@@ -1103,6 +1103,362 @@ s32 principale(vacuum)
     }
 
 
+    /* ========================================================
+     * PROBARE: Variadic macro - zero arguments
+     * ======================================================== */
+
+    {
+        constans character* fons;
+        Arbor2Expansion* exp;
+        Xar* result;
+        i32 num;
+        b32 found_eof_only;
+        i32 i;
+        Arbor2Token* tok;
+
+        imprimere("\n--- Probans variadic macro zero arguments ---\n");
+
+        exp = arbor2_expansion_creare(piscina, intern);
+
+        /* #define ARGS(...) __VA_ARGS__ then ARGS() should produce empty */
+        fons = "#define ARGS(...) __VA_ARGS__\nARGS()";
+        result = arbor2_expansion_processare(exp, fons, (i32)strlen(fons), "test.c");
+
+        /* Numerus tokenum debet esse parvum (solum EOF vel vacuum) */
+        num = xar_numerus(result);
+        found_eof_only = VERUM;
+        per (i = ZEPHYRUM; i < num; i++)
+        {
+            tok = *(Arbor2Token**)xar_obtinere(result, i);
+            si (tok->lexema->genus != ARBOR2_LEXEMA_EOF)
+            {
+                found_eof_only = FALSUM;
+                frange;
+            }
+        }
+        /* Vel vacuum vel solum EOF */
+        CREDO_VERUM(num == ZEPHYRUM || found_eof_only);
+    }
+
+
+    /* ========================================================
+     * PROBARE: Variadic macro - single argument
+     * ======================================================== */
+
+    {
+        constans character* fons;
+        Arbor2Expansion* exp;
+        Xar* result;
+        Arbor2Token* tok;
+
+        imprimere("\n--- Probans variadic macro single argument ---\n");
+
+        exp = arbor2_expansion_creare(piscina, intern);
+
+        /* #define ARGS(...) __VA_ARGS__ then ARGS(x) should produce x */
+        fons = "#define ARGS(...) __VA_ARGS__\nARGS(x)";
+        result = arbor2_expansion_processare(exp, fons, (i32)strlen(fons), "test.c");
+
+        /* Debet esse x identificator */
+        tok = *(Arbor2Token**)xar_obtinere(result, ZEPHYRUM);
+        CREDO_AEQUALIS_I32(tok->lexema->genus, ARBOR2_LEXEMA_IDENTIFICATOR);
+        CREDO_AEQUALIS_I32(tok->lexema->valor.mensura, I);  /* "x" = 1 */
+    }
+
+
+    /* ========================================================
+     * PROBARE: Variadic macro - __VA_ARGS__ used twice
+     * ======================================================== */
+
+    {
+        constans character* fons;
+        Arbor2Expansion* exp;
+        Xar* result;
+        Arbor2Token* tok;
+        i32 comma_count;
+        i32 i;
+
+        imprimere("\n--- Probans __VA_ARGS__ used twice ---\n");
+
+        exp = arbor2_expansion_creare(piscina, intern);
+
+        /* #define TWICE(...) __VA_ARGS__ __VA_ARGS__ */
+        fons = "#define TWICE(...) __VA_ARGS__ __VA_ARGS__\nTWICE(a,b)";
+        result = arbor2_expansion_processare(exp, fons, (i32)strlen(fons), "test.c");
+
+        /* Debet habere a,b a,b - ergo 3 commas (2 in primo, 2 in secundo, minus 1) */
+        /* Actually: a , b a , b = 2 commas */
+        comma_count = ZEPHYRUM;
+        per (i = ZEPHYRUM; i < xar_numerus(result); i++)
+        {
+            tok = *(Arbor2Token**)xar_obtinere(result, i);
+            si (tok->lexema->genus == ARBOR2_LEXEMA_COMMA)
+            {
+                comma_count++;
+            }
+        }
+        /* Duo commas (unum in primo __VA_ARGS__, unum in secundo) */
+        CREDO_AEQUALIS_I32(comma_count, II);
+    }
+
+
+    /* ========================================================
+     * PROBARE: Nested macro invocation - macro arg is macro call
+     * ======================================================== */
+
+    {
+        constans character* fons;
+        Arbor2Expansion* exp;
+        Xar* result;
+        Arbor2Token* tok;
+        i32 plus_count;
+        i32 i;
+
+        imprimere("\n--- Probans nested macro - arg is macro call ---\n");
+
+        exp = arbor2_expansion_creare(piscina, intern);
+
+        /* #define MUL(a,b) ((a)*(b))
+         * #define ADD(a,b) ((a)+(b))
+         * ADD(MUL(2,3), 4) -> ((((2)*(3)))+(4)) */
+        fons = "#define MUL(a,b) ((a)*(b))\n#define ADD(a,b) ((a)+(b))\nADD(MUL(2,3),4)";
+        result = arbor2_expansion_processare(exp, fons, (i32)strlen(fons), "test.c");
+
+        /* Debet habere PLUS token */
+        plus_count = ZEPHYRUM;
+        per (i = ZEPHYRUM; i < xar_numerus(result); i++)
+        {
+            tok = *(Arbor2Token**)xar_obtinere(result, i);
+            si (tok->lexema->genus == ARBOR2_LEXEMA_PLUS)
+            {
+                plus_count++;
+            }
+        }
+        CREDO_AEQUALIS_I32(plus_count, I);
+    }
+
+
+    /* ========================================================
+     * PROBARE: Nested macro invocation - chained function macros
+     * ======================================================== */
+
+    {
+        constans character* fons;
+        Arbor2Expansion* exp;
+        Xar* result;
+        Arbor2Token* tok;
+        b32 found_identifier;
+        i32 i;
+
+        imprimere("\n--- Probans chained function macros ---\n");
+
+        exp = arbor2_expansion_creare(piscina, intern);
+
+        /* #define INNER(x) (x)
+         * #define OUTER(x) [x]
+         * OUTER(INNER(foo)) -> [(foo)] */
+        fons = "#define INNER(x) (x)\n#define OUTER(x) [x]\nOUTER(INNER(foo))";
+        result = arbor2_expansion_processare(exp, fons, (i32)strlen(fons), "test.c");
+
+        /* Debet habere foo identifier et brackets */
+        found_identifier = FALSUM;
+        per (i = ZEPHYRUM; i < xar_numerus(result); i++)
+        {
+            tok = *(Arbor2Token**)xar_obtinere(result, i);
+            si (tok->lexema->genus == ARBOR2_LEXEMA_IDENTIFICATOR &&
+                tok->lexema->valor.mensura == III)  /* "foo" = 3 */
+            {
+                found_identifier = VERUM;
+                frange;
+            }
+        }
+        CREDO_VERUM(found_identifier);
+    }
+
+
+    /* ========================================================
+     * PROBARE: Object-like macro via #define - simple
+     * ======================================================== */
+
+    {
+        constans character* fons;
+        Arbor2Expansion* exp;
+        Xar* result;
+        Arbor2Token* tok;
+
+        imprimere("\n--- Probans object-like macro via #define simple ---\n");
+
+        exp = arbor2_expansion_creare(piscina, intern);
+
+        /* #define FOO 42 then FOO -> 42 */
+        fons = "#define FOO 42\nFOO";
+        result = arbor2_expansion_processare(exp, fons, (i32)strlen(fons), "test.c");
+
+        /* 42 */
+        tok = *(Arbor2Token**)xar_obtinere(result, ZEPHYRUM);
+        CREDO_AEQUALIS_I32(tok->lexema->genus, ARBOR2_LEXEMA_INTEGER);
+        CREDO_AEQUALIS_I32(tok->lexema->valor.mensura, II);  /* "42" = 2 */
+    }
+
+
+    /* ========================================================
+     * PROBARE: Object-like macro via #define - multi-token
+     * ======================================================== */
+
+    {
+        constans character* fons;
+        Arbor2Expansion* exp;
+        Xar* result;
+        Arbor2Token* tok;
+
+        imprimere("\n--- Probans object-like macro multi-token ---\n");
+
+        exp = arbor2_expansion_creare(piscina, intern);
+
+        /* #define EXPR 1+2 then EXPR -> 1 + 2 */
+        fons = "#define EXPR 1+2\nEXPR";
+        result = arbor2_expansion_processare(exp, fons, (i32)strlen(fons), "test.c");
+
+        /* 1 */
+        tok = *(Arbor2Token**)xar_obtinere(result, ZEPHYRUM);
+        CREDO_AEQUALIS_I32(tok->lexema->genus, ARBOR2_LEXEMA_INTEGER);
+
+        /* + */
+        tok = *(Arbor2Token**)xar_obtinere(result, I);
+        CREDO_AEQUALIS_I32(tok->lexema->genus, ARBOR2_LEXEMA_PLUS);
+
+        /* 2 */
+        tok = *(Arbor2Token**)xar_obtinere(result, II);
+        CREDO_AEQUALIS_I32(tok->lexema->genus, ARBOR2_LEXEMA_INTEGER);
+    }
+
+
+    /* ========================================================
+     * PROBARE: Stringification - empty argument
+     * ======================================================== */
+
+    {
+        constans character* fons;
+        Arbor2Expansion* exp;
+        Xar* result;
+        Arbor2Token* tok;
+
+        imprimere("\n--- Probans stringification empty argument ---\n");
+
+        exp = arbor2_expansion_creare(piscina, intern);
+
+        /* #define STR(x) #x then STR() -> "" */
+        fons = "#define STR(x) #x\nSTR()";
+        result = arbor2_expansion_processare(exp, fons, (i32)strlen(fons), "test.c");
+
+        /* Debet esse chorda literalis vacua "" */
+        tok = *(Arbor2Token**)xar_obtinere(result, ZEPHYRUM);
+        CREDO_AEQUALIS_I32(tok->lexema->genus, ARBOR2_LEXEMA_STRING_LIT);
+        /* Mensura debet esse II pro "" (duae quotes) */
+        CREDO_AEQUALIS_I32(tok->lexema->valor.mensura, II);
+    }
+
+
+    /* ========================================================
+     * PROBARE: Stringification - multiple tokens
+     * ======================================================== */
+
+    {
+        constans character* fons;
+        Arbor2Expansion* exp;
+        Xar* result;
+        Arbor2Token* tok;
+
+        imprimere("\n--- Probans stringification multiple tokens ---\n");
+
+        exp = arbor2_expansion_creare(piscina, intern);
+
+        /* #define STR(x) #x then STR(a b c) -> "a b c" */
+        fons = "#define STR(x) #x\nSTR(a b c)";
+        result = arbor2_expansion_processare(exp, fons, (i32)strlen(fons), "test.c");
+
+        /* Debet esse chorda literalis "a b c" */
+        tok = *(Arbor2Token**)xar_obtinere(result, ZEPHYRUM);
+        CREDO_AEQUALIS_I32(tok->lexema->genus, ARBOR2_LEXEMA_STRING_LIT);
+        /* Mensura maior quam simplex token */
+        CREDO_MAIOR_I32(tok->lexema->valor.mensura, III);
+    }
+
+
+    /* ========================================================
+     * PROBARE: Token pasting - create operator
+     * ======================================================== */
+
+    {
+        constans character* fons;
+        Arbor2Expansion* exp;
+        Xar* result;
+        Arbor2Token* tok;
+
+        imprimere("\n--- Probans token pasting create operator ---\n");
+
+        exp = arbor2_expansion_creare(piscina, intern);
+
+        /* #define OP(a,b) a##b then OP(+,=) -> += */
+        fons = "#define OP(a,b) a##b\nOP(+,=)";
+        result = arbor2_expansion_processare(exp, fons, (i32)strlen(fons), "test.c");
+
+        /* Debet esse PLUS_ASSIGN vel duo tokens */
+        tok = *(Arbor2Token**)xar_obtinere(result, ZEPHYRUM);
+        /* += debet esse PLUS_ASSIGN */
+        CREDO_AEQUALIS_I32(tok->lexema->genus, ARBOR2_LEXEMA_PLUS_ASSIGN);
+    }
+
+
+    /* ========================================================
+     * PROBARE: Token pasting - empty left argument
+     * ======================================================== */
+
+    {
+        constans character* fons;
+        Arbor2Expansion* exp;
+        Xar* result;
+
+        imprimere("\n--- Probans token pasting empty left arg ---\n");
+
+        exp = arbor2_expansion_creare(piscina, intern);
+
+        /* #define PASTE(a,b) a##b then PASTE(,bar)
+         * Comportamentum vacuum paste non est bene definitum.
+         * Verificare quod non frangit et producit aliquid. */
+        fons = "#define PASTE(a,b) a##b\nPASTE(,bar)";
+        result = arbor2_expansion_processare(exp, fons, (i32)strlen(fons), "test.c");
+
+        /* Verificare quod processatio non fregit et producit tokens */
+        CREDO_MAIOR_I32(xar_numerus(result), ZEPHYRUM);
+    }
+
+
+    /* ========================================================
+     * PROBARE: Triple nested macro expansion
+     * ======================================================== */
+
+    {
+        constans character* fons;
+        Arbor2Expansion* exp;
+        Xar* result;
+        Arbor2Token* tok;
+
+        imprimere("\n--- Probans triple nested macro expansion ---\n");
+
+        exp = arbor2_expansion_creare(piscina, intern);
+
+        /* A -> B -> C -> 999 */
+        fons = "#define A B\n#define B C\n#define C 999\nA";
+        result = arbor2_expansion_processare(exp, fons, (i32)strlen(fons), "test.c");
+
+        /* A -> B -> C -> 999 */
+        tok = *(Arbor2Token**)xar_obtinere(result, ZEPHYRUM);
+        CREDO_AEQUALIS_I32(tok->lexema->genus, ARBOR2_LEXEMA_INTEGER);
+        CREDO_AEQUALIS_I32(tok->lexema->valor.mensura, III);  /* "999" = 3 */
+    }
+
+
     /* Compendium */
     imprimere("\n");
     credo_imprimere_compendium();
