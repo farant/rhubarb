@@ -503,18 +503,37 @@ s32 principale(vacuum)
         /* Struct with char member */
         CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "struct S { char c; };", NIHIL));
 
-        /* NOTE: struct members with float/double/short/long types fail roundtrip
-         * due to pre-existing parser limitation in struct member grammar.
-         * Only int/char work currently. */
+        /* Struct with float member */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "struct S { float f; };", NIHIL));
+
+        /* Struct with double member */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "struct S { double d; };", NIHIL));
+
+        /* Struct with short member */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "struct S { short s; };", NIHIL));
+
+        /* Struct with long member */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "struct S { long l; };", NIHIL));
+
+        /* Struct with unsigned member */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "struct S { unsigned u; };", NIHIL));
+
+        /* NOTE: void pointer members have a serialization bug (outputs void **;)
+         * Compound type specifiers like 'unsigned int', 'long int' in
+         * struct members require grammar changes. Only single type specifiers
+         * work currently. */
 
         /* Struct with multiple members */
         CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "struct S { int x; int y; };", NIHIL));
 
+        /* NOTE: Struct with mixed type members (e.g., int x; float f;) fails
+         * in translation_unit parsing. Needs investigation. */
+
         /* Simple union */
         CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "union U { int x; };", NIHIL));
 
-        /* Union with multiple members */
-        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "union U { int i; int j; };", NIHIL));
+        /* Union with float member */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "union U { float f; };", NIHIL));
 
         /* Anonymous struct */
         CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "struct { int x; };", NIHIL));
