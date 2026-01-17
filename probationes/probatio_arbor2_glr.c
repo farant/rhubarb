@@ -4182,6 +4182,30 @@ s32 principale(vacuum)
         CREDO_NON_NIHIL(res.radix);
     }
 
+    /* Test struct with mixed type members: struct foo { int x; float f; } */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans struct mixed members: struct foo { int x; float f; } ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "struct foo { int x; float f; }");
+        res = arbor2_glr_parsere(glr, tokens);
+
+        imprimere("  successus: %s\n", res.successus ? "VERUM" : "FALSUM");
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        CREDO_NON_NIHIL(res.radix);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_STRUCT_SPECIFIER);
+            si (res.radix->datum.struct_specifier.membra != NIHIL)
+            {
+                CREDO_AEQUALIS_I32(xar_numerus(res.radix->datum.struct_specifier.membra), II);
+            }
+        }
+    }
+
     /* NOTE: Compound type specifiers like 'unsigned int', 'long int', etc.
      * in struct members require grammar changes to allow multiple type
      * specifier tokens before declarator. Currently only single type

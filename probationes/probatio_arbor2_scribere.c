@@ -526,8 +526,8 @@ s32 principale(vacuum)
         /* Struct with multiple members */
         CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "struct S { int x; int y; };", NIHIL));
 
-        /* NOTE: Struct with mixed type members (e.g., int x; float f;) fails
-         * in translation_unit parsing. Needs investigation. */
+        /* Struct with mixed type members */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "struct S { int x; float f; };", NIHIL));
 
         /* Simple union */
         CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "union U { int x; };", NIHIL));
