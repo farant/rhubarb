@@ -359,6 +359,11 @@ structura Arbor2Nodus {
             Arbor2Token*        tok_storage;    /* static/extern/auto/register keyword (NIHIL if none) */
             Arbor2Token*        tok_const;      /* const keyword (NIHIL if none) */
             Arbor2Token*        tok_volatile;   /* volatile keyword (NIHIL if none) */
+            Arbor2Token*        tok_unsigned;   /* unsigned keyword (NIHIL if none) */
+            Arbor2Token*        tok_signed;     /* signed keyword (NIHIL if none) */
+            Arbor2Token*        tok_long;       /* long keyword (NIHIL if none) */
+            Arbor2Token*        tok_long2;      /* second long keyword for 'long long' (NIHIL if none) */
+            Arbor2Token*        tok_short;      /* short keyword (NIHIL if none) */
             Arbor2Nodus*        specifier;      /* Type specifier (identifier) */
             Arbor2Nodus*        declarator;     /* The declarator (*name or name) */
             Arbor2Token*        tok_assignatio; /* = token (NIHIL if no initializer) */

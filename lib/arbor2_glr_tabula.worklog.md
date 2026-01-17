@@ -1583,3 +1583,146 @@ GOTO(0, FACTOR) = 3
 - Total states: 855 (+102)
 - Total productions: 324 (+34)
 - Total tests: 1695 (+46)
+
+## 2026-01-17: Compound Type Specifiers in Struct/Union Members
+
+### Goal
+
+Enable compound type specifiers inside struct/union member declarations:
+```c
+struct S { unsigned int x; };
+struct S { signed char c; };
+struct S { long int x; };
+struct S { unsigned long long x; };
+struct S { const int x; };
+struct S { volatile int x; };
+```
+
+Previously these failed because states 119/120 (after `struct {` / `struct ID {`) only
+shifted single type specifiers to state 121, which only accepted `*`, IDENTIFIER, or `:`.
+
+### Approach
+
+Rather than modify the existing struct member parsing flow, added explicit productions
+for compound type patterns (similar to how top-level declarations handle them).
+
+### AST Changes (include/arbor2_glr.h)
+
+Added new token fields to DECLARATIO struct for compound type specifiers:
+```c
+Arbor2Token*        tok_unsigned;   /* for 'unsigned' modifier */
+Arbor2Token*        tok_signed;     /* for 'signed' modifier */
+Arbor2Token*        tok_long;       /* for 'long' modifier */
+Arbor2Token*        tok_long2;      /* for 'long long' second long */
+Arbor2Token*        tok_short;      /* for 'short' modifier */
+```
+
+### Productions Added (P348-P366)
+
+19 productions for first member compound types:
+
+| Prod | Pattern | Symbols |
+|------|---------|---------|
+| P348 | unsigned int declarator ; | 4 |
+| P349 | signed int declarator ; | 4 |
+| P350 | unsigned char declarator ; | 4 |
+| P351 | signed char declarator ; | 4 |
+| P352 | long int declarator ; | 4 |
+| P353 | short int declarator ; | 4 |
+| P354 | unsigned long declarator ; | 4 |
+| P355 | unsigned short declarator ; | 4 |
+| P356 | signed long declarator ; | 4 |
+| P357 | signed short declarator ; | 4 |
+| P358 | unsigned long int declarator ; | 5 |
+| P359 | unsigned short int declarator ; | 5 |
+| P360 | signed long int declarator ; | 5 |
+| P361 | signed short int declarator ; | 5 |
+| P362 | const type declarator ; | 4 |
+| P363 | volatile type declarator ; | 4 |
+| P364 | long long declarator ; | 4 |
+| P365 | unsigned long long declarator ; | 5 |
+| P366 | signed long long declarator ; | 5 |
+
+### States Added (956-1019)
+
+64 new states organized by role:
+
+**First specifier states (from 119/120):**
+- 956: after `unsigned` - expects int/char/long/short/*
+- 957: after `signed` - expects int/char/long/short/*
+- 958: after `long` - expects int/long/*
+- 959: after `short` - expects int/*
+- 960: after `const` - expects type
+- 961: after `volatile` - expects type
+
+**Second specifier states:**
+- 962-974: after compound specifiers like `unsigned int`, `long int`, etc.
+
+**Third specifier states:**
+- 975-980: after three-part specifiers like `unsigned long int`
+
+**Post-declarator states:**
+- 981-999: after `<compound_type> declarator` - expects `;`
+
+**Reserved:**
+- 1000: placeholder (validation requires contiguous indices)
+
+**Reduction states:**
+- 1001-1019: REDUCE P348-P366 on `}`
+
+### State Modifications
+
+States 119 and 120 modified to route compound specifier tokens to new states:
+- UNSIGNED → 956 (instead of 121)
+- SIGNED → 957 (instead of 121)
+- LONG → 958 (instead of 121)
+- SHORT → 959 (instead of 121)
+- CONST → 960 (NEW)
+- VOLATILE → 961 (NEW)
+- (INT, CHAR, FLOAT, DOUBLE, VOID, ID still → 121)
+
+### Serializer Update (lib/arbor2_scribere.c)
+
+Added output for new compound type tokens in DECLARATIO case:
+```c
+si (nodus->datum.declaratio.tok_unsigned != NIHIL)
+    arbor2_scribere_lexema(output, nodus->datum.declaratio.tok_unsigned);
+si (nodus->datum.declaratio.tok_signed != NIHIL)
+    arbor2_scribere_lexema(output, nodus->datum.declaratio.tok_signed);
+si (nodus->datum.declaratio.tok_long != NIHIL)
+    arbor2_scribere_lexema(output, nodus->datum.declaratio.tok_long);
+/* etc. */
+```
+
+### Validation Fix
+
+State 1000 was skipped in STATUS_TABULA_PARTIAL (jumped from 999 to 1001).
+The validation function checks for NIHIL action tables and only allows them
+if description starts with "reserved". Initial placeholder used "placeholder 1000"
+which failed validation. Fixed by changing to "reserved 1000".
+
+### Scope Limitations
+
+NOT covered (future work):
+- `const volatile int` (triple qualifiers)
+- `const unsigned int` (qualifier + compound type)
+- `volatile long int` (qualifier + compound type)
+- Subsequent member compound types (P367-P385 defined but not active)
+- Union member compound types (would need states 139-143 modifications)
+
+### Test Results
+
+All compound type tests pass for implemented patterns:
+- `unsigned int`, `signed int`, `unsigned char`, `signed char` ✓
+- `long int`, `short int` ✓
+- `unsigned long`, `unsigned short`, `signed long`, `signed short` ✓
+- `long long`, `unsigned long long`, `signed long long` ✓
+- `const int`, `volatile int` ✓
+
+GLR tests: 1992/1992 pass
+Serializer tests: 137/137 pass
+
+### Final Statistics
+- Total states: 1020 (956-1019 new, 1000 reserved)
+- Total productions: 385 (P348-P385, with P348-P366 fully active)
+- All existing tests pass

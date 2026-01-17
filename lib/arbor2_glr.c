@@ -2145,6 +2145,11 @@ _processare_unam_actionem(
                             member->datum.declaratio.tok_storage = NIHIL;
                             member->datum.declaratio.tok_const = NIHIL;
                             member->datum.declaratio.tok_volatile = NIHIL;
+                            member->datum.declaratio.tok_unsigned = NIHIL;
+                            member->datum.declaratio.tok_signed = NIHIL;
+                            member->datum.declaratio.tok_long = NIHIL;
+                            member->datum.declaratio.tok_long2 = NIHIL;
+                            member->datum.declaratio.tok_short = NIHIL;
                             member->datum.declaratio.specifier = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                             member->datum.declaratio.specifier->genus = ARBOR2_NODUS_IDENTIFICATOR;
                             member->datum.declaratio.specifier->lexema = type_tok;
@@ -2186,6 +2191,11 @@ _processare_unam_actionem(
                             member->datum.declaratio.tok_storage = NIHIL;
                             member->datum.declaratio.tok_const = NIHIL;
                             member->datum.declaratio.tok_volatile = NIHIL;
+                            member->datum.declaratio.tok_unsigned = NIHIL;
+                            member->datum.declaratio.tok_signed = NIHIL;
+                            member->datum.declaratio.tok_long = NIHIL;
+                            member->datum.declaratio.tok_long2 = NIHIL;
+                            member->datum.declaratio.tok_short = NIHIL;
                             member->datum.declaratio.specifier = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                             member->datum.declaratio.specifier->genus = ARBOR2_NODUS_IDENTIFICATOR;
                             member->datum.declaratio.specifier->lexema = type_tok;
@@ -2616,6 +2626,184 @@ _processare_unam_actionem(
                         {
                             /* P73: UNUSED - pointer variants now handled via declarator */
                             valor_novus = NIHIL;
+                        }
+                        /* ========== COMPOUND TYPE SPECIFIERS P348-P366 ========== */
+                        alioquin si (actio->valor >= 348 && actio->valor <= 366)
+                        {
+                            /* P348-P366: Compound type specifiers in first struct member
+                             * P348: unsigned int declarator ;     (4 symbols)
+                             * P349: signed int declarator ;       (4 symbols)
+                             * P350: unsigned char declarator ;    (4 symbols)
+                             * P351: signed char declarator ;      (4 symbols)
+                             * P352: long int declarator ;         (4 symbols)
+                             * P353: short int declarator ;        (4 symbols)
+                             * P354: unsigned long declarator ;    (4 symbols)
+                             * P355: unsigned short declarator ;   (4 symbols)
+                             * P356: signed long declarator ;      (4 symbols)
+                             * P357: signed short declarator ;     (4 symbols)
+                             * P358: unsigned long int declarator ; (5 symbols)
+                             * P359: unsigned short int declarator ; (5 symbols)
+                             * P360: signed long int declarator ;   (5 symbols)
+                             * P361: signed short int declarator ;  (5 symbols)
+                             * P362: const type declarator ;        (4 symbols)
+                             * P363: volatile type declarator ;     (4 symbols)
+                             * P364: long long declarator ;         (4 symbols)
+                             * P365: unsigned long long declarator ; (5 symbols)
+                             * P366: signed long long declarator ;  (5 symbols)
+                             */
+                            Arbor2Nodus* member;
+                            Arbor2Nodus* decl_node;
+                            Xar* lista;
+                            Arbor2Nodus** slot;
+                            Arbor2Token* base_type_tok = NIHIL;
+                            Arbor2Token* modifier1_tok = NIHIL;
+                            Arbor2Token* modifier2_tok = NIHIL;
+                            i32 num_symbols = regula->longitudo;
+
+                            /* Get declarator from valori[1] (pre-built by P12/P11) */
+                            decl_node = valori[I];
+
+                            /* Create member node */
+                            member = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
+                            member->genus = ARBOR2_NODUS_DECLARATIO;
+                            member->pater = NIHIL;
+                            member->datum.declaratio.tok_storage = NIHIL;
+                            member->datum.declaratio.tok_const = NIHIL;
+                            member->datum.declaratio.tok_volatile = NIHIL;
+                            member->datum.declaratio.tok_unsigned = NIHIL;
+                            member->datum.declaratio.tok_signed = NIHIL;
+                            member->datum.declaratio.tok_long = NIHIL;
+                            member->datum.declaratio.tok_long2 = NIHIL;
+                            member->datum.declaratio.tok_short = NIHIL;
+                            member->datum.declaratio.tok_assignatio = NIHIL;
+                            member->datum.declaratio.initializor = NIHIL;
+                            member->datum.declaratio.tok_semicolon = lexemata[ZEPHYRUM];
+                            member->datum.declaratio.proxima = NIHIL;
+
+                            /* Parse tokens based on production number */
+                            si (num_symbols == 4)
+                            {
+                                /* 4-symbol productions: modifier type decl ; */
+                                modifier1_tok = lexemata[III];
+                                base_type_tok = lexemata[II];
+                            }
+                            alioquin si (num_symbols == 5)
+                            {
+                                /* 5-symbol productions: modifier1 modifier2 type decl ; */
+                                modifier1_tok = lexemata[IV];
+                                modifier2_tok = lexemata[III];
+                                base_type_tok = lexemata[II];
+                            }
+
+                            /* Set modifier tokens based on production */
+                            commutatio (actio->valor)
+                            {
+                                casus 348: /* unsigned int */
+                                    member->datum.declaratio.tok_unsigned = modifier1_tok;
+                                    frange;
+                                casus 349: /* signed int */
+                                    member->datum.declaratio.tok_signed = modifier1_tok;
+                                    frange;
+                                casus 350: /* unsigned char */
+                                    member->datum.declaratio.tok_unsigned = modifier1_tok;
+                                    frange;
+                                casus 351: /* signed char */
+                                    member->datum.declaratio.tok_signed = modifier1_tok;
+                                    frange;
+                                casus 352: /* long int */
+                                    member->datum.declaratio.tok_long = modifier1_tok;
+                                    frange;
+                                casus 353: /* short int */
+                                    member->datum.declaratio.tok_short = modifier1_tok;
+                                    frange;
+                                casus 354: /* unsigned long (implicit int) */
+                                    member->datum.declaratio.tok_unsigned = modifier1_tok;
+                                    member->datum.declaratio.tok_long = base_type_tok;
+                                    base_type_tok = NIHIL; /* No explicit base type */
+                                    frange;
+                                casus 355: /* unsigned short (implicit int) */
+                                    member->datum.declaratio.tok_unsigned = modifier1_tok;
+                                    member->datum.declaratio.tok_short = base_type_tok;
+                                    base_type_tok = NIHIL;
+                                    frange;
+                                casus 356: /* signed long (implicit int) */
+                                    member->datum.declaratio.tok_signed = modifier1_tok;
+                                    member->datum.declaratio.tok_long = base_type_tok;
+                                    base_type_tok = NIHIL;
+                                    frange;
+                                casus 357: /* signed short (implicit int) */
+                                    member->datum.declaratio.tok_signed = modifier1_tok;
+                                    member->datum.declaratio.tok_short = base_type_tok;
+                                    base_type_tok = NIHIL;
+                                    frange;
+                                casus 358: /* unsigned long int */
+                                    member->datum.declaratio.tok_unsigned = modifier1_tok;
+                                    member->datum.declaratio.tok_long = modifier2_tok;
+                                    frange;
+                                casus 359: /* unsigned short int */
+                                    member->datum.declaratio.tok_unsigned = modifier1_tok;
+                                    member->datum.declaratio.tok_short = modifier2_tok;
+                                    frange;
+                                casus 360: /* signed long int */
+                                    member->datum.declaratio.tok_signed = modifier1_tok;
+                                    member->datum.declaratio.tok_long = modifier2_tok;
+                                    frange;
+                                casus 361: /* signed short int */
+                                    member->datum.declaratio.tok_signed = modifier1_tok;
+                                    member->datum.declaratio.tok_short = modifier2_tok;
+                                    frange;
+                                casus 362: /* const type */
+                                    member->datum.declaratio.tok_const = modifier1_tok;
+                                    frange;
+                                casus 363: /* volatile type */
+                                    member->datum.declaratio.tok_volatile = modifier1_tok;
+                                    frange;
+                                casus 364: /* long long (implicit int) */
+                                    member->datum.declaratio.tok_long = modifier1_tok;
+                                    member->datum.declaratio.tok_long2 = base_type_tok;
+                                    base_type_tok = NIHIL;
+                                    frange;
+                                casus 365: /* unsigned long long */
+                                    member->datum.declaratio.tok_unsigned = modifier1_tok;
+                                    member->datum.declaratio.tok_long = modifier2_tok;
+                                    member->datum.declaratio.tok_long2 = base_type_tok;
+                                    base_type_tok = NIHIL;
+                                    frange;
+                                casus 366: /* signed long long */
+                                    member->datum.declaratio.tok_signed = modifier1_tok;
+                                    member->datum.declaratio.tok_long = modifier2_tok;
+                                    member->datum.declaratio.tok_long2 = base_type_tok;
+                                    base_type_tok = NIHIL;
+                                    frange;
+                                ordinarius:
+                                    frange;
+                            }
+
+                            /* Set specifier (base type) */
+                            si (base_type_tok != NIHIL)
+                            {
+                                member->datum.declaratio.specifier = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
+                                member->datum.declaratio.specifier->genus = ARBOR2_NODUS_IDENTIFICATOR;
+                                member->datum.declaratio.specifier->lexema = base_type_tok;
+                                member->datum.declaratio.specifier->pater = member;
+                                member->datum.declaratio.specifier->datum.folium.valor = base_type_tok->lexema->valor;
+                                member->lexema = base_type_tok;
+                            }
+                            alioquin
+                            {
+                                /* No explicit base type (e.g., "unsigned long" = implicit int) */
+                                member->datum.declaratio.specifier = NIHIL;
+                                member->lexema = modifier1_tok;
+                            }
+
+                            member->datum.declaratio.declarator = decl_node;
+                            si (decl_node != NIHIL) decl_node->pater = member;
+
+                            /* Create member list */
+                            lista = xar_creare(glr->piscina, magnitudo(Arbor2Nodus*));
+                            slot = xar_addere(lista);
+                            *slot = member;
+                            valor_novus = (Arbor2Nodus*)lista;
                         }
                         /* ========== TYPEDEF DECLARATIONS P74-P79 ========== */
                         alioquin si (actio->valor == 74)

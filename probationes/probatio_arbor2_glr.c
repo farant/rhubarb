@@ -4206,11 +4206,70 @@ s32 principale(vacuum)
         }
     }
 
-    /* NOTE: Compound type specifiers like 'unsigned int', 'long int', etc.
-     * in struct members require grammar changes to allow multiple type
-     * specifier tokens before declarator. Currently only single type
-     * specifiers work (int, char, float, double, short, long, unsigned,
-     * signed, void). This is a known limitation. */
+    /* ================================================================
+     * COMPOUND TYPE SPECIFIER TESTS (currently failing - to be fixed)
+     * These test multi-token type specifiers in struct members.
+     * ================================================================ */
+
+    /* Test struct with unsigned int member */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans struct unsigned int: struct foo { unsigned int x; } ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "struct foo { unsigned int x; }");
+        res = arbor2_glr_parsere(glr, tokens);
+
+        /* TODO: Currently fails - expects VERUM after grammar fix */
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        CREDO_NON_NIHIL(res.radix);
+    }
+
+    /* Test struct with long int member */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans struct long int: struct foo { long int x; } ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "struct foo { long int x; }");
+        res = arbor2_glr_parsere(glr, tokens);
+
+        /* TODO: Currently fails - expects VERUM after grammar fix */
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        CREDO_NON_NIHIL(res.radix);
+    }
+
+    /* Test struct with const int member */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans struct const int: struct foo { const int x; } ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "struct foo { const int x; }");
+        res = arbor2_glr_parsere(glr, tokens);
+
+        /* TODO: Currently fails - expects VERUM after grammar fix */
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        CREDO_NON_NIHIL(res.radix);
+    }
+
+    /* Test struct with unsigned long member */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans struct unsigned long: struct foo { unsigned long x; } ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "struct foo { unsigned long x; }");
+        res = arbor2_glr_parsere(glr, tokens);
+
+        /* TODO: Currently fails - expects VERUM after grammar fix */
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        CREDO_NON_NIHIL(res.radix);
+    }
 
     /* Test struct variable declaration: struct foo { int x; } var */
     {
