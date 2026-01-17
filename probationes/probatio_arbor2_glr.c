@@ -12844,6 +12844,86 @@ s32 principale(vacuum)
     }
 
     /* ========================================================
+     * PROBARE: Latin type macro disambiguation (Phase 3.2)
+     * ======================================================== */
+
+    {
+        Arbor2GLRResultus res;
+        Xar* tokens;
+
+        imprimere("\n--- Probans Latin type macro disambiguation ---\n");
+
+        /* Register latina.h macros */
+        arbor2_includere_latina(expansion);
+        imprimere("  Latina macros registered.\n");
+
+        /* Test: "integer x" should use type hint from macro */
+        imprimere("  Testing 'integer x' with latina.h macros...\n");
+        tokens = _lexare_ad_tokens(piscina, intern, "integer x");
+        res = arbor2_glr_parsere(glr, tokens);
+        imprimere("  successus: %s\n", res.successus ? "VERUM" : "FALSUM");
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.radix);
+        CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_DECLARATIO);
+    }
+
+    /* ========================================================
+     * PROBARE: Nested macro resolution (Phase 3.2)
+     * ======================================================== */
+
+    {
+        Arbor2GLRResultus res;
+        Xar* tokens;
+
+        imprimere("\n--- Probans nested macro resolution ---\n");
+
+        /* Add i32 -> integer (which -> int via latina.h) */
+        arbor2_expansion_addere_macro(expansion, "i32", "integer", NIHIL);
+
+        /* Test: "i32 x" should follow two levels to int */
+        imprimere("  Testing 'i32 x' with nested macros...\n");
+        tokens = _lexare_ad_tokens(piscina, intern, "i32 x");
+        res = arbor2_glr_parsere(glr, tokens);
+        imprimere("  successus: %s\n", res.successus ? "VERUM" : "FALSUM");
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.radix);
+        CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_DECLARATIO);
+    }
+
+    /* ========================================================
+     * PROBARE: AMBIGUUS identifier tracking (Phase 3.3)
+     * ======================================================== */
+
+    {
+        Arbor2GLRResultus res;
+        Xar* tokens;
+        Arbor2Expansion* fresh_exp;
+        Arbor2GLR* fresh_glr;
+
+        imprimere("\n--- Probans AMBIGUUS identifier tracking ---\n");
+
+        /* Create fresh context without latina.h to get ambiguity */
+        fresh_exp = arbor2_expansion_creare(piscina, intern);
+        fresh_glr = arbor2_glr_creare(piscina, intern, fresh_exp);
+
+        /* Test: "foo * bar" without type info is ambiguous */
+        imprimere("  Testing 'foo * bar' (ambiguous)...\n");
+        tokens = _lexare_ad_tokens(piscina, intern, "foo * bar");
+        res = arbor2_glr_parsere_expressio(fresh_glr, tokens);
+        imprimere("  successus: %s\n", res.successus ? "VERUM" : "FALSUM");
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.radix);
+
+        /* Check if ambiguous and verify identificator tracking */
+        si (res.radix != NIHIL && res.radix->genus == ARBOR2_NODUS_AMBIGUUS)
+        {
+            imprimere("  AMBIGUUS node created with %d interpretations\n",
+                xar_numerus(res.radix->datum.ambiguus.interpretationes));
+            CREDO_VERUM(xar_numerus(res.radix->datum.ambiguus.interpretationes) >= II);
+        }
+    }
+
+    /* ========================================================
      * PROBARE: Parser statistics
      * ======================================================== */
 

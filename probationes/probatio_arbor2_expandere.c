@@ -1459,6 +1459,187 @@ s32 principale(vacuum)
     }
 
 
+    /* ========================================================
+     * PROBARE: Lookahead genus - simple INT macro
+     * ======================================================== */
+
+    {
+        Arbor2Expansion* exp;
+        Arbor2LexemaGenus genus;
+        chorda nomen_ch;
+        unio { constans character* c; i8* m; } u;
+
+        imprimere("\n--- Probans lookahead genus simple INT macro ---\n");
+
+        exp = arbor2_expansion_creare(piscina, intern);
+        arbor2_expansion_addere_macro(exp, "TYPUS", "int", NIHIL);
+
+        u.c = "TYPUS";
+        nomen_ch.datum = u.m;
+        nomen_ch.mensura = V;
+
+        genus = arbor2_expansion_lookahead_genus(exp, nomen_ch);
+        CREDO_AEQUALIS_I32((i32)genus, (i32)ARBOR2_LEXEMA_INT);
+    }
+
+
+    /* ========================================================
+     * PROBARE: Lookahead genus - unknown macro returns ERROR
+     * ======================================================== */
+
+    {
+        Arbor2Expansion* exp;
+        Arbor2LexemaGenus genus;
+        chorda nomen_ch;
+        unio { constans character* c; i8* m; } u;
+
+        imprimere("\n--- Probans lookahead genus unknown macro ---\n");
+
+        exp = arbor2_expansion_creare(piscina, intern);
+
+        u.c = "NONEXISTENT";
+        nomen_ch.datum = u.m;
+        nomen_ch.mensura = XI;
+
+        genus = arbor2_expansion_lookahead_genus(exp, nomen_ch);
+        CREDO_AEQUALIS_I32((i32)genus, (i32)ARBOR2_LEXEMA_ERROR);
+    }
+
+
+    /* ========================================================
+     * PROBARE: Lookahead genus - empty macro returns EOF
+     * ======================================================== */
+
+    {
+        Arbor2Expansion* exp;
+        Arbor2LexemaGenus genus;
+        chorda nomen_ch;
+        unio { constans character* c; i8* m; } u;
+
+        imprimere("\n--- Probans lookahead genus empty macro ---\n");
+
+        exp = arbor2_expansion_creare(piscina, intern);
+        arbor2_expansion_addere_macro(exp, "VACUUM", "", NIHIL);
+
+        u.c = "VACUUM";
+        nomen_ch.datum = u.m;
+        nomen_ch.mensura = VI;
+
+        genus = arbor2_expansion_lookahead_genus(exp, nomen_ch);
+        CREDO_AEQUALIS_I32((i32)genus, (i32)ARBOR2_LEXEMA_EOF);
+    }
+
+
+    /* ========================================================
+     * PROBARE: Lookahead extended - macro expanding to macro
+     * ======================================================== */
+
+    {
+        Arbor2Expansion* exp;
+        Arbor2ExpansionLookahead lookahead;
+        chorda nomen_ch;
+        unio { constans character* c; i8* m; } u;
+
+        imprimere("\n--- Probans lookahead extended recursive macro ---\n");
+
+        exp = arbor2_expansion_creare(piscina, intern);
+        arbor2_expansion_addere_macro(exp, "INNER", "42", NIHIL);
+        arbor2_expansion_addere_macro(exp, "OUTER", "INNER", NIHIL);
+
+        u.c = "OUTER";
+        nomen_ch.datum = u.m;
+        nomen_ch.mensura = V;
+
+        lookahead = arbor2_expansion_lookahead(exp, nomen_ch);
+
+        /* Primus token est INNER identificator */
+        CREDO_AEQUALIS_I32((i32)lookahead.genus, (i32)ARBOR2_LEXEMA_IDENTIFICATOR);
+        /* INNER est macro, ergo est_recursivum debet esse VERUM */
+        CREDO_AEQUALIS_I32((i32)lookahead.est_recursivum, (i32)VERUM);
+        CREDO_AEQUALIS_I32((i32)lookahead.est_vacuum, (i32)FALSUM);
+    }
+
+
+    /* ========================================================
+     * PROBARE: Lookahead extended - empty macro est_vacuum
+     * ======================================================== */
+
+    {
+        Arbor2Expansion* exp;
+        Arbor2ExpansionLookahead lookahead;
+        chorda nomen_ch;
+        unio { constans character* c; i8* m; } u;
+
+        imprimere("\n--- Probans lookahead extended empty macro est_vacuum ---\n");
+
+        exp = arbor2_expansion_creare(piscina, intern);
+        arbor2_expansion_addere_macro(exp, "EMPTY", "", NIHIL);
+
+        u.c = "EMPTY";
+        nomen_ch.datum = u.m;
+        nomen_ch.mensura = V;
+
+        lookahead = arbor2_expansion_lookahead(exp, nomen_ch);
+
+        CREDO_AEQUALIS_I32((i32)lookahead.genus, (i32)ARBOR2_LEXEMA_EOF);
+        CREDO_AEQUALIS_I32((i32)lookahead.est_vacuum, (i32)VERUM);
+        CREDO_AEQUALIS_I32((i32)lookahead.est_recursivum, (i32)FALSUM);
+    }
+
+
+    /* ========================================================
+     * PROBARE: Lookahead extended - non-recursive identifier
+     * ======================================================== */
+
+    {
+        Arbor2Expansion* exp;
+        Arbor2ExpansionLookahead lookahead;
+        chorda nomen_ch;
+        unio { constans character* c; i8* m; } u;
+
+        imprimere("\n--- Probans lookahead extended non-recursive identifier ---\n");
+
+        exp = arbor2_expansion_creare(piscina, intern);
+        /* Macro expandit ad identificator qui NON est macro */
+        arbor2_expansion_addere_macro(exp, "ALIAS", "foo", NIHIL);
+
+        u.c = "ALIAS";
+        nomen_ch.datum = u.m;
+        nomen_ch.mensura = V;
+
+        lookahead = arbor2_expansion_lookahead(exp, nomen_ch);
+
+        /* foo est identificator sed non macro */
+        CREDO_AEQUALIS_I32((i32)lookahead.genus, (i32)ARBOR2_LEXEMA_IDENTIFICATOR);
+        CREDO_AEQUALIS_I32((i32)lookahead.est_recursivum, (i32)FALSUM);
+        CREDO_AEQUALIS_I32((i32)lookahead.est_vacuum, (i32)FALSUM);
+    }
+
+
+    /* ========================================================
+     * PROBARE: Lookahead genus - integer literal
+     * ======================================================== */
+
+    {
+        Arbor2Expansion* exp;
+        Arbor2LexemaGenus genus;
+        chorda nomen_ch;
+        unio { constans character* c; i8* m; } u;
+
+        imprimere("\n--- Probans lookahead genus integer literal ---\n");
+
+        exp = arbor2_expansion_creare(piscina, intern);
+        arbor2_expansion_addere_macro(exp, "NUMERUS", "42", NIHIL);
+
+        u.c = "NUMERUS";
+        nomen_ch.datum = u.m;
+        nomen_ch.mensura = VII;
+
+        genus = arbor2_expansion_lookahead_genus(exp, nomen_ch);
+        CREDO_AEQUALIS_I32((i32)genus, (i32)ARBOR2_LEXEMA_INTEGER);
+    }
+
+
     /* Compendium */
     imprimere("\n");
     credo_imprimere_compendium();

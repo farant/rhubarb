@@ -996,11 +996,12 @@ _potest_esse_typus(Arbor2GLR* glr, Arbor2Token* tok)
     redde FALSUM;
 }
 
-/* Check if a macro might expand to a type */
+/* Check if a macro might expand to a type.
+ * Uses the public lookahead API and follows one level of macro recursion. */
 interior b32
 _macro_suggerit_typum(Arbor2GLR* glr, Arbor2Token* tok)
 {
-    Arbor2MacroDef* macro;
+    Arbor2ExpansionLookahead lookahead;
 
     si (tok == NIHIL || glr->expansion == NIHIL)
     {
@@ -1012,40 +1013,49 @@ _macro_suggerit_typum(Arbor2GLR* glr, Arbor2Token* tok)
         redde FALSUM;
     }
 
-    macro = arbor2_expansion_quaerere_macro(glr->expansion, tok->lexema->valor);
-    si (macro == NIHIL)
+    lookahead = arbor2_expansion_lookahead(glr->expansion, tok->lexema->valor);
+
+    /* Unknown macro or empty body */
+    si (lookahead.genus == ARBOR2_LEXEMA_ERROR || lookahead.est_vacuum)
     {
         redde FALSUM;
     }
 
-    /* Check first token of expansion for type keyword */
-    si (xar_numerus(macro->corpus) > ZEPHYRUM)
+    /* Recursive macro - follow one level (e.g., integer -> int) */
+    si (lookahead.est_recursivum)
     {
-        Arbor2Lexema* primus;
-        primus = *(Arbor2Lexema**)xar_obtinere(macro->corpus, ZEPHYRUM);
-
-        /* Check for type keywords: int, char, void, etc. */
-        commutatio (primus->genus)
+        Arbor2MacroDef* def;
+        def = arbor2_expansion_quaerere_macro(glr->expansion, tok->lexema->valor);
+        si (def != NIHIL && xar_numerus(def->corpus) > ZEPHYRUM)
         {
-            casus ARBOR2_LEXEMA_INT:
-            casus ARBOR2_LEXEMA_CHAR:
-            casus ARBOR2_LEXEMA_VOID:
-            casus ARBOR2_LEXEMA_FLOAT:
-            casus ARBOR2_LEXEMA_DOUBLE:
-            casus ARBOR2_LEXEMA_LONG:
-            casus ARBOR2_LEXEMA_SHORT:
-            casus ARBOR2_LEXEMA_SIGNED:
-            casus ARBOR2_LEXEMA_UNSIGNED:
-            casus ARBOR2_LEXEMA_STRUCT:
-            casus ARBOR2_LEXEMA_UNION:
-            casus ARBOR2_LEXEMA_ENUM:
-                redde VERUM;
-            ordinarius:
-                frange;
+            Arbor2Lexema* primus;
+            primus = *(Arbor2Lexema**)xar_obtinere(def->corpus, ZEPHYRUM);
+            lookahead = arbor2_expansion_lookahead(glr->expansion, primus->valor);
         }
     }
 
-    redde FALSUM;
+    /* Check if genus is a type keyword */
+    commutatio (lookahead.genus)
+    {
+        casus ARBOR2_LEXEMA_INT:
+        casus ARBOR2_LEXEMA_CHAR:
+        casus ARBOR2_LEXEMA_VOID:
+        casus ARBOR2_LEXEMA_FLOAT:
+        casus ARBOR2_LEXEMA_DOUBLE:
+        casus ARBOR2_LEXEMA_LONG:
+        casus ARBOR2_LEXEMA_SHORT:
+        casus ARBOR2_LEXEMA_SIGNED:
+        casus ARBOR2_LEXEMA_UNSIGNED:
+        casus ARBOR2_LEXEMA_STRUCT:
+        casus ARBOR2_LEXEMA_UNION:
+        casus ARBOR2_LEXEMA_ENUM:
+        casus ARBOR2_LEXEMA_TYPEDEF:
+        casus ARBOR2_LEXEMA_CONST:
+        casus ARBOR2_LEXEMA_VOLATILE:
+            redde VERUM;
+        ordinarius:
+            redde FALSUM;
+    }
 }
 
 /* Check if an identifier is likely a type (typedef or type-suggesting macro) */
@@ -1091,7 +1101,19 @@ _creare_nodum_ambiguum(
     nodus->genus = ARBOR2_NODUS_AMBIGUUS;
     nodus->lexema = lexema;
     nodus->datum.ambiguus.genus = ARBOR2_AMBIG_TYPEDEF_IGNOTUM;
-    nodus->datum.ambiguus.identificator = NIHIL;
+
+    /* Set identificator if lexema is an identifier - enables later resolution */
+    si (lexema != NIHIL && lexema->lexema != NIHIL &&
+        lexema->lexema->genus == ARBOR2_LEXEMA_IDENTIFICATOR)
+    {
+        nodus->datum.ambiguus.identificator = piscina_allocare(glr->piscina, magnitudo(chorda));
+        *(nodus->datum.ambiguus.identificator) = lexema->lexema->valor;
+    }
+    alioquin
+    {
+        nodus->datum.ambiguus.identificator = NIHIL;
+    }
+
     nodus->datum.ambiguus.interpretationes = xar_creare(glr->piscina, magnitudo(Arbor2Nodus*));
 
     slot = xar_addere(nodus->datum.ambiguus.interpretationes);

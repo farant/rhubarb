@@ -381,6 +381,78 @@ arbor2_expansion_quaerere_typedef(
 }
 
 /* ==================================================
+ * Macro Lookahead
+ *
+ * Inspect what a macro would expand to without full expansion.
+ * ================================================== */
+
+Arbor2LexemaGenus
+arbor2_expansion_lookahead_genus(
+    Arbor2Expansion*        exp,
+    chorda                  nomen_macro)
+{
+    Arbor2MacroDef* def;
+    Arbor2Lexema* primus;
+
+    def = arbor2_expansion_quaerere_macro(exp, nomen_macro);
+    si (def == NIHIL)
+    {
+        redde ARBOR2_LEXEMA_ERROR;
+    }
+
+    si (xar_numerus(def->corpus) == ZEPHYRUM)
+    {
+        redde ARBOR2_LEXEMA_EOF;
+    }
+
+    primus = *(Arbor2Lexema**)xar_obtinere(def->corpus, ZEPHYRUM);
+    redde primus->genus;
+}
+
+Arbor2ExpansionLookahead
+arbor2_expansion_lookahead(
+    Arbor2Expansion*        exp,
+    chorda                  nomen_macro)
+{
+    Arbor2ExpansionLookahead result;
+    Arbor2MacroDef* def;
+    Arbor2Lexema* primus;
+
+    result.est_recursivum = FALSUM;
+    result.est_vacuum = FALSUM;
+
+    def = arbor2_expansion_quaerere_macro(exp, nomen_macro);
+    si (def == NIHIL)
+    {
+        result.genus = ARBOR2_LEXEMA_ERROR;
+        redde result;
+    }
+
+    si (xar_numerus(def->corpus) == ZEPHYRUM)
+    {
+        result.genus = ARBOR2_LEXEMA_EOF;
+        result.est_vacuum = VERUM;
+        redde result;
+    }
+
+    primus = *(Arbor2Lexema**)xar_obtinere(def->corpus, ZEPHYRUM);
+    result.genus = primus->genus;
+
+    /* Verificare si primus token est alius macro */
+    si (primus->genus == ARBOR2_LEXEMA_IDENTIFICATOR)
+    {
+        Arbor2MacroDef* proximus;
+        proximus = arbor2_expansion_quaerere_macro(exp, primus->valor);
+        si (proximus != NIHIL)
+        {
+            result.est_recursivum = VERUM;
+        }
+    }
+
+    redde result;
+}
+
+/* ==================================================
  * Segment Management
  * ================================================== */
 
@@ -1744,4 +1816,77 @@ Xar*
 arbor2_expansion_obtinere_layers(Arbor2Expansion* exp)
 {
     redde exp->layers;
+}
+
+/* ==================================================
+ * Built-in Latin C89 Macros (latina.h)
+ *
+ * Registers all macros from latina.h for Latin C89 parsing.
+ * ================================================== */
+
+hic_manens constans structura {
+    constans character* titulus;
+    constans character* valor;
+} LATINA_MACROS[] = {
+    /* Keywords */
+    { "si", "if" },
+    { "alioquin", "else" },
+    { "per", "for" },
+    { "dum", "while" },
+    { "fac", "do" },
+    { "commutatio", "switch" },
+    { "casus", "case" },
+    { "ordinarius", "default" },
+    { "frange", "break" },
+    { "perge", "continue" },
+    { "redde", "return" },
+    { "salta", "goto" },
+    /* Type keywords - note: "nomen" itself is a macro so we write the string directly */
+    { "structura", "struct" },
+    { "unio", "union" },
+    { "enumeratio", "enum" },
+    { "nomen", "typedef" },
+    /* Qualifiers */
+    { "constans", "const" },
+    { "volatilis", "volatile" },
+    { "staticus", "static" },
+    { "externus", "extern" },
+    { "registrum", "register" },
+    { "sponte", "auto" },
+    /* Types */
+    { "vacuum", "void" },
+    { "character", "char" },
+    { "integer", "int" },
+    { "brevis", "short" },
+    { "longus", "long" },
+    { "signatus", "signed" },
+    { "insignatus", "unsigned" },
+    { "fluitans", "float" },
+    { "duplex", "double" },
+    /* Operators */
+    { "magnitudo", "sizeof" },
+    /* Constants */
+    { "NIHIL", "NULL" },
+    { "VERUM", "1" },
+    { "FALSUM", "0" },
+    /* Storage hints (all map to static) */
+    { "hic_manens", "static" },
+    { "interior", "static" },
+    { "universalis", "static" },
+    /* Sentinel */
+    { NIHIL, NIHIL }
+};
+
+vacuum
+arbor2_includere_latina(Arbor2Expansion* exp)
+{
+    i32 i;
+
+    per (i = ZEPHYRUM; LATINA_MACROS[i].titulus != NIHIL; i++)
+    {
+        arbor2_expansion_addere_macro(exp,
+            LATINA_MACROS[i].titulus,
+            LATINA_MACROS[i].valor,
+            "latina.h");
+    }
 }

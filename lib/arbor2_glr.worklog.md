@@ -2166,3 +2166,61 @@ Arbor2GLRResultus arbor2_glr_parsere_translation_unit(
 - 1523 tests (up from 1491, +32 new)
 - 611 states unchanged
 - 252 productions unchanged
+
+## 2026-01-17 - GLR-Expansion Integration (Phase 3.2/3.3)
+
+### 3.2a: Replaced `_macro_suggerit_typum()` with Public API
+
+**Old implementation** (lines 1001-1048): Manual macro lookup with direct corpus access.
+
+**New implementation** (lines 999-1059): Uses `arbor2_expansion_lookahead()` public API.
+
+Key improvements:
+1. Uses tested public API instead of duplicating logic
+2. Follows one level of macro recursion (e.g., `i32` → `integer` → `int`)
+3. Added `ARBOR2_LEXEMA_TYPEDEF`, `ARBOR2_LEXEMA_CONST`, `ARBOR2_LEXEMA_VOLATILE` to type keywords
+
+```c
+/* Old: manual lookup */
+macro = arbor2_expansion_quaerere_macro(glr->expansion, tok->lexema->valor);
+si (macro == NIHIL) redde FALSUM;
+si (xar_numerus(macro->corpus) > ZEPHYRUM) { ... }
+
+/* New: uses public API with recursion support */
+lookahead = arbor2_expansion_lookahead(glr->expansion, tok->lexema->valor);
+si (lookahead.est_recursivum) {
+    /* Follow one level */
+    def = arbor2_expansion_quaerere_macro(...);
+    primus = *(Arbor2Lexema**)xar_obtinere(def->corpus, ZEPHYRUM);
+    lookahead = arbor2_expansion_lookahead(glr->expansion, primus->valor);
+}
+```
+
+### 3.3: AMBIGUUS Identifier Tracking
+
+**Location:** `_creare_nodum_ambiguum()` lines 1105-1115
+
+**Before:** `identificator` was always set to `NIHIL`.
+
+**After:** When `lexema` is an identifier, allocates and stores the identifier causing ambiguity:
+
+```c
+si (lexema != NIHIL && lexema->lexema != NIHIL &&
+    lexema->lexema->genus == ARBOR2_LEXEMA_IDENTIFICATOR)
+{
+    nodus->datum.ambiguus.identificator = piscina_allocare(glr->piscina, magnitudo(chorda));
+    *(nodus->datum.ambiguus.identificator) = lexema->lexema->valor;
+}
+```
+
+This enables future resolution by looking up the identifier that caused the ambiguity.
+
+### Test Coverage
+
+Added 3 new test sections to `probatio_arbor2_glr.c`:
+1. Latin type macro disambiguation: `integer x` → DECLARATIO
+2. Nested macro resolution: `i32 x` (i32→integer→int) → DECLARATIO  
+3. AMBIGUUS tracking: `foo * bar` creates AMBIGUUS node with 2+ interpretations
+
+Tests: 1856 (up from 1847, +9 new assertions)
+

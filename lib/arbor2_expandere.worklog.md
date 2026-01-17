@@ -56,3 +56,33 @@ Updated tests from 69 to 92 assertions with proper verification of:
 - Stringification via #define (checks STRING_LIT result)
 - Token pasting via #define (checks pasted identifier)
 - Variadic macros (checks each substituted arg and comma)
+
+## 2026-01-17 - Built-in Latina.h Registration (Phase 3.4)
+
+Added `arbor2_includere_latina()` function to register all latina.h macros for Latin C89 parsing.
+
+### Implementation
+
+- Static table `LATINA_MACROS[]` at lines 1827-1878 contains all latin→C mappings
+- Note: Had to use `titulus` instead of `nomen` for struct field name (since `nomen` is itself a macro that expands to `typedef`)
+- Categories: keywords, type keywords, qualifiers, types, operators, constants, storage hints
+
+### Macros registered
+
+| Latin | C | Category |
+|-------|---|----------|
+| si, alioquin, per, dum, fac, commutatio, casus, ordinarius, frange, perge, redde, salta | if, else, for, while, do, switch, case, default, break, continue, return, goto | Keywords |
+| structura, unio, enumeratio, nomen | struct, union, enum, typedef | Type keywords |
+| constans, volatilis, staticus, externus, registrum, sponte | const, volatile, static, extern, register, auto | Qualifiers |
+| vacuum, character, integer, brevis, longus, signatus, insignatus, fluitans, duplex | void, char, int, short, long, signed, unsigned, float, double | Types |
+| magnitudo | sizeof | Operators |
+| NIHIL, VERUM, FALSUM | NULL, 1, 0 | Constants |
+| hic_manens, interior, universalis | static | Storage hints |
+
+### Usage
+
+```c
+Arbor2Expansion* exp = arbor2_expansion_creare(piscina, intern);
+arbor2_includere_latina(exp);
+/* Now "integer x" parses as declaration because integer→int */
+```

@@ -193,4 +193,38 @@ Arbor2TypedefInfo* arbor2_expansion_quaerere_typedef(
     Arbor2Expansion*        exp,
     chorda                  titulus);
 
+/* ==================================================
+ * API - Macro Lookahead
+ *
+ * Inspect what a macro would expand to without full expansion.
+ * Used by GLR parser for disambiguation decisions.
+ * ================================================== */
+
+nomen structura {
+    Arbor2LexemaGenus   genus;          /* First token's genus */
+    b32                 est_recursivum; /* First token is another macro */
+    b32                 est_vacuum;     /* Empty body */
+} Arbor2ExpansionLookahead;
+
+/* Simple lookahead: returns first token's genus,
+ * or ARBOR2_LEXEMA_ERROR if unknown macro */
+Arbor2LexemaGenus arbor2_expansion_lookahead_genus(
+    Arbor2Expansion*        exp,
+    chorda                  nomen_macro);
+
+/* Extended lookahead with additional metadata */
+Arbor2ExpansionLookahead arbor2_expansion_lookahead(
+    Arbor2Expansion*        exp,
+    chorda                  nomen_macro);
+
+/* ==================================================
+ * API - Built-in Latin C89 Macros
+ * ================================================== */
+
+/* Register all macros from latina.h for Latin C89 parsing.
+ * This includes type mappings (integer->int), keywords (si->if),
+ * qualifiers (constans->const), and storage specifiers (interior->static).
+ */
+vacuum arbor2_includere_latina(Arbor2Expansion* exp);
+
 #endif /* ARBOR2_EXPANDERE_H */
