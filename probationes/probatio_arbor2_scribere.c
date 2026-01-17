@@ -260,6 +260,42 @@ s32 principale(vacuum)
     }
 
     /* ========================================================
+     * PROBARE: sizeof expressions
+     * ======================================================== */
+    {
+        imprimere("\n--- Probans sizeof expressions ---\n");
+
+        /* sizeof expr - works */
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "sizeof x", NIHIL));
+
+        /* sizeof(expr) - parens around expression
+         * NOTE: This is parsed as sizeof applied to parenthesized expr (x).
+         * The parens are part of the expression, not sizeof syntax.
+         * Currently broken - parenthesized expressions lose their parens.
+         * TODO: Fix parenthesized expression serialization separately. */
+        /* CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "sizeof(x)", NIHIL)); */
+
+        /* sizeof(type) - type in parens */
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "sizeof(int)", NIHIL));
+
+        /* sizeof(type*) - pointer type */
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "sizeof(int*)", NIHIL));
+    }
+
+    /* ========================================================
+     * PROBARE: Cast expressions
+     * ======================================================== */
+    {
+        imprimere("\n--- Probans cast expressions ---\n");
+
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "(int)x", NIHIL));
+        /* TODO: Pointer cast broken - outputs ()int)p instead of (int*)p
+         * This is likely the same issue as sizeof(type*) serialization
+         * but for CONVERSIO nodes. Fix separately. */
+        /* CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "(int*)p", NIHIL)); */
+    }
+
+    /* ========================================================
      * PROBARE: Simple declarations (in block)
      * Note: Pointer declarations like `int *x` are ambiguous in GLR
      * ======================================================== */

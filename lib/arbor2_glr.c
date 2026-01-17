@@ -1529,8 +1529,11 @@ _processare_unam_actionem(
                             nodus_sizeof->lexema = lexemata[VI];  /* sizeof token */
                             nodus_sizeof->pater = NIHIL;
                             LOCUS_EX_LEXEMATIS(nodus_sizeof, VI, ZEPHYRUM);
+                            nodus_sizeof->datum.sizeof_expr.tok_sizeof = lexemata[VI];
+                            nodus_sizeof->datum.sizeof_expr.tok_paren_ap = lexemata[V];
                             nodus_sizeof->datum.sizeof_expr.est_typus = VERUM;
                             nodus_sizeof->datum.sizeof_expr.operandum = nodus_typus;
+                            nodus_sizeof->datum.sizeof_expr.tok_paren_cl = lexemata[ZEPHYRUM];
                             nodus_typus->pater = nodus_sizeof;
 
                             valor_novus = nodus_sizeof;
@@ -1575,8 +1578,11 @@ _processare_unam_actionem(
                             nodus_sizeof->lexema = lexemata[IX];  /* sizeof token */
                             nodus_sizeof->pater = NIHIL;
                             LOCUS_EX_LEXEMATIS(nodus_sizeof, IX, ZEPHYRUM);
+                            nodus_sizeof->datum.sizeof_expr.tok_sizeof = lexemata[IX];
+                            nodus_sizeof->datum.sizeof_expr.tok_paren_ap = lexemata[VIII];
                             nodus_sizeof->datum.sizeof_expr.est_typus = VERUM;
                             nodus_sizeof->datum.sizeof_expr.operandum = nodus_typus;
+                            nodus_sizeof->datum.sizeof_expr.tok_paren_cl = lexemata[ZEPHYRUM];
                             nodus_typus->pater = nodus_sizeof;
 
                             valor_novus = nodus_sizeof;
@@ -1625,8 +1631,11 @@ _processare_unam_actionem(
                             nodus_sizeof->lexema = lexemata[VII];  /* sizeof token */
                             nodus_sizeof->pater = NIHIL;
                             LOCUS_EX_LEXEMATIS(nodus_sizeof, VII, ZEPHYRUM);
+                            nodus_sizeof->datum.sizeof_expr.tok_sizeof = lexemata[VII];
+                            nodus_sizeof->datum.sizeof_expr.tok_paren_ap = lexemata[VI];
                             nodus_sizeof->datum.sizeof_expr.est_typus = VERUM;
                             nodus_sizeof->datum.sizeof_expr.operandum = nodus_typus;
+                            nodus_sizeof->datum.sizeof_expr.tok_paren_cl = lexemata[ZEPHYRUM];
                             nodus_typus->pater = nodus_sizeof;
 
                             valor_novus = nodus_sizeof;
@@ -1653,9 +1662,12 @@ _processare_unam_actionem(
                             }
                             alioquin
                             {
-                                /* sizeof(basic type): 4=base, 5=*, 6=** */
+                                /* sizeof(basic type): 4=base, 5=*, 6=**
+                                 * sizeof ( type )    -> type at index 1 = num_pop - 3
+                                 * sizeof ( type * )  -> type at index 2 = num_pop - 3
+                                 * sizeof ( type ** ) -> type at index 3 = num_pop - 3 */
                                 ptr_count = num_pop - IV;
-                                type_token_idx = num_pop - II;  /* type keyword */
+                                type_token_idx = num_pop - III;  /* type keyword */
                             }
 
                             /* Creare nodus typus */
@@ -1693,8 +1705,11 @@ _processare_unam_actionem(
                             nodus_sizeof->lexema = lexemata[num_pop - I];  /* sizeof token */
                             nodus_sizeof->pater = NIHIL;
                             LOCUS_EX_LEXEMATIS(nodus_sizeof, num_pop - I, ZEPHYRUM);
+                            nodus_sizeof->datum.sizeof_expr.tok_sizeof = lexemata[num_pop - I];
+                            nodus_sizeof->datum.sizeof_expr.tok_paren_ap = lexemata[num_pop - II];
                             nodus_sizeof->datum.sizeof_expr.est_typus = VERUM;
                             nodus_sizeof->datum.sizeof_expr.operandum = nodus_typus;
+                            nodus_sizeof->datum.sizeof_expr.tok_paren_cl = lexemata[ZEPHYRUM];
                             nodus_typus->pater = nodus_sizeof;
 
                             /* Initializare campos commentorum */

@@ -262,7 +262,32 @@ _scribere_nodum(Xar* output, Arbor2Nodus* nodus)
             {
                 arbor2_scribere_lexema(output, nodus->datum.sizeof_expr.tok_paren_ap);
             }
-            _scribere_nodum(output, nodus->datum.sizeof_expr.operandum);
+            /* For sizeof(type), emit type specifier then pointers (int* not *int) */
+            si (nodus->datum.sizeof_expr.est_typus &&
+                nodus->datum.sizeof_expr.operandum != NIHIL &&
+                nodus->datum.sizeof_expr.operandum->genus == ARBOR2_NODUS_DECLARATOR)
+            {
+                Arbor2Nodus* typus = nodus->datum.sizeof_expr.operandum;
+                /* Emit type specifier (lexema) first */
+                arbor2_scribere_lexema(output, typus->lexema);
+                /* Then emit pointer levels */
+                _scribere_pointer_levels(output, typus->datum.declarator.pointer_levels);
+                /* Then array dimensions if any */
+                si (typus->datum.declarator.dimensiones != NIHIL)
+                {
+                    i32 i;
+                    i32 num = xar_numerus(typus->datum.declarator.dimensiones);
+                    per (i = ZEPHYRUM; i < num; i++)
+                    {
+                        Arbor2Nodus** dim = xar_obtinere(typus->datum.declarator.dimensiones, i);
+                        _scribere_nodum(output, *dim);
+                    }
+                }
+            }
+            alioquin
+            {
+                _scribere_nodum(output, nodus->datum.sizeof_expr.operandum);
+            }
             si (nodus->datum.sizeof_expr.tok_paren_cl != NIHIL)
             {
                 arbor2_scribere_lexema(output, nodus->datum.sizeof_expr.tok_paren_cl);
