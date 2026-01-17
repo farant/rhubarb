@@ -218,11 +218,14 @@ nomen structura Arbor2CondRamus Arbor2CondRamus;
 structura Arbor2Nodus;
 
 structura Arbor2CondRamus {
-    Arbor2DirectivumGenus   genus;          /* IFDEF, IFNDEF, ELSE, ELIF */
-    chorda*                 conditio;       /* Macro name or condition expr */
-    Xar*                    lexemata;       /* Tokens in this branch (Xar of Arbor2Token*) */
-    structura Arbor2Nodus*  parsed;         /* Parsed AST for branch (or NIHIL) */
-    i32                     linea;          /* Line of directive */
+    Arbor2DirectivumGenus   genus;              /* IFDEF, IFNDEF, ELSE, ELIF, IF */
+    chorda*                 conditio;           /* Macro name (ifdef/ifndef) */
+    Xar*                    expressio_lexemata; /* Expression tokens (#if/#elif) - Xar of Arbor2Token* */
+    i64                     valor_evaluatus;    /* Evaluated value (0=false, nonzero=true) */
+    b32                     est_evaluatum;      /* VERUM if evaluation succeeded */
+    Xar*                    lexemata;           /* Tokens in this branch (Xar of Arbor2Token*) */
+    structura Arbor2Nodus*  parsed;             /* Parsed AST for branch (or NIHIL) */
+    i32                     linea;              /* Line of directive */
 };
 
 /* ==================================================

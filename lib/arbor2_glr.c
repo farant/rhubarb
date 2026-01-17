@@ -1,6 +1,7 @@
 /* arbor2_glr.c - GLR Parser Core */
 #include "latina.h"
 #include "arbor2_glr.h"
+#include "arbor2_conditio_evaluare.h"
 #include "piscina.h"
 #include "xar.h"
 #include <string.h>
@@ -5281,8 +5282,99 @@ _obtinere_conditio(Arbor2GLR* glr, Xar* lexemata, i32 positus, Arbor2DirectivumG
         }
     }
 
-    /* For #if/#elif, we'd need to collect the entire expression (Phase 5b) */
+    /* For #if/#elif, conditio is NIHIL (expression tokens are collected separately) */
     redde NIHIL;
+}
+
+/* Collect expression tokens for #if/#elif directives (Phase 5b) */
+interior Xar*
+_obtinere_expressio_lexemata(Arbor2GLR* glr, Xar* lexemata, i32 positus)
+{
+    Xar* expressio;
+    i32 pos;
+    i32 num;
+
+    expressio = xar_creare(glr->piscina, magnitudo(Arbor2Token*));
+    pos = positus + II;  /* Skip # and if/elif */
+    num = xar_numerus(lexemata);
+
+    /* Collect until end of line */
+    dum (pos < num)
+    {
+        Arbor2Token* tok;
+        Arbor2Token** slot;
+        b32 found_newline;
+
+        tok = *(Arbor2Token**)xar_obtinere(lexemata, pos);
+
+        /* Check for newline in trailing trivia */
+        found_newline = FALSUM;
+        si (tok->lexema->spatia_post != NIHIL)
+        {
+            i32 j;
+            i32 num_spatia;
+
+            num_spatia = xar_numerus(tok->lexema->spatia_post);
+            per (j = ZEPHYRUM; j < num_spatia; j++)
+            {
+                Arbor2Lexema* spatium;
+                spatium = *(Arbor2Lexema**)xar_obtinere(tok->lexema->spatia_post, j);
+                si (spatium->genus == ARBOR2_LEXEMA_NOVA_LINEA ||
+                    spatium->genus == ARBOR2_LEXEMA_CONTINUATIO)
+                {
+                    /* Still add this token, newline follows */
+                    slot = xar_addere(expressio);
+                    *slot = tok;
+                    found_newline = VERUM;
+                    frange;
+                }
+            }
+        }
+
+        si (found_newline)
+        {
+            frange;
+        }
+
+        /* Check for newline in leading trivia of next token */
+        si (pos + I < num)
+        {
+            Arbor2Token* next_tok;
+            next_tok = *(Arbor2Token**)xar_obtinere(lexemata, pos + I);
+            si (next_tok->lexema->spatia_ante != NIHIL)
+            {
+                i32 j;
+                i32 num_spatia;
+
+                num_spatia = xar_numerus(next_tok->lexema->spatia_ante);
+                per (j = ZEPHYRUM; j < num_spatia; j++)
+                {
+                    Arbor2Lexema* spatium;
+                    spatium = *(Arbor2Lexema**)xar_obtinere(next_tok->lexema->spatia_ante, j);
+                    si (spatium->genus == ARBOR2_LEXEMA_NOVA_LINEA)
+                    {
+                        /* Add current token, newline is before next */
+                        slot = xar_addere(expressio);
+                        *slot = tok;
+                        found_newline = VERUM;
+                        frange;
+                    }
+                }
+            }
+        }
+
+        si (found_newline)
+        {
+            frange;
+        }
+
+        /* Add token to expression */
+        slot = xar_addere(expressio);
+        *slot = tok;
+        pos++;
+    }
+
+    redde expressio;
 }
 
 /* Collect entire conditional block and create CONDITIONALIS node */
@@ -5318,9 +5410,34 @@ _colligere_conditionale(Arbor2GLR* glr, Xar* lexemata, i32* positus)
     ramus_currens = piscina_allocare(glr->piscina, magnitudo(Arbor2CondRamus));
     ramus_currens->genus = genus;
     ramus_currens->conditio = _obtinere_conditio(glr, lexemata, pos, genus);
+    ramus_currens->expressio_lexemata = NIHIL;
+    ramus_currens->valor_evaluatus = ZEPHYRUM;
+    ramus_currens->est_evaluatum = FALSUM;
     ramus_currens->lexemata = xar_creare(glr->piscina, magnitudo(Arbor2Token*));
     ramus_currens->parsed = NIHIL;
     ramus_currens->linea = tok_initium->lexema->linea;
+
+    /* For #if, collect and evaluate expression */
+    si (genus == ARBOR2_DIRECTIVUM_IF)
+    {
+        ramus_currens->expressio_lexemata = _obtinere_expressio_lexemata(glr, lexemata, pos);
+        ramus_currens->valor_evaluatus = arbor2_conditio_evaluare(
+            glr->expansion,
+            ramus_currens->expressio_lexemata,
+            &ramus_currens->est_evaluatum);
+    }
+    /* For #ifdef/#ifndef, evaluate using conditio */
+    alioquin si (genus == ARBOR2_DIRECTIVUM_IFDEF || genus == ARBOR2_DIRECTIVUM_IFNDEF)
+    {
+        si (ramus_currens->conditio != NIHIL)
+        {
+            b32 est_def;
+            est_def = arbor2_conditio_est_definitum(glr->expansion, *ramus_currens->conditio);
+            ramus_currens->valor_evaluatus = (genus == ARBOR2_DIRECTIVUM_IFDEF) ?
+                (est_def ? I : ZEPHYRUM) : (est_def ? ZEPHYRUM : I);
+            ramus_currens->est_evaluatum = VERUM;
+        }
+    }
 
     /* Skip to end of directive line */
     pos = _saltare_ad_finem_lineae(lexemata, pos);
@@ -5441,10 +5558,26 @@ _colligere_conditionale(Arbor2GLR* glr, Xar* lexemata, i32* positus)
                 ramus_currens = piscina_allocare(glr->piscina, magnitudo(Arbor2CondRamus));
                 ramus_currens->genus = genus_curr;
                 ramus_currens->conditio = NIHIL;
+                ramus_currens->expressio_lexemata = NIHIL;
+                ramus_currens->valor_evaluatus = ZEPHYRUM;
+                ramus_currens->est_evaluatum = FALSUM;
+
                 si (genus_curr == ARBOR2_DIRECTIVUM_ELIF)
                 {
-                    ramus_currens->conditio = _obtinere_conditio(glr, lexemata, pos, genus_curr);
+                    /* Collect and evaluate #elif expression */
+                    ramus_currens->expressio_lexemata = _obtinere_expressio_lexemata(glr, lexemata, pos);
+                    ramus_currens->valor_evaluatus = arbor2_conditio_evaluare(
+                        glr->expansion,
+                        ramus_currens->expressio_lexemata,
+                        &ramus_currens->est_evaluatum);
                 }
+                alioquin si (genus_curr == ARBOR2_DIRECTIVUM_ELSE)
+                {
+                    /* #else is always "true" if reached */
+                    ramus_currens->valor_evaluatus = I;
+                    ramus_currens->est_evaluatum = VERUM;
+                }
+
                 ramus_currens->lexemata = xar_creare(glr->piscina, magnitudo(Arbor2Token*));
                 ramus_currens->parsed = NIHIL;
                 ramus_currens->linea = tok_curr->lexema->linea;
