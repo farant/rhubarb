@@ -179,7 +179,8 @@ nomen enumeratio {
     ARBOR2_NODUS_AMBIGUUS,          /* Ambiguous node */
     ARBOR2_NODUS_ERROR,
     ARBOR2_NODUS_TRANSLATION_UNIT,  /* Translation unit (list of external declarations) */
-    ARBOR2_NODUS_COMMENTUM          /* Comment node (promoted from trivia) */
+    ARBOR2_NODUS_COMMENTUM,         /* Comment node (promoted from trivia) */
+    ARBOR2_NODUS_CONDITIONALIS      /* Conditional compilation (#ifdef/#ifndef/#else/#endif) */
 } Arbor2NodusGenus;
 
 /* ==================================================
@@ -191,6 +192,38 @@ nomen enumeratio {
     ARBOR2_COMMENTUM_LINEA,         /* Line comment (C99 slash-slash) */
     ARBOR2_COMMENTUM_DOC            /* Doc comment (future) */
 } Arbor2CommentumGenus;
+
+/* ==================================================
+ * Conditional Directive Type
+ * ================================================== */
+
+nomen enumeratio {
+    ARBOR2_DIRECTIVUM_IFDEF,        /* #ifdef MACRO */
+    ARBOR2_DIRECTIVUM_IFNDEF,       /* #ifndef MACRO */
+    ARBOR2_DIRECTIVUM_IF,           /* #if EXPR (Phase 5b) */
+    ARBOR2_DIRECTIVUM_ELIF,         /* #elif EXPR (Phase 5b) */
+    ARBOR2_DIRECTIVUM_ELSE,         /* #else */
+    ARBOR2_DIRECTIVUM_ENDIF         /* #endif */
+} Arbor2DirectivumGenus;
+
+/* ==================================================
+ * Conditional Branch (for CONDITIONALIS node)
+ *
+ * Represents one branch of a conditional (#ifdef, #else, etc.)
+ * ================================================== */
+
+nomen structura Arbor2CondRamus Arbor2CondRamus;
+
+/* Forward declaration - defined below in AST Node section */
+structura Arbor2Nodus;
+
+structura Arbor2CondRamus {
+    Arbor2DirectivumGenus   genus;          /* IFDEF, IFNDEF, ELSE, ELIF */
+    chorda*                 conditio;       /* Macro name or condition expr */
+    Xar*                    lexemata;       /* Tokens in this branch (Xar of Arbor2Token*) */
+    structura Arbor2Nodus*  parsed;         /* Parsed AST for branch (or NIHIL) */
+    i32                     linea;          /* Line of directive */
+};
 
 /* ==================================================
  * AST Node
@@ -528,6 +561,13 @@ structura Arbor2Nodus {
             Xar*                    spatia_ante;    /* Leading whitespace (Xar of Arbor2Lexema*) */
             Xar*                    spatia_post;    /* Trailing whitespace (Xar of Arbor2Lexema*) */
         } commentum;
+
+        /* CONDITIONALIS (conditional compilation) */
+        structura {
+            Xar*                    rami;           /* Xar of Arbor2CondRamus* */
+            i32                     linea_if;       /* Line of opening #if/#ifdef */
+            i32                     linea_endif;    /* Line of closing #endif */
+        } conditionalis;
     } datum;
 };
 

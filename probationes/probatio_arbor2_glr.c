@@ -13095,6 +13095,300 @@ s32 principale(vacuum)
     }
 
 
+    /* ========================================================
+     * PROBARE: Conditional Compilation (Phase 5)
+     * ======================================================== */
+
+    /* Test 1: Simple #ifdef/#endif */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+        Arbor2Nodus* tu;
+        i32 num_decls;
+
+        imprimere("\n--- Probans simple #ifdef/#endif ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern,
+            "#ifdef DEBUG\n"
+            "int debug_level = 1;\n"
+            "#endif\n"
+            "int x = 5;");
+        res = arbor2_glr_parsere_translation_unit(glr, tokens);
+
+        imprimere("  successus: %s\n", res.successus ? "VERUM" : "FALSUM");
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.radix);
+
+        si (res.radix != NIHIL)
+        {
+            tu = res.radix;
+            num_decls = xar_numerus(tu->datum.translation_unit.declarationes);
+            imprimere("  num_decls: %d\n", num_decls);
+            CREDO_AEQUALIS_I32(num_decls, II);  /* CONDITIONALIS + int x */
+
+            si (num_decls >= II)
+            {
+                Arbor2Nodus** first_ptr;
+                Arbor2Nodus* cond;
+                first_ptr = xar_obtinere(tu->datum.translation_unit.declarationes, ZEPHYRUM);
+                cond = *first_ptr;
+                imprimere("  first node: %s\n", arbor2_nodus_genus_nomen(cond->genus));
+                CREDO_AEQUALIS_I32((i32)cond->genus, (i32)ARBOR2_NODUS_CONDITIONALIS);
+
+                si (cond->genus == ARBOR2_NODUS_CONDITIONALIS)
+                {
+                    i32 num_rami;
+                    num_rami = xar_numerus(cond->datum.conditionalis.rami);
+                    imprimere("  num_rami: %d\n", num_rami);
+                    CREDO_AEQUALIS_I32(num_rami, I);  /* One branch (ifdef) */
+                }
+            }
+        }
+    }
+
+    /* Test 2: #ifdef/#else/#endif */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+        Arbor2Nodus* tu;
+        i32 num_decls;
+
+        imprimere("\n--- Probans #ifdef/#else/#endif ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern,
+            "#ifdef DEBUG\n"
+            "int level = 1;\n"
+            "#else\n"
+            "int level = 0;\n"
+            "#endif\n");
+        res = arbor2_glr_parsere_translation_unit(glr, tokens);
+
+        imprimere("  successus: %s\n", res.successus ? "VERUM" : "FALSUM");
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.radix);
+
+        si (res.radix != NIHIL)
+        {
+            tu = res.radix;
+            num_decls = xar_numerus(tu->datum.translation_unit.declarationes);
+            imprimere("  num_decls: %d\n", num_decls);
+            CREDO_AEQUALIS_I32(num_decls, I);  /* One CONDITIONALIS */
+
+            si (num_decls >= I)
+            {
+                Arbor2Nodus** first_ptr;
+                Arbor2Nodus* cond;
+                first_ptr = xar_obtinere(tu->datum.translation_unit.declarationes, ZEPHYRUM);
+                cond = *first_ptr;
+                imprimere("  first node: %s\n", arbor2_nodus_genus_nomen(cond->genus));
+                CREDO_AEQUALIS_I32((i32)cond->genus, (i32)ARBOR2_NODUS_CONDITIONALIS);
+
+                si (cond->genus == ARBOR2_NODUS_CONDITIONALIS)
+                {
+                    i32 num_rami;
+                    num_rami = xar_numerus(cond->datum.conditionalis.rami);
+                    imprimere("  num_rami: %d\n", num_rami);
+                    CREDO_AEQUALIS_I32(num_rami, II);  /* Two branches (ifdef + else) */
+                }
+            }
+        }
+    }
+
+    /* Test 3: #ifndef */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+        Arbor2Nodus* tu;
+        i32 num_decls;
+
+        imprimere("\n--- Probans #ifndef ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern,
+            "#ifndef HEADER_H\n"
+            "int header_guard;\n"
+            "#endif\n");
+        res = arbor2_glr_parsere_translation_unit(glr, tokens);
+
+        imprimere("  successus: %s\n", res.successus ? "VERUM" : "FALSUM");
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.radix);
+
+        si (res.radix != NIHIL)
+        {
+            tu = res.radix;
+            num_decls = xar_numerus(tu->datum.translation_unit.declarationes);
+            imprimere("  num_decls: %d\n", num_decls);
+            CREDO_AEQUALIS_I32(num_decls, I);
+
+            si (num_decls >= I)
+            {
+                Arbor2Nodus** first_ptr;
+                Arbor2Nodus* cond;
+                Arbor2CondRamus* ramus;
+                first_ptr = xar_obtinere(tu->datum.translation_unit.declarationes, ZEPHYRUM);
+                cond = *first_ptr;
+                CREDO_AEQUALIS_I32((i32)cond->genus, (i32)ARBOR2_NODUS_CONDITIONALIS);
+
+                si (cond->genus == ARBOR2_NODUS_CONDITIONALIS &&
+                    xar_numerus(cond->datum.conditionalis.rami) > ZEPHYRUM)
+                {
+                    ramus = *(Arbor2CondRamus**)xar_obtinere(cond->datum.conditionalis.rami, ZEPHYRUM);
+                    imprimere("  ramus genus: %d (IFNDEF=%d)\n", ramus->genus, ARBOR2_DIRECTIVUM_IFNDEF);
+                    CREDO_AEQUALIS_I32((i32)ramus->genus, (i32)ARBOR2_DIRECTIVUM_IFNDEF);
+
+                    /* Check condition is captured */
+                    si (ramus->conditio != NIHIL)
+                    {
+                        imprimere("  conditio: %.*s\n", ramus->conditio->mensura, ramus->conditio->datum);
+                        CREDO_AEQUALIS_I32(ramus->conditio->mensura, VIII);  /* "HEADER_H" = 8 */
+                    }
+                }
+            }
+        }
+    }
+
+    /* Test 4: Multiple independent conditionals */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+        Arbor2Nodus* tu;
+        i32 num_decls;
+
+        imprimere("\n--- Probans multiple conditionals ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern,
+            "#ifdef X\n"
+            "int x;\n"
+            "#endif\n"
+            "#ifdef Y\n"
+            "int y;\n"
+            "#endif\n");
+        res = arbor2_glr_parsere_translation_unit(glr, tokens);
+
+        imprimere("  successus: %s\n", res.successus ? "VERUM" : "FALSUM");
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.radix);
+
+        si (res.radix != NIHIL)
+        {
+            tu = res.radix;
+            num_decls = xar_numerus(tu->datum.translation_unit.declarationes);
+            imprimere("  num_decls: %d\n", num_decls);
+            CREDO_AEQUALIS_I32(num_decls, II);  /* Two CONDITIONALIS nodes */
+
+            si (num_decls >= II)
+            {
+                Arbor2Nodus** first_ptr;
+                Arbor2Nodus** second_ptr;
+                first_ptr = xar_obtinere(tu->datum.translation_unit.declarationes, ZEPHYRUM);
+                second_ptr = xar_obtinere(tu->datum.translation_unit.declarationes, I);
+                CREDO_AEQUALIS_I32((i32)(*first_ptr)->genus, (i32)ARBOR2_NODUS_CONDITIONALIS);
+                CREDO_AEQUALIS_I32((i32)(*second_ptr)->genus, (i32)ARBOR2_NODUS_CONDITIONALIS);
+            }
+        }
+    }
+
+    /* Test 5: Conditional mixed with regular declarations */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+        Arbor2Nodus* tu;
+        i32 num_decls;
+
+        imprimere("\n--- Probans conditional mixed with declarations ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern,
+            "int before;\n"
+            "#ifdef FEATURE\n"
+            "int feature;\n"
+            "#endif\n"
+            "int after;");
+        res = arbor2_glr_parsere_translation_unit(glr, tokens);
+
+        imprimere("  successus: %s\n", res.successus ? "VERUM" : "FALSUM");
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.radix);
+
+        si (res.radix != NIHIL)
+        {
+            tu = res.radix;
+            num_decls = xar_numerus(tu->datum.translation_unit.declarationes);
+            imprimere("  num_decls: %d\n", num_decls);
+            CREDO_AEQUALIS_I32(num_decls, III);  /* decl + CONDITIONALIS + decl */
+
+            si (num_decls >= III)
+            {
+                Arbor2Nodus** ptr1;
+                Arbor2Nodus** ptr2;
+                Arbor2Nodus** ptr3;
+                ptr1 = xar_obtinere(tu->datum.translation_unit.declarationes, ZEPHYRUM);
+                ptr2 = xar_obtinere(tu->datum.translation_unit.declarationes, I);
+                ptr3 = xar_obtinere(tu->datum.translation_unit.declarationes, II);
+
+                imprimere("  node 0: %s\n", arbor2_nodus_genus_nomen((*ptr1)->genus));
+                imprimere("  node 1: %s\n", arbor2_nodus_genus_nomen((*ptr2)->genus));
+                imprimere("  node 2: %s\n", arbor2_nodus_genus_nomen((*ptr3)->genus));
+
+                CREDO_AEQUALIS_I32((i32)(*ptr2)->genus, (i32)ARBOR2_NODUS_CONDITIONALIS);
+            }
+        }
+    }
+
+    /* Test 6: Nested conditionals */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+        Arbor2Nodus* tu;
+        i32 num_decls;
+
+        imprimere("\n--- Probans nested conditionals ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern,
+            "#ifdef A\n"
+            "int a;\n"
+            "#ifdef B\n"
+            "int b;\n"
+            "#endif\n"
+            "#endif\n");
+        res = arbor2_glr_parsere_translation_unit(glr, tokens);
+
+        imprimere("  successus: %s\n", res.successus ? "VERUM" : "FALSUM");
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.radix);
+
+        si (res.radix != NIHIL)
+        {
+            tu = res.radix;
+            num_decls = xar_numerus(tu->datum.translation_unit.declarationes);
+            imprimere("  num_decls: %d\n", num_decls);
+            CREDO_AEQUALIS_I32(num_decls, I);  /* One outer CONDITIONALIS */
+
+            si (num_decls >= I)
+            {
+                Arbor2Nodus** first_ptr;
+                Arbor2Nodus* cond;
+                Arbor2CondRamus* ramus;
+                i32 num_tokens;
+
+                first_ptr = xar_obtinere(tu->datum.translation_unit.declarationes, ZEPHYRUM);
+                cond = *first_ptr;
+                CREDO_AEQUALIS_I32((i32)cond->genus, (i32)ARBOR2_NODUS_CONDITIONALIS);
+
+                /* Check that nested conditional tokens are included in branch */
+                si (cond->genus == ARBOR2_NODUS_CONDITIONALIS &&
+                    xar_numerus(cond->datum.conditionalis.rami) > ZEPHYRUM)
+                {
+                    ramus = *(Arbor2CondRamus**)xar_obtinere(cond->datum.conditionalis.rami, ZEPHYRUM);
+                    num_tokens = xar_numerus(ramus->lexemata);
+                    imprimere("  branch tokens: %d\n", num_tokens);
+                    /* Should have tokens for: int a; # ifdef B int b; # endif */
+                    CREDO_MAIOR_I32(num_tokens, V);
+                }
+            }
+        }
+    }
+
+
     /* Compendium */
     imprimere("\n");
     credo_imprimere_compendium();

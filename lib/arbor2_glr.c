@@ -5097,6 +5097,419 @@ arbor2_glr_parsere(
  * scans for item boundaries, then parses each item.
  * ================================================== */
 
+/* ==================================================
+ * Conditional Directive Handling (Phase 5)
+ *
+ * Recognizes #ifdef/#ifndef/#else/#endif and creates
+ * CONDITIONALIS nodes that contain all branches.
+ * ================================================== */
+
+/* Check if token at position is # followed by conditional keyword */
+interior b32
+_est_conditionale_directivum(Xar* lexemata, i32 positus, Arbor2DirectivumGenus* genus_out)
+{
+    Arbor2Token* tok;
+    Arbor2Token* next_tok;
+    i32 num;
+
+    num = xar_numerus(lexemata);
+    si (positus + I >= num)
+    {
+        redde FALSUM;
+    }
+
+    tok = *(Arbor2Token**)xar_obtinere(lexemata, positus);
+    si (tok->lexema->genus != ARBOR2_LEXEMA_HASH)
+    {
+        redde FALSUM;
+    }
+
+    next_tok = *(Arbor2Token**)xar_obtinere(lexemata, positus + I);
+
+    /* Check for conditional keywords - can be IDENTIFICATOR or keywords like ELSE/IF */
+
+    /* #else - 'else' is tokenized as ARBOR2_LEXEMA_ELSE keyword */
+    si (next_tok->lexema->genus == ARBOR2_LEXEMA_ELSE)
+    {
+        si (genus_out != NIHIL) *genus_out = ARBOR2_DIRECTIVUM_ELSE;
+        redde VERUM;
+    }
+
+    /* #if - 'if' is tokenized as ARBOR2_LEXEMA_IF keyword */
+    si (next_tok->lexema->genus == ARBOR2_LEXEMA_IF)
+    {
+        si (genus_out != NIHIL) *genus_out = ARBOR2_DIRECTIVUM_IF;
+        redde VERUM;
+    }
+
+    /* For other directives, they must be identifiers */
+    si (next_tok->lexema->genus != ARBOR2_LEXEMA_IDENTIFICATOR)
+    {
+        redde FALSUM;
+    }
+
+    /* Check for conditional keywords that are identifiers (not reserved words) */
+    si (next_tok->lexema->valor.mensura == V &&
+        memcmp(next_tok->lexema->valor.datum, "ifdef", V) == ZEPHYRUM)
+    {
+        si (genus_out != NIHIL) *genus_out = ARBOR2_DIRECTIVUM_IFDEF;
+        redde VERUM;
+    }
+    si (next_tok->lexema->valor.mensura == VI &&
+        memcmp(next_tok->lexema->valor.datum, "ifndef", VI) == ZEPHYRUM)
+    {
+        si (genus_out != NIHIL) *genus_out = ARBOR2_DIRECTIVUM_IFNDEF;
+        redde VERUM;
+    }
+    si (next_tok->lexema->valor.mensura == IV &&
+        memcmp(next_tok->lexema->valor.datum, "elif", IV) == ZEPHYRUM)
+    {
+        si (genus_out != NIHIL) *genus_out = ARBOR2_DIRECTIVUM_ELIF;
+        redde VERUM;
+    }
+    si (next_tok->lexema->valor.mensura == V &&
+        memcmp(next_tok->lexema->valor.datum, "endif", V) == ZEPHYRUM)
+    {
+        si (genus_out != NIHIL) *genus_out = ARBOR2_DIRECTIVUM_ENDIF;
+        redde VERUM;
+    }
+
+    redde FALSUM;
+}
+
+/* Check if token at position starts a conditional block (ifdef/ifndef/if) */
+interior b32
+_est_initium_conditionale(Xar* lexemata, i32 positus)
+{
+    Arbor2DirectivumGenus genus;
+
+    si (!_est_conditionale_directivum(lexemata, positus, &genus))
+    {
+        redde FALSUM;
+    }
+
+    redde (genus == ARBOR2_DIRECTIVUM_IFDEF ||
+           genus == ARBOR2_DIRECTIVUM_IFNDEF ||
+           genus == ARBOR2_DIRECTIVUM_IF);
+}
+
+/* Skip to end of line (after directive) */
+interior i32
+_saltare_ad_finem_lineae(Xar* lexemata, i32 positus)
+{
+    i32 num;
+    Arbor2Token* tok;
+
+    num = xar_numerus(lexemata);
+    dum (positus < num)
+    {
+        tok = *(Arbor2Token**)xar_obtinere(lexemata, positus);
+
+        /* Check for newline in spatia_post */
+        si (tok->lexema->spatia_post != NIHIL)
+        {
+            i32 j;
+            i32 num_spatia;
+            num_spatia = xar_numerus(tok->lexema->spatia_post);
+            per (j = ZEPHYRUM; j < num_spatia; j++)
+            {
+                Arbor2Lexema* spatium;
+                spatium = *(Arbor2Lexema**)xar_obtinere(tok->lexema->spatia_post, j);
+                si (spatium->genus == ARBOR2_LEXEMA_NOVA_LINEA)
+                {
+                    redde positus + I;
+                }
+            }
+        }
+
+        /* Check for newline in next token's spatia_ante */
+        si (positus + I < num)
+        {
+            Arbor2Token* next_tok;
+            next_tok = *(Arbor2Token**)xar_obtinere(lexemata, positus + I);
+            si (next_tok->lexema->spatia_ante != NIHIL)
+            {
+                i32 j;
+                i32 num_spatia;
+                num_spatia = xar_numerus(next_tok->lexema->spatia_ante);
+                per (j = ZEPHYRUM; j < num_spatia; j++)
+                {
+                    Arbor2Lexema* spatium;
+                    spatium = *(Arbor2Lexema**)xar_obtinere(next_tok->lexema->spatia_ante, j);
+                    si (spatium->genus == ARBOR2_LEXEMA_NOVA_LINEA)
+                    {
+                        redde positus + I;
+                    }
+                }
+            }
+        }
+
+        positus++;
+    }
+
+    redde positus;
+}
+
+/* Get condition string from #ifdef/#ifndef/#if directive */
+interior chorda*
+_obtinere_conditio(Arbor2GLR* glr, Xar* lexemata, i32 positus, Arbor2DirectivumGenus genus)
+{
+    i32 num;
+    Arbor2Token* tok;
+    chorda* conditio;
+
+    num = xar_numerus(lexemata);
+
+    /* Skip # and keyword (ifdef/ifndef/if) */
+    positus += II;
+
+    si (positus >= num)
+    {
+        redde NIHIL;
+    }
+
+    tok = *(Arbor2Token**)xar_obtinere(lexemata, positus);
+
+    /* For ifdef/ifndef, the condition is just the macro name */
+    si (genus == ARBOR2_DIRECTIVUM_IFDEF || genus == ARBOR2_DIRECTIVUM_IFNDEF)
+    {
+        si (tok->lexema->genus == ARBOR2_LEXEMA_IDENTIFICATOR)
+        {
+            conditio = piscina_allocare(glr->piscina, magnitudo(chorda));
+            *conditio = tok->lexema->valor;
+            redde conditio;
+        }
+    }
+
+    /* For #if/#elif, we'd need to collect the entire expression (Phase 5b) */
+    redde NIHIL;
+}
+
+/* Collect entire conditional block and create CONDITIONALIS node */
+interior Arbor2Nodus*
+_colligere_conditionale(Arbor2GLR* glr, Xar* lexemata, i32* positus)
+{
+    Arbor2Nodus* nodus;
+    Xar* rami;
+    Arbor2CondRamus* ramus_currens;
+    Arbor2DirectivumGenus genus;
+    i32 profunditas;
+    i32 pos;
+    i32 num;
+    i32 linea_if;
+    Arbor2Token* tok_initium;
+
+    pos = *positus;
+    num = xar_numerus(lexemata);
+
+    /* Get initial directive info */
+    si (!_est_conditionale_directivum(lexemata, pos, &genus))
+    {
+        redde NIHIL;
+    }
+
+    tok_initium = *(Arbor2Token**)xar_obtinere(lexemata, pos);
+    linea_if = tok_initium->lexema->linea;
+
+    /* Create branch array */
+    rami = xar_creare(glr->piscina, magnitudo(Arbor2CondRamus*));
+
+    /* Create first branch */
+    ramus_currens = piscina_allocare(glr->piscina, magnitudo(Arbor2CondRamus));
+    ramus_currens->genus = genus;
+    ramus_currens->conditio = _obtinere_conditio(glr, lexemata, pos, genus);
+    ramus_currens->lexemata = xar_creare(glr->piscina, magnitudo(Arbor2Token*));
+    ramus_currens->parsed = NIHIL;
+    ramus_currens->linea = tok_initium->lexema->linea;
+
+    /* Skip to end of directive line */
+    pos = _saltare_ad_finem_lineae(lexemata, pos);
+
+    profunditas = I;
+
+    dum (pos < num && profunditas > ZEPHYRUM)
+    {
+        Arbor2DirectivumGenus genus_curr;
+
+        si (_est_conditionale_directivum(lexemata, pos, &genus_curr))
+        {
+            /* Handle nested conditionals */
+            si (genus_curr == ARBOR2_DIRECTIVUM_IFDEF ||
+                genus_curr == ARBOR2_DIRECTIVUM_IFNDEF ||
+                genus_curr == ARBOR2_DIRECTIVUM_IF)
+            {
+                /* Nested conditional - include tokens and increase depth */
+                Arbor2Token** tok_slot;
+                Arbor2Token* tok_curr;
+
+                /* Add # token */
+                tok_curr = *(Arbor2Token**)xar_obtinere(lexemata, pos);
+                tok_slot = xar_addere(ramus_currens->lexemata);
+                *tok_slot = tok_curr;
+                pos++;
+
+                /* Add remaining directive tokens */
+                dum (pos < num)
+                {
+                    Arbor2Token* tok_next;
+                    tok_next = *(Arbor2Token**)xar_obtinere(lexemata, pos);
+                    tok_slot = xar_addere(ramus_currens->lexemata);
+                    *tok_slot = tok_next;
+
+                    /* Check if end of line */
+                    si (tok_next->lexema->spatia_post != NIHIL)
+                    {
+                        i32 j;
+                        i32 num_spatia;
+                        b32 found_newline;
+
+                        found_newline = FALSUM;
+                        num_spatia = xar_numerus(tok_next->lexema->spatia_post);
+                        per (j = ZEPHYRUM; j < num_spatia; j++)
+                        {
+                            Arbor2Lexema* spatium;
+                            spatium = *(Arbor2Lexema**)xar_obtinere(tok_next->lexema->spatia_post, j);
+                            si (spatium->genus == ARBOR2_LEXEMA_NOVA_LINEA)
+                            {
+                                found_newline = VERUM;
+                                frange;
+                            }
+                        }
+                        si (found_newline)
+                        {
+                            pos++;
+                            frange;
+                        }
+                    }
+                    pos++;
+                }
+
+                profunditas++;
+                perge;
+            }
+            alioquin si (genus_curr == ARBOR2_DIRECTIVUM_ENDIF)
+            {
+                profunditas--;
+                si (profunditas == ZEPHYRUM)
+                {
+                    /* End of our conditional - save current branch and finish */
+                    Arbor2CondRamus** ramus_slot;
+                    ramus_slot = xar_addere(rami);
+                    *ramus_slot = ramus_currens;
+
+                    /* Skip #endif line */
+                    pos = _saltare_ad_finem_lineae(lexemata, pos);
+                    frange;
+                }
+                alioquin
+                {
+                    /* Nested #endif - include in current branch */
+                    Arbor2Token** tok_slot;
+                    Arbor2Token* tok_curr;
+
+                    /* Add # and endif tokens */
+                    tok_curr = *(Arbor2Token**)xar_obtinere(lexemata, pos);
+                    tok_slot = xar_addere(ramus_currens->lexemata);
+                    *tok_slot = tok_curr;
+                    pos++;
+
+                    si (pos < num)
+                    {
+                        tok_curr = *(Arbor2Token**)xar_obtinere(lexemata, pos);
+                        tok_slot = xar_addere(ramus_currens->lexemata);
+                        *tok_slot = tok_curr;
+                    }
+
+                    pos = _saltare_ad_finem_lineae(lexemata, pos);
+                    perge;
+                }
+            }
+            alioquin si ((genus_curr == ARBOR2_DIRECTIVUM_ELSE ||
+                          genus_curr == ARBOR2_DIRECTIVUM_ELIF) &&
+                         profunditas == I)
+            {
+                /* Top-level else/elif - start new branch */
+                Arbor2CondRamus** ramus_slot;
+                Arbor2Token* tok_curr;
+
+                /* Save current branch */
+                ramus_slot = xar_addere(rami);
+                *ramus_slot = ramus_currens;
+
+                /* Create new branch */
+                tok_curr = *(Arbor2Token**)xar_obtinere(lexemata, pos);
+                ramus_currens = piscina_allocare(glr->piscina, magnitudo(Arbor2CondRamus));
+                ramus_currens->genus = genus_curr;
+                ramus_currens->conditio = NIHIL;
+                si (genus_curr == ARBOR2_DIRECTIVUM_ELIF)
+                {
+                    ramus_currens->conditio = _obtinere_conditio(glr, lexemata, pos, genus_curr);
+                }
+                ramus_currens->lexemata = xar_creare(glr->piscina, magnitudo(Arbor2Token*));
+                ramus_currens->parsed = NIHIL;
+                ramus_currens->linea = tok_curr->lexema->linea;
+
+                /* Skip to end of directive line */
+                pos = _saltare_ad_finem_lineae(lexemata, pos);
+                perge;
+            }
+            alioquin
+            {
+                /* Nested else/elif - include in current branch */
+                Arbor2Token** tok_slot;
+                Arbor2Token* tok_curr;
+
+                tok_curr = *(Arbor2Token**)xar_obtinere(lexemata, pos);
+                tok_slot = xar_addere(ramus_currens->lexemata);
+                *tok_slot = tok_curr;
+                pos++;
+
+                si (pos < num)
+                {
+                    tok_curr = *(Arbor2Token**)xar_obtinere(lexemata, pos);
+                    tok_slot = xar_addere(ramus_currens->lexemata);
+                    *tok_slot = tok_curr;
+                }
+
+                pos = _saltare_ad_finem_lineae(lexemata, pos);
+                perge;
+            }
+        }
+        alioquin
+        {
+            /* Regular token - add to current branch */
+            Arbor2Token** tok_slot;
+            Arbor2Token* tok_curr;
+
+            tok_curr = *(Arbor2Token**)xar_obtinere(lexemata, pos);
+            tok_slot = xar_addere(ramus_currens->lexemata);
+            *tok_slot = tok_curr;
+            pos++;
+        }
+    }
+
+    /* Create CONDITIONALIS node */
+    nodus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
+    nodus->genus = ARBOR2_NODUS_CONDITIONALIS;
+    nodus->lexema = tok_initium;
+    nodus->pater = NIHIL;
+    nodus->commenta_ante = NIHIL;
+    nodus->commenta_post = NIHIL;
+    nodus->linea_initium = linea_if;
+    nodus->columna_initium = tok_initium->lexema->columna;
+    nodus->linea_finis = (pos > ZEPHYRUM && pos <= num) ?
+        (*(Arbor2Token**)xar_obtinere(lexemata, pos - I))->lexema->linea : linea_if;
+    nodus->columna_finis = I;
+    nodus->layer_index = ZEPHYRUM;
+
+    nodus->datum.conditionalis.rami = rami;
+    nodus->datum.conditionalis.linea_if = linea_if;
+    nodus->datum.conditionalis.linea_endif = nodus->linea_finis;
+
+    *positus = pos;
+    redde nodus;
+}
+
 /* Result from boundary finder */
 nomen structura {
     i32 parse_finis;    /* Index up to (exclusive) for parsing */
@@ -5226,6 +5639,21 @@ arbor2_glr_parsere_translation_unit(
         si (tok->lexema->genus == ARBOR2_LEXEMA_EOF)
         {
             frange;
+        }
+
+        /* Check for conditional directive (#ifdef, #ifndef, #if) */
+        si (_est_initium_conditionale(lexemata, positus))
+        {
+            Arbor2Nodus* conditionale;
+            Arbor2Nodus** cond_slot;
+
+            conditionale = _colligere_conditionale(glr, lexemata, &positus);
+            si (conditionale != NIHIL)
+            {
+                cond_slot = xar_addere(tu_nodus->datum.translation_unit.declarationes);
+                *cond_slot = conditionale;
+            }
+            perge;
         }
 
         /* Find end of this external declaration */

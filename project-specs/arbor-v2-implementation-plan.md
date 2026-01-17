@@ -1,7 +1,7 @@
 # Arbor v2 Implementation Plan
 
 Date: 2026-01-17
-Status: Updated after Phase 3.2/3.3 + 7.1 completion - Phase 3 MOSTLY COMPLETE
+Status: Updated after Phase 4 completion - Error Recovery COMPLETE
 
 ---
 
@@ -47,11 +47,12 @@ Status: Updated after Phase 3.2/3.3 + 7.1 completion - Phase 3 MOSTLY COMPLETE
 - Piscina checkpointing for rollback
 - **346 grammar productions** (P0-P345)
 - **952 LR states** (0-951)
-- **1856 tests total** (all passing)
+- **1877 tests total** (all passing)
 - Table validation
 - **Location propagation** via LOCUS_EX_LEXEMATIS macro (Phase 2.1)
 - **Macro lookahead integration** via public API (Phase 3.2)
 - **AMBIGUUS identifier tracking** (Phase 3.3)
+- **Error recovery** with ERROR nodes and skipped token tracking (Phase 4)
 
 **Grammar currently covered:**
 
@@ -128,7 +129,7 @@ Current structure has:
 - Type resolution field
 
 ### Tests - COMPREHENSIVE
-- **1856 GLR tests** (all passing) - updated after Phase 3.2/3.3
+- **1877 GLR tests** (all passing) - updated after Phase 4
 - **124 expandere tests** (all passing) - includes lookahead API
 - Covers expressions, statements, declarations
 - Full initializer coverage (simple, brace, designated)
@@ -142,6 +143,7 @@ Current structure has:
 - **Parent pointer tests** (binary expr, nested expr, ternary, function call, subscript) - Phase 2.3
 - **Latin macro disambiguation tests** (integer x, i32 x, constans integer x) - Phase 3.2
 - **AMBIGUUS tracking tests** (foo * bar) - Phase 3.3
+- **Error recovery tests** (invalid decl + valid, multiple errors, error + function) - Phase 4
 - Table validation
 - Parser statistics
 
@@ -366,10 +368,16 @@ Given the current state, the recommended priority is:
 3. **Phase 7.1 (Built-in Latina)** - **COMPLETE** ✓
    - `arbor2_includere_latina()` with 35 macros
 
-4. **Next priorities:**
-   - Phase 4: Error Recovery (partial AST on errors)
+4. **Phase 4 (Error Recovery)** - **COMPLETE** ✓
+   - Statement-level recovery in translation unit parser
+   - ERROR nodes with skipped token tracking
+   - Error limit (10 max) to prevent infinite loops
+   - 21 new test assertions
+
+5. **Next priorities:**
    - Phase 5: Conditional Compilation (#ifdef, #if, #else)
    - Phase 6: #include Processing (actually read files)
+   - Phase 7.2: Standard Library Type Hints (FILE, size_t, etc.)
 
 **Current capabilities:**
 - Complete C89 files with multiple declarations/functions ✓
@@ -651,54 +659,61 @@ GLR parser already forks on ambiguous positions:
 
 ---
 
-## Phase 4: Error Recovery
+## Phase 4: Error Recovery — **COMPLETE** ✓
 
-Current: Parser stops on first error
-Need: Continue and produce partial AST
+Implemented 2026-01-17.
 
-#### 4.1 Panic Mode Recovery
-On error, skip to synchronizing tokens:
-- `;` (statement boundary)
-- `}` (block boundary)
-- `)` (expression boundary)
+**Before:** Parser stopped on first error, returned FALSUM immediately.
 
+**After:** Parser continues past errors, produces partial AST with ERROR nodes.
+
+#### 4.1 Design Decisions
+
+1. **Recovery granularity: Statement-level only**
+   - Uses existing `_invenire_finem_declarationis()` to find item boundaries
+   - Synchronizes at `;` and `}` tokens
+   - Recovery happens in `arbor2_glr_parsere_translation_unit()`
+
+2. **Error limit: 10 errors max**
+   - `ARBOR2_GLR_MAX_ERRORES X` (10 in Roman numerals)
+   - Prevents infinite loops on pathological input
+   - After limit, returns partial result with `successus = FALSUM`
+
+3. **Error classification: None**
+   - Just stores error message and skipped tokens
+   - No "probably a declaration" guessing - keeps it simple
+
+#### 4.2 Implementation
+
+**New struct member (arbor2_glr.h):**
 ```c
-interior vacuum
-_recuperare_panic(Arbor2GLR* glr)
-{
-    dum (_currens_lexema(glr)->lexema->genus != ARBOR2_LEXEMA_EOF)
-    {
-        Arbor2LexemaGenus g;
-        g = _currens_lexema(glr)->lexema->genus;
-
-        si (g == ARBOR2_LEXEMA_SEMICOLON ||
-            g == ARBOR2_LEXEMA_BRACE_CLAUSA)
-        {
-            _progredi(glr);
-            redde;
-        }
-        _progredi(glr);
-    }
-}
+i32  num_errores;    /* Error count for recovery limit */
 ```
 
-#### 4.2 Error Node Creation
+**Error node creation (`_creare_nodum_error`):**
 ```c
 Arbor2Nodus* error_nodus;
-error_nodus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
 error_nodus->genus = ARBOR2_NODUS_ERROR;
-error_nodus->datum.error.nuntius = /* error message */;
-error_nodus->datum.error.lexemata_saltata = /* skipped tokens */;
+error_nodus->datum.error.nuntius = /* error message from sub-parse */;
+error_nodus->datum.error.lexemata_saltata = /* Xar of skipped tokens */;
 ```
 
-#### 4.3 Error Productions (optional)
-Add grammar rules that match common errors:
-```
-stmt -> error ';'  /* recover at semicolon */
-stmt -> error '}'  /* recover at brace */
-```
+**Translation unit parser modification:**
+- On sub-parse failure: increment error count, check limit
+- Collect tokens from failed parse range
+- Create ERROR node with skipped tokens
+- Add ERROR node to translation unit declarations
+- Advance position and continue to next item
 
-**Deliverable:** Parser continues past errors, produces partial AST
+#### 4.3 Tests
+
+4 new test sections (21 assertions):
+1. Invalid decl + valid decl: `int @ x; int y;` → ERROR + DECLARATIO
+2. Multiple consecutive errors: `@ x; @ y; @ z;` → 3 ERROR nodes
+3. Error + valid function: `@ badstuff; int foo() {}` → ERROR + DEFINITIO_FUNCTI
+4. Error collection: Verifies `res.errores` contains messages
+
+**Deliverable:** Parser continues past errors, produces partial AST ✓
 
 ---
 
@@ -963,13 +978,13 @@ Phase 8 (Queries)      Phase 9 (Types)      Phase 10 (Index)
 | include/arbor2_lexema.h | 220 | Complete (98 token types incl. whitespace) |
 | include/arbor2_token.h | 147 | Complete |
 | include/arbor2_expandere.h | ~230 | Complete (lookahead API, latina.h function) |
-| probationes/probatio_arbor2_glr.c | ~12950 | 1856 tests |
+| probationes/probatio_arbor2_glr.c | ~13100 | 1877 tests (Phase 4 error recovery) |
 | probationes/probatio_arbor2_lexema.c | ~340 | 38 tests (whitespace tokens) |
 | probationes/probatio_arbor2_expandere.c | ~600 | 124 tests (includes lookahead) |
 | tools/glr_debug.c | ~340 | Working |
 | lib/arbor2_lexema.worklog.md | - | Phase 2.6 design notes |
 | lib/arbor2_expandere.worklog.md | - | Phase 3.2, 7.1 design notes |
-| lib/arbor2_glr.worklog.md | - | Phase 3.2, 3.3 design notes |
+| lib/arbor2_glr.worklog.md | - | Phase 3.2, 3.3, 4 design notes |
 
 ---
 
@@ -997,4 +1012,5 @@ Phase 8 (Queries)      Phase 9 (Types)      Phase 10 (Index)
 | 2026-01-17 | 3.2 Macro Lookahead | +0 | +0 | +6 | arbor2_expansion_lookahead() API, parser integration |
 | 2026-01-17 | 3.3 AMBIGUUS Tracking | +0 | +0 | +3 | identificator field set in _creare_nodum_ambiguum() |
 | 2026-01-17 | 7.1 Built-in Latina | +0 | +0 | +0 | arbor2_includere_latina() with 35 macros |
-| **Current** | | **351** | **952** | **1856** | |
+| 2026-01-17 | 4 Error Recovery | +0 | +0 | +21 | _creare_nodum_error(), translation unit recovery, error limit |
+| **Current** | | **351** | **952** | **1877** | |

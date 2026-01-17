@@ -17690,6 +17690,7 @@ arbor2_nodus_genus_nomen(Arbor2NodusGenus genus)
         casus ARBOR2_NODUS_STRUCT_SPECIFIER: redde "STRUCT_SPECIFIER";
         casus ARBOR2_NODUS_ERROR:         redde "ERROR";
         casus ARBOR2_NODUS_COMMENTUM:     redde "COMMENTUM";
+        casus ARBOR2_NODUS_CONDITIONALIS: redde "CONDITIONALIS";
         ordinarius:                       redde "IGNOTUM";
     }
 }

@@ -2297,3 +2297,84 @@ Tests: 1877 (up from 1856, +21 new assertions)
 - The `_recuperare_panic()` function was designed but removed since the translation unit parser already knows item boundaries via `_invenire_finem_declarationis()`
 - `successus = VERUM` even if there were errors (as long as under the limit) since we produced a valid AST
 - Errors are available in both `res.errores` (messages) and in ERROR nodes (skipped tokens)
+
+---
+
+## 2026-01-17: Phase 5 - Conditional Compilation
+
+### Overview
+
+Implemented recognition of preprocessor conditionals (`#ifdef`, `#ifndef`, `#else`, `#endif`) in the translation unit parser. Creates `ARBOR2_NODUS_CONDITIONALIS` nodes that preserve ALL branches (not just the "active" one).
+
+### Key Design Decisions
+
+1. **Parser-level handling, not expander**
+   - The expander passes conditional directives through unchanged
+   - The GLR parser recognizes and collects them into CONDITIONALIS nodes
+   - Rationale: The expander's job is macro expansion; structure belongs in the parser
+
+2. **All branches preserved**
+   - Unlike a traditional preprocessor that picks one branch, we keep all branches
+   - Each branch stores its tokens in `Arbor2CondRamus.lexemata`
+   - Enables queries like "what code exists under DEBUG?" without re-parsing
+
+3. **Nested conditionals as token inclusion**
+   - Nested `#ifdef` blocks are included as tokens within the parent branch
+   - Depth tracking (`profunditas`) ensures we match the right `#endif`
+   - Keeps the outer CONDITIONALIS node flat (branches don't nest in the structure)
+
+### Bug Fix: #else Detection
+
+Initial implementation failed to detect `#else` because:
+- `else` is tokenized as `ARBOR2_LEXEMA_ELSE` (keyword), not `ARBOR2_LEXEMA_IDENTIFICATOR`
+- The directive check only looked for identifiers after `#`
+
+Fix: Added explicit checks for keyword tokens before the identifier fallback:
+```c
+/* #else - 'else' is tokenized as ARBOR2_LEXEMA_ELSE keyword */
+si (next_tok->lexema->genus == ARBOR2_LEXEMA_ELSE)
+{
+    si (genus_out != NIHIL) *genus_out = ARBOR2_DIRECTIVUM_ELSE;
+    redde VERUM;
+}
+```
+
+Same pattern for `#if` (ARBOR2_LEXEMA_IF keyword).
+
+### Data Structures Added
+
+**arbor2_glr.h:**
+- `Arbor2DirectivumGenus` enum: IFDEF, IFNDEF, IF, ELIF, ELSE, ENDIF
+- `Arbor2CondRamus` struct: branch with genus, conditio, lexemata, parsed, linea
+- `conditionalis` union member: rami array, linea_if, linea_endif
+
+### Functions Added
+
+**arbor2_glr.c (~400 lines):**
+- `_est_conditionale_directivum()` - detect # followed by conditional keyword
+- `_est_initium_conditionale()` - check if position starts #ifdef/#ifndef/#if
+- `_saltare_ad_finem_lineae()` - skip past directive line using trivia newlines
+- `_obtinere_conditio()` - extract macro name from #ifdef/#ifndef
+- `_colligere_conditionale()` - main collection function, handles:
+  - Branch creation and switching at #else/#elif
+  - Depth tracking for nested conditionals
+  - Token collection per branch
+
+### Test Cases Added
+
+6 new test sections in `probatio_arbor2_glr.c` (+294 lines):
+1. Simple #ifdef/#endif → 1 CONDITIONALIS with 1 branch
+2. #ifdef/#else/#endif → 1 CONDITIONALIS with 2 branches
+3. #ifndef → verifies IFNDEF genus and condition string capture
+4. Multiple independent conditionals → 2 separate CONDITIONALIS nodes
+5. Conditional mixed with declarations → decl + CONDITIONALIS + decl
+6. Nested conditionals → outer CONDITIONALIS contains inner's tokens
+
+Tests: 1907 total (up from 1877)
+
+### Out of Scope (Phase 5b)
+
+- `#if EXPR` with expression evaluation
+- `#elif EXPR` condition extraction
+- `defined(MACRO)` operator
+- Branch parsing (`ramus->parsed` remains NIHIL for now)
