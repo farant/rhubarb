@@ -3500,7 +3500,8 @@ _processare_unam_actionem(
 
                                 valor_novus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                                 valor_novus->genus = ARBOR2_NODUS_DECLARATOR_FUNCTI;
-                                valor_novus->lexema = lexemata[I];  /* The '*' token */
+                                /* Preserve inner declarator's lexema (the identifier token) */
+                                valor_novus->lexema = inner_functi->lexema;
                                 valor_novus->datum.declarator_functi.declarator_interior =
                                     inner_functi->datum.declarator_functi.declarator_interior;
                                 valor_novus->datum.declarator_functi.tok_paren_ap =
@@ -3539,15 +3540,17 @@ _processare_unam_actionem(
                             {
                                 Arbor2PointerLevel* lvl;
                                 Arbor2PointerLevel** lvl_slot;
+                                Arbor2Nodus* inner = valori[ZEPHYRUM];
 
                                 valor_novus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                                 valor_novus->genus = ARBOR2_NODUS_DECLARATOR;
-                                valor_novus->lexema = lexemata[I];  /* The '*' token */
+                                /* Preserve inner declarator's lexema (the identifier token),
+                                 * NOT the '*' token which goes in pointer_levels */
+                                valor_novus->lexema = (inner != NIHIL) ? inner->lexema : lexemata[I];
                                 /* Count stars: inner declarator's count + 1 */
-                                si (valori[ZEPHYRUM] != NIHIL &&
-                                    valori[ZEPHYRUM]->genus == ARBOR2_NODUS_DECLARATOR)
+                                si (inner != NIHIL &&
+                                    inner->genus == ARBOR2_NODUS_DECLARATOR)
                                 {
-                                    Arbor2Nodus* inner = valori[ZEPHYRUM];
                                     valor_novus->datum.declarator.titulus =
                                         inner->datum.declarator.titulus;
                                     valor_novus->datum.declarator.latitudo_biti =
@@ -5991,6 +5994,36 @@ arbor2_glr_parsere_translation_unit(
             si (semi_tok->lexema->genus == ARBOR2_LEXEMA_SEMICOLON)
             {
                 sub_res.radix->datum.struct_specifier.tok_semicolon = semi_tok;
+            }
+        }
+
+        /* Set tok_semicolon on DECLARATIO interpretations inside AMBIGUUS nodes */
+        si (sub_res.radix != NIHIL &&
+            sub_res.radix->genus == ARBOR2_NODUS_AMBIGUUS &&
+            finis_info.parse_finis < num_tokens)
+        {
+            Arbor2Token** semi_ptr = xar_obtinere(lexemata, finis_info.parse_finis);
+            Arbor2Token* semi_tok = *semi_ptr;
+            si (semi_tok->lexema->genus == ARBOR2_LEXEMA_SEMICOLON &&
+                sub_res.radix->datum.ambiguus.interpretationes != NIHIL)
+            {
+                i32 j;
+                i32 num_interp = xar_numerus(sub_res.radix->datum.ambiguus.interpretationes);
+                per (j = ZEPHYRUM; j < num_interp; j++)
+                {
+                    Arbor2Nodus** interp_ptr = xar_obtinere(sub_res.radix->datum.ambiguus.interpretationes, j);
+                    Arbor2Nodus* interp = *interp_ptr;
+                    si (interp != NIHIL && interp->genus == ARBOR2_NODUS_DECLARATIO)
+                    {
+                        /* Set on this declaration and all chained declarations */
+                        Arbor2Nodus* decl = interp;
+                        dum (decl != NIHIL)
+                        {
+                            decl->datum.declaratio.tok_semicolon = semi_tok;
+                            decl = decl->datum.declaratio.proxima;
+                        }
+                    }
+                }
             }
         }
 

@@ -369,6 +369,11 @@ s32 principale(vacuum)
         /* Float variable declaration */
         CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "float f;", NIHIL));
 
+        /* Pointer declarations (including ambiguous ones like int *p) */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "void *p;", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "int *p;", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "char *s;", NIHIL));
+
         /* Variable with integer initializer */
         CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "int x = 5;", NIHIL));
 
@@ -518,8 +523,11 @@ s32 principale(vacuum)
         /* Struct with unsigned member */
         CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "struct S { unsigned u; };", NIHIL));
 
-        /* NOTE: void pointer members have a serialization bug (outputs void **;)
-         * Compound type specifiers like 'unsigned int', 'long int' in
+        /* Struct with pointer member */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "struct S { int *p; };", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "struct S { void *p; };", NIHIL));
+
+        /* NOTE: Compound type specifiers like 'unsigned int', 'long int' in
          * struct members require grammar changes. Only single type specifiers
          * work currently. */
 
