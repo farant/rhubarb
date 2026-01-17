@@ -1,11 +1,11 @@
 # Arbor v2 Implementation Plan
 
-Date: 2026-01-16
-Status: Updated after Phase 2.6 completion (Tokenize Whitespace) - Phase 2 COMPLETE
+Date: 2026-01-17
+Status: Updated after Phase 3.2/3.3 + 7.1 completion - Phase 3 MOSTLY COMPLETE
 
 ---
 
-## Current State (Updated 2026-01-16)
+## Current State (Updated 2026-01-17)
 
 ### arbor2_lexema.c - COMPLETE
 - 98 token types (all C89 keywords, operators, literals, whitespace)
@@ -23,7 +23,7 @@ Status: Updated after Phase 2.6 completion (Tokenize Whitespace) - Phase 2 COMPL
 - Chain walking: arbor2_token_radix(), arbor2_token_profunditas()
 - Merged provenance for token paste
 
-### arbor2_expandere.c (~1576 lines) - MOSTLY COMPLETE
+### arbor2_expandere.c (~1892 lines) - MOSTLY COMPLETE
 - Object-like and function-like macro expansion
 - Parameter substitution
 - Stringification (#) - C89 compliant
@@ -33,6 +33,8 @@ Status: Updated after Phase 2.6 completion (Tokenize Whitespace) - Phase 2 COMPL
 - Typedef detection (keyword + "nomen" heuristic)
 - Layered expansion (expand to fixpoint, store all layers)
 - Layer and segment query APIs
+- **Lookahead API** for macro type disambiguation (Phase 3.2)
+- **Built-in latina.h macros** via `arbor2_includere_latina()` (Phase 7.1)
 
 **Missing in expandere:**
 - #include processing (files not actually read)
@@ -45,9 +47,11 @@ Status: Updated after Phase 2.6 completion (Tokenize Whitespace) - Phase 2 COMPL
 - Piscina checkpointing for rollback
 - **346 grammar productions** (P0-P345)
 - **952 LR states** (0-951)
-- **1828 tests total** (all passing)
+- **1856 tests total** (all passing)
 - Table validation
 - **Location propagation** via LOCUS_EX_LEXEMATIS macro (Phase 2.1)
+- **Macro lookahead integration** via public API (Phase 3.2)
+- **AMBIGUUS identifier tracking** (Phase 3.3)
 
 **Grammar currently covered:**
 
@@ -124,7 +128,8 @@ Current structure has:
 - Type resolution field
 
 ### Tests - COMPREHENSIVE
-- **1847 tests total** (all passing) - updated after Phase 2.3
+- **1856 GLR tests** (all passing) - updated after Phase 3.2/3.3
+- **124 expandere tests** (all passing) - includes lookahead API
 - Covers expressions, statements, declarations
 - Full initializer coverage (simple, brace, designated)
 - sizeof variants (type, pointer, array, multi-dim, pointer array)
@@ -135,6 +140,8 @@ Current structure has:
 - Qualifier + type modifier tests (Phase 1.4b)
 - **Location propagation tests** (identifier, binary expr, literals, function call) - Phase 2.1
 - **Parent pointer tests** (binary expr, nested expr, ternary, function call, subscript) - Phase 2.3
+- **Latin macro disambiguation tests** (integer x, i32 x, constans integer x) - Phase 3.2
+- **AMBIGUUS tracking tests** (foo * bar) - Phase 3.3
 - Table validation
 - Parser statistics
 
@@ -343,12 +350,26 @@ Implemented 2026-01-15.
 
 Given the current state, the recommended priority is:
 
-1. **Phase 2 (Rich AST)** - Add location spans, trivia, parent pointers for formatter/tooling support.
+1. **Phase 2 (Rich AST)** - **COMPLETE** ✓
    - 2.1 Location Propagation: **COMPLETE** ✓
    - 2.2 Trivia Attachment: **COMPLETE** ✓ (superseded by 2.6)
    - 2.3 Parent Pointer: **COMPLETE** ✓
    - 2.4 Comment Nodes: **COMPLETE** ✓ (promoted from trivia to first-class AST nodes)
    - 2.6 Tokenize Whitespace: **COMPLETE** ✓ (explicit SPATIA/TABULAE/CONTINUATIO/COMMENTUM tokens)
+
+2. **Phase 3 (GLR-Expansion Integration)** - **MOSTLY COMPLETE** ✓
+   - 3.1 Typedef Lookahead: **COMPLETE** ✓
+   - 3.2 Macro Lookahead: **COMPLETE** ✓ (public API + parser integration)
+   - 3.3 AMBIGUUS Tracking: **IMPROVED** ✓ (identificator field set)
+   - 3.4 Fork on Unknown: **WORKING** ✓
+
+3. **Phase 7.1 (Built-in Latina)** - **COMPLETE** ✓
+   - `arbor2_includere_latina()` with 35 macros
+
+4. **Next priorities:**
+   - Phase 4: Error Recovery (partial AST on errors)
+   - Phase 5: Conditional Compilation (#ifdef, #if, #else)
+   - Phase 6: #include Processing (actually read files)
 
 **Current capabilities:**
 - Complete C89 files with multiple declarations/functions ✓
@@ -362,6 +383,8 @@ Given the current state, the recommended priority is:
 - Pointer qualifiers (`int * const p`, `int * volatile p`) ✓
 - Qualified parameters (`int fn(const int x)`, `int fn(volatile int v)`) ✓
 - Function pointers (`int (*fp)(void)`) ✓
+- **Latin C89 macros** (`integer x` parses correctly with latina.h) ✓
+- **Macro type lookahead** (recursive resolution: i32→integer→int) ✓
 
 **Remaining gaps (low priority):**
 - K&R function definitions (old-style parameters)
@@ -549,11 +572,12 @@ After: Whitespace/comments are now typed `Arbor2Lexema*` tokens with specific ge
 
 ## Phase 3: GLR-Expansion Integration
 
-The infrastructure exists but isn't connected:
+Status: **MOSTLY COMPLETE** (Updated 2026-01-17)
 
-#### 3.1 Typedef Lookahead
-Current: arbor2_glr_est_probabiliter_typus() exists but limited
-Need: Query expansion context during parsing
+#### 3.1 Typedef Lookahead — **COMPLETE** ✓
+`arbor2_glr_est_probabiliter_typus()` queries expansion context during parsing:
+- Checks typedef table via `_potest_esse_typus()`
+- Checks macro type hints via `_macro_suggerit_typum()`
 
 ```c
 /* In parser, when seeing identifier in ambiguous position: */
@@ -566,27 +590,64 @@ si (tok->lexema->genus == ARBOR2_LEXEMA_IDENTIFICATOR)
 }
 ```
 
-#### 3.2 Macro Lookahead
-Add to expansion context:
+#### 3.2 Macro Lookahead — **COMPLETE** ✓
+
+Implemented 2026-01-17.
+
+**API added to arbor2_expandere.h:**
 ```c
-/* Query what first token of macro expansion would be */
+/* Simple genus query */
 Arbor2LexemaGenus arbor2_expansion_lookahead_genus(
     Arbor2Expansion*    exp,
-    chorda              identifier);
+    chorda              nomen_macro);
+
+/* Extended lookahead with metadata */
+Arbor2ExpansionLookahead arbor2_expansion_lookahead(
+    Arbor2Expansion*    exp,
+    chorda              nomen_macro);
 ```
 
-Use during parsing to guide decisions (e.g., is this macro function-like?).
+**Parser integration:**
+- `_macro_suggerit_typum()` refactored to use public `arbor2_expansion_lookahead()` API
+- Follows one level of macro recursion (e.g., `i32` → `integer` → `int`)
+- Recognizes type-starting keywords: INT, CHAR, VOID, FLOAT, DOUBLE, LONG, SHORT, SIGNED, UNSIGNED, STRUCT, UNION, ENUM, TYPEDEF, CONST, VOLATILE
 
-#### 3.3 Fork on Unknown
-When typedef/macro status unknown:
-1. Fork both interpretations
-2. Let one die naturally
-3. If both survive, create ambiguity node
+**Location:** lib/arbor2_glr.c lines 999-1059
 
-Current: ARBOR2_NODUS_AMBIGUUS exists but unused
-Need: Actually create these during parsing
+#### 3.3 AMBIGUUS Tracking — **IMPROVED** ✓
 
-**Deliverable:** Parser handles latina.h macros correctly
+Implemented 2026-01-17.
+
+**Before:** `_creare_nodum_ambiguum()` set `identificator = NIHIL` always.
+
+**After:** When lexema is an identifier, stores the identifier causing ambiguity:
+```c
+si (lexema != NIHIL && lexema->lexema != NIHIL &&
+    lexema->lexema->genus == ARBOR2_LEXEMA_IDENTIFICATOR)
+{
+    nodus->datum.ambiguus.identificator = piscina_allocare(glr->piscina, magnitudo(chorda));
+    *(nodus->datum.ambiguus.identificator) = lexema->lexema->valor;
+}
+```
+
+**Enables:** Future resolution by looking up the identifier that caused ambiguity.
+
+**Location:** lib/arbor2_glr.c lines 1105-1115
+
+#### 3.4 Fork on Unknown — **WORKING**
+GLR parser already forks on ambiguous positions:
+1. Fork both interpretations ✓
+2. Let one die naturally ✓
+3. If both survive, create AMBIGUUS node ✓
+
+**Tests added:**
+- Latin type macro disambiguation: `integer x` → DECLARATIO (with latina.h)
+- Nested macro resolution: `i32 x` → DECLARATIO (i32→integer→int)
+- AMBIGUUS tracking: `foo * bar` creates AMBIGUUS with 2+ interpretations
+
+**Tests:** 1856 (up from 1847, +9 new assertions)
+
+**Deliverable:** Parser handles latina.h macros correctly ✓
 
 ---
 
@@ -714,69 +775,38 @@ TabulaDispersa* included_viae;  /* Already exists in Arbor2Expansion */
 
 ## Phase 7: Built-in Definitions
 
-#### 7.1 Compiled-in Latina.h
-```c
-hic_manens constans structura {
-    constans character* nomen;
-    constans character* valor;
-} LATINA_MACROS[] = {
-    { "si", "if" },
-    { "alioquin", "else" },
-    { "per", "for" },
-    { "dum", "while" },
-    { "fac", "do" },
-    { "commutatio", "switch" },
-    { "casus", "case" },
-    { "ordinarius", "default" },
-    { "frange", "break" },
-    { "perge", "continue" },
-    { "redde", "return" },
-    { "salta", "goto" },
-    { "structura", "struct" },
-    { "unio", "union" },
-    { "enumeratio", "enum" },
-    { "nomen", "typedef" },
-    { "constans", "const" },
-    { "volatilis", "volatile" },
-    { "staticus", "static" },
-    { "externus", "extern" },
-    { "registrum", "register" },
-    { "sponte", "auto" },
-    { "vacuum", "void" },
-    { "character", "char" },
-    { "integer", "int" },
-    { "brevis", "short" },
-    { "longus", "long" },
-    { "signatus", "signed" },
-    { "insignatus", "unsigned" },
-    { "fluitans", "float" },
-    { "duplex", "double" },
-    { "magnitudo", "sizeof" },
-    { "NIHIL", "NULL" },
-    { "VERUM", "1" },
-    { "FALSUM", "0" },
-    { "hic_manens", "static" },
-    { "interior", "static" },
-    { "universalis", "static" },
-    { NIHIL, NIHIL }
-};
+#### 7.1 Compiled-in Latina.h — **COMPLETE** ✓
 
-vacuum arbor2_includere_latina(Arbor2Expansion* exp)
-{
-    i32 i;
-    per (i = ZEPHYRUM; LATINA_MACROS[i].nomen != NIHIL; i++)
-    {
-        arbor2_expansion_addere_macro(exp,
-            LATINA_MACROS[i].nomen,
-            LATINA_MACROS[i].valor,
-            "latina.h");
-    }
-}
+Implemented 2026-01-17.
+
+**API:** `arbor2_includere_latina(Arbor2Expansion* exp)`
+
+**Location:** lib/arbor2_expandere.c lines 1821-1892
+
+**Implementation note:** Struct field uses `titulus` instead of `nomen` because `nomen` is itself a macro that expands to `typedef`.
+
+**Macros registered (35 total):**
+
+| Category | Latin | C |
+|----------|-------|---|
+| Keywords | si, alioquin, per, dum, fac, commutatio, casus, ordinarius, frange, perge, redde, salta | if, else, for, while, do, switch, case, default, break, continue, return, goto |
+| Type keywords | structura, unio, enumeratio, nomen | struct, union, enum, typedef |
+| Qualifiers | constans, volatilis, staticus, externus, registrum, sponte | const, volatile, static, extern, register, auto |
+| Types | vacuum, character, integer, brevis, longus, signatus, insignatus, fluitans, duplex | void, char, int, short, long, signed, unsigned, float, double |
+| Operators | magnitudo | sizeof |
+| Constants | NIHIL, VERUM, FALSUM | NULL, 1, 0 |
+| Storage hints | hic_manens, interior, universalis | static |
+
+**Usage:**
+```c
+Arbor2Expansion* exp = arbor2_expansion_creare(piscina, intern);
+arbor2_includere_latina(exp);
+/* Now "integer x" parses as declaration because integer→int */
 ```
 
 #### 7.2 Standard Library Type Hints
 ```c
-/* Common typedefs from system headers */
+/* Common typedefs from system headers - NOT YET IMPLEMENTED */
 hic_manens constans character* STDLIB_TYPEDEFS[] = {
     "FILE", "size_t", "ptrdiff_t", "wchar_t",
     "int8_t", "int16_t", "int32_t", "int64_t",
@@ -785,7 +815,7 @@ hic_manens constans character* STDLIB_TYPEDEFS[] = {
 };
 ```
 
-**Deliverable:** Out-of-box Latin C89 parsing
+**Deliverable:** Out-of-box Latin C89 parsing ✓ (Phase 7.1 complete)
 
 ---
 
@@ -919,25 +949,27 @@ Phase 8 (Queries)      Phase 9 (Types)      Phase 10 (Index)
 
 ---
 
-## Files Reference (Updated 2026-01-16)
+## Files Reference (Updated 2026-01-17)
 
 | File | Lines | Status |
 |------|-------|--------|
 | lib/arbor2_lexema.c | ~500 | Complete (Phase 2.6: explicit whitespace tokens) |
 | lib/arbor2_token.c | 264 | Complete |
-| lib/arbor2_expandere.c | 1576 | Mostly complete (updated for spatia fields) |
-| lib/arbor2_glr.c | ~3800 | Functional + location + parent pointers + comment promotion |
+| lib/arbor2_expandere.c | ~1892 | Mostly complete (lookahead API, built-in latina.h) |
+| lib/arbor2_glr.c | ~3800 | Functional + location + parent + macro lookahead |
 | lib/arbor2_glr_tabula.c | ~17500 | 346 productions, 952 states |
 | lib/arbor2_scribere.c | ~200 | Complete (Phase 2.6: emits spatia tokens) |
 | include/arbor2_glr.h | ~720 | Good structure + location + pater + commenta fields |
 | include/arbor2_lexema.h | 220 | Complete (98 token types incl. whitespace) |
 | include/arbor2_token.h | 147 | Complete |
-| include/arbor2_expandere.h | 197 | Complete |
-| probationes/probatio_arbor2_glr.c | ~12900 | 1847 tests |
+| include/arbor2_expandere.h | ~230 | Complete (lookahead API, latina.h function) |
+| probationes/probatio_arbor2_glr.c | ~12950 | 1856 tests |
 | probationes/probatio_arbor2_lexema.c | ~340 | 38 tests (whitespace tokens) |
-| probationes/probatio_arbor2_expandere.c | ~600 | 30 tests |
+| probationes/probatio_arbor2_expandere.c | ~600 | 124 tests (includes lookahead) |
 | tools/glr_debug.c | ~340 | Working |
 | lib/arbor2_lexema.worklog.md | - | Phase 2.6 design notes |
+| lib/arbor2_expandere.worklog.md | - | Phase 3.2, 7.1 design notes |
+| lib/arbor2_glr.worklog.md | - | Phase 3.2, 3.3 design notes |
 
 ---
 
@@ -962,4 +994,7 @@ Phase 8 (Queries)      Phase 9 (Types)      Phase 10 (Index)
 | 2026-01-16 | 2.1 Location Prop | +0 | +0 | +26 | linea/columna_initium/finis, layer_index on AST nodes |
 | 2026-01-16 | 2.3 Parent Pointer | +0 | +0 | +19 | pater field, ~40 alloc sites, ~55 child->pater assignments |
 | 2026-01-16 | 2.6 Tokenize Whitespace | +5 | +0 | +0 | SPATIA, TABULAE, CONTINUATIO, COMMENTUM_* tokens; removed Arbor2Trivia |
-| **Current** | | **351** | **952** | **1847** | |
+| 2026-01-17 | 3.2 Macro Lookahead | +0 | +0 | +6 | arbor2_expansion_lookahead() API, parser integration |
+| 2026-01-17 | 3.3 AMBIGUUS Tracking | +0 | +0 | +3 | identificator field set in _creare_nodum_ambiguum() |
+| 2026-01-17 | 7.1 Built-in Latina | +0 | +0 | +0 | arbor2_includere_latina() with 35 macros |
+| **Current** | | **351** | **952** | **1856** | |

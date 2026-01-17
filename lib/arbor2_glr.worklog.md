@@ -2224,3 +2224,76 @@ Added 3 new test sections to `probatio_arbor2_glr.c`:
 
 Tests: 1856 (up from 1847, +9 new assertions)
 
+
+---
+
+## 2026-01-17: Phase 4 - Error Recovery
+
+### Overview
+
+Implemented error recovery for the GLR parser. The parser now continues past errors and produces partial ASTs with ERROR nodes containing information about skipped tokens.
+
+### Design Decisions
+
+1. **Recovery granularity: Statement-level only**
+   - Uses `_invenire_finem_declarationis()` to find item boundaries (`;` and `}`)
+   - Simpler and fewer false recoveries than expression-level recovery
+   - Recovery happens in `arbor2_glr_parsere_translation_unit()`
+
+2. **Error limit: 10 errors max**
+   - `ARBOR2_GLR_MAX_ERRORES X` (10 in Roman numerals)
+   - Prevents infinite loops on pathological input
+   - After 10 errors, returns partial result with `successus = FALSUM`
+
+3. **Error classification: None**
+   - Just stores error message and skipped tokens
+   - No "probably a declaration" guessing - keeps it simple
+
+4. **Error node placement: At translation unit level**
+   - ERROR nodes become siblings of declarations/functions in the AST
+   - The translation unit wrapper handles recovery between top-level items
+
+### Implementation
+
+#### New struct member (arbor2_glr.h)
+```c
+/* Error recovery */
+i32  num_errores;    /* Error count for recovery limit */
+```
+
+#### New constant (arbor2_glr.h)
+```c
+#define ARBOR2_GLR_MAX_ERRORES X  /* 10 errors max */
+```
+
+#### Error node creation (arbor2_glr.c:_creare_nodum_error)
+- Populates `ARBOR2_NODUS_ERROR` with:
+  - `nuntius`: error message from the parse attempt
+  - `lexemata_saltata`: Xar of tokens that were part of the failed parse
+- Sets location info from the first token
+
+#### Translation unit parser modification
+When sub-parse fails:
+1. Increment `num_errores`
+2. Check if over limit → return partial result
+3. Collect tokens from `positus` to `finis_info.proximus`
+4. Extract error message from `sub_res.errores`
+5. Create ERROR node with skipped tokens
+6. Add ERROR node to translation unit
+7. Advance position and continue to next item
+
+### Test Cases
+
+Added 4 new test sections to `probatio_arbor2_glr.c`:
+1. **Invalid decl + valid decl**: `int @ x; int y;` → ERROR + DECLARATIO
+2. **Multiple consecutive errors**: `@ x; @ y; @ z;` → 3 ERROR nodes
+3. **Error + valid function**: `@ badstuff; int foo() { return 0; }` → ERROR + DEFINITIO_FUNCTI
+4. **Error collection**: Verifies `res.errores` contains error messages
+
+Tests: 1877 (up from 1856, +21 new assertions)
+
+### Notes
+
+- The `_recuperare_panic()` function was designed but removed since the translation unit parser already knows item boundaries via `_invenire_finem_declarationis()`
+- `successus = VERUM` even if there were errors (as long as under the limit) since we produced a valid AST
+- Errors are available in both `res.errores` (messages) and in ERROR nodes (skipped tokens)

@@ -629,7 +629,13 @@ nomen structura {
     i32                     num_furcae;     /* Fork count */
     i32                     num_mergae;     /* Merge count */
     i32                     max_frons;      /* Max frontier size */
+
+    /* Error recovery */
+    i32                     num_errores;    /* Error count for recovery limit */
 } Arbor2GLR;
+
+/* Maximum errors before giving up recovery */
+#define ARBOR2_GLR_MAX_ERRORES X
 
 /* ==================================================
  * Parse Result

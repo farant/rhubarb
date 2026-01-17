@@ -12924,6 +12924,166 @@ s32 principale(vacuum)
     }
 
     /* ========================================================
+     * PROBARE: Error Recovery
+     * ======================================================== */
+
+    /* Test 1: Single invalid declaration, followed by valid one */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+        Arbor2Nodus* tu;
+        i32 num_decls;
+
+        imprimere("\n--- Probans error recovery: invalid decl + valid decl ---\n");
+
+        /* "int @ x;" is invalid, "int y;" is valid */
+        tokens = _lexare_ad_tokens(piscina, intern, "int @ x; int y;");
+        res = arbor2_glr_parsere_translation_unit(glr, tokens);
+
+        imprimere("  successus: %s\n", res.successus ? "VERUM" : "FALSUM");
+        CREDO_VERUM(res.successus);  /* Should succeed (with error recovery) */
+        CREDO_NON_NIHIL(res.radix);
+
+        si (res.radix != NIHIL)
+        {
+            tu = res.radix;
+            CREDO_AEQUALIS_I32((i32)tu->genus, (i32)ARBOR2_NODUS_TRANSLATION_UNIT);
+            num_decls = xar_numerus(tu->datum.translation_unit.declarationes);
+            imprimere("  num_decls: %d\n", num_decls);
+            CREDO_AEQUALIS_I32(num_decls, II);  /* ERROR node + valid decl */
+
+            si (num_decls >= I)
+            {
+                Arbor2Nodus** first_ptr;
+                Arbor2Nodus* first;
+                first_ptr = xar_obtinere(tu->datum.translation_unit.declarationes, ZEPHYRUM);
+                first = *first_ptr;
+                imprimere("  first node genus: %s\n", arbor2_nodus_genus_nomen(first->genus));
+                CREDO_AEQUALIS_I32((i32)first->genus, (i32)ARBOR2_NODUS_ERROR);
+
+                /* Check ERROR node has skipped tokens */
+                si (first->genus == ARBOR2_NODUS_ERROR)
+                {
+                    i32 num_skipped;
+                    num_skipped = first->datum.error.lexemata_saltata != NIHIL ?
+                        xar_numerus(first->datum.error.lexemata_saltata) : ZEPHYRUM;
+                    imprimere("  skipped tokens: %d\n", num_skipped);
+                    CREDO_VERUM(num_skipped > ZEPHYRUM);
+                }
+            }
+
+            si (num_decls >= II)
+            {
+                Arbor2Nodus** second_ptr;
+                Arbor2Nodus* second;
+                second_ptr = xar_obtinere(tu->datum.translation_unit.declarationes, I);
+                second = *second_ptr;
+                imprimere("  second node genus: %s\n", arbor2_nodus_genus_nomen(second->genus));
+                CREDO_AEQUALIS_I32((i32)second->genus, (i32)ARBOR2_NODUS_DECLARATIO);
+            }
+        }
+    }
+
+    /* Test 2: Multiple consecutive errors */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+        Arbor2Nodus* tu;
+        i32 num_decls;
+
+        imprimere("\n--- Probans error recovery: multiple errors ---\n");
+
+        /* All three are invalid: "@ x;", "@ y;", "@ z;" */
+        tokens = _lexare_ad_tokens(piscina, intern, "@ x; @ y; @ z;");
+        res = arbor2_glr_parsere_translation_unit(glr, tokens);
+
+        imprimere("  successus: %s\n", res.successus ? "VERUM" : "FALSUM");
+        CREDO_VERUM(res.successus);  /* Should succeed (with ERROR nodes) */
+        CREDO_NON_NIHIL(res.radix);
+
+        si (res.radix != NIHIL)
+        {
+            tu = res.radix;
+            num_decls = xar_numerus(tu->datum.translation_unit.declarationes);
+            imprimere("  num_decls: %d\n", num_decls);
+            CREDO_AEQUALIS_I32(num_decls, III);  /* Three ERROR nodes */
+
+            /* Verify all are ERROR nodes */
+            si (num_decls >= III)
+            {
+                Arbor2Nodus** ptr1;
+                Arbor2Nodus** ptr2;
+                Arbor2Nodus** ptr3;
+                ptr1 = xar_obtinere(tu->datum.translation_unit.declarationes, ZEPHYRUM);
+                ptr2 = xar_obtinere(tu->datum.translation_unit.declarationes, I);
+                ptr3 = xar_obtinere(tu->datum.translation_unit.declarationes, II);
+                CREDO_AEQUALIS_I32((i32)(*ptr1)->genus, (i32)ARBOR2_NODUS_ERROR);
+                CREDO_AEQUALIS_I32((i32)(*ptr2)->genus, (i32)ARBOR2_NODUS_ERROR);
+                CREDO_AEQUALIS_I32((i32)(*ptr3)->genus, (i32)ARBOR2_NODUS_ERROR);
+            }
+        }
+    }
+
+    /* Test 3: Error followed by valid function */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+        Arbor2Nodus* tu;
+        i32 num_decls;
+
+        imprimere("\n--- Probans error recovery: error + valid function ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "@ badstuff; int foo() { return 0; }");
+        res = arbor2_glr_parsere_translation_unit(glr, tokens);
+
+        imprimere("  successus: %s\n", res.successus ? "VERUM" : "FALSUM");
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.radix);
+
+        si (res.radix != NIHIL)
+        {
+            tu = res.radix;
+            num_decls = xar_numerus(tu->datum.translation_unit.declarationes);
+            imprimere("  num_decls: %d\n", num_decls);
+            CREDO_AEQUALIS_I32(num_decls, II);  /* ERROR + function */
+
+            si (num_decls >= II)
+            {
+                Arbor2Nodus** first_ptr;
+                Arbor2Nodus** second_ptr;
+                first_ptr = xar_obtinere(tu->datum.translation_unit.declarationes, ZEPHYRUM);
+                second_ptr = xar_obtinere(tu->datum.translation_unit.declarationes, I);
+                CREDO_AEQUALIS_I32((i32)(*first_ptr)->genus, (i32)ARBOR2_NODUS_ERROR);
+                CREDO_AEQUALIS_I32((i32)(*second_ptr)->genus, (i32)ARBOR2_NODUS_DEFINITIO_FUNCTI);
+            }
+        }
+    }
+
+    /* Test 4: Errors collection in result */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans error collection in result ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "@ bad;");
+        res = arbor2_glr_parsere_translation_unit(glr, tokens);
+
+        imprimere("  successus: %s\n", res.successus ? "VERUM" : "FALSUM");
+        imprimere("  errores: %p\n", (vacuum*)res.errores);
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.errores);  /* Should have error messages */
+
+        si (res.errores != NIHIL)
+        {
+            i32 num_err;
+            num_err = xar_numerus(res.errores);
+            imprimere("  num errors: %d\n", num_err);
+            CREDO_VERUM(num_err > ZEPHYRUM);
+        }
+    }
+
+    /* ========================================================
      * PROBARE: Parser statistics
      * ======================================================== */
 

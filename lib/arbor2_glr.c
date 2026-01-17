@@ -54,6 +54,10 @@ interior Arbor2Nodus* _construere_nodum_binarium(
 interior Arbor2Nodus* _construere_nodum_unarium(
     Arbor2GLR* glr, Arbor2Token* operator, Arbor2Nodus* operandum);
 
+/* Error recovery forward declarations */
+interior Arbor2Nodus* _creare_nodum_error(
+    Arbor2GLR* glr, chorda* nuntius, Xar* lexemata_saltata, Arbor2Token* lexema_initium);
+
 /* ==================================================
  * GSS Path Enumeration for Reductions
  *
@@ -738,6 +742,7 @@ arbor2_glr_creare(
     glr->num_furcae = ZEPHYRUM;
     glr->num_mergae = ZEPHYRUM;
     glr->max_frons = ZEPHYRUM;
+    glr->num_errores = ZEPHYRUM;
 
     /* Initialize LR tables */
     arbor2_glr_initializare_tabulas(glr);
@@ -4874,6 +4879,73 @@ _processare_actiones(Arbor2GLR* glr, b32* acceptatum_out)
     redde nodus_acceptatus;
 }
 
+/* ==================================================
+ * Error Recovery Functions
+ *
+ * Create ERROR nodes with skipped token information.
+ * Recovery is done at statement-level in the translation
+ * unit parser using _invenire_finem_declarationis.
+ * ================================================== */
+
+/* _creare_nodum_error - Create ERROR node with skipped tokens
+ *
+ * Populates the error node fields:
+ * - nuntius: error message
+ * - lexemata_saltata: array of skipped tokens
+ */
+interior Arbor2Nodus*
+_creare_nodum_error(
+    Arbor2GLR*      glr,
+    chorda*         nuntius,
+    Xar*            lexemata_saltata,
+    Arbor2Token*    lexema_initium)
+{
+    Arbor2Nodus* nodus;
+
+    nodus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
+    si (nodus == NIHIL)
+    {
+        redde NIHIL;
+    }
+
+    nodus->genus = ARBOR2_NODUS_ERROR;
+    nodus->lexema = lexema_initium;
+    nodus->pater = NIHIL;
+    nodus->commenta_ante = NIHIL;
+    nodus->commenta_post = NIHIL;
+
+    /* Set location from first skipped token or initial token */
+    si (lexema_initium != NIHIL && lexema_initium->origo_meta != NIHIL)
+    {
+        nodus->linea_initium = lexema_initium->origo_meta->linea;
+        nodus->columna_initium = lexema_initium->origo_meta->columna;
+        nodus->linea_finis = lexema_initium->origo_meta->linea;
+        nodus->columna_finis = lexema_initium->origo_meta->columna;
+        nodus->layer_index = lexema_initium->origo_meta->layer_index;
+    }
+    alioquin si (lexema_initium != NIHIL)
+    {
+        nodus->linea_initium = lexema_initium->lexema->linea;
+        nodus->columna_initium = lexema_initium->lexema->columna;
+        nodus->linea_finis = lexema_initium->lexema->linea;
+        nodus->columna_finis = lexema_initium->lexema->columna;
+        nodus->layer_index = ZEPHYRUM;
+    }
+    alioquin
+    {
+        nodus->linea_initium = ZEPHYRUM;
+        nodus->columna_initium = ZEPHYRUM;
+        nodus->linea_finis = ZEPHYRUM;
+        nodus->columna_finis = ZEPHYRUM;
+        nodus->layer_index = ZEPHYRUM;
+    }
+
+    nodus->datum.error.nuntius = nuntius;
+    nodus->datum.error.lexemata_saltata = lexemata_saltata;
+
+    redde nodus;
+}
+
 Arbor2GLRResultus
 arbor2_glr_parsere_expressio(
     Arbor2GLR*      glr,
@@ -5133,6 +5205,7 @@ arbor2_glr_parsere_translation_unit(
 
     /* Clear errors for fresh parse */
     xar_vacare(glr->errores);
+    glr->num_errores = ZEPHYRUM;
 
     /* Parse external declarations until EOF */
     dum (positus < num_tokens)
@@ -5187,13 +5260,60 @@ arbor2_glr_parsere_translation_unit(
 
         si (!sub_res.successus)
         {
-            /* Parse failed - return partial result with errors */
-            resultus.successus = FALSUM;
-            resultus.errores = sub_res.errores;
-            resultus.ambigui = sub_res.ambigui;
-            resultus.radix = tu_nodus;  /* Return partial result */
-            resultus.tokens_consumed = positus;
-            redde resultus;
+            /* Error recovery - check if we've hit the error limit */
+            glr->num_errores++;
+
+            si (glr->num_errores > ARBOR2_GLR_MAX_ERRORES)
+            {
+                /* Too many errors - give up and return partial result */
+                resultus.successus = FALSUM;
+                resultus.errores = glr->errores;
+                resultus.ambigui = sub_res.ambigui;
+                resultus.radix = tu_nodus;
+                resultus.tokens_consumed = positus;
+                redde resultus;
+            }
+
+            /* Create ERROR node with skipped tokens */
+            {
+                Arbor2Nodus* error_nodus;
+                Xar* lexemata_saltata;
+                chorda* nuntius;
+                Arbor2Nodus** error_slot;
+
+                /* Collect tokens that were part of this failed parse */
+                lexemata_saltata = xar_creare(glr->piscina, magnitudo(Arbor2Token*));
+                per (i = positus; i < finis_info.proximus; i++)
+                {
+                    Arbor2Token** src_tok;
+                    Arbor2Token** dst_tok;
+                    src_tok = xar_obtinere(lexemata, i);
+                    dst_tok = xar_addere(lexemata_saltata);
+                    *dst_tok = *src_tok;
+                }
+
+                /* Get error message from sub_res.errores if available */
+                nuntius = NIHIL;
+                si (sub_res.errores != NIHIL && xar_numerus(sub_res.errores) > ZEPHYRUM)
+                {
+                    chorda** err_ptr;
+                    err_ptr = xar_obtinere(sub_res.errores, ZEPHYRUM);
+                    nuntius = *err_ptr;
+                }
+
+                /* Create ERROR node */
+                error_nodus = _creare_nodum_error(glr, nuntius, lexemata_saltata, tok);
+
+                si (error_nodus != NIHIL)
+                {
+                    error_slot = xar_addere(tu_nodus->datum.translation_unit.declarationes);
+                    *error_slot = error_nodus;
+                }
+            }
+
+            /* Advance past this erroneous item and continue */
+            positus = finis_info.proximus;
+            perge;
         }
 
         /* Initialize comment fields on the parsed node */
@@ -5234,10 +5354,10 @@ arbor2_glr_parsere_translation_unit(
         positus = finis_info.proximus;
     }
 
-    /* Success - return complete translation unit */
-    resultus.successus = VERUM;
+    /* Return translation unit with any collected errors */
+    resultus.successus = VERUM;  /* We produced an AST (may contain ERROR nodes) */
     resultus.radix = tu_nodus;
-    resultus.errores = NIHIL;
+    resultus.errores = (glr->num_errores > ZEPHYRUM) ? glr->errores : NIHIL;
     resultus.ambigui = NIHIL;
     resultus.tokens_consumed = positus;
 
