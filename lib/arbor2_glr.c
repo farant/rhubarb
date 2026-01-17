@@ -202,7 +202,9 @@ interior Arbor2Nodus*
 _creare_nodum_commentum(
     Piscina*             piscina,
     Arbor2Trivia*        trivia,
-    b32                  est_fluitans)
+    b32                  est_fluitans,
+    Xar*                 trivia_ante,
+    Xar*                 trivia_post)
 {
     Arbor2Nodus* nodus;
 
@@ -235,6 +237,8 @@ _creare_nodum_commentum(
     nodus->datum.commentum.textus = _extrahere_textum_commenti(trivia->valor, trivia->est_c99);
     nodus->datum.commentum.est_fluitans = est_fluitans;
     nodus->datum.commentum.fragmenta = NIHIL;
+    nodus->datum.commentum.trivia_ante = trivia_ante;
+    nodus->datum.commentum.trivia_post = trivia_post;
 
     redde nodus;
 }
@@ -380,6 +384,81 @@ _est_commentum_finis_lineae(Xar* trivia_post, i32 comment_index)
     redde VERUM;
 }
 
+/* Extract whitespace trivia around a comment.
+ * NOTE: Reserved for future reformatting scenarios where we need to
+ * move/modify comments and track their surrounding whitespace.
+ * For roundtrip, whitespace stays in token trivia.
+ */
+#if 0
+interior vacuum
+_extrahere_trivia_circa_commentum(
+    Piscina*    piscina,
+    Xar*        trivia,
+    i32         comment_index,
+    i32         start_index,    /* Start of range to consider (inclusive) */
+    Xar**       out_trivia_ante,
+    Xar**       out_trivia_post)
+{
+    i32 i;
+    i32 num;
+    Xar* ante;
+    Xar* post;
+    Arbor2Trivia** t_ptr;
+    Arbor2Trivia** slot;
+
+    ante = NIHIL;
+    post = NIHIL;
+
+    *out_trivia_ante = NIHIL;
+    *out_trivia_post = NIHIL;
+
+    si (trivia == NIHIL)
+    {
+        redde;
+    }
+
+    num = xar_numerus(trivia);
+
+    /* Collect whitespace before comment (from start_index to comment_index-1) */
+    per (i = start_index; i < comment_index; i++)
+    {
+        t_ptr = xar_obtinere(trivia, i);
+        si (t_ptr != NIHIL && *t_ptr != NIHIL && !(*t_ptr)->est_commentum)
+        {
+            si (ante == NIHIL)
+            {
+                ante = xar_creare(piscina, magnitudo(Arbor2Trivia*));
+            }
+            slot = xar_addere(ante);
+            *slot = *t_ptr;
+        }
+    }
+
+    /* Collect whitespace after comment (until next comment or end) */
+    per (i = comment_index + I; i < num; i++)
+    {
+        t_ptr = xar_obtinere(trivia, i);
+        si (t_ptr != NIHIL && *t_ptr != NIHIL)
+        {
+            si ((*t_ptr)->est_commentum)
+            {
+                /* Hit another comment, stop */
+                frange;
+            }
+            si (post == NIHIL)
+            {
+                post = xar_creare(piscina, magnitudo(Arbor2Trivia*));
+            }
+            slot = xar_addere(post);
+            *slot = *t_ptr;
+        }
+    }
+
+    *out_trivia_ante = ante;
+    *out_trivia_post = post;
+}
+#endif
+
 /* Attach a comment node to commenta_ante of target node */
 interior vacuum
 _adhaerere_commentum_ante(Piscina* piscina, Arbor2Nodus* target, Arbor2Nodus* commentum)
@@ -427,6 +506,7 @@ _adhaerere_commentum_post(Piscina* piscina, Arbor2Nodus* target, Arbor2Nodus* co
  * Attaches trailing comments to nodus_ante as commenta_post.
  * Adds floating comments to lista_parens as sibling nodes.
  *
+ * Comments are promoted as first-class AST nodes with their own trivia.
  * Returns number of comment nodes created.
  */
 interior i32
@@ -441,6 +521,14 @@ _promovere_commenta_ex_trivia(
     i32 i;
     i32 num;
     Xar* trivia;
+    Arbor2Trivia** t_ptr;
+    Arbor2Trivia* t;
+    b32 blank_ante;
+    b32 blank_post;
+    b32 est_fluitans;
+    b32 est_eol;
+    Arbor2Nodus* commentum;
+    Arbor2Nodus** slot;
 
     count = ZEPHYRUM;
 
@@ -456,23 +544,26 @@ _promovere_commenta_ex_trivia(
         num = xar_numerus(trivia);
         per (i = ZEPHYRUM; i < num; i++)
         {
-            Arbor2Trivia** t_ptr = xar_obtinere(trivia, i);
+            t_ptr = xar_obtinere(trivia, i);
             si (t_ptr != NIHIL && *t_ptr != NIHIL)
             {
-                Arbor2Trivia* t = *t_ptr;
+                t = *t_ptr;
                 si (t->est_commentum)
                 {
                     /* Check if floating (blank lines both sides) */
-                    b32 blank_ante = _habet_lineam_vacuam_ante(trivia, i);
-                    b32 blank_post = _habet_lineam_vacuam_post(trivia, i);
-                    b32 est_fluitans = blank_ante && blank_post;
+                    blank_ante = _habet_lineam_vacuam_ante(trivia, i);
+                    blank_post = _habet_lineam_vacuam_post(trivia, i);
+                    est_fluitans = blank_ante && blank_post;
 
-                    Arbor2Nodus* commentum = _creare_nodum_commentum(piscina, t, est_fluitans);
+                    /* NOTE: For roundtrip, whitespace remains in token trivia.
+                     * Comment trivia fields reserved for reformatting scenarios
+                     * where we need to move/modify comments. */
+                    commentum = _creare_nodum_commentum(piscina, t, est_fluitans, NIHIL, NIHIL);
 
                     si (est_fluitans && lista_parens != NIHIL)
                     {
                         /* Floating comment - add to parent list */
-                        Arbor2Nodus** slot = xar_addere(lista_parens);
+                        slot = xar_addere(lista_parens);
                         *slot = commentum;
                     }
                     alioquin si (nodus_post != NIHIL)
@@ -494,19 +585,19 @@ _promovere_commenta_ex_trivia(
         num = xar_numerus(trivia);
         per (i = ZEPHYRUM; i < num; i++)
         {
-            Arbor2Trivia** t_ptr = xar_obtinere(trivia, i);
+            t_ptr = xar_obtinere(trivia, i);
             si (t_ptr != NIHIL && *t_ptr != NIHIL)
             {
-                Arbor2Trivia* t = *t_ptr;
+                t = *t_ptr;
                 si (t->est_commentum)
                 {
                     /* Check if end-of-line comment */
-                    b32 est_eol = _est_commentum_finis_lineae(trivia, i);
+                    est_eol = _est_commentum_finis_lineae(trivia, i);
 
                     si (est_eol && nodus_ante != NIHIL)
                     {
                         /* EOL comment - attach to previous node */
-                        Arbor2Nodus* commentum = _creare_nodum_commentum(piscina, t, FALSUM);
+                        commentum = _creare_nodum_commentum(piscina, t, FALSUM, NIHIL, NIHIL);
                         _adhaerere_commentum_post(piscina, nodus_ante, commentum);
                         count++;
                     }
@@ -516,6 +607,96 @@ _promovere_commenta_ex_trivia(
     }
 
     redde count;
+}
+
+/* Promovere commenta ab tokeno interiore ad nodos filiorum.
+ * Pro operatoribus inter sinister et dexter:
+ *   - trivia_ante tok → nodus_post.commenta_ante (praecedentia)
+ *   - trivia_post tok → nodus_post.commenta_ante (interiora)
+ * Pro parenibus et braketis:
+ *   - trivia_post tok_apertum → nodus_contentum.commenta_ante
+ *   - trivia_ante tok_clausum → nodus_contentum.commenta_post
+ *
+ * Comments are promoted as first-class AST nodes.
+ * Whitespace remains in token trivia for roundtrip; comment trivia fields
+ * are reserved for future reformatting scenarios.
+ * Nulla commenta fluitantia in expressionibus - omnia adhaerent.
+ */
+interior vacuum
+_promovere_commenta_interior(
+    Piscina*        piscina,
+    Arbor2Token*    tok_interior,   /* Token interior (operator, paren, etc.) */
+    Arbor2Nodus*    nodus_ante,     /* Filius ante tokenum */
+    Arbor2Nodus*    nodus_post)     /* Filius post tokenum */
+{
+    i32 i;
+    i32 num;
+    Xar* trivia;
+    Arbor2Trivia** t_ptr;
+    Arbor2Trivia* t;
+    Arbor2Nodus* commentum;
+    b32 est_eol;
+
+    si (tok_interior == NIHIL || tok_interior->lexema == NIHIL)
+    {
+        redde;
+    }
+
+    /* Processare trivia_ante (commenta praecedentia tokenum) */
+    trivia = tok_interior->lexema->trivia_ante;
+    si (trivia != NIHIL && nodus_post != NIHIL)
+    {
+        num = xar_numerus(trivia);
+        per (i = ZEPHYRUM; i < num; i++)
+        {
+            t_ptr = xar_obtinere(trivia, i);
+            si (t_ptr != NIHIL && *t_ptr != NIHIL)
+            {
+                t = *t_ptr;
+                si (t->est_commentum)
+                {
+                    /* In expressionibus, commenta praecedentia adhaerent ad nodum post */
+                    commentum = _creare_nodum_commentum(piscina, t, FALSUM, NIHIL, NIHIL);
+                    _adhaerere_commentum_ante(piscina, nodus_post, commentum);
+                }
+            }
+        }
+    }
+
+    /* Processare trivia_post (commenta post tokenum) */
+    trivia = tok_interior->lexema->trivia_post;
+    si (trivia != NIHIL)
+    {
+        num = xar_numerus(trivia);
+        per (i = ZEPHYRUM; i < num; i++)
+        {
+            t_ptr = xar_obtinere(trivia, i);
+            si (t_ptr != NIHIL && *t_ptr != NIHIL)
+            {
+                t = *t_ptr;
+                si (t->est_commentum)
+                {
+                    /* Commenta post operatorem: ad nodum post si existit,
+                     * alioquin ad nodum ante ut commenta_post */
+                    si (nodus_post != NIHIL)
+                    {
+                        commentum = _creare_nodum_commentum(piscina, t, FALSUM, NIHIL, NIHIL);
+                        _adhaerere_commentum_ante(piscina, nodus_post, commentum);
+                    }
+                    alioquin si (nodus_ante != NIHIL)
+                    {
+                        /* Pro tokenis clausis sine nodo sequenti */
+                        est_eol = _est_commentum_finis_lineae(trivia, i);
+                        si (est_eol)
+                        {
+                            commentum = _creare_nodum_commentum(piscina, t, FALSUM, NIHIL, NIHIL);
+                            _adhaerere_commentum_post(piscina, nodus_ante, commentum);
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
 
 /* ==================================================
@@ -1197,6 +1378,17 @@ _processare_unam_actionem(
                             si (valor_novus != NIHIL)
                             {
                                 LOCUS_EX_LEXEMATIS(valor_novus, num_pop - I, ZEPHYRUM);
+
+                                /* Initializare campos commentorum */
+                                valor_novus->commenta_ante = NIHIL;
+                                valor_novus->commenta_post = NIHIL;
+
+                                /* Promovere commenta ab operatore */
+                                _promovere_commenta_interior(
+                                    glr->piscina,
+                                    lexemata[I],  /* tok_operator */
+                                    valori[II],   /* sinister */
+                                    valori[ZEPHYRUM]);  /* dexter */
                             }
                         }
                         alioquin
@@ -1213,6 +1405,17 @@ _processare_unam_actionem(
                             si (valor_novus != NIHIL)
                             {
                                 LOCUS_EX_LEXEMATIS(valor_novus, num_pop - I, ZEPHYRUM);
+
+                                /* Initializare campos commentorum */
+                                valor_novus->commenta_ante = NIHIL;
+                                valor_novus->commenta_post = NIHIL;
+
+                                /* Promovere commenta ab operatore */
+                                _promovere_commenta_interior(
+                                    glr->piscina,
+                                    lexemata[I],         /* tok_operator */
+                                    NIHIL,               /* nulla ante */
+                                    valori[ZEPHYRUM]);   /* operandum */
                             }
                         }
                         alioquin
@@ -1246,7 +1449,18 @@ _processare_unam_actionem(
                             nodus_sizeof->datum.sizeof_expr.operandum = valori[ZEPHYRUM];
                             nodus_sizeof->datum.sizeof_expr.tok_paren_cl = NIHIL;
 
+                            /* Initializare campos commentorum */
+                            nodus_sizeof->commenta_ante = NIHIL;
+                            nodus_sizeof->commenta_post = NIHIL;
+
                             si (valori[ZEPHYRUM] != NIHIL) valori[ZEPHYRUM]->pater = nodus_sizeof;
+
+                            /* Promovere commenta ab sizeof token */
+                            _promovere_commenta_interior(
+                                glr->piscina,
+                                lexemata[I],         /* tok_sizeof */
+                                NIHIL,               /* nulla ante */
+                                valori[ZEPHYRUM]);   /* operandum */
 
                             valor_novus = nodus_sizeof;
                         }
@@ -1450,6 +1664,26 @@ _processare_unam_actionem(
                             nodus_sizeof->datum.sizeof_expr.operandum = nodus_typus;
                             nodus_typus->pater = nodus_sizeof;
 
+                            /* Initializare campos commentorum */
+                            nodus_sizeof->commenta_ante = NIHIL;
+                            nodus_sizeof->commenta_post = NIHIL;
+                            nodus_typus->commenta_ante = NIHIL;
+                            nodus_typus->commenta_post = NIHIL;
+
+                            /* Promovere commenta ab '(' token */
+                            _promovere_commenta_interior(
+                                glr->piscina,
+                                lexemata[num_pop - II],  /* tok_paren_ap */
+                                NIHIL,                   /* nulla ante */
+                                nodus_typus);            /* typus */
+
+                            /* Promovere commenta ab ')' token */
+                            _promovere_commenta_interior(
+                                glr->piscina,
+                                lexemata[ZEPHYRUM],      /* tok_paren_cl */
+                                nodus_typus,             /* typus */
+                                NIHIL);                  /* nulla post */
+
                             valor_novus = nodus_sizeof;
                         }
                         alioquin
@@ -1535,9 +1769,29 @@ _processare_unam_actionem(
                             nodus_cast->datum.conversio.tok_paren_cl = lexemata[I];  /* ) before operand */
                             nodus_cast->datum.conversio.expressio = valori[ZEPHYRUM];
 
+                            /* Initializare campos commentorum */
+                            nodus_cast->commenta_ante = NIHIL;
+                            nodus_cast->commenta_post = NIHIL;
+                            nodus_typus->commenta_ante = NIHIL;
+                            nodus_typus->commenta_post = NIHIL;
+
                             /* Statuere patrem pro filiis */
                             nodus_typus->pater = nodus_cast;
                             si (valori[ZEPHYRUM] != NIHIL) valori[ZEPHYRUM]->pater = nodus_cast;
+
+                            /* Promovere commenta ab '(' token */
+                            _promovere_commenta_interior(
+                                glr->piscina,
+                                lexemata[num_pop - I],  /* tok_paren_ap */
+                                NIHIL,                  /* nulla ante */
+                                nodus_typus);           /* typus */
+
+                            /* Promovere commenta ab ')' token */
+                            _promovere_commenta_interior(
+                                glr->piscina,
+                                lexemata[I],            /* tok_paren_cl */
+                                nodus_typus,            /* typus */
+                                valori[ZEPHYRUM]);      /* expressio */
 
                             valor_novus = nodus_cast;
                         }
@@ -1564,10 +1818,28 @@ _processare_unam_actionem(
                             nodus_tern->datum.ternarius.tok_colon = lexemata[I];
                             nodus_tern->datum.ternarius.falsum = valori[ZEPHYRUM];
 
+                            /* Initializare campos commentorum */
+                            nodus_tern->commenta_ante = NIHIL;
+                            nodus_tern->commenta_post = NIHIL;
+
                             /* Statuere patrem pro filiis */
                             si (valori[IV] != NIHIL) valori[IV]->pater = nodus_tern;
                             si (valori[II] != NIHIL) valori[II]->pater = nodus_tern;
                             si (valori[ZEPHYRUM] != NIHIL) valori[ZEPHYRUM]->pater = nodus_tern;
+
+                            /* Promovere commenta ab ? token */
+                            _promovere_commenta_interior(
+                                glr->piscina,
+                                lexemata[III],  /* tok_interrogatio */
+                                valori[IV],     /* conditio */
+                                valori[II]);    /* verum */
+
+                            /* Promovere commenta ab : token */
+                            _promovere_commenta_interior(
+                                glr->piscina,
+                                lexemata[I],    /* tok_colon */
+                                valori[II],     /* verum */
+                                valori[ZEPHYRUM]);  /* falsum */
 
                             valor_novus = nodus_tern;
                         }
@@ -1593,9 +1865,27 @@ _processare_unam_actionem(
                             nodus_sub->datum.subscriptio.index = valori[I];
                             nodus_sub->datum.subscriptio.tok_bracket_cl = lexemata[ZEPHYRUM];
 
+                            /* Initializare campos commentorum */
+                            nodus_sub->commenta_ante = NIHIL;
+                            nodus_sub->commenta_post = NIHIL;
+
                             /* Statuere patrem pro filiis */
                             si (valori[III] != NIHIL) valori[III]->pater = nodus_sub;
                             si (valori[I] != NIHIL) valori[I]->pater = nodus_sub;
+
+                            /* Promovere commenta ab '[' token */
+                            _promovere_commenta_interior(
+                                glr->piscina,
+                                lexemata[II],   /* tok_bracket_ap */
+                                valori[III],    /* basis */
+                                valori[I]);     /* index */
+
+                            /* Promovere commenta ab ']' token */
+                            _promovere_commenta_interior(
+                                glr->piscina,
+                                lexemata[ZEPHYRUM],  /* tok_bracket_cl */
+                                valori[I],      /* index */
+                                NIHIL);         /* nulla post */
 
                             valor_novus = nodus_sub;
                         }
@@ -1624,8 +1914,26 @@ _processare_unam_actionem(
                             nodus_call->datum.vocatio.argumenta = NIHIL;
                             nodus_call->datum.vocatio.tok_paren_cl = lexemata[ZEPHYRUM];
 
+                            /* Initializare campos commentorum */
+                            nodus_call->commenta_ante = NIHIL;
+                            nodus_call->commenta_post = NIHIL;
+
                             /* Statuere patrem pro filio */
                             si (valori[II] != NIHIL) valori[II]->pater = nodus_call;
+
+                            /* Promovere commenta ab '(' token */
+                            _promovere_commenta_interior(
+                                glr->piscina,
+                                lexemata[I],    /* tok_paren_ap */
+                                valori[II],     /* basis */
+                                NIHIL);         /* nulla argumenta */
+
+                            /* Promovere commenta ab ')' token */
+                            _promovere_commenta_interior(
+                                glr->piscina,
+                                lexemata[ZEPHYRUM],  /* tok_paren_cl */
+                                valori[II],     /* basis (no args, attach to base) */
+                                NIHIL);
 
                             valor_novus = nodus_call;
                         }
@@ -1646,9 +1954,27 @@ _processare_unam_actionem(
                             nodus_call->datum.vocatio.argumenta = valori[I];
                             nodus_call->datum.vocatio.tok_paren_cl = lexemata[ZEPHYRUM];
 
+                            /* Initializare campos commentorum */
+                            nodus_call->commenta_ante = NIHIL;
+                            nodus_call->commenta_post = NIHIL;
+
                             /* Statuere patrem pro filiis */
                             si (valori[III] != NIHIL) valori[III]->pater = nodus_call;
                             si (valori[I] != NIHIL) valori[I]->pater = nodus_call;
+
+                            /* Promovere commenta ab '(' token */
+                            _promovere_commenta_interior(
+                                glr->piscina,
+                                lexemata[II],   /* tok_paren_ap */
+                                valori[III],    /* basis */
+                                valori[I]);     /* argumenta */
+
+                            /* Promovere commenta ab ')' token */
+                            _promovere_commenta_interior(
+                                glr->piscina,
+                                lexemata[ZEPHYRUM],  /* tok_paren_cl */
+                                valori[I],      /* argumenta */
+                                NIHIL);
 
                             valor_novus = nodus_call;
                         }
@@ -1676,8 +2002,20 @@ _processare_unam_actionem(
                             nodus_mem->datum.membrum.membrum = lexemata[ZEPHYRUM]->lexema->valor;
                             nodus_mem->datum.membrum.est_sagitta = (actio->valor == 135);
 
+                            /* Initializare campos commentorum */
+                            nodus_mem->commenta_ante = NIHIL;
+                            nodus_mem->commenta_post = NIHIL;
+
                             /* Statuere patrem pro filio */
                             si (valori[II] != NIHIL) valori[II]->pater = nodus_mem;
+
+                            /* Promovere commenta ab accessor token (. or ->) */
+                            /* Commenta post accessor adhaerent ad basis.commenta_post */
+                            _promovere_commenta_interior(
+                                glr->piscina,
+                                lexemata[I],    /* tok_accessor */
+                                valori[II],     /* basis */
+                                NIHIL);         /* membrum est token, non nodus */
 
                             valor_novus = nodus_mem;
                         }
@@ -1703,8 +2041,20 @@ _processare_unam_actionem(
                             nodus_post->datum.post_unarium.tok_operator = lexemata[ZEPHYRUM];
                             nodus_post->datum.post_unarium.operator = lexemata[ZEPHYRUM]->lexema->genus;
 
+                            /* Initializare campos commentorum */
+                            nodus_post->commenta_ante = NIHIL;
+                            nodus_post->commenta_post = NIHIL;
+
                             /* Statuere patrem pro filio */
                             si (valori[I] != NIHIL) valori[I]->pater = nodus_post;
+
+                            /* Promovere commenta ab operator token (++ or --) */
+                            /* Commenta post operandum adhaerent ad operandum.commenta_post */
+                            _promovere_commenta_interior(
+                                glr->piscina,
+                                lexemata[ZEPHYRUM],  /* tok_operator */
+                                valori[I],           /* operandum */
+                                NIHIL);              /* nulla post */
 
                             valor_novus = nodus_post;
                         }
@@ -3375,6 +3725,10 @@ _processare_unam_actionem(
                         valor_novus->pater = NIHIL;
                         LOCUS_EX_LEXEMATIS(valor_novus, num_pop - I, ZEPHYRUM);
 
+                        /* Initializare campos commentorum */
+                        valor_novus->commenta_ante = NIHIL;
+                        valor_novus->commenta_post = NIHIL;
+
                         si (num_pop == V)
                         {
                             /* P20: if_statement -> 'if' '(' expression ')' statement */
@@ -3390,6 +3744,20 @@ _processare_unam_actionem(
                             /* Statuere patrem pro filiis */
                             si (valori[II] != NIHIL) valori[II]->pater = valor_novus;
                             si (valori[ZEPHYRUM] != NIHIL) valori[ZEPHYRUM]->pater = valor_novus;
+
+                            /* Promovere commenta ab '(' token */
+                            _promovere_commenta_interior(
+                                glr->piscina,
+                                lexemata[III],    /* tok_paren_ap */
+                                NIHIL,            /* nulla ante */
+                                valori[II]);      /* conditio */
+
+                            /* Promovere commenta ab ')' token */
+                            _promovere_commenta_interior(
+                                glr->piscina,
+                                lexemata[I],      /* tok_paren_cl */
+                                valori[II],       /* conditio */
+                                valori[ZEPHYRUM]); /* consequens */
                         }
                         alioquin si (num_pop == VII)
                         {
@@ -3407,6 +3775,27 @@ _processare_unam_actionem(
                             si (valori[IV] != NIHIL) valori[IV]->pater = valor_novus;
                             si (valori[II] != NIHIL) valori[II]->pater = valor_novus;
                             si (valori[ZEPHYRUM] != NIHIL) valori[ZEPHYRUM]->pater = valor_novus;
+
+                            /* Promovere commenta ab '(' token */
+                            _promovere_commenta_interior(
+                                glr->piscina,
+                                lexemata[V],      /* tok_paren_ap */
+                                NIHIL,            /* nulla ante */
+                                valori[IV]);      /* conditio */
+
+                            /* Promovere commenta ab ')' token */
+                            _promovere_commenta_interior(
+                                glr->piscina,
+                                lexemata[III],    /* tok_paren_cl */
+                                valori[IV],       /* conditio */
+                                valori[II]);      /* consequens */
+
+                            /* Promovere commenta ab 'else' token */
+                            _promovere_commenta_interior(
+                                glr->piscina,
+                                lexemata[I],      /* tok_alioquin */
+                                valori[II],       /* consequens */
+                                valori[ZEPHYRUM]); /* alternans */
                         }
                         alioquin
                         {
@@ -3428,6 +3817,11 @@ _processare_unam_actionem(
                         valor_novus->lexema = lexemata[num_pop - I];  /* 'while' token */
                         valor_novus->pater = NIHIL;
                         LOCUS_EX_LEXEMATIS(valor_novus, num_pop - I, ZEPHYRUM);
+
+                        /* Initializare campos commentorum */
+                        valor_novus->commenta_ante = NIHIL;
+                        valor_novus->commenta_post = NIHIL;
+
                         si (num_pop == V)
                         {
                             valor_novus->datum.iteratio.tok_fac = NIHIL;
@@ -3441,6 +3835,20 @@ _processare_unam_actionem(
                             /* Statuere patrem pro filiis */
                             si (valori[II] != NIHIL) valori[II]->pater = valor_novus;
                             si (valori[ZEPHYRUM] != NIHIL) valori[ZEPHYRUM]->pater = valor_novus;
+
+                            /* Promovere commenta ab '(' token */
+                            _promovere_commenta_interior(
+                                glr->piscina,
+                                lexemata[III],    /* tok_paren_ap */
+                                NIHIL,            /* nulla ante */
+                                valori[II]);      /* conditio */
+
+                            /* Promovere commenta ab ')' token */
+                            _promovere_commenta_interior(
+                                glr->piscina,
+                                lexemata[I],      /* tok_paren_cl */
+                                valori[II],       /* conditio */
+                                valori[ZEPHYRUM]); /* corpus */
                         }
                         alioquin
                         {
@@ -3462,6 +3870,11 @@ _processare_unam_actionem(
                         valor_novus->lexema = lexemata[num_pop - I];  /* 'do' token */
                         valor_novus->pater = NIHIL;
                         LOCUS_EX_LEXEMATIS(valor_novus, num_pop - I, ZEPHYRUM);
+
+                        /* Initializare campos commentorum */
+                        valor_novus->commenta_ante = NIHIL;
+                        valor_novus->commenta_post = NIHIL;
+
                         si (num_pop == VII)
                         {
                             valor_novus->datum.iteratio.tok_fac = lexemata[VI];
@@ -3475,6 +3888,27 @@ _processare_unam_actionem(
                             /* Statuere patrem pro filiis */
                             si (valori[V] != NIHIL) valori[V]->pater = valor_novus;
                             si (valori[II] != NIHIL) valori[II]->pater = valor_novus;
+
+                            /* Promovere commenta ab 'while' token */
+                            _promovere_commenta_interior(
+                                glr->piscina,
+                                lexemata[IV],     /* tok_dum */
+                                valori[V],        /* corpus */
+                                NIHIL);           /* paren_ap sequitur */
+
+                            /* Promovere commenta ab '(' token */
+                            _promovere_commenta_interior(
+                                glr->piscina,
+                                lexemata[III],    /* tok_paren_ap */
+                                NIHIL,            /* nulla ante */
+                                valori[II]);      /* conditio */
+
+                            /* Promovere commenta ab ')' token */
+                            _promovere_commenta_interior(
+                                glr->piscina,
+                                lexemata[I],      /* tok_paren_cl */
+                                valori[II],       /* conditio */
+                                NIHIL);           /* semicolon sequitur */
                         }
                         alioquin
                         {
@@ -3496,6 +3930,11 @@ _processare_unam_actionem(
                         valor_novus->lexema = lexemata[num_pop - I];  /* 'for' token */
                         valor_novus->pater = NIHIL;
                         LOCUS_EX_LEXEMATIS(valor_novus, num_pop - I, ZEPHYRUM);
+
+                        /* Initializare campos commentorum */
+                        valor_novus->commenta_ante = NIHIL;
+                        valor_novus->commenta_post = NIHIL;
+
                         si (num_pop == IX)
                         {
                             valor_novus->datum.circuitus.tok_per = lexemata[VIII];
@@ -3513,6 +3952,34 @@ _processare_unam_actionem(
                             si (valori[IV] != NIHIL) valori[IV]->pater = valor_novus;
                             si (valori[II] != NIHIL) valori[II]->pater = valor_novus;
                             si (valori[ZEPHYRUM] != NIHIL) valori[ZEPHYRUM]->pater = valor_novus;
+
+                            /* Promovere commenta ab '(' token */
+                            _promovere_commenta_interior(
+                                glr->piscina,
+                                lexemata[VII],    /* tok_paren_ap */
+                                NIHIL,            /* nulla ante */
+                                valori[VI]);      /* initium */
+
+                            /* Promovere commenta ab first ';' token */
+                            _promovere_commenta_interior(
+                                glr->piscina,
+                                lexemata[V],      /* tok_semicolon1 */
+                                valori[VI],       /* initium */
+                                valori[IV]);      /* conditio */
+
+                            /* Promovere commenta ab second ';' token */
+                            _promovere_commenta_interior(
+                                glr->piscina,
+                                lexemata[III],    /* tok_semicolon2 */
+                                valori[IV],       /* conditio */
+                                valori[II]);      /* incrementum */
+
+                            /* Promovere commenta ab ')' token */
+                            _promovere_commenta_interior(
+                                glr->piscina,
+                                lexemata[I],      /* tok_paren_cl */
+                                valori[II],       /* incrementum */
+                                valori[ZEPHYRUM]); /* corpus */
                         }
                         alioquin
                         {

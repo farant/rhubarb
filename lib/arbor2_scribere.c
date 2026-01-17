@@ -38,7 +38,10 @@ _appendere_chordam(Xar* output, chorda* s)
     }
 }
 
-/* Emit trivia array (whitespace/comments) */
+/* Emit trivia array (whitespace AND comments).
+ * For roundtrip serialization, comments are emitted from token trivia.
+ * Promoted comment nodes (commenta_ante/commenta_post) are for AST access,
+ * not for serialization. */
 hic_manens vacuum
 _emittere_trivia(Xar* output, Xar* trivia)
 {
@@ -153,12 +156,19 @@ _scribere_pointer_levels(Xar* output, Xar* pointer_levels)
 /* Forward declaration for mutual recursion */
 hic_manens vacuum _scribere_nodum(Xar* output, Arbor2Nodus* nodus);
 
-/* Emit attached comments (commenta_ante or commenta_post) */
+/* Emit attached comments (commenta_ante or commenta_post).
+ * NOTE: Reserved for future reformatting scenarios where we need
+ * to emit comments from their promoted locations.
+ * For roundtrip, comments are emitted via token trivia.
+ */
+#if 0
 hic_manens vacuum
 _emittere_commenta(Xar* output, Xar* commenta)
 {
     i32 i;
     i32 num;
+    Arbor2Nodus** c_ptr;
+    Arbor2Nodus* commentum;
 
     si (commenta == NIHIL)
     {
@@ -168,17 +178,19 @@ _emittere_commenta(Xar* output, Xar* commenta)
     num = xar_numerus(commenta);
     per (i = ZEPHYRUM; i < num; i++)
     {
-        Arbor2Nodus** c_ptr = xar_obtinere(commenta, i);
+        c_ptr = xar_obtinere(commenta, i);
         si (c_ptr != NIHIL && *c_ptr != NIHIL)
         {
-            Arbor2Nodus* commentum = *c_ptr;
+            commentum = *c_ptr;
             si (commentum->genus == ARBOR2_NODUS_COMMENTUM)
             {
-                _appendere_chordam(output, &commentum->datum.commentum.textus_crudus);
+                /* Emit comment with its trivia */
+                _scribere_nodum(output, commentum);
             }
         }
     }
 }
+#endif
 
 /* Main node serializer */
 hic_manens vacuum
@@ -189,8 +201,10 @@ _scribere_nodum(Xar* output, Arbor2Nodus* nodus)
         redde;
     }
 
-    /* Emit attached leading comments */
-    _emittere_commenta(output, nodus->commenta_ante);
+    /* NOTE: Do NOT emit commenta_ante here.
+     * Promoted comments are for AST tooling access, not serialization.
+     * Roundtrip serialization uses token trivia which preserves
+     * exact positioning and whitespace. */
 
     commutatio (nodus->genus)
     {
@@ -633,9 +647,14 @@ _scribere_nodum(Xar* output, Arbor2Nodus* nodus)
             }
             frange;
 
-        /* COMMENTUM: emit raw comment text */
+        /* COMMENTUM: emit trivia + raw comment text */
         casus ARBOR2_NODUS_COMMENTUM:
+            /* Emit leading trivia (whitespace before comment) */
+            _emittere_trivia(output, nodus->datum.commentum.trivia_ante);
+            /* Emit the comment text */
             _appendere_chordam(output, &nodus->datum.commentum.textus_crudus);
+            /* Emit trailing trivia (whitespace after comment) */
+            _emittere_trivia(output, nodus->datum.commentum.trivia_post);
             frange;
 
         ordinarius:
@@ -643,8 +662,7 @@ _scribere_nodum(Xar* output, Arbor2Nodus* nodus)
             frange;
     }
 
-    /* Emit attached trailing comments */
-    _emittere_commenta(output, nodus->commenta_post);
+    /* NOTE: Do NOT emit commenta_post here - see commenta_ante note above. */
 }
 
 /* ==================================================

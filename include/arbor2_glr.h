@@ -525,6 +525,8 @@ structura Arbor2Nodus {
             chorda                  textus_crudus;  /* Full original text */
             b32                     est_fluitans;   /* True if floating (blank lines around) */
             Xar*                    fragmenta;      /* Parsed sub-structure (NIHIL initially) */
+            Xar*                    trivia_ante;    /* Leading whitespace (Xar of Arbor2Trivia) */
+            Xar*                    trivia_post;    /* Trailing whitespace (Xar of Arbor2Trivia) */
         } commentum;
     } datum;
 };
