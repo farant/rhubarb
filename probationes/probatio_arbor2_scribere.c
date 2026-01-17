@@ -146,6 +146,50 @@ _probare_roundtrip(Piscina* p, InternamentumChorda* intern,
     redde aequalis;
 }
 
+/* Test roundtrip for translation unit (top-level declarations) */
+hic_manens b32
+_probare_roundtrip_tu(Piscina* p, InternamentumChorda* intern,
+                      Arbor2Expansion* expansion,
+                      constans character* input,
+                      constans character* expectatum)
+{
+    Arbor2GLR* glr;
+    Xar* tokens;
+    Arbor2GLRResultus result;
+    chorda* output;
+    b32 aequalis;
+
+    glr = arbor2_glr_creare(p, intern, expansion);
+    tokens = _lexare(p, intern, input);
+    result = arbor2_glr_parsere_translation_unit(glr, tokens);
+
+    si (!result.successus)
+    {
+        imprimere("  FRACTA: parsing failed for '%s'\n", input);
+        redde FALSUM;
+    }
+
+    output = arbor2_scribere(p, result.radix);
+
+    si (expectatum == NIHIL)
+    {
+        expectatum = input;
+    }
+
+    aequalis = (output->mensura == (i32)strlen(expectatum)) &&
+               (memcmp(output->datum, expectatum, (size_t)output->mensura) == ZEPHYRUM);
+
+    si (!aequalis)
+    {
+        imprimere("  FRACTA: roundtrip mismatch\n");
+        imprimere("    Input:    '%s'\n", input);
+        imprimere("    Expected: '%s'\n", expectatum);
+        imprimere("    Got:      '%.*s'\n", output->mensura, (constans character*)output->datum);
+    }
+
+    redde aequalis;
+}
+
 /* ==================================================
  * Main
  * ================================================== */
@@ -314,14 +358,32 @@ s32 principale(vacuum)
     }
 
     /* ========================================================
-     * PROBARE: Declarations with initializers
-     * Note: tok_assignatio not yet passed through parser - skip for now
+     * PROBARE: Declarations with initializers (translation unit)
      * ======================================================== */
     {
         imprimere("\n--- Probans declarations with initializers ---\n");
 
-        /* TODO: Need to pass '=' token from P222 to P226 */
-        /* For now, test without initializers */
+        /* Simple variable declaration without initializer */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "int x;", NIHIL));
+
+        /* Variable with integer initializer */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "int x = 5;", NIHIL));
+
+        /* Variable with expression initializer */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "int x = 1 + 2;", NIHIL));
+
+        /* Variable with complex expression */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "int x = a * b + c;", NIHIL));
+
+        /* Variable with parenthesized expression */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "int x = (1 + 2);", NIHIL));
+
+        /* Variable with identifier initializer */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "int x = y;", NIHIL));
+
+        /* Variable with function call initializer */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "int x = f();", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "int x = f(a, b);", NIHIL));
     }
 
     /* ========================================================
@@ -364,13 +426,16 @@ s32 principale(vacuum)
     }
 
     /* ========================================================
-     * PROBARE: Initializer lists (in declaration)
-     * Note: Requires tok_assignatio fix first - skip for now
+     * PROBARE: Initializer lists (translation unit)
+     * Note: Array declarator bracket serialization needs separate fix
      * ======================================================== */
     {
         imprimere("\n--- Probans initializer lists ---\n");
 
-        /* TODO: Need to pass '=' token from P222/P223 to P226 first */
+        /* TODO: These test cases expose array declarator serialization bug:
+         * - int arr[] = {1, 2, 3}; outputs "int arr= {1, 2, 3};" (missing [])
+         * - Need to fix array bracket serialization in scribere first
+         */
     }
 
     /* ========================================================

@@ -3104,13 +3104,16 @@ _processare_unam_actionem(
                                     Xar** pair_ptr = xar_obtinere(lista, i);
                                     Xar* pair = *pair_ptr;
                                     Arbor2Nodus* decl_node = NIHIL;
+                                    Arbor2Token* tok_assign = NIHIL;
                                     Arbor2Nodus* init_node = NIHIL;
                                     Arbor2Nodus* nodus;
 
-                                    si (pair != NIHIL && xar_numerus(pair) >= II)
+                                    /* Triple: [0]=declarator, [1]=tok_assignatio, [2]=initializor */
+                                    si (pair != NIHIL && xar_numerus(pair) >= III)
                                     {
                                         decl_node = *(Arbor2Nodus**)xar_obtinere(pair, ZEPHYRUM);
-                                        init_node = *(Arbor2Nodus**)xar_obtinere(pair, I);
+                                        tok_assign = *(Arbor2Token**)xar_obtinere(pair, I);
+                                        init_node = *(Arbor2Nodus**)xar_obtinere(pair, II);
                                     }
 
                                     nodus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
@@ -3121,9 +3124,9 @@ _processare_unam_actionem(
                                     nodus->datum.declaratio.tok_volatile = NIHIL;
                                     nodus->datum.declaratio.specifier = type_spec;
                                     nodus->datum.declaratio.declarator = decl_node;
-                                    nodus->datum.declaratio.tok_assignatio = NIHIL;  /* TODO: pass from P222 */
+                                    nodus->datum.declaratio.tok_assignatio = tok_assign;
                                     nodus->datum.declaratio.initializor = init_node;
-                                    nodus->datum.declaratio.tok_semicolon = NIHIL;  /* Set by P239 */
+                                    nodus->datum.declaratio.tok_semicolon = NIHIL;  /* Set by P239 or post-process */
                                     nodus->datum.declaratio.proxima = NIHIL;
                                     nodus->datum.declaratio.est_typedef = FALSUM;
                                     nodus->datum.declaratio.storage_class = ARBOR2_STORAGE_NONE;
@@ -4618,11 +4621,13 @@ _processare_unam_actionem(
                         alioquin si (actio->valor == 221)
                         {
                             /* P221: init_decl -> declarator (1 symbol)
-                             * Create pair [declarator, NIHIL] for uniformity with P222/P223 */
-                            Xar* pair = xar_creare(glr->piscina, magnitudo(Arbor2Nodus*));
-                            Arbor2Nodus** slot;
+                             * Create triple [declarator, tok_assignatio, initializor] */
+                            Xar* pair = xar_creare(glr->piscina, magnitudo(vacuum*));
+                            vacuum** slot;
                             slot = xar_addere(pair);
                             *slot = valori[ZEPHYRUM];  /* declarator */
+                            slot = xar_addere(pair);
+                            *slot = NIHIL;  /* no tok_assignatio */
                             slot = xar_addere(pair);
                             *slot = NIHIL;  /* no initializor */
                             valor_novus = (Arbor2Nodus*)pair;
@@ -4630,12 +4635,15 @@ _processare_unam_actionem(
                         alioquin si (actio->valor == 222)
                         {
                             /* P222: init_decl -> declarator '=' assignatio (3 symbols)
-                             * valori: [2]=declarator, [1]='=', [0]=assignatio
-                             * Create a temporary pair structure using Xar */
-                            Xar* pair = xar_creare(glr->piscina, magnitudo(Arbor2Nodus*));
-                            Arbor2Nodus** slot;
+                             * lexemata: [2]=last_decl, [1]='=', [0]=last_init
+                             * valori: [2]=declarator, [1]=nil, [0]=assignatio
+                             * Create triple [declarator, tok_assignatio, initializor] */
+                            Xar* pair = xar_creare(glr->piscina, magnitudo(vacuum*));
+                            vacuum** slot;
                             slot = xar_addere(pair);
                             *slot = valori[II];  /* declarator */
+                            slot = xar_addere(pair);
+                            *slot = lexemata[I];  /* tok_assignatio '=' */
                             slot = xar_addere(pair);
                             *slot = valori[ZEPHYRUM];  /* initializor */
                             valor_novus = (Arbor2Nodus*)pair;
@@ -4643,12 +4651,15 @@ _processare_unam_actionem(
                         alioquin si (actio->valor == 223)
                         {
                             /* P223: init_decl -> declarator '=' init_lista (3 symbols)
-                             * valori: [2]=declarator, [1]='=', [0]=init_lista
-                             * Create a temporary pair structure using Xar */
-                            Xar* pair = xar_creare(glr->piscina, magnitudo(Arbor2Nodus*));
-                            Arbor2Nodus** slot;
+                             * lexemata: [2]=last_decl, [1]='=', [0]='}'
+                             * valori: [2]=declarator, [1]=nil, [0]=init_lista
+                             * Create triple [declarator, tok_assignatio, initializor] */
+                            Xar* pair = xar_creare(glr->piscina, magnitudo(vacuum*));
+                            vacuum** slot;
                             slot = xar_addere(pair);
                             *slot = valori[II];  /* declarator */
+                            slot = xar_addere(pair);
+                            *slot = lexemata[I];  /* tok_assignatio '=' */
                             slot = xar_addere(pair);
                             *slot = valori[ZEPHYRUM];  /* init_lista */
                             valor_novus = (Arbor2Nodus*)pair;
@@ -5919,6 +5930,25 @@ arbor2_glr_parsere_translation_unit(
         {
             sub_res.radix->commenta_ante = NIHIL;
             sub_res.radix->commenta_post = NIHIL;
+        }
+
+        /* Set tok_semicolon on declaration (semicolon excluded from parse) */
+        si (sub_res.radix != NIHIL &&
+            sub_res.radix->genus == ARBOR2_NODUS_DECLARATIO &&
+            finis_info.parse_finis < num_tokens)
+        {
+            Arbor2Token** semi_ptr = xar_obtinere(lexemata, finis_info.parse_finis);
+            Arbor2Token* semi_tok = *semi_ptr;
+            si (semi_tok->lexema->genus == ARBOR2_LEXEMA_SEMICOLON)
+            {
+                /* Set on first declaration and all chained declarations */
+                Arbor2Nodus* decl = sub_res.radix;
+                dum (decl != NIHIL)
+                {
+                    decl->datum.declaratio.tok_semicolon = semi_tok;
+                    decl = decl->datum.declaratio.proxima;
+                }
+            }
         }
 
         /* Add to translation unit */
