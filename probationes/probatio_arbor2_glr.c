@@ -5274,10 +5274,15 @@ s32 principale(vacuum)
                 CREDO_NON_NIHIL(decl->datum.declarator.dimensiones);
                 si (decl->datum.declarator.dimensiones != NIHIL)
                 {
-                    Arbor2Nodus** dim;
+                    Arbor2ArrayDimension** dim_ptr;
+                    Arbor2ArrayDimension* dim;
                     CREDO_AEQUALIS_I32((i32)xar_numerus(decl->datum.declarator.dimensiones), 1);
-                    dim = xar_obtinere(decl->datum.declarator.dimensiones, ZEPHYRUM);
-                    CREDO_NIHIL(*dim);  /* Unsized array has NIHIL dimension */
+                    dim_ptr = xar_obtinere(decl->datum.declarator.dimensiones, ZEPHYRUM);
+                    dim = *dim_ptr;
+                    CREDO_NON_NIHIL(dim);
+                    CREDO_NON_NIHIL(dim->tok_bracket_ap);
+                    CREDO_NIHIL(dim->dimensio);  /* Unsized array has NIHIL dimension */
+                    CREDO_NON_NIHIL(dim->tok_bracket_cl);
                 }
             }
         }
@@ -5555,12 +5560,16 @@ s32 principale(vacuum)
             CREDO_NON_NIHIL(decl->datum.declarator.dimensiones);
             si (decl->datum.declarator.dimensiones != NIHIL)
             {
-                Arbor2Nodus** dim = xar_obtinere(decl->datum.declarator.dimensiones, ZEPHYRUM);
-                CREDO_NON_NIHIL(*dim);  /* Should have expression node */
-                si (*dim != NIHIL)
+                Arbor2ArrayDimension** dim_ptr = xar_obtinere(decl->datum.declarator.dimensiones, ZEPHYRUM);
+                Arbor2ArrayDimension* dim = *dim_ptr;
+                CREDO_NON_NIHIL(dim);
+                CREDO_NON_NIHIL(dim->tok_bracket_ap);
+                CREDO_NON_NIHIL(dim->dimensio);  /* Should have expression node */
+                si (dim->dimensio != NIHIL)
                 {
-                    CREDO_AEQUALIS_I32((i32)(*dim)->genus, (i32)ARBOR2_NODUS_BINARIUM);
+                    CREDO_AEQUALIS_I32((i32)dim->dimensio->genus, (i32)ARBOR2_NODUS_BINARIUM);
                 }
+                CREDO_NON_NIHIL(dim->tok_bracket_cl);
             }
         }
 

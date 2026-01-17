@@ -74,6 +74,21 @@ nomen structura {
 } Arbor2PointerLevel;
 
 /* ==================================================
+ * Array Dimension (for roundtrip token preservation)
+ * Each dimension stores its bracket tokens:
+ * e.g., int arr[10][20][] has 3 dimensions
+ * ================================================== */
+
+/* Forward declaration */
+structura Arbor2Nodus;
+
+nomen structura {
+    Arbor2Token*    tok_bracket_ap;  /* The [ token */
+    structura Arbor2Nodus* dimensio; /* Size expression, NIHIL for unsized [] */
+    Arbor2Token*    tok_bracket_cl;  /* The ] token */
+} Arbor2ArrayDimension;
+
+/* ==================================================
  * Non-Terminal Symbols
  * ================================================== */
 
@@ -360,7 +375,7 @@ structura Arbor2Nodus {
             Xar*                pointer_levels; /* Xar of Arbor2PointerLevel*, NIHIL if no pointers */
             chorda              titulus;        /* Variable name (empty for anonymous bit fields) */
             Arbor2Nodus*        latitudo_biti;  /* Bit field width expr, NIHIL if not bit field */
-            Xar*                dimensiones;    /* Array dimensions (Xar of Arbor2Nodus*), NIHIL if not array */
+            Xar*                dimensiones;    /* Xar of Arbor2ArrayDimension*, NIHIL if not array */
         } declarator;
 
         /* DECLARATOR_FUNCTI (function declarator) */

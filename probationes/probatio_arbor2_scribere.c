@@ -426,16 +426,41 @@ s32 principale(vacuum)
     }
 
     /* ========================================================
+     * PROBARE: Array declarators (translation unit)
+     * ======================================================== */
+    {
+        imprimere("\n--- Probans array declarators ---\n");
+
+        /* Unsized array */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "int arr[];", NIHIL));
+
+        /* Sized array */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "int arr[10];", NIHIL));
+
+        /* Array with expression size */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "int arr[N];", NIHIL));
+
+        /* Multi-dimensional array */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "int arr[10][20];", NIHIL));
+
+        /* Mixed dimensions */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "int arr[][10];", NIHIL));
+    }
+
+    /* ========================================================
      * PROBARE: Initializer lists (translation unit)
-     * Note: Array declarator bracket serialization needs separate fix
      * ======================================================== */
     {
         imprimere("\n--- Probans initializer lists ---\n");
 
-        /* TODO: These test cases expose array declarator serialization bug:
-         * - int arr[] = {1, 2, 3}; outputs "int arr= {1, 2, 3};" (missing [])
-         * - Need to fix array bracket serialization in scribere first
-         */
+        /* Simple initializer list */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "int arr[] = {1, 2, 3};", NIHIL));
+
+        /* Empty initializer list */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "int arr[] = {};", NIHIL));
+
+        /* Nested initializer list */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "int arr[][2] = {{1, 2}, {3, 4}};", NIHIL));
     }
 
     /* ========================================================

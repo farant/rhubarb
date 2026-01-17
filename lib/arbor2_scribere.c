@@ -384,8 +384,14 @@ _scribere_nodum(Xar* output, Arbor2Nodus* nodus)
                 i32 num = xar_numerus(nodus->datum.declarator.dimensiones);
                 per (i = ZEPHYRUM; i < num; i++)
                 {
-                    Arbor2Nodus** dim = xar_obtinere(nodus->datum.declarator.dimensiones, i);
-                    _scribere_nodum(output, *dim);
+                    Arbor2ArrayDimension** dim_ptr = xar_obtinere(nodus->datum.declarator.dimensiones, i);
+                    Arbor2ArrayDimension* dim = *dim_ptr;
+                    arbor2_scribere_lexema(output, dim->tok_bracket_ap);
+                    si (dim->dimensio != NIHIL)
+                    {
+                        _scribere_nodum(output, dim->dimensio);
+                    }
+                    arbor2_scribere_lexema(output, dim->tok_bracket_cl);
                 }
             }
             /* Bit field */

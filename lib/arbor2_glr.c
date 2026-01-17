@@ -3169,8 +3169,10 @@ _processare_unam_actionem(
                         {
                             /* P80: declarator '[' expression ']' (4 symbols, sized array) */
                             /* valori: [3]=declarator, [2]='[', [1]=expr, [0]=']' */
+                            /* lexemata: [3]=last_decl, [2]='[', [1]=last_expr, [0]=']' */
                             Arbor2Nodus* inner = valori[III];
                             Arbor2Nodus* size_expr = valori[I];
+                            Arbor2ArrayDimension* dim;
 
                             valor_novus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                             valor_novus->genus = ARBOR2_NODUS_DECLARATOR;
@@ -3188,20 +3190,26 @@ _processare_unam_actionem(
                             }
                             alioquin
                             {
-                                valor_novus->datum.declarator.dimensiones = xar_creare(glr->piscina, magnitudo(Arbor2Nodus*));
+                                valor_novus->datum.declarator.dimensiones = xar_creare(glr->piscina, magnitudo(Arbor2ArrayDimension*));
                             }
 
-                            /* Add this dimension (expression for sized array) */
+                            /* Create and add this dimension with bracket tokens */
+                            dim = piscina_allocare(glr->piscina, magnitudo(Arbor2ArrayDimension));
+                            dim->tok_bracket_ap = lexemata[II];
+                            dim->dimensio = size_expr;
+                            dim->tok_bracket_cl = lexemata[ZEPHYRUM];
                             {
-                                Arbor2Nodus** slot = xar_addere(valor_novus->datum.declarator.dimensiones);
-                                *slot = size_expr;
+                                Arbor2ArrayDimension** slot = xar_addere(valor_novus->datum.declarator.dimensiones);
+                                *slot = dim;
                             }
                         }
                         alioquin si (actio->valor == 81)
                         {
                             /* P81: declarator '[' ']' (3 symbols, unsized array) */
                             /* valori: [2]=declarator, [1]='[', [0]=']' */
+                            /* lexemata: [2]=last_decl, [1]='[', [0]=']' */
                             Arbor2Nodus* inner = valori[II];
+                            Arbor2ArrayDimension* dim;
 
                             valor_novus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                             valor_novus->genus = ARBOR2_NODUS_DECLARATOR;
@@ -3219,13 +3227,17 @@ _processare_unam_actionem(
                             }
                             alioquin
                             {
-                                valor_novus->datum.declarator.dimensiones = xar_creare(glr->piscina, magnitudo(Arbor2Nodus*));
+                                valor_novus->datum.declarator.dimensiones = xar_creare(glr->piscina, magnitudo(Arbor2ArrayDimension*));
                             }
 
-                            /* Add NIHIL dimension for unsized array */
+                            /* Create and add dimension with NIHIL size for unsized array */
+                            dim = piscina_allocare(glr->piscina, magnitudo(Arbor2ArrayDimension));
+                            dim->tok_bracket_ap = lexemata[I];
+                            dim->dimensio = NIHIL;
+                            dim->tok_bracket_cl = lexemata[ZEPHYRUM];
                             {
-                                Arbor2Nodus** slot = xar_addere(valor_novus->datum.declarator.dimensiones);
-                                *slot = NIHIL;
+                                Arbor2ArrayDimension** slot = xar_addere(valor_novus->datum.declarator.dimensiones);
+                                *slot = dim;
                             }
                         }
                         /* ========== GROUPED POINTER DECLARATOR P339 ========== */
