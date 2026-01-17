@@ -416,6 +416,7 @@ structura Arbor2Nodus {
             Xar*                membra;               /* List of member declarations (DECLARATIO nodes) */
             Arbor2Token*        tok_brace_cl;         /* } (NIHIL if forward decl) */
             b32                 est_unio;             /* VERUM for union, FALSUM for struct */
+            Arbor2Token*        tok_semicolon;        /* ; for standalone type definition */
         } struct_specifier;
 
         /* ENUM_SPECIFIER */
@@ -425,11 +426,13 @@ structura Arbor2Nodus {
             Arbor2Token*        tok_brace_ap;         /* { (NIHIL if forward decl) */
             Arbor2Nodus*        enumeratores;         /* LISTA_SEPARATA node with ENUMERATOR nodes */
             Arbor2Token*        tok_brace_cl;         /* } (NIHIL if forward decl) */
+            Arbor2Token*        tok_semicolon;        /* ; for standalone type definition */
         } enum_specifier;
 
         /* ENUMERATOR */
         structura {
             chorda              titulus;              /* Enumerator name */
+            Arbor2Token*        tok_assignatio;       /* = token, NIHIL if no value */
             Arbor2Nodus*        valor;                /* Optional value expr, NIHIL if not specified */
         } enumerator;
 

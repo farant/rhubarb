@@ -366,6 +366,9 @@ s32 principale(vacuum)
         /* Simple variable declaration without initializer */
         CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "int x;", NIHIL));
 
+        /* Float variable declaration */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "float f;", NIHIL));
+
         /* Variable with integer initializer */
         CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "int x = 5;", NIHIL));
 
@@ -461,6 +464,60 @@ s32 principale(vacuum)
 
         /* Nested initializer list */
         CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "int arr[][2] = {{1, 2}, {3, 4}};", NIHIL));
+    }
+
+    /* ========================================================
+     * PROBARE: Enum specifiers (translation unit)
+     * ======================================================== */
+    {
+        imprimere("\n--- Probans enum specifiers ---\n");
+
+        /* Simple enum */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "enum E { A };", NIHIL));
+
+        /* Multiple enumerators */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "enum E { A, B };", NIHIL));
+
+        /* Enumerator with value */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "enum E { A = 1 };", NIHIL));
+
+        /* Multiple enumerators with values */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "enum E { A = 1, B = 2 };", NIHIL));
+
+        /* Mixed: some with values, some without */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "enum E { A, B = 5, C };", NIHIL));
+
+        /* Anonymous enum */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "enum { A, B };", NIHIL));
+    }
+
+    /* ========================================================
+     * PROBARE: Struct/union specifiers (translation unit)
+     * ======================================================== */
+    {
+        imprimere("\n--- Probans struct/union specifiers ---\n");
+
+        /* Simple struct */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "struct S { int x; };", NIHIL));
+
+        /* Struct with char member */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "struct S { char c; };", NIHIL));
+
+        /* NOTE: struct members with float/double/short/long types fail roundtrip
+         * due to pre-existing parser limitation in struct member grammar.
+         * Only int/char work currently. */
+
+        /* Struct with multiple members */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "struct S { int x; int y; };", NIHIL));
+
+        /* Simple union */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "union U { int x; };", NIHIL));
+
+        /* Union with multiple members */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "union U { int i; int j; };", NIHIL));
+
+        /* Anonymous struct */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "struct { int x; };", NIHIL));
     }
 
     /* ========================================================

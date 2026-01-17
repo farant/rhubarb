@@ -4236,6 +4236,7 @@ _processare_unam_actionem(
                         valor_novus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                         valor_novus->genus = ARBOR2_NODUS_STRUCT_SPECIFIER;
                         LOCUS_EX_LEXEMATIS(valor_novus, num_pop - I, ZEPHYRUM);
+                        valor_novus->datum.struct_specifier.tok_semicolon = NIHIL;
 
                         si (num_pop == V)
                         {
@@ -4309,6 +4310,7 @@ _processare_unam_actionem(
                         valor_novus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                         valor_novus->genus = ARBOR2_NODUS_ENUM_SPECIFIER;
                         LOCUS_EX_LEXEMATIS(valor_novus, num_pop - I, ZEPHYRUM);
+                        valor_novus->datum.enum_specifier.tok_semicolon = NIHIL;
 
                         si (num_pop == V)
                         {
@@ -4377,15 +4379,18 @@ _processare_unam_actionem(
                             Arbor2Token* id_tok = lexemata[ZEPHYRUM];
                             valor_novus->lexema = id_tok;
                             valor_novus->datum.enumerator.titulus = id_tok->lexema->valor;
+                            valor_novus->datum.enumerator.tok_assignatio = NIHIL;
                             valor_novus->datum.enumerator.valor = NIHIL;
                         }
                         alioquin si (num_pop == III)
                         {
                             /* P61: enumerator -> IDENTIFIER '=' expression */
-                            /* valori: [2]=ID, [1]='=', [0]=expression */
+                            /* lexemata: [2]=ID, [1]='=', [0]=last_expr */
+                            /* valori: [2]=nil, [1]=nil, [0]=expression */
                             Arbor2Token* id_tok = lexemata[II];
                             valor_novus->lexema = id_tok;
                             valor_novus->datum.enumerator.titulus = id_tok->lexema->valor;
+                            valor_novus->datum.enumerator.tok_assignatio = lexemata[I];
                             valor_novus->datum.enumerator.valor = valori[ZEPHYRUM];
                         }
                         frange;
@@ -5960,6 +5965,32 @@ arbor2_glr_parsere_translation_unit(
                     decl->datum.declaratio.tok_semicolon = semi_tok;
                     decl = decl->datum.declaratio.proxima;
                 }
+            }
+        }
+
+        /* Set tok_semicolon on enum specifier (standalone type definition) */
+        si (sub_res.radix != NIHIL &&
+            sub_res.radix->genus == ARBOR2_NODUS_ENUM_SPECIFIER &&
+            finis_info.parse_finis < num_tokens)
+        {
+            Arbor2Token** semi_ptr = xar_obtinere(lexemata, finis_info.parse_finis);
+            Arbor2Token* semi_tok = *semi_ptr;
+            si (semi_tok->lexema->genus == ARBOR2_LEXEMA_SEMICOLON)
+            {
+                sub_res.radix->datum.enum_specifier.tok_semicolon = semi_tok;
+            }
+        }
+
+        /* Set tok_semicolon on struct/union specifier (standalone type definition) */
+        si (sub_res.radix != NIHIL &&
+            sub_res.radix->genus == ARBOR2_NODUS_STRUCT_SPECIFIER &&
+            finis_info.parse_finis < num_tokens)
+        {
+            Arbor2Token** semi_ptr = xar_obtinere(lexemata, finis_info.parse_finis);
+            Arbor2Token* semi_tok = *semi_ptr;
+            si (semi_tok->lexema->genus == ARBOR2_LEXEMA_SEMICOLON)
+            {
+                sub_res.radix->datum.struct_specifier.tok_semicolon = semi_tok;
             }
         }
 

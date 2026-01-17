@@ -4073,6 +4073,147 @@ s32 principale(vacuum)
         imprimere("  furcae: %d\n", glr->num_furcae);
     }
 
+    /* ================================================================
+     * PROBARE: Struct members with various type specifiers
+     * These test that all C89 type specifiers work in struct members.
+     * ================================================================ */
+
+    /* Test struct with float member: struct foo { float f; } */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans struct float member: struct foo { float f; } ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "struct foo { float f; }");
+        res = arbor2_glr_parsere(glr, tokens);
+
+        imprimere("  successus: %s\n", res.successus ? "VERUM" : "FALSUM");
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        CREDO_NON_NIHIL(res.radix);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_STRUCT_SPECIFIER);
+            si (res.radix->datum.struct_specifier.membra != NIHIL)
+            {
+                CREDO_AEQUALIS_I32(xar_numerus(res.radix->datum.struct_specifier.membra), I);
+            }
+        }
+    }
+
+    /* Test struct with double member: struct foo { double d; } */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans struct double member: struct foo { double d; } ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "struct foo { double d; }");
+        res = arbor2_glr_parsere(glr, tokens);
+
+        imprimere("  successus: %s\n", res.successus ? "VERUM" : "FALSUM");
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        CREDO_NON_NIHIL(res.radix);
+    }
+
+    /* Test struct with short member: struct foo { short s; } */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans struct short member: struct foo { short s; } ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "struct foo { short s; }");
+        res = arbor2_glr_parsere(glr, tokens);
+
+        imprimere("  successus: %s\n", res.successus ? "VERUM" : "FALSUM");
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        CREDO_NON_NIHIL(res.radix);
+    }
+
+    /* Test struct with long member: struct foo { long l; } */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans struct long member: struct foo { long l; } ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "struct foo { long l; }");
+        res = arbor2_glr_parsere(glr, tokens);
+
+        imprimere("  successus: %s\n", res.successus ? "VERUM" : "FALSUM");
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        CREDO_NON_NIHIL(res.radix);
+    }
+
+    /* Test struct with unsigned member: struct foo { unsigned u; } */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans struct unsigned member: struct foo { unsigned u; } ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "struct foo { unsigned u; }");
+        res = arbor2_glr_parsere(glr, tokens);
+
+        imprimere("  successus: %s\n", res.successus ? "VERUM" : "FALSUM");
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        CREDO_NON_NIHIL(res.radix);
+    }
+
+    /* Test struct with signed member: struct foo { signed s; } */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans struct signed member: struct foo { signed s; } ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "struct foo { signed s; }");
+        res = arbor2_glr_parsere(glr, tokens);
+
+        imprimere("  successus: %s\n", res.successus ? "VERUM" : "FALSUM");
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        CREDO_NON_NIHIL(res.radix);
+    }
+
+    /* Test struct with unsigned int member: struct foo { unsigned int ui; } */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans struct unsigned int member: struct foo { unsigned int ui; } ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "struct foo { unsigned int ui; }");
+        res = arbor2_glr_parsere(glr, tokens);
+
+        imprimere("  successus: %s\n", res.successus ? "VERUM" : "FALSUM");
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        CREDO_NON_NIHIL(res.radix);
+    }
+
+    /* Test struct with long int member: struct foo { long int li; } */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans struct long int member: struct foo { long int li; } ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "struct foo { long int li; }");
+        res = arbor2_glr_parsere(glr, tokens);
+
+        imprimere("  successus: %s\n", res.successus ? "VERUM" : "FALSUM");
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        CREDO_NON_NIHIL(res.radix);
+    }
+
     /* Test struct variable declaration: struct foo { int x; } var */
     {
         Xar* tokens;

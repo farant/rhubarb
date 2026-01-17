@@ -447,6 +447,10 @@ _scribere_nodum(Xar* output, Arbor2Nodus* nodus)
                 }
                 arbor2_scribere_lexema(output, nodus->datum.struct_specifier.tok_brace_cl);
             }
+            si (nodus->datum.struct_specifier.tok_semicolon != NIHIL)
+            {
+                arbor2_scribere_lexema(output, nodus->datum.struct_specifier.tok_semicolon);
+            }
             frange;
 
         /* ENUM_SPECIFIER: enum name { enumerators } */
@@ -465,15 +469,18 @@ _scribere_nodum(Xar* output, Arbor2Nodus* nodus)
                 }
                 arbor2_scribere_lexema(output, nodus->datum.enum_specifier.tok_brace_cl);
             }
+            si (nodus->datum.enum_specifier.tok_semicolon != NIHIL)
+            {
+                arbor2_scribere_lexema(output, nodus->datum.enum_specifier.tok_semicolon);
+            }
             frange;
 
         /* ENUMERATOR: NAME or NAME = value */
         casus ARBOR2_NODUS_ENUMERATOR:
             arbor2_scribere_lexema(output, nodus->lexema);
-            si (nodus->datum.enumerator.valor != NIHIL)
+            si (nodus->datum.enumerator.tok_assignatio != NIHIL)
             {
-                /* Note: We need the '=' token here but it's not stored in the AST.
-                 * For now emit directly, but this is a limitation. */
+                arbor2_scribere_lexema(output, nodus->datum.enumerator.tok_assignatio);
                 _scribere_nodum(output, nodus->datum.enumerator.valor);
             }
             frange;
