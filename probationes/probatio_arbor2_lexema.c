@@ -1,4 +1,5 @@
-/* probatio_arbor2_lexema.c - Probationes Arbor2 Lexematis */
+/* probatio_arbor2_lexema.c - Probationes Arbor2 Lexematis
+ * Phase 2.7: NOVA_LINEA is now in spatia, not main stream. */
 #include "latina.h"
 #include "piscina.h"
 #include "internamentum.h"
@@ -6,6 +7,80 @@
 #include "credo.h"
 #include <stdio.h>
 #include <string.h>
+
+/* Helper: check if spatia array contains NOVA_LINEA */
+hic_manens b32
+_habet_nova_linea(Xar* spatia)
+{
+    i32 i;
+    Arbor2Lexema* spatium;
+
+    si (spatia == NIHIL)
+    {
+        redde FALSUM;
+    }
+
+    per (i = ZEPHYRUM; i < xar_numerus(spatia); i++)
+    {
+        spatium = *(Arbor2Lexema**)xar_obtinere(spatia, i);
+        si (spatium->genus == ARBOR2_LEXEMA_NOVA_LINEA)
+        {
+            redde VERUM;
+        }
+    }
+
+    redde FALSUM;
+}
+
+/* Helper: count NOVA_LINEA in spatia array */
+hic_manens i32
+_numerare_nova_linea(Xar* spatia)
+{
+    i32 i;
+    i32 count;
+    Arbor2Lexema* spatium;
+
+    si (spatia == NIHIL)
+    {
+        redde ZEPHYRUM;
+    }
+
+    count = ZEPHYRUM;
+    per (i = ZEPHYRUM; i < xar_numerus(spatia); i++)
+    {
+        spatium = *(Arbor2Lexema**)xar_obtinere(spatia, i);
+        si (spatium->genus == ARBOR2_LEXEMA_NOVA_LINEA)
+        {
+            count++;
+        }
+    }
+
+    redde count;
+}
+
+/* Helper: get first NOVA_LINEA from spatia array */
+hic_manens Arbor2Lexema*
+_obtinere_nova_linea(Xar* spatia)
+{
+    i32 i;
+    Arbor2Lexema* spatium;
+
+    si (spatia == NIHIL)
+    {
+        redde NIHIL;
+    }
+
+    per (i = ZEPHYRUM; i < xar_numerus(spatia); i++)
+    {
+        spatium = *(Arbor2Lexema**)xar_obtinere(spatia, i);
+        si (spatium->genus == ARBOR2_LEXEMA_NOVA_LINEA)
+        {
+            redde spatium;
+        }
+    }
+
+    redde NIHIL;
+}
 
 s32 principale(vacuum)
 {
@@ -25,7 +100,9 @@ s32 principale(vacuum)
 
 
     /* ========================================================
-     * PROBARE: NOVA_LINEA emitted for newlines
+     * PROBARE: NOVA_LINEA in spatia (Phase 2.7)
+     * Newlines now appear in spatia_post of preceding token,
+     * or spatia_ante of following token.
      * ======================================================== */
 
     {
@@ -33,7 +110,7 @@ s32 principale(vacuum)
         Arbor2Lexator* lex;
         Arbor2Lexema* tok;
 
-        imprimere("\n--- Probans NOVA_LINEA emission ---\n");
+        imprimere("\n--- Probans NOVA_LINEA in spatia ---\n");
 
         fons = "int x;\nint y;";
         lex = arbor2_lexator_creare(piscina, intern, fons, (i32)strlen(fons));
@@ -46,15 +123,12 @@ s32 principale(vacuum)
         tok = arbor2_lexema_proximum(lex);
         CREDO_AEQUALIS_I32(tok->genus, ARBOR2_LEXEMA_IDENTIFICATOR);
 
-        /* ; */
+        /* ; - should have NOVA_LINEA in spatia_post */
         tok = arbor2_lexema_proximum(lex);
         CREDO_AEQUALIS_I32(tok->genus, ARBOR2_LEXEMA_SEMICOLON);
+        CREDO_VERUM(_habet_nova_linea(tok->spatia_post));
 
-        /* \n -> NOVA_LINEA */
-        tok = arbor2_lexema_proximum(lex);
-        CREDO_AEQUALIS_I32(tok->genus, ARBOR2_LEXEMA_NOVA_LINEA);
-
-        /* int */
+        /* int - should have NOVA_LINEA in spatia_ante (from previous line) */
         tok = arbor2_lexema_proximum(lex);
         CREDO_AEQUALIS_I32(tok->genus, ARBOR2_LEXEMA_INT);
 
@@ -73,7 +147,7 @@ s32 principale(vacuum)
 
 
     /* ========================================================
-     * PROBARE: Multiple newlines
+     * PROBARE: Multiple newlines in spatia
      * ======================================================== */
 
     {
@@ -81,26 +155,20 @@ s32 principale(vacuum)
         Arbor2Lexator* lex;
         Arbor2Lexema* tok;
 
-        imprimere("\n--- Probans newlines multiplices ---\n");
+        imprimere("\n--- Probans newlines multiplices in spatia ---\n");
 
         fons = "a\n\nb";
         lex = arbor2_lexator_creare(piscina, intern, fons, (i32)strlen(fons));
 
-        /* a */
+        /* a - should have one NOVA_LINEA in spatia_post */
         tok = arbor2_lexema_proximum(lex);
         CREDO_AEQUALIS_I32(tok->genus, ARBOR2_LEXEMA_IDENTIFICATOR);
+        CREDO_AEQUALIS_I32(_numerare_nova_linea(tok->spatia_post), I);
 
-        /* \n */
-        tok = arbor2_lexema_proximum(lex);
-        CREDO_AEQUALIS_I32(tok->genus, ARBOR2_LEXEMA_NOVA_LINEA);
-
-        /* \n */
-        tok = arbor2_lexema_proximum(lex);
-        CREDO_AEQUALIS_I32(tok->genus, ARBOR2_LEXEMA_NOVA_LINEA);
-
-        /* b */
+        /* b - should have one NOVA_LINEA in spatia_ante (the second newline) */
         tok = arbor2_lexema_proximum(lex);
         CREDO_AEQUALIS_I32(tok->genus, ARBOR2_LEXEMA_IDENTIFICATOR);
+        CREDO_AEQUALIS_I32(_numerare_nova_linea(tok->spatia_ante), I);
 
         /* EOF */
         tok = arbor2_lexema_proximum(lex);
@@ -109,7 +177,7 @@ s32 principale(vacuum)
 
 
     /* ========================================================
-     * PROBARE: Line continuation (\\\n)
+     * PROBARE: Line continuation (\\\n) - still works
      * ======================================================== */
 
     {
@@ -126,7 +194,7 @@ s32 principale(vacuum)
         tok = arbor2_lexema_proximum(lex);
         CREDO_AEQUALIS_I32(tok->genus, ARBOR2_LEXEMA_INT);
 
-        /* x - continuation should be consumed, NOT emit NOVA_LINEA */
+        /* x - continuation should be consumed, NO NOVA_LINEA token */
         tok = arbor2_lexema_proximum(lex);
         CREDO_AEQUALIS_I32(tok->genus, ARBOR2_LEXEMA_IDENTIFICATOR);
 
@@ -141,7 +209,7 @@ s32 principale(vacuum)
 
 
     /* ========================================================
-     * PROBARE: Trivia with continuation marked
+     * PROBARE: CONTINUATIO in spatia
      * ======================================================== */
 
     {
@@ -200,27 +268,32 @@ s32 principale(vacuum)
 
 
     /* ========================================================
-     * PROBARE: CRLF handling
+     * PROBARE: CRLF handling in spatia
      * ======================================================== */
 
     {
         constans character* fons;
         Arbor2Lexator* lex;
         Arbor2Lexema* tok;
+        Arbor2Lexema* nl;
 
         imprimere("\n--- Probans CRLF handling ---\n");
 
         fons = "a\r\nb";
         lex = arbor2_lexator_creare(piscina, intern, fons, (i32)strlen(fons));
 
-        /* a */
+        /* a - should have NOVA_LINEA in spatia_post */
         tok = arbor2_lexema_proximum(lex);
         CREDO_AEQUALIS_I32(tok->genus, ARBOR2_LEXEMA_IDENTIFICATOR);
+        CREDO_VERUM(_habet_nova_linea(tok->spatia_post));
 
-        /* \r\n -> single NOVA_LINEA */
-        tok = arbor2_lexema_proximum(lex);
-        CREDO_AEQUALIS_I32(tok->genus, ARBOR2_LEXEMA_NOVA_LINEA);
-        CREDO_AEQUALIS_I32(tok->longitudo, II);  /* \r\n is 2 bytes */
+        /* Check that NOVA_LINEA has length 2 (\r\n) */
+        nl = _obtinere_nova_linea(tok->spatia_post);
+        CREDO_NON_NIHIL(nl);
+        si (nl != NIHIL)
+        {
+            CREDO_AEQUALIS_I32(nl->longitudo, II);  /* \r\n is 2 bytes */
+        }
 
         /* b */
         tok = arbor2_lexema_proximum(lex);
@@ -230,6 +303,7 @@ s32 principale(vacuum)
 
     /* ========================================================
      * PROBARE: Preprocessor directive pattern
+     * Now checks for NOVA_LINEA in spatia, not main stream
      * ======================================================== */
 
     {
@@ -254,13 +328,10 @@ s32 principale(vacuum)
         tok = arbor2_lexema_proximum(lex);
         CREDO_AEQUALIS_I32(tok->genus, ARBOR2_LEXEMA_IDENTIFICATOR);
 
-        /* 1 */
+        /* 1 - should have NOVA_LINEA in spatia_post (marks end of directive) */
         tok = arbor2_lexema_proximum(lex);
         CREDO_AEQUALIS_I32(tok->genus, ARBOR2_LEXEMA_INTEGER);
-
-        /* \n - marks end of directive */
-        tok = arbor2_lexema_proximum(lex);
-        CREDO_AEQUALIS_I32(tok->genus, ARBOR2_LEXEMA_NOVA_LINEA);
+        CREDO_VERUM(_habet_nova_linea(tok->spatia_post));
 
         /* int */
         tok = arbor2_lexema_proximum(lex);
@@ -269,7 +340,8 @@ s32 principale(vacuum)
 
 
     /* ========================================================
-     * PROBARE: arbor2_lexema_omnia
+     * PROBARE: arbor2_lexema_omnia (Phase 2.7)
+     * NOVA_LINEA no longer in main stream, so fewer tokens
      * ======================================================== */
 
     {
@@ -284,19 +356,18 @@ s32 principale(vacuum)
         lex = arbor2_lexator_creare(piscina, intern, fons, (i32)strlen(fons));
         omnia = arbor2_lexema_omnia(lex);
 
-        /* Should have: a, \n, b, EOF = 4 tokens */
-        CREDO_AEQUALIS_I32(xar_numerus(omnia), IV);
+        /* Should have: a, b, EOF = 3 tokens (NOVA_LINEA is in spatia) */
+        CREDO_AEQUALIS_I32(xar_numerus(omnia), III);
 
         tok = *(Arbor2Lexema**)xar_obtinere(omnia, ZEPHYRUM);
         CREDO_AEQUALIS_I32(tok->genus, ARBOR2_LEXEMA_IDENTIFICATOR);
+        /* Check that 'a' has NOVA_LINEA in spatia_post */
+        CREDO_VERUM(_habet_nova_linea(tok->spatia_post));
 
         tok = *(Arbor2Lexema**)xar_obtinere(omnia, I);
-        CREDO_AEQUALIS_I32(tok->genus, ARBOR2_LEXEMA_NOVA_LINEA);
-
-        tok = *(Arbor2Lexema**)xar_obtinere(omnia, II);
         CREDO_AEQUALIS_I32(tok->genus, ARBOR2_LEXEMA_IDENTIFICATOR);
 
-        tok = *(Arbor2Lexema**)xar_obtinere(omnia, III);
+        tok = *(Arbor2Lexema**)xar_obtinere(omnia, II);
         CREDO_AEQUALIS_I32(tok->genus, ARBOR2_LEXEMA_EOF);
     }
 
@@ -318,6 +389,27 @@ s32 principale(vacuum)
 
         titulus = arbor2_lexema_genus_nomen(ARBOR2_LEXEMA_EOF);
         CREDO_AEQUALIS_I32((i32)strcmp(titulus, "EOF"), ZEPHYRUM);
+    }
+
+
+    /* ========================================================
+     * PROBARE: Leading newlines (BOF case)
+     * ======================================================== */
+
+    {
+        constans character* fons;
+        Arbor2Lexator* lex;
+        Arbor2Lexema* tok;
+
+        imprimere("\n--- Probans leading newlines ---\n");
+
+        fons = "\n\nint x;";
+        lex = arbor2_lexator_creare(piscina, intern, fons, (i32)strlen(fons));
+
+        /* int - should have 2 NOVA_LINEA in spatia_ante */
+        tok = arbor2_lexema_proximum(lex);
+        CREDO_AEQUALIS_I32(tok->genus, ARBOR2_LEXEMA_INT);
+        CREDO_AEQUALIS_I32(_numerare_nova_linea(tok->spatia_ante), II);
     }
 
 

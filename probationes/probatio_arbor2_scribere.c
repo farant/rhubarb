@@ -32,6 +32,8 @@ _lexare(Piscina* p, InternamentumChorda* intern, constans character* input)
     via->datum = u.m;
     via->mensura = VI;
 
+    /* Phase 2.7: NOVA_LINEA is now in spatia, not main stream.
+     * No need to skip it - it won't appear here anymore. */
     dum (VERUM)
     {
         Arbor2Lexema* l = arbor2_lexema_proximum(lex);
@@ -41,11 +43,6 @@ _lexare(Piscina* p, InternamentumChorda* intern, constans character* input)
         si (l == NIHIL)
         {
             frange;
-        }
-
-        si (l->genus == ARBOR2_LEXEMA_NOVA_LINEA)
-        {
-            perge;
         }
 
         t = arbor2_token_ex_lexema(p, l, via, l->linea, l->columna);
@@ -331,6 +328,23 @@ s32 principale(vacuum)
         imprimere("\n--- Probans initializer lists ---\n");
 
         /* TODO: Need to pass '=' token from P222/P223 to P226 first */
+    }
+
+    /* ========================================================
+     * PROBARE: Newline preservation (Phase 2.7)
+     * These tests verify that newlines are preserved in roundtrip.
+     * NOVA_LINEA is now in spatia, so roundtrip should preserve them.
+     * ======================================================== */
+    {
+        imprimere("\n--- Probans newline preservation ---\n");
+
+        /* Simple multi-line expression - newline should be preserved */
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "a +\nb", NIHIL));
+
+        /* Multi-line with spaces */
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "a + \n  b", NIHIL));
     }
 
     /* ========================================================

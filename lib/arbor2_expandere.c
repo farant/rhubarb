@@ -47,6 +47,71 @@ _chorda_aequalis(chorda a, chorda b)
     redde memcmp(a.datum, b.datum, (size_t)a.mensura) == ZEPHYRUM;
 }
 
+/* Phase 2.7: Check if token has NOVA_LINEA in spatia_post.
+ * Used for directive boundary detection now that NOVA_LINEA
+ * is collected as spatia instead of main stream tokens. */
+interior b32
+_habet_nova_linea_post(Arbor2Token* tok)
+{
+    Arbor2Lexema** spatium_ptr;
+    Arbor2Lexema* spatium;
+    i32 i;
+    i32 num;
+
+    si (tok == NIHIL || tok->lexema == NIHIL || tok->lexema->spatia_post == NIHIL)
+    {
+        redde FALSUM;
+    }
+
+    num = xar_numerus(tok->lexema->spatia_post);
+    per (i = ZEPHYRUM; i < num; i++)
+    {
+        spatium_ptr = xar_obtinere(tok->lexema->spatia_post, i);
+        si (spatium_ptr != NIHIL && *spatium_ptr != NIHIL)
+        {
+            spatium = *spatium_ptr;
+            si (spatium->genus == ARBOR2_LEXEMA_NOVA_LINEA)
+            {
+                redde VERUM;
+            }
+        }
+    }
+
+    redde FALSUM;
+}
+
+/* Phase 2.7: Check if token has NOVA_LINEA in spatia_ante.
+ * Used to detect if a token is at start of a new line. */
+interior b32
+_habet_nova_linea_ante(Arbor2Token* tok)
+{
+    Arbor2Lexema** spatium_ptr;
+    Arbor2Lexema* spatium;
+    i32 i;
+    i32 num;
+
+    si (tok == NIHIL || tok->lexema == NIHIL || tok->lexema->spatia_ante == NIHIL)
+    {
+        redde FALSUM;
+    }
+
+    num = xar_numerus(tok->lexema->spatia_ante);
+    per (i = ZEPHYRUM; i < num; i++)
+    {
+        spatium_ptr = xar_obtinere(tok->lexema->spatia_ante, i);
+        si (spatium_ptr != NIHIL && *spatium_ptr != NIHIL)
+        {
+            spatium = *spatium_ptr;
+            si (spatium->genus == ARBOR2_LEXEMA_NOVA_LINEA)
+            {
+                redde VERUM;
+            }
+        }
+    }
+
+    redde FALSUM;
+}
+
 /* ==================================================
  * Context Creation
  * ================================================== */
@@ -431,7 +496,7 @@ _detectare_typedef(
     {
         tok = *(Arbor2Token**)xar_obtinere(tokens, i);
 
-        /* Skip newlines */
+        /* Skip newlines (legacy check - Phase 2.7 moves NOVA_LINEA to spatia) */
         si (tok->lexema->genus == ARBOR2_LEXEMA_NOVA_LINEA)
         {
             perge;
@@ -632,9 +697,9 @@ _processare_define(Arbor2Expansion* exp, Xar* tokens, i32* positus)
                 {
                     pos++;
                 }
-                alioquin si (tok->lexema->genus == ARBOR2_LEXEMA_NOVA_LINEA)
+                alioquin si (_habet_nova_linea_ante(tok))
                 {
-                    /* Unterminated parameter list */
+                    /* Unterminated parameter list (Phase 2.7: check spatia_ante) */
                     frange;
                 }
                 alioquin
@@ -647,12 +712,16 @@ _processare_define(Arbor2Expansion* exp, Xar* tokens, i32* positus)
         }
     }
 
-    /* Collect body tokens until newline */
+    /* Collect body tokens until newline.
+     * Phase 2.7: NOVA_LINEA is now in spatia_post, so we add token first
+     * then check if it ends the line. */
     corpus_xar = xar_creare(exp->piscina, magnitudo(Arbor2Lexema*));
     dum (pos < num)
     {
         tok = *(Arbor2Token**)xar_obtinere(tokens, pos);
-        si (tok->lexema->genus == ARBOR2_LEXEMA_NOVA_LINEA)
+
+        /* Phase 2.7: Check if this token starts on a new line */
+        si (_habet_nova_linea_ante(tok))
         {
             frange;
         }
@@ -666,6 +735,12 @@ _processare_define(Arbor2Expansion* exp, Xar* tokens, i32* positus)
             }
         }
         pos++;
+
+        /* Phase 2.7: Check if this token ends the line */
+        si (_habet_nova_linea_post(tok))
+        {
+            frange;
+        }
     }
     def->corpus = corpus_xar;
 
@@ -709,15 +784,24 @@ _processare_undef(Arbor2Expansion* exp, Xar* tokens, i32* positus)
     tabula_dispersa_delere(exp->macros, nomen_ch);
     _finire_segmentum(exp, tok->lexema->linea);
 
-    /* Skip to newline */
+    /* Skip to newline (Phase 2.7: check spatia for NOVA_LINEA) */
     dum (pos < num)
     {
         tok = *(Arbor2Token**)xar_obtinere(tokens, pos);
-        si (tok->lexema->genus == ARBOR2_LEXEMA_NOVA_LINEA)
+
+        /* If this token starts on a new line, we're done */
+        si (_habet_nova_linea_ante(tok))
         {
             frange;
         }
+
         pos++;
+
+        /* If this token ends the line, we're done */
+        si (_habet_nova_linea_post(tok))
+        {
+            frange;
+        }
     }
 
     *positus = pos;

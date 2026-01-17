@@ -1,5 +1,46 @@
 # arbor2_lexema.c Worklog
 
+## 2026-01-16 - Phase 2.7: NOVA_LINEA Roundtrip Preservation
+
+Moved NOVA_LINEA from main token stream into spatia. This enables proper roundtrip serialization while maintaining preprocessor directive detection.
+
+### Problem
+
+NOVA_LINEA tokens were emitted in the main token stream, but:
+1. Test helpers skipped them (couldn't serialize)
+2. Even if not skipped, serializer walks AST nodes, so unattached tokens were lost
+3. Result: newlines lost during roundtrip
+
+### Solution: NOVA_LINEA in spatia (Option D from plan)
+
+**Before:** `_colligere_spatia()` broke on newlines, then main loop emitted NOVA_LINEA tokens.
+
+**After:** Newlines collected as NOVA_LINEA tokens in spatia like any other whitespace:
+- First newline goes in `spatia_post` of preceding token
+- Subsequent newlines collected in `spatia_ante` of following token
+
+### Preprocessor Adaptation
+
+The preprocessor relied on NOVA_LINEA in stream for directive boundary detection. Updated to check spatia instead:
+- `_habet_nova_linea_post(tok)` - checks if token has NOVA_LINEA in spatia_post
+- `_habet_nova_linea_ante(tok)` - checks if token starts on new line
+
+Updated `_processare_define()` and `_processare_undef()` to use these helpers.
+
+### GLR Blank Line Detection
+
+Updated `_habet_lineam_vacuam_ante/post()` and `_est_commentum_finis_lineae()` to check for both CONTINUATIO and NOVA_LINEA tokens in spatia.
+
+### Testing
+
+All tests pass:
+- `probatio_arbor2_lexema` - Rewritten for Phase 2.7 (41/41)
+- `probatio_arbor2_expandere` - PASSES (30/30)
+- `probatio_arbor2_glr` - PASSES (1847/1847)
+- `probatio_arbor2_scribere` - PASSES (81/81) - newline preservation tests now work
+
+---
+
 ## 2026-01-16 - Phase 2.6: Tokenize Whitespace
 
 Replaced `Arbor2Trivia` with explicit whitespace/comment tokens. This is a significant architectural change.

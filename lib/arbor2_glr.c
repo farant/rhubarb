@@ -256,7 +256,7 @@ _est_commentum_lexema(Arbor2Lexema* lex)
 
 /* Check if spatia sequence has a blank line (2+ newlines) before given index.
  * Phase 2.6: Uses Arbor2Lexema* instead of Arbor2Trivia*.
- * Newlines in spatia come from CONTINUATIO tokens. */
+ * Phase 2.7: Newlines come from CONTINUATIO or NOVA_LINEA tokens. */
 interior b32
 _habet_lineam_vacuam_ante(Xar* spatia, i32 index)
 {
@@ -283,9 +283,10 @@ _habet_lineam_vacuam_ante(Xar* spatia, i32 index)
                 /* Hit another comment, reset count */
                 newline_count = ZEPHYRUM;
             }
-            alioquin si (s->genus == ARBOR2_LEXEMA_CONTINUATIO)
+            alioquin si (s->genus == ARBOR2_LEXEMA_CONTINUATIO ||
+                         s->genus == ARBOR2_LEXEMA_NOVA_LINEA)
             {
-                /* Line continuation has exactly one newline */
+                /* CONTINUATIO and NOVA_LINEA each have exactly one newline */
                 newline_count++;
                 si (newline_count >= II)
                 {
@@ -300,7 +301,8 @@ _habet_lineam_vacuam_ante(Xar* spatia, i32 index)
 }
 
 /* Check if spatia sequence has a blank line (2+ newlines) after given index.
- * Phase 2.6: Uses Arbor2Lexema* instead of Arbor2Trivia*. */
+ * Phase 2.6: Uses Arbor2Lexema* instead of Arbor2Trivia*.
+ * Phase 2.7: Newlines come from CONTINUATIO or NOVA_LINEA tokens. */
 interior b32
 _habet_lineam_vacuam_post(Xar* spatia, i32 index)
 {
@@ -334,9 +336,10 @@ _habet_lineam_vacuam_post(Xar* spatia, i32 index)
                 /* Hit another comment, reset count */
                 newline_count = ZEPHYRUM;
             }
-            alioquin si (s->genus == ARBOR2_LEXEMA_CONTINUATIO)
+            alioquin si (s->genus == ARBOR2_LEXEMA_CONTINUATIO ||
+                         s->genus == ARBOR2_LEXEMA_NOVA_LINEA)
             {
-                /* Line continuation has exactly one newline */
+                /* CONTINUATIO and NOVA_LINEA each have exactly one newline */
                 newline_count++;
                 si (newline_count >= II)
                 {
@@ -351,7 +354,8 @@ _habet_lineam_vacuam_post(Xar* spatia, i32 index)
 }
 
 /* Check if a comment in spatia_post is at end of line (no newline before it).
- * Phase 2.6: Uses Arbor2Lexema* instead of Arbor2Trivia*. */
+ * Phase 2.6: Uses Arbor2Lexema* instead of Arbor2Trivia*.
+ * Phase 2.7: Newlines come from CONTINUATIO or NOVA_LINEA tokens. */
 interior b32
 _est_commentum_finis_lineae(Xar* spatia_post, i32 comment_index)
 {
@@ -369,8 +373,9 @@ _est_commentum_finis_lineae(Xar* spatia_post, i32 comment_index)
         si (s_ptr != NIHIL && *s_ptr != NIHIL)
         {
             Arbor2Lexema* s = *s_ptr;
-            /* CONTINUATIO tokens contain newlines */
-            si (s->genus == ARBOR2_LEXEMA_CONTINUATIO)
+            /* CONTINUATIO and NOVA_LINEA tokens contain newlines */
+            si (s->genus == ARBOR2_LEXEMA_CONTINUATIO ||
+                s->genus == ARBOR2_LEXEMA_NOVA_LINEA)
             {
                 redde FALSUM;
             }

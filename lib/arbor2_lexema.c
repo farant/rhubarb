@@ -5,7 +5,9 @@
  * Key differences:
  * - NOVA_LINEA token type for explicit newlines
  * - Line continuation tracking (est_continuatio)
- * - Newlines not consumed as trivia
+ * - Phase 2.7: NOVA_LINEA collected as spatia for roundtrip
+ *   preservation. Preprocessor checks spatia_post for
+ *   directive boundary detection.
  * ================================================== */
 
 #include "arbor2_lexema.h"
@@ -576,7 +578,63 @@ _colligere_spatia(Arbor2Lexator* lex)
             perge;
         }
 
-        frange;  /* Non est spatium (including newline!) */
+        /* Newline: \n or \r\n or bare \r - now collected as spatia (Phase 2.7) */
+        si (c == '\n')
+        {
+            initium = lex->positus;
+            linea_initium = lex->linea;
+            columna_initium = lex->columna;
+
+            _progredi(lex, I);
+
+            spatium = _creare_spatium(
+                lex,
+                ARBOR2_LEXEMA_NOVA_LINEA,
+                initium,
+                I,
+                linea_initium,
+                columna_initium
+            );
+            locus = xar_addere(lex->spatia_pendentia);
+            si (locus != NIHIL)
+            {
+                *locus = spatium;
+            }
+            perge;
+        }
+
+        si (c == '\r')
+        {
+            initium = lex->positus;
+            linea_initium = lex->linea;
+            columna_initium = lex->columna;
+
+            si (c2 == '\n')
+            {
+                _progredi(lex, II);  /* \r\n */
+            }
+            alioquin
+            {
+                _progredi(lex, I);   /* bare \r */
+            }
+
+            spatium = _creare_spatium(
+                lex,
+                ARBOR2_LEXEMA_NOVA_LINEA,
+                initium,
+                lex->positus - initium,
+                linea_initium,
+                columna_initium
+            );
+            locus = xar_addere(lex->spatia_pendentia);
+            si (locus != NIHIL)
+            {
+                *locus = spatium;
+            }
+            perge;
+        }
+
+        frange;  /* Non est spatium */
     }
 }
 
@@ -760,7 +818,63 @@ _colligere_spatia_trailing(Arbor2Lexator* lex, Arbor2Lexema* lexema)
             perge;
         }
 
-        frange;  /* Finire trailing spatia (including at newline) */
+        /* Newline: collect into spatia_post and stop (Phase 2.7) */
+        si (c == '\n')
+        {
+            initium = lex->positus;
+            linea_initium = lex->linea;
+            columna_initium = lex->columna;
+
+            _progredi(lex, I);
+
+            spatium = _creare_spatium(
+                lex,
+                ARBOR2_LEXEMA_NOVA_LINEA,
+                initium,
+                I,
+                linea_initium,
+                columna_initium
+            );
+            locus = xar_addere(trailing);
+            si (locus != NIHIL)
+            {
+                *locus = spatium;
+            }
+            frange;  /* Stop after newline - next token gets rest as spatia_ante */
+        }
+
+        si (c == '\r')
+        {
+            initium = lex->positus;
+            linea_initium = lex->linea;
+            columna_initium = lex->columna;
+
+            si (c2 == '\n')
+            {
+                _progredi(lex, II);  /* \r\n */
+            }
+            alioquin
+            {
+                _progredi(lex, I);   /* bare \r */
+            }
+
+            spatium = _creare_spatium(
+                lex,
+                ARBOR2_LEXEMA_NOVA_LINEA,
+                initium,
+                lex->positus - initium,
+                linea_initium,
+                columna_initium
+            );
+            locus = xar_addere(trailing);
+            si (locus != NIHIL)
+            {
+                *locus = spatium;
+            }
+            frange;  /* Stop after newline */
+        }
+
+        frange;  /* Non est spatium */
     }
 
     si (xar_numerus(trailing) > ZEPHYRUM)
@@ -1075,8 +1189,9 @@ _legere_characterem(Arbor2Lexator* lex)
 /* ==================================================
  * Main Tokenization
  *
- * MODIFIED: Emits NOVA_LINEA tokens for newlines instead
- * of consuming them as trivia.
+ * Phase 2.7: NOVA_LINEA now collected as spatia for roundtrip
+ * preservation. Preprocessor checks spatia_post for directive
+ * boundary detection.
  * ================================================== */
 
 Arbor2Lexema*
@@ -1091,7 +1206,7 @@ arbor2_lexema_proximum(Arbor2Lexator* lex)
     Arbor2Lexema* lexema;
     Arbor2LexemaGenus genus;
 
-    /* Colligere leading trivia (horizontal whitespace and comments only) */
+    /* Colligere leading trivia (whitespace, comments, AND newlines) */
     _colligere_spatia(lex);
 
     /* EOF */
@@ -1110,37 +1225,6 @@ arbor2_lexema_proximum(Arbor2Lexator* lex)
     c = _aspicere(lex, ZEPHYRUM);
     c2 = _aspicere(lex, I);
     c3 = _aspicere(lex, II);
-
-    /* NEW: Explicit newline token */
-    si (c == '\n')
-    {
-        _progredi(lex, I);
-        lexema = _creare_lexema(lex, ARBOR2_LEXEMA_NOVA_LINEA, initium, I,
-                                linea_initium, columna_initium);
-        _assignare_spatia_ante(lex, lexema);
-        /* No trailing trivia for newline */
-        redde lexema;
-    }
-
-    /* NEW: Handle \r\n as single newline token */
-    si (c == '\r' && c2 == '\n')
-    {
-        _progredi(lex, II);
-        lexema = _creare_lexema(lex, ARBOR2_LEXEMA_NOVA_LINEA, initium, II,
-                                linea_initium, columna_initium);
-        _assignare_spatia_ante(lex, lexema);
-        redde lexema;
-    }
-
-    /* Bare \r (old Mac style) - treat as newline too */
-    si (c == '\r')
-    {
-        _progredi(lex, I);
-        lexema = _creare_lexema(lex, ARBOR2_LEXEMA_NOVA_LINEA, initium, I,
-                                linea_initium, columna_initium);
-        _assignare_spatia_ante(lex, lexema);
-        redde lexema;
-    }
 
     /* Identificator vel verbum clausum */
     si (_est_identificator_initium(c))

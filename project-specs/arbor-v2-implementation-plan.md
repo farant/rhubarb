@@ -1,17 +1,20 @@
 # Arbor v2 Implementation Plan
 
 Date: 2026-01-16
-Status: Updated after Phase 2.4 completion (Comment Nodes) - Phase 2 COMPLETE
+Status: Updated after Phase 2.6 completion (Tokenize Whitespace) - Phase 2 COMPLETE
 
 ---
 
 ## Current State (Updated 2026-01-16)
 
 ### arbor2_lexema.c - COMPLETE
-- 93 token types (all C89 keywords, operators, literals)
+- 98 token types (all C89 keywords, operators, literals, whitespace)
 - NOVA_LINEA as explicit token (key difference from v1)
-- Trivia handling (whitespace, comments attached to tokens)
-- Line continuation tracking (est_continuatio flag)
+- Explicit whitespace tokens (Phase 2.6):
+  - SPATIA (contiguous spaces), TABULAE (contiguous tabs)
+  - CONTINUATIO (line continuation `\\\n`)
+  - COMMENTUM_CLAUSUM (block `/* */`), COMMENTUM_LINEA (line `//`)
+- Whitespace/comments attached via `spatia_ante`/`spatia_post` (Xar of Arbor2Lexema*)
 - Standard tracking (ARBOR2_STANDARD_C89/C99/EXTENSION)
 
 ### arbor2_token.c - COMPLETE
@@ -100,19 +103,24 @@ Status: Updated after Phase 2.4 completion (Comment Nodes) - Phase 2 COMPLETE
 - `static const unsigned int z` ✓
 - `extern volatile long int e` ✓
 
-### Arbor2Nodus Structure - ENHANCED (Phase 2.1, 2.3)
+### Arbor2Nodus Structure - ENHANCED (Phase 2.1, 2.3, 2.4)
 Current structure has:
 - genus (node type)
 - lexema (associated token)
-- **linea_initium, columna_initium** (start position) - NEW in Phase 2.1
-- **linea_finis, columna_finis** (end position) - NEW in Phase 2.1
-- **layer_index** (0 = source, >0 = macro-expanded) - NEW in Phase 2.1
-- **pater** (parent pointer, NIHIL for root) - NEW in Phase 2.3
-- datum union (38 node type variants including DESIGNATOR_ITEM)
+- **linea_initium, columna_initium** (start position) - Phase 2.1
+- **linea_finis, columna_finis** (end position) - Phase 2.1
+- **layer_index** (0 = source, >0 = macro-expanded) - Phase 2.1
+- **pater** (parent pointer, NIHIL for root) - Phase 2.3
+- **commenta_ante, commenta_post** (promoted comment nodes) - Phase 2.4
+- datum union (38+ node type variants including DESIGNATOR_ITEM, COMMENTUM)
+
+**Whitespace/Trivia Model (Phase 2.6):**
+- Whitespace lives on TOKENS via `spatia_ante`/`spatia_post` (Xar of Arbor2Lexema*)
+- Each spatium is a typed token: SPATIA, TABULAE, CONTINUATIO, COMMENTUM_CLAUSUM, COMMENTUM_LINEA
+- Comments also promoted to AST nodes for querying (dual storage)
 
 **Missing for tooling:**
 - Byte offsets (byte_initium/finis) - line/column added, bytes not yet
-- Trivia (trivia_ante/post) - flows through tokens currently
 - Type resolution field
 
 ### Tests - COMPREHENSIVE
@@ -337,9 +345,10 @@ Given the current state, the recommended priority is:
 
 1. **Phase 2 (Rich AST)** - Add location spans, trivia, parent pointers for formatter/tooling support.
    - 2.1 Location Propagation: **COMPLETE** ✓
-   - 2.2 Trivia Attachment: ~90% COMPLETE (roundtrip works via tokens)
+   - 2.2 Trivia Attachment: **COMPLETE** ✓ (superseded by 2.6)
    - 2.3 Parent Pointer: **COMPLETE** ✓
-   - 2.4 Comment Nodes: COMPLETE (promoted from trivia to first-class AST nodes)
+   - 2.4 Comment Nodes: **COMPLETE** ✓ (promoted from trivia to first-class AST nodes)
+   - 2.6 Tokenize Whitespace: **COMPLETE** ✓ (explicit SPATIA/TABULAE/CONTINUATIO/COMMENTUM tokens)
 
 **Current capabilities:**
 - Complete C89 files with multiple declarations/functions ✓
@@ -367,31 +376,35 @@ Extend Arbor2Nodus for tooling support:
 structura Arbor2Nodus {
     Arbor2NodusGenus            genus;
 
-    /* Location span - NEW */
-    i32     byte_initium;
-    i32     byte_finis;
+    /* Location span */
     i32     linea_initium;
     i32     columna_initium;
     i32     linea_finis;
     i32     columna_finis;
 
-    /* Trivia for roundtrip - NEW */
-    Xar*    trivia_ante;
-    Xar*    trivia_post;
-
-    /* Provenance - EXISTING but enhance */
+    /* Provenance */
     Arbor2Token*    lexema;
-    i32             layer_index;    /* NEW: which expansion layer */
+    i32             layer_index;    /* which expansion layer */
 
-    /* Navigation - NEW */
+    /* Navigation */
     Arbor2Nodus*    pater;
 
-    /* Type (populated later) - NEW */
+    /* Comments (promoted from token spatia) */
+    Xar*    commenta_ante;  /* Leading comment nodes */
+    Xar*    commenta_post;  /* Trailing comment nodes */
+
+    /* Type (populated later) - FUTURE */
     structura Arbor2Typus*  typus_resolutum;
 
-    /* Type-specific data - EXISTING */
+    /* Type-specific data */
     unio { ... } datum;
 };
+
+/* Note: Whitespace/trivia lives on TOKENS, not nodes:
+ *   Arbor2Lexema.spatia_ante  - Xar of Arbor2Lexema* (SPATIA, TABULAE, CONTINUATIO, COMMENTUM_*)
+ *   Arbor2Lexema.spatia_post  - Xar of Arbor2Lexema* (SPATIA, TABULAE, CONTINUATIO, COMMENTUM_*)
+ * Roundtrip serialization reads these from tokens.
+ */
 ```
 
 #### 2.1 Location Propagation — **COMPLETE** ✓
@@ -419,13 +432,12 @@ Implemented 2026-01-16.
 
 **Tests:** 26 new location verification tests (identifier, binary expr, integer literal, function call)
 
-#### 2.2 Trivia Attachment — **~90% COMPLETE**
-- Tokens already have trivia_ante/post from lexer ✓
-- Copy to AST nodes during construction — **PARTIAL**
-- Decision: Leading trivia attaches to following node ✓
-- Status: Roundtrip serialization works via token trivia (arbor2_scribere.c reads trivia from tokens).
-  Arbor2Nodus does NOT have its own trivia_ante/trivia_post fields — trivia flows through tokens.
-  For most use cases this is sufficient; node-level trivia only needed for synthetic nodes.
+#### 2.2 Trivia Attachment — **COMPLETE** ✓ (superseded by 2.6)
+- Originally: Tokens had opaque `Arbor2Trivia` structs with flags
+- Now: Replaced by explicit whitespace/comment tokens (see Phase 2.6)
+- Roundtrip serialization works via `spatia_ante`/`spatia_post` on tokens
+- Arbor2Nodus does NOT have its own trivia fields — trivia flows through tokens
+- Comments also accessible via promoted `commenta_ante`/`commenta_post` AST nodes
 
 #### 2.3 Parent Pointer — **COMPLETE** ✓
 
@@ -495,8 +507,43 @@ Xar*    commenta_post;  /* Trailing comments */
 
 **Enables:** Querying comments like any other node type, future parsing of comment content
 
+#### 2.6 Tokenize Whitespace — **COMPLETE** ✓
+
+Implemented 2026-01-16.
+
+**Replaced `Arbor2Trivia` with explicit whitespace/comment tokens:**
+
+Before: Whitespace/comments stored as opaque `Arbor2Trivia` structs with flags:
+- `est_commentum` - true if comment
+- `est_c99` - true if // line comment
+- `est_continuatio` - true if contains `\\\n`
+
+After: Whitespace/comments are now typed `Arbor2Lexema*` tokens with specific genus:
+- `SPATIA` - contiguous spaces (stores actual " " chars in valor)
+- `TABULAE` - contiguous tabs (stores actual "\t" chars in valor)
+- `CONTINUATIO` - line continuation `\\\n`
+- `COMMENTUM_CLAUSUM` - block comment `/* */`
+- `COMMENTUM_LINEA` - line comment `//`
+
+**Key Design Decisions:**
+1. Separate SPATIA vs TABULAE - keeps them distinct for formatting tools
+2. No mixed whitespace tokens - a run of spaces becomes one SPATIA, then tabs become TABULAE
+3. CONTINUATIO is atomic - contains exactly one newline
+4. Comment tokens store full text including delimiters
+
+**Files Modified:**
+- `include/arbor2_lexema.h` - New enum values, removed Arbor2Trivia, renamed fields
+- `lib/arbor2_lexema.c` - New _creare_spatium, rewrote _colligere_spatia
+- `lib/arbor2_scribere.c` - Updated to iterate Arbor2Lexema* in spatia
+- `lib/arbor2_glr.c` - Updated comment promotion to check genus
+- `lib/arbor2_expandere.c` - Field renames
+
+**Tests:** probatio_arbor2_lexema (38/38), probatio_arbor2_expandere (30/30)
+
+**Enables:** Clean typed whitespace queries, simpler serialization, structured trivia
+
 **Deliverable:** AST supports roundtrip formatting
-**Current Status:** Roundtrip formatting WORKS via token trivia AND promoted comment nodes. Phase 2 COMPLETE with location spans, parent pointers, and comment nodes for advanced tooling.
+**Current Status:** Roundtrip formatting WORKS via explicit whitespace tokens AND promoted comment nodes. Phase 2 COMPLETE with location spans, parent pointers, comment nodes, and typed whitespace tokens for advanced tooling.
 
 ---
 
@@ -876,17 +923,21 @@ Phase 8 (Queries)      Phase 9 (Types)      Phase 10 (Index)
 
 | File | Lines | Status |
 |------|-------|--------|
-| lib/arbor2_lexema.c | ~500 | Complete |
+| lib/arbor2_lexema.c | ~500 | Complete (Phase 2.6: explicit whitespace tokens) |
 | lib/arbor2_token.c | 264 | Complete |
-| lib/arbor2_expandere.c | 1576 | Mostly complete |
-| lib/arbor2_glr.c | ~3800 | Functional + location + parent pointers |
+| lib/arbor2_expandere.c | 1576 | Mostly complete (updated for spatia fields) |
+| lib/arbor2_glr.c | ~3800 | Functional + location + parent pointers + comment promotion |
 | lib/arbor2_glr_tabula.c | ~17500 | 346 productions, 952 states |
-| include/arbor2_glr.h | ~720 | Good structure + location + pater fields |
-| include/arbor2_lexema.h | 220 | Complete |
+| lib/arbor2_scribere.c | ~200 | Complete (Phase 2.6: emits spatia tokens) |
+| include/arbor2_glr.h | ~720 | Good structure + location + pater + commenta fields |
+| include/arbor2_lexema.h | 220 | Complete (98 token types incl. whitespace) |
 | include/arbor2_token.h | 147 | Complete |
 | include/arbor2_expandere.h | 197 | Complete |
 | probationes/probatio_arbor2_glr.c | ~12900 | 1847 tests |
+| probationes/probatio_arbor2_lexema.c | ~340 | 38 tests (whitespace tokens) |
+| probationes/probatio_arbor2_expandere.c | ~600 | 30 tests |
 | tools/glr_debug.c | ~340 | Working |
+| lib/arbor2_lexema.worklog.md | - | Phase 2.6 design notes |
 
 ---
 
@@ -910,4 +961,5 @@ Phase 8 (Queries)      Phase 9 (Types)      Phase 10 (Index)
 | 2026-01-15 | 1.4b Qual+TypeMod | +0 | +33 | +0 | const unsigned int, volatile long int, compound combos - states 920-951 |
 | 2026-01-16 | 2.1 Location Prop | +0 | +0 | +26 | linea/columna_initium/finis, layer_index on AST nodes |
 | 2026-01-16 | 2.3 Parent Pointer | +0 | +0 | +19 | pater field, ~40 alloc sites, ~55 child->pater assignments |
-| **Current** | | **346** | **952** | **1847** | |
+| 2026-01-16 | 2.6 Tokenize Whitespace | +5 | +0 | +0 | SPATIA, TABULAE, CONTINUATIO, COMMENTUM_* tokens; removed Arbor2Trivia |
+| **Current** | | **351** | **952** | **1847** | |
