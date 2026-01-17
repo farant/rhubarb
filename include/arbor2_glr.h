@@ -518,15 +518,15 @@ structura Arbor2Nodus {
             Xar*                lexemata_saltata;   /* Skipped tokens */
         } error;
 
-        /* COMMENTUM (promoted from trivia) */
+        /* COMMENTUM (promoted from spatia) */
         structura {
             Arbor2CommentumGenus    subgenus;       /* Block, line, or doc */
             chorda                  textus;         /* Comment text (without delimiters) */
             chorda                  textus_crudus;  /* Full original text */
             b32                     est_fluitans;   /* True if floating (blank lines around) */
             Xar*                    fragmenta;      /* Parsed sub-structure (NIHIL initially) */
-            Xar*                    trivia_ante;    /* Leading whitespace (Xar of Arbor2Trivia) */
-            Xar*                    trivia_post;    /* Trailing whitespace (Xar of Arbor2Trivia) */
+            Xar*                    spatia_ante;    /* Leading whitespace (Xar of Arbor2Lexema*) */
+            Xar*                    spatia_post;    /* Trailing whitespace (Xar of Arbor2Lexema*) */
         } commentum;
     } datum;
 };

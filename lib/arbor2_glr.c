@@ -197,16 +197,18 @@ _extrahere_textum_commenti(chorda textus_crudus, b32 est_c99)
     redde textus;
 }
 
-/* Create a COMMENTUM node from trivia */
+/* Create a COMMENTUM node from spatium (Arbor2Lexema* comment token).
+ * Phase 2.6: Uses typed lexema tokens instead of Arbor2Trivia. */
 interior Arbor2Nodus*
 _creare_nodum_commentum(
     Piscina*             piscina,
-    Arbor2Trivia*        trivia,
+    Arbor2Lexema*        spatium,
     b32                  est_fluitans,
-    Xar*                 trivia_ante,
-    Xar*                 trivia_post)
+    Xar*                 spatia_ante,
+    Xar*                 spatia_post)
 {
     Arbor2Nodus* nodus;
+    b32 est_linea;
 
     nodus = piscina_allocare(piscina, magnitudo(Arbor2Nodus));
     nodus->genus = ARBOR2_NODUS_COMMENTUM;
@@ -215,16 +217,17 @@ _creare_nodum_commentum(
     nodus->commenta_ante = NIHIL;
     nodus->commenta_post = NIHIL;
 
-    /* Location from trivia */
-    nodus->linea_initium = trivia->linea;
-    nodus->columna_initium = trivia->columna;
+    /* Location from spatium */
+    nodus->linea_initium = spatium->linea;
+    nodus->columna_initium = spatium->columna;
     /* Calculate end position from text length */
-    nodus->linea_finis = trivia->linea;  /* May span lines but start with single */
-    nodus->columna_finis = trivia->columna + trivia->valor.mensura;
+    nodus->linea_finis = spatium->linea;  /* May span lines but start with single */
+    nodus->columna_finis = spatium->columna + spatium->valor.mensura;
     nodus->layer_index = ZEPHYRUM;
 
-    /* Determine subgenus */
-    si (trivia->est_c99)
+    /* Determine subgenus from genus */
+    est_linea = (spatium->genus == ARBOR2_LEXEMA_COMMENTUM_LINEA);
+    si (est_linea)
     {
         nodus->datum.commentum.subgenus = ARBOR2_COMMENTUM_LINEA;
     }
@@ -233,24 +236,34 @@ _creare_nodum_commentum(
         nodus->datum.commentum.subgenus = ARBOR2_COMMENTUM_CLAUSUM;
     }
 
-    nodus->datum.commentum.textus_crudus = trivia->valor;
-    nodus->datum.commentum.textus = _extrahere_textum_commenti(trivia->valor, trivia->est_c99);
+    nodus->datum.commentum.textus_crudus = spatium->valor;
+    nodus->datum.commentum.textus = _extrahere_textum_commenti(spatium->valor, est_linea);
     nodus->datum.commentum.est_fluitans = est_fluitans;
     nodus->datum.commentum.fragmenta = NIHIL;
-    nodus->datum.commentum.trivia_ante = trivia_ante;
-    nodus->datum.commentum.trivia_post = trivia_post;
+    nodus->datum.commentum.spatia_ante = spatia_ante;
+    nodus->datum.commentum.spatia_post = spatia_post;
 
     redde nodus;
 }
 
-/* Check if trivia sequence has a blank line (2+ newlines) before given index */
+/* Helper: Check if lexema is a comment token */
 interior b32
-_habet_lineam_vacuam_ante(Xar* trivia, i32 index)
+_est_commentum_lexema(Arbor2Lexema* lex)
+{
+    redde lex->genus == ARBOR2_LEXEMA_COMMENTUM_CLAUSUM ||
+           lex->genus == ARBOR2_LEXEMA_COMMENTUM_LINEA;
+}
+
+/* Check if spatia sequence has a blank line (2+ newlines) before given index.
+ * Phase 2.6: Uses Arbor2Lexema* instead of Arbor2Trivia*.
+ * Newlines in spatia come from CONTINUATIO tokens. */
+interior b32
+_habet_lineam_vacuam_ante(Xar* spatia, i32 index)
 {
     i32 i;
     i32 newline_count;
 
-    si (trivia == NIHIL || index <= ZEPHYRUM)
+    si (spatia == NIHIL || index <= ZEPHYRUM)
     {
         redde FALSUM;
     }
@@ -260,52 +273,47 @@ _habet_lineam_vacuam_ante(Xar* trivia, i32 index)
     /* Walk backwards from index looking for consecutive newlines */
     per (i = index - I; i >= ZEPHYRUM; i--)
     {
-        Arbor2Trivia** t_ptr = xar_obtinere(trivia, i);
-        si (t_ptr != NIHIL && *t_ptr != NIHIL)
+        Arbor2Lexema** s_ptr = xar_obtinere(spatia, i);
+        si (s_ptr != NIHIL && *s_ptr != NIHIL)
         {
-            Arbor2Trivia* t = *t_ptr;
+            Arbor2Lexema* s = *s_ptr;
 
-            si (t->est_commentum)
+            si (_est_commentum_lexema(s))
             {
                 /* Hit another comment, reset count */
                 newline_count = ZEPHYRUM;
             }
-            alioquin
+            alioquin si (s->genus == ARBOR2_LEXEMA_CONTINUATIO)
             {
-                /* Whitespace - count newlines in it */
-                i32 j;
-                per (j = ZEPHYRUM; j < t->valor.mensura; j++)
+                /* Line continuation has exactly one newline */
+                newline_count++;
+                si (newline_count >= II)
                 {
-                    si (t->valor.datum[j] == '\n')
-                    {
-                        newline_count++;
-                        si (newline_count >= II)
-                        {
-                            redde VERUM;
-                        }
-                    }
+                    redde VERUM;
                 }
             }
+            /* SPATIA and TABULAE have no newlines */
         }
     }
 
     redde FALSUM;
 }
 
-/* Check if trivia sequence has a blank line (2+ newlines) after given index */
+/* Check if spatia sequence has a blank line (2+ newlines) after given index.
+ * Phase 2.6: Uses Arbor2Lexema* instead of Arbor2Trivia*. */
 interior b32
-_habet_lineam_vacuam_post(Xar* trivia, i32 index)
+_habet_lineam_vacuam_post(Xar* spatia, i32 index)
 {
     i32 i;
     i32 num;
     i32 newline_count;
 
-    si (trivia == NIHIL)
+    si (spatia == NIHIL)
     {
         redde FALSUM;
     }
 
-    num = xar_numerus(trivia);
+    num = xar_numerus(spatia);
     si (index >= num - I)
     {
         redde FALSUM;
@@ -316,146 +324,136 @@ _habet_lineam_vacuam_post(Xar* trivia, i32 index)
     /* Walk forward from index looking for consecutive newlines */
     per (i = index + I; i < num; i++)
     {
-        Arbor2Trivia** t_ptr = xar_obtinere(trivia, i);
-        si (t_ptr != NIHIL && *t_ptr != NIHIL)
+        Arbor2Lexema** s_ptr = xar_obtinere(spatia, i);
+        si (s_ptr != NIHIL && *s_ptr != NIHIL)
         {
-            Arbor2Trivia* t = *t_ptr;
+            Arbor2Lexema* s = *s_ptr;
 
-            si (t->est_commentum)
+            si (_est_commentum_lexema(s))
             {
                 /* Hit another comment, reset count */
                 newline_count = ZEPHYRUM;
             }
-            alioquin
+            alioquin si (s->genus == ARBOR2_LEXEMA_CONTINUATIO)
             {
-                /* Whitespace - count newlines in it */
-                i32 j;
-                per (j = ZEPHYRUM; j < t->valor.mensura; j++)
+                /* Line continuation has exactly one newline */
+                newline_count++;
+                si (newline_count >= II)
                 {
-                    si (t->valor.datum[j] == '\n')
-                    {
-                        newline_count++;
-                        si (newline_count >= II)
-                        {
-                            redde VERUM;
-                        }
-                    }
+                    redde VERUM;
                 }
             }
+            /* SPATIA and TABULAE have no newlines */
         }
     }
 
     redde FALSUM;
 }
 
-/* Check if a comment in trivia_post is at end of line (no newline before it) */
+/* Check if a comment in spatia_post is at end of line (no newline before it).
+ * Phase 2.6: Uses Arbor2Lexema* instead of Arbor2Trivia*. */
 interior b32
-_est_commentum_finis_lineae(Xar* trivia_post, i32 comment_index)
+_est_commentum_finis_lineae(Xar* spatia_post, i32 comment_index)
 {
     i32 i;
 
-    si (trivia_post == NIHIL || comment_index < ZEPHYRUM)
+    si (spatia_post == NIHIL || comment_index < ZEPHYRUM)
     {
         redde FALSUM;
     }
 
-    /* Check trivia before this comment - if there's any newline, it's not EOL */
+    /* Check spatia before this comment - if there's any newline, it's not EOL */
     per (i = ZEPHYRUM; i < comment_index; i++)
     {
-        Arbor2Trivia** t_ptr = xar_obtinere(trivia_post, i);
-        si (t_ptr != NIHIL && *t_ptr != NIHIL)
+        Arbor2Lexema** s_ptr = xar_obtinere(spatia_post, i);
+        si (s_ptr != NIHIL && *s_ptr != NIHIL)
         {
-            Arbor2Trivia* t = *t_ptr;
-            si (!t->est_commentum)
+            Arbor2Lexema* s = *s_ptr;
+            /* CONTINUATIO tokens contain newlines */
+            si (s->genus == ARBOR2_LEXEMA_CONTINUATIO)
             {
-                /* Whitespace - check for newlines */
-                i32 j;
-                per (j = ZEPHYRUM; j < t->valor.mensura; j++)
-                {
-                    si (t->valor.datum[j] == '\n')
-                    {
-                        redde FALSUM;
-                    }
-                }
+                redde FALSUM;
             }
+            /* SPATIA and TABULAE have no newlines, so skip them */
         }
     }
 
     redde VERUM;
 }
 
-/* Extract whitespace trivia around a comment.
+/* Extract whitespace spatia around a comment.
  * NOTE: Reserved for future reformatting scenarios where we need to
  * move/modify comments and track their surrounding whitespace.
- * For roundtrip, whitespace stays in token trivia.
+ * For roundtrip, whitespace stays in token spatia.
+ * Phase 2.6: Uses Arbor2Lexema* instead of Arbor2Trivia*.
  */
 #if 0
 interior vacuum
-_extrahere_trivia_circa_commentum(
+_extrahere_spatia_circa_commentum(
     Piscina*    piscina,
-    Xar*        trivia,
+    Xar*        spatia,
     i32         comment_index,
     i32         start_index,    /* Start of range to consider (inclusive) */
-    Xar**       out_trivia_ante,
-    Xar**       out_trivia_post)
+    Xar**       out_spatia_ante,
+    Xar**       out_spatia_post)
 {
     i32 i;
     i32 num;
     Xar* ante;
     Xar* post;
-    Arbor2Trivia** t_ptr;
-    Arbor2Trivia** slot;
+    Arbor2Lexema** s_ptr;
+    Arbor2Lexema** slot;
 
     ante = NIHIL;
     post = NIHIL;
 
-    *out_trivia_ante = NIHIL;
-    *out_trivia_post = NIHIL;
+    *out_spatia_ante = NIHIL;
+    *out_spatia_post = NIHIL;
 
-    si (trivia == NIHIL)
+    si (spatia == NIHIL)
     {
         redde;
     }
 
-    num = xar_numerus(trivia);
+    num = xar_numerus(spatia);
 
     /* Collect whitespace before comment (from start_index to comment_index-1) */
     per (i = start_index; i < comment_index; i++)
     {
-        t_ptr = xar_obtinere(trivia, i);
-        si (t_ptr != NIHIL && *t_ptr != NIHIL && !(*t_ptr)->est_commentum)
+        s_ptr = xar_obtinere(spatia, i);
+        si (s_ptr != NIHIL && *s_ptr != NIHIL && !_est_commentum_lexema(*s_ptr))
         {
             si (ante == NIHIL)
             {
-                ante = xar_creare(piscina, magnitudo(Arbor2Trivia*));
+                ante = xar_creare(piscina, magnitudo(Arbor2Lexema*));
             }
             slot = xar_addere(ante);
-            *slot = *t_ptr;
+            *slot = *s_ptr;
         }
     }
 
     /* Collect whitespace after comment (until next comment or end) */
     per (i = comment_index + I; i < num; i++)
     {
-        t_ptr = xar_obtinere(trivia, i);
-        si (t_ptr != NIHIL && *t_ptr != NIHIL)
+        s_ptr = xar_obtinere(spatia, i);
+        si (s_ptr != NIHIL && *s_ptr != NIHIL)
         {
-            si ((*t_ptr)->est_commentum)
+            si (_est_commentum_lexema(*s_ptr))
             {
                 /* Hit another comment, stop */
                 frange;
             }
             si (post == NIHIL)
             {
-                post = xar_creare(piscina, magnitudo(Arbor2Trivia*));
+                post = xar_creare(piscina, magnitudo(Arbor2Lexema*));
             }
             slot = xar_addere(post);
-            *slot = *t_ptr;
+            *slot = *s_ptr;
         }
     }
 
-    *out_trivia_ante = ante;
-    *out_trivia_post = post;
+    *out_spatia_ante = ante;
+    *out_spatia_post = post;
 }
 #endif
 
@@ -501,28 +499,29 @@ _adhaerere_commentum_post(Piscina* piscina, Arbor2Nodus* target, Arbor2Nodus* co
     commentum->pater = target;
 }
 
-/* Process trivia on a token and promote comments to nodes.
+/* Process spatia on a token and promote comments to nodes.
  * Attaches leading comments (non-floating) to nodus_post as commenta_ante.
  * Attaches trailing comments to nodus_ante as commenta_post.
  * Adds floating comments to lista_parens as sibling nodes.
  *
- * Comments are promoted as first-class AST nodes with their own trivia.
+ * Phase 2.6: Uses Arbor2Lexema* spatia instead of Arbor2Trivia.
+ * Comments are promoted as first-class AST nodes with their own spatia.
  * Returns number of comment nodes created.
  */
 interior i32
-_promovere_commenta_ex_trivia(
+_promovere_commenta_ex_spatia(
     Piscina*        piscina,
     Arbor2Token*    token,
-    Arbor2Nodus*    nodus_ante,     /* Node before trivia (for commenta_post) */
-    Arbor2Nodus*    nodus_post,     /* Node after trivia (for commenta_ante) */
+    Arbor2Nodus*    nodus_ante,     /* Node before spatia (for commenta_post) */
+    Arbor2Nodus*    nodus_post,     /* Node after spatia (for commenta_ante) */
     Xar*            lista_parens)   /* Parent list for floating comments */
 {
     i32 count;
     i32 i;
     i32 num;
-    Xar* trivia;
-    Arbor2Trivia** t_ptr;
-    Arbor2Trivia* t;
+    Xar* spatia;
+    Arbor2Lexema** s_ptr;
+    Arbor2Lexema* s;
     b32 blank_ante;
     b32 blank_post;
     b32 est_fluitans;
@@ -537,28 +536,28 @@ _promovere_commenta_ex_trivia(
         redde count;
     }
 
-    /* Process trivia_ante (leading trivia) */
-    trivia = token->lexema->trivia_ante;
-    si (trivia != NIHIL)
+    /* Process spatia_ante (leading spatia) */
+    spatia = token->lexema->spatia_ante;
+    si (spatia != NIHIL)
     {
-        num = xar_numerus(trivia);
+        num = xar_numerus(spatia);
         per (i = ZEPHYRUM; i < num; i++)
         {
-            t_ptr = xar_obtinere(trivia, i);
-            si (t_ptr != NIHIL && *t_ptr != NIHIL)
+            s_ptr = xar_obtinere(spatia, i);
+            si (s_ptr != NIHIL && *s_ptr != NIHIL)
             {
-                t = *t_ptr;
-                si (t->est_commentum)
+                s = *s_ptr;
+                si (_est_commentum_lexema(s))
                 {
                     /* Check if floating (blank lines both sides) */
-                    blank_ante = _habet_lineam_vacuam_ante(trivia, i);
-                    blank_post = _habet_lineam_vacuam_post(trivia, i);
+                    blank_ante = _habet_lineam_vacuam_ante(spatia, i);
+                    blank_post = _habet_lineam_vacuam_post(spatia, i);
                     est_fluitans = blank_ante && blank_post;
 
-                    /* NOTE: For roundtrip, whitespace remains in token trivia.
-                     * Comment trivia fields reserved for reformatting scenarios
+                    /* NOTE: For roundtrip, whitespace remains in token spatia.
+                     * Comment spatia fields reserved for reformatting scenarios
                      * where we need to move/modify comments. */
-                    commentum = _creare_nodum_commentum(piscina, t, est_fluitans, NIHIL, NIHIL);
+                    commentum = _creare_nodum_commentum(piscina, s, est_fluitans, NIHIL, NIHIL);
 
                     si (est_fluitans && lista_parens != NIHIL)
                     {
@@ -578,26 +577,26 @@ _promovere_commenta_ex_trivia(
         }
     }
 
-    /* Process trivia_post (trailing trivia) */
-    trivia = token->lexema->trivia_post;
-    si (trivia != NIHIL)
+    /* Process spatia_post (trailing spatia) */
+    spatia = token->lexema->spatia_post;
+    si (spatia != NIHIL)
     {
-        num = xar_numerus(trivia);
+        num = xar_numerus(spatia);
         per (i = ZEPHYRUM; i < num; i++)
         {
-            t_ptr = xar_obtinere(trivia, i);
-            si (t_ptr != NIHIL && *t_ptr != NIHIL)
+            s_ptr = xar_obtinere(spatia, i);
+            si (s_ptr != NIHIL && *s_ptr != NIHIL)
             {
-                t = *t_ptr;
-                si (t->est_commentum)
+                s = *s_ptr;
+                si (_est_commentum_lexema(s))
                 {
                     /* Check if end-of-line comment */
-                    est_eol = _est_commentum_finis_lineae(trivia, i);
+                    est_eol = _est_commentum_finis_lineae(spatia, i);
 
                     si (est_eol && nodus_ante != NIHIL)
                     {
                         /* EOL comment - attach to previous node */
-                        commentum = _creare_nodum_commentum(piscina, t, FALSUM, NIHIL, NIHIL);
+                        commentum = _creare_nodum_commentum(piscina, s, FALSUM, NIHIL, NIHIL);
                         _adhaerere_commentum_post(piscina, nodus_ante, commentum);
                         count++;
                     }
@@ -611,14 +610,15 @@ _promovere_commenta_ex_trivia(
 
 /* Promovere commenta ab tokeno interiore ad nodos filiorum.
  * Pro operatoribus inter sinister et dexter:
- *   - trivia_ante tok → nodus_post.commenta_ante (praecedentia)
- *   - trivia_post tok → nodus_post.commenta_ante (interiora)
+ *   - spatia_ante tok → nodus_post.commenta_ante (praecedentia)
+ *   - spatia_post tok → nodus_post.commenta_ante (interiora)
  * Pro parenibus et braketis:
- *   - trivia_post tok_apertum → nodus_contentum.commenta_ante
- *   - trivia_ante tok_clausum → nodus_contentum.commenta_post
+ *   - spatia_post tok_apertum → nodus_contentum.commenta_ante
+ *   - spatia_ante tok_clausum → nodus_contentum.commenta_post
  *
+ * Phase 2.6: Uses Arbor2Lexema* spatia instead of Arbor2Trivia.
  * Comments are promoted as first-class AST nodes.
- * Whitespace remains in token trivia for roundtrip; comment trivia fields
+ * Whitespace remains in token spatia for roundtrip; comment spatia fields
  * are reserved for future reformatting scenarios.
  * Nulla commenta fluitantia in expressionibus - omnia adhaerent.
  */
@@ -631,9 +631,9 @@ _promovere_commenta_interior(
 {
     i32 i;
     i32 num;
-    Xar* trivia;
-    Arbor2Trivia** t_ptr;
-    Arbor2Trivia* t;
+    Xar* spatia;
+    Arbor2Lexema** s_ptr;
+    Arbor2Lexema* s;
     Arbor2Nodus* commentum;
     b32 est_eol;
 
@@ -642,54 +642,54 @@ _promovere_commenta_interior(
         redde;
     }
 
-    /* Processare trivia_ante (commenta praecedentia tokenum) */
-    trivia = tok_interior->lexema->trivia_ante;
-    si (trivia != NIHIL && nodus_post != NIHIL)
+    /* Processare spatia_ante (commenta praecedentia tokenum) */
+    spatia = tok_interior->lexema->spatia_ante;
+    si (spatia != NIHIL && nodus_post != NIHIL)
     {
-        num = xar_numerus(trivia);
+        num = xar_numerus(spatia);
         per (i = ZEPHYRUM; i < num; i++)
         {
-            t_ptr = xar_obtinere(trivia, i);
-            si (t_ptr != NIHIL && *t_ptr != NIHIL)
+            s_ptr = xar_obtinere(spatia, i);
+            si (s_ptr != NIHIL && *s_ptr != NIHIL)
             {
-                t = *t_ptr;
-                si (t->est_commentum)
+                s = *s_ptr;
+                si (_est_commentum_lexema(s))
                 {
                     /* In expressionibus, commenta praecedentia adhaerent ad nodum post */
-                    commentum = _creare_nodum_commentum(piscina, t, FALSUM, NIHIL, NIHIL);
+                    commentum = _creare_nodum_commentum(piscina, s, FALSUM, NIHIL, NIHIL);
                     _adhaerere_commentum_ante(piscina, nodus_post, commentum);
                 }
             }
         }
     }
 
-    /* Processare trivia_post (commenta post tokenum) */
-    trivia = tok_interior->lexema->trivia_post;
-    si (trivia != NIHIL)
+    /* Processare spatia_post (commenta post tokenum) */
+    spatia = tok_interior->lexema->spatia_post;
+    si (spatia != NIHIL)
     {
-        num = xar_numerus(trivia);
+        num = xar_numerus(spatia);
         per (i = ZEPHYRUM; i < num; i++)
         {
-            t_ptr = xar_obtinere(trivia, i);
-            si (t_ptr != NIHIL && *t_ptr != NIHIL)
+            s_ptr = xar_obtinere(spatia, i);
+            si (s_ptr != NIHIL && *s_ptr != NIHIL)
             {
-                t = *t_ptr;
-                si (t->est_commentum)
+                s = *s_ptr;
+                si (_est_commentum_lexema(s))
                 {
                     /* Commenta post operatorem: ad nodum post si existit,
                      * alioquin ad nodum ante ut commenta_post */
                     si (nodus_post != NIHIL)
                     {
-                        commentum = _creare_nodum_commentum(piscina, t, FALSUM, NIHIL, NIHIL);
+                        commentum = _creare_nodum_commentum(piscina, s, FALSUM, NIHIL, NIHIL);
                         _adhaerere_commentum_ante(piscina, nodus_post, commentum);
                     }
                     alioquin si (nodus_ante != NIHIL)
                     {
                         /* Pro tokenis clausis sine nodo sequenti */
-                        est_eol = _est_commentum_finis_lineae(trivia, i);
+                        est_eol = _est_commentum_finis_lineae(spatia, i);
                         si (est_eol)
                         {
-                            commentum = _creare_nodum_commentum(piscina, t, FALSUM, NIHIL, NIHIL);
+                            commentum = _creare_nodum_commentum(piscina, s, FALSUM, NIHIL, NIHIL);
                             _adhaerere_commentum_post(piscina, nodus_ante, commentum);
                         }
                     }
@@ -5195,7 +5195,7 @@ arbor2_glr_parsere_translation_unit(
             }
 
             /* Promote comments from first token */
-            _promovere_commenta_ex_trivia(
+            _promovere_commenta_ex_spatia(
                 glr->piscina,
                 tok,
                 nodus_ante,

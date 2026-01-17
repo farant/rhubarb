@@ -592,7 +592,7 @@ _processare_define(Arbor2Expansion* exp, Xar* tokens, i32* positus)
         tok = *(Arbor2Token**)xar_obtinere(tokens, pos);
         /* Function-like if '(' immediately follows (no trivia) */
         si (tok->lexema->genus == ARBOR2_LEXEMA_PAREN_APERTA &&
-            tok->lexema->trivia_ante == NIHIL)
+            tok->lexema->spatia_ante == NIHIL)
         {
             def->est_functio = VERUM;
             pos++;  /* Skip ( */
@@ -872,7 +872,7 @@ _stringify_tokens(Arbor2Expansion* exp, Xar* arg_tokens)
         }
 
         /* Check for leading trivia (whitespace) */
-        si (tok->lexema->trivia_ante != NIHIL && xar_numerus(tok->lexema->trivia_ante) > ZEPHYRUM)
+        si (tok->lexema->spatia_ante != NIHIL && xar_numerus(tok->lexema->spatia_ante) > ZEPHYRUM)
         {
             si (in_content)
             {
@@ -929,8 +929,8 @@ _stringify_tokens(Arbor2Expansion* exp, Xar* arg_tokens)
     result->longitudo = buf_pos;
     result->linea = ZEPHYRUM;
     result->columna = ZEPHYRUM;
-    result->trivia_ante = NIHIL;
-    result->trivia_post = NIHIL;
+    result->spatia_ante = NIHIL;
+    result->spatia_post = NIHIL;
     result->standard = ARBOR2_STANDARD_C89;
 
     redde result;
@@ -1280,7 +1280,7 @@ _expand_layer(Arbor2Expansion* exp, Arbor2Layer* input)
         si (tok->lexema->genus == ARBOR2_LEXEMA_HASH)
         {
             /* Check if at start of line (leading trivia or first token) */
-            si (i == ZEPHYRUM || tok->lexema->trivia_ante != NIHIL)
+            si (i == ZEPHYRUM || tok->lexema->spatia_ante != NIHIL)
             {
                 si (i + I < num)
                 {

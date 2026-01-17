@@ -38,33 +38,35 @@ _appendere_chordam(Xar* output, chorda* s)
     }
 }
 
-/* Emit trivia array (whitespace AND comments).
- * For roundtrip serialization, comments are emitted from token trivia.
+/* Emit spatia array (whitespace AND comments).
+ * Phase 2.6: Iterates Arbor2Lexema* tokens instead of Arbor2Trivia*.
+ * For roundtrip serialization, comments are emitted from token spatia.
  * Promoted comment nodes (commenta_ante/commenta_post) are for AST access,
  * not for serialization. */
 hic_manens vacuum
-_emittere_trivia(Xar* output, Xar* trivia)
+_emittere_spatia(Xar* output, Xar* spatia)
 {
     i32 i;
     i32 num;
 
-    si (trivia == NIHIL)
+    si (spatia == NIHIL)
     {
         redde;
     }
 
-    num = xar_numerus(trivia);
+    num = xar_numerus(spatia);
     per (i = ZEPHYRUM; i < num; i++)
     {
-        Arbor2Trivia** t_ptr = xar_obtinere(trivia, i);
-        si (t_ptr != NIHIL && *t_ptr != NIHIL)
+        Arbor2Lexema** lex_ptr = xar_obtinere(spatia, i);
+        si (lex_ptr != NIHIL && *lex_ptr != NIHIL)
         {
-            _appendere_chordam(output, &(*t_ptr)->valor);
+            _appendere_chordam(output, &(*lex_ptr)->valor);
         }
     }
 }
 
-/* Emit single token with trivia */
+/* Emit single token with spatia (whitespace/comments).
+ * Phase 2.6: Uses spatia_ante/spatia_post instead of trivia. */
 vacuum arbor2_scribere_lexema(Xar* output, Arbor2Token* token)
 {
     si (token == NIHIL || token->lexema == NIHIL)
@@ -72,14 +74,14 @@ vacuum arbor2_scribere_lexema(Xar* output, Arbor2Token* token)
         redde;
     }
 
-    /* Emit leading trivia */
-    _emittere_trivia(output, token->lexema->trivia_ante);
+    /* Emit leading spatia */
+    _emittere_spatia(output, token->lexema->spatia_ante);
 
     /* Emit token text */
     _appendere_chordam(output, &token->lexema->valor);
 
-    /* Emit trailing trivia */
-    _emittere_trivia(output, token->lexema->trivia_post);
+    /* Emit trailing spatia */
+    _emittere_spatia(output, token->lexema->spatia_post);
 }
 
 /* Forward declaration */
@@ -647,14 +649,14 @@ _scribere_nodum(Xar* output, Arbor2Nodus* nodus)
             }
             frange;
 
-        /* COMMENTUM: emit trivia + raw comment text */
+        /* COMMENTUM: emit spatia + raw comment text */
         casus ARBOR2_NODUS_COMMENTUM:
-            /* Emit leading trivia (whitespace before comment) */
-            _emittere_trivia(output, nodus->datum.commentum.trivia_ante);
+            /* Emit leading spatia (whitespace before comment) */
+            _emittere_spatia(output, nodus->datum.commentum.spatia_ante);
             /* Emit the comment text */
             _appendere_chordam(output, &nodus->datum.commentum.textus_crudus);
-            /* Emit trailing trivia (whitespace after comment) */
-            _emittere_trivia(output, nodus->datum.commentum.trivia_post);
+            /* Emit trailing spatia (whitespace after comment) */
+            _emittere_spatia(output, nodus->datum.commentum.spatia_post);
             frange;
 
         ordinarius:

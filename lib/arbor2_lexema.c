@@ -24,7 +24,7 @@ structura Arbor2Lexator {
     i32                       columna;
     Piscina*                  piscina;
     InternamentumChorda*      intern;
-    Xar*                      trivia_pendente;   /* Trivia collecta pro proximo lexema */
+    Xar*                      spatia_pendentia;   /* Spatia collecta pro proximo lexema (Xar of Arbor2Lexema*) */
 };
 
 /* ==================================================
@@ -191,6 +191,15 @@ hic_manens constans character* NOMINA_GENERUM[] = {
     /* NEW: Explicit newline token */
     "NOVA_LINEA",
 
+    /* Whitespace tokens (Phase 2.6) */
+    "SPATIA",
+    "TABULAE",
+    "CONTINUATIO",
+
+    /* Comment tokens (Phase 2.6) */
+    "COMMENTUM_CLAUSUM",
+    "COMMENTUM_LINEA",
+
     /* Special */
     "EOF",
     "ERROR",
@@ -222,13 +231,6 @@ _chorda_ex_fonte(constans character* fons, i32 mensura)
 /* ==================================================
  * Helper Functions - Character Classification
  * ================================================== */
-
-/* NEW: Spatium horizontale (space/tab only, NOT newline) */
-interior b32
-_est_spatium_horizontale(character c)
-{
-    redde c == ' ' || c == '\t';
-}
 
 interior b32
 _est_cifra(character c)
@@ -331,8 +333,8 @@ _creare_lexema(Arbor2Lexator* lex, Arbor2LexemaGenus genus,
     lexema->longitudo = longitudo;
     lexema->linea = linea;
     lexema->columna = columna;
-    lexema->trivia_ante = NIHIL;
-    lexema->trivia_post = NIHIL;
+    lexema->spatia_ante = NIHIL;
+    lexema->spatia_post = NIHIL;
     lexema->standard = ARBOR2_STANDARD_C89;
 
     /* Internare valor (chorda_internare facit copiam) */
@@ -351,57 +353,62 @@ _creare_lexema(Arbor2Lexator* lex, Arbor2LexemaGenus genus,
     redde lexema;
 }
 
-interior Arbor2Trivia*
-_creare_trivia(Arbor2Lexator* lex, i32 byte_offset, i32 longitudo,
-               i32 linea, i32 columna, b32 est_commentum, b32 est_c99,
-               b32 est_continuatio)
+/* Create whitespace/comment lexema for spatia_ante/spatia_post.
+ * Phase 2.6: All trivia are now typed lexema tokens. */
+interior Arbor2Lexema*
+_creare_spatium(Arbor2Lexator* lex, Arbor2LexemaGenus genus,
+                i32 byte_offset, i32 longitudo, i32 linea, i32 columna)
 {
-    Arbor2Trivia* trivia;
+    Arbor2Lexema* spatium;
     chorda temp;
     chorda* internata;
 
-    trivia = piscina_allocare(lex->piscina, magnitudo(Arbor2Trivia));
-    trivia->linea = linea;
-    trivia->columna = columna;
-    trivia->est_commentum = est_commentum;
-    trivia->est_c99 = est_c99;
-    trivia->est_continuatio = est_continuatio;  /* NEW */
+    spatium = piscina_allocare(lex->piscina, magnitudo(Arbor2Lexema));
+    spatium->genus = genus;
+    spatium->byte_offset = byte_offset;
+    spatium->longitudo = longitudo;
+    spatium->linea = linea;
+    spatium->columna = columna;
+    spatium->spatia_ante = NIHIL;
+    spatium->spatia_post = NIHIL;
+    spatium->standard = ARBOR2_STANDARD_C89;
 
     /* chorda_internare facit copiam */
     si (longitudo > ZEPHYRUM)
     {
         temp = _chorda_ex_fonte(lex->fons + byte_offset, longitudo);
         internata = chorda_internare(lex->intern, temp);
-        trivia->valor = *internata;
+        spatium->valor = *internata;
     }
     alioquin
     {
-        trivia->valor.datum = NIHIL;
-        trivia->valor.mensura = ZEPHYRUM;
+        spatium->valor.datum = NIHIL;
+        spatium->valor.mensura = ZEPHYRUM;
     }
 
-    redde trivia;
+    redde spatium;
 }
 
 /* ==================================================
- * Trivia Collection
+ * Spatia Collection (Phase 2.6)
  *
- * MODIFIED: In arbor2, newlines are NOT consumed as trivia.
- * Only horizontal whitespace (space/tab) and comments are trivia.
- * Line continuations (\\\n) are consumed and marked in trivia.
+ * Collects horizontal whitespace, comments, and line continuations
+ * as typed Arbor2Lexema tokens instead of opaque Arbor2Trivia.
+ * Newlines are NOT consumed - they become NOVA_LINEA tokens.
  * ================================================== */
 
 interior vacuum
-_colligere_trivia(Arbor2Lexator* lex)
+_colligere_spatia(Arbor2Lexator* lex)
 {
     character c;
     character c2;
     i32 initium;
     i32 linea_initium;
     i32 columna_initium;
-    Arbor2Trivia* trivia;
-    Arbor2Trivia** locus;
-    b32 habet_continuatio;
+    Arbor2Lexema* spatium;
+    Arbor2Lexema** locus;
+    i32 space_count;
+    i32 tab_count;
 
     dum (!_finis(lex))
     {
@@ -427,79 +434,84 @@ _colligere_trivia(Arbor2Lexator* lex)
                 _progredi(lex, I);   /* \n */
             }
 
-            trivia = _creare_trivia(
+            spatium = _creare_spatium(
                 lex,
+                ARBOR2_LEXEMA_CONTINUATIO,
                 initium,
                 lex->positus - initium,
                 linea_initium,
-                columna_initium,
-                FALSUM,  /* non est commentum */
-                FALSUM,  /* non est c99 */
-                VERUM    /* EST continuatio */
+                columna_initium
             );
-            locus = xar_addere(lex->trivia_pendente);
+            locus = xar_addere(lex->spatia_pendentia);
             si (locus != NIHIL)
             {
-                *locus = trivia;
+                *locus = spatium;
             }
             perge;
         }
 
-        /* Horizontal whitespace only (NOT newline) */
-        si (_est_spatium_horizontale(c))
+        /* Spaces - collect contiguous run */
+        si (c == ' ')
         {
             initium = lex->positus;
             linea_initium = lex->linea;
             columna_initium = lex->columna;
-            habet_continuatio = FALSUM;
+            space_count = ZEPHYRUM;
 
-            dum (!_finis(lex))
+            dum (!_finis(lex) && _aspicere(lex, ZEPHYRUM) == ' ')
             {
-                c = _aspicere(lex, ZEPHYRUM);
-                c2 = _aspicere(lex, I);
-
-                /* Check for line continuation within whitespace */
-                si (c == '\\' && (c2 == '\n' || (c2 == '\r' && _aspicere(lex, II) == '\n')))
-                {
-                    habet_continuatio = VERUM;
-                    _progredi(lex, I);  /* backslash */
-                    si (c2 == '\r')
-                    {
-                        _progredi(lex, II);  /* \r\n */
-                    }
-                    alioquin
-                    {
-                        _progredi(lex, I);   /* \n */
-                    }
-                }
-                alioquin si (_est_spatium_horizontale(c))
-                {
-                    _progredi(lex, I);
-                }
-                alioquin
-                {
-                    frange;
-                }
+                _progredi(lex, I);
+                space_count++;
             }
 
-            trivia = _creare_trivia(
+            spatium = _creare_spatium(
                 lex,
+                ARBOR2_LEXEMA_SPATIA,
                 initium,
-                lex->positus - initium,
+                space_count,
                 linea_initium,
-                columna_initium,
-                FALSUM,          /* non est commentum */
-                FALSUM,          /* non est c99 */
-                habet_continuatio
+                columna_initium
             );
-            locus = xar_addere(lex->trivia_pendente);
+            locus = xar_addere(lex->spatia_pendentia);
             si (locus != NIHIL)
             {
-                *locus = trivia;
+                *locus = spatium;
             }
+            perge;
         }
+
+        /* Tabs - collect contiguous run */
+        si (c == '\t')
+        {
+            initium = lex->positus;
+            linea_initium = lex->linea;
+            columna_initium = lex->columna;
+            tab_count = ZEPHYRUM;
+
+            dum (!_finis(lex) && _aspicere(lex, ZEPHYRUM) == '\t')
+            {
+                _progredi(lex, I);
+                tab_count++;
+            }
+
+            spatium = _creare_spatium(
+                lex,
+                ARBOR2_LEXEMA_TABULAE,
+                initium,
+                tab_count,
+                linea_initium,
+                columna_initium
+            );
+            locus = xar_addere(lex->spatia_pendentia);
+            si (locus != NIHIL)
+            {
+                *locus = spatium;
+            }
+            perge;
+        }
+
         /* Block comment: slash star ... star slash */
-        alioquin si (c == '/' && c2 == '*')
+        si (c == '/' && c2 == '*')
         {
             initium = lex->positus;
             linea_initium = lex->linea;
@@ -517,24 +529,24 @@ _colligere_trivia(Arbor2Lexator* lex)
                 _progredi(lex, I);
             }
 
-            trivia = _creare_trivia(
+            spatium = _creare_spatium(
                 lex,
+                ARBOR2_LEXEMA_COMMENTUM_CLAUSUM,
                 initium,
                 lex->positus - initium,
                 linea_initium,
-                columna_initium,
-                VERUM,   /* est commentum */
-                FALSUM,  /* non est c99 */
-                FALSUM   /* non est continuatio */
+                columna_initium
             );
-            locus = xar_addere(lex->trivia_pendente);
+            locus = xar_addere(lex->spatia_pendentia);
             si (locus != NIHIL)
             {
-                *locus = trivia;
+                *locus = spatium;
             }
+            perge;
         }
+
         /* Line comment: slash slash (C99) */
-        alioquin si (c == '/' && c2 == '/')
+        si (c == '/' && c2 == '/')
         {
             initium = lex->positus;
             linea_initium = lex->linea;
@@ -548,104 +560,143 @@ _colligere_trivia(Arbor2Lexator* lex)
                 _progredi(lex, I);
             }
 
-            trivia = _creare_trivia(
+            spatium = _creare_spatium(
                 lex,
+                ARBOR2_LEXEMA_COMMENTUM_LINEA,
                 initium,
                 lex->positus - initium,
                 linea_initium,
-                columna_initium,
-                VERUM,   /* est commentum */
-                VERUM,   /* EST c99 */
-                FALSUM   /* non est continuatio */
+                columna_initium
             );
-            locus = xar_addere(lex->trivia_pendente);
+            locus = xar_addere(lex->spatia_pendentia);
             si (locus != NIHIL)
             {
-                *locus = trivia;
+                *locus = spatium;
             }
+            perge;
         }
-        alioquin
-        {
-            frange;  /* Non est trivia (including newline!) */
-        }
+
+        frange;  /* Non est spatium (including newline!) */
     }
 }
 
+/* Collect trailing spatia (whitespace/comments after token on same line).
+ * Phase 2.6: Uses typed Arbor2Lexema* tokens. */
 interior vacuum
-_colligere_trivia_trailing(Arbor2Lexator* lex, Arbor2Lexema* lexema)
+_colligere_spatia_trailing(Arbor2Lexator* lex, Arbor2Lexema* lexema)
 {
     character c;
     character c2;
     i32 initium;
     i32 linea_initium;
     i32 columna_initium;
-    Arbor2Trivia* trivia;
-    Arbor2Trivia** locus;
+    Arbor2Lexema* spatium;
+    Arbor2Lexema** locus;
     Xar* trailing;
-    b32 habet_continuatio;
+    i32 count;
 
-    trailing = xar_creare(lex->piscina, magnitudo(Arbor2Trivia*));
+    trailing = xar_creare(lex->piscina, magnitudo(Arbor2Lexema*));
 
     dum (!_finis(lex))
     {
         c = _aspicere(lex, ZEPHYRUM);
         c2 = _aspicere(lex, I);
 
-        /* Solum spatia horizontales (non newline) */
-        si (c == ' ' || c == '\t')
+        /* Line continuation: backslash-newline */
+        si (c == '\\' && (c2 == '\n' || (c2 == '\r' && _aspicere(lex, II) == '\n')))
         {
             initium = lex->positus;
             linea_initium = lex->linea;
             columna_initium = lex->columna;
-            habet_continuatio = FALSUM;
 
-            dum (!_finis(lex))
+            _progredi(lex, I);  /* backslash */
+            si (c2 == '\r')
             {
-                c = _aspicere(lex, ZEPHYRUM);
-                c2 = _aspicere(lex, I);
-
-                /* Check for line continuation */
-                si (c == '\\' && (c2 == '\n' || (c2 == '\r' && _aspicere(lex, II) == '\n')))
-                {
-                    habet_continuatio = VERUM;
-                    _progredi(lex, I);
-                    si (c2 == '\r')
-                    {
-                        _progredi(lex, II);
-                    }
-                    alioquin
-                    {
-                        _progredi(lex, I);
-                    }
-                }
-                alioquin si (c == ' ' || c == '\t')
-                {
-                    _progredi(lex, I);
-                }
-                alioquin
-                {
-                    frange;
-                }
+                _progredi(lex, II);  /* \r\n */
+            }
+            alioquin
+            {
+                _progredi(lex, I);   /* \n */
             }
 
-            trivia = _creare_trivia(
+            spatium = _creare_spatium(
                 lex,
+                ARBOR2_LEXEMA_CONTINUATIO,
                 initium,
                 lex->positus - initium,
                 linea_initium,
-                columna_initium,
-                FALSUM,
-                FALSUM,
-                habet_continuatio
+                columna_initium
             );
             locus = xar_addere(trailing);
             si (locus != NIHIL)
             {
-                *locus = trivia;
+                *locus = spatium;
             }
+            perge;
         }
+
+        /* Spaces */
+        si (c == ' ')
+        {
+            initium = lex->positus;
+            linea_initium = lex->linea;
+            columna_initium = lex->columna;
+            count = ZEPHYRUM;
+
+            dum (!_finis(lex) && _aspicere(lex, ZEPHYRUM) == ' ')
+            {
+                _progredi(lex, I);
+                count++;
+            }
+
+            spatium = _creare_spatium(
+                lex,
+                ARBOR2_LEXEMA_SPATIA,
+                initium,
+                count,
+                linea_initium,
+                columna_initium
+            );
+            locus = xar_addere(trailing);
+            si (locus != NIHIL)
+            {
+                *locus = spatium;
+            }
+            perge;
+        }
+
+        /* Tabs */
+        si (c == '\t')
+        {
+            initium = lex->positus;
+            linea_initium = lex->linea;
+            columna_initium = lex->columna;
+            count = ZEPHYRUM;
+
+            dum (!_finis(lex) && _aspicere(lex, ZEPHYRUM) == '\t')
+            {
+                _progredi(lex, I);
+                count++;
+            }
+
+            spatium = _creare_spatium(
+                lex,
+                ARBOR2_LEXEMA_TABULAE,
+                initium,
+                count,
+                linea_initium,
+                columna_initium
+            );
+            locus = xar_addere(trailing);
+            si (locus != NIHIL)
+            {
+                *locus = spatium;
+            }
+            perge;
+        }
+
         /* Block comment on same line */
-        alioquin si (c == '/' && c2 == '*')
+        si (c == '/' && c2 == '*')
         {
             initium = lex->positus;
             linea_initium = lex->linea;
@@ -663,24 +714,24 @@ _colligere_trivia_trailing(Arbor2Lexator* lex, Arbor2Lexema* lexema)
                 _progredi(lex, I);
             }
 
-            trivia = _creare_trivia(
+            spatium = _creare_spatium(
                 lex,
+                ARBOR2_LEXEMA_COMMENTUM_CLAUSUM,
                 initium,
                 lex->positus - initium,
                 linea_initium,
-                columna_initium,
-                VERUM,
-                FALSUM,
-                FALSUM
+                columna_initium
             );
             locus = xar_addere(trailing);
             si (locus != NIHIL)
             {
-                *locus = trivia;
+                *locus = spatium;
             }
+            perge;
         }
+
         /* Line comment on same line */
-        alioquin si (c == '/' && c2 == '/')
+        si (c == '/' && c2 == '/')
         {
             initium = lex->positus;
             linea_initium = lex->linea;
@@ -693,41 +744,40 @@ _colligere_trivia_trailing(Arbor2Lexator* lex, Arbor2Lexema* lexema)
                 _progredi(lex, I);
             }
 
-            trivia = _creare_trivia(
+            spatium = _creare_spatium(
                 lex,
+                ARBOR2_LEXEMA_COMMENTUM_LINEA,
                 initium,
                 lex->positus - initium,
                 linea_initium,
-                columna_initium,
-                VERUM,
-                VERUM,
-                FALSUM
+                columna_initium
             );
             locus = xar_addere(trailing);
             si (locus != NIHIL)
             {
-                *locus = trivia;
+                *locus = spatium;
             }
+            perge;
         }
-        alioquin
-        {
-            frange;  /* Finire trailing trivia (including at newline) */
-        }
+
+        frange;  /* Finire trailing spatia (including at newline) */
     }
 
     si (xar_numerus(trailing) > ZEPHYRUM)
     {
-        lexema->trivia_post = trailing;
+        lexema->spatia_post = trailing;
     }
 }
 
+/* Assign pending leading spatia to lexema.
+ * Phase 2.6: Uses typed Arbor2Lexema* tokens. */
 interior vacuum
-_assignare_trivia_ante(Arbor2Lexator* lex, Arbor2Lexema* lexema)
+_assignare_spatia_ante(Arbor2Lexator* lex, Arbor2Lexema* lexema)
 {
-    si (xar_numerus(lex->trivia_pendente) > ZEPHYRUM)
+    si (xar_numerus(lex->spatia_pendentia) > ZEPHYRUM)
     {
-        lexema->trivia_ante = lex->trivia_pendente;
-        lex->trivia_pendente = xar_creare(lex->piscina, magnitudo(Arbor2Trivia*));
+        lexema->spatia_ante = lex->spatia_pendentia;
+        lex->spatia_pendentia = xar_creare(lex->piscina, magnitudo(Arbor2Lexema*));
     }
 }
 
@@ -1042,14 +1092,14 @@ arbor2_lexema_proximum(Arbor2Lexator* lex)
     Arbor2LexemaGenus genus;
 
     /* Colligere leading trivia (horizontal whitespace and comments only) */
-    _colligere_trivia(lex);
+    _colligere_spatia(lex);
 
     /* EOF */
     si (_finis(lex))
     {
         lexema = _creare_lexema(lex, ARBOR2_LEXEMA_EOF, lex->positus, ZEPHYRUM,
                                 lex->linea, lex->columna);
-        _assignare_trivia_ante(lex, lexema);
+        _assignare_spatia_ante(lex, lexema);
         redde lexema;
     }
 
@@ -1067,7 +1117,7 @@ arbor2_lexema_proximum(Arbor2Lexator* lex)
         _progredi(lex, I);
         lexema = _creare_lexema(lex, ARBOR2_LEXEMA_NOVA_LINEA, initium, I,
                                 linea_initium, columna_initium);
-        _assignare_trivia_ante(lex, lexema);
+        _assignare_spatia_ante(lex, lexema);
         /* No trailing trivia for newline */
         redde lexema;
     }
@@ -1078,7 +1128,7 @@ arbor2_lexema_proximum(Arbor2Lexator* lex)
         _progredi(lex, II);
         lexema = _creare_lexema(lex, ARBOR2_LEXEMA_NOVA_LINEA, initium, II,
                                 linea_initium, columna_initium);
-        _assignare_trivia_ante(lex, lexema);
+        _assignare_spatia_ante(lex, lexema);
         redde lexema;
     }
 
@@ -1088,7 +1138,7 @@ arbor2_lexema_proximum(Arbor2Lexator* lex)
         _progredi(lex, I);
         lexema = _creare_lexema(lex, ARBOR2_LEXEMA_NOVA_LINEA, initium, I,
                                 linea_initium, columna_initium);
-        _assignare_trivia_ante(lex, lexema);
+        _assignare_spatia_ante(lex, lexema);
         redde lexema;
     }
 
@@ -1096,8 +1146,8 @@ arbor2_lexema_proximum(Arbor2Lexator* lex)
     si (_est_identificator_initium(c))
     {
         lexema = _legere_identificator(lex);
-        _assignare_trivia_ante(lex, lexema);
-        _colligere_trivia_trailing(lex, lexema);
+        _assignare_spatia_ante(lex, lexema);
+        _colligere_spatia_trailing(lex, lexema);
         redde lexema;
     }
 
@@ -1105,8 +1155,8 @@ arbor2_lexema_proximum(Arbor2Lexator* lex)
     si (_est_cifra(c))
     {
         lexema = _legere_numerum(lex);
-        _assignare_trivia_ante(lex, lexema);
-        _colligere_trivia_trailing(lex, lexema);
+        _assignare_spatia_ante(lex, lexema);
+        _colligere_spatia_trailing(lex, lexema);
         redde lexema;
     }
 
@@ -1114,8 +1164,8 @@ arbor2_lexema_proximum(Arbor2Lexator* lex)
     si (c == '"')
     {
         lexema = _legere_chordam(lex);
-        _assignare_trivia_ante(lex, lexema);
-        _colligere_trivia_trailing(lex, lexema);
+        _assignare_spatia_ante(lex, lexema);
+        _colligere_spatia_trailing(lex, lexema);
         redde lexema;
     }
 
@@ -1123,8 +1173,8 @@ arbor2_lexema_proximum(Arbor2Lexator* lex)
     si (c == '\'')
     {
         lexema = _legere_characterem(lex);
-        _assignare_trivia_ante(lex, lexema);
-        _colligere_trivia_trailing(lex, lexema);
+        _assignare_spatia_ante(lex, lexema);
+        _colligere_spatia_trailing(lex, lexema);
         redde lexema;
     }
 
@@ -1134,8 +1184,8 @@ arbor2_lexema_proximum(Arbor2Lexator* lex)
         _progredi(lex, III);
         lexema = _creare_lexema(lex, ARBOR2_LEXEMA_ELLIPSIS, initium, III,
                                 linea_initium, columna_initium);
-        _assignare_trivia_ante(lex, lexema);
-        _colligere_trivia_trailing(lex, lexema);
+        _assignare_spatia_ante(lex, lexema);
+        _colligere_spatia_trailing(lex, lexema);
         redde lexema;
     }
 
@@ -1144,8 +1194,8 @@ arbor2_lexema_proximum(Arbor2Lexator* lex)
         _progredi(lex, III);
         lexema = _creare_lexema(lex, ARBOR2_LEXEMA_SHL_ASSIGN, initium, III,
                                 linea_initium, columna_initium);
-        _assignare_trivia_ante(lex, lexema);
-        _colligere_trivia_trailing(lex, lexema);
+        _assignare_spatia_ante(lex, lexema);
+        _colligere_spatia_trailing(lex, lexema);
         redde lexema;
     }
 
@@ -1154,8 +1204,8 @@ arbor2_lexema_proximum(Arbor2Lexator* lex)
         _progredi(lex, III);
         lexema = _creare_lexema(lex, ARBOR2_LEXEMA_SHR_ASSIGN, initium, III,
                                 linea_initium, columna_initium);
-        _assignare_trivia_ante(lex, lexema);
-        _colligere_trivia_trailing(lex, lexema);
+        _assignare_spatia_ante(lex, lexema);
+        _colligere_spatia_trailing(lex, lexema);
         redde lexema;
     }
 
@@ -1395,8 +1445,8 @@ arbor2_lexema_proximum(Arbor2Lexator* lex)
 
     lexema = _creare_lexema(lex, genus, initium, lex->positus - initium,
                             linea_initium, columna_initium);
-    _assignare_trivia_ante(lex, lexema);
-    _colligere_trivia_trailing(lex, lexema);
+    _assignare_spatia_ante(lex, lexema);
+    _colligere_spatia_trailing(lex, lexema);
 
     redde lexema;
 }
@@ -1450,7 +1500,7 @@ arbor2_lexator_creare(
     lex->columna = I;
     lex->piscina = piscina;
     lex->intern = intern;
-    lex->trivia_pendente = xar_creare(piscina, magnitudo(Arbor2Trivia*));
+    lex->spatia_pendentia = xar_creare(piscina, magnitudo(Arbor2Lexema*));
 
     redde lex;
 }

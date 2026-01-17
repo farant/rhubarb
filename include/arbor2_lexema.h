@@ -153,6 +153,15 @@ nomen enumeratio {
     /* NEW: Explicit newline token */
     ARBOR2_LEXEMA_NOVA_LINEA,     /* \n or \r\n */
 
+    /* Whitespace tokens (Phase 2.6) */
+    ARBOR2_LEXEMA_SPATIA,           /* n spaces */
+    ARBOR2_LEXEMA_TABULAE,          /* n tabs */
+    ARBOR2_LEXEMA_CONTINUATIO,      /* \\\n line continuation */
+
+    /* Comment tokens (Phase 2.6) */
+    ARBOR2_LEXEMA_COMMENTUM_CLAUSUM,  /* block comment */
+    ARBOR2_LEXEMA_COMMENTUM_LINEA,    /* line comment */
+
     /* Special */
     ARBOR2_LEXEMA_EOF,
     ARBOR2_LEXEMA_ERROR,
@@ -162,20 +171,11 @@ nomen enumeratio {
 } Arbor2LexemaGenus;
 
 /* ==================================================
- * Trivia (whitespace and comments)
- * ================================================== */
-
-nomen structura {
-    chorda      valor;           /* Actual text content */
-    b32         est_commentum;   /* true if comment, false if whitespace */
-    b32         est_c99;         /* true if // comment (C99) */
-    b32         est_continuatio; /* NEW: true if contains \\\n continuation */
-    i32         linea;           /* Starting line (1-based) */
-    i32         columna;         /* Starting column (1-based) */
-} Arbor2Trivia;
-
-/* ==================================================
  * Token
+ *
+ * Phase 2.6: Trivia replaced by explicit whitespace/comment tokens.
+ * spatia_ante/spatia_post contain Xar of Arbor2Lexema* with genus:
+ *   SPATIA, TABULAE, CONTINUATIO, COMMENTUM_CLAUSUM, COMMENTUM_LINEA
  * ================================================== */
 
 nomen structura {
@@ -185,8 +185,8 @@ nomen structura {
     i32               longitudo;     /* Length in bytes */
     i32               linea;         /* Starting line (1-based) */
     i32               columna;       /* Starting column (1-based) */
-    Xar*              trivia_ante;   /* Leading trivia (Xar of Arbor2Trivia) */
-    Xar*              trivia_post;   /* Trailing trivia (Xar of Arbor2Trivia) */
+    Xar*              spatia_ante;   /* Leading whitespace/comments (Xar of Arbor2Lexema*) */
+    Xar*              spatia_post;   /* Trailing whitespace/comments (Xar of Arbor2Lexema*) */
     i8                standard;      /* ARBOR2_STANDARD_* */
 } Arbor2Lexema;
 

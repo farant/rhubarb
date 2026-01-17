@@ -148,29 +148,29 @@ s32 principale(vacuum)
         constans character* fons;
         Arbor2Lexator* lex;
         Arbor2Lexema* tok;
-        Arbor2Trivia* trivia;
+        Arbor2Lexema* spatium;
         b32 found_continuation;
 
-        imprimere("\n--- Probans trivia est_continuatio ---\n");
+        imprimere("\n--- Probans spatia CONTINUATIO ---\n");
 
-        /* Test that continuation is captured in trivia */
+        /* Test that continuation is captured in spatia (Phase 2.6) */
         fons = "a \\\n b";
         lex = arbor2_lexator_creare(piscina, intern, fons, (i32)strlen(fons));
 
-        /* a - may have trailing trivia with continuation */
+        /* a - may have trailing spatia with continuation */
         tok = arbor2_lexema_proximum(lex);
         CREDO_AEQUALIS_I32(tok->genus, ARBOR2_LEXEMA_IDENTIFICATOR);
 
         found_continuation = FALSUM;
 
-        /* Check trailing trivia of 'a' for continuation */
-        si (tok->trivia_post != NIHIL && xar_numerus(tok->trivia_post) > ZEPHYRUM)
+        /* Check trailing spatia of 'a' for CONTINUATIO token */
+        si (tok->spatia_post != NIHIL && xar_numerus(tok->spatia_post) > ZEPHYRUM)
         {
             i32 t;
-            per (t = ZEPHYRUM; t < xar_numerus(tok->trivia_post); t++)
+            per (t = ZEPHYRUM; t < xar_numerus(tok->spatia_post); t++)
             {
-                trivia = *(Arbor2Trivia**)xar_obtinere(tok->trivia_post, t);
-                si (trivia->est_continuatio)
+                spatium = *(Arbor2Lexema**)xar_obtinere(tok->spatia_post, t);
+                si (spatium->genus == ARBOR2_LEXEMA_CONTINUATIO)
                 {
                     found_continuation = VERUM;
                 }
@@ -181,14 +181,14 @@ s32 principale(vacuum)
         tok = arbor2_lexema_proximum(lex);
         CREDO_AEQUALIS_I32(tok->genus, ARBOR2_LEXEMA_IDENTIFICATOR);
 
-        /* Check leading trivia of 'b' for continuation */
-        si (tok->trivia_ante != NIHIL && xar_numerus(tok->trivia_ante) > ZEPHYRUM)
+        /* Check leading spatia of 'b' for CONTINUATIO token */
+        si (tok->spatia_ante != NIHIL && xar_numerus(tok->spatia_ante) > ZEPHYRUM)
         {
             i32 t;
-            per (t = ZEPHYRUM; t < xar_numerus(tok->trivia_ante); t++)
+            per (t = ZEPHYRUM; t < xar_numerus(tok->spatia_ante); t++)
             {
-                trivia = *(Arbor2Trivia**)xar_obtinere(tok->trivia_ante, t);
-                si (trivia->est_continuatio)
+                spatium = *(Arbor2Lexema**)xar_obtinere(tok->spatia_ante, t);
+                si (spatium->genus == ARBOR2_LEXEMA_CONTINUATIO)
                 {
                     found_continuation = VERUM;
                 }
