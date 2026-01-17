@@ -4709,6 +4709,26 @@ _processare_unam_actionem(
                             }
                             valor_novus = lista_nodus;
                         }
+                        alioquin si (actio->valor == 7)
+                        {
+                            /* P7: factor -> '(' expression ')' (3 symbols)
+                             * Create PARENTHESIZED node to preserve parens for roundtrip
+                             * valori: [2]=NIHIL, [1]=expression, [0]=NIHIL
+                             * lexemata: [2]='(', [1]=last_token_of_expr, [0]=')' */
+                            Arbor2Nodus* paren_nodus;
+                            paren_nodus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
+                            paren_nodus->genus = ARBOR2_NODUS_PARENTHESIZED;
+                            paren_nodus->lexema = lexemata[II];  /* ( token */
+                            paren_nodus->pater = NIHIL;
+                            LOCUS_EX_LEXEMATIS(paren_nodus, II, ZEPHYRUM);
+                            paren_nodus->datum.parenthesized.tok_paren_ap = lexemata[II];
+                            paren_nodus->datum.parenthesized.expressio = valori[I];
+                            paren_nodus->datum.parenthesized.tok_paren_cl = lexemata[ZEPHYRUM];
+                            paren_nodus->commenta_ante = NIHIL;
+                            paren_nodus->commenta_post = NIHIL;
+                            si (valori[I] != NIHIL) valori[I]->pater = paren_nodus;
+                            valor_novus = paren_nodus;
+                        }
                         alioquin si (num_pop == III)
                         {
                             valor_novus = valori[I];  /* Middle element */

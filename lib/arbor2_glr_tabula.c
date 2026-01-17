@@ -17658,6 +17658,7 @@ arbor2_nodus_genus_nomen(Arbor2NodusGenus genus)
         casus ARBOR2_NODUS_SUBSCRIPTIO:   redde "SUBSCRIPTIO";
         casus ARBOR2_NODUS_MEMBRUM:       redde "MEMBRUM";
         casus ARBOR2_NODUS_POST_UNARIUM:  redde "POST_UNARIUM";
+        casus ARBOR2_NODUS_PARENTHESIZED: redde "PARENTHESIZED";
         casus ARBOR2_NODUS_DECLARATIO:    redde "DECLARATIO";
         casus ARBOR2_NODUS_DECLARATOR:    redde "DECLARATOR";
         casus ARBOR2_NODUS_DECLARATOR_FUNCTI: redde "DECLARATOR_FUNCTI";

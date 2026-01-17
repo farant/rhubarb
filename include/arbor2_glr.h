@@ -149,6 +149,7 @@ nomen enumeratio {
     ARBOR2_NODUS_SUBSCRIPTIO,       /* Array subscript: base[index] */
     ARBOR2_NODUS_MEMBRUM,           /* Member access: base.member or base->member */
     ARBOR2_NODUS_POST_UNARIUM,      /* Post-increment/decrement: x++ or x-- */
+    ARBOR2_NODUS_PARENTHESIZED,     /* Parenthesized expression: (expr) */
     ARBOR2_NODUS_DECLARATIO,        /* Declaration: type *name */
     ARBOR2_NODUS_DECLARATOR,        /* Declarator: *name or name */
     ARBOR2_NODUS_DECLARATOR_FUNCTI, /* Function declarator: name() or name(void) */
@@ -330,6 +331,13 @@ structura Arbor2Nodus {
             Arbor2Token*        tok_operator;   /* Operator token for roundtrip */
             Arbor2LexemaGenus   operator;       /* DUPLUS or DUMINUS (kept for compatibility) */
         } post_unarium;
+
+        /* PARENTHESIZED (parenthesized expression) */
+        structura {
+            Arbor2Token*        tok_paren_ap;   /* ( */
+            Arbor2Nodus*        expressio;      /* Inner expression */
+            Arbor2Token*        tok_paren_cl;   /* ) */
+        } parenthesized;
 
         /* DECLARATIO */
         structura {

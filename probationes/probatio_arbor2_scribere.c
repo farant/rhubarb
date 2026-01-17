@@ -268,18 +268,27 @@ s32 principale(vacuum)
         /* sizeof expr - works */
         CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "sizeof x", NIHIL));
 
-        /* sizeof(expr) - parens around expression
-         * NOTE: This is parsed as sizeof applied to parenthesized expr (x).
-         * The parens are part of the expression, not sizeof syntax.
-         * Currently broken - parenthesized expressions lose their parens.
-         * TODO: Fix parenthesized expression serialization separately. */
-        /* CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "sizeof(x)", NIHIL)); */
+        /* sizeof(expr) - parens around expression */
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "sizeof(x)", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "sizeof (x)", NIHIL));
 
         /* sizeof(type) - type in parens */
         CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "sizeof(int)", NIHIL));
 
         /* sizeof(type*) - pointer type */
         CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "sizeof(int*)", NIHIL));
+    }
+
+    /* ========================================================
+     * PROBARE: Parenthesized expressions
+     * ======================================================== */
+    {
+        imprimere("\n--- Probans parenthesized expressions ---\n");
+
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "(x)", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "(1)", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "(a + b)", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "((x))", NIHIL));
     }
 
     /* ========================================================

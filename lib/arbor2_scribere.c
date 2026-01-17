@@ -238,6 +238,13 @@ _scribere_nodum(Xar* output, Arbor2Nodus* nodus)
             arbor2_scribere_lexema(output, nodus->datum.post_unarium.tok_operator);
             frange;
 
+        /* PARENTHESIZED: (expr) */
+        casus ARBOR2_NODUS_PARENTHESIZED:
+            arbor2_scribere_lexema(output, nodus->datum.parenthesized.tok_paren_ap);
+            _scribere_nodum(output, nodus->datum.parenthesized.expressio);
+            arbor2_scribere_lexema(output, nodus->datum.parenthesized.tok_paren_cl);
+            frange;
+
         /* CONVERSIO: (type) expr */
         casus ARBOR2_NODUS_CONVERSIO:
             arbor2_scribere_lexema(output, nodus->datum.conversio.tok_paren_ap);

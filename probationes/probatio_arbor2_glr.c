@@ -745,10 +745,15 @@ s32 principale(vacuum)
 
         CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
         CREDO_NON_NIHIL(res.radix);
-        /* Should unwrap to 1 + 2 */
+        /* Should be PARENTHESIZED containing BINARIUM */
         si (res.radix != NIHIL)
         {
-            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_BINARIUM);
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_PARENTHESIZED);
+            CREDO_NON_NIHIL(res.radix->datum.parenthesized.expressio);
+            si (res.radix->datum.parenthesized.expressio != NIHIL)
+            {
+                CREDO_AEQUALIS_I32((i32)res.radix->datum.parenthesized.expressio->genus, (i32)ARBOR2_NODUS_BINARIUM);
+            }
         }
     }
 
@@ -1232,9 +1237,14 @@ s32 principale(vacuum)
         CREDO_NON_NIHIL(res.radix);
         si (res.radix != NIHIL)
         {
-            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_BINARIUM);
-            CREDO_AEQUALIS_I32((i32)res.radix->datum.binarium.operator,
-                               (i32)ARBOR2_LEXEMA_MINOR);
+            /* Should be PARENTHESIZED containing BINARIUM */
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_PARENTHESIZED);
+            si (res.radix->datum.parenthesized.expressio != NIHIL)
+            {
+                CREDO_AEQUALIS_I32((i32)res.radix->datum.parenthesized.expressio->genus, (i32)ARBOR2_NODUS_BINARIUM);
+                CREDO_AEQUALIS_I32((i32)res.radix->datum.parenthesized.expressio->datum.binarium.operator,
+                                   (i32)ARBOR2_LEXEMA_MINOR);
+            }
         }
     }
 
@@ -1262,9 +1272,20 @@ s32 principale(vacuum)
         CREDO_NON_NIHIL(res.radix);
         si (res.radix != NIHIL)
         {
-            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_BINARIUM);
-            CREDO_AEQUALIS_I32((i32)res.radix->datum.binarium.operator,
-                               (i32)ARBOR2_LEXEMA_MINOR);
+            /* Should be PARENTHESIZED containing PARENTHESIZED containing BINARIUM */
+            Arbor2Nodus* inner;
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_PARENTHESIZED);
+            inner = res.radix->datum.parenthesized.expressio;
+            si (inner != NIHIL)
+            {
+                CREDO_AEQUALIS_I32((i32)inner->genus, (i32)ARBOR2_NODUS_PARENTHESIZED);
+                si (inner->datum.parenthesized.expressio != NIHIL)
+                {
+                    CREDO_AEQUALIS_I32((i32)inner->datum.parenthesized.expressio->genus, (i32)ARBOR2_NODUS_BINARIUM);
+                    CREDO_AEQUALIS_I32((i32)inner->datum.parenthesized.expressio->datum.binarium.operator,
+                                       (i32)ARBOR2_LEXEMA_MINOR);
+                }
+            }
         }
     }
 

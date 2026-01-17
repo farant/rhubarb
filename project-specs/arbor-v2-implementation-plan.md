@@ -143,7 +143,7 @@ Current structure has:
 - Type resolution field
 
 ### Tests - COMPREHENSIVE
-- **1877 GLR tests** (all passing) - updated after Phase 4
+- **~1900 GLR tests** (all passing) - updated after Phase 5b
 - **124 expandere tests** (all passing) - includes lookahead API
 - Covers expressions, statements, declarations
 - Full initializer coverage (simple, brace, designated)
@@ -158,6 +158,13 @@ Current structure has:
 - **Latin macro disambiguation tests** (integer x, i32 x, constans integer x) - Phase 3.2
 - **AMBIGUUS tracking tests** (foo * bar) - Phase 3.3
 - **Error recovery tests** (invalid decl + valid, multiple errors, error + function) - Phase 4
+- **Conditional compilation tests** (Phase 5/5b):
+  - Basic #ifdef/#endif, #ifdef/#else/#endif, #ifndef
+  - Multiple independent conditionals, mixed with declarations
+  - Nested conditionals
+  - #if with expressions: literals, arithmetic, comparison, logical, defined()
+  - #elif branches
+  - 19+ test cases for conditional directives
 - Table validation
 - Parser statistics
 
@@ -388,10 +395,18 @@ Given the current state, the recommended priority is:
    - Error limit (10 max) to prevent infinite loops
    - 21 new test assertions
 
-5. **Next priorities:**
-   - Phase 5: Conditional Compilation (#ifdef, #if, #else)
+5. **Phase 5 (Conditional Compilation)** - **MOSTLY COMPLETE** ✓
+   - 5.1 Directive Recognition: **COMPLETE** ✓
+   - 5.2 Branch Structure: **COMPLETE** ✓ (Arbor2CondRamus, CONDITIONALIS node)
+   - 5.3 Expression Evaluation: **COMPLETE** ✓ (arbor2_conditio_evaluare.c)
+   - 5.4 Branch Parsing: **NOT YET** (tokens collected but not parsed to AST)
+   - 19+ test cases
+
+6. **Next priorities:**
+   - Phase 5.4: Parse branch contents into AST (currently just token collection)
    - Phase 6: #include Processing (actually read files)
    - Phase 7.2: Standard Library Type Hints (FILE, size_t, etc.)
+   - #error, #warning, #pragma, #line directives
 
 **Current capabilities:**
 - Complete C89 files with multiple declarations/functions ✓
@@ -407,9 +422,12 @@ Given the current state, the recommended priority is:
 - Function pointers (`int (*fp)(void)`) ✓
 - **Latin C89 macros** (`integer x` parses correctly with latina.h) ✓
 - **Macro type lookahead** (recursive resolution: i32→integer→int) ✓
+- **Conditional compilation** (#ifdef, #ifndef, #if, #elif, #else, #endif) ✓
+- **#if expression evaluation** (arithmetic, comparison, logical, bitwise, ternary, defined()) ✓
 
 **Remaining gaps (low priority):**
 - K&R function definitions (old-style parameters)
+- Branch content parsing (tokens collected but not parsed to AST yet)
 
 ---
 
@@ -731,43 +749,140 @@ error_nodus->datum.error.lexemata_saltata = /* Xar of skipped tokens */;
 
 ---
 
-## Phase 5: Conditional Compilation
+## Phase 5: Conditional Compilation — **MOSTLY COMPLETE** ✓
 
-Current: Not implemented at all
-Need: Parse ALL branches
+Implemented 2026-01-17 in two sub-phases.
 
-#### 5.1 Directive Recognition in Parser
-Extend parser to recognize #ifdef, #if, #else, #elif, #endif
+**Phase 5 (commit 5740c60):** Basic directive structure
+**Phase 5b (commit 6013f71):** Expression evaluation for #if/#elif
 
-#### 5.2 Branch Structure
+#### 5.1 Directive Recognition — **COMPLETE** ✓
+
+**Detection functions in arbor2_glr.c:**
+- `_est_conditionale_directivum()` - detects # followed by conditional keyword
+- `_est_initium_conditionale()` - checks if position starts a conditional block
+- Returns `Arbor2DirectivumGenus` enum value
+
+**Recognized directives:**
+- `ARBOR2_DIRECTIVUM_IFDEF` - #ifdef MACRO
+- `ARBOR2_DIRECTIVUM_IFNDEF` - #ifndef MACRO
+- `ARBOR2_DIRECTIVUM_IF` - #if EXPR
+- `ARBOR2_DIRECTIVUM_ELIF` - #elif EXPR
+- `ARBOR2_DIRECTIVUM_ELSE` - #else
+- `ARBOR2_DIRECTIVUM_ENDIF` - #endif
+
+#### 5.2 Branch Structure — **COMPLETE** ✓
+
+**Arbor2CondRamus (branch structure):**
 ```c
-nomen structura {
-    Arbor2DirectivaGenus    genus;          /* IFDEF, IF, ELSE, ELIF, ENDIF */
-    chorda*                 condition_text; /* "DEBUG", "x > 0", etc. */
-    Xar*                    lexemata;       /* Tokens in directive line */
-} Arbor2Directiva;
-
-nomen structura {
-    Xar*                    branches;       /* Xar of Arbor2CondBranch* */
-    i32                     linea_if;
-    i32                     linea_endif;
-} Arbor2Conditional;
-
-nomen structura {
-    Arbor2Directiva*        directiva;      /* The #if/#elif/#else */
-    Arbor2Nodus*            parsed;         /* AST for this branch */
-} Arbor2CondBranch;
+structura Arbor2CondRamus {
+    Arbor2DirectivumGenus   genus;              /* IFDEF, IFNDEF, IF, ELIF, ELSE */
+    chorda*                 conditio;           /* Macro name (ifdef/ifndef) */
+    Xar*                    expressio_lexemata; /* Expression tokens (#if/#elif) */
+    i64                     valor_evaluatus;    /* Evaluated value (0=false, nonzero=true) */
+    b32                     est_evaluatum;      /* VERUM if evaluation succeeded */
+    Xar*                    lexemata;           /* Tokens in this branch */
+    Arbor2Nodus*            parsed;             /* Parsed AST (NIHIL for now) */
+    i32                     linea;              /* Line of directive */
+};
 ```
 
-#### 5.3 Node-Based Forking
-Don't duplicate entire file per #ifdef - create local fork:
-```
-CONDITIONAL_NODE
-  ├─ branch[0]: #ifdef DEBUG → { parsed_stmts_A }
-  └─ branch[1]: #else → { parsed_stmts_B }
+**CONDITIONALIS node datum:**
+```c
+structura {
+    Xar*    rami;           /* Xar of Arbor2CondRamus* */
+    i32     linea_if;       /* Line of opening #if/#ifdef */
+    i32     linea_endif;    /* Line of closing #endif */
+} conditionalis;
 ```
 
-**Deliverable:** Can search across all conditional branches
+**Core collection function:**
+- `_colligere_conditionale()` - collects entire conditional block
+- Handles nested conditionals with depth tracking
+- Creates Arbor2CondRamus for each branch
+- Evaluates expressions for #if/#elif directives
+- Returns single ARBOR2_NODUS_CONDITIONALIS node
+
+#### 5.3 Expression Evaluation — **COMPLETE** ✓
+
+**New file: lib/arbor2_conditio_evaluare.c (~800 lines)**
+
+Recursive descent evaluator with proper C89 precedence:
+```
+Precedence (low to high):
+  ternarius     ? :
+  disiunctio    ||
+  coniunctio    &&
+  or_bitwise    |
+  xor_bitwise   ^
+  and_bitwise   &
+  aequalitas    == !=
+  comparatio    < > <= >=
+  translatio    << >>
+  additio       + -
+  multiplicatio * / %
+  unarium       ! ~ - +
+  primarium     integer, defined, (expr), ident
+```
+
+**Supported:**
+- Integer constants (decimal, octal 0x, hexadecimal 0x)
+- All arithmetic operators: + - * / %
+- All comparison operators: < > <= >= == !=
+- Logical operators: && || !
+- Bitwise operators: & | ^ ~ << >>
+- Ternary operator: ? :
+- Grouping: ( )
+- `defined(MACRO)` and `defined MACRO`
+- Macro expansion (single-token object macros)
+- Character literals with escape sequences
+
+**API:**
+```c
+i64 arbor2_conditio_evaluare(
+    Arbor2Expansion*    exp,
+    Xar*                lexemata,
+    b32*                successus);
+
+b32 arbor2_conditio_est_definitum(
+    Arbor2Expansion*    exp,
+    chorda              titulus);
+```
+
+#### 5.4 Branch Parsing — **NOT YET IMPLEMENTED**
+
+The `parsed` field in Arbor2CondRamus is always NIHIL. Each branch has its tokens collected in `lexemata` but they are not being parsed into AST nodes yet.
+
+**TODO:** Recursively parse branch contents to populate `parsed` field.
+
+#### 5.5 Tests
+
+19+ test cases in probatio_arbor2_glr.c (lines 13100+):
+
+**Phase 5 tests:**
+1. Simple #ifdef/#endif
+2. #ifdef/#else/#endif
+3. #ifndef
+4. Multiple independent conditionals
+5. Conditionals mixed with regular declarations
+6. Nested conditionals
+
+**Phase 5b tests:**
+7. #if 1, #if 0
+8. #if 1 + 1
+9. #if 5 > 3
+10. #if 1 && 1
+11. #if !0
+12. #if defined(UNDEFINED)
+13. #if 1 ? 5 : 10
+14. #if 0 / #elif 1
+15. #ifdef with defined macro
+16. #ifndef with undefined macro
+17. #if (1 + 2) * 3 == 9
+18. #if 0xFF & 0x0F
+
+**Deliverable:** Can detect and collect conditional blocks with expression evaluation ✓
+**TODO:** Parse branch contents into AST
 
 ---
 
@@ -946,19 +1061,19 @@ Phase 1.4 (Specifier Combos) ───┤
                                 │
 Phase 1.5 (Translation Unit) ───┤
                                 ▼
-                     [Grammar Complete]
+                     [Grammar Complete] ✓
                                 │
-Phase 2 (Rich AST) ─────────────┤
+Phase 2 (Rich AST) ─────────────┤ ✓
                                 │
-Phase 3 (GLR-Expansion) ────────┤
+Phase 3 (GLR-Expansion) ────────┤ ✓
                                 │
-Phase 4 (Error Recovery) ───────┤
+Phase 4 (Error Recovery) ───────┤ ✓
                                 │
-Phase 5 (Conditionals) ─────────┤
+Phase 5 (Conditionals) ─────────┤ ~✓ (branch parsing TODO)
                                 │
 Phase 6 (#include) ─────────────┤
                                 │
-Phase 7 (Built-ins) ────────────┤
+Phase 7 (Built-ins) ────────────┤ 7.1 ✓
                                 ▼
                        [Core Complete]
                                 │
@@ -985,20 +1100,22 @@ Phase 8 (Queries)      Phase 9 (Types)      Phase 10 (Index)
 | lib/arbor2_lexema.c | ~500 | Complete (Phase 2.6: explicit whitespace tokens) |
 | lib/arbor2_token.c | 264 | Complete |
 | lib/arbor2_expandere.c | ~1892 | Mostly complete (lookahead API, built-in latina.h) |
-| lib/arbor2_glr.c | ~3800 | Functional + location + parent + macro lookahead |
+| lib/arbor2_conditio_evaluare.c | ~800 | Complete (Phase 5b: #if/#elif expression evaluator) |
+| lib/arbor2_glr.c | ~5800 | Functional + Phase 5 conditional directives |
 | lib/arbor2_glr_tabula.c | ~17500 | 346 productions, 952 states |
 | lib/arbor2_scribere.c | ~200 | Complete (Phase 2.6: emits spatia tokens) |
-| include/arbor2_glr.h | ~720 | Good structure + location + pater + commenta fields |
+| include/arbor2_glr.h | ~820 | Good structure + Arbor2CondRamus + CONDITIONALIS |
 | include/arbor2_lexema.h | 220 | Complete (98 token types incl. whitespace) |
 | include/arbor2_token.h | 147 | Complete |
 | include/arbor2_expandere.h | ~230 | Complete (lookahead API, latina.h function) |
-| probationes/probatio_arbor2_glr.c | ~13100 | 1877 tests (Phase 4 error recovery) |
+| include/arbor2_conditio_evaluare.h | ~70 | Complete (expression evaluator API) |
+| probationes/probatio_arbor2_glr.c | ~13900 | ~1900 tests (Phase 5b conditionals) |
 | probationes/probatio_arbor2_lexema.c | ~340 | 38 tests (whitespace tokens) |
 | probationes/probatio_arbor2_expandere.c | ~600 | 124 tests (includes lookahead) |
 | tools/glr_debug.c | ~340 | Working |
 | lib/arbor2_lexema.worklog.md | - | Phase 2.6 design notes |
 | lib/arbor2_expandere.worklog.md | - | Phase 3.2, 7.1 design notes |
-| lib/arbor2_glr.worklog.md | - | Phase 3.2, 3.3, 4 design notes |
+| lib/arbor2_glr.worklog.md | - | Phase 3.2, 3.3, 4, 5 design notes |
 
 ---
 
@@ -1027,4 +1144,6 @@ Phase 8 (Queries)      Phase 9 (Types)      Phase 10 (Index)
 | 2026-01-17 | 3.3 AMBIGUUS Tracking | +0 | +0 | +3 | identificator field set in _creare_nodum_ambiguum() |
 | 2026-01-17 | 7.1 Built-in Latina | +0 | +0 | +0 | arbor2_includere_latina() with 35 macros |
 | 2026-01-17 | 4 Error Recovery | +0 | +0 | +21 | _creare_nodum_error(), translation unit recovery, error limit |
-| **Current** | | **351** | **952** | **1877** | |
+| 2026-01-17 | 5 Conditional Directives | +0 | +0 | +6 | #ifdef/#ifndef/#else/#endif detection, Arbor2CondRamus, CONDITIONALIS node |
+| 2026-01-17 | 5b Expression Evaluation | +0 | +0 | +13 | arbor2_conditio_evaluare.c, #if/#elif support, defined() operator |
+| **Current** | | **351** | **952** | **~1900** | |
