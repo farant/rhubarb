@@ -289,10 +289,8 @@ s32 principale(vacuum)
         imprimere("\n--- Probans cast expressions ---\n");
 
         CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "(int)x", NIHIL));
-        /* TODO: Pointer cast broken - outputs ()int)p instead of (int*)p
-         * This is likely the same issue as sizeof(type*) serialization
-         * but for CONVERSIO nodes. Fix separately. */
-        /* CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "(int*)p", NIHIL)); */
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "(int*)p", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "(char**)q", NIHIL));
     }
 
     /* ========================================================

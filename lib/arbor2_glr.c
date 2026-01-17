@@ -1791,10 +1791,12 @@ _processare_unam_actionem(
                                 {
                                     Arbor2PointerLevel* lvl = piscina_allocare(glr->piscina, magnitudo(Arbor2PointerLevel));
                                     Arbor2PointerLevel** lvl_slot;
-                                    /* Pointer tokens are before the ')' which is at index 0
-                                     * For struct: (STRUCT ID * * ) expr - stars at indices 1, 2
-                                     * For basic:  (TYPE * * ) expr - stars at indices 1, 2 */
-                                    lvl->tok_stella = lexemata[I + i];
+                                    /* Pointer tokens are before ')' which is at index 1
+                                     * Stars start at index 2 and go up:
+                                     * (TYPE *)     -> star at index 2, num_stellae=1
+                                     * (TYPE * *)   -> stars at indices 3,2, num_stellae=2
+                                     * Formula: lexemata[I + num_stellae - i] */
+                                    lvl->tok_stella = lexemata[I + num_stellae - i];
                                     lvl->tok_const = NIHIL;
                                     lvl->tok_volatile = NIHIL;
                                     lvl_slot = xar_addere(nodus_typus->datum.declarator.pointer_levels);

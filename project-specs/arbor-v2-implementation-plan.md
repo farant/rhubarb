@@ -1,7 +1,7 @@
 # Arbor v2 Implementation Plan
 
 Date: 2026-01-17
-Status: Updated after Phase 4 completion - Error Recovery COMPLETE
+Status: Updated after Phase 5b completion - Conditional Compilation MOSTLY COMPLETE
 
 ---
 
@@ -38,8 +38,16 @@ Status: Updated after Phase 4 completion - Error Recovery COMPLETE
 
 **Missing in expandere:**
 - #include processing (files not actually read)
-- Conditional compilation (#ifdef, #if, #else, #endif)
 - #error, #line, #pragma handling
+
+### arbor2_conditio_evaluare.c (~800 lines) - COMPLETE
+- Full C89 preprocessor expression evaluator for #if/#elif
+- Recursive descent parser with proper operator precedence
+- Supports: integers (decimal/octal/hex), arithmetic, comparison, logical, bitwise, ternary
+- `defined(MACRO)` and `defined MACRO` operators
+- Macro expansion within expressions
+- Character literal support
+- API: `arbor2_conditio_evaluare()`, `arbor2_conditio_est_definitum()`
 
 ### arbor2_glr.c + arbor2_glr_tabula.c - SUBSTANTIAL
 - GLR parser core with GSS
@@ -47,12 +55,18 @@ Status: Updated after Phase 4 completion - Error Recovery COMPLETE
 - Piscina checkpointing for rollback
 - **346 grammar productions** (P0-P345)
 - **952 LR states** (0-951)
-- **1877 tests total** (all passing)
+- **~1900 tests total** (all passing)
 - Table validation
 - **Location propagation** via LOCUS_EX_LEXEMATIS macro (Phase 2.1)
 - **Macro lookahead integration** via public API (Phase 3.2)
 - **AMBIGUUS identifier tracking** (Phase 3.3)
 - **Error recovery** with ERROR nodes and skipped token tracking (Phase 4)
+- **Conditional compilation** detection and collection (Phase 5/5b):
+  - `_est_conditionale_directivum()` - detects #ifdef/#ifndef/#if/#elif/#else/#endif
+  - `_colligere_conditionale()` - collects entire conditional block into AST
+  - `ARBOR2_NODUS_CONDITIONALIS` with `Arbor2CondRamus` branches
+  - Nested conditional support with depth tracking
+  - Expression evaluation for #if/#elif via arbor2_conditio_evaluare()
 
 **Grammar currently covered:**
 

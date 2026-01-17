@@ -241,7 +241,20 @@ _scribere_nodum(Xar* output, Arbor2Nodus* nodus)
         /* CONVERSIO: (type) expr */
         casus ARBOR2_NODUS_CONVERSIO:
             arbor2_scribere_lexema(output, nodus->datum.conversio.tok_paren_ap);
-            _scribere_nodum(output, nodus->datum.conversio.typus);
+            /* For cast types, emit type specifier then pointers (int* not *int) */
+            si (nodus->datum.conversio.typus != NIHIL &&
+                nodus->datum.conversio.typus->genus == ARBOR2_NODUS_DECLARATOR)
+            {
+                Arbor2Nodus* typus = nodus->datum.conversio.typus;
+                /* Emit type specifier (lexema) first */
+                arbor2_scribere_lexema(output, typus->lexema);
+                /* Then emit pointer levels */
+                _scribere_pointer_levels(output, typus->datum.declarator.pointer_levels);
+            }
+            alioquin
+            {
+                _scribere_nodum(output, nodus->datum.conversio.typus);
+            }
             arbor2_scribere_lexema(output, nodus->datum.conversio.tok_paren_cl);
             _scribere_nodum(output, nodus->datum.conversio.expressio);
             frange;

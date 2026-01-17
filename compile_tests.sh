@@ -532,12 +532,13 @@ for arg in "$@"; do
     fi
 done
 
-# Handle clean mode
+# Handle clean mode - clean build and bin directories, then continue to rebuild
 if [ $CLEAN_MODE -eq 1 ]; then
-    echo -e "${BLUE}Cleaning build directory...${RESET}"
-    rm -rf "$BUILD_DIR"
-    echo -e "${GREEN}Done${RESET}"
-    exit 0
+    echo -e "${BLUE}Cleaning build and bin directories...${RESET}"
+    rm -rf "$BUILD_DIR"/*
+    rm -rf bin/*
+    echo -e "${GREEN}Cleaned${RESET}"
+    echo ""
 fi
 
 # Add debug symbols if debug mode
