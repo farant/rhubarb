@@ -655,6 +655,7 @@ _processare_define(Arbor2Expansion* exp, Xar* tokens, i32* positus)
     si (pos < num)
     {
         tok = *(Arbor2Token**)xar_obtinere(tokens, pos);
+
         /* Function-like if '(' immediately follows (no trivia) */
         si (tok->lexema->genus == ARBOR2_LEXEMA_PAREN_APERTA &&
             tok->lexema->spatia_ante == NIHIL)
@@ -1265,6 +1266,89 @@ _expandere_macro(Arbor2Expansion* exp, Arbor2MacroDef* def, Xar* argumenta,
             }
         }
 
+        /* __VA_ARGS__ substitution for variadic macros */
+        si (lex->genus == ARBOR2_LEXEMA_IDENTIFICATOR &&
+            def->est_variadic &&
+            lex->valor.mensura == XI &&
+            memcmp(lex->valor.datum, "__VA_ARGS__", XI) == ZEPHYRUM)
+        {
+            i32 num_params;
+            i32 num_args;
+            i32 j;
+            i32 k;
+            b32 first_arg;
+
+            num_params = def->parametra ? xar_numerus(def->parametra) : ZEPHYRUM;
+            num_args = argumenta ? xar_numerus(argumenta) : ZEPHYRUM;
+            first_arg = VERUM;
+
+            /* Output all variadic arguments (those beyond named params) */
+            per (j = num_params; j < num_args; j++)
+            {
+                Xar* arg;
+                i32 arg_num;
+
+                arg = *(Xar**)xar_obtinere(argumenta, j);
+                arg_num = xar_numerus(arg);
+
+                /* Add comma between variadic args (not before first) */
+                si (!first_arg)
+                {
+                    Arbor2Lexema* comma_lex;
+                    Arbor2Token* comma_tok;
+                    chorda comma_ch;
+                    chorda* comma_intern;
+                    unio { constans character* c; i8* m; } u;
+
+                    comma_lex = piscina_allocare(exp->piscina, magnitudo(Arbor2Lexema));
+                    comma_lex->genus = ARBOR2_LEXEMA_COMMA;
+                    u.c = ",";
+                    comma_ch.datum = u.m;
+                    comma_ch.mensura = I;
+                    comma_intern = chorda_internare(exp->intern, comma_ch);
+                    comma_lex->valor = *comma_intern;
+                    comma_lex->byte_offset = ZEPHYRUM;
+                    comma_lex->longitudo = I;
+                    comma_lex->linea = ZEPHYRUM;
+                    comma_lex->columna = ZEPHYRUM;
+                    comma_lex->spatia_ante = NIHIL;
+                    comma_lex->spatia_post = NIHIL;
+                    comma_lex->standard = ARBOR2_STANDARD_C89;
+
+                    comma_tok = arbor2_token_ex_expansione(exp->piscina, comma_lex,
+                                                           invocation_token, def->titulus,
+                                                           def->via_file, layer_index);
+                    locus = xar_addere(result);
+                    si (locus != NIHIL)
+                    {
+                        *locus = comma_tok;
+                    }
+                }
+
+                /* Output tokens from this variadic arg */
+                per (k = ZEPHYRUM; k < arg_num; k++)
+                {
+                    Arbor2Token* arg_tok;
+                    arg_tok = *(Arbor2Token**)xar_obtinere(arg, k);
+
+                    /* Skip NOVA_LINEA */
+                    si (arg_tok->lexema->genus == ARBOR2_LEXEMA_NOVA_LINEA)
+                    {
+                        perge;
+                    }
+
+                    locus = xar_addere(result);
+                    si (locus != NIHIL)
+                    {
+                        *locus = arg_tok;
+                    }
+                }
+
+                first_arg = FALSUM;
+            }
+            perge;
+        }
+
         /* Parameter substitution */
         si (lex->genus == ARBOR2_LEXEMA_IDENTIFICATOR && def->est_functio)
         {
@@ -1377,6 +1461,8 @@ _expand_layer(Arbor2Expansion* exp, Arbor2Layer* input)
                     {
                         _processare_define(exp, input->lexemata, &i);
                         changed = VERUM;
+                        /* Adjust for loop increment - we want to process token at i next */
+                        i--;
                         perge;
                     }
 
@@ -1387,6 +1473,8 @@ _expand_layer(Arbor2Expansion* exp, Arbor2Layer* input)
                     {
                         _processare_undef(exp, input->lexemata, &i);
                         changed = VERUM;
+                        /* Adjust for loop increment */
+                        i--;
                         perge;
                     }
                 }
