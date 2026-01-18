@@ -3049,6 +3049,67 @@ _processare_unam_actionem(
                             *slot = member;
                             valor_novus = (Arbor2Nodus*)lista;
                         }
+                        /* ========== DOUBLE QUALIFIER P418-P419 ========== */
+                        alioquin si (actio->valor == 418 || actio->valor == 419)
+                        {
+                            /* P418: 'const' 'volatile' type declarator ';' (5 symbols)
+                             * P419: 'volatile' 'const' type declarator ';' (5 symbols)
+                             * lexemata: [4]=qual1 [3]=qual2 [2]=type [1]=... [0]=;
+                             * valori: [1]=declarator node */
+                            Arbor2Nodus* member;
+                            Arbor2Nodus* decl_node;
+                            Xar* lista;
+                            Arbor2Nodus** slot;
+                            Arbor2Token* qual1_tok = lexemata[IV];
+                            Arbor2Token* qual2_tok = lexemata[III];
+                            Arbor2Token* type_tok = lexemata[II];
+
+                            decl_node = valori[I];
+
+                            member = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
+                            member->genus = ARBOR2_NODUS_DECLARATIO;
+                            member->pater = NIHIL;
+                            member->datum.declaratio.tok_storage = NIHIL;
+                            member->datum.declaratio.tok_unsigned = NIHIL;
+                            member->datum.declaratio.tok_signed = NIHIL;
+                            member->datum.declaratio.tok_long = NIHIL;
+                            member->datum.declaratio.tok_long2 = NIHIL;
+                            member->datum.declaratio.tok_short = NIHIL;
+                            member->datum.declaratio.tok_assignatio = NIHIL;
+                            member->datum.declaratio.initializor = NIHIL;
+                            member->datum.declaratio.tok_semicolon = lexemata[ZEPHYRUM];
+                            member->datum.declaratio.proxima = NIHIL;
+
+                            /* Set qualifiers - both const and volatile */
+                            si (actio->valor == 418)
+                            {
+                                /* P418: const volatile - qual1=const, qual2=volatile */
+                                member->datum.declaratio.tok_const = qual1_tok;
+                                member->datum.declaratio.tok_volatile = qual2_tok;
+                            }
+                            alioquin
+                            {
+                                /* P419: volatile const - qual1=volatile, qual2=const */
+                                member->datum.declaratio.tok_volatile = qual1_tok;
+                                member->datum.declaratio.tok_const = qual2_tok;
+                            }
+
+                            /* Set specifier (base type) */
+                            member->datum.declaratio.specifier = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
+                            member->datum.declaratio.specifier->genus = ARBOR2_NODUS_IDENTIFICATOR;
+                            member->datum.declaratio.specifier->lexema = type_tok;
+                            member->datum.declaratio.specifier->pater = member;
+                            member->datum.declaratio.specifier->datum.folium.valor = type_tok->lexema->valor;
+                            member->lexema = qual1_tok;
+
+                            member->datum.declaratio.declarator = decl_node;
+                            si (decl_node != NIHIL) decl_node->pater = member;
+
+                            lista = xar_creare(glr->piscina, magnitudo(Arbor2Nodus*));
+                            slot = xar_addere(lista);
+                            *slot = member;
+                            valor_novus = (Arbor2Nodus*)lista;
+                        }
                         /* ========== TYPEDEF DECLARATIONS P74-P79 ========== */
                         alioquin si (actio->valor == 74)
                         {

@@ -73,6 +73,7 @@ s32 principale(vacuum)
     test(p, intern, "struct S { const int x; };");
     test(p, intern, "struct S { volatile int x; };");
     test(p, intern, "struct S { const volatile int x; };");
+    test(p, intern, "struct S { volatile const int x; };");
     
     imprimere("\n-- Combined qualifiers with compound types --\n");
     test(p, intern, "struct S { const unsigned int x; };");
