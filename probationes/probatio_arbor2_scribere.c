@@ -550,6 +550,46 @@ s32 principale(vacuum)
     }
 
     /* ========================================================
+     * PROBARE: Function definitions (translation unit)
+     * ======================================================== */
+    {
+        imprimere("\n--- Probans function definitions ---\n");
+
+        /* Basic function definitions with simple return types */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "void f() { }", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "int main() { }", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "char g() { }", NIHIL));
+
+        /* Function definitions with qualified return types (P505/P506) */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "const int f() { }", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "volatile int g() { }", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "const char h() { }", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "volatile void v() { }", NIHIL));
+
+        /* Function definitions with empty parameters */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "int get() { }", NIHIL));
+        /* NOTE: Typed parameters (int a, int b) and void params have serialization bugs,
+         * tested separately in probatio_compound.c roundtrip tests */
+
+        /* Function definitions with body statements */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "int f() { return 0; }", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "int f() { return x + 1; }", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "void f() { x = 1; }", NIHIL));
+
+        /* Function definitions with local declarations */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "int f() { int x; return x; }", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "int f() { int x = 0; return x; }", NIHIL));
+
+        /* Qualified return type with body */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "const int f() { return 0; }", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "volatile int g() { return x; }", NIHIL));
+
+        /* Qualified return type with empty parameters */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "const int get() { }", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "volatile void work() { }", NIHIL));
+    }
+
+    /* ========================================================
      * PROBARE: Newline preservation (Phase 2.7)
      * These tests verify that newlines are preserved in roundtrip.
      * NOVA_LINEA is now in spatia, so roundtrip should preserve them.

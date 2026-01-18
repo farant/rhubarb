@@ -778,7 +778,13 @@ hic_manens Arbor2Regula REGULAE[] = {
     /* P501 */ { ARBOR2_NT_DECLARATIO, 6, ARBOR2_NODUS_DECLARATIO, "decl -> 'volatile' 'const' 'signed' 'short' 'int' declarator" },
     /* P502 */ { ARBOR2_NT_DECLARATIO, 5, ARBOR2_NODUS_DECLARATIO, "decl -> 'volatile' 'const' 'long' 'long' declarator" },
     /* P503 */ { ARBOR2_NT_DECLARATIO, 6, ARBOR2_NODUS_DECLARATIO, "decl -> 'volatile' 'const' 'unsigned' 'long' 'long' declarator" },
-    /* P504 */ { ARBOR2_NT_DECLARATIO, 6, ARBOR2_NODUS_DECLARATIO, "decl -> 'volatile' 'const' 'signed' 'long' 'long' declarator" }
+    /* P504 */ { ARBOR2_NT_DECLARATIO, 6, ARBOR2_NODUS_DECLARATIO, "decl -> 'volatile' 'const' 'signed' 'long' 'long' declarator" },
+
+    /* ==================================================
+     * Qualified Function Definitions (P505-P506)
+     * ================================================== */
+    /* P505 */ { ARBOR2_NT_DEFINITIO_FUNCTI, 4, ARBOR2_NODUS_DEFINITIO_FUNCTI, "func_def -> 'const' type declarator compound" },
+    /* P506 */ { ARBOR2_NT_DEFINITIO_FUNCTI, 4, ARBOR2_NODUS_DEFINITIO_FUNCTI, "func_def -> 'volatile' type declarator compound" }
 };
 
 hic_manens i32 NUM_REGULAE = (i32)(magnitudo(REGULAE) / magnitudo(REGULAE[0]));
@@ -6460,21 +6466,26 @@ hic_manens constans Arbor2TabulaActio STATUS_361_ACTIONES[] = {
     { ARBOR2_LEXEMA_ASSIGNATIO,     ARBOR2_ACTIO_SHIFT, 481, FALSUM }  /* initializer */
 };
 
-/* State 362: reduce P152 (const) or shift for initializer/array */
+/* State 362: reduce P152 (const) or shift for initializer/array/function */
 hic_manens constans Arbor2TabulaActio STATUS_362_ACTIONES[] = {
     { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 152, FALSUM },
     { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 152, FALSUM },
     { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 152, FALSUM },
     { ARBOR2_LEXEMA_ASSIGNATIO,     ARBOR2_ACTIO_SHIFT, 483, FALSUM },  /* initializer */
-    { ARBOR2_LEXEMA_BRACKET_APERTA, ARBOR2_ACTIO_SHIFT, 217, FALSUM }   /* array declarator */
+    { ARBOR2_LEXEMA_BRACKET_APERTA, ARBOR2_ACTIO_SHIFT, 217, FALSUM },  /* array declarator */
+    { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_SHIFT,  91, FALSUM },  /* function params */
+    { ARBOR2_LEXEMA_BRACE_APERTA,   ARBOR2_ACTIO_SHIFT,  25, FALSUM }   /* function body */
 };
 
-/* State 363: reduce P153 (volatile) or shift for initializer */
+/* State 363: reduce P153 (volatile) or shift for initializer/array/function */
 hic_manens constans Arbor2TabulaActio STATUS_363_ACTIONES[] = {
     { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 153, FALSUM },
     { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 153, FALSUM },
     { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 153, FALSUM },
-    { ARBOR2_LEXEMA_ASSIGNATIO,     ARBOR2_ACTIO_SHIFT, 485, FALSUM }  /* initializer */
+    { ARBOR2_LEXEMA_ASSIGNATIO,     ARBOR2_ACTIO_SHIFT, 485, FALSUM },  /* initializer */
+    { ARBOR2_LEXEMA_BRACKET_APERTA, ARBOR2_ACTIO_SHIFT, 217, FALSUM },  /* array declarator */
+    { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_SHIFT,  91, FALSUM },  /* function params */
+    { ARBOR2_LEXEMA_BRACE_APERTA,   ARBOR2_ACTIO_SHIFT,  25, FALSUM }   /* function body */
 };
 
 /* ==================================================
@@ -16674,6 +16685,20 @@ hic_manens constans Arbor2TabulaActio STATUS_1367_ACTIONES[] = {
 };
 
 /* ==================================================
+ * Qualified Function Definition States (1400-1401)
+ * ================================================== */
+
+/* State 1400: after 'const type declarator compound' - reduce P505 */
+hic_manens constans Arbor2TabulaActio STATUS_1400_ACTIONES[] = {
+    { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 505, FALSUM }
+};
+
+/* State 1401: after 'volatile type declarator compound' - reduce P506 */
+hic_manens constans Arbor2TabulaActio STATUS_1401_ACTIONES[] = {
+    { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 506, FALSUM }
+};
+
+/* ==================================================
  * STATUS_TABULA - Master state table (UNDER CONSTRUCTION)
  *
  * Will be populated as states are converted.
@@ -18232,7 +18257,45 @@ hic_manens constans Arbor2StatusInfo STATUS_TABULA_PARTIAL[] = {
     STATUS_INFO(1364, "reduce P501 - volatile const signed short int declarator"),
     STATUS_INFO(1365, "reduce P502 - volatile const long long declarator"),
     STATUS_INFO(1366, "reduce P503 - volatile const unsigned long long declarator"),
-    STATUS_INFO(1367, "reduce P504 - volatile const signed long long declarator")
+    STATUS_INFO(1367, "reduce P504 - volatile const signed long long declarator"),
+
+    /* Reserved states 1368-1399 for array indexing continuity */
+    { NIHIL, 0, "reserved 1368" },
+    { NIHIL, 0, "reserved 1369" },
+    { NIHIL, 0, "reserved 1370" },
+    { NIHIL, 0, "reserved 1371" },
+    { NIHIL, 0, "reserved 1372" },
+    { NIHIL, 0, "reserved 1373" },
+    { NIHIL, 0, "reserved 1374" },
+    { NIHIL, 0, "reserved 1375" },
+    { NIHIL, 0, "reserved 1376" },
+    { NIHIL, 0, "reserved 1377" },
+    { NIHIL, 0, "reserved 1378" },
+    { NIHIL, 0, "reserved 1379" },
+    { NIHIL, 0, "reserved 1380" },
+    { NIHIL, 0, "reserved 1381" },
+    { NIHIL, 0, "reserved 1382" },
+    { NIHIL, 0, "reserved 1383" },
+    { NIHIL, 0, "reserved 1384" },
+    { NIHIL, 0, "reserved 1385" },
+    { NIHIL, 0, "reserved 1386" },
+    { NIHIL, 0, "reserved 1387" },
+    { NIHIL, 0, "reserved 1388" },
+    { NIHIL, 0, "reserved 1389" },
+    { NIHIL, 0, "reserved 1390" },
+    { NIHIL, 0, "reserved 1391" },
+    { NIHIL, 0, "reserved 1392" },
+    { NIHIL, 0, "reserved 1393" },
+    { NIHIL, 0, "reserved 1394" },
+    { NIHIL, 0, "reserved 1395" },
+    { NIHIL, 0, "reserved 1396" },
+    { NIHIL, 0, "reserved 1397" },
+    { NIHIL, 0, "reserved 1398" },
+    { NIHIL, 0, "reserved 1399" },
+
+    /* Function definition with qualified return type states (1400-1401) */
+    STATUS_INFO(1400, "reduce P505 - const type declarator compound"),
+    STATUS_INFO(1401, "reduce P506 - volatile type declarator compound")
 };
 
 /* ==================================================
@@ -19396,6 +19459,18 @@ hic_manens constans Arbor2StatusGotoEntry STATUS_357_GOTO[] = {
     { INT_NT_DECLARATOR, 363 }
 };
 
+/* State 362: after 'const type declarator' - function declarator reduces back here */
+hic_manens constans Arbor2StatusGotoEntry STATUS_362_GOTO[] = {
+    { INT_NT_DECLARATOR, 362 },  /* P38 reduces to declarator, stay here for fn body */
+    { INT_NT_CORPUS, 1400 }      /* After compound statement, reduce P505 (const func def) */
+};
+
+/* State 363: after 'volatile type declarator' - function declarator reduces back here */
+hic_manens constans Arbor2StatusGotoEntry STATUS_363_GOTO[] = {
+    { INT_NT_DECLARATOR, 363 },  /* P38 reduces to declarator, stay here for fn body */
+    { INT_NT_CORPUS, 1401 }      /* After compound statement, reduce P506 (volatile func def) */
+};
+
 /* ==================================================
  * Phase 1.1: Pointer cast GOTO entries
  * ================================================== */
@@ -19994,12 +20069,14 @@ hic_manens constans Arbor2StatusGotoEntry STATUS_349_GOTO[] = {
 
 /* State 350: after 'const' - needs DECLARATIO for qualifier + modifier chains */
 hic_manens constans Arbor2StatusGotoEntry STATUS_350_GOTO[] = {
-    { INT_NT_DECLARATIO, 21 }
+    { INT_NT_DECLARATIO, 21 },
+    { INT_NT_DEFINITIO, 114 }  /* Function definition with const return type */
 };
 
 /* State 351: after 'volatile' - needs DECLARATIO for qualifier + modifier chains */
 hic_manens constans Arbor2StatusGotoEntry STATUS_351_GOTO[] = {
-    { INT_NT_DECLARATIO, 21 }
+    { INT_NT_DECLARATIO, 21 },
+    { INT_NT_DEFINITIO, 114 }  /* Function definition with volatile return type */
 };
 
 /* ==================================================
@@ -21704,8 +21781,8 @@ hic_manens constans Arbor2StatusGoto GOTO_TABULA_NOVA[] = {
     STATUS_GOTO_NIL,   /* 359: reduce P149 (extern) */
     STATUS_GOTO_NIL,   /* 360: reduce P150 (register) */
     STATUS_GOTO_NIL,   /* 361: reduce P151 (auto) */
-    STATUS_GOTO_NIL,   /* 362: reduce P152 (const) */
-    STATUS_GOTO_NIL,   /* 363: reduce P153 (volatile) */
+    STATUS_GOTO(362),  /* 362: const type declarator - function support */
+    STATUS_GOTO(363),  /* 363: volatile type declarator - function support */
 
     /* ==================================================
      * Phase 1.1: Pointer cast states (364-381)
@@ -22861,7 +22938,45 @@ hic_manens constans Arbor2StatusGoto GOTO_TABULA_NOVA[] = {
     STATUS_GOTO_NIL,   /* 1364: reduce P501 */
     STATUS_GOTO_NIL,   /* 1365: reduce P502 */
     STATUS_GOTO_NIL,   /* 1366: reduce P503 */
-    STATUS_GOTO_NIL    /* 1367: reduce P504 */
+    STATUS_GOTO_NIL,   /* 1367: reduce P504 */
+
+    /* Reserved states 1368-1399 for array indexing continuity */
+    STATUS_GOTO_NIL,   /* 1368: reserved */
+    STATUS_GOTO_NIL,   /* 1369: reserved */
+    STATUS_GOTO_NIL,   /* 1370: reserved */
+    STATUS_GOTO_NIL,   /* 1371: reserved */
+    STATUS_GOTO_NIL,   /* 1372: reserved */
+    STATUS_GOTO_NIL,   /* 1373: reserved */
+    STATUS_GOTO_NIL,   /* 1374: reserved */
+    STATUS_GOTO_NIL,   /* 1375: reserved */
+    STATUS_GOTO_NIL,   /* 1376: reserved */
+    STATUS_GOTO_NIL,   /* 1377: reserved */
+    STATUS_GOTO_NIL,   /* 1378: reserved */
+    STATUS_GOTO_NIL,   /* 1379: reserved */
+    STATUS_GOTO_NIL,   /* 1380: reserved */
+    STATUS_GOTO_NIL,   /* 1381: reserved */
+    STATUS_GOTO_NIL,   /* 1382: reserved */
+    STATUS_GOTO_NIL,   /* 1383: reserved */
+    STATUS_GOTO_NIL,   /* 1384: reserved */
+    STATUS_GOTO_NIL,   /* 1385: reserved */
+    STATUS_GOTO_NIL,   /* 1386: reserved */
+    STATUS_GOTO_NIL,   /* 1387: reserved */
+    STATUS_GOTO_NIL,   /* 1388: reserved */
+    STATUS_GOTO_NIL,   /* 1389: reserved */
+    STATUS_GOTO_NIL,   /* 1390: reserved */
+    STATUS_GOTO_NIL,   /* 1391: reserved */
+    STATUS_GOTO_NIL,   /* 1392: reserved */
+    STATUS_GOTO_NIL,   /* 1393: reserved */
+    STATUS_GOTO_NIL,   /* 1394: reserved */
+    STATUS_GOTO_NIL,   /* 1395: reserved */
+    STATUS_GOTO_NIL,   /* 1396: reserved */
+    STATUS_GOTO_NIL,   /* 1397: reserved */
+    STATUS_GOTO_NIL,   /* 1398: reserved */
+    STATUS_GOTO_NIL,   /* 1399: reserved */
+
+    /* Function definition with qualified return type states (1400-1401) */
+    STATUS_GOTO_NIL,   /* 1400: reduce P505 */
+    STATUS_GOTO_NIL    /* 1401: reduce P506 */
 };
 
 

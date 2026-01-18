@@ -5150,21 +5150,52 @@ _processare_unam_actionem(
                         frange;
 
                     casus ARBOR2_NODUS_DEFINITIO_FUNCTI:
-                        /* P44: function_definition -> type_specifier declarator compound_statement */
-                        /* valori[2]=type_spec, valori[1]=declarator, valori[0]=corpus */
+                        /* P44: function_definition -> type_specifier declarator compound_statement (3 sym) */
+                        /* P505: func_def -> 'const' type declarator compound (4 sym) */
+                        /* P506: func_def -> 'volatile' type declarator compound (4 sym) */
                         valor_novus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                         valor_novus->genus = ARBOR2_NODUS_DEFINITIO_FUNCTI;
-                        valor_novus->lexema = lexemata[II];  /* type_specifier token */
                         valor_novus->pater = NIHIL;
-                        LOCUS_EX_LEXEMATIS(valor_novus, II, ZEPHYRUM);
-                        valor_novus->datum.definitio_functi.specifier = valori[II];
-                        valor_novus->datum.definitio_functi.declarator = valori[I];
-                        valor_novus->datum.definitio_functi.corpus = valori[ZEPHYRUM];
+                        valor_novus->datum.definitio_functi.tok_const = NIHIL;
+                        valor_novus->datum.definitio_functi.tok_volatile = NIHIL;
 
-                        /* Statuere patrem pro filiis */
-                        si (valori[II] != NIHIL) valori[II]->pater = valor_novus;
-                        si (valori[I] != NIHIL) valori[I]->pater = valor_novus;
-                        si (valori[ZEPHYRUM] != NIHIL) valori[ZEPHYRUM]->pater = valor_novus;
+                        si (num_pop == IV)
+                        {
+                            /* P505/P506: valori[3]=qual, valori[2]=type_spec, valori[1]=decl, valori[0]=corpus */
+                            /* lexemata[3]=qual tok, lexemata[2]=type tok */
+                            si (actio->valor == 505)
+                            {
+                                valor_novus->datum.definitio_functi.tok_const = lexemata[III];
+                            }
+                            alioquin
+                            {
+                                valor_novus->datum.definitio_functi.tok_volatile = lexemata[III];
+                            }
+                            valor_novus->lexema = lexemata[II];  /* type_specifier token */
+                            LOCUS_EX_LEXEMATIS(valor_novus, III, ZEPHYRUM);
+                            valor_novus->datum.definitio_functi.specifier = valori[II];
+                            valor_novus->datum.definitio_functi.declarator = valori[I];
+                            valor_novus->datum.definitio_functi.corpus = valori[ZEPHYRUM];
+
+                            /* Statuere patrem pro filiis */
+                            si (valori[II] != NIHIL) valori[II]->pater = valor_novus;
+                            si (valori[I] != NIHIL) valori[I]->pater = valor_novus;
+                            si (valori[ZEPHYRUM] != NIHIL) valori[ZEPHYRUM]->pater = valor_novus;
+                        }
+                        alioquin
+                        {
+                            /* P44: valori[2]=type_spec, valori[1]=declarator, valori[0]=corpus */
+                            valor_novus->lexema = lexemata[II];  /* type_specifier token */
+                            LOCUS_EX_LEXEMATIS(valor_novus, II, ZEPHYRUM);
+                            valor_novus->datum.definitio_functi.specifier = valori[II];
+                            valor_novus->datum.definitio_functi.declarator = valori[I];
+                            valor_novus->datum.definitio_functi.corpus = valori[ZEPHYRUM];
+
+                            /* Statuere patrem pro filiis */
+                            si (valori[II] != NIHIL) valori[II]->pater = valor_novus;
+                            si (valori[I] != NIHIL) valori[I]->pater = valor_novus;
+                            si (valori[ZEPHYRUM] != NIHIL) valori[ZEPHYRUM]->pater = valor_novus;
+                        }
                         frange;
 
                     casus ARBOR2_NODUS_STRUCT_SPECIFIER:

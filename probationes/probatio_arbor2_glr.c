@@ -3969,6 +3969,166 @@ s32 principale(vacuum)
 
 
     /* ========================================================
+     * PROBARE: Qualified return type: const int f() { } (P505)
+     * ======================================================== */
+
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans qualified return: const int f() { } (P505) ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "const int f() { }");
+        res = arbor2_glr_parsere(glr, tokens);
+
+        imprimere("  successus: %s\n", res.successus ? "VERUM" : "FALSUM");
+
+        si (res.radix != NIHIL)
+        {
+            _imprimere_arborem(res.radix, II);
+        }
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        CREDO_NON_NIHIL(res.radix);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_DEFINITIO_FUNCTI);
+            /* Check tok_const is set */
+            CREDO_NON_NIHIL(res.radix->datum.definitio_functi.tok_const);
+            /* Check tok_volatile is NOT set */
+            CREDO_NIHIL(res.radix->datum.definitio_functi.tok_volatile);
+            /* Check lexema is the type token (int) */
+            CREDO_NON_NIHIL(res.radix->lexema);
+            si (res.radix->lexema != NIHIL)
+            {
+                CREDO_AEQUALIS_I32((i32)res.radix->lexema->lexema->genus, (i32)ARBOR2_LEXEMA_INT);
+            }
+            /* Check declarator exists */
+            CREDO_NON_NIHIL(res.radix->datum.definitio_functi.declarator);
+            /* Check corpus exists */
+            CREDO_NON_NIHIL(res.radix->datum.definitio_functi.corpus);
+        }
+
+        imprimere("  furcae: %d\n", glr->num_furcae);
+    }
+
+
+    /* ========================================================
+     * PROBARE: Qualified return type: volatile int g() { } (P506)
+     * ======================================================== */
+
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans qualified return: volatile int g() { } (P506) ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "volatile int g() { }");
+        res = arbor2_glr_parsere(glr, tokens);
+
+        imprimere("  successus: %s\n", res.successus ? "VERUM" : "FALSUM");
+
+        si (res.radix != NIHIL)
+        {
+            _imprimere_arborem(res.radix, II);
+        }
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        CREDO_NON_NIHIL(res.radix);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_DEFINITIO_FUNCTI);
+            /* Check tok_volatile is set */
+            CREDO_NON_NIHIL(res.radix->datum.definitio_functi.tok_volatile);
+            /* Check tok_const is NOT set */
+            CREDO_NIHIL(res.radix->datum.definitio_functi.tok_const);
+            /* Check lexema is the type token (int) */
+            CREDO_NON_NIHIL(res.radix->lexema);
+            si (res.radix->lexema != NIHIL)
+            {
+                CREDO_AEQUALIS_I32((i32)res.radix->lexema->lexema->genus, (i32)ARBOR2_LEXEMA_INT);
+            }
+            /* Check declarator exists */
+            CREDO_NON_NIHIL(res.radix->datum.definitio_functi.declarator);
+            /* Check corpus exists */
+            CREDO_NON_NIHIL(res.radix->datum.definitio_functi.corpus);
+        }
+
+        imprimere("  furcae: %d\n", glr->num_furcae);
+    }
+
+
+    /* ========================================================
+     * PROBARE: Basic function: void f() { } - verify tok_const/tok_volatile are NIHIL
+     * ======================================================== */
+
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans basic return: void f() { } (no qualifier) ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "void f() { }");
+        res = arbor2_glr_parsere(glr, tokens);
+
+        imprimere("  successus: %s\n", res.successus ? "VERUM" : "FALSUM");
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        CREDO_NON_NIHIL(res.radix);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_DEFINITIO_FUNCTI);
+            /* Check tok_const is NOT set (P44, not P505) */
+            CREDO_NIHIL(res.radix->datum.definitio_functi.tok_const);
+            /* Check tok_volatile is NOT set */
+            CREDO_NIHIL(res.radix->datum.definitio_functi.tok_volatile);
+            /* Check lexema is the type token (void) */
+            CREDO_NON_NIHIL(res.radix->lexema);
+            si (res.radix->lexema != NIHIL)
+            {
+                CREDO_AEQUALIS_I32((i32)res.radix->lexema->lexema->genus, (i32)ARBOR2_LEXEMA_VOID);
+            }
+        }
+
+        imprimere("  furcae: %d\n", glr->num_furcae);
+    }
+
+
+    /* ========================================================
+     * PROBARE: Qualified return with char: const char h() { }
+     * ======================================================== */
+
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans qualified return: const char h() { } ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "const char h() { }");
+        res = arbor2_glr_parsere(glr, tokens);
+
+        imprimere("  successus: %s\n", res.successus ? "VERUM" : "FALSUM");
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        CREDO_NON_NIHIL(res.radix);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_DEFINITIO_FUNCTI);
+            /* Check tok_const is set */
+            CREDO_NON_NIHIL(res.radix->datum.definitio_functi.tok_const);
+            /* Check lexema is char token */
+            CREDO_NON_NIHIL(res.radix->lexema);
+            si (res.radix->lexema != NIHIL)
+            {
+                CREDO_AEQUALIS_I32((i32)res.radix->lexema->lexema->genus, (i32)ARBOR2_LEXEMA_CHAR);
+            }
+        }
+
+        imprimere("  furcae: %d\n", glr->num_furcae);
+    }
+
+
+    /* ========================================================
      * PROBARE: Struct specifier tests
      * ======================================================== */
 

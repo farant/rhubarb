@@ -1727,6 +1727,112 @@ Serializer tests: 137/137 pass
 - Total productions: 385 (P348-P385, with P348-P366 fully active)
 - All existing tests pass
 
+## 2026-01-17: Function Definition Qualified Return Types (P505/P506)
+
+### Goal
+
+Enable qualified return types for function definitions:
+```c
+const int f() { }
+volatile int g() { }
+const char h() { }
+volatile void v() { }
+```
+
+Previously, simple return types (`void f()`, `int main()`) worked, but qualified types failed because the const/volatile token was consumed during parsing but not stored in the AST.
+
+### Approach
+
+Added new productions P505 and P506 for 4-symbol function definitions (qualifier type declarator compound) alongside the existing P44 (3-symbol: type declarator compound).
+
+### AST Changes (include/arbor2_glr.h)
+
+Added `tok_const` and `tok_volatile` fields to definitio_functi struct:
+```c
+structura {
+    Arbor2Nodus*        specifier;
+    Arbor2Nodus*        declarator;
+    Arbor2Nodus*        corpus;
+    Arbor2Token*        tok_const;     /* NEW: P505 */
+    Arbor2Token*        tok_volatile;  /* NEW: P506 */
+} definitio_functi;
+```
+
+### Productions Added (P505-P506)
+
+- P505: `func_def -> 'const' type declarator compound` (4 symbols)
+- P506: `func_def -> 'volatile' type declarator compound` (4 symbols)
+
+### States Added
+
+**Reserved states (1368-1399):**
+Added 32 placeholder entries to STATUS_TABULA_PARTIAL and GOTO_TABULA_NOVA for array indexing continuity.
+
+**Function definition reduction states (1400-1401):**
+- 1400: after `const type declarator compound` - REDUCE P505
+- 1401: after `volatile type declarator compound` - REDUCE P506
+
+These states are reached via GOTO(362, CORPUS) = 1400 and GOTO(363, CORPUS) = 1401, which were added in a previous session.
+
+### Semantic Actions (arbor2_glr.c)
+
+Updated DEFINITIO_FUNCTI handler to distinguish 3-symbol (P44) from 4-symbol (P505/P506) productions:
+```c
+si (num_pop == IV)
+{
+    /* P505/P506: lexemata[3]=qual tok, lexemata[2]=type tok */
+    si (actio->valor == 505)
+        valor_novus->datum.definitio_functi.tok_const = lexemata[III];
+    alioquin
+        valor_novus->datum.definitio_functi.tok_volatile = lexemata[III];
+    /* ... set up rest from valori[2], valori[1], valori[0] */
+}
+alioquin
+{
+    /* P44: standard 3-symbol case */
+}
+```
+
+### Serializer Update (arbor2_scribere.c)
+
+Updated DEFINITIO_FUNCTI handler to emit qualifiers before the type specifier:
+```c
+si (nodus->datum.definitio_functi.tok_const != NIHIL)
+    arbor2_scribere_lexema(output, nodus->datum.definitio_functi.tok_const);
+si (nodus->datum.definitio_functi.tok_volatile != NIHIL)
+    arbor2_scribere_lexema(output, nodus->datum.definitio_functi.tok_volatile);
+/* then emit specifier/lexema as before */
+```
+
+### Key Insight
+
+The critical fix was ensuring STATUS_TABULA_PARTIAL has contiguous entries from 0 to the maximum state number. States 1400-1401 couldn't be found because the table ended at 1367 and used direct array indexing. Adding 32 reserved placeholder entries (1368-1399) plus the actual entries for 1400-1401 fixed the table lookup.
+
+### Test Results
+
+All tests pass:
+- `void f() { }` → OK
+- `int main() { }` → OK
+- `const int f() { }` → OK (uses P505)
+- `volatile int g() { }` → OK (uses P506)
+- `const char h() { }` → OK (uses P505)
+- `volatile void v() { }` → OK (uses P506)
+
+### Scope Limitations
+
+NOT covered:
+- Compound return types (`unsigned int f() { }`, `long int g() { }`)
+- These would require additional productions P507+ for modifier chains
+
+### Final Statistics
+- Total states: 1402 (was 1368, added 34)
+- Total productions: 507 (was 504, added P505-P506)
+- GLR tests: 1992/1992 pass
+- Scribere tests: pass
+- Compound tests: pass
+
+---
+
 ## 2026-01-17: Qualifier + Type Modifier Combinations in Struct Members
 
 ### Goal

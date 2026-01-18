@@ -411,6 +411,8 @@ structura Arbor2Nodus {
             Arbor2Nodus*        specifier;            /* Return type (identifier node) */
             Arbor2Nodus*        declarator;           /* Function declarator (DECLARATOR_FUNCTI) */
             Arbor2Nodus*        corpus;               /* Function body (CORPUS node) */
+            Arbor2Token*        tok_const;            /* 'const' qualifier (P505) */
+            Arbor2Token*        tok_volatile;         /* 'volatile' qualifier (P506) */
         } definitio_functi;
 
         /* STRUCT_SPECIFIER (also used for union) */

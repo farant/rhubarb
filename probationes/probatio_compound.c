@@ -227,6 +227,22 @@ s32 principale(vacuum)
     test(p, intern, "struct S;");
     test(p, intern, "enum E;");
 
+    imprimere("\n=== Function definition tests ===\n\n");
+
+    imprimere("-- Basic function definitions --\n");
+    test(p, intern, "void f() { }");
+    test(p, intern, "int main() { }");
+    test(p, intern, "char g() { }");
+
+    imprimere("\n-- Qualified return type function definitions (P505/P506) --\n");
+    test(p, intern, "const int f() { }");
+    test(p, intern, "volatile int g() { }");
+    test(p, intern, "const char h() { }");
+    test(p, intern, "volatile void v() { }");
+
+    /* NOTE: Compound return types (unsigned int, long int) for function
+     * definitions require additional grammar extensions not yet implemented */
+
     piscina_destruere(p);
     redde 0;
 }
