@@ -203,6 +203,30 @@ s32 principale(vacuum)
     test(p, intern, "const volatile long int x;");
     test(p, intern, "volatile const long int x;");
 
+    imprimere("\n=== Trailing semicolon tests ===\n\n");
+
+    imprimere("-- Struct definitions with trailing ; --\n");
+    test(p, intern, "struct S { int x; };");
+    test(p, intern, "struct T { int a; int b; };");
+    test(p, intern, "struct { int x; };");
+
+    imprimere("\n-- Struct with variable declaration --\n");
+    test(p, intern, "struct S { int x; } s;");
+    test(p, intern, "struct { int x; } anon;");
+
+    imprimere("\n-- Enum definitions with trailing ; --\n");
+    test(p, intern, "enum E { A, B, C };");
+    test(p, intern, "enum E { A = 1, B = 2 };");
+    test(p, intern, "enum { X, Y, Z };");
+
+    imprimere("\n-- Enum with variable declaration --\n");
+    test(p, intern, "enum E { A, B } e;");
+    test(p, intern, "enum { X, Y } anon;");
+
+    imprimere("\n-- Forward declarations --\n");
+    test(p, intern, "struct S;");
+    test(p, intern, "enum E;");
+
     piscina_destruere(p);
     redde 0;
 }

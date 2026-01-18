@@ -6693,9 +6693,25 @@ _invenire_finem_declarationis(Xar* lexemata, i32 initium)
 
             casus ARBOR2_LEXEMA_BRACE_CLAUSA:
                 profunditas_bracei--;
-                /* Function body ended - include closing brace */
+                /* Brace depth returned to 0 - check what follows */
                 si (profunditas_bracei == ZEPHYRUM && in_functione)
                 {
+                    /* Check next token to distinguish function body from struct/enum def */
+                    si (i + I < num)
+                    {
+                        Arbor2Token** next_ptr = xar_obtinere(lexemata, i + I);
+                        Arbor2Token* next_tok = *next_ptr;
+                        /* If followed by ; or identifier, this is struct/enum, not function */
+                        /* Continue to find the semicolon as the real end */
+                        si (next_tok->lexema->genus == ARBOR2_LEXEMA_SEMICOLON ||
+                            next_tok->lexema->genus == ARBOR2_LEXEMA_IDENTIFICATOR ||
+                            next_tok->lexema->genus == ARBOR2_LEXEMA_ASTERISCUS)
+                        {
+                            in_functione = FALSUM;  /* Reset - continue to semicolon */
+                            frange;
+                        }
+                    }
+                    /* Function body ended - include closing brace */
                     info.parse_finis = i + I;
                     info.proximus = i + I;
                     redde info;
@@ -6899,8 +6915,9 @@ arbor2_glr_parsere_translation_unit(
             Arbor2Token* semi_tok = *semi_ptr;
             si (semi_tok->lexema->genus == ARBOR2_LEXEMA_SEMICOLON)
             {
+                Arbor2Nodus* decl;
                 /* Set on first declaration and all chained declarations */
-                Arbor2Nodus* decl = sub_res.radix;
+                decl = sub_res.radix;
                 dum (decl != NIHIL)
                 {
                     decl->datum.declaratio.tok_semicolon = semi_tok;
