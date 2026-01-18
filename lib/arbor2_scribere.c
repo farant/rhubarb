@@ -468,7 +468,12 @@ _scribere_nodum(Xar* output, Arbor2Nodus* nodus)
         casus ARBOR2_NODUS_DECLARATOR_FUNCTI:
             _scribere_nodum(output, nodus->datum.declarator_functi.declarator_interior);
             arbor2_scribere_lexema(output, nodus->datum.declarator_functi.tok_paren_ap);
-            si (nodus->datum.declarator_functi.parametri != NIHIL)
+            si (nodus->datum.declarator_functi.tok_void != NIHIL)
+            {
+                /* (void) parameter - emit the void token */
+                arbor2_scribere_lexema(output, nodus->datum.declarator_functi.tok_void);
+            }
+            alioquin si (nodus->datum.declarator_functi.parametri != NIHIL)
             {
                 _scribere_lista_separata(output, nodus->datum.declarator_functi.parametri);
             }
@@ -477,7 +482,15 @@ _scribere_nodum(Xar* output, Arbor2Nodus* nodus)
 
         /* PARAMETER_DECL: type name */
         casus ARBOR2_NODUS_PARAMETER_DECL:
-            _scribere_nodum(output, nodus->datum.parameter_decl.type_specifier);
+            si (nodus->datum.parameter_decl.type_specifier != NIHIL)
+            {
+                _scribere_nodum(output, nodus->datum.parameter_decl.type_specifier);
+            }
+            alioquin
+            {
+                /* Simple type (int, char, void) - emit from lexema token */
+                arbor2_scribere_lexema(output, nodus->lexema);
+            }
             _scribere_nodum(output, nodus->datum.parameter_decl.declarator);
             frange;
 

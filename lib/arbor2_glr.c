@@ -4572,6 +4572,7 @@ _processare_unam_actionem(
                             valor_novus->datum.declarator_functi.tok_paren_ap = lexemata[I];
                             valor_novus->datum.declarator_functi.parametri = NIHIL;
                             valor_novus->datum.declarator_functi.tok_paren_cl = lexemata[ZEPHYRUM];
+                            valor_novus->datum.declarator_functi.tok_void = NIHIL;
                             valor_novus->datum.declarator_functi.habet_void = FALSUM;
                             valor_novus->datum.declarator_functi.est_variadicus = FALSUM;
                             valor_novus->datum.declarator_functi.pointer_levels = NIHIL;
@@ -4590,12 +4591,14 @@ _processare_unam_actionem(
                             {
                                 /* P39: (void) - valori[1] is NULL from VOID token */
                                 valor_novus->datum.declarator_functi.parametri = NIHIL;
+                                valor_novus->datum.declarator_functi.tok_void = lexemata[I];
                                 valor_novus->datum.declarator_functi.habet_void = VERUM;
                             }
                             alioquin
                             {
                                 /* P40: (param_list) - valori[1] is LISTA_SEPARATA node */
                                 valor_novus->datum.declarator_functi.parametri = valori[I];
+                                valor_novus->datum.declarator_functi.tok_void = NIHIL;
                                 valor_novus->datum.declarator_functi.habet_void = FALSUM;
                             }
                         }
@@ -4606,6 +4609,7 @@ _processare_unam_actionem(
                             valor_novus->datum.declarator_functi.tok_paren_ap = NIHIL;
                             valor_novus->datum.declarator_functi.parametri = NIHIL;
                             valor_novus->datum.declarator_functi.tok_paren_cl = NIHIL;
+                            valor_novus->datum.declarator_functi.tok_void = NIHIL;
                             valor_novus->datum.declarator_functi.habet_void = FALSUM;
                             valor_novus->datum.declarator_functi.est_variadicus = FALSUM;
                             valor_novus->datum.declarator_functi.pointer_levels = NIHIL;

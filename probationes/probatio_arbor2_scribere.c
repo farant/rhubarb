@@ -568,8 +568,16 @@ s32 principale(vacuum)
 
         /* Function definitions with empty parameters */
         CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "int get() { }", NIHIL));
-        /* NOTE: Typed parameters (int a, int b) and void params have serialization bugs,
-         * tested separately in probatio_compound.c roundtrip tests */
+
+        /* Function definitions with void parameter */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "int get(void) { }", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "void f(void) { }", NIHIL));
+
+        /* Function definitions with typed parameters */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "int add(int a, int b) { }", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "void set(int x) { }", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "char f(char c) { }", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "void g(int a, char b, int c) { }", NIHIL));
 
         /* Function definitions with body statements */
         CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "int f() { return 0; }", NIHIL));

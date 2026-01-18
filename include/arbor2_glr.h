@@ -389,6 +389,7 @@ structura Arbor2Nodus {
             Arbor2Token*        tok_paren_ap;         /* ( */
             Arbor2Nodus*        parametri;            /* LISTA_SEPARATA node, NIHIL for () or (void) */
             Arbor2Token*        tok_paren_cl;         /* ) */
+            Arbor2Token*        tok_void;             /* 'void' token for (void) params, NIHIL otherwise */
             b32                 habet_void;           /* true if explicitly (void) */
             b32                 est_variadicus;       /* true if ends with ... */
             Xar*                pointer_levels;       /* Xar of Arbor2PointerLevel*, NIHIL if no pointers */
