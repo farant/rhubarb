@@ -137,17 +137,40 @@ _scribere_pointer_levels(Xar* output, Xar* pointer_levels)
     }
 
     num = xar_numerus(pointer_levels);
-    per (i = ZEPHYRUM; i < num; i++)
+    /* Iterate in reverse - outer pointers (added last) should serialize first */
+    i = num;
+    dum (i > 0)
     {
-        Arbor2PointerLevel** lvl = xar_obtinere(pointer_levels, i);
-        si (*lvl != NIHIL)
+        Arbor2PointerLevel** lvl;
+        i = i - 1;
+        lvl = xar_obtinere(pointer_levels, i);
+        si (lvl != NIHIL && *lvl != NIHIL)
         {
             arbor2_scribere_lexema(output, (*lvl)->tok_stella);
-            si ((*lvl)->tok_const != NIHIL)
+            /* Output const/volatile in original source order */
+            si ((*lvl)->tok_const != NIHIL && (*lvl)->tok_volatile != NIHIL)
+            {
+                Arbor2Token* c = (*lvl)->tok_const;
+                Arbor2Token* v = (*lvl)->tok_volatile;
+                b32 const_first = (c->origo_meta->linea < v->origo_meta->linea) ||
+                                  (c->origo_meta->linea == v->origo_meta->linea &&
+                                   c->origo_meta->columna < v->origo_meta->columna);
+                si (const_first)
+                {
+                    arbor2_scribere_lexema(output, c);
+                    arbor2_scribere_lexema(output, v);
+                }
+                alioquin
+                {
+                    arbor2_scribere_lexema(output, v);
+                    arbor2_scribere_lexema(output, c);
+                }
+            }
+            alioquin si ((*lvl)->tok_const != NIHIL)
             {
                 arbor2_scribere_lexema(output, (*lvl)->tok_const);
             }
-            si ((*lvl)->tok_volatile != NIHIL)
+            alioquin si ((*lvl)->tok_volatile != NIHIL)
             {
                 arbor2_scribere_lexema(output, (*lvl)->tok_volatile);
             }
@@ -346,11 +369,31 @@ _scribere_nodum(Xar* output, Arbor2Nodus* nodus)
             {
                 arbor2_scribere_lexema(output, nodus->datum.declaratio.tok_storage);
             }
-            si (nodus->datum.declaratio.tok_const != NIHIL)
+            /* Output const/volatile in original source order */
+            si (nodus->datum.declaratio.tok_const != NIHIL && nodus->datum.declaratio.tok_volatile != NIHIL)
+            {
+                /* Both qualifiers - compare positions to preserve order */
+                Arbor2Token* c = nodus->datum.declaratio.tok_const;
+                Arbor2Token* v = nodus->datum.declaratio.tok_volatile;
+                b32 const_first = (c->origo_meta->linea < v->origo_meta->linea) ||
+                                  (c->origo_meta->linea == v->origo_meta->linea &&
+                                   c->origo_meta->columna < v->origo_meta->columna);
+                si (const_first)
+                {
+                    arbor2_scribere_lexema(output, c);
+                    arbor2_scribere_lexema(output, v);
+                }
+                alioquin
+                {
+                    arbor2_scribere_lexema(output, v);
+                    arbor2_scribere_lexema(output, c);
+                }
+            }
+            alioquin si (nodus->datum.declaratio.tok_const != NIHIL)
             {
                 arbor2_scribere_lexema(output, nodus->datum.declaratio.tok_const);
             }
-            si (nodus->datum.declaratio.tok_volatile != NIHIL)
+            alioquin si (nodus->datum.declaratio.tok_volatile != NIHIL)
             {
                 arbor2_scribere_lexema(output, nodus->datum.declaratio.tok_volatile);
             }

@@ -3481,8 +3481,30 @@ _processare_unam_actionem(
                             valor_novus->genus = ARBOR2_NODUS_DECLARATIO;
                             valor_novus->lexema = type_tok;
                             valor_novus->datum.declaratio.tok_storage = (storage != ARBOR2_STORAGE_NONE) ? lexemata[III] : NIHIL;
-                            valor_novus->datum.declaratio.tok_const = (quals & ARBOR2_QUAL_CONST) ? lexemata[II] : NIHIL;
-                            valor_novus->datum.declaratio.tok_volatile = (quals & ARBOR2_QUAL_VOLATILE) ? lexemata[II] : NIHIL;
+
+                            /* Handle token positions for const/volatile combinations
+                             * P227-P232: storage + qualifier - lexemata[III]=storage, lexemata[II]=qualifier
+                             * P233: const volatile - lexemata[III]=const, lexemata[II]=volatile
+                             * P234: volatile const - lexemata[III]=volatile, lexemata[II]=const */
+                            si (actio->valor == 233)
+                            {
+                                /* const volatile: [3]=const, [2]=volatile */
+                                valor_novus->datum.declaratio.tok_const = lexemata[III];
+                                valor_novus->datum.declaratio.tok_volatile = lexemata[II];
+                            }
+                            alioquin si (actio->valor == 234)
+                            {
+                                /* volatile const: [3]=volatile, [2]=const */
+                                valor_novus->datum.declaratio.tok_volatile = lexemata[III];
+                                valor_novus->datum.declaratio.tok_const = lexemata[II];
+                            }
+                            alioquin
+                            {
+                                /* P227-P232: storage + single qualifier */
+                                valor_novus->datum.declaratio.tok_const = (quals & ARBOR2_QUAL_CONST) ? lexemata[II] : NIHIL;
+                                valor_novus->datum.declaratio.tok_volatile = (quals & ARBOR2_QUAL_VOLATILE) ? lexemata[II] : NIHIL;
+                            }
+
                             valor_novus->datum.declaratio.specifier = type_spec;
                             valor_novus->datum.declaratio.declarator = decl_node;
                             valor_novus->datum.declaratio.tok_assignatio = NIHIL;
@@ -3870,7 +3892,8 @@ _processare_unam_actionem(
 
                             valor_novus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                             valor_novus->genus = ARBOR2_NODUS_DECLARATOR;
-                            valor_novus->lexema = lexemata[II];  /* The '*' token */
+                            /* Copy inner declarator's lexema (identifier) for serialization */
+                            valor_novus->lexema = (inner != NIHIL) ? inner->lexema : lexemata[II];
 
                             si (inner != NIHIL && inner->genus == ARBOR2_NODUS_DECLARATOR)
                             {
@@ -3925,7 +3948,8 @@ _processare_unam_actionem(
 
                             valor_novus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                             valor_novus->genus = ARBOR2_NODUS_DECLARATOR;
-                            valor_novus->lexema = lexemata[III];  /* The '*' token */
+                            /* Copy inner declarator's lexema (identifier) for serialization */
+                            valor_novus->lexema = (inner != NIHIL) ? inner->lexema : lexemata[III];
 
                             si (inner != NIHIL && inner->genus == ARBOR2_NODUS_DECLARATOR)
                             {

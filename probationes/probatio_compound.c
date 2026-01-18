@@ -119,7 +119,52 @@ s32 principale(vacuum)
     test(p, intern, "unsigned int x;");
     test(p, intern, "const int x;");
     test(p, intern, "long long x;");
-    
+
+    imprimere("\n=== Qualifier order preservation tests ===\n\n");
+
+    imprimere("-- Top-level const volatile --\n");
+    test(p, intern, "const volatile int x;");
+    test(p, intern, "volatile const int x;");
+    test(p, intern, "const volatile char c;");
+    test(p, intern, "volatile const char c;");
+
+    imprimere("\n-- Struct member const volatile (both orders) --\n");
+    test(p, intern, "struct S { const volatile int x; };");
+    test(p, intern, "struct S { volatile const int x; };");
+    test(p, intern, "struct S { const volatile char c; };");
+    test(p, intern, "struct S { volatile const char c; };");
+    test(p, intern, "struct S { const volatile float f; };");
+    test(p, intern, "struct S { volatile const double d; };");
+
+    imprimere("\n-- Basic pointers --\n");
+    test(p, intern, "int *p;");
+    test(p, intern, "int *const p;");
+    test(p, intern, "int *volatile p;");
+
+    imprimere("\n-- Pointers with const volatile --\n");
+    test(p, intern, "int *const volatile p;");
+    test(p, intern, "int *volatile const p;");
+    test(p, intern, "const int *const volatile p;");
+    test(p, intern, "volatile int *volatile const p;");
+
+    imprimere("\n-- Double pointer with qualifiers --\n");
+    test(p, intern, "int **const volatile p;");
+    test(p, intern, "int **volatile const p;");
+    test(p, intern, "int *const *volatile p;");
+    test(p, intern, "int *volatile *const p;");
+
+    imprimere("\n-- Struct member pointers with qualifiers --\n");
+    test(p, intern, "struct S { int *const volatile p; };");
+    test(p, intern, "struct S { int *volatile const p; };");
+    test(p, intern, "struct S { const volatile int *p; };");
+    test(p, intern, "struct S { volatile const int *p; };");
+
+    imprimere("\n-- Mixed qualifiers and type modifiers --\n");
+    test(p, intern, "const volatile unsigned int x;");
+    test(p, intern, "volatile const unsigned int x;");
+    test(p, intern, "const volatile long int x;");
+    test(p, intern, "volatile const long int x;");
+
     piscina_destruere(p);
     redde 0;
 }
