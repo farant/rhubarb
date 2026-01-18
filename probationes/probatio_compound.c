@@ -120,6 +120,44 @@ s32 principale(vacuum)
     test(p, intern, "const int x;");
     test(p, intern, "long long x;");
 
+    imprimere("\n-- Top-level const + compound types (items 7a/7b) --\n");
+    test(p, intern, "const unsigned int x;");
+    test(p, intern, "const signed int x;");
+    test(p, intern, "const unsigned char c;");
+    test(p, intern, "const signed char c;");
+    test(p, intern, "const long int x;");
+    test(p, intern, "const short int x;");
+    test(p, intern, "const unsigned long x;");
+    test(p, intern, "const unsigned short x;");
+    test(p, intern, "const signed long x;");
+    test(p, intern, "const signed short x;");
+    test(p, intern, "const unsigned long int x;");
+    test(p, intern, "const unsigned short int x;");
+    test(p, intern, "const signed long int x;");
+    test(p, intern, "const signed short int x;");
+    test(p, intern, "const long long x;");
+    test(p, intern, "const unsigned long long x;");
+    test(p, intern, "const signed long long x;");
+
+    imprimere("\n-- Top-level volatile + compound types --\n");
+    test(p, intern, "volatile unsigned int x;");
+    test(p, intern, "volatile signed int x;");
+    test(p, intern, "volatile unsigned char c;");
+    test(p, intern, "volatile signed char c;");
+    test(p, intern, "volatile long int x;");
+    test(p, intern, "volatile short int x;");
+    test(p, intern, "volatile unsigned long x;");
+    test(p, intern, "volatile unsigned short x;");
+    test(p, intern, "volatile signed long x;");
+    test(p, intern, "volatile signed short x;");
+    test(p, intern, "volatile unsigned long int x;");
+    test(p, intern, "volatile unsigned short int x;");
+    test(p, intern, "volatile signed long int x;");
+    test(p, intern, "volatile signed short int x;");
+    test(p, intern, "volatile long long x;");
+    test(p, intern, "volatile unsigned long long x;");
+    test(p, intern, "volatile signed long long x;");
+
     imprimere("\n=== Qualifier order preservation tests ===\n\n");
 
     imprimere("-- Top-level const volatile --\n");
