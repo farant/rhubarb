@@ -628,7 +628,43 @@ hic_manens Arbor2Regula REGULAE[] = {
     /* Subsequent member: long long */
     /* P383 */ { ARBOR2_NT_STRUCT_MEMBER_LIST, 5, ARBOR2_NODUS_DECLARATIO, "members -> members 'long' 'long' declarator ';'" },
     /* P384 */ { ARBOR2_NT_STRUCT_MEMBER_LIST, 6, ARBOR2_NODUS_DECLARATIO, "members -> members 'unsigned' 'long' 'long' declarator ';'" },
-    /* P385 */ { ARBOR2_NT_STRUCT_MEMBER_LIST, 6, ARBOR2_NODUS_DECLARATIO, "members -> members 'signed' 'long' 'long' declarator ';'" }
+    /* P385 */ { ARBOR2_NT_STRUCT_MEMBER_LIST, 6, ARBOR2_NODUS_DECLARATIO, "members -> members 'signed' 'long' 'long' declarator ';'" },
+
+    /* First member: const + type modifiers */
+    /* P386 */ { ARBOR2_NT_STRUCT_MEMBER_LIST, 5, ARBOR2_NODUS_DECLARATIO, "members -> 'const' 'unsigned' 'int' declarator ';'" },
+    /* P387 */ { ARBOR2_NT_STRUCT_MEMBER_LIST, 5, ARBOR2_NODUS_DECLARATIO, "members -> 'const' 'unsigned' 'char' declarator ';'" },
+    /* P388 */ { ARBOR2_NT_STRUCT_MEMBER_LIST, 5, ARBOR2_NODUS_DECLARATIO, "members -> 'const' 'unsigned' 'long' declarator ';'" },
+    /* P389 */ { ARBOR2_NT_STRUCT_MEMBER_LIST, 5, ARBOR2_NODUS_DECLARATIO, "members -> 'const' 'unsigned' 'short' declarator ';'" },
+    /* P390 */ { ARBOR2_NT_STRUCT_MEMBER_LIST, 6, ARBOR2_NODUS_DECLARATIO, "members -> 'const' 'unsigned' 'long' 'int' declarator ';'" },
+    /* P391 */ { ARBOR2_NT_STRUCT_MEMBER_LIST, 6, ARBOR2_NODUS_DECLARATIO, "members -> 'const' 'unsigned' 'short' 'int' declarator ';'" },
+    /* P392 */ { ARBOR2_NT_STRUCT_MEMBER_LIST, 6, ARBOR2_NODUS_DECLARATIO, "members -> 'const' 'unsigned' 'long' 'long' declarator ';'" },
+    /* P393 */ { ARBOR2_NT_STRUCT_MEMBER_LIST, 5, ARBOR2_NODUS_DECLARATIO, "members -> 'const' 'signed' 'int' declarator ';'" },
+    /* P394 */ { ARBOR2_NT_STRUCT_MEMBER_LIST, 5, ARBOR2_NODUS_DECLARATIO, "members -> 'const' 'signed' 'char' declarator ';'" },
+    /* P395 */ { ARBOR2_NT_STRUCT_MEMBER_LIST, 5, ARBOR2_NODUS_DECLARATIO, "members -> 'const' 'signed' 'long' declarator ';'" },
+    /* P396 */ { ARBOR2_NT_STRUCT_MEMBER_LIST, 5, ARBOR2_NODUS_DECLARATIO, "members -> 'const' 'signed' 'short' declarator ';'" },
+    /* P397 */ { ARBOR2_NT_STRUCT_MEMBER_LIST, 6, ARBOR2_NODUS_DECLARATIO, "members -> 'const' 'signed' 'long' 'int' declarator ';'" },
+    /* P398 */ { ARBOR2_NT_STRUCT_MEMBER_LIST, 6, ARBOR2_NODUS_DECLARATIO, "members -> 'const' 'signed' 'short' 'int' declarator ';'" },
+    /* P399 */ { ARBOR2_NT_STRUCT_MEMBER_LIST, 6, ARBOR2_NODUS_DECLARATIO, "members -> 'const' 'signed' 'long' 'long' declarator ';'" },
+    /* P400 */ { ARBOR2_NT_STRUCT_MEMBER_LIST, 5, ARBOR2_NODUS_DECLARATIO, "members -> 'const' 'long' 'int' declarator ';'" },
+    /* P401 */ { ARBOR2_NT_STRUCT_MEMBER_LIST, 5, ARBOR2_NODUS_DECLARATIO, "members -> 'const' 'long' 'long' declarator ';'" },
+    /* P402 */ { ARBOR2_NT_STRUCT_MEMBER_LIST, 5, ARBOR2_NODUS_DECLARATIO, "members -> 'const' 'short' 'int' declarator ';'" },
+
+    /* First member: volatile + type modifiers */
+    /* P403 */ { ARBOR2_NT_STRUCT_MEMBER_LIST, 5, ARBOR2_NODUS_DECLARATIO, "members -> 'volatile' 'unsigned' 'int' declarator ';'" },
+    /* P404 */ { ARBOR2_NT_STRUCT_MEMBER_LIST, 5, ARBOR2_NODUS_DECLARATIO, "members -> 'volatile' 'unsigned' 'char' declarator ';'" },
+    /* P405 */ { ARBOR2_NT_STRUCT_MEMBER_LIST, 5, ARBOR2_NODUS_DECLARATIO, "members -> 'volatile' 'unsigned' 'long' declarator ';'" },
+    /* P406 */ { ARBOR2_NT_STRUCT_MEMBER_LIST, 5, ARBOR2_NODUS_DECLARATIO, "members -> 'volatile' 'unsigned' 'short' declarator ';'" },
+    /* P407 */ { ARBOR2_NT_STRUCT_MEMBER_LIST, 6, ARBOR2_NODUS_DECLARATIO, "members -> 'volatile' 'unsigned' 'long' 'int' declarator ';'" },
+    /* P408 */ { ARBOR2_NT_STRUCT_MEMBER_LIST, 6, ARBOR2_NODUS_DECLARATIO, "members -> 'volatile' 'unsigned' 'short' 'int' declarator ';'" },
+    /* P409 */ { ARBOR2_NT_STRUCT_MEMBER_LIST, 6, ARBOR2_NODUS_DECLARATIO, "members -> 'volatile' 'unsigned' 'long' 'long' declarator ';'" },
+    /* P410 */ { ARBOR2_NT_STRUCT_MEMBER_LIST, 5, ARBOR2_NODUS_DECLARATIO, "members -> 'volatile' 'signed' 'int' declarator ';'" },
+    /* P411 */ { ARBOR2_NT_STRUCT_MEMBER_LIST, 5, ARBOR2_NODUS_DECLARATIO, "members -> 'volatile' 'signed' 'char' declarator ';'" },
+    /* P412 */ { ARBOR2_NT_STRUCT_MEMBER_LIST, 5, ARBOR2_NODUS_DECLARATIO, "members -> 'volatile' 'signed' 'long' declarator ';'" },
+    /* P413 */ { ARBOR2_NT_STRUCT_MEMBER_LIST, 5, ARBOR2_NODUS_DECLARATIO, "members -> 'volatile' 'signed' 'short' declarator ';'" },
+    /* P414 */ { ARBOR2_NT_STRUCT_MEMBER_LIST, 6, ARBOR2_NODUS_DECLARATIO, "members -> 'volatile' 'signed' 'long' 'int' declarator ';'" },
+    /* P415 */ { ARBOR2_NT_STRUCT_MEMBER_LIST, 6, ARBOR2_NODUS_DECLARATIO, "members -> 'volatile' 'signed' 'short' 'int' declarator ';'" },
+    /* P416 */ { ARBOR2_NT_STRUCT_MEMBER_LIST, 6, ARBOR2_NODUS_DECLARATIO, "members -> 'volatile' 'signed' 'long' 'long' declarator ';'" },
+    /* P417 */ { ARBOR2_NT_STRUCT_MEMBER_LIST, 5, ARBOR2_NODUS_DECLARATIO, "members -> 'volatile' 'long' 'int' declarator ';'" }
 };
 
 hic_manens i32 NUM_REGULAE = (i32)(magnitudo(REGULAE) / magnitudo(REGULAE[0]));
@@ -12911,32 +12947,38 @@ hic_manens constans Arbor2TabulaActio STATUS_959_ACTIONES[] = {
     { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,  18, FALSUM }
 };
 
-/* State 960: after 'const' in first member - expects any type specifier */
+/* State 960: after 'const' in first member - expects type or modifier */
 hic_manens constans Arbor2TabulaActio STATUS_960_ACTIONES[] = {
     { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_SHIFT, 973, FALSUM },
     { ARBOR2_LEXEMA_CHAR,           ARBOR2_ACTIO_SHIFT, 973, FALSUM },
     { ARBOR2_LEXEMA_FLOAT,          ARBOR2_ACTIO_SHIFT, 973, FALSUM },
     { ARBOR2_LEXEMA_DOUBLE,         ARBOR2_ACTIO_SHIFT, 973, FALSUM },
-    { ARBOR2_LEXEMA_SHORT,          ARBOR2_ACTIO_SHIFT, 973, FALSUM },
-    { ARBOR2_LEXEMA_LONG,           ARBOR2_ACTIO_SHIFT, 973, FALSUM },
-    { ARBOR2_LEXEMA_UNSIGNED,       ARBOR2_ACTIO_SHIFT, 973, FALSUM },
-    { ARBOR2_LEXEMA_SIGNED,         ARBOR2_ACTIO_SHIFT, 973, FALSUM },
     { ARBOR2_LEXEMA_VOID,           ARBOR2_ACTIO_SHIFT, 973, FALSUM },
-    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT, 973, FALSUM }
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT, 973, FALSUM },
+    /* Route to const volatile combination */
+    { ARBOR2_LEXEMA_VOLATILE,       ARBOR2_ACTIO_SHIFT, 1020, FALSUM },
+    /* Route to const + type modifier chains */
+    { ARBOR2_LEXEMA_UNSIGNED,       ARBOR2_ACTIO_SHIFT, 1021, FALSUM },
+    { ARBOR2_LEXEMA_SIGNED,         ARBOR2_ACTIO_SHIFT, 1025, FALSUM },
+    { ARBOR2_LEXEMA_LONG,           ARBOR2_ACTIO_SHIFT, 1029, FALSUM },
+    { ARBOR2_LEXEMA_SHORT,          ARBOR2_ACTIO_SHIFT, 1030, FALSUM }
 };
 
-/* State 961: after 'volatile' in first member - expects any type specifier */
+/* State 961: after 'volatile' in first member - expects type or modifier */
 hic_manens constans Arbor2TabulaActio STATUS_961_ACTIONES[] = {
     { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_SHIFT, 974, FALSUM },
     { ARBOR2_LEXEMA_CHAR,           ARBOR2_ACTIO_SHIFT, 974, FALSUM },
     { ARBOR2_LEXEMA_FLOAT,          ARBOR2_ACTIO_SHIFT, 974, FALSUM },
     { ARBOR2_LEXEMA_DOUBLE,         ARBOR2_ACTIO_SHIFT, 974, FALSUM },
-    { ARBOR2_LEXEMA_SHORT,          ARBOR2_ACTIO_SHIFT, 974, FALSUM },
-    { ARBOR2_LEXEMA_LONG,           ARBOR2_ACTIO_SHIFT, 974, FALSUM },
-    { ARBOR2_LEXEMA_UNSIGNED,       ARBOR2_ACTIO_SHIFT, 974, FALSUM },
-    { ARBOR2_LEXEMA_SIGNED,         ARBOR2_ACTIO_SHIFT, 974, FALSUM },
     { ARBOR2_LEXEMA_VOID,           ARBOR2_ACTIO_SHIFT, 974, FALSUM },
-    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT, 974, FALSUM }
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT, 974, FALSUM },
+    /* Route to volatile const combination */
+    { ARBOR2_LEXEMA_CONST,          ARBOR2_ACTIO_SHIFT, 1031, FALSUM },
+    /* Route to volatile + type modifier chains */
+    { ARBOR2_LEXEMA_UNSIGNED,       ARBOR2_ACTIO_SHIFT, 1032, FALSUM },
+    { ARBOR2_LEXEMA_SIGNED,         ARBOR2_ACTIO_SHIFT, 1036, FALSUM },
+    { ARBOR2_LEXEMA_LONG,           ARBOR2_ACTIO_SHIFT, 1040, FALSUM },
+    { ARBOR2_LEXEMA_SHORT,          ARBOR2_ACTIO_SHIFT, 1041, FALSUM }
 };
 
 /* State 962: after 'unsigned int' - expects * or ID */
@@ -13458,6 +13500,1198 @@ hic_manens constans Arbor2TabulaActio STATUS_1019_ACTIONES[] = {
     { ARBOR2_LEXEMA_UNION,          ARBOR2_ACTIO_REDUCE, 366, FALSUM },
     { ARBOR2_LEXEMA_ENUM,           ARBOR2_ACTIO_REDUCE, 366, FALSUM },
     { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 366, FALSUM }
+};
+
+/* ==================================================
+ * States 1020-1120: Qualifier + Type Modifier Combinations
+ * in struct/union members
+ *
+ * Handles: const unsigned int x; const volatile int x; etc.
+ * ================================================== */
+
+/* ========== CONST + TYPE MODIFIER CHAIN STATES ========== */
+
+/* State 1020: after 'const volatile' in member - expects type or modifier */
+hic_manens constans Arbor2TabulaActio STATUS_1020_ACTIONES[] = {
+    { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_SHIFT, 1042, FALSUM },
+    { ARBOR2_LEXEMA_CHAR,           ARBOR2_ACTIO_SHIFT, 1042, FALSUM },
+    { ARBOR2_LEXEMA_FLOAT,          ARBOR2_ACTIO_SHIFT, 1042, FALSUM },
+    { ARBOR2_LEXEMA_DOUBLE,         ARBOR2_ACTIO_SHIFT, 1042, FALSUM },
+    { ARBOR2_LEXEMA_VOID,           ARBOR2_ACTIO_SHIFT, 1042, FALSUM },
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT, 1042, FALSUM },
+    { ARBOR2_LEXEMA_UNSIGNED,       ARBOR2_ACTIO_SHIFT, 1043, FALSUM },
+    { ARBOR2_LEXEMA_SIGNED,         ARBOR2_ACTIO_SHIFT, 1047, FALSUM },
+    { ARBOR2_LEXEMA_LONG,           ARBOR2_ACTIO_SHIFT, 1051, FALSUM },
+    { ARBOR2_LEXEMA_SHORT,          ARBOR2_ACTIO_SHIFT, 1052, FALSUM }
+};
+
+/* State 1021: after 'const unsigned' in member */
+hic_manens constans Arbor2TabulaActio STATUS_1021_ACTIONES[] = {
+    { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_SHIFT, 1053, FALSUM },
+    { ARBOR2_LEXEMA_CHAR,           ARBOR2_ACTIO_SHIFT, 1054, FALSUM },
+    { ARBOR2_LEXEMA_LONG,           ARBOR2_ACTIO_SHIFT, 1022, FALSUM },
+    { ARBOR2_LEXEMA_SHORT,          ARBOR2_ACTIO_SHIFT, 1023, FALSUM },
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,  17, FALSUM },
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,  18, FALSUM }
+};
+
+/* State 1022: after 'const unsigned long' in member */
+hic_manens constans Arbor2TabulaActio STATUS_1022_ACTIONES[] = {
+    { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_SHIFT, 1055, FALSUM },
+    { ARBOR2_LEXEMA_LONG,           ARBOR2_ACTIO_SHIFT, 1024, FALSUM },
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,  17, FALSUM },
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,  18, FALSUM }
+};
+
+/* State 1023: after 'const unsigned short' in member */
+hic_manens constans Arbor2TabulaActio STATUS_1023_ACTIONES[] = {
+    { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_SHIFT, 1056, FALSUM },
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,  17, FALSUM },
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,  18, FALSUM }
+};
+
+/* State 1024: after 'const unsigned long long' in member */
+hic_manens constans Arbor2TabulaActio STATUS_1024_ACTIONES[] = {
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,  17, FALSUM },
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,  18, FALSUM }
+};
+
+/* State 1025: after 'const signed' in member */
+hic_manens constans Arbor2TabulaActio STATUS_1025_ACTIONES[] = {
+    { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_SHIFT, 1057, FALSUM },
+    { ARBOR2_LEXEMA_CHAR,           ARBOR2_ACTIO_SHIFT, 1058, FALSUM },
+    { ARBOR2_LEXEMA_LONG,           ARBOR2_ACTIO_SHIFT, 1026, FALSUM },
+    { ARBOR2_LEXEMA_SHORT,          ARBOR2_ACTIO_SHIFT, 1027, FALSUM },
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,  17, FALSUM },
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,  18, FALSUM }
+};
+
+/* State 1026: after 'const signed long' in member */
+hic_manens constans Arbor2TabulaActio STATUS_1026_ACTIONES[] = {
+    { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_SHIFT, 1059, FALSUM },
+    { ARBOR2_LEXEMA_LONG,           ARBOR2_ACTIO_SHIFT, 1028, FALSUM },
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,  17, FALSUM },
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,  18, FALSUM }
+};
+
+/* State 1027: after 'const signed short' in member */
+hic_manens constans Arbor2TabulaActio STATUS_1027_ACTIONES[] = {
+    { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_SHIFT, 1060, FALSUM },
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,  17, FALSUM },
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,  18, FALSUM }
+};
+
+/* State 1028: after 'const signed long long' in member */
+hic_manens constans Arbor2TabulaActio STATUS_1028_ACTIONES[] = {
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,  17, FALSUM },
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,  18, FALSUM }
+};
+
+/* State 1029: after 'const long' in member */
+hic_manens constans Arbor2TabulaActio STATUS_1029_ACTIONES[] = {
+    { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_SHIFT, 1061, FALSUM },
+    { ARBOR2_LEXEMA_LONG,           ARBOR2_ACTIO_SHIFT, 1062, FALSUM },
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,  17, FALSUM },
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,  18, FALSUM }
+};
+
+/* State 1030: after 'const short' in member */
+hic_manens constans Arbor2TabulaActio STATUS_1030_ACTIONES[] = {
+    { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_SHIFT, 1063, FALSUM },
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,  17, FALSUM },
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,  18, FALSUM }
+};
+
+/* ========== VOLATILE + TYPE MODIFIER CHAIN STATES ========== */
+
+/* State 1031: after 'volatile const' in member - same as 1020 */
+hic_manens constans Arbor2TabulaActio STATUS_1031_ACTIONES[] = {
+    { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_SHIFT, 1042, FALSUM },
+    { ARBOR2_LEXEMA_CHAR,           ARBOR2_ACTIO_SHIFT, 1042, FALSUM },
+    { ARBOR2_LEXEMA_FLOAT,          ARBOR2_ACTIO_SHIFT, 1042, FALSUM },
+    { ARBOR2_LEXEMA_DOUBLE,         ARBOR2_ACTIO_SHIFT, 1042, FALSUM },
+    { ARBOR2_LEXEMA_VOID,           ARBOR2_ACTIO_SHIFT, 1042, FALSUM },
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT, 1042, FALSUM },
+    { ARBOR2_LEXEMA_UNSIGNED,       ARBOR2_ACTIO_SHIFT, 1043, FALSUM },
+    { ARBOR2_LEXEMA_SIGNED,         ARBOR2_ACTIO_SHIFT, 1047, FALSUM },
+    { ARBOR2_LEXEMA_LONG,           ARBOR2_ACTIO_SHIFT, 1051, FALSUM },
+    { ARBOR2_LEXEMA_SHORT,          ARBOR2_ACTIO_SHIFT, 1052, FALSUM }
+};
+
+/* State 1032: after 'volatile unsigned' in member */
+hic_manens constans Arbor2TabulaActio STATUS_1032_ACTIONES[] = {
+    { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_SHIFT, 1064, FALSUM },
+    { ARBOR2_LEXEMA_CHAR,           ARBOR2_ACTIO_SHIFT, 1065, FALSUM },
+    { ARBOR2_LEXEMA_LONG,           ARBOR2_ACTIO_SHIFT, 1033, FALSUM },
+    { ARBOR2_LEXEMA_SHORT,          ARBOR2_ACTIO_SHIFT, 1034, FALSUM },
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,  17, FALSUM },
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,  18, FALSUM }
+};
+
+/* State 1033: after 'volatile unsigned long' in member */
+hic_manens constans Arbor2TabulaActio STATUS_1033_ACTIONES[] = {
+    { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_SHIFT, 1066, FALSUM },
+    { ARBOR2_LEXEMA_LONG,           ARBOR2_ACTIO_SHIFT, 1035, FALSUM },
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,  17, FALSUM },
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,  18, FALSUM }
+};
+
+/* State 1034: after 'volatile unsigned short' in member */
+hic_manens constans Arbor2TabulaActio STATUS_1034_ACTIONES[] = {
+    { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_SHIFT, 1067, FALSUM },
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,  17, FALSUM },
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,  18, FALSUM }
+};
+
+/* State 1035: after 'volatile unsigned long long' in member */
+hic_manens constans Arbor2TabulaActio STATUS_1035_ACTIONES[] = {
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,  17, FALSUM },
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,  18, FALSUM }
+};
+
+/* State 1036: after 'volatile signed' in member */
+hic_manens constans Arbor2TabulaActio STATUS_1036_ACTIONES[] = {
+    { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_SHIFT, 1068, FALSUM },
+    { ARBOR2_LEXEMA_CHAR,           ARBOR2_ACTIO_SHIFT, 1069, FALSUM },
+    { ARBOR2_LEXEMA_LONG,           ARBOR2_ACTIO_SHIFT, 1037, FALSUM },
+    { ARBOR2_LEXEMA_SHORT,          ARBOR2_ACTIO_SHIFT, 1038, FALSUM },
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,  17, FALSUM },
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,  18, FALSUM }
+};
+
+/* State 1037: after 'volatile signed long' in member */
+hic_manens constans Arbor2TabulaActio STATUS_1037_ACTIONES[] = {
+    { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_SHIFT, 1070, FALSUM },
+    { ARBOR2_LEXEMA_LONG,           ARBOR2_ACTIO_SHIFT, 1039, FALSUM },
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,  17, FALSUM },
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,  18, FALSUM }
+};
+
+/* State 1038: after 'volatile signed short' in member */
+hic_manens constans Arbor2TabulaActio STATUS_1038_ACTIONES[] = {
+    { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_SHIFT, 1071, FALSUM },
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,  17, FALSUM },
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,  18, FALSUM }
+};
+
+/* State 1039: after 'volatile signed long long' in member */
+hic_manens constans Arbor2TabulaActio STATUS_1039_ACTIONES[] = {
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,  17, FALSUM },
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,  18, FALSUM }
+};
+
+/* State 1040: after 'volatile long' in member */
+hic_manens constans Arbor2TabulaActio STATUS_1040_ACTIONES[] = {
+    { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_SHIFT, 1072, FALSUM },
+    { ARBOR2_LEXEMA_LONG,           ARBOR2_ACTIO_SHIFT, 1073, FALSUM },
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,  17, FALSUM },
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,  18, FALSUM }
+};
+
+/* State 1041: after 'volatile short' in member */
+hic_manens constans Arbor2TabulaActio STATUS_1041_ACTIONES[] = {
+    { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_SHIFT, 1074, FALSUM },
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,  17, FALSUM },
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,  18, FALSUM }
+};
+
+/* ========== CONST VOLATILE + BASE TYPE STATES ========== */
+
+/* State 1042: after 'const volatile type' in member - expects * or ID */
+hic_manens constans Arbor2TabulaActio STATUS_1042_ACTIONES[] = {
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,  17, FALSUM },
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,  18, FALSUM }
+};
+
+/* State 1043: after 'const volatile unsigned' in member */
+hic_manens constans Arbor2TabulaActio STATUS_1043_ACTIONES[] = {
+    { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_SHIFT, 1075, FALSUM },
+    { ARBOR2_LEXEMA_CHAR,           ARBOR2_ACTIO_SHIFT, 1076, FALSUM },
+    { ARBOR2_LEXEMA_LONG,           ARBOR2_ACTIO_SHIFT, 1044, FALSUM },
+    { ARBOR2_LEXEMA_SHORT,          ARBOR2_ACTIO_SHIFT, 1045, FALSUM },
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,  17, FALSUM },
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,  18, FALSUM }
+};
+
+/* State 1044: after 'const volatile unsigned long' in member */
+hic_manens constans Arbor2TabulaActio STATUS_1044_ACTIONES[] = {
+    { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_SHIFT, 1077, FALSUM },
+    { ARBOR2_LEXEMA_LONG,           ARBOR2_ACTIO_SHIFT, 1046, FALSUM },
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,  17, FALSUM },
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,  18, FALSUM }
+};
+
+/* State 1045: after 'const volatile unsigned short' in member */
+hic_manens constans Arbor2TabulaActio STATUS_1045_ACTIONES[] = {
+    { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_SHIFT, 1078, FALSUM },
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,  17, FALSUM },
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,  18, FALSUM }
+};
+
+/* State 1046: after 'const volatile unsigned long long' in member */
+hic_manens constans Arbor2TabulaActio STATUS_1046_ACTIONES[] = {
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,  17, FALSUM },
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,  18, FALSUM }
+};
+
+/* State 1047: after 'const volatile signed' in member */
+hic_manens constans Arbor2TabulaActio STATUS_1047_ACTIONES[] = {
+    { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_SHIFT, 1079, FALSUM },
+    { ARBOR2_LEXEMA_CHAR,           ARBOR2_ACTIO_SHIFT, 1080, FALSUM },
+    { ARBOR2_LEXEMA_LONG,           ARBOR2_ACTIO_SHIFT, 1048, FALSUM },
+    { ARBOR2_LEXEMA_SHORT,          ARBOR2_ACTIO_SHIFT, 1049, FALSUM },
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,  17, FALSUM },
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,  18, FALSUM }
+};
+
+/* State 1048: after 'const volatile signed long' in member */
+hic_manens constans Arbor2TabulaActio STATUS_1048_ACTIONES[] = {
+    { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_SHIFT, 1081, FALSUM },
+    { ARBOR2_LEXEMA_LONG,           ARBOR2_ACTIO_SHIFT, 1050, FALSUM },
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,  17, FALSUM },
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,  18, FALSUM }
+};
+
+/* State 1049: after 'const volatile signed short' in member */
+hic_manens constans Arbor2TabulaActio STATUS_1049_ACTIONES[] = {
+    { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_SHIFT, 1082, FALSUM },
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,  17, FALSUM },
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,  18, FALSUM }
+};
+
+/* State 1050: after 'const volatile signed long long' in member */
+hic_manens constans Arbor2TabulaActio STATUS_1050_ACTIONES[] = {
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,  17, FALSUM },
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,  18, FALSUM }
+};
+
+/* State 1051: after 'const volatile long' in member */
+hic_manens constans Arbor2TabulaActio STATUS_1051_ACTIONES[] = {
+    { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_SHIFT, 1083, FALSUM },
+    { ARBOR2_LEXEMA_LONG,           ARBOR2_ACTIO_SHIFT, 1084, FALSUM },
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,  17, FALSUM },
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,  18, FALSUM }
+};
+
+/* State 1052: after 'const volatile short' in member */
+hic_manens constans Arbor2TabulaActio STATUS_1052_ACTIONES[] = {
+    { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_SHIFT, 1085, FALSUM },
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,  17, FALSUM },
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,  18, FALSUM }
+};
+
+/* ========== CONST + COMPLETE TYPE STATES (expect * or ID) ========== */
+
+/* State 1053: after 'const unsigned int' - expects * or ID */
+hic_manens constans Arbor2TabulaActio STATUS_1053_ACTIONES[] = {
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,  17, FALSUM },
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,  18, FALSUM }
+};
+
+/* State 1054: after 'const unsigned char' - expects * or ID */
+hic_manens constans Arbor2TabulaActio STATUS_1054_ACTIONES[] = {
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,  17, FALSUM },
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,  18, FALSUM }
+};
+
+/* State 1055: after 'const unsigned long int' - expects * or ID */
+hic_manens constans Arbor2TabulaActio STATUS_1055_ACTIONES[] = {
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,  17, FALSUM },
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,  18, FALSUM }
+};
+
+/* State 1056: after 'const unsigned short int' - expects * or ID */
+hic_manens constans Arbor2TabulaActio STATUS_1056_ACTIONES[] = {
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,  17, FALSUM },
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,  18, FALSUM }
+};
+
+/* State 1057: after 'const signed int' - expects * or ID */
+hic_manens constans Arbor2TabulaActio STATUS_1057_ACTIONES[] = {
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,  17, FALSUM },
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,  18, FALSUM }
+};
+
+/* State 1058: after 'const signed char' - expects * or ID */
+hic_manens constans Arbor2TabulaActio STATUS_1058_ACTIONES[] = {
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,  17, FALSUM },
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,  18, FALSUM }
+};
+
+/* State 1059: after 'const signed long int' - expects * or ID */
+hic_manens constans Arbor2TabulaActio STATUS_1059_ACTIONES[] = {
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,  17, FALSUM },
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,  18, FALSUM }
+};
+
+/* State 1060: after 'const signed short int' - expects * or ID */
+hic_manens constans Arbor2TabulaActio STATUS_1060_ACTIONES[] = {
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,  17, FALSUM },
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,  18, FALSUM }
+};
+
+/* State 1061: after 'const long int' - expects * or ID */
+hic_manens constans Arbor2TabulaActio STATUS_1061_ACTIONES[] = {
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,  17, FALSUM },
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,  18, FALSUM }
+};
+
+/* State 1062: after 'const long long' - expects * or ID */
+hic_manens constans Arbor2TabulaActio STATUS_1062_ACTIONES[] = {
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,  17, FALSUM },
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,  18, FALSUM }
+};
+
+/* State 1063: after 'const short int' - expects * or ID */
+hic_manens constans Arbor2TabulaActio STATUS_1063_ACTIONES[] = {
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,  17, FALSUM },
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,  18, FALSUM }
+};
+
+/* ========== VOLATILE + COMPLETE TYPE STATES (expect * or ID) ========== */
+
+/* State 1064: after 'volatile unsigned int' - expects * or ID */
+hic_manens constans Arbor2TabulaActio STATUS_1064_ACTIONES[] = {
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,  17, FALSUM },
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,  18, FALSUM }
+};
+
+/* State 1065: after 'volatile unsigned char' - expects * or ID */
+hic_manens constans Arbor2TabulaActio STATUS_1065_ACTIONES[] = {
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,  17, FALSUM },
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,  18, FALSUM }
+};
+
+/* State 1066: after 'volatile unsigned long int' - expects * or ID */
+hic_manens constans Arbor2TabulaActio STATUS_1066_ACTIONES[] = {
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,  17, FALSUM },
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,  18, FALSUM }
+};
+
+/* State 1067: after 'volatile unsigned short int' - expects * or ID */
+hic_manens constans Arbor2TabulaActio STATUS_1067_ACTIONES[] = {
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,  17, FALSUM },
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,  18, FALSUM }
+};
+
+/* State 1068: after 'volatile signed int' - expects * or ID */
+hic_manens constans Arbor2TabulaActio STATUS_1068_ACTIONES[] = {
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,  17, FALSUM },
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,  18, FALSUM }
+};
+
+/* State 1069: after 'volatile signed char' - expects * or ID */
+hic_manens constans Arbor2TabulaActio STATUS_1069_ACTIONES[] = {
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,  17, FALSUM },
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,  18, FALSUM }
+};
+
+/* State 1070: after 'volatile signed long int' - expects * or ID */
+hic_manens constans Arbor2TabulaActio STATUS_1070_ACTIONES[] = {
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,  17, FALSUM },
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,  18, FALSUM }
+};
+
+/* State 1071: after 'volatile signed short int' - expects * or ID */
+hic_manens constans Arbor2TabulaActio STATUS_1071_ACTIONES[] = {
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,  17, FALSUM },
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,  18, FALSUM }
+};
+
+/* State 1072: after 'volatile long int' - expects * or ID */
+hic_manens constans Arbor2TabulaActio STATUS_1072_ACTIONES[] = {
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,  17, FALSUM },
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,  18, FALSUM }
+};
+
+/* State 1073: after 'volatile long long' - expects * or ID */
+hic_manens constans Arbor2TabulaActio STATUS_1073_ACTIONES[] = {
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,  17, FALSUM },
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,  18, FALSUM }
+};
+
+/* State 1074: after 'volatile short int' - expects * or ID */
+hic_manens constans Arbor2TabulaActio STATUS_1074_ACTIONES[] = {
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,  17, FALSUM },
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,  18, FALSUM }
+};
+
+/* ========== CONST VOLATILE + COMPLETE TYPE STATES (expect * or ID) ========== */
+
+/* State 1075: after 'const volatile unsigned int' - expects * or ID */
+hic_manens constans Arbor2TabulaActio STATUS_1075_ACTIONES[] = {
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,  17, FALSUM },
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,  18, FALSUM }
+};
+
+/* State 1076: after 'const volatile unsigned char' - expects * or ID */
+hic_manens constans Arbor2TabulaActio STATUS_1076_ACTIONES[] = {
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,  17, FALSUM },
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,  18, FALSUM }
+};
+
+/* State 1077: after 'const volatile unsigned long int' - expects * or ID */
+hic_manens constans Arbor2TabulaActio STATUS_1077_ACTIONES[] = {
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,  17, FALSUM },
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,  18, FALSUM }
+};
+
+/* State 1078: after 'const volatile unsigned short int' - expects * or ID */
+hic_manens constans Arbor2TabulaActio STATUS_1078_ACTIONES[] = {
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,  17, FALSUM },
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,  18, FALSUM }
+};
+
+/* State 1079: after 'const volatile signed int' - expects * or ID */
+hic_manens constans Arbor2TabulaActio STATUS_1079_ACTIONES[] = {
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,  17, FALSUM },
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,  18, FALSUM }
+};
+
+/* State 1080: after 'const volatile signed char' - expects * or ID */
+hic_manens constans Arbor2TabulaActio STATUS_1080_ACTIONES[] = {
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,  17, FALSUM },
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,  18, FALSUM }
+};
+
+/* State 1081: after 'const volatile signed long int' - expects * or ID */
+hic_manens constans Arbor2TabulaActio STATUS_1081_ACTIONES[] = {
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,  17, FALSUM },
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,  18, FALSUM }
+};
+
+/* State 1082: after 'const volatile signed short int' - expects * or ID */
+hic_manens constans Arbor2TabulaActio STATUS_1082_ACTIONES[] = {
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,  17, FALSUM },
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,  18, FALSUM }
+};
+
+/* State 1083: after 'const volatile long int' - expects * or ID */
+hic_manens constans Arbor2TabulaActio STATUS_1083_ACTIONES[] = {
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,  17, FALSUM },
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,  18, FALSUM }
+};
+
+/* State 1084: after 'const volatile long long' - expects * or ID */
+hic_manens constans Arbor2TabulaActio STATUS_1084_ACTIONES[] = {
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,  17, FALSUM },
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,  18, FALSUM }
+};
+
+/* State 1085: after 'const volatile short int' - expects * or ID */
+hic_manens constans Arbor2TabulaActio STATUS_1085_ACTIONES[] = {
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,  17, FALSUM },
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,  18, FALSUM }
+};
+
+/* ========== POST-DECLARATOR STATES (expect ;) ========== */
+
+/* State 1086: const unsigned int declarator - expect ; */
+hic_manens constans Arbor2TabulaActio STATUS_1086_ACTIONES[] = {
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_SHIFT, 1118, FALSUM }
+};
+
+/* State 1087: const unsigned char declarator - expect ; */
+hic_manens constans Arbor2TabulaActio STATUS_1087_ACTIONES[] = {
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_SHIFT, 1119, FALSUM }
+};
+
+/* State 1088: const unsigned long declarator - expect ; */
+hic_manens constans Arbor2TabulaActio STATUS_1088_ACTIONES[] = {
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_SHIFT, 1120, FALSUM }
+};
+
+/* State 1089: const unsigned short declarator - expect ; */
+hic_manens constans Arbor2TabulaActio STATUS_1089_ACTIONES[] = {
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_SHIFT, 1121, FALSUM }
+};
+
+/* State 1090: const unsigned long int declarator - expect ; */
+hic_manens constans Arbor2TabulaActio STATUS_1090_ACTIONES[] = {
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_SHIFT, 1122, FALSUM }
+};
+
+/* State 1091: const unsigned short int declarator - expect ; */
+hic_manens constans Arbor2TabulaActio STATUS_1091_ACTIONES[] = {
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_SHIFT, 1123, FALSUM }
+};
+
+/* State 1092: const unsigned long long declarator - expect ; */
+hic_manens constans Arbor2TabulaActio STATUS_1092_ACTIONES[] = {
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_SHIFT, 1124, FALSUM }
+};
+
+/* State 1093: const signed int declarator - expect ; */
+hic_manens constans Arbor2TabulaActio STATUS_1093_ACTIONES[] = {
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_SHIFT, 1125, FALSUM }
+};
+
+/* State 1094: const signed char declarator - expect ; */
+hic_manens constans Arbor2TabulaActio STATUS_1094_ACTIONES[] = {
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_SHIFT, 1126, FALSUM }
+};
+
+/* State 1095: const signed long declarator - expect ; */
+hic_manens constans Arbor2TabulaActio STATUS_1095_ACTIONES[] = {
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_SHIFT, 1127, FALSUM }
+};
+
+/* State 1096: const signed short declarator - expect ; */
+hic_manens constans Arbor2TabulaActio STATUS_1096_ACTIONES[] = {
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_SHIFT, 1128, FALSUM }
+};
+
+/* State 1097: const signed long int declarator - expect ; */
+hic_manens constans Arbor2TabulaActio STATUS_1097_ACTIONES[] = {
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_SHIFT, 1129, FALSUM }
+};
+
+/* State 1098: const signed short int declarator - expect ; */
+hic_manens constans Arbor2TabulaActio STATUS_1098_ACTIONES[] = {
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_SHIFT, 1130, FALSUM }
+};
+
+/* State 1099: const signed long long declarator - expect ; */
+hic_manens constans Arbor2TabulaActio STATUS_1099_ACTIONES[] = {
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_SHIFT, 1131, FALSUM }
+};
+
+/* State 1100: const long int declarator - expect ; */
+hic_manens constans Arbor2TabulaActio STATUS_1100_ACTIONES[] = {
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_SHIFT, 1132, FALSUM }
+};
+
+/* State 1101: const long long declarator - expect ; */
+hic_manens constans Arbor2TabulaActio STATUS_1101_ACTIONES[] = {
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_SHIFT, 1133, FALSUM }
+};
+
+/* State 1102: const short int declarator - expect ; */
+hic_manens constans Arbor2TabulaActio STATUS_1102_ACTIONES[] = {
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_SHIFT, 1134, FALSUM }
+};
+
+/* State 1103: volatile unsigned int declarator - expect ; */
+hic_manens constans Arbor2TabulaActio STATUS_1103_ACTIONES[] = {
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_SHIFT, 1135, FALSUM }
+};
+
+/* State 1104: volatile unsigned char declarator - expect ; */
+hic_manens constans Arbor2TabulaActio STATUS_1104_ACTIONES[] = {
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_SHIFT, 1136, FALSUM }
+};
+
+/* State 1105: volatile unsigned long declarator - expect ; */
+hic_manens constans Arbor2TabulaActio STATUS_1105_ACTIONES[] = {
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_SHIFT, 1137, FALSUM }
+};
+
+/* State 1106: volatile unsigned short declarator - expect ; */
+hic_manens constans Arbor2TabulaActio STATUS_1106_ACTIONES[] = {
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_SHIFT, 1138, FALSUM }
+};
+
+/* State 1107: volatile unsigned long int declarator - expect ; */
+hic_manens constans Arbor2TabulaActio STATUS_1107_ACTIONES[] = {
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_SHIFT, 1139, FALSUM }
+};
+
+/* State 1108: volatile unsigned short int declarator - expect ; */
+hic_manens constans Arbor2TabulaActio STATUS_1108_ACTIONES[] = {
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_SHIFT, 1140, FALSUM }
+};
+
+/* State 1109: volatile unsigned long long declarator - expect ; */
+hic_manens constans Arbor2TabulaActio STATUS_1109_ACTIONES[] = {
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_SHIFT, 1141, FALSUM }
+};
+
+/* State 1110: volatile signed int declarator - expect ; */
+hic_manens constans Arbor2TabulaActio STATUS_1110_ACTIONES[] = {
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_SHIFT, 1142, FALSUM }
+};
+
+/* State 1111: volatile signed char declarator - expect ; */
+hic_manens constans Arbor2TabulaActio STATUS_1111_ACTIONES[] = {
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_SHIFT, 1143, FALSUM }
+};
+
+/* State 1112: volatile signed long declarator - expect ; */
+hic_manens constans Arbor2TabulaActio STATUS_1112_ACTIONES[] = {
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_SHIFT, 1144, FALSUM }
+};
+
+/* State 1113: volatile signed short declarator - expect ; */
+hic_manens constans Arbor2TabulaActio STATUS_1113_ACTIONES[] = {
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_SHIFT, 1145, FALSUM }
+};
+
+/* State 1114: volatile signed long int declarator - expect ; */
+hic_manens constans Arbor2TabulaActio STATUS_1114_ACTIONES[] = {
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_SHIFT, 1146, FALSUM }
+};
+
+/* State 1115: volatile signed short int declarator - expect ; */
+hic_manens constans Arbor2TabulaActio STATUS_1115_ACTIONES[] = {
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_SHIFT, 1147, FALSUM }
+};
+
+/* State 1116: volatile signed long long declarator - expect ; */
+hic_manens constans Arbor2TabulaActio STATUS_1116_ACTIONES[] = {
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_SHIFT, 1148, FALSUM }
+};
+
+/* State 1117: volatile long int declarator - expect ; */
+hic_manens constans Arbor2TabulaActio STATUS_1117_ACTIONES[] = {
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_SHIFT, 1149, FALSUM }
+};
+
+/* ========== Reduction States for const + type modifier first member ========== */
+
+/* State 1118: reduce P386 (const unsigned int) */
+hic_manens constans Arbor2TabulaActio STATUS_1118_ACTIONES[] = {
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_REDUCE, 386, FALSUM },
+    { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_REDUCE, 386, FALSUM },
+    { ARBOR2_LEXEMA_CHAR,           ARBOR2_ACTIO_REDUCE, 386, FALSUM },
+    { ARBOR2_LEXEMA_LONG,           ARBOR2_ACTIO_REDUCE, 386, FALSUM },
+    { ARBOR2_LEXEMA_SHORT,          ARBOR2_ACTIO_REDUCE, 386, FALSUM },
+    { ARBOR2_LEXEMA_UNSIGNED,       ARBOR2_ACTIO_REDUCE, 386, FALSUM },
+    { ARBOR2_LEXEMA_SIGNED,         ARBOR2_ACTIO_REDUCE, 386, FALSUM },
+    { ARBOR2_LEXEMA_CONST,          ARBOR2_ACTIO_REDUCE, 386, FALSUM },
+    { ARBOR2_LEXEMA_VOLATILE,       ARBOR2_ACTIO_REDUCE, 386, FALSUM },
+    { ARBOR2_LEXEMA_STRUCT,         ARBOR2_ACTIO_REDUCE, 386, FALSUM },
+    { ARBOR2_LEXEMA_UNION,          ARBOR2_ACTIO_REDUCE, 386, FALSUM },
+    { ARBOR2_LEXEMA_ENUM,           ARBOR2_ACTIO_REDUCE, 386, FALSUM },
+    { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 386, FALSUM }
+};
+
+/* State 1119: reduce P387 (const unsigned char) */
+hic_manens constans Arbor2TabulaActio STATUS_1119_ACTIONES[] = {
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_REDUCE, 387, FALSUM },
+    { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_REDUCE, 387, FALSUM },
+    { ARBOR2_LEXEMA_CHAR,           ARBOR2_ACTIO_REDUCE, 387, FALSUM },
+    { ARBOR2_LEXEMA_LONG,           ARBOR2_ACTIO_REDUCE, 387, FALSUM },
+    { ARBOR2_LEXEMA_SHORT,          ARBOR2_ACTIO_REDUCE, 387, FALSUM },
+    { ARBOR2_LEXEMA_UNSIGNED,       ARBOR2_ACTIO_REDUCE, 387, FALSUM },
+    { ARBOR2_LEXEMA_SIGNED,         ARBOR2_ACTIO_REDUCE, 387, FALSUM },
+    { ARBOR2_LEXEMA_CONST,          ARBOR2_ACTIO_REDUCE, 387, FALSUM },
+    { ARBOR2_LEXEMA_VOLATILE,       ARBOR2_ACTIO_REDUCE, 387, FALSUM },
+    { ARBOR2_LEXEMA_STRUCT,         ARBOR2_ACTIO_REDUCE, 387, FALSUM },
+    { ARBOR2_LEXEMA_UNION,          ARBOR2_ACTIO_REDUCE, 387, FALSUM },
+    { ARBOR2_LEXEMA_ENUM,           ARBOR2_ACTIO_REDUCE, 387, FALSUM },
+    { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 387, FALSUM }
+};
+
+/* State 1120: reduce P388 (const unsigned long - implicit int) */
+hic_manens constans Arbor2TabulaActio STATUS_1120_ACTIONES[] = {
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_REDUCE, 388, FALSUM },
+    { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_REDUCE, 388, FALSUM },
+    { ARBOR2_LEXEMA_CHAR,           ARBOR2_ACTIO_REDUCE, 388, FALSUM },
+    { ARBOR2_LEXEMA_LONG,           ARBOR2_ACTIO_REDUCE, 388, FALSUM },
+    { ARBOR2_LEXEMA_SHORT,          ARBOR2_ACTIO_REDUCE, 388, FALSUM },
+    { ARBOR2_LEXEMA_UNSIGNED,       ARBOR2_ACTIO_REDUCE, 388, FALSUM },
+    { ARBOR2_LEXEMA_SIGNED,         ARBOR2_ACTIO_REDUCE, 388, FALSUM },
+    { ARBOR2_LEXEMA_CONST,          ARBOR2_ACTIO_REDUCE, 388, FALSUM },
+    { ARBOR2_LEXEMA_VOLATILE,       ARBOR2_ACTIO_REDUCE, 388, FALSUM },
+    { ARBOR2_LEXEMA_STRUCT,         ARBOR2_ACTIO_REDUCE, 388, FALSUM },
+    { ARBOR2_LEXEMA_UNION,          ARBOR2_ACTIO_REDUCE, 388, FALSUM },
+    { ARBOR2_LEXEMA_ENUM,           ARBOR2_ACTIO_REDUCE, 388, FALSUM },
+    { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 388, FALSUM }
+};
+
+/* State 1121: reduce P389 (const unsigned short - implicit int) */
+hic_manens constans Arbor2TabulaActio STATUS_1121_ACTIONES[] = {
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_REDUCE, 389, FALSUM },
+    { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_REDUCE, 389, FALSUM },
+    { ARBOR2_LEXEMA_CHAR,           ARBOR2_ACTIO_REDUCE, 389, FALSUM },
+    { ARBOR2_LEXEMA_LONG,           ARBOR2_ACTIO_REDUCE, 389, FALSUM },
+    { ARBOR2_LEXEMA_SHORT,          ARBOR2_ACTIO_REDUCE, 389, FALSUM },
+    { ARBOR2_LEXEMA_UNSIGNED,       ARBOR2_ACTIO_REDUCE, 389, FALSUM },
+    { ARBOR2_LEXEMA_SIGNED,         ARBOR2_ACTIO_REDUCE, 389, FALSUM },
+    { ARBOR2_LEXEMA_CONST,          ARBOR2_ACTIO_REDUCE, 389, FALSUM },
+    { ARBOR2_LEXEMA_VOLATILE,       ARBOR2_ACTIO_REDUCE, 389, FALSUM },
+    { ARBOR2_LEXEMA_STRUCT,         ARBOR2_ACTIO_REDUCE, 389, FALSUM },
+    { ARBOR2_LEXEMA_UNION,          ARBOR2_ACTIO_REDUCE, 389, FALSUM },
+    { ARBOR2_LEXEMA_ENUM,           ARBOR2_ACTIO_REDUCE, 389, FALSUM },
+    { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 389, FALSUM }
+};
+
+/* State 1122: reduce P390 (const unsigned long int) */
+hic_manens constans Arbor2TabulaActio STATUS_1122_ACTIONES[] = {
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_REDUCE, 390, FALSUM },
+    { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_REDUCE, 390, FALSUM },
+    { ARBOR2_LEXEMA_CHAR,           ARBOR2_ACTIO_REDUCE, 390, FALSUM },
+    { ARBOR2_LEXEMA_LONG,           ARBOR2_ACTIO_REDUCE, 390, FALSUM },
+    { ARBOR2_LEXEMA_SHORT,          ARBOR2_ACTIO_REDUCE, 390, FALSUM },
+    { ARBOR2_LEXEMA_UNSIGNED,       ARBOR2_ACTIO_REDUCE, 390, FALSUM },
+    { ARBOR2_LEXEMA_SIGNED,         ARBOR2_ACTIO_REDUCE, 390, FALSUM },
+    { ARBOR2_LEXEMA_CONST,          ARBOR2_ACTIO_REDUCE, 390, FALSUM },
+    { ARBOR2_LEXEMA_VOLATILE,       ARBOR2_ACTIO_REDUCE, 390, FALSUM },
+    { ARBOR2_LEXEMA_STRUCT,         ARBOR2_ACTIO_REDUCE, 390, FALSUM },
+    { ARBOR2_LEXEMA_UNION,          ARBOR2_ACTIO_REDUCE, 390, FALSUM },
+    { ARBOR2_LEXEMA_ENUM,           ARBOR2_ACTIO_REDUCE, 390, FALSUM },
+    { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 390, FALSUM }
+};
+
+/* State 1123: reduce P391 (const unsigned short int) */
+hic_manens constans Arbor2TabulaActio STATUS_1123_ACTIONES[] = {
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_REDUCE, 391, FALSUM },
+    { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_REDUCE, 391, FALSUM },
+    { ARBOR2_LEXEMA_CHAR,           ARBOR2_ACTIO_REDUCE, 391, FALSUM },
+    { ARBOR2_LEXEMA_LONG,           ARBOR2_ACTIO_REDUCE, 391, FALSUM },
+    { ARBOR2_LEXEMA_SHORT,          ARBOR2_ACTIO_REDUCE, 391, FALSUM },
+    { ARBOR2_LEXEMA_UNSIGNED,       ARBOR2_ACTIO_REDUCE, 391, FALSUM },
+    { ARBOR2_LEXEMA_SIGNED,         ARBOR2_ACTIO_REDUCE, 391, FALSUM },
+    { ARBOR2_LEXEMA_CONST,          ARBOR2_ACTIO_REDUCE, 391, FALSUM },
+    { ARBOR2_LEXEMA_VOLATILE,       ARBOR2_ACTIO_REDUCE, 391, FALSUM },
+    { ARBOR2_LEXEMA_STRUCT,         ARBOR2_ACTIO_REDUCE, 391, FALSUM },
+    { ARBOR2_LEXEMA_UNION,          ARBOR2_ACTIO_REDUCE, 391, FALSUM },
+    { ARBOR2_LEXEMA_ENUM,           ARBOR2_ACTIO_REDUCE, 391, FALSUM },
+    { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 391, FALSUM }
+};
+
+/* State 1124: reduce P392 (const unsigned long long) */
+hic_manens constans Arbor2TabulaActio STATUS_1124_ACTIONES[] = {
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_REDUCE, 392, FALSUM },
+    { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_REDUCE, 392, FALSUM },
+    { ARBOR2_LEXEMA_CHAR,           ARBOR2_ACTIO_REDUCE, 392, FALSUM },
+    { ARBOR2_LEXEMA_LONG,           ARBOR2_ACTIO_REDUCE, 392, FALSUM },
+    { ARBOR2_LEXEMA_SHORT,          ARBOR2_ACTIO_REDUCE, 392, FALSUM },
+    { ARBOR2_LEXEMA_UNSIGNED,       ARBOR2_ACTIO_REDUCE, 392, FALSUM },
+    { ARBOR2_LEXEMA_SIGNED,         ARBOR2_ACTIO_REDUCE, 392, FALSUM },
+    { ARBOR2_LEXEMA_CONST,          ARBOR2_ACTIO_REDUCE, 392, FALSUM },
+    { ARBOR2_LEXEMA_VOLATILE,       ARBOR2_ACTIO_REDUCE, 392, FALSUM },
+    { ARBOR2_LEXEMA_STRUCT,         ARBOR2_ACTIO_REDUCE, 392, FALSUM },
+    { ARBOR2_LEXEMA_UNION,          ARBOR2_ACTIO_REDUCE, 392, FALSUM },
+    { ARBOR2_LEXEMA_ENUM,           ARBOR2_ACTIO_REDUCE, 392, FALSUM },
+    { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 392, FALSUM }
+};
+
+/* State 1125: reduce P393 (const signed int) */
+hic_manens constans Arbor2TabulaActio STATUS_1125_ACTIONES[] = {
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_REDUCE, 393, FALSUM },
+    { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_REDUCE, 393, FALSUM },
+    { ARBOR2_LEXEMA_CHAR,           ARBOR2_ACTIO_REDUCE, 393, FALSUM },
+    { ARBOR2_LEXEMA_LONG,           ARBOR2_ACTIO_REDUCE, 393, FALSUM },
+    { ARBOR2_LEXEMA_SHORT,          ARBOR2_ACTIO_REDUCE, 393, FALSUM },
+    { ARBOR2_LEXEMA_UNSIGNED,       ARBOR2_ACTIO_REDUCE, 393, FALSUM },
+    { ARBOR2_LEXEMA_SIGNED,         ARBOR2_ACTIO_REDUCE, 393, FALSUM },
+    { ARBOR2_LEXEMA_CONST,          ARBOR2_ACTIO_REDUCE, 393, FALSUM },
+    { ARBOR2_LEXEMA_VOLATILE,       ARBOR2_ACTIO_REDUCE, 393, FALSUM },
+    { ARBOR2_LEXEMA_STRUCT,         ARBOR2_ACTIO_REDUCE, 393, FALSUM },
+    { ARBOR2_LEXEMA_UNION,          ARBOR2_ACTIO_REDUCE, 393, FALSUM },
+    { ARBOR2_LEXEMA_ENUM,           ARBOR2_ACTIO_REDUCE, 393, FALSUM },
+    { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 393, FALSUM }
+};
+
+/* State 1126: reduce P394 (const signed char) */
+hic_manens constans Arbor2TabulaActio STATUS_1126_ACTIONES[] = {
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_REDUCE, 394, FALSUM },
+    { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_REDUCE, 394, FALSUM },
+    { ARBOR2_LEXEMA_CHAR,           ARBOR2_ACTIO_REDUCE, 394, FALSUM },
+    { ARBOR2_LEXEMA_LONG,           ARBOR2_ACTIO_REDUCE, 394, FALSUM },
+    { ARBOR2_LEXEMA_SHORT,          ARBOR2_ACTIO_REDUCE, 394, FALSUM },
+    { ARBOR2_LEXEMA_UNSIGNED,       ARBOR2_ACTIO_REDUCE, 394, FALSUM },
+    { ARBOR2_LEXEMA_SIGNED,         ARBOR2_ACTIO_REDUCE, 394, FALSUM },
+    { ARBOR2_LEXEMA_CONST,          ARBOR2_ACTIO_REDUCE, 394, FALSUM },
+    { ARBOR2_LEXEMA_VOLATILE,       ARBOR2_ACTIO_REDUCE, 394, FALSUM },
+    { ARBOR2_LEXEMA_STRUCT,         ARBOR2_ACTIO_REDUCE, 394, FALSUM },
+    { ARBOR2_LEXEMA_UNION,          ARBOR2_ACTIO_REDUCE, 394, FALSUM },
+    { ARBOR2_LEXEMA_ENUM,           ARBOR2_ACTIO_REDUCE, 394, FALSUM },
+    { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 394, FALSUM }
+};
+
+/* State 1127: reduce P395 (const signed long - implicit int) */
+hic_manens constans Arbor2TabulaActio STATUS_1127_ACTIONES[] = {
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_REDUCE, 395, FALSUM },
+    { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_REDUCE, 395, FALSUM },
+    { ARBOR2_LEXEMA_CHAR,           ARBOR2_ACTIO_REDUCE, 395, FALSUM },
+    { ARBOR2_LEXEMA_LONG,           ARBOR2_ACTIO_REDUCE, 395, FALSUM },
+    { ARBOR2_LEXEMA_SHORT,          ARBOR2_ACTIO_REDUCE, 395, FALSUM },
+    { ARBOR2_LEXEMA_UNSIGNED,       ARBOR2_ACTIO_REDUCE, 395, FALSUM },
+    { ARBOR2_LEXEMA_SIGNED,         ARBOR2_ACTIO_REDUCE, 395, FALSUM },
+    { ARBOR2_LEXEMA_CONST,          ARBOR2_ACTIO_REDUCE, 395, FALSUM },
+    { ARBOR2_LEXEMA_VOLATILE,       ARBOR2_ACTIO_REDUCE, 395, FALSUM },
+    { ARBOR2_LEXEMA_STRUCT,         ARBOR2_ACTIO_REDUCE, 395, FALSUM },
+    { ARBOR2_LEXEMA_UNION,          ARBOR2_ACTIO_REDUCE, 395, FALSUM },
+    { ARBOR2_LEXEMA_ENUM,           ARBOR2_ACTIO_REDUCE, 395, FALSUM },
+    { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 395, FALSUM }
+};
+
+/* State 1128: reduce P396 (const signed short - implicit int) */
+hic_manens constans Arbor2TabulaActio STATUS_1128_ACTIONES[] = {
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_REDUCE, 396, FALSUM },
+    { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_REDUCE, 396, FALSUM },
+    { ARBOR2_LEXEMA_CHAR,           ARBOR2_ACTIO_REDUCE, 396, FALSUM },
+    { ARBOR2_LEXEMA_LONG,           ARBOR2_ACTIO_REDUCE, 396, FALSUM },
+    { ARBOR2_LEXEMA_SHORT,          ARBOR2_ACTIO_REDUCE, 396, FALSUM },
+    { ARBOR2_LEXEMA_UNSIGNED,       ARBOR2_ACTIO_REDUCE, 396, FALSUM },
+    { ARBOR2_LEXEMA_SIGNED,         ARBOR2_ACTIO_REDUCE, 396, FALSUM },
+    { ARBOR2_LEXEMA_CONST,          ARBOR2_ACTIO_REDUCE, 396, FALSUM },
+    { ARBOR2_LEXEMA_VOLATILE,       ARBOR2_ACTIO_REDUCE, 396, FALSUM },
+    { ARBOR2_LEXEMA_STRUCT,         ARBOR2_ACTIO_REDUCE, 396, FALSUM },
+    { ARBOR2_LEXEMA_UNION,          ARBOR2_ACTIO_REDUCE, 396, FALSUM },
+    { ARBOR2_LEXEMA_ENUM,           ARBOR2_ACTIO_REDUCE, 396, FALSUM },
+    { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 396, FALSUM }
+};
+
+/* State 1129: reduce P397 (const signed long int) */
+hic_manens constans Arbor2TabulaActio STATUS_1129_ACTIONES[] = {
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_REDUCE, 397, FALSUM },
+    { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_REDUCE, 397, FALSUM },
+    { ARBOR2_LEXEMA_CHAR,           ARBOR2_ACTIO_REDUCE, 397, FALSUM },
+    { ARBOR2_LEXEMA_LONG,           ARBOR2_ACTIO_REDUCE, 397, FALSUM },
+    { ARBOR2_LEXEMA_SHORT,          ARBOR2_ACTIO_REDUCE, 397, FALSUM },
+    { ARBOR2_LEXEMA_UNSIGNED,       ARBOR2_ACTIO_REDUCE, 397, FALSUM },
+    { ARBOR2_LEXEMA_SIGNED,         ARBOR2_ACTIO_REDUCE, 397, FALSUM },
+    { ARBOR2_LEXEMA_CONST,          ARBOR2_ACTIO_REDUCE, 397, FALSUM },
+    { ARBOR2_LEXEMA_VOLATILE,       ARBOR2_ACTIO_REDUCE, 397, FALSUM },
+    { ARBOR2_LEXEMA_STRUCT,         ARBOR2_ACTIO_REDUCE, 397, FALSUM },
+    { ARBOR2_LEXEMA_UNION,          ARBOR2_ACTIO_REDUCE, 397, FALSUM },
+    { ARBOR2_LEXEMA_ENUM,           ARBOR2_ACTIO_REDUCE, 397, FALSUM },
+    { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 397, FALSUM }
+};
+
+/* State 1130: reduce P398 (const signed short int) */
+hic_manens constans Arbor2TabulaActio STATUS_1130_ACTIONES[] = {
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_REDUCE, 398, FALSUM },
+    { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_REDUCE, 398, FALSUM },
+    { ARBOR2_LEXEMA_CHAR,           ARBOR2_ACTIO_REDUCE, 398, FALSUM },
+    { ARBOR2_LEXEMA_LONG,           ARBOR2_ACTIO_REDUCE, 398, FALSUM },
+    { ARBOR2_LEXEMA_SHORT,          ARBOR2_ACTIO_REDUCE, 398, FALSUM },
+    { ARBOR2_LEXEMA_UNSIGNED,       ARBOR2_ACTIO_REDUCE, 398, FALSUM },
+    { ARBOR2_LEXEMA_SIGNED,         ARBOR2_ACTIO_REDUCE, 398, FALSUM },
+    { ARBOR2_LEXEMA_CONST,          ARBOR2_ACTIO_REDUCE, 398, FALSUM },
+    { ARBOR2_LEXEMA_VOLATILE,       ARBOR2_ACTIO_REDUCE, 398, FALSUM },
+    { ARBOR2_LEXEMA_STRUCT,         ARBOR2_ACTIO_REDUCE, 398, FALSUM },
+    { ARBOR2_LEXEMA_UNION,          ARBOR2_ACTIO_REDUCE, 398, FALSUM },
+    { ARBOR2_LEXEMA_ENUM,           ARBOR2_ACTIO_REDUCE, 398, FALSUM },
+    { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 398, FALSUM }
+};
+
+/* State 1131: reduce P399 (const signed long long) */
+hic_manens constans Arbor2TabulaActio STATUS_1131_ACTIONES[] = {
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_REDUCE, 399, FALSUM },
+    { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_REDUCE, 399, FALSUM },
+    { ARBOR2_LEXEMA_CHAR,           ARBOR2_ACTIO_REDUCE, 399, FALSUM },
+    { ARBOR2_LEXEMA_LONG,           ARBOR2_ACTIO_REDUCE, 399, FALSUM },
+    { ARBOR2_LEXEMA_SHORT,          ARBOR2_ACTIO_REDUCE, 399, FALSUM },
+    { ARBOR2_LEXEMA_UNSIGNED,       ARBOR2_ACTIO_REDUCE, 399, FALSUM },
+    { ARBOR2_LEXEMA_SIGNED,         ARBOR2_ACTIO_REDUCE, 399, FALSUM },
+    { ARBOR2_LEXEMA_CONST,          ARBOR2_ACTIO_REDUCE, 399, FALSUM },
+    { ARBOR2_LEXEMA_VOLATILE,       ARBOR2_ACTIO_REDUCE, 399, FALSUM },
+    { ARBOR2_LEXEMA_STRUCT,         ARBOR2_ACTIO_REDUCE, 399, FALSUM },
+    { ARBOR2_LEXEMA_UNION,          ARBOR2_ACTIO_REDUCE, 399, FALSUM },
+    { ARBOR2_LEXEMA_ENUM,           ARBOR2_ACTIO_REDUCE, 399, FALSUM },
+    { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 399, FALSUM }
+};
+
+/* State 1132: reduce P400 (const long int) */
+hic_manens constans Arbor2TabulaActio STATUS_1132_ACTIONES[] = {
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_REDUCE, 400, FALSUM },
+    { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_REDUCE, 400, FALSUM },
+    { ARBOR2_LEXEMA_CHAR,           ARBOR2_ACTIO_REDUCE, 400, FALSUM },
+    { ARBOR2_LEXEMA_LONG,           ARBOR2_ACTIO_REDUCE, 400, FALSUM },
+    { ARBOR2_LEXEMA_SHORT,          ARBOR2_ACTIO_REDUCE, 400, FALSUM },
+    { ARBOR2_LEXEMA_UNSIGNED,       ARBOR2_ACTIO_REDUCE, 400, FALSUM },
+    { ARBOR2_LEXEMA_SIGNED,         ARBOR2_ACTIO_REDUCE, 400, FALSUM },
+    { ARBOR2_LEXEMA_CONST,          ARBOR2_ACTIO_REDUCE, 400, FALSUM },
+    { ARBOR2_LEXEMA_VOLATILE,       ARBOR2_ACTIO_REDUCE, 400, FALSUM },
+    { ARBOR2_LEXEMA_STRUCT,         ARBOR2_ACTIO_REDUCE, 400, FALSUM },
+    { ARBOR2_LEXEMA_UNION,          ARBOR2_ACTIO_REDUCE, 400, FALSUM },
+    { ARBOR2_LEXEMA_ENUM,           ARBOR2_ACTIO_REDUCE, 400, FALSUM },
+    { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 400, FALSUM }
+};
+
+/* State 1133: reduce P401 (const long long) */
+hic_manens constans Arbor2TabulaActio STATUS_1133_ACTIONES[] = {
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_REDUCE, 401, FALSUM },
+    { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_REDUCE, 401, FALSUM },
+    { ARBOR2_LEXEMA_CHAR,           ARBOR2_ACTIO_REDUCE, 401, FALSUM },
+    { ARBOR2_LEXEMA_LONG,           ARBOR2_ACTIO_REDUCE, 401, FALSUM },
+    { ARBOR2_LEXEMA_SHORT,          ARBOR2_ACTIO_REDUCE, 401, FALSUM },
+    { ARBOR2_LEXEMA_UNSIGNED,       ARBOR2_ACTIO_REDUCE, 401, FALSUM },
+    { ARBOR2_LEXEMA_SIGNED,         ARBOR2_ACTIO_REDUCE, 401, FALSUM },
+    { ARBOR2_LEXEMA_CONST,          ARBOR2_ACTIO_REDUCE, 401, FALSUM },
+    { ARBOR2_LEXEMA_VOLATILE,       ARBOR2_ACTIO_REDUCE, 401, FALSUM },
+    { ARBOR2_LEXEMA_STRUCT,         ARBOR2_ACTIO_REDUCE, 401, FALSUM },
+    { ARBOR2_LEXEMA_UNION,          ARBOR2_ACTIO_REDUCE, 401, FALSUM },
+    { ARBOR2_LEXEMA_ENUM,           ARBOR2_ACTIO_REDUCE, 401, FALSUM },
+    { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 401, FALSUM }
+};
+
+/* State 1134: reduce P402 (const short int) */
+hic_manens constans Arbor2TabulaActio STATUS_1134_ACTIONES[] = {
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_REDUCE, 402, FALSUM },
+    { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_REDUCE, 402, FALSUM },
+    { ARBOR2_LEXEMA_CHAR,           ARBOR2_ACTIO_REDUCE, 402, FALSUM },
+    { ARBOR2_LEXEMA_LONG,           ARBOR2_ACTIO_REDUCE, 402, FALSUM },
+    { ARBOR2_LEXEMA_SHORT,          ARBOR2_ACTIO_REDUCE, 402, FALSUM },
+    { ARBOR2_LEXEMA_UNSIGNED,       ARBOR2_ACTIO_REDUCE, 402, FALSUM },
+    { ARBOR2_LEXEMA_SIGNED,         ARBOR2_ACTIO_REDUCE, 402, FALSUM },
+    { ARBOR2_LEXEMA_CONST,          ARBOR2_ACTIO_REDUCE, 402, FALSUM },
+    { ARBOR2_LEXEMA_VOLATILE,       ARBOR2_ACTIO_REDUCE, 402, FALSUM },
+    { ARBOR2_LEXEMA_STRUCT,         ARBOR2_ACTIO_REDUCE, 402, FALSUM },
+    { ARBOR2_LEXEMA_UNION,          ARBOR2_ACTIO_REDUCE, 402, FALSUM },
+    { ARBOR2_LEXEMA_ENUM,           ARBOR2_ACTIO_REDUCE, 402, FALSUM },
+    { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 402, FALSUM }
+};
+
+/* ========== Reduction States for volatile + type modifier first member ========== */
+
+/* State 1135: reduce P403 (volatile unsigned int) */
+hic_manens constans Arbor2TabulaActio STATUS_1135_ACTIONES[] = {
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_REDUCE, 403, FALSUM },
+    { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_REDUCE, 403, FALSUM },
+    { ARBOR2_LEXEMA_CHAR,           ARBOR2_ACTIO_REDUCE, 403, FALSUM },
+    { ARBOR2_LEXEMA_LONG,           ARBOR2_ACTIO_REDUCE, 403, FALSUM },
+    { ARBOR2_LEXEMA_SHORT,          ARBOR2_ACTIO_REDUCE, 403, FALSUM },
+    { ARBOR2_LEXEMA_UNSIGNED,       ARBOR2_ACTIO_REDUCE, 403, FALSUM },
+    { ARBOR2_LEXEMA_SIGNED,         ARBOR2_ACTIO_REDUCE, 403, FALSUM },
+    { ARBOR2_LEXEMA_CONST,          ARBOR2_ACTIO_REDUCE, 403, FALSUM },
+    { ARBOR2_LEXEMA_VOLATILE,       ARBOR2_ACTIO_REDUCE, 403, FALSUM },
+    { ARBOR2_LEXEMA_STRUCT,         ARBOR2_ACTIO_REDUCE, 403, FALSUM },
+    { ARBOR2_LEXEMA_UNION,          ARBOR2_ACTIO_REDUCE, 403, FALSUM },
+    { ARBOR2_LEXEMA_ENUM,           ARBOR2_ACTIO_REDUCE, 403, FALSUM },
+    { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 403, FALSUM }
+};
+
+/* State 1136: reduce P404 (volatile unsigned char) */
+hic_manens constans Arbor2TabulaActio STATUS_1136_ACTIONES[] = {
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_REDUCE, 404, FALSUM },
+    { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_REDUCE, 404, FALSUM },
+    { ARBOR2_LEXEMA_CHAR,           ARBOR2_ACTIO_REDUCE, 404, FALSUM },
+    { ARBOR2_LEXEMA_LONG,           ARBOR2_ACTIO_REDUCE, 404, FALSUM },
+    { ARBOR2_LEXEMA_SHORT,          ARBOR2_ACTIO_REDUCE, 404, FALSUM },
+    { ARBOR2_LEXEMA_UNSIGNED,       ARBOR2_ACTIO_REDUCE, 404, FALSUM },
+    { ARBOR2_LEXEMA_SIGNED,         ARBOR2_ACTIO_REDUCE, 404, FALSUM },
+    { ARBOR2_LEXEMA_CONST,          ARBOR2_ACTIO_REDUCE, 404, FALSUM },
+    { ARBOR2_LEXEMA_VOLATILE,       ARBOR2_ACTIO_REDUCE, 404, FALSUM },
+    { ARBOR2_LEXEMA_STRUCT,         ARBOR2_ACTIO_REDUCE, 404, FALSUM },
+    { ARBOR2_LEXEMA_UNION,          ARBOR2_ACTIO_REDUCE, 404, FALSUM },
+    { ARBOR2_LEXEMA_ENUM,           ARBOR2_ACTIO_REDUCE, 404, FALSUM },
+    { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 404, FALSUM }
+};
+
+/* State 1137: reduce P405 (volatile unsigned long - implicit int) */
+hic_manens constans Arbor2TabulaActio STATUS_1137_ACTIONES[] = {
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_REDUCE, 405, FALSUM },
+    { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_REDUCE, 405, FALSUM },
+    { ARBOR2_LEXEMA_CHAR,           ARBOR2_ACTIO_REDUCE, 405, FALSUM },
+    { ARBOR2_LEXEMA_LONG,           ARBOR2_ACTIO_REDUCE, 405, FALSUM },
+    { ARBOR2_LEXEMA_SHORT,          ARBOR2_ACTIO_REDUCE, 405, FALSUM },
+    { ARBOR2_LEXEMA_UNSIGNED,       ARBOR2_ACTIO_REDUCE, 405, FALSUM },
+    { ARBOR2_LEXEMA_SIGNED,         ARBOR2_ACTIO_REDUCE, 405, FALSUM },
+    { ARBOR2_LEXEMA_CONST,          ARBOR2_ACTIO_REDUCE, 405, FALSUM },
+    { ARBOR2_LEXEMA_VOLATILE,       ARBOR2_ACTIO_REDUCE, 405, FALSUM },
+    { ARBOR2_LEXEMA_STRUCT,         ARBOR2_ACTIO_REDUCE, 405, FALSUM },
+    { ARBOR2_LEXEMA_UNION,          ARBOR2_ACTIO_REDUCE, 405, FALSUM },
+    { ARBOR2_LEXEMA_ENUM,           ARBOR2_ACTIO_REDUCE, 405, FALSUM },
+    { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 405, FALSUM }
+};
+
+/* State 1138: reduce P406 (volatile unsigned short - implicit int) */
+hic_manens constans Arbor2TabulaActio STATUS_1138_ACTIONES[] = {
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_REDUCE, 406, FALSUM },
+    { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_REDUCE, 406, FALSUM },
+    { ARBOR2_LEXEMA_CHAR,           ARBOR2_ACTIO_REDUCE, 406, FALSUM },
+    { ARBOR2_LEXEMA_LONG,           ARBOR2_ACTIO_REDUCE, 406, FALSUM },
+    { ARBOR2_LEXEMA_SHORT,          ARBOR2_ACTIO_REDUCE, 406, FALSUM },
+    { ARBOR2_LEXEMA_UNSIGNED,       ARBOR2_ACTIO_REDUCE, 406, FALSUM },
+    { ARBOR2_LEXEMA_SIGNED,         ARBOR2_ACTIO_REDUCE, 406, FALSUM },
+    { ARBOR2_LEXEMA_CONST,          ARBOR2_ACTIO_REDUCE, 406, FALSUM },
+    { ARBOR2_LEXEMA_VOLATILE,       ARBOR2_ACTIO_REDUCE, 406, FALSUM },
+    { ARBOR2_LEXEMA_STRUCT,         ARBOR2_ACTIO_REDUCE, 406, FALSUM },
+    { ARBOR2_LEXEMA_UNION,          ARBOR2_ACTIO_REDUCE, 406, FALSUM },
+    { ARBOR2_LEXEMA_ENUM,           ARBOR2_ACTIO_REDUCE, 406, FALSUM },
+    { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 406, FALSUM }
+};
+
+/* State 1139: reduce P407 (volatile unsigned long int) */
+hic_manens constans Arbor2TabulaActio STATUS_1139_ACTIONES[] = {
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_REDUCE, 407, FALSUM },
+    { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_REDUCE, 407, FALSUM },
+    { ARBOR2_LEXEMA_CHAR,           ARBOR2_ACTIO_REDUCE, 407, FALSUM },
+    { ARBOR2_LEXEMA_LONG,           ARBOR2_ACTIO_REDUCE, 407, FALSUM },
+    { ARBOR2_LEXEMA_SHORT,          ARBOR2_ACTIO_REDUCE, 407, FALSUM },
+    { ARBOR2_LEXEMA_UNSIGNED,       ARBOR2_ACTIO_REDUCE, 407, FALSUM },
+    { ARBOR2_LEXEMA_SIGNED,         ARBOR2_ACTIO_REDUCE, 407, FALSUM },
+    { ARBOR2_LEXEMA_CONST,          ARBOR2_ACTIO_REDUCE, 407, FALSUM },
+    { ARBOR2_LEXEMA_VOLATILE,       ARBOR2_ACTIO_REDUCE, 407, FALSUM },
+    { ARBOR2_LEXEMA_STRUCT,         ARBOR2_ACTIO_REDUCE, 407, FALSUM },
+    { ARBOR2_LEXEMA_UNION,          ARBOR2_ACTIO_REDUCE, 407, FALSUM },
+    { ARBOR2_LEXEMA_ENUM,           ARBOR2_ACTIO_REDUCE, 407, FALSUM },
+    { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 407, FALSUM }
+};
+
+/* State 1140: reduce P408 (volatile unsigned short int) */
+hic_manens constans Arbor2TabulaActio STATUS_1140_ACTIONES[] = {
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_REDUCE, 408, FALSUM },
+    { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_REDUCE, 408, FALSUM },
+    { ARBOR2_LEXEMA_CHAR,           ARBOR2_ACTIO_REDUCE, 408, FALSUM },
+    { ARBOR2_LEXEMA_LONG,           ARBOR2_ACTIO_REDUCE, 408, FALSUM },
+    { ARBOR2_LEXEMA_SHORT,          ARBOR2_ACTIO_REDUCE, 408, FALSUM },
+    { ARBOR2_LEXEMA_UNSIGNED,       ARBOR2_ACTIO_REDUCE, 408, FALSUM },
+    { ARBOR2_LEXEMA_SIGNED,         ARBOR2_ACTIO_REDUCE, 408, FALSUM },
+    { ARBOR2_LEXEMA_CONST,          ARBOR2_ACTIO_REDUCE, 408, FALSUM },
+    { ARBOR2_LEXEMA_VOLATILE,       ARBOR2_ACTIO_REDUCE, 408, FALSUM },
+    { ARBOR2_LEXEMA_STRUCT,         ARBOR2_ACTIO_REDUCE, 408, FALSUM },
+    { ARBOR2_LEXEMA_UNION,          ARBOR2_ACTIO_REDUCE, 408, FALSUM },
+    { ARBOR2_LEXEMA_ENUM,           ARBOR2_ACTIO_REDUCE, 408, FALSUM },
+    { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 408, FALSUM }
+};
+
+/* State 1141: reduce P409 (volatile unsigned long long) */
+hic_manens constans Arbor2TabulaActio STATUS_1141_ACTIONES[] = {
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_REDUCE, 409, FALSUM },
+    { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_REDUCE, 409, FALSUM },
+    { ARBOR2_LEXEMA_CHAR,           ARBOR2_ACTIO_REDUCE, 409, FALSUM },
+    { ARBOR2_LEXEMA_LONG,           ARBOR2_ACTIO_REDUCE, 409, FALSUM },
+    { ARBOR2_LEXEMA_SHORT,          ARBOR2_ACTIO_REDUCE, 409, FALSUM },
+    { ARBOR2_LEXEMA_UNSIGNED,       ARBOR2_ACTIO_REDUCE, 409, FALSUM },
+    { ARBOR2_LEXEMA_SIGNED,         ARBOR2_ACTIO_REDUCE, 409, FALSUM },
+    { ARBOR2_LEXEMA_CONST,          ARBOR2_ACTIO_REDUCE, 409, FALSUM },
+    { ARBOR2_LEXEMA_VOLATILE,       ARBOR2_ACTIO_REDUCE, 409, FALSUM },
+    { ARBOR2_LEXEMA_STRUCT,         ARBOR2_ACTIO_REDUCE, 409, FALSUM },
+    { ARBOR2_LEXEMA_UNION,          ARBOR2_ACTIO_REDUCE, 409, FALSUM },
+    { ARBOR2_LEXEMA_ENUM,           ARBOR2_ACTIO_REDUCE, 409, FALSUM },
+    { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 409, FALSUM }
+};
+
+/* State 1142: reduce P410 (volatile signed int) */
+hic_manens constans Arbor2TabulaActio STATUS_1142_ACTIONES[] = {
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_REDUCE, 410, FALSUM },
+    { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_REDUCE, 410, FALSUM },
+    { ARBOR2_LEXEMA_CHAR,           ARBOR2_ACTIO_REDUCE, 410, FALSUM },
+    { ARBOR2_LEXEMA_LONG,           ARBOR2_ACTIO_REDUCE, 410, FALSUM },
+    { ARBOR2_LEXEMA_SHORT,          ARBOR2_ACTIO_REDUCE, 410, FALSUM },
+    { ARBOR2_LEXEMA_UNSIGNED,       ARBOR2_ACTIO_REDUCE, 410, FALSUM },
+    { ARBOR2_LEXEMA_SIGNED,         ARBOR2_ACTIO_REDUCE, 410, FALSUM },
+    { ARBOR2_LEXEMA_CONST,          ARBOR2_ACTIO_REDUCE, 410, FALSUM },
+    { ARBOR2_LEXEMA_VOLATILE,       ARBOR2_ACTIO_REDUCE, 410, FALSUM },
+    { ARBOR2_LEXEMA_STRUCT,         ARBOR2_ACTIO_REDUCE, 410, FALSUM },
+    { ARBOR2_LEXEMA_UNION,          ARBOR2_ACTIO_REDUCE, 410, FALSUM },
+    { ARBOR2_LEXEMA_ENUM,           ARBOR2_ACTIO_REDUCE, 410, FALSUM },
+    { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 410, FALSUM }
+};
+
+/* State 1143: reduce P411 (volatile signed char) */
+hic_manens constans Arbor2TabulaActio STATUS_1143_ACTIONES[] = {
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_REDUCE, 411, FALSUM },
+    { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_REDUCE, 411, FALSUM },
+    { ARBOR2_LEXEMA_CHAR,           ARBOR2_ACTIO_REDUCE, 411, FALSUM },
+    { ARBOR2_LEXEMA_LONG,           ARBOR2_ACTIO_REDUCE, 411, FALSUM },
+    { ARBOR2_LEXEMA_SHORT,          ARBOR2_ACTIO_REDUCE, 411, FALSUM },
+    { ARBOR2_LEXEMA_UNSIGNED,       ARBOR2_ACTIO_REDUCE, 411, FALSUM },
+    { ARBOR2_LEXEMA_SIGNED,         ARBOR2_ACTIO_REDUCE, 411, FALSUM },
+    { ARBOR2_LEXEMA_CONST,          ARBOR2_ACTIO_REDUCE, 411, FALSUM },
+    { ARBOR2_LEXEMA_VOLATILE,       ARBOR2_ACTIO_REDUCE, 411, FALSUM },
+    { ARBOR2_LEXEMA_STRUCT,         ARBOR2_ACTIO_REDUCE, 411, FALSUM },
+    { ARBOR2_LEXEMA_UNION,          ARBOR2_ACTIO_REDUCE, 411, FALSUM },
+    { ARBOR2_LEXEMA_ENUM,           ARBOR2_ACTIO_REDUCE, 411, FALSUM },
+    { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 411, FALSUM }
+};
+
+/* State 1144: reduce P412 (volatile signed long - implicit int) */
+hic_manens constans Arbor2TabulaActio STATUS_1144_ACTIONES[] = {
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_REDUCE, 412, FALSUM },
+    { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_REDUCE, 412, FALSUM },
+    { ARBOR2_LEXEMA_CHAR,           ARBOR2_ACTIO_REDUCE, 412, FALSUM },
+    { ARBOR2_LEXEMA_LONG,           ARBOR2_ACTIO_REDUCE, 412, FALSUM },
+    { ARBOR2_LEXEMA_SHORT,          ARBOR2_ACTIO_REDUCE, 412, FALSUM },
+    { ARBOR2_LEXEMA_UNSIGNED,       ARBOR2_ACTIO_REDUCE, 412, FALSUM },
+    { ARBOR2_LEXEMA_SIGNED,         ARBOR2_ACTIO_REDUCE, 412, FALSUM },
+    { ARBOR2_LEXEMA_CONST,          ARBOR2_ACTIO_REDUCE, 412, FALSUM },
+    { ARBOR2_LEXEMA_VOLATILE,       ARBOR2_ACTIO_REDUCE, 412, FALSUM },
+    { ARBOR2_LEXEMA_STRUCT,         ARBOR2_ACTIO_REDUCE, 412, FALSUM },
+    { ARBOR2_LEXEMA_UNION,          ARBOR2_ACTIO_REDUCE, 412, FALSUM },
+    { ARBOR2_LEXEMA_ENUM,           ARBOR2_ACTIO_REDUCE, 412, FALSUM },
+    { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 412, FALSUM }
+};
+
+/* State 1145: reduce P413 (volatile signed short - implicit int) */
+hic_manens constans Arbor2TabulaActio STATUS_1145_ACTIONES[] = {
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_REDUCE, 413, FALSUM },
+    { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_REDUCE, 413, FALSUM },
+    { ARBOR2_LEXEMA_CHAR,           ARBOR2_ACTIO_REDUCE, 413, FALSUM },
+    { ARBOR2_LEXEMA_LONG,           ARBOR2_ACTIO_REDUCE, 413, FALSUM },
+    { ARBOR2_LEXEMA_SHORT,          ARBOR2_ACTIO_REDUCE, 413, FALSUM },
+    { ARBOR2_LEXEMA_UNSIGNED,       ARBOR2_ACTIO_REDUCE, 413, FALSUM },
+    { ARBOR2_LEXEMA_SIGNED,         ARBOR2_ACTIO_REDUCE, 413, FALSUM },
+    { ARBOR2_LEXEMA_CONST,          ARBOR2_ACTIO_REDUCE, 413, FALSUM },
+    { ARBOR2_LEXEMA_VOLATILE,       ARBOR2_ACTIO_REDUCE, 413, FALSUM },
+    { ARBOR2_LEXEMA_STRUCT,         ARBOR2_ACTIO_REDUCE, 413, FALSUM },
+    { ARBOR2_LEXEMA_UNION,          ARBOR2_ACTIO_REDUCE, 413, FALSUM },
+    { ARBOR2_LEXEMA_ENUM,           ARBOR2_ACTIO_REDUCE, 413, FALSUM },
+    { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 413, FALSUM }
+};
+
+/* State 1146: reduce P414 (volatile signed long int) */
+hic_manens constans Arbor2TabulaActio STATUS_1146_ACTIONES[] = {
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_REDUCE, 414, FALSUM },
+    { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_REDUCE, 414, FALSUM },
+    { ARBOR2_LEXEMA_CHAR,           ARBOR2_ACTIO_REDUCE, 414, FALSUM },
+    { ARBOR2_LEXEMA_LONG,           ARBOR2_ACTIO_REDUCE, 414, FALSUM },
+    { ARBOR2_LEXEMA_SHORT,          ARBOR2_ACTIO_REDUCE, 414, FALSUM },
+    { ARBOR2_LEXEMA_UNSIGNED,       ARBOR2_ACTIO_REDUCE, 414, FALSUM },
+    { ARBOR2_LEXEMA_SIGNED,         ARBOR2_ACTIO_REDUCE, 414, FALSUM },
+    { ARBOR2_LEXEMA_CONST,          ARBOR2_ACTIO_REDUCE, 414, FALSUM },
+    { ARBOR2_LEXEMA_VOLATILE,       ARBOR2_ACTIO_REDUCE, 414, FALSUM },
+    { ARBOR2_LEXEMA_STRUCT,         ARBOR2_ACTIO_REDUCE, 414, FALSUM },
+    { ARBOR2_LEXEMA_UNION,          ARBOR2_ACTIO_REDUCE, 414, FALSUM },
+    { ARBOR2_LEXEMA_ENUM,           ARBOR2_ACTIO_REDUCE, 414, FALSUM },
+    { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 414, FALSUM }
+};
+
+/* State 1147: reduce P415 (volatile signed short int) */
+hic_manens constans Arbor2TabulaActio STATUS_1147_ACTIONES[] = {
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_REDUCE, 415, FALSUM },
+    { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_REDUCE, 415, FALSUM },
+    { ARBOR2_LEXEMA_CHAR,           ARBOR2_ACTIO_REDUCE, 415, FALSUM },
+    { ARBOR2_LEXEMA_LONG,           ARBOR2_ACTIO_REDUCE, 415, FALSUM },
+    { ARBOR2_LEXEMA_SHORT,          ARBOR2_ACTIO_REDUCE, 415, FALSUM },
+    { ARBOR2_LEXEMA_UNSIGNED,       ARBOR2_ACTIO_REDUCE, 415, FALSUM },
+    { ARBOR2_LEXEMA_SIGNED,         ARBOR2_ACTIO_REDUCE, 415, FALSUM },
+    { ARBOR2_LEXEMA_CONST,          ARBOR2_ACTIO_REDUCE, 415, FALSUM },
+    { ARBOR2_LEXEMA_VOLATILE,       ARBOR2_ACTIO_REDUCE, 415, FALSUM },
+    { ARBOR2_LEXEMA_STRUCT,         ARBOR2_ACTIO_REDUCE, 415, FALSUM },
+    { ARBOR2_LEXEMA_UNION,          ARBOR2_ACTIO_REDUCE, 415, FALSUM },
+    { ARBOR2_LEXEMA_ENUM,           ARBOR2_ACTIO_REDUCE, 415, FALSUM },
+    { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 415, FALSUM }
+};
+
+/* State 1148: reduce P416 (volatile signed long long) */
+hic_manens constans Arbor2TabulaActio STATUS_1148_ACTIONES[] = {
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_REDUCE, 416, FALSUM },
+    { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_REDUCE, 416, FALSUM },
+    { ARBOR2_LEXEMA_CHAR,           ARBOR2_ACTIO_REDUCE, 416, FALSUM },
+    { ARBOR2_LEXEMA_LONG,           ARBOR2_ACTIO_REDUCE, 416, FALSUM },
+    { ARBOR2_LEXEMA_SHORT,          ARBOR2_ACTIO_REDUCE, 416, FALSUM },
+    { ARBOR2_LEXEMA_UNSIGNED,       ARBOR2_ACTIO_REDUCE, 416, FALSUM },
+    { ARBOR2_LEXEMA_SIGNED,         ARBOR2_ACTIO_REDUCE, 416, FALSUM },
+    { ARBOR2_LEXEMA_CONST,          ARBOR2_ACTIO_REDUCE, 416, FALSUM },
+    { ARBOR2_LEXEMA_VOLATILE,       ARBOR2_ACTIO_REDUCE, 416, FALSUM },
+    { ARBOR2_LEXEMA_STRUCT,         ARBOR2_ACTIO_REDUCE, 416, FALSUM },
+    { ARBOR2_LEXEMA_UNION,          ARBOR2_ACTIO_REDUCE, 416, FALSUM },
+    { ARBOR2_LEXEMA_ENUM,           ARBOR2_ACTIO_REDUCE, 416, FALSUM },
+    { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 416, FALSUM }
+};
+
+/* State 1149: reduce P417 (volatile long int) */
+hic_manens constans Arbor2TabulaActio STATUS_1149_ACTIONES[] = {
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_REDUCE, 417, FALSUM },
+    { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_REDUCE, 417, FALSUM },
+    { ARBOR2_LEXEMA_CHAR,           ARBOR2_ACTIO_REDUCE, 417, FALSUM },
+    { ARBOR2_LEXEMA_LONG,           ARBOR2_ACTIO_REDUCE, 417, FALSUM },
+    { ARBOR2_LEXEMA_SHORT,          ARBOR2_ACTIO_REDUCE, 417, FALSUM },
+    { ARBOR2_LEXEMA_UNSIGNED,       ARBOR2_ACTIO_REDUCE, 417, FALSUM },
+    { ARBOR2_LEXEMA_SIGNED,         ARBOR2_ACTIO_REDUCE, 417, FALSUM },
+    { ARBOR2_LEXEMA_CONST,          ARBOR2_ACTIO_REDUCE, 417, FALSUM },
+    { ARBOR2_LEXEMA_VOLATILE,       ARBOR2_ACTIO_REDUCE, 417, FALSUM },
+    { ARBOR2_LEXEMA_STRUCT,         ARBOR2_ACTIO_REDUCE, 417, FALSUM },
+    { ARBOR2_LEXEMA_UNION,          ARBOR2_ACTIO_REDUCE, 417, FALSUM },
+    { ARBOR2_LEXEMA_ENUM,           ARBOR2_ACTIO_REDUCE, 417, FALSUM },
+    { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 417, FALSUM }
 };
 
 /* ==================================================
@@ -14627,7 +15861,143 @@ hic_manens constans Arbor2StatusInfo STATUS_TABULA_PARTIAL[] = {
     STATUS_INFO(1016, "reduce P363 (volatile type)"),
     STATUS_INFO(1017, "reduce P364 (long long)"),
     STATUS_INFO(1018, "reduce P365 (unsigned long long)"),
-    STATUS_INFO(1019, "reduce P366 (signed long long)")
+    STATUS_INFO(1019, "reduce P366 (signed long long)"),
+
+    /* States 1020-1085: Qualifier + Type Modifier chain states */
+    STATUS_INFO(1020, "const volatile - expect type/modifier"),
+    STATUS_INFO(1021, "const unsigned - expect int/char/long/short/*"),
+    STATUS_INFO(1022, "const unsigned long - expect int/long/*"),
+    STATUS_INFO(1023, "const unsigned short - expect int/*"),
+    STATUS_INFO(1024, "const unsigned long long - expect *|ID"),
+    STATUS_INFO(1025, "const signed - expect int/char/long/short/*"),
+    STATUS_INFO(1026, "const signed long - expect int/long/*"),
+    STATUS_INFO(1027, "const signed short - expect int/*"),
+    STATUS_INFO(1028, "const signed long long - expect *|ID"),
+    STATUS_INFO(1029, "const long - expect int/long/*"),
+    STATUS_INFO(1030, "const short - expect int/*"),
+    STATUS_INFO(1031, "volatile const - expect type/modifier"),
+    STATUS_INFO(1032, "volatile unsigned - expect int/char/long/short/*"),
+    STATUS_INFO(1033, "volatile unsigned long - expect int/long/*"),
+    STATUS_INFO(1034, "volatile unsigned short - expect int/*"),
+    STATUS_INFO(1035, "volatile unsigned long long - expect *|ID"),
+    STATUS_INFO(1036, "volatile signed - expect int/char/long/short/*"),
+    STATUS_INFO(1037, "volatile signed long - expect int/long/*"),
+    STATUS_INFO(1038, "volatile signed short - expect int/*"),
+    STATUS_INFO(1039, "volatile signed long long - expect *|ID"),
+    STATUS_INFO(1040, "volatile long - expect int/long/*"),
+    STATUS_INFO(1041, "volatile short - expect int/*"),
+    STATUS_INFO(1042, "const volatile type - expect *|ID"),
+    STATUS_INFO(1043, "const volatile unsigned - expect int/char/long/short/*"),
+    STATUS_INFO(1044, "const volatile unsigned long - expect int/long/*"),
+    STATUS_INFO(1045, "const volatile unsigned short - expect int/*"),
+    STATUS_INFO(1046, "const volatile unsigned long long - expect *|ID"),
+    STATUS_INFO(1047, "const volatile signed - expect int/char/long/short/*"),
+    STATUS_INFO(1048, "const volatile signed long - expect int/long/*"),
+    STATUS_INFO(1049, "const volatile signed short - expect int/*"),
+    STATUS_INFO(1050, "const volatile signed long long - expect *|ID"),
+    STATUS_INFO(1051, "const volatile long - expect int/long/*"),
+    STATUS_INFO(1052, "const volatile short - expect int/*"),
+    STATUS_INFO(1053, "const unsigned int - expect *|ID"),
+    STATUS_INFO(1054, "const unsigned char - expect *|ID"),
+    STATUS_INFO(1055, "const unsigned long int - expect *|ID"),
+    STATUS_INFO(1056, "const unsigned short int - expect *|ID"),
+    STATUS_INFO(1057, "const signed int - expect *|ID"),
+    STATUS_INFO(1058, "const signed char - expect *|ID"),
+    STATUS_INFO(1059, "const signed long int - expect *|ID"),
+    STATUS_INFO(1060, "const signed short int - expect *|ID"),
+    STATUS_INFO(1061, "const long int - expect *|ID"),
+    STATUS_INFO(1062, "const long long - expect *|ID"),
+    STATUS_INFO(1063, "const short int - expect *|ID"),
+    STATUS_INFO(1064, "volatile unsigned int - expect *|ID"),
+    STATUS_INFO(1065, "volatile unsigned char - expect *|ID"),
+    STATUS_INFO(1066, "volatile unsigned long int - expect *|ID"),
+    STATUS_INFO(1067, "volatile unsigned short int - expect *|ID"),
+    STATUS_INFO(1068, "volatile signed int - expect *|ID"),
+    STATUS_INFO(1069, "volatile signed char - expect *|ID"),
+    STATUS_INFO(1070, "volatile signed long int - expect *|ID"),
+    STATUS_INFO(1071, "volatile signed short int - expect *|ID"),
+    STATUS_INFO(1072, "volatile long int - expect *|ID"),
+    STATUS_INFO(1073, "volatile long long - expect *|ID"),
+    STATUS_INFO(1074, "volatile short int - expect *|ID"),
+    STATUS_INFO(1075, "const volatile unsigned int - expect *|ID"),
+    STATUS_INFO(1076, "const volatile unsigned char - expect *|ID"),
+    STATUS_INFO(1077, "const volatile unsigned long int - expect *|ID"),
+    STATUS_INFO(1078, "const volatile unsigned short int - expect *|ID"),
+    STATUS_INFO(1079, "const volatile signed int - expect *|ID"),
+    STATUS_INFO(1080, "const volatile signed char - expect *|ID"),
+    STATUS_INFO(1081, "const volatile signed long int - expect *|ID"),
+    STATUS_INFO(1082, "const volatile signed short int - expect *|ID"),
+    STATUS_INFO(1083, "const volatile long int - expect *|ID"),
+    STATUS_INFO(1084, "const volatile long long - expect *|ID"),
+    STATUS_INFO(1085, "const volatile short int - expect *|ID"),
+
+    /* States 1086-1117: Post-declarator states (expect ;) */
+    STATUS_INFO(1086, "const unsigned int declarator - expect ;"),
+    STATUS_INFO(1087, "const unsigned char declarator - expect ;"),
+    STATUS_INFO(1088, "const unsigned long declarator - expect ;"),
+    STATUS_INFO(1089, "const unsigned short declarator - expect ;"),
+    STATUS_INFO(1090, "const unsigned long int declarator - expect ;"),
+    STATUS_INFO(1091, "const unsigned short int declarator - expect ;"),
+    STATUS_INFO(1092, "const unsigned long long declarator - expect ;"),
+    STATUS_INFO(1093, "const signed int declarator - expect ;"),
+    STATUS_INFO(1094, "const signed char declarator - expect ;"),
+    STATUS_INFO(1095, "const signed long declarator - expect ;"),
+    STATUS_INFO(1096, "const signed short declarator - expect ;"),
+    STATUS_INFO(1097, "const signed long int declarator - expect ;"),
+    STATUS_INFO(1098, "const signed short int declarator - expect ;"),
+    STATUS_INFO(1099, "const signed long long declarator - expect ;"),
+    STATUS_INFO(1100, "const long int declarator - expect ;"),
+    STATUS_INFO(1101, "const long long declarator - expect ;"),
+    STATUS_INFO(1102, "const short int declarator - expect ;"),
+    STATUS_INFO(1103, "volatile unsigned int declarator - expect ;"),
+    STATUS_INFO(1104, "volatile unsigned char declarator - expect ;"),
+    STATUS_INFO(1105, "volatile unsigned long declarator - expect ;"),
+    STATUS_INFO(1106, "volatile unsigned short declarator - expect ;"),
+    STATUS_INFO(1107, "volatile unsigned long int declarator - expect ;"),
+    STATUS_INFO(1108, "volatile unsigned short int declarator - expect ;"),
+    STATUS_INFO(1109, "volatile unsigned long long declarator - expect ;"),
+    STATUS_INFO(1110, "volatile signed int declarator - expect ;"),
+    STATUS_INFO(1111, "volatile signed char declarator - expect ;"),
+    STATUS_INFO(1112, "volatile signed long declarator - expect ;"),
+    STATUS_INFO(1113, "volatile signed short declarator - expect ;"),
+    STATUS_INFO(1114, "volatile signed long int declarator - expect ;"),
+    STATUS_INFO(1115, "volatile signed short int declarator - expect ;"),
+    STATUS_INFO(1116, "volatile signed long long declarator - expect ;"),
+    STATUS_INFO(1117, "volatile long int declarator - expect ;"),
+
+    /* Reduction states 1118-1149 for qualifier + type modifier */
+    STATUS_INFO(1118, "reduce P386 - const unsigned int"),
+    STATUS_INFO(1119, "reduce P387 - const unsigned char"),
+    STATUS_INFO(1120, "reduce P388 - const unsigned long"),
+    STATUS_INFO(1121, "reduce P389 - const unsigned short"),
+    STATUS_INFO(1122, "reduce P390 - const unsigned long int"),
+    STATUS_INFO(1123, "reduce P391 - const unsigned short int"),
+    STATUS_INFO(1124, "reduce P392 - const unsigned long long"),
+    STATUS_INFO(1125, "reduce P393 - const signed int"),
+    STATUS_INFO(1126, "reduce P394 - const signed char"),
+    STATUS_INFO(1127, "reduce P395 - const signed long"),
+    STATUS_INFO(1128, "reduce P396 - const signed short"),
+    STATUS_INFO(1129, "reduce P397 - const signed long int"),
+    STATUS_INFO(1130, "reduce P398 - const signed short int"),
+    STATUS_INFO(1131, "reduce P399 - const signed long long"),
+    STATUS_INFO(1132, "reduce P400 - const long int"),
+    STATUS_INFO(1133, "reduce P401 - const long long"),
+    STATUS_INFO(1134, "reduce P402 - const short int"),
+    STATUS_INFO(1135, "reduce P403 - volatile unsigned int"),
+    STATUS_INFO(1136, "reduce P404 - volatile unsigned char"),
+    STATUS_INFO(1137, "reduce P405 - volatile unsigned long"),
+    STATUS_INFO(1138, "reduce P406 - volatile unsigned short"),
+    STATUS_INFO(1139, "reduce P407 - volatile unsigned long int"),
+    STATUS_INFO(1140, "reduce P408 - volatile unsigned short int"),
+    STATUS_INFO(1141, "reduce P409 - volatile unsigned long long"),
+    STATUS_INFO(1142, "reduce P410 - volatile signed int"),
+    STATUS_INFO(1143, "reduce P411 - volatile signed char"),
+    STATUS_INFO(1144, "reduce P412 - volatile signed long"),
+    STATUS_INFO(1145, "reduce P413 - volatile signed short"),
+    STATUS_INFO(1146, "reduce P414 - volatile signed long int"),
+    STATUS_INFO(1147, "reduce P415 - volatile signed short int"),
+    STATUS_INFO(1148, "reduce P416 - volatile signed long long"),
+    STATUS_INFO(1149, "reduce P417 - volatile long int")
 };
 
 /* ==================================================
@@ -17086,6 +18456,270 @@ hic_manens constans Arbor2StatusGotoEntry STATUS_980_GOTO[] = {
     { INT_NT_DECLARATOR, 999 }
 };
 
+/* ========== GOTO Arrays for Qualifier + Type Modifier States ========== */
+
+/* States 1021-1030: const + incomplete type (implicit int) */
+hic_manens constans Arbor2StatusGotoEntry STATUS_1021_GOTO[] = {
+    { INT_NT_DECLARATOR, 1088 }  /* const unsigned -> implicit int */
+};
+
+hic_manens constans Arbor2StatusGotoEntry STATUS_1022_GOTO[] = {
+    { INT_NT_DECLARATOR, 1088 }  /* const unsigned long -> implicit int */
+};
+
+hic_manens constans Arbor2StatusGotoEntry STATUS_1023_GOTO[] = {
+    { INT_NT_DECLARATOR, 1089 }  /* const unsigned short -> implicit int */
+};
+
+hic_manens constans Arbor2StatusGotoEntry STATUS_1024_GOTO[] = {
+    { INT_NT_DECLARATOR, 1092 }  /* const unsigned long long */
+};
+
+hic_manens constans Arbor2StatusGotoEntry STATUS_1025_GOTO[] = {
+    { INT_NT_DECLARATOR, 1095 }  /* const signed -> implicit int */
+};
+
+hic_manens constans Arbor2StatusGotoEntry STATUS_1026_GOTO[] = {
+    { INT_NT_DECLARATOR, 1095 }  /* const signed long -> implicit int */
+};
+
+hic_manens constans Arbor2StatusGotoEntry STATUS_1027_GOTO[] = {
+    { INT_NT_DECLARATOR, 1096 }  /* const signed short -> implicit int */
+};
+
+hic_manens constans Arbor2StatusGotoEntry STATUS_1028_GOTO[] = {
+    { INT_NT_DECLARATOR, 1099 }  /* const signed long long */
+};
+
+hic_manens constans Arbor2StatusGotoEntry STATUS_1029_GOTO[] = {
+    { INT_NT_DECLARATOR, 1100 }  /* const long -> implicit int */
+};
+
+hic_manens constans Arbor2StatusGotoEntry STATUS_1030_GOTO[] = {
+    { INT_NT_DECLARATOR, 1102 }  /* const short -> implicit int */
+};
+
+/* States 1032-1041: volatile + incomplete type (implicit int) */
+hic_manens constans Arbor2StatusGotoEntry STATUS_1032_GOTO[] = {
+    { INT_NT_DECLARATOR, 1105 }  /* volatile unsigned -> implicit int */
+};
+
+hic_manens constans Arbor2StatusGotoEntry STATUS_1033_GOTO[] = {
+    { INT_NT_DECLARATOR, 1105 }  /* volatile unsigned long -> implicit int */
+};
+
+hic_manens constans Arbor2StatusGotoEntry STATUS_1034_GOTO[] = {
+    { INT_NT_DECLARATOR, 1106 }  /* volatile unsigned short -> implicit int */
+};
+
+hic_manens constans Arbor2StatusGotoEntry STATUS_1035_GOTO[] = {
+    { INT_NT_DECLARATOR, 1109 }  /* volatile unsigned long long */
+};
+
+hic_manens constans Arbor2StatusGotoEntry STATUS_1036_GOTO[] = {
+    { INT_NT_DECLARATOR, 1112 }  /* volatile signed -> implicit int */
+};
+
+hic_manens constans Arbor2StatusGotoEntry STATUS_1037_GOTO[] = {
+    { INT_NT_DECLARATOR, 1112 }  /* volatile signed long -> implicit int */
+};
+
+hic_manens constans Arbor2StatusGotoEntry STATUS_1038_GOTO[] = {
+    { INT_NT_DECLARATOR, 1113 }  /* volatile signed short -> implicit int */
+};
+
+hic_manens constans Arbor2StatusGotoEntry STATUS_1039_GOTO[] = {
+    { INT_NT_DECLARATOR, 1116 }  /* volatile signed long long */
+};
+
+hic_manens constans Arbor2StatusGotoEntry STATUS_1040_GOTO[] = {
+    { INT_NT_DECLARATOR, 1117 }  /* volatile long -> implicit int */
+};
+
+hic_manens constans Arbor2StatusGotoEntry STATUS_1041_GOTO[] = {
+    { INT_NT_DECLARATOR, 1117 }  /* volatile short -> implicit int */
+};
+
+/* States 1042-1052: const volatile + incomplete type */
+hic_manens constans Arbor2StatusGotoEntry STATUS_1042_GOTO[] = {
+    { INT_NT_DECLARATOR, 995 }   /* const volatile type - reuse existing */
+};
+
+hic_manens constans Arbor2StatusGotoEntry STATUS_1043_GOTO[] = {
+    { INT_NT_DECLARATOR, 995 }   /* const volatile unsigned */
+};
+
+hic_manens constans Arbor2StatusGotoEntry STATUS_1044_GOTO[] = {
+    { INT_NT_DECLARATOR, 995 }   /* const volatile unsigned long */
+};
+
+hic_manens constans Arbor2StatusGotoEntry STATUS_1045_GOTO[] = {
+    { INT_NT_DECLARATOR, 995 }   /* const volatile unsigned short */
+};
+
+hic_manens constans Arbor2StatusGotoEntry STATUS_1046_GOTO[] = {
+    { INT_NT_DECLARATOR, 995 }   /* const volatile unsigned long long */
+};
+
+hic_manens constans Arbor2StatusGotoEntry STATUS_1047_GOTO[] = {
+    { INT_NT_DECLARATOR, 995 }   /* const volatile signed */
+};
+
+hic_manens constans Arbor2StatusGotoEntry STATUS_1048_GOTO[] = {
+    { INT_NT_DECLARATOR, 995 }   /* const volatile signed long */
+};
+
+hic_manens constans Arbor2StatusGotoEntry STATUS_1049_GOTO[] = {
+    { INT_NT_DECLARATOR, 995 }   /* const volatile signed short */
+};
+
+hic_manens constans Arbor2StatusGotoEntry STATUS_1050_GOTO[] = {
+    { INT_NT_DECLARATOR, 995 }   /* const volatile signed long long */
+};
+
+hic_manens constans Arbor2StatusGotoEntry STATUS_1051_GOTO[] = {
+    { INT_NT_DECLARATOR, 995 }   /* const volatile long */
+};
+
+hic_manens constans Arbor2StatusGotoEntry STATUS_1052_GOTO[] = {
+    { INT_NT_DECLARATOR, 995 }   /* const volatile short */
+};
+
+/* States 1053-1063: const + complete type */
+hic_manens constans Arbor2StatusGotoEntry STATUS_1053_GOTO[] = {
+    { INT_NT_DECLARATOR, 1086 }  /* const unsigned int */
+};
+
+hic_manens constans Arbor2StatusGotoEntry STATUS_1054_GOTO[] = {
+    { INT_NT_DECLARATOR, 1087 }  /* const unsigned char */
+};
+
+hic_manens constans Arbor2StatusGotoEntry STATUS_1055_GOTO[] = {
+    { INT_NT_DECLARATOR, 1090 }  /* const unsigned long int */
+};
+
+hic_manens constans Arbor2StatusGotoEntry STATUS_1056_GOTO[] = {
+    { INT_NT_DECLARATOR, 1091 }  /* const unsigned short int */
+};
+
+hic_manens constans Arbor2StatusGotoEntry STATUS_1057_GOTO[] = {
+    { INT_NT_DECLARATOR, 1093 }  /* const signed int */
+};
+
+hic_manens constans Arbor2StatusGotoEntry STATUS_1058_GOTO[] = {
+    { INT_NT_DECLARATOR, 1094 }  /* const signed char */
+};
+
+hic_manens constans Arbor2StatusGotoEntry STATUS_1059_GOTO[] = {
+    { INT_NT_DECLARATOR, 1097 }  /* const signed long int */
+};
+
+hic_manens constans Arbor2StatusGotoEntry STATUS_1060_GOTO[] = {
+    { INT_NT_DECLARATOR, 1098 }  /* const signed short int */
+};
+
+hic_manens constans Arbor2StatusGotoEntry STATUS_1061_GOTO[] = {
+    { INT_NT_DECLARATOR, 1100 }  /* const long int */
+};
+
+hic_manens constans Arbor2StatusGotoEntry STATUS_1062_GOTO[] = {
+    { INT_NT_DECLARATOR, 1101 }  /* const long long */
+};
+
+hic_manens constans Arbor2StatusGotoEntry STATUS_1063_GOTO[] = {
+    { INT_NT_DECLARATOR, 1102 }  /* const short int */
+};
+
+/* States 1064-1074: volatile + complete type */
+hic_manens constans Arbor2StatusGotoEntry STATUS_1064_GOTO[] = {
+    { INT_NT_DECLARATOR, 1103 }  /* volatile unsigned int */
+};
+
+hic_manens constans Arbor2StatusGotoEntry STATUS_1065_GOTO[] = {
+    { INT_NT_DECLARATOR, 1104 }  /* volatile unsigned char */
+};
+
+hic_manens constans Arbor2StatusGotoEntry STATUS_1066_GOTO[] = {
+    { INT_NT_DECLARATOR, 1107 }  /* volatile unsigned long int */
+};
+
+hic_manens constans Arbor2StatusGotoEntry STATUS_1067_GOTO[] = {
+    { INT_NT_DECLARATOR, 1108 }  /* volatile unsigned short int */
+};
+
+hic_manens constans Arbor2StatusGotoEntry STATUS_1068_GOTO[] = {
+    { INT_NT_DECLARATOR, 1110 }  /* volatile signed int */
+};
+
+hic_manens constans Arbor2StatusGotoEntry STATUS_1069_GOTO[] = {
+    { INT_NT_DECLARATOR, 1111 }  /* volatile signed char */
+};
+
+hic_manens constans Arbor2StatusGotoEntry STATUS_1070_GOTO[] = {
+    { INT_NT_DECLARATOR, 1114 }  /* volatile signed long int */
+};
+
+hic_manens constans Arbor2StatusGotoEntry STATUS_1071_GOTO[] = {
+    { INT_NT_DECLARATOR, 1115 }  /* volatile signed short int */
+};
+
+hic_manens constans Arbor2StatusGotoEntry STATUS_1072_GOTO[] = {
+    { INT_NT_DECLARATOR, 1117 }  /* volatile long int */
+};
+
+hic_manens constans Arbor2StatusGotoEntry STATUS_1073_GOTO[] = {
+    { INT_NT_DECLARATOR, 1117 }  /* volatile long long */
+};
+
+hic_manens constans Arbor2StatusGotoEntry STATUS_1074_GOTO[] = {
+    { INT_NT_DECLARATOR, 1117 }  /* volatile short int */
+};
+
+/* States 1075-1085: const volatile + complete type */
+hic_manens constans Arbor2StatusGotoEntry STATUS_1075_GOTO[] = {
+    { INT_NT_DECLARATOR, 995 }   /* const volatile unsigned int */
+};
+
+hic_manens constans Arbor2StatusGotoEntry STATUS_1076_GOTO[] = {
+    { INT_NT_DECLARATOR, 995 }   /* const volatile unsigned char */
+};
+
+hic_manens constans Arbor2StatusGotoEntry STATUS_1077_GOTO[] = {
+    { INT_NT_DECLARATOR, 995 }   /* const volatile unsigned long int */
+};
+
+hic_manens constans Arbor2StatusGotoEntry STATUS_1078_GOTO[] = {
+    { INT_NT_DECLARATOR, 995 }   /* const volatile unsigned short int */
+};
+
+hic_manens constans Arbor2StatusGotoEntry STATUS_1079_GOTO[] = {
+    { INT_NT_DECLARATOR, 995 }   /* const volatile signed int */
+};
+
+hic_manens constans Arbor2StatusGotoEntry STATUS_1080_GOTO[] = {
+    { INT_NT_DECLARATOR, 995 }   /* const volatile signed char */
+};
+
+hic_manens constans Arbor2StatusGotoEntry STATUS_1081_GOTO[] = {
+    { INT_NT_DECLARATOR, 995 }   /* const volatile signed long int */
+};
+
+hic_manens constans Arbor2StatusGotoEntry STATUS_1082_GOTO[] = {
+    { INT_NT_DECLARATOR, 995 }   /* const volatile signed short int */
+};
+
+hic_manens constans Arbor2StatusGotoEntry STATUS_1083_GOTO[] = {
+    { INT_NT_DECLARATOR, 995 }   /* const volatile long int */
+};
+
+hic_manens constans Arbor2StatusGotoEntry STATUS_1084_GOTO[] = {
+    { INT_NT_DECLARATOR, 995 }   /* const volatile long long */
+};
+
+hic_manens constans Arbor2StatusGotoEntry STATUS_1085_GOTO[] = {
+    { INT_NT_DECLARATOR, 995 }   /* const volatile short int */
+};
+
 /* ==================================================
  * STATUS_GOTO Macro and Master Table
  * ================================================== */
@@ -18238,7 +19872,145 @@ hic_manens constans Arbor2StatusGoto GOTO_TABULA_NOVA[] = {
     STATUS_GOTO_NIL,   /* 1016: reduce P363 */
     STATUS_GOTO_NIL,   /* 1017: reduce P364 */
     STATUS_GOTO_NIL,   /* 1018: reduce P365 */
-    STATUS_GOTO_NIL    /* 1019: reduce P366 */
+    STATUS_GOTO_NIL,   /* 1019: reduce P366 */
+
+    /* States 1020-1052: Qualifier + type modifier chain states */
+    STATUS_GOTO_NIL,   /* 1020: const volatile - no GOTO */
+    STATUS_GOTO(1021), /* 1021: const unsigned - GOTO declarator */
+    STATUS_GOTO(1022), /* 1022: const unsigned long - GOTO declarator */
+    STATUS_GOTO(1023), /* 1023: const unsigned short - GOTO declarator */
+    STATUS_GOTO(1024), /* 1024: const unsigned long long - GOTO declarator */
+    STATUS_GOTO(1025), /* 1025: const signed - GOTO declarator */
+    STATUS_GOTO(1026), /* 1026: const signed long - GOTO declarator */
+    STATUS_GOTO(1027), /* 1027: const signed short - GOTO declarator */
+    STATUS_GOTO(1028), /* 1028: const signed long long - GOTO declarator */
+    STATUS_GOTO(1029), /* 1029: const long - GOTO declarator */
+    STATUS_GOTO(1030), /* 1030: const short - GOTO declarator */
+    STATUS_GOTO_NIL,   /* 1031: volatile const - no GOTO */
+    STATUS_GOTO(1032), /* 1032: volatile unsigned - GOTO declarator */
+    STATUS_GOTO(1033), /* 1033: volatile unsigned long - GOTO declarator */
+    STATUS_GOTO(1034), /* 1034: volatile unsigned short - GOTO declarator */
+    STATUS_GOTO(1035), /* 1035: volatile unsigned long long - GOTO declarator */
+    STATUS_GOTO(1036), /* 1036: volatile signed - GOTO declarator */
+    STATUS_GOTO(1037), /* 1037: volatile signed long - GOTO declarator */
+    STATUS_GOTO(1038), /* 1038: volatile signed short - GOTO declarator */
+    STATUS_GOTO(1039), /* 1039: volatile signed long long - GOTO declarator */
+    STATUS_GOTO(1040), /* 1040: volatile long - GOTO declarator */
+    STATUS_GOTO(1041), /* 1041: volatile short - GOTO declarator */
+    STATUS_GOTO(1042), /* 1042: const volatile type - GOTO declarator */
+    STATUS_GOTO(1043), /* 1043: const volatile unsigned - GOTO declarator */
+    STATUS_GOTO(1044), /* 1044: const volatile unsigned long - GOTO declarator */
+    STATUS_GOTO(1045), /* 1045: const volatile unsigned short - GOTO declarator */
+    STATUS_GOTO(1046), /* 1046: const volatile unsigned long long - GOTO declarator */
+    STATUS_GOTO(1047), /* 1047: const volatile signed - GOTO declarator */
+    STATUS_GOTO(1048), /* 1048: const volatile signed long - GOTO declarator */
+    STATUS_GOTO(1049), /* 1049: const volatile signed short - GOTO declarator */
+    STATUS_GOTO(1050), /* 1050: const volatile signed long long - GOTO declarator */
+    STATUS_GOTO(1051), /* 1051: const volatile long - GOTO declarator */
+    STATUS_GOTO(1052), /* 1052: const volatile short - GOTO declarator */
+
+    /* States 1053-1085: Complete type states */
+    STATUS_GOTO(1053), /* 1053: const unsigned int - GOTO declarator */
+    STATUS_GOTO(1054), /* 1054: const unsigned char - GOTO declarator */
+    STATUS_GOTO(1055), /* 1055: const unsigned long int - GOTO declarator */
+    STATUS_GOTO(1056), /* 1056: const unsigned short int - GOTO declarator */
+    STATUS_GOTO(1057), /* 1057: const signed int - GOTO declarator */
+    STATUS_GOTO(1058), /* 1058: const signed char - GOTO declarator */
+    STATUS_GOTO(1059), /* 1059: const signed long int - GOTO declarator */
+    STATUS_GOTO(1060), /* 1060: const signed short int - GOTO declarator */
+    STATUS_GOTO(1061), /* 1061: const long int - GOTO declarator */
+    STATUS_GOTO(1062), /* 1062: const long long - GOTO declarator */
+    STATUS_GOTO(1063), /* 1063: const short int - GOTO declarator */
+    STATUS_GOTO(1064), /* 1064: volatile unsigned int - GOTO declarator */
+    STATUS_GOTO(1065), /* 1065: volatile unsigned char - GOTO declarator */
+    STATUS_GOTO(1066), /* 1066: volatile unsigned long int - GOTO declarator */
+    STATUS_GOTO(1067), /* 1067: volatile unsigned short int - GOTO declarator */
+    STATUS_GOTO(1068), /* 1068: volatile signed int - GOTO declarator */
+    STATUS_GOTO(1069), /* 1069: volatile signed char - GOTO declarator */
+    STATUS_GOTO(1070), /* 1070: volatile signed long int - GOTO declarator */
+    STATUS_GOTO(1071), /* 1071: volatile signed short int - GOTO declarator */
+    STATUS_GOTO(1072), /* 1072: volatile long int - GOTO declarator */
+    STATUS_GOTO(1073), /* 1073: volatile long long - GOTO declarator */
+    STATUS_GOTO(1074), /* 1074: volatile short int - GOTO declarator */
+    STATUS_GOTO(1075), /* 1075: const volatile unsigned int - GOTO declarator */
+    STATUS_GOTO(1076), /* 1076: const volatile unsigned char - GOTO declarator */
+    STATUS_GOTO(1077), /* 1077: const volatile unsigned long int - GOTO declarator */
+    STATUS_GOTO(1078), /* 1078: const volatile unsigned short int - GOTO declarator */
+    STATUS_GOTO(1079), /* 1079: const volatile signed int - GOTO declarator */
+    STATUS_GOTO(1080), /* 1080: const volatile signed char - GOTO declarator */
+    STATUS_GOTO(1081), /* 1081: const volatile signed long int - GOTO declarator */
+    STATUS_GOTO(1082), /* 1082: const volatile signed short int - GOTO declarator */
+    STATUS_GOTO(1083), /* 1083: const volatile long int - GOTO declarator */
+    STATUS_GOTO(1084), /* 1084: const volatile long long - GOTO declarator */
+    STATUS_GOTO(1085), /* 1085: const volatile short int - GOTO declarator */
+
+    /* States 1086-1117: Post-declarator states (expect ;) */
+    STATUS_GOTO_NIL,   /* 1086: const unsigned int declarator - expect ; */
+    STATUS_GOTO_NIL,   /* 1087: const unsigned char declarator - expect ; */
+    STATUS_GOTO_NIL,   /* 1088: const unsigned long declarator - expect ; */
+    STATUS_GOTO_NIL,   /* 1089: const unsigned short declarator - expect ; */
+    STATUS_GOTO_NIL,   /* 1090: const unsigned long int declarator - expect ; */
+    STATUS_GOTO_NIL,   /* 1091: const unsigned short int declarator - expect ; */
+    STATUS_GOTO_NIL,   /* 1092: const unsigned long long declarator - expect ; */
+    STATUS_GOTO_NIL,   /* 1093: const signed int declarator - expect ; */
+    STATUS_GOTO_NIL,   /* 1094: const signed char declarator - expect ; */
+    STATUS_GOTO_NIL,   /* 1095: const signed long declarator - expect ; */
+    STATUS_GOTO_NIL,   /* 1096: const signed short declarator - expect ; */
+    STATUS_GOTO_NIL,   /* 1097: const signed long int declarator - expect ; */
+    STATUS_GOTO_NIL,   /* 1098: const signed short int declarator - expect ; */
+    STATUS_GOTO_NIL,   /* 1099: const signed long long declarator - expect ; */
+    STATUS_GOTO_NIL,   /* 1100: const long int declarator - expect ; */
+    STATUS_GOTO_NIL,   /* 1101: const long long declarator - expect ; */
+    STATUS_GOTO_NIL,   /* 1102: const short int declarator - expect ; */
+    STATUS_GOTO_NIL,   /* 1103: volatile unsigned int declarator - expect ; */
+    STATUS_GOTO_NIL,   /* 1104: volatile unsigned char declarator - expect ; */
+    STATUS_GOTO_NIL,   /* 1105: volatile unsigned long declarator - expect ; */
+    STATUS_GOTO_NIL,   /* 1106: volatile unsigned short declarator - expect ; */
+    STATUS_GOTO_NIL,   /* 1107: volatile unsigned long int declarator - expect ; */
+    STATUS_GOTO_NIL,   /* 1108: volatile unsigned short int declarator - expect ; */
+    STATUS_GOTO_NIL,   /* 1109: volatile unsigned long long declarator - expect ; */
+    STATUS_GOTO_NIL,   /* 1110: volatile signed int declarator - expect ; */
+    STATUS_GOTO_NIL,   /* 1111: volatile signed char declarator - expect ; */
+    STATUS_GOTO_NIL,   /* 1112: volatile signed long declarator - expect ; */
+    STATUS_GOTO_NIL,   /* 1113: volatile signed short declarator - expect ; */
+    STATUS_GOTO_NIL,   /* 1114: volatile signed long int declarator - expect ; */
+    STATUS_GOTO_NIL,   /* 1115: volatile signed short int declarator - expect ; */
+    STATUS_GOTO_NIL,   /* 1116: volatile signed long long declarator - expect ; */
+    STATUS_GOTO_NIL,   /* 1117: volatile long int declarator - expect ; */
+
+    /* Reduction states 1118-1149 (no GOTO needed) */
+    STATUS_GOTO_NIL,   /* 1118: reduce P386 - const unsigned int */
+    STATUS_GOTO_NIL,   /* 1119: reduce P387 - const unsigned char */
+    STATUS_GOTO_NIL,   /* 1120: reduce P388 - const unsigned long */
+    STATUS_GOTO_NIL,   /* 1121: reduce P389 - const unsigned short */
+    STATUS_GOTO_NIL,   /* 1122: reduce P390 - const unsigned long int */
+    STATUS_GOTO_NIL,   /* 1123: reduce P391 - const unsigned short int */
+    STATUS_GOTO_NIL,   /* 1124: reduce P392 - const unsigned long long */
+    STATUS_GOTO_NIL,   /* 1125: reduce P393 - const signed int */
+    STATUS_GOTO_NIL,   /* 1126: reduce P394 - const signed char */
+    STATUS_GOTO_NIL,   /* 1127: reduce P395 - const signed long */
+    STATUS_GOTO_NIL,   /* 1128: reduce P396 - const signed short */
+    STATUS_GOTO_NIL,   /* 1129: reduce P397 - const signed long int */
+    STATUS_GOTO_NIL,   /* 1130: reduce P398 - const signed short int */
+    STATUS_GOTO_NIL,   /* 1131: reduce P399 - const signed long long */
+    STATUS_GOTO_NIL,   /* 1132: reduce P400 - const long int */
+    STATUS_GOTO_NIL,   /* 1133: reduce P401 - const long long */
+    STATUS_GOTO_NIL,   /* 1134: reduce P402 - const short int */
+    STATUS_GOTO_NIL,   /* 1135: reduce P403 - volatile unsigned int */
+    STATUS_GOTO_NIL,   /* 1136: reduce P404 - volatile unsigned char */
+    STATUS_GOTO_NIL,   /* 1137: reduce P405 - volatile unsigned long */
+    STATUS_GOTO_NIL,   /* 1138: reduce P406 - volatile unsigned short */
+    STATUS_GOTO_NIL,   /* 1139: reduce P407 - volatile unsigned long int */
+    STATUS_GOTO_NIL,   /* 1140: reduce P408 - volatile unsigned short int */
+    STATUS_GOTO_NIL,   /* 1141: reduce P409 - volatile unsigned long long */
+    STATUS_GOTO_NIL,   /* 1142: reduce P410 - volatile signed int */
+    STATUS_GOTO_NIL,   /* 1143: reduce P411 - volatile signed char */
+    STATUS_GOTO_NIL,   /* 1144: reduce P412 - volatile signed long */
+    STATUS_GOTO_NIL,   /* 1145: reduce P413 - volatile signed short */
+    STATUS_GOTO_NIL,   /* 1146: reduce P414 - volatile signed long int */
+    STATUS_GOTO_NIL,   /* 1147: reduce P415 - volatile signed short int */
+    STATUS_GOTO_NIL,   /* 1148: reduce P416 - volatile signed long long */
+    STATUS_GOTO_NIL    /* 1149: reduce P417 - volatile long int */
 };
 
 

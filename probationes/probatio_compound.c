@@ -77,7 +77,43 @@ s32 principale(vacuum)
     imprimere("\n-- Combined qualifiers with compound types --\n");
     test(p, intern, "struct S { const unsigned int x; };");
     test(p, intern, "struct S { volatile long int x; };");
-    
+
+    imprimere("\n-- const + unsigned/signed variants --\n");
+    test(p, intern, "struct S { const unsigned int x; };");
+    test(p, intern, "struct S { const unsigned char c; };");
+    test(p, intern, "struct S { const unsigned long x; };");
+    test(p, intern, "struct S { const unsigned short x; };");
+    test(p, intern, "struct S { const unsigned long int x; };");
+    test(p, intern, "struct S { const unsigned short int x; };");
+    test(p, intern, "struct S { const unsigned long long x; };");
+    test(p, intern, "struct S { const signed int x; };");
+    test(p, intern, "struct S { const signed char c; };");
+    test(p, intern, "struct S { const signed long x; };");
+    test(p, intern, "struct S { const signed short x; };");
+    test(p, intern, "struct S { const signed long int x; };");
+    test(p, intern, "struct S { const signed short int x; };");
+    test(p, intern, "struct S { const signed long long x; };");
+    test(p, intern, "struct S { const long int x; };");
+    test(p, intern, "struct S { const long long x; };");
+    test(p, intern, "struct S { const short int x; };");
+
+    imprimere("\n-- volatile + unsigned/signed variants --\n");
+    test(p, intern, "struct S { volatile unsigned int x; };");
+    test(p, intern, "struct S { volatile unsigned char c; };");
+    test(p, intern, "struct S { volatile unsigned long x; };");
+    test(p, intern, "struct S { volatile unsigned short x; };");
+    test(p, intern, "struct S { volatile unsigned long int x; };");
+    test(p, intern, "struct S { volatile unsigned short int x; };");
+    test(p, intern, "struct S { volatile unsigned long long x; };");
+    test(p, intern, "struct S { volatile signed int x; };");
+    test(p, intern, "struct S { volatile signed char c; };");
+    test(p, intern, "struct S { volatile signed long x; };");
+    test(p, intern, "struct S { volatile signed short x; };");
+    test(p, intern, "struct S { volatile signed long int x; };");
+    test(p, intern, "struct S { volatile signed short int x; };");
+    test(p, intern, "struct S { volatile signed long long x; };");
+    test(p, intern, "struct S { volatile long int x; };");
+
     imprimere("\n-- Top-level declarations (for comparison) --\n");
     test(p, intern, "unsigned int x;");
     test(p, intern, "const int x;");

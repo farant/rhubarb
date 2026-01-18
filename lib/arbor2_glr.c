@@ -2805,6 +2805,250 @@ _processare_unam_actionem(
                             *slot = member;
                             valor_novus = (Arbor2Nodus*)lista;
                         }
+                        /* ========== QUALIFIER + TYPE MODIFIER SPECIFIERS P386-P417 ========== */
+                        alioquin si (actio->valor >= 386 && actio->valor <= 417)
+                        {
+                            /* P386-P417: Qualifier + type modifier combinations in first struct member
+                             * P386-P402: const + type modifier combinations
+                             * P403-P417: volatile + type modifier combinations
+                             *
+                             * 5-symbol: qualifier modifier type decl ;
+                             * 6-symbol: qualifier modifier1 modifier2 type decl ;
+                             *
+                             * lexemata layout:
+                             *   5-symbol: [4]=qual [3]=mod [2]=type [1]=... [0]=;
+                             *   6-symbol: [5]=qual [4]=mod1 [3]=mod2 [2]=type [1]=... [0]=;
+                             */
+                            Arbor2Nodus* member;
+                            Arbor2Nodus* decl_node;
+                            Xar* lista;
+                            Arbor2Nodus** slot;
+                            Arbor2Token* qualifier_tok = NIHIL;
+                            Arbor2Token* modifier1_tok = NIHIL;
+                            Arbor2Token* modifier2_tok = NIHIL;
+                            Arbor2Token* base_type_tok = NIHIL;
+                            i32 num_symbols = regula->longitudo;
+
+                            /* Get declarator from valori[1] (pre-built by P12/P11) */
+                            decl_node = valori[I];
+
+                            /* Create member node */
+                            member = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
+                            member->genus = ARBOR2_NODUS_DECLARATIO;
+                            member->pater = NIHIL;
+                            member->datum.declaratio.tok_storage = NIHIL;
+                            member->datum.declaratio.tok_const = NIHIL;
+                            member->datum.declaratio.tok_volatile = NIHIL;
+                            member->datum.declaratio.tok_unsigned = NIHIL;
+                            member->datum.declaratio.tok_signed = NIHIL;
+                            member->datum.declaratio.tok_long = NIHIL;
+                            member->datum.declaratio.tok_long2 = NIHIL;
+                            member->datum.declaratio.tok_short = NIHIL;
+                            member->datum.declaratio.tok_assignatio = NIHIL;
+                            member->datum.declaratio.initializor = NIHIL;
+                            member->datum.declaratio.tok_semicolon = lexemata[ZEPHYRUM];
+                            member->datum.declaratio.proxima = NIHIL;
+
+                            /* Parse tokens based on number of symbols */
+                            si (num_symbols == 5)
+                            {
+                                /* 5-symbol: qualifier modifier type decl ; */
+                                qualifier_tok = lexemata[IV];
+                                modifier1_tok = lexemata[III];
+                                base_type_tok = lexemata[II];
+                            }
+                            alioquin si (num_symbols == 6)
+                            {
+                                /* 6-symbol: qualifier modifier1 modifier2 type decl ; */
+                                qualifier_tok = lexemata[V];
+                                modifier1_tok = lexemata[IV];
+                                modifier2_tok = lexemata[III];
+                                base_type_tok = lexemata[II];
+                            }
+
+                            /* Set qualifier token (const or volatile) */
+                            si (actio->valor >= 386 && actio->valor <= 402)
+                            {
+                                /* const + type modifiers (P386-P402) */
+                                member->datum.declaratio.tok_const = qualifier_tok;
+                            }
+                            alioquin
+                            {
+                                /* volatile + type modifiers (P403-P417) */
+                                member->datum.declaratio.tok_volatile = qualifier_tok;
+                            }
+
+                            /* Set modifier tokens based on production */
+                            commutatio (actio->valor)
+                            {
+                                /* P386-P402: const + type modifiers */
+                                casus 386: /* const unsigned int */
+                                    member->datum.declaratio.tok_unsigned = modifier1_tok;
+                                    frange;
+                                casus 387: /* const unsigned char */
+                                    member->datum.declaratio.tok_unsigned = modifier1_tok;
+                                    frange;
+                                casus 388: /* const unsigned long (implicit int) */
+                                    member->datum.declaratio.tok_unsigned = modifier1_tok;
+                                    member->datum.declaratio.tok_long = base_type_tok;
+                                    base_type_tok = NIHIL;
+                                    frange;
+                                casus 389: /* const unsigned short (implicit int) */
+                                    member->datum.declaratio.tok_unsigned = modifier1_tok;
+                                    member->datum.declaratio.tok_short = base_type_tok;
+                                    base_type_tok = NIHIL;
+                                    frange;
+                                casus 390: /* const unsigned long int */
+                                    member->datum.declaratio.tok_unsigned = modifier1_tok;
+                                    member->datum.declaratio.tok_long = modifier2_tok;
+                                    frange;
+                                casus 391: /* const unsigned short int */
+                                    member->datum.declaratio.tok_unsigned = modifier1_tok;
+                                    member->datum.declaratio.tok_short = modifier2_tok;
+                                    frange;
+                                casus 392: /* const unsigned long long */
+                                    member->datum.declaratio.tok_unsigned = modifier1_tok;
+                                    member->datum.declaratio.tok_long = modifier2_tok;
+                                    member->datum.declaratio.tok_long2 = base_type_tok;
+                                    base_type_tok = NIHIL;
+                                    frange;
+                                casus 393: /* const signed int */
+                                    member->datum.declaratio.tok_signed = modifier1_tok;
+                                    frange;
+                                casus 394: /* const signed char */
+                                    member->datum.declaratio.tok_signed = modifier1_tok;
+                                    frange;
+                                casus 395: /* const signed long (implicit int) */
+                                    member->datum.declaratio.tok_signed = modifier1_tok;
+                                    member->datum.declaratio.tok_long = base_type_tok;
+                                    base_type_tok = NIHIL;
+                                    frange;
+                                casus 396: /* const signed short (implicit int) */
+                                    member->datum.declaratio.tok_signed = modifier1_tok;
+                                    member->datum.declaratio.tok_short = base_type_tok;
+                                    base_type_tok = NIHIL;
+                                    frange;
+                                casus 397: /* const signed long int */
+                                    member->datum.declaratio.tok_signed = modifier1_tok;
+                                    member->datum.declaratio.tok_long = modifier2_tok;
+                                    frange;
+                                casus 398: /* const signed short int */
+                                    member->datum.declaratio.tok_signed = modifier1_tok;
+                                    member->datum.declaratio.tok_short = modifier2_tok;
+                                    frange;
+                                casus 399: /* const signed long long */
+                                    member->datum.declaratio.tok_signed = modifier1_tok;
+                                    member->datum.declaratio.tok_long = modifier2_tok;
+                                    member->datum.declaratio.tok_long2 = base_type_tok;
+                                    base_type_tok = NIHIL;
+                                    frange;
+                                casus 400: /* const long int */
+                                    member->datum.declaratio.tok_long = modifier1_tok;
+                                    frange;
+                                casus 401: /* const long long (implicit int) */
+                                    member->datum.declaratio.tok_long = modifier1_tok;
+                                    member->datum.declaratio.tok_long2 = base_type_tok;
+                                    base_type_tok = NIHIL;
+                                    frange;
+                                casus 402: /* const short int */
+                                    member->datum.declaratio.tok_short = modifier1_tok;
+                                    frange;
+
+                                /* P403-P417: volatile + type modifiers */
+                                casus 403: /* volatile unsigned int */
+                                    member->datum.declaratio.tok_unsigned = modifier1_tok;
+                                    frange;
+                                casus 404: /* volatile unsigned char */
+                                    member->datum.declaratio.tok_unsigned = modifier1_tok;
+                                    frange;
+                                casus 405: /* volatile unsigned long (implicit int) */
+                                    member->datum.declaratio.tok_unsigned = modifier1_tok;
+                                    member->datum.declaratio.tok_long = base_type_tok;
+                                    base_type_tok = NIHIL;
+                                    frange;
+                                casus 406: /* volatile unsigned short (implicit int) */
+                                    member->datum.declaratio.tok_unsigned = modifier1_tok;
+                                    member->datum.declaratio.tok_short = base_type_tok;
+                                    base_type_tok = NIHIL;
+                                    frange;
+                                casus 407: /* volatile unsigned long int */
+                                    member->datum.declaratio.tok_unsigned = modifier1_tok;
+                                    member->datum.declaratio.tok_long = modifier2_tok;
+                                    frange;
+                                casus 408: /* volatile unsigned short int */
+                                    member->datum.declaratio.tok_unsigned = modifier1_tok;
+                                    member->datum.declaratio.tok_short = modifier2_tok;
+                                    frange;
+                                casus 409: /* volatile unsigned long long */
+                                    member->datum.declaratio.tok_unsigned = modifier1_tok;
+                                    member->datum.declaratio.tok_long = modifier2_tok;
+                                    member->datum.declaratio.tok_long2 = base_type_tok;
+                                    base_type_tok = NIHIL;
+                                    frange;
+                                casus 410: /* volatile signed int */
+                                    member->datum.declaratio.tok_signed = modifier1_tok;
+                                    frange;
+                                casus 411: /* volatile signed char */
+                                    member->datum.declaratio.tok_signed = modifier1_tok;
+                                    frange;
+                                casus 412: /* volatile signed long (implicit int) */
+                                    member->datum.declaratio.tok_signed = modifier1_tok;
+                                    member->datum.declaratio.tok_long = base_type_tok;
+                                    base_type_tok = NIHIL;
+                                    frange;
+                                casus 413: /* volatile signed short (implicit int) */
+                                    member->datum.declaratio.tok_signed = modifier1_tok;
+                                    member->datum.declaratio.tok_short = base_type_tok;
+                                    base_type_tok = NIHIL;
+                                    frange;
+                                casus 414: /* volatile signed long int */
+                                    member->datum.declaratio.tok_signed = modifier1_tok;
+                                    member->datum.declaratio.tok_long = modifier2_tok;
+                                    frange;
+                                casus 415: /* volatile signed short int */
+                                    member->datum.declaratio.tok_signed = modifier1_tok;
+                                    member->datum.declaratio.tok_short = modifier2_tok;
+                                    frange;
+                                casus 416: /* volatile signed long long */
+                                    member->datum.declaratio.tok_signed = modifier1_tok;
+                                    member->datum.declaratio.tok_long = modifier2_tok;
+                                    member->datum.declaratio.tok_long2 = base_type_tok;
+                                    base_type_tok = NIHIL;
+                                    frange;
+                                casus 417: /* volatile long int */
+                                    member->datum.declaratio.tok_long = modifier1_tok;
+                                    frange;
+
+                                ordinarius:
+                                    frange;
+                            }
+
+                            /* Set specifier (base type) */
+                            si (base_type_tok != NIHIL)
+                            {
+                                member->datum.declaratio.specifier = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
+                                member->datum.declaratio.specifier->genus = ARBOR2_NODUS_IDENTIFICATOR;
+                                member->datum.declaratio.specifier->lexema = base_type_tok;
+                                member->datum.declaratio.specifier->pater = member;
+                                member->datum.declaratio.specifier->datum.folium.valor = base_type_tok->lexema->valor;
+                                member->lexema = qualifier_tok;  /* Use qualifier as primary lexema */
+                            }
+                            alioquin
+                            {
+                                /* No explicit base type (implicit int) */
+                                member->datum.declaratio.specifier = NIHIL;
+                                member->lexema = qualifier_tok;
+                            }
+
+                            member->datum.declaratio.declarator = decl_node;
+                            si (decl_node != NIHIL) decl_node->pater = member;
+
+                            /* Create member list */
+                            lista = xar_creare(glr->piscina, magnitudo(Arbor2Nodus*));
+                            slot = xar_addere(lista);
+                            *slot = member;
+                            valor_novus = (Arbor2Nodus*)lista;
+                        }
                         /* ========== TYPEDEF DECLARATIONS P74-P79 ========== */
                         alioquin si (actio->valor == 74)
                         {

@@ -1726,3 +1726,156 @@ Serializer tests: 137/137 pass
 - Total states: 1020 (956-1019 new, 1000 reserved)
 - Total productions: 385 (P348-P385, with P348-P366 fully active)
 - All existing tests pass
+
+## 2026-01-17: Qualifier + Type Modifier Combinations in Struct Members
+
+### Goal
+
+Extend struct member parsing to support qualifier + type modifier combinations:
+```c
+struct S { const unsigned int x; };
+struct S { const volatile int x; };
+struct S { volatile long int x; };
+struct S { const unsigned long long x; };
+```
+
+These are valid C89 constructs that already worked for top-level declarations but were missing in struct member context.
+
+### Approach
+
+Modified states 960/961 (after `const`/`volatile` in struct member) to route type modifiers to new state chains, following the pattern established for top-level declarations.
+
+### States Added (1020-1149)
+
+130 new states organized into four categories:
+
+**Type modifier chain states (1020-1052):**
+- 1020: after `const volatile` - expects type or more modifiers
+- 1021-1024: const unsigned chains (unsigned, unsigned long, unsigned short, unsigned long long)
+- 1025-1028: const signed chains
+- 1029-1030: const long/short
+- 1031: after `volatile const` (symmetric to 1020)
+- 1032-1041: volatile + modifier chains
+- 1042-1052: const volatile + modifier chains
+
+**Complete type states (1053-1085):**
+States where full type specifier is parsed, expecting declarator via GOTO:
+- 1053-1063: const + complete type (e.g., const unsigned int, const signed char)
+- 1064-1074: volatile + complete type
+- 1075-1085: const volatile + complete type (placeholder routing to state 995)
+
+**Post-declarator states (1086-1117):**
+After declarator, expecting `;` then shifting to reduction states:
+- 1086-1102: const variants (17 states)
+- 1103-1117: volatile variants (15 states)
+
+**Reduction states (1118-1149):**
+Perform REDUCE on production P386-P417 when seeing follow tokens (IDENTIFIER, INT, CHAR, LONG, SHORT, UNSIGNED, SIGNED, CONST, VOLATILE, STRUCT, UNION, ENUM, `}`).
+
+### Productions Added (P386-P417)
+
+32 new productions for first member qualifier + type modifier combinations:
+
+**const + type modifiers (P386-P402):**
+- P386: `const unsigned int declarator ;` (5 symbols)
+- P387: `const unsigned char declarator ;` (5 symbols)
+- P388-P389: const unsigned long/short (implicit int)
+- P390-P391: const unsigned long/short int (explicit)
+- P392: const unsigned long long
+- P393-P398: const signed variants
+- P399: const signed long long
+- P400-P402: const long/short variants
+
+**volatile + type modifiers (P403-P417):**
+- P403-P409: volatile unsigned variants
+- P410-P416: volatile signed variants
+- P417: volatile long int
+
+### State Modifications
+
+**State 960 (after `const` in member):**
+```c
+/* Original: only INT/CHAR/FLOAT/DOUBLE/VOID/ID → 973 */
+/* Added: */
+VOLATILE → 1020  (const volatile combination)
+UNSIGNED → 1021  (const unsigned chain)
+SIGNED → 1025    (const signed chain)
+LONG → 1029      (const long chain)
+SHORT → 1030     (const short chain)
+```
+
+**State 961 (after `volatile` in member):**
+Same pattern, routing to states 1031, 1032, 1036, 1040, 1041.
+
+### GOTO Tables
+
+Added GOTO entries for all states that expect declarator (1021-1085) pointing to appropriate post-declarator states:
+```c
+hic_manens constans Arbor2StatusGotoEntry STATUS_1053_GOTO[] = {
+    { INT_NT_DECLARATOR, 1086 }  /* const unsigned int */
+};
+```
+
+### Semantic Actions (arbor2_glr.c)
+
+Added handler for P386-P417 (~200 lines) that:
+1. Extracts qualifier token from lexemata[IV] or lexemata[V]
+2. Extracts modifier tokens from subsequent positions
+3. Sets tok_const/tok_volatile appropriately
+4. Sets tok_unsigned/tok_signed/tok_long/tok_short based on production
+5. Creates member node and member list
+
+Token layout for 5-symbol productions:
+```
+lexemata: [4]=qualifier [3]=modifier [2]=type [1]=decl_tok [0]=;
+valori:   [1]=declarator
+```
+
+Token layout for 6-symbol productions:
+```
+lexemata: [5]=qualifier [4]=mod1 [3]=mod2 [2]=type [1]=decl_tok [0]=;
+valori:   [1]=declarator
+```
+
+### Scope Limitations
+
+**Fully implemented:**
+- const + any single type modifier combination (unsigned, signed, long, short)
+- const + any two type modifier combination (unsigned long, signed short, etc.)
+- volatile + same patterns
+- All produce correct AST nodes with tok_const/tok_volatile and modifier tokens
+
+**Partially implemented (state routing exists, but incomplete):**
+- const volatile + type modifier combinations (states 1042-1052, 1075-1085)
+- These route to placeholder state 995 instead of proper post-declarator states
+- Would need additional productions and semantic actions
+
+**Not implemented:**
+- Subsequent member (non-first) qualifier + type modifier combinations
+- Would need mirror states after member_list non-terminal
+
+### Test Results
+
+All 32 new struct member combinations parse correctly:
+```c
+struct S { const unsigned int x; };      // OK
+struct S { const unsigned char c; };     // OK
+struct S { const unsigned long x; };     // OK
+struct S { const unsigned long int x; }; // OK
+struct S { const unsigned long long x; };// OK
+struct S { const signed int x; };        // OK
+struct S { volatile unsigned int x; };   // OK
+struct S { volatile signed long int x; };// OK
+// ... etc
+```
+
+Pre-existing issues (not from this change):
+- `struct S { const volatile int x; };` → empty output (double qualifier not fully implemented)
+- `unsigned int x;` (top-level) → serializer drops `unsigned`
+- `long long x;` (top-level) → empty output
+
+### Final Statistics
+- Total states: 1150 (was 1020, added 130)
+- Total productions: 418 (was 385, added P386-P417)
+- GLR tests: 1992/1992 pass
+- Compound tests: all new tests pass
