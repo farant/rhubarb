@@ -1018,8 +1018,8 @@ s32 principale(vacuum)
         CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "a >> b", NIHIL));
         CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "a | b & c", NIHIL));
         CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "a ^ b | c", NIHIL));
-        /* TODO: parenthesized bitwise needs parser fix */
-        /* CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "(a & b) | c", NIHIL)); */
+        /* Parenthesized bitwise */
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "(a & b) | c", NIHIL));
     }
 
     /* ========================================================
@@ -1068,8 +1068,8 @@ s32 principale(vacuum)
         CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "a * b + c * d", NIHIL));
         CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "(a + b) * (c - d) / (e + f)", NIHIL));
         CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "a && b || c && d", NIHIL));
-        /* TODO: parenthesized logical needs parser fix */
-        /* CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "(a || b) && (c || d)", NIHIL)); */
+        /* Parenthesized logical */
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "(a || b) && (c || d)", NIHIL));
         CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "a < b && c > d || e == f", NIHIL));
     }
 
@@ -1081,8 +1081,8 @@ s32 principale(vacuum)
 
         CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "a, b", NIHIL));
         CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "a, b, c", NIHIL));
-        /* TODO: parenthesized comma needs parser fix */
-        /* CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "(a, b)", NIHIL)); */
+        /* Parenthesized comma */
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "(a, b)", NIHIL));
         CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "a = 1, b = 2", NIHIL));
     }
 

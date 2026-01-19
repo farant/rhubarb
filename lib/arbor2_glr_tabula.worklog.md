@@ -2096,3 +2096,45 @@ action set (like state 1180):
 - Total productions: 525 (was 507, added P507-P524)
 - GLR tests: 2041/2041 pass
 - Scribere tests: 180/180 pass (was 160, added 20 roundtrip tests)
+
+## 2026-01-19: Fixed Parenthesized Bitwise, Logical, and Comma Expressions
+
+### Problem
+
+Three roundtrip tests were failing because the parser couldn't handle certain operators inside parentheses:
+- `(a & b) | c` - parenthesized bitwise AND
+- `(a || b) && (c || d)` - parenthesized logical OR
+- `(a, b)` - parenthesized comma expression
+
+### Root Cause
+
+Several parser states were missing actions for operator tokens that can follow parenthesized expressions. The states had EOF and SEMICOLON as valid follow tokens but were missing PAREN_CLAUSA, COMMA, and COLON.
+
+### Fixes
+
+Added missing token actions to the following states:
+
+**State 11** (after `(` expression):
+- Added PIPA, CARET, AMPERSAND (bitwise operators)
+- Added COMMA (comma operator)
+
+**State 12** (after `(` expression `)`):
+- Added PIPA, CARET, AMPERSAND (bitwise operators)
+
+**State 245** (after aequalitas inside parens):
+- Added COMMA, COLON
+
+**State 259** (after aequalitas in || context):
+- Added PAREN_CLAUSA, COLON, COMMA
+
+**State 260** (after coniunctio in || context):
+- Added PAREN_CLAUSA, COLON, COMMA
+
+**State 274** (after aequalitas in & context):
+- Added PAREN_CLAUSA, COLON, COMMA, QUAESTIO
+
+### Files Changed
+- lib/arbor2_glr_tabula.c: Added missing actions to states 11, 12, 245, 259, 260, 274
+- probationes/probatio_arbor2_scribere.c: Enabled 3 previously commented-out tests
+
+Tests: 272 pass (scribere), 77 total test files pass
