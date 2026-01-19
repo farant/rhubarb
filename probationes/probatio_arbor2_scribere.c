@@ -347,6 +347,43 @@ s32 principale(vacuum)
     }
 
     /* ========================================================
+     * PROBARE: Ternary expressions
+     * NOTE: Using numeric literals to avoid label ambiguity
+     * (a ? b : c is ambiguous because b: could be a label)
+     * ======================================================== */
+    {
+        imprimere("\n--- Probans ternary expressions ---\n");
+
+        /* Simple ternary with numbers */
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "a ? 1 : 2", NIHIL));
+
+        /* Nested ternary (right-associative) */
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "a ? 1 : b ? 2 : 3", NIHIL));
+
+        /* Ternary with expressions in branches */
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "a ? 1 + 2 : 3 * 4", NIHIL));
+
+        /* Ternary with logical condition */
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "a || b ? 1 : 2", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "a && b ? 1 : 2", NIHIL));
+
+        /* Ternary in assignment context */
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "x = a ? 1 : 2", NIHIL));
+
+        /* Nested in true branch */
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "a ? b ? 1 : 2 : 3", NIHIL));
+
+        /* Comparison + ternary */
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "a > b ? 1 : 2", NIHIL));
+
+        /* Equality + ternary */
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "a == b ? 1 : 2", NIHIL));
+
+        /* Parenthesized ternary */
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "(a ? 1 : 2)", NIHIL));
+    }
+
+    /* ========================================================
      * PROBARE: Simple declarations (in block)
      * Note: Pointer declarations like `int *x` are ambiguous in GLR
      * ======================================================== */
