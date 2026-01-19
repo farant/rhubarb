@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# Platform detection
+PLATFORM=$(uname -s)
+echo "Platform: $PLATFORM"
+
 # Compiler flags (same strict settings as compile_chorda.sh)
 declare -a GCC_FLAGS=(
     "-std=c89"
@@ -136,12 +140,26 @@ declare -a SOURCE_FILES=(
     "book_assets/capsula_libri.c"
 )
 
-# Objective-C sources (compiled separately)
-declare -a OBJC_SOURCES=(
-    "lib/fenestra_macos.m"
-    "lib/tls_macos.m"
-    "lib/clipboard_platform_macos.m"
-)
+# Platform-specific sources
+if [ "$PLATFORM" = "Darwin" ]; then
+    # macOS: Objective-C sources
+    declare -a PLATFORM_SOURCES=(
+        "lib/fenestra_macos.m"
+        "lib/tls_macos.m"
+        "lib/clipboard_platform_macos.m"
+    )
+    PLATFORM_EXT=".m"
+    LINK_FLAGS="-framework Cocoa -framework Security"
+else
+    # Linux: C sources with OpenSSL
+    declare -a PLATFORM_SOURCES=(
+        "lib/fenestra_linux.c"
+        "lib/tls_linux.c"
+        "lib/clipboard_platform_linux.c"
+    )
+    PLATFORM_EXT=".c"
+    LINK_FLAGS="-lssl -lcrypto -lm"
+fi
 
 # Build directory for object files
 BUILD_DIR="build"
@@ -196,11 +214,11 @@ compile_libraries() {
         fi
     done
 
-    # Also check Objective-C files
-    for objc_file in "${OBJC_SOURCES[@]}"; do
-        obj_name=$(basename "$objc_file" .m).o
+    # Also check platform-specific files
+    for plat_file in "${PLATFORM_SOURCES[@]}"; do
+        obj_name=$(basename "$plat_file" "$PLATFORM_EXT").o
         obj_file="$BUILD_DIR/$obj_name"
-        if [ ! -f "$obj_file" ] || [ "$objc_file" -nt "$obj_file" ]; then
+        if [ ! -f "$obj_file" ] || [ "$plat_file" -nt "$obj_file" ]; then
             needs_compile=1
             break
         fi
@@ -242,15 +260,15 @@ compile_libraries() {
         fi
     done
 
-    # Compile Objective-C files
-    for objc_file in "${OBJC_SOURCES[@]}"; do
-        obj_name=$(basename "$objc_file" .m).o
+    # Compile platform-specific files
+    for plat_file in "${PLATFORM_SOURCES[@]}"; do
+        obj_name=$(basename "$plat_file" "$PLATFORM_EXT").o
         obj_file="$BUILD_DIR/$obj_name"
 
-        if [ ! -f "$obj_file" ] || [ "$objc_file" -nt "$obj_file" ]; then
-            echo -e "  Compiling: $objc_file"
-            if ! clang -c ${GCC_FLAGS[@]} ${INCLUDE_FLAGS[@]} "$objc_file" -o "$obj_file" 2>&1; then
-                echo -e "${RED}✗ FAILED: $objc_file${RESET}"
+        if [ ! -f "$obj_file" ] || [ "$plat_file" -nt "$obj_file" ]; then
+            echo -e "  Compiling: $plat_file"
+            if ! clang -c ${GCC_FLAGS[@]} ${INCLUDE_FLAGS[@]} "$plat_file" -o "$obj_file" 2>&1; then
+                echo -e "${RED}✗ FAILED: $plat_file${RESET}"
                 return 1
             fi
         fi
@@ -273,9 +291,9 @@ get_object_files() {
         obj_files="$obj_files $BUILD_DIR/$obj_name"
     done
 
-    # Add Objective-C objects
-    for objc_file in "${OBJC_SOURCES[@]}"; do
-        obj_name=$(basename "$objc_file" .m).o
+    # Add platform-specific objects
+    for plat_file in "${PLATFORM_SOURCES[@]}"; do
+        obj_name=$(basename "$plat_file" "$PLATFORM_EXT").o
         obj_files="$obj_files $BUILD_DIR/$obj_name"
     done
 
@@ -299,7 +317,7 @@ compile_gui_app() {
 
     # Compile test file and link with object files
     # -Wno-overlength-strings: GUI apps may have long STML layout strings
-    if ! clang ${GCC_FLAGS[@]} -Wno-overlength-strings ${INCLUDE_FLAGS[@]} "$app_file" $obj_files -framework Cocoa -framework Security -o "$output_binary" 2>&1; then
+    if ! clang ${GCC_FLAGS[@]} -Wno-overlength-strings ${INCLUDE_FLAGS[@]} "$app_file" $obj_files $LINK_FLAGS -o "$output_binary" 2>&1; then
         echo -e "${RED}✗ BUILD FAILED: $app_name${RESET}"
         GUI_APPS_FAILED=$((GUI_APPS_FAILED + 1))
         FAILED_GUI_APPS="$FAILED_GUI_APPS $app_name"
@@ -359,7 +377,7 @@ compile_and_run_test() {
     obj_files=$(get_object_files)
 
     # Compile test file and link with object files
-    if ! clang ${GCC_FLAGS[@]} ${INCLUDE_FLAGS[@]} "$test_file" $obj_files -framework Cocoa -framework Security -o "$output_binary" 2>&1; then
+    if ! clang ${GCC_FLAGS[@]} ${INCLUDE_FLAGS[@]} "$test_file" $obj_files $LINK_FLAGS -o "$output_binary" 2>&1; then
         echo -e "${RED}✗ COMPILATION FAILED: $test_name${RESET}"
         TESTS_FAILED=$((TESTS_FAILED + 1))
         FAILED_TESTS="$FAILED_TESTS $test_name"
