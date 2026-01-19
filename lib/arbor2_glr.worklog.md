@@ -2378,3 +2378,62 @@ Tests: 1907 total (up from 1877)
 - `#elif EXPR` condition extraction
 - `defined(MACRO)` operator
 - Branch parsing (`ramus->parsed` remains NIHIL for now)
+
+## 2026-01-19: Fixed Nested Ternary in False Branch
+
+### Problem
+
+Test `a ? b : c ? d : e` (nested ternary in false branch with all identifiers) was failing. The parser returned `c ? d : e` instead of the full expression. The existing test `a ? 1 : b ? 2 : 3` (with integer literals) worked correctly.
+
+### Root Cause
+
+In the GLR parser, both parses were being created correctly:
+1. Inner ternary: `c ? d : e` 
+2. Outer ternary: `a ? b : (c ? d : e)` with `falsum.genus = TERNARIUS`
+
+But the `_nodi_aequales` function only compared node `genus` (type), not structure:
+```c
+si (a->genus != b->genus) redde FALSUM;
+/* For now, just compare genus - could add deeper comparison */
+redde VERUM;
+```
+
+Both parses had `genus = ARBOR2_NODUS_TERNARIUS`, so they were considered equal. The first one (wrong one) was selected.
+
+### Fix
+
+1. Added recursive structure comparison for TERNARIUS in `_nodi_aequales`:
+```c
+si (a->genus == ARBOR2_NODUS_TERNARIUS)
+{
+    si (!_nodi_aequales(a->datum.ternarius.conditio, b->datum.ternarius.conditio))
+        redde FALSUM;
+    si (!_nodi_aequales(a->datum.ternarius.verum, b->datum.ternarius.verum))
+        redde FALSUM;
+    si (!_nodi_aequales(a->datum.ternarius.falsum, b->datum.ternarius.falsum))
+        redde FALSUM;
+}
+```
+
+2. Added heuristic in ambiguity resolution to prefer TERNARIUS with nested TERNARIUS in falsum:
+```c
+alioquin si (primus->valor->genus == ARBOR2_NODUS_TERNARIUS &&
+             alius->valor->genus == ARBOR2_NODUS_TERNARIUS)
+{
+    b32 primus_habet_ternarium = (primus->valor->datum.ternarius.falsum != NIHIL &&
+        primus->valor->datum.ternarius.falsum->genus == ARBOR2_NODUS_TERNARIUS);
+    b32 alius_habet_ternarium = (alius->valor->datum.ternarius.falsum != NIHIL &&
+        alius->valor->datum.ternarius.falsum->genus == ARBOR2_NODUS_TERNARIUS);
+
+    si (!primus_habet_ternarium && alius_habet_ternarium)
+        primus->valor = alius->valor;
+}
+```
+
+This ensures right-associative parsing: `a ? b : c ? d : e` → `a ? b : (c ? d : e)`
+
+### Files Changed
+- lib/arbor2_glr.c: `_nodi_aequales` and ambiguity resolution
+- probationes/probatio_arbor2_scribere.c: uncommented test at line 943
+
+Tests: 269 pass (scribere), 77 total pass

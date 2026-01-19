@@ -1083,7 +1083,23 @@ _nodi_aequales(Arbor2Nodus* a, Arbor2Nodus* b)
     si (a == NIHIL || b == NIHIL) redde FALSUM;
     si (a->genus != b->genus) redde FALSUM;
 
-    /* For now, just compare genus - could add deeper comparison */
+    /* For TERNARIUS, compare structure recursively */
+    si (a->genus == ARBOR2_NODUS_TERNARIUS)
+    {
+        si (!_nodi_aequales(a->datum.ternarius.conditio, b->datum.ternarius.conditio))
+        {
+            redde FALSUM;
+        }
+        si (!_nodi_aequales(a->datum.ternarius.verum, b->datum.ternarius.verum))
+        {
+            redde FALSUM;
+        }
+        si (!_nodi_aequales(a->datum.ternarius.falsum, b->datum.ternarius.falsum))
+        {
+            redde FALSUM;
+        }
+    }
+
     redde VERUM;
 }
 
@@ -6168,6 +6184,23 @@ _processare_actiones(Arbor2GLR* glr, b32* acceptatum_out)
                     alioquin si (!primus_est_identificator && alius_est_identificator)
                     {
                         /* Alius est IDENTIFICATOR, primus melius - servare */
+                    }
+                    alioquin si (primus->valor->genus == ARBOR2_NODUS_TERNARIUS &&
+                                 alius->valor->genus == ARBOR2_NODUS_TERNARIUS)
+                    {
+                        /* Both are TERNARIUS - prefer the one with nested ternary in falsum
+                         * This handles `a ? b : c ? d : e` correctly as `a ? b : (c ? d : e)` */
+                        b32 primus_habet_ternarium = (primus->valor->datum.ternarius.falsum != NIHIL &&
+                            primus->valor->datum.ternarius.falsum->genus == ARBOR2_NODUS_TERNARIUS);
+                        b32 alius_habet_ternarium = (alius->valor->datum.ternarius.falsum != NIHIL &&
+                            alius->valor->datum.ternarius.falsum->genus == ARBOR2_NODUS_TERNARIUS);
+
+                        si (!primus_habet_ternarium && alius_habet_ternarium)
+                        {
+                            /* Alius has nested ternary, prefer it */
+                            primus->valor = alius->valor;
+                        }
+                        /* alioquin: either primus has it or neither does - keep primus */
                     }
                     alioquin
                     {

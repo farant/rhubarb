@@ -939,8 +939,8 @@ s32 principale(vacuum)
 
         /* Nested ternary in true branch */
         CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "a ? b ? c : d : e", NIHIL));
-        /* TODO: nested ternary in false branch needs parser fix */
-        /* CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "a ? b : c ? d : e", NIHIL)); */
+        /* Nested ternary in false branch */
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "a ? b : c ? d : e", NIHIL));
 
         /* Ternary in expressions */
         CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "(a ? b : c) + d", NIHIL));
