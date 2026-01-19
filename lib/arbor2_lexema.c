@@ -562,6 +562,14 @@ _colligere_spatia(Arbor2Lexator* lex)
                 _progredi(lex, I);
             }
 
+            /* Include terminating newline in comment token for roundtrip */
+            si (!_finis(lex) && _aspicere(lex, ZEPHYRUM) == '\n')
+            {
+                _progredi(lex, I);
+                lex->linea++;
+                lex->columna = I;
+            }
+
             spatium = _creare_spatium(
                 lex,
                 ARBOR2_LEXEMA_COMMENTUM_LINEA,

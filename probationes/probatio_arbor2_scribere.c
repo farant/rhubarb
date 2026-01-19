@@ -694,9 +694,9 @@ s32 principale(vacuum)
         CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
             "/* comment */ x", NIHIL));
 
-        /* Note: Line comment test skipped - requires special newline handling */
-        /* CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
-            "// comment\nx", NIHIL)); */
+        /* Line comment roundtrip (newline consumed with comment) */
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "// comment\nx", NIHIL));
 
         /* Comment in binary expression */
         CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
