@@ -818,9 +818,16 @@ s32 principale(vacuum)
                   arbor2_nodus_genus_nomen(res.radix->genus),
                   (i32)res.radix->genus);
 
-        /* NOTE: Parser currently returns AMBIGUUS for ternary with interior comment.
-         * This is a known parser issue to be fixed separately.
-         * Skip strict type check for now. */
+        /* Verificare roundtrip */
+        {
+            chorda* output = arbor2_scribere(piscina, res.radix);
+            constans character* input = "c ? /* q */ t : f";
+            imprimere("  Input:  '%s'\n", input);
+            imprimere("  Output: '%.*s'\n", output->mensura, output->datum);
+            CREDO_VERUM(output->mensura == 17);
+            CREDO_VERUM(memcmp(output->datum, input, 17) == ZEPHYRUM);
+        }
+
         si (res.radix->genus == ARBOR2_NODUS_TERNARIUS)
         {
             /* The comment after ? should attach to verum as commenta_ante */
@@ -840,7 +847,9 @@ s32 principale(vacuum)
         }
         alioquin
         {
-            imprimere("  KNOWN ISSUE: parser returns AMBIGUUS instead of TERNARIUS\n");
+            imprimere("  ERRATUM: expectavit TERNARIUS, obtinuit %s\n",
+                      arbor2_nodus_genus_nomen(res.radix->genus));
+            CREDO_VERUM(FALSUM); /* Debet esse TERNARIUS */
         }
     }
 

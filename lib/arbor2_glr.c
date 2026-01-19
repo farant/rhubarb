@@ -6153,7 +6153,29 @@ _processare_actiones(Arbor2GLR* glr, b32* acceptatum_out)
             Arbor2GSSNodus* alius = *(Arbor2GSSNodus**)xar_obtinere(acceptati, j);
             si (primus->valor != NIHIL && alius->valor != NIHIL)
             {
-                primus->valor = _creare_nodum_ambiguum(glr, primus->valor, alius->valor, primus->lexema);
+                si (!_nodi_aequales(primus->valor, alius->valor))
+                {
+                    /* IDENTIFICATOR solum est parse incompleta - non valida top-level.
+                     * Si unus path IDENTIFICATOR habet et alter non, praeferre alterum. */
+                    b32 primus_est_identificator = (primus->valor->genus == ARBOR2_NODUS_IDENTIFICATOR);
+                    b32 alius_est_identificator = (alius->valor->genus == ARBOR2_NODUS_IDENTIFICATOR);
+
+                    si (primus_est_identificator && !alius_est_identificator)
+                    {
+                        /* Primus est IDENTIFICATOR, alius melius - mutare */
+                        primus->valor = alius->valor;
+                    }
+                    alioquin si (!primus_est_identificator && alius_est_identificator)
+                    {
+                        /* Alius est IDENTIFICATOR, primus melius - servare */
+                    }
+                    alioquin
+                    {
+                        /* Neuter est IDENTIFICATOR solum - vere ambiguum */
+                        primus->valor = _creare_nodum_ambiguum(glr, primus->valor, alius->valor, primus->lexema);
+                    }
+                }
+                /* alioquin: eadem structura, eligere primum (commenta in trivia servantur) */
             }
         }
         nodus_acceptatus = primus;
