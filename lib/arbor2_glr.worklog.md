@@ -2437,3 +2437,39 @@ This ensures right-associative parsing: `a ? b : c ? d : e` → `a ? b : (c ? d 
 - probationes/probatio_arbor2_scribere.c: uncommented test at line 943
 
 Tests: 269 pass (scribere), 77 total pass
+
+
+## 2026-01-19: Phase 5.4 - Branch Parsing
+
+Implemented parsing of conditional branch contents. Previously, `ARBOR2_NODUS_CONDITIONALIS` nodes collected tokens in each branch's `lexemata` field but `parsed` was always NIHIL.
+
+### Changes
+
+1. **New helper `_parsere_ramus()`** (lines 6737-6785):
+   - Returns NIHIL for empty branches (no tokens)
+   - Creates copy of branch tokens with synthetic EOF appended
+   - Calls `arbor2_glr_parsere_translation_unit()` recursively
+   - Returns the parsed AST (TRANSLATION_UNIT node)
+
+2. **Branch parsing loop in `_colligere_conditionale()`** (lines 7031-7042):
+   - After collecting all branch tokens but before creating the CONDITIONALIS node
+   - Iterates through all branches and calls `_parsere_ramus()` for each
+   - Populates `ramus->parsed` with the resulting AST
+
+### Design Notes
+
+- Nested conditionals are handled naturally - when branch tokens contain `#ifdef`/`#endif`, the recursive parse creates nested CONDITIONALIS nodes
+- Empty branches (e.g., `#ifdef X\n#else\n...`) correctly produce `parsed = NIHIL`
+- Each branch parses independently - partial constructs split across branches will produce ERROR nodes (acceptable limitation)
+- Error counter resets per-branch since `arbor2_glr_parsere_translation_unit` clears errors at start
+
+### Tests Added
+
+5 new test blocks in probatio_arbor2_glr.c:
+- Basic parsed branch (1 declaration)
+- Multiple declarations in branch
+- Nested conditional in branch (verifies inner CONDITIONALIS created)
+- Empty branch (verifies parsed = NIHIL)
+- ifdef with else (both branches parse independently)
+
+Tests: 2069 total pass (24 new assertions)

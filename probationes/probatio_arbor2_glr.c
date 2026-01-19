@@ -14438,6 +14438,310 @@ s32 principale(vacuum)
     }
 
 
+    /* ========================================================
+     * PROBARE: Branch Parsing (Phase 5.4)
+     * ======================================================== */
+
+    /* Test: Basic parsed branch - one declaration */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+        Arbor2Nodus* tu;
+
+        imprimere("\n--- Probans branch parsing: basic ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern,
+            "#ifdef DEBUG\n"
+            "int x;\n"
+            "#endif\n");
+        res = arbor2_glr_parsere_translation_unit(glr, tokens);
+
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.radix);
+
+        si (res.radix != NIHIL)
+        {
+            tu = res.radix;
+            si (xar_numerus(tu->datum.translation_unit.declarationes) >= I)
+            {
+                Arbor2Nodus** first_ptr;
+                Arbor2Nodus* cond;
+                Arbor2CondRamus* ramus;
+
+                first_ptr = xar_obtinere(tu->datum.translation_unit.declarationes, ZEPHYRUM);
+                cond = *first_ptr;
+                CREDO_AEQUALIS_I32((i32)cond->genus, (i32)ARBOR2_NODUS_CONDITIONALIS);
+
+                si (cond->genus == ARBOR2_NODUS_CONDITIONALIS &&
+                    xar_numerus(cond->datum.conditionalis.rami) > ZEPHYRUM)
+                {
+                    ramus = *(Arbor2CondRamus**)xar_obtinere(cond->datum.conditionalis.rami, ZEPHYRUM);
+
+                    /* Verificare ramus->parsed */
+                    imprimere("  ramus->parsed: %s\n", ramus->parsed != NIHIL ? "non-NIHIL" : "NIHIL");
+                    CREDO_NON_NIHIL(ramus->parsed);
+
+                    si (ramus->parsed != NIHIL)
+                    {
+                        Arbor2Nodus* parsed_tu = ramus->parsed;
+                        i32 num_parsed;
+
+                        CREDO_AEQUALIS_I32((i32)parsed_tu->genus, (i32)ARBOR2_NODUS_TRANSLATION_UNIT);
+                        num_parsed = xar_numerus(parsed_tu->datum.translation_unit.declarationes);
+                        imprimere("  parsed declarations: %d\n", num_parsed);
+                        CREDO_AEQUALIS_I32(num_parsed, I);  /* int x; */
+                    }
+                }
+            }
+        }
+    }
+
+    /* Test: Multiple declarations in branch */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+        Arbor2Nodus* tu;
+
+        imprimere("\n--- Probans branch parsing: multiple decls ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern,
+            "#ifdef DEBUG\n"
+            "int x;\n"
+            "int y;\n"
+            "#endif\n");
+        res = arbor2_glr_parsere_translation_unit(glr, tokens);
+
+        CREDO_VERUM(res.successus);
+
+        si (res.radix != NIHIL)
+        {
+            tu = res.radix;
+            si (xar_numerus(tu->datum.translation_unit.declarationes) >= I)
+            {
+                Arbor2Nodus** first_ptr;
+                Arbor2Nodus* cond;
+                Arbor2CondRamus* ramus;
+
+                first_ptr = xar_obtinere(tu->datum.translation_unit.declarationes, ZEPHYRUM);
+                cond = *first_ptr;
+
+                si (cond->genus == ARBOR2_NODUS_CONDITIONALIS &&
+                    xar_numerus(cond->datum.conditionalis.rami) > ZEPHYRUM)
+                {
+                    ramus = *(Arbor2CondRamus**)xar_obtinere(cond->datum.conditionalis.rami, ZEPHYRUM);
+                    CREDO_NON_NIHIL(ramus->parsed);
+
+                    si (ramus->parsed != NIHIL)
+                    {
+                        Arbor2Nodus* parsed_tu = ramus->parsed;
+                        i32 num_parsed;
+
+                        num_parsed = xar_numerus(parsed_tu->datum.translation_unit.declarationes);
+                        imprimere("  parsed declarations: %d\n", num_parsed);
+                        CREDO_AEQUALIS_I32(num_parsed, II);  /* int x; int y; */
+                    }
+                }
+            }
+        }
+    }
+
+    /* Test: Nested conditional in branch */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+        Arbor2Nodus* tu;
+
+        imprimere("\n--- Probans branch parsing: nested conditional ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern,
+            "#ifdef OUTER\n"
+            "#ifdef INNER\n"
+            "int nested;\n"
+            "#endif\n"
+            "#endif\n");
+        res = arbor2_glr_parsere_translation_unit(glr, tokens);
+
+        CREDO_VERUM(res.successus);
+
+        si (res.radix != NIHIL)
+        {
+            tu = res.radix;
+            si (xar_numerus(tu->datum.translation_unit.declarationes) >= I)
+            {
+                Arbor2Nodus** first_ptr;
+                Arbor2Nodus* cond;
+                Arbor2CondRamus* ramus;
+
+                first_ptr = xar_obtinere(tu->datum.translation_unit.declarationes, ZEPHYRUM);
+                cond = *first_ptr;
+
+                si (cond->genus == ARBOR2_NODUS_CONDITIONALIS &&
+                    xar_numerus(cond->datum.conditionalis.rami) > ZEPHYRUM)
+                {
+                    ramus = *(Arbor2CondRamus**)xar_obtinere(cond->datum.conditionalis.rami, ZEPHYRUM);
+                    CREDO_NON_NIHIL(ramus->parsed);
+
+                    si (ramus->parsed != NIHIL)
+                    {
+                        Arbor2Nodus* parsed_tu = ramus->parsed;
+                        i32 num_parsed;
+
+                        num_parsed = xar_numerus(parsed_tu->datum.translation_unit.declarationes);
+                        imprimere("  parsed declarations: %d\n", num_parsed);
+                        CREDO_AEQUALIS_I32(num_parsed, I);  /* One nested CONDITIONALIS */
+
+                        si (num_parsed >= I)
+                        {
+                            Arbor2Nodus** inner_ptr;
+                            Arbor2Nodus* inner_cond;
+
+                            inner_ptr = xar_obtinere(parsed_tu->datum.translation_unit.declarationes, ZEPHYRUM);
+                            inner_cond = *inner_ptr;
+                            imprimere("  inner node genus: %d (CONDITIONALIS=%d)\n",
+                                (i32)inner_cond->genus, (i32)ARBOR2_NODUS_CONDITIONALIS);
+                            CREDO_AEQUALIS_I32((i32)inner_cond->genus, (i32)ARBOR2_NODUS_CONDITIONALIS);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    /* Test: Empty branch */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+        Arbor2Nodus* tu;
+
+        imprimere("\n--- Probans branch parsing: empty branch ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern,
+            "#ifdef DEBUG\n"
+            "#else\n"
+            "int fallback;\n"
+            "#endif\n");
+        res = arbor2_glr_parsere_translation_unit(glr, tokens);
+
+        CREDO_VERUM(res.successus);
+
+        si (res.radix != NIHIL)
+        {
+            tu = res.radix;
+            si (xar_numerus(tu->datum.translation_unit.declarationes) >= I)
+            {
+                Arbor2Nodus** first_ptr;
+                Arbor2Nodus* cond;
+                i32 num_rami;
+
+                first_ptr = xar_obtinere(tu->datum.translation_unit.declarationes, ZEPHYRUM);
+                cond = *first_ptr;
+
+                si (cond->genus == ARBOR2_NODUS_CONDITIONALIS)
+                {
+                    num_rami = xar_numerus(cond->datum.conditionalis.rami);
+                    imprimere("  num_rami: %d\n", num_rami);
+                    CREDO_AEQUALIS_I32(num_rami, II);  /* ifdef branch + else branch */
+
+                    si (num_rami >= II)
+                    {
+                        Arbor2CondRamus* ramus_if;
+                        Arbor2CondRamus* ramus_else;
+
+                        ramus_if = *(Arbor2CondRamus**)xar_obtinere(cond->datum.conditionalis.rami, ZEPHYRUM);
+                        ramus_else = *(Arbor2CondRamus**)xar_obtinere(cond->datum.conditionalis.rami, I);
+
+                        /* Empty branch should have NIHIL parsed */
+                        imprimere("  ifdef branch parsed: %s\n",
+                            ramus_if->parsed != NIHIL ? "non-NIHIL" : "NIHIL");
+                        CREDO_NIHIL(ramus_if->parsed);
+
+                        /* Else branch should have one declaration */
+                        imprimere("  else branch parsed: %s\n",
+                            ramus_else->parsed != NIHIL ? "non-NIHIL" : "NIHIL");
+                        CREDO_NON_NIHIL(ramus_else->parsed);
+
+                        si (ramus_else->parsed != NIHIL)
+                        {
+                            i32 num_else_decls;
+                            num_else_decls = xar_numerus(ramus_else->parsed->datum.translation_unit.declarationes);
+                            imprimere("  else declarations: %d\n", num_else_decls);
+                            CREDO_AEQUALIS_I32(num_else_decls, I);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    /* Test: Declaration after ifdef/else */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+        Arbor2Nodus* tu;
+
+        imprimere("\n--- Probans branch parsing: ifdef with else ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern,
+            "#ifdef DEBUG\n"
+            "int debug_val;\n"
+            "#else\n"
+            "int release_val;\n"
+            "#endif\n");
+        res = arbor2_glr_parsere_translation_unit(glr, tokens);
+
+        CREDO_VERUM(res.successus);
+
+        si (res.radix != NIHIL)
+        {
+            tu = res.radix;
+            si (xar_numerus(tu->datum.translation_unit.declarationes) >= I)
+            {
+                Arbor2Nodus** first_ptr;
+                Arbor2Nodus* cond;
+                i32 num_rami;
+
+                first_ptr = xar_obtinere(tu->datum.translation_unit.declarationes, ZEPHYRUM);
+                cond = *first_ptr;
+
+                si (cond->genus == ARBOR2_NODUS_CONDITIONALIS)
+                {
+                    num_rami = xar_numerus(cond->datum.conditionalis.rami);
+                    CREDO_AEQUALIS_I32(num_rami, II);
+
+                    si (num_rami >= II)
+                    {
+                        Arbor2CondRamus* ramus_if;
+                        Arbor2CondRamus* ramus_else;
+
+                        ramus_if = *(Arbor2CondRamus**)xar_obtinere(cond->datum.conditionalis.rami, ZEPHYRUM);
+                        ramus_else = *(Arbor2CondRamus**)xar_obtinere(cond->datum.conditionalis.rami, I);
+
+                        /* Both branches should have parsed content */
+                        CREDO_NON_NIHIL(ramus_if->parsed);
+                        CREDO_NON_NIHIL(ramus_else->parsed);
+
+                        si (ramus_if->parsed != NIHIL)
+                        {
+                            i32 num_if;
+                            num_if = xar_numerus(ramus_if->parsed->datum.translation_unit.declarationes);
+                            imprimere("  ifdef decls: %d\n", num_if);
+                            CREDO_AEQUALIS_I32(num_if, I);
+                        }
+
+                        si (ramus_else->parsed != NIHIL)
+                        {
+                            i32 num_else;
+                            num_else = xar_numerus(ramus_else->parsed->datum.translation_unit.declarationes);
+                            imprimere("  else decls: %d\n", num_else);
+                            CREDO_AEQUALIS_I32(num_else, I);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
     /* Compendium */
     imprimere("\n");
     credo_imprimere_compendium();

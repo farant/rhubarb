@@ -6734,6 +6734,56 @@ _obtinere_expressio_lexemata(Arbor2GLR* glr, Xar* lexemata, i32 positus)
     redde expressio;
 }
 
+/* Parse branch tokens into AST (returns TRANSLATION_UNIT or NIHIL) */
+interior Arbor2Nodus*
+_parsere_ramus(
+    Arbor2GLR*  glr,
+    Xar*        lexemata)    /* Xar of Arbor2Token* */
+{
+    Xar*            lexemata_cum_eof;
+    Arbor2Token*    eof_token;
+    Arbor2Token**   slot;
+    Arbor2GLRResultus res;
+    i32             i;
+    i32             num;
+
+    /* Ramus vacuus -> NIHIL */
+    si (lexemata == NIHIL || xar_numerus(lexemata) == ZEPHYRUM)
+    {
+        redde NIHIL;
+    }
+
+    /* Creare copiam lexematum cum EOF addito */
+    lexemata_cum_eof = xar_creare(glr->piscina, magnitudo(Arbor2Token*));
+
+    num = xar_numerus(lexemata);
+    per (i = ZEPHYRUM; i < num; i++)
+    {
+        Arbor2Token** src = xar_obtinere(lexemata, i);
+        slot = xar_addere(lexemata_cum_eof);
+        *slot = *src;
+    }
+
+    /* Creare token EOF syntheticum */
+    eof_token = piscina_allocare(glr->piscina, magnitudo(Arbor2Token));
+    eof_token->lexema = piscina_allocare(glr->piscina, magnitudo(Arbor2Lexema));
+    eof_token->lexema->genus = ARBOR2_LEXEMA_EOF;
+    eof_token->lexema->valor.datum = NIHIL;
+    eof_token->lexema->valor.mensura = ZEPHYRUM;
+    eof_token->lexema->linea = I;
+    eof_token->lexema->columna = I;
+    eof_token->origo_token = NIHIL;
+    eof_token->origo_meta = NIHIL;
+
+    slot = xar_addere(lexemata_cum_eof);
+    *slot = eof_token;
+
+    /* Parsere ut fragmentum translation unit */
+    res = arbor2_glr_parsere_translation_unit(glr, lexemata_cum_eof);
+
+    redde res.radix;
+}
+
 /* Collect entire conditional block and create CONDITIONALIS node */
 interior Arbor2Nodus*
 _colligere_conditionale(Arbor2GLR* glr, Xar* lexemata, i32* positus)
@@ -6975,6 +7025,19 @@ _colligere_conditionale(Arbor2GLR* glr, Xar* lexemata, i32* positus)
             tok_slot = xar_addere(ramus_currens->lexemata);
             *tok_slot = tok_curr;
             pos++;
+        }
+    }
+
+    /* Parse each branch's tokens into AST */
+    {
+        i32 num_rami = xar_numerus(rami);
+        i32 r;
+        per (r = ZEPHYRUM; r < num_rami; r++)
+        {
+            Arbor2CondRamus** ramus_ptr = xar_obtinere(rami, r);
+            Arbor2CondRamus*  ramus = *ramus_ptr;
+
+            ramus->parsed = _parsere_ramus(glr, ramus->lexemata);
         }
     }
 

@@ -1,7 +1,7 @@
 # Arbor v2 Implementation Plan
 
-Date: 2026-01-17
-Status: Updated after Phase 5b completion - Conditional Compilation MOSTLY COMPLETE
+Date: 2026-01-19
+Status: Updated after Phase 5.4 completion - Conditional Compilation COMPLETE
 
 ---
 
@@ -143,7 +143,7 @@ Current structure has:
 - Type resolution field
 
 ### Tests - COMPREHENSIVE
-- **~1900 GLR tests** (all passing) - updated after Phase 5b
+- **~2069 GLR tests** (all passing) - updated after Phase 5.4
 - **124 expandere tests** (all passing) - includes lookahead API
 - Covers expressions, statements, declarations
 - Full initializer coverage (simple, brace, designated)
@@ -158,12 +158,13 @@ Current structure has:
 - **Latin macro disambiguation tests** (integer x, i32 x, constans integer x) - Phase 3.2
 - **AMBIGUUS tracking tests** (foo * bar) - Phase 3.3
 - **Error recovery tests** (invalid decl + valid, multiple errors, error + function) - Phase 4
-- **Conditional compilation tests** (Phase 5/5b):
+- **Conditional compilation tests** (Phase 5/5b/5.4):
   - Basic #ifdef/#endif, #ifdef/#else/#endif, #ifndef
   - Multiple independent conditionals, mixed with declarations
   - Nested conditionals
   - #if with expressions: literals, arithmetic, comparison, logical, defined()
   - #elif branches
+  - Branch parsing: basic, multiple decls, nested, empty, ifdef/else
   - 19+ test cases for conditional directives
 - Table validation
 - Parser statistics
@@ -395,15 +396,14 @@ Given the current state, the recommended priority is:
    - Error limit (10 max) to prevent infinite loops
    - 21 new test assertions
 
-5. **Phase 5 (Conditional Compilation)** - **MOSTLY COMPLETE** ✓
+5. **Phase 5 (Conditional Compilation)** - **COMPLETE** ✓
    - 5.1 Directive Recognition: **COMPLETE** ✓
    - 5.2 Branch Structure: **COMPLETE** ✓ (Arbor2CondRamus, CONDITIONALIS node)
    - 5.3 Expression Evaluation: **COMPLETE** ✓ (arbor2_conditio_evaluare.c)
-   - 5.4 Branch Parsing: **NOT YET** (tokens collected but not parsed to AST)
-   - 19+ test cases
+   - 5.4 Branch Parsing: **COMPLETE** ✓ (recursive AST parsing of branch contents)
+   - 24+ test cases
 
 6. **Next priorities:**
-   - Phase 5.4: Parse branch contents into AST (currently just token collection)
    - Phase 6: #include Processing (actually read files)
    - Phase 7.2: Standard Library Type Hints (FILE, size_t, etc.)
    - #error, #warning, #pragma, #line directives
@@ -427,7 +427,6 @@ Given the current state, the recommended priority is:
 
 **Remaining gaps (low priority):**
 - K&R function definitions (old-style parameters)
-- Branch content parsing (tokens collected but not parsed to AST yet)
 
 ---
 
@@ -749,12 +748,13 @@ error_nodus->datum.error.lexemata_saltata = /* Xar of skipped tokens */;
 
 ---
 
-## Phase 5: Conditional Compilation — **MOSTLY COMPLETE** ✓
+## Phase 5: Conditional Compilation — **COMPLETE** ✓
 
-Implemented 2026-01-17 in two sub-phases.
+Implemented 2026-01-17 through 2026-01-19 in three sub-phases.
 
 **Phase 5 (commit 5740c60):** Basic directive structure
 **Phase 5b (commit 6013f71):** Expression evaluation for #if/#elif
+**Phase 5.4 (2026-01-19):** Branch content parsing into AST
 
 #### 5.1 Directive Recognition — **COMPLETE** ✓
 
@@ -849,15 +849,19 @@ b32 arbor2_conditio_est_definitum(
     chorda              titulus);
 ```
 
-#### 5.4 Branch Parsing — **NOT YET IMPLEMENTED**
+#### 5.4 Branch Parsing — **COMPLETE** ✓
 
-The `parsed` field in Arbor2CondRamus is always NIHIL. Each branch has its tokens collected in `lexemata` but they are not being parsed into AST nodes yet.
+Each branch's `parsed` field is now populated with a TRANSLATION_UNIT AST node containing the parsed declarations from that branch.
 
-**TODO:** Recursively parse branch contents to populate `parsed` field.
+**Implementation:**
+- `_parsere_ramus()` helper: Creates token copy with synthetic EOF, calls `arbor2_glr_parsere_translation_unit()` recursively
+- Branch parsing loop in `_colligere_conditionale()`: Iterates branches after collection, populates `ramus->parsed`
+- Empty branches correctly produce `parsed = NIHIL`
+- Nested conditionals create nested CONDITIONALIS nodes in the branch AST
 
 #### 5.5 Tests
 
-19+ test cases in probatio_arbor2_glr.c (lines 13100+):
+24+ test cases in probatio_arbor2_glr.c (lines 13100+):
 
 **Phase 5 tests:**
 1. Simple #ifdef/#endif
@@ -881,8 +885,14 @@ The `parsed` field in Arbor2CondRamus is always NIHIL. Each branch has its token
 17. #if (1 + 2) * 3 == 9
 18. #if 0xFF & 0x0F
 
-**Deliverable:** Can detect and collect conditional blocks with expression evaluation ✓
-**TODO:** Parse branch contents into AST
+**Phase 5.4 tests:**
+19. Branch parsing: basic (1 declaration)
+20. Branch parsing: multiple declarations
+21. Branch parsing: nested conditional
+22. Branch parsing: empty branch
+23. Branch parsing: ifdef with else
+
+**Deliverable:** Full conditional compilation with parsed branch AST ✓
 
 ---
 
@@ -1069,7 +1079,7 @@ Phase 3 (GLR-Expansion) ────────┤ ✓
                                 │
 Phase 4 (Error Recovery) ───────┤ ✓
                                 │
-Phase 5 (Conditionals) ─────────┤ ~✓ (branch parsing TODO)
+Phase 5 (Conditionals) ─────────┤ ✓ (complete with branch parsing)
                                 │
 Phase 6 (#include) ─────────────┤
                                 │
@@ -1146,4 +1156,5 @@ Phase 8 (Queries)      Phase 9 (Types)      Phase 10 (Index)
 | 2026-01-17 | 4 Error Recovery | +0 | +0 | +21 | _creare_nodum_error(), translation unit recovery, error limit |
 | 2026-01-17 | 5 Conditional Directives | +0 | +0 | +6 | #ifdef/#ifndef/#else/#endif detection, Arbor2CondRamus, CONDITIONALIS node |
 | 2026-01-17 | 5b Expression Evaluation | +0 | +0 | +13 | arbor2_conditio_evaluare.c, #if/#elif support, defined() operator |
-| **Current** | | **351** | **952** | **~1900** | |
+| 2026-01-19 | 5.4 Branch Parsing | +0 | +0 | +24 | _parsere_ramus(), recursive branch AST parsing, nested conditionals |
+| **Current** | | **351** | **952** | **~2069** | |
