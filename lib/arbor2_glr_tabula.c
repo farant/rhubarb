@@ -784,7 +784,45 @@ hic_manens Arbor2Regula REGULAE[] = {
      * Qualified Function Definitions (P505-P506)
      * ================================================== */
     /* P505 */ { ARBOR2_NT_DEFINITIO_FUNCTI, 4, ARBOR2_NODUS_DEFINITIO_FUNCTI, "func_def -> 'const' type declarator compound" },
-    /* P506 */ { ARBOR2_NT_DEFINITIO_FUNCTI, 4, ARBOR2_NODUS_DEFINITIO_FUNCTI, "func_def -> 'volatile' type declarator compound" }
+    /* P506 */ { ARBOR2_NT_DEFINITIO_FUNCTI, 4, ARBOR2_NODUS_DEFINITIO_FUNCTI, "func_def -> 'volatile' type declarator compound" },
+
+    /* ==================================================
+     * Compound Type Function Definitions (P507-P519)
+     * For functions with compound return types like:
+     *   unsigned int f() { }
+     *   long int g() { }
+     *   unsigned long h() { }
+     *   long long l() { }
+     * ================================================== */
+
+    /* 4-symbol: modifier + type + declarator + compound */
+    /* P507 */ { ARBOR2_NT_DEFINITIO_FUNCTI, 4, ARBOR2_NODUS_DEFINITIO_FUNCTI, "func_def -> 'unsigned' type declarator compound" },
+    /* P508 */ { ARBOR2_NT_DEFINITIO_FUNCTI, 4, ARBOR2_NODUS_DEFINITIO_FUNCTI, "func_def -> 'signed' type declarator compound" },
+    /* P509 */ { ARBOR2_NT_DEFINITIO_FUNCTI, 4, ARBOR2_NODUS_DEFINITIO_FUNCTI, "func_def -> 'long' type declarator compound" },
+    /* P510 */ { ARBOR2_NT_DEFINITIO_FUNCTI, 4, ARBOR2_NODUS_DEFINITIO_FUNCTI, "func_def -> 'short' type declarator compound" },
+
+    /* 5-symbol: modifier + modifier + type + declarator + compound */
+    /* P511 */ { ARBOR2_NT_DEFINITIO_FUNCTI, 5, ARBOR2_NODUS_DEFINITIO_FUNCTI, "func_def -> 'unsigned' 'long' type declarator compound" },
+    /* P512 */ { ARBOR2_NT_DEFINITIO_FUNCTI, 5, ARBOR2_NODUS_DEFINITIO_FUNCTI, "func_def -> 'signed' 'long' type declarator compound" },
+    /* P513 */ { ARBOR2_NT_DEFINITIO_FUNCTI, 5, ARBOR2_NODUS_DEFINITIO_FUNCTI, "func_def -> 'unsigned' 'short' type declarator compound" },
+    /* P514 */ { ARBOR2_NT_DEFINITIO_FUNCTI, 5, ARBOR2_NODUS_DEFINITIO_FUNCTI, "func_def -> 'signed' 'short' type declarator compound" },
+    /* P515 */ { ARBOR2_NT_DEFINITIO_FUNCTI, 5, ARBOR2_NODUS_DEFINITIO_FUNCTI, "func_def -> 'long' 'long' type declarator compound" },
+
+    /* 6-symbol: modifier + modifier + modifier + type + declarator + compound */
+    /* P516 */ { ARBOR2_NT_DEFINITIO_FUNCTI, 6, ARBOR2_NODUS_DEFINITIO_FUNCTI, "func_def -> 'unsigned' 'long' 'long' type declarator compound" },
+    /* P517 */ { ARBOR2_NT_DEFINITIO_FUNCTI, 6, ARBOR2_NODUS_DEFINITIO_FUNCTI, "func_def -> 'signed' 'long' 'long' type declarator compound" },
+
+    /* Implicit int function definitions (no explicit 'int' type) */
+    /* 4-symbol: modifier + modifier + declarator + compound (implicit int) */
+    /* P518 */ { ARBOR2_NT_DEFINITIO_FUNCTI, 4, ARBOR2_NODUS_DEFINITIO_FUNCTI, "func_def -> 'unsigned' 'long' declarator compound" },
+    /* P519 */ { ARBOR2_NT_DEFINITIO_FUNCTI, 4, ARBOR2_NODUS_DEFINITIO_FUNCTI, "func_def -> 'signed' 'long' declarator compound" },
+    /* P520 */ { ARBOR2_NT_DEFINITIO_FUNCTI, 4, ARBOR2_NODUS_DEFINITIO_FUNCTI, "func_def -> 'unsigned' 'short' declarator compound" },
+    /* P521 */ { ARBOR2_NT_DEFINITIO_FUNCTI, 4, ARBOR2_NODUS_DEFINITIO_FUNCTI, "func_def -> 'signed' 'short' declarator compound" },
+    /* P522 */ { ARBOR2_NT_DEFINITIO_FUNCTI, 4, ARBOR2_NODUS_DEFINITIO_FUNCTI, "func_def -> 'long' 'long' declarator compound" },
+
+    /* 5-symbol: modifier + modifier + modifier + declarator + compound (implicit int) */
+    /* P523 */ { ARBOR2_NT_DEFINITIO_FUNCTI, 5, ARBOR2_NODUS_DEFINITIO_FUNCTI, "func_def -> 'unsigned' 'long' 'long' declarator compound" },
+    /* P524 */ { ARBOR2_NT_DEFINITIO_FUNCTI, 5, ARBOR2_NODUS_DEFINITIO_FUNCTI, "func_def -> 'signed' 'long' 'long' declarator compound" }
 };
 
 hic_manens i32 NUM_REGULAE = (i32)(magnitudo(REGULAE) / magnitudo(REGULAE[0]));
@@ -14986,20 +15024,23 @@ hic_manens constans Arbor2TabulaActio STATUS_1173_ACTIONES[] = {
     { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,  18, FALSUM }
 };
 
-/* State 1174: after 'long long' at top-level - expects * or ID */
+/* State 1174: after 'long long' at top-level - expects int, * or ID */
 hic_manens constans Arbor2TabulaActio STATUS_1174_ACTIONES[] = {
+    { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_SHIFT, 1420, FALSUM },  /* long long int */
     { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,  17, FALSUM },
     { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,  18, FALSUM }
 };
 
-/* State 1175: after 'unsigned long long' at top-level - expects * or ID */
+/* State 1175: after 'unsigned long long' at top-level - expects int, * or ID */
 hic_manens constans Arbor2TabulaActio STATUS_1175_ACTIONES[] = {
+    { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_SHIFT, 1421, FALSUM },  /* unsigned long long int */
     { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,  17, FALSUM },
     { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,  18, FALSUM }
 };
 
-/* State 1176: after 'signed long long' at top-level - expects * or ID */
+/* State 1176: after 'signed long long' at top-level - expects int, * or ID */
 hic_manens constans Arbor2TabulaActio STATUS_1176_ACTIONES[] = {
+    { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_SHIFT, 1422, FALSUM },  /* signed long long int */
     { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,  17, FALSUM },
     { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,  18, FALSUM }
 };
@@ -16699,6 +16740,162 @@ hic_manens constans Arbor2TabulaActio STATUS_1401_ACTIONES[] = {
 };
 
 /* ==================================================
+ * Compound Type Function Definition States (1402-1412)
+ * For function definitions with compound return types like:
+ *   unsigned int f() { }
+ *   long int g() { }
+ * ================================================== */
+
+/* State 1402: after 'unsigned int declarator compound' - reduce P507 */
+hic_manens constans Arbor2TabulaActio STATUS_1402_ACTIONES[] = {
+    { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 507, FALSUM }
+};
+
+/* State 1403: after 'signed int declarator compound' - reduce P508 */
+hic_manens constans Arbor2TabulaActio STATUS_1403_ACTIONES[] = {
+    { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 508, FALSUM }
+};
+
+/* State 1404: after 'long int declarator compound' - reduce P509 */
+hic_manens constans Arbor2TabulaActio STATUS_1404_ACTIONES[] = {
+    { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 509, FALSUM }
+};
+
+/* State 1405: after 'short int declarator compound' - reduce P510 */
+hic_manens constans Arbor2TabulaActio STATUS_1405_ACTIONES[] = {
+    { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 510, FALSUM }
+};
+
+/* State 1406: after 'unsigned long [int] declarator compound' - reduce P511 */
+hic_manens constans Arbor2TabulaActio STATUS_1406_ACTIONES[] = {
+    { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 511, FALSUM }
+};
+
+/* State 1407: after 'signed long [int] declarator compound' - reduce P512 */
+hic_manens constans Arbor2TabulaActio STATUS_1407_ACTIONES[] = {
+    { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 512, FALSUM }
+};
+
+/* State 1408: after 'unsigned short [int] declarator compound' - reduce P513 */
+hic_manens constans Arbor2TabulaActio STATUS_1408_ACTIONES[] = {
+    { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 513, FALSUM }
+};
+
+/* State 1409: after 'signed short [int] declarator compound' - reduce P514 */
+hic_manens constans Arbor2TabulaActio STATUS_1409_ACTIONES[] = {
+    { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 514, FALSUM }
+};
+
+/* State 1410: after 'long long [int] declarator compound' - reduce P515 */
+hic_manens constans Arbor2TabulaActio STATUS_1410_ACTIONES[] = {
+    { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 515, FALSUM }
+};
+
+/* State 1411: after 'unsigned long long [int] declarator compound' - reduce P516 */
+hic_manens constans Arbor2TabulaActio STATUS_1411_ACTIONES[] = {
+    { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 516, FALSUM }
+};
+
+/* State 1412: after 'signed long long [int] declarator compound' - reduce P517 */
+hic_manens constans Arbor2TabulaActio STATUS_1412_ACTIONES[] = {
+    { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 517, FALSUM }
+};
+
+/* ==================================================
+ * Implicit Int Function Definition States (1413-1419)
+ * For function definitions like 'unsigned long f() { }' where there's
+ * no explicit 'int' type.
+ * ================================================== */
+
+/* State 1413: after 'unsigned long declarator compound' (implicit int) - reduce P518 */
+hic_manens constans Arbor2TabulaActio STATUS_1413_ACTIONES[] = {
+    { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 518, FALSUM }
+};
+
+/* State 1414: after 'signed long declarator compound' (implicit int) - reduce P519 */
+hic_manens constans Arbor2TabulaActio STATUS_1414_ACTIONES[] = {
+    { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 519, FALSUM }
+};
+
+/* State 1415: after 'unsigned short declarator compound' (implicit int) - reduce P520 */
+hic_manens constans Arbor2TabulaActio STATUS_1415_ACTIONES[] = {
+    { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 520, FALSUM }
+};
+
+/* State 1416: after 'signed short declarator compound' (implicit int) - reduce P521 */
+hic_manens constans Arbor2TabulaActio STATUS_1416_ACTIONES[] = {
+    { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 521, FALSUM }
+};
+
+/* State 1417: after 'long long declarator compound' (implicit int) - reduce P522 */
+hic_manens constans Arbor2TabulaActio STATUS_1417_ACTIONES[] = {
+    { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 522, FALSUM }
+};
+
+/* State 1418: after 'unsigned long long declarator compound' (implicit int) - reduce P523 */
+hic_manens constans Arbor2TabulaActio STATUS_1418_ACTIONES[] = {
+    { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 523, FALSUM }
+};
+
+/* State 1419: after 'signed long long declarator compound' (implicit int) - reduce P524 */
+hic_manens constans Arbor2TabulaActio STATUS_1419_ACTIONES[] = {
+    { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 524, FALSUM }
+};
+
+/* ==================================================
+ * Long Long Int States (1420-1425)
+ *
+ * These handle explicit int after long long modifiers for function definitions.
+ * 1420-1422: after 'long long int' etc - expects declarator
+ * 1423-1425: post-declarator states that go to reduction states
+ * ================================================== */
+
+/* State 1420: after 'long long int' at top-level - expects * or ID */
+hic_manens constans Arbor2TabulaActio STATUS_1420_ACTIONES[] = {
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,  17, FALSUM },
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,  18, FALSUM }
+};
+
+/* State 1421: after 'unsigned long long int' at top-level - expects * or ID */
+hic_manens constans Arbor2TabulaActio STATUS_1421_ACTIONES[] = {
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,  17, FALSUM },
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,  18, FALSUM }
+};
+
+/* State 1422: after 'signed long long int' at top-level - expects * or ID */
+hic_manens constans Arbor2TabulaActio STATUS_1422_ACTIONES[] = {
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,  17, FALSUM },
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,  18, FALSUM }
+};
+
+/* State 1423: after 'long long int declarator' - like state 1180 */
+hic_manens constans Arbor2TabulaActio STATUS_1423_ACTIONES[] = {
+    { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 434, FALSUM },  /* P434 for declaration */
+    { ARBOR2_LEXEMA_COMMA,          ARBOR2_ACTIO_REDUCE, 434, FALSUM },
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 434, FALSUM },
+    { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_SHIFT,  91, FALSUM },   /* func params */
+    { ARBOR2_LEXEMA_BRACE_APERTA,   ARBOR2_ACTIO_SHIFT,  25, FALSUM }    /* func body */
+};
+
+/* State 1424: after 'unsigned long long int declarator' - like state 1180 */
+hic_manens constans Arbor2TabulaActio STATUS_1424_ACTIONES[] = {
+    { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 435, FALSUM },  /* P435 for declaration */
+    { ARBOR2_LEXEMA_COMMA,          ARBOR2_ACTIO_REDUCE, 435, FALSUM },
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 435, FALSUM },
+    { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_SHIFT,  91, FALSUM },   /* func params */
+    { ARBOR2_LEXEMA_BRACE_APERTA,   ARBOR2_ACTIO_SHIFT,  25, FALSUM }    /* func body */
+};
+
+/* State 1425: after 'signed long long int declarator' - like state 1180 */
+hic_manens constans Arbor2TabulaActio STATUS_1425_ACTIONES[] = {
+    { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 436, FALSUM },  /* P436 for declaration */
+    { ARBOR2_LEXEMA_COMMA,          ARBOR2_ACTIO_REDUCE, 436, FALSUM },
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 436, FALSUM },
+    { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_SHIFT,  91, FALSUM },   /* func params */
+    { ARBOR2_LEXEMA_BRACE_APERTA,   ARBOR2_ACTIO_SHIFT,  25, FALSUM }    /* func body */
+};
+
+/* ==================================================
  * STATUS_TABULA - Master state table (UNDER CONSTRUCTION)
  *
  * Will be populated as states are converted.
@@ -18295,7 +18492,37 @@ hic_manens constans Arbor2StatusInfo STATUS_TABULA_PARTIAL[] = {
 
     /* Function definition with qualified return type states (1400-1401) */
     STATUS_INFO(1400, "reduce P505 - const type declarator compound"),
-    STATUS_INFO(1401, "reduce P506 - volatile type declarator compound")
+    STATUS_INFO(1401, "reduce P506 - volatile type declarator compound"),
+
+    /* Compound type function definition states (1402-1412) - explicit int */
+    STATUS_INFO(1402, "reduce P507 - unsigned int declarator compound"),
+    STATUS_INFO(1403, "reduce P508 - signed int declarator compound"),
+    STATUS_INFO(1404, "reduce P509 - long int declarator compound"),
+    STATUS_INFO(1405, "reduce P510 - short int declarator compound"),
+    STATUS_INFO(1406, "reduce P511 - unsigned long int declarator compound"),
+    STATUS_INFO(1407, "reduce P512 - signed long int declarator compound"),
+    STATUS_INFO(1408, "reduce P513 - unsigned short int declarator compound"),
+    STATUS_INFO(1409, "reduce P514 - signed short int declarator compound"),
+    STATUS_INFO(1410, "reduce P515 - long long int declarator compound"),
+    STATUS_INFO(1411, "reduce P516 - unsigned long long int declarator compound"),
+    STATUS_INFO(1412, "reduce P517 - signed long long int declarator compound"),
+
+    /* Implicit int function definition states (1413-1419) */
+    STATUS_INFO(1413, "reduce P518 - unsigned long declarator compound (implicit)"),
+    STATUS_INFO(1414, "reduce P519 - signed long declarator compound (implicit)"),
+    STATUS_INFO(1415, "reduce P520 - unsigned short declarator compound (implicit)"),
+    STATUS_INFO(1416, "reduce P521 - signed short declarator compound (implicit)"),
+    STATUS_INFO(1417, "reduce P522 - long long declarator compound (implicit)"),
+    STATUS_INFO(1418, "reduce P523 - unsigned long long declarator compound (implicit)"),
+    STATUS_INFO(1419, "reduce P524 - signed long long declarator compound (implicit)"),
+
+    /* Long long int function definition states (1420-1425) */
+    STATUS_INFO(1420, "long long int - expects declarator"),
+    STATUS_INFO(1421, "unsigned long long int - expects declarator"),
+    STATUS_INFO(1422, "signed long long int - expects declarator"),
+    STATUS_INFO(1423, "long long int declarator - expects compound"),
+    STATUS_INFO(1424, "unsigned long long int declarator - expects compound"),
+    STATUS_INFO(1425, "signed long long int declarator - expects compound")
 };
 
 /* ==================================================
@@ -21115,6 +21342,121 @@ hic_manens constans Arbor2StatusGotoEntry STATUS_1176_GOTO[] = {
 };
 
 /* ==================================================
+ * GOTO Entries for Post-Declarator States (1180-1196)
+ * These route CORPUS from post-declarator states to function definition
+ * reduction states (P507-P517).
+ * ================================================== */
+
+/* State 1180: 'unsigned int' declarator - needs CORPUS for func def */
+hic_manens constans Arbor2StatusGotoEntry STATUS_1180_GOTO[] = {
+    { INT_NT_CORPUS, 1402 }   /* unsigned int declarator compound -> reduce P507 */
+};
+
+/* State 1181: 'signed int' declarator - needs CORPUS for func def */
+hic_manens constans Arbor2StatusGotoEntry STATUS_1181_GOTO[] = {
+    { INT_NT_CORPUS, 1403 }   /* signed int declarator compound -> reduce P508 */
+};
+
+/* State 1184: 'long int' declarator - needs CORPUS for func def */
+hic_manens constans Arbor2StatusGotoEntry STATUS_1184_GOTO[] = {
+    { INT_NT_CORPUS, 1404 }   /* long int declarator compound -> reduce P509 */
+};
+
+/* State 1185: 'short int' declarator - needs CORPUS for func def */
+hic_manens constans Arbor2StatusGotoEntry STATUS_1185_GOTO[] = {
+    { INT_NT_CORPUS, 1405 }   /* short int declarator compound -> reduce P510 */
+};
+
+/* State 1186: 'unsigned long' declarator (implicit int) - needs CORPUS for func def */
+hic_manens constans Arbor2StatusGotoEntry STATUS_1186_GOTO[] = {
+    { INT_NT_CORPUS, 1413 }   /* unsigned long declarator compound -> reduce P518 */
+};
+
+/* State 1187: 'unsigned short' declarator (implicit int) - needs CORPUS for func def */
+hic_manens constans Arbor2StatusGotoEntry STATUS_1187_GOTO[] = {
+    { INT_NT_CORPUS, 1415 }   /* unsigned short declarator compound -> reduce P520 */
+};
+
+/* State 1188: 'signed long' declarator (implicit int) - needs CORPUS for func def */
+hic_manens constans Arbor2StatusGotoEntry STATUS_1188_GOTO[] = {
+    { INT_NT_CORPUS, 1414 }   /* signed long declarator compound -> reduce P519 */
+};
+
+/* State 1189: 'signed short' declarator (implicit int) - needs CORPUS for func def */
+hic_manens constans Arbor2StatusGotoEntry STATUS_1189_GOTO[] = {
+    { INT_NT_CORPUS, 1416 }   /* signed short declarator compound -> reduce P521 */
+};
+
+/* State 1190: 'unsigned long int' declarator - needs CORPUS for func def */
+hic_manens constans Arbor2StatusGotoEntry STATUS_1190_GOTO[] = {
+    { INT_NT_CORPUS, 1406 }   /* unsigned long int declarator compound -> reduce P511 */
+};
+
+/* State 1191: 'unsigned short int' declarator - needs CORPUS for func def */
+hic_manens constans Arbor2StatusGotoEntry STATUS_1191_GOTO[] = {
+    { INT_NT_CORPUS, 1408 }   /* unsigned short int declarator compound -> reduce P513 */
+};
+
+/* State 1192: 'signed long int' declarator - needs CORPUS for func def */
+hic_manens constans Arbor2StatusGotoEntry STATUS_1192_GOTO[] = {
+    { INT_NT_CORPUS, 1407 }   /* signed long int declarator compound -> reduce P512 */
+};
+
+/* State 1193: 'signed short int' declarator - needs CORPUS for func def */
+hic_manens constans Arbor2StatusGotoEntry STATUS_1193_GOTO[] = {
+    { INT_NT_CORPUS, 1409 }   /* signed short int declarator compound -> reduce P514 */
+};
+
+/* State 1194: 'long long' declarator (implicit int) - needs CORPUS for func def */
+hic_manens constans Arbor2StatusGotoEntry STATUS_1194_GOTO[] = {
+    { INT_NT_CORPUS, 1417 }   /* long long declarator compound -> reduce P522 */
+};
+
+/* State 1195: 'unsigned long long' declarator (implicit int) - needs CORPUS for func def */
+hic_manens constans Arbor2StatusGotoEntry STATUS_1195_GOTO[] = {
+    { INT_NT_CORPUS, 1418 }   /* unsigned long long declarator compound -> reduce P523 */
+};
+
+/* State 1196: 'signed long long' declarator (implicit int) - needs CORPUS for func def */
+hic_manens constans Arbor2StatusGotoEntry STATUS_1196_GOTO[] = {
+    { INT_NT_CORPUS, 1419 }   /* signed long long declarator compound -> reduce P524 */
+};
+
+/* ==================================================
+ * GOTO Entries for Long Long Int States (1420-1425)
+ * ================================================== */
+
+/* State 1420: 'long long int' - needs DECLARATOR for func def */
+hic_manens constans Arbor2StatusGotoEntry STATUS_1420_GOTO[] = {
+    { INT_NT_DECLARATOR, 1423 }   /* long long int -> declarator */
+};
+
+/* State 1421: 'unsigned long long int' - needs DECLARATOR for func def */
+hic_manens constans Arbor2StatusGotoEntry STATUS_1421_GOTO[] = {
+    { INT_NT_DECLARATOR, 1424 }   /* unsigned long long int -> declarator */
+};
+
+/* State 1422: 'signed long long int' - needs DECLARATOR for func def */
+hic_manens constans Arbor2StatusGotoEntry STATUS_1422_GOTO[] = {
+    { INT_NT_DECLARATOR, 1425 }   /* signed long long int -> declarator */
+};
+
+/* State 1423: 'long long int declarator' - needs CORPUS for func def */
+hic_manens constans Arbor2StatusGotoEntry STATUS_1423_GOTO[] = {
+    { INT_NT_CORPUS, 1410 }   /* long long int declarator compound -> reduce P515 */
+};
+
+/* State 1424: 'unsigned long long int declarator' - needs CORPUS for func def */
+hic_manens constans Arbor2StatusGotoEntry STATUS_1424_GOTO[] = {
+    { INT_NT_CORPUS, 1411 }   /* unsigned long long int declarator compound -> reduce P516 */
+};
+
+/* State 1425: 'signed long long int declarator' - needs CORPUS for func def */
+hic_manens constans Arbor2StatusGotoEntry STATUS_1425_GOTO[] = {
+    { INT_NT_CORPUS, 1412 }   /* signed long long int declarator compound -> reduce P517 */
+};
+
+/* ==================================================
  * GOTO Entries for Intermediate States (Implicit int cases)
  * These route DECLARATOR from intermediate states to reduction states
  * ================================================== */
@@ -22722,24 +23064,24 @@ hic_manens constans Arbor2StatusGoto GOTO_TABULA_NOVA[] = {
     STATUS_GOTO_NIL,   /* 1178 */
     STATUS_GOTO_NIL,   /* 1179 */
 
-    /* Post-declarator reduction states (1180-1196) - no GOTOs needed */
-    STATUS_GOTO_NIL,   /* 1180: reduce P420 */
-    STATUS_GOTO_NIL,   /* 1181: reduce P421 */
-    STATUS_GOTO_NIL,   /* 1182: reduce P422 */
-    STATUS_GOTO_NIL,   /* 1183: reduce P423 */
-    STATUS_GOTO_NIL,   /* 1184: reduce P424 */
-    STATUS_GOTO_NIL,   /* 1185: reduce P425 */
-    STATUS_GOTO_NIL,   /* 1186: reduce P426 */
-    STATUS_GOTO_NIL,   /* 1187: reduce P427 */
-    STATUS_GOTO_NIL,   /* 1188: reduce P428 */
-    STATUS_GOTO_NIL,   /* 1189: reduce P429 */
-    STATUS_GOTO_NIL,   /* 1190: reduce P430 */
-    STATUS_GOTO_NIL,   /* 1191: reduce P431 */
-    STATUS_GOTO_NIL,   /* 1192: reduce P432 */
-    STATUS_GOTO_NIL,   /* 1193: reduce P433 */
-    STATUS_GOTO_NIL,   /* 1194: reduce P434 */
-    STATUS_GOTO_NIL,   /* 1195: reduce P435 */
-    STATUS_GOTO_NIL,   /* 1196: reduce P436 */
+    /* Post-declarator reduction states (1180-1196) - CORPUS GOTOs for func defs */
+    STATUS_GOTO(1180), /* 1180: unsigned int declarator -> CORPUS -> P507 */
+    STATUS_GOTO(1181), /* 1181: signed int declarator -> CORPUS -> P508 */
+    STATUS_GOTO_NIL,   /* 1182: unsigned char declarator (no func def production) */
+    STATUS_GOTO_NIL,   /* 1183: signed char declarator (no func def production) */
+    STATUS_GOTO(1184), /* 1184: long int declarator -> CORPUS -> P509 */
+    STATUS_GOTO(1185), /* 1185: short int declarator -> CORPUS -> P510 */
+    STATUS_GOTO(1186), /* 1186: unsigned long declarator -> CORPUS -> P511 */
+    STATUS_GOTO(1187), /* 1187: unsigned short declarator -> CORPUS -> P513 */
+    STATUS_GOTO(1188), /* 1188: signed long declarator -> CORPUS -> P512 */
+    STATUS_GOTO(1189), /* 1189: signed short declarator -> CORPUS -> P514 */
+    STATUS_GOTO(1190), /* 1190: unsigned long int declarator -> CORPUS -> P511 */
+    STATUS_GOTO(1191), /* 1191: unsigned short int declarator -> CORPUS -> P513 */
+    STATUS_GOTO(1192), /* 1192: signed long int declarator -> CORPUS -> P512 */
+    STATUS_GOTO(1193), /* 1193: signed short int declarator -> CORPUS -> P514 */
+    STATUS_GOTO(1194), /* 1194: long long declarator -> CORPUS -> P515 */
+    STATUS_GOTO(1195), /* 1195: unsigned long long declarator -> CORPUS -> P516 */
+    STATUS_GOTO(1196), /* 1196: signed long long declarator -> CORPUS -> P517 */
 
     /* --- Phase 1.5: Qualifier + Compound Type GOTO Entries (1197-1367) --- */
 
@@ -22976,7 +23318,37 @@ hic_manens constans Arbor2StatusGoto GOTO_TABULA_NOVA[] = {
 
     /* Function definition with qualified return type states (1400-1401) */
     STATUS_GOTO_NIL,   /* 1400: reduce P505 */
-    STATUS_GOTO_NIL    /* 1401: reduce P506 */
+    STATUS_GOTO_NIL,   /* 1401: reduce P506 */
+
+    /* Compound type function definition states (1402-1412) - explicit int */
+    STATUS_GOTO_NIL,   /* 1402: reduce P507 (unsigned int func def) */
+    STATUS_GOTO_NIL,   /* 1403: reduce P508 (signed int func def) */
+    STATUS_GOTO_NIL,   /* 1404: reduce P509 (long int func def) */
+    STATUS_GOTO_NIL,   /* 1405: reduce P510 (short int func def) */
+    STATUS_GOTO_NIL,   /* 1406: reduce P511 (unsigned long int func def) */
+    STATUS_GOTO_NIL,   /* 1407: reduce P512 (signed long int func def) */
+    STATUS_GOTO_NIL,   /* 1408: reduce P513 (unsigned short int func def) */
+    STATUS_GOTO_NIL,   /* 1409: reduce P514 (signed short int func def) */
+    STATUS_GOTO_NIL,   /* 1410: reduce P515 (long long int func def) */
+    STATUS_GOTO_NIL,   /* 1411: reduce P516 (unsigned long long int func def) */
+    STATUS_GOTO_NIL,   /* 1412: reduce P517 (signed long long int func def) */
+
+    /* Implicit int function definition states (1413-1419) */
+    STATUS_GOTO_NIL,   /* 1413: reduce P518 (unsigned long func def, implicit) */
+    STATUS_GOTO_NIL,   /* 1414: reduce P519 (signed long func def, implicit) */
+    STATUS_GOTO_NIL,   /* 1415: reduce P520 (unsigned short func def, implicit) */
+    STATUS_GOTO_NIL,   /* 1416: reduce P521 (signed short func def, implicit) */
+    STATUS_GOTO_NIL,   /* 1417: reduce P522 (long long func def, implicit) */
+    STATUS_GOTO_NIL,   /* 1418: reduce P523 (unsigned long long func def, implicit) */
+    STATUS_GOTO_NIL,   /* 1419: reduce P524 (signed long long func def, implicit) */
+
+    /* Long long int function definition states (1420-1425) */
+    STATUS_GOTO(1420), /* 1420: long long int -> DECLARATOR -> 1423 */
+    STATUS_GOTO(1421), /* 1421: unsigned long long int -> DECLARATOR -> 1424 */
+    STATUS_GOTO(1422), /* 1422: signed long long int -> DECLARATOR -> 1425 */
+    STATUS_GOTO(1423), /* 1423: long long int declarator -> CORPUS -> 1410 */
+    STATUS_GOTO(1424), /* 1424: unsigned long long int declarator -> CORPUS -> 1411 */
+    STATUS_GOTO(1425)  /* 1425: signed long long int declarator -> CORPUS -> 1412 */
 };
 
 

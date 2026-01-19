@@ -4128,6 +4128,138 @@ s32 principale(vacuum)
     }
 
 
+    /* ================================================================
+     * COMPOUND RETURN TYPE TESTS (currently failing - grammar needed)
+     * These test function definitions with compound type specifiers.
+     * ================================================================ */
+
+    /* Test function with unsigned int return type */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans compound return: unsigned int f() { } ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "unsigned int f() { }");
+        res = arbor2_glr_parsere(glr, tokens);
+
+        imprimere("  successus: %s\n", res.successus ? "VERUM" : "FALSUM");
+
+        /* TODO: Currently fails - expects VERUM after grammar fix */
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        CREDO_NON_NIHIL(res.radix);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_DEFINITIO_FUNCTI);
+        }
+    }
+
+    /* Test function with long int return type */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans compound return: long int g() { } ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "long int g() { }");
+        res = arbor2_glr_parsere(glr, tokens);
+
+        imprimere("  successus: %s\n", res.successus ? "VERUM" : "FALSUM");
+
+        /* TODO: Currently fails - expects VERUM after grammar fix */
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        CREDO_NON_NIHIL(res.radix);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_DEFINITIO_FUNCTI);
+        }
+    }
+
+    /* Test function with short int return type */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans compound return: short int h() { } ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "short int h() { }");
+        res = arbor2_glr_parsere(glr, tokens);
+
+        imprimere("  successus: %s\n", res.successus ? "VERUM" : "FALSUM");
+
+        /* TODO: Currently fails - expects VERUM after grammar fix */
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        CREDO_NON_NIHIL(res.radix);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_DEFINITIO_FUNCTI);
+        }
+    }
+
+    /* Test function with signed int return type */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans compound return: signed int s() { } ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "signed int s() { }");
+        res = arbor2_glr_parsere(glr, tokens);
+
+        imprimere("  successus: %s\n", res.successus ? "VERUM" : "FALSUM");
+
+        /* TODO: Currently fails - expects VERUM after grammar fix */
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        CREDO_NON_NIHIL(res.radix);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_DEFINITIO_FUNCTI);
+        }
+    }
+
+    /* Test function with unsigned long return type */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans compound return: unsigned long l() { } ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "unsigned long l() { }");
+        res = arbor2_glr_parsere(glr, tokens);
+
+        imprimere("  successus: %s\n", res.successus ? "VERUM" : "FALSUM");
+
+        /* TODO: Currently fails - expects VERUM after grammar fix */
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        CREDO_NON_NIHIL(res.radix);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_DEFINITIO_FUNCTI);
+        }
+    }
+
+    /* Test function with unsigned return type (implicit int) */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans compound return: unsigned u() { } ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "unsigned u() { }");
+        res = arbor2_glr_parsere(glr, tokens);
+
+        imprimere("  successus: %s\n", res.successus ? "VERUM" : "FALSUM");
+
+        /* TODO: Currently fails - expects VERUM after grammar fix */
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        CREDO_NON_NIHIL(res.radix);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_DEFINITIO_FUNCTI);
+        }
+    }
+
+
     /* ========================================================
      * PROBARE: Struct specifier tests
      * ======================================================== */

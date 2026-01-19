@@ -595,6 +595,39 @@ s32 principale(vacuum)
         /* Qualified return type with empty parameters */
         CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "const int get() { }", NIHIL));
         CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "volatile void work() { }", NIHIL));
+
+        /* Compound return type function definitions (P507-P524) */
+        imprimere("\n--- Probans compound return type roundtrip ---\n");
+
+        /* P507-P510: single modifier + explicit type */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "unsigned int f() { }", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "signed int g() { }", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "long int h() { }", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "short int s() { }", NIHIL));
+
+        /* P511-P514: two modifiers + explicit type */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "unsigned long int ul() { }", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "signed long int sl() { }", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "unsigned short int us() { }", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "signed short int ss() { }", NIHIL));
+
+        /* P515-P517: long long variations */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "long long int ll() { }", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "unsigned long long int ull() { }", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "signed long long int sll() { }", NIHIL));
+
+        /* P518-P524: implicit int cases */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "unsigned long ul2() { }", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "signed long sl2() { }", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "unsigned short us2() { }", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "signed short ss2() { }", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "long long ll2() { }", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "unsigned long long ull2() { }", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "signed long long sll2() { }", NIHIL));
+
+        /* Compound return type with body */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "unsigned int count() { return 0; }", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "long long size() { return x; }", NIHIL));
     }
 
     /* ========================================================

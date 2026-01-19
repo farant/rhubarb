@@ -494,7 +494,7 @@ _scribere_nodum(Xar* output, Arbor2Nodus* nodus)
             _scribere_nodum(output, nodus->datum.parameter_decl.declarator);
             frange;
 
-        /* DEFINITIO_FUNCTI: [const/volatile] type name(params) { body } */
+        /* DEFINITIO_FUNCTI: [qualifiers] [modifiers] type name(params) { body } */
         casus ARBOR2_NODUS_DEFINITIO_FUNCTI:
             /* Emit qualifier if present (P505: const, P506: volatile) */
             si (nodus->datum.definitio_functi.tok_const != NIHIL)
@@ -505,15 +505,56 @@ _scribere_nodum(Xar* output, Arbor2Nodus* nodus)
             {
                 arbor2_scribere_lexema(output, nodus->datum.definitio_functi.tok_volatile);
             }
+            /* Emit type modifiers (unsigned/signed) */
+            si (nodus->datum.definitio_functi.tok_unsigned != NIHIL)
+            {
+                arbor2_scribere_lexema(output, nodus->datum.definitio_functi.tok_unsigned);
+            }
+            si (nodus->datum.definitio_functi.tok_signed != NIHIL)
+            {
+                arbor2_scribere_lexema(output, nodus->datum.definitio_functi.tok_signed);
+            }
+            /* Emit type modifiers (long/short) */
+            si (nodus->datum.definitio_functi.tok_long != NIHIL)
+            {
+                arbor2_scribere_lexema(output, nodus->datum.definitio_functi.tok_long);
+            }
+            si (nodus->datum.definitio_functi.tok_long2 != NIHIL)
+            {
+                arbor2_scribere_lexema(output, nodus->datum.definitio_functi.tok_long2);
+            }
+            si (nodus->datum.definitio_functi.tok_short != NIHIL)
+            {
+                arbor2_scribere_lexema(output, nodus->datum.definitio_functi.tok_short);
+            }
             /* Emit type specifier */
             si (nodus->datum.definitio_functi.specifier != NIHIL)
             {
                 _scribere_nodum(output, nodus->datum.definitio_functi.specifier);
             }
-            alioquin
+            alioquin si (nodus->lexema != NIHIL)
             {
-                /* Simple type specifier (void, int, etc.) - emit lexema token */
-                arbor2_scribere_lexema(output, nodus->lexema);
+                /* Check if lexema is a distinct type token (not a modifier token).
+                   For explicit type cases (e.g., "unsigned int"), lexema holds the
+                   type token which is different from all modifier tokens.
+                   For implicit int cases (e.g., "unsigned long"), lexema points
+                   to the same token as one of the modifiers. */
+                b32 is_distinct_type = VERUM;
+                si (nodus->lexema == nodus->datum.definitio_functi.tok_unsigned ||
+                    nodus->lexema == nodus->datum.definitio_functi.tok_signed ||
+                    nodus->lexema == nodus->datum.definitio_functi.tok_long ||
+                    nodus->lexema == nodus->datum.definitio_functi.tok_long2 ||
+                    nodus->lexema == nodus->datum.definitio_functi.tok_short ||
+                    nodus->lexema == nodus->datum.definitio_functi.tok_const ||
+                    nodus->lexema == nodus->datum.definitio_functi.tok_volatile)
+                {
+                    is_distinct_type = FALSUM;
+                }
+                si (is_distinct_type)
+                {
+                    /* Emit the type token (int, char, void, etc.) */
+                    arbor2_scribere_lexema(output, nodus->lexema);
+                }
             }
             _scribere_nodum(output, nodus->datum.definitio_functi.declarator);
             _scribere_nodum(output, nodus->datum.definitio_functi.corpus);

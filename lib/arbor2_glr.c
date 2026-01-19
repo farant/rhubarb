@@ -5154,51 +5154,312 @@ _processare_unam_actionem(
                         frange;
 
                     casus ARBOR2_NODUS_DEFINITIO_FUNCTI:
-                        /* P44: function_definition -> type_specifier declarator compound_statement (3 sym) */
-                        /* P505: func_def -> 'const' type declarator compound (4 sym) */
-                        /* P506: func_def -> 'volatile' type declarator compound (4 sym) */
+                        /* P44: func_def -> type declarator compound (3 sym) */
+                        /* P505/P506: func_def -> qual type declarator compound (4 sym) */
+                        /* P507-P510: func_def -> modifier type declarator compound (4 sym) */
+                        /* P511-P517: func_def -> mod mod [type] declarator compound (5-6 sym) */
+                        /* P518-P522: func_def -> mod mod declarator compound (4 sym, implicit int) */
+                        /* P523-P524: func_def -> mod mod mod declarator compound (5 sym, implicit int) */
                         valor_novus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                         valor_novus->genus = ARBOR2_NODUS_DEFINITIO_FUNCTI;
                         valor_novus->pater = NIHIL;
                         valor_novus->datum.definitio_functi.tok_const = NIHIL;
                         valor_novus->datum.definitio_functi.tok_volatile = NIHIL;
+                        valor_novus->datum.definitio_functi.tok_unsigned = NIHIL;
+                        valor_novus->datum.definitio_functi.tok_signed = NIHIL;
+                        valor_novus->datum.definitio_functi.tok_long = NIHIL;
+                        valor_novus->datum.definitio_functi.tok_long2 = NIHIL;
+                        valor_novus->datum.definitio_functi.tok_short = NIHIL;
+                        valor_novus->datum.definitio_functi.specifier = NIHIL;
 
-                        si (num_pop == IV)
+                        commutatio (actio->valor)
                         {
-                            /* P505/P506: valori[3]=qual, valori[2]=type_spec, valori[1]=decl, valori[0]=corpus */
-                            /* lexemata[3]=qual tok, lexemata[2]=type tok */
-                            si (actio->valor == 505)
-                            {
+                            casus 44:
+                                /* P44: type declarator compound (3 sym) */
+                                valor_novus->lexema = lexemata[II];
+                                LOCUS_EX_LEXEMATIS(valor_novus, II, ZEPHYRUM);
+                                valor_novus->datum.definitio_functi.specifier = valori[II];
+                                valor_novus->datum.definitio_functi.declarator = valori[I];
+                                valor_novus->datum.definitio_functi.corpus = valori[ZEPHYRUM];
+                                si (valori[II] != NIHIL) valori[II]->pater = valor_novus;
+                                si (valori[I] != NIHIL) valori[I]->pater = valor_novus;
+                                si (valori[ZEPHYRUM] != NIHIL) valori[ZEPHYRUM]->pater = valor_novus;
+                                frange;
+
+                            casus 505:
+                                /* P505: const type declarator compound (4 sym) */
                                 valor_novus->datum.definitio_functi.tok_const = lexemata[III];
-                            }
-                            alioquin
-                            {
+                                valor_novus->lexema = lexemata[II];
+                                LOCUS_EX_LEXEMATIS(valor_novus, III, ZEPHYRUM);
+                                valor_novus->datum.definitio_functi.specifier = valori[II];
+                                valor_novus->datum.definitio_functi.declarator = valori[I];
+                                valor_novus->datum.definitio_functi.corpus = valori[ZEPHYRUM];
+                                si (valori[II] != NIHIL) valori[II]->pater = valor_novus;
+                                si (valori[I] != NIHIL) valori[I]->pater = valor_novus;
+                                si (valori[ZEPHYRUM] != NIHIL) valori[ZEPHYRUM]->pater = valor_novus;
+                                frange;
+
+                            casus 506:
+                                /* P506: volatile type declarator compound (4 sym) */
                                 valor_novus->datum.definitio_functi.tok_volatile = lexemata[III];
-                            }
-                            valor_novus->lexema = lexemata[II];  /* type_specifier token */
-                            LOCUS_EX_LEXEMATIS(valor_novus, III, ZEPHYRUM);
-                            valor_novus->datum.definitio_functi.specifier = valori[II];
-                            valor_novus->datum.definitio_functi.declarator = valori[I];
-                            valor_novus->datum.definitio_functi.corpus = valori[ZEPHYRUM];
+                                valor_novus->lexema = lexemata[II];
+                                LOCUS_EX_LEXEMATIS(valor_novus, III, ZEPHYRUM);
+                                valor_novus->datum.definitio_functi.specifier = valori[II];
+                                valor_novus->datum.definitio_functi.declarator = valori[I];
+                                valor_novus->datum.definitio_functi.corpus = valori[ZEPHYRUM];
+                                si (valori[II] != NIHIL) valori[II]->pater = valor_novus;
+                                si (valori[I] != NIHIL) valori[I]->pater = valor_novus;
+                                si (valori[ZEPHYRUM] != NIHIL) valori[ZEPHYRUM]->pater = valor_novus;
+                                frange;
 
-                            /* Statuere patrem pro filiis */
-                            si (valori[II] != NIHIL) valori[II]->pater = valor_novus;
-                            si (valori[I] != NIHIL) valori[I]->pater = valor_novus;
-                            si (valori[ZEPHYRUM] != NIHIL) valori[ZEPHYRUM]->pater = valor_novus;
-                        }
-                        alioquin
-                        {
-                            /* P44: valori[2]=type_spec, valori[1]=declarator, valori[0]=corpus */
-                            valor_novus->lexema = lexemata[II];  /* type_specifier token */
-                            LOCUS_EX_LEXEMATIS(valor_novus, II, ZEPHYRUM);
-                            valor_novus->datum.definitio_functi.specifier = valori[II];
-                            valor_novus->datum.definitio_functi.declarator = valori[I];
-                            valor_novus->datum.definitio_functi.corpus = valori[ZEPHYRUM];
+                            casus 507:
+                                /* P507: unsigned type declarator compound (4 sym) */
+                                valor_novus->datum.definitio_functi.tok_unsigned = lexemata[III];
+                                valor_novus->lexema = lexemata[II];
+                                LOCUS_EX_LEXEMATIS(valor_novus, III, ZEPHYRUM);
+                                valor_novus->datum.definitio_functi.specifier = valori[II];
+                                valor_novus->datum.definitio_functi.declarator = valori[I];
+                                valor_novus->datum.definitio_functi.corpus = valori[ZEPHYRUM];
+                                si (valori[II] != NIHIL) valori[II]->pater = valor_novus;
+                                si (valori[I] != NIHIL) valori[I]->pater = valor_novus;
+                                si (valori[ZEPHYRUM] != NIHIL) valori[ZEPHYRUM]->pater = valor_novus;
+                                frange;
 
-                            /* Statuere patrem pro filiis */
-                            si (valori[II] != NIHIL) valori[II]->pater = valor_novus;
-                            si (valori[I] != NIHIL) valori[I]->pater = valor_novus;
-                            si (valori[ZEPHYRUM] != NIHIL) valori[ZEPHYRUM]->pater = valor_novus;
+                            casus 508:
+                                /* P508: signed type declarator compound (4 sym) */
+                                valor_novus->datum.definitio_functi.tok_signed = lexemata[III];
+                                valor_novus->lexema = lexemata[II];
+                                LOCUS_EX_LEXEMATIS(valor_novus, III, ZEPHYRUM);
+                                valor_novus->datum.definitio_functi.specifier = valori[II];
+                                valor_novus->datum.definitio_functi.declarator = valori[I];
+                                valor_novus->datum.definitio_functi.corpus = valori[ZEPHYRUM];
+                                si (valori[II] != NIHIL) valori[II]->pater = valor_novus;
+                                si (valori[I] != NIHIL) valori[I]->pater = valor_novus;
+                                si (valori[ZEPHYRUM] != NIHIL) valori[ZEPHYRUM]->pater = valor_novus;
+                                frange;
+
+                            casus 509:
+                                /* P509: long type declarator compound (4 sym) */
+                                valor_novus->datum.definitio_functi.tok_long = lexemata[III];
+                                valor_novus->lexema = lexemata[II];
+                                LOCUS_EX_LEXEMATIS(valor_novus, III, ZEPHYRUM);
+                                valor_novus->datum.definitio_functi.specifier = valori[II];
+                                valor_novus->datum.definitio_functi.declarator = valori[I];
+                                valor_novus->datum.definitio_functi.corpus = valori[ZEPHYRUM];
+                                si (valori[II] != NIHIL) valori[II]->pater = valor_novus;
+                                si (valori[I] != NIHIL) valori[I]->pater = valor_novus;
+                                si (valori[ZEPHYRUM] != NIHIL) valori[ZEPHYRUM]->pater = valor_novus;
+                                frange;
+
+                            casus 510:
+                                /* P510: short type declarator compound (4 sym) */
+                                valor_novus->datum.definitio_functi.tok_short = lexemata[III];
+                                valor_novus->lexema = lexemata[II];
+                                LOCUS_EX_LEXEMATIS(valor_novus, III, ZEPHYRUM);
+                                valor_novus->datum.definitio_functi.specifier = valori[II];
+                                valor_novus->datum.definitio_functi.declarator = valori[I];
+                                valor_novus->datum.definitio_functi.corpus = valori[ZEPHYRUM];
+                                si (valori[II] != NIHIL) valori[II]->pater = valor_novus;
+                                si (valori[I] != NIHIL) valori[I]->pater = valor_novus;
+                                si (valori[ZEPHYRUM] != NIHIL) valori[ZEPHYRUM]->pater = valor_novus;
+                                frange;
+
+                            casus 511:
+                                /* P511: unsigned long type declarator compound (5 sym) */
+                                valor_novus->datum.definitio_functi.tok_unsigned = lexemata[IV];
+                                valor_novus->datum.definitio_functi.tok_long = lexemata[III];
+                                valor_novus->lexema = lexemata[II];
+                                LOCUS_EX_LEXEMATIS(valor_novus, IV, ZEPHYRUM);
+                                valor_novus->datum.definitio_functi.specifier = valori[II];
+                                valor_novus->datum.definitio_functi.declarator = valori[I];
+                                valor_novus->datum.definitio_functi.corpus = valori[ZEPHYRUM];
+                                si (valori[II] != NIHIL) valori[II]->pater = valor_novus;
+                                si (valori[I] != NIHIL) valori[I]->pater = valor_novus;
+                                si (valori[ZEPHYRUM] != NIHIL) valori[ZEPHYRUM]->pater = valor_novus;
+                                frange;
+
+                            casus 512:
+                                /* P512: signed long type declarator compound (5 sym) */
+                                valor_novus->datum.definitio_functi.tok_signed = lexemata[IV];
+                                valor_novus->datum.definitio_functi.tok_long = lexemata[III];
+                                valor_novus->lexema = lexemata[II];
+                                LOCUS_EX_LEXEMATIS(valor_novus, IV, ZEPHYRUM);
+                                valor_novus->datum.definitio_functi.specifier = valori[II];
+                                valor_novus->datum.definitio_functi.declarator = valori[I];
+                                valor_novus->datum.definitio_functi.corpus = valori[ZEPHYRUM];
+                                si (valori[II] != NIHIL) valori[II]->pater = valor_novus;
+                                si (valori[I] != NIHIL) valori[I]->pater = valor_novus;
+                                si (valori[ZEPHYRUM] != NIHIL) valori[ZEPHYRUM]->pater = valor_novus;
+                                frange;
+
+                            casus 513:
+                                /* P513: unsigned short type declarator compound (5 sym) */
+                                valor_novus->datum.definitio_functi.tok_unsigned = lexemata[IV];
+                                valor_novus->datum.definitio_functi.tok_short = lexemata[III];
+                                valor_novus->lexema = lexemata[II];
+                                LOCUS_EX_LEXEMATIS(valor_novus, IV, ZEPHYRUM);
+                                valor_novus->datum.definitio_functi.specifier = valori[II];
+                                valor_novus->datum.definitio_functi.declarator = valori[I];
+                                valor_novus->datum.definitio_functi.corpus = valori[ZEPHYRUM];
+                                si (valori[II] != NIHIL) valori[II]->pater = valor_novus;
+                                si (valori[I] != NIHIL) valori[I]->pater = valor_novus;
+                                si (valori[ZEPHYRUM] != NIHIL) valori[ZEPHYRUM]->pater = valor_novus;
+                                frange;
+
+                            casus 514:
+                                /* P514: signed short type declarator compound (5 sym) */
+                                valor_novus->datum.definitio_functi.tok_signed = lexemata[IV];
+                                valor_novus->datum.definitio_functi.tok_short = lexemata[III];
+                                valor_novus->lexema = lexemata[II];
+                                LOCUS_EX_LEXEMATIS(valor_novus, IV, ZEPHYRUM);
+                                valor_novus->datum.definitio_functi.specifier = valori[II];
+                                valor_novus->datum.definitio_functi.declarator = valori[I];
+                                valor_novus->datum.definitio_functi.corpus = valori[ZEPHYRUM];
+                                si (valori[II] != NIHIL) valori[II]->pater = valor_novus;
+                                si (valori[I] != NIHIL) valori[I]->pater = valor_novus;
+                                si (valori[ZEPHYRUM] != NIHIL) valori[ZEPHYRUM]->pater = valor_novus;
+                                frange;
+
+                            casus 515:
+                                /* P515: long long type declarator compound (5 sym) */
+                                valor_novus->datum.definitio_functi.tok_long = lexemata[IV];
+                                valor_novus->datum.definitio_functi.tok_long2 = lexemata[III];
+                                valor_novus->lexema = lexemata[II];
+                                LOCUS_EX_LEXEMATIS(valor_novus, IV, ZEPHYRUM);
+                                valor_novus->datum.definitio_functi.specifier = valori[II];
+                                valor_novus->datum.definitio_functi.declarator = valori[I];
+                                valor_novus->datum.definitio_functi.corpus = valori[ZEPHYRUM];
+                                si (valori[II] != NIHIL) valori[II]->pater = valor_novus;
+                                si (valori[I] != NIHIL) valori[I]->pater = valor_novus;
+                                si (valori[ZEPHYRUM] != NIHIL) valori[ZEPHYRUM]->pater = valor_novus;
+                                frange;
+
+                            casus 516:
+                                /* P516: unsigned long long type declarator compound (6 sym) */
+                                valor_novus->datum.definitio_functi.tok_unsigned = lexemata[V];
+                                valor_novus->datum.definitio_functi.tok_long = lexemata[IV];
+                                valor_novus->datum.definitio_functi.tok_long2 = lexemata[III];
+                                valor_novus->lexema = lexemata[II];
+                                LOCUS_EX_LEXEMATIS(valor_novus, V, ZEPHYRUM);
+                                valor_novus->datum.definitio_functi.specifier = valori[II];
+                                valor_novus->datum.definitio_functi.declarator = valori[I];
+                                valor_novus->datum.definitio_functi.corpus = valori[ZEPHYRUM];
+                                si (valori[II] != NIHIL) valori[II]->pater = valor_novus;
+                                si (valori[I] != NIHIL) valori[I]->pater = valor_novus;
+                                si (valori[ZEPHYRUM] != NIHIL) valori[ZEPHYRUM]->pater = valor_novus;
+                                frange;
+
+                            casus 517:
+                                /* P517: signed long long type declarator compound (6 sym) */
+                                valor_novus->datum.definitio_functi.tok_signed = lexemata[V];
+                                valor_novus->datum.definitio_functi.tok_long = lexemata[IV];
+                                valor_novus->datum.definitio_functi.tok_long2 = lexemata[III];
+                                valor_novus->lexema = lexemata[II];
+                                LOCUS_EX_LEXEMATIS(valor_novus, V, ZEPHYRUM);
+                                valor_novus->datum.definitio_functi.specifier = valori[II];
+                                valor_novus->datum.definitio_functi.declarator = valori[I];
+                                valor_novus->datum.definitio_functi.corpus = valori[ZEPHYRUM];
+                                si (valori[II] != NIHIL) valori[II]->pater = valor_novus;
+                                si (valori[I] != NIHIL) valori[I]->pater = valor_novus;
+                                si (valori[ZEPHYRUM] != NIHIL) valori[ZEPHYRUM]->pater = valor_novus;
+                                frange;
+
+                            /* Implicit int cases (no explicit type specifier) */
+                            casus 518:
+                                /* P518: unsigned long declarator compound (4 sym, implicit int) */
+                                valor_novus->datum.definitio_functi.tok_unsigned = lexemata[III];
+                                valor_novus->datum.definitio_functi.tok_long = lexemata[II];
+                                valor_novus->lexema = lexemata[III];
+                                LOCUS_EX_LEXEMATIS(valor_novus, III, ZEPHYRUM);
+                                valor_novus->datum.definitio_functi.declarator = valori[I];
+                                valor_novus->datum.definitio_functi.corpus = valori[ZEPHYRUM];
+                                si (valori[I] != NIHIL) valori[I]->pater = valor_novus;
+                                si (valori[ZEPHYRUM] != NIHIL) valori[ZEPHYRUM]->pater = valor_novus;
+                                frange;
+
+                            casus 519:
+                                /* P519: signed long declarator compound (4 sym, implicit int) */
+                                valor_novus->datum.definitio_functi.tok_signed = lexemata[III];
+                                valor_novus->datum.definitio_functi.tok_long = lexemata[II];
+                                valor_novus->lexema = lexemata[III];
+                                LOCUS_EX_LEXEMATIS(valor_novus, III, ZEPHYRUM);
+                                valor_novus->datum.definitio_functi.declarator = valori[I];
+                                valor_novus->datum.definitio_functi.corpus = valori[ZEPHYRUM];
+                                si (valori[I] != NIHIL) valori[I]->pater = valor_novus;
+                                si (valori[ZEPHYRUM] != NIHIL) valori[ZEPHYRUM]->pater = valor_novus;
+                                frange;
+
+                            casus 520:
+                                /* P520: unsigned short declarator compound (4 sym, implicit int) */
+                                valor_novus->datum.definitio_functi.tok_unsigned = lexemata[III];
+                                valor_novus->datum.definitio_functi.tok_short = lexemata[II];
+                                valor_novus->lexema = lexemata[III];
+                                LOCUS_EX_LEXEMATIS(valor_novus, III, ZEPHYRUM);
+                                valor_novus->datum.definitio_functi.declarator = valori[I];
+                                valor_novus->datum.definitio_functi.corpus = valori[ZEPHYRUM];
+                                si (valori[I] != NIHIL) valori[I]->pater = valor_novus;
+                                si (valori[ZEPHYRUM] != NIHIL) valori[ZEPHYRUM]->pater = valor_novus;
+                                frange;
+
+                            casus 521:
+                                /* P521: signed short declarator compound (4 sym, implicit int) */
+                                valor_novus->datum.definitio_functi.tok_signed = lexemata[III];
+                                valor_novus->datum.definitio_functi.tok_short = lexemata[II];
+                                valor_novus->lexema = lexemata[III];
+                                LOCUS_EX_LEXEMATIS(valor_novus, III, ZEPHYRUM);
+                                valor_novus->datum.definitio_functi.declarator = valori[I];
+                                valor_novus->datum.definitio_functi.corpus = valori[ZEPHYRUM];
+                                si (valori[I] != NIHIL) valori[I]->pater = valor_novus;
+                                si (valori[ZEPHYRUM] != NIHIL) valori[ZEPHYRUM]->pater = valor_novus;
+                                frange;
+
+                            casus 522:
+                                /* P522: long long declarator compound (4 sym, implicit int) */
+                                valor_novus->datum.definitio_functi.tok_long = lexemata[III];
+                                valor_novus->datum.definitio_functi.tok_long2 = lexemata[II];
+                                valor_novus->lexema = lexemata[III];
+                                LOCUS_EX_LEXEMATIS(valor_novus, III, ZEPHYRUM);
+                                valor_novus->datum.definitio_functi.declarator = valori[I];
+                                valor_novus->datum.definitio_functi.corpus = valori[ZEPHYRUM];
+                                si (valori[I] != NIHIL) valori[I]->pater = valor_novus;
+                                si (valori[ZEPHYRUM] != NIHIL) valori[ZEPHYRUM]->pater = valor_novus;
+                                frange;
+
+                            casus 523:
+                                /* P523: unsigned long long declarator compound (5 sym, implicit int) */
+                                valor_novus->datum.definitio_functi.tok_unsigned = lexemata[IV];
+                                valor_novus->datum.definitio_functi.tok_long = lexemata[III];
+                                valor_novus->datum.definitio_functi.tok_long2 = lexemata[II];
+                                valor_novus->lexema = lexemata[IV];
+                                LOCUS_EX_LEXEMATIS(valor_novus, IV, ZEPHYRUM);
+                                valor_novus->datum.definitio_functi.declarator = valori[I];
+                                valor_novus->datum.definitio_functi.corpus = valori[ZEPHYRUM];
+                                si (valori[I] != NIHIL) valori[I]->pater = valor_novus;
+                                si (valori[ZEPHYRUM] != NIHIL) valori[ZEPHYRUM]->pater = valor_novus;
+                                frange;
+
+                            casus 524:
+                                /* P524: signed long long declarator compound (5 sym, implicit int) */
+                                valor_novus->datum.definitio_functi.tok_signed = lexemata[IV];
+                                valor_novus->datum.definitio_functi.tok_long = lexemata[III];
+                                valor_novus->datum.definitio_functi.tok_long2 = lexemata[II];
+                                valor_novus->lexema = lexemata[IV];
+                                LOCUS_EX_LEXEMATIS(valor_novus, IV, ZEPHYRUM);
+                                valor_novus->datum.definitio_functi.declarator = valori[I];
+                                valor_novus->datum.definitio_functi.corpus = valori[ZEPHYRUM];
+                                si (valori[I] != NIHIL) valori[I]->pater = valor_novus;
+                                si (valori[ZEPHYRUM] != NIHIL) valori[ZEPHYRUM]->pater = valor_novus;
+                                frange;
+
+                            ordinarius:
+                                /* Fallback for unhandled production */
+                                valor_novus->lexema = lexemata[num_pop - I];
+                                LOCUS_EX_LEXEMATIS(valor_novus, num_pop - I, ZEPHYRUM);
+                                valor_novus->datum.definitio_functi.declarator = valori[I];
+                                valor_novus->datum.definitio_functi.corpus = valori[ZEPHYRUM];
+                                si (valori[I] != NIHIL) valori[I]->pater = valor_novus;
+                                si (valori[ZEPHYRUM] != NIHIL) valori[ZEPHYRUM]->pater = valor_novus;
+                                frange;
                         }
                         frange;
 

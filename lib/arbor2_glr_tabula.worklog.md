@@ -1985,3 +1985,114 @@ Pre-existing issues (not from this change):
 - Total productions: 418 (was 385, added P386-P417)
 - GLR tests: 1992/1992 pass
 - Compound tests: all new tests pass
+
+## 2026-01-19: Compound Return Type Function Definitions (P507-P524)
+
+### Goal
+
+Enable compound return types for function definitions:
+```c
+unsigned int f() { }
+long int g() { }
+unsigned long l() { }
+long long int ll() { }
+unsigned long long int ull() { }
+```
+
+Previously, function definitions with compound return types parsed as ERROR nodes because
+only P44 (type declarator compound), P505 (const type declarator compound), and P506
+(volatile type declarator compound) existed.
+
+### Approach
+
+Follow the pattern established by P386-P417 (struct member compound types) and P505-P506
+(qualified function definitions).
+
+### AST Changes (include/arbor2_glr.h)
+
+Added 5 token fields to `definitio_functi` struct:
+```c
+Arbor2Token*        tok_unsigned;   /* 'unsigned' keyword */
+Arbor2Token*        tok_signed;     /* 'signed' keyword */
+Arbor2Token*        tok_long;       /* 'long' keyword */
+Arbor2Token*        tok_long2;      /* second 'long' for 'long long' */
+Arbor2Token*        tok_short;      /* 'short' keyword */
+```
+
+### Productions Added (P507-P524)
+
+18 new productions covering explicit and implicit int cases:
+
+**Explicit type (with 'int'):**
+- P507-P510: 4-symbol (modifier type declarator compound): unsigned int, signed int, long int, short int
+- P511-P514: 5-symbol (mod mod type decl comp): unsigned long int, signed long int, etc.
+- P515-P517: 5-6 symbol long long variants: long long int, unsigned long long int, signed long long int
+
+**Implicit int:**
+- P518-P521: 4-symbol (mod mod decl comp): unsigned long, signed long, unsigned short, signed short
+- P522-P524: 4-5 symbol long long implicit: long long, unsigned long long, signed long long
+
+### States Added (1402-1425)
+
+24 new states:
+
+**Reduction states for explicit type (1402-1412):**
+- 1402-1405: reduce P507-P510 (single modifier + int)
+- 1406-1409: reduce P511-P514 (double modifier + int)
+- 1410-1412: reduce P515-P517 (long long + int)
+
+**Reduction states for implicit int (1413-1419):**
+- 1413-1416: reduce P518-P521 (double modifier implicit)
+- 1417-1419: reduce P522-P524 (long long implicit)
+
+**Long long int states (1420-1425):**
+- 1420-1422: after 'long long int' etc - expects declarator (added INT shift from 1174/1175/1176)
+- 1423-1425: post-declarator states with full action set (PAREN_APERTA, BRACE_APERTA, etc.)
+
+### State Modifications
+
+**States 1174, 1175, 1176** (after 'long long', 'unsigned long long', 'signed long long'):
+Added INT shift to states 1420, 1421, 1422 for explicit int cases.
+
+**States 1180-1196** (post-declarator for compound types):
+Added GOTO entries for CORPUS non-terminal to reach the new reduction states.
+
+### Serializer Fix (arbor2_scribere.c)
+
+Critical fix for explicit vs implicit int distinction:
+- For explicit int cases like `unsigned int f()`, the `lexema` field holds the type token (`int`)
+- For implicit int cases like `unsigned long f()`, the `lexema` field points to the same token as one of the modifiers
+
+The fix checks if `lexema` is distinct from all modifier tokens before emitting it:
+```c
+si (nodus->lexema != nodus->datum.definitio_functi.tok_unsigned &&
+    nodus->lexema != nodus->datum.definitio_functi.tok_signed &&
+    /* etc */)
+{
+    arbor2_scribere_lexema(output, nodus->lexema);
+}
+```
+
+### Key Bug Fixed
+
+States 1423-1425 initially only had BRACE_APERTA action. After parsing a declarator like `ll`,
+the parser needed to handle PAREN_APERTA for the `()` part of `ll()`. Fixed by adding full
+action set (like state 1180):
+- EOF/COMMA/SEMICOLON → REDUCE (for declaration context)
+- PAREN_APERTA → SHIFT 91 (for function parameters)
+- BRACE_APERTA → SHIFT 25 (for function body)
+
+### Round-Trip Tests Added (probatio_arbor2_scribere.c)
+
+20 new tests covering:
+- Single modifier + explicit type: `unsigned int f()`, `signed int g()`, etc.
+- Two modifiers + explicit type: `unsigned long int ul()`, etc.
+- Long long variations: `long long int ll()`, `unsigned long long int ull()`, etc.
+- Implicit int cases: `unsigned long ul2()`, `long long ll2()`, etc.
+- Compound return with body: `unsigned int count() { return 0; }`
+
+### Final Statistics
+- Total states: 1426 (was 1402, added 24)
+- Total productions: 525 (was 507, added P507-P524)
+- GLR tests: 2041/2041 pass
+- Scribere tests: 180/180 pass (was 160, added 20 roundtrip tests)

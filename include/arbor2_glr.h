@@ -414,6 +414,11 @@ structura Arbor2Nodus {
             Arbor2Nodus*        corpus;               /* Function body (CORPUS node) */
             Arbor2Token*        tok_const;            /* 'const' qualifier (P505) */
             Arbor2Token*        tok_volatile;         /* 'volatile' qualifier (P506) */
+            Arbor2Token*        tok_unsigned;         /* 'unsigned' keyword (P507+) */
+            Arbor2Token*        tok_signed;           /* 'signed' keyword (P508+) */
+            Arbor2Token*        tok_long;             /* 'long' keyword (P509+) */
+            Arbor2Token*        tok_long2;            /* second 'long' for 'long long' */
+            Arbor2Token*        tok_short;            /* 'short' keyword (P510+) */
         } definitio_functi;
 
         /* STRUCT_SPECIFIER (also used for union) */
