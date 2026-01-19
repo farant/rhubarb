@@ -564,7 +564,7 @@ s32 principale(vacuum)
         CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "struct S { int *p; };", NIHIL));
         CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "struct S { void *p; };", NIHIL));
 
-        /* Compound type specifiers in struct members (currently failing - to be fixed) */
+        /* Compound type specifiers in struct members */
         CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "struct S { unsigned int x; };", NIHIL));
         CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "struct S { long int x; };", NIHIL));
         CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion, "struct S { const int x; };", NIHIL));

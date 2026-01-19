@@ -4129,7 +4129,7 @@ s32 principale(vacuum)
 
 
     /* ================================================================
-     * COMPOUND RETURN TYPE TESTS (currently failing - grammar needed)
+     * COMPOUND RETURN TYPE TESTS
      * These test function definitions with compound type specifiers.
      * ================================================================ */
 
@@ -4145,7 +4145,6 @@ s32 principale(vacuum)
 
         imprimere("  successus: %s\n", res.successus ? "VERUM" : "FALSUM");
 
-        /* TODO: Currently fails - expects VERUM after grammar fix */
         CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
         CREDO_NON_NIHIL(res.radix);
         si (res.radix != NIHIL)
@@ -4166,7 +4165,6 @@ s32 principale(vacuum)
 
         imprimere("  successus: %s\n", res.successus ? "VERUM" : "FALSUM");
 
-        /* TODO: Currently fails - expects VERUM after grammar fix */
         CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
         CREDO_NON_NIHIL(res.radix);
         si (res.radix != NIHIL)
@@ -4187,7 +4185,6 @@ s32 principale(vacuum)
 
         imprimere("  successus: %s\n", res.successus ? "VERUM" : "FALSUM");
 
-        /* TODO: Currently fails - expects VERUM after grammar fix */
         CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
         CREDO_NON_NIHIL(res.radix);
         si (res.radix != NIHIL)
@@ -4208,7 +4205,6 @@ s32 principale(vacuum)
 
         imprimere("  successus: %s\n", res.successus ? "VERUM" : "FALSUM");
 
-        /* TODO: Currently fails - expects VERUM after grammar fix */
         CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
         CREDO_NON_NIHIL(res.radix);
         si (res.radix != NIHIL)
@@ -4229,7 +4225,6 @@ s32 principale(vacuum)
 
         imprimere("  successus: %s\n", res.successus ? "VERUM" : "FALSUM");
 
-        /* TODO: Currently fails - expects VERUM after grammar fix */
         CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
         CREDO_NON_NIHIL(res.radix);
         si (res.radix != NIHIL)
@@ -4250,7 +4245,6 @@ s32 principale(vacuum)
 
         imprimere("  successus: %s\n", res.successus ? "VERUM" : "FALSUM");
 
-        /* TODO: Currently fails - expects VERUM after grammar fix */
         CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
         CREDO_NON_NIHIL(res.radix);
         si (res.radix != NIHIL)
@@ -4499,7 +4493,7 @@ s32 principale(vacuum)
     }
 
     /* ================================================================
-     * COMPOUND TYPE SPECIFIER TESTS (currently failing - to be fixed)
+     * COMPOUND TYPE SPECIFIER TESTS
      * These test multi-token type specifiers in struct members.
      * ================================================================ */
 
@@ -4513,7 +4507,6 @@ s32 principale(vacuum)
         tokens = _lexare_ad_tokens(piscina, intern, "struct foo { unsigned int x; }");
         res = arbor2_glr_parsere(glr, tokens);
 
-        /* TODO: Currently fails - expects VERUM after grammar fix */
         CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
         CREDO_NON_NIHIL(res.radix);
     }
@@ -4528,7 +4521,6 @@ s32 principale(vacuum)
         tokens = _lexare_ad_tokens(piscina, intern, "struct foo { long int x; }");
         res = arbor2_glr_parsere(glr, tokens);
 
-        /* TODO: Currently fails - expects VERUM after grammar fix */
         CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
         CREDO_NON_NIHIL(res.radix);
     }
@@ -4543,7 +4535,6 @@ s32 principale(vacuum)
         tokens = _lexare_ad_tokens(piscina, intern, "struct foo { const int x; }");
         res = arbor2_glr_parsere(glr, tokens);
 
-        /* TODO: Currently fails - expects VERUM after grammar fix */
         CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
         CREDO_NON_NIHIL(res.radix);
     }
@@ -4558,7 +4549,6 @@ s32 principale(vacuum)
         tokens = _lexare_ad_tokens(piscina, intern, "struct foo { unsigned long x; }");
         res = arbor2_glr_parsere(glr, tokens);
 
-        /* TODO: Currently fails - expects VERUM after grammar fix */
         CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
         CREDO_NON_NIHIL(res.radix);
     }
@@ -12557,96 +12547,95 @@ s32 principale(vacuum)
 
 
     /* ========================================================
-     * PROBARE: Phase 1.4b - Qualifier + type modifier combinations
-     * (FAILING - states 350/351 need UNSIGNED/LONG/SHORT/SIGNED)
+     * PROBARE: Qualifier + type modifier combinations
      * ======================================================== */
 
-    /* const unsigned int x - FAILING */
+    /* const unsigned int x */
     {
         Xar* tokens;
         Arbor2GLRResultus res;
 
-        imprimere("\n--- Probans const unsigned int x (EXPECTED FAIL) ---\n");
+        imprimere("\n--- Probans const unsigned int x  ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "const unsigned int x");
         res = arbor2_glr_parsere(glr, tokens);
-        CREDO_VERUM(res.successus);  /* FAILING until Phase 1.4b */
+        CREDO_VERUM(res.successus);
     }
 
-    /* const long int y - FAILING */
+    /* const long int y */
     {
         Xar* tokens;
         Arbor2GLRResultus res;
 
-        imprimere("\n--- Probans const long int y (EXPECTED FAIL) ---\n");
+        imprimere("\n--- Probans const long int y  ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "const long int y");
         res = arbor2_glr_parsere(glr, tokens);
-        CREDO_VERUM(res.successus);  /* FAILING until Phase 1.4b */
+        CREDO_VERUM(res.successus);
     }
 
-    /* const short int z - FAILING */
+    /* const short int z */
     {
         Xar* tokens;
         Arbor2GLRResultus res;
 
-        imprimere("\n--- Probans const short int z (EXPECTED FAIL) ---\n");
+        imprimere("\n--- Probans const short int z  ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "const short int z");
         res = arbor2_glr_parsere(glr, tokens);
-        CREDO_VERUM(res.successus);  /* FAILING until Phase 1.4b */
+        CREDO_VERUM(res.successus);
     }
 
-    /* volatile unsigned int a - FAILING */
+    /* volatile unsigned int a */
     {
         Xar* tokens;
         Arbor2GLRResultus res;
 
-        imprimere("\n--- Probans volatile unsigned int a (EXPECTED FAIL) ---\n");
+        imprimere("\n--- Probans volatile unsigned int a  ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "volatile unsigned int a");
         res = arbor2_glr_parsere(glr, tokens);
-        CREDO_VERUM(res.successus);  /* FAILING until Phase 1.4b */
+        CREDO_VERUM(res.successus);
     }
 
-    /* volatile long int b - FAILING */
+    /* volatile long int b */
     {
         Xar* tokens;
         Arbor2GLRResultus res;
 
-        imprimere("\n--- Probans volatile long int b (EXPECTED FAIL) ---\n");
+        imprimere("\n--- Probans volatile long int b  ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "volatile long int b");
         res = arbor2_glr_parsere(glr, tokens);
-        CREDO_VERUM(res.successus);  /* FAILING until Phase 1.4b */
+        CREDO_VERUM(res.successus);
     }
 
-    /* const signed char c - FAILING */
+    /* const signed char c */
     {
         Xar* tokens;
         Arbor2GLRResultus res;
 
-        imprimere("\n--- Probans const signed char c (EXPECTED FAIL) ---\n");
+        imprimere("\n--- Probans const signed char c  ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "const signed char c");
         res = arbor2_glr_parsere(glr, tokens);
-        CREDO_VERUM(res.successus);  /* FAILING until Phase 1.4b */
+        CREDO_VERUM(res.successus);
     }
 
-    /* static const unsigned int d - FAILING (storage + qualifier + type modifier) */
+    /* static const unsigned int d (storage + qualifier + type modifier) */
     {
         Xar* tokens;
         Arbor2GLRResultus res;
 
-        imprimere("\n--- Probans static const unsigned int d (EXPECTED FAIL) ---\n");
+        imprimere("\n--- Probans static const unsigned int d  ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "static const unsigned int d");
         res = arbor2_glr_parsere(glr, tokens);
-        CREDO_VERUM(res.successus);  /* FAILING until Phase 1.4b */
+        CREDO_VERUM(res.successus);
     }
 
-    /* extern volatile long int e - FAILING (storage + qualifier + type modifier) */
+    /* extern volatile long int e (storage + qualifier + type modifier) */
     {
         Xar* tokens;
         Arbor2GLRResultus res;
 
-        imprimere("\n--- Probans extern volatile long int e (EXPECTED FAIL) ---\n");
+        imprimere("\n--- Probans extern volatile long int e  ---\n");
         tokens = _lexare_ad_tokens(piscina, intern, "extern volatile long int e");
         res = arbor2_glr_parsere(glr, tokens);
-        CREDO_VERUM(res.successus);  /* FAILING until Phase 1.4b */
+        CREDO_VERUM(res.successus);
     }
 
 
@@ -12689,7 +12678,7 @@ s32 principale(vacuum)
 
 
     /* ========================================================
-     * PROBARE: Floating point types (FAILING - not yet implemented)
+     * PROBARE: Floating point types
      * ======================================================== */
 
     /* float f - basic float declaration */
@@ -12771,7 +12760,7 @@ s32 principale(vacuum)
 
 
     /* ========================================================
-     * PROBARE: Float/Double casts (FAILING - not yet implemented)
+     * PROBARE: Float/Double casts
      * ======================================================== */
 
     /* (float)x - cast to float */
@@ -12831,7 +12820,7 @@ s32 principale(vacuum)
 
 
     /* ========================================================
-     * PROBARE: Float/Double sizeof (FAILING - not yet implemented)
+     * PROBARE: Float/Double sizeof
      * ======================================================== */
 
     /* sizeof(float) */
@@ -12891,7 +12880,7 @@ s32 principale(vacuum)
 
 
     /* ========================================================
-     * PROBARE: Function pointers (FAILING - not yet implemented)
+     * PROBARE: Function pointers
      * ======================================================== */
 
     /* int (*fp)(void) - function pointer returning int, no params */
@@ -12951,7 +12940,7 @@ s32 principale(vacuum)
 
 
     /* ========================================================
-     * PROBARE: Array parameters (FAILING - not yet implemented)
+     * PROBARE: Array parameters
      * ======================================================== */
 
     /* int fn(int arr[]) - function with array parameter */
