@@ -3101,11 +3101,11 @@ _eval_binarium(SputnikInterpres* interp, SputnikAstNodus* nodus)
             /* Pecunia * numerus vel numerus * pecunia */
             si (sin.genus == SPUTNIK_VALOR_PECUNIA && dex.genus == SPUTNIK_VALOR_NUMERUS)
             {
-                redde _valor_pecunia((s64)(sin.ut.pecunia * dex.ut.numerus));
+                redde _valor_pecunia((s64)((f64)sin.ut.pecunia * dex.ut.numerus));
             }
             si (sin.genus == SPUTNIK_VALOR_NUMERUS && dex.genus == SPUTNIK_VALOR_PECUNIA)
             {
-                redde _valor_pecunia((s64)(sin.ut.numerus * dex.ut.pecunia));
+                redde _valor_pecunia((s64)(sin.ut.numerus * (f64)dex.ut.pecunia));
             }
             si (sin.genus != SPUTNIK_VALOR_NUMERUS || dex.genus != SPUTNIK_VALOR_NUMERUS)
             {

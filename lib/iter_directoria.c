@@ -25,7 +25,7 @@ structura DirectoriumIterator {
 
 /* Determinare genus introitus ex stat() */
 hic_manens IntroitusGenus
-_determinare_genus(mode_t modus)
+_determinare_genus(i32 modus)
 {
     si (S_ISREG(modus)) {
         redde INTROITUS_FILUM;

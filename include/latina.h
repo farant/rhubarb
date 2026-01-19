@@ -339,6 +339,9 @@
 #define memoriae_allocare	malloc
 #define exire				exit
 
+/* snprintf non est pars C89, sed extensio communis */
+externus integer snprintf(character* str, size_t size, constans character* format, ...);
+
 #define interior 		static 
 #define hic_manens 	static
 #define universalis static

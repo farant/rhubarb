@@ -41,7 +41,7 @@ _generare_randomos(i8* bytes, i32 mensura)
         /* Fallback: usus rand() (non cryptographice securus!) */
         per (i = ZEPHYRUM; i < mensura; i++)
         {
-            bytes[i] = (insignatus i8)(rand() & 0xFF);
+            bytes[i] = (i8)(rand() & 0xFF);
         }
     }
 #endif

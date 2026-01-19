@@ -1,10 +1,15 @@
 /* tcp_posix.c - Implementatio TCP pro POSIX (macOS, Linux)
  */
 
+/* Feature test macros pro POSIX functiones (getaddrinfo, usleep, etc.) */
+#define _XOPEN_SOURCE 500
+#define _POSIX_C_SOURCE 200112L
+
 #include "tcp.h"
 
 #include <sys/types.h>
 #include <sys/socket.h>
+#include <sys/time.h>
 #include <netinet/in.h>
 #include <netinet/tcp.h>
 #include <arpa/inet.h>

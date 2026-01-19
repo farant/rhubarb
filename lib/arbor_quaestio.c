@@ -99,8 +99,8 @@ _aedificare_genus_tabulam(ArborQuaestio* q)
         si (nom != NIHIL && nom[ZEPHYRUM] != '\0')
         {
             key = chorda_internare_ex_literis(q->intern, nom);
-            /* Store enum value as pointer (cast via intptr_t) */
-            tabula_dispersa_inserere(q->genus_tabula, *key, (vacuum*)(intptr_t)(i + I));
+            /* Store enum value as pointer (cast via long) */
+            tabula_dispersa_inserere(q->genus_tabula, *key, (vacuum*)(long)(i + I));
         }
     }
 }
@@ -113,7 +113,7 @@ _titulus_ad_genus(ArborQuaestio* q, chorda* titulus)
     si (tabula_dispersa_invenire(q->genus_tabula, *titulus, &valor))
     {
         /* Subtract 1 because we stored i+1 (to distinguish from NULL/0) */
-        redde (ArborNodusGenus)((intptr_t)valor - I);
+        redde (ArborNodusGenus)((long)valor - I);
     }
 
     /* Not found - return invalid */
