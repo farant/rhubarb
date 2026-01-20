@@ -395,9 +395,15 @@ s32 principale(vacuum)
      *
      * 3. POINTER-TO-MEMBER expressions - FIXED
      *    p->x = p->x + dx;  -- now works correctly
-     *    Fix: Added INT_NT_POSTFIXUM GOTO entries to States 26 and 70
+     *    Fix: Added INT_NT_POSTFIXUM GOTO entries to States 26, 70, 293
      *    so that postfix expressions (subscript, call, member access)
-     *    can parse correctly inside compound statements and return.
+     *    can parse correctly inside compound statements, return, and
+     *    assignment RHS.
+     *
+     * 4. DEREFERENCE AS LVALUE - FIXED
+     *    *y = 1;  -- now works correctly
+     *    Fix: State 15 (after '* factor' unary) was missing assignment
+     *    operators (=, +=, -=, etc). Added all assignment ops to reduce P8.
      * ======================================================== */
 
     /* ========================================================
