@@ -108,6 +108,12 @@ nomen structura {
     TabulaDispersa*         included_viae;  /* Files already processed */
     Arbor2IncludeModus      include_modus;
 
+    /* Include search paths */
+    Xar*                    system_viae;    /* Xar of chorda* - <> include paths */
+    Xar*                    local_viae;     /* Xar of chorda* - "" include paths */
+    b32                     system_learning_default;  /* VERUM: system includes are learning mode */
+    b32                     local_learning_default;   /* FALSUM: local includes are full mode */
+
     /* Current source info */
     chorda*                 via_current;    /* Current file being processed */
 } Arbor2Expansion;
@@ -149,6 +155,35 @@ vacuum arbor2_expansion_addere_macro_functio(
 vacuum arbor2_expansion_addere_typedef(
     Arbor2Expansion*        exp,
     constans character*     nomen_typedef);
+
+/* ==================================================
+ * API - Include Paths
+ * ================================================== */
+
+/* Add system include search path (<> includes) */
+vacuum arbor2_expansion_addere_system_via(
+    Arbor2Expansion*        exp,
+    constans character*     via);
+
+/* Add local include search path ("" includes) */
+vacuum arbor2_expansion_addere_local_via(
+    Arbor2Expansion*        exp,
+    constans character*     via);
+
+/* Resolve include path to absolute (returns NIHIL if not found)
+ *
+ * exp:           expansion context
+ * via_specifier: path from #include directive
+ * genus:         SYSTEM (<>) or LOCAL ("")
+ * via_current:   current file path (for relative resolution)
+ *
+ * Returns: allocated chorda* with absolute path, or NIHIL if not found
+ */
+chorda* arbor2_expansion_resolvere_include(
+    Arbor2Expansion*        exp,
+    chorda                  via_specifier,
+    i32                     genus,
+    chorda*                 via_current);
 
 /* ==================================================
  * API - Expansion

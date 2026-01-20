@@ -5,7 +5,11 @@
  * ================================================== */
 
 #include "arbor2_expandere.h"
+#include "arbor2_glr.h"
+#include "via.h"
+#include "chorda_aedificator.h"
 #include <string.h>
+#include <stdio.h>
 
 /* ==================================================
  * Internal Helper - Chorda Utilities
@@ -136,6 +140,12 @@ arbor2_expansion_creare(
 
     exp->included_viae = tabula_dispersa_creare_chorda(piscina, LXIV);
     exp->include_modus = ARBOR2_INCLUDE_RESET_PER_PARSE;
+
+    /* Include search paths */
+    exp->system_viae = xar_creare(piscina, magnitudo(chorda*));
+    exp->local_viae = xar_creare(piscina, magnitudo(chorda*));
+    exp->system_learning_default = VERUM;   /* System includes are learning by default */
+    exp->local_learning_default = FALSUM;   /* Local includes are full by default */
 
     exp->via_current = NIHIL;
 
@@ -340,6 +350,145 @@ arbor2_expansion_addere_typedef(
     info->est_certum = VERUM;
 
     tabula_dispersa_inserere(exp->typedefs, nomen_ch, info);
+}
+
+/* ==================================================
+ * Include Path Management
+ * ================================================== */
+
+vacuum
+arbor2_expansion_addere_system_via(
+    Arbor2Expansion*        exp,
+    constans character*     via)
+{
+    chorda via_ch;
+    chorda* via_ptr;
+    chorda** locus;
+
+    si (via == NIHIL || exp == NIHIL)
+    {
+        redde;
+    }
+
+    via_ch = _chorda_ex_cstring(via, exp->intern);
+    via_ptr = piscina_allocare(exp->piscina, magnitudo(chorda));
+    *via_ptr = via_ch;
+
+    locus = xar_addere(exp->system_viae);
+    si (locus != NIHIL)
+    {
+        *locus = via_ptr;
+    }
+}
+
+vacuum
+arbor2_expansion_addere_local_via(
+    Arbor2Expansion*        exp,
+    constans character*     via)
+{
+    chorda via_ch;
+    chorda* via_ptr;
+    chorda** locus;
+
+    si (via == NIHIL || exp == NIHIL)
+    {
+        redde;
+    }
+
+    via_ch = _chorda_ex_cstring(via, exp->intern);
+    via_ptr = piscina_allocare(exp->piscina, magnitudo(chorda));
+    *via_ptr = via_ch;
+
+    locus = xar_addere(exp->local_viae);
+    si (locus != NIHIL)
+    {
+        *locus = via_ptr;
+    }
+}
+
+/* Try to resolve a path against a directory */
+interior chorda*
+_tentare_resolvere(Arbor2Expansion* exp, chorda* directorium, chorda via_specifier)
+{
+    chorda partes[II];
+    chorda via_candidata;
+    chorda* resultus;
+
+    si (directorium == NIHIL || directorium->mensura == ZEPHYRUM)
+    {
+        redde NIHIL;
+    }
+
+    partes[ZEPHYRUM] = *directorium;
+    partes[I] = via_specifier;
+
+    via_candidata = via_iungere(partes, II, exp->piscina);
+
+    si (via_existit(via_candidata))
+    {
+        /* Normalize the path */
+        via_candidata = via_normalizare(via_candidata, exp->piscina);
+
+        resultus = piscina_allocare(exp->piscina, magnitudo(chorda));
+        *resultus = via_candidata;
+        redde resultus;
+    }
+
+    redde NIHIL;
+}
+
+chorda*
+arbor2_expansion_resolvere_include(
+    Arbor2Expansion*        exp,
+    chorda                  via_specifier,
+    i32                     genus,
+    chorda*                 via_current)
+{
+    chorda* resultus;
+    i32 i;
+    i32 num;
+    chorda** via_ptr;
+    chorda dir_current;
+
+    /* Local "" includes: first check relative to current file */
+    si (genus == ARBOR2_INCLUDE_LOCAL && via_current != NIHIL)
+    {
+        dir_current = via_directorium(*via_current, exp->piscina);
+        resultus = _tentare_resolvere(exp, &dir_current, via_specifier);
+        si (resultus != NIHIL)
+        {
+            redde resultus;
+        }
+    }
+
+    /* Local "" includes: search local_viae */
+    si (genus == ARBOR2_INCLUDE_LOCAL)
+    {
+        num = xar_numerus(exp->local_viae);
+        per (i = ZEPHYRUM; i < num; i++)
+        {
+            via_ptr = xar_obtinere(exp->local_viae, i);
+            resultus = _tentare_resolvere(exp, *via_ptr, via_specifier);
+            si (resultus != NIHIL)
+            {
+                redde resultus;
+            }
+        }
+    }
+
+    /* All includes: search system_viae */
+    num = xar_numerus(exp->system_viae);
+    per (i = ZEPHYRUM; i < num; i++)
+    {
+        via_ptr = xar_obtinere(exp->system_viae, i);
+        resultus = _tentare_resolvere(exp, *via_ptr, via_specifier);
+        si (resultus != NIHIL)
+        {
+            redde resultus;
+        }
+    }
+
+    redde NIHIL;
 }
 
 /* ==================================================
@@ -876,6 +1025,331 @@ _processare_undef(Arbor2Expansion* exp, Xar* tokens, i32* positus)
             frange;
         }
     }
+
+    *positus = pos;
+    redde VERUM;
+}
+
+/* ==================================================
+ * Include Processing
+ * ================================================== */
+
+/* Read file contents into buffer */
+interior chorda
+_legere_filum(Arbor2Expansion* exp, chorda* via)
+{
+    FILE* filum;
+    character buffer_via[MMMMXCVI];
+    longus mensura;
+    i8* contentum;
+    chorda resultus;
+
+    resultus.datum = NIHIL;
+    resultus.mensura = ZEPHYRUM;
+
+    si (via == NIHIL || via->mensura == ZEPHYRUM)
+    {
+        redde resultus;
+    }
+
+    /* Create null-terminated path */
+    si (via->mensura >= MMMMXCVI)
+    {
+        redde resultus;
+    }
+    memcpy(buffer_via, via->datum, (size_t)via->mensura);
+    buffer_via[via->mensura] = '\0';
+
+    filum = fopen(buffer_via, "rb");
+    si (filum == NIHIL)
+    {
+        redde resultus;
+    }
+
+    /* Get file size */
+    fseek(filum, 0L, SEEK_END);
+    mensura = ftell(filum);
+    fseek(filum, 0L, SEEK_SET);
+
+    si (mensura <= 0L)
+    {
+        fclose(filum);
+        redde resultus;
+    }
+
+    /* Allocate and read */
+    contentum = piscina_allocare(exp->piscina, (i32)mensura + I);
+    si (fread(contentum, (size_t)1, (size_t)mensura, filum) != (size_t)mensura)
+    {
+        fclose(filum);
+        redde resultus;
+    }
+    fclose(filum);
+
+    contentum[mensura] = '\0';
+    resultus.datum = contentum;
+    resultus.mensura = (i32)mensura;
+
+    redde resultus;
+}
+
+interior b32
+_processare_include(Arbor2Expansion* exp, Xar* tokens, i32* positus, Xar* result)
+{
+    i32 pos;
+    i32 num;
+    Arbor2Token* tok;
+    Arbor2Token* tok_hash;
+    Arbor2IncludeGenus genus;
+    Arbor2IncludeStatus status;
+    chorda via_specifier;
+    chorda* via_specifier_ptr;
+    chorda* via_resoluta;
+    b32 est_learning;
+    Xar* lexemata_originalia;
+    Arbor2Token** locus;
+    i32 linea_directive;
+    i32 bracket_depth;
+
+    pos = *positus;
+    num = xar_numerus(tokens);
+
+    /* Store # token position and line */
+    tok_hash = *(Arbor2Token**)xar_obtinere(tokens, pos);
+    linea_directive = tok_hash->lexema->linea;
+
+    /* Collect original tokens for roundtrip */
+    lexemata_originalia = xar_creare(exp->piscina, magnitudo(Arbor2Token*));
+
+    /* Add # token */
+    locus = xar_addere(lexemata_originalia);
+    si (locus != NIHIL) *locus = tok_hash;
+    pos++;
+
+    /* Skip 'include' */
+    si (pos >= num)
+    {
+        *positus = pos;
+        redde FALSUM;
+    }
+    tok = *(Arbor2Token**)xar_obtinere(tokens, pos);
+    locus = xar_addere(lexemata_originalia);
+    si (locus != NIHIL) *locus = tok;
+    pos++;
+
+    /* Determine include type and extract path */
+    si (pos >= num)
+    {
+        *positus = pos;
+        redde FALSUM;
+    }
+    tok = *(Arbor2Token**)xar_obtinere(tokens, pos);
+
+    via_specifier.datum = NIHIL;
+    via_specifier.mensura = ZEPHYRUM;
+
+    si (tok->lexema->genus == ARBOR2_LEXEMA_STRING_LIT)
+    {
+        /* Local include: "path" */
+        genus = ARBOR2_INCLUDE_LOCAL;
+
+        /* Extract path (remove quotes) */
+        si (tok->lexema->valor.mensura >= II)
+        {
+            via_specifier.datum = tok->lexema->valor.datum + I;
+            via_specifier.mensura = tok->lexema->valor.mensura - II;
+        }
+
+        locus = xar_addere(lexemata_originalia);
+        si (locus != NIHIL) *locus = tok;
+        pos++;
+    }
+    alioquin si (tok->lexema->genus == ARBOR2_LEXEMA_MINOR)
+    {
+        /* System include: <path> - collect tokens until > */
+        ChordaAedificator* aedificator;
+        chorda path_ch;
+        chorda* path_interned;
+
+        genus = ARBOR2_INCLUDE_SYSTEM;
+
+        /* Add < token */
+        locus = xar_addere(lexemata_originalia);
+        si (locus != NIHIL) *locus = tok;
+        pos++;
+
+        /* Collect path tokens until > */
+        aedificator = chorda_aedificator_creare(exp->piscina, CCLVI);
+        bracket_depth = I;
+
+        dum (pos < num && bracket_depth > ZEPHYRUM)
+        {
+            tok = *(Arbor2Token**)xar_obtinere(tokens, pos);
+
+            /* Check for newline - unterminated include */
+            si (_habet_nova_linea_ante(tok))
+            {
+                frange;
+            }
+
+            si (tok->lexema->genus == ARBOR2_LEXEMA_MAIOR)
+            {
+                bracket_depth--;
+                si (bracket_depth == ZEPHYRUM)
+                {
+                    locus = xar_addere(lexemata_originalia);
+                    si (locus != NIHIL) *locus = tok;
+                    pos++;
+                    frange;
+                }
+            }
+            alioquin si (tok->lexema->genus == ARBOR2_LEXEMA_MINOR)
+            {
+                bracket_depth++;
+            }
+
+            /* Add to path */
+            chorda_aedificator_appendere_chorda(aedificator, tok->lexema->valor);
+
+            locus = xar_addere(lexemata_originalia);
+            si (locus != NIHIL) *locus = tok;
+            pos++;
+        }
+
+        path_ch = chorda_aedificator_finire(aedificator);
+        path_interned = chorda_internare(exp->intern, path_ch);
+        via_specifier = *path_interned;
+    }
+    alioquin
+    {
+        /* Unknown include format - skip to newline */
+        dum (pos < num)
+        {
+            tok = *(Arbor2Token**)xar_obtinere(tokens, pos);
+            si (_habet_nova_linea_ante(tok))
+            {
+                frange;
+            }
+            locus = xar_addere(lexemata_originalia);
+            si (locus != NIHIL) *locus = tok;
+            pos++;
+            si (_habet_nova_linea_post(tok))
+            {
+                frange;
+            }
+        }
+        *positus = pos;
+        redde FALSUM;
+    }
+
+    /* Skip to end of line */
+    dum (pos < num)
+    {
+        tok = *(Arbor2Token**)xar_obtinere(tokens, pos);
+        si (_habet_nova_linea_ante(tok))
+        {
+            frange;
+        }
+        locus = xar_addere(lexemata_originalia);
+        si (locus != NIHIL) *locus = tok;
+        pos++;
+        si (_habet_nova_linea_post(tok))
+        {
+            frange;
+        }
+    }
+
+    /* Store specifier */
+    via_specifier_ptr = piscina_allocare(exp->piscina, magnitudo(chorda));
+    *via_specifier_ptr = via_specifier;
+
+    /* Determine mode */
+    est_learning = (genus == ARBOR2_INCLUDE_SYSTEM)
+                    ? exp->system_learning_default
+                    : exp->local_learning_default;
+
+    /* Resolve path */
+    via_resoluta = arbor2_expansion_resolvere_include(
+        exp, via_specifier, (i32)genus, exp->via_current);
+
+    /* Determine status and process */
+    si (via_resoluta == NIHIL)
+    {
+        status = ARBOR2_INCLUDE_UNRESOLVED;
+    }
+    alioquin si (tabula_dispersa_continet(exp->included_viae, *via_resoluta))
+    {
+        status = ARBOR2_INCLUDE_SKIPPED;
+    }
+    alioquin
+    {
+        chorda contentum;
+        Xar* included_tokens;
+        chorda* via_salvata;
+
+        status = ARBOR2_INCLUDE_RESOLVED;
+
+        /* Mark as included */
+        tabula_dispersa_inserere(exp->included_viae, *via_resoluta, (vacuum*)I);
+
+        /* Save current file context */
+        via_salvata = exp->via_current;
+
+        /* Read and process included file */
+        contentum = _legere_filum(exp, via_resoluta);
+
+        si (contentum.mensura > ZEPHYRUM)
+        {
+            included_tokens = arbor2_expansion_processare(
+                exp,
+                (constans character*)contentum.datum,
+                contentum.mensura,
+                (constans character*)via_resoluta->datum);
+
+            /* Full mode: merge tokens into result */
+            si (!est_learning && included_tokens != NIHIL)
+            {
+                i32 j;
+                i32 inc_num;
+                Arbor2Token* inc_tok;
+
+                inc_num = xar_numerus(included_tokens);
+                per (j = ZEPHYRUM; j < inc_num; j++)
+                {
+                    inc_tok = *(Arbor2Token**)xar_obtinere(included_tokens, j);
+
+                    /* Skip EOF tokens */
+                    si (inc_tok->lexema->genus == ARBOR2_LEXEMA_EOF)
+                    {
+                        perge;
+                    }
+
+                    locus = xar_addere(result);
+                    si (locus != NIHIL)
+                    {
+                        *locus = inc_tok;
+                    }
+                }
+            }
+            /* Learning mode: macros/typedefs already extracted, tokens discarded */
+        }
+
+        /* Restore file context */
+        exp->via_current = via_salvata;
+    }
+
+    /* Create INCLUDE node (stored in result for AST) */
+    /* Note: For now we just pass through the tokens in learning mode
+     * and merge in full mode. The INCLUDE node creation is for future
+     * AST representation if needed. The roundtrip tokens are preserved
+     * in lexemata_originalia for serialization. */
+
+    /* Suppress unused variable warnings */
+    (vacuum)status;
+    (vacuum)via_specifier_ptr;
+    (vacuum)est_learning;
+    (vacuum)linea_directive;
+    (vacuum)lexemata_originalia;
 
     *positus = pos;
     redde VERUM;
@@ -1544,6 +2018,18 @@ _expand_layer(Arbor2Expansion* exp, Arbor2Layer* input)
                         memcmp(next_tok->lexema->valor.datum, "undef", V) == ZEPHYRUM)
                     {
                         _processare_undef(exp, input->lexemata, &i);
+                        changed = VERUM;
+                        /* Adjust for loop increment */
+                        i--;
+                        perge;
+                    }
+
+                    /* #include */
+                    si (next_tok->lexema->genus == ARBOR2_LEXEMA_IDENTIFICATOR &&
+                        next_tok->lexema->valor.mensura == VII &&
+                        memcmp(next_tok->lexema->valor.datum, "include", VII) == ZEPHYRUM)
+                    {
+                        _processare_include(exp, input->lexemata, &i, result);
                         changed = VERUM;
                         /* Adjust for loop increment */
                         i--;

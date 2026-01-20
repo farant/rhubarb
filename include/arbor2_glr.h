@@ -196,7 +196,8 @@ nomen enumeratio {
     ARBOR2_NODUS_ERROR,
     ARBOR2_NODUS_TRANSLATION_UNIT,  /* Translation unit (list of external declarations) */
     ARBOR2_NODUS_COMMENTUM,         /* Comment node (promoted from trivia) */
-    ARBOR2_NODUS_CONDITIONALIS      /* Conditional compilation (#ifdef/#ifndef/#else/#endif) */
+    ARBOR2_NODUS_CONDITIONALIS,     /* Conditional compilation (#ifdef/#ifndef/#else/#endif) */
+    ARBOR2_NODUS_INCLUDE            /* #include directive */
 } Arbor2NodusGenus;
 
 /* ==================================================
@@ -221,6 +222,34 @@ nomen enumeratio {
     ARBOR2_DIRECTIVUM_ELSE,         /* #else */
     ARBOR2_DIRECTIVUM_ENDIF         /* #endif */
 } Arbor2DirectivumGenus;
+
+/* ==================================================
+ * Include Directive Type
+ * ================================================== */
+
+nomen enumeratio {
+    ARBOR2_INCLUDE_SYSTEM,          /* <header.h> */
+    ARBOR2_INCLUDE_LOCAL            /* "header.h" */
+} Arbor2IncludeGenus;
+
+nomen enumeratio {
+    ARBOR2_INCLUDE_UNRESOLVED,      /* File not found */
+    ARBOR2_INCLUDE_RESOLVED,        /* File found and processed */
+    ARBOR2_INCLUDE_SKIPPED          /* Already included (guard) */
+} Arbor2IncludeStatus;
+
+/* ==================================================
+ * Include Info (for INCLUDE node)
+ * ================================================== */
+
+nomen structura {
+    Arbor2IncludeGenus      genus;              /* System <> or local "" */
+    Arbor2IncludeStatus     status;             /* Resolution status */
+    chorda*                 via_specifier;      /* Original path from directive */
+    chorda*                 via_resoluta;       /* Resolved absolute path (NIHIL if unresolved) */
+    b32                     est_learning;       /* VERUM if learning mode */
+    i32                     linea;              /* Line number of directive */
+} Arbor2IncludeInfo;
 
 /* ==================================================
  * Conditional Branch (for CONDITIONALIS node)
@@ -610,6 +639,12 @@ structura Arbor2Nodus {
             i32                     linea_if;       /* Line of opening #if/#ifdef */
             i32                     linea_endif;    /* Line of closing #endif */
         } conditionalis;
+
+        /* INCLUDE (#include directive) */
+        structura {
+            Arbor2IncludeInfo*      info;                   /* Include metadata */
+            Xar*                    lexemata_originalia;    /* Original tokens for roundtrip */
+        } include_directive;
     } datum;
 };
 

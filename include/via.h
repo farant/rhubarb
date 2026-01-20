@@ -170,6 +170,22 @@ via_est_relativa (
 
 
 /* ====================================================
+ * Existentia
+ * ==================================================== */
+
+/* Verificare si filum existit
+ *
+ * via: via ad filum verificandum
+ *
+ * Reddit: VERUM si filum existit, FALSUM aliter
+ *
+ * NOTA: Solum verificat existentiam, non genus (directorium vel filum)
+ */
+b32
+via_existit (
+	chorda via);
+
+/* ====================================================
  * Utilitas
  * ==================================================== */
 

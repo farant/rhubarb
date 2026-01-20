@@ -2,6 +2,7 @@
 #include "chorda_aedificator.h"
 #include <string.h>
 #include <unistd.h>
+#include <sys/stat.h>
 
 /* ===========================================================
  * CONSTANTAE
@@ -426,6 +427,41 @@ via_est_relativa (
 	chorda via)
 {
 	redde !via_est_absoluta(via);
+}
+
+
+/* ===========================================================
+ * EXISTENTIA
+ * =========================================================== */
+
+b32
+via_existit (
+	chorda via)
+{
+	character buffer[MMMMXCVI]; /* 4096 bytes pro via */
+	structura stat info;
+
+	si (via.mensura == ZEPHYRUM || via.datum == NIHIL)
+	{
+		redde FALSUM;
+	}
+
+	/* Copiare via ad buffer cum terminatore nullo */
+	si (via.mensura >= MMMMXCVI)
+	{
+		redde FALSUM; /* Via nimis longa */
+	}
+
+	memcpy(buffer, via.datum, (size_t)via.mensura);
+	buffer[via.mensura] = '\0';
+
+	/* Verificare existentiam per stat() */
+	si (stat(buffer, &info) == ZEPHYRUM)
+	{
+		redde VERUM;
+	}
+
+	redde FALSUM;
 }
 
 

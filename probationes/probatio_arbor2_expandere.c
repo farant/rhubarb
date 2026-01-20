@@ -1640,6 +1640,193 @@ s32 principale(vacuum)
     }
 
 
+    /* ========================================================
+     * PROBARE: Include path management - add paths
+     * ======================================================== */
+
+    {
+        Arbor2Expansion* exp;
+
+        imprimere("\n--- Probans include path management ---\n");
+
+        exp = arbor2_expansion_creare(piscina, intern);
+
+        /* Add paths */
+        arbor2_expansion_addere_system_via(exp, "/usr/include");
+        arbor2_expansion_addere_local_via(exp, "./probationes/fixa");
+
+        /* Verify arrays are populated */
+        CREDO_AEQUALIS_I32(xar_numerus(exp->system_viae), I);
+        CREDO_AEQUALIS_I32(xar_numerus(exp->local_viae), I);
+    }
+
+
+    /* ========================================================
+     * PROBARE: Local include - extract macros
+     * ======================================================== */
+
+    {
+        constans character* fons;
+        Arbor2Expansion* exp;
+        Xar* result;
+        Arbor2MacroDef* def;
+        chorda nomen_ch;
+        vacuum* val_ptr;
+        unio { constans character* c; i8* m; } u;
+
+        imprimere("\n--- Probans local include macro extraction ---\n");
+
+        exp = arbor2_expansion_creare(piscina, intern);
+        arbor2_expansion_addere_local_via(exp, "./probationes/fixa");
+
+        fons = "#include \"include_test_header.h\"\nint x = HEADER_MACRO;";
+        result = arbor2_expansion_processare(exp, fons, (i32)strlen(fons), "test.c");
+        (vacuum)result;
+
+        /* Verify HEADER_MACRO was extracted */
+        u.c = "HEADER_MACRO";
+        nomen_ch.datum = u.m;
+        nomen_ch.mensura = XII;
+
+        CREDO_VERUM(tabula_dispersa_invenire(exp->macros, nomen_ch, &val_ptr));
+        def = (Arbor2MacroDef*)val_ptr;
+        CREDO_NON_NIHIL(def);
+    }
+
+
+    /* ========================================================
+     * PROBARE: Local include - extract typedefs
+     * ======================================================== */
+
+    {
+        constans character* fons;
+        Arbor2Expansion* exp;
+        Xar* result;
+        chorda nomen_ch;
+        unio { constans character* c; i8* m; } u;
+
+        imprimere("\n--- Probans local include typedef extraction ---\n");
+
+        exp = arbor2_expansion_creare(piscina, intern);
+        arbor2_expansion_addere_local_via(exp, "./probationes/fixa");
+
+        fons = "#include \"include_test_header.h\"";
+        result = arbor2_expansion_processare(exp, fons, (i32)strlen(fons), "test.c");
+        (vacuum)result;
+
+        /* Verify HeaderInt typedef was extracted */
+        u.c = "HeaderInt";
+        nomen_ch.datum = u.m;
+        nomen_ch.mensura = IX;
+
+        CREDO_AEQUALIS_I32((i32)arbor2_expansion_est_typedef(exp, nomen_ch), VERUM);
+    }
+
+
+    /* ========================================================
+     * PROBARE: Nested include - extract from nested
+     * ======================================================== */
+
+    {
+        constans character* fons;
+        Arbor2Expansion* exp;
+        Xar* result;
+        chorda nomen_ch;
+        vacuum* val_ptr;
+        unio { constans character* c; i8* m; } u;
+
+        imprimere("\n--- Probans nested include extraction ---\n");
+
+        exp = arbor2_expansion_creare(piscina, intern);
+        arbor2_expansion_addere_local_via(exp, "./probationes/fixa");
+
+        fons = "#include \"include_test_nested.h\"";
+        result = arbor2_expansion_processare(exp, fons, (i32)strlen(fons), "test.c");
+        (vacuum)result;
+
+        /* Verify NESTED_MACRO from nested file */
+        u.c = "NESTED_MACRO";
+        nomen_ch.datum = u.m;
+        nomen_ch.mensura = XII;
+
+        CREDO_VERUM(tabula_dispersa_invenire(exp->macros, nomen_ch, &val_ptr));
+
+        /* Verify HEADER_MACRO from included-by-nested file */
+        u.c = "HEADER_MACRO";
+        nomen_ch.datum = u.m;
+        nomen_ch.mensura = XII;
+
+        CREDO_VERUM(tabula_dispersa_invenire(exp->macros, nomen_ch, &val_ptr));
+    }
+
+
+    /* ========================================================
+     * PROBARE: Include guard - no double processing
+     * ======================================================== */
+
+    {
+        constans character* fons;
+        Arbor2Expansion* exp;
+        Xar* result;
+
+        imprimere("\n--- Probans include guard ---\n");
+
+        exp = arbor2_expansion_creare(piscina, intern);
+        arbor2_expansion_addere_local_via(exp, "./probationes/fixa");
+
+        /* Include same file twice - should be skipped second time */
+        fons = "#include \"include_test_header.h\"\n#include \"include_test_header.h\"";
+        result = arbor2_expansion_processare(exp, fons, (i32)strlen(fons), "test.c");
+
+        /* Test passes if it completes without infinite loop */
+        CREDO_NON_NIHIL(result);
+    }
+
+
+    /* ========================================================
+     * PROBARE: Unresolved include - graceful handling
+     * ======================================================== */
+
+    {
+        constans character* fons;
+        Arbor2Expansion* exp;
+        Xar* result;
+
+        imprimere("\n--- Probans unresolved include ---\n");
+
+        exp = arbor2_expansion_creare(piscina, intern);
+        /* No paths added - file won't be found */
+
+        fons = "#include \"nonexistent.h\"";
+        result = arbor2_expansion_processare(exp, fons, (i32)strlen(fons), "test.c");
+
+        /* Processing should complete despite missing file */
+        CREDO_NON_NIHIL(result);
+    }
+
+
+    /* ========================================================
+     * PROBARE: System include syntax
+     * ======================================================== */
+
+    {
+        constans character* fons;
+        Arbor2Expansion* exp;
+        Xar* result;
+
+        imprimere("\n--- Probans system include syntax ---\n");
+
+        exp = arbor2_expansion_creare(piscina, intern);
+
+        /* System include with no paths - won't be found but should parse */
+        fons = "#include <stdio.h>";
+        result = arbor2_expansion_processare(exp, fons, (i32)strlen(fons), "test.c");
+
+        /* Processing should complete */
+        CREDO_NON_NIHIL(result);
+    }
+
+
     /* Compendium */
     imprimere("\n");
     credo_imprimere_compendium();

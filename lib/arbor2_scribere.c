@@ -852,6 +852,23 @@ _scribere_nodum(Xar* output, Arbor2Nodus* nodus)
             _emittere_spatia(output, nodus->datum.commentum.spatia_post);
             frange;
 
+        /* INCLUDE: emit original directive tokens for roundtrip */
+        casus ARBOR2_NODUS_INCLUDE:
+            si (nodus->datum.include_directive.lexemata_originalia != NIHIL)
+            {
+                i32 i;
+                i32 num = xar_numerus(nodus->datum.include_directive.lexemata_originalia);
+                per (i = ZEPHYRUM; i < num; i++)
+                {
+                    Arbor2Token** tok_ptr = xar_obtinere(nodus->datum.include_directive.lexemata_originalia, i);
+                    si (tok_ptr != NIHIL && *tok_ptr != NIHIL)
+                    {
+                        arbor2_scribere_lexema(output, *tok_ptr);
+                    }
+                }
+            }
+            frange;
+
         ordinarius:
             /* Unknown node type - skip */
             frange;
