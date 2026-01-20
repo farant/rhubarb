@@ -296,18 +296,24 @@ s32 principale(vacuum)
     */
 
     /* ========================================================
-     * NOTE: Files with preprocessor directives (#include, #define, etc.)
-     * are not yet supported by arbor2_glr. They require preprocessor
-     * directive parsing which is a separate feature to add.
-     *
-     * Skipped files:
-     *   - include_test.c
-     *   - piscina_mini.c
-     *   - latina.h
-     *   - cursor.c, cursor.h
-     *   - color.c, color.h
-     *   - etc.
+     * PROBARE: Files with preprocessor directives
+     * Now supported with preprocessor roundtrip implementation!
      * ======================================================== */
+    {
+        imprimere("\n--- Probans files with preprocessor ---\n");
+
+        /* Simple include + declaration */
+        CREDO_VERUM(_probare_roundtrip_fasciculum(piscina, intern, expansion,
+            "probationes/fixa/roundtrip/include_test.c"));
+
+        /* Another simple include */
+        CREDO_VERUM(_probare_roundtrip_fasciculum(piscina, intern, expansion,
+            "probationes/fixa/roundtrip/include_cursor.c"));
+
+        /* File with #define and #ifdef */
+        CREDO_VERUM(_probare_roundtrip_fasciculum(piscina, intern, expansion,
+            "probationes/fixa/roundtrip/preprocessor_test.c"));
+    }
 
     /* Print summary */
     credo_imprimere_compendium();

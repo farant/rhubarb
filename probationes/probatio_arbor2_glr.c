@@ -12010,6 +12010,157 @@ s32 principale(vacuum)
 
 
     /* ========================================================
+     * PROBARE: Typedef registration post-parse
+     *
+     * After parsing a translation unit with typedef declarations,
+     * the typedef names should be registered in the expansion context.
+     * This enables subsequent declarations using the typedef'd names.
+     * ======================================================== */
+
+    /* Test: typedef registration - simple typedef */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+        chorda titulus_ch;
+        Arbor2Nodus* tu;
+        Arbor2Nodus* first_decl;
+        unio { constans character* c; i8* m; } u;
+
+        imprimere("\n--- Typedef registration: typedef int Integer; ---\n");
+
+        /* Create fresh GLR with clean expansion context for this test */
+        {
+            Arbor2Expansion* exp_test = arbor2_expansion_creare(piscina, intern);
+            Arbor2GLR* glr_test = arbor2_glr_creare(piscina, intern, exp_test);
+
+            tokens = _lexare_ad_tokens(piscina, intern, "typedef int Integer;\n");
+            res = arbor2_glr_parsere_translation_unit(glr_test, tokens);
+
+            CREDO_VERUM(res.successus);
+            CREDO_NON_NIHIL(res.radix);
+
+            si (res.radix != NIHIL)
+            {
+                tu = res.radix;
+                CREDO_AEQUALIS_I32((i32)tu->genus, (i32)ARBOR2_NODUS_TRANSLATION_UNIT);
+                CREDO_AEQUALIS_I32(xar_numerus(tu->datum.translation_unit.declarationes), I);
+
+                /* Verify first declaration is a typedef */
+                si (xar_numerus(tu->datum.translation_unit.declarationes) >= I)
+                {
+                    Arbor2Nodus** ptr = xar_obtinere(tu->datum.translation_unit.declarationes, ZEPHYRUM);
+                    first_decl = *ptr;
+                    CREDO_NON_NIHIL(first_decl);
+                    si (first_decl != NIHIL)
+                    {
+                        CREDO_AEQUALIS_I32((i32)first_decl->genus, (i32)ARBOR2_NODUS_DECLARATIO);
+                        CREDO_VERUM(first_decl->datum.declaratio.est_typedef);
+                    }
+                }
+
+                /* Verify Integer is registered as typedef */
+                u.c = "Integer";
+                titulus_ch.datum = u.m;
+                titulus_ch.mensura = VII;
+                CREDO_VERUM(arbor2_expansion_est_typedef(exp_test, titulus_ch));
+            }
+        }
+    }
+
+    /* Test: pointer typedef registration */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+        chorda titulus_ch;
+        unio { constans character* c; i8* m; } u;
+
+        imprimere("\n--- Typedef registration: typedef int *IntPtr; ---\n");
+
+        {
+            Arbor2Expansion* exp_test = arbor2_expansion_creare(piscina, intern);
+            Arbor2GLR* glr_test = arbor2_glr_creare(piscina, intern, exp_test);
+
+            tokens = _lexare_ad_tokens(piscina, intern, "typedef int *IntPtr;\n");
+            res = arbor2_glr_parsere_translation_unit(glr_test, tokens);
+
+            CREDO_VERUM(res.successus);
+
+            /* Verify IntPtr is registered as typedef */
+            u.c = "IntPtr";
+            titulus_ch.datum = u.m;
+            titulus_ch.mensura = VI;
+            CREDO_VERUM(arbor2_expansion_est_typedef(exp_test, titulus_ch));
+        }
+    }
+
+    /* Test: struct typedef registration */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+        chorda titulus_ch;
+        unio { constans character* c; i8* m; } u;
+
+        imprimere("\n--- Typedef registration: typedef struct { int x; } Point; ---\n");
+
+        {
+            Arbor2Expansion* exp_test = arbor2_expansion_creare(piscina, intern);
+            Arbor2GLR* glr_test = arbor2_glr_creare(piscina, intern, exp_test);
+
+            tokens = _lexare_ad_tokens(piscina, intern,
+                "typedef struct { int x; } Point;\n");
+            res = arbor2_glr_parsere_translation_unit(glr_test, tokens);
+
+            CREDO_VERUM(res.successus);
+            CREDO_NON_NIHIL(res.radix);
+
+            si (res.radix != NIHIL)
+            {
+                CREDO_AEQUALIS_I32(xar_numerus(res.radix->datum.translation_unit.declarationes), I);
+            }
+
+            /* Verify Point is registered as typedef */
+            u.c = "Point";
+            titulus_ch.datum = u.m;
+            titulus_ch.mensura = V;
+            CREDO_VERUM(arbor2_expansion_est_typedef(exp_test, titulus_ch));
+        }
+    }
+
+    /* Test: enum typedef registration */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+        chorda titulus_ch;
+        unio { constans character* c; i8* m; } u;
+
+        imprimere("\n--- Typedef registration: typedef enum { RED, GREEN, BLUE } Color; ---\n");
+
+        {
+            Arbor2Expansion* exp_test = arbor2_expansion_creare(piscina, intern);
+            Arbor2GLR* glr_test = arbor2_glr_creare(piscina, intern, exp_test);
+
+            tokens = _lexare_ad_tokens(piscina, intern,
+                "typedef enum { RED, GREEN, BLUE } Color;\n");
+            res = arbor2_glr_parsere_translation_unit(glr_test, tokens);
+
+            CREDO_VERUM(res.successus);
+            CREDO_NON_NIHIL(res.radix);
+
+            si (res.radix != NIHIL)
+            {
+                CREDO_AEQUALIS_I32(xar_numerus(res.radix->datum.translation_unit.declarationes), I);
+            }
+
+            /* Verify Color is registered as typedef */
+            u.c = "Color";
+            titulus_ch.datum = u.m;
+            titulus_ch.mensura = V;
+            CREDO_VERUM(arbor2_expansion_est_typedef(exp_test, titulus_ch));
+        }
+    }
+
+
+    /* ========================================================
      * PROBARE: Type modifiers (Phase 1.4)
      * ======================================================== */
 

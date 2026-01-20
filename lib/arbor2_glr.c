@@ -7444,7 +7444,7 @@ _invenire_finem_declarationis(Xar* lexemata, i32 initium)
                 frange;
 
             casus ARBOR2_LEXEMA_SEMICOLON:
-                /* Declaration ends at semicolon - exclude it from parse */
+                /* Declaration ends at semicolon - exclude from parse, will be set after */
                 si (profunditas_bracei == ZEPHYRUM && profunditas_paren == ZEPHYRUM)
                 {
                     info.parse_finis = i;     /* Exclude semicolon */
@@ -7466,6 +7466,94 @@ _invenire_finem_declarationis(Xar* lexemata, i32 initium)
     info.parse_finis = num;
     info.proximus = num;
     redde info;
+}
+
+/* ==================================================
+ * Typedef Collection
+ *
+ * Post-parse pass to register typedef names from AST.
+ * This enables subsequent declarations to use typedef'd names.
+ * ================================================== */
+
+/* Extrahere nomen typedef ex declaratione
+ * Returns: chorda with typedef name, or empty chorda if not extractable
+ */
+hic_manens chorda
+_extrahere_nomen_typedef(Arbor2Nodus* declaratio)
+{
+    chorda vacua;
+    Arbor2Nodus* declarator;
+
+    vacua.datum = NIHIL;
+    vacua.mensura = ZEPHYRUM;
+
+    si (declaratio == NIHIL || declaratio->genus != ARBOR2_NODUS_DECLARATIO)
+        redde vacua;
+
+    si (!declaratio->datum.declaratio.est_typedef)
+        redde vacua;
+
+    declarator = declaratio->datum.declaratio.declarator;
+    si (declarator == NIHIL)
+        redde vacua;
+
+    /* Handle DECLARATOR_FUNCTI (function pointer typedef) */
+    si (declarator->genus == ARBOR2_NODUS_DECLARATOR_FUNCTI)
+    {
+        Arbor2Nodus* inner = declarator->datum.declarator_functi.declarator_interior;
+        si (inner != NIHIL && inner->genus == ARBOR2_NODUS_DECLARATOR)
+            redde inner->datum.declarator.titulus;
+        redde vacua;
+    }
+
+    si (declarator->genus != ARBOR2_NODUS_DECLARATOR)
+        redde vacua;
+
+    redde declarator->datum.declarator.titulus;
+}
+
+/* Registrare typedef ex singula declaratione
+ * Call this immediately after parsing each declaration.
+ * Handles comma-separated typedefs via proxima chain.
+ */
+hic_manens vacuum
+_registrare_typedef_ex_declaratione(Arbor2GLR* glr, Arbor2Nodus* decl)
+{
+    Arbor2Nodus* currens;
+
+    si (decl == NIHIL)
+        redde;
+
+    si (glr->expansion == NIHIL)
+        redde;
+
+    /* Only process typedef declarations */
+    si (decl->genus != ARBOR2_NODUS_DECLARATIO ||
+        !decl->datum.declaratio.est_typedef)
+        redde;
+
+    /* Walk the proxima chain for comma-separated typedefs */
+    currens = decl;
+    dum (currens != NIHIL)
+    {
+        chorda titulus = _extrahere_nomen_typedef(currens);
+        si (titulus.datum != NIHIL && titulus.mensura > ZEPHYRUM)
+        {
+            /* Create null-terminated string for API */
+            character* titulus_nt = piscina_allocare(glr->piscina,
+                (size_t)titulus.mensura + I);
+            memcpy(titulus_nt, titulus.datum, (size_t)titulus.mensura);
+            titulus_nt[titulus.mensura] = '\0';
+
+            arbor2_expansion_addere_typedef(glr->expansion, titulus_nt);
+        }
+
+        /* Move to next in comma chain */
+        si (currens->genus == ARBOR2_NODUS_DECLARATIO)
+            currens = currens->datum.declaratio.proxima;
+        alioquin
+            currens = NIHIL;
+    }
 }
 
 Arbor2GLRResultus
@@ -7549,7 +7637,7 @@ arbor2_glr_parsere_translation_unit(
         /* Find end of this external declaration */
         finis_info = _invenire_finem_declarationis(lexemata, positus);
 
-        /* Create sub-token array from positus to parse_finis, with EOF */
+        /* Create sub-token array from positus to parse_finis */
         sub_tokens = xar_creare(glr->piscina, magnitudo(Arbor2Token*));
         per (i = positus; i < finis_info.parse_finis; i++)
         {
@@ -7558,6 +7646,19 @@ arbor2_glr_parsere_translation_unit(
             src = xar_obtinere(lexemata, i);
             dst = xar_addere(sub_tokens);
             *dst = *src;
+        }
+
+        /* Include semicolon for typedef declarations (grammar requires it) */
+        si (finis_info.parse_finis < num_tokens &&
+            tok->lexema->genus == ARBOR2_LEXEMA_TYPEDEF)
+        {
+            Arbor2Token** semi_ptr = xar_obtinere(lexemata, finis_info.parse_finis);
+            Arbor2Token* semi_tok = *semi_ptr;
+            si (semi_tok->lexema->genus == ARBOR2_LEXEMA_SEMICOLON)
+            {
+                Arbor2Token** semi_slot = xar_addere(sub_tokens);
+                *semi_slot = semi_tok;
+            }
         }
 
         /* Add EOF token at end */
@@ -7720,6 +7821,9 @@ arbor2_glr_parsere_translation_unit(
         /* Add to translation unit */
         slot = xar_addere(tu_nodus->datum.translation_unit.declarationes);
         *slot = sub_res.radix;
+
+        /* Register typedef names immediately so subsequent decls can use them */
+        _registrare_typedef_ex_declaratione(glr, sub_res.radix);
 
         /* Promote comments from the first token's trivia */
         {
