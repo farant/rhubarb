@@ -260,18 +260,21 @@ s32 principale(vacuum)
     }
 
     /* ========================================================
-     * NOTE: Typedef declarations have a GLR parser bug where the
-     * typedef path dies because the parser doesn't see SEMICOLON
-     * correctly. This is a separate issue to investigate.
-     *
-     * Skipped typedef tests:
-     *   - typedef_simple.c
-     *   - typedef_struct.c
+     * PROBARE: Typedef declarations
      * ======================================================== */
+    {
+        imprimere("\n--- Probans typedef files ---\n");
+
+        CREDO_VERUM(_probare_roundtrip_fasciculum(piscina, intern, expansion,
+            "probationes/fixa/roundtrip/typedef_simple.c"));
+
+        CREDO_VERUM(_probare_roundtrip_fasciculum(piscina, intern, expansion,
+            "probationes/fixa/roundtrip/typedef_struct.c"));
+    }
 
     /* ========================================================
-     * PROBARE: Structs, unions, enums (complex) - SKIPPED for now
-     * This file has some issues to debug
+     * PROBARE: Structs, unions, enums (complex) - SKIPPED
+     * Still has issues to debug (slow parsing, potential infinite loop)
      * ======================================================== */
     /*
     {
@@ -283,8 +286,8 @@ s32 principale(vacuum)
     */
 
     /* ========================================================
-     * PROBARE: Arrays, pointers, complex declarations - SKIPPED for now
-     * This file has some issues to debug
+     * PROBARE: Arrays, pointers, complex declarations - SKIPPED
+     * Still has issues to debug (slow parsing, potential infinite loop)
      * ======================================================== */
     /*
     {
