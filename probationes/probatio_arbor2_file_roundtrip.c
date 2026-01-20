@@ -342,21 +342,46 @@ s32 principale(vacuum)
     }
 
     /* ========================================================
+     * PROBARE: Pointer-to-member (arrow) expressions
+     * Tests: p->x access pattern
+     * ======================================================== */
+    {
+        imprimere("\n--- Probans pointer-to-member (arrow) expressions ---\n");
+
+        /* Debug 1: simple pointer deref */
+        CREDO_VERUM(_probare_roundtrip_fasciculum(piscina, intern, expansion,
+            "probationes/fixa/roundtrip/arrow_debug1.c"));
+
+        /* Debug 2: struct pointer param, no arrow */
+        CREDO_VERUM(_probare_roundtrip_fasciculum(piscina, intern, expansion,
+            "probationes/fixa/roundtrip/arrow_debug2.c"));
+
+        /* Debug 3: struct pointer param with arrow */
+        CREDO_VERUM(_probare_roundtrip_fasciculum(piscina, intern, expansion,
+            "probationes/fixa/roundtrip/arrow_debug3.c"));
+
+        CREDO_VERUM(_probare_roundtrip_fasciculum(piscina, intern, expansion,
+            "probationes/fixa/roundtrip/arrow_member.c"));
+    }
+
+    /* ========================================================
      * NOTA: Known issues with structs.c and arrays.c
      *
      * 1. CONSECUTIVE COMMENTS - FIXED (was unsigned underflow in
      *    _habet_lineam_vacuam_ante, loop var needed s32 not i32)
      *
-     * 2. LOCAL STRUCT VARIABLE DECLARATIONS - PARTIALLY FIXED
+     * 2. LOCAL STRUCT VARIABLE DECLARATIONS - FIXED
      *    - Simple case works: { struct Point p; }
-     *    - Pointer case FAILS: { struct Point *ptr; }
-     *      (duplicates due to shift-reduce conflict in State 4)
-     *    Fix: Added INT_NT_STRUCT_SPEC/INT_NT_ENUM_SPEC GOTO
-     *    entries to STATUS_26_GOTO pointing to state 4.
-     *    Pointer case needs dedicated state without conflict.
+     *    - Pointer case works: { struct Point *ptr; }
+     *    Fix: Created State 1500 for struct/enum specs in compound
+     *    statements that only has SHIFT actions (no reduce conflict).
+     *    STATUS_26_GOTO routes STRUCT_SPEC/ENUM_SPEC to State 1500.
      *
-     * 3. POINTER-TO-MEMBER expressions fail roundtrip:
-     *    p->x = p->x + dx;  -- function body is dropped
+     * 3. POINTER-TO-MEMBER expressions - FIXED
+     *    p->x = p->x + dx;  -- now works correctly
+     *    Fix: Added INT_NT_POSTFIXUM GOTO entries to States 26 and 70
+     *    so that postfix expressions (subscript, call, member access)
+     *    can parse correctly inside compound statements and return.
      * ======================================================== */
 
     /* ========================================================
