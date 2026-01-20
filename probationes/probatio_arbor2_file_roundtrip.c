@@ -325,15 +325,35 @@ s32 principale(vacuum)
     }
 
     /* ========================================================
+     * PROBARE: Local struct/union/enum variable declarations
+     *
+     * Tests: void f(void) { struct Point p; }
+     * Fixed by adding INT_NT_STRUCT_SPEC/INT_NT_ENUM_SPEC
+     * GOTO entries to STATUS_26_GOTO pointing to state 4.
+     * ======================================================== */
+    {
+        imprimere("\n--- Probans local struct variable declarations ---\n");
+
+        CREDO_VERUM(_probare_roundtrip_fasciculum(piscina, intern, expansion,
+            "probationes/fixa/roundtrip/local_struct_var.c"));
+
+        CREDO_VERUM(_probare_roundtrip_fasciculum(piscina, intern, expansion,
+            "probationes/fixa/roundtrip/local_decl_extended.c"));
+    }
+
+    /* ========================================================
      * NOTA: Known issues with structs.c and arrays.c
      *
      * 1. CONSECUTIVE COMMENTS - FIXED (was unsigned underflow in
      *    _habet_lineam_vacuam_ante, loop var needed s32 not i32)
      *
-     * 2. LOCAL STRUCT VARIABLE DECLARATIONS fail:
-     *    void f(void) { struct Point p; }  -- function dropped
-     *    Parameters use State 91 (fixed), local decls need
-     *    similar GOTO entries in compound stmt states (25/26).
+     * 2. LOCAL STRUCT VARIABLE DECLARATIONS - PARTIALLY FIXED
+     *    - Simple case works: { struct Point p; }
+     *    - Pointer case FAILS: { struct Point *ptr; }
+     *      (duplicates due to shift-reduce conflict in State 4)
+     *    Fix: Added INT_NT_STRUCT_SPEC/INT_NT_ENUM_SPEC GOTO
+     *    entries to STATUS_26_GOTO pointing to state 4.
+     *    Pointer case needs dedicated state without conflict.
      *
      * 3. POINTER-TO-MEMBER expressions fail roundtrip:
      *    p->x = p->x + dx;  -- function body is dropped

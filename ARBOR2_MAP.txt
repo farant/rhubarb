@@ -1,0 +1,486 @@
+ARBOR2 - C89 PARSER WITH PROVENANCE
+====================================
+Last updated: 2026-01-20
+
+A complete C89 parser and preprocessor with full macro expansion
+provenance tracking and byte-perfect roundtrip serialization.
+
+Total: ~38,773 LOC across 7 modules, ~1,900 tests
+
+
+DATA FLOW PIPELINE
+------------------
+
+    Source Code (C string)
+           │
+           ▼
+    ┌──────────────────────────────────────────────────────────────┐
+    │  ARBOR2_LEXEMA                                               │
+    │  Tokenizes C89 with explicit whitespace/comment tracking     │
+    │                                                              │
+    │  Output: Xar<Arbor2Lexema*> with spatia_ante/spatia_post     │
+    └──────────────────────────────────────────────────────────────┘
+           │
+           ▼
+    ┌──────────────────────────────────────────────────────────────┐
+    │  ARBOR2_TOKEN                                                │
+    │  Wraps lexema with provenance chain for macro tracking       │
+    │                                                              │
+    │  Output: Arbor2Token* with origo chain back to source        │
+    └──────────────────────────────────────────────────────────────┘
+           │
+           ▼
+    ┌──────────────────────────────────────────────────────────────┐
+    │  ARBOR2_EXPANDERE                                            │
+    │  Preprocessor: #define, #undef, #include, typedef detection  │
+    │                                                              │
+    │  Uses: ARBOR2_CONDITIO_EVALUARE for #if/#elif expressions    │
+    │                                                              │
+    │  Output: Xar<Arbor2Token*> (expanded, layered provenance)    │
+    └──────────────────────────────────────────────────────────────┘
+           │
+           ▼
+    ┌──────────────────────────────────────────────────────────────┐
+    │  ARBOR2_GLR                                                  │
+    │  GLR parser with Graph-Structured Stack for ambiguity        │
+    │                                                              │
+    │  Uses: ARBOR2_GLR_TABULA for LR action/goto tables           │
+    │  Uses: ARBOR2_EXPANDERE for typedef/macro lookahead          │
+    │                                                              │
+    │  Output: Arbor2Nodus* (AST root, typically TRANSLATION_UNIT) │
+    └──────────────────────────────────────────────────────────────┘
+           │
+           ▼
+    ┌──────────────────────────────────────────────────────────────┐
+    │  ARBOR2_SCRIBERE                                             │
+    │  AST serialization with trivia preservation                  │
+    │                                                              │
+    │  Output: chorda* (byte-perfect reconstruction of source)     │
+    └──────────────────────────────────────────────────────────────┘
+
+
+MODULE DETAILS
+--------------
+
+┌─────────────────────────────────────────────────────────────────────┐
+│  arbor2_lexema.c                                        1,608 LOC  │
+├─────────────────────────────────────────────────────────────────────┤
+│                                                                     │
+│  PURPOSE: Tokenize C89 source with explicit whitespace tracking     │
+│                                                                     │
+│  KEY FEATURES:                                                      │
+│  - 98 token types (keywords, operators, literals, trivia)           │
+│  - NOVA_LINEA: explicit newline tokens (Phase 2.7)                  │
+│  - SPATIA/TABULAE/CONTINUATIO: whitespace tokens                    │
+│  - COMMENTUM_CLAUSUM/LINEA: comment tokens                          │
+│  - spatia_ante/spatia_post: Xar of trivia attached to each token    │
+│  - Standard tracking: C89/C99/EXTENSION modes                       │
+│                                                                     │
+│  KEY TYPES:                                                         │
+│  - Arbor2Lexema: token with genus, valor (chorda), line/column      │
+│  - Arbor2Lexator: stateful lexer context                            │
+│  - Arbor2LexemaGenus: enum of 98 token types                        │
+│                                                                     │
+│  KEY FUNCTIONS:                                                     │
+│  - arbor2_lexator_creare(piscina, intern)                           │
+│  - arbor2_lexema_proximum(lexator, fons, index) -> Arbor2Lexema*    │
+│  - arbor2_lexema_genus_nomen(genus) -> const char*                  │
+│                                                                     │
+│  FILES:                                                             │
+│  - include/arbor2_lexema.h                                          │
+│  - lib/arbor2_lexema.c                                              │
+│  - lib/arbor2_lexema.worklog.md                                     │
+│  - probationes/probatio_arbor2_lexema.c (41 tests)                  │
+│                                                                     │
+└─────────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────────┐
+│  arbor2_token.c                                           263 LOC  │
+├─────────────────────────────────────────────────────────────────────┤
+│                                                                     │
+│  PURPOSE: Wrap lexema with provenance chain for macro tracking      │
+│                                                                     │
+│  PROVENANCE CHAIN:                                                  │
+│  Every token tracks its origin through expansion layers:            │
+│                                                                     │
+│      Source Token (layer 0)                                         │
+│           ▲                                                         │
+│           │ origo_token                                             │
+│      Expanded Token (layer 1)                                       │
+│           ▲                                                         │
+│           │ origo_token                                             │
+│      Re-expanded Token (layer 2)                                    │
+│           ...                                                       │
+│                                                                     │
+│  ORIGIN TYPES (Arbor2OrigoGenus):                                   │
+│  - ARBOR2_ORIGO_FONS: original source token                         │
+│  - ARBOR2_ORIGO_EXPANSIO: from macro expansion                      │
+│  - ARBOR2_ORIGO_PASTA: from ## token pasting                        │
+│  - ARBOR2_ORIGO_CHORDA: from # stringification                      │
+│  - ARBOR2_ORIGO_API: API-injected macro                             │
+│                                                                     │
+│  KEY TYPES:                                                         │
+│  - Arbor2Token: lexema + origo_token + origo_meta                   │
+│  - Arbor2OrigoMeta: file/line/column/macro info (always allocated)  │
+│                                                                     │
+│  KEY FUNCTIONS:                                                     │
+│  - arbor2_token_ex_lexema(piscina, lexema) -> source token          │
+│  - arbor2_token_ex_expansione(piscina, lex, orig, macro, layer)     │
+│  - arbor2_token_ex_pasta(piscina, lex, left, right) -> ## result    │
+│  - arbor2_token_ex_chorda(piscina, lex, orig) -> # result           │
+│  - arbor2_token_radix(token) -> walk to original source             │
+│  - arbor2_token_profunditas(token) -> expansion depth count         │
+│                                                                     │
+│  FILES:                                                             │
+│  - include/arbor2_token.h                                           │
+│  - lib/arbor2_token.c                                               │
+│                                                                     │
+│  TEST STATUS: NO DEDICATED TESTS (indirect only via expandere)      │
+│                                                                     │
+└─────────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────────┐
+│  arbor2_expandere.c                                     2,378 LOC  │
+├─────────────────────────────────────────────────────────────────────┤
+│                                                                     │
+│  PURPOSE: C preprocessor with full provenance tracking              │
+│                                                                     │
+│  MACRO FEATURES:                                                    │
+│  - Object-like: #define PI 3.14                                     │
+│  - Function-like: #define MAX(a,b) ((a)>(b)?(a):(b))                 │
+│  - Variadic: #define LOG(fmt, ...) printf(fmt, __VA_ARGS__)         │
+│  - Stringification: #arg -> "arg"                                   │
+│  - Token pasting: a##b -> ab (with re-lexing)                       │
+│  - Recursion prevention via macro stack                             │
+│                                                                     │
+│  PREPROCESSOR DIRECTIVES:                                           │
+│  - #define / #undef                                                 │
+│  - #include <system> and #include "local"                           │
+│  - #if / #ifdef / #ifndef / #elif / #else / #endif                  │
+│  - Typedef detection (both 'typedef' and 'nomen' macro)             │
+│                                                                     │
+│  SEGMENT TRACKING:                                                  │
+│  Creates segments at #define/#undef boundaries with snapshots       │
+│  of macro table state for provenance queries.                       │
+│                                                                     │
+│  LAYER SYSTEM:                                                      │
+│  - Layer 0: source tokens                                           │
+│  - Layer N: tokens from Nth expansion pass                          │
+│  - Stores all layers, expands to fixpoint                           │
+│                                                                     │
+│  KEY TYPES:                                                         │
+│  - Arbor2Expansion: expansion context with macro/typedef tables     │
+│  - Arbor2MacroDef: macro definition with parameters, body           │
+│                                                                     │
+│  KEY FUNCTIONS:                                                     │
+│  - arbor2_expansion_creare(piscina, intern)                         │
+│  - arbor2_expansion_expandere(exp, tokens) -> expanded tokens       │
+│  - arbor2_expansion_addere_macro(exp, name, body, params)           │
+│  - arbor2_expansion_addere_typedef(exp, name)                       │
+│  - arbor2_expansion_est_typedef(exp, name) -> b32                   │
+│  - arbor2_expansion_lookahead(exp, name) -> peek expansion          │
+│  - arbor2_includere_latina(exp) -> load latina.h macros             │
+│                                                                     │
+│  FILES:                                                             │
+│  - include/arbor2_expandere.h                                       │
+│  - lib/arbor2_expandere.c                                           │
+│  - lib/arbor2_expandere.worklog.md                                  │
+│  - probationes/probatio_arbor2_expandere.c (92 tests)               │
+│                                                                     │
+└─────────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────────┐
+│  arbor2_conditio_evaluare.c                               792 LOC  │
+├─────────────────────────────────────────────────────────────────────┤
+│                                                                     │
+│  PURPOSE: Evaluate C preprocessor constant expressions              │
+│                                                                     │
+│  USED BY: arbor2_expandere for #if and #elif directives             │
+│                                                                     │
+│  SUPPORTED OPERATORS:                                               │
+│  - Arithmetic: + - * / %                                            │
+│  - Comparison: == != < > <= >=                                      │
+│  - Logical: && || !                                                 │
+│  - Bitwise: & | ^ ~ << >>                                           │
+│  - Ternary: ? :                                                     │
+│  - Grouping: ( )                                                    │
+│  - defined(MACRO) and defined MACRO                                 │
+│                                                                     │
+│  LITERAL SUPPORT:                                                   │
+│  - Decimal integers                                                 │
+│  - Octal (0777)                                                     │
+│  - Hexadecimal (0xFF)                                               │
+│  - Character literals ('x')                                         │
+│                                                                     │
+│  KEY FUNCTIONS:                                                     │
+│  - arbor2_conditio_evaluare(exp, tokens, successus) -> i64          │
+│  - arbor2_conditio_est_definitum(exp, name) -> b32                  │
+│                                                                     │
+│  FILES:                                                             │
+│  - include/arbor2_conditio_evaluare.h                               │
+│  - lib/arbor2_conditio_evaluare.c                                   │
+│  - lib/arbor2_conditio_evaluare.worklog.md                          │
+│                                                                     │
+│  TEST STATUS: NO DEDICATED TESTS (critical gap)                     │
+│                                                                     │
+└─────────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────────┐
+│  arbor2_glr.c                                           8,203 LOC  │
+├─────────────────────────────────────────────────────────────────────┤
+│                                                                     │
+│  PURPOSE: GLR parser implementing complete C89 grammar              │
+│                                                                     │
+│  GRAMMAR SCOPE:                                                     │
+│  - 346 productions (P0-P345)                                        │
+│  - 952 LR states (0-951)                                            │
+│  - Full C89 grammar + preprocessor directives                       │
+│                                                                     │
+│  AMBIGUITY HANDLING:                                                │
+│  Graph-Structured Stack (GSS) forks on ambiguity, merges on         │
+│  reconvergence. Piscina checkpointing enables rollback.             │
+│                                                                     │
+│  C89 AMBIGUITIES RESOLVED:                                          │
+│  - foo * bar (declaration vs multiplication)                        │
+│  - (type)expr (cast vs parenthesized)                               │
+│  - sizeof ambiguities                                               │
+│  - Typedef disambiguation via expandere lookahead                   │
+│                                                                     │
+│  AST NODE TYPES (51 total):                                         │
+│  - Expressions: BINARIUM, UNARIUM, TERNARIUS, VOCATIO, etc.         │
+│  - Declarations: DECLARATIO, DECLARATOR, PARAMETER_DECL             │
+│  - Statements: SI, DUM, FAC, PER, REDDE, SALTA, SENTENTIA           │
+│  - Preprocessor: INCLUDE, DEFINE, UNDEF, CONDITIONALIS              │
+│  - Containers: LISTA_SEPARATA, TRANSLATION_UNIT, CORPUS             │
+│                                                                     │
+│  KEY TYPES:                                                         │
+│  - Arbor2GLR: parser context with GSS, expansion, tables            │
+│  - Arbor2Nodus: AST node with genus, filii, lexema, commenta        │
+│  - Arbor2NodusGenus: enum of 51 node types                          │
+│  - Arbor2GLRResultus: parse result with radix, errores              │
+│                                                                     │
+│  KEY FUNCTIONS:                                                     │
+│  - arbor2_glr_creare(piscina, intern, expansion)                    │
+│  - arbor2_glr_parse(glr, fons) -> Arbor2GLRResultus                 │
+│  - arbor2_nodus_genus_nomen(genus) -> const char*                   │
+│                                                                     │
+│  FILES:                                                             │
+│  - include/arbor2_glr.h                                             │
+│  - lib/arbor2_glr.c                                                 │
+│  - lib/arbor2_glr.worklog.md                                        │
+│  - probationes/probatio_arbor2_glr.c (1,847 tests)                  │
+│                                                                     │
+└─────────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────────┐
+│  arbor2_glr_tabula.c                                   24,480 LOC  │
+├─────────────────────────────────────────────────────────────────────┤
+│                                                                     │
+│  PURPOSE: LR parse tables for efficient parsing                     │
+│                                                                     │
+│  CONTAINS:                                                          │
+│  - Action table: (state, token) -> SHIFT/REDUCE/ACCEPT/ERROR        │
+│  - Goto table: (state, non-terminal) -> next state                  │
+│  - Grammar rules with human-readable descriptions                   │
+│  - State metadata for debugging                                     │
+│                                                                     │
+│  KEY FUNCTIONS:                                                     │
+│  - arbor2_glr_initializare_tabulas(glr) -> populate tables          │
+│  - arbor2_glr_quaerere_actiones(glr, state, token) -> actions       │
+│  - arbor2_glr_quaerere_goto(glr, state, nonterminal) -> state       │
+│  - arbor2_tabula_numerus_statuum() -> 952                           │
+│  - arbor2_tabula_numerus_regularum() -> 346                         │
+│  - arbor2_glr_validare_tabulas(glr) -> debug validation             │
+│                                                                     │
+│  FILES:                                                             │
+│  - lib/arbor2_glr_tabula.c                                          │
+│  - lib/arbor2_glr_tabula.worklog.md                                 │
+│                                                                     │
+│  NOTE: Largest file in codebase. Tables are data, not logic.        │
+│                                                                     │
+│  KNOWN ISSUE: arbor2_tabula_obtinere_status_info() declared in      │
+│  arbor2_glr.h:896 but NOT IMPLEMENTED                               │
+│                                                                     │
+└─────────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────────┐
+│  arbor2_scribere.c                                      1,049 LOC  │
+├─────────────────────────────────────────────────────────────────────┤
+│                                                                     │
+│  PURPOSE: Serialize AST back to source code                         │
+│                                                                     │
+│  ROUNDTRIP GUARANTEE:                                               │
+│  parse(source) -> AST -> scribere(AST) -> source2                   │
+│  source == source2 (byte-for-byte identical)                        │
+│                                                                     │
+│  PRESERVATION:                                                      │
+│  - All whitespace (spaces, tabs, newlines)                          │
+│  - All comments (block and line)                                    │
+│  - Original formatting                                              │
+│                                                                     │
+│  COVERAGE: Handles all 51 AST node types                            │
+│                                                                     │
+│  KEY FUNCTIONS:                                                     │
+│  - arbor2_scribere(piscina, nodus) -> chorda*                       │
+│  - arbor2_scribere_lexema(xar, token) -> append token with trivia   │
+│                                                                     │
+│  FILES:                                                             │
+│  - include/arbor2_scribere.h                                        │
+│  - lib/arbor2_scribere.c                                            │
+│  - probationes/probatio_arbor2_scribere.c (81 tests)                │
+│                                                                     │
+└─────────────────────────────────────────────────────────────────────┘
+
+
+DEPENDENCY GRAPH
+----------------
+
+    ┌─────────────┐
+    │   piscina   │ ◄─────────────────────────────────────────┐
+    │    xar      │ ◄──────────────────────────────────┐      │
+    │   chorda    │ ◄───────────────────────────┐      │      │
+    │internamentum│ ◄────────────────────┐      │      │      │
+    │tabula_disp. │ ◄─────────────┐      │      │      │      │
+    └─────────────┘               │      │      │      │      │
+                                  │      │      │      │      │
+    ┌─────────────────────────────┼──────┼──────┼──────┼──────┤
+    │  arbor2_lexema              │      ●      ●      ●      ●
+    └─────────────────────────────┼──────┼──────┼──────┼──────┤
+              │                   │      │      │      │      │
+              ▼                   │      │      │      │      │
+    ┌─────────────────────────────┼──────┼──────┼──────┼──────┤
+    │  arbor2_token               │      │      ●      │      ●
+    └─────────────────────────────┼──────┼──────┼──────┼──────┤
+              │                   │      │      │      │      │
+              ▼                   │      │      │      │      │
+    ┌─────────────────────────────┼──────┼──────┼──────┼──────┤
+    │  arbor2_expandere           ●      ●      ●      ●      ●
+    │    └─ arbor2_conditio_eval  │      ●      │      │      │
+    └─────────────────────────────┼──────┼──────┼──────┼──────┤
+              │                   │      │      │      │      │
+              ▼                   │      │      │      │      │
+    ┌─────────────────────────────┼──────┼──────┼──────┼──────┤
+    │  arbor2_glr                 │      ●      ●      ●      ●
+    │    └─ arbor2_glr_tabula     │      │      │      │      │
+    └─────────────────────────────┼──────┼──────┼──────┼──────┤
+              │                   │      │      │      │      │
+              ▼                   │      │      │      │      │
+    ┌─────────────────────────────┼──────┼──────┼──────┼──────┤
+    │  arbor2_scribere            │      ●      ●      │      ●
+    └─────────────────────────────┴──────┴──────┴──────┴──────┘
+
+    ● = uses this dependency
+
+
+TEST COVERAGE
+-------------
+
+    Module                    Test File                        Tests
+    ─────────────────────────────────────────────────────────────────
+    arbor2_lexema             probatio_arbor2_lexema.c           41
+    arbor2_token              (none - indirect only)              0  ◄─ GAP
+    arbor2_expandere          probatio_arbor2_expandere.c        92
+    arbor2_conditio_evaluare  (none - indirect only)              0  ◄─ GAP
+    arbor2_glr                probatio_arbor2_glr.c           1,847
+    arbor2_glr_tabula         (tested via glr)                    -
+    arbor2_scribere           probatio_arbor2_scribere.c         81
+    ─────────────────────────────────────────────────────────────────
+    Integration               probatio_arbor2_file_roundtrip.c   ~13
+    ─────────────────────────────────────────────────────────────────
+    TOTAL                                                     ~2,074
+
+
+KNOWN ISSUES
+------------
+
+CRITICAL:
+
+1. arbor2_tabula_obtinere_status_info() declared but not implemented
+   Location: include/arbor2_glr.h:896
+   Action: implement or remove declaration
+
+2. No tests for arbor2_conditio_evaluare
+   Risk: preprocessor #if/#elif evaluation untested
+   Action: create probatio_arbor2_conditio_evaluare.c
+
+3. No tests for arbor2_token provenance functions
+   Untested: arbor2_token_profunditas, arbor2_token_pasta,
+             arbor2_token_est_fons, arbor2_origo_genus_nomen
+   Action: create probatio_arbor2_token.c
+
+
+HIGH PRIORITY REDUNDANCIES:
+
+1. Comment initialization (arbor2_glr.c)
+   Pattern: commenta_ante = NIHIL; commenta_post = NIHIL;
+   Count: 44 instances
+   Fix: create INITIALIZARE_COMMENTA(nodus) macro
+
+2. Node allocation pattern (arbor2_glr.c)
+   Pattern: piscina_allocare + genus + lexema + pater = NIHIL
+   Count: ~50 instances
+   Fix: create _nodus_allocare_et_initializare() helper
+
+3. Near-duplicate functions (arbor2_expandere.c:57-115)
+   Functions: _habet_nova_linea_ante, _habet_nova_linea_post
+   Fix: merge into _habet_nova_linea_in_spatia(Xar*)
+
+
+USAGE EXAMPLE
+-------------
+
+    #include "arbor2_glr.h"
+    #include "arbor2_scribere.h"
+    #include "arbor2_expandere.h"
+
+    Piscina* piscina = piscina_creare(1024 * 1024);
+    InternamentumChorda* intern = internamentum_creare(piscina);
+    Arbor2Expansion* exp = arbor2_expansion_creare(piscina, intern);
+
+    /* Load latina.h macros */
+    arbor2_includere_latina(exp);
+
+    /* Create parser */
+    Arbor2GLR* glr = arbor2_glr_creare(piscina, intern, exp);
+
+    /* Parse source */
+    constans character* fons = "integer principale(vacuum) { redde 0; }";
+    Arbor2GLRResultus resultus = arbor2_glr_parse(glr, fons);
+
+    si (resultus.radix != NIHIL)
+    {
+        /* Serialize back to source */
+        chorda* output = arbor2_scribere(piscina, resultus.radix);
+        /* output->datum contains reconstructed source */
+    }
+
+    piscina_destruere(piscina);
+
+
+PHASE HISTORY
+-------------
+
+Phase 1:  Basic lexer with token types
+Phase 2:  Whitespace/comment preservation, NOVA_LINEA tokens
+Phase 3:  Token provenance system
+Phase 4:  Macro expansion with #define/#undef
+Phase 5:  GLR parser with full C89 grammar
+Phase 6:  #include processing with path resolution
+Phase 7+: (in progress) #error, #line, #pragma directives
+
+
+RELATED FILES
+-------------
+
+Specifications:
+- project-specs/arbor-v2-spec.md
+- project-specs/arbor-v2-brainstorm.md
+- project-specs/arbor-v2-implementation-plan.md
+- arbor2-comment-spec.md
+
+Worklogs:
+- lib/arbor2_lexema.worklog.md
+- lib/arbor2_expandere.worklog.md
+- lib/arbor2_glr.worklog.md
+- lib/arbor2_glr_tabula.worklog.md
+- lib/arbor2_conditio_evaluare.worklog.md

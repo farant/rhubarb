@@ -17063,6 +17063,18 @@ hic_manens constans Arbor2TabulaActio STATUS_1455_ACTIONES[] = {
 };
 
 /* ==================================================
+ * State 1500: after struct/enum specifier in local declaration
+ * NO shift-reduce conflict - only declarator paths allowed
+ * This avoids GLR fork that causes duplication
+ * ================================================== */
+
+/* State 1500: after struct/enum spec in local decl - declarator only */
+hic_manens constans Arbor2TabulaActio STATUS_1500_ACTIONES[] = {
+    { ARBOR2_LEXEMA_ASTERISCUS,    ARBOR2_ACTIO_SHIFT,  17, FALSUM },  /* -> pointer chain */
+    { ARBOR2_LEXEMA_IDENTIFICATOR, ARBOR2_ACTIO_SHIFT, 116, FALSUM }   /* -> direct declarator */
+};
+
+/* ==================================================
  * STATUS_TABULA - Master state table (UNDER CONSTRUCTION)
  *
  * Will be populated as states are converted.
@@ -18722,7 +18734,54 @@ hic_manens constans Arbor2StatusInfo STATUS_TABULA_PARTIAL[] = {
     /* States 1453-1455: reduce struct/union/enum specifiers in param context */
     STATUS_INFO(1453, "after '( struct ID' - reduce P47"),
     STATUS_INFO(1454, "after '( union ID' - reduce P54"),
-    STATUS_INFO(1455, "after '( enum ID' - reduce P57")
+    STATUS_INFO(1455, "after '( enum ID' - reduce P57"),
+    /* States 1456-1499: reserved */
+    { NIHIL, 0, "reserved" },  /* 1456 */
+    { NIHIL, 0, "reserved" },  /* 1457 */
+    { NIHIL, 0, "reserved" },  /* 1458 */
+    { NIHIL, 0, "reserved" },  /* 1459 */
+    { NIHIL, 0, "reserved" },  /* 1460 */
+    { NIHIL, 0, "reserved" },  /* 1461 */
+    { NIHIL, 0, "reserved" },  /* 1462 */
+    { NIHIL, 0, "reserved" },  /* 1463 */
+    { NIHIL, 0, "reserved" },  /* 1464 */
+    { NIHIL, 0, "reserved" },  /* 1465 */
+    { NIHIL, 0, "reserved" },  /* 1466 */
+    { NIHIL, 0, "reserved" },  /* 1467 */
+    { NIHIL, 0, "reserved" },  /* 1468 */
+    { NIHIL, 0, "reserved" },  /* 1469 */
+    { NIHIL, 0, "reserved" },  /* 1470 */
+    { NIHIL, 0, "reserved" },  /* 1471 */
+    { NIHIL, 0, "reserved" },  /* 1472 */
+    { NIHIL, 0, "reserved" },  /* 1473 */
+    { NIHIL, 0, "reserved" },  /* 1474 */
+    { NIHIL, 0, "reserved" },  /* 1475 */
+    { NIHIL, 0, "reserved" },  /* 1476 */
+    { NIHIL, 0, "reserved" },  /* 1477 */
+    { NIHIL, 0, "reserved" },  /* 1478 */
+    { NIHIL, 0, "reserved" },  /* 1479 */
+    { NIHIL, 0, "reserved" },  /* 1480 */
+    { NIHIL, 0, "reserved" },  /* 1481 */
+    { NIHIL, 0, "reserved" },  /* 1482 */
+    { NIHIL, 0, "reserved" },  /* 1483 */
+    { NIHIL, 0, "reserved" },  /* 1484 */
+    { NIHIL, 0, "reserved" },  /* 1485 */
+    { NIHIL, 0, "reserved" },  /* 1486 */
+    { NIHIL, 0, "reserved" },  /* 1487 */
+    { NIHIL, 0, "reserved" },  /* 1488 */
+    { NIHIL, 0, "reserved" },  /* 1489 */
+    { NIHIL, 0, "reserved" },  /* 1490 */
+    { NIHIL, 0, "reserved" },  /* 1491 */
+    { NIHIL, 0, "reserved" },  /* 1492 */
+    { NIHIL, 0, "reserved" },  /* 1493 */
+    { NIHIL, 0, "reserved" },  /* 1494 */
+    { NIHIL, 0, "reserved" },  /* 1495 */
+    { NIHIL, 0, "reserved" },  /* 1496 */
+    { NIHIL, 0, "reserved" },  /* 1497 */
+    { NIHIL, 0, "reserved" },  /* 1498 */
+    { NIHIL, 0, "reserved" },  /* 1499 */
+    /* State 1500: struct/enum specifier in local declaration (no conflict) */
+    STATUS_INFO(1500, "after struct/enum spec in local decl - declarator only")
 };
 
 /* ==================================================
@@ -18846,6 +18905,14 @@ hic_manens constans Arbor2StatusGotoEntry STATUS_4_GOTO[] = {
     { INT_NT_INIT_DECLARATOR_LIST, 514 }    /* Phase 1.3: init_decl_list ready for comma or reduce */
 };
 
+/* State 1500: after struct/enum spec in local decl - declarator only
+ * Same GOTO entries as State 4, but State 1500 has NO shift-reduce conflict */
+hic_manens constans Arbor2StatusGotoEntry STATUS_1500_GOTO[] = {
+    { INT_NT_DECLARATOR,           20 },   /* after declarator -> completion */
+    { INT_NT_INIT_DECLARATOR,     513 },   /* after init_decl */
+    { INT_NT_INIT_DECLARATOR_LIST, 514 }   /* after init_decl_list -> DECLARATIO */
+};
+
 /* State 6: after '(' - full expression chain inside parens */
 hic_manens constans Arbor2StatusGotoEntry STATUS_6_GOTO[] = {
     { INT_NT_EXPR,        11 },
@@ -18927,7 +18994,9 @@ hic_manens constans Arbor2StatusGotoEntry STATUS_26_GOTO[] = {
     { INT_NT_FAC,              52 },
     { INT_NT_PER,              65 },
     { INT_NT_TRANSLATIO,       264 },
-    { INT_NT_DECLARATIO,       560 }  /* Declaration as statement (P239) */
+    { INT_NT_DECLARATIO,       560 },  /* Declaration as statement (P239) */
+    { INT_NT_STRUCT_SPEC,     1500 },  /* struct/union specifier -> State 1500 (no conflict) */
+    { INT_NT_ENUM_SPEC,       1500 }   /* enum specifier -> State 1500 (no conflict) */
 };
 
 /* State 31: after 'if (' - expression components */
@@ -23601,7 +23670,54 @@ hic_manens constans Arbor2StatusGoto GOTO_TABULA_NOVA[] = {
     /* States 1453-1455: reduce struct/union/enum specifiers (no GOTOs) */
     STATUS_GOTO_NIL,   /* 1453: ( struct ID - reduce P47 */
     STATUS_GOTO_NIL,   /* 1454: ( union ID - reduce P54 */
-    STATUS_GOTO_NIL    /* 1455: ( enum ID - reduce P57 */
+    STATUS_GOTO_NIL,   /* 1455: ( enum ID - reduce P57 */
+    /* States 1456-1499: reserved */
+    STATUS_GOTO_NIL,   /* 1456: reserved */
+    STATUS_GOTO_NIL,   /* 1457: reserved */
+    STATUS_GOTO_NIL,   /* 1458: reserved */
+    STATUS_GOTO_NIL,   /* 1459: reserved */
+    STATUS_GOTO_NIL,   /* 1460: reserved */
+    STATUS_GOTO_NIL,   /* 1461: reserved */
+    STATUS_GOTO_NIL,   /* 1462: reserved */
+    STATUS_GOTO_NIL,   /* 1463: reserved */
+    STATUS_GOTO_NIL,   /* 1464: reserved */
+    STATUS_GOTO_NIL,   /* 1465: reserved */
+    STATUS_GOTO_NIL,   /* 1466: reserved */
+    STATUS_GOTO_NIL,   /* 1467: reserved */
+    STATUS_GOTO_NIL,   /* 1468: reserved */
+    STATUS_GOTO_NIL,   /* 1469: reserved */
+    STATUS_GOTO_NIL,   /* 1470: reserved */
+    STATUS_GOTO_NIL,   /* 1471: reserved */
+    STATUS_GOTO_NIL,   /* 1472: reserved */
+    STATUS_GOTO_NIL,   /* 1473: reserved */
+    STATUS_GOTO_NIL,   /* 1474: reserved */
+    STATUS_GOTO_NIL,   /* 1475: reserved */
+    STATUS_GOTO_NIL,   /* 1476: reserved */
+    STATUS_GOTO_NIL,   /* 1477: reserved */
+    STATUS_GOTO_NIL,   /* 1478: reserved */
+    STATUS_GOTO_NIL,   /* 1479: reserved */
+    STATUS_GOTO_NIL,   /* 1480: reserved */
+    STATUS_GOTO_NIL,   /* 1481: reserved */
+    STATUS_GOTO_NIL,   /* 1482: reserved */
+    STATUS_GOTO_NIL,   /* 1483: reserved */
+    STATUS_GOTO_NIL,   /* 1484: reserved */
+    STATUS_GOTO_NIL,   /* 1485: reserved */
+    STATUS_GOTO_NIL,   /* 1486: reserved */
+    STATUS_GOTO_NIL,   /* 1487: reserved */
+    STATUS_GOTO_NIL,   /* 1488: reserved */
+    STATUS_GOTO_NIL,   /* 1489: reserved */
+    STATUS_GOTO_NIL,   /* 1490: reserved */
+    STATUS_GOTO_NIL,   /* 1491: reserved */
+    STATUS_GOTO_NIL,   /* 1492: reserved */
+    STATUS_GOTO_NIL,   /* 1493: reserved */
+    STATUS_GOTO_NIL,   /* 1494: reserved */
+    STATUS_GOTO_NIL,   /* 1495: reserved */
+    STATUS_GOTO_NIL,   /* 1496: reserved */
+    STATUS_GOTO_NIL,   /* 1497: reserved */
+    STATUS_GOTO_NIL,   /* 1498: reserved */
+    STATUS_GOTO_NIL,   /* 1499: reserved */
+    /* State 1500: struct/enum specifier in local declaration (no conflict) */
+    STATUS_GOTO(1500)  /* 1500: after struct/enum spec in local decl */
 };
 
 
