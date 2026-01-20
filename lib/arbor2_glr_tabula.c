@@ -19776,6 +19776,7 @@ hic_manens constans Arbor2StatusGotoEntry STATUS_293_GOTO[] = {
     { INT_NT_EXPR,             1 },
     { INT_NT_TERM,             2 },
     { INT_NT_FACTOR,           3 },
+    { INT_NT_POSTFIXUM,      311 },  /* postfix for subscript/call/member access (p->x, arr[i], f()) */
     { INT_NT_COMPARATIO,       239 },
     { INT_NT_AEQUALITAS,       240 },
     { INT_NT_AMPERSAND_BITWISE, 268 },

@@ -362,6 +362,22 @@ s32 principale(vacuum)
 
         CREDO_VERUM(_probare_roundtrip_fasciculum(piscina, intern, expansion,
             "probationes/fixa/roundtrip/arrow_member.c"));
+
+        /* Arrow on LHS of assignment: s->x = 1; */
+        CREDO_VERUM(_probare_roundtrip_fasciculum(piscina, intern, expansion,
+            "probationes/fixa/roundtrip/arrow_lhs.c"));
+
+        /* Dereference on LHS: *y = 1; */
+        CREDO_VERUM(_probare_roundtrip_fasciculum(piscina, intern, expansion,
+            "probationes/fixa/roundtrip/deref_lhs.c"));
+
+        /* Arrow on RHS of assignment: *y = s->x; */
+        CREDO_VERUM(_probare_roundtrip_fasciculum(piscina, intern, expansion,
+            "probationes/fixa/roundtrip/arrow_rhs.c"));
+
+        /* Original issue case: p->x = p->x + dx; */
+        CREDO_VERUM(_probare_roundtrip_fasciculum(piscina, intern, expansion,
+            "probationes/fixa/roundtrip/arrow_assign.c"));
     }
 
     /* ========================================================
