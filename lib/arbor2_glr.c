@@ -6,9 +6,20 @@
 #include "xar.h"
 #include <string.h>
 #include <stdio.h>
+#include <time.h>
 
 /* Debug flag - set to 1 to enable tracing */
 #define GLR_DEBUG 0
+
+/* Trace flag for slowdown diagnosis - prints per-token stats */
+#define GLR_TRACE_SLOWDOWN 0
+
+#if GLR_TRACE_SLOWDOWN
+/* Global counters for profiling */
+hic_manens i64 g_gss_nodes = 0;
+hic_manens i64 g_shifts = 0;
+hic_manens i64 g_reduces = 0;
+#endif
 
 /* ==================================================
  * Location Propagation Helper
@@ -261,11 +272,12 @@ _est_commentum_lexema(Arbor2Lexema* lex)
 
 /* Check if spatia sequence has a blank line (2+ newlines) before given index.
  * Phase 2.6: Uses Arbor2Lexema* instead of Arbor2Trivia*.
- * Phase 2.7: Newlines come from CONTINUATIO or NOVA_LINEA tokens. */
+ * Phase 2.7: Newlines come from CONTINUATIO or NOVA_LINEA tokens.
+ * NOTE: Loop variable must be signed (s32) to avoid unsigned underflow at 0. */
 interior b32
 _habet_lineam_vacuam_ante(Xar* spatia, i32 index)
 {
-    i32 i;
+    s32 i;  /* Must be signed for i-- loop to terminate at 0 */
     i32 newline_count;
 
     si (spatia == NIHIL || index <= ZEPHYRUM)
@@ -276,9 +288,9 @@ _habet_lineam_vacuam_ante(Xar* spatia, i32 index)
     newline_count = ZEPHYRUM;
 
     /* Walk backwards from index looking for consecutive newlines */
-    per (i = index - I; i >= ZEPHYRUM; i--)
+    per (i = (s32)index - I; i >= ZEPHYRUM; i--)
     {
-        Arbor2Lexema** s_ptr = xar_obtinere(spatia, i);
+        Arbor2Lexema** s_ptr = xar_obtinere(spatia, (i32)i);
         si (s_ptr != NIHIL && *s_ptr != NIHIL)
         {
             Arbor2Lexema* s = *s_ptr;
@@ -779,6 +791,10 @@ _creare_gss_nodum(
     nodus->punctum_salutis = piscina_notare(glr->piscina);
     nodus->furca_id = ZEPHYRUM;  /* No fork by default */
 
+#if GLR_TRACE_SLOWDOWN
+    g_gss_nodes++;
+#endif
+
     redde nodus;
 }
 
@@ -1264,6 +1280,10 @@ _exequi_shift(
 
     slot = xar_addere(glr->frons_nova);
     *slot = nodus_novus;
+
+#if GLR_TRACE_SLOWDOWN
+    g_shifts++;
+#endif
 }
 
 /* ==================================================
@@ -1357,6 +1377,10 @@ _processare_unam_actionem(
             {
                 /* Execute reduce and add result to pending queue */
                 Arbor2Regula* regula;
+
+#if GLR_TRACE_SLOWDOWN
+                g_reduces++;
+#endif
 
                 regula = arbor2_glr_obtinere_regula(glr, actio->valor);
                 si (regula == NIHIL)
@@ -6347,6 +6371,19 @@ _processare_actiones(Arbor2GLR* glr, b32* acceptatum_out)
         i++;
     }
 
+#if GLR_TRACE_SLOWDOWN
+    /* Trace: report large reduction queues (sign of exponential blowup) */
+    si (i > 50 || xar_numerus(glr->frons_activa) > 10)
+    {
+        constans character* tok_nomen = lexema != NIHIL ?
+            arbor2_lexema_genus_nomen(lexema->lexema->genus) : "EOF";
+        printf("  [TRACE] pos=%d tok=%s reductions=%d frontier=%d new_frontier=%d\n",
+               glr->positus, tok_nomen, i,
+               xar_numerus(glr->frons_activa), xar_numerus(glr->frons_nova));
+        fflush(stdout);
+    }
+#endif
+
     /* Handle multiple accepting paths */
     si (xar_numerus(acceptati) > I)
     {
@@ -6513,6 +6550,10 @@ arbor2_glr_parsere_expressio(
     Arbor2GSSNodus** slot;
     b32 acceptatum;
     Xar* temp;
+#if GLR_TRACE_SLOWDOWN
+    i32 total_iterations = ZEPHYRUM;
+    i32 max_frontier_seen = ZEPHYRUM;
+#endif
 
     /* Initialize */
     glr->lexemata = lexemata;
@@ -6534,6 +6575,14 @@ arbor2_glr_parsere_expressio(
     dum (xar_numerus(glr->frons_activa) > ZEPHYRUM && !acceptatum)
     {
         Arbor2GSSNodus* nodus_iter;
+
+#if GLR_TRACE_SLOWDOWN
+        total_iterations++;
+        si (xar_numerus(glr->frons_activa) > max_frontier_seen)
+        {
+            max_frontier_seen = xar_numerus(glr->frons_activa);
+        }
+#endif
 
         /* Process all reductions, then shifts */
         nodus_iter = _processare_actiones(glr, &acceptatum);
@@ -6622,6 +6671,16 @@ arbor2_glr_parsere_expressio(
     resultus.errores = glr->errores;
     resultus.ambigui = glr->ambigui;
     resultus.tokens_consumed = glr->positus;
+
+#if GLR_TRACE_SLOWDOWN
+    /* Report parse stats if significant */
+    si (total_iterations > 50 || max_frontier_seen > 5)
+    {
+        printf("    [STATS] tokens=%d iters=%d max_frontier=%d\n",
+               xar_numerus(lexemata), total_iterations, max_frontier_seen);
+        fflush(stdout);
+    }
+#endif
 
     /* Use the accepting node's value */
     si (acceptatum && nodus_acceptatus != NIHIL)
@@ -7750,6 +7809,19 @@ arbor2_glr_parsere_translation_unit(
     xar_vacare(glr->errores);
     glr->num_errores = ZEPHYRUM;
 
+#if GLR_TRACE_SLOWDOWN
+    /* Reset profiling counters */
+    g_gss_nodes = 0;
+    g_shifts = 0;
+    g_reduces = 0;
+#endif
+
+#if GLR_TRACE_SLOWDOWN
+    {
+        i32 loop_count = ZEPHYRUM;
+        clock_t loop_start = clock();
+#endif
+
     /* Parse external declarations until EOF */
     dum (positus < num_tokens)
     {
@@ -7762,6 +7834,18 @@ arbor2_glr_parsere_translation_unit(
         Arbor2Nodus** slot;
         Arbor2Token* eof_tok;
         Arbor2Token** eof_slot;
+
+#if GLR_TRACE_SLOWDOWN
+        loop_count++;
+        si (loop_count % 100 == ZEPHYRUM)
+        {
+            clock_t now = clock();
+            duplex elapsed = (duplex)(now - loop_start) / CLOCKS_PER_SEC;
+            printf("  [LOOP] iter=%d pos=%d/%d elapsed=%.2fs\n",
+                   loop_count, positus, num_tokens, elapsed);
+            fflush(stdout);
+        }
+#endif
 
         /* Check if only EOF remains */
         tok_ptr = xar_obtinere(lexemata, positus);
@@ -7805,7 +7889,23 @@ arbor2_glr_parsere_translation_unit(
         }
 
         /* Find end of this external declaration */
+#if GLR_TRACE_SLOWDOWN
+        {
+            clock_t t_finis_init = clock();
+#endif
         finis_info = _invenire_finem_declarationis(lexemata, positus);
+#if GLR_TRACE_SLOWDOWN
+            {
+                clock_t t_finis_done = clock();
+                duplex finis_time = (duplex)(t_finis_done - t_finis_init) / CLOCKS_PER_SEC;
+                si (finis_time > 0.1)
+                {
+                    printf("  [SLOW] _invenire_finem at pos %d took %.2fs\n", positus, finis_time);
+                    fflush(stdout);
+                }
+            }
+        }
+#endif
 
         /* Create sub-token array from positus to parse_finis */
         sub_tokens = xar_creare(glr->piscina, magnitudo(Arbor2Token*));
@@ -7845,7 +7945,23 @@ arbor2_glr_parsere_translation_unit(
         *eof_slot = eof_tok;
 
         /* Parse one external declaration */
+#if GLR_TRACE_SLOWDOWN
+        {
+            clock_t t_initium = clock();
+            hic_manens i32 decl_num = ZEPHYRUM;
+            decl_num++;
+#endif
         sub_res = arbor2_glr_parsere_expressio(glr, sub_tokens);
+#if GLR_TRACE_SLOWDOWN
+            {
+                clock_t t_finis = clock();
+                duplex tempus = (duplex)(t_finis - t_initium) / CLOCKS_PER_SEC;
+                printf("  [TRACE] Decl #%d at pos %d: %.3fs (%d tokens)\n",
+                       decl_num, positus, tempus, xar_numerus(sub_tokens));
+                fflush(stdout);
+            }
+        }
+#endif
 
         si (!sub_res.successus)
         {
@@ -7993,7 +8109,23 @@ arbor2_glr_parsere_translation_unit(
         *slot = sub_res.radix;
 
         /* Register typedef names immediately so subsequent decls can use them */
+#if GLR_TRACE_SLOWDOWN
+        {
+            clock_t t_reg_start = clock();
+#endif
         _registrare_typedef_ex_declaratione(glr, sub_res.radix);
+#if GLR_TRACE_SLOWDOWN
+            {
+                clock_t t_reg_end = clock();
+                duplex reg_time = (duplex)(t_reg_end - t_reg_start) / CLOCKS_PER_SEC;
+                si (reg_time > 0.1)
+                {
+                    printf("  [SLOW] _registrare_typedef took %.2fs\n", reg_time);
+                    fflush(stdout);
+                }
+            }
+        }
+#endif
 
         /* Promote comments from the first token's trivia */
         {
@@ -8009,6 +8141,13 @@ arbor2_glr_parsere_translation_unit(
                 nodus_ante = *prev_ptr;
             }
 
+#if GLR_TRACE_SLOWDOWN
+            printf("  [TRACE] calling _promovere pos=%d\n", positus);
+            fflush(stdout);
+            {
+                clock_t t_prom_start = clock();
+#endif
+
             /* Promote comments from first token */
             _promovere_commenta_ex_spatia(
                 glr->piscina,
@@ -8016,11 +8155,42 @@ arbor2_glr_parsere_translation_unit(
                 nodus_ante,
                 sub_res.radix,
                 tu_nodus->datum.translation_unit.declarationes);
+
+#if GLR_TRACE_SLOWDOWN
+                {
+                    clock_t t_prom_end = clock();
+                    duplex prom_time = (duplex)(t_prom_end - t_prom_start) / CLOCKS_PER_SEC;
+                    printf("  [TRACE] done _promovere pos=%d time=%.2fs\n", positus, prom_time);
+                    fflush(stdout);
+                }
+            }
+#endif
         }
 
         /* Advance position past this item (including semicolon if any) */
         positus = finis_info.proximus;
     }
+
+#if GLR_TRACE_SLOWDOWN
+        {
+            clock_t loop_end = clock();
+            duplex total_loop = (duplex)(loop_end - loop_start) / CLOCKS_PER_SEC;
+            si (total_loop > 0.5)
+            {
+                printf("  [LOOP DONE] total_iters=%d total_time=%.2fs\n",
+                       loop_count, total_loop);
+                fflush(stdout);
+            }
+        }
+    }
+#endif
+
+#if GLR_TRACE_SLOWDOWN
+    /* Print profiling counters */
+    printf("  [COUNTERS] gss_nodes=%lld shifts=%lld reduces=%lld\n",
+           g_gss_nodes, g_shifts, g_reduces);
+    fflush(stdout);
+#endif
 
     /* Return translation unit with any collected errors */
     resultus.successus = VERUM;  /* We produced an AST (may contain ERROR nodes) */

@@ -11,6 +11,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <time.h>
 
 /* ==================================================
  * Helper Functions
@@ -118,9 +119,30 @@ _probare_roundtrip_fasciculum(Piscina* p, InternamentumChorda* intern,
     imprimere("  Testing: %s (%d bytes)\n", via, mensura);
 
     /* Parse */
-    glr = arbor2_glr_creare(p, intern, expansion);
-    tokens = _lexare(p, intern, fons, mensura);
-    result = arbor2_glr_parsere_translation_unit(glr, tokens);
+    {
+        clock_t t0, t1, t2, t3;
+        duplex lex_time, parse_time, scrib_time;
+
+        t0 = clock();
+        glr = arbor2_glr_creare(p, intern, expansion);
+        tokens = _lexare(p, intern, fons, mensura);
+        t1 = clock();
+        result = arbor2_glr_parsere_translation_unit(glr, tokens);
+        t2 = clock();
+        output = arbor2_scribere(p, result.radix);
+        t3 = clock();
+
+        lex_time = (duplex)(t1 - t0) / CLOCKS_PER_SEC;
+        parse_time = (duplex)(t2 - t1) / CLOCKS_PER_SEC;
+        scrib_time = (duplex)(t3 - t2) / CLOCKS_PER_SEC;
+
+        si (lex_time + parse_time + scrib_time > 0.1)
+        {
+            imprimere("    [TIME] lex=%.2fs parse=%.2fs scrib=%.2fs total=%.2fs\n",
+                      lex_time, parse_time, scrib_time,
+                      lex_time + parse_time + scrib_time);
+        }
+    }
 
     si (!result.successus)
     {
@@ -294,7 +316,29 @@ s32 principale(vacuum)
 
         CREDO_VERUM(_probare_roundtrip_fasciculum(piscina, intern, expansion,
             "probationes/fixa/roundtrip/struct_param.c"));
+
+        CREDO_VERUM(_probare_roundtrip_fasciculum(piscina, intern, expansion,
+            "probationes/fixa/roundtrip/test_struct_func.c"));
+
+        CREDO_VERUM(_probare_roundtrip_fasciculum(piscina, intern, expansion,
+            "probationes/fixa/roundtrip/test_slow.c"));
     }
+
+    /* ========================================================
+     * NOTA: Known issues with structs.c and arrays.c
+     *
+     * 1. CONSECUTIVE COMMENTS cause GLR ambiguity explosion:
+     *    [comment a] [comment b] int x;  -- hangs (exponential)
+     *    [comment a] int x; [comment b] int y;  -- works
+     *
+     * 2. LOCAL STRUCT VARIABLE DECLARATIONS fail:
+     *    void f(void) { struct Point p; }  -- function dropped
+     *    Parameters use State 91 (fixed), local decls need
+     *    similar GOTO entries in compound stmt states (25/26).
+     *
+     * 3. POINTER-TO-MEMBER expressions fail roundtrip:
+     *    p->x = p->x + dx;  -- function body is dropped
+     * ======================================================== */
 
     /* ========================================================
      * PROBARE: Files with preprocessor directives
