@@ -1,7 +1,7 @@
 # Arbor v2 Implementation Plan
 
 Date: 2026-01-19
-Status: Updated after Phase 5.4 completion - Conditional Compilation COMPLETE
+Status: Updated after Phase 6 completion - #include Processing COMPLETE
 
 ---
 
@@ -23,7 +23,7 @@ Status: Updated after Phase 5.4 completion - Conditional Compilation COMPLETE
 - Chain walking: arbor2_token_radix(), arbor2_token_profunditas()
 - Merged provenance for token paste
 
-### arbor2_expandere.c (~1892 lines) - MOSTLY COMPLETE
+### arbor2_expandere.c (~2200 lines) - COMPLETE
 - Object-like and function-like macro expansion
 - Parameter substitution
 - Stringification (#) - C89 compliant
@@ -35,9 +35,9 @@ Status: Updated after Phase 5.4 completion - Conditional Compilation COMPLETE
 - Layer and segment query APIs
 - **Lookahead API** for macro type disambiguation (Phase 3.2)
 - **Built-in latina.h macros** via `arbor2_includere_latina()` (Phase 7.1)
+- **#include processing** with separate system/local search paths (Phase 6)
 
 **Missing in expandere:**
-- #include processing (files not actually read)
 - #error, #line, #pragma handling
 
 ### arbor2_conditio_evaluare.c (~800 lines) - COMPLETE
@@ -144,7 +144,7 @@ Current structure has:
 
 ### Tests - COMPREHENSIVE
 - **~2069 GLR tests** (all passing) - updated after Phase 5.4
-- **124 expandere tests** (all passing) - includes lookahead API
+- **134 expandere tests** (all passing) - includes lookahead API, #include processing
 - Covers expressions, statements, declarations
 - Full initializer coverage (simple, brace, designated)
 - sizeof variants (type, pointer, array, multi-dim, pointer array)
@@ -403,8 +403,14 @@ Given the current state, the recommended priority is:
    - 5.4 Branch Parsing: **COMPLETE** ✓ (recursive AST parsing of branch contents)
    - 24+ test cases
 
-6. **Next priorities:**
-   - Phase 6: #include Processing (actually read files)
+6. **Phase 6 (#include Processing)** - **COMPLETE** ✓
+   - Separate search paths: `system_viae` for `<>`, `local_viae` for `""`
+   - Learning mode (system) vs full mode (local) defaults
+   - Path resolution: local relative first, then local paths, then system paths
+   - Include guards via `included_viae` hash table
+   - Graceful handling of missing files (not errors)
+
+7. **Next priorities:**
    - Phase 7.2: Standard Library Type Hints (FILE, size_t, etc.)
    - #error, #warning, #pragma, #line directives
 
@@ -424,6 +430,7 @@ Given the current state, the recommended priority is:
 - **Macro type lookahead** (recursive resolution: i32→integer→int) ✓
 - **Conditional compilation** (#ifdef, #ifndef, #if, #elif, #else, #endif) ✓
 - **#if expression evaluation** (arithmetic, comparison, logical, bitwise, ternary, defined()) ✓
+- **#include processing** (separate system/local paths, learning/full modes, include guards) ✓
 
 **Remaining gaps (low priority):**
 - K&R function definitions (old-style parameters)
@@ -896,34 +903,103 @@ Each branch's `parsed` field is now populated with a TRANSLATION_UNIT AST node c
 
 ---
 
-## Phase 6: #include Processing
+## Phase 6: #include Processing — **COMPLETE** ✓
 
-Current: Not implemented
-Need: Actually read and process included files
+Implemented 2026-01-19.
 
-#### 6.1 Include Directive Handling
+#### 6.1 Data Structures
+
+**New enums in arbor2_glr.h:**
 ```c
-interior b32
-_processare_include(Arbor2Expansion* exp, Xar* tokens, i32* positus)
-{
-    /* Parse filename from tokens */
-    /* Resolve path (search include_viae) */
-    /* Check if already included */
-    /* Read file */
-    /* Recursively process */
-}
+nomen enumeratio {
+    ARBOR2_INCLUDE_SYSTEM,      /* <header.h> */
+    ARBOR2_INCLUDE_LOCAL        /* "header.h" */
+} Arbor2IncludeGenus;
+
+nomen enumeratio {
+    ARBOR2_INCLUDE_UNRESOLVED,  /* File not found */
+    ARBOR2_INCLUDE_RESOLVED,    /* File found and processed */
+    ARBOR2_INCLUDE_SKIPPED      /* Already included (guard) */
+} Arbor2IncludeStatus;
 ```
 
-#### 6.2 Include Guard Tracking
+**New struct:**
 ```c
-TabulaDispersa* included_viae;  /* Already exists in Arbor2Expansion */
+nomen structura {
+    Arbor2IncludeGenus      genus;
+    Arbor2IncludeStatus     status;
+    chorda*                 via_specifier;
+    chorda*                 via_resoluta;
+    b32                     est_learning;
+    i32                     linea;
+} Arbor2IncludeInfo;
 ```
 
-#### 6.3 System vs User Includes
-- `<stdio.h>` - search system paths
-- `"myheader.h"` - search current directory first
+**New node type:** `ARBOR2_NODUS_INCLUDE` with `include_directive` datum
 
-**Deliverable:** Can parse files with #include
+#### 6.2 Search Paths
+
+**New fields in Arbor2Expansion:**
+```c
+Xar*    system_viae;            /* <> include paths */
+Xar*    local_viae;             /* "" include paths */
+b32     system_learning_default;  /* VERUM - macros only */
+b32     local_learning_default;   /* FALSUM - full merge */
+```
+
+**Resolution order:**
+- Local `""`: relative to current file → local_viae → system_viae
+- System `<>`: system_viae only
+
+#### 6.3 API Functions
+
+```c
+vacuum arbor2_expansion_addere_system_via(Arbor2Expansion* exp, constans character* via);
+vacuum arbor2_expansion_addere_local_via(Arbor2Expansion* exp, constans character* via);
+chorda* arbor2_expansion_resolvere_include(Arbor2Expansion* exp, chorda via_specifier,
+                                           i32 genus, chorda* via_current);
+```
+
+#### 6.4 Processing Logic
+
+1. Detect `#include` directive in `_expand_layer()`
+2. `_processare_include()` parses path from tokens
+3. Determines mode: system → learning, local → full
+4. Resolves path via search paths
+5. If found and not already included:
+   - Mark in `included_viae`
+   - Read file via `_legere_filum()`
+   - Call `arbor2_expansion_processare()` recursively
+   - Learning mode: extract macros/typedefs only
+   - Full mode: merge tokens into output
+
+#### 6.5 Files Modified
+
+| File | Changes |
+|------|---------|
+| `include/via.h` | Added `via_existit()` |
+| `lib/via.c` | Implemented `via_existit()` using `stat()` |
+| `include/arbor2_glr.h` | Added INCLUDE node, enums, structs |
+| `include/arbor2_expandere.h` | Added search path fields, API functions |
+| `lib/arbor2_expandere.c` | Implemented `_processare_include()`, path resolution |
+| `lib/arbor2_scribere.c` | Added INCLUDE serialization |
+
+#### 6.6 Tests
+
+7 new test cases in probatio_arbor2_expandere.c:
+1. Include path management (add system/local paths)
+2. Local include macro extraction
+3. Local include typedef extraction
+4. Nested include extraction
+5. Include guard (no double processing)
+6. Unresolved include (graceful handling)
+7. System include syntax parsing
+
+**Test files created:**
+- `probationes/fixa/include_test_header.h`
+- `probationes/fixa/include_test_nested.h`
+
+**Deliverable:** Can parse files with #include ✓
 
 ---
 
@@ -1081,7 +1157,7 @@ Phase 4 (Error Recovery) ───────┤ ✓
                                 │
 Phase 5 (Conditionals) ─────────┤ ✓ (complete with branch parsing)
                                 │
-Phase 6 (#include) ─────────────┤
+Phase 6 (#include) ─────────────┤ ✓
                                 │
 Phase 7 (Built-ins) ────────────┤ 7.1 ✓
                                 ▼
@@ -1109,7 +1185,7 @@ Phase 8 (Queries)      Phase 9 (Types)      Phase 10 (Index)
 |------|-------|--------|
 | lib/arbor2_lexema.c | ~500 | Complete (Phase 2.6: explicit whitespace tokens) |
 | lib/arbor2_token.c | 264 | Complete |
-| lib/arbor2_expandere.c | ~1892 | Mostly complete (lookahead API, built-in latina.h) |
+| lib/arbor2_expandere.c | ~2200 | Complete (lookahead API, built-in latina.h, #include processing) |
 | lib/arbor2_conditio_evaluare.c | ~800 | Complete (Phase 5b: #if/#elif expression evaluator) |
 | lib/arbor2_glr.c | ~5800 | Functional + Phase 5 conditional directives |
 | lib/arbor2_glr_tabula.c | ~17500 | 346 productions, 952 states |
@@ -1121,7 +1197,7 @@ Phase 8 (Queries)      Phase 9 (Types)      Phase 10 (Index)
 | include/arbor2_conditio_evaluare.h | ~70 | Complete (expression evaluator API) |
 | probationes/probatio_arbor2_glr.c | ~13900 | ~1900 tests (Phase 5b conditionals) |
 | probationes/probatio_arbor2_lexema.c | ~340 | 38 tests (whitespace tokens) |
-| probationes/probatio_arbor2_expandere.c | ~600 | 124 tests (includes lookahead) |
+| probationes/probatio_arbor2_expandere.c | ~1850 | 134 tests (lookahead + #include) |
 | tools/glr_debug.c | ~340 | Working |
 | lib/arbor2_lexema.worklog.md | - | Phase 2.6 design notes |
 | lib/arbor2_expandere.worklog.md | - | Phase 3.2, 7.1 design notes |
@@ -1157,4 +1233,5 @@ Phase 8 (Queries)      Phase 9 (Types)      Phase 10 (Index)
 | 2026-01-17 | 5 Conditional Directives | +0 | +0 | +6 | #ifdef/#ifndef/#else/#endif detection, Arbor2CondRamus, CONDITIONALIS node |
 | 2026-01-17 | 5b Expression Evaluation | +0 | +0 | +13 | arbor2_conditio_evaluare.c, #if/#elif support, defined() operator |
 | 2026-01-19 | 5.4 Branch Parsing | +0 | +0 | +24 | _parsere_ramus(), recursive branch AST parsing, nested conditionals |
-| **Current** | | **351** | **952** | **~2069** | |
+| 2026-01-19 | 6 #include Processing | +0 | +0 | +10 | via_existit(), _processare_include(), search paths, learning/full modes |
+| **Current** | | **351** | **952** | **~2079** | |
