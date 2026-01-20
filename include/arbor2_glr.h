@@ -197,7 +197,10 @@ nomen enumeratio {
     ARBOR2_NODUS_TRANSLATION_UNIT,  /* Translation unit (list of external declarations) */
     ARBOR2_NODUS_COMMENTUM,         /* Comment node (promoted from trivia) */
     ARBOR2_NODUS_CONDITIONALIS,     /* Conditional compilation (#ifdef/#ifndef/#else/#endif) */
-    ARBOR2_NODUS_INCLUDE            /* #include directive */
+    ARBOR2_NODUS_INCLUDE,           /* #include directive */
+    ARBOR2_NODUS_DEFINE,            /* #define directive */
+    ARBOR2_NODUS_UNDEF,             /* #undef directive */
+    ARBOR2_NODUS_PRAGMA             /* #pragma directive */
 } Arbor2NodusGenus;
 
 /* ==================================================
@@ -268,6 +271,7 @@ structura Arbor2CondRamus {
     Xar*                    expressio_lexemata; /* Expression tokens (#if/#elif) - Xar of Arbor2Token* */
     i64                     valor_evaluatus;    /* Evaluated value (0=false, nonzero=true) */
     b32                     est_evaluatum;      /* VERUM if evaluation succeeded */
+    Xar*                    directivum_lexemata; /* Directive line tokens for roundtrip (# ifdef FOO, etc.) */
     Xar*                    lexemata;           /* Tokens in this branch (Xar of Arbor2Token*) */
     structura Arbor2Nodus*  parsed;             /* Parsed AST for branch (or NIHIL) */
     i32                     linea;              /* Line of directive */
@@ -639,6 +643,7 @@ structura Arbor2Nodus {
             Xar*                    rami;           /* Xar of Arbor2CondRamus* */
             i32                     linea_if;       /* Line of opening #if/#ifdef */
             i32                     linea_endif;    /* Line of closing #endif */
+            Xar*                    endif_lexemata; /* #endif directive tokens for roundtrip */
         } conditionalis;
 
         /* INCLUDE (#include directive) */
@@ -646,6 +651,24 @@ structura Arbor2Nodus {
             Arbor2IncludeInfo*      info;                   /* Include metadata */
             Xar*                    lexemata_originalia;    /* Original tokens for roundtrip */
         } include_directive;
+
+        /* DEFINE (#define directive) */
+        structura {
+            Xar*                    lexemata_originalia;    /* All tokens for roundtrip */
+            chorda*                 nomen_macro;            /* Macro name */
+            b32                     est_functio;            /* VERUM if function-like macro */
+        } define_directive;
+
+        /* UNDEF (#undef directive) */
+        structura {
+            Xar*                    lexemata_originalia;    /* All tokens for roundtrip */
+            chorda*                 nomen_macro;            /* Macro name */
+        } undef_directive;
+
+        /* PRAGMA (#pragma directive) */
+        structura {
+            Xar*                    lexemata_originalia;    /* All tokens for roundtrip */
+        } pragma_directive;
     } datum;
 };
 

@@ -2473,3 +2473,54 @@ Implemented parsing of conditional branch contents. Previously, `ARBOR2_NODUS_CO
 - ifdef with else (both branches parse independently)
 
 Tests: 2069 total pass (24 new assertions)
+
+---
+
+## 2026-01-19
+
+### Preprocessor Directive Roundtrip Support
+
+Implemented full roundtrip (parse → serialize → identical output) for all preprocessor directives.
+
+#### Problem
+
+Preprocessor directives were being parsed but could not roundtrip because:
+- CONDITIONALIS nodes didn't store the directive line tokens (just parsed the body)
+- No parsing existed for #define, #undef, #pragma, #include (HASH token had 0 parser actions)
+
+#### Solution
+
+1. **Extended Arbor2CondRamus struct** with `directivum_lexemata` field to store each directive line's tokens (#ifdef FOO, #else, etc.)
+
+2. **Extended conditionalis datum** with `endif_lexemata` field to store #endif tokens
+
+3. **Added new node types**: `ARBOR2_NODUS_DEFINE`, `ARBOR2_NODUS_UNDEF`, `ARBOR2_NODUS_PRAGMA`
+
+4. **Created helper functions**:
+   - `_colligere_directivum_lexemata()` - collects tokens from # to newline
+   - `_obtinere_pp_genus()` - identifies directive type (define/undef/pragma/include)
+   - `_creare_pp_nodus()` - creates appropriate node for each directive type
+
+5. **Updated `_colligere_conditionale()`** to capture directive tokens for each branch
+
+6. **Updated translation unit parser** to detect and create nodes for non-conditional directives
+
+7. **Added serializer cases** for all preprocessor node types
+
+#### Key Design Decisions
+
+- Directive tokens stored verbatim (not parsed into sub-structure) for perfect roundtrip
+- Each branch's directive line is stored separately from body tokens
+- Non-conditional directives (#define etc.) handled at translation unit level, not in grammar tables
+
+#### Tests Added
+
+17 new roundtrip tests:
+- #define (simple, empty, function-like)
+- #undef
+- #pragma
+- #include (angle brackets and quotes)
+- Conditional compilation (#ifdef, #ifndef, #else, #elif, #if)
+- Mixed preprocessor with declarations
+
+All 396 scribere tests pass, all 2069 GLR tests pass.

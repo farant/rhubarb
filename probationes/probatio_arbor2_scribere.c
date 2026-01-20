@@ -1562,6 +1562,95 @@ s32 principale(vacuum)
         CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion, "a[0](x)", NIHIL));
     }
 
+    /* ========================================================
+     * PROBARE: Preprocessor directives roundtrip
+     * ======================================================== */
+    {
+        imprimere("\n--- Probans preprocessor directiva ---\n");
+
+        /* #define simple */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion,
+            "#define MAX 100\n", NIHIL));
+
+        /* #define with expression */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion,
+            "#define MIN 0\n", NIHIL));
+
+        /* #define empty */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion,
+            "#define EMPTY\n", NIHIL));
+
+        /* #define function-like macro */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion,
+            "#define ADD(a, b) a + b\n", NIHIL));
+
+        /* #undef */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion,
+            "#undef MAX\n", NIHIL));
+
+        /* #pragma */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion,
+            "#pragma once\n", NIHIL));
+
+        /* #include with angle brackets */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion,
+            "#include <stdio.h>\n", NIHIL));
+
+        /* #include with quotes */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion,
+            "#include \"myfile.h\"\n", NIHIL));
+    }
+
+    /* ========================================================
+     * PROBARE: Conditional compilation roundtrip
+     * ======================================================== */
+    {
+        imprimere("\n--- Probans conditionales directiva ---\n");
+
+        /* Simple #ifdef/#endif */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion,
+            "#ifdef FOO\nint x;\n#endif\n", NIHIL));
+
+        /* #ifndef/#endif */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion,
+            "#ifndef BAR\nint y;\n#endif\n", NIHIL));
+
+        /* #ifdef/#else/#endif */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion,
+            "#ifdef FOO\nint x;\n#else\nint y;\n#endif\n", NIHIL));
+
+        /* #if with expression */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion,
+            "#if 1\nint x;\n#endif\n", NIHIL));
+
+        /* #if with defined() */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion,
+            "#if defined(FOO)\nint x;\n#endif\n", NIHIL));
+
+        /* #if/#elif/#else/#endif */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion,
+            "#if 0\nint a;\n#elif 1\nint b;\n#else\nint c;\n#endif\n", NIHIL));
+    }
+
+    /* ========================================================
+     * PROBARE: Mixed preprocessor and declarations
+     * ======================================================== */
+    {
+        imprimere("\n--- Probans mixta preprocessor et declarationes ---\n");
+
+        /* Declaration after #include */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion,
+            "#include <stdio.h>\nint x;\n", NIHIL));
+
+        /* #define between declarations */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion,
+            "int a;\n#define MAX 100\nint b;\n", NIHIL));
+
+        /* Conditional with function */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion,
+            "#ifdef DEBUG\nvoid debug() { }\n#endif\n", NIHIL));
+    }
+
     /* Print summary */
     credo_imprimere_compendium();
 

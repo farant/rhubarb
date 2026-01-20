@@ -6659,6 +6659,73 @@ _saltare_ad_finem_lineae(Xar* lexemata, i32 positus)
     redde positus;
 }
 
+/* Collect directive line tokens from # to newline (for roundtrip) */
+interior Xar*
+_colligere_directivum_lexemata(Arbor2GLR* glr, Xar* lexemata, i32 positus, i32* positus_novus)
+{
+    Xar* directivum;
+    i32 num;
+
+    directivum = xar_creare(glr->piscina, magnitudo(Arbor2Token*));
+    num = xar_numerus(lexemata);
+
+    dum (positus < num)
+    {
+        Arbor2Token* tok;
+        Arbor2Token** tok_slot;
+
+        tok = *(Arbor2Token**)xar_obtinere(lexemata, positus);
+        tok_slot = xar_addere(directivum);
+        *tok_slot = tok;
+
+        /* Check for newline in spatia_post */
+        si (tok->lexema->spatia_post != NIHIL)
+        {
+            i32 j;
+            i32 num_spatia;
+            num_spatia = xar_numerus(tok->lexema->spatia_post);
+            per (j = ZEPHYRUM; j < num_spatia; j++)
+            {
+                Arbor2Lexema* spatium;
+                spatium = *(Arbor2Lexema**)xar_obtinere(tok->lexema->spatia_post, j);
+                si (spatium->genus == ARBOR2_LEXEMA_NOVA_LINEA)
+                {
+                    *positus_novus = positus + I;
+                    redde directivum;
+                }
+            }
+        }
+
+        /* Check for newline in next token's spatia_ante */
+        si (positus + I < num)
+        {
+            Arbor2Token* next_tok;
+            next_tok = *(Arbor2Token**)xar_obtinere(lexemata, positus + I);
+            si (next_tok->lexema->spatia_ante != NIHIL)
+            {
+                i32 j;
+                i32 num_spatia;
+                num_spatia = xar_numerus(next_tok->lexema->spatia_ante);
+                per (j = ZEPHYRUM; j < num_spatia; j++)
+                {
+                    Arbor2Lexema* spatium;
+                    spatium = *(Arbor2Lexema**)xar_obtinere(next_tok->lexema->spatia_ante, j);
+                    si (spatium->genus == ARBOR2_LEXEMA_NOVA_LINEA)
+                    {
+                        *positus_novus = positus + I;
+                        redde directivum;
+                    }
+                }
+            }
+        }
+
+        positus++;
+    }
+
+    *positus_novus = positus;
+    redde directivum;
+}
+
 /* Get condition string from #ifdef/#ifndef/#if directive */
 interior chorda*
 _obtinere_conditio(Arbor2GLR* glr, Xar* lexemata, i32 positus, Arbor2DirectivumGenus genus)
@@ -6841,6 +6908,7 @@ _colligere_conditionale(Arbor2GLR* glr, Xar* lexemata, i32* positus)
 {
     Arbor2Nodus* nodus;
     Xar* rami;
+    Xar* endif_lexemata;
     Arbor2CondRamus* ramus_currens;
     Arbor2DirectivumGenus genus;
     i32 profunditas;
@@ -6848,6 +6916,8 @@ _colligere_conditionale(Arbor2GLR* glr, Xar* lexemata, i32* positus)
     i32 num;
     i32 linea_if;
     Arbor2Token* tok_initium;
+
+    endif_lexemata = NIHIL;
 
     pos = *positus;
     num = xar_numerus(lexemata);
@@ -6865,40 +6935,43 @@ _colligere_conditionale(Arbor2GLR* glr, Xar* lexemata, i32* positus)
     rami = xar_creare(glr->piscina, magnitudo(Arbor2CondRamus*));
 
     /* Create first branch */
-    ramus_currens = piscina_allocare(glr->piscina, magnitudo(Arbor2CondRamus));
-    ramus_currens->genus = genus;
-    ramus_currens->conditio = _obtinere_conditio(glr, lexemata, pos, genus);
-    ramus_currens->expressio_lexemata = NIHIL;
-    ramus_currens->valor_evaluatus = ZEPHYRUM;
-    ramus_currens->est_evaluatum = FALSUM;
-    ramus_currens->lexemata = xar_creare(glr->piscina, magnitudo(Arbor2Token*));
-    ramus_currens->parsed = NIHIL;
-    ramus_currens->linea = tok_initium->lexema->linea;
+    {
+        i32 pos_initium = pos;  /* Save for expression collection */
+        ramus_currens = piscina_allocare(glr->piscina, magnitudo(Arbor2CondRamus));
+        ramus_currens->genus = genus;
+        ramus_currens->conditio = _obtinere_conditio(glr, lexemata, pos, genus);
+        ramus_currens->expressio_lexemata = NIHIL;
+        ramus_currens->valor_evaluatus = ZEPHYRUM;
+        ramus_currens->est_evaluatum = FALSUM;
+        ramus_currens->directivum_lexemata = _colligere_directivum_lexemata(glr, lexemata, pos, &pos);
+        ramus_currens->lexemata = xar_creare(glr->piscina, magnitudo(Arbor2Token*));
+        ramus_currens->parsed = NIHIL;
+        ramus_currens->linea = tok_initium->lexema->linea;
 
-    /* For #if, collect and evaluate expression */
-    si (genus == ARBOR2_DIRECTIVUM_IF)
-    {
-        ramus_currens->expressio_lexemata = _obtinere_expressio_lexemata(glr, lexemata, pos);
-        ramus_currens->valor_evaluatus = arbor2_conditio_evaluare(
-            glr->expansion,
-            ramus_currens->expressio_lexemata,
-            &ramus_currens->est_evaluatum);
-    }
-    /* For #ifdef/#ifndef, evaluate using conditio */
-    alioquin si (genus == ARBOR2_DIRECTIVUM_IFDEF || genus == ARBOR2_DIRECTIVUM_IFNDEF)
-    {
-        si (ramus_currens->conditio != NIHIL)
+        /* For #if, collect and evaluate expression */
+        si (genus == ARBOR2_DIRECTIVUM_IF)
         {
-            b32 est_def;
-            est_def = arbor2_conditio_est_definitum(glr->expansion, *ramus_currens->conditio);
-            ramus_currens->valor_evaluatus = (genus == ARBOR2_DIRECTIVUM_IFDEF) ?
-                (est_def ? I : ZEPHYRUM) : (est_def ? ZEPHYRUM : I);
-            ramus_currens->est_evaluatum = VERUM;
+            ramus_currens->expressio_lexemata = _obtinere_expressio_lexemata(glr, lexemata, pos_initium);
+            ramus_currens->valor_evaluatus = arbor2_conditio_evaluare(
+                glr->expansion,
+                ramus_currens->expressio_lexemata,
+                &ramus_currens->est_evaluatum);
+        }
+        /* For #ifdef/#ifndef, evaluate using conditio */
+        alioquin si (genus == ARBOR2_DIRECTIVUM_IFDEF || genus == ARBOR2_DIRECTIVUM_IFNDEF)
+        {
+            si (ramus_currens->conditio != NIHIL)
+            {
+                b32 est_def;
+                est_def = arbor2_conditio_est_definitum(glr->expansion, *ramus_currens->conditio);
+                ramus_currens->valor_evaluatus = (genus == ARBOR2_DIRECTIVUM_IFDEF) ?
+                    (est_def ? I : ZEPHYRUM) : (est_def ? ZEPHYRUM : I);
+                ramus_currens->est_evaluatum = VERUM;
+            }
         }
     }
 
-    /* Skip to end of directive line */
-    pos = _saltare_ad_finem_lineae(lexemata, pos);
+    /* pos is already updated by _colligere_directivum_lexemata */
 
     profunditas = I;
 
@@ -6972,8 +7045,8 @@ _colligere_conditionale(Arbor2GLR* glr, Xar* lexemata, i32* positus)
                     ramus_slot = xar_addere(rami);
                     *ramus_slot = ramus_currens;
 
-                    /* Skip #endif line */
-                    pos = _saltare_ad_finem_lineae(lexemata, pos);
+                    /* Collect #endif tokens for roundtrip */
+                    endif_lexemata = _colligere_directivum_lexemata(glr, lexemata, pos, &pos);
                     frange;
                 }
                 alioquin
@@ -7006,6 +7079,7 @@ _colligere_conditionale(Arbor2GLR* glr, Xar* lexemata, i32* positus)
                 /* Top-level else/elif - start new branch */
                 Arbor2CondRamus** ramus_slot;
                 Arbor2Token* tok_curr;
+                i32 pos_initium;
 
                 /* Save current branch */
                 ramus_slot = xar_addere(rami);
@@ -7013,17 +7087,19 @@ _colligere_conditionale(Arbor2GLR* glr, Xar* lexemata, i32* positus)
 
                 /* Create new branch */
                 tok_curr = *(Arbor2Token**)xar_obtinere(lexemata, pos);
+                pos_initium = pos;
                 ramus_currens = piscina_allocare(glr->piscina, magnitudo(Arbor2CondRamus));
                 ramus_currens->genus = genus_curr;
                 ramus_currens->conditio = NIHIL;
                 ramus_currens->expressio_lexemata = NIHIL;
                 ramus_currens->valor_evaluatus = ZEPHYRUM;
                 ramus_currens->est_evaluatum = FALSUM;
+                ramus_currens->directivum_lexemata = _colligere_directivum_lexemata(glr, lexemata, pos, &pos);
 
                 si (genus_curr == ARBOR2_DIRECTIVUM_ELIF)
                 {
                     /* Collect and evaluate #elif expression */
-                    ramus_currens->expressio_lexemata = _obtinere_expressio_lexemata(glr, lexemata, pos);
+                    ramus_currens->expressio_lexemata = _obtinere_expressio_lexemata(glr, lexemata, pos_initium);
                     ramus_currens->valor_evaluatus = arbor2_conditio_evaluare(
                         glr->expansion,
                         ramus_currens->expressio_lexemata,
@@ -7040,8 +7116,7 @@ _colligere_conditionale(Arbor2GLR* glr, Xar* lexemata, i32* positus)
                 ramus_currens->parsed = NIHIL;
                 ramus_currens->linea = tok_curr->lexema->linea;
 
-                /* Skip to end of directive line */
-                pos = _saltare_ad_finem_lineae(lexemata, pos);
+                /* pos is already updated by _colligere_directivum_lexemata */
                 perge;
             }
             alioquin
@@ -7109,6 +7184,183 @@ _colligere_conditionale(Arbor2GLR* glr, Xar* lexemata, i32* positus)
     nodus->datum.conditionalis.rami = rami;
     nodus->datum.conditionalis.linea_if = linea_if;
     nodus->datum.conditionalis.linea_endif = nodus->linea_finis;
+    nodus->datum.conditionalis.endif_lexemata = endif_lexemata;
+
+    *positus = pos;
+    redde nodus;
+}
+
+/* ==================================================
+ * Other Preprocessor Directive Handling
+ *
+ * Recognizes #define, #undef, #pragma, #include
+ * ================================================== */
+
+/* Directive type for non-conditional preprocessor directives */
+nomen enumeratio {
+    ARBOR2_PP_NONE,
+    ARBOR2_PP_DEFINE,
+    ARBOR2_PP_UNDEF,
+    ARBOR2_PP_PRAGMA,
+    ARBOR2_PP_INCLUDE
+} Arbor2PPGenus;
+
+/* Check what kind of preprocessor directive starts at position */
+interior Arbor2PPGenus
+_obtinere_pp_genus(Xar* lexemata, i32 positus)
+{
+    Arbor2Token* tok;
+    Arbor2Token* next_tok;
+    i32 num;
+    constans i8* ident;
+
+    num = xar_numerus(lexemata);
+    si (positus + I >= num)
+    {
+        redde ARBOR2_PP_NONE;
+    }
+
+    tok = *(Arbor2Token**)xar_obtinere(lexemata, positus);
+    si (tok->lexema->genus != ARBOR2_LEXEMA_HASH)
+    {
+        redde ARBOR2_PP_NONE;
+    }
+
+    next_tok = *(Arbor2Token**)xar_obtinere(lexemata, positus + I);
+    si (next_tok->lexema->genus != ARBOR2_LEXEMA_IDENTIFICATOR)
+    {
+        redde ARBOR2_PP_NONE;
+    }
+
+    ident = (constans i8*)next_tok->lexema->valor.datum;
+
+    /* Check for define */
+    si (next_tok->lexema->valor.mensura == VI &&
+        ident[ZEPHYRUM] == 'd' && ident[I] == 'e' && ident[II] == 'f' &&
+        ident[III] == 'i' && ident[IV] == 'n' && ident[V] == 'e')
+    {
+        redde ARBOR2_PP_DEFINE;
+    }
+
+    /* Check for undef */
+    si (next_tok->lexema->valor.mensura == V &&
+        ident[ZEPHYRUM] == 'u' && ident[I] == 'n' && ident[II] == 'd' &&
+        ident[III] == 'e' && ident[IV] == 'f')
+    {
+        redde ARBOR2_PP_UNDEF;
+    }
+
+    /* Check for pragma */
+    si (next_tok->lexema->valor.mensura == VI &&
+        ident[ZEPHYRUM] == 'p' && ident[I] == 'r' && ident[II] == 'a' &&
+        ident[III] == 'g' && ident[IV] == 'm' && ident[V] == 'a')
+    {
+        redde ARBOR2_PP_PRAGMA;
+    }
+
+    /* Check for include */
+    si (next_tok->lexema->valor.mensura == VII &&
+        ident[ZEPHYRUM] == 'i' && ident[I] == 'n' && ident[II] == 'c' &&
+        ident[III] == 'l' && ident[IV] == 'u' && ident[V] == 'd' &&
+        ident[VI] == 'e')
+    {
+        redde ARBOR2_PP_INCLUDE;
+    }
+
+    redde ARBOR2_PP_NONE;
+}
+
+/* Create a preprocessor directive node (DEFINE, UNDEF, PRAGMA, INCLUDE) */
+interior Arbor2Nodus*
+_creare_pp_nodus(Arbor2GLR* glr, Xar* lexemata, i32* positus, Arbor2PPGenus genus)
+{
+    Arbor2Nodus* nodus;
+    Arbor2Token* tok_initium;
+    Xar* tokens;
+    i32 pos;
+
+    pos = *positus;
+    tok_initium = *(Arbor2Token**)xar_obtinere(lexemata, pos);
+
+    /* Collect all tokens on this directive line */
+    tokens = _colligere_directivum_lexemata(glr, lexemata, pos, &pos);
+
+    /* Create node */
+    nodus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
+    nodus->lexema = tok_initium;
+    nodus->pater = NIHIL;
+    nodus->commenta_ante = NIHIL;
+    nodus->commenta_post = NIHIL;
+    nodus->linea_initium = tok_initium->lexema->linea;
+    nodus->columna_initium = tok_initium->lexema->columna;
+    nodus->linea_finis = tok_initium->lexema->linea;
+    nodus->columna_finis = I;
+    nodus->layer_index = ZEPHYRUM;
+
+    commutatio (genus)
+    {
+        casus ARBOR2_PP_DEFINE:
+            nodus->genus = ARBOR2_NODUS_DEFINE;
+            nodus->datum.define_directive.lexemata_originalia = tokens;
+            nodus->datum.define_directive.nomen_macro = NIHIL;
+            nodus->datum.define_directive.est_functio = FALSUM;
+
+            /* Extract macro name (third token after # and define) */
+            si (xar_numerus(tokens) >= III)
+            {
+                Arbor2Token* tok_name = *(Arbor2Token**)xar_obtinere(tokens, II);
+                si (tok_name->lexema->genus == ARBOR2_LEXEMA_IDENTIFICATOR)
+                {
+                    nodus->datum.define_directive.nomen_macro =
+                        piscina_allocare(glr->piscina, magnitudo(chorda));
+                    *nodus->datum.define_directive.nomen_macro = tok_name->lexema->valor;
+
+                    /* Check if function-like (has lparen immediately after name) */
+                    si (xar_numerus(tokens) >= IV)
+                    {
+                        Arbor2Token* tok_next = *(Arbor2Token**)xar_obtinere(tokens, III);
+                        si (tok_next->lexema->genus == ARBOR2_LEXEMA_PAREN_APERTA)
+                        {
+                            nodus->datum.define_directive.est_functio = VERUM;
+                        }
+                    }
+                }
+            }
+            frange;
+
+        casus ARBOR2_PP_UNDEF:
+            nodus->genus = ARBOR2_NODUS_UNDEF;
+            nodus->datum.undef_directive.lexemata_originalia = tokens;
+            nodus->datum.undef_directive.nomen_macro = NIHIL;
+
+            /* Extract macro name */
+            si (xar_numerus(tokens) >= III)
+            {
+                Arbor2Token* tok_name = *(Arbor2Token**)xar_obtinere(tokens, II);
+                si (tok_name->lexema->genus == ARBOR2_LEXEMA_IDENTIFICATOR)
+                {
+                    nodus->datum.undef_directive.nomen_macro =
+                        piscina_allocare(glr->piscina, magnitudo(chorda));
+                    *nodus->datum.undef_directive.nomen_macro = tok_name->lexema->valor;
+                }
+            }
+            frange;
+
+        casus ARBOR2_PP_PRAGMA:
+            nodus->genus = ARBOR2_NODUS_PRAGMA;
+            nodus->datum.pragma_directive.lexemata_originalia = tokens;
+            frange;
+
+        casus ARBOR2_PP_INCLUDE:
+            nodus->genus = ARBOR2_NODUS_INCLUDE;
+            nodus->datum.include_directive.lexemata_originalia = tokens;
+            nodus->datum.include_directive.info = NIHIL;  /* No resolution attempted */
+            frange;
+
+        ordinarius:
+            /* Should not happen */
+            redde NIHIL;
+    }
 
     *positus = pos;
     redde nodus;
@@ -7274,6 +7526,24 @@ arbor2_glr_parsere_translation_unit(
                 *cond_slot = conditionale;
             }
             perge;
+        }
+
+        /* Check for other preprocessor directives (#define, #undef, #pragma, #include) */
+        {
+            Arbor2PPGenus pp_genus = _obtinere_pp_genus(lexemata, positus);
+            si (pp_genus != ARBOR2_PP_NONE)
+            {
+                Arbor2Nodus* pp_nodus;
+                Arbor2Nodus** pp_slot;
+
+                pp_nodus = _creare_pp_nodus(glr, lexemata, &positus, pp_genus);
+                si (pp_nodus != NIHIL)
+                {
+                    pp_slot = xar_addere(tu_nodus->datum.translation_unit.declarationes);
+                    *pp_slot = pp_nodus;
+                }
+                perge;
+            }
         }
 
         /* Find end of this external declaration */

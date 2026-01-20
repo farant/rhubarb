@@ -886,6 +886,116 @@ _scribere_nodum(Xar* output, Arbor2Nodus* nodus)
             }
             frange;
 
+        /* CONDITIONALIS: emit directive tokens + body tokens for each branch + endif */
+        casus ARBOR2_NODUS_CONDITIONALIS:
+            si (nodus->datum.conditionalis.rami != NIHIL)
+            {
+                i32 i;
+                i32 num_rami = xar_numerus(nodus->datum.conditionalis.rami);
+                per (i = ZEPHYRUM; i < num_rami; i++)
+                {
+                    Arbor2CondRamus** ramus_ptr = xar_obtinere(nodus->datum.conditionalis.rami, i);
+                    Arbor2CondRamus* ramus = *ramus_ptr;
+
+                    /* Emit directive line tokens (#ifdef FOO, #else, etc.) */
+                    si (ramus->directivum_lexemata != NIHIL)
+                    {
+                        i32 j;
+                        i32 num_dir = xar_numerus(ramus->directivum_lexemata);
+                        per (j = ZEPHYRUM; j < num_dir; j++)
+                        {
+                            Arbor2Token** tok_ptr = xar_obtinere(ramus->directivum_lexemata, j);
+                            si (tok_ptr != NIHIL && *tok_ptr != NIHIL)
+                            {
+                                arbor2_scribere_lexema(output, *tok_ptr);
+                            }
+                        }
+                    }
+
+                    /* Emit body tokens */
+                    si (ramus->lexemata != NIHIL)
+                    {
+                        i32 j;
+                        i32 num_lex = xar_numerus(ramus->lexemata);
+                        per (j = ZEPHYRUM; j < num_lex; j++)
+                        {
+                            Arbor2Token** tok_ptr = xar_obtinere(ramus->lexemata, j);
+                            si (tok_ptr != NIHIL && *tok_ptr != NIHIL)
+                            {
+                                arbor2_scribere_lexema(output, *tok_ptr);
+                            }
+                        }
+                    }
+                }
+            }
+
+            /* Emit #endif tokens */
+            si (nodus->datum.conditionalis.endif_lexemata != NIHIL)
+            {
+                i32 j;
+                i32 num_endif = xar_numerus(nodus->datum.conditionalis.endif_lexemata);
+                per (j = ZEPHYRUM; j < num_endif; j++)
+                {
+                    Arbor2Token** tok_ptr = xar_obtinere(nodus->datum.conditionalis.endif_lexemata, j);
+                    si (tok_ptr != NIHIL && *tok_ptr != NIHIL)
+                    {
+                        arbor2_scribere_lexema(output, *tok_ptr);
+                    }
+                }
+            }
+            frange;
+
+        /* DEFINE: emit original directive tokens for roundtrip */
+        casus ARBOR2_NODUS_DEFINE:
+            si (nodus->datum.define_directive.lexemata_originalia != NIHIL)
+            {
+                i32 i;
+                i32 num = xar_numerus(nodus->datum.define_directive.lexemata_originalia);
+                per (i = ZEPHYRUM; i < num; i++)
+                {
+                    Arbor2Token** tok_ptr = xar_obtinere(nodus->datum.define_directive.lexemata_originalia, i);
+                    si (tok_ptr != NIHIL && *tok_ptr != NIHIL)
+                    {
+                        arbor2_scribere_lexema(output, *tok_ptr);
+                    }
+                }
+            }
+            frange;
+
+        /* UNDEF: emit original directive tokens for roundtrip */
+        casus ARBOR2_NODUS_UNDEF:
+            si (nodus->datum.undef_directive.lexemata_originalia != NIHIL)
+            {
+                i32 i;
+                i32 num = xar_numerus(nodus->datum.undef_directive.lexemata_originalia);
+                per (i = ZEPHYRUM; i < num; i++)
+                {
+                    Arbor2Token** tok_ptr = xar_obtinere(nodus->datum.undef_directive.lexemata_originalia, i);
+                    si (tok_ptr != NIHIL && *tok_ptr != NIHIL)
+                    {
+                        arbor2_scribere_lexema(output, *tok_ptr);
+                    }
+                }
+            }
+            frange;
+
+        /* PRAGMA: emit original directive tokens for roundtrip */
+        casus ARBOR2_NODUS_PRAGMA:
+            si (nodus->datum.pragma_directive.lexemata_originalia != NIHIL)
+            {
+                i32 i;
+                i32 num = xar_numerus(nodus->datum.pragma_directive.lexemata_originalia);
+                per (i = ZEPHYRUM; i < num; i++)
+                {
+                    Arbor2Token** tok_ptr = xar_obtinere(nodus->datum.pragma_directive.lexemata_originalia, i);
+                    si (tok_ptr != NIHIL && *tok_ptr != NIHIL)
+                    {
+                        arbor2_scribere_lexema(output, *tok_ptr);
+                    }
+                }
+            }
+            frange;
+
         ordinarius:
             /* Unknown node type - skip */
             frange;
