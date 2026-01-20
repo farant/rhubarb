@@ -14893,6 +14893,320 @@ s32 principale(vacuum)
     }
 
 
+    /* ========================================================
+     * PROBARE: Typedef Edge Cases
+     *
+     * Comprehensive tests for typedef handling in various contexts:
+     * nested typedefs, pointer typedefs, casts, sizeof, etc.
+     * ======================================================== */
+
+    /* Test: Nested typedef - typedef of typedef */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+        chorda titulus_ch;
+        unio { constans character* c; i8* m; } u;
+
+        imprimere("\n--- Typedef edge: typedef int A; typedef A B; B x; ---\n");
+
+        {
+            Arbor2Expansion* exp_test = arbor2_expansion_creare(piscina, intern);
+            Arbor2GLR* glr_test = arbor2_glr_creare(piscina, intern, exp_test);
+
+            tokens = _lexare_ad_tokens(piscina, intern,
+                "typedef int A;\n"
+                "typedef A B;\n"
+                "B x;\n");
+            res = arbor2_glr_parsere_translation_unit(glr_test, tokens);
+
+            CREDO_VERUM(res.successus);
+            CREDO_NON_NIHIL(res.radix);
+
+            si (res.radix != NIHIL)
+            {
+                /* Should have 3 declarations */
+                CREDO_AEQUALIS_I32(
+                    xar_numerus(res.radix->datum.translation_unit.declarationes), III);
+
+                /* Verify A is registered */
+                u.c = "A";
+                titulus_ch.datum = u.m;
+                titulus_ch.mensura = I;
+                CREDO_VERUM(arbor2_expansion_est_typedef(exp_test, titulus_ch));
+
+                /* Verify B is registered */
+                u.c = "B";
+                titulus_ch.datum = u.m;
+                titulus_ch.mensura = I;
+                CREDO_VERUM(arbor2_expansion_est_typedef(exp_test, titulus_ch));
+            }
+        }
+    }
+
+    /* Test: Pointer typedef usage */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Typedef edge: typedef int *IntPtr; IntPtr p; ---\n");
+
+        {
+            Arbor2Expansion* exp_test = arbor2_expansion_creare(piscina, intern);
+            Arbor2GLR* glr_test = arbor2_glr_creare(piscina, intern, exp_test);
+
+            tokens = _lexare_ad_tokens(piscina, intern,
+                "typedef int *IntPtr;\n"
+                "IntPtr p;\n");
+            res = arbor2_glr_parsere_translation_unit(glr_test, tokens);
+
+            CREDO_VERUM(res.successus);
+            CREDO_NON_NIHIL(res.radix);
+
+            si (res.radix != NIHIL)
+            {
+                /* Should have 2 declarations */
+                CREDO_AEQUALIS_I32(
+                    xar_numerus(res.radix->datum.translation_unit.declarationes), II);
+            }
+        }
+    }
+
+    /* Test: Double pointer from typedef */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Typedef edge: typedef int *IntPtr; IntPtr *pp; ---\n");
+
+        {
+            Arbor2Expansion* exp_test = arbor2_expansion_creare(piscina, intern);
+            Arbor2GLR* glr_test = arbor2_glr_creare(piscina, intern, exp_test);
+
+            tokens = _lexare_ad_tokens(piscina, intern,
+                "typedef int *IntPtr;\n"
+                "IntPtr *pp;\n");
+            res = arbor2_glr_parsere_translation_unit(glr_test, tokens);
+
+            CREDO_VERUM(res.successus);
+            CREDO_NON_NIHIL(res.radix);
+
+            si (res.radix != NIHIL)
+            {
+                /* Should have 2 declarations */
+                CREDO_AEQUALIS_I32(
+                    xar_numerus(res.radix->datum.translation_unit.declarationes), II);
+            }
+        }
+    }
+
+    /* Test: Typedef in cast expression */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Typedef edge: typedef int MyInt; int x = (MyInt)42; ---\n");
+
+        {
+            Arbor2Expansion* exp_test = arbor2_expansion_creare(piscina, intern);
+            Arbor2GLR* glr_test = arbor2_glr_creare(piscina, intern, exp_test);
+
+            tokens = _lexare_ad_tokens(piscina, intern,
+                "typedef int MyInt;\n"
+                "int x = (MyInt)42;\n");
+            res = arbor2_glr_parsere_translation_unit(glr_test, tokens);
+
+            CREDO_VERUM(res.successus);
+            CREDO_NON_NIHIL(res.radix);
+
+            si (res.radix != NIHIL)
+            {
+                /* Should have 2 declarations */
+                CREDO_AEQUALIS_I32(
+                    xar_numerus(res.radix->datum.translation_unit.declarationes), II);
+            }
+        }
+    }
+
+    /* Test: Typedef in sizeof */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Typedef edge: typedef int MyInt; int x = sizeof(MyInt); ---\n");
+
+        {
+            Arbor2Expansion* exp_test = arbor2_expansion_creare(piscina, intern);
+            Arbor2GLR* glr_test = arbor2_glr_creare(piscina, intern, exp_test);
+
+            tokens = _lexare_ad_tokens(piscina, intern,
+                "typedef int MyInt;\n"
+                "int x = sizeof(MyInt);\n");
+            res = arbor2_glr_parsere_translation_unit(glr_test, tokens);
+
+            CREDO_VERUM(res.successus);
+            CREDO_NON_NIHIL(res.radix);
+
+            si (res.radix != NIHIL)
+            {
+                /* Should have 2 declarations */
+                CREDO_AEQUALIS_I32(
+                    xar_numerus(res.radix->datum.translation_unit.declarationes), II);
+            }
+        }
+    }
+
+    /* Test: Typedef as function parameter */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Typedef edge: typedef int A; void f(A x) {} ---\n");
+
+        {
+            Arbor2Expansion* exp_test = arbor2_expansion_creare(piscina, intern);
+            Arbor2GLR* glr_test = arbor2_glr_creare(piscina, intern, exp_test);
+
+            tokens = _lexare_ad_tokens(piscina, intern,
+                "typedef int A;\n"
+                "void f(A x) {}\n");
+            res = arbor2_glr_parsere_translation_unit(glr_test, tokens);
+
+            CREDO_VERUM(res.successus);
+            CREDO_NON_NIHIL(res.radix);
+
+            si (res.radix != NIHIL)
+            {
+                /* Should have 2 declarations (typedef + function) */
+                CREDO_AEQUALIS_I32(
+                    xar_numerus(res.radix->datum.translation_unit.declarationes), II);
+            }
+        }
+    }
+
+    /* Test: Typedef in struct member */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Typedef edge: typedef int A; struct S { A x; }; ---\n");
+
+        {
+            Arbor2Expansion* exp_test = arbor2_expansion_creare(piscina, intern);
+            Arbor2GLR* glr_test = arbor2_glr_creare(piscina, intern, exp_test);
+
+            tokens = _lexare_ad_tokens(piscina, intern,
+                "typedef int A;\n"
+                "struct S { A x; };\n");
+            res = arbor2_glr_parsere_translation_unit(glr_test, tokens);
+
+            CREDO_VERUM(res.successus);
+            CREDO_NON_NIHIL(res.radix);
+
+            si (res.radix != NIHIL)
+            {
+                /* Should have 2 declarations */
+                CREDO_AEQUALIS_I32(
+                    xar_numerus(res.radix->datum.translation_unit.declarationes), II);
+            }
+        }
+    }
+
+    /* Test: Chained usage - multiple variables */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Typedef edge: typedef int A; A x, y, z; ---\n");
+
+        {
+            Arbor2Expansion* exp_test = arbor2_expansion_creare(piscina, intern);
+            Arbor2GLR* glr_test = arbor2_glr_creare(piscina, intern, exp_test);
+
+            tokens = _lexare_ad_tokens(piscina, intern,
+                "typedef int A;\n"
+                "A x, y, z;\n");
+            res = arbor2_glr_parsere_translation_unit(glr_test, tokens);
+
+            CREDO_VERUM(res.successus);
+            CREDO_NON_NIHIL(res.radix);
+
+            si (res.radix != NIHIL)
+            {
+                /* Should have 2 declarations */
+                CREDO_AEQUALIS_I32(
+                    xar_numerus(res.radix->datum.translation_unit.declarationes), II);
+            }
+        }
+    }
+
+    /* Test: Array typedef */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+        chorda titulus_ch;
+        unio { constans character* c; i8* m; } u;
+
+        imprimere("\n--- Typedef edge: typedef int Arr[10]; Arr a; ---\n");
+
+        {
+            Arbor2Expansion* exp_test = arbor2_expansion_creare(piscina, intern);
+            Arbor2GLR* glr_test = arbor2_glr_creare(piscina, intern, exp_test);
+
+            tokens = _lexare_ad_tokens(piscina, intern,
+                "typedef int Arr[10];\n"
+                "Arr a;\n");
+            res = arbor2_glr_parsere_translation_unit(glr_test, tokens);
+
+            CREDO_VERUM(res.successus);
+            CREDO_NON_NIHIL(res.radix);
+
+            si (res.radix != NIHIL)
+            {
+                /* Should have 2 declarations */
+                CREDO_AEQUALIS_I32(
+                    xar_numerus(res.radix->datum.translation_unit.declarationes), II);
+
+                /* Verify Arr is registered */
+                u.c = "Arr";
+                titulus_ch.datum = u.m;
+                titulus_ch.mensura = III;
+                CREDO_VERUM(arbor2_expansion_est_typedef(exp_test, titulus_ch));
+            }
+        }
+    }
+
+    /* Test: Function pointer typedef
+     * Note: Function pointer typedef registration requires extracting
+     * the name from complex declarators like (*FP). Parsing succeeds
+     * but registration may need enhancement for this edge case. */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Typedef edge: typedef int (*FP)(void); FP f; ---\n");
+
+        {
+            Arbor2Expansion* exp_test = arbor2_expansion_creare(piscina, intern);
+            Arbor2GLR* glr_test = arbor2_glr_creare(piscina, intern, exp_test);
+
+            tokens = _lexare_ad_tokens(piscina, intern,
+                "typedef int (*FP)(void);\n"
+                "FP f;\n");
+            res = arbor2_glr_parsere_translation_unit(glr_test, tokens);
+
+            CREDO_VERUM(res.successus);
+            CREDO_NON_NIHIL(res.radix);
+
+            si (res.radix != NIHIL)
+            {
+                /* Should have 2 declarations */
+                CREDO_AEQUALIS_I32(
+                    xar_numerus(res.radix->datum.translation_unit.declarationes), II);
+            }
+        }
+    }
+
+
     /* Compendium */
     imprimere("\n");
     credo_imprimere_compendium();
