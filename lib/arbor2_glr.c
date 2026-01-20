@@ -8,7 +8,7 @@
 #include <stdio.h>
 
 /* Debug flag - set to 1 to enable tracing */
-#define GLR_DEBUG 1
+#define GLR_DEBUG 0
 
 /* ==================================================
  * Location Propagation Helper
@@ -6423,6 +6423,14 @@ _processare_actiones(Arbor2GLR* glr, b32* acceptatum_out)
     {
         glr->max_frons = (i32)xar_numerus(glr->frons_nova);
     }
+
+#if GLR_DEBUG
+    /* Debug: print frontier size if large */
+    si (xar_numerus(glr->frons_nova) > II)
+    {
+        printf("  [DEBUG] FRONTIER SIZE: %d (after merge)\n", xar_numerus(glr->frons_nova));
+    }
+#endif
 
     redde nodus_acceptatus;
 }

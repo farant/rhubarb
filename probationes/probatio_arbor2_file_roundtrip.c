@@ -273,30 +273,29 @@ s32 principale(vacuum)
     }
 
     /* ========================================================
-     * PROBARE: Structs, unions, enums (complex) - SKIPPED
-     * Still has issues to debug (slow parsing, potential infinite loop)
+     * PROBARE: Struct definition + simple function
      * ======================================================== */
-    /*
     {
-        imprimere("\n--- Probans struct/union/enum file ---\n");
+        imprimere("\n--- Probans struct + function ---\n");
 
         CREDO_VERUM(_probare_roundtrip_fasciculum(piscina, intern, expansion,
-            "probationes/fixa/roundtrip/structs.c"));
+            "probationes/fixa/roundtrip/test_debug.c"));
     }
-    */
 
     /* ========================================================
-     * PROBARE: Arrays, pointers, complex declarations - SKIPPED
-     * Still has issues to debug (slow parsing, potential infinite loop)
+     * NOTA: Struct/union/enum as function parameters NOT YET SUPPORTED
+     *
+     * The grammar extension for struct/union/enum in State 91 was added,
+     * but the production P40 (declarator -> declarator '(' params ')')
+     * doesn't handle the extra type specifier tokens correctly.
+     *
+     * Example that fails: void foo(struct Point *p) { ... }
+     * The 'struct Point' adds extra stack symbols that P40 can't pop.
+     *
+     * Skipped tests:
+     *   - structs.c (has functions with struct parameters)
+     *   - arrays.c (has complex declarators)
      * ======================================================== */
-    /*
-    {
-        imprimere("\n--- Probans arrays/pointers file ---\n");
-
-        CREDO_VERUM(_probare_roundtrip_fasciculum(piscina, intern, expansion,
-            "probationes/fixa/roundtrip/arrays.c"));
-    }
-    */
 
     /* ========================================================
      * PROBARE: Files with preprocessor directives

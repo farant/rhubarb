@@ -2861,8 +2861,17 @@ hic_manens constans Arbor2TabulaActio STATUS_91_ACTIONES[] = {
     { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,  95, FALSUM },
     { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_SHIFT,  95, FALSUM },
     { ARBOR2_LEXEMA_CHAR,           ARBOR2_ACTIO_SHIFT,  95, FALSUM },
+    { ARBOR2_LEXEMA_FLOAT,          ARBOR2_ACTIO_SHIFT,  95, FALSUM },
+    { ARBOR2_LEXEMA_DOUBLE,         ARBOR2_ACTIO_SHIFT,  95, FALSUM },
+    { ARBOR2_LEXEMA_LONG,           ARBOR2_ACTIO_SHIFT,  95, FALSUM },
+    { ARBOR2_LEXEMA_SHORT,          ARBOR2_ACTIO_SHIFT,  95, FALSUM },
+    { ARBOR2_LEXEMA_UNSIGNED,       ARBOR2_ACTIO_SHIFT,  95, FALSUM },
+    { ARBOR2_LEXEMA_SIGNED,         ARBOR2_ACTIO_SHIFT,  95, FALSUM },
     { ARBOR2_LEXEMA_CONST,          ARBOR2_ACTIO_SHIFT, 907, FALSUM },  /* const int x */
-    { ARBOR2_LEXEMA_VOLATILE,       ARBOR2_ACTIO_SHIFT, 908, FALSUM }   /* volatile int x */
+    { ARBOR2_LEXEMA_VOLATILE,       ARBOR2_ACTIO_SHIFT, 908, FALSUM },  /* volatile int x */
+    { ARBOR2_LEXEMA_STRUCT,         ARBOR2_ACTIO_SHIFT, 1450, FALSUM }, /* struct param */
+    { ARBOR2_LEXEMA_UNION,          ARBOR2_ACTIO_SHIFT, 1451, FALSUM }, /* union param */
+    { ARBOR2_LEXEMA_ENUM,           ARBOR2_ACTIO_SHIFT, 1452, FALSUM }  /* enum param */
 };
 
 /* State 92: after 'declarator ( )' - reduce P38 */
@@ -17006,6 +17015,25 @@ hic_manens constans Arbor2TabulaActio STATUS_1435_ACTIONES[] = {
 };
 
 /* ==================================================
+ * States 1450-1452: struct/union/enum in function parameters
+ * ================================================== */
+
+/* State 1450: after '( struct' in parameter - expect struct name */
+hic_manens constans Arbor2TabulaActio STATUS_1450_ACTIONES[] = {
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,  95, FALSUM }  /* struct Name -> state 95 */
+};
+
+/* State 1451: after '( union' in parameter - expect union name */
+hic_manens constans Arbor2TabulaActio STATUS_1451_ACTIONES[] = {
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,  95, FALSUM }  /* union Name -> state 95 */
+};
+
+/* State 1452: after '( enum' in parameter - expect enum name */
+hic_manens constans Arbor2TabulaActio STATUS_1452_ACTIONES[] = {
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,  95, FALSUM }  /* enum Name -> state 95 */
+};
+
+/* ==================================================
  * STATUS_TABULA - Master state table (UNDER CONSTRUCTION)
  *
  * Will be populated as states are converted.
@@ -18642,7 +18670,26 @@ hic_manens constans Arbor2StatusInfo STATUS_TABULA_PARTIAL[] = {
     STATUS_INFO(1432, "after 'typedef type (*ID)(void' - expect ')'"),
     STATUS_INFO(1433, "after 'typedef type (*ID)(void)' - expect ';'"),
     STATUS_INFO(1434, "reduce P525 - typedef type (*ID)();"),
-    STATUS_INFO(1435, "reduce P526 - typedef type (*ID)(void);")
+    STATUS_INFO(1435, "reduce P526 - typedef type (*ID)(void);"),
+    /* Placeholder entries for states 1436-1449 */
+    { NIHIL, 0, "reserved" },  /* 1436 */
+    { NIHIL, 0, "reserved" },  /* 1437 */
+    { NIHIL, 0, "reserved" },  /* 1438 */
+    { NIHIL, 0, "reserved" },  /* 1439 */
+    { NIHIL, 0, "reserved" },  /* 1440 */
+    { NIHIL, 0, "reserved" },  /* 1441 */
+    { NIHIL, 0, "reserved" },  /* 1442 */
+    { NIHIL, 0, "reserved" },  /* 1443 */
+    { NIHIL, 0, "reserved" },  /* 1444 */
+    { NIHIL, 0, "reserved" },  /* 1445 */
+    { NIHIL, 0, "reserved" },  /* 1446 */
+    { NIHIL, 0, "reserved" },  /* 1447 */
+    { NIHIL, 0, "reserved" },  /* 1448 */
+    { NIHIL, 0, "reserved" },  /* 1449 */
+    /* States 1450-1452: struct/union/enum in parameters */
+    STATUS_INFO(1450, "after '( struct' in parameter"),
+    STATUS_INFO(1451, "after '( union' in parameter"),
+    STATUS_INFO(1452, "after '( enum' in parameter")
 };
 
 /* ==================================================
@@ -21854,6 +21901,24 @@ hic_manens constans Arbor2StatusGotoEntry STATUS_1299_GOTO[] = {
     { INT_NT_DECLARATOR, 1367 }   /* volatile const signed long long -> declarator -> reduce P504 */
 };
 
+/* State 1450: after '( struct' - PARAM_DECL goes to 101 (same as state 91) */
+hic_manens constans Arbor2StatusGotoEntry STATUS_1450_GOTO[] = {
+    { INT_NT_PARAM_DECL, 101 },
+    { INT_NT_PARAM_LIST, 102 }
+};
+
+/* State 1451: after '( union' - PARAM_DECL goes to 101 */
+hic_manens constans Arbor2StatusGotoEntry STATUS_1451_GOTO[] = {
+    { INT_NT_PARAM_DECL, 101 },
+    { INT_NT_PARAM_LIST, 102 }
+};
+
+/* State 1452: after '( enum' - PARAM_DECL goes to 101 */
+hic_manens constans Arbor2StatusGotoEntry STATUS_1452_GOTO[] = {
+    { INT_NT_PARAM_DECL, 101 },
+    { INT_NT_PARAM_LIST, 102 }
+};
+
 /* ==================================================
  * STATUS_GOTO Macro and Master Table
  * ================================================== */
@@ -23468,7 +23533,36 @@ hic_manens constans Arbor2StatusGoto GOTO_TABULA_NOVA[] = {
     STATUS_GOTO(1422), /* 1422: signed long long int -> DECLARATOR -> 1425 */
     STATUS_GOTO(1423), /* 1423: long long int declarator -> CORPUS -> 1410 */
     STATUS_GOTO(1424), /* 1424: unsigned long long int declarator -> CORPUS -> 1411 */
-    STATUS_GOTO(1425)  /* 1425: signed long long int declarator -> CORPUS -> 1412 */
+    STATUS_GOTO(1425), /* 1425: signed long long int declarator -> CORPUS -> 1412 */
+    /* Placeholder entries for states 1426-1449 (typedef func ptr states) */
+    STATUS_GOTO_NIL,   /* 1426: typedef type ( */
+    STATUS_GOTO_NIL,   /* 1427: typedef type (* */
+    STATUS_GOTO_NIL,   /* 1428: typedef type (*ID */
+    STATUS_GOTO_NIL,   /* 1429: typedef type (*ID) */
+    STATUS_GOTO_NIL,   /* 1430: typedef type (*ID)( */
+    STATUS_GOTO_NIL,   /* 1431: typedef type (*ID)() */
+    STATUS_GOTO_NIL,   /* 1432: typedef type (*ID)(void */
+    STATUS_GOTO_NIL,   /* 1433: typedef type (*ID)(void) */
+    STATUS_GOTO_NIL,   /* 1434: reduce P525 */
+    STATUS_GOTO_NIL,   /* 1435: reduce P526 */
+    STATUS_GOTO_NIL,   /* 1436: reserved */
+    STATUS_GOTO_NIL,   /* 1437: reserved */
+    STATUS_GOTO_NIL,   /* 1438: reserved */
+    STATUS_GOTO_NIL,   /* 1439: reserved */
+    STATUS_GOTO_NIL,   /* 1440: reserved */
+    STATUS_GOTO_NIL,   /* 1441: reserved */
+    STATUS_GOTO_NIL,   /* 1442: reserved */
+    STATUS_GOTO_NIL,   /* 1443: reserved */
+    STATUS_GOTO_NIL,   /* 1444: reserved */
+    STATUS_GOTO_NIL,   /* 1445: reserved */
+    STATUS_GOTO_NIL,   /* 1446: reserved */
+    STATUS_GOTO_NIL,   /* 1447: reserved */
+    STATUS_GOTO_NIL,   /* 1448: reserved */
+    STATUS_GOTO_NIL,   /* 1449: reserved */
+    /* States 1450-1452: struct/union/enum in parameters */
+    STATUS_GOTO(1450), /* 1450: ( struct -> PARAM_DECL */
+    STATUS_GOTO(1451), /* 1451: ( union -> PARAM_DECL */
+    STATUS_GOTO(1452)  /* 1452: ( enum -> PARAM_DECL */
 };
 
 
