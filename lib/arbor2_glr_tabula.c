@@ -822,7 +822,11 @@ hic_manens Arbor2Regula REGULAE[] = {
 
     /* 5-symbol: modifier + modifier + modifier + declarator + compound (implicit int) */
     /* P523 */ { ARBOR2_NT_DEFINITIO_FUNCTI, 5, ARBOR2_NODUS_DEFINITIO_FUNCTI, "func_def -> 'unsigned' 'long' 'long' declarator compound" },
-    /* P524 */ { ARBOR2_NT_DEFINITIO_FUNCTI, 5, ARBOR2_NODUS_DEFINITIO_FUNCTI, "func_def -> 'signed' 'long' 'long' declarator compound" }
+    /* P524 */ { ARBOR2_NT_DEFINITIO_FUNCTI, 5, ARBOR2_NODUS_DEFINITIO_FUNCTI, "func_def -> 'signed' 'long' 'long' declarator compound" },
+
+    /* Function pointer typedef: typedef type (*name)(); or typedef type (*name)(void); */
+    /* P525 */ { ARBOR2_NT_DECLARATIO, 9, ARBOR2_NODUS_DECLARATIO, "typedef -> 'typedef' type '(' '*' ID ')' '(' ')' ';'" },
+    /* P526 */ { ARBOR2_NT_DECLARATIO, 10, ARBOR2_NODUS_DECLARATIO, "typedef -> 'typedef' type '(' '*' ID ')' '(' 'void' ')' ';'" }
 };
 
 hic_manens i32 NUM_REGULAE = (i32)(magnitudo(REGULAE) / magnitudo(REGULAE[0]));
@@ -3784,10 +3788,11 @@ hic_manens constans Arbor2TabulaActio STATUS_198_ACTIONES[] = {
     { ARBOR2_LEXEMA_ENUM,           ARBOR2_ACTIO_SHIFT, 145, FALSUM }
 };
 
-/* State 199: after 'typedef type_spec' - expect '*' or ID */
+/* State 199: after 'typedef type_spec' - expect '*' or ID or '(' for func ptr */
 hic_manens constans Arbor2TabulaActio STATUS_199_ACTIONES[] = {
     { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT, 17, FALSUM },
-    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT, 18, FALSUM }
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT, 18, FALSUM },
+    { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_SHIFT, 1426, FALSUM }  /* func ptr: (*name) */
 };
 
 /* State 200: after 'typedef type_spec *' - expect more '*' or ID */
@@ -16926,6 +16931,81 @@ hic_manens constans Arbor2TabulaActio STATUS_1425_ACTIONES[] = {
 };
 
 /* ==================================================
+ * Function Pointer Typedef States
+ *
+ * Handles: typedef type_spec (*name)(params);
+ * Pattern: typedef int (*FP)(void);
+ * ================================================== */
+
+/* State 1426: after 'typedef type_spec (' - expect '*' */
+hic_manens constans Arbor2TabulaActio STATUS_1426_ACTIONES[] = {
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT, 1427, FALSUM }
+};
+
+/* State 1427: after 'typedef type_spec (*' - expect ID or more '*' */
+hic_manens constans Arbor2TabulaActio STATUS_1427_ACTIONES[] = {
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT, 1427, FALSUM },
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT, 1428, FALSUM }
+};
+
+/* State 1428: after 'typedef type_spec (*...ID' - expect ')' */
+hic_manens constans Arbor2TabulaActio STATUS_1428_ACTIONES[] = {
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_SHIFT, 1429, FALSUM }
+};
+
+/* State 1429: after 'typedef type_spec (*...ID)' - expect '(' for func params */
+hic_manens constans Arbor2TabulaActio STATUS_1429_ACTIONES[] = {
+    { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_SHIFT, 1430, FALSUM }
+};
+
+/* State 1430: after 'typedef type_spec (*...ID)(' - expect ')' or 'void' */
+hic_manens constans Arbor2TabulaActio STATUS_1430_ACTIONES[] = {
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_SHIFT, 1431, FALSUM },
+    { ARBOR2_LEXEMA_VOID,           ARBOR2_ACTIO_SHIFT, 1432, FALSUM }
+};
+
+/* State 1431: after 'typedef type_spec (*...ID)()' - expect ';' */
+hic_manens constans Arbor2TabulaActio STATUS_1431_ACTIONES[] = {
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_SHIFT, 1434, FALSUM }
+};
+
+/* State 1432: after 'typedef type_spec (*...ID)(void' - expect ')' */
+hic_manens constans Arbor2TabulaActio STATUS_1432_ACTIONES[] = {
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_SHIFT, 1433, FALSUM }
+};
+
+/* State 1433: after 'typedef type_spec (*...ID)(void)' - expect ';' */
+hic_manens constans Arbor2TabulaActio STATUS_1433_ACTIONES[] = {
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_SHIFT, 1435, FALSUM }
+};
+
+/* State 1434: reduce P525 - typedef type (*ID)(); - 9 symbols */
+hic_manens constans Arbor2TabulaActio STATUS_1434_ACTIONES[] = {
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_REDUCE, 525, FALSUM },
+    { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_REDUCE, 525, FALSUM },
+    { ARBOR2_LEXEMA_CHAR,           ARBOR2_ACTIO_REDUCE, 525, FALSUM },
+    { ARBOR2_LEXEMA_VOID,           ARBOR2_ACTIO_REDUCE, 525, FALSUM },
+    { ARBOR2_LEXEMA_STRUCT,         ARBOR2_ACTIO_REDUCE, 525, FALSUM },
+    { ARBOR2_LEXEMA_UNION,          ARBOR2_ACTIO_REDUCE, 525, FALSUM },
+    { ARBOR2_LEXEMA_ENUM,           ARBOR2_ACTIO_REDUCE, 525, FALSUM },
+    { ARBOR2_LEXEMA_TYPEDEF,        ARBOR2_ACTIO_REDUCE, 525, FALSUM },
+    { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 525, FALSUM }
+};
+
+/* State 1435: reduce P526 - typedef type (*ID)(void); - 10 symbols */
+hic_manens constans Arbor2TabulaActio STATUS_1435_ACTIONES[] = {
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_REDUCE, 526, FALSUM },
+    { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_REDUCE, 526, FALSUM },
+    { ARBOR2_LEXEMA_CHAR,           ARBOR2_ACTIO_REDUCE, 526, FALSUM },
+    { ARBOR2_LEXEMA_VOID,           ARBOR2_ACTIO_REDUCE, 526, FALSUM },
+    { ARBOR2_LEXEMA_STRUCT,         ARBOR2_ACTIO_REDUCE, 526, FALSUM },
+    { ARBOR2_LEXEMA_UNION,          ARBOR2_ACTIO_REDUCE, 526, FALSUM },
+    { ARBOR2_LEXEMA_ENUM,           ARBOR2_ACTIO_REDUCE, 526, FALSUM },
+    { ARBOR2_LEXEMA_TYPEDEF,        ARBOR2_ACTIO_REDUCE, 526, FALSUM },
+    { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 526, FALSUM }
+};
+
+/* ==================================================
  * STATUS_TABULA - Master state table (UNDER CONSTRUCTION)
  *
  * Will be populated as states are converted.
@@ -18552,7 +18632,17 @@ hic_manens constans Arbor2StatusInfo STATUS_TABULA_PARTIAL[] = {
     STATUS_INFO(1422, "signed long long int - expects declarator"),
     STATUS_INFO(1423, "long long int declarator - expects compound"),
     STATUS_INFO(1424, "unsigned long long int declarator - expects compound"),
-    STATUS_INFO(1425, "signed long long int declarator - expects compound")
+    STATUS_INFO(1425, "signed long long int declarator - expects compound"),
+    STATUS_INFO(1426, "after 'typedef type (' - expect '*'"),
+    STATUS_INFO(1427, "after 'typedef type (*' - expect ID or more '*'"),
+    STATUS_INFO(1428, "after 'typedef type (*ID' - expect ')'"),
+    STATUS_INFO(1429, "after 'typedef type (*ID)' - expect '('"),
+    STATUS_INFO(1430, "after 'typedef type (*ID)(' - expect ')' or 'void'"),
+    STATUS_INFO(1431, "after 'typedef type (*ID)()' - expect ';'"),
+    STATUS_INFO(1432, "after 'typedef type (*ID)(void' - expect ')'"),
+    STATUS_INFO(1433, "after 'typedef type (*ID)(void)' - expect ';'"),
+    STATUS_INFO(1434, "reduce P525 - typedef type (*ID)();"),
+    STATUS_INFO(1435, "reduce P526 - typedef type (*ID)(void);")
 };
 
 /* ==================================================

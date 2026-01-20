@@ -3241,6 +3241,145 @@ _processare_unam_actionem(
                             (vacuum)lexemata;
                             valor_novus = NIHIL;
                         }
+                        /* ========== FUNCTION POINTER TYPEDEF P525-P526 ========== */
+                        alioquin si (actio->valor == 525)
+                        {
+                            /* P525: 'typedef' type '(' '*' ID ')' '(' ')' ';' (9 symbols)
+                             * lexemata: [8]=typedef, [7]=type, [6]=(, [5]=*, [4]=ID,
+                             *           [3]=), [2]=(, [1]=), [0]=; */
+                            Arbor2Nodus* spec_node;
+                            Arbor2Nodus* inner_decl;
+                            Arbor2Nodus* func_decl;
+                            Arbor2PointerLevel* ptr_lvl;
+                            Arbor2PointerLevel** ptr_slot;
+
+                            /* Creare specifier (type) */
+                            spec_node = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
+                            spec_node->genus = ARBOR2_NODUS_IDENTIFICATOR;
+                            spec_node->lexema = lexemata[VII];
+                            spec_node->datum.folium.valor = lexemata[VII]->lexema->valor;
+
+                            /* Creare inner declarator (*name) */
+                            inner_decl = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
+                            inner_decl->genus = ARBOR2_NODUS_DECLARATOR;
+                            inner_decl->lexema = lexemata[IV];  /* ID token */
+                            inner_decl->datum.declarator.titulus = lexemata[IV]->lexema->valor;
+                            inner_decl->datum.declarator.latitudo_biti = NIHIL;
+                            inner_decl->datum.declarator.dimensiones = NIHIL;
+                            inner_decl->datum.declarator.pointer_levels =
+                                xar_creare(glr->piscina, magnitudo(Arbor2PointerLevel*));
+                            ptr_lvl = piscina_allocare(glr->piscina, magnitudo(Arbor2PointerLevel));
+                            ptr_lvl->tok_stella = lexemata[V];
+                            ptr_lvl->tok_const = NIHIL;
+                            ptr_lvl->tok_volatile = NIHIL;
+                            ptr_slot = xar_addere(inner_decl->datum.declarator.pointer_levels);
+                            *ptr_slot = ptr_lvl;
+
+                            /* Creare function declarator wrapping inner */
+                            func_decl = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
+                            func_decl->genus = ARBOR2_NODUS_DECLARATOR_FUNCTI;
+                            func_decl->lexema = lexemata[IV];
+                            func_decl->datum.declarator_functi.declarator_interior = inner_decl;
+                            func_decl->datum.declarator_functi.tok_paren_ap = lexemata[II];
+                            func_decl->datum.declarator_functi.parametri = NIHIL;
+                            func_decl->datum.declarator_functi.tok_paren_cl = lexemata[I];
+                            func_decl->datum.declarator_functi.tok_void = NIHIL;
+                            func_decl->datum.declarator_functi.habet_void = FALSUM;
+                            func_decl->datum.declarator_functi.est_variadicus = FALSUM;
+                            func_decl->datum.declarator_functi.pointer_levels = NIHIL;
+
+                            /* Creare declaration */
+                            valor_novus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
+                            valor_novus->genus = ARBOR2_NODUS_DECLARATIO;
+                            valor_novus->lexema = lexemata[VIII];  /* typedef */
+                            valor_novus->datum.declaratio.tok_storage = lexemata[VIII];
+                            valor_novus->datum.declaratio.tok_const = NIHIL;
+                            valor_novus->datum.declaratio.tok_volatile = NIHIL;
+                            valor_novus->datum.declaratio.tok_unsigned = NIHIL;
+                            valor_novus->datum.declaratio.tok_signed = NIHIL;
+                            valor_novus->datum.declaratio.tok_long = NIHIL;
+                            valor_novus->datum.declaratio.tok_long2 = NIHIL;
+                            valor_novus->datum.declaratio.tok_short = NIHIL;
+                            valor_novus->datum.declaratio.specifier = spec_node;
+                            valor_novus->datum.declaratio.declarator = func_decl;
+                            valor_novus->datum.declaratio.tok_assignatio = NIHIL;
+                            valor_novus->datum.declaratio.initializor = NIHIL;
+                            valor_novus->datum.declaratio.tok_semicolon = lexemata[ZEPHYRUM];
+                            valor_novus->datum.declaratio.tok_comma = NIHIL;
+                            valor_novus->datum.declaratio.proxima = NIHIL;
+                            valor_novus->datum.declaratio.est_typedef = VERUM;
+                            valor_novus->datum.declaratio.storage_class = ZEPHYRUM;
+                            valor_novus->datum.declaratio.qualifiers = ZEPHYRUM;
+                        }
+                        alioquin si (actio->valor == 526)
+                        {
+                            /* P526: 'typedef' type '(' '*' ID ')' '(' 'void' ')' ';' (10 symbols)
+                             * lexemata: [9]=typedef, [8]=type, [7]=(, [6]=*, [5]=ID,
+                             *           [4]=), [3]=(, [2]=void, [1]=), [0]=; */
+                            Arbor2Nodus* spec_node;
+                            Arbor2Nodus* inner_decl;
+                            Arbor2Nodus* func_decl;
+                            Arbor2PointerLevel* ptr_lvl;
+                            Arbor2PointerLevel** ptr_slot;
+
+                            /* Creare specifier (type) */
+                            spec_node = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
+                            spec_node->genus = ARBOR2_NODUS_IDENTIFICATOR;
+                            spec_node->lexema = lexemata[VIII];
+                            spec_node->datum.folium.valor = lexemata[VIII]->lexema->valor;
+
+                            /* Creare inner declarator (*name) */
+                            inner_decl = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
+                            inner_decl->genus = ARBOR2_NODUS_DECLARATOR;
+                            inner_decl->lexema = lexemata[V];  /* ID token */
+                            inner_decl->datum.declarator.titulus = lexemata[V]->lexema->valor;
+                            inner_decl->datum.declarator.latitudo_biti = NIHIL;
+                            inner_decl->datum.declarator.dimensiones = NIHIL;
+                            inner_decl->datum.declarator.pointer_levels =
+                                xar_creare(glr->piscina, magnitudo(Arbor2PointerLevel*));
+                            ptr_lvl = piscina_allocare(glr->piscina, magnitudo(Arbor2PointerLevel));
+                            ptr_lvl->tok_stella = lexemata[VI];
+                            ptr_lvl->tok_const = NIHIL;
+                            ptr_lvl->tok_volatile = NIHIL;
+                            ptr_slot = xar_addere(inner_decl->datum.declarator.pointer_levels);
+                            *ptr_slot = ptr_lvl;
+
+                            /* Creare function declarator wrapping inner */
+                            func_decl = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
+                            func_decl->genus = ARBOR2_NODUS_DECLARATOR_FUNCTI;
+                            func_decl->lexema = lexemata[V];
+                            func_decl->datum.declarator_functi.declarator_interior = inner_decl;
+                            func_decl->datum.declarator_functi.tok_paren_ap = lexemata[III];
+                            func_decl->datum.declarator_functi.parametri = NIHIL;
+                            func_decl->datum.declarator_functi.tok_paren_cl = lexemata[I];
+                            func_decl->datum.declarator_functi.tok_void = lexemata[II];
+                            func_decl->datum.declarator_functi.habet_void = VERUM;
+                            func_decl->datum.declarator_functi.est_variadicus = FALSUM;
+                            func_decl->datum.declarator_functi.pointer_levels = NIHIL;
+
+                            /* Creare declaration */
+                            valor_novus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
+                            valor_novus->genus = ARBOR2_NODUS_DECLARATIO;
+                            valor_novus->lexema = lexemata[IX];  /* typedef */
+                            valor_novus->datum.declaratio.tok_storage = lexemata[IX];
+                            valor_novus->datum.declaratio.tok_const = NIHIL;
+                            valor_novus->datum.declaratio.tok_volatile = NIHIL;
+                            valor_novus->datum.declaratio.tok_unsigned = NIHIL;
+                            valor_novus->datum.declaratio.tok_signed = NIHIL;
+                            valor_novus->datum.declaratio.tok_long = NIHIL;
+                            valor_novus->datum.declaratio.tok_long2 = NIHIL;
+                            valor_novus->datum.declaratio.tok_short = NIHIL;
+                            valor_novus->datum.declaratio.specifier = spec_node;
+                            valor_novus->datum.declaratio.declarator = func_decl;
+                            valor_novus->datum.declaratio.tok_assignatio = NIHIL;
+                            valor_novus->datum.declaratio.initializor = NIHIL;
+                            valor_novus->datum.declaratio.tok_semicolon = lexemata[ZEPHYRUM];
+                            valor_novus->datum.declaratio.tok_comma = NIHIL;
+                            valor_novus->datum.declaratio.proxima = NIHIL;
+                            valor_novus->datum.declaratio.est_typedef = VERUM;
+                            valor_novus->datum.declaratio.storage_class = ZEPHYRUM;
+                            valor_novus->datum.declaratio.qualifiers = ZEPHYRUM;
+                        }
                         /* P148-P153: Storage class and qualifier declarations */
                         alioquin si (actio->valor >= 148 && actio->valor <= 153)
                         {
@@ -7475,6 +7614,43 @@ _invenire_finem_declarationis(Xar* lexemata, i32 initium)
  * This enables subsequent declarations to use typedef'd names.
  * ================================================== */
 
+/* Extrahere nomen ex declarator (recursive helper)
+ * Traverses nested declarator structures to find the name.
+ * Handles: DECLARATOR, DECLARATOR_FUNCTI, PARENTHESIZED
+ */
+hic_manens chorda
+_extrahere_nomen_ex_declarator(Arbor2Nodus* declarator)
+{
+    chorda vacua;
+    vacua.datum = NIHIL;
+    vacua.mensura = ZEPHYRUM;
+
+    si (declarator == NIHIL)
+        redde vacua;
+
+    /* Simple declarator - return the name */
+    si (declarator->genus == ARBOR2_NODUS_DECLARATOR)
+    {
+        redde declarator->datum.declarator.titulus;
+    }
+
+    /* Function declarator - recurse into inner */
+    si (declarator->genus == ARBOR2_NODUS_DECLARATOR_FUNCTI)
+    {
+        redde _extrahere_nomen_ex_declarator(
+            declarator->datum.declarator_functi.declarator_interior);
+    }
+
+    /* Parenthesized - recurse into expression */
+    si (declarator->genus == ARBOR2_NODUS_PARENTHESIZED)
+    {
+        redde _extrahere_nomen_ex_declarator(
+            declarator->datum.parenthesized.expressio);
+    }
+
+    redde vacua;
+}
+
 /* Extrahere nomen typedef ex declaratione
  * Returns: chorda with typedef name, or empty chorda if not extractable
  */
@@ -7494,22 +7670,8 @@ _extrahere_nomen_typedef(Arbor2Nodus* declaratio)
         redde vacua;
 
     declarator = declaratio->datum.declaratio.declarator;
-    si (declarator == NIHIL)
-        redde vacua;
 
-    /* Handle DECLARATOR_FUNCTI (function pointer typedef) */
-    si (declarator->genus == ARBOR2_NODUS_DECLARATOR_FUNCTI)
-    {
-        Arbor2Nodus* inner = declarator->datum.declarator_functi.declarator_interior;
-        si (inner != NIHIL && inner->genus == ARBOR2_NODUS_DECLARATOR)
-            redde inner->datum.declarator.titulus;
-        redde vacua;
-    }
-
-    si (declarator->genus != ARBOR2_NODUS_DECLARATOR)
-        redde vacua;
-
-    redde declarator->datum.declarator.titulus;
+    redde _extrahere_nomen_ex_declarator(declarator);
 }
 
 /* Registrare typedef ex singula declaratione

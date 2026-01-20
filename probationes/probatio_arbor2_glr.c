@@ -15175,10 +15175,77 @@ s32 principale(vacuum)
         }
     }
 
-    /* Test: Function pointer typedef
-     * Note: Function pointer typedef registration requires extracting
-     * the name from complex declarators like (*FP). Parsing succeeds
-     * but registration may need enhancement for this edge case. */
+    /* Test: Function pointer typedef with (void) params */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+        chorda titulus_ch;
+        unio { constans character* c; i8* m; } u;
+
+        imprimere("\n--- Typedef edge: typedef int (*FP)(void); ---\n");
+
+        {
+            Arbor2Expansion* exp_test = arbor2_expansion_creare(piscina, intern);
+            Arbor2GLR* glr_test = arbor2_glr_creare(piscina, intern, exp_test);
+
+            tokens = _lexare_ad_tokens(piscina, intern,
+                "typedef int (*FP)(void);\n");
+            res = arbor2_glr_parsere_translation_unit(glr_test, tokens);
+
+            CREDO_VERUM(res.successus);
+            CREDO_NON_NIHIL(res.radix);
+
+            si (res.radix != NIHIL)
+            {
+                /* Should have 1 declaration */
+                CREDO_AEQUALIS_I32(
+                    xar_numerus(res.radix->datum.translation_unit.declarationes), I);
+
+                /* Verify FP is registered as typedef */
+                u.c = "FP";
+                titulus_ch.datum = u.m;
+                titulus_ch.mensura = II;
+                CREDO_VERUM(arbor2_expansion_est_typedef(exp_test, titulus_ch));
+            }
+        }
+    }
+
+    /* Test: Function pointer typedef with empty params () */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+        chorda titulus_ch;
+        unio { constans character* c; i8* m; } u;
+
+        imprimere("\n--- Typedef edge: typedef int (*Callback)(); ---\n");
+
+        {
+            Arbor2Expansion* exp_test = arbor2_expansion_creare(piscina, intern);
+            Arbor2GLR* glr_test = arbor2_glr_creare(piscina, intern, exp_test);
+
+            tokens = _lexare_ad_tokens(piscina, intern,
+                "typedef int (*Callback)();\n");
+            res = arbor2_glr_parsere_translation_unit(glr_test, tokens);
+
+            CREDO_VERUM(res.successus);
+            CREDO_NON_NIHIL(res.radix);
+
+            si (res.radix != NIHIL)
+            {
+                /* Should have 1 declaration */
+                CREDO_AEQUALIS_I32(
+                    xar_numerus(res.radix->datum.translation_unit.declarationes), I);
+
+                /* Verify Callback is registered as typedef */
+                u.c = "Callback";
+                titulus_ch.datum = u.m;
+                titulus_ch.mensura = VIII;
+                CREDO_VERUM(arbor2_expansion_est_typedef(exp_test, titulus_ch));
+            }
+        }
+    }
+
+    /* Test: Function pointer typedef used in subsequent declaration */
     {
         Xar* tokens;
         Arbor2GLRResultus res;
