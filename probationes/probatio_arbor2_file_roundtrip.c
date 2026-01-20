@@ -381,6 +381,16 @@ s32 principale(vacuum)
     }
 
     /* ========================================================
+     * PROBARE: Qualified parameters (const/volatile)
+     * ======================================================== */
+    {
+        imprimere("\n--- Probans qualified parameters ---\n");
+
+        CREDO_VERUM(_probare_roundtrip_fasciculum(piscina, intern, expansion,
+            "probationes/fixa/roundtrip/const_param.c"));
+    }
+
+    /* ========================================================
      * NOTA: Known issues with structs.c and arrays.c
      *
      * 1. CONSECUTIVE COMMENTS - FIXED (was unsigned underflow in

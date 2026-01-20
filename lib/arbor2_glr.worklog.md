@@ -2524,3 +2524,72 @@ Preprocessor directives were being parsed but could not roundtrip because:
 - Mixed preprocessor with declarations
 
 All 396 scribere tests pass, all 2069 GLR tests pass.
+
+
+## 2026-01-20: Fix Qualifier Tracking in Parameter Declarations
+
+### Problem
+
+Type qualifiers (`const`, `volatile`) were being dropped from parameter declarations during roundtrip:
+
+```c
+// Input:
+void f(const int x) { (void)x; }
+
+// Output (qualifiers dropped):
+void f(int x) { (void)x; }
+```
+
+### Root Cause Analysis
+
+1. **Missing fields in `parameter_decl` struct** - The struct in `arbor2_glr.h` lacked `tok_const` and `tok_volatile` fields (unlike `declaratio` which had them).
+
+2. **Missing production handlers** - Productions P342-P345 in the grammar table handle qualified parameters:
+   - P342: `param -> 'const' type declarator` (3 symbols)
+   - P343: `param -> 'volatile' type declarator` (3 symbols)
+   - P344: `param -> 'const' type` (2 symbols, abstract)
+   - P345: `param -> 'volatile' type` (2 symbols, abstract)
+
+   These were falling through to the generic `casus ARBOR2_NODUS_PARAMETER_DECL:` handler which didn't capture qualifier tokens.
+
+3. **Serializer ignored qualifiers** - The PARAMETER_DECL case in `arbor2_scribere.c` had no code to emit qualifier tokens.
+
+### Key Bug in Initial Fix Attempt
+
+First fix attempt produced "const const x" instead of "const int x". The issue: when `type_specifier` is NIHIL (for built-in types like `int`), the serializer falls back to emitting `nodus->lexema`. Initially I set `nodus->lexema = lexemata[II]` (qualifier token) instead of `lexemata[I]` (type token).
+
+### Solution
+
+1. **Added fields to struct** (`arbor2_glr.h`):
+   ```c
+   structura {
+       Arbor2Token*  tok_const;      /* 'const' qualifier (NIHIL si nullus) */
+       Arbor2Token*  tok_volatile;   /* 'volatile' qualifier (NIHIL si nullus) */
+       Arbor2Nodus*  type_specifier;
+       Arbor2Nodus*  declarator;
+   } parameter_decl;
+   ```
+
+2. **Added P342-P345 handlers** in `casus ARBOR2_NODUS_PARAMETER_DECL:`:
+   - Set `tok_const`/`tok_volatile` from `lexemata[II]` (for 3-symbol) or `lexemata[I]` (for 2-symbol)
+   - Critical: Set `nodus->lexema` to **type token** (not qualifier) for fallback serialization
+
+3. **Updated serializer** to emit qualifiers before type:
+   ```c
+   si (nodus->datum.parameter_decl.tok_const != NIHIL)
+       arbor2_scribere_lexema(output, nodus->datum.parameter_decl.tok_const);
+   si (nodus->datum.parameter_decl.tok_volatile != NIHIL)
+       arbor2_scribere_lexema(output, nodus->datum.parameter_decl.tok_volatile);
+   ```
+
+### Valori/Lexemata Indexing (for reference)
+
+For reductions, indices go from rightmost (0) to leftmost (N-1):
+- 3-symbol `const type declarator`: lexemata[2]=const, [1]=type, [0]=decl
+- 4-symbol `const type decl body`: lexemata[3]=const, [2]=type, [1]=decl, [0]=body
+
+### Files Modified
+
+- `include/arbor2_glr.h` - Added tok_const/tok_volatile to parameter_decl
+- `lib/arbor2_glr.c` - Added P340-P345 handlers in PARAMETER_DECL case
+- `lib/arbor2_scribere.c` - Emit qualifier tokens before type

@@ -497,17 +497,30 @@ _scribere_nodum(Xar* output, Arbor2Nodus* nodus)
             arbor2_scribere_lexema(output, nodus->datum.declarator_functi.tok_paren_cl);
             frange;
 
-        /* PARAMETER_DECL: type name */
+        /* PARAMETER_DECL: [const] [volatile] type name */
         casus ARBOR2_NODUS_PARAMETER_DECL:
+            /* Emittere qualificatores primum */
+            si (nodus->datum.parameter_decl.tok_const != NIHIL)
+            {
+                arbor2_scribere_lexema(output, nodus->datum.parameter_decl.tok_const);
+            }
+            si (nodus->datum.parameter_decl.tok_volatile != NIHIL)
+            {
+                arbor2_scribere_lexema(output, nodus->datum.parameter_decl.tok_volatile);
+            }
+
+            /* Emittere type specifier */
             si (nodus->datum.parameter_decl.type_specifier != NIHIL)
             {
                 _scribere_nodum(output, nodus->datum.parameter_decl.type_specifier);
             }
             alioquin
             {
-                /* Simple type (int, char, void) - emit from lexema token */
+                /* Typus simplex (int, char, void) - emittere ex lexema token */
                 arbor2_scribere_lexema(output, nodus->lexema);
             }
+
+            /* Emittere declarator */
             _scribere_nodum(output, nodus->datum.parameter_decl.declarator);
             frange;
 

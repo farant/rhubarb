@@ -4462,20 +4462,6 @@ _processare_unam_actionem(
                                 *lvl_slot = lvl;
                             }
                         }
-                        /* ========== ABSTRACT PARAMETER P340 ========== */
-                        alioquin si (actio->valor == 340)
-                        {
-                            /* P340: param -> type (1 symbol)
-                             * Abstract parameter - just the type, no declarator
-                             * valori: [0]=type specifier */
-                            Arbor2Nodus* type_spec = valori[ZEPHYRUM];
-
-                            valor_novus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
-                            valor_novus->genus = ARBOR2_NODUS_PARAMETER_DECL;
-                            valor_novus->lexema = NIHIL;
-                            valor_novus->datum.parameter_decl.type_specifier = type_spec;
-                            valor_novus->datum.parameter_decl.declarator = NIHIL;  /* abstract - no declarator */
-                        }
                         /* ========== VARIADIC PARAMS P341 ========== */
                         alioquin si (actio->valor == 341)
                         {
@@ -4500,21 +4486,6 @@ _processare_unam_actionem(
                                 *(Arbor2Nodus**)xar_addere(valor_novus->datum.parameter_list.parametra) = params;
                             }
                             valor_novus->datum.parameter_list.est_variadicus = VERUM;
-                        }
-                        /* ========== ABSTRACT QUALIFIED PARAMS P344-P345 ========== */
-                        alioquin si (actio->valor == 344 || actio->valor == 345)
-                        {
-                            /* P344: param -> 'const' type (2 symbols, abstract const param)
-                             * P345: param -> 'volatile' type (2 symbols, abstract volatile param)
-                             * valori: [1]=qualifier, [0]=type specifier */
-                            Arbor2Nodus* type_spec = valori[ZEPHYRUM];
-
-                            valor_novus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
-                            valor_novus->genus = ARBOR2_NODUS_PARAMETER_DECL;
-                            valor_novus->lexema = NIHIL;
-                            valor_novus->datum.parameter_decl.type_specifier = type_spec;
-                            valor_novus->datum.parameter_decl.declarator = NIHIL;  /* abstract - no declarator */
-                            /* TODO: Track qualifier in type_specifier if needed */
                         }
                         /* ========== POINTER QUALIFIERS P252-P255 ========== */
                         alioquin si (actio->valor == 252 || actio->valor == 253)
@@ -5353,19 +5324,97 @@ _processare_unam_actionem(
                         frange;
 
                     casus ARBOR2_NODUS_PARAMETER_DECL:
-                        /* P43: parameter_declaration -> type_specifier declarator */
-                        /* valori[1]=type_spec, valori[0]=declarator */
-                        valor_novus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
-                        valor_novus->genus = ARBOR2_NODUS_PARAMETER_DECL;
-                        valor_novus->lexema = lexemata[I];  /* type_specifier token */
-                        valor_novus->pater = NIHIL;
-                        LOCUS_EX_LEXEMATIS(valor_novus, I, ZEPHYRUM);
-                        valor_novus->datum.parameter_decl.type_specifier = valori[I];
-                        valor_novus->datum.parameter_decl.declarator = valori[ZEPHYRUM];
+                        /* P342: param -> 'const' type declarator (3 symbols)
+                         * P343: param -> 'volatile' type declarator (3 symbols) */
+                        si (actio->valor == 342 || actio->valor == 343)
+                        {
+                            /* lexemata: [2]=qualifier, [1]=type, [0]=declarator_token
+                             * valori: [1]=type_specifier, [0]=declarator */
+                            Arbor2Nodus* type_spec = valori[I];
+                            Arbor2Nodus* decl_node = valori[ZEPHYRUM];
 
-                        /* Statuere patrem pro filiis */
-                        si (valori[I] != NIHIL) valori[I]->pater = valor_novus;
-                        si (valori[ZEPHYRUM] != NIHIL) valori[ZEPHYRUM]->pater = valor_novus;
+                            valor_novus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
+                            valor_novus->genus = ARBOR2_NODUS_PARAMETER_DECL;
+                            valor_novus->lexema = lexemata[I];  /* type token (pro fallback serialization) */
+                            valor_novus->pater = NIHIL;
+                            LOCUS_EX_LEXEMATIS(valor_novus, II, ZEPHYRUM);
+
+                            /* Statuere qualifier lexemata */
+                            valor_novus->datum.parameter_decl.tok_const = NIHIL;
+                            valor_novus->datum.parameter_decl.tok_volatile = NIHIL;
+                            si (actio->valor == 342)
+                                valor_novus->datum.parameter_decl.tok_const = lexemata[II];
+                            alioquin
+                                valor_novus->datum.parameter_decl.tok_volatile = lexemata[II];
+
+                            valor_novus->datum.parameter_decl.type_specifier = type_spec;
+                            valor_novus->datum.parameter_decl.declarator = decl_node;
+
+                            /* Statuere patrem pro filiis */
+                            si (type_spec != NIHIL) type_spec->pater = valor_novus;
+                            si (decl_node != NIHIL) decl_node->pater = valor_novus;
+                        }
+                        /* P344: param -> 'const' type (2 symbols, abstract const param)
+                         * P345: param -> 'volatile' type (2 symbols, abstract volatile param) */
+                        alioquin si (actio->valor == 344 || actio->valor == 345)
+                        {
+                            /* lexemata: [1]=qualifier, [0]=type
+                             * valori: [0]=type specifier */
+                            Arbor2Nodus* type_spec = valori[ZEPHYRUM];
+
+                            valor_novus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
+                            valor_novus->genus = ARBOR2_NODUS_PARAMETER_DECL;
+                            valor_novus->lexema = lexemata[ZEPHYRUM];  /* type token (pro fallback serialization) */
+                            valor_novus->pater = NIHIL;
+
+                            /* Statuere qualifier lexemata */
+                            valor_novus->datum.parameter_decl.tok_const = NIHIL;
+                            valor_novus->datum.parameter_decl.tok_volatile = NIHIL;
+                            si (actio->valor == 344)
+                                valor_novus->datum.parameter_decl.tok_const = lexemata[I];
+                            alioquin
+                                valor_novus->datum.parameter_decl.tok_volatile = lexemata[I];
+
+                            valor_novus->datum.parameter_decl.type_specifier = type_spec;
+                            valor_novus->datum.parameter_decl.declarator = NIHIL;  /* abstract - nullus declarator */
+
+                            /* Statuere patrem pro filiis */
+                            si (type_spec != NIHIL) type_spec->pater = valor_novus;
+                        }
+                        /* P340: param -> type (1 symbol, abstract unqualified param) */
+                        alioquin si (actio->valor == 340)
+                        {
+                            Arbor2Nodus* type_spec = valori[ZEPHYRUM];
+
+                            valor_novus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
+                            valor_novus->genus = ARBOR2_NODUS_PARAMETER_DECL;
+                            valor_novus->lexema = NIHIL;
+                            valor_novus->pater = NIHIL;
+                            valor_novus->datum.parameter_decl.tok_const = NIHIL;
+                            valor_novus->datum.parameter_decl.tok_volatile = NIHIL;
+                            valor_novus->datum.parameter_decl.type_specifier = type_spec;
+                            valor_novus->datum.parameter_decl.declarator = NIHIL;
+
+                            si (type_spec != NIHIL) type_spec->pater = valor_novus;
+                        }
+                        /* P43: parameter_declaration -> type_specifier declarator (generic case) */
+                        alioquin
+                        {
+                            /* valori[1]=type_spec, valori[0]=declarator */
+                            valor_novus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
+                            valor_novus->genus = ARBOR2_NODUS_PARAMETER_DECL;
+                            valor_novus->lexema = lexemata[I];  /* type_specifier token */
+                            valor_novus->pater = NIHIL;
+                            LOCUS_EX_LEXEMATIS(valor_novus, I, ZEPHYRUM);
+                            valor_novus->datum.parameter_decl.tok_const = NIHIL;
+                            valor_novus->datum.parameter_decl.tok_volatile = NIHIL;
+                            valor_novus->datum.parameter_decl.type_specifier = valori[I];
+                            valor_novus->datum.parameter_decl.declarator = valori[ZEPHYRUM];
+
+                            /* Statuere patrem pro filiis */
+                            si (valori[I] != NIHIL) valori[I]->pater = valor_novus;
+                            si (valori[ZEPHYRUM] != NIHIL) valori[ZEPHYRUM]->pater = valor_novus;
+                        }
                         frange;
 
                     casus ARBOR2_NODUS_DEFINITIO_FUNCTI:

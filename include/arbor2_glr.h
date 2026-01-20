@@ -431,6 +431,8 @@ structura Arbor2Nodus {
 
         /* PARAMETER_DECL (parameter declaration) */
         structura {
+            Arbor2Token*        tok_const;            /* 'const' qualifier (NIHIL si nullus) */
+            Arbor2Token*        tok_volatile;         /* 'volatile' qualifier (NIHIL si nullus) */
             Arbor2Nodus*        type_specifier;       /* Type (identifier node) */
             Arbor2Nodus*        declarator;           /* Name + pointers */
         } parameter_decl;
