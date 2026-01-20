@@ -17020,17 +17020,46 @@ hic_manens constans Arbor2TabulaActio STATUS_1435_ACTIONES[] = {
 
 /* State 1450: after '( struct' in parameter - expect struct name */
 hic_manens constans Arbor2TabulaActio STATUS_1450_ACTIONES[] = {
-    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,  95, FALSUM }  /* struct Name -> state 95 */
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT, 1453, FALSUM }  /* struct Name -> state 1453 to reduce P47 */
 };
 
 /* State 1451: after '( union' in parameter - expect union name */
 hic_manens constans Arbor2TabulaActio STATUS_1451_ACTIONES[] = {
-    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,  95, FALSUM }  /* union Name -> state 95 */
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT, 1454, FALSUM }  /* union Name -> state 1454 to reduce P54 */
 };
 
 /* State 1452: after '( enum' in parameter - expect enum name */
 hic_manens constans Arbor2TabulaActio STATUS_1452_ACTIONES[] = {
-    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,  95, FALSUM }  /* enum Name -> state 95 */
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT, 1455, FALSUM }  /* enum Name -> state 1455 to reduce P57 */
+};
+
+/* ==================================================
+ * States 1453-1455: reduce struct/union/enum specifiers in param context
+ * After '( struct ID' / '( union ID' / '( enum ID' - reduce to specifier
+ * ================================================== */
+
+/* State 1453: after '( struct ID' - reduce P47 (struct -> 'struct' ID) */
+hic_manens constans Arbor2TabulaActio STATUS_1453_ACTIONES[] = {
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_REDUCE, 47, FALSUM },
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_REDUCE, 47, FALSUM },
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_REDUCE, 47, FALSUM },
+    { ARBOR2_LEXEMA_COMMA,          ARBOR2_ACTIO_REDUCE, 47, FALSUM }
+};
+
+/* State 1454: after '( union ID' - reduce P54 (union -> 'union' ID) */
+hic_manens constans Arbor2TabulaActio STATUS_1454_ACTIONES[] = {
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_REDUCE, 54, FALSUM },
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_REDUCE, 54, FALSUM },
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_REDUCE, 54, FALSUM },
+    { ARBOR2_LEXEMA_COMMA,          ARBOR2_ACTIO_REDUCE, 54, FALSUM }
+};
+
+/* State 1455: after '( enum ID' - reduce P57 (enum -> 'enum' ID) */
+hic_manens constans Arbor2TabulaActio STATUS_1455_ACTIONES[] = {
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_REDUCE, 57, FALSUM },
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_REDUCE, 57, FALSUM },
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_REDUCE, 57, FALSUM },
+    { ARBOR2_LEXEMA_COMMA,          ARBOR2_ACTIO_REDUCE, 57, FALSUM }
 };
 
 /* ==================================================
@@ -18689,7 +18718,11 @@ hic_manens constans Arbor2StatusInfo STATUS_TABULA_PARTIAL[] = {
     /* States 1450-1452: struct/union/enum in parameters */
     STATUS_INFO(1450, "after '( struct' in parameter"),
     STATUS_INFO(1451, "after '( union' in parameter"),
-    STATUS_INFO(1452, "after '( enum' in parameter")
+    STATUS_INFO(1452, "after '( enum' in parameter"),
+    /* States 1453-1455: reduce struct/union/enum specifiers in param context */
+    STATUS_INFO(1453, "after '( struct ID' - reduce P47"),
+    STATUS_INFO(1454, "after '( union ID' - reduce P54"),
+    STATUS_INFO(1455, "after '( enum ID' - reduce P57")
 };
 
 /* ==================================================
@@ -19263,7 +19296,9 @@ hic_manens constans Arbor2StatusGotoEntry STATUS_89_GOTO[] = {
 /* State 91: parameter list start */
 hic_manens constans Arbor2StatusGotoEntry STATUS_91_GOTO[] = {
     { INT_NT_PARAM_DECL, 101 },
-    { INT_NT_PARAM_LIST, 102 }
+    { INT_NT_PARAM_LIST, 102 },
+    { INT_NT_STRUCT_SPEC, 95 },  /* struct/union specifier acts like type */
+    { INT_NT_ENUM_SPEC,   95 }   /* enum specifier acts like type */
 };
 
 /* State 95: after type_spec in parameter */
@@ -23562,7 +23597,11 @@ hic_manens constans Arbor2StatusGoto GOTO_TABULA_NOVA[] = {
     /* States 1450-1452: struct/union/enum in parameters */
     STATUS_GOTO(1450), /* 1450: ( struct -> PARAM_DECL */
     STATUS_GOTO(1451), /* 1451: ( union -> PARAM_DECL */
-    STATUS_GOTO(1452)  /* 1452: ( enum -> PARAM_DECL */
+    STATUS_GOTO(1452), /* 1452: ( enum -> PARAM_DECL */
+    /* States 1453-1455: reduce struct/union/enum specifiers (no GOTOs) */
+    STATUS_GOTO_NIL,   /* 1453: ( struct ID - reduce P47 */
+    STATUS_GOTO_NIL,   /* 1454: ( union ID - reduce P54 */
+    STATUS_GOTO_NIL    /* 1455: ( enum ID - reduce P57 */
 };
 
 

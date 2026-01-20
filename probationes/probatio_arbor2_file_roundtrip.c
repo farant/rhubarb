@@ -283,19 +283,18 @@ s32 principale(vacuum)
     }
 
     /* ========================================================
-     * NOTA: Struct/union/enum as function parameters NOT YET SUPPORTED
+     * PROBARE: Struct/union/enum as function parameters
      *
-     * The grammar extension for struct/union/enum in State 91 was added,
-     * but the production P40 (declarator -> declarator '(' params ')')
-     * doesn't handle the extra type specifier tokens correctly.
-     *
-     * Example that fails: void foo(struct Point *p) { ... }
-     * The 'struct Point' adds extra stack symbols that P40 can't pop.
-     *
-     * Skipped tests:
-     *   - structs.c (has functions with struct parameters)
-     *   - arrays.c (has complex declarators)
+     * States 1453-1455 reduce struct/union/enum specifiers to
+     * non-terminals before parameter parsing continues. This makes
+     * the stack arithmetic correct for P43 (param -> type declarator).
      * ======================================================== */
+    {
+        imprimere("\n--- Probans struct/union/enum parameters ---\n");
+
+        CREDO_VERUM(_probare_roundtrip_fasciculum(piscina, intern, expansion,
+            "probationes/fixa/roundtrip/struct_param.c"));
+    }
 
     /* ========================================================
      * PROBARE: Files with preprocessor directives
