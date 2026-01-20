@@ -327,9 +327,8 @@ s32 principale(vacuum)
     /* ========================================================
      * NOTA: Known issues with structs.c and arrays.c
      *
-     * 1. CONSECUTIVE COMMENTS cause GLR ambiguity explosion:
-     *    [comment a] [comment b] int x;  -- hangs (exponential)
-     *    [comment a] int x; [comment b] int y;  -- works
+     * 1. CONSECUTIVE COMMENTS - FIXED (was unsigned underflow in
+     *    _habet_lineam_vacuam_ante, loop var needed s32 not i32)
      *
      * 2. LOCAL STRUCT VARIABLE DECLARATIONS fail:
      *    void f(void) { struct Point p; }  -- function dropped
