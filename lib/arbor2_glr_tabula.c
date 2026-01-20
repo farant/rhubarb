@@ -826,7 +826,21 @@ hic_manens Arbor2Regula REGULAE[] = {
 
     /* Function pointer typedef: typedef type (*name)(); or typedef type (*name)(void); */
     /* P525 */ { ARBOR2_NT_DECLARATIO, 9, ARBOR2_NODUS_DECLARATIO, "typedef -> 'typedef' type '(' '*' ID ')' '(' ')' ';'" },
-    /* P526 */ { ARBOR2_NT_DECLARATIO, 10, ARBOR2_NODUS_DECLARATIO, "typedef -> 'typedef' type '(' '*' ID ')' '(' 'void' ')' ';'" }
+    /* P526 */ { ARBOR2_NT_DECLARATIO, 10, ARBOR2_NODUS_DECLARATIO, "typedef -> 'typedef' type '(' '*' ID ')' '(' 'void' ')' ';'" },
+
+    /* Phase 2.1: Implicit int type modifier declarations (local context)
+     * These handle: long a;  short a;  unsigned a;  signed a;
+     * where the 'int' is implicit (C89 feature) */
+    /* P527 */ { ARBOR2_NT_DECLARATIO, 2, ARBOR2_NODUS_DECLARATIO, "decl -> 'long' declarator" },
+    /* P528 */ { ARBOR2_NT_DECLARATIO, 2, ARBOR2_NODUS_DECLARATIO, "decl -> 'short' declarator" },
+    /* P529 */ { ARBOR2_NT_DECLARATIO, 2, ARBOR2_NODUS_DECLARATIO, "decl -> 'unsigned' declarator" },
+    /* P530 */ { ARBOR2_NT_DECLARATIO, 2, ARBOR2_NODUS_DECLARATIO, "decl -> 'signed' declarator" },
+
+    /* Phase 2.1b: Implicit int type modifier declarations with initializers */
+    /* P531 */ { ARBOR2_NT_DECLARATIO, 4, ARBOR2_NODUS_DECLARATIO, "decl -> 'long' declarator '=' assignatio" },
+    /* P532 */ { ARBOR2_NT_DECLARATIO, 4, ARBOR2_NODUS_DECLARATIO, "decl -> 'short' declarator '=' assignatio" },
+    /* P533 */ { ARBOR2_NT_DECLARATIO, 4, ARBOR2_NODUS_DECLARATIO, "decl -> 'unsigned' declarator '=' assignatio" },
+    /* P534 */ { ARBOR2_NT_DECLARATIO, 4, ARBOR2_NODUS_DECLARATIO, "decl -> 'signed' declarator '=' assignatio" }
 };
 
 hic_manens i32 NUM_REGULAE = (i32)(magnitudo(REGULAE) / magnitudo(REGULAE[0]));
@@ -1594,6 +1608,13 @@ hic_manens constans Arbor2TabulaActio STATUS_25_ACTIONES[] = {
     { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_REDUCE, 18, FALSUM },
     { ARBOR2_LEXEMA_CHAR,           ARBOR2_ACTIO_REDUCE, 18, FALSUM },
     { ARBOR2_LEXEMA_VOID,           ARBOR2_ACTIO_REDUCE, 18, FALSUM },
+    { ARBOR2_LEXEMA_FLOAT,          ARBOR2_ACTIO_REDUCE, 18, FALSUM },
+    { ARBOR2_LEXEMA_DOUBLE,         ARBOR2_ACTIO_REDUCE, 18, FALSUM },
+    /* Type modifiers for declarations in compound statements */
+    { ARBOR2_LEXEMA_UNSIGNED,       ARBOR2_ACTIO_REDUCE, 18, FALSUM },
+    { ARBOR2_LEXEMA_LONG,           ARBOR2_ACTIO_REDUCE, 18, FALSUM },
+    { ARBOR2_LEXEMA_SHORT,          ARBOR2_ACTIO_REDUCE, 18, FALSUM },
+    { ARBOR2_LEXEMA_SIGNED,         ARBOR2_ACTIO_REDUCE, 18, FALSUM },
     /* Storage class specifiers */
     { ARBOR2_LEXEMA_STATIC,         ARBOR2_ACTIO_REDUCE, 18, FALSUM },
     { ARBOR2_LEXEMA_EXTERN,         ARBOR2_ACTIO_REDUCE, 18, FALSUM },
@@ -1639,6 +1660,13 @@ hic_manens constans Arbor2TabulaActio STATUS_26_ACTIONES[] = {
     { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_SHIFT,   4, FALSUM },
     { ARBOR2_LEXEMA_CHAR,           ARBOR2_ACTIO_SHIFT,   4, FALSUM },
     { ARBOR2_LEXEMA_VOID,           ARBOR2_ACTIO_SHIFT,   4, FALSUM },
+    { ARBOR2_LEXEMA_FLOAT,          ARBOR2_ACTIO_SHIFT,   4, FALSUM },
+    { ARBOR2_LEXEMA_DOUBLE,         ARBOR2_ACTIO_SHIFT,   4, FALSUM },
+    /* Type modifiers for declarations in compound statements (local context) */
+    { ARBOR2_LEXEMA_UNSIGNED,       ARBOR2_ACTIO_SHIFT, 1503, FALSUM },
+    { ARBOR2_LEXEMA_LONG,           ARBOR2_ACTIO_SHIFT, 1501, FALSUM },
+    { ARBOR2_LEXEMA_SHORT,          ARBOR2_ACTIO_SHIFT, 1502, FALSUM },
+    { ARBOR2_LEXEMA_SIGNED,         ARBOR2_ACTIO_SHIFT, 1504, FALSUM },
     /* Storage class specifiers */
     { ARBOR2_LEXEMA_STATIC,         ARBOR2_ACTIO_SHIFT, 346, FALSUM },
     { ARBOR2_LEXEMA_EXTERN,         ARBOR2_ACTIO_SHIFT, 347, FALSUM },
@@ -1705,6 +1733,13 @@ hic_manens constans Arbor2TabulaActio STATUS_28_ACTIONES[] = {
     { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_REDUCE, 17, FALSUM },
     { ARBOR2_LEXEMA_CHAR,           ARBOR2_ACTIO_REDUCE, 17, FALSUM },
     { ARBOR2_LEXEMA_VOID,           ARBOR2_ACTIO_REDUCE, 17, FALSUM },
+    { ARBOR2_LEXEMA_FLOAT,          ARBOR2_ACTIO_REDUCE, 17, FALSUM },
+    { ARBOR2_LEXEMA_DOUBLE,         ARBOR2_ACTIO_REDUCE, 17, FALSUM },
+    /* Type modifiers for declarations in compound statements */
+    { ARBOR2_LEXEMA_UNSIGNED,       ARBOR2_ACTIO_REDUCE, 17, FALSUM },
+    { ARBOR2_LEXEMA_LONG,           ARBOR2_ACTIO_REDUCE, 17, FALSUM },
+    { ARBOR2_LEXEMA_SHORT,          ARBOR2_ACTIO_REDUCE, 17, FALSUM },
+    { ARBOR2_LEXEMA_SIGNED,         ARBOR2_ACTIO_REDUCE, 17, FALSUM },
     /* Storage class specifiers */
     { ARBOR2_LEXEMA_STATIC,         ARBOR2_ACTIO_REDUCE, 17, FALSUM },
     { ARBOR2_LEXEMA_EXTERN,         ARBOR2_ACTIO_REDUCE, 17, FALSUM },
@@ -9767,6 +9802,13 @@ hic_manens constans Arbor2TabulaActio STATUS_561_ACTIONES[] = {
     { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_REDUCE, 239, FALSUM },
     { ARBOR2_LEXEMA_CHAR,           ARBOR2_ACTIO_REDUCE, 239, FALSUM },
     { ARBOR2_LEXEMA_VOID,           ARBOR2_ACTIO_REDUCE, 239, FALSUM },
+    { ARBOR2_LEXEMA_FLOAT,          ARBOR2_ACTIO_REDUCE, 239, FALSUM },
+    { ARBOR2_LEXEMA_DOUBLE,         ARBOR2_ACTIO_REDUCE, 239, FALSUM },
+    /* Type modifiers for follow-on declarations */
+    { ARBOR2_LEXEMA_UNSIGNED,       ARBOR2_ACTIO_REDUCE, 239, FALSUM },
+    { ARBOR2_LEXEMA_LONG,           ARBOR2_ACTIO_REDUCE, 239, FALSUM },
+    { ARBOR2_LEXEMA_SHORT,          ARBOR2_ACTIO_REDUCE, 239, FALSUM },
+    { ARBOR2_LEXEMA_SIGNED,         ARBOR2_ACTIO_REDUCE, 239, FALSUM },
     /* Storage class specifiers */
     { ARBOR2_LEXEMA_STATIC,         ARBOR2_ACTIO_REDUCE, 239, FALSUM },
     { ARBOR2_LEXEMA_EXTERN,         ARBOR2_ACTIO_REDUCE, 239, FALSUM },
@@ -17090,6 +17132,179 @@ hic_manens constans Arbor2TabulaActio STATUS_1500_ACTIONES[] = {
 };
 
 /* ==================================================
+ * Phase 2.1: Local-context type modifier states (1501-1508)
+ *
+ * These handle implicit int declarations in compound statements:
+ *   long a;  short a;  unsigned a;  signed a;
+ *
+ * Flow: State 26 shifts 'long' -> 1501
+ *       State 1501 shifts ID -> 116
+ *       State 116 reduces P12 (declarator -> ID)
+ *       GOTO(1501, DECLARATOR) = 1505
+ *       State 1505 on ';' reduces P527 (decl -> 'long' declarator)
+ *       Pop 2, back at State 26
+ *       GOTO(26, DECLARATIO) = 560
+ *       State 560 shifts ';' -> 561
+ *       State 561 reduces P239 (stmt -> declaratio ';')
+ * ================================================== */
+
+/* State 1501: after 'long' in compound statement - expects declarator */
+hic_manens constans Arbor2TabulaActio STATUS_1501_ACTIONES[] = {
+    { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_SHIFT, 1164, FALSUM },  /* long int */
+    { ARBOR2_LEXEMA_LONG,           ARBOR2_ACTIO_SHIFT, 1174, FALSUM },  /* long long */
+    { ARBOR2_LEXEMA_DOUBLE,         ARBOR2_ACTIO_SHIFT,    4, FALSUM },  /* long double */
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,   17, FALSUM },  /* pointer */
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,  116, FALSUM }   /* direct declarator */
+};
+
+/* State 1502: after 'short' in compound statement - expects declarator */
+hic_manens constans Arbor2TabulaActio STATUS_1502_ACTIONES[] = {
+    { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_SHIFT, 1165, FALSUM },  /* short int */
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,   17, FALSUM },  /* pointer */
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,  116, FALSUM }   /* direct declarator */
+};
+
+/* State 1503: after 'unsigned' in compound statement - expects declarator */
+hic_manens constans Arbor2TabulaActio STATUS_1503_ACTIONES[] = {
+    { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_SHIFT, 1160, FALSUM },  /* unsigned int */
+    { ARBOR2_LEXEMA_CHAR,           ARBOR2_ACTIO_SHIFT, 1162, FALSUM },  /* unsigned char */
+    { ARBOR2_LEXEMA_LONG,           ARBOR2_ACTIO_SHIFT, 1166, FALSUM },  /* unsigned long */
+    { ARBOR2_LEXEMA_SHORT,          ARBOR2_ACTIO_SHIFT, 1167, FALSUM },  /* unsigned short */
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,   17, FALSUM },  /* pointer */
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,  116, FALSUM }   /* direct declarator */
+};
+
+/* State 1504: after 'signed' in compound statement - expects declarator */
+hic_manens constans Arbor2TabulaActio STATUS_1504_ACTIONES[] = {
+    { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_SHIFT, 1161, FALSUM },  /* signed int */
+    { ARBOR2_LEXEMA_CHAR,           ARBOR2_ACTIO_SHIFT, 1163, FALSUM },  /* signed char */
+    { ARBOR2_LEXEMA_LONG,           ARBOR2_ACTIO_SHIFT, 1168, FALSUM },  /* signed long */
+    { ARBOR2_LEXEMA_SHORT,          ARBOR2_ACTIO_SHIFT, 1169, FALSUM },  /* signed short */
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,   17, FALSUM },  /* pointer */
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,  116, FALSUM }   /* direct declarator */
+};
+
+/* State 1505: after 'long' DECLARATOR in compound - reduce P527 or shift for init */
+hic_manens constans Arbor2TabulaActio STATUS_1505_ACTIONES[] = {
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 527, FALSUM },  /* decl -> 'long' declarator */
+    { ARBOR2_LEXEMA_ASSIGNATIO,     ARBOR2_ACTIO_SHIFT, 1509, FALSUM }   /* -> initializer */
+};
+
+/* State 1506: after 'short' DECLARATOR in compound - reduce P528 or shift for init */
+hic_manens constans Arbor2TabulaActio STATUS_1506_ACTIONES[] = {
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 528, FALSUM },  /* decl -> 'short' declarator */
+    { ARBOR2_LEXEMA_ASSIGNATIO,     ARBOR2_ACTIO_SHIFT, 1510, FALSUM }   /* -> initializer */
+};
+
+/* State 1507: after 'unsigned' DECLARATOR in compound - reduce P529 or shift for init */
+hic_manens constans Arbor2TabulaActio STATUS_1507_ACTIONES[] = {
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 529, FALSUM },  /* decl -> 'unsigned' declarator */
+    { ARBOR2_LEXEMA_ASSIGNATIO,     ARBOR2_ACTIO_SHIFT, 1511, FALSUM }   /* -> initializer */
+};
+
+/* State 1508: after 'signed' DECLARATOR in compound - reduce P530 or shift for init */
+hic_manens constans Arbor2TabulaActio STATUS_1508_ACTIONES[] = {
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 530, FALSUM },  /* decl -> 'signed' declarator */
+    { ARBOR2_LEXEMA_ASSIGNATIO,     ARBOR2_ACTIO_SHIFT, 1512, FALSUM }   /* -> initializer */
+};
+
+/* State 1509: after 'long' declarator '=' - expects expression */
+hic_manens constans Arbor2TabulaActio STATUS_1509_ACTIONES[] = {
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,   4, FALSUM },
+    { ARBOR2_LEXEMA_INTEGER,        ARBOR2_ACTIO_SHIFT,   5, FALSUM },
+    { ARBOR2_LEXEMA_FLOAT_LIT,      ARBOR2_ACTIO_SHIFT, 332, FALSUM },
+    { ARBOR2_LEXEMA_CHAR_LIT,       ARBOR2_ACTIO_SHIFT, 333, FALSUM },
+    { ARBOR2_LEXEMA_STRING_LIT,     ARBOR2_ACTIO_SHIFT, 334, FALSUM },
+    { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_SHIFT,   6, FALSUM },
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,   7, FALSUM },
+    { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_SHIFT,   8, FALSUM },
+    { ARBOR2_LEXEMA_SIZEOF,         ARBOR2_ACTIO_SHIFT, 335, FALSUM },
+    { ARBOR2_LEXEMA_MINUS,          ARBOR2_ACTIO_SHIFT, 952, FALSUM },
+    { ARBOR2_LEXEMA_PLUS,           ARBOR2_ACTIO_SHIFT, 954, FALSUM },
+    { ARBOR2_LEXEMA_TILDE,          ARBOR2_ACTIO_SHIFT, 289, FALSUM },
+    { ARBOR2_LEXEMA_EXCLAMATIO,     ARBOR2_ACTIO_SHIFT, 291, FALSUM },
+    { ARBOR2_LEXEMA_DUPLUS,         ARBOR2_ACTIO_SHIFT, 328, FALSUM },
+    { ARBOR2_LEXEMA_DUMINUS,        ARBOR2_ACTIO_SHIFT, 329, FALSUM }
+};
+
+/* State 1510: after 'short' declarator '=' - expects expression */
+hic_manens constans Arbor2TabulaActio STATUS_1510_ACTIONES[] = {
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,   4, FALSUM },
+    { ARBOR2_LEXEMA_INTEGER,        ARBOR2_ACTIO_SHIFT,   5, FALSUM },
+    { ARBOR2_LEXEMA_FLOAT_LIT,      ARBOR2_ACTIO_SHIFT, 332, FALSUM },
+    { ARBOR2_LEXEMA_CHAR_LIT,       ARBOR2_ACTIO_SHIFT, 333, FALSUM },
+    { ARBOR2_LEXEMA_STRING_LIT,     ARBOR2_ACTIO_SHIFT, 334, FALSUM },
+    { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_SHIFT,   6, FALSUM },
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,   7, FALSUM },
+    { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_SHIFT,   8, FALSUM },
+    { ARBOR2_LEXEMA_SIZEOF,         ARBOR2_ACTIO_SHIFT, 335, FALSUM },
+    { ARBOR2_LEXEMA_MINUS,          ARBOR2_ACTIO_SHIFT, 952, FALSUM },
+    { ARBOR2_LEXEMA_PLUS,           ARBOR2_ACTIO_SHIFT, 954, FALSUM },
+    { ARBOR2_LEXEMA_TILDE,          ARBOR2_ACTIO_SHIFT, 289, FALSUM },
+    { ARBOR2_LEXEMA_EXCLAMATIO,     ARBOR2_ACTIO_SHIFT, 291, FALSUM },
+    { ARBOR2_LEXEMA_DUPLUS,         ARBOR2_ACTIO_SHIFT, 328, FALSUM },
+    { ARBOR2_LEXEMA_DUMINUS,        ARBOR2_ACTIO_SHIFT, 329, FALSUM }
+};
+
+/* State 1511: after 'unsigned' declarator '=' - expects expression */
+hic_manens constans Arbor2TabulaActio STATUS_1511_ACTIONES[] = {
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,   4, FALSUM },
+    { ARBOR2_LEXEMA_INTEGER,        ARBOR2_ACTIO_SHIFT,   5, FALSUM },
+    { ARBOR2_LEXEMA_FLOAT_LIT,      ARBOR2_ACTIO_SHIFT, 332, FALSUM },
+    { ARBOR2_LEXEMA_CHAR_LIT,       ARBOR2_ACTIO_SHIFT, 333, FALSUM },
+    { ARBOR2_LEXEMA_STRING_LIT,     ARBOR2_ACTIO_SHIFT, 334, FALSUM },
+    { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_SHIFT,   6, FALSUM },
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,   7, FALSUM },
+    { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_SHIFT,   8, FALSUM },
+    { ARBOR2_LEXEMA_SIZEOF,         ARBOR2_ACTIO_SHIFT, 335, FALSUM },
+    { ARBOR2_LEXEMA_MINUS,          ARBOR2_ACTIO_SHIFT, 952, FALSUM },
+    { ARBOR2_LEXEMA_PLUS,           ARBOR2_ACTIO_SHIFT, 954, FALSUM },
+    { ARBOR2_LEXEMA_TILDE,          ARBOR2_ACTIO_SHIFT, 289, FALSUM },
+    { ARBOR2_LEXEMA_EXCLAMATIO,     ARBOR2_ACTIO_SHIFT, 291, FALSUM },
+    { ARBOR2_LEXEMA_DUPLUS,         ARBOR2_ACTIO_SHIFT, 328, FALSUM },
+    { ARBOR2_LEXEMA_DUMINUS,        ARBOR2_ACTIO_SHIFT, 329, FALSUM }
+};
+
+/* State 1512: after 'signed' declarator '=' - expects expression */
+hic_manens constans Arbor2TabulaActio STATUS_1512_ACTIONES[] = {
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,   4, FALSUM },
+    { ARBOR2_LEXEMA_INTEGER,        ARBOR2_ACTIO_SHIFT,   5, FALSUM },
+    { ARBOR2_LEXEMA_FLOAT_LIT,      ARBOR2_ACTIO_SHIFT, 332, FALSUM },
+    { ARBOR2_LEXEMA_CHAR_LIT,       ARBOR2_ACTIO_SHIFT, 333, FALSUM },
+    { ARBOR2_LEXEMA_STRING_LIT,     ARBOR2_ACTIO_SHIFT, 334, FALSUM },
+    { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_SHIFT,   6, FALSUM },
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,   7, FALSUM },
+    { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_SHIFT,   8, FALSUM },
+    { ARBOR2_LEXEMA_SIZEOF,         ARBOR2_ACTIO_SHIFT, 335, FALSUM },
+    { ARBOR2_LEXEMA_MINUS,          ARBOR2_ACTIO_SHIFT, 952, FALSUM },
+    { ARBOR2_LEXEMA_PLUS,           ARBOR2_ACTIO_SHIFT, 954, FALSUM },
+    { ARBOR2_LEXEMA_TILDE,          ARBOR2_ACTIO_SHIFT, 289, FALSUM },
+    { ARBOR2_LEXEMA_EXCLAMATIO,     ARBOR2_ACTIO_SHIFT, 291, FALSUM },
+    { ARBOR2_LEXEMA_DUPLUS,         ARBOR2_ACTIO_SHIFT, 328, FALSUM },
+    { ARBOR2_LEXEMA_DUMINUS,        ARBOR2_ACTIO_SHIFT, 329, FALSUM }
+};
+
+/* State 1513: after 'long' declarator '=' ASSIGNATIO - reduce P531 */
+hic_manens constans Arbor2TabulaActio STATUS_1513_ACTIONES[] = {
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 531, FALSUM }
+};
+
+/* State 1514: after 'short' declarator '=' ASSIGNATIO - reduce P532 */
+hic_manens constans Arbor2TabulaActio STATUS_1514_ACTIONES[] = {
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 532, FALSUM }
+};
+
+/* State 1515: after 'unsigned' declarator '=' ASSIGNATIO - reduce P533 */
+hic_manens constans Arbor2TabulaActio STATUS_1515_ACTIONES[] = {
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 533, FALSUM }
+};
+
+/* State 1516: after 'signed' declarator '=' ASSIGNATIO - reduce P534 */
+hic_manens constans Arbor2TabulaActio STATUS_1516_ACTIONES[] = {
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 534, FALSUM }
+};
+
+/* ==================================================
  * STATUS_TABULA - Master state table (UNDER CONSTRUCTION)
  *
  * Will be populated as states are converted.
@@ -18796,7 +19011,25 @@ hic_manens constans Arbor2StatusInfo STATUS_TABULA_PARTIAL[] = {
     { NIHIL, 0, "reserved" },  /* 1498 */
     { NIHIL, 0, "reserved" },  /* 1499 */
     /* State 1500: struct/enum specifier in local declaration (no conflict) */
-    STATUS_INFO(1500, "after struct/enum spec in local decl - declarator only")
+    STATUS_INFO(1500, "after struct/enum spec in local decl - declarator only"),
+    /* Phase 2.1: Local-context type modifier states (1501-1508) */
+    STATUS_INFO(1501, "after 'long' in compound statement"),
+    STATUS_INFO(1502, "after 'short' in compound statement"),
+    STATUS_INFO(1503, "after 'unsigned' in compound statement"),
+    STATUS_INFO(1504, "after 'signed' in compound statement"),
+    STATUS_INFO(1505, "after 'long' DECLARATOR - reduce P527"),
+    STATUS_INFO(1506, "after 'short' DECLARATOR - reduce P528"),
+    STATUS_INFO(1507, "after 'unsigned' DECLARATOR - reduce P529"),
+    STATUS_INFO(1508, "after 'signed' DECLARATOR - reduce P530"),
+    /* Phase 2.1b: Initializer states (1509-1516) */
+    STATUS_INFO(1509, "after 'long' declarator '=' - expects expression"),
+    STATUS_INFO(1510, "after 'short' declarator '=' - expects expression"),
+    STATUS_INFO(1511, "after 'unsigned' declarator '=' - expects expression"),
+    STATUS_INFO(1512, "after 'signed' declarator '=' - expects expression"),
+    STATUS_INFO(1513, "after 'long' declarator '=' ASSIGNATIO - reduce P531"),
+    STATUS_INFO(1514, "after 'short' declarator '=' ASSIGNATIO - reduce P532"),
+    STATUS_INFO(1515, "after 'unsigned' declarator '=' ASSIGNATIO - reduce P533"),
+    STATUS_INFO(1516, "after 'signed' declarator '=' ASSIGNATIO - reduce P534")
 };
 
 /* ==================================================
@@ -18926,6 +19159,107 @@ hic_manens constans Arbor2StatusGotoEntry STATUS_1500_GOTO[] = {
     { INT_NT_DECLARATOR,           20 },   /* after declarator -> completion */
     { INT_NT_INIT_DECLARATOR,     513 },   /* after init_decl */
     { INT_NT_INIT_DECLARATOR_LIST, 514 }   /* after init_decl_list -> DECLARATIO */
+};
+
+/* State 1501: after 'long' in compound statement
+ * DECLARATOR goes to 1505 for P527 reduction */
+hic_manens constans Arbor2StatusGotoEntry STATUS_1501_GOTO[] = {
+    { INT_NT_DECLARATOR,          1505 }   /* 'long' DECLARATOR -> reduce P527 */
+};
+
+/* State 1502: after 'short' in compound statement
+ * DECLARATOR goes to 1506 for P528 reduction */
+hic_manens constans Arbor2StatusGotoEntry STATUS_1502_GOTO[] = {
+    { INT_NT_DECLARATOR,          1506 }   /* 'short' DECLARATOR -> reduce P528 */
+};
+
+/* State 1503: after 'unsigned' in compound statement
+ * DECLARATOR goes to 1507 for P529 reduction */
+hic_manens constans Arbor2StatusGotoEntry STATUS_1503_GOTO[] = {
+    { INT_NT_DECLARATOR,          1507 }   /* 'unsigned' DECLARATOR -> reduce P529 */
+};
+
+/* State 1504: after 'signed' in compound statement
+ * DECLARATOR goes to 1508 for P530 reduction */
+hic_manens constans Arbor2StatusGotoEntry STATUS_1504_GOTO[] = {
+    { INT_NT_DECLARATOR,          1508 }   /* 'signed' DECLARATOR -> reduce P530 */
+};
+
+/* State 1509: after 'long' declarator '=' - expects expression
+ * ASSIGNATIO goes to 1513 for P531 reduction
+ * Uses state 240 for AEQUALITAS (handles semicolons), not 245 (parens only) */
+hic_manens constans Arbor2StatusGotoEntry STATUS_1509_GOTO[] = {
+    { INT_NT_EXPR,              1 },
+    { INT_NT_TERM,              2 },
+    { INT_NT_FACTOR,            3 },
+    { INT_NT_POSTFIXUM,         311 },
+    { INT_NT_COMPARATIO,        239 },
+    { INT_NT_AEQUALITAS,        240 },   /* 240 handles ';', 245 is for parens */
+    { INT_NT_AMPERSAND_BITWISE, 268 },
+    { INT_NT_CARET_BITWISE,     270 },
+    { INT_NT_PIPA_BITWISE,      272 },
+    { INT_NT_CONIUNCTIO,        253 },
+    { INT_NT_DISIUNCTIO,        255 },
+    { INT_NT_TERNARIUS,         310 },
+    { INT_NT_ASSIGNATIO,        1513 },
+    { INT_NT_TRANSLATIO,        264 }
+};
+
+/* State 1510: after 'short' declarator '=' - expects expression
+ * ASSIGNATIO goes to 1514 for P532 reduction */
+hic_manens constans Arbor2StatusGotoEntry STATUS_1510_GOTO[] = {
+    { INT_NT_EXPR,              1 },
+    { INT_NT_TERM,              2 },
+    { INT_NT_FACTOR,            3 },
+    { INT_NT_POSTFIXUM,         311 },
+    { INT_NT_COMPARATIO,        239 },
+    { INT_NT_AEQUALITAS,        240 },   /* 240 handles ';', 245 is for parens */
+    { INT_NT_AMPERSAND_BITWISE, 268 },
+    { INT_NT_CARET_BITWISE,     270 },
+    { INT_NT_PIPA_BITWISE,      272 },
+    { INT_NT_CONIUNCTIO,        253 },
+    { INT_NT_DISIUNCTIO,        255 },
+    { INT_NT_TERNARIUS,         310 },
+    { INT_NT_ASSIGNATIO,        1514 },
+    { INT_NT_TRANSLATIO,        264 }
+};
+
+/* State 1511: after 'unsigned' declarator '=' - expects expression
+ * ASSIGNATIO goes to 1515 for P533 reduction */
+hic_manens constans Arbor2StatusGotoEntry STATUS_1511_GOTO[] = {
+    { INT_NT_EXPR,              1 },
+    { INT_NT_TERM,              2 },
+    { INT_NT_FACTOR,            3 },
+    { INT_NT_POSTFIXUM,         311 },
+    { INT_NT_COMPARATIO,        239 },
+    { INT_NT_AEQUALITAS,        240 },   /* 240 handles ';', 245 is for parens */
+    { INT_NT_AMPERSAND_BITWISE, 268 },
+    { INT_NT_CARET_BITWISE,     270 },
+    { INT_NT_PIPA_BITWISE,      272 },
+    { INT_NT_CONIUNCTIO,        253 },
+    { INT_NT_DISIUNCTIO,        255 },
+    { INT_NT_TERNARIUS,         310 },
+    { INT_NT_ASSIGNATIO,        1515 },
+    { INT_NT_TRANSLATIO,        264 }
+};
+
+/* State 1512: after 'signed' declarator '=' - expects expression
+ * ASSIGNATIO goes to 1516 for P534 reduction */
+hic_manens constans Arbor2StatusGotoEntry STATUS_1512_GOTO[] = {
+    { INT_NT_EXPR,              1 },
+    { INT_NT_TERM,              2 },
+    { INT_NT_FACTOR,            3 },
+    { INT_NT_POSTFIXUM,         311 },
+    { INT_NT_COMPARATIO,        239 },
+    { INT_NT_AEQUALITAS,        240 },   /* 240 handles ';', 245 is for parens */
+    { INT_NT_AMPERSAND_BITWISE, 268 },
+    { INT_NT_CARET_BITWISE,     270 },
+    { INT_NT_PIPA_BITWISE,      272 },
+    { INT_NT_CONIUNCTIO,        253 },
+    { INT_NT_DISIUNCTIO,        255 },
+    { INT_NT_TERNARIUS,         310 },
+    { INT_NT_ASSIGNATIO,        1516 },
+    { INT_NT_TRANSLATIO,        264 }
 };
 
 /* State 6: after '(' - full expression chain inside parens */
@@ -23735,7 +24069,25 @@ hic_manens constans Arbor2StatusGoto GOTO_TABULA_NOVA[] = {
     STATUS_GOTO_NIL,   /* 1498: reserved */
     STATUS_GOTO_NIL,   /* 1499: reserved */
     /* State 1500: struct/enum specifier in local declaration (no conflict) */
-    STATUS_GOTO(1500)  /* 1500: after struct/enum spec in local decl */
+    STATUS_GOTO(1500), /* 1500: after struct/enum spec in local decl */
+    /* Phase 2.1: Local-context type modifier states (1501-1508) */
+    STATUS_GOTO(1501), /* 1501: after 'long' in compound statement */
+    STATUS_GOTO(1502), /* 1502: after 'short' in compound statement */
+    STATUS_GOTO(1503), /* 1503: after 'unsigned' in compound statement */
+    STATUS_GOTO(1504), /* 1504: after 'signed' in compound statement */
+    STATUS_GOTO_NIL,   /* 1505: reduce P527 (no GOTO needed) */
+    STATUS_GOTO_NIL,   /* 1506: reduce P528 (no GOTO needed) */
+    STATUS_GOTO_NIL,   /* 1507: reduce P529 (no GOTO needed) */
+    STATUS_GOTO_NIL,   /* 1508: reduce P530 (no GOTO needed) */
+    /* Phase 2.1b: Initializer states (1509-1516) */
+    STATUS_GOTO(1509), /* 1509: after 'long' declarator '=' */
+    STATUS_GOTO(1510), /* 1510: after 'short' declarator '=' */
+    STATUS_GOTO(1511), /* 1511: after 'unsigned' declarator '=' */
+    STATUS_GOTO(1512), /* 1512: after 'signed' declarator '=' */
+    STATUS_GOTO_NIL,   /* 1513: reduce P531 (no GOTO needed) */
+    STATUS_GOTO_NIL,   /* 1514: reduce P532 (no GOTO needed) */
+    STATUS_GOTO_NIL,   /* 1515: reduce P533 (no GOTO needed) */
+    STATUS_GOTO_NIL    /* 1516: reduce P534 (no GOTO needed) */
 };
 
 

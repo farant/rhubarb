@@ -391,6 +391,16 @@ s32 principale(vacuum)
     }
 
     /* ========================================================
+     * PROBARE: Cast expressions in declaration initializers
+     * ======================================================== */
+    {
+        imprimere("\n--- Probans cast in initializers ---\n");
+
+        CREDO_VERUM(_probare_roundtrip_fasciculum(piscina, intern, expansion,
+            "probationes/fixa/roundtrip/cast_init.c"));
+    }
+
+    /* ========================================================
      * NOTA: Known issues with structs.c and arrays.c
      *
      * 1. CONSECUTIVE COMMENTS - FIXED (was unsigned underflow in

@@ -9,7 +9,7 @@
 #include <time.h>
 
 /* Debug flag - set to 1 to enable tracing */
-#define GLR_DEBUG 0
+#define GLR_DEBUG 1
 
 /* Trace flag for slowdown diagnosis - prints per-token stats */
 #define GLR_TRACE_SLOWDOWN 0
@@ -4037,6 +4037,160 @@ _processare_unam_actionem(
 
                             valor_novus->datum.declaratio.declarator = decl_node;
                             si (decl_node != NIHIL) decl_node->pater = valor_novus;
+                        }
+                        /* ========== IMPLICIT INT TYPE MODIFIER DECLARATIONS P527-P530 ========== */
+                        alioquin si (actio->valor >= 527 && actio->valor <= 530)
+                        {
+                            /* P527-P530: Implicit int declarations in local context
+                             * P527: long declarator      (2 symbols)
+                             * P528: short declarator     (2 symbols)
+                             * P529: unsigned declarator  (2 symbols)
+                             * P530: signed declarator    (2 symbols)
+                             *
+                             * These handle declarations like:
+                             *   long a;      (implicit long int)
+                             *   short b;     (implicit short int)
+                             *   unsigned c;  (implicit unsigned int)
+                             *   signed d;    (implicit signed int)
+                             */
+                            Arbor2Nodus* decl_node;
+                            Arbor2Token* modifier_tok;
+
+                            /* Get declarator from valori[0] (pre-built by P12/P11) */
+                            decl_node = valori[ZEPHYRUM];
+
+                            /* Get modifier token from lexemata[I] (position 1 in stack) */
+                            modifier_tok = lexemata[I];
+
+                            /* Create DECLARATIO node */
+                            valor_novus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
+                            valor_novus->genus = ARBOR2_NODUS_DECLARATIO;
+                            valor_novus->pater = NIHIL;
+                            valor_novus->datum.declaratio.tok_storage = NIHIL;
+                            valor_novus->datum.declaratio.tok_const = NIHIL;
+                            valor_novus->datum.declaratio.tok_volatile = NIHIL;
+                            valor_novus->datum.declaratio.tok_unsigned = NIHIL;
+                            valor_novus->datum.declaratio.tok_signed = NIHIL;
+                            valor_novus->datum.declaratio.tok_long = NIHIL;
+                            valor_novus->datum.declaratio.tok_long2 = NIHIL;
+                            valor_novus->datum.declaratio.tok_short = NIHIL;
+                            valor_novus->datum.declaratio.tok_assignatio = NIHIL;
+                            valor_novus->datum.declaratio.initializor = NIHIL;
+                            valor_novus->datum.declaratio.tok_semicolon = NIHIL;
+                            valor_novus->datum.declaratio.tok_comma = NIHIL;
+                            valor_novus->datum.declaratio.proxima = NIHIL;
+                            valor_novus->datum.declaratio.est_typedef = FALSUM;
+                            valor_novus->datum.declaratio.storage_class = ARBOR2_STORAGE_NONE;
+                            valor_novus->datum.declaratio.qualifiers = ARBOR2_QUAL_NONE;
+
+                            /* Set modifier token based on production */
+                            commutatio (actio->valor)
+                            {
+                                casus 527: /* long (implicit int) */
+                                    valor_novus->datum.declaratio.tok_long = modifier_tok;
+                                    frange;
+                                casus 528: /* short (implicit int) */
+                                    valor_novus->datum.declaratio.tok_short = modifier_tok;
+                                    frange;
+                                casus 529: /* unsigned (implicit int) */
+                                    valor_novus->datum.declaratio.tok_unsigned = modifier_tok;
+                                    frange;
+                                casus 530: /* signed (implicit int) */
+                                    valor_novus->datum.declaratio.tok_signed = modifier_tok;
+                                    frange;
+                                ordinarius:
+                                    frange;
+                            }
+
+                            /* No explicit base type (implicit int) */
+                            valor_novus->datum.declaratio.specifier = NIHIL;
+                            valor_novus->lexema = modifier_tok;
+
+                            valor_novus->datum.declaratio.declarator = decl_node;
+                            si (decl_node != NIHIL) decl_node->pater = valor_novus;
+                        }
+                        /* ========== IMPLICIT INT TYPE MODIFIER DECLARATIONS WITH INITIALIZERS P531-P534 ========== */
+                        alioquin si (actio->valor >= 531 && actio->valor <= 534)
+                        {
+                            /* P531-P534: Implicit int declarations with initializers
+                             * P531: long declarator '=' assignatio   (4 symbols)
+                             * P532: short declarator '=' assignatio  (4 symbols)
+                             * P533: unsigned declarator '=' assignatio (4 symbols)
+                             * P534: signed declarator '=' assignatio (4 symbols)
+                             *
+                             * Stack layout (index 0 = rightmost):
+                             *   [3] = modifier token ('long'/'short'/etc)
+                             *   [2] = declarator (AST node from P12)
+                             *   [1] = '=' token (no AST)
+                             *   [0] = assignatio (expression AST)
+                             *
+                             * valori[2] = declarator AST
+                             * valori[0] = assignatio AST
+                             * lexemata[3] = modifier token
+                             * lexemata[1] = '=' token
+                             */
+                            Arbor2Nodus* decl_node;
+                            Arbor2Nodus* init_expr;
+                            Arbor2Token* modifier_tok;
+                            Arbor2Token* assign_tok;
+
+                            /* Get declarator from valori[2] (pre-built by P12/P11) */
+                            decl_node = valori[II];
+
+                            /* Get initializer expression from valori[0] */
+                            init_expr = valori[ZEPHYRUM];
+
+                            /* Get modifier token from lexemata[III] and '=' from lexemata[I] */
+                            modifier_tok = lexemata[III];
+                            assign_tok = lexemata[I];
+
+                            /* Create DECLARATIO node */
+                            valor_novus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
+                            valor_novus->genus = ARBOR2_NODUS_DECLARATIO;
+                            valor_novus->pater = NIHIL;
+                            valor_novus->datum.declaratio.tok_storage = NIHIL;
+                            valor_novus->datum.declaratio.tok_const = NIHIL;
+                            valor_novus->datum.declaratio.tok_volatile = NIHIL;
+                            valor_novus->datum.declaratio.tok_unsigned = NIHIL;
+                            valor_novus->datum.declaratio.tok_signed = NIHIL;
+                            valor_novus->datum.declaratio.tok_long = NIHIL;
+                            valor_novus->datum.declaratio.tok_long2 = NIHIL;
+                            valor_novus->datum.declaratio.tok_short = NIHIL;
+                            valor_novus->datum.declaratio.tok_assignatio = assign_tok;
+                            valor_novus->datum.declaratio.initializor = init_expr;
+                            valor_novus->datum.declaratio.tok_semicolon = NIHIL;
+                            valor_novus->datum.declaratio.tok_comma = NIHIL;
+                            valor_novus->datum.declaratio.proxima = NIHIL;
+                            valor_novus->datum.declaratio.est_typedef = FALSUM;
+                            valor_novus->datum.declaratio.storage_class = ARBOR2_STORAGE_NONE;
+                            valor_novus->datum.declaratio.qualifiers = ARBOR2_QUAL_NONE;
+
+                            /* Set modifier token based on production */
+                            commutatio (actio->valor)
+                            {
+                                casus 531: /* long (implicit int) */
+                                    valor_novus->datum.declaratio.tok_long = modifier_tok;
+                                    frange;
+                                casus 532: /* short (implicit int) */
+                                    valor_novus->datum.declaratio.tok_short = modifier_tok;
+                                    frange;
+                                casus 533: /* unsigned (implicit int) */
+                                    valor_novus->datum.declaratio.tok_unsigned = modifier_tok;
+                                    frange;
+                                casus 534: /* signed (implicit int) */
+                                    valor_novus->datum.declaratio.tok_signed = modifier_tok;
+                                    frange;
+                                ordinarius:
+                                    frange;
+                            }
+
+                            /* No explicit base type (implicit int) */
+                            valor_novus->datum.declaratio.specifier = NIHIL;
+                            valor_novus->lexema = modifier_tok;
+
+                            valor_novus->datum.declaratio.declarator = decl_node;
+                            si (decl_node != NIHIL) decl_node->pater = valor_novus;
+                            si (init_expr != NIHIL) init_expr->pater = valor_novus;
                         }
                         /* ========== QUALIFIER + COMPOUND TYPE SPECIFIERS P437-P504 ========== */
                         alioquin si (actio->valor >= 437 && actio->valor <= 504)
