@@ -923,6 +923,452 @@ s32 principale(vacuum)
     }
 
     /* ========================================================
+     * PROBARE: Comprehensive interior comment roundtrip tests
+     * ======================================================== */
+    {
+        imprimere("\n--- Probans comprehensive interior commenta ---\n");
+
+        /* Multiple interior comments in binary */
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "a /* c1 */ + /* c2 */ b", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "a /* c1 */ + /* c2 */ b /* c3 */ + /* c4 */ c", NIHIL));
+
+        /* Comments around operators */
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "a/* pre */+b", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "a+/* post */b", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "a /* both */ + /* sides */ b", NIHIL));
+
+        /* Comments in all binary operator types */
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "a /* x */ - /* y */ b", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "a /* x */ * /* y */ b", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "a /* x */ / /* y */ b", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "a /* x */ % /* y */ b", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "a /* x */ == /* y */ b", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "a /* x */ != /* y */ b", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "a /* x */ < /* y */ b", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "a /* x */ > /* y */ b", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "a /* x */ <= /* y */ b", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "a /* x */ >= /* y */ b", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "a /* x */ && /* y */ b", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "a /* x */ || /* y */ b", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "a /* x */ & /* y */ b", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "a /* x */ | /* y */ b", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "a /* x */ ^ /* y */ b", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "a /* x */ << /* y */ b", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "a /* x */ >> /* y */ b", NIHIL));
+    }
+
+    /* ========================================================
+     * PROBARE: Interior comments in function calls
+     * ======================================================== */
+    {
+        imprimere("\n--- Probans interior commenta in vocatio ---\n");
+
+        /* Comment before first argument */
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "f(/* first */ a)", NIHIL));
+
+        /* Comment after argument */
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "f(a /* after */)", NIHIL));
+
+        /* Comments between arguments */
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "f(a, /* mid */ b)", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "f(a /* c1 */, /* c2 */ b)", NIHIL));
+
+        /* Multiple arguments with comments */
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "f(/* a */ a, /* b */ b, /* c */ c)", NIHIL));
+
+        /* Comments in nested calls */
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "f(g(/* inner */ x))", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "f(/* outer */ g(/* inner */ x))", NIHIL));
+
+        /* Empty function with comment */
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "f(/* empty */)", NIHIL));
+    }
+
+    /* ========================================================
+     * PROBARE: Interior comments in subscript expressions
+     * ======================================================== */
+    {
+        imprimere("\n--- Probans interior commenta in subscriptio ---\n");
+
+        /* Comment inside subscript */
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "a[/* idx */ i]", NIHIL));
+
+        /* Comment before index */
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "a[ /* pre */ i]", NIHIL));
+
+        /* Comment after index */
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "a[i /* post */ ]", NIHIL));
+
+        /* Comments around index expression */
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "a[/* pre */ i + 1 /* post */]", NIHIL));
+
+        /* Multiple subscripts with comments */
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "a[/* x */ i][/* y */ j]", NIHIL));
+    }
+
+    /* ========================================================
+     * PROBARE: Interior comments in member access
+     * ======================================================== */
+    {
+        imprimere("\n--- Probans interior commenta in membrum accessus ---\n");
+
+        /* Comment before dot */
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "a /* c */ .b", NIHIL));
+
+        /* Comment after dot */
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "a. /* c */ b", NIHIL));
+
+        /* Comment before arrow */
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "a /* c */ ->b", NIHIL));
+
+        /* Comment after arrow */
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "a-> /* c */ b", NIHIL));
+
+        /* Chained access with comments */
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "a /* c1 */ .b /* c2 */ .c", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "a /* c1 */ ->b /* c2 */ ->c", NIHIL));
+    }
+
+    /* ========================================================
+     * PROBARE: Interior comments in unary expressions
+     * ======================================================== */
+    {
+        imprimere("\n--- Probans interior commenta in unarius ---\n");
+
+        /* Comment after unary operator */
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "! /* c */ x", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "~ /* c */ x", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "- /* c */ x", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "+ /* c */ x", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "++ /* c */ x", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "-- /* c */ x", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "& /* c */ x", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "* /* c */ p", NIHIL));
+    }
+
+    /* ========================================================
+     * PROBARE: Interior comments in cast expressions
+     * ======================================================== */
+    {
+        imprimere("\n--- Probans interior commenta in cast ---\n");
+
+        /* Comment inside cast parens */
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "(/* type */ int)x", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "(int /* after */)x", NIHIL));
+
+        /* Comment after cast */
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "(int) /* c */ x", NIHIL));
+
+        /* Pointer cast with comments */
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "(int /* c */ *)p", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "(int*) /* c */ p", NIHIL));
+    }
+
+    /* ========================================================
+     * PROBARE: Interior comments in sizeof
+     * ======================================================== */
+    {
+        imprimere("\n--- Probans interior commenta in sizeof ---\n");
+
+        /* Comment after sizeof */
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "sizeof /* c */ x", NIHIL));
+
+        /* Comment inside sizeof parens */
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "sizeof(/* c */ x)", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "sizeof(x /* c */)", NIHIL));
+
+        /* Comment in sizeof type */
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "sizeof(/* type */ int)", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "sizeof(int /* c */)", NIHIL));
+    }
+
+    /* ========================================================
+     * PROBARE: Interior comments in parenthesized expressions
+     * ======================================================== */
+    {
+        imprimere("\n--- Probans interior commenta in parenthesis ---\n");
+
+        /* Comment inside parens */
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "(/* c */ x)", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "(x /* c */)", NIHIL));
+
+        /* Comments around expression */
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "(/* pre */ a + b /* post */)", NIHIL));
+
+        /* Nested parens with comments */
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "((/* inner */ x))", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "(/* outer */ (/* inner */ x))", NIHIL));
+    }
+
+    /* ========================================================
+     * PROBARE: Interior comments in ternary expressions
+     * ======================================================== */
+    {
+        imprimere("\n--- Probans interior commenta in ternarius ---\n");
+
+        /* Comment after condition */
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "a /* cond */ ? 1 : 2", NIHIL));
+
+        /* Comment before true branch */
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "a ? /* true */ 1 : 2", NIHIL));
+
+        /* Comment after true branch */
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "a ? 1 /* mid */ : 2", NIHIL));
+
+        /* Comment before false branch */
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "a ? 1 : /* false */ 2", NIHIL));
+
+        /* Multiple comments */
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "a /* c1 */ ? /* c2 */ 1 /* c3 */ : /* c4 */ 2", NIHIL));
+    }
+
+    /* ========================================================
+     * PROBARE: Interior comments in assignment
+     * ======================================================== */
+    {
+        imprimere("\n--- Probans interior commenta in assignatio ---\n");
+
+        /* Comment before equals */
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "x /* c */ = 1", NIHIL));
+
+        /* Comment after equals */
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "x = /* c */ 1", NIHIL));
+
+        /* Comments around compound assignment */
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "x /* c */ += 1", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "x += /* c */ 1", NIHIL));
+    }
+
+    /* ========================================================
+     * PROBARE: Interior comments in comma expressions
+     * ======================================================== */
+    {
+        imprimere("\n--- Probans interior commenta in comma ---\n");
+
+        /* Comment between comma elements */
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "a /* c */ , b", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "a, /* c */ b", NIHIL));
+
+        /* Multiple elements with comments */
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "a /* c1 */, b /* c2 */, c", NIHIL));
+    }
+
+    /* ========================================================
+     * PROBARE: Interior comments in declarations
+     * ======================================================== */
+    {
+        imprimere("\n--- Probans interior commenta in declarationes ---\n");
+
+        /* Comment between type and name */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion,
+            "int /* c */ x;", NIHIL));
+
+        /* Comment after name before semicolon */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion,
+            "int x /* c */;", NIHIL));
+
+        /* Comment before initializer */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion,
+            "int x /* c */ = 1;", NIHIL));
+
+        /* Comment after equals */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion,
+            "int x = /* c */ 1;", NIHIL));
+
+        /* Pointer declaration with comment */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion,
+            "int /* ptr */ *p;", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion,
+            "int * /* name */ p;", NIHIL));
+    }
+
+    /* ========================================================
+     * PROBARE: Multi-declarator declarations (int a, b;)
+     * ======================================================== */
+    {
+        imprimere("\n--- Probans multi-declarator declarationes ---\n");
+
+        /* Basic multi-declarator */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion,
+            "int a, b;", NIHIL));
+
+        /* With initializers */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion,
+            "int a = 1, b = 2;", NIHIL));
+
+        /* Mixed with/without initializers */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion,
+            "int a, b = 1;", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion,
+            "int a = 1, b;", NIHIL));
+
+        /* Three declarators */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion,
+            "int a, b, c;", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion,
+            "int a = 1, b = 2, c = 3;", NIHIL));
+
+        /* Pointers */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion,
+            "int *a, *b;", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion,
+            "int *a, b;", NIHIL));
+
+        /* Spacing around comma */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion,
+            "int a , b;", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion,
+            "int a,b;", NIHIL));
+
+        /* With comments */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion,
+            "int a /* c1 */, b;", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion,
+            "int a, /* c2 */ b;", NIHIL));
+
+        /* Other types */
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion,
+            "char a, b;", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_tu(piscina, intern, expansion,
+            "float a, b;", NIHIL));
+    }
+
+    /* ========================================================
+     * PROBARE: Line comments interior preservation
+     * ======================================================== */
+    {
+        imprimere("\n--- Probans line commenta interior ---\n");
+
+        /* Line comment in multi-line expression */
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "a + // mid\nb", NIHIL));
+
+        /* Multiple line comments */
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "a + // c1\nb + // c2\nc", NIHIL));
+    }
+
+    /* ========================================================
+     * PROBARE: Mixed block and line comments
+     * ======================================================== */
+    {
+        imprimere("\n--- Probans mixta commenta ---\n");
+
+        /* Block then line */
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "a /* block */ + // line\nb", NIHIL));
+
+        /* Line then block */
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "a + // line\n/* block */ b", NIHIL));
+    }
+
+    /* ========================================================
+     * PROBARE: Edge case comments
+     * ======================================================== */
+    {
+        imprimere("\n--- Probans edge case commenta ---\n");
+
+        /* Empty block comment */
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "a /**/ + b", NIHIL));
+
+        /* Comment with only spaces */
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "a /*   */ + b", NIHIL));
+
+        /* Comment with stars */
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "a /***/ + b", NIHIL));
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "a /** comment **/ + b", NIHIL));
+
+        /* Empty line comment */
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "a + //\nb", NIHIL));
+
+        /* Adjacent comments */
+        CREDO_VERUM(_probare_roundtrip_expressio(piscina, intern, expansion,
+            "a /* c1 *//* c2 */ + b", NIHIL));
+    }
+
+    /* ========================================================
      * PROBARE: Additional ternary variations
      * ======================================================== */
     {

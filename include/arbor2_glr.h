@@ -398,6 +398,7 @@ structura Arbor2Nodus {
             Arbor2Token*        tok_assignatio; /* = token (NIHIL if no initializer) */
             Arbor2Nodus*        initializor;    /* Initializer expression (NIHIL if none) */
             Arbor2Token*        tok_semicolon;  /* ; */
+            Arbor2Token*        tok_comma;      /* , before this decl (NIHIL for first) */
             Arbor2Nodus*        proxima;        /* Next declaration in comma-sep list */
             b32                 est_typedef;    /* VERUM if this is a typedef declaration */
             i32                 storage_class;  /* ARBOR2_STORAGE_* flags (only one in C89) */

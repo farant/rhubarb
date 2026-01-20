@@ -424,14 +424,31 @@ _scribere_nodum(Xar* output, Arbor2Nodus* nodus)
                 arbor2_scribere_lexema(output, nodus->datum.declaratio.tok_assignatio);
                 _scribere_nodum(output, nodus->datum.declaratio.initializor);
             }
+            /* Handle chained declarations: emit comma + declarator only (not specifiers) */
+            {
+                Arbor2Nodus* curr = nodus->datum.declaratio.proxima;
+                dum (curr != NIHIL)
+                {
+                    /* Emit comma before this declarator */
+                    si (curr->datum.declaratio.tok_comma != NIHIL)
+                    {
+                        arbor2_scribere_lexema(output, curr->datum.declaratio.tok_comma);
+                    }
+                    /* Emit declarator */
+                    _scribere_nodum(output, curr->datum.declaratio.declarator);
+                    /* Emit initializer if present */
+                    si (curr->datum.declaratio.tok_assignatio != NIHIL)
+                    {
+                        arbor2_scribere_lexema(output, curr->datum.declaratio.tok_assignatio);
+                        _scribere_nodum(output, curr->datum.declaratio.initializor);
+                    }
+                    curr = curr->datum.declaratio.proxima;
+                }
+            }
+            /* Semicolon comes after all declarators */
             si (nodus->datum.declaratio.tok_semicolon != NIHIL)
             {
                 arbor2_scribere_lexema(output, nodus->datum.declaratio.tok_semicolon);
-            }
-            /* Handle chained declarations */
-            si (nodus->datum.declaratio.proxima != NIHIL)
-            {
-                _scribere_nodum(output, nodus->datum.declaratio.proxima);
             }
             frange;
 

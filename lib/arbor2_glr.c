@@ -2175,6 +2175,7 @@ _processare_unam_actionem(
                             member->datum.declaratio.tok_assignatio = NIHIL;
                             member->datum.declaratio.initializor = NIHIL;
                             member->datum.declaratio.tok_semicolon = lexemata[ZEPHYRUM];
+                            member->datum.declaratio.tok_comma = NIHIL;
                             member->datum.declaratio.proxima = NIHIL;
 
                             /* Statuere patrem pro filiis */
@@ -2221,6 +2222,7 @@ _processare_unam_actionem(
                             member->datum.declaratio.tok_assignatio = NIHIL;
                             member->datum.declaratio.initializor = NIHIL;
                             member->datum.declaratio.tok_semicolon = lexemata[ZEPHYRUM];
+                            member->datum.declaratio.tok_comma = NIHIL;
                             member->datum.declaratio.proxima = NIHIL;
 
                             /* Statuere patrem pro filiis */
@@ -2275,6 +2277,7 @@ _processare_unam_actionem(
                             member->datum.declaratio.tok_assignatio = NIHIL;
                             member->datum.declaratio.initializor = NIHIL;
                             member->datum.declaratio.tok_semicolon = lexemata[ZEPHYRUM];
+                            member->datum.declaratio.tok_comma = NIHIL;
                             member->datum.declaratio.proxima = NIHIL;
 
                             lista = xar_creare(glr->piscina, magnitudo(Arbor2Nodus*));
@@ -2327,6 +2330,7 @@ _processare_unam_actionem(
                             member->datum.declaratio.tok_assignatio = NIHIL;
                             member->datum.declaratio.initializor = NIHIL;
                             member->datum.declaratio.tok_semicolon = lexemata[ZEPHYRUM];
+                            member->datum.declaratio.tok_comma = NIHIL;
                             member->datum.declaratio.proxima = NIHIL;
 
                             slot = xar_addere(lista);
@@ -2373,6 +2377,7 @@ _processare_unam_actionem(
                             member->datum.declaratio.tok_assignatio = NIHIL;
                             member->datum.declaratio.initializor = NIHIL;
                             member->datum.declaratio.tok_semicolon = lexemata[ZEPHYRUM];
+                            member->datum.declaratio.tok_comma = NIHIL;
                             member->datum.declaratio.proxima = NIHIL;
 
                             lista = xar_creare(glr->piscina, magnitudo(Arbor2Nodus*));
@@ -2415,6 +2420,7 @@ _processare_unam_actionem(
                             member->datum.declaratio.tok_assignatio = NIHIL;
                             member->datum.declaratio.initializor = NIHIL;
                             member->datum.declaratio.tok_semicolon = lexemata[ZEPHYRUM];
+                            member->datum.declaratio.tok_comma = NIHIL;
                             member->datum.declaratio.proxima = NIHIL;
 
                             slot = xar_addere(lista);
@@ -2459,6 +2465,7 @@ _processare_unam_actionem(
                             member->datum.declaratio.tok_assignatio = NIHIL;
                             member->datum.declaratio.initializor = NIHIL;
                             member->datum.declaratio.tok_semicolon = lexemata[ZEPHYRUM];
+                            member->datum.declaratio.tok_comma = NIHIL;
                             member->datum.declaratio.proxima = NIHIL;
 
                             lista = xar_creare(glr->piscina, magnitudo(Arbor2Nodus*));
@@ -2501,6 +2508,7 @@ _processare_unam_actionem(
                             member->datum.declaratio.tok_assignatio = NIHIL;
                             member->datum.declaratio.initializor = NIHIL;
                             member->datum.declaratio.tok_semicolon = lexemata[ZEPHYRUM];
+                            member->datum.declaratio.tok_comma = NIHIL;
                             member->datum.declaratio.proxima = NIHIL;
 
                             slot = xar_addere(lista);
@@ -2533,6 +2541,7 @@ _processare_unam_actionem(
                             member->datum.declaratio.tok_assignatio = NIHIL;
                             member->datum.declaratio.initializor = NIHIL;
                             member->datum.declaratio.tok_semicolon = lexemata[ZEPHYRUM];
+                            member->datum.declaratio.tok_comma = NIHIL;
                             member->datum.declaratio.proxima = NIHIL;
 
                             lista = xar_creare(glr->piscina, magnitudo(Arbor2Nodus*));
@@ -2566,6 +2575,7 @@ _processare_unam_actionem(
                             member->datum.declaratio.tok_assignatio = NIHIL;
                             member->datum.declaratio.initializor = NIHIL;
                             member->datum.declaratio.tok_semicolon = lexemata[ZEPHYRUM];
+                            member->datum.declaratio.tok_comma = NIHIL;
                             member->datum.declaratio.proxima = NIHIL;
 
                             slot = xar_addere(lista);
@@ -2599,6 +2609,7 @@ _processare_unam_actionem(
                             member->datum.declaratio.tok_assignatio = NIHIL;
                             member->datum.declaratio.initializor = NIHIL;
                             member->datum.declaratio.tok_semicolon = lexemata[ZEPHYRUM];
+                            member->datum.declaratio.tok_comma = NIHIL;
                             member->datum.declaratio.proxima = NIHIL;
 
                             lista = xar_creare(glr->piscina, magnitudo(Arbor2Nodus*));
@@ -2632,6 +2643,7 @@ _processare_unam_actionem(
                             member->datum.declaratio.tok_assignatio = NIHIL;
                             member->datum.declaratio.initializor = NIHIL;
                             member->datum.declaratio.tok_semicolon = lexemata[ZEPHYRUM];
+                            member->datum.declaratio.tok_comma = NIHIL;
                             member->datum.declaratio.proxima = NIHIL;
 
                             slot = xar_addere(lista);
@@ -2694,6 +2706,7 @@ _processare_unam_actionem(
                             member->datum.declaratio.tok_assignatio = NIHIL;
                             member->datum.declaratio.initializor = NIHIL;
                             member->datum.declaratio.tok_semicolon = lexemata[ZEPHYRUM];
+                            member->datum.declaratio.tok_comma = NIHIL;
                             member->datum.declaratio.proxima = NIHIL;
 
                             /* Parse tokens based on production number */
@@ -2863,6 +2876,7 @@ _processare_unam_actionem(
                             member->datum.declaratio.tok_assignatio = NIHIL;
                             member->datum.declaratio.initializor = NIHIL;
                             member->datum.declaratio.tok_semicolon = lexemata[ZEPHYRUM];
+                            member->datum.declaratio.tok_comma = NIHIL;
                             member->datum.declaratio.proxima = NIHIL;
 
                             /* Parse tokens based on number of symbols */
@@ -3094,6 +3108,7 @@ _processare_unam_actionem(
                             member->datum.declaratio.tok_assignatio = NIHIL;
                             member->datum.declaratio.initializor = NIHIL;
                             member->datum.declaratio.tok_semicolon = lexemata[ZEPHYRUM];
+                            member->datum.declaratio.tok_comma = NIHIL;
                             member->datum.declaratio.proxima = NIHIL;
 
                             /* Set qualifiers - both const and volatile */
@@ -3153,6 +3168,7 @@ _processare_unam_actionem(
                             valor_novus->datum.declaratio.tok_assignatio = NIHIL;
                             valor_novus->datum.declaratio.initializor = NIHIL;
                             valor_novus->datum.declaratio.tok_semicolon = lexemata[ZEPHYRUM];
+                            valor_novus->datum.declaratio.tok_comma = NIHIL;
                             valor_novus->datum.declaratio.proxima = NIHIL;
                             valor_novus->datum.declaratio.est_typedef = VERUM;
                         }
@@ -3183,6 +3199,7 @@ _processare_unam_actionem(
                             valor_novus->datum.declaratio.tok_assignatio = NIHIL;
                             valor_novus->datum.declaratio.initializor = NIHIL;
                             valor_novus->datum.declaratio.tok_semicolon = lexemata[ZEPHYRUM];
+                            valor_novus->datum.declaratio.tok_comma = NIHIL;
                             valor_novus->datum.declaratio.proxima = NIHIL;
                             valor_novus->datum.declaratio.est_typedef = VERUM;
                         }
@@ -3213,6 +3230,7 @@ _processare_unam_actionem(
                             valor_novus->datum.declaratio.tok_assignatio = NIHIL;
                             valor_novus->datum.declaratio.initializor = NIHIL;
                             valor_novus->datum.declaratio.tok_semicolon = lexemata[ZEPHYRUM];
+                            valor_novus->datum.declaratio.tok_comma = NIHIL;
                             valor_novus->datum.declaratio.proxima = NIHIL;
                             valor_novus->datum.declaratio.est_typedef = VERUM;
                         }
@@ -3249,6 +3267,7 @@ _processare_unam_actionem(
                             valor_novus->datum.declaratio.tok_assignatio = NIHIL;
                             valor_novus->datum.declaratio.initializor = NIHIL;
                             valor_novus->datum.declaratio.tok_semicolon = NIHIL;  /* No semicolon in intermediate form */
+                            valor_novus->datum.declaratio.tok_comma = NIHIL;
                             valor_novus->datum.declaratio.proxima = NIHIL;
                             valor_novus->datum.declaratio.est_typedef = FALSUM;
 
@@ -3319,6 +3338,7 @@ _processare_unam_actionem(
                             valor_novus->datum.declaratio.tok_assignatio = lexemata[I];  /* '=' */
                             valor_novus->datum.declaratio.initializor = init_expr;
                             valor_novus->datum.declaratio.tok_semicolon = NIHIL;  /* No semicolon in intermediate */
+                            valor_novus->datum.declaratio.tok_comma = NIHIL;
                             valor_novus->datum.declaratio.proxima = NIHIL;
                             valor_novus->datum.declaratio.est_typedef = FALSUM;
                             valor_novus->datum.declaratio.storage_class = ARBOR2_STORAGE_NONE;
@@ -3362,6 +3382,7 @@ _processare_unam_actionem(
                             valor_novus->datum.declaratio.tok_assignatio = lexemata[I];  /* '=' */
                             valor_novus->datum.declaratio.initializor = init_expr;
                             valor_novus->datum.declaratio.tok_semicolon = NIHIL;  /* No semicolon in intermediate */
+                            valor_novus->datum.declaratio.tok_comma = NIHIL;
                             valor_novus->datum.declaratio.proxima = NIHIL;
                             valor_novus->datum.declaratio.est_typedef = FALSUM;
                             valor_novus->datum.declaratio.storage_class = storage;
@@ -3393,6 +3414,7 @@ _processare_unam_actionem(
                             valor_novus->datum.declaratio.tok_assignatio = lexemata[I];  /* '=' */
                             valor_novus->datum.declaratio.initializor = init_lista;
                             valor_novus->datum.declaratio.tok_semicolon = NIHIL;  /* No semicolon in intermediate */
+                            valor_novus->datum.declaratio.tok_comma = NIHIL;
                             valor_novus->datum.declaratio.proxima = NIHIL;
                             valor_novus->datum.declaratio.est_typedef = FALSUM;
                             valor_novus->datum.declaratio.storage_class = ARBOR2_STORAGE_NONE;
@@ -3433,6 +3455,7 @@ _processare_unam_actionem(
                             valor_novus->datum.declaratio.tok_assignatio = lexemata[I];  /* '=' */
                             valor_novus->datum.declaratio.initializor = init_lista;
                             valor_novus->datum.declaratio.tok_semicolon = NIHIL;  /* No semicolon in intermediate */
+                            valor_novus->datum.declaratio.tok_comma = NIHIL;
                             valor_novus->datum.declaratio.proxima = NIHIL;
                             valor_novus->datum.declaratio.est_typedef = FALSUM;
                             valor_novus->datum.declaratio.storage_class = storage;
@@ -3526,6 +3549,7 @@ _processare_unam_actionem(
                             valor_novus->datum.declaratio.tok_assignatio = NIHIL;
                             valor_novus->datum.declaratio.initializor = NIHIL;
                             valor_novus->datum.declaratio.tok_semicolon = NIHIL;  /* No semicolon in intermediate */
+                            valor_novus->datum.declaratio.tok_comma = NIHIL;
                             valor_novus->datum.declaratio.proxima = NIHIL;
                             valor_novus->datum.declaratio.est_typedef = FALSUM;
                             valor_novus->datum.declaratio.storage_class = storage;
@@ -3554,6 +3578,7 @@ _processare_unam_actionem(
                             valor_novus->datum.declaratio.specifier = type_spec;
                             valor_novus->datum.declaratio.declarator = decl_node;
                             valor_novus->datum.declaratio.initializor = init_expr;
+                            valor_novus->datum.declaratio.tok_comma = NIHIL;
                             valor_novus->datum.declaratio.proxima = NIHIL;
                             valor_novus->datum.declaratio.est_typedef = FALSUM;
                             valor_novus->datum.declaratio.storage_class = storage;
@@ -3582,6 +3607,7 @@ _processare_unam_actionem(
                             valor_novus->datum.declaratio.specifier = type_spec;
                             valor_novus->datum.declaratio.declarator = decl_node;
                             valor_novus->datum.declaratio.initializor = init_lista;
+                            valor_novus->datum.declaratio.tok_comma = NIHIL;
                             valor_novus->datum.declaratio.proxima = NIHIL;
                             valor_novus->datum.declaratio.est_typedef = FALSUM;
                             valor_novus->datum.declaratio.storage_class = storage;
@@ -3637,14 +3663,20 @@ _processare_unam_actionem(
                                     Arbor2Nodus* decl_node = NIHIL;
                                     Arbor2Token* tok_assign = NIHIL;
                                     Arbor2Nodus* init_node = NIHIL;
+                                    Arbor2Token* tok_comma = NIHIL;
                                     Arbor2Nodus* nodus;
 
-                                    /* Triple: [0]=declarator, [1]=tok_assignatio, [2]=initializor */
+                                    /* Quad: [0]=declarator, [1]=tok_assignatio, [2]=initializor, [3]=tok_comma */
                                     si (pair != NIHIL && xar_numerus(pair) >= III)
                                     {
                                         decl_node = *(Arbor2Nodus**)xar_obtinere(pair, ZEPHYRUM);
                                         tok_assign = *(Arbor2Token**)xar_obtinere(pair, I);
                                         init_node = *(Arbor2Nodus**)xar_obtinere(pair, II);
+                                    }
+                                    /* Read tok_comma from 4th slot if available */
+                                    si (pair != NIHIL && xar_numerus(pair) >= IV)
+                                    {
+                                        tok_comma = *(Arbor2Token**)xar_obtinere(pair, III);
                                     }
 
                                     nodus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
@@ -3658,6 +3690,7 @@ _processare_unam_actionem(
                                     nodus->datum.declaratio.tok_assignatio = tok_assign;
                                     nodus->datum.declaratio.initializor = init_node;
                                     nodus->datum.declaratio.tok_semicolon = NIHIL;  /* Set by P239 or post-process */
+                                    nodus->datum.declaratio.tok_comma = tok_comma;
                                     nodus->datum.declaratio.proxima = NIHIL;
                                     nodus->datum.declaratio.est_typedef = FALSUM;
                                     nodus->datum.declaratio.storage_class = ARBOR2_STORAGE_NONE;
@@ -3723,6 +3756,7 @@ _processare_unam_actionem(
                             valor_novus->datum.declaratio.tok_assignatio = NIHIL;
                             valor_novus->datum.declaratio.initializor = NIHIL;
                             valor_novus->datum.declaratio.tok_semicolon = NIHIL;
+                            valor_novus->datum.declaratio.tok_comma = NIHIL;
                             valor_novus->datum.declaratio.proxima = NIHIL;
                             valor_novus->datum.declaratio.est_typedef = FALSUM;
                             valor_novus->datum.declaratio.storage_class = ARBOR2_STORAGE_NONE;
@@ -3880,6 +3914,7 @@ _processare_unam_actionem(
                             valor_novus->datum.declaratio.tok_assignatio = NIHIL;
                             valor_novus->datum.declaratio.initializor = NIHIL;
                             valor_novus->datum.declaratio.tok_semicolon = NIHIL;
+                            valor_novus->datum.declaratio.tok_comma = NIHIL;
                             valor_novus->datum.declaratio.proxima = NIHIL;
                             valor_novus->datum.declaratio.est_typedef = FALSUM;
                             valor_novus->datum.declaratio.storage_class = ARBOR2_STORAGE_NONE;
@@ -4107,6 +4142,7 @@ _processare_unam_actionem(
                             valor_novus->datum.declaratio.specifier = valori[I];
                             valor_novus->datum.declaratio.declarator = valori[ZEPHYRUM];
                             valor_novus->datum.declaratio.initializor = NIHIL;
+                            valor_novus->datum.declaratio.tok_comma = NIHIL;
                             valor_novus->datum.declaratio.proxima = NIHIL;
                         }
                         alioquin
@@ -5891,7 +5927,7 @@ _processare_unam_actionem(
                         alioquin si (actio->valor == 221)
                         {
                             /* P221: init_decl -> declarator (1 symbol)
-                             * Create triple [declarator, tok_assignatio, initializor] */
+                             * Create quad [declarator, tok_assignatio, initializor, tok_comma] */
                             Xar* pair = xar_creare(glr->piscina, magnitudo(vacuum*));
                             vacuum** slot;
                             slot = xar_addere(pair);
@@ -5900,6 +5936,8 @@ _processare_unam_actionem(
                             *slot = NIHIL;  /* no tok_assignatio */
                             slot = xar_addere(pair);
                             *slot = NIHIL;  /* no initializor */
+                            slot = xar_addere(pair);
+                            *slot = NIHIL;  /* no tok_comma (first in list) */
                             valor_novus = (Arbor2Nodus*)pair;
                         }
                         alioquin si (actio->valor == 222)
@@ -5907,7 +5945,7 @@ _processare_unam_actionem(
                             /* P222: init_decl -> declarator '=' assignatio (3 symbols)
                              * lexemata: [2]=last_decl, [1]='=', [0]=last_init
                              * valori: [2]=declarator, [1]=nil, [0]=assignatio
-                             * Create triple [declarator, tok_assignatio, initializor] */
+                             * Create quad [declarator, tok_assignatio, initializor, tok_comma] */
                             Xar* pair = xar_creare(glr->piscina, magnitudo(vacuum*));
                             vacuum** slot;
                             slot = xar_addere(pair);
@@ -5916,6 +5954,8 @@ _processare_unam_actionem(
                             *slot = lexemata[I];  /* tok_assignatio '=' */
                             slot = xar_addere(pair);
                             *slot = valori[ZEPHYRUM];  /* initializor */
+                            slot = xar_addere(pair);
+                            *slot = NIHIL;  /* no tok_comma (first in list) */
                             valor_novus = (Arbor2Nodus*)pair;
                         }
                         alioquin si (actio->valor == 223)
@@ -5923,7 +5963,7 @@ _processare_unam_actionem(
                             /* P223: init_decl -> declarator '=' init_lista (3 symbols)
                              * lexemata: [2]=last_decl, [1]='=', [0]='}'
                              * valori: [2]=declarator, [1]=nil, [0]=init_lista
-                             * Create triple [declarator, tok_assignatio, initializor] */
+                             * Create quad [declarator, tok_assignatio, initializor, tok_comma] */
                             Xar* pair = xar_creare(glr->piscina, magnitudo(vacuum*));
                             vacuum** slot;
                             slot = xar_addere(pair);
@@ -5932,6 +5972,8 @@ _processare_unam_actionem(
                             *slot = lexemata[I];  /* tok_assignatio '=' */
                             slot = xar_addere(pair);
                             *slot = valori[ZEPHYRUM];  /* init_lista */
+                            slot = xar_addere(pair);
+                            *slot = NIHIL;  /* no tok_comma (first in list) */
                             valor_novus = (Arbor2Nodus*)pair;
                         }
                         alioquin si (actio->valor == 224)
@@ -5946,10 +5988,19 @@ _processare_unam_actionem(
                         alioquin si (actio->valor == 225)
                         {
                             /* P225: init_decl_list -> init_decl_list ',' init_decl (3 symbols)
-                             * valori: [2]=init_decl_list (Xar of pairs), [1]=',', [0]=init_decl (pair) */
+                             * valori: [2]=init_decl_list (Xar of pairs), [1]=NIHIL, [0]=init_decl (quad)
+                             * lexemata: [2]=?, [1]=',', [0]=last_token */
                             Xar* lista = (Xar*)valori[II];
-                            Xar** slot = xar_addere(lista);
-                            *slot = (Xar*)valori[ZEPHYRUM];  /* The new pair */
+                            Xar* new_quad = (Xar*)valori[ZEPHYRUM];
+                            Xar** slot_lista;
+                            /* Store comma token in quad's 4th slot */
+                            si (new_quad != NIHIL && xar_numerus(new_quad) >= IV)
+                            {
+                                vacuum** comma_slot = xar_obtinere(new_quad, III);
+                                *comma_slot = lexemata[I];  /* tok_comma */
+                            }
+                            slot_lista = xar_addere(lista);
+                            *slot_lista = new_quad;
                             valor_novus = (Arbor2Nodus*)lista;
                         }
                         /* Phase 2: Argument lists as LISTA_SEPARATA for roundtrip */
