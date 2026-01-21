@@ -5170,6 +5170,146 @@ s32 principale(vacuum)
         imprimere("  furcae: %d\n", glr->num_furcae);
     }
 
+    /* Test enum with unary minus: enum { A = -1 } */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans enum unary minus: enum { A = -1 } ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "enum { A = -1 }");
+        res = arbor2_glr_parsere(glr, tokens);
+
+        imprimere("  resultus: %s\n", res.successus ? "verum" : "falsum");
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.radix);
+        si (res.radix != NIHIL)
+        {
+            _imprimere_arborem(res.radix, ZEPHYRUM);
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_ENUM_SPECIFIER);
+        }
+    }
+
+    /* Test enum with unary plus: enum { A = +1 } */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans enum unary plus: enum { A = +1 } ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "enum { A = +1 }");
+        res = arbor2_glr_parsere(glr, tokens);
+
+        imprimere("  resultus: %s\n", res.successus ? "verum" : "falsum");
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.radix);
+        si (res.radix != NIHIL)
+        {
+            _imprimere_arborem(res.radix, ZEPHYRUM);
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_ENUM_SPECIFIER);
+        }
+    }
+
+    /* Test enum with bitwise NOT: enum { A = ~0 } */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans enum bitwise NOT: enum { A = ~0 } ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "enum { A = ~0 }");
+        res = arbor2_glr_parsere(glr, tokens);
+
+        imprimere("  resultus: %s\n", res.successus ? "verum" : "falsum");
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.radix);
+        si (res.radix != NIHIL)
+        {
+            _imprimere_arborem(res.radix, ZEPHYRUM);
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_ENUM_SPECIFIER);
+        }
+    }
+
+    /* Test enum with logical NOT: enum { A = !0 } */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans enum logical NOT: enum { A = !0 } ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "enum { A = !0 }");
+        res = arbor2_glr_parsere(glr, tokens);
+
+        imprimere("  resultus: %s\n", res.successus ? "verum" : "falsum");
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.radix);
+        si (res.radix != NIHIL)
+        {
+            _imprimere_arborem(res.radix, ZEPHYRUM);
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_ENUM_SPECIFIER);
+        }
+    }
+
+    /* Test enum with sizeof: enum { A = sizeof(int) } */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans enum sizeof: enum { A = sizeof(int) } ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "enum { A = sizeof(int) }");
+        res = arbor2_glr_parsere(glr, tokens);
+
+        imprimere("  resultus: %s\n", res.successus ? "verum" : "falsum");
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.radix);
+        si (res.radix != NIHIL)
+        {
+            _imprimere_arborem(res.radix, ZEPHYRUM);
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_ENUM_SPECIFIER);
+        }
+    }
+
+    /* Test enum with char literal: enum { A = 'X' } */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans enum char literal: enum { A = 'X' } ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "enum { A = 'X' }");
+        res = arbor2_glr_parsere(glr, tokens);
+
+        imprimere("  resultus: %s\n", res.successus ? "verum" : "falsum");
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.radix);
+        si (res.radix != NIHIL)
+        {
+            _imprimere_arborem(res.radix, ZEPHYRUM);
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_ENUM_SPECIFIER);
+        }
+    }
+
+    /* Test enum with subsequent enumerator using new expressions: enum { A, B = ~1, C = -2 } */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans enum subsequent expr: enum { A, B = ~1, C = -2 } ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "enum { A, B = ~1, C = -2 }");
+        res = arbor2_glr_parsere(glr, tokens);
+
+        imprimere("  resultus: %s\n", res.successus ? "verum" : "falsum");
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.radix);
+        si (res.radix != NIHIL)
+        {
+            _imprimere_arborem(res.radix, ZEPHYRUM);
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_ENUM_SPECIFIER);
+        }
+    }
+
 
     /* ========================================================
      * PROBARE: Nested type specifiers (Phase E5)
