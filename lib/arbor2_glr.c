@@ -8070,14 +8070,43 @@ _invenire_finem_declarationis(Xar* lexemata, i32 initium)
                     {
                         Arbor2Token** next_ptr = xar_obtinere(lexemata, i + I);
                         Arbor2Token* next_tok = *next_ptr;
-                        /* If followed by ; or identifier, this is struct/enum, not function */
-                        /* Continue to find the semicolon as the real end */
-                        si (next_tok->lexema->genus == ARBOR2_LEXEMA_SEMICOLON ||
-                            next_tok->lexema->genus == ARBOR2_LEXEMA_IDENTIFICATOR ||
-                            next_tok->lexema->genus == ARBOR2_LEXEMA_ASTERISCUS)
+                        /* If followed by ; this is struct/enum definition */
+                        si (next_tok->lexema->genus == ARBOR2_LEXEMA_SEMICOLON)
                         {
                             in_functione = FALSUM;  /* Reset - continue to semicolon */
                             frange;
+                        }
+                        /* If followed by identifier or *, check if it's a struct declarator
+                         * or a new function definition. Look for '(' within next 5 tokens
+                         * before seeing ';' - if so, it's a new function. */
+                        si (next_tok->lexema->genus == ARBOR2_LEXEMA_IDENTIFICATOR ||
+                            next_tok->lexema->genus == ARBOR2_LEXEMA_ASTERISCUS)
+                        {
+                            i32 j;
+                            b32 videtur_functio = FALSUM;
+                            per (j = i + I; j < num && j < i + VI; j++)
+                            {
+                                Arbor2Token** look_ptr = xar_obtinere(lexemata, j);
+                                Arbor2Token* look_tok = *look_ptr;
+                                si (look_tok->lexema->genus == ARBOR2_LEXEMA_SEMICOLON ||
+                                    look_tok->lexema->genus == ARBOR2_LEXEMA_COMMA)
+                                {
+                                    /* Struct/enum declarator list */
+                                    frange;
+                                }
+                                si (look_tok->lexema->genus == ARBOR2_LEXEMA_PAREN_APERTA)
+                                {
+                                    /* Function definition follows */
+                                    videtur_functio = VERUM;
+                                    frange;
+                                }
+                            }
+                            si (!videtur_functio)
+                            {
+                                in_functione = FALSUM;  /* Reset - continue to semicolon */
+                                frange;
+                            }
+                            /* Fall through to return - this is a new function */
                         }
                     }
                     /* Function body ended - include closing brace */

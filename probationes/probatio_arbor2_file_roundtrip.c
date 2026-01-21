@@ -541,7 +541,22 @@ s32 principale(vacuum)
         CREDO_VERUM(_probare_roundtrip_fasciculum(piscina, intern, expansion,
             "probationes/fixa/roundtrip/color_simple.c"));
 
-        /* Files requiring latina.h expansion (future: GLR forking)
+        /* GLR forking Phase 2: multiple functions with unknown return types */
+        CREDO_VERUM(_probare_roundtrip_fasciculum(piscina, intern, expansion,
+            "probationes/fixa/roundtrip/test_color_func.c"));
+        CREDO_VERUM(_probare_roundtrip_fasciculum(piscina, intern, expansion,
+            "probationes/fixa/roundtrip/test_return_unknown.c"));
+        CREDO_VERUM(_probare_roundtrip_fasciculum(piscina, intern, expansion,
+            "probationes/fixa/roundtrip/test_two_simple.c"));
+        CREDO_VERUM(_probare_roundtrip_fasciculum(piscina, intern, expansion,
+            "probationes/fixa/roundtrip/test_two_unknown_ret.c"));
+        CREDO_VERUM(_probare_roundtrip_fasciculum(piscina, intern, expansion,
+            "probationes/fixa/roundtrip/test_two_funcs.c"));
+
+        /* TODO: Phase 3 - pointer declarations with unknown typedefs in function bodies
+         * e.g., constans i8* pal; requires grammar changes for ID ID * ID pattern
+        CREDO_VERUM(_probare_roundtrip_fasciculum(piscina, intern, expansion,
+            "probationes/fixa/roundtrip/test_const_ptr.c"));
         CREDO_VERUM(_probare_roundtrip_fasciculum(piscina, intern, expansion,
             "probationes/fixa/roundtrip/color.c"));
         CREDO_VERUM(_probare_roundtrip_fasciculum(piscina, intern, expansion,
