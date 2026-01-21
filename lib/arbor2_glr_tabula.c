@@ -25113,6 +25113,21 @@ hic_manens constans Arbor2LexemaGenus ENUMERATOR_INIT_CONTEXTUS_LEXEMATA[] = {
     ARBOR2_LEXEMA_SIZEOF          /* sizeof operator */
 };
 
+/* Required tokens for CASE_EXPR_CONTEXTUS states (case constant expressions) */
+hic_manens constans Arbor2LexemaGenus CASE_EXPR_CONTEXTUS_LEXEMATA[] = {
+    ARBOR2_LEXEMA_IDENTIFICATOR,  /* enum constants, macros */
+    ARBOR2_LEXEMA_INTEGER,        /* integer literals */
+    ARBOR2_LEXEMA_CHAR_LIT,       /* character literals */
+    ARBOR2_LEXEMA_PAREN_APERTA,   /* grouped expressions */
+    ARBOR2_LEXEMA_ASTERISCUS,     /* dereference */
+    ARBOR2_LEXEMA_AMPERSAND,      /* address-of */
+    ARBOR2_LEXEMA_MINUS,          /* unary minus -1 */
+    ARBOR2_LEXEMA_PLUS,           /* unary plus +1 */
+    ARBOR2_LEXEMA_TILDE,          /* bitwise NOT ~0 */
+    ARBOR2_LEXEMA_EXCLAMATIO,     /* logical NOT !0 */
+    ARBOR2_LEXEMA_SIZEOF          /* sizeof operator */
+};
+
 /* Tag rule structure */
 nomen structura {
     i32                         signum;        /* Tag bit flag */
@@ -25163,6 +25178,12 @@ hic_manens constans Arbor2TagRegula TAG_REGULAE[] = {
         "ENUMERATOR_INIT_CONTEXTUS",
         ENUMERATOR_INIT_CONTEXTUS_LEXEMATA,
         (i32)(magnitudo(ENUMERATOR_INIT_CONTEXTUS_LEXEMATA) / magnitudo(ENUMERATOR_INIT_CONTEXTUS_LEXEMATA[0]))
+    },
+    {
+        ARBOR2_TAG_CASE_EXPR_CONTEXTUS,
+        "CASE_EXPR_CONTEXTUS",
+        CASE_EXPR_CONTEXTUS_LEXEMATA,
+        (i32)(magnitudo(CASE_EXPR_CONTEXTUS_LEXEMATA) / magnitudo(CASE_EXPR_CONTEXTUS_LEXEMATA[0]))
     }
 };
 
@@ -25218,7 +25239,7 @@ hic_manens constans i32 STATUS_TAGS[] = {
     /* 81 */  0,
     /* 82 */  ARBOR2_TAG_SENTENTIA_INITIUM,  /* switch body */
     /* 83 */  0,
-    /* 84 */  ARBOR2_TAG_EXPR_INITIUM,  /* case expression */
+    /* 84 */  ARBOR2_TAG_EXPR_INITIUM | ARBOR2_TAG_CASE_EXPR_CONTEXTUS,  /* case expression */
     /* 85 */  0,
     /* 86 */  ARBOR2_TAG_SENTENTIA_INITIUM,  /* case body */
     /* 87 */  0, /* 88 */ 0,
