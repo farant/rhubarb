@@ -25067,6 +25067,25 @@ hic_manens constans Arbor2LexemaGenus DECLARATOR_CONTEXTUS_LEXEMATA[] = {
     ARBOR2_LEXEMA_PAREN_APERTA    /* grouped/function pointer */
 };
 
+/* Required tokens for INITIALIZER_CONTEXTUS states */
+hic_manens constans Arbor2LexemaGenus INITIALIZER_CONTEXTUS_LEXEMATA[] = {
+    ARBOR2_LEXEMA_IDENTIFICATOR,  /* variable references */
+    ARBOR2_LEXEMA_INTEGER,        /* integer literals */
+    ARBOR2_LEXEMA_FLOAT_LIT,      /* float literals */
+    ARBOR2_LEXEMA_CHAR_LIT,       /* character literals */
+    ARBOR2_LEXEMA_STRING_LIT,     /* string literals */
+    ARBOR2_LEXEMA_PAREN_APERTA,   /* grouped expressions (expr) */
+    ARBOR2_LEXEMA_ASTERISCUS,     /* dereference *ptr */
+    ARBOR2_LEXEMA_AMPERSAND,      /* address-of &var */
+    ARBOR2_LEXEMA_MINUS,          /* unary minus -x */
+    ARBOR2_LEXEMA_PLUS,           /* unary plus +x */
+    ARBOR2_LEXEMA_TILDE,          /* bitwise NOT ~x */
+    ARBOR2_LEXEMA_EXCLAMATIO,     /* logical NOT !x */
+    ARBOR2_LEXEMA_DUPLUS,         /* pre-increment ++x */
+    ARBOR2_LEXEMA_DUMINUS,        /* pre-decrement --x */
+    ARBOR2_LEXEMA_SIZEOF          /* sizeof operator */
+};
+
 /* Tag rule structure */
 nomen structura {
     i32                         signum;        /* Tag bit flag */
@@ -25105,6 +25124,12 @@ hic_manens constans Arbor2TagRegula TAG_REGULAE[] = {
         "DECLARATOR_CONTEXTUS",
         DECLARATOR_CONTEXTUS_LEXEMATA,
         (i32)(magnitudo(DECLARATOR_CONTEXTUS_LEXEMATA) / magnitudo(DECLARATOR_CONTEXTUS_LEXEMATA[0]))
+    },
+    {
+        ARBOR2_TAG_INITIALIZER_CONTEXTUS,
+        "INITIALIZER_CONTEXTUS",
+        INITIALIZER_CONTEXTUS_LEXEMATA,
+        (i32)(magnitudo(INITIALIZER_CONTEXTUS_LEXEMATA) / magnitudo(INITIALIZER_CONTEXTUS_LEXEMATA[0]))
     }
 };
 
@@ -25349,25 +25374,25 @@ hic_manens constans i32 STATUS_TAGS[] = {
     0,  /* 466: type-specifier context */
     /* 467-472: 0 */
     0, 0, 0, 0, 0, 0,
-    ARBOR2_TAG_EXPR_INITIUM,  /* 473: initializer expression */
+    ARBOR2_TAG_EXPR_INITIUM | ARBOR2_TAG_INITIALIZER_CONTEXTUS,  /* 473: initializer expression */
     /* 474-474: 0 */
     0,
-    ARBOR2_TAG_EXPR_INITIUM,  /* 475: static initializer */
+    ARBOR2_TAG_EXPR_INITIUM | ARBOR2_TAG_INITIALIZER_CONTEXTUS,  /* 475: static initializer */
     /* 476-476: 0 */
     0,
-    ARBOR2_TAG_EXPR_INITIUM,  /* 477: extern initializer */
+    ARBOR2_TAG_EXPR_INITIUM | ARBOR2_TAG_INITIALIZER_CONTEXTUS,  /* 477: extern initializer */
     /* 478-478: 0 */
     0,
-    ARBOR2_TAG_EXPR_INITIUM,  /* 479: register initializer */
+    ARBOR2_TAG_EXPR_INITIUM | ARBOR2_TAG_INITIALIZER_CONTEXTUS,  /* 479: register initializer */
     /* 480-480: 0 */
     0,
-    ARBOR2_TAG_EXPR_INITIUM,  /* 481: expression context */
+    ARBOR2_TAG_EXPR_INITIUM | ARBOR2_TAG_INITIALIZER_CONTEXTUS,  /* 481: auto initializer */
     /* 482-482: 0 */
     0,
-    ARBOR2_TAG_EXPR_INITIUM,  /* 483: expression context */
+    ARBOR2_TAG_EXPR_INITIUM | ARBOR2_TAG_INITIALIZER_CONTEXTUS,  /* 483: const initializer */
     /* 484-484: 0 */
     0,
-    ARBOR2_TAG_EXPR_INITIUM,  /* 485: expression context */
+    ARBOR2_TAG_EXPR_INITIUM | ARBOR2_TAG_INITIALIZER_CONTEXTUS,  /* 485: volatile initializer */
     /* 486-486: 0 */
     0,
     ARBOR2_TAG_EXPR_INITIUM,  /* 487: brace initializer */
@@ -25382,7 +25407,7 @@ hic_manens constans i32 STATUS_TAGS[] = {
     0,  /* 503: type-specifier context */
     /* 504-506: 0 */
     0, 0, 0,
-    ARBOR2_TAG_EXPR_INITIUM,  /* 507: expression context */
+    ARBOR2_TAG_EXPR_INITIUM | ARBOR2_TAG_INITIALIZER_CONTEXTUS,  /* 507: designator = initializer */
     /* 508-514: 0, 515: declarator after 'type init_decl_list ,', 516: 0 */
     0, 0, 0, 0, 0, 0, 0,  /* 508-514 */
     ARBOR2_TAG_DECLARATOR_CONTEXTUS,  /* 515: after 'type init_decl_list ,' - declarator */
@@ -25390,7 +25415,7 @@ hic_manens constans i32 STATUS_TAGS[] = {
     0,  /* 517: declarator context */
     /* 518-518: 0 */
     0,
-    ARBOR2_TAG_EXPR_INITIUM,  /* 519: expression context */
+    ARBOR2_TAG_EXPR_INITIUM | ARBOR2_TAG_INITIALIZER_CONTEXTUS,  /* 519: init_decl_list , declarator = */
     /* 520-524: 0 */
     0, 0, 0, 0, 0,
     0,  /* 525: array dimension (limited expr) */
@@ -25405,8 +25430,8 @@ hic_manens constans i32 STATUS_TAGS[] = {
     /* 538-553: 0 */
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     0, 0, 0, 0, 0, 0,
-    ARBOR2_TAG_EXPR_INITIUM,  /* 554: expression context */
-    ARBOR2_TAG_EXPR_INITIUM,  /* 555: expression context */
+    ARBOR2_TAG_EXPR_INITIUM | ARBOR2_TAG_INITIALIZER_CONTEXTUS,  /* 554: static const initializer */
+    ARBOR2_TAG_EXPR_INITIUM | ARBOR2_TAG_INITIALIZER_CONTEXTUS,  /* 555: extern const initializer */
     /* 556-562: 0 */
     0, 0, 0, 0, 0, 0, 0,
     0,  /* 563: type-specifier context */
@@ -25571,10 +25596,10 @@ hic_manens constans i32 STATUS_TAGS[] = {
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     0, 0, 0, 0, 0, 0,
-    ARBOR2_TAG_EXPR_INITIUM,  /* 1509: long declarator = expression */
-    ARBOR2_TAG_EXPR_INITIUM,  /* 1510: short declarator = expression */
-    ARBOR2_TAG_EXPR_INITIUM,  /* 1511: unsigned declarator = expression */
-    ARBOR2_TAG_EXPR_INITIUM,  /* 1512: signed declarator = expression */
+    ARBOR2_TAG_EXPR_INITIUM | ARBOR2_TAG_INITIALIZER_CONTEXTUS,  /* 1509: long declarator = expression */
+    ARBOR2_TAG_EXPR_INITIUM | ARBOR2_TAG_INITIALIZER_CONTEXTUS,  /* 1510: short declarator = expression */
+    ARBOR2_TAG_EXPR_INITIUM | ARBOR2_TAG_INITIALIZER_CONTEXTUS,  /* 1511: unsigned declarator = expression */
+    ARBOR2_TAG_EXPR_INITIUM | ARBOR2_TAG_INITIALIZER_CONTEXTUS,  /* 1512: signed declarator = expression */
     /* 1513-1650: 0 */
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0,

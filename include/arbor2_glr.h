@@ -917,6 +917,7 @@ chorda* arbor2_glr_exspectata_pro_statu(Piscina* piscina, s32 status);
 #define ARBOR2_TAG_SENTENTIA_INITIUM  0x0040  /* Can start a statement */
 #define ARBOR2_TAG_TYPUS_CONTEXTUS    0x0080  /* Type specifier context */
 #define ARBOR2_TAG_DECLARATOR_CONTEXTUS 0x0100  /* Declarator context */
+#define ARBOR2_TAG_INITIALIZER_CONTEXTUS 0x0200  /* Initializer expression context */
 
 /* Validate state tags - checks that tagged states have required tokens */
 b32 arbor2_glr_validare_tags(vacuum);
