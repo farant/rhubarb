@@ -19618,9 +19618,10 @@ hic_manens constans Arbor2StatusGotoEntry STATUS_9_GOTO[] = {
     { INT_NT_TRANSLATIO, 264 }
 };
 
-/* State 10: after term '*' or '/' */
+/* State 10: after term '*' or '/' or '%' */
 hic_manens constans Arbor2StatusGotoEntry STATUS_10_GOTO[] = {
-    { INT_NT_FACTOR, 14 }
+    { INT_NT_FACTOR, 14 },
+    { INT_NT_POSTFIXUM, 311 }  /* postfix for subscript e.g. a * b[0] */
 };
 
 /* State 17: after '*' in declarator */
@@ -19671,6 +19672,7 @@ hic_manens constans Arbor2StatusGotoEntry STATUS_31_GOTO[] = {
     { INT_NT_EXPR,        32 },
     { INT_NT_TERM,        2 },
     { INT_NT_FACTOR,      3 },
+    { INT_NT_POSTFIXUM,   311 },  /* postfix for subscript e.g. if (arr[0]) */
     { INT_NT_COMPARATIO,  246 },
     { INT_NT_AEQUALITAS,  247 },
     { INT_NT_AMPERSAND_BITWISE, 268 },
@@ -26216,6 +26218,7 @@ arbor2_glr_validare_goto_completeness(vacuum)
     s32 num_revealed;
     s32 num_checked = ZEPHYRUM;
     s32 num_missing = ZEPHYRUM;
+    s32 num_skipped_intentus = ZEPHYRUM;  /* Skipped due to intentional conflict */
 
     /* Build predecessor map first */
     _aedificare_praedecessores();
@@ -26238,6 +26241,13 @@ arbor2_glr_validare_goto_completeness(vacuum)
 
             si (info->actiones[a].actio != ARBOR2_ACTIO_REDUCE)
             {
+                perge;
+            }
+
+            /* Skip intentional GLR conflicts - these are expected to have paths die */
+            si (info->actiones[a].conflictus_intentus)
+            {
+                num_skipped_intentus++;
                 perge;
             }
 
@@ -26281,11 +26291,13 @@ arbor2_glr_validare_goto_completeness(vacuum)
 
     si (valida)
     {
-        imprimere("GOTO VALIDATIO: Omnes %d GOTO entries verificatae.\n", num_checked);
+        imprimere("GOTO VALIDATIO: Omnes %d GOTO entries verificatae (%d GLR conflictus praetermissi).\n",
+                  num_checked, num_skipped_intentus);
     }
     alioquin
     {
-        imprimere("GOTO VALIDATIO: %d GOTO entries desunt!\n", num_missing);
+        imprimere("GOTO VALIDATIO: %d GOTO entries desunt (%d GLR conflictus praetermissi)!\n",
+                  num_missing, num_skipped_intentus);
     }
 
     redde valida;
