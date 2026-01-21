@@ -55,7 +55,7 @@ _legere_fasciculum(constans character* via, i32* mensura_out)
 
 /* Lexare input string to tokens */
 hic_manens Xar*
-_lexare(Piscina* p, InternamentumChorda* intern, constans character* input, i32 mensura)
+_lexare(Piscina* p, InternamentumChorda* inter, constans character* input, i32 mensura)
 {
     Xar* tokens;
     Arbor2Lexator* lex;
@@ -63,7 +63,7 @@ _lexare(Piscina* p, InternamentumChorda* intern, constans character* input, i32 
     unio { constans character* c; i8* m; } u;
 
     tokens = xar_creare(p, magnitudo(Arbor2Token*));
-    lex = arbor2_lexator_creare(p, intern, input, mensura);
+    lex = arbor2_lexator_creare(p, inter, input, mensura);
 
     u.c = "<test>";
     via = piscina_allocare(p, magnitudo(chorda));
@@ -125,6 +125,7 @@ _probare_roundtrip_fasciculum(Piscina* p, InternamentumChorda* intern,
 
         t0 = clock();
         glr = arbor2_glr_creare(p, intern, expansion);
+        /* Direct lexing for byte-for-byte roundtrip (no macro expansion) */
         tokens = _lexare(p, intern, fons, mensura);
         t1 = clock();
         result = arbor2_glr_parsere_translation_unit(glr, tokens);
@@ -233,6 +234,11 @@ s32 principale(vacuum)
 
     intern = internamentum_creare(piscina);
     expansion = arbor2_expansion_creare(piscina, intern);
+
+    /* Note: For byte-for-byte roundtrip tests, we don't expand macros or includes.
+     * Files using latina.h macros would need GLR forking on unknown identifiers
+     * to parse without expansion. For now, we test simpler C files. */
+
     credo_aperire(piscina);
 
     /* ========================================================
@@ -494,6 +500,56 @@ s32 principale(vacuum)
 
         CREDO_VERUM(_probare_roundtrip_fasciculum(piscina, intern, expansion,
             "probationes/fixa/roundtrip/comment_multiline.c"));
+    }
+
+    /* ========================================================
+     * PROBARE: Unknown identifier chains (GLR forking)
+     * Tests for ID ID patterns without prior typedef registration.
+     *
+     * Phase 1: Two-identifier chains (ID ID) work via State 4 fork.
+     * Phase 2: Three+ ID chains require grammar changes to properly
+     *          capture multiple type specifiers in the AST. The simple
+     *          self-loop approach parses but loses earlier IDs in output.
+     * ======================================================== */
+    {
+        imprimere("\n--- Probans identifier chains (GLR fork) ---\n");
+
+        /* Phase 1: Two identifiers (ID ID) */
+        CREDO_VERUM(_probare_roundtrip_fasciculum(piscina, intern, expansion,
+            "probationes/fixa/roundtrip/id_chain_simple.c"));
+
+        /* Phase 2 disabled - requires grammar changes for proper AST
+        CREDO_VERUM(_probare_roundtrip_fasciculum(piscina, intern, expansion,
+            "probationes/fixa/roundtrip/id_chain_extended.c"));
+        */
+    }
+
+    /* ========================================================
+     * PROBARE: Arbor v1 test files (more comprehensive)
+     * Note: color.c, utf8.c, base64.c require latina.h macro expansion.
+     *       GLR forking on unknown identifiers would allow parsing
+     *       these without expansion. For now, test simpler files.
+     * ======================================================== */
+    {
+        imprimere("\n--- Probans arbor v1 files ---\n");
+
+        CREDO_VERUM(_probare_roundtrip_fasciculum(piscina, intern, expansion,
+            "probationes/fixa/roundtrip/arrow_simple.c"));
+
+        CREDO_VERUM(_probare_roundtrip_fasciculum(piscina, intern, expansion,
+            "probationes/fixa/roundtrip/typedef_return.c"));
+
+        CREDO_VERUM(_probare_roundtrip_fasciculum(piscina, intern, expansion,
+            "probationes/fixa/roundtrip/color_simple.c"));
+
+        /* Files requiring latina.h expansion (future: GLR forking)
+        CREDO_VERUM(_probare_roundtrip_fasciculum(piscina, intern, expansion,
+            "probationes/fixa/roundtrip/color.c"));
+        CREDO_VERUM(_probare_roundtrip_fasciculum(piscina, intern, expansion,
+            "probationes/fixa/roundtrip/utf8.c"));
+        CREDO_VERUM(_probare_roundtrip_fasciculum(piscina, intern, expansion,
+            "probationes/fixa/roundtrip/base64.c"));
+        */
     }
 
     /* Print summary */

@@ -2138,3 +2138,82 @@ Added missing token actions to the following states:
 - probationes/probatio_arbor2_scribere.c: Enabled 3 previously commented-out tests
 
 Tests: 272 pass (scribere), 77 total test files pass
+
+## 2026-01-20: Multi-function File Support & Pointer Initializer Fix
+
+### Problem
+When parsing files with multiple function definitions, the parser would die after the first function because State 113 and 114 only handled EOF, not tokens that start the next declaration.
+
+Also, pointer declarations with initializers (`int *p = ...`) failed because State 19 (after `* declarator`) didn't have an action for `=`.
+
+### Changes Made
+
+1. **State 19 (after `* declarator`)**: Added ASSIGNATIO action to REDUCE P11, allowing pointer declarations with initializers.
+
+2. **State 113 (after `type declarator compound`)**: Added REDUCE P44 actions for all tokens that can start a new declaration (IDENTIFICATOR, INT, CHAR, VOID, STATIC, EXTERN, CONST, etc.).
+
+3. **State 114 (after function_definition)**: Changed from just EOF accept to ACCEPT on all declaration-starter tokens. The driver loop (`parsere_translation_unit`) handles multiple declarations, so each function definition should accept to let the loop continue.
+
+### Key Insight
+The translation_unit parsing uses a driver loop that parses one declaration at a time. After parsing a function definition, the grammar should ACCEPT (not try to parse more), and the driver loop will continue with the next declaration. This is why State 114 accepts on any declaration-starting token.
+
+### Files Changed
+- lib/arbor2_glr_tabula.c: Updated States 19, 113, 114
+
+### Notes on Arbor v1 Files
+The arbor v1 test files (color.c, utf8.c, base64.c) use latina.h macros and were temporarily removed from roundtrip tests. These files require either:
+1. Macro expansion before parsing (which changes tokens, breaking byte-for-byte roundtrip)
+2. GLR forking on unknown identifiers to treat them as potential typedefs
+
+The simpler test files (arrow_simple.c, typedef_return.c, color_simple.c) work without expansion.
+
+Tests: 44 roundtrip tests pass, all arbor2 tests pass
+
+## 2026-01-20: GLR Forking for Unknown Identifiers (Phase 1)
+
+### Problem
+Files using latina.h macros (like `color.c`, `utf8.c`, `base64.c`) cannot be parsed without macro expansion because sequences like `hic_manens constans character*` appear as `ID ID ID *` - multiple identifiers in a row that the grammar doesn't support.
+
+### Goal
+Enable the GLR parser to fork when seeing unknown identifiers that could be:
+1. A typedef (type specifier)
+2. A regular identifier (expression context)
+
+### Phase 1 Implementation (Two-ID Chains)
+
+**State 4 Changes** (after first ID):
+- Changed single IDENTIFICATOR action to a forked pair:
+  - `REDUCE P5`: Expression path - treat first ID as factor
+  - `SHIFT 116`: Declaration path - treat first ID as type, second as declarator
+- Both marked with `VERUM` for intentional GLR conflict
+
+**New Test File**: `probationes/fixa/roundtrip/id_chain_simple.c`
+```c
+MyType myVar;           /* ID ID ; → parses as declaration */
+MyType* myPtr;          /* ID * ID ; → works with existing * fork */
+MyType myFunc(void);    /* ID ID ( → works with existing ( fork */
+```
+
+### Phase 2 Limitations (Three+ ID Chains)
+
+The simple self-loop approach for State 116 (SHIFT back to 116 on seeing another ID) was attempted but failed:
+
+1. **Parsing works**: The GLR parser correctly explores the declaration path
+2. **AST capture fails**: P226 (`type_spec init_decl_list → declaratio`) only pops 2 items, so earlier IDs in the chain are lost
+3. **Output mismatch**: `MyStorage MyType myVar;` produces output `MyType myVar;`
+
+**Root Cause**: The grammar assumes exactly one type specifier before the declarator. Multi-ID type chains (storage class + qualifier + type) require grammar changes to capture all specifiers in a `type_spec_list` non-terminal.
+
+### Files Changed
+- `lib/arbor2_glr_tabula.c`: State 4 IDENTIFICATOR fork (also added DECLARATIO to State 4 GOTO for future Phase 2 work)
+- `probationes/fixa/roundtrip/id_chain_simple.c`: New test file
+- `probationes/probatio_arbor2_file_roundtrip.c`: Added test case
+
+### Future Work (Phase 2)
+To properly support `hic_manens constans character*`:
+1. Create `TYPE_SPEC_LIST` non-terminal that can hold multiple IDs
+2. Add new reduction rule: `type_spec_list ID → type_spec_list`
+3. Change P226 to use type_spec_list instead of single type_spec
+4. Update AST building to preserve all type specifiers
+
+Tests: 45 roundtrip tests pass (including new id_chain_simple.c)

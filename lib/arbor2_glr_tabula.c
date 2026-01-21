@@ -1033,7 +1033,9 @@ hic_manens constans Arbor2TabulaActio STATUS_4_ACTIONES[] = {
     { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,  17, VERUM },  /* intentional conflict */
     { ARBOR2_LEXEMA_SOLIDUS,        ARBOR2_ACTIO_REDUCE,  5, FALSUM },
     { ARBOR2_LEXEMA_PERCENTUM,      ARBOR2_ACTIO_REDUCE,  5, FALSUM },
-    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT, 116, FALSUM }, /* decl: direct declarator name */
+    /* GLR fork for unknown identifier: could be type or expression */
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_REDUCE,   5, VERUM },  /* expr: ID→factor (intentional fork) */
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,  116, VERUM },  /* decl: type ID (intentional fork) */
     { ARBOR2_LEXEMA_PLUS,           ARBOR2_ACTIO_REDUCE,  5, FALSUM },
     { ARBOR2_LEXEMA_MINUS,          ARBOR2_ACTIO_REDUCE,  5, FALSUM },
     { ARBOR2_LEXEMA_MINOR,          ARBOR2_ACTIO_REDUCE,  5, FALSUM },
@@ -1470,7 +1472,8 @@ hic_manens constans Arbor2TabulaActio STATUS_19_ACTIONES[] = {
     { ARBOR2_LEXEMA_BRACKET_APERTA, ARBOR2_ACTIO_REDUCE, 11, FALSUM },
     { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 11, FALSUM },
     { ARBOR2_LEXEMA_COLON,          ARBOR2_ACTIO_REDUCE, 11, FALSUM },
-    { ARBOR2_LEXEMA_COMMA,          ARBOR2_ACTIO_REDUCE, 11, FALSUM }  /* for multiple declarators */
+    { ARBOR2_LEXEMA_COMMA,          ARBOR2_ACTIO_REDUCE, 11, FALSUM }, /* for multiple declarators */
+    { ARBOR2_LEXEMA_ASSIGNATIO,     ARBOR2_ACTIO_REDUCE, 11, FALSUM }  /* pointer with initializer: int *p = ... */
 };
 
 /* State 20: after 'type declarator' - reduce P221 (init_decl) or continue fn/array/init */
@@ -3091,12 +3094,54 @@ hic_manens constans Arbor2TabulaActio STATUS_112_ACTIONES[] = {
 
 /* State 113: after 'type_spec declarator compound' - reduce P44 */
 hic_manens constans Arbor2TabulaActio STATUS_113_ACTIONES[] = {
-    { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 44, FALSUM }
+    { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 44, FALSUM },
+    /* Next top-level declaration starters */
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_REDUCE, 44, FALSUM },
+    { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_REDUCE, 44, FALSUM },
+    { ARBOR2_LEXEMA_CHAR,           ARBOR2_ACTIO_REDUCE, 44, FALSUM },
+    { ARBOR2_LEXEMA_VOID,           ARBOR2_ACTIO_REDUCE, 44, FALSUM },
+    { ARBOR2_LEXEMA_FLOAT,          ARBOR2_ACTIO_REDUCE, 44, FALSUM },
+    { ARBOR2_LEXEMA_DOUBLE,         ARBOR2_ACTIO_REDUCE, 44, FALSUM },
+    { ARBOR2_LEXEMA_STRUCT,         ARBOR2_ACTIO_REDUCE, 44, FALSUM },
+    { ARBOR2_LEXEMA_UNION,          ARBOR2_ACTIO_REDUCE, 44, FALSUM },
+    { ARBOR2_LEXEMA_ENUM,           ARBOR2_ACTIO_REDUCE, 44, FALSUM },
+    { ARBOR2_LEXEMA_TYPEDEF,        ARBOR2_ACTIO_REDUCE, 44, FALSUM },
+    { ARBOR2_LEXEMA_STATIC,         ARBOR2_ACTIO_REDUCE, 44, FALSUM },
+    { ARBOR2_LEXEMA_EXTERN,         ARBOR2_ACTIO_REDUCE, 44, FALSUM },
+    { ARBOR2_LEXEMA_CONST,          ARBOR2_ACTIO_REDUCE, 44, FALSUM },
+    { ARBOR2_LEXEMA_VOLATILE,       ARBOR2_ACTIO_REDUCE, 44, FALSUM },
+    { ARBOR2_LEXEMA_UNSIGNED,       ARBOR2_ACTIO_REDUCE, 44, FALSUM },
+    { ARBOR2_LEXEMA_SIGNED,         ARBOR2_ACTIO_REDUCE, 44, FALSUM },
+    { ARBOR2_LEXEMA_LONG,           ARBOR2_ACTIO_REDUCE, 44, FALSUM },
+    { ARBOR2_LEXEMA_SHORT,          ARBOR2_ACTIO_REDUCE, 44, FALSUM },
+    { ARBOR2_LEXEMA_REGISTER,       ARBOR2_ACTIO_REDUCE, 44, FALSUM },
+    { ARBOR2_LEXEMA_AUTO,           ARBOR2_ACTIO_REDUCE, 44, FALSUM }
 };
 
-/* State 114: after function_definition - accept */
+/* State 114: after function_definition - accept (driver loop handles multiple declarations) */
 hic_manens constans Arbor2TabulaActio STATUS_114_ACTIONES[] = {
-    { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_ACCEPT,  0, FALSUM }
+    { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_ACCEPT,  0, FALSUM },
+    /* Next top-level declaration starters - also accept to let driver loop continue */
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_ACCEPT,  0, FALSUM },
+    { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_ACCEPT,  0, FALSUM },
+    { ARBOR2_LEXEMA_CHAR,           ARBOR2_ACTIO_ACCEPT,  0, FALSUM },
+    { ARBOR2_LEXEMA_VOID,           ARBOR2_ACTIO_ACCEPT,  0, FALSUM },
+    { ARBOR2_LEXEMA_FLOAT,          ARBOR2_ACTIO_ACCEPT,  0, FALSUM },
+    { ARBOR2_LEXEMA_DOUBLE,         ARBOR2_ACTIO_ACCEPT,  0, FALSUM },
+    { ARBOR2_LEXEMA_STRUCT,         ARBOR2_ACTIO_ACCEPT,  0, FALSUM },
+    { ARBOR2_LEXEMA_UNION,          ARBOR2_ACTIO_ACCEPT,  0, FALSUM },
+    { ARBOR2_LEXEMA_ENUM,           ARBOR2_ACTIO_ACCEPT,  0, FALSUM },
+    { ARBOR2_LEXEMA_TYPEDEF,        ARBOR2_ACTIO_ACCEPT,  0, FALSUM },
+    { ARBOR2_LEXEMA_STATIC,         ARBOR2_ACTIO_ACCEPT,  0, FALSUM },
+    { ARBOR2_LEXEMA_EXTERN,         ARBOR2_ACTIO_ACCEPT,  0, FALSUM },
+    { ARBOR2_LEXEMA_CONST,          ARBOR2_ACTIO_ACCEPT,  0, FALSUM },
+    { ARBOR2_LEXEMA_VOLATILE,       ARBOR2_ACTIO_ACCEPT,  0, FALSUM },
+    { ARBOR2_LEXEMA_UNSIGNED,       ARBOR2_ACTIO_ACCEPT,  0, FALSUM },
+    { ARBOR2_LEXEMA_SIGNED,         ARBOR2_ACTIO_ACCEPT,  0, FALSUM },
+    { ARBOR2_LEXEMA_LONG,           ARBOR2_ACTIO_ACCEPT,  0, FALSUM },
+    { ARBOR2_LEXEMA_SHORT,          ARBOR2_ACTIO_ACCEPT,  0, FALSUM },
+    { ARBOR2_LEXEMA_REGISTER,       ARBOR2_ACTIO_ACCEPT,  0, FALSUM },
+    { ARBOR2_LEXEMA_AUTO,           ARBOR2_ACTIO_ACCEPT,  0, FALSUM }
 };
 
 /* State 115: (reserved/unused) */
@@ -19150,7 +19195,8 @@ hic_manens constans Arbor2StatusGotoEntry STATUS_0_GOTO[] = {
 hic_manens constans Arbor2StatusGotoEntry STATUS_4_GOTO[] = {
     { INT_NT_DECLARATOR,            20 },
     { INT_NT_INIT_DECLARATOR,      513 },   /* Phase 1.3: init_decl after first declarator */
-    { INT_NT_INIT_DECLARATOR_LIST, 514 }    /* Phase 1.3: init_decl_list ready for comma or reduce */
+    { INT_NT_INIT_DECLARATOR_LIST, 514 },   /* Phase 1.3: init_decl_list ready for comma or reduce */
+    { INT_NT_DECLARATIO,            21 }    /* GLR: nested declaration from ID chain completes */
 };
 
 /* State 1500: after struct/enum spec in local decl - declarator only
@@ -22504,7 +22550,7 @@ hic_manens constans Arbor2StatusGoto GOTO_TABULA_NOVA[] = {
     STATUS_GOTO_NIL,   /* 113: after declarator + compound */
     STATUS_GOTO_NIL,   /* 114: after function_definition */
     STATUS_GOTO_NIL,   /* 115: reserved */
-    STATUS_GOTO_NIL,   /* 116: after 'struct' */
+    STATUS_GOTO_NIL,   /* 116: after 'type_spec name' direct decl */
     STATUS_GOTO_NIL,   /* 117: after 'struct ID' */
     STATUS_GOTO_NIL,   /* 118: reserved */
     STATUS_GOTO(119),  /* 119: anonymous struct '{' */
