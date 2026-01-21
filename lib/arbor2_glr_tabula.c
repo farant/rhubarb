@@ -25188,6 +25188,21 @@ hic_manens constans Arbor2LexemaGenus BITFIELD_WIDTH_CONTEXTUS_LEXEMATA[] = {
     ARBOR2_LEXEMA_SIZEOF          /* sizeof operator */
 };
 
+/* Required tokens for DESIGNATED_INIT_CONTEXTUS states (designator index expressions) */
+hic_manens constans Arbor2LexemaGenus DESIGNATED_INIT_CONTEXTUS_LEXEMATA[] = {
+    ARBOR2_LEXEMA_IDENTIFICATOR,  /* macros, enum constants */
+    ARBOR2_LEXEMA_INTEGER,        /* integer literals */
+    ARBOR2_LEXEMA_CHAR_LIT,       /* character literals */
+    ARBOR2_LEXEMA_PAREN_APERTA,   /* grouped expressions */
+    ARBOR2_LEXEMA_ASTERISCUS,     /* dereference */
+    ARBOR2_LEXEMA_AMPERSAND,      /* address-of */
+    ARBOR2_LEXEMA_MINUS,          /* unary minus */
+    ARBOR2_LEXEMA_PLUS,           /* unary plus */
+    ARBOR2_LEXEMA_TILDE,          /* bitwise NOT */
+    ARBOR2_LEXEMA_EXCLAMATIO,     /* logical NOT */
+    ARBOR2_LEXEMA_SIZEOF          /* sizeof operator */
+};
+
 /* Tag rule structure */
 nomen structura {
     i32                         signum;        /* Tag bit flag */
@@ -25256,6 +25271,12 @@ hic_manens constans Arbor2TagRegula TAG_REGULAE[] = {
         "BITFIELD_WIDTH_CONTEXTUS",
         BITFIELD_WIDTH_CONTEXTUS_LEXEMATA,
         (i32)(magnitudo(BITFIELD_WIDTH_CONTEXTUS_LEXEMATA) / magnitudo(BITFIELD_WIDTH_CONTEXTUS_LEXEMATA[0]))
+    },
+    {
+        ARBOR2_TAG_DESIGNATED_INIT_CONTEXTUS,
+        "DESIGNATED_INIT_CONTEXTUS",
+        DESIGNATED_INIT_CONTEXTUS_LEXEMATA,
+        (i32)(magnitudo(DESIGNATED_INIT_CONTEXTUS_LEXEMATA) / magnitudo(DESIGNATED_INIT_CONTEXTUS_LEXEMATA[0]))
     }
 };
 
@@ -25542,7 +25563,7 @@ hic_manens constans i32 STATUS_TAGS[] = {
     ARBOR2_TAG_EXPR_INITIUM,  /* 491: expression context */
     /* 492-499: 0 */
     0, 0, 0, 0, 0, 0, 0, 0,
-    ARBOR2_TAG_EXPR_INITIUM,  /* 500: expression context */
+    ARBOR2_TAG_EXPR_INITIUM | ARBOR2_TAG_DESIGNATED_INIT_CONTEXTUS,  /* 500: designator index expression */
     /* 501-502: 0 */
     0, 0,
     0,  /* 503: type-specifier context */

@@ -922,6 +922,7 @@ chorda* arbor2_glr_exspectata_pro_statu(Piscina* piscina, s32 status);
 #define ARBOR2_TAG_CASE_EXPR_CONTEXTUS 0x0800  /* Case constant expression context */
 #define ARBOR2_TAG_ARRAY_DIM_CONTEXTUS 0x1000  /* Array dimension expression context */
 #define ARBOR2_TAG_BITFIELD_WIDTH_CONTEXTUS 0x2000  /* Bit field width expression context */
+#define ARBOR2_TAG_DESIGNATED_INIT_CONTEXTUS 0x4000  /* Designated initializer index context */
 
 /* Validate state tags - checks that tagged states have required tokens */
 b32 arbor2_glr_validare_tags(vacuum);
