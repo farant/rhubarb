@@ -928,6 +928,9 @@ chorda* arbor2_glr_exspectata_pro_statu(Piscina* piscina, s32 status);
 /* Validate state tags - checks that tagged states have required tokens */
 b32 arbor2_glr_validare_tags(vacuum);
 
+/* Validate state reachability - identifies dead/unreachable states */
+b32 arbor2_glr_validare_reachability(vacuum);
+
 /* Validate GOTO table completeness for all REDUCE actions */
 b32 arbor2_glr_validare_goto_completeness(vacuum);
 

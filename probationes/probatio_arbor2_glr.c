@@ -575,6 +575,7 @@ s32 principale(vacuum)
     {
         b32 tabula_valida;
         b32 tags_valida;
+        b32 reachability_valida;
         b32 goto_valida;
 
         imprimere("\n--- Probans table validation ---\n");
@@ -586,6 +587,12 @@ s32 principale(vacuum)
 
         tags_valida = arbor2_glr_validare_tags();
         CREDO_AEQUALIS_I32((i32)tags_valida, VERUM);
+
+        imprimere("\n--- Probans reachability ---\n");
+
+        reachability_valida = arbor2_glr_validare_reachability();
+        /* NOTE: Not asserting - dead states are informational, not fatal */
+        imprimere("  Reachability: %s\n", reachability_valida ? "VERUM" : "FALSUM (dead states above)");
 
         imprimere("\n--- Probans GOTO completeness ---\n");
 

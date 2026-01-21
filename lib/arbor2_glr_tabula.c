@@ -17671,10 +17671,10 @@ hic_manens constans Arbor2StatusInfo STATUS_TABULA_PARTIAL[] = {
     STATUS_INFO(109, "after 'param_list , type_spec declarator' - reduce P43"),
     STATUS_INFO(110, "after 'param_list , type_spec * decl' - reduce P11"),
     STATUS_INFO(111, "after 'param_list , param_decl' - reduce P42"),
-    STATUS_INFO(112, "(reserved/unused)"),
+    STATUS_INFO_NIL,  /* 112: dead */
     STATUS_INFO(113, "after 'type_spec declarator compound' - reduce P44"),
     STATUS_INFO(114, "after function_definition - accept"),
-    STATUS_INFO(115, "(reserved/unused)"),
+    STATUS_INFO_NIL,  /* 115: dead */
     STATUS_INFO(116, "after 'type_spec name' direct decl - reduce P12"),
     STATUS_INFO(117, "after 'struct' - expect ID or '{'"),
     STATUS_INFO(118, "after 'struct ID' - expect '{' or reduce P47"),
@@ -17734,48 +17734,48 @@ hic_manens constans Arbor2StatusInfo STATUS_TABULA_PARTIAL[] = {
     STATUS_INFO(172, "after member_list type_spec ':' expr (anon) - continue"),
     STATUS_INFO(173, "after member_list type_spec ':' expr ';' (anon) - P65"),
     STATUS_INFO(174, "after struct_spec (first member) - expect '*' or ID"),
-    STATUS_INFO(175, "after struct_spec '*' (first member) - expect ID"),
-    STATUS_INFO(176, "after struct_spec ID (first member) - expect ';'"),
-    STATUS_INFO(177, "after struct_spec '*' ID (first member) - expect ';'"),
-    STATUS_INFO(178, "after struct_spec ID ';' (first) - reduce P66"),
-    STATUS_INFO(179, "after struct_spec '*' ID ';' (first) - reduce P67"),
+    STATUS_INFO_NIL,  /* 175: dead - unreachable struct member ptr handling */
+    STATUS_INFO_NIL,  /* 176: dead */
+    STATUS_INFO_NIL,  /* 177: dead */
+    STATUS_INFO_NIL,  /* 178: dead */
+    STATUS_INFO_NIL,  /* 179: dead */
     STATUS_INFO(180, "after struct_spec (subsequent member) - expect '*' or ID"),
-    STATUS_INFO(181, "after struct_spec '*' (subsequent) - expect ID"),
-    STATUS_INFO(182, "after struct_spec ID (subsequent) - expect ';'"),
-    STATUS_INFO(183, "after struct_spec '*' ID (subsequent) - expect ';'"),
-    STATUS_INFO(184, "after struct_spec ID ';' (subsequent) - reduce P68"),
-    STATUS_INFO(185, "after struct_spec '*' ID ';' (subsequent) - reduce P69"),
+    STATUS_INFO_NIL,  /* 181: dead */
+    STATUS_INFO_NIL,  /* 182: dead */
+    STATUS_INFO_NIL,  /* 183: dead */
+    STATUS_INFO_NIL,  /* 184: dead */
+    STATUS_INFO_NIL,  /* 185: dead */
     STATUS_INFO(186, "after enum_spec (first member) - expect '*' or ID"),
-    STATUS_INFO(187, "after enum_spec '*' (first member) - expect ID"),
-    STATUS_INFO(188, "after enum_spec ID (first member) - expect ';'"),
-    STATUS_INFO(189, "after enum_spec '*' ID (first member) - expect ';'"),
-    STATUS_INFO(190, "after enum_spec ID ';' (first) - reduce P70"),
-    STATUS_INFO(191, "after enum_spec '*' ID ';' (first) - reduce P71"),
+    STATUS_INFO_NIL,  /* 187: dead - unreachable enum member ptr handling */
+    STATUS_INFO_NIL,  /* 188: dead */
+    STATUS_INFO_NIL,  /* 189: dead */
+    STATUS_INFO_NIL,  /* 190: dead */
+    STATUS_INFO_NIL,  /* 191: dead */
     STATUS_INFO(192, "after enum_spec (subsequent member) - expect '*' or ID"),
-    STATUS_INFO(193, "after enum_spec '*' (subsequent) - expect ID"),
-    STATUS_INFO(194, "after enum_spec ID (subsequent) - expect ';'"),
-    STATUS_INFO(195, "after enum_spec '*' ID (subsequent) - expect ';'"),
-    STATUS_INFO(196, "after enum_spec ID ';' (subsequent) - reduce P72"),
-    STATUS_INFO(197, "after enum_spec '*' ID ';' (subsequent) - reduce P73"),
+    STATUS_INFO_NIL,  /* 193: dead */
+    STATUS_INFO_NIL,  /* 194: dead */
+    STATUS_INFO_NIL,  /* 195: dead */
+    STATUS_INFO_NIL,  /* 196: dead */
+    STATUS_INFO_NIL,  /* 197: dead */
     STATUS_INFO(198, "after 'typedef' - expect type_specifier"),
     STATUS_INFO(199, "after 'typedef type_spec' - expect '*' or ID"),
-    STATUS_INFO(200, "after 'typedef type_spec *' - expect more '*' or ID"),
-    STATUS_INFO(201, "after 'typedef type_spec ID' - expect ';'"),
-    STATUS_INFO(202, "after 'typedef type_spec *... ID' - expect ';'"),
-    STATUS_INFO(203, "reduce P74 (typedef type_spec ID ;)"),
-    STATUS_INFO(204, "reduce P75 (typedef type_spec *... ID ;)"),
+    STATUS_INFO_NIL,  /* 200: dead - unreachable typedef handling */
+    STATUS_INFO_NIL,  /* 201: dead */
+    STATUS_INFO_NIL,  /* 202: dead */
+    STATUS_INFO_NIL,  /* 203: dead */
+    STATUS_INFO_NIL,  /* 204: dead */
     STATUS_INFO(205, "after 'typedef struct_spec' - expect '*' or ID"),
-    STATUS_INFO(206, "after 'typedef struct_spec *' - expect more '*' or ID"),
-    STATUS_INFO(207, "after 'typedef struct_spec ID' - expect ';'"),
-    STATUS_INFO(208, "after 'typedef struct_spec *... ID' - expect ';'"),
-    STATUS_INFO(209, "reduce P76 (typedef struct_spec ID ;)"),
-    STATUS_INFO(210, "reduce P77 (typedef struct_spec *... ID ;)"),
+    STATUS_INFO_NIL,  /* 206: dead */
+    STATUS_INFO_NIL,  /* 207: dead */
+    STATUS_INFO_NIL,  /* 208: dead */
+    STATUS_INFO_NIL,  /* 209: dead */
+    STATUS_INFO_NIL,  /* 210: dead */
     STATUS_INFO(211, "after 'typedef enum_spec' - expect '*' or ID"),
-    STATUS_INFO(212, "after 'typedef enum_spec *' - expect more '*' or ID"),
-    STATUS_INFO(213, "after 'typedef enum_spec ID' - expect ';'"),
-    STATUS_INFO(214, "after 'typedef enum_spec *... ID' - expect ';'"),
-    STATUS_INFO(215, "reduce P78 (typedef enum_spec ID ;)"),
-    STATUS_INFO(216, "reduce P79 (typedef enum_spec *... ID ;)"),
+    STATUS_INFO_NIL,  /* 212: dead */
+    STATUS_INFO_NIL,  /* 213: dead */
+    STATUS_INFO_NIL,  /* 214: dead */
+    STATUS_INFO_NIL,  /* 215: dead */
+    STATUS_INFO_NIL,  /* 216: dead */
     STATUS_INFO(217, "after 'declarator [' - expect expression or ']'"),
     STATUS_INFO(218, "after 'declarator [ ]' - reduce P81 (unsized array)"),
     STATUS_INFO(219, "after 'declarator [ expression' - expect ']' or cont"),
@@ -17963,12 +17963,12 @@ hic_manens constans Arbor2StatusInfo STATUS_TABULA_PARTIAL[] = {
     STATUS_INFO(381, "after '( void * * ) factor' - reduce P160"),
 
     /* Placeholder states 382-387 (reserved) */
-    STATUS_INFO(382, "reserved"),
-    STATUS_INFO(383, "reserved"),
-    STATUS_INFO(384, "reserved"),
-    STATUS_INFO(385, "reserved"),
-    STATUS_INFO(386, "reserved"),
-    STATUS_INFO(387, "reserved"),
+    STATUS_INFO_NIL,  /* 382: dead */
+    STATUS_INFO_NIL,  /* 383: dead */
+    STATUS_INFO_NIL,  /* 384: dead */
+    STATUS_INFO_NIL,  /* 385: dead */
+    STATUS_INFO_NIL,  /* 386: dead */
+    STATUS_INFO_NIL,  /* 387: dead */
 
     /* ==================================================
      * Phase 1.1: sizeof(type) states (388-406)
@@ -18009,12 +18009,12 @@ hic_manens constans Arbor2StatusInfo STATUS_TABULA_PARTIAL[] = {
     /* ==================================================
      * Phase 1.1b: sizeof(ID) states (416-421)
      * ================================================== */
-    STATUS_INFO(416, "after 'sizeof ( ID' - expects ')' or '*'"),
-    STATUS_INFO(417, "after 'sizeof ( ID )' - reduce P165"),
-    STATUS_INFO(418, "after 'sizeof ( ID *' - expects ')' or '*'"),
-    STATUS_INFO(419, "after 'sizeof ( ID * )' - reduce P169"),
-    STATUS_INFO(420, "after 'sizeof ( ID * *' - expects ')'"),
-    STATUS_INFO(421, "after 'sizeof ( ID * * )' - reduce P173"),
+    STATUS_INFO_NIL,  /* 416: dead - sizeof(ID) handling */
+    STATUS_INFO_NIL,  /* 417: dead */
+    STATUS_INFO_NIL,  /* 418: dead */
+    STATUS_INFO_NIL,  /* 419: dead */
+    STATUS_INFO_NIL,  /* 420: dead */
+    STATUS_INFO_NIL,  /* 421: dead */
 
     /* Phase 1.1b Part 2: struct cast states (422-431) */
     STATUS_INFO(422, "after '( struct' - expects ID"),
@@ -18140,7 +18140,7 @@ hic_manens constans Arbor2StatusInfo STATUS_TABULA_PARTIAL[] = {
     STATUS_INFO(526, "after init_decl_list ',' declarator '[' expr ']' - reduce P94"),
     STATUS_INFO(527, "after init_decl_list ',' declarator '[]' - reduce P95"),
     STATUS_INFO(528, "after init_decl_list ',' declarator '[' expr - expect ']'"),
-    STATUS_INFO(529, "(reserved/unused)"),
+    STATUS_INFO_NIL,  /* 529: dead */
     /* --- Phase 1.4: Specifier combination states (530-559) --- */
     STATUS_INFO(530, "after 'static const' - expects type"),
     STATUS_INFO(531, "after 'extern const' - expects type"),
@@ -18176,7 +18176,7 @@ hic_manens constans Arbor2StatusInfo STATUS_TABULA_PARTIAL[] = {
     STATUS_INFO(561, "reduce P239 (stmt -> declaratio ';')"),
 
     /* Phase 1.1c: sizeof(type[N]) array states */
-    STATUS_INFO(562, "placeholder"),
+    STATUS_INFO_NIL,  /* 562: dead */
     STATUS_INFO(563, "after 'sizeof ( int [' - expects expression"),
     STATUS_INFO(564, "after 'sizeof ( int [ expr' - expects ']'"),
     STATUS_INFO(565, "after 'sizeof ( int [ expr ]' - expects ')'"),
@@ -18189,10 +18189,10 @@ hic_manens constans Arbor2StatusInfo STATUS_TABULA_PARTIAL[] = {
     STATUS_INFO(572, "after 'sizeof ( void [ expr' - expects ']'"),
     STATUS_INFO(573, "after 'sizeof ( void [ expr ]' - expects ')'"),
     STATUS_INFO(574, "reduce P242 (sizeof(void[N]))"),
-    STATUS_INFO(575, "after 'sizeof ( ID [' - expects expression"),
-    STATUS_INFO(576, "after 'sizeof ( ID [ expr' - expects ']'"),
-    STATUS_INFO(577, "after 'sizeof ( ID [ expr ]' - expects ')'"),
-    STATUS_INFO(578, "reduce P243 (sizeof(ID[N]))"),
+    STATUS_INFO_NIL,  /* 575: dead - sizeof(ID[N]) */
+    STATUS_INFO_NIL,  /* 576: dead */
+    STATUS_INFO_NIL,  /* 577: dead */
+    STATUS_INFO_NIL,  /* 578: dead */
 
     /* Phase 1.1d: sizeof(type[N][M]) multi-dimensional (579-594) */
     /* sizeof(int[N][M]) */
@@ -18211,10 +18211,10 @@ hic_manens constans Arbor2StatusInfo STATUS_TABULA_PARTIAL[] = {
     STATUS_INFO(589, "after 'sizeof ( void [ expr ] [ expr ]' - expects ')'"),
     STATUS_INFO(590, "reduce P246 (sizeof(void[N][M]))"),
     /* sizeof(ID[N][M]) */
-    STATUS_INFO(591, "after 'sizeof ( ID [ expr ] [' - expects expression"),
-    STATUS_INFO(592, "after 'sizeof ( ID [ expr ] [ expr' - expects ']'"),
-    STATUS_INFO(593, "after 'sizeof ( ID [ expr ] [ expr ]' - expects ')'"),
-    STATUS_INFO(594, "reduce P247 (sizeof(ID[N][M]))"),
+    STATUS_INFO_NIL,  /* 591: dead - sizeof(ID[N][M]) */
+    STATUS_INFO_NIL,  /* 592: dead */
+    STATUS_INFO_NIL,  /* 593: dead */
+    STATUS_INFO_NIL,  /* 594: dead */
     /* Phase 1.1e: sizeof(type*[N]) - pointer array sizeof */
     /* sizeof(int*[N]) */
     STATUS_INFO(595, "after 'sizeof ( int * [' - expects expression"),
@@ -18232,26 +18232,26 @@ hic_manens constans Arbor2StatusInfo STATUS_TABULA_PARTIAL[] = {
     STATUS_INFO(605, "after 'sizeof ( void * [ expr ]' - expects ')'"),
     STATUS_INFO(606, "reduce P250 (sizeof(void*[N]))"),
     /* sizeof(ID*[N]) */
-    STATUS_INFO(607, "after 'sizeof ( ID * [' - expects expression"),
-    STATUS_INFO(608, "after 'sizeof ( ID * [ expr' - expects ']'"),
-    STATUS_INFO(609, "after 'sizeof ( ID * [ expr ]' - expects ')'"),
-    STATUS_INFO(610, "reduce P251 (sizeof(ID*[N]))"),
+    STATUS_INFO_NIL,  /* 607: dead - sizeof(ID*[N]) */
+    STATUS_INFO_NIL,  /* 608: dead */
+    STATUS_INFO_NIL,  /* 609: dead */
+    STATUS_INFO_NIL,  /* 610: dead */
     /* Reserved states 611-616 */
-    STATUS_INFO(611, "reserved"),
-    STATUS_INFO(612, "reserved"),
-    STATUS_INFO(613, "reserved"),
-    STATUS_INFO(614, "reserved"),
-    STATUS_INFO(615, "reserved"),
-    STATUS_INFO(616, "reserved"),
+    STATUS_INFO_NIL,  /* 611: dead */
+    STATUS_INFO_NIL,  /* 612: dead */
+    STATUS_INFO_NIL,  /* 613: dead */
+    STATUS_INFO_NIL,  /* 614: dead */
+    STATUS_INFO_NIL,  /* 615: dead */
+    STATUS_INFO_NIL,  /* 616: dead */
     /* Type modifier states 617-624 */
     STATUS_INFO(617, "after 'unsigned'"),
-    STATUS_INFO(618, "after 'unsigned long'"),
-    STATUS_INFO(619, "after 'unsigned short'"),
+    STATUS_INFO_NIL,   /* 618: dead - unreachable */
+    STATUS_INFO_NIL,   /* 619: dead - unreachable */
     STATUS_INFO(620, "after 'long'"),
     STATUS_INFO(621, "after 'short'"),
     STATUS_INFO(622, "after 'signed'"),
-    STATUS_INFO(623, "after 'signed long'"),
-    STATUS_INFO(624, "after 'signed short'"),
+    STATUS_INFO_NIL,   /* 623: dead - unreachable */
+    STATUS_INFO_NIL,   /* 624: dead - unreachable */
     /* Phase 1.4b: Storage class + type modifier states 625-656 */
     /* Static (625-632) */
     STATUS_INFO(625, "after 'static unsigned'"),
@@ -18607,23 +18607,23 @@ hic_manens constans Arbor2StatusInfo STATUS_TABULA_PARTIAL[] = {
     STATUS_INFO(917, "params , const type declarator - reduce P342"),
     STATUS_INFO(918, "params , volatile type - expects * or ID or )"),
     STATUS_INFO(919, "params , volatile type declarator - reduce P343"),
-    /* Phase 1.4b: Qualifier + Type Modifier States (920-935) */
-    STATUS_INFO(920, "const unsigned - expects int/char/long/short/ID"),
-    STATUS_INFO(921, "const unsigned long - expects int/ID"),
-    STATUS_INFO(922, "const unsigned short - expects int/ID"),
-    STATUS_INFO(923, "const long - expects int/ID"),
-    STATUS_INFO(924, "const short - expects int/ID"),
-    STATUS_INFO(925, "const signed - expects int/char/long/short/ID"),
-    STATUS_INFO(926, "const signed long - expects int/ID"),
-    STATUS_INFO(927, "const signed short - expects int/ID"),
-    STATUS_INFO(928, "volatile unsigned - expects int/char/long/short/ID"),
-    STATUS_INFO(929, "volatile unsigned long - expects int/ID"),
-    STATUS_INFO(930, "volatile unsigned short - expects int/ID"),
-    STATUS_INFO(931, "volatile long - expects int/ID"),
-    STATUS_INFO(932, "volatile short - expects int/ID"),
-    STATUS_INFO(933, "volatile signed - expects int/char/long/short/ID"),
-    STATUS_INFO(934, "volatile signed long - expects int/ID"),
-    STATUS_INFO(935, "volatile signed short - expects int/ID"),
+    /* Phase 1.4b: Qualifier + Type Modifier States (920-935) - all dead */
+    STATUS_INFO_NIL,   /* 920: dead - unreachable */
+    STATUS_INFO_NIL,   /* 921: dead - unreachable */
+    STATUS_INFO_NIL,   /* 922: dead - unreachable */
+    STATUS_INFO_NIL,   /* 923: dead - unreachable */
+    STATUS_INFO_NIL,   /* 924: dead - unreachable */
+    STATUS_INFO_NIL,   /* 925: dead - unreachable */
+    STATUS_INFO_NIL,   /* 926: dead - unreachable */
+    STATUS_INFO_NIL,   /* 927: dead - unreachable */
+    STATUS_INFO_NIL,   /* 928: dead - unreachable */
+    STATUS_INFO_NIL,   /* 929: dead - unreachable */
+    STATUS_INFO_NIL,   /* 930: dead - unreachable */
+    STATUS_INFO_NIL,   /* 931: dead - unreachable */
+    STATUS_INFO_NIL,   /* 932: dead - unreachable */
+    STATUS_INFO_NIL,   /* 933: dead - unreachable */
+    STATUS_INFO_NIL,   /* 934: dead - unreachable */
+    STATUS_INFO_NIL,   /* 935: dead - unreachable */
     /* Phase 1.4b: Compound (Storage+Qualifier) + Type Modifier States (936-951) */
     STATUS_INFO(936, "static const unsigned - expects int/char/long/short/ID"),
     STATUS_INFO(937, "static const unsigned long - expects int/ID"),
@@ -18735,7 +18735,7 @@ hic_manens constans Arbor2StatusInfo STATUS_TABULA_PARTIAL[] = {
     STATUS_INFO(1039, "volatile signed long long - expect *|ID"),
     STATUS_INFO(1040, "volatile long - expect int/long/*"),
     STATUS_INFO(1041, "volatile short - expect int/*"),
-    STATUS_INFO(1042, "const volatile type - expect *|ID"),
+    STATUS_INFO_NIL,   /* 1042: dead - unreachable */
     STATUS_INFO(1043, "const volatile unsigned - expect int/char/long/short/*"),
     STATUS_INFO(1044, "const volatile unsigned long - expect int/long/*"),
     STATUS_INFO(1045, "const volatile unsigned short - expect int/*"),
@@ -18856,11 +18856,11 @@ hic_manens constans Arbor2StatusInfo STATUS_TABULA_PARTIAL[] = {
     STATUS_INFO(1154, "reduce P418 - const volatile type"),
     STATUS_INFO(1155, "reduce P419 - volatile const type"),
 
-    /* Gap 1156-1159 (reserved) */
-    STATUS_INFO(1156, "reserved"),
-    STATUS_INFO(1157, "reserved"),
-    STATUS_INFO(1158, "reserved"),
-    STATUS_INFO(1159, "reserved"),
+    /* Gap 1156-1159 (reserved) - all dead */
+    STATUS_INFO_NIL,   /* 1156: dead - unreachable */
+    STATUS_INFO_NIL,   /* 1157: dead - unreachable */
+    STATUS_INFO_NIL,   /* 1158: dead - unreachable */
+    STATUS_INFO_NIL,   /* 1159: dead - unreachable */
 
     /* Top-level compound type states (1160-1196) */
     STATUS_INFO(1160, "unsigned int - expects * or ID"),
@@ -18881,10 +18881,10 @@ hic_manens constans Arbor2StatusInfo STATUS_TABULA_PARTIAL[] = {
     STATUS_INFO(1175, "unsigned long long - expects * or ID"),
     STATUS_INFO(1176, "signed long long - expects * or ID"),
 
-    /* Gap 1177-1179 (reserved) */
-    STATUS_INFO(1177, "reserved"),
-    STATUS_INFO(1178, "reserved"),
-    STATUS_INFO(1179, "reserved"),
+    /* Gap 1177-1179 (reserved) - all dead */
+    STATUS_INFO_NIL,   /* 1177: dead - unreachable */
+    STATUS_INFO_NIL,   /* 1178: dead - unreachable */
+    STATUS_INFO_NIL,   /* 1179: dead - unreachable */
 
     /* Post-declarator reduction states for P420-P436 */
     STATUS_INFO(1180, "unsigned int declarator - reduce P420"),
@@ -18907,10 +18907,10 @@ hic_manens constans Arbor2StatusInfo STATUS_TABULA_PARTIAL[] = {
 
     /* --- Phase 1.5: Qualifier + Compound Type States (1197-1367) --- */
 
-    /* Reserved states 1197-1199 */
-    STATUS_INFO(1197, "reserved"),
-    STATUS_INFO(1198, "reserved"),
-    STATUS_INFO(1199, "reserved"),
+    /* Reserved states 1197-1199 - all dead */
+    STATUS_INFO_NIL,   /* 1197: dead - unreachable */
+    STATUS_INFO_NIL,   /* 1198: dead - unreachable */
+    STATUS_INFO_NIL,   /* 1199: dead - unreachable */
 
     /* Intermediate states for const + modifiers (1200-1207) */
     STATUS_INFO(1200, "const unsigned - expects INT/CHAR/LONG/SHORT/ID"),
@@ -18959,10 +18959,10 @@ hic_manens constans Arbor2StatusInfo STATUS_TABULA_PARTIAL[] = {
     STATUS_INFO(1235, "const signed char - expects declarator"),
     STATUS_INFO(1236, "const long int - expects declarator"),
     STATUS_INFO(1237, "const short int - expects declarator"),
-    STATUS_INFO(1238, "const unsigned long - expects declarator"),
-    STATUS_INFO(1239, "const unsigned short - expects declarator"),
-    STATUS_INFO(1240, "const signed long - expects declarator"),
-    STATUS_INFO(1241, "const signed short - expects declarator"),
+    STATUS_INFO_NIL,   /* 1238: dead - unreachable */
+    STATUS_INFO_NIL,   /* 1239: dead - unreachable */
+    STATUS_INFO_NIL,   /* 1240: dead - unreachable */
+    STATUS_INFO_NIL,   /* 1241: dead - unreachable */
     STATUS_INFO(1242, "const unsigned long int - expects declarator"),
     STATUS_INFO(1243, "const unsigned short int - expects declarator"),
     STATUS_INFO(1244, "const signed long int - expects declarator"),
@@ -18978,10 +18978,10 @@ hic_manens constans Arbor2StatusInfo STATUS_TABULA_PARTIAL[] = {
     STATUS_INFO(1252, "volatile signed char - expects declarator"),
     STATUS_INFO(1253, "volatile long int - expects declarator"),
     STATUS_INFO(1254, "volatile short int - expects declarator"),
-    STATUS_INFO(1255, "volatile unsigned long - expects declarator"),
-    STATUS_INFO(1256, "volatile unsigned short - expects declarator"),
-    STATUS_INFO(1257, "volatile signed long - expects declarator"),
-    STATUS_INFO(1258, "volatile signed short - expects declarator"),
+    STATUS_INFO_NIL,   /* 1255: dead - unreachable */
+    STATUS_INFO_NIL,   /* 1256: dead - unreachable */
+    STATUS_INFO_NIL,   /* 1257: dead - unreachable */
+    STATUS_INFO_NIL,   /* 1258: dead - unreachable */
     STATUS_INFO(1259, "volatile unsigned long int - expects declarator"),
     STATUS_INFO(1260, "volatile unsigned short int - expects declarator"),
     STATUS_INFO(1261, "volatile signed long int - expects declarator"),
@@ -18997,10 +18997,10 @@ hic_manens constans Arbor2StatusInfo STATUS_TABULA_PARTIAL[] = {
     STATUS_INFO(1269, "const volatile signed char - expects declarator"),
     STATUS_INFO(1270, "const volatile long int - expects declarator"),
     STATUS_INFO(1271, "const volatile short int - expects declarator"),
-    STATUS_INFO(1272, "const volatile unsigned long - expects declarator"),
-    STATUS_INFO(1273, "const volatile unsigned short - expects declarator"),
-    STATUS_INFO(1274, "const volatile signed long - expects declarator"),
-    STATUS_INFO(1275, "const volatile signed short - expects declarator"),
+    STATUS_INFO_NIL,   /* 1272: dead - unreachable */
+    STATUS_INFO_NIL,   /* 1273: dead - unreachable */
+    STATUS_INFO_NIL,   /* 1274: dead - unreachable */
+    STATUS_INFO_NIL,   /* 1275: dead - unreachable */
     STATUS_INFO(1276, "const volatile unsigned long int - expects declarator"),
     STATUS_INFO(1277, "const volatile unsigned short int - expects declarator"),
     STATUS_INFO(1278, "const volatile signed long int - expects declarator"),
@@ -19016,10 +19016,10 @@ hic_manens constans Arbor2StatusInfo STATUS_TABULA_PARTIAL[] = {
     STATUS_INFO(1286, "volatile const signed char - expects declarator"),
     STATUS_INFO(1287, "volatile const long int - expects declarator"),
     STATUS_INFO(1288, "volatile const short int - expects declarator"),
-    STATUS_INFO(1289, "volatile const unsigned long - expects declarator"),
-    STATUS_INFO(1290, "volatile const unsigned short - expects declarator"),
-    STATUS_INFO(1291, "volatile const signed long - expects declarator"),
-    STATUS_INFO(1292, "volatile const signed short - expects declarator"),
+    STATUS_INFO_NIL,   /* 1289: dead - unreachable */
+    STATUS_INFO_NIL,   /* 1290: dead - unreachable */
+    STATUS_INFO_NIL,   /* 1291: dead - unreachable */
+    STATUS_INFO_NIL,   /* 1292: dead - unreachable */
     STATUS_INFO(1293, "volatile const unsigned long int - expects declarator"),
     STATUS_INFO(1294, "volatile const unsigned short int - expects declarator"),
     STATUS_INFO(1295, "volatile const signed long int - expects declarator"),
@@ -19316,8 +19316,8 @@ hic_manens constans Arbor2StatusInfo STATUS_TABULA_PARTIAL[] = {
     STATUS_INFO_NIL, STATUS_INFO_NIL, STATUS_INFO_NIL, STATUS_INFO_NIL, STATUS_INFO_NIL, /* 1642-1646 */
     STATUS_INFO_NIL, STATUS_INFO_NIL, STATUS_INFO_NIL,                                   /* 1647-1649 */
 
-    /* State 1650: After struct/enum spec - direct to declarator (no fork) */
-    STATUS_INFO(1650, "after struct/enum spec - direct to declarator")
+    /* State 1650: dead - unreachable */
+    STATUS_INFO_NIL    /* 1650: dead - unreachable */
 };
 
 /* ==================================================
@@ -24517,6 +24517,8 @@ arbor2_glr_quaerere_actiones(
     info = &STATUS_TABULA_PARTIAL[status];
     si (info->actiones == NIHIL)
     {
+        /* This should never happen if reachability analysis is correct */
+        imprimere("WARNING: Accessed NIL state %d during parsing!\n", status);
         redde resultus;
     }
 
@@ -25951,6 +25953,137 @@ nomen structura {
 
 hic_manens StatusPraedecessores PRAEDECESSOR_MAPPA[2048];  /* Max states supported */
 
+/* Reachability tracking */
+hic_manens b32 STATUS_REACHABLE[2048];  /* True if state is reachable from state 0 */
+hic_manens b32 REACHABILITY_COMPUTED = FALSUM;
+
+/* Compute reachability via forward traversal from state 0 */
+hic_manens vacuum
+_computare_reachability(vacuum)
+{
+    s32 status;
+    s32 a;
+    s32 g;
+    s32 num_states = (s32)(magnitudo(STATUS_TABULA_PARTIAL) / magnitudo(STATUS_TABULA_PARTIAL[0]));
+    s32 num_goto_states = (s32)(magnitudo(GOTO_TABULA_NOVA) / magnitudo(GOTO_TABULA_NOVA[0]));
+    b32 changed = VERUM;
+
+    si (REACHABILITY_COMPUTED)
+    {
+        redde;
+    }
+
+    /* Initialize all as unreachable */
+    per (status = ZEPHYRUM; status < 2048; status++)
+    {
+        STATUS_REACHABLE[status] = FALSUM;
+    }
+
+    /* State 0 is always reachable */
+    STATUS_REACHABLE[0] = VERUM;
+
+    /* Fixed-point iteration: keep marking reachable states until no changes */
+    dum (changed)
+    {
+        changed = FALSUM;
+
+        per (status = ZEPHYRUM; status < num_states; status++)
+        {
+            constans Arbor2StatusInfo* info;
+            constans Arbor2StatusGoto* sg;
+
+            si (!STATUS_REACHABLE[status])
+            {
+                perge;
+            }
+
+            /* Mark all SHIFT targets as reachable */
+            info = &STATUS_TABULA_PARTIAL[status];
+            si (info->actiones != NIHIL)
+            {
+                per (a = ZEPHYRUM; a < info->numerus; a++)
+                {
+                    si (info->actiones[a].actio == ARBOR2_ACTIO_SHIFT)
+                    {
+                        s32 target = (s32)info->actiones[a].valor;
+                        si (target >= ZEPHYRUM && target < 2048 && !STATUS_REACHABLE[target])
+                        {
+                            STATUS_REACHABLE[target] = VERUM;
+                            changed = VERUM;
+                        }
+                    }
+                }
+            }
+
+            /* Mark all GOTO targets as reachable */
+            si (status < num_goto_states)
+            {
+                sg = &GOTO_TABULA_NOVA[status];
+                si (sg->transitus != NIHIL)
+                {
+                    per (g = ZEPHYRUM; g < sg->numerus; g++)
+                    {
+                        s32 target = sg->transitus[g].status_novus;
+                        si (target >= ZEPHYRUM && target < 2048 && !STATUS_REACHABLE[target])
+                        {
+                            STATUS_REACHABLE[target] = VERUM;
+                            changed = VERUM;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    REACHABILITY_COMPUTED = VERUM;
+}
+
+/* Validate state reachability - report dead states */
+b32
+arbor2_glr_validare_reachability(vacuum)
+{
+    s32 status;
+    s32 num_states = (s32)(magnitudo(STATUS_TABULA_PARTIAL) / magnitudo(STATUS_TABULA_PARTIAL[0]));
+    s32 num_reachable = ZEPHYRUM;
+    s32 num_dead = ZEPHYRUM;
+    b32 valida = VERUM;
+
+    _computare_reachability();
+
+    per (status = ZEPHYRUM; status < num_states; status++)
+    {
+        constans Arbor2StatusInfo* info = &STATUS_TABULA_PARTIAL[status];
+
+        si (info->actiones == NIHIL)
+        {
+            perge;  /* Already marked as NIL/reserved */
+        }
+
+        si (STATUS_REACHABLE[status])
+        {
+            num_reachable++;
+        }
+        alioquin
+        {
+            imprimere("STATUS MORTUUS: %d (%s)\n", status, info->descriptio);
+            num_dead++;
+            valida = FALSUM;
+        }
+    }
+
+    si (valida)
+    {
+        imprimere("REACHABILITY VALIDATIO: Omnes %d status reachable sunt.\n", num_reachable);
+    }
+    alioquin
+    {
+        imprimere("REACHABILITY VALIDATIO: %d status mortui (unreachable), %d reachable.\n",
+                  num_dead, num_reachable);
+    }
+
+    redde valida;
+}
+
 /* Build predecessor map from SHIFT actions */
 hic_manens vacuum
 _aedificare_praedecessores(vacuum)
@@ -26257,8 +26390,12 @@ arbor2_glr_validare_goto_completeness(vacuum)
     s32 num_checked = ZEPHYRUM;
     s32 num_missing = ZEPHYRUM;
     s32 num_skipped_intentus = ZEPHYRUM;  /* Skipped due to intentional conflict */
+    s32 num_skipped_unreachable = ZEPHYRUM;  /* Skipped due to unreachable state */
 
-    /* Build predecessor map first */
+    /* Compute reachability first */
+    _computare_reachability();
+
+    /* Build predecessor map */
     _aedificare_praedecessores();
 
     /* For each state */
@@ -26267,6 +26404,12 @@ arbor2_glr_validare_goto_completeness(vacuum)
         constans Arbor2StatusInfo* info = &STATUS_TABULA_PARTIAL[status];
 
         si (info->actiones == NIHIL)
+        {
+            perge;
+        }
+
+        /* Skip unreachable states */
+        si (!STATUS_REACHABLE[status])
         {
             perge;
         }
@@ -26308,6 +26451,14 @@ arbor2_glr_validare_goto_completeness(vacuum)
                 s32 status_revelatus = revealed_states[r];
                 s32 goto_status;
 
+                /* Skip unreachable revealed states */
+                si (status_revelatus >= ZEPHYRUM && status_revelatus < 2048 &&
+                    !STATUS_REACHABLE[status_revelatus])
+                {
+                    num_skipped_unreachable++;
+                    perge;
+                }
+
                 num_checked++;
 
                 /* Check GOTO exists */
@@ -26329,13 +26480,13 @@ arbor2_glr_validare_goto_completeness(vacuum)
 
     si (valida)
     {
-        imprimere("GOTO VALIDATIO: Omnes %d GOTO entries verificatae (%d GLR conflictus praetermissi).\n",
-                  num_checked, num_skipped_intentus);
+        imprimere("GOTO VALIDATIO: Omnes %d GOTO entries verificatae (%d GLR conflictus praetermissi, %d unreachable praetermissi).\n",
+                  num_checked, num_skipped_intentus, num_skipped_unreachable);
     }
     alioquin
     {
-        imprimere("GOTO VALIDATIO: %d GOTO entries desunt (%d GLR conflictus praetermissi)!\n",
-                  num_missing, num_skipped_intentus);
+        imprimere("GOTO VALIDATIO: %d GOTO entries desunt (%d GLR conflictus praetermissi, %d unreachable praetermissi)!\n",
+                  num_missing, num_skipped_intentus, num_skipped_unreachable);
     }
 
     redde valida;
