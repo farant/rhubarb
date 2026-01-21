@@ -17681,21 +17681,21 @@ hic_manens constans Arbor2StatusInfo STATUS_TABULA_PARTIAL[] = {
     STATUS_INFO(119, "after 'struct {' (anon) - start member list"),
     STATUS_INFO(120, "after 'struct ID {' (named) - start member list"),
     STATUS_INFO(121, "after member type_spec - expect '*' or name or ':'"),
-    STATUS_INFO(122, "after member type_spec '*' - expect more '*' or name"),
-    STATUS_INFO(123, "after member type_spec name - expect ';' or ':'"),
-    STATUS_INFO(124, "after member type_spec * name - expect ';'"),
-    STATUS_INFO(125, "after member decl ';' (no ptr) - reduce P48"),
-    STATUS_INFO(126, "after first ptr member decl ';' - reduce P50"),
+    STATUS_INFO_NIL,  /* 122: dead - unreachable (was member ptr handling) */
+    STATUS_INFO_NIL,  /* 123: dead - unreachable */
+    STATUS_INFO_NIL,  /* 124: dead - unreachable */
+    STATUS_INFO_NIL,  /* 125: dead - unreachable */
+    STATUS_INFO_NIL,  /* 126: dead - unreachable */
     STATUS_INFO(127, "after member_list in anon struct - expect more or '}'"),
     STATUS_INFO(128, "after 'struct { members }' - reduce P46 (anon)"),
     STATUS_INFO(129, "after member_list in named struct - expect more or '}'"),
     STATUS_INFO(130, "after 'struct ID { members }' - reduce P45 (named)"),
     STATUS_INFO(131, "after type_spec in subseq member - expect '*' or name"),
-    STATUS_INFO(132, "after type_spec '*' in subseq member - expect '*'/name"),
-    STATUS_INFO(133, "after subseq non-ptr member - expect ';' or ':'"),
-    STATUS_INFO(134, "after subseq ptr member + * + name - expect ';'"),
-    STATUS_INFO(135, "after subseq non-ptr member ';' - reduce P49"),
-    STATUS_INFO(136, "after subseq ptr member ';' - reduce P51"),
+    STATUS_INFO_NIL,  /* 132: dead - unreachable (was subseq member ptr) */
+    STATUS_INFO_NIL,  /* 133: dead - unreachable */
+    STATUS_INFO_NIL,  /* 134: dead - unreachable */
+    STATUS_INFO_NIL,  /* 135: dead - unreachable */
+    STATUS_INFO_NIL,  /* 136: dead - unreachable */
     STATUS_INFO(137, "after 'union' - expect ID or '{'"),
     STATUS_INFO(138, "after 'union ID' - expect '{' or reduce P54"),
     STATUS_INFO(139, "after 'union {' (anon) - start member list"),
