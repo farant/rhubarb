@@ -6020,6 +6020,29 @@ s32 principale(vacuum)
         imprimere("  furcae: %d\n", glr->num_furcae);
     }
 
+    /* Test typedef float: typedef float MyFloat; */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Probans typedef float: typedef float MyFloat; ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "typedef float MyFloat;");
+        res = arbor2_glr_parsere(glr, tokens);
+
+        imprimere("  successus: %s\n", res.successus ? "VERUM" : "FALSUM");
+
+        si (res.radix != NIHIL)
+        {
+            _imprimere_arborem(res.radix, ZEPHYRUM);
+        }
+
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.radix);
+
+        imprimere("  furcae: %d\n", glr->num_furcae);
+    }
+
     /* Test expression size: int arr[1 + 2] */
     {
         Xar* tokens;
@@ -10738,6 +10761,23 @@ s32 principale(vacuum)
         Xar* tokens;
         Arbor2GLRResultus res;
 
+        imprimere("\n--- Probans static float f ---\n");
+
+        tokens = _lexare_ad_tokens(piscina, intern, "static float f");
+        res = arbor2_glr_parsere(glr, tokens);
+
+        CREDO_AEQUALIS_I32((i32)res.successus, VERUM);
+        si (res.radix != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)res.radix->genus, (i32)ARBOR2_NODUS_DECLARATIO);
+            CREDO_AEQUALIS_I32(res.radix->datum.declaratio.storage_class, ARBOR2_STORAGE_STATIC);
+        }
+    }
+
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
         imprimere("\n--- Probans extern int y ---\n");
 
         tokens = _lexare_ad_tokens(piscina, intern, "extern int y");
@@ -12011,6 +12051,19 @@ s32 principale(vacuum)
             CREDO_AEQUALIS_I32(
                 xar_numerus(res.radix->datum.translation_unit.declarationes), I);
         }
+    }
+
+    /* Function with mixed type params: int and float */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- Translation unit: function with int and float params ---\n");
+        tokens = _lexare_ad_tokens(piscina, intern,
+            "float scale(int x, float factor) { return x * factor; }");
+        res = arbor2_glr_parsere_translation_unit(glr, tokens);
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.radix);
     }
 
 

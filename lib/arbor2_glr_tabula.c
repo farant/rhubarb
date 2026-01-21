@@ -3050,6 +3050,16 @@ hic_manens constans Arbor2TabulaActio STATUS_104_ACTIONES[] = {
     { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT, 105, FALSUM },
     { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_SHIFT, 105, FALSUM },
     { ARBOR2_LEXEMA_CHAR,           ARBOR2_ACTIO_SHIFT, 105, FALSUM },
+    { ARBOR2_LEXEMA_VOID,           ARBOR2_ACTIO_SHIFT, 105, FALSUM },
+    { ARBOR2_LEXEMA_FLOAT,          ARBOR2_ACTIO_SHIFT, 105, FALSUM },
+    { ARBOR2_LEXEMA_DOUBLE,         ARBOR2_ACTIO_SHIFT, 105, FALSUM },
+    { ARBOR2_LEXEMA_SHORT,          ARBOR2_ACTIO_SHIFT, 105, FALSUM },
+    { ARBOR2_LEXEMA_LONG,           ARBOR2_ACTIO_SHIFT, 105, FALSUM },
+    { ARBOR2_LEXEMA_SIGNED,         ARBOR2_ACTIO_SHIFT, 105, FALSUM },
+    { ARBOR2_LEXEMA_UNSIGNED,       ARBOR2_ACTIO_SHIFT, 105, FALSUM },
+    { ARBOR2_LEXEMA_STRUCT,         ARBOR2_ACTIO_SHIFT, 117, FALSUM },
+    { ARBOR2_LEXEMA_UNION,          ARBOR2_ACTIO_SHIFT, 137, FALSUM },
+    { ARBOR2_LEXEMA_ENUM,           ARBOR2_ACTIO_SHIFT, 145, FALSUM },
     { ARBOR2_LEXEMA_ELLIPSIS,       ARBOR2_ACTIO_SHIFT, 906, FALSUM },  /* variadic ... */
     { ARBOR2_LEXEMA_CONST,          ARBOR2_ACTIO_SHIFT, 910, FALSUM },  /* const int x */
     { ARBOR2_LEXEMA_VOLATILE,       ARBOR2_ACTIO_SHIFT, 911, FALSUM }   /* volatile int x */
@@ -3905,6 +3915,13 @@ hic_manens constans Arbor2TabulaActio STATUS_198_ACTIONES[] = {
     { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT, 199, FALSUM },
     { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_SHIFT, 199, FALSUM },
     { ARBOR2_LEXEMA_CHAR,           ARBOR2_ACTIO_SHIFT, 199, FALSUM },
+    { ARBOR2_LEXEMA_VOID,           ARBOR2_ACTIO_SHIFT, 199, FALSUM },
+    { ARBOR2_LEXEMA_FLOAT,          ARBOR2_ACTIO_SHIFT, 199, FALSUM },
+    { ARBOR2_LEXEMA_DOUBLE,         ARBOR2_ACTIO_SHIFT, 199, FALSUM },
+    { ARBOR2_LEXEMA_SHORT,          ARBOR2_ACTIO_SHIFT, 199, FALSUM },
+    { ARBOR2_LEXEMA_LONG,           ARBOR2_ACTIO_SHIFT, 199, FALSUM },
+    { ARBOR2_LEXEMA_SIGNED,         ARBOR2_ACTIO_SHIFT, 199, FALSUM },
+    { ARBOR2_LEXEMA_UNSIGNED,       ARBOR2_ACTIO_SHIFT, 199, FALSUM },
     { ARBOR2_LEXEMA_STRUCT,         ARBOR2_ACTIO_SHIFT, 117, FALSUM },
     { ARBOR2_LEXEMA_UNION,          ARBOR2_ACTIO_SHIFT, 137, FALSUM },
     { ARBOR2_LEXEMA_ENUM,           ARBOR2_ACTIO_SHIFT, 145, FALSUM }
@@ -6511,8 +6528,13 @@ hic_manens constans Arbor2TabulaActio STATUS_346_ACTIONES[] = {
     { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_SHIFT, 352, FALSUM },
     { ARBOR2_LEXEMA_CHAR,           ARBOR2_ACTIO_SHIFT, 352, FALSUM },
     { ARBOR2_LEXEMA_VOID,           ARBOR2_ACTIO_SHIFT, 352, FALSUM },
+    { ARBOR2_LEXEMA_FLOAT,          ARBOR2_ACTIO_SHIFT, 352, FALSUM },
+    { ARBOR2_LEXEMA_DOUBLE,         ARBOR2_ACTIO_SHIFT, 352, FALSUM },
     { ARBOR2_LEXEMA_CONST,          ARBOR2_ACTIO_SHIFT, 530, FALSUM },  /* static const */
     { ARBOR2_LEXEMA_VOLATILE,       ARBOR2_ACTIO_SHIFT, 534, FALSUM },  /* static volatile */
+    { ARBOR2_LEXEMA_STRUCT,         ARBOR2_ACTIO_SHIFT, 117, FALSUM },  /* static struct */
+    { ARBOR2_LEXEMA_UNION,          ARBOR2_ACTIO_SHIFT, 137, FALSUM },  /* static union */
+    { ARBOR2_LEXEMA_ENUM,           ARBOR2_ACTIO_SHIFT, 145, FALSUM },  /* static enum */
     /* Type modifiers - Phase 1.4b */
     { ARBOR2_LEXEMA_UNSIGNED,       ARBOR2_ACTIO_SHIFT, 625, FALSUM },  /* static unsigned */
     { ARBOR2_LEXEMA_LONG,           ARBOR2_ACTIO_SHIFT, 628, FALSUM },  /* static long */
@@ -6526,8 +6548,13 @@ hic_manens constans Arbor2TabulaActio STATUS_347_ACTIONES[] = {
     { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_SHIFT, 353, FALSUM },
     { ARBOR2_LEXEMA_CHAR,           ARBOR2_ACTIO_SHIFT, 353, FALSUM },
     { ARBOR2_LEXEMA_VOID,           ARBOR2_ACTIO_SHIFT, 353, FALSUM },
+    { ARBOR2_LEXEMA_FLOAT,          ARBOR2_ACTIO_SHIFT, 353, FALSUM },
+    { ARBOR2_LEXEMA_DOUBLE,         ARBOR2_ACTIO_SHIFT, 353, FALSUM },
     { ARBOR2_LEXEMA_CONST,          ARBOR2_ACTIO_SHIFT, 531, FALSUM },  /* extern const */
     { ARBOR2_LEXEMA_VOLATILE,       ARBOR2_ACTIO_SHIFT, 535, FALSUM },  /* extern volatile */
+    { ARBOR2_LEXEMA_STRUCT,         ARBOR2_ACTIO_SHIFT, 117, FALSUM },  /* extern struct */
+    { ARBOR2_LEXEMA_UNION,          ARBOR2_ACTIO_SHIFT, 137, FALSUM },  /* extern union */
+    { ARBOR2_LEXEMA_ENUM,           ARBOR2_ACTIO_SHIFT, 145, FALSUM },  /* extern enum */
     /* Type modifiers - Phase 1.4b */
     { ARBOR2_LEXEMA_UNSIGNED,       ARBOR2_ACTIO_SHIFT, 633, FALSUM },  /* extern unsigned */
     { ARBOR2_LEXEMA_LONG,           ARBOR2_ACTIO_SHIFT, 636, FALSUM },  /* extern long */
@@ -6541,7 +6568,12 @@ hic_manens constans Arbor2TabulaActio STATUS_348_ACTIONES[] = {
     { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_SHIFT, 354, FALSUM },
     { ARBOR2_LEXEMA_CHAR,           ARBOR2_ACTIO_SHIFT, 354, FALSUM },
     { ARBOR2_LEXEMA_VOID,           ARBOR2_ACTIO_SHIFT, 354, FALSUM },
+    { ARBOR2_LEXEMA_FLOAT,          ARBOR2_ACTIO_SHIFT, 354, FALSUM },
+    { ARBOR2_LEXEMA_DOUBLE,         ARBOR2_ACTIO_SHIFT, 354, FALSUM },
     { ARBOR2_LEXEMA_CONST,          ARBOR2_ACTIO_SHIFT, 532, FALSUM },  /* register const */
+    { ARBOR2_LEXEMA_STRUCT,         ARBOR2_ACTIO_SHIFT, 117, FALSUM },  /* register struct */
+    { ARBOR2_LEXEMA_UNION,          ARBOR2_ACTIO_SHIFT, 137, FALSUM },  /* register union */
+    { ARBOR2_LEXEMA_ENUM,           ARBOR2_ACTIO_SHIFT, 145, FALSUM },  /* register enum */
     /* Type modifiers - Phase 1.4b */
     { ARBOR2_LEXEMA_UNSIGNED,       ARBOR2_ACTIO_SHIFT, 641, FALSUM },  /* register unsigned */
     { ARBOR2_LEXEMA_LONG,           ARBOR2_ACTIO_SHIFT, 644, FALSUM },  /* register long */
@@ -6555,7 +6587,12 @@ hic_manens constans Arbor2TabulaActio STATUS_349_ACTIONES[] = {
     { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_SHIFT, 355, FALSUM },
     { ARBOR2_LEXEMA_CHAR,           ARBOR2_ACTIO_SHIFT, 355, FALSUM },
     { ARBOR2_LEXEMA_VOID,           ARBOR2_ACTIO_SHIFT, 355, FALSUM },
+    { ARBOR2_LEXEMA_FLOAT,          ARBOR2_ACTIO_SHIFT, 355, FALSUM },
+    { ARBOR2_LEXEMA_DOUBLE,         ARBOR2_ACTIO_SHIFT, 355, FALSUM },
     { ARBOR2_LEXEMA_CONST,          ARBOR2_ACTIO_SHIFT, 533, FALSUM },  /* auto const */
+    { ARBOR2_LEXEMA_STRUCT,         ARBOR2_ACTIO_SHIFT, 117, FALSUM },  /* auto struct */
+    { ARBOR2_LEXEMA_UNION,          ARBOR2_ACTIO_SHIFT, 137, FALSUM },  /* auto union */
+    { ARBOR2_LEXEMA_ENUM,           ARBOR2_ACTIO_SHIFT, 145, FALSUM },  /* auto enum */
     /* Type modifiers - Phase 1.4b */
     { ARBOR2_LEXEMA_UNSIGNED,       ARBOR2_ACTIO_SHIFT, 649, FALSUM },  /* auto unsigned */
     { ARBOR2_LEXEMA_LONG,           ARBOR2_ACTIO_SHIFT, 652, FALSUM },  /* auto long */
@@ -6569,7 +6606,12 @@ hic_manens constans Arbor2TabulaActio STATUS_350_ACTIONES[] = {
     { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_SHIFT, 356, FALSUM },
     { ARBOR2_LEXEMA_CHAR,           ARBOR2_ACTIO_SHIFT, 356, FALSUM },
     { ARBOR2_LEXEMA_VOID,           ARBOR2_ACTIO_SHIFT, 356, FALSUM },
+    { ARBOR2_LEXEMA_FLOAT,          ARBOR2_ACTIO_SHIFT, 356, FALSUM },
+    { ARBOR2_LEXEMA_DOUBLE,         ARBOR2_ACTIO_SHIFT, 356, FALSUM },
     { ARBOR2_LEXEMA_VOLATILE,       ARBOR2_ACTIO_SHIFT, 536, FALSUM },  /* const volatile */
+    { ARBOR2_LEXEMA_STRUCT,         ARBOR2_ACTIO_SHIFT, 117, FALSUM },  /* const struct */
+    { ARBOR2_LEXEMA_UNION,          ARBOR2_ACTIO_SHIFT, 137, FALSUM },  /* const union */
+    { ARBOR2_LEXEMA_ENUM,           ARBOR2_ACTIO_SHIFT, 145, FALSUM },  /* const enum */
     /* Type modifiers - Phase 1.5: Route to new qualifier-preserving states */
     { ARBOR2_LEXEMA_UNSIGNED,       ARBOR2_ACTIO_SHIFT, 1200, FALSUM }, /* const unsigned -> P437+ */
     { ARBOR2_LEXEMA_SIGNED,         ARBOR2_ACTIO_SHIFT, 1203, FALSUM }, /* const signed -> P438+ */
@@ -6583,7 +6625,12 @@ hic_manens constans Arbor2TabulaActio STATUS_351_ACTIONES[] = {
     { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_SHIFT, 357, FALSUM },
     { ARBOR2_LEXEMA_CHAR,           ARBOR2_ACTIO_SHIFT, 357, FALSUM },
     { ARBOR2_LEXEMA_VOID,           ARBOR2_ACTIO_SHIFT, 357, FALSUM },
+    { ARBOR2_LEXEMA_FLOAT,          ARBOR2_ACTIO_SHIFT, 357, FALSUM },
+    { ARBOR2_LEXEMA_DOUBLE,         ARBOR2_ACTIO_SHIFT, 357, FALSUM },
     { ARBOR2_LEXEMA_CONST,          ARBOR2_ACTIO_SHIFT, 537, FALSUM },  /* volatile const */
+    { ARBOR2_LEXEMA_STRUCT,         ARBOR2_ACTIO_SHIFT, 117, FALSUM },  /* volatile struct */
+    { ARBOR2_LEXEMA_UNION,          ARBOR2_ACTIO_SHIFT, 137, FALSUM },  /* volatile union */
+    { ARBOR2_LEXEMA_ENUM,           ARBOR2_ACTIO_SHIFT, 145, FALSUM },  /* volatile enum */
     /* Type modifiers - Phase 1.5: Route to new qualifier-preserving states */
     { ARBOR2_LEXEMA_UNSIGNED,       ARBOR2_ACTIO_SHIFT, 1208, FALSUM }, /* volatile unsigned -> new path */
     { ARBOR2_LEXEMA_SIGNED,         ARBOR2_ACTIO_SHIFT, 1211, FALSUM }, /* volatile signed -> new path */
@@ -24973,6 +25020,28 @@ hic_manens constans Arbor2LexemaGenus SENTENTIA_INITIUM_LEXEMATA[] = {
     ARBOR2_LEXEMA_BRACE_APERTA
 };
 
+/* Required tokens for TYPUS_CONTEXTUS states (type specifiers) */
+hic_manens constans Arbor2LexemaGenus TYPUS_CONTEXTUS_LEXEMATA[] = {
+    /* Basic types */
+    ARBOR2_LEXEMA_INT,
+    ARBOR2_LEXEMA_CHAR,
+    ARBOR2_LEXEMA_VOID,
+    ARBOR2_LEXEMA_FLOAT,
+    ARBOR2_LEXEMA_DOUBLE,
+    /* Size modifiers */
+    ARBOR2_LEXEMA_SHORT,
+    ARBOR2_LEXEMA_LONG,
+    /* Sign modifiers */
+    ARBOR2_LEXEMA_SIGNED,
+    ARBOR2_LEXEMA_UNSIGNED,
+    /* Compound types */
+    ARBOR2_LEXEMA_STRUCT,
+    ARBOR2_LEXEMA_UNION,
+    ARBOR2_LEXEMA_ENUM,
+    /* Typedef names */
+    ARBOR2_LEXEMA_IDENTIFICATOR
+};
+
 /* Tag rule structure */
 nomen structura {
     i32                         signum;        /* Tag bit flag */
@@ -24999,6 +25068,12 @@ hic_manens constans Arbor2TagRegula TAG_REGULAE[] = {
         "SENTENTIA_INITIUM",
         SENTENTIA_INITIUM_LEXEMATA,
         (i32)(magnitudo(SENTENTIA_INITIUM_LEXEMATA) / magnitudo(SENTENTIA_INITIUM_LEXEMATA[0]))
+    },
+    {
+        ARBOR2_TAG_TYPUS_CONTEXTUS,
+        "TYPUS_CONTEXTUS",
+        TYPUS_CONTEXTUS_LEXEMATA,
+        (i32)(magnitudo(TYPUS_CONTEXTUS_LEXEMATA) / magnitudo(TYPUS_CONTEXTUS_LEXEMATA[0]))
     }
 };
 
@@ -25007,7 +25082,7 @@ hic_manens constans Arbor2TagRegula TAG_REGULAE[] = {
 /* State tags array - index corresponds to state number.
  * Zero means no tags. Multiple tags can be combined with |. */
 hic_manens constans i32 STATUS_TAGS[] = {
-    /* 0 */   ARBOR2_TAG_EXPR_INITIUM,  /* initial - expression start */
+    /* 0 */   ARBOR2_TAG_EXPR_INITIUM | ARBOR2_TAG_TYPUS_CONTEXTUS,  /* initial - expression/type start */
     /* 1 */   0,
     /* 2 */   0,
     /* 3 */   0,
@@ -25059,18 +25134,30 @@ hic_manens constans i32 STATUS_TAGS[] = {
     /* 86 */  ARBOR2_TAG_SENTENTIA_INITIUM,  /* case body */
     /* 87 */  0, /* 88 */ 0,
     /* 89 */  ARBOR2_TAG_SENTENTIA_INITIUM,  /* default body */
-    /* Rest are untagged for now - add as needed */
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,  /* 90-99 */
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,  /* 100-109 */
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,  /* 110-119 */
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,  /* 120-129 */
+    /* 90-99: state 91 expects types after 'declarator (' */
+    0,  /* 90 */
+    ARBOR2_TAG_TYPUS_CONTEXTUS,  /* 91: after 'declarator (' - function param types */
+    0, 0, 0, 0, 0, 0, 0, 0,  /* 92-99 */
+    /* 100-109: state 104 expects types after 'param_list ,' */
+    0, 0, 0, 0,  /* 100-103 */
+    ARBOR2_TAG_TYPUS_CONTEXTUS,  /* 104: after 'param_list ,' - next param type */
+    0, 0, 0, 0, 0,  /* 105-109 */
+    /* 110-119: state 119 expects types in anon struct */
+    0, 0, 0, 0, 0, 0, 0, 0, 0,  /* 110-118 */
+    ARBOR2_TAG_TYPUS_CONTEXTUS,  /* 119: after 'struct {' (anon) - member type */
+    /* 120-129: state 120 expects types in named struct */
+    ARBOR2_TAG_TYPUS_CONTEXTUS,  /* 120: after 'struct ID {' - member type */
+    0, 0, 0, 0, 0, 0, 0, 0, 0,  /* 121-129 */
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0,  /* 130-139 */
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0,  /* 140-149 */
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0,  /* 150-159 */
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0,  /* 160-169 */
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0,  /* 170-179 */
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0,  /* 180-189 */
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,  /* 190-199 */
+    /* 190-199: state 198 expects types after 'typedef' */
+    0, 0, 0, 0, 0, 0, 0, 0,  /* 190-197 */
+    ARBOR2_TAG_TYPUS_CONTEXTUS,  /* 198: after 'typedef' - typedef'd type */
+    0,  /* 199 */
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0,  /* 200-209 */
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0,  /* 210-219 */
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0,  /* 220-229 */
@@ -25144,12 +25231,18 @@ hic_manens constans i32 STATUS_TAGS[] = {
     ARBOR2_TAG_EXPR_INITIUM,  /* 340: cast expression */
     ARBOR2_TAG_EXPR_INITIUM,  /* 341: cast expression */
     ARBOR2_TAG_EXPR_INITIUM,  /* 342: cast expression */
-    /* 343-347: 0 */
-    0, 0, 0, 0, 0,
-    0,  /* 348: type-specifier context (not expr start) */
-    /* 349-366: 0 */
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    /* 343-345: 0 (cast reduce states) */
+    0, 0, 0,
+    /* Storage class / qualifier states - expect types */
+    ARBOR2_TAG_TYPUS_CONTEXTUS,  /* 346: after 'static' - expects type */
+    ARBOR2_TAG_TYPUS_CONTEXTUS,  /* 347: after 'extern' - expects type */
+    ARBOR2_TAG_TYPUS_CONTEXTUS,  /* 348: after 'register' - expects type */
+    ARBOR2_TAG_TYPUS_CONTEXTUS,  /* 349: after 'auto' - expects type */
+    ARBOR2_TAG_TYPUS_CONTEXTUS,  /* 350: after 'const' - expects type */
+    ARBOR2_TAG_TYPUS_CONTEXTUS,  /* 351: after 'volatile' - expects type */
+    /* 352-366: 0 */
     0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0,
     ARBOR2_TAG_EXPR_INITIUM,  /* 367: expression context */
     ARBOR2_TAG_EXPR_INITIUM,  /* 368: expression context */
     ARBOR2_TAG_EXPR_INITIUM,  /* 369: expression context */
