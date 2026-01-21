@@ -19691,6 +19691,7 @@ hic_manens constans Arbor2StatusGotoEntry STATUS_33_GOTO[] = {
     { INT_NT_EXPR,             1 },
     { INT_NT_TERM,             2 },
     { INT_NT_FACTOR,           3 },
+    { INT_NT_POSTFIXUM,        311 },
     { INT_NT_COMPARATIO,       239 },
     { INT_NT_AEQUALITAS,       240 },
     { INT_NT_AMPERSAND_BITWISE, 268 },
@@ -19715,6 +19716,7 @@ hic_manens constans Arbor2StatusGotoEntry STATUS_35_GOTO[] = {
     { INT_NT_EXPR,             1 },
     { INT_NT_TERM,             2 },
     { INT_NT_FACTOR,           3 },
+    { INT_NT_POSTFIXUM,        311 },
     { INT_NT_COMPARATIO,       239 },
     { INT_NT_AEQUALITAS,       240 },
     { INT_NT_AMPERSAND_BITWISE, 268 },
@@ -19739,6 +19741,7 @@ hic_manens constans Arbor2StatusGotoEntry STATUS_40_GOTO[] = {
     { INT_NT_EXPR,              41 },
     { INT_NT_TERM,              2 },
     { INT_NT_FACTOR,            3 },
+    { INT_NT_POSTFIXUM,         311 },
     { INT_NT_COMPARATIO,        246 },
     { INT_NT_AEQUALITAS,        248 },
     { INT_NT_AMPERSAND_BITWISE, 268 },
@@ -19757,6 +19760,7 @@ hic_manens constans Arbor2StatusGotoEntry STATUS_42_GOTO[] = {
     { INT_NT_EXPR,             1 },
     { INT_NT_TERM,             2 },
     { INT_NT_FACTOR,           3 },
+    { INT_NT_POSTFIXUM,        311 },
     { INT_NT_COMPARATIO,       239 },
     { INT_NT_AEQUALITAS,       240 },
     { INT_NT_AMPERSAND_BITWISE, 268 },
@@ -19781,6 +19785,7 @@ hic_manens constans Arbor2StatusGotoEntry STATUS_45_GOTO[] = {
     { INT_NT_EXPR,             1 },
     { INT_NT_TERM,             2 },
     { INT_NT_FACTOR,           3 },
+    { INT_NT_POSTFIXUM,        311 },
     { INT_NT_COMPARATIO,       239 },
     { INT_NT_AEQUALITAS,       240 },
     { INT_NT_AMPERSAND_BITWISE, 268 },
@@ -19805,6 +19810,7 @@ hic_manens constans Arbor2StatusGotoEntry STATUS_48_GOTO[] = {
     { INT_NT_EXPR,              49 },
     { INT_NT_TERM,              2 },
     { INT_NT_FACTOR,            3 },
+    { INT_NT_POSTFIXUM,         311 },
     { INT_NT_COMPARATIO,        246 },
     { INT_NT_AEQUALITAS,        251 },
     { INT_NT_AMPERSAND_BITWISE, 268 },
@@ -19823,6 +19829,7 @@ hic_manens constans Arbor2StatusGotoEntry STATUS_54_GOTO[] = {
     { INT_NT_EXPR,              55 },
     { INT_NT_TERM,              2 },
     { INT_NT_FACTOR,            3 },
+    { INT_NT_POSTFIXUM,         311 },
     { INT_NT_COMPARATIO,        239 },
     { INT_NT_AEQUALITAS,        240 },
     { INT_NT_AMPERSAND_BITWISE, 268 },
@@ -19842,6 +19849,7 @@ hic_manens constans Arbor2StatusGotoEntry STATUS_57_GOTO[] = {
     { INT_NT_EXPR,              58 },
     { INT_NT_TERM,              2 },
     { INT_NT_FACTOR,            3 },
+    { INT_NT_POSTFIXUM,         311 },
     { INT_NT_COMPARATIO,        249 },
     { INT_NT_AEQUALITAS,        250 },
     { INT_NT_AMPERSAND_BITWISE, 268 },
@@ -19881,6 +19889,7 @@ hic_manens constans Arbor2StatusGotoEntry STATUS_63_GOTO[] = {
     { INT_NT_EXPR,             1 },
     { INT_NT_TERM,             2 },
     { INT_NT_FACTOR,           3 },
+    { INT_NT_POSTFIXUM,        311 },
     { INT_NT_COMPARATIO,       239 },
     { INT_NT_AEQUALITAS,       240 },
     { INT_NT_AMPERSAND_BITWISE, 268 },
@@ -19915,6 +19924,7 @@ hic_manens constans Arbor2StatusGotoEntry STATUS_77_GOTO[] = {
     { INT_NT_EXPR,             1 },
     { INT_NT_TERM,             2 },
     { INT_NT_FACTOR,           3 },
+    { INT_NT_POSTFIXUM,        311 },
     { INT_NT_COMPARATIO,       239 },
     { INT_NT_AEQUALITAS,       240 },
     { INT_NT_AMPERSAND_BITWISE, 268 },
@@ -19939,6 +19949,7 @@ hic_manens constans Arbor2StatusGotoEntry STATUS_80_GOTO[] = {
     { INT_NT_EXPR,              81 },
     { INT_NT_TERM,              2 },
     { INT_NT_FACTOR,            3 },
+    { INT_NT_POSTFIXUM,         311 },
     { INT_NT_COMPARATIO,        246 },
     { INT_NT_AEQUALITAS,        252 },
     { INT_NT_AMPERSAND_BITWISE, 268 },
@@ -19957,6 +19968,7 @@ hic_manens constans Arbor2StatusGotoEntry STATUS_82_GOTO[] = {
     { INT_NT_EXPR,             1 },
     { INT_NT_TERM,             2 },
     { INT_NT_FACTOR,           3 },
+    { INT_NT_POSTFIXUM,        311 },
     { INT_NT_COMPARATIO,       239 },
     { INT_NT_AEQUALITAS,       240 },
     { INT_NT_AMPERSAND_BITWISE, 268 },
@@ -19981,6 +19993,7 @@ hic_manens constans Arbor2StatusGotoEntry STATUS_84_GOTO[] = {
     { INT_NT_EXPR,       85 },
     { INT_NT_TERM,       2 },
     { INT_NT_FACTOR,     3 },
+    { INT_NT_POSTFIXUM,  311 },
     { INT_NT_TRANSLATIO, 264 }
 };
 
@@ -19989,6 +20002,7 @@ hic_manens constans Arbor2StatusGotoEntry STATUS_86_GOTO[] = {
     { INT_NT_EXPR,        1 },
     { INT_NT_TERM,        2 },
     { INT_NT_FACTOR,      3 },
+    { INT_NT_POSTFIXUM,   311 },
     { INT_NT_COMPARATIO,  239 },
     { INT_NT_AEQUALITAS,  240 },
     { INT_NT_AMPERSAND_BITWISE, 268 },
@@ -20013,6 +20027,7 @@ hic_manens constans Arbor2StatusGotoEntry STATUS_89_GOTO[] = {
     { INT_NT_EXPR,        1 },
     { INT_NT_TERM,        2 },
     { INT_NT_FACTOR,      3 },
+    { INT_NT_POSTFIXUM,   311 },
     { INT_NT_COMPARATIO,  239 },
     { INT_NT_AEQUALITAS,  240 },
     { INT_NT_AMPERSAND_BITWISE, 268 },
@@ -20190,6 +20205,7 @@ hic_manens constans Arbor2StatusGotoEntry STATUS_150_GOTO[] = {
     { INT_NT_EXPR,       151 },
     { INT_NT_TERM,       2 },
     { INT_NT_FACTOR,     3 },
+    { INT_NT_POSTFIXUM,  311 },
     { INT_NT_TRANSLATIO, 264 }
 };
 
@@ -20203,6 +20219,7 @@ hic_manens constans Arbor2StatusGotoEntry STATUS_159_GOTO[] = {
     { INT_NT_EXPR,       160 },
     { INT_NT_TERM,       2 },
     { INT_NT_FACTOR,     3 },
+    { INT_NT_POSTFIXUM,  311 },
     { INT_NT_TRANSLATIO, 264 }
 };
 
@@ -20211,6 +20228,7 @@ hic_manens constans Arbor2StatusGotoEntry STATUS_162_GOTO[] = {
     { INT_NT_EXPR,       163 },
     { INT_NT_TERM,       2 },
     { INT_NT_FACTOR,     3 },
+    { INT_NT_POSTFIXUM,  311 },
     { INT_NT_TRANSLATIO, 264 }
 };
 
@@ -20219,6 +20237,7 @@ hic_manens constans Arbor2StatusGotoEntry STATUS_165_GOTO[] = {
     { INT_NT_EXPR,       166 },
     { INT_NT_TERM,       2 },
     { INT_NT_FACTOR,     3 },
+    { INT_NT_POSTFIXUM,  311 },
     { INT_NT_TRANSLATIO, 264 }
 };
 
@@ -20227,6 +20246,7 @@ hic_manens constans Arbor2StatusGotoEntry STATUS_168_GOTO[] = {
     { INT_NT_EXPR,       169 },
     { INT_NT_TERM,       2 },
     { INT_NT_FACTOR,     3 },
+    { INT_NT_POSTFIXUM,  311 },
     { INT_NT_TRANSLATIO, 264 }
 };
 
@@ -20235,6 +20255,7 @@ hic_manens constans Arbor2StatusGotoEntry STATUS_171_GOTO[] = {
     { INT_NT_EXPR,       172 },
     { INT_NT_TERM,       2 },
     { INT_NT_FACTOR,     3 },
+    { INT_NT_POSTFIXUM,  311 },
     { INT_NT_TRANSLATIO, 264 }
 };
 
@@ -20284,6 +20305,7 @@ hic_manens constans Arbor2StatusGotoEntry STATUS_217_GOTO[] = {
     { INT_NT_EXPR,       219 },
     { INT_NT_TERM,       2 },
     { INT_NT_FACTOR,     3 },
+    { INT_NT_POSTFIXUM,  311 },
     { INT_NT_TRANSLATIO, 264 }
 };
 
