@@ -20067,7 +20067,9 @@ hic_manens constans Arbor2StatusGotoEntry STATUS_96_GOTO[] = {
 
 /* State 104: after ',' in parameter list */
 hic_manens constans Arbor2StatusGotoEntry STATUS_104_GOTO[] = {
-    { INT_NT_PARAM_DECL, 111 }
+    { INT_NT_PARAM_DECL, 111 },
+    { INT_NT_STRUCT_SPEC, 95 },     /* struct/union specifier as parameter type */
+    { INT_NT_ENUM_SPEC,   95 }      /* enum specifier as parameter type */
 };
 
 /* State 105: after ', type_spec' in parameter list */
@@ -21256,34 +21258,46 @@ hic_manens constans Arbor2StatusGotoEntry STATUS_607_GOTO[] = {
 
 /* State 346: after 'static' */
 hic_manens constans Arbor2StatusGotoEntry STATUS_346_GOTO[] = {
-    { INT_NT_DECLARATIO, 21 }
+    { INT_NT_DECLARATIO, 21 },
+    { INT_NT_STRUCT_SPEC, 4 },      /* static struct S -> state 4 (type specifier done) */
+    { INT_NT_ENUM_SPEC,   4 }       /* static enum E -> state 4 */
 };
 
 /* State 347: after 'extern' */
 hic_manens constans Arbor2StatusGotoEntry STATUS_347_GOTO[] = {
-    { INT_NT_DECLARATIO, 21 }
+    { INT_NT_DECLARATIO, 21 },
+    { INT_NT_STRUCT_SPEC, 4 },      /* extern struct S -> state 4 */
+    { INT_NT_ENUM_SPEC,   4 }       /* extern enum E -> state 4 */
 };
 
 /* State 348: after 'register' */
 hic_manens constans Arbor2StatusGotoEntry STATUS_348_GOTO[] = {
-    { INT_NT_DECLARATIO, 21 }
+    { INT_NT_DECLARATIO, 21 },
+    { INT_NT_STRUCT_SPEC, 4 },      /* register struct S -> state 4 */
+    { INT_NT_ENUM_SPEC,   4 }       /* register enum E -> state 4 */
 };
 
 /* State 349: after 'auto' */
 hic_manens constans Arbor2StatusGotoEntry STATUS_349_GOTO[] = {
-    { INT_NT_DECLARATIO, 21 }
+    { INT_NT_DECLARATIO, 21 },
+    { INT_NT_STRUCT_SPEC, 4 },      /* auto struct S -> state 4 */
+    { INT_NT_ENUM_SPEC,   4 }       /* auto enum E -> state 4 */
 };
 
 /* State 350: after 'const' - needs DECLARATIO for qualifier + modifier chains */
 hic_manens constans Arbor2StatusGotoEntry STATUS_350_GOTO[] = {
     { INT_NT_DECLARATIO, 21 },
-    { INT_NT_DEFINITIO, 114 }  /* Function definition with const return type */
+    { INT_NT_DEFINITIO, 114 },      /* Function definition with const return type */
+    { INT_NT_STRUCT_SPEC, 4 },      /* const struct S -> state 4 */
+    { INT_NT_ENUM_SPEC,   4 }       /* const enum E -> state 4 */
 };
 
 /* State 351: after 'volatile' - needs DECLARATIO for qualifier + modifier chains */
 hic_manens constans Arbor2StatusGotoEntry STATUS_351_GOTO[] = {
     { INT_NT_DECLARATIO, 21 },
-    { INT_NT_DEFINITIO, 114 }  /* Function definition with volatile return type */
+    { INT_NT_DEFINITIO, 114 },      /* Function definition with volatile return type */
+    { INT_NT_STRUCT_SPEC, 4 },      /* volatile struct S -> state 4 */
+    { INT_NT_ENUM_SPEC,   4 }       /* volatile enum E -> state 4 */
 };
 
 /* ==================================================
