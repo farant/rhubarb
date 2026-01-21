@@ -574,12 +574,17 @@ s32 principale(vacuum)
 
     {
         b32 tabula_valida;
+        b32 tags_valida;
 
         imprimere("\n--- Probans table validation ---\n");
 
         tabula_valida = arbor2_glr_validare_tabulas();
-
         CREDO_AEQUALIS_I32((i32)tabula_valida, VERUM);
+
+        imprimere("\n--- Probans tag validation ---\n");
+
+        tags_valida = arbor2_glr_validare_tags();
+        CREDO_AEQUALIS_I32((i32)tags_valida, VERUM);
     }
 
 
@@ -13211,6 +13216,10 @@ s32 principale(vacuum)
 
         imprimere("\n--- Table validation ---\n");
         valida = arbor2_glr_validare_tabulas();
+        CREDO_VERUM(valida);
+
+        imprimere("\n--- Tag validation ---\n");
+        valida = arbor2_glr_validare_tags();
         CREDO_VERUM(valida);
     }
 

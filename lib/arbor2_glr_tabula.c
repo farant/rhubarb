@@ -25115,7 +25115,345 @@ hic_manens constans i32 STATUS_TAGS[] = {
     0,  /* 307: after ? ternarius - expects : */
     ARBOR2_TAG_EXPR_INITIUM,  /* 308: after : */
     0,  /* 309: reduce state */
-    0   /* 310: after TERNARIUS */
+    0,  /* 310: after TERNARIUS */
+    /* ================================================================
+     * States 311-1650: Expanded tag coverage
+     *
+     * Expression-starter states (SHIFT IDENTIFICATOR/INTEGER to primary)
+     * are tagged with ARBOR2_TAG_EXPR_INITIUM.
+     * Other states are 0 (reduce-only or intermediate states).
+     * ================================================================ */
+    /* 311-311: 0 */
+    0,
+    ARBOR2_TAG_EXPR_INITIUM,  /* 312: array subscript expression */
+    /* 313-314: 0 */
+    0, 0,
+    ARBOR2_TAG_EXPR_INITIUM,  /* 315: function call arguments */
+    /* 316-316: 0 */
+    0,
+    ARBOR2_TAG_EXPR_INITIUM,  /* 317: after '(' in expression */
+    /* 318-327: 0 */
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    ARBOR2_TAG_EXPR_INITIUM,  /* 328: prefix ++ */
+    ARBOR2_TAG_EXPR_INITIUM,  /* 329: prefix -- */
+    /* 330-334: 0 */
+    0, 0, 0, 0, 0,
+    ARBOR2_TAG_EXPR_INITIUM,  /* 335: sizeof */
+    /* 336-339: 0 */
+    0, 0, 0, 0,
+    ARBOR2_TAG_EXPR_INITIUM,  /* 340: cast expression */
+    ARBOR2_TAG_EXPR_INITIUM,  /* 341: cast expression */
+    ARBOR2_TAG_EXPR_INITIUM,  /* 342: cast expression */
+    /* 343-347: 0 */
+    0, 0, 0, 0, 0,
+    0,  /* 348: type-specifier context (not expr start) */
+    /* 349-366: 0 */
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0,
+    ARBOR2_TAG_EXPR_INITIUM,  /* 367: expression context */
+    ARBOR2_TAG_EXPR_INITIUM,  /* 368: expression context */
+    ARBOR2_TAG_EXPR_INITIUM,  /* 369: expression context */
+    /* 370-372: 0 */
+    0, 0, 0,
+    ARBOR2_TAG_EXPR_INITIUM,  /* 373: expression context */
+    ARBOR2_TAG_EXPR_INITIUM,  /* 374: expression context */
+    ARBOR2_TAG_EXPR_INITIUM,  /* 375: expression context */
+    /* 376-407: 0 */
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0,
+    ARBOR2_TAG_EXPR_INITIUM,  /* 408: array size expression */
+    ARBOR2_TAG_EXPR_INITIUM,  /* 409: array size expression */
+    /* 410-411: 0 */
+    0, 0,
+    ARBOR2_TAG_EXPR_INITIUM,  /* 412: expression context */
+    /* 413-421: 0 */
+    0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0,  /* 422: type-specifier context */
+    /* 423-423: 0 */
+    0,
+    ARBOR2_TAG_EXPR_INITIUM,  /* 424: expression context */
+    /* 425-426: 0 */
+    0, 0,
+    ARBOR2_TAG_EXPR_INITIUM,  /* 427: expression context */
+    /* 428-429: 0 */
+    0, 0,
+    ARBOR2_TAG_EXPR_INITIUM,  /* 430: expression context */
+    /* 431-431: 0 */
+    0,
+    0,  /* 432: type-specifier context */
+    /* 433-433: 0 */
+    0,
+    ARBOR2_TAG_EXPR_INITIUM,  /* 434: expression context */
+    /* 435-436: 0 */
+    0, 0,
+    ARBOR2_TAG_EXPR_INITIUM,  /* 437: expression context */
+    /* 438-439: 0 */
+    0, 0,
+    ARBOR2_TAG_EXPR_INITIUM,  /* 440: expression context */
+    /* 441-441: 0 */
+    0,
+    0,  /* 442: type-specifier context */
+    /* 443-443: 0 */
+    0,
+    ARBOR2_TAG_EXPR_INITIUM,  /* 444: expression context */
+    /* 445-446: 0 */
+    0, 0,
+    ARBOR2_TAG_EXPR_INITIUM,  /* 447: expression context */
+    /* 448-449: 0 */
+    0, 0,
+    ARBOR2_TAG_EXPR_INITIUM,  /* 450: expression context */
+    /* 451-451: 0 */
+    0,
+    0,  /* 452: type-specifier context */
+    /* 453-458: 0 */
+    0, 0, 0, 0, 0, 0,
+    0,  /* 459: type-specifier context */
+    /* 460-465: 0 */
+    0, 0, 0, 0, 0, 0,
+    0,  /* 466: type-specifier context */
+    /* 467-472: 0 */
+    0, 0, 0, 0, 0, 0,
+    ARBOR2_TAG_EXPR_INITIUM,  /* 473: initializer expression */
+    /* 474-474: 0 */
+    0,
+    ARBOR2_TAG_EXPR_INITIUM,  /* 475: static initializer */
+    /* 476-476: 0 */
+    0,
+    ARBOR2_TAG_EXPR_INITIUM,  /* 477: extern initializer */
+    /* 478-478: 0 */
+    0,
+    ARBOR2_TAG_EXPR_INITIUM,  /* 479: register initializer */
+    /* 480-480: 0 */
+    0,
+    ARBOR2_TAG_EXPR_INITIUM,  /* 481: expression context */
+    /* 482-482: 0 */
+    0,
+    ARBOR2_TAG_EXPR_INITIUM,  /* 483: expression context */
+    /* 484-484: 0 */
+    0,
+    ARBOR2_TAG_EXPR_INITIUM,  /* 485: expression context */
+    /* 486-486: 0 */
+    0,
+    ARBOR2_TAG_EXPR_INITIUM,  /* 487: brace initializer */
+    /* 488-490: 0 */
+    0, 0, 0,
+    ARBOR2_TAG_EXPR_INITIUM,  /* 491: expression context */
+    /* 492-499: 0 */
+    0, 0, 0, 0, 0, 0, 0, 0,
+    ARBOR2_TAG_EXPR_INITIUM,  /* 500: expression context */
+    /* 501-502: 0 */
+    0, 0,
+    0,  /* 503: type-specifier context */
+    /* 504-506: 0 */
+    0, 0, 0,
+    ARBOR2_TAG_EXPR_INITIUM,  /* 507: expression context */
+    /* 508-516: 0 */
+    0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0,  /* 517: declarator context */
+    /* 518-518: 0 */
+    0,
+    ARBOR2_TAG_EXPR_INITIUM,  /* 519: expression context */
+    /* 520-524: 0 */
+    0, 0, 0, 0, 0,
+    0,  /* 525: array dimension (limited expr) */
+    /* 526-531: 0 */
+    0, 0, 0, 0, 0, 0,
+    0,  /* 532: type-specifier context */
+    0,  /* 533: type-specifier context */
+    0,  /* 534: type-specifier context */
+    0,  /* 535: type-specifier context */
+    0,  /* 536: type-specifier context */
+    0,  /* 537: type-specifier context */
+    /* 538-553: 0 */
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0,
+    ARBOR2_TAG_EXPR_INITIUM,  /* 554: expression context */
+    ARBOR2_TAG_EXPR_INITIUM,  /* 555: expression context */
+    /* 556-562: 0 */
+    0, 0, 0, 0, 0, 0, 0,
+    0,  /* 563: type-specifier context */
+    /* 564-566: 0 */
+    0, 0, 0,
+    0,  /* 567: type-specifier context */
+    /* 568-570: 0 */
+    0, 0, 0,
+    0,  /* 571: type-specifier context */
+    /* 572-574: 0 */
+    0, 0, 0,
+    0,  /* 575: type-specifier context */
+    /* 576-578: 0 */
+    0, 0, 0,
+    0,  /* 579: type-specifier context */
+    /* 580-582: 0 */
+    0, 0, 0,
+    0,  /* 583: type-specifier context */
+    /* 584-586: 0 */
+    0, 0, 0,
+    0,  /* 587: type-specifier context */
+    /* 588-590: 0 */
+    0, 0, 0,
+    0,  /* 591: type-specifier context */
+    /* 592-594: 0 */
+    0, 0, 0,
+    0,  /* 595: type-specifier context */
+    /* 596-598: 0 */
+    0, 0, 0,
+    0,  /* 599: type-specifier context */
+    /* 600-602: 0 */
+    0, 0, 0,
+    0,  /* 603: type-specifier context */
+    /* 604-606: 0 */
+    0, 0, 0,
+    0,  /* 607: type-specifier context */
+    /* 608-718: 0 */
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0,
+    ARBOR2_TAG_EXPR_INITIUM,  /* 719: cast expression */
+    ARBOR2_TAG_EXPR_INITIUM,  /* 720: cast expression */
+    ARBOR2_TAG_EXPR_INITIUM,  /* 721: cast expression */
+    ARBOR2_TAG_EXPR_INITIUM,  /* 722: cast expression */
+    ARBOR2_TAG_EXPR_INITIUM,  /* 723: cast expression */
+    ARBOR2_TAG_EXPR_INITIUM,  /* 724: cast expression */
+    ARBOR2_TAG_EXPR_INITIUM,  /* 725: cast expression */
+    ARBOR2_TAG_EXPR_INITIUM,  /* 726: cast expression */
+    ARBOR2_TAG_EXPR_INITIUM,  /* 727: cast expression */
+    ARBOR2_TAG_EXPR_INITIUM,  /* 728: cast expression */
+    ARBOR2_TAG_EXPR_INITIUM,  /* 729: cast expression */
+    ARBOR2_TAG_EXPR_INITIUM,  /* 730: cast expression */
+    ARBOR2_TAG_EXPR_INITIUM,  /* 731: cast expression */
+    ARBOR2_TAG_EXPR_INITIUM,  /* 732: cast expression */
+    ARBOR2_TAG_EXPR_INITIUM,  /* 733: cast expression */
+    ARBOR2_TAG_EXPR_INITIUM,  /* 734: cast expression */
+    ARBOR2_TAG_EXPR_INITIUM,  /* 735: cast expression */
+    /* 736-906: 0 */
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0,
+    0,  /* 907: struct/union context */
+    0,  /* 908: struct/union context */
+    /* 909-909: 0 */
+    0,
+    0,  /* 910: struct/union context */
+    0,  /* 911: struct/union context */
+    /* 912-951: 0 */
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    ARBOR2_TAG_EXPR_INITIUM,  /* 952: unary minus */
+    /* 953-953: 0 */
+    0,
+    ARBOR2_TAG_EXPR_INITIUM,  /* 954: unary plus */
+    /* 955-1426: 0 */
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0,
+    0,  /* 1427: type-specifier context */
+    /* 1428-1449: 0 */
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0,
+    0,  /* 1450: type-specifier context */
+    0,  /* 1451: type-specifier context */
+    0,  /* 1452: type-specifier context */
+    /* 1453-1508: 0 */
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0,
+    ARBOR2_TAG_EXPR_INITIUM,  /* 1509: long declarator = expression */
+    ARBOR2_TAG_EXPR_INITIUM,  /* 1510: short declarator = expression */
+    ARBOR2_TAG_EXPR_INITIUM,  /* 1511: unsigned declarator = expression */
+    ARBOR2_TAG_EXPR_INITIUM,  /* 1512: signed declarator = expression */
+    /* 1513-1650: 0 */
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0
 };
 
 #define NUM_STATUS_TAGS (i32)(magnitudo(STATUS_TAGS) / magnitudo(STATUS_TAGS[0]))
