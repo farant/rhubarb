@@ -25203,6 +25203,11 @@ hic_manens constans Arbor2LexemaGenus DESIGNATED_INIT_CONTEXTUS_LEXEMATA[] = {
     ARBOR2_LEXEMA_SIZEOF          /* sizeof operator */
 };
 
+/* Required tokens for FIELD_DESIGNATOR_CONTEXTUS states (after . in designator) */
+hic_manens constans Arbor2LexemaGenus FIELD_DESIGNATOR_CONTEXTUS_LEXEMATA[] = {
+    ARBOR2_LEXEMA_IDENTIFICATOR   /* field name - the ONLY valid token */
+};
+
 /* Tag rule structure */
 nomen structura {
     i32                         signum;        /* Tag bit flag */
@@ -25277,6 +25282,12 @@ hic_manens constans Arbor2TagRegula TAG_REGULAE[] = {
         "DESIGNATED_INIT_CONTEXTUS",
         DESIGNATED_INIT_CONTEXTUS_LEXEMATA,
         (i32)(magnitudo(DESIGNATED_INIT_CONTEXTUS_LEXEMATA) / magnitudo(DESIGNATED_INIT_CONTEXTUS_LEXEMATA[0]))
+    },
+    {
+        ARBOR2_TAG_FIELD_DESIGNATOR_CONTEXTUS,
+        "FIELD_DESIGNATOR_CONTEXTUS",
+        FIELD_DESIGNATOR_CONTEXTUS_LEXEMATA,
+        (i32)(magnitudo(FIELD_DESIGNATOR_CONTEXTUS_LEXEMATA) / magnitudo(FIELD_DESIGNATOR_CONTEXTUS_LEXEMATA[0]))
     }
 };
 
@@ -25566,7 +25577,7 @@ hic_manens constans i32 STATUS_TAGS[] = {
     ARBOR2_TAG_EXPR_INITIUM | ARBOR2_TAG_DESIGNATED_INIT_CONTEXTUS,  /* 500: designator index expression */
     /* 501-502: 0 */
     0, 0,
-    0,  /* 503: type-specifier context */
+    ARBOR2_TAG_FIELD_DESIGNATOR_CONTEXTUS,  /* 503: field designator - expects IDENTIFICATOR */
     /* 504-506: 0 */
     0, 0, 0,
     ARBOR2_TAG_EXPR_INITIUM | ARBOR2_TAG_INITIALIZER_CONTEXTUS,  /* 507: designator = initializer */
@@ -25876,6 +25887,405 @@ arbor2_glr_validare_tags(vacuum)
     {
         imprimere("TAG VALIDATIO: %d lexemata desunt in %d statusibus cum signis.\n",
                   num_missing, num_tagged);
+    }
+
+    redde valida;
+}
+
+/* ==================================================
+ * GOTO Completeness Validation
+ *
+ * Validates that for every REDUCE action, the predecessor
+ * states (revealed after popping) have valid GOTO entries
+ * for the reduced non-terminal.
+ * ================================================== */
+
+/* Predecessor tracking for GOTO validation */
+#define MAX_PRAEDECESSORES 32
+#define MAX_REVEALED_STATUS 256
+
+nomen structura {
+    s32 praedecessores[MAX_PRAEDECESSORES];
+    s32 numerus;
+} StatusPraedecessores;
+
+hic_manens StatusPraedecessores PRAEDECESSOR_MAPPA[2048];  /* Max states supported */
+
+/* Build predecessor map from SHIFT actions */
+hic_manens vacuum
+_aedificare_praedecessores(vacuum)
+{
+    s32 status;
+    s32 a;
+    s32 num_states = (s32)(magnitudo(STATUS_TABULA_PARTIAL) / magnitudo(STATUS_TABULA_PARTIAL[0]));
+
+    /* Initialize */
+    per (status = ZEPHYRUM; status < num_states && status < 2048; status++)
+    {
+        PRAEDECESSOR_MAPPA[status].numerus = ZEPHYRUM;
+    }
+
+    /* For each state, find where its SHIFT actions lead */
+    per (status = ZEPHYRUM; status < num_states; status++)
+    {
+        constans Arbor2StatusInfo* info = &STATUS_TABULA_PARTIAL[status];
+
+        si (info->actiones == NIHIL)
+        {
+            perge;
+        }
+
+        per (a = ZEPHYRUM; a < info->numerus; a++)
+        {
+            si (info->actiones[a].actio == ARBOR2_ACTIO_SHIFT)
+            {
+                s32 target = (s32)info->actiones[a].valor;
+
+                /* Add 'status' as predecessor of 'target' */
+                si (target >= ZEPHYRUM && target < num_states && target < 2048)
+                {
+                    StatusPraedecessores* sp = &PRAEDECESSOR_MAPPA[target];
+                    si (sp->numerus < MAX_PRAEDECESSORES)
+                    {
+                        /* Check if already added (avoid duplicates) */
+                        b32 iam_adest = FALSUM;
+                        s32 p;
+                        per (p = ZEPHYRUM; p < sp->numerus; p++)
+                        {
+                            si (sp->praedecessores[p] == status)
+                            {
+                                iam_adest = VERUM;
+                                frange;
+                            }
+                        }
+                        si (!iam_adest)
+                        {
+                            sp->praedecessores[sp->numerus++] = status;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+/* Find states N steps back from given state */
+hic_manens vacuum
+_invenire_status_retro(
+    s32 status_initium,
+    s32 gradus,              /* steps back */
+    s32* resultatus,         /* output array */
+    s32* num_resultatus,     /* output count */
+    s32 max_resultatus)      /* capacity */
+{
+    si (gradus == ZEPHYRUM)
+    {
+        /* Zero steps back = current state */
+        si (*num_resultatus < max_resultatus)
+        {
+            /* Check if already in result (avoid duplicates) */
+            s32 r;
+            per (r = ZEPHYRUM; r < *num_resultatus; r++)
+            {
+                si (resultatus[r] == status_initium)
+                {
+                    redde;  /* Already present */
+                }
+            }
+            resultatus[(*num_resultatus)++] = status_initium;
+        }
+        redde;
+    }
+
+    /* One step back = direct predecessors */
+    si (gradus == I)
+    {
+        StatusPraedecessores* sp = &PRAEDECESSOR_MAPPA[status_initium];
+        s32 i;
+        per (i = ZEPHYRUM; i < sp->numerus && *num_resultatus < max_resultatus; i++)
+        {
+            /* Check if already in result */
+            s32 r;
+            b32 iam_adest = FALSUM;
+            per (r = ZEPHYRUM; r < *num_resultatus; r++)
+            {
+                si (resultatus[r] == sp->praedecessores[i])
+                {
+                    iam_adest = VERUM;
+                    frange;
+                }
+            }
+            si (!iam_adest)
+            {
+                resultatus[(*num_resultatus)++] = sp->praedecessores[i];
+            }
+        }
+        redde;
+    }
+
+    /* Multiple steps: recurse through predecessors */
+    {
+        StatusPraedecessores* sp = &PRAEDECESSOR_MAPPA[status_initium];
+        s32 i;
+        per (i = ZEPHYRUM; i < sp->numerus; i++)
+        {
+            _invenire_status_retro(sp->praedecessores[i], gradus - I,
+                                   resultatus, num_resultatus, max_resultatus);
+        }
+    }
+}
+
+/* GOTO lookup without GLR instance (for validation) */
+hic_manens s32
+_quaerere_goto_sine_glr(s32 status, Arbor2NonTerminalis nt)
+{
+    i32 i;
+    s32 nt_int;
+
+    /* Map external NT enum to internal index */
+    commutatio (nt)
+    {
+        casus ARBOR2_NT_EXPRESSIO:
+            nt_int = INT_NT_EXPR;
+            frange;
+        casus ARBOR2_NT_TERMINUS:
+            nt_int = INT_NT_TERM;
+            frange;
+        casus ARBOR2_NT_FACTOR:
+            nt_int = INT_NT_FACTOR;
+            frange;
+        casus ARBOR2_NT_DECLARATIO:
+            nt_int = INT_NT_DECLARATIO;
+            frange;
+        casus ARBOR2_NT_DECLARATOR:
+            nt_int = INT_NT_DECLARATOR;
+            frange;
+        casus ARBOR2_NT_SENTENTIA:
+            nt_int = INT_NT_SENTENTIA;
+            frange;
+        casus ARBOR2_NT_CORPUS:
+            nt_int = INT_NT_CORPUS;
+            frange;
+        casus ARBOR2_NT_ELENCHUS_SENTENTIARUM:
+            nt_int = INT_NT_ELENCHUS;
+            frange;
+        casus ARBOR2_NT_SI:
+            nt_int = INT_NT_SI;
+            frange;
+        casus ARBOR2_NT_DUM:
+            nt_int = INT_NT_DUM;
+            frange;
+        casus ARBOR2_NT_FAC:
+            nt_int = INT_NT_FAC;
+            frange;
+        casus ARBOR2_NT_PER:
+            nt_int = INT_NT_PER;
+            frange;
+        casus ARBOR2_NT_EXPRESSIO_OPTATIVA:
+            nt_int = INT_NT_EXPRESSIO_OPT;
+            frange;
+        casus ARBOR2_NT_PARAMETER_LIST:
+            nt_int = INT_NT_PARAM_LIST;
+            frange;
+        casus ARBOR2_NT_PARAMETER_DECL:
+            nt_int = INT_NT_PARAM_DECL;
+            frange;
+        casus ARBOR2_NT_DEFINITIO_FUNCTI:
+            nt_int = INT_NT_DEFINITIO;
+            frange;
+        casus ARBOR2_NT_STRUCT_SPECIFIER:
+            nt_int = INT_NT_STRUCT_SPEC;
+            frange;
+        casus ARBOR2_NT_STRUCT_MEMBER_LIST:
+            nt_int = INT_NT_STRUCT_MEMBERS;
+            frange;
+        casus ARBOR2_NT_ENUM_SPECIFIER:
+            nt_int = INT_NT_ENUM_SPEC;
+            frange;
+        casus ARBOR2_NT_ENUMERATOR_LIST:
+            nt_int = INT_NT_ENUM_LIST;
+            frange;
+        casus ARBOR2_NT_ENUMERATOR:
+            nt_int = INT_NT_ENUMERATOR;
+            frange;
+        casus ARBOR2_NT_AEQUALITAS:
+            nt_int = INT_NT_AEQUALITAS;
+            frange;
+        casus ARBOR2_NT_COMPARATIO:
+            nt_int = INT_NT_COMPARATIO;
+            frange;
+        casus ARBOR2_NT_TRANSLATIO:
+            nt_int = INT_NT_TRANSLATIO;
+            frange;
+        casus ARBOR2_NT_CONIUNCTIO:
+            nt_int = INT_NT_CONIUNCTIO;
+            frange;
+        casus ARBOR2_NT_DISIUNCTIO:
+            nt_int = INT_NT_DISIUNCTIO;
+            frange;
+        casus ARBOR2_NT_PIPA_BITWISE:
+            nt_int = INT_NT_PIPA_BITWISE;
+            frange;
+        casus ARBOR2_NT_CARET_BITWISE:
+            nt_int = INT_NT_CARET_BITWISE;
+            frange;
+        casus ARBOR2_NT_AMPERSAND_BITWISE:
+            nt_int = INT_NT_AMPERSAND_BITWISE;
+            frange;
+        casus ARBOR2_NT_VIRGA:
+            nt_int = INT_NT_VIRGA;
+            frange;
+        casus ARBOR2_NT_ASSIGNATIO:
+            nt_int = INT_NT_ASSIGNATIO;
+            frange;
+        casus ARBOR2_NT_TERNARIUS:
+            nt_int = INT_NT_TERNARIUS;
+            frange;
+        casus ARBOR2_NT_POSTFIXUM:
+            nt_int = INT_NT_POSTFIXUM;
+            frange;
+        casus ARBOR2_NT_ARGUMENTA:
+            nt_int = INT_NT_ARGUMENTA;
+            frange;
+        casus ARBOR2_NT_INITIALIZOR_LISTA:
+            nt_int = INT_NT_INITIALIZOR_LISTA;
+            frange;
+        casus ARBOR2_NT_INIT_ITEMS:
+            nt_int = INT_NT_INIT_ITEMS;
+            frange;
+        casus ARBOR2_NT_INITIALIZER:
+            nt_int = INT_NT_INITIALIZER;
+            frange;
+        casus ARBOR2_NT_DESIGNATOR:
+            nt_int = INT_NT_DESIGNATOR;
+            frange;
+        casus ARBOR2_NT_DESIGNATOR_LIST:
+            nt_int = INT_NT_DESIGNATOR_LIST;
+            frange;
+        casus ARBOR2_NT_DESIGNATOR_ITEM:
+            nt_int = INT_NT_DESIGNATOR_ITEM;
+            frange;
+        casus ARBOR2_NT_INIT_DECLARATOR:
+            nt_int = INT_NT_INIT_DECLARATOR;
+            frange;
+        casus ARBOR2_NT_INIT_DECLARATOR_LIST:
+            nt_int = INT_NT_INIT_DECLARATOR_LIST;
+            frange;
+        casus ARBOR2_NT_SPECIFIER_TYPI:
+            nt_int = INT_NT_TYPE_SPEC_LIST;
+            frange;
+        ordinarius:
+            nt_int = -I;
+            frange;
+    }
+
+    si (nt_int < ZEPHYRUM)
+    {
+        redde -I;  /* Error */
+    }
+
+    /* Use per-state GOTO table */
+    si (status >= ZEPHYRUM && status < (s32)(magnitudo(GOTO_TABULA_NOVA) / magnitudo(GOTO_TABULA_NOVA[0])))
+    {
+        constans Arbor2StatusGoto* sg = &GOTO_TABULA_NOVA[status];
+        si (sg->transitus != NIHIL)
+        {
+            per (i = ZEPHYRUM; (s32)i < sg->numerus; i++)
+            {
+                si (sg->transitus[i].non_terminalis == nt_int)
+                {
+                    redde sg->transitus[i].status_novus;
+                }
+            }
+        }
+    }
+
+    redde -I;  /* Not found */
+}
+
+/* Validate GOTO completeness */
+b32
+arbor2_glr_validare_goto_completeness(vacuum)
+{
+    s32 status;
+    s32 a;
+    s32 r;
+    b32 valida = VERUM;
+    s32 num_states = (s32)(magnitudo(STATUS_TABULA_PARTIAL) / magnitudo(STATUS_TABULA_PARTIAL[0]));
+    s32 revealed_states[MAX_REVEALED_STATUS];
+    s32 num_revealed;
+    s32 num_checked = ZEPHYRUM;
+    s32 num_missing = ZEPHYRUM;
+
+    /* Build predecessor map first */
+    _aedificare_praedecessores();
+
+    /* For each state */
+    per (status = ZEPHYRUM; status < num_states; status++)
+    {
+        constans Arbor2StatusInfo* info = &STATUS_TABULA_PARTIAL[status];
+
+        si (info->actiones == NIHIL)
+        {
+            perge;
+        }
+
+        /* For each REDUCE action */
+        per (a = ZEPHYRUM; a < info->numerus; a++)
+        {
+            s32 regula_idx;
+            Arbor2Regula* regula;
+
+            si (info->actiones[a].actio != ARBOR2_ACTIO_REDUCE)
+            {
+                perge;
+            }
+
+            regula_idx = (s32)info->actiones[a].valor;
+            si (regula_idx < ZEPHYRUM || regula_idx >= (s32)NUM_REGULAE)
+            {
+                perge;
+            }
+
+            regula = &REGULAE[regula_idx];
+
+            /* Find all states longitudo steps back */
+            num_revealed = ZEPHYRUM;
+            _invenire_status_retro(status, (s32)regula->longitudo,
+                                   revealed_states, &num_revealed, MAX_REVEALED_STATUS);
+
+            /* Each revealed state must have GOTO for sinister */
+            per (r = ZEPHYRUM; r < num_revealed; r++)
+            {
+                s32 status_revelatus = revealed_states[r];
+                s32 goto_status;
+
+                num_checked++;
+
+                /* Check GOTO exists */
+                goto_status = _quaerere_goto_sine_glr(status_revelatus, regula->sinister);
+
+                si (goto_status < ZEPHYRUM)
+                {
+                    imprimere("GOTO DEEST: status %d necessitat GOTO(%s) pro reduce P%d in statu %d\n",
+                              status_revelatus,
+                              arbor2_nt_nomen(regula->sinister),
+                              regula_idx,
+                              status);
+                    num_missing++;
+                    valida = FALSUM;
+                }
+            }
+        }
+    }
+
+    si (valida)
+    {
+        imprimere("GOTO VALIDATIO: Omnes %d GOTO entries verificatae.\n", num_checked);
+    }
+    alioquin
+    {
+        imprimere("GOTO VALIDATIO: %d GOTO entries desunt!\n", num_missing);
     }
 
     redde valida;
