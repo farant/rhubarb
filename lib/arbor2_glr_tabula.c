@@ -26156,7 +26156,90 @@ _aedificare_praedecessores(vacuum)
     }
 }
 
-/* Find states N steps back from given state */
+/* Maximum path depth for tracking (prevents stack overflow on deep recursion) */
+#define MAX_VIA_DEPTH 64
+
+/* DFS helper that tracks visited states in current path to avoid self-loop false positives.
+ *
+ * The key insight: when tracing back N steps for a production of length N,
+ * we should not revisit the same state in a single path. Self-loops (like
+ * state 1427 -> 1427 on '*') can create "false paths" where the same state
+ * is visited multiple times, but these don't correspond to valid parse paths
+ * for a specific production.
+ *
+ * Example: For production P525 (length 9) with exactly ONE '*':
+ *   - Valid path: 0 -> 198 -> 199 -> 1426 -> 1427 -> 1428 -> ... -> 1434
+ *   - Invalid path (detected by this function): ... -> 1427 -> 1427 -> ...
+ *     (This would require TWO '*' symbols, which is a different production)
+ */
+hic_manens vacuum
+_invenire_status_retro_dfs(
+    s32 status_current,
+    s32 gradus_restans,      /* steps remaining */
+    s32* via,                /* current path (to avoid revisiting) */
+    s32 via_longitudo,       /* current path length */
+    s32* resultatus,         /* output array */
+    s32* num_resultatus,     /* output count */
+    s32 max_resultatus)      /* capacity */
+{
+    s32 i, r;
+    StatusPraedecessores* sp;
+
+    /* Base case: reached target depth - add to results */
+    si (gradus_restans == ZEPHYRUM)
+    {
+        /* Add to results if not already present */
+        per (r = ZEPHYRUM; r < *num_resultatus; r++)
+        {
+            si (resultatus[r] == status_current)
+            {
+                redde;  /* Already in results */
+            }
+        }
+        si (*num_resultatus < max_resultatus)
+        {
+            resultatus[(*num_resultatus)++] = status_current;
+        }
+        redde;
+    }
+
+    /* Check if current state is already in path (would create invalid loop) */
+    per (i = ZEPHYRUM; i < via_longitudo; i++)
+    {
+        si (via[i] == status_current)
+        {
+            redde;  /* Don't revisit - this path goes through a self-loop multiple times */
+        }
+    }
+
+    /* Path too deep - shouldn't happen with valid productions */
+    si (via_longitudo >= MAX_VIA_DEPTH)
+    {
+        redde;
+    }
+
+    /* Add current state to path */
+    via[via_longitudo] = status_current;
+
+    /* Recurse to predecessors */
+    sp = &PRAEDECESSOR_MAPPA[status_current];
+    per (i = ZEPHYRUM; i < sp->numerus; i++)
+    {
+        _invenire_status_retro_dfs(
+            sp->praedecessores[i],
+            gradus_restans - I,
+            via,
+            via_longitudo + I,
+            resultatus,
+            num_resultatus,
+            max_resultatus);
+    }
+}
+
+/* Find states N steps back from given state.
+ * This version prevents revisiting states in the same path, which correctly
+ * handles self-loops in the state machine and eliminates false positives
+ * in GOTO validation. */
 hic_manens vacuum
 _invenire_status_retro(
     s32 status_initium,
@@ -26165,61 +26248,18 @@ _invenire_status_retro(
     s32* num_resultatus,     /* output count */
     s32 max_resultatus)      /* capacity */
 {
-    si (gradus == ZEPHYRUM)
-    {
-        /* Zero steps back = current state */
-        si (*num_resultatus < max_resultatus)
-        {
-            /* Check if already in result (avoid duplicates) */
-            s32 r;
-            per (r = ZEPHYRUM; r < *num_resultatus; r++)
-            {
-                si (resultatus[r] == status_initium)
-                {
-                    redde;  /* Already present */
-                }
-            }
-            resultatus[(*num_resultatus)++] = status_initium;
-        }
-        redde;
-    }
+    s32 via[MAX_VIA_DEPTH];
 
-    /* One step back = direct predecessors */
-    si (gradus == I)
-    {
-        StatusPraedecessores* sp = &PRAEDECESSOR_MAPPA[status_initium];
-        s32 i;
-        per (i = ZEPHYRUM; i < sp->numerus && *num_resultatus < max_resultatus; i++)
-        {
-            /* Check if already in result */
-            s32 r;
-            b32 iam_adest = FALSUM;
-            per (r = ZEPHYRUM; r < *num_resultatus; r++)
-            {
-                si (resultatus[r] == sp->praedecessores[i])
-                {
-                    iam_adest = VERUM;
-                    frange;
-                }
-            }
-            si (!iam_adest)
-            {
-                resultatus[(*num_resultatus)++] = sp->praedecessores[i];
-            }
-        }
-        redde;
-    }
+    *num_resultatus = ZEPHYRUM;
 
-    /* Multiple steps: recurse through predecessors */
-    {
-        StatusPraedecessores* sp = &PRAEDECESSOR_MAPPA[status_initium];
-        s32 i;
-        per (i = ZEPHYRUM; i < sp->numerus; i++)
-        {
-            _invenire_status_retro(sp->praedecessores[i], gradus - I,
-                                   resultatus, num_resultatus, max_resultatus);
-        }
-    }
+    _invenire_status_retro_dfs(
+        status_initium,
+        gradus,
+        via,
+        ZEPHYRUM,
+        resultatus,
+        num_resultatus,
+        max_resultatus);
 }
 
 /* GOTO lookup without GLR instance (for validation) */
