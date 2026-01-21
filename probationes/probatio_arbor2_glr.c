@@ -591,8 +591,7 @@ s32 principale(vacuum)
         imprimere("\n--- Probans reachability ---\n");
 
         reachability_valida = arbor2_glr_validare_reachability();
-        /* NOTE: Not asserting - dead states are informational, not fatal */
-        imprimere("  Reachability: %s\n", reachability_valida ? "VERUM" : "FALSUM (dead states above)");
+        CREDO_AEQUALIS_I32((i32)reachability_valida, VERUM);
 
         imprimere("\n--- Probans GOTO completeness ---\n");
 
