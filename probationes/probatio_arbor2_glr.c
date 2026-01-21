@@ -15335,6 +15335,111 @@ s32 principale(vacuum)
         }
     }
 
+    /* ================================================================
+     * DECLARATOR_CONTEXTUS tests - Grouped declarators (function pointers)
+     * These test that PAREN_APERTA is handled after type specifiers
+     * ================================================================ */
+
+    /* Test: static int (*fp)(void) - storage class + function pointer */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- DECLARATOR_CONTEXTUS: static int (*fp)(void); ---\n");
+
+        {
+            Arbor2Expansion* exp_test = arbor2_expansion_creare(piscina, intern);
+            Arbor2GLR* glr_test = arbor2_glr_creare(piscina, intern, exp_test);
+
+            tokens = _lexare_ad_tokens(piscina, intern,
+                "static int (*fp)(void);\n");
+            res = arbor2_glr_parsere_translation_unit(glr_test, tokens);
+
+            CREDO_VERUM(res.successus);
+            CREDO_NON_NIHIL(res.radix);
+        }
+    }
+
+    /* Test: extern int (*callback)() - extern + function pointer */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- DECLARATOR_CONTEXTUS: extern int (*callback)(); ---\n");
+
+        {
+            Arbor2Expansion* exp_test = arbor2_expansion_creare(piscina, intern);
+            Arbor2GLR* glr_test = arbor2_glr_creare(piscina, intern, exp_test);
+
+            tokens = _lexare_ad_tokens(piscina, intern,
+                "extern int (*callback)();\n");
+            res = arbor2_glr_parsere_translation_unit(glr_test, tokens);
+
+            CREDO_VERUM(res.successus);
+            CREDO_NON_NIHIL(res.radix);
+        }
+    }
+
+    /* Test: void func(int (*param)(void)) - function pointer parameter */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- DECLARATOR_CONTEXTUS: void func(int (*param)(void)) ---\n");
+
+        {
+            Arbor2Expansion* exp_test = arbor2_expansion_creare(piscina, intern);
+            Arbor2GLR* glr_test = arbor2_glr_creare(piscina, intern, exp_test);
+
+            tokens = _lexare_ad_tokens(piscina, intern,
+                "void func(int (*param)(void)) {}\n");
+            res = arbor2_glr_parsere_translation_unit(glr_test, tokens);
+
+            CREDO_VERUM(res.successus);
+            CREDO_NON_NIHIL(res.radix);
+        }
+    }
+
+    /* Test: struct S { int (*fp)(); }; - struct member function pointer */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- DECLARATOR_CONTEXTUS: struct S { int (*fp)(); }; ---\n");
+
+        {
+            Arbor2Expansion* exp_test = arbor2_expansion_creare(piscina, intern);
+            Arbor2GLR* glr_test = arbor2_glr_creare(piscina, intern, exp_test);
+
+            tokens = _lexare_ad_tokens(piscina, intern,
+                "struct S { int (*fp)(); };\n");
+            res = arbor2_glr_parsere_translation_unit(glr_test, tokens);
+
+            CREDO_VERUM(res.successus);
+            CREDO_NON_NIHIL(res.radix);
+        }
+    }
+
+    /* Test: int x, (*fp)(); - multi-declarator with function pointer */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- DECLARATOR_CONTEXTUS: int x, (*fp)(); ---\n");
+
+        {
+            Arbor2Expansion* exp_test = arbor2_expansion_creare(piscina, intern);
+            Arbor2GLR* glr_test = arbor2_glr_creare(piscina, intern, exp_test);
+
+            tokens = _lexare_ad_tokens(piscina, intern,
+                "int x, (*fp)();\n");
+            res = arbor2_glr_parsere_translation_unit(glr_test, tokens);
+
+            CREDO_VERUM(res.successus);
+            CREDO_NON_NIHIL(res.radix);
+        }
+    }
+
 
     /* Compendium */
     imprimere("\n");

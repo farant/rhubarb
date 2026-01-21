@@ -2976,12 +2976,13 @@ hic_manens constans Arbor2TabulaActio STATUS_94_ACTIONES[] = {
     { ARBOR2_LEXEMA_BRACE_APERTA,   ARBOR2_ACTIO_REDUCE, 39, FALSUM }
 };
 
-/* State 95: after '( type_specifier' - expect '*' or param name */
+/* State 95: after '( type_specifier' - expect '*', param name, or '(' for grouped */
 hic_manens constans Arbor2TabulaActio STATUS_95_ACTIONES[] = {
     { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,  96, FALSUM },
     { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,  97, FALSUM },
     { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_REDUCE, 340, FALSUM },  /* abstract param */
-    { ARBOR2_LEXEMA_COMMA,          ARBOR2_ACTIO_REDUCE, 340, FALSUM }   /* abstract param */
+    { ARBOR2_LEXEMA_COMMA,          ARBOR2_ACTIO_REDUCE, 340, FALSUM },  /* abstract param */
+    { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_SHIFT, 901, FALSUM }    /* grouped: int (*param)(void) */
 };
 
 /* State 96: after '( type_spec *' - expect '*' or param name or pointer qualifier */
@@ -3006,11 +3007,12 @@ hic_manens constans Arbor2TabulaActio STATUS_98_ACTIONES[] = {
     { ARBOR2_LEXEMA_BRACKET_APERTA, ARBOR2_ACTIO_REDUCE, 12, FALSUM }  /* pointer array: *arr[] */
 };
 
-/* State 99: after '( type_spec declarator' - reduce P43 */
+/* State 99: after '( type_spec declarator' - reduce P43 or continue for function ptr */
 hic_manens constans Arbor2TabulaActio STATUS_99_ACTIONES[] = {
     { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_REDUCE, 43, FALSUM },
     { ARBOR2_LEXEMA_COMMA,          ARBOR2_ACTIO_REDUCE, 43, FALSUM },
-    { ARBOR2_LEXEMA_BRACKET_APERTA, ARBOR2_ACTIO_SHIFT, 217, FALSUM }  /* array param: arr[] */
+    { ARBOR2_LEXEMA_BRACKET_APERTA, ARBOR2_ACTIO_SHIFT, 217, FALSUM },  /* array param: arr[] */
+    { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_SHIFT,  91, FALSUM }   /* func ptr param: (*fp)(void) */
 };
 
 /* State 100: after '( type_spec * declarator' - reduce P11 */
@@ -3065,12 +3067,13 @@ hic_manens constans Arbor2TabulaActio STATUS_104_ACTIONES[] = {
     { ARBOR2_LEXEMA_VOLATILE,       ARBOR2_ACTIO_SHIFT, 911, FALSUM }   /* volatile int x */
 };
 
-/* State 105: after 'param_list , type_spec' - expect '*' or param name */
+/* State 105: after 'param_list , type_spec' - expect '*', param name, or '(' for grouped */
 hic_manens constans Arbor2TabulaActio STATUS_105_ACTIONES[] = {
     { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT, 106, FALSUM },
     { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT, 107, FALSUM },
     { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_REDUCE, 340, FALSUM },  /* abstract param */
-    { ARBOR2_LEXEMA_COMMA,          ARBOR2_ACTIO_REDUCE, 340, FALSUM }   /* abstract param */
+    { ARBOR2_LEXEMA_COMMA,          ARBOR2_ACTIO_REDUCE, 340, FALSUM },  /* abstract param */
+    { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_SHIFT, 901, FALSUM }    /* grouped: int (*param)(void) */
 };
 
 /* State 106: after 'param_list , type_spec *' - expect '*' or name or pointer qualifier */
@@ -3095,11 +3098,12 @@ hic_manens constans Arbor2TabulaActio STATUS_108_ACTIONES[] = {
     { ARBOR2_LEXEMA_BRACKET_APERTA, ARBOR2_ACTIO_REDUCE, 12, FALSUM }  /* pointer array: *arr[] */
 };
 
-/* State 109: after 'param_list , type_spec declarator' - reduce P43 */
+/* State 109: after 'param_list , type_spec declarator' - reduce P43 or continue for func ptr */
 hic_manens constans Arbor2TabulaActio STATUS_109_ACTIONES[] = {
     { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_REDUCE, 43, FALSUM },
     { ARBOR2_LEXEMA_COMMA,          ARBOR2_ACTIO_REDUCE, 43, FALSUM },
-    { ARBOR2_LEXEMA_BRACKET_APERTA, ARBOR2_ACTIO_SHIFT, 217, FALSUM }  /* array param: arr[] */
+    { ARBOR2_LEXEMA_BRACKET_APERTA, ARBOR2_ACTIO_SHIFT, 217, FALSUM },  /* array param: arr[] */
+    { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_SHIFT,  91, FALSUM }   /* func ptr param: (*fp)(void) */
 };
 
 /* State 110: after 'param_list , type_spec * declarator' - reduce P11 */
@@ -3247,11 +3251,12 @@ hic_manens constans Arbor2TabulaActio STATUS_120_ACTIONES[] = {
     { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 48, FALSUM }
 };
 
-/* State 121: after member type_specifier - expect '*' or name or ':' */
+/* State 121: after member type_specifier - expect '*', name, ':', or '(' for grouped */
 hic_manens constans Arbor2TabulaActio STATUS_121_ACTIONES[] = {
     { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,  17, FALSUM },
     { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,  18, FALSUM },
-    { ARBOR2_LEXEMA_COLON,          ARBOR2_ACTIO_SHIFT, 168, FALSUM }
+    { ARBOR2_LEXEMA_COLON,          ARBOR2_ACTIO_SHIFT, 168, FALSUM },
+    { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_SHIFT, 901, FALSUM }    /* grouped: int (*fp)() */
 };
 
 /* State 122: after member type_spec '*' - expect more '*' or name */
@@ -4108,11 +4113,12 @@ hic_manens constans Arbor2TabulaActio STATUS_220_ACTIONES[] = {
 
 /* ========== STRUCT MEMBER DECLARATOR COMPLETION (221-224) ========== */
 
-/* State 221: after 'type_spec declarator' in struct (first) - ';' or '[' or ':' */
+/* State 221: after 'type_spec declarator' in struct (first) - ';' or '[' or ':' or '(' for func ptr */
 hic_manens constans Arbor2TabulaActio STATUS_221_ACTIONES[] = {
     { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_SHIFT, 222, FALSUM },
     { ARBOR2_LEXEMA_BRACKET_APERTA, ARBOR2_ACTIO_SHIFT, 217, FALSUM },
-    { ARBOR2_LEXEMA_COLON,          ARBOR2_ACTIO_SHIFT, 162, FALSUM }
+    { ARBOR2_LEXEMA_COLON,          ARBOR2_ACTIO_SHIFT, 162, FALSUM },
+    { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_SHIFT,  91, FALSUM }   /* func ptr member: (*fp)(void) */
 };
 
 /* State 222: after 'type_spec declarator ;' (first member) - reduce P48 */
@@ -6638,74 +6644,84 @@ hic_manens constans Arbor2TabulaActio STATUS_351_ACTIONES[] = {
     { ARBOR2_LEXEMA_SHORT,          ARBOR2_ACTIO_SHIFT, 1215, FALSUM }  /* volatile short -> new path */
 };
 
-/* State 352: after 'static type' - expects declarator (* or ID) */
+/* State 352: after 'static type' - expects declarator (*, ID, or grouped) */
 hic_manens constans Arbor2TabulaActio STATUS_352_ACTIONES[] = {
-    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT, 17, FALSUM },
-    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT, 18, FALSUM }
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,  17, FALSUM },
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,  18, FALSUM },
+    { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_SHIFT, 901, FALSUM }   /* grouped: static int (*fp)() */
 };
 
-/* State 353: after 'extern type' - expects declarator (* or ID) */
+/* State 353: after 'extern type' - expects declarator (*, ID, or grouped) */
 hic_manens constans Arbor2TabulaActio STATUS_353_ACTIONES[] = {
-    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT, 17, FALSUM },
-    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT, 18, FALSUM }
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,  17, FALSUM },
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,  18, FALSUM },
+    { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_SHIFT, 901, FALSUM }   /* grouped: extern int (*fp)() */
 };
 
-/* State 354: after 'register type' - expects declarator (* or ID) */
+/* State 354: after 'register type' - expects declarator (*, ID, or grouped) */
 hic_manens constans Arbor2TabulaActio STATUS_354_ACTIONES[] = {
-    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT, 17, FALSUM },
-    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT, 18, FALSUM }
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,  17, FALSUM },
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,  18, FALSUM },
+    { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_SHIFT, 901, FALSUM }   /* grouped: register int (*fp)() */
 };
 
-/* State 355: after 'auto type' - expects declarator (* or ID) */
+/* State 355: after 'auto type' - expects declarator (*, ID, or grouped) */
 hic_manens constans Arbor2TabulaActio STATUS_355_ACTIONES[] = {
-    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT, 17, FALSUM },
-    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT, 18, FALSUM }
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,  17, FALSUM },
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,  18, FALSUM },
+    { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_SHIFT, 901, FALSUM }   /* grouped: auto int (*fp)() */
 };
 
-/* State 356: after 'const type' - expects declarator (* or ID) */
+/* State 356: after 'const type' - expects declarator (*, ID, or grouped) */
 hic_manens constans Arbor2TabulaActio STATUS_356_ACTIONES[] = {
-    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT, 17, FALSUM },
-    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT, 18, FALSUM }
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,  17, FALSUM },
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,  18, FALSUM },
+    { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_SHIFT, 901, FALSUM }   /* grouped: const int (*fp)() */
 };
 
-/* State 357: after 'volatile type' - expects declarator (* or ID) */
+/* State 357: after 'volatile type' - expects declarator (*, ID, or grouped) */
 hic_manens constans Arbor2TabulaActio STATUS_357_ACTIONES[] = {
-    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT, 17, FALSUM },
-    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT, 18, FALSUM }
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,  17, FALSUM },
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,  18, FALSUM },
+    { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_SHIFT, 901, FALSUM }   /* grouped: volatile int (*fp)() */
 };
 
-/* States 358-363: after 'specifier type declarator' - reduce or init */
-/* State 358: reduce P148 (static) or shift for initializer/array */
+/* States 358-363: after 'specifier type declarator' - reduce or init/array/function */
+/* State 358: reduce P148 (static) or shift for initializer/array/function */
 hic_manens constans Arbor2TabulaActio STATUS_358_ACTIONES[] = {
     { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 148, FALSUM },
     { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 148, FALSUM },
     { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 148, FALSUM },
     { ARBOR2_LEXEMA_ASSIGNATIO,     ARBOR2_ACTIO_SHIFT, 475, FALSUM },  /* initializer */
-    { ARBOR2_LEXEMA_BRACKET_APERTA, ARBOR2_ACTIO_SHIFT, 217, FALSUM }   /* array declarator */
+    { ARBOR2_LEXEMA_BRACKET_APERTA, ARBOR2_ACTIO_SHIFT, 217, FALSUM },  /* array declarator */
+    { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_SHIFT,  91, FALSUM }   /* function params: static int (*fp)(void) */
 };
 
-/* State 359: reduce P149 (extern) or shift for initializer */
+/* State 359: reduce P149 (extern) or shift for initializer/function */
 hic_manens constans Arbor2TabulaActio STATUS_359_ACTIONES[] = {
     { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 149, FALSUM },
     { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 149, FALSUM },
     { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 149, FALSUM },
-    { ARBOR2_LEXEMA_ASSIGNATIO,     ARBOR2_ACTIO_SHIFT, 477, FALSUM }  /* initializer */
+    { ARBOR2_LEXEMA_ASSIGNATIO,     ARBOR2_ACTIO_SHIFT, 477, FALSUM },  /* initializer */
+    { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_SHIFT,  91, FALSUM }   /* function params: extern int (*fp)(void) */
 };
 
-/* State 360: reduce P150 (register) or shift for initializer */
+/* State 360: reduce P150 (register) or shift for initializer/function */
 hic_manens constans Arbor2TabulaActio STATUS_360_ACTIONES[] = {
     { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 150, FALSUM },
     { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 150, FALSUM },
     { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 150, FALSUM },
-    { ARBOR2_LEXEMA_ASSIGNATIO,     ARBOR2_ACTIO_SHIFT, 479, FALSUM }  /* initializer */
+    { ARBOR2_LEXEMA_ASSIGNATIO,     ARBOR2_ACTIO_SHIFT, 479, FALSUM },  /* initializer */
+    { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_SHIFT,  91, FALSUM }   /* function params: register int (*fp)(void) */
 };
 
-/* State 361: reduce P151 (auto) or shift for initializer */
+/* State 361: reduce P151 (auto) or shift for initializer/function */
 hic_manens constans Arbor2TabulaActio STATUS_361_ACTIONES[] = {
     { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 151, FALSUM },
     { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 151, FALSUM },
     { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 151, FALSUM },
-    { ARBOR2_LEXEMA_ASSIGNATIO,     ARBOR2_ACTIO_SHIFT, 481, FALSUM }  /* initializer */
+    { ARBOR2_LEXEMA_ASSIGNATIO,     ARBOR2_ACTIO_SHIFT, 481, FALSUM },  /* initializer */
+    { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_SHIFT,  91, FALSUM }   /* function params: auto int (*fp)(void) */
 };
 
 /* State 362: reduce P152 (const) or shift for initializer/array/function */
@@ -9460,10 +9476,11 @@ hic_manens constans Arbor2TabulaActio STATUS_514_ACTIONES[] = {
     { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 226, FALSUM }
 };
 
-/* State 515: after type init_decl_list ',' - expect declarator */
+/* State 515: after type init_decl_list ',' - expect declarator (*, ID, or grouped) */
 hic_manens constans Arbor2TabulaActio STATUS_515_ACTIONES[] = {
     { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT, 517, FALSUM },   /* pointer declarator */
-    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT, 516, FALSUM }    /* direct declarator */
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT, 516, FALSUM },   /* direct declarator */
+    { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_SHIFT, 901, FALSUM }    /* grouped: int x, (*fp)() */
 };
 
 /* State 516: after init_decl_list ',' ID - reduce to declarator */
@@ -9482,14 +9499,15 @@ hic_manens constans Arbor2TabulaActio STATUS_517_ACTIONES[] = {
     { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT, 524, FALSUM }    /* name after pointers */
 };
 
-/* State 518: after init_decl_list ',' DECLARATOR - reduce P221 or '=' for init */
+/* State 518: after init_decl_list ',' DECLARATOR - reduce P221 or '=', '[', '(' for func ptr */
 hic_manens constans Arbor2TabulaActio STATUS_518_ACTIONES[] = {
     { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 221, FALSUM },  /* init_decl -> declarator */
     { ARBOR2_LEXEMA_COMMA,          ARBOR2_ACTIO_REDUCE, 221, FALSUM },
     { ARBOR2_LEXEMA_ASSIGNATIO,     ARBOR2_ACTIO_SHIFT, 519, FALSUM },   /* declarator '=' ... */
     { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 221, FALSUM },
     { ARBOR2_LEXEMA_BRACKET_APERTA, ARBOR2_ACTIO_SHIFT, 525, FALSUM },   /* array dimension */
-    { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 221, FALSUM }
+    { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 221, FALSUM },
+    { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_SHIFT,  91, FALSUM }    /* func ptr params: (*fp)(void) */
 };
 
 /* State 519: after init_decl_list ',' declarator '=' - expect expression or brace init */
@@ -25042,6 +25060,13 @@ hic_manens constans Arbor2LexemaGenus TYPUS_CONTEXTUS_LEXEMATA[] = {
     ARBOR2_LEXEMA_IDENTIFICATOR
 };
 
+/* Required tokens for DECLARATOR_CONTEXTUS states */
+hic_manens constans Arbor2LexemaGenus DECLARATOR_CONTEXTUS_LEXEMATA[] = {
+    ARBOR2_LEXEMA_ASTERISCUS,     /* pointer declarator */
+    ARBOR2_LEXEMA_IDENTIFICATOR,  /* direct declarator */
+    ARBOR2_LEXEMA_PAREN_APERTA    /* grouped/function pointer */
+};
+
 /* Tag rule structure */
 nomen structura {
     i32                         signum;        /* Tag bit flag */
@@ -25074,6 +25099,12 @@ hic_manens constans Arbor2TagRegula TAG_REGULAE[] = {
         "TYPUS_CONTEXTUS",
         TYPUS_CONTEXTUS_LEXEMATA,
         (i32)(magnitudo(TYPUS_CONTEXTUS_LEXEMATA) / magnitudo(TYPUS_CONTEXTUS_LEXEMATA[0]))
+    },
+    {
+        ARBOR2_TAG_DECLARATOR_CONTEXTUS,
+        "DECLARATOR_CONTEXTUS",
+        DECLARATOR_CONTEXTUS_LEXEMATA,
+        (i32)(magnitudo(DECLARATOR_CONTEXTUS_LEXEMATA) / magnitudo(DECLARATOR_CONTEXTUS_LEXEMATA[0]))
     }
 };
 
@@ -25134,30 +25165,34 @@ hic_manens constans i32 STATUS_TAGS[] = {
     /* 86 */  ARBOR2_TAG_SENTENTIA_INITIUM,  /* case body */
     /* 87 */  0, /* 88 */ 0,
     /* 89 */  ARBOR2_TAG_SENTENTIA_INITIUM,  /* default body */
-    /* 90-99: state 91 expects types after 'declarator (' */
+    /* 90-99: state 91 expects types, 95 expects declarator */
     0,  /* 90 */
     ARBOR2_TAG_TYPUS_CONTEXTUS,  /* 91: after 'declarator (' - function param types */
-    0, 0, 0, 0, 0, 0, 0, 0,  /* 92-99 */
-    /* 100-109: state 104 expects types after 'param_list ,' */
+    0, 0, 0,  /* 92-94 */
+    ARBOR2_TAG_DECLARATOR_CONTEXTUS,  /* 95: after '( type_specifier' - declarator */
+    0, 0, 0, 0,  /* 96-99 */
+    /* 100-109: state 104 expects types, 105 expects declarator */
     0, 0, 0, 0,  /* 100-103 */
     ARBOR2_TAG_TYPUS_CONTEXTUS,  /* 104: after 'param_list ,' - next param type */
-    0, 0, 0, 0, 0,  /* 105-109 */
+    ARBOR2_TAG_DECLARATOR_CONTEXTUS,  /* 105: after 'param_list , type_spec' - declarator */
+    0, 0, 0, 0,  /* 106-109 */
     /* 110-119: state 119 expects types in anon struct */
     0, 0, 0, 0, 0, 0, 0, 0, 0,  /* 110-118 */
     ARBOR2_TAG_TYPUS_CONTEXTUS,  /* 119: after 'struct {' (anon) - member type */
-    /* 120-129: state 120 expects types in named struct */
+    /* 120-129: state 120 expects types, 121 expects declarator */
     ARBOR2_TAG_TYPUS_CONTEXTUS,  /* 120: after 'struct ID {' - member type */
-    0, 0, 0, 0, 0, 0, 0, 0, 0,  /* 121-129 */
+    ARBOR2_TAG_DECLARATOR_CONTEXTUS,  /* 121: after member type - declarator */
+    0, 0, 0, 0, 0, 0, 0, 0,  /* 122-129 */
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0,  /* 130-139 */
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0,  /* 140-149 */
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0,  /* 150-159 */
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0,  /* 160-169 */
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0,  /* 170-179 */
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0,  /* 180-189 */
-    /* 190-199: state 198 expects types after 'typedef' */
+    /* 190-199: state 198 expects types, 199 expects declarator */
     0, 0, 0, 0, 0, 0, 0, 0,  /* 190-197 */
     ARBOR2_TAG_TYPUS_CONTEXTUS,  /* 198: after 'typedef' - typedef'd type */
-    0,  /* 199 */
+    ARBOR2_TAG_DECLARATOR_CONTEXTUS,  /* 199: after 'typedef type_spec' - declarator */
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0,  /* 200-209 */
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0,  /* 210-219 */
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0,  /* 220-229 */
@@ -25240,9 +25275,15 @@ hic_manens constans i32 STATUS_TAGS[] = {
     ARBOR2_TAG_TYPUS_CONTEXTUS,  /* 349: after 'auto' - expects type */
     ARBOR2_TAG_TYPUS_CONTEXTUS,  /* 350: after 'const' - expects type */
     ARBOR2_TAG_TYPUS_CONTEXTUS,  /* 351: after 'volatile' - expects type */
-    /* 352-366: 0 */
-    0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0,
+    /* 352-357: after storage/qualifier + type - expect declarator */
+    ARBOR2_TAG_DECLARATOR_CONTEXTUS,  /* 352: after 'static type' - declarator */
+    ARBOR2_TAG_DECLARATOR_CONTEXTUS,  /* 353: after 'extern type' - declarator */
+    ARBOR2_TAG_DECLARATOR_CONTEXTUS,  /* 354: after 'register type' - declarator */
+    ARBOR2_TAG_DECLARATOR_CONTEXTUS,  /* 355: after 'auto type' - declarator */
+    ARBOR2_TAG_DECLARATOR_CONTEXTUS,  /* 356: after 'const type' - declarator */
+    ARBOR2_TAG_DECLARATOR_CONTEXTUS,  /* 357: after 'volatile type' - declarator */
+    /* 358-366: 0 */
+    0, 0, 0, 0, 0, 0, 0, 0, 0,
     ARBOR2_TAG_EXPR_INITIUM,  /* 367: expression context */
     ARBOR2_TAG_EXPR_INITIUM,  /* 368: expression context */
     ARBOR2_TAG_EXPR_INITIUM,  /* 369: expression context */
@@ -25342,8 +25383,10 @@ hic_manens constans i32 STATUS_TAGS[] = {
     /* 504-506: 0 */
     0, 0, 0,
     ARBOR2_TAG_EXPR_INITIUM,  /* 507: expression context */
-    /* 508-516: 0 */
-    0, 0, 0, 0, 0, 0, 0, 0, 0,
+    /* 508-514: 0, 515: declarator after 'type init_decl_list ,', 516: 0 */
+    0, 0, 0, 0, 0, 0, 0,  /* 508-514 */
+    ARBOR2_TAG_DECLARATOR_CONTEXTUS,  /* 515: after 'type init_decl_list ,' - declarator */
+    0,  /* 516 */
     0,  /* 517: declarator context */
     /* 518-518: 0 */
     0,
