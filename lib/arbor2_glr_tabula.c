@@ -20544,6 +20544,14 @@ hic_manens constans Arbor2StatusGotoEntry STATUS_312_GOTO[] = {
     { INT_NT_TRANSLATIO,       264 }
 };
 
+/* State 313: after 'postfixum [ expr' - expects ']' but may have expression continuation
+ * When expression operators chain (e.g., arr[x < y]), comparisons shift to state 11,
+ * reducing P99 to TRANSLATIO. Same for bitwise XOR reducing to CARET_BITWISE. */
+hic_manens constans Arbor2StatusGotoEntry STATUS_313_GOTO[] = {
+    { INT_NT_TRANSLATIO,       264 },
+    { INT_NT_CARET_BITWISE,    270 }
+};
+
 /* State 315: after 'postfixum (' - expects ')' or argument expression
  * Arguments reduce to ASSIGNATIO (not VIRGA, since comma separates args)
  * INT_NT_ASSIGNATIO -> 321 (reduce P132), then ARGUMENTA -> 316 */
@@ -20968,6 +20976,14 @@ hic_manens constans Arbor2StatusGotoEntry STATUS_500_GOTO[] = {
     { INT_NT_TERM,              2 },
     { INT_NT_FACTOR,            3 },
     { INT_NT_POSTFIXUM,         311 }
+};
+
+/* State 501: after '[ expr' in designator - expects ']' but may have expression continuation
+ * When expression operators chain, comparisons shift to state 11,
+ * reducing P99 to TRANSLATIO. Same for bitwise XOR reducing to CARET_BITWISE. */
+hic_manens constans Arbor2StatusGotoEntry STATUS_501_GOTO[] = {
+    { INT_NT_TRANSLATIO,       264 },
+    { INT_NT_CARET_BITWISE,    270 }
 };
 
 /* State 506: after DESIGNATOR_LIST - GOTO for chained designator */
@@ -23047,7 +23063,7 @@ hic_manens constans Arbor2StatusGoto GOTO_TABULA_NOVA[] = {
     /* Postfix operator states */
     STATUS_GOTO_NIL,   /* 311: after POSTFIXUM - check postfix ops or reduce P129 */
     STATUS_GOTO(312),  /* 312: after postfixum '[' - subscript expression */
-    STATUS_GOTO_NIL,   /* 313: after postfixum '[' expr - expects ']' */
+    STATUS_GOTO(313),  /* 313: after postfixum '[' expr - expects ']' */
     STATUS_GOTO_NIL,   /* 314: after postfixum '[' expr ']' - reduce P128 */
     /* Function call states */
     STATUS_GOTO(315),  /* 315: after postfixum '(' - expects args or ')' */
@@ -23290,7 +23306,7 @@ hic_manens constans Arbor2StatusGoto GOTO_TABULA_NOVA[] = {
     STATUS_GOTO_NIL,   /* 499: after init_lista in const decl - reduce P211 */
     /* Phase 1.2c: Designated initializer states */
     STATUS_GOTO(500),  /* 500: after '[' in designator - expression chain */
-    STATUS_GOTO_NIL,   /* 501: after '[ expr' - expects ']' */
+    STATUS_GOTO(501),  /* 501: after '[ expr' - expects ']' */
     STATUS_GOTO_NIL,   /* 502: after '[ expr ]' - reduce P213 */
     STATUS_GOTO_NIL,   /* 503: after '.' in designator - expects ID */
     STATUS_GOTO_NIL,   /* 504: after '. ID' - reduce P214 */
