@@ -3653,9 +3653,15 @@ hic_manens constans Arbor2TabulaActio STATUS_161_ACTIONES[] = {
 hic_manens constans Arbor2TabulaActio STATUS_162_ACTIONES[] = {
     { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,  4, FALSUM },
     { ARBOR2_LEXEMA_INTEGER,        ARBOR2_ACTIO_SHIFT,  5, FALSUM },
+    { ARBOR2_LEXEMA_CHAR_LIT,       ARBOR2_ACTIO_SHIFT,  5, FALSUM },
     { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_SHIFT,  6, FALSUM },
     { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,  7, FALSUM },
-    { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_SHIFT,  8, FALSUM }
+    { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_SHIFT,  8, FALSUM },
+    { ARBOR2_LEXEMA_MINUS,          ARBOR2_ACTIO_SHIFT,  9, FALSUM },
+    { ARBOR2_LEXEMA_PLUS,           ARBOR2_ACTIO_SHIFT,  9, FALSUM },
+    { ARBOR2_LEXEMA_TILDE,          ARBOR2_ACTIO_SHIFT, 289, FALSUM },
+    { ARBOR2_LEXEMA_EXCLAMATIO,     ARBOR2_ACTIO_SHIFT, 291, FALSUM },
+    { ARBOR2_LEXEMA_SIZEOF,         ARBOR2_ACTIO_SHIFT, 335, FALSUM }
 };
 
 /* State 163: after type_spec ID ':' expr (first) - continue expr or ';' */
@@ -3677,9 +3683,15 @@ hic_manens constans Arbor2TabulaActio STATUS_164_ACTIONES[] = {
 hic_manens constans Arbor2TabulaActio STATUS_165_ACTIONES[] = {
     { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,  4, FALSUM },
     { ARBOR2_LEXEMA_INTEGER,        ARBOR2_ACTIO_SHIFT,  5, FALSUM },
+    { ARBOR2_LEXEMA_CHAR_LIT,       ARBOR2_ACTIO_SHIFT,  5, FALSUM },
     { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_SHIFT,  6, FALSUM },
     { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,  7, FALSUM },
-    { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_SHIFT,  8, FALSUM }
+    { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_SHIFT,  8, FALSUM },
+    { ARBOR2_LEXEMA_MINUS,          ARBOR2_ACTIO_SHIFT,  9, FALSUM },
+    { ARBOR2_LEXEMA_PLUS,           ARBOR2_ACTIO_SHIFT,  9, FALSUM },
+    { ARBOR2_LEXEMA_TILDE,          ARBOR2_ACTIO_SHIFT, 289, FALSUM },
+    { ARBOR2_LEXEMA_EXCLAMATIO,     ARBOR2_ACTIO_SHIFT, 291, FALSUM },
+    { ARBOR2_LEXEMA_SIZEOF,         ARBOR2_ACTIO_SHIFT, 335, FALSUM }
 };
 
 /* State 166: after member_list type_spec ID ':' expr (subsequent) - continue or ';' */
@@ -3701,9 +3713,15 @@ hic_manens constans Arbor2TabulaActio STATUS_167_ACTIONES[] = {
 hic_manens constans Arbor2TabulaActio STATUS_168_ACTIONES[] = {
     { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,  4, FALSUM },
     { ARBOR2_LEXEMA_INTEGER,        ARBOR2_ACTIO_SHIFT,  5, FALSUM },
+    { ARBOR2_LEXEMA_CHAR_LIT,       ARBOR2_ACTIO_SHIFT,  5, FALSUM },
     { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_SHIFT,  6, FALSUM },
     { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,  7, FALSUM },
-    { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_SHIFT,  8, FALSUM }
+    { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_SHIFT,  8, FALSUM },
+    { ARBOR2_LEXEMA_MINUS,          ARBOR2_ACTIO_SHIFT,  9, FALSUM },
+    { ARBOR2_LEXEMA_PLUS,           ARBOR2_ACTIO_SHIFT,  9, FALSUM },
+    { ARBOR2_LEXEMA_TILDE,          ARBOR2_ACTIO_SHIFT, 289, FALSUM },
+    { ARBOR2_LEXEMA_EXCLAMATIO,     ARBOR2_ACTIO_SHIFT, 291, FALSUM },
+    { ARBOR2_LEXEMA_SIZEOF,         ARBOR2_ACTIO_SHIFT, 335, FALSUM }
 };
 
 /* State 169: after type_spec ':' expr (first anon) - continue expr or ';' */
@@ -3725,9 +3743,15 @@ hic_manens constans Arbor2TabulaActio STATUS_170_ACTIONES[] = {
 hic_manens constans Arbor2TabulaActio STATUS_171_ACTIONES[] = {
     { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,  4, FALSUM },
     { ARBOR2_LEXEMA_INTEGER,        ARBOR2_ACTIO_SHIFT,  5, FALSUM },
+    { ARBOR2_LEXEMA_CHAR_LIT,       ARBOR2_ACTIO_SHIFT,  5, FALSUM },
     { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_SHIFT,  6, FALSUM },
     { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,  7, FALSUM },
-    { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_SHIFT,  8, FALSUM }
+    { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_SHIFT,  8, FALSUM },
+    { ARBOR2_LEXEMA_MINUS,          ARBOR2_ACTIO_SHIFT,  9, FALSUM },
+    { ARBOR2_LEXEMA_PLUS,           ARBOR2_ACTIO_SHIFT,  9, FALSUM },
+    { ARBOR2_LEXEMA_TILDE,          ARBOR2_ACTIO_SHIFT, 289, FALSUM },
+    { ARBOR2_LEXEMA_EXCLAMATIO,     ARBOR2_ACTIO_SHIFT, 291, FALSUM },
+    { ARBOR2_LEXEMA_SIZEOF,         ARBOR2_ACTIO_SHIFT, 335, FALSUM }
 };
 
 /* State 172: after member_list type_spec ':' expr (subsequent anon) - continue or ';' */
@@ -4089,10 +4113,16 @@ hic_manens constans Arbor2TabulaActio STATUS_216_ACTIONES[] = {
 hic_manens constans Arbor2TabulaActio STATUS_217_ACTIONES[] = {
     { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,  4, FALSUM },
     { ARBOR2_LEXEMA_INTEGER,        ARBOR2_ACTIO_SHIFT,  5, FALSUM },
+    { ARBOR2_LEXEMA_CHAR_LIT,       ARBOR2_ACTIO_SHIFT,  5, FALSUM },
     { ARBOR2_LEXEMA_BRACKET_CLAUSA, ARBOR2_ACTIO_SHIFT, 218, FALSUM },
     { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_SHIFT,  6, FALSUM },
     { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,  7, FALSUM },
-    { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_SHIFT,  8, FALSUM }
+    { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_SHIFT,  8, FALSUM },
+    { ARBOR2_LEXEMA_MINUS,          ARBOR2_ACTIO_SHIFT,  9, FALSUM },
+    { ARBOR2_LEXEMA_PLUS,           ARBOR2_ACTIO_SHIFT,  9, FALSUM },
+    { ARBOR2_LEXEMA_TILDE,          ARBOR2_ACTIO_SHIFT, 289, FALSUM },
+    { ARBOR2_LEXEMA_EXCLAMATIO,     ARBOR2_ACTIO_SHIFT, 291, FALSUM },
+    { ARBOR2_LEXEMA_SIZEOF,         ARBOR2_ACTIO_SHIFT, 335, FALSUM }
 };
 
 /* State 218: after 'declarator [ ]' - reduce P81 (unsized array) */
@@ -25128,6 +25158,36 @@ hic_manens constans Arbor2LexemaGenus CASE_EXPR_CONTEXTUS_LEXEMATA[] = {
     ARBOR2_LEXEMA_SIZEOF          /* sizeof operator */
 };
 
+/* Required tokens for ARRAY_DIM_CONTEXTUS states (array dimension expressions) */
+hic_manens constans Arbor2LexemaGenus ARRAY_DIM_CONTEXTUS_LEXEMATA[] = {
+    ARBOR2_LEXEMA_IDENTIFICATOR,  /* macros, enum constants */
+    ARBOR2_LEXEMA_INTEGER,        /* integer literals */
+    ARBOR2_LEXEMA_CHAR_LIT,       /* character literals */
+    ARBOR2_LEXEMA_PAREN_APERTA,   /* grouped expressions */
+    ARBOR2_LEXEMA_ASTERISCUS,     /* dereference */
+    ARBOR2_LEXEMA_AMPERSAND,      /* address-of */
+    ARBOR2_LEXEMA_MINUS,          /* unary minus -1 */
+    ARBOR2_LEXEMA_PLUS,           /* unary plus +1 */
+    ARBOR2_LEXEMA_TILDE,          /* bitwise NOT ~0 */
+    ARBOR2_LEXEMA_EXCLAMATIO,     /* logical NOT !0 */
+    ARBOR2_LEXEMA_SIZEOF          /* sizeof operator */
+};
+
+/* Required tokens for BITFIELD_WIDTH_CONTEXTUS states (bit field width expressions) */
+hic_manens constans Arbor2LexemaGenus BITFIELD_WIDTH_CONTEXTUS_LEXEMATA[] = {
+    ARBOR2_LEXEMA_IDENTIFICATOR,  /* macros, enum constants */
+    ARBOR2_LEXEMA_INTEGER,        /* integer literals */
+    ARBOR2_LEXEMA_CHAR_LIT,       /* character literals */
+    ARBOR2_LEXEMA_PAREN_APERTA,   /* grouped expressions */
+    ARBOR2_LEXEMA_ASTERISCUS,     /* dereference */
+    ARBOR2_LEXEMA_AMPERSAND,      /* address-of */
+    ARBOR2_LEXEMA_MINUS,          /* unary minus -1 */
+    ARBOR2_LEXEMA_PLUS,           /* unary plus +1 */
+    ARBOR2_LEXEMA_TILDE,          /* bitwise NOT ~0 */
+    ARBOR2_LEXEMA_EXCLAMATIO,     /* logical NOT !0 */
+    ARBOR2_LEXEMA_SIZEOF          /* sizeof operator */
+};
+
 /* Tag rule structure */
 nomen structura {
     i32                         signum;        /* Tag bit flag */
@@ -25184,6 +25244,18 @@ hic_manens constans Arbor2TagRegula TAG_REGULAE[] = {
         "CASE_EXPR_CONTEXTUS",
         CASE_EXPR_CONTEXTUS_LEXEMATA,
         (i32)(magnitudo(CASE_EXPR_CONTEXTUS_LEXEMATA) / magnitudo(CASE_EXPR_CONTEXTUS_LEXEMATA[0]))
+    },
+    {
+        ARBOR2_TAG_ARRAY_DIM_CONTEXTUS,
+        "ARRAY_DIM_CONTEXTUS",
+        ARRAY_DIM_CONTEXTUS_LEXEMATA,
+        (i32)(magnitudo(ARRAY_DIM_CONTEXTUS_LEXEMATA) / magnitudo(ARRAY_DIM_CONTEXTUS_LEXEMATA[0]))
+    },
+    {
+        ARBOR2_TAG_BITFIELD_WIDTH_CONTEXTUS,
+        "BITFIELD_WIDTH_CONTEXTUS",
+        BITFIELD_WIDTH_CONTEXTUS_LEXEMATA,
+        (i32)(magnitudo(BITFIELD_WIDTH_CONTEXTUS_LEXEMATA) / magnitudo(BITFIELD_WIDTH_CONTEXTUS_LEXEMATA[0]))
     }
 };
 
@@ -25267,15 +25339,28 @@ hic_manens constans i32 STATUS_TAGS[] = {
     ARBOR2_TAG_EXPR_INITIUM | ARBOR2_TAG_ENUMERATOR_INIT_CONTEXTUS,  /* 150: after enum ID = */
     0, 0, 0, 0, 0, 0, 0, 0,  /* 151-158 */
     ARBOR2_TAG_EXPR_INITIUM | ARBOR2_TAG_ENUMERATOR_INIT_CONTEXTUS,  /* 159: after enum , ID = */
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,  /* 160-169 */
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,  /* 170-179 */
+    /* 160-169: bit field width states 162, 165, 168 */
+    0, 0,  /* 160-161 */
+    ARBOR2_TAG_EXPR_INITIUM | ARBOR2_TAG_BITFIELD_WIDTH_CONTEXTUS,  /* 162: bit field width: type ID : */
+    0, 0,  /* 163-164 */
+    ARBOR2_TAG_EXPR_INITIUM | ARBOR2_TAG_BITFIELD_WIDTH_CONTEXTUS,  /* 165: bit field width: members type ID : */
+    0, 0,  /* 166-167 */
+    ARBOR2_TAG_EXPR_INITIUM | ARBOR2_TAG_BITFIELD_WIDTH_CONTEXTUS,  /* 168: bit field width: type : (anonymous) */
+    0,  /* 169 */
+    /* 170-179: bit field width state 171 */
+    0,  /* 170 */
+    ARBOR2_TAG_EXPR_INITIUM | ARBOR2_TAG_BITFIELD_WIDTH_CONTEXTUS,  /* 171: bit field width: members type : (anonymous) */
+    0, 0, 0, 0, 0, 0, 0, 0,  /* 172-179 */
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0,  /* 180-189 */
     /* 190-199: state 198 expects types, 199 expects declarator */
     0, 0, 0, 0, 0, 0, 0, 0,  /* 190-197 */
     ARBOR2_TAG_TYPUS_CONTEXTUS,  /* 198: after 'typedef' - typedef'd type */
     ARBOR2_TAG_DECLARATOR_CONTEXTUS,  /* 199: after 'typedef type_spec' - declarator */
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0,  /* 200-209 */
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,  /* 210-219 */
+    /* 210-219: array dimension state 217 */
+    0, 0, 0, 0, 0, 0, 0,  /* 210-216 */
+    ARBOR2_TAG_EXPR_INITIUM | ARBOR2_TAG_ARRAY_DIM_CONTEXTUS,  /* 217: after declarator [ */
+    0, 0,  /* 218-219 */
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0,  /* 220-229 */
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0,  /* 230-239 */
     0,  /* 240: after aequalitas - no tags yet */
