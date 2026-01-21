@@ -2593,3 +2593,68 @@ For reductions, indices go from rightmost (0) to leftmost (N-1):
 - `include/arbor2_glr.h` - Added tok_const/tok_volatile to parameter_decl
 - `lib/arbor2_glr.c` - Added P340-P345 handlers in PARAMETER_DECL case
 - `lib/arbor2_scribere.c` - Emit qualifier tokens before type
+
+---
+
+## 2026-01-21: GLR Forking Phase 2 - Multi-ID Type Specifier Chains
+
+### Problem
+
+Phase 1 (commit b83f165) handled 2-ID chains like `MyType myVar;` but only captured the last identifier. For 3+ identifier chains like `MyStorage MyType myVar;` or `hic_manens constans character*`, the earlier identifiers were lost:
+
+- Input: `MyStorage MyType myVar;`
+- Output: `MyType myVar;` (MyStorage lost!)
+
+### Solution Overview
+
+1. Created `type_spec_list` non-terminal that accumulates identifier tokens in a Xar array
+2. Added States 1600-1621 for type_spec_list path through declarations
+3. Added State 1650 for struct/enum specifiers (direct to declarator, no fork)
+4. Added `extra_specifiers` field to Arbor2Declaratio for middle tokens
+5. Added productions P535-P538
+
+### Critical Bug Discovery: Dual ordinarius Blocks
+
+The main debugging challenge was that P537 was receiving NULL for the type_spec_list (`valori[1]=0x0`). Traced this to discovering there are TWO `ordinarius:` (default) case blocks in the GLR parser:
+
+- **First block** (~line 4195) - frons_activa (active front) reduction processing
+- **Second block** (~line 6344) - reducenda queue reduction processing
+
+P535-P538 handlers were initially only added to the first block. When P535 reduced via the reducenda queue path, the second `ordinarius:` block didn't have the handler, so `valor_novus` remained NIHIL.
+
+**Fix**: Added P535-P538 handlers to BOTH `ordinarius:` blocks.
+
+### Productions Added
+
+```
+P535: type_spec_list -> ID                        (start list)
+P536: type_spec_list -> type_spec_list ID         (accumulate)
+P537: declaratio -> type_spec_list init_decl_list (build declaration)
+P538: func_def -> type_spec_list declarator compound (build function)
+```
+
+### Key Implementation Details
+
+- P535/P536 store tokens in a Xar cast to Arbor2Nodus* for transport through the parser
+- P537 unpacks: first token → tok_storage, middle tokens → extra_specifiers, last token → type specifier
+- State 1601 decides: more IDs coming → REDUCE P536 (accumulate); terminal → REDUCE P12 (this is declarator)
+- State 1650 prevents struct/enum from entering type_spec_list fork (preserves `struct` keyword)
+
+### Files Modified
+
+- `include/arbor2_glr.h` - Added `extra_specifiers` (Xar*) field to declaratio struct
+- `lib/arbor2_glr.c` - Added P535-P538 handlers to BOTH ordinarius blocks (~243 lines)
+- `lib/arbor2_glr_tabula.c` - Added INT_NT_TYPE_SPEC_LIST, States 1600-1621, State 1650, P535-P538 rules (~225 lines)
+- `lib/arbor2_scribere.c` - Output extra_specifiers after tok_storage
+- `probationes/probatio_arbor2_file_roundtrip.c` - Enabled id_chain_extended.c test
+
+### Test Cases
+
+```c
+/* probationes/fixa/roundtrip/id_chain_extended.c */
+MyStorage MyType myVar;              /* 3 IDs */
+MyStorage MyQual MyType myVar2;      /* 4 IDs */
+MyA MyB MyC MyD myFinal;             /* 5 IDs */
+```
+
+All 46 roundtrip tests pass.

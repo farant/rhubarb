@@ -390,6 +390,7 @@ structura Arbor2Nodus {
         /* DECLARATIO */
         structura {
             Arbor2Token*        tok_storage;    /* static/extern/auto/register keyword (NIHIL if none) */
+            Xar*                extra_specifiers; /* Middle tokens from unknown typedef chains (NIHIL if none) */
             Arbor2Token*        tok_const;      /* const keyword (NIHIL if none) */
             Arbor2Token*        tok_volatile;   /* volatile keyword (NIHIL if none) */
             Arbor2Token*        tok_unsigned;   /* unsigned keyword (NIHIL if none) */

@@ -840,7 +840,24 @@ hic_manens Arbor2Regula REGULAE[] = {
     /* P531 */ { ARBOR2_NT_DECLARATIO, 4, ARBOR2_NODUS_DECLARATIO, "decl -> 'long' declarator '=' assignatio" },
     /* P532 */ { ARBOR2_NT_DECLARATIO, 4, ARBOR2_NODUS_DECLARATIO, "decl -> 'short' declarator '=' assignatio" },
     /* P533 */ { ARBOR2_NT_DECLARATIO, 4, ARBOR2_NODUS_DECLARATIO, "decl -> 'unsigned' declarator '=' assignatio" },
-    /* P534 */ { ARBOR2_NT_DECLARATIO, 4, ARBOR2_NODUS_DECLARATIO, "decl -> 'signed' declarator '=' assignatio" }
+    /* P534 */ { ARBOR2_NT_DECLARATIO, 4, ARBOR2_NODUS_DECLARATIO, "decl -> 'signed' declarator '=' assignatio" },
+
+    /* ==================================================
+     * Phase 2: Multi-ID Type Specifier Chains (GLR forking)
+     * Handles: MyStorage MyType myVar; (3+ identifier chains)
+     * ================================================== */
+
+    /* P535: type_spec_list -> ID (start accumulating) */
+    /* P535 */ { ARBOR2_NT_SPECIFIER_TYPI, 1, ARBOR2_NODUS_ERROR, "type_spec_list -> ID" },
+
+    /* P536: type_spec_list -> type_spec_list ID (accumulate more) */
+    /* P536 */ { ARBOR2_NT_SPECIFIER_TYPI, 2, ARBOR2_NODUS_ERROR, "type_spec_list -> type_spec_list ID" },
+
+    /* P537: declaratio -> type_spec_list init_decl_list (declaration from type list) */
+    /* P537 */ { ARBOR2_NT_DECLARATIO, 2, ARBOR2_NODUS_DECLARATIO, "declaratio -> type_spec_list init_decl_list" },
+
+    /* P538: func_def -> type_spec_list declarator compound (function definition) */
+    /* P538 */ { ARBOR2_NT_DEFINITIO_FUNCTI, 3, ARBOR2_NODUS_DEFINITIO_FUNCTI, "func_def -> type_spec_list declarator compound" }
 };
 
 hic_manens i32 NUM_REGULAE = (i32)(magnitudo(REGULAE) / magnitudo(REGULAE[0]));
@@ -1033,9 +1050,10 @@ hic_manens constans Arbor2TabulaActio STATUS_4_ACTIONES[] = {
     { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,  17, VERUM },  /* intentional conflict */
     { ARBOR2_LEXEMA_SOLIDUS,        ARBOR2_ACTIO_REDUCE,  5, FALSUM },
     { ARBOR2_LEXEMA_PERCENTUM,      ARBOR2_ACTIO_REDUCE,  5, FALSUM },
-    /* GLR fork for unknown identifier: could be type or expression */
+    /* GLR fork for unknown identifier: could be type or expression or type_spec_list */
     { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_REDUCE,   5, VERUM },  /* expr: ID→factor (intentional fork) */
-    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,  116, VERUM },  /* decl: type ID (intentional fork) */
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,  116, VERUM },  /* decl: type ID (2-ID chains) */
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_REDUCE, 535, VERUM },  /* type_spec_list: start chain for 3+ IDs */
     { ARBOR2_LEXEMA_PLUS,           ARBOR2_ACTIO_REDUCE,  5, FALSUM },
     { ARBOR2_LEXEMA_MINUS,          ARBOR2_ACTIO_REDUCE,  5, FALSUM },
     { ARBOR2_LEXEMA_MINOR,          ARBOR2_ACTIO_REDUCE,  5, FALSUM },
@@ -17350,6 +17368,72 @@ hic_manens constans Arbor2TabulaActio STATUS_1516_ACTIONES[] = {
 };
 
 /* ==================================================
+ * Phase 2: Multi-ID Type Specifier Chain States (1600-1621, 1650)
+ *
+ * Handles: MyStorage MyType myVar; (3+ identifier chains)
+ * ================================================== */
+
+/* State 1600: After type_spec_list - can accumulate more IDs or proceed to declarator */
+hic_manens constans Arbor2TabulaActio STATUS_1600_ACTIONES[] = {
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT, 1601, FALSUM }, /* shift next ID */
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,   17, FALSUM }, /* pointer declarator */
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_SHIFT,  515, FALSUM }, /* bare declarator ; */
+    { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_ACCEPT,   0, FALSUM }
+};
+
+/* State 1601: After type_spec_list ID - decide: accumulate P536 or reduce P12 (declarator) */
+hic_manens constans Arbor2TabulaActio STATUS_1601_ACTIONES[] = {
+    /* More IDs coming: accumulate into type_spec_list */
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_REDUCE, 536, FALSUM },
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_REDUCE, 536, FALSUM },
+    /* This ID is the declarator */
+    { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_REDUCE,  12, FALSUM }, /* func declarator */
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE,  12, FALSUM },
+    { ARBOR2_LEXEMA_ASSIGNATIO,     ARBOR2_ACTIO_REDUCE,  12, FALSUM },
+    { ARBOR2_LEXEMA_COMMA,          ARBOR2_ACTIO_REDUCE,  12, FALSUM },
+    { ARBOR2_LEXEMA_BRACKET_APERTA, ARBOR2_ACTIO_REDUCE,  12, FALSUM }, /* array declarator */
+    { ARBOR2_LEXEMA_BRACE_APERTA,   ARBOR2_ACTIO_REDUCE,  12, FALSUM }, /* func body */
+    { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE,  12, FALSUM }
+};
+
+/* State 1602: After type_spec_list init_decl_list - ready to reduce P537 or add more decls */
+hic_manens constans Arbor2TabulaActio STATUS_1602_ACTIONES[] = {
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 537, FALSUM },
+    { ARBOR2_LEXEMA_COMMA,          ARBOR2_ACTIO_SHIFT,  517, FALSUM }, /* more declarators */
+    { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 537, FALSUM }
+};
+
+/* State 1620: After type_spec_list declarator - ready for function def or init_decl */
+hic_manens constans Arbor2TabulaActio STATUS_1620_ACTIONES[] = {
+    { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_SHIFT,   91, FALSUM }, /* function params */
+    { ARBOR2_LEXEMA_BRACE_APERTA,   ARBOR2_ACTIO_SHIFT,   25, FALSUM }, /* function body */
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE, 221, FALSUM }, /* init_decl */
+    { ARBOR2_LEXEMA_ASSIGNATIO,     ARBOR2_ACTIO_SHIFT,  516, FALSUM }, /* = initializer */
+    { ARBOR2_LEXEMA_COMMA,          ARBOR2_ACTIO_REDUCE, 221, FALSUM },
+    { ARBOR2_LEXEMA_BRACKET_APERTA, ARBOR2_ACTIO_SHIFT,  520, FALSUM }, /* array [] */
+    { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 221, FALSUM }
+};
+
+/* State 1621: After type_spec_list declarator compound - reduce P538 (func_def) */
+hic_manens constans Arbor2TabulaActio STATUS_1621_ACTIONES[] = {
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_REDUCE, 538, FALSUM },
+    { ARBOR2_LEXEMA_STRUCT,         ARBOR2_ACTIO_REDUCE, 538, FALSUM },
+    { ARBOR2_LEXEMA_UNION,          ARBOR2_ACTIO_REDUCE, 538, FALSUM },
+    { ARBOR2_LEXEMA_ENUM,           ARBOR2_ACTIO_REDUCE, 538, FALSUM },
+    { ARBOR2_LEXEMA_STATIC,         ARBOR2_ACTIO_REDUCE, 538, FALSUM },
+    { ARBOR2_LEXEMA_EXTERN,         ARBOR2_ACTIO_REDUCE, 538, FALSUM },
+    { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 538, FALSUM }
+};
+
+/* State 1650: After struct/enum specifier - go directly to declarator (no fork) */
+hic_manens constans Arbor2TabulaActio STATUS_1650_ACTIONES[] = {
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,   18, FALSUM },
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,   17, FALSUM },
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_SHIFT,  515, FALSUM },
+    { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_ACCEPT,   0, FALSUM }
+};
+
+/* ==================================================
  * STATUS_TABULA - Master state table (UNDER CONSTRUCTION)
  *
  * Will be populated as states are converted.
@@ -17362,6 +17446,9 @@ hic_manens constans Arbor2TabulaActio STATUS_1516_ACTIONES[] = {
     (s32)(magnitudo(STATUS_##n##_ACTIONES) / magnitudo(STATUS_##n##_ACTIONES[0])), \
     desc \
 }
+
+/* STATUS_INFO_NIL for reserved/placeholder states */
+#define STATUS_INFO_NIL { NIHIL, 0, "reserved" }
 
 /* Partial STATUS_TABULA - first 53 states converted */
 hic_manens constans Arbor2StatusInfo STATUS_TABULA_PARTIAL[] = {
@@ -19074,7 +19161,56 @@ hic_manens constans Arbor2StatusInfo STATUS_TABULA_PARTIAL[] = {
     STATUS_INFO(1513, "after 'long' declarator '=' ASSIGNATIO - reduce P531"),
     STATUS_INFO(1514, "after 'short' declarator '=' ASSIGNATIO - reduce P532"),
     STATUS_INFO(1515, "after 'unsigned' declarator '=' ASSIGNATIO - reduce P533"),
-    STATUS_INFO(1516, "after 'signed' declarator '=' ASSIGNATIO - reduce P534")
+    STATUS_INFO(1516, "after 'signed' declarator '=' ASSIGNATIO - reduce P534"),
+
+    /* Phase 2: Multi-ID type specifier chain states (1600-1650) */
+    /* Reserved states 1517-1599 for future use */
+    STATUS_INFO_NIL, STATUS_INFO_NIL, STATUS_INFO_NIL, STATUS_INFO_NIL, STATUS_INFO_NIL, /* 1517-1521 */
+    STATUS_INFO_NIL, STATUS_INFO_NIL, STATUS_INFO_NIL, STATUS_INFO_NIL, STATUS_INFO_NIL, /* 1522-1526 */
+    STATUS_INFO_NIL, STATUS_INFO_NIL, STATUS_INFO_NIL, STATUS_INFO_NIL, STATUS_INFO_NIL, /* 1527-1531 */
+    STATUS_INFO_NIL, STATUS_INFO_NIL, STATUS_INFO_NIL, STATUS_INFO_NIL, STATUS_INFO_NIL, /* 1532-1536 */
+    STATUS_INFO_NIL, STATUS_INFO_NIL, STATUS_INFO_NIL, STATUS_INFO_NIL, STATUS_INFO_NIL, /* 1537-1541 */
+    STATUS_INFO_NIL, STATUS_INFO_NIL, STATUS_INFO_NIL, STATUS_INFO_NIL, STATUS_INFO_NIL, /* 1542-1546 */
+    STATUS_INFO_NIL, STATUS_INFO_NIL, STATUS_INFO_NIL, STATUS_INFO_NIL, STATUS_INFO_NIL, /* 1547-1551 */
+    STATUS_INFO_NIL, STATUS_INFO_NIL, STATUS_INFO_NIL, STATUS_INFO_NIL, STATUS_INFO_NIL, /* 1552-1556 */
+    STATUS_INFO_NIL, STATUS_INFO_NIL, STATUS_INFO_NIL, STATUS_INFO_NIL, STATUS_INFO_NIL, /* 1557-1561 */
+    STATUS_INFO_NIL, STATUS_INFO_NIL, STATUS_INFO_NIL, STATUS_INFO_NIL, STATUS_INFO_NIL, /* 1562-1566 */
+    STATUS_INFO_NIL, STATUS_INFO_NIL, STATUS_INFO_NIL, STATUS_INFO_NIL, STATUS_INFO_NIL, /* 1567-1571 */
+    STATUS_INFO_NIL, STATUS_INFO_NIL, STATUS_INFO_NIL, STATUS_INFO_NIL, STATUS_INFO_NIL, /* 1572-1576 */
+    STATUS_INFO_NIL, STATUS_INFO_NIL, STATUS_INFO_NIL, STATUS_INFO_NIL, STATUS_INFO_NIL, /* 1577-1581 */
+    STATUS_INFO_NIL, STATUS_INFO_NIL, STATUS_INFO_NIL, STATUS_INFO_NIL, STATUS_INFO_NIL, /* 1582-1586 */
+    STATUS_INFO_NIL, STATUS_INFO_NIL, STATUS_INFO_NIL, STATUS_INFO_NIL, STATUS_INFO_NIL, /* 1587-1591 */
+    STATUS_INFO_NIL, STATUS_INFO_NIL, STATUS_INFO_NIL, STATUS_INFO_NIL, STATUS_INFO_NIL, /* 1592-1596 */
+    STATUS_INFO_NIL, STATUS_INFO_NIL, STATUS_INFO_NIL,                                   /* 1597-1599 */
+
+    /* State 1600: After type_spec_list - accumulation state */
+    STATUS_INFO(1600, "after type_spec_list - accumulate or declarator"),
+    /* State 1601: After type_spec_list ID - decide path */
+    STATUS_INFO(1601, "after type_spec_list ID - accumulate P536 or declarator P12"),
+    /* State 1602: After type_spec_list init_decl_list - ready to reduce P537 */
+    STATUS_INFO(1602, "after type_spec_list init_decl_list - reduce P537"),
+
+    /* Reserved 1603-1619 */
+    STATUS_INFO_NIL, STATUS_INFO_NIL, STATUS_INFO_NIL, STATUS_INFO_NIL, STATUS_INFO_NIL, /* 1603-1607 */
+    STATUS_INFO_NIL, STATUS_INFO_NIL, STATUS_INFO_NIL, STATUS_INFO_NIL, STATUS_INFO_NIL, /* 1608-1612 */
+    STATUS_INFO_NIL, STATUS_INFO_NIL, STATUS_INFO_NIL, STATUS_INFO_NIL, STATUS_INFO_NIL, /* 1613-1617 */
+    STATUS_INFO_NIL, STATUS_INFO_NIL,                                                     /* 1618-1619 */
+
+    /* State 1620: After type_spec_list declarator */
+    STATUS_INFO(1620, "after type_spec_list declarator - func or init"),
+    /* State 1621: After type_spec_list declarator compound - reduce P538 */
+    STATUS_INFO(1621, "after type_spec_list declarator compound - reduce P538"),
+
+    /* Reserved 1622-1649 */
+    STATUS_INFO_NIL, STATUS_INFO_NIL, STATUS_INFO_NIL, STATUS_INFO_NIL, STATUS_INFO_NIL, /* 1622-1626 */
+    STATUS_INFO_NIL, STATUS_INFO_NIL, STATUS_INFO_NIL, STATUS_INFO_NIL, STATUS_INFO_NIL, /* 1627-1631 */
+    STATUS_INFO_NIL, STATUS_INFO_NIL, STATUS_INFO_NIL, STATUS_INFO_NIL, STATUS_INFO_NIL, /* 1632-1636 */
+    STATUS_INFO_NIL, STATUS_INFO_NIL, STATUS_INFO_NIL, STATUS_INFO_NIL, STATUS_INFO_NIL, /* 1637-1641 */
+    STATUS_INFO_NIL, STATUS_INFO_NIL, STATUS_INFO_NIL, STATUS_INFO_NIL, STATUS_INFO_NIL, /* 1642-1646 */
+    STATUS_INFO_NIL, STATUS_INFO_NIL, STATUS_INFO_NIL,                                   /* 1647-1649 */
+
+    /* State 1650: After struct/enum spec - direct to declarator (no fork) */
+    STATUS_INFO(1650, "after struct/enum spec - direct to declarator")
 };
 
 /* ==================================================
@@ -19154,6 +19290,8 @@ hic_manens constans Arbor2StatusInfo STATUS_TABULA_PARTIAL[] = {
 /* Phase 1.3: Init-declarator list NT mappings */
 #define INT_NT_INIT_DECLARATOR       41
 #define INT_NT_INIT_DECLARATOR_LIST  42
+/* Phase 2: Multi-ID type specifier chains */
+#define INT_NT_TYPE_SPEC_LIST        43
 
 /* ==================================================
  * Per-State GOTO Arrays (Phase 4 refactor)
@@ -19188,7 +19326,8 @@ hic_manens constans Arbor2StatusGotoEntry STATUS_0_GOTO[] = {
     { INT_NT_DEFINITIO,   114 },
     { INT_NT_STRUCT_SPEC, 4 },
     { INT_NT_ENUM_SPEC,   4 },
-    { INT_NT_TRANSLATIO,  264 }
+    { INT_NT_TRANSLATIO,  264 },
+    { INT_NT_TYPE_SPEC_LIST, 1600 }  /* Phase 2: type_spec_list for 3+ ID chains */
 };
 
 /* State 4: after identifier as type_specifier */
@@ -19196,7 +19335,8 @@ hic_manens constans Arbor2StatusGotoEntry STATUS_4_GOTO[] = {
     { INT_NT_DECLARATOR,            20 },
     { INT_NT_INIT_DECLARATOR,      513 },   /* Phase 1.3: init_decl after first declarator */
     { INT_NT_INIT_DECLARATOR_LIST, 514 },   /* Phase 1.3: init_decl_list ready for comma or reduce */
-    { INT_NT_DECLARATIO,            21 }    /* GLR: nested declaration from ID chain completes */
+    { INT_NT_DECLARATIO,            21 },   /* GLR: nested declaration from ID chain completes */
+    { INT_NT_TYPE_SPEC_LIST,      1600 }    /* Phase 2: type_spec_list for 3+ ID chains */
 };
 
 /* State 1500: after struct/enum spec in local decl - declarator only
@@ -19306,6 +19446,30 @@ hic_manens constans Arbor2StatusGotoEntry STATUS_1512_GOTO[] = {
     { INT_NT_TERNARIUS,         310 },
     { INT_NT_ASSIGNATIO,        1516 },
     { INT_NT_TRANSLATIO,        264 }
+};
+
+/* ==================================================
+ * Phase 2: Multi-ID Type Specifier Chain GOTO Entries
+ * ================================================== */
+
+/* State 1600: After type_spec_list - GOTO for declarator, init_decl, etc. */
+hic_manens constans Arbor2StatusGotoEntry STATUS_1600_GOTO[] = {
+    { INT_NT_DECLARATOR,           1620 },
+    { INT_NT_INIT_DECLARATOR,       513 },
+    { INT_NT_INIT_DECLARATOR_LIST, 1602 },
+    { INT_NT_TYPE_SPEC_LIST,       1600 }   /* self-loop for more accumulation */
+};
+
+/* State 1620: After type_spec_list + declarator */
+hic_manens constans Arbor2StatusGotoEntry STATUS_1620_GOTO[] = {
+    { INT_NT_CORPUS, 1621 }
+};
+
+/* State 1650: After struct/enum specifier - direct to declarator */
+hic_manens constans Arbor2StatusGotoEntry STATUS_1650_GOTO[] = {
+    { INT_NT_DECLARATOR,            20 },
+    { INT_NT_INIT_DECLARATOR,      513 },
+    { INT_NT_INIT_DECLARATOR_LIST, 514 }
 };
 
 /* State 6: after '(' - full expression chain inside parens */
@@ -24133,7 +24297,50 @@ hic_manens constans Arbor2StatusGoto GOTO_TABULA_NOVA[] = {
     STATUS_GOTO_NIL,   /* 1513: reduce P531 (no GOTO needed) */
     STATUS_GOTO_NIL,   /* 1514: reduce P532 (no GOTO needed) */
     STATUS_GOTO_NIL,   /* 1515: reduce P533 (no GOTO needed) */
-    STATUS_GOTO_NIL    /* 1516: reduce P534 (no GOTO needed) */
+    STATUS_GOTO_NIL,   /* 1516: reduce P534 (no GOTO needed) */
+
+    /* Phase 2: Multi-ID type specifier chain states (1600-1650) */
+    /* Reserved 1517-1599 */
+    STATUS_GOTO_NIL, STATUS_GOTO_NIL, STATUS_GOTO_NIL, STATUS_GOTO_NIL, STATUS_GOTO_NIL, /* 1517-1521 */
+    STATUS_GOTO_NIL, STATUS_GOTO_NIL, STATUS_GOTO_NIL, STATUS_GOTO_NIL, STATUS_GOTO_NIL, /* 1522-1526 */
+    STATUS_GOTO_NIL, STATUS_GOTO_NIL, STATUS_GOTO_NIL, STATUS_GOTO_NIL, STATUS_GOTO_NIL, /* 1527-1531 */
+    STATUS_GOTO_NIL, STATUS_GOTO_NIL, STATUS_GOTO_NIL, STATUS_GOTO_NIL, STATUS_GOTO_NIL, /* 1532-1536 */
+    STATUS_GOTO_NIL, STATUS_GOTO_NIL, STATUS_GOTO_NIL, STATUS_GOTO_NIL, STATUS_GOTO_NIL, /* 1537-1541 */
+    STATUS_GOTO_NIL, STATUS_GOTO_NIL, STATUS_GOTO_NIL, STATUS_GOTO_NIL, STATUS_GOTO_NIL, /* 1542-1546 */
+    STATUS_GOTO_NIL, STATUS_GOTO_NIL, STATUS_GOTO_NIL, STATUS_GOTO_NIL, STATUS_GOTO_NIL, /* 1547-1551 */
+    STATUS_GOTO_NIL, STATUS_GOTO_NIL, STATUS_GOTO_NIL, STATUS_GOTO_NIL, STATUS_GOTO_NIL, /* 1552-1556 */
+    STATUS_GOTO_NIL, STATUS_GOTO_NIL, STATUS_GOTO_NIL, STATUS_GOTO_NIL, STATUS_GOTO_NIL, /* 1557-1561 */
+    STATUS_GOTO_NIL, STATUS_GOTO_NIL, STATUS_GOTO_NIL, STATUS_GOTO_NIL, STATUS_GOTO_NIL, /* 1562-1566 */
+    STATUS_GOTO_NIL, STATUS_GOTO_NIL, STATUS_GOTO_NIL, STATUS_GOTO_NIL, STATUS_GOTO_NIL, /* 1567-1571 */
+    STATUS_GOTO_NIL, STATUS_GOTO_NIL, STATUS_GOTO_NIL, STATUS_GOTO_NIL, STATUS_GOTO_NIL, /* 1572-1576 */
+    STATUS_GOTO_NIL, STATUS_GOTO_NIL, STATUS_GOTO_NIL, STATUS_GOTO_NIL, STATUS_GOTO_NIL, /* 1577-1581 */
+    STATUS_GOTO_NIL, STATUS_GOTO_NIL, STATUS_GOTO_NIL, STATUS_GOTO_NIL, STATUS_GOTO_NIL, /* 1582-1586 */
+    STATUS_GOTO_NIL, STATUS_GOTO_NIL, STATUS_GOTO_NIL, STATUS_GOTO_NIL, STATUS_GOTO_NIL, /* 1587-1591 */
+    STATUS_GOTO_NIL, STATUS_GOTO_NIL, STATUS_GOTO_NIL, STATUS_GOTO_NIL, STATUS_GOTO_NIL, /* 1592-1596 */
+    STATUS_GOTO_NIL, STATUS_GOTO_NIL, STATUS_GOTO_NIL,                                   /* 1597-1599 */
+
+    STATUS_GOTO(1600),  /* 1600: type_spec_list accumulation */
+    STATUS_GOTO_NIL,    /* 1601: after type_spec_list ID (reduce only) */
+    STATUS_GOTO_NIL,    /* 1602: after type_spec_list init_decl_list (reduce only) */
+
+    /* Reserved 1603-1619 */
+    STATUS_GOTO_NIL, STATUS_GOTO_NIL, STATUS_GOTO_NIL, STATUS_GOTO_NIL, STATUS_GOTO_NIL, /* 1603-1607 */
+    STATUS_GOTO_NIL, STATUS_GOTO_NIL, STATUS_GOTO_NIL, STATUS_GOTO_NIL, STATUS_GOTO_NIL, /* 1608-1612 */
+    STATUS_GOTO_NIL, STATUS_GOTO_NIL, STATUS_GOTO_NIL, STATUS_GOTO_NIL, STATUS_GOTO_NIL, /* 1613-1617 */
+    STATUS_GOTO_NIL, STATUS_GOTO_NIL,                                                     /* 1618-1619 */
+
+    STATUS_GOTO(1620),  /* 1620: after type_spec_list declarator */
+    STATUS_GOTO_NIL,    /* 1621: after type_spec_list declarator compound (reduce only) */
+
+    /* Reserved 1622-1649 */
+    STATUS_GOTO_NIL, STATUS_GOTO_NIL, STATUS_GOTO_NIL, STATUS_GOTO_NIL, STATUS_GOTO_NIL, /* 1622-1626 */
+    STATUS_GOTO_NIL, STATUS_GOTO_NIL, STATUS_GOTO_NIL, STATUS_GOTO_NIL, STATUS_GOTO_NIL, /* 1627-1631 */
+    STATUS_GOTO_NIL, STATUS_GOTO_NIL, STATUS_GOTO_NIL, STATUS_GOTO_NIL, STATUS_GOTO_NIL, /* 1632-1636 */
+    STATUS_GOTO_NIL, STATUS_GOTO_NIL, STATUS_GOTO_NIL, STATUS_GOTO_NIL, STATUS_GOTO_NIL, /* 1637-1641 */
+    STATUS_GOTO_NIL, STATUS_GOTO_NIL, STATUS_GOTO_NIL, STATUS_GOTO_NIL, STATUS_GOTO_NIL, /* 1642-1646 */
+    STATUS_GOTO_NIL, STATUS_GOTO_NIL, STATUS_GOTO_NIL,                                   /* 1647-1649 */
+
+    STATUS_GOTO(1650)   /* 1650: after struct/enum spec - direct to declarator */
 };
 
 
@@ -24322,6 +24529,10 @@ arbor2_glr_quaerere_goto(
             frange;
         casus ARBOR2_NT_INIT_DECLARATOR_LIST:
             nt_int = INT_NT_INIT_DECLARATOR_LIST;
+            frange;
+        /* Phase 2: Multi-ID type specifier chains */
+        casus ARBOR2_NT_SPECIFIER_TYPI:
+            nt_int = INT_NT_TYPE_SPEC_LIST;
             frange;
         ordinarius:
             nt_int = -I;

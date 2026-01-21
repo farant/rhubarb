@@ -363,11 +363,22 @@ _scribere_nodum(Xar* output, Arbor2Nodus* nodus)
             arbor2_scribere_lexema(output, nodus->datum.membrum.tok_membrum);
             frange;
 
-        /* DECLARATIO: [storage] [const] [volatile] [unsigned/signed] [long/short] type declarator [= init]; */
+        /* DECLARATIO: [storage] [extra_specifiers...] [const] [volatile] [unsigned/signed] [long/short] type declarator [= init]; */
         casus ARBOR2_NODUS_DECLARATIO:
             si (nodus->datum.declaratio.tok_storage != NIHIL)
             {
                 arbor2_scribere_lexema(output, nodus->datum.declaratio.tok_storage);
+            }
+            /* Output extra specifiers from unknown typedef chains (Phase 2) */
+            si (nodus->datum.declaratio.extra_specifiers != NIHIL)
+            {
+                i32 i;
+                i32 num = xar_numerus(nodus->datum.declaratio.extra_specifiers);
+                per (i = ZEPHYRUM; i < num; i++)
+                {
+                    Arbor2Token* tok = *(Arbor2Token**)xar_obtinere(nodus->datum.declaratio.extra_specifiers, i);
+                    arbor2_scribere_lexema(output, tok);
+                }
             }
             /* Output const/volatile in original source order */
             si (nodus->datum.declaratio.tok_const != NIHIL && nodus->datum.declaratio.tok_volatile != NIHIL)

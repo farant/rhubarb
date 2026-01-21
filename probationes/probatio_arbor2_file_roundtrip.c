@@ -518,10 +518,9 @@ s32 principale(vacuum)
         CREDO_VERUM(_probare_roundtrip_fasciculum(piscina, intern, expansion,
             "probationes/fixa/roundtrip/id_chain_simple.c"));
 
-        /* Phase 2 disabled - requires grammar changes for proper AST
+        /* Phase 2: Three or more identifiers (ID ID ID ...) */
         CREDO_VERUM(_probare_roundtrip_fasciculum(piscina, intern, expansion,
             "probationes/fixa/roundtrip/id_chain_extended.c"));
-        */
     }
 
     /* ========================================================

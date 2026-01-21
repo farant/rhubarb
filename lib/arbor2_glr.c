@@ -4192,6 +4192,212 @@ _processare_unam_actionem(
                             si (decl_node != NIHIL) decl_node->pater = valor_novus;
                             si (init_expr != NIHIL) init_expr->pater = valor_novus;
                         }
+                        /* ========== MULTI-ID TYPE SPECIFIER CHAINS P535-P538 ========== */
+                        alioquin si (actio->valor == 535)
+                        {
+                            /* P535: type_spec_list -> ID (1 symbol)
+                             * Start a new type_spec_list with first identifier token.
+                             * Value is a Xar of Arbor2Token* (not an AST node).
+                             */
+                            Xar* type_list = xar_creare(glr->piscina, magnitudo(Arbor2Token*));
+                            Arbor2Token** slot = xar_addere(type_list);
+                            *slot = lexemata[ZEPHYRUM];
+                            valor_novus = (Arbor2Nodus*)type_list;
+                        }
+                        alioquin si (actio->valor == 536)
+                        {
+                            /* P536: type_spec_list -> type_spec_list ID (2 symbols)
+                             * Append new identifier to existing list.
+                             * valori[1] = existing type_list (Xar*)
+                             * lexemata[0] = new ID token
+                             */
+                            Xar* type_list = (Xar*)valori[I];
+                            si (type_list == NIHIL)
+                            {
+                                valor_novus = NIHIL;
+                            }
+                            alioquin
+                            {
+                                Arbor2Token** slot = xar_addere(type_list);
+                                *slot = lexemata[ZEPHYRUM];
+                                valor_novus = (Arbor2Nodus*)type_list;
+                            }
+                        }
+                        alioquin si (actio->valor == 537)
+                        {
+                            /* P537: declaratio -> type_spec_list init_decl_list (2 symbols)
+                             * Build declaration from accumulated type tokens and declarator list.
+                             * valori[1] = type_spec_list (Xar of Arbor2Token*)
+                             * valori[0] = init_decl_list (Xar of pairs)
+                             *
+                             * Last token in type_list is the base type specifier.
+                             * First tokens become storage/qualifiers (stored in extra_specifiers).
+                             */
+                            Xar* type_list = (Xar*)valori[I];
+                            Xar* init_list = (Xar*)valori[ZEPHYRUM];
+                            i32 num_types;
+                            Arbor2Token* base_type_tok;
+                            Arbor2Nodus* type_spec;
+                            Arbor2Nodus* primus = NIHIL;
+                            Arbor2Nodus* ultimus = NIHIL;
+                            i32 num_items;
+                            i32 i;
+
+                            si (type_list == NIHIL)
+                            {
+                                valor_novus = NIHIL;
+                            }
+                            alioquin
+                            {
+                                num_types = xar_numerus(type_list);
+
+                                si (num_types <= ZEPHYRUM)
+                                {
+                                    valor_novus = NIHIL;
+                                }
+                                alioquin
+                                {
+                                /* Last token is the base type */
+                                base_type_tok = *(Arbor2Token**)xar_obtinere(type_list, num_types - I);
+
+                            /* Create type_spec node */
+                            type_spec = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
+                            type_spec->genus = ARBOR2_NODUS_IDENTIFICATOR;
+                            type_spec->lexema = base_type_tok;
+                            type_spec->datum.folium.valor = base_type_tok->lexema->valor;
+
+                            si (init_list != NIHIL)
+                            {
+                                num_items = xar_numerus(init_list);
+                                per (i = ZEPHYRUM; i < num_items; i++)
+                                {
+                                    Xar** pair_ptr = xar_obtinere(init_list, i);
+                                    Xar* pair = *pair_ptr;
+                                    Arbor2Nodus* decl_node = NIHIL;
+                                    Arbor2Token* tok_assign = NIHIL;
+                                    Arbor2Nodus* init_node = NIHIL;
+                                    Arbor2Token* tok_comma = NIHIL;
+                                    Arbor2Nodus* nodus;
+
+                                    si (pair != NIHIL && xar_numerus(pair) >= III)
+                                    {
+                                        decl_node = *(Arbor2Nodus**)xar_obtinere(pair, ZEPHYRUM);
+                                        tok_assign = *(Arbor2Token**)xar_obtinere(pair, I);
+                                        init_node = *(Arbor2Nodus**)xar_obtinere(pair, II);
+                                    }
+                                    si (pair != NIHIL && xar_numerus(pair) >= IV)
+                                    {
+                                        tok_comma = *(Arbor2Token**)xar_obtinere(pair, III);
+                                    }
+
+                                    nodus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
+                                    nodus->genus = ARBOR2_NODUS_DECLARATIO;
+                                    nodus->lexema = base_type_tok;
+
+                                    /* First token as tok_storage (if more than 1 type token) */
+                                    si (num_types > I)
+                                    {
+                                        nodus->datum.declaratio.tok_storage = *(Arbor2Token**)xar_obtinere(type_list, ZEPHYRUM);
+                                    }
+                                    alioquin
+                                    {
+                                        nodus->datum.declaratio.tok_storage = NIHIL;
+                                    }
+
+                                    /* Middle tokens as extra_specifiers (if more than 2 type tokens) */
+                                    si (num_types > II)
+                                    {
+                                        i32 j;
+                                        nodus->datum.declaratio.extra_specifiers = xar_creare(glr->piscina, magnitudo(Arbor2Token*));
+                                        per (j = I; j < num_types - I; j++)
+                                        {
+                                            Arbor2Token** extra_slot = xar_addere(nodus->datum.declaratio.extra_specifiers);
+                                            *extra_slot = *(Arbor2Token**)xar_obtinere(type_list, j);
+                                        }
+                                    }
+                                    alioquin
+                                    {
+                                        nodus->datum.declaratio.extra_specifiers = NIHIL;
+                                    }
+
+                                    nodus->datum.declaratio.tok_const = NIHIL;
+                                    nodus->datum.declaratio.tok_volatile = NIHIL;
+                                    nodus->datum.declaratio.tok_unsigned = NIHIL;
+                                    nodus->datum.declaratio.tok_signed = NIHIL;
+                                    nodus->datum.declaratio.tok_long = NIHIL;
+                                    nodus->datum.declaratio.tok_long2 = NIHIL;
+                                    nodus->datum.declaratio.tok_short = NIHIL;
+                                    nodus->datum.declaratio.specifier = type_spec;
+                                    nodus->datum.declaratio.declarator = decl_node;
+                                    nodus->datum.declaratio.tok_assignatio = tok_assign;
+                                    nodus->datum.declaratio.initializor = init_node;
+                                    nodus->datum.declaratio.tok_semicolon = NIHIL;
+                                    nodus->datum.declaratio.tok_comma = tok_comma;
+                                    nodus->datum.declaratio.proxima = NIHIL;
+                                    nodus->datum.declaratio.est_typedef = FALSUM;
+                                    nodus->datum.declaratio.storage_class = ARBOR2_STORAGE_NONE;
+                                    nodus->datum.declaratio.qualifiers = ARBOR2_QUAL_NONE;
+
+                                    si (decl_node != NIHIL) decl_node->pater = nodus;
+                                    si (init_node != NIHIL) init_node->pater = nodus;
+
+                                    si (primus == NIHIL)
+                                    {
+                                        primus = nodus;
+                                        ultimus = nodus;
+                                    }
+                                    alioquin
+                                    {
+                                        ultimus->datum.declaratio.proxima = nodus;
+                                        ultimus = nodus;
+                                    }
+                                }
+                            }
+                            valor_novus = primus;
+                            }  /* end alioquin for num_types > 0 */
+                            }  /* end alioquin for type_list != NIHIL */
+                        }
+                        alioquin si (actio->valor == 538)
+                        {
+                            /* P538: func_def -> type_spec_list declarator compound (3 symbols)
+                             * valori[2] = type_spec_list (Xar of Arbor2Token*)
+                             * valori[1] = declarator (DECLARATOR_FUNCTI node)
+                             * valori[0] = compound (CORPUS node)
+                             */
+                            Xar* type_list = (Xar*)valori[II];
+                            Arbor2Nodus* decl_node = valori[I];
+                            Arbor2Nodus* corpus_node = valori[ZEPHYRUM];
+                            i32 num_types = xar_numerus(type_list);
+                            Arbor2Token* base_type_tok;
+                            Arbor2Nodus* type_spec;
+
+                            /* Last token is the base type */
+                            base_type_tok = *(Arbor2Token**)xar_obtinere(type_list, num_types - I);
+
+                            /* Create type_spec node */
+                            type_spec = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
+                            type_spec->genus = ARBOR2_NODUS_IDENTIFICATOR;
+                            type_spec->lexema = base_type_tok;
+                            type_spec->datum.folium.valor = base_type_tok->lexema->valor;
+
+                            /* Create function definition node */
+                            valor_novus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
+                            valor_novus->genus = ARBOR2_NODUS_DEFINITIO_FUNCTI;
+                            valor_novus->lexema = base_type_tok;
+                            valor_novus->datum.definitio_functi.specifier = type_spec;
+                            valor_novus->datum.definitio_functi.declarator = decl_node;
+                            valor_novus->datum.definitio_functi.corpus = corpus_node;
+                            valor_novus->datum.definitio_functi.tok_const = NIHIL;
+                            valor_novus->datum.definitio_functi.tok_volatile = NIHIL;
+                            valor_novus->datum.definitio_functi.tok_unsigned = NIHIL;
+                            valor_novus->datum.definitio_functi.tok_signed = NIHIL;
+                            valor_novus->datum.definitio_functi.tok_long = NIHIL;
+                            valor_novus->datum.definitio_functi.tok_long2 = NIHIL;
+                            valor_novus->datum.definitio_functi.tok_short = NIHIL;
+
+                            si (decl_node != NIHIL) decl_node->pater = valor_novus;
+                            si (corpus_node != NIHIL) corpus_node->pater = valor_novus;
+                        }
                         /* ========== QUALIFIER + COMPOUND TYPE SPECIFIERS P437-P504 ========== */
                         alioquin si (actio->valor >= 437 && actio->valor <= 504)
                         {
@@ -6426,6 +6632,43 @@ _processare_unam_actionem(
                             paren_nodus->commenta_post = NIHIL;
                             si (valori[I] != NIHIL) valori[I]->pater = paren_nodus;
                             valor_novus = paren_nodus;
+                        }
+                        /* ========== MULTI-ID TYPE SPECIFIER CHAINS P535-P538 (Second Block) ========== */
+                        alioquin si (actio->valor == 535)
+                        {
+                            /* P535: type_spec_list -> ID (1 symbol)
+                             * Start a new type_spec_list with first identifier token. */
+                            Xar* type_list = xar_creare(glr->piscina, magnitudo(Arbor2Token*));
+                            Arbor2Token** slot = xar_addere(type_list);
+                            *slot = lexemata[ZEPHYRUM];
+                            valor_novus = (Arbor2Nodus*)type_list;
+                        }
+                        alioquin si (actio->valor == 536)
+                        {
+                            /* P536: type_spec_list -> type_spec_list ID (2 symbols) */
+                            Xar* type_list = (Xar*)valori[I];
+                            si (type_list != NIHIL)
+                            {
+                                Arbor2Token** slot = xar_addere(type_list);
+                                *slot = lexemata[ZEPHYRUM];
+                                valor_novus = (Arbor2Nodus*)type_list;
+                            }
+                            alioquin
+                            {
+                                valor_novus = NIHIL;
+                            }
+                        }
+                        alioquin si (actio->valor == 537)
+                        {
+                            /* P537: declaratio -> type_spec_list init_decl_list (2 symbols)
+                             * This case should be handled by nodus_genus=DECLARATIO, not default. */
+                            valor_novus = NIHIL;
+                        }
+                        alioquin si (actio->valor == 538)
+                        {
+                            /* P538: func_def -> type_spec_list declarator compound (3 symbols)
+                             * This case should be handled by nodus_genus=DEFINITIO_FUNCTI, not default. */
+                            valor_novus = NIHIL;
                         }
                         alioquin si (num_pop == III)
                         {
