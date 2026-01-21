@@ -3212,6 +3212,7 @@ hic_manens constans Arbor2TabulaActio STATUS_118_ACTIONES[] = {
 };
 
 /* State 119: after 'struct {' (anonymous) - start member list */
+/* C89: empty struct not allowed - no REDUCE on '}' here */
 hic_manens constans Arbor2TabulaActio STATUS_119_ACTIONES[] = {
     { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT, 121, FALSUM },
     { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_SHIFT, 121, FALSUM },
@@ -3227,11 +3228,11 @@ hic_manens constans Arbor2TabulaActio STATUS_119_ACTIONES[] = {
     { ARBOR2_LEXEMA_VOLATILE,       ARBOR2_ACTIO_SHIFT, 961, FALSUM },   /* compound: volatile type */
     { ARBOR2_LEXEMA_STRUCT,         ARBOR2_ACTIO_SHIFT, 117, FALSUM },
     { ARBOR2_LEXEMA_UNION,          ARBOR2_ACTIO_SHIFT, 137, FALSUM },
-    { ARBOR2_LEXEMA_ENUM,           ARBOR2_ACTIO_SHIFT, 145, FALSUM },
-    { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 48, FALSUM }
+    { ARBOR2_LEXEMA_ENUM,           ARBOR2_ACTIO_SHIFT, 145, FALSUM }
 };
 
 /* State 120: after 'struct ID {' (named) - start member list */
+/* C89: empty struct not allowed - no REDUCE on '}' here */
 hic_manens constans Arbor2TabulaActio STATUS_120_ACTIONES[] = {
     { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT, 121, FALSUM },
     { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_SHIFT, 121, FALSUM },
@@ -3247,8 +3248,7 @@ hic_manens constans Arbor2TabulaActio STATUS_120_ACTIONES[] = {
     { ARBOR2_LEXEMA_VOLATILE,       ARBOR2_ACTIO_SHIFT, 961, FALSUM },   /* compound: volatile type */
     { ARBOR2_LEXEMA_STRUCT,         ARBOR2_ACTIO_SHIFT, 117, FALSUM },
     { ARBOR2_LEXEMA_UNION,          ARBOR2_ACTIO_SHIFT, 137, FALSUM },
-    { ARBOR2_LEXEMA_ENUM,           ARBOR2_ACTIO_SHIFT, 145, FALSUM },
-    { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 48, FALSUM }
+    { ARBOR2_LEXEMA_ENUM,           ARBOR2_ACTIO_SHIFT, 145, FALSUM }
 };
 
 /* State 121: after member type_specifier - expect '*', name, ':', or '(' for grouped */
@@ -3437,6 +3437,7 @@ hic_manens constans Arbor2TabulaActio STATUS_138_ACTIONES[] = {
 };
 
 /* State 139: after 'union {' (anonymous) - start member list */
+/* C89: empty union not allowed - no REDUCE on '}' here */
 hic_manens constans Arbor2TabulaActio STATUS_139_ACTIONES[] = {
     { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT, 121, FALSUM },
     { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_SHIFT, 121, FALSUM },
@@ -3450,11 +3451,11 @@ hic_manens constans Arbor2TabulaActio STATUS_139_ACTIONES[] = {
     { ARBOR2_LEXEMA_VOID,           ARBOR2_ACTIO_SHIFT, 121, FALSUM },
     { ARBOR2_LEXEMA_STRUCT,         ARBOR2_ACTIO_SHIFT, 117, FALSUM },
     { ARBOR2_LEXEMA_UNION,          ARBOR2_ACTIO_SHIFT, 137, FALSUM },
-    { ARBOR2_LEXEMA_ENUM,           ARBOR2_ACTIO_SHIFT, 145, FALSUM },
-    { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 48, FALSUM }
+    { ARBOR2_LEXEMA_ENUM,           ARBOR2_ACTIO_SHIFT, 145, FALSUM }
 };
 
 /* State 140: after 'union ID {' (named) - start member list */
+/* C89: empty union not allowed - no REDUCE on '}' here */
 hic_manens constans Arbor2TabulaActio STATUS_140_ACTIONES[] = {
     { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT, 121, FALSUM },
     { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_SHIFT, 121, FALSUM },
@@ -3468,8 +3469,7 @@ hic_manens constans Arbor2TabulaActio STATUS_140_ACTIONES[] = {
     { ARBOR2_LEXEMA_VOID,           ARBOR2_ACTIO_SHIFT, 121, FALSUM },
     { ARBOR2_LEXEMA_STRUCT,         ARBOR2_ACTIO_SHIFT, 117, FALSUM },
     { ARBOR2_LEXEMA_UNION,          ARBOR2_ACTIO_SHIFT, 137, FALSUM },
-    { ARBOR2_LEXEMA_ENUM,           ARBOR2_ACTIO_SHIFT, 145, FALSUM },
-    { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 48, FALSUM }
+    { ARBOR2_LEXEMA_ENUM,           ARBOR2_ACTIO_SHIFT, 145, FALSUM }
 };
 
 /* State 141: after struct_member_list in anonymous union - expect more or '}' */

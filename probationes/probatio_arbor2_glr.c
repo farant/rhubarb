@@ -15670,6 +15670,145 @@ s32 principale(vacuum)
         }
     }
 
+    /* ================================================================
+     * C89 COMPLIANCE: Empty struct/union rejection tests
+     * C89 requires at least one member in struct/union
+     * ================================================================ */
+
+    /* Test: struct Empty {} - should be rejected (C89 compliance) */
+    /* Note: GLR parser has error recovery, so it returns successus=VERUM
+     * with errores populated. We check for parse errors being present. */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+        b32 habet_errores;
+
+        imprimere("\n--- C89: empty struct rejection (anonymous) ---\n");
+
+        {
+            Arbor2Expansion* exp_test = arbor2_expansion_creare(piscina, intern);
+            Arbor2GLR* glr_test = arbor2_glr_creare(piscina, intern, exp_test);
+
+            tokens = _lexare_ad_tokens(piscina, intern, "struct { }");
+            res = arbor2_glr_parsere_translation_unit(glr_test, tokens);
+
+            /* Empty struct should produce parse errors (C89 compliance) */
+            habet_errores = (res.errores != NIHIL && xar_numerus(res.errores) > ZEPHYRUM);
+            CREDO_VERUM(habet_errores);
+            imprimere("  Empty anonymous struct produced errors: %s\n",
+                      habet_errores ? "VERUM (correctum)" : "FALSUM (BUG!)");
+        }
+    }
+
+    /* Test: struct Empty {} - named empty struct should be rejected */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+        b32 habet_errores;
+
+        imprimere("\n--- C89: empty struct rejection (named) ---\n");
+
+        {
+            Arbor2Expansion* exp_test = arbor2_expansion_creare(piscina, intern);
+            Arbor2GLR* glr_test = arbor2_glr_creare(piscina, intern, exp_test);
+
+            tokens = _lexare_ad_tokens(piscina, intern, "struct Empty { }");
+            res = arbor2_glr_parsere_translation_unit(glr_test, tokens);
+
+            /* Empty struct should produce parse errors (C89 compliance) */
+            habet_errores = (res.errores != NIHIL && xar_numerus(res.errores) > ZEPHYRUM);
+            CREDO_VERUM(habet_errores);
+            imprimere("  Empty named struct produced errors: %s\n",
+                      habet_errores ? "VERUM (correctum)" : "FALSUM (BUG!)");
+        }
+    }
+
+    /* Test: union Empty {} - empty union should also be rejected */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+        b32 habet_errores;
+
+        imprimere("\n--- C89: empty union rejection (anonymous) ---\n");
+
+        {
+            Arbor2Expansion* exp_test = arbor2_expansion_creare(piscina, intern);
+            Arbor2GLR* glr_test = arbor2_glr_creare(piscina, intern, exp_test);
+
+            tokens = _lexare_ad_tokens(piscina, intern, "union { }");
+            res = arbor2_glr_parsere_translation_unit(glr_test, tokens);
+
+            /* Empty union should produce parse errors (C89 compliance) */
+            habet_errores = (res.errores != NIHIL && xar_numerus(res.errores) > ZEPHYRUM);
+            CREDO_VERUM(habet_errores);
+            imprimere("  Empty anonymous union produced errors: %s\n",
+                      habet_errores ? "VERUM (correctum)" : "FALSUM (BUG!)");
+        }
+    }
+
+    /* Test: union Empty {} - named empty union should be rejected */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+        b32 habet_errores;
+
+        imprimere("\n--- C89: empty union rejection (named) ---\n");
+
+        {
+            Arbor2Expansion* exp_test = arbor2_expansion_creare(piscina, intern);
+            Arbor2GLR* glr_test = arbor2_glr_creare(piscina, intern, exp_test);
+
+            tokens = _lexare_ad_tokens(piscina, intern, "union Empty { }");
+            res = arbor2_glr_parsere_translation_unit(glr_test, tokens);
+
+            /* Empty union should produce parse errors (C89 compliance) */
+            habet_errores = (res.errores != NIHIL && xar_numerus(res.errores) > ZEPHYRUM);
+            CREDO_VERUM(habet_errores);
+            imprimere("  Empty named union produced errors: %s\n",
+                      habet_errores ? "VERUM (correctum)" : "FALSUM (BUG!)");
+        }
+    }
+
+    /* Test: Non-empty struct still works (regression test) */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- C89: non-empty struct still accepted ---\n");
+
+        {
+            Arbor2Expansion* exp_test = arbor2_expansion_creare(piscina, intern);
+            Arbor2GLR* glr_test = arbor2_glr_creare(piscina, intern, exp_test);
+
+            tokens = _lexare_ad_tokens(piscina, intern, "struct S { int x; }");
+            res = arbor2_glr_parsere_translation_unit(glr_test, tokens);
+
+            CREDO_VERUM(res.successus);
+            imprimere("  Non-empty struct accepted: %s\n",
+                      res.successus ? "VERUM (correctum)" : "FALSUM (REGRESSIO!)");
+        }
+    }
+
+    /* Test: Non-empty union still works (regression test) */
+    {
+        Xar* tokens;
+        Arbor2GLRResultus res;
+
+        imprimere("\n--- C89: non-empty union still accepted ---\n");
+
+        {
+            Arbor2Expansion* exp_test = arbor2_expansion_creare(piscina, intern);
+            Arbor2GLR* glr_test = arbor2_glr_creare(piscina, intern, exp_test);
+
+            tokens = _lexare_ad_tokens(piscina, intern, "union U { int x; float f; }");
+            res = arbor2_glr_parsere_translation_unit(glr_test, tokens);
+
+            CREDO_VERUM(res.successus);
+            imprimere("  Non-empty union accepted: %s\n",
+                      res.successus ? "VERUM (correctum)" : "FALSUM (REGRESSIO!)");
+        }
+    }
+
 
     /* Compendium */
     imprimere("\n");
