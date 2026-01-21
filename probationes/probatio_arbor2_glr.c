@@ -596,7 +596,7 @@ s32 principale(vacuum)
         imprimere("\n--- Probans GOTO completeness ---\n");
 
         goto_valida = arbor2_glr_validare_goto_completeness();
-        /* NOTE: Not asserting - just reporting missing GOTOs for diagnostic purposes */
+        CREDO_VERUM(goto_valida);
         imprimere("  GOTO validation: %s\n", goto_valida ? "VERUM" : "FALSUM (issues above)");
     }
 
