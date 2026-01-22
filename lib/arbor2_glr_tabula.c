@@ -1655,7 +1655,7 @@ hic_manens constans Arbor2TabulaActio STATUS_25_ACTIONES[] = {
 /* State 26: after '{ stmt_list' - expect stmts or '}' */
 hic_manens constans Arbor2TabulaActio STATUS_26_ACTIONES[] = {
     { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_SHIFT,  27, FALSUM },
-    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,   4, FALSUM },
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT, 1700, FALSUM },  /* Phase 3: ID-only path */
     { ARBOR2_LEXEMA_INTEGER,        ARBOR2_ACTIO_SHIFT,   5, FALSUM },
     { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_SHIFT,  23, FALSUM },
     { ARBOR2_LEXEMA_BRACE_APERTA,   ARBOR2_ACTIO_SHIFT,  25, FALSUM },
@@ -1677,12 +1677,13 @@ hic_manens constans Arbor2TabulaActio STATUS_26_ACTIONES[] = {
     { ARBOR2_LEXEMA_SWITCH,         ARBOR2_ACTIO_SHIFT,  79, FALSUM },
     { ARBOR2_LEXEMA_CASE,           ARBOR2_ACTIO_SHIFT,  84, FALSUM },
     { ARBOR2_LEXEMA_DEFAULT,        ARBOR2_ACTIO_SHIFT,  88, FALSUM },
-    /* Type specifiers for declarations in compound statements */
-    { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_SHIFT,   4, FALSUM },
-    { ARBOR2_LEXEMA_CHAR,           ARBOR2_ACTIO_SHIFT,   4, FALSUM },
-    { ARBOR2_LEXEMA_VOID,           ARBOR2_ACTIO_SHIFT,   4, FALSUM },
-    { ARBOR2_LEXEMA_FLOAT,          ARBOR2_ACTIO_SHIFT,   4, FALSUM },
-    { ARBOR2_LEXEMA_DOUBLE,         ARBOR2_ACTIO_SHIFT,   4, FALSUM },
+    /* Type specifiers for declarations in compound statements
+     * Use State 1701 instead of State 4 to avoid P535 (type_spec_list) conflict */
+    { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_SHIFT, 1701, FALSUM },
+    { ARBOR2_LEXEMA_CHAR,           ARBOR2_ACTIO_SHIFT, 1701, FALSUM },
+    { ARBOR2_LEXEMA_VOID,           ARBOR2_ACTIO_SHIFT, 1701, FALSUM },
+    { ARBOR2_LEXEMA_FLOAT,          ARBOR2_ACTIO_SHIFT, 1701, FALSUM },
+    { ARBOR2_LEXEMA_DOUBLE,         ARBOR2_ACTIO_SHIFT, 1701, FALSUM },
     /* Type modifiers for declarations in compound statements (local context) */
     { ARBOR2_LEXEMA_UNSIGNED,       ARBOR2_ACTIO_SHIFT, 1503, FALSUM },
     { ARBOR2_LEXEMA_LONG,           ARBOR2_ACTIO_SHIFT, 1501, FALSUM },
@@ -17541,6 +17542,134 @@ hic_manens constans Arbor2TabulaActio STATUS_1650_ACTIONES[] = {
 };
 
 /* ==================================================
+ * Phase 3: State 1700 - ID entry in compound statement
+ *
+ * Handles: { constans i8* pal; } - ID-only path from State 26
+ * Separate from keywords (int/char/etc) which also use State 4.
+ * ================================================== */
+
+/* State 1700: After ID in compound statement - potential typedef
+ * Same actions as State 4 but only for ID entry path from State 26.
+ * This separation ensures P535 only fires when actual ID is on stack. */
+hic_manens constans Arbor2TabulaActio STATUS_1700_ACTIONES[] = {
+    /* Expression operators - reduce P5 (ID -> factor) */
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_REDUCE,   5, FALSUM },
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,   17, VERUM },  /* intentional fork: pointer declarator */
+    { ARBOR2_LEXEMA_SOLIDUS,        ARBOR2_ACTIO_REDUCE,   5, FALSUM },
+    { ARBOR2_LEXEMA_PERCENTUM,      ARBOR2_ACTIO_REDUCE,   5, FALSUM },
+    /* GLR fork for unknown identifier: could be type or expression or type_spec_list */
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_REDUCE,   5, VERUM },  /* expr: ID->factor (intentional fork) */
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,  116, VERUM },  /* decl: type ID (2-ID chains) */
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_REDUCE, 535, VERUM },  /* type_spec_list: start chain for 3+ IDs */
+    { ARBOR2_LEXEMA_PLUS,           ARBOR2_ACTIO_REDUCE,   5, FALSUM },
+    { ARBOR2_LEXEMA_MINUS,          ARBOR2_ACTIO_REDUCE,   5, FALSUM },
+    { ARBOR2_LEXEMA_MINOR,          ARBOR2_ACTIO_REDUCE,   5, FALSUM },
+    { ARBOR2_LEXEMA_MAIOR,          ARBOR2_ACTIO_REDUCE,   5, FALSUM },
+    { ARBOR2_LEXEMA_MINOR_AEQ,      ARBOR2_ACTIO_REDUCE,   5, FALSUM },
+    { ARBOR2_LEXEMA_MAIOR_AEQ,      ARBOR2_ACTIO_REDUCE,   5, FALSUM },
+    { ARBOR2_LEXEMA_SINISTRUM,      ARBOR2_ACTIO_REDUCE,   5, FALSUM },
+    { ARBOR2_LEXEMA_DEXTRUM,        ARBOR2_ACTIO_REDUCE,   5, FALSUM },
+    { ARBOR2_LEXEMA_AEQUALIS,       ARBOR2_ACTIO_REDUCE,   5, FALSUM },
+    { ARBOR2_LEXEMA_NON_AEQUALIS,   ARBOR2_ACTIO_REDUCE,   5, FALSUM },
+    { ARBOR2_LEXEMA_DUAMPERSAND,    ARBOR2_ACTIO_REDUCE,   5, FALSUM },
+    { ARBOR2_LEXEMA_DUPIPA,         ARBOR2_ACTIO_REDUCE,   5, FALSUM },
+    { ARBOR2_LEXEMA_PIPA,           ARBOR2_ACTIO_REDUCE,   5, FALSUM },  /* bitwise OR */
+    { ARBOR2_LEXEMA_CARET,          ARBOR2_ACTIO_REDUCE,   5, FALSUM },  /* bitwise XOR */
+    { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_REDUCE,   5, FALSUM },  /* bitwise AND */
+    { ARBOR2_LEXEMA_ASSIGNATIO,     ARBOR2_ACTIO_REDUCE,   5, FALSUM },  /* = */
+    { ARBOR2_LEXEMA_PLUS_ASSIGN,    ARBOR2_ACTIO_REDUCE,   5, FALSUM },  /* += */
+    { ARBOR2_LEXEMA_MINUS_ASSIGN,   ARBOR2_ACTIO_REDUCE,   5, FALSUM },  /* -= */
+    { ARBOR2_LEXEMA_MULT_ASSIGN,    ARBOR2_ACTIO_REDUCE,   5, FALSUM },  /* *= */
+    { ARBOR2_LEXEMA_DIV_ASSIGN,     ARBOR2_ACTIO_REDUCE,   5, FALSUM },  /* /= */
+    { ARBOR2_LEXEMA_MOD_ASSIGN,     ARBOR2_ACTIO_REDUCE,   5, FALSUM },  /* %= */
+    { ARBOR2_LEXEMA_AND_ASSIGN,     ARBOR2_ACTIO_REDUCE,   5, FALSUM },  /* &= */
+    { ARBOR2_LEXEMA_OR_ASSIGN,      ARBOR2_ACTIO_REDUCE,   5, FALSUM },  /* |= */
+    { ARBOR2_LEXEMA_XOR_ASSIGN,     ARBOR2_ACTIO_REDUCE,   5, FALSUM },  /* ^= */
+    { ARBOR2_LEXEMA_SHL_ASSIGN,     ARBOR2_ACTIO_REDUCE,   5, FALSUM },  /* <<= */
+    { ARBOR2_LEXEMA_SHR_ASSIGN,     ARBOR2_ACTIO_REDUCE,   5, FALSUM },  /* >>= */
+    { ARBOR2_LEXEMA_QUAESTIO,       ARBOR2_ACTIO_REDUCE,   5, FALSUM },  /* ? ternary */
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE,   5, FALSUM },
+    { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE,   5, FALSUM },
+    { ARBOR2_LEXEMA_COLON,          ARBOR2_ACTIO_SHIFT,   77, FALSUM },  /* label: */
+    { ARBOR2_LEXEMA_COLON,          ARBOR2_ACTIO_REDUCE,   5, VERUM },   /* intentional conflict */
+    { ARBOR2_LEXEMA_COMMA,          ARBOR2_ACTIO_REDUCE,   5, FALSUM },
+    /* Function call: fork between postfixum and declarator paths */
+    { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_REDUCE, 125, VERUM },  /* intentional fork for call: ID -> postfixum */
+    { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_SHIFT,   20, VERUM },  /* declarator path: int foo( */
+    { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_SHIFT,  901, VERUM },  /* grouped declarator: int (* */
+    /* Postfix subscript: reduce to postfixum first, then handle '[' */
+    { ARBOR2_LEXEMA_BRACKET_APERTA, ARBOR2_ACTIO_REDUCE, 125, VERUM },  /* intentional fork for subscript */
+    { ARBOR2_LEXEMA_BRACKET_APERTA, ARBOR2_ACTIO_REDUCE,   5, VERUM },  /* regular factor path */
+    /* Member access: reduce to postfixum first, then handle '.' and '->' */
+    { ARBOR2_LEXEMA_PUNCTUM,        ARBOR2_ACTIO_REDUCE, 125, FALSUM }, /* member access: ID -> postfixum */
+    { ARBOR2_LEXEMA_SAGITTA,        ARBOR2_ACTIO_REDUCE, 125, FALSUM }, /* ptr member: ID -> postfixum */
+    /* Post-increment/decrement: reduce to postfixum first */
+    { ARBOR2_LEXEMA_DUPLUS,         ARBOR2_ACTIO_REDUCE, 125, FALSUM }, /* post-inc: x++ */
+    { ARBOR2_LEXEMA_DUMINUS,        ARBOR2_ACTIO_REDUCE, 125, FALSUM }  /* post-dec: x-- */
+};
+
+/* State 1701: After keyword type spec in compound - NO P535
+ * Keywords (int/char/etc.) in compound statements should not start type_spec_list chains.
+ * This is like State 4 but without the P535 reduction. */
+hic_manens constans Arbor2TabulaActio STATUS_1701_ACTIONES[] = {
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_REDUCE,  5, FALSUM },
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,  17, VERUM },  /* intentional conflict */
+    { ARBOR2_LEXEMA_SOLIDUS,        ARBOR2_ACTIO_REDUCE,  5, FALSUM },
+    { ARBOR2_LEXEMA_PERCENTUM,      ARBOR2_ACTIO_REDUCE,  5, FALSUM },
+    /* For keywords: only 2-way fork (no P535 type_spec_list) */
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_REDUCE,   5, VERUM },  /* expr: keyword→factor */
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,  116, VERUM },  /* decl: int x */
+    /* No P535 - keywords don't start type_spec_list chains */
+    { ARBOR2_LEXEMA_PLUS,           ARBOR2_ACTIO_REDUCE,  5, FALSUM },
+    { ARBOR2_LEXEMA_MINUS,          ARBOR2_ACTIO_REDUCE,  5, FALSUM },
+    { ARBOR2_LEXEMA_MINOR,          ARBOR2_ACTIO_REDUCE,  5, FALSUM },
+    { ARBOR2_LEXEMA_MAIOR,          ARBOR2_ACTIO_REDUCE,  5, FALSUM },
+    { ARBOR2_LEXEMA_MINOR_AEQ,      ARBOR2_ACTIO_REDUCE,  5, FALSUM },
+    { ARBOR2_LEXEMA_MAIOR_AEQ,      ARBOR2_ACTIO_REDUCE,  5, FALSUM },
+    { ARBOR2_LEXEMA_SINISTRUM,      ARBOR2_ACTIO_REDUCE,  5, FALSUM },
+    { ARBOR2_LEXEMA_DEXTRUM,        ARBOR2_ACTIO_REDUCE,  5, FALSUM },
+    { ARBOR2_LEXEMA_AEQUALIS,       ARBOR2_ACTIO_REDUCE,  5, FALSUM },
+    { ARBOR2_LEXEMA_NON_AEQUALIS,   ARBOR2_ACTIO_REDUCE,  5, FALSUM },
+    { ARBOR2_LEXEMA_DUAMPERSAND,    ARBOR2_ACTIO_REDUCE,  5, FALSUM },
+    { ARBOR2_LEXEMA_DUPIPA,         ARBOR2_ACTIO_REDUCE,  5, FALSUM },
+    { ARBOR2_LEXEMA_PIPA,           ARBOR2_ACTIO_REDUCE,  5, FALSUM },
+    { ARBOR2_LEXEMA_CARET,          ARBOR2_ACTIO_REDUCE,  5, FALSUM },
+    { ARBOR2_LEXEMA_AMPERSAND,      ARBOR2_ACTIO_REDUCE,  5, FALSUM },
+    { ARBOR2_LEXEMA_ASSIGNATIO,     ARBOR2_ACTIO_REDUCE,  5, FALSUM },
+    { ARBOR2_LEXEMA_PLUS_ASSIGN,    ARBOR2_ACTIO_REDUCE,  5, FALSUM },
+    { ARBOR2_LEXEMA_MINUS_ASSIGN,   ARBOR2_ACTIO_REDUCE,  5, FALSUM },
+    { ARBOR2_LEXEMA_MULT_ASSIGN,    ARBOR2_ACTIO_REDUCE,  5, FALSUM },
+    { ARBOR2_LEXEMA_DIV_ASSIGN,     ARBOR2_ACTIO_REDUCE,  5, FALSUM },
+    { ARBOR2_LEXEMA_MOD_ASSIGN,     ARBOR2_ACTIO_REDUCE,  5, FALSUM },
+    { ARBOR2_LEXEMA_AND_ASSIGN,     ARBOR2_ACTIO_REDUCE,  5, FALSUM },
+    { ARBOR2_LEXEMA_OR_ASSIGN,      ARBOR2_ACTIO_REDUCE,  5, FALSUM },
+    { ARBOR2_LEXEMA_XOR_ASSIGN,     ARBOR2_ACTIO_REDUCE,  5, FALSUM },
+    { ARBOR2_LEXEMA_SHL_ASSIGN,     ARBOR2_ACTIO_REDUCE,  5, FALSUM },
+    { ARBOR2_LEXEMA_SHR_ASSIGN,     ARBOR2_ACTIO_REDUCE,  5, FALSUM },
+    { ARBOR2_LEXEMA_QUAESTIO,       ARBOR2_ACTIO_REDUCE,  5, FALSUM },
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_REDUCE,  5, FALSUM },
+    { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE,  5, FALSUM },
+    { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE,  5, FALSUM },
+    { ARBOR2_LEXEMA_PAREN_CLAUSA,   ARBOR2_ACTIO_REDUCE,  5, FALSUM },
+    { ARBOR2_LEXEMA_COLON,          ARBOR2_ACTIO_REDUCE,  5, FALSUM },
+    { ARBOR2_LEXEMA_COMMA,          ARBOR2_ACTIO_REDUCE,  5, FALSUM },
+    { ARBOR2_LEXEMA_BRACKET_CLAUSA, ARBOR2_ACTIO_REDUCE,  5, FALSUM },
+    /* Function call: fork between postfixum and declarator paths */
+    { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_REDUCE, 125, VERUM },
+    { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_SHIFT,   20, VERUM },
+    { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_SHIFT,  901, VERUM },
+    /* Postfix subscript */
+    { ARBOR2_LEXEMA_BRACKET_APERTA, ARBOR2_ACTIO_REDUCE, 125, VERUM },
+    { ARBOR2_LEXEMA_BRACKET_APERTA, ARBOR2_ACTIO_REDUCE,   5, VERUM },
+    /* Member access */
+    { ARBOR2_LEXEMA_PUNCTUM,        ARBOR2_ACTIO_REDUCE, 125, FALSUM },
+    { ARBOR2_LEXEMA_SAGITTA,        ARBOR2_ACTIO_REDUCE, 125, FALSUM },
+    /* Post-increment/decrement */
+    { ARBOR2_LEXEMA_DUPLUS,         ARBOR2_ACTIO_REDUCE, 125, FALSUM },
+    { ARBOR2_LEXEMA_DUMINUS,        ARBOR2_ACTIO_REDUCE, 125, FALSUM }
+};
+
+/* ==================================================
  * STATUS_TABULA - Master state table (UNDER CONSTRUCTION)
  *
  * Will be populated as states are converted.
@@ -19316,8 +19445,26 @@ hic_manens constans Arbor2StatusInfo STATUS_TABULA_PARTIAL[] = {
     STATUS_INFO_NIL, STATUS_INFO_NIL, STATUS_INFO_NIL, STATUS_INFO_NIL, STATUS_INFO_NIL, /* 1642-1646 */
     STATUS_INFO_NIL, STATUS_INFO_NIL, STATUS_INFO_NIL,                                   /* 1647-1649 */
 
-    /* State 1650: dead - unreachable */
-    STATUS_INFO_NIL    /* 1650: dead - unreachable */
+    /* State 1650: dead - unreachable (ACTIONES exist but not wired) */
+    STATUS_INFO_NIL,   /* 1650: dead */
+
+    /* Reserved 1651-1699 */
+    STATUS_INFO_NIL, STATUS_INFO_NIL, STATUS_INFO_NIL, STATUS_INFO_NIL, STATUS_INFO_NIL, /* 1651-1655 */
+    STATUS_INFO_NIL, STATUS_INFO_NIL, STATUS_INFO_NIL, STATUS_INFO_NIL, STATUS_INFO_NIL, /* 1656-1660 */
+    STATUS_INFO_NIL, STATUS_INFO_NIL, STATUS_INFO_NIL, STATUS_INFO_NIL, STATUS_INFO_NIL, /* 1661-1665 */
+    STATUS_INFO_NIL, STATUS_INFO_NIL, STATUS_INFO_NIL, STATUS_INFO_NIL, STATUS_INFO_NIL, /* 1666-1670 */
+    STATUS_INFO_NIL, STATUS_INFO_NIL, STATUS_INFO_NIL, STATUS_INFO_NIL, STATUS_INFO_NIL, /* 1671-1675 */
+    STATUS_INFO_NIL, STATUS_INFO_NIL, STATUS_INFO_NIL, STATUS_INFO_NIL, STATUS_INFO_NIL, /* 1676-1680 */
+    STATUS_INFO_NIL, STATUS_INFO_NIL, STATUS_INFO_NIL, STATUS_INFO_NIL, STATUS_INFO_NIL, /* 1681-1685 */
+    STATUS_INFO_NIL, STATUS_INFO_NIL, STATUS_INFO_NIL, STATUS_INFO_NIL, STATUS_INFO_NIL, /* 1686-1690 */
+    STATUS_INFO_NIL, STATUS_INFO_NIL, STATUS_INFO_NIL, STATUS_INFO_NIL, STATUS_INFO_NIL, /* 1691-1695 */
+    STATUS_INFO_NIL, STATUS_INFO_NIL, STATUS_INFO_NIL, STATUS_INFO_NIL,                  /* 1696-1699 */
+
+    /* State 1700: after ID in compound - potential typedef (Phase 3) */
+    STATUS_INFO(1700, "after ID in compound - potential typedef"),
+
+    /* State 1701: after keyword type spec in compound - no P535 */
+    STATUS_INFO(1701, "after keyword in compound - no type_spec_list")
 };
 
 /* ==================================================
@@ -19579,6 +19726,29 @@ hic_manens constans Arbor2StatusGotoEntry STATUS_1650_GOTO[] = {
     { INT_NT_INIT_DECLARATOR_LIST, 514 }
 };
 
+/* ==================================================
+ * Phase 3: State 1700 GOTO - ID in compound statement
+ * ================================================== */
+
+/* State 1700: After ID in compound statement - same as State 4 but compound context */
+hic_manens constans Arbor2StatusGotoEntry STATUS_1700_GOTO[] = {
+    { INT_NT_DECLARATOR,            20 },
+    { INT_NT_INIT_DECLARATOR,      513 },
+    { INT_NT_INIT_DECLARATOR_LIST, 514 },
+    { INT_NT_DECLARATIO,           560 },   /* Declaration as statement (P239) */
+    { INT_NT_TYPE_SPEC_LIST,      1600 }    /* Phase 3: type_spec_list for 3+ ID chains */
+};
+
+/* State 1701: After keyword in compound statement - NO type_spec_list
+ * Keywords like int/char/etc. don't start type_spec_list chains */
+hic_manens constans Arbor2StatusGotoEntry STATUS_1701_GOTO[] = {
+    { INT_NT_DECLARATOR,            20 },
+    { INT_NT_INIT_DECLARATOR,      513 },
+    { INT_NT_INIT_DECLARATOR_LIST, 514 },
+    { INT_NT_DECLARATIO,           560 }    /* Declaration as statement (P239) */
+    /* No TYPE_SPEC_LIST - keywords don't start type_spec_list chains */
+};
+
 /* State 6: after '(' - full expression chain inside parens */
 hic_manens constans Arbor2StatusGotoEntry STATUS_6_GOTO[] = {
     { INT_NT_EXPR,        11 },
@@ -19664,7 +19834,8 @@ hic_manens constans Arbor2StatusGotoEntry STATUS_26_GOTO[] = {
     { INT_NT_TRANSLATIO,       264 },
     { INT_NT_DECLARATIO,       560 },  /* Declaration as statement (P239) */
     { INT_NT_STRUCT_SPEC,     1500 },  /* struct/union specifier -> State 1500 (no conflict) */
-    { INT_NT_ENUM_SPEC,       1500 }   /* enum specifier -> State 1500 (no conflict) */
+    { INT_NT_ENUM_SPEC,       1500 },  /* enum specifier -> State 1500 (no conflict) */
+    { INT_NT_TYPE_SPEC_LIST,  1600 }   /* Phase 3: type_spec_list for ID ID * ID patterns */
 };
 
 /* State 31: after 'if (' - expression components */
@@ -20316,6 +20487,7 @@ hic_manens constans Arbor2StatusGotoEntry STATUS_241_GOTO[] = {
     { INT_NT_EXPR,       243 },
     { INT_NT_TERM,       2 },
     { INT_NT_FACTOR,     3 },
+    { INT_NT_POSTFIXUM,  311 },
     { INT_NT_TRANSLATIO, 267 }
 };
 
@@ -24501,7 +24673,22 @@ hic_manens constans Arbor2StatusGoto GOTO_TABULA_NOVA[] = {
     STATUS_GOTO_NIL, STATUS_GOTO_NIL, STATUS_GOTO_NIL, STATUS_GOTO_NIL, STATUS_GOTO_NIL, /* 1642-1646 */
     STATUS_GOTO_NIL, STATUS_GOTO_NIL, STATUS_GOTO_NIL,                                   /* 1647-1649 */
 
-    STATUS_GOTO(1650)   /* 1650: after struct/enum spec - direct to declarator */
+    STATUS_GOTO(1650),  /* 1650: after struct/enum spec - direct to declarator */
+
+    /* Reserved 1651-1699 */
+    STATUS_GOTO_NIL, STATUS_GOTO_NIL, STATUS_GOTO_NIL, STATUS_GOTO_NIL, STATUS_GOTO_NIL, /* 1651-1655 */
+    STATUS_GOTO_NIL, STATUS_GOTO_NIL, STATUS_GOTO_NIL, STATUS_GOTO_NIL, STATUS_GOTO_NIL, /* 1656-1660 */
+    STATUS_GOTO_NIL, STATUS_GOTO_NIL, STATUS_GOTO_NIL, STATUS_GOTO_NIL, STATUS_GOTO_NIL, /* 1661-1665 */
+    STATUS_GOTO_NIL, STATUS_GOTO_NIL, STATUS_GOTO_NIL, STATUS_GOTO_NIL, STATUS_GOTO_NIL, /* 1666-1670 */
+    STATUS_GOTO_NIL, STATUS_GOTO_NIL, STATUS_GOTO_NIL, STATUS_GOTO_NIL, STATUS_GOTO_NIL, /* 1671-1675 */
+    STATUS_GOTO_NIL, STATUS_GOTO_NIL, STATUS_GOTO_NIL, STATUS_GOTO_NIL, STATUS_GOTO_NIL, /* 1676-1680 */
+    STATUS_GOTO_NIL, STATUS_GOTO_NIL, STATUS_GOTO_NIL, STATUS_GOTO_NIL, STATUS_GOTO_NIL, /* 1681-1685 */
+    STATUS_GOTO_NIL, STATUS_GOTO_NIL, STATUS_GOTO_NIL, STATUS_GOTO_NIL, STATUS_GOTO_NIL, /* 1686-1690 */
+    STATUS_GOTO_NIL, STATUS_GOTO_NIL, STATUS_GOTO_NIL, STATUS_GOTO_NIL, STATUS_GOTO_NIL, /* 1691-1695 */
+    STATUS_GOTO_NIL, STATUS_GOTO_NIL, STATUS_GOTO_NIL, STATUS_GOTO_NIL,                  /* 1696-1699 */
+
+    STATUS_GOTO(1700),  /* 1700: after ID in compound - Phase 3 */
+    STATUS_GOTO(1701)   /* 1701: after keyword in compound - no type_spec_list */
 };
 
 

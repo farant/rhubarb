@@ -37,6 +37,7 @@ hic_manens structura {
     constans character*  verbum;
     Arbor2LexemaGenus    genus;
 } VERBA_CLAUSA_C[] = {
+    /* C89 Keywords (English) */
     {"auto",      ARBOR2_LEXEMA_AUTO},
     {"break",     ARBOR2_LEXEMA_BREAK},
     {"case",      ARBOR2_LEXEMA_CASE},
@@ -69,7 +70,43 @@ hic_manens structura {
     {"void",      ARBOR2_LEXEMA_VOID},
     {"volatile",  ARBOR2_LEXEMA_VOLATILE},
     {"while",     ARBOR2_LEXEMA_WHILE},
-    {NIHIL,       ARBOR2_LEXEMA_ERROR}
+    /* Latina.h Keywords (Latin equivalents - compiled-in per design) */
+    {"sponte",      ARBOR2_LEXEMA_AUTO},      /* auto */
+    {"frange",      ARBOR2_LEXEMA_BREAK},     /* break */
+    {"casus",       ARBOR2_LEXEMA_CASE},      /* case */
+    {"character",   ARBOR2_LEXEMA_CHAR},      /* char */
+    {"constans",    ARBOR2_LEXEMA_CONST},     /* const */
+    {"perge",       ARBOR2_LEXEMA_CONTINUE},  /* continue */
+    {"ordinarius",  ARBOR2_LEXEMA_DEFAULT},   /* default */
+    {"fac",         ARBOR2_LEXEMA_DO},        /* do */
+    {"duplex",      ARBOR2_LEXEMA_DOUBLE},    /* double */
+    {"alioquin",    ARBOR2_LEXEMA_ELSE},      /* else */
+    {"enumeratio",  ARBOR2_LEXEMA_ENUM},      /* enum */
+    {"externus",    ARBOR2_LEXEMA_EXTERN},    /* extern */
+    {"fluitans",    ARBOR2_LEXEMA_FLOAT},     /* float */
+    {"per",         ARBOR2_LEXEMA_FOR},       /* for */
+    {"salta",       ARBOR2_LEXEMA_GOTO},      /* goto */
+    {"si",          ARBOR2_LEXEMA_IF},        /* if */
+    {"integer",     ARBOR2_LEXEMA_INT},       /* int */
+    {"longus",      ARBOR2_LEXEMA_LONG},      /* long */
+    {"registrum",   ARBOR2_LEXEMA_REGISTER},  /* register */
+    {"redde",       ARBOR2_LEXEMA_RETURN},    /* return */
+    {"brevis",      ARBOR2_LEXEMA_SHORT},     /* short */
+    {"signatus",    ARBOR2_LEXEMA_SIGNED},    /* signed */
+    {"magnitudo",   ARBOR2_LEXEMA_SIZEOF},    /* sizeof */
+    {"staticus",    ARBOR2_LEXEMA_STATIC},    /* static */
+    {"interior",    ARBOR2_LEXEMA_STATIC},    /* static (alternative) */
+    {"hic_manens",  ARBOR2_LEXEMA_STATIC},    /* static (alternative) */
+    {"universalis", ARBOR2_LEXEMA_STATIC},    /* static (alternative) */
+    {"structura",   ARBOR2_LEXEMA_STRUCT},    /* struct */
+    {"commutatio",  ARBOR2_LEXEMA_SWITCH},    /* switch */
+    {"nomen",       ARBOR2_LEXEMA_TYPEDEF},   /* typedef */
+    {"unio",        ARBOR2_LEXEMA_UNION},     /* union */
+    {"insignatus",  ARBOR2_LEXEMA_UNSIGNED},  /* unsigned */
+    {"vacuum",      ARBOR2_LEXEMA_VOID},      /* void */
+    {"volatilis",   ARBOR2_LEXEMA_VOLATILE},  /* volatile */
+    {"dum",         ARBOR2_LEXEMA_WHILE},     /* while */
+    {NIHIL,         ARBOR2_LEXEMA_ERROR}
 };
 
 /* ==================================================
