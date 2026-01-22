@@ -2716,3 +2716,43 @@ These are grammar completeness issues, not C language restrictions. Future work 
 
 - Phase 4: Port specifiers_ordine to other contexts (parameters, return types, struct members, locals)
 - Consider grammar refactor to specifier_list approach for complete C89 coverage
+
+---
+
+## 2026-01-21
+
+### Compound Typedef Declarations Added
+
+Added support for compound type specifiers in typedef declarations, fixing one of the grammar gaps identified earlier.
+
+**New Productions P539-P547:**
+- P539: `typedef unsigned int ID ;`
+- P540: `typedef unsigned long ID ;`
+- P541: `typedef unsigned short ID ;`
+- P542: `typedef signed int ID ;`
+- P543: `typedef signed long ID ;`
+- P544: `typedef signed short ID ;`
+- P545: `typedef long int ID ;`
+- P546: `typedef short int ID ;`
+- P547: `typedef long long ID ;`
+
+**New States 1460-1462:**
+- State 1460: after `typedef type_spec type_spec` - expects declarator
+- State 1461: after `typedef type_spec type_spec declarator` - expects `;`
+- State 1462: reduce P539 (or appropriate production based on tokens)
+
+**Implementation Details:**
+- Modified state 199 to transition to 1460 on INT/LONG/SHORT (instead of self-loop)
+- Added GOTO(1460, DECLARATOR) = 1461
+- Added reduction handler for P539-P547 in arbor2_glr.c that populates specifiers_ordine
+
+**Test Added:**
+- `test_gap_typedef_unsigned.c` - Tests `typedef unsigned int MyUInt;`
+
+**Remaining Grammar Gaps:**
+- `const static int x;` (reversed specifier order)
+- `unsigned int x = 1;` (compound specifier + initializer at file scope)
+
+**Results:**
+- All GLR tests pass
+- All 56 roundtrip tests pass (including new compound typedef test)

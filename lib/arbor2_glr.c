@@ -3544,6 +3544,84 @@ _processare_unam_actionem(
                             valor_novus->datum.declaratio.storage_class = ZEPHYRUM;
                             valor_novus->datum.declaratio.qualifiers = ZEPHYRUM;
                         }
+                        /* ========== COMPOUND TYPEDEF P539-P547 ========== */
+                        alioquin si (actio->valor >= 539 && actio->valor <= 547)
+                        {
+                            /* P539-P547: 'typedef' type_spec type_spec declarator ';' (5 symbols)
+                             * e.g., typedef unsigned int MyUInt;
+                             * lexemata: [4]=typedef, [3]=unsigned, [2]=int, [1]=..., [0]=;
+                             * valori: [1]=declarator node (pre-built) */
+                            Arbor2Nodus* decl_node = valori[I];  /* Pre-built declarator! */
+
+                            valor_novus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
+                            valor_novus->genus = ARBOR2_NODUS_DECLARATIO;
+                            valor_novus->lexema = lexemata[IV];  /* typedef token */
+                            valor_novus->datum.declaratio.tok_storage = lexemata[IV];  /* typedef */
+                            valor_novus->datum.declaratio.tok_const = NIHIL;
+                            valor_novus->datum.declaratio.tok_volatile = NIHIL;
+                            valor_novus->datum.declaratio.tok_unsigned = NIHIL;
+                            valor_novus->datum.declaratio.tok_signed = NIHIL;
+                            valor_novus->datum.declaratio.tok_long = NIHIL;
+                            valor_novus->datum.declaratio.tok_long2 = NIHIL;
+                            valor_novus->datum.declaratio.tok_short = NIHIL;
+                            valor_novus->datum.declaratio.extra_specifiers = NIHIL;
+
+                            /* Set appropriate modifier token based on production */
+                            si (actio->valor == 539 || actio->valor == 540 ||
+                                actio->valor == 541)
+                            {
+                                /* unsigned int/long/short */
+                                valor_novus->datum.declaratio.tok_unsigned = lexemata[III];
+                            }
+                            alioquin si (actio->valor == 542 || actio->valor == 543 ||
+                                         actio->valor == 544)
+                            {
+                                /* signed int/long/short */
+                                valor_novus->datum.declaratio.tok_signed = lexemata[III];
+                            }
+                            alioquin si (actio->valor == 545 || actio->valor == 546)
+                            {
+                                /* long int, short int */
+                                si (actio->valor == 545)
+                                {
+                                    valor_novus->datum.declaratio.tok_long = lexemata[III];
+                                }
+                                alioquin
+                                {
+                                    valor_novus->datum.declaratio.tok_short = lexemata[III];
+                                }
+                            }
+                            alioquin si (actio->valor == 547)
+                            {
+                                /* long long */
+                                valor_novus->datum.declaratio.tok_long = lexemata[III];
+                                valor_novus->datum.declaratio.tok_long2 = lexemata[II];
+                            }
+
+                            /* Creare specifiers_ordine with all tokens in order */
+                            {
+                                Arbor2Token** slot;
+                                valor_novus->datum.declaratio.specifiers_ordine =
+                                    xar_creare(glr->piscina, magnitudo(Arbor2Token*));
+                                slot = xar_addere(valor_novus->datum.declaratio.specifiers_ordine);
+                                *slot = lexemata[IV];  /* typedef */
+                                slot = xar_addere(valor_novus->datum.declaratio.specifiers_ordine);
+                                *slot = lexemata[III];  /* first type spec (unsigned/signed/long/short) */
+                                slot = xar_addere(valor_novus->datum.declaratio.specifiers_ordine);
+                                *slot = lexemata[II];   /* second type spec (int/long/short) */
+                            }
+
+                            valor_novus->datum.declaratio.specifier = NIHIL;  /* compound - use tokens */
+                            valor_novus->datum.declaratio.declarator = decl_node;
+                            valor_novus->datum.declaratio.tok_assignatio = NIHIL;
+                            valor_novus->datum.declaratio.initializor = NIHIL;
+                            valor_novus->datum.declaratio.tok_semicolon = lexemata[ZEPHYRUM];
+                            valor_novus->datum.declaratio.tok_comma = NIHIL;
+                            valor_novus->datum.declaratio.proxima = NIHIL;
+                            valor_novus->datum.declaratio.est_typedef = VERUM;
+                            valor_novus->datum.declaratio.storage_class = ZEPHYRUM;
+                            valor_novus->datum.declaratio.qualifiers = ZEPHYRUM;
+                        }
                         /* P148-P153: Storage class and qualifier declarations */
                         alioquin si (actio->valor >= 148 && actio->valor <= 153)
                         {

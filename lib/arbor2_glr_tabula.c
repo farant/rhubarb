@@ -857,7 +857,18 @@ hic_manens Arbor2Regula REGULAE[] = {
     /* P537 */ { ARBOR2_NT_DECLARATIO, 2, ARBOR2_NODUS_DECLARATIO, "declaratio -> type_spec_list init_decl_list" },
 
     /* P538: func_def -> type_spec_list declarator compound (function definition) */
-    /* P538 */ { ARBOR2_NT_DEFINITIO_FUNCTI, 3, ARBOR2_NODUS_DEFINITIO_FUNCTI, "func_def -> type_spec_list declarator compound" }
+    /* P538 */ { ARBOR2_NT_DEFINITIO_FUNCTI, 3, ARBOR2_NODUS_DEFINITIO_FUNCTI, "func_def -> type_spec_list declarator compound" },
+
+    /* Compound typedef declarations - typedef with two type specifiers */
+    /* P539 */ { ARBOR2_NT_DECLARATIO, 5, ARBOR2_NODUS_DECLARATIO, "typedef -> 'typedef' 'unsigned' 'int' ID ';'" },
+    /* P540 */ { ARBOR2_NT_DECLARATIO, 5, ARBOR2_NODUS_DECLARATIO, "typedef -> 'typedef' 'unsigned' 'long' ID ';'" },
+    /* P541 */ { ARBOR2_NT_DECLARATIO, 5, ARBOR2_NODUS_DECLARATIO, "typedef -> 'typedef' 'unsigned' 'short' ID ';'" },
+    /* P542 */ { ARBOR2_NT_DECLARATIO, 5, ARBOR2_NODUS_DECLARATIO, "typedef -> 'typedef' 'signed' 'int' ID ';'" },
+    /* P543 */ { ARBOR2_NT_DECLARATIO, 5, ARBOR2_NODUS_DECLARATIO, "typedef -> 'typedef' 'signed' 'long' ID ';'" },
+    /* P544 */ { ARBOR2_NT_DECLARATIO, 5, ARBOR2_NODUS_DECLARATIO, "typedef -> 'typedef' 'signed' 'short' ID ';'" },
+    /* P545 */ { ARBOR2_NT_DECLARATIO, 5, ARBOR2_NODUS_DECLARATIO, "typedef -> 'typedef' 'long' 'int' ID ';'" },
+    /* P546 */ { ARBOR2_NT_DECLARATIO, 5, ARBOR2_NODUS_DECLARATIO, "typedef -> 'typedef' 'short' 'int' ID ';'" },
+    /* P547 */ { ARBOR2_NT_DECLARATIO, 5, ARBOR2_NODUS_DECLARATIO, "typedef -> 'typedef' 'long' 'long' ID ';'" }
 };
 
 hic_manens i32 NUM_REGULAE = (i32)(magnitudo(REGULAE) / magnitudo(REGULAE[0]));
@@ -3969,11 +3980,17 @@ hic_manens constans Arbor2TabulaActio STATUS_198_ACTIONES[] = {
     { ARBOR2_LEXEMA_ENUM,           ARBOR2_ACTIO_SHIFT, 145, FALSUM }
 };
 
-/* State 199: after 'typedef type_spec' - expect '*' or ID or '(' for func ptr */
+/* State 199: after 'typedef type_spec' - expect '*' or ID or '(' for func ptr
+ * Also allow additional type specifiers (INT, LONG, SHORT) for compound types like
+ * 'typedef unsigned int MyUInt;' or 'typedef long long MyLL;' */
 hic_manens constans Arbor2TabulaActio STATUS_199_ACTIONES[] = {
     { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT, 17, FALSUM },
     { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT, 18, FALSUM },
-    { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_SHIFT, 1426, FALSUM }  /* func ptr: (*name) */
+    { ARBOR2_LEXEMA_PAREN_APERTA,   ARBOR2_ACTIO_SHIFT, 1426, FALSUM },  /* func ptr: (*name) */
+    /* Additional type specifiers for compound types - go to state 1460 */
+    { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_SHIFT, 1460, FALSUM },
+    { ARBOR2_LEXEMA_LONG,           ARBOR2_ACTIO_SHIFT, 1460, FALSUM },
+    { ARBOR2_LEXEMA_SHORT,          ARBOR2_ACTIO_SHIFT, 1460, FALSUM }
 };
 
 /* State 200: after 'typedef type_spec *' - expect more '*' or ID */
@@ -17291,6 +17308,50 @@ hic_manens constans Arbor2TabulaActio STATUS_1455_ACTIONES[] = {
 };
 
 /* ==================================================
+ * States 1460-1464: Compound typedef declarations
+ *
+ * For patterns like: typedef unsigned int MyUInt;
+ * Flow: State 0 -> 198 (typedef) -> 199 (unsigned) -> 1460 (int)
+ *       State 1460 shifts ID -> 116
+ *       State 116 reduces P12 (declarator -> ID)
+ *       GOTO(1460, DECLARATOR) = 1461
+ *       State 1461 shifts ';' -> 1462
+ *       State 1462 reduces P539 (5 symbols: typedef unsigned int ID ;)
+ * ================================================== */
+
+/* State 1460: after 'typedef type_spec type_spec' - expect declarator */
+hic_manens constans Arbor2TabulaActio STATUS_1460_ACTIONES[] = {
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT, 17, FALSUM },   /* pointer */
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT, 116, FALSUM }   /* direct ID */
+};
+
+/* State 1461: after 'typedef type_spec type_spec declarator' - expect ';' */
+hic_manens constans Arbor2TabulaActio STATUS_1461_ACTIONES[] = {
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_SHIFT, 1462, FALSUM }
+};
+
+/* State 1462: reduce P539 (typedef unsigned int ID ;) - 5 symbols */
+hic_manens constans Arbor2TabulaActio STATUS_1462_ACTIONES[] = {
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_REDUCE, 539, FALSUM },
+    { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_REDUCE, 539, FALSUM },
+    { ARBOR2_LEXEMA_CHAR,           ARBOR2_ACTIO_REDUCE, 539, FALSUM },
+    { ARBOR2_LEXEMA_VOID,           ARBOR2_ACTIO_REDUCE, 539, FALSUM },
+    { ARBOR2_LEXEMA_STRUCT,         ARBOR2_ACTIO_REDUCE, 539, FALSUM },
+    { ARBOR2_LEXEMA_UNION,          ARBOR2_ACTIO_REDUCE, 539, FALSUM },
+    { ARBOR2_LEXEMA_ENUM,           ARBOR2_ACTIO_REDUCE, 539, FALSUM },
+    { ARBOR2_LEXEMA_TYPEDEF,        ARBOR2_ACTIO_REDUCE, 539, FALSUM },
+    { ARBOR2_LEXEMA_UNSIGNED,       ARBOR2_ACTIO_REDUCE, 539, FALSUM },
+    { ARBOR2_LEXEMA_SIGNED,         ARBOR2_ACTIO_REDUCE, 539, FALSUM },
+    { ARBOR2_LEXEMA_LONG,           ARBOR2_ACTIO_REDUCE, 539, FALSUM },
+    { ARBOR2_LEXEMA_SHORT,          ARBOR2_ACTIO_REDUCE, 539, FALSUM },
+    { ARBOR2_LEXEMA_CONST,          ARBOR2_ACTIO_REDUCE, 539, FALSUM },
+    { ARBOR2_LEXEMA_VOLATILE,       ARBOR2_ACTIO_REDUCE, 539, FALSUM },
+    { ARBOR2_LEXEMA_STATIC,         ARBOR2_ACTIO_REDUCE, 539, FALSUM },
+    { ARBOR2_LEXEMA_EXTERN,         ARBOR2_ACTIO_REDUCE, 539, FALSUM },
+    { ARBOR2_LEXEMA_EOF,            ARBOR2_ACTIO_REDUCE, 539, FALSUM }
+};
+
+/* ==================================================
  * State 1500: after struct/enum specifier in local declaration
  * NO shift-reduce conflict - only declarator paths allowed
  * This avoids GLR fork that causes duplication
@@ -19336,14 +19397,15 @@ hic_manens constans Arbor2StatusInfo STATUS_TABULA_PARTIAL[] = {
     STATUS_INFO(1453, "after '( struct ID' - reduce P47"),
     STATUS_INFO(1454, "after '( union ID' - reduce P54"),
     STATUS_INFO(1455, "after '( enum ID' - reduce P57"),
-    /* States 1456-1499: reserved */
+    /* States 1456-1459: reserved */
     { NIHIL, 0, "reserved" },  /* 1456 */
     { NIHIL, 0, "reserved" },  /* 1457 */
     { NIHIL, 0, "reserved" },  /* 1458 */
     { NIHIL, 0, "reserved" },  /* 1459 */
-    { NIHIL, 0, "reserved" },  /* 1460 */
-    { NIHIL, 0, "reserved" },  /* 1461 */
-    { NIHIL, 0, "reserved" },  /* 1462 */
+    /* States 1460-1462: compound typedef declarations */
+    STATUS_INFO(1460, "after 'typedef type type' - expect declarator"),
+    STATUS_INFO(1461, "after 'typedef type type declarator' - expect ';'"),
+    STATUS_INFO(1462, "reduce P539 - typedef compound"),
     { NIHIL, 0, "reserved" },  /* 1463 */
     { NIHIL, 0, "reserved" },  /* 1464 */
     { NIHIL, 0, "reserved" },  /* 1465 */
@@ -22921,6 +22983,11 @@ hic_manens constans Arbor2StatusGotoEntry STATUS_1452_GOTO[] = {
     { INT_NT_PARAM_LIST, 102 }
 };
 
+/* State 1460: after 'typedef type_spec type_spec' - DECLARATOR goes to 1461 */
+hic_manens constans Arbor2StatusGotoEntry STATUS_1460_GOTO[] = {
+    { INT_NT_DECLARATOR, 1461 }
+};
+
 /* ==================================================
  * STATUS_GOTO Macro and Master Table
  * ================================================== */
@@ -24569,14 +24636,15 @@ hic_manens constans Arbor2StatusGoto GOTO_TABULA_NOVA[] = {
     STATUS_GOTO_NIL,   /* 1453: ( struct ID - reduce P47 */
     STATUS_GOTO_NIL,   /* 1454: ( union ID - reduce P54 */
     STATUS_GOTO_NIL,   /* 1455: ( enum ID - reduce P57 */
-    /* States 1456-1499: reserved */
+    /* States 1456-1459: reserved */
     STATUS_GOTO_NIL,   /* 1456: reserved */
     STATUS_GOTO_NIL,   /* 1457: reserved */
     STATUS_GOTO_NIL,   /* 1458: reserved */
     STATUS_GOTO_NIL,   /* 1459: reserved */
-    STATUS_GOTO_NIL,   /* 1460: reserved */
-    STATUS_GOTO_NIL,   /* 1461: reserved */
-    STATUS_GOTO_NIL,   /* 1462: reserved */
+    /* States 1460-1462: compound typedef declarations */
+    STATUS_GOTO(1460), /* 1460: typedef type type -> DECLARATOR */
+    STATUS_GOTO_NIL,   /* 1461: typedef type type declarator - shift ';' */
+    STATUS_GOTO_NIL,   /* 1462: reduce P539 */
     STATUS_GOTO_NIL,   /* 1463: reserved */
     STATUS_GOTO_NIL,   /* 1464: reserved */
     STATUS_GOTO_NIL,   /* 1465: reserved */

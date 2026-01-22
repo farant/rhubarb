@@ -609,6 +609,21 @@ s32 principale(vacuum)
             "probationes/fixa/roundtrip/modifier_order.c"));
         CREDO_VERUM(_probare_roundtrip_fasciculum(piscina, intern, expansion,
             "probationes/fixa/roundtrip/typedef_specifiers.c"));
+
+        /* Phase 5: Grammar gap tests */
+        CREDO_VERUM(_probare_roundtrip_fasciculum(piscina, intern, expansion,
+            "probationes/fixa/roundtrip/test_gap_typedef_unsigned.c"));
+        /* TODO: These still need grammar extensions:
+         * - const static (reversed specifier order)
+         * - unsigned int = 1 (compound specifier + initializer at file scope)
+         */
+        /*
+        CREDO_VERUM(_probare_roundtrip_fasciculum(piscina, intern, expansion,
+            "probationes/fixa/roundtrip/test_gap_const_static.c"));
+        CREDO_VERUM(_probare_roundtrip_fasciculum(piscina, intern, expansion,
+            "probationes/fixa/roundtrip/test_gap_unsigned_init.c"));
+        */
+
         /* These files have pre-existing parsing issues (function drops) unrelated to Phase 3.
          * The basic Phase 3 test (test_const_ptr.c) passes, proving the core functionality works.
          * TODO: Investigate why some functions are being dropped from these complex files. */
