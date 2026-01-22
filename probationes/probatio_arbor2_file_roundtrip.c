@@ -601,6 +601,14 @@ s32 principale(vacuum)
         /* Phase 3: pointer declarations with unknown typedefs in function bodies */
         CREDO_VERUM(_probare_roundtrip_fasciculum(piscina, intern, expansion,
             "probationes/fixa/roundtrip/test_const_ptr.c"));
+
+        /* Phase 4: specifier order preservation */
+        CREDO_VERUM(_probare_roundtrip_fasciculum(piscina, intern, expansion,
+            "probationes/fixa/roundtrip/specifier_order.c"));
+        CREDO_VERUM(_probare_roundtrip_fasciculum(piscina, intern, expansion,
+            "probationes/fixa/roundtrip/modifier_order.c"));
+        CREDO_VERUM(_probare_roundtrip_fasciculum(piscina, intern, expansion,
+            "probationes/fixa/roundtrip/typedef_specifiers.c"));
         /* These files have pre-existing parsing issues (function drops) unrelated to Phase 3.
          * The basic Phase 3 test (test_const_ptr.c) passes, proving the core functionality works.
          * TODO: Investigate why some functions are being dropped from these complex files. */

@@ -398,6 +398,7 @@ structura Arbor2Nodus {
             Arbor2Token*        tok_long;       /* long keyword (NIHIL if none) */
             Arbor2Token*        tok_long2;      /* second long keyword for 'long long' (NIHIL if none) */
             Arbor2Token*        tok_short;      /* short keyword (NIHIL if none) */
+            Xar*                specifiers_ordine; /* All specifier tokens in source order (Xar of Arbor2Token*) */
             Arbor2Nodus*        specifier;      /* Type specifier (identifier) */
             Arbor2Nodus*        declarator;     /* The declarator (*name or name) */
             Arbor2Token*        tok_assignatio; /* = token (NIHIL if no initializer) */
@@ -434,6 +435,12 @@ structura Arbor2Nodus {
         structura {
             Arbor2Token*        tok_const;            /* 'const' qualifier (NIHIL si nullus) */
             Arbor2Token*        tok_volatile;         /* 'volatile' qualifier (NIHIL si nullus) */
+            Arbor2Token*        tok_unsigned;         /* 'unsigned' modifier (NIHIL si nullus) */
+            Arbor2Token*        tok_signed;           /* 'signed' modifier (NIHIL si nullus) */
+            Arbor2Token*        tok_long;             /* 'long' modifier (NIHIL si nullus) */
+            Arbor2Token*        tok_long2;            /* second 'long' for 'long long' (NIHIL si nullus) */
+            Arbor2Token*        tok_short;            /* 'short' modifier (NIHIL si nullus) */
+            Xar*                specifiers_ordine;    /* All specifier tokens in source order (Xar of Arbor2Token*) */
             Arbor2Nodus*        type_specifier;       /* Type (identifier node) */
             Arbor2Nodus*        declarator;           /* Name + pointers */
         } parameter_decl;
@@ -456,6 +463,7 @@ structura Arbor2Nodus {
             Arbor2Token*        tok_long;             /* 'long' keyword (P509+) */
             Arbor2Token*        tok_long2;            /* second 'long' for 'long long' */
             Arbor2Token*        tok_short;            /* 'short' keyword (P510+) */
+            Xar*                specifiers_ordine;    /* All specifier tokens in source order (Xar of Arbor2Token*) */
         } definitio_functi;
 
         /* STRUCT_SPECIFIER (also used for union) */

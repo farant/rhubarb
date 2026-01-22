@@ -363,70 +363,88 @@ _scribere_nodum(Xar* output, Arbor2Nodus* nodus)
             arbor2_scribere_lexema(output, nodus->datum.membrum.tok_membrum);
             frange;
 
-        /* DECLARATIO: [storage] [extra_specifiers...] [const] [volatile] [unsigned/signed] [long/short] type declarator [= init]; */
+        /* DECLARATIO: specifiers in source order, then type, declarator [= init]; */
         casus ARBOR2_NODUS_DECLARATIO:
-            si (nodus->datum.declaratio.tok_storage != NIHIL)
-            {
-                arbor2_scribere_lexema(output, nodus->datum.declaratio.tok_storage);
-            }
-            /* Output extra specifiers from unknown typedef chains (Phase 2) */
-            si (nodus->datum.declaratio.extra_specifiers != NIHIL)
+            /* Use specifiers_ordine if available (preserves exact source order) */
+            si (nodus->datum.declaratio.specifiers_ordine != NIHIL)
             {
                 i32 i;
-                i32 num = xar_numerus(nodus->datum.declaratio.extra_specifiers);
+                i32 num = xar_numerus(nodus->datum.declaratio.specifiers_ordine);
                 per (i = ZEPHYRUM; i < num; i++)
                 {
-                    Arbor2Token* tok = *(Arbor2Token**)xar_obtinere(nodus->datum.declaratio.extra_specifiers, i);
-                    arbor2_scribere_lexema(output, tok);
+                    Arbor2Token** tok_ptr = xar_obtinere(nodus->datum.declaratio.specifiers_ordine, i);
+                    si (tok_ptr != NIHIL && *tok_ptr != NIHIL)
+                    {
+                        arbor2_scribere_lexema(output, *tok_ptr);
+                    }
                 }
             }
-            /* Output const/volatile in original source order */
-            si (nodus->datum.declaratio.tok_const != NIHIL && nodus->datum.declaratio.tok_volatile != NIHIL)
+            alioquin
             {
-                /* Both qualifiers - compare positions to preserve order */
-                Arbor2Token* c = nodus->datum.declaratio.tok_const;
-                Arbor2Token* v = nodus->datum.declaratio.tok_volatile;
-                b32 const_first = (c->origo_meta->linea < v->origo_meta->linea) ||
-                                  (c->origo_meta->linea == v->origo_meta->linea &&
-                                   c->origo_meta->columna < v->origo_meta->columna);
-                si (const_first)
+                /* Fallback: use individual fields in fixed order */
+                si (nodus->datum.declaratio.tok_storage != NIHIL)
                 {
-                    arbor2_scribere_lexema(output, c);
-                    arbor2_scribere_lexema(output, v);
+                    arbor2_scribere_lexema(output, nodus->datum.declaratio.tok_storage);
                 }
-                alioquin
+                /* Output extra specifiers from unknown typedef chains (Phase 2) */
+                si (nodus->datum.declaratio.extra_specifiers != NIHIL)
                 {
-                    arbor2_scribere_lexema(output, v);
-                    arbor2_scribere_lexema(output, c);
+                    i32 i;
+                    i32 num = xar_numerus(nodus->datum.declaratio.extra_specifiers);
+                    per (i = ZEPHYRUM; i < num; i++)
+                    {
+                        Arbor2Token* tok = *(Arbor2Token**)xar_obtinere(nodus->datum.declaratio.extra_specifiers, i);
+                        arbor2_scribere_lexema(output, tok);
+                    }
                 }
-            }
-            alioquin si (nodus->datum.declaratio.tok_const != NIHIL)
-            {
-                arbor2_scribere_lexema(output, nodus->datum.declaratio.tok_const);
-            }
-            alioquin si (nodus->datum.declaratio.tok_volatile != NIHIL)
-            {
-                arbor2_scribere_lexema(output, nodus->datum.declaratio.tok_volatile);
-            }
-            si (nodus->datum.declaratio.tok_unsigned != NIHIL)
-            {
-                arbor2_scribere_lexema(output, nodus->datum.declaratio.tok_unsigned);
-            }
-            si (nodus->datum.declaratio.tok_signed != NIHIL)
-            {
-                arbor2_scribere_lexema(output, nodus->datum.declaratio.tok_signed);
-            }
-            si (nodus->datum.declaratio.tok_long != NIHIL)
-            {
-                arbor2_scribere_lexema(output, nodus->datum.declaratio.tok_long);
-            }
-            si (nodus->datum.declaratio.tok_long2 != NIHIL)
-            {
-                arbor2_scribere_lexema(output, nodus->datum.declaratio.tok_long2);
-            }
-            si (nodus->datum.declaratio.tok_short != NIHIL)
-            {
-                arbor2_scribere_lexema(output, nodus->datum.declaratio.tok_short);
+                /* Output const/volatile in original source order */
+                si (nodus->datum.declaratio.tok_const != NIHIL && nodus->datum.declaratio.tok_volatile != NIHIL)
+                {
+                    /* Both qualifiers - compare positions to preserve order */
+                    Arbor2Token* c = nodus->datum.declaratio.tok_const;
+                    Arbor2Token* v = nodus->datum.declaratio.tok_volatile;
+                    b32 const_first = (c->origo_meta->linea < v->origo_meta->linea) ||
+                                      (c->origo_meta->linea == v->origo_meta->linea &&
+                                       c->origo_meta->columna < v->origo_meta->columna);
+                    si (const_first)
+                    {
+                        arbor2_scribere_lexema(output, c);
+                        arbor2_scribere_lexema(output, v);
+                    }
+                    alioquin
+                    {
+                        arbor2_scribere_lexema(output, v);
+                        arbor2_scribere_lexema(output, c);
+                    }
+                }
+                alioquin si (nodus->datum.declaratio.tok_const != NIHIL)
+                {
+                    arbor2_scribere_lexema(output, nodus->datum.declaratio.tok_const);
+                }
+                alioquin si (nodus->datum.declaratio.tok_volatile != NIHIL)
+                {
+                    arbor2_scribere_lexema(output, nodus->datum.declaratio.tok_volatile);
+                }
+                si (nodus->datum.declaratio.tok_unsigned != NIHIL)
+                {
+                    arbor2_scribere_lexema(output, nodus->datum.declaratio.tok_unsigned);
+                }
+                si (nodus->datum.declaratio.tok_signed != NIHIL)
+                {
+                    arbor2_scribere_lexema(output, nodus->datum.declaratio.tok_signed);
+                }
+                si (nodus->datum.declaratio.tok_long != NIHIL)
+                {
+                    arbor2_scribere_lexema(output, nodus->datum.declaratio.tok_long);
+                }
+                si (nodus->datum.declaratio.tok_long2 != NIHIL)
+                {
+                    arbor2_scribere_lexema(output, nodus->datum.declaratio.tok_long2);
+                }
+                si (nodus->datum.declaratio.tok_short != NIHIL)
+                {
+                    arbor2_scribere_lexema(output, nodus->datum.declaratio.tok_short);
+                }
             }
             _scribere_nodum(output, nodus->datum.declaratio.specifier);
             _scribere_nodum(output, nodus->datum.declaratio.declarator);
@@ -508,16 +526,53 @@ _scribere_nodum(Xar* output, Arbor2Nodus* nodus)
             arbor2_scribere_lexema(output, nodus->datum.declarator_functi.tok_paren_cl);
             frange;
 
-        /* PARAMETER_DECL: [const] [volatile] type name */
+        /* PARAMETER_DECL: specifiers in source order, then type, then name */
         casus ARBOR2_NODUS_PARAMETER_DECL:
-            /* Emittere qualificatores primum */
-            si (nodus->datum.parameter_decl.tok_const != NIHIL)
+            /* Use specifiers_ordine if available (preserves exact source order) */
+            si (nodus->datum.parameter_decl.specifiers_ordine != NIHIL)
             {
-                arbor2_scribere_lexema(output, nodus->datum.parameter_decl.tok_const);
+                i32 i;
+                i32 num = xar_numerus(nodus->datum.parameter_decl.specifiers_ordine);
+                per (i = ZEPHYRUM; i < num; i++)
+                {
+                    Arbor2Token** tok_ptr = xar_obtinere(nodus->datum.parameter_decl.specifiers_ordine, i);
+                    si (tok_ptr != NIHIL && *tok_ptr != NIHIL)
+                    {
+                        arbor2_scribere_lexema(output, *tok_ptr);
+                    }
+                }
             }
-            si (nodus->datum.parameter_decl.tok_volatile != NIHIL)
+            alioquin
             {
-                arbor2_scribere_lexema(output, nodus->datum.parameter_decl.tok_volatile);
+                /* Fallback: use individual fields in fixed order */
+                si (nodus->datum.parameter_decl.tok_const != NIHIL)
+                {
+                    arbor2_scribere_lexema(output, nodus->datum.parameter_decl.tok_const);
+                }
+                si (nodus->datum.parameter_decl.tok_volatile != NIHIL)
+                {
+                    arbor2_scribere_lexema(output, nodus->datum.parameter_decl.tok_volatile);
+                }
+                si (nodus->datum.parameter_decl.tok_unsigned != NIHIL)
+                {
+                    arbor2_scribere_lexema(output, nodus->datum.parameter_decl.tok_unsigned);
+                }
+                si (nodus->datum.parameter_decl.tok_signed != NIHIL)
+                {
+                    arbor2_scribere_lexema(output, nodus->datum.parameter_decl.tok_signed);
+                }
+                si (nodus->datum.parameter_decl.tok_long != NIHIL)
+                {
+                    arbor2_scribere_lexema(output, nodus->datum.parameter_decl.tok_long);
+                }
+                si (nodus->datum.parameter_decl.tok_long2 != NIHIL)
+                {
+                    arbor2_scribere_lexema(output, nodus->datum.parameter_decl.tok_long2);
+                }
+                si (nodus->datum.parameter_decl.tok_short != NIHIL)
+                {
+                    arbor2_scribere_lexema(output, nodus->datum.parameter_decl.tok_short);
+                }
             }
 
             /* Emittere type specifier */
@@ -535,38 +590,55 @@ _scribere_nodum(Xar* output, Arbor2Nodus* nodus)
             _scribere_nodum(output, nodus->datum.parameter_decl.declarator);
             frange;
 
-        /* DEFINITIO_FUNCTI: [qualifiers] [modifiers] type name(params) { body } */
+        /* DEFINITIO_FUNCTI: specifiers in source order, then type, name(params) { body } */
         casus ARBOR2_NODUS_DEFINITIO_FUNCTI:
-            /* Emit qualifier if present (P505: const, P506: volatile) */
-            si (nodus->datum.definitio_functi.tok_const != NIHIL)
+            /* Use specifiers_ordine if available (preserves exact source order) */
+            si (nodus->datum.definitio_functi.specifiers_ordine != NIHIL)
             {
-                arbor2_scribere_lexema(output, nodus->datum.definitio_functi.tok_const);
+                i32 i;
+                i32 num = xar_numerus(nodus->datum.definitio_functi.specifiers_ordine);
+                per (i = ZEPHYRUM; i < num; i++)
+                {
+                    Arbor2Token** tok_ptr = xar_obtinere(nodus->datum.definitio_functi.specifiers_ordine, i);
+                    si (tok_ptr != NIHIL && *tok_ptr != NIHIL)
+                    {
+                        arbor2_scribere_lexema(output, *tok_ptr);
+                    }
+                }
             }
-            si (nodus->datum.definitio_functi.tok_volatile != NIHIL)
+            alioquin
             {
-                arbor2_scribere_lexema(output, nodus->datum.definitio_functi.tok_volatile);
-            }
-            /* Emit type modifiers (unsigned/signed) */
-            si (nodus->datum.definitio_functi.tok_unsigned != NIHIL)
-            {
-                arbor2_scribere_lexema(output, nodus->datum.definitio_functi.tok_unsigned);
-            }
-            si (nodus->datum.definitio_functi.tok_signed != NIHIL)
-            {
-                arbor2_scribere_lexema(output, nodus->datum.definitio_functi.tok_signed);
-            }
-            /* Emit type modifiers (long/short) */
-            si (nodus->datum.definitio_functi.tok_long != NIHIL)
-            {
-                arbor2_scribere_lexema(output, nodus->datum.definitio_functi.tok_long);
-            }
-            si (nodus->datum.definitio_functi.tok_long2 != NIHIL)
-            {
-                arbor2_scribere_lexema(output, nodus->datum.definitio_functi.tok_long2);
-            }
-            si (nodus->datum.definitio_functi.tok_short != NIHIL)
-            {
-                arbor2_scribere_lexema(output, nodus->datum.definitio_functi.tok_short);
+                /* Fallback: use individual fields in fixed order */
+                si (nodus->datum.definitio_functi.tok_const != NIHIL)
+                {
+                    arbor2_scribere_lexema(output, nodus->datum.definitio_functi.tok_const);
+                }
+                si (nodus->datum.definitio_functi.tok_volatile != NIHIL)
+                {
+                    arbor2_scribere_lexema(output, nodus->datum.definitio_functi.tok_volatile);
+                }
+                /* Emit type modifiers (unsigned/signed) */
+                si (nodus->datum.definitio_functi.tok_unsigned != NIHIL)
+                {
+                    arbor2_scribere_lexema(output, nodus->datum.definitio_functi.tok_unsigned);
+                }
+                si (nodus->datum.definitio_functi.tok_signed != NIHIL)
+                {
+                    arbor2_scribere_lexema(output, nodus->datum.definitio_functi.tok_signed);
+                }
+                /* Emit type modifiers (long/short) */
+                si (nodus->datum.definitio_functi.tok_long != NIHIL)
+                {
+                    arbor2_scribere_lexema(output, nodus->datum.definitio_functi.tok_long);
+                }
+                si (nodus->datum.definitio_functi.tok_long2 != NIHIL)
+                {
+                    arbor2_scribere_lexema(output, nodus->datum.definitio_functi.tok_long2);
+                }
+                si (nodus->datum.definitio_functi.tok_short != NIHIL)
+                {
+                    arbor2_scribere_lexema(output, nodus->datum.definitio_functi.tok_short);
+                }
             }
             /* Emit type specifier */
             si (nodus->datum.definitio_functi.specifier != NIHIL)

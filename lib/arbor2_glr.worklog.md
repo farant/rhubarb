@@ -2658,3 +2658,61 @@ MyA MyB MyC MyD myFinal;             /* 5 IDs */
 ```
 
 All 46 roundtrip tests pass.
+
+---
+
+## 2026-01-21: Phase 2 - specifiers_ordine Implementation (File-Scope)
+
+### Overview
+
+Implemented `specifiers_ordine` population for file-scope declarations. This field preserves specifier token order for accurate roundtrip serialization.
+
+### Problem
+
+Specifier order wasn't being preserved during roundtrip. For example, `const volatile int x;` vs `volatile const int x;` - both are semantically equivalent but should serialize back to their original form.
+
+### Solution
+
+Added code to populate `specifiers_ordine` (a Xar of Arbor2Token*) in reduction handlers. The serializer (arbor2_scribere.c) already checks for this field and outputs tokens in order when populated.
+
+### Productions Updated
+
+| Group | Productions | Description |
+|-------|-------------|-------------|
+| Single specifier | P148-P153 | `static/extern/const/volatile type declarator` |
+| Single specifier + init | P193-P198 | With `= expr` initializer |
+| Single specifier + brace init | P207-P212 | With `= { ... }` initializer |
+| Double specifier | P227-P234 | `static const`, `const volatile`, etc. |
+| Double specifier + init | P235-P238 | With initializers |
+| Modifier combos | P420-P436 | `unsigned int`, `long long`, etc. |
+| Implicit int | P527-P534 | `long x`, `unsigned x`, etc. |
+| Qualifier + modifier | P437-P504 | `const unsigned int`, `volatile const long`, etc. |
+| Typedef | P74, P76, P78, P525, P526 | `typedef type name` |
+
+### Grammar Gaps Discovered
+
+The following valid C89 patterns are NOT in the grammar:
+
+1. **Reversed specifier order**: `const static` (only `static const` supported)
+2. **Compound specifier + initializer**: `unsigned int x = 1;` at file scope
+3. **Typedef with compound specifiers**: `typedef unsigned int MyUInt;`
+
+These are grammar completeness issues, not C language restrictions. Future work could:
+- Add individual missing productions (tedious)
+- Refactor to use a general `specifier_list` non-terminal (cleaner but larger change)
+
+### Test Files Added
+
+- `specifier_order.c` - Tests qualifier order preservation (const/volatile)
+- `modifier_order.c` - Tests modifier combinations (unsigned long, const unsigned int)
+- `typedef_specifiers.c` - Tests typedef declarations and usage
+
+### Results
+
+- All 2176 GLR tests pass
+- All 55 roundtrip tests pass
+
+### Next Steps
+
+- Phase 4: Port specifiers_ordine to other contexts (parameters, return types, struct members, locals)
+- Consider grammar refactor to specifier_list approach for complete C89 coverage

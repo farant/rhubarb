@@ -2190,6 +2190,8 @@ _processare_unam_actionem(
                             member->datum.declaratio.tok_long = NIHIL;
                             member->datum.declaratio.tok_long2 = NIHIL;
                             member->datum.declaratio.tok_short = NIHIL;
+                            member->datum.declaratio.extra_specifiers = NIHIL;
+                            member->datum.declaratio.specifiers_ordine = NIHIL;
                             member->datum.declaratio.specifier = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                             member->datum.declaratio.specifier->genus = ARBOR2_NODUS_IDENTIFICATOR;
                             member->datum.declaratio.specifier->lexema = type_tok;
@@ -2237,6 +2239,8 @@ _processare_unam_actionem(
                             member->datum.declaratio.tok_long = NIHIL;
                             member->datum.declaratio.tok_long2 = NIHIL;
                             member->datum.declaratio.tok_short = NIHIL;
+                            member->datum.declaratio.extra_specifiers = NIHIL;
+                            member->datum.declaratio.specifiers_ordine = NIHIL;
                             member->datum.declaratio.specifier = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                             member->datum.declaratio.specifier->genus = ARBOR2_NODUS_IDENTIFICATOR;
                             member->datum.declaratio.specifier->lexema = type_tok;
@@ -2293,6 +2297,13 @@ _processare_unam_actionem(
                             member->datum.declaratio.tok_storage = NIHIL;
                             member->datum.declaratio.tok_const = NIHIL;
                             member->datum.declaratio.tok_volatile = NIHIL;
+                            member->datum.declaratio.tok_unsigned = NIHIL;
+                            member->datum.declaratio.tok_signed = NIHIL;
+                            member->datum.declaratio.tok_long = NIHIL;
+                            member->datum.declaratio.tok_long2 = NIHIL;
+                            member->datum.declaratio.tok_short = NIHIL;
+                            member->datum.declaratio.extra_specifiers = NIHIL;
+                            member->datum.declaratio.specifiers_ordine = NIHIL;
                             member->datum.declaratio.specifier = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                             member->datum.declaratio.specifier->genus = ARBOR2_NODUS_IDENTIFICATOR;
                             member->datum.declaratio.specifier->lexema = type_tok;
@@ -2346,6 +2357,13 @@ _processare_unam_actionem(
                             member->datum.declaratio.tok_storage = NIHIL;
                             member->datum.declaratio.tok_const = NIHIL;
                             member->datum.declaratio.tok_volatile = NIHIL;
+                            member->datum.declaratio.tok_unsigned = NIHIL;
+                            member->datum.declaratio.tok_signed = NIHIL;
+                            member->datum.declaratio.tok_long = NIHIL;
+                            member->datum.declaratio.tok_long2 = NIHIL;
+                            member->datum.declaratio.tok_short = NIHIL;
+                            member->datum.declaratio.extra_specifiers = NIHIL;
+                            member->datum.declaratio.specifiers_ordine = NIHIL;
                             member->datum.declaratio.specifier = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                             member->datum.declaratio.specifier->genus = ARBOR2_NODUS_IDENTIFICATOR;
                             member->datum.declaratio.specifier->lexema = type_tok;
@@ -2393,6 +2411,13 @@ _processare_unam_actionem(
                             member->datum.declaratio.tok_storage = NIHIL;
                             member->datum.declaratio.tok_const = NIHIL;
                             member->datum.declaratio.tok_volatile = NIHIL;
+                            member->datum.declaratio.tok_unsigned = NIHIL;
+                            member->datum.declaratio.tok_signed = NIHIL;
+                            member->datum.declaratio.tok_long = NIHIL;
+                            member->datum.declaratio.tok_long2 = NIHIL;
+                            member->datum.declaratio.tok_short = NIHIL;
+                            member->datum.declaratio.extra_specifiers = NIHIL;
+                            member->datum.declaratio.specifiers_ordine = NIHIL;
                             member->datum.declaratio.specifier = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                             member->datum.declaratio.specifier->genus = ARBOR2_NODUS_IDENTIFICATOR;
                             member->datum.declaratio.specifier->lexema = type_tok;
@@ -2436,6 +2461,13 @@ _processare_unam_actionem(
                             member->datum.declaratio.tok_storage = NIHIL;
                             member->datum.declaratio.tok_const = NIHIL;
                             member->datum.declaratio.tok_volatile = NIHIL;
+                            member->datum.declaratio.tok_unsigned = NIHIL;
+                            member->datum.declaratio.tok_signed = NIHIL;
+                            member->datum.declaratio.tok_long = NIHIL;
+                            member->datum.declaratio.tok_long2 = NIHIL;
+                            member->datum.declaratio.tok_short = NIHIL;
+                            member->datum.declaratio.extra_specifiers = NIHIL;
+                            member->datum.declaratio.specifiers_ordine = NIHIL;
                             member->datum.declaratio.specifier = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                             member->datum.declaratio.specifier->genus = ARBOR2_NODUS_IDENTIFICATOR;
                             member->datum.declaratio.specifier->lexema = type_tok;
@@ -2481,6 +2513,13 @@ _processare_unam_actionem(
                             member->datum.declaratio.tok_storage = NIHIL;
                             member->datum.declaratio.tok_const = NIHIL;
                             member->datum.declaratio.tok_volatile = NIHIL;
+                            member->datum.declaratio.tok_unsigned = NIHIL;
+                            member->datum.declaratio.tok_signed = NIHIL;
+                            member->datum.declaratio.tok_long = NIHIL;
+                            member->datum.declaratio.tok_long2 = NIHIL;
+                            member->datum.declaratio.tok_short = NIHIL;
+                            member->datum.declaratio.extra_specifiers = NIHIL;
+                            member->datum.declaratio.specifiers_ordine = NIHIL;
                             member->datum.declaratio.specifier = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                             member->datum.declaratio.specifier->genus = ARBOR2_NODUS_IDENTIFICATOR;
                             member->datum.declaratio.specifier->lexema = type_tok;
@@ -2524,6 +2563,13 @@ _processare_unam_actionem(
                             member->datum.declaratio.tok_storage = NIHIL;
                             member->datum.declaratio.tok_const = NIHIL;
                             member->datum.declaratio.tok_volatile = NIHIL;
+                            member->datum.declaratio.tok_unsigned = NIHIL;
+                            member->datum.declaratio.tok_signed = NIHIL;
+                            member->datum.declaratio.tok_long = NIHIL;
+                            member->datum.declaratio.tok_long2 = NIHIL;
+                            member->datum.declaratio.tok_short = NIHIL;
+                            member->datum.declaratio.extra_specifiers = NIHIL;
+                            member->datum.declaratio.specifiers_ordine = NIHIL;
                             member->datum.declaratio.specifier = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                             member->datum.declaratio.specifier->genus = ARBOR2_NODUS_IDENTIFICATOR;
                             member->datum.declaratio.specifier->lexema = type_tok;
@@ -2560,6 +2606,13 @@ _processare_unam_actionem(
                             member->datum.declaratio.tok_storage = NIHIL;
                             member->datum.declaratio.tok_const = NIHIL;
                             member->datum.declaratio.tok_volatile = NIHIL;
+                            member->datum.declaratio.tok_unsigned = NIHIL;
+                            member->datum.declaratio.tok_signed = NIHIL;
+                            member->datum.declaratio.tok_long = NIHIL;
+                            member->datum.declaratio.tok_long2 = NIHIL;
+                            member->datum.declaratio.tok_short = NIHIL;
+                            member->datum.declaratio.extra_specifiers = NIHIL;
+                            member->datum.declaratio.specifiers_ordine = NIHIL;
                             member->datum.declaratio.specifier = spec_node;
                             member->datum.declaratio.declarator = decl_node;
                             member->datum.declaratio.tok_assignatio = NIHIL;
@@ -2594,6 +2647,13 @@ _processare_unam_actionem(
                             member->datum.declaratio.tok_storage = NIHIL;
                             member->datum.declaratio.tok_const = NIHIL;
                             member->datum.declaratio.tok_volatile = NIHIL;
+                            member->datum.declaratio.tok_unsigned = NIHIL;
+                            member->datum.declaratio.tok_signed = NIHIL;
+                            member->datum.declaratio.tok_long = NIHIL;
+                            member->datum.declaratio.tok_long2 = NIHIL;
+                            member->datum.declaratio.tok_short = NIHIL;
+                            member->datum.declaratio.extra_specifiers = NIHIL;
+                            member->datum.declaratio.specifiers_ordine = NIHIL;
                             member->datum.declaratio.specifier = spec_node;
                             member->datum.declaratio.declarator = decl_node;
                             member->datum.declaratio.tok_assignatio = NIHIL;
@@ -2628,6 +2688,13 @@ _processare_unam_actionem(
                             member->datum.declaratio.tok_storage = NIHIL;
                             member->datum.declaratio.tok_const = NIHIL;
                             member->datum.declaratio.tok_volatile = NIHIL;
+                            member->datum.declaratio.tok_unsigned = NIHIL;
+                            member->datum.declaratio.tok_signed = NIHIL;
+                            member->datum.declaratio.tok_long = NIHIL;
+                            member->datum.declaratio.tok_long2 = NIHIL;
+                            member->datum.declaratio.tok_short = NIHIL;
+                            member->datum.declaratio.extra_specifiers = NIHIL;
+                            member->datum.declaratio.specifiers_ordine = NIHIL;
                             member->datum.declaratio.specifier = spec_node;
                             member->datum.declaratio.declarator = decl_node;
                             member->datum.declaratio.tok_assignatio = NIHIL;
@@ -2662,6 +2729,13 @@ _processare_unam_actionem(
                             member->datum.declaratio.tok_storage = NIHIL;
                             member->datum.declaratio.tok_const = NIHIL;
                             member->datum.declaratio.tok_volatile = NIHIL;
+                            member->datum.declaratio.tok_unsigned = NIHIL;
+                            member->datum.declaratio.tok_signed = NIHIL;
+                            member->datum.declaratio.tok_long = NIHIL;
+                            member->datum.declaratio.tok_long2 = NIHIL;
+                            member->datum.declaratio.tok_short = NIHIL;
+                            member->datum.declaratio.extra_specifiers = NIHIL;
+                            member->datum.declaratio.specifiers_ordine = NIHIL;
                             member->datum.declaratio.specifier = spec_node;
                             member->datum.declaratio.declarator = decl_node;
                             member->datum.declaratio.tok_assignatio = NIHIL;
@@ -2727,6 +2801,8 @@ _processare_unam_actionem(
                             member->datum.declaratio.tok_long = NIHIL;
                             member->datum.declaratio.tok_long2 = NIHIL;
                             member->datum.declaratio.tok_short = NIHIL;
+                            member->datum.declaratio.extra_specifiers = NIHIL;
+                            member->datum.declaratio.specifiers_ordine = NIHIL;
                             member->datum.declaratio.tok_assignatio = NIHIL;
                             member->datum.declaratio.initializor = NIHIL;
                             member->datum.declaratio.tok_semicolon = lexemata[ZEPHYRUM];
@@ -2897,6 +2973,8 @@ _processare_unam_actionem(
                             member->datum.declaratio.tok_long = NIHIL;
                             member->datum.declaratio.tok_long2 = NIHIL;
                             member->datum.declaratio.tok_short = NIHIL;
+                            member->datum.declaratio.extra_specifiers = NIHIL;
+                            member->datum.declaratio.specifiers_ordine = NIHIL;
                             member->datum.declaratio.tok_assignatio = NIHIL;
                             member->datum.declaratio.initializor = NIHIL;
                             member->datum.declaratio.tok_semicolon = lexemata[ZEPHYRUM];
@@ -3129,6 +3207,8 @@ _processare_unam_actionem(
                             member->datum.declaratio.tok_long = NIHIL;
                             member->datum.declaratio.tok_long2 = NIHIL;
                             member->datum.declaratio.tok_short = NIHIL;
+                            member->datum.declaratio.extra_specifiers = NIHIL;
+                            member->datum.declaratio.specifiers_ordine = NIHIL;
                             member->datum.declaratio.tok_assignatio = NIHIL;
                             member->datum.declaratio.initializor = NIHIL;
                             member->datum.declaratio.tok_semicolon = lexemata[ZEPHYRUM];
@@ -3187,6 +3267,20 @@ _processare_unam_actionem(
                             valor_novus->datum.declaratio.tok_storage = lexemata[III];  /* typedef */
                             valor_novus->datum.declaratio.tok_const = NIHIL;
                             valor_novus->datum.declaratio.tok_volatile = NIHIL;
+                            valor_novus->datum.declaratio.tok_unsigned = NIHIL;
+                            valor_novus->datum.declaratio.tok_signed = NIHIL;
+                            valor_novus->datum.declaratio.tok_long = NIHIL;
+                            valor_novus->datum.declaratio.tok_long2 = NIHIL;
+                            valor_novus->datum.declaratio.tok_short = NIHIL;
+                            valor_novus->datum.declaratio.extra_specifiers = NIHIL;
+                            /* Creare specifiers_ordine cum typedef token */
+                            {
+                                Arbor2Token** slot;
+                                valor_novus->datum.declaratio.specifiers_ordine =
+                                    xar_creare(glr->piscina, magnitudo(Arbor2Token*));
+                                slot = xar_addere(valor_novus->datum.declaratio.specifiers_ordine);
+                                *slot = lexemata[III];  /* typedef */
+                            }
                             valor_novus->datum.declaratio.specifier = spec_node;
                             valor_novus->datum.declaratio.declarator = decl_node;
                             valor_novus->datum.declaratio.tok_assignatio = NIHIL;
@@ -3218,6 +3312,20 @@ _processare_unam_actionem(
                             valor_novus->datum.declaratio.tok_storage = lexemata[III];  /* typedef */
                             valor_novus->datum.declaratio.tok_const = NIHIL;
                             valor_novus->datum.declaratio.tok_volatile = NIHIL;
+                            valor_novus->datum.declaratio.tok_unsigned = NIHIL;
+                            valor_novus->datum.declaratio.tok_signed = NIHIL;
+                            valor_novus->datum.declaratio.tok_long = NIHIL;
+                            valor_novus->datum.declaratio.tok_long2 = NIHIL;
+                            valor_novus->datum.declaratio.tok_short = NIHIL;
+                            valor_novus->datum.declaratio.extra_specifiers = NIHIL;
+                            /* Creare specifiers_ordine cum typedef token */
+                            {
+                                Arbor2Token** slot;
+                                valor_novus->datum.declaratio.specifiers_ordine =
+                                    xar_creare(glr->piscina, magnitudo(Arbor2Token*));
+                                slot = xar_addere(valor_novus->datum.declaratio.specifiers_ordine);
+                                *slot = lexemata[III];  /* typedef */
+                            }
                             valor_novus->datum.declaratio.specifier = spec_node;
                             valor_novus->datum.declaratio.declarator = decl_node;
                             valor_novus->datum.declaratio.tok_assignatio = NIHIL;
@@ -3249,6 +3357,20 @@ _processare_unam_actionem(
                             valor_novus->datum.declaratio.tok_storage = lexemata[III];  /* typedef */
                             valor_novus->datum.declaratio.tok_const = NIHIL;
                             valor_novus->datum.declaratio.tok_volatile = NIHIL;
+                            valor_novus->datum.declaratio.tok_unsigned = NIHIL;
+                            valor_novus->datum.declaratio.tok_signed = NIHIL;
+                            valor_novus->datum.declaratio.tok_long = NIHIL;
+                            valor_novus->datum.declaratio.tok_long2 = NIHIL;
+                            valor_novus->datum.declaratio.tok_short = NIHIL;
+                            valor_novus->datum.declaratio.extra_specifiers = NIHIL;
+                            /* Creare specifiers_ordine cum typedef token */
+                            {
+                                Arbor2Token** slot;
+                                valor_novus->datum.declaratio.specifiers_ordine =
+                                    xar_creare(glr->piscina, magnitudo(Arbor2Token*));
+                                slot = xar_addere(valor_novus->datum.declaratio.specifiers_ordine);
+                                *slot = lexemata[III];  /* typedef */
+                            }
                             valor_novus->datum.declaratio.specifier = spec_node;
                             valor_novus->datum.declaratio.declarator = decl_node;
                             valor_novus->datum.declaratio.tok_assignatio = NIHIL;
@@ -3324,6 +3446,15 @@ _processare_unam_actionem(
                             valor_novus->datum.declaratio.tok_long = NIHIL;
                             valor_novus->datum.declaratio.tok_long2 = NIHIL;
                             valor_novus->datum.declaratio.tok_short = NIHIL;
+                            valor_novus->datum.declaratio.extra_specifiers = NIHIL;
+                            /* Creare specifiers_ordine cum typedef token */
+                            {
+                                Arbor2Token** slot;
+                                valor_novus->datum.declaratio.specifiers_ordine =
+                                    xar_creare(glr->piscina, magnitudo(Arbor2Token*));
+                                slot = xar_addere(valor_novus->datum.declaratio.specifiers_ordine);
+                                *slot = lexemata[VIII];  /* typedef */
+                            }
                             valor_novus->datum.declaratio.specifier = spec_node;
                             valor_novus->datum.declaratio.declarator = func_decl;
                             valor_novus->datum.declaratio.tok_assignatio = NIHIL;
@@ -3393,6 +3524,15 @@ _processare_unam_actionem(
                             valor_novus->datum.declaratio.tok_long = NIHIL;
                             valor_novus->datum.declaratio.tok_long2 = NIHIL;
                             valor_novus->datum.declaratio.tok_short = NIHIL;
+                            valor_novus->datum.declaratio.extra_specifiers = NIHIL;
+                            /* Creare specifiers_ordine cum typedef token */
+                            {
+                                Arbor2Token** slot;
+                                valor_novus->datum.declaratio.specifiers_ordine =
+                                    xar_creare(glr->piscina, magnitudo(Arbor2Token*));
+                                slot = xar_addere(valor_novus->datum.declaratio.specifiers_ordine);
+                                *slot = lexemata[IX];  /* typedef */
+                            }
                             valor_novus->datum.declaratio.specifier = spec_node;
                             valor_novus->datum.declaratio.declarator = func_decl;
                             valor_novus->datum.declaratio.tok_assignatio = NIHIL;
@@ -3425,6 +3565,20 @@ _processare_unam_actionem(
                             valor_novus->datum.declaratio.tok_storage = NIHIL;
                             valor_novus->datum.declaratio.tok_const = NIHIL;
                             valor_novus->datum.declaratio.tok_volatile = NIHIL;
+                            valor_novus->datum.declaratio.tok_unsigned = NIHIL;
+                            valor_novus->datum.declaratio.tok_signed = NIHIL;
+                            valor_novus->datum.declaratio.tok_long = NIHIL;
+                            valor_novus->datum.declaratio.tok_long2 = NIHIL;
+                            valor_novus->datum.declaratio.tok_short = NIHIL;
+                            valor_novus->datum.declaratio.extra_specifiers = NIHIL;
+                            /* Creare specifiers_ordine cum singulo specificatore */
+                            {
+                                Arbor2Token** slot;
+                                valor_novus->datum.declaratio.specifiers_ordine =
+                                    xar_creare(glr->piscina, magnitudo(Arbor2Token*));
+                                slot = xar_addere(valor_novus->datum.declaratio.specifiers_ordine);
+                                *slot = lexemata[II];  /* storage/qualifier token */
+                            }
                             valor_novus->datum.declaratio.specifier = type_spec;
                             valor_novus->datum.declaratio.declarator = valori[ZEPHYRUM];
                             valor_novus->datum.declaratio.tok_assignatio = NIHIL;
@@ -3496,6 +3650,13 @@ _processare_unam_actionem(
                             valor_novus->datum.declaratio.tok_storage = NIHIL;
                             valor_novus->datum.declaratio.tok_const = NIHIL;
                             valor_novus->datum.declaratio.tok_volatile = NIHIL;
+                            valor_novus->datum.declaratio.tok_unsigned = NIHIL;
+                            valor_novus->datum.declaratio.tok_signed = NIHIL;
+                            valor_novus->datum.declaratio.tok_long = NIHIL;
+                            valor_novus->datum.declaratio.tok_long2 = NIHIL;
+                            valor_novus->datum.declaratio.tok_short = NIHIL;
+                            valor_novus->datum.declaratio.extra_specifiers = NIHIL;
+                            valor_novus->datum.declaratio.specifiers_ordine = NIHIL;
                             valor_novus->datum.declaratio.specifier = type_spec;
                             valor_novus->datum.declaratio.declarator = decl_node;
                             valor_novus->datum.declaratio.tok_assignatio = lexemata[I];  /* '=' */
@@ -3540,6 +3701,20 @@ _processare_unam_actionem(
                             valor_novus->datum.declaratio.tok_storage = (storage != ARBOR2_STORAGE_NONE) ? lexemata[IV] : NIHIL;
                             valor_novus->datum.declaratio.tok_const = (quals == ARBOR2_QUAL_CONST) ? lexemata[IV] : NIHIL;
                             valor_novus->datum.declaratio.tok_volatile = (quals == ARBOR2_QUAL_VOLATILE) ? lexemata[IV] : NIHIL;
+                            valor_novus->datum.declaratio.tok_unsigned = NIHIL;
+                            valor_novus->datum.declaratio.tok_signed = NIHIL;
+                            valor_novus->datum.declaratio.tok_long = NIHIL;
+                            valor_novus->datum.declaratio.tok_long2 = NIHIL;
+                            valor_novus->datum.declaratio.tok_short = NIHIL;
+                            valor_novus->datum.declaratio.extra_specifiers = NIHIL;
+                            /* Creare specifiers_ordine cum singulo specificatore */
+                            {
+                                Arbor2Token** slot;
+                                valor_novus->datum.declaratio.specifiers_ordine =
+                                    xar_creare(glr->piscina, magnitudo(Arbor2Token*));
+                                slot = xar_addere(valor_novus->datum.declaratio.specifiers_ordine);
+                                *slot = lexemata[IV];  /* storage/qualifier token */
+                            }
                             valor_novus->datum.declaratio.specifier = type_spec;
                             valor_novus->datum.declaratio.declarator = decl_node;
                             valor_novus->datum.declaratio.tok_assignatio = lexemata[I];  /* '=' */
@@ -3572,6 +3747,13 @@ _processare_unam_actionem(
                             valor_novus->datum.declaratio.tok_storage = NIHIL;
                             valor_novus->datum.declaratio.tok_const = NIHIL;
                             valor_novus->datum.declaratio.tok_volatile = NIHIL;
+                            valor_novus->datum.declaratio.tok_unsigned = NIHIL;
+                            valor_novus->datum.declaratio.tok_signed = NIHIL;
+                            valor_novus->datum.declaratio.tok_long = NIHIL;
+                            valor_novus->datum.declaratio.tok_long2 = NIHIL;
+                            valor_novus->datum.declaratio.tok_short = NIHIL;
+                            valor_novus->datum.declaratio.extra_specifiers = NIHIL;
+                            valor_novus->datum.declaratio.specifiers_ordine = NIHIL;
                             valor_novus->datum.declaratio.specifier = type_spec;
                             valor_novus->datum.declaratio.declarator = decl_node;
                             valor_novus->datum.declaratio.tok_assignatio = lexemata[I];  /* '=' */
@@ -3613,6 +3795,20 @@ _processare_unam_actionem(
                             valor_novus->datum.declaratio.tok_storage = (storage != ARBOR2_STORAGE_NONE) ? lexemata[IV] : NIHIL;
                             valor_novus->datum.declaratio.tok_const = (quals == ARBOR2_QUAL_CONST) ? lexemata[IV] : NIHIL;
                             valor_novus->datum.declaratio.tok_volatile = (quals == ARBOR2_QUAL_VOLATILE) ? lexemata[IV] : NIHIL;
+                            valor_novus->datum.declaratio.tok_unsigned = NIHIL;
+                            valor_novus->datum.declaratio.tok_signed = NIHIL;
+                            valor_novus->datum.declaratio.tok_long = NIHIL;
+                            valor_novus->datum.declaratio.tok_long2 = NIHIL;
+                            valor_novus->datum.declaratio.tok_short = NIHIL;
+                            valor_novus->datum.declaratio.extra_specifiers = NIHIL;
+                            /* Creare specifiers_ordine cum singulo specificatore */
+                            {
+                                Arbor2Token** slot;
+                                valor_novus->datum.declaratio.specifiers_ordine =
+                                    xar_creare(glr->piscina, magnitudo(Arbor2Token*));
+                                slot = xar_addere(valor_novus->datum.declaratio.specifiers_ordine);
+                                *slot = lexemata[IV];  /* storage/qualifier token */
+                            }
                             valor_novus->datum.declaratio.specifier = type_spec;
                             valor_novus->datum.declaratio.declarator = decl_node;
                             valor_novus->datum.declaratio.tok_assignatio = lexemata[I];  /* '=' */
@@ -3707,6 +3903,22 @@ _processare_unam_actionem(
                                 valor_novus->datum.declaratio.tok_volatile = (quals & ARBOR2_QUAL_VOLATILE) ? lexemata[II] : NIHIL;
                             }
 
+                            valor_novus->datum.declaratio.tok_unsigned = NIHIL;
+                            valor_novus->datum.declaratio.tok_signed = NIHIL;
+                            valor_novus->datum.declaratio.tok_long = NIHIL;
+                            valor_novus->datum.declaratio.tok_long2 = NIHIL;
+                            valor_novus->datum.declaratio.tok_short = NIHIL;
+                            valor_novus->datum.declaratio.extra_specifiers = NIHIL;
+                            /* Creare specifiers_ordine cum duobus specificatoribus */
+                            {
+                                Arbor2Token** slot;
+                                valor_novus->datum.declaratio.specifiers_ordine =
+                                    xar_creare(glr->piscina, magnitudo(Arbor2Token*));
+                                slot = xar_addere(valor_novus->datum.declaratio.specifiers_ordine);
+                                *slot = lexemata[III];  /* primo specificator */
+                                slot = xar_addere(valor_novus->datum.declaratio.specifiers_ordine);
+                                *slot = lexemata[II];   /* secundo specificator */
+                            }
                             valor_novus->datum.declaratio.specifier = type_spec;
                             valor_novus->datum.declaratio.declarator = decl_node;
                             valor_novus->datum.declaratio.tok_assignatio = NIHIL;
@@ -3738,9 +3950,30 @@ _processare_unam_actionem(
                             valor_novus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                             valor_novus->genus = ARBOR2_NODUS_DECLARATIO;
                             valor_novus->lexema = type_tok;
+                            valor_novus->datum.declaratio.tok_storage = lexemata[V];
+                            valor_novus->datum.declaratio.tok_const = lexemata[IV];
+                            valor_novus->datum.declaratio.tok_volatile = NIHIL;
+                            valor_novus->datum.declaratio.tok_unsigned = NIHIL;
+                            valor_novus->datum.declaratio.tok_signed = NIHIL;
+                            valor_novus->datum.declaratio.tok_long = NIHIL;
+                            valor_novus->datum.declaratio.tok_long2 = NIHIL;
+                            valor_novus->datum.declaratio.tok_short = NIHIL;
+                            valor_novus->datum.declaratio.extra_specifiers = NIHIL;
+                            /* Creare specifiers_ordine cum duobus specificatoribus */
+                            {
+                                Arbor2Token** slot;
+                                valor_novus->datum.declaratio.specifiers_ordine =
+                                    xar_creare(glr->piscina, magnitudo(Arbor2Token*));
+                                slot = xar_addere(valor_novus->datum.declaratio.specifiers_ordine);
+                                *slot = lexemata[V];   /* storage (static/extern) */
+                                slot = xar_addere(valor_novus->datum.declaratio.specifiers_ordine);
+                                *slot = lexemata[IV];  /* const */
+                            }
                             valor_novus->datum.declaratio.specifier = type_spec;
                             valor_novus->datum.declaratio.declarator = decl_node;
+                            valor_novus->datum.declaratio.tok_assignatio = lexemata[I];  /* '=' */
                             valor_novus->datum.declaratio.initializor = init_expr;
+                            valor_novus->datum.declaratio.tok_semicolon = NIHIL;
                             valor_novus->datum.declaratio.tok_comma = NIHIL;
                             valor_novus->datum.declaratio.proxima = NIHIL;
                             valor_novus->datum.declaratio.est_typedef = FALSUM;
@@ -3767,9 +4000,30 @@ _processare_unam_actionem(
                             valor_novus = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
                             valor_novus->genus = ARBOR2_NODUS_DECLARATIO;
                             valor_novus->lexema = type_tok;
+                            valor_novus->datum.declaratio.tok_storage = lexemata[V];
+                            valor_novus->datum.declaratio.tok_const = lexemata[IV];
+                            valor_novus->datum.declaratio.tok_volatile = NIHIL;
+                            valor_novus->datum.declaratio.tok_unsigned = NIHIL;
+                            valor_novus->datum.declaratio.tok_signed = NIHIL;
+                            valor_novus->datum.declaratio.tok_long = NIHIL;
+                            valor_novus->datum.declaratio.tok_long2 = NIHIL;
+                            valor_novus->datum.declaratio.tok_short = NIHIL;
+                            valor_novus->datum.declaratio.extra_specifiers = NIHIL;
+                            /* Creare specifiers_ordine cum duobus specificatoribus */
+                            {
+                                Arbor2Token** slot;
+                                valor_novus->datum.declaratio.specifiers_ordine =
+                                    xar_creare(glr->piscina, magnitudo(Arbor2Token*));
+                                slot = xar_addere(valor_novus->datum.declaratio.specifiers_ordine);
+                                *slot = lexemata[V];   /* storage (static/extern) */
+                                slot = xar_addere(valor_novus->datum.declaratio.specifiers_ordine);
+                                *slot = lexemata[IV];  /* const */
+                            }
                             valor_novus->datum.declaratio.specifier = type_spec;
                             valor_novus->datum.declaratio.declarator = decl_node;
+                            valor_novus->datum.declaratio.tok_assignatio = lexemata[I];  /* '=' */
                             valor_novus->datum.declaratio.initializor = init_lista;
+                            valor_novus->datum.declaratio.tok_semicolon = NIHIL;
                             valor_novus->datum.declaratio.tok_comma = NIHIL;
                             valor_novus->datum.declaratio.proxima = NIHIL;
                             valor_novus->datum.declaratio.est_typedef = FALSUM;
@@ -3916,6 +4170,8 @@ _processare_unam_actionem(
                             valor_novus->datum.declaratio.tok_long = NIHIL;
                             valor_novus->datum.declaratio.tok_long2 = NIHIL;
                             valor_novus->datum.declaratio.tok_short = NIHIL;
+                            valor_novus->datum.declaratio.extra_specifiers = NIHIL;
+                            valor_novus->datum.declaratio.specifiers_ordine = NIHIL;
                             valor_novus->datum.declaratio.tok_assignatio = NIHIL;
                             valor_novus->datum.declaratio.initializor = NIHIL;
                             valor_novus->datum.declaratio.tok_semicolon = NIHIL;
@@ -4018,6 +4274,40 @@ _processare_unam_actionem(
                                     frange;
                             }
 
+                            /* Build specifiers_ordine with all modifier tokens in source order */
+                            {
+                                Arbor2Token** slot;
+                                valor_novus->datum.declaratio.specifiers_ordine =
+                                    xar_creare(glr->piscina, magnitudo(Arbor2Token*));
+
+                                si (num_symbols == 3)
+                                {
+                                    /* First modifier always present */
+                                    slot = xar_addere(valor_novus->datum.declaratio.specifiers_ordine);
+                                    *slot = lexemata[II];
+                                    /* If implicit int, second token is also a modifier */
+                                    si (base_type_tok == NIHIL)
+                                    {
+                                        slot = xar_addere(valor_novus->datum.declaratio.specifiers_ordine);
+                                        *slot = lexemata[I];
+                                    }
+                                }
+                                alioquin si (num_symbols == 4)
+                                {
+                                    /* Two modifiers */
+                                    slot = xar_addere(valor_novus->datum.declaratio.specifiers_ordine);
+                                    *slot = lexemata[III];
+                                    slot = xar_addere(valor_novus->datum.declaratio.specifiers_ordine);
+                                    *slot = lexemata[II];
+                                    /* If implicit int, third token is also a modifier */
+                                    si (base_type_tok == NIHIL)
+                                    {
+                                        slot = xar_addere(valor_novus->datum.declaratio.specifiers_ordine);
+                                        *slot = lexemata[I];
+                                    }
+                                }
+                            }
+
                             /* Set specifier (base type) */
                             si (base_type_tok != NIHIL)
                             {
@@ -4074,6 +4364,15 @@ _processare_unam_actionem(
                             valor_novus->datum.declaratio.tok_long = NIHIL;
                             valor_novus->datum.declaratio.tok_long2 = NIHIL;
                             valor_novus->datum.declaratio.tok_short = NIHIL;
+                            valor_novus->datum.declaratio.extra_specifiers = NIHIL;
+                            /* Creare specifiers_ordine cum singulo modificatore */
+                            {
+                                Arbor2Token** slot;
+                                valor_novus->datum.declaratio.specifiers_ordine =
+                                    xar_creare(glr->piscina, magnitudo(Arbor2Token*));
+                                slot = xar_addere(valor_novus->datum.declaratio.specifiers_ordine);
+                                *slot = modifier_tok;
+                            }
                             valor_novus->datum.declaratio.tok_assignatio = NIHIL;
                             valor_novus->datum.declaratio.initializor = NIHIL;
                             valor_novus->datum.declaratio.tok_semicolon = NIHIL;
@@ -4156,6 +4455,15 @@ _processare_unam_actionem(
                             valor_novus->datum.declaratio.tok_long = NIHIL;
                             valor_novus->datum.declaratio.tok_long2 = NIHIL;
                             valor_novus->datum.declaratio.tok_short = NIHIL;
+                            valor_novus->datum.declaratio.extra_specifiers = NIHIL;
+                            /* Creare specifiers_ordine cum singulo modificatore */
+                            {
+                                Arbor2Token** slot;
+                                valor_novus->datum.declaratio.specifiers_ordine =
+                                    xar_creare(glr->piscina, magnitudo(Arbor2Token*));
+                                slot = xar_addere(valor_novus->datum.declaratio.specifiers_ordine);
+                                *slot = modifier_tok;
+                            }
                             valor_novus->datum.declaratio.tok_assignatio = assign_tok;
                             valor_novus->datum.declaratio.initializor = init_expr;
                             valor_novus->datum.declaratio.tok_semicolon = NIHIL;
@@ -4327,6 +4635,7 @@ _processare_unam_actionem(
                                     nodus->datum.declaratio.tok_long = NIHIL;
                                     nodus->datum.declaratio.tok_long2 = NIHIL;
                                     nodus->datum.declaratio.tok_short = NIHIL;
+                                    nodus->datum.declaratio.specifiers_ordine = NIHIL;
                                     nodus->datum.declaratio.specifier = type_spec;
                                     nodus->datum.declaratio.declarator = decl_node;
                                     nodus->datum.declaratio.tok_assignatio = tok_assign;
@@ -4394,6 +4703,7 @@ _processare_unam_actionem(
                             valor_novus->datum.definitio_functi.tok_long = NIHIL;
                             valor_novus->datum.definitio_functi.tok_long2 = NIHIL;
                             valor_novus->datum.definitio_functi.tok_short = NIHIL;
+                            valor_novus->datum.definitio_functi.specifiers_ordine = NIHIL;
 
                             si (decl_node != NIHIL) decl_node->pater = valor_novus;
                             si (corpus_node != NIHIL) corpus_node->pater = valor_novus;
@@ -4434,6 +4744,8 @@ _processare_unam_actionem(
                             valor_novus->datum.declaratio.tok_long = NIHIL;
                             valor_novus->datum.declaratio.tok_long2 = NIHIL;
                             valor_novus->datum.declaratio.tok_short = NIHIL;
+                            valor_novus->datum.declaratio.extra_specifiers = NIHIL;
+                            valor_novus->datum.declaratio.specifiers_ordine = NIHIL;
                             valor_novus->datum.declaratio.tok_assignatio = NIHIL;
                             valor_novus->datum.declaratio.initializor = NIHIL;
                             valor_novus->datum.declaratio.tok_semicolon = NIHIL;
@@ -4633,6 +4945,65 @@ _processare_unam_actionem(
                                         frange;
                                     ordinarius:
                                         frange;
+                                }
+                            }
+
+                            /* Build specifiers_ordine with qualifiers + modifiers in source order */
+                            {
+                                Arbor2Token** slot;
+                                valor_novus->datum.declaratio.specifiers_ordine =
+                                    xar_creare(glr->piscina, magnitudo(Arbor2Token*));
+
+                                /* Add qualifier(s) first */
+                                si (prod <= 453)
+                                {
+                                    /* P437-P453: const first */
+                                    slot = xar_addere(valor_novus->datum.declaratio.specifiers_ordine);
+                                    *slot = const_tok;
+                                }
+                                alioquin si (prod <= 470)
+                                {
+                                    /* P454-P470: volatile first */
+                                    slot = xar_addere(valor_novus->datum.declaratio.specifiers_ordine);
+                                    *slot = volatile_tok;
+                                }
+                                alioquin si (prod <= 487)
+                                {
+                                    /* P471-P487: const volatile */
+                                    slot = xar_addere(valor_novus->datum.declaratio.specifiers_ordine);
+                                    *slot = const_tok;
+                                    slot = xar_addere(valor_novus->datum.declaratio.specifiers_ordine);
+                                    *slot = volatile_tok;
+                                }
+                                alioquin
+                                {
+                                    /* P488-P504: volatile const */
+                                    slot = xar_addere(valor_novus->datum.declaratio.specifiers_ordine);
+                                    *slot = volatile_tok;
+                                    slot = xar_addere(valor_novus->datum.declaratio.specifiers_ordine);
+                                    *slot = const_tok;
+                                }
+
+                                /* Add modifier1 */
+                                si (modifier1_tok != NIHIL)
+                                {
+                                    slot = xar_addere(valor_novus->datum.declaratio.specifiers_ordine);
+                                    *slot = modifier1_tok;
+                                }
+
+                                /* Add modifier2 if present */
+                                si (modifier2_tok != NIHIL)
+                                {
+                                    slot = xar_addere(valor_novus->datum.declaratio.specifiers_ordine);
+                                    *slot = modifier2_tok;
+                                }
+
+                                /* If implicit int, the original base_type_tok is now a modifier (stored in tok_long/tok_short/tok_long2) */
+                                si (base_type_tok == NIHIL && lexemata[I] != NIHIL)
+                                {
+                                    /* lexemata[I] was the base_type position, now a modifier */
+                                    slot = xar_addere(valor_novus->datum.declaratio.specifiers_ordine);
+                                    *slot = lexemata[I];
                                 }
                             }
 
@@ -5707,6 +6078,12 @@ _processare_unam_actionem(
                             alioquin
                                 valor_novus->datum.parameter_decl.tok_volatile = lexemata[II];
 
+                            valor_novus->datum.parameter_decl.tok_unsigned = NIHIL;
+                            valor_novus->datum.parameter_decl.tok_signed = NIHIL;
+                            valor_novus->datum.parameter_decl.tok_long = NIHIL;
+                            valor_novus->datum.parameter_decl.tok_long2 = NIHIL;
+                            valor_novus->datum.parameter_decl.tok_short = NIHIL;
+                            valor_novus->datum.parameter_decl.specifiers_ordine = NIHIL;
                             valor_novus->datum.parameter_decl.type_specifier = type_spec;
                             valor_novus->datum.parameter_decl.declarator = decl_node;
 
@@ -5735,6 +6112,12 @@ _processare_unam_actionem(
                             alioquin
                                 valor_novus->datum.parameter_decl.tok_volatile = lexemata[I];
 
+                            valor_novus->datum.parameter_decl.tok_unsigned = NIHIL;
+                            valor_novus->datum.parameter_decl.tok_signed = NIHIL;
+                            valor_novus->datum.parameter_decl.tok_long = NIHIL;
+                            valor_novus->datum.parameter_decl.tok_long2 = NIHIL;
+                            valor_novus->datum.parameter_decl.tok_short = NIHIL;
+                            valor_novus->datum.parameter_decl.specifiers_ordine = NIHIL;
                             valor_novus->datum.parameter_decl.type_specifier = type_spec;
                             valor_novus->datum.parameter_decl.declarator = NIHIL;  /* abstract - nullus declarator */
 
@@ -5752,6 +6135,12 @@ _processare_unam_actionem(
                             valor_novus->pater = NIHIL;
                             valor_novus->datum.parameter_decl.tok_const = NIHIL;
                             valor_novus->datum.parameter_decl.tok_volatile = NIHIL;
+                            valor_novus->datum.parameter_decl.tok_unsigned = NIHIL;
+                            valor_novus->datum.parameter_decl.tok_signed = NIHIL;
+                            valor_novus->datum.parameter_decl.tok_long = NIHIL;
+                            valor_novus->datum.parameter_decl.tok_long2 = NIHIL;
+                            valor_novus->datum.parameter_decl.tok_short = NIHIL;
+                            valor_novus->datum.parameter_decl.specifiers_ordine = NIHIL;
                             valor_novus->datum.parameter_decl.type_specifier = type_spec;
                             valor_novus->datum.parameter_decl.declarator = NIHIL;
 
@@ -5768,6 +6157,12 @@ _processare_unam_actionem(
                             LOCUS_EX_LEXEMATIS(valor_novus, I, ZEPHYRUM);
                             valor_novus->datum.parameter_decl.tok_const = NIHIL;
                             valor_novus->datum.parameter_decl.tok_volatile = NIHIL;
+                            valor_novus->datum.parameter_decl.tok_unsigned = NIHIL;
+                            valor_novus->datum.parameter_decl.tok_signed = NIHIL;
+                            valor_novus->datum.parameter_decl.tok_long = NIHIL;
+                            valor_novus->datum.parameter_decl.tok_long2 = NIHIL;
+                            valor_novus->datum.parameter_decl.tok_short = NIHIL;
+                            valor_novus->datum.parameter_decl.specifiers_ordine = NIHIL;
                             valor_novus->datum.parameter_decl.type_specifier = valori[I];
                             valor_novus->datum.parameter_decl.declarator = valori[ZEPHYRUM];
 
@@ -5794,6 +6189,7 @@ _processare_unam_actionem(
                         valor_novus->datum.definitio_functi.tok_long = NIHIL;
                         valor_novus->datum.definitio_functi.tok_long2 = NIHIL;
                         valor_novus->datum.definitio_functi.tok_short = NIHIL;
+                        valor_novus->datum.definitio_functi.specifiers_ordine = NIHIL;
                         valor_novus->datum.definitio_functi.specifier = NIHIL;
 
                         commutatio (actio->valor)
