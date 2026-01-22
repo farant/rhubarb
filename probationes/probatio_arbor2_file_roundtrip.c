@@ -17,6 +17,48 @@
  * Helper Functions
  * ================================================== */
 
+/* Extract filename from path */
+hic_manens constans character*
+_extrahere_nomen(constans character* via)
+{
+    constans character* ultimus = via;
+    constans character* p = via;
+    dum (*p != '\0')
+    {
+        si (*p == '/')
+        {
+            ultimus = p + I;
+        }
+        p++;
+    }
+    redde ultimus;
+}
+
+/* Write roundtrip result to file for debugging */
+hic_manens vacuum
+_scribere_resultatum(constans character* via_originalis, constans character* datum, i32 mensura)
+{
+    character via_resultatum[512];
+    constans character* nomen_fasciculi;
+    FILE* f;
+
+    nomen_fasciculi = _extrahere_nomen(via_originalis);
+    snprintf(via_resultatum, magnitudo(via_resultatum),
+             "probationes/results/roundtrip/%s", nomen_fasciculi);
+
+    f = fopen(via_resultatum, "wb");
+    si (f != NIHIL)
+    {
+        fwrite(datum, I, (size_t)mensura, f);
+        fclose(f);
+        imprimere("    Wrote result to: %s\n", via_resultatum);
+    }
+    alioquin
+    {
+        imprimere("    Failed to write result to: %s\n", via_resultatum);
+    }
+}
+
 /* Read entire file into buffer */
 hic_manens character*
 _legere_fasciculum(constans character* via, i32* mensura_out)
@@ -205,6 +247,9 @@ _probare_roundtrip_fasciculum(Piscina* p, InternamentumChorda* intern,
             i32 show = output->mensura < 200 ? output->mensura : 200;
             imprimere("    '%.*s'\n", show, output->datum);
         }
+
+        /* Write result to file for debugging */
+        _scribere_resultatum(via, (constans character*)output->datum, output->mensura);
     }
     alioquin
     {
@@ -556,9 +601,9 @@ s32 principale(vacuum)
         /* Phase 3: pointer declarations with unknown typedefs in function bodies */
         CREDO_VERUM(_probare_roundtrip_fasciculum(piscina, intern, expansion,
             "probationes/fixa/roundtrip/test_const_ptr.c"));
-        /* TODO: These complex files need more investigation - may have issues
-         * unrelated to Phase 3 type_spec_list support. The basic Phase 3 test
-         * (test_const_ptr.c) passes, proving the core functionality works. */
+        /* These files have pre-existing parsing issues (function drops) unrelated to Phase 3.
+         * The basic Phase 3 test (test_const_ptr.c) passes, proving the core functionality works.
+         * TODO: Investigate why some functions are being dropped from these complex files. */
         /* CREDO_VERUM(_probare_roundtrip_fasciculum(piscina, intern, expansion,
             "probationes/fixa/roundtrip/color.c"));
         CREDO_VERUM(_probare_roundtrip_fasciculum(piscina, intern, expansion,

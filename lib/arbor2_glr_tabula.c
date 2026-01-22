@@ -17557,10 +17557,13 @@ hic_manens constans Arbor2TabulaActio STATUS_1700_ACTIONES[] = {
     { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,   17, VERUM },  /* intentional fork: pointer declarator */
     { ARBOR2_LEXEMA_SOLIDUS,        ARBOR2_ACTIO_REDUCE,   5, FALSUM },
     { ARBOR2_LEXEMA_PERCENTUM,      ARBOR2_ACTIO_REDUCE,   5, FALSUM },
-    /* GLR fork for unknown identifier: could be type or expression or type_spec_list */
+    /* GLR fork for unknown identifier: could be type or expression
+     * NOTE: P535 (type_spec_list) removed here to prevent duplicate DECLARATIO nodes.
+     * For 2-ID patterns like "Type var;", shift 116 handles it correctly.
+     * For const-qualified patterns like "constans i8* pal;", the CONST path (State 350) handles it.
+     * 3+ ID chains in compound statements are not currently supported. */
     { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_REDUCE,   5, VERUM },  /* expr: ID->factor (intentional fork) */
     { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,  116, VERUM },  /* decl: type ID (2-ID chains) */
-    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_REDUCE, 535, VERUM },  /* type_spec_list: start chain for 3+ IDs */
     { ARBOR2_LEXEMA_PLUS,           ARBOR2_ACTIO_REDUCE,   5, FALSUM },
     { ARBOR2_LEXEMA_MINUS,          ARBOR2_ACTIO_REDUCE,   5, FALSUM },
     { ARBOR2_LEXEMA_MINOR,          ARBOR2_ACTIO_REDUCE,   5, FALSUM },
