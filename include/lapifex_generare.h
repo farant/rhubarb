@@ -27,6 +27,7 @@
 nomen structura {
     chorda*  titulus;          /* Symbolum appellatio (internatum) */
     chorda*  genus;            /* Pro terminalibus: genus lexematis */
+    chorda*  exemplum;         /* Pro lexere: exemplum congruendi (vel NIHIL) */
     s32      index;            /* Index in tabula symbolorum */
     b32      est_terminale;    /* VERUM si terminale */
     Xar*     first;            /* FIRST coniunctum: Xar de s32 (indices terminalium) */

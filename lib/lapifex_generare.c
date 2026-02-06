@@ -30,6 +30,7 @@ symbolum_addere(
 
     sym->titulus = titulus;
     sym->genus = genus;
+    sym->exemplum = NIHIL;
     sym->index = (s32)index;
     sym->est_terminale = est_terminale;
     sym->first = xar_creare(grammatica->piscina, (i32)magnitudo(s32));
@@ -175,6 +176,18 @@ lapifex_grammaticam_legere(
 
             idx = symbolum_addere(grammatica, tit, gen, VERUM);
             si (idx < ZEPHYRUM) redde NIHIL;
+
+            /* Legere exemplum attributum pro lexere */
+            {
+                chorda* exemplum_attr;
+                exemplum_attr = stml_attributum_capere(*nodus_ptr, "exemplum");
+                si (exemplum_attr)
+                {
+                    LapifexSymbolum* sym = (LapifexSymbolum*)xar_obtinere(
+                        grammatica->symbola, (i32)idx);
+                    si (sym) sym->exemplum = exemplum_attr;
+                }
+            }
 
             tabula_dispersa_inserere(tabula_symbolorum, *tit,
                 (vacuum*)(s64)idx);
