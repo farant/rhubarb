@@ -3361,6 +3361,8 @@ hic_manens constans Arbor2TabulaActio STATUS_129_ACTIONES[] = {
     { ARBOR2_LEXEMA_UNSIGNED,       ARBOR2_ACTIO_SHIFT, 131, FALSUM },
     { ARBOR2_LEXEMA_SIGNED,         ARBOR2_ACTIO_SHIFT, 131, FALSUM },
     { ARBOR2_LEXEMA_VOID,           ARBOR2_ACTIO_SHIFT, 131, FALSUM },
+    { ARBOR2_LEXEMA_CONST,          ARBOR2_ACTIO_SHIFT, 1470, FALSUM },  /* subsequent member const -> P381 */
+    { ARBOR2_LEXEMA_VOLATILE,       ARBOR2_ACTIO_SHIFT, 1474, FALSUM },  /* subsequent member volatile -> P382 */
     { ARBOR2_LEXEMA_STRUCT,         ARBOR2_ACTIO_SHIFT, 117, FALSUM },
     { ARBOR2_LEXEMA_UNION,          ARBOR2_ACTIO_SHIFT, 137, FALSUM },
     { ARBOR2_LEXEMA_ENUM,           ARBOR2_ACTIO_SHIFT, 145, FALSUM },
@@ -17352,6 +17354,106 @@ hic_manens constans Arbor2TabulaActio STATUS_1462_ACTIONES[] = {
 };
 
 /* ==================================================
+ * States 1470-1477: Subsequent struct member const/volatile handling
+ *
+ * These handle subsequent members with qualifiers:
+ *   struct { int a; const int b; }    -> P381
+ *   struct { int a; volatile int b; } -> P382
+ *
+ * The key difference from first-member states (960/961) is that these
+ * reduce with 5-symbol productions that include the "members" nonterminal,
+ * preventing stack accumulation.
+ *
+ * Flow for "const int b;" as second member:
+ *   State 129 -> CONST -> 1470 -> INT -> 1471 -> ID -> 18
+ *   REDUCE P12, GOTO(1471, DECLARATOR) = 1472
+ *   State 1472 -> ; -> 1473
+ *   REDUCE P381 (pop 5: members const type decl ;)
+ * ================================================== */
+
+/* State 1470: after 'members CONST' - expects type */
+hic_manens constans Arbor2TabulaActio STATUS_1470_ACTIONES[] = {
+    { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_SHIFT, 1471, FALSUM },
+    { ARBOR2_LEXEMA_CHAR,           ARBOR2_ACTIO_SHIFT, 1471, FALSUM },
+    { ARBOR2_LEXEMA_FLOAT,          ARBOR2_ACTIO_SHIFT, 1471, FALSUM },
+    { ARBOR2_LEXEMA_DOUBLE,         ARBOR2_ACTIO_SHIFT, 1471, FALSUM },
+    { ARBOR2_LEXEMA_VOID,           ARBOR2_ACTIO_SHIFT, 1471, FALSUM },
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT, 1471, FALSUM }
+};
+
+/* State 1471: after 'members CONST type' - expects declarator */
+hic_manens constans Arbor2TabulaActio STATUS_1471_ACTIONES[] = {
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,  17, FALSUM },
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,  18, FALSUM }
+};
+
+/* State 1472: after 'members CONST type declarator' - expects ';' */
+hic_manens constans Arbor2TabulaActio STATUS_1472_ACTIONES[] = {
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_SHIFT, 1473, FALSUM }
+};
+
+/* State 1473: after 'members CONST type declarator ;' - reduce P381 */
+hic_manens constans Arbor2TabulaActio STATUS_1473_ACTIONES[] = {
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_REDUCE, 381, FALSUM },
+    { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_REDUCE, 381, FALSUM },
+    { ARBOR2_LEXEMA_CHAR,           ARBOR2_ACTIO_REDUCE, 381, FALSUM },
+    { ARBOR2_LEXEMA_FLOAT,          ARBOR2_ACTIO_REDUCE, 381, FALSUM },
+    { ARBOR2_LEXEMA_DOUBLE,         ARBOR2_ACTIO_REDUCE, 381, FALSUM },
+    { ARBOR2_LEXEMA_VOID,           ARBOR2_ACTIO_REDUCE, 381, FALSUM },
+    { ARBOR2_LEXEMA_LONG,           ARBOR2_ACTIO_REDUCE, 381, FALSUM },
+    { ARBOR2_LEXEMA_SHORT,          ARBOR2_ACTIO_REDUCE, 381, FALSUM },
+    { ARBOR2_LEXEMA_UNSIGNED,       ARBOR2_ACTIO_REDUCE, 381, FALSUM },
+    { ARBOR2_LEXEMA_SIGNED,         ARBOR2_ACTIO_REDUCE, 381, FALSUM },
+    { ARBOR2_LEXEMA_CONST,          ARBOR2_ACTIO_REDUCE, 381, FALSUM },
+    { ARBOR2_LEXEMA_VOLATILE,       ARBOR2_ACTIO_REDUCE, 381, FALSUM },
+    { ARBOR2_LEXEMA_STRUCT,         ARBOR2_ACTIO_REDUCE, 381, FALSUM },
+    { ARBOR2_LEXEMA_UNION,          ARBOR2_ACTIO_REDUCE, 381, FALSUM },
+    { ARBOR2_LEXEMA_ENUM,           ARBOR2_ACTIO_REDUCE, 381, FALSUM },
+    { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 381, FALSUM }
+};
+
+/* State 1474: after 'members VOLATILE' - expects type */
+hic_manens constans Arbor2TabulaActio STATUS_1474_ACTIONES[] = {
+    { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_SHIFT, 1475, FALSUM },
+    { ARBOR2_LEXEMA_CHAR,           ARBOR2_ACTIO_SHIFT, 1475, FALSUM },
+    { ARBOR2_LEXEMA_FLOAT,          ARBOR2_ACTIO_SHIFT, 1475, FALSUM },
+    { ARBOR2_LEXEMA_DOUBLE,         ARBOR2_ACTIO_SHIFT, 1475, FALSUM },
+    { ARBOR2_LEXEMA_VOID,           ARBOR2_ACTIO_SHIFT, 1475, FALSUM },
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT, 1475, FALSUM }
+};
+
+/* State 1475: after 'members VOLATILE type' - expects declarator */
+hic_manens constans Arbor2TabulaActio STATUS_1475_ACTIONES[] = {
+    { ARBOR2_LEXEMA_ASTERISCUS,     ARBOR2_ACTIO_SHIFT,  17, FALSUM },
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_SHIFT,  18, FALSUM }
+};
+
+/* State 1476: after 'members VOLATILE type declarator' - expects ';' */
+hic_manens constans Arbor2TabulaActio STATUS_1476_ACTIONES[] = {
+    { ARBOR2_LEXEMA_SEMICOLON,      ARBOR2_ACTIO_SHIFT, 1477, FALSUM }
+};
+
+/* State 1477: after 'members VOLATILE type declarator ;' - reduce P382 */
+hic_manens constans Arbor2TabulaActio STATUS_1477_ACTIONES[] = {
+    { ARBOR2_LEXEMA_IDENTIFICATOR,  ARBOR2_ACTIO_REDUCE, 382, FALSUM },
+    { ARBOR2_LEXEMA_INT,            ARBOR2_ACTIO_REDUCE, 382, FALSUM },
+    { ARBOR2_LEXEMA_CHAR,           ARBOR2_ACTIO_REDUCE, 382, FALSUM },
+    { ARBOR2_LEXEMA_FLOAT,          ARBOR2_ACTIO_REDUCE, 382, FALSUM },
+    { ARBOR2_LEXEMA_DOUBLE,         ARBOR2_ACTIO_REDUCE, 382, FALSUM },
+    { ARBOR2_LEXEMA_VOID,           ARBOR2_ACTIO_REDUCE, 382, FALSUM },
+    { ARBOR2_LEXEMA_LONG,           ARBOR2_ACTIO_REDUCE, 382, FALSUM },
+    { ARBOR2_LEXEMA_SHORT,          ARBOR2_ACTIO_REDUCE, 382, FALSUM },
+    { ARBOR2_LEXEMA_UNSIGNED,       ARBOR2_ACTIO_REDUCE, 382, FALSUM },
+    { ARBOR2_LEXEMA_SIGNED,         ARBOR2_ACTIO_REDUCE, 382, FALSUM },
+    { ARBOR2_LEXEMA_CONST,          ARBOR2_ACTIO_REDUCE, 382, FALSUM },
+    { ARBOR2_LEXEMA_VOLATILE,       ARBOR2_ACTIO_REDUCE, 382, FALSUM },
+    { ARBOR2_LEXEMA_STRUCT,         ARBOR2_ACTIO_REDUCE, 382, FALSUM },
+    { ARBOR2_LEXEMA_UNION,          ARBOR2_ACTIO_REDUCE, 382, FALSUM },
+    { ARBOR2_LEXEMA_ENUM,           ARBOR2_ACTIO_REDUCE, 382, FALSUM },
+    { ARBOR2_LEXEMA_BRACE_CLAUSA,   ARBOR2_ACTIO_REDUCE, 382, FALSUM }
+};
+
+/* ==================================================
  * State 1500: after struct/enum specifier in local declaration
  * NO shift-reduce conflict - only declarator paths allowed
  * This avoids GLR fork that causes duplication
@@ -19413,14 +19515,15 @@ hic_manens constans Arbor2StatusInfo STATUS_TABULA_PARTIAL[] = {
     { NIHIL, 0, "reserved" },  /* 1467 */
     { NIHIL, 0, "reserved" },  /* 1468 */
     { NIHIL, 0, "reserved" },  /* 1469 */
-    { NIHIL, 0, "reserved" },  /* 1470 */
-    { NIHIL, 0, "reserved" },  /* 1471 */
-    { NIHIL, 0, "reserved" },  /* 1472 */
-    { NIHIL, 0, "reserved" },  /* 1473 */
-    { NIHIL, 0, "reserved" },  /* 1474 */
-    { NIHIL, 0, "reserved" },  /* 1475 */
-    { NIHIL, 0, "reserved" },  /* 1476 */
-    { NIHIL, 0, "reserved" },  /* 1477 */
+    /* States 1470-1477: subsequent member const/volatile */
+    STATUS_INFO(1470, "members CONST - expect type"),
+    STATUS_INFO(1471, "members CONST type - expect declarator"),
+    STATUS_INFO(1472, "members CONST type declarator - expect ';'"),
+    STATUS_INFO(1473, "reduce P381 - subsequent member const"),
+    STATUS_INFO(1474, "members VOLATILE - expect type"),
+    STATUS_INFO(1475, "members VOLATILE type - expect declarator"),
+    STATUS_INFO(1476, "members VOLATILE type declarator - expect ';'"),
+    STATUS_INFO(1477, "reduce P382 - subsequent member volatile"),
     { NIHIL, 0, "reserved" },  /* 1478 */
     { NIHIL, 0, "reserved" },  /* 1479 */
     { NIHIL, 0, "reserved" },  /* 1480 */
@@ -22988,6 +23091,16 @@ hic_manens constans Arbor2StatusGotoEntry STATUS_1460_GOTO[] = {
     { INT_NT_DECLARATOR, 1461 }
 };
 
+/* State 1471: after 'members CONST type' - DECLARATOR goes to 1472 */
+hic_manens constans Arbor2StatusGotoEntry STATUS_1471_GOTO[] = {
+    { INT_NT_DECLARATOR, 1472 }
+};
+
+/* State 1475: after 'members VOLATILE type' - DECLARATOR goes to 1476 */
+hic_manens constans Arbor2StatusGotoEntry STATUS_1475_GOTO[] = {
+    { INT_NT_DECLARATOR, 1476 }
+};
+
 /* ==================================================
  * STATUS_GOTO Macro and Master Table
  * ================================================== */
@@ -24652,14 +24765,15 @@ hic_manens constans Arbor2StatusGoto GOTO_TABULA_NOVA[] = {
     STATUS_GOTO_NIL,   /* 1467: reserved */
     STATUS_GOTO_NIL,   /* 1468: reserved */
     STATUS_GOTO_NIL,   /* 1469: reserved */
-    STATUS_GOTO_NIL,   /* 1470: reserved */
-    STATUS_GOTO_NIL,   /* 1471: reserved */
-    STATUS_GOTO_NIL,   /* 1472: reserved */
-    STATUS_GOTO_NIL,   /* 1473: reserved */
-    STATUS_GOTO_NIL,   /* 1474: reserved */
-    STATUS_GOTO_NIL,   /* 1475: reserved */
-    STATUS_GOTO_NIL,   /* 1476: reserved */
-    STATUS_GOTO_NIL,   /* 1477: reserved */
+    /* States 1470-1477: subsequent member const/volatile */
+    STATUS_GOTO_NIL,   /* 1470: members CONST - shift type */
+    STATUS_GOTO(1471), /* 1471: members CONST type -> DECLARATOR */
+    STATUS_GOTO_NIL,   /* 1472: members CONST type declarator - shift ';' */
+    STATUS_GOTO_NIL,   /* 1473: reduce P381 */
+    STATUS_GOTO_NIL,   /* 1474: members VOLATILE - shift type */
+    STATUS_GOTO(1475), /* 1475: members VOLATILE type -> DECLARATOR */
+    STATUS_GOTO_NIL,   /* 1476: members VOLATILE type declarator - shift ';' */
+    STATUS_GOTO_NIL,   /* 1477: reduce P382 */
     STATUS_GOTO_NIL,   /* 1478: reserved */
     STATUS_GOTO_NIL,   /* 1479: reserved */
     STATUS_GOTO_NIL,   /* 1480: reserved */

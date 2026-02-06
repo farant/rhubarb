@@ -2934,6 +2934,61 @@ _processare_unam_actionem(
                             *slot = member;
                             valor_novus = (Arbor2Nodus*)lista;
                         }
+                        /* ========== SUBSEQUENT MEMBER CONST/VOLATILE P381-P382 ========== */
+                        alioquin si (actio->valor == 381 || actio->valor == 382)
+                        {
+                            /* P381: members 'const' type declarator ';' (5 symbols)
+                             * P382: members 'volatile' type declarator ';' (5 symbols)
+                             * valori: [4]=list, [1]=declarator node (pre-built)
+                             * lexemata: [3]=const/volatile, [2]=type, [0]=; */
+                            Arbor2Nodus* member;
+                            Arbor2Nodus* decl_node = valori[I];
+                            Xar* lista = (Xar*)valori[IV];
+                            Arbor2Nodus** slot;
+                            Arbor2Token* qual_tok = lexemata[III];
+                            Arbor2Token* type_tok = lexemata[II];
+
+                            member = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
+                            member->genus = ARBOR2_NODUS_DECLARATIO;
+                            member->lexema = type_tok;
+                            member->pater = NIHIL;
+                            member->datum.declaratio.tok_storage = NIHIL;
+                            member->datum.declaratio.tok_const = NIHIL;
+                            member->datum.declaratio.tok_volatile = NIHIL;
+                            member->datum.declaratio.tok_unsigned = NIHIL;
+                            member->datum.declaratio.tok_signed = NIHIL;
+                            member->datum.declaratio.tok_long = NIHIL;
+                            member->datum.declaratio.tok_long2 = NIHIL;
+                            member->datum.declaratio.tok_short = NIHIL;
+                            member->datum.declaratio.extra_specifiers = NIHIL;
+                            member->datum.declaratio.specifiers_ordine = NIHIL;
+                            member->datum.declaratio.tok_assignatio = NIHIL;
+                            member->datum.declaratio.initializor = NIHIL;
+                            member->datum.declaratio.tok_semicolon = lexemata[ZEPHYRUM];
+                            member->datum.declaratio.tok_comma = NIHIL;
+                            member->datum.declaratio.proxima = NIHIL;
+
+                            /* Set qualifier */
+                            si (actio->valor == 381)
+                                member->datum.declaratio.tok_const = qual_tok;
+                            alioquin
+                                member->datum.declaratio.tok_volatile = qual_tok;
+
+                            /* Set specifier (base type) */
+                            member->datum.declaratio.specifier = piscina_allocare(glr->piscina, magnitudo(Arbor2Nodus));
+                            member->datum.declaratio.specifier->genus = ARBOR2_NODUS_IDENTIFICATOR;
+                            member->datum.declaratio.specifier->lexema = type_tok;
+                            member->datum.declaratio.specifier->pater = member;
+                            member->datum.declaratio.specifier->datum.folium.valor = type_tok->lexema->valor;
+
+                            member->datum.declaratio.declarator = decl_node;
+                            si (decl_node != NIHIL) decl_node->pater = member;
+
+                            /* Append to existing member list */
+                            slot = xar_addere(lista);
+                            *slot = member;
+                            valor_novus = (Arbor2Nodus*)lista;
+                        }
                         /* ========== QUALIFIER + TYPE MODIFIER SPECIFIERS P386-P417 ========== */
                         alioquin si (actio->valor >= 386 && actio->valor <= 417)
                         {

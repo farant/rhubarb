@@ -323,6 +323,16 @@ s32 principale(vacuum)
     }
 
     /* ========================================================
+     * PROBARE: Struct member specifiers (Phase 3.5 validation)
+     * ======================================================== */
+    {
+        imprimere("\n--- Probans struct member specifiers ---\n");
+
+        CREDO_VERUM(_probare_roundtrip_fasciculum(piscina, intern, expansion,
+            "probationes/fixa/roundtrip/struct_member_specifiers.c"));
+    }
+
+    /* ========================================================
      * PROBARE: Enums
      * ======================================================== */
     {

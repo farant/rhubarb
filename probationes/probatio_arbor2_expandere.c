@@ -279,8 +279,8 @@ s32 principale(vacuum)
 
         info = arbor2_expansion_quaerere_typedef(exp, nomen_ch);
         CREDO_NON_NIHIL(info);
-        /* est_certum is FALSUM for heuristic nomen detection */
-        CREDO_AEQUALIS_I32((i32)info->est_certum, (i32)FALSUM);
+        /* est_certum is VERUM because lexer recognizes 'nomen' as TYPEDEF keyword */
+        CREDO_AEQUALIS_I32((i32)info->est_certum, (i32)VERUM);
     }
 
 
