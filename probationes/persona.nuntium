@@ -1,0 +1,5 @@
+nuntium Persona {
+    textus id = 1;
+    varint aetas = 2;
+    textus appellatio = 3;
+}

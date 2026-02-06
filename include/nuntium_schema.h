@@ -99,4 +99,36 @@ nuntium_schema_legere(
     constans character*  fons,
     s32                  longitudo);
 
+/* ================================================
+ * Generatio Codicis ex Schemate
+ * ================================================ */
+
+/* Generare caput (.h) ex schemate
+ *
+ * piscina         - Piscina pro allocationibus
+ * radix           - Radix AST (genus = SCHEMA)
+ * caput_titulis   - Nomen fili capitis (e.g. "persona_gen.h")
+ *
+ * Redde: chorda cum fonte C generato
+ */
+chorda
+nuntium_schema_generare_caput(
+    Piscina*            piscina,
+    NuntiumSchemaNodus* radix,
+    constans character* caput_titulis);
+
+/* Generare corpus (.c) ex schemate
+ *
+ * piscina         - Piscina pro allocationibus
+ * radix           - Radix AST (genus = SCHEMA)
+ * caput_titulis   - Nomen fili capitis (e.g. "persona_gen.h")
+ *
+ * Redde: chorda cum fonte C generato
+ */
+chorda
+nuntium_schema_generare_corpus(
+    Piscina*            piscina,
+    NuntiumSchemaNodus* radix,
+    constans character* caput_titulis);
+
 #endif /* NUNTIUM_SCHEMA_H */
