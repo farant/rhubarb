@@ -1,12 +1,14 @@
 /* lapifex_generare.h - Generator Grammaticae GLR
  *
- * Legit grammaticam ex STML, computat FIRST coniuncta,
- * fundamentum pro generatore tabularum GLR.
+ * Legit grammaticam ex STML, computat FIRST/FOLLOW coniuncta,
+ * construit collectio canonica LR(1).
  *
  * Usus:
  *   LapifexGrammatica* g = lapifex_grammaticam_legere(piscina, intern, stml);
  *   lapifex_first_computare(g);
- *   lapifex_first_imprimere(g);
+ *   lapifex_follow_computare(g);
+ *   LapifexCollectio* c = lapifex_collectio_construere(g);
+ *   lapifex_collectio_imprimere(c);
  */
 
 #ifndef LAPIFEX_GENERARE_H
@@ -28,6 +30,7 @@ nomen structura {
     s32      index;            /* Index in tabula symbolorum */
     b32      est_terminale;    /* VERUM si terminale */
     Xar*     first;            /* FIRST coniunctum: Xar de s32 (indices terminalium) */
+    Xar*     follow;           /* FOLLOW coniunctum: Xar de s32 (indices terminalium) */
     b32      habet_epsilon;    /* VERUM si epsilon in FIRST */
 } LapifexSymbolum;
 
@@ -100,5 +103,86 @@ lapifex_grammaticam_imprimere(
 vacuum
 lapifex_first_imprimere(
     LapifexGrammatica*  grammatica);
+
+/* ================================================
+ * FOLLOW Coniuncta
+ * ================================================ */
+
+/* Computare FOLLOW coniuncta pro omnibus symbolis
+ * Requirit: FIRST iam computata
+ * Redde: VERUM si successus
+ */
+b32
+lapifex_follow_computare(
+    LapifexGrammatica*  grammatica);
+
+/* Obtinere FOLLOW coniunctum pro symbolo
+ * Redde: Xar* de s32 (indices terminalium), vel NIHIL
+ */
+Xar*
+lapifex_follow_obtinere(
+    LapifexGrammatica*  grammatica,
+    i32                 symbolum_index);
+
+/* Imprimere FOLLOW coniuncta ad stdout */
+vacuum
+lapifex_follow_imprimere(
+    LapifexGrammatica*  grammatica);
+
+/* ================================================
+ * LR(1) Res (Item): [A -> alpha . beta, a]
+ * ================================================ */
+
+nomen structura {
+    s32  productio;     /* Index productionis */
+    s32  punctum;       /* Positio puncti (0..longitudo RHS) */
+    s32  prospectus;    /* Lookahead: index terminalis (-1 = EOF/finis) */
+} LapifexRes;
+
+/* ================================================
+ * LR(1) Status (State): coniunctum rerum
+ * ================================================ */
+
+nomen structura {
+    Xar*  res;          /* Xar de LapifexRes */
+    s32   index;        /* Status numerus */
+} LapifexStatus;
+
+/* ================================================
+ * Transitio: status --symbolum--> status_novus
+ * ================================================ */
+
+nomen structura {
+    s32  status;        /* Fons status */
+    s32  symbolum;      /* Symbolum transitionis */
+    s32  status_novus;  /* Destinatio status */
+} LapifexTransitio;
+
+/* ================================================
+ * Collectio Canonica: omnes status + transitiones
+ * ================================================ */
+
+nomen structura {
+    Xar*                status_omnes;     /* Xar de LapifexStatus */
+    Xar*                transitiones;     /* Xar de LapifexTransitio */
+    LapifexGrammatica*  grammatica;
+} LapifexCollectio;
+
+/* ================================================
+ * Constructio Collectionis LR(1)
+ * ================================================ */
+
+/* Construere collectionem canonicam LR(1)
+ * Requirit: FIRST iam computata
+ * Redde: LapifexCollectio* vel NIHIL si error
+ */
+LapifexCollectio*
+lapifex_collectio_construere(
+    LapifexGrammatica*  grammatica);
+
+/* Imprimere collectionem ad stdout */
+vacuum
+lapifex_collectio_imprimere(
+    LapifexCollectio*   collectio);
 
 #endif /* LAPIFEX_GENERARE_H */
