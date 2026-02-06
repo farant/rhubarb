@@ -133,6 +133,7 @@ declare -a SOURCE_FILES=(
     "lib/arbor2_conditio_evaluare.c"
     "lib/arbor2_scribere.c"
     "lib/lapifex_generare.c"
+    "lib/lapifex_parsere.c"
     "probationes/capsula_assets.c"
     "book_assets/capsula_libri.c"
 )
