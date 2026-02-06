@@ -265,8 +265,8 @@ lapifex_lexere(
                 {
                     congruentia = _scandere_identificatorem(
                         fons, longitudo, positio);
-                    /* Valor: 0 (vel internare chorda si necessarium) */
-                    val = 0;
+                    /* Valor: offset in altis XXXII bits, longitudo in imis XXXII bits */
+                    val = ((s64)positio << XXXII) | (s64)congruentia;
                 }
             }
             alioquin
