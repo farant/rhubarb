@@ -1,0 +1,27 @@
+<grammatica>
+  <terminalia>
+    <terminalis titulus="NUMBER" genus="LAPIFEX_LEX_NUMBER"/>
+    <terminalis titulus="PLUS" genus="LAPIFEX_LEX_PLUS"/>
+    <terminalis titulus="STAR" genus="LAPIFEX_LEX_STAR"/>
+    <terminalis titulus="LPAREN" genus="LAPIFEX_LEX_LPAREN"/>
+    <terminalis titulus="RPAREN" genus="LAPIFEX_LEX_RPAREN"/>
+    <terminalis titulus="EOF" genus="LAPIFEX_LEX_EOF"/>
+  </terminalia>
+
+  <regulae>
+    <regula titulus="expr">
+      <productio>expr PLUS term</productio>
+      <productio>term</productio>
+    </regula>
+    <regula titulus="term">
+      <productio>term STAR factor</productio>
+      <productio>factor</productio>
+    </regula>
+    <regula titulus="factor">
+      <productio>LPAREN expr RPAREN</productio>
+      <productio>NUMBER</productio>
+    </regula>
+  </regulae>
+
+  <initium>expr</initium>
+</grammatica>
