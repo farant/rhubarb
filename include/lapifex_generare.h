@@ -185,4 +185,81 @@ vacuum
 lapifex_collectio_imprimere(
     LapifexCollectio*   collectio);
 
+/* ================================================
+ * ACTION/GOTO Tabula LR(1)
+ * ================================================ */
+
+/* Genus actionis in tabula */
+nomen enumeratio {
+    LAPIFEX_ACTIO_ERRARE,       /* 0: Nulla actio valida */
+    LAPIFEX_ACTIO_TRANSPONERE,  /* SHIFT: impellere statum, consumere token */
+    LAPIFEX_ACTIO_REDUCERE,     /* REDUCE: applicare productionem */
+    LAPIFEX_ACTIO_ACCIPERE      /* ACCEPT: parsura completa */
+} LapifexActioGenus;
+
+/* Introitus in tabula ACTION */
+nomen structura {
+    s32                terminalis;          /* Index symboli (-1 = $) */
+    LapifexActioGenus  actio;              /* SHIFT/REDUCE/ACCEPT */
+    s32                valor;              /* SHIFT: status destinationis; REDUCE: index productionis */
+    b32                conflictus_intentus; /* VERUM si conflictus GLR */
+} LapifexActioIntroitus;
+
+/* Introitus in tabula GOTO */
+nomen structura {
+    s32  non_terminalis;  /* Index symboli */
+    s32  status_novus;    /* Status destinationis */
+} LapifexGotoIntroitus;
+
+/* Tabula pro uno statu */
+nomen structura {
+    Xar*  actiones;         /* Xar de LapifexActioIntroitus */
+    Xar*  goto_introitus;   /* Xar de LapifexGotoIntroitus */
+    s32   index;
+    b32   habet_conflictum;
+} LapifexStatusTabula;
+
+/* Tabula completa ACTION/GOTO */
+nomen structura {
+    Xar*                status_tabulae;   /* Xar de LapifexStatusTabula */
+    LapifexGrammatica*  grammatica;
+    LapifexCollectio*   collectio;
+    s32                 numerus_conflictuum;
+} LapifexTabula;
+
+/* Construere tabulam ACTION/GOTO ex collectione canonica
+ * Redde: LapifexTabula* vel NIHIL si error
+ */
+LapifexTabula*
+lapifex_tabulam_construere(
+    LapifexCollectio*  collectio);
+
+/* Quaerere actiones pro (status, terminalis)
+ * Redde: Xar* de LapifexActioIntroitus (possibilis plures si conflictus)
+ */
+Xar*
+lapifex_actiones_quaerere(
+    LapifexTabula*  tabula,
+    s32             status,
+    s32             terminalis);
+
+/* Quaerere goto pro (status, non_terminalis)
+ * Redde: index status novi, vel -1 si non inventum
+ */
+s32
+lapifex_goto_quaerere(
+    LapifexTabula*  tabula,
+    s32             status,
+    s32             non_terminalis);
+
+/* Imprimere tabulam ad stdout */
+vacuum
+lapifex_tabulam_imprimere(
+    LapifexTabula*  tabula);
+
+/* Imprimere conflictus ad stdout */
+vacuum
+lapifex_conflictus_imprimere(
+    LapifexTabula*  tabula);
+
 #endif /* LAPIFEX_GENERARE_H */

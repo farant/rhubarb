@@ -1357,6 +1357,511 @@ lapifex_collectio_construere(
  * Imprimere Collectionem
  * ================================================ */
 
+/* ================================================
+ * ACTION/GOTO Tabula
+ * ================================================ */
+
+/* Auxiliaris: verificare si actio iam existit in Xar */
+hic_manens b32
+actio_iam_existit(
+    Xar*                   actiones,
+    LapifexActioIntroitus* nova)
+{
+    i32 i;
+    i32 numerus = (i32)xar_numerus(actiones);
+
+    per (i = ZEPHYRUM; i < numerus; i++)
+    {
+        LapifexActioIntroitus* existens =
+            (LapifexActioIntroitus*)xar_obtinere(actiones, i);
+        si (existens &&
+            existens->terminalis == nova->terminalis &&
+            existens->actio == nova->actio &&
+            existens->valor == nova->valor)
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
+/* Auxiliaris: detegere conflictus in tabula */
+hic_manens vacuum
+conflictus_detegere(
+    LapifexTabula* tabula)
+{
+    i32 s;
+    i32 num_status;
+
+    tabula->numerus_conflictuum = ZEPHYRUM;
+    num_status = (i32)xar_numerus(tabula->status_tabulae);
+
+    per (s = ZEPHYRUM; s < num_status; s++)
+    {
+        LapifexStatusTabula* st =
+            (LapifexStatusTabula*)xar_obtinere(tabula->status_tabulae, s);
+        i32 num_actiones;
+        i32 i;
+        i32 j;
+
+        si (!st) perge;
+
+        num_actiones = (i32)xar_numerus(st->actiones);
+        st->habet_conflictum = FALSUM;
+
+        per (i = ZEPHYRUM; i < num_actiones; i++)
+        {
+            LapifexActioIntroitus* ai =
+                (LapifexActioIntroitus*)xar_obtinere(st->actiones, i);
+            si (!ai) perge;
+
+            per (j = i + I; j < num_actiones; j++)
+            {
+                LapifexActioIntroitus* aj =
+                    (LapifexActioIntroitus*)xar_obtinere(st->actiones, j);
+                si (!aj) perge;
+
+                si (ai->terminalis == aj->terminalis)
+                {
+                    ai->conflictus_intentus = VERUM;
+                    aj->conflictus_intentus = VERUM;
+                    st->habet_conflictum = VERUM;
+                    tabula->numerus_conflictuum++;
+                }
+            }
+        }
+    }
+}
+
+LapifexTabula*
+lapifex_tabulam_construere(
+    LapifexCollectio*  collectio)
+{
+    LapifexTabula*      tabula;
+    LapifexGrammatica*  grammatica;
+    Piscina*            piscina;
+    i32                 num_status;
+    i32                 num_transitiones;
+    i32                 s;
+    i32                 t;
+
+    si (!collectio || !collectio->grammatica) redde NIHIL;
+
+    grammatica = collectio->grammatica;
+    piscina = grammatica->piscina;
+
+    /* Creare tabulam */
+    tabula = (LapifexTabula*)piscina_allocare(piscina,
+        (memoriae_index)magnitudo(LapifexTabula));
+    tabula->grammatica = grammatica;
+    tabula->collectio = collectio;
+    tabula->numerus_conflictuum = ZEPHYRUM;
+
+    num_status = (i32)xar_numerus(collectio->status_omnes);
+    tabula->status_tabulae = xar_creare(piscina,
+        (i32)magnitudo(LapifexStatusTabula));
+
+    /* Initializare tabulam pro unoquoque statu */
+    per (s = ZEPHYRUM; s < num_status; s++)
+    {
+        LapifexStatusTabula* st =
+            (LapifexStatusTabula*)xar_addere(tabula->status_tabulae);
+        st->actiones = xar_creare(piscina,
+            (i32)magnitudo(LapifexActioIntroitus));
+        st->goto_introitus = xar_creare(piscina,
+            (i32)magnitudo(LapifexGotoIntroitus));
+        st->index = (s32)s;
+        st->habet_conflictum = FALSUM;
+    }
+
+    /* Passus 1: Transitiones -> SHIFT (terminalia) et GOTO (non-terminalia) */
+    num_transitiones = (i32)xar_numerus(collectio->transitiones);
+
+    per (t = ZEPHYRUM; t < num_transitiones; t++)
+    {
+        LapifexTransitio* trans =
+            (LapifexTransitio*)xar_obtinere(collectio->transitiones, t);
+        LapifexSymbolum*  sym;
+        LapifexStatusTabula* st;
+
+        si (!trans) perge;
+
+        sym = (LapifexSymbolum*)xar_obtinere(
+            grammatica->symbola, (i32)trans->symbolum);
+        si (!sym) perge;
+
+        st = (LapifexStatusTabula*)xar_obtinere(
+            tabula->status_tabulae, (i32)trans->status);
+        si (!st) perge;
+
+        si (sym->est_terminale)
+        {
+            /* SHIFT actio */
+            LapifexActioIntroitus nova;
+            nova.terminalis = trans->symbolum;
+            nova.actio = LAPIFEX_ACTIO_TRANSPONERE;
+            nova.valor = trans->status_novus;
+            nova.conflictus_intentus = FALSUM;
+
+            si (!actio_iam_existit(st->actiones, &nova))
+            {
+                LapifexActioIntroitus* addita =
+                    (LapifexActioIntroitus*)xar_addere(st->actiones);
+                si (addita) *addita = nova;
+            }
+        }
+        alioquin
+        {
+            /* GOTO introitus */
+            LapifexGotoIntroitus* gi =
+                (LapifexGotoIntroitus*)xar_addere(st->goto_introitus);
+            si (gi)
+            {
+                gi->non_terminalis = trans->symbolum;
+                gi->status_novus = trans->status_novus;
+            }
+        }
+    }
+
+    /* Passus 2: Res cum puncto ad finem -> REDUCE vel ACCEPT */
+    per (s = ZEPHYRUM; s < num_status; s++)
+    {
+        LapifexStatus* status_lr =
+            (LapifexStatus*)xar_obtinere(collectio->status_omnes, s);
+        LapifexStatusTabula* st;
+        i32 num_rerum;
+        i32 r;
+
+        si (!status_lr) perge;
+
+        st = (LapifexStatusTabula*)xar_obtinere(
+            tabula->status_tabulae, s);
+        si (!st) perge;
+
+        num_rerum = (i32)xar_numerus(status_lr->res);
+
+        per (r = ZEPHYRUM; r < num_rerum; r++)
+        {
+            LapifexRes* res =
+                (LapifexRes*)xar_obtinere(status_lr->res, r);
+            LapifexProductio* prod;
+            i32 num_dextrum;
+
+            si (!res) perge;
+
+            prod = (LapifexProductio*)xar_obtinere(
+                grammatica->productiones, (i32)res->productio);
+            si (!prod) perge;
+
+            num_dextrum = (i32)xar_numerus(prod->dextrum);
+
+            /* Punctum ad finem? */
+            si ((i32)res->punctum == num_dextrum)
+            {
+                LapifexActioIntroitus nova;
+                nova.conflictus_intentus = FALSUM;
+
+                si (prod->sinistrum == grammatica->initium_index &&
+                    res->prospectus == (s32)LAPIFEX_EOF_PROSPECTUS)
+                {
+                    /* ACCEPT */
+                    nova.terminalis = (s32)LAPIFEX_EOF_PROSPECTUS;
+                    nova.actio = LAPIFEX_ACTIO_ACCIPERE;
+                    nova.valor = ZEPHYRUM;
+                }
+                alioquin
+                {
+                    /* REDUCE */
+                    nova.terminalis = res->prospectus;
+                    nova.actio = LAPIFEX_ACTIO_REDUCERE;
+                    nova.valor = prod->index;
+                }
+
+                si (!actio_iam_existit(st->actiones, &nova))
+                {
+                    LapifexActioIntroitus* addita =
+                        (LapifexActioIntroitus*)xar_addere(st->actiones);
+                    si (addita) *addita = nova;
+                }
+            }
+        }
+    }
+
+    /* Passus 3: Detegere conflictus */
+    conflictus_detegere(tabula);
+
+    redde tabula;
+}
+
+Xar*
+lapifex_actiones_quaerere(
+    LapifexTabula*  tabula,
+    s32             status,
+    s32             terminalis)
+{
+    LapifexStatusTabula* st;
+    Xar* fructus;
+    i32 i;
+    i32 numerus;
+
+    si (!tabula) redde NIHIL;
+
+    st = (LapifexStatusTabula*)xar_obtinere(
+        tabula->status_tabulae, (i32)status);
+    si (!st) redde NIHIL;
+
+    fructus = xar_creare(tabula->grammatica->piscina,
+        (i32)magnitudo(LapifexActioIntroitus));
+
+    numerus = (i32)xar_numerus(st->actiones);
+    per (i = ZEPHYRUM; i < numerus; i++)
+    {
+        LapifexActioIntroitus* ai =
+            (LapifexActioIntroitus*)xar_obtinere(st->actiones, i);
+        si (ai && ai->terminalis == terminalis)
+        {
+            LapifexActioIntroitus* copia =
+                (LapifexActioIntroitus*)xar_addere(fructus);
+            si (copia) *copia = *ai;
+        }
+    }
+
+    redde fructus;
+}
+
+s32
+lapifex_goto_quaerere(
+    LapifexTabula*  tabula,
+    s32             status,
+    s32             non_terminalis)
+{
+    LapifexStatusTabula* st;
+    i32 i;
+    i32 numerus;
+
+    si (!tabula) redde -I;
+
+    st = (LapifexStatusTabula*)xar_obtinere(
+        tabula->status_tabulae, (i32)status);
+    si (!st) redde -I;
+
+    numerus = (i32)xar_numerus(st->goto_introitus);
+    per (i = ZEPHYRUM; i < numerus; i++)
+    {
+        LapifexGotoIntroitus* gi =
+            (LapifexGotoIntroitus*)xar_obtinere(st->goto_introitus, i);
+        si (gi && gi->non_terminalis == non_terminalis)
+        {
+            redde gi->status_novus;
+        }
+    }
+
+    redde -I;
+}
+
+vacuum
+lapifex_tabulam_imprimere(
+    LapifexTabula*  tabula)
+{
+    LapifexGrammatica* grammatica;
+    i32 s;
+    i32 num_status;
+
+    si (!tabula) redde;
+
+    grammatica = tabula->grammatica;
+    num_status = (i32)xar_numerus(tabula->status_tabulae);
+
+    imprimere("\n=== Tabula ACTION/GOTO ===\n");
+    imprimere("Status: %d, Conflictus: %d\n\n",
+        (int)num_status, (int)tabula->numerus_conflictuum);
+
+    per (s = ZEPHYRUM; s < num_status; s++)
+    {
+        LapifexStatusTabula* st =
+            (LapifexStatusTabula*)xar_obtinere(tabula->status_tabulae, s);
+        i32 i;
+        i32 num_actiones;
+        i32 num_goto;
+
+        si (!st) perge;
+
+        num_actiones = (i32)xar_numerus(st->actiones);
+        num_goto = (i32)xar_numerus(st->goto_introitus);
+
+        imprimere("--- Status %d%s ---\n", (int)st->index,
+            st->habet_conflictum ? " [CONFLICTUS]" : "");
+
+        /* ACTION introitus */
+        per (i = ZEPHYRUM; i < num_actiones; i++)
+        {
+            LapifexActioIntroitus* ai =
+                (LapifexActioIntroitus*)xar_obtinere(st->actiones, i);
+            si (!ai) perge;
+
+            imprimere("  ACTION(");
+            si (ai->terminalis == (s32)LAPIFEX_EOF_PROSPECTUS)
+            {
+                imprimere("$");
+            }
+            alioquin
+            {
+                LapifexSymbolum* sym = (LapifexSymbolum*)xar_obtinere(
+                    grammatica->symbola, (i32)ai->terminalis);
+                si (sym)
+                {
+                    imprimere("%.*s",
+                        (int)sym->titulus->mensura,
+                        (constans character*)sym->titulus->datum);
+                }
+            }
+
+            imprimere(") = ");
+
+            commutatio (ai->actio)
+            {
+                casus LAPIFEX_ACTIO_TRANSPONERE:
+                    imprimere("SHIFT %d", (int)ai->valor);
+                    frange;
+                casus LAPIFEX_ACTIO_REDUCERE:
+                {
+                    LapifexProductio* prod = (LapifexProductio*)xar_obtinere(
+                        grammatica->productiones, (i32)ai->valor);
+                    si (prod)
+                    {
+                        LapifexSymbolum* lhs = (LapifexSymbolum*)xar_obtinere(
+                            grammatica->symbola, (i32)prod->sinistrum);
+                        si (lhs)
+                        {
+                            imprimere("REDUCE P%d (%.*s)",
+                                (int)ai->valor,
+                                (int)lhs->titulus->mensura,
+                                (constans character*)lhs->titulus->datum);
+                        }
+                    }
+                    frange;
+                }
+                casus LAPIFEX_ACTIO_ACCIPERE:
+                    imprimere("ACCEPT");
+                    frange;
+                ordinarius:
+                    imprimere("ERROR");
+                    frange;
+            }
+
+            si (ai->conflictus_intentus)
+            {
+                imprimere(" [!]");
+            }
+            imprimere("\n");
+        }
+
+        /* GOTO introitus */
+        per (i = ZEPHYRUM; i < num_goto; i++)
+        {
+            LapifexGotoIntroitus* gi =
+                (LapifexGotoIntroitus*)xar_obtinere(st->goto_introitus, i);
+            si (!gi) perge;
+
+            {
+                LapifexSymbolum* sym = (LapifexSymbolum*)xar_obtinere(
+                    grammatica->symbola, (i32)gi->non_terminalis);
+                si (sym)
+                {
+                    imprimere("  GOTO(%.*s) = %d\n",
+                        (int)sym->titulus->mensura,
+                        (constans character*)sym->titulus->datum,
+                        (int)gi->status_novus);
+                }
+            }
+        }
+
+        imprimere("\n");
+    }
+}
+
+vacuum
+lapifex_conflictus_imprimere(
+    LapifexTabula*  tabula)
+{
+    LapifexGrammatica* grammatica;
+    i32 s;
+    i32 num_status;
+
+    si (!tabula) redde;
+
+    grammatica = tabula->grammatica;
+    num_status = (i32)xar_numerus(tabula->status_tabulae);
+
+    si (tabula->numerus_conflictuum == ZEPHYRUM)
+    {
+        imprimere("\nNulli conflictus in tabula.\n");
+        redde;
+    }
+
+    imprimere("\n=== Conflictus (%d) ===\n", (int)tabula->numerus_conflictuum);
+
+    per (s = ZEPHYRUM; s < num_status; s++)
+    {
+        LapifexStatusTabula* st =
+            (LapifexStatusTabula*)xar_obtinere(tabula->status_tabulae, s);
+        i32 i;
+        i32 num_actiones;
+
+        si (!st || !st->habet_conflictum) perge;
+
+        imprimere("  Status %d:\n", (int)st->index);
+
+        num_actiones = (i32)xar_numerus(st->actiones);
+        per (i = ZEPHYRUM; i < num_actiones; i++)
+        {
+            LapifexActioIntroitus* ai =
+                (LapifexActioIntroitus*)xar_obtinere(st->actiones, i);
+            si (!ai || !ai->conflictus_intentus) perge;
+
+            imprimere("    ");
+            si (ai->terminalis == (s32)LAPIFEX_EOF_PROSPECTUS)
+            {
+                imprimere("$");
+            }
+            alioquin
+            {
+                LapifexSymbolum* sym = (LapifexSymbolum*)xar_obtinere(
+                    grammatica->symbola, (i32)ai->terminalis);
+                si (sym)
+                {
+                    imprimere("%.*s",
+                        (int)sym->titulus->mensura,
+                        (constans character*)sym->titulus->datum);
+                }
+            }
+
+            imprimere(": ");
+
+            commutatio (ai->actio)
+            {
+                casus LAPIFEX_ACTIO_TRANSPONERE:
+                    imprimere("SHIFT %d", (int)ai->valor);
+                    frange;
+                casus LAPIFEX_ACTIO_REDUCERE:
+                    imprimere("REDUCE P%d", (int)ai->valor);
+                    frange;
+                casus LAPIFEX_ACTIO_ACCIPERE:
+                    imprimere("ACCEPT");
+                    frange;
+                ordinarius:
+                    imprimere("ERROR");
+                    frange;
+            }
+            imprimere("\n");
+        }
+    }
+}
+
+/* ================================================
+ * Imprimere Collectionem
+ * ================================================ */
+
 vacuum
 lapifex_collectio_imprimere(
     LapifexCollectio*   collectio)
