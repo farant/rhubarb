@@ -1,0 +1,1413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vox — Audio Production</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background: #1a1a2e;
+  color: #e0e0e0;
+  height: 100vh;
+  overflow: hidden;
+}
+
+#app {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr;
+  height: 100vh;
+  gap: 1px;
+  background: #2a2a4a;
+}
+
+/* ── Left Panel: Script ── */
+
+#script-panel {
+  background: #16213e;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+#script-header {
+  padding: 12px 16px;
+  background: #0f3460;
+  border-bottom: 1px solid #2a2a4a;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#script-header h2 {
+  font-size: 14px;
+  font-weight: 600;
+  color: #e94560;
+}
+
+#project-select {
+  background: #1a1a2e;
+  color: #e0e0e0;
+  border: 1px solid #2a2a4a;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+}
+
+#script-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 8px;
+}
+
+.section-header {
+  padding: 8px 12px;
+  margin-top: 8px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #e94560;
+  border-bottom: 1px solid #2a2a4a;
+}
+
+.section-context {
+  padding: 4px 12px 8px;
+  font-size: 11px;
+  color: #888;
+  font-style: italic;
+}
+
+.line-item {
+  padding: 8px 12px;
+  margin: 2px 0;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.15s;
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+}
+
+.line-item:hover { background: #1a1a4e; }
+.line-item.selected { background: #1a2a5e; outline: 1px solid #e94560; }
+.line-item.generated { border-left: 3px solid #53d769; }
+.line-item.generating { border-left: 3px solid #ffcc00; }
+.line-item.error { border-left: 3px solid #ff3b30; }
+
+.line-id {
+  font-size: 10px;
+  font-family: monospace;
+  color: #666;
+  min-width: 28px;
+  padding-top: 2px;
+}
+
+.line-character {
+  font-size: 11px;
+  font-weight: 700;
+  min-width: 80px;
+  padding-top: 1px;
+}
+
+.line-text {
+  font-size: 13px;
+  flex: 1;
+  line-height: 1.4;
+}
+
+.line-type-narration .line-character { color: #7eb8da; }
+.line-type-dialogue .line-character { color: #f0c040; }
+
+/* Group bracket — thin vertical bar connecting grouped lines */
+.line-item.group-first { border-radius: 6px 6px 0 0; }
+.line-item.group-middle { border-radius: 0; }
+.line-item.group-last { border-radius: 0 0 6px 6px; }
+
+.line-item.group-member {
+  position: relative;
+}
+
+.line-item.group-member::before {
+  content: "";
+  position: absolute;
+  left: 2px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: #e94560;
+  opacity: 0.5;
+}
+
+.line-item.group-first::before { top: 50%; }
+.line-item.group-last::before { bottom: 50%; }
+
+.pause-item {
+  padding: 4px 12px;
+  text-align: center;
+  font-size: 10px;
+  color: #555;
+}
+
+/* ── Right Panel ── */
+
+#right-panel {
+  display: flex;
+  flex-direction: column;
+  background: #16213e;
+}
+
+/* Player */
+#player-panel {
+  padding: 16px;
+  background: #0f3460;
+  border-bottom: 1px solid #2a2a4a;
+}
+
+#player-panel h3 {
+  font-size: 12px;
+  color: #888;
+  margin-bottom: 8px;
+}
+
+#player-info {
+  font-size: 14px;
+  margin-bottom: 8px;
+  color: #e94560;
+}
+
+#audio-player {
+  width: 100%;
+  height: 36px;
+}
+
+#player-delivery {
+  margin-top: 8px;
+  font-size: 12px;
+  color: #7eb8da;
+  font-style: italic;
+}
+
+/* Controls */
+#control-panel {
+  flex: 1;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  overflow-y: auto;
+}
+
+.btn-row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+button {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+
+button:hover { opacity: 0.85; }
+button:disabled { opacity: 0.4; cursor: not-allowed; }
+
+.btn-primary { background: #e94560; color: white; }
+.btn-secondary { background: #2a2a4a; color: #e0e0e0; }
+.btn-accent { background: #53d769; color: #1a1a2e; }
+
+/* Feedback */
+#feedback-section {
+  border-top: 1px solid #2a2a4a;
+  padding-top: 12px;
+}
+
+#feedback-section h4 {
+  font-size: 12px;
+  color: #888;
+  margin-bottom: 6px;
+}
+
+#feedback-text {
+  width: 100%;
+  height: 60px;
+  background: #1a1a2e;
+  color: #e0e0e0;
+  border: 1px solid #2a2a4a;
+  border-radius: 6px;
+  padding: 8px;
+  font-size: 13px;
+  resize: vertical;
+  font-family: inherit;
+}
+
+/* Progress log */
+#progress-log {
+  flex: 1;
+  min-height: 100px;
+  overflow-y: auto;
+  background: #0d1117;
+  border-radius: 6px;
+  padding: 8px;
+  font-family: monospace;
+  font-size: 11px;
+  line-height: 1.6;
+}
+
+.log-info { color: #7eb8da; }
+.log-done { color: #53d769; }
+.log-error { color: #ff3b30; }
+.log-progress { color: #ffcc00; }
+
+/* Playing highlight */
+.line-item.playing { background: rgba(233, 69, 96, 0.15); }
+
+/* Announce icon */
+.announce-toggle {
+  font-size: 12px;
+  cursor: pointer;
+  user-select: none;
+  opacity: 0.3;
+  transition: opacity 0.15s;
+  flex-shrink: 0;
+  padding-top: 1px;
+  width: 16px;
+  text-align: center;
+}
+
+.announce-toggle:hover { opacity: 0.7; }
+.announce-toggle.active { opacity: 1.0; }
+
+/* Transport controls */
+#transport {
+  margin-top: 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+#transport button {
+  padding: 4px 10px;
+  font-size: 12px;
+  font-family: monospace;
+}
+
+#transport-info {
+  font-size: 11px;
+  color: #888;
+  flex: 1;
+}
+
+/* Line gap control */
+#gap-control {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+#gap-control label {
+  font-size: 12px;
+  color: #888;
+}
+
+#line-gap-ms {
+  width: 55px;
+  background: #1a1a2e;
+  color: #e0e0e0;
+  border: 1px solid #2a2a4a;
+  border-radius: 4px;
+  padding: 3px 6px;
+  font-size: 12px;
+  text-align: right;
+}
+
+#gap-control .gap-unit {
+  font-size: 11px;
+  color: #666;
+}
+
+/* Version history */
+#version-history {
+  border-top: 1px solid #2a2a4a;
+  padding-top: 12px;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+#version-history h4 {
+  font-size: 12px;
+  color: #888;
+  margin-bottom: 6px;
+}
+
+.version-item {
+  padding: 4px 0;
+  font-size: 12px;
+  color: #aaa;
+  cursor: pointer;
+}
+
+.version-item:hover { color: #e0e0e0; }
+.version-item .v-num { color: #e94560; font-weight: 600; }
+.version-item .v-feedback { color: #7eb8da; font-style: italic; }
+
+/* ── Cast Panel ── */
+
+#cast-panel {
+  border-bottom: 1px solid #2a2a4a;
+}
+
+#cast-header {
+  padding: 10px 16px;
+  background: #0f3460;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  user-select: none;
+}
+
+#cast-header h3 {
+  font-size: 12px;
+  color: #888;
+}
+
+#cast-header .toggle-arrow {
+  font-size: 10px;
+  color: #888;
+  transition: transform 0.2s;
+}
+
+#cast-header.open .toggle-arrow {
+  transform: rotate(90deg);
+}
+
+#cast-body {
+  display: none;
+  padding: 8px 12px;
+  background: #16213e;
+}
+
+#cast-body.open {
+  display: block;
+}
+
+.cast-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 6px 0;
+  border-bottom: 1px solid #1a1a2e;
+}
+
+.cast-row:last-child { border-bottom: none; }
+
+.cast-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin-top: 6px;
+  flex-shrink: 0;
+}
+
+.cast-name {
+  font-size: 12px;
+  font-weight: 600;
+  min-width: 70px;
+  padding-top: 4px;
+  color: #e0e0e0;
+}
+
+.cast-voice-select {
+  background: #1a1a2e;
+  color: #e0e0e0;
+  border: 1px solid #2a2a4a;
+  padding: 3px 6px;
+  border-radius: 4px;
+  font-size: 11px;
+  min-width: 200px;
+}
+
+.cast-baseline {
+  flex: 1;
+  min-width: 0;
+  background: #1a1a2e;
+  color: #e0e0e0;
+  border: 1px solid #2a2a4a;
+  border-radius: 4px;
+  padding: 3px 6px;
+  font-size: 11px;
+  font-family: inherit;
+  resize: vertical;
+  height: 28px;
+}
+
+.cast-save-btn {
+  padding: 3px 10px;
+  font-size: 11px;
+  background: #2a2a4a;
+  color: #666;
+  border: none;
+  border-radius: 4px;
+  cursor: not-allowed;
+}
+
+.cast-save-btn.dirty {
+  background: #e94560;
+  color: white;
+  cursor: pointer;
+}
+
+.cast-regen-btn {
+  padding: 3px 10px;
+  font-size: 11px;
+  background: #2a2a4a;
+  color: #7eb8da;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.cast-regen-btn:hover { background: #3a3a5a; }
+.cast-regen-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+</style>
+</head>
+<body>
+
+<div id="app">
+  <!-- Left: Script Panel -->
+  <div id="script-panel">
+    <div id="script-header">
+      <h2 id="project-title">Vox</h2>
+      <select id="project-select"></select>
+    </div>
+    <div id="script-list"></div>
+  </div>
+
+  <!-- Right Panel -->
+  <div id="right-panel">
+    <div id="player-panel">
+      <h3>Player</h3>
+      <div id="player-info">Select a line to play</div>
+      <audio id="audio-player" controls></audio>
+      <div id="player-delivery"></div>
+      <div id="transport" style="display:none">
+        <button class="btn-secondary" id="btn-prev-line" title="Previous line/group">|&lt;</button>
+        <button class="btn-secondary" id="btn-next-line" title="Next line/group">&gt;|</button>
+        <span id="transport-info"></span>
+      </div>
+    </div>
+
+    <div id="cast-panel">
+      <div id="cast-header">
+        <h3>Cast</h3>
+        <span class="toggle-arrow">▶</span>
+      </div>
+      <div id="cast-body"></div>
+    </div>
+
+    <div id="control-panel">
+      <div class="btn-row">
+        <button class="btn-primary" id="btn-generate-all">Generate All</button>
+        <button class="btn-secondary" id="btn-generate-selected" disabled>Generate Selected</button>
+        <button class="btn-accent" id="btn-stitch" disabled>Stitch Full Mix</button>
+        <button class="btn-secondary" id="btn-download-mix" disabled>Download Mix</button>
+        <button class="btn-secondary" id="btn-play-mix" disabled>Play Sequence</button>
+      </div>
+      <div id="gap-control">
+        <label>Line gap:</label>
+        <input type="number" id="line-gap-ms" value="300" min="0" max="5000" step="100">
+        <span class="gap-unit">ms</span>
+      </div>
+
+      <div id="feedback-section">
+        <h4>Redo with Feedback</h4>
+        <textarea id="feedback-text" placeholder="e.g. too flat, needs more intensity"></textarea>
+        <div class="btn-row" style="margin-top:6px">
+          <button class="btn-primary" id="btn-redo" disabled>Redo Line</button>
+        </div>
+      </div>
+
+      <div id="version-history">
+        <h4>Version History</h4>
+        <div id="version-list"></div>
+      </div>
+
+      <div id="progress-log"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function() {
+  /* ── State ── */
+  let currentProject = null;
+  let production = null;
+  let manifest = null;
+  let selectedLineId = null;
+  let characterColors = {};
+  let ws = null;
+  let availableVoices = [];
+  let groupMap = {};  /* lineId → groupId for multi-line groups */
+  let announceMap = {}; /* lineId → boolean, only for dialogue lines */
+
+  /* Mix sequential playback state */
+  let mixPlaylist = [];    /* [{ lineIds, url, character, pauseAfter }] */
+  let mixPlayIndex = -1;   /* -1 = not in mix mode */
+  let mixPauseTimer = null;
+
+  /* ── Voice descriptions ── */
+  const VOICE_INFO = {
+    alloy:   "Neutral, androgynous",
+    ash:     "M — clear, direct",
+    ballad:  "M — smooth, warm",
+    cedar:   "M — warm, grounded ★",
+    coral:   "F — warm, conversational",
+    echo:    "M — resonant, clear",
+    fable:   "M — expressive, British-tinged",
+    marin:   "F — fresh, bright ★",
+    nova:    "F — bright, energetic",
+    onyx:    "M — deep, authoritative",
+    sage:    "M — calm, measured",
+    shimmer: "F — bright, cheerful",
+    verse:   "F — expressive, poetic",
+  };
+
+  /* ── Color palette for characters ── */
+  const PALETTE = [
+    "#f0c040", "#7eb8da", "#e94560", "#53d769", "#c084fc",
+    "#fb923c", "#22d3ee", "#f472b6", "#a3e635", "#fbbf24",
+  ];
+
+  /* ── Elements ── */
+  const $ = (sel) => document.querySelector(sel);
+  const projectTitle = $("#project-title");
+  const projectSelect = $("#project-select");
+  const scriptList = $("#script-list");
+  const playerInfo = $("#player-info");
+  const audioPlayer = $("#audio-player");
+  const playerDelivery = $("#player-delivery");
+  const btnGenerateAll = $("#btn-generate-all");
+  const btnGenerateSelected = $("#btn-generate-selected");
+  const btnStitch = $("#btn-stitch");
+  const btnDownloadMix = $("#btn-download-mix");
+  const btnPlayMix = $("#btn-play-mix");
+  const btnRedo = $("#btn-redo");
+  const feedbackText = $("#feedback-text");
+  const versionList = $("#version-list");
+  const progressLog = $("#progress-log");
+  const castHeader = $("#cast-header");
+  const castBody = $("#cast-body");
+  const transport = $("#transport");
+  const btnPrevLine = $("#btn-prev-line");
+  const btnNextLine = $("#btn-next-line");
+  const transportInfo = $("#transport-info");
+  const lineGapInput = $("#line-gap-ms");
+
+  /* ── Cast panel toggle ── */
+  castHeader.addEventListener("click", () => {
+    castHeader.classList.toggle("open");
+    castBody.classList.toggle("open");
+  });
+
+  /* ── Logging (newest at top) ── */
+  function log(msg, cls = "log-info") {
+    const div = document.createElement("div");
+    div.className = cls;
+    div.textContent = `[${new Date().toLocaleTimeString()}] ${msg}`;
+    progressLog.prepend(div);
+  }
+
+  /* ── WebSocket ── */
+  function connectWS() {
+    const protocol = location.protocol === "https:" ? "wss:" : "ws:";
+    ws = new WebSocket(`${protocol}//${location.host}/ws`);
+    ws.onopen = () => log("Connected to server");
+    ws.onclose = () => {
+      log("Disconnected. Reconnecting...", "log-error");
+      setTimeout(connectWS, 2000);
+    };
+    ws.onmessage = (evt) => {
+      const msg = JSON.parse(evt.data);
+      handleWSMessage(msg);
+    };
+  }
+
+  function handleWSMessage(msg) {
+    if (msg.type === "progress") {
+      const el = document.querySelector(`.line-item[data-id="${msg.lineId}"]`);
+      if (msg.status === "generating") {
+        log(`Generating ${msg.lineId}...`, "log-progress");
+        if (el) { el.classList.remove("generated", "error"); el.classList.add("generating"); }
+      } else if (msg.status === "done") {
+        log(`Done: ${msg.lineId}`, "log-done");
+        if (el) { el.classList.remove("generating", "error"); el.classList.add("generated"); }
+        btnStitch.disabled = false;
+        btnPlayMix.disabled = false;
+      } else if (msg.status === "error") {
+        log(`Error ${msg.lineId}: ${msg.message}`, "log-error");
+        if (el) { el.classList.remove("generating", "generated"); el.classList.add("error"); }
+      }
+    } else if (msg.type === "redo") {
+      log(`Redo complete: ${msg.lineId} v${msg.version}`, "log-done");
+      /* Reload to get updated manifest */
+      if (currentProject) loadProject(currentProject);
+    } else if (msg.type === "stitch") {
+      if (msg.status === "started") log("Stitching audio...", "log-progress");
+      else if (msg.status === "done") {
+        log("Full mix ready!", "log-done");
+        btnPlayMix.disabled = false;
+      }
+      else if (msg.status === "error") log(`Stitch error: ${msg.message}`, "log-error");
+    }
+  }
+
+  /* ── API helpers ── */
+  async function api(path, opts) {
+    const res = await fetch(`/api${path}`, opts);
+    return res.json();
+  }
+
+  /* ── Load projects list ── */
+  async function loadProjectsList() {
+    const data = await api("/projects");
+    projectSelect.innerHTML = '<option value="">-- select project --</option>';
+    for (const p of data.projects || []) {
+      const opt = document.createElement("option");
+      opt.value = p;
+      opt.textContent = p;
+      projectSelect.appendChild(opt);
+    }
+  }
+
+  /* ── Load project ── */
+  async function loadProject(name) {
+    const data = await api(`/project/${name}`);
+    if (data.error) { log(`Error: ${data.error}`, "log-error"); return; }
+
+    currentProject = name;
+    production = data.production;
+    manifest = data.manifest;
+    groupMap = data.groups || {};
+    announceMap = data.announce || {};
+
+    projectTitle.textContent = production.title || name;
+
+    /* Assign colors to characters */
+    characterColors = {};
+    (production.cast || []).forEach((c, i) => {
+      characterColors[c.id] = PALETTE[i % PALETTE.length];
+    });
+
+    renderScript();
+    renderCast();
+
+    /* Enable playback/stitch if any lines have audio */
+    const hasAudio = Object.keys(manifest.lines || {}).length > 0;
+    btnStitch.disabled = !hasAudio;
+    btnPlayMix.disabled = !hasAudio;
+
+    /* Check if a stitched mix already exists */
+    btnDownloadMix.disabled = true;
+    fetch(`/api/mix/${name}`, { method: "HEAD" }).then(r => {
+      if (r.ok) btnDownloadMix.disabled = false;
+    }).catch(() => {});
+
+    log(`Loaded project: ${name}`);
+  }
+
+  /* ── Helper: find all line IDs in a group ── */
+  function groupLineIds(groupId) {
+    if (!groupId) return [];
+    const ids = [];
+    for (const [lineId, gid] of Object.entries(groupMap)) {
+      if (gid === groupId) ids.push(lineId);
+    }
+    return ids;
+  }
+
+  /* ── Helper: get audio URL for a line (group-aware) ── */
+  function audioUrlForLine(lineId) {
+    const gid = groupMap[lineId];
+    if (gid) {
+      /* Grouped line — find the first line in the group to get audio file */
+      const ids = groupLineIds(gid);
+      if (ids.length > 0) {
+        const firstId = ids[0];
+        const firstStatus = manifest.lines && manifest.lines[firstId];
+        if (firstStatus) {
+          const latest = firstStatus.versions[firstStatus.versions.length - 1];
+          if (latest.audioFile) return `/api/audio/${currentProject}/${latest.audioFile}`;
+        }
+      }
+    }
+    /* Fallback: own audio */
+    const lineStatus = manifest.lines && manifest.lines[lineId];
+    if (lineStatus) {
+      const latest = lineStatus.versions[lineStatus.versions.length - 1];
+      if (latest.audioFile) return `/api/audio/${currentProject}/${latest.audioFile}`;
+    }
+    return null;
+  }
+
+  /* ── Mix sequential playback ── */
+
+  function getDefaultGap() {
+    return parseInt(lineGapInput.value, 10) || 300;
+  }
+
+  /** Build ordered playlist from production elements + groups */
+  function buildPlaylist() {
+    /* First pass: build flat list of audio entries and pauses */
+    const flat = [];
+    const seenGroups = new Set();
+
+    for (const section of production.sections) {
+      for (const el of section.elements) {
+        if (el.id) {
+          const gid = groupMap[el.id];
+          const key = gid || el.id;
+          if (seenGroups.has(key)) continue;
+          seenGroups.add(key);
+          const lineIds = gid ? groupLineIds(gid) : [el.id];
+          const url = audioUrlForLine(el.id);
+          if (url) {
+            flat.push({ type: "audio", lineIds, url, character: el.character });
+          }
+        } else if (el.ms) {
+          flat.push({ type: "pause", ms: el.ms });
+        }
+      }
+    }
+
+    /* Second pass: collapse into audio entries with pauseAfter */
+    const playlist = [];
+    for (let i = 0; i < flat.length; i++) {
+      if (flat[i].type !== "audio") continue;
+      let pauseAfter = 0;
+      /* Look ahead: if next is a pause, use its ms */
+      if (i + 1 < flat.length && flat[i + 1].type === "pause") {
+        pauseAfter = flat[i + 1].ms;
+      } else if (i + 1 < flat.length && flat[i + 1].type === "audio") {
+        /* No explicit pause between audio entries — use default gap */
+        pauseAfter = getDefaultGap();
+      }
+      playlist.push({
+        lineIds: flat[i].lineIds,
+        url: flat[i].url,
+        character: flat[i].character,
+        pauseAfter,
+      });
+    }
+    return playlist;
+  }
+
+  /** Start sequential mix playback from a given index */
+  function mixPlay(startIndex) {
+    mixPlaylist = buildPlaylist();
+    if (mixPlaylist.length === 0) {
+      log("No audio to play", "log-error");
+      return;
+    }
+    mixPlayIndex = Math.max(0, Math.min(startIndex, mixPlaylist.length - 1));
+    transport.style.display = "flex";
+    mixPlayEntry();
+  }
+
+  /** Play the current playlist entry */
+  function mixPlayEntry() {
+    if (mixPlayIndex < 0 || mixPlayIndex >= mixPlaylist.length) {
+      mixStop();
+      return;
+    }
+    const entry = mixPlaylist[mixPlayIndex];
+
+    /* Update transport info */
+    const lineLabel = entry.lineIds.length > 1
+      ? `lines ${entry.lineIds.join(", ")}`
+      : `line ${entry.lineIds[0]}`;
+    transportInfo.textContent = `${mixPlayIndex + 1}/${mixPlaylist.length} — ${lineLabel} (${entry.character})`;
+
+    /* Highlight playing lines in script */
+    document.querySelectorAll(".line-item.playing").forEach(el => el.classList.remove("playing"));
+    for (const lid of entry.lineIds) {
+      const el = document.querySelector(`.line-item[data-id="${lid}"]`);
+      if (el) {
+        el.classList.add("playing");
+        el.scrollIntoView({ block: "nearest", behavior: "smooth" });
+      }
+    }
+
+    /* Update player info */
+    playerInfo.textContent = `Sequence: ${lineLabel} (${entry.character})`;
+
+    /* Load and play */
+    audioPlayer.src = entry.url;
+    audioPlayer.load();
+    audioPlayer.play();
+  }
+
+  /** Handle audio ended — wait pause, then advance */
+  function mixOnEnded() {
+    if (mixPlayIndex < 0) return; /* not in mix mode */
+    if (mixPauseTimer) clearTimeout(mixPauseTimer);
+
+    const entry = mixPlaylist[mixPlayIndex];
+    const wait = entry ? entry.pauseAfter : 0;
+
+    if (mixPlayIndex + 1 >= mixPlaylist.length) {
+      /* End of playlist */
+      log("Sequence playback complete", "log-done");
+      mixStop();
+      return;
+    }
+
+    mixPauseTimer = setTimeout(() => {
+      mixPauseTimer = null;
+      mixPlayIndex++;
+      mixPlayEntry();
+    }, wait);
+  }
+
+  /** Stop mix mode */
+  function mixStop() {
+    mixPlayIndex = -1;
+    mixPlaylist = [];
+    if (mixPauseTimer) { clearTimeout(mixPauseTimer); mixPauseTimer = null; }
+    transport.style.display = "none";
+    document.querySelectorAll(".line-item.playing").forEach(el => el.classList.remove("playing"));
+    transportInfo.textContent = "";
+  }
+
+  /** Find playlist index containing a lineId */
+  function mixIndexForLine(lineId) {
+    return mixPlaylist.findIndex(e => e.lineIds.includes(lineId));
+  }
+
+  /* ── Render script ── */
+  function renderScript() {
+    scriptList.innerHTML = "";
+
+    for (const section of production.sections) {
+      /* Section header */
+      const header = document.createElement("div");
+      header.className = "section-header";
+      header.textContent = section.title;
+      scriptList.appendChild(header);
+
+      if (section.context) {
+        const ctx = document.createElement("div");
+        ctx.className = "section-context";
+        ctx.textContent = section.context;
+        scriptList.appendChild(ctx);
+      }
+
+      for (const el of section.elements) {
+        if (el.id) {
+          /* Line */
+          const line = el;
+          const div = document.createElement("div");
+          div.className = `line-item line-type-${line.type}`;
+          div.dataset.id = line.id;
+
+          /* Group bracket classes */
+          const gid = groupMap[line.id];
+          if (gid) {
+            div.classList.add("group-member");
+            const ids = groupLineIds(gid);
+            if (ids.length > 0) {
+              if (line.id === ids[0]) div.classList.add("group-first");
+              else if (line.id === ids[ids.length - 1]) div.classList.add("group-last");
+              else div.classList.add("group-middle");
+            }
+          }
+
+          /* Check if generated */
+          if (manifest.lines && manifest.lines[line.id]) {
+            div.classList.add("generated");
+          }
+
+          const idSpan = document.createElement("span");
+          idSpan.className = "line-id";
+          idSpan.textContent = line.id;
+
+          const charSpan = document.createElement("span");
+          charSpan.className = "line-character";
+          charSpan.textContent = line.character;
+          charSpan.style.color = characterColors[line.character] || "#e0e0e0";
+
+          const textSpan = document.createElement("span");
+          textSpan.className = "line-text";
+          textSpan.textContent = line.text;
+
+          div.appendChild(idSpan);
+          div.appendChild(charSpan);
+
+          /* Announce toggle icon — only for dialogue lines */
+          if (line.type === "dialogue" && line.id in announceMap) {
+            const icon = document.createElement("span");
+            icon.className = "announce-toggle";
+            if (announceMap[line.id]) icon.classList.add("active");
+            icon.textContent = "\uD83D\uDDE3"; /* 🗣 speaking head */
+            icon.title = announceMap[line.id]
+              ? "Narrator announces character (click to disable)"
+              : "No announcement (click to enable)";
+            icon.addEventListener("click", async (e) => {
+              e.stopPropagation();
+              const newVal = !announceMap[line.id];
+              try {
+                const result = await api(`/announce/${currentProject}`, {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({ lineId: line.id, announce: newVal }),
+                });
+                if (result.success) {
+                  announceMap[line.id] = newVal;
+                  icon.classList.toggle("active", newVal);
+                  icon.title = newVal
+                    ? "Narrator announces character (click to disable)"
+                    : "No announcement (click to enable)";
+                  log(`${newVal ? "Enabled" : "Disabled"} announce for ${line.id}`);
+                }
+              } catch (err) {
+                log(`Error toggling announce: ${err.message}`, "log-error");
+              }
+            });
+            div.appendChild(icon);
+          }
+
+          div.appendChild(textSpan);
+
+          div.addEventListener("click", () => selectLine(line));
+          scriptList.appendChild(div);
+        } else if (el.ms) {
+          /* Pause */
+          const div = document.createElement("div");
+          div.className = "pause-item";
+          div.textContent = `⏸ ${el.ms}ms`;
+          scriptList.appendChild(div);
+        }
+      }
+    }
+  }
+
+  /* ── Fetch voices ── */
+  async function fetchVoices() {
+    const data = await api("/voices");
+    availableVoices = data.voices || [];
+  }
+
+  /* ── Render cast panel ── */
+  function renderCast() {
+    castBody.innerHTML = "";
+    if (!production || !production.cast) return;
+
+    for (const c of production.cast) {
+      const row = document.createElement("div");
+      row.className = "cast-row";
+
+      const dot = document.createElement("div");
+      dot.className = "cast-dot";
+      dot.style.background = characterColors[c.id] || "#888";
+
+      const name = document.createElement("span");
+      name.className = "cast-name";
+      name.textContent = c.name;
+
+      const select = document.createElement("select");
+      select.className = "cast-voice-select";
+      for (const v of availableVoices) {
+        const opt = document.createElement("option");
+        opt.value = v;
+        const desc = VOICE_INFO[v];
+        opt.textContent = desc ? `${v} — ${desc}` : v;
+        if (v === c.voice) opt.selected = true;
+        select.appendChild(opt);
+      }
+
+      const baseline = document.createElement("textarea");
+      baseline.className = "cast-baseline";
+      baseline.value = c.baseline || "";
+      baseline.placeholder = "Baseline delivery instructions...";
+
+      const saveBtn = document.createElement("button");
+      saveBtn.className = "cast-save-btn";
+      saveBtn.textContent = "Save";
+
+      /* Track original values for dirty detection */
+      let origVoice = c.voice;
+      let origBaseline = c.baseline || "";
+
+      function checkDirty() {
+        const dirty = select.value !== origVoice || baseline.value !== origBaseline;
+        if (dirty) saveBtn.classList.add("dirty");
+        else saveBtn.classList.remove("dirty");
+      }
+
+      select.addEventListener("change", checkDirty);
+      baseline.addEventListener("input", checkDirty);
+
+      saveBtn.addEventListener("click", async () => {
+        if (!saveBtn.classList.contains("dirty")) return;
+        saveBtn.disabled = true;
+        saveBtn.textContent = "...";
+        try {
+          const result = await api(`/cast/${currentProject}`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              characterId: c.id,
+              voice: select.value,
+              baseline: baseline.value,
+            }),
+          });
+          if (result.success) {
+            c.voice = result.character.voice;
+            c.baseline = result.character.baseline;
+            origVoice = c.voice;
+            origBaseline = c.baseline;
+            saveBtn.classList.remove("dirty");
+            log(`Updated ${c.name}: voice=${c.voice}`, "log-done");
+          } else {
+            log(`Failed to update ${c.name}: ${result.error}`, "log-error");
+          }
+        } catch (e) {
+          log(`Error updating ${c.name}: ${e.message}`, "log-error");
+        }
+        saveBtn.disabled = false;
+        saveBtn.textContent = "Save";
+      });
+
+      /* Regenerate all lines for this character */
+      const regenBtn = document.createElement("button");
+      regenBtn.className = "cast-regen-btn";
+      regenBtn.textContent = "Regen All";
+      regenBtn.title = `Regenerate all lines for ${c.name}`;
+      regenBtn.addEventListener("click", async () => {
+        if (!currentProject || !production) return;
+        /* Collect all line IDs belonging to this character */
+        const charLineIds = [];
+        for (const s of production.sections) {
+          for (const el of s.elements) {
+            if (el.id && el.character === c.id) charLineIds.push(el.id);
+          }
+        }
+        if (charLineIds.length === 0) {
+          log(`No lines found for ${c.name}`, "log-error");
+          return;
+        }
+        regenBtn.disabled = true;
+        regenBtn.textContent = "...";
+        log(`Regenerating all ${charLineIds.length} lines for ${c.name}...`);
+        try {
+          await api("/generate", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ project: currentProject, lineIds: charLineIds }),
+          });
+          await loadProject(currentProject);
+          log(`Done regenerating ${c.name}`, "log-done");
+        } catch (e) {
+          log(`Error regenerating ${c.name}: ${e.message}`, "log-error");
+        }
+        regenBtn.disabled = false;
+        regenBtn.textContent = "Regen All";
+      });
+
+      row.appendChild(dot);
+      row.appendChild(name);
+      row.appendChild(select);
+      row.appendChild(baseline);
+      row.appendChild(saveBtn);
+      row.appendChild(regenBtn);
+      castBody.appendChild(row);
+    }
+  }
+
+  /* ── Select line ── */
+  function selectLine(line) {
+    /* Exit mix mode if active */
+    if (mixPlayIndex >= 0) mixStop();
+
+    selectedLineId = line.id;
+
+    /* Highlight */
+    document.querySelectorAll(".line-item").forEach(el => el.classList.remove("selected"));
+    const el = document.querySelector(`.line-item[data-id="${line.id}"]`);
+    if (el) el.classList.add("selected");
+
+    /* Player */
+    const character = (production.cast || []).find(c => c.id === line.character);
+    const gid = groupMap[line.id];
+    const groupLabel = gid ? ` [group ${gid}]` : "";
+    playerInfo.textContent = `${character?.name || line.character}: "${line.text.slice(0, 80)}${line.text.length > 80 ? "..." : ""}"${groupLabel}`;
+    playerDelivery.textContent = line.delivery ? `Delivery: ${line.delivery}` : "";
+
+    /* Try to load audio (group-aware) */
+    const url = audioUrlForLine(line.id);
+    if (url) {
+      audioPlayer.src = url;
+      audioPlayer.load();
+    } else {
+      audioPlayer.src = "";
+    }
+
+    /* Enable buttons */
+    const lineStatus = manifest.lines && manifest.lines[line.id];
+    btnGenerateSelected.disabled = false;
+    btnRedo.disabled = !lineStatus;
+
+    /* Update feedback placeholder for groups */
+    if (gid) {
+      const ids = groupLineIds(gid);
+      feedbackText.placeholder = `Feedback applies to full group (lines ${ids.join(", ")})`;
+    } else {
+      feedbackText.placeholder = "e.g. too flat, needs more intensity";
+    }
+
+    /* Version history */
+    renderVersionHistory(line.id);
+  }
+
+  /* ── Version history ── */
+  function renderVersionHistory(lineId) {
+    versionList.innerHTML = "";
+    const lineStatus = manifest.lines && manifest.lines[lineId];
+    if (!lineStatus) {
+      versionList.innerHTML = '<div style="color:#555;font-size:12px">No versions yet</div>';
+      return;
+    }
+
+    /* For grouped lines, also look up first line's versions for audio files */
+    const gid = groupMap[lineId];
+    const firstLineId = gid ? groupLineIds(gid)[0] : null;
+    const firstLineStatus = firstLineId ? (manifest.lines && manifest.lines[firstLineId]) : null;
+
+    for (const v of lineStatus.versions) {
+      const div = document.createElement("div");
+      div.className = "version-item";
+      div.innerHTML = `<span class="v-num">v${v.version}</span> ${v.delivery.slice(0, 60)}${v.delivery.length > 60 ? "..." : ""}`;
+      if (v.feedback) {
+        div.innerHTML += ` <span class="v-feedback">(${v.feedback})</span>`;
+      }
+      div.addEventListener("click", () => {
+        /* Resolve audio file — use own if present, otherwise first line's same version */
+        let audioFile = v.audioFile;
+        if (!audioFile && firstLineStatus) {
+          const matching = firstLineStatus.versions.find(fv => fv.version === v.version);
+          if (matching) audioFile = matching.audioFile;
+        }
+        if (audioFile) {
+          audioPlayer.src = `/api/audio/${currentProject}/${audioFile}`;
+          audioPlayer.load();
+          audioPlayer.play();
+        }
+      });
+      versionList.appendChild(div);
+    }
+  }
+
+  /* ── Button handlers ── */
+
+  btnGenerateAll.addEventListener("click", async () => {
+    if (!currentProject) return;
+    btnGenerateAll.disabled = true;
+    const groupCount = new Set(Object.values(groupMap)).size;
+    const totalLines = Object.keys(groupMap).length;
+    if (groupCount > 0) {
+      log(`Starting generation (${groupCount} groups, ${totalLines} grouped lines)...`);
+    } else {
+      log("Starting generation for all lines...");
+    }
+    try {
+      await api("/generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ project: currentProject }),
+      });
+      /* Reload manifest */
+      await loadProject(currentProject);
+    } catch (e) {
+      log(`Error: ${e.message}`, "log-error");
+    }
+    btnGenerateAll.disabled = false;
+  });
+
+  btnGenerateSelected.addEventListener("click", async () => {
+    if (!currentProject || !selectedLineId) return;
+    btnGenerateSelected.disabled = true;
+    const gid = groupMap[selectedLineId];
+    if (gid) {
+      const ids = groupLineIds(gid);
+      log(`Generating group ${gid} (${ids.length} lines: ${ids.join(", ")})...`);
+    } else {
+      log(`Generating line ${selectedLineId}...`);
+    }
+    try {
+      await api("/generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ project: currentProject, lineIds: [selectedLineId] }),
+      });
+      await loadProject(currentProject);
+      /* Re-select to update player */
+      const entries = [];
+      for (const s of production.sections) {
+        for (const el of s.elements) {
+          if (el.id === selectedLineId) entries.push(el);
+        }
+      }
+      if (entries[0]) selectLine(entries[0]);
+    } catch (e) {
+      log(`Error: ${e.message}`, "log-error");
+    }
+    btnGenerateSelected.disabled = false;
+  });
+
+  btnRedo.addEventListener("click", async () => {
+    if (!currentProject || !selectedLineId) return;
+    const feedback = feedbackText.value.trim();
+    if (!feedback) { log("Please enter feedback first", "log-error"); return; }
+
+    btnRedo.disabled = true;
+    const gid = groupMap[selectedLineId];
+    if (gid) {
+      const ids = groupLineIds(gid);
+      log(`Redoing group ${gid} (lines ${ids.join(", ")}) with feedback: "${feedback}"`);
+    } else {
+      log(`Redoing ${selectedLineId} with feedback: "${feedback}"`);
+    }
+    try {
+      const result = await api(`/redo/${selectedLineId}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ project: currentProject, feedback }),
+      });
+      if (result.success) {
+        log(`New delivery: "${result.newDelivery}"${result.groupId ? ` (group ${result.groupId})` : ""}`, "log-done");
+        feedbackText.value = "";
+        await loadProject(currentProject);
+      } else {
+        log(`Redo failed: ${result.error}`, "log-error");
+      }
+    } catch (e) {
+      log(`Error: ${e.message}`, "log-error");
+    }
+    btnRedo.disabled = false;
+  });
+
+  btnStitch.addEventListener("click", async () => {
+    if (!currentProject) return;
+    btnStitch.disabled = true;
+    const gapMs = getDefaultGap();
+    log(`Stitching full mix (line gap: ${gapMs}ms)...`);
+    try {
+      const result = await api("/stitch", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ project: currentProject, defaultGapMs: gapMs }),
+      });
+      if (result.success) {
+        log("Full mix ready!", "log-done");
+        btnPlayMix.disabled = false;
+        btnDownloadMix.disabled = false;
+      } else {
+        log(`Stitch error: ${result.error}`, "log-error");
+      }
+    } catch (e) {
+      log(`Error: ${e.message}`, "log-error");
+    }
+    btnStitch.disabled = false;
+  });
+
+  btnDownloadMix.addEventListener("click", () => {
+    if (!currentProject) return;
+    const a = document.createElement("a");
+    a.href = `/api/mix/${currentProject}?dl=1`;
+    a.download = `${currentProject}-full-mix.mp3`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  });
+
+  btnPlayMix.addEventListener("click", () => {
+    if (!currentProject) return;
+    /* Start sequential playback from selected line or beginning */
+    let startIdx = 0;
+    if (selectedLineId) {
+      const tempPlaylist = buildPlaylist();
+      const idx = tempPlaylist.findIndex(e => e.lineIds.includes(selectedLineId));
+      if (idx >= 0) startIdx = idx;
+    }
+    log(`Starting sequence playback from entry ${startIdx + 1}...`);
+    mixPlay(startIdx);
+  });
+
+  /* Audio ended — auto-advance in mix mode */
+  audioPlayer.addEventListener("ended", mixOnEnded);
+
+  /* Transport: prev/next */
+  btnPrevLine.addEventListener("click", () => {
+    if (mixPlayIndex <= 0) return;
+    if (mixPauseTimer) { clearTimeout(mixPauseTimer); mixPauseTimer = null; }
+    mixPlayIndex--;
+    mixPlayEntry();
+  });
+
+  btnNextLine.addEventListener("click", () => {
+    if (mixPlayIndex < 0 || mixPlayIndex >= mixPlaylist.length - 1) return;
+    if (mixPauseTimer) { clearTimeout(mixPauseTimer); mixPauseTimer = null; }
+    mixPlayIndex++;
+    mixPlayEntry();
+  });
+
+  /* ── Project select ── */
+  projectSelect.addEventListener("change", () => {
+    const val = projectSelect.value;
+    if (val) loadProject(val);
+  });
+
+  /* ── Keyboard shortcuts ── */
+  document.addEventListener("keydown", (e) => {
+    if (e.target.tagName === "TEXTAREA" || e.target.tagName === "INPUT") return;
+
+    if (e.code === "Space") {
+      e.preventDefault();
+      if (audioPlayer.paused) audioPlayer.play();
+      else audioPlayer.pause();
+    }
+
+    /* Left/Right arrows for prev/next in mix mode */
+    if (mixPlayIndex >= 0) {
+      if (e.code === "ArrowLeft") {
+        e.preventDefault();
+        btnPrevLine.click();
+      } else if (e.code === "ArrowRight") {
+        e.preventDefault();
+        btnNextLine.click();
+      } else if (e.code === "Escape") {
+        e.preventDefault();
+        mixStop();
+        audioPlayer.pause();
+        log("Sequence stopped");
+      }
+    }
+  });
+
+  /* ── Init ── */
+  connectWS();
+  fetchVoices();
+  loadProjectsList();
+})();
+</script>
+</body>
+</html>
