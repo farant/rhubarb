@@ -403,10 +403,81 @@ compile_and_run_test() {
     return 0
 }
 
+compile_tool_if_needed() {
+    local tool_source="$1"
+    local tool_binary="$2"
+    local obj_files
+
+    if [ ! -f "$tool_source" ]; then
+        return 0
+    fi
+
+    if [ -f "$tool_binary" ] && [ "$tool_binary" -nt "$tool_source" ]; then
+        return 0
+    fi
+
+    mkdir -p bin
+    obj_files=$(get_object_files)
+
+    echo -e "  Compiling tool: $tool_source"
+    if ! clang ${GCC_FLAGS[@]} ${INCLUDE_FLAGS[@]} "$tool_source" $obj_files -framework Cocoa -framework Security -o "$tool_binary" 2>&1; then
+        echo -e "${RED}✗ FAILED: $tool_source${RESET}"
+        return 1
+    fi
+    return 0
+}
+
+run_generare() {
+    local gen_files
+    local gen_file
+
+    # Construere instrumenta si opus est
+    compile_tool_if_needed "tools/generare.c" "bin/generare" || return 1
+    compile_tool_if_needed "instrumenta/nuntium_schema_generare.c" "bin/nuntium_schema_generare" || return 1
+
+    if [ ! -f "bin/generare" ]; then
+        return 0
+    fi
+
+    # Invenire fila probationum quae compilabuntur
+    if [ -n "$FILTER" ]; then
+        gen_files=$(find probatio probationes -name "probatio_*${FILTER}*.c" -type f 2>/dev/null | sort)
+    else
+        gen_files=$(find probatio probationes -name "probatio_*.c" -type f 2>/dev/null | sort)
+    fi
+
+    if [ -z "$gen_files" ]; then
+        return 0
+    fi
+
+    # Currere generare solum in filis quae compilabuntur
+    echo -e "${BLUE}Running generare on test files${RESET}"
+    while IFS= read -r gen_file; do
+        [ -z "$gen_file" ] && continue
+        # Saltare probatio_generare.c — continet directivas probationis in literis
+        if [[ "$gen_file" == *"probatio_generare.c" ]]; then
+            continue
+        fi
+        if ! ./bin/generare "$gen_file" 2>&1; then
+            echo -e "${RED}✗ generare failed for $gen_file${RESET}"
+            return 1
+        fi
+    done <<< "$gen_files"
+    echo ""
+
+    return 0
+}
+
 run_all_tests() {
     # Compile libraries first
     if ! compile_libraries; then
         echo -e "${RED}Library compilation failed${RESET}"
+        return 1
+    fi
+
+    # Run generare directives before compiling tests
+    if ! run_generare; then
+        echo -e "${RED}generare step failed${RESET}"
         return 1
     fi
 
