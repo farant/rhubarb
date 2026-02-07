@@ -1,6 +1,6 @@
 # NOVUM FUNDAMENTUM
 ## Episode 1x01: "Piscina: Capacitas Nova"
-### Beat Sheet (Draft 4)
+### Beat Sheet (Draft 5 — Polish Pass on Acts 1-2)
 
 ---
 
@@ -68,31 +68,49 @@ SMASH TO MAIN TITLES
 
 ### Beat 1: Standoff
 
-Immediate tension. SG-1 has weapons on Duncan. He's not afraid. Professional respect between people who recognize competence.
+Immediate tension. SG-1 has weapons on Duncan. He's not afraid. He stands with the ease of someone who's had weapons pointed at him many times and found the experience survivable.
 
-Duncan: "You're SGC. Took you long enough."
+**DUNCAN:** You're SGC. Took you long enough.
 
-He's been tracking them too. He knows who they are. They don't know what he is.
+He's been tracking them too. He knows who they are. They don't know what he is. Carter notes his hands — calloused, scarred, a fighter's hands. Not a bureaucrat's.
+
+**CARTER:** Put down the files.
+
+**DUNCAN:** *(not putting them down)* These files are why I'm here. They're why *you're* here. We've been working the same problem from different ends. *(beat)* I was rather hoping you'd be further along.
 
 ### Beat 2: The Exchange
 
 Careful negotiation. Duncan offers information. He's been working this problem longer than they have. Decades, not months.
 
-He starts explaining: the invasion isn't coming. It's already here. Infrastructure level. The advance work has been happening for thirty years. Backdoors in hardware. Compromised supply chains. Sleeper protocols in software that runs everything.
+**DUNCAN:** The invasion isn't coming, Colonel. It's already here. It's in the infrastructure.
 
-"Your gates going dark? That's not an attack. That's a side effect. Something's interfering with the physics. Something new. Something they built."
+He moves to the desk. Spreads out photographs, documents. His movements are precise, unhurried — a man who learned patience across centuries.
 
-"In ten to twenty years, they arrive. And when they do, they press a button and every system you depend on turns against you. Power grids. Communications. Water treatment. The machines you've taught to run your civilization will be the weapons that end it."
+**DUNCAN:** I watched the telegraph become the telephone. The telephone become the radio. The radio become the television. I watched every generation promise that the new technology would connect people, liberate people. And every generation, someone found a way to turn it into a weapon or a cage. *(beat)* This time, the weapon was built into the technology from the start. Hardware level. Chip level. Thirty years of compromised supply chains.
+
+**CARTER:** That's —
+
+**DUNCAN:** Your gates going dark? That's not an attack. That's a side effect. Something's interfering with the physics. Something new. Something they *built*.
+
+He lets it land.
+
+**DUNCAN:** In ten to twenty years, they arrive. And when they do, they press a button and every system you depend on turns against you. Power grids. Communications. Water treatment. The machines you've taught to run your civilization will be the weapons that end it.
 
 ### Beat 3: Skepticism
 
 Daniel and Carter push back. This is conspiracy thinking. Where's the evidence?
 
-Duncan: "Your informant. The one who just died. How long did you trust him?"
+**DANIEL:** You're asking us to believe that every piece of modern technology is compromised. That's —
+
+**DUNCAN:** *(quietly)* Your informant. The one who just died. How long did you trust him?
 
 They're shaken. He was vetted. Years of service.
 
-Duncan: "There are more. Everywhere. You've been compromised at every level. The question isn't who you can trust. The question is whether you can trust *anything with a microchip*."
+**DUNCAN:** How did he find you? Did you find him, or did he find you?
+
+Carter looks at Daniel. The silence answers.
+
+**DUNCAN:** There are more. Everywhere. The question isn't who you can trust. The question is whether you can trust *anything with a microchip*. *(beat)* I carry an analog phone and a four-hundred-year-old sword. I recommend you start thinking about which of your tools you can verify.
 
 ### Beat 4: The Borg Files
 
@@ -168,19 +186,33 @@ END ACT ONE
 
 ### Beat 6: Casey's Safehouse
 
-**Location:** Remote. Off-grid. A farmhouse or compound that looks abandoned but isn't. No power lines running to it. No satellite dishes. Old trucks, not new cars.
+**Location:** Remote. Off-grid. A farmhouse or compound that looks abandoned but isn't. No power lines running to it. No satellite dishes. Old trucks in what used to be a stable — a '72 Ford, a '68 Chevy, nothing with a computer in the engine. The kind of place that looks forgotten. It isn't.
 
-Duncan brings SG-1 here. They're met by CASEY - weathered, ageless, cowboy energy even in modern clothes. And METHOS - sardonic, watching, assessing.
+Duncan brings SG-1 here. The door opens before they knock.
 
-Casey: "So you're the SGC. Duncan's told me about you."
+CASEY stands in the doorway. Weathered. Ageless in the way that reads as "well-preserved" until you look at the eyes. Cowboy energy even in modern clothes — boots, denim, a posture that says open sky, not office. He looks at SG-1 the way a rancher looks at new horses: assessing temperament, not credentials.
 
-Carter: "And who are you?"
+**CASEY:** So you're the SGC. Duncan's told me about you.
 
-Casey: "Someone who's been watching your civilization build its own coffin for sixty years."
+**CARTER:** And who are you?
 
-He leads them inside. The farmhouse is deceptive - underground levels, clean rooms, hardware that looks like it's from the 80s and 90s. Deliberate.
+**CASEY:** Someone who's been watching your civilization build its own coffin for sixty years.
 
-Casey: "No chips manufactured after 1985. Nothing networked. Nothing they can touch."
+Behind him, deeper in the house, a figure sprawled on a couch with a beer. METHOS. He doesn't get up. He raises the bottle in greeting.
+
+**METHOS:** He means that literally. Don't worry, he's like this with everyone.
+
+**CASEY:** *(ignoring Methos)* Come in.
+
+He leads them inside. The farmhouse is deceptive — underground levels, clean rooms, hardware that looks like it's from the 80s and 90s. Deliberate. CRT monitors. Keyboards with heft. Machines that hum instead of whisper.
+
+**CASEY:** No chips manufactured after 1985. Nothing networked. Nothing they can touch.
+
+**CARTER:** *(looking around, half-impressed, half-incredulous)* You've been running on thirty-year-old hardware?
+
+**CASEY:** Forty. Some of it. *(beat)* It still works. That's the point. I built these machines to last, not to update.
+
+**METHOS:** *(from behind them, following at his own pace)* Casey has opinions about software. Strong ones. You'll hear them all eventually. Several times.
 
 ### Beat 7: The Pattern
 
@@ -220,31 +252,69 @@ The stakes crystallize. Whatever's in that mission isn't just interfering with E
 
 ### Beat 9: The Assault Plan
 
-Casey has been preparing for this. Weapons - old ones, mechanical, nothing digital. Vehicles. A team.
+Casey has been preparing for this. A room in the basement — weapons laid out on a table. Old ones. Mechanical. Nothing digital. Lever-action rifles. Revolvers. A crossbow. Duncan's katana on the end, incongruous and beautiful.
 
-O'Neill appears - first time we see him. He's been here. Part of this operation all along, working off-book.
+O'NEILL appears — first time we see him. He's been here. Part of this operation all along, working off-book. He picks up a revolver, checks the cylinder, puts it back. Picks up another. Comfortable with all of them.
 
-O'Neill: "So we're really doing this. Attacking a Spanish mission."
+**O'NEILL:** So we're really doing this. Attacking a Spanish mission.
 
-Duncan: "A Borg-controlled Spanish mission."
+**DUNCAN:** A Borg-controlled Spanish mission.
 
-O'Neill: "Right. Evil mission. Much better."
+**O'NEILL:** Right. Evil mission. Much better. *(to Carter)* You know, when I retired, I specifically asked for *less* of this.
+
+**CARTER:** And yet here you are. In a basement. With a crossbow.
+
+**O'NEILL:** It's a *nice* crossbow.
+
+Methos picks up a short sword from the table. Ancient-looking. He holds it like he remembers it.
+
+**METHOS:** Seven people against an unknown number of enemy combatants in a fortified position, armed with weapons your great-grandfather would recognize. *(beat)* I've done worse. Usually it was my idea, which is how I know this is stupid.
+
+**CASEY:** *(loading his rifle — a Winchester lever-action, well-oiled, clearly beloved)* You don't have to come.
+
+**METHOS:** Oh, I'm coming. I just want it noted for the historical record that I objected.
 
 The team: Carter, Daniel, Teal'c, O'Neill, Duncan, Casey, Methos. Seven people against whatever's been killing their drones.
 
-Casey: "We get in. We find whatever's generating the interference. We shut it down or we take it. Either way, we finally get some answers."
+**CASEY:** We get in. We find whatever's generating the interference. We shut it down or we take it. Either way, we finally get some answers.
+
+**TEAL'C:** And if we encounter resistance?
+
+**CASEY:** That's why I brought the crossbow.
+
+Teal'c looks at Casey. The barest nod. Respect for a man who plans for the fight.
 
 ### Beat 10: The Mission Assault
 
-**Location:** The Spanish mission. Adobe walls. Bell tower. Courtyard with a dry fountain. Beautiful and wrong. Too quiet. No birds. No insects. The desert around it feels *dead*. Technology doesn't work right near it - compasses spin, phones die.
+**Location:** The Spanish mission. Adobe walls. Bell tower. Courtyard with a dry fountain. Beautiful and wrong. Too quiet. No birds. No insects. The desert around it feels *dead*. Technology doesn't work right near it — compasses spin, phones die. Even the stars look different here. Sharper.
 
-The assault is tactical, brutal, strange. The defenders aren't human - they're machines. Humanoid robots, crude but effective, being remote-controlled by the Borg from somewhere else. Green lights where eyes should be. They move wrong, react wrong. No self-preservation. No fear.
+They approach in Casey's trucks. No headlights. Casey, riding shotgun, crosses himself. Brief. Silent. Duncan, driving, doesn't react — he's seen Casey do this for decades. It's what Casey does before entering places he may not leave. The camera catches it without comment. First visual seed of the Catholic thread.
 
-Casey: "They're not people. Don't hesitate."
+The Immortals feel it first — not the Buzz of another Immortal, but something else. A pressure. A wrongness.
 
-The Immortals can't be killed - they take point, absorbing damage that would kill anyone else. Casey with a lever-action rifle (he's had this gun for a hundred years), Duncan with a sword, Methos hanging back but deadly when needed.
+**DUNCAN:** *(quietly, to Methos)* You feel that?
 
-Teal'c and O'Neill provide military precision. Carter and Daniel work toward the center of the complex, following the readings, looking for whatever's generating the interference.
+**METHOS:** I felt something like it once. Fifteen hundred years ago. I left that place and didn't go back. *(beat)* We should probably go in.
+
+The assault is tactical, brutal, strange. The defenders aren't human — they're machines. Humanoid robots, crude but effective, being remote-controlled by the Borg from somewhere else. Green lights where eyes should be. They move wrong, react wrong. No self-preservation. No fear.
+
+**CASEY:** They're not people. Don't hesitate.
+
+The Immortals take point — they can't be killed, so they absorb damage that would end anyone else. Casey advances with his Winchester, working the lever between shots with a rhythm that speaks to a hundred years of practice. He moves like a man clearing a frontier — steady, unhurried, every shot placed. Duncan fights with the katana. Close quarters in adobe corridors. He's been doing this for four centuries and it shows — economy of motion, no wasted movement, the sword an extension of his body.
+
+Methos hangs back. Not cowardice — positioning. He watches the angles. When a machine flanks Casey from a doorway, Methos is already there. The short sword is fast and precise. Ancient technique against alien machines.
+
+**METHOS:** *(after, wiping the blade)* For the record, I was never here.
+
+**O'Neill:** *(to Teal'c, covering a corridor)* How many more?
+
+**TEAL'C:** *(listening)* Four. Perhaps five. They do not attempt to hide their movements.
+
+**O'NEILL:** Because they don't care if they die.
+
+**TEAL'C:** They are already not alive. *(fires the staff weapon)* Three. Perhaps four.
+
+Carter and Daniel work toward the center of the complex, following the readings, looking for whatever's generating the interference. The robots thin out as they go deeper — as if the machines were guarding the perimeter, not the interior. Whatever's at the center doesn't need guarding. It's been waiting.
 
 ### Beat 11: The Gate Room
 
@@ -288,57 +358,73 @@ END ACT TWO
 
 They step through.
 
-First sight: Mediterranean landscape. Mountains. Blue sky. A Roman forum built around the gate arrival point - the Forum Stellarum.
+First sight: Mediterranean landscape. Mountains. Blue sky. The air is different — cleaner, somehow heavier, as if the atmosphere itself is older. A Roman forum built around the gate arrival point — the Forum Stellarum. Stone columns. An altar with fresh offerings. This is a holy place to the people who live here.
 
 But they don't emerge to an empty plaza.
 
-They emerge to armed Romans. Spears. Shields. Military discipline.
+They emerge to armed Romans. Spears. Shields. Military discipline. Real soldiers, not reenactors. Their formation is textbook — a half-circle, shields overlapping, closing the exits.
 
-And in front of them, relaxed, amused: MIDAS.
+And in front of them, relaxed, arms spread wide, grinning like a man greeting old friends at a party: MIDAS.
 
-**MIDAS:** Finally! Do you have any idea how long I've been waiting?
+**MIDAS:** *Finally!* Do you have any idea how long I've been waiting?
 
 Duncan and Methos sense it immediately. The Immortal buzz.
 
-**DUNCAN:** There's one of us here.
+**DUNCAN:** *(hand on his katana)* There's one of us here.
 
-**MIDAS:** One of you? I've been here for eighty years. Well - eighty years for me. I'm told it's been longer on your end.
+**MIDAS:** One of you? I've been here for eighty years. Well — eighty years for me. I'm told it's been somewhat longer on your end. *(He clasps Duncan's arm before Duncan can decide whether to offer it.)* Welcome! You look terrible. Was the journey difficult? It looked difficult. The gate does this... thing... when it activates. Very dramatic. The Romans think it's the gods breathing. I've told them it isn't. They don't listen. They never listen.
+
+He hasn't stopped moving since they arrived. Hands, arms, pacing. He touches O'Neill on the shoulder, claps Casey on the back, peers at Teal'c with open curiosity.
+
+**MIDAS:** *(to Teal'c)* You're not Roman. You're not from Earth either, are you? How wonderful. How *wonderfully* strange.
+
+**TEAL'C:** *(enduring the examination)* Indeed.
 
 ### Beat 13: The Reunion
 
-The Romans stand down at Midas's signal. He knows these people - or people like them. He's been waiting.
+The Romans stand down at Midas's signal. He knows these people — or people like them. He's been waiting.
 
-Midas explains, in his rambling way: He came through the gate with the original exiles. Rome used the portal to dispose of inconvenient people - criminals, political enemies, anyone they wanted gone. "I was one of the political enemies. Long story. Involves a misunderstanding about taxation."
+Midas explains, in his rambling way, as he leads them through the forum. He came through the gate with the original exiles. Rome used the portal to dispose of inconvenient people — criminals, political enemies, anyone they wanted gone.
 
-He leads them into the forum. Nova Roma spreads out around them - a small but complete civilization. Roman architecture. Roman dress. Roman *life*.
+**MIDAS:** I was one of the political enemies. Long story. Involves a misunderstanding about taxation. *(to Methos, conspiratorially)* I maintain that the tax was unconstitutional. The Senate disagreed. The Senate had more soldiers than I did. *(gesturing broadly)* So here I am!
 
-**MIDAS:** They thought I was a god at first. I told them I wasn't. They didn't believe me. Then I died in front of them and came back, and they *really* didn't believe me. Took about twenty years to sort out.
+Nova Roma spreads out around them — a small but complete civilization. Roman architecture. Roman dress. Roman *life*. Children running between columns. A blacksmith working in an open forge. The smell of bread and olive oil.
+
+**MIDAS:** They thought I was a god at first. I told them I wasn't. They didn't believe me. Then I died in front of them and came back, and they *really* didn't believe me. Took about twenty years to sort out. Now I'm just Midas. The strange old friend who doesn't age. They've stopped asking questions. Romans are very practical people — if you're useful and not actively dangerous, they'll tolerate almost anything.
+
+**O'NEILL:** *(looking around at the civilization)* You built all this?
+
+**MIDAS:** *They* built all this. I just... didn't leave. *(softer now, the comedy dropping for a moment)* Three generations. The grandchildren of the original exiles. They're good people. Stubborn. Opinionated. Very Roman about everything. But good.
 
 ### Beat 14: Pliny
 
-They're brought to a villa. Larger than the others. A scholar's home.
+They're brought to a villa. Larger than the others. A scholar's home — but you can tell from the outside. Scrolls visible through open windows. The sound of someone dictating to a scribe.
 
-PLINY emerges. An exile like Midas, but mortal - one of the original colonists, now old. Eighty years of building a civilization in a strange land. Methos recognizes the look of someone who's seen too much and written it all down anyway.
+PLINY emerges. An exile like Midas, but mortal — one of the original colonists, now old. Very old. But his eyes are sharp, and he moves with the deliberation of someone who has decided that every remaining step should count. Eighty years of building a civilization in a strange land, and he's still building.
 
-**PLINY:** More visitors from Earth. And Immortals among you. Midas said you might come eventually.
+Methos sees him and goes still. He recognizes something. Not the face — the *type*. A man who has seen too much and written it all down anyway.
+
+**PLINY:** More visitors from Earth. And Immortals among you. *(He looks at each of them in turn, cataloging. It's automatic — the habit of a lifetime.)* Midas said you might come eventually.
 
 **CARTER:** You knew about us?
 
-**PLINY:** I knew about the gate. I knew time moved strangely here - our eighty years, your two thousand. I've spent my life trying to understand why.
+**PLINY:** I knew about the gate. I knew time moved strangely here — our eighty years, your two thousand. I spent the first forty years trying to understand why. I spent the second forty recording everything else. *(a wry look)* I ran out of questions about the gate. I did not run out of questions about this world.
 
-He leads them inside. Shows them a stone tablet - old, preserved carefully.
+He leads them inside. His study: scrolls stacked floor to ceiling. Wax tablets. Pressed botanical specimens. Maps drawn with extraordinary precision. The Naturalis Historia Nova — forty volumes and counting — arranged on a shelf like a library in miniature. A life's work, visible at a glance.
 
-**PLINY:** *Praeparate*. It came through the gate before we did. The first exiles found it waiting. I've spent eighty years trying to understand what it means.
+He shows them a stone tablet — old, preserved carefully, separate from everything else. Treated with reverence.
+
+**PLINY:** *Praeparate*. It came through the gate before we did. The first exiles found it waiting. I have spent eighty years trying to understand what it means.
 
 **DANIEL:** "Prepare." We found the same word in intercepted communications. From something called... Borg.
 
-**PLINY:** Borg. Is that what built the gate? Is that what brought us here?
+**PLINY:** *(the word is new to him; he tastes it)* Borg. Is that what built the gate? Is that what brought us here?
 
 **METHOS:** We're still figuring that out.
 
-Pliny considers this. A lifetime of questions, and now strangers with pieces of the answer.
+Pliny considers this. He looks at the stone tablet. At his forty volumes. At these strangers with their weapons and their strange clothes and their pieces of answers to the question that has defined his life.
 
-**PLINY:** Then we have much to discuss.
+**PLINY:** *(quietly, with the weight of eighty years)* Then we have much to discuss. I have been waiting a very long time to discuss it with someone.
 
 ### Beat 15: The Scope
 

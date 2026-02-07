@@ -1,0 +1,4472 @@
+{
+  "project": "1x01-piscina-capacitas-nova",
+  "episode": "1x01",
+  "createdAt": "2026-02-06T23:57:27.795Z",
+  "updatedAt": "2026-02-07T02:37:50.089Z",
+  "lines": {
+    "100": {
+      "lineId": "100",
+      "character": "carter",
+      "currentVersion": 2,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Finishing his thought. Clipped. The implication hitting her.",
+          "feedback": null,
+          "audioFile": "100-carter.mp3",
+          "timestamp": "2026-02-07T02:02:58.317Z"
+        },
+        {
+          "version": 2,
+          "delivery": "Finishing his thought. Clipped. The implication hitting her.",
+          "feedback": null,
+          "audioFile": "100-carter.v2.mp3",
+          "timestamp": "2026-02-07T02:37:25.108Z"
+        }
+      ]
+    },
+    "101": {
+      "lineId": "101",
+      "character": "casey",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "The final piece clicking into place. Patient revelation.",
+          "feedback": null,
+          "audioFile": "101-casey.mp3",
+          "timestamp": "2026-02-07T02:03:00.239Z"
+        }
+      ]
+    },
+    "102": {
+      "lineId": "102",
+      "character": "narrator",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Broadening scope. The problem is bigger than they thought. Weight and gravity.",
+          "feedback": null,
+          "audioFile": "g102-104-narrator.mp3",
+          "timestamp": "2026-02-07T02:03:06.838Z"
+        }
+      ],
+      "groupId": "g102-104"
+    },
+    "103": {
+      "lineId": "103",
+      "character": "narrator",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "The arsenal. Each weapon a statement of philosophy. The katana is the grace note.",
+          "feedback": null,
+          "audioFile": "",
+          "timestamp": "2026-02-07T02:03:06.838Z"
+        }
+      ],
+      "groupId": "g102-104"
+    },
+    "104": {
+      "lineId": "104",
+      "character": "narrator",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Character introduction through action. O'Neill's ease with weapons tells you everything.",
+          "feedback": null,
+          "audioFile": "",
+          "timestamp": "2026-02-07T02:03:06.838Z"
+        }
+      ],
+      "groupId": "g102-104"
+    },
+    "105": {
+      "lineId": "105",
+      "character": "oneill",
+      "currentVersion": 2,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Dry. The absurdity registered but accepted. Classic O'Neill — wry understatement.",
+          "feedback": null,
+          "audioFile": "105-oneill.mp3",
+          "timestamp": "2026-02-07T01:53:51.225Z"
+        },
+        {
+          "version": 2,
+          "delivery": "Dry. The absurdity registered but accepted. Classic O'Neill — wry understatement.",
+          "feedback": null,
+          "audioFile": "105-oneill.v2.mp3",
+          "timestamp": "2026-02-07T02:03:09.146Z"
+        }
+      ]
+    },
+    "106": {
+      "lineId": "106",
+      "character": "duncan",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Correcting with a straight face. The qualifier makes it worse, which is the joke.",
+          "feedback": null,
+          "audioFile": "106-duncan.mp3",
+          "timestamp": "2026-02-07T02:03:10.311Z"
+        }
+      ]
+    },
+    "107": {
+      "lineId": "107",
+      "character": "oneill",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Sarcastic acceptance. He keeps getting pulled back in. Warm underneath the sarcasm.",
+          "feedback": null,
+          "audioFile": "107-oneill.mp3",
+          "timestamp": "2026-02-07T02:03:11.738Z"
+        }
+      ]
+    },
+    "108": {
+      "lineId": "108",
+      "character": "carter",
+      "currentVersion": 2,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Matching his tone. A smile in the voice. The affection between old colleagues.",
+          "feedback": null,
+          "audioFile": "108-carter.mp3",
+          "timestamp": "2026-02-07T02:03:12.968Z"
+        },
+        {
+          "version": 2,
+          "delivery": "Matching his tone. A smile in the voice. The affection between old colleagues.",
+          "feedback": null,
+          "audioFile": "108-carter.v2.mp3",
+          "timestamp": "2026-02-07T02:37:26.707Z"
+        }
+      ]
+    },
+    "109": {
+      "lineId": "109",
+      "character": "oneill",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Deadpan. The joke lands because he means it.",
+          "feedback": null,
+          "audioFile": "109-oneill.mp3",
+          "timestamp": "2026-02-07T02:03:13.937Z"
+        }
+      ]
+    },
+    "110": {
+      "lineId": "110",
+      "character": "narrator",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "The detail — like he remembers it. Five thousand years of muscle memory.",
+          "feedback": null,
+          "audioFile": "110-narrator.mp3",
+          "timestamp": "2026-02-07T02:03:15.318Z"
+        }
+      ]
+    },
+    "111": {
+      "lineId": "111",
+      "character": "methos",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Sardonic analysis. The assessment is accurate and he knows it. The self-awareness is the humor.",
+          "feedback": null,
+          "audioFile": "111-methos.mp3",
+          "timestamp": "2026-02-07T02:03:17.740Z"
+        }
+      ]
+    },
+    "112": {
+      "lineId": "112",
+      "character": "casey",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Simple. No pressure. Loading his Winchester as he says it — the sound of the mechanism part of the line.",
+          "feedback": null,
+          "audioFile": "112-casey.mp3",
+          "timestamp": "2026-02-07T02:03:19.646Z"
+        }
+      ]
+    },
+    "113": {
+      "lineId": "113",
+      "character": "methos",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Five thousand years of surviving by objecting and then doing it anyway. Resigned amusement.",
+          "feedback": null,
+          "audioFile": "113-methos.mp3",
+          "timestamp": "2026-02-07T02:03:21.056Z"
+        }
+      ]
+    },
+    "114": {
+      "lineId": "114",
+      "character": "narrator",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "The roll call. Each name carries weight. Seven against the unknown.",
+          "feedback": null,
+          "audioFile": "114-narrator.mp3",
+          "timestamp": "2026-02-07T02:03:23.256Z"
+        }
+      ]
+    },
+    "115": {
+      "lineId": "115",
+      "character": "casey",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Mission briefing. Clear, concise, military. This is Casey the soldier, not Casey the philosopher.",
+          "feedback": null,
+          "audioFile": "115-casey.mp3",
+          "timestamp": "2026-02-07T02:03:25.116Z"
+        }
+      ]
+    },
+    "116": {
+      "lineId": "116",
+      "character": "tealc",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Deep. Measured. The warrior's practical question. Not fear — preparation.",
+          "feedback": null,
+          "audioFile": "116-tealc.mp3",
+          "timestamp": "2026-02-07T02:03:26.923Z"
+        }
+      ]
+    },
+    "117": {
+      "lineId": "117",
+      "character": "casey",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Dry. A callback to O'Neill's line. Deadpan humor from a man who doesn't make jokes often.",
+          "feedback": null,
+          "audioFile": "117-casey.mp3",
+          "timestamp": "2026-02-07T02:03:27.793Z"
+        }
+      ]
+    },
+    "118": {
+      "lineId": "118",
+      "character": "narrator",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Brief. The nod says everything. Two warriors recognizing each other.",
+          "feedback": null,
+          "audioFile": "g118-121-narrator.mp3",
+          "timestamp": "2026-02-07T02:03:35.152Z"
+        }
+      ],
+      "groupId": "g118-121"
+    },
+    "119": {
+      "lineId": "119",
+      "character": "narrator",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Atmospheric dread. The beauty makes the wrongness worse. Each absence noted.",
+          "feedback": null,
+          "audioFile": "",
+          "timestamp": "2026-02-07T02:03:35.152Z"
+        }
+      ],
+      "groupId": "g118-121"
+    },
+    "120": {
+      "lineId": "120",
+      "character": "narrator",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Escalating wrongness. The stars being different is the unsettling detail — reality itself is off.",
+          "feedback": null,
+          "audioFile": "",
+          "timestamp": "2026-02-07T02:03:35.152Z"
+        }
+      ],
+      "groupId": "g118-121"
+    },
+    "121": {
+      "lineId": "121",
+      "character": "narrator",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Intimate. The cross is the seed of the Catholic thread. Don't oversell it — it's natural, habitual, real.",
+          "feedback": null,
+          "audioFile": "",
+          "timestamp": "2026-02-07T02:03:35.152Z"
+        }
+      ],
+      "groupId": "g118-121"
+    },
+    "122": {
+      "lineId": "122",
+      "character": "narrator",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Supernatural unease. They sense what the mortals can't yet.",
+          "feedback": null,
+          "audioFile": "122-narrator.mp3",
+          "timestamp": "2026-02-07T02:03:37.035Z"
+        }
+      ]
+    },
+    "123": {
+      "lineId": "123",
+      "character": "duncan",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Quiet. To Methos only. Tense. Something is very wrong.",
+          "feedback": null,
+          "audioFile": "123-duncan.mp3",
+          "timestamp": "2026-02-07T02:03:38.102Z"
+        }
+      ]
+    },
+    "124": {
+      "lineId": "124",
+      "character": "methos",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "The understatement of a five-thousand-year-old man. The humor covers genuine unease.",
+          "feedback": null,
+          "audioFile": "124-methos.mp3",
+          "timestamp": "2026-02-07T02:03:40.229Z"
+        }
+      ]
+    },
+    "125": {
+      "lineId": "125",
+      "character": "narrator",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Combat. The wrongness of fighting things that aren't alive. Each detail builds the alien horror.",
+          "feedback": null,
+          "audioFile": "125-narrator.mp3",
+          "timestamp": "2026-02-07T02:03:43.378Z"
+        }
+      ]
+    },
+    "126": {
+      "lineId": "126",
+      "character": "casey",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Sharp command. Reassuring them and himself. Giving permission to fight without mercy.",
+          "feedback": null,
+          "audioFile": "126-casey.mp3",
+          "timestamp": "2026-02-07T02:03:44.488Z"
+        }
+      ]
+    },
+    "127": {
+      "lineId": "127",
+      "character": "narrator",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "The tactical logic, then Casey's artistry. The rhythm of the lever-action is music.",
+          "feedback": null,
+          "audioFile": "g127-129-narrator.mp3",
+          "timestamp": "2026-02-07T02:03:51.962Z"
+        }
+      ],
+      "groupId": "g127-129"
+    },
+    "128": {
+      "lineId": "128",
+      "character": "narrator",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Two fighting styles, two histories. Casey's frontier patience, Duncan's samurai precision.",
+          "feedback": null,
+          "audioFile": "",
+          "timestamp": "2026-02-07T02:03:51.962Z"
+        }
+      ],
+      "groupId": "g127-129"
+    },
+    "129": {
+      "lineId": "129",
+      "character": "narrator",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Methos's survival instinct as combat strategy. He's always where he needs to be.",
+          "feedback": null,
+          "audioFile": "",
+          "timestamp": "2026-02-07T02:03:51.962Z"
+        }
+      ],
+      "groupId": "g127-129"
+    },
+    "130": {
+      "lineId": "130",
+      "character": "methos",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Wiping the blade. Dry. Five thousand years of plausible deniability.",
+          "feedback": null,
+          "audioFile": "130-methos.mp3",
+          "timestamp": "2026-02-07T02:03:52.919Z"
+        }
+      ]
+    },
+    "131": {
+      "lineId": "131",
+      "character": "oneill",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Covering a corridor. Tactical. Focused.",
+          "feedback": null,
+          "audioFile": "131-oneill.mp3",
+          "timestamp": "2026-02-07T02:03:54.287Z"
+        }
+      ]
+    },
+    "132": {
+      "lineId": "132",
+      "character": "tealc",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Listening. Analytical. The warrior's calm assessment.",
+          "feedback": null,
+          "audioFile": "132-tealc.mp3",
+          "timestamp": "2026-02-07T02:03:55.560Z"
+        }
+      ]
+    },
+    "133": {
+      "lineId": "133",
+      "character": "oneill",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "The realization. Grim. Fighting enemies without self-preservation is a different kind of problem.",
+          "feedback": null,
+          "audioFile": "133-oneill.mp3",
+          "timestamp": "2026-02-07T02:03:56.518Z"
+        }
+      ]
+    },
+    "134": {
+      "lineId": "134",
+      "character": "tealc",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Correcting O'Neill's framing. Philosophical precision.",
+          "feedback": null,
+          "audioFile": "134-tealc.mp3",
+          "timestamp": "2026-02-07T02:03:57.716Z"
+        }
+      ]
+    },
+    "135": {
+      "lineId": "135",
+      "character": "narrator",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Action and revised assessment in one beat. Teal'c's efficiency is darkly humorous.",
+          "feedback": null,
+          "audioFile": "g135-138-narrator.mp3",
+          "timestamp": "2026-02-07T02:04:02.528Z"
+        }
+      ],
+      "groupId": "g135-138"
+    },
+    "136": {
+      "lineId": "136",
+      "character": "narrator",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Ominous. The absence of resistance is more frightening than its presence. Waiting is the key word.",
+          "feedback": null,
+          "audioFile": "",
+          "timestamp": "2026-02-07T02:04:02.528Z"
+        }
+      ],
+      "groupId": "g135-138"
+    },
+    "137": {
+      "lineId": "137",
+      "character": "narrator",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Expectation. The list of what they expected. Reasonable expectations about to be destroyed.",
+          "feedback": null,
+          "audioFile": "",
+          "timestamp": "2026-02-07T02:04:02.528Z"
+        }
+      ],
+      "groupId": "g135-138"
+    },
+    "138": {
+      "lineId": "138",
+      "character": "narrator",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Simple. Let the revelation land. A beat of silence in the voice.",
+          "feedback": null,
+          "audioFile": "",
+          "timestamp": "2026-02-07T02:04:02.528Z"
+        }
+      ],
+      "groupId": "g135-138"
+    },
+    "139": {
+      "lineId": "139",
+      "character": "carter",
+      "currentVersion": 2,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Stunned. Carter's certainty shaken. The stammer is real — she doesn't stammer.",
+          "feedback": null,
+          "audioFile": "139-carter.mp3",
+          "timestamp": "2026-02-07T02:04:03.597Z"
+        },
+        {
+          "version": 2,
+          "delivery": "Stunned. Carter's certainty shaken. The stammer is real — she doesn't stammer.",
+          "feedback": null,
+          "audioFile": "139-carter.v2.mp3",
+          "timestamp": "2026-02-07T02:37:27.853Z"
+        }
+      ]
+    },
+    "140": {
+      "lineId": "140",
+      "character": "narrator",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Each sentence a new impossibility. The permanence is what stuns.",
+          "feedback": null,
+          "audioFile": "g140-142-narrator.mp3",
+          "timestamp": "2026-02-07T02:04:07.640Z"
+        }
+      ],
+      "groupId": "g140-142"
+    },
+    "141": {
+      "lineId": "141",
+      "character": "narrator",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "The fusion of ancient and alien. The word offerings carries religious weight.",
+          "feedback": null,
+          "audioFile": "",
+          "timestamp": "2026-02-07T02:04:07.640Z"
+        }
+      ],
+      "groupId": "g140-142"
+    },
+    "142": {
+      "lineId": "142",
+      "character": "narrator",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Brief. The fight compressed because the discovery matters more. Barely does the work.",
+          "feedback": null,
+          "audioFile": "",
+          "timestamp": "2026-02-07T02:04:07.640Z"
+        }
+      ],
+      "groupId": "g140-142"
+    },
+    "143": {
+      "lineId": "143",
+      "character": "narrator",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "The detail — Carter's hands shaking. She doesn't shake. This is that significant.",
+          "feedback": null,
+          "audioFile": "143-narrator.mp3",
+          "timestamp": "2026-02-07T02:04:08.889Z"
+        }
+      ]
+    },
+    "144": {
+      "lineId": "144",
+      "character": "carter",
+      "currentVersion": 2,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Working through it in real time. The scientist discovering something that breaks her models.",
+          "feedback": null,
+          "audioFile": "144-carter.mp3",
+          "timestamp": "2026-02-07T02:04:10.840Z"
+        },
+        {
+          "version": 2,
+          "delivery": "Working through it in real time. The scientist discovering something that breaks her models.",
+          "feedback": null,
+          "audioFile": "144-carter.v2.mp3",
+          "timestamp": "2026-02-07T02:37:29.803Z"
+        }
+      ]
+    },
+    "145": {
+      "lineId": "145",
+      "character": "daniel",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Urgent. Needing her to finish the thought.",
+          "feedback": null,
+          "audioFile": "145-daniel.mp3",
+          "timestamp": "2026-02-07T02:04:11.646Z"
+        }
+      ]
+    },
+    "146": {
+      "lineId": "146",
+      "character": "carter",
+      "currentVersion": 2,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Honest. The mystery. One address is the key — it goes somewhere specific.",
+          "feedback": null,
+          "audioFile": "146-carter.mp3",
+          "timestamp": "2026-02-07T02:04:13.283Z"
+        },
+        {
+          "version": 2,
+          "delivery": "Honest. The mystery. One address is the key — it goes somewhere specific.",
+          "feedback": null,
+          "audioFile": "146-carter.v2.mp3",
+          "timestamp": "2026-02-07T02:37:31.144Z"
+        }
+      ]
+    },
+    "147": {
+      "lineId": "147",
+      "character": "narrator",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "A moment of wonder despite everything. The gate is beautiful.",
+          "feedback": null,
+          "audioFile": "147-narrator.mp3",
+          "timestamp": "2026-02-07T02:04:14.430Z"
+        }
+      ]
+    },
+    "148": {
+      "lineId": "148",
+      "character": "daniel",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "The question. Quiet. Reverent almost.",
+          "feedback": null,
+          "audioFile": "148-daniel.mp3",
+          "timestamp": "2026-02-07T02:04:15.486Z"
+        }
+      ]
+    },
+    "149": {
+      "lineId": "149",
+      "character": "carter",
+      "currentVersion": 2,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Decision made. Determination overriding fear. The adventurer in her.",
+          "feedback": null,
+          "audioFile": "149-carter.mp3",
+          "timestamp": "2026-02-07T02:04:16.484Z"
+        },
+        {
+          "version": 2,
+          "delivery": "Decision made. Determination overriding fear. The adventurer in her.",
+          "feedback": null,
+          "audioFile": "149-carter.v2.mp3",
+          "timestamp": "2026-02-07T02:37:32.195Z"
+        }
+      ]
+    },
+    "150": {
+      "lineId": "150",
+      "character": "narrator",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Simple. The commitment. Two words that change everything.",
+          "feedback": null,
+          "audioFile": "150-narrator.mp3",
+          "timestamp": "2026-02-07T02:04:17.452Z"
+        }
+      ]
+    },
+    "151": {
+      "lineId": "151",
+      "character": "narrator",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Wonder. The senses overwhelmed. Each detail savored. This is a new world.",
+          "feedback": null,
+          "audioFile": "g151-154-narrator.mp3",
+          "timestamp": "2026-02-07T02:04:24.688Z"
+        }
+      ],
+      "groupId": "g151-154"
+    },
+    "152": {
+      "lineId": "152",
+      "character": "narrator",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Awe. The Latin name should land with weight. A civilization that reveres its gate.",
+          "feedback": null,
+          "audioFile": "",
+          "timestamp": "2026-02-07T02:04:24.688Z"
+        }
+      ],
+      "groupId": "g151-154"
+    },
+    "153": {
+      "lineId": "153",
+      "character": "narrator",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Tension. The wonder turns to danger. These are professionals.",
+          "feedback": null,
+          "audioFile": "",
+          "timestamp": "2026-02-07T02:04:24.688Z"
+        }
+      ],
+      "groupId": "g151-154"
+    },
+    "154": {
+      "lineId": "154",
+      "character": "narrator",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "The contrast — Roman military precision and one man who couldn't care less about protocol. Joy.",
+          "feedback": null,
+          "audioFile": "",
+          "timestamp": "2026-02-07T02:04:24.688Z"
+        }
+      ],
+      "groupId": "g151-154"
+    },
+    "155": {
+      "lineId": "155",
+      "character": "midas",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Explosive energy. Theatrical. Genuine delight. He's been waiting decades and it shows.",
+          "feedback": null,
+          "audioFile": "155-midas.mp3",
+          "timestamp": "2026-02-07T02:04:26.953Z"
+        }
+      ]
+    },
+    "156": {
+      "lineId": "156",
+      "character": "narrator",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Brief. The recognition is instant and significant.",
+          "feedback": null,
+          "audioFile": "156-narrator.mp3",
+          "timestamp": "2026-02-07T02:04:28.372Z"
+        }
+      ]
+    },
+    "157": {
+      "lineId": "157",
+      "character": "duncan",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Hand on his katana. Alert. The buzz changes everything.",
+          "feedback": null,
+          "audioFile": "157-duncan.mp3",
+          "timestamp": "2026-02-07T02:04:29.310Z"
+        }
+      ]
+    },
+    "158": {
+      "lineId": "158",
+      "character": "midas",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Rapid. The correction is compulsive. The time difference mentioned casually.",
+          "feedback": null,
+          "audioFile": "g158-159-midas.mp3",
+          "timestamp": "2026-02-07T02:04:33.242Z"
+        }
+      ],
+      "groupId": "g158-159"
+    },
+    "159": {
+      "lineId": "159",
+      "character": "midas",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Nonstop. Stream of consciousness. Each sentence running into the next. Affectionate exasperation about the Romans.",
+          "feedback": null,
+          "audioFile": "",
+          "timestamp": "2026-02-07T02:04:33.242Z"
+        }
+      ],
+      "groupId": "g158-159"
+    },
+    "160": {
+      "lineId": "160",
+      "character": "narrator",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Kinetic energy made human. Midas is incapable of stillness.",
+          "feedback": null,
+          "audioFile": "160-narrator.mp3",
+          "timestamp": "2026-02-07T02:04:36.266Z"
+        }
+      ]
+    },
+    "161": {
+      "lineId": "161",
+      "character": "midas",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "To Teal'c. Fascinated. No fear, only curiosity.",
+          "feedback": null,
+          "audioFile": "161-midas.mp3",
+          "timestamp": "2026-02-07T02:04:37.708Z"
+        }
+      ]
+    },
+    "162": {
+      "lineId": "162",
+      "character": "tealc",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Enduring the examination. One word. Patient, dignified, slightly amused.",
+          "feedback": null,
+          "audioFile": "162-tealc.mp3",
+          "timestamp": "2026-02-07T02:04:38.741Z"
+        }
+      ]
+    },
+    "163": {
+      "lineId": "163",
+      "character": "narrator",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "The tension breaks. Midas's authority here is absolute and casual.",
+          "feedback": null,
+          "audioFile": "g163-164-narrator.mp3",
+          "timestamp": "2026-02-07T02:04:42.644Z"
+        }
+      ],
+      "groupId": "g163-164"
+    },
+    "164": {
+      "lineId": "164",
+      "character": "narrator",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Walking tour energy. The history delivered in motion, casual but weighty.",
+          "feedback": null,
+          "audioFile": "",
+          "timestamp": "2026-02-07T02:04:42.644Z"
+        }
+      ],
+      "groupId": "g163-164"
+    },
+    "165": {
+      "lineId": "165",
+      "character": "midas",
+      "currentVersion": 2,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Conspiratorial. The comedy of ancient politics. Self-deprecating. So here I am is both punchline and truth.",
+          "feedback": null,
+          "audioFile": "165-midas.mp3",
+          "timestamp": "2026-02-07T01:54:41.334Z"
+        },
+        {
+          "version": 2,
+          "delivery": "Conspiratorial. The comedy of ancient politics. Self-deprecating. So here I am is both punchline and truth.",
+          "feedback": null,
+          "audioFile": "165-midas.v2.mp3",
+          "timestamp": "2026-02-07T02:04:45.525Z"
+        }
+      ]
+    },
+    "166": {
+      "lineId": "166",
+      "character": "narrator",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Beauty. Life. The sensory details — smell, sound, sight. This is real, lived-in, alive.",
+          "feedback": null,
+          "audioFile": "166-narrator.mp3",
+          "timestamp": "2026-02-07T02:04:48.495Z"
+        }
+      ]
+    },
+    "167": {
+      "lineId": "167",
+      "character": "midas",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "The comedy of divinity denied. Each sentence a chapter of his life here. The practicality of Romans said with genuine affection.",
+          "feedback": null,
+          "audioFile": "167-midas.mp3",
+          "timestamp": "2026-02-07T02:04:53.583Z"
+        }
+      ]
+    },
+    "168": {
+      "lineId": "168",
+      "character": "oneill",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Looking around at the civilization. Genuine awe from a man who doesn't impress easily.",
+          "feedback": null,
+          "audioFile": "168-oneill.mp3",
+          "timestamp": "2026-02-07T02:04:54.553Z"
+        }
+      ]
+    },
+    "169": {
+      "lineId": "169",
+      "character": "midas",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "The correction is important to him. Softer now, the comedy dropping. The pause carries decades of belonging.",
+          "feedback": null,
+          "audioFile": "g169-170-midas.mp3",
+          "timestamp": "2026-02-07T02:04:57.398Z"
+        }
+      ],
+      "groupId": "g169-170"
+    },
+    "170": {
+      "lineId": "170",
+      "character": "midas",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Paternal pride. He loves these people. Each quality a compliment disguised as observation.",
+          "feedback": null,
+          "audioFile": "",
+          "timestamp": "2026-02-07T02:04:57.398Z"
+        }
+      ],
+      "groupId": "g169-170"
+    },
+    "171": {
+      "lineId": "171",
+      "character": "narrator",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Approach. The details tell you who lives here before you meet them.",
+          "feedback": null,
+          "audioFile": "g171-174-narrator.mp3",
+          "timestamp": "2026-02-07T02:05:04.739Z"
+        }
+      ],
+      "groupId": "g171-174"
+    },
+    "172": {
+      "lineId": "172",
+      "character": "narrator",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Character introduction with reverence. This is a great man measured by patience, not power.",
+          "feedback": null,
+          "audioFile": "",
+          "timestamp": "2026-02-07T02:05:04.739Z"
+        }
+      ],
+      "groupId": "g171-174"
+    },
+    "173": {
+      "lineId": "173",
+      "character": "narrator",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "The summary of a life. Simple. Admiring.",
+          "feedback": null,
+          "audioFile": "",
+          "timestamp": "2026-02-07T02:05:04.739Z"
+        }
+      ],
+      "groupId": "g171-174"
+    },
+    "174": {
+      "lineId": "174",
+      "character": "narrator",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Methos's recognition. One survivor seeing another. The stillness is rare for him.",
+          "feedback": null,
+          "audioFile": "",
+          "timestamp": "2026-02-07T02:05:04.739Z"
+        }
+      ],
+      "groupId": "g171-174"
+    },
+    "175": {
+      "lineId": "175",
+      "character": "pliny",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Measured. Scholarly. Cataloging them as he speaks — the habit of a lifetime.",
+          "feedback": null,
+          "audioFile": "175-pliny.mp3",
+          "timestamp": "2026-02-07T02:05:07.311Z"
+        }
+      ]
+    },
+    "176": {
+      "lineId": "176",
+      "character": "carter",
+      "currentVersion": 2,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Surprised. This old man in a Roman villa knew they were coming?",
+          "feedback": null,
+          "audioFile": "176-carter.mp3",
+          "timestamp": "2026-02-07T02:05:08.245Z"
+        },
+        {
+          "version": 2,
+          "delivery": "Surprised. This old man in a Roman villa knew they were coming?",
+          "feedback": null,
+          "audioFile": "176-carter.v2.mp3",
+          "timestamp": "2026-02-07T02:37:33.252Z"
+        }
+      ]
+    },
+    "177": {
+      "lineId": "177",
+      "character": "pliny",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "The scope of his work in three sentences. Patient, precise, with wry awareness of his own obsessiveness.",
+          "feedback": null,
+          "audioFile": "g177-178-pliny.mp3",
+          "timestamp": "2026-02-07T02:05:11.521Z"
+        }
+      ],
+      "groupId": "g177-178"
+    },
+    "178": {
+      "lineId": "178",
+      "character": "pliny",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Wry. The second sentence is the revelation — his curiosity survived when the mystery didn't.",
+          "feedback": null,
+          "audioFile": "",
+          "timestamp": "2026-02-07T02:05:11.521Z"
+        }
+      ],
+      "groupId": "g177-178"
+    },
+    "179": {
+      "lineId": "179",
+      "character": "narrator",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Awe. Each detail a testament to one man's dedication. The forty volumes are the centerpiece.",
+          "feedback": null,
+          "audioFile": "g179-180-narrator.mp3",
+          "timestamp": "2026-02-07T02:05:16.147Z"
+        }
+      ],
+      "groupId": "g179-180"
+    },
+    "180": {
+      "lineId": "180",
+      "character": "narrator",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "The shift in tone. This tablet is different. Sacred.",
+          "feedback": null,
+          "audioFile": "",
+          "timestamp": "2026-02-07T02:05:16.147Z"
+        }
+      ],
+      "groupId": "g179-180"
+    },
+    "181": {
+      "lineId": "181",
+      "character": "pliny",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "The Latin word spoken with the weight of a lifetime's obsession.",
+          "feedback": null,
+          "audioFile": "181-pliny.mp3",
+          "timestamp": "2026-02-07T02:05:18.018Z"
+        }
+      ]
+    },
+    "182": {
+      "lineId": "182",
+      "character": "daniel",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "The connection firing. Translating automatically, then the hesitation before Borg.",
+          "feedback": null,
+          "audioFile": "182-daniel.mp3",
+          "timestamp": "2026-02-07T02:05:19.614Z"
+        }
+      ]
+    },
+    "183": {
+      "lineId": "183",
+      "character": "pliny",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "The word is new to him. He tastes it. Each question genuine — eighty years of wondering given a name.",
+          "feedback": null,
+          "audioFile": "183-pliny.mp3",
+          "timestamp": "2026-02-07T02:05:20.937Z"
+        }
+      ]
+    },
+    "184": {
+      "lineId": "184",
+      "character": "methos",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Honest. Gentle. Rare gentleness from Methos — he respects this old man's patience.",
+          "feedback": null,
+          "audioFile": "184-methos.mp3",
+          "timestamp": "2026-02-07T02:05:21.768Z"
+        }
+      ]
+    },
+    "185": {
+      "lineId": "185",
+      "character": "narrator",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "A man at the end of his life seeing the possibility of answers. Weight, stillness, hope.",
+          "feedback": null,
+          "audioFile": "185-narrator.mp3",
+          "timestamp": "2026-02-07T02:05:24.673Z"
+        }
+      ]
+    },
+    "186": {
+      "lineId": "186",
+      "character": "pliny",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Quiet. The weight of eighty years of solitary scholarship. Not self-pity — gratitude that the wait is over.",
+          "feedback": null,
+          "audioFile": "186-pliny.mp3",
+          "timestamp": "2026-02-07T02:05:26.084Z"
+        }
+      ]
+    },
+    "187": {
+      "lineId": "187",
+      "character": "narrator",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "The census read like a strategic assessment. Clean carries the most weight.",
+          "feedback": null,
+          "audioFile": "g187-188-narrator.mp3",
+          "timestamp": "2026-02-07T02:05:32.193Z"
+        }
+      ],
+      "groupId": "g187-188"
+    },
+    "188": {
+      "lineId": "188",
+      "character": "narrator",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "The strategic insight. Carter's mind making the leap. Platform is the key word.",
+          "feedback": null,
+          "audioFile": "",
+          "timestamp": "2026-02-07T02:05:32.193Z"
+        }
+      ],
+      "groupId": "g187-188"
+    },
+    "189": {
+      "lineId": "189",
+      "character": "carter",
+      "currentVersion": 2,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "The excitement of possibility. Trailing off because the scope overwhelms the words.",
+          "feedback": null,
+          "audioFile": "189-carter.mp3",
+          "timestamp": "2026-02-07T02:05:33.795Z"
+        },
+        {
+          "version": 2,
+          "delivery": "The excitement of possibility. Trailing off because the scope overwhelms the words.",
+          "feedback": null,
+          "audioFile": "189-carter.v2.mp3",
+          "timestamp": "2026-02-07T02:37:34.655Z"
+        }
+      ]
+    },
+    "190": {
+      "lineId": "190",
+      "character": "daniel",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Finishing her thought. The shared understanding. Quiet awe at the implication.",
+          "feedback": null,
+          "audioFile": "190-daniel.mp3",
+          "timestamp": "2026-02-07T02:05:35.537Z"
+        }
+      ]
+    },
+    "191": {
+      "lineId": "191",
+      "character": "casey",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Simple. He's been waiting for someone else to see it. Two words that validate thirty years.",
+          "feedback": null,
+          "audioFile": "191-casey.mp3",
+          "timestamp": "2026-02-07T02:05:36.476Z"
+        }
+      ]
+    },
+    "192": {
+      "lineId": "192",
+      "character": "narrator",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "The attention shifting. Casey's silence was not absence — it was calculation.",
+          "feedback": null,
+          "audioFile": "192-narrator.mp3",
+          "timestamp": "2026-02-07T02:05:37.703Z"
+        }
+      ]
+    },
+    "193": {
+      "lineId": "193",
+      "character": "casey",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Vulnerable. Thirty years of frustration in three sentences. But here is the turn — hope finally permitted.",
+          "feedback": null,
+          "audioFile": "193-casey.mp3",
+          "timestamp": "2026-02-07T02:05:40.038Z"
+        }
+      ]
+    },
+    "194": {
+      "lineId": "194",
+      "character": "narrator",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Casey seeing what he's been dreaming of. The reality more beautiful than the dream.",
+          "feedback": null,
+          "audioFile": "194-narrator.mp3",
+          "timestamp": "2026-02-07T02:05:41.566Z"
+        }
+      ]
+    },
+    "195": {
+      "lineId": "195",
+      "character": "casey",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Five words. Thirty years of longing. Said quietly, almost to himself. The most important line Casey has.",
+          "feedback": null,
+          "audioFile": "195-casey.mp3",
+          "timestamp": "2026-02-07T02:05:42.452Z"
+        }
+      ]
+    },
+    "196": {
+      "lineId": "196",
+      "character": "narrator",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "The space between worlds. Ancient and future sharing a room.",
+          "feedback": null,
+          "audioFile": "g196-197-narrator.mp3",
+          "timestamp": "2026-02-07T02:05:45.282Z"
+        }
+      ],
+      "groupId": "g196-197"
+    },
+    "197": {
+      "lineId": "197",
+      "character": "narrator",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Character introduction. Skeptical first, curious second. The curiosity won.",
+          "feedback": null,
+          "audioFile": "",
+          "timestamp": "2026-02-07T02:05:45.282Z"
+        }
+      ],
+      "groupId": "g196-197"
+    },
+    "198": {
+      "lineId": "198",
+      "character": "marcus",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Direct. The engineer's question. No diplomacy, just the practical core.",
+          "feedback": null,
+          "audioFile": "198-marcus.mp3",
+          "timestamp": "2026-02-07T02:05:47.740Z"
+        }
+      ]
+    },
+    "199": {
+      "lineId": "199",
+      "character": "narrator",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "The weight of the moment. Everything hinges on this answer.",
+          "feedback": null,
+          "audioFile": "199-narrator.mp3",
+          "timestamp": "2026-02-07T02:05:48.766Z"
+        }
+      ]
+    },
+    "200": {
+      "lineId": "200",
+      "character": "carter",
+      "currentVersion": 2,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Teaching. Clear, patient, precise. Finding the simplest possible starting point.",
+          "feedback": null,
+          "audioFile": "200-carter.mp3",
+          "timestamp": "2026-02-07T02:05:50.711Z"
+        },
+        {
+          "version": 2,
+          "delivery": "Teaching. Clear, patient, precise. Finding the simplest possible starting point.",
+          "feedback": null,
+          "audioFile": "200-carter.v2.mp3",
+          "timestamp": "2026-02-07T02:37:36.536Z"
+        }
+      ]
+    },
+    "201": {
+      "lineId": "201",
+      "character": "daniel",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "The translator at work. Finding the bridge between worlds.",
+          "feedback": null,
+          "audioFile": "201-daniel.mp3",
+          "timestamp": "2026-02-07T02:05:52.460Z"
+        }
+      ]
+    },
+    "202": {
+      "lineId": "202",
+      "character": "carter",
+      "currentVersion": 2,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Technical but accessible. She's finding the metaphor that will cross two thousand years.",
+          "feedback": null,
+          "audioFile": "202-carter.mp3",
+          "timestamp": "2026-02-07T02:05:54.394Z"
+        },
+        {
+          "version": 2,
+          "delivery": "Technical but accessible. She's finding the metaphor that will cross two thousand years.",
+          "feedback": null,
+          "audioFile": "202-carter.v2.mp3",
+          "timestamp": "2026-02-07T02:37:38.522Z"
+        }
+      ]
+    },
+    "203": {
+      "lineId": "203",
+      "character": "marcus",
+      "currentVersion": 2,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "The engineer pushing back. Testing the metaphor against reality. Sharp, practical.",
+          "feedback": null,
+          "audioFile": "203-marcus.mp3",
+          "timestamp": "2026-02-07T01:55:47.978Z"
+        },
+        {
+          "version": 2,
+          "delivery": "The engineer pushing back. Testing the metaphor against reality. Sharp, practical.",
+          "feedback": null,
+          "audioFile": "203-marcus.v2.mp3",
+          "timestamp": "2026-02-07T02:05:55.918Z"
+        }
+      ]
+    },
+    "204": {
+      "lineId": "204",
+      "character": "carter",
+      "currentVersion": 2,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "The key insight. Forgetting is the breakthrough word. Patient, delighted by his understanding.",
+          "feedback": null,
+          "audioFile": "204-carter.mp3",
+          "timestamp": "2026-02-07T02:05:58.235Z"
+        },
+        {
+          "version": 2,
+          "delivery": "The key insight. Forgetting is the breakthrough word. Patient, delighted by his understanding.",
+          "feedback": null,
+          "audioFile": "204-carter.v2.mp3",
+          "timestamp": "2026-02-07T02:37:40.421Z"
+        }
+      ]
+    },
+    "205": {
+      "lineId": "205",
+      "character": "marcus",
+      "currentVersion": 2,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "The episode's climax in one syllable. A Roman engineer understanding a computing concept. Wonder, comprehension, and the birth of something new.",
+          "feedback": null,
+          "audioFile": "205-marcus.mp3",
+          "timestamp": "2026-02-07T01:55:40.431Z"
+        },
+        {
+          "version": 2,
+          "delivery": "The episode's climax in one syllable. A Roman engineer understanding a computing concept. Wonder, comprehension, and the birth of something new.",
+          "feedback": null,
+          "audioFile": "205-marcus.v2.mp3",
+          "timestamp": "2026-02-07T02:05:58.819Z"
+        }
+      ]
+    },
+    "206": {
+      "lineId": "206",
+      "character": "narrator",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Let it breathe. This is the thematic heart of the episode. Warm. Reverent.",
+          "feedback": null,
+          "audioFile": "206-narrator.mp3",
+          "timestamp": "2026-02-07T02:06:00.929Z"
+        }
+      ]
+    },
+    "207": {
+      "lineId": "207",
+      "character": "pliny",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "The scholar recognizing the moment. Quiet pride. He understands what just happened at a deeper level.",
+          "feedback": null,
+          "audioFile": "207-pliny.mp3",
+          "timestamp": "2026-02-07T02:06:02.238Z"
+        }
+      ]
+    },
+    "208": {
+      "lineId": "208",
+      "character": "narrator",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "The moment of creation. Revolutionary by Nova Roma's standards.",
+          "feedback": null,
+          "audioFile": "g208-209-narrator.mp3",
+          "timestamp": "2026-02-07T02:06:06.051Z"
+        }
+      ],
+      "groupId": "g208-209"
+    },
+    "209": {
+      "lineId": "209",
+      "character": "narrator",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "The collaboration. Each person in their role. Midas's unhelpfulness is affectionate comedy.",
+          "feedback": null,
+          "audioFile": "",
+          "timestamp": "2026-02-07T02:06:06.051Z"
+        }
+      ],
+      "groupId": "g208-209"
+    },
+    "210": {
+      "lineId": "210",
+      "character": "carter",
+      "currentVersion": 2,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Teaching. Practical. The principle of naming things — engineering wisdom.",
+          "feedback": null,
+          "audioFile": "210-carter.mp3",
+          "timestamp": "2026-02-07T02:06:07.699Z"
+        },
+        {
+          "version": 2,
+          "delivery": "Teaching. Practical. The principle of naming things — engineering wisdom.",
+          "feedback": null,
+          "audioFile": "210-carter.v2.mp3",
+          "timestamp": "2026-02-07T02:37:42.252Z"
+        }
+      ]
+    },
+    "211": {
+      "lineId": "211",
+      "character": "daniel",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "The Latin word arriving naturally. Daniel bridging the languages without effort.",
+          "feedback": null,
+          "audioFile": "211-daniel.mp3",
+          "timestamp": "2026-02-07T02:06:09.245Z"
+        }
+      ]
+    },
+    "212": {
+      "lineId": "212",
+      "character": "marcus",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Engaged now. Making connections. The engineer seeing Roman concepts in alien ideas.",
+          "feedback": null,
+          "audioFile": "212-marcus.mp3",
+          "timestamp": "2026-02-07T02:06:10.553Z"
+        }
+      ]
+    },
+    "213": {
+      "lineId": "213",
+      "character": "carter",
+      "currentVersion": 2,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Explaining linked allocation. Patient, encouraging his understanding.",
+          "feedback": null,
+          "audioFile": "213-carter.mp3",
+          "timestamp": "2026-02-07T02:06:11.915Z"
+        },
+        {
+          "version": 2,
+          "delivery": "Explaining linked allocation. Patient, encouraging his understanding.",
+          "feedback": null,
+          "audioFile": "213-carter.v2.mp3",
+          "timestamp": "2026-02-07T02:37:43.522Z"
+        }
+      ]
+    },
+    "214": {
+      "lineId": "214",
+      "character": "marcus",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "The breakthrough analogy. A Roman heating system as metaphor for memory chains. Genuinely excited.",
+          "feedback": null,
+          "audioFile": "214-marcus.mp3",
+          "timestamp": "2026-02-07T02:06:13.235Z"
+        }
+      ]
+    },
+    "215": {
+      "lineId": "215",
+      "character": "carter",
+      "currentVersion": 2,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "To Daniel. Impressed. Genuine admiration. The student surpassing expectations.",
+          "feedback": null,
+          "audioFile": "215-carter.mp3",
+          "timestamp": "2026-02-07T02:06:14.360Z"
+        },
+        {
+          "version": 2,
+          "delivery": "To Daniel. Impressed. Genuine admiration. The student surpassing expectations.",
+          "feedback": null,
+          "audioFile": "215-carter.v2.mp3",
+          "timestamp": "2026-02-07T02:37:44.703Z"
+        }
+      ]
+    },
+    "216": {
+      "lineId": "216",
+      "character": "narrator",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Quiet. Beautiful. A moment of solitude before the work begins.",
+          "feedback": null,
+          "audioFile": "216-narrator.mp3",
+          "timestamp": "2026-02-07T02:06:15.492Z"
+        }
+      ]
+    },
+    "217": {
+      "lineId": "217",
+      "character": "casey",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Simple. Not prying. One insomniac recognizing another.",
+          "feedback": null,
+          "audioFile": "217-casey.mp3",
+          "timestamp": "2026-02-07T02:06:16.518Z"
+        }
+      ]
+    },
+    "218": {
+      "lineId": "218",
+      "character": "carter",
+      "currentVersion": 2,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "The weight of it. Not complaining — processing. Each sentence a different dimension of the impossible.",
+          "feedback": null,
+          "audioFile": "218-carter.mp3",
+          "timestamp": "2026-02-07T02:06:18.627Z"
+        },
+        {
+          "version": 2,
+          "delivery": "The weight of it. Not complaining — processing. Each sentence a different dimension of the impossible.",
+          "feedback": null,
+          "audioFile": "218-carter.v2.mp3",
+          "timestamp": "2026-02-07T02:37:47.315Z"
+        }
+      ]
+    },
+    "219": {
+      "lineId": "219",
+      "character": "casey",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Matching her vulnerability. Thirty years distilled to three sentences. The loneliness between the words.",
+          "feedback": null,
+          "audioFile": "219-casey.mp3",
+          "timestamp": "2026-02-07T02:06:21.099Z"
+        }
+      ]
+    },
+    "220": {
+      "lineId": "220",
+      "character": "narrator",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "The world coming alive around them. Morning sounds. A city stirring.",
+          "feedback": null,
+          "audioFile": "220-narrator.mp3",
+          "timestamp": "2026-02-07T02:06:22.344Z"
+        }
+      ]
+    },
+    "221": {
+      "lineId": "221",
+      "character": "casey",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Hope. Quiet, hard-won hope from a man who's been fighting alone for decades.",
+          "feedback": null,
+          "audioFile": "221-casey.mp3",
+          "timestamp": "2026-02-07T02:06:23.948Z"
+        }
+      ]
+    },
+    "222": {
+      "lineId": "222",
+      "character": "carter",
+      "currentVersion": 2,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "One word. Genuinely asking. She needs to hear the reason.",
+          "feedback": null,
+          "audioFile": "222-carter.mp3",
+          "timestamp": "2026-02-07T02:06:25.031Z"
+        },
+        {
+          "version": 2,
+          "delivery": "One word. Genuinely asking. She needs to hear the reason.",
+          "feedback": null,
+          "audioFile": "222-carter.v2.mp3",
+          "timestamp": "2026-02-07T02:37:48.423Z"
+        }
+      ]
+    },
+    "223": {
+      "lineId": "223",
+      "character": "casey",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "The manifesto. Building to the punchline — npm, blockchain, dependencies. But learn it right is said with conviction, not comedy.",
+          "feedback": null,
+          "audioFile": "223-casey.mp3",
+          "timestamp": "2026-02-07T02:06:27.699Z"
+        }
+      ]
+    },
+    "224": {
+      "lineId": "224",
+      "character": "narrator",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Hope made visible. The work has already begun.",
+          "feedback": null,
+          "audioFile": "224-narrator.mp3",
+          "timestamp": "2026-02-07T02:06:29.012Z"
+        }
+      ]
+    },
+    "225": {
+      "lineId": "225",
+      "character": "carter",
+      "currentVersion": 2,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Latin. Said with the weight of a founding statement. The pool is the foundation.",
+          "feedback": null,
+          "audioFile": "225-carter.mp3",
+          "timestamp": "2026-02-07T02:06:30.131Z"
+        },
+        {
+          "version": 2,
+          "delivery": "Latin. Said with the weight of a founding statement. The pool is the foundation.",
+          "feedback": null,
+          "audioFile": "225-carter.v2.mp3",
+          "timestamp": "2026-02-07T02:37:50.089Z"
+        }
+      ]
+    },
+    "226": {
+      "lineId": "226",
+      "character": "casey",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Echo of his earlier line. But now it means everything. Quiet. Complete.",
+          "feedback": null,
+          "audioFile": "226-casey.mp3",
+          "timestamp": "2026-02-07T02:06:30.980Z"
+        }
+      ]
+    },
+    "227": {
+      "lineId": "227",
+      "character": "narrator",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Forward momentum. Purpose. The future calling her.",
+          "feedback": null,
+          "audioFile": "g227-228-narrator.mp3",
+          "timestamp": "2026-02-07T02:06:33.563Z"
+        }
+      ],
+      "groupId": "g227-228"
+    },
+    "228": {
+      "lineId": "228",
+      "character": "narrator",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "The final image of the main story. Hope and threat in balance. Let it breathe.",
+          "feedback": null,
+          "audioFile": "",
+          "timestamp": "2026-02-07T02:06:33.563Z"
+        }
+      ],
+      "groupId": "g227-228"
+    },
+    "229": {
+      "lineId": "229",
+      "character": "narrator",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "New scene. Jarring shift from Nova Roma's warmth. This is Earth but it looks like another planet. Ominous.",
+          "feedback": null,
+          "audioFile": "g229-230-narrator.mp3",
+          "timestamp": "2026-02-07T02:06:36.607Z"
+        }
+      ],
+      "groupId": "g229-230"
+    },
+    "230": {
+      "lineId": "230",
+      "character": "narrator",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "The quiet before something terrible. Let the silence work.",
+          "feedback": null,
+          "audioFile": "",
+          "timestamp": "2026-02-07T02:06:36.607Z"
+        }
+      ],
+      "groupId": "g229-230"
+    },
+    "231": {
+      "lineId": "231",
+      "character": "narrator",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Each word a step toward something. Wrong is the punch.",
+          "feedback": null,
+          "audioFile": "g231-234-narrator.mp3",
+          "timestamp": "2026-02-07T02:06:41.684Z"
+        }
+      ],
+      "groupId": "g231-234"
+    },
+    "232": {
+      "lineId": "232",
+      "character": "narrator",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "The arrival effect. Violent, electric, overwhelming. Build through the description.",
+          "feedback": null,
+          "audioFile": "",
+          "timestamp": "2026-02-07T02:06:41.684Z"
+        }
+      ],
+      "groupId": "g231-234"
+    },
+    "233": {
+      "lineId": "233",
+      "character": "narrator",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "The arrival. Raw. Physical. The heat is real.",
+          "feedback": null,
+          "audioFile": "",
+          "timestamp": "2026-02-07T02:06:41.684Z"
+        }
+      ],
+      "groupId": "g231-234"
+    },
+    "234": {
+      "lineId": "234",
+      "character": "narrator",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Aftermath. Brief. Let the image settle.",
+          "feedback": null,
+          "audioFile": "",
+          "timestamp": "2026-02-07T02:06:41.684Z"
+        }
+      ],
+      "groupId": "g231-234"
+    },
+    "235": {
+      "lineId": "235",
+      "character": "narrator",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "The wrongness. Each word more unsettling. Mechanically is the tell.",
+          "feedback": null,
+          "audioFile": "g235-238-narrator.mp3",
+          "timestamp": "2026-02-07T02:06:48.255Z"
+        }
+      ],
+      "groupId": "g235-238"
+    },
+    "236": {
+      "lineId": "236",
+      "character": "narrator",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Recognition and horror. The familiar made unfamiliar. Each damage detail adds to the picture.",
+          "feedback": null,
+          "audioFile": "",
+          "timestamp": "2026-02-07T02:06:48.255Z"
+        }
+      ],
+      "groupId": "g235-238"
+    },
+    "237": {
+      "lineId": "237",
+      "character": "narrator",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Mechanical wrongness. The pause before processing — he's not experiencing, he's computing.",
+          "feedback": null,
+          "audioFile": "",
+          "timestamp": "2026-02-07T02:06:48.255Z"
+        }
+      ],
+      "groupId": "g235-238"
+    },
+    "238": {
+      "lineId": "238",
+      "character": "narrator",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "The green. The same green from the cold open. Three words that recontextualize everything.",
+          "feedback": null,
+          "audioFile": "",
+          "timestamp": "2026-02-07T02:06:48.255Z"
+        }
+      ],
+      "groupId": "g235-238"
+    },
+    "239": {
+      "lineId": "239",
+      "character": "narrator",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "The final image of this beat. Dread. Stillness. The threat has arrived.",
+          "feedback": null,
+          "audioFile": "239-narrator.mp3",
+          "timestamp": "2026-02-07T02:06:50.196Z"
+        }
+      ]
+    },
+    "240": {
+      "lineId": "240",
+      "character": "narrator",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "New location. Sacred. Natural. The contrast with Yellowstone's hellscape.",
+          "feedback": null,
+          "audioFile": "g240-241-narrator.mp3",
+          "timestamp": "2026-02-07T02:06:52.739Z"
+        }
+      ],
+      "groupId": "g240-241"
+    },
+    "241": {
+      "lineId": "241",
+      "character": "narrator",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "The parallel drawn. Brief. Both locations ancient, but one is life and one is fire.",
+          "feedback": null,
+          "audioFile": "",
+          "timestamp": "2026-02-07T02:06:52.739Z"
+        }
+      ],
+      "groupId": "g240-241"
+    },
+    "242": {
+      "lineId": "242",
+      "character": "narrator",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Repetition of the Yellowstone beat. The audience knows what's coming. Dread.",
+          "feedback": null,
+          "audioFile": "g242-244-narrator.mp3",
+          "timestamp": "2026-02-07T02:06:56.430Z"
+        }
+      ],
+      "groupId": "g242-244"
+    },
+    "243": {
+      "lineId": "243",
+      "character": "narrator",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "The violence against nature. The trees as witnesses.",
+          "feedback": null,
+          "audioFile": "",
+          "timestamp": "2026-02-07T02:06:56.430Z"
+        }
+      ],
+      "groupId": "g242-244"
+    },
+    "244": {
+      "lineId": "244",
+      "character": "narrator",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Parallel to Data's arrival. The burning ferns — beauty destroyed.",
+          "feedback": null,
+          "audioFile": "",
+          "timestamp": "2026-02-07T02:06:56.430Z"
+        }
+      ],
+      "groupId": "g242-244"
+    },
+    "245": {
+      "lineId": "245",
+      "character": "narrator",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "The contrast. After Data's wrongness, this is right. Human. The relief in the word.",
+          "feedback": null,
+          "audioFile": "g245-250-narrator.mp3",
+          "timestamp": "2026-02-07T02:07:03.222Z"
+        }
+      ],
+      "groupId": "g245-250"
+    },
+    "246": {
+      "lineId": "246",
+      "character": "narrator",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Physical. Visceral. The vulnerability is key — this is a man, not a machine.",
+          "feedback": null,
+          "audioFile": "",
+          "timestamp": "2026-02-07T02:07:03.222Z"
+        }
+      ],
+      "groupId": "g245-250"
+    },
+    "247": {
+      "lineId": "247",
+      "character": "narrator",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Survivor energy. He's here by necessity, not choice. He barely made it.",
+          "feedback": null,
+          "audioFile": "",
+          "timestamp": "2026-02-07T02:07:03.222Z"
+        }
+      ],
+      "groupId": "g245-250"
+    },
+    "248": {
+      "lineId": "248",
+      "character": "narrator",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Isolation. The connection to the previous scene — he was with Data, now he's not.",
+          "feedback": null,
+          "audioFile": "",
+          "timestamp": "2026-02-07T02:07:03.222Z"
+        }
+      ],
+      "groupId": "g245-250"
+    },
+    "249": {
+      "lineId": "249",
+      "character": "narrator",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "A man finding his feet. The trees above him — ancient, enduring, a silent welcome.",
+          "feedback": null,
+          "audioFile": "",
+          "timestamp": "2026-02-07T02:07:03.222Z"
+        }
+      ],
+      "groupId": "g245-250"
+    },
+    "250": {
+      "lineId": "250",
+      "character": "narrator",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Relief. Simple. Two sentences that carry everything.",
+          "feedback": null,
+          "audioFile": "",
+          "timestamp": "2026-02-07T02:07:03.222Z"
+        }
+      ],
+      "groupId": "g245-250"
+    },
+    "251": {
+      "lineId": "251",
+      "character": "narrator",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "The reveal. Build to the name. That jawline carries recognition, humor, excitement. Then Kirk. One word. Let it land.",
+          "feedback": null,
+          "audioFile": "g251-252-narrator.mp3",
+          "timestamp": "2026-02-07T02:07:06.154Z"
+        }
+      ],
+      "groupId": "g251-252"
+    },
+    "252": {
+      "lineId": "252",
+      "character": "narrator",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Purpose amid vulnerability. He's here for a reason. The mission drives him even now.",
+          "feedback": null,
+          "audioFile": "",
+          "timestamp": "2026-02-07T02:07:06.154Z"
+        }
+      ],
+      "groupId": "g251-252"
+    },
+    "001": {
+      "lineId": "001",
+      "character": "narrator",
+      "currentVersion": 6,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Set the scene. Atmospheric. Slow pace. Let the room breathe.",
+          "feedback": null,
+          "audioFile": "001-narrator.mp3",
+          "timestamp": "2026-02-06T23:57:30.288Z"
+        },
+        {
+          "version": 2,
+          "delivery": "Set the scene. Atmospheric. Slow pace. Let the room breathe.",
+          "feedback": null,
+          "audioFile": "001-narrator.v2.mp3",
+          "timestamp": "2026-02-07T00:18:31.462Z"
+        },
+        {
+          "version": 3,
+          "delivery": "Set the scene. Atmospheric. Slow pace. Let the room breathe.",
+          "feedback": null,
+          "audioFile": "g001-002-narrator.v3.mp3",
+          "timestamp": "2026-02-07T00:34:28.146Z"
+        },
+        {
+          "version": 4,
+          "delivery": "Set the scene. Atmospheric. Slow pace. Let the room breathe.",
+          "feedback": null,
+          "audioFile": "g001-002-narrator.v4.mp3",
+          "timestamp": "2026-02-07T01:01:37.591Z"
+        },
+        {
+          "version": 5,
+          "delivery": "Set the scene. Atmospheric. Slow pace. Let the room breathe.",
+          "feedback": null,
+          "audioFile": "g001-007-narrator.v5.mp3",
+          "timestamp": "2026-02-07T01:43:11.484Z"
+        },
+        {
+          "version": 6,
+          "delivery": "Set the scene. Atmospheric. Slow pace. Let the room breathe.",
+          "feedback": null,
+          "audioFile": "g001-007-narrator.v6.mp3",
+          "timestamp": "2026-02-07T02:00:14.778Z"
+        }
+      ],
+      "groupId": "g001-007"
+    },
+    "002": {
+      "lineId": "002",
+      "character": "narrator",
+      "currentVersion": 6,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Brief. Knowing. A wry observation.",
+          "feedback": null,
+          "audioFile": "002-narrator.mp3",
+          "timestamp": "2026-02-06T23:57:47.434Z"
+        },
+        {
+          "version": 2,
+          "delivery": "Brief. Knowing. A wry observation.",
+          "feedback": null,
+          "audioFile": "002-narrator.v2.mp3",
+          "timestamp": "2026-02-07T00:18:32.949Z"
+        },
+        {
+          "version": 3,
+          "delivery": "Brief. Knowing. A wry observation.",
+          "feedback": null,
+          "audioFile": "",
+          "timestamp": "2026-02-07T00:34:28.146Z"
+        },
+        {
+          "version": 4,
+          "delivery": "Brief. Knowing. A wry observation.",
+          "feedback": null,
+          "audioFile": "",
+          "timestamp": "2026-02-07T01:01:37.591Z"
+        },
+        {
+          "version": 5,
+          "delivery": "Exposition delivered as mystery. Cinematic. The backstory is intrigue, not info dump.",
+          "feedback": null,
+          "audioFile": "",
+          "timestamp": "2026-02-07T01:43:11.484Z"
+        },
+        {
+          "version": 6,
+          "delivery": "Exposition delivered as mystery. Cinematic. The backstory is intrigue, not info dump.",
+          "feedback": null,
+          "audioFile": "",
+          "timestamp": "2026-02-07T02:00:14.778Z"
+        }
+      ],
+      "groupId": "g001-007"
+    },
+    "003": {
+      "lineId": "003",
+      "character": "carter",
+      "currentVersion": 6,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Direct. Interrogative. She is in control and she knows it. Quiet intensity.",
+          "feedback": null,
+          "audioFile": "003-carter.mp3",
+          "timestamp": "2026-02-06T23:58:20.645Z"
+        },
+        {
+          "version": 2,
+          "delivery": "Direct. Interrogative. She is in control and she knows it. Quiet intensity.",
+          "feedback": null,
+          "audioFile": "003-carter.v2.mp3",
+          "timestamp": "2026-02-07T00:18:33.941Z"
+        },
+        {
+          "version": 3,
+          "delivery": "Direct. Interrogative. She is in control and she knows it. Quiet intensity.",
+          "feedback": null,
+          "audioFile": "003-carter.v3.mp3",
+          "timestamp": "2026-02-07T00:46:11.620Z"
+        },
+        {
+          "version": 4,
+          "delivery": "Direct. Interrogative. She is in control and she knows it. Quiet intensity.",
+          "feedback": null,
+          "audioFile": "003-carter.v4.mp3",
+          "timestamp": "2026-02-07T01:01:40.211Z"
+        },
+        {
+          "version": 5,
+          "delivery": "Brief. Knowing. A wry observation.",
+          "feedback": null,
+          "audioFile": "",
+          "timestamp": "2026-02-07T01:43:11.484Z"
+        },
+        {
+          "version": 6,
+          "delivery": "Brief. Knowing. A wry observation.",
+          "feedback": null,
+          "audioFile": "",
+          "timestamp": "2026-02-07T02:00:14.778Z"
+        }
+      ],
+      "groupId": "g001-007"
+    },
+    "004": {
+      "lineId": "004",
+      "character": "target",
+      "currentVersion": 6,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Quiet. Almost gentle. Resigned but amused. One word that changes everything.",
+          "feedback": null,
+          "audioFile": "004-target.mp3",
+          "timestamp": "2026-02-06T23:58:40.189Z"
+        },
+        {
+          "version": 2,
+          "delivery": "Quiet. Almost gentle. Resigned but amused. One word that changes everything.",
+          "feedback": null,
+          "audioFile": "004-target.v2.mp3",
+          "timestamp": "2026-02-07T00:17:49.037Z"
+        },
+        {
+          "version": 3,
+          "delivery": "Quiet. Almost gentle. Resigned but amused. One word that changes everything.",
+          "feedback": null,
+          "audioFile": "004-target.v3.mp3",
+          "timestamp": "2026-02-07T00:18:34.969Z"
+        },
+        {
+          "version": 4,
+          "delivery": "Quiet. Almost gentle. Resigned but amused. One word that changes everything.",
+          "feedback": null,
+          "audioFile": "004-target.v4.mp3",
+          "timestamp": "2026-02-07T01:01:41.650Z"
+        },
+        {
+          "version": 5,
+          "delivery": "Measured. Building the portrait of a dangerous man hiding in plain sight.",
+          "feedback": null,
+          "audioFile": "",
+          "timestamp": "2026-02-07T01:43:11.484Z"
+        },
+        {
+          "version": 6,
+          "delivery": "Measured. Building the portrait of a dangerous man hiding in plain sight.",
+          "feedback": null,
+          "audioFile": "",
+          "timestamp": "2026-02-07T02:00:14.778Z"
+        }
+      ],
+      "groupId": "g001-007"
+    },
+    "008": {
+      "lineId": "008",
+      "character": "daniel",
+      "currentVersion": 8,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Shaken but already processing. The academic reflex kicking in even under stress.",
+          "feedback": null,
+          "audioFile": "008-daniel.mp3",
+          "timestamp": "2026-02-06T23:58:53.337Z"
+        },
+        {
+          "version": 2,
+          "delivery": "Shaken but already processing. The academic reflex kicking in even under stress.",
+          "feedback": null,
+          "audioFile": "008-daniel.v2.mp3",
+          "timestamp": "2026-02-07T00:18:42.886Z"
+        },
+        {
+          "version": 3,
+          "delivery": "Shaken but already processing. The academic reflex kicking in even under stress.",
+          "feedback": null,
+          "audioFile": "008-daniel.v3.mp3",
+          "timestamp": "2026-02-07T00:46:59.333Z"
+        },
+        {
+          "version": 4,
+          "delivery": "Shaken but already processing. The academic reflex kicking in even under stress.",
+          "feedback": null,
+          "audioFile": "008-daniel.v4.mp3",
+          "timestamp": "2026-02-07T01:01:50.958Z"
+        },
+        {
+          "version": 5,
+          "delivery": "Direct. Interrogative. She is in control and she knows it. Quiet intensity.",
+          "feedback": null,
+          "audioFile": "008-carter.v5.mp3",
+          "timestamp": "2026-02-07T01:43:24.596Z"
+        },
+        {
+          "version": 6,
+          "delivery": "Direct. Interrogative. She is in control and she knows it. Quiet intensity.",
+          "feedback": null,
+          "audioFile": "008-carter.v6.mp3",
+          "timestamp": "2026-02-07T02:00:17.055Z"
+        },
+        {
+          "version": 7,
+          "delivery": "Direct. Interrogative. She is in control and she knows it. Quiet intensity.",
+          "feedback": null,
+          "audioFile": "008-carter.v7.mp3",
+          "timestamp": "2026-02-07T02:31:26.297Z"
+        },
+        {
+          "version": 8,
+          "delivery": "Direct. Interrogative. She is in control and she knows it. Quiet intensity.",
+          "feedback": null,
+          "audioFile": "008-carter.v8.mp3",
+          "timestamp": "2026-02-07T02:37:11.394Z"
+        }
+      ]
+    },
+    "010": {
+      "lineId": "010",
+      "character": "duncan",
+      "currentVersion": 12,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Said like it should mean something. Confident, warm, slightly amused. A man who has introduced himself ten thousand times.",
+          "feedback": null,
+          "audioFile": "010-duncan.mp3",
+          "timestamp": "2026-02-06T23:59:03.944Z"
+        },
+        {
+          "version": 2,
+          "delivery": "Said like it should mean something. Confident, warm, slightly amused. A man who has introduced himself ten thousand times.",
+          "feedback": null,
+          "audioFile": "010-duncan.v2.mp3",
+          "timestamp": "2026-02-07T00:15:30.008Z"
+        },
+        {
+          "version": 3,
+          "delivery": "Said like it should mean something. Confident, warm, slightly amused. A man who has introduced himself ten thousand times.",
+          "feedback": null,
+          "audioFile": "010-duncan.v3.mp3",
+          "timestamp": "2026-02-07T00:15:50.593Z"
+        },
+        {
+          "version": 4,
+          "delivery": "Said like it should mean something. Confident, warm, slightly amused. A man who has introduced himself ten thousand times.",
+          "feedback": null,
+          "audioFile": "010-duncan.v4.mp3",
+          "timestamp": "2026-02-07T00:16:07.558Z"
+        },
+        {
+          "version": 5,
+          "delivery": "Said like it should mean something. Confident, warm, slightly amused. A man who has introduced himself ten thousand times.",
+          "feedback": null,
+          "audioFile": "010-duncan.v5.mp3",
+          "timestamp": "2026-02-07T00:16:30.625Z"
+        },
+        {
+          "version": 6,
+          "delivery": "Said like it should mean something. Confident, warm, slightly amused. A man who has introduced himself ten thousand times.",
+          "feedback": null,
+          "audioFile": "010-duncan.v6.mp3",
+          "timestamp": "2026-02-07T00:16:51.377Z"
+        },
+        {
+          "version": 7,
+          "delivery": "Said like it should mean something. Confident, warm, slightly amused. A man who has introduced himself ten thousand times.",
+          "feedback": null,
+          "audioFile": "010-duncan.v7.mp3",
+          "timestamp": "2026-02-07T00:17:02.956Z"
+        },
+        {
+          "version": 8,
+          "delivery": "Said like it should mean something. Confident, warm, slightly amused. A man who has introduced himself ten thousand times.",
+          "feedback": null,
+          "audioFile": "010-duncan.v8.mp3",
+          "timestamp": "2026-02-07T00:17:19.862Z"
+        },
+        {
+          "version": 9,
+          "delivery": "Said like it should mean something. Confident, warm, slightly amused. A man who has introduced himself ten thousand times.",
+          "feedback": null,
+          "audioFile": "010-duncan.v9.mp3",
+          "timestamp": "2026-02-07T00:18:44.732Z"
+        },
+        {
+          "version": 10,
+          "delivery": "Said like it should mean something. Confident, warm, slightly amused. A man who has introduced himself ten thousand times.",
+          "feedback": null,
+          "audioFile": "010-duncan.v10.mp3",
+          "timestamp": "2026-02-07T01:01:53.189Z"
+        },
+        {
+          "version": 11,
+          "delivery": "Quiet. Almost gentle. Resigned but amused. One word that changes everything.",
+          "feedback": null,
+          "audioFile": "010-target.v11.mp3",
+          "timestamp": "2026-02-07T01:43:31.774Z"
+        },
+        {
+          "version": 12,
+          "delivery": "Quiet. Almost gentle. Resigned but amused. One word that changes everything.",
+          "feedback": null,
+          "audioFile": "010-target.v12.mp3",
+          "timestamp": "2026-02-07T02:00:18.914Z"
+        }
+      ]
+    },
+    "005": {
+      "lineId": "005",
+      "character": "narrator",
+      "currentVersion": 6,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Building tension. Each sentence lands heavier. The green is wrong, alien. Convey the wrongness.",
+          "feedback": null,
+          "audioFile": "005-narrator.mp3",
+          "timestamp": "2026-02-07T00:18:36.876Z"
+        },
+        {
+          "version": 2,
+          "delivery": "Building tension. Each sentence lands heavier. The green is wrong, alien. Convey the wrongness.",
+          "feedback": null,
+          "audioFile": "g005-006-narrator.v2.mp3",
+          "timestamp": "2026-02-07T00:34:36.866Z"
+        },
+        {
+          "version": 3,
+          "delivery": "Building tension. Each sentence lands heavier. The green is wrong, alien. Convey the wrongness.",
+          "feedback": null,
+          "audioFile": "g005-006-narrator.v3.mp3",
+          "timestamp": "2026-02-07T00:38:09.831Z"
+        },
+        {
+          "version": 4,
+          "delivery": "Building tension. Each sentence lands heavier. The green is wrong, alien. Convey the wrongness.",
+          "feedback": null,
+          "audioFile": "g005-006-narrator.v4.mp3",
+          "timestamp": "2026-02-07T01:01:45.692Z"
+        },
+        {
+          "version": 5,
+          "delivery": "Building tension. The net tightening. Each sentence a step closer.",
+          "feedback": null,
+          "audioFile": "",
+          "timestamp": "2026-02-07T01:43:11.484Z"
+        },
+        {
+          "version": 6,
+          "delivery": "Building tension. The net tightening. Each sentence a step closer.",
+          "feedback": null,
+          "audioFile": "",
+          "timestamp": "2026-02-07T02:00:14.778Z"
+        }
+      ],
+      "groupId": "g001-007"
+    },
+    "006": {
+      "lineId": "006",
+      "character": "narrator",
+      "currentVersion": 6,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Accelerating. The horror of the mundane becoming weaponized. Build to the word golem.",
+          "feedback": null,
+          "audioFile": "006-narrator.mp3",
+          "timestamp": "2026-02-07T00:18:39.140Z"
+        },
+        {
+          "version": 2,
+          "delivery": "Accelerating. The horror of the mundane becoming weaponized. Build to the word golem.",
+          "feedback": null,
+          "audioFile": "",
+          "timestamp": "2026-02-07T00:34:36.866Z"
+        },
+        {
+          "version": 3,
+          "delivery": "Accelerating. The horror of the mundane becoming weaponized. Build to the word golem.",
+          "feedback": null,
+          "audioFile": "",
+          "timestamp": "2026-02-07T00:38:09.831Z"
+        },
+        {
+          "version": 4,
+          "delivery": "Accelerating. The horror of the mundane becoming weaponized. Build to the word golem.",
+          "feedback": null,
+          "audioFile": "",
+          "timestamp": "2026-02-07T01:01:45.692Z"
+        },
+        {
+          "version": 5,
+          "delivery": "Quiet dread. The moment before the mask drops.",
+          "feedback": null,
+          "audioFile": "",
+          "timestamp": "2026-02-07T01:43:11.484Z"
+        },
+        {
+          "version": 6,
+          "delivery": "Quiet dread. The moment before the mask drops.",
+          "feedback": null,
+          "audioFile": "",
+          "timestamp": "2026-02-07T02:00:14.778Z"
+        }
+      ],
+      "groupId": "g001-007"
+    },
+    "007": {
+      "lineId": "007",
+      "character": "narrator",
+      "currentVersion": 6,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Sudden stillness after violence. The simile lands dry, almost darkly comic.",
+          "feedback": null,
+          "audioFile": "007-narrator.mp3",
+          "timestamp": "2026-02-07T00:18:41.736Z"
+        },
+        {
+          "version": 2,
+          "delivery": "Sudden stillness after violence. The simile lands dry, almost darkly comic.",
+          "feedback": null,
+          "audioFile": "007-narrator.v2.mp3",
+          "timestamp": "2026-02-07T01:01:48.213Z"
+        },
+        {
+          "version": 5,
+          "delivery": "Intimate. The laugh is for himself, not for them.",
+          "feedback": null,
+          "audioFile": "",
+          "timestamp": "2026-02-07T01:43:11.484Z"
+        },
+        {
+          "version": 6,
+          "delivery": "Intimate. The laugh is for himself, not for them.",
+          "feedback": null,
+          "audioFile": "",
+          "timestamp": "2026-02-07T02:00:14.778Z"
+        }
+      ],
+      "groupId": "g001-007"
+    },
+    "009": {
+      "lineId": "009",
+      "character": "carter",
+      "currentVersion": 4,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Rare admission. Carter not knowing something is significant. Brief, honest, unsettled.",
+          "feedback": null,
+          "audioFile": "009-carter.mp3",
+          "timestamp": "2026-02-07T00:18:43.668Z"
+        },
+        {
+          "version": 2,
+          "delivery": "Rare admission. Carter not knowing something is significant. Brief, honest, unsettled.",
+          "feedback": null,
+          "audioFile": "009-carter.v2.mp3",
+          "timestamp": "2026-02-07T01:01:51.988Z"
+        },
+        {
+          "version": 3,
+          "delivery": "Simple. The gesture says everything. Slow.",
+          "feedback": null,
+          "audioFile": "009-narrator.v3.mp3",
+          "timestamp": "2026-02-07T01:43:27.611Z"
+        },
+        {
+          "version": 4,
+          "delivery": "Simple. The gesture says everything. Slow.",
+          "feedback": null,
+          "audioFile": "009-narrator.v4.mp3",
+          "timestamp": "2026-02-07T02:00:18.170Z"
+        }
+      ]
+    },
+    "011": {
+      "lineId": "011",
+      "character": "narrator",
+      "currentVersion": 2,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Building tension. Each sentence lands heavier. The green is wrong, alien. Convey the wrongness.",
+          "feedback": null,
+          "audioFile": "g011-014-narrator.mp3",
+          "timestamp": "2026-02-07T01:43:43.127Z"
+        },
+        {
+          "version": 2,
+          "delivery": "Building tension. Each sentence lands heavier. The green is wrong, alien. Convey the wrongness.",
+          "feedback": null,
+          "audioFile": "g011-014-narrator.v2.mp3",
+          "timestamp": "2026-02-07T02:00:28.308Z"
+        }
+      ],
+      "groupId": "g011-014"
+    },
+    "012": {
+      "lineId": "012",
+      "character": "narrator",
+      "currentVersion": 2,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Accelerating. The horror of the mundane becoming weaponized. Build to the word golem.",
+          "feedback": null,
+          "audioFile": "",
+          "timestamp": "2026-02-07T01:43:43.127Z"
+        },
+        {
+          "version": 2,
+          "delivery": "Accelerating. The horror of the mundane becoming weaponized. Build to the word golem.",
+          "feedback": null,
+          "audioFile": "",
+          "timestamp": "2026-02-07T02:00:28.308Z"
+        }
+      ],
+      "groupId": "g011-014"
+    },
+    "013": {
+      "lineId": "013",
+      "character": "narrator",
+      "currentVersion": 2,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Horrifying intimacy between man and machine. The revelation of the cost.",
+          "feedback": null,
+          "audioFile": "",
+          "timestamp": "2026-02-07T01:43:43.127Z"
+        },
+        {
+          "version": 2,
+          "delivery": "Horrifying intimacy between man and machine. The revelation of the cost.",
+          "feedback": null,
+          "audioFile": "",
+          "timestamp": "2026-02-07T02:00:28.308Z"
+        }
+      ],
+      "groupId": "g011-014"
+    },
+    "014": {
+      "lineId": "014",
+      "character": "narrator",
+      "currentVersion": 2,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Violent, fast, then suddenly still. The green light fading is the key image.",
+          "feedback": null,
+          "audioFile": "",
+          "timestamp": "2026-02-07T01:43:43.127Z"
+        },
+        {
+          "version": 2,
+          "delivery": "Violent, fast, then suddenly still. The green light fading is the key image.",
+          "feedback": null,
+          "audioFile": "",
+          "timestamp": "2026-02-07T02:00:28.308Z"
+        }
+      ],
+      "groupId": "g011-014"
+    },
+    "015": {
+      "lineId": "015",
+      "character": "narrator",
+      "currentVersion": 2,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Sudden stillness after violence. The simile lands dry, almost darkly comic.",
+          "feedback": null,
+          "audioFile": "015-narrator.mp3",
+          "timestamp": "2026-02-07T01:43:49.345Z"
+        },
+        {
+          "version": 2,
+          "delivery": "Sudden stillness after violence. The simile lands dry, almost darkly comic.",
+          "feedback": null,
+          "audioFile": "015-narrator.v2.mp3",
+          "timestamp": "2026-02-07T02:00:30.008Z"
+        }
+      ]
+    },
+    "016": {
+      "lineId": "016",
+      "character": "narrator",
+      "currentVersion": 2,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Recovery from violence. Terse. Professional.",
+          "feedback": null,
+          "audioFile": "016-narrator.mp3",
+          "timestamp": "2026-02-07T01:43:58.045Z"
+        },
+        {
+          "version": 2,
+          "delivery": "Recovery from violence. Terse. Professional.",
+          "feedback": null,
+          "audioFile": "016-narrator.v2.mp3",
+          "timestamp": "2026-02-07T02:00:31.727Z"
+        }
+      ]
+    },
+    "017": {
+      "lineId": "017",
+      "character": "daniel",
+      "currentVersion": 2,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Shaken but already processing. The academic reflex kicking in even under stress.",
+          "feedback": null,
+          "audioFile": "017-daniel.mp3",
+          "timestamp": "2026-02-07T01:44:02.216Z"
+        },
+        {
+          "version": 2,
+          "delivery": "Shaken but already processing. The academic reflex kicking in even under stress.",
+          "feedback": null,
+          "audioFile": "017-daniel.v2.mp3",
+          "timestamp": "2026-02-07T02:00:33.858Z"
+        }
+      ]
+    },
+    "018": {
+      "lineId": "018",
+      "character": "carter",
+      "currentVersion": 3,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Rare admission. Carter not knowing something is significant. Brief, honest, unsettled.",
+          "feedback": null,
+          "audioFile": "018-carter.mp3",
+          "timestamp": "2026-02-07T01:44:05.628Z"
+        },
+        {
+          "version": 2,
+          "delivery": "Rare admission. Carter not knowing something is significant. Brief, honest, unsettled.",
+          "feedback": null,
+          "audioFile": "018-carter.v2.mp3",
+          "timestamp": "2026-02-07T02:00:35.106Z"
+        },
+        {
+          "version": 3,
+          "delivery": "Rare admission. Carter not knowing something is significant. Brief, honest, unsettled.",
+          "feedback": null,
+          "audioFile": "018-carter.v3.mp3",
+          "timestamp": "2026-02-07T02:37:12.552Z"
+        }
+      ]
+    },
+    "019": {
+      "lineId": "019",
+      "character": "narrator",
+      "currentVersion": 3,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Forward momentum. They're not done. The real prize is through that door.",
+          "feedback": null,
+          "audioFile": "g019-021-narrator.mp3",
+          "timestamp": "2026-02-07T01:44:12.984Z"
+        },
+        {
+          "version": 2,
+          "delivery": "Forward momentum. They're not done. The real prize is through that door.",
+          "feedback": null,
+          "audioFile": "g019-021-narrator.v2.mp3",
+          "timestamp": "2026-02-07T01:48:20.815Z"
+        },
+        {
+          "version": 3,
+          "delivery": "Forward momentum. They're not done. The real prize is through that door.",
+          "feedback": null,
+          "audioFile": "g019-021-narrator.v3.mp3",
+          "timestamp": "2026-02-07T02:00:38.833Z"
+        }
+      ],
+      "groupId": "g019-021"
+    },
+    "020": {
+      "lineId": "020",
+      "character": "narrator",
+      "currentVersion": 3,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Surprise that isn't panic. This man is in control. The intruder is more at home than they are.",
+          "feedback": null,
+          "audioFile": "",
+          "timestamp": "2026-02-07T01:44:12.984Z"
+        },
+        {
+          "version": 2,
+          "delivery": "Surprise that isn't panic. This man is in control. The intruder is more at home than they are.",
+          "feedback": null,
+          "audioFile": "",
+          "timestamp": "2026-02-07T01:48:20.815Z"
+        },
+        {
+          "version": 3,
+          "delivery": "Surprise that isn't panic. This man is in control. The intruder is more at home than they are.",
+          "feedback": null,
+          "audioFile": "",
+          "timestamp": "2026-02-07T02:00:38.833Z"
+        }
+      ],
+      "groupId": "g019-021"
+    },
+    "021": {
+      "lineId": "021",
+      "character": "narrator",
+      "currentVersion": 3,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Simple. Weighted. A beat before the introduction.",
+          "feedback": null,
+          "audioFile": "",
+          "timestamp": "2026-02-07T01:44:12.984Z"
+        },
+        {
+          "version": 2,
+          "delivery": "Simple. Weighted. A beat before the introduction.",
+          "feedback": null,
+          "audioFile": "",
+          "timestamp": "2026-02-07T01:48:20.815Z"
+        },
+        {
+          "version": 3,
+          "delivery": "Simple. Weighted. A beat before the introduction.",
+          "feedback": null,
+          "audioFile": "",
+          "timestamp": "2026-02-07T02:00:38.833Z"
+        }
+      ],
+      "groupId": "g019-021"
+    },
+    "022": {
+      "lineId": "022",
+      "character": "carter",
+      "currentVersion": 3,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Suspicious, weapon ready, demanding. A second confrontation in the same night.",
+          "feedback": null,
+          "audioFile": "022-carter.mp3",
+          "timestamp": "2026-02-07T01:44:15.616Z"
+        },
+        {
+          "version": 2,
+          "delivery": "Suspicious, weapon ready, demanding. A second confrontation in the same night.",
+          "feedback": null,
+          "audioFile": "022-carter.v2.mp3",
+          "timestamp": "2026-02-07T02:00:39.674Z"
+        },
+        {
+          "version": 3,
+          "delivery": "Suspicious, weapon ready, demanding. A second confrontation in the same night.",
+          "feedback": null,
+          "audioFile": "022-carter.v3.mp3",
+          "timestamp": "2026-02-07T02:37:13.469Z"
+        }
+      ]
+    },
+    "023": {
+      "lineId": "023",
+      "character": "duncan",
+      "currentVersion": 2,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Said like it should mean something. Confident, warm, slightly amused. A man who has introduced himself ten thousand times.",
+          "feedback": null,
+          "audioFile": "023-duncan.mp3",
+          "timestamp": "2026-02-07T01:44:19.882Z"
+        },
+        {
+          "version": 2,
+          "delivery": "Said like it should mean something. Confident, warm, slightly amused. A man who has introduced himself ten thousand times.",
+          "feedback": null,
+          "audioFile": "023-duncan.v2.mp3",
+          "timestamp": "2026-02-07T02:00:40.849Z"
+        }
+      ]
+    },
+    "024": {
+      "lineId": "024",
+      "character": "narrator",
+      "currentVersion": 2,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Dry. The disconnect between his confidence and their ignorance. Slight wry humor.",
+          "feedback": null,
+          "audioFile": "024-narrator.mp3",
+          "timestamp": "2026-02-07T01:44:22.579Z"
+        },
+        {
+          "version": 2,
+          "delivery": "Dry. The disconnect between his confidence and their ignorance. Slight wry humor.",
+          "feedback": null,
+          "audioFile": "024-narrator.v2.mp3",
+          "timestamp": "2026-02-07T02:00:42.142Z"
+        }
+      ]
+    },
+    "076": {
+      "lineId": "076",
+      "character": "casey",
+      "currentVersion": 8,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Flat. Unimpressed until proven otherwise. A man who judges by actions.",
+          "feedback": null,
+          "audioFile": "076-casey.mp3",
+          "timestamp": "2026-02-07T01:49:14.977Z"
+        },
+        {
+          "version": 2,
+          "delivery": "Flat. Unimpressed until proven otherwise. A man who judges by actions.",
+          "feedback": null,
+          "audioFile": "076-casey.v2.mp3",
+          "timestamp": "2026-02-07T01:49:35.575Z"
+        },
+        {
+          "version": 3,
+          "delivery": "Flat. Unimpressed until proven otherwise. A man who judges by actions.",
+          "feedback": null,
+          "audioFile": "076-casey.v3.mp3",
+          "timestamp": "2026-02-07T01:50:27.933Z"
+        },
+        {
+          "version": 4,
+          "delivery": "Flat. Unimpressed until proven otherwise. A man who judges by actions.",
+          "feedback": null,
+          "audioFile": "076-casey.v4.mp3",
+          "timestamp": "2026-02-07T01:50:43.586Z"
+        },
+        {
+          "version": 5,
+          "delivery": "Flat. Unimpressed until proven otherwise. A man who judges by actions.",
+          "feedback": null,
+          "audioFile": "076-casey.v5.mp3",
+          "timestamp": "2026-02-07T01:51:14.999Z"
+        },
+        {
+          "version": 6,
+          "delivery": "Flat. Unimpressed until proven otherwise. A man who judges by actions.",
+          "feedback": null,
+          "audioFile": "076-casey.v6.mp3",
+          "timestamp": "2026-02-07T01:52:21.159Z"
+        },
+        {
+          "version": 7,
+          "delivery": "Flat. Unimpressed until proven otherwise. A man who judges by actions.",
+          "feedback": null,
+          "audioFile": "076-casey.v7.mp3",
+          "timestamp": "2026-02-07T01:52:35.957Z"
+        },
+        {
+          "version": 8,
+          "delivery": "Flat. Unimpressed until proven otherwise. A man who judges by actions.",
+          "feedback": null,
+          "audioFile": "076-casey.v8.mp3",
+          "timestamp": "2026-02-07T02:02:17.241Z"
+        }
+      ]
+    },
+    "066": {
+      "lineId": "066",
+      "character": "daniel",
+      "currentVersion": 2,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Rapid-fire connection. Daniel's mind working at full speed, pulling together fragments of knowledge.",
+          "feedback": null,
+          "audioFile": "066-daniel.mp3",
+          "timestamp": "2026-02-07T01:49:55.985Z"
+        },
+        {
+          "version": 2,
+          "delivery": "Rapid-fire connection. Daniel's mind working at full speed, pulling together fragments of knowledge.",
+          "feedback": null,
+          "audioFile": "066-daniel.v2.mp3",
+          "timestamp": "2026-02-07T02:01:58.753Z"
+        }
+      ]
+    },
+    "080": {
+      "lineId": "080",
+      "character": "methos",
+      "currentVersion": 2,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Dry. Sardonic. A man who's survived five thousand years by not taking anything too seriously.",
+          "feedback": null,
+          "audioFile": "080-methos.mp3",
+          "timestamp": "2026-02-07T01:53:04.276Z"
+        },
+        {
+          "version": 2,
+          "delivery": "Dry. Sardonic. A man who's survived five thousand years by not taking anything too seriously.",
+          "feedback": null,
+          "audioFile": "080-methos.v2.mp3",
+          "timestamp": "2026-02-07T02:02:24.086Z"
+        }
+      ]
+    },
+    "025": {
+      "lineId": "025",
+      "character": "narrator",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "The contrast: their aggression, his calm. He's been here before.",
+          "feedback": null,
+          "audioFile": "025-narrator.mp3",
+          "timestamp": "2026-02-07T02:00:44.836Z"
+        }
+      ]
+    },
+    "026": {
+      "lineId": "026",
+      "character": "duncan",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Confident. Slightly chiding. He expected them sooner.",
+          "feedback": null,
+          "audioFile": "026-duncan.mp3",
+          "timestamp": "2026-02-07T02:00:46.219Z"
+        }
+      ]
+    },
+    "027": {
+      "lineId": "027",
+      "character": "narrator",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Observation. Carter's tactical eye picking up details.",
+          "feedback": null,
+          "audioFile": "027-narrator.mp3",
+          "timestamp": "2026-02-07T02:00:49.537Z"
+        }
+      ]
+    },
+    "028": {
+      "lineId": "028",
+      "character": "carter",
+      "currentVersion": 2,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Military command. Short, direct, no room for negotiation.",
+          "feedback": null,
+          "audioFile": "028-carter.mp3",
+          "timestamp": "2026-02-07T02:00:50.338Z"
+        },
+        {
+          "version": 2,
+          "delivery": "Military command. Short, direct, no room for negotiation.",
+          "feedback": null,
+          "audioFile": "028-carter.v2.mp3",
+          "timestamp": "2026-02-07T02:37:14.511Z"
+        }
+      ]
+    },
+    "029": {
+      "lineId": "029",
+      "character": "duncan",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Not putting them down. Reasonable but firm. The last sentence has gentle disappointment.",
+          "feedback": null,
+          "audioFile": "029-duncan.mp3",
+          "timestamp": "2026-02-07T02:00:52.720Z"
+        }
+      ]
+    },
+    "030": {
+      "lineId": "030",
+      "character": "narrator",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Transition. The power dynamic shifting as they realize he has more answers than they do.",
+          "feedback": null,
+          "audioFile": "030-narrator.mp3",
+          "timestamp": "2026-02-07T02:00:54.747Z"
+        }
+      ]
+    },
+    "031": {
+      "lineId": "031",
+      "character": "duncan",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Grave. Certain. Not trying to convince — stating a fact he's lived with for years.",
+          "feedback": null,
+          "audioFile": "031-duncan.mp3",
+          "timestamp": "2026-02-07T02:00:56.276Z"
+        }
+      ]
+    },
+    "032": {
+      "lineId": "032",
+      "character": "narrator",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Measured. His physical movement reflects his mindset — methodical, deliberate.",
+          "feedback": null,
+          "audioFile": "032-narrator.mp3",
+          "timestamp": "2026-02-07T02:00:58.700Z"
+        }
+      ]
+    },
+    "033": {
+      "lineId": "033",
+      "character": "duncan",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "The weight of centuries in every word. Not bitter — resigned. Each technology listed like a chapter in a very long book.",
+          "feedback": null,
+          "audioFile": "g033-034-duncan.mp3",
+          "timestamp": "2026-02-07T02:01:03.965Z"
+        }
+      ],
+      "groupId": "g033-034"
+    },
+    "034": {
+      "lineId": "034",
+      "character": "duncan",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "More urgent now. This is the one that's different. Technical precision.",
+          "feedback": null,
+          "audioFile": "",
+          "timestamp": "2026-02-07T02:01:03.965Z"
+        }
+      ],
+      "groupId": "g033-034"
+    },
+    "035": {
+      "lineId": "035",
+      "character": "carter",
+      "currentVersion": 2,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Interrupted. Starting to object but cut off. Skeptical but listening.",
+          "feedback": null,
+          "audioFile": "035-carter.mp3",
+          "timestamp": "2026-02-07T02:01:05.126Z"
+        },
+        {
+          "version": 2,
+          "delivery": "Interrupted. Starting to object but cut off. Skeptical but listening.",
+          "feedback": null,
+          "audioFile": "035-carter.v2.mp3",
+          "timestamp": "2026-02-07T02:37:15.464Z"
+        }
+      ]
+    },
+    "036": {
+      "lineId": "036",
+      "character": "duncan",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Letting it land. Each sentence a step in the logic. The word built carries the horror.",
+          "feedback": null,
+          "audioFile": "036-duncan.mp3",
+          "timestamp": "2026-02-07T02:01:07.623Z"
+        }
+      ]
+    },
+    "037": {
+      "lineId": "037",
+      "character": "duncan",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "The full scope revealed. Not hysterical — calm, which makes it worse. A man describing an apocalypse he's watched being built.",
+          "feedback": null,
+          "audioFile": "037-duncan.mp3",
+          "timestamp": "2026-02-07T02:01:10.898Z"
+        }
+      ]
+    },
+    "038": {
+      "lineId": "038",
+      "character": "narrator",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Their resistance is understandable. Ground the audience in their skepticism.",
+          "feedback": null,
+          "audioFile": "038-narrator.mp3",
+          "timestamp": "2026-02-07T02:01:12.412Z"
+        }
+      ]
+    },
+    "039": {
+      "lineId": "039",
+      "character": "daniel",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Incredulous. The academic drawing a line. This is too far.",
+          "feedback": null,
+          "audioFile": "039-daniel.mp3",
+          "timestamp": "2026-02-07T02:01:13.897Z"
+        }
+      ]
+    },
+    "040": {
+      "lineId": "040",
+      "character": "duncan",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Quiet. Dangerous. Not an accusation — a question that already contains its answer.",
+          "feedback": null,
+          "audioFile": "040-duncan.mp3",
+          "timestamp": "2026-02-07T02:01:15.161Z"
+        }
+      ]
+    },
+    "041": {
+      "lineId": "041",
+      "character": "narrator",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "The ground shifting under them. Brief. Let the silence do the work.",
+          "feedback": null,
+          "audioFile": "041-narrator.mp3",
+          "timestamp": "2026-02-07T02:01:16.560Z"
+        }
+      ]
+    },
+    "042": {
+      "lineId": "042",
+      "character": "duncan",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Each question a scalpel. Calm. Surgical. He already knows the answer.",
+          "feedback": null,
+          "audioFile": "042-duncan.mp3",
+          "timestamp": "2026-02-07T02:01:17.829Z"
+        }
+      ]
+    },
+    "043": {
+      "lineId": "043",
+      "character": "narrator",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "The realization. No words needed. The look says everything.",
+          "feedback": null,
+          "audioFile": "043-narrator.mp3",
+          "timestamp": "2026-02-07T02:01:18.823Z"
+        }
+      ]
+    },
+    "044": {
+      "lineId": "044",
+      "character": "duncan",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Measured. Letting the scope of the problem unfold. A patient teacher revealing a terrible truth.",
+          "feedback": null,
+          "audioFile": "g044-045-duncan.mp3",
+          "timestamp": "2026-02-07T02:01:21.856Z"
+        }
+      ],
+      "groupId": "g044-045"
+    },
+    "045": {
+      "lineId": "045",
+      "character": "duncan",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Wry. The absurdity is deliberate. But the advice is deadly serious.",
+          "feedback": null,
+          "audioFile": "",
+          "timestamp": "2026-02-07T02:01:21.856Z"
+        }
+      ],
+      "groupId": "g044-045"
+    },
+    "046": {
+      "lineId": "046",
+      "character": "narrator",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Descriptive. The wrongness should come through — these look ancient but aren't quite.",
+          "feedback": null,
+          "audioFile": "g046-047-narrator.mp3",
+          "timestamp": "2026-02-07T02:01:25.256Z"
+        }
+      ],
+      "groupId": "g046-047"
+    },
+    "047": {
+      "lineId": "047",
+      "character": "narrator",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Character observation. Daniel can't help himself.",
+          "feedback": null,
+          "audioFile": "",
+          "timestamp": "2026-02-07T02:01:25.256Z"
+        }
+      ],
+      "groupId": "g046-047"
+    },
+    "048": {
+      "lineId": "048",
+      "character": "daniel",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Fascinated despite himself. The ellipsis is him thinking in real time, trailing off as his mind races.",
+          "feedback": null,
+          "audioFile": "048-daniel.mp3",
+          "timestamp": "2026-02-07T02:01:26.515Z"
+        }
+      ]
+    },
+    "049": {
+      "lineId": "049",
+      "character": "duncan",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Methodical. Each location listed like evidence in a case he's been building for a lifetime.",
+          "feedback": null,
+          "audioFile": "049-duncan.mp3",
+          "timestamp": "2026-02-07T02:01:37.038Z"
+        }
+      ]
+    },
+    "050": {
+      "lineId": "050",
+      "character": "carter",
+      "currentVersion": 2,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Direct. Military precision. Cutting through to the essential question.",
+          "feedback": null,
+          "audioFile": "050-carter.mp3",
+          "timestamp": "2026-02-07T02:01:38.046Z"
+        },
+        {
+          "version": 2,
+          "delivery": "Direct. Military precision. Cutting through to the essential question.",
+          "feedback": null,
+          "audioFile": "050-carter.v2.mp3",
+          "timestamp": "2026-02-07T02:37:16.057Z"
+        }
+      ]
+    },
+    "051": {
+      "lineId": "051",
+      "character": "duncan",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Honest. A rare admission of the limits of his knowledge. He needs them too.",
+          "feedback": null,
+          "audioFile": "051-duncan.mp3",
+          "timestamp": "2026-02-07T02:01:38.847Z"
+        }
+      ]
+    },
+    "052": {
+      "lineId": "052",
+      "character": "narrator",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Casual. Routine. The kind of thing you do a hundred times. This time it's a mistake.",
+          "feedback": null,
+          "audioFile": "052-narrator.mp3",
+          "timestamp": "2026-02-07T02:01:40.495Z"
+        }
+      ]
+    },
+    "053": {
+      "lineId": "053",
+      "character": "duncan",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Sharp. Urgent. Too late. He sees what's about to happen.",
+          "feedback": null,
+          "audioFile": "053-duncan.mp3",
+          "timestamp": "2026-02-07T02:01:41.671Z"
+        }
+      ]
+    },
+    "054": {
+      "lineId": "054",
+      "character": "narrator",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Rapid. Each sentence an escalation. The green glow is the warning.",
+          "feedback": null,
+          "audioFile": "g054-059-narrator.mp3",
+          "timestamp": "2026-02-07T02:01:48.555Z"
+        }
+      ],
+      "groupId": "g054-059"
+    },
+    "055": {
+      "lineId": "055",
+      "character": "narrator",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Uncanny. The desire between machine and artifact. Disturbing.",
+          "feedback": null,
+          "audioFile": "",
+          "timestamp": "2026-02-07T02:01:48.555Z"
+        }
+      ],
+      "groupId": "g054-059"
+    },
+    "056": {
+      "lineId": "056",
+      "character": "narrator",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Brutal speed. The horror is how fast it happens. No warning, no chance.",
+          "feedback": null,
+          "audioFile": "",
+          "timestamp": "2026-02-07T02:01:48.555Z"
+        }
+      ],
+      "groupId": "g054-059"
+    },
+    "057": {
+      "lineId": "057",
+      "character": "narrator",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Staccato. The intelligence behind the attack — this isn't random violence, it's tactical.",
+          "feedback": null,
+          "audioFile": "",
+          "timestamp": "2026-02-07T02:01:48.555Z"
+        }
+      ],
+      "groupId": "g054-059"
+    },
+    "058": {
+      "lineId": "058",
+      "character": "narrator",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Fast. Heroic. The impact of the bullets should be felt in the delivery.",
+          "feedback": null,
+          "audioFile": "",
+          "timestamp": "2026-02-07T02:01:48.555Z"
+        }
+      ],
+      "groupId": "g054-059"
+    },
+    "059": {
+      "lineId": "059",
+      "character": "narrator",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Military efficiency. Teal'c doesn't hesitate. The green light fading is the release.",
+          "feedback": null,
+          "audioFile": "",
+          "timestamp": "2026-02-07T02:01:48.555Z"
+        }
+      ],
+      "groupId": "g054-059"
+    },
+    "060": {
+      "lineId": "060",
+      "character": "carter",
+      "currentVersion": 2,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Checking vitals. Professional grief. She means Duncan — clearly dead, multiple gunshot wounds.",
+          "feedback": null,
+          "audioFile": "060-carter.mp3",
+          "timestamp": "2026-02-07T02:01:49.228Z"
+        },
+        {
+          "version": 2,
+          "delivery": "Checking vitals. Professional grief. She means Duncan — clearly dead, multiple gunshot wounds.",
+          "feedback": null,
+          "audioFile": "060-carter.v2.mp3",
+          "timestamp": "2026-02-07T02:37:17.183Z"
+        }
+      ]
+    },
+    "061": {
+      "lineId": "061",
+      "character": "narrator",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "The contrast — the violence just happened, and the tablets look like museum pieces again.",
+          "feedback": null,
+          "audioFile": "061-narrator.mp3",
+          "timestamp": "2026-02-07T02:01:50.807Z"
+        }
+      ]
+    },
+    "062": {
+      "lineId": "062",
+      "character": "daniel",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Shaken. Not rhetorical — genuinely asking. The academic framework has failed him.",
+          "feedback": null,
+          "audioFile": "062-daniel.mp3",
+          "timestamp": "2026-02-07T02:01:51.896Z"
+        }
+      ]
+    },
+    "063": {
+      "lineId": "063",
+      "character": "narrator",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Shock. Wonder. The impossible happening in front of them. Build from the gasp to the visual horror of healing.",
+          "feedback": null,
+          "audioFile": "063-narrator.mp3",
+          "timestamp": "2026-02-07T02:01:53.939Z"
+        }
+      ]
+    },
+    "064": {
+      "lineId": "064",
+      "character": "duncan",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Breathless. Catching his breath. Gallows humor from a man who's done this before.",
+          "feedback": null,
+          "audioFile": "064-duncan.mp3",
+          "timestamp": "2026-02-07T02:01:55.029Z"
+        }
+      ]
+    },
+    "065": {
+      "lineId": "065",
+      "character": "narrator",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Philosophical weight. Even for them, this is new territory.",
+          "feedback": null,
+          "audioFile": "065-narrator.mp3",
+          "timestamp": "2026-02-07T02:01:57.059Z"
+        }
+      ]
+    },
+    "067": {
+      "lineId": "067",
+      "character": "duncan",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Serious now. The humor gone. This is the pitch — the alliance that will save them.",
+          "feedback": null,
+          "audioFile": "067-duncan.mp3",
+          "timestamp": "2026-02-07T02:02:00.483Z"
+        }
+      ]
+    },
+    "068": {
+      "lineId": "068",
+      "character": "narrator",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Weighted. The evidence of what they're fighting, right in front of them.",
+          "feedback": null,
+          "audioFile": "068-narrator.mp3",
+          "timestamp": "2026-02-07T02:02:01.533Z"
+        }
+      ]
+    },
+    "069": {
+      "lineId": "069",
+      "character": "duncan",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "The full picture crystallizing. Centuries of patience from an enemy that plays a longer game than they imagined.",
+          "feedback": null,
+          "audioFile": "069-duncan.mp3",
+          "timestamp": "2026-02-07T02:02:04.626Z"
+        }
+      ]
+    },
+    "070": {
+      "lineId": "070",
+      "character": "narrator",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "The detail matters — everything about Duncan is deliberate. Old technology by choice.",
+          "feedback": null,
+          "audioFile": "070-narrator.mp3",
+          "timestamp": "2026-02-07T02:02:06.053Z"
+        }
+      ]
+    },
+    "071": {
+      "lineId": "071",
+      "character": "duncan",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Decision made. Forward momentum. The night isn't over — it's just beginning.",
+          "feedback": null,
+          "audioFile": "071-duncan.mp3",
+          "timestamp": "2026-02-07T02:02:07.921Z"
+        }
+      ]
+    },
+    "072": {
+      "lineId": "072",
+      "character": "narrator",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Scene setting. Each detail paints a picture of deliberate disconnection. The vehicles are characters too.",
+          "feedback": null,
+          "audioFile": "g072-075-narrator.mp3",
+          "timestamp": "2026-02-07T02:02:14.797Z"
+        }
+      ],
+      "groupId": "g072-075"
+    },
+    "073": {
+      "lineId": "073",
+      "character": "narrator",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "He was expected. Brief. The door opening is the welcome.",
+          "feedback": null,
+          "audioFile": "",
+          "timestamp": "2026-02-07T02:02:14.797Z"
+        }
+      ],
+      "groupId": "g072-075"
+    },
+    "074": {
+      "lineId": "074",
+      "character": "narrator",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Character introduction. Paint Casey with the voice — rugged, timeless, Western.",
+          "feedback": null,
+          "audioFile": "",
+          "timestamp": "2026-02-07T02:02:14.797Z"
+        }
+      ],
+      "groupId": "g072-075"
+    },
+    "075": {
+      "lineId": "075",
+      "character": "narrator",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "The simile should land — he's sizing them up on his own terms.",
+          "feedback": null,
+          "audioFile": "",
+          "timestamp": "2026-02-07T02:02:14.797Z"
+        }
+      ],
+      "groupId": "g072-075"
+    },
+    "077": {
+      "lineId": "077",
+      "character": "carter",
+      "currentVersion": 2,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Still on guard. Another stranger, another introduction to verify.",
+          "feedback": null,
+          "audioFile": "077-carter.mp3",
+          "timestamp": "2026-02-07T02:02:17.934Z"
+        },
+        {
+          "version": 2,
+          "delivery": "Still on guard. Another stranger, another introduction to verify.",
+          "feedback": null,
+          "audioFile": "077-carter.v2.mp3",
+          "timestamp": "2026-02-07T02:37:17.973Z"
+        }
+      ]
+    },
+    "078": {
+      "lineId": "078",
+      "character": "casey",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Blunt. Not dramatic — stating a fact. The weariness is real.",
+          "feedback": null,
+          "audioFile": "078-casey.mp3",
+          "timestamp": "2026-02-07T02:02:19.138Z"
+        }
+      ]
+    },
+    "079": {
+      "lineId": "079",
+      "character": "narrator",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "The contrast — Casey's intensity, Methos's studied laziness. Comic relief that isn't.",
+          "feedback": null,
+          "audioFile": "079-narrator.mp3",
+          "timestamp": "2026-02-07T02:02:21.154Z"
+        }
+      ]
+    },
+    "081": {
+      "lineId": "081",
+      "character": "casey",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Two words. Not warm, not hostile. An invitation from a man who doesn't waste words.",
+          "feedback": null,
+          "audioFile": "081-casey.mp3",
+          "timestamp": "2026-02-07T02:02:25.007Z"
+        }
+      ]
+    },
+    "082": {
+      "lineId": "082",
+      "character": "narrator",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Revelation. Each detail a surprise. This isn't poverty — it's philosophy.",
+          "feedback": null,
+          "audioFile": "082-narrator.mp3",
+          "timestamp": "2026-02-07T02:02:27.912Z"
+        }
+      ]
+    },
+    "083": {
+      "lineId": "083",
+      "character": "casey",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Pride. This is his life's work. The rule is absolute.",
+          "feedback": null,
+          "audioFile": "083-casey.mp3",
+          "timestamp": "2026-02-07T02:02:30.735Z"
+        }
+      ]
+    },
+    "084": {
+      "lineId": "084",
+      "character": "carter",
+      "currentVersion": 2,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Half-impressed, half-incredulous. The engineer in her is fascinated.",
+          "feedback": null,
+          "audioFile": "084-carter.mp3",
+          "timestamp": "2026-02-07T02:02:31.580Z"
+        },
+        {
+          "version": 2,
+          "delivery": "Half-impressed, half-incredulous. The engineer in her is fascinated.",
+          "feedback": null,
+          "audioFile": "084-carter.v2.mp3",
+          "timestamp": "2026-02-07T02:37:18.895Z"
+        }
+      ]
+    },
+    "085": {
+      "lineId": "085",
+      "character": "casey",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Correcting her. Dry. The philosophy in one sentence — longevity over novelty.",
+          "feedback": null,
+          "audioFile": "085-casey.mp3",
+          "timestamp": "2026-02-07T02:02:33.164Z"
+        }
+      ]
+    },
+    "086": {
+      "lineId": "086",
+      "character": "methos",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Following at his own pace. Amused. He's heard these opinions many, many times.",
+          "feedback": null,
+          "audioFile": "086-methos.mp3",
+          "timestamp": "2026-02-07T02:02:34.779Z"
+        }
+      ]
+    },
+    "087": {
+      "lineId": "087",
+      "character": "narrator",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "The visual. Beautiful madness that turns out to be sanity. Respect in the description.",
+          "feedback": null,
+          "audioFile": "g087-089-narrator.mp3",
+          "timestamp": "2026-02-07T02:02:39.849Z"
+        }
+      ],
+      "groupId": "g087-089"
+    },
+    "088": {
+      "lineId": "088",
+      "character": "narrator",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Building the case. Momentum toward the revelation.",
+          "feedback": null,
+          "audioFile": "",
+          "timestamp": "2026-02-07T02:02:39.849Z"
+        }
+      ],
+      "groupId": "g087-089"
+    },
+    "089": {
+      "lineId": "089",
+      "character": "narrator",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "The destination revealed. Ancient, remote, mysterious.",
+          "feedback": null,
+          "audioFile": "",
+          "timestamp": "2026-02-07T02:02:39.849Z"
+        }
+      ],
+      "groupId": "g087-089"
+    },
+    "090": {
+      "lineId": "090",
+      "character": "casey",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Personal history spanning over a century. Each sentence a decade of observation. Patient, measured, haunted.",
+          "feedback": null,
+          "audioFile": "090-casey.mp3",
+          "timestamp": "2026-02-07T02:02:43.867Z"
+        }
+      ]
+    },
+    "091": {
+      "lineId": "091",
+      "character": "carter",
+      "currentVersion": 2,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Connecting the dots. Skeptical but hopeful — if this is the source, maybe they can fix it.",
+          "feedback": null,
+          "audioFile": "091-carter.mp3",
+          "timestamp": "2026-02-07T02:02:45.942Z"
+        },
+        {
+          "version": 2,
+          "delivery": "Connecting the dots. Skeptical but hopeful — if this is the source, maybe they can fix it.",
+          "feedback": null,
+          "audioFile": "091-carter.v2.mp3",
+          "timestamp": "2026-02-07T02:37:21.163Z"
+        }
+      ]
+    },
+    "092": {
+      "lineId": "092",
+      "character": "casey",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Declarative. The evidence is clear to him. No room for doubt.",
+          "feedback": null,
+          "audioFile": "092-casey.mp3",
+          "timestamp": "2026-02-07T02:02:47.513Z"
+        }
+      ]
+    },
+    "093": {
+      "lineId": "093",
+      "character": "carter",
+      "currentVersion": 2,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "The essential question. Direct, focused, military.",
+          "feedback": null,
+          "audioFile": "093-carter.mp3",
+          "timestamp": "2026-02-07T02:02:48.283Z"
+        },
+        {
+          "version": 2,
+          "delivery": "The essential question. Direct, focused, military.",
+          "feedback": null,
+          "audioFile": "093-carter.v2.mp3",
+          "timestamp": "2026-02-07T02:37:22.336Z"
+        }
+      ]
+    },
+    "094": {
+      "lineId": "094",
+      "character": "casey",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "The admission of limitation, then the pivot to hope. Until now carries the weight of years of waiting.",
+          "feedback": null,
+          "audioFile": "094-casey.mp3",
+          "timestamp": "2026-02-07T02:02:50.455Z"
+        }
+      ]
+    },
+    "095": {
+      "lineId": "095",
+      "character": "narrator",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Internal. Her mind working. The scope of the problem settling on her shoulders.",
+          "feedback": null,
+          "audioFile": "095-narrator.mp3",
+          "timestamp": "2026-02-07T02:02:51.926Z"
+        }
+      ]
+    },
+    "096": {
+      "lineId": "096",
+      "character": "carter",
+      "currentVersion": 2,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Decision crystallizing. Military resolve. She sees the mission now.",
+          "feedback": null,
+          "audioFile": "096-carter.mp3",
+          "timestamp": "2026-02-07T02:02:53.574Z"
+        },
+        {
+          "version": 2,
+          "delivery": "Decision crystallizing. Military resolve. She sees the mission now.",
+          "feedback": null,
+          "audioFile": "096-carter.v2.mp3",
+          "timestamp": "2026-02-07T02:37:23.916Z"
+        }
+      ]
+    },
+    "097": {
+      "lineId": "097",
+      "character": "casey",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Confirmation, then the turn. There's always more. Measured.",
+          "feedback": null,
+          "audioFile": "097-casey.mp3",
+          "timestamp": "2026-02-07T02:02:54.333Z"
+        }
+      ]
+    },
+    "098": {
+      "lineId": "098",
+      "character": "narrator",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Transition to the next revelation. Daniel's skill in action.",
+          "feedback": null,
+          "audioFile": "098-narrator.mp3",
+          "timestamp": "2026-02-07T02:02:55.626Z"
+        }
+      ]
+    },
+    "099": {
+      "lineId": "099",
+      "character": "daniel",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "delivery": "Translating live. Excitement mixed with confusion — the language is ancient but the delivery system isn't.",
+          "feedback": null,
+          "audioFile": "099-daniel.mp3",
+          "timestamp": "2026-02-07T02:02:57.337Z"
+        }
+      ]
+    }
+  },
+  "announceOverrides": {
+    "106": false,
+    "108": false,
+    "111": false,
+    "112": false,
+    "123": false,
+    "124": false,
+    "126": false,
+    "131": false,
+    "132": false,
+    "139": false,
+    "145": false,
+    "157": false,
+    "162": false,
+    "165": false,
+    "168": false,
+    "176": false,
+    "182": false,
+    "184": false,
+    "189": false,
+    "190": false,
+    "191": false,
+    "200": false,
+    "201": false,
+    "207": false,
+    "210": false,
+    "211": false,
+    "212": false,
+    "217": false,
+    "218": false,
+    "225": false,
+    "226": false,
+    "004": false,
+    "010": false,
+    "023": false,
+    "026": false,
+    "028": false,
+    "031": false,
+    "035": false,
+    "039": false,
+    "040": false,
+    "048": false,
+    "049": false,
+    "050": false,
+    "060": false,
+    "062": false,
+    "064": false,
+    "077": false,
+    "096": false,
+    "097": false,
+    "099": false,
+    "080": false
+  }
+}

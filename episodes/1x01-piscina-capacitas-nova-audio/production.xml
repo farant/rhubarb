@@ -1,0 +1,1126 @@
+<production title="Piscina: Capacitas Nova" episode="1x01">
+  <cast>
+    <character id="narrator" name="Narrator" voice="onyx"
+      baseline="Cinematic narration, measured pace, warm but with gravitas. Like a prestige TV opening." />
+    <character id="carter" name="Colonel Samantha Carter" voice="marin"
+      baseline="Military professional, confident, precise. Slight warmth when excited about science. Even-toned authority." />
+    <character id="daniel" name="Dr. Daniel Jackson" voice="echo"
+      baseline="Academic, thoughtful, curious. Quick to connect dots. Slightly breathless when excited." />
+    <character id="duncan" name="Duncan MacLeod" voice="ash"
+      baseline="Scottish accent, warm baritone. Centuries of experience in every word. Patient but urgent when needed." />
+    <character id="target" name="The Target" voice="fable"
+      baseline="Composed, quiet, almost gentle. A man who has lived a very long time in disguise." />
+    <character id="tealc" name="Teal'c" voice="onyx"
+      baseline="Deep, resonant, measured. Jaffa warrior. Every word deliberate. Immense dignity and restraint." />
+    <character id="casey" name="Casey" voice="alloy"
+      baseline="Weathered. Ageless cowboy energy. A man who built things to last and watched the world choose not to. Dry, direct, patient." />
+    <character id="methos" name="Methos" voice="ballad"
+      baseline="Sardonic, dry, five thousand years of survival instinct disguised as laziness. Quick wit covering deep wells of experience." />
+    <character id="oneill" name="Jack O'Neill" voice="cedar"
+      baseline="Wry, casual, deceptively sharp. Military authority worn lightly. The humor is a weapon and a shield." />
+    <character id="midas" name="Midas" voice="fable"
+      baseline="Explosive energy. Theatrical, warm, incapable of stillness. Eighty years alone with Romans has not dimmed him. Every sentence runs into the next." />
+    <character id="pliny" name="Pliny" voice="onyx"
+      baseline="Scholarly, measured, ancient. A mortal who has spent eighty years recording a new world. Every word chosen with care. Quiet authority of knowledge." />
+    <character id="marcus" name="Marcus Aurelius Ferrarius" voice="alloy"
+      baseline="Roman engineer. Practical, skeptical, curious. Accented but clear. A man who builds things and tests ideas against reality." />
+  </cast>
+  <script>
+    <section title="Cold Open" context="Upscale private poker room. Monaco vibes. Crystal, dark wood, soft lighting. Texas hold em but the real game is information. Tense, controlled, high stakes. Night.">
+      <line id="001" type="narration" character="narrator">
+        <text>Earth. Upscale private poker room. Crystal, dark wood, soft lighting. The kind of place where very serious people do very quiet business.</text>
+        <delivery>Set the scene. Atmospheric. Slow pace. Let the room breathe.</delivery>
+      </line>
+      <line id="002" type="narration" character="narrator">
+        <text>SG-1 has been investigating why every Stargate on Earth went dark six months ago. No explanation. No attack. They just stopped working. Tonight they've tracked a lead to a man at this table.</text>
+        <delivery>Exposition delivered as mystery. Cinematic. The backstory is intrigue, not info dump.</delivery>
+      </line>
+      <line id="003" type="narration" character="narrator">
+        <text>Texas hold 'em. But the real game is the conversation.</text>
+        <delivery>Brief. Knowing. A wry observation.</delivery>
+      </line>
+      <line id="004" type="narration" character="narrator">
+        <text>The Target sits across from them. Composed. Wealthy-looking. He's been playing this role for years, decades maybe. A man with connections, with access, with influence.</text>
+        <delivery>Measured. Building the portrait of a dangerous man hiding in plain sight.</delivery>
+      </line>
+      <line id="005" type="narration" character="narrator">
+        <text>The conversation is coded. Circling. They're feeling each other out through bets and small talk. But slowly, SG-1 closes the net. Carter mentions an operation. Daniel references a name. Teal'c says nothing but watches.</text>
+        <delivery>Building tension. The net tightening. Each sentence a step closer.</delivery>
+      </line>
+      <line id="006" type="narration" character="narrator">
+        <text>The target realizes, piece by piece, that they know. They know what he is, even if they don't know the word for it yet.</text>
+        <delivery>Quiet dread. The moment before the mask drops.</delivery>
+      </line>
+      <line id="007" type="narration" character="narrator">
+        <text>He laughs quietly. To himself. Resigned but almost amused.</text>
+        <delivery>Intimate. The laugh is for himself, not for them.</delivery>
+      </line>
+      <pause ms="1000"/>
+      <line id="008" type="dialogue" character="carter">
+        <text>The only thing I haven't figured out is you. Who are you?</text>
+        <delivery>Direct. Interrogative. She is in control and she knows it. Quiet intensity.</delivery>
+      </line>
+      <line id="009" type="narration" character="narrator">
+        <text>He sets down his cards.</text>
+        <delivery>Simple. The gesture says everything. Slow.</delivery>
+      </line>
+      <pause ms="1500"/>
+      <line id="010" type="dialogue" character="target">
+        <text>Borg.</text>
+        <delivery>Quiet. Almost gentle. Resigned but amused. One word that changes everything.</delivery>
+      </line>
+      <pause ms="2000"/>
+      <line id="011" type="narration" character="narrator">
+        <text>His eyes begin to glow. Green. Not the blue-white of Goa'uld, not the gold of ascension. Green. Then his mouth. Light bleeding from inside him.</text>
+        <delivery>Building tension. Each sentence lands heavier. The green is wrong, alien. Convey the wrongness.</delivery>
+      </line>
+      <line id="012" type="narration" character="narrator">
+        <text>Everything electronic in the room starts to move. Phones, cameras, the card shuffler. Metal and wire and glass pulling toward him, assembling around him. A technology golem.</text>
+        <delivery>Accelerating. The horror of the mundane becoming weaponized. Build to the word golem.</delivery>
+      </line>
+      <line id="013" type="narration" character="narrator">
+        <text>He's not controlling it remotely. He's merged with it. The sympathetic damage is visible. When they shoot the golem, he flinches. When they hit a critical mass of circuitry, he bleeds.</text>
+        <delivery>Horrifying intimacy between man and machine. The revelation of the cost.</delivery>
+      </line>
+      <line id="014" type="narration" character="narrator">
+        <text>The fight is brief and brutal. The golem attacks. SG-1 responds with gunfire. The golem staggers as the man staggers. They destroy enough of it that he collapses. Man and machine together, the green light fading from his eyes.</text>
+        <delivery>Violent, fast, then suddenly still. The green light fading is the key image.</delivery>
+      </line>
+      <pause ms="1500"/>
+      <line id="015" type="narration" character="narrator">
+        <text>He is dead. The golem is junk. Phones and tablets and wires scattered across the poker table like a losing hand.</text>
+        <delivery>Sudden stillness after violence. The simile lands dry, almost darkly comic.</delivery>
+      </line>
+      <pause ms="1000"/>
+      <line id="016" type="narration" character="narrator">
+        <text>Silence. Heavy breathing. They search the body. Find keys.</text>
+        <delivery>Recovery from violence. Terse. Professional.</delivery>
+      </line>
+      <line id="017" type="dialogue" character="daniel">
+        <text>What did he say? Borg? What does that mean?</text>
+        <delivery>Shaken but already processing. The academic reflex kicking in even under stress.</delivery>
+      </line>
+      <line id="018" type="dialogue" character="carter">
+        <text>I don't know.</text>
+        <delivery>Rare admission. Carter not knowing something is significant. Brief, honest, unsettled.</delivery>
+      </line>
+      <pause ms="1000"/>
+      <line id="019" type="narration" character="narrator">
+        <text>They move to a door at the back of the room. His private office. The place they've been trying to get to for a year.</text>
+        <delivery>Forward momentum. They're not done. The real prize is through that door.</delivery>
+      </line>
+      <line id="020" type="narration" character="narrator">
+        <text>They unlock it. Step through. A man is already there, going through files. Calm. Professional. Like he belongs here more than they do.</text>
+        <delivery>Surprise that isn't panic. This man is in control. The intruder is more at home than they are.</delivery>
+      </line>
+      <line id="021" type="narration" character="narrator">
+        <text>He turns.</text>
+        <delivery>Simple. Weighted. A beat before the introduction.</delivery>
+      </line>
+      <pause ms="500"/>
+      <line id="022" type="dialogue" character="carter">
+        <text>Who are you?</text>
+        <delivery>Suspicious, weapon ready, demanding. A second confrontation in the same night.</delivery>
+      </line>
+      <line id="023" type="dialogue" character="duncan">
+        <text>I'm Duncan MacLeod.</text>
+        <delivery>Said like it should mean something. Confident, warm, slightly amused. A man who has introduced himself ten thousand times.</delivery>
+      </line>
+      <line id="024" type="narration" character="narrator">
+        <text>It doesn't mean anything. To them.</text>
+        <delivery>Dry. The disconnect between his confidence and their ignorance. Slight wry humor.</delivery>
+      </line>
+      <pause ms="3000"/>
+    </section>
+    <section title="Act One - Standoff" context="The target's private office. Immediate tension. SG-1 has weapons drawn on Duncan MacLeod, who stands calmly among the files he was searching. The aftermath of the poker room fight still fresh.">
+      <line id="025" type="narration" character="narrator">
+        <text>Immediate tension. SG-1 has weapons on Duncan. He's not afraid. He stands with the ease of someone who's had weapons pointed at him many times and found the experience survivable.</text>
+        <delivery>The contrast: their aggression, his calm. He's been here before.</delivery>
+      </line>
+      <line id="026" type="dialogue" character="duncan">
+        <text>You're SGC. Took you long enough.</text>
+        <delivery>Confident. Slightly chiding. He expected them sooner.</delivery>
+      </line>
+      <line id="027" type="narration" character="narrator">
+        <text>He's been tracking them too. He knows who they are. They don't know what he is. Carter notes his hands. Calloused, scarred, a fighter's hands. Not a bureaucrat's.</text>
+        <delivery>Observation. Carter's tactical eye picking up details.</delivery>
+      </line>
+      <line id="028" type="dialogue" character="carter">
+        <text>Put down the files.</text>
+        <delivery>Military command. Short, direct, no room for negotiation.</delivery>
+      </line>
+      <line id="029" type="dialogue" character="duncan">
+        <text>These files are why I'm here. They're why you're here. We've been working the same problem from different ends. I was rather hoping you'd be further along.</text>
+        <delivery>Not putting them down. Reasonable but firm. The last sentence has gentle disappointment.</delivery>
+      </line>
+    </section>
+    <section title="Act One - The Exchange" context="The target's private office. Tension easing into cautious negotiation. Duncan spreads photographs and documents on the desk, revealing decades of investigation. The atmosphere shifts from confrontation to revelation.">
+      <line id="030" type="narration" character="narrator">
+        <text>Careful negotiation. Duncan offers information. He's been working this problem longer than they have. Decades, not months.</text>
+        <delivery>Transition. The power dynamic shifting as they realize he has more answers than they do.</delivery>
+      </line>
+      <line id="031" type="dialogue" character="duncan">
+        <text>The invasion isn't coming, Colonel. It's already here. It's in the infrastructure.</text>
+        <delivery>Grave. Certain. Not trying to convince — stating a fact he's lived with for years.</delivery>
+      </line>
+      <line id="032" type="narration" character="narrator">
+        <text>He moves to the desk. Spreads out photographs, documents. His movements are precise, unhurried. A man who learned patience across centuries.</text>
+        <delivery>Measured. His physical movement reflects his mindset — methodical, deliberate.</delivery>
+      </line>
+      <line id="033" type="dialogue" character="duncan">
+        <text>I watched the telegraph become the telephone. The telephone become the radio. The radio become the television. I watched every generation promise that the new technology would connect people, liberate people. And every generation, someone found a way to turn it into a weapon or a cage.</text>
+        <delivery>The weight of centuries in every word. Not bitter — resigned. Each technology listed like a chapter in a very long book.</delivery>
+      </line>
+      <line id="034" type="dialogue" character="duncan">
+        <text>This time, the weapon was built into the technology from the start. Hardware level. Chip level. Thirty years of compromised supply chains.</text>
+        <delivery>More urgent now. This is the one that's different. Technical precision.</delivery>
+      </line>
+      <line id="035" type="dialogue" character="carter">
+        <text>That's —</text>
+        <delivery>Interrupted. Starting to object but cut off. Skeptical but listening.</delivery>
+      </line>
+      <line id="036" type="dialogue" character="duncan">
+        <text>Your gates going dark? That's not an attack. That's a side effect. Something's interfering with the physics. Something new. Something they built.</text>
+        <delivery>Letting it land. Each sentence a step in the logic. The word built carries the horror.</delivery>
+      </line>
+      <pause ms="1000"/>
+      <line id="037" type="dialogue" character="duncan">
+        <text>In ten to twenty years, they arrive. And when they do, they press a button and every system you depend on turns against you. Power grids. Communications. Water treatment. The machines you've taught to run your civilization will be the weapons that end it.</text>
+        <delivery>The full scope revealed. Not hysterical — calm, which makes it worse. A man describing an apocalypse he's watched being built.</delivery>
+      </line>
+    </section>
+    <section title="Act One - Skepticism" context="The target's private office. Daniel and Carter push back against Duncan's claims. The mood is resistant, defensive. But Duncan's questions cut deeper than they expect.">
+      <line id="038" type="narration" character="narrator">
+        <text>Daniel and Carter push back. This is conspiracy thinking. Where's the evidence?</text>
+        <delivery>Their resistance is understandable. Ground the audience in their skepticism.</delivery>
+      </line>
+      <line id="039" type="dialogue" character="daniel">
+        <text>You're asking us to believe that every piece of modern technology is compromised. That's —</text>
+        <delivery>Incredulous. The academic drawing a line. This is too far.</delivery>
+      </line>
+      <line id="040" type="dialogue" character="duncan">
+        <text>Your informant. The one who just died. How long did you trust him?</text>
+        <delivery>Quiet. Dangerous. Not an accusation — a question that already contains its answer.</delivery>
+      </line>
+      <line id="041" type="narration" character="narrator">
+        <text>They're shaken. He was vetted. Years of service.</text>
+        <delivery>The ground shifting under them. Brief. Let the silence do the work.</delivery>
+      </line>
+      <line id="042" type="dialogue" character="duncan">
+        <text>How did he find you? Did you find him, or did he find you?</text>
+        <delivery>Each question a scalpel. Calm. Surgical. He already knows the answer.</delivery>
+      </line>
+      <line id="043" type="narration" character="narrator">
+        <text>Carter looks at Daniel. The silence answers.</text>
+        <delivery>The realization. No words needed. The look says everything.</delivery>
+      </line>
+      <pause ms="1000"/>
+      <line id="044" type="dialogue" character="duncan">
+        <text>There are more. Everywhere. The question isn't who you can trust. The question is whether you can trust anything with a microchip.</text>
+        <delivery>Measured. Letting the scope of the problem unfold. A patient teacher revealing a terrible truth.</delivery>
+      </line>
+      <line id="045" type="dialogue" character="duncan">
+        <text>I carry an analog phone and a four-hundred-year-old sword. I recommend you start thinking about which of your tools you can verify.</text>
+        <delivery>Wry. The absurdity is deliberate. But the advice is deadly serious.</delivery>
+      </line>
+    </section>
+    <section title="Act One - The Borg Files" context="The target's private office. Strange tablet-like artifacts on the desk, covered in markings that look almost like cuneiform — ancient, weathered, but somehow wrong. Too regular. Too precise. Daniel is drawn to them.">
+      <line id="046" type="narration" character="narrator">
+        <text>Duncan gestures to what he's been examining. Strange artifacts on the desk. Tablet-like objects covered in markings that look almost like cuneiform. Ancient, weathered, but somehow wrong. Too regular. Too precise.</text>
+        <delivery>Descriptive. The wrongness should come through — these look ancient but aren't quite.</delivery>
+      </line>
+      <line id="047" type="narration" character="narrator">
+        <text>Daniel is drawn to them. The scholar's instinct, irresistible.</text>
+        <delivery>Character observation. Daniel can't help himself.</delivery>
+      </line>
+      <line id="048" type="dialogue" character="daniel">
+        <text>These markings. They're not any language I recognize. But the structure...</text>
+        <delivery>Fascinated despite himself. The ellipsis is him thinking in real time, trailing off as his mind races.</delivery>
+      </line>
+      <line id="049" type="dialogue" character="duncan">
+        <text>I've been tracking these for decades. They show up in strange places. Archaeological sites. Corporate vaults. Private collections. Always connected to the pattern I've been following.</text>
+        <delivery>Methodical. Each location listed like evidence in a case he's been building for a lifetime.</delivery>
+      </line>
+      <line id="050" type="dialogue" character="carter">
+        <text>What are they?</text>
+        <delivery>Direct. Military precision. Cutting through to the essential question.</delivery>
+      </line>
+      <line id="051" type="dialogue" character="duncan">
+        <text>I was hoping you could tell me.</text>
+        <delivery>Honest. A rare admission of the limits of his knowledge. He needs them too.</delivery>
+      </line>
+      <pause ms="500"/>
+      <line id="052" type="narration" character="narrator">
+        <text>A junior SGC operative who came with them moves closer. Pulls out his phone to photograph the tablets for analysis.</text>
+        <delivery>Casual. Routine. The kind of thing you do a hundred times. This time it's a mistake.</delivery>
+      </line>
+      <line id="053" type="dialogue" character="duncan">
+        <text>Wait. Don't —</text>
+        <delivery>Sharp. Urgent. Too late. He sees what's about to happen.</delivery>
+      </line>
+      <line id="054" type="narration" character="narrator">
+        <text>The phone's camera activates. The tablet reacts. The cuneiform markings begin to glow. Green.</text>
+        <delivery>Rapid. Each sentence an escalation. The green glow is the warning.</delivery>
+      </line>
+      <line id="055" type="narration" character="narrator">
+        <text>The phone pulls toward the tablet. Or the tablet toward the phone. They want to connect.</text>
+        <delivery>Uncanny. The desire between machine and artifact. Disturbing.</delivery>
+      </line>
+      <line id="056" type="narration" character="narrator">
+        <text>Contact. The operative's eyes flash green. Instant. No transition. One moment human, the next — not.</text>
+        <delivery>Brutal speed. The horror is how fast it happens. No warning, no chance.</delivery>
+      </line>
+    </section>
+    <section title="Act One - Infection and Resurrection" context="The target's private office. Chaos. The infected operative opens fire with tactical precision. Duncan sacrifices himself to shield Carter. The first death and resurrection — SG-1's worldview cracks open again.">
+      <line id="057" type="narration" character="narrator">
+        <text>The infected operative draws his weapon. Starts firing. Not randomly — targeted. He knows who the threats are.</text>
+        <delivery>Staccato. The intelligence behind the attack — this isn't random violence, it's tactical.</delivery>
+      </line>
+      <line id="058" type="narration" character="narrator">
+        <text>Duncan moves without thinking. Puts himself between the gunfire and Carter. Takes multiple rounds to the chest. He goes down hard.</text>
+        <delivery>Fast. Heroic. The impact of the bullets should be felt in the delivery.</delivery>
+      </line>
+      <line id="059" type="narration" character="narrator">
+        <text>Teal'c neutralizes the operative. Staff weapon, brutal, efficient. The green light fades from the man's eyes as he collapses.</text>
+        <delivery>Military efficiency. Teal'c doesn't hesitate. The green light fading is the release.</delivery>
+      </line>
+      <pause ms="500"/>
+      <line id="060" type="dialogue" character="carter">
+        <text>He's gone.</text>
+        <delivery>Checking vitals. Professional grief. She means Duncan — clearly dead, multiple gunshot wounds.</delivery>
+      </line>
+      <line id="061" type="narration" character="narrator">
+        <text>Daniel stares at the tablets. The glow has faded. They look inert again. Ancient. Harmless.</text>
+        <delivery>The contrast — the violence just happened, and the tablets look like museum pieces again.</delivery>
+      </line>
+      <line id="062" type="dialogue" character="daniel">
+        <text>What the hell just happened?</text>
+        <delivery>Shaken. Not rhetorical — genuinely asking. The academic framework has failed him.</delivery>
+      </line>
+      <pause ms="2000"/>
+      <line id="063" type="narration" character="narrator">
+        <text>Duncan gasps. His eyes fly open. He sits up, touching his chest. The wounds are closing. The bullets pushing out of his flesh.</text>
+        <delivery>Shock. Wonder. The impossible happening in front of them. Build from the gasp to the visual horror of healing.</delivery>
+      </line>
+      <line id="064" type="dialogue" character="duncan">
+        <text>That's going to be complicated to explain.</text>
+        <delivery>Breathless. Catching his breath. Gallows humor from a man who's done this before.</delivery>
+      </line>
+      <pause ms="1000"/>
+      <line id="065" type="narration" character="narrator">
+        <text>SG-1's worldview cracks open. Again. They've seen aliens, gods, ascended beings. But a human who doesn't die?</text>
+        <delivery>Philosophical weight. Even for them, this is new territory.</delivery>
+      </line>
+      <line id="066" type="dialogue" character="daniel">
+        <text>The Watchers. The chronicles of immortals. I thought those were myths. Classified speculation.</text>
+        <delivery>Rapid-fire connection. Daniel's mind working at full speed, pulling together fragments of knowledge.</delivery>
+      </line>
+      <line id="067" type="dialogue" character="duncan">
+        <text>Not myths. And there are others. Older than me. If we're going to survive what's coming, you need to meet them.</text>
+        <delivery>Serious now. The humor gone. This is the pitch — the alliance that will save them.</delivery>
+      </line>
+      <line id="068" type="narration" character="narrator">
+        <text>He looks at the tablets. At the dead operative.</text>
+        <delivery>Weighted. The evidence of what they're fighting, right in front of them.</delivery>
+      </line>
+      <line id="069" type="dialogue" character="duncan">
+        <text>And now you've seen how it spreads. Ancient technology meets modern. That's the trigger. That's how they've been seeding this planet for centuries. Waiting for you to build the infrastructure they need.</text>
+        <delivery>The full picture crystallizing. Centuries of patience from an enemy that plays a longer game than they imagined.</delivery>
+      </line>
+      <line id="070" type="narration" character="narrator">
+        <text>He pulls out a phone. Old. Analog. No camera.</text>
+        <delivery>The detail matters — everything about Duncan is deliberate. Old technology by choice.</delivery>
+      </line>
+      <line id="071" type="dialogue" character="duncan">
+        <text>I need to make a call. We know where these tablets are coming from. And tonight's the night we do something about it.</text>
+        <delivery>Decision made. Forward momentum. The night isn't over — it's just beginning.</delivery>
+      </line>
+      <pause ms="2000"/>
+    </section>
+    <section title="Act Two - Casey's Safehouse" context="Remote. Off-grid. A farmhouse that looks abandoned but isn't. No power lines. No satellite dishes. Old trucks with no computers in the engines. Underground levels, clean rooms, hardware from the eighties and nineties. Deliberate.">
+      <line id="072" type="narration" character="narrator">
+        <text>Remote. Off-grid. A farmhouse that looks abandoned but isn't. No power lines running to it. No satellite dishes. Old trucks in what used to be a stable. A seventy-two Ford, a sixty-eight Chevy. Nothing with a computer in the engine.</text>
+        <delivery>Scene setting. Each detail paints a picture of deliberate disconnection. The vehicles are characters too.</delivery>
+      </line>
+      <line id="073" type="narration" character="narrator">
+        <text>Duncan brings SG-1 here. The door opens before they knock.</text>
+        <delivery>He was expected. Brief. The door opening is the welcome.</delivery>
+      </line>
+      <line id="074" type="narration" character="narrator">
+        <text>Casey stands in the doorway. Weathered. Ageless in the way that reads as well-preserved until you look at the eyes. Cowboy energy even in modern clothes. Boots, denim, a posture that says open sky, not office.</text>
+        <delivery>Character introduction. Paint Casey with the voice — rugged, timeless, Western.</delivery>
+      </line>
+      <line id="075" type="narration" character="narrator">
+        <text>He looks at SG-1 the way a rancher looks at new horses. Assessing temperament, not credentials.</text>
+        <delivery>The simile should land — he's sizing them up on his own terms.</delivery>
+      </line>
+      <line id="076" type="dialogue" character="casey">
+        <text>So you're the SGC. Duncan's told me about you.</text>
+        <delivery>Flat. Unimpressed until proven otherwise. A man who judges by actions.</delivery>
+      </line>
+      <line id="077" type="dialogue" character="carter">
+        <text>And who are you?</text>
+        <delivery>Still on guard. Another stranger, another introduction to verify.</delivery>
+      </line>
+      <line id="078" type="dialogue" character="casey">
+        <text>Someone who's been watching your civilization build its own coffin for sixty years.</text>
+        <delivery>Blunt. Not dramatic — stating a fact. The weariness is real.</delivery>
+      </line>
+      <pause ms="500"/>
+      <line id="079" type="narration" character="narrator">
+        <text>Behind him, deeper in the house, a figure sprawled on a couch with a beer. Methos. He doesn't get up. He raises the bottle in greeting.</text>
+        <delivery>The contrast — Casey's intensity, Methos's studied laziness. Comic relief that isn't.</delivery>
+      </line>
+      <line id="080" type="dialogue" character="methos">
+        <text>He means that literally. Don't worry, he's like this with everyone.</text>
+        <delivery>Dry. Sardonic. A man who's survived five thousand years by not taking anything too seriously.</delivery>
+      </line>
+      <line id="081" type="dialogue" character="casey">
+        <text>Come in.</text>
+        <delivery>Two words. Not warm, not hostile. An invitation from a man who doesn't waste words.</delivery>
+      </line>
+      <pause ms="500"/>
+      <line id="082" type="narration" character="narrator">
+        <text>He leads them inside. The farmhouse is deceptive. Underground levels. Clean rooms. Hardware that looks like it's from the eighties and nineties. Deliberate. CRT monitors. Keyboards with heft. Machines that hum instead of whisper.</text>
+        <delivery>Revelation. Each detail a surprise. This isn't poverty — it's philosophy.</delivery>
+      </line>
+      <line id="083" type="dialogue" character="casey">
+        <text>No chips manufactured after nineteen eighty-five. Nothing networked. Nothing they can touch.</text>
+        <delivery>Pride. This is his life's work. The rule is absolute.</delivery>
+      </line>
+      <line id="084" type="dialogue" character="carter">
+        <text>You've been running on thirty-year-old hardware?</text>
+        <delivery>Half-impressed, half-incredulous. The engineer in her is fascinated.</delivery>
+      </line>
+      <line id="085" type="dialogue" character="casey">
+        <text>Forty. Some of it. It still works. That's the point. I built these machines to last, not to update.</text>
+        <delivery>Correcting her. Dry. The philosophy in one sentence — longevity over novelty.</delivery>
+      </line>
+      <line id="086" type="dialogue" character="methos">
+        <text>Casey has opinions about software. Strong ones. You'll hear them all eventually. Several times.</text>
+        <delivery>Following at his own pace. Amused. He's heard these opinions many, many times.</delivery>
+      </line>
+    </section>
+    <section title="Act Two - The Pattern" context="Casey's war room. Maps on the walls — physical maps, pins and string. Photographs. Documents. A conspiracy theorist's lair, except every connection is real. The investigation laid bare.">
+      <line id="087" type="narration" character="narrator">
+        <text>Casey's war room. Maps on the walls. Physical maps, pins and string. Photographs. Documents. A conspiracy theorist's lair, except every connection is real.</text>
+        <delivery>The visual. Beautiful madness that turns out to be sanity. Respect in the description.</delivery>
+      </line>
+      <line id="088" type="narration" character="narrator">
+        <text>Casey and Duncan have been tracking this for decades. The tablets. The disappearances. The technology that behaves wrong. It all traces back to one location.</text>
+        <delivery>Building the case. Momentum toward the revelation.</delivery>
+      </line>
+      <line id="089" type="narration" character="narrator">
+        <text>An old Spanish mission. American Southwest. Abandoned since the eighteen hundreds. The padres built around something they didn't understand.</text>
+        <delivery>The destination revealed. Ancient, remote, mysterious.</delivery>
+      </line>
+      <line id="090" type="dialogue" character="casey">
+        <text>I've known about it since eighteen fifty-eight. Strange things happened there. Objects aging wrong. Compasses spinning. Time felt different near it. The padres thought it was holy. Then they thought it was cursed. They left. Nobody's been back since.</text>
+        <delivery>Personal history spanning over a century. Each sentence a decade of observation. Patient, measured, haunted.</delivery>
+      </line>
+      <line id="091" type="dialogue" character="carter">
+        <text>And you think this is what's interfering with our gates?</text>
+        <delivery>Connecting the dots. Skeptical but hopeful — if this is the source, maybe they can fix it.</delivery>
+      </line>
+      <line id="092" type="dialogue" character="casey">
+        <text>Six months ago, the readings from that location spiked. Same time your gates went dark. That's not a coincidence.</text>
+        <delivery>Declarative. The evidence is clear to him. No room for doubt.</delivery>
+      </line>
+      <line id="093" type="dialogue" character="carter">
+        <text>What's in there?</text>
+        <delivery>The essential question. Direct, focused, military.</delivery>
+      </line>
+      <line id="094" type="dialogue" character="casey">
+        <text>We don't know. Every drone we've sent in stopped transmitting. Every team we've considered sending... we didn't have enough people we could trust. Until now.</text>
+        <delivery>The admission of limitation, then the pivot to hope. Until now carries the weight of years of waiting.</delivery>
+      </line>
+    </section>
+    <section title="Act Two - The Impossible Choice" context="Casey's war room. Intercepted signals from the mission — Latin words transmitted through alien methods. The stakes crystallize: this isn't just about Earth's gates. Something is communicating through that location.">
+      <line id="095" type="narration" character="narrator">
+        <text>Carter processes. Whatever's in that mission shut down the entire gate network.</text>
+        <delivery>Internal. Her mind working. The scope of the problem settling on her shoulders.</delivery>
+      </line>
+      <line id="096" type="dialogue" character="carter">
+        <text>We have to take it. If there's any chance of getting our gates back online...</text>
+        <delivery>Decision crystallizing. Military resolve. She sees the mission now.</delivery>
+      </line>
+      <line id="097" type="dialogue" character="casey">
+        <text>That's the idea. But there's more.</text>
+        <delivery>Confirmation, then the turn. There's always more. Measured.</delivery>
+      </line>
+      <line id="098" type="narration" character="narrator">
+        <text>He shows them intercepted signals. Partial translations that Daniel works through in real time.</text>
+        <delivery>Transition to the next revelation. Daniel's skill in action.</delivery>
+      </line>
+      <line id="099" type="dialogue" character="daniel">
+        <text>Praeparate... prepare. Colonia... colony. These are old. Latin. But the transmission method is...</text>
+        <delivery>Translating live. Excitement mixed with confusion — the language is ancient but the delivery system isn't.</delivery>
+      </line>
+      <line id="100" type="dialogue" character="carter">
+        <text>Not ancient.</text>
+        <delivery>Finishing his thought. Clipped. The implication hitting her.</delivery>
+      </line>
+      <line id="101" type="dialogue" character="casey">
+        <text>Someone's communicating through that location. Has been for years. We just didn't know what we were looking at until your gates went down and the pattern became clear.</text>
+        <delivery>The final piece clicking into place. Patient revelation.</delivery>
+      </line>
+      <line id="102" type="narration" character="narrator">
+        <text>The stakes crystallize. Whatever's in that mission isn't just interfering with Earth's gates. It's connected to something else. Somewhere else.</text>
+        <delivery>Broadening scope. The problem is bigger than they thought. Weight and gravity.</delivery>
+      </line>
+    </section>
+    <section title="Act Two - The Assault Plan" context="Casey's basement. Weapons laid out on a table. Old ones. Mechanical. Nothing digital. Lever-action rifles. Revolvers. A crossbow. Duncan's katana. The team assembles for what might be a suicide mission armed with weapons their great-grandfathers would recognize.">
+      <line id="103" type="narration" character="narrator">
+        <text>A room in the basement. Weapons laid out on a table. Old ones. Mechanical. Nothing digital. Lever-action rifles. Revolvers. A crossbow. Duncan's katana on the end, incongruous and beautiful.</text>
+        <delivery>The arsenal. Each weapon a statement of philosophy. The katana is the grace note.</delivery>
+      </line>
+      <line id="104" type="narration" character="narrator">
+        <text>O'Neill appears. First time we see him. He's been here, part of this operation all along, working off-book. He picks up a revolver, checks the cylinder, puts it back. Picks up another. Comfortable with all of them.</text>
+        <delivery>Character introduction through action. O'Neill's ease with weapons tells you everything.</delivery>
+      </line>
+      <line id="105" type="dialogue" character="oneill">
+        <text>So we're really doing this. Attacking a Spanish mission.</text>
+        <delivery>Dry. The absurdity registered but accepted. Classic O'Neill — wry understatement.</delivery>
+      </line>
+      <line id="106" type="dialogue" character="duncan">
+        <text>A Borg-controlled Spanish mission.</text>
+        <delivery>Correcting with a straight face. The qualifier makes it worse, which is the joke.</delivery>
+      </line>
+      <line id="107" type="dialogue" character="oneill">
+        <text>Right. Evil mission. Much better. You know, when I retired, I specifically asked for less of this.</text>
+        <delivery>Sarcastic acceptance. He keeps getting pulled back in. Warm underneath the sarcasm.</delivery>
+      </line>
+      <line id="108" type="dialogue" character="carter">
+        <text>And yet here you are. In a basement. With a crossbow.</text>
+        <delivery>Matching his tone. A smile in the voice. The affection between old colleagues.</delivery>
+      </line>
+      <line id="109" type="dialogue" character="oneill">
+        <text>It's a nice crossbow.</text>
+        <delivery>Deadpan. The joke lands because he means it.</delivery>
+      </line>
+      <pause ms="500"/>
+      <line id="110" type="narration" character="narrator">
+        <text>Methos picks up a short sword from the table. Ancient-looking. He holds it like he remembers it.</text>
+        <delivery>The detail — like he remembers it. Five thousand years of muscle memory.</delivery>
+      </line>
+      <line id="111" type="dialogue" character="methos">
+        <text>Seven people against an unknown number of enemy combatants in a fortified position, armed with weapons your great-grandfather would recognize. I've done worse. Usually it was my idea, which is how I know this is stupid.</text>
+        <delivery>Sardonic analysis. The assessment is accurate and he knows it. The self-awareness is the humor.</delivery>
+      </line>
+      <line id="112" type="dialogue" character="casey">
+        <text>You don't have to come.</text>
+        <delivery>Simple. No pressure. Loading his Winchester as he says it — the sound of the mechanism part of the line.</delivery>
+      </line>
+      <line id="113" type="dialogue" character="methos">
+        <text>Oh, I'm coming. I just want it noted for the historical record that I objected.</text>
+        <delivery>Five thousand years of surviving by objecting and then doing it anyway. Resigned amusement.</delivery>
+      </line>
+      <pause ms="500"/>
+      <line id="114" type="narration" character="narrator">
+        <text>The team: Carter, Daniel, Teal'c, O'Neill, Duncan, Casey, Methos. Seven people against whatever's been killing their drones.</text>
+        <delivery>The roll call. Each name carries weight. Seven against the unknown.</delivery>
+      </line>
+      <line id="115" type="dialogue" character="casey">
+        <text>We get in. We find whatever's generating the interference. We shut it down or we take it. Either way, we finally get some answers.</text>
+        <delivery>Mission briefing. Clear, concise, military. This is Casey the soldier, not Casey the philosopher.</delivery>
+      </line>
+      <line id="116" type="dialogue" character="tealc">
+        <text>And if we encounter resistance?</text>
+        <delivery>Deep. Measured. The warrior's practical question. Not fear — preparation.</delivery>
+      </line>
+      <line id="117" type="dialogue" character="casey">
+        <text>That's why I brought the crossbow.</text>
+        <delivery>Dry. A callback to O'Neill's line. Deadpan humor from a man who doesn't make jokes often.</delivery>
+      </line>
+      <line id="118" type="narration" character="narrator">
+        <text>Teal'c looks at Casey. The barest nod. Respect for a man who plans for the fight.</text>
+        <delivery>Brief. The nod says everything. Two warriors recognizing each other.</delivery>
+      </line>
+    </section>
+    <section title="Act Two - The Mission Assault" context="The Spanish mission. Adobe walls. Bell tower. Courtyard with a dry fountain. Beautiful and wrong. Too quiet. No birds. No insects. The desert around it feels dead. Compasses spin. Phones die. Even the stars look different here. Sharper.">
+      <line id="119" type="narration" character="narrator">
+        <text>The Spanish mission. Adobe walls. Bell tower. Courtyard with a dry fountain. Beautiful and wrong. Too quiet. No birds. No insects. The desert around it feels dead.</text>
+        <delivery>Atmospheric dread. The beauty makes the wrongness worse. Each absence noted.</delivery>
+      </line>
+      <line id="120" type="narration" character="narrator">
+        <text>Technology doesn't work right near it. Compasses spin. Phones die. Even the stars look different here. Sharper.</text>
+        <delivery>Escalating wrongness. The stars being different is the unsettling detail — reality itself is off.</delivery>
+      </line>
+      <line id="121" type="narration" character="narrator">
+        <text>They approach in Casey's trucks. No headlights. Casey, riding shotgun, crosses himself. Brief. Silent. Duncan, driving, doesn't react. He's seen Casey do this for decades. It's what Casey does before entering places he may not leave.</text>
+        <delivery>Intimate. The cross is the seed of the Catholic thread. Don't oversell it — it's natural, habitual, real.</delivery>
+      </line>
+      <pause ms="1000"/>
+      <line id="122" type="narration" character="narrator">
+        <text>The Immortals feel it first. Not the Buzz of another Immortal, but something else. A pressure. A wrongness.</text>
+        <delivery>Supernatural unease. They sense what the mortals can't yet.</delivery>
+      </line>
+      <line id="123" type="dialogue" character="duncan">
+        <text>You feel that?</text>
+        <delivery>Quiet. To Methos only. Tense. Something is very wrong.</delivery>
+      </line>
+      <line id="124" type="dialogue" character="methos">
+        <text>I felt something like it once. Fifteen hundred years ago. I left that place and didn't go back. We should probably go in.</text>
+        <delivery>The understatement of a five-thousand-year-old man. The humor covers genuine unease.</delivery>
+      </line>
+      <pause ms="1000"/>
+      <line id="125" type="narration" character="narrator">
+        <text>The assault is tactical, brutal, strange. The defenders aren't human. They're machines. Humanoid robots, crude but effective. Green lights where eyes should be. They move wrong, react wrong. No self-preservation. No fear.</text>
+        <delivery>Combat. The wrongness of fighting things that aren't alive. Each detail builds the alien horror.</delivery>
+      </line>
+      <line id="126" type="dialogue" character="casey">
+        <text>They're not people. Don't hesitate.</text>
+        <delivery>Sharp command. Reassuring them and himself. Giving permission to fight without mercy.</delivery>
+      </line>
+      <line id="127" type="narration" character="narrator">
+        <text>The Immortals take point. They can't be killed, so they absorb damage that would end anyone else. Casey advances with his Winchester, working the lever between shots with a rhythm that speaks to a hundred years of practice.</text>
+        <delivery>The tactical logic, then Casey's artistry. The rhythm of the lever-action is music.</delivery>
+      </line>
+      <line id="128" type="narration" character="narrator">
+        <text>He moves like a man clearing a frontier. Steady, unhurried, every shot placed. Duncan fights with the katana. Close quarters in adobe corridors. Four centuries of practice. Economy of motion, no wasted movement, the sword an extension of his body.</text>
+        <delivery>Two fighting styles, two histories. Casey's frontier patience, Duncan's samurai precision.</delivery>
+      </line>
+      <line id="129" type="narration" character="narrator">
+        <text>Methos hangs back. Not cowardice — positioning. He watches the angles. When a machine flanks Casey from a doorway, Methos is already there. The short sword is fast and precise. Ancient technique against alien machines.</text>
+        <delivery>Methos's survival instinct as combat strategy. He's always where he needs to be.</delivery>
+      </line>
+      <line id="130" type="dialogue" character="methos">
+        <text>For the record, I was never here.</text>
+        <delivery>Wiping the blade. Dry. Five thousand years of plausible deniability.</delivery>
+      </line>
+      <pause ms="500"/>
+      <line id="131" type="dialogue" character="oneill">
+        <text>How many more?</text>
+        <delivery>Covering a corridor. Tactical. Focused.</delivery>
+      </line>
+      <line id="132" type="dialogue" character="tealc">
+        <text>Four. Perhaps five. They do not attempt to hide their movements.</text>
+        <delivery>Listening. Analytical. The warrior's calm assessment.</delivery>
+      </line>
+      <line id="133" type="dialogue" character="oneill">
+        <text>Because they don't care if they die.</text>
+        <delivery>The realization. Grim. Fighting enemies without self-preservation is a different kind of problem.</delivery>
+      </line>
+      <line id="134" type="dialogue" character="tealc">
+        <text>They are already not alive.</text>
+        <delivery>Correcting O'Neill's framing. Philosophical precision.</delivery>
+      </line>
+      <line id="135" type="narration" character="narrator">
+        <text>Teal'c fires the staff weapon. The count drops. Three. Perhaps four.</text>
+        <delivery>Action and revised assessment in one beat. Teal'c's efficiency is darkly humorous.</delivery>
+      </line>
+      <line id="136" type="narration" character="narrator">
+        <text>Carter and Daniel work toward the center of the complex, following the readings. The robots thin out as they go deeper, as if the machines were guarding the perimeter, not the interior. Whatever's at the center doesn't need guarding. It's been waiting.</text>
+        <delivery>Ominous. The absence of resistance is more frightening than its presence. Waiting is the key word.</delivery>
+      </line>
+    </section>
+    <section title="Act Two - The Gate Room" context="Central chamber of the Spanish mission. They breach expecting machinery, a transmitter. Instead: a Stargate. Active. The event horizon shimmers — a permanent connection to somewhere. Borg technology surrounding it. Tablets stacked like offerings.">
+      <line id="137" type="narration" character="narrator">
+        <text>They breach the central chamber expecting machinery. A transmitter. Something technological.</text>
+        <delivery>Expectation. The list of what they expected. Reasonable expectations about to be destroyed.</delivery>
+      </line>
+      <line id="138" type="narration" character="narrator">
+        <text>They find a Stargate.</text>
+        <delivery>Simple. Let the revelation land. A beat of silence in the voice.</delivery>
+      </line>
+      <pause ms="1500"/>
+      <line id="139" type="dialogue" character="carter">
+        <text>That's... that's not possible.</text>
+        <delivery>Stunned. Carter's certainty shaken. The stammer is real — she doesn't stammer.</delivery>
+      </line>
+      <line id="140" type="narration" character="narrator">
+        <text>It's active. The event horizon shimmers. A permanent connection to somewhere. It's been running this whole time.</text>
+        <delivery>Each sentence a new impossibility. The permanence is what stuns.</delivery>
+      </line>
+      <line id="141" type="narration" character="narrator">
+        <text>Borg technology surrounds it. The tablets stacked like offerings. A control system that's half-ancient, half-alien.</text>
+        <delivery>The fusion of ancient and alien. The word offerings carries religious weight.</delivery>
+      </line>
+      <line id="142" type="narration" character="narrator">
+        <text>One final defender. A larger robot, more sophisticated than the others. The fight is desperate. They win. Barely.</text>
+        <delivery>Brief. The fight compressed because the discovery matters more. Barely does the work.</delivery>
+      </line>
+      <pause ms="500"/>
+      <line id="143" type="narration" character="narrator">
+        <text>Carter examines the control system. Her hands are shaking.</text>
+        <delivery>The detail — Carter's hands shaking. She doesn't shake. This is that significant.</delivery>
+      </line>
+      <line id="144" type="dialogue" character="carter">
+        <text>This is what's been interfering with our gates. It's a different kind of gate. The physics are wrong. It's not just connecting to another place, it's...</text>
+        <delivery>Working through it in real time. The scientist discovering something that breaks her models.</delivery>
+      </line>
+      <line id="145" type="dialogue" character="daniel">
+        <text>It's what?</text>
+        <delivery>Urgent. Needing her to finish the thought.</delivery>
+      </line>
+      <line id="146" type="dialogue" character="carter">
+        <text>I don't know. But it's been running for a long time. Permanently open. One address.</text>
+        <delivery>Honest. The mystery. One address is the key — it goes somewhere specific.</delivery>
+      </line>
+      <line id="147" type="narration" character="narrator">
+        <text>She looks at the shimmering event horizon.</text>
+        <delivery>A moment of wonder despite everything. The gate is beautiful.</delivery>
+      </line>
+      <pause ms="1000"/>
+      <line id="148" type="dialogue" character="daniel">
+        <text>Where does it go?</text>
+        <delivery>The question. Quiet. Reverent almost.</delivery>
+      </line>
+      <line id="149" type="dialogue" character="carter">
+        <text>Only one way to find out.</text>
+        <delivery>Decision made. Determination overriding fear. The adventurer in her.</delivery>
+      </line>
+      <pause ms="3000"/>
+    </section>
+    <section title="Act Three - Through the Gate" context="They step through. Mediterranean landscape. Mountains. Blue sky. Air that is cleaner, heavier, older. The Forum Stellarum — a Roman forum built around the gate. Stone columns. An altar with fresh offerings. Armed Romans in military formation. And Midas.">
+      <line id="150" type="narration" character="narrator">
+        <text>They step through.</text>
+        <delivery>Simple. The commitment. Two words that change everything.</delivery>
+      </line>
+      <pause ms="1000"/>
+      <line id="151" type="narration" character="narrator">
+        <text>First sight: Mediterranean landscape. Mountains. Blue sky. The air is different. Cleaner, somehow heavier, as if the atmosphere itself is older.</text>
+        <delivery>Wonder. The senses overwhelmed. Each detail savored. This is a new world.</delivery>
+      </line>
+      <line id="152" type="narration" character="narrator">
+        <text>A Roman forum built around the gate arrival point. The Forum Stellarum. Stone columns. An altar with fresh offerings. This is a holy place to the people who live here.</text>
+        <delivery>Awe. The Latin name should land with weight. A civilization that reveres its gate.</delivery>
+      </line>
+      <line id="153" type="narration" character="narrator">
+        <text>But they don't emerge to an empty plaza. They emerge to armed Romans. Spears. Shields. Military discipline. Real soldiers, not reenactors. Their formation is textbook. A half-circle, shields overlapping, closing the exits.</text>
+        <delivery>Tension. The wonder turns to danger. These are professionals.</delivery>
+      </line>
+      <line id="154" type="narration" character="narrator">
+        <text>And in front of them, relaxed, arms spread wide, grinning like a man greeting old friends at a party: Midas.</text>
+        <delivery>The contrast — Roman military precision and one man who couldn't care less about protocol. Joy.</delivery>
+      </line>
+      <line id="155" type="dialogue" character="midas">
+        <text>Finally! Do you have any idea how long I've been waiting?</text>
+        <delivery>Explosive energy. Theatrical. Genuine delight. He's been waiting decades and it shows.</delivery>
+      </line>
+      <line id="156" type="narration" character="narrator">
+        <text>Duncan and Methos sense it immediately. The Immortal buzz.</text>
+        <delivery>Brief. The recognition is instant and significant.</delivery>
+      </line>
+      <line id="157" type="dialogue" character="duncan">
+        <text>There's one of us here.</text>
+        <delivery>Hand on his katana. Alert. The buzz changes everything.</delivery>
+      </line>
+      <line id="158" type="dialogue" character="midas">
+        <text>One of you? I've been here for eighty years. Well — eighty years for me. I'm told it's been somewhat longer on your end.</text>
+        <delivery>Rapid. The correction is compulsive. The time difference mentioned casually.</delivery>
+      </line>
+      <line id="159" type="dialogue" character="midas">
+        <text>Welcome! You look terrible. Was the journey difficult? It looked difficult. The gate does this thing when it activates. Very dramatic. The Romans think it's the gods breathing. I've told them it isn't. They don't listen. They never listen.</text>
+        <delivery>Nonstop. Stream of consciousness. Each sentence running into the next. Affectionate exasperation about the Romans.</delivery>
+      </line>
+      <line id="160" type="narration" character="narrator">
+        <text>He hasn't stopped moving since they arrived. Hands, arms, pacing. He touches O'Neill on the shoulder, claps Casey on the back, peers at Teal'c with open curiosity.</text>
+        <delivery>Kinetic energy made human. Midas is incapable of stillness.</delivery>
+      </line>
+      <line id="161" type="dialogue" character="midas">
+        <text>You're not Roman. You're not from Earth either, are you? How wonderful. How wonderfully strange.</text>
+        <delivery>To Teal'c. Fascinated. No fear, only curiosity.</delivery>
+      </line>
+      <line id="162" type="dialogue" character="tealc">
+        <text>Indeed.</text>
+        <delivery>Enduring the examination. One word. Patient, dignified, slightly amused.</delivery>
+      </line>
+    </section>
+    <section title="Act Three - The Reunion" context="Forum Stellarum. The Romans stand down at Midas's signal. He leads the newcomers through the forum, explaining the exile colony. Nova Roma spreads around them — Roman architecture, Roman dress, Roman life. Children, blacksmiths, the smell of bread and olive oil.">
+      <line id="163" type="narration" character="narrator">
+        <text>The Romans stand down at Midas's signal. He knows these people, or people like them. He's been waiting.</text>
+        <delivery>The tension breaks. Midas's authority here is absolute and casual.</delivery>
+      </line>
+      <line id="164" type="narration" character="narrator">
+        <text>Midas explains, in his rambling way, as he leads them through the forum. He came through the gate with the original exiles. Rome used the portal to dispose of inconvenient people. Criminals, political enemies, anyone they wanted gone.</text>
+        <delivery>Walking tour energy. The history delivered in motion, casual but weighty.</delivery>
+      </line>
+      <line id="165" type="dialogue" character="midas">
+        <text>I was one of the political enemies. Long story. Involves a misunderstanding about taxation. I maintain that the tax was unconstitutional. The Senate disagreed. The Senate had more soldiers than I did. So here I am!</text>
+        <delivery>Conspiratorial. The comedy of ancient politics. Self-deprecating. So here I am is both punchline and truth.</delivery>
+      </line>
+      <pause ms="500"/>
+      <line id="166" type="narration" character="narrator">
+        <text>Nova Roma spreads out around them. A small but complete civilization. Roman architecture. Roman dress. Roman life. Children running between columns. A blacksmith working in an open forge. The smell of bread and olive oil.</text>
+        <delivery>Beauty. Life. The sensory details — smell, sound, sight. This is real, lived-in, alive.</delivery>
+      </line>
+      <line id="167" type="dialogue" character="midas">
+        <text>They thought I was a god at first. I told them I wasn't. They didn't believe me. Then I died in front of them and came back, and they really didn't believe me. Took about twenty years to sort out. Now I'm just Midas. The strange old friend who doesn't age. They've stopped asking questions. Romans are very practical people. If you're useful and not actively dangerous, they'll tolerate almost anything.</text>
+        <delivery>The comedy of divinity denied. Each sentence a chapter of his life here. The practicality of Romans said with genuine affection.</delivery>
+      </line>
+      <line id="168" type="dialogue" character="oneill">
+        <text>You built all this?</text>
+        <delivery>Looking around at the civilization. Genuine awe from a man who doesn't impress easily.</delivery>
+      </line>
+      <line id="169" type="dialogue" character="midas">
+        <text>They built all this. I just... didn't leave.</text>
+        <delivery>The correction is important to him. Softer now, the comedy dropping. The pause carries decades of belonging.</delivery>
+      </line>
+      <line id="170" type="dialogue" character="midas">
+        <text>Three generations. The grandchildren of the original exiles. They're good people. Stubborn. Opinionated. Very Roman about everything. But good.</text>
+        <delivery>Paternal pride. He loves these people. Each quality a compliment disguised as observation.</delivery>
+      </line>
+    </section>
+    <section title="Act Three - Pliny" context="A scholar's villa in Nova Roma. Larger than the others. Scrolls visible through open windows. The sound of dictation. Pliny — one of the original mortal colonists, now very old but sharp. His study is a life's work: the Naturalis Historia Nova in forty volumes.">
+      <line id="171" type="narration" character="narrator">
+        <text>They're brought to a villa. Larger than the others. A scholar's home. You can tell from the outside. Scrolls visible through open windows. The sound of someone dictating to a scribe.</text>
+        <delivery>Approach. The details tell you who lives here before you meet them.</delivery>
+      </line>
+      <line id="172" type="narration" character="narrator">
+        <text>Pliny emerges. An exile like Midas, but mortal. One of the original colonists, now old. Very old. But his eyes are sharp, and he moves with the deliberation of someone who has decided that every remaining step should count.</text>
+        <delivery>Character introduction with reverence. This is a great man measured by patience, not power.</delivery>
+      </line>
+      <line id="173" type="narration" character="narrator">
+        <text>Eighty years of building a civilization in a strange land, and he's still building.</text>
+        <delivery>The summary of a life. Simple. Admiring.</delivery>
+      </line>
+      <line id="174" type="narration" character="narrator">
+        <text>Methos sees him and goes still. He recognizes something. Not the face — the type. A man who has seen too much and written it all down anyway.</text>
+        <delivery>Methos's recognition. One survivor seeing another. The stillness is rare for him.</delivery>
+      </line>
+      <pause ms="500"/>
+      <line id="175" type="dialogue" character="pliny">
+        <text>More visitors from Earth. And Immortals among you. Midas said you might come eventually.</text>
+        <delivery>Measured. Scholarly. Cataloging them as he speaks — the habit of a lifetime.</delivery>
+      </line>
+      <line id="176" type="dialogue" character="carter">
+        <text>You knew about us?</text>
+        <delivery>Surprised. This old man in a Roman villa knew they were coming?</delivery>
+      </line>
+      <line id="177" type="dialogue" character="pliny">
+        <text>I knew about the gate. I knew time moved strangely here — our eighty years, your two thousand. I spent the first forty years trying to understand why. I spent the second forty recording everything else.</text>
+        <delivery>The scope of his work in three sentences. Patient, precise, with wry awareness of his own obsessiveness.</delivery>
+      </line>
+      <line id="178" type="dialogue" character="pliny">
+        <text>I ran out of questions about the gate. I did not run out of questions about this world.</text>
+        <delivery>Wry. The second sentence is the revelation — his curiosity survived when the mystery didn't.</delivery>
+      </line>
+      <pause ms="500"/>
+      <line id="179" type="narration" character="narrator">
+        <text>He leads them inside. His study: scrolls stacked floor to ceiling. Wax tablets. Pressed botanical specimens. Maps drawn with extraordinary precision. The Naturalis Historia Nova — forty volumes and counting — arranged on a shelf like a library in miniature. A life's work, visible at a glance.</text>
+        <delivery>Awe. Each detail a testament to one man's dedication. The forty volumes are the centerpiece.</delivery>
+      </line>
+      <line id="180" type="narration" character="narrator">
+        <text>He shows them a stone tablet. Old, preserved carefully, separate from everything else. Treated with reverence.</text>
+        <delivery>The shift in tone. This tablet is different. Sacred.</delivery>
+      </line>
+      <line id="181" type="dialogue" character="pliny">
+        <text>Praeparate. It came through the gate before we did. The first exiles found it waiting. I have spent eighty years trying to understand what it means.</text>
+        <delivery>The Latin word spoken with the weight of a lifetime's obsession.</delivery>
+      </line>
+      <line id="182" type="dialogue" character="daniel">
+        <text>Prepare. We found the same word in intercepted communications. From something called... Borg.</text>
+        <delivery>The connection firing. Translating automatically, then the hesitation before Borg.</delivery>
+      </line>
+      <line id="183" type="dialogue" character="pliny">
+        <text>Borg. Is that what built the gate? Is that what brought us here?</text>
+        <delivery>The word is new to him. He tastes it. Each question genuine — eighty years of wondering given a name.</delivery>
+      </line>
+      <line id="184" type="dialogue" character="methos">
+        <text>We're still figuring that out.</text>
+        <delivery>Honest. Gentle. Rare gentleness from Methos — he respects this old man's patience.</delivery>
+      </line>
+      <pause ms="1000"/>
+      <line id="185" type="narration" character="narrator">
+        <text>Pliny considers this. He looks at the stone tablet. At his forty volumes. At these strangers with their weapons and their strange clothes and their pieces of answers to the question that has defined his life.</text>
+        <delivery>A man at the end of his life seeing the possibility of answers. Weight, stillness, hope.</delivery>
+      </line>
+      <line id="186" type="dialogue" character="pliny">
+        <text>Then we have much to discuss. I have been waiting a very long time to discuss it with someone.</text>
+        <delivery>Quiet. The weight of eighty years of solitary scholarship. Not self-pity — gratitude that the wait is over.</delivery>
+      </line>
+    </section>
+    <section title="Act Three - The Scope" context="Pliny's villa. Maps of Nova Roma. Census records. The full picture: three thousand people, republican governance, Roman technology level. Clean, isolated, untouched by the Borg. Carter sees the strategic possibility.">
+      <line id="187" type="narration" character="narrator">
+        <text>The colony: three thousand people. Started with perhaps two hundred exiles eighty years ago. Roman technology level. Agriculture, crafts, republican governance. Isolated. Clean. Untouched by anything the Borg have done to Earth.</text>
+        <delivery>The census read like a strategic assessment. Clean carries the most weight.</delivery>
+      </line>
+      <line id="188" type="narration" character="narrator">
+        <text>Carter sees it now. This isn't just a colony to save. It's a platform. A place to build something new.</text>
+        <delivery>The strategic insight. Carter's mind making the leap. Platform is the key word.</delivery>
+      </line>
+      <line id="189" type="dialogue" character="carter">
+        <text>They're completely clean. No compromised technology. No corrupted infrastructure. We could...</text>
+        <delivery>The excitement of possibility. Trailing off because the scope overwhelms the words.</delivery>
+      </line>
+      <line id="190" type="dialogue" character="daniel">
+        <text>Build from scratch. Everything we can't trust on Earth.</text>
+        <delivery>Finishing her thought. The shared understanding. Quiet awe at the implication.</delivery>
+      </line>
+      <line id="191" type="dialogue" character="casey">
+        <text>That's the idea.</text>
+        <delivery>Simple. He's been waiting for someone else to see it. Two words that validate thirty years.</delivery>
+      </line>
+      <pause ms="500"/>
+      <line id="192" type="narration" character="narrator">
+        <text>Everyone turns. Casey has been quiet, looking around, assessing.</text>
+        <delivery>The attention shifting. Casey's silence was not absence — it was calculation.</delivery>
+      </line>
+      <line id="193" type="dialogue" character="casey">
+        <text>I've been trying to build clean systems for thirty years. But you can't do it on Earth. Not really. The contamination is too deep. But here...</text>
+        <delivery>Vulnerable. Thirty years of frustration in three sentences. But here is the turn — hope finally permitted.</delivery>
+      </line>
+      <line id="194" type="narration" character="narrator">
+        <text>He looks at Pliny's scrolls. At the Roman engineers examining their strange visitors.</text>
+        <delivery>Casey seeing what he's been dreaming of. The reality more beautiful than the dream.</delivery>
+      </line>
+      <line id="195" type="dialogue" character="casey">
+        <text>Here we could do it right.</text>
+        <delivery>Five words. Thirty years of longing. Said quietly, almost to himself. The most important line Casey has.</delivery>
+      </line>
+    </section>
+    <section title="Act Three - The Foundation Question" context="Pliny's workshop. Oil lamps. Wax tablets. A Roman scriptorium about to become something else. Marcus Aurelius Ferrarius — Roman engineer, skeptical, curious — asks the question that begins everything.">
+      <line id="196" type="narration" character="narrator">
+        <text>Pliny's workshop. Oil lamps. Wax tablets. A Roman scriptorium about to become something else.</text>
+        <delivery>The space between worlds. Ancient and future sharing a room.</delivery>
+      </line>
+      <line id="197" type="narration" character="narrator">
+        <text>Marcus Aurelius Ferrarius. Roman engineer. Skeptical. Curious. He has been listening to everything.</text>
+        <delivery>Character introduction. Skeptical first, curious second. The curiosity won.</delivery>
+      </line>
+      <line id="198" type="dialogue" character="marcus">
+        <text>You speak of building. Of systems we don't understand. Where do you begin?</text>
+        <delivery>Direct. The engineer's question. No diplomacy, just the practical core.</delivery>
+      </line>
+      <line id="199" type="narration" character="narrator">
+        <text>Carter thinks. This is the question.</text>
+        <delivery>The weight of the moment. Everything hinges on this answer.</delivery>
+      </line>
+      <line id="200" type="dialogue" character="carter">
+        <text>Memory. Before you can compute anything, you need somewhere to put it. Before you can build any structure, you need to allocate space for it.</text>
+        <delivery>Teaching. Clear, patient, precise. Finding the simplest possible starting point.</delivery>
+      </line>
+      <line id="201" type="dialogue" character="daniel">
+        <text>The Romans had public pools. Piscinae. For bathing, for training. A shared resource.</text>
+        <delivery>The translator at work. Finding the bridge between worlds.</delivery>
+      </line>
+      <line id="202" type="dialogue" character="carter">
+        <text>Arena allocation. You allocate from a pool. When you're done with a task, you drain the whole pool at once. It's simpler than tracking individual pieces.</text>
+        <delivery>Technical but accessible. She's finding the metaphor that will cross two thousand years.</delivery>
+      </line>
+      <line id="203" type="dialogue" character="marcus">
+        <text>But in a real piscina, you cannot put the water back. Once drawn, it is used.</text>
+        <delivery>The engineer pushing back. Testing the metaphor against reality. Sharp, practical.</delivery>
+      </line>
+      <line id="204" type="dialogue" character="carter">
+        <text>That's exactly right. We're not returning the water. We're just... forgetting that we used it. The vessel remains. Only our accounting changes.</text>
+        <delivery>The key insight. Forgetting is the breakthrough word. Patient, delighted by his understanding.</delivery>
+      </line>
+      <pause ms="1500"/>
+      <line id="205" type="dialogue" character="marcus">
+        <text>Ah.</text>
+        <delivery>The episode's climax in one syllable. A Roman engineer understanding a computing concept. Wonder, comprehension, and the birth of something new.</delivery>
+      </line>
+      <pause ms="1000"/>
+      <line id="206" type="narration" character="narrator">
+        <text>That single syllable is the sound of two civilizations connecting. A Roman engineer understanding memory allocation through the metaphor of his own world.</text>
+        <delivery>Let it breathe. This is the thematic heart of the episode. Warm. Reverent.</delivery>
+      </line>
+      <line id="207" type="dialogue" character="pliny">
+        <text>Piscina. A word they know, given new meaning. That's how languages grow.</text>
+        <delivery>The scholar recognizing the moment. Quiet pride. He understands what just happened at a deeper level.</delivery>
+      </line>
+    </section>
+    <section title="Act Three - The First Code" context="Pliny's workshop. Carter's air-gapped laptop — one of Casey's clean machines. The first code being written. Daniel translating. Pliny taking notes. Midas offering unhelpful suggestions. Marcus watching the shape of something new.">
+      <line id="208" type="narration" character="narrator">
+        <text>Carter pulls out her laptop. Old, air-gapped, one of Casey's clean machines. The structure takes shape on screen.</text>
+        <delivery>The moment of creation. Revolutionary by Nova Roma's standards.</delivery>
+      </line>
+      <line id="209" type="narration" character="narrator">
+        <text>Daniel translates as she types. Pliny takes notes. Midas offers unhelpful suggestions. Marcus watches, starting to see the shape of something new.</text>
+        <delivery>The collaboration. Each person in their role. Midas's unhelpfulness is affectionate comedy.</delivery>
+      </line>
+      <line id="210" type="dialogue" character="carter">
+        <text>Every pool has a name. For debugging. When something goes wrong, you need to know which pool it came from.</text>
+        <delivery>Teaching. Practical. The principle of naming things — engineering wisdom.</delivery>
+      </line>
+      <line id="211" type="dialogue" character="daniel">
+        <text>Titulus. The label. The inscription.</text>
+        <delivery>The Latin word arriving naturally. Daniel bridging the languages without effort.</delivery>
+      </line>
+      <line id="212" type="dialogue" character="marcus">
+        <text>And alveus? I know this word. A basin. A trough.</text>
+        <delivery>Engaged now. Making connections. The engineer seeing Roman concepts in alien ideas.</delivery>
+      </line>
+      <line id="213" type="dialogue" character="carter">
+        <text>The pool is made of basins. When one fills, we create another. They link together.</text>
+        <delivery>Explaining linked allocation. Patient, encouraging his understanding.</delivery>
+      </line>
+      <line id="214" type="dialogue" character="marcus">
+        <text>Like chambers in a hypocaust. The heat flows from one to the next.</text>
+        <delivery>The breakthrough analogy. A Roman heating system as metaphor for memory chains. Genuinely excited.</delivery>
+      </line>
+      <line id="215" type="dialogue" character="carter">
+        <text>He's going to be better at this than us.</text>
+        <delivery>To Daniel. Impressed. Genuine admiration. The student surpassing expectations.</delivery>
+      </line>
+      <pause ms="3000"/>
+    </section>
+    <section title="Tag - Dawn" context="The Forum Stellarum at dawn. Nova Roma waking up. Carter alone with the gate. The weight of what they've undertaken settling in.">
+      <line id="216" type="narration" character="narrator">
+        <text>The Forum Stellarum at dawn. Carter alone with the gate.</text>
+        <delivery>Quiet. Beautiful. A moment of solitude before the work begins.</delivery>
+      </line>
+      <line id="217" type="dialogue" character="casey">
+        <text>Can't sleep?</text>
+        <delivery>Simple. Not prying. One insomniac recognizing another.</delivery>
+      </line>
+      <line id="218" type="dialogue" character="carter">
+        <text>We just took on a mission that might take decades. We're trying to rebuild all of human knowledge for a civilization that's never seen a computer. And somewhere out there, a clock is ticking.</text>
+        <delivery>The weight of it. Not complaining — processing. Each sentence a different dimension of the impossible.</delivery>
+      </line>
+      <line id="219" type="dialogue" character="casey">
+        <text>I've been working on this for thirty years. Alone, mostly. Building pieces I knew would never fit together in my lifetime.</text>
+        <delivery>Matching her vulnerability. Thirty years distilled to three sentences. The loneliness between the words.</delivery>
+      </line>
+      <line id="220" type="narration" character="narrator">
+        <text>He looks at the forum. At Nova Roma waking up.</text>
+        <delivery>The world coming alive around them. Morning sounds. A city stirring.</delivery>
+      </line>
+      <line id="221" type="dialogue" character="casey">
+        <text>This is the first time I've thought we might actually pull it off.</text>
+        <delivery>Hope. Quiet, hard-won hope from a man who's been fighting alone for decades.</delivery>
+      </line>
+      <line id="222" type="dialogue" character="carter">
+        <text>Why?</text>
+        <delivery>One word. Genuinely asking. She needs to hear the reason.</delivery>
+      </line>
+      <line id="223" type="dialogue" character="casey">
+        <text>Because it's not just me anymore. And because they're not starting from where we started. They're not going to make our mistakes. No npm. No blockchain. No fourteen million dependencies. They're going to learn it right.</text>
+        <delivery>The manifesto. Building to the punchline — npm, blockchain, dependencies. But learn it right is said with conviction, not comedy.</delivery>
+      </line>
+    </section>
+    <section title="Tag - The Foundation" context="The Forum Stellarum. Dawn light growing. Behind them, light in Pliny's villa — people already working. The first code being written. The beginning of something that might take generations.">
+      <line id="224" type="narration" character="narrator">
+        <text>Behind them, light in Pliny's villa. People working. The first code being written.</text>
+        <delivery>Hope made visible. The work has already begun.</delivery>
+      </line>
+      <line id="225" type="dialogue" character="carter">
+        <text>Piscina est fundamentum.</text>
+        <delivery>Latin. Said with the weight of a founding statement. The pool is the foundation.</delivery>
+      </line>
+      <line id="226" type="dialogue" character="casey">
+        <text>That's the idea.</text>
+        <delivery>Echo of his earlier line. But now it means everything. Quiet. Complete.</delivery>
+      </line>
+      <line id="227" type="narration" character="narrator">
+        <text>She walks back toward the villa. Toward the work.</text>
+        <delivery>Forward momentum. Purpose. The future calling her.</delivery>
+      </line>
+      <line id="228" type="narration" character="narrator">
+        <text>Casey stays a moment longer. Looking at the gate. At the sky. Somewhere, the Borg are still coming. But here, something new is beginning.</text>
+        <delivery>The final image of the main story. Hope and threat in balance. Let it breathe.</delivery>
+      </line>
+      <pause ms="3000"/>
+    </section>
+    <section title="Stinger - The First Arrival" context="Earth. Yellowstone. Night. Steam rises from hot springs. The landscape is alien, primordial — mineral deposits in strange colors, the ground itself seeming to breathe. Silence except for geothermal vents. Then: violence.">
+      <line id="229" type="narration" character="narrator">
+        <text>Earth. Yellowstone. Night. Steam rises from hot springs. The landscape is alien, primordial. Mineral deposits in strange colors. The ground itself seeming to breathe.</text>
+        <delivery>New scene. Jarring shift from Nova Roma's warmth. This is Earth but it looks like another planet. Ominous.</delivery>
+      </line>
+      <line id="230" type="narration" character="narrator">
+        <text>Silence. Except for the hiss of geothermal vents.</text>
+        <delivery>The quiet before something terrible. Let the silence work.</delivery>
+      </line>
+      <pause ms="2000"/>
+      <line id="231" type="narration" character="narrator">
+        <text>Then: a sound. Building. Electrical. Wrong.</text>
+        <delivery>Each word a step toward something. Wrong is the punch.</delivery>
+      </line>
+      <line id="232" type="narration" character="narrator">
+        <text>Lightning begins to arc from nowhere. Striking the ground, the air, itself. A sphere of energy forming. Displaced air. Ozone. Violence. Steam billows outward.</text>
+        <delivery>The arrival effect. Violent, electric, overwhelming. Build through the description.</delivery>
+      </line>
+      <line id="233" type="narration" character="narrator">
+        <text>At the center of the sphere, a figure materializes. Crouched. The scorch mark spreading beneath him, minerals cracking from the heat.</text>
+        <delivery>The arrival. Raw. Physical. The heat is real.</delivery>
+      </line>
+      <line id="234" type="narration" character="narrator">
+        <text>The energy dissipates. Smoke and steam mix.</text>
+        <delivery>Aftermath. Brief. Let the image settle.</delivery>
+      </line>
+      <pause ms="1500"/>
+      <line id="235" type="narration" character="narrator">
+        <text>He stands. Slowly. Mechanically. Something is wrong with him.</text>
+        <delivery>The wrongness. Each word more unsettling. Mechanically is the tell.</delivery>
+      </line>
+      <line id="236" type="narration" character="narrator">
+        <text>Data. But not the Data we know. He's battle-damaged. Badly. Synthetic skin torn, exposing circuitry beneath. One eye's covering is missing — the mechanical orb visible, unsettling. Scorch marks. Gashes. He's been through a war.</text>
+        <delivery>Recognition and horror. The familiar made unfamiliar. Each damage detail adds to the picture.</delivery>
+      </line>
+      <line id="237" type="narration" character="narrator">
+        <text>He moves stiffly. Jerkily. Damage affecting his motor control. He looks around at the hellish landscape. No expression. No reaction. Just... processing.</text>
+        <delivery>Mechanical wrongness. The pause before processing — he's not experiencing, he's computing.</delivery>
+      </line>
+      <line id="238" type="narration" character="narrator">
+        <text>Then his eyes glow. Green.</text>
+        <delivery>The green. The same green from the cold open. Three words that recontextualize everything.</delivery>
+      </line>
+      <pause ms="1000"/>
+      <line id="239" type="narration" character="narrator">
+        <text>He stands motionless among the steam vents. Waiting. A broken machine with Borg eyes in a landscape that looks like another planet.</text>
+        <delivery>The final image of this beat. Dread. Stillness. The threat has arrived.</delivery>
+      </line>
+      <pause ms="2000"/>
+    </section>
+    <section title="Stinger - The Second Arrival" context="Northern California. Redwood forest. Night. Ancient trees, cathedral silence. Fog drifting between trunks that have stood for a thousand years. A different kind of primordial.">
+      <line id="240" type="narration" character="narrator">
+        <text>Northern California. Redwood forest. Night. Ancient trees. Cathedral silence. Fog drifting between trunks that have stood for a thousand years.</text>
+        <delivery>New location. Sacred. Natural. The contrast with Yellowstone's hellscape.</delivery>
+      </line>
+      <line id="241" type="narration" character="narrator">
+        <text>A different kind of primordial.</text>
+        <delivery>The parallel drawn. Brief. Both locations ancient, but one is life and one is fire.</delivery>
+      </line>
+      <pause ms="1500"/>
+      <line id="242" type="narration" character="narrator">
+        <text>Then: the same sound. Building. Electrical. Wrong.</text>
+        <delivery>Repetition of the Yellowstone beat. The audience knows what's coming. Dread.</delivery>
+      </line>
+      <line id="243" type="narration" character="narrator">
+        <text>Lightning arcs between the massive trunks. A sphere of energy forming. Birds scatter. The forest that has seen everything hasn't seen this.</text>
+        <delivery>The violence against nature. The trees as witnesses.</delivery>
+      </line>
+      <line id="244" type="narration" character="narrator">
+        <text>At the center, a figure materializes. The scorch mark spreads across the forest floor, ferns burning.</text>
+        <delivery>Parallel to Data's arrival. The burning ferns — beauty destroyed.</delivery>
+      </line>
+      <pause ms="1000"/>
+      <line id="245" type="narration" character="narrator">
+        <text>This figure lands differently. Not mechanical. Human.</text>
+        <delivery>The contrast. After Data's wrongness, this is right. Human. The relief in the word.</delivery>
+      </line>
+      <line id="246" type="narration" character="narrator">
+        <text>He's gasping. Panting. The arrival hurt. He's disoriented, checking his body, making sure he's intact. Naked and vulnerable among the ancient trees.</text>
+        <delivery>Physical. Visceral. The vulnerability is key — this is a man, not a machine.</delivery>
+      </line>
+      <line id="247" type="narration" character="narrator">
+        <text>He looks around with urgency. Fear. The eyes of someone who's seen things. Who barely made it.</text>
+        <delivery>Survivor energy. He's here by necessity, not choice. He barely made it.</delivery>
+      </line>
+      <line id="248" type="narration" character="narrator">
+        <text>The fog swirls around him. He's alone. No idea where Data landed, or if Data made it at all.</text>
+        <delivery>Isolation. The connection to the previous scene — he was with Data, now he's not.</delivery>
+      </line>
+      <line id="249" type="narration" character="narrator">
+        <text>He steadies himself against a redwood trunk. Catches his breath. Looks up at the trees towering above him.</text>
+        <delivery>A man finding his feet. The trees above him — ancient, enduring, a silent welcome.</delivery>
+      </line>
+      <line id="250" type="narration" character="narrator">
+        <text>He's arrived. He made it.</text>
+        <delivery>Relief. Simple. Two sentences that carry everything.</delivery>
+      </line>
+      <pause ms="1000"/>
+      <line id="251" type="narration" character="narrator">
+        <text>Young. Handsome. That jawline. Kirk.</text>
+        <delivery>The reveal. Build to the name. That jawline carries recognition, humor, excitement. Then Kirk. One word. Let it land.</delivery>
+      </line>
+      <line id="252" type="narration" character="narrator">
+        <text>He's catching his breath. Steadying himself. The body language of a survivor. A man with a mission. A warning to deliver.</text>
+        <delivery>Purpose amid vulnerability. He's here for a reason. The mission drives him even now.</delivery>
+      </line>
+      <pause ms="3000"/>
+    </section>
+  </script>
+</production>
