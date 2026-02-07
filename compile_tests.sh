@@ -135,6 +135,7 @@ declare -a SOURCE_FILES=(
     "lib/lapifex_generare.c"
     "lib/lapifex_parsere.c"
     "lib/lapifex_lexere.c"
+    "lib/lapifex_glr.c"
     "lib/nuntium_schema.c"
     "lib/nuntium_schema_generare.c"
     "probationes/capsula_assets.c"

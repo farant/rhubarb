@@ -188,4 +188,33 @@ it might be worthwhile to create an entry as needed before compaction and to re-
 
 anyway!
 
+NOVUM FUNDAMENTUM WRITERS' ROOM
 
+when we are doing a writers' room for an episode of Novum Fundamentum (the TV show project, see episodes/ folder), the configuration that has worked well is 5 parallel agents:
+
+1. technical writer (A-plot) — the library mechanics, act structure, on-screen code moments, dramatic engine
+2. character writer — character arcs, flashback, ensemble dynamics, relationship shifts
+3. thread writer — serialized threads (Casey faith escalation, Kirk stinger progression, C-plot beats, nominalism/realism, Black Stone seed tracking)
+4. genre fan — the Patton Oswalt parks-and-rec-filibuster guy. franchise deep cuts (SG-1, TNG, Highlander, Foundation, B5), easter eggs, rewatch rewards, cross-franchise algorithm moments
+5. historian — real historical grounding (Roman architecture, actual Pliny sources, Latin terminology audit, production design notes, period-accurate technology)
+
+each writer produces an independent pitch file saved to episodes/pitches/. then we compile them into a unified beat sheet following the format of the previous episode's beat sheet. the beat sheet format is: Cold Open -> Acts with numbered beats -> Tag -> Stinger -> C-Plot Threading -> Thematic Notes -> Genre Architecture -> Continuity Notes -> Additional Notes -> Open Questions.
+
+all writers need to be briefed on: the season outline, the series arc, the previous episode's beat sheet, and the relevant library source code (since each episode = one C89 library).
+
+after all 5 pitches come back, DO NOT go straight to writing the beat sheet. instead:
+
+1. spawn a "compiler" agent that reads all 5 pitches + the previous episode's beat sheet and produces a COMPILATION PLAN saved to episodes/pitches/1xNN-compilation-plan.md. the plan should:
+   - identify where pitches conflict or offer alternative versions of the same beat
+   - decide which version wins and why (record the reasoning)
+   - note what gets cut or combined
+   - lay out the beat ordering across acts
+   - flag any open questions for fran to weigh in on before writing
+
+2. review the compilation plan (and let fran review if they want)
+
+3. THEN write the beat sheet from the plan
+
+the point of this is that the compilation decisions are the hard part and they should survive as a file in case of context compaction. writing the actual beat sheet from a good plan is just execution.
+
+/NOVUM FUNDAMENTUM WRITERS' ROOM
