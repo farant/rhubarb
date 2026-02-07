@@ -17,3 +17,8 @@ book_assets/*.txt
 # Test fixture binaries
 probationes/fixa/cum_functione
 probationes/fixa/simplex
+
+# Vox audio output
+episodes/*-audio/audio/
+episodes/*-audio/output/
+*.mp3
