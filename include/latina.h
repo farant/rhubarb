@@ -203,7 +203,13 @@
 #define CLIV 				154
 #define CLV 				155
 #define CLVI 				156
+#define CLVII 			157
+#define CLVIII 			158
+#define CLIX 				159
 #define CLX					160
+#define CLXI				161
+#define CLXII				162
+#define CLXIII			163
 #define CLXIV				164
 #define CLXV				165
 #define CLXX				170

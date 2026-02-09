@@ -52,6 +52,20 @@ lapifex_c89_expressionem_parsare(
     constans character*   fons,
     i32                   mensura);
 
+/* Parsare declarationem ex fonte
+ * piscina  - Arena allocatoris
+ * intern   - Internamentum chordarum
+ * fons     - Fons C89 (declaratio)
+ * mensura  - Longitudo fontis in bytes
+ * Redde: Arbor2Nodus* radix AST, vel NIHIL si error
+ */
+Arbor2Nodus*
+lapifex_c89_declarationem_parsare(
+    Piscina*              piscina,
+    InternamentumChorda*  intern,
+    constans character*   fons,
+    i32                   mensura);
+
 /* Obtinere grammaticam STML expressionum (pro usu externo / probatione) */
 constans character*
 lapifex_c89_expressio_grammatica(vacuum);

@@ -42,18 +42,23 @@ hic_manens constans character* GRAMMATICA_EXPRESSIO =
     /* ---- Terminalia ---- */
     "  <terminalia>"
 
-    /* Verba Clavium (solum quae in expressionibus usantur) */
+    /* Verba Clavium */
+    "    <terminalis titulus=\"AUTO\"/>"
     "    <terminalis titulus=\"CHAR\"/>"
     "    <terminalis titulus=\"CONST\"/>"
     "    <terminalis titulus=\"DOUBLE\"/>"
     "    <terminalis titulus=\"ENUM\"/>"
+    "    <terminalis titulus=\"EXTERN\"/>"
     "    <terminalis titulus=\"FLOAT\"/>"
     "    <terminalis titulus=\"INT\"/>"
     "    <terminalis titulus=\"LONG\"/>"
+    "    <terminalis titulus=\"REGISTER\"/>"
     "    <terminalis titulus=\"SHORT\"/>"
     "    <terminalis titulus=\"SIGNED\"/>"
     "    <terminalis titulus=\"SIZEOF\"/>"
+    "    <terminalis titulus=\"STATIC\"/>"
     "    <terminalis titulus=\"STRUCT\"/>"
+    "    <terminalis titulus=\"TYPEDEF\"/>"
     "    <terminalis titulus=\"UNION\"/>"
     "    <terminalis titulus=\"UNSIGNED\"/>"
     "    <terminalis titulus=\"VOID\"/>"
@@ -117,9 +122,10 @@ hic_manens constans character* GRAMMATICA_EXPRESSIO =
     "    <terminalis titulus=\"PUNCTUM\"/>"
     "    <terminalis titulus=\"SAGITTA\"/>"
 
-    /* Punctuatio (solum quae in expressionibus usantur) */
+    /* Punctuatio */
     "    <terminalis titulus=\"COMMA\"/>"
     "    <terminalis titulus=\"COLON\"/>"
+    "    <terminalis titulus=\"SEMICOLON\"/>"
     "    <terminalis titulus=\"QUAESTIO\"/>"
 
     /* Delimitatores */
@@ -127,6 +133,11 @@ hic_manens constans character* GRAMMATICA_EXPRESSIO =
     "    <terminalis titulus=\"PAREN_CLAUSA\"/>"
     "    <terminalis titulus=\"BRACKET_APERTA\"/>"
     "    <terminalis titulus=\"BRACKET_CLAUSA\"/>"
+    "    <terminalis titulus=\"BRACE_APERTA\"/>"
+    "    <terminalis titulus=\"BRACE_CLAUSA\"/>"
+
+    /* Ellipsis */
+    "    <terminalis titulus=\"ELLIPSIS\"/>"
 
     "    <terminalis titulus=\"EOF\"/>"
     "  </terminalia>"
@@ -140,7 +151,7 @@ hic_manens constans character* GRAMMATICA_EXPRESSIO =
     "      <productio>virga COMMA assignatio</productio>"               /* P1 */
     "    </regula>"
 
-    /* P2-P12: assignatio (dextro-associativa) */
+    /* P2-P13: assignatio (dextro-associativa) */
     "    <regula titulus=\"assignatio\">"
     "      <productio>ternarius</productio>"                            /* P2 */
     "      <productio>ternarius ASSIGNATIO assignatio</productio>"      /* P3 */
@@ -312,8 +323,148 @@ hic_manens constans character* GRAMMATICA_EXPRESSIO =
     "      <productio>ASTERISCUS CONST pointer</productio>"             /* P93 */
     "    </regula>"
 
+    /* ---- Declarationes (P94+) ---- */
+
+    /* P94-P95: summum (novum initium) */
+    "    <regula titulus=\"summum\">"
+    "      <productio>declaratio</productio>"                           /* P94 */
+    "      <productio>virga</productio>"                                /* P95 */
+    "    </regula>"
+
+    /* P96-P97: declaratio */
+    "    <regula titulus=\"declaratio\">"
+    "      <productio>decl_specifiers init_declarator_lista SEMICOLON</productio>" /* P96 */
+    "      <productio>decl_specifiers SEMICOLON</productio>"            /* P97 */
+    "    </regula>"
+
+    /* P98-P117: decl_specifiers */
+    "    <regula titulus=\"decl_specifiers\">"
+    "      <productio>decl_specifier</productio>"                       /* P98 */
+    "      <productio>decl_specifiers decl_specifier</productio>"       /* P99 */
+    "    </regula>"
+
+    "    <regula titulus=\"decl_specifier\">"
+    "      <productio>AUTO</productio>"                                 /* P100 */
+    "      <productio>REGISTER</productio>"                             /* P101 */
+    "      <productio>STATIC</productio>"                               /* P102 */
+    "      <productio>EXTERN</productio>"                               /* P103 */
+    "      <productio>TYPEDEF</productio>"                              /* P104 */
+    "      <productio>CONST</productio>"                                /* P105 */
+    "      <productio>VOLATILE</productio>"                             /* P106 */
+    "      <productio>VOID</productio>"                                 /* P107 */
+    "      <productio>CHAR</productio>"                                 /* P108 */
+    "      <productio>SHORT</productio>"                                /* P109 */
+    "      <productio>INT</productio>"                                  /* P110 */
+    "      <productio>LONG</productio>"                                 /* P111 */
+    "      <productio>FLOAT</productio>"                                /* P112 */
+    "      <productio>DOUBLE</productio>"                               /* P113 */
+    "      <productio>SIGNED</productio>"                               /* P114 */
+    "      <productio>UNSIGNED</productio>"                             /* P115 */
+    "      <productio>struct_specifier</productio>"                     /* P116 */
+    "      <productio>enum_specifier</productio>"                       /* P117 */
+    "    </regula>"
+
+    /* P118-P121: init_declarator_lista et init_declarator */
+    "    <regula titulus=\"init_declarator_lista\">"
+    "      <productio>init_declarator</productio>"                      /* P118 */
+    "      <productio>init_declarator_lista COMMA init_declarator</productio>" /* P119 */
+    "    </regula>"
+
+    "    <regula titulus=\"init_declarator\">"
+    "      <productio>declarator</productio>"                           /* P120 */
+    "      <productio>declarator ASSIGNATIO initializer</productio>"    /* P121 */
+    "    </regula>"
+
+    /* P122-P130: declarator et directus_declarator */
+    "    <regula titulus=\"declarator\">"
+    "      <productio>directus_declarator</productio>"                  /* P122 */
+    "      <productio>pointer directus_declarator</productio>"          /* P123 */
+    "    </regula>"
+
+    "    <regula titulus=\"directus_declarator\">"
+    "      <productio>IDENTIFICATOR</productio>"                        /* P124 */
+    "      <productio>PAREN_APERTA declarator PAREN_CLAUSA</productio>" /* P125 */
+    "      <productio>directus_declarator BRACKET_APERTA BRACKET_CLAUSA</productio>" /* P126 */
+    "      <productio>directus_declarator BRACKET_APERTA virga BRACKET_CLAUSA</productio>" /* P127 */
+    "      <productio>directus_declarator PAREN_APERTA PAREN_CLAUSA</productio>" /* P128 */
+    "      <productio>directus_declarator PAREN_APERTA parameter_lista PAREN_CLAUSA</productio>" /* P129 */
+    "      <productio>directus_declarator PAREN_APERTA VOID PAREN_CLAUSA</productio>" /* P130 */
+    "    </regula>"
+
+    /* P131-P136: struct_specifier (struct et union) */
+    "    <regula titulus=\"struct_specifier\">"
+    "      <productio>STRUCT IDENTIFICATOR BRACE_APERTA struct_member_lista BRACE_CLAUSA</productio>" /* P131 */
+    "      <productio>STRUCT BRACE_APERTA struct_member_lista BRACE_CLAUSA</productio>" /* P132 */
+    "      <productio>STRUCT IDENTIFICATOR</productio>"                 /* P133 */
+    "      <productio>UNION IDENTIFICATOR BRACE_APERTA struct_member_lista BRACE_CLAUSA</productio>" /* P134 */
+    "      <productio>UNION BRACE_APERTA struct_member_lista BRACE_CLAUSA</productio>" /* P135 */
+    "      <productio>UNION IDENTIFICATOR</productio>"                  /* P136 */
+    "    </regula>"
+
+    /* P137-P144: struct_member_lista, struct_member, struct_declarator */
+    "    <regula titulus=\"struct_member_lista\">"
+    "      <productio>struct_member</productio>"                        /* P137 */
+    "      <productio>struct_member_lista struct_member</productio>"    /* P138 */
+    "    </regula>"
+
+    "    <regula titulus=\"struct_member\">"
+    "      <productio>decl_specifiers struct_declarator_lista SEMICOLON</productio>" /* P139 */
+    "    </regula>"
+
+    "    <regula titulus=\"struct_declarator_lista\">"
+    "      <productio>struct_declarator</productio>"                    /* P140 */
+    "      <productio>struct_declarator_lista COMMA struct_declarator</productio>" /* P141 */
+    "    </regula>"
+
+    "    <regula titulus=\"struct_declarator\">"
+    "      <productio>declarator</productio>"                           /* P142 */
+    "      <productio>declarator COLON virga</productio>"               /* P143 */
+    "      <productio>COLON virga</productio>"                          /* P144 */
+    "    </regula>"
+
+    /* P145-P151: enum_specifier, enumerator_lista, enumerator */
+    "    <regula titulus=\"enum_specifier\">"
+    "      <productio>ENUM IDENTIFICATOR BRACE_APERTA enumerator_lista BRACE_CLAUSA</productio>" /* P145 */
+    "      <productio>ENUM BRACE_APERTA enumerator_lista BRACE_CLAUSA</productio>" /* P146 */
+    "      <productio>ENUM IDENTIFICATOR</productio>"                   /* P147 */
+    "    </regula>"
+
+    "    <regula titulus=\"enumerator_lista\">"
+    "      <productio>enumerator</productio>"                           /* P148 */
+    "      <productio>enumerator_lista COMMA enumerator</productio>"    /* P149 */
+    "    </regula>"
+
+    "    <regula titulus=\"enumerator\">"
+    "      <productio>IDENTIFICATOR</productio>"                        /* P150 */
+    "      <productio>IDENTIFICATOR ASSIGNATIO virga</productio>"       /* P151 */
+    "    </regula>"
+
+    /* P152-P156: parameter_lista, parameter_decl */
+    "    <regula titulus=\"parameter_lista\">"
+    "      <productio>parameter_decl</productio>"                       /* P152 */
+    "      <productio>parameter_lista COMMA parameter_decl</productio>" /* P153 */
+    "      <productio>parameter_lista COMMA ELLIPSIS</productio>"       /* P154 */
+    "    </regula>"
+
+    "    <regula titulus=\"parameter_decl\">"
+    "      <productio>decl_specifiers declarator</productio>"           /* P155 */
+    "      <productio>decl_specifiers</productio>"                      /* P156 */
+    "    </regula>"
+
+    /* P157-P161: initializer, init_items */
+    "    <regula titulus=\"initializer\">"
+    "      <productio>assignatio</productio>"                           /* P157 */
+    "      <productio>BRACE_APERTA init_items BRACE_CLAUSA</productio>" /* P158 */
+    "      <productio>BRACE_APERTA init_items COMMA BRACE_CLAUSA</productio>" /* P159 */
+    "    </regula>"
+
+    "    <regula titulus=\"init_items\">"
+    "      <productio>initializer</productio>"                          /* P160 */
+    "      <productio>init_items COMMA initializer</productio>"         /* P161 */
+    "    </regula>"
+
     "  </regulae>"
-    "  <initium>virga</initium>"
+    "  <initium>summum</initium>"
     "</grammatica>";
 
 /* ================================================
@@ -823,6 +974,609 @@ _nodus_specifier_lista(
 }
 
 /* ================================================
+ * Functiones Auxiliares pro Declarationibus
+ * ================================================ */
+
+/* Creare nodum pointer chain ex productionibus P90-P93.
+ * Quisque * creatur ut Arbor2PointerLevel in Xar.
+ * In M2.3 pointer reductions reddebant valori[ZEPHYRUM] solum.
+ * In M2.4 aedificamus Xar de Arbor2PointerLevel*.
+ */
+hic_manens Xar*
+_pointer_chain_creare(
+    LapifexC89Contextus*  ctx,
+    Arbor2Lexema*         tok_stella,
+    b32                   habet_const,
+    Arbor2Lexema*         tok_const_lex,
+    Xar*                  catena_interior)
+{
+    Xar*                 catena;
+    Arbor2PointerLevel*  gradus;
+    Arbor2PointerLevel** slot;
+
+    /* Si iam habemus catenam interiorem, addere ad eam in fronte */
+    si (catena_interior)
+        catena = catena_interior;
+    alioquin
+        catena = xar_creare(ctx->piscina, (i32)magnitudo(Arbor2PointerLevel*));
+
+    /* Creare novum gradum */
+    gradus = (Arbor2PointerLevel*)piscina_allocare(ctx->piscina,
+        (memoriae_index)magnitudo(Arbor2PointerLevel));
+    gradus->tok_stella = _token_ex_lexema(ctx, tok_stella);
+    gradus->tok_const = habet_const ? _token_ex_lexema(ctx, tok_const_lex) : NIHIL;
+    gradus->tok_volatile = NIHIL;
+
+    /* Inserere in fronte (externus pointer primus) */
+    /* Quia Xar non habet "inserere in fronte", addimus ad finem
+     * et invertimus ordinem in _nodus_declarator.
+     * Sed realiter: pointer -> ASTERISCUS pointer significat
+     * externus * est in valori[0], interior est in valori[1].
+     * Ergo addere ad finem est correctum: externi primi. */
+    slot = (Arbor2PointerLevel**)xar_addere(catena);
+    *slot = gradus;
+
+    redde catena;
+}
+
+/* Creare nodum declarator (DECLARATOR) */
+hic_manens Arbor2Nodus*
+_nodus_declarator(
+    LapifexC89Contextus*  ctx,
+    Xar*                  pointer_levels,
+    Arbor2Nodus*          directus)
+{
+    Arbor2Nodus* nodus;
+
+    nodus = (Arbor2Nodus*)piscina_allocare(ctx->piscina,
+        (memoriae_index)magnitudo(Arbor2Nodus));
+    memset(nodus, ZEPHYRUM, magnitudo(Arbor2Nodus));
+
+    nodus->genus = ARBOR2_NODUS_DECLARATOR;
+    nodus->lexema = directus->lexema;
+    nodus->datum.declarator.pointer_levels = pointer_levels;
+    nodus->datum.declarator.titulus = directus->datum.folium.valor;
+    nodus->datum.declarator.latitudo_biti = NIHIL;
+    nodus->datum.declarator.dimensiones = NIHIL;
+
+    nodus->linea_initium = directus->linea_initium;
+    nodus->columna_initium = directus->columna_initium;
+    nodus->linea_finis = directus->linea_finis;
+    nodus->columna_finis = directus->columna_finis;
+
+    redde nodus;
+}
+
+/* Auxiliaris: creare nodum DECLARATIO ab init_declarator_lista et decl_specifiers.
+ * decl_specifiers est LISTA_SEPARATA vel singulum nodus de specifiers.
+ * init_declarator_lista est LISTA_SEPARATA vel singulum declarator.
+ *
+ * Pro simplici casu (int x;): specifiers = unum folium, declarator = unum DECLARATOR.
+ * Pro multi (int a, b;): init_declarator_lista est LISTA_SEPARATA.
+ */
+hic_manens Arbor2Nodus*
+_nodus_declaratio(
+    LapifexC89Contextus*  ctx,
+    Arbor2Nodus*          specifiers,
+    Arbor2Nodus*          init_decl_lista,
+    Arbor2Lexema*         tok_semi)
+{
+    Arbor2Nodus* nodus;
+    Arbor2Nodus* primus_decl;
+
+    nodus = (Arbor2Nodus*)piscina_allocare(ctx->piscina,
+        (memoriae_index)magnitudo(Arbor2Nodus));
+    memset(nodus, ZEPHYRUM, magnitudo(Arbor2Nodus));
+
+    nodus->genus = ARBOR2_NODUS_DECLARATIO;
+
+    /* Specifier est primus token */
+    nodus->lexema = specifiers->lexema;
+    nodus->datum.declaratio.specifier = specifiers;
+
+    /* Si init_decl_lista est LISTA_SEPARATA, primus elementum est declarator */
+    si (init_decl_lista)
+    {
+        si (init_decl_lista->genus == ARBOR2_NODUS_LISTA_SEPARATA)
+        {
+            Arbor2Nodus** elem = (Arbor2Nodus**)xar_obtinere(
+                init_decl_lista->datum.lista_separata.elementa, ZEPHYRUM);
+            primus_decl = *elem;
+        }
+        alioquin
+        {
+            primus_decl = init_decl_lista;
+        }
+        nodus->datum.declaratio.declarator = primus_decl;
+
+        /* Si plures declaratores, servare totam listam ut proxima */
+        si (init_decl_lista->genus == ARBOR2_NODUS_LISTA_SEPARATA)
+            nodus->datum.declaratio.proxima = init_decl_lista;
+    }
+
+    nodus->datum.declaratio.tok_semicolon = _token_ex_lexema(ctx, tok_semi);
+
+    /* Locatio */
+    nodus->linea_initium = specifiers->linea_initium;
+    nodus->columna_initium = specifiers->columna_initium;
+    nodus->linea_finis = tok_semi->linea;
+    nodus->columna_finis = tok_semi->columna + tok_semi->longitudo;
+
+    redde nodus;
+}
+
+/* Creare nodum declaratio sine declaratore (forward decl / standalone struct) */
+hic_manens Arbor2Nodus*
+_nodus_declaratio_vacua(
+    LapifexC89Contextus*  ctx,
+    Arbor2Nodus*          specifiers,
+    Arbor2Lexema*         tok_semi)
+{
+    redde _nodus_declaratio(ctx, specifiers, NIHIL, tok_semi);
+}
+
+/* Creare nodum init_declarator: declarator = initializer */
+hic_manens Arbor2Nodus*
+_nodus_init_declarator(
+    LapifexC89Contextus*  ctx,
+    Arbor2Nodus*          declarator,
+    Arbor2Lexema*         tok_assign,
+    Arbor2Nodus*          initializor)
+{
+    Arbor2Nodus* nodus;
+
+    /* Reusare DECLARATIO nodum pro init_declarator */
+    nodus = (Arbor2Nodus*)piscina_allocare(ctx->piscina,
+        (memoriae_index)magnitudo(Arbor2Nodus));
+    memset(nodus, ZEPHYRUM, magnitudo(Arbor2Nodus));
+
+    nodus->genus = ARBOR2_NODUS_DECLARATIO;
+    nodus->lexema = declarator->lexema;
+    nodus->datum.declaratio.declarator = declarator;
+    nodus->datum.declaratio.tok_assignatio = _token_ex_lexema(ctx, tok_assign);
+    nodus->datum.declaratio.initializor = initializor;
+
+    nodus->linea_initium = declarator->linea_initium;
+    nodus->columna_initium = declarator->columna_initium;
+    nodus->linea_finis = initializor->linea_finis;
+    nodus->columna_finis = initializor->columna_finis;
+
+    redde nodus;
+}
+
+/* Catena specifier: accumulare specifiers in LISTA_SEPARATA */
+hic_manens Arbor2Nodus*
+_nodus_specifier_chain(
+    LapifexC89Contextus*  ctx,
+    Arbor2Nodus*          catena,
+    Arbor2Nodus*          novum)
+{
+    Arbor2Nodus* nodus;
+    Arbor2Nodus** elem_slot;
+
+    /* Si catena iam est LISTA_SEPARATA, addere ad eam */
+    si (catena->genus == ARBOR2_NODUS_LISTA_SEPARATA)
+    {
+        elem_slot = (Arbor2Nodus**)xar_addere(catena->datum.lista_separata.elementa);
+        *elem_slot = novum;
+        novum->pater = catena;
+        catena->linea_finis = novum->linea_finis;
+        catena->columna_finis = novum->columna_finis;
+        redde catena;
+    }
+
+    /* Creare novam LISTA_SEPARATA */
+    nodus = (Arbor2Nodus*)piscina_allocare(ctx->piscina,
+        (memoriae_index)magnitudo(Arbor2Nodus));
+    memset(nodus, ZEPHYRUM, magnitudo(Arbor2Nodus));
+
+    nodus->genus = ARBOR2_NODUS_LISTA_SEPARATA;
+    nodus->lexema = catena->lexema;
+    nodus->datum.lista_separata.elementa =
+        xar_creare(ctx->piscina, (i32)magnitudo(Arbor2Nodus*));
+    nodus->datum.lista_separata.separatores =
+        xar_creare(ctx->piscina, (i32)magnitudo(Arbor2Token*));
+
+    elem_slot = (Arbor2Nodus**)xar_addere(nodus->datum.lista_separata.elementa);
+    *elem_slot = catena;
+    elem_slot = (Arbor2Nodus**)xar_addere(nodus->datum.lista_separata.elementa);
+    *elem_slot = novum;
+
+    catena->pater = nodus;
+    novum->pater = nodus;
+
+    nodus->linea_initium = catena->linea_initium;
+    nodus->columna_initium = catena->columna_initium;
+    nodus->linea_finis = novum->linea_finis;
+    nodus->columna_finis = novum->columna_finis;
+
+    redde nodus;
+}
+
+/* Creare nodum array dimension - extendere declarator */
+hic_manens Arbor2Nodus*
+_nodus_array_dim(
+    LapifexC89Contextus*  ctx,
+    Arbor2Nodus*          basis,
+    Arbor2Lexema*         tok_brk_ap,
+    Arbor2Nodus*          dimensio,
+    Arbor2Lexema*         tok_brk_cl)
+{
+    Arbor2ArrayDimension*  dim;
+    Arbor2ArrayDimension** slot;
+
+    /* Si basis nondum habet dimensiones, creare Xar */
+    si (!basis->datum.declarator.dimensiones)
+        basis->datum.declarator.dimensiones =
+            xar_creare(ctx->piscina, (i32)magnitudo(Arbor2ArrayDimension*));
+
+    dim = (Arbor2ArrayDimension*)piscina_allocare(ctx->piscina,
+        (memoriae_index)magnitudo(Arbor2ArrayDimension));
+    dim->tok_bracket_ap = _token_ex_lexema(ctx, tok_brk_ap);
+    dim->dimensio = dimensio;
+    dim->tok_bracket_cl = _token_ex_lexema(ctx, tok_brk_cl);
+
+    slot = (Arbor2ArrayDimension**)xar_addere(basis->datum.declarator.dimensiones);
+    *slot = dim;
+
+    basis->linea_finis = tok_brk_cl->linea;
+    basis->columna_finis = tok_brk_cl->columna + tok_brk_cl->longitudo;
+
+    redde basis;
+}
+
+/* Creare nodum function declarator */
+hic_manens Arbor2Nodus*
+_nodus_declarator_functi(
+    LapifexC89Contextus*  ctx,
+    Arbor2Nodus*          basis,
+    Arbor2Lexema*         tok_ap,
+    Arbor2Nodus*          parametri,
+    Arbor2Lexema*         tok_cl,
+    b32                   habet_void,
+    b32                   est_variadicus)
+{
+    Arbor2Nodus* nodus;
+
+    nodus = (Arbor2Nodus*)piscina_allocare(ctx->piscina,
+        (memoriae_index)magnitudo(Arbor2Nodus));
+    memset(nodus, ZEPHYRUM, magnitudo(Arbor2Nodus));
+
+    nodus->genus = ARBOR2_NODUS_DECLARATOR_FUNCTI;
+    nodus->lexema = basis->lexema;
+    nodus->datum.declarator_functi.declarator_interior = basis;
+    nodus->datum.declarator_functi.tok_paren_ap = _token_ex_lexema(ctx, tok_ap);
+    nodus->datum.declarator_functi.parametri = parametri;
+    nodus->datum.declarator_functi.tok_paren_cl = _token_ex_lexema(ctx, tok_cl);
+    nodus->datum.declarator_functi.habet_void = habet_void;
+    nodus->datum.declarator_functi.est_variadicus = est_variadicus;
+    nodus->datum.declarator_functi.pointer_levels = NIHIL;
+    nodus->datum.declarator_functi.tok_void = NIHIL;
+
+    basis->pater = nodus;
+    si (parametri) parametri->pater = nodus;
+
+    nodus->linea_initium = basis->linea_initium;
+    nodus->columna_initium = basis->columna_initium;
+    nodus->linea_finis = tok_cl->linea;
+    nodus->columna_finis = tok_cl->columna + tok_cl->longitudo;
+
+    redde nodus;
+}
+
+/* Creare nodum struct/union specifier */
+hic_manens Arbor2Nodus*
+_nodus_struct_specifier(
+    LapifexC89Contextus*  ctx,
+    Arbor2Lexema*         tok_kw,
+    Arbor2Nodus*          tag,
+    Arbor2Lexema*         tok_br_ap,
+    Arbor2Nodus*          membra,
+    Arbor2Lexema*         tok_br_cl,
+    b32                   est_unio)
+{
+    Arbor2Nodus* nodus;
+
+    nodus = (Arbor2Nodus*)piscina_allocare(ctx->piscina,
+        (memoriae_index)magnitudo(Arbor2Nodus));
+    memset(nodus, ZEPHYRUM, magnitudo(Arbor2Nodus));
+
+    nodus->genus = ARBOR2_NODUS_STRUCT_SPECIFIER;
+    nodus->lexema = _token_ex_lexema(ctx, tok_kw);
+    nodus->datum.struct_specifier.tok_struct_or_union = nodus->lexema;
+    nodus->datum.struct_specifier.tag = tag;
+    nodus->datum.struct_specifier.est_unio = est_unio;
+
+    si (tok_br_ap)
+    {
+        nodus->datum.struct_specifier.tok_brace_ap = _token_ex_lexema(ctx, tok_br_ap);
+        /* membra est LISTA_SEPARATA vel singulum, convertere ad Xar */
+        si (membra)
+        {
+            Xar* membra_xar = xar_creare(ctx->piscina, (i32)magnitudo(Arbor2Nodus*));
+            si (membra->genus == ARBOR2_NODUS_LISTA_SEPARATA)
+            {
+                i32 i;
+                per (i = ZEPHYRUM; i < (i32)xar_numerus(membra->datum.lista_separata.elementa); i++)
+                {
+                    Arbor2Nodus** src = (Arbor2Nodus**)xar_obtinere(
+                        membra->datum.lista_separata.elementa, i);
+                    Arbor2Nodus** dst = (Arbor2Nodus**)xar_addere(membra_xar);
+                    *dst = *src;
+                }
+            }
+            alioquin
+            {
+                Arbor2Nodus** dst = (Arbor2Nodus**)xar_addere(membra_xar);
+                *dst = membra;
+            }
+            nodus->datum.struct_specifier.membra = membra_xar;
+        }
+        nodus->datum.struct_specifier.tok_brace_cl = _token_ex_lexema(ctx, tok_br_cl);
+        nodus->linea_finis = tok_br_cl->linea;
+        nodus->columna_finis = tok_br_cl->columna + tok_br_cl->longitudo;
+    }
+    alioquin
+    {
+        /* Forward ref: struct Foo */
+        nodus->datum.struct_specifier.tok_brace_ap = NIHIL;
+        nodus->datum.struct_specifier.membra = NIHIL;
+        nodus->datum.struct_specifier.tok_brace_cl = NIHIL;
+        si (tag)
+        {
+            nodus->linea_finis = tag->linea_finis;
+            nodus->columna_finis = tag->columna_finis;
+        }
+    }
+
+    nodus->linea_initium = tok_kw->linea;
+    nodus->columna_initium = tok_kw->columna;
+
+    redde nodus;
+}
+
+/* Creare nodum enum specifier */
+hic_manens Arbor2Nodus*
+_nodus_enum_specifier(
+    LapifexC89Contextus*  ctx,
+    Arbor2Lexema*         tok_enum,
+    Arbor2Nodus*          tag,
+    Arbor2Lexema*         tok_br_ap,
+    Arbor2Nodus*          enumeratores,
+    Arbor2Lexema*         tok_br_cl)
+{
+    Arbor2Nodus* nodus;
+
+    nodus = (Arbor2Nodus*)piscina_allocare(ctx->piscina,
+        (memoriae_index)magnitudo(Arbor2Nodus));
+    memset(nodus, ZEPHYRUM, magnitudo(Arbor2Nodus));
+
+    nodus->genus = ARBOR2_NODUS_ENUM_SPECIFIER;
+    nodus->lexema = _token_ex_lexema(ctx, tok_enum);
+    nodus->datum.enum_specifier.tok_enum = nodus->lexema;
+    nodus->datum.enum_specifier.tag = tag;
+
+    si (tok_br_ap)
+    {
+        nodus->datum.enum_specifier.tok_brace_ap = _token_ex_lexema(ctx, tok_br_ap);
+        nodus->datum.enum_specifier.enumeratores = enumeratores;
+        nodus->datum.enum_specifier.tok_brace_cl = _token_ex_lexema(ctx, tok_br_cl);
+        nodus->linea_finis = tok_br_cl->linea;
+        nodus->columna_finis = tok_br_cl->columna + tok_br_cl->longitudo;
+    }
+    alioquin
+    {
+        nodus->datum.enum_specifier.tok_brace_ap = NIHIL;
+        nodus->datum.enum_specifier.enumeratores = NIHIL;
+        nodus->datum.enum_specifier.tok_brace_cl = NIHIL;
+        si (tag)
+        {
+            nodus->linea_finis = tag->linea_finis;
+            nodus->columna_finis = tag->columna_finis;
+        }
+    }
+
+    nodus->linea_initium = tok_enum->linea;
+    nodus->columna_initium = tok_enum->columna;
+
+    redde nodus;
+}
+
+/* Creare nodum enumerator */
+hic_manens Arbor2Nodus*
+_nodus_enumerator(
+    LapifexC89Contextus*  ctx,
+    Arbor2Lexema*         tok_titulus,
+    Arbor2Lexema*         tok_assign,
+    Arbor2Nodus*          valor)
+{
+    Arbor2Nodus* nodus;
+
+    nodus = (Arbor2Nodus*)piscina_allocare(ctx->piscina,
+        (memoriae_index)magnitudo(Arbor2Nodus));
+    memset(nodus, ZEPHYRUM, magnitudo(Arbor2Nodus));
+
+    nodus->genus = ARBOR2_NODUS_ENUMERATOR;
+    nodus->lexema = _token_ex_lexema(ctx, tok_titulus);
+    nodus->datum.enumerator.titulus = tok_titulus->valor;
+    nodus->datum.enumerator.tok_assignatio =
+        tok_assign ? _token_ex_lexema(ctx, tok_assign) : NIHIL;
+    nodus->datum.enumerator.valor = valor;
+
+    nodus->linea_initium = tok_titulus->linea;
+    nodus->columna_initium = tok_titulus->columna;
+    si (valor)
+    {
+        nodus->linea_finis = valor->linea_finis;
+        nodus->columna_finis = valor->columna_finis;
+    }
+    alioquin
+    {
+        nodus->linea_finis = tok_titulus->linea;
+        nodus->columna_finis = tok_titulus->columna + tok_titulus->longitudo;
+    }
+
+    redde nodus;
+}
+
+/* Creare nodum parameter_decl */
+hic_manens Arbor2Nodus*
+_nodus_parameter_decl(
+    LapifexC89Contextus*  ctx,
+    Arbor2Nodus*          specifiers,
+    Arbor2Nodus*          declarator)
+{
+    Arbor2Nodus* nodus;
+
+    nodus = (Arbor2Nodus*)piscina_allocare(ctx->piscina,
+        (memoriae_index)magnitudo(Arbor2Nodus));
+    memset(nodus, ZEPHYRUM, magnitudo(Arbor2Nodus));
+
+    nodus->genus = ARBOR2_NODUS_PARAMETER_DECL;
+    nodus->lexema = specifiers->lexema;
+    nodus->datum.parameter_decl.type_specifier = specifiers;
+    nodus->datum.parameter_decl.declarator = declarator;
+
+    nodus->linea_initium = specifiers->linea_initium;
+    nodus->columna_initium = specifiers->columna_initium;
+    si (declarator)
+    {
+        nodus->linea_finis = declarator->linea_finis;
+        nodus->columna_finis = declarator->columna_finis;
+    }
+    alioquin
+    {
+        nodus->linea_finis = specifiers->linea_finis;
+        nodus->columna_finis = specifiers->columna_finis;
+    }
+
+    redde nodus;
+}
+
+/* Creare nodum initializer lista {a, b, c} */
+hic_manens Arbor2Nodus*
+_nodus_initializor_lista(
+    LapifexC89Contextus*  ctx,
+    Arbor2Lexema*         tok_br_ap,
+    Arbor2Nodus*          items,
+    Arbor2Lexema*         tok_br_cl)
+{
+    Arbor2Nodus* nodus;
+
+    nodus = (Arbor2Nodus*)piscina_allocare(ctx->piscina,
+        (memoriae_index)magnitudo(Arbor2Nodus));
+    memset(nodus, ZEPHYRUM, magnitudo(Arbor2Nodus));
+
+    nodus->genus = ARBOR2_NODUS_INITIALIZOR_LISTA;
+    nodus->lexema = _token_ex_lexema(ctx, tok_br_ap);
+    nodus->datum.initializor_lista.tok_brace_ap = nodus->lexema;
+    nodus->datum.initializor_lista.items = items;
+    nodus->datum.initializor_lista.tok_brace_cl = _token_ex_lexema(ctx, tok_br_cl);
+
+    si (items) items->pater = nodus;
+
+    nodus->linea_initium = tok_br_ap->linea;
+    nodus->columna_initium = tok_br_ap->columna;
+    nodus->linea_finis = tok_br_cl->linea;
+    nodus->columna_finis = tok_br_cl->columna + tok_br_cl->longitudo;
+
+    redde nodus;
+}
+
+/* struct_member_lista: accumulare membra in LISTA_SEPARATA */
+hic_manens Arbor2Nodus*
+_nodus_struct_member_append(
+    LapifexC89Contextus*  ctx,
+    Arbor2Nodus*          lista,
+    Arbor2Nodus*          membrum)
+{
+    /* Reusare _nodus_specifier_chain (same logic: append to LISTA_SEPARATA) */
+    redde _nodus_specifier_chain(ctx, lista, membrum);
+}
+
+/* Creare nodum struct_member: decl_specifiers struct_declarator_lista SEMICOLON */
+hic_manens Arbor2Nodus*
+_nodus_struct_member(
+    LapifexC89Contextus*  ctx,
+    Arbor2Nodus*          specifiers,
+    Arbor2Nodus*          decl_lista,
+    Arbor2Lexema*         tok_semi)
+{
+    /* Reusare DECLARATIO nodum */
+    redde _nodus_declaratio(ctx, specifiers, decl_lista, tok_semi);
+}
+
+/* Creare nodum struct_declarator cum bit field */
+hic_manens Arbor2Nodus*
+_nodus_bit_field(
+    LapifexC89Contextus*  ctx,
+    Arbor2Nodus*          declarator,
+    Arbor2Lexema*         tok_colon,
+    Arbor2Nodus*          latitudo)
+{
+    (vacuum)tok_colon;
+
+    /* Extendere declarator nodum cum bit field info */
+    si (declarator && declarator->genus == ARBOR2_NODUS_DECLARATOR)
+    {
+        declarator->datum.declarator.latitudo_biti = latitudo;
+        declarator->linea_finis = latitudo->linea_finis;
+        declarator->columna_finis = latitudo->columna_finis;
+        redde declarator;
+    }
+
+    /* Si declarator non est DECLARATOR, creare novum */
+    {
+        Arbor2Nodus* nodus;
+        nodus = (Arbor2Nodus*)piscina_allocare(ctx->piscina,
+            (memoriae_index)magnitudo(Arbor2Nodus));
+        memset(nodus, ZEPHYRUM, magnitudo(Arbor2Nodus));
+        nodus->genus = ARBOR2_NODUS_DECLARATOR;
+        nodus->lexema = declarator ? declarator->lexema : NIHIL;
+        nodus->datum.declarator.latitudo_biti = latitudo;
+        si (declarator)
+        {
+            nodus->datum.declarator.pointer_levels = NIHIL;
+            nodus->datum.declarator.titulus = declarator->datum.folium.valor;
+            nodus->linea_initium = declarator->linea_initium;
+            nodus->columna_initium = declarator->columna_initium;
+        }
+        nodus->linea_finis = latitudo->linea_finis;
+        nodus->columna_finis = latitudo->columna_finis;
+        redde nodus;
+    }
+}
+
+/* Creare nodum anonymous bit field (: expr) */
+hic_manens Arbor2Nodus*
+_nodus_anon_bit_field(
+    LapifexC89Contextus*  ctx,
+    Arbor2Lexema*         tok_colon,
+    Arbor2Nodus*          latitudo)
+{
+    Arbor2Nodus* nodus;
+
+    nodus = (Arbor2Nodus*)piscina_allocare(ctx->piscina,
+        (memoriae_index)magnitudo(Arbor2Nodus));
+    memset(nodus, ZEPHYRUM, magnitudo(Arbor2Nodus));
+
+    nodus->genus = ARBOR2_NODUS_DECLARATOR;
+    nodus->lexema = _token_ex_lexema(ctx, tok_colon);
+    nodus->datum.declarator.pointer_levels = NIHIL;
+    /* titulus vacua = anonymus */
+    memset(&nodus->datum.declarator.titulus, ZEPHYRUM, magnitudo(chorda));
+    nodus->datum.declarator.latitudo_biti = latitudo;
+    nodus->datum.declarator.dimensiones = NIHIL;
+
+    nodus->linea_initium = tok_colon->linea;
+    nodus->columna_initium = tok_colon->columna;
+    nodus->linea_finis = latitudo->linea_finis;
+    nodus->columna_finis = latitudo->columna_finis;
+
+    redde nodus;
+}
+
+/* ================================================
  * Callback Reductionis
  *
  * Numeratio productionum:
@@ -920,6 +1674,76 @@ _nodus_specifier_lista(
  * P91: pointer -> ASTERISCUS pointer
  * P92: pointer -> ASTERISCUS CONST
  * P93: pointer -> ASTERISCUS CONST pointer
+ *
+ * ---- Declarationes ----
+ * P94:  summum -> declaratio
+ * P95:  summum -> virga
+ * P96:  declaratio -> decl_specifiers init_declarator_lista SEMICOLON
+ * P97:  declaratio -> decl_specifiers SEMICOLON
+ * P98:  decl_specifiers -> decl_specifier
+ * P99:  decl_specifiers -> decl_specifiers decl_specifier
+ * P100: decl_specifier -> AUTO
+ * P101: decl_specifier -> REGISTER
+ * P102: decl_specifier -> STATIC
+ * P103: decl_specifier -> EXTERN
+ * P104: decl_specifier -> TYPEDEF
+ * P105: decl_specifier -> CONST
+ * P106: decl_specifier -> VOLATILE
+ * P107: decl_specifier -> VOID
+ * P108: decl_specifier -> CHAR
+ * P109: decl_specifier -> SHORT
+ * P110: decl_specifier -> INT
+ * P111: decl_specifier -> LONG
+ * P112: decl_specifier -> FLOAT
+ * P113: decl_specifier -> DOUBLE
+ * P114: decl_specifier -> SIGNED
+ * P115: decl_specifier -> UNSIGNED
+ * P116: decl_specifier -> struct_specifier
+ * P117: decl_specifier -> enum_specifier
+ * P118: init_declarator_lista -> init_declarator
+ * P119: init_declarator_lista -> init_declarator_lista COMMA init_declarator
+ * P120: init_declarator -> declarator
+ * P121: init_declarator -> declarator ASSIGNATIO initializer
+ * P122: declarator -> directus_declarator
+ * P123: declarator -> pointer directus_declarator
+ * P124: directus_declarator -> IDENTIFICATOR
+ * P125: directus_declarator -> PAREN_APERTA declarator PAREN_CLAUSA
+ * P126: directus_declarator -> directus_declarator BRACKET_APERTA BRACKET_CLAUSA
+ * P127: directus_declarator -> directus_declarator BRACKET_APERTA virga BRACKET_CLAUSA
+ * P128: directus_declarator -> directus_declarator PAREN_APERTA PAREN_CLAUSA
+ * P129: directus_declarator -> directus_declarator PAREN_APERTA parameter_lista PAREN_CLAUSA
+ * P130: directus_declarator -> directus_declarator PAREN_APERTA VOID PAREN_CLAUSA
+ * P131: struct_specifier -> STRUCT IDENTIFICATOR BRACE_APERTA struct_member_lista BRACE_CLAUSA
+ * P132: struct_specifier -> STRUCT BRACE_APERTA struct_member_lista BRACE_CLAUSA
+ * P133: struct_specifier -> STRUCT IDENTIFICATOR
+ * P134: struct_specifier -> UNION IDENTIFICATOR BRACE_APERTA struct_member_lista BRACE_CLAUSA
+ * P135: struct_specifier -> UNION BRACE_APERTA struct_member_lista BRACE_CLAUSA
+ * P136: struct_specifier -> UNION IDENTIFICATOR
+ * P137: struct_member_lista -> struct_member
+ * P138: struct_member_lista -> struct_member_lista struct_member
+ * P139: struct_member -> decl_specifiers struct_declarator_lista SEMICOLON
+ * P140: struct_declarator_lista -> struct_declarator
+ * P141: struct_declarator_lista -> struct_declarator_lista COMMA struct_declarator
+ * P142: struct_declarator -> declarator
+ * P143: struct_declarator -> declarator COLON virga
+ * P144: struct_declarator -> COLON virga
+ * P145: enum_specifier -> ENUM IDENTIFICATOR BRACE_APERTA enumerator_lista BRACE_CLAUSA
+ * P146: enum_specifier -> ENUM BRACE_APERTA enumerator_lista BRACE_CLAUSA
+ * P147: enum_specifier -> ENUM IDENTIFICATOR
+ * P148: enumerator_lista -> enumerator
+ * P149: enumerator_lista -> enumerator_lista COMMA enumerator
+ * P150: enumerator -> IDENTIFICATOR
+ * P151: enumerator -> IDENTIFICATOR ASSIGNATIO virga
+ * P152: parameter_lista -> parameter_decl
+ * P153: parameter_lista -> parameter_lista COMMA parameter_decl
+ * P154: parameter_lista -> parameter_lista COMMA ELLIPSIS
+ * P155: parameter_decl -> decl_specifiers declarator
+ * P156: parameter_decl -> decl_specifiers
+ * P157: initializer -> assignatio
+ * P158: initializer -> BRACE_APERTA init_items BRACE_CLAUSA
+ * P159: initializer -> BRACE_APERTA init_items COMMA BRACE_CLAUSA
+ * P160: init_items -> initializer
+ * P161: init_items -> init_items COMMA initializer
  * ================================================ */
 
 s64
@@ -1252,16 +2076,423 @@ lapifex_c89_expressio_reductio(
 
         /* ---- Pointer ---- */
         casus XC:    /* pointer -> ASTERISCUS */
+            redde VALOR_EX(_pointer_chain_creare(ctx,
+                LEXEMA_EX(valori[ZEPHYRUM]),
+                FALSUM, NIHIL, NIHIL));
+
         casus XCI:   /* pointer -> ASTERISCUS pointer */
+            redde VALOR_EX(_pointer_chain_creare(ctx,
+                LEXEMA_EX(valori[ZEPHYRUM]),
+                FALSUM, NIHIL,
+                (Xar*)(vacuum*)(longus)(valori[I])));
+
         casus XCII:  /* pointer -> ASTERISCUS CONST */
+            redde VALOR_EX(_pointer_chain_creare(ctx,
+                LEXEMA_EX(valori[ZEPHYRUM]),
+                VERUM, LEXEMA_EX(valori[I]), NIHIL));
+
         casus XCIII: /* pointer -> ASTERISCUS CONST pointer */
-            /* Pointer nodi non creantur separatim in M2.3 --
-             * type name nodus iam continet sufficientem informatem */
+            redde VALOR_EX(_pointer_chain_creare(ctx,
+                LEXEMA_EX(valori[ZEPHYRUM]),
+                VERUM, LEXEMA_EX(valori[I]),
+                (Xar*)(vacuum*)(longus)(valori[II])));
+
+        /* ---- Summum (P94-P95) ---- */
+        casus XCIV:  /* summum -> declaratio */
             redde valori[ZEPHYRUM];
+
+        casus XCV:   /* summum -> virga */
+            redde valori[ZEPHYRUM];
+
+        /* ---- Declaratio (P96-P97) ---- */
+        casus XCVI:  /* declaratio -> decl_specifiers init_declarator_lista SEMICOLON */
+            redde VALOR_EX(_nodus_declaratio(ctx,
+                NODUS_EX(valori[ZEPHYRUM]),
+                NODUS_EX(valori[I]),
+                LEXEMA_EX(valori[II])));
+
+        casus XCVII: /* declaratio -> decl_specifiers SEMICOLON */
+            redde VALOR_EX(_nodus_declaratio_vacua(ctx,
+                NODUS_EX(valori[ZEPHYRUM]),
+                LEXEMA_EX(valori[I])));
+
+        /* ---- Decl Specifiers (P98-P99) ---- */
+        casus XCVIII: /* decl_specifiers -> decl_specifier */
+            redde valori[ZEPHYRUM];
+
+        casus XCIX:   /* decl_specifiers -> decl_specifiers decl_specifier */
+            redde VALOR_EX(_nodus_specifier_chain(ctx,
+                NODUS_EX(valori[ZEPHYRUM]),
+                NODUS_EX(valori[I])));
+
+        /* ---- Decl Specifier keywords (P100-P115) ---- */
+        casus C:      /* AUTO */
+        casus CI:     /* REGISTER */
+        casus CII:    /* STATIC */
+        casus CIII:   /* EXTERN */
+        casus CIV:    /* TYPEDEF */
+        casus CV:     /* CONST */
+        casus CVI:    /* VOLATILE */
+        casus CVII:   /* VOID */
+        casus CVIII:  /* CHAR */
+        casus CIX:    /* SHORT */
+        casus CX:     /* INT */
+        casus CXI:    /* LONG */
+        casus CXII:   /* FLOAT */
+        casus CXIII:  /* DOUBLE */
+        casus CXIV:   /* SIGNED */
+        casus CXV:    /* UNSIGNED */
+            redde VALOR_EX(_nodus_specifier_folium(ctx,
+                LEXEMA_EX(valori[ZEPHYRUM])));
+
+        /* ---- Decl Specifier struct/enum (P116-P117) ---- */
+        casus CXVI:   /* struct_specifier */
+        casus CXVII:  /* enum_specifier */
+            redde valori[ZEPHYRUM];
+
+        /* ---- Init Declarator Lista (P118-P119) ---- */
+        casus CXVIII: /* init_declarator_lista -> init_declarator */
+            redde valori[ZEPHYRUM];
+
+        casus CXIX:   /* init_declarator_lista -> init_declarator_lista COMMA init_declarator */
+            redde VALOR_EX(_nodus_lista_separata(ctx,
+                NODUS_EX(valori[ZEPHYRUM]),
+                LEXEMA_EX(valori[I]),
+                NODUS_EX(valori[II])));
+
+        /* ---- Init Declarator (P120-P121) ---- */
+        casus CXX:    /* init_declarator -> declarator */
+            redde valori[ZEPHYRUM];
+
+        casus CXXI:   /* init_declarator -> declarator ASSIGNATIO initializer */
+            redde VALOR_EX(_nodus_init_declarator(ctx,
+                NODUS_EX(valori[ZEPHYRUM]),
+                LEXEMA_EX(valori[I]),
+                NODUS_EX(valori[II])));
+
+        /* ---- Declarator (P122-P123) ---- */
+        casus CXXII:  /* declarator -> directus_declarator */
+            /* Impaccare in DECLARATOR nodum si nondum est */
+        {
+            Arbor2Nodus* dir = NODUS_EX(valori[ZEPHYRUM]);
+            si (dir->genus == ARBOR2_NODUS_DECLARATOR
+                || dir->genus == ARBOR2_NODUS_DECLARATOR_FUNCTI)
+                redde valori[ZEPHYRUM];
+            redde VALOR_EX(_nodus_declarator(ctx, NIHIL, dir));
+        }
+
+        casus CXXIII: /* declarator -> pointer directus_declarator */
+        {
+            Xar* ptr = (Xar*)(vacuum*)(longus)(valori[ZEPHYRUM]);
+            Arbor2Nodus* dir = NODUS_EX(valori[I]);
+            si (dir->genus == ARBOR2_NODUS_DECLARATOR)
+            {
+                dir->datum.declarator.pointer_levels = ptr;
+                redde valori[I];
+            }
+            si (dir->genus == ARBOR2_NODUS_DECLARATOR_FUNCTI)
+            {
+                dir->datum.declarator_functi.pointer_levels = ptr;
+                redde valori[I];
+            }
+            redde VALOR_EX(_nodus_declarator(ctx, ptr, dir));
+        }
+
+        /* ---- Directus Declarator (P124-P130) ---- */
+        casus CXXIV:  /* directus_declarator -> IDENTIFICATOR */
+        {
+            Arbor2Nodus* folium = _nodus_folium(ctx,
+                ARBOR2_NODUS_IDENTIFICATOR,
+                LEXEMA_EX(valori[ZEPHYRUM]));
+            redde VALOR_EX(_nodus_declarator(ctx, NIHIL, folium));
+        }
+
+        casus CXXV:   /* directus_declarator -> PAREN_APERTA declarator PAREN_CLAUSA */
+            /* Grouped declarator: (*fp) - just pass through the inner declarator */
+            redde valori[I];
+
+        casus CXXVI:  /* directus_declarator -> directus_declarator BRACKET_APERTA BRACKET_CLAUSA */
+            redde VALOR_EX(_nodus_array_dim(ctx,
+                NODUS_EX(valori[ZEPHYRUM]),
+                LEXEMA_EX(valori[I]),
+                NIHIL,
+                LEXEMA_EX(valori[II])));
+
+        casus CXXVII: /* directus_declarator -> directus_declarator BRACKET_APERTA virga BRACKET_CLAUSA */
+            redde VALOR_EX(_nodus_array_dim(ctx,
+                NODUS_EX(valori[ZEPHYRUM]),
+                LEXEMA_EX(valori[I]),
+                NODUS_EX(valori[II]),
+                LEXEMA_EX(valori[III])));
+
+        casus CXXVIII: /* directus_declarator -> directus_declarator PAREN_APERTA PAREN_CLAUSA */
+            redde VALOR_EX(_nodus_declarator_functi(ctx,
+                NODUS_EX(valori[ZEPHYRUM]),
+                LEXEMA_EX(valori[I]),
+                NIHIL,
+                LEXEMA_EX(valori[II]),
+                FALSUM, FALSUM));
+
+        casus CXXIX:  /* directus_declarator -> directus_declarator PAREN_APERTA parameter_lista PAREN_CLAUSA */
+        {
+            Arbor2Nodus* params = NODUS_EX(valori[II]);
+            b32 variadicus = FALSUM;
+            si (params->genus == ARBOR2_NODUS_PARAMETER_LIST)
+                variadicus = params->datum.parameter_list.est_variadicus;
+            redde VALOR_EX(_nodus_declarator_functi(ctx,
+                NODUS_EX(valori[ZEPHYRUM]),
+                LEXEMA_EX(valori[I]),
+                params,
+                LEXEMA_EX(valori[III]),
+                FALSUM, variadicus));
+        }
+
+        casus CXXX:   /* directus_declarator -> directus_declarator PAREN_APERTA VOID PAREN_CLAUSA */
+            redde VALOR_EX(_nodus_declarator_functi(ctx,
+                NODUS_EX(valori[ZEPHYRUM]),
+                LEXEMA_EX(valori[I]),
+                NIHIL,
+                LEXEMA_EX(valori[III]),
+                VERUM, FALSUM));
+
+        /* ---- Struct Specifier (P131-P136) ---- */
+        casus CXXXI:  /* STRUCT IDENTIFICATOR BRACE_APERTA struct_member_lista BRACE_CLAUSA */
+            redde VALOR_EX(_nodus_struct_specifier(ctx,
+                LEXEMA_EX(valori[ZEPHYRUM]),
+                _nodus_folium(ctx, ARBOR2_NODUS_IDENTIFICATOR, LEXEMA_EX(valori[I])),
+                LEXEMA_EX(valori[II]),
+                NODUS_EX(valori[III]),
+                LEXEMA_EX(valori[IV]),
+                FALSUM));
+
+        casus CXXXII: /* STRUCT BRACE_APERTA struct_member_lista BRACE_CLAUSA */
+            redde VALOR_EX(_nodus_struct_specifier(ctx,
+                LEXEMA_EX(valori[ZEPHYRUM]),
+                NIHIL,
+                LEXEMA_EX(valori[I]),
+                NODUS_EX(valori[II]),
+                LEXEMA_EX(valori[III]),
+                FALSUM));
+
+        casus CXXXIII: /* STRUCT IDENTIFICATOR (forward ref) */
+            redde VALOR_EX(_nodus_struct_specifier(ctx,
+                LEXEMA_EX(valori[ZEPHYRUM]),
+                _nodus_folium(ctx, ARBOR2_NODUS_IDENTIFICATOR, LEXEMA_EX(valori[I])),
+                NIHIL, NIHIL, NIHIL,
+                FALSUM));
+
+        casus CXXXIV: /* UNION IDENTIFICATOR BRACE_APERTA struct_member_lista BRACE_CLAUSA */
+            redde VALOR_EX(_nodus_struct_specifier(ctx,
+                LEXEMA_EX(valori[ZEPHYRUM]),
+                _nodus_folium(ctx, ARBOR2_NODUS_IDENTIFICATOR, LEXEMA_EX(valori[I])),
+                LEXEMA_EX(valori[II]),
+                NODUS_EX(valori[III]),
+                LEXEMA_EX(valori[IV]),
+                VERUM));
+
+        casus CXXXV:  /* UNION BRACE_APERTA struct_member_lista BRACE_CLAUSA */
+            redde VALOR_EX(_nodus_struct_specifier(ctx,
+                LEXEMA_EX(valori[ZEPHYRUM]),
+                NIHIL,
+                LEXEMA_EX(valori[I]),
+                NODUS_EX(valori[II]),
+                LEXEMA_EX(valori[III]),
+                VERUM));
+
+        casus CXXXVI: /* UNION IDENTIFICATOR (forward ref) */
+            redde VALOR_EX(_nodus_struct_specifier(ctx,
+                LEXEMA_EX(valori[ZEPHYRUM]),
+                _nodus_folium(ctx, ARBOR2_NODUS_IDENTIFICATOR, LEXEMA_EX(valori[I])),
+                NIHIL, NIHIL, NIHIL,
+                VERUM));
+
+        /* ---- Struct Member Lista (P137-P138) ---- */
+        casus CXXXVII: /* struct_member_lista -> struct_member */
+            redde valori[ZEPHYRUM];
+
+        casus CXXXVIII: /* struct_member_lista -> struct_member_lista struct_member */
+            redde VALOR_EX(_nodus_struct_member_append(ctx,
+                NODUS_EX(valori[ZEPHYRUM]),
+                NODUS_EX(valori[I])));
+
+        /* ---- Struct Member (P139) ---- */
+        casus CXXXIX: /* struct_member -> decl_specifiers struct_declarator_lista SEMICOLON */
+            redde VALOR_EX(_nodus_struct_member(ctx,
+                NODUS_EX(valori[ZEPHYRUM]),
+                NODUS_EX(valori[I]),
+                LEXEMA_EX(valori[II])));
+
+        /* ---- Struct Declarator Lista (P140-P141) ---- */
+        casus CXL:    /* struct_declarator_lista -> struct_declarator */
+            redde valori[ZEPHYRUM];
+
+        casus CXLI:   /* struct_declarator_lista -> struct_declarator_lista COMMA struct_declarator */
+            redde VALOR_EX(_nodus_lista_separata(ctx,
+                NODUS_EX(valori[ZEPHYRUM]),
+                LEXEMA_EX(valori[I]),
+                NODUS_EX(valori[II])));
+
+        /* ---- Struct Declarator (P142-P144) ---- */
+        casus CXLII:  /* struct_declarator -> declarator */
+            redde valori[ZEPHYRUM];
+
+        casus CXLIII: /* struct_declarator -> declarator COLON virga (bit field) */
+            redde VALOR_EX(_nodus_bit_field(ctx,
+                NODUS_EX(valori[ZEPHYRUM]),
+                LEXEMA_EX(valori[I]),
+                NODUS_EX(valori[II])));
+
+        casus CXLIV:  /* struct_declarator -> COLON virga (anonymous bit field) */
+            redde VALOR_EX(_nodus_anon_bit_field(ctx,
+                LEXEMA_EX(valori[ZEPHYRUM]),
+                NODUS_EX(valori[I])));
+
+        /* ---- Enum Specifier (P145-P147) ---- */
+        casus CXLV:   /* ENUM IDENTIFICATOR BRACE_APERTA enumerator_lista BRACE_CLAUSA */
+            redde VALOR_EX(_nodus_enum_specifier(ctx,
+                LEXEMA_EX(valori[ZEPHYRUM]),
+                _nodus_folium(ctx, ARBOR2_NODUS_IDENTIFICATOR, LEXEMA_EX(valori[I])),
+                LEXEMA_EX(valori[II]),
+                NODUS_EX(valori[III]),
+                LEXEMA_EX(valori[IV])));
+
+        casus CXLVI:  /* ENUM BRACE_APERTA enumerator_lista BRACE_CLAUSA */
+            redde VALOR_EX(_nodus_enum_specifier(ctx,
+                LEXEMA_EX(valori[ZEPHYRUM]),
+                NIHIL,
+                LEXEMA_EX(valori[I]),
+                NODUS_EX(valori[II]),
+                LEXEMA_EX(valori[III])));
+
+        casus CXLVII: /* ENUM IDENTIFICATOR (forward ref) */
+            redde VALOR_EX(_nodus_enum_specifier(ctx,
+                LEXEMA_EX(valori[ZEPHYRUM]),
+                _nodus_folium(ctx, ARBOR2_NODUS_IDENTIFICATOR, LEXEMA_EX(valori[I])),
+                NIHIL, NIHIL, NIHIL));
+
+        /* ---- Enumerator Lista (P148-P149) ---- */
+        casus CXLVIII: /* enumerator_lista -> enumerator */
+            redde valori[ZEPHYRUM];
+
+        casus CXLIX:   /* enumerator_lista -> enumerator_lista COMMA enumerator */
+            redde VALOR_EX(_nodus_lista_separata(ctx,
+                NODUS_EX(valori[ZEPHYRUM]),
+                LEXEMA_EX(valori[I]),
+                NODUS_EX(valori[II])));
+
+        /* ---- Enumerator (P150-P151) ---- */
+        casus CL:     /* enumerator -> IDENTIFICATOR */
+            redde VALOR_EX(_nodus_enumerator(ctx,
+                LEXEMA_EX(valori[ZEPHYRUM]),
+                NIHIL, NIHIL));
+
+        casus CLI:    /* enumerator -> IDENTIFICATOR ASSIGNATIO virga */
+            redde VALOR_EX(_nodus_enumerator(ctx,
+                LEXEMA_EX(valori[ZEPHYRUM]),
+                LEXEMA_EX(valori[I]),
+                NODUS_EX(valori[II])));
+
+        /* ---- Parameter Lista (P152-P154) ---- */
+        casus CLII:   /* parameter_lista -> parameter_decl */
+            redde valori[ZEPHYRUM];
+
+        casus CLIII:  /* parameter_lista -> parameter_lista COMMA parameter_decl */
+            redde VALOR_EX(_nodus_lista_separata(ctx,
+                NODUS_EX(valori[ZEPHYRUM]),
+                LEXEMA_EX(valori[I]),
+                NODUS_EX(valori[II])));
+
+        casus CLIV:   /* parameter_lista -> parameter_lista COMMA ELLIPSIS */
+        {
+            /* Marcare listam ut variadicam et addere ellipsis token */
+            Arbor2Nodus* lista = NODUS_EX(valori[ZEPHYRUM]);
+            Arbor2Nodus* nodus_param;
+
+            /* Creare PARAMETER_LIST wrapper si nondum est */
+            si (lista->genus != ARBOR2_NODUS_PARAMETER_LIST)
+            {
+                nodus_param = (Arbor2Nodus*)piscina_allocare(ctx->piscina,
+                    (memoriae_index)magnitudo(Arbor2Nodus));
+                memset(nodus_param, ZEPHYRUM, magnitudo(Arbor2Nodus));
+                nodus_param->genus = ARBOR2_NODUS_PARAMETER_LIST;
+                nodus_param->lexema = lista->lexema;
+                nodus_param->datum.parameter_list.parametra =
+                    xar_creare(ctx->piscina, (i32)magnitudo(Arbor2Nodus*));
+                /* Copiere elementa ex lista */
+                si (lista->genus == ARBOR2_NODUS_LISTA_SEPARATA)
+                {
+                    i32 i;
+                    per (i = ZEPHYRUM; i < (i32)xar_numerus(lista->datum.lista_separata.elementa); i++)
+                    {
+                        Arbor2Nodus** src = (Arbor2Nodus**)xar_obtinere(
+                            lista->datum.lista_separata.elementa, i);
+                        Arbor2Nodus** dst = (Arbor2Nodus**)xar_addere(
+                            nodus_param->datum.parameter_list.parametra);
+                        *dst = *src;
+                    }
+                }
+                alioquin
+                {
+                    Arbor2Nodus** dst = (Arbor2Nodus**)xar_addere(
+                        nodus_param->datum.parameter_list.parametra);
+                    *dst = lista;
+                }
+                nodus_param->linea_initium = lista->linea_initium;
+                nodus_param->columna_initium = lista->columna_initium;
+            }
+            alioquin
+            {
+                nodus_param = lista;
+            }
+            nodus_param->datum.parameter_list.est_variadicus = VERUM;
+            {
+                Arbor2Lexema* tok_ell = LEXEMA_EX(valori[II]);
+                nodus_param->linea_finis = tok_ell->linea;
+                nodus_param->columna_finis = tok_ell->columna + tok_ell->longitudo;
+            }
+            redde VALOR_EX(nodus_param);
+        }
+
+        /* ---- Parameter Decl (P155-P156) ---- */
+        casus CLV:    /* parameter_decl -> decl_specifiers declarator */
+            redde VALOR_EX(_nodus_parameter_decl(ctx,
+                NODUS_EX(valori[ZEPHYRUM]),
+                NODUS_EX(valori[I])));
+
+        casus CLVI:   /* parameter_decl -> decl_specifiers (abstract) */
+            redde VALOR_EX(_nodus_parameter_decl(ctx,
+                NODUS_EX(valori[ZEPHYRUM]),
+                NIHIL));
+
+        /* ---- Initializer (P157-P159) ---- */
+        casus CLVII:  /* initializer -> assignatio */
+            redde valori[ZEPHYRUM];
+
+        casus CLVIII: /* initializer -> BRACE_APERTA init_items BRACE_CLAUSA */
+            redde VALOR_EX(_nodus_initializor_lista(ctx,
+                LEXEMA_EX(valori[ZEPHYRUM]),
+                NODUS_EX(valori[I]),
+                LEXEMA_EX(valori[II])));
+
+        casus CLIX:   /* initializer -> BRACE_APERTA init_items COMMA BRACE_CLAUSA */
+            redde VALOR_EX(_nodus_initializor_lista(ctx,
+                LEXEMA_EX(valori[ZEPHYRUM]),
+                NODUS_EX(valori[I]),
+                LEXEMA_EX(valori[III])));
+
+        /* ---- Init Items (P160-P161) ---- */
+        casus CLX:    /* init_items -> initializer */
+            redde valori[ZEPHYRUM];
+
+        casus CLXI:   /* init_items -> init_items COMMA initializer */
+            redde VALOR_EX(_nodus_lista_separata(ctx,
+                NODUS_EX(valori[ZEPHYRUM]),
+                LEXEMA_EX(valori[I]),
+                NODUS_EX(valori[II])));
 
         /* ---- Productio Augmentata ---- */
         ordinarius:
-            /* __initium__ -> virga EOF */
+            /* __initium__ -> summum EOF */
             redde valori[ZEPHYRUM];
     }
 }
@@ -1294,7 +2525,7 @@ _tabulam_parare(vacuum)
     si (s_tabula) redde; /* Iam parata */
 
     s_grammatica_piscina = piscina_generare_dynamicum(
-        "lapifex_c89_grammatica", (memoriae_index)(MMMMXCVI * XVI));
+        "lapifex_c89_grammatica", (memoriae_index)(MMMMXCVI * XXXII));
     s_grammatica_intern = internamentum_creare(s_grammatica_piscina);
 
     s_grammatica = lapifex_grammaticam_legere(s_grammatica_piscina,
@@ -1404,6 +2635,97 @@ lapifex_c89_expressionem_parsare(
     si (fructus.numerus_fructuum < I)
     {
         fprintf(stderr, "lapifex_c89: nullus fructus\n");
+        redde NIHIL;
+    }
+
+    redde NODUS_EX(fructus.valori[ZEPHYRUM]);
+}
+
+/* ================================================
+ * API: Parsare declarationem
+ *
+ * Eadem pipeline ut expressionem_parsare, sed contextus
+ * via est "<declaratio>" et grammatica iam acceptat
+ * utramque (summum -> declaratio | virga).
+ * ================================================ */
+
+Arbor2Nodus*
+lapifex_c89_declarationem_parsare(
+    Piscina*              piscina,
+    InternamentumChorda*  intern,
+    constans character*   fons,
+    i32                   mensura)
+{
+    Arbor2Lexator*          lexator;
+    Xar*                    lexemata;
+    Arbor2LapifexAdaptator* adaptator;
+    Arbor2LapifexFructus    conv_fructus;
+    LapifexGLR*             glr;
+    LapifexGLRFructus       fructus;
+    LapifexC89Contextus     ctx;
+    chorda*                 via;
+
+    si (!piscina || !intern || !fons) redde NIHIL;
+
+    _tabulam_parare();
+    si (!s_tabula || !s_grammatica) redde NIHIL;
+
+    lexator = arbor2_lexator_creare(piscina, intern, fons, mensura);
+    si (!lexator)
+    {
+        fprintf(stderr, "lapifex_c89_decl: lexator non creatus\n");
+        redde NIHIL;
+    }
+
+    lexemata = arbor2_lexema_omnia(lexator);
+    si (!lexemata)
+    {
+        fprintf(stderr, "lapifex_c89_decl: lexemata non obtenta\n");
+        redde NIHIL;
+    }
+
+    adaptator = arbor2_lapifex_adaptator_creare(piscina, s_grammatica);
+    si (!adaptator)
+    {
+        fprintf(stderr, "lapifex_c89_decl: adaptator non creatus\n");
+        redde NIHIL;
+    }
+
+    conv_fructus = arbor2_lapifex_convertere(adaptator, lexemata);
+    si (!conv_fructus.successus)
+    {
+        fprintf(stderr, "lapifex_c89_decl: conversio fracta\n");
+        redde NIHIL;
+    }
+
+    glr = lapifex_glr_creare(piscina, s_tabula);
+    si (!glr)
+    {
+        fprintf(stderr, "lapifex_c89_decl: GLR motor non creatus\n");
+        redde NIHIL;
+    }
+
+    via = chorda_internare_ex_literis(intern, "<declaratio>");
+    ctx.piscina = piscina;
+    ctx.intern = intern;
+    ctx.via_file = via;
+
+    fructus = lapifex_glr_parsare(glr,
+        conv_fructus.signa, conv_fructus.numerus,
+        lapifex_c89_expressio_reductio, &ctx);
+
+    si (!fructus.successus)
+    {
+        fprintf(stderr, "lapifex_c89_decl: parsatio fracta (status=%d, term=%d, pos=%d)\n",
+            (int)fructus.error.status,
+            (int)fructus.error.terminalis,
+            (int)fructus.error.positio);
+        redde NIHIL;
+    }
+
+    si (fructus.numerus_fructuum < I)
+    {
+        fprintf(stderr, "lapifex_c89_decl: nullus fructus\n");
         redde NIHIL;
     }
 
