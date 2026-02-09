@@ -70,3 +70,48 @@ P90–P93 changed from simple passthrough to building Xar pointer chains via `_p
 - 30 declaration tests, 112 assertions — all pass
 - 25 expression tests, 120 assertions — all pass (no regression)
 - Table build time: ~3s (up from ~2s with expression-only grammar)
+
+## 2026-02-09 — Statement Grammar (M2.5)
+
+### Overview
+Extended C89 grammar from 162 to 203 productions to parse statements. Start symbol `summum` now accepts expressions, declarations, and statements. Augmented production is now P203.
+
+### New Productions (P96, P163–P202)
+- P96: `summum → sententia` (3rd alternative, shifted all M2.4 declarations by +1)
+- P163–P164: `sententia → sententia_compar | sententia_incompar`
+- P165–P171: `sententia_compar` (matched statements: non_si, if-else balanced, while, for, label, case, default)
+- P172–P178: `sententia_incompar` (unmatched: dangling-else variants)
+- P179–P188: `non_si_sententia` (corpus, expr;, ;, do-while, switch, goto, continue, break, return;, return expr;)
+- P189–P190: `corpus` (empty block, block with body)
+- P191–P192: `elenchus_corporis` (single element, append)
+- P193–P194: `elementum_corporis` (declaration or statement)
+- P195–P202: `per_clausula` (8 for-loop variants: all combinations of optional init/cond/incr)
+
+### New Terminals Added to STML
+IF, ELSE, WHILE, DO, FOR, SWITCH, CASE, DEFAULT, BREAK, CONTINUE, RETURN, GOTO
+
+### Helper Functions (16+ new)
+`_nodus_si`, `_nodus_dum`, `_nodus_fac_dum`, `_nodus_per`, `_nodus_commutatio`, `_nodus_redde`, `_nodus_salta`, `_nodus_frange`, `_nodus_perge`, `_nodus_sententia_expr`, `_nodus_sententia_vacua`, `_nodus_corpus`, `_nodus_corpus_append`, `_nodus_titulatum`, `_nodus_casus`, `_nodus_ordinarius`, `_per_clausula_creare`
+
+### Dangling-Else Resolution
+Used classical matched/unmatched (compar/incompar) grammar transformation. Every statement position that could create dangling-else ambiguity is split into two non-terminals: `sententia_compar` (all if-branches balanced with else) and `sententia_incompar` (has a dangling else somewhere). Grammar is LR(1) unambiguous; LALR(1) generates no conflicts.
+
+### Key Design Decisions
+1. **Production renumbering**: Adding P96 `summum → sententia` shifted all existing M2.4 declaration productions by +1 (old P96→P97 through P161→P162). All case labels in the reduction callback were updated.
+2. **elenchus_corporis accumulation**: Uses a wrapper Arbor2Nodus with genus marker `0xDEAD` to distinguish between a single AST node and a Xar* collection. `_nodus_corpus` extracts the Xar from the wrapper or wraps a single node into a new Xar. Fragile but works within the s64-value-only GLR reduction system.
+3. **PerClausula struct**: Intermediate struct to pack for-loop clause components (init/cond/incr + semicolon tokens). Allocated from arena, cast to Arbor2Nodus* to pass through the s64 value system, then unpacked in `_nodus_per`.
+4. **C99-style interleaving**: `elementum_corporis → declaratio | sententia` allows declarations and statements to interleave freely. Semantic C89 ordering check can be added later.
+5. **IDENTIFICATOR COLON conflict**: GLR engine forks on shift-reduce conflict (label vs expression start); only the correct parse survives.
+
+### Bug Found & Fixed
+`_nodus_corpus` and `_nodus_corpus_append` had a bug where the 0xDEAD wrapper's Xar* was extracted by blind pointer cast instead of accessing `wrapper->datum.corpus.sententiae`. Fixed to correctly handle both single-node (wrap in new Xar) and wrapper-node (extract existing Xar) cases.
+
+### New API
+`lapifex_c89_sententiam_parsare()` — parses a C89 statement from source text, returns AST root.
+
+### Test Results
+- 30 statement tests, 148 assertions — all pass
+- 30 declaration tests, 112 assertions — all pass (no regression)
+- 25 expression tests, 120 assertions — all pass (no regression)
+- All 10 lapifex tests pass
+- Table build time: ~7s (up from ~3s with expression+declaration grammar)

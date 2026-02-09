@@ -136,6 +136,20 @@ hic_manens constans character* GRAMMATICA_EXPRESSIO =
     "    <terminalis titulus=\"BRACE_APERTA\"/>"
     "    <terminalis titulus=\"BRACE_CLAUSA\"/>"
 
+    /* Verba Clavium Sententiarum */
+    "    <terminalis titulus=\"IF\"/>"
+    "    <terminalis titulus=\"ELSE\"/>"
+    "    <terminalis titulus=\"WHILE\"/>"
+    "    <terminalis titulus=\"DO\"/>"
+    "    <terminalis titulus=\"FOR\"/>"
+    "    <terminalis titulus=\"SWITCH\"/>"
+    "    <terminalis titulus=\"CASE\"/>"
+    "    <terminalis titulus=\"DEFAULT\"/>"
+    "    <terminalis titulus=\"BREAK\"/>"
+    "    <terminalis titulus=\"CONTINUE\"/>"
+    "    <terminalis titulus=\"RETURN\"/>"
+    "    <terminalis titulus=\"GOTO\"/>"
+
     /* Ellipsis */
     "    <terminalis titulus=\"ELLIPSIS\"/>"
 
@@ -325,142 +339,217 @@ hic_manens constans character* GRAMMATICA_EXPRESSIO =
 
     /* ---- Declarationes (P94+) ---- */
 
-    /* P94-P95: summum (novum initium) */
+    /* P94-P96: summum (novum initium) */
     "    <regula titulus=\"summum\">"
     "      <productio>declaratio</productio>"                           /* P94 */
     "      <productio>virga</productio>"                                /* P95 */
+    "      <productio>sententia</productio>"                            /* P96 */
     "    </regula>"
 
-    /* P96-P97: declaratio */
+    /* P97-P98: declaratio */
     "    <regula titulus=\"declaratio\">"
-    "      <productio>decl_specifiers init_declarator_lista SEMICOLON</productio>" /* P96 */
-    "      <productio>decl_specifiers SEMICOLON</productio>"            /* P97 */
+    "      <productio>decl_specifiers init_declarator_lista SEMICOLON</productio>" /* P97 */
+    "      <productio>decl_specifiers SEMICOLON</productio>"            /* P98 */
     "    </regula>"
 
-    /* P98-P117: decl_specifiers */
+    /* P99-P118: decl_specifiers */
     "    <regula titulus=\"decl_specifiers\">"
-    "      <productio>decl_specifier</productio>"                       /* P98 */
-    "      <productio>decl_specifiers decl_specifier</productio>"       /* P99 */
+    "      <productio>decl_specifier</productio>"                       /* P99 */
+    "      <productio>decl_specifiers decl_specifier</productio>"       /* P100 */
     "    </regula>"
 
     "    <regula titulus=\"decl_specifier\">"
-    "      <productio>AUTO</productio>"                                 /* P100 */
-    "      <productio>REGISTER</productio>"                             /* P101 */
-    "      <productio>STATIC</productio>"                               /* P102 */
-    "      <productio>EXTERN</productio>"                               /* P103 */
-    "      <productio>TYPEDEF</productio>"                              /* P104 */
-    "      <productio>CONST</productio>"                                /* P105 */
-    "      <productio>VOLATILE</productio>"                             /* P106 */
-    "      <productio>VOID</productio>"                                 /* P107 */
-    "      <productio>CHAR</productio>"                                 /* P108 */
-    "      <productio>SHORT</productio>"                                /* P109 */
-    "      <productio>INT</productio>"                                  /* P110 */
-    "      <productio>LONG</productio>"                                 /* P111 */
-    "      <productio>FLOAT</productio>"                                /* P112 */
-    "      <productio>DOUBLE</productio>"                               /* P113 */
-    "      <productio>SIGNED</productio>"                               /* P114 */
-    "      <productio>UNSIGNED</productio>"                             /* P115 */
-    "      <productio>struct_specifier</productio>"                     /* P116 */
-    "      <productio>enum_specifier</productio>"                       /* P117 */
+    "      <productio>AUTO</productio>"                                 /* P101 */
+    "      <productio>REGISTER</productio>"                             /* P102 */
+    "      <productio>STATIC</productio>"                               /* P103 */
+    "      <productio>EXTERN</productio>"                               /* P104 */
+    "      <productio>TYPEDEF</productio>"                              /* P105 */
+    "      <productio>CONST</productio>"                                /* P106 */
+    "      <productio>VOLATILE</productio>"                             /* P107 */
+    "      <productio>VOID</productio>"                                 /* P108 */
+    "      <productio>CHAR</productio>"                                 /* P109 */
+    "      <productio>SHORT</productio>"                                /* P110 */
+    "      <productio>INT</productio>"                                  /* P111 */
+    "      <productio>LONG</productio>"                                 /* P112 */
+    "      <productio>FLOAT</productio>"                                /* P113 */
+    "      <productio>DOUBLE</productio>"                               /* P114 */
+    "      <productio>SIGNED</productio>"                               /* P115 */
+    "      <productio>UNSIGNED</productio>"                             /* P116 */
+    "      <productio>struct_specifier</productio>"                     /* P117 */
+    "      <productio>enum_specifier</productio>"                       /* P118 */
     "    </regula>"
 
-    /* P118-P121: init_declarator_lista et init_declarator */
+    /* P119-P122: init_declarator_lista et init_declarator */
     "    <regula titulus=\"init_declarator_lista\">"
-    "      <productio>init_declarator</productio>"                      /* P118 */
-    "      <productio>init_declarator_lista COMMA init_declarator</productio>" /* P119 */
+    "      <productio>init_declarator</productio>"                      /* P119 */
+    "      <productio>init_declarator_lista COMMA init_declarator</productio>" /* P120 */
     "    </regula>"
 
     "    <regula titulus=\"init_declarator\">"
-    "      <productio>declarator</productio>"                           /* P120 */
-    "      <productio>declarator ASSIGNATIO initializer</productio>"    /* P121 */
+    "      <productio>declarator</productio>"                           /* P121 */
+    "      <productio>declarator ASSIGNATIO initializer</productio>"    /* P122 */
     "    </regula>"
 
-    /* P122-P130: declarator et directus_declarator */
+    /* P123-P131: declarator et directus_declarator */
     "    <regula titulus=\"declarator\">"
-    "      <productio>directus_declarator</productio>"                  /* P122 */
-    "      <productio>pointer directus_declarator</productio>"          /* P123 */
+    "      <productio>directus_declarator</productio>"                  /* P123 */
+    "      <productio>pointer directus_declarator</productio>"          /* P124 */
     "    </regula>"
 
     "    <regula titulus=\"directus_declarator\">"
-    "      <productio>IDENTIFICATOR</productio>"                        /* P124 */
-    "      <productio>PAREN_APERTA declarator PAREN_CLAUSA</productio>" /* P125 */
-    "      <productio>directus_declarator BRACKET_APERTA BRACKET_CLAUSA</productio>" /* P126 */
-    "      <productio>directus_declarator BRACKET_APERTA virga BRACKET_CLAUSA</productio>" /* P127 */
-    "      <productio>directus_declarator PAREN_APERTA PAREN_CLAUSA</productio>" /* P128 */
-    "      <productio>directus_declarator PAREN_APERTA parameter_lista PAREN_CLAUSA</productio>" /* P129 */
-    "      <productio>directus_declarator PAREN_APERTA VOID PAREN_CLAUSA</productio>" /* P130 */
+    "      <productio>IDENTIFICATOR</productio>"                        /* P125 */
+    "      <productio>PAREN_APERTA declarator PAREN_CLAUSA</productio>" /* P126 */
+    "      <productio>directus_declarator BRACKET_APERTA BRACKET_CLAUSA</productio>" /* P127 */
+    "      <productio>directus_declarator BRACKET_APERTA virga BRACKET_CLAUSA</productio>" /* P128 */
+    "      <productio>directus_declarator PAREN_APERTA PAREN_CLAUSA</productio>" /* P129 */
+    "      <productio>directus_declarator PAREN_APERTA parameter_lista PAREN_CLAUSA</productio>" /* P130 */
+    "      <productio>directus_declarator PAREN_APERTA VOID PAREN_CLAUSA</productio>" /* P131 */
     "    </regula>"
 
-    /* P131-P136: struct_specifier (struct et union) */
+    /* P132-P137: struct_specifier (struct et union) */
     "    <regula titulus=\"struct_specifier\">"
-    "      <productio>STRUCT IDENTIFICATOR BRACE_APERTA struct_member_lista BRACE_CLAUSA</productio>" /* P131 */
-    "      <productio>STRUCT BRACE_APERTA struct_member_lista BRACE_CLAUSA</productio>" /* P132 */
-    "      <productio>STRUCT IDENTIFICATOR</productio>"                 /* P133 */
-    "      <productio>UNION IDENTIFICATOR BRACE_APERTA struct_member_lista BRACE_CLAUSA</productio>" /* P134 */
-    "      <productio>UNION BRACE_APERTA struct_member_lista BRACE_CLAUSA</productio>" /* P135 */
-    "      <productio>UNION IDENTIFICATOR</productio>"                  /* P136 */
+    "      <productio>STRUCT IDENTIFICATOR BRACE_APERTA struct_member_lista BRACE_CLAUSA</productio>" /* P132 */
+    "      <productio>STRUCT BRACE_APERTA struct_member_lista BRACE_CLAUSA</productio>" /* P133 */
+    "      <productio>STRUCT IDENTIFICATOR</productio>"                 /* P134 */
+    "      <productio>UNION IDENTIFICATOR BRACE_APERTA struct_member_lista BRACE_CLAUSA</productio>" /* P135 */
+    "      <productio>UNION BRACE_APERTA struct_member_lista BRACE_CLAUSA</productio>" /* P136 */
+    "      <productio>UNION IDENTIFICATOR</productio>"                  /* P137 */
     "    </regula>"
 
-    /* P137-P144: struct_member_lista, struct_member, struct_declarator */
+    /* P138-P145: struct_member_lista, struct_member, struct_declarator */
     "    <regula titulus=\"struct_member_lista\">"
-    "      <productio>struct_member</productio>"                        /* P137 */
-    "      <productio>struct_member_lista struct_member</productio>"    /* P138 */
+    "      <productio>struct_member</productio>"                        /* P138 */
+    "      <productio>struct_member_lista struct_member</productio>"    /* P139 */
     "    </regula>"
 
     "    <regula titulus=\"struct_member\">"
-    "      <productio>decl_specifiers struct_declarator_lista SEMICOLON</productio>" /* P139 */
+    "      <productio>decl_specifiers struct_declarator_lista SEMICOLON</productio>" /* P140 */
     "    </regula>"
 
     "    <regula titulus=\"struct_declarator_lista\">"
-    "      <productio>struct_declarator</productio>"                    /* P140 */
-    "      <productio>struct_declarator_lista COMMA struct_declarator</productio>" /* P141 */
+    "      <productio>struct_declarator</productio>"                    /* P141 */
+    "      <productio>struct_declarator_lista COMMA struct_declarator</productio>" /* P142 */
     "    </regula>"
 
     "    <regula titulus=\"struct_declarator\">"
-    "      <productio>declarator</productio>"                           /* P142 */
-    "      <productio>declarator COLON virga</productio>"               /* P143 */
-    "      <productio>COLON virga</productio>"                          /* P144 */
+    "      <productio>declarator</productio>"                           /* P143 */
+    "      <productio>declarator COLON virga</productio>"               /* P144 */
+    "      <productio>COLON virga</productio>"                          /* P145 */
     "    </regula>"
 
-    /* P145-P151: enum_specifier, enumerator_lista, enumerator */
+    /* P146-P152: enum_specifier, enumerator_lista, enumerator */
     "    <regula titulus=\"enum_specifier\">"
-    "      <productio>ENUM IDENTIFICATOR BRACE_APERTA enumerator_lista BRACE_CLAUSA</productio>" /* P145 */
-    "      <productio>ENUM BRACE_APERTA enumerator_lista BRACE_CLAUSA</productio>" /* P146 */
-    "      <productio>ENUM IDENTIFICATOR</productio>"                   /* P147 */
+    "      <productio>ENUM IDENTIFICATOR BRACE_APERTA enumerator_lista BRACE_CLAUSA</productio>" /* P146 */
+    "      <productio>ENUM BRACE_APERTA enumerator_lista BRACE_CLAUSA</productio>" /* P147 */
+    "      <productio>ENUM IDENTIFICATOR</productio>"                   /* P148 */
     "    </regula>"
 
     "    <regula titulus=\"enumerator_lista\">"
-    "      <productio>enumerator</productio>"                           /* P148 */
-    "      <productio>enumerator_lista COMMA enumerator</productio>"    /* P149 */
+    "      <productio>enumerator</productio>"                           /* P149 */
+    "      <productio>enumerator_lista COMMA enumerator</productio>"    /* P150 */
     "    </regula>"
 
     "    <regula titulus=\"enumerator\">"
-    "      <productio>IDENTIFICATOR</productio>"                        /* P150 */
-    "      <productio>IDENTIFICATOR ASSIGNATIO virga</productio>"       /* P151 */
+    "      <productio>IDENTIFICATOR</productio>"                        /* P151 */
+    "      <productio>IDENTIFICATOR ASSIGNATIO virga</productio>"       /* P152 */
     "    </regula>"
 
-    /* P152-P156: parameter_lista, parameter_decl */
+    /* P153-P157: parameter_lista, parameter_decl */
     "    <regula titulus=\"parameter_lista\">"
-    "      <productio>parameter_decl</productio>"                       /* P152 */
-    "      <productio>parameter_lista COMMA parameter_decl</productio>" /* P153 */
-    "      <productio>parameter_lista COMMA ELLIPSIS</productio>"       /* P154 */
+    "      <productio>parameter_decl</productio>"                       /* P153 */
+    "      <productio>parameter_lista COMMA parameter_decl</productio>" /* P154 */
+    "      <productio>parameter_lista COMMA ELLIPSIS</productio>"       /* P155 */
     "    </regula>"
 
     "    <regula titulus=\"parameter_decl\">"
-    "      <productio>decl_specifiers declarator</productio>"           /* P155 */
-    "      <productio>decl_specifiers</productio>"                      /* P156 */
+    "      <productio>decl_specifiers declarator</productio>"           /* P156 */
+    "      <productio>decl_specifiers</productio>"                      /* P157 */
     "    </regula>"
 
-    /* P157-P161: initializer, init_items */
+    /* P158-P162: initializer, init_items */
     "    <regula titulus=\"initializer\">"
-    "      <productio>assignatio</productio>"                           /* P157 */
-    "      <productio>BRACE_APERTA init_items BRACE_CLAUSA</productio>" /* P158 */
-    "      <productio>BRACE_APERTA init_items COMMA BRACE_CLAUSA</productio>" /* P159 */
+    "      <productio>assignatio</productio>"                           /* P158 */
+    "      <productio>BRACE_APERTA init_items BRACE_CLAUSA</productio>" /* P159 */
+    "      <productio>BRACE_APERTA init_items COMMA BRACE_CLAUSA</productio>" /* P160 */
     "    </regula>"
 
     "    <regula titulus=\"init_items\">"
-    "      <productio>initializer</productio>"                          /* P160 */
-    "      <productio>init_items COMMA initializer</productio>"         /* P161 */
+    "      <productio>initializer</productio>"                          /* P161 */
+    "      <productio>init_items COMMA initializer</productio>"         /* P162 */
+    "    </regula>"
+
+    /* ---- Sententiae (P163+) ---- */
+
+    /* P163-P164: sententia -> compar | incompar */
+    "    <regula titulus=\"sententia\">"
+    "      <productio>sententia_compar</productio>"                     /* P163 */
+    "      <productio>sententia_incompar</productio>"                   /* P164 */
+    "    </regula>"
+
+    /* P165-P171: sententia_compar (matched statements) */
+    "    <regula titulus=\"sententia_compar\">"
+    "      <productio>non_si_sententia</productio>"                     /* P165 */
+    "      <productio>IF PAREN_APERTA virga PAREN_CLAUSA sententia_compar ELSE sententia_compar</productio>" /* P166 */
+    "      <productio>WHILE PAREN_APERTA virga PAREN_CLAUSA sententia_compar</productio>" /* P167 */
+    "      <productio>FOR PAREN_APERTA per_clausula PAREN_CLAUSA sententia_compar</productio>" /* P168 */
+    "      <productio>IDENTIFICATOR COLON sententia_compar</productio>" /* P169 */
+    "      <productio>CASE virga COLON sententia_compar</productio>"    /* P170 */
+    "      <productio>DEFAULT COLON sententia_compar</productio>"       /* P171 */
+    "    </regula>"
+
+    /* P172-P178: sententia_incompar (unmatched statements) */
+    "    <regula titulus=\"sententia_incompar\">"
+    "      <productio>IF PAREN_APERTA virga PAREN_CLAUSA sententia</productio>" /* P172 */
+    "      <productio>IF PAREN_APERTA virga PAREN_CLAUSA sententia_compar ELSE sententia_incompar</productio>" /* P173 */
+    "      <productio>WHILE PAREN_APERTA virga PAREN_CLAUSA sententia_incompar</productio>" /* P174 */
+    "      <productio>FOR PAREN_APERTA per_clausula PAREN_CLAUSA sententia_incompar</productio>" /* P175 */
+    "      <productio>IDENTIFICATOR COLON sententia_incompar</productio>" /* P176 */
+    "      <productio>CASE virga COLON sententia_incompar</productio>"  /* P177 */
+    "      <productio>DEFAULT COLON sententia_incompar</productio>"     /* P178 */
+    "    </regula>"
+
+    /* P179-P188: non_si_sententia (non-if matched statements) */
+    "    <regula titulus=\"non_si_sententia\">"
+    "      <productio>corpus</productio>"                               /* P179 */
+    "      <productio>virga SEMICOLON</productio>"                      /* P180 */
+    "      <productio>SEMICOLON</productio>"                            /* P181 */
+    "      <productio>DO sententia WHILE PAREN_APERTA virga PAREN_CLAUSA SEMICOLON</productio>" /* P182 */
+    "      <productio>SWITCH PAREN_APERTA virga PAREN_CLAUSA sententia</productio>" /* P183 */
+    "      <productio>GOTO IDENTIFICATOR SEMICOLON</productio>"         /* P184 */
+    "      <productio>CONTINUE SEMICOLON</productio>"                   /* P185 */
+    "      <productio>BREAK SEMICOLON</productio>"                      /* P186 */
+    "      <productio>RETURN SEMICOLON</productio>"                     /* P187 */
+    "      <productio>RETURN virga SEMICOLON</productio>"               /* P188 */
+    "    </regula>"
+
+    /* P189-P190: corpus (compound statement) */
+    "    <regula titulus=\"corpus\">"
+    "      <productio>BRACE_APERTA BRACE_CLAUSA</productio>"           /* P189 */
+    "      <productio>BRACE_APERTA elenchus_corporis BRACE_CLAUSA</productio>" /* P190 */
+    "    </regula>"
+
+    /* P191-P192: elenchus_corporis */
+    "    <regula titulus=\"elenchus_corporis\">"
+    "      <productio>elementum_corporis</productio>"                   /* P191 */
+    "      <productio>elenchus_corporis elementum_corporis</productio>" /* P192 */
+    "    </regula>"
+
+    /* P193-P194: elementum_corporis */
+    "    <regula titulus=\"elementum_corporis\">"
+    "      <productio>declaratio</productio>"                           /* P193 */
+    "      <productio>sententia</productio>"                            /* P194 */
+    "    </regula>"
+
+    /* P195-P202: per_clausula (for-loop clauses) */
+    "    <regula titulus=\"per_clausula\">"
+    "      <productio>virga SEMICOLON virga SEMICOLON virga</productio>" /* P195 */
+    "      <productio>virga SEMICOLON virga SEMICOLON</productio>"      /* P196 */
+    "      <productio>virga SEMICOLON SEMICOLON virga</productio>"      /* P197 */
+    "      <productio>SEMICOLON virga SEMICOLON virga</productio>"      /* P198 */
+    "      <productio>virga SEMICOLON SEMICOLON</productio>"            /* P199 */
+    "      <productio>SEMICOLON virga SEMICOLON</productio>"            /* P200 */
+    "      <productio>SEMICOLON SEMICOLON virga</productio>"            /* P201 */
+    "      <productio>SEMICOLON SEMICOLON</productio>"                  /* P202 */
     "    </regula>"
 
     "  </regulae>"
@@ -1577,6 +1666,602 @@ _nodus_anon_bit_field(
 }
 
 /* ================================================
+ * Functiones Auxiliares pro Sententiis
+ * ================================================ */
+
+/* PerClausula: structura interna pro for-loop clausulis */
+nomen structura {
+    Arbor2Nodus*  initium;
+    Arbor2Lexema* tok_semicolon1;
+    Arbor2Nodus*  conditio;
+    Arbor2Lexema* tok_semicolon2;
+    Arbor2Nodus*  incrementum;
+} PerClausula;
+
+/* Creare nodum SI (if statement) */
+hic_manens Arbor2Nodus*
+_nodus_si(
+    LapifexC89Contextus*  ctx,
+    Arbor2Lexema*         tok_si,
+    Arbor2Lexema*         tok_pa,
+    Arbor2Nodus*          conditio,
+    Arbor2Lexema*         tok_pc,
+    Arbor2Nodus*          consequens,
+    Arbor2Lexema*         tok_alioquin,
+    Arbor2Nodus*          alternans)
+{
+    Arbor2Nodus* nodus;
+
+    nodus = (Arbor2Nodus*)piscina_allocare(ctx->piscina,
+        (memoriae_index)magnitudo(Arbor2Nodus));
+    memset(nodus, ZEPHYRUM, magnitudo(Arbor2Nodus));
+
+    nodus->genus = ARBOR2_NODUS_SI;
+    nodus->lexema = _token_ex_lexema(ctx, tok_si);
+    nodus->datum.conditionale.tok_si = nodus->lexema;
+    nodus->datum.conditionale.tok_paren_ap = _token_ex_lexema(ctx, tok_pa);
+    nodus->datum.conditionale.conditio = conditio;
+    nodus->datum.conditionale.tok_paren_cl = _token_ex_lexema(ctx, tok_pc);
+    nodus->datum.conditionale.consequens = consequens;
+    nodus->datum.conditionale.tok_alioquin =
+        tok_alioquin ? _token_ex_lexema(ctx, tok_alioquin) : NIHIL;
+    nodus->datum.conditionale.alternans = alternans;
+
+    conditio->pater = nodus;
+    consequens->pater = nodus;
+    si (alternans) alternans->pater = nodus;
+
+    nodus->linea_initium = tok_si->linea;
+    nodus->columna_initium = tok_si->columna;
+    si (alternans)
+    {
+        nodus->linea_finis = alternans->linea_finis;
+        nodus->columna_finis = alternans->columna_finis;
+    }
+    alioquin
+    {
+        nodus->linea_finis = consequens->linea_finis;
+        nodus->columna_finis = consequens->columna_finis;
+    }
+
+    redde nodus;
+}
+
+/* Creare nodum DUM (while statement) */
+hic_manens Arbor2Nodus*
+_nodus_dum(
+    LapifexC89Contextus*  ctx,
+    Arbor2Lexema*         tok_dum,
+    Arbor2Lexema*         tok_pa,
+    Arbor2Nodus*          conditio,
+    Arbor2Lexema*         tok_pc,
+    Arbor2Nodus*          corpus)
+{
+    Arbor2Nodus* nodus;
+
+    nodus = (Arbor2Nodus*)piscina_allocare(ctx->piscina,
+        (memoriae_index)magnitudo(Arbor2Nodus));
+    memset(nodus, ZEPHYRUM, magnitudo(Arbor2Nodus));
+
+    nodus->genus = ARBOR2_NODUS_DUM;
+    nodus->lexema = _token_ex_lexema(ctx, tok_dum);
+    nodus->datum.iteratio.tok_fac = NIHIL;
+    nodus->datum.iteratio.tok_dum = nodus->lexema;
+    nodus->datum.iteratio.tok_paren_ap = _token_ex_lexema(ctx, tok_pa);
+    nodus->datum.iteratio.conditio = conditio;
+    nodus->datum.iteratio.tok_paren_cl = _token_ex_lexema(ctx, tok_pc);
+    nodus->datum.iteratio.corpus = corpus;
+    nodus->datum.iteratio.tok_semicolon = NIHIL;
+
+    conditio->pater = nodus;
+    corpus->pater = nodus;
+
+    nodus->linea_initium = tok_dum->linea;
+    nodus->columna_initium = tok_dum->columna;
+    nodus->linea_finis = corpus->linea_finis;
+    nodus->columna_finis = corpus->columna_finis;
+
+    redde nodus;
+}
+
+/* Creare nodum FAC (do-while statement) */
+hic_manens Arbor2Nodus*
+_nodus_fac_dum(
+    LapifexC89Contextus*  ctx,
+    Arbor2Lexema*         tok_fac,
+    Arbor2Nodus*          corpus,
+    Arbor2Lexema*         tok_dum,
+    Arbor2Lexema*         tok_pa,
+    Arbor2Nodus*          conditio,
+    Arbor2Lexema*         tok_pc,
+    Arbor2Lexema*         tok_semi)
+{
+    Arbor2Nodus* nodus;
+
+    nodus = (Arbor2Nodus*)piscina_allocare(ctx->piscina,
+        (memoriae_index)magnitudo(Arbor2Nodus));
+    memset(nodus, ZEPHYRUM, magnitudo(Arbor2Nodus));
+
+    nodus->genus = ARBOR2_NODUS_FAC;
+    nodus->lexema = _token_ex_lexema(ctx, tok_fac);
+    nodus->datum.iteratio.tok_fac = nodus->lexema;
+    nodus->datum.iteratio.tok_dum = _token_ex_lexema(ctx, tok_dum);
+    nodus->datum.iteratio.tok_paren_ap = _token_ex_lexema(ctx, tok_pa);
+    nodus->datum.iteratio.conditio = conditio;
+    nodus->datum.iteratio.tok_paren_cl = _token_ex_lexema(ctx, tok_pc);
+    nodus->datum.iteratio.corpus = corpus;
+    nodus->datum.iteratio.tok_semicolon = _token_ex_lexema(ctx, tok_semi);
+
+    corpus->pater = nodus;
+    conditio->pater = nodus;
+
+    nodus->linea_initium = tok_fac->linea;
+    nodus->columna_initium = tok_fac->columna;
+    nodus->linea_finis = tok_semi->linea;
+    nodus->columna_finis = tok_semi->columna + tok_semi->longitudo;
+
+    redde nodus;
+}
+
+/* Creare nodum PER (for statement) ex PerClausula */
+hic_manens Arbor2Nodus*
+_nodus_per(
+    LapifexC89Contextus*  ctx,
+    Arbor2Lexema*         tok_per,
+    Arbor2Lexema*         tok_pa,
+    Arbor2Nodus*          clausula_nodus,
+    Arbor2Lexema*         tok_pc,
+    Arbor2Nodus*          corpus)
+{
+    Arbor2Nodus* nodus;
+    PerClausula* clausula = (PerClausula*)(vacuum*)(longus)
+        ((s64)(longus)(vacuum*)clausula_nodus);
+
+    nodus = (Arbor2Nodus*)piscina_allocare(ctx->piscina,
+        (memoriae_index)magnitudo(Arbor2Nodus));
+    memset(nodus, ZEPHYRUM, magnitudo(Arbor2Nodus));
+
+    nodus->genus = ARBOR2_NODUS_PER;
+    nodus->lexema = _token_ex_lexema(ctx, tok_per);
+    nodus->datum.circuitus.tok_per = nodus->lexema;
+    nodus->datum.circuitus.tok_paren_ap = _token_ex_lexema(ctx, tok_pa);
+    nodus->datum.circuitus.initium = clausula->initium;
+    nodus->datum.circuitus.tok_semicolon1 = _token_ex_lexema(ctx, clausula->tok_semicolon1);
+    nodus->datum.circuitus.conditio = clausula->conditio;
+    nodus->datum.circuitus.tok_semicolon2 = _token_ex_lexema(ctx, clausula->tok_semicolon2);
+    nodus->datum.circuitus.incrementum = clausula->incrementum;
+    nodus->datum.circuitus.tok_paren_cl = _token_ex_lexema(ctx, tok_pc);
+    nodus->datum.circuitus.corpus = corpus;
+
+    si (clausula->initium) clausula->initium->pater = nodus;
+    si (clausula->conditio) clausula->conditio->pater = nodus;
+    si (clausula->incrementum) clausula->incrementum->pater = nodus;
+    corpus->pater = nodus;
+
+    nodus->linea_initium = tok_per->linea;
+    nodus->columna_initium = tok_per->columna;
+    nodus->linea_finis = corpus->linea_finis;
+    nodus->columna_finis = corpus->columna_finis;
+
+    redde nodus;
+}
+
+/* Creare nodum COMMUTATIO (switch statement) */
+hic_manens Arbor2Nodus*
+_nodus_commutatio(
+    LapifexC89Contextus*  ctx,
+    Arbor2Lexema*         tok_sw,
+    Arbor2Lexema*         tok_pa,
+    Arbor2Nodus*          expressio,
+    Arbor2Lexema*         tok_pc,
+    Arbor2Nodus*          corpus)
+{
+    Arbor2Nodus* nodus;
+
+    nodus = (Arbor2Nodus*)piscina_allocare(ctx->piscina,
+        (memoriae_index)magnitudo(Arbor2Nodus));
+    memset(nodus, ZEPHYRUM, magnitudo(Arbor2Nodus));
+
+    nodus->genus = ARBOR2_NODUS_COMMUTATIO;
+    nodus->lexema = _token_ex_lexema(ctx, tok_sw);
+    nodus->datum.selectivum.tok_commutatio = nodus->lexema;
+    nodus->datum.selectivum.tok_paren_ap = _token_ex_lexema(ctx, tok_pa);
+    nodus->datum.selectivum.expressio = expressio;
+    nodus->datum.selectivum.tok_paren_cl = _token_ex_lexema(ctx, tok_pc);
+    nodus->datum.selectivum.corpus = corpus;
+
+    expressio->pater = nodus;
+    corpus->pater = nodus;
+
+    nodus->linea_initium = tok_sw->linea;
+    nodus->columna_initium = tok_sw->columna;
+    nodus->linea_finis = corpus->linea_finis;
+    nodus->columna_finis = corpus->columna_finis;
+
+    redde nodus;
+}
+
+/* Creare nodum REDDE (return statement) */
+hic_manens Arbor2Nodus*
+_nodus_redde(
+    LapifexC89Contextus*  ctx,
+    Arbor2Lexema*         tok_ret,
+    Arbor2Nodus*          valor,
+    Arbor2Lexema*         tok_semi)
+{
+    Arbor2Nodus* nodus;
+
+    nodus = (Arbor2Nodus*)piscina_allocare(ctx->piscina,
+        (memoriae_index)magnitudo(Arbor2Nodus));
+    memset(nodus, ZEPHYRUM, magnitudo(Arbor2Nodus));
+
+    nodus->genus = ARBOR2_NODUS_REDDE;
+    nodus->lexema = _token_ex_lexema(ctx, tok_ret);
+    nodus->datum.reditio.tok_redde = nodus->lexema;
+    nodus->datum.reditio.valor = valor;
+    nodus->datum.reditio.tok_semicolon = _token_ex_lexema(ctx, tok_semi);
+
+    si (valor) valor->pater = nodus;
+
+    nodus->linea_initium = tok_ret->linea;
+    nodus->columna_initium = tok_ret->columna;
+    nodus->linea_finis = tok_semi->linea;
+    nodus->columna_finis = tok_semi->columna + tok_semi->longitudo;
+
+    redde nodus;
+}
+
+/* Creare nodum SALTA (goto statement) */
+hic_manens Arbor2Nodus*
+_nodus_salta(
+    LapifexC89Contextus*  ctx,
+    Arbor2Lexema*         tok_salta,
+    Arbor2Lexema*         tok_label,
+    Arbor2Lexema*         tok_semi)
+{
+    Arbor2Nodus* nodus;
+
+    nodus = (Arbor2Nodus*)piscina_allocare(ctx->piscina,
+        (memoriae_index)magnitudo(Arbor2Nodus));
+    memset(nodus, ZEPHYRUM, magnitudo(Arbor2Nodus));
+
+    nodus->genus = ARBOR2_NODUS_SALTA;
+    nodus->lexema = _token_ex_lexema(ctx, tok_salta);
+    nodus->datum.saltus.tok_salta = nodus->lexema;
+    nodus->datum.saltus.tok_destinatio = _token_ex_lexema(ctx, tok_label);
+    nodus->datum.saltus.destinatio = tok_label->valor;
+    nodus->datum.saltus.tok_semicolon = _token_ex_lexema(ctx, tok_semi);
+
+    nodus->linea_initium = tok_salta->linea;
+    nodus->columna_initium = tok_salta->columna;
+    nodus->linea_finis = tok_semi->linea;
+    nodus->columna_finis = tok_semi->columna + tok_semi->longitudo;
+
+    redde nodus;
+}
+
+/* Creare nodum FRANGE (break statement) */
+hic_manens Arbor2Nodus*
+_nodus_frange(
+    LapifexC89Contextus*  ctx,
+    Arbor2Lexema*         tok_frange,
+    Arbor2Lexema*         tok_semi)
+{
+    Arbor2Nodus* nodus;
+
+    nodus = (Arbor2Nodus*)piscina_allocare(ctx->piscina,
+        (memoriae_index)magnitudo(Arbor2Nodus));
+    memset(nodus, ZEPHYRUM, magnitudo(Arbor2Nodus));
+
+    nodus->genus = ARBOR2_NODUS_FRANGE;
+    nodus->lexema = _token_ex_lexema(ctx, tok_frange);
+    nodus->datum.frangendum.tok_frange = nodus->lexema;
+    nodus->datum.frangendum.tok_semicolon = _token_ex_lexema(ctx, tok_semi);
+
+    nodus->linea_initium = tok_frange->linea;
+    nodus->columna_initium = tok_frange->columna;
+    nodus->linea_finis = tok_semi->linea;
+    nodus->columna_finis = tok_semi->columna + tok_semi->longitudo;
+
+    redde nodus;
+}
+
+/* Creare nodum PERGE (continue statement) */
+hic_manens Arbor2Nodus*
+_nodus_perge(
+    LapifexC89Contextus*  ctx,
+    Arbor2Lexema*         tok_perge,
+    Arbor2Lexema*         tok_semi)
+{
+    Arbor2Nodus* nodus;
+
+    nodus = (Arbor2Nodus*)piscina_allocare(ctx->piscina,
+        (memoriae_index)magnitudo(Arbor2Nodus));
+    memset(nodus, ZEPHYRUM, magnitudo(Arbor2Nodus));
+
+    nodus->genus = ARBOR2_NODUS_PERGE;
+    nodus->lexema = _token_ex_lexema(ctx, tok_perge);
+    nodus->datum.pergendum.tok_perge = nodus->lexema;
+    nodus->datum.pergendum.tok_semicolon = _token_ex_lexema(ctx, tok_semi);
+
+    nodus->linea_initium = tok_perge->linea;
+    nodus->columna_initium = tok_perge->columna;
+    nodus->linea_finis = tok_semi->linea;
+    nodus->columna_finis = tok_semi->columna + tok_semi->longitudo;
+
+    redde nodus;
+}
+
+/* Creare nodum SENTENTIA (expression statement) */
+hic_manens Arbor2Nodus*
+_nodus_sententia_expr(
+    LapifexC89Contextus*  ctx,
+    Arbor2Nodus*          expressio,
+    Arbor2Lexema*         tok_semi)
+{
+    Arbor2Nodus* nodus;
+
+    nodus = (Arbor2Nodus*)piscina_allocare(ctx->piscina,
+        (memoriae_index)magnitudo(Arbor2Nodus));
+    memset(nodus, ZEPHYRUM, magnitudo(Arbor2Nodus));
+
+    nodus->genus = ARBOR2_NODUS_SENTENTIA;
+    nodus->lexema = expressio->lexema;
+    nodus->datum.sententia.expressio = expressio;
+    nodus->datum.sententia.tok_semicolon = _token_ex_lexema(ctx, tok_semi);
+
+    expressio->pater = nodus;
+
+    nodus->linea_initium = expressio->linea_initium;
+    nodus->columna_initium = expressio->columna_initium;
+    nodus->linea_finis = tok_semi->linea;
+    nodus->columna_finis = tok_semi->columna + tok_semi->longitudo;
+
+    redde nodus;
+}
+
+/* Creare nodum SENTENTIA_VACUA (empty statement) */
+hic_manens Arbor2Nodus*
+_nodus_sententia_vacua(
+    LapifexC89Contextus*  ctx,
+    Arbor2Lexema*         tok_semi)
+{
+    Arbor2Nodus* nodus;
+
+    nodus = (Arbor2Nodus*)piscina_allocare(ctx->piscina,
+        (memoriae_index)magnitudo(Arbor2Nodus));
+    memset(nodus, ZEPHYRUM, magnitudo(Arbor2Nodus));
+
+    nodus->genus = ARBOR2_NODUS_SENTENTIA_VACUA;
+    nodus->lexema = _token_ex_lexema(ctx, tok_semi);
+
+    nodus->linea_initium = tok_semi->linea;
+    nodus->columna_initium = tok_semi->columna;
+    nodus->linea_finis = tok_semi->linea;
+    nodus->columna_finis = tok_semi->columna + tok_semi->longitudo;
+
+    redde nodus;
+}
+
+/* Creare nodum CORPUS (compound statement) */
+hic_manens Arbor2Nodus*
+_nodus_corpus(
+    LapifexC89Contextus*  ctx,
+    Arbor2Lexema*         tok_ba,
+    Arbor2Nodus*          elenchus,
+    Arbor2Lexema*         tok_bc)
+{
+    Arbor2Nodus* nodus;
+
+    nodus = (Arbor2Nodus*)piscina_allocare(ctx->piscina,
+        (memoriae_index)magnitudo(Arbor2Nodus));
+    memset(nodus, ZEPHYRUM, magnitudo(Arbor2Nodus));
+
+    nodus->genus = ARBOR2_NODUS_CORPUS;
+    nodus->lexema = _token_ex_lexema(ctx, tok_ba);
+    nodus->datum.corpus.tok_brace_ap = nodus->lexema;
+    nodus->datum.corpus.tok_brace_cl = _token_ex_lexema(ctx, tok_bc);
+
+    si (elenchus)
+    {
+        si (elenchus->genus == (Arbor2NodusGenus)0xDEAD)
+        {
+            /* Elenchus venit de _nodus_corpus_append, Xar* in datum.corpus */
+            nodus->datum.corpus.sententiae = elenchus->datum.corpus.sententiae;
+        }
+        alioquin
+        {
+            /* Singulare elementum (P191 passthrough), involvi in Xar */
+            Arbor2Nodus** slot;
+            Xar* xar_unum = xar_creare(ctx->piscina,
+                (i32)magnitudo(Arbor2Nodus*));
+            slot = (Arbor2Nodus**)xar_addere(xar_unum);
+            *slot = elenchus;
+            nodus->datum.corpus.sententiae = xar_unum;
+        }
+    }
+    alioquin
+    {
+        nodus->datum.corpus.sententiae = NIHIL;
+    }
+
+    nodus->linea_initium = tok_ba->linea;
+    nodus->columna_initium = tok_ba->columna;
+    nodus->linea_finis = tok_bc->linea;
+    nodus->columna_finis = tok_bc->columna + tok_bc->longitudo;
+
+    redde nodus;
+}
+
+/* Accumulare elementa in elenchus corporis (ut Xar) */
+hic_manens Arbor2Nodus*
+_nodus_corpus_append(
+    LapifexC89Contextus*  ctx,
+    Arbor2Nodus*          elenchus_nodus,
+    Arbor2Nodus*          elementum)
+{
+    /* elenchus_nodus is either a single item (first call) or a Xar* packed as Nodus* */
+    Xar* xar_elenchus;
+
+    /* Check if this is already a Xar (from previous _nodus_corpus_append) */
+    /* Heuristic: si elenchus_nodus non est standard nodus genus, est Xar* */
+    /* Realiter: primum elementum est nodus normalis, deinde Xar */
+    /* Usamus approach simplex: primum call creat Xar, deinde appendit */
+
+    /* Si hoc est primum call: elenchus_nodus est normalis nodus */
+    si (elenchus_nodus->genus != (Arbor2NodusGenus)0xDEAD)
+    {
+        Arbor2Nodus** slot;
+        xar_elenchus = xar_creare(ctx->piscina, (i32)magnitudo(Arbor2Nodus*));
+        slot = (Arbor2Nodus**)xar_addere(xar_elenchus);
+        *slot = elenchus_nodus;
+        slot = (Arbor2Nodus**)xar_addere(xar_elenchus);
+        *slot = elementum;
+    }
+    alioquin
+    {
+        /* Iam habemus Xar in wrapper, extrahere et addere */
+        Arbor2Nodus** slot;
+        xar_elenchus = elenchus_nodus->datum.corpus.sententiae;
+        slot = (Arbor2Nodus**)xar_addere(xar_elenchus);
+        *slot = elementum;
+    }
+
+    /* Redde Xar* codificatum ut Arbor2Nodus* cum marker */
+    {
+        /* Creamus wrapper nodum cum marcatore speciali */
+        Arbor2Nodus* wrapper = (Arbor2Nodus*)piscina_allocare(ctx->piscina,
+            (memoriae_index)magnitudo(Arbor2Nodus));
+        memset(wrapper, ZEPHYRUM, magnitudo(Arbor2Nodus));
+        wrapper->genus = (Arbor2NodusGenus)0xDEAD;
+        /* Servare Xar* in folium.valor pointer regione */
+        /* Sed chorda non est pointer... usamus datum campo directe */
+        /* Realiter, melius est stare Xar* in unione */
+        /* Usamus CORPUS nodum ipsum */
+        wrapper->datum.corpus.sententiae = xar_elenchus;
+        redde wrapper;
+    }
+}
+
+/* Creare nodum TITULATUM (labeled statement) */
+hic_manens Arbor2Nodus*
+_nodus_titulatum(
+    LapifexC89Contextus*  ctx,
+    Arbor2Lexema*         tok_label,
+    Arbor2Lexema*         tok_colon,
+    Arbor2Nodus*          stmt)
+{
+    Arbor2Nodus* nodus;
+
+    nodus = (Arbor2Nodus*)piscina_allocare(ctx->piscina,
+        (memoriae_index)magnitudo(Arbor2Nodus));
+    memset(nodus, ZEPHYRUM, magnitudo(Arbor2Nodus));
+
+    nodus->genus = ARBOR2_NODUS_TITULATUM;
+    nodus->lexema = _token_ex_lexema(ctx, tok_label);
+    nodus->datum.titulatum.tok_titulus = nodus->lexema;
+    nodus->datum.titulatum.titulus = tok_label->valor;
+    nodus->datum.titulatum.tok_colon = _token_ex_lexema(ctx, tok_colon);
+    nodus->datum.titulatum.sententia = stmt;
+
+    stmt->pater = nodus;
+
+    nodus->linea_initium = tok_label->linea;
+    nodus->columna_initium = tok_label->columna;
+    nodus->linea_finis = stmt->linea_finis;
+    nodus->columna_finis = stmt->columna_finis;
+
+    redde nodus;
+}
+
+/* Creare nodum CASUS (case label) */
+hic_manens Arbor2Nodus*
+_nodus_casus(
+    LapifexC89Contextus*  ctx,
+    Arbor2Lexema*         tok_casus,
+    Arbor2Nodus*          valor,
+    Arbor2Lexema*         tok_colon,
+    Arbor2Nodus*          stmt)
+{
+    Arbor2Nodus* nodus;
+
+    nodus = (Arbor2Nodus*)piscina_allocare(ctx->piscina,
+        (memoriae_index)magnitudo(Arbor2Nodus));
+    memset(nodus, ZEPHYRUM, magnitudo(Arbor2Nodus));
+
+    nodus->genus = ARBOR2_NODUS_CASUS;
+    nodus->lexema = _token_ex_lexema(ctx, tok_casus);
+    nodus->datum.electio.tok_casus = nodus->lexema;
+    nodus->datum.electio.valor = valor;
+    nodus->datum.electio.tok_colon = _token_ex_lexema(ctx, tok_colon);
+    nodus->datum.electio.sententia = stmt;
+
+    valor->pater = nodus;
+    stmt->pater = nodus;
+
+    nodus->linea_initium = tok_casus->linea;
+    nodus->columna_initium = tok_casus->columna;
+    nodus->linea_finis = stmt->linea_finis;
+    nodus->columna_finis = stmt->columna_finis;
+
+    redde nodus;
+}
+
+/* Creare nodum ORDINARIUS (default label) */
+hic_manens Arbor2Nodus*
+_nodus_ordinarius(
+    LapifexC89Contextus*  ctx,
+    Arbor2Lexema*         tok_ordinarius,
+    Arbor2Lexema*         tok_colon,
+    Arbor2Nodus*          stmt)
+{
+    Arbor2Nodus* nodus;
+
+    nodus = (Arbor2Nodus*)piscina_allocare(ctx->piscina,
+        (memoriae_index)magnitudo(Arbor2Nodus));
+    memset(nodus, ZEPHYRUM, magnitudo(Arbor2Nodus));
+
+    nodus->genus = ARBOR2_NODUS_ORDINARIUS;
+    nodus->lexema = _token_ex_lexema(ctx, tok_ordinarius);
+    nodus->datum.defectus.tok_ordinarius = nodus->lexema;
+    nodus->datum.defectus.tok_colon = _token_ex_lexema(ctx, tok_colon);
+    nodus->datum.defectus.sententia = stmt;
+
+    stmt->pater = nodus;
+
+    nodus->linea_initium = tok_ordinarius->linea;
+    nodus->columna_initium = tok_ordinarius->columna;
+    nodus->linea_finis = stmt->linea_finis;
+    nodus->columna_finis = stmt->columna_finis;
+
+    redde nodus;
+}
+
+/* Creare PerClausula (for-loop clausulae) */
+hic_manens Arbor2Nodus*
+_per_clausula_creare(
+    LapifexC89Contextus*  ctx,
+    Arbor2Nodus*          initium,
+    Arbor2Lexema*         tok_s1,
+    Arbor2Nodus*          conditio,
+    Arbor2Lexema*         tok_s2,
+    Arbor2Nodus*          incrementum)
+{
+    PerClausula* clausula;
+
+    clausula = (PerClausula*)piscina_allocare(ctx->piscina,
+        (memoriae_index)magnitudo(PerClausula));
+    clausula->initium = initium;
+    clausula->tok_semicolon1 = tok_s1;
+    clausula->conditio = conditio;
+    clausula->tok_semicolon2 = tok_s2;
+    clausula->incrementum = incrementum;
+
+    /* Codificare PerClausula* ut Arbor2Nodus* (reinterpretare) */
+    redde (Arbor2Nodus*)(vacuum*)clausula;
+}
+
+/* ================================================
  * Callback Reductionis
  *
  * Numeratio productionum:
@@ -2097,81 +2782,84 @@ lapifex_c89_expressio_reductio(
                 VERUM, LEXEMA_EX(valori[I]),
                 (Xar*)(vacuum*)(longus)(valori[II])));
 
-        /* ---- Summum (P94-P95) ---- */
+        /* ---- Summum (P94-P96) ---- */
         casus XCIV:  /* summum -> declaratio */
             redde valori[ZEPHYRUM];
 
         casus XCV:   /* summum -> virga */
             redde valori[ZEPHYRUM];
 
-        /* ---- Declaratio (P96-P97) ---- */
-        casus XCVI:  /* declaratio -> decl_specifiers init_declarator_lista SEMICOLON */
+        casus XCVI:  /* summum -> sententia */
+            redde valori[ZEPHYRUM];
+
+        /* ---- Declaratio (P97-P98) ---- */
+        casus XCVII:  /* declaratio -> decl_specifiers init_declarator_lista SEMICOLON */
             redde VALOR_EX(_nodus_declaratio(ctx,
                 NODUS_EX(valori[ZEPHYRUM]),
                 NODUS_EX(valori[I]),
                 LEXEMA_EX(valori[II])));
 
-        casus XCVII: /* declaratio -> decl_specifiers SEMICOLON */
+        casus XCVIII: /* declaratio -> decl_specifiers SEMICOLON */
             redde VALOR_EX(_nodus_declaratio_vacua(ctx,
                 NODUS_EX(valori[ZEPHYRUM]),
                 LEXEMA_EX(valori[I])));
 
-        /* ---- Decl Specifiers (P98-P99) ---- */
-        casus XCVIII: /* decl_specifiers -> decl_specifier */
+        /* ---- Decl Specifiers (P99-P100) ---- */
+        casus XCIX:   /* decl_specifiers -> decl_specifier */
             redde valori[ZEPHYRUM];
 
-        casus XCIX:   /* decl_specifiers -> decl_specifiers decl_specifier */
+        casus C:      /* decl_specifiers -> decl_specifiers decl_specifier */
             redde VALOR_EX(_nodus_specifier_chain(ctx,
                 NODUS_EX(valori[ZEPHYRUM]),
                 NODUS_EX(valori[I])));
 
-        /* ---- Decl Specifier keywords (P100-P115) ---- */
-        casus C:      /* AUTO */
-        casus CI:     /* REGISTER */
-        casus CII:    /* STATIC */
-        casus CIII:   /* EXTERN */
-        casus CIV:    /* TYPEDEF */
-        casus CV:     /* CONST */
-        casus CVI:    /* VOLATILE */
-        casus CVII:   /* VOID */
-        casus CVIII:  /* CHAR */
-        casus CIX:    /* SHORT */
-        casus CX:     /* INT */
-        casus CXI:    /* LONG */
-        casus CXII:   /* FLOAT */
-        casus CXIII:  /* DOUBLE */
-        casus CXIV:   /* SIGNED */
-        casus CXV:    /* UNSIGNED */
+        /* ---- Decl Specifier keywords (P101-P116) ---- */
+        casus CI:      /* AUTO */
+        casus CII:     /* REGISTER */
+        casus CIII:    /* STATIC */
+        casus CIV:     /* EXTERN */
+        casus CV:      /* TYPEDEF */
+        casus CVI:     /* CONST */
+        casus CVII:    /* VOLATILE */
+        casus CVIII:   /* VOID */
+        casus CIX:     /* CHAR */
+        casus CX:      /* SHORT */
+        casus CXI:     /* INT */
+        casus CXII:    /* LONG */
+        casus CXIII:   /* FLOAT */
+        casus CXIV:    /* DOUBLE */
+        casus CXV:     /* SIGNED */
+        casus CXVI:    /* UNSIGNED */
             redde VALOR_EX(_nodus_specifier_folium(ctx,
                 LEXEMA_EX(valori[ZEPHYRUM])));
 
-        /* ---- Decl Specifier struct/enum (P116-P117) ---- */
-        casus CXVI:   /* struct_specifier */
-        casus CXVII:  /* enum_specifier */
+        /* ---- Decl Specifier struct/enum (P117-P118) ---- */
+        casus CXVII:   /* struct_specifier */
+        casus CXVIII:  /* enum_specifier */
             redde valori[ZEPHYRUM];
 
-        /* ---- Init Declarator Lista (P118-P119) ---- */
-        casus CXVIII: /* init_declarator_lista -> init_declarator */
+        /* ---- Init Declarator Lista (P119-P120) ---- */
+        casus CXIX:   /* init_declarator_lista -> init_declarator */
             redde valori[ZEPHYRUM];
 
-        casus CXIX:   /* init_declarator_lista -> init_declarator_lista COMMA init_declarator */
+        casus CXX:    /* init_declarator_lista -> init_declarator_lista COMMA init_declarator */
             redde VALOR_EX(_nodus_lista_separata(ctx,
                 NODUS_EX(valori[ZEPHYRUM]),
                 LEXEMA_EX(valori[I]),
                 NODUS_EX(valori[II])));
 
-        /* ---- Init Declarator (P120-P121) ---- */
-        casus CXX:    /* init_declarator -> declarator */
+        /* ---- Init Declarator (P121-P122) ---- */
+        casus CXXI:   /* init_declarator -> declarator */
             redde valori[ZEPHYRUM];
 
-        casus CXXI:   /* init_declarator -> declarator ASSIGNATIO initializer */
+        casus CXXII:  /* init_declarator -> declarator ASSIGNATIO initializer */
             redde VALOR_EX(_nodus_init_declarator(ctx,
                 NODUS_EX(valori[ZEPHYRUM]),
                 LEXEMA_EX(valori[I]),
                 NODUS_EX(valori[II])));
 
-        /* ---- Declarator (P122-P123) ---- */
-        casus CXXII:  /* declarator -> directus_declarator */
+        /* ---- Declarator (P123-P124) ---- */
+        casus CXXIII:  /* declarator -> directus_declarator */
             /* Impaccare in DECLARATOR nodum si nondum est */
         {
             Arbor2Nodus* dir = NODUS_EX(valori[ZEPHYRUM]);
@@ -2181,7 +2869,7 @@ lapifex_c89_expressio_reductio(
             redde VALOR_EX(_nodus_declarator(ctx, NIHIL, dir));
         }
 
-        casus CXXIII: /* declarator -> pointer directus_declarator */
+        casus CXXIV:  /* declarator -> pointer directus_declarator */
         {
             Xar* ptr = (Xar*)(vacuum*)(longus)(valori[ZEPHYRUM]);
             Arbor2Nodus* dir = NODUS_EX(valori[I]);
@@ -2198,8 +2886,8 @@ lapifex_c89_expressio_reductio(
             redde VALOR_EX(_nodus_declarator(ctx, ptr, dir));
         }
 
-        /* ---- Directus Declarator (P124-P130) ---- */
-        casus CXXIV:  /* directus_declarator -> IDENTIFICATOR */
+        /* ---- Directus Declarator (P125-P131) ---- */
+        casus CXXV:   /* directus_declarator -> IDENTIFICATOR */
         {
             Arbor2Nodus* folium = _nodus_folium(ctx,
                 ARBOR2_NODUS_IDENTIFICATOR,
@@ -2207,25 +2895,25 @@ lapifex_c89_expressio_reductio(
             redde VALOR_EX(_nodus_declarator(ctx, NIHIL, folium));
         }
 
-        casus CXXV:   /* directus_declarator -> PAREN_APERTA declarator PAREN_CLAUSA */
+        casus CXXVI:  /* directus_declarator -> PAREN_APERTA declarator PAREN_CLAUSA */
             /* Grouped declarator: (*fp) - just pass through the inner declarator */
             redde valori[I];
 
-        casus CXXVI:  /* directus_declarator -> directus_declarator BRACKET_APERTA BRACKET_CLAUSA */
+        casus CXXVII: /* directus_declarator -> directus_declarator BRACKET_APERTA BRACKET_CLAUSA */
             redde VALOR_EX(_nodus_array_dim(ctx,
                 NODUS_EX(valori[ZEPHYRUM]),
                 LEXEMA_EX(valori[I]),
                 NIHIL,
                 LEXEMA_EX(valori[II])));
 
-        casus CXXVII: /* directus_declarator -> directus_declarator BRACKET_APERTA virga BRACKET_CLAUSA */
+        casus CXXVIII: /* directus_declarator -> directus_declarator BRACKET_APERTA virga BRACKET_CLAUSA */
             redde VALOR_EX(_nodus_array_dim(ctx,
                 NODUS_EX(valori[ZEPHYRUM]),
                 LEXEMA_EX(valori[I]),
                 NODUS_EX(valori[II]),
                 LEXEMA_EX(valori[III])));
 
-        casus CXXVIII: /* directus_declarator -> directus_declarator PAREN_APERTA PAREN_CLAUSA */
+        casus CXXIX:  /* directus_declarator -> directus_declarator PAREN_APERTA PAREN_CLAUSA */
             redde VALOR_EX(_nodus_declarator_functi(ctx,
                 NODUS_EX(valori[ZEPHYRUM]),
                 LEXEMA_EX(valori[I]),
@@ -2233,7 +2921,7 @@ lapifex_c89_expressio_reductio(
                 LEXEMA_EX(valori[II]),
                 FALSUM, FALSUM));
 
-        casus CXXIX:  /* directus_declarator -> directus_declarator PAREN_APERTA parameter_lista PAREN_CLAUSA */
+        casus CXXX:   /* directus_declarator -> directus_declarator PAREN_APERTA parameter_lista PAREN_CLAUSA */
         {
             Arbor2Nodus* params = NODUS_EX(valori[II]);
             b32 variadicus = FALSUM;
@@ -2247,7 +2935,7 @@ lapifex_c89_expressio_reductio(
                 FALSUM, variadicus));
         }
 
-        casus CXXX:   /* directus_declarator -> directus_declarator PAREN_APERTA VOID PAREN_CLAUSA */
+        casus CXXXI:  /* directus_declarator -> directus_declarator PAREN_APERTA VOID PAREN_CLAUSA */
             redde VALOR_EX(_nodus_declarator_functi(ctx,
                 NODUS_EX(valori[ZEPHYRUM]),
                 LEXEMA_EX(valori[I]),
@@ -2255,8 +2943,8 @@ lapifex_c89_expressio_reductio(
                 LEXEMA_EX(valori[III]),
                 VERUM, FALSUM));
 
-        /* ---- Struct Specifier (P131-P136) ---- */
-        casus CXXXI:  /* STRUCT IDENTIFICATOR BRACE_APERTA struct_member_lista BRACE_CLAUSA */
+        /* ---- Struct Specifier (P132-P137) ---- */
+        casus CXXXII:  /* STRUCT IDENTIFICATOR BRACE_APERTA struct_member_lista BRACE_CLAUSA */
             redde VALOR_EX(_nodus_struct_specifier(ctx,
                 LEXEMA_EX(valori[ZEPHYRUM]),
                 _nodus_folium(ctx, ARBOR2_NODUS_IDENTIFICATOR, LEXEMA_EX(valori[I])),
@@ -2265,7 +2953,7 @@ lapifex_c89_expressio_reductio(
                 LEXEMA_EX(valori[IV]),
                 FALSUM));
 
-        casus CXXXII: /* STRUCT BRACE_APERTA struct_member_lista BRACE_CLAUSA */
+        casus CXXXIII: /* STRUCT BRACE_APERTA struct_member_lista BRACE_CLAUSA */
             redde VALOR_EX(_nodus_struct_specifier(ctx,
                 LEXEMA_EX(valori[ZEPHYRUM]),
                 NIHIL,
@@ -2274,14 +2962,14 @@ lapifex_c89_expressio_reductio(
                 LEXEMA_EX(valori[III]),
                 FALSUM));
 
-        casus CXXXIII: /* STRUCT IDENTIFICATOR (forward ref) */
+        casus CXXXIV:  /* STRUCT IDENTIFICATOR (forward ref) */
             redde VALOR_EX(_nodus_struct_specifier(ctx,
                 LEXEMA_EX(valori[ZEPHYRUM]),
                 _nodus_folium(ctx, ARBOR2_NODUS_IDENTIFICATOR, LEXEMA_EX(valori[I])),
                 NIHIL, NIHIL, NIHIL,
                 FALSUM));
 
-        casus CXXXIV: /* UNION IDENTIFICATOR BRACE_APERTA struct_member_lista BRACE_CLAUSA */
+        casus CXXXV:  /* UNION IDENTIFICATOR BRACE_APERTA struct_member_lista BRACE_CLAUSA */
             redde VALOR_EX(_nodus_struct_specifier(ctx,
                 LEXEMA_EX(valori[ZEPHYRUM]),
                 _nodus_folium(ctx, ARBOR2_NODUS_IDENTIFICATOR, LEXEMA_EX(valori[I])),
@@ -2290,7 +2978,7 @@ lapifex_c89_expressio_reductio(
                 LEXEMA_EX(valori[IV]),
                 VERUM));
 
-        casus CXXXV:  /* UNION BRACE_APERTA struct_member_lista BRACE_CLAUSA */
+        casus CXXXVI: /* UNION BRACE_APERTA struct_member_lista BRACE_CLAUSA */
             redde VALOR_EX(_nodus_struct_specifier(ctx,
                 LEXEMA_EX(valori[ZEPHYRUM]),
                 NIHIL,
@@ -2299,56 +2987,56 @@ lapifex_c89_expressio_reductio(
                 LEXEMA_EX(valori[III]),
                 VERUM));
 
-        casus CXXXVI: /* UNION IDENTIFICATOR (forward ref) */
+        casus CXXXVII: /* UNION IDENTIFICATOR (forward ref) */
             redde VALOR_EX(_nodus_struct_specifier(ctx,
                 LEXEMA_EX(valori[ZEPHYRUM]),
                 _nodus_folium(ctx, ARBOR2_NODUS_IDENTIFICATOR, LEXEMA_EX(valori[I])),
                 NIHIL, NIHIL, NIHIL,
                 VERUM));
 
-        /* ---- Struct Member Lista (P137-P138) ---- */
-        casus CXXXVII: /* struct_member_lista -> struct_member */
+        /* ---- Struct Member Lista (P138-P139) ---- */
+        casus CXXXVIII: /* struct_member_lista -> struct_member */
             redde valori[ZEPHYRUM];
 
-        casus CXXXVIII: /* struct_member_lista -> struct_member_lista struct_member */
+        casus CXXXIX:   /* struct_member_lista -> struct_member_lista struct_member */
             redde VALOR_EX(_nodus_struct_member_append(ctx,
                 NODUS_EX(valori[ZEPHYRUM]),
                 NODUS_EX(valori[I])));
 
-        /* ---- Struct Member (P139) ---- */
-        casus CXXXIX: /* struct_member -> decl_specifiers struct_declarator_lista SEMICOLON */
+        /* ---- Struct Member (P140) ---- */
+        casus CXL:    /* struct_member -> decl_specifiers struct_declarator_lista SEMICOLON */
             redde VALOR_EX(_nodus_struct_member(ctx,
                 NODUS_EX(valori[ZEPHYRUM]),
                 NODUS_EX(valori[I]),
                 LEXEMA_EX(valori[II])));
 
-        /* ---- Struct Declarator Lista (P140-P141) ---- */
-        casus CXL:    /* struct_declarator_lista -> struct_declarator */
+        /* ---- Struct Declarator Lista (P141-P142) ---- */
+        casus CXLI:   /* struct_declarator_lista -> struct_declarator */
             redde valori[ZEPHYRUM];
 
-        casus CXLI:   /* struct_declarator_lista -> struct_declarator_lista COMMA struct_declarator */
+        casus CXLII:  /* struct_declarator_lista -> struct_declarator_lista COMMA struct_declarator */
             redde VALOR_EX(_nodus_lista_separata(ctx,
                 NODUS_EX(valori[ZEPHYRUM]),
                 LEXEMA_EX(valori[I]),
                 NODUS_EX(valori[II])));
 
-        /* ---- Struct Declarator (P142-P144) ---- */
-        casus CXLII:  /* struct_declarator -> declarator */
+        /* ---- Struct Declarator (P143-P145) ---- */
+        casus CXLIII: /* struct_declarator -> declarator */
             redde valori[ZEPHYRUM];
 
-        casus CXLIII: /* struct_declarator -> declarator COLON virga (bit field) */
+        casus CXLIV:  /* struct_declarator -> declarator COLON virga (bit field) */
             redde VALOR_EX(_nodus_bit_field(ctx,
                 NODUS_EX(valori[ZEPHYRUM]),
                 LEXEMA_EX(valori[I]),
                 NODUS_EX(valori[II])));
 
-        casus CXLIV:  /* struct_declarator -> COLON virga (anonymous bit field) */
+        casus CXLV:   /* struct_declarator -> COLON virga (anonymous bit field) */
             redde VALOR_EX(_nodus_anon_bit_field(ctx,
                 LEXEMA_EX(valori[ZEPHYRUM]),
                 NODUS_EX(valori[I])));
 
-        /* ---- Enum Specifier (P145-P147) ---- */
-        casus CXLV:   /* ENUM IDENTIFICATOR BRACE_APERTA enumerator_lista BRACE_CLAUSA */
+        /* ---- Enum Specifier (P146-P148) ---- */
+        casus CXLVI:  /* ENUM IDENTIFICATOR BRACE_APERTA enumerator_lista BRACE_CLAUSA */
             redde VALOR_EX(_nodus_enum_specifier(ctx,
                 LEXEMA_EX(valori[ZEPHYRUM]),
                 _nodus_folium(ctx, ARBOR2_NODUS_IDENTIFICATOR, LEXEMA_EX(valori[I])),
@@ -2356,7 +3044,7 @@ lapifex_c89_expressio_reductio(
                 NODUS_EX(valori[III]),
                 LEXEMA_EX(valori[IV])));
 
-        casus CXLVI:  /* ENUM BRACE_APERTA enumerator_lista BRACE_CLAUSA */
+        casus CXLVII: /* ENUM BRACE_APERTA enumerator_lista BRACE_CLAUSA */
             redde VALOR_EX(_nodus_enum_specifier(ctx,
                 LEXEMA_EX(valori[ZEPHYRUM]),
                 NIHIL,
@@ -2364,45 +3052,45 @@ lapifex_c89_expressio_reductio(
                 NODUS_EX(valori[II]),
                 LEXEMA_EX(valori[III])));
 
-        casus CXLVII: /* ENUM IDENTIFICATOR (forward ref) */
+        casus CXLVIII: /* ENUM IDENTIFICATOR (forward ref) */
             redde VALOR_EX(_nodus_enum_specifier(ctx,
                 LEXEMA_EX(valori[ZEPHYRUM]),
                 _nodus_folium(ctx, ARBOR2_NODUS_IDENTIFICATOR, LEXEMA_EX(valori[I])),
                 NIHIL, NIHIL, NIHIL));
 
-        /* ---- Enumerator Lista (P148-P149) ---- */
-        casus CXLVIII: /* enumerator_lista -> enumerator */
+        /* ---- Enumerator Lista (P149-P150) ---- */
+        casus CXLIX:  /* enumerator_lista -> enumerator */
             redde valori[ZEPHYRUM];
 
-        casus CXLIX:   /* enumerator_lista -> enumerator_lista COMMA enumerator */
+        casus CL:     /* enumerator_lista -> enumerator_lista COMMA enumerator */
             redde VALOR_EX(_nodus_lista_separata(ctx,
                 NODUS_EX(valori[ZEPHYRUM]),
                 LEXEMA_EX(valori[I]),
                 NODUS_EX(valori[II])));
 
-        /* ---- Enumerator (P150-P151) ---- */
-        casus CL:     /* enumerator -> IDENTIFICATOR */
+        /* ---- Enumerator (P151-P152) ---- */
+        casus CLI:    /* enumerator -> IDENTIFICATOR */
             redde VALOR_EX(_nodus_enumerator(ctx,
                 LEXEMA_EX(valori[ZEPHYRUM]),
                 NIHIL, NIHIL));
 
-        casus CLI:    /* enumerator -> IDENTIFICATOR ASSIGNATIO virga */
+        casus CLII:   /* enumerator -> IDENTIFICATOR ASSIGNATIO virga */
             redde VALOR_EX(_nodus_enumerator(ctx,
                 LEXEMA_EX(valori[ZEPHYRUM]),
                 LEXEMA_EX(valori[I]),
                 NODUS_EX(valori[II])));
 
-        /* ---- Parameter Lista (P152-P154) ---- */
-        casus CLII:   /* parameter_lista -> parameter_decl */
+        /* ---- Parameter Lista (P153-P155) ---- */
+        casus CLIII:  /* parameter_lista -> parameter_decl */
             redde valori[ZEPHYRUM];
 
-        casus CLIII:  /* parameter_lista -> parameter_lista COMMA parameter_decl */
+        casus CLIV:   /* parameter_lista -> parameter_lista COMMA parameter_decl */
             redde VALOR_EX(_nodus_lista_separata(ctx,
                 NODUS_EX(valori[ZEPHYRUM]),
                 LEXEMA_EX(valori[I]),
                 NODUS_EX(valori[II])));
 
-        casus CLIV:   /* parameter_lista -> parameter_lista COMMA ELLIPSIS */
+        casus CLV:    /* parameter_lista -> parameter_lista COMMA ELLIPSIS */
         {
             /* Marcare listam ut variadicam et addere ellipsis token */
             Arbor2Nodus* lista = NODUS_EX(valori[ZEPHYRUM]);
@@ -2453,42 +3141,311 @@ lapifex_c89_expressio_reductio(
             redde VALOR_EX(nodus_param);
         }
 
-        /* ---- Parameter Decl (P155-P156) ---- */
-        casus CLV:    /* parameter_decl -> decl_specifiers declarator */
+        /* ---- Parameter Decl (P156-P157) ---- */
+        casus CLVI:   /* parameter_decl -> decl_specifiers declarator */
             redde VALOR_EX(_nodus_parameter_decl(ctx,
                 NODUS_EX(valori[ZEPHYRUM]),
                 NODUS_EX(valori[I])));
 
-        casus CLVI:   /* parameter_decl -> decl_specifiers (abstract) */
+        casus CLVII:  /* parameter_decl -> decl_specifiers (abstract) */
             redde VALOR_EX(_nodus_parameter_decl(ctx,
                 NODUS_EX(valori[ZEPHYRUM]),
                 NIHIL));
 
-        /* ---- Initializer (P157-P159) ---- */
-        casus CLVII:  /* initializer -> assignatio */
+        /* ---- Initializer (P158-P160) ---- */
+        casus CLVIII: /* initializer -> assignatio */
             redde valori[ZEPHYRUM];
 
-        casus CLVIII: /* initializer -> BRACE_APERTA init_items BRACE_CLAUSA */
+        casus CLIX:   /* initializer -> BRACE_APERTA init_items BRACE_CLAUSA */
             redde VALOR_EX(_nodus_initializor_lista(ctx,
                 LEXEMA_EX(valori[ZEPHYRUM]),
                 NODUS_EX(valori[I]),
                 LEXEMA_EX(valori[II])));
 
-        casus CLIX:   /* initializer -> BRACE_APERTA init_items COMMA BRACE_CLAUSA */
+        casus CLX:    /* initializer -> BRACE_APERTA init_items COMMA BRACE_CLAUSA */
             redde VALOR_EX(_nodus_initializor_lista(ctx,
                 LEXEMA_EX(valori[ZEPHYRUM]),
                 NODUS_EX(valori[I]),
                 LEXEMA_EX(valori[III])));
 
-        /* ---- Init Items (P160-P161) ---- */
-        casus CLX:    /* init_items -> initializer */
+        /* ---- Init Items (P161-P162) ---- */
+        casus CLXI:   /* init_items -> initializer */
             redde valori[ZEPHYRUM];
 
-        casus CLXI:   /* init_items -> init_items COMMA initializer */
+        casus CLXII:  /* init_items -> init_items COMMA initializer */
             redde VALOR_EX(_nodus_lista_separata(ctx,
                 NODUS_EX(valori[ZEPHYRUM]),
                 LEXEMA_EX(valori[I]),
                 NODUS_EX(valori[II])));
+
+        /* ========================================================
+         * SENTENTIAE (P163-P202)
+         * ======================================================== */
+
+        /* ---- Sententia (P163-P164) ---- */
+        casus CLXIII: /* sententia -> sententia_compar */
+            redde valori[ZEPHYRUM];
+
+        casus CLXIV:  /* sententia -> sententia_incompar */
+            redde valori[ZEPHYRUM];
+
+        /* ---- Sententia Compar (P165-P171) ---- */
+        casus CLXV:   /* sententia_compar -> non_si_sententia */
+            redde valori[ZEPHYRUM];
+
+        casus CLXVI:  /* IF PAREN_APERTA virga PAREN_CLAUSA sententia_compar ELSE sententia_compar */
+            redde VALOR_EX(_nodus_si(ctx,
+                LEXEMA_EX(valori[ZEPHYRUM]),
+                LEXEMA_EX(valori[I]),
+                NODUS_EX(valori[II]),
+                LEXEMA_EX(valori[III]),
+                NODUS_EX(valori[IV]),
+                LEXEMA_EX(valori[V]),
+                NODUS_EX(valori[VI])));
+
+        casus CLXVII: /* WHILE PAREN_APERTA virga PAREN_CLAUSA sententia_compar */
+            redde VALOR_EX(_nodus_dum(ctx,
+                LEXEMA_EX(valori[ZEPHYRUM]),
+                LEXEMA_EX(valori[I]),
+                NODUS_EX(valori[II]),
+                LEXEMA_EX(valori[III]),
+                NODUS_EX(valori[IV])));
+
+        casus CLXVIII: /* FOR PAREN_APERTA per_clausula PAREN_CLAUSA sententia_compar */
+            redde VALOR_EX(_nodus_per(ctx,
+                LEXEMA_EX(valori[ZEPHYRUM]),
+                LEXEMA_EX(valori[I]),
+                NODUS_EX(valori[II]),
+                LEXEMA_EX(valori[III]),
+                NODUS_EX(valori[IV])));
+
+        casus CLXIX:  /* IDENTIFICATOR COLON sententia_compar */
+            redde VALOR_EX(_nodus_titulatum(ctx,
+                LEXEMA_EX(valori[ZEPHYRUM]),
+                LEXEMA_EX(valori[I]),
+                NODUS_EX(valori[II])));
+
+        casus CLXX:   /* CASE virga COLON sententia_compar */
+            redde VALOR_EX(_nodus_casus(ctx,
+                LEXEMA_EX(valori[ZEPHYRUM]),
+                NODUS_EX(valori[I]),
+                LEXEMA_EX(valori[II]),
+                NODUS_EX(valori[III])));
+
+        casus CLXXI:  /* DEFAULT COLON sententia_compar */
+            redde VALOR_EX(_nodus_ordinarius(ctx,
+                LEXEMA_EX(valori[ZEPHYRUM]),
+                LEXEMA_EX(valori[I]),
+                NODUS_EX(valori[II])));
+
+        /* ---- Sententia Incompar (P172-P178) ---- */
+        casus CLXXII: /* IF PAREN_APERTA virga PAREN_CLAUSA sententia */
+            redde VALOR_EX(_nodus_si(ctx,
+                LEXEMA_EX(valori[ZEPHYRUM]),
+                LEXEMA_EX(valori[I]),
+                NODUS_EX(valori[II]),
+                LEXEMA_EX(valori[III]),
+                NODUS_EX(valori[IV]),
+                NIHIL,
+                NIHIL));
+
+        casus CLXXIII: /* IF PAREN_APERTA virga PAREN_CLAUSA sententia_compar ELSE sententia_incompar */
+            redde VALOR_EX(_nodus_si(ctx,
+                LEXEMA_EX(valori[ZEPHYRUM]),
+                LEXEMA_EX(valori[I]),
+                NODUS_EX(valori[II]),
+                LEXEMA_EX(valori[III]),
+                NODUS_EX(valori[IV]),
+                LEXEMA_EX(valori[V]),
+                NODUS_EX(valori[VI])));
+
+        casus CLXXIV: /* WHILE PAREN_APERTA virga PAREN_CLAUSA sententia_incompar */
+            redde VALOR_EX(_nodus_dum(ctx,
+                LEXEMA_EX(valori[ZEPHYRUM]),
+                LEXEMA_EX(valori[I]),
+                NODUS_EX(valori[II]),
+                LEXEMA_EX(valori[III]),
+                NODUS_EX(valori[IV])));
+
+        casus CLXXV:  /* FOR PAREN_APERTA per_clausula PAREN_CLAUSA sententia_incompar */
+            redde VALOR_EX(_nodus_per(ctx,
+                LEXEMA_EX(valori[ZEPHYRUM]),
+                LEXEMA_EX(valori[I]),
+                NODUS_EX(valori[II]),
+                LEXEMA_EX(valori[III]),
+                NODUS_EX(valori[IV])));
+
+        casus CLXXVI: /* IDENTIFICATOR COLON sententia_incompar */
+            redde VALOR_EX(_nodus_titulatum(ctx,
+                LEXEMA_EX(valori[ZEPHYRUM]),
+                LEXEMA_EX(valori[I]),
+                NODUS_EX(valori[II])));
+
+        casus CLXXVII: /* CASE virga COLON sententia_incompar */
+            redde VALOR_EX(_nodus_casus(ctx,
+                LEXEMA_EX(valori[ZEPHYRUM]),
+                NODUS_EX(valori[I]),
+                LEXEMA_EX(valori[II]),
+                NODUS_EX(valori[III])));
+
+        casus CLXXVIII: /* DEFAULT COLON sententia_incompar */
+            redde VALOR_EX(_nodus_ordinarius(ctx,
+                LEXEMA_EX(valori[ZEPHYRUM]),
+                LEXEMA_EX(valori[I]),
+                NODUS_EX(valori[II])));
+
+        /* ---- Non-Si Sententia (P179-P188) ---- */
+        casus CLXXIX: /* non_si_sententia -> corpus */
+            redde valori[ZEPHYRUM];
+
+        casus CLXXX:  /* non_si_sententia -> virga SEMICOLON (expression stmt) */
+            redde VALOR_EX(_nodus_sententia_expr(ctx,
+                NODUS_EX(valori[ZEPHYRUM]),
+                LEXEMA_EX(valori[I])));
+
+        casus CLXXXI: /* non_si_sententia -> SEMICOLON (empty stmt) */
+            redde VALOR_EX(_nodus_sententia_vacua(ctx,
+                LEXEMA_EX(valori[ZEPHYRUM])));
+
+        casus CLXXXII: /* DO sententia WHILE PAREN_APERTA virga PAREN_CLAUSA SEMICOLON */
+            redde VALOR_EX(_nodus_fac_dum(ctx,
+                LEXEMA_EX(valori[ZEPHYRUM]),
+                NODUS_EX(valori[I]),
+                LEXEMA_EX(valori[II]),
+                LEXEMA_EX(valori[III]),
+                NODUS_EX(valori[IV]),
+                LEXEMA_EX(valori[V]),
+                LEXEMA_EX(valori[VI])));
+
+        casus CLXXXIII: /* SWITCH PAREN_APERTA virga PAREN_CLAUSA sententia */
+            redde VALOR_EX(_nodus_commutatio(ctx,
+                LEXEMA_EX(valori[ZEPHYRUM]),
+                LEXEMA_EX(valori[I]),
+                NODUS_EX(valori[II]),
+                LEXEMA_EX(valori[III]),
+                NODUS_EX(valori[IV])));
+
+        casus CLXXXIV: /* GOTO IDENTIFICATOR SEMICOLON */
+            redde VALOR_EX(_nodus_salta(ctx,
+                LEXEMA_EX(valori[ZEPHYRUM]),
+                LEXEMA_EX(valori[I]),
+                LEXEMA_EX(valori[II])));
+
+        casus CLXXXV:  /* CONTINUE SEMICOLON */
+            redde VALOR_EX(_nodus_perge(ctx,
+                LEXEMA_EX(valori[ZEPHYRUM]),
+                LEXEMA_EX(valori[I])));
+
+        casus CLXXXVI: /* BREAK SEMICOLON */
+            redde VALOR_EX(_nodus_frange(ctx,
+                LEXEMA_EX(valori[ZEPHYRUM]),
+                LEXEMA_EX(valori[I])));
+
+        casus CLXXXVII: /* RETURN SEMICOLON */
+            redde VALOR_EX(_nodus_redde(ctx,
+                LEXEMA_EX(valori[ZEPHYRUM]),
+                NIHIL,
+                LEXEMA_EX(valori[I])));
+
+        casus CLXXXVIII: /* RETURN virga SEMICOLON */
+            redde VALOR_EX(_nodus_redde(ctx,
+                LEXEMA_EX(valori[ZEPHYRUM]),
+                NODUS_EX(valori[I]),
+                LEXEMA_EX(valori[II])));
+
+        /* ---- Corpus (P189-P190) ---- */
+        casus CLXXXIX: /* corpus -> BRACE_APERTA BRACE_CLAUSA */
+            redde VALOR_EX(_nodus_corpus(ctx,
+                LEXEMA_EX(valori[ZEPHYRUM]),
+                NIHIL,
+                LEXEMA_EX(valori[I])));
+
+        casus CXC:    /* corpus -> BRACE_APERTA elenchus_corporis BRACE_CLAUSA */
+            redde VALOR_EX(_nodus_corpus(ctx,
+                LEXEMA_EX(valori[ZEPHYRUM]),
+                NODUS_EX(valori[I]),
+                LEXEMA_EX(valori[II])));
+
+        /* ---- Elenchus Corporis (P191-P192) ---- */
+        casus CXCI:   /* elenchus_corporis -> elementum_corporis */
+            redde valori[ZEPHYRUM];
+
+        casus CXCII:  /* elenchus_corporis -> elenchus_corporis elementum_corporis */
+            redde VALOR_EX(_nodus_corpus_append(ctx,
+                NODUS_EX(valori[ZEPHYRUM]),
+                NODUS_EX(valori[I])));
+
+        /* ---- Elementum Corporis (P193-P194) ---- */
+        casus CXCIII: /* elementum_corporis -> declaratio */
+            redde valori[ZEPHYRUM];
+
+        casus CXCIV:  /* elementum_corporis -> sententia */
+            redde valori[ZEPHYRUM];
+
+        /* ---- Per Clausula (P195-P202) ---- */
+        casus CXCV:   /* virga SEMICOLON virga SEMICOLON virga */
+            redde VALOR_EX(_per_clausula_creare(ctx,
+                NODUS_EX(valori[ZEPHYRUM]),
+                LEXEMA_EX(valori[I]),
+                NODUS_EX(valori[II]),
+                LEXEMA_EX(valori[III]),
+                NODUS_EX(valori[IV])));
+
+        casus CXCVI:  /* virga SEMICOLON virga SEMICOLON */
+            redde VALOR_EX(_per_clausula_creare(ctx,
+                NODUS_EX(valori[ZEPHYRUM]),
+                LEXEMA_EX(valori[I]),
+                NODUS_EX(valori[II]),
+                LEXEMA_EX(valori[III]),
+                NIHIL));
+
+        casus CXCVII: /* virga SEMICOLON SEMICOLON virga */
+            redde VALOR_EX(_per_clausula_creare(ctx,
+                NODUS_EX(valori[ZEPHYRUM]),
+                LEXEMA_EX(valori[I]),
+                NIHIL,
+                LEXEMA_EX(valori[II]),
+                NODUS_EX(valori[III])));
+
+        casus CXCVIII: /* SEMICOLON virga SEMICOLON virga */
+            redde VALOR_EX(_per_clausula_creare(ctx,
+                NIHIL,
+                LEXEMA_EX(valori[ZEPHYRUM]),
+                NODUS_EX(valori[I]),
+                LEXEMA_EX(valori[II]),
+                NODUS_EX(valori[III])));
+
+        casus CXCIX:  /* virga SEMICOLON SEMICOLON */
+            redde VALOR_EX(_per_clausula_creare(ctx,
+                NODUS_EX(valori[ZEPHYRUM]),
+                LEXEMA_EX(valori[I]),
+                NIHIL,
+                LEXEMA_EX(valori[II]),
+                NIHIL));
+
+        casus CC:     /* SEMICOLON virga SEMICOLON */
+            redde VALOR_EX(_per_clausula_creare(ctx,
+                NIHIL,
+                LEXEMA_EX(valori[ZEPHYRUM]),
+                NODUS_EX(valori[I]),
+                LEXEMA_EX(valori[II]),
+                NIHIL));
+
+        casus CCI:    /* SEMICOLON SEMICOLON virga */
+            redde VALOR_EX(_per_clausula_creare(ctx,
+                NIHIL,
+                LEXEMA_EX(valori[ZEPHYRUM]),
+                NIHIL,
+                LEXEMA_EX(valori[I]),
+                NODUS_EX(valori[II])));
+
+        casus CCII:   /* SEMICOLON SEMICOLON */
+            redde VALOR_EX(_per_clausula_creare(ctx,
+                NIHIL,
+                LEXEMA_EX(valori[ZEPHYRUM]),
+                NIHIL,
+                LEXEMA_EX(valori[I]),
+                NIHIL));
 
         /* ---- Productio Augmentata ---- */
         ordinarius:
@@ -2726,6 +3683,92 @@ lapifex_c89_declarationem_parsare(
     si (fructus.numerus_fructuum < I)
     {
         fprintf(stderr, "lapifex_c89_decl: nullus fructus\n");
+        redde NIHIL;
+    }
+
+    redde NODUS_EX(fructus.valori[ZEPHYRUM]);
+}
+
+/* ================================================
+ * API: Parsare sententiam (statement)
+ * ================================================ */
+Arbor2Nodus*
+lapifex_c89_sententiam_parsare(
+    Piscina*              piscina,
+    InternamentumChorda*  intern,
+    constans character*   fons,
+    i32                   mensura)
+{
+    Arbor2Lexator*          lexator;
+    Xar*                    lexemata;
+    Arbor2LapifexAdaptator* adaptator;
+    Arbor2LapifexFructus    conv_fructus;
+    LapifexGLR*             glr;
+    LapifexGLRFructus       fructus;
+    LapifexC89Contextus     ctx;
+    chorda*                 via;
+
+    si (!piscina || !intern || !fons) redde NIHIL;
+
+    _tabulam_parare();
+    si (!s_tabula || !s_grammatica) redde NIHIL;
+
+    lexator = arbor2_lexator_creare(piscina, intern, fons, mensura);
+    si (!lexator)
+    {
+        fprintf(stderr, "lapifex_c89_sent: lexator non creatus\n");
+        redde NIHIL;
+    }
+
+    lexemata = arbor2_lexema_omnia(lexator);
+    si (!lexemata)
+    {
+        fprintf(stderr, "lapifex_c89_sent: lexemata non obtenta\n");
+        redde NIHIL;
+    }
+
+    adaptator = arbor2_lapifex_adaptator_creare(piscina, s_grammatica);
+    si (!adaptator)
+    {
+        fprintf(stderr, "lapifex_c89_sent: adaptator non creatus\n");
+        redde NIHIL;
+    }
+
+    conv_fructus = arbor2_lapifex_convertere(adaptator, lexemata);
+    si (!conv_fructus.successus)
+    {
+        fprintf(stderr, "lapifex_c89_sent: conversio fracta\n");
+        redde NIHIL;
+    }
+
+    glr = lapifex_glr_creare(piscina, s_tabula);
+    si (!glr)
+    {
+        fprintf(stderr, "lapifex_c89_sent: GLR motor non creatus\n");
+        redde NIHIL;
+    }
+
+    via = chorda_internare_ex_literis(intern, "<sententia>");
+    ctx.piscina = piscina;
+    ctx.intern = intern;
+    ctx.via_file = via;
+
+    fructus = lapifex_glr_parsare(glr,
+        conv_fructus.signa, conv_fructus.numerus,
+        lapifex_c89_expressio_reductio, &ctx);
+
+    si (!fructus.successus)
+    {
+        fprintf(stderr, "lapifex_c89_sent: parsatio fracta (status=%d, term=%d, pos=%d)\n",
+            (int)fructus.error.status,
+            (int)fructus.error.terminalis,
+            (int)fructus.error.positio);
+        redde NIHIL;
+    }
+
+    si (fructus.numerus_fructuum < I)
+    {
+        fprintf(stderr, "lapifex_c89_sent: nullus fructus\n");
         redde NIHIL;
     }
 
