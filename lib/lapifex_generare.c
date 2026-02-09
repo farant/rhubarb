@@ -1367,6 +1367,736 @@ lapifex_collectio_construere(
 }
 
 /* ================================================
+ * LALR(1) Constructio
+ * ================================================ */
+
+/* LR(0) res: productio + punctum (sine prospectu) */
+nomen structura {
+    s32  productio;
+    s32  punctum;
+} LapifexRes0;
+
+/* Comparator pro LR(0) rebus */
+hic_manens s32
+res0_comparator(constans vacuum* a, constans vacuum* b)
+{
+    constans LapifexRes0* ra = (constans LapifexRes0*)a;
+    constans LapifexRes0* rb = (constans LapifexRes0*)b;
+
+    si (ra->productio != rb->productio)
+        redde (ra->productio < rb->productio) ? -I : I;
+    si (ra->punctum != rb->punctum)
+        redde (ra->punctum < rb->punctum) ? -I : I;
+    redde ZEPHYRUM;
+}
+
+/* Verificare si LR(0) res iam in coniuncto */
+hic_manens b32
+res0_in_coniuncto(
+    Xar*          res_xar,
+    LapifexRes0*  res)
+{
+    i32 i;
+    i32 numerus = (i32)xar_numerus(res_xar);
+
+    per (i = ZEPHYRUM; i < numerus; i++)
+    {
+        LapifexRes0* existens = (LapifexRes0*)xar_obtinere(res_xar, i);
+        si (existens &&
+            existens->productio == res->productio &&
+            existens->punctum == res->punctum)
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
+/* LR(0) clausura: expandere sine prospectu */
+hic_manens vacuum
+clausura0_computare(
+    LapifexGrammatica*  grammatica,
+    Xar*                res_xar)
+{
+    b32 mutatum;
+    i32 numerus_productionum;
+
+    numerus_productionum = (i32)xar_numerus(grammatica->productiones);
+
+    fac
+    {
+        i32 i;
+        i32 numerus_rerum;
+
+        mutatum = FALSUM;
+        numerus_rerum = (i32)xar_numerus(res_xar);
+
+        per (i = ZEPHYRUM; i < numerus_rerum; i++)
+        {
+            LapifexRes0*      res_currens;
+            LapifexProductio* prod;
+            i32               num_dextrum;
+            s32*              b_idx_ptr;
+            LapifexSymbolum*  b_sym;
+            i32               j;
+
+            res_currens = (LapifexRes0*)xar_obtinere(res_xar, i);
+            si (!res_currens) perge;
+
+            prod = (LapifexProductio*)xar_obtinere(
+                grammatica->productiones, (i32)res_currens->productio);
+            si (!prod) perge;
+
+            num_dextrum = (i32)xar_numerus(prod->dextrum);
+            si ((i32)res_currens->punctum >= num_dextrum) perge;
+
+            b_idx_ptr = (s32*)xar_obtinere(prod->dextrum,
+                (i32)res_currens->punctum);
+            si (!b_idx_ptr) perge;
+
+            b_sym = (LapifexSymbolum*)xar_obtinere(
+                grammatica->symbola, (i32)*b_idx_ptr);
+            si (!b_sym || b_sym->est_terminale) perge;
+
+            /* Pro unaquaque productione B -> gamma, addere [B -> . gamma] */
+            per (j = ZEPHYRUM; j < numerus_productionum; j++)
+            {
+                LapifexProductio* prod_b;
+                LapifexRes0       nova_res;
+
+                prod_b = (LapifexProductio*)xar_obtinere(
+                    grammatica->productiones, j);
+                si (!prod_b || prod_b->sinistrum != *b_idx_ptr) perge;
+
+                nova_res.productio = prod_b->index;
+                nova_res.punctum = ZEPHYRUM;
+
+                si (!res0_in_coniuncto(res_xar, &nova_res))
+                {
+                    LapifexRes0* addita = (LapifexRes0*)xar_addere(res_xar);
+                    si (addita)
+                    {
+                        *addita = nova_res;
+                        mutatum = VERUM;
+                    }
+                }
+            }
+        }
+    } dum (mutatum);
+}
+
+/* LR(0) goto: movere punctum trans symbolum */
+hic_manens Xar*
+goto0_computare(
+    LapifexGrammatica*  grammatica,
+    Xar*                res_xar,
+    s32                 symbolum)
+{
+    Xar* nova_res;
+    i32  i;
+    i32  numerus;
+
+    nova_res = xar_creare(grammatica->piscina, (i32)magnitudo(LapifexRes0));
+    numerus = (i32)xar_numerus(res_xar);
+
+    per (i = ZEPHYRUM; i < numerus; i++)
+    {
+        LapifexRes0*      res_currens;
+        LapifexProductio* prod;
+        i32               num_dextrum;
+        s32*              sym_idx_ptr;
+
+        res_currens = (LapifexRes0*)xar_obtinere(res_xar, i);
+        si (!res_currens) perge;
+
+        prod = (LapifexProductio*)xar_obtinere(
+            grammatica->productiones, (i32)res_currens->productio);
+        si (!prod) perge;
+
+        num_dextrum = (i32)xar_numerus(prod->dextrum);
+        si ((i32)res_currens->punctum >= num_dextrum) perge;
+
+        sym_idx_ptr = (s32*)xar_obtinere(prod->dextrum,
+            (i32)res_currens->punctum);
+        si (!sym_idx_ptr || *sym_idx_ptr != symbolum) perge;
+
+        {
+            LapifexRes0* nova = (LapifexRes0*)xar_addere(nova_res);
+            si (nova)
+            {
+                nova->productio = res_currens->productio;
+                nova->punctum = res_currens->punctum + I;
+            }
+        }
+    }
+
+    si ((i32)xar_numerus(nova_res) > ZEPHYRUM)
+    {
+        clausura0_computare(grammatica, nova_res);
+    }
+
+    redde nova_res;
+}
+
+/* Verificare si duo LR(0) coniuncta sunt aequalia */
+hic_manens b32
+status0_aequales(
+    Xar*  res_a,
+    Xar*  res_b)
+{
+    i32 num_a;
+    i32 num_b;
+    i32 i;
+
+    num_a = (i32)xar_numerus(res_a);
+    num_b = (i32)xar_numerus(res_b);
+
+    si (num_a != num_b) redde FALSUM;
+
+    per (i = ZEPHYRUM; i < num_a; i++)
+    {
+        LapifexRes0* a = (LapifexRes0*)xar_obtinere(res_a, i);
+        LapifexRes0* b = (LapifexRes0*)xar_obtinere(res_b, i);
+
+        si (!a || !b) redde FALSUM;
+        si (a->productio != b->productio ||
+            a->punctum != b->punctum)
+        {
+            redde FALSUM;
+        }
+    }
+    redde VERUM;
+}
+
+/* Invenire LR(0) statum */
+hic_manens s32
+statum0_invenire(
+    Xar*  status_omnes,
+    Xar*  res_xar)
+{
+    i32 i;
+    i32 numerus = (i32)xar_numerus(status_omnes);
+
+    per (i = ZEPHYRUM; i < numerus; i++)
+    {
+        LapifexStatus* s = (LapifexStatus*)xar_obtinere(status_omnes, i);
+        si (s && status0_aequales(s->res, res_xar))
+        {
+            redde (s32)i;
+        }
+    }
+    redde -I;
+}
+
+/* Colligere symbola post punctum in LR(0) rebus */
+hic_manens Xar*
+symbola_post_punctum0_colligere(
+    LapifexGrammatica*  grammatica,
+    Xar*                res_xar)
+{
+    Xar* symbola;
+    i32  i;
+    i32  numerus;
+
+    symbola = xar_creare(grammatica->piscina, (i32)magnitudo(s32));
+    numerus = (i32)xar_numerus(res_xar);
+
+    per (i = ZEPHYRUM; i < numerus; i++)
+    {
+        LapifexRes0*      res_currens;
+        LapifexProductio* prod;
+        s32*              sym_idx_ptr;
+
+        res_currens = (LapifexRes0*)xar_obtinere(res_xar, i);
+        si (!res_currens) perge;
+
+        prod = (LapifexProductio*)xar_obtinere(
+            grammatica->productiones, (i32)res_currens->productio);
+        si (!prod) perge;
+
+        si ((i32)res_currens->punctum >= (i32)xar_numerus(prod->dextrum)) perge;
+
+        sym_idx_ptr = (s32*)xar_obtinere(prod->dextrum,
+            (i32)res_currens->punctum);
+        si (!sym_idx_ptr) perge;
+
+        si (!first_continet(symbola, *sym_idx_ptr))
+        {
+            s32* novum = (s32*)xar_addere(symbola);
+            si (novum) *novum = *sym_idx_ptr;
+        }
+    }
+
+    redde symbola;
+}
+
+/* Tabula prospectuum: pro unoquoque statu et unaquaque re,
+ * Xar de s32 (prospectus terminales) */
+nomen structura {
+    Xar** prospectus;   /* [numerus_rerum] Xar de s32 */
+    s32   numerus_rerum;
+} LapifexProspectusTabula;
+
+/* ================================================
+ * LALR(1) Constructio Principalis
+ * ================================================ */
+
+LapifexCollectio*
+lapifex_collectio_lalr_construere(
+    LapifexGrammatica*  grammatica)
+{
+    /* Pars I: Construere LR(0) nucleos */
+    Xar*                lr0_status;    /* Xar de LapifexStatus (res = Xar de LapifexRes0) */
+    Xar*                lr0_trans;     /* Xar de LapifexTransitio */
+    Xar*                opus;
+    LapifexProductio*   prod_augmentata;
+    i32                 num_prod;
+    i32                 i;
+    i32                 num_status;
+    LapifexProspectusTabula* pt;
+    LapifexCollectio*   collectio;
+
+    si (!grammatica) redde NIHIL;
+
+    num_prod = (i32)xar_numerus(grammatica->productiones);
+
+    /* Invenire productionem augmentatam */
+    prod_augmentata = NIHIL;
+    per (i = ZEPHYRUM; i < num_prod; i++)
+    {
+        LapifexProductio* p = (LapifexProductio*)xar_obtinere(
+            grammatica->productiones, i);
+        si (p && p->sinistrum == grammatica->initium_index)
+        {
+            prod_augmentata = p;
+            frange;
+        }
+    }
+
+    si (!prod_augmentata)
+    {
+        fprintf(stderr, "lapifex lalr: productio augmentata non inventa\n");
+        redde NIHIL;
+    }
+
+    /* --- Construere LR(0) automaton --- */
+    lr0_status = xar_creare(grammatica->piscina, (i32)magnitudo(LapifexStatus));
+    lr0_trans = xar_creare(grammatica->piscina, (i32)magnitudo(LapifexTransitio));
+    opus = xar_creare(grammatica->piscina, (i32)magnitudo(s32));
+
+    /* Status 0 */
+    {
+        Xar*           res_initium;
+        LapifexRes0*   res_prima;
+        LapifexStatus* status_0;
+        s32*           opus_elem;
+
+        res_initium = xar_creare(grammatica->piscina,
+            (i32)magnitudo(LapifexRes0));
+        res_prima = (LapifexRes0*)xar_addere(res_initium);
+        res_prima->productio = prod_augmentata->index;
+        res_prima->punctum = ZEPHYRUM;
+
+        clausura0_computare(grammatica, res_initium);
+        xar_ordinare(res_initium, res0_comparator);
+
+        status_0 = (LapifexStatus*)xar_addere(lr0_status);
+        status_0->res = res_initium;
+        status_0->index = ZEPHYRUM;
+
+        opus_elem = (s32*)xar_addere(opus);
+        *opus_elem = ZEPHYRUM;
+    }
+
+    /* LR(0) worklist */
+    {
+        i32 opus_index = ZEPHYRUM;
+
+        dum (opus_index < (i32)xar_numerus(opus))
+        {
+            s32*           stat_idx_ptr;
+            LapifexStatus* status_currens;
+            Xar*           symbola;
+            i32            j;
+
+            stat_idx_ptr = (s32*)xar_obtinere(opus, opus_index);
+            opus_index++;
+
+            si (!stat_idx_ptr) perge;
+
+            status_currens = (LapifexStatus*)xar_obtinere(
+                lr0_status, (i32)*stat_idx_ptr);
+            si (!status_currens) perge;
+
+            symbola = symbola_post_punctum0_colligere(
+                grammatica, status_currens->res);
+
+            per (j = ZEPHYRUM; j < (i32)xar_numerus(symbola); j++)
+            {
+                s32* sym_ptr = (s32*)xar_obtinere(symbola, j);
+                Xar* nova_res;
+                s32  status_novus_idx;
+
+                si (!sym_ptr) perge;
+
+                nova_res = goto0_computare(
+                    grammatica, status_currens->res, *sym_ptr);
+
+                si ((i32)xar_numerus(nova_res) == ZEPHYRUM) perge;
+
+                xar_ordinare(nova_res, res0_comparator);
+
+                status_novus_idx = statum0_invenire(lr0_status, nova_res);
+
+                si (status_novus_idx < ZEPHYRUM)
+                {
+                    LapifexStatus* novus;
+                    s32*           opus_elem;
+
+                    status_novus_idx = (s32)xar_numerus(lr0_status);
+                    novus = (LapifexStatus*)xar_addere(lr0_status);
+                    novus->res = nova_res;
+                    novus->index = status_novus_idx;
+
+                    opus_elem = (s32*)xar_addere(opus);
+                    *opus_elem = status_novus_idx;
+                }
+
+                /* Notare transitionem */
+                {
+                    LapifexTransitio* trans;
+                    trans = (LapifexTransitio*)xar_addere(lr0_trans);
+                    trans->status = *stat_idx_ptr;
+                    trans->symbolum = *sym_ptr;
+                    trans->status_novus = status_novus_idx;
+                }
+            }
+        }
+    }
+
+    num_status = (i32)xar_numerus(lr0_status);
+
+    /* --- Pars II: Allocare prospectus tabulas --- */
+    pt = (LapifexProspectusTabula*)piscina_allocare(
+        grammatica->piscina,
+        (memoriae_index)((i32)magnitudo(LapifexProspectusTabula) * num_status));
+
+    per (i = ZEPHYRUM; i < num_status; i++)
+    {
+        LapifexStatus* s = (LapifexStatus*)xar_obtinere(lr0_status, i);
+        i32 nr = (i32)xar_numerus(s->res);
+        i32 k;
+
+        pt[i].numerus_rerum = (s32)nr;
+        pt[i].prospectus = (Xar**)piscina_allocare(
+            grammatica->piscina,
+            (memoriae_index)((i32)magnitudo(Xar*) * nr));
+
+        per (k = ZEPHYRUM; k < nr; k++)
+        {
+            pt[i].prospectus[k] = xar_creare(grammatica->piscina,
+                (i32)magnitudo(s32));
+        }
+    }
+
+    /* Semine: status 0, res augmentata habeat prospectum EOF */
+    {
+        s32   eof_val = (s32)LAPIFEX_EOF_PROSPECTUS;
+        s32*  p_eof;
+        i32   aug_ri;
+        LapifexStatus* s0_aug = (LapifexStatus*)xar_obtinere(lr0_status, ZEPHYRUM);
+        i32   nr0_aug = (i32)xar_numerus(s0_aug->res);
+
+        /* Invenire indicem rei augmentatae in statu 0 */
+        aug_ri = ZEPHYRUM;
+        per (aug_ri = ZEPHYRUM; aug_ri < nr0_aug; aug_ri++)
+        {
+            LapifexRes0* r0a = (LapifexRes0*)xar_obtinere(s0_aug->res, aug_ri);
+            si (r0a && r0a->productio == prod_augmentata->index &&
+                r0a->punctum == ZEPHYRUM)
+            {
+                frange;
+            }
+        }
+
+        p_eof = (s32*)xar_addere(pt[0].prospectus[aug_ri]);
+        *p_eof = eof_val;
+    }
+
+    /* --- Pars III: Propagare prospectus --- */
+    /* Pro unoquoque statu, unaquaque re, unoquoque prospectu:
+     * computare FIRST(beta a) et propagare ad status successorum */
+    {
+        b32 mutatum_global;
+
+        fac
+        {
+            i32 si_idx; /* status index */
+
+            mutatum_global = FALSUM;
+
+            per (si_idx = ZEPHYRUM; si_idx < num_status; si_idx++)
+            {
+                LapifexStatus* status_lr0;
+                i32            nr;
+                i32            ri; /* res index */
+
+                status_lr0 = (LapifexStatus*)xar_obtinere(lr0_status, si_idx);
+                si (!status_lr0) perge;
+
+                nr = (i32)xar_numerus(status_lr0->res);
+
+                per (ri = ZEPHYRUM; ri < nr; ri++)
+                {
+                    LapifexRes0*      res0;
+                    LapifexProductio* prod;
+                    i32               num_dextrum;
+                    LapifexSymbolum*  b_sym;
+                    i32               num_prosp;
+                    i32               pi; /* prospectus index */
+
+                    res0 = (LapifexRes0*)xar_obtinere(status_lr0->res, ri);
+                    si (!res0) perge;
+
+                    prod = (LapifexProductio*)xar_obtinere(
+                        grammatica->productiones, (i32)res0->productio);
+                    si (!prod) perge;
+
+                    num_dextrum = (i32)xar_numerus(prod->dextrum);
+
+                    /* Casus 1: Punctum non ad finem - propagare trans GOTO */
+                    si ((i32)res0->punctum < num_dextrum)
+                    {
+                        s32* sym_ptr;
+                        i32  ti; /* transitio index */
+                        i32  num_trans;
+
+                        sym_ptr = (s32*)xar_obtinere(prod->dextrum,
+                            (i32)res0->punctum);
+                        si (!sym_ptr) perge;
+
+                        /* Invenire transitionem ex hoc statu per hoc symbolum */
+                        num_trans = (i32)xar_numerus(lr0_trans);
+                        per (ti = ZEPHYRUM; ti < num_trans; ti++)
+                        {
+                            LapifexTransitio* trans;
+                            LapifexStatus*    dest_status;
+                            i32               dest_nr;
+                            i32               di; /* dest res index */
+
+                            trans = (LapifexTransitio*)xar_obtinere(
+                                lr0_trans, ti);
+                            si (!trans) perge;
+                            si (trans->status != (s32)si_idx) perge;
+                            si (trans->symbolum != *sym_ptr) perge;
+
+                            /* Invenire rem correspondentem in statu destinationis */
+                            dest_status = (LapifexStatus*)xar_obtinere(
+                                lr0_status, (i32)trans->status_novus);
+                            si (!dest_status) perge;
+
+                            dest_nr = (i32)xar_numerus(dest_status->res);
+                            per (di = ZEPHYRUM; di < dest_nr; di++)
+                            {
+                                LapifexRes0* dest_res;
+
+                                dest_res = (LapifexRes0*)xar_obtinere(
+                                    dest_status->res, di);
+                                si (!dest_res) perge;
+
+                                si (dest_res->productio == res0->productio &&
+                                    dest_res->punctum == res0->punctum + I)
+                                {
+                                    /* Propagare omnes prospectus */
+                                    num_prosp = (i32)xar_numerus(
+                                        pt[si_idx].prospectus[ri]);
+
+                                    per (pi = ZEPHYRUM; pi < num_prosp; pi++)
+                                    {
+                                        s32* prosp = (s32*)xar_obtinere(
+                                            pt[si_idx].prospectus[ri], pi);
+                                        si (!prosp) perge;
+
+                                        si (!first_continet(
+                                            pt[trans->status_novus].prospectus[di],
+                                            *prosp))
+                                        {
+                                            s32* novum = (s32*)xar_addere(
+                                                pt[trans->status_novus].prospectus[di]);
+                                            *novum = *prosp;
+                                            mutatum_global = VERUM;
+                                        }
+                                    }
+                                    frange;
+                                }
+                            }
+                            frange; /* una transitio per symbolum */
+                        }
+
+                        /* Casus 1b: Si symbolum post punctum est non-terminale B,
+                         * generare prospectus pro productionibus B -> . gamma */
+                        b_sym = (LapifexSymbolum*)xar_obtinere(
+                            grammatica->symbola, (i32)*sym_ptr);
+                        si (b_sym && !b_sym->est_terminale)
+                        {
+                            /* FIRST(beta a) ubi beta = symbola post B,
+                             * a = prospectus currentes */
+                            i32 num_beta;
+                            s32* beta_indices;
+                            i32 k;
+
+                            num_beta = num_dextrum - (i32)res0->punctum - I;
+                            beta_indices = NIHIL;
+
+                            si (num_beta > ZEPHYRUM)
+                            {
+                                beta_indices = (s32*)piscina_allocare(
+                                    grammatica->piscina,
+                                    (memoriae_index)((i32)magnitudo(s32) * num_beta));
+                                per (k = ZEPHYRUM; k < num_beta; k++)
+                                {
+                                    s32* si2 = (s32*)xar_obtinere(prod->dextrum,
+                                        (i32)res0->punctum + I + k);
+                                    si (si2) beta_indices[k] = *si2;
+                                }
+                            }
+
+                            /* Pro unoquoque prospectu currente a */
+                            num_prosp = (i32)xar_numerus(
+                                pt[si_idx].prospectus[ri]);
+
+                            per (pi = ZEPHYRUM; pi < num_prosp; pi++)
+                            {
+                                s32* prosp_a;
+                                Xar* first_beta_a;
+                                i32  pj; /* prod index */
+
+                                prosp_a = (s32*)xar_obtinere(
+                                    pt[si_idx].prospectus[ri], pi);
+                                si (!prosp_a) perge;
+
+                                first_beta_a = xar_creare(
+                                    grammatica->piscina, (i32)magnitudo(s32));
+
+                                first_sequentiae_computare(
+                                    grammatica,
+                                    beta_indices, num_beta,
+                                    *prosp_a,
+                                    first_beta_a);
+
+                                /* Pro unaquaque productione B -> gamma */
+                                per (pj = ZEPHYRUM; pj < num_prod; pj++)
+                                {
+                                    LapifexProductio* prod_b;
+                                    i32 qi; /* res index in statu currente */
+
+                                    prod_b = (LapifexProductio*)xar_obtinere(
+                                        grammatica->productiones, pj);
+                                    si (!prod_b) perge;
+                                    si (prod_b->sinistrum != *sym_ptr) perge;
+
+                                    /* Invenire [B -> . gamma] in statu currente */
+                                    per (qi = ZEPHYRUM; qi < nr; qi++)
+                                    {
+                                        LapifexRes0* qres;
+                                        i32 fbi; /* first beta a index */
+                                        i32 num_fba;
+
+                                        qres = (LapifexRes0*)xar_obtinere(
+                                            status_lr0->res, qi);
+                                        si (!qres) perge;
+                                        si (qres->productio != prod_b->index) perge;
+                                        si (qres->punctum != ZEPHYRUM) perge;
+
+                                        /* Addere FIRST(beta a) ad prospectus */
+                                        num_fba = (i32)xar_numerus(first_beta_a);
+                                        per (fbi = ZEPHYRUM; fbi < num_fba; fbi++)
+                                        {
+                                            s32* fb_term = (s32*)xar_obtinere(
+                                                first_beta_a, fbi);
+                                            si (!fb_term) perge;
+
+                                            si (!first_continet(
+                                                pt[si_idx].prospectus[qi],
+                                                *fb_term))
+                                            {
+                                                s32* novum = (s32*)xar_addere(
+                                                    pt[si_idx].prospectus[qi]);
+                                                *novum = *fb_term;
+                                                mutatum_global = VERUM;
+                                            }
+                                        }
+                                        frange;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        } dum (mutatum_global);
+    }
+
+    /* --- Pars IV: Convertere ad LapifexCollectio cum LR(1) rebus --- */
+    collectio = (LapifexCollectio*)piscina_allocare(
+        grammatica->piscina,
+        (memoriae_index)magnitudo(LapifexCollectio));
+    collectio->status_omnes = xar_creare(grammatica->piscina,
+        (i32)magnitudo(LapifexStatus));
+    collectio->transitiones = lr0_trans;
+    collectio->grammatica = grammatica;
+
+    per (i = ZEPHYRUM; i < num_status; i++)
+    {
+        LapifexStatus* lr0_s;
+        LapifexStatus* lr1_s;
+        Xar*           lr1_res;
+        i32            nr;
+        i32            ri;
+
+        lr0_s = (LapifexStatus*)xar_obtinere(lr0_status, i);
+        si (!lr0_s) perge;
+
+        nr = (i32)xar_numerus(lr0_s->res);
+        lr1_res = xar_creare(grammatica->piscina, (i32)magnitudo(LapifexRes));
+
+        per (ri = ZEPHYRUM; ri < nr; ri++)
+        {
+            LapifexRes0* res0;
+            i32          num_prosp;
+            i32          pi;
+
+            res0 = (LapifexRes0*)xar_obtinere(lr0_s->res, ri);
+            si (!res0) perge;
+
+            num_prosp = (i32)xar_numerus(pt[i].prospectus[ri]);
+
+            per (pi = ZEPHYRUM; pi < num_prosp; pi++)
+            {
+                s32* prosp;
+                LapifexRes* lr1_r;
+
+                prosp = (s32*)xar_obtinere(pt[i].prospectus[ri], pi);
+                si (!prosp) perge;
+
+                lr1_r = (LapifexRes*)xar_addere(lr1_res);
+                lr1_r->productio = res0->productio;
+                lr1_r->punctum = res0->punctum;
+                lr1_r->prospectus = *prosp;
+            }
+        }
+
+        xar_ordinare(lr1_res, res_comparator);
+
+        lr1_s = (LapifexStatus*)xar_addere(collectio->status_omnes);
+        lr1_s->res = lr1_res;
+        lr1_s->index = (s32)i;
+    }
+
+    redde collectio;
+}
+
+/* ================================================
  * Imprimere Collectionem
  * ================================================ */
 

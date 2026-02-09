@@ -181,6 +181,15 @@ LapifexCollectio*
 lapifex_collectio_construere(
     LapifexGrammatica*  grammatica);
 
+/* Construere collectionem LALR(1) (multo velocior quam canonica LR(1))
+ * Construit LR(0) nucleos, deinde propagat prospectus.
+ * Requirit: FIRST iam computata
+ * Redde: LapifexCollectio* vel NIHIL si error
+ */
+LapifexCollectio*
+lapifex_collectio_lalr_construere(
+    LapifexGrammatica*  grammatica);
+
 /* Imprimere collectionem ad stdout */
 vacuum
 lapifex_collectio_imprimere(
