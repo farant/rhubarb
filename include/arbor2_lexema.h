@@ -167,7 +167,10 @@ nomen enumeratio {
     ARBOR2_LEXEMA_ERROR,
 
     /* Pseudo-type for keyword macro table */
-    ARBOR2_LEXEMA_TYPEDEF_MACRO    /* Macro expands to a type */
+    ARBOR2_LEXEMA_TYPEDEF_MACRO,   /* Macro expands to a type */
+
+    /* Nomen Typus (typedef name, remapped from IDENTIFICATOR) */
+    ARBOR2_LEXEMA_NOMEN_TYPUS      /* Typedef name token */
 } Arbor2LexemaGenus;
 
 /* ==================================================

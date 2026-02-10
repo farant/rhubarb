@@ -80,6 +80,33 @@ lapifex_c89_sententiam_parsare(
     constans character*   fons,
     i32                   mensura);
 
+/* Parsare translationem (translation unit) ex fonte
+ * piscina  - Arena allocatoris
+ * intern   - Internamentum chordarum
+ * fons     - Fons C89 (plures declarationes/definitiones)
+ * mensura  - Longitudo fontis in bytes
+ * Redde: Arbor2Nodus* radix AST (TRANSLATION_UNIT), vel NIHIL si error
+ */
+Arbor2Nodus*
+lapifex_c89_translationem_parsare(
+    Piscina*              piscina,
+    InternamentumChorda*  intern,
+    constans character*   fons,
+    i32                   mensura);
+
+/* Praescandere lexemata pro typedef nominibus
+ * lexemata       - Xar of Arbor2Lexema* (mutatur in loco)
+ * intern         - Internamentum chordarum
+ * externa_nomina - Tabula externarum typedef nominum (vel NIHIL)
+ * numerus_ext    - Numerus externarum nominum
+ */
+vacuum
+lapifex_c89_typedef_praescandere(
+    Xar*                     lexemata,
+    InternamentumChorda*     intern,
+    constans character* constans* externa_nomina,
+    i32                      numerus_ext);
+
 /* Obtinere grammaticam STML expressionum (pro usu externo / probatione) */
 constans character*
 lapifex_c89_expressio_grammatica(vacuum);

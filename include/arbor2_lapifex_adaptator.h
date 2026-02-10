@@ -28,7 +28,7 @@
 #include "lapifex_parsere.h"
 
 /* Numerus maximus generum lexematum (enum Arbor2LexemaGenus) */
-#define ARBOR2_LAPIFEX_MAX_GENERA XCIV
+#define ARBOR2_LAPIFEX_MAX_GENERA XCV
 
 /* ================================================
  * Fructus Conversionis

@@ -252,7 +252,13 @@
 #define CCIII				203
 #define CCIV				204
 #define CCV					205
+#define CCVI				206
+#define CCVII				207
+#define CCVIII			208
+#define CCIX				209
 #define CCX					210
+#define CCXI				211
+#define CCXII				212
 #define CCXIII			213
 #define CCXIV			  214
 #define CCXX				220

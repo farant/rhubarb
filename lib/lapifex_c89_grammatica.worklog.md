@@ -115,3 +115,64 @@ Used classical matched/unmatched (compar/incompar) grammar transformation. Every
 - 25 expression tests, 120 assertions — all pass (no regression)
 - All 10 lapifex tests pass
 - Table build time: ~7s (up from ~3s with expression+declaration grammar)
+
+## 2026-02-09 — Function Definitions, Translation Unit, Naive Typedef (M2.6)
+
+### Overview
+Extended C89 grammar from 203 to 207 productions. Added function definitions, translation unit support (loop-based, not grammar-driven), and naive typedef pre-scan mechanism. Enables parsing complete C89 source files.
+
+### New Token
+`ARBOR2_LEXEMA_NOMEN_TYPUS` — typedef name token (IDENTIFICATOR remapped to this by pre-scan when it matches a known typedef). Added to `arbor2_lexema.h` enum, `arbor2_lexema.c` NOMINA_GENERUM[], and `ARBOR2_LAPIFEX_MAX_GENERA` bumped from 94 to 95.
+
+### New Productions (P203–P206)
+- P203: `declaratio → decl_specifiers declarator corpus` (function definition)
+- P204: `decl_specifier → NOMEN_TYPUS` (typedef name as type specifier)
+- P205: `specifier_singulum → NOMEN_TYPUS` (for casts: `(my_type)x`)
+- P206: `directus_declarator → NOMEN_TYPUS` (for definition sites in typedef decls)
+
+### Translation Unit Architecture
+**Originally attempted grammar-driven** (summum → translatio → declaratio_externa*) but hit two fatal issues:
+1. **GLR phantom forks**: `summum → translatio` caused invalid reductions from other forks accessing wrong union members → segfault
+2. **LALR ambiguity**: After `summum → declaratio` matched `int x;`, parser expected EOF but multi-item input continued
+
+**Solution: loop-based segment parsing** at the token level in `lapifex_c89_translationem_parsare()`:
+1. Lex entire input → single token stream
+2. Pre-scan for typedefs (remaps IDENTIFICATOR → NOMEN_TYPUS in-place)
+3. Scan token stream for segment boundaries
+4. For each segment, create sub-Xar + EOF, run adaptor + GLR
+5. Collect results into TRANSLATION_UNIT node (or return single item directly)
+
+### Token-Level Segment Finder
+`_segmentum_finem_in_lexematibus()` — scans non-trivia tokens tracking brace depth:
+- `;` at depth 0 → end of declaration
+- `}` at depth 0 → end of segment ONLY if `{` was preceded by `)` (function definition). If preceded by anything else (struct tag, keyword), it's a struct/enum body and scanning continues to find the `;`.
+
+This heuristic correctly handles:
+- `void f(void) { ... }` — `)` before `{` → function def, split at `}`
+- `typedef struct Foo { ... } Foo_t;` — `Foo` before `{` → struct body, scan to `;`
+- `int arr[] = {1, 2, 3};` — `=` before `{` → initializer, scan to `;`
+
+### Naive Typedef Pre-Scan
+`lapifex_c89_typedef_praescandere()` — forward scan through token stream:
+1. Accept optional external typedef names (e.g., `size_t` from `<stddef.h>`)
+2. When encountering `TYPEDEF` keyword, scan forward to `;` **at brace depth 0** (critical for struct bodies), extract last IDENTIFICATOR at depth 0 before `;` as new typedef name
+3. Remap any known-typedef IDENTIFICATORs within the typedef decl (but not the name being defined)
+4. For all other positions, remap IDENTIFICATOR → NOMEN_TYPUS if the name is known
+
+**Bug fixed**: Initial implementation didn't track brace depth while scanning for `;`, causing `typedef struct Foo { int x; } Foo_t;` to find the `;` inside the struct body and extract `x` as the typedef name instead of `Foo_t`.
+
+### New API
+- `lapifex_c89_translationem_parsare()` — parses multiple declarations/definitions from source
+- `lapifex_c89_typedef_praescandere()` — pre-scans tokens for typedef resolution
+
+### Helper Function
+`_nodus_definitio_functi()` — creates `ARBOR2_NODUS_DEFINITIO_FUNCTI` AST node with specifier, declarator, corpus.
+
+Removed `_nodus_translatio` and `_nodus_translatio_append` (no longer needed with loop-based approach).
+
+### Test Results
+- 20 function/translation/typedef tests — all pass
+- 30 statement tests, 148 assertions — all pass (no regression)
+- 30 declaration tests, 112 assertions — all pass (no regression)
+- 25 expression tests, 120 assertions — all pass (no regression)
+- All 11 lapifex tests pass

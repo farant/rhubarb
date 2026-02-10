@@ -244,7 +244,10 @@ hic_manens constans character* NOMINA_GENERUM[] = {
     "ERROR",
 
     /* Pseudo-type for keyword macro table */
-    "TYPEDEF_MACRO"
+    "TYPEDEF_MACRO",
+
+    /* Nomen Typus */
+    "NOMEN_TYPUS"
 };
 
 /* ==================================================
@@ -1637,7 +1640,7 @@ arbor2_lexator_creare(
 constans character*
 arbor2_lexema_genus_nomen(Arbor2LexemaGenus genus)
 {
-    si (genus >= ZEPHYRUM && genus <= ARBOR2_LEXEMA_TYPEDEF_MACRO)
+    si (genus >= ZEPHYRUM && genus <= ARBOR2_LEXEMA_NOMEN_TYPUS)
     {
         redde NOMINA_GENERUM[genus];
     }
