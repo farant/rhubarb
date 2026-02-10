@@ -4271,3 +4271,295 @@ lapifex_c89_translationem_parsare(
 
     redde nodus_trans;
 }
+
+/* ================================================
+ * Pons: Extrahere Arbor2Lexema* ex Arbor2Token*
+ *
+ * Expandere producit Xar* de Arbor2Token*.
+ * Lapifex pipeline expectat Xar* de Arbor2Lexema*.
+ * Haec functio extrahit lexema ex unoquoque token,
+ * filtrans trivia (NOVA_LINEA, SPATIA, etc.).
+ * ================================================ */
+
+hic_manens Xar*
+_lexemata_ex_tokens(
+    Piscina*  piscina,
+    Xar*      tokens)
+{
+    Xar*  lexemata;
+    i32   num_tok;
+    i32   i;
+
+    si (!tokens) redde NIHIL;
+
+    num_tok = (i32)xar_numerus(tokens);
+    lexemata = xar_creare(piscina, (i32)magnitudo(Arbor2Lexema*));
+
+    per (i = ZEPHYRUM; i < num_tok; i++)
+    {
+        Arbor2Token** tok_ptr = (Arbor2Token**)xar_obtinere(tokens, i);
+        Arbor2Token*  tok;
+        Arbor2Lexema* lex;
+        Arbor2Lexema** slot;
+
+        si (!tok_ptr) perge;
+        tok = *tok_ptr;
+        si (!tok || !tok->lexema) perge;
+
+        lex = tok->lexema;
+
+        /* Filtrare trivia */
+        si (arbor2_lapifex_est_trivia(lex->genus)) perge;
+
+        /* Filtrare EOF — addemus nostrum */
+        si (lex->genus == ARBOR2_LEXEMA_EOF) perge;
+
+        slot = (Arbor2Lexema**)xar_addere(lexemata);
+        *slot = lex;
+    }
+
+    redde lexemata;
+}
+
+/* ================================================
+ * Remappare typedef nomina ex expansione
+ *
+ * Utitur tabula typedef expansionis (quae includit
+ * typedefs ex #include headeribus) vice praescandendi.
+ * ================================================ */
+
+hic_manens vacuum
+_typedef_ex_expansione_remappare(
+    Xar*              lexemata,
+    Arbor2Expansion*  exp)
+{
+    i32 num_lex;
+    i32 i;
+
+    si (!lexemata || !exp) redde;
+
+    num_lex = (i32)xar_numerus(lexemata);
+
+    per (i = ZEPHYRUM; i < num_lex; i++)
+    {
+        Arbor2Lexema** lex_ptr = (Arbor2Lexema**)xar_obtinere(lexemata, i);
+        Arbor2Lexema*  lex;
+
+        si (!lex_ptr) perge;
+        lex = *lex_ptr;
+        si (!lex) perge;
+
+        si (lex->genus == ARBOR2_LEXEMA_IDENTIFICATOR &&
+            arbor2_expansion_est_typedef(exp, lex->valor))
+        {
+            lex->genus = ARBOR2_LEXEMA_NOMEN_TYPUS;
+        }
+    }
+}
+
+/* ================================================
+ * API: Parsare fontem per expansionem
+ *
+ * Pipeline completus:
+ *   1. Expandere (macros, #include, #if, etc.)
+ *   2. Extrahere lexemata ex tokens
+ *   3. Remappare typedef nomina ex expansione
+ *   4. Segmentare et parsare per GLR
+ * ================================================ */
+
+Arbor2Nodus*
+lapifex_c89_fontem_parsare(
+    Piscina*              piscina,
+    InternamentumChorda*  intern,
+    Arbor2Expansion*      exp,
+    constans character*   fons,
+    i32                   mensura,
+    constans character*   via_file)
+{
+    Xar*                    tokens;
+    Xar*                    lexemata;
+    Arbor2Nodus*            nodus_trans;
+    Xar*                    declarationes;
+    Arbor2LapifexAdaptator* adaptator;
+    i32                     num_lex;
+    i32                     cursor;
+    Arbor2Lexema*           eof_lex;
+    LapifexC89Contextus     ctx;
+    chorda*                 via;
+
+    si (!piscina || !intern || !exp || !fons) redde NIHIL;
+
+    _tabulam_parare();
+    si (!s_tabula || !s_grammatica) redde NIHIL;
+
+    /* 1. Expandere fontem per preprocessorem */
+    tokens = arbor2_expansion_processare(exp, fons, mensura, via_file);
+    si (!tokens) redde NIHIL;
+
+    /* 2. Extrahere lexemata ex tokens */
+    lexemata = _lexemata_ex_tokens(piscina, tokens);
+    si (!lexemata) redde NIHIL;
+
+    /* 3. Remappare typedef nomina ex expansione */
+    _typedef_ex_expansione_remappare(lexemata, exp);
+
+    /* 4. Creare adaptatorem */
+    adaptator = arbor2_lapifex_adaptator_creare(piscina, s_grammatica);
+    si (!adaptator) redde NIHIL;
+
+    num_lex = (i32)xar_numerus(lexemata);
+    si (num_lex == ZEPHYRUM) redde NIHIL;
+
+    /* Creare EOF lexema sinteticum */
+    eof_lex = (Arbor2Lexema*)piscina_allocare(piscina,
+        (memoriae_index)magnitudo(Arbor2Lexema));
+    memset(eof_lex, ZEPHYRUM, magnitudo(Arbor2Lexema));
+    eof_lex->genus = ARBOR2_LEXEMA_EOF;
+
+    /* Parare contextum */
+    via = chorda_internare_ex_literis(intern,
+        via_file ? via_file : "<fons>");
+    ctx.piscina = piscina;
+    ctx.intern = intern;
+    ctx.via_file = via;
+
+    /* 5. Creare TRANSLATION_UNIT nodum */
+    nodus_trans = (Arbor2Nodus*)piscina_allocare(piscina,
+        (memoriae_index)magnitudo(Arbor2Nodus));
+    memset(nodus_trans, ZEPHYRUM, magnitudo(Arbor2Nodus));
+    nodus_trans->genus = ARBOR2_NODUS_TRANSLATION_UNIT;
+    declarationes = xar_creare(piscina, (i32)magnitudo(Arbor2Nodus*));
+    nodus_trans->datum.translation_unit.declarationes = declarationes;
+
+    /* 6. Segmentare lexemata et parsare singula */
+    cursor = ZEPHYRUM;
+
+    /* Saltare trivia initiales */
+    dum (cursor < num_lex)
+    {
+        Arbor2Lexema** lp = (Arbor2Lexema**)xar_obtinere(lexemata, cursor);
+        si (!lp || !*lp) frange;
+        si ((*lp)->genus == ARBOR2_LEXEMA_EOF) frange;
+        si (!arbor2_lapifex_est_trivia((*lp)->genus)) frange;
+        cursor++;
+    }
+
+    dum (cursor < num_lex)
+    {
+        i32                   finis;
+        Xar*                  seg_lex;
+        Arbor2LapifexFructus  conv;
+        LapifexGLR*           glr;
+        LapifexGLRFructus     fructus;
+        i32                   k;
+
+        /* Confer si solum EOF remanet */
+        {
+            Arbor2Lexema** lp = (Arbor2Lexema**)xar_obtinere(lexemata, cursor);
+            si (!lp || !*lp || (*lp)->genus == ARBOR2_LEXEMA_EOF) frange;
+        }
+
+        /* Invenire finem segmenti */
+        finis = _segmentum_finem_in_lexematibus(lexemata, cursor, num_lex);
+
+        /* Creare sub-Xar pro hoc segmento */
+        seg_lex = xar_creare(piscina, (i32)magnitudo(Arbor2Lexema*));
+        per (k = cursor; k < finis; k++)
+        {
+            Arbor2Lexema** lp = (Arbor2Lexema**)xar_obtinere(lexemata, k);
+            si (lp)
+            {
+                Arbor2Lexema** slot = (Arbor2Lexema**)xar_addere(seg_lex);
+                *slot = *lp;
+            }
+        }
+
+        /* Addere EOF ad finem segmenti */
+        {
+            Arbor2Lexema** slot = (Arbor2Lexema**)xar_addere(seg_lex);
+            *slot = eof_lex;
+        }
+
+        /* Convertere per adaptatorem */
+        conv = arbor2_lapifex_convertere(adaptator, seg_lex);
+        si (!conv.successus)
+        {
+            fprintf(stderr,
+                "lapifex_c89_fontem: conversio fracta (cursor=%d)\n", cursor);
+            cursor = finis;
+            perge;
+        }
+
+        /* Parsare per GLR */
+        glr = lapifex_glr_creare(piscina, s_tabula);
+        si (!glr)
+        {
+            cursor = finis;
+            perge;
+        }
+
+        fructus = lapifex_glr_parsare(glr,
+            conv.signa, conv.numerus,
+            lapifex_c89_expressio_reductio, &ctx);
+
+        si (fructus.successus && fructus.numerus_fructuum >= I)
+        {
+            Arbor2Nodus*  seg_nodus = NODUS_EX(fructus.valori[ZEPHYRUM]);
+            Arbor2Nodus** slot = (Arbor2Nodus**)xar_addere(declarationes);
+            *slot = seg_nodus;
+        }
+        alioquin
+        {
+            fprintf(stderr,
+                "lapifex_c89_fontem: parsatio fracta (cursor=%d)\n", cursor);
+        }
+
+        cursor = finis;
+
+        /* Saltare trivia inter segmenta */
+        dum (cursor < num_lex)
+        {
+            Arbor2Lexema** lp =
+                (Arbor2Lexema**)xar_obtinere(lexemata, cursor);
+            si (!lp || !*lp) frange;
+            si ((*lp)->genus == ARBOR2_LEXEMA_EOF) frange;
+            si (!arbor2_lapifex_est_trivia((*lp)->genus)) frange;
+            cursor++;
+        }
+    }
+
+    /* Si singulum elementum, redde directe */
+    si ((i32)xar_numerus(declarationes) == I)
+    {
+        Arbor2Nodus** elem =
+            (Arbor2Nodus**)xar_obtinere(declarationes, ZEPHYRUM);
+        si (elem) redde *elem;
+    }
+
+    si ((i32)xar_numerus(declarationes) == ZEPHYRUM)
+    {
+        fprintf(stderr, "lapifex_c89_fontem: nullae declarationes\n");
+        redde NIHIL;
+    }
+
+    /* Locatio */
+    {
+        Arbor2Nodus** primum =
+            (Arbor2Nodus**)xar_obtinere(declarationes, ZEPHYRUM);
+        Arbor2Nodus** ultimum = (Arbor2Nodus**)xar_obtinere(declarationes,
+            (i32)xar_numerus(declarationes) - I);
+        si (primum && *primum)
+        {
+            nodus_trans->linea_initium = (*primum)->linea_initium;
+            nodus_trans->columna_initium = (*primum)->columna_initium;
+            nodus_trans->lexema = (*primum)->lexema;
+        }
+        si (ultimum && *ultimum)
+        {
+            nodus_trans->linea_finis = (*ultimum)->linea_finis;
+            nodus_trans->columna_finis = (*ultimum)->columna_finis;
+        }
+    }
+
+    redde nodus_trans;
+}

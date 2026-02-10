@@ -21,6 +21,7 @@
 #include "arbor2_lapifex_adaptator.h"
 #include "lapifex_generare.h"
 #include "lapifex_glr.h"
+#include "arbor2_expandere.h"
 
 /* ================================================
  * Contextus pro reductione
@@ -93,6 +94,24 @@ lapifex_c89_translationem_parsare(
     InternamentumChorda*  intern,
     constans character*   fons,
     i32                   mensura);
+
+/* Parsare fontem per expansionem (preprocessor → parser pipeline)
+ * piscina  - Arena allocatoris
+ * intern   - Internamentum chordarum
+ * exp      - Contextus expansionis (iam configuratus cum include viis, macris, etc.)
+ * fons     - Fons C89 (cum directivis preprocessoris)
+ * mensura  - Longitudo fontis in bytes
+ * via_file - Via file fontis (pro provenientia)
+ * Redde: Arbor2Nodus* radix AST, vel NIHIL si error
+ */
+Arbor2Nodus*
+lapifex_c89_fontem_parsare(
+    Piscina*              piscina,
+    InternamentumChorda*  intern,
+    Arbor2Expansion*      exp,
+    constans character*   fons,
+    i32                   mensura,
+    constans character*   via_file);
 
 /* Praescandere lexemata pro typedef nominibus
  * lexemata       - Xar of Arbor2Lexema* (mutatur in loco)

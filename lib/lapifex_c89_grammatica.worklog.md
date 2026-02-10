@@ -176,3 +176,41 @@ Removed `_nodus_translatio` and `_nodus_translatio_append` (no longer needed wit
 - 30 declaration tests, 112 assertions — all pass (no regression)
 - 25 expression tests, 120 assertions — all pass (no regression)
 - All 11 lapifex tests pass
+
+## 2026-02-10 — Preprocessor-to-Parser Integration (M3)
+
+### Overview
+Connected the preprocessor (`arbor2_expandere`) to the Lapifex C89 parser. New public API `lapifex_c89_fontem_parsare()` takes an `Arbor2Expansion*` context and source text, runs the full pipeline: expand macros → extract lexemata from tokens → remap typedefs using expander's table → segment-split → GLR parse.
+
+### New Functions
+1. **`_lexemata_ex_tokens()`** (internal) — Extracts `Arbor2Lexema*` from the `Xar* of Arbor2Token*` that the expander outputs, filtering trivia (whitespace, newlines, comments, EOF). Simple O(n) pass.
+
+2. **`_typedef_ex_expansione_remappare()`** (internal) — Walks lexemata and remaps `IDENTIFICATOR → NOMEN_TYPUS` using `arbor2_expansion_est_typedef()`. Uses the expander's typedef table which includes typedefs discovered during expansion and API-injected typedefs.
+
+3. **`lapifex_c89_fontem_parsare()`** (public) — Full pipeline: expand → extract → remap → segment-split → parse. Caller creates and configures the `Arbor2Expansion*` context (include paths, macros, typedefs, latina.h registration). Creates a synthetic EOF lexema since the expander's EOF is filtered out during extraction.
+
+### Key Design Decisions
+1. **Extract Lexema*, not convert Token***: The GLR parser's s64 value system stores `(s64)(longus)(vacuum*)lexema`. Changing to Token* would require touching every reduction callback. Provenance can be recovered later by mapping Lexema* → Token* if needed.
+
+2. **Expander-driven typedef**: The expander's `_detectare_typedef` handles typedefs from expansion including from `#include`d headers. For `fontem_parsare`, we use the expander's table exclusively. The naive `typedef_praescandere` remains for the non-expander path.
+
+3. **Caller owns Expansion context**: Rather than creating the expander internally, `fontem_parsare` takes a pre-configured `Arbor2Expansion*`. This lets callers configure include paths, register macros/typedefs, reuse contexts across files, and register latina.h.
+
+4. **Segment-parse loop reused**: The segment finder (`_segmentum_finem_in_lexematibus`) and per-segment parse loop are the same as `translationem_parsare`.
+
+### Discovery: Expander Conditional Compilation
+The expander does NOT handle `#ifdef`/`#ifndef`/`#if`/`#elif`/`#else`/`#endif`. It handles `#define`, `#undef`, `#include`, and macro expansion. The `arbor2_conditio_evaluare.c` file has expression evaluation for `#if` but the directive dispatching in the expander's layer-expansion loop only recognizes `define`, `undef`, and `include`. Tests were adjusted to avoid conditional directives.
+
+Also discovered that `#undef` followed by `#define` in multi-line source doesn't work correctly — the directive tokens leak through into the output. The first `#define` in a source works because it's consumed before macro expansion, but subsequent `#define`/`#undef` after the first line have issues.
+
+### Header Change
+Added `#include "arbor2_expandere.h"` to `lapifex_c89.h`.
+
+### Test Results
+- 20 integration tests (probatio_lapifex_c89_expandere.c), all pass
+  - Basic pipeline, latina.h macros, #define, typedef, function-like macro
+  - API-injected macros (object + function-like), external typedef
+  - Latina.h + typedef interaction, struct, enum, for loop
+  - Mixed declarations + functions, multiple #defines, nomen + structura
+- All 12 lapifex tests pass (zero regression)
+- All 134 expander tests pass (zero regression)
