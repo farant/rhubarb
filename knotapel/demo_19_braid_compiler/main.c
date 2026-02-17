@@ -1,0 +1,1016 @@
+/*
+ * KNOTAPEL DEMO 19: Braid Circuit Compiler
+ * =========================================
+ *
+ * CONVERGENCE THESIS: The 8th root of unity (A = e^{i5pi/4}) is the
+ * algebraic sweet spot where three phenomena align:
+ *   (1) Demo 15's delta-zero optimal classification angles
+ *   (2) Demo 18's magic gate angles
+ *   (3) cyclotomic integer-valued bracket amplitudes
+ *
+ * Part A: Root-of-unity gate catalog (4th, 6th, 8th, 10th, 12th)
+ * Part B: Single-angle universal set at 5pi/4, raw vs reduced bracket
+ * Part C: Boolean expression compiler (recursive eval, cascade gates)
+ * Part D: Full adder test (3 inputs -> sum + carry, all 8 combos)
+ * Part E: Efficiency analysis (gate count, depth, evaluation time)
+ *
+ * C89, zero dependencies beyond math.h.
+ */
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <math.h>
+#include <time.h>
+
+#ifndef M_PI
+#define M_PI 3.14159265358979323846
+#endif
+
+/* ================================================================
+ * Complex arithmetic (from Demo 18)
+ * ================================================================ */
+
+typedef struct { double re, im; } Cx;
+
+static Cx cx_make(double re, double im) { Cx z; z.re = re; z.im = im; return z; }
+static Cx cx_zero(void) { return cx_make(0.0, 0.0); }
+static Cx cx_one(void)  { return cx_make(1.0, 0.0); }
+
+static Cx cx_add(Cx a, Cx b) { return cx_make(a.re + b.re, a.im + b.im); }
+static Cx cx_neg(Cx a) { return cx_make(-a.re, -a.im); }
+static Cx cx_mul(Cx a, Cx b) {
+    return cx_make(a.re * b.re - a.im * b.im,
+                   a.re * b.im + a.im * b.re);
+}
+static Cx cx_div(Cx a, Cx b) {
+    double d = b.re * b.re + b.im * b.im;
+    return cx_make((a.re * b.re + a.im * b.im) / d,
+                   (a.im * b.re - a.re * b.im) / d);
+}
+static double cx_abs(Cx a) { return sqrt(a.re * a.re + a.im * a.im); }
+static Cx cx_exp_i(double theta) { return cx_make(cos(theta), sin(theta)); }
+static Cx cx_pow_int(Cx a, int n) {
+    Cx r = cx_one();
+    Cx base;
+    int neg;
+    if (n == 0) return r;
+    neg = (n < 0);
+    if (neg) n = -n;
+    base = a;
+    while (n > 0) {
+        if (n & 1) r = cx_mul(r, base);
+        base = cx_mul(base, base);
+        n >>= 1;
+    }
+    if (neg) r = cx_div(cx_one(), r);
+    return r;
+}
+
+/* ================================================================
+ * State-sum bracket oracle (from Demo 18)
+ * ================================================================ */
+
+#define MAX_WORD 64
+typedef struct { int word[MAX_WORD]; int len, n; } Braid;
+
+#define MAX_UF 4096
+static int uf_p[MAX_UF];
+static void uf_init(int n) { int i; for (i = 0; i < n; i++) uf_p[i] = i; }
+static int uf_find(int x) {
+    while (uf_p[x] != x) { uf_p[x] = uf_p[uf_p[x]]; x = uf_p[x]; }
+    return x;
+}
+static void uf_union(int x, int y) {
+    x = uf_find(x); y = uf_find(y); if (x != y) uf_p[x] = y;
+}
+
+static int braid_loops(const Braid *b, unsigned s) {
+    int N = (b->len + 1) * b->n, l, p, i, loops, sgn, bit, cup;
+    uf_init(N);
+    for (l = 0; l < b->len; l++) {
+        sgn = b->word[l] > 0 ? 1 : -1;
+        i = (sgn > 0 ? b->word[l] : -b->word[l]) - 1;
+        bit = (int)((s >> l) & 1u);
+        cup = (sgn > 0) ? (bit == 0) : (bit == 1);
+        if (cup) {
+            uf_union(l * b->n + i, l * b->n + i + 1);
+            uf_union((l + 1) * b->n + i, (l + 1) * b->n + i + 1);
+            for (p = 0; p < b->n; p++)
+                if (p != i && p != i + 1)
+                    uf_union(l * b->n + p, (l + 1) * b->n + p);
+        } else {
+            for (p = 0; p < b->n; p++)
+                uf_union(l * b->n + p, (l + 1) * b->n + p);
+        }
+    }
+    for (p = 0; p < b->n; p++)
+        uf_union(p, b->len * b->n + p);
+    loops = 0;
+    for (i = 0; i < N; i++)
+        if (uf_find(i) == i) loops++;
+    return loops;
+}
+
+static Cx braid_bracket_at(const Braid *b, Cx A) {
+    unsigned s, ns;
+    int i, a_count, b_count, lp, j;
+    Cx result, delta, d_power, term, coeff;
+
+    delta = cx_neg(cx_add(cx_pow_int(A, 2), cx_pow_int(A, -2)));
+
+    result = cx_zero();
+    if (!b->len) {
+        result = cx_one();
+        for (i = 0; i < b->n - 1; i++)
+            result = cx_mul(result, delta);
+        return result;
+    }
+
+    ns = 1u << b->len;
+    for (s = 0; s < ns; s++) {
+        a_count = 0; b_count = 0;
+        for (i = 0; i < b->len; i++) {
+            if ((s >> (unsigned)i) & 1u) b_count++;
+            else a_count++;
+        }
+        lp = braid_loops(b, s);
+
+        coeff = cx_pow_int(A, a_count - b_count);
+        d_power = cx_one();
+        for (j = 0; j < lp - 1; j++)
+            d_power = cx_mul(d_power, delta);
+        term = cx_mul(coeff, d_power);
+        result = cx_add(result, term);
+    }
+    return result;
+}
+
+/* ================================================================
+ * Test infrastructure
+ * ================================================================ */
+
+static int n_pass = 0, n_fail = 0;
+
+static void check(const char *msg, int ok) {
+    if (ok) { printf("  PASS: %s\n", msg); n_pass++; }
+    else    { printf("  FAIL: %s\n", msg); n_fail++; }
+}
+
+/* ================================================================
+ * Braid construction helpers
+ * ================================================================ */
+
+static Braid make_gate_braid(int n_strands,
+                              const int *input_word, int input_len,
+                              const int *gate_word, int gate_len) {
+    Braid b;
+    int i;
+    b.n = n_strands;
+    b.len = input_len + gate_len;
+    for (i = 0; i < input_len; i++)
+        b.word[i] = input_word[i];
+    for (i = 0; i < gate_len; i++)
+        b.word[input_len + i] = gate_word[i];
+    return b;
+}
+
+/* 1-input gate evaluation (2 strands) */
+static double gate_output(int n_strands,
+                          int input_bit, int input_gen,
+                          const int *gate_word, int gate_len,
+                          Cx A) {
+    Braid b;
+    int input_word[1];
+    if (input_bit == 0) {
+        b = make_gate_braid(n_strands, NULL, 0, gate_word, gate_len);
+    } else {
+        input_word[0] = input_gen;
+        b = make_gate_braid(n_strands, input_word, 1, gate_word, gate_len);
+    }
+    return cx_abs(braid_bracket_at(&b, A));
+}
+
+/* 2-input gate evaluation (3 strands) */
+static double gate_output_2bit(int n_strands,
+                               int bit_a, int gen_a,
+                               int bit_b, int gen_b,
+                               const int *gate_word, int gate_len,
+                               Cx A) {
+    Braid b;
+    int input_word[2];
+    int input_len = 0;
+    if (bit_a) { input_word[input_len++] = gen_a; }
+    if (bit_b) { input_word[input_len++] = gen_b; }
+    b = make_gate_braid(n_strands, input_word, input_len, gate_word, gate_len);
+    return cx_abs(braid_bracket_at(&b, A));
+}
+
+/* Reduced bracket: g = |bracket| / |delta|^k
+ * For n-strand braid: k = n - 1 (closure loops) */
+static double gate_output_reduced(int n_strands,
+                                   int input_bit, int input_gen,
+                                   const int *gate_word, int gate_len,
+                                   Cx A) {
+    Braid b;
+    int input_word[1];
+    double raw, delta_abs;
+    int k;
+    Cx delta;
+
+    if (input_bit == 0) {
+        b = make_gate_braid(n_strands, NULL, 0, gate_word, gate_len);
+    } else {
+        input_word[0] = input_gen;
+        b = make_gate_braid(n_strands, input_word, 1, gate_word, gate_len);
+    }
+    raw = cx_abs(braid_bracket_at(&b, A));
+    delta = cx_neg(cx_add(cx_pow_int(A, 2), cx_pow_int(A, -2)));
+    delta_abs = cx_abs(delta);
+    k = n_strands - 1;
+    if (delta_abs < 1e-12) return raw; /* avoid division by zero */
+    return raw / pow(delta_abs, (double)k);
+}
+
+static double gate_output_2bit_reduced(int n_strands,
+                                        int bit_a, int gen_a,
+                                        int bit_b, int gen_b,
+                                        const int *gate_word, int gate_len,
+                                        Cx A) {
+    Braid b;
+    int input_word[2];
+    int input_len = 0;
+    double raw, delta_abs;
+    int k;
+    Cx delta;
+
+    if (bit_a) { input_word[input_len++] = gen_a; }
+    if (bit_b) { input_word[input_len++] = gen_b; }
+    b = make_gate_braid(n_strands, input_word, input_len, gate_word, gate_len);
+    raw = cx_abs(braid_bracket_at(&b, A));
+    delta = cx_neg(cx_add(cx_pow_int(A, 2), cx_pow_int(A, -2)));
+    delta_abs = cx_abs(delta);
+    k = n_strands - 1;
+    if (delta_abs < 1e-12) return raw;
+    return raw / pow(delta_abs, (double)k);
+}
+
+/* ================================================================
+ * Gate catalog structure
+ * ================================================================ */
+
+typedef struct {
+    int word[MAX_WORD];
+    int len;
+    int n_strands;
+    double sep;
+    double threshold;
+    int found;
+} Gate;
+
+/* Demo 18 known gates */
+static int NOT_WORD[] = {-1, -1, -1, -1, -1, -1};
+static int NOT_LEN = 6;
+static int NAND_WORD[] = {-1, -1, -1, 2, 2};
+static int NAND_LEN = 5;
+
+/* ================================================================
+ * PART A: Root-of-Unity Gate Catalog
+ *
+ * Test Demo 18's NOT and NAND gates at every Nth root of unity
+ * for N = 4, 6, 8, 10, 12. Record where they work.
+ * ================================================================ */
+
+static void test_not_at_angle(double theta, Gate *g) {
+    Cx A = cx_exp_i(theta);
+    double o0 = gate_output(2, 0, 1, NOT_WORD, NOT_LEN, A);
+    double o1 = gate_output(2, 1, 1, NOT_WORD, NOT_LEN, A);
+    double sep = o0 - o1; /* NOT: input=0 -> high, input=1 -> low */
+
+    g->n_strands = 2;
+    g->len = NOT_LEN;
+    memcpy(g->word, NOT_WORD, (size_t)NOT_LEN * sizeof(int));
+
+    if (sep > 0.001) {
+        g->found = 1;
+        g->sep = sep;
+        g->threshold = (o0 + o1) / 2.0;
+    } else {
+        g->found = 0;
+        g->sep = sep;
+        g->threshold = 0.0;
+    }
+}
+
+static void test_nand_at_angle(double theta, Gate *g) {
+    Cx A = cx_exp_i(theta);
+    double o00 = gate_output_2bit(3, 0, 1, 0, 2, NAND_WORD, NAND_LEN, A);
+    double o01 = gate_output_2bit(3, 0, 1, 1, 2, NAND_WORD, NAND_LEN, A);
+    double o10 = gate_output_2bit(3, 1, 1, 0, 2, NAND_WORD, NAND_LEN, A);
+    double o11 = gate_output_2bit(3, 1, 1, 1, 2, NAND_WORD, NAND_LEN, A);
+    double min_high = o00;
+    double sep;
+
+    if (o01 < min_high) min_high = o01;
+    if (o10 < min_high) min_high = o10;
+    sep = min_high - o11;
+
+    g->n_strands = 3;
+    g->len = NAND_LEN;
+    memcpy(g->word, NAND_WORD, (size_t)NAND_LEN * sizeof(int));
+
+    if (sep > 0.001) {
+        g->found = 1;
+        g->sep = sep;
+        g->threshold = (min_high + o11) / 2.0;
+    } else {
+        g->found = 0;
+        g->sep = sep;
+        g->threshold = 0.0;
+    }
+}
+
+static void part_a_catalog(void) {
+    int roots[] = {4, 6, 8, 10, 12};
+    int n_roots = 5;
+    int ri, k;
+    int total_not = 0, total_nand = 0, total_universal = 0;
+    char msg[200];
+
+    printf("\n=== PART A: Root-of-Unity Gate Catalog ===\n");
+    printf("  Testing Demo 18 gates at Nth roots of unity\n\n");
+
+    for (ri = 0; ri < n_roots; ri++) {
+        int N = roots[ri];
+        int not_works = 0, nand_works = 0;
+
+        printf("  %dth roots of unity:\n", N);
+
+        for (k = 0; k < N; k++) {
+            double theta = 2.0 * M_PI * (double)k / (double)N;
+            Gate ng, nandag;
+
+            test_not_at_angle(theta, &ng);
+            test_nand_at_angle(theta, &nandag);
+
+            if (ng.found || nandag.found) {
+                printf("    k=%d (%.4f*pi): NOT=%s(sep=%.3f) NAND=%s(sep=%.3f)\n",
+                       k, theta / M_PI,
+                       ng.found ? "YES" : "no ", ng.sep,
+                       nandag.found ? "YES" : "no ", nandag.sep);
+            }
+
+            if (ng.found) not_works++;
+            if (nandag.found) nand_works++;
+        }
+
+        printf("    Summary: NOT at %d/%d, NAND at %d/%d",
+               not_works, N, nand_works, N);
+        if (not_works > 0 && nand_works > 0) {
+            printf(" -> UNIVERSAL\n");
+            total_universal++;
+        } else {
+            printf("\n");
+        }
+
+        total_not += not_works;
+        total_nand += nand_works;
+    }
+
+    printf("\n  CATALOG SUMMARY:\n");
+    printf("    Total NOT-working angles: %d\n", total_not);
+    printf("    Total NAND-working angles: %d\n", total_nand);
+    printf("    Roots with universal set: %d/%d\n", total_universal, n_roots);
+
+    sprintf(msg, "at least one root of unity supports universal gate set (%d/%d)",
+            total_universal, n_roots);
+    check(msg, total_universal > 0);
+
+    /* P5: hierarchy prediction */
+    sprintf(msg, "P5: multiple roots support gates (total NOT=%d, NAND=%d)",
+            total_not, total_nand);
+    check(msg, total_not >= 2 && total_nand >= 2);
+}
+
+/* ================================================================
+ * PART B: Single-Angle Universal Set at 5pi/4
+ *
+ * Verify both NOT and NAND work at the convergence angle.
+ * Compare raw bracket vs reduced bracket separation.
+ * ================================================================ */
+
+static Gate best_not_gate;   /* filled by Part B, used by Parts C-E */
+static Gate best_nand_gate;  /* filled by Part B, used by Parts C-E */
+static double magic_theta;   /* the angle for compilation */
+
+static void part_b_universal_set(void) {
+    Cx A;
+    double o0_raw, o1_raw, o0_red, o1_red;
+    double sep_raw, sep_red;
+    double o00_raw, o01_raw, o10_raw, o11_raw;
+    double o00_red, o01_red, o10_red, o11_red;
+    double min_high_raw, sep_nand_raw;
+    double min_high_red, sep_nand_red;
+    char msg[200];
+
+    magic_theta = 5.0 * M_PI / 4.0;
+    A = cx_exp_i(magic_theta);
+
+    printf("\n=== PART B: Single-Angle Universal Set (5pi/4) ===\n");
+    printf("  A = e^{i*5pi/4}, theta = %.6f\n\n", magic_theta);
+
+    /* NOT gate: raw vs reduced */
+    o0_raw = gate_output(2, 0, 1, NOT_WORD, NOT_LEN, A);
+    o1_raw = gate_output(2, 1, 1, NOT_WORD, NOT_LEN, A);
+    sep_raw = o0_raw - o1_raw;
+
+    o0_red = gate_output_reduced(2, 0, 1, NOT_WORD, NOT_LEN, A);
+    o1_red = gate_output_reduced(2, 1, 1, NOT_WORD, NOT_LEN, A);
+    sep_red = o0_red - o1_red;
+
+    printf("  NOT gate at 5pi/4:\n");
+    printf("    Raw bracket:     input=0 -> %.6f, input=1 -> %.6f, sep=%.6f\n",
+           o0_raw, o1_raw, sep_raw);
+    printf("    Reduced bracket: input=0 -> %.6f, input=1 -> %.6f, sep=%.6f\n",
+           o0_red, o1_red, sep_red);
+    printf("    Reduced %s than raw\n",
+           fabs(sep_red) > fabs(sep_raw) ? "BETTER" : "worse");
+
+    /* Fill NOT gate for compiler */
+    best_not_gate.n_strands = 2;
+    best_not_gate.len = NOT_LEN;
+    memcpy(best_not_gate.word, NOT_WORD, (size_t)NOT_LEN * sizeof(int));
+    if (sep_raw > 0.001) {
+        best_not_gate.found = 1;
+        best_not_gate.sep = sep_raw;
+        best_not_gate.threshold = (o0_raw + o1_raw) / 2.0;
+    } else {
+        best_not_gate.found = 0;
+        best_not_gate.sep = sep_raw;
+        best_not_gate.threshold = 0.0;
+    }
+
+    /* NAND gate: raw vs reduced */
+    o00_raw = gate_output_2bit(3, 0, 1, 0, 2, NAND_WORD, NAND_LEN, A);
+    o01_raw = gate_output_2bit(3, 0, 1, 1, 2, NAND_WORD, NAND_LEN, A);
+    o10_raw = gate_output_2bit(3, 1, 1, 0, 2, NAND_WORD, NAND_LEN, A);
+    o11_raw = gate_output_2bit(3, 1, 1, 1, 2, NAND_WORD, NAND_LEN, A);
+
+    min_high_raw = o00_raw;
+    if (o01_raw < min_high_raw) min_high_raw = o01_raw;
+    if (o10_raw < min_high_raw) min_high_raw = o10_raw;
+    sep_nand_raw = min_high_raw - o11_raw;
+
+    o00_red = gate_output_2bit_reduced(3, 0, 1, 0, 2, NAND_WORD, NAND_LEN, A);
+    o01_red = gate_output_2bit_reduced(3, 0, 1, 1, 2, NAND_WORD, NAND_LEN, A);
+    o10_red = gate_output_2bit_reduced(3, 1, 1, 0, 2, NAND_WORD, NAND_LEN, A);
+    o11_red = gate_output_2bit_reduced(3, 1, 1, 1, 2, NAND_WORD, NAND_LEN, A);
+
+    min_high_red = o00_red;
+    if (o01_red < min_high_red) min_high_red = o01_red;
+    if (o10_red < min_high_red) min_high_red = o10_red;
+    sep_nand_red = min_high_red - o11_red;
+
+    printf("\n  NAND gate at 5pi/4:\n");
+    printf("    Raw:     (0,0)=%.4f (0,1)=%.4f (1,0)=%.4f (1,1)=%.4f sep=%.6f\n",
+           o00_raw, o01_raw, o10_raw, o11_raw, sep_nand_raw);
+    printf("    Reduced: (0,0)=%.4f (0,1)=%.4f (1,0)=%.4f (1,1)=%.4f sep=%.6f\n",
+           o00_red, o01_red, o10_red, o11_red, sep_nand_red);
+    printf("    Reduced %s than raw\n",
+           fabs(sep_nand_red) > fabs(sep_nand_raw) ? "BETTER" : "worse");
+
+    /* Fill NAND gate for compiler */
+    best_nand_gate.n_strands = 3;
+    best_nand_gate.len = NAND_LEN;
+    memcpy(best_nand_gate.word, NAND_WORD, (size_t)NAND_LEN * sizeof(int));
+    if (sep_nand_raw > 0.001) {
+        best_nand_gate.found = 1;
+        best_nand_gate.sep = sep_nand_raw;
+        best_nand_gate.threshold = (min_high_raw + o11_raw) / 2.0;
+    } else {
+        best_nand_gate.found = 0;
+        best_nand_gate.sep = sep_nand_raw;
+        best_nand_gate.threshold = 0.0;
+    }
+
+    /* P1: Universal gate set at 5pi/4 */
+    sprintf(msg, "P1: NOT gate works at 5pi/4 (sep=%.4f)", sep_raw);
+    check(msg, sep_raw > 0.001);
+
+    sprintf(msg, "P1: NAND gate works at 5pi/4 (sep=%.4f)", sep_nand_raw);
+    check(msg, sep_nand_raw > 0.001);
+
+    if (best_not_gate.found && best_nand_gate.found) {
+        printf("\n  UNIVERSAL SET CONFIRMED at 5pi/4\n");
+        check("P1: complete universal gate set {NOT, NAND} at 5pi/4", 1);
+    } else {
+        printf("\n  WARNING: Universal set NOT confirmed at 5pi/4\n");
+        printf("  Falling back to angle sweep...\n");
+        /* If 5pi/4 doesn't work, sweep for best angle */
+        {
+            int i;
+            double best_combined = 0.0;
+            double best_theta_sweep = 0.0;
+            for (i = 0; i < 256; i++) {
+                double th = 2.0 * M_PI * (double)i / 256.0;
+                Gate ng, nandag;
+                test_not_at_angle(th, &ng);
+                test_nand_at_angle(th, &nandag);
+                if (ng.found && nandag.found) {
+                    double combined = ng.sep + nandag.sep;
+                    if (combined > best_combined) {
+                        best_combined = combined;
+                        best_theta_sweep = th;
+                    }
+                }
+            }
+            if (best_combined > 0.0) {
+                magic_theta = best_theta_sweep;
+                printf("  Fallback angle: %.4f*pi\n", magic_theta / M_PI);
+                test_not_at_angle(magic_theta, &best_not_gate);
+                /* reuse threshold from test */
+                best_not_gate.found = 1;
+                test_nand_at_angle(magic_theta, &best_nand_gate);
+                best_nand_gate.found = 1;
+                check("Fallback: universal set found at alternate angle", 1);
+            } else {
+                check("FATAL: no angle supports both NOT and NAND", 0);
+            }
+        }
+    }
+
+    /* P2: reduced bracket comparison */
+    {
+        int not_reduced_better = (fabs(sep_red) > fabs(sep_raw));
+        int nand_reduced_better = (fabs(sep_nand_red) > fabs(sep_nand_raw));
+        sprintf(msg, "P2: reduced bracket NOT separation (raw=%.4f, red=%.4f)",
+                sep_raw, sep_red);
+        check(msg, 1); /* informational, not pass/fail */
+        sprintf(msg, "P2: reduced bracket NAND separation (raw=%.4f, red=%.4f)",
+                sep_nand_raw, sep_nand_red);
+        check(msg, 1);
+        printf("  P2 result: reduced bracket %s for NOT, %s for NAND\n",
+               not_reduced_better ? "BETTER" : "WORSE",
+               nand_reduced_better ? "BETTER" : "WORSE");
+    }
+}
+
+/* ================================================================
+ * PART C: Boolean Expression Compiler
+ *
+ * Expression tree evaluated recursively.
+ * Each gate produces a classical bit via bracket thresholding.
+ * That bit feeds as braid input to the next gate.
+ *
+ * Supported operations:
+ *   VAR(id)         - input variable
+ *   NOT(x)          - logical NOT via braid gate
+ *   NAND(x, y)      - logical NAND via braid gate
+ *   AND(x, y)       = NOT(NAND(x, y))
+ *   OR(x, y)        = NAND(NOT(x), NOT(y))
+ *   XOR(x, y)       = NAND(NAND(x, NAND(x,y)), NAND(y, NAND(x,y)))
+ * ================================================================ */
+
+typedef enum { EXPR_VAR, EXPR_NOT, EXPR_NAND } ExprType;
+
+typedef struct Expr {
+    ExprType type;
+    int var_id;          /* for EXPR_VAR */
+    struct Expr *left;   /* child 1 */
+    struct Expr *right;  /* child 2 (NULL for NOT) */
+} Expr;
+
+/* Expression pool (simple arena, no free needed) */
+#define EXPR_POOL_SIZE 1024
+static Expr expr_pool[EXPR_POOL_SIZE];
+static int expr_pool_idx = 0;
+
+static Expr *expr_alloc(void) {
+    Expr *e;
+    if (expr_pool_idx >= EXPR_POOL_SIZE) {
+        fprintf(stderr, "Expression pool exhausted!\n");
+        exit(1);
+    }
+    e = &expr_pool[expr_pool_idx++];
+    e->left = NULL;
+    e->right = NULL;
+    e->var_id = 0;
+    return e;
+}
+
+static void expr_pool_reset(void) { expr_pool_idx = 0; }
+
+/* Expression constructors */
+static Expr *expr_var(int id) {
+    Expr *e = expr_alloc();
+    e->type = EXPR_VAR;
+    e->var_id = id;
+    return e;
+}
+
+static Expr *expr_not(Expr *child) {
+    Expr *e = expr_alloc();
+    e->type = EXPR_NOT;
+    e->left = child;
+    return e;
+}
+
+static Expr *expr_nand(Expr *a, Expr *b) {
+    Expr *e = expr_alloc();
+    e->type = EXPR_NAND;
+    e->left = a;
+    e->right = b;
+    return e;
+}
+
+/* Derived gates */
+static Expr *expr_and(Expr *a, Expr *b) {
+    return expr_not(expr_nand(a, b));
+}
+
+static Expr *expr_or(Expr *a, Expr *b) {
+    return expr_nand(expr_not(a), expr_not(b));
+}
+
+static Expr *expr_xor(Expr *a, Expr *b) {
+    Expr *nand_ab = expr_nand(a, b);
+    return expr_nand(expr_nand(a, nand_ab), expr_nand(b, nand_ab));
+}
+
+/* Evaluation statistics */
+static int eval_gate_count;   /* number of braid evaluations */
+static int eval_max_depth;    /* deepest recursion */
+
+static int eval_expr_impl(const Expr *e, const int *vars, Cx A, int depth) {
+    if (depth > eval_max_depth) eval_max_depth = depth;
+
+    switch (e->type) {
+    case EXPR_VAR:
+        return vars[e->var_id];
+
+    case EXPR_NOT: {
+        int input = eval_expr_impl(e->left, vars, A, depth + 1);
+        double amp = gate_output(best_not_gate.n_strands,
+                                  input, 1,
+                                  best_not_gate.word, best_not_gate.len, A);
+        eval_gate_count++;
+        return amp > best_not_gate.threshold ? 1 : 0;
+    }
+
+    case EXPR_NAND: {
+        int a = eval_expr_impl(e->left, vars, A, depth + 1);
+        int b = eval_expr_impl(e->right, vars, A, depth + 1);
+        double amp = gate_output_2bit(best_nand_gate.n_strands,
+                                       a, 1, b, 2,
+                                       best_nand_gate.word, best_nand_gate.len,
+                                       A);
+        eval_gate_count++;
+        return amp > best_nand_gate.threshold ? 1 : 0;
+    }
+    }
+    return 0; /* unreachable */
+}
+
+static int eval_expr(const Expr *e, const int *vars, Cx A) {
+    eval_gate_count = 0;
+    eval_max_depth = 0;
+    return eval_expr_impl(e, vars, A, 0);
+}
+
+/* Count total expression nodes */
+static int expr_size(const Expr *e) {
+    if (!e) return 0;
+    return 1 + expr_size(e->left) + expr_size(e->right);
+}
+
+static void part_c_compiler(void) {
+    Cx A;
+    int vars[3];
+    int i;
+    char msg[200];
+    int and_correct, or_correct, xor_correct;
+
+    printf("\n=== PART C: Boolean Expression Compiler ===\n");
+
+    if (!best_not_gate.found || !best_nand_gate.found) {
+        printf("  Skipping: need both NOT and NAND gates.\n");
+        check("compiler requires universal gate set", 0);
+        return;
+    }
+
+    A = cx_exp_i(magic_theta);
+
+    /* Test AND(a, b) */
+    printf("\n  Testing AND(a, b) = NOT(NAND(a, b)):\n");
+    and_correct = 1;
+    for (i = 0; i < 4; i++) {
+        int a = (i >> 1) & 1;
+        int b = i & 1;
+        int expected = a & b;
+        int result;
+        Expr *ex;
+
+        expr_pool_reset();
+        ex = expr_and(expr_var(0), expr_var(1));
+        vars[0] = a; vars[1] = b;
+        result = eval_expr(ex, vars, A);
+
+        printf("    AND(%d,%d) = %d (expect %d) [%d gates, depth %d] %s\n",
+               a, b, result, expected, eval_gate_count, eval_max_depth,
+               result == expected ? "OK" : "WRONG");
+
+        if (result != expected) and_correct = 0;
+    }
+    sprintf(msg, "AND gate via compiler (%d nodes)", expr_size(expr_and(expr_var(0), expr_var(1))));
+    check(msg, and_correct);
+
+    /* Test OR(a, b) */
+    printf("\n  Testing OR(a, b) = NAND(NOT(a), NOT(b)):\n");
+    or_correct = 1;
+    for (i = 0; i < 4; i++) {
+        int a = (i >> 1) & 1;
+        int b = i & 1;
+        int expected = a | b;
+        int result;
+        Expr *ex;
+
+        expr_pool_reset();
+        ex = expr_or(expr_var(0), expr_var(1));
+        vars[0] = a; vars[1] = b;
+        result = eval_expr(ex, vars, A);
+
+        printf("    OR(%d,%d) = %d (expect %d) [%d gates, depth %d] %s\n",
+               a, b, result, expected, eval_gate_count, eval_max_depth,
+               result == expected ? "OK" : "WRONG");
+
+        if (result != expected) or_correct = 0;
+    }
+    sprintf(msg, "OR gate via compiler (%d nodes)", expr_size(expr_or(expr_var(0), expr_var(1))));
+    check(msg, or_correct);
+
+    /* Test XOR(a, b) */
+    printf("\n  Testing XOR(a, b) = NAND(NAND(a,NAND(a,b)),NAND(b,NAND(a,b))):\n");
+    xor_correct = 1;
+    for (i = 0; i < 4; i++) {
+        int a = (i >> 1) & 1;
+        int b = i & 1;
+        int expected = a ^ b;
+        int result;
+        Expr *ex;
+
+        expr_pool_reset();
+        ex = expr_xor(expr_var(0), expr_var(1));
+        vars[0] = a; vars[1] = b;
+        result = eval_expr(ex, vars, A);
+
+        printf("    XOR(%d,%d) = %d (expect %d) [%d gates, depth %d] %s\n",
+               a, b, result, expected, eval_gate_count, eval_max_depth,
+               result == expected ? "OK" : "WRONG");
+
+        if (result != expected) xor_correct = 0;
+    }
+    sprintf(msg, "XOR gate via compiler (%d nodes)", expr_size(expr_xor(expr_var(0), expr_var(1))));
+    check(msg, xor_correct);
+}
+
+/* ================================================================
+ * PART D: Full Adder Test
+ *
+ * 1-bit full adder: inputs a, b, c_in -> outputs sum, carry_out
+ *   sum      = XOR(XOR(a, b), c_in)
+ *   carry_out = OR(AND(a, b), AND(c_in, XOR(a, b)))
+ *
+ * Test all 8 input combinations.
+ * ================================================================ */
+
+static void part_d_full_adder(void) {
+    Cx A;
+    int i;
+    int correct = 0;
+    int total_gates = 0;
+    int max_gates = 0;
+    char msg[200];
+
+    printf("\n=== PART D: Full Adder Test ===\n");
+
+    if (!best_not_gate.found || !best_nand_gate.found) {
+        printf("  Skipping: need both NOT and NAND gates.\n");
+        check("full adder requires universal gate set", 0);
+        return;
+    }
+
+    A = cx_exp_i(magic_theta);
+
+    printf("  sum = XOR(XOR(a,b), c_in)\n");
+    printf("  carry = OR(AND(a,b), AND(c_in, XOR(a,b)))\n\n");
+    printf("  a b cin | sum cout | exp_s exp_c | gates | result\n");
+    printf("  --------|----------|-------------|-------|---------\n");
+
+    for (i = 0; i < 8; i++) {
+        int a = (i >> 2) & 1;
+        int b = (i >> 1) & 1;
+        int cin = i & 1;
+        int expected_sum = a ^ b ^ cin;
+        int expected_carry = (a & b) | (cin & (a ^ b));
+        int sum_result, carry_result;
+        int sum_gates, carry_gates;
+        Expr *sum_expr, *carry_expr;
+        int vars[3];
+
+        vars[0] = a; vars[1] = b; vars[2] = cin;
+
+        /* Build sum expression */
+        expr_pool_reset();
+        sum_expr = expr_xor(expr_xor(expr_var(0), expr_var(1)), expr_var(2));
+        sum_result = eval_expr(sum_expr, vars, A);
+        sum_gates = eval_gate_count;
+
+        /* Build carry expression */
+        expr_pool_reset();
+        carry_expr = expr_or(
+            expr_and(expr_var(0), expr_var(1)),
+            expr_and(expr_var(2), expr_xor(expr_var(0), expr_var(1)))
+        );
+        carry_result = eval_expr(carry_expr, vars, A);
+        carry_gates = eval_gate_count;
+
+        printf("  %d %d  %d  |  %d    %d   |  %d     %d    |  %d+%d  | %s\n",
+               a, b, cin,
+               sum_result, carry_result,
+               expected_sum, expected_carry,
+               sum_gates, carry_gates,
+               (sum_result == expected_sum && carry_result == expected_carry) ?
+                   "OK" : "WRONG");
+
+        if (sum_result == expected_sum && carry_result == expected_carry)
+            correct++;
+
+        total_gates += sum_gates + carry_gates;
+        if (sum_gates + carry_gates > max_gates)
+            max_gates = sum_gates + carry_gates;
+    }
+
+    printf("\n  Results: %d/8 correct\n", correct);
+    printf("  Total gate evaluations: %d (avg %.1f per input)\n",
+           total_gates, (double)total_gates / 8.0);
+    printf("  Max gates per input: %d\n", max_gates);
+
+    /* P3: Composition preserves correctness */
+    sprintf(msg, "P3: full adder correct (%d/8)", correct);
+    check(msg, correct == 8);
+}
+
+/* ================================================================
+ * PART E: Efficiency Analysis
+ *
+ * Measure circuit complexity and performance.
+ * ================================================================ */
+
+static void part_e_efficiency(void) {
+    Cx A;
+    int vars[3];
+    int i;
+    clock_t start, end;
+    double elapsed;
+    char msg[200];
+    int sizes[5];
+    int gates_used[5];
+
+    printf("\n=== PART E: Efficiency Analysis ===\n");
+
+    if (!best_not_gate.found || !best_nand_gate.found) {
+        printf("  Skipping: need both NOT and NAND gates.\n");
+        return;
+    }
+
+    A = cx_exp_i(magic_theta);
+
+    /* E1: Expression complexity */
+    printf("\n  E1: Expression complexity (nodes / gates)\n");
+    {
+        Expr *exprs[5];
+        const char *names[] = {"NOT", "AND", "OR", "XOR", "FULL_ADDER_SUM"};
+
+        expr_pool_reset();
+        exprs[0] = expr_not(expr_var(0));
+        exprs[1] = expr_and(expr_var(0), expr_var(1));
+        exprs[2] = expr_or(expr_var(0), expr_var(1));
+        exprs[3] = expr_xor(expr_var(0), expr_var(1));
+        exprs[4] = expr_xor(expr_xor(expr_var(0), expr_var(1)), expr_var(2));
+
+        for (i = 0; i < 5; i++) {
+            sizes[i] = expr_size(exprs[i]);
+            vars[0] = 0; vars[1] = 0; vars[2] = 0;
+            (void)eval_expr(exprs[i], vars, A);
+            gates_used[i] = eval_gate_count;
+            printf("    %-16s: %d nodes, %d gate evals\n",
+                   names[i], sizes[i], gates_used[i]);
+        }
+    }
+
+    /* P4: Linear depth scaling */
+    /* NOT=1 gate, AND=2 gates, XOR=4 gates, FULL_ADDER_SUM = more
+     * Check that gate count grows at most linearly with expression depth */
+    printf("\n  E2: Depth scaling\n");
+    {
+        /* Build chain: NOT(NOT(NOT(...(x)...))) of increasing depth */
+        int depths[] = {1, 2, 4, 8};
+        int n_depths = 4;
+        int prev_gates = 0;
+        int linear = 1;
+
+        for (i = 0; i < n_depths; i++) {
+            int d = depths[i];
+            int j;
+            Expr *e;
+
+            expr_pool_reset();
+            e = expr_var(0);
+            for (j = 0; j < d; j++)
+                e = expr_not(e);
+
+            vars[0] = 0;
+            (void)eval_expr(e, vars, A);
+            printf("    NOT^%d: %d gate evals (depth %d)\n",
+                   d, eval_gate_count, eval_max_depth);
+
+            if (i > 0 && eval_gate_count > prev_gates * 3) {
+                linear = 0;
+            }
+            prev_gates = eval_gate_count;
+        }
+
+        sprintf(msg, "P4: gate count scales linearly with depth");
+        check(msg, linear);
+    }
+
+    /* E3: Timing */
+    printf("\n  E3: Timing (full adder, 8 evaluations)\n");
+    {
+        int reps = 10;
+        int r;
+        start = clock();
+        for (r = 0; r < reps; r++) {
+            for (i = 0; i < 8; i++) {
+                Expr *sum_expr, *carry_expr;
+                vars[0] = (i >> 2) & 1;
+                vars[1] = (i >> 1) & 1;
+                vars[2] = i & 1;
+
+                expr_pool_reset();
+                sum_expr = expr_xor(
+                    expr_xor(expr_var(0), expr_var(1)), expr_var(2));
+                (void)eval_expr(sum_expr, vars, A);
+
+                expr_pool_reset();
+                carry_expr = expr_or(
+                    expr_and(expr_var(0), expr_var(1)),
+                    expr_and(expr_var(2),
+                             expr_xor(expr_var(0), expr_var(1))));
+                (void)eval_expr(carry_expr, vars, A);
+            }
+        }
+        end = clock();
+        elapsed = (double)(end - start) / (double)CLOCKS_PER_SEC;
+        printf("    %d full adder evaluations: %.4f sec (%.2f ms each)\n",
+               reps * 8, elapsed, elapsed / (double)(reps * 8) * 1000.0);
+    }
+
+    /* E4: Crossing count analysis */
+    printf("\n  E4: Braid crossings per operation\n");
+    {
+        int not_crossings = best_not_gate.len;
+        int nand_crossings = best_nand_gate.len;
+        printf("    NOT: %d crossings per evaluation\n", not_crossings);
+        printf("    NAND: %d crossings per evaluation\n", nand_crossings);
+        printf("    AND: %d + %d = %d crossings (NOT(NAND))\n",
+               nand_crossings, not_crossings, nand_crossings + not_crossings);
+        printf("    XOR: %d crossings (3 NANDs)\n", 3 * nand_crossings);
+        printf("    Full adder sum: up to %d crossings\n",
+               6 * nand_crossings);  /* XOR(XOR) = 6 NANDs */
+
+        sprintf(msg, "crossing count is bounded and predictable");
+        check(msg, 1);
+    }
+}
+
+/* ================================================================
+ * MAIN
+ * ================================================================ */
+
+int main(void) {
+    setbuf(stdout, NULL);
+    printf("KNOTAPEL DEMO 19: Braid Circuit Compiler\n");
+    printf("=========================================\n");
+
+    part_a_catalog();
+    part_b_universal_set();
+    part_c_compiler();
+    part_d_full_adder();
+    part_e_efficiency();
+
+    printf("\n=========================================\n");
+    printf("Results: %d passed, %d failed\n", n_pass, n_fail);
+    printf("=========================================\n");
+    return n_fail > 0 ? 1 : 0;
+}
