@@ -1,0 +1,603 @@
+/*
+ * KNOTAPEL DEMO 03 v3: TL Module & Braid Representation
+ * ======================================================
+ *
+ * CORRECT TL_3 standard module W_1 (derived from diagrams):
+ *   Basis: e_a = (cap12, free3), e_b = (cap23, free1)
+ *   U_1 = [[delta, 1], [0, 0]]
+ *   U_2 = [[0, 0], [1, delta]]
+ *
+ * These satisfy: U^2 = delta*U, U1*U2*U1 = U1, U2*U1*U2 = U2.
+ *
+ * BRAID REPRESENTATION:
+ *   g_i = A*I + A^{-1}*U_i
+ *
+ * This satisfies:
+ *   g^2 = A^2*I + 2*U + A^{-2}*delta*U
+ *       = A^2*I + (2 + delta*A^{-2})*U
+ *   Since delta = -A^2 - A^{-2}:
+ *   2 + delta*A^{-2} = 2 + (-A^2-A^{-2})*A^{-2} = 2 - 1 - A^{-4} = 1 - A^{-4}
+ *   g^2 = A^2*I + (1-A^{-4})*U
+ *
+ *   Also: (A-A^{-1})*g + I = (A-A^{-1})*A*I + (A-A^{-1})*A^{-1}*U + I
+ *        = (A^2-1+1)*I + (1-A^{-2})*U = A^2*I + (1-A^{-2})*U
+ *   
+ *   Hmm, g^2 has (1-A^{-4}) but (A-A^{-1})*g+I has (1-A^{-2}).
+ *   These are NOT equal. So g^2 != (A-A^{-1})*g+I.
+ *
+ *   Let me recompute g^2 properly:
+ *   g = A*I + A^{-1}*U
+ *   g^2 = (A*I + A^{-1}*U)^2 = A^2*I + A*A^{-1}*U + A^{-1}*A*U + A^{-2}*U^2
+ *       = A^2*I + 2U + A^{-2}*delta*U
+ *       = A^2*I + (2 + delta/A^2)*U
+ *   delta = -A^2 - A^{-2}, so delta/A^2 = -1 - A^{-4}
+ *   g^2 = A^2*I + (2-1-A^{-4})*U = A^2*I + (1-A^{-4})*U
+ *
+ *   What Hecke relation should g satisfy? For Jones/Kauffman:
+ *   g - g^{-1} = (A - A^{-1})*I
+ *   => g^{-1} = g - (A-A^{-1})*I
+ *   => g*g^{-1} = g^2 - (A-A^{-1})*g = I
+ *   => g^2 = (A-A^{-1})*g + I
+ *   => g^2 = (A-A^{-1})*(A*I + A^{-1}*U) + I
+ *          = (A^2-1+1)*I + (1-A^{-2})*U
+ *          = A^2*I + (1-A^{-2})*U
+ *
+ *   But we computed g^2 = A^2*I + (1-A^{-4})*U.
+ *   (1-A^{-2}) vs (1-A^{-4}). These differ by A^{-2}*(A^2-A^{-2})...
+ *   No wait: 1-A^{-4} = (1-A^{-2})(1+A^{-2}).
+ *
+ *   The problem: I used U*U = delta*U but also I*U = U*I = U.
+ *   Let me redo carefully:
+ *   g^2 = A^2*(I*I) + A*(I*U) + A^{-1}*(U*I) + A^{-2}*(U*U)
+ *       = A^2*I + A*U + A^{-1}*U + A^{-2}*delta*U
+ *       = A^2*I + (A + A^{-1} + A^{-2}*delta)*U
+ *   
+ *   A + A^{-1} + A^{-2}*delta = A + A^{-1} + A^{-2}*(-A^2-A^{-2})
+ *     = A + A^{-1} - 1 - A^{-4}
+ *
+ *   Hmm that's DIFFERENT from what I had before (I was using
+ *   I*U + U*I = 2U, but actually (AI)(A^{-1}U) = U, and
+ *   (A^{-1}U)(AI) = A^{-1}*A*(U*I) = U. So yes, 2U. 
+ *   Wait no: (A*I)*(A^{-1}*U) = A*A^{-1}*(I*U) = 1*U = U.
+ *   That's NOT 2U! I made an error. Let me be very careful:
+ *
+ *   g^2 = (A*I + A^{-1}*U)*(A*I + A^{-1}*U)
+ *       = A^2*I + A*A^{-1}*U + A^{-1}*A*U + A^{-2}*U^2
+ *       = A^2*I + U + U + A^{-2}*delta*U
+ *       = A^2*I + (2 + A^{-2}*delta)*U
+ *
+ *   This is what I had. 2+A^{-2}*delta = 2+A^{-2}*(-A^2-A^{-2})
+ *     = 2 - 1 - A^{-4} = 1 - A^{-4}.
+ *
+ *   And (A-A^{-1})*g + I = A^2*I + (1-A^{-2})*U.
+ *
+ *   So we need: 1 - A^{-4} = 1 - A^{-2}? NO!
+ *   g^2 != (A-A^{-1})*g + I.
+ *
+ *   The Hecke relation g-g^{-1} = (A-A^{-1})*I fails?!
+ *   That means g_i = A*I + A^{-1}*U_i is NOT the right formula.
+ *
+ *   AARGH. Let me look at this from first principles.
+ *   The Kauffman bracket relation at a crossing is:
+ *
+ *   <positive crossing> = A*<0-smoothing> + A^{-1}*<1-smoothing>
+ *
+ *   For the braid generator sigma_i:
+ *   0-smoothing = identity (strands pass through)
+ *   1-smoothing = U_i (cup-cap, the TL generator)
+ *
+ *   So the "resolution" of sigma_i is: A*I + A^{-1}*U_i.
+ *   This is correct for COMPUTING THE BRACKET as a trace.
+ *   But it's NOT a GROUP homomorphism (sigma has inverse,
+ *   but A*I + A^{-1}*U might not be invertible).
+ *
+ *   For sigma_i^{-1}: the smoothings swap:
+ *   0-smoothing of negative crossing = U_i
+ *   1-smoothing of negative crossing = I
+ *   So: A^{-1}*I + A*U_i.
+ *
+ *   But (A*I + A^{-1}*U)(A^{-1}*I + A*U) 
+ *   = I + A^2*U + A^{-2}*U + U^2
+ *   = I + (A^2+A^{-2})*U + delta*U
+ *   = I + (A^2+A^{-2}+delta)*U
+ *   = I + (A^2+A^{-2}-A^2-A^{-2})*U
+ *   = I + 0*U = I. 
+ *
+ *   IT WORKS! (A*I+A^{-1}*U)*(A^{-1}*I+A*U) = I!
+ *   So g_i^{-1} = A^{-1}*I + A*U_i. NOT g-delta*I!
+ *
+ *   So the representation IS:
+ *   rho(sigma_i) = A*I + A^{-1}*U_i
+ *   rho(sigma_i^{-1}) = A^{-1}*I + A*U_i
+ *
+ *   This is NOT a Hecke algebra representation. The relation
+ *   g satisfies is: g*g_inv = I where g_inv = A^{-1}+A*U,
+ *   which gives g^2 = (A-A^{-1})*g + (A^2+A^{-2}+delta)*g*U/...
+ *   Actually it's simpler: g is just an invertible element of
+ *   the TL algebra (extended by A).
+ *
+ *   The braid relation g1*g2*g1 = g2*g1*g2 should follow from
+ *   the TL relations. Let me verify computationally.
+ *
+ * C89, zero dependencies.
+ */
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+/* ================================================================
+ * Laurent polynomial ring
+ * ================================================================ */
+#define MAX_TERMS 80
+
+typedef struct { int c[MAX_TERMS]; int lo, len; } Poly;
+
+static void p_zero(Poly *p){memset(p,0,sizeof(Poly));}
+static void p_mono(Poly *p,int coeff,int exp){p_zero(p);if(!coeff)return;p->lo=exp;p->len=1;p->c[0]=coeff;}
+static void p_trim(Poly *p){int a=0,b;if(!p->len)return;while(a<p->len&&!p->c[a])a++;
+    if(a==p->len){p_zero(p);return;}b=p->len-1;while(b>a&&!p->c[b])b--;
+    if(a>0)memmove(p->c,p->c+a,(size_t)(b-a+1)*sizeof(int));p->lo+=a;p->len=b-a+1;}
+static void p_add(Poly *r,const Poly *a,const Poly *b){Poly t;int lo,hi,i;
+    if(!a->len){*r=*b;return;}if(!b->len){*r=*a;return;}
+    lo=a->lo<b->lo?a->lo:b->lo;hi=(a->lo+a->len-1)>(b->lo+b->len-1)?(a->lo+a->len-1):(b->lo+b->len-1);
+    p_zero(&t);t.lo=lo;t.len=hi-lo+1;
+    for(i=0;i<a->len;i++)t.c[(a->lo+i)-lo]+=a->c[i];
+    for(i=0;i<b->len;i++)t.c[(b->lo+i)-lo]+=b->c[i];p_trim(&t);*r=t;}
+static void p_mul(Poly *r,const Poly *a,const Poly *b){Poly t;int i,j;
+    if(!a->len||!b->len){p_zero(r);return;}p_zero(&t);t.lo=a->lo+b->lo;t.len=a->len+b->len-1;
+    for(i=0;i<a->len;i++)for(j=0;j<b->len;j++)t.c[i+j]+=a->c[i]*b->c[j];p_trim(&t);*r=t;}
+static int p_eq(const Poly *a,const Poly *b){if(a->len!=b->len)return 0;
+    if(!a->len)return 1;if(a->lo!=b->lo)return 0;return memcmp(a->c,b->c,(size_t)a->len*sizeof(int))==0;}
+static void p_print(const Poly *p,const char *name){int i,e,first;printf("%s = ",name);
+    if(!p->len){printf("0\n");return;}first=1;for(i=0;i<p->len;i++){if(!p->c[i])continue;e=p->lo+i;
+    if(!first&&p->c[i]>0)printf(" + ");if(!first&&p->c[i]<0)printf(" - ");if(first&&p->c[i]<0)printf("-");
+    first=0;if(abs(p->c[i])!=1||e==0)printf("%d",abs(p->c[i]));
+    if(e==1)printf("A");else if(e==-1)printf("A^-1");else if(e)printf("A^%d",e);}printf("\n");}
+
+/* ================================================================
+ * 2x2 Matrix
+ * ================================================================ */
+typedef struct{Poly m[2][2];}Mat2;
+static void m2_id(Mat2 *M){p_mono(&M->m[0][0],1,0);p_zero(&M->m[0][1]);p_zero(&M->m[1][0]);p_mono(&M->m[1][1],1,0);}
+static void m2_mul(Mat2 *R,const Mat2 *A,const Mat2 *B){Mat2 T;Poly t1,t2;int i,j;
+    for(i=0;i<2;i++)for(j=0;j<2;j++){p_mul(&t1,&A->m[i][0],&B->m[0][j]);
+    p_mul(&t2,&A->m[i][1],&B->m[1][j]);p_add(&T.m[i][j],&t1,&t2);}*R=T;}
+static void m2_scale(Mat2 *R,const Mat2 *M,const Poly *s){int i,j;
+    for(i=0;i<2;i++)for(j=0;j<2;j++)p_mul(&R->m[i][j],&M->m[i][j],s);}
+static void m2_add(Mat2 *R,const Mat2 *A,const Mat2 *B){int i,j;
+    for(i=0;i<2;i++)for(j=0;j<2;j++)p_add(&R->m[i][j],&A->m[i][j],&B->m[i][j]);}
+static void m2_trace(Poly *tr,const Mat2 *M){p_add(tr,&M->m[0][0],&M->m[1][1]);}
+static int m2_eq(const Mat2 *A,const Mat2 *B){int i,j;
+    for(i=0;i<2;i++)for(j=0;j<2;j++)if(!p_eq(&A->m[i][j],&B->m[i][j]))return 0;return 1;}
+static void m2_print(const Mat2 *M,const char *name){printf("%s:\n",name);
+    p_print(&M->m[0][0],"  [0,0]");p_print(&M->m[0][1],"  [0,1]");
+    p_print(&M->m[1][0],"  [1,0]");p_print(&M->m[1][1],"  [1,1]");}
+
+/* 4x4 for Yang-Baxter */
+typedef struct{Poly m[4][4];}Mat4;
+static void m4_zero(Mat4 *M){int i,j;for(i=0;i<4;i++)for(j=0;j<4;j++)p_zero(&M->m[i][j]);}
+static void m4_mul(Mat4 *R,const Mat4 *A,const Mat4 *B){Mat4 T;int i,j,k;Poly t;m4_zero(&T);
+    for(i=0;i<4;i++)for(j=0;j<4;j++)for(k=0;k<4;k++){p_mul(&t,&A->m[i][k],&B->m[k][j]);
+    p_add(&T.m[i][j],&T.m[i][j],&t);}*R=T;}
+static int m4_eq(const Mat4 *A,const Mat4 *B){int i,j;
+    for(i=0;i<4;i++)for(j=0;j<4;j++)if(!p_eq(&A->m[i][j],&B->m[i][j]))return 0;return 1;}
+static void m4_tensor(Mat4 *R,const Mat2 *A,const Mat2 *B){int i1,i2,j1,j2;
+    for(i1=0;i1<2;i1++)for(i2=0;i2<2;i2++)for(j1=0;j1<2;j1++)for(j2=0;j2<2;j2++)
+    p_mul(&R->m[i1*2+i2][j1*2+j2],&A->m[i1][j1],&B->m[i2][j2]);}
+
+/* ================================================================
+ * State-sum oracle
+ * ================================================================ */
+#define MAX_UF 256
+static int uf_p[MAX_UF];
+static void uf_init(int n){int i;for(i=0;i<n;i++)uf_p[i]=i;}
+static int uf_find(int x){while(uf_p[x]!=x){uf_p[x]=uf_p[uf_p[x]];x=uf_p[x];}return x;}
+static void uf_union(int x,int y){x=uf_find(x);y=uf_find(y);if(x!=y)uf_p[x]=y;}
+typedef struct{int word[20];int len,n;}Braid;
+
+static int braid_loops(const Braid *b,unsigned s){
+    int N=(b->len+1)*b->n,l,p,i,loops,sgn,bit,cup;uf_init(N);
+    for(l=0;l<b->len;l++){sgn=b->word[l]>0?1:-1;i=(sgn>0?b->word[l]:-b->word[l])-1;
+    bit=(s>>l)&1;cup=(sgn>0)?(bit==0):(bit==1);
+    if(cup){uf_union(l*b->n+i,l*b->n+i+1);uf_union((l+1)*b->n+i,(l+1)*b->n+i+1);
+    for(p=0;p<b->n;p++)if(p!=i&&p!=i+1)uf_union(l*b->n+p,(l+1)*b->n+p);}
+    else{for(p=0;p<b->n;p++)uf_union(l*b->n+p,(l+1)*b->n+p);}}
+    for(p=0;p<b->n;p++)uf_union(p,b->len*b->n+p);
+    loops=0;for(i=0;i<N;i++)if(uf_find(i)==i)loops++;return loops;}
+
+static void braid_bracket(Poly *r,const Braid *b){
+    unsigned s,ns;int i,a,bc,lp,j;Poly d,dp,t,c,t1,t2;p_zero(r);
+    p_mono(&t1,-1,2);p_mono(&t2,-1,-2);p_add(&d,&t1,&t2);
+    if(!b->len){p_mono(r,1,0);for(i=0;i<b->n-1;i++)p_mul(r,r,&d);return;}
+    ns=1u<<b->len;for(s=0;s<ns;s++){a=0;bc=0;
+    for(i=0;i<b->len;i++){if((s>>i)&1)bc++;else a++;}
+    lp=braid_loops(b,s);p_mono(&t,1,a-bc);p_mono(&dp,1,0);
+    for(j=0;j<lp-1;j++)p_mul(&dp,&dp,&d);p_mul(&c,&t,&dp);p_add(r,r,&c);}p_trim(r);}
+
+/* ================================================================
+ * Globals
+ * ================================================================ */
+static Poly DELTA;
+static void init_delta(void){Poly t1,t2;p_mono(&t1,-1,2);p_mono(&t2,-1,-2);p_add(&DELTA,&t1,&t2);}
+
+static int n_pass=0,n_fail=0;
+static void check(const char *msg,int ok){
+    if(ok){printf("  PASS: %s\n",msg);n_pass++;}else{printf("  FAIL: %s\n",msg);n_fail++;}}
+
+/* ================================================================
+ * Build correct TL generators and braid rep
+ * ================================================================ */
+
+static Mat2 TL_U1, TL_U2;
+static Mat2 G1, G2, G1_INV, G2_INV;
+
+static void build_all(void) {
+    Poly A, Ainv;
+    Mat2 AI, AinvI, AU1, AinvU1, AU2, AinvU2;
+
+    /* U_1 = [[delta, 1], [0, 0]] */
+    TL_U1.m[0][0] = DELTA; p_mono(&TL_U1.m[0][1],1,0);
+    p_zero(&TL_U1.m[1][0]); p_zero(&TL_U1.m[1][1]);
+
+    /* U_2 = [[0, 0], [1, delta]] */
+    p_zero(&TL_U2.m[0][0]); p_zero(&TL_U2.m[0][1]);
+    p_mono(&TL_U2.m[1][0],1,0); TL_U2.m[1][1] = DELTA;
+
+    p_mono(&A,1,1); p_mono(&Ainv,1,-1);
+
+    /* g_i = A*U_i + A^{-1}*I  (Wikipedia/Jones: sigma_i -> A*e_i + A^{-1}*1) */
+    m2_id(&AI); m2_scale(&AI,&AI,&Ainv);  /* A^{-1}*I */
+    m2_scale(&AinvU1,&TL_U1,&A);          /* A*U_1 */
+    m2_add(&G1,&AI,&AinvU1);
+
+    m2_scale(&AinvU2,&TL_U2,&A);          /* A*U_2 */
+    m2_add(&G2,&AI,&AinvU2);
+
+    /* g_i^{-1} = A^{-1}*U_i + A*I 
+     * Check: (A*U+A^{-1}*I)(A^{-1}*U+A*I) = U^2 + A^2*U + A^{-2}*U + I
+     *       = delta*U + (A^2+A^{-2})*U + I = (delta+A^2+A^{-2})*U + I = 0*U + I = I */
+    m2_id(&AinvI); m2_scale(&AinvI,&AinvI,&A);  /* A*I */
+    m2_scale(&AU1,&TL_U1,&Ainv);                  /* A^{-1}*U_1 */
+    m2_add(&G1_INV,&AinvI,&AU1);
+
+    m2_scale(&AU2,&TL_U2,&Ainv);                  /* A^{-1}*U_2 */
+    m2_add(&G2_INV,&AinvI,&AU2);
+}
+
+
+/* ================================================================
+ * TESTS
+ * ================================================================ */
+
+static void test_part_a(void) {
+    Mat2 U1sq, dU1, U2sq, dU2, t, U1U2U1, U2U1U2;
+
+    printf("\n=== PART A: TL Relations ===\n");
+
+    m2_print(&TL_U1, "U_1"); m2_print(&TL_U2, "U_2");
+
+    m2_mul(&U1sq,&TL_U1,&TL_U1); m2_scale(&dU1,&TL_U1,&DELTA);
+    check("U_1^2 = delta * U_1", m2_eq(&U1sq,&dU1));
+
+    m2_mul(&U2sq,&TL_U2,&TL_U2); m2_scale(&dU2,&TL_U2,&DELTA);
+    check("U_2^2 = delta * U_2", m2_eq(&U2sq,&dU2));
+
+    m2_mul(&t,&TL_U1,&TL_U2); m2_mul(&U1U2U1,&t,&TL_U1);
+    check("U_1*U_2*U_1 = U_1", m2_eq(&U1U2U1,&TL_U1));
+
+    m2_mul(&t,&TL_U2,&TL_U1); m2_mul(&U2U1U2,&t,&TL_U2);
+    check("U_2*U_1*U_2 = U_2", m2_eq(&U2U1U2,&TL_U2));
+}
+
+static void test_part_b(void) {
+    Mat2 prod, I2;
+
+    printf("\n=== PART B: Braid Rep Inverses ===\n");
+
+    m2_print(&G1, "g_1 = A*I + A^{-1}*U_1");
+    m2_print(&G1_INV, "g_1^{-1} = A^{-1}*I + A*U_1");
+
+    m2_id(&I2);
+    m2_mul(&prod,&G1,&G1_INV);
+    check("g_1 * g_1^{-1} = I", m2_eq(&prod,&I2));
+
+    m2_mul(&prod,&G2,&G2_INV);
+    check("g_2 * g_2^{-1} = I", m2_eq(&prod,&I2));
+}
+
+static void test_part_c(void) {
+    Mat2 t, lhs, rhs;
+
+    printf("\n=== PART C: Braid Relation (Yang-Baxter) ===\n");
+
+    m2_mul(&t,&G1,&G2); m2_mul(&lhs,&t,&G1);
+    m2_mul(&t,&G2,&G1); m2_mul(&rhs,&t,&G2);
+
+    m2_print(&lhs, "g1*g2*g1");
+    m2_print(&rhs, "g2*g1*g2");
+    check("g1*g2*g1 = g2*g1*g2 (braid relation)", m2_eq(&lhs,&rhs));
+
+    /* Inverses too */
+    m2_mul(&t,&G1_INV,&G2_INV); m2_mul(&lhs,&t,&G1_INV);
+    m2_mul(&t,&G2_INV,&G1_INV); m2_mul(&rhs,&t,&G2_INV);
+    check("g1inv*g2inv*g1inv = g2inv*g1inv*g2inv", m2_eq(&lhs,&rhs));
+
+    /* 4x4 tensor product Yang-Baxter:
+     * The standard tensor form R12*R23*R12 = R23*R12*R23 applies when
+     * R acts on V tensor V and indices label DIFFERENT copies of V.
+     * Here g_1 and g_2 act on the SAME 2D module W_1, not on tensor
+     * factors. The direct braid relation g1*g2*g1 = g2*g1*g2 is the
+     * correct form for this representation. The tensor product form
+     * would require the n-strand representation on V^{tensor n}
+     * (the spin chain representation), which is Demo 04+ territory. */
+    printf("\n  (4x4 tensor form: deferred to tensor product rep)\n");
+}
+
+static void test_part_d(void) {
+    Mat2 product;
+    Poly tr_w1, tr_w3, oracle, bracket, w3_coeff, scaled;
+    Braid braid;
+    Poly t1, t2;
+    Poly g_w3, ginv_w3; /* scalars for W_3 */
+
+    printf("\n=== PART D: Full Bracket via Both Modules ===\n");
+    printf("  <L> = 1*tr_W1(rho(b)) + (A^-4+A^4)*tr_W3(rho(b))\n\n");
+
+    /* c_3 = quantum dimension of W_3 = A^{-4} + A^4 */
+    p_mono(&t1,1,-4); p_mono(&t2,1,4);
+    p_add(&w3_coeff,&t1,&t2);
+
+    /* On W_3: g_i = A^{-1} (scalar), g_i^{-1} = A (scalar) */
+    p_mono(&g_w3, 1, -1);
+    p_mono(&ginv_w3, 1, 1);
+
+    /* --- Figure-eight: s1*s2^{-1}*s1*s2^{-1} --- */
+    printf("  --- Figure-Eight ---\n");
+    m2_mul(&product,&G1,&G2_INV);
+    m2_mul(&product,&product,&G1);
+    m2_mul(&product,&product,&G2_INV);
+    m2_trace(&tr_w1,&product);
+    p_print(&tr_w1, "  tr_W1");
+
+    /* W_3: A^{-1}*A*A^{-1}*A = 1 */
+    p_mono(&tr_w3,1,0);
+    p_print(&tr_w3, "  tr_W3");
+
+    p_mul(&scaled,&w3_coeff,&tr_w3);
+    p_add(&bracket,&tr_w1,&scaled);
+    p_print(&bracket, "  bracket");
+
+    braid.n=3;braid.len=4;
+    braid.word[0]=1;braid.word[1]=-2;braid.word[2]=1;braid.word[3]=-2;
+    braid_bracket(&oracle,&braid);
+    p_print(&oracle, "  oracle");
+    check("Figure-eight: modules = oracle", p_eq(&bracket,&oracle));
+
+    /* --- Trefoil: s1*s2*s1 --- */
+    printf("\n  --- Trefoil (s1*s2*s1) ---\n");
+    m2_mul(&product,&G1,&G2); m2_mul(&product,&product,&G1);
+    m2_trace(&tr_w1,&product);
+    p_print(&tr_w1, "  tr_W1");
+
+    /* W_3: (A^{-1})^3 = A^{-3} */
+    p_mono(&tr_w3,1,-3);
+    p_print(&tr_w3, "  tr_W3");
+
+    p_mul(&scaled,&w3_coeff,&tr_w3);
+    p_add(&bracket,&tr_w1,&scaled);
+    p_print(&bracket, "  bracket");
+
+    braid.n=3;braid.len=3;
+    braid.word[0]=1;braid.word[1]=2;braid.word[2]=1;
+    braid_bracket(&oracle,&braid);
+    p_print(&oracle, "  oracle");
+    check("Trefoil (3-strand): modules = oracle", p_eq(&bracket,&oracle));
+
+    /* --- Identity (3-component unlink) --- */
+    printf("\n  --- Identity (3-strand closure) ---\n");
+    p_mono(&tr_w1,2,0); /* tr(I_2x2) = 2 */
+    p_mono(&tr_w3,1,0); /* tr(1) = 1 */
+    p_mul(&scaled,&w3_coeff,&tr_w3);
+    p_add(&bracket,&tr_w1,&scaled);
+    p_print(&bracket, "  bracket");
+
+    braid.n=3;braid.len=0;
+    braid_bracket(&oracle,&braid);
+    p_print(&oracle, "  oracle (delta^2)");
+    check("Identity: modules = oracle", p_eq(&bracket,&oracle));
+
+    /* --- Mirror trefoil: s1^{-1}*s2^{-1}*s1^{-1} --- */
+    printf("\n  --- Mirror Trefoil (s1inv*s2inv*s1inv) ---\n");
+    m2_mul(&product,&G1_INV,&G2_INV); m2_mul(&product,&product,&G1_INV);
+    m2_trace(&tr_w1,&product);
+    /* W_3: A^3 */
+    p_mono(&tr_w3,1,3);
+    p_mul(&scaled,&w3_coeff,&tr_w3);
+    p_add(&bracket,&tr_w1,&scaled);
+    p_print(&bracket, "  bracket");
+
+    braid.n=3;braid.len=3;
+    braid.word[0]=-1;braid.word[1]=-2;braid.word[2]=-1;
+    braid_bracket(&oracle,&braid);
+    p_print(&oracle, "  oracle");
+    check("Mirror trefoil: modules = oracle", p_eq(&bracket,&oracle));
+
+    /* --- Single crossing: s1 --- */
+    printf("\n  --- Single crossing (s1) ---\n");
+    m2_trace(&tr_w1,&G1);
+    p_mono(&tr_w3,1,-1); /* A^{-1} */
+    p_mul(&scaled,&w3_coeff,&tr_w3);
+    p_add(&bracket,&tr_w1,&scaled);
+    p_print(&bracket, "  bracket");
+
+    braid.n=3;braid.len=1;braid.word[0]=1;
+    braid_bracket(&oracle,&braid);
+    p_print(&oracle, "  oracle");
+    check("Single crossing: modules = oracle", p_eq(&bracket,&oracle));
+}
+
+
+int main(void) {
+    printf("KNOTAPEL DEMO 03 v3: Correct TL Module\n");
+    printf("=======================================\n");
+
+    init_delta();
+    p_print(&DELTA, "delta");
+
+    build_all();
+
+    test_part_a();
+    test_part_b();
+    test_part_c();
+    test_part_d();
+
+    printf("\n=======================================\n");
+    printf("Results: %d passed, %d failed\n", n_pass, n_fail);
+    printf("=======================================\n");
+    return n_fail>0?1:0;
+}
+
+/* ADDENDUM: We need BOTH standard modules W_0 and W_1 to
+ * reconstruct the full bracket.
+ *
+ * For TL_3, the modules are:
+ *   W_0 (0 defects, dim=1): All strands paired. Single basis element.
+ *     U_1 and U_2 both act as scalar delta on W_0.
+ *     So g_i = A + A^{-1}*delta = -A^{-3} (scalar).
+ *     g_i^{-1} = A^{-1} + A*delta = -A^3.
+ *
+ *   W_1 (1 defect, dim=2): As computed above.
+ *
+ * The Kauffman bracket is:
+ *   <closure(b)> = sum over modules: qdim(W_j) * tr_{W_j}(rho(b))
+ *
+ * where qdim is the quantum dimension.
+ *
+ * For TL_n, the quantum dimensions are related to Chebyshev polys.
+ * For TL_3 with delta = -A^2 - A^{-2}:
+ *   qdim(W_0) = (delta^2 - 1) / delta = delta - 1/delta
+ *     ... actually that's not right either.
+ *
+ * The standard formula: the bracket of the closure of a braid b
+ * on n strands equals delta^{n-1} times the Markov trace of rho(b).
+ * The Markov trace is a special trace, not the ordinary matrix trace.
+ *
+ * For a TL element x, the Markov trace is:
+ *   tr_M(x) = coefficient of the identity in the expansion of x
+ *             in the TL basis, times delta^{-(n-1)}.
+ *
+ * Actually, the simplest formulation: the Markov trace tr_M
+ * satisfies tr_M(1) = 1 and tr_M(x * U_i) = tr_M(x) for the
+ * "last" generator U_{n-1} (the one being "closed off").
+ *
+ * For computing via standard modules, the formula is:
+ *   tr_M(x) = sum_j (qdim_j / delta^{n-1}) * tr_{W_j}(rho_j(x))
+ *
+ * And then <closure(b)> = delta^{n-1} * tr_M(rho(b)).
+ *
+ * Let me try a different approach: just compute both modules'
+ * traces and find coefficients c_0, c_1 such that
+ *   <L> = c_0 * tr_{W_0}(rho(b)) + c_1 * tr_{W_1}(rho(b))
+ * for ALL test braids simultaneously.
+ *
+ * For identity (b=1):
+ *   tr_{W_0}(1) = 1 (1x1 identity)
+ *   tr_{W_1}(1) = 2 (2x2 identity)
+ *   oracle = delta^2
+ *   Need: c_0 + 2*c_1 = delta^2
+ *
+ * For trefoil (b = sigma_1*sigma_2*sigma_1):
+ *   tr_{W_0} = (-A^{-3})^3 = -A^{-9}
+ *   tr_{W_1} = 0 (computed above)
+ *   oracle = A^{-7} + A
+ *   Need: -A^{-9} * c_0 = A^{-7} + A
+ *   => c_0 = -(A^{-7}+A)/A^{-9} = -(A^{-7}+A)*A^9 = -(A^2+A^10)
+ *   Hmm that doesn't look like a nice quantum dimension.
+ *
+ * Actually wait. For W_0 in TL_3: the basis is the single
+ * element where all 3 positions are paired: cap12 and position 3...
+ * but that only pairs 2 strands! With 3 strands and 0 defects,
+ * we need (3-0)/2 = 1.5 caps, which is impossible.
+ *
+ * OH. W_0 doesn't exist for TL_3! With n=3 strands, the number
+ * of defects must have the same parity as n. Since n=3 is odd,
+ * the defect count must be odd: 1 or 3.
+ *
+ * W_1 (1 defect) = our 2D module.
+ * W_3 (3 defects) = 1D module where everything is a through-line.
+ *   On W_3, U_1 = U_2 = 0 (can't form any caps from 3 through-lines
+ *   without destroying the non-crossing property... wait, yes you can:
+ *   U_1 would pair strands 1-2, reducing defects from 3 to 1.
+ *   But that takes you OUT of W_3 and into W_1!
+ *   Actually no: the TL generators can't increase defects within a 
+ *   standard module. U_i on W_3 must map back to W_3.
+ *   With 3 through-lines, applying U_1 (cap 1-2) would require
+ *   absorbing the through-lines at 1 and 2, creating a cap.
+ *   But that reduces defects to 1, which is W_1.
+ *   So U_i acts as 0 on W_3!
+ *
+ *   g_i on W_3 = A*I + A^{-1}*0 = A (scalar).
+ *   g_i^{-1} on W_3 = A^{-1} (scalar).
+ *
+ * So for TL_3, the modules are W_1 (dim 2) and W_3 (dim 1).
+ *
+ * For identity:
+ *   tr_{W_1}(I) = 2, tr_{W_3}(I) = 1
+ *   oracle = delta^2 = A^{-4} + 2 + A^4
+ *   c_1*2 + c_3*1 = delta^2
+ *
+ * For trefoil (sigma_1*sigma_2*sigma_1):
+ *   tr_{W_1} = 0
+ *   tr_{W_3} = A^3 (since g = A on W_3, product = A^3)
+ *   oracle = A^{-7} + A
+ *   c_1*0 + c_3*A^3 = A^{-7} + A
+ *   => c_3 = (A^{-7}+A)/A^3 = A^{-10} + A^{-2}
+ *
+ * For identity: c_1*2 + (A^{-10}+A^{-2})*1 = A^{-4}+2+A^4
+ *   c_1*2 = A^{-4}+2+A^4 - A^{-10} - A^{-2}
+ *   c_1 = (A^{-4}+2+A^4 - A^{-10} - A^{-2}) / 2
+ *   Hmm, 2 doesn't divide this cleanly. Something is off.
+ *
+ * Actually I realize the problem. The W_3 module (all through-lines)
+ * is the 1D module where all U_i act as 0. But dim(W_3) for TL_3
+ * is actually C(3,3) - C(3,4) = 1 - 0 = 1. Wait, the dimension
+ * formula for the standard module W_k of TL_n is:
+ *   dim(W_k) = C(n, (n-k)/2) - C(n, (n-k)/2 - 1)
+ * For W_3 of TL_3: (n-k)/2 = 0, so C(3,0) - C(3,-1) = 1 - 0 = 1. OK.
+ * For W_1 of TL_3: (n-k)/2 = 1, so C(3,1) - C(3,0) = 3 - 1 = 2. Good.
+ *
+ * Let me verify the figure-eight to check c_3:
+ *   fig8 = sigma_1*sigma_2^{-1}*sigma_1*sigma_2^{-1}
+ *   On W_3: g_1=A, g_2^{-1}=A^{-1}, product = A*A^{-1}*A*A^{-1} = 1
+ *   tr_{W_3} = 1
+ *   On W_1: tr = A^{-8} - 2A^{-4} + 1 - 2A^4 + A^8
+ *
+ *   oracle = A^{-8} - A^{-4} + 1 - A^4 + A^8
+ *   Need: c_1*(A^{-8}-2A^{-4}+1-2A^4+A^8) + c_3*1 = oracle
+ *   => c_1*(tr_W1) + c_3 = oracle
+ *   
+ *   From trefoil: c_3 = (A^{-7}+A)/A^3 = A^{-10} + A^{-2}
+ *   But c_3 should be a constant (not depend on the braid)!
+ *   If c_3 = A^{-10} + A^{-2}, then for fig-8:
+ *   c_1*(A^{-8}-2A^{-4}+1-2A^4+A^8) + A^{-10}+A^{-2} = A^{-8}-A^{-4}+1-A^4+A^8
+ *   c_1*(tr_W1) = A^{-8}-A^{-4}+1-A^4+A^8 - A^{-10}-A^{-2}
+ *
+ *   For this to give a consistent c_1, the RHS must be proportional 
+ *   to tr_W1. Let me check numerically at A=2:
+ *   delta = -4-0.25 = -4.25
+ *   tr_W1 at A=2: 256-32+1-32+256 = 449
+ *   oracle at A=2: 256-16+1-16+256 = 481
+ *   c_3 = 1/1024 + 1/4 = 0.2510 (roughly)
+ *   c_1 * 449 = 481 - 0.2510 = 480.749
+ *   c_1 ~ 1.0707
+ *   
+ *   From identity: c_1*2 + c_3 = delta^2 = 18.0625
+ *   c_1 = (18.0625 - 0.2510)/2 = 8.906
+ *   
+ *   But fig-8 gives c_1 ~ 1.07. Inconsistent!
+ *   
+ *   This means the simple formula <L> = c_0*tr0 + c_1*tr1
+ *   with CONSTANT coefficients doesn't work. The Markov trace
+ *   is more subtle than just a weighted sum of ordinary traces.
+ */

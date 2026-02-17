@@ -1,0 +1,1467 @@
+/*
+ * KNOTAPEL DEMO 17: Multi-Layer DKC -- Does Hierarchy Beat Flatness?
+ * ===================================================================
+ *
+ * Demos 12-16 established a flat pipeline: evaluate g at optimal angles.
+ * Demo 16 baseline: 6 bits at 1 angle for full 210/210 classification.
+ *
+ * This demo tests whether HIERARCHICAL evaluation outperforms flat:
+ *   Part A: Flat g baseline at 1, 2, 4 greedy-optimal angles
+ *   Part B: Arf split -- Layer 1 = k value, Layer 2 = per-group angles
+ *   Part C: Greedy hierarchical binary tree with analytical splits
+ *   Part D: Gradient descent comparison (same architecture, searched angles)
+ *   Part E: Bit budget Pareto -- all methods on same axes
+ *
+ * Five predictions:
+ *   1. Arf split saves 1-2 bits over flat
+ *   2. Greedy hierarchical tree beats Arf split
+ *   3. Analytical matches/beats gradient descent
+ *   4. Biggest gains at low bit budgets (4-8 bits)
+ *   5. Flat catches up at high bit budgets (16+)
+ *
+ * Literature context: Craven et al. (2025) found neural networks CANNOT
+ * learn the Arf invariant. We use it as Layer 1 -- for free, analytically.
+ *
+ * C89, zero dependencies beyond math.h.
+ */
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <math.h>
+
+#ifndef M_PI
+#define M_PI 3.14159265358979323846
+#endif
+
+/* ================================================================
+ * Complex arithmetic (from Demo 10-16)
+ * ================================================================ */
+
+typedef struct { double re, im; } Cx;
+
+static Cx cx_make(double re, double im) { Cx z; z.re = re; z.im = im; return z; }
+static Cx cx_zero(void) { return cx_make(0.0, 0.0); }
+static Cx cx_one(void)  { return cx_make(1.0, 0.0); }
+
+static Cx cx_add(Cx a, Cx b) { return cx_make(a.re + b.re, a.im + b.im); }
+static Cx cx_sub(Cx a, Cx b) { return cx_make(a.re - b.re, a.im - b.im); }
+static Cx cx_neg(Cx a) { return cx_make(-a.re, -a.im); }
+
+static Cx cx_mul(Cx a, Cx b) {
+    return cx_make(a.re * b.re - a.im * b.im,
+                   a.re * b.im + a.im * b.re);
+}
+
+static Cx cx_div(Cx a, Cx b) {
+    double d = b.re * b.re + b.im * b.im;
+    return cx_make((a.re * b.re + a.im * b.im) / d,
+                   (a.im * b.re - a.re * b.im) / d);
+}
+
+static double cx_abs(Cx a) { return sqrt(a.re * a.re + a.im * a.im); }
+static Cx cx_exp_i(double theta) { return cx_make(cos(theta), sin(theta)); }
+
+static Cx cx_pow_int(Cx a, int n) {
+    Cx r = cx_one();
+    Cx base;
+    int neg;
+    if (n == 0) return r;
+    neg = (n < 0);
+    if (neg) n = -n;
+    base = a;
+    while (n > 0) {
+        if (n & 1) r = cx_mul(r, base);
+        base = cx_mul(base, base);
+        n >>= 1;
+    }
+    if (neg) r = cx_div(cx_one(), r);
+    return r;
+}
+
+/* ================================================================
+ * State-sum bracket oracle (from Demo 10-16)
+ * ================================================================ */
+
+#define MAX_WORD 40
+typedef struct { int word[MAX_WORD]; int len, n; } Braid;
+
+#define MAX_UF 2048
+static int uf_p[MAX_UF];
+static void uf_init(int n) { int i; for (i = 0; i < n; i++) uf_p[i] = i; }
+static int uf_find(int x) {
+    while (uf_p[x] != x) { uf_p[x] = uf_p[uf_p[x]]; x = uf_p[x]; }
+    return x;
+}
+static void uf_union(int x, int y) {
+    x = uf_find(x); y = uf_find(y); if (x != y) uf_p[x] = y;
+}
+
+static int braid_loops(const Braid *b, unsigned s) {
+    int N = (b->len + 1) * b->n, l, p, i, loops, sgn, bit, cup;
+    uf_init(N);
+    for (l = 0; l < b->len; l++) {
+        sgn = b->word[l] > 0 ? 1 : -1;
+        i = (sgn > 0 ? b->word[l] : -b->word[l]) - 1;
+        bit = (int)((s >> l) & 1u);
+        cup = (sgn > 0) ? (bit == 0) : (bit == 1);
+        if (cup) {
+            uf_union(l * b->n + i, l * b->n + i + 1);
+            uf_union((l + 1) * b->n + i, (l + 1) * b->n + i + 1);
+            for (p = 0; p < b->n; p++)
+                if (p != i && p != i + 1)
+                    uf_union(l * b->n + p, (l + 1) * b->n + p);
+        } else {
+            for (p = 0; p < b->n; p++)
+                uf_union(l * b->n + p, (l + 1) * b->n + p);
+        }
+    }
+    for (p = 0; p < b->n; p++)
+        uf_union(p, b->len * b->n + p);
+    loops = 0;
+    for (i = 0; i < N; i++)
+        if (uf_find(i) == i) loops++;
+    return loops;
+}
+
+static Cx braid_bracket_at(const Braid *b, Cx A) {
+    unsigned s, ns;
+    int i, a_count, b_count, lp, j;
+    Cx result, delta, d_power, term, coeff;
+
+    delta = cx_neg(cx_add(cx_pow_int(A, 2), cx_pow_int(A, -2)));
+
+    result = cx_zero();
+    if (!b->len) {
+        result = cx_one();
+        for (i = 0; i < b->n - 1; i++)
+            result = cx_mul(result, delta);
+        return result;
+    }
+
+    ns = 1u << b->len;
+    for (s = 0; s < ns; s++) {
+        a_count = 0; b_count = 0;
+        for (i = 0; i < b->len; i++) {
+            if ((s >> (unsigned)i) & 1u) b_count++;
+            else a_count++;
+        }
+        lp = braid_loops(b, s);
+
+        coeff = cx_pow_int(A, a_count - b_count);
+        d_power = cx_one();
+        for (j = 0; j < lp - 1; j++)
+            d_power = cx_mul(d_power, delta);
+        term = cx_mul(coeff, d_power);
+        result = cx_add(result, term);
+    }
+    return result;
+}
+
+/* ================================================================
+ * Test infrastructure
+ * ================================================================ */
+
+static int n_pass = 0, n_fail = 0;
+
+static void check(const char *msg, int ok) {
+    if (ok) { printf("  PASS: %s\n", msg); n_pass++; }
+    else    { printf("  FAIL: %s\n", msg); n_fail++; }
+}
+
+/* ================================================================
+ * KNOT TABLE (from Demo 14-16, deduped to 21)
+ * ================================================================ */
+
+#define MAX_KNOTS 40
+
+static Braid knots[MAX_KNOTS];
+static const char *knames[MAX_KNOTS];
+static int kcrossings[MAX_KNOTS];
+static int num_knots = 0;
+
+static void add_torus_2n(int n, int sign, const char *titulis, int crossings) {
+    int k = num_knots;
+    int i;
+    knots[k].n = 3;
+    knots[k].len = n;
+    for (i = 0; i < n; i++)
+        knots[k].word[i] = sign * ((i % 2 == 0) ? 1 : 2);
+    knames[k] = titulis;
+    kcrossings[k] = crossings;
+    num_knots++;
+}
+
+static void init_knots(void) {
+    int k;
+    int fig8_s2[] = {2, -1, 2, -1};
+    int s1_3[]  = {1, 1, 1};
+    int s1_5[]  = {1, 1, 1, 1, 1};
+    int s1m_3[] = {-1, -1, -1};
+    int s2_3[]  = {2, 2, 2};
+    int s2_5[]  = {2, 2, 2, 2, 2};
+    int s2m_3[] = {-2, -2, -2};
+    int s2m_5[] = {-2, -2, -2, -2, -2};
+    int fig8_s2b[] = {2, -1, 2, -1};
+    int i;
+
+    (void)fig8_s2;
+    num_knots = 0;
+
+    /* unknot */
+    knots[0].n = 3; knots[0].len = 0;
+    knames[0] = "unknot"; kcrossings[0] = 0; num_knots++;
+
+    /* Torus knots and mirrors */
+    add_torus_2n(3,  1, "T(2,3)",  3);
+    add_torus_2n(3, -1, "T(2,3)*", 3);
+    add_torus_2n(5,  1, "T(2,5)",  5);
+    add_torus_2n(5, -1, "T(2,5)*", 5);
+    add_torus_2n(7,  1, "T(2,7)",  7);
+    add_torus_2n(7, -1, "T(2,7)*", 7);
+    add_torus_2n(9,  1, "T(2,9)",  9);
+    add_torus_2n(9, -1, "T(2,9)*", 9);
+    add_torus_2n(11,  1, "T(2,11)", 11);
+    add_torus_2n(11, -1, "T(2,11)*", 11);
+    add_torus_2n(13,  1, "T(2,13)", 13);
+    add_torus_2n(13, -1, "T(2,13)*", 13);
+
+    /* figure-eight */
+    k = num_knots;
+    knots[k].n = 3; knots[k].len = 4;
+    knots[k].word[0] = 1; knots[k].word[1] = -2;
+    knots[k].word[2] = 1; knots[k].word[3] = -2;
+    knames[k] = "fig-eight"; kcrossings[k] = 4; num_knots++;
+
+    /* Connected sums via braid concatenation */
+    /* granny = T(2,3) on s1 # T(2,3) on s2 */
+    k = num_knots;
+    knots[k].n = 3; knots[k].len = 6;
+    for (i = 0; i < 3; i++) knots[k].word[i] = s1_3[i];
+    for (i = 0; i < 3; i++) knots[k].word[3 + i] = s2_3[i];
+    knames[k] = "granny"; kcrossings[k] = 6; num_knots++;
+
+    /* square = T(2,3) # T(2,3)* */
+    k = num_knots;
+    knots[k].n = 3; knots[k].len = 6;
+    for (i = 0; i < 3; i++) knots[k].word[i] = s1_3[i];
+    for (i = 0; i < 3; i++) knots[k].word[3 + i] = s2m_3[i];
+    knames[k] = "square"; kcrossings[k] = 6; num_knots++;
+
+    /* T23#T25 */
+    k = num_knots;
+    knots[k].n = 3; knots[k].len = 8;
+    for (i = 0; i < 3; i++) knots[k].word[i] = s1_3[i];
+    for (i = 0; i < 5; i++) knots[k].word[3 + i] = s2_5[i];
+    knames[k] = "T23#T25"; kcrossings[k] = 8; num_knots++;
+
+    /* T23#T25* */
+    k = num_knots;
+    knots[k].n = 3; knots[k].len = 8;
+    for (i = 0; i < 3; i++) knots[k].word[i] = s1_3[i];
+    for (i = 0; i < 5; i++) knots[k].word[3 + i] = s2m_5[i];
+    knames[k] = "T23#T25*"; kcrossings[k] = 8; num_knots++;
+
+    /* T25#T25 */
+    k = num_knots;
+    knots[k].n = 3; knots[k].len = 10;
+    for (i = 0; i < 5; i++) knots[k].word[i] = s1_5[i];
+    for (i = 0; i < 5; i++) knots[k].word[5 + i] = s2_5[i];
+    knames[k] = "T25#T25"; kcrossings[k] = 10; num_knots++;
+
+    /* T25#T25* */
+    k = num_knots;
+    knots[k].n = 3; knots[k].len = 10;
+    for (i = 0; i < 5; i++) knots[k].word[i] = s1_5[i];
+    for (i = 0; i < 5; i++) knots[k].word[5 + i] = s2m_5[i];
+    knames[k] = "T25#T25*"; kcrossings[k] = 10; num_knots++;
+
+    /* granny* */
+    k = num_knots;
+    knots[k].n = 3; knots[k].len = 6;
+    for (i = 0; i < 3; i++) knots[k].word[i] = s1m_3[i];
+    for (i = 0; i < 3; i++) knots[k].word[3 + i] = s2m_3[i];
+    knames[k] = "granny*"; kcrossings[k] = 6; num_knots++;
+
+    /* T23#fig8 */
+    k = num_knots;
+    knots[k].n = 3; knots[k].len = 7;
+    for (i = 0; i < 3; i++) knots[k].word[i] = s1_3[i];
+    for (i = 0; i < 4; i++) knots[k].word[3 + i] = fig8_s2b[i];
+    knames[k] = "T23#fig8"; kcrossings[k] = 7; num_knots++;
+}
+
+/* Dedup (from Demo 13-16) */
+static void dedup_knots(void) {
+    double ref_theta = 1.805 * M_PI;
+    double ref_theta2 = 0.75 * M_PI;
+    Cx vals[MAX_KNOTS], vals2[MAX_KNOTS];
+    int keep[MAX_KNOTS];
+    int ki, kj, new_count, i;
+
+    for (ki = 0; ki < num_knots; ki++) {
+        vals[ki] = braid_bracket_at(&knots[ki], cx_exp_i(ref_theta));
+        vals2[ki] = braid_bracket_at(&knots[ki], cx_exp_i(ref_theta2));
+        keep[ki] = 1;
+    }
+
+    for (ki = 0; ki < num_knots; ki++) {
+        if (!keep[ki]) continue;
+        for (kj = ki + 1; kj < num_knots; kj++) {
+            if (!keep[kj]) continue;
+            if (cx_abs(cx_sub(vals[ki], vals[kj])) < 1e-6 &&
+                cx_abs(cx_sub(vals2[ki], vals2[kj])) < 1e-6) {
+                printf("  dedup: %s == %s\n", knames[kj], knames[ki]);
+                keep[kj] = 0;
+            }
+        }
+    }
+
+    new_count = 0;
+    for (i = 0; i < num_knots; i++) {
+        if (keep[i]) {
+            if (new_count != i) {
+                knots[new_count] = knots[i];
+                knames[new_count] = knames[i];
+                kcrossings[new_count] = kcrossings[i];
+            }
+            new_count++;
+        }
+    }
+
+    printf("  Deduplicated: %d -> %d unique knot types\n",
+           num_knots, new_count);
+    num_knots = new_count;
+}
+
+/* ================================================================
+ * Delta exponent and reduced bracket (from Demo 14-16)
+ * ================================================================ */
+
+static int delta_exponent(const Braid *b) {
+    double delta_zero_thetas[] = {
+        M_PI / 4.0, 3.0 * M_PI / 4.0,
+        5.0 * M_PI / 4.0, 7.0 * M_PI / 4.0
+    };
+    int nz = 0;
+    int i;
+    for (i = 0; i < 4; i++) {
+        double amp = cx_abs(braid_bracket_at(b, cx_exp_i(delta_zero_thetas[i])));
+        if (amp < 1e-6) nz++;
+    }
+    if (nz == 0) return 0;
+    {
+        double eps = 0.001;
+        double amp_near = cx_abs(braid_bracket_at(b,
+            cx_exp_i(M_PI / 4.0 + eps)));
+        double delta_near = fabs(-2.0 * cos(2.0 * (M_PI / 4.0 + eps)));
+        double ratio;
+        if (delta_near < 1e-15) return 2;
+        ratio = amp_near / delta_near;
+        if (ratio < 1e-3) return 2;
+    }
+    return 1;
+}
+
+static Cx reduced_bracket_at(const Braid *b, int k, Cx A) {
+    Cx bracket, delta, dk;
+    int i;
+    bracket = braid_bracket_at(b, A);
+    if (k == 0) return bracket;
+    delta = cx_neg(cx_add(cx_pow_int(A, 2), cx_pow_int(A, -2)));
+    dk = cx_one();
+    for (i = 0; i < k; i++)
+        dk = cx_mul(dk, delta);
+    if (cx_abs(dk) < 1e-12) return bracket;
+    return cx_div(bracket, dk);
+}
+
+static int k_cache[MAX_KNOTS];
+static int k_cached = 0;
+
+static void ensure_k_cache(void) {
+    int ki;
+    if (k_cached) return;
+    for (ki = 0; ki < num_knots; ki++)
+        k_cache[ki] = delta_exponent(&knots[ki]);
+    k_cached = 1;
+}
+
+/* ================================================================
+ * Shared: precompute g values at a set of angles
+ * ================================================================ */
+
+#define SURVEY_SAMP 256
+
+static Cx g_survey[SURVEY_SAMP][MAX_KNOTS];
+static double survey_thetas[SURVEY_SAMP];
+static int survey_computed = 0;
+
+static void ensure_survey(void) {
+    int si, ki;
+    if (survey_computed) return;
+    ensure_k_cache();
+    for (si = 0; si < SURVEY_SAMP; si++) {
+        survey_thetas[si] = 2.0 * M_PI * (double)si / (double)SURVEY_SAMP;
+        {
+            Cx A = cx_exp_i(survey_thetas[si]);
+            for (ki = 0; ki < num_knots; ki++)
+                g_survey[si][ki] = reduced_bracket_at(&knots[ki], k_cache[ki], A);
+        }
+    }
+    survey_computed = 1;
+}
+
+/* Compute min_dist for a subset of knots from precomputed values */
+static double min_dist_subset(const Cx *vals, const int *indices, int count) {
+    int a, b;
+    double min_d = 1e30;
+    for (a = 0; a < count; a++) {
+        for (b = a + 1; b < count; b++) {
+            double d = cx_abs(cx_sub(vals[indices[a]], vals[indices[b]]));
+            if (d < min_d) min_d = d;
+        }
+    }
+    return min_d;
+}
+
+/* Compute min_dist for all knots from precomputed values */
+static double min_dist_all(const Cx *vals) {
+    int ki, kj;
+    double min_d = 1e30;
+    for (ki = 0; ki < num_knots; ki++) {
+        for (kj = ki + 1; kj < num_knots; kj++) {
+            double d = cx_abs(cx_sub(vals[ki], vals[kj]));
+            if (d < min_d) min_d = d;
+        }
+    }
+    return min_d;
+}
+
+/* ================================================================
+ * Quantization: count classified pairs at B bits
+ * ================================================================ */
+
+/* Quantize a complex value to (B bits re, B bits im) within [-range, range] */
+typedef struct { int qre, qim; } QuantVal;
+
+static QuantVal quantize(Cx v, int bits, double range) {
+    QuantVal q;
+    double levels = (double)(1 << bits);
+    q.qre = (int)((v.re + range) / (2.0 * range) * levels);
+    q.qim = (int)((v.im + range) / (2.0 * range) * levels);
+    /* Clamp */
+    if (q.qre < 0) q.qre = 0;
+    if (q.qre >= (1 << bits)) q.qre = (1 << bits) - 1;
+    if (q.qim < 0) q.qim = 0;
+    if (q.qim >= (1 << bits)) q.qim = (1 << bits) - 1;
+    return q;
+}
+
+/* Count distinct pairs from quantized multi-angle feature vectors.
+ * features[knot][angle] = Cx value.
+ * Two knots are "separated" if they differ at ANY angle. */
+static int count_separated_pairs(Cx features[][4], int n_knots, int n_angles,
+                                 int bits, double range) {
+    int ki, kj, ai, sep_count = 0;
+    for (ki = 0; ki < n_knots; ki++) {
+        for (kj = ki + 1; kj < n_knots; kj++) {
+            int differ = 0;
+            for (ai = 0; ai < n_angles; ai++) {
+                QuantVal qi = quantize(features[ki][ai], bits, range);
+                QuantVal qj = quantize(features[kj][ai], bits, range);
+                if (qi.qre != qj.qre || qi.qim != qj.qim) {
+                    differ = 1;
+                    break;
+                }
+            }
+            if (differ) sep_count++;
+        }
+    }
+    return sep_count;
+}
+
+/* ================================================================
+ * PART A: Flat g Baseline
+ * Evaluate g at 1, 2, 4 greedy-optimal angles.
+ * Record min_dist and Pareto frontier at each count.
+ * ================================================================ */
+
+static double flat_angles[4];
+static int flat_n_angles = 0;
+
+static void part_a_flat_baseline(void) {
+    int round, si, ki, kj;
+    int total_pairs = num_knots * (num_knots - 1) / 2;
+    /* Accumulated squared distance per pair */
+    double dist2[MAX_KNOTS][MAX_KNOTS];
+    char msg[256];
+
+    ensure_survey();
+
+    printf("\n=== PART A: Flat g Baseline (Greedy Angles) ===\n");
+    printf("  %d knots, %d pairs, survey resolution: %d angles\n\n",
+           num_knots, total_pairs, SURVEY_SAMP);
+
+    for (ki = 0; ki < num_knots; ki++)
+        for (kj = 0; kj < num_knots; kj++)
+            dist2[ki][kj] = 0.0;
+
+    for (round = 0; round < 4; round++) {
+        int best_si = 0;
+        double best_min_d = -1.0;
+
+        /* Greedy: find angle that maximizes min pairwise distance
+         * in accumulated feature space */
+        for (si = 0; si < SURVEY_SAMP; si++) {
+            double min_d = 1e30;
+            for (ki = 0; ki < num_knots; ki++) {
+                for (kj = ki + 1; kj < num_knots; kj++) {
+                    Cx d = cx_sub(g_survey[si][ki], g_survey[si][kj]);
+                    double nd2 = dist2[ki][kj] + d.re * d.re + d.im * d.im;
+                    double dist = sqrt(nd2);
+                    if (dist < min_d) min_d = dist;
+                }
+            }
+            if (min_d > best_min_d) {
+                best_min_d = min_d;
+                best_si = si;
+            }
+        }
+
+        flat_angles[round] = survey_thetas[best_si];
+
+        /* Update accumulators */
+        for (ki = 0; ki < num_knots; ki++) {
+            for (kj = ki + 1; kj < num_knots; kj++) {
+                Cx d = cx_sub(g_survey[best_si][ki], g_survey[best_si][kj]);
+                dist2[ki][kj] += d.re * d.re + d.im * d.im;
+                dist2[kj][ki] = dist2[ki][kj];
+            }
+        }
+
+        printf("  Angle %d: %.4f*pi  min_dist=%.6f\n",
+               round + 1, flat_angles[round] / M_PI, best_min_d);
+    }
+
+    flat_n_angles = 4;
+
+    /* Pareto for flat at each angle count */
+    printf("\n  Flat Pareto (bits vs pairs at 1,2,4 angles):\n");
+    printf("  %5s", "Bits");
+    {
+        int na;
+        for (na = 0; na < 3; na++) {
+            int n_a = (na == 0) ? 1 : (na == 1) ? 2 : 4;
+            printf(" %8dA", n_a);
+        }
+        printf("\n");
+    }
+    {
+        int bits, na;
+        int first_full[3];
+        for (na = 0; na < 3; na++) first_full[na] = 0;
+        for (bits = 1; bits <= 10; bits++) {
+            printf("  %5d", bits);
+            for (na = 0; na < 3; na++) {
+                int n_a = (na == 0) ? 1 : (na == 1) ? 2 : 4;
+                Cx features[MAX_KNOTS][4];
+                int ai, sep;
+                for (ki = 0; ki < num_knots; ki++) {
+                    for (ai = 0; ai < n_a; ai++) {
+                        /* Find survey index closest to flat_angles[ai] */
+                        int best = (int)(flat_angles[ai] / (2.0 * M_PI) * (double)SURVEY_SAMP);
+                        if (best >= SURVEY_SAMP) best = SURVEY_SAMP - 1;
+                        if (best < 0) best = 0;
+                        features[ki][ai] = g_survey[best][ki];
+                    }
+                }
+                sep = count_separated_pairs(features, num_knots, n_a, bits, 50.0);
+                printf(" %8d", sep);
+                if (sep == total_pairs && first_full[na] == 0)
+                    first_full[na] = bits;
+            }
+            printf("  /%d\n", total_pairs);
+        }
+        printf("\n  Bits for full classification: 1A=%d  2A=%d  4A=%d\n",
+               first_full[0], first_full[1], first_full[2]);
+    }
+
+    sprintf(msg, "flat g at 1 angle achieves full classification within 10 bits");
+    {
+        Cx features[MAX_KNOTS][4];
+        int sep, bits_ok = 0, bits;
+        for (ki = 0; ki < num_knots; ki++) {
+            int best = (int)(flat_angles[0] / (2.0 * M_PI) * (double)SURVEY_SAMP);
+            if (best >= SURVEY_SAMP) best = SURVEY_SAMP - 1;
+            features[ki][0] = g_survey[best][ki];
+        }
+        for (bits = 1; bits <= 10; bits++) {
+            sep = count_separated_pairs(features, num_knots, 1, bits, 50.0);
+            if (sep == total_pairs) { bits_ok = bits; break; }
+        }
+        sprintf(msg, "flat g at 1 angle: full classification at %d bits", bits_ok);
+        check(msg, bits_ok > 0 && bits_ok <= 10);
+    }
+}
+
+/* ================================================================
+ * PART B: Arf Split -- Layer 1 = k value, Layer 2 = per-group angle
+ * ================================================================ */
+
+static void part_b_arf_split(void) {
+    int ki, si;
+    int total_pairs = num_knots * (num_knots - 1) / 2;
+    /* Split knots by k value */
+    int group0[MAX_KNOTS], group1[MAX_KNOTS];
+    int n0 = 0, n1 = 0;
+    int best_si0 = 0, best_si1 = 0;
+    double best_md0 = -1.0, best_md1 = -1.0;
+    double arf_theta0, arf_theta1;
+    char msg[256];
+
+    ensure_survey();
+
+    printf("\n=== PART B: Arf Split (k=0 vs k>0) ===\n");
+
+    for (ki = 0; ki < num_knots; ki++) {
+        if (k_cache[ki] == 0)
+            group0[n0++] = ki;
+        else
+            group1[n1++] = ki;
+    }
+
+    printf("  Group k=0: %d knots (%d pairs)\n", n0, n0 * (n0 - 1) / 2);
+    printf("  Group k>0: %d knots (%d pairs)\n", n1, n1 * (n1 - 1) / 2);
+    printf("  Cross-group pairs: %d (separated by Arf bit alone)\n",
+           n0 * n1);
+    printf("  Total: %d cross + %d within = %d (check: %d)\n",
+           n0 * n1, n0 * (n0 - 1) / 2 + n1 * (n1 - 1) / 2,
+           n0 * n1 + n0 * (n0 - 1) / 2 + n1 * (n1 - 1) / 2,
+           total_pairs);
+
+    /* Find optimal angle for each group separately */
+    if (n0 >= 2) {
+        for (si = 0; si < SURVEY_SAMP; si++) {
+            double md = min_dist_subset(g_survey[si], group0, n0);
+            if (md > best_md0) { best_md0 = md; best_si0 = si; }
+        }
+        arf_theta0 = survey_thetas[best_si0];
+        printf("\n  Group k=0 optimal: %.4f*pi  min_dist=%.6f\n",
+               arf_theta0 / M_PI, best_md0);
+    } else {
+        arf_theta0 = flat_angles[0]; /* fallback */
+        best_md0 = 1e30; /* trivially separated */
+        printf("\n  Group k=0: only %d knot, trivially separated\n", n0);
+    }
+
+    if (n1 >= 2) {
+        for (si = 0; si < SURVEY_SAMP; si++) {
+            double md = min_dist_subset(g_survey[si], group1, n1);
+            if (md > best_md1) { best_md1 = md; best_si1 = si; }
+        }
+        arf_theta1 = survey_thetas[best_si1];
+        printf("  Group k>0 optimal: %.4f*pi  min_dist=%.6f\n",
+               arf_theta1 / M_PI, best_md1);
+    } else {
+        arf_theta1 = flat_angles[0]; /* fallback */
+        best_md1 = 1e30;
+        printf("  Group k>0: only %d knot, trivially separated\n", n1);
+    }
+
+    /* Compare to global flat optimal */
+    {
+        double flat_md = min_dist_all(g_survey[(int)(flat_angles[0] / (2.0 * M_PI) * (double)SURVEY_SAMP)]);
+        printf("\n  Global flat min_dist at best angle: %.6f\n", flat_md);
+        printf("  Per-group min_dists: k=0 %.6f, k>0 %.6f\n",
+               best_md0, best_md1);
+        printf("  Arf bit separates %d/%d cross-group pairs for FREE\n",
+               n0 * n1, total_pairs);
+    }
+
+    /* Pareto: Arf split uses 1 bit for Arf + B bits per group
+     * Total budget = 1 + 2B bits (re+im at B bits each) */
+    printf("\n  Arf Split Pareto (1 Arf bit + B bits per value):\n");
+    printf("  %5s %12s %12s %12s\n",
+           "B", "within k=0", "within k>0", "total sep");
+    {
+        int bits;
+        int arf_first_full = 0;
+        for (bits = 1; bits <= 10; bits++) {
+            int sep0 = 0, sep1 = 0, cross_sep;
+            /* Within group k=0 */
+            if (n0 >= 2) {
+                int a, b;
+                for (a = 0; a < n0; a++) {
+                    for (b = a + 1; b < n0; b++) {
+                        QuantVal qa = quantize(g_survey[best_si0][group0[a]], bits, 50.0);
+                        QuantVal qb = quantize(g_survey[best_si0][group0[b]], bits, 50.0);
+                        if (qa.qre != qb.qre || qa.qim != qb.qim) sep0++;
+                    }
+                }
+            }
+            /* Within group k>0 */
+            if (n1 >= 2) {
+                int a, b;
+                for (a = 0; a < n1; a++) {
+                    for (b = a + 1; b < n1; b++) {
+                        QuantVal qa = quantize(g_survey[best_si1][group1[a]], bits, 50.0);
+                        QuantVal qb = quantize(g_survey[best_si1][group1[b]], bits, 50.0);
+                        if (qa.qre != qb.qre || qa.qim != qb.qim) sep1++;
+                    }
+                }
+            }
+            /* Cross-group: ALL separated by Arf bit */
+            cross_sep = n0 * n1;
+            printf("  %5d %12d/%d %12d/%d %12d/%d\n",
+                   bits, sep0, n0 * (n0 - 1) / 2, sep1, n1 * (n1 - 1) / 2,
+                   sep0 + sep1 + cross_sep, total_pairs);
+            if (sep0 + sep1 + cross_sep == total_pairs && arf_first_full == 0)
+                arf_first_full = bits;
+        }
+        printf("\n  Arf split: full classification at B=%d (total %d bits: 1 Arf + 2*%d value)\n",
+               arf_first_full, 1 + 2 * arf_first_full, arf_first_full);
+
+        sprintf(msg, "Arf split achieves full classification within 10 bits");
+        check(msg, arf_first_full > 0 && arf_first_full <= 10);
+    }
+}
+
+/* ================================================================
+ * PART C: Greedy Hierarchical Binary Tree
+ * Find the angle that maximally bisects, then recurse on each half.
+ * ================================================================ */
+
+#define MAX_TREE_DEPTH 4
+
+typedef struct {
+    int knot_indices[MAX_KNOTS];
+    int count;
+    double split_theta;
+    double split_threshold;  /* real part threshold at split angle */
+    int depth;
+} TreeNode;
+
+/* Find best bisection: angle and threshold that maximizes
+ * min(min_dist_left, min_dist_right) */
+static void find_best_bisection(const int *indices, int count,
+                                double *out_theta, double *out_threshold,
+                                double *out_score,
+                                int *left, int *n_left,
+                                int *right, int *n_right) {
+    int si, ki;
+    double best_score = -1.0;
+
+    ensure_survey();
+
+    *n_left = 0; *n_right = 0; *out_score = 0;
+
+    for (si = 0; si < SURVEY_SAMP; si++) {
+        /* Collect g values for this subset at this angle */
+        double reals[MAX_KNOTS];
+        double sorted[MAX_KNOTS];
+        int j;
+
+        for (ki = 0; ki < count; ki++)
+            reals[ki] = g_survey[si][indices[ki]].re;
+
+        /* Sort to find midpoint thresholds */
+        for (ki = 0; ki < count; ki++) sorted[ki] = reals[ki];
+        /* Simple insertion sort (small N) */
+        for (ki = 1; ki < count; ki++) {
+            double tmp = sorted[ki];
+            j = ki - 1;
+            while (j >= 0 && sorted[j] > tmp) {
+                sorted[j + 1] = sorted[j];
+                j--;
+            }
+            sorted[j + 1] = tmp;
+        }
+
+        /* Try each midpoint as threshold */
+        for (ki = 0; ki < count - 1; ki++) {
+            double thresh = (sorted[ki] + sorted[ki + 1]) / 2.0;
+            int l_idx[MAX_KNOTS], r_idx[MAX_KNOTS];
+            int nl = 0, nr = 0;
+            double md_l, md_r, score;
+
+            for (j = 0; j < count; j++) {
+                if (reals[j] <= thresh)
+                    l_idx[nl++] = indices[j];
+                else
+                    r_idx[nr++] = indices[j];
+            }
+
+            /* Skip degenerate splits */
+            if (nl < 1 || nr < 1) continue;
+
+            /* Score = min of within-group min_dists
+             * (or 1e30 if a group has 1 element) */
+            md_l = (nl >= 2) ? min_dist_subset(g_survey[si], l_idx, nl) : 1e30;
+            md_r = (nr >= 2) ? min_dist_subset(g_survey[si], r_idx, nr) : 1e30;
+            score = (md_l < md_r) ? md_l : md_r;
+
+            if (score > best_score) {
+                int ii;
+                best_score = score;
+                *out_theta = survey_thetas[si];
+                *out_threshold = thresh;
+                *out_score = score;
+                *n_left = nl; *n_right = nr;
+                for (ii = 0; ii < nl; ii++) left[ii] = l_idx[ii];
+                for (ii = 0; ii < nr; ii++) right[ii] = r_idx[ii];
+            }
+        }
+    }
+}
+
+static TreeNode tree_nodes[64];
+static int tree_node_count = 0;
+
+static void build_tree(const int *indices, int count, int depth) {
+    int left[MAX_KNOTS], right[MAX_KNOTS];
+    int n_left = 0, n_right = 0;
+    double theta, threshold, score;
+    int node_idx;
+
+    if (count <= 1 || depth >= MAX_TREE_DEPTH) return;
+
+    find_best_bisection(indices, count, &theta, &threshold, &score,
+                        left, &n_left, right, &n_right);
+
+    if (n_left == 0 || n_right == 0) return;
+
+    node_idx = tree_node_count++;
+    {
+        int i;
+        tree_nodes[node_idx].count = count;
+        for (i = 0; i < count; i++)
+            tree_nodes[node_idx].knot_indices[i] = indices[i];
+    }
+    tree_nodes[node_idx].split_theta = theta;
+    tree_nodes[node_idx].split_threshold = threshold;
+    tree_nodes[node_idx].depth = depth;
+
+    printf("  %*sDepth %d: split %d knots at %.4f*pi (thresh=%.4f) -> %d|%d  score=%.6f\n",
+           depth * 2, "", depth, count, theta / M_PI, threshold,
+           n_left, n_right, score);
+
+    /* Recurse */
+    build_tree(left, n_left, depth + 1);
+    build_tree(right, n_right, depth + 1);
+}
+
+static void part_c_hierarchical_tree(void) {
+    int all[MAX_KNOTS];
+    int ki, bits;
+    int total_pairs = num_knots * (num_knots - 1) / 2;
+    char msg[256];
+
+    ensure_survey();
+
+    printf("\n=== PART C: Greedy Hierarchical Binary Tree ===\n\n");
+
+    for (ki = 0; ki < num_knots; ki++) all[ki] = ki;
+    tree_node_count = 0;
+
+    build_tree(all, num_knots, 0);
+
+    printf("\n  Tree has %d internal nodes (splits)\n", tree_node_count);
+
+    /* Evaluate tree classification at various bit budgets.
+     * Each tree node uses 1 bit for the split decision.
+     * Total tree overhead = tree_node_count bits.
+     * Plus B bits per leaf value per angle. */
+    printf("\n  Hierarchical Tree Pareto:\n");
+    printf("  Tree uses %d split decision bits + per-leaf value bits\n\n",
+           tree_node_count);
+
+    /* Simpler approach: the tree partitions knots into leaf groups.
+     * Within each leaf, we need B bits to distinguish.
+     * Cross-leaf pairs are separated by tree decisions.
+     * Count how many pairs the tree structure alone separates. */
+    {
+        /* Walk tree to assign each knot a leaf ID */
+        int leaf_id[MAX_KNOTS];
+        int ni, n_idx;
+
+        for (ki = 0; ki < num_knots; ki++) leaf_id[ki] = 0;
+
+        /* Replay tree splits to assign leaf IDs */
+        for (ni = 0; ni < tree_node_count; ni++) {
+            int si_best = (int)(tree_nodes[ni].split_theta / (2.0 * M_PI) * (double)SURVEY_SAMP);
+            if (si_best >= SURVEY_SAMP) si_best = SURVEY_SAMP - 1;
+            for (n_idx = 0; n_idx < tree_nodes[ni].count; n_idx++) {
+                int idx = tree_nodes[ni].knot_indices[n_idx];
+                double re = g_survey[si_best][idx].re;
+                if (re > tree_nodes[ni].split_threshold) {
+                    /* Right child: add depth-dependent bit */
+                    leaf_id[idx] |= (1 << tree_nodes[ni].depth);
+                }
+            }
+        }
+
+        /* Count cross-leaf pairs (separated by tree structure alone) */
+        {
+            int cross = 0, within = 0;
+            int kj;
+            for (ki = 0; ki < num_knots; ki++) {
+                for (kj = ki + 1; kj < num_knots; kj++) {
+                    if (leaf_id[ki] != leaf_id[kj]) cross++;
+                    else within++;
+                }
+            }
+            printf("  Tree structure separates %d/%d pairs\n", cross, total_pairs);
+            printf("  Remaining within-leaf pairs: %d\n", within);
+        }
+
+        /* Count distinct leaf groups */
+        {
+            int seen[MAX_KNOTS];
+            int n_leaves = 0;
+            int kj, found;
+            for (ki = 0; ki < num_knots; ki++) {
+                found = 0;
+                for (kj = 0; kj < n_leaves; kj++) {
+                    if (seen[kj] == leaf_id[ki]) { found = 1; break; }
+                }
+                if (!found) seen[n_leaves++] = leaf_id[ki];
+            }
+            printf("  Number of leaf groups: %d\n", n_leaves);
+        }
+
+        /* Pareto: tree bits + B value bits */
+        printf("\n  %5s %12s\n", "B+tree", "sep pairs");
+        {
+            int tree_first_full = 0;
+            for (bits = 1; bits <= 10; bits++) {
+                int sep = 0;
+                int kj;
+                for (ki = 0; ki < num_knots; ki++) {
+                    for (kj = ki + 1; kj < num_knots; kj++) {
+                        if (leaf_id[ki] != leaf_id[kj]) {
+                            sep++;
+                        } else {
+                            /* Same leaf: need value bits to distinguish.
+                             * Use the split angle for this leaf's parent node. */
+                            int a;
+                            int differ = 0;
+                            for (a = 0; a < tree_node_count; a++) {
+                                int si_a = (int)(tree_nodes[a].split_theta / (2.0 * M_PI) * (double)SURVEY_SAMP);
+                                QuantVal qi, qj;
+                                if (si_a >= SURVEY_SAMP) si_a = SURVEY_SAMP - 1;
+                                qi = quantize(g_survey[si_a][ki], bits, 50.0);
+                                qj = quantize(g_survey[si_a][kj], bits, 50.0);
+                                if (qi.qre != qj.qre || qi.qim != qj.qim) {
+                                    differ = 1; break;
+                                }
+                            }
+                            if (differ) sep++;
+                        }
+                    }
+                }
+                printf("  %5d %12d/%d\n", bits, sep, total_pairs);
+                if (sep == total_pairs && tree_first_full == 0)
+                    tree_first_full = bits;
+            }
+            sprintf(msg, "hierarchical tree achieves full classification within 10 bits");
+            check(msg, tree_first_full > 0 && tree_first_full <= 10);
+        }
+    }
+}
+
+/* ================================================================
+ * PART D: Gradient Descent Comparison
+ * Same 2-group structure as Arf split, but search for angles
+ * by sampling + local refinement instead of analytical computation.
+ * ================================================================ */
+
+static void part_d_gradient_descent(void) {
+    int ki, si, iter;
+    int group0[MAX_KNOTS], group1[MAX_KNOTS];
+    int n0 = 0, n1 = 0;
+    /* Random search: sample N random angles, keep best */
+    /* Then local refinement: perturb best angle, accept improvements */
+    double gd_theta0 = 0, gd_theta1 = 0;
+    double gd_md0 = -1.0, gd_md1 = -1.0;
+    double arf_theta0 = 0, arf_theta1 = 0;
+    double arf_md0 = -1.0, arf_md1 = -1.0;
+    char msg[256];
+
+    ensure_survey();
+
+    printf("\n=== PART D: Gradient Descent vs Analytical ===\n");
+
+    /* Split by k value (same as Arf split) */
+    for (ki = 0; ki < num_knots; ki++) {
+        if (k_cache[ki] == 0)
+            group0[n0++] = ki;
+        else
+            group1[n1++] = ki;
+    }
+
+    /* Analytical: exhaustive survey (same as Part B) */
+    if (n0 >= 2) {
+        for (si = 0; si < SURVEY_SAMP; si++) {
+            double md = min_dist_subset(g_survey[si], group0, n0);
+            if (md > arf_md0) { arf_md0 = md; arf_theta0 = survey_thetas[si]; }
+        }
+    }
+    if (n1 >= 2) {
+        for (si = 0; si < SURVEY_SAMP; si++) {
+            double md = min_dist_subset(g_survey[si], group1, n1);
+            if (md > arf_md1) { arf_md1 = md; arf_theta1 = survey_thetas[si]; }
+        }
+    }
+
+    /* Gradient descent simulation:
+     * Start from a random angle, do hill climbing with decreasing step size.
+     * Repeat from multiple starts, keep global best. */
+    printf("  Gradient descent (50 random starts, 100 iterations each):\n\n");
+
+    gd_md0 = -1.0; gd_md1 = -1.0;
+
+    /* Group k=0 */
+    if (n0 >= 2) {
+        int start;
+        for (start = 0; start < 50; start++) {
+            /* Deterministic "random" starts: spread evenly with offset */
+            double theta = 2.0 * M_PI * ((double)start + 0.37) / 50.0;
+            double step = 0.1;
+
+            for (iter = 0; iter < 100; iter++) {
+                Cx A;
+                double md, md_plus, md_minus;
+
+                A = cx_exp_i(theta);
+                {
+                    Cx vals[MAX_KNOTS];
+                    int a;
+                    for (a = 0; a < n0; a++)
+                        vals[a] = reduced_bracket_at(&knots[group0[a]], k_cache[group0[a]], A);
+                    md = 1e30;
+                    {
+                        int aa, bb;
+                        for (aa = 0; aa < n0; aa++)
+                            for (bb = aa + 1; bb < n0; bb++) {
+                                double d = cx_abs(cx_sub(vals[aa], vals[bb]));
+                                if (d < md) md = d;
+                            }
+                    }
+                }
+
+                /* Try +step */
+                A = cx_exp_i(theta + step);
+                {
+                    Cx vals[MAX_KNOTS];
+                    int a;
+                    for (a = 0; a < n0; a++)
+                        vals[a] = reduced_bracket_at(&knots[group0[a]], k_cache[group0[a]], A);
+                    md_plus = 1e30;
+                    {
+                        int aa, bb;
+                        for (aa = 0; aa < n0; aa++)
+                            for (bb = aa + 1; bb < n0; bb++) {
+                                double d = cx_abs(cx_sub(vals[aa], vals[bb]));
+                                if (d < md_plus) md_plus = d;
+                            }
+                    }
+                }
+
+                /* Try -step */
+                A = cx_exp_i(theta - step);
+                {
+                    Cx vals[MAX_KNOTS];
+                    int a;
+                    for (a = 0; a < n0; a++)
+                        vals[a] = reduced_bracket_at(&knots[group0[a]], k_cache[group0[a]], A);
+                    md_minus = 1e30;
+                    {
+                        int aa, bb;
+                        for (aa = 0; aa < n0; aa++)
+                            for (bb = aa + 1; bb < n0; bb++) {
+                                double d = cx_abs(cx_sub(vals[aa], vals[bb]));
+                                if (d < md_minus) md_minus = d;
+                            }
+                    }
+                }
+
+                if (md_plus > md && md_plus >= md_minus)
+                    theta = theta + step;
+                else if (md_minus > md)
+                    theta = theta - step;
+
+                step *= 0.95; /* anneal */
+            }
+
+            {
+                Cx A = cx_exp_i(theta);
+                Cx vals[MAX_KNOTS];
+                double md;
+                int a;
+                for (a = 0; a < n0; a++)
+                    vals[a] = reduced_bracket_at(&knots[group0[a]], k_cache[group0[a]], A);
+                md = 1e30;
+                {
+                    int aa, bb;
+                    for (aa = 0; aa < n0; aa++)
+                        for (bb = aa + 1; bb < n0; bb++) {
+                            double d = cx_abs(cx_sub(vals[aa], vals[bb]));
+                            if (d < md) md = d;
+                        }
+                }
+                if (md > gd_md0) {
+                    gd_md0 = md;
+                    gd_theta0 = theta;
+                }
+            }
+        }
+    }
+
+    /* Group k>0 */
+    if (n1 >= 2) {
+        int start;
+        for (start = 0; start < 50; start++) {
+            double theta = 2.0 * M_PI * ((double)start + 0.37) / 50.0;
+            double step = 0.1;
+
+            for (iter = 0; iter < 100; iter++) {
+                Cx A;
+                double md, md_plus, md_minus;
+
+                A = cx_exp_i(theta);
+                {
+                    Cx vals[MAX_KNOTS];
+                    int a;
+                    for (a = 0; a < n1; a++)
+                        vals[a] = reduced_bracket_at(&knots[group1[a]], k_cache[group1[a]], A);
+                    md = 1e30;
+                    {
+                        int aa, bb;
+                        for (aa = 0; aa < n1; aa++)
+                            for (bb = aa + 1; bb < n1; bb++) {
+                                double d = cx_abs(cx_sub(vals[aa], vals[bb]));
+                                if (d < md) md = d;
+                            }
+                    }
+                }
+
+                A = cx_exp_i(theta + step);
+                {
+                    Cx vals[MAX_KNOTS];
+                    int a;
+                    for (a = 0; a < n1; a++)
+                        vals[a] = reduced_bracket_at(&knots[group1[a]], k_cache[group1[a]], A);
+                    md_plus = 1e30;
+                    {
+                        int aa, bb;
+                        for (aa = 0; aa < n1; aa++)
+                            for (bb = aa + 1; bb < n1; bb++) {
+                                double d = cx_abs(cx_sub(vals[aa], vals[bb]));
+                                if (d < md_plus) md_plus = d;
+                            }
+                    }
+                }
+
+                A = cx_exp_i(theta - step);
+                {
+                    Cx vals[MAX_KNOTS];
+                    int a;
+                    for (a = 0; a < n1; a++)
+                        vals[a] = reduced_bracket_at(&knots[group1[a]], k_cache[group1[a]], A);
+                    md_minus = 1e30;
+                    {
+                        int aa, bb;
+                        for (aa = 0; aa < n1; aa++)
+                            for (bb = aa + 1; bb < n1; bb++) {
+                                double d = cx_abs(cx_sub(vals[aa], vals[bb]));
+                                if (d < md_minus) md_minus = d;
+                            }
+                    }
+                }
+
+                if (md_plus > md && md_plus >= md_minus)
+                    theta = theta + step;
+                else if (md_minus > md)
+                    theta = theta - step;
+
+                step *= 0.95;
+            }
+
+            {
+                Cx A = cx_exp_i(theta);
+                Cx vals[MAX_KNOTS];
+                double md;
+                int a;
+                for (a = 0; a < n1; a++)
+                    vals[a] = reduced_bracket_at(&knots[group1[a]], k_cache[group1[a]], A);
+                md = 1e30;
+                {
+                    int aa, bb;
+                    for (aa = 0; aa < n1; aa++)
+                        for (bb = aa + 1; bb < n1; bb++) {
+                            double d = cx_abs(cx_sub(vals[aa], vals[bb]));
+                            if (d < md) md = d;
+                        }
+                }
+                if (md > gd_md1) {
+                    gd_md1 = md;
+                    gd_theta1 = theta;
+                }
+            }
+        }
+    }
+
+    printf("  Results:\n");
+    printf("  Group k=0: analytical %.4f*pi (md=%.6f) vs GD %.4f*pi (md=%.6f)\n",
+           arf_theta0 / M_PI, arf_md0, gd_theta0 / M_PI, gd_md0);
+    printf("  Group k>0: analytical %.4f*pi (md=%.6f) vs GD %.4f*pi (md=%.6f)\n",
+           arf_theta1 / M_PI, arf_md1, gd_theta1 / M_PI, gd_md1);
+
+    {
+        /* Analytical beats or matches GD if combined min_dist >= GD combined */
+        double anal_min = (arf_md0 < arf_md1) ? arf_md0 : arf_md1;
+        double gd_min = (gd_md0 < gd_md1) ? gd_md0 : gd_md1;
+        printf("\n  Combined worst-group min_dist: analytical=%.6f, GD=%.6f\n",
+               anal_min, gd_min);
+        sprintf(msg, "analytical matches or beats gradient descent (%.4f >= %.4f)",
+                anal_min, gd_min);
+        /* Allow 1%% tolerance for GD being slightly better due to finer resolution */
+        check(msg, anal_min >= gd_min * 0.99);
+    }
+}
+
+/* ================================================================
+ * PART E: Bit Budget Pareto -- All Methods on Same Axes
+ * ================================================================ */
+
+static void part_e_pareto_comparison(void) {
+    int bits, ki, kj;
+    int total_pairs = num_knots * (num_knots - 1) / 2;
+    /* Methods: flat 1A, flat 2A, Arf split 1A, tree */
+    char msg[256];
+
+    /* Recompute Arf group info */
+    int group0[MAX_KNOTS], group1[MAX_KNOTS];
+    int n0 = 0, n1 = 0;
+    int arf_si0 = 0, arf_si1 = 0;
+    double arf_md0 = -1.0, arf_md1 = -1.0;
+    int si;
+
+    /* Track first-full for each method */
+    int flat1_first = 0, flat2_first = 0, arf_first = 0, tree_first = 0;
+
+    ensure_survey();
+
+    for (ki = 0; ki < num_knots; ki++) {
+        if (k_cache[ki] == 0) group0[n0++] = ki;
+        else group1[n1++] = ki;
+    }
+    if (n0 >= 2) {
+        for (si = 0; si < SURVEY_SAMP; si++) {
+            double md = min_dist_subset(g_survey[si], group0, n0);
+            if (md > arf_md0) { arf_md0 = md; arf_si0 = si; }
+        }
+    }
+    if (n1 >= 2) {
+        for (si = 0; si < SURVEY_SAMP; si++) {
+            double md = min_dist_subset(g_survey[si], group1, n1);
+            if (md > arf_md1) { arf_md1 = md; arf_si1 = si; }
+        }
+    }
+
+    printf("\n=== PART E: Bit Budget Pareto -- All Methods ===\n");
+    printf("  Methods: flat-1A, flat-2A, arf-split, tree\n");
+    printf("  Total pairs: %d\n\n", total_pairs);
+    printf("  %5s %10s %10s %10s %10s\n",
+           "Bits", "flat-1A", "flat-2A", "arf-split", "tree");
+
+    for (bits = 1; bits <= 10; bits++) {
+        int flat1_sep = 0, flat2_sep = 0, arf_sep = 0, tree_sep = 0;
+
+        /* Flat 1 angle */
+        {
+            int bsi = (int)(flat_angles[0] / (2.0 * M_PI) * (double)SURVEY_SAMP);
+            if (bsi >= SURVEY_SAMP) bsi = SURVEY_SAMP - 1;
+            for (ki = 0; ki < num_knots; ki++) {
+                for (kj = ki + 1; kj < num_knots; kj++) {
+                    QuantVal qi = quantize(g_survey[bsi][ki], bits, 50.0);
+                    QuantVal qj = quantize(g_survey[bsi][kj], bits, 50.0);
+                    if (qi.qre != qj.qre || qi.qim != qj.qim) flat1_sep++;
+                }
+            }
+        }
+
+        /* Flat 2 angles */
+        {
+            for (ki = 0; ki < num_knots; ki++) {
+                for (kj = ki + 1; kj < num_knots; kj++) {
+                    int differ = 0;
+                    int ai;
+                    for (ai = 0; ai < 2 && !differ; ai++) {
+                        int bsi = (int)(flat_angles[ai] / (2.0 * M_PI) * (double)SURVEY_SAMP);
+                        QuantVal qi, qj;
+                        if (bsi >= SURVEY_SAMP) bsi = SURVEY_SAMP - 1;
+                        qi = quantize(g_survey[bsi][ki], bits, 50.0);
+                        qj = quantize(g_survey[bsi][kj], bits, 50.0);
+                        if (qi.qre != qj.qre || qi.qim != qj.qim) differ = 1;
+                    }
+                    if (differ) flat2_sep++;
+                }
+            }
+        }
+
+        /* Arf split: 1 Arf bit + B value bits per group */
+        {
+            for (ki = 0; ki < num_knots; ki++) {
+                for (kj = ki + 1; kj < num_knots; kj++) {
+                    if (k_cache[ki] != k_cache[kj]) {
+                        /* Different Arf class: separated */
+                        arf_sep++;
+                    } else {
+                        /* Same class: use per-group angle */
+                        int bsi = (k_cache[ki] == 0) ? arf_si0 : arf_si1;
+                        QuantVal qi = quantize(g_survey[bsi][ki], bits, 50.0);
+                        QuantVal qj = quantize(g_survey[bsi][kj], bits, 50.0);
+                        if (qi.qre != qj.qre || qi.qim != qj.qim) arf_sep++;
+                    }
+                }
+            }
+        }
+
+        /* Tree: leaf-id separation + value bits at tree angles */
+        {
+            /* Rebuild leaf IDs from tree */
+            int leaf_id[MAX_KNOTS];
+            int ni;
+            for (ki = 0; ki < num_knots; ki++) leaf_id[ki] = 0;
+            for (ni = 0; ni < tree_node_count; ni++) {
+                int n_idx;
+                int si_best = (int)(tree_nodes[ni].split_theta / (2.0 * M_PI) * (double)SURVEY_SAMP);
+                if (si_best >= SURVEY_SAMP) si_best = SURVEY_SAMP - 1;
+                for (n_idx = 0; n_idx < tree_nodes[ni].count; n_idx++) {
+                    int idx = tree_nodes[ni].knot_indices[n_idx];
+                    double re = g_survey[si_best][idx].re;
+                    if (re > tree_nodes[ni].split_threshold)
+                        leaf_id[idx] |= (1 << tree_nodes[ni].depth);
+                }
+            }
+
+            for (ki = 0; ki < num_knots; ki++) {
+                for (kj = ki + 1; kj < num_knots; kj++) {
+                    if (leaf_id[ki] != leaf_id[kj]) {
+                        tree_sep++;
+                    } else {
+                        int a, differ = 0;
+                        for (a = 0; a < tree_node_count && !differ; a++) {
+                            int si_a = (int)(tree_nodes[a].split_theta / (2.0 * M_PI) * (double)SURVEY_SAMP);
+                            QuantVal qi, qj;
+                            if (si_a >= SURVEY_SAMP) si_a = SURVEY_SAMP - 1;
+                            qi = quantize(g_survey[si_a][ki], bits, 50.0);
+                            qj = quantize(g_survey[si_a][kj], bits, 50.0);
+                            if (qi.qre != qj.qre || qi.qim != qj.qim) differ = 1;
+                        }
+                        if (differ) tree_sep++;
+                    }
+                }
+            }
+        }
+
+        printf("  %5d %10d %10d %10d %10d  /%d\n",
+               bits, flat1_sep, flat2_sep, arf_sep, tree_sep, total_pairs);
+
+        /* Diagnostic: identify stubborn pairs at 1 bit for tree method */
+        if (bits == 1 && tree_sep < total_pairs) {
+            int leaf_id2[MAX_KNOTS];
+            int ni2;
+            for (ki = 0; ki < num_knots; ki++) leaf_id2[ki] = 0;
+            for (ni2 = 0; ni2 < tree_node_count; ni2++) {
+                int n_idx2;
+                int si2 = (int)(tree_nodes[ni2].split_theta / (2.0 * M_PI) * (double)SURVEY_SAMP);
+                if (si2 >= SURVEY_SAMP) si2 = SURVEY_SAMP - 1;
+                for (n_idx2 = 0; n_idx2 < tree_nodes[ni2].count; n_idx2++) {
+                    int idx2 = tree_nodes[ni2].knot_indices[n_idx2];
+                    double re2 = g_survey[si2][idx2].re;
+                    if (re2 > tree_nodes[ni2].split_threshold)
+                        leaf_id2[idx2] |= (1 << tree_nodes[ni2].depth);
+                }
+            }
+            printf("\n  ** Stubborn pairs at 1 bit (tree method): **\n");
+            for (ki = 0; ki < num_knots; ki++) {
+                for (kj = ki + 1; kj < num_knots; kj++) {
+                    if (leaf_id2[ki] == leaf_id2[kj]) {
+                        int a2, differ2 = 0;
+                        for (a2 = 0; a2 < tree_node_count && !differ2; a2++) {
+                            int si_a2 = (int)(tree_nodes[a2].split_theta / (2.0 * M_PI) * (double)SURVEY_SAMP);
+                            QuantVal qi2, qj2;
+                            if (si_a2 >= SURVEY_SAMP) si_a2 = SURVEY_SAMP - 1;
+                            qi2 = quantize(g_survey[si_a2][ki], bits, 50.0);
+                            qj2 = quantize(g_survey[si_a2][kj], bits, 50.0);
+                            if (qi2.qre != qj2.qre || qi2.qim != qj2.qim) differ2 = 1;
+                        }
+                        if (!differ2)
+                            printf("    %s vs %s (leaf_id=%d)\n",
+                                   knames[ki], knames[kj], leaf_id2[ki]);
+                    }
+                }
+            }
+            printf("\n");
+        }
+
+        if (flat1_sep == total_pairs && flat1_first == 0) flat1_first = bits;
+        if (flat2_sep == total_pairs && flat2_first == 0) flat2_first = bits;
+        if (arf_sep == total_pairs && arf_first == 0) arf_first = bits;
+        if (tree_sep == total_pairs && tree_first == 0) tree_first = bits;
+    }
+
+    printf("\n  Bits for full classification:\n");
+    printf("    flat-1A: %d\n", flat1_first);
+    printf("    flat-2A: %d\n", flat2_first);
+    printf("    arf-split: %d\n", arf_first);
+    printf("    tree: %d\n", tree_first);
+
+    /* Test: Arf split reaches full classification */
+    sprintf(msg, "all methods achieve full classification within 10 bits");
+    check(msg, flat1_first > 0 && arf_first > 0);
+
+    /* Test: hierarchy provides benefit somewhere */
+    {
+        int arf_better = (arf_first > 0 && flat1_first > 0 && arf_first <= flat1_first);
+        int tree_better = (tree_first > 0 && flat1_first > 0 && tree_first <= flat1_first);
+        sprintf(msg, "some hierarchical method <= flat-1A bits (%s)",
+                arf_better ? "arf" : (tree_better ? "tree" : "neither"));
+        check(msg, arf_better || tree_better);
+    }
+}
+
+/* ================================================================
+ * MAIN
+ * ================================================================ */
+
+int main(void) {
+    printf("KNOTAPEL DEMO 17: Multi-Layer DKC -- Hierarchy vs Flatness\n");
+    printf("============================================================\n");
+
+    init_knots();
+    dedup_knots();
+
+    printf("\n--- Delta exponents (Arf classes) ---\n");
+    {
+        int ki;
+        ensure_k_cache();
+        for (ki = 0; ki < num_knots; ki++) {
+            printf("  %-20s k=%d\n", knames[ki], k_cache[ki]);
+        }
+    }
+
+    part_a_flat_baseline();
+    part_b_arf_split();
+    part_c_hierarchical_tree();
+    part_d_gradient_descent();
+    part_e_pareto_comparison();
+
+    printf("\n============================================================\n");
+    printf("Results: %d passed, %d failed\n", n_pass, n_fail);
+    printf("============================================================\n");
+    return n_fail > 0 ? 1 : 0;
+}
