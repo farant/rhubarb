@@ -1,0 +1,957 @@
+/*
+ * KNOTAPEL DEMO 28: Unitary Activation
+ * ======================================
+ *
+ * THESIS: Demo 27 discovered two independent error sources in reverse DKC:
+ *   (a) Born-rule collapse C -> R>=0 (phase loss at readout)
+ *   (b) Split-sigmoid activation distortion (phase noise)
+ * Source (b) is DOMINANT: complex RMS 0.3494 > amplitude RMS 0.2936.
+ *
+ * KEY INSIGHT: modReLU(z) = ReLU(|z|+b)*z/|z| is U(1)-equivariant.
+ * It preserves phase exactly, eliminating error source (b).
+ *
+ * We compare 4 activations on complex XOR:
+ *   0. split-sigmoid: h = z (identity), baseline from Demo 27
+ *   1. modReLU: h = max(0, |z|+b) * z/|z|, phase-preserving
+ *   2. cardioid: h = 0.5*(1+cos(arg(z))) * z, direction-dependent
+ *   3. phase-only: h = z/|z|, normalized to unit circle
+ *
+ * Architecture (unified for all):
+ *   z = w1*x1 + w2*x2 + b
+ *   h = ACTIVATION(z)
+ *   g = sigmoid(Re(h)) + i*sigmoid(Im(h))
+ *   p = g.re*(1-g.im) + (1-g.re)*g.im   (smooth XOR)
+ *
+ * Predictions:
+ *   P1: modReLU gauge-corrected RMS < 0.15 (vs 0.3494 split-sigmoid)
+ *   P2: Cardioid RMS in [0.15, 0.35]
+ *   P3: Phase-only convergence rate < 50%
+ *   P4: Lattice projection: modReLU 80%+, split-sigmoid <20%
+ *   P5: Gauge angle within pi/8 of 7*pi/4 for all activations
+ *   P6: Weight phase error: modReLU < split-sigmoid
+ *
+ * C89, zero dependencies beyond math.h.
+ */
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <math.h>
+
+#ifndef M_PI
+#define M_PI 3.14159265358979323846
+#endif
+
+/* ================================================================
+ * Complex arithmetic
+ * ================================================================ */
+
+typedef struct { double re, im; } Cx;
+
+static Cx cx_make(double re, double im) { Cx z; z.re = re; z.im = im; return z; }
+static Cx cx_zero(void) { return cx_make(0.0, 0.0); }
+static Cx cx_one(void)  { return cx_make(1.0, 0.0); }
+
+static Cx cx_add(Cx a, Cx b) { return cx_make(a.re + b.re, a.im + b.im); }
+static Cx cx_sub(Cx a, Cx b) { return cx_make(a.re - b.re, a.im - b.im); }
+static Cx cx_neg(Cx a) { return cx_make(-a.re, -a.im); }
+static Cx cx_mul(Cx a, Cx b) {
+    return cx_make(a.re * b.re - a.im * b.im,
+                   a.re * b.im + a.im * b.re);
+}
+static Cx cx_div(Cx a, Cx b) {
+    double d = b.re * b.re + b.im * b.im;
+    return cx_make((a.re * b.re + a.im * b.im) / d,
+                   (a.im * b.re - a.re * b.im) / d);
+}
+static double cx_abs(Cx a) { return sqrt(a.re * a.re + a.im * a.im); }
+static double cx_phase(Cx a) { return atan2(a.im, a.re); }
+static Cx cx_exp_i(double theta) { return cx_make(cos(theta), sin(theta)); }
+static Cx cx_scale(Cx a, double s) { return cx_make(a.re * s, a.im * s); }
+
+static Cx cx_pow_int(Cx a, int n) {
+    Cx r = cx_one();
+    Cx base;
+    int neg;
+    if (n == 0) return r;
+    neg = (n < 0);
+    if (neg) n = -n;
+    base = a;
+    while (n > 0) {
+        if (n & 1) r = cx_mul(r, base);
+        base = cx_mul(base, base);
+        n >>= 1;
+    }
+    if (neg) r = cx_div(cx_one(), r);
+    return r;
+}
+
+/* ================================================================
+ * Bracket oracle (state-sum, from Demo 27)
+ * ================================================================ */
+
+#define MAX_WORD 64
+typedef struct { int word[MAX_WORD]; int len, n; } Braid;
+
+#define MAX_UF 4096
+static int uf_p[MAX_UF];
+static void uf_init(int n) { int i; for (i = 0; i < n; i++) uf_p[i] = i; }
+static int uf_find(int x) {
+    while (uf_p[x] != x) { uf_p[x] = uf_p[uf_p[x]]; x = uf_p[x]; }
+    return x;
+}
+static void uf_union(int x, int y) {
+    x = uf_find(x); y = uf_find(y); if (x != y) uf_p[x] = y;
+}
+
+static int braid_loops(const Braid *b, unsigned s) {
+    int N = (b->len + 1) * b->n, l, p, i, loops, sgn, bit, cup;
+    uf_init(N);
+    for (l = 0; l < b->len; l++) {
+        sgn = b->word[l] > 0 ? 1 : -1;
+        i = (sgn > 0 ? b->word[l] : -b->word[l]) - 1;
+        bit = (int)((s >> l) & 1u);
+        cup = (sgn > 0) ? (bit == 0) : (bit == 1);
+        if (cup) {
+            uf_union(l * b->n + i, l * b->n + i + 1);
+            uf_union((l + 1) * b->n + i, (l + 1) * b->n + i + 1);
+            for (p = 0; p < b->n; p++)
+                if (p != i && p != i + 1)
+                    uf_union(l * b->n + p, (l + 1) * b->n + p);
+        } else {
+            for (p = 0; p < b->n; p++)
+                uf_union(l * b->n + p, (l + 1) * b->n + p);
+        }
+    }
+    for (p = 0; p < b->n; p++)
+        uf_union(p, b->len * b->n + p);
+    loops = 0;
+    for (i = 0; i < N; i++)
+        if (uf_find(i) == i) loops++;
+    return loops;
+}
+
+static Cx braid_bracket_at(const Braid *b, Cx A) {
+    unsigned s, ns;
+    int i, a_count, b_count, lp, j;
+    Cx result, delta, d_power, term, coeff;
+
+    delta = cx_neg(cx_add(cx_pow_int(A, 2), cx_pow_int(A, -2)));
+    result = cx_zero();
+    if (!b->len) {
+        result = cx_one();
+        for (i = 0; i < b->n - 1; i++)
+            result = cx_mul(result, delta);
+        return result;
+    }
+    ns = 1u << b->len;
+    for (s = 0; s < ns; s++) {
+        a_count = 0; b_count = 0;
+        for (i = 0; i < b->len; i++) {
+            if ((s >> (unsigned)i) & 1u) b_count++;
+            else a_count++;
+        }
+        lp = braid_loops(b, s);
+        coeff = cx_pow_int(A, a_count - b_count);
+        d_power = cx_one();
+        for (j = 0; j < lp - 1; j++)
+            d_power = cx_mul(d_power, delta);
+        term = cx_mul(coeff, d_power);
+        result = cx_add(result, term);
+    }
+    return result;
+}
+
+/* ================================================================
+ * Test infrastructure
+ * ================================================================ */
+
+static int n_pass = 0, n_fail = 0;
+
+static void check(const char *msg, int ok) {
+    if (ok) { printf("  PASS: %s\n", msg); n_pass++; }
+    else    { printf("  FAIL: %s\n", msg); n_fail++; }
+}
+
+/* ================================================================
+ * RNG (simple LCG for reproducibility)
+ * ================================================================ */
+
+static unsigned long rng_state = 12345;
+static void rng_seed(unsigned long s) { rng_state = s; }
+static double rng_uniform(void) {
+    rng_state = rng_state * 1103515245UL + 12345UL;
+    return (double)((rng_state >> 16) & 0x7FFF) / 32768.0;
+}
+static double rng_normal(void) {
+    double u1 = rng_uniform() + 1e-10;
+    double u2 = rng_uniform();
+    return sqrt(-2.0 * log(u1)) * cos(2.0 * M_PI * u2);
+}
+
+/* ================================================================
+ * Sigmoid
+ * ================================================================ */
+
+static double sigmoid(double x) { return 1.0 / (1.0 + exp(-x)); }
+
+/* ================================================================
+ * Activation types
+ * ================================================================ */
+
+#define ACT_SPLIT_SIGMOID 0
+#define ACT_MODRELU       1
+#define ACT_CARDIOID      2
+#define ACT_PHASE_ONLY    3
+#define NUM_ACTIVATIONS   4
+
+static const char *act_names[NUM_ACTIVATIONS] = {
+    "split-sigmoid", "modReLU", "cardioid", "phase-only"
+};
+
+/* ================================================================
+ * Complex neuron with configurable activation
+ * ================================================================ */
+
+typedef struct {
+    Cx w1, w2, b;     /* 2 complex weights + 1 complex bias = 6 real params */
+    double b_act;     /* modReLU learnable bias */
+    int act_type;
+} CxNeuron28;
+
+static Cx apply_activation(Cx z, int act_type, double b_act) {
+    double r;
+    switch (act_type) {
+    case ACT_SPLIT_SIGMOID:
+        return z;  /* identity -- sigmoid applied in readout */
+    case ACT_MODRELU:
+        r = cx_abs(z);
+        if (r < 1e-10) return cx_zero();
+        if (r + b_act <= 0.0) return cx_zero();
+        return cx_scale(z, (r + b_act) / r);
+    case ACT_CARDIOID:
+        r = cx_abs(z);
+        if (r < 1e-10) return cx_zero();
+        return cx_scale(z, 0.5 * (1.0 + z.re / r));
+    case ACT_PHASE_ONLY:
+        r = cx_abs(z);
+        if (r < 1e-10) return cx_zero();
+        return cx_scale(z, 1.0 / r);
+    }
+    return z;
+}
+
+static double cx28_forward(const CxNeuron28 *net, double x1, double x2,
+                            Cx *out_z, Cx *out_h, Cx *out_g) {
+    Cx z, h, g;
+    double p;
+
+    z = cx_add(cx_add(cx_scale(net->w1, x1), cx_scale(net->w2, x2)), net->b);
+    h = apply_activation(z, net->act_type, net->b_act);
+    g = cx_make(sigmoid(h.re), sigmoid(h.im));
+    p = g.re * (1.0 - g.im) + (1.0 - g.re) * g.im;
+
+    if (out_z) *out_z = z;
+    if (out_h) *out_h = h;
+    if (out_g) *out_g = g;
+    return p;
+}
+
+static int cx28_predict(const CxNeuron28 *net, double x1, double x2) {
+    return cx28_forward(net, x1, x2, NULL, NULL, NULL) > 0.5 ? 1 : 0;
+}
+
+static int cx28_verify_xor(const CxNeuron28 *net) {
+    int i;
+    for (i = 0; i < 4; i++) {
+        double x1 = (double)((i >> 1) & 1);
+        double x2 = (double)(i & 1);
+        int pred = cx28_predict(net, x1, x2);
+        int target = (i >> 1) ^ (i & 1);
+        if (pred != target) return 0;
+    }
+    return 1;
+}
+
+/* ================================================================
+ * Activation backward: dL/dh -> dL/dz
+ *
+ * For each activation, compute the Jacobian J[i][j] = dh_i/dz_j
+ * and then dL/dz_i = sum_k dL/dh_k * J[k][i]
+ * ================================================================ */
+
+static void activation_backward(Cx z, int act_type, double b_act,
+                                  double dL_dh_re, double dL_dh_im,
+                                  double *dL_dz_re, double *dL_dz_im,
+                                  double *dL_db_act) {
+    double r, r3;
+    *dL_db_act = 0.0;
+
+    switch (act_type) {
+    case ACT_SPLIT_SIGMOID:
+        /* h = z, Jacobian = I */
+        *dL_dz_re = dL_dh_re;
+        *dL_dz_im = dL_dh_im;
+        break;
+
+    case ACT_MODRELU:
+        /* h = (r+b)*z/r where r = |z|
+         * J is symmetric:
+         *   J11 = 1 + b*y^2/r^3
+         *   J12 = J21 = -b*x*y/r^3
+         *   J22 = 1 + b*x^2/r^3  */
+        r = cx_abs(z);
+        if (r < 1e-10 || r + b_act <= 0.0) {
+            *dL_dz_re = 0.0;
+            *dL_dz_im = 0.0;
+            break;
+        }
+        r3 = r * r * r;
+        {
+            double J11 = 1.0 + b_act * z.im * z.im / r3;
+            double J12 = -b_act * z.re * z.im / r3;
+            double J22 = 1.0 + b_act * z.re * z.re / r3;
+            *dL_dz_re = dL_dh_re * J11 + dL_dh_im * J12;
+            *dL_dz_im = dL_dh_re * J12 + dL_dh_im * J22;
+            /* dh/db_act = z/r */
+            *dL_db_act = dL_dh_re * z.re / r + dL_dh_im * z.im / r;
+        }
+        break;
+
+    case ACT_CARDIOID:
+        /* h = c*z where c = 0.5*(1 + x/r)
+         * Jacobian NOT symmetric:
+         *   dc/dx = 0.5*y^2/r^3,  dc/dy = -0.5*x*y/r^3
+         *   J11 = dc_x*x + c,  J12 = dc_y*x
+         *   J21 = dc_x*y,      J22 = dc_y*y + c  */
+        r = cx_abs(z);
+        if (r < 1e-10) {
+            *dL_dz_re = 0.0;
+            *dL_dz_im = 0.0;
+            break;
+        }
+        r3 = r * r * r;
+        {
+            double c = 0.5 * (1.0 + z.re / r);
+            double dc_re = 0.5 * z.im * z.im / r3;
+            double dc_im = -0.5 * z.re * z.im / r3;
+            double J11 = dc_re * z.re + c;
+            double J12 = dc_im * z.re;
+            double J21 = dc_re * z.im;
+            double J22 = dc_im * z.im + c;
+            *dL_dz_re = dL_dh_re * J11 + dL_dh_im * J21;
+            *dL_dz_im = dL_dh_re * J12 + dL_dh_im * J22;
+        }
+        break;
+
+    case ACT_PHASE_ONLY:
+        /* h = z/r, Jacobian is projection matrix (symmetric):
+         *   J11 = y^2/r^3
+         *   J12 = J21 = -x*y/r^3
+         *   J22 = x^2/r^3  */
+        r = cx_abs(z);
+        if (r < 1e-10) {
+            *dL_dz_re = 0.0;
+            *dL_dz_im = 0.0;
+            break;
+        }
+        r3 = r * r * r;
+        {
+            double J11 = z.im * z.im / r3;
+            double J12 = -z.re * z.im / r3;
+            double J22 = z.re * z.re / r3;
+            *dL_dz_re = dL_dh_re * J11 + dL_dh_im * J12;
+            *dL_dz_im = dL_dh_re * J12 + dL_dh_im * J22;
+        }
+        break;
+
+    default:
+        *dL_dz_re = dL_dh_re;
+        *dL_dz_im = dL_dh_im;
+    }
+}
+
+/* ================================================================
+ * Initialization and training
+ * ================================================================ */
+
+static void cx28_init(CxNeuron28 *net, int act_type) {
+    net->w1 = cx_make(rng_normal(), rng_normal());
+    net->w2 = cx_make(rng_normal(), rng_normal());
+    net->b  = cx_make(rng_normal() * 0.5, rng_normal() * 0.5);
+    net->b_act = -0.5;  /* modReLU initial threshold */
+    net->act_type = act_type;
+}
+
+static int cx28_train_xor(CxNeuron28 *net, double lr, int max_epochs) {
+    double inputs[4][2] = {{0,0}, {0,1}, {1,0}, {1,1}};
+    double targets[4]   = {0, 1, 1, 0};
+    int epoch, i;
+
+    for (epoch = 0; epoch < max_epochs; epoch++) {
+        double total_loss = 0.0;
+        int correct = 0;
+
+        for (i = 0; i < 4; i++) {
+            double x1 = inputs[i][0], x2 = inputs[i][1];
+            Cx z, h, g;
+            double p, err;
+            double dL_dh_re, dL_dh_im;
+            double dL_dz_re, dL_dz_im, dL_db_act;
+
+            p = cx28_forward(net, x1, x2, &z, &h, &g);
+            err = p - targets[i];
+            total_loss += err * err;
+            if ((p > 0.5) == (targets[i] > 0.5)) correct++;
+
+            /* Backward through sigmoid readout */
+            dL_dh_re = 2.0 * err * (1.0 - 2.0 * g.im) * g.re * (1.0 - g.re);
+            dL_dh_im = 2.0 * err * (1.0 - 2.0 * g.re) * g.im * (1.0 - g.im);
+
+            /* Backward through activation */
+            activation_backward(z, net->act_type, net->b_act,
+                              dL_dh_re, dL_dh_im,
+                              &dL_dz_re, &dL_dz_im, &dL_db_act);
+
+            /* Update weights */
+            net->w1.re -= lr * dL_dz_re * x1;
+            net->w1.im -= lr * dL_dz_im * x1;
+            net->w2.re -= lr * dL_dz_re * x2;
+            net->w2.im -= lr * dL_dz_im * x2;
+            net->b.re  -= lr * dL_dz_re;
+            net->b.im  -= lr * dL_dz_im;
+            if (net->act_type == ACT_MODRELU)
+                net->b_act -= lr * dL_db_act;
+        }
+
+        if (correct == 4 && total_loss < 0.01)
+            return epoch + 1;
+    }
+    return 0;  /* did not converge */
+}
+
+/* ================================================================
+ * Bracket catalog
+ * ================================================================ */
+
+typedef struct {
+    Braid braid;
+    Cx bracket;
+    double amplitude;
+} CxCatalogEntry;
+
+#define MAX_CX_CATALOG 8192
+static CxCatalogEntry cx_catalog[MAX_CX_CATALOG];
+static int cx_catalog_size = 0;
+
+static void build_complex_catalog(Cx A, int max_strands, int max_len) {
+    int n, len;
+    Braid b;
+    int word_buf[MAX_WORD];
+
+    cx_catalog_size = 0;
+    for (n = 2; n <= max_strands; n++) {
+        for (len = 1; len <= max_len && len <= MAX_WORD; len++) {
+            int max_gen = n - 1;
+            int total_gens = 2 * max_gen;
+            unsigned long total, idx;
+            int i;
+
+            total = 1;
+            for (i = 0; i < len; i++) {
+                total *= (unsigned long)total_gens;
+                if (total > 100000) break;
+            }
+            if (total > 100000) continue;
+
+            for (idx = 0; idx < total; idx++) {
+                unsigned long tmp = idx;
+                Cx bracket;
+                double amp;
+
+                for (i = 0; i < len; i++) {
+                    int g = (int)(tmp % (unsigned long)total_gens);
+                    tmp /= (unsigned long)total_gens;
+                    if (g < max_gen) word_buf[i] = g + 1;
+                    else             word_buf[i] = -(g - max_gen + 1);
+                }
+                b.n = n;
+                b.len = len;
+                memcpy(b.word, word_buf, (size_t)len * sizeof(int));
+
+                bracket = braid_bracket_at(&b, A);
+                amp = cx_abs(bracket);
+
+                if (amp > 0.5 && cx_catalog_size < MAX_CX_CATALOG) {
+                    cx_catalog[cx_catalog_size].braid = b;
+                    cx_catalog[cx_catalog_size].bracket = bracket;
+                    cx_catalog[cx_catalog_size].amplitude = amp;
+                    cx_catalog_size++;
+                }
+            }
+        }
+    }
+}
+
+static void find_nearest_cx(Cx target, int *best_idx, double *best_dist) {
+    int i;
+    *best_idx = -1;
+    *best_dist = 1e30;
+    for (i = 0; i < cx_catalog_size; i++) {
+        double d = cx_abs(cx_sub(target, cx_catalog[i].bracket));
+        if (d < *best_dist) {
+            *best_dist = d;
+            *best_idx = i;
+        }
+    }
+}
+
+/* ================================================================
+ * Gauge sweep: find rotation minimizing distance to catalog
+ * ================================================================ */
+
+static double find_best_gauge(Cx w1, Cx w2, Cx b, double *out_rms) {
+    double best_angle = 0.0, best_rms = 1e30;
+    int gi;
+
+    for (gi = 0; gi < 360; gi++) {
+        double theta = 2.0 * M_PI * (double)gi / 360.0;
+        Cx rot = cx_exp_i(theta);
+        double total = 0.0;
+        int idx;
+        double dist;
+        Cx w;
+
+        w = cx_mul(w1, rot); find_nearest_cx(w, &idx, &dist); total += dist * dist;
+        w = cx_mul(w2, rot); find_nearest_cx(w, &idx, &dist); total += dist * dist;
+        w = cx_mul(b, rot);  find_nearest_cx(w, &idx, &dist); total += dist * dist;
+
+        total = sqrt(total / 3.0);
+        if (total < best_rms) {
+            best_rms = total;
+            best_angle = theta;
+        }
+    }
+    if (out_rms) *out_rms = best_rms;
+    return best_angle;
+}
+
+/* ================================================================
+ * Storage for trained networks
+ * ================================================================ */
+
+#define NUM_TRIALS 20
+static CxNeuron28 all_nets[NUM_ACTIVATIONS][NUM_TRIALS];
+static int n_converged[NUM_ACTIVATIONS];
+static CxNeuron28 best_nets[NUM_ACTIVATIONS];
+static int best_found[NUM_ACTIVATIONS];
+static double gauge_angles[NUM_ACTIVATIONS];
+static double gauge_rms[NUM_ACTIVATIONS];
+static double avg_phase_errs[NUM_ACTIVATIONS];
+static double avg_amp_errs[NUM_ACTIVATIONS];
+
+/* ================================================================
+ * PART A: Train All Activations on XOR
+ * ================================================================ */
+
+static void part_a_train_all(void) {
+    int act, trial;
+    char msg[256];
+
+    printf("\n=== PART A: Train All Activations on XOR ===\n");
+    printf("  Architecture: z -> ACTIVATION -> sigmoid readout -> XOR\n");
+    printf("  %d trials per activation, lr=0.5, max 100k epochs\n\n", NUM_TRIALS);
+
+    for (act = 0; act < NUM_ACTIVATIONS; act++) {
+        int best_epoch = 999999;
+        n_converged[act] = 0;
+        best_found[act] = 0;
+
+        printf("  --- %s ---\n", act_names[act]);
+
+        for (trial = 0; trial < NUM_TRIALS; trial++) {
+            CxNeuron28 net;
+            int epoch;
+
+            rng_seed((unsigned long)(trial * 7919 + 42));
+            cx28_init(&net, act);
+            epoch = cx28_train_xor(&net, 0.5, 100000);
+
+            if (epoch > 0 && cx28_verify_xor(&net)) {
+                all_nets[act][n_converged[act]] = net;
+                n_converged[act]++;
+                if (epoch < best_epoch) {
+                    best_nets[act] = net;
+                    best_epoch = epoch;
+                    best_found[act] = 1;
+                }
+            }
+        }
+
+        printf("    Converged: %d/%d", n_converged[act], NUM_TRIALS);
+        if (best_found[act]) {
+            printf("  (best at epoch %d)\n", best_epoch);
+            printf("    w1=(%.4f,%.4f) w2=(%.4f,%.4f) b=(%.4f,%.4f)",
+                   best_nets[act].w1.re, best_nets[act].w1.im,
+                   best_nets[act].w2.re, best_nets[act].w2.im,
+                   best_nets[act].b.re, best_nets[act].b.im);
+            if (act == ACT_MODRELU)
+                printf(" b_act=%.4f", best_nets[act].b_act);
+            printf("\n");
+        } else {
+            printf("\n");
+        }
+    }
+
+    sprintf(msg, "P3: phase-only convergence < 50%% (%d/%d)",
+            n_converged[ACT_PHASE_ONLY], NUM_TRIALS);
+    check(msg, n_converged[ACT_PHASE_ONLY] < NUM_TRIALS / 2);
+
+    sprintf(msg, "split-sigmoid baseline converges (%d/%d)",
+            n_converged[ACT_SPLIT_SIGMOID], NUM_TRIALS);
+    check(msg, n_converged[ACT_SPLIT_SIGMOID] > 0);
+
+    sprintf(msg, "modReLU converges (%d/%d)",
+            n_converged[ACT_MODRELU], NUM_TRIALS);
+    check(msg, n_converged[ACT_MODRELU] > 0);
+}
+
+/* ================================================================
+ * PART B: Build Complex Bracket Catalog
+ * ================================================================ */
+
+static void part_b_catalog(void) {
+    Cx A = cx_exp_i(5.0 * M_PI / 4.0);
+
+    printf("\n=== PART B: Complex Bracket Catalog ===\n");
+    printf("  A = e^{i*5pi/4}, delta = 0\n");
+
+    build_complex_catalog(A, 3, 8);
+    printf("  Catalog: %d braids with |bracket| > 0.5\n", cx_catalog_size);
+    check("catalog has entries", cx_catalog_size > 100);
+}
+
+/* ================================================================
+ * PART C: Gauge Sweep Comparison
+ * ================================================================ */
+
+static void part_c_gauge_comparison(void) {
+    int act;
+    char msg[256];
+
+    printf("\n=== PART C: Gauge Sweep Comparison ===\n");
+
+    if (cx_catalog_size == 0) {
+        printf("  No catalog. Skipping.\n");
+        return;
+    }
+
+    for (act = 0; act < NUM_ACTIVATIONS; act++) {
+        if (!best_found[act]) {
+            printf("  %s: no converged network\n", act_names[act]);
+            gauge_angles[act] = 0.0;
+            gauge_rms[act] = 99.0;
+            continue;
+        }
+
+        gauge_angles[act] = find_best_gauge(
+            best_nets[act].w1, best_nets[act].w2, best_nets[act].b,
+            &gauge_rms[act]);
+
+        printf("\n  %s:\n", act_names[act]);
+        printf("    Gauge angle: %.4f rad (%.1f deg)\n",
+               gauge_angles[act], gauge_angles[act] * 180.0 / M_PI);
+        printf("    Gauge-corrected RMS: %.6f\n", gauge_rms[act]);
+
+        /* Show matched brackets */
+        {
+            Cx rot = cx_exp_i(gauge_angles[act]);
+            const char *wnames[3] = {"w1", "w2", "b "};
+            Cx weights[3];
+            int i, idx;
+            double dist;
+
+            weights[0] = best_nets[act].w1;
+            weights[1] = best_nets[act].w2;
+            weights[2] = best_nets[act].b;
+
+            for (i = 0; i < 3; i++) {
+                Cx w_rot = cx_mul(weights[i], rot);
+                find_nearest_cx(w_rot, &idx, &dist);
+                printf("    %s_rot=(%.3f,%.3f) -> bracket (%.3f,%.3f) d=%.4f\n",
+                       wnames[i], w_rot.re, w_rot.im,
+                       cx_catalog[idx].bracket.re,
+                       cx_catalog[idx].bracket.im, dist);
+            }
+        }
+    }
+
+    /* P1: modReLU RMS < 0.15 */
+    if (best_found[ACT_MODRELU]) {
+        sprintf(msg, "P1: modReLU RMS < 0.15 (got %.4f)", gauge_rms[ACT_MODRELU]);
+        check(msg, gauge_rms[ACT_MODRELU] < 0.15);
+    }
+
+    /* P2: Cardioid RMS in [0.15, 0.35] */
+    if (best_found[ACT_CARDIOID]) {
+        sprintf(msg, "P2: cardioid RMS in [0.15, 0.35] (got %.4f)",
+                gauge_rms[ACT_CARDIOID]);
+        check(msg, gauge_rms[ACT_CARDIOID] >= 0.15 &&
+                   gauge_rms[ACT_CARDIOID] <= 0.35);
+    }
+
+    /* P5: Gauge angles near 7pi/4 */
+    {
+        double target_angle = 7.0 * M_PI / 4.0;
+        double tol = M_PI / 8.0;
+        for (act = 0; act < NUM_ACTIVATIONS; act++) {
+            double diff;
+            if (!best_found[act]) continue;
+            diff = fabs(gauge_angles[act] - target_angle);
+            if (diff > M_PI) diff = 2.0 * M_PI - diff;
+            sprintf(msg, "P5: %s gauge near 7pi/4 (diff=%.4f < %.4f)",
+                    act_names[act], diff, tol);
+            check(msg, diff < tol);
+        }
+    }
+
+    /* modReLU vs split-sigmoid */
+    if (best_found[ACT_MODRELU] && best_found[ACT_SPLIT_SIGMOID]) {
+        sprintf(msg, "modReLU RMS < split-sigmoid (%.4f vs %.4f)",
+                gauge_rms[ACT_MODRELU], gauge_rms[ACT_SPLIT_SIGMOID]);
+        check(msg, gauge_rms[ACT_MODRELU] < gauge_rms[ACT_SPLIT_SIGMOID]);
+    }
+}
+
+/* ================================================================
+ * PART D: Weight Phase/Amplitude Error Decomposition
+ * ================================================================ */
+
+static void part_d_weight_analysis(void) {
+    int act;
+    char msg[256];
+
+    printf("\n=== PART D: Weight Phase/Amplitude Error ===\n");
+
+    for (act = 0; act < NUM_ACTIVATIONS; act++) {
+        avg_phase_errs[act] = 99.0;
+        avg_amp_errs[act] = 99.0;
+    }
+
+    if (cx_catalog_size == 0) {
+        printf("  No catalog. Skipping.\n");
+        return;
+    }
+
+    for (act = 0; act < NUM_ACTIVATIONS; act++) {
+        Cx rot, weights[3];
+        double total_phase = 0.0, total_amp = 0.0;
+        int i;
+
+        if (!best_found[act]) {
+            printf("  %s: no network\n", act_names[act]);
+            continue;
+        }
+
+        rot = cx_exp_i(gauge_angles[act]);
+        weights[0] = cx_mul(best_nets[act].w1, rot);
+        weights[1] = cx_mul(best_nets[act].w2, rot);
+        weights[2] = cx_mul(best_nets[act].b, rot);
+
+        printf("\n  %s (gauge=%.1f deg):\n", act_names[act],
+               gauge_angles[act] * 180.0 / M_PI);
+        for (i = 0; i < 3; i++) {
+            int idx;
+            double dist, pe, ae;
+            Cx nearest;
+
+            find_nearest_cx(weights[i], &idx, &dist);
+            nearest = cx_catalog[idx].bracket;
+
+            pe = fabs(cx_phase(weights[i]) - cx_phase(nearest));
+            if (pe > M_PI) pe = 2.0 * M_PI - pe;
+            ae = fabs(cx_abs(weights[i]) - cx_abs(nearest));
+
+            printf("    w%d: phase_err=%.4f rad  amp_err=%.4f  total=%.4f\n",
+                   i, pe, ae, dist);
+            total_phase += pe;
+            total_amp += ae;
+        }
+
+        avg_phase_errs[act] = total_phase / 3.0;
+        avg_amp_errs[act] = total_amp / 3.0;
+        printf("    Avg: phase=%.4f rad  amp=%.4f\n",
+               avg_phase_errs[act], avg_amp_errs[act]);
+    }
+
+    /* P6: modReLU phase error < split-sigmoid */
+    if (best_found[ACT_MODRELU] && best_found[ACT_SPLIT_SIGMOID]) {
+        sprintf(msg, "P6: modReLU phase err < split-sigmoid (%.4f vs %.4f)",
+                avg_phase_errs[ACT_MODRELU],
+                avg_phase_errs[ACT_SPLIT_SIGMOID]);
+        check(msg, avg_phase_errs[ACT_MODRELU] <
+                   avg_phase_errs[ACT_SPLIT_SIGMOID]);
+    }
+}
+
+/* ================================================================
+ * PART E: Lattice Projection Test
+ *
+ * For each converged network:
+ *   1. Find best gauge angle
+ *   2. Rotate weights by gauge
+ *   3. Snap each to nearest catalog bracket value
+ *   4. Reverse rotation
+ *   5. Check if projected network still solves XOR
+ * ================================================================ */
+
+static void part_e_lattice_projection(void) {
+    int act, trial;
+    int proj_success[NUM_ACTIVATIONS];
+    char msg[256];
+
+    printf("\n=== PART E: Lattice Projection Test ===\n");
+    printf("  Snap weights to nearest bracket, check if XOR survives.\n\n");
+
+    if (cx_catalog_size == 0) {
+        printf("  No catalog. Skipping.\n");
+        return;
+    }
+
+    for (act = 0; act < NUM_ACTIVATIONS; act++) {
+        int successes = 0;
+
+        if (n_converged[act] == 0) {
+            printf("  %s: no converged networks\n", act_names[act]);
+            proj_success[act] = 0;
+            continue;
+        }
+
+        printf("  %s (%d networks):\n", act_names[act], n_converged[act]);
+
+        for (trial = 0; trial < n_converged[act]; trial++) {
+            CxNeuron28 net = all_nets[act][trial];
+            CxNeuron28 proj;
+            double ga, rms;
+            Cx rot, inv_rot, w;
+            int idx;
+            double dist;
+
+            /* Find gauge for this network */
+            ga = find_best_gauge(net.w1, net.w2, net.b, &rms);
+            rot = cx_exp_i(ga);
+            inv_rot = cx_exp_i(-ga);
+
+            /* Project each weight to nearest bracket value */
+            proj = net;
+            w = cx_mul(net.w1, rot);
+            find_nearest_cx(w, &idx, &dist);
+            proj.w1 = cx_mul(cx_catalog[idx].bracket, inv_rot);
+
+            w = cx_mul(net.w2, rot);
+            find_nearest_cx(w, &idx, &dist);
+            proj.w2 = cx_mul(cx_catalog[idx].bracket, inv_rot);
+
+            w = cx_mul(net.b, rot);
+            find_nearest_cx(w, &idx, &dist);
+            proj.b = cx_mul(cx_catalog[idx].bracket, inv_rot);
+
+            /* Test projected network */
+            if (cx28_verify_xor(&proj)) {
+                successes++;
+                if (trial < 3)
+                    printf("    Trial %d: PASS (RMS %.4f)\n", trial, rms);
+            } else {
+                if (trial < 3)
+                    printf("    Trial %d: FAIL (RMS %.4f)\n", trial, rms);
+            }
+        }
+
+        proj_success[act] = successes;
+        printf("    Projection success: %d/%d (%.0f%%)\n",
+               successes, n_converged[act],
+               100.0 * (double)successes / (double)n_converged[act]);
+    }
+
+    /* P4: modReLU >= 80%, split-sigmoid < 20% */
+    if (n_converged[ACT_MODRELU] > 0) {
+        double rate = 100.0 * (double)proj_success[ACT_MODRELU] /
+                      (double)n_converged[ACT_MODRELU];
+        sprintf(msg, "P4a: modReLU projection >= 80%% (got %.0f%%)", rate);
+        check(msg, rate >= 80.0);
+    }
+    if (n_converged[ACT_SPLIT_SIGMOID] > 0) {
+        double rate = 100.0 * (double)proj_success[ACT_SPLIT_SIGMOID] /
+                      (double)n_converged[ACT_SPLIT_SIGMOID];
+        sprintf(msg, "P4b: split-sigmoid projection < 20%% (got %.0f%%)", rate);
+        check(msg, rate < 20.0);
+    }
+
+    /* modReLU projection beats split-sigmoid projection */
+    if (n_converged[ACT_MODRELU] > 0 && n_converged[ACT_SPLIT_SIGMOID] > 0) {
+        double mr = (double)proj_success[ACT_MODRELU] /
+                    (double)n_converged[ACT_MODRELU];
+        double sr = (double)proj_success[ACT_SPLIT_SIGMOID] /
+                    (double)n_converged[ACT_SPLIT_SIGMOID];
+        sprintf(msg, "modReLU projection rate > split-sigmoid (%.0f%% vs %.0f%%)",
+                mr * 100.0, sr * 100.0);
+        check(msg, mr > sr);
+    }
+}
+
+/* ================================================================
+ * PART F: Summary Comparison
+ * ================================================================ */
+
+static void part_f_summary(void) {
+    int act;
+
+    printf("\n=== PART F: Summary ===\n\n");
+    printf("  %-15s  Conv   Gauge RMS  Gauge Angle   Phase Err  Amp Err\n",
+           "Activation");
+    printf("  %-15s  -----  ---------  -----------   ---------  -------\n",
+           "----------");
+
+    for (act = 0; act < NUM_ACTIVATIONS; act++) {
+        if (best_found[act]) {
+            printf("  %-15s  %2d/%d    %.4f    %.4f (%3.0f)   %.4f     %.4f\n",
+                   act_names[act],
+                   n_converged[act], NUM_TRIALS,
+                   gauge_rms[act],
+                   gauge_angles[act],
+                   gauge_angles[act] * 180.0 / M_PI,
+                   avg_phase_errs[act],
+                   avg_amp_errs[act]);
+        } else {
+            printf("  %-15s  %2d/%d       --           --          --        --\n",
+                   act_names[act], n_converged[act], NUM_TRIALS);
+        }
+    }
+
+    printf("\n  Reference values:\n");
+    printf("    Demo 27 split-sigmoid: RMS=0.3494, gauge=5.50 rad (315 deg)\n");
+    printf("    Demo 26 real 2-2-1:    amp RMS=0.2641\n");
+}
+
+/* ================================================================
+ * MAIN
+ * ================================================================ */
+
+int main(void) {
+    setbuf(stdout, NULL);
+    printf("KNOTAPEL DEMO 28: Unitary Activation\n");
+    printf("======================================\n");
+
+    part_a_train_all();
+    part_b_catalog();
+    part_c_gauge_comparison();
+    part_d_weight_analysis();
+    part_e_lattice_projection();
+    part_f_summary();
+
+    printf("\n======================================\n");
+    printf("Results: %d passed, %d failed\n", n_pass, n_fail);
+    printf("======================================\n");
+
+    return n_fail > 0 ? 1 : 0;
+}
