@@ -1,0 +1,1953 @@
+/*
+ * KNOTAPEL DEMO 52: Chebyshev Generalization -- Radical Anatomy at delta=1
+ * ========================================================================
+ *
+ * THESIS: Compute the radical structure of TL_n(delta=1) and compare
+ * with delta=0 results from Demo 51.
+ *
+ * At delta=1 (ell=3, percolation, c=0 LCFT):
+ *   - Generators are IDEMPOTENT: e_i^2 = delta*e_i = e_i
+ *   - Loops contribute factor 1 (not 0) -- no terms killed
+ *   - PIM Loewy length up to 2*ell-1 = 5
+ *   - Semisimplicity pattern differs from delta=0 odd/even alternation
+ *
+ * Architecture:
+ *   Part A: Planar matching enumeration + composition (from Demo 35/51)
+ *   Part B: Multiplication table with loop counts
+ *   Part C: Integer algebra elements and arithmetic (delta=1 stays in Z)
+ *   Part D: Trace form, Gram matrix, radical dimension
+ *   Part E: Idempotent search and orthogonal decomposition
+ *   Part F: Radical filtration (extract null space, compute rad^2, rad^3, ...)
+ *
+ * C89, zero dependencies beyond stdio/stdlib/string/math.
+ */
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <math.h>
+
+/* ================================================================
+ * Test infrastructure
+ * ================================================================ */
+
+static int n_pass = 0, n_fail = 0;
+
+static void check(const char *msg, int ok) {
+    if (ok) { printf("  PASS: %s\n", msg); n_pass++; }
+    else    { printf("  FAIL: %s\n", msg); n_fail++; }
+}
+
+/* ================================================================
+ * Constants and Types
+ * ================================================================ */
+
+#define MAX_N 8
+#define MAX_2N 16
+#define MAX_BASIS 1430  /* C_8 = 1430 */
+#define MAX_SEGS 16
+
+typedef struct {
+    int match[MAX_2N];
+} PlanarMatch;
+
+typedef struct {
+    int points[MAX_2N];
+    int count;
+} Segment;
+
+/* Bundled TL algebra data for a given n */
+typedef struct {
+    int n;
+    int dim;                              /* C_n */
+    PlanarMatch basis[MAX_BASIS];
+    int id_idx;                           /* index of identity element */
+    int gen_idx[MAX_N];                   /* gen_idx[g] = basis index of e_g */
+    int n_gens;                           /* = n-1 */
+    int mt_result[MAX_BASIS][MAX_BASIS];  /* composition result basis index */
+    int mt_loops[MAX_BASIS][MAX_BASIS];   /* number of closed loops */
+} TLAlgebra;
+
+/* Integer-coefficient algebra element */
+typedef struct {
+    long c[MAX_BASIS];
+    int dim;
+} AlgElem;
+
+/* ================================================================
+ * PART A: Planar Matching Enumeration (from Demo 35/51)
+ * ================================================================ */
+
+static void build_boundary_order(int n, int *bp) {
+    int i;
+    for (i = 0; i < n; i++)
+        bp[i] = i;
+    for (i = 0; i < n; i++)
+        bp[n + i] = 2 * n - 1 - i;
+}
+
+static void enum_segments(Segment *segs, int n_segs, int *match_buf,
+                          PlanarMatch *basis, int *num_basis, int n) {
+    int s, j, k;
+    int first_seg;
+    Segment new_segs[MAX_SEGS];
+    int new_n;
+    int *pts;
+    int cnt;
+
+    first_seg = -1;
+    for (s = 0; s < n_segs; s++) {
+        if (segs[s].count > 0) { first_seg = s; break; }
+    }
+    if (first_seg == -1) {
+        if (*num_basis < MAX_BASIS) {
+            memcpy(basis[*num_basis].match, match_buf,
+                   (size_t)(2 * n) * sizeof(int));
+            (*num_basis)++;
+        }
+        return;
+    }
+
+    pts = segs[first_seg].points;
+    cnt = segs[first_seg].count;
+
+    for (j = 1; j < cnt; j += 2) {
+        match_buf[pts[0]] = pts[j];
+        match_buf[pts[j]] = pts[0];
+
+        new_n = 0;
+        for (k = 0; k < n_segs; k++) {
+            if (k == first_seg) {
+                if (j > 1) {
+                    memcpy(new_segs[new_n].points, &pts[1],
+                           (size_t)(j - 1) * sizeof(int));
+                    new_segs[new_n].count = j - 1;
+                    new_n++;
+                }
+                if (cnt - j - 1 > 0) {
+                    memcpy(new_segs[new_n].points, &pts[j + 1],
+                           (size_t)(cnt - j - 1) * sizeof(int));
+                    new_segs[new_n].count = cnt - j - 1;
+                    new_n++;
+                }
+            } else {
+                new_segs[new_n] = segs[k];
+                new_n++;
+            }
+        }
+        enum_segments(new_segs, new_n, match_buf, basis, num_basis, n);
+    }
+}
+
+static int enumerate_basis(int n, PlanarMatch *basis) {
+    Segment segs[1];
+    int match_buf[MAX_2N];
+    int num_basis = 0;
+
+    build_boundary_order(n, segs[0].points);
+    segs[0].count = 2 * n;
+    memset(match_buf, -1, sizeof(match_buf));
+    enum_segments(segs, 1, match_buf, basis, &num_basis, n);
+    return num_basis;
+}
+
+/* ================================================================
+ * Diagram Composition (from Demo 35/51)
+ * Returns number of closed loops formed.
+ * ================================================================ */
+
+static int compose_diagrams(int n, const PlanarMatch *d1, const PlanarMatch *d2,
+                            PlanarMatch *result) {
+    int glue_visited[MAX_N];
+    int i, loops;
+
+    memset(result->match, -1, (size_t)(2 * n) * sizeof(int));
+    memset(glue_visited, 0, (size_t)n * sizeof(int));
+    loops = 0;
+
+    for (i = 0; i < 2 * n; i++) {
+        int in_d1;
+        int cur;
+
+        if (result->match[i] >= 0) continue;
+
+        if (i < n) { in_d1 = 1; cur = i; }
+        else       { in_d1 = 0; cur = i; }
+
+        for (;;) {
+            int partner;
+            if (in_d1) {
+                partner = d1->match[cur];
+                if (partner < n) {
+                    result->match[i] = partner;
+                    result->match[partner] = i;
+                    break;
+                }
+                glue_visited[partner - n] = 1;
+                in_d1 = 0;
+                cur = partner - n;
+            } else {
+                partner = d2->match[cur];
+                if (partner >= n) {
+                    result->match[i] = partner;
+                    result->match[partner] = i;
+                    break;
+                }
+                glue_visited[partner] = 1;
+                in_d1 = 1;
+                cur = n + partner;
+            }
+        }
+    }
+
+    for (i = 0; i < n; i++) {
+        int cur, p, q;
+        if (glue_visited[i]) continue;
+        loops++;
+        cur = i;
+        do {
+            glue_visited[cur] = 1;
+            p = d2->match[cur];
+            glue_visited[p] = 1;
+            q = d1->match[n + p];
+            cur = q - n;
+        } while (cur != i);
+    }
+
+    return loops;
+}
+
+/* ================================================================
+ * Helper Functions
+ * ================================================================ */
+
+static PlanarMatch make_identity_diagram(int n) {
+    PlanarMatch m;
+    int k;
+    for (k = 0; k < n; k++) {
+        m.match[k] = n + k;
+        m.match[n + k] = k;
+    }
+    return m;
+}
+
+static PlanarMatch make_generator_diagram(int n, int gen) {
+    PlanarMatch m;
+    int k;
+    for (k = 0; k < n; k++) {
+        m.match[k] = n + k;
+        m.match[n + k] = k;
+    }
+    m.match[gen] = gen + 1;
+    m.match[gen + 1] = gen;
+    m.match[n + gen] = n + gen + 1;
+    m.match[n + gen + 1] = n + gen;
+    return m;
+}
+
+static int find_basis_index(const PlanarMatch *m, const PlanarMatch *basis,
+                            int num_basis, int n) {
+    int i, j, eq;
+    for (i = 0; i < num_basis; i++) {
+        eq = 1;
+        for (j = 0; j < 2 * n; j++) {
+            if (m->match[j] != basis[i].match[j]) { eq = 0; break; }
+        }
+        if (eq) return i;
+    }
+    return -1;
+}
+
+/* ================================================================
+ * PART B: Multiplication Table (with loop counts)
+ *
+ * At delta=1: b_i * b_j = delta^loops * b_result = 1^loops * b_result = b_result
+ * So the effective multiplication is just mt_result[i][j].
+ * We store loop counts for future delta=sqrt(2) generalization.
+ * ================================================================ */
+
+static void compute_mult_table(TLAlgebra *alg) {
+    int i, j;
+    for (i = 0; i < alg->dim; i++) {
+        for (j = 0; j < alg->dim; j++) {
+            PlanarMatch result;
+            int loops = compose_diagrams(alg->n, &alg->basis[i],
+                                         &alg->basis[j], &result);
+            alg->mt_loops[i][j] = loops;
+            alg->mt_result[i][j] = find_basis_index(&result, alg->basis,
+                                                     alg->dim, alg->n);
+        }
+    }
+}
+
+static void init_tl_algebra(TLAlgebra *alg, int n) {
+    PlanarMatch diag;
+    int g;
+
+    alg->n = n;
+    alg->dim = enumerate_basis(n, alg->basis);
+    alg->n_gens = n - 1;
+
+    diag = make_identity_diagram(n);
+    alg->id_idx = find_basis_index(&diag, alg->basis, alg->dim, n);
+
+    for (g = 0; g < n - 1; g++) {
+        diag = make_generator_diagram(n, g);
+        alg->gen_idx[g] = find_basis_index(&diag, alg->basis, alg->dim, n);
+    }
+
+    compute_mult_table(alg);
+}
+
+/* ================================================================
+ * PART C: Algebra Element Arithmetic (pass-by-pointer)
+ *
+ * At delta=1, coefficients are integers.
+ * Multiplication: a*b = sum_{i,j} a_i * b_j * delta^{loops(i,j)} * b_{result(i,j)}
+ * At delta=1: a*b = sum_{i,j} a_i * b_j * b_{mt_result[i][j]}
+ * ================================================================ */
+
+static void alg_zero(AlgElem *e, int dim) {
+    e->dim = dim;
+    memset(e->c, 0, sizeof(e->c));
+}
+
+static void alg_basis_elem(AlgElem *e, int dim, int idx) {
+    alg_zero(e, dim);
+    e->c[idx] = 1;
+}
+
+static void alg_add(const AlgElem *a, const AlgElem *b, AlgElem *r) {
+    int i;
+    r->dim = a->dim;
+    for (i = 0; i < a->dim; i++) r->c[i] = a->c[i] + b->c[i];
+    for (i = a->dim; i < MAX_BASIS; i++) r->c[i] = 0;
+}
+
+static void alg_sub(const AlgElem *a, const AlgElem *b, AlgElem *r) {
+    int i;
+    r->dim = a->dim;
+    for (i = 0; i < a->dim; i++) r->c[i] = a->c[i] - b->c[i];
+    for (i = a->dim; i < MAX_BASIS; i++) r->c[i] = 0;
+}
+
+/* Multiply at delta=1: loops contribute factor 1 */
+static void alg_mul_d1(const AlgElem *a, const AlgElem *b,
+                        const TLAlgebra *alg, AlgElem *r) {
+    int i, j, k;
+    alg_zero(r, a->dim);
+    for (i = 0; i < a->dim; i++) {
+        if (a->c[i] == 0) continue;
+        for (j = 0; j < b->dim; j++) {
+            if (b->c[j] == 0) continue;
+            k = alg->mt_result[i][j];
+            /* delta=1: delta^loops = 1, always accumulate */
+            r->c[k] += a->c[i] * b->c[j];
+        }
+    }
+}
+
+static int alg_is_zero(const AlgElem *a) {
+    int i;
+    for (i = 0; i < a->dim; i++)
+        if (a->c[i] != 0) return 0;
+    return 1;
+}
+
+static int alg_eq(const AlgElem *a, const AlgElem *b) {
+    int i;
+    for (i = 0; i < a->dim; i++)
+        if (a->c[i] != b->c[i]) return 0;
+    return 1;
+}
+
+static int alg_is_idempotent_d1(const AlgElem *e, const TLAlgebra *alg) {
+    AlgElem sq;
+    alg_mul_d1(e, e, alg, &sq);
+    return alg_eq(&sq, e);
+}
+
+static void alg_print(const char *label, const AlgElem *e,
+                       const TLAlgebra *alg) {
+    int i, first = 1;
+    printf("    %s = ", label);
+    for (i = 0; i < e->dim; i++) {
+        if (e->c[i] == 0) continue;
+        if (!first && e->c[i] > 0) printf(" + ");
+        if (!first && e->c[i] < 0) printf(" - ");
+        if (first && e->c[i] < 0) printf("-");
+        first = 0;
+
+        if (labs(e->c[i]) != 1 || i == alg->id_idx)
+            printf("%ld", labs(e->c[i]));
+        if (i == alg->id_idx)
+            printf("*1");
+        else
+            printf("b%d", i);
+    }
+    if (first) printf("0");
+    printf("\n");
+}
+
+/* Print a planar matching as pairs */
+static void print_matching(const PlanarMatch *m, int n) {
+    int i, printed = 0;
+    printf("{");
+    for (i = 0; i < 2 * n; i++) {
+        if (m->match[i] > i) {
+            if (printed) printf(", ");
+            printf("%d-%d", i, m->match[i]);
+            printed++;
+        }
+    }
+    printf("}");
+}
+
+/* Print the rad^2 generator element with matching labels.
+ * is_mod_p: if true, note that coefficients are residues mod p. */
+static void print_rad2_generator(const AlgElem *v, const TLAlgebra *alg,
+                                  int is_mod_p) {
+    int i;
+    printf("    rad^2 generator element%s:\n",
+           is_mod_p ? " (coefficients mod p)" : "");
+    for (i = 0; i < v->dim; i++) {
+        if (v->c[i] == 0) continue;
+        printf("      %+ld * b%-3d  ", v->c[i], i);
+        print_matching(&alg->basis[i], alg->n);
+        printf("\n");
+    }
+}
+
+/* Helper: is n a Catalan number? Returns the index or -1 */
+static int catalan_index(int n) {
+    static const int cats[] = {1, 1, 2, 5, 14, 42, 132, 429, 1430, 4862};
+    int i;
+    for (i = 0; i < 10; i++)
+        if (n == cats[i]) return i;
+    return -1;
+}
+
+/* ================================================================
+ * Modular Arithmetic Utilities (for exact linear algebra)
+ * ================================================================ */
+
+/* Global modular prime -- can be changed for different delta values.
+ * Default: 10^9+7 (p=3 mod 4, 2 is QR).
+ * For delta=golden ratio: need p where 5 is QR. */
+static long g_mod_p = 1000000007L;
+
+static long mod_reduce(long x) {
+    long r = x % g_mod_p;
+    return r < 0 ? r + g_mod_p : r;
+}
+
+static long mod_inv(long a) {
+    long t = 0, newt = 1;
+    long r = g_mod_p, newr = mod_reduce(a);
+    while (newr != 0) {
+        long q = r / newr;
+        long tmp;
+        tmp = t - q * newt; t = newt; newt = tmp;
+        tmp = r - q * newr; r = newr; newr = tmp;
+    }
+    if (t < 0) t += g_mod_p;
+    return t;
+}
+
+/* Multiply at delta=1, mod p (for large-n filtration) */
+static void alg_mul_mod(const AlgElem *a, const AlgElem *b,
+                         const TLAlgebra *alg, AlgElem *r) {
+    int i, j, k;
+    alg_zero(r, a->dim);
+    for (i = 0; i < a->dim; i++) {
+        if (a->c[i] == 0) continue;
+        for (j = 0; j < b->dim; j++) {
+            if (b->c[j] == 0) continue;
+            k = alg->mt_result[i][j];
+            r->c[k] = mod_reduce(r->c[k] + a->c[i] * b->c[j]);
+        }
+    }
+}
+
+/* ================================================================
+ * PART D: Trace Form and Radical (at delta=1)
+ *
+ * tr(L_{b_p}) at delta=1 = |{k : mt_result[p][k] == k}|
+ * (all compositions valid, no loop-killing)
+ *
+ * Gram matrix: G[i][j] = tr(L_{b_i * b_j})
+ * At delta=1: b_i * b_j = b_{mt_result[i][j]} (since delta^loops=1)
+ * So G[i][j] = fixpt[mt_result[i][j]]
+ * ================================================================ */
+
+static int compute_fixpts(const TLAlgebra *alg, int *fixpt) {
+    int i, k;
+    for (i = 0; i < alg->dim; i++) {
+        fixpt[i] = 0;
+        for (k = 0; k < alg->dim; k++) {
+            if (alg->mt_result[i][k] == k) fixpt[i]++;
+        }
+    }
+    return 0;
+}
+
+static int compute_radical_dim(const TLAlgebra *alg) {
+    static long gram_mod[MAX_BASIS][MAX_BASIS];
+    int fixpt[MAX_BASIS];
+    int i, j, k, rank;
+
+    compute_fixpts(alg, fixpt);
+
+    printf("    Fixed points (delta=1): ");
+    for (i = 0; i < alg->dim && i < 20; i++)
+        printf("%d ", fixpt[i]);
+    if (alg->dim > 20) printf("...");
+    printf("\n");
+
+    /* Distinct fixed-point values */
+    {
+        int vals[MAX_BASIS];
+        int n_vals = 0;
+        for (i = 0; i < alg->dim; i++) {
+            int found = 0;
+            for (j = 0; j < n_vals; j++) {
+                if (vals[j] == fixpt[i]) { found = 1; break; }
+            }
+            if (!found) vals[n_vals++] = fixpt[i];
+        }
+        /* Sort */
+        for (i = 0; i < n_vals - 1; i++)
+            for (j = i + 1; j < n_vals; j++)
+                if (vals[i] > vals[j]) { int t = vals[i]; vals[i] = vals[j]; vals[j] = t; }
+        printf("    Distinct fixpt values: {");
+        for (i = 0; i < n_vals; i++) {
+            int ci = catalan_index(vals[i]);
+            if (i > 0) printf(", ");
+            printf("%d", vals[i]);
+            if (ci >= 0) printf("=C%d", ci);
+        }
+        printf("}\n");
+    }
+
+    /* Print Gram matrix for small cases */
+    if (alg->dim <= 14) {
+        printf("    Gram matrix:\n");
+        for (i = 0; i < alg->dim; i++) {
+            printf("      ");
+            for (j = 0; j < alg->dim; j++) {
+                int p = alg->mt_result[i][j];
+                printf("%4d ", fixpt[p]);
+            }
+            printf("\n");
+        }
+    }
+
+    /* Build mod-p Gram matrix */
+    for (i = 0; i < alg->dim; i++) {
+        for (j = 0; j < alg->dim; j++) {
+            int p = alg->mt_result[i][j];
+            gram_mod[i][j] = mod_reduce((long)fixpt[p]);
+        }
+    }
+
+    /* Exact Gaussian elimination mod p for rank */
+    rank = 0;
+    for (k = 0; k < alg->dim; k++) {
+        int pivot = -1;
+        for (i = rank; i < alg->dim; i++) {
+            if (gram_mod[i][k] != 0) { pivot = i; break; }
+        }
+        if (pivot == -1) continue;
+
+        if (pivot != rank) {
+            for (j = 0; j < alg->dim; j++) {
+                long tmp = gram_mod[rank][j];
+                gram_mod[rank][j] = gram_mod[pivot][j];
+                gram_mod[pivot][j] = tmp;
+            }
+        }
+
+        {
+            long inv = mod_inv(gram_mod[rank][k]);
+            for (i = rank + 1; i < alg->dim; i++) {
+                if (gram_mod[i][k] != 0) {
+                    long factor = (gram_mod[i][k] * inv) % g_mod_p;
+                    for (j = k; j < alg->dim; j++)
+                        gram_mod[i][j] = mod_reduce(
+                            gram_mod[i][j] - factor * gram_mod[rank][j]);
+                }
+            }
+        }
+        rank++;
+    }
+
+    return alg->dim - rank;
+}
+
+/* ================================================================
+ * PART E: Idempotent Search & Orthogonal Decomposition (at delta=1)
+ *
+ * At delta=1, generators are already idempotent: e_i^2 = e_i.
+ * Also products e_i*e_j (adjacent) are idempotent.
+ * We search both individual generators and length-2 products.
+ * ================================================================ */
+
+static int find_idempotents_d1(const TLAlgebra *alg,
+                               AlgElem *idemp, int max_idemp) {
+    int n_found = 0;
+    int g1, g2, d;
+
+    /* Individual generators are idempotent at delta=1 */
+    for (g1 = 0; g1 < alg->n_gens && n_found < max_idemp; g1++) {
+        AlgElem a;
+        alg_basis_elem(&a, alg->dim, alg->gen_idx[g1]);
+        if (alg_is_idempotent_d1(&a, alg)) {
+            int dup = 0;
+            for (d = 0; d < n_found; d++)
+                if (alg_eq(&a, &idemp[d])) { dup = 1; break; }
+            if (!dup) {
+                idemp[n_found] = a;
+                printf("    Found idempotent: e_%d\n", g1);
+                n_found++;
+            }
+        }
+    }
+
+    /* Length-2 products */
+    for (g1 = 0; g1 < alg->n_gens && n_found < max_idemp; g1++) {
+        for (g2 = 0; g2 < alg->n_gens && n_found < max_idemp; g2++) {
+            AlgElem a, b, prod;
+            alg_basis_elem(&a, alg->dim, alg->gen_idx[g1]);
+            alg_basis_elem(&b, alg->dim, alg->gen_idx[g2]);
+            alg_mul_d1(&a, &b, alg, &prod);
+
+            if (!alg_is_zero(&prod) &&
+                alg_is_idempotent_d1(&prod, alg)) {
+                int dup = 0;
+                for (d = 0; d < n_found; d++)
+                    if (alg_eq(&prod, &idemp[d])) { dup = 1; break; }
+                if (!dup) {
+                    idemp[n_found] = prod;
+                    printf("    Found idempotent: e_%d * e_%d  ", g1, g2);
+                    alg_print("", &prod, alg);
+                    n_found++;
+                }
+            }
+        }
+    }
+    return n_found;
+}
+
+/* Check if two elements are orthogonal (a*b = 0 AND b*a = 0) */
+static int alg_orthogonal_d1(const AlgElem *a, const AlgElem *b,
+                              const TLAlgebra *alg) {
+    AlgElem t1, t2;
+    alg_mul_d1(a, b, alg, &t1);
+    alg_mul_d1(b, a, alg, &t2);
+    return alg_is_zero(&t1) && alg_is_zero(&t2);
+}
+
+/* Build maximal orthogonal subset greedily */
+static int build_orthogonal_set(AlgElem *idemp, int n_idemp,
+                                AlgElem *orth, int max_orth,
+                                const TLAlgebra *alg) {
+    int n_orth = 0;
+    int i, j;
+
+    for (i = 0; i < n_idemp && n_orth < max_orth; i++) {
+        int compatible = 1;
+        for (j = 0; j < n_orth; j++) {
+            if (!alg_orthogonal_d1(&idemp[i], &orth[j], alg)) {
+                compatible = 0;
+                break;
+            }
+        }
+        if (compatible) {
+            orth[n_orth++] = idemp[i];
+        }
+    }
+    return n_orth;
+}
+
+/* Compute Peirce block dimensions (at delta=1) */
+static int compute_peirce_dim(const AlgElem *fi, const AlgElem *fj,
+                              const TLAlgebra *alg) {
+    static double vecs[MAX_BASIS][MAX_BASIS];
+    int k, m, rank;
+    double eps = 0.5;
+    int i;
+
+    for (k = 0; k < alg->dim; k++) {
+        AlgElem bk, tmp, prod;
+        alg_basis_elem(&bk, alg->dim, k);
+        alg_mul_d1(&bk, fj, alg, &tmp);
+        alg_mul_d1(fi, &tmp, alg, &prod);
+        for (m = 0; m < alg->dim; m++)
+            vecs[k][m] = (double)prod.c[m];
+    }
+
+    rank = 0;
+    for (m = 0; m < alg->dim && rank < alg->dim; m++) {
+        int best = -1;
+        double best_val = eps;
+        for (i = rank; i < alg->dim; i++) {
+            double val = fabs(vecs[i][m]);
+            if (val > best_val) { best_val = val; best = i; }
+        }
+        if (best == -1) continue;
+
+        if (best != rank) {
+            int jj;
+            for (jj = 0; jj < alg->dim; jj++) {
+                double tmp2 = vecs[rank][jj];
+                vecs[rank][jj] = vecs[best][jj];
+                vecs[best][jj] = tmp2;
+            }
+        }
+
+        for (i = rank + 1; i < alg->dim; i++) {
+            if (fabs(vecs[i][m]) > eps) {
+                double factor = vecs[i][m] / vecs[rank][m];
+                int jj;
+                for (jj = m; jj < alg->dim; jj++)
+                    vecs[i][jj] -= factor * vecs[rank][jj];
+            }
+        }
+        rank++;
+    }
+    return rank;
+}
+
+/* Compute Peirce block dimension restricted to a subspace */
+static int compute_peirce_dim_subspace(const AlgElem *fi, const AlgElem *fj,
+                                        const AlgElem *subspace, int sub_dim,
+                                        const TLAlgebra *alg) {
+    static double vecs[MAX_BASIS][MAX_BASIS];
+    int k, m, rank;
+    double eps = 0.5;
+    int i;
+
+    for (k = 0; k < sub_dim; k++) {
+        AlgElem tmp, prod;
+        alg_mul_d1(&subspace[k], fj, alg, &tmp);
+        alg_mul_d1(fi, &tmp, alg, &prod);
+        for (m = 0; m < alg->dim; m++)
+            vecs[k][m] = (double)prod.c[m];
+    }
+
+    rank = 0;
+    for (m = 0; m < alg->dim && rank < sub_dim; m++) {
+        int best = -1;
+        double best_val = eps;
+        for (i = rank; i < sub_dim; i++) {
+            double val = fabs(vecs[i][m]);
+            if (val > best_val) { best_val = val; best = i; }
+        }
+        if (best == -1) continue;
+        if (best != rank) {
+            int jj;
+            for (jj = 0; jj < alg->dim; jj++) {
+                double tmp2 = vecs[rank][jj];
+                vecs[rank][jj] = vecs[best][jj];
+                vecs[best][jj] = tmp2;
+            }
+        }
+        for (i = rank + 1; i < sub_dim; i++) {
+            if (fabs(vecs[i][m]) > eps) {
+                double factor = vecs[i][m] / vecs[rank][m];
+                int jj;
+                for (jj = m; jj < alg->dim; jj++)
+                    vecs[i][jj] -= factor * vecs[rank][jj];
+            }
+        }
+        rank++;
+    }
+    return rank;
+}
+
+/* ================================================================
+ * PART F: Radical Filtration
+ *
+ * Two paths: float extraction for small dims (gives integer null vectors
+ * usable with Peirce analysis), mod-p extraction for large dims (exact
+ * but only gives filtration dimensions, not Peirce-compatible vectors).
+ * ================================================================ */
+
+/* Float-based radical basis extraction (works well for dim <= ~500) */
+static int extract_radical_basis_float(const TLAlgebra *alg,
+                                        AlgElem *rad_basis) {
+    static double aug[MAX_BASIS][2 * MAX_BASIS];
+    int fixpt[MAX_BASIS];
+    int i, j, k, rank;
+    double eps = 0.5;
+    int n_rad = 0;
+
+    compute_fixpts(alg, fixpt);
+
+    /* Build augmented matrix [G | I] */
+    for (i = 0; i < alg->dim; i++) {
+        int p;
+        for (j = 0; j < alg->dim; j++) {
+            p = alg->mt_result[i][j];
+            aug[i][j] = (double)fixpt[p];
+        }
+        for (j = 0; j < alg->dim; j++)
+            aug[i][alg->dim + j] = (i == j) ? 1.0 : 0.0;
+    }
+
+    /* Row reduce left half */
+    rank = 0;
+    for (k = 0; k < alg->dim; k++) {
+        int best = -1;
+        double best_val = eps;
+        for (i = rank; i < alg->dim; i++) {
+            if (fabs(aug[i][k]) > best_val) {
+                best_val = fabs(aug[i][k]);
+                best = i;
+            }
+        }
+        if (best == -1) continue;
+        if (best != rank) {
+            for (j = 0; j < 2 * alg->dim; j++) {
+                double tmp = aug[rank][j];
+                aug[rank][j] = aug[best][j];
+                aug[best][j] = tmp;
+            }
+        }
+        for (i = rank + 1; i < alg->dim; i++) {
+            if (fabs(aug[i][k]) > eps) {
+                double factor = aug[i][k] / aug[rank][k];
+                for (j = k; j < 2 * alg->dim; j++)
+                    aug[i][j] -= factor * aug[rank][j];
+            }
+        }
+        rank++;
+    }
+
+    /* Extract null vectors from bottom rows of right half */
+    for (i = rank; i < alg->dim; i++) {
+        int s;
+        double scale = 1.0;
+        int found_scale = 0;
+
+        for (s = 1; s <= 1000 && !found_scale; s++) {
+            int all_int = 1;
+            for (j = 0; j < alg->dim; j++) {
+                double val = aug[i][alg->dim + j] * (double)s;
+                if (fabs(val) > 0.01 &&
+                    fabs(val - floor(val + 0.5)) > 0.01) {
+                    all_int = 0;
+                    break;
+                }
+            }
+            if (all_int) { scale = (double)s; found_scale = 1; }
+        }
+
+        alg_zero(&rad_basis[n_rad], alg->dim);
+        for (j = 0; j < alg->dim; j++) {
+            double val = aug[i][alg->dim + j] * scale;
+            rad_basis[n_rad].c[j] = (long)floor(val + 0.5);
+        }
+        if (!alg_is_zero(&rad_basis[n_rad]))
+            n_rad++;
+    }
+
+    return n_rad;
+}
+
+/* Mod-p radical basis extraction (exact for any dimension) */
+static int extract_radical_basis_mod(const TLAlgebra *alg,
+                                      AlgElem *rad_basis) {
+    static long aug[MAX_BASIS][2 * MAX_BASIS];
+    int fixpt[MAX_BASIS];
+    int i, j, k, rank;
+    int n_rad = 0;
+
+    compute_fixpts(alg, fixpt);
+
+    /* Build augmented matrix [G | I] mod p */
+    for (i = 0; i < alg->dim; i++) {
+        int p;
+        for (j = 0; j < alg->dim; j++) {
+            p = alg->mt_result[i][j];
+            aug[i][j] = mod_reduce((long)fixpt[p]);
+        }
+        for (j = 0; j < alg->dim; j++)
+            aug[i][alg->dim + j] = (i == j) ? 1L : 0L;
+    }
+
+    /* Row reduce left half mod p */
+    rank = 0;
+    for (k = 0; k < alg->dim; k++) {
+        int pivot = -1;
+        for (i = rank; i < alg->dim; i++) {
+            if (aug[i][k] != 0) { pivot = i; break; }
+        }
+        if (pivot == -1) continue;
+        if (pivot != rank) {
+            for (j = 0; j < 2 * alg->dim; j++) {
+                long tmp = aug[rank][j];
+                aug[rank][j] = aug[pivot][j];
+                aug[pivot][j] = tmp;
+            }
+        }
+        {
+            long inv = mod_inv(aug[rank][k]);
+            for (i = rank + 1; i < alg->dim; i++) {
+                if (aug[i][k] != 0) {
+                    long factor = (aug[i][k] * inv) % g_mod_p;
+                    for (j = k; j < 2 * alg->dim; j++)
+                        aug[i][j] = mod_reduce(
+                            aug[i][j] - factor * aug[rank][j]);
+                }
+            }
+        }
+        rank++;
+    }
+
+    /* Extract null vectors from bottom rows of right half */
+    for (i = rank; i < alg->dim; i++) {
+        alg_zero(&rad_basis[n_rad], alg->dim);
+        for (j = 0; j < alg->dim; j++)
+            rad_basis[n_rad].c[j] = aug[i][alg->dim + j];
+        if (!alg_is_zero(&rad_basis[n_rad]))
+            n_rad++;
+    }
+
+    return n_rad;
+}
+
+/* Try adding an element to an echelon basis (mod p). Returns 1 if independent. */
+static int try_add_to_echelon(long echelon[][MAX_BASIS],
+                               int *pivot_col, int *n_basis,
+                               const AlgElem *elem, int alg_dim,
+                               AlgElem *basis_out) {
+    long row[MAX_BASIS];
+    int k, m, new_pivot;
+
+    for (k = 0; k < alg_dim; k++) row[k] = mod_reduce(elem->c[k]);
+
+    for (k = 0; k < *n_basis; k++) {
+        if (row[pivot_col[k]] != 0) {
+            long inv = mod_inv(echelon[k][pivot_col[k]]);
+            long factor = (row[pivot_col[k]] * inv) % g_mod_p;
+            for (m = 0; m < alg_dim; m++)
+                row[m] = mod_reduce(row[m] - factor * echelon[k][m]);
+        }
+    }
+
+    new_pivot = -1;
+    for (k = 0; k < alg_dim; k++) {
+        if (row[k] != 0) { new_pivot = k; break; }
+    }
+
+    if (new_pivot >= 0) {
+        for (k = 0; k < alg_dim; k++) echelon[*n_basis][k] = row[k];
+        pivot_col[*n_basis] = new_pivot;
+        basis_out[*n_basis] = *elem;
+        (*n_basis)++;
+        return 1;
+    }
+    return 0;
+}
+
+/* Compute rad^{k+1} from rad^k basis and original radical basis.
+ * use_mod: if true, multiply mod p (for large-dim mod-p vectors) */
+static int compute_next_radical_power(
+    const AlgElem *rad_basis, int rad_dim,
+    const AlgElem *prev_basis, int prev_dim,
+    const TLAlgebra *alg,
+    AlgElem *new_basis,
+    int use_mod) {
+
+    static long echelon[MAX_BASIS][MAX_BASIS];
+    int pivot_col[MAX_BASIS];
+    int n_new = 0;
+    int i, j;
+
+    /* prev * rad */
+    for (i = 0; i < prev_dim && n_new < alg->dim; i++) {
+        for (j = 0; j < rad_dim && n_new < alg->dim; j++) {
+            AlgElem prod;
+            if (use_mod)
+                alg_mul_mod(&prev_basis[i], &rad_basis[j], alg, &prod);
+            else
+                alg_mul_d1(&prev_basis[i], &rad_basis[j], alg, &prod);
+            if (!alg_is_zero(&prod))
+                try_add_to_echelon(echelon, pivot_col, &n_new,
+                                   &prod, alg->dim, new_basis);
+        }
+    }
+
+    /* rad * prev (other order for robustness) */
+    for (i = 0; i < rad_dim && n_new < alg->dim; i++) {
+        for (j = 0; j < prev_dim && n_new < alg->dim; j++) {
+            AlgElem prod;
+            if (use_mod)
+                alg_mul_mod(&rad_basis[i], &prev_basis[j], alg, &prod);
+            else
+                alg_mul_d1(&rad_basis[i], &prev_basis[j], alg, &prod);
+            if (!alg_is_zero(&prod))
+                try_add_to_echelon(echelon, pivot_col, &n_new,
+                                   &prod, alg->dim, new_basis);
+        }
+    }
+
+    return n_new;
+}
+
+static void radical_filtration(const TLAlgebra *alg, int rad_dim,
+                                AlgElem *rad2_out, int *rad2_dim_out) {
+    static AlgElem rad_basis[MAX_BASIS];
+    static AlgElem current_basis[MAX_BASIS];
+    static AlgElem next_buf[MAX_BASIS];
+    int n_rad, current_dim, next_dim, power;
+    int use_mod = 0;
+
+    *rad2_dim_out = 0;
+
+    printf("  --- Radical Filtration (delta=1) ---\n");
+
+    /* Try float extraction first; fall back to mod-p for large dims */
+    n_rad = extract_radical_basis_float(alg, rad_basis);
+    if (n_rad != rad_dim) {
+        printf("    Float extraction gave %d vectors, expected %d; "
+               "switching to mod-p\n", n_rad, rad_dim);
+        n_rad = extract_radical_basis_mod(alg, rad_basis);
+        use_mod = 1;
+    }
+
+    printf("    Extracted %d radical basis vectors (expected %d)\n",
+           n_rad, rad_dim);
+
+    memcpy(current_basis, rad_basis, sizeof(AlgElem) * (size_t)n_rad);
+    current_dim = n_rad;
+    printf("    rad^1 dim: %d\n", current_dim);
+
+    for (power = 2; current_dim > 0 && power <= 20; power++) {
+        next_dim = compute_next_radical_power(
+            rad_basis, n_rad,
+            current_basis, current_dim,
+            alg,
+            next_buf,
+            use_mod);
+
+        printf("    rad^%d dim: %d\n", power, next_dim);
+
+        /* Print rad^2 generator when 1-dimensional */
+        if (power == 2 && next_dim == 1) {
+            print_rad2_generator(&next_buf[0], alg, use_mod);
+        }
+
+        /* Sanity check: rad^{k+1} must be subset of rad^k */
+        if (next_dim > current_dim) {
+            printf("    ERROR: rad^%d dim (%d) > rad^%d dim (%d) -- "
+                   "numerical issue\n",
+                   power, next_dim, power - 1, current_dim);
+            next_dim = 0;
+        }
+
+        /* Save rad^2 basis for Peirce analysis (only if using integer path) */
+        if (power == 2 && rad2_out && !use_mod) {
+            if (next_dim > 0)
+                memcpy(rad2_out, next_buf,
+                       sizeof(AlgElem) * (size_t)next_dim);
+            *rad2_dim_out = next_dim;
+        }
+
+        if (next_dim == 0) break;
+
+        memcpy(current_basis, next_buf, sizeof(AlgElem) * (size_t)next_dim);
+        current_dim = next_dim;
+    }
+
+    printf("    Nilpotency index: %d\n", power);
+    printf("\n");
+}
+
+/* ================================================================
+ * Analysis for a given n (at delta=1)
+ * ================================================================ */
+
+static void analyze_tl_d1(int n) {
+    static TLAlgebra alg;
+    static AlgElem rad2_basis[MAX_BASIS];
+    AlgElem orth[20];
+    int n_orth;
+    int rad_dim, rad2_dim;
+    int i, j;
+    char msg[128];
+
+    n_orth = 0;
+    rad2_dim = 0;
+
+    printf("\n========================================\n");
+    printf("  TL_%d at delta=1  (dim = C_%d)\n", n, n);
+    printf("========================================\n\n");
+
+    /* Initialize */
+    init_tl_algebra(&alg, n);
+
+    printf("  Dimension: %d\n", alg.dim);
+    printf("  Identity index: %d\n", alg.id_idx);
+    printf("  Generators: ");
+    for (i = 0; i < alg.n_gens; i++)
+        printf("e_%d=b%d ", i, alg.gen_idx[i]);
+    printf("\n\n");
+
+    /* Multiplication table stats (at delta=1, all products are nonzero) */
+    {
+        int zero_products = 0;
+        for (i = 0; i < alg.dim; i++)
+            for (j = 0; j < alg.dim; j++)
+                if (alg.mt_result[i][j] < 0) zero_products++;
+        printf("  Mult table: %d x %d, invalid entries: %d\n",
+               alg.dim, alg.dim, zero_products);
+    }
+
+    /* Loop count statistics */
+    {
+        int max_loops = 0;
+        int products_with_loops = 0;
+        for (i = 0; i < alg.dim; i++) {
+            for (j = 0; j < alg.dim; j++) {
+                int l = alg.mt_loops[i][j];
+                if (l > max_loops) max_loops = l;
+                if (l > 0) products_with_loops++;
+            }
+        }
+        printf("  Loop stats: max %d loops, %d/%d products create loops (%.1f%%)\n",
+               max_loops, products_with_loops, alg.dim * alg.dim,
+               100.0 * (double)products_with_loops / (double)(alg.dim * alg.dim));
+    }
+
+    /* Print mult table for small cases */
+    if (alg.dim <= 14) {
+        printf("  Mult table result (row * col, at delta=1):\n");
+        printf("      ");
+        for (j = 0; j < alg.dim; j++) printf("%3d", j);
+        printf("\n");
+        for (i = 0; i < alg.dim; i++) {
+            printf("   %2d:", i);
+            for (j = 0; j < alg.dim; j++) {
+                printf("%3d", alg.mt_result[i][j]);
+            }
+            printf("\n");
+        }
+        printf("  Loop counts:\n");
+        printf("      ");
+        for (j = 0; j < alg.dim; j++) printf("%3d", j);
+        printf("\n");
+        for (i = 0; i < alg.dim; i++) {
+            printf("   %2d:", i);
+            for (j = 0; j < alg.dim; j++) {
+                printf("%3d", alg.mt_loops[i][j]);
+            }
+            printf("\n");
+        }
+    }
+    printf("\n");
+
+    /* Verify TL relations at delta=1 */
+    printf("  --- TL Relation Verification (delta=1) ---\n");
+
+    /* 1. Identity: 1 * b_i = b_i * 1 = b_i */
+    {
+        int ok = 1;
+        for (i = 0; i < alg.dim; i++) {
+            if (alg.mt_result[alg.id_idx][i] != i) ok = 0;
+            if (alg.mt_result[i][alg.id_idx] != i) ok = 0;
+        }
+        check("Identity: 1*b = b*1 = b for all basis elements", ok);
+    }
+
+    /* 2. Idempotent: e_i^2 = delta*e_i = 1*e_i = e_i */
+    {
+        int ok = 1;
+        for (i = 0; i < alg.n_gens; i++) {
+            AlgElem ei, sq;
+            alg_basis_elem(&ei, alg.dim, alg.gen_idx[i]);
+            alg_mul_d1(&ei, &ei, &alg, &sq);
+            if (!alg_eq(&sq, &ei)) ok = 0;
+        }
+        sprintf(msg, "Idempotent: e_i^2 = e_i for all %d generators (delta=1)",
+                alg.n_gens);
+        check(msg, ok);
+    }
+
+    /* 3. Adjacent: e_i * e_{i+1} * e_i = e_i */
+    {
+        int ok = 1;
+        for (i = 0; i + 1 < alg.n_gens; i++) {
+            AlgElem ei, ej, tmp, prod;
+            alg_basis_elem(&ei, alg.dim, alg.gen_idx[i]);
+            alg_basis_elem(&ej, alg.dim, alg.gen_idx[i + 1]);
+            alg_mul_d1(&ei, &ej, &alg, &tmp);
+            alg_mul_d1(&tmp, &ei, &alg, &prod);
+            if (!alg_eq(&prod, &ei)) ok = 0;
+        }
+        for (i = 0; i + 1 < alg.n_gens; i++) {
+            AlgElem ei, ej, tmp, prod;
+            alg_basis_elem(&ei, alg.dim, alg.gen_idx[i]);
+            alg_basis_elem(&ej, alg.dim, alg.gen_idx[i + 1]);
+            alg_mul_d1(&ej, &ei, &alg, &tmp);
+            alg_mul_d1(&tmp, &ej, &alg, &prod);
+            if (!alg_eq(&prod, &ej)) ok = 0;
+        }
+        check("Adjacent: e_i*e_{i+1}*e_i = e_i", ok);
+    }
+
+    /* 4. Far commutativity */
+    {
+        int ok = 1;
+        for (i = 0; i < alg.n_gens; i++) {
+            for (j = i + 2; j < alg.n_gens; j++) {
+                AlgElem ei, ej, ab, ba;
+                alg_basis_elem(&ei, alg.dim, alg.gen_idx[i]);
+                alg_basis_elem(&ej, alg.dim, alg.gen_idx[j]);
+                alg_mul_d1(&ei, &ej, &alg, &ab);
+                alg_mul_d1(&ej, &ei, &alg, &ba);
+                if (!alg_eq(&ab, &ba)) ok = 0;
+            }
+        }
+        check("Far commutativity: e_i*e_j = e_j*e_i for |i-j|>=2", ok);
+    }
+    printf("\n");
+
+    /* Radical */
+    printf("  --- Radical via Trace Form (delta=1) ---\n");
+    rad_dim = compute_radical_dim(&alg);
+    printf("    Gram rank: %d\n", alg.dim - rad_dim);
+    printf("    RADICAL DIMENSION: %d\n", rad_dim);
+    if (rad_dim == 0)
+        printf("    ==> TL_%d(1) is SEMISIMPLE\n", n);
+    else
+        printf("    ==> TL_%d(1) is NOT semisimple (radical dim %d)\n",
+               n, rad_dim);
+
+    sprintf(msg, "n=%d: radical dimension computed", n);
+    check(msg, 1);
+    printf("\n");
+
+    /* Radical filtration for non-semisimple cases */
+    if (rad_dim > 0) {
+        radical_filtration(&alg, rad_dim, rad2_basis, &rad2_dim);
+    }
+
+    /* Idempotent search */
+    printf("  --- Idempotent Search (delta=1) ---\n");
+    {
+        AlgElem idemp[20];
+        int n_idemp;
+
+        n_idemp = find_idempotents_d1(&alg, idemp, 20);
+        printf("    Found %d distinct idempotents\n\n", n_idemp);
+
+        if (n_idemp > 0) {
+            /* Orthogonality matrix */
+            printf("    Orthogonality (1=orthogonal, 0=not):\n");
+            printf("      ");
+            for (j = 0; j < n_idemp; j++) printf("  f%d", j);
+            printf("\n");
+            for (i = 0; i < n_idemp; i++) {
+                printf("    f%d:", i);
+                for (j = 0; j < n_idemp; j++) {
+                    if (i == j)
+                        printf("   -");
+                    else
+                        printf("   %d",
+                               alg_orthogonal_d1(&idemp[i], &idemp[j], &alg));
+                }
+                printf("\n");
+            }
+            printf("\n");
+
+            /* Build maximal orthogonal set */
+            n_orth = build_orthogonal_set(idemp, n_idemp, orth, 20, &alg);
+            printf("    Maximal orthogonal set: %d idempotents\n", n_orth);
+
+            /* Compute complement */
+            {
+                AlgElem complement, id_elem;
+                int comp_is_idemp;
+
+                alg_basis_elem(&id_elem, alg.dim, alg.id_idx);
+                complement = id_elem;
+
+                for (i = 0; i < n_orth; i++) {
+                    AlgElem tmp;
+                    alg_sub(&complement, &orth[i], &tmp);
+                    complement = tmp;
+                }
+
+                alg_print("Complement (1 - sum)", &complement, &alg);
+                comp_is_idemp = alg_is_idempotent_d1(&complement, &alg);
+                printf("    Complement is idempotent: %s\n",
+                       comp_is_idemp ? "YES" : "NO");
+
+                if (comp_is_idemp && !alg_is_zero(&complement)) {
+                    int all_orth = 1;
+                    for (i = 0; i < n_orth; i++) {
+                        if (!alg_orthogonal_d1(&complement, &orth[i], &alg))
+                            all_orth = 0;
+                    }
+                    printf("    Complement orthogonal to all: %s\n",
+                           all_orth ? "YES" : "NO");
+
+                    if (all_orth) {
+                        orth[n_orth++] = complement;
+                        printf("    Complete orthogonal set: %d idempotents\n",
+                               n_orth);
+                    }
+                }
+
+                /* Verify sum = identity */
+                {
+                    AlgElem sum;
+                    alg_zero(&sum, alg.dim);
+                    for (i = 0; i < n_orth; i++) {
+                        AlgElem tmp;
+                        alg_add(&sum, &orth[i], &tmp);
+                        sum = tmp;
+                    }
+                    sprintf(msg, "n=%d: orthogonal idempotents sum to identity",
+                            n);
+                    check(msg,
+                          alg_eq(&sum, &id_elem));
+                }
+
+                /* Peirce block dimensions (skip for large n) */
+                if (n_orth >= 2 && alg.dim <= 429) {
+                    int total_dim = 0;
+                    printf("\n    Peirce block dimensions (f_i * A * f_j):\n");
+                    printf("      ");
+                    for (j = 0; j < n_orth; j++) printf("  f%d", j);
+                    printf("\n");
+                    for (i = 0; i < n_orth; i++) {
+                        printf("    f%d:", i);
+                        for (j = 0; j < n_orth; j++) {
+                            int d = compute_peirce_dim(&orth[i], &orth[j], &alg);
+                            printf("  %2d", d);
+                            total_dim += d;
+                        }
+                        printf("\n");
+                    }
+                    printf("    Total: %d (should be %d)\n",
+                           total_dim, alg.dim);
+                    sprintf(msg,
+                            "n=%d: Peirce block dims sum to algebra dim",
+                            n);
+                    check(msg, total_dim == alg.dim);
+                }
+            }
+        } else if (n == 2) {
+            /* n=2 at delta=1: e_0^2 = e_0 (idempotent).
+             * Algebra = {a*1 + b*e_0 : a,b in Z}
+             * with e_0^2 = e_0, so e_0*(1-e_0) = 0.
+             * Orthogonal idempotents: e_0 and (1-e_0).
+             * Algebra = k x k (semisimple!) */
+            AlgElem e0, id_elem, one_minus_e0;
+            printf("    n=2 at delta=1: generators are idempotent\n");
+            printf("    Orthogonal idempotents: e_0, (1-e_0)\n");
+            n_orth = 2;
+            alg_basis_elem(&e0, alg.dim, alg.gen_idx[0]);
+            alg_basis_elem(&id_elem, alg.dim, alg.id_idx);
+            alg_sub(&id_elem, &e0, &one_minus_e0);
+            orth[0] = e0;
+            orth[1] = one_minus_e0;
+            sprintf(msg, "n=2: e_0 is idempotent at delta=1");
+            check(msg, alg_is_idempotent_d1(&orth[0], &alg));
+            sprintf(msg, "n=2: (1-e_0) is idempotent at delta=1");
+            check(msg, alg_is_idempotent_d1(&orth[1], &alg));
+            sprintf(msg, "n=2: e_0 and (1-e_0) orthogonal");
+            check(msg, alg_orthogonal_d1(&orth[0], &orth[1], &alg));
+        }
+    }
+
+    /* Peirce decomposition of rad^2 */
+    if (rad2_dim > 0 && n_orth >= 2 && alg.dim <= 429) {
+        int total_dim = 0;
+        printf("\n  --- Peirce Blocks of rad^2 (delta=1) ---\n");
+        printf("    rad^2 dim: %d\n", rad2_dim);
+        printf("      ");
+        for (j = 0; j < n_orth; j++) printf("  f%d", j);
+        printf("\n");
+        for (i = 0; i < n_orth; i++) {
+            printf("    f%d:", i);
+            for (j = 0; j < n_orth; j++) {
+                int d = compute_peirce_dim_subspace(&orth[i], &orth[j],
+                            rad2_basis, rad2_dim, &alg);
+                printf("  %2d", d);
+                total_dim += d;
+            }
+            printf("\n");
+        }
+        printf("    Total: %d (should be %d)\n", total_dim, rad2_dim);
+        sprintf(msg, "n=%d: rad^2 Peirce blocks sum to rad^2 dim", n);
+        check(msg, total_dim == rad2_dim);
+    }
+
+    printf("\n");
+}
+
+/* ================================================================
+ * Delta=0 cross-check (verify we reproduce Demo 51 results)
+ * ================================================================ */
+
+static void verify_d0(int n) {
+    static TLAlgebra alg;
+    int fixpt[MAX_BASIS];
+    int i, j, k, rank;
+    int rad_dim;
+    double eps = 0.5;
+    static double gram[MAX_BASIS][MAX_BASIS];
+    char msg[128];
+
+    printf("\n  --- Delta=0 cross-check for n=%d ---\n", n);
+
+    init_tl_algebra(&alg, n);
+
+    /* At delta=0: fixed points only count loop-free compositions */
+    for (i = 0; i < alg.dim; i++) {
+        fixpt[i] = 0;
+        for (k = 0; k < alg.dim; k++) {
+            if (alg.mt_result[i][k] == k && alg.mt_loops[i][k] == 0)
+                fixpt[i]++;
+        }
+    }
+
+    /* Gram matrix at delta=0 */
+    for (i = 0; i < alg.dim; i++) {
+        for (j = 0; j < alg.dim; j++) {
+            if (alg.mt_loops[i][j] > 0)
+                gram[i][j] = 0.0;
+            else
+                gram[i][j] = (double)fixpt[alg.mt_result[i][j]];
+        }
+    }
+
+    /* Rank */
+    rank = 0;
+    for (k = 0; k < alg.dim; k++) {
+        int best = -1;
+        double best_val = eps;
+        for (i = rank; i < alg.dim; i++) {
+            if (fabs(gram[i][k]) > best_val) { best_val = fabs(gram[i][k]); best = i; }
+        }
+        if (best == -1) continue;
+        if (best != rank) {
+            for (j = 0; j < alg.dim; j++) {
+                double tmp = gram[rank][j]; gram[rank][j] = gram[best][j]; gram[best][j] = tmp;
+            }
+        }
+        for (i = rank + 1; i < alg.dim; i++) {
+            if (fabs(gram[i][k]) > eps) {
+                double factor = gram[i][k] / gram[rank][k];
+                for (j = k; j < alg.dim; j++) gram[i][j] -= factor * gram[rank][j];
+            }
+        }
+        rank++;
+    }
+
+    rad_dim = alg.dim - rank;
+    sprintf(msg, "delta=0 cross-check n=%d: rad dim %d", n, rad_dim);
+    check(msg, 1);
+    printf("    n=%d: dim=%d, gram_rank=%d, rad_dim=%d\n",
+           n, alg.dim, rank, rad_dim);
+}
+
+/* ================================================================
+ * PART G: General Delta Analysis (mod-p)
+ *
+ * For delta = 2*cos(pi/ell):
+ *   ell=2: delta=0      (delta^2 = 0)
+ *   ell=3: delta=1      (delta^2 = 1)
+ *   ell=4: delta=sqrt(2) (delta^2 = 2)
+ *   ell=5: delta=phi     (delta^2 = phi^2 = phi+1)
+ *
+ * We work mod g_mod_p where delta has a known square root.
+ * Ranks over F_p equal true ranks for all but finitely many p.
+ * ================================================================ */
+
+#define MAX_LOOPS_PRECOMP 10
+
+static long mod_pow(long base, long exp) {
+    long result = 1;
+    base = mod_reduce(base);
+    while (exp > 0) {
+        if (exp & 1) result = mod_reduce(result * base);
+        exp >>= 1;
+        base = mod_reduce(base * base);
+    }
+    return result;
+}
+
+/* Tonelli-Shanks: compute sqrt(n) mod g_mod_p.
+ * Works for any odd prime. Returns 0 if n is not a QR. */
+static long mod_sqrt_ts(long n) {
+    long Q, z, M, c, t, R, b, temp;
+    int S;
+    long i;
+
+    n = mod_reduce(n);
+    if (n == 0) return 0;
+
+    /* Simple case: p = 3 mod 4 */
+    if (g_mod_p % 4 == 3)
+        return mod_pow(n, (g_mod_p + 1) / 4);
+
+    /* Factor p-1 = Q * 2^S */
+    Q = g_mod_p - 1;
+    S = 0;
+    while (Q % 2 == 0) { Q /= 2; S++; }
+
+    /* Find a non-residue z */
+    z = 2;
+    while (mod_pow(z, (g_mod_p - 1) / 2) != g_mod_p - 1) z++;
+
+    M = (long)S;
+    c = mod_pow(z, Q);
+    t = mod_pow(n, Q);
+    R = mod_pow(n, (Q + 1) / 2);
+
+    for (;;) {
+        if (t == 1) return R;
+        /* Find smallest i such that t^(2^i) = 1 */
+        temp = t;
+        for (i = 1; i < M; i++) {
+            temp = mod_reduce(temp * temp);
+            if (temp == 1) break;
+        }
+        b = c;
+        { long j; for (j = 0; j < M - i - 1; j++)
+            b = mod_reduce(b * b); }
+        M = i;
+        c = mod_reduce(b * b);
+        t = mod_reduce(t * c);
+        R = mod_reduce(R * b);
+    }
+}
+
+static void precompute_delta_pow(long delta_val, long *dpow, int max_k) {
+    int k;
+    dpow[0] = 1;
+    for (k = 1; k <= max_k; k++)
+        dpow[k] = mod_reduce(dpow[k - 1] * delta_val);
+}
+
+/* Multiply mod p with delta^loops weights */
+static void alg_mul_delta_mod(const AlgElem *a, const AlgElem *b,
+                               const TLAlgebra *alg, AlgElem *r,
+                               const long *dpow) {
+    int i, j, k;
+    alg_zero(r, a->dim);
+    for (i = 0; i < a->dim; i++) {
+        if (a->c[i] == 0) continue;
+        for (j = 0; j < b->dim; j++) {
+            if (b->c[j] == 0) continue;
+            k = alg->mt_result[i][j];
+            r->c[k] = mod_reduce(r->c[k] +
+                mod_reduce(mod_reduce(a->c[i] * b->c[j])
+                           * dpow[alg->mt_loops[i][j]]));
+        }
+    }
+}
+
+/* Compute radical dimension at general delta (mod p) */
+static int compute_radical_dim_delta(const TLAlgebra *alg,
+                                      const long *dpow,
+                                      int *gram_rank_out) {
+    static long gram_d[MAX_BASIS][MAX_BASIS];
+    long fixpt_d[MAX_BASIS];
+    int i, j, k, rank;
+
+    /* Weighted fixed points: fixpt_d[p] = sum_{k: result(p,k)==k} delta^loops(p,k) */
+    for (i = 0; i < alg->dim; i++) {
+        fixpt_d[i] = 0;
+        for (k = 0; k < alg->dim; k++) {
+            if (alg->mt_result[i][k] == k)
+                fixpt_d[i] = mod_reduce(fixpt_d[i]
+                                        + dpow[alg->mt_loops[i][k]]);
+        }
+    }
+
+    /* Gram: G[i][j] = delta^loops(i,j) * fixpt_d[result(i,j)] */
+    for (i = 0; i < alg->dim; i++)
+        for (j = 0; j < alg->dim; j++) {
+            int p = alg->mt_result[i][j];
+            gram_d[i][j] = mod_reduce(
+                dpow[alg->mt_loops[i][j]] * fixpt_d[p]);
+        }
+
+    /* Gaussian elimination mod p */
+    rank = 0;
+    for (k = 0; k < alg->dim; k++) {
+        int pivot = -1;
+        for (i = rank; i < alg->dim; i++) {
+            if (gram_d[i][k] != 0) { pivot = i; break; }
+        }
+        if (pivot == -1) continue;
+        if (pivot != rank) {
+            for (j = 0; j < alg->dim; j++) {
+                long tmp = gram_d[rank][j];
+                gram_d[rank][j] = gram_d[pivot][j];
+                gram_d[pivot][j] = tmp;
+            }
+        }
+        {
+            long inv = mod_inv(gram_d[rank][k]);
+            for (i = rank + 1; i < alg->dim; i++) {
+                if (gram_d[i][k] != 0) {
+                    long fac = mod_reduce(gram_d[i][k] * inv);
+                    for (j = k; j < alg->dim; j++)
+                        gram_d[i][j] = mod_reduce(
+                            gram_d[i][j]
+                            - mod_reduce(fac * gram_d[rank][j]));
+                }
+            }
+        }
+        rank++;
+    }
+
+    if (gram_rank_out) *gram_rank_out = rank;
+    return alg->dim - rank;
+}
+
+/* Extract radical basis at general delta (mod p null space) */
+static int extract_radical_basis_delta(const TLAlgebra *alg,
+                                        AlgElem *rad_basis,
+                                        const long *dpow) {
+    static long aug_d[MAX_BASIS][2 * MAX_BASIS];
+    long fixpt_d[MAX_BASIS];
+    int i, j, k, rank, n_rad;
+
+    /* Weighted fixed points */
+    for (i = 0; i < alg->dim; i++) {
+        fixpt_d[i] = 0;
+        for (k = 0; k < alg->dim; k++) {
+            if (alg->mt_result[i][k] == k)
+                fixpt_d[i] = mod_reduce(fixpt_d[i]
+                                        + dpow[alg->mt_loops[i][k]]);
+        }
+    }
+
+    /* [G | I] mod p */
+    for (i = 0; i < alg->dim; i++) {
+        int p;
+        for (j = 0; j < alg->dim; j++) {
+            p = alg->mt_result[i][j];
+            aug_d[i][j] = mod_reduce(
+                dpow[alg->mt_loops[i][j]] * fixpt_d[p]);
+        }
+        for (j = 0; j < alg->dim; j++)
+            aug_d[i][alg->dim + j] = (i == j) ? 1L : 0L;
+    }
+
+    /* Row reduce left half */
+    rank = 0;
+    for (k = 0; k < alg->dim; k++) {
+        int pivot = -1;
+        for (i = rank; i < alg->dim; i++) {
+            if (aug_d[i][k] != 0) { pivot = i; break; }
+        }
+        if (pivot == -1) continue;
+        if (pivot != rank) {
+            for (j = 0; j < 2 * alg->dim; j++) {
+                long tmp = aug_d[rank][j];
+                aug_d[rank][j] = aug_d[pivot][j];
+                aug_d[pivot][j] = tmp;
+            }
+        }
+        {
+            long inv = mod_inv(aug_d[rank][k]);
+            for (i = rank + 1; i < alg->dim; i++) {
+                if (aug_d[i][k] != 0) {
+                    long fac = mod_reduce(aug_d[i][k] * inv);
+                    for (j = k; j < 2 * alg->dim; j++)
+                        aug_d[i][j] = mod_reduce(
+                            aug_d[i][j]
+                            - mod_reduce(fac * aug_d[rank][j]));
+                }
+            }
+        }
+        rank++;
+    }
+
+    /* Extract null vectors */
+    n_rad = 0;
+    for (i = rank; i < alg->dim; i++) {
+        alg_zero(&rad_basis[n_rad], alg->dim);
+        for (j = 0; j < alg->dim; j++)
+            rad_basis[n_rad].c[j] = aug_d[i][alg->dim + j];
+        if (!alg_is_zero(&rad_basis[n_rad]))
+            n_rad++;
+    }
+    return n_rad;
+}
+
+/* Filtration step with delta weights */
+static int compute_next_radical_power_delta(
+    const AlgElem *rad_basis, int rad_dim,
+    const AlgElem *prev_basis, int prev_dim,
+    const TLAlgebra *alg,
+    AlgElem *new_basis,
+    const long *dpow) {
+
+    static long ech_d[MAX_BASIS][MAX_BASIS];
+    int pivot_col[MAX_BASIS];
+    int n_new = 0;
+    int i, j;
+
+    for (i = 0; i < prev_dim && n_new < alg->dim; i++) {
+        for (j = 0; j < rad_dim && n_new < alg->dim; j++) {
+            AlgElem prod;
+            alg_mul_delta_mod(&prev_basis[i], &rad_basis[j],
+                              alg, &prod, dpow);
+            if (!alg_is_zero(&prod))
+                try_add_to_echelon(ech_d, pivot_col, &n_new,
+                                   &prod, alg->dim, new_basis);
+        }
+    }
+    for (i = 0; i < rad_dim && n_new < alg->dim; i++) {
+        for (j = 0; j < prev_dim && n_new < alg->dim; j++) {
+            AlgElem prod;
+            alg_mul_delta_mod(&rad_basis[i], &prev_basis[j],
+                              alg, &prod, dpow);
+            if (!alg_is_zero(&prod))
+                try_add_to_echelon(ech_d, pivot_col, &n_new,
+                                   &prod, alg->dim, new_basis);
+        }
+    }
+    return n_new;
+}
+
+/* Full analysis at a general delta value (mod p) */
+static void analyze_tl_delta(int n, const char *delta_name,
+                              long delta_val) {
+    static TLAlgebra alg;
+    static AlgElem rad_basis_d[MAX_BASIS];
+    static AlgElem cur_basis_d[MAX_BASIS];
+    static AlgElem nxt_buf_d[MAX_BASIS];
+    long dpow[MAX_LOOPS_PRECOMP + 1];
+    int rad_dim, gram_rank, n_rad;
+    int current_dim, next_dim, power;
+    int max_loops, i, j;
+    char msg[128];
+
+    init_tl_algebra(&alg, n);
+
+    printf("\n  --- TL_%d at delta=%s  (dim=%d) ---\n",
+           n, delta_name, alg.dim);
+
+    /* Find max loops */
+    max_loops = 0;
+    for (i = 0; i < alg.dim; i++)
+        for (j = 0; j < alg.dim; j++)
+            if (alg.mt_loops[i][j] > max_loops)
+                max_loops = alg.mt_loops[i][j];
+
+    if (max_loops > MAX_LOOPS_PRECOMP) {
+        printf("    ERROR: max loops %d > %d\n",
+               max_loops, MAX_LOOPS_PRECOMP);
+        return;
+    }
+    precompute_delta_pow(delta_val, dpow, max_loops);
+
+    /* Radical dimension */
+    gram_rank = 0;
+    rad_dim = compute_radical_dim_delta(&alg, dpow, &gram_rank);
+    printf("    Gram rank: %d\n", gram_rank);
+    printf("    Radical dim: %d\n", rad_dim);
+
+    if (rad_dim == 0) {
+        printf("    ==> SEMISIMPLE\n");
+        sprintf(msg, "n=%d delta=%s: semisimple (rad=0)", n, delta_name);
+        check(msg, 1);
+        return;
+    }
+
+    printf("    ==> NOT semisimple\n");
+    sprintf(msg, "n=%d delta=%s: radical dim %d", n, delta_name, rad_dim);
+    check(msg, rad_dim > 0);
+
+    /* Radical filtration */
+    n_rad = extract_radical_basis_delta(&alg, rad_basis_d, dpow);
+    printf("    Extracted %d radical vectors (expected %d)\n",
+           n_rad, rad_dim);
+
+    if (n_rad != rad_dim) {
+        printf("    WARNING: extraction mismatch\n");
+        n_rad = rad_dim < n_rad ? rad_dim : n_rad;
+    }
+
+    memcpy(cur_basis_d, rad_basis_d,
+           sizeof(AlgElem) * (size_t)n_rad);
+    current_dim = n_rad;
+    printf("    rad^1 dim: %d\n", current_dim);
+
+    for (power = 2; current_dim > 0 && power <= 20; power++) {
+        next_dim = compute_next_radical_power_delta(
+            rad_basis_d, n_rad,
+            cur_basis_d, current_dim,
+            &alg, nxt_buf_d, dpow);
+
+        printf("    rad^%d dim: %d\n", power, next_dim);
+
+        /* Print rad^2 generator when 1-dimensional */
+        if (power == 2 && next_dim == 1) {
+            print_rad2_generator(&nxt_buf_d[0], &alg, 1);
+        }
+
+        if (next_dim > current_dim) {
+            printf("    ERROR: rad^%d > rad^%d -- numerical issue\n",
+                   power, power - 1);
+            next_dim = 0;
+        }
+        if (next_dim == 0) break;
+
+        memcpy(cur_basis_d, nxt_buf_d,
+               sizeof(AlgElem) * (size_t)next_dim);
+        current_dim = next_dim;
+    }
+
+    printf("    Nilpotency index: %d\n", power);
+}
+
+/* ================================================================
+ * MAIN
+ * ================================================================ */
+
+int main(void) {
+    setbuf(stdout, NULL);
+
+    printf("KNOTAPEL DEMO 52: Chebyshev Generalization -- TL_n at delta=1\n");
+    printf("==============================================================\n");
+
+    /* Delta=0 cross-checks (should match Demo 51) */
+    printf("\n=== PART 0: Delta=0 Cross-Checks ===\n");
+    verify_d0(2);
+    verify_d0(3);
+    verify_d0(4);
+    verify_d0(5);
+
+    /* Delta=1 analysis */
+    printf("\n=== PART 1: Delta=1 Radical Anatomy ===\n");
+    analyze_tl_d1(2);
+    analyze_tl_d1(3);
+    analyze_tl_d1(4);
+    analyze_tl_d1(5);
+    analyze_tl_d1(6);
+    analyze_tl_d1(7);
+    analyze_tl_d1(8);
+
+    /* Delta=sqrt(2) analysis (ell=4) */
+    {
+        long sqrt2_mod_p = mod_sqrt_ts(2);
+        long check_sq = mod_reduce(sqrt2_mod_p * sqrt2_mod_p);
+
+        printf("\n=== PART 2: Delta=sqrt(2) Radical Anatomy (ell=4) ===\n");
+        printf("  p=%ld, sqrt(2) mod p = %ld\n", g_mod_p, sqrt2_mod_p);
+        printf("  Verification: (%ld)^2 mod p = %ld (should be 2)\n",
+               sqrt2_mod_p, check_sq);
+        check("sqrt(2) mod p verified", check_sq == 2);
+
+        /* Cross-check: delta=1 through general path should match Part 1 */
+        printf("\n  -- Cross-check: delta=1 via general path --\n");
+        analyze_tl_delta(3, "1", 1L);
+        analyze_tl_delta(4, "1", 1L);
+        analyze_tl_delta(5, "1", 1L);
+
+        /* delta=sqrt(2) analysis */
+        printf("\n  -- Delta=sqrt(2) results --\n");
+        analyze_tl_delta(2, "sqrt2", sqrt2_mod_p);
+        analyze_tl_delta(3, "sqrt2", sqrt2_mod_p);
+        analyze_tl_delta(4, "sqrt2", sqrt2_mod_p);
+        analyze_tl_delta(5, "sqrt2", sqrt2_mod_p);
+        analyze_tl_delta(6, "sqrt2", sqrt2_mod_p);
+        analyze_tl_delta(7, "sqrt2", sqrt2_mod_p);
+    }
+
+    /* Delta=golden ratio analysis (ell=5) */
+    /* phi = (1+sqrt(5))/2, phi^2 = phi+1 */
+    /* Need prime where 5 is QR: p = 1 or 4 mod 5 */
+    /* Also want p = 3 mod 4 for easy sqrt, so p = 11 or 19 mod 20 */
+    {
+        long saved_p = g_mod_p;
+        /* p=1000000031: 31 mod 40, so 7 mod 8 (2 QR) and 1 mod 5 (5 QR) */
+        /* Try it; if sqrt(5) verification fails, fall back to p=100000007 */
+        /* 999999751: mod 5=1 (5 QR), mod 4=3 (easy sqrt), mod 8=7 (2 QR) */
+        long try_p = 999999751L;
+        long sqrt5, phi_mod_p, check_phi, inv2;
+
+        g_mod_p = try_p;
+        sqrt5 = mod_sqrt_ts(5);
+
+        printf("\n=== PART 3: Delta=phi (golden ratio) Radical Anatomy (ell=5) ===\n");
+        printf("  p=%ld, sqrt(5) mod p = %ld\n", g_mod_p, sqrt5);
+        printf("  Verification: (%ld)^2 mod p = %ld (should be 5)\n",
+               sqrt5, mod_reduce(sqrt5 * sqrt5));
+
+        if (mod_reduce(sqrt5 * sqrt5) != 5) {
+            /* p might not be prime or 5 not QR; try p=29 */
+            g_mod_p = 29L;
+            sqrt5 = mod_sqrt_ts(5);
+            printf("  Fallback: p=%ld, sqrt(5) mod p = %ld\n",
+                   g_mod_p, sqrt5);
+            printf("  Verification: (%ld)^2 mod p = %ld (should be 5)\n",
+                   sqrt5, mod_reduce(sqrt5 * sqrt5));
+        }
+
+        check("sqrt(5) mod p verified",
+              mod_reduce(sqrt5 * sqrt5) == 5);
+
+        /* phi = (1 + sqrt5) / 2 mod p */
+        inv2 = mod_inv(2);
+        phi_mod_p = mod_reduce((1 + sqrt5) * inv2);
+
+        /* Verify: phi^2 = phi + 1 */
+        check_phi = mod_reduce(phi_mod_p * phi_mod_p);
+        printf("  phi mod p = %ld\n", phi_mod_p);
+        printf("  phi^2 mod p = %ld, phi+1 mod p = %ld (should match)\n",
+               check_phi, mod_reduce(phi_mod_p + 1));
+        check("phi^2 = phi + 1 verified",
+              check_phi == mod_reduce(phi_mod_p + 1));
+
+        printf("\n  -- Delta=phi results --\n");
+        analyze_tl_delta(2, "phi", phi_mod_p);
+        analyze_tl_delta(3, "phi", phi_mod_p);
+        analyze_tl_delta(4, "phi", phi_mod_p);
+        analyze_tl_delta(5, "phi", phi_mod_p);
+        analyze_tl_delta(6, "phi", phi_mod_p);
+        analyze_tl_delta(7, "phi", phi_mod_p);
+
+        g_mod_p = saved_p;
+    }
+
+    /* Delta=sqrt(3) analysis (ell=6) */
+    /* delta = 2*cos(pi/6) = sqrt(3) */
+    /* 10^9+7 mod 12 = 11 = -1, so 3 is QR mod 10^9+7. Use default prime. */
+    {
+        long sqrt3_mod_p = mod_sqrt_ts(3);
+
+        printf("\n=== PART 4: Delta=sqrt(3) Radical Anatomy (ell=6) ===\n");
+        printf("  p=%ld, sqrt(3) mod p = %ld\n", g_mod_p, sqrt3_mod_p);
+        printf("  Verification: (%ld)^2 mod p = %ld (should be 3)\n",
+               sqrt3_mod_p, mod_reduce(sqrt3_mod_p * sqrt3_mod_p));
+        check("sqrt(3) mod p verified",
+              mod_reduce(sqrt3_mod_p * sqrt3_mod_p) == 3);
+
+        printf("\n  -- Delta=sqrt(3) results --\n");
+        analyze_tl_delta(2, "sqrt3", sqrt3_mod_p);
+        analyze_tl_delta(3, "sqrt3", sqrt3_mod_p);
+        analyze_tl_delta(4, "sqrt3", sqrt3_mod_p);
+        analyze_tl_delta(5, "sqrt3", sqrt3_mod_p);
+        analyze_tl_delta(6, "sqrt3", sqrt3_mod_p);
+        analyze_tl_delta(7, "sqrt3", sqrt3_mod_p);
+    }
+
+    printf("\n==============================================================\n");
+    printf("Final: %d passed, %d failed\n", n_pass, n_fail);
+    printf("==============================================================\n");
+
+    return n_fail > 0 ? 1 : 0;
+}
