@@ -1,7 +1,7 @@
 # Explorer's Log — DKC Research Arc & Demo 35
 
 Last updated: 2026-02-19
-Context: Written after completing Demo 35 (TL_n matrix representations over Z[ζ₈]).
+Context: Updated through Demo 55 (DKC Boolean search at ℓ=4). Parity at Re>0 confirmed.
 
 ## The Story in One Paragraph
 
@@ -618,13 +618,195 @@ Confirms all formulas with 5th data point (ℓ=2,3,4,5,6):
 6. **ℓ²+1 zero count** at n=ℓ+1
 7. **ℓ=6 confirmation** of all formulas
 
+### Fibonacci-Anyon Connection (QM Lens)
+
+At ℓ=5 (δ=φ), TL gives the **Fibonacci anyon model** — the simplest universal topological quantum computer. Our F(ℓ-1) bilinear rank equals the number of fusion channels for (ℓ-1) Fibonacci anyons. Both count **length-2 paths through Dynkin diagram A_{ℓ-1}**. The Fibonacci recurrence (rank(ℓ+1) = rank(ℓ) + rank(ℓ-1)) emerges from adding one vertex to the path graph. This is the deepest theoretical insight: the entanglement rank of the thermal ground state follows the same sequence that governs anyonic computational power.
+
+### Decoherence Rate Scaling
+
+The radical proportion (2ℓ-3)/C_ℓ gives a "decoherence rate" that decreases with ℓ:
+- ℓ=3: 3/5 = 60%
+- ℓ=4: 5/14 = 36%
+- ℓ=5: 7/42 = 17%
+- ℓ=6: 9/132 = 7%
+
+Higher ℓ = less decoherence = more stable coherent sector. This is WHY Fibonacci anyons (ℓ=5) are better for quantum computing than simpler theories (ℓ=3).
+
+### Galois-Theoretic Mod-p Framework
+
+The mod-p technique is not just a hack — it's **Galois reduction at split primes**. Replacing δ=2cos(π/ℓ) with its F_p image is reduction of an algebraic number modulo a prime that splits completely in Q(δ). The QR condition (e.g., 2 is QR for ℓ=4, 5 is QR for ℓ=5) IS the splitting condition. Chebotarev density theorem guarantees infinitely many valid primes. Agreement at two good primes guarantees true rank via **semicontinuity** — a number-theoretic proof technique, not heuristic.
+
+### ℓ=7 Prediction (Cubic Wall)
+
+Explicit predictions for ℓ=7 (δ = 2cos(π/7), first **cubic** number field):
+- **Number field:** Q(2cos(π/7)), degree 3, minimal poly **x³ - x² - 2x + 1 = 0**
+- **rad(TL_7)** = 2(7)-3 = **11**
+- **rad(TL_8)** = 7²-7-3 = **39**
+- **rad²** = 1 at n=7 and n=8
+- **Fibonacci Rank Theorem:** bilinear rank = **F(6) = 8**
+- **Sector profile:** 3 sectors (1,3,5 through-strands), predict palindromic if odd-ℓ palindromicity holds
+- **Technical barrier:** Need completely splitting prime (all 3 roots in F_p). Density 1/6 by Chebotarev.
+
+### Five Lens Summaries
+
+1. **Rep Theory:** Fibonacci from Dynkin A_{ℓ-1} length-2 path compositions. Nilpotency 3 from cellularity (cell modules link in pairs → two drops, never three). Quantum dimensions as categorical weights.
+2. **Coding Theory:** Radical as CSS quantum error-correcting code [C_ℓ, 2ℓ-3]. rad² = maximum-weight codeword. Fibonacci tensor rank = channel count. Self-orthogonality under trace form.
+3. **QM:** Three quantum sectors (coherent / decoherence / thermal). F(ℓ-1) entanglement rank. Fibonacci anyons at ℓ=5. Decoherence rate decreases with ℓ.
+4. **Algebraic Number Theory:** Number field tower Q(2cos(π/ℓ)). Mod-p = Galois reduction. Galois-covariant weights, Galois-invariant ranks. ℓ=7 cubic wall.
+5. **Approximation Theory:** Chebyshev double role (parameterizes failure points AND decomposition weights). Superexponential convergence of radical proportion. Universal 3-level multiresolution analysis.
+
 ### Open Questions
 
-1. **Predict ℓ=7:** Fibonacci says total rank = F(6) = 8. What's the sector profile? {1,?,?,1}?
-2. **Prove Fibonacci:** Can we derive F(ℓ-1) from TL tower fusion rules?
+1. **ℓ=7 cubic wall:** Test all predictions above — this is the strongest validation of universality
+2. **Prove Fibonacci:** Can we derive F(ℓ-1) from TL tower fusion rules formally?
 3. **Non-palindromic odd ℓ:** ℓ=5 has profile [2,1], ℓ=7 should test whether odd ℓ is always non-palindromic
 4. **Interpret rank-2 components:** The φ-weighted vectors at ℓ=5 — are these related to specific cell module morphisms?
 5. **DKC connection:** How does the tensor product structure of rad² constrain bracket computation?
+6. **CSS code distance:** What is the minimum weight of rad⊥\rad? This determines quantum error-correcting capability.
+
+## Demo 53: DKC at δ=1 (ℓ=3) — Binary Collapse — COMPLETE
+
+**File:** `knotapel/demo_53_dkc_d1/main.c`
+**Tests:** 59/59 pass
+
+### Key Results
+
+At δ=1 (ℓ=3), the bracket values collapse to **binary ±1 (times powers of A=ζ₆)**. The catalog has only 6 distinct values: {±1, ±ζ₆, ±ζ₆²}. Magnitudes are always exactly 1.
+
+**Why it's dead for DKC:** Binary values can't separate Boolean function inputs. A split-sigmoid on ±1 just gives constant outputs. k-sector MVN can only distinguish 6 angles (the 6th roots of unity directions), giving at best 6 distinct classification outcomes — not enough for interesting Boolean computation.
+
+**The two-source hypothesis:** DKC computation requires BOTH:
+1. Non-trivial radical (nilpotency, from Demo 52) — δ=1 has this ✓
+2. Rich bracket catalog (diverse representation) — δ=1 does NOT have this ✗
+
+δ=0 has rich catalog (100 values) but low nilpotency (ℓ=2). δ=1 has higher nilpotency but trivial catalog. δ=√2 (Demo 54) gets BOTH.
+
+### Axiality
+
+100% Z[ζ₆]-axial — all values are pure root-of-unity multiples of ±1.
+
+## Demo 54: DKC at δ=√2 (ℓ=4) — Z[i]-Axiality — COMPLETE
+
+**File:** `knotapel/demo_54_dkc_l4/main.c` (~1800 lines)
+**Tests:** 53/53 pass
+
+### Key Results
+
+At δ=√2 (ℓ=4), bracket values live in Z[ζ₁₆] but exhibit **100% Z[i]-axiality**: every value = (a+bi)·ζ₁₆^c for some Gaussian integer (a+bi) and axis c ∈ {0,1,...,7}. Verified across 89,426 braids (n=2 len 1-10, n=3 len 1-8, n=4 len 1-6).
+
+**Catalog:** 56 distinct nonzero bracket values (vs 100 at δ=0, vs 6 at δ=1).
+
+**Gaussian integer catalog structure:**
+- n=2: 8 distinct GIs, 4 negation pairs (ALL pair up)
+- n=3: 12 distinct GIs, 6 negation pairs (ALL pair up)
+- n=4: 15 distinct GIs, 7 negation pairs (one unpaired: (2-2i) missing (-2+2i))
+
+**Complete negation pairing** is algebraically forced: A⁸ = ζ₁₆⁴⁰ = -1, so adding 8 crossings negates the bracket.
+
+### Axiality Hierarchy
+
+| ℓ | δ | Ring | Axiality | Catalog | Ent. Vanish | DKC Richness |
+|---|---|------|----------|---------|-------------|-------------|
+| 2 | 0 | Z[ζ₈] | Z-axial | 100 | 100% | Rich (all 13 NPN at k=6) |
+| 3 | 1 | Z[ζ₆] | Z-axial | 6 | 0% | Dead (binary collapse) |
+| 4 | √2 | Z[ζ₁₆] | Z[i]-axial | 56 | 43.7% | **Richest** (all 13 NPN at k=2!) |
+
+**Entanglement vanishing** = % of non-interleaving n=4 braids (σ₁, σ₃ only) with zero bracket.
+- δ=0: 100% vanish (perfect entanglement detector)
+- δ=1: 0% vanish (all ±1, nothing is zero)
+- δ=√2: 43.7% vanish — partial preservation, interpolating between extremes
+
+## Demo 55: DKC Boolean Search at ℓ=4 — PARITY AT Re>0 — COMPLETE
+
+**File:** `knotapel/demo_55_dkc_boolean/main.c` (~1040 lines)
+**Tests:** 7/7 pass
+
+### THE HEADLINE RESULT
+
+**Re(z) > 0 — the simplest possible activation function — gives the MOST parity solutions (9,334) at δ=√2.**
+
+At δ=0, parity required k=6 MVN sectors (906 solutions). At δ=√2, a half-plane suffices. The root of unity removes the activation wall entirely.
+
+### Architecture
+
+- **Part A:** Build bracket catalog from state-sum (n=2 len 1-10, n=3 len 1-6, n=4 len 1-6)
+- **Part B:** 2-input multiplicative search: z(x₁,x₂) = w₁^x₁ · w₂^x₂, quartet = (1, w₂, w₁, w₁·w₂)
+- **Part C:** 3-input multiplicative search with NPN classification (13 non-trivial classes)
+- **Part D:** k-sector sweep analysis, comparison with δ=0
+
+### 2-Input Results (16 functions)
+
+8/16 achievable with any angle-based activation. Structural constraint: z(0,0)=1 always → activation fires or doesn't on 1 → bit 0 fixed → two complementary halves:
+- Re>0 gets: AND, PROJ_A, PROJ_B, OR, XNOR, A≥B, B≥A, TRUE (bit 0 = 1)
+- Sector/sigmoid gets: FALSE, A>B, B>A, XOR, NOR, NOT_A, NOT_B, NAND (bit 0 = 0)
+
+Together they cover all 16 functions.
+
+### 3-Input Results (13 NPN classes) — LANDMARK
+
+| Activation | Reachable | Parity | Notes |
+|-----------|-----------|--------|-------|
+| Re(z) > 0 | 11/13 | **9,334** | Simplest, most parity |
+| Im(z) > 0 | 12/13 | 3,114 | |
+| Split-sigmoid | 13/13 | 481 | All classes, least parity |
+| Sector k=2 | 13/13 | 5,314 | |
+| Sector k=4 | 13/13 | 6,712 | |
+| Sector k=6 | 13/13 | 5,314 | |
+| Sector k=8 | 13/13 | 8,000 | |
+| Magnitude τ=1.0 | 3/13 | 0 | Very weak |
+
+### Difficulty Hierarchy Reshuffling
+
+The computational landscape at δ=√2 is fundamentally different from δ=0:
+
+| Class | δ=0 split-sig | δ=√2 Re>0 | Change |
+|-------|--------------|-----------|--------|
+| XNOR3 (parity) | 0 (impossible) | 9,334 | **impossible → abundant** |
+| ~A(B^C) | 1,402,076 | 0 | **abundant → impossible** |
+| 3v-0x1B | 1,690,752 | 0 | **abundant → impossible** |
+| EXACT1 | 126,666 | 6,568 | hard → hard |
+
+Key observations:
+- Parity goes from the ONLY impossible class at δ=0 to mid-pack at δ=√2
+- Two mid-tier classes (~A(B^C), 3v-0x1B) become impossible at δ=√2 with Re>0
+- Split-sigmoid at δ=√2 reaches ALL 13 including those two, confirming they're algebraically available — only geometrically hidden from half-plane tests
+- The algebra and activation trade difficulty profiles: choose the activation to choose which functions are easy
+
+### The Principle
+
+**The root of unity is a computational resource.** Algebraic dimension (Z→Z[i]) substitutes for activation complexity (k=6→Re>0). The Gaussian integer lattice geometry at ℓ=4 does the computational heavy lifting that the activation function had to do at ℓ=2.
+
+### Trade-off Pattern
+
+Simple activations (Re>0, Im>0) miss 1-2 obscure classes but have MORE parity solutions. Complex activations (sector, sigmoid) get all 13 classes but with fewer parity solutions. The rich Gaussian integer geometry means you don't need activation complexity to separate.
+
+### The Two-Source Hypothesis — CONFIRMED
+
+DKC computation requires BOTH nilpotency AND representation diversity:
+- δ=0 (ℓ=2): Rich catalog (100 values) but minimal radical → parity needs k=6
+- δ=1 (ℓ=3): Deeper radical but binary catalog → dead zone
+- δ=√2 (ℓ=4): Rich catalog (56 values) AND non-trivial radical → parity at Re>0
+- Key: ℓ=4 is the sweet spot where both sources of computational power are present
+
+### Strict Dominance Result
+
+**δ=√2 strictly dominates δ=0 for split-sigmoid:** 13/13 NPN classes vs 12/13 (parity gained, nothing lost). This is a clean algebra-level result independent of activation choice.
+
+The Re>0 comparison is more nuanced (trades 2 obscure classes for 9,334 parity solutions), but that's an activation choice, not an algebra limitation — split-sigmoid at δ=√2 reaches all 13 classes.
+
+### Comparison with δ=0
+
+- δ=0: 100 catalog values, parity requires k=6 MVN (906 solutions)
+- δ=√2: 56 catalog values, parity with Re>0 half-plane (9,334 solutions)
+- The Z[i] structure provides ~10× the parity solution density of Z[ζ₈] despite having fewer catalog values
+- Encodings differ (additive at δ=0 vs multiplicative at δ=√2) — not directly comparable, but the structural parallels are striking
+
+### Open Questions for Future Sessions
+
+1. **ℓ=5 (δ=φ, Fibonacci anyons):** What is the axiality ring? Predict Z[ζ₅]-axial or something richer. This would extend the axiality hierarchy to the regime where topological quantum computation is universal.
+2. **Prove Z[i]-axiality theoretically:** We have 89,426 braids confirming it computationally. Can we prove it from the state-sum structure at ℓ=4?
+3. **Additive encoding at δ=√2:** Would remove the z(0,...,0)=1 constraint and potentially reach all 16 two-input functions. Lower priority — the multiplicative results already tell the story.
+4. **Difficulty hierarchy deeper analysis:** WHY are ~A(B^C) and 3v-0x1B invisible to half-plane activations? Is there a geometric reason in the Gaussian integer plane?
 
 ---
 *End of Explorer's Log*
