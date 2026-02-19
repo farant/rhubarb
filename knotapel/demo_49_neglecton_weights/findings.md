@@ -186,33 +186,52 @@ bias = 0
 
 **These are ALL elements of Z[zeta_8].** The weights (0,1,0,0), (0,0,1,0), and (-1,0,0,0) are in our standard catalog. The lattice contains parity-capable weights.
 
+### The k=2 Impossibility
+
+However, a simple k=2 half-plane classifier (Im(z) > 0 → 1, Im(z) ≤ 0 → 0) provably CANNOT compute 3-input parity with ANY complex weights, not just Z[zeta_8]:
+
+**Proof:** Let y1=Im(w1), y2=Im(w2), y3=Im(w3), d=-Im(b) > 0. XOR3 requires:
+- d > 0 (input 000 → class 0, so Im(b) < 0)
+- y1 > d, y2 > d, y3 > d (single inputs → class 1)
+- y1+y2 < d, y1+y3 < d, y2+y3 < d (pairs → class 0)
+
+But y1 > d and y2 > d implies y1+y2 > 2d > d. CONTRADICTION.
+
+This is the complex analog of Minsky-Papert: 3-input parity is not linearly separable by a half-plane in C.
+
+### What Aizenberg Actually Proves
+
+Aizenberg's parity construction requires k > 2 sectors. With k=2^n sectors (k=8 for n=3 inputs), a single MVN computes parity by mapping inputs to alternating sectors. The sector boundaries are at angles 2πj/k, and the classification is: sector number mod 2. The weights (zeta_8, i, -1) distribute the 8 input combinations across 8 equally-spaced sectors in alternating parity classes.
+
 ### Why Didn't Demo 47 Find This?
 
 Demo 47's MVN architecture is fundamentally different from Aizenberg's:
 - **Demo 47:** 3 inputs -> complex hidden neurons -> REAL output weights -> sigmoid -> threshold
-- **Aizenberg:** 3 inputs -> single complex neuron -> SECTOR-BASED classification (upper half-plane = 1, lower = 0)
+- **Aizenberg:** 3 inputs -> single complex neuron -> k-SECTOR classification (k=8 sectors, output = sector mod 2)
 
-The real output layer in Demo 47 destroys the angular information that Aizenberg's sector classifier preserves. Demo 47 also used trained (random-initialized) weights, not exhaustive search — the specific triple (zeta_8, i, -1) would only be found by accident.
+The real output layer in Demo 47 destroys the angular information that Aizenberg's sector classifier preserves. Demo 47 also used trained (random-initialized) weights, not exhaustive search.
 
 ### Reframing the Narrative
 
 The parity wall from Demos 48-49 is real but its interpretation must be refined:
 
 1. **The lattice Z[zeta_8] DOES contain parity-capable weights** — Aizenberg's construction proves this
-2. **The wall is in the activation function**, not the weight space
-3. Split-sigmoid and the standard bracket evaluation share the same limitation: they read magnitude/real-part information and discard angular structure
-4. **The radical/neglecton story** is about the bracket evaluation's information loss (zeroing out loops >= 2 states), which parallels split-sigmoid's information loss (projecting complex values onto real axes)
-5. **Sector-based classification** (Aizenberg's approach) reads the ANGLE directly — the one piece of information that both the bracket evaluation and split-sigmoid destroy
+2. **k=2 classification (half-plane) provably cannot compute parity** with any weights, not just bracket values
+3. **k=8 sector classification CAN compute parity** with Aizenberg's weights, which are in Z[zeta_8]
+4. **The wall is in the activation geometry**, not the weight space — specifically, the number of decision boundaries (sectors) determines which functions are computable
+5. Split-sigmoid is a rectangular partition of C (not angular sectors), which limits it differently from k-sector MVN
 
 ### Prediction for Demo 50
 
-Test: take the exact Z[zeta_8] catalog (100 standard values) as weights, compute z = w1*x1 + w2*x2 + w3*x3 + b for all 8 inputs, classify by SECTOR (arg(z) in [0,pi) -> 1, arg(z) in [pi,2pi) -> 0). Count which Boolean functions this computes.
-
-If parity is reachable under sector classification with standard bracket weights: the wall was never in the lattice. It was always in how we read the output.
+**Activation Function Zoo:** For each k from 2 to 8, exhaustively search the standard Z[zeta_8] catalog (100 values, no bias) with k-sector MVN classification. Report which NPN classes are computable at each k. Key predictions:
+- k=2: parity impossible (proven), threshold-type functions (AND, OR) should be reachable
+- k=8: parity should be reachable with the specific weights (zeta_8, i, -1)
+- There exists some minimum k* where parity first becomes computable with Z[zeta_8] weights
+- The per-NPN-class minimum sector count maps the Boolean function hierarchy onto activation geometry
 
 ## 7. Tower Scroll Summary
 
-Demo 49 tested the neglecton prediction by constructing a dual Kauffman bracket evaluation that extracts radical contributions (loops=2 smoothing states) as exact Z[zeta_8] values scaled by factor 4. The 148 new distinct values from 15,242 previously invisible braids, combined with 100 standard values into a 216-value catalog, were exhaustively searched across 2.18 billion quartets. Parity (XNOR3) remains unreachable — zero solutions. The 116 genuinely new neglecton values introduce zero new angles in the complex plane, closing the perturbation approach at all orders: every Cyc8 element produced by any order of bracket perturbation has the same angular structure as the standard catalog. However, Aizenberg's known parity construction uses weights that ARE in Z[zeta_8], revealing that the wall is in the activation function (split-sigmoid), not the weight space. The next demo should test sector-based classification with exact bracket values.
+Demo 49 tested the neglecton prediction by constructing a dual Kauffman bracket evaluation that extracts radical contributions (loops=2 smoothing states) as exact Z[zeta_8] values scaled by factor 4. The 148 new distinct values from 15,242 previously invisible braids, combined with 100 standard values into a 216-value catalog, were exhaustively searched across 2.18 billion quartets. Parity (XNOR3) remains unreachable — zero solutions. The 116 genuinely new neglecton values introduce zero new angles in the complex plane, closing the perturbation approach at all orders. However, Aizenberg's known parity construction uses weights that ARE in Z[zeta_8] — but requires k=8 sector classification, not k=2 half-plane (which provably cannot compute 3-input parity with any weights). The wall is in the activation geometry (number of sectors), not the weight space. The next demo should map which Boolean functions become computable at each sector count k=2..8 with exact bracket values.
 
 ## Architecture
 
