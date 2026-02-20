@@ -6,11 +6,9 @@ Generated 2026-02-20. Informed by synthesis documents (narrative, novelty, conne
 
 ## Tier 1: Do Next
 
-### 1.1 Formal proof of the sandwich theorem
-**What:** Prove that rad^2(TL_{2k}(0)) is isomorphic to TL_{2k-1}(0) using Graham-Lehrer cellularity plus explicit cell-module bilinear form computation. Write it up proof-quality.
-**Why:** This is the strongest novel algebra result (HIGH confidence novelty) but currently only a computational observation at n=4,6,8. A formal proof turns Paper 3 from "computational discovery" to "theorem," which is the difference between a short note and a substantial publication.
-**Effort:** SMALL (1 demo — mostly pen-and-paper with verification code).
-**Unblocks:** Paper 3 (Sandwich + Radical Anatomy). Also strengthens the TL non-semisimplicity explanation for the parity wall.
+### ~~1.1 Formal proof of the sandwich theorem~~ — PARTIALLY DONE
+The **radical dimension formula** (rad(TL_ℓ) = 2ℓ−3) is now formally proven in `proofs/radical-dimension-formula.md`. Method: Graham-Lehrer cellular theory, unique degenerate cell module V_{ℓ-2} with corank 1, Chebyshev determinant. Corollary: ℓ²−ℓ−3 at n=ℓ+1.
+**Remaining:** The full sandwich theorem (rad^2(TL_{2k}(0)) ≅ TL_{2k-1}(0) as algebras) is a stronger claim than the dimension formula. The proof proves dimensions match; the algebra isomorphism still needs formal proof. Also: nilpotency=3 and Fibonacci rank remain computationally verified, not proven.
 
 ### 1.2 4-input parity: test the triskelion generalization
 **What:** Extend the forward DKC pipeline to 4-input Boolean functions (222 NPN classes). Search for parity (XOR4) under k-sector activations. Does parity require k=8 sectors as the triskelion generalization (k=2n) predicts?
@@ -129,8 +127,11 @@ Paper 2 submission
 The shortest path to Paper 3 (radical anatomy):
 
 ```
-1.1 (sandwich proof) --> [2.1 ell=7 DONE]
-                              |
-                              v
-                       Paper 3 submission
+[1.1 rad dim formula PROVEN] --> [2.1 ell=7 DONE]
+         |
+         v
+  1.1 remaining (algebra isomorphism, nilpotency, Fibonacci rank)
+         |
+         v
+  Paper 3 submission
 ```

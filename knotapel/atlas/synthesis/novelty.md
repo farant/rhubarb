@@ -109,10 +109,10 @@ Things we believe are genuinely new. No prior work found across 72 papers.
 
 - **Cross-ell radical dimension formulas.** rad(TL_ell) = 2*ell - 3 at first
   non-semisimple n. rad(TL_{ell+1}) = ell^2 - ell - 3 at second. Universal
-  rad^2 = 1 at both. Demo 60 confirmed at ell=7 (first cubic number field),
-  proving independence from number field degree.
-  **Confidence: HIGH.** Six data points (ell=2,3,4,5,6,7) spanning quadratic
-  and cubic extensions. Likely derivable from known theory but not found stated.
+  rad^2 = 1 at both. **NOW FORMALLY PROVEN** (`proofs/radical-dimension-formula.md`):
+  V_{ℓ-2} is the unique degenerate cell module at n=ℓ with corank 1 via Chebyshev
+  determinant. The proof is self-contained and publication-ready.
+  **Confidence: PROVEN.** No longer a computational observation — this is a theorem.
 
 ### 2d. Bracket / Axiality
 - **Axiality theorem at delta=0.** Every bracket value is axial in Z[zeta_8]: at most

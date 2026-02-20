@@ -171,12 +171,12 @@ Each step is grounded in established mathematics. The assembly is novel.
 - The split-sigmoid parity wall: XNOR3 has exactly 0 solutions out of 100M quartets (Demo 48) and 0 out of 2.18B with neglecton expansion (Demo 49).
 - MVN k=6 resolves parity: 906 solutions with the triskelion geometry (Demo 50).
 - The 11/13 half-plane theorem: analytical proofs that 0x06 and 0x1B are unreachable by any semicircle activation on multiplicative encodings (Demo 62).
+- Cross-ell radical dimension formulas: rad(TL_ell) = 2*ell - 3 and rad(TL_{ell+1}) = ell^2-ell-3. **FORMALLY PROVEN** via Graham-Lehrer cellular theory (`proofs/radical-dimension-formula.md`).
 - Universal nilpotency 3: rad^3 = 0 for TL_n at all tested roots of unity (Demo 52).
 - The Sandwich Theorem: rad^2(TL_{2k}(0)) is isomorphic to TL_{2k-1}(0) (Demo 51).
 
 **What is computationally verified but not analytically proven:**
 - The axiality theorem at delta=0 (131K braids, zero counterexamples).
-- Cross-ell radical dimension formulas: rad(TL_ell) = 2*ell - 3 (six data points, including first cubic number field at ell=7).
 - Fibonacci rank of rad^2 generator = F(ell-1) (five data points, through F(6)=8 at ell=7).
 - The Catalan trace theorem and window formula.
 - The incommensurability hypothesis (parity solutions anti-correlate with gcd(k,8)).

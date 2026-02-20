@@ -120,11 +120,12 @@ These directly address the strengthening actions and open questions identified i
 - Priority: **HIGH** -- the 906 parity solutions claim depends on catalog completeness; Paper 1's main weakness
 - Addresses: strengthening action #4 (catalog completeness argument)
 
-### D65 -- Sandwich Theorem Formal Proof
-- Rigorous proof that rad^2(TL_{2k}(0)) is isomorphic to TL_{2k-1}(0) as an algebra; likely via cellular algebra theory + explicit cell module bilinear form computation
+### D65 -- Sandwich Theorem Formal Proof — PARTIALLY DONE
+- **Radical dimension formula PROVEN** (`proofs/radical-dimension-formula.md`): rad(TL_ℓ) = 2ℓ−3 via Graham-Lehrer cellular theory + Chebyshev determinant. Corollary: ℓ²−ℓ−3 at n=ℓ+1.
+- **Remaining**: Full sandwich theorem (rad^2(TL_{2k}(0)) ≅ TL_{2k-1}(0) as *algebras*), nilpotency=3 formal proof, Fibonacci rank formal proof.
 - Dependencies: D51 (done), D52 (done)
-- Priority: **HIGH** -- required for Paper 3 (radical anatomy); currently proof-sketch only
-- Addresses: strengthening action #3 (formal proof of sandwich theorem)
+- Priority: **HIGH** -- dimension formula is proven; algebra isomorphism and nilpotency still needed for Paper 3
+- Addresses: strengthening action #3 (partially complete)
 
 ### D66 -- Nazer-Gastpar Rate Region for DKC
 - Apply compute-and-forward capacity bounds to the DKC lattice; how many bits per bracket value can DKC extract?
@@ -145,7 +146,7 @@ These directly address the strengthening actions and open questions identified i
 ### HIGH (do these first -- direct publication impact)
 1. **D63** -- 4-Input DKC. Tests triskelion generalization. Paper 1 strengthener.
 2. **D64** -- Catalog Completeness Bound. Paper 1 weakness fix.
-3. **D65** -- Sandwich Theorem Proof. Paper 3 requirement.
+3. **D65** -- Sandwich Theorem Proof. **Radical dim formula PROVEN**; algebra isomorphism remaining.
 
 ### MEDIUM (do next -- strengthen claims or open new connections)
 4. **D66** -- Nazer-Gastpar Rate Region. Paper 1 pillar strengthener.

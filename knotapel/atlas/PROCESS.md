@@ -4,7 +4,7 @@ The atlas is an organized synthesis of all knotapel research. It is regenerated 
 
 ## Principles
 
-- **Readonly outside atlas/**: Defrag agents READ from demo dirs, explorer's log, research/, future-demos/. They WRITE only to atlas/. Nothing outside atlas/ is ever modified.
+- **Readonly outside atlas/**: Defrag agents READ from demo dirs, proofs/, explorer's log, research/, future-demos/. They WRITE only to atlas/. Nothing outside atlas/ is ever modified.
 - **Inventory vs Synthesis**: Some artifacts are pure extraction ("what do we have"), others are interpretation ("what does it mean"). Both are necessary.
 - **Repeatable**: The process can be re-run. Incremental updates are preferred (check demo-index.md for what's already cataloged), but full rebuilds are fine too.
 - **Parallelizable**: Phases 1 and 2 split across agents. Phases 3-5 are sequential.
@@ -18,6 +18,7 @@ atlas/
 
   inventory/                    <- "what do we have"
     demo-index.md               <- every demo, standardized entry
+    proofs-index.md             <- formal proofs with status and cross-references
     theorems.md                 <- all proven/conjectured results + status
     data-tables.md              <- key numerical tables
     code-assets.md              <- reusable code patterns across demos
@@ -41,12 +42,22 @@ atlas/
     vision.md                   <- long-term directions, application vision, architectural ideas
 ```
 
+## Sources
+
+The defrag reads from these directories (all readonly during defrag):
+
+- `demo_*/` — Demo source code and findings
+- `proofs/` — Formal mathematical proofs (*.md). Each proof upgrades a result from VERIFIED/CONJECTURED to PROVEN in the atlas. Proofs should be indexed in `inventory/proofs-index.md` and propagated to theorems.md, narrative.md, novelty.md, and next-priorities.md.
+- `future-demos/` — Proposed demo ideas with dependencies
+- `research/` — External literature notes (read by Phase 2 literature agent)
+- `explorers-log.md` — Running research log
+
 ## Phases
 
 ### Phase 1: Inventory Extraction (parallelizable)
 
-**Input**: Each demo's main.c, findings.md, README.md, and any other .md files in the demo dir.
-**Output**: Entries appended to `inventory/demo-index.md`.
+**Input**: Each demo's main.c, findings.md, README.md, and any other .md files in the demo dir. Also: new files in `proofs/`.
+**Output**: Entries appended to `inventory/demo-index.md`. New proofs indexed in `inventory/proofs-index.md`.
 
 Each demo gets a standardized entry:
 
@@ -133,17 +144,46 @@ The fast-onboarding document. Read this on every cold start. Contains:
 - Current frontier (what we just proved, what's next)
 - Pointers to deeper reading
 
+## Phase 0: Change Detection (always run first)
+
+Before any defrag work, run a git-based change scan to identify what needs updating:
+
+```bash
+# 1. What's changed since last defrag commit?
+git diff --stat <last-defrag-commit>..HEAD -- demo_* proofs/ future-demos/ explorers-log.md
+
+# 2. What's new/untracked?
+git status -s -- demo_* proofs/ future-demos/
+
+# 3. Recent commits touching demo/proof dirs (human-readable)
+git log --oneline <last-defrag-commit>..HEAD -- demo_* proofs/
+```
+
+This produces three categories of work:
+
+| Category | Example | Action |
+|----------|---------|--------|
+| **New demo dirs** | `?? demo_63_four_input/` | Phase 1: create new entry |
+| **New non-demo dirs** | `?? proofs/something.md` | Phase 1: index in appropriate file |
+| **Modified existing demos** | `M demo_51_radical_anatomy/main.c` | Phase 1: RE-READ and update existing entry |
+| **No changes** | (nothing) | Skip defrag |
+
+The "modified existing demo" case is the one the old process missed — if someone adds tests, fixes bugs, or extends results in an already-cataloged demo, the entry needs updating. The git diff tells you exactly which entries are stale.
+
+**Recording the baseline:** After each defrag, note the HEAD commit hash in the defrag history table. This becomes `<last-defrag-commit>` for the next run.
+
 ## Re-running the Defrag
 
-1. Check `inventory/demo-index.md` for the last demo cataloged.
-2. Run Phase 1 on NEW demos only (or full rebuild if structure changed).
+1. **Run Phase 0** (change detection) to identify new, modified, and untracked items.
+2. Run Phase 1 on NEW items (create entries) and MODIFIED items (update existing entries).
 3. Re-run Phase 2 (full rebuild — these are fast).
 4. Re-run Phase 3-5 (synthesis always needs refresh with new data).
-5. Update this section with the date of last defrag.
+5. Update defrag history with date, commit hash, and notes.
 
 ## Defrag History
 
-| Date | Demos Covered | Notes |
-|------|---------------|-------|
-| 2026-02-20 | 01-62 | Initial defrag. Worker pool for Phase 1 (4 agents, 1 demo each). Phase 2 duplication issue fixed by merging. Phase 3 agent drafts + review worked well. |
-| 2026-02-20 | +38,39,60 | Incremental defrag. 3 missed demos cataloged. Phase 1: 3 parallel agents. Phase 2: 4 parallel agents (incremental updates). Phase 3-5: targeted edits (not full rebuilds). ell=7 moved from "next" to "done" across all docs. |
+| Date | Commit | Demos Covered | Notes |
+|------|--------|---------------|-------|
+| 2026-02-20 | — | 01-62 | Initial defrag. Worker pool for Phase 1 (4 agents, 1 demo each). Phase 2 duplication issue fixed by merging. Phase 3 agent drafts + review worked well. |
+| 2026-02-20 | — | +38,39,60 | Incremental defrag. 3 missed demos cataloged. Phase 1: 3 parallel agents. Phase 2: 4 parallel agents (incremental updates). Phase 3-5: targeted edits (not full rebuilds). ell=7 moved from "next" to "done" across all docs. |
+| 2026-02-20 | `1548c73` | +proofs/ | First proof ingestion. Created proofs-index.md. Radical dimension formula (2ℓ−3) upgraded from VERIFIED→PROVEN. D65 marked partially done. Phase 0 (git change detection) added to process. |

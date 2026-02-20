@@ -435,10 +435,10 @@ Updated 2026-02-20: Added results from Demos 38 (dimension reduction), 39 (symme
 ## 6. Cross-ell Universality
 
 ### Cross-ell Radical Dimension Formulas
-- **Statement:** At the first non-semisimple n (n=ell): rad(TL_ell(2cos(pi/ell))) = 2*ell - 3. At the second non-semisimple n (n=ell+1): rad(TL_{ell+1}) = ell^2 - ell - 3 for ell >= 3.
-- **Status:** COMPUTATIONALLY VERIFIED (ell=2,3,4,5,6,7 — six data points, including first cubic number field at ell=7: rad(TL_7)=11=2*7-3, rad(TL_8)=39=49-7-3)
-- **Demo provenance:** Demo 52, Demo 60 (ell=7), explorer's log
-- **Significance:** NOVEL explicit formulas. Not found in existing literature. ell=7 confirmation extends validity beyond quadratic number fields into cubic.
+- **Statement:** At the first non-semisimple n (n=ell): rad(TL_ell(2cos(pi/ell))) = 2*ell - 3 for all ell >= 2. At the second non-semisimple n (n=ell+1): rad(TL_{ell+1}) = ell^2 - ell - 3 for all ell >= 3.
+- **Status:** **PROVEN** (formal proof in `proofs/radical-dimension-formula.md`). Method: Graham-Lehrer cellular algebra theory — V_{ℓ-2} is the unique degenerate cell module at n=ℓ with corank 1 via Chebyshev determinant U_{ℓ-1}(cos(π/ℓ))=0. Contribution: 1·(2(ℓ-1)−1) = 2ℓ−3. Corollary derives ℓ²−ℓ−3 at n=ℓ+1. Computationally verified at ell=2..7.
+- **Demo provenance:** Demo 52, Demo 60 (ell=7), explorer's log. **Proof:** `proofs/radical-dimension-formula.md`
+- **Significance:** NOVEL. First formal proof of these formulas. The proof identifies V_{ℓ-2} as the unique degenerate cell module — a structural result stronger than the formula alone.
 
 ### Universal rad^2 = 1 at First Non-Semisimple Pair
 - **Statement:** rad^2 = 1 at n=ell and n=ell+1 for all ell >= 3 tested.
@@ -448,8 +448,8 @@ Updated 2026-02-20: Added results from Demos 38 (dimension reduction), 39 (symme
 
 ### Gram Rank at n=ell
 - **Statement:** Gram rank of TL_ell at delta=2cos(pi/ell) equals C_ell - (2*ell - 3).
-- **Status:** COMPUTATIONALLY VERIFIED (ell=2,3,4,5,6,7; ell=7: rank=429-11=418)
-- **Demo provenance:** Demo 52, Demo 60 (ell=7)
+- **Status:** **PROVEN** (immediate corollary of the radical dimension formula, now formally proved)
+- **Demo provenance:** Demo 52, Demo 60 (ell=7). Proof: corollary of `proofs/radical-dimension-formula.md`
 - **Significance:** Immediate corollary of radical dimension formula
 
 ### Semisimplicity Criterion
@@ -609,7 +609,7 @@ Jones polynomial (writhe-normalized bracket) is invariant under all three Reidem
 2. Sandwich theorem — algebra-level rad^2 identification (Demo 51)
 3. Catalan trace theorem and window formula (Demo 51)
 4. Fibonacci rank theorem, now verified through cubic number fields (Demo 52 session, Demo 60)
-5. Cross-ell radical dimension formulas: 2ell-3, ell^2-ell-3, now verified at 6 ell values including cubic (Demo 52, Demo 60)
+5. Cross-ell radical dimension formulas: 2ell-3, ell^2-ell-3 — **FORMALLY PROVEN** (`proofs/radical-dimension-formula.md`)
 6. Forward DKC — bracket values compute Boolean functions (Demo 29)
 7. Four-tier NPN hierarchy by sector count (Demo 50)
 8. 11/13 half-plane theorem with analytical proofs (Demos 61, 62)

@@ -34,15 +34,16 @@ lattices = exact computation). Each step is published; the intersection is unocc
 
 ## Current Frontier
 
-Most recent landmarks: Demos 61-62 proved the 11/13 theorem analytically (interval-squeeze
-for 0x1B, parallelogram for 0x06), ring-independent across ell=4,5,6. Demo 60 confirmed all
-radical anatomy formulas at ell=7 (first cubic number field): rad=11, Fibonacci rank=F(6)=8,
-nilpotency=3, rad^2=1-dimensional. Universality holds beyond quadratic extensions. Demo 50
-resolved the parity wall: the lattice always had what parity needed; split-sigmoid could not.
+Most recent landmarks: The radical dimension formula rad(TL_ℓ) = 2ℓ−3 is now **formally
+proven** (`proofs/radical-dimension-formula.md`) via Graham-Lehrer cellular theory — V_{ℓ-2}
+is the unique degenerate cell module with corank 1. Demos 61-62 proved the 11/13 theorem
+analytically. Demo 60 confirmed all radical formulas at ell=7 (first cubic number field).
+Demo 50 resolved the parity wall: the lattice always had what parity needed; split-sigmoid
+could not.
 
 **Next (Tier 1 priorities):**
-1. **Sandwich theorem formal proof** -- turn computational observation into rigorous
-   theorem via Graham-Lehrer cellularity. Small effort. Unlocks Paper 3.
+1. **Sandwich theorem formal proof** -- radical dimension formula PROVEN; remaining:
+   algebra isomorphism, nilpotency=3, Fibonacci rank. Small-medium effort. Unlocks Paper 3.
 2. **4-input parity** -- does XOR4 require k=8 sectors? Tests triskelion generalization
    (k=2n). Medium effort. Second data point for a structural law. Unlocks Paper 1.
 3. **Catalog completeness bound** -- prove the 100-value catalog contains all bracket
@@ -52,7 +53,7 @@ resolved the parity wall: the lattice always had what parity needed; split-sigmo
 
 - Research narrative: `atlas/synthesis/narrative.md` | Four-lens analysis: `atlas/synthesis/four-lenses.md`
 - Cross-demo connections: `atlas/synthesis/connections.md` | Novelty: `atlas/synthesis/novelty.md`
-- Demo inventory: `atlas/inventory/demo-index.md` | Theorems: `atlas/inventory/theorems.md`
+- Demo inventory: `atlas/inventory/demo-index.md` | Theorems: `atlas/inventory/theorems.md` | Proofs: `atlas/inventory/proofs-index.md`
 - Literature: `atlas/research/literature-index.md`
 - Next priorities: `atlas/planning/next-priorities.md` | Future demos: `atlas/planning/future-demos.md`
 - Open questions: `atlas/planning/research-questions.md` | Vision: `atlas/planning/vision.md`
