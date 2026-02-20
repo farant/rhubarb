@@ -65,7 +65,7 @@ typedef struct {
  * Modular Arithmetic
  * ================================================================ */
 
-static long g_mod_p = 1000000007L;
+static long g_mod_p = 1000002361L;  /* p ≡ 1 mod 840: all roots exist */
 
 static long mod_reduce(long x) {
     long r = x % g_mod_p;
@@ -93,11 +93,12 @@ static long mod_pow(long base, long exp) {
     return result;
 }
 
-/* Tonelli-Shanks: sqrt(n) mod p */
+/* Tonelli-Shanks: sqrt(n) mod p.  Returns -1 if n is a non-residue. */
 static long mod_sqrt(long n) {
     long S, Q, z, M, c, t, R;
     n = mod_reduce(n);
     if (n == 0) return 0;
+    if (mod_pow(n, (g_mod_p - 1) / 2) != 1) return -1;
     if (g_mod_p % 4 == 3)
         return mod_pow(n, (g_mod_p + 1) / 4);
     S = 0; Q = g_mod_p - 1;
@@ -572,6 +573,26 @@ static int compute_cell_gram_rank(
 
             cell_gram[ui * n_unique + uj] =
                 (rts == j) ? dpow[loops] : 0;
+        }
+    }
+
+    /* Debug: print cell Gram for small cases */
+    if (n_unique <= 6) {
+        int ri, ci;
+        printf("      Cell Gram (%dx%d) for j=%d:\n", n_unique, n_unique, j);
+        printf("      n_unique_left=%d (expect d=%d)\n",
+               n_unique, cell_module_dim(n, j));
+        for (ri = 0; ri < n_unique; ri++) {
+            printf("      ");
+            for (ci = 0; ci < n_unique; ci++)
+                printf(" %4ld", cell_gram[ri * n_unique + ci]);
+            printf("\n");
+        }
+        /* Check for missing basis elements */
+        for (ui = 0; ui < n_unique; ui++) {
+            if (b_for_left[ui] < 0)
+                printf("      WARNING: left state %d has no"
+                       " basis with ref right!\n", ui);
         }
     }
 
@@ -1113,14 +1134,18 @@ int main(void) {
     }
 
     /* ===========================================================
-     * Part G: Per-Cell-Module Gram Data at n = ell
+     * Part G: Three Gram Forms at n = ell
      *
      * At the critical boundary n = ell, where delta = 2cos(pi/ell),
-     * report per-sector Gram rank. This is where semisimplicity
-     * first fails (Graham-Lehrer: semisimple iff n < ell).
+     * compare three bilinear forms:
+     *   1. Fixpt (regular trace): B(a,b) = sum_{k:ab(k)=k} d^loops
+     *   2. Markov trace: B_M(a,b) = d^{inner_loops + closure_loops}
+     *   3. Cell module Gram: d(n,j) x d(n,j), the Graham-Lehrer form
+     *
+     * Graham-Lehrer: TL_n(d) is semisimple iff n < ell.
      * =========================================================== */
 
-    printf("======== Part G: Gram Data at n=ell Boundary ========\n\n");
+    printf("======== Part G: Three Gram Forms at n=ell ========\n\n");
     {
         int ells[] = {2, 3, 4, 5, 6, 7};
         long dvals[6];
@@ -1129,6 +1154,7 @@ int main(void) {
         int li;
         long delta_sqrt3 = mod_sqrt(3);
         long delta_l7 = find_l7_root();
+        int cl_buf[MAX_BASIS];
 
         dvals[0] = 0;
         dvals[1] = 1;
@@ -1147,7 +1173,7 @@ int main(void) {
             long dv = dvals[li];
             long dpow_g[MAX_LOOPS + 1];
             long fixpt_g[MAX_BASIS];
-            int s, total_rank = 0, total_dim = 0;
+            int s, i_elem, max_cl;
 
             if (dv < 0 && ell == 7) {
                 printf("  ell=%d: SKIPPED (root not found)\n\n", ell);
@@ -1161,76 +1187,116 @@ int main(void) {
             classify_sectors(&alg, n_through,
                              sectors, sect_count, &n_sectors);
 
-            make_dpow(dv, alg.max_loops, dpow_g);
+            /* Precompute closure loops for all basis elements */
+            max_cl = 0;
+            for (i_elem = 0; i_elem < alg.dim; i_elem++) {
+                cl_buf[i_elem] =
+                    closure_loops(&alg.basis[i_elem], ell);
+                if (cl_buf[i_elem] > max_cl)
+                    max_cl = cl_buf[i_elem];
+            }
+
+            /* dpow must cover combined loops (inner + closure) */
+            {
+                int max_total = alg.max_loops + max_cl;
+                if (max_total > MAX_LOOPS) max_total = MAX_LOOPS;
+                make_dpow(dv, max_total, dpow_g);
+            }
             compute_fixpt(&alg, dpow_g, fixpt_g);
 
-            printf("    j  | d(n,j) | |V_j|=d^2 | Gram rank"
-                   " | status\n");
-            printf("    ---|--------|-----------|----------"
-                   "-|-------\n");
+            /* Per-sector table: three Gram forms */
+            printf("    j  | d(n,j) | d^2 |"
+                   " fixpt_rk | markov_rk | cell_rk / d\n");
+            printf("    ---|--------|-----|"
+                   "----------|-----------|------------\n");
 
             for (s = 0; s < n_sectors; s++) {
                 int j = sectors[s];
                 int d = cell_module_dim(ell, j);
                 int elems[MAX_BASIS];
-                int n_elems, srank;
-                const char *status;
+                int n_elems, fixpt_rk, markov_rk, cell_rk;
 
                 n_elems = collect_sector(n_through, alg.dim,
                                          j, elems);
 
                 if (n_elems > MAX_SECTOR) {
-                    printf("    %-3d| %-7d| %-10d| SKIP\n",
+                    printf("    %-3d| %-7d| %-4d| SKIP\n",
                            j, d, n_elems);
                     continue;
                 }
 
+                /* 1. Fixpt (regular trace) sector Gram rank */
                 build_gram_sub(&alg, fixpt_g, dpow_g,
                                elems, n_elems, g_sub_gram);
-                srank = compute_rank(g_sub_gram, n_elems);
-                total_rank += srank;
-                total_dim += n_elems;
+                fixpt_rk = compute_rank(g_sub_gram, n_elems);
 
-                if (srank == n_elems) status = "LIVE";
-                else if (srank == 0) status = "DEAD";
-                else status = "DEGEN";
+                /* 2. Markov trace sector Gram rank */
+                build_markov_gram(&alg, dpow_g, cl_buf,
+                                  elems, n_elems, g_sub_gram);
+                markov_rk = compute_rank(g_sub_gram, n_elems);
 
-                printf("    %-3d| %-7d| %-10d| %-10d| %s",
-                       j, d, n_elems, srank, status);
-                if (srank > 0 && srank < n_elems)
-                    printf(" (deficit %d)", n_elems - srank);
+                /* 3. Cell module Gram rank (d x d matrix) */
+                cell_rk = compute_cell_gram_rank(
+                    &alg, dpow_g, n_through, j, ell);
+
+                printf("    %-3d| %-7d| %-4d|"
+                       " %-9d| %-10d| %d / %d",
+                       j, d, n_elems,
+                       fixpt_rk, markov_rk, cell_rk, d);
+                if (cell_rk < d)
+                    printf("  DEGEN(rad=%d)", d - cell_rk);
                 printf("\n");
             }
 
-            printf("    ---|--------|-----------|----------"
-                   "-|-------\n");
-            printf("    sum of sector ranks: %d / %d\n",
-                   total_rank, total_dim);
+            printf("    ---|--------|-----|"
+                   "----------|-----------|------------\n");
 
-            /* Full Gram rank (accounts for cross-sector coupling) */
+            /* Full Gram ranks (all sectors together) */
             {
                 int all_elems[MAX_BASIS];
-                int full_rank, coupling, i_elem;
+                int full_fixpt, full_markov;
 
                 for (i_elem = 0; i_elem < alg.dim; i_elem++)
                     all_elems[i_elem] = i_elem;
 
+                /* Full fixpt Gram */
                 build_gram_sub(&alg, fixpt_g, dpow_g,
                                all_elems, alg.dim, g_full_gram);
-                full_rank = compute_rank(g_full_gram, alg.dim);
-                coupling = total_rank - full_rank;
+                full_fixpt = compute_rank(g_full_gram, alg.dim);
 
-                printf("    full Gram rank: %d / %d\n",
-                       full_rank, total_dim);
-                if (coupling > 0)
-                    printf("    cross-sector coupling: %d\n",
-                           coupling);
-                printf("    radical dim = %d",
-                       total_dim - full_rank);
-                if (full_rank == total_dim)
-                    printf(" (SEMISIMPLE)");
-                printf("\n\n");
+                /* Full Markov Gram */
+                build_markov_gram(&alg, dpow_g, cl_buf,
+                                  all_elems, alg.dim,
+                                  g_full_gram);
+                full_markov = compute_rank(g_full_gram, alg.dim);
+
+                printf("    full ranks: fixpt=%d, markov=%d"
+                       " / %d\n",
+                       full_fixpt, full_markov, alg.dim);
+                if (full_fixpt == alg.dim
+                    && full_markov < alg.dim)
+                    printf("    ** fixpt says semisimple but"
+                           " markov detects radical! **\n");
             }
+
+            /* Test: Graham-Lehrer predicts non-semisimple
+             * at n = ell (since n >= ell) */
+            if (ell >= 3) {
+                int any_cell_degen = 0;
+                for (s = 0; s < n_sectors; s++) {
+                    int j = sectors[s];
+                    int d = cell_module_dim(ell, j);
+                    int cr = compute_cell_gram_rank(
+                        &alg, dpow_g, n_through, j, ell);
+                    if (cr < d) any_cell_degen = 1;
+                }
+                sprintf(msg,
+                    "ell=%d: cell module detects non-semisimple"
+                    " at n=ell (Graham-Lehrer)", ell);
+                check(msg, any_cell_degen);
+            }
+
+            printf("\n");
         }
     }
 

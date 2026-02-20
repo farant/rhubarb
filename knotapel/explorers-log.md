@@ -1503,4 +1503,93 @@ The sector structure determines the **ceiling** of what's computationally possib
 18/18 tests passed, 0 failed.
 
 ---
+
+## Demo 39 Part G: Three Gram Forms at n=ℓ — MILESTONE
+
+**Date:** 2026-02-20
+
+### The Problem
+
+At the "critical boundary" n=ℓ where δ=2cos(π/ℓ), the Graham-Lehrer criterion says TL_n is non-semisimple. We need to detect this computationally and measure the radical.
+
+### Three Bilinear Forms
+
+We implemented three distinct Gram forms:
+1. **Fixpt (regular trace):** B(a,b) = Σ_{k:ab(k)=k} δ^loops — the form used in all previous demos
+2. **Markov trace:** B_M(a,b) = δ^{inner_loops + closure_loops}
+3. **Cell module Gram:** d(n,j) × d(n,j) matrix — the Graham-Lehrer bilinear form on cell modules V_j
+
+### Critical Bug & Fix
+
+Initially ℓ=5 showed full rank (0 radical). Root cause: **p=10^9+7 has 5 as a quadratic non-residue.** `mod_sqrt(5)` was returning √(-5), making the golden ratio φ garbage. Changed to p=1000002361 (≡1 mod 840), which guarantees all roots of unity for ℓ=2..7 exist in GF(p). Also added QR check to `mod_sqrt`.
+
+### Results: 23/23 tests pass
+
+**Cell module Gram data at n=ℓ:**
+
+| ℓ | δ | Degen module | dim | cell_rk | corank | rad = k(2d-k) |
+|---|---|-------------|-----|---------|--------|---------------|
+| 2 | 0 | V₀ | 1 | 0 | 1 | 1 |
+| 3 | 1 | V₁ | 2 | 1 | 1 | 3 |
+| 4 | √2 | V₂ | 3 | 2 | 1 | 5 |
+| 5 | φ | V₃ | 4 | 3 | 1 | 7 |
+| 6 | √3 | V₄ | 5 | 4 | 1 | 9 |
+| 7 | 2cos(π/7) | V₅ | 6 | 5 | 1 | 11 |
+
+**Pattern: V_{ℓ-2} is the UNIQUE degenerate cell module, always with corank 1. rad(TL_ℓ) = 2ℓ-3.**
+
+**Full Gram ranks:**
+
+| ℓ | dim | fixpt_rk | Markov_rk | fixpt_rad | Markov_rad |
+|---|-----|----------|-----------|-----------|------------|
+| 2 | 2 | 1 | 0 | 1 | 2 |
+| 3 | 5 | 2 | 1 | 3 | 4 |
+| 4 | 14 | 9 | 8 | 5 | 6 |
+| 5 | 42 | 35 | 34 | 7 | 8 |
+| 6 | 132 | 123 | 122 | 9 | 10 |
+| 7 | 429 | 418 | 417 | 11 | 12 |
+
+**Patterns:**
+- fixpt_rad = 2ℓ-3 (matches cell module prediction exactly)
+- Markov_rad = 2ℓ-2 (always 1 more than fixpt — Markov detects an extra dimension)
+
+### THEOREM (Explorer's Proof)
+
+**Theorem.** For all ℓ ≥ 2, rad(TL_ℓ(2cos(π/ℓ))) = 2ℓ - 3.
+
+**Proof sketch:**
+1. V_{ℓ-2} has dim = ℓ-1. Its basis: half-diagrams h_i with single adjacent arc (i,i+1).
+2. Cell Gram is tridiagonal: G_{ii}=δ, G_{i,i±1}=1, G_{ij}=0 for |i-j|≥2.
+   (Forced by planarity: non-adjacent arcs would enclose through-strands.)
+3. det(G) = U_{ℓ-1}(δ/2) = sin(ℓπ/ℓ)/sin(π/ℓ) = 0 (Chebyshev).
+4. Leading minor: U_{ℓ-2}(δ/2) = sin((ℓ-1)π/ℓ)/sin(π/ℓ) = 1 ≠ 0. Corank = 1.
+5. Uniqueness: For j < ℓ-2, max quantum integer index in Gram det formula is (ℓ+j+2)/2 < ℓ, so no [ℓ]=0 factor appears. V_j non-degenerate.
+6. rad = k(2d-k) = 1·(2(ℓ-1)-1) = 2ℓ-3. ∎
+
+Kernel vector: v_i = sin(iπ/ℓ). For ℓ=5: ∝ (1, φ, φ, 1).
+
+### Cell Gram Matrix Structure
+
+The cell Gram for V_{ℓ-2} at each ℓ (confirmed by print output):
+- ℓ=3: 2×2 [[1,1],[1,1]] — rank 1 ✓
+- ℓ=4: 3×3 tridiagonal — rank 2 ✓
+- ℓ=5: 4×4 tridiagonal — rank 3 ✓
+- ℓ=6: 5×5 tridiagonal — rank 4 ✓
+- ℓ=7: 6×6 tridiagonal — rank 5 ✓
+
+### Open Questions
+
+1. **Markov radical = 2ℓ-2:** Why does Markov trace detect one extra dimension? What is that extra element?
+2. **rad at n=ℓ+1:** Explorer predicts rad(TL_{ℓ+1}) = ℓ²-ℓ-3 (both V_{ℓ-2} and V_{ℓ-4} degenerate). Not yet tested.
+3. **Non-critical n:** What happens at n=2ℓ, n=3ℓ, etc.? More modules should degenerate.
+
+### Literature (from research agent)
+
+Key reference: Ridout & Saint-Aubin (2014), arXiv:1204.4505 — radical of each cell module is irreducible or zero. Gram determinant formula:
+
+det(G_{n,p}) = ∏_{k=1}^{p} ([n-2p+2k]/[2k])^{d_{n-2k,p-k}}
+
+Graham-Lehrer semisimplicity: TL_n(2cos(π/ℓ)) semisimple iff n < ℓ.
+
+---
 *End of Explorer's Log*
