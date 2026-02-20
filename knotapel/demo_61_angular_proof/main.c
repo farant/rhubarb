@@ -189,6 +189,229 @@ static void search(int grid_n, int show_progress)
     if (show_progress) printf("done.\n");
 }
 
+/* ========== Phase 2: Analytical Proof ========== */
+
+static const char *angle_label(int b)
+{
+    static const char *labels[8] = {
+        "0", "p3", "p2", "p2+p3", "p1", "p1+p3", "p1+p2", "p1+p2+p3"
+    };
+    return (b >= 0 && b < 8) ? labels[b] : "?";
+}
+
+static void print_constraints(int mask, int target)
+{
+    int b, first = 1;
+    printf("{");
+    for (b = 0; b < 8; b++) {
+        if (mask & (1 << b)) {
+            if (!first) printf(", ");
+            printf("%s %s", angle_label(b),
+                   ((target >> b) & 1) ? "IN" : "OUT");
+            first = 0;
+        }
+    }
+    printf("}");
+}
+
+/*
+ * Check if target truth table (on mask bits) is achievable.
+ * Returns 1 if feasible, 0 if proven absent at grid resolution N.
+ */
+static int masked_feasible(int target, int mask, int grid_n)
+{
+    int half_n = grid_n / 2;
+    int tgt = target & mask;
+    int p1, p2, p3;
+
+    for (p1 = 0; p1 < grid_n; p1++) {
+        for (p2 = 0; p2 < grid_n; p2++) {
+            for (p3 = 0; p3 < grid_n; p3++) {
+                int a[8], k;
+                a[0] = 0;
+                a[1] = p3;
+                a[2] = p2;
+                a[3] = p2 + p3;
+                if (a[3] >= grid_n) a[3] -= grid_n;
+                a[4] = p1;
+                a[5] = p1 + p3;
+                if (a[5] >= grid_n) a[5] -= grid_n;
+                a[6] = p1 + p2;
+                if (a[6] >= grid_n) a[6] -= grid_n;
+                a[7] = p1 + p2 + p3;
+                if (a[7] >= grid_n) a[7] -= grid_n;
+                if (a[7] >= grid_n) a[7] -= grid_n;
+
+                for (k = 0; k < 8; k++) {
+                    int th, tt, b;
+                    th = a[k] + 1;
+                    if (th >= grid_n) th = 0;
+                    tt = 0;
+                    for (b = 0; b < 8; b++) {
+                        int d = a[b] - th;
+                        if (d < 0) d += grid_n;
+                        if (d < half_n) tt |= (1 << b);
+                    }
+                    if ((tt & mask) == tgt) return 1;
+                }
+            }
+        }
+    }
+    return 0;
+}
+
+static int find_min_obstruction(int target, int grid_n,
+                                int *out_masks, int max_out, int *out_count)
+{
+    int mask, bits, min_size;
+
+    min_size = 9;
+    *out_count = 0;
+
+    for (bits = 3; bits <= 8; bits++) {
+        int found_at_size = 0;
+        if (bits > min_size) break;
+        printf("  size %d...", bits);
+        fflush(stdout);
+        for (mask = 1; mask < 256; mask++) {
+            if (popcnt(mask) != bits) continue;
+            if (!masked_feasible(target, mask, grid_n)) {
+                if (bits < min_size) {
+                    min_size = bits;
+                    *out_count = 0;
+                }
+                if (*out_count < max_out) {
+                    out_masks[*out_count] = mask;
+                    (*out_count)++;
+                }
+                found_at_size++;
+            }
+        }
+        if (found_at_size > 0) {
+            printf(" %d INFEASIBLE\n", found_at_size);
+        } else {
+            printf(" all feasible\n");
+        }
+    }
+    return min_size;
+}
+
+static void run_phase2(int *p, int *f)
+{
+    static const int reps[14] = {
+        0x00, 0x01, 0x03, 0x06, 0x07, 0x0F, 0x16,
+        0x17, 0x18, 0x19, 0x1B, 0x1E, 0x3C, 0x69
+    };
+    static const int tb1[6] = {1, 1, 2, 1, 2, 4};
+    static const int tb2[6] = {2, 4, 4, 6, 5, 3};
+    int i, j;
+
+    printf("\n========== Phase 2: Analytical Proof ==========\n");
+    printf("Why are 0x06 and 0x1B the only unreachable classes?\n\n");
+
+    /* ---- Part F: NPN Orbit Sizes ---- */
+    printf("--- Part F: NPN Orbit Sizes ---\n\n");
+    {
+        int sizes[256];
+        memset(sizes, 0, sizeof(sizes));
+        for (i = 0; i < 256; i++) sizes[npn[i]]++;
+
+        printf("  %-6s %-10s  Orb  Wt  Aff  Ach\n", "Canon", "Name");
+        for (i = 0; i < 14; i++) {
+            printf("  0x%02X  %-10s  %3d   %d   %s    %s\n",
+                   reps[i], class_name(reps[i]), sizes[reps[i]],
+                   popcnt(reps[i]),
+                   is_affine(reps[i]) ? "Y" : "N",
+                   achieved[reps[i]] ? "Y" : "N");
+        }
+    }
+    printf("\n");
+
+    /* ---- Part G: Additive Triple Analysis ---- */
+    printf("--- Part G: Additive Triple Analysis ---\n\n");
+    printf("  6 non-trivial additive triples (b1,b2)->b3 with b1&b2=0:\n");
+    printf("  angle(b1) + angle(b2) = angle(b3) exactly.\n\n");
+    printf("  Conflict: b1 IN, b2 IN, b3 OUT\n");
+    printf("  Cnt0: conflicts where additionally angle(000) is OUT\n\n");
+    printf("  %-6s %-10s  Ach  Conf  Cnt0\n", "Canon", "Name");
+    for (i = 0; i < 14; i++) {
+        int tt = reps[i];
+        int conf = 0, cnt0_val = 0;
+        int bit0 = (tt >> 0) & 1;
+
+        for (j = 0; j < 6; j++) {
+            int b1 = tb1[j], b2 = tb2[j], b3 = b1 | b2;
+            if (((tt >> b1) & 1) && ((tt >> b2) & 1) && !((tt >> b3) & 1)) {
+                conf++;
+                if (!bit0) cnt0_val++;
+            }
+        }
+        printf("  0x%02X  %-10s   %s    %d     %d\n",
+               tt, class_name(tt),
+               achieved[tt] ? "Y" : "N",
+               conf, cnt0_val);
+    }
+    printf("\n  Note: local additive conflicts are necessary but NOT sufficient.\n");
+    printf("  0x16 has Cnt0=3 but IS achievable.\n");
+    printf("  0x1B has Cnt0=0 -- its obstruction is global, not local.\n\n");
+
+    /* ---- Part H: Minimal Obstruction for 0x06 ---- */
+    printf("--- Part H: Minimal Obstruction for 0x06 (XOR-AND) ---\n\n");
+    printf("  TRUE=");
+    print_true_set(0x06);
+    printf("  Constraints: p3 IN, p2 IN, rest OUT\n\n");
+    {
+        int masks[64], count, min_sz;
+
+        min_sz = find_min_obstruction(0x06, 60, masks, 64, &count);
+
+        printf("\n  Minimal obstruction: %d constraints\n", min_sz);
+        printf("  %d minimal infeasible sets found:\n\n", count);
+        for (j = 0; j < count && j < 30; j++) {
+            printf("    ");
+            print_constraints(masks[j], 0x06);
+            printf("\n");
+        }
+
+        if (min_sz <= 8) {
+            printf("\n  PASS: 0x06 blocked by %d-constraint subsets\n", min_sz);
+            (*p)++;
+        } else {
+            printf("\n  FAIL: no obstruction found for 0x06\n");
+            (*f)++;
+        }
+    }
+    printf("\n");
+
+    /* ---- Part I: Minimal Obstruction for 0x1B ---- */
+    printf("--- Part I: Minimal Obstruction for 0x1B (CROSS) ---\n\n");
+    printf("  TRUE=");
+    print_true_set(0x1B);
+    printf("  Constraints: 0 IN, p3 IN, p2+p3 IN, p1 IN, rest OUT\n\n");
+    {
+        int masks[64], count, min_sz;
+
+        min_sz = find_min_obstruction(0x1B, 60, masks, 64, &count);
+
+        printf("\n  Minimal obstruction: %d constraints\n", min_sz);
+        printf("  %d minimal infeasible sets found:\n\n", count);
+        for (j = 0; j < count && j < 30; j++) {
+            printf("    ");
+            print_constraints(masks[j], 0x1B);
+            printf("\n");
+        }
+
+        if (min_sz <= 8) {
+            printf("\n  PASS: 0x1B blocked by %d-constraint subsets\n", min_sz);
+            (*p)++;
+        } else {
+            printf("\n  FAIL: no obstruction found for 0x1B\n");
+            (*f)++;
+        }
+    }
+    printf("\n");
+}
+
 /* ========== Main ========== */
 
 int main(void)
@@ -430,6 +653,8 @@ int main(void)
     printf("classes are 0x06 (XOR-AND) and 0x1B (CROSS), independent\n");
     printf("of angles (phi1,phi2,phi3) and half-plane orientation.\n");
     printf("============================================================\n");
+
+    run_phase2(&pass, &fail);
 
     printf("\n=== Summary: %d pass, %d fail ===\n", pass, fail);
     return fail > 0 ? 1 : 0;

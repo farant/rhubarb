@@ -1,0 +1,178 @@
+/*
+ * Extract and print radical basis vectors for TL_n at delta=0.
+ * Focused output for CSS feasibility probe.
+ * Reuses Demo 51 machinery.
+ */
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <math.h>
+
+#define MAX_N 8
+#define MAX_2N 16
+#define MAX_BASIS 1430
+#define MAX_SEGS 16
+
+typedef struct { int match[MAX_2N]; } PlanarMatch;
+typedef struct { int points[MAX_2N]; int count; } Segment;
+
+typedef struct {
+    int n, dim, id_idx, gen_idx[MAX_N], n_gens;
+    PlanarMatch basis[MAX_BASIS];
+    int mt[MAX_BASIS][MAX_BASIS];
+} TLAlgebra;
+
+typedef struct { long c[MAX_BASIS]; int dim; } AlgElem;
+
+/* --- Planar matching enumeration --- */
+static void build_boundary_order(int n, int *bp) {
+    int i;
+    for (i = 0; i < n; i++) bp[i] = i;
+    for (i = 0; i < n; i++) bp[n+i] = 2*n-1-i;
+}
+
+static void enum_segments(Segment *segs, int n_segs, int *mb,
+                          PlanarMatch *basis, int *nb, int n) {
+    int s, j, k, first_seg = -1;
+    Segment ns[MAX_SEGS]; int nn; int *pts; int cnt;
+    for (s = 0; s < n_segs; s++) if (segs[s].count > 0) { first_seg = s; break; }
+    if (first_seg == -1) {
+        if (*nb < MAX_BASIS) { memcpy(basis[*nb].match, mb, (size_t)(2*n)*sizeof(int)); (*nb)++; }
+        return;
+    }
+    pts = segs[first_seg].points; cnt = segs[first_seg].count;
+    for (j = 1; j < cnt; j += 2) {
+        mb[pts[0]] = pts[j]; mb[pts[j]] = pts[0];
+        nn = 0;
+        for (k = 0; k < n_segs; k++) {
+            if (k == first_seg) {
+                if (j > 1) { memcpy(ns[nn].points, &pts[1], (size_t)(j-1)*sizeof(int)); ns[nn].count = j-1; nn++; }
+                if (cnt-j-1 > 0) { memcpy(ns[nn].points, &pts[j+1], (size_t)(cnt-j-1)*sizeof(int)); ns[nn].count = cnt-j-1; nn++; }
+            } else { ns[nn] = segs[k]; nn++; }
+        }
+        enum_segments(ns, nn, mb, basis, nb, n);
+    }
+}
+
+static int enumerate_basis(int n, PlanarMatch *basis) {
+    Segment segs[1]; int mb[MAX_2N]; int nb = 0;
+    build_boundary_order(n, segs[0].points);
+    segs[0].count = 2*n;
+    memset(mb, -1, sizeof(mb));
+    enum_segments(segs, 1, mb, basis, &nb, n);
+    return nb;
+}
+
+static int compose_diagrams(int n, const PlanarMatch *d1, const PlanarMatch *d2, PlanarMatch *r) {
+    int gv[MAX_N]; int i, loops = 0;
+    memset(r->match, -1, (size_t)(2*n)*sizeof(int));
+    memset(gv, 0, (size_t)n*sizeof(int));
+    for (i = 0; i < 2*n; i++) {
+        int in1, cur;
+        if (r->match[i] >= 0) continue;
+        if (i < n) { in1=1; cur=i; } else { in1=0; cur=i; }
+        for (;;) {
+            int p;
+            if (in1) { p=d1->match[cur]; if (p<n){r->match[i]=p;r->match[p]=i;break;} gv[p-n]=1;in1=0;cur=p-n; }
+            else { p=d2->match[cur]; if (p>=n){r->match[i]=p;r->match[p]=i;break;} gv[p]=1;in1=1;cur=n+p; }
+        }
+    }
+    for (i = 0; i < n; i++) {
+        int cur,p,q; if (gv[i]) continue; loops++; cur=i;
+        do { gv[cur]=1; p=d2->match[cur]; gv[p]=1; q=d1->match[n+p]; cur=q-n; } while (cur!=i);
+    }
+    return loops;
+}
+
+static int find_basis_index(const PlanarMatch *m, const PlanarMatch *b, int nb, int n) {
+    int i,j; for (i=0;i<nb;i++){int eq=1;for(j=0;j<2*n;j++)if(m->match[j]!=b[i].match[j]){eq=0;break;}if(eq)return i;}return -1;
+}
+
+static void init_tl(TLAlgebra *a, int n) {
+    PlanarMatch d; int g,i,j;
+    a->n=n; a->dim=enumerate_basis(n,a->basis); a->n_gens=n-1;
+    d=*(PlanarMatch*)memset(&d,0,sizeof(d));
+    for(g=0;g<n;g++){d.match[g]=n+g;d.match[n+g]=g;} a->id_idx=find_basis_index(&d,a->basis,a->dim,n);
+    for(g=0;g<n-1;g++){
+        PlanarMatch gen; int k;
+        for(k=0;k<n;k++){gen.match[k]=n+k;gen.match[n+k]=k;}
+        gen.match[g]=g+1;gen.match[g+1]=g;gen.match[n+g]=n+g+1;gen.match[n+g+1]=n+g;
+        a->gen_idx[g]=find_basis_index(&gen,a->basis,a->dim,n);
+    }
+    for(i=0;i<a->dim;i++) for(j=0;j<a->dim;j++){
+        PlanarMatch r; int l=compose_diagrams(n,&a->basis[i],&a->basis[j],&r);
+        a->mt[i][j]=(l>0)?-1:find_basis_index(&r,a->basis,a->dim,n);
+    }
+}
+
+/* --- Gram matrix and radical extraction --- */
+static void extract_and_print(int n) {
+    static TLAlgebra alg;
+    static double aug[MAX_BASIS][2*MAX_BASIS];
+    int fixpt[MAX_BASIS];
+    int i,j,k,rank;
+    double eps = 0.5;
+    int n_rad;
+
+    init_tl(&alg, n);
+    printf("=== TL_%d at delta=0 (dim=%d) ===\n\n", n, alg.dim);
+
+    /* Fixed points */
+    for (i=0;i<alg.dim;i++){fixpt[i]=0;for(k=0;k<alg.dim;k++)if(alg.mt[i][k]==k)fixpt[i]++;}
+
+    /* Gram matrix (build but only print for small n) */
+    for (i=0;i<alg.dim;i++){
+        for(j=0;j<alg.dim;j++){
+            int p=alg.mt[i][j];
+            double v=(p>=0)?(double)fixpt[p]:0.0;
+            aug[i][j]=v;
+        }
+        for(j=0;j<alg.dim;j++) aug[i][alg.dim+j]=(i==j)?1.0:0.0;
+    }
+
+    /* Row reduce */
+    rank=0;
+    for(k=0;k<alg.dim;k++){
+        int best=-1; double bv=eps;
+        for(i=rank;i<alg.dim;i++) if(fabs(aug[i][k])>bv){bv=fabs(aug[i][k]);best=i;}
+        if(best==-1) continue;
+        if(best!=rank) for(j=0;j<2*alg.dim;j++){double t=aug[rank][j];aug[rank][j]=aug[best][j];aug[best][j]=t;}
+        for(i=rank+1;i<alg.dim;i++) if(fabs(aug[i][k])>eps){
+            double f=aug[i][k]/aug[rank][k]; for(j=k;j<2*alg.dim;j++) aug[i][j]-=f*aug[rank][j];
+        }
+        rank++;
+    }
+
+    n_rad = alg.dim - rank;
+    printf("Gram rank: %d\n", rank);
+    printf("Radical dimension: %d\n\n", n_rad);
+
+    /* Extract and print radical basis vectors */
+    printf("Radical basis vectors (as coefficient arrays over TL basis):\n\n");
+    for (i=rank; i<alg.dim; i++) {
+        int s, found_scale = 0;
+        double scale = 1.0;
+        long vec[MAX_BASIS];
+
+        for(s=1;s<=1000&&!found_scale;s++){
+            int all_int=1;
+            for(j=0;j<alg.dim;j++){double v=aug[i][alg.dim+j]*(double)s;
+                if(fabs(v)>0.01&&fabs(v-floor(v+0.5))>0.01){all_int=0;break;}}
+            if(all_int){scale=(double)s;found_scale=1;}
+        }
+        for(j=0;j<alg.dim;j++) vec[j]=(long)floor(aug[i][alg.dim+j]*scale+0.5);
+
+        { int nnz=0; for(j=0;j<alg.dim;j++) if(vec[j]!=0) nnz++;
+        printf("  rad[%d] (%d nonzero): ", i-rank, nnz);
+        for(j=0;j<alg.dim;j++) if(vec[j]!=0) printf("%d:%ld ", j, vec[j]);
+        printf("\n"); }
+    }
+    printf("\n");
+}
+
+int main(void) {
+    setbuf(stdout, NULL);
+    extract_and_print(4);
+    extract_and_print(6);
+    return 0;
+}
