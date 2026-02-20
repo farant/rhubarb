@@ -1764,4 +1764,50 @@ Complete parity scaling table:
 5. **Connection to finer lattices**: The ceiling n=5 is specific to Z[zeta_8] (8 rays). Moving to Z[zeta_16] (16 rays) would provide more angular resolution and potentially raise the ceiling. The parity ceiling is a function of the cyclotomic order.
 
 ---
+
+## Demo 64: Parity Matroid Recursion (22/22 pass)
+
+**Date**: 2026-02-20
+
+**Core question**: Is the DKC parity hierarchy (XOR2→XOR3→XOR4→XOR5) a single recursive matroid object?
+
+**Answer**: YES. The hierarchy is fully deletion-contraction closed and forms a funnel-shaped matroid.
+
+### Key Results
+
+**Parts A+B — Matroid Closure (100%)**:
+- Deletion: removing any weight from XOR_n always gives XOR_{n-1}. 100% at all levels.
+- Contraction: fixing any input to 1 in XOR_n always gives XNOR_{n-1}. 100% at all levels.
+- Implementation note: contraction requires exact Cyc8 arithmetic — floating-point produces 420 spurious failures.
+
+**Parts C+D — The Funnel**:
+- Coverage upward collapses: XOR3→XOR2 (99.3%) → XOR4→XOR3 (39.2%) → XOR5→XOR4 (19.2%) → 0%
+- Distinct unordered weight sets: XOR5=27, XOR4=673, XOR3=3834, XOR2=1469
+- Parent multiplicity thins near wall: mean 7.88 (XOR3→XOR2) → 1.79 (XOR4→XOR3) → 1.05 (XOR5→XOR4)
+
+**Part E — Wall Microscope**:
+- Minimum Hamming distance from XOR6: **4** (38 near-misses). No d=0,1,2,3.
+- Errors at weight 0 and 1: **zero**. Wall manifests only at interaction level (weight 2+).
+- 44/83 class-1 values used by XOR5. 31 "poison" values appear only in orphan XOR4 sets.
+- Vocabulary perfectly nested: {XOR5 values} = {extensible XOR4 values} ⊂ {all XOR4 values}.
+
+**Parts E4+E5 — Self-Doubling Theorem**:
+- All 38 d=4 broken pairs involve the extension weight. 34/38 are self-extensions (6th = duplicate).
+- **Theorem**: Self-extensions always fail because 2·w has the same angle as w (class 1), but pair sums need class 0.
+- Representative case: exactly 1/15 pairwise sums wrong. The broken sum 2·(0,-12,0,0) = (0,-24,0,0) at 225°, sector 9 (odd).
+- Higher-order wall: d=7-8 cases exist with 0 broken pairs — errors only at weight 3+.
+
+### Quantum Connection (T-gate correspondence)
+- ζ_8 = T-gate phase. Z[ζ_8] = T-gate algebraic ring.
+- Parity ceiling = computational depth of one Clifford hierarchy level.
+- Self-doubling: 2·(T-gate phase) = S-gate phase — descending the hierarchy loses power.
+- Higher-order wall parallels GHZ entanglement (pairwise OK, three-body fails).
+
+### Open Questions
+1. Does XOR6 become achievable at Z[ζ_16] (next Clifford hierarchy level)?
+2. Can the triple-interaction wall layer be characterized explicitly?
+3. Funnel rate formula: 99.3% → 39.2% → 19.2% → 0% — is this predictable?
+4. Are the 27 XOR5 sets built primarily from antipodal pairs?
+
+---
 *End of Explorer's Log*
