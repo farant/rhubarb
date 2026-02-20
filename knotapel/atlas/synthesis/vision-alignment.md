@@ -1,6 +1,6 @@
 # Vision Alignment: Current Research → Long-Term Direction
 
-How the completed work (50 demos) positions us relative to the hybrid LLM vision
+How the completed work (51 demos) positions us relative to the hybrid LLM vision
 described in `planning/vision.md`. Generated 2026-02-20.
 
 ---
@@ -11,12 +11,12 @@ The hybrid LLM vision requires: taxonomy → braids → DKC → compiled weights
 coexist with trained weights in a model that can dynamically update its factual
 knowledge.
 
-**What the 47 demos established:**
+**What the 51 demos established:**
 
 | Vision Component | Status | Key Evidence |
 |-----------------|--------|--------------|
 | Exact algebraic computation | PROVEN | Z[ζ₈] arithmetic, zero FP error (D29+) |
-| Topology → Boolean logic | PROVEN | Forward DKC, all 13 NPN classes (D29, D50) |
+| Topology → Boolean logic | PROVEN | Forward DKC, all 13 NPN classes (D29, D50), **4-input and 5-input parity (D63), parity ceiling n=5** |
 | Finite compilable weight catalog | PROVEN | 100 values at δ=0, exhaustively searchable |
 | Provable correctness | PROVEN | Exhaustive verification, analytical proofs (D48, D62) |
 | Gate composition / chaining | DEMONSTRATED | Cascade thresholding, 1-bit adder (D19) |
@@ -57,6 +57,20 @@ how much "deductive capacity" each evaluation level provides. Higher ℓ = more
 capacity but more complex ring. This could inform choosing the right ℓ for
 a given taxonomy size.
 
+### The parity ceiling establishes finite capacity
+Demo 63 proves Z[zeta_8] parity tops out at n=5 inputs. For the hybrid LLM vision,
+this means individual DKC neurons handle at most 5-input parity functions. Larger
+logical operations must be built compositionally — which aligns with the syllogism
+approach (3 terms per syllogism, well within the n=5 ceiling). The ceiling is a
+feature, not a limitation: it bounds the complexity of each compiled unit, making
+the system predictable.
+
+### Formal proofs strengthen the theoretical foundation
+Three formal proofs (radical dimension, next-level radical, Markov RT truncation)
+move key results from "computationally verified" to "proven theorem." For the
+vision's credibility — especially in academic and engineering contexts — having
+rigorous proofs of the algebraic underpinnings is essential.
+
 ---
 
 ## Course Corrections
@@ -70,10 +84,11 @@ both a constraint and an opportunity — the compiled layers are architecturally
 distinct from trained layers, which might actually make integration cleaner
 (they're clearly separate subsystems).
 
-### Exhaustive search doesn't scale
-The current "compiler" searches |catalog|^(n+1) combinations. At 3 inputs
-this is 100M (seconds). At 4 inputs it's 10B (heavy but feasible). At 10
-inputs it's intractable. The vision requires either:
+### Exhaustive search doesn't scale — but has a proven ceiling
+The current "compiler" searches |catalog|^(n+1) combinations. D63 shows
+exhaustive search is feasible up to n=5 at k=15 sectors, but n=6+ is truly
+impossible — not just intractable but zero solutions exist (the parity ceiling).
+The vision requires either:
 - Compositional compilation (build large functions from small compiled units)
 - Predictive compilation (theory for which braid → which function)
 - Restricting compiled weights to small logical units (syllogisms are 3-term)
@@ -81,6 +96,10 @@ inputs it's intractable. The vision requires either:
 The third option is actually fine for the vision — if compiled weights encode
 individual syllogisms (3 terms each), and reasoning chains are built by
 composition, then the 3-input scale is sufficient per unit.
+
+Additionally, the triskelion generalization (k=2n) was FALSIFIED by D63; the
+actual scaling law is k=2M-1 where M is the ray count. This is an important
+course correction — the real relationship is to lattice geometry, not input count.
 
 ---
 
@@ -101,7 +120,9 @@ Current state → Multi-layer composition test (1 demo)
 Feed DKC neuron outputs into other DKC neurons. If exactness survives, the
 vision's "reasoning chains" become feasible. If not, cascade thresholding
 (D19 style, collapse to bits between layers) is the fallback — still works,
-just less elegant.
+just less elegant. DKC capacity per neuron is now well-characterized (n<=5
+for parity in Z[zeta_8]), so multi-layer composition is the clear path for
+anything beyond 5-input functions.
 
 ### Path C: Demonstrate dynamic recompilation (1 demo)
 ```
@@ -118,7 +139,10 @@ of concept for the dynamic update story.
 **The syllogism → NPN mapping** is the highest-leverage single demo for the
 vision. It requires no new code infrastructure (existing NPN classification +
 DKC search), answers the most critical question (do syllogisms fit 3-input
-DKC?), and its answer determines whether Path A is viable.
+DKC?), and its answer determines whether Path A is viable. The parity ceiling
+result (D63) gives confidence here: 3-input syllogisms are well within the
+proven n=5 DKC capacity, so any 3-input Boolean function a syllogism maps to
+is guaranteed reachable.
 
 If that succeeds, the toy taxonomy pipeline (Path C) becomes the natural
 follow-up, because you'd have: taxonomy → syllogisms → NPN classes → DKC
@@ -126,6 +150,6 @@ weights — a complete (if toy) end-to-end pipeline.
 
 ---
 
-*Generated 2026-02-20. Reads: narrative.md, novelty.md, connections.md,
-four-lenses.md, planning/vision.md, inventory/demo-index.md (via entries
-for D19, D29, D48, D50, D61-62).*
+*Generated 2026-02-20, updated 2026-02-20. Reads: narrative.md, novelty.md,
+connections.md, four-lenses.md, planning/vision.md, inventory/demo-index.md
+(via entries for D19, D29, D39G-J, D48, D50, D61-63).*

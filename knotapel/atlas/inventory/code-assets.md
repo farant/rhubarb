@@ -1,6 +1,6 @@
 # Code Assets Catalog
 
-Reusable code patterns across 50 knotapel demos. Updated 2026-02-20 (added Demos 38, 39, 60).
+Reusable code patterns across 50 knotapel demos. Updated 2026-02-20 (added Demos 38, 39, 60, 63; D39 Parts G-J).
 
 ---
 
@@ -43,7 +43,7 @@ Reusable code patterns across 50 knotapel demos. Updated 2026-02-20 (added Demos
 
 - **What it does**: Exact integer arithmetic in the 8th cyclotomic ring — basis {1, zeta_8, zeta_8^2, zeta_8^3} with zeta_8^4 = -1. The natural home for bracket values at delta=0 (A = e^{i*5pi/4}).
 - **Introduced in**: Demo 29
-- **Reused in**: Demos 35, 48, 49, 50
+- **Reused in**: Demos 35, 48, 49, 50, 63
 - **Key types/functions**:
   - `Cyc8` struct: 4 `long` coefficients `(a, b, c, d)`
   - `cyc8_make()`, `cyc8_zero()`, `cyc8_one()` — constructors
@@ -546,6 +546,19 @@ Reusable code patterns across 50 knotapel demos. Updated 2026-02-20 (added Demos
 - **Approximate size**: ~1012 lines (full demo)
 - **Notes**: All formulas confirmed at ell=7: rad(TL_7)=11=2*7-3, rad(TL_8)=39=7^2-7-3, rad^2 is 1-dimensional, nilpotency=3, Fibonacci rank=F(6)=8. Cross-validated at two independent primes (10^9+7 and 10^9+9). Semisimple for n<7, non-semisimple for n>=7. Universality conjecture strengthened — radical structure independent of number field degree.
 
+### 4.8 Three Gram Forms Infrastructure (Demo 39 Parts G-J)
+
+- **What it does**: Computes fixpt, Markov, and cell module Gram matrices at the semisimplicity boundary, along with multi-level radical dimensions and Markov excess analysis.
+- **Introduced in**: Demo 39 (Parts G-J)
+- **Reused in**: (foundational for future RT truncation studies)
+- **Key types/functions**:
+  - `build_markov_gram()`: constructs Markov trace bilinear form B_M(a,b) using closure loop counting
+  - `closure_loops()`: counts loops created when a TL diagram is planar-closed (top connected to bottom)
+  - Cell module Gram verification: per-sector d(n,j) × d(n,j) Gram matrix for Graham-Lehrer bilinear form
+  - Multi-level radical computation: radical at n=ℓ through n=ℓ+3 for each ℓ=2..7
+- **Approximate size**: ~400 lines (Parts G-J combined)
+- **Notes**: The prime p=1000002361 (≡1 mod 840) was chosen to guarantee all roots of unity for ℓ=2..7 exist as quadratic residues. Previous p=10^9+7 had 5 as QNR, making ℓ=5 appear semisimple erroneously.
+
 ---
 
 ## 5. Neural / Boolean
@@ -793,6 +806,32 @@ Reusable code patterns across 50 knotapel demos. Updated 2026-02-20 (added Demos
   - `wrap(angle)` — angle normalization
 - **Approximate size**: ~200 lines
 - **Notes**: Proves exactly 11/13 NPN classes reachable. 0x06 obstruction: parallelogram gap argument. 0x1B obstruction: 3-step algebraic contradiction. Zero floating-point in proof.
+
+### 5.19 Octant-Sector Classification (Demo 63)
+
+- **What it does**: Classifies Z[zeta_8] lattice points into 8 discrete octants, maps sector boundaries to class-1 octant sets, and computes oriented matroid types for weight triples.
+- **Introduced in**: Demo 63
+- **Reused in**: (foundational for future Z[zeta_16] scaling demos)
+- **Key types/functions**:
+  - `angle_to_octant()`: classifies a Cyc8 value into one of 8 discrete octants (0-7)
+  - `cross_sign(a, b)`: sign of 2D cross product of two octant vectors
+  - `om_encode(s12, s13, s23)`: encodes oriented matroid type as a single integer from 3 pairwise cross-product signs
+  - `om_decode()`: decodes OM integer back to sign triple
+  - Sector-octant mapping: iterates k-sector boundaries to compute class-1 octant set for arbitrary k
+- **Approximate size**: ~80 lines
+- **Notes**: Oriented matroid classification is the key tool for characterizing parity — alternating OM type is necessary and sufficient for 3-input parity.
+
+### 5.20 Recursive N-Input Parity Search (Demo 63)
+
+- **What it does**: General recursive search for n-input parity solutions in Z[zeta_8] MVN networks. Tests all 2^n-1 non-empty subset sums against sector-parity constraints.
+- **Introduced in**: Demo 63
+- **Reused in**: (foundational for future parity scaling studies)
+- **Key types/functions**:
+  - `collect_class1(k)`: collects all class-1 sector vectors for given sector count k
+  - `compute_tt4_at_k(k)`: 4-input DKC truth table search with 4-level pruning (checks 1-weight, 2-weight, 3-weight, 4-weight sum parities)
+  - `pj_search(n, k)`: general recursive n-input parity search — iterates over all n-tuples of catalog values, checks all 2^n-1 subset sums for correct sector parity
+- **Approximate size**: ~200 lines (Part H: 4-input ~80 lines, Part I: 5-input ~60 lines, Part J: recursive ~60 lines)
+- **Notes**: Search pruning is critical for performance — 4-input uses early rejection at each weight addition. 5-input at k=15 has 7 class-1 octants (100 values each), making brute force feasible.
 
 ---
 

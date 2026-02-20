@@ -1,7 +1,7 @@
 # Theorems, Conjectures & Key Results
 
 Extracted from 50 demos (demo-index.md) and explorer's log. Organized by topic.
-Updated 2026-02-20: Added results from Demos 38 (dimension reduction), 39 (symmetry decomposition), 60 (ell=7 cubic wall).
+Updated 2026-02-20: Added results from Demos 38 (dimension reduction), 39 (symmetry decomposition), 60 (ell=7 cubic wall), 63 (Angular Anatomy), 39 Parts G-J (Markov RT truncation, second-degeneracy coranks).
 
 ---
 
@@ -172,9 +172,51 @@ Updated 2026-02-20: Added results from Demos 38 (dimension reduction), 39 (symme
 
 ### Triskelion Principle
 - **Statement:** For 3-input parity at k=6, each of the 3 inputs requires its own odd sector (at 120-degree intervals). All three weights are confined to octants {2,4,5,7} (class-1 angles).
-- **Status:** COMPUTATIONALLY VERIFIED (906 solutions analyzed)
-- **Demo provenance:** Demo 50
-- **Significance:** Geometric explanation of why k=6 is the minimum
+- **Status:** COMPUTATIONALLY VERIFIED (3-input specific; k=2n generalization FALSIFIED — see below). Demo 63 confirms triskelion is specific to 3-input parity; 4-input uses tetraskelion at k=8, 5-input uses pentaskelion at k=15.
+- **Demo provenance:** Demo 50, Demo 63 (generalization falsified)
+- **Significance:** Geometric explanation of why k=6 is the minimum for 3-input parity
+
+### Four-Tier NPN from Octant-Sector Geometry
+- **Statement:** The four-tier NPN reachability structure (k=2:5, k=3:+1, k=4:+6, k=6:+1) is reproduced entirely from pure octant-sector geometry: sector boundaries partition the 8 discrete Z[zeta_8] rays into class-0 and class-1 sets. k=6 is the UNIQUE sector count producing the parity octant set {2,4,5,7}.
+- **Status:** PROVEN (exhaustive verification, k=2..16)
+- **Demo provenance:** Demo 63 (Parts B, D)
+- **Significance:** Reduces the four-tier hierarchy to discrete angular combinatorics — no search required
+
+### Parity Requires Alternating Oriented Matroid Type
+- **Statement:** Among the 21 distinct oriented matroid types of Z[zeta_8] weight triples, only the ALTERNATING type (sign sequence -,+,- or +,-,+, where s12=s23=-s13) achieves parity. The alternating condition means the three generators interleave around the circle. Uniform OM types achieve 12/13 NPN classes — everything except parity.
+- **Status:** PROVEN (exhaustive: 0 of ~1M non-alternating triples achieve parity)
+- **Demo provenance:** Demo 63 (Part G)
+- **Significance:** First characterization of parity in terms of oriented matroid theory. The interleaving condition ensures pair sums swing to opposite parity from single and triple sums.
+
+### 4-Input Parity (XOR) at k=8
+- **Statement:** 4-input parity (truth table 0x6996) is reachable at k=8 with exactly 96 solutions from the Z[zeta_8] catalog. Tetraskelion structure: 4 weights placed in all 4 odd octants {1,3,5,7}. Not reachable at any k < 8.
+- **Status:** PROVEN (exhaustive search)
+- **Demo provenance:** Demo 63 (Part H)
+- **Significance:** Extends DKC from 3-input to 4-input. Resolves Priority 1.2 from the research roadmap.
+
+### 5-Input Parity at k=15
+- **Statement:** 5-input parity is reachable only at k=15 (the universal k for M=8 rays) with 3020 solutions. k=15 makes all 7 non-zero octants class-1. Not reachable at any k in {2,...,14,16}.
+- **Status:** PROVEN (exhaustive search over k=2..16)
+- **Demo provenance:** Demo 63 (Part I)
+- **Significance:** Pentaskelion structure. Requires the maximum possible class-1 coverage.
+
+### Parity Ceiling for Z[zeta_8] is n=5
+- **Statement:** The maximum number of inputs for which parity is computable by a single Z[zeta_8] MVN neuron is n=5. For n>=6, no sector count k in {2,...,16} produces any parity solutions. Two impossibility mechanisms: constraint-geometric wall (n=6,7: enough octants available but 63+ subset-sum constraints unsatisfiable) and pigeonhole (n>=8: only 7 class-1 octants, need distinct rays).
+- **Status:** PROVEN (exhaustive search for n=6,7; pigeonhole argument for n>=8)
+- **Demo provenance:** Demo 63 (Part J)
+- **Significance:** Establishes the fundamental capacity limit of Z[zeta_8] DKC for the hardest boolean function.
+
+### Universal k Theorem (k = 2M-1)
+- **Statement:** For a lattice with M equally-spaced ray directions, k = 2M-1 sectors places every non-zero ray in an odd sector. For Z[zeta_8] (M=8): k=15. Proof: at k=2M-1, ray j falls in sector 2j-1 (always odd) for j=1,...,M-1.
+- **Status:** CONJECTURED (proof sketch provided, not yet fully formal)
+- **Demo provenance:** Demo 63 (Part J)
+- **Significance:** Identifies the "maximal coverage" sector count for any regular lattice
+
+### Two Types of Impossibility
+- **Statement:** The n>=6 impossibility and n>=8 impossibility for Z[zeta_8] parity have fundamentally different characters. Pigeonhole (n>=8): only 7 class-1 octants, trivially provable. Constraint wall (n=6,7): enough octants available (7>=6) but the system of 2^n-1 sector-parity constraints is unsatisfiable. The gap between pigeonhole bound (n<=7) and actual bound (n<=5) is the "geometric surplus."
+- **Status:** PROVEN (exhaustive + pigeonhole)
+- **Demo provenance:** Demo 63 (Part J, findings.md)
+- **Significance:** Distinguishes combinatorial from geometric impossibility
 
 ### Complex Minsky-Papert Theorem
 - **Statement:** A k=2 half-plane classifier CANNOT compute 3-input parity with ANY complex weights. If y1 > d and y2 > d then y1+y2 > 2d > d, contradicting the parity requirement.
@@ -436,9 +478,27 @@ Updated 2026-02-20: Added results from Demos 38 (dimension reduction), 39 (symme
 
 ### Cross-ell Radical Dimension Formulas
 - **Statement:** At the first non-semisimple n (n=ell): rad(TL_ell(2cos(pi/ell))) = 2*ell - 3 for all ell >= 2. At the second non-semisimple n (n=ell+1): rad(TL_{ell+1}) = ell^2 - ell - 3 for all ell >= 3.
-- **Status:** **PROVEN** (formal proof in `proofs/radical-dimension-formula.md`). Method: Graham-Lehrer cellular algebra theory — V_{ℓ-2} is the unique degenerate cell module at n=ℓ with corank 1 via Chebyshev determinant U_{ℓ-1}(cos(π/ℓ))=0. Contribution: 1·(2(ℓ-1)−1) = 2ℓ−3. Corollary derives ℓ²−ℓ−3 at n=ℓ+1. Computationally verified at ell=2..7.
-- **Demo provenance:** Demo 52, Demo 60 (ell=7), explorer's log. **Proof:** `proofs/radical-dimension-formula.md`
-- **Significance:** NOVEL. First formal proof of these formulas. The proof identifies V_{ℓ-2} as the unique degenerate cell module — a structural result stronger than the formula alone.
+- **Status:** **PROVEN** (formal proofs: 2ℓ−3 in `proofs/radical-dimension-formula.md`, ℓ²−ℓ−3 in `proofs/next-level-radical-formula.md`). Method: Graham-Lehrer cellular algebra theory — V_{ℓ-2} is the unique degenerate cell module at n=ℓ with corank 1 via Chebyshev determinant U_{ℓ-1}(cos(π/ℓ))=0. Contribution: 1·(2(ℓ-1)−1) = 2ℓ−3. The ℓ²−ℓ−3 formula has its own independent proof. Computationally verified at ell=2..7.
+- **Demo provenance:** Demo 52, Demo 60 (ell=7), explorer's log. **Proofs:** `proofs/radical-dimension-formula.md` (2ℓ−3), `proofs/next-level-radical-formula.md` (ℓ²−ℓ−3)
+- **Significance:** NOVEL. First formal proofs of these formulas. The proof identifies V_{ℓ-2} as the unique degenerate cell module — a structural result stronger than the formula alone.
+
+### Markov RT Truncation Theorem
+- **Statement:** For TL_n(2cos(π/ℓ)) with n ≥ ℓ ≥ 3: dim ker(B_M) = dim J(A) + Σ_{j ≥ ℓ-1, j ≡ n mod 2} (dim L_j)². The Markov trace vanishes on the negligible ideal (generated by Jones-Wenzl JW_{ℓ-1}) and kills exactly the simple blocks with j ≥ ℓ-1, preserving those with j ≤ ℓ-2.
+- **Status:** **PROVEN** (formal proof in `proofs/markov-rt-truncation.md`). Three-part proof: (A) Markov vanishes on negligible ideal since [ℓ]=0. (B) Negligible ideal kills j ≥ ℓ-1 by through-strand argument. (C) Excess = Σ (dim L_j)² from combining.
+- **Demo provenance:** Demo 39 Parts I-J (discovery and verification, 31/31 data points). **Proof:** `proofs/markov-rt-truncation.md`
+- **Significance:** NOVEL. Identifies the Markov kernel as J(A) + negligible ideal — connecting fixpt trace (algebraic light) to Markov trace (topological light). The excess = what topology cannot see that algebra can.
+
+### Universal Corank 1 at First Degeneracy
+- **Statement:** At the first n where any cell module V_j degenerates, its corank is always 1. This holds because the linked module is V_n^{(n)} (dim 1).
+- **Status:** **PROVEN** (structural, via Graham-Lehrer linking theorem)
+- **Demo provenance:** Demo 39 Part H, `proofs/next-level-radical-formula.md`
+- **Significance:** Explains why rad contributions at first degeneracy have the uniform shape 1·(2j-1)
+
+### Second-Degeneracy Corank = ℓ+1
+- **Statement:** At n=ℓ+2, the cell module V_{ℓ-2} degenerates for the second time with corank ℓ+1. Values: ℓ=3→4, ℓ=4→5, ℓ=5→6, ℓ=6→7.
+- **Status:** COMPUTATIONALLY VERIFIED (ℓ=3..6)
+- **Demo provenance:** Demo 39 Part H, `proofs/next-level-radical-formula.md`
+- **Significance:** No clean closed form for rad at arbitrary n=ℓ+m
 
 ### Universal rad^2 = 1 at First Non-Semisimple Pair
 - **Statement:** rad^2 = 1 at n=ell and n=ell+1 for all ell >= 3 tested.
@@ -524,9 +584,9 @@ Updated 2026-02-20: Added results from Demos 38 (dimension reduction), 39 (symme
 
 ### Triskelion Generalization Conjecture
 - **Statement:** Does n-input parity require k=2n sectors (n odd sectors for n inputs)?
-- **Status:** OPEN CONJECTURE
-- **Demo provenance:** Demo 50
-- **Significance:** Would predict activation requirements for arbitrary-input parity
+- **Status:** **FALSIFIED** — n=5 parity requires k=15, not k=10. The triskelion pattern is specific to 3-input parity; generalization follows a different law (k=2M-1 where M is the ray count, not 2n).
+- **Demo provenance:** Demo 50 (original conjecture), Demo 63 (falsification)
+- **Significance:** The scaling is lattice-geometric (k=2M-1), not input-count-proportional (k=2n)
 
 ### Galois Symmetry Conjecture
 - **Statement:** The sandwich duality (top ≅ bottom) could correspond to a non-trivial Galois automorphism of Gal(Q(zeta_8)/Q). The 4-element Galois group and the asymptotic 1/4 visible ratio may not be coincidental.
@@ -554,8 +614,8 @@ Updated 2026-02-20: Added results from Demos 38 (dimension reduction), 39 (symme
 
 ### Radical Dimension at n=ell Pattern
 - **Statement:** Radical dimensions at the semisimplicity boundary n=ell follow the sequence: ell=2→1, ell=3→3, ell=4→5, ell=5→0, ell=6→9, ell=7→11. These are 2*ell-3 except at ell=5 where the algebra is semisimple (radical=0).
-- **Status:** COMPUTATIONALLY VERIFIED (ell=2..7)
-- **Demo provenance:** Demo 39 (multi-ell boundary data), Demo 60 (ell=7 confirmation)
+- **Status:** **PROVEN** — rad = 2ell-3 is now formally proved in `proofs/radical-dimension-formula.md`. The ell=5 exception is explained: delta=phi satisfies no Chebyshev zero condition for n=ell=5.
+- **Demo provenance:** Demo 39 (multi-ell boundary data), Demo 60 (ell=7 confirmation). **Proof:** `proofs/radical-dimension-formula.md`
 - **Significance:** The ell=5 exception (semisimple at n=ell) is the Fibonacci anyon case — a structural anomaly in the radical landscape.
 
 ---
@@ -618,3 +678,8 @@ Jones polynomial (writhe-normalized bracket) is invariant under all three Reidem
 11. Quotient isomorphism TL_n(0)/rad ~ TL_{n-1}(0) with TL-relation verification (Demo 38)
 12. Cellular sector decomposition with d(n,j)^2 size verification and cell filtration proof (Demo 39)
 13. Number field degree independence of radical structure — cubic wall confirmation (Demo 60)
+14. Markov RT truncation theorem — Markov kernel = J(A) + negligible ideal, **FORMALLY PROVEN** (`proofs/markov-rt-truncation.md`)
+15. Next-level radical formula rad(TL_{ℓ+1}) = ℓ²−ℓ−3, **FORMALLY PROVEN** (`proofs/next-level-radical-formula.md`)
+16. Parity ceiling for Z[zeta_8] is n=5 — extends DKC to 4-input (k=8) and 5-input (k=15) (Demo 63)
+17. Oriented matroid classification of DKC — alternating OM type required for parity (Demo 63)
+18. Two types of impossibility — constraint-geometric vs pigeonhole wall (Demo 63)

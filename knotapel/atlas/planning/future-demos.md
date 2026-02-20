@@ -2,7 +2,7 @@
 
 Consolidated 2026-02-20. Sources: future-demos/ proposals, synthesis documents, completed demo results.
 
-50 demos completed (D01-D29, D35, D38-D39, D45-D62). Updated 2026-02-20.
+51 demos completed (D01-D29, D35, D38-D39, D45-D63). Updated 2026-02-20.
 13 proposals remain from future-demos/. 5 new demos added from synthesis open questions.
 
 ---
@@ -108,11 +108,14 @@ Original proposals from the pre-DKC era. Still valid as pedagogical and infrastr
 
 These directly address the strengthening actions and open questions identified in novelty.md Section 5 and the narrative frontier.
 
-### D63 -- 4-Input DKC (Triskelion Generalization)
-- Search 222 NPN classes of 4-input Boolean functions with bracket catalog; test k=2n conjecture (parity at k=8)
-- Dependencies: D50 (done), D29 (done)
-- Priority: **HIGH** -- tests the triskelion generalization conjecture; a positive result strengthens Paper 1 enormously; a negative result is equally informative
-- Addresses: strengthening action #2 (4-input and 5-input DKC), conjectured triskelion generalization (k=2n for n-input parity)
+### D63 -- Angular Anatomy of DKC — DONE
+- **Completed as demo_63_angular_anatomy/**. 29/29 tests pass.
+- 4-input parity at k=8 (96 solutions, tetraskelion). 5-input parity at k=15 (3020 solutions, pentaskelion).
+- **Parity ceiling for Z[zeta_8] is n=5.** Triskelion generalization (k=2n) FALSIFIED.
+- Oriented matroid classification: alternating OM type required for parity. 21 distinct types.
+- Two types of impossibility: constraint wall (n=6,7) vs pigeonhole (n>=8).
+- Universal k theorem: k=2M-1 for M-ray lattice (conjectured, proof sketch).
+- See atlas/inventory/entries/demo_63.md for full results.
 
 ### D64 -- Catalog Completeness Bound
 - Prove or bound that the 100-value Z[zeta_8] catalog at delta=0 contains all distinct bracket values up to braid length L; characterize saturation curve
@@ -121,11 +124,13 @@ These directly address the strengthening actions and open questions identified i
 - Addresses: strengthening action #4 (catalog completeness argument)
 
 ### D65 -- Sandwich Theorem Formal Proof — PARTIALLY DONE
-- **Radical dimension formula PROVEN** (`proofs/radical-dimension-formula.md`): rad(TL_ℓ) = 2ℓ−3 via Graham-Lehrer cellular theory + Chebyshev determinant. Corollary: ℓ²−ℓ−3 at n=ℓ+1.
+- **Radical dimension formula PROVEN** (`proofs/radical-dimension-formula.md`): rad(TL_ℓ) = 2ℓ−3.
+- **Next-level radical formula PROVEN** (`proofs/next-level-radical-formula.md`): rad(TL_{ℓ+1}) = ℓ²−ℓ−3.
+- **Markov RT truncation PROVEN** (`proofs/markov-rt-truncation.md`): Markov trace kills j >= ℓ-1.
 - **Remaining**: Full sandwich theorem (rad^2(TL_{2k}(0)) ≅ TL_{2k-1}(0) as *algebras*), nilpotency=3 formal proof, Fibonacci rank formal proof.
 - Dependencies: D51 (done), D52 (done)
-- Priority: **HIGH** -- dimension formula is proven; algebra isomorphism and nilpotency still needed for Paper 3
-- Addresses: strengthening action #3 (partially complete)
+- Priority: **HIGH** -- three proofs done; algebra isomorphism and nilpotency still needed for Paper 3
+- Addresses: strengthening action #3 (significantly advanced)
 
 ### D66 -- Nazer-Gastpar Rate Region for DKC
 - Apply compute-and-forward capacity bounds to the DKC lattice; how many bits per bracket value can DKC extract?
@@ -139,32 +144,39 @@ These directly address the strengthening actions and open questions identified i
 - Priority: **MEDIUM** -- determines whether Paper 4 (axiality) is a short note or a significant result; consultation with a number theorist recommended
 - Addresses: novelty assessment Section 2d (axiality confidence MEDIUM-HIGH); strengthens Paper 4
 
+### D68 -- Z[zeta_16] Parity Scaling
+- Extend DKC to Z[zeta_16] (16 directions). Build exact Z[zeta_16] arithmetic. Compute universal k=31. Test parity ceiling. Is gap between constraint ceiling and pigeonhole bound always 2?
+- Dependencies: D63 (done)
+- Priority: **MEDIUM** -- first test of DKC scaling laws beyond Z[zeta_8]; potential Paper 1 extension
+- Addresses: D63 open question about Z[zeta_N] scaling; generalizes parity ceiling result
+
 ---
 
 ## Priority Summary
 
 ### HIGH (do these first -- direct publication impact)
-1. **D63** -- 4-Input DKC. Tests triskelion generalization. Paper 1 strengthener.
-2. **D64** -- Catalog Completeness Bound. Paper 1 weakness fix.
-3. **D65** -- Sandwich Theorem Proof. **Radical dim formula PROVEN**; algebra isomorphism remaining.
+1. **D64** -- Catalog Completeness Bound. Paper 1 weakness fix.
+2. **D65** -- Sandwich Theorem Proof. **Three proofs done**; algebra isomorphism and nilpotency remaining.
 
 ### MEDIUM (do next -- strengthen claims or open new connections)
-4. **D66** -- Nazer-Gastpar Rate Region. Paper 1 pillar strengthener.
-5. **D67** -- Axiality Proof Formalization. Paper 4 gating question.
+3. **D66** -- Nazer-Gastpar Rate Region. Paper 1 pillar strengthener.
+4. **D67** -- Axiality Proof Formalization. Paper 4 gating question.
+5. **D68** -- Z[zeta_16] Parity Scaling. DKC scaling laws beyond Z[zeta_8].
 6. ~~**D39** -- Symmetry Decomposition.~~ **DONE** (demo_39_symmetry_decomposition/)
-7. **D44** -- Path Integral / Ising. Physics interpretation.
-8. **D36** -- Long Braid Scaling. Practical ceiling validation.
+7. ~~**D63** -- Angular Anatomy of DKC.~~ **DONE** (demo_63_angular_anatomy/)
+8. **D44** -- Path Integral / Ising. Physics interpretation.
+9. **D36** -- Long Braid Scaling. Practical ceiling validation.
 
 ### LOW (backlog -- valid but not urgent)
-9. **D37** -- Diakoptics
-10. **D40** -- Impedance Tensor
-11. **D41** -- Axis Elimination
-12. **D30** -- Taxonomy-to-Braid Compiler
-13. **D31** -- Execution-as-Traversal
-14. **D32** -- Two-Thread Coordinates
-15. **D33** -- Full Pipeline
-16. **D34** -- Torus Knots
-17. **D43** -- Landauer Verification
+10. **D37** -- Diakoptics
+11. **D40** -- Impedance Tensor
+12. **D41** -- Axis Elimination
+13. **D30** -- Taxonomy-to-Braid Compiler
+14. **D31** -- Execution-as-Traversal
+15. **D32** -- Two-Thread Coordinates
+16. **D33** -- Full Pipeline
+17. **D34** -- Torus Knots
+18. **D43** -- Landauer Verification
 
 ---
 
@@ -176,4 +188,5 @@ These emerged from synthesis but don't have a clear single-demo scope yet:
 - **Galois symmetry conjecture**: sandwich duality from Galois automorphisms of Gal(Q(zeta_8)/Q). Highly speculative; may resolve itself during D65.
 - **Abramsky depth**: full Geometry of Interaction interpretation to predict which bracket triples compute which functions. Needs significant theoretical development.
 - **Costello-Francis-Gwilliam connection**: Witten=RT now proven (2026); DKC compiles QFT transition amplitudes into Boolean logic. Framing question more than a demo.
-- **5-input DKC**: would further test triskelion generalization (k=10 for 5-input parity). Scope depends on D63 results.
+- **OM generalization**: what OM type characterizes n-input parity for n=4,5?
+- **n=6 constraint wall proof**: clean algebraic proof, or inherently finite-verification?

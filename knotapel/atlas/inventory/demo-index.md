@@ -1,6 +1,6 @@
 # Demo Index
 
-50 demos cataloged. Generated 2026-02-20. Updated 2026-02-20 (added D38, D39, D60).
+51 demos cataloged. Generated 2026-02-20. Updated 2026-02-20 (added D63, updated D39 with Parts G-J).
 
 ---
 
@@ -1710,22 +1710,25 @@ At delta=0, the Gram matrix of the Temperley-Lieb trace form has rank exactly C_
 ## Demo 39: Symmetry Decomposition of TL_n
 
 - **Status**: COMPLETE
-- **File**: `demo_39_symmetry_decomposition/main.c` (~1072 lines)
-- **Tests**: 18/18 pass
-- **Depends on**: Demo 35 (planar matching enumeration), Demo 38 (dimension reduction infrastructure), Demo 51 (radical anatomy), Demo 52 (Chebyshev multi-delta)
-- **Feeds into**: Algebraic explanation of DKC parity wall (Demo 48), sector-level Gram degeneracy analysis
+- **File**: `demo_39_symmetry_decomposition/main.c` (~1483 lines)
+- **Tests**: 49+ tests pass
+- **Depends on**: Demo 35 (planar matching enumeration, diagram composition), Demo 38 (dimension reduction infrastructure), Demo 51 (radical anatomy at delta=0), Demo 52 (Chebyshev multi-delta radical structure), Demo 48 (forward DKC zoo — conjectured non-semisimplicity explanation deferred here)
+- **Feeds into**: Algebraic explanation of DKC parity wall (Demo 48 conjecture), understanding of sector-level Gram degeneracies for future multi-delta DKC analysis, Demo 63 (angular anatomy, RT truncation connection), proofs/markov-rt-truncation.md, proofs/next-level-radical-formula.md
 
 ### Headline
-Decomposes TL_n (n=2..8) by through-strand count into cellular sectors, verifying sector sizes = d(n,j)^2, computing per-sector Gram ranks at multiple delta values, proving cell filtration monotonicity, and showing semisimple algebras are NOT block-diagonal in the standard basis.
+Decomposes TL_n (n=2..8) by through-strand count into cellular sectors, verifying sector sizes = d(n,j)^2, computing per-sector Gram ranks at multiple delta values, proving cell filtration monotonicity, and showing semisimple algebras are NOT block-diagonal in the standard basis. Parts G-J extend to three distinct Gram forms at the n=ell boundary (fixpt, Markov, cell module), prove the Markov RT truncation theorem (Markov trace kills j >= ell-1, preserves j <= ell-2), verify the next-level radical formula rad(TL_{ell+1}) = ell^2-ell-3, and establish the second-degeneracy corank = ell+1.
 
 ### Key Results
-- **Part A**: Sector sizes |V_j| = d(n,j)^2 verified exhaustively for n=2..8 (Graham-Lehrer cell module dimensions)
+- **Part A**: Sector sizes |V_j| = d(n,j)^2 verified exhaustively for n=2..8
 - **Part B**: Even-n j=0 sector completely DEAD at delta=0; odd-n ALL sectors fully LIVE
 - **Part C**: Cross-sector coupling grows: 0 at n=4, 4 at n=6, 104 at n=8
 - **Part D**: Cell filtration ts(a*b) <= min(ts(a), ts(b)) proven exhaustively at n=4 and n=6
 - **Part E**: Multi-delta comparison — delta=phi semisimple (full rank), delta=0 minimal rank
 - **Part F**: Semisimple odd-n algebras are NOT block-diagonal in standard basis despite semisimplicity
-- **Part G**: Radical dimensions at n=ell boundary: ell=2:1, ell=3:3, ell=4:5, ell=5:0, ell=6:9, ell=7:11
+- **Part G**: Three Gram forms at n=ell boundary. V_{ell-2} unique degenerate module, corank 1. fixpt_rad=2ell-3, Markov_rad=2ell-2. Bug fix: p=10^9+7 → p=1000002361 (≡1 mod 840)
+- **Part H**: Next-level radical rad(TL_{ell+1}) = ell^2-ell-3 verified for ell=3..7. V_{ell-3} unique degenerate module.
+- **Part I**: Markov excess conjecture (ell+m-1)^2+1 REFUTED at m=3. True formula: excess = Σ (dim L_j)^2 for j ≥ ell-1.
+- **Part J**: Full RT truncation: Markov kills j ≥ ell-1, preserves j ≤ ell-2. Cross-sector kernel vector at ell=4: coefficient matrix [-δ,1;1,-δ] = J−δI, rank 2.
 
 ### Theorems/Conjectures
 - **Cellular decomposition**: |V_j| = d(n,j)^2 — PROVEN (n=2..8)
@@ -1733,30 +1736,48 @@ Decomposes TL_n (n=2..8) by through-strand count into cellular sectors, verifyin
 - **Cell filtration monotonicity**: PROVEN (exhaustive at n=4,6)
 - **Semisimple =/= block-diagonal**: PROVEN (n=3,5)
 - **Graham-Lehrer semisimplicity**: CONFIRMED (n < ell iff semisimple)
+- **rad(TL_ell) = 2ell-3**: PROVEN (formal proof in proofs/radical-dimension-formula.md)
+- **rad(TL_{ell+1}) = ell^2-ell-3**: PROVEN (formal proof in proofs/next-level-radical-formula.md)
+- **Universal Corank 1**: PROVEN (structural, via linking theorem)
+- **Markov RT truncation**: PROVEN (formal proof in proofs/markov-rt-truncation.md, 31/31 tests)
+- **Second-degeneracy corank = ell+1**: VERIFIED (ell=3..6)
+- **(ell+m-1)^2+1 excess conjecture**: REFUTED at m=3
 
 ### Data
 - Gram ranks at delta=0: n=4: [0,4,1]; n=6: [0,25,20,1]; n=8: [0,196,294,42,1]
 - Cross-sector coupling: n=4:0, n=6:4, n=8:104
 - Multi-delta ranks at n=4: delta=0:5, delta=1:11, delta=sqrt(2):9, delta=phi:14
 - Radical dims at n=ell: 1, 3, 5, 0, 9, 11 for ell=2..7
+- Three Gram forms (fixpt_rad, Markov_rad) at n=ell: (1,2), (3,4), (5,6), (7,8), (9,10), (11,12)
+- Markov excess: n=ell: 1; n=ell+1: ell^2+1; n=ell+2: (ell+1)^2+1; n=ell+3: Σ(dim L_j)^2
+- Next-level radical: ell=3:3, ell=4:9, ell=5:17, ell=6:27, ell=7:39
+- Second-degeneracy corank: ell=3:4, ell=4:5, ell=5:6, ell=6:7
 
 ### Code Assets
 - **Cell module dimension formula**: cell_module_dim(n,j)
 - **Sector classifier**: classify_sectors() partitions basis by through-strand count
 - **Gram submatrix builder**: build_gram_sub() for sector-restricted bilinear forms
+- **Markov Gram builder**: build_markov_gram() using closure loops
+- **Cell module Gram verification**: per-sector d(n,j) x d(n,j) Gram matrix
 - **Cubic root finder for ell=7**: Cantor-Zassenhaus over F_p[x]/(x^3-x^2-2x+1)
 - **Modular arithmetic suite**: mod_reduce, mod_inv, mod_pow, mod_sqrt (Tonelli-Shanks)
+- **Multi-level radical computation**: radical at n=ell through n=ell+3
 
 ### Literature Touched
 - Graham-Lehrer cellular algebra theory (1996)
 - Chebyshev parametrization of semisimplicity boundary
 - Cantor-Zassenhaus polynomial factoring
-- Non-semisimple representation theory: radical, cross-sector coupling
+- Ridout & Saint-Aubin (2014, arXiv:1204.4505): radical structure of cell modules
+- Reshetikhin-Turaev (1991): RT TQFT truncation
+- Turaev, "Quantum Invariants of Knots and 3-Manifolds": negligible modules
 
 ### Open Questions
 - Closed-form for cross-sector coupling growth?
-- Which sector's degeneracy specifically blocks parity computation?
-- Formula for radical dimensions at n=ell: 1, 3, 5, 0, 9, 11 for ell=2..7?
+- ANSWERED: Which sector's degeneracy blocks parity? → Cross-sector coupling (Markov kernel spans multiple sectors, not a product state)
+- ANSWERED: Formula for radical dims at n=ell? → rad = 2ell-3, PROVEN
+- Cross-sector kernel structure at general ell (J−δI pattern at ell=4)?
+- Second-degeneracy corank = ell+1: provable from linking theory?
+- ell=3 Markov rank stays 1 for n=5,6 — does it stay 1 for all n > ell at delta=1?
 
 ---
 
@@ -3014,6 +3035,65 @@ Provides two independent analytical proofs that exactly 0x06 (~A(B^C)) and 0x1B 
 - Is there a unified proof that handles both 0x06 and 0x1B simultaneously (they use different argument structures)?
 - What is the exact characterization of reachable NPN classes for other activation geometries (sectors, magnitude thresholds)?
 - Does the 11/13 ratio have a deeper algebraic meaning (e.g., related to the structure of the Boolean lattice or the symmetric group S_3)?
+
+---
+
+## Demo 63: Angular Anatomy of DKC
+
+- **Status**: COMPLETE
+- **File**: `demo_63_angular_anatomy/main.c` (~1957 lines)
+- **Tests**: 29/29 pass
+- **Depends on**: Demo 29 (Z[zeta_8] exact arithmetic, bracket catalog), Demo 50 (four-tier NPN hierarchy, parity at k=6), Demo 35 (TL matrix representations), Demo 39 (Markov RT truncation connection)
+- **Feeds into**: Paper 1 (4/5-input parity, parity ceiling); future demos on Z[zeta_16] scaling
+
+### Headline
+Establishes that the four-tier NPN reachability structure is determined by discrete octant-sector geometry, derives the complete parity scaling law for Z[zeta_8] (ceiling n=5), extends DKC to 4-input (k=8, 96 solutions) and 5-input (k=15, 3020 solutions) parity, and connects the angular structure to oriented matroid theory.
+
+### Key Results
+- **Part A**: All 100 catalog values are axial (single Z[zeta_8] component). Octant distribution: {17,8,17,11,11,11,17,8}.
+- **Part B**: Sector-octant mapping for k=2..8,15,16. k=6 uniquely produces parity octants {2,4,5,7}.
+- **Part C**: Representative weight triples from each tier showing sector-count mechanism.
+- **Part D**: Four-tier NPN structure from pure geometry: k=2(5), k=3(+1), k=4(+6), k=6(+1=parity). Non-monotonic: 906@k=6 > 756@k=7 > 96@k=8.
+- **Part E**: Triskelion anatomy at k=6. Two octant sets: {2,5,7}=636 (70.2%), {2,4,7}=270 (29.8%). Octants 2,7 mandatory.
+- **Part F**: Commensurability analysis. gcd(k,8) controls structure.
+- **Part G**: 21 distinct OM types. Parity requires ALTERNATING type only (-,+,- or +,-,+).
+- **Part H**: 4-input XOR at k=8, 96 solutions. Tetraskelion: all 4 odd octants {1,3,5,7}.
+- **Part I**: 5-input XOR at k=15, 3020 solutions. k=15 has 7 class-1 octants.
+- **Part J**: Parity ceiling n=5. n=6,7 impossible (constraint wall); n≥8 impossible (pigeonhole).
+
+### Theorems/Conjectures
+- **Four-tier from geometry**: PROVEN (exhaustive)
+- **Parity requires alternating OM type**: PROVEN (exhaustive, 0/1M non-alternating achieve parity)
+- **k=6 uniqueness**: PROVEN (exhaustive k=2..16)
+- **Parity ceiling n=5**: PROVEN (exhaustive search + pigeonhole)
+- **Universal k = 2M−1**: CONJECTURED (proof sketch, not yet fully formal)
+- **k=2n triskelion conjecture**: FALSIFIED (n=5 requires k=15, not k=10)
+
+### Data
+- Parity scaling: n=3→k=6(906), n=4→k=8(96), n=5→k=15(3020), n≥6→impossible
+- Solutions at k=15: n=3:23004, n=4:16108, n=5:3020, n=6:0, n=7:0
+- Octant distribution: {17,8,17,11,11,11,17,8}
+- 21 oriented matroid types from 512 octant triples
+
+### Code Assets
+- `angle_to_octant()`: Z[zeta_8] octant classifier
+- Sector-octant mapping for arbitrary k
+- `cross_sign()`, `om_encode()`, `om_decode()`: oriented matroid classification
+- `compute_tt4_at_k()`: 4-input DKC with 4-level pruning
+- `pj_search()`: recursive n-input parity search with 2^n−1 subset constraints
+
+### Literature Touched
+- Cover (1965): linearly separable functions, k=2 tier
+- Reiner (2004): cyclotomic matroids mu_N, Z[zeta_8] as mu_8
+- Bjorner et al.: oriented matroid covector lattices
+- Aizenberg (2008): k-sector MVN activation
+
+### Open Questions
+- Clean algebraic proof for n=6 constraint wall?
+- Z[zeta_16] constraint ceiling — is gap always 2?
+- Non-monotonic solution counts at k=15: a theorem?
+- OM type for n=4,5 parity?
+- Non-parity ceiling: NPN classes achievable at n=6?
 
 ---
 

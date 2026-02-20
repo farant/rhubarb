@@ -235,13 +235,26 @@ for 3 inputs (~100^4 = 100M, seconds), unclear for larger inputs.
 
 Status: DEPENDS ON scaling (Gap 6).
 
-### Gap 6: Scaling Beyond 3 Inputs
-222 NPN classes at 4 inputs. Catalog search space grows as |catalog|^(n+1).
-Need either: smarter search (predict which braid → which function), larger
-catalogs (more braids, higher strand counts), or compositional approaches
-(build n-input functions from smaller compiled units).
+### Gap 6: Scaling Beyond 3 Inputs — PARTIALLY RESOLVED
+Demo 63 extended DKC to 4-input (k=8, 96 solutions) and 5-input (k=15, 3020
+solutions) parity, establishing the parity ceiling at n=5 for Z[zeta_8]. The
+triskelion generalization (k=2n) was FALSIFIED; the true scaling law is
+k=2M-1 where M is the ray count.
 
-Status: PARTIALLY EXPLORED (4-input DKC is planned as Demo 63).
+For the vision, this means:
+- **Individual DKC neurons handle up to 5-input parity** (the hardest function).
+  Simpler functions (AND, OR, MAJ) likely have higher ceilings.
+- **3-input syllogisms are well within capacity** — the natural fit between
+  syllogisms and DKC is confirmed by the n=5 ceiling.
+- **Larger functions require composition** — multi-layer DKC (Gap 3) is the
+  path for anything beyond 5 inputs. This is architecturally consistent with
+  syllogistic chains.
+- **Z[zeta_16] may push the ceiling higher** — 16 directions give a pigeonhole
+  ceiling of n=15. Whether the constraint ceiling is close to that is an open
+  question (Demo 68 proposal).
+
+Status: n<=5 resolved. Compositional approach needed for n>5. Z[zeta_16]
+scaling is the natural next investigation.
 
 ---
 
@@ -255,8 +268,9 @@ Status: PARTIALLY EXPLORED (4-input DKC is planned as Demo 63).
    neuron. Test both cascade-threshold (Demo 19 style) and full-complex-value
    passing. Single demo.
 
-3. **4-input DKC** (Demo 63, already planned) — Tests scaling, triskelion
-   generalization, and provides the second data point for structural laws.
+3. ~~**4-input DKC** (Demo 63, already planned)~~ — **DONE** (Demo 63).
+   4-input parity at k=8 (96 solutions), 5-input at k=15 (3020 solutions),
+   parity ceiling n=5, triskelion FALSIFIED, oriented matroid classification.
 
 4. **Toy taxonomy → weight pipeline** — Take a 5-node taxonomy, manually encode
    as braids (even if the encoding is ad hoc), compile to DKC weights, verify
@@ -319,3 +333,4 @@ The hybrid LLM vision connects to rhubarb's larger goals:
 *First recorded: 2026-02-20. Source: conversation during atlas defrag.*
 *Updated: 2026-02-20. Source: second vision discussion — opaque tokens,
 syllogism-as-training, wired integration, deterministic NL parser.*
+*Updated: 2026-02-20. D63 resolved Gap 6 scaling (parity ceiling n=5).*

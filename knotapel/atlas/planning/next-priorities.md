@@ -1,6 +1,6 @@
 # DKC Research: Next Priorities
 
-Generated 2026-02-20. Informed by synthesis documents (narrative, novelty, connections, four-lenses).
+Generated 2026-02-20. Updated after D63. Informed by synthesis documents (narrative, novelty, connections, four-lenses).
 
 ---
 
@@ -8,13 +8,11 @@ Generated 2026-02-20. Informed by synthesis documents (narrative, novelty, conne
 
 ### ~~1.1 Formal proof of the sandwich theorem~~ — PARTIALLY DONE
 The **radical dimension formula** (rad(TL_ℓ) = 2ℓ−3) is now formally proven in `proofs/radical-dimension-formula.md`. Method: Graham-Lehrer cellular theory, unique degenerate cell module V_{ℓ-2} with corank 1, Chebyshev determinant. Corollary: ℓ²−ℓ−3 at n=ℓ+1.
+**Additionally proven:** Markov RT truncation (`proofs/markov-rt-truncation.md`) and next-level radical formula (`proofs/next-level-radical-formula.md`). These strengthen Paper 3.
 **Remaining:** The full sandwich theorem (rad^2(TL_{2k}(0)) ≅ TL_{2k-1}(0) as algebras) is a stronger claim than the dimension formula. The proof proves dimensions match; the algebra isomorphism still needs formal proof. Also: nilpotency=3 and Fibonacci rank remain computationally verified, not proven.
 
-### 1.2 4-input parity: test the triskelion generalization
-**What:** Extend the forward DKC pipeline to 4-input Boolean functions (222 NPN classes). Search for parity (XOR4) under k-sector activations. Does parity require k=8 sectors as the triskelion generalization (k=2n) predicts?
-**Why:** The triskelion conjecture is the most testable open conjecture and a natural "next result" for Paper 1. If k=8 is confirmed, it's a strong structural law. If it fails, we learn something deeper about the sector geometry. Either outcome is publishable.
-**Effort:** MEDIUM (2 demos — catalog expansion to 4-strand braids + exhaustive k-sector search at each k).
-**Unblocks:** Triskelion generalization conjecture (confirm or refute). Extends the four-tier hierarchy to a richer NPN landscape. Provides the second data point for the k=2n law.
+### ~~1.2 4-input parity: test the triskelion generalization~~ — DONE (Demo 63)
+4-input parity reachable at k=8 (96 solutions, tetraskelion). 5-input parity at k=15 (3020 solutions, pentaskelion). **Parity ceiling for Z[zeta_8] is n=5.** Triskelion generalization (k=2n) **FALSIFIED** — n=5 requires k=15, not k=10. True scaling: k=2M-1 where M is ray count. Oriented matroid classification: alternating OM type required for parity. Two types of impossibility: constraint wall (n=6,7) vs pigeonhole (n>=8).
 
 ### 1.3 Catalog completeness argument
 **What:** Prove or bound that the 100-value Z[zeta_8] catalog at delta=0 contains all distinct bracket values up to braid length L. Alternatively, prove asymptotic saturation (new values per additional crossing approaches zero).
@@ -59,6 +57,12 @@ All predictions confirmed: rad(TL_7) = 11 = 2*7-3, rad(TL_8) = 39 = 49-7-3, rad^
 **Effort:** MEDIUM (2 demos — 2-layer architecture + systematic search).
 **Unblocks:** Determines whether DKC's computational limits are single-layer phenomena or fundamental to the bracket algebra.
 
+### 2.6 Z[zeta_16] scaling
+**What:** Extend DKC to Z[zeta_16] (16 directions, M=16). Compute the universal k (k=31), test parity ceiling. Is the gap between constraint ceiling and pigeonhole bound always 2? (Z[zeta_8]: ceiling n=5, pigeonhole n=7, gap=2.)
+**Why:** The first test of whether DKC scaling laws generalize beyond Z[zeta_8]. If the gap is always 2, that's a theorem. If not, the lattice geometry matters more than expected.
+**Effort:** LARGE (requires Z[zeta_16] exact arithmetic infrastructure + extensive search at M=16, k=31 with up to n=15 inputs).
+**Unblocks:** Generalizes the parity ceiling beyond Z[zeta_8]. Potential Paper 1 extension.
+
 ---
 
 ## Tier 3: Someday
@@ -69,11 +73,8 @@ All predictions confirmed: rad(TL_7) = 11 = 2*7-3, rad(TL_8) = 39 = 49-7-3, rad^
 **Effort:** LARGE (research program — requires deep engagement with Abramsky's categorical framework).
 **Unblocks:** Theoretical prediction of computability without exhaustive enumeration. The "grand theory" of DKC.
 
-### 3.2 5-input parity and beyond
-**What:** Extend forward DKC to 5 inputs (616,126 NPN classes). Test triskelion generalization at k=10.
-**Why:** Third data point for k=2n law. But 5-strand braid catalogs are computationally expensive and the NPN landscape is vast.
-**Effort:** LARGE (3+ demos — catalog generation alone is non-trivial at 5 strands).
-**Unblocks:** Third data point for triskelion generalization. Complete NPN hierarchy for 5 inputs.
+### ~~3.2 5-input parity and beyond~~ — DONE (Demo 63)
+5-input parity resolved as part of Demo 63 (k=15, 3020 solutions). Triskelion generalization FALSIFIED. Z[zeta_16] scaling is the natural next step.
 
 ### 3.3 Physical interpretation via Costello-Francis-Gwilliam
 **What:** Costello-Francis-Gwilliam (2026) proved Witten = Reshetikhin-Turaev rigorously. Interpret forward DKC in terms of compiling QFT transition amplitudes into Boolean logic.
@@ -109,11 +110,13 @@ The shortest path to a strong first publication (Paper 1):
 1.3 (catalog completeness) + 2.3 (Aizenberg relationship)
             |
             v
-    1.2 (4-input parity)
+    [1.2 DONE: 4-input, 5-input, ceiling n=5, OM classification]
             |
             v
       Paper 1 submission
 ```
+
+Paper 1 is significantly strengthened by D63. Remaining gaps: catalog completeness (1.3) and Aizenberg relationship (2.3).
 
 The shortest path to Paper 2 (11/13 theorem):
 
@@ -127,7 +130,7 @@ Paper 2 submission
 The shortest path to Paper 3 (radical anatomy):
 
 ```
-[1.1 rad dim formula PROVEN] --> [2.1 ell=7 DONE]
+[1.1 rad dim formula PROVEN] --> [2.1 ell=7 DONE] --> [Markov RT truncation PROVEN]
          |
          v
   1.1 remaining (algebra isomorphism, nilpotency, Fibonacci rank)
@@ -135,3 +138,13 @@ The shortest path to Paper 3 (radical anatomy):
          v
   Paper 3 submission
 ```
+
+Paper 3 strengthened by Markov RT truncation proof and next-level radical formula proof.
+
+---
+
+## Open Questions
+
+- Z[zeta_16] parity ceiling: what is the constraint-geometric ceiling for a 16-direction lattice?
+- Oriented matroid generalization: what OM type characterizes n-input parity for n=4,5?
+- n=6 constraint wall algebraic proof: is there a clean proof that the 63 constraints are unsatisfiable, or is it inherently a finite-verification result?

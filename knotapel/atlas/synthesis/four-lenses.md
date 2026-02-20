@@ -8,7 +8,7 @@ The DKC research is one thing seen from four directions. These are not four rese
 
 **What the research looks like:** The Temperley-Lieb algebra TL_n(delta) at roots of unity is a non-semisimple finite-dimensional algebra whose radical structure controls what the Kauffman bracket can and cannot compute. The radical is not noise. It is the precise algebraic object that separates computable from incomputable Boolean functions.
 
-**Central demos:** D35 (TL_n matrices over Z[zeta_8], the keystone), D51 (radical anatomy at delta=0 -- the sandwich theorem, Loewy length 3, Catalan trace theorem, Peirce block matching), D52 (Chebyshev generalization across ell=2-6, universal nilpotency 3, cross-ell radical dimension formulas), D06 (Jones-Wenzl idempotents as module projectors).
+**Central demos:** D35 (TL_n matrices over Z[zeta_8], the keystone), D39 (Parts G-J: three Gram forms, Markov RT truncation, next-level radical formula), D51 (radical anatomy at delta=0 -- the sandwich theorem, Loewy length 3, Catalan trace theorem, Peirce block matching), D52 (Chebyshev generalization across ell=2-6, universal nilpotency 3, cross-ell radical dimension formulas), D06 (Jones-Wenzl idempotents as module projectors).
 
 **Core results belonging to this lens:**
 - The sandwich theorem: rad^2(TL_{2k}(0)) is isomorphic to TL_{2k-1}(0) as a bimodule. Three Loewy layers with dimensional mirrors.
@@ -16,11 +16,13 @@ The DKC research is one thing seen from four directions. These are not four rese
 - Universal nilpotency 3: rad^3 = 0 at ALL roots of unity tested (ell=2-6). The cellularity of TL algebras forces this.
 - Fibonacci rank theorem: the total bilinear rank of the rad^2 generator equals F(ell-1). Fibonacci numbers arise from fusion rules in the Bratteli diagram.
 - Cross-ell radical dimension formulas: rad(TL_ell) = 2ell-3, rad(TL_{ell+1}) = ell^2-ell-3.
+- Markov RT truncation: Markov trace kills j >= ell-1, preserves j <= ell-2. The "shadow interpretation": fixpt = algebraic light, Markov = topological light.
+- Next-level radical formula: rad(TL_{ell+1}) = ell^2-ell-3, now formally proven.
 
 **Open questions specific to this lens:**
 - The Galois symmetry conjecture: does the sandwich duality (top isomorphic to bottom) correspond to a Galois automorphism of Gal(Q(zeta_8)/Q)?
 - Palindromic sector rank conjecture for even ell.
-- ell=7 predictions: first cubic number field case, would validate all universal formulas.
+- ell=7 predictions: first cubic number field case, would validate all universal formulas. **CONFIRMED (D60).**
 
 **Connections to other lenses:**
 - To Coding Theory: the radical is what the bracket evaluation quotients out. The semisimple quotient TL/rad is the "visible" part; the radical is the "invisible" lattice dimension. This is exactly the information-theoretic partition into accessible and inaccessible bits.
@@ -33,7 +35,7 @@ The DKC research is one thing seen from four directions. These are not four rese
 
 **What the research looks like:** The bracket catalog is a codebook. Z[zeta_8] is a rank-4 lattice over Z, and each bracket value is a codeword. The question "which Boolean functions can be computed?" becomes "which truth tables are achievable via lattice codewords as neural network weights?" This is Nazer-Gastpar's compute-and-forward applied not to relay channels but to topological invariants.
 
-**Central demos:** D29 (forward DKC -- exact Z[zeta_8] arithmetic, 65K+ XOR triples from lattice), D48 (100M quartet exhaustive search -- the parity wall as a coding-theoretic impossibility), D46 (capacity analysis: ~4.3 bits magnitude + ~1.5 bits phase = ~5.8 bits/symbol), D47 (two-channel coding conjecture, topology-frequency correlation reversal), D12 (quantization geometry, BitNet parallels).
+**Central demos:** D29 (forward DKC -- exact Z[zeta_8] arithmetic, 65K+ XOR triples from lattice), D48 (100M quartet exhaustive search -- the parity wall as a coding-theoretic impossibility), D63 (parity ceiling n=5, oriented matroid classification), D46 (capacity analysis: ~4.3 bits magnitude + ~1.5 bits phase = ~5.8 bits/symbol), D47 (two-channel coding conjecture, topology-frequency correlation reversal), D12 (quantization geometry, BitNet parallels).
 
 **Core results belonging to this lens:**
 - Axiality theorem: at delta=0, bracket values are Z-axial in Z[zeta_8] -- only one coordinate is nonzero. The full rank-4 lattice collapses to rank 1. This is extreme constellation collapse.
@@ -41,12 +43,15 @@ The DKC research is one thing seen from four directions. These are not four rese
 - Phase decoherence thesis (D46): split-sigmoid accesses ~4.3 bits (magnitude channel), MVN-continuous accesses a different ~1.5 bits (phase channel). These are literally complementary codes.
 - Catalog size hierarchy: ell=3 (6 values, binary collapse), ell=4 (56 values), delta=0 (100 values), ell=5 (116 values). Non-monotonic: delta=0 has a uniquely favorable catalog despite the simplest algebra.
 - The 11/13 half-plane theorem (D61-62): a semicircular decision region on additive angular sums can reach exactly 11 of 13 NPN classes. This is a covering radius / quantization geometry result.
+- Parity ceiling for Z[zeta_8] is n=5 -- the fundamental capacity limit of the Z[zeta_8] codebook for the hardest boolean function.
+- Oriented matroid classification: alternating OM type required for parity. Connection to matroid theory codebook structure.
 
 **Open questions specific to this lens:**
 - Two-channel coding conjecture: can a joint decoder for magnitude + phase achieve ~5.8 bits/symbol?
 - Does the catalog size obey a lattice theta function identity?
 - What is the covering radius of the Z[zeta_8] bracket catalog in the complex plane?
 - CSS feasibility is already ruled out (radical is self-orthogonal under Gram form but not standard inner product). Are there other algebraic coding constructions that work?
+- Z[zeta_16] scaling: does moving to ell=3 (rank-8 lattice) push the parity ceiling beyond n=5? What is the general relationship between cyclotomic ring rank and parity capacity?
 
 **Connections to other lenses:**
 - To Representation Theory: the radical is the "invisible" sublattice. Bracket evaluation projects through TL/rad, killing radical codewords. The neglecton weights (D49) are first-order perturbations recovering radical information -- 148 new values, but zero new angles. The lattice geometry is preserved by the projection.
@@ -68,6 +73,7 @@ The DKC research is one thing seen from four directions. These are not four rese
 - Entanglement vanishing theorem: at delta=0, ALL non-interleaving braids have zero bracket. Delta=0 is an entanglement detector.
 - Convergence at WRT angles (D15): the greedy-optimal classification angle (1.805pi) converges to within 1.5% of the WRT level-3 evaluation point (11pi/6). "Topology knows information theory."
 - Fibonacci anyon negative result (D58): at ell=5, braid representations are dense in PSU(2) — the condition for topological quantum computation universality. But density in the group does NOT translate to angular diversity in the scalar bracket output. The bracket projects a rich group-theoretic structure down to scalar amplitudes, and the projection destroys the angular diversity that DKC needs. This is why TQC universality and DKC universality are independent properties.
+- DKC-RT truncation connection (D63): DKC works because it uses pre-closure bracket information that RT truncation would discard. At delta=0 (ell=2), the most degenerate topological point gives the most structured algebraic point.
 
 **Open questions specific to this lens:**
 - Fibonacci TQFT boundary (mentioned at D05, n=5): what happens when we cross into the Fibonacci anyon regime?
@@ -94,12 +100,14 @@ The DKC research is one thing seen from four directions. These are not four rese
 - 0x1B unreachability proof: algebraic contradiction via interval squeeze. Three angles phi_1, phi_2, phi_3 cannot simultaneously satisfy the semicircle constraints imposed by the 0x1B truth table. The proof forces phi_3 > pi and phi_3 < pi.
 - 0x06 unreachability proof: four-semicircle parallelogram argument. If alpha + beta > pi, all gaps are < pi, making the required intersection empty.
 - Incommensurability hypothesis (D50): parity solution count anti-correlates with gcd(k,8). Sector boundaries misaligned with the pi/4 angular lattice break the symmetry blocking parity. k=6 (gcd=2) gives 906 solutions; k=8 (gcd=8) gives only 96.
+- DKC-RT truncation connection (D63): DKC works because it uses pre-closure bracket information that RT truncation would discard. At delta=0 (ell=2), the most degenerate topological point gives the most structured algebraic point.
 
 **Open questions specific to this lens:**
 - Can the cyclic zero pattern {8,0,0,8,4,4} be explained by a Chebyshev identity?
 - Is there a Chebyshev polynomial characterization of which NPN classes require k sectors?
-- Can the triskelion principle (each input needs its own odd sector at 120-degree intervals) be derived from approximation-theoretic bounds on angular separation?
+- Can the triskelion principle (each input needs its own odd sector at 120-degree intervals) be derived from approximation-theoretic bounds on angular separation? **FALSIFIED** -- triskelion generalization does not hold; the angular separation requirement is specific to n=3, not a universal principle.
 - Does the incommensurability hypothesis generalize: for n-input parity, is the minimum sector count k=2n?
+- Z[zeta_16] scaling: does the richer angular lattice of ell=3 push the parity ceiling beyond n=5, or is the capacity limit intrinsic to the activation geometry rather than the ring?
 
 **Connections to other lenses:**
 - To Representation Theory: the Chebyshev recurrence IS the quantum dimension recurrence. When [ell]_q = 0, the Jones-Wenzl idempotent p_ell is singular and the algebra becomes non-semisimple. Approximation theory predicts EXACTLY where the algebra changes character.
@@ -150,7 +158,9 @@ These are not analogies. They are the same mathematics described in four languag
 | D53-D54 | Coding (axiality hierarchy, cross-ell catalogs) | Rep Theory (semisimplicity) |
 | D55-D59 | Coding (cross-ell DKC landscape) | Approx (11/13 wall universality) |
 | D61-D62 | Approx (semicircle proofs for 0x1B, 0x06) | Coding (half-plane quantization) |
+| D63 | Coding (parity ceiling n=5, oriented matroid classification) | QM (RT truncation connection), Approx (angular capacity) |
+| D39 G-J | Rep Theory (three Gram forms, Markov truncation, radical formula) | QM (shadow interpretation), Approx (Chebyshev) |
 
 ---
 
-*Generated 2026-02-20. Source: demo-index.md (47 demos), theorems.md, data-tables.md, four-pillars.md.*
+*Updated 2026-02-20. Source: demo-index.md, theorems.md, data-tables.md, four-pillars.md. Added D63 (parity ceiling, oriented matroids) and D39 Parts G-J (Gram forms, Markov truncation, radical formula).*

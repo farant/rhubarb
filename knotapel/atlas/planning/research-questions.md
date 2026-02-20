@@ -1,6 +1,6 @@
 # DKC Research Questions
 
-Collected from 47 demos, four-lenses.md, novelty.md, connections.md. Generated 2026-02-20.
+Collected from 51 demos (incl. D63, D39 Parts G-J), four-lenses.md, novelty.md, connections.md. Generated 2026-02-20.
 
 ---
 
@@ -9,14 +9,14 @@ Collected from 47 demos, four-lenses.md, novelty.md, connections.md. Generated 2
 **Q1.1. Convexity thesis formalization.** The 11/13 wall is about activation convexity (half-planes convex; multiplicative products rotate out). Can this be a formal theorem?
 - Source: D57, D61-D62 | Difficulty: MODERATE | Publication: upgrades Paper 2
 
-**Q1.2. Triskelion generalization.** Does n-input parity require k=2n sectors? Untested beyond n=3.
-- Source: D50 | Difficulty: MODERATE (4-input computational; general proof HARD) | Publication: scaling law for Paper 1
+**Q1.2. Triskelion generalization.** ~~Does n-input parity require k=2n sectors?~~ **ANSWERED/FALSIFIED**: n=5 parity requires k=15, not k=10. The scaling law is k=2M-1 (universal k for M-ray lattice), not k=2n. FALSIFIED by Demo 63.
+- Source: D50, D63 | Difficulty: N/A | Publication: superseded by Q1.10
 
 **Q1.3. Minimum k per NPN class.** Can sector count be predicted from truth table properties (nonlinearity, correlation immunity)?
 - Source: D49, D50 | Difficulty: MODERATE | Publication: systematic activation-requirement classification
 
-**Q1.4. Non-monotonicity continuation.** 906@k=6 > 756@k=7 > 96@k=8. What happens k=9..16? Does gcd(k,8) anti-correlation persist?
-- Source: D50 | Difficulty: APPROACHABLE | Publication: strengthens incommensurability hypothesis
+**Q1.4. Non-monotonicity continuation.** 906@k=6 > 756@k=7 > 96@k=8. What happens k=9..16? Does gcd(k,8) anti-correlation persist? *Note: D63 provides k=2..16 data (Part D), but the continuation k=9..16 for 3-input is already in D50 data.*
+- Source: D50, D63 | Difficulty: APPROACHABLE | Publication: strengthens incommensurability hypothesis
 
 **Q1.5. Incommensurability as theorem.** Prove gcd(k,8) correlation rigorously (currently 3 data points).
 - Source: D50, four-lenses | Difficulty: HARD | Publication: theoretical centerpiece of sector geometry
@@ -30,6 +30,18 @@ Collected from 47 demos, four-lenses.md, novelty.md, connections.md. Generated 2
 **Q1.8. 11/13 deeper meaning.** Does 11/13 relate to Boolean lattice structure, S_3, or something else?
 - Source: D62 | Difficulty: OPEN PROBLEM | Publication: connects combinatorics to geometry
 
+**Q1.9. Oriented matroid type for n-input parity.** Alternating OM type characterizes 3-input parity. What type characterizes n=4 (6-sign encoding) and n=5?
+- Source: D63 | Difficulty: MODERATE | Publication: generalizes OM classification
+
+**Q1.10. Universal k theorem proof.** k=2M-1 for M-ray lattice. Proof sketch exists; needs formalization.
+- Source: D63 | Difficulty: APPROACHABLE | Publication: closes the sector-geometry story
+
+**Q1.11. n=6 constraint wall algebraic proof.** 63 subset-sum constraints on 6 integer magnitudes have no solution in Z[zeta_8] at k=15. Exhaustive search confirms; is there a clean algebraic proof?
+- Source: D63 | Difficulty: HARD | Publication: distinguishes geometric from combinatorial impossibility
+
+**Q1.12. Z[zeta_16] parity ceiling.** At 16 directions (M=16), pigeonhole ceiling rises to n=15. What is the actual constraint ceiling? Is the gap always 2?
+- Source: D63 | Difficulty: LARGE | Publication: first test of scaling beyond Z[zeta_8]
+
 ---
 
 ## 2. TL Algebra / Radical Structure
@@ -40,8 +52,8 @@ Collected from 47 demos, four-lenses.md, novelty.md, connections.md. Generated 2
 **Q2.2. Galois symmetry conjecture.** Does sandwich duality correspond to Gal(Q(zeta_8)/Q) automorphism?
 - Source: D51, four-lenses | Difficulty: HARD | Publication: rep theory meets number theory
 
-**Q2.3. ell=7 predictions.** rad(TL_7) = 11, Fibonacci rank = 8. First cubic number field. Validates all universal formulas.
-- Source: D52 | Difficulty: APPROACHABLE | Publication: dramatically strengthens cross-ell claims
+**Q2.3. ell=7 predictions.** ~~rad(TL_7) = 11, Fibonacci rank = 8.~~ **DONE** (Demo 60, all predictions confirmed).
+- Source: D52, D60 | Difficulty: N/A | Publication: confirmed
 
 **Q2.4. Palindromic sector rank conjecture.** For even ell. Not yet tested beyond current range.
 - Source: four-lenses | Difficulty: MODERATE | Publication: adds structure to Fibonacci rank theorem
@@ -54,6 +66,12 @@ Collected from 47 demos, four-lenses.md, novelty.md, connections.md. Generated 2
 
 **Q2.7. rad^2 generator vs neglecton objects.** D49 neglecton weights from radical; D51 characterizes rad^2. Same objects?
 - Source: D49, D52 | Difficulty: MODERATE | Publication: unifies DKC arc with radical anatomy arc
+
+**Q2.8. Markov RT truncation: cross-sector kernel structure.** At ell=4, coefficient matrix is J-deltaI (rank 2). Does this pattern generalize to other ell? Does the kernel vector always span exactly two sectors?
+- Source: D39 Part J | Difficulty: MODERATE | Publication: refines Markov RT truncation theorem
+
+**Q2.9. Second-degeneracy corank proof.** Corank = ell+1 at n=ell+2, verified ell=3..6. Provable from linking theory?
+- Source: D39 Part H | Difficulty: MODERATE | Publication: extends radical structure formulas
 
 ---
 
@@ -110,8 +128,8 @@ Collected from 47 demos, four-lenses.md, novelty.md, connections.md. Generated 2
 
 ## 6. DKC Extensions
 
-**Q6.1. 4-input DKC.** Does parity need k=8? Tests triskelion generalization. Probes 222 NPN classes.
-- Source: D50 | Difficulty: MODERATE | Publication: next step for Paper 1
+**Q6.1. 4-input DKC.** ~~Does parity need k=8?~~ **DONE** (Demo 63, 96 solutions at k=8).
+- Source: D50, D63 | Difficulty: N/A | Publication: confirmed
 
 **Q6.2. Forward-reverse duality at 4 inputs.** Spearman rho = -0.82 at 3 inputs. Holds at 222 NPN classes?
 - Source: D45, D47 | Difficulty: APPROACHABLE | Publication: universality of the duality
@@ -125,19 +143,25 @@ Collected from 47 demos, four-lenses.md, novelty.md, connections.md. Generated 2
 **Q6.5. Solution manifold structure.** 100+ XOR triples, 906 parity solutions -- lattice, group, Z[zeta_8] automorphism orbits?
 - Source: D29, D50 | Difficulty: HARD | Publication: hidden symmetry in DKC solution space
 
+**Q6.6. Non-parity ceiling.** Parity is the hardest function (last reachable). Are there NPN classes achievable at n=6 that are NOT parity?
+- Source: D63 | Difficulty: MODERATE | Publication: characterizes the full scaling landscape
+
+**Q6.7. Solution count monotonicity at k=15.** Solutions decrease 23004→16108→3020→0 as n increases from 3 to 6. Is monotonic decrease a theorem, or could counts increase for larger n in other lattices?
+- Source: D63 | Difficulty: MODERATE | Publication: structural property of DKC
+
 ---
 
 ## Priority Ranking
 
 **Tier 1 -- Immediate (APPROACHABLE, high impact):**
-Q2.3 (ell=7), Q1.4 (k=9..16 counts), Q6.2 (duality at 4 inputs), Q4.3 (axiality known?), Q1.7 (multi-sector multiplicative)
+Q1.10 (universal k proof), Q1.4 (k=9..16 counts), Q6.2 (duality at 4 inputs), Q4.3 (axiality known?), Q1.7 (multi-sector multiplicative)
 
 **Tier 2 -- Soon (MODERATE, strengthens papers):**
-Q2.1 (sandwich proof), Q3.4 (catalog completeness), Q1.2 (triskelion at 4 inputs), Q6.1 (4-input landscape)
+Q2.1 (sandwich proof), Q3.4 (catalog completeness), Q1.9 (OM generalization), Q2.8 (cross-sector kernel), Q6.6 (non-parity ceiling)
 
 **Tier 3 -- Deep work (HARD, transformative):**
-Q1.5 (incommensurability theorem), Q3.1 (two-channel coding), Q5.3 (TQC/DKC independence), Q2.2 (Galois symmetry)
+Q1.5 (incommensurability theorem), Q3.1 (two-channel coding), Q5.3 (TQC/DKC independence), Q2.2 (Galois symmetry), Q1.11 (n=6 wall proof), Q1.12 (Z[zeta_16] scaling)
 
 ---
 
-*Source: demo-index.md (47 demos), four-lenses.md, novelty.md, connections.md.*
+*Source: demo-index.md (51 demos incl. D63, D39 Parts G-J), four-lenses.md, novelty.md, connections.md.*

@@ -164,35 +164,58 @@ Each step is grounded in established mathematics. The assembly is novel.
 
 ---
 
+## 9.5. The Proof Trilogy: Radical, Markov, and Angular Anatomy
+
+Three formal proofs now anchor the algebraic side of DKC.
+
+**Proof 1: Radical Dimension Formula** (`proofs/radical-dimension-formula.md`). rad(TL_ell) = 2ell-3. The unique degenerate cell module V_{ell-2} has corank 1, determined by the Chebyshev zero U_{ell-1}(cos(pi/ell)) = 0. This is the "algebraic light" — the fixpt trace sees everything except the radical.
+
+**Proof 2: Next-Level Radical Formula** (`proofs/next-level-radical-formula.md`). rad(TL_{ell+1}) = ell^2-ell-3. At n=ell+1, V_{ell-3} is the unique new degenerate module, again with corank 1 via the linking theorem. The Universal Corank 1 property at first degeneracy is structural, not numerical.
+
+**Proof 3: Markov RT Truncation** (`proofs/markov-rt-truncation.md`). dim ker(B_M) = dim J(A) + sum of (dim L_j)^2 for j >= ell-1. The Markov trace kills exactly the Reshetikhin-Turaev truncated modules (j >= ell-1), preserving only the "physical" modules (j <= ell-2). This is the "topological light" — dimmer than the algebraic light by exactly the RT-truncated blocks. The shadow interpretation: fixpt trace = algebraic light (sees all simples), Markov trace = topological light (sees only RT-physical modules). The excess = what topology cannot see that algebra can.
+
+Discovery path: the wrong conjecture ((ell+m-1)^2+1 for the excess) was essential — it worked for small m and failed at m=3, revealing the true block-sum structure. Demo 39 Parts G-J provided the computational verification (31/31 data points); Demo 63 uses the RT truncation connection to explain why DKC works at delta=0.
+
+---
+
 ## 10. The Frontier
 
 **What is proven:**
 - Forward DKC works: exact Z[zeta_8] bracket values compute XOR (Demo 29) and all 13 NPN classes (Demo 50) without training.
 - The split-sigmoid parity wall: XNOR3 has exactly 0 solutions out of 100M quartets (Demo 48) and 0 out of 2.18B with neglecton expansion (Demo 49).
-- MVN k=6 resolves parity: 906 solutions with the triskelion geometry (Demo 50).
+- MVN k=6 resolves 3-input parity: 906 solutions with the triskelion geometry (Demo 50).
+- **4-input parity at k=8**: 96 solutions, tetraskelion structure (Demo 63).
+- **5-input parity at k=15**: 3020 solutions, pentaskelion (Demo 63).
+- **Parity ceiling for Z[zeta_8] is n=5**: n>=6 impossible by constraint wall, n>=8 impossible by pigeonhole (Demo 63).
 - The 11/13 half-plane theorem: analytical proofs that 0x06 and 0x1B are unreachable by any semicircle activation on multiplicative encodings (Demo 62).
-- Cross-ell radical dimension formulas: rad(TL_ell) = 2*ell - 3 and rad(TL_{ell+1}) = ell^2-ell-3. **FORMALLY PROVEN** via Graham-Lehrer cellular theory (`proofs/radical-dimension-formula.md`).
+- Cross-ell radical dimension formulas: rad(TL_ell) = 2*ell - 3 and rad(TL_{ell+1}) = ell^2-ell-3. **FORMALLY PROVEN** via Graham-Lehrer cellular theory (proofs/radical-dimension-formula.md, proofs/next-level-radical-formula.md).
+- **Markov RT Truncation theorem**: Markov trace kills j >= ell-1, preserves j <= ell-2. **FORMALLY PROVEN** (proofs/markov-rt-truncation.md).
 - Universal nilpotency 3: rad^3 = 0 for TL_n at all tested roots of unity (Demo 52).
 - The Sandwich Theorem: rad^2(TL_{2k}(0)) is isomorphic to TL_{2k-1}(0) (Demo 51).
+- **Four-tier NPN hierarchy from pure octant-sector geometry** (Demo 63).
+- **Oriented matroid classification**: parity requires alternating OM type (Demo 63).
 
 **What is computationally verified but not analytically proven:**
 - The axiality theorem at delta=0 (131K braids, zero counterexamples).
 - Fibonacci rank of rad^2 generator = F(ell-1) (five data points, through F(6)=8 at ell=7).
 - The Catalan trace theorem and window formula.
 - The incommensurability hypothesis (parity solutions anti-correlate with gcd(k,8)).
+- The universal k theorem (k=2M-1 for M-ray lattice; proof sketch provided).
+- Second-degeneracy corank = ell+1 (four data points).
 
 **What is conjectured:**
-- The triskelion generalization: n-input parity requires k=2n sectors.
-- The TL non-semisimplicity hypothesis: parity's resistance reflects the Clifford boundary — bracket evaluation through TL/radical kills radical degrees of freedom that parity requires.
-- The two-channel coding conjecture: the bracket catalog has a ~4.3-bit magnitude channel and a ~1.5-bit phase channel; a joint decoder could achieve ~5.8 bits/symbol.
-- The Galois symmetry conjecture: the sandwich duality may correspond to a Galois automorphism of Gal(Q(zeta_8)/Q).
+- ~~The triskelion generalization: n-input parity requires k=2n sectors.~~ **FALSIFIED** by Demo 63 — n=5 requires k=15, not k=10.
+- The TL non-semisimplicity hypothesis: parity's resistance reflects the Clifford boundary.
+- The two-channel coding conjecture: ~4.3-bit magnitude + ~1.5-bit phase = ~5.8 bits/symbol.
+- The Galois symmetry conjecture: sandwich duality from Galois automorphism.
 
 **What is next:**
-- ell=7 predictions CONFIRMED (Demo 60): rad(TL_7) = 11, Fibonacci rank = F(6) = 8. First cubic number field. Universality holds.
-- 4-input DKC: 222 NPN classes, higher-dimensional parity, triskelion generalization test.
+- Z[zeta_16] scaling: 16 directions, k=31 universal. What is the constraint-geometric ceiling? Is the gap between ceiling and pigeonhole bound always 2?
+- Catalog completeness: prove (or bound) that the 100-value Z[zeta_8] catalog at delta=0 contains ALL distinct bracket values.
 - The Abramsky depth: full Geometry of Interaction interpretation to predict which bracket triples compute which functions.
 - Multi-layer DKC: cascading bracket-valued neurons for circuit-level compilation.
 - The physical interpretation: Costello-Francis-Gwilliam (2026) proved Witten = Reshetikhin-Turaev, making bracket values rigorously quantum field theory transition amplitudes. DKC compiles quantum field theory into Boolean logic.
+- OM generalization: what oriented matroid type characterizes n-input parity for n=4,5?
 
 ---
 
@@ -206,8 +229,12 @@ Each step is grounded in established mathematics. The assembly is novel.
 6. The Sandwich Theorem: rad^2(TL_{2k}(0)) = TL_{2k-1}(0) (Demo 51)
 7. Catalan trace theorem and window formula (Demo 51)
 8. Fibonacci rank theorem: total bilinear rank = F(ell-1) (Demo 52)
-9. Cross-ell radical dimension formulas: 2ell-3 and ell^2-ell-3 (Demo 52)
+9. Cross-ell radical dimension formulas: 2ell-3 and ell^2-ell-3 — FORMALLY PROVEN (Demos 52, 39)
 10. Topology-frequency correlation reversal under activation change (Demo 47)
 11. The four-pillar assembly connecting Habiro, Nazer-Gastpar, Abramsky, and Aizenberg
+12. Markov RT truncation theorem — FORMALLY PROVEN (Demo 39, proof trilogy)
+13. Parity ceiling for Z[zeta_8] is n=5 — extends DKC to 4-input and 5-input (Demo 63)
+14. Oriented matroid classification of DKC — alternating OM type required for parity (Demo 63)
+15. Two types of impossibility: constraint-geometric wall vs pigeonhole (Demo 63)
 
-No prior work connects these four fields. The intersection is genuinely unoccupied. The question "can topological invariants be compiled into neural network weights?" has no direct precedent in the literature. Fifty demos prove the answer is yes — and map the exact boundary of what is computable.
+No prior work connects these four fields. The intersection is genuinely unoccupied. The question "can topological invariants be compiled into neural network weights?" has no direct precedent in the literature. Fifty-one demos prove the answer is yes — and map the exact boundary of what is computable, including the fundamental capacity limit: parity up to n=5 inputs in Z[zeta_8].

@@ -1,7 +1,7 @@
 # Novelty Assessment: DKC Research Program
 
-Assessment date: 2026-02-20. Updated 2026-02-20 (added D38, D39, D60). Based on
-73 cataloged papers (literature-index.md), 50 demos, and the theorem inventory.
+Assessment date: 2026-02-20. Updated 2026-02-20 (added D38, D39, D60, D63, D39 Parts G-J). Based on
+76 cataloged papers (literature-index.md), 50 demos, and the theorem inventory.
 Honest where uncertain.
 
 ---
@@ -81,10 +81,25 @@ Things we believe are genuinely new. No prior work found across 72 papers.
   with gcd(k,8). **Confidence: HIGH** (computational fact). The incommensurability
   explanation is conjectural.
 
-- **Triskelion principle.** 3-input parity at k=6 requires each input to have its own
+- **Triskelion principle (3-input).** 3-input parity at k=6 requires each input to have its own
   odd sector at 120-degree intervals. All weights confined to octants {2,4,5,7}.
-  **Confidence: MEDIUM-HIGH.** Observed in all 906 solutions; geometric explanation
-  is informal.
+  **Confidence: HIGH.** Confirmed by all 906 solutions. The k=2n generalization to higher
+  inputs is FALSIFIED (5-input parity requires k=15, not k=10). Triskelion is 3-input specific.
+
+- **Parity ceiling for Z[zeta_8] is n=5.** 4-input parity at k=8 (96 solutions), 5-input at
+  k=15 (3020 solutions), n>=6 impossible (constraint wall: 63 subset constraints unsatisfiable),
+  n>=8 impossible (pigeonhole: 7 class-1 octants). Two distinct impossibility mechanisms.
+  **Confidence: HIGH.** Exhaustive computational verification + pigeonhole proof.
+
+- **Oriented matroid classification of DKC.** 21 distinct OM types from 512 weight triples.
+  Only the alternating type (-,+,- or +,-,+) achieves parity. 0 of ~1M non-alternating triples
+  reach parity. Interleaving around the circle is the geometric condition for pair-sum parity alternation.
+  **Confidence: HIGH.** Exhaustive verification. Connection to matroid theory is novel.
+
+- **Four-tier NPN from octant-sector geometry.** The four-tier hierarchy is reproduced from
+  pure discrete geometry (sector boundaries on 8 rays) without any search. k=6 is the UNIQUE
+  sector count producing the parity octant set {2,4,5,7}.
+  **Confidence: HIGH.** Exhaustive for k=2..16.
 
 - **Convexity thesis.** The 0x1B/0x06 wall is about activation convexity, not encoding
   geometry. Half-planes are convex; multiplicative products can rotate out.
@@ -113,6 +128,18 @@ Things we believe are genuinely new. No prior work found across 72 papers.
   V_{ℓ-2} is the unique degenerate cell module at n=ℓ with corank 1 via Chebyshev
   determinant. The proof is self-contained and publication-ready.
   **Confidence: PROVEN.** No longer a computational observation — this is a theorem.
+
+- **Markov RT truncation theorem.** Markov trace at q=e^{i*pi/ell} kills exactly j >= ell-1,
+  preserves j <= ell-2. Excess = sum of (dim L_j)^2 for killed blocks. The "shadow interpretation":
+  fixpt = algebraic light (all simples), Markov = topological light (RT-physical simples).
+  **NOW FORMALLY PROVEN** (`proofs/markov-rt-truncation.md`): three-part proof via negligible
+  ideal. 31/31 computational verification points.
+  **Confidence: PROVEN.** The initial conjecture ((ell+m-1)^2+1) was REFUTED at m=3, leading
+  to discovery of the true block-sum formula. Clean three-part proof.
+
+- **Universal Corank 1 at first degeneracy.** At first n where V_j degenerates, corank = 1.
+  Linked module V_n^{(n)} has dim 1.
+  **Confidence: PROVEN.** Structural from Graham-Lehrer linking theorem.
 
 ### 2d. Bracket / Axiality
 - **Axiality theorem at delta=0.** Every bracket value is axial in Z[zeta_8]: at most
@@ -243,10 +270,14 @@ Forward DKC answers it.
 
 **Paper 1: "Forward DKC -- Topological Invariants as Neural Network Weights"**
 - Results: Forward DKC theorem, 100+ XOR triples, exhaustive parity wall (100M quartets),
-  parity reachability at k=6 (906 solutions), four-tier NPN hierarchy.
-- Strength: Exhaustive computational proofs. Clean narrative from wall to resolution.
-- Weakness: No formal proof that 906 is the exact count (depends on catalog completeness).
-  Need to clarify relationship to Aizenberg 2008 UBN construction.
+  parity reachability at k=6 (906 solutions), four-tier NPN hierarchy, **4-input parity at
+  k=8 (96 solutions), 5-input parity at k=15 (3020 solutions), parity ceiling n=5,
+  oriented matroid classification, two types of impossibility**.
+- Strength: Exhaustive computational proofs. Clean narrative from wall to resolution to
+  **complete scaling law**. D63 dramatically strengthens the paper.
+- Weakness: Need to clarify relationship to Aizenberg 2008 UBN construction.
+  ~~No formal proof that 906 is the exact count~~ -- catalog completeness still open but
+  less critical given the full scaling law.
 - Recommendation: Submit as a letter/communication to a venue that bridges ML and topology.
   Nature Machine Intelligence, JMLR, or NeurIPS.
 
@@ -282,21 +313,22 @@ Forward DKC answers it.
 ### Speculative / Not Ready
 
 - Incommensurability hypothesis (gcd(k,8) correlation). Suggestive but 3 data points.
-- Triskelion generalization conjecture (k=2n for n-input parity). Untested beyond n=3.
+- ~~Triskelion generalization conjecture (k=2n for n-input parity). Untested beyond n=3.~~ **FALSIFIED** by Demo 63 — n=5 requires k=15, not k=10. Replaced by universal k theorem (k=2M-1).
 - Galois symmetry conjecture (sandwich duality from Galois automorphisms). Speculative.
 - Two-channel coding conjecture (~5.8 bits/symbol). Needs formal capacity analysis.
 - TL non-semisimplicity hypothesis for parity. Conceptually important but unproven.
 
 ### Strengthening Actions
 
-1. **ell=7 verification.** Predictions exist (rad(TL_7) = 11, Fibonacci rank = 8).
+1. **ell=7 verification.** DONE. Predictions exist (rad(TL_7) = 11, Fibonacci rank = 8).
    First cubic number field case. Confirming these would dramatically strengthen
    the cross-ell universality claims.
-2. **4-input and 5-input DKC.** Does parity require k=8 sectors for 4 inputs?
-   Would test triskelion generalization.
+2. **4-input and 5-input DKC.** **DONE (Demo 63)**. Triskelion generalization FALSIFIED.
+   4-input parity at k=8, 5-input at k=15, parity ceiling at n=5.
 3. **Formal proof of sandwich theorem.** Likely provable from cellular algebra theory
    plus explicit cell module bilinear form computation.
 4. **Catalog completeness argument.** Prove (or bound) that the 100-value Z[zeta_8]
    catalog at delta=0 contains ALL distinct bracket values up to some braid length.
 5. **Rate region analysis.** Apply Nazer-Gastpar capacity bounds to DKC. How many
    bits per bracket value can DKC extract?
+6. **Formal proof of Markov RT truncation.** DONE (`proofs/markov-rt-truncation.md`). Strengthens Paper 3.

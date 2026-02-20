@@ -1,6 +1,6 @@
 # Cross-Demo Connections
 
-How 50 demos feed into each other, what recurs, and where threads unexpectedly converge.
+How 51 demos feed into each other, what recurs, and where threads unexpectedly converge.
 
 ---
 
@@ -425,6 +425,36 @@ Result: Clean analytical proofs via integer arithmetic and geometric arguments. 
 floating-point. The 48 unreachable truth tables (orbits of 0x06 and 0x1B) are
 characterized by parallelogram and interval-squeeze obstructions on the circle.
 
+### D63: Angular Anatomy and Parity Ceiling
+
+Threads converging:
+- Triskelion geometry (D50 parity at k=6, 906 solutions)
+- Z[zeta_8] axiality (D35, octant structure)
+- MVN k-sector activation (Aizenberg 2008, sector-octant mapping)
+- Oriented matroid theory (Bjorner et al., matroid covector lattices)
+- RT truncation connection (D39 Parts G-J, Markov trace kills j >= ell-1)
+
+Result: Complete parity scaling law for Z[zeta_8] — ceiling n=5. Extends DKC from
+3-input (Demo 50) to 4-input (k=8, 96 solutions) and 5-input (k=15, 3020 solutions).
+Falsifies k=2n triskelion conjecture (n=5 needs k=15 not k=10). Discovers that parity
+requires the alternating oriented matroid type — the first connection between DKC and
+matroid theory. Two types of impossibility: constraint-geometric wall (n=6,7) vs
+pigeonhole (n>=8).
+
+### D39 Parts G-J: The Proof Trilogy
+
+Threads converging:
+- Cellular algebra theory (Graham-Lehrer 1996)
+- Fixpt vs Markov trace (two "lights" on TL_n)
+- RT truncation (Reshetikhin-Turaev 1991, negligible ideal)
+- Wrong conjecture as discovery tool ((ell+m-1)^2+1 refuted at m=3)
+
+Result: Three formal proofs anchoring the algebraic side of DKC. Markov RT truncation
+theorem identifies the Markov kernel as J(A) + negligible ideal. The "shadow
+interpretation" — fixpt trace is algebraic light, Markov trace is topological light,
+excess = what topology cannot see — provides the deepest framing of how DKC uses
+pre-closure information that RT truncation would discard.
+
 ---
 
 ## Summary: The Project's Logic
@@ -438,9 +468,14 @@ classical universality but discover the parity barrier. D26-D29 connect bracket
 values to neural network weights and prove forward DKC. D45-D50 map the complete
 landscape and resolve the parity wall via activation geometry. D51-D52 ground the
 algebraic explanation. D53-D59 verify universality across evaluation levels.
-D61-D62 prove the half-plane wall analytically.
+D61-D62 prove the half-plane wall analytically. D63 establishes the parity scaling
+ceiling at n=5 inputs. D39 Parts G-J provide three formal proofs anchoring the
+algebraic theory.
 
 The answer: yes, with caveats. The bracket algebra computes 12/13 NPN classes
 through its natural structure. The 13th (parity) requires reading angular information
 that half-plane activations cannot access but k-sector activations can. The wall is
-geometric, not topological.
+geometric, not topological. Demo 63 establishes the fundamental capacity limit:
+parity up to n=5 inputs in Z[zeta_8], with two distinct impossibility mechanisms
+beyond. Three formal proofs (radical dimension, next-level radical, Markov RT
+truncation) now anchor the algebraic theory.

@@ -2,7 +2,7 @@
 
 All numerical tables extracted from the demo index and explorer's log. Exact numbers preserved.
 
-*Updated 2026-02-20: Added Demo 38 (dimension reduction), Demo 39 (symmetry decomposition), Demo 60 (ell=7 cubic wall) data.*
+*Updated 2026-02-20: Added Demo 38 (dimension reduction), Demo 39 (symmetry decomposition), Demo 60 (ell=7 cubic wall), Demo 63 (angular anatomy), Demo 39 Parts G-J (three gram forms) data.*
 
 ---
 
@@ -196,6 +196,79 @@ Parity solution counts by k-sector:
 **Non-monotonic:** 906@k=6 > 756@k=7 > 96@k=8.
 
 **Provenance:** Demo 50; Explorer's Log.
+
+### Complete Parity Scaling Law for Z[zeta_8] — Demo 63
+
+| n inputs | min k | solutions at min k | solutions at k=15 | mechanism |
+|----------|-------|-------------------|-------------------|-----------|
+| 3 | 6 | 906 | 23,004 | triskelion |
+| 4 | 8 | 96 | 16,108 | tetraskelion |
+| 5 | 15 | 3,020 | 3,020 | pentaskelion |
+| 6 | — | 0 | 0 | **impossible** (constraint wall) |
+| 7 | — | 0 | 0 | **impossible** (constraint wall) |
+| 8+ | — | 0 | 0 | **impossible** (pigeonhole) |
+
+**Parity ceiling for Z[zeta_8] is n=5.**
+
+**Provenance:** Demo 63 Part J.
+
+### Sector-Octant Mapping Table — Demo 63
+
+Class-1 octant sets for each sector count k (mod 2 activation):
+
+| k | class-1 octants | count | notes |
+|---|----------------|-------|-------|
+| 2 | {4,5,6,7} | 4 | half-plane (Im > 0) |
+| 3 | {3,4,5} | 3 | 120° boundaries |
+| 4 | {2,3,6,7} | 4 | quadrant structure |
+| 5 | {2,3,5,6} | 4 | |
+| 6 | {2,4,5,7} | 4 | **parity octants** (unique) |
+| 7 | {2,4,6} | 3 | |
+| 8 | {1,3,5,7} | 4 | odd octants only |
+| 15 | {1,2,3,4,5,6,7} | 7 | all non-zero (universal k) |
+
+k=6 is the UNIQUE k in {2,...,16} whose class-1 set equals {2,4,5,7}.
+
+**Provenance:** Demo 63 Parts B, D.
+
+### Octant Distribution over 100 Catalog Values — Demo 63
+
+| Octant | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 |
+|--------|---|---|---|---|---|---|---|---|
+| Count | 17 | 8 | 17 | 11 | 11 | 11 | 17 | 8 |
+| Ray | a | b | c | d | a | b | c | d |
+| Ray count | 28 | 19 | 34 | 19 | — | — | — | — |
+
+Symmetric: octants {0,2,4,6} (real/imaginary axes) have counts {17,17,11,17}; octants {1,3,5,7} (diagonal axes) have counts {8,11,11,8}.
+
+**Provenance:** Demo 63 Part A.
+
+### Parity Triskelion Octant Distribution — Demo 63
+
+At k=6 (3-input parity, 906 solutions):
+
+| Octant triple | Solutions | Percentage |
+|---------------|-----------|------------|
+| {2,5,7} | 636 | 70.2% |
+| {2,4,7} | 270 | 29.8% |
+
+Octants 2 and 7 are mandatory in every parity solution. Only two of the C(4,3)=4 possible triples from {2,4,5,7} actually occur.
+
+**Provenance:** Demo 63 Part E.
+
+### Oriented Matroid Type Distribution — Demo 63
+
+21 distinct OM types from 512 octant triples. Key finding:
+
+| OM type | sign pattern | NPN classes at k=6 | parity? |
+|---------|-------------|-------------------|---------|
+| Alternating | (-,+,-) or (+,-,+) | 13/13 | YES |
+| Uniform | (+,+,+) or (-,-,-) | 12/13 | NO |
+| All others | mixed | ≤12/13 | NO |
+
+0 degenerate (any cross-product = 0) OM types achieve parity.
+
+**Provenance:** Demo 63 Part G.
 
 ### DKC at δ=√2 (ℓ=4): 3-Input Results — Demo 55
 
@@ -985,6 +1058,61 @@ TL_n(δ) at δ=2cos(π/ℓ) is semisimple iff n < ℓ.
 Note: ℓ=5 is the unique case where n=ℓ is still semisimple (Graham-Lehrer criterion: n < ℓ is sufficient but the boundary n=ℓ depends on ℓ).
 
 **Provenance:** Demo 39; Demo 60.
+
+---
+
+## 25. Three Gram Forms at n=ℓ Boundary — Demo 39 Parts G-J
+
+### Fixpt vs Markov Radical at n=ℓ
+
+| ℓ | dim(TL_ℓ) | fixpt rank | Markov rank | fixpt rad | Markov rad | excess |
+|---|-----------|------------|-------------|-----------|------------|--------|
+| 2 | 2 | 1 | 0 | 1 | 2 | 1 |
+| 3 | 5 | 2 | 1 | 3 | 4 | 1 |
+| 4 | 14 | 9 | 8 | 5 | 6 | 1 |
+| 5 | 42 | 35 | 34 | 7 | 8 | 1 |
+| 6 | 132 | 123 | 122 | 9 | 10 | 1 |
+| 7 | 429 | 418 | 417 | 11 | 12 | 1 |
+
+Pattern: Markov_rad = fixpt_rad + 1 = 2ℓ-2 at n=ℓ. Excess always 1 (single killed block L_ℓ, dim 1).
+
+**Provenance:** Demo 39 Part G.
+
+### Markov Excess at Successive Levels
+
+| Level | killed blocks | ℓ=3 excess | ℓ=4 excess | ℓ=5 excess | ℓ=6 excess | ℓ=7 excess |
+|-------|--------------|------------|------------|------------|------------|------------|
+| n=ℓ | L_ℓ (dim 1) | 1 | 1 | 1 | 1 | 1 |
+| n=ℓ+1 | L_{ℓ+1}(dim 1), L_{ℓ-1}(dim ℓ) | 10 | 17 | 26 | 37 | 50 |
+| n=ℓ+2 | L_{ℓ+2}(dim 1), L_ℓ(dim ℓ+1) | 17 | 26 | 37 | 50 | — |
+| n=ℓ+3 | 3 blocks | 98 | 233 | 450 | — | — |
+
+Formula: excess = Σ (dim L_j)² for j ≥ ℓ-1 (same parity as n).
+
+**Provenance:** Demo 39 Parts I-J.
+
+### Next-Level Radical (n=ℓ+1)
+
+| ℓ | rad(TL_{ℓ+1}) | = ℓ²-ℓ-3 | unique degenerate | corank |
+|---|----------------|-----------|-------------------|--------|
+| 3 | 3 | 9-3-3=3 ✓ | V_0 | 1 |
+| 4 | 9 | 16-4-3=9 ✓ | V_1 | 1 |
+| 5 | 17 | 25-5-3=17 ✓ | V_2 | 1 |
+| 6 | 27 | 36-6-3=27 ✓ | V_3 | 1 |
+| 7 | 39 | 49-7-3=39 ✓ | V_4 | 1 |
+
+**Provenance:** Demo 39 Part H; formal proof in `proofs/next-level-radical-formula.md`.
+
+### Second-Degeneracy Corank (V_{ℓ-2} at n=ℓ+2)
+
+| ℓ | corank | = ℓ+1 |
+|---|--------|-------|
+| 3 | 4 | ✓ |
+| 4 | 5 | ✓ |
+| 5 | 6 | ✓ |
+| 6 | 7 | ✓ |
+
+**Provenance:** Demo 39 Part H.
 
 ---
 
