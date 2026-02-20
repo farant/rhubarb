@@ -1,7 +1,7 @@
 # Explorer's Log — DKC Research Arc & Demo 35
 
 Last updated: 2026-02-19
-Context: Updated through Demo 55 (DKC Boolean search at ℓ=4). Parity at Re>0 confirmed.
+Context: Updated through Demo 56 (Potts-TL Dictionary). Ising partition functions compute 12/13 NPN classes.
 
 ## The Story in One Paragraph
 
@@ -801,12 +801,115 @@ The Re>0 comparison is more nuanced (trades 2 obscure classes for 9,334 parity s
 - The Z[i] structure provides ~10× the parity solution density of Z[ζ₈] despite having fewer catalog values
 - Encodings differ (additive at δ=0 vs multiplicative at δ=√2) — not directly comparable, but the structural parallels are striking
 
+## Demo 56: Potts-TL Dictionary — Ising Partition Functions Compute Boolean Functions — COMPLETE
+
+**File:** `knotapel/demo_56_potts_tl/main.c`
+**Tests:** 17/17 pass
+
+### Core Idea
+
+δ² = Q in the Potts model, so the Kauffman bracket IS a Potts partition function:
+- ℓ=3 (δ=1) → Q=1 = bond percolation (trivial)
+- ℓ=4 (δ=√2) → Q=2 = **Ising model**
+- ℓ=6 (δ=√3) → Q=3 = 3-state Potts
+
+The Fortuin-Kasteleyn partition function: Z_FK(G; Q, v) = Σ_{A⊆E} v^|A| · Q^{k(A)}
+
+### Headline Results
+
+**1. FK = Ising spin sum: CONFIRMED** (7/7 cross-validation on lattice strips)
+
+**2. Z[i]-axiality is a BRAID property, not an algebra property.**
+- Bracket values are Z[i]-axial (2D over Z) — the specific A, A⁻¹ coefficients in σ_i create cancellations
+- FK partition functions live in Z[ζ₈] = Z[i, √2] (4D over Z) — the Q^{k(A)} weighting breaks axiality
+- Both come from TL_n(√2), but FK uses the FULL even subring
+
+**3. Critical coupling gives real values.**
+At v = √2 (self-dual Ising critical temperature), all FK values are in Z[√2]:
+- Pattern: a + b·√2 (e.g., S(2,2) = 72 + 48·√2 ≈ 139.88)
+
+**4. Q=1 → Q=2 is a computational phase transition.**
+- Q=1: Z_FK = (1+v)^|E| always — no geometric information (confirms Demo 53)
+- Q=2: Each strip geometry gives a distinct Z — the lattice topology matters
+
+### FK DKC Boolean Search — THE PHYSICS HEADLINE
+
+**"The Ising partition function computes 12 of 13 NPN Boolean function classes, including parity, with a 2-sector activation."**
+
+FK catalog: 9 distinct partition function values from lattice strips S(w,h) at bracket coupling (Q=2, v=-ζ₁₆⁶).
+
+| Activation | NPN Reachable | Parity | Missing |
+|-----------|-----------|--------|---------|
+| Re(z) > 0 | 11/13 | 113 | ~A(B^C), 3v-0x1B |
+| Split-sigmoid | 10/13 | 19 | ~A(B^C), 3v-0x1B, A^(B\|C) |
+| Sector k=2 | **12/13** | 32 | **3v-0x1B only** |
+| Sector k=4 | 10/13 | 19 | ~A(B^C), 3v-0x1B, A^(B\|C) |
+| Sector k=6 | 11/13 | 32 | ~A(B^C), 3v-0x1B |
+
+### Comparison: FK vs Bracket
+
+- Bracket Re>0 (56 values): 11/13 NPN — same as FK Re>0 (9 values)!
+- FK sector k=2 (9 values): 12/13 NPN — **better** than any single bracket activation
+- 4D algebraic structure (Z[ζ₈]) gives more angular diversity, which sector activations exploit
+- Only 9 catalog values achieve nearly the same coverage as 56 bracket values
+
+### The 0x1B Wall: Five-Lens Analysis — RESOLVED
+
+**CORRECTION:** 3v-0x1B is NOT universally impossible. Full (activation × catalog) matrix:
+
+**Bracket catalog (56 values):**
+| Activation | 0x1B solutions |
+|-----------|---------------|
+| Re(z) > 0 | 0 |
+| Im(z) > 0 | 0 |
+| Split-sigmoid | **144** |
+| Sector k=2 | **480** |
+| Sector k=4 | 384 |
+| Sector k=6 | 480 |
+| Sector k=8 | **2,496** |
+| Magnitude | 0 |
+
+**FK catalog (9 values):** 0 across ALL activations (catalog too small).
+
+**δ=0 (Demo 48):** 1,690,752 solutions with split-sigmoid.
+
+**Two-type wall classification:**
+1. **Algebraic wall** (parity at δ=0): Fundamental — the algebra itself lacks the structure. Dissolves only by changing ℓ.
+2. **Encoding wall** (0x1B at δ=√2 Re>0): Contingent on encoding+activation combination. Dissolves with sector activations at the SAME ℓ.
+
+**Coding theory criterion** — the sharpest lens:
+- 0x1B TRUE set = {000, 001, 011, 100}. Check linearity: 001⊕011 = 010 ∉ set. **Non-linear.**
+- ~A(B^C) TRUE set (0x06) = {001, 010}. Check: 001⊕010 = 011 ∉ set. **Also non-linear.**
+- PARITY TRUE set = {000, 011, 101, 110}. Check: 011⊕101 = 110 ✓, 000⊕011 = 011 ✓, etc. **Linear** (dual of repetition code).
+- The two classes that Re>0 misses are exactly the ones with non-linear TRUE sets incompatible with the (Z/2)³ group structure of multiplicative encoding under a single half-plane cut.
+
+**Five-lens summary:**
+1. **QM:** 0x1B's TRUE set has asymmetric, W-state-like correlation structure — genuinely 3-party correlated, resists the tensor-product (separable) structure of multiplicative encoding.
+2. **Coding theory:** Non-linear code → fights against (Z/2)³ group structure. Linear TRUE sets (parity, XOR2) are compatible with multiplicative encoding; non-linear ones (0x1B, 0x06) are not — under half-plane activations.
+3. **Number theory:** Half-plane activation = single arc in angular ordering of group elements. 0x1B requires the TRUE set elements to be in a non-contiguous angular arrangement that can't be captured by a single arc. Sector activations (multiple arcs) resolve this.
+4. **Approximation theory:** All three weights must "cross the imaginary axis" in conflicting ways. The angular constraints are over-determined for a single boundary but resolvable with two or more boundaries (sector k≥2).
+5. **Rep theory:** Braid symmetry (σ_i symmetric under permutation) constrains which partitions the trace image can produce. The asymmetry of 0x1B conflicts with this, but not fatally — sector activations break the symmetry enough.
+
+**Prediction:** Additive encoding z(a,b,c) = a·w₁ + b·w₂ + c·w₃ would dissolve the Re>0 wall for 0x1B, because addition doesn't impose the group/arc constraint. The TRUE set maps to {0, w₃, w₂+w₃, w₁} — four independent points with no multiplicative coupling.
+
+**Conclusion:** The 0x1B obstruction is understood and NOT fundamental. It's a property of multiplicative encoding + half-plane activation, not of the algebra or physics.
+
+### Updated Axiality Hierarchy
+
+| ℓ | δ | Bracket Ring | FK Ring | Bracket DKC | FK DKC |
+|---|---|-------------|---------|-------------|--------|
+| 2 | 0 | Z[ζ₈], Z-axial | — | 13/13 at k=6 | — |
+| 3 | 1 | Z[ζ₆], Z-axial | Q=1 trivial | Dead | Dead |
+| 4 | √2 | Z[ζ₁₆], Z[i]-axial (2D) | Z[ζ₈] (4D) | 13/13 split-sig | **12/13 at k=2** |
+
 ### Open Questions for Future Sessions
 
-1. **ℓ=5 (δ=φ, Fibonacci anyons):** What is the axiality ring? Predict Z[ζ₅]-axial or something richer. This would extend the axiality hierarchy to the regime where topological quantum computation is universal.
-2. **Prove Z[i]-axiality theoretically:** We have 89,426 braids confirming it computationally. Can we prove it from the state-sum structure at ℓ=4?
-3. **Additive encoding at δ=√2:** Would remove the z(0,...,0)=1 constraint and potentially reach all 16 two-input functions. Lower priority — the multiplicative results already tell the story.
-4. **Difficulty hierarchy deeper analysis:** WHY are ~A(B^C) and 3v-0x1B invisible to half-plane activations? Is there a geometric reason in the Gaussian integer plane?
+1. **ℓ=5 (δ=φ, Fibonacci anyons):** What is the axiality ring? Predict Z[ζ₅]-axial or something richer. Extends axiality hierarchy to the topological quantum computation regime.
+2. **Prove Z[i]-axiality theoretically:** 89,426 braids confirm computationally. Can we prove it from the state-sum structure at ℓ=4?
+3. **Additive encoding experiment:** Verify prediction that additive encoding dissolves the 0x1B and 0x06 Re>0 walls. Would confirm the coding theory criterion.
+4. **FK catalog expansion:** More lattice sizes, boundary conditions (periodic, twisted), non-rectangular graphs. Could a richer FK catalog reach 0x1B with sectors?
+5. **Q=3 (3-state Potts at ℓ=6):** Does the Potts model get richer at Q=3? The FK ring would live in Z[ζ₁₂].
+6. **Complete linearity classification:** Which of the 13 NPN classes have linear/affine TRUE sets? This would fully characterize the multiplicative+half-plane achievability boundary.
 
 ---
 *End of Explorer's Log*

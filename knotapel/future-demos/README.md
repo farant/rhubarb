@@ -2,7 +2,7 @@
 
 Unfinished knotapel demos, extracted from Smaragda entities (Feb 2026). Each file = one demo.
 
-17 demos total (30-44, 46-47). 10 ready now, 7 blocked behind one keystone demo.
+23 demos total (30-44, 46-47, 57-62). 10 original ready now, 7 blocked behind keystone, 6 new from DKC research arc.
 
 ## Ready Now
 
@@ -49,6 +49,22 @@ These form a dependency chain within Track C. Completing Demo 35 unblocks the wh
 - `40-impedance-tensor.md` — Transfer matrix as Kron impedance
 - `41-axis-elimination.md` — Schur complement strand elimination
 - `42-cyclotomic-exact-arithmetic.md` — Z[i,sqrt(2)] integer arithmetic
+
+### Track D (continued): DKC Research Arc (Demos 57-62)
+
+Added Feb 2026 after Demos 53-56 results. Ordering: 57 first (prediction test), 58 second (highest theory value), rest in any order. Demo 61 builds on 57-59 results.
+
+- `57-additive-encoding-dkc.md` — Test coding theory prediction: additive encoding dissolves 0x1B/0x06 Re>0 wall *(needs Demo 55)*
+- `58-fibonacci-anyon-dkc.md` — ℓ=5 (δ=φ) axiality and DKC. Does TQC universality → DKC universality? *(needs Demos 54, 55)*
+- `59-q3-potts-dkc.md` — Q=3 Potts (ℓ=6, δ=√3). Extend Potts hierarchy. *(needs Demos 52, 56)*
+- `60-cubic-wall-l7.md` — ℓ=7 first cubic number field. Sharp test of radical dimension universality. *(needs Demos 51, 52)*
+- `61-linearity-classification.md` — Complete GF(2) linearity classification of NPN classes vs DKC achievability. *(needs Demos 55-59)*
+- `62-radical-css-code.md` — Radical → CSS quantum error-correcting code → computable functions pipeline. *(needs Demos 51, 52, 55-59)*
+
+### Track E: Radical Anatomy
+
+- `60-cubic-wall-l7.md` — Also in Track D. First non-quadratic number field test.
+- `62-radical-css-code.md` — Also in Track D. Bridges anatomy and computation.
 
 ## Completed Demos (for reference)
 
