@@ -1300,6 +1300,417 @@ int main(void) {
         }
     }
 
+    /* ===========================================================
+     * Kernel Analysis: ell=4, dump both Gram matrices
+     * =========================================================== */
+    printf("======== Kernel Analysis: ell=4 (n=4, dim=14) ========\n\n");
+    {
+        long dpow_k[MAX_LOOPS + 1];
+        long fixpt_k[MAX_BASIS];
+        int all_k[MAX_BASIS];
+        int cl_k[MAX_BASIS];
+        int ik, max_cl_k;
+
+        init_tl(&alg, 4);
+
+        /* Closure loops */
+        max_cl_k = 0;
+        for (ik = 0; ik < alg.dim; ik++) {
+            cl_k[ik] = closure_loops(&alg.basis[ik], 4);
+            if (cl_k[ik] > max_cl_k) max_cl_k = cl_k[ik];
+        }
+        {
+            int mt = alg.max_loops + max_cl_k;
+            if (mt > MAX_LOOPS) mt = MAX_LOOPS;
+            make_dpow(delta_sqrt2, mt, dpow_k);
+        }
+        compute_fixpt(&alg, dpow_k, fixpt_k);
+
+        for (ik = 0; ik < alg.dim; ik++)
+            all_k[ik] = ik;
+
+        /* Through-strand counts per basis element */
+        classify_sectors(&alg, n_through,
+                         sectors, sect_count, &n_sectors);
+        printf("  basis through-strands: ");
+        for (ik = 0; ik < alg.dim; ik++)
+            printf("%d ", n_through[ik]);
+        printf("\n\n");
+
+        /* Fixpt Gram */
+        build_gram_sub(&alg, fixpt_k, dpow_k,
+                       all_k, alg.dim, g_full_gram);
+        printf("  FIXPT_GRAM = [\n");
+        for (ik = 0; ik < alg.dim; ik++) {
+            int jk;
+            printf("    [");
+            for (jk = 0; jk < alg.dim; jk++) {
+                printf("%ld", g_full_gram[ik * alg.dim + jk]);
+                if (jk < alg.dim - 1) printf(", ");
+            }
+            printf("],\n");
+        }
+        printf("  ]\n\n");
+
+        /* Markov Gram */
+        build_markov_gram(&alg, dpow_k, cl_k,
+                          all_k, alg.dim, g_full_gram);
+        printf("  MARKOV_GRAM = [\n");
+        for (ik = 0; ik < alg.dim; ik++) {
+            int jk;
+            printf("    [");
+            for (jk = 0; jk < alg.dim; jk++) {
+                printf("%ld", g_full_gram[ik * alg.dim + jk]);
+                if (jk < alg.dim - 1) printf(", ");
+            }
+            printf("],\n");
+        }
+        printf("  ]\n\n");
+    }
+
+    /* ===========================================================
+     * Part H: Next-Level Verification (n = ell+1)
+     *
+     * Verify rad(TL_{ell+1}(delta)) = ell^2 - ell - 3 for ell=3..7.
+     * Also compute cell module Gram for V_{ell-3} to verify corank=1.
+     * =========================================================== */
+
+    printf("======== Part H: Next-Level (n=ell+1) ========\n\n");
+    {
+        int ells_h[] = {3, 4, 5, 6, 7};
+        long dvals_h[5];
+        const char *dnames_h[] = {"1", "sqrt(2)", "phi",
+                                   "sqrt(3)", "2cos(pi/7)"};
+        int hi;
+        long delta_sqrt3_h = mod_sqrt(3);
+        long delta_l7_h = find_l7_root();
+
+        dvals_h[0] = 1;
+        dvals_h[1] = delta_sqrt2;
+        dvals_h[2] = delta_phi;
+        dvals_h[3] = delta_sqrt3_h;
+        dvals_h[4] = delta_l7_h;
+
+        for (hi = 0; hi < 5; hi++) {
+            int ell = ells_h[hi];
+            int np1 = ell + 1;
+            long dv = dvals_h[hi];
+            long dpow_h[MAX_LOOPS + 1];
+            long fixpt_h[MAX_BASIS];
+            int all_elems_h[MAX_BASIS];
+            int full_fixpt_h, full_markov_h;
+            int expected_rad = ell * ell - ell - 3;
+            int cl_buf_h[MAX_BASIS];
+            int i_elem, max_cl_h, s;
+
+            if (dv < 0 && ell == 7) {
+                printf("  ell=%d: SKIPPED\n\n", ell);
+                continue;
+            }
+
+            printf("  ell=%d, n=%d, delta=%s, dim(TL_%d)=%d:\n",
+                   ell, np1, dnames_h[hi], np1, catalan[np1]);
+
+            init_tl(&alg, np1);
+            classify_sectors(&alg, n_through,
+                             sectors, sect_count, &n_sectors);
+
+            /* Precompute closure loops */
+            max_cl_h = 0;
+            for (i_elem = 0; i_elem < alg.dim; i_elem++) {
+                cl_buf_h[i_elem] =
+                    closure_loops(&alg.basis[i_elem], np1);
+                if (cl_buf_h[i_elem] > max_cl_h)
+                    max_cl_h = cl_buf_h[i_elem];
+            }
+
+            {
+                int max_total = alg.max_loops + max_cl_h;
+                if (max_total > MAX_LOOPS) max_total = MAX_LOOPS;
+                make_dpow(dv, max_total, dpow_h);
+            }
+            compute_fixpt(&alg, dpow_h, fixpt_h);
+
+            /* Full fixpt Gram rank */
+            for (i_elem = 0; i_elem < alg.dim; i_elem++)
+                all_elems_h[i_elem] = i_elem;
+
+            build_gram_sub(&alg, fixpt_h, dpow_h,
+                           all_elems_h, alg.dim, g_full_gram);
+            full_fixpt_h = compute_rank(g_full_gram, alg.dim);
+
+            /* Full Markov Gram rank */
+            build_markov_gram(&alg, dpow_h, cl_buf_h,
+                              all_elems_h, alg.dim, g_full_gram);
+            full_markov_h = compute_rank(g_full_gram, alg.dim);
+
+            printf("    full ranks: fixpt=%d, markov=%d / %d\n",
+                   full_fixpt_h, full_markov_h, alg.dim);
+            printf("    fixpt_rad=%d (expect %d = ell^2-ell-3)\n",
+                   alg.dim - full_fixpt_h, expected_rad);
+            printf("    markov_rad=%d\n",
+                   alg.dim - full_markov_h);
+
+            /* Cell module for V_{ell-3} */
+            {
+                int j_target = ell - 3;
+                int d_target = cell_module_dim(np1, j_target);
+                int cr = compute_cell_gram_rank(
+                    &alg, dpow_h, n_through, j_target, np1);
+                printf("    V_%d: dim=%d, cell_rk=%d, corank=%d\n",
+                       j_target, d_target, cr, d_target - cr);
+            }
+
+            /* Per-sector cell module ranks */
+            printf("    j  | d | cell_rk | corank\n");
+            printf("    ---|---|---------|-------\n");
+            for (s = 0; s < n_sectors; s++) {
+                int j = sectors[s];
+                int d = cell_module_dim(np1, j);
+                int cr = compute_cell_gram_rank(
+                    &alg, dpow_h, n_through, j, np1);
+                printf("    %-3d| %d | %-7d | %d",
+                       j, d, cr, d - cr);
+                if (cr < d) printf("  DEGEN");
+                printf("\n");
+            }
+
+            sprintf(msg,
+                "ell=%d: rad(TL_%d) = %d (expect ell^2-ell-3 = %d)",
+                ell, np1, alg.dim - full_fixpt_h, expected_rad);
+            check(msg, alg.dim - full_fixpt_h == expected_rad);
+
+            printf("\n");
+        }
+    }
+
+    /* ===========================================================
+     * Part I: n = ell+2 Radical Dimensions
+     *
+     * At n = ell+2, multiple cell modules degenerate:
+     *   V_{ell-4} (first degeneracy, corank 1) and
+     *   V_{ell-2} (second degeneracy, corank > 1?).
+     * Compute fixpt and Markov radical to find the excess pattern.
+     *
+     * At n=ell:   excess = markov_rad - fixpt_rad = 1 (constant)
+     * At n=ell+1: excess = ell^2+1 (quadratic?)
+     * At n=ell+2: ???
+     * =========================================================== */
+
+    printf("======== Part I: n=ell+2 Radical Dimensions ========\n\n");
+    {
+        int ells_i[] = {3, 4, 5, 6};
+        long dvals_i[4];
+        /* dnames: "1", "sqrt(2)", "phi", "sqrt(3)" */
+        int ii;
+        long delta_sqrt3_i = mod_sqrt(3);
+
+        dvals_i[0] = 1;
+        dvals_i[1] = delta_sqrt2;
+        dvals_i[2] = delta_phi;
+        dvals_i[3] = delta_sqrt3_i;
+
+        printf("  %-4s| %-5s| %-7s| %-10s| %-10s| %-10s| %-10s\n",
+               "ell", "n", "dim", "fixpt_rk", "markov_rk",
+               "fix_rad", "mar_rad");
+        printf("  ----|------|--------|-----------|"
+               "-----------|-----------|----------\n");
+
+        for (ii = 0; ii < 4; ii++) {
+            int ell = ells_i[ii];
+            int np2 = ell + 2;
+            long dv = dvals_i[ii];
+            long dpow_i[MAX_LOOPS + 1];
+            long fixpt_i[MAX_BASIS];
+            int all_elems_i[MAX_BASIS];
+            int full_fixpt_i, full_markov_i;
+            int cl_buf_i[MAX_BASIS];
+            int ie, max_cl_i, s;
+
+            if (np2 > MAX_N) {
+                printf("  %-4d| %-5d| SKIP (n > MAX_N=%d)\n",
+                       ell, np2, MAX_N);
+                continue;
+            }
+
+            init_tl(&alg, np2);
+            classify_sectors(&alg, n_through,
+                             sectors, sect_count, &n_sectors);
+
+            /* Precompute closure loops */
+            max_cl_i = 0;
+            for (ie = 0; ie < alg.dim; ie++) {
+                cl_buf_i[ie] =
+                    closure_loops(&alg.basis[ie], np2);
+                if (cl_buf_i[ie] > max_cl_i)
+                    max_cl_i = cl_buf_i[ie];
+            }
+
+            {
+                int max_total = alg.max_loops + max_cl_i;
+                if (max_total > MAX_LOOPS) max_total = MAX_LOOPS;
+                make_dpow(dv, max_total, dpow_i);
+            }
+            compute_fixpt(&alg, dpow_i, fixpt_i);
+
+            for (ie = 0; ie < alg.dim; ie++)
+                all_elems_i[ie] = ie;
+
+            /* Full fixpt Gram rank */
+            build_gram_sub(&alg, fixpt_i, dpow_i,
+                           all_elems_i, alg.dim, g_full_gram);
+            full_fixpt_i = compute_rank(g_full_gram, alg.dim);
+
+            /* Full Markov Gram rank */
+            build_markov_gram(&alg, dpow_i, cl_buf_i,
+                              all_elems_i, alg.dim, g_full_gram);
+            full_markov_i = compute_rank(g_full_gram, alg.dim);
+
+            printf("  %-4d| %-5d| %-7d| %-10d| %-10d| %-10d| %-10d\n",
+                   ell, np2, alg.dim,
+                   full_fixpt_i, full_markov_i,
+                   alg.dim - full_fixpt_i,
+                   alg.dim - full_markov_i);
+
+            /* Per-sector cell module analysis */
+            printf("    Cell modules:\n");
+            printf("      j  | d | cell_rk | corank\n");
+            printf("      ---|---|---------|-------\n");
+            for (s = 0; s < n_sectors; s++) {
+                int j = sectors[s];
+                int d = cell_module_dim(np2, j);
+                int cr = compute_cell_gram_rank(
+                    &alg, dpow_i, n_through, j, np2);
+                printf("      %-3d| %d | %-7d | %d",
+                       j, d, cr, d - cr);
+                if (cr < d) printf("  DEGEN");
+                printf("\n");
+            }
+            printf("\n");
+        }
+
+        /* Summary table: excess = markov_rad - fixpt_rad */
+        printf("  === Excess pattern (markov_rad - fixpt_rad) ===\n");
+        printf("  Rerun for summary...\n\n");
+    }
+
+    /* ===========================================================
+     * Part J: RT Truncation Theorem Verification
+     *
+     * Reshetikhin-Turaev: the Markov trace at q=e^{i*pi/ell}
+     * kills exactly the simple modules L_j with j >= ell-1.
+     *
+     * excess = markov_rad - fixpt_rad = sum_{j>=ell-1} (dim L_j)^2
+     * where dim L_j = cell_rk(V_j) at level n.
+     *
+     * Test at n=ell+3 for ell=3,4,5 (three killed blocks each).
+     * =========================================================== */
+
+    printf("======== Part J: RT Truncation Verification ========\n\n");
+    {
+        int ells_j[] = {3, 4, 5};
+        long dvals_j[3];
+        int ji;
+
+        dvals_j[0] = 1;          /* ell=3, delta=1 */
+        dvals_j[1] = delta_sqrt2; /* ell=4, delta=sqrt(2) */
+        dvals_j[2] = delta_phi;   /* ell=5, delta=phi */
+
+        for (ji = 0; ji < 3; ji++) {
+            int ell = ells_j[ji];
+            int np3 = ell + 3;
+            long dv = dvals_j[ji];
+            long dpow_j[MAX_LOOPS + 1];
+            long fixpt_j[MAX_BASIS];
+            int all_elems_j[MAX_BASIS];
+            int full_fixpt_j, full_markov_j;
+            int fix_rad_j, mar_rad_j, excess_j;
+            int rt_excess;
+            int cl_buf_j[MAX_BASIS];
+            int je, max_cl_j, s;
+
+            if (np3 > MAX_N) {
+                printf("  ell=%d: SKIP (n=%d > MAX_N=%d)\n",
+                       ell, np3, MAX_N);
+                continue;
+            }
+
+            printf("  ell=%d, n=%d, dim(TL_%d)=%d:\n",
+                   ell, np3, np3, catalan[np3]);
+
+            init_tl(&alg, np3);
+            classify_sectors(&alg, n_through,
+                             sectors, sect_count, &n_sectors);
+
+            /* Precompute closure loops */
+            max_cl_j = 0;
+            for (je = 0; je < alg.dim; je++) {
+                cl_buf_j[je] =
+                    closure_loops(&alg.basis[je], np3);
+                if (cl_buf_j[je] > max_cl_j)
+                    max_cl_j = cl_buf_j[je];
+            }
+
+            {
+                int max_total = alg.max_loops + max_cl_j;
+                if (max_total > MAX_LOOPS) max_total = MAX_LOOPS;
+                make_dpow(dv, max_total, dpow_j);
+            }
+            compute_fixpt(&alg, dpow_j, fixpt_j);
+
+            for (je = 0; je < alg.dim; je++)
+                all_elems_j[je] = je;
+
+            /* Full fixpt Gram rank */
+            build_gram_sub(&alg, fixpt_j, dpow_j,
+                           all_elems_j, alg.dim, g_full_gram);
+            full_fixpt_j = compute_rank(g_full_gram, alg.dim);
+
+            /* Full Markov Gram rank */
+            build_markov_gram(&alg, dpow_j, cl_buf_j,
+                              all_elems_j, alg.dim, g_full_gram);
+            full_markov_j = compute_rank(g_full_gram, alg.dim);
+
+            fix_rad_j = alg.dim - full_fixpt_j;
+            mar_rad_j = alg.dim - full_markov_j;
+            excess_j = mar_rad_j - fix_rad_j;
+
+            /* Per-sector cell module analysis */
+            printf("    j  | d | cell_rk | dim_L | status\n");
+            printf("    ---|---|---------|-------|-------\n");
+
+            rt_excess = 0;
+            for (s = 0; s < n_sectors; s++) {
+                int j = sectors[s];
+                int d = cell_module_dim(np3, j);
+                int cr = compute_cell_gram_rank(
+                    &alg, dpow_j, n_through, j, np3);
+                int killed = (j >= ell - 1) ? 1 : 0;
+
+                printf("    %-3d| %d | %-7d | %-5d | %s",
+                       j, d, cr, cr,
+                       killed ? "KILLED" : "alive");
+                if (cr < d) printf(" (degen)");
+                printf("\n");
+
+                if (killed) rt_excess += cr * cr;
+            }
+
+            printf("    fixpt_rad=%d, markov_rad=%d, excess=%d\n",
+                   fix_rad_j, mar_rad_j, excess_j);
+            printf("    RT predicted excess: sum (dim L_j)^2"
+                   " for j>=ell-1 = %d\n", rt_excess);
+
+            sprintf(msg,
+                "ell=%d, n=%d: RT truncation (excess=%d ="
+                " sum killed (dim L)^2=%d)",
+                ell, np3, excess_j, rt_excess);
+            check(msg, excess_j == rt_excess);
+
+            printf("\n");
+        }
+    }
+
     /* Summary */
     printf("=================================================\n");
     printf("Final: %d passed, %d failed\n", n_pass, n_fail);

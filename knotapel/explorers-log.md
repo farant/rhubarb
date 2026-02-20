@@ -1553,35 +1553,84 @@ Initially ℓ=5 showed full rank (0 radical). Root cause: **p=10^9+7 has 5 as a 
 - fixpt_rad = 2ℓ-3 (matches cell module prediction exactly)
 - Markov_rad = 2ℓ-2 (always 1 more than fixpt — Markov detects an extra dimension)
 
-### THEOREM (Explorer's Proof)
+### THEOREM: rad(TL_ℓ) = 2ℓ-3
 
-**Theorem.** For all ℓ ≥ 2, rad(TL_ℓ(2cos(π/ℓ))) = 2ℓ - 3.
+**Full proof: see `proofs/radical-dimension-formula.md`**
 
-**Proof sketch:**
-1. V_{ℓ-2} has dim = ℓ-1. Its basis: half-diagrams h_i with single adjacent arc (i,i+1).
-2. Cell Gram is tridiagonal: G_{ii}=δ, G_{i,i±1}=1, G_{ij}=0 for |i-j|≥2.
-   (Forced by planarity: non-adjacent arcs would enclose through-strands.)
-3. det(G) = U_{ℓ-1}(δ/2) = sin(ℓπ/ℓ)/sin(π/ℓ) = 0 (Chebyshev).
-4. Leading minor: U_{ℓ-2}(δ/2) = sin((ℓ-1)π/ℓ)/sin(π/ℓ) = 1 ≠ 0. Corank = 1.
-5. Uniqueness: For j < ℓ-2, max quantum integer index in Gram det formula is (ℓ+j+2)/2 < ℓ, so no [ℓ]=0 factor appears. V_j non-degenerate.
-6. rad = k(2d-k) = 1·(2(ℓ-1)-1) = 2ℓ-3. ∎
+Summary: V_{ℓ-2} is the unique degenerate cell module with corank 1. Tridiagonal Gram (forced by planarity) has Chebyshev determinant U_{ℓ-1}(δ/2) = 0. rad = 1·(2(ℓ-1)-1) = 2ℓ-3.
 
-Kernel vector: v_i = sin(iπ/ℓ). For ℓ=5: ∝ (1, φ, φ, 1).
+**Corollary:** rad(TL_{ℓ+1}) = ℓ²-ℓ-3 (V_{ℓ-3} is the unique degenerate module at next level).
 
-### Cell Gram Matrix Structure
+### THEOREM: Reshetikhin-Turaev Truncation of Markov Trace
 
-The cell Gram for V_{ℓ-2} at each ℓ (confirmed by print output):
-- ℓ=3: 2×2 [[1,1],[1,1]] — rank 1 ✓
-- ℓ=4: 3×3 tridiagonal — rank 2 ✓
-- ℓ=5: 4×4 tridiagonal — rank 3 ✓
-- ℓ=6: 5×5 tridiagonal — rank 4 ✓
-- ℓ=7: 6×6 tridiagonal — rank 5 ✓
+**The Markov trace at q = e^{iπ/ℓ} kills exactly the simple modules L_j with j ≥ ℓ-1, and preserves those with j ≤ ℓ-2.**
 
-### Open Questions
+This is the standard RT TQFT truncation: the "physical" representations are 0 ≤ j ≤ ℓ-2. Everything above is negligible.
 
-1. **Markov radical = 2ℓ-2:** Why does Markov trace detect one extra dimension? What is that extra element?
-2. **rad at n=ℓ+1:** Explorer predicts rad(TL_{ℓ+1}) = ℓ²-ℓ-3 (both V_{ℓ-2} and V_{ℓ-4} degenerate). Not yet tested.
-3. **Non-critical n:** What happens at n=2ℓ, n=3ℓ, etc.? More modules should degenerate.
+**Consequence:**
+- Markov excess = Σ_{j ≥ ℓ-1, j ≡ n mod 2} (dim L_j)²
+- Markov rank = Σ_{j ≤ ℓ-2, j ≡ n mod 2} (dim L_j)²
+- dim L_j = cell_rk(V_j^{(n)}) = d(n,j) - corank(V_j)
+
+**Verified computationally: 31/31 tests pass across all levels n=ℓ through n=ℓ+3.**
+
+| Level | Killed blocks | Excess | Special cases |
+|-------|--------------|--------|---------------|
+| n=ℓ | {ℓ} | 1² = 1 | Always 1 killed block |
+| n=ℓ+1 | {ℓ-1, ℓ+1} | ℓ²+1 | dim L_{ℓ-1}=ℓ (non-degen) |
+| n=ℓ+2 | {ℓ, ℓ+2} | (ℓ+1)²+1 | dim L_ℓ=ℓ+1 (non-degen) |
+| n=ℓ+3 | {ℓ-1, ℓ+1, ℓ+3} | Σ 3 blocks | ℓ=3: V₄ degenerates via [2ℓ]=0 |
+
+**n=ℓ+3 data (3 killed blocks each):**
+
+| ℓ | n | killed | dim L values | excess |
+|---|---|--------|-------------|--------|
+| 3 | 6 | {2,4,6} | 9, 4, 1 | 81+16+1 = 98 |
+| 4 | 7 | {3,5,7} | 14, 6, 1 | 196+36+1 = 233 |
+| 5 | 8 | {4,6,8} | 20, 7, 1 | 400+49+1 = 450 |
+
+**Key insight from ℓ=3/n=6:** V₄ has corank 1 (degenerates via [2ℓ]=0, not [ℓ]=0), so dim L₄ = 4 not 5. For ℓ ≥ 4 at n=ℓ+3, all killed modules are non-degenerate.
+
+**Why the (ℓ+m-1)²+1 pattern appeared to hold for m=1,2:** At small m, only 2 killed blocks exist. The identity block always contributes 1. The other block has dimension d(n,n-2) = n-1 (at m=1) or d(n,n-2) = n-1 (at m=2), giving (n-1)²+1. At m=3, THREE blocks appear and the formula breaks.
+
+Note: ℓ=3 (δ=1) is extremely degenerate — Markov rank is 1 at both n=5 and n=6 (only L₀ or L₁ survives, both with dim L = 1 after corank subtraction).
+
+### Cell Module Corank Patterns
+
+**First degeneracy:** At the first level n where V_j degenerates, corank is always 1. This is universal — proved via the Graham-Lehrer linking theorem (linked module is V_n^{(n)}, dim 1).
+
+**Second degeneracy of V_{ℓ-2} at n=ℓ+2:** corank = ℓ+1 (verified ℓ=3..6).
+
+| ℓ | Module | dim d | First degen corank | Second degen corank |
+|---|--------|-------|-------------------|---------------------|
+| 3 | V₁ | 5 (at n=5) | 1 (at n=3) | 4 = ℓ+1 |
+| 4 | V₂ | 9 (at n=6) | 1 (at n=4) | 5 = ℓ+1 |
+| 5 | V₃ | 14 (at n=7) | 1 (at n=5) | 6 = ℓ+1 |
+| 6 | V₄ | 20 (at n=8) | 1 (at n=6) | 7 = ℓ+1 |
+
+### Cross-Sector Markov Kernel Vector (ℓ=4)
+
+The extra Markov kernel vector at ℓ=4 (n=4, δ=√2) is:
+
+**v = -δ·e₂ + e₃ + e₇ - δ·e₉ + e₁₃**
+
+Diagram identities:
+- e₂ (j=2): left arc (01), right arc (01) — T0-T1 | T2=B2 T3=B3 | B0-B1
+- e₃ (j=2): left arc (01), right arc (12) — T0-T1 | T2=B0 T3=B3 | B1-B2
+- e₇ (j=2): left arc (12), right arc (01) — T1-T2 | T0=B2 T3=B3 | B0-B1
+- e₉ (j=2): left arc (12), right arc (12) — T1-T2 | T0=B0 T3=B3 | B1-B2
+- e₁₃ (j=4): identity — T0=B0 T1=B1 T2=B2 T3=B3
+
+The j=2 component forms a 2×2 grid: coefficient matrix [-δ, 1; 1, -δ] = J - δI (exchange minus diagonal). This has full rank 2 — the kernel vector is NOT a product state in the left⊗right decomposition. Uses first two Chebyshev basis vectors h₁=(01), h₂=(12) but NOT h₃=(23).
+
+G_F·v = (0,...,0,4) — nonzero only at identity position. The fixpt trace sees v but the Markov trace kills it.
+
+### Open Questions (Updated)
+
+1. **Markov excess growth:** Why does excess jump from quadratic (m=1,2) to high-degree (m=3)? The m=1 and m=2 patterns (ℓ²+1 and (ℓ+1)²+1) suggest (n-1)²+1, but this fails at m=3. Possibly related to proliferation of degenerate cell modules.
+2. **Second-degeneracy corank = ℓ+1:** Can this be proved from linking theory? The linked module at second degeneracy should have dim > 1.
+3. **ℓ=3 Markov rank = 1:** At δ=1, Markov rank stays 1 for n=5,6. Does it stay 1 for all n > ℓ? This connects to the Jones polynomial at q=1.
+4. **Block projection:** What is the image of the extra kernel vector in A/J(A) ≅ ⊕ M_{d_j}? Does it live in a single simple block or span multiple?
 
 ### Literature (from research agent)
 
@@ -1590,6 +1639,129 @@ Key reference: Ridout & Saint-Aubin (2014), arXiv:1204.4505 — radical of each 
 det(G_{n,p}) = ∏_{k=1}^{p} ([n-2p+2k]/[2k])^{d_{n-2k,p-k}}
 
 Graham-Lehrer semisimplicity: TL_n(2cos(π/ℓ)) semisimple iff n < ℓ.
+
+---
+
+## Demo 63: Angular Anatomy of DKC (2026-02-20)
+
+### Summary
+Demo 63 explains the four-tier NPN hierarchy from Demo 50 through pure angular/octant geometry of the Z[zeta_8] lattice, then extends to 4-input and 5-input parity. **24/24 tests pass.**
+
+### Key Findings
+- **Axiality confirmed**: All 100 catalog values at δ=0 are axial (single nonzero Z[zeta_8] component). Ray distribution: a=28, b=19, c=34, d=19. Values live on exactly 8 discrete rays (octants 0-7, spaced 45°).
+- **Sector-octant mapping table**: k-sector boundaries partition the 8 lattice octants into class-0 and class-1 groups. k=6 uniquely produces class-1 = {2,4,5,7} = the parity octants.
+- **Four-tier structure reproduced from pure geometry**: Tier 1 (k=2, 5 classes) = linearly separable by hemisphere. Tier 2 (k=3, +1 = MAJ') = first nonlinear, needs 120° boundaries. Tier 3 (k=4, +6 classes) = everything except parity. Tier 4 (k=6, +1 = XNOR3) = parity requires 60° boundaries cutting the 45° lattice at the exact incommensurate angle needed.
+- **Part C representative examples**: For each tier, one weight triple displayed with full anatomy — all 8 sums, their Z[zeta_8] coordinates, octant, sector, and class assignments. The parity example shows triskelion structure: weights from octants {5,2,7} landing in odd sectors {s3,s1,s5}, producing the alternating class pattern that IS parity.
+- **906 parity triskelions verified**: All parity solutions at k=6 place one weight per odd sector. Only two octant sets: {2,5,7}=636 and {2,4,7}=270.
+- **Commensurability**: gcd(k,8) controls structure. k=6 (gcd=2) gives maximum parity; k=8 (gcd=8) gives minimum (96). Non-monotonic because incommensurate angles create richer sector-octant mixing.
+
+### Connection to RT Truncation (Demo 39)
+At δ=0 (ℓ=2), the Markov trace kills all j ≥ 1 — topology is almost trivial. But this SAME degeneracy forces bracket values onto single rays, giving DKC its maximally structured angular alphabet. DKC works BECAUSE it reads pre-closure (fixpt) information that RT truncation would discard. The wall between 12/13 and 13/13 NPN classes is an angular geometry fact about the Z[zeta_8] lattice and half-plane activation, not about the algebra's root-of-unity parameter.
+
+### Oriented Matroid Connection
+The sector-octant table is oriented matroid data — k-sector boundaries define hyperplane arrangements classifying the 8 lattice rays. The tiers correspond to covector realizability thresholds over the Z[zeta_8] lattice.
+
+### Parts
+- Part A: Octant enumeration, axiality verification, ray/octant distribution
+- Part B: Sector-octant mapping table for k=2..8, class-1 octant sets
+- Part C: Representative weight triple examples from each tier (mechanism visible)
+- Part D: Minimum-k per NPN class, four-tier structure, reachability heatmap
+- Part E: Parity triskelion anatomy, octant set distribution
+- Part F: Commensurability analysis (gcd(k,8) vs parity)
+- Part G: Oriented matroid classification (see below)
+- Part H: 4-input XOR extension (see below)
+- Part I: 5-input XOR extension (see below)
+
+### Part G: Oriented Matroid Classification (added 2026-02-20)
+
+Each weight triple defines an oriented matroid via the sign pattern of 3 pairwise cross products. Since all catalog values are axial, the cross product sign depends only on the octant difference (Δoct mod 8: {1,2,3}→+, {5,6,7}→-, {0,4}→0).
+
+**G1: 21 distinct OM types** from 512 octant triples. Predicted and confirmed: 27 - 6 (two-zero patterns unrealizable in R²) = 21. Geometric constraint: if any two cross products are 0 (parallel pairs), the third must also be 0.
+
+**G2: Parity requires ALTERNATING OM types — prediction falsified**
+- Explorer predicted: parity needs (+,+,+) or (-,-,-) (uniform cycling)
+- Reality: (-,+,-) = 453 solutions, (+,-,+) = 453 solutions, ALL others = 0
+- The alternating type has s12 = s23 = -s13: an INTERLEAVING arrangement, not uniform cycling
+- Geometrically: weights span three different 120°-separated odd sectors because they interleave around the circle, not cluster in one arc
+
+**Other findings from the OM×k reachability table:**
+1. At k=2: ALL 21 OM types achieve exactly 5/13 — OM type irrelevant for linear separability
+2. At k=6: ONLY alternating types reach 13/13; everything else ≤ 12
+3. Uniform types (+,+,+) etc get 12/13 at k=6 — everything except parity
+4. Degenerate (0,0,0) drops to 4/13 at k=4 and k=8 (perfect alignment kills expressivity)
+5. At k=7: six one-degenerate types reach 13/13 (k=7 is less selective than k=6)
+
+### Literature (from research agent, 2026-02-20)
+
+- **Cover's theorem (1965)**: 104 linearly separable functions of 3 variables (OEIS A000609). This is our k=2 case (5 NPN classes = 104 functions under permutation/negation). Our k-sector mechanism generalizes threshold functions.
+- **Oriented matroids**: Bjorner et al (Cambridge). Framework NAMES our setup (tope set of cyclotomic arrangement on cube vertices) but doesn't COMPUTE it.
+- **Cyclotomic matroids**: Reiner (2004, arXiv:math/0402206). mu_n = direct sum of simplicial matroids. Doesn't connect to Boolean function classification.
+- **Gap confirmed**: nobody studies zonotope dual to Z[zeta_n] sector-boundary arrangement evaluated at Boolean cube vertices. Our setup is novel.
+- Key authors: Cover, Muroga, Winder (threshold); Reiner (cyclotomic); Bjorner, Las Vergnas, Sturmfels, White, Ziegler (OM).
+
+### Part H: 4-Input XOR Extension (added 2026-02-20)
+
+**XOR4 (0x6996) is reachable — ONLY at k=8, with exactly 96 solutions.**
+
+- Searched k=2..8 with 4-level pruned search over class-1 catalog values
+- k=2 through k=7: zero XOR4 solutions
+- k=8: 96 solutions — the ONLY k that works
+
+**Tetraskelion structure**: The first example places 4 weights at the 4 odd octants {3,1,5,7}, each in its own odd sector (s3,s1,s5,s7) at k=8. All have coefficient magnitude 4. The 6-sign OM type is (-,+,0,0,-,+) — contains zeros from antipodal pairs (oct 1 + oct 5, oct 3 + oct 7 cancel to zero).
+
+**Key insight**: At k=8, sectors = octants perfectly (gcd(8,8)=8). This forces complete alignment: each sector holds exactly one octant. XOR4 needs all 4 single weights in class-1 sectors, so all 4 must come from the 4 odd octants {1,3,5,7}. Pair sums between different odd octants land in even sectors (class-0) as required.
+
+### Part I: 5-Input XOR Extension — MAJOR FINDING (added 2026-02-20)
+
+**XOR5 IS reachable — at k=15 only, with 3020 solutions.**
+
+- Searched k=2..16 with 5-level pruned search (31 subset constraints per candidate)
+- k=2 through k=14: zero XOR5 solutions
+- k=15: 3020 solutions
+- k=16: zero class-1 values (dead zone)
+
+**Class-1 octant count is the governing principle.** XOR_n needs at least n distinct class-1 octants (since same-octant weights sum to the same ray, violating pair class-0 constraint). Survey:
+- k=2..14: at most 4 class-1 octants (NOT enough for n=5)
+- k=15: {1,2,3,4,5,6,7} = 7 class-1 octants (360/15 = 24°, every 45° ray lands in an odd sector)
+- k=16: 0 class-1 octants
+
+**Pentaskelion structure**: First example uses weights from 5 different octants {6,2,1,7,4} in sectors {s11,s3,s1,s13,s7} at k=15.
+
+**The k=2n conjecture is FALSIFIED.** The scaling is:
+- n=3 parity: k=6, 906 solutions (4 class-1 octants)
+- n=4 parity: k=8, 96 solutions (4 class-1 octants)
+- n=5 parity: k=15, 3020 solutions (7 class-1 octants)
+
+Non-monotonic solution counts: 906 → 96 → 3020. Having 7 class-1 octants at k=15 provides much more combinatorial room than the tight 4-octant fits at k=6 and k=8.
+
+### Part J: Complete Parity Scaling — CEILING THEOREM (added 2026-02-20)
+
+Tested XOR_n for n=3..7 at k=15 using general recursive search with 2^n - 1 subset constraints per candidate. **29/29 tests pass.**
+
+**The Z[zeta_8] parity ceiling is n=5.**
+
+Complete parity scaling table:
+```
+  n    min_k    sol@k=15   mechanism
+  3      6       23,004    triskelion
+  4      8       16,108    tetraskelion
+  5     15        3,020    pentaskelion
+  6    N/A            0    IMPOSSIBLE (constraint wall)
+  7    N/A            0    IMPOSSIBLE (constraint wall)
+  8    N/A            0    IMPOSSIBLE (pigeonhole)
+```
+
+**Key findings:**
+
+1. **k=15 is universal for n=3,4,5**: All achievable there with massive solution counts (23K, 16K, 3K) compared to minimum-k results (906, 96, 3020). k=15 is special because 15 = 2×8 - 1, making floor(15m/8) odd for all m=1..7.
+
+2. **XOR6 is impossible despite 7 class-1 octants**: The wall is NOT pigeonhole (we have enough octants). It's a constraint-satisfaction wall: with 6 weights from 6 different rays, the C(6,2)=15 pair sums + C(6,3)=20 triple sums + ... = 63 total subset constraints cannot all be satisfied simultaneously.
+
+3. **Monotonic decrease at k=15**: 23004 → 16108 → 3020 → 0. Each additional input roughly halves solutions until the wall.
+
+4. **Two types of impossibility**: n=6,7 are impossible by constraint geometry (too many constraints). n=8 is impossible by pigeonhole (only 7 class-1 octants, same-octant pairs violate XOR).
+
+5. **Connection to finer lattices**: The ceiling n=5 is specific to Z[zeta_8] (8 rays). Moving to Z[zeta_16] (16 rays) would provide more angular resolution and potentially raise the ceiling. The parity ceiling is a function of the cyclotomic order.
 
 ---
 *End of Explorer's Log*
