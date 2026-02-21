@@ -2814,5 +2814,176 @@ Davies et al (2022, DeepMind): σ(K) ≈ -(1/2)Σℓᵢ²qᵢ where ℓᵢ is li
 4. **"What is 4D about Jones?"**: DKC may be part of the answer — the bracket at roots of unity accesses 4-manifold structure via the framing data Jones discards.
 5. **3D vs 2D computational complexity**: Only linking number is proven faster to compute in 3D (Bar-Natan et al). Jones, Alexander, HOMFLY-PT all have UNKNOWN 3D computational status. V^{4/3} projection inflation means 2D crossing count is dimensionally distorted.
 
+## Demo 83: Framing as Computational Content — 12/12 pass
+
+**Date**: 2026-02-21
+**File:** `knotapel/demo_83_framing_test/main.c`
+
+### The Question
+
+Jones polynomial = (-A³)^{-w} × bracket. Does removing writhe (normalizing to Jones) destroy computational power?
+
+### Answer: YES. Framing contributes exactly 2 XOR levels.
+
+| Root | Bracket max | Jones max | Loss |
+|------|------------|-----------|------|
+| ζ₁₂  | XOR12      | XOR10     | 2    |
+| ζ₈   | XOR8       | XOR6      | 2    |
+
+### The N-2 Pattern Was Jones All Along
+
+Jones capacity at ζ₈ = 6 = 8-2. Jones capacity at ζ₁₂ = 10 = 12-2. The N-2 pattern IS real — it's the Jones polynomial's capacity. Bracket capacity = N. Jones capacity = N-2. The difference = framing.
+
+### Information Collapse: Angles, Not Directions
+
+| Metric | Bracket | Jones | Change |
+|--------|---------|-------|--------|
+| Distinct quaternions | 4096 | 2710 | -33.8% |
+| Directions | 512 | 512 | unchanged |
+| Angles | 43 | 31 | -28% |
+
+Framing lives in angular information — HOW quaternions rotate, not WHERE they point.
+
+### Writhe and Depth Are Independent (r=0.14)
+
+Mean |writhe| grows linearly with depth (0.8 at depth 0, 3.2 at depth 8) but correlation is only 0.14. They are genuinely separate computational resources.
+
+### Writhe Alone Can Compute XOR6
+
+32 winners in brute-force test. But writhe alone cannot reach XOR8 — full power requires writhe × lattice interaction.
+
+### Winners Use Mixed Writhe
+
+41% of XOR6 winners use both positive AND negative writhe entries. Computation uses chirality variation, not just magnitude.
+
+### Decomposition of DKC Computational Power
+
+Three independent, additive resources:
+1. **Lattice structure** → base capacity (XOR6)
+2. **Depth** → +2 per closure round (Demo 82)
+3. **Writhe/framing** → +2 additional (this demo)
+
+### Theoretical Significance
+
+What TQFT calls a "framing anomaly" and subtracts away IS the computational content DKC exploits. Confirmed from three independent directions:
+- Kirby (1978): framing determines 3-manifold topology
+- Witten (1989): δ=0 is TQFT's maximally degenerate point
+- Rasmussen (2004): writhe explicit in categorified q-grading
+
+### PDF Research: Five Additional Papers Analyzed
+
+The LCFT paper (Gainutdinov et al 2013, notes-1303.2082.md) and TL indecomposables paper (Belletête et al 2017, notes-1605.05159.md) together give the complete algebraic picture:
+
+1. DKC operates at the **dense polymer / free fermion point** (p=2, q=i, n=0, c=-2)
+2. **l₀ = 0 at β=0**: trivial module VANISHES (quantum dimension singularity)
+3. **Orbit confinement = MVN sector structure**: different orbits have Hom = Ext = 0
+4. **B^l_k depth = crossing depth**: each level adds one more layer of non-split extension
+5. **Ext adjacency = entanglement condition**: extensions only between neighbors
+6. **Representation-finiteness = capacity ceiling**: finitely many indecomposables
+7. **Lattice fusion = braid composition = DKC computation**
+8. **Logarithmic partners**: null states (⟨T|T⟩ = 0) at c=0 may have computational content DKC hasn't accessed yet
+9. **Zigzag algebra**: AR quivers at β=0 coincide with Huerfano-Khovanov zigzag algebras → unexplored bridge to categorification
+
+Rasmussen (2004, notes-0402131.md): Lee's deformation ↔ moving off δ=0. Writhe explicit in q-grading. Lee's a/b basis "de-quantizes" the TQFT.
+
+Grid Homology (Ozsváth et al 2015, notes-gridhomology.md): n! permutation states vs 2^c binary states. Quasi-alternating = thin (categorification adds nothing). K(B,k) blind spot — if bracket distinguishes these, DKC carries complementary information to grid homology.
+
+Vogel algorithm (Bartholomew 2011, notes-vogel.md): Each braiding step adds 2 crossings. Essential vs overhead crossings matter for capacity analysis.
+
+## Algebraic Framework: DKC = Dense Polymer Model at β=0
+
+*Source: Gainutdinov et al. (2013) "Logarithmic CFT: a Lattice Approach" + Belletête, Ridout & Saint-Aubin (2017) "Restriction and Induction of Indecomposables over TL" + Rasmussen (2004) "Khovanov homology and the slice genus"*
+
+### DKC IS Dense Polymer Physics
+
+Not "related to" or "inspired by." Identical.
+
+| DKC parameter | Value | Dense polymer parameter | Value |
+|---------------|-------|------------------------|-------|
+| A | ζ₈ = e^{iπ/4} | — | — |
+| q = A² | i | q | e^{iπ/2} = i |
+| δ = -(A²+A⁻²) | 0 | β = q+q⁻¹ | 0 |
+| Loop fugacity | 0 | n | 0 |
+| — | — | Central charge c | -2 |
+| — | — | Root-of-unity order ℓ | 2 (q^{2ℓ}=1) |
+| — | — | Physical system | Symplectic fermions (free) |
+
+This is the SIMPLEST root-of-unity case (ℓ=2), the free fermion point, and the ONE case where the associated LCFT is analytically solvable. Every other root of unity gives an interacting theory. DKC's clean structure (axiality, crossing depth hierarchy, entanglement vanishing, NPN classification) lives at the unique point where analytic tools are maximally available.
+
+### Complete Algebraic Dictionary
+
+| DKC concept | Demo | TL representation theory |
+|-------------|------|--------------------------|
+| MVN sector structure | 50 | **Orbit confinement**: all composition factors of any indecomposable lie in a single orbit [k]. Different orbits have Hom = Ext = 0 — complete algebraic decoupling. At ℓ=2, orbits are maximally small (pairs of adjacent even numbers). |
+| Entanglement vanishing (non-interleaving braids → bracket=0) | 29+ | **Ext adjacency**: extensions only between NEIGHBORS in orbit. Ext(l_k, l_{k'}) ≅ ℂ iff k' = k^±. Non-adjacent irreducibles cannot form non-trivial extensions — module-theoretic version of "non-interleaving = zero." |
+| Crossing depth drives computation (max_xor ≈ depth + 6) | 82 | **B^l_k indecomposable depth**: the indecomposable B^l_k has l+1 composition factors stretching through l consecutive orbit elements. Each additional crossing creates a new B^l_k with one more layer of non-split extension. Deeper = more non-trivial extensions = more computational content. |
+| Capacity ceiling (finite group, 24 elements) | 78 | **Representation-finiteness**: TL_n has FINITELY many non-isomorphic indecomposable modules. Complete list: irreducibles l_k, projectives P_k, and B^l_k / T^l_k families. This finiteness IS the capacity ceiling. |
+| Quantum dimension singularity ([2]_q = 0) | 80 | **l₀ = 0 at β=0**: the trivial irreducible module VANISHES. Not "becomes small" — IS zero. S₀ = 0 too. The entire vacuum sector doesn't exist. Most dramatic possible quantum dimension singularity. |
+| Adding crossings creates new capacity | 82 | **Induction not left-exact**: going from TL_n to TL_{n+1} is only right-exact. Adding crossings genuinely creates new algebraic phenomena that don't exist at smaller sizes. Irreversible. |
+| Computational atoms (irreducible building blocks) | — | **Tilting modules**: self-dual, indecomposable diamond-shaped gluings of two standard modules. Finite number for each N. The irreducible computational units at roots of unity. |
+| Braid composition | all | **Lattice fusion**: M₁ ×_f M₂ = TL_{N₁+N₂} ⊗ (M₁ ⊗ M₂). At generic q: sl(2) Clebsch-Gordan rules. At roots of unity: produces tilting modules and indecomposable structures. Fusion IS what happens when you compose braids. |
+| Axiality (bracket on single Z[ζ₈] axis) | 63 | **Free fermion solvability**: δ=0 is the free fermion point (symplectic fermions). The SU(2) symmetry from the symplectic fermion action may explain why bracket values are constrained to lie on Z[ζ₈] axes. |
+| Dimer model | — | **Physical realization**: the dimer model IS TL at β=0. Its state space decomposes into B and T modules. Continuum limit is log CFT at c=-2. DKC has a statistical-mechanical physical realization. |
+
+### The Logarithmic Partner Hypothesis
+
+At c=0 (= δ=0 = DKC's operating point), the stress-energy tensor T is a **NULL STATE**: ⟨T|T⟩ = 0. It exists algebraically but is invisible to the inner product. The OPE has a 1/c divergence that FORCES introduction of a logarithmic partner t, with:
+
+- L₀|t⟩ = 2|t⟩ + |T⟩ (Jordan cell — L₀ is non-diagonalizable)
+- ⟨T|T⟩ = 0 (null)
+- ⟨T|t⟩ = b (the indecomposability parameter, NOT determined by conformal symmetry)
+- ⟨t(z)t(0)⟩ = (-2b ln z + a)/z⁴ (logarithmic two-point function)
+
+**For DKC**: braids with bracket = 0 at δ=0 are algebraic null states. We have been treating them as "useless" (zero contribution to computation). The LCFT framework says they have **logarithmic partners** that carry measurable information via Jordan cells. The parameter b is EXTRA DATA beyond the bracket — it measures "how logarithmic" the system is.
+
+**Concretely**: at the lattice level, b can be computed from finite systems by diagonalizing H, finding Jordan cells, normalizing states, constructing lattice L_{-2}, and computing b^(N) = |⟨t^(N)|L_{-2}^(N)|0^(N)⟩|²/⟨t^(N)|T^(N)⟩. For percolation: b = -5/8 (boundary), b = -5 (bulk). These were found numerically BEFORE correct theoretical prediction existed.
+
+**Implication**: There may be a "logarithmic DKC" that extracts computational content from the null-state braids that current DKC ignores. This is potentially a major new direction.
+
+### Dense Polymer Fusion: An Open Calculation
+
+Gainutdinov et al. worked out the lattice fusion catastrophe for **percolation** (n=1, p=3) in detail, showing how divergent invariants get resolved by introducing logarithmic partner states. But they did NOT work out the analogous calculation for **dense polymers** (n=0, p=2) — DKC's operating point.
+
+Performing this calculation would directly describe how braid composition behaves at δ=0 — i.e., what happens algebraically when DKC catalog entries combine. This is a gap in the literature we could potentially fill computationally.
+
+### Zigzag Algebra → Khovanov Bridge
+
+At β=0, the Auslander-Reiten quivers of TL_n "interestingly coincide with those of a zigzag algebra discussed in [Huerfano-Khovanov]" (Belletête et al., p.49). Zigzag algebras appear in Khovanov homology and categorification of quantum groups.
+
+This creates an unexplored pathway:
+```
+DKC → TL at β=0 → zigzag algebra → Khovanov homology → categorification
+```
+
+If this bridge is real, it would connect DKC's computational results (which live at the decategorified/polynomial level) to the categorified invariants (which see strictly more structure). The open question from grid homology ("A precise mathematical relationship between knot Floer and Khovanov homologies has yet to be discovered") sits at the far end of this chain.
+
+### Rasmussen Confirms Writhe in Categorified Theory
+
+Rasmussen's s-invariant (2004) provides direct support for Demo 83's framing result:
+
+- Writhe explicitly appears in the q-grading: q-grading includes n₊ - n₋ = writhe
+- For positive knots: s(K) = writhe - Seifert_circles + 1
+- Lee's deformation m'(v₋ ⊗ v₋) = v₊ is structurally analogous to moving δ away from 0
+- The a/b basis change diagonalizes the deformed TQFT completely — "de-quantizes" it
+- The s-invariant lives at the **boundary between singular and generic**: it measures the "memory" of δ=0 singularity that persists via filtration
+
+**Writhe is not normalized away in the categorified theory.** The categorified version keeps what the Jones polynomial discards — exactly as DKC does.
+
+### Three New Demo Directions
+
+1. **Demo 84: Logarithmic DKC** — Define logarithmic partners for null-state braids (bracket=0 entries in the catalog). Test whether these partners carry computational content. Method: construct the Jordan cell structure at the lattice level using the indecomposability parameter algorithm from Gainutdinov et al.
+
+2. **Demo 85: Dense Polymer Fusion on Lattice** — The open calculation. Implement lattice fusion for TL at β=0 and work out the fusion rules explicitly. Compare with how DKC catalog entries combine under braid composition. This would give the first algebraic description of DKC's composition structure.
+
+3. **Demo 86: Tilting Module Decomposition** — Decompose catalog entries into tilting modules using the Belletête et al. classification. Test whether the tilting module decomposition predicts computational role (which entries are XOR winners, which are dead weight). The B^l_k depth should correlate with crossing depth from Demo 82.
+
+### Unbounded Jordan Cell Rank (Speculative)
+
+For periodic systems (bulk LCFT), the Hamiltonian L₀+L̄₀ admits Jordan cells "of arbitrarily large rank as the corresponding conformal weight is increased." The rank grows without bound. If this translates to DKC: more complex computations (higher crossing number) involve deeper non-diagonalizability. The logarithmic structure becomes increasingly complex — which may be the algebraic mechanism behind Demo 82's "capacity linear in depth."
+
+### Wall Brauer Algebra at q=i
+
+At the free fermion point (DKC's operating point), the lattice W-algebras are "closely connected with known wall Brauer algebras." Brauer algebras are the algebraic framework for SO(n)/Sp(n) representation theory, distinct from the TL/SU(2) framework. There is ADDITIONAL algebraic structure at q=i beyond what TL captures — from a different classical group family. This is completely unexplored territory for DKC.
+
 ---
 *End of Explorer's Log*
