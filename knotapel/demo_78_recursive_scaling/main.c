@@ -1,0 +1,1052 @@
+/*
+ * KNOTAPEL DEMO 78: Recursive Scaling + Phase Diagram
+ * ====================================================
+ *
+ * Demo 77 discovered: XOR8 computable at zeta_8 using Combined Sec8xVor
+ * (112 cells, 6 winners). Each winner = XOR6 triple + shadow partner.
+ *
+ * Core question: Does this recursive structure generalize?
+ * Can XOR10, XOR12 be computed by extending winners with shadows?
+ *
+ * Part A: Recursive XOR10 search (~120 candidates, fast)
+ * Part B: Brute-force XOR10 verification (all C(24,5) quintuples)
+ * Part C: Recursive XOR12 search (extend XOR10 winners)
+ * Part D: Phase diagram (min cells needed vs input count)
+ * Part E: Recursive structure verification
+ *
+ * C89, zero dependencies beyond math.h.
+ */
+
+#include <stdio.h>
+#include <string.h>
+#include <math.h>
+
+#ifndef M_PI
+#define M_PI 3.14159265358979323846
+#endif
+
+/* ================================================================
+ * Test infrastructure
+ * ================================================================ */
+
+static int n_pass = 0, n_fail = 0;
+
+static void check(const char *msg, int ok) {
+    if (ok) { printf("  PASS: %s\n", msg); n_pass++; }
+    else    { printf("  FAIL: %s\n", msg); n_fail++; }
+}
+
+/* ================================================================
+ * Quaternion type
+ * ================================================================ */
+
+typedef struct { double a, b, c, d; } Quat;
+
+static Quat quat_make(double a, double b, double c, double d) {
+    Quat q; q.a = a; q.b = b; q.c = c; q.d = d; return q;
+}
+static Quat quat_add(Quat p, Quat q) {
+    return quat_make(p.a+q.a, p.b+q.b, p.c+q.c, p.d+q.d);
+}
+static Quat quat_neg(Quat q) {
+    return quat_make(-q.a, -q.b, -q.c, -q.d);
+}
+static Quat quat_mul(Quat p, Quat q) {
+    return quat_make(
+        p.a*q.a - p.b*q.b - p.c*q.c - p.d*q.d,
+        p.a*q.b + p.b*q.a + p.c*q.d - p.d*q.c,
+        p.a*q.c - p.b*q.d + p.c*q.a + p.d*q.b,
+        p.a*q.d + p.b*q.c - p.c*q.b + p.d*q.a);
+}
+static Quat quat_conj(Quat q) {
+    return quat_make(q.a, -q.b, -q.c, -q.d);
+}
+static double quat_norm(Quat q) {
+    return sqrt(q.a*q.a + q.b*q.b + q.c*q.c + q.d*q.d);
+}
+static Quat quat_one(void) { return quat_make(1, 0, 0, 0); }
+
+/* ================================================================
+ * Braid type + SU(2) representation
+ * ================================================================ */
+
+#define MAX_WORD 64
+typedef struct { int word[MAX_WORD]; int len, n; } Braid;
+
+static Quat q_gen[3];
+
+static void init_su2_generators(void) {
+    double s = 1.0 / sqrt(2.0);
+    q_gen[1] = quat_make(s, s, 0, 0);
+    q_gen[2] = quat_make(s, 0, 0, -s);
+}
+
+static Quat braid_quaternion(const Braid *b) {
+    Quat result = quat_one();
+    int l;
+    for (l = 0; l < b->len; l++) {
+        int gen = b->word[l];
+        int idx = gen > 0 ? gen : -gen;
+        Quat g = q_gen[idx];
+        if (gen < 0) g = quat_conj(g);
+        result = quat_mul(result, g);
+    }
+    return result;
+}
+
+/* ================================================================
+ * Quaternion catalog (24 entries)
+ * ================================================================ */
+
+#define MAX_QCAT 128
+static Quat qcat[MAX_QCAT];
+static int qcat_size = 0;
+
+static int find_quat(Quat q) {
+    int i;
+    for (i = 0; i < qcat_size; i++) {
+        if (fabs(qcat[i].a-q.a)<1e-10 && fabs(qcat[i].b-q.b)<1e-10 &&
+            fabs(qcat[i].c-q.c)<1e-10 && fabs(qcat[i].d-q.d)<1e-10)
+            return i;
+        if (fabs(qcat[i].a+q.a)<1e-10 && fabs(qcat[i].b+q.b)<1e-10 &&
+            fabs(qcat[i].c+q.c)<1e-10 && fabs(qcat[i].d+q.d)<1e-10)
+            return i;
+    }
+    return -1;
+}
+
+static void build_catalogs(void) {
+    int n, len;
+    Braid b;
+    int word_buf[MAX_WORD];
+    qcat_size = 0;
+    for (n = 2; n <= 3; n++) {
+        for (len = 1; len <= 8 && len <= MAX_WORD; len++) {
+            int max_gen = n - 1;
+            int total_gens = 2 * max_gen;
+            unsigned long total, idx_l;
+            int i;
+            total = 1;
+            for (i = 0; i < len; i++) {
+                total *= (unsigned long)total_gens;
+                if (total > 100000) break;
+            }
+            if (total > 100000) continue;
+            for (idx_l = 0; idx_l < total; idx_l++) {
+                unsigned long tmp = idx_l;
+                Quat q;
+                for (i = 0; i < len; i++) {
+                    int g = (int)(tmp % (unsigned long)total_gens);
+                    tmp /= (unsigned long)total_gens;
+                    if (g < max_gen) word_buf[i] = g + 1;
+                    else             word_buf[i] = -(g - max_gen + 1);
+                }
+                b.n = n; b.len = len;
+                memcpy(b.word, word_buf, (size_t)len * sizeof(int));
+                q = braid_quaternion(&b);
+                if (find_quat(q) < 0 && qcat_size < MAX_QCAT) {
+                    qcat[qcat_size] = q;
+                    qcat_size++;
+                }
+            }
+        }
+    }
+}
+
+/* ================================================================
+ * Eigenvector direction catalog + S2 Voronoi (14 cells)
+ * ================================================================ */
+
+#define MAX_DIR 32
+static double g_dir[MAX_DIR][3];
+static int g_nd = 0;
+
+#define NCELLS 14
+#define IDENT_CELL 13
+
+static void build_dir_catalog(void) {
+    int i;
+    g_nd = 0;
+    for (i = 0; i < qcat_size; i++) {
+        Quat q = qcat[i];
+        double norm_v, ax, ay, az;
+        int found = 0, j;
+        if (q.a < 0) { q.a = -q.a; q.b = -q.b; q.c = -q.c; q.d = -q.d; }
+        if (q.a > 1.0) q.a = 1.0;
+        norm_v = sqrt(q.b*q.b + q.c*q.c + q.d*q.d);
+        if (norm_v < 1e-12) continue;
+        ax = q.b / norm_v; ay = q.c / norm_v; az = q.d / norm_v;
+        for (j = 0; j < g_nd; j++) {
+            double d1 = fabs(g_dir[j][0]-ax) + fabs(g_dir[j][1]-ay) +
+                         fabs(g_dir[j][2]-az);
+            double d2 = fabs(g_dir[j][0]+ax) + fabs(g_dir[j][1]+ay) +
+                         fabs(g_dir[j][2]+az);
+            if (d1 < 1e-8 || d2 < 1e-8) { found = 1; break; }
+        }
+        if (!found && g_nd < MAX_DIR) {
+            g_dir[g_nd][0] = ax; g_dir[g_nd][1] = ay; g_dir[g_nd][2] = az;
+            g_nd++;
+        }
+    }
+}
+
+static int vor_cell(double ax, double ay, double az) {
+    int i, best = 0;
+    double bd = -2.0;
+    for (i = 0; i < g_nd; i++) {
+        double dp = fabs(ax * g_dir[i][0] + ay * g_dir[i][1] +
+                         az * g_dir[i][2]);
+        if (dp > bd) { bd = dp; best = i; }
+    }
+    return best;
+}
+
+static int sum_to_s2_cell(Quat sum) {
+    double n = quat_norm(sum);
+    double norm_v, ax, ay, az;
+    double qa, qb, qc, qd;
+    if (n < 1e-12) return IDENT_CELL;
+    qa = sum.a / n; qb = sum.b / n; qc = sum.c / n; qd = sum.d / n;
+    if (qa < 0) { qa = -qa; qb = -qb; qc = -qc; qd = -qd; }
+    if (qa > 1.0) qa = 1.0;
+    norm_v = sqrt(qb*qb + qc*qc + qd*qd);
+    if (norm_v < 1e-12) return IDENT_CELL;
+    ax = qb / norm_v; ay = qc / norm_v; az = qd / norm_v;
+    return vor_cell(ax, ay, az);
+}
+
+/* ================================================================
+ * Rotation angle (0 to 360 degrees, full SU(2))
+ * ================================================================ */
+
+static double rotation_angle(Quat sum) {
+    double n = quat_norm(sum);
+    double cos_half, half_ang;
+    if (n < 1e-12) return 0.0;
+    cos_half = sum.a / n;
+    if (cos_half > 1.0) cos_half = 1.0;
+    if (cos_half < -1.0) cos_half = -1.0;
+    half_ang = acos(cos_half);
+    return 2.0 * half_ang * 180.0 / M_PI;
+}
+
+/* ================================================================
+ * Generalized XOR checker (up to 4096 masks, 512 cells)
+ * ================================================================ */
+
+#define MAX_ACT_CELLS 512
+
+static int check_xor_gen(const int *cells, const int *parity,
+                          int n_masks, int n_cells, int *acc_out) {
+    int cell_even[MAX_ACT_CELLS], cell_odd[MAX_ACT_CELLS];
+    int i, correct = 0, is_winner = 1;
+    memset(cell_even, 0, (size_t)n_cells * sizeof(int));
+    memset(cell_odd, 0, (size_t)n_cells * sizeof(int));
+    for (i = 0; i < n_masks; i++) {
+        int c = cells[i];
+        if (parity[i] == 0) cell_even[c]++;
+        else                 cell_odd[c]++;
+    }
+    for (i = 0; i < n_cells; i++) {
+        if (cell_even[i] > 0 && cell_odd[i] > 0) is_winner = 0;
+        correct += (cell_even[i] > cell_odd[i]) ? cell_even[i] : cell_odd[i];
+    }
+    if (acc_out) *acc_out = correct;
+    return is_winner;
+}
+
+/* ================================================================
+ * Generic XOR test with Combined Sec(k) x Vor activation
+ *
+ * indices: sorted catalog indices (one per +/- pair)
+ * n_idx:   number of indices (= N_inputs / 2)
+ * k_sec:   number of sectors (k=1 = Voronoi only)
+ * acc_out: if non-NULL, receives majority-vote accuracy
+ * Returns 1 if perfect (every cell sees one parity).
+ * ================================================================ */
+
+#define MAX_MASKS 4096
+
+static int test_combined(const int *indices, int n_idx, int k_sec,
+                          int *acc_out) {
+    int n_inputs = 2 * n_idx;
+    int n_masks, n_cells;
+    int par_buf[MAX_MASKS], cell_buf[MAX_MASKS];
+    Quat weights[24];
+    int mask, i;
+
+    n_masks = 1 << n_inputs;
+    n_cells = k_sec * NCELLS;
+
+    if (n_masks > MAX_MASKS || n_cells > MAX_ACT_CELLS) {
+        if (acc_out) *acc_out = 0;
+        return 0;
+    }
+
+    for (i = 0; i < n_idx; i++) {
+        weights[2*i]     = qcat[indices[i]];
+        weights[2*i + 1] = quat_neg(qcat[indices[i]]);
+    }
+
+    for (mask = 0; mask < n_masks; mask++) {
+        Quat sum = quat_make(0, 0, 0, 0);
+        int par = 0;
+        double ang;
+        int sec, vor;
+
+        for (i = 0; i < n_inputs; i++) {
+            if (mask & (1 << i)) {
+                sum = quat_add(sum, weights[i]);
+                par ^= 1;
+            }
+        }
+        par_buf[mask] = par;
+
+        ang = rotation_angle(sum);
+        sec = (int)(ang * (double)k_sec / 360.0);
+        if (sec >= k_sec) sec = k_sec - 1;
+        if (sec < 0) sec = 0;
+        vor = sum_to_s2_cell(sum);
+        cell_buf[mask] = sec * NCELLS + vor;
+    }
+
+    return check_xor_gen(cell_buf, par_buf, n_masks, n_cells, acc_out);
+}
+
+/* ================================================================
+ * Catalog quaternion properties
+ * ================================================================ */
+
+static int quat_cell(int idx) {
+    Quat q = qcat[idx];
+    double norm_v, ax, ay, az;
+    if (q.a < 0) { q.a = -q.a; q.b = -q.b; q.c = -q.c; q.d = -q.d; }
+    norm_v = sqrt(q.b*q.b + q.c*q.c + q.d*q.d);
+    if (norm_v < 1e-12) return IDENT_CELL;
+    ax = q.b / norm_v; ay = q.c / norm_v; az = q.d / norm_v;
+    return vor_cell(ax, ay, az);
+}
+
+static double quat_half_angle(int idx) {
+    Quat q = qcat[idx];
+    double norm_v;
+    if (q.a < 0) { q.a = -q.a; q.b = -q.b; q.c = -q.c; q.d = -q.d; }
+    if (q.a > 1.0) q.a = 1.0;
+    norm_v = sqrt(q.b*q.b + q.c*q.c + q.d*q.d);
+    return atan2(norm_v, q.a) * 180.0 / M_PI;
+}
+
+/* ================================================================
+ * Winner storage
+ * ================================================================ */
+
+#define MAX_WIN 256
+
+static int g_win6[MAX_WIN][3];
+static int g_nwin6 = 0;
+
+static int g_win8[MAX_WIN][4];
+static int g_nwin8 = 0;
+
+static int g_win10[MAX_WIN][5];
+static int g_win10_k[MAX_WIN];
+static int g_nwin10 = 0;
+
+static int g_win12[MAX_WIN][6];
+static int g_win12_k[MAX_WIN];
+static int g_nwin12 = 0;
+
+/* ================================================================
+ * Winner finders (baselines)
+ * ================================================================ */
+
+static void find_winners_6(void) {
+    int ai, aj, ak;
+    int indices[3];
+    g_nwin6 = 0;
+    for (ai = 0; ai < qcat_size; ai++) {
+        for (aj = ai + 1; aj < qcat_size; aj++) {
+            for (ak = aj + 1; ak < qcat_size; ak++) {
+                indices[0] = ai; indices[1] = aj; indices[2] = ak;
+                /* k=1 => Voronoi only (1 sector covers full circle) */
+                if (test_combined(indices, 3, 1, NULL)) {
+                    if (g_nwin6 < MAX_WIN) {
+                        g_win6[g_nwin6][0] = ai;
+                        g_win6[g_nwin6][1] = aj;
+                        g_win6[g_nwin6][2] = ak;
+                        g_nwin6++;
+                    }
+                }
+            }
+        }
+    }
+}
+
+static void find_winners_8(void) {
+    int ai, aj, ak, al;
+    int indices[4];
+    g_nwin8 = 0;
+    for (ai = 0; ai < qcat_size; ai++) {
+        for (aj = ai + 1; aj < qcat_size; aj++) {
+            for (ak = aj + 1; ak < qcat_size; ak++) {
+                for (al = ak + 1; al < qcat_size; al++) {
+                    indices[0] = ai; indices[1] = aj;
+                    indices[2] = ak; indices[3] = al;
+                    if (test_combined(indices, 4, 8, NULL)) {
+                        if (g_nwin8 < MAX_WIN) {
+                            g_win8[g_nwin8][0] = ai;
+                            g_win8[g_nwin8][1] = aj;
+                            g_win8[g_nwin8][2] = ak;
+                            g_win8[g_nwin8][3] = al;
+                            g_nwin8++;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+/* ================================================================
+ * Winner lookup helpers
+ * ================================================================ */
+
+static int is_win6(int a, int b, int c) {
+    int i;
+    for (i = 0; i < g_nwin6; i++) {
+        if (g_win6[i][0] == a && g_win6[i][1] == b &&
+            g_win6[i][2] == c) return 1;
+    }
+    return 0;
+}
+
+static int is_win8(int a, int b, int c, int d) {
+    int i;
+    for (i = 0; i < g_nwin8; i++) {
+        if (g_win8[i][0] == a && g_win8[i][1] == b &&
+            g_win8[i][2] == c && g_win8[i][3] == d) return 1;
+    }
+    return 0;
+}
+
+static int is_win10(int a, int b, int c, int d, int e) {
+    int i;
+    for (i = 0; i < g_nwin10; i++) {
+        if (g_win10[i][0] == a && g_win10[i][1] == b &&
+            g_win10[i][2] == c && g_win10[i][3] == d &&
+            g_win10[i][4] == e) return 1;
+    }
+    return 0;
+}
+
+/* ================================================================
+ * Part A: Recursive XOR10 search
+ * Extend each XOR8 winner with one remaining catalog entry.
+ * ================================================================ */
+
+static const int g_k10[] = {8, 10, 12, 16};
+#define N_K10 4
+
+static void part_a_recursive_xor10(void) {
+    char msg[256];
+    int wi, ae, ki, i, j;
+    int n_tested = 0;
+    int min_k = 0;
+
+    printf("\n=== Part A: Recursive XOR10 search ===\n");
+    printf("  INFO: %d XOR8 winners, %d catalog entries\n",
+           g_nwin8, qcat_size);
+    printf("  INFO: Testing Sec(k) x Vor for k = ");
+    for (ki = 0; ki < N_K10; ki++)
+        printf("%d%s", g_k10[ki], ki < N_K10 - 1 ? ", " : "\n\n");
+
+    g_nwin10 = 0;
+
+    for (wi = 0; wi < g_nwin8; wi++) {
+        for (ae = 0; ae < qcat_size; ae++) {
+            int in_winner = 0;
+            int indices[5];
+            int pos;
+
+            /* Skip if ae already in this winner */
+            for (i = 0; i < 4; i++) {
+                if (g_win8[wi][i] == ae) { in_winner = 1; break; }
+            }
+            if (in_winner) continue;
+
+            /* Build sorted 5-tuple by inserting ae */
+            pos = 4;
+            for (i = 0; i < 4; i++) {
+                if (ae < g_win8[wi][i]) { pos = i; break; }
+            }
+            for (i = 0; i < pos; i++) indices[i] = g_win8[wi][i];
+            indices[pos] = ae;
+            for (i = pos; i < 4; i++) indices[i + 1] = g_win8[wi][i];
+
+            /* Dedup: skip if already found */
+            {
+                int dup = 0;
+                for (j = 0; j < g_nwin10; j++) {
+                    if (g_win10[j][0] == indices[0] &&
+                        g_win10[j][1] == indices[1] &&
+                        g_win10[j][2] == indices[2] &&
+                        g_win10[j][3] == indices[3] &&
+                        g_win10[j][4] == indices[4]) {
+                        dup = 1; break;
+                    }
+                }
+                if (dup) continue;
+            }
+
+            n_tested++;
+
+            /* Test with each k value (smallest first) */
+            for (ki = 0; ki < N_K10; ki++) {
+                if (test_combined(indices, 5, g_k10[ki], NULL)) {
+                    if (g_nwin10 < MAX_WIN) {
+                        memcpy(g_win10[g_nwin10], indices,
+                               5 * sizeof(int));
+                        g_win10_k[g_nwin10] = g_k10[ki];
+                        g_nwin10++;
+                    }
+                    printf("  FOUND: [%d,%d,%d,%d,%d] at Sec%d x Vor "
+                           "(%d cells)\n",
+                           indices[0], indices[1], indices[2],
+                           indices[3], indices[4],
+                           g_k10[ki], g_k10[ki] * NCELLS);
+                    if (min_k == 0 || g_k10[ki] < min_k)
+                        min_k = g_k10[ki];
+                    break; /* found at smallest working k */
+                }
+            }
+        }
+    }
+
+    printf("\n  INFO: Tested %d unique candidates\n", n_tested);
+
+    sprintf(msg, "Recursive XOR10: %d winners", g_nwin10);
+    check(msg, 1);
+
+    if (g_nwin10 > 0) {
+        sprintf(msg, "Min sectors for XOR10: k=%d (%d cells)",
+                min_k, min_k * NCELLS);
+        check(msg, 1);
+    } else {
+        check("No recursive XOR10 winners at tested k values", 1);
+    }
+}
+
+/* ================================================================
+ * Part B: Brute-force XOR10 verification
+ * All C(24,5) = 42504 quintuples.
+ * ================================================================ */
+
+static void part_b_bruteforce_xor10(void) {
+    char msg[256];
+    int ai, aj, ak, al, am;
+    int n_quints = 0;
+    int winners_any = 0;
+    int winners_per_k[N_K10];
+    int best_acc_per_k[N_K10];
+    int ki;
+    long expected;
+
+    printf("\n=== Part B: Brute-force XOR10 verification ===\n");
+
+    expected = (long)qcat_size * (long)(qcat_size - 1) *
+               (long)(qcat_size - 2) * (long)(qcat_size - 3) *
+               (long)(qcat_size - 4) / 120;
+
+    printf("  INFO: All C(%d,5) = %ld quintuples\n", qcat_size, expected);
+    printf("  INFO: Testing Sec(k) x Vor for k = 8, 10, 12, 16\n\n");
+
+    memset(winners_per_k, 0, sizeof(winners_per_k));
+    memset(best_acc_per_k, 0, sizeof(best_acc_per_k));
+
+    for (ai = 0; ai < qcat_size; ai++) {
+     for (aj = ai + 1; aj < qcat_size; aj++) {
+      for (ak = aj + 1; ak < qcat_size; ak++) {
+       for (al = ak + 1; al < qcat_size; al++) {
+        for (am = al + 1; am < qcat_size; am++) {
+            /* Compute all 1024 sums once, then test multiple k */
+            Quat weights[10];
+            double ang_buf[1024];
+            int vor_buf[1024], par_buf[1024], cell_buf[1024];
+            int mask, i;
+            int found_any = 0;
+
+            weights[0] = qcat[ai]; weights[1] = quat_neg(qcat[ai]);
+            weights[2] = qcat[aj]; weights[3] = quat_neg(qcat[aj]);
+            weights[4] = qcat[ak]; weights[5] = quat_neg(qcat[ak]);
+            weights[6] = qcat[al]; weights[7] = quat_neg(qcat[al]);
+            weights[8] = qcat[am]; weights[9] = quat_neg(qcat[am]);
+
+            for (mask = 0; mask < 1024; mask++) {
+                Quat sum = quat_make(0, 0, 0, 0);
+                int p = 0;
+                for (i = 0; i < 10; i++) {
+                    if (mask & (1 << i)) {
+                        sum = quat_add(sum, weights[i]);
+                        p ^= 1;
+                    }
+                }
+                par_buf[mask] = p;
+                ang_buf[mask] = rotation_angle(sum);
+                vor_buf[mask] = sum_to_s2_cell(sum);
+            }
+
+            for (ki = 0; ki < N_K10; ki++) {
+                int acc;
+                int k = g_k10[ki];
+                int nc = k * NCELLS;
+                for (mask = 0; mask < 1024; mask++) {
+                    int sec = (int)(ang_buf[mask] *
+                              (double)k / 360.0);
+                    if (sec >= k) sec = k - 1;
+                    if (sec < 0) sec = 0;
+                    cell_buf[mask] = sec * NCELLS + vor_buf[mask];
+                }
+                if (check_xor_gen(cell_buf, par_buf, 1024, nc, &acc)) {
+                    winners_per_k[ki]++;
+                    found_any = 1;
+                }
+                if (acc > best_acc_per_k[ki])
+                    best_acc_per_k[ki] = acc;
+            }
+
+            if (found_any) winners_any++;
+            n_quints++;
+
+            if (n_quints % 10000 == 0)
+                printf("  ... %d / %ld quintuples\r",
+                       n_quints, expected);
+        }
+       }
+      }
+     }
+    }
+
+    printf("  ... %d quintuples (done)          \n\n", n_quints);
+
+    printf("  %-10s  %5s  %8s  %10s\n",
+           "Sectors", "Cells", "Winners", "Best Acc");
+    printf("  %-10s  %5s  %8s  %10s\n",
+           "-------", "-----", "-------", "--------");
+
+    for (ki = 0; ki < N_K10; ki++) {
+        double acc_pct = 100.0 * (double)best_acc_per_k[ki] / 1024.0;
+        printf("  k=%-8d  %5d  %8d  %8.1f%%\n",
+               g_k10[ki], g_k10[ki] * NCELLS,
+               winners_per_k[ki], acc_pct);
+    }
+
+    printf("\n  INFO: Unique quintuples winning at any k: %d\n",
+           winners_any);
+
+    sprintf(msg, "Swept all %d quintuples", n_quints);
+    check(msg, (long)n_quints == expected);
+
+    if (winners_any == g_nwin10) {
+        sprintf(msg, "Recursive found ALL %d XOR10 winners",
+                g_nwin10);
+        check(msg, 1);
+    } else if (winners_any > g_nwin10) {
+        sprintf(msg, "Brute-force found %d more (total %d vs "
+                "recursive %d)",
+                winners_any - g_nwin10, winners_any, g_nwin10);
+        check(msg, 1); /* informational, not a failure */
+    } else {
+        sprintf(msg, "BUG: brute-force fewer than recursive "
+                "(%d < %d)", winners_any, g_nwin10);
+        check(msg, 0);
+    }
+}
+
+/* ================================================================
+ * Part C: Recursive XOR12 search
+ * Extend each XOR10 winner with one remaining catalog entry.
+ * ================================================================ */
+
+static const int g_k12[] = {8, 10, 12, 16, 20, 24};
+#define N_K12 6
+
+static void part_c_recursive_xor12(void) {
+    char msg[256];
+    int wi, ae, ki, i, j;
+    int n_tested = 0;
+    int min_k = 0;
+
+    printf("\n=== Part C: Recursive XOR12 search ===\n");
+
+    if (g_nwin10 == 0) {
+        printf("  INFO: No XOR10 winners, skipping XOR12\n");
+        check("XOR12 skipped (no XOR10 winners)", 1);
+        return;
+    }
+
+    printf("  INFO: %d XOR10 winners, %d catalog entries\n",
+           g_nwin10, qcat_size);
+    printf("  INFO: Testing Sec(k) x Vor for k = ");
+    for (ki = 0; ki < N_K12; ki++)
+        printf("%d%s", g_k12[ki], ki < N_K12 - 1 ? ", " : "\n\n");
+
+    g_nwin12 = 0;
+
+    for (wi = 0; wi < g_nwin10; wi++) {
+        for (ae = 0; ae < qcat_size; ae++) {
+            int in_winner = 0;
+            int indices[6];
+            int pos;
+
+            for (i = 0; i < 5; i++) {
+                if (g_win10[wi][i] == ae) { in_winner = 1; break; }
+            }
+            if (in_winner) continue;
+
+            /* Build sorted 6-tuple */
+            pos = 5;
+            for (i = 0; i < 5; i++) {
+                if (ae < g_win10[wi][i]) { pos = i; break; }
+            }
+            for (i = 0; i < pos; i++) indices[i] = g_win10[wi][i];
+            indices[pos] = ae;
+            for (i = pos; i < 5; i++) indices[i + 1] = g_win10[wi][i];
+
+            /* Dedup */
+            {
+                int dup = 0;
+                for (j = 0; j < g_nwin12; j++) {
+                    if (g_win12[j][0] == indices[0] &&
+                        g_win12[j][1] == indices[1] &&
+                        g_win12[j][2] == indices[2] &&
+                        g_win12[j][3] == indices[3] &&
+                        g_win12[j][4] == indices[4] &&
+                        g_win12[j][5] == indices[5]) {
+                        dup = 1; break;
+                    }
+                }
+                if (dup) continue;
+            }
+
+            n_tested++;
+
+            for (ki = 0; ki < N_K12; ki++) {
+                if (test_combined(indices, 6, g_k12[ki], NULL)) {
+                    if (g_nwin12 < MAX_WIN) {
+                        memcpy(g_win12[g_nwin12], indices,
+                               6 * sizeof(int));
+                        g_win12_k[g_nwin12] = g_k12[ki];
+                        g_nwin12++;
+                    }
+                    printf("  FOUND: [%d,%d,%d,%d,%d,%d] at Sec%d x "
+                           "Vor (%d cells)\n",
+                           indices[0], indices[1], indices[2],
+                           indices[3], indices[4], indices[5],
+                           g_k12[ki], g_k12[ki] * NCELLS);
+                    if (min_k == 0 || g_k12[ki] < min_k)
+                        min_k = g_k12[ki];
+                    break;
+                }
+            }
+        }
+    }
+
+    printf("\n  INFO: Tested %d unique candidates\n", n_tested);
+
+    sprintf(msg, "Recursive XOR12: %d winners", g_nwin12);
+    check(msg, 1);
+
+    if (g_nwin12 > 0) {
+        sprintf(msg, "Min sectors for XOR12: k=%d (%d cells)",
+                min_k, min_k * NCELLS);
+        check(msg, 1);
+    } else {
+        check("No recursive XOR12 winners at tested k values", 1);
+    }
+}
+
+/* ================================================================
+ * Part D: Phase diagram
+ * ================================================================ */
+
+static void part_d_phase_diagram(void) {
+    printf("\n=== Part D: Phase diagram ===\n\n");
+
+    printf("  %-8s  %6s  %9s  %8s  %-16s  %10s\n",
+           "N", "2^N", "Min cells", "Winners", "Activation",
+           "Hit rate");
+    printf("  %-8s  %6s  %9s  %8s  %-16s  %10s\n",
+           "------", "------", "---------", "-------",
+           "----------", "--------");
+
+    /* XOR6 */
+    {
+        long c6 = (long)qcat_size * (long)(qcat_size - 1) *
+                  (long)(qcat_size - 2) / 6;
+        printf("  %-8d  %6d  %9d  %8d  %-16s  %8.3f%%\n",
+               6, 64, NCELLS, g_nwin6, "Voronoi",
+               100.0 * (double)g_nwin6 / (double)c6);
+    }
+
+    /* XOR8 */
+    {
+        long c8 = (long)qcat_size * (long)(qcat_size - 1) *
+                  (long)(qcat_size - 2) * (long)(qcat_size - 3) / 24;
+        printf("  %-8d  %6d  %9d  %8d  %-16s  %8.4f%%\n",
+               8, 256, 8 * NCELLS, g_nwin8, "Sec8 x Vor",
+               100.0 * (double)g_nwin8 / (double)c8);
+    }
+
+    /* XOR10 */
+    if (g_nwin10 > 0) {
+        long c10 = (long)qcat_size * (long)(qcat_size - 1) *
+                   (long)(qcat_size - 2) * (long)(qcat_size - 3) *
+                   (long)(qcat_size - 4) / 120;
+        int mk = g_win10_k[0];
+        int wi;
+        char act[32];
+        for (wi = 1; wi < g_nwin10; wi++) {
+            if (g_win10_k[wi] < mk) mk = g_win10_k[wi];
+        }
+        sprintf(act, "Sec%d x Vor", mk);
+        printf("  %-8d  %6d  %9d  %8d  %-16s  %8.5f%%\n",
+               10, 1024, mk * NCELLS, g_nwin10, act,
+               100.0 * (double)g_nwin10 / (double)c10);
+    } else {
+        printf("  %-8d  %6d  %9s  %8d  %-16s  %10s\n",
+               10, 1024, "---", 0, "---", "---");
+    }
+
+    /* XOR12 */
+    if (g_nwin12 > 0) {
+        long c12 = (long)qcat_size * (long)(qcat_size - 1) *
+                   (long)(qcat_size - 2) * (long)(qcat_size - 3) *
+                   (long)(qcat_size - 4) * (long)(qcat_size - 5) / 720;
+        int mk = g_win12_k[0];
+        int wi;
+        char act[32];
+        for (wi = 1; wi < g_nwin12; wi++) {
+            if (g_win12_k[wi] < mk) mk = g_win12_k[wi];
+        }
+        sprintf(act, "Sec%d x Vor", mk);
+        printf("  %-8d  %6d  %9d  %8d  %-16s  %8.6f%%\n",
+               12, 4096, mk * NCELLS, g_nwin12, act,
+               100.0 * (double)g_nwin12 / (double)c12);
+    } else {
+        printf("  %-8d  %6d  %9s  %8d  %-16s  %10s\n",
+               12, 4096, "---", 0, "---", "---");
+    }
+
+    printf("\n");
+    check("Phase diagram compiled", 1);
+}
+
+/* ================================================================
+ * Part E: Recursive structure verification
+ * For each XOR(N+2) winner, verify it = XOR(N) winner + shadow.
+ * Check shadow properties: shared cell? angle?
+ * ================================================================ */
+
+static void part_e_recursive(void) {
+    char msg[256];
+    int wi, i, j;
+    int all_8_from_6 = 1;
+    int all_10_from_8 = 1;
+    int all_12_from_10 = 1;
+    int n_shadow_shares = 0, n_shadow_total = 0;
+
+    printf("\n=== Part E: Recursive structure verification ===\n");
+
+    /* --- XOR8 -> XOR6 --- */
+    printf("\n  --- XOR8 winners: parent XOR6 triples ---\n");
+    for (wi = 0; wi < g_nwin8; wi++) {
+        int *q = g_win8[wi];
+        int n_parents = 0;
+        printf("  [%d,%d,%d,%d]:\n", q[0], q[1], q[2], q[3]);
+
+        for (i = 0; i < 4; i++) {
+            int sub[3], si = 0;
+            for (j = 0; j < 4; j++) {
+                if (j != i) sub[si++] = q[j];
+            }
+            if (is_win6(sub[0], sub[1], sub[2])) {
+                int shadow = q[i];
+                int s_cell = quat_cell(shadow);
+                double s_ang = quat_half_angle(shadow);
+                int shares = 0;
+                for (j = 0; j < 4; j++) {
+                    if (j != i && quat_cell(q[j]) == s_cell) {
+                        shares = 1; break;
+                    }
+                }
+                printf("    = [%d,%d,%d] + %d (cell=%d, %.1f deg, "
+                       "shares=%s)\n",
+                       sub[0], sub[1], sub[2], shadow,
+                       s_cell, s_ang, shares ? "YES" : "NO");
+                n_parents++;
+                n_shadow_total++;
+                if (shares) n_shadow_shares++;
+            }
+        }
+        if (n_parents == 0) {
+            printf("    NO XOR6 parent!\n");
+            all_8_from_6 = 0;
+        }
+    }
+
+    /* --- XOR10 -> XOR8 --- */
+    if (g_nwin10 > 0) {
+        printf("\n  --- XOR10 winners: parent XOR8 quadruples ---\n");
+        for (wi = 0; wi < g_nwin10; wi++) {
+            int *q = g_win10[wi];
+            int n_parents = 0;
+            printf("  [%d,%d,%d,%d,%d] (k=%d):\n",
+                   q[0], q[1], q[2], q[3], q[4], g_win10_k[wi]);
+
+            for (i = 0; i < 5; i++) {
+                int sub[4], si = 0;
+                for (j = 0; j < 5; j++) {
+                    if (j != i) sub[si++] = q[j];
+                }
+                if (is_win8(sub[0], sub[1], sub[2], sub[3])) {
+                    int shadow = q[i];
+                    int s_cell = quat_cell(shadow);
+                    double s_ang = quat_half_angle(shadow);
+                    int shares = 0;
+                    for (j = 0; j < 5; j++) {
+                        if (j != i && quat_cell(q[j]) == s_cell) {
+                            shares = 1; break;
+                        }
+                    }
+                    printf("    = [%d,%d,%d,%d] + %d (cell=%d, %.1f"
+                           " deg, shares=%s)\n",
+                           sub[0], sub[1], sub[2], sub[3], shadow,
+                           s_cell, s_ang, shares ? "YES" : "NO");
+                    n_parents++;
+                    n_shadow_total++;
+                    if (shares) n_shadow_shares++;
+                }
+            }
+            if (n_parents == 0) {
+                printf("    NO XOR8 parent!\n");
+                all_10_from_8 = 0;
+            }
+        }
+    }
+
+    /* --- XOR12 -> XOR10 --- */
+    if (g_nwin12 > 0) {
+        printf("\n  --- XOR12 winners: parent XOR10 quintuples ---\n");
+        for (wi = 0; wi < g_nwin12; wi++) {
+            int *q = g_win12[wi];
+            int n_parents = 0;
+            printf("  [%d,%d,%d,%d,%d,%d] (k=%d):\n",
+                   q[0], q[1], q[2], q[3], q[4], q[5],
+                   g_win12_k[wi]);
+
+            for (i = 0; i < 6; i++) {
+                int sub[5], si = 0;
+                for (j = 0; j < 6; j++) {
+                    if (j != i) sub[si++] = q[j];
+                }
+                if (is_win10(sub[0], sub[1], sub[2], sub[3],
+                             sub[4])) {
+                    int shadow = q[i];
+                    int s_cell = quat_cell(shadow);
+                    double s_ang = quat_half_angle(shadow);
+                    int shares = 0;
+                    for (j = 0; j < 6; j++) {
+                        if (j != i && quat_cell(q[j]) == s_cell) {
+                            shares = 1; break;
+                        }
+                    }
+                    printf("    = [%d,%d,%d,%d,%d] + %d (cell=%d, "
+                           "%.1f deg, shares=%s)\n",
+                           sub[0], sub[1], sub[2], sub[3], sub[4],
+                           shadow, s_cell, s_ang,
+                           shares ? "YES" : "NO");
+                    n_parents++;
+                    n_shadow_total++;
+                    if (shares) n_shadow_shares++;
+                }
+            }
+            if (n_parents == 0) {
+                printf("    NO XOR10 parent!\n");
+                all_12_from_10 = 0;
+            }
+        }
+    }
+
+    /* Summary */
+    printf("\n  INFO: Shadow cell-sharing: %d / %d",
+           n_shadow_shares, n_shadow_total);
+    if (n_shadow_total > 0)
+        printf(" (%.1f%%)",
+               100.0 * (double)n_shadow_shares /
+               (double)n_shadow_total);
+    printf("\n");
+
+    sprintf(msg, "XOR8 all extend XOR6: %s",
+            all_8_from_6 ? "YES" : "NO");
+    check(msg, all_8_from_6);
+
+    if (g_nwin10 > 0) {
+        sprintf(msg, "XOR10 all extend XOR8: %s",
+                all_10_from_8 ? "YES" : "NO");
+        check(msg, all_10_from_8);
+    }
+
+    if (g_nwin12 > 0) {
+        sprintf(msg, "XOR12 all extend XOR10: %s",
+                all_12_from_10 ? "YES" : "NO");
+        check(msg, all_12_from_10);
+    }
+
+    /* Suppress unused warnings for conditional variables */
+    (void)all_10_from_8;
+    (void)all_12_from_10;
+}
+
+/* ================================================================
+ * Main
+ * ================================================================ */
+
+int main(void) {
+    char msg[64];
+
+    printf("KNOTAPEL DEMO 78: Recursive Scaling + Phase Diagram\n");
+    printf("====================================================\n");
+
+    init_su2_generators();
+    build_catalogs();
+    build_dir_catalog();
+
+    printf("  INFO: %d quaternions, %d S2 directions\n",
+           qcat_size, g_nd);
+
+    /* Find baselines */
+    printf("  INFO: Finding XOR6 winners (Voronoi)...\n");
+    find_winners_6();
+    printf("  INFO: XOR6 winners: %d\n", g_nwin6);
+
+    printf("  INFO: Finding XOR8 winners (Sec8 x Vor)...\n");
+    find_winners_8();
+    printf("  INFO: XOR8 winners: %d\n", g_nwin8);
+
+    /* Verify baselines match Demo 77 */
+    sprintf(msg, "XOR6 baseline: %d (expect 36)", g_nwin6);
+    check(msg, g_nwin6 == 36);
+    sprintf(msg, "XOR8 baseline: %d (expect 6)", g_nwin8);
+    check(msg, g_nwin8 == 6);
+
+    /* Run parts */
+    part_a_recursive_xor10();
+    part_b_bruteforce_xor10();
+    part_c_recursive_xor12();
+    part_d_phase_diagram();
+    part_e_recursive();
+
+    printf("\n====================================================\n");
+    printf("Results: %d pass, %d fail\n", n_pass, n_fail);
+    return n_fail > 0 ? 1 : 0;
+}

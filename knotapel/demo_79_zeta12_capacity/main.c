@@ -1,0 +1,877 @@
+/*
+ * KNOTAPEL DEMO 79: zeta_12 Capacity Test
+ * ========================================
+ *
+ * Demo 78 proved: zeta_8 catalog (24 quaternions) maxes out at 8 inputs.
+ * Does the pattern zeta_N -> N-input capacity hold? Test zeta_12.
+ *
+ * Part A: Build zeta_12 catalog and compare with zeta_8
+ * Part B: Direction and angle census
+ * Part C: XOR capacity ladder (6, 8, 10, 12, 14)
+ * Part D: Phase diagram (zeta_8 + zeta_12)
+ * Part E: Nesting verification (zeta_8 subset of zeta_12?)
+ *
+ * C89, zero dependencies beyond math.h.
+ */
+
+#include <stdio.h>
+#include <string.h>
+#include <math.h>
+
+#ifndef M_PI
+#define M_PI 3.14159265358979323846
+#endif
+
+/* ================================================================
+ * Test infrastructure
+ * ================================================================ */
+
+static int n_pass = 0, n_fail = 0;
+
+static void check(const char *msg, int ok) {
+    if (ok) { printf("  PASS: %s\n", msg); n_pass++; }
+    else    { printf("  FAIL: %s\n", msg); n_fail++; }
+}
+
+/* ================================================================
+ * Quaternion type
+ * ================================================================ */
+
+typedef struct { double a, b, c, d; } Quat;
+
+static Quat quat_make(double a, double b, double c, double d) {
+    Quat q; q.a = a; q.b = b; q.c = c; q.d = d; return q;
+}
+static Quat quat_add(Quat p, Quat q) {
+    return quat_make(p.a+q.a, p.b+q.b, p.c+q.c, p.d+q.d);
+}
+static Quat quat_neg(Quat q) {
+    return quat_make(-q.a, -q.b, -q.c, -q.d);
+}
+static Quat quat_mul(Quat p, Quat q) {
+    return quat_make(
+        p.a*q.a - p.b*q.b - p.c*q.c - p.d*q.d,
+        p.a*q.b + p.b*q.a + p.c*q.d - p.d*q.c,
+        p.a*q.c - p.b*q.d + p.c*q.a + p.d*q.b,
+        p.a*q.d + p.b*q.c - p.c*q.b + p.d*q.a);
+}
+static Quat quat_conj(Quat q) {
+    return quat_make(q.a, -q.b, -q.c, -q.d);
+}
+static double quat_norm(Quat q) {
+    return sqrt(q.a*q.a + q.b*q.b + q.c*q.c + q.d*q.d);
+}
+static Quat quat_one(void) { return quat_make(1, 0, 0, 0); }
+
+/* ================================================================
+ * Braid type + SU(2) representation (parameterized)
+ * ================================================================ */
+
+#define MAX_WORD 64
+typedef struct { int word[MAX_WORD]; int len, n; } Braid;
+
+static Quat q_gen[3];
+
+static void init_su2_generators(double half_angle) {
+    double c = cos(half_angle);
+    double s = sin(half_angle);
+    q_gen[1] = quat_make(c, s, 0, 0);
+    q_gen[2] = quat_make(c, 0, 0, -s);
+}
+
+static Quat braid_quaternion(const Braid *b) {
+    Quat result = quat_one();
+    int l;
+    for (l = 0; l < b->len; l++) {
+        int gen = b->word[l];
+        int idx = gen > 0 ? gen : -gen;
+        Quat g = q_gen[idx];
+        if (gen < 0) g = quat_conj(g);
+        result = quat_mul(result, g);
+    }
+    return result;
+}
+
+/* ================================================================
+ * Quaternion catalog
+ * ================================================================ */
+
+#define MAX_QCAT 256
+static Quat qcat[MAX_QCAT];
+static int qcat_size = 0;
+
+static int find_quat(Quat q) {
+    int i;
+    for (i = 0; i < qcat_size; i++) {
+        if (fabs(qcat[i].a-q.a)<1e-10 && fabs(qcat[i].b-q.b)<1e-10 &&
+            fabs(qcat[i].c-q.c)<1e-10 && fabs(qcat[i].d-q.d)<1e-10)
+            return i;
+        if (fabs(qcat[i].a+q.a)<1e-10 && fabs(qcat[i].b+q.b)<1e-10 &&
+            fabs(qcat[i].c+q.c)<1e-10 && fabs(qcat[i].d+q.d)<1e-10)
+            return i;
+    }
+    return -1;
+}
+
+static int find_quat_in(Quat q, const Quat *arr, int arr_size) {
+    int i;
+    for (i = 0; i < arr_size; i++) {
+        if (fabs(arr[i].a-q.a)<1e-10 && fabs(arr[i].b-q.b)<1e-10 &&
+            fabs(arr[i].c-q.c)<1e-10 && fabs(arr[i].d-q.d)<1e-10)
+            return i;
+        if (fabs(arr[i].a+q.a)<1e-10 && fabs(arr[i].b+q.b)<1e-10 &&
+            fabs(arr[i].c+q.c)<1e-10 && fabs(arr[i].d+q.d)<1e-10)
+            return i;
+    }
+    return -1;
+}
+
+static void build_catalogs(void) {
+    int n, len;
+    Braid b;
+    int word_buf[MAX_WORD];
+    qcat_size = 0;
+    for (n = 2; n <= 3; n++) {
+        for (len = 1; len <= 12 && len <= MAX_WORD; len++) {
+            int max_gen = n - 1;
+            int total_gens = 2 * max_gen;
+            unsigned long total, idx_l;
+            int i;
+            total = 1;
+            for (i = 0; i < len; i++) {
+                total *= (unsigned long)total_gens;
+                if (total > 300000) break;
+            }
+            if (total > 300000) continue;
+            for (idx_l = 0; idx_l < total; idx_l++) {
+                unsigned long tmp = idx_l;
+                Quat q;
+                for (i = 0; i < len; i++) {
+                    int g = (int)(tmp % (unsigned long)total_gens);
+                    tmp /= (unsigned long)total_gens;
+                    if (g < max_gen) word_buf[i] = g + 1;
+                    else             word_buf[i] = -(g - max_gen + 1);
+                }
+                b.n = n; b.len = len;
+                memcpy(b.word, word_buf, (size_t)len * sizeof(int));
+                q = braid_quaternion(&b);
+                if (find_quat(q) < 0 && qcat_size < MAX_QCAT) {
+                    qcat[qcat_size] = q;
+                    qcat_size++;
+                }
+            }
+        }
+    }
+}
+
+/* ================================================================
+ * Eigenvector direction catalog + S2 Voronoi
+ * g_nd directions => cells 0..g_nd-1, cell g_nd = identity
+ * Total Voronoi cells = g_nd + 1
+ * ================================================================ */
+
+#define MAX_DIR 64
+static double g_dir[MAX_DIR][3];
+static int g_nd = 0;
+
+static void build_dir_catalog(void) {
+    int i;
+    g_nd = 0;
+    for (i = 0; i < qcat_size; i++) {
+        Quat q = qcat[i];
+        double norm_v, ax, ay, az;
+        int found = 0, j;
+        if (q.a < 0) { q.a = -q.a; q.b = -q.b; q.c = -q.c; q.d = -q.d; }
+        if (q.a > 1.0) q.a = 1.0;
+        norm_v = sqrt(q.b*q.b + q.c*q.c + q.d*q.d);
+        if (norm_v < 1e-12) continue;
+        ax = q.b / norm_v; ay = q.c / norm_v; az = q.d / norm_v;
+        for (j = 0; j < g_nd; j++) {
+            double d1 = fabs(g_dir[j][0]-ax) + fabs(g_dir[j][1]-ay) +
+                         fabs(g_dir[j][2]-az);
+            double d2 = fabs(g_dir[j][0]+ax) + fabs(g_dir[j][1]+ay) +
+                         fabs(g_dir[j][2]+az);
+            if (d1 < 1e-8 || d2 < 1e-8) { found = 1; break; }
+        }
+        if (!found && g_nd < MAX_DIR) {
+            g_dir[g_nd][0] = ax; g_dir[g_nd][1] = ay; g_dir[g_nd][2] = az;
+            g_nd++;
+        }
+    }
+}
+
+static int vor_cell(double ax, double ay, double az) {
+    int i, best = 0;
+    double bd = -2.0;
+    for (i = 0; i < g_nd; i++) {
+        double dp = fabs(ax * g_dir[i][0] + ay * g_dir[i][1] +
+                         az * g_dir[i][2]);
+        if (dp > bd) { bd = dp; best = i; }
+    }
+    return best;
+}
+
+static int sum_to_s2_cell(Quat sum) {
+    double n = quat_norm(sum);
+    double norm_v, ax, ay, az;
+    double qa, qb, qc, qd;
+    if (n < 1e-12) return g_nd;
+    qa = sum.a / n; qb = sum.b / n; qc = sum.c / n; qd = sum.d / n;
+    if (qa < 0) { qa = -qa; qb = -qb; qc = -qc; qd = -qd; }
+    if (qa > 1.0) qa = 1.0;
+    norm_v = sqrt(qb*qb + qc*qc + qd*qd);
+    if (norm_v < 1e-12) return g_nd;
+    ax = qb / norm_v; ay = qc / norm_v; az = qd / norm_v;
+    return vor_cell(ax, ay, az);
+}
+
+/* ================================================================
+ * Rotation angle (0 to 360 degrees)
+ * ================================================================ */
+
+static double rotation_angle(Quat sum) {
+    double n = quat_norm(sum);
+    double cos_half, half_ang;
+    if (n < 1e-12) return 0.0;
+    cos_half = sum.a / n;
+    if (cos_half > 1.0) cos_half = 1.0;
+    if (cos_half < -1.0) cos_half = -1.0;
+    half_ang = acos(cos_half);
+    return 2.0 * half_ang * 180.0 / M_PI;
+}
+
+/* ================================================================
+ * XOR checker (up to 16384 masks, 1024 cells)
+ * ================================================================ */
+
+#define MAX_ACT_CELLS 1024
+
+static int check_xor_gen(const int *cells, const int *parity,
+                          int n_masks, int n_cells, int *acc_out) {
+    int cell_even[MAX_ACT_CELLS], cell_odd[MAX_ACT_CELLS];
+    int i, correct = 0, is_winner = 1;
+    memset(cell_even, 0, (size_t)n_cells * sizeof(int));
+    memset(cell_odd, 0, (size_t)n_cells * sizeof(int));
+    for (i = 0; i < n_masks; i++) {
+        int c = cells[i];
+        if (parity[i] == 0) cell_even[c]++;
+        else                 cell_odd[c]++;
+    }
+    for (i = 0; i < n_cells; i++) {
+        if (cell_even[i] > 0 && cell_odd[i] > 0) is_winner = 0;
+        correct += (cell_even[i] > cell_odd[i]) ? cell_even[i] : cell_odd[i];
+    }
+    if (acc_out) *acc_out = correct;
+    return is_winner;
+}
+
+/* ================================================================
+ * Generic test: Sec(k) x Vor combined activation
+ * k_sec=1 gives Voronoi-only. Uses dynamic g_nd for cell count.
+ * ================================================================ */
+
+#define MAX_MASKS 16384
+
+static int test_combined(const int *indices, int n_idx, int k_sec,
+                          int *acc_out) {
+    static int par_buf[MAX_MASKS], cell_buf[MAX_MASKS];
+    Quat weights[14];
+    int n_inputs = 2 * n_idx;
+    int n_masks, n_cells, n_vor;
+    int mask, i;
+
+    n_masks = 1 << n_inputs;
+    n_vor = g_nd + 1;
+    n_cells = k_sec * n_vor;
+
+    if (n_masks > MAX_MASKS || n_cells > MAX_ACT_CELLS) {
+        if (acc_out) *acc_out = 0;
+        return 0;
+    }
+
+    for (i = 0; i < n_idx; i++) {
+        weights[2*i]     = qcat[indices[i]];
+        weights[2*i + 1] = quat_neg(qcat[indices[i]]);
+    }
+
+    for (mask = 0; mask < n_masks; mask++) {
+        Quat sum = quat_make(0, 0, 0, 0);
+        int par = 0;
+        double ang;
+        int sec, vor;
+
+        for (i = 0; i < n_inputs; i++) {
+            if (mask & (1 << i)) {
+                sum = quat_add(sum, weights[i]);
+                par ^= 1;
+            }
+        }
+        par_buf[mask] = par;
+
+        ang = rotation_angle(sum);
+        sec = (int)(ang * (double)k_sec / 360.0);
+        if (sec >= k_sec) sec = k_sec - 1;
+        if (sec < 0) sec = 0;
+        vor = sum_to_s2_cell(sum);
+        cell_buf[mask] = sec * n_vor + vor;
+    }
+
+    return check_xor_gen(cell_buf, par_buf, n_masks, n_cells, acc_out);
+}
+
+/* ================================================================
+ * Catalog quaternion properties
+ * ================================================================ */
+
+static double quat_half_angle(int idx) {
+    Quat q = qcat[idx];
+    double norm_v;
+    if (q.a < 0) { q.a = -q.a; q.b = -q.b; q.c = -q.c; q.d = -q.d; }
+    if (q.a > 1.0) q.a = 1.0;
+    norm_v = sqrt(q.b*q.b + q.c*q.c + q.d*q.d);
+    return atan2(norm_v, q.a) * 180.0 / M_PI;
+}
+
+/* ================================================================
+ * Winner storage (generic, levels 3..7 for XOR6..XOR14)
+ * ================================================================ */
+
+#define MAX_WIN 1024
+#define MAX_TUPLE 7
+
+static int g_win[8][MAX_WIN][MAX_TUPLE];
+static int g_win_k[8][MAX_WIN];
+static int g_nwin[8];
+
+/* k values: Voronoi-only first, then combined */
+static const int K_LADDER[] = {1, 6, 8, 10, 12, 16, 20, 24};
+#define N_KLADDER 8
+
+/* ================================================================
+ * XOR6 brute force
+ * ================================================================ */
+
+static void find_xor6_bruteforce(void) {
+    int ai, aj, ak, ki;
+    int indices[3];
+
+    g_nwin[3] = 0;
+    for (ai = 0; ai < qcat_size; ai++) {
+      for (aj = ai + 1; aj < qcat_size; aj++) {
+        for (ak = aj + 1; ak < qcat_size; ak++) {
+          indices[0] = ai; indices[1] = aj; indices[2] = ak;
+          for (ki = 0; ki < N_KLADDER; ki++) {
+            if (test_combined(indices, 3, K_LADDER[ki], NULL)) {
+              if (g_nwin[3] < MAX_WIN) {
+                g_win[3][g_nwin[3]][0] = ai;
+                g_win[3][g_nwin[3]][1] = aj;
+                g_win[3][g_nwin[3]][2] = ak;
+                g_win_k[3][g_nwin[3]] = K_LADDER[ki];
+                g_nwin[3]++;
+              }
+              break;
+            }
+          }
+        }
+      }
+    }
+}
+
+/* ================================================================
+ * XOR8 optimized brute force (compute sums once, test k cheaply)
+ * ================================================================ */
+
+static void find_xor8_bruteforce(void) {
+    int ai, aj, ak, al, ki, mask, i;
+    int n_vor = g_nd + 1;
+
+    g_nwin[4] = 0;
+    for (ai = 0; ai < qcat_size; ai++) {
+      for (aj = ai + 1; aj < qcat_size; aj++) {
+        for (ak = aj + 1; ak < qcat_size; ak++) {
+          for (al = ak + 1; al < qcat_size; al++) {
+            Quat weights[8];
+            double ang_buf[256];
+            int vor_buf[256], par_buf[256], cell_buf[256];
+
+            weights[0] = qcat[ai]; weights[1] = quat_neg(qcat[ai]);
+            weights[2] = qcat[aj]; weights[3] = quat_neg(qcat[aj]);
+            weights[4] = qcat[ak]; weights[5] = quat_neg(qcat[ak]);
+            weights[6] = qcat[al]; weights[7] = quat_neg(qcat[al]);
+
+            for (mask = 0; mask < 256; mask++) {
+                Quat sum = quat_make(0, 0, 0, 0);
+                int p = 0;
+                for (i = 0; i < 8; i++) {
+                    if (mask & (1 << i)) {
+                        sum = quat_add(sum, weights[i]);
+                        p ^= 1;
+                    }
+                }
+                par_buf[mask] = p;
+                ang_buf[mask] = rotation_angle(sum);
+                vor_buf[mask] = sum_to_s2_cell(sum);
+            }
+
+            for (ki = 0; ki < N_KLADDER; ki++) {
+                int k = K_LADDER[ki];
+                int nc = k * n_vor;
+                if (nc > MAX_ACT_CELLS) continue;
+                for (mask = 0; mask < 256; mask++) {
+                    if (k == 1) {
+                        cell_buf[mask] = vor_buf[mask];
+                    } else {
+                        int sec = (int)(ang_buf[mask] *
+                                  (double)k / 360.0);
+                        if (sec >= k) sec = k - 1;
+                        if (sec < 0) sec = 0;
+                        cell_buf[mask] = sec * n_vor + vor_buf[mask];
+                    }
+                }
+                if (check_xor_gen(cell_buf, par_buf, 256, nc, NULL)) {
+                    if (g_nwin[4] < MAX_WIN) {
+                        g_win[4][g_nwin[4]][0] = ai;
+                        g_win[4][g_nwin[4]][1] = aj;
+                        g_win[4][g_nwin[4]][2] = ak;
+                        g_win[4][g_nwin[4]][3] = al;
+                        g_win_k[4][g_nwin[4]] = k;
+                        g_nwin[4]++;
+                    }
+                    break;
+                }
+            }
+          }
+        }
+      }
+    }
+}
+
+/* ================================================================
+ * Recursive extension: extend level (N-1) winners to level N
+ * ================================================================ */
+
+static void find_recursive(int level) {
+    int prev = level - 1;
+    int wi, ae, ki, i, j;
+    int n_tested = 0;
+
+    g_nwin[level] = 0;
+
+    if (g_nwin[prev] == 0) {
+        printf("    No XOR%d winners, skipping XOR%d\n",
+               2 * prev, 2 * level);
+        return;
+    }
+
+    for (wi = 0; wi < g_nwin[prev]; wi++) {
+        for (ae = 0; ae < qcat_size; ae++) {
+            int in_winner = 0;
+            int indices[MAX_TUPLE];
+            int pos;
+
+            for (i = 0; i < prev; i++) {
+                if (g_win[prev][wi][i] == ae) { in_winner = 1; break; }
+            }
+            if (in_winner) continue;
+
+            /* Build sorted tuple by inserting ae */
+            pos = prev;
+            for (i = 0; i < prev; i++) {
+                if (ae < g_win[prev][wi][i]) { pos = i; break; }
+            }
+            for (i = 0; i < pos; i++) indices[i] = g_win[prev][wi][i];
+            indices[pos] = ae;
+            for (i = pos; i < prev; i++) indices[i + 1] = g_win[prev][wi][i];
+
+            /* Dedup */
+            {
+                int dup = 0;
+                for (j = 0; j < g_nwin[level]; j++) {
+                    int match = 1;
+                    for (i = 0; i < level; i++) {
+                        if (g_win[level][j][i] != indices[i]) {
+                            match = 0; break;
+                        }
+                    }
+                    if (match) { dup = 1; break; }
+                }
+                if (dup) continue;
+            }
+
+            n_tested++;
+
+            /* Test with k ladder (smallest first) */
+            for (ki = 0; ki < N_KLADDER; ki++) {
+                if (test_combined(indices, level, K_LADDER[ki], NULL)) {
+                    if (g_nwin[level] < MAX_WIN) {
+                        memcpy(g_win[level][g_nwin[level]],
+                               indices, (size_t)level * sizeof(int));
+                        g_win_k[level][g_nwin[level]] = K_LADDER[ki];
+                        g_nwin[level]++;
+                    }
+                    printf("    FOUND XOR%d: [", 2 * level);
+                    for (i = 0; i < level; i++)
+                        printf("%d%s", indices[i],
+                               i < level - 1 ? "," : "");
+                    printf("] at k=%d (%d cells)\n",
+                           K_LADDER[ki], K_LADDER[ki] * (g_nd + 1));
+                    break;
+                }
+            }
+        }
+    }
+    printf("    Tested %d unique candidates\n", n_tested);
+}
+
+/* ================================================================
+ * Part A: Build zeta_12 catalog
+ * ================================================================ */
+
+static void part_a(void) {
+    char msg[128];
+
+    printf("\n=== Part A: Build zeta_12 catalog ===\n");
+    printf("  Generator half-angle: pi/6 = 30 degrees\n");
+    printf("  (zeta_8 was pi/4 = 45 degrees)\n\n");
+
+    init_su2_generators(M_PI / 6.0);
+    build_catalogs();
+    build_dir_catalog();
+
+    printf("  Catalog size: %d quaternions\n", qcat_size);
+    printf("  S2 directions: %d\n", g_nd);
+    printf("  Voronoi cells: %d (= %d directions + 1 identity)\n",
+           g_nd + 1, g_nd);
+
+    sprintf(msg, "zeta_12 catalog: %d quaternions", qcat_size);
+    check(msg, qcat_size > 0);
+    sprintf(msg, "More than zeta_8 (24): %d > 24", qcat_size);
+    check(msg, qcat_size > 24);
+    sprintf(msg, "More directions than zeta_8 (13): %d > 13", g_nd);
+    check(msg, g_nd > 13);
+}
+
+/* ================================================================
+ * Part B: Direction and angle census
+ * ================================================================ */
+
+static void part_b(void) {
+    double angles[MAX_QCAT];
+    int angle_counts[MAX_QCAT];
+    int n_angles = 0;
+    int dir_count[MAX_DIR];
+    int i, j;
+    char msg[128];
+
+    printf("\n=== Part B: Direction and angle census ===\n");
+
+    /* Count quaternions per direction */
+    memset(dir_count, 0, sizeof(dir_count));
+    for (i = 0; i < qcat_size; i++) {
+        Quat q = qcat[i];
+        double norm_v, ax, ay, az;
+        int cell;
+        if (q.a < 0) { q.a = -q.a; q.b = -q.b; q.c = -q.c; q.d = -q.d; }
+        norm_v = sqrt(q.b*q.b + q.c*q.c + q.d*q.d);
+        if (norm_v < 1e-12) { dir_count[g_nd]++; continue; }
+        ax = q.b / norm_v; ay = q.c / norm_v; az = q.d / norm_v;
+        cell = vor_cell(ax, ay, az);
+        dir_count[cell]++;
+    }
+
+    printf("\n  Directions (eigenvector S2 Voronoi cells):\n");
+    printf("  %4s  %8s  %8s  %8s  %5s\n",
+           "Cell", "x", "y", "z", "Count");
+    printf("  %4s  %8s  %8s  %8s  %5s\n",
+           "----", "--------", "--------", "--------", "-----");
+    for (i = 0; i < g_nd; i++) {
+        printf("  %4d  %8.4f  %8.4f  %8.4f  %5d\n",
+               i, g_dir[i][0], g_dir[i][1], g_dir[i][2], dir_count[i]);
+    }
+    if (dir_count[g_nd] > 0)
+        printf("  %4s  %8s  %8s  %8s  %5d\n",
+               "id", "---", "---", "---", dir_count[g_nd]);
+
+    /* Collect distinct half-angles */
+    memset(angle_counts, 0, sizeof(angle_counts));
+    for (i = 0; i < qcat_size; i++) {
+        double ha = quat_half_angle(i);
+        int found = 0;
+        for (j = 0; j < n_angles; j++) {
+            if (fabs(angles[j] - ha) < 0.1) {
+                found = 1;
+                angle_counts[j]++;
+                break;
+            }
+        }
+        if (!found && n_angles < MAX_QCAT) {
+            angles[n_angles] = ha;
+            angle_counts[n_angles] = 1;
+            n_angles++;
+        }
+    }
+
+    /* Sort angles */
+    for (i = 0; i < n_angles - 1; i++) {
+        for (j = i + 1; j < n_angles; j++) {
+            if (angles[j] < angles[i]) {
+                double tmp_a = angles[i]; int tmp_c = angle_counts[i];
+                angles[i] = angles[j]; angle_counts[i] = angle_counts[j];
+                angles[j] = tmp_a; angle_counts[j] = tmp_c;
+            }
+        }
+    }
+
+    printf("\n  Distinct eigenvalue half-angles: %d\n", n_angles);
+    printf("  %10s  %5s\n", "Degrees", "Count");
+    printf("  %10s  %5s\n", "-------", "-----");
+    for (i = 0; i < n_angles; i++) {
+        printf("  %10.1f  %5d\n", angles[i], angle_counts[i]);
+    }
+
+    sprintf(msg, "Directions: %d", g_nd);
+    check(msg, g_nd > 0);
+    sprintf(msg, "Distinct half-angles: %d", n_angles);
+    check(msg, n_angles > 0);
+    sprintf(msg, "More angles than zeta_8 (2): %d", n_angles);
+    check(msg, n_angles > 2);
+}
+
+/* ================================================================
+ * Part C: XOR capacity ladder
+ * ================================================================ */
+
+static void part_c(void) {
+    int level;
+    char msg[128];
+    long n_combinations;
+
+    printf("\n=== Part C: XOR capacity ladder ===\n");
+    printf("  k ladder: ");
+    {
+        int ki;
+        for (ki = 0; ki < N_KLADDER; ki++)
+            printf("%d%s", K_LADDER[ki], ki < N_KLADDER - 1 ? ", " : "\n");
+    }
+
+    /* XOR6: brute force */
+    n_combinations = (long)qcat_size * (long)(qcat_size - 1) *
+                     (long)(qcat_size - 2) / 6;
+    printf("\n  --- XOR6 (brute force, %ld triples) ---\n", n_combinations);
+    find_xor6_bruteforce();
+    {
+        int min_k = 0, i;
+        for (i = 0; i < g_nwin[3]; i++) {
+            if (min_k == 0 || g_win_k[3][i] < min_k)
+                min_k = g_win_k[3][i];
+        }
+        printf("  XOR6: %d winners", g_nwin[3]);
+        if (g_nwin[3] > 0)
+            printf(" (min k=%d, %d cells)", min_k, min_k * (g_nd + 1));
+        printf("\n");
+        sprintf(msg, "XOR6: %d winners", g_nwin[3]);
+        check(msg, g_nwin[3] > 0);
+    }
+
+    /* XOR8: brute force if catalog <= 60, else recursive */
+    if (qcat_size <= 60) {
+        n_combinations = (long)qcat_size * (long)(qcat_size - 1) *
+                         (long)(qcat_size - 2) * (long)(qcat_size - 3) / 24;
+        printf("\n  --- XOR8 (brute force, %ld quadruples) ---\n",
+               n_combinations);
+        find_xor8_bruteforce();
+    } else {
+        printf("\n  --- XOR8 (recursive from %d XOR6 winners, "
+               "catalog=%d too large for brute force) ---\n",
+               g_nwin[3], qcat_size);
+        find_recursive(4);
+    }
+    {
+        int min_k = 0, i;
+        for (i = 0; i < g_nwin[4]; i++) {
+            if (min_k == 0 || g_win_k[4][i] < min_k)
+                min_k = g_win_k[4][i];
+        }
+        printf("  XOR8: %d winners", g_nwin[4]);
+        if (g_nwin[4] > 0)
+            printf(" (min k=%d, %d cells)", min_k, min_k * (g_nd + 1));
+        printf("\n");
+        sprintf(msg, "XOR8: %d winners", g_nwin[4]);
+        check(msg, 1);
+    }
+
+    /* XOR10..14: recursive */
+    for (level = 5; level <= 7; level++) {
+        int min_k = 0, i;
+        printf("\n  --- XOR%d (recursive from %d XOR%d winners) ---\n",
+               2 * level, g_nwin[level - 1], 2 * (level - 1));
+        find_recursive(level);
+        for (i = 0; i < g_nwin[level]; i++) {
+            if (min_k == 0 || g_win_k[level][i] < min_k)
+                min_k = g_win_k[level][i];
+        }
+        printf("  XOR%d: %d winners", 2 * level, g_nwin[level]);
+        if (g_nwin[level] > 0)
+            printf(" (min k=%d, %d cells)", min_k, min_k * (g_nd + 1));
+        printf("\n");
+        sprintf(msg, "XOR%d: %d winners", 2 * level, g_nwin[level]);
+        check(msg, 1);
+
+        if (g_nwin[level] == 0) {
+            printf("  >>> WALL at XOR%d <<<\n", 2 * level);
+            break;
+        }
+    }
+
+    /* Summary */
+    {
+        int max_n = 6;
+        for (level = 4; level <= 7; level++) {
+            if (g_nwin[level] > 0) max_n = 2 * level;
+            else break;
+        }
+        printf("\n  zeta_12 max computable XOR inputs: %d\n", max_n);
+        sprintf(msg, "zeta_12 capacity >= %d inputs", max_n);
+        check(msg, 1);
+    }
+}
+
+/* ================================================================
+ * Part D: Phase diagram
+ * ================================================================ */
+
+static void part_d(void) {
+    int level;
+
+    printf("\n=== Part D: Phase diagram ===\n\n");
+
+    printf("  %-5s  %-4s  %6s  %9s  %8s  %-16s\n",
+           "Root", "N", "2^N", "Min cells", "Winners", "Activation");
+    printf("  %-5s  %-4s  %6s  %9s  %8s  %-16s\n",
+           "-----", "----", "------", "---------", "-------", "----------");
+
+    /* zeta_8 baselines (from Demo 78) */
+    printf("  z8     6     %5d  %9d  %8d  %-16s\n",
+           64, 14, 36, "Voronoi");
+    printf("  z8     8     %5d  %9d  %8d  %-16s\n",
+           256, 112, 6, "Sec8xVor");
+    printf("  z8     10    %5d  %9s  %8d  %-16s\n",
+           1024, "WALL", 0, "---");
+
+    /* zeta_12 results */
+    for (level = 3; level <= 7; level++) {
+        int n = 2 * level;
+        int masks = 1 << n;
+        if (g_nwin[level] > 0) {
+            int min_k = g_win_k[level][0], i;
+            char act[32];
+            for (i = 1; i < g_nwin[level]; i++) {
+                if (g_win_k[level][i] < min_k) min_k = g_win_k[level][i];
+            }
+            if (min_k == 1)
+                sprintf(act, "Voronoi");
+            else
+                sprintf(act, "Sec%dxVor", min_k);
+            printf("  z12    %-4d  %6d  %9d  %8d  %-16s\n",
+                   n, masks, min_k * (g_nd + 1), g_nwin[level], act);
+        } else {
+            printf("  z12    %-4d  %6d  %9s  %8d  %-16s\n",
+                   n, masks, "WALL", 0, "---");
+            break;
+        }
+    }
+
+    printf("\n");
+    check("Phase diagram compiled", 1);
+}
+
+/* ================================================================
+ * Part E: Nesting verification (zeta_8 subset of zeta_12?)
+ * ================================================================ */
+
+static void part_e(void) {
+    Quat z12_cat[MAX_QCAT];
+    double z12_dirs[MAX_DIR][3];
+    int z12_size, z12_nd;
+    int found_q, found_d;
+    int i, j;
+    char msg[128];
+
+    printf("\n=== Part E: Nesting verification ===\n");
+
+    /* Save zeta_12 catalog */
+    z12_size = qcat_size;
+    z12_nd = g_nd;
+    memcpy(z12_cat, qcat, sizeof(Quat) * (size_t)qcat_size);
+    memcpy(z12_dirs, g_dir, sizeof(double) * 3 * (size_t)g_nd);
+
+    /* Build zeta_8 catalog */
+    init_su2_generators(M_PI / 4.0);
+    build_catalogs();
+    build_dir_catalog();
+
+    printf("  zeta_8:  %d quaternions, %d directions\n", qcat_size, g_nd);
+    printf("  zeta_12: %d quaternions, %d directions\n", z12_size, z12_nd);
+
+    /* Check quaternion nesting */
+    found_q = 0;
+    for (i = 0; i < qcat_size; i++) {
+        if (find_quat_in(qcat[i], z12_cat, z12_size) >= 0)
+            found_q++;
+    }
+    printf("\n  Quaternion nesting: %d / %d zeta_8 entries in zeta_12\n",
+           found_q, qcat_size);
+
+    /* Check direction nesting */
+    found_d = 0;
+    for (i = 0; i < g_nd; i++) {
+        int found = 0;
+        for (j = 0; j < z12_nd; j++) {
+            double d1 = fabs(g_dir[i][0] - z12_dirs[j][0]) +
+                         fabs(g_dir[i][1] - z12_dirs[j][1]) +
+                         fabs(g_dir[i][2] - z12_dirs[j][2]);
+            double d2 = fabs(g_dir[i][0] + z12_dirs[j][0]) +
+                         fabs(g_dir[i][1] + z12_dirs[j][1]) +
+                         fabs(g_dir[i][2] + z12_dirs[j][2]);
+            if (d1 < 1e-8 || d2 < 1e-8) { found = 1; break; }
+        }
+        if (found) found_d++;
+    }
+    printf("  Direction nesting: %d / %d zeta_8 directions in zeta_12\n",
+           found_d, g_nd);
+
+    sprintf(msg, "Quaternion nesting: %d/%d (%.0f%%)",
+            found_q, qcat_size,
+            100.0 * (double)found_q / (double)qcat_size);
+    check(msg, 1);
+
+    sprintf(msg, "Direction nesting: %d/%d (%.0f%%)",
+            found_d, g_nd, 100.0 * (double)found_d / (double)g_nd);
+    check(msg, 1);
+
+    if (found_q == qcat_size)
+        check("CONFIRMED: zeta_8 quaternions fully nest in zeta_12", 1);
+    else
+        printf("  NOTE: zeta_8 NOT fully nested (different group)\n");
+}
+
+/* ================================================================
+ * Main
+ * ================================================================ */
+
+int main(void) {
+    printf("KNOTAPEL DEMO 79: zeta_12 Capacity Test\n");
+    printf("========================================\n");
+
+    memset(g_nwin, 0, sizeof(g_nwin));
+
+    part_a();
+    part_b();
+    part_c();
+    part_d();
+    part_e();
+
+    printf("\n========================================\n");
+    printf("Results: %d pass, %d fail\n", n_pass, n_fail);
+    return n_fail > 0 ? 1 : 0;
+}

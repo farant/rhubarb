@@ -19,6 +19,9 @@
 - there is a briefing.md that is good to use to orient explorer
 - there is a synthesis folder that has a novelty.md which is probably good to reference when starting new projects
 - there is also a planning folder that has some useful markdown files
+- for team lead: it might be worthwhile to just 100% avoid floating point, occasionally we have artifacts in results that are from floating point, i think we've caught them so far but wouldn't want that kind of thing to slip through
+- another source of bad results can be truncated catalogs / limits where we don't explore the whole space, obviously sometimes this might be necessary or proudent but good to keep in mind
+- if you are writing something that you expect to be more compute expensive it might be worthwhile to think about inlining functions in hot loop, using pointers instead of copying to stack, etc
 
 IMPORTANT
 - NEVER DELETE OR SPAWN TEAM OR TEAM MEMBER AFTER COMPACTION

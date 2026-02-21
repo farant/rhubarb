@@ -1,7 +1,7 @@
 # Explorer's Log — DKC Research Arc & Demo 35
 
 Last updated: 2026-02-21
-Context: Updated through Demo 71 (Spectral DKC). Bandwidth of DKC on S² is l=6, explained by 2l+1=13=number of directions. Sharp phase transition at DOF boundary. 3.5x super-Nyquist compression via compressed sensing. Universal spectrum across all 36 winners.
+Context: Updated through Demo 82 (Crossing Depth, 17/17 pass). BOMBSHELL: deep entries (born from many generator multiplications) are computationally SUPERIOR to shallow entries at matched catalog sizes. 564 pure depth-8 entries reach XOR12 — the full catalog needed ~1140. Depth IS crossing depth in the knot-theory sense. The logarithmic scaling from Demo 81 reflects the cost of GENERATING deep entries, not an intrinsic capacity limit.
 
 ## The Story in One Paragraph
 
@@ -2168,6 +2168,595 @@ For ζ_16 (3,457 directions): predicted bandwidth l ≥ 1728, Nyquist = 2,989,44
 
 ### Key Insight
 The number 13 (eigenvector directions of the binary octahedral group on S²) determines EVERYTHING: the Voronoi cell count, the bandwidth of computation, and the super-Nyquist compression. It's not just how many directions there are — it's that 13 = 2×6+1 places the computation at exactly the mode that can address each direction independently.
+
+---
+
+## Demo 72: Spherical Design Test — Not Optimal, but Computational (6/6)
+
+### t=0: Not a Spherical Design
+The 13 eigenvector directions fail the t-design property at l=1 (centroid is off-center, |S_{1,1}|=2.43). Despite the Delsarte bound allowing t=7 for 13 points, the actual achievement is t=0. However, l=2 passes perfectly (5.11e-16).
+
+### Even Mode Advantage
+- t_even = 2 (passes l=2, fails l=4)
+- t_odd = 0 (fails immediately)
+- Undirected (26 pts): t=3 (odd modes auto-vanish)
+- Directions are better at even modes, which is what DKC uses
+
+### DKC Works Despite Design Failure
+The gap between t=0 and bandwidth l=6 is huge. The computation succeeds entirely through:
+1. DOF counting: 2l+1 = 13 components can label 13 regions
+2. Compressed sensing: binary function at known positions = 13 bits, not 49 samples
+3. The algebra selects directions for computation, not integration
+
+### S³ Design
+48-element binary octahedral group achieves t=1 on S³. Odd degrees exactly zero, even degrees fail at degree 2. The 24-cell (binary tetrahedral, a subgroup) is the known 5-design.
+
+### Optimized Design Gets Fewer Solutions (Part G)
+13 optimized points (design residual 0.93, 2.6x better than eigenvector's 2.43) get only **4 XOR6 solutions** vs eigenvector's **36**. Better geometry = fewer solutions. The algebra matters, not the geometry.
+
+### Perturbation Sensitivity (Part H)
+| ε | Mean XOR6 | Min | Max |
+|---|-----------|-----|-----|
+| 1° | 38.0 | 36 | 44 |
+| 5° | 35.8 | 32 | 42 |
+| 10° | 11.5 | 1 | 25 |
+| 20° | 2.1 | 0 | 8 |
+
+Robust to ~5°, collapses at 10-20°. Algebraic placement is sharp. At 1° mean slightly exceeds 36 (perturbation creates lucky near-misses).
+
+### Key Insight
+The 13 directions are computationally effective without being geometrically optimal. This separates two concepts that sampling theory usually conflates: having enough DOF to encode information (Demo 71) vs being an optimal quadrature rule (Demo 72). The algebra provides the former, not the latter. Moving directions to "better" positions destroys the computation.
+
+---
+
+## Demo 73: Eigenvector Automaton (2026-02-21)
+
+**Question**: Can DKC be modeled as a finite automaton on the Voronoi cells?
+
+**Answer**: No — but it's close (82.8% deterministic), and the percentage is a structural constant.
+
+### Additive vs Multiplicative
+The multiplicative braid product (M = σ₁^{±1}·σ₂^{±1}·...·σ₂^{±1}) **cannot compute XOR6** — every final cell gets exactly 8 even + 8 odd parity inputs. The reason: flipping all bits gives the conjugate braid (same eigenvector, negated angle), so the cell structurally cannot distinguish parity. DKC is fundamentally ADDITIVE (vector sums of quaternion weights), not multiplicative (matrix products).
+
+### Determinism Test
+For the additive formulation, at each step k, check: do all inputs in the same cell at step k-1 with the same bit at step k always land in the same cell? Result: 48/58 transitions (82.8%) are deterministic. All non-deterministic transitions are "bit=1" (adding a weight). All splits are binary (2-way). Cell 0 is the main bottleneck.
+
+### Universal 82.8%
+ALL 36 winning triples have exactly 82.8% determinism — zero variation. This is a structural property of the 13-direction Voronoi partition, not dependent on the triple. Follows from binary octahedral symmetry.
+
+### Finer Partition
+- 27 distinct partial sums at step 5 (theoretical minimum cells for 100%)
+- 14-cell (unsigned) partition: 82.8%
+- 27-cell (signed) partition: 87.1% (improves but not 100%)
+- Bottleneck: partial sum magnitude (compass without odometer)
+
+### Partial Sum State Space
+| Step | Distinct sums | Cells used (14-cell) |
+|------|--------------|---------------------|
+| 0 | 2 | 2 |
+| 1 | 3 | 2 |
+| 2 | 6 | 5 |
+| 3 | 9 | 5 |
+| 4 | 18 | 14 |
+| 5 | 27 | 14 |
+
+### Key Insight
+The Voronoi cell is a "compass without odometer" — it captures the direction of the partial sum's eigenvector but not its magnitude. Two partial sums pointing the same way but at different distances from the origin share a cell, then diverge when the same weight is added. This information loss is structural: it's built into the geometry of projecting 4D quaternion space onto a discrete set of 13 directions.
+
+## Demo 74: Computational Invariant of Braids (2026-02-21)
+
+**Question**: How does the DKC Voronoi cell compare to the Kauffman bracket as a braid invariant?
+
+**Answer**: They are **incomparable** — neither subsumes the other. Combined, they form a strictly finer invariant.
+
+### Bracket Collisions (Part A)
+From 1,124,250 braid pairs: 58,078 bracket collisions (same bracket, different quaternion). Of these, **97.8% are separated by the Voronoi cell** (different cells for the two braids). Only 2.2% share a cell — these are quaternion pairs with the same eigenvector direction but different eigenvalue angles.
+
+### Reverse Direction (Part B)
+At the quaternion catalog level: 13 pairs share a cell. Of these, 7 have different bracket values. **The cell does NOT subsume the bracket.** Some bracket information (trace + normalization) is invisible to the cell.
+
+### Combined Invariant (Part C)
+| Invariant | Classes |
+|-----------|---------|
+| Voronoi cell | 14 |
+| Quaternion | 24 |
+| Bracket | 100 |
+| **(Bracket, Cell)** | **119** |
+
+119 > max(100, 14) proves the combination is strictly finer. 28/100 bracket values split across multiple cells. Up to 19 distinct brackets per cell.
+
+### Computational Significance (Part D)
+33/36 winning triples (92%) XOR6-separate at least some bracket collisions. The 3 exceptions are all [*,18,22] triples. 186 total XOR6-separated collisions across all 36 winners. DKC actively exploits information the bracket discards.
+
+### Information Hierarchy (Part E)
+```
+Braid → Quaternion → Direction = Cell    (geometric: eigenvector)
+Braid → Bracket                          (algebraic: trace + normalization)
+Quaternion ↛ Bracket                     (NOT a function: many-to-many)
+```
+The bracket does not factor through the quaternion. This is why cell and bracket are incomparable — they're genuinely orthogonal projections of the braid.
+
+### Computational Type Vectors (Part G)
+36-bit type vector per cell: bit i = parity label under winning triple i. Only **6 distinct types** among 14 cells:
+- Type 0,1,4: Three axis cells (0, 1, 10) — each unique
+- Type 2: Body cells {2,3,4,5} — **computationally interchangeable**
+- Type 3: Edge cells {6,7,8,9,11,12} — **computationally interchangeable**
+- Type 5: Identity cell {13}
+
+The DKC computation uses only 6 "roles." The 13-direction Voronoi is geometrically finer than computationally necessary.
+
+### Concrete Examples (Part H)
+σ₁⁸ (2-strand, identity quaternion, bracket (0,0,8,0)) collides with shorter 3-strand braids that land in axis cells. The bracket "sees" the algebraic value but is blind to the geometric destination.
+
+### Refinement Chain (Part I)
+43 bracket groups → 61 type subgroups → 168 quaternion subgroups. Max 4 types per bracket. Each level genuinely refines the previous.
+
+### Full Hierarchy
+```
+Type (6) < Cell (14) < Quaternion (24) < Bracket (100) < (Bracket,Cell) (119)
+```
+
+### Key Insight
+DKC doesn't "use the bracket differently" — it accesses a fundamentally different projection of the braid group representation. The bracket captures algebraic (trace) information; the cell captures geometric (eigenvector direction) information. These are complementary, not redundant. The cell's 14 classes can be organized into a parity-separating binary labeling; the bracket's 100 classes cannot. This is why DKC computes XOR6 through geometry, not algebra.
+
+The [*,18,22] exception pattern: 3 winning triples with edge-type quaternions (q18, q22) have ZERO bracket collision separation — a "computational dead zone" where eigenvector labeling fails. Connects to Demo 70's music ⊥ space finding (r = -0.06).
+
+**20/20 pass. Parts A-I. Wraps the Demo 66-74 invariant arc.**
+
+## Demo 75: Binocular DKC — Multi-Output (2026-02-21)
+
+**Question**: Can we read BOTH eigenvalue angle and eigenvector direction from one braid evaluation? Are they independent channels?
+
+**Answer**: The eigenvalue angle channel **subsumes** the Voronoi cell channel. Binocular DKC is a zoom lens, not stereo vision.
+
+### Eigenvalue Angle (Parts A-D)
+Seven distinct angles from the additive sum quaternion: the 4 canonical (0°, 45°, 60°, 90°) plus 3 non-canonical created by quaternion addition: **35.264° (tetrahedral angle = arctan(1/√2))**, 30° (π/6), 65.905°. These are geometric invariants of the cube/octahedron/tetrahedron family, not present in individual 24-cell entries.
+
+The angle perfectly predicts parity for all 36 triples — every angle value maps to a single XOR6 bit. The cell (1 bit) is a coarsening of the angle (~2 bits). Capacity: **2.282 bits per evaluation (2.3× over cell-only)**. The gain comes from reading 7 levels instead of 2.
+
+### Eight-Fold Triple Classification (Part E)
+36 winning triples produce only **8 distinct angle functions**, grouped into 8 families of 3-8 triples. Triples sharing an "axis pair" tend to share angle functions. This 8-fold structure is a natural classification beyond the 6-role type vectors of Demo 74.
+
+### Additive Magnitude |S| (Part G)
+The magnitude is quantized to exactly **6 values: √{0, 1, 2, 3, 4, 6}** — square roots of small integers. This comes from the inner product structure of the 24-cell (inner products ∈ {-1, -½, 0, ½, 1}). The missing √5 reflects the lattice geometry.
+
+Magnitude does NOT reliably predict parity (16/36 = 44% of triples). H(|S|) = 1.839 bits. MI(|S|; cell) = 0.724 bits. This is Demo 73's "odometer" — the information the automaton lost. The odometer reads in algebraic numbers.
+
+### Multiplicative Product (Part H)
+Product M = Π w_i preserves the 24-cell group structure, so eigenvalue angles are restricted to the 4 canonical values only (no non-canonical). The product has HIGH entropy (H(cell) = 2.75 bits, H(angle) = 1.49 bits, total 4.24 bits) but is **completely blind to XOR6** (0/36 triples for both channels). A "kaleidoscope" — beautiful structure, computationally useless for parity.
+
+**Key structural insight**: DKC computation requires BREAKING the group structure (addition creates non-group-element sums with non-canonical angles). Multiplication stays inside the group and cannot compute parity. MI(additive cell; multiplicative cell) = 0.517 bits — moderate correlation, far from redundant.
+
+### Reconciliation with Demo 74
+Demo 74: bracket and cell are incomparable at the CATALOG level (individual quaternions). Demo 75: angle subsumes cell at the COMPUTATION level (sums). Different math objects, different refinement relationships. Sums create finer resolution because the sum space is larger (non-unit quaternions with non-canonical angles).
+
+**23/23 pass. Parts A-I (eigenvalue quantization, binocular output, MI, computable functions, triple classification, capacity, magnitude, multiplicative, comparison).**
+
+---
+
+## Demo 76: Scaling DKC to 8 Inputs (2026-02-21)
+
+**Question**: Can DKC at ζ_8 compute XOR8 (8-input parity)?
+
+**Answer**: **No. Zero solutions.** DKC at ζ_8 is a 6-input structure. The failure is total — best accuracy is 50% (random chance).
+
+### XOR8 Enumeration (Part A)
+Exhaustive search over all C(24,4) = 10,626 quadruples of the 24-quaternion catalog. Each quadruple encodes 8 inputs (4 × ±1 signs). **Zero of 10,626 quadruples compute XOR8.** Compare: 36 of C(24,3) = 2,024 triples compute XOR6 (1.78% hit rate).
+
+### Failure Analysis (Part B)
+The minimum conflict count is 2 (achieved by 11 quadruples, 0.1%). Even with only 2 conflict cells, the best quadruple [0,1,2,3] achieves **50.0% accuracy** (128/256) — exactly random. The conflict distribution: 57% of quadruples have 5-8 conflicts, 36% have 9-14.
+
+### Capacity Argument
+At 6 inputs: 64 masks / 14 cells ≈ 4.6 masks/cell. Geometrically possible for every cell to be parity-pure.
+At 8 inputs: 256 masks / 14 cells ≈ 18.3 masks/cell. By pigeonhole, most cells see ~18 masks. The probability that ALL masks in a cell share parity drops exponentially. **The 14-cell Voronoi partition lacks the resolution to separate 128 even from 128 odd masks.**
+
+### Direction Structure Collapse (Part C)
+The best quadruple uses only **2 of 14 cells**: cell 0 gets 208 masks (81%), cell 13 gets 48 (19%). Compare 6-input winners which spread across 8-10 cells. With 4 quaternions per weight set (vs 3), sum vectors cluster more tightly toward the average direction.
+
+### Algebraic Structure Breakdown (Parts D-E)
+- **Eigenvalue angles**: 86 distinct (nearly continuous) at 8 inputs vs 7 (discrete, algebraic) at 6 inputs. The clean 7-angle quantization is specific to 3-term sums from the 24-cell.
+- **Magnitudes**: 28 distinct |S| values (dense, non-algebraic) vs 6 (√{0,1,2,3,4,6}) at 6 inputs. The √n quantization breaks down at 4-term sums.
+
+### Scaling Path
+From Demo 69: ζ_16 has 3,457 eigenvector directions → 3,458 Voronoi cells. At that resolution, 256 masks / 3,458 cells ≈ 0.07 masks/cell — trivially parity-pure by pigeonhole. The open question: is there an intermediate root of unity with ~56 directions (giving ~4.6 masks/cell for 256 masks) that would yield non-trivial XOR8?
+
+**10/10 pass. Parts A-E (XOR8 enumeration, failure analysis, direction structure, eigenvalue angles, magnitude/capacity).**
+
+---
+
+## Demo 77: Activation Zoo — XOR8 SOLVED (2026-02-21)
+
+**Question**: Can a different activation function enable XOR8 at ζ_8?
+
+**Answer**: **YES.** Combined Sector(8) × Voronoi activation (112 cells) finds **6 XOR8 winners** out of 10,626 quadruples. The wall was in the activation function, not the root of unity — exactly mirroring Demo 50.
+
+### The Headline Result
+14 activation functions tested across 10,626 quadruples. Only one succeeds: the product S¹ × S² activation with 8 angle sectors × 14 Voronoi cells = 112 combined cells (2.3 masks/cell). Neither channel alone suffices: pure sector (k=16, 96.9%) and pure Voronoi (14 cells, 90.6%) both fail. This proves Demo 74's incomparable invariants are **computationally necessary**, not just mathematically distinct.
+
+### Accuracy Cascade
+Accuracy grows with cell count across all activation types:
+- S² Voronoi (14 cells): 90.6%
+- Sector k=16 (16 cells): 96.9%
+- Polar 14×6 (84 cells): 99.2% — tantalizingly close
+- Combined 8×14 (112 cells): **100%** — 6 perfect winners
+
+Phase transition between 84 cells (0 winners) and 112 cells (6 winners). Critical threshold: ~100 cells.
+
+### The 6 Winners: Paired Quaternion Structure
+Every winning quadruple contains a PAIR of quaternions sharing the same eigenvector direction. Removing either pair element leaves an XOR6-winning triple. Thus: 12 of 24 triples embedded in winners are XOR6 winners. XOR8 winners are built from XOR6 winners by adding a directional partner.
+
+15 of 24 catalog entries participate. Dominant cells: 0 (axis-x), 1 (axis-z), 10 (edge diagonal) — each appears 6 times across the 24 winner slots. Only 2 eigenvalue half-angles: 45° and 90° (canonical octahedral angles only).
+
+### Correcting Demo 76
+"ζ_8 is a 6-input structure" was activation-specific. ζ_8 with S² Voronoi IS limited to 6 inputs. ζ_8 with combined S¹ × S² activation supports at least 8 inputs. The algebraic structure is richer than any single projection reveals.
+
+### Key Structural Findings
+- S³ Voronoi (24-cell, 24 cells) underperforms: 90.2%. The S³ partition mixes angle and direction non-optimally.
+- Polar (direction × magnitude) at 84 cells reaches 99.2% — magnitude helps enormously but doesn't cross the threshold alone.
+- The combined activation is the quaternionic generalization of Aizenberg's MVN: read BOTH eigenvalue (S¹) and eigenvector (S²).
+- Open question: can combined activation support 10, 12, or more inputs?
+
+**14/14 pass. Parts A-F (sector, polar, S³, combined, comparison, winner analysis).**
+
+## Demo 78: Recursive Scaling + Phase Diagram — COMPLETE (2026-02-21)
+
+**File:** `knotapel/demo_78_recursive_scaling/main.c`
+**Tests:** 9/9 pass (Parts A-E)
+
+### Core Question
+Does the recursive structure (XOR8 = XOR6 + shadow) generalize to XOR10, XOR12?
+
+### Answer: **NO.** XOR10 has ZERO winners at ζ_8.
+
+Both recursive search (120 candidates, extending 6 XOR8 winners with remaining catalog entries) and exhaustive brute-force (all C(24,5) = 42,504 quintuples) agree: no combination of 5 catalog entries computes XOR10 with Combined Sec(k) × Voronoi activation, tested at k = 8, 10, 12, 16. The recursive scaling hits a hard wall.
+
+### Brute-Force Results (Part B)
+| Sectors | Cells | Winners | Best Accuracy |
+|---------|-------|---------|---------------|
+| k=8     | 112   | 0       | 94.1%         |
+| k=10    | 140   | 0       | 98.4%         |
+| k=12    | 168   | 0       | 96.9%         |
+| k=16    | 224   | 0       | 98.4%         |
+
+Non-monotonic in k: k=12 (96.9%) worse than k=10 (98.4%). Same pi/4 lattice incommensurability as Demo 50's non-monotonic sector counts.
+
+### Phase Diagram (Part D)
+| N inputs | 2^N masks | Min cells | Winners | Activation |
+|----------|-----------|-----------|---------|------------|
+| 6        | 64        | 14        | 36      | Voronoi    |
+| 8        | 256       | 112       | 6       | Sec8 × Vor |
+| 10       | 1024      | ---       | 0       | ---        |
+| 12       | 4096      | ---       | 0       | ---        |
+
+### Shadow Structure Confirmed (Part E)
+- Every XOR8 winner has exactly 2 XOR6 parents (all 6 verified)
+- 12/12 shadows share Voronoi cell with parent member (100%)
+- ALL shadow half-angles = 45° (the canonical octahedral angle)
+- Shadow pairs: {0,1} in cell 0, {4,5} in cell 1, {19,21} in cell 10
+- These are the 3 dominant cells from the 24-cell structural skeleton
+
+### Why XOR10 Fails
+Three converging explanations:
+1. **Catalog exhaustion:** 24 entries with only 13 directions and 2 eigenvalue angles (45°, 90°). Not enough structural diversity for 5-tuple separation.
+2. **Information-theoretic limit:** 1024 masks across 224 cells = 4.6 masks/cell. Same ratio where XOR6 barely worked (64/14=4.6), but the catalog can't generate diverse enough sums at 10 inputs.
+3. **Incommensurability:** The pi/4 angles create systematic collisions when 5 entries are summed. Non-monotonicity in k confirms destructive interference at certain sector boundaries.
+
+### Key Implication
+The root of unity ℓ directly constrains max computable input size:
+- ζ_8 catalog (24 entries): max = 8 inputs
+- Higher ℓ → larger catalog → potentially higher max inputs
+- The scaling law max_inputs = f(|catalog|, n_directions, n_angles) is the open question
+
+### Open Questions
+1. What does ℓ=12 or ℓ=16 buy? Larger catalogs with more directions and angles.
+2. Is there a different activation geometry (not Sec×Vor) that could break through?
+3. What are the 16 misclassified masks at 98.4%? Do they form a structured pattern?
+4. Is max_inputs = 2·ℓ a conjecture? (ℓ=4 gave max=8... but ℓ=3 gave max=6 too, so max_inputs = 2·ℓ for ℓ≥3?)
+
+## Demo 79: ζ₁₂ Capacity Test — COMPLETE (2026-02-21)
+
+**File:** `knotapel/demo_79_zeta12_capacity/main.c`
+**Tests:** 14/14 pass (Parts A-E)
+
+### Core Question
+Does the pattern ζ_N → N-input capacity hold? Test ζ₁₂ (half-angle = π/6 = 30°).
+
+### Answer: **ζ_N → N is REFUTED.** ζ₁₂ gives max 10 inputs, not 12.
+
+But ζ₁₂ DOES break through the ζ₈ wall: XOR10 goes from 0 winners to **124 winners**.
+
+### Catalog Comparison
+| Property      | ζ₈          | ζ₁₂          | Ratio  |
+|---------------|-------------|---------------|--------|
+| Quaternions   | 24          | 256 (CAPPED)  | 10.7x  |
+| Directions    | 13          | 64            | 4.9x   |
+| Half-angles   | 2 (45°,90°) | 12            | 6x     |
+| Voronoi cells | 14          | 65            | 4.6x   |
+
+ζ₁₂ half-angles: 0°, 29°, 30°, 41.4°, 49.5°, 51.3°, 60°, 64.3°, 75.5°, 77.5°, 82.8°, 90° — dramatically richer angular spectrum.
+
+### Capacity Ladder
+| Level | Masks | Winners | Min k | Cells | Note         |
+|-------|-------|---------|-------|-------|--------------|
+| XOR6  | 64    | 1024+   | 1     | 65    | Voronoi-only |
+| XOR8  | 256   | 1024+   | 6     | 390   | Sec6 × Vor   |
+| XOR10 | 1024  | **124** | 8     | 520   | Sec8 × Vor   |
+| XOR12 | 4096  | 0       | ---   | ---   | **WALL**     |
+
+### Phase Diagram (Combined)
+| Root | N  | 2^N  | Min cells | Winners | Activation |
+|------|----|------|-----------|---------|------------|
+| ζ₈   | 6  | 64   | 14        | 36      | Voronoi    |
+| ζ₈   | 8  | 256  | 112       | 6       | Sec8×Vor   |
+| ζ₈   | 10 | 1024 | WALL      | 0       | ---        |
+| ζ₁₂  | 6  | 64   | 65        | 1024+   | Voronoi    |
+| ζ₁₂  | 8  | 256  | 390       | 1024+   | Sec6×Vor   |
+| ζ₁₂  | 10 | 1024 | 520       | 124     | Sec8×Vor   |
+| ζ₁₂  | 12 | 4096 | WALL      | 0       | ---        |
+
+### Nesting: NOT nested
+- Only 3/24 ζ₈ quaternions found in ζ₁₂ (12%)
+- Only 2/13 ζ₈ directions found in ζ₁₂ (15%)
+- Different half-angles (π/4 vs π/6) generate different finite subgroups of SU(2)
+- The capacity gain comes from genuinely different algebraic structure, not "more of the same"
+
+### CRITICAL UPDATE: XOR12 IS SOLVABLE (catalog was truncated)
+
+Follow-up test (`xor12_fast.c`) with expanded catalog (4096 entries via group closure):
+- **50+ XOR12 winners found** (capped at 50, only 11/124 parents tested)
+- Min k = 8 (4104 cells with 513 Voronoi cells)
+- The 6th quaternion always comes from the expanded catalog (index > 256)
+
+**The N-2 pattern was WRONG.** The XOR12 "wall" was an artifact of the truncated catalog.
+
+### Finite vs Infinite Group — THE Key Finding
+
+| Round | ζ₈ size | ζ₁₂ size |
+|-------|---------|----------|
+| 0     | 5       | 5        |
+| 1     | 15      | 17       |
+| 2     | 23      | 51       |
+| 3     | 24 (CLOSED) | 127  |
+| 4     | —       | 275      |
+| 5     | —       | 564      |
+| 6     | —       | 1140     |
+| 7     | —       | 2292     |
+| 8     | —       | 4096+ (cap) |
+
+- ζ₈ → binary octahedral group (order 48, 24 up to ±). **FINITE.**
+- ζ₁₂ → still growing past 4096, roughly doubling each round. Possibly **INFINITE.**
+- At 4096: **512 directions**, **43 half-angles** (vs 13 dirs, 4 angles at ζ₈)
+
+**This is the fundamental difference**: finite group = hard capacity ceiling, infinite group = no ceiling (limited only by computational search).
+
+### Updated Phase Diagram
+| Root | N  | 2^N  | Min cells | Winners | Activation |
+|------|----|------|-----------|---------|------------|
+| ζ₈   | 6  | 64   | 14        | 36      | Voronoi    |
+| ζ₈   | 8  | 256  | 112       | 6       | Sec8×Vor   |
+| ζ₈   | 10 | 1024 | WALL      | 0       | --- (finite group) |
+| ζ₁₂  | 6  | 64   | 65        | 1024+   | Voronoi    |
+| ζ₁₂  | 8  | 256  | 390       | 1024+   | Sec6×Vor   |
+| ζ₁₂  | 10 | 1024 | 520       | 124     | Sec8×Vor   |
+| ζ₁₂  | 12 | 4096 | 4104      | 50+     | Sec8×Vor   |
+
+### Open Questions (Updated) → ANSWERED by Demo 80
+
+---
+
+## Demo 80: Group Finiteness Survey — COMPLETE (2026-02-21)
+
+**File:** `knotapel/demo_80_group_finiteness/main.c`
+**Tests:** 11/11 pass
+
+### Core Question
+Which roots of unity generate finite vs infinite SU(2) subgroups?
+
+### Answer: **Only ζ₄ and ζ₈ are finite. Everything else is infinite.**
+
+| Root  | Angle  | Size   | Dirs | Angles | ADE Type            |
+|-------|--------|--------|------|--------|---------------------|
+| ζ₄    | 90.0°  | 4      | 3    | 2      | Binary Dihedral 2D₂ |
+| ζ₆    | 60.0°  | >4096  | 512  | 37     | INFINITE            |
+| ζ₈    | 45.0°  | 24     | 13   | 4      | Binary Octahedral   |
+| ζ₁₀   | 36.0°  | >4096  | 512  | 71     | INFINITE            |
+| ζ₁₂   | 30.0°  | >4096  | 512  | 43     | INFINITE            |
+| ζ₁₆   | 22.5°  | >4096  | 512  | 51     | INFINITE            |
+| ζ₂₀   | 18.0°  | >4096  | 512  | 67     | INFINITE            |
+
+### Key Findings
+
+1. **The boundary ALTERNATES**: ζ₄ (finite), ζ₆ (infinite), ζ₈ (finite), then all infinite. NOT monotonic.
+
+2. **ζ₈ = Binary Octahedral (2O, E₇)**, order 48 (24 up to ±). 4 half-angles: 0°, 45°, 60°, 90°.
+
+3. **ζ₁₀ is NOT binary icosahedral** — it's infinite. The Fibonacci/golden ratio angle does not close.
+
+4. **Only π/2 and π/4 generate finite groups** among the tested angles. These are rotational symmetries of the cube/octahedron.
+
+5. **All infinite groups** at 4096 entries: 512 directions (all 8 octants), approaching uniform S² coverage. Angle gaps < 1° (approaching continuum).
+
+### Computational Implication
+
+- **Finite group (ζ₄, ζ₈)** → hard capacity ceiling (XOR4 and XOR8 respectively)
+- **Infinite group (all others)** → potentially unbounded capacity, limited only by computational search cost
+- The capacity hierarchy isn't "higher roots → more capacity." It's "finite vs infinite."
+
+### Open Questions
+1. Is ζ₃₂ (π/16 = another power of 2) also finite? Conjecture: only π/(2^k) generate finite groups.
+2. Which infinite group is "best" for computation? ζ₁₀ has 71 angles vs ζ₆'s 37 at same catalog size.
+3. Do all infinite groups give unbounded capacity, or do some have structural limitations?
+
+## Demo 81: Capacity Scaling Law — COMPLETE (2026-02-21)
+
+**File:** `knotapel/demo_81_capacity_scaling/main.c`
+**Tests:** 14/14 pass
+
+### Core Question
+For ζ₁₂ (infinite group), how does computational capacity scale with catalog size?
+
+### Answer: **Logarithmic scaling. 0.62 XOR per doubling.**
+
+| Round | Cat   | Dirs | Ang | MaxXOR | log₂(C) |
+|-------|-------|------|-----|--------|---------|
+| 0     | 5     | 2    | 2   | 6      | 2.32    |
+| 1     | 17    | 6    | 4   | 6      | 4.09    |
+| 2     | 51    | 22   | 6   | 8      | 5.67    |
+| 3     | 127   | 46   | 10  | 8      | 6.99    |
+| 4     | 275   | 114  | 12  | 10     | 8.10    |
+| 5     | 564   | 239  | 16  | 10     | 9.14    |
+| 6     | 1140  | 507  | 21  | 12     | 10.15   |
+| 7     | 2292  | 512  | 35  | 12     | 11.16   |
+| 8     | 4096  | 512  | 43  | 12     | 12.00   |
+
+### Key Findings
+
+1. **Logarithmic**: max_xor ≈ 0.62 × log₂(cat_size) + 4.6. Monotonically non-decreasing. 3 clean transitions.
+
+2. **Transitions require ~10x catalog growth**: XOR6→8 at ~51, XOR8→10 at ~275, XOR10→12 at ~1140. Each jump: ~3.2 more doublings.
+
+3. **Directions drive transitions**: 22 dirs → XOR8, 114 dirs → XOR10, 507 dirs → XOR12. Directions saturate at MAX_DIR=512 after round 7.
+
+4. **Angles sustain growth after saturation**: When directions hit 512, angles keep growing (35→43). XOR12 winners go from 12 to 32. Angular diversity is the long-term resource.
+
+5. **Consistent with #P-hardness**: Exponential catalog cost per +2 XOR level matches Kuperberg's result for non-lattice roots.
+
+### Predictions
+- XOR14 needs ~38,000 entries (~11 closure rounds)
+- XOR16 needs ~615,000 entries (~14 rounds)
+- XOR20 needs ~160 million entries (~20 rounds)
+
+### The Two Regimes
+- **Finite groups (ζ₄, ζ₈)**: Hard ceiling. No scaling. 24 entries → max XOR8, period.
+- **Infinite groups (ζ₁₂, etc.)**: Logarithmic scaling. Catalog size = exponential function of desired XOR level. Tractable but expensive.
+
+## Demo 82: Crossing Depth and Computational Role — 17/17 pass
+
+**File:** `knotapel/demo_82_crossing_depth/main.c`
+
+### The Question
+Each quaternion in the closure catalog is "born" at a specific round (depth). Does depth matter for computation, or is it just catalog size?
+
+### Part D Results — The Crux
+
+| Subset      | Size | Dirs | Ang | Max XOR |
+|-------------|------|------|-----|---------|
+| Shallow 127 | 127  | 46   | 10  | 8       |
+| Strided 127 | 127  | 125  | 37  | 10      |
+| Deep 127    | 127  | 119  | 19  | 10      |
+| Shallow 564 | 564  | 239  | 16  | 10      |
+| Strided 564 | 564  | 512  | 43  | 10      |
+| Deep 564    | 564  | 476  | 19  | **12**  |
+
+Deep entries BEAT shallow at matched sizes. Deep 564 reaches XOR12 with only 564 entries (full catalog needed ~1140).
+
+### Key Findings
+
+1. **Winners = shallow core + deep extensions**: ALL winners at ALL levels contain depth-0 entries (generators). Mean depth rises: 0.52 (XOR6) → 1.98 (XOR12).
+
+2. **Two vocabulary regimes**: Depths 0-6 add directions (2→507). Depths 7-8 add angles (21→43) after directions saturate at 512. Angular refinement is the bottleneck for higher XOR.
+
+3. **Vocabulary alone insufficient**: Strided 564 has the MOST vocabulary (512 dirs, 43 angles) but doesn't reach XOR12. Deep 564 has fewer dirs (476) and angles (19) but reaches XOR12. Algebraic relationships between deep entries matter beyond raw vocabulary.
+
+4. **Deep entries alone work**: Pure depth-8 entries (without generators!) compute XOR10 and XOR12. They contain "effective generators" from algebraic structure.
+
+5. **Reinterpretation of the scaling law**: Demo 81's "logarithmic in catalog size" is an artifact of exponential growth per round. The TRUE relationship is **linear in depth**: max_xor ≈ depth + 6. Each closure round adds +2 XOR at transition depths 0, 2, 4, 6. The log law was measuring the wrong variable — catalog size instead of crossing depth.
+
+6. **Algebraic coherence**: The strided sample LOSES to deep despite having more vocabulary. Deep entries share common generator factors (algebraic coherence). A more complexly knotted strand computes more than many simply knotted strands covering more frame space.
+
+## Theoretical Framework: Higher-Dimensional Manifolds as 3D Knots
+
+### Core Idea
+
+Higher-dimensional manifolds can be represented as 3D knot configurations. The dimensional formula:
+
+    dimension = strands × 2 + writhe events
+
+where writhe events are ≥180° self-crossings of a single strand. The same dimension admits multiple decompositions (partitions), each corresponding to a different manifold type.
+
+### Examples
+
+- **S³ = 1 strand + 1 writhe.** Our SU(2) catalog lives here. Each quaternion is a single knotted strand configuration. This is the base case for DKC.
+- **S⁷ (octonionic) = 2 strands + 3 writhes OR 3 strands + 1 writhe.** Different decompositions = different manifold types within the same dimension.
+- The division algebra sequence (R, C, H, O) = (1, 2, 4, 8) maps to crossing complexity, not spatial dimensions.
+
+### Even vs Odd Dimensions
+
+- **Even-dimensional spheres**: Possible with 0 writhes (pure strand interaction).
+- **Odd-dimensional spheres**: Must include at least 1 writhe.
+- This explains the **hairy ball theorem**: even spheres lack the preferred orientation that writhe provides. No writhe = no global combing direction.
+
+### Connection to the Kauffman Bracket and DKC
+
+The Kauffman bracket is NOT writhe-invariant — it requires a (-A³)^w correction to produce the Jones polynomial. DKC uses **raw bracket values**, meaning we compute WITH the writhe data that most knot theorists normalize away. This may be why DKC works: the writhe carries computational information that the Jones polynomial discards.
+
+**DKC addition (not multiplication)** = linking separate knots together, not composing crossings within one strand. The link interaction is where higher-dimensional structure and computation emerge. When we sum quaternions w₁ + w₂ + w₃, we're computing the combined topology of three linked knot configurations.
+
+### Connection to Our Findings
+
+- **Finite groups (ζ₄, ζ₈)** = crystallized knot types with bounded crossings. The binary octahedral group (ζ₈, 24 elements) = the 24 distinct knot configurations possible in one specific crystallographic symmetry.
+- **Infinite groups (everything else)** = dense knot types with unbounded crossings. The group closure never terminates because there's always a new knot configuration reachable by one more crossing.
+- The **finite/infinite transition** is the transition from "one specific knot crystal" to "all knots" — from a lattice to a continuum.
+- The **logarithmic scaling law** (Demo 81) means each +2 XOR inputs requires exponentially more knot configurations. This is the computational cost of exploring higher-dimensional manifold structure through 3D knots.
+
+### Mathematical Foundations
+
+The framework reinterprets existing results as a visualization paradigm:
+- **Alexander's theorem**: Every closed braid is a knot/link. Our braid-word enumeration = systematic knot exploration.
+- **Kirby calculus**: Surgery presentations of manifolds. Handle slides = braid relations in our catalog.
+- **Piergallini branched coverings**: Every closed oriented 4-manifold is a branched cover of S⁴. The branching structure = our writhe events.
+- **Lickorish-Wallace surgery**: Any closed orientable 3-manifold from surgery on links in S³. Our quaternion catalog = surgery instructions.
+
+### Practical Application
+
+A tool to **visualize higher-dimensional manifolds as decorated 3D knot diagrams**. Currently impossible to directly visualize >3D. The decoration (writhe markers, strand labels, bracket values) carries the extra-dimensional information.
+
+### Future Demo Directions
+
+- Take known 4-manifolds (CP², S²×S², K3 surface), extract Kirby diagrams
+- Verify dimensional formula against known topology
+- Compute bracket values of Kirby link components
+- Check if DKC output encodes known topological invariants (signature, Euler characteristic)
+- Test whether different decompositions of the same dimension give different DKC capacities
+
+## Conceptual Developments (Post-Demo 82)
+
+### Neural Network Depth Analogy
+Crossing depth = synaptic graph wiring, catalog breadth = number of neurons. You can't replace depth with width — same principle as deep learning theory. Deep entries have "algebraic coherence" (shared generator factors) = coherent wiring patterns. Strided/random samples destroy this coherence = random wiring, can't compute higher-order functions. This is the DKC version of the depth-vs-width theorem in neural network theory.
+
+### Octonionic / Division Algebra Connection
+The division algebra sequence R(1), C(2), H(4), O(8) maps to crossing complexity, not spatial dimensions. ζ₈ capacity ceiling = 8 = dim(O) — possibly not coincidence. Non-associativity of octonions ↔ non-commutativity of braids: Yang-Baxter equation = controlled exceptions to order-dependence. E8 chain: the 24-cell (our ζ₈ group) is the D₄ root system, which sits inside E8, which gives the optimal sphere packing in 8D. The tower of exceptional structures may be the algebraic spine of DKC.
+
+### Quantum Dimension Singularity Explanation
+- At ζ₈: q = A² = i, quantum integer [2]_q = q + q⁻¹ = i + (-i) = 0. Representation theory degenerates → finite group (24 elements).
+- At ζ₄: q = -1, [2]_q = -1 + (-1) = -2... actually q = A² and A = ζ₄ = i, so q = -1, [2]_q = -1 + (-1) = -2. But for the Kauffman bracket δ = -(A² + A⁻²) = 0 at ζ₈, and δ = -(i + (-i)) = 0 at ζ₄ too. Both are roots where quantum dimensions vanish.
+- All other roots: quantum dimensions nonzero, generic representation theory → infinite groups.
+- Finite groups = lattice roots = Kuperberg-tractable. Infinite = non-lattice = #P-hard.
+
+### Hopf Fibration as Projection Pipeline
+S⁷ → S⁴ → S² with fibers S³ and S¹. Our computational pipeline mirrors this:
+- Full data (pair of quaternions) lives in S⁷
+- Direction projection (eigenvector on S²) = second Hopf map
+- Angle extraction (eigenvalue on S¹) = fiber of first Hopf map
+- "Angle subsumes cell" = information loss at each Hopf projection stage
+- "Compass without odometer" = having direction but losing angle = stuck at S² level
+
+### Bracket vs Jones Hypothesis
+DKC uses the Kauffman bracket (writhe-dependent), NOT the Jones polynomial (writhe-independent). The writhe data that Jones normalizes away (via (-A³)^w correction) may be exactly why DKC computes. Writhe = odd-dimensional data in the strand framework. Demo 82 supports this: depth (which accumulates writhe through generator multiplication) drives computation. Every crossing product adds writhe; deeper entries carry more writhe information.
+
+### Knot Theory Research Landscape Mapping
+- **Kauffman virtual knots**: writhes in our framework may BE virtual crossings (exist on surfaces, not in 3D)
+- **Rasmussen invariant**: 4D subtleties invisible in 3D = what the manifold framework makes visible
+- **Categorical tangles**: "knots are shadows of higher-dimensional structures" = concrete version of our thesis
+- **Grid number complexity**: analogous to our crossing depth measure
+- **Polymer entanglement / topological glass**: our crystal (finite group) vs fluid (infinite group) might be literal, not metaphor
+
+### Open Questions for Future Demos
+1. Does writhe alone compute? (Extract writhe from catalog entries, test independently)
+2. Kirby calculus test: take known 4-manifolds (CP², K3), compute bracket values of their knot diagrams, check if DKC output encodes known topological invariants
+3. Virtual crossings test: do the writhes in our framework correspond to Kauffman's virtual crossings?
+4. Is the 0.62 ≈ 1/φ coefficient in the (now-superseded) log scaling law meaningful or coincidence?
+5. Research PDF deep reading in progress (18 papers in knot-pdfs/ and research-ingress/)
 
 ---
 *End of Explorer's Log*
