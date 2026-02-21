@@ -1,7 +1,7 @@
 # Explorer's Log — DKC Research Arc & Demo 35
 
-Last updated: 2026-02-19
-Context: Updated through Demo 56 (Potts-TL Dictionary). Ising partition functions compute 12/13 NPN classes.
+Last updated: 2026-02-21
+Context: Updated through Demo 71 (Spectral DKC). Bandwidth of DKC on S² is l=6, explained by 2l+1=13=number of directions. Sharp phase transition at DOF boundary. 3.5x super-Nyquist compression via compressed sensing. Universal spectrum across all 36 winners.
 
 ## The Story in One Paragraph
 
@@ -1808,6 +1808,366 @@ Complete parity scaling table:
 2. Can the triple-interaction wall layer be characterized explicitly?
 3. Funnel rate formula: 99.3% → 39.2% → 19.2% → 0% — is this predictable?
 4. Are the 27 XOR5 sets built primarily from antipodal pairs?
+
+---
+
+## Demo 65: Clifford Hierarchy Staircase (33/33 pass)
+
+**Date**: 2026-02-20
+
+**Core question**: Does XOR6 become achievable at Z[zeta_16], the next Clifford hierarchy level?
+
+**Answer**: NO. The parity ceiling n=5 is identical at Z[zeta_8] and Z[zeta_16].
+
+### Z[zeta_16] Setup
+- phi(16) = 8 components. Basis {1, zeta, ..., zeta^7}, reduction zeta^8 = -1
+- A = -zeta_16, delta = -A^2 - A^{-2} = -sqrt(2) (NOT zero!)
+- All braid states contribute (not just single-loop)
+- Bracket = sum_s A^{a(s)-b(s)} * delta^{loops(s)-1}
+
+### Catalog
+- **36 values** from 2-3 strand braids (vs Z[zeta_8]'s 100!)
+- 24/36 axial, 12 with 2 nonzero components
+- 14/16 angular directions used (missing dirs 2 and 11)
+- Only 8/100 Z[zeta_8] values found — catalogs mostly DISJOINT
+- Extended to **56 values** with 4-strand braids (+20 new)
+
+### NPN Tier Structure (IDENTICAL to Z[zeta_8])
+| XOR_n | First k (Z[zeta_8]) | First k (Z[zeta_16]) |
+|-------|---------------------|----------------------|
+| XOR3  | k=6                 | k=6                  |
+| XOR4  | k=8                 | k=8                  |
+| XOR5  | k=14                | k=14                 |
+| XOR6  | impossible          | impossible            |
+
+### XOR5 (56-value catalog)
+- k=14: 120, k=15: 1080, k=17: 240, k=21: 240, k=31: 960
+- Note: k=31 was 0 with 36 values — catalog incompleteness artifact
+
+### XOR6: Zero at ALL k=2..31 with both 36 and 56-value catalogs
+
+### "Gap of 2" Hypothesis: REFUTED
+| Ring | Pigeonhole | Ceiling | Gap |
+|------|-----------|---------|-----|
+| Z[zeta_8]  | 7  | 5 | 2 |
+| Z[zeta_16] | 14 | 5 | 9 |
+
+### Key Insight
+The parity ceiling is NOT a function of Clifford hierarchy level. Moving from T-gate ring (3rd level) to 4th level provides zero benefit for parity. The ceiling appears to be a universal property of the Kauffman bracket's topological structure, independent of evaluation point.
+
+### Part G: Generalized Activation Check — BREAKTHROUGH
+
+**Question**: Can ANY binary sector labeling (not just odd/even) compute XOR6?
+
+**Method**: 27 known XOR5 sets × 100 catalog extensions = 2700 checks. For each 6-tuple, check if a consistent binary labeling of k sectors exists.
+
+**Results**:
+- k=6,8,15,31: **0/2700** — absolute wall
+- **k=24: 3/2700** — FIRST generalized XOR6!
+- k=63: 20, k=127: 57, k=255: 109, k=500: 165
+
+**Two-layer wall**:
+- **Layer 1 (absolute, k≤23)**: No binary partition works. Geometric constraint.
+- **Layer 2 (convention, k≥24)**: Standard odd/even fails, but custom labelings succeed.
+
+**Implication**: The parity ceiling n=5 is true ONLY for standard sector activations. With k≥24 custom labelings, XOR6 IS achievable from bracket weights. The wall is in the activation convention, not the weights.
+
+### Part H: Anatomy of 3 Passing Tuples at k=24
+
+**Structure**: All 3 are **antipodal pairs** — the 6 weights form 3 pairs of (w, -w).
+- 21/24 sectors used, 12 labeled class-1
+- Labeling does NOT match standard odd/even
+- Min margin: **0.000000 rad** (exactly on boundaries — concerning)
+
+**Boundary Robustness** (critical):
+- k=25: 0/2700 — odd k fails
+- k=26: 4/2700 — even k has DIFFERENT passing tuples!
+- k=27: 0/2700 — odd k fails
+- k=28: 4/2700 — even k
+- k=30: 10/2700 — even k, growing
+- k=32: 4/2700 — even k
+
+**Even/odd k pattern**: Generalized XOR6 exists at EVEN k (26,28,30,32) but NOT odd k (25,27,29,31) near the threshold. The k=24 zero-margin is a boundary effect, but the phenomenon is REAL — different tuples succeed at nearby even k values. Likely a lattice-sector resonance (45° lattice angles vs sector boundaries).
+
+### Part I: Generalized XOR7
+
+- k=24,48,63: 0/300
+- **k=127: 1/300** — FIRST generalized XOR7
+- k=255: 12/300, k=500: 24/300
+
+**Minimum k scaling**:
+| XOR_n | Min k (generalized) |
+|-------|---------------------|
+| XOR6  | 24                  |
+| XOR7  | 127                 |
+
+Ratio 127/24 ≈ 5.3x. The ceiling keeps climbing — no fixed upper bound with custom activations.
+
+### Open Questions (Revised)
+1. Even/odd k pattern — why does it occur? Lattice resonance?
+2. Z[zeta_16] generalized check — does the absolute wall threshold change?
+3. Scaling law: is min_k exponential in n? Need XOR8 data point.
+4. Antipodal necessity: are all passing tuples antipodal pairs?
+5. XOR7 anatomy at k=127 — what does the single passing tuple look like?
+
+## Demo 66: Quaternionic DKC — First Contact (30/30 pass)
+
+**Date**: 2026-02-20
+
+**Core question**: What happens when we extract the full quaternion from an SU(2) braid representation instead of collapsing to a scalar bracket?
+
+**Answer**: The **24-cell polytope** emerges as the natural computational geometry, and its Voronoi partition dramatically outperforms arbitrary grids for XOR6.
+
+### SU(2) Braid Representation
+- Generators: σ₁ → (1+i)/√2, σ₂ → (1−k)/√2 in unit quaternion space
+- 87,890 enumerated braids produce exactly **24 distinct unit quaternions** (mod ±)
+- These are the vertices of the **24-cell**, unique self-dual regular 4-polytope
+- The 48 quaternions (with negatives) form the **binary octahedral group**
+- Vertex types: 4 axis-aligned (±1,±i,±j,±k), 12 edge (two components at ±1/√2), 8 body (all four at ±½)
+
+### Bracket ≠ Trace
+- Standard prediction: bracket ∝ trace(ρ(b)) = 2·Re(q). Data says NO.
+- Average Re(bracket)/trace ratio: −0.0799 (no clean constant)
+- Same quaternion maps to different brackets in 8,424 of 124,750 pairs
+- Bracket and quaternion are **complementary projections** — neither subsumes the other
+
+### Antipodal-Only XOR6
+- Full combinatorial search over C(24,6) = 475,020 six-tuples: **ZERO** solutions at any grid
+- Restricting to **antipodal pairs** (3 pairs of (q,−q)): solutions emerge at 6×6 (3) and 8×8 (34)
+- Antipodal constraint is **absolute** — reflects SU(2) → SO(3) double cover
+
+### 24-Cell Voronoi Activation — HEADLINE RESULT
+- Assign each subset sum to nearest 24-cell vertex (Voronoi cell on S³)
+- 25 cells (24 Voronoi + 1 zero cell)
+- **35 solutions at 25 cells** — beats 64-cell geographic grid (34 solutions)!
+- The polytope IS the computation, not just the stage
+- Connection to complex DKC: k=24 minimum on S¹ (Demo 65) is a projection of the 24-cell
+
+### Universal 7/7/11 Structure
+- Every one of the 35 Voronoi winners has EXACTLY: 7 cells labeled 0, 7 cells labeled 1, 11 cells unused
+- Zero cell always labeled 0
+- All 35 labelings are distinct
+- Every cell used in at least one solution; only zero cell in all 35
+
+### F4 Symmetry: 6 Orbits
+- Full two-sided symmetry group q → g·q·h has **576 elements** (F4 Coxeter rotation subgroup)
+- 35 solutions decompose into **6 orbits**: sizes 12, 7, 5, 5, 4, 2
+- Two families:
+  - **Edge-dominant** (orbits 1,2,5 — 22 solutions): edge-type cells → label 1
+  - **Body-dominant** (orbits 3,4,6 — 13 solutions): body-type cells → label 1
+- Complementary labelings of the same cell structure
+
+### Complementary Hash Functions
+- Quaternion resolves **450 bracket collisions** (same bracket, different quaternion)
+- Bracket resolves **8,424 quaternion collisions** (same quaternion, different bracket)
+- Neither strictly more informative — they capture different aspects of braid representation
+
+### Winning Tuple Anatomy
+- At 8×8: 15/34 mutually orthogonal (44%), 16/34 all-body type
+- Body-type (±½,±½,±½,±½) vertices dominate the solution landscape
+
+### Open Questions
+1. Why exactly 6 orbits? 6 = n(n-1)/2 for n=4 pairs? Or partition of 6?
+2. Edge/body complementary split — related to 24-cell self-duality?
+3. XOR7 on 24-cell Voronoi: does 4D geometry accommodate it at 25 cells?
+4. Higher quaternion groups: binary icosahedral (120-cell) at ℓ=5?
+5. Zero-margin: do Voronoi solutions sit exactly on cell boundaries like S¹ solutions?
+
+## Demo 67: Coordinate System Zoo — SU(2) Projections (18/18 pass)
+
+**Date**: 2026-02-20
+
+**Core question**: Which SU(2) coordinate system is optimal for DKC activation?
+
+**Answer**: S² (rotation axis direction) is the computational sweet spot. A custom 13-direction Voronoi on S² achieves **36 solutions at 14 cells** — the most efficient activation found. The Hopf phase is completely inert.
+
+### Eigenvector Extraction
+- 24 quaternions → 4 eigenvalue angles (0°, 45°, 60°, 90°) + 13 eigenvector directions on S²
+- 17 distinct (angle, direction) pairs — mild compression from 24 quaternions
+- 3 axis-aligned directions shared across 2 angles; 10 directions unique to one angle
+- Direction types: 3 axis-aligned, 6 edge-midpoints (±1/√2), 4 body-diagonals (±1/√3)
+
+### Custom 13-Direction Voronoi — HEADLINE RESULT
+- 13 actual eigenvector directions as Voronoi centers + 1 degenerate cell = **14 cells**
+- **36 XOR6 solutions** — beats 24-cell Voronoi (35 at 25 cells) with fewer cells
+- Solutions-per-cell: **2.57** — best of any activation
+
+### Comparison Across Coordinate Systems (at ~16 cells)
+| System | Cells | Solutions | Sol/Cell |
+|--------|-------|-----------|----------|
+| Custom 13-dir S² Voronoi | 14 | 36 | 2.57 |
+| Hopf base 4×4 | 16 | 30 | 1.88 |
+| 24-cell Voronoi (S³) | 25 | 35 | 1.40 |
+| Eigenvector LatLon 4×4 | 16 | 2 | 0.13 |
+| Cayley-Klein 4×4 | 16 | 0 | 0 |
+
+### Hopf Phase = ZERO (Deepest Result)
+- Hopf phase-only activation: **0 solutions at ALL k** (k=4 through k=32)
+- Hopf base: 292 solutions at 8×8=64 cells (best 2D system at high resolution)
+- The Hopf fibration S³→S² has a computationally dead fiber
+- ALL DKC information lives in the S² base
+
+### Eigenvalue-Only
+- First solutions at k=8 (4 solutions). Peak: k=32 (80 solutions).
+- k=24: 72 solutions — more than 24-cell Voronoi but 1D only
+- Eigenvalue θ ≠ Hopf phase ξ₁ — this explains why θ works but phase doesn't
+
+### Cayley-Klein (Worst)
+- First solutions at 32 cells. 8×8: 106 solutions.
+- The "native" SU(2) parameterization is worst for computation.
+
+### Key Theoretical Insight
+DKC computation is about **rotation axis direction** (S²), not rotation amount (θ) or phase (ξ₁). The natural computational space for braid data is S² = CP¹ = Bloch sphere.
+
+### Cross-Demo Minimum Cells for XOR6
+| Space | Activation | Min cells |
+|-------|-----------|-----------|
+| S¹ (trace) | k=24 sectors | 25 |
+| S³ (quaternion) | 24-cell Voronoi | 25 |
+| **S² (eigenvector)** | **13-dir Voronoi** | **14** |
+
+## Demo 68: Stereographic DKC — Knot Computation in the Plane (9/9 pass)
+
+**Date**: 2026-02-20
+
+**Core question**: Can we project S² DKC onto the plane and visualize it?
+
+**Answer**: Yes, but the computation is intrinsically curved. Stereographic projection gives beautiful ASCII art showing decision boundaries, but you MUST use S² metric for cell assignment — Euclidean gives 0 solutions.
+
+### Projection Setup
+- South pole (0,0,−1) is in the 13-direction catalog → switched to north pole projection
+- Round-trip precision: ~1e-15 (machine epsilon)
+- Area distortion ratio: 16.5× (conformal but not area-preserving)
+
+### The Intrinsic Curvature Result
+| Metric for cell assignment | Solutions |
+|---------------------------|-----------|
+| S² great-circle (dot product) | **36** |
+| R² Euclidean | **0** |
+
+The computation cannot be flattened. Voronoi cells drawn in R² with Euclidean distance are wrong — the area distortion reassigns points to incorrect cells. Only the S² metric preserves the structure.
+
+### 36/36 Perfect Match
+Projected Voronoi with S² metric: 36 solutions at 14 cells — identical to Demo 67's S² result. Difference = 0. All 36 winners show 7 zero / 7 one labeling.
+
+### ASCII Visualization — DKC as a Picture
+65×33 character canvas showing:
+- 0/1 regions (XOR output), + boundaries, * weights, 0-9/A-C eigenvector centers
+- The decision boundary between 0 and 1 is a visible curve in the plane
+- Knot computation is literally a drawable picture
+
+### Perceptron Formulation
+Explicit 6×2 weight matrices: 6 bits → 2 neurons (x,y) → Voronoi cell → label. Weights from knot theory, not gradient descent.
+
+### Planar Grid Comparison
+| Grid | Cells | Solutions |
+|------|-------|-----------|
+| 4×4 | 16 | 0 |
+| 8×8 | 64 | 33 |
+| Voronoi (S² metric) | 14 | **36** |
+
+### The Lesson
+Visualize on the plane, compute on the sphere. S² is not just convenient — it's the intrinsic geometry.
+
+### Cross-Demo Progression
+S¹ (25 cells) → S³ (25 cells) → S² (14 cells) → R² (visualization only, not a further reduction)
+
+## Demo 69: Clifford Staircase on S² — Multi-Root Eigenvector Comparison (9/9 pass)
+
+**Date**: 2026-02-20
+
+**Core question**: Is the 13-direction eigenvector structure universal across roots of unity, or specific to ζ_8?
+
+**Answer**: The 13 directions are perfectly nested inside ζ_16 (RIGIDITY — zero angular drift), and algebraically guaranteed to nest at all power-of-2 roots. But finer roots trivialize XOR6 computation via pigeonhole, making ζ_8 the computational sweet spot.
+
+### Catalog Explosion
+| Root | θ | Quaternions | Directions |
+|------|---|-------------|------------|
+| ζ_8  | π/4  | 24      | 13         |
+| ζ_16 | π/8  | 7,952   | 3,457      |
+| ζ_32 | π/16 | 32,768* | 4,096*     |
+
+*Still hitting enumeration caps. True ζ_32 group is larger.
+
+### Direction Nesting
+- **ζ_8 → ζ_16**: 13/13 match, 0.0000° drift — **RIGIDITY** (algebraically forced: ζ_8 = (ζ_16)²)
+- **ζ_8 → ζ_32**: 8/13 match, 2.07° max drift — **DRIFT** (cap artifact; improved from 6/13 at smaller caps)
+- Algebraic argument: ζ_8 = (ζ_32)⁴, squaring preserves rotation axis → all 13 must nest
+
+### XOR6 Trivialization
+| Root | Voronoi cells | XOR6 solutions | % of triples |
+|------|--------------|----------------|--------------|
+| ζ_8  | 14           | 36             | 0.007%       |
+| ζ_16 | 3,458        | 499,367        | 90.6%        |
+| ζ_32 | 4,097        | 493,654        | 89.6%        |
+
+~90% of triples are solutions at 3,000+ cells — pigeonhole makes computation trivial.
+
+### Fixed-Resolution Comparison
+At lat/lon 4×4 (16 cells): ζ_16=450 > ζ_32=393. Finer roots NOT monotonically better at fixed resolution.
+
+### Key Insight
+ζ_8 is special: coarsest root where the 13-direction structure emerges. Structure is preserved at finer roots, but computational power at fixed resolution peaks at moderate refinement. The trivialization threshold lies between ~50 and ~500 cells.
+
+## Demo 70: Musica Nodorum — Knots as Sound (8/8 pass)
+
+**Date**: 2026-02-21
+
+**Core question**: Can knot invariants be mapped to musical structures?
+
+**Answer**: Yes, and the mapping reveals deep structure. The ζ_8 algebra's 4 eigenvalue angles map to C-Eb-E-F# (consonance to tritone). Yang-Baxter equivalent braids produce identical melodies. Eigenvalue (pitch) and eigenvector (position) are orthogonal dimensions.
+
+### Four Knot Notes
+| Angle | Note | Trace | Interval |
+|-------|------|-------|----------|
+| 0°    | C    | 2.000 | Unison   |
+| 45°   | Eb   | √2    | m3       |
+| 60°   | E    | 1.000 | M3       |
+| 90°   | F#   | 0.000 | Tritone  |
+
+### Yang-Baxter = Identical Melodies
+σ₁σ₂σ₁ and σ₂σ₁σ₂ produce the same note at EVERY intermediate step (not just final). Trace is conjugation-invariant → eigenvalue angle sequence depends on product length, not specific generators.
+
+### Music ⊥ Space
+Correlation r = -0.0624 (essentially zero). 72 pairs share the same note but point in different directions. Confirms Hopf decomposition: eigenvalue and eigenvector are independent coordinates.
+
+### Dodecahedral Connection — Platonic Failure
+| Polyhedron | Eff cells | XOR6 |
+|------------|-----------|------|
+| Eigenvector | 13 | **36** |
+| Icosahedron | 6 | **0** |
+| Dodecahedron | 10 | **0** |
+
+Only the knot algebra's own geometry computes XOR6. Dodecahedral symmetry (icosahedral group, order 120) is unrelated to binary octahedral group (order 48).
+
+### Best Melodies
+- Garside (s1 s2)³: Eb E F# E Eb C — complete ascending/descending arch
+- (s1 s2⁻¹)⁵: Eb E₃ F# E₃ Eb C₃ Eb E₃ F# E₃ — octave-leaping oscillation
+
+---
+
+## Demo 71: Spectral DKC — Spherical Harmonic Decomposition (10/10)
+
+### The 13=13 Theorem
+Mode l has (2l+1) independent spherical harmonic components. The minimum bandwidth for XOR6 is l=6 because 2×6+1 = 13 = number of eigenvector directions. This is the lowest l where a single mode has enough DOF to independently address all 13 Voronoi regions.
+
+### Sharp Phase Transition
+0% recovery at l≤5, 100% at l=6. No partial recovery — the problem is all-or-nothing at the DOF boundary. l=5 has 11 components for 13 regions (underdetermined); l=6 has exactly 13 (determined).
+
+### l=6 Dominates the Spectrum
+~80.7% of XOR6 power (averaged across all 36 winners) sits in mode l=6. Only even modes have power (odd modes exactly zero from antipodal symmetry). Universal across all winners.
+
+### Super-Nyquist Compression
+Nyquist for l=6: (6+1)² = 49 cells needed. Actual: 14 cells. Ratio: 0.29 (3.5× compression). This is compressed sensing on S²: the XOR6 labeling is binary at 13 known positions → 13 bits of information, not 49 samples.
+
+### Musical Connection — Inverted
+The eigenvalue angles map to l=2 (F#, tritone), l=3 (E, major 3rd), l=4 (Eb, minor 3rd). But the dominant XOR6 mode is l=6 (D, whole tone = 200 cents). The computation requires HIGHER angular frequency than the eigenvalue structure. The notes are at one scale; the computation on those notes is at a finer scale.
+
+### Trivialization Explained
+For ζ_16 (3,457 directions): predicted bandwidth l ≥ 1728, Nyquist = 2,989,441 cells. At such bandwidth, ANY partition resolves XOR6 — explaining Demo 69's ~90% solution rate.
+
+### Key Insight
+The number 13 (eigenvector directions of the binary octahedral group on S²) determines EVERYTHING: the Voronoi cell count, the bandwidth of computation, and the super-Nyquist compression. It's not just how many directions there are — it's that 13 = 2×6+1 places the computation at exactly the mode that can address each direction independently.
 
 ---
 *End of Explorer's Log*

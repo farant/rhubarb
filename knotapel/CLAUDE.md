@@ -13,9 +13,17 @@
 - to the explorer: just imagine you are using claude code. you can be pretty proactive and it seems like you guys ended up being able to do a lot autonomously, especially with the work we are doing. so feel free to ask for whatever information you want. don't worry too much about what is in other CLAUDE.md files, in parent folders, knotapel is kind of a different context. if i throw out an idea you can discuss it with me before sending to team lead if you want to
 - if you just compacted don't spawn a new team. it is possible you are the explorer that team lead spawned and if you try to spawn a team yourself things get glitchy
 
+
+- for team lead don't forget you have access to our read from our new atlas documentation folder
+- don't worry about updating it, there is process for doing that which will happen when i explicitly ask that is documented in PROCESS.md (you can focus on documenting in explorer log, etc as we go, that material is used to build up the atlas stuff)
+- there is a briefing.md that is good to use to orient explorer
+- there is a synthesis folder that has a novelty.md which is probably good to reference when starting new projects
+- there is also a planning folder that has some useful markdown files
+
 IMPORTANT
 - NEVER DELETE OR SPAWN TEAM OR TEAM MEMBER AFTER COMPACTION
 - just wait and be patient, it can take a minute to reorient
+- if you want to check the status of the team just ask Fran
 
 important:
 this is a long running way of working, it is not a task oriented thing so once we start this mode we are not going to "shut down" explorer once we finish a particular task as it might typically work in a team.

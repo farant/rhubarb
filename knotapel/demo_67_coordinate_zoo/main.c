@@ -1,0 +1,1776 @@
+/*
+ * KNOTAPEL DEMO 67: Coordinate System Zoo — SU(2) Projections for DKC
+ * ====================================================================
+ *
+ * Systematically try every natural SU(2) coordinate system as a DKC
+ * activation and compare XOR6 performance.
+ *
+ * Part A: Eigenvector extraction (eigenvalue angle + axis on S^2)
+ * Part B: S^2 activation (eigenvector direction)
+ *
+ * C89, zero dependencies beyond math.h.
+ */
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <math.h>
+
+#ifndef M_PI
+#define M_PI 3.14159265358979323846
+#endif
+
+/* ================================================================
+ * Test infrastructure
+ * ================================================================ */
+
+static int n_pass = 0, n_fail = 0;
+
+static void check(const char *msg, int ok) {
+    if (ok) { printf("  PASS: %s\n", msg); n_pass++; }
+    else    { printf("  FAIL: %s\n", msg); n_fail++; }
+}
+
+/* ================================================================
+ * Quaternion type
+ * ================================================================
+ * q = a + bi + cj + dk
+ */
+
+typedef struct { double a, b, c, d; } Quat;
+
+static Quat quat_make(double a, double b, double c, double d) {
+    Quat q; q.a = a; q.b = b; q.c = c; q.d = d; return q;
+}
+
+static Quat quat_one(void) { return quat_make(1, 0, 0, 0); }
+
+static Quat quat_add(Quat p, Quat q) {
+    return quat_make(p.a + q.a, p.b + q.b, p.c + q.c, p.d + q.d);
+}
+
+static Quat quat_neg(Quat q) {
+    return quat_make(-q.a, -q.b, -q.c, -q.d);
+}
+
+static Quat quat_mul(Quat p, Quat q) {
+    return quat_make(
+        p.a*q.a - p.b*q.b - p.c*q.c - p.d*q.d,
+        p.a*q.b + p.b*q.a + p.c*q.d - p.d*q.c,
+        p.a*q.c - p.b*q.d + p.c*q.a + p.d*q.b,
+        p.a*q.d + p.b*q.c - p.c*q.b + p.d*q.a);
+}
+
+static Quat quat_conj(Quat q) {
+    return quat_make(q.a, -q.b, -q.c, -q.d);
+}
+
+static double quat_norm(Quat q) {
+    return sqrt(q.a*q.a + q.b*q.b + q.c*q.c + q.d*q.d);
+}
+
+static double quat_norm2(Quat q) {
+    return q.a*q.a + q.b*q.b + q.c*q.c + q.d*q.d;
+}
+
+static Quat quat_normalize(Quat q) {
+    double n = quat_norm(q);
+    if (n < 1e-15) return quat_make(0, 0, 0, 0);
+    return quat_make(q.a / n, q.b / n, q.c / n, q.d / n);
+}
+
+static double quat_dot(Quat p, Quat q) {
+    return p.a*q.a + p.b*q.b + p.c*q.c + p.d*q.d;
+}
+
+static int quat_close(Quat p, Quat q, double eps) {
+    return fabs(p.a - q.a) < eps && fabs(p.b - q.b) < eps &&
+           fabs(p.c - q.c) < eps && fabs(p.d - q.d) < eps;
+}
+
+/* ================================================================
+ * Complex type
+ * ================================================================ */
+
+typedef struct { double re, im; } Cx;
+
+/* ================================================================
+ * Z[zeta_8] exact arithmetic (for bracket computation)
+ * ================================================================ */
+
+typedef struct { long a, b, c, d; } Cyc8;
+
+static Cyc8 cyc8_make(long a, long b, long c, long d) {
+    Cyc8 z; z.a = a; z.b = b; z.c = c; z.d = d; return z;
+}
+static Cyc8 cyc8_zero(void) { return cyc8_make(0, 0, 0, 0); }
+static int cyc8_eq(Cyc8 x, Cyc8 y) {
+    return x.a == y.a && x.b == y.b && x.c == y.c && x.d == y.d;
+}
+static int cyc8_is_zero(Cyc8 z) {
+    return z.a == 0 && z.b == 0 && z.c == 0 && z.d == 0;
+}
+static Cyc8 cyc8_add(Cyc8 x, Cyc8 y) {
+    return cyc8_make(x.a + y.a, x.b + y.b, x.c + y.c, x.d + y.d);
+}
+static Cyc8 cyc8_conj(Cyc8 z) {
+    return cyc8_make(z.a, -z.d, -z.c, -z.b);
+}
+static Cyc8 cyc8_mul(Cyc8 x, Cyc8 y) {
+    return cyc8_make(
+        x.a*y.a - x.b*y.d - x.c*y.c - x.d*y.b,
+        x.a*y.b + x.b*y.a - x.c*y.d - x.d*y.c,
+        x.a*y.c + x.b*y.b + x.c*y.a - x.d*y.d,
+        x.a*y.d + x.b*y.c + x.c*y.b + x.d*y.a);
+}
+static Cyc8 cyc8_pow_int(Cyc8 base, int n) {
+    Cyc8 r = cyc8_make(1, 0, 0, 0);
+    if (n == 0) return r;
+    if (n < 0) { n = -n; base = cyc8_conj(base); }
+    while (n > 0) {
+        if (n & 1) r = cyc8_mul(r, base);
+        base = cyc8_mul(base, base);
+        n >>= 1;
+    }
+    return r;
+}
+
+/* Convert Cyc8 to complex double */
+static Cx cyc8_to_cx(Cyc8 z) {
+    double s = sqrt(2.0) / 2.0;
+    Cx r;
+    r.re = (double)z.a + (double)(z.b - z.d) * s;
+    r.im = (double)z.c + (double)(z.b + z.d) * s;
+    return r;
+}
+
+/* ================================================================
+ * Braid type + union-find for loop counting
+ * ================================================================ */
+
+#define MAX_WORD 64
+typedef struct { int word[MAX_WORD]; int len, n; } Braid;
+
+#define MAX_UF 4096
+static int uf_p[MAX_UF];
+
+static void uf_init(int n) {
+    int i;
+    for (i = 0; i < n; i++) uf_p[i] = i;
+}
+static int uf_find(int x) {
+    while (uf_p[x] != x) { uf_p[x] = uf_p[uf_p[x]]; x = uf_p[x]; }
+    return x;
+}
+static void uf_union(int x, int y) {
+    x = uf_find(x); y = uf_find(y);
+    if (x != y) uf_p[x] = y;
+}
+
+static int braid_loops(const Braid *b, unsigned s) {
+    int N = (b->len + 1) * b->n;
+    int l, p, i, loops, sgn, bit, cup;
+    uf_init(N);
+    for (l = 0; l < b->len; l++) {
+        sgn = b->word[l] > 0 ? 1 : -1;
+        i = (sgn > 0 ? b->word[l] : -b->word[l]) - 1;
+        bit = (int)((s >> (unsigned)l) & 1u);
+        cup = (sgn > 0) ? (bit == 0) : (bit == 1);
+        if (cup) {
+            uf_union(l * b->n + i, l * b->n + i + 1);
+            uf_union((l + 1) * b->n + i, (l + 1) * b->n + i + 1);
+            for (p = 0; p < b->n; p++)
+                if (p != i && p != i + 1)
+                    uf_union(l * b->n + p, (l + 1) * b->n + p);
+        } else {
+            for (p = 0; p < b->n; p++)
+                uf_union(l * b->n + p, (l + 1) * b->n + p);
+        }
+    }
+    for (p = 0; p < b->n; p++)
+        uf_union(p, b->len * b->n + p);
+    loops = 0;
+    for (i = 0; i < N; i++)
+        if (uf_find(i) == i) loops++;
+    return loops;
+}
+
+/* Bracket at A = -zeta_8, delta = 0 (single-loop only) */
+static Cyc8 braid_bracket(const Braid *b) {
+    Cyc8 A = cyc8_make(0, -1, 0, 0);
+    Cyc8 bracket = cyc8_zero();
+    unsigned s, ns;
+    int i;
+    ns = 1u << b->len;
+    for (s = 0; s < ns; s++) {
+        int a_count = 0, b_count = 0, lp;
+        for (i = 0; i < b->len; i++) {
+            if ((s >> (unsigned)i) & 1u) b_count++;
+            else a_count++;
+        }
+        lp = braid_loops(b, s);
+        if (lp == 1) {
+            bracket = cyc8_add(bracket,
+                cyc8_pow_int(A, a_count - b_count));
+        }
+    }
+    return bracket;
+}
+
+/* ================================================================
+ * SU(2) braid representation
+ * ================================================================
+ * sigma_1 -> q1 = (1+i)/sqrt(2)
+ * sigma_2 -> q2 = (1-k)/sqrt(2)
+ * sigma_i^{-1} -> conjugate
+ */
+
+static Quat q_gen[3]; /* q_gen[1]=sigma_1, q_gen[2]=sigma_2 */
+
+static void init_su2_generators(void) {
+    double s = 1.0 / sqrt(2.0);
+    q_gen[1] = quat_make(s, s, 0, 0);
+    q_gen[2] = quat_make(s, 0, 0, -s);
+}
+
+static Quat braid_quaternion(const Braid *b) {
+    Quat result = quat_one();
+    int l;
+    for (l = 0; l < b->len; l++) {
+        int gen = b->word[l];
+        int idx = gen > 0 ? gen : -gen;
+        Quat g = q_gen[idx];
+        if (gen < 0) g = quat_conj(g);
+        result = quat_mul(result, g);
+    }
+    return result;
+}
+
+/* ================================================================
+ * Catalog building (shared from Demo 66)
+ * ================================================================ */
+
+#define MAX_QCAT 4096
+static Quat qcat[MAX_QCAT];
+static int qcat_size = 0;
+static Cyc8 qcat_bracket[MAX_QCAT];
+static int qcat_braid_count = 0;
+
+static int find_quat(Quat q) {
+    int i;
+    for (i = 0; i < qcat_size; i++) {
+        if (quat_close(qcat[i], q, 1e-10)) return i;
+        if (quat_close(qcat[i], quat_neg(q), 1e-10)) return i;
+    }
+    return -1;
+}
+
+#define MAX_BCAT 512
+static Cyc8 bcat[MAX_BCAT];
+static int bcat_size = 0;
+
+static int find_bracket(Cyc8 v) {
+    int i;
+    for (i = 0; i < bcat_size; i++)
+        if (cyc8_eq(bcat[i], v)) return i;
+    return -1;
+}
+
+static void build_catalogs(void) {
+    int n, len;
+    Braid b;
+    int word_buf[MAX_WORD];
+
+    qcat_size = 0;
+    bcat_size = 0;
+    qcat_braid_count = 0;
+
+    for (n = 2; n <= 3; n++) {
+        for (len = 1; len <= 8 && len <= MAX_WORD; len++) {
+            int max_gen = n - 1;
+            int total_gens = 2 * max_gen;
+            unsigned long total, idx;
+            int i;
+
+            total = 1;
+            for (i = 0; i < len; i++) {
+                total *= (unsigned long)total_gens;
+                if (total > 100000) break;
+            }
+            if (total > 100000) continue;
+
+            for (idx = 0; idx < total; idx++) {
+                unsigned long tmp = idx;
+                Quat q;
+                Cyc8 brk;
+
+                for (i = 0; i < len; i++) {
+                    int g = (int)(tmp % (unsigned long)total_gens);
+                    tmp /= (unsigned long)total_gens;
+                    if (g < max_gen) word_buf[i] = g + 1;
+                    else             word_buf[i] = -(g - max_gen + 1);
+                }
+                b.n = n; b.len = len;
+                memcpy(b.word, word_buf, (size_t)len * sizeof(int));
+
+                q = braid_quaternion(&b);
+                brk = braid_bracket(&b);
+                qcat_braid_count++;
+
+                if (find_quat(q) < 0 && qcat_size < MAX_QCAT) {
+                    qcat[qcat_size] = q;
+                    qcat_bracket[qcat_size] = brk;
+                    qcat_size++;
+                }
+
+                if (!cyc8_is_zero(brk) && find_bracket(brk) < 0
+                    && bcat_size < MAX_BCAT) {
+                    bcat[bcat_size] = brk;
+                    bcat_size++;
+                }
+            }
+        }
+    }
+}
+
+/* ================================================================
+ * Eigenvector / eigenvalue extraction from quaternion
+ * ================================================================
+ *
+ * A unit quaternion q = cos(theta) + sin(theta)*(xi*i + yj*j + zk*k)
+ * represents rotation by 2*theta around axis (xi, yj, zk).
+ *
+ * The SU(2) matrix has eigenvalues e^{i*theta} and e^{-i*theta}.
+ * The eigenvector direction is the rotation axis (xi, yj, zk) on S^2.
+ *
+ * For q = a + bi + cj + dk:
+ *   cos(theta) = a  =>  theta = acos(a)
+ *   axis = (b, c, d) / sin(theta) = (b, c, d) / sqrt(1 - a^2)
+ *
+ * Special case: when theta = 0 or pi, the axis is undefined (identity
+ * or -identity). We assign a sentinel axis.
+ */
+
+typedef struct {
+    double theta;       /* eigenvalue angle: eigenvalues = e^{+/- i*theta} */
+    double ax, ay, az;  /* rotation axis on S^2 (unit vector) */
+    int axis_defined;   /* 0 if theta=0 or pi (degenerate) */
+} EigenData;
+
+static EigenData quat_to_eigen(Quat q) {
+    EigenData e;
+    double sin_th, norm_v;
+
+    /* Normalize to canonical form: ensure a >= 0 (mod +-q) */
+    if (q.a < 0.0) {
+        q.a = -q.a; q.b = -q.b; q.c = -q.c; q.d = -q.d;
+    }
+
+    /* Clamp for numerical safety */
+    if (q.a > 1.0) q.a = 1.0;
+    if (q.a < 0.0) q.a = 0.0;
+
+    e.theta = acos(q.a); /* in [0, pi] */
+
+    sin_th = sin(e.theta);
+    norm_v = sqrt(q.b*q.b + q.c*q.c + q.d*q.d);
+
+    if (norm_v < 1e-12) {
+        /* Identity or antipodal — axis undefined */
+        e.ax = 0.0; e.ay = 0.0; e.az = 1.0; /* sentinel: north pole */
+        e.axis_defined = 0;
+    } else {
+        e.ax = q.b / norm_v;
+        e.ay = q.c / norm_v;
+        e.az = q.d / norm_v;
+        e.axis_defined = 1;
+        (void)sin_th;
+    }
+
+    return e;
+}
+
+/* ================================================================
+ * S^2 cell assignment functions
+ * ================================================================ */
+
+/* Latitude/longitude grid on S^2.
+ * lat  = acos(z) in [0, pi]        ->  n_lat bands
+ * lon  = atan2(y, x) in [0, 2*pi)  ->  n_lon bands
+ * cell = lat_band * n_lon + lon_band
+ */
+static int s2_cell_latlon(double ax, double ay, double az,
+                          int n_lat, int n_lon) {
+    double lat, lon;
+    int lat_b, lon_b;
+
+    /* Clamp for acos safety */
+    if (az > 1.0) az = 1.0;
+    if (az < -1.0) az = -1.0;
+
+    lat = acos(az); /* [0, pi] */
+    lon = atan2(ay, ax);
+    if (lon < 0.0) lon += 2.0 * M_PI;
+
+    lat_b = (int)(lat / M_PI * (double)n_lat);
+    if (lat_b >= n_lat) lat_b = n_lat - 1;
+
+    lon_b = (int)(lon / (2.0 * M_PI) * (double)n_lon);
+    if (lon_b >= n_lon) lon_b = n_lon - 1;
+
+    return lat_b * n_lon + lon_b;
+}
+
+/* Octahedral Voronoi: 6 cells (vertices of octahedron on S^2)
+ * Vertices: +x, -x, +y, -y, +z, -z
+ * Cell = nearest vertex */
+static int s2_cell_octahedral(double ax, double ay, double az) {
+    double dots[6];
+    int i, best = 0;
+    double best_d = -2.0;
+
+    dots[0] = ax;   /* +x */
+    dots[1] = -ax;  /* -x */
+    dots[2] = ay;   /* +y */
+    dots[3] = -ay;  /* -y */
+    dots[4] = az;   /* +z */
+    dots[5] = -az;  /* -z */
+
+    for (i = 0; i < 6; i++) {
+        if (dots[i] > best_d) { best_d = dots[i]; best = i; }
+    }
+    return best;
+}
+
+/* Icosahedral Voronoi: 12 cells (vertices of icosahedron on S^2)
+ * Golden ratio phi = (1+sqrt(5))/2
+ * Vertices: permutations of (0, +-1, +-phi) normalized */
+static double ico_verts[12][3];
+static int ico_inited = 0;
+
+static void init_icosahedron(void) {
+    double phi = (1.0 + sqrt(5.0)) / 2.0;
+    double norm = sqrt(1.0 + phi * phi);
+    double a = 1.0 / norm, b = phi / norm;
+    int idx = 0;
+    int s1, s2;
+
+    /* (0, +-a, +-b), (+-a, +-b, 0), (+-b, 0, +-a) */
+    for (s1 = -1; s1 <= 1; s1 += 2) {
+        for (s2 = -1; s2 <= 1; s2 += 2) {
+            ico_verts[idx][0] = 0.0;
+            ico_verts[idx][1] = (double)s1 * a;
+            ico_verts[idx][2] = (double)s2 * b;
+            idx++;
+        }
+    }
+    for (s1 = -1; s1 <= 1; s1 += 2) {
+        for (s2 = -1; s2 <= 1; s2 += 2) {
+            ico_verts[idx][0] = (double)s1 * a;
+            ico_verts[idx][1] = (double)s2 * b;
+            ico_verts[idx][2] = 0.0;
+            idx++;
+        }
+    }
+    for (s1 = -1; s1 <= 1; s1 += 2) {
+        for (s2 = -1; s2 <= 1; s2 += 2) {
+            ico_verts[idx][0] = (double)s1 * b;
+            ico_verts[idx][1] = 0.0;
+            ico_verts[idx][2] = (double)s2 * a;
+            idx++;
+        }
+    }
+    ico_inited = 1;
+}
+
+static int s2_cell_icosahedral(double ax, double ay, double az) {
+    int i, best = 0;
+    double best_d = -2.0;
+
+    if (!ico_inited) init_icosahedron();
+
+    for (i = 0; i < 12; i++) {
+        double d = ax * ico_verts[i][0] +
+                   ay * ico_verts[i][1] +
+                   az * ico_verts[i][2];
+        if (d > best_d) { best_d = d; best = i; }
+    }
+    return best;
+}
+
+/* Cuboctahedral Voronoi: 12 cells (cuboctahedron vertices)
+ * Vertices: permutations of (+-1, +-1, 0) normalized */
+static double cuboct_verts[12][3];
+static int cuboct_inited = 0;
+
+static void init_cuboctahedron(void) {
+    int idx = 0;
+    int s1, s2;
+    double norm = sqrt(2.0);
+
+    /* (+-1, +-1, 0) */
+    for (s1 = -1; s1 <= 1; s1 += 2) {
+        for (s2 = -1; s2 <= 1; s2 += 2) {
+            cuboct_verts[idx][0] = (double)s1 / norm;
+            cuboct_verts[idx][1] = (double)s2 / norm;
+            cuboct_verts[idx][2] = 0.0;
+            idx++;
+        }
+    }
+    /* (+-1, 0, +-1) */
+    for (s1 = -1; s1 <= 1; s1 += 2) {
+        for (s2 = -1; s2 <= 1; s2 += 2) {
+            cuboct_verts[idx][0] = (double)s1 / norm;
+            cuboct_verts[idx][1] = 0.0;
+            cuboct_verts[idx][2] = (double)s2 / norm;
+            idx++;
+        }
+    }
+    /* (0, +-1, +-1) */
+    for (s1 = -1; s1 <= 1; s1 += 2) {
+        for (s2 = -1; s2 <= 1; s2 += 2) {
+            cuboct_verts[idx][0] = 0.0;
+            cuboct_verts[idx][1] = (double)s1 / norm;
+            cuboct_verts[idx][2] = (double)s2 / norm;
+            idx++;
+        }
+    }
+    cuboct_inited = 1;
+}
+
+static int s2_cell_cuboctahedral(double ax, double ay, double az) {
+    int i, best = 0;
+    double best_d = -2.0;
+
+    if (!cuboct_inited) init_cuboctahedron();
+
+    for (i = 0; i < 12; i++) {
+        double d = ax * cuboct_verts[i][0] +
+                   ay * cuboct_verts[i][1] +
+                   az * cuboct_verts[i][2];
+        if (d > best_d) { best_d = d; best = i; }
+    }
+    return best;
+}
+
+/* ================================================================
+ * Eigendata catalog
+ * ================================================================ */
+
+#define MAX_ECAT 128
+
+static EigenData ecat[MAX_QCAT]; /* parallel to qcat */
+
+/* Distinct eigenvalue angles (mod tolerance) */
+static double angle_cat[MAX_ECAT];
+static int angle_cat_size = 0;
+
+/* Distinct eigenvector directions on S^2 (mod +-, tolerance) */
+static double dir_cat[MAX_ECAT][3]; /* (ax, ay, az) */
+static int dir_cat_size = 0;
+
+/* (angle_idx, dir_idx) pairs */
+static int pair_cat[MAX_QCAT][2]; /* [i][0]=angle_idx, [i][1]=dir_idx */
+
+static int find_angle(double theta) {
+    int i;
+    for (i = 0; i < angle_cat_size; i++) {
+        if (fabs(angle_cat[i] - theta) < 1e-8) return i;
+    }
+    return -1;
+}
+
+static int find_dir(double ax, double ay, double az) {
+    int i;
+    for (i = 0; i < dir_cat_size; i++) {
+        /* Check both orientations (axis sign ambiguity) */
+        double d1 = fabs(dir_cat[i][0] - ax) + fabs(dir_cat[i][1] - ay) +
+                     fabs(dir_cat[i][2] - az);
+        double d2 = fabs(dir_cat[i][0] + ax) + fabs(dir_cat[i][1] + ay) +
+                     fabs(dir_cat[i][2] + az);
+        if (d1 < 1e-8 || d2 < 1e-8) return i;
+    }
+    return -1;
+}
+
+static void build_eigen_catalog(void) {
+    int i;
+
+    angle_cat_size = 0;
+    dir_cat_size = 0;
+
+    for (i = 0; i < qcat_size; i++) {
+        int ai, di;
+        ecat[i] = quat_to_eigen(qcat[i]);
+
+        /* Register angle */
+        ai = find_angle(ecat[i].theta);
+        if (ai < 0 && angle_cat_size < MAX_ECAT) {
+            ai = angle_cat_size;
+            angle_cat[angle_cat_size++] = ecat[i].theta;
+        }
+        pair_cat[i][0] = ai;
+
+        /* Register direction */
+        if (ecat[i].axis_defined) {
+            di = find_dir(ecat[i].ax, ecat[i].ay, ecat[i].az);
+            if (di < 0 && dir_cat_size < MAX_ECAT) {
+                di = dir_cat_size;
+                dir_cat[dir_cat_size][0] = ecat[i].ax;
+                dir_cat[dir_cat_size][1] = ecat[i].ay;
+                dir_cat[dir_cat_size][2] = ecat[i].az;
+                dir_cat_size++;
+            }
+        } else {
+            di = -1; /* degenerate */
+        }
+        pair_cat[i][1] = di;
+    }
+}
+
+/* ================================================================
+ * S^2 XOR6 checker — given 6 quaternions, use eigenvector direction
+ * for cell assignment, check if any labeling separates XOR6
+ * ================================================================ */
+
+/* Compute eigenvector-axis of quaternion sum, assign to S^2 cell.
+ * The "sum" of quaternions is in R^4. We take the eigenvector of the
+ * sum (as if it were a quaternion representing a rotation).
+ * The sum is NOT unit in general, so we normalize first. */
+
+/* Method: for each of 64 subsets, compute quaternion sum,
+ * extract eigenvector, assign S^2 cell, check parity separation. */
+
+#define MAX_S2_CELLS 256
+
+/* Generic S^2 XOR6 checker with cell function pointer */
+typedef int (*s2_cell_fn)(double, double, double, int);
+
+/* Wrapper adapters for cell functions of different signatures */
+static int s2_latlon_4x4(double ax, double ay, double az, int dummy) {
+    (void)dummy;
+    return s2_cell_latlon(ax, ay, az, 4, 4);
+}
+static int s2_latlon_6x6(double ax, double ay, double az, int dummy) {
+    (void)dummy;
+    return s2_cell_latlon(ax, ay, az, 6, 6);
+}
+static int s2_latlon_8x8(double ax, double ay, double az, int dummy) {
+    (void)dummy;
+    return s2_cell_latlon(ax, ay, az, 8, 8);
+}
+static int s2_octahedral_w(double ax, double ay, double az, int dummy) {
+    (void)dummy;
+    return s2_cell_octahedral(ax, ay, az);
+}
+static int s2_icosahedral_w(double ax, double ay, double az, int dummy) {
+    (void)dummy;
+    return s2_cell_icosahedral(ax, ay, az);
+}
+static int s2_cuboctahedral_w(double ax, double ay, double az, int dummy) {
+    (void)dummy;
+    return s2_cell_cuboctahedral(ax, ay, az);
+}
+
+static int check_xor6_s2(const Quat *w, s2_cell_fn cell_fn,
+                          int n_cells) {
+    int seen[MAX_S2_CELLS + 1]; /* +1 for zero/degenerate cell */
+    int mask, i, cell;
+
+    if (n_cells > MAX_S2_CELLS) return 0;
+    for (i = 0; i <= n_cells; i++) seen[i] = 0;
+
+    for (mask = 0; mask < 64; mask++) {
+        Quat sum = quat_make(0, 0, 0, 0);
+        int par = 0;
+        EigenData ed;
+
+        for (i = 0; i < 6; i++) {
+            if (mask & (1 << i)) {
+                sum = quat_add(sum, w[i]);
+                par ^= 1;
+            }
+        }
+
+        /* Extract eigenvector of sum-as-quaternion */
+        if (quat_norm(sum) < 1e-12) {
+            cell = n_cells; /* zero pseudo-cell */
+        } else {
+            sum = quat_normalize(sum);
+            ed = quat_to_eigen(sum);
+            if (!ed.axis_defined) {
+                cell = n_cells; /* degenerate: identity or antipodal */
+            } else {
+                cell = cell_fn(ed.ax, ed.ay, ed.az, 0);
+            }
+        }
+
+        seen[cell] |= (1 << par);
+        if (seen[cell] == 3) return 0;
+    }
+    return 1;
+}
+
+/* Custom 13-direction Voronoi on S^2:
+ * Uses the 13 actual eigenvector directions as Voronoi centers.
+ * Cell = nearest eigenvector direction (by |dot product| since ±axis).
+ * Cell 13 = degenerate/zero pseudo-cell. Total: 14 cells. */
+
+static int s2_cell_custom13(double ax, double ay, double az, int dummy) {
+    int i, best = 0;
+    double best_d = -2.0;
+    (void)dummy;
+
+    for (i = 0; i < dir_cat_size; i++) {
+        double d = fabs(ax * dir_cat[i][0] +
+                        ay * dir_cat[i][1] +
+                        az * dir_cat[i][2]);
+        if (d > best_d) { best_d = d; best = i; }
+    }
+    return best;
+}
+
+/* ================================================================
+ * Eigenvalue-only activation (Part C)
+ * ================================================================
+ * Partition [0, pi] into k equal sectors.
+ * Cell = floor(theta / (pi/k))
+ * Cell k = zero/degenerate pseudo-cell.
+ */
+
+static int eigenvalue_cell(double theta, int k) {
+    int sec;
+    if (theta < 0.0) theta = -theta;
+    sec = (int)(theta / (M_PI / (double)k));
+    if (sec >= k) sec = k - 1;
+    return sec;
+}
+
+static int check_xor6_eigenvalue(const Quat *w, int k) {
+    int seen[1025]; /* max k + 1 */
+    int mask, i, cell;
+
+    if (k > 1024) return 0;
+    for (i = 0; i <= k; i++) seen[i] = 0;
+
+    for (mask = 0; mask < 64; mask++) {
+        Quat sum = quat_make(0, 0, 0, 0);
+        int par = 0;
+        EigenData ed;
+
+        for (i = 0; i < 6; i++) {
+            if (mask & (1 << i)) {
+                sum = quat_add(sum, w[i]);
+                par ^= 1;
+            }
+        }
+
+        if (quat_norm(sum) < 1e-12) {
+            cell = k; /* zero pseudo-cell */
+        } else {
+            sum = quat_normalize(sum);
+            ed = quat_to_eigen(sum);
+            cell = eigenvalue_cell(ed.theta, k);
+        }
+
+        seen[cell] |= (1 << par);
+        if (seen[cell] == 3) return 0;
+    }
+    return 1;
+}
+
+/* ================================================================
+ * Hopf decomposition (Part D)
+ * ================================================================
+ * q = a + bi + cj + dk
+ * Hopf coordinates:
+ *   eta = atan2(sqrt(c^2 + d^2), sqrt(a^2 + b^2))  in [0, pi/2]
+ *   xi1 = atan2(b, a)   in [0, 2*pi)
+ *   xi2 = atan2(d, c)   in [0, 2*pi)
+ *
+ * eta parameterizes the S^2 base of the Hopf fibration.
+ * xi1, xi2 are fiber phase angles.
+ */
+
+typedef struct {
+    double eta;  /* [0, pi/2] */
+    double xi1;  /* [0, 2*pi) */
+    double xi2;  /* [0, 2*pi) */
+} HopfData;
+
+static HopfData quat_to_hopf(Quat q) {
+    HopfData h;
+    double r1 = sqrt(q.a*q.a + q.b*q.b);
+    double r2 = sqrt(q.c*q.c + q.d*q.d);
+
+    h.eta = atan2(r2, r1); /* [0, pi/2] */
+
+    h.xi1 = atan2(q.b, q.a);
+    if (h.xi1 < 0.0) h.xi1 += 2.0 * M_PI;
+
+    h.xi2 = atan2(q.d, q.c);
+    if (h.xi2 < 0.0) h.xi2 += 2.0 * M_PI;
+
+    return h;
+}
+
+/* Hopf S^2 base activation: partition eta into bands */
+static int hopf_base_cell(HopfData h, int n_eta, int n_lon) {
+    int eta_b, lon_b;
+    double lon;
+
+    eta_b = (int)(h.eta / (M_PI / 2.0) * (double)n_eta);
+    if (eta_b >= n_eta) eta_b = n_eta - 1;
+
+    /* Use xi1 as longitude on S^2 base */
+    lon = h.xi1;
+    lon_b = (int)(lon / (2.0 * M_PI) * (double)n_lon);
+    if (lon_b >= n_lon) lon_b = n_lon - 1;
+
+    return eta_b * n_lon + lon_b;
+}
+
+/* Hopf phase-only activation: partition xi1 into sectors */
+static int hopf_phase_cell(HopfData h, int k) {
+    int sec;
+    sec = (int)(h.xi1 / (2.0 * M_PI) * (double)k);
+    if (sec >= k) sec = k - 1;
+    return sec;
+}
+
+static int check_xor6_hopf_base(const Quat *w, int n_eta, int n_lon) {
+    int total_cells = n_eta * n_lon;
+    int seen[MAX_S2_CELLS + 1];
+    int mask, i, cell;
+
+    if (total_cells > MAX_S2_CELLS) return 0;
+    for (i = 0; i <= total_cells; i++) seen[i] = 0;
+
+    for (mask = 0; mask < 64; mask++) {
+        Quat sum = quat_make(0, 0, 0, 0);
+        int par = 0;
+
+        for (i = 0; i < 6; i++) {
+            if (mask & (1 << i)) {
+                sum = quat_add(sum, w[i]);
+                par ^= 1;
+            }
+        }
+
+        if (quat_norm(sum) < 1e-12) {
+            cell = total_cells;
+        } else {
+            HopfData h;
+            sum = quat_normalize(sum);
+            h = quat_to_hopf(sum);
+            cell = hopf_base_cell(h, n_eta, n_lon);
+        }
+
+        seen[cell] |= (1 << par);
+        if (seen[cell] == 3) return 0;
+    }
+    return 1;
+}
+
+static int check_xor6_hopf_phase(const Quat *w, int k) {
+    int seen[1025];
+    int mask, i, cell;
+
+    if (k > 1024) return 0;
+    for (i = 0; i <= k; i++) seen[i] = 0;
+
+    for (mask = 0; mask < 64; mask++) {
+        Quat sum = quat_make(0, 0, 0, 0);
+        int par = 0;
+
+        for (i = 0; i < 6; i++) {
+            if (mask & (1 << i)) {
+                sum = quat_add(sum, w[i]);
+                par ^= 1;
+            }
+        }
+
+        if (quat_norm(sum) < 1e-12) {
+            cell = k;
+        } else {
+            HopfData h;
+            sum = quat_normalize(sum);
+            h = quat_to_hopf(sum);
+            cell = hopf_phase_cell(h, k);
+        }
+
+        seen[cell] |= (1 << par);
+        if (seen[cell] == 3) return 0;
+    }
+    return 1;
+}
+
+/* ================================================================
+ * Cayley-Klein activation (Part E)
+ * ================================================================
+ * SU(2) matrix: [[alpha, -conj(beta)], [beta, conj(alpha)]]
+ * where alpha = a + bi, beta = c + di (from quaternion q = a+bi+cj+dk)
+ * |alpha|^2 + |beta|^2 = 1
+ *
+ * Activation: 2D grid on (|alpha|, arg(alpha))
+ */
+
+static int cayley_klein_cell(Quat q, int n_r, int n_theta) {
+    double alpha_r = sqrt(q.a*q.a + q.b*q.b); /* |alpha| in [0,1] */
+    double alpha_arg = atan2(q.b, q.a); /* arg(alpha) in [-pi, pi] */
+    int ri, ti;
+
+    if (alpha_arg < 0.0) alpha_arg += 2.0 * M_PI;
+
+    ri = (int)(alpha_r * (double)n_r);
+    if (ri >= n_r) ri = n_r - 1;
+
+    ti = (int)(alpha_arg / (2.0 * M_PI) * (double)n_theta);
+    if (ti >= n_theta) ti = n_theta - 1;
+
+    return ri * n_theta + ti;
+}
+
+static int check_xor6_cayley_klein(const Quat *w, int n_r, int n_theta) {
+    int total_cells = n_r * n_theta;
+    int seen[MAX_S2_CELLS + 1];
+    int mask, i, cell;
+
+    if (total_cells > MAX_S2_CELLS) return 0;
+    for (i = 0; i <= total_cells; i++) seen[i] = 0;
+
+    for (mask = 0; mask < 64; mask++) {
+        Quat sum = quat_make(0, 0, 0, 0);
+        int par = 0;
+
+        for (i = 0; i < 6; i++) {
+            if (mask & (1 << i)) {
+                sum = quat_add(sum, w[i]);
+                par ^= 1;
+            }
+        }
+
+        if (quat_norm(sum) < 1e-12) {
+            cell = total_cells;
+        } else {
+            sum = quat_normalize(sum);
+            cell = cayley_klein_cell(sum, n_r, n_theta);
+        }
+
+        seen[cell] |= (1 << par);
+        if (seen[cell] == 3) return 0;
+    }
+    return 1;
+}
+
+/* ================================================================
+ * 24-cell Voronoi (from Demo 66, for comparison)
+ * ================================================================ */
+
+static int voronoi_cell_24(Quat q) {
+    int i, best = 0;
+    double best_sim = -2.0;
+    for (i = 0; i < qcat_size; i++) {
+        double sim = fabs(quat_dot(q, qcat[i]));
+        if (sim > best_sim) { best_sim = sim; best = i; }
+    }
+    return best;
+}
+
+static int check_xor6_voronoi_24(const Quat *w) {
+    int seen[MAX_QCAT + 1];
+    int mask, i, cell;
+
+    for (i = 0; i <= qcat_size; i++) seen[i] = 0;
+
+    for (mask = 0; mask < 64; mask++) {
+        Quat sum = quat_make(0, 0, 0, 0);
+        int par = 0;
+        for (i = 0; i < 6; i++) {
+            if (mask & (1 << i)) {
+                sum = quat_add(sum, w[i]);
+                par ^= 1;
+            }
+        }
+        if (quat_norm(sum) < 1e-12) {
+            cell = qcat_size;
+        } else {
+            sum = quat_normalize(sum);
+            cell = voronoi_cell_24(sum);
+        }
+        seen[cell] |= (1 << par);
+        if (seen[cell] == 3) return 0;
+    }
+    return 1;
+}
+
+/* ================================================================
+ * Part A: Eigenvector extraction
+ * ================================================================ */
+
+static void part_a_eigenvectors(void) {
+    char msg[256];
+    int i, n_defined = 0, n_undef = 0;
+    int n_trace_ok = 0;
+
+    printf("\n=== Part A: Eigenvector extraction ===\n");
+
+    init_su2_generators();
+    build_catalogs();
+    build_eigen_catalog();
+
+    printf("  INFO: Quaternion catalog: %d values from %d braids\n",
+           qcat_size, qcat_braid_count);
+    printf("  INFO: Bracket catalog: %d values\n", bcat_size);
+    printf("  INFO: Distinct eigenvalue angles: %d\n", angle_cat_size);
+    printf("  INFO: Distinct eigenvector directions (mod +-): %d\n",
+           dir_cat_size);
+
+    /* A1: Catalog built */
+    sprintf(msg, "Quaternion catalog: %d values (expected 24)", qcat_size);
+    check(msg, qcat_size == 24);
+
+    /* A2: Eigenvector directions counted */
+    sprintf(msg, "Eigenvector directions: %d (mod +-)", dir_cat_size);
+    check(msg, dir_cat_size > 0);
+
+    /* A3: Eigenvalue angles counted */
+    sprintf(msg, "Eigenvalue angles: %d distinct", angle_cat_size);
+    check(msg, angle_cat_size > 0);
+
+    /* Print first 24 eigen decompositions */
+    printf("  INFO: Eigenvalue/eigenvector decomposition:\n");
+    for (i = 0; i < qcat_size && i < 30; i++) {
+        printf("    [%2d] q=(%+.3f,%+.3f,%+.3f,%+.3f)  "
+               "theta=%.4f (%.1f deg)  axis=(%+.4f,%+.4f,%+.4f)%s\n",
+               i, qcat[i].a, qcat[i].b, qcat[i].c, qcat[i].d,
+               ecat[i].theta, ecat[i].theta * 180.0 / M_PI,
+               ecat[i].ax, ecat[i].ay, ecat[i].az,
+               ecat[i].axis_defined ? "" : " [DEGENERATE]");
+    }
+
+    /* A4: Trace sanity check: trace(SU2) = 2*cos(theta) = 2*Re(q) */
+    for (i = 0; i < qcat_size; i++) {
+        double trace_val = 2.0 * qcat[i].a;
+        double trace_from_theta;
+        trace_from_theta = 2.0 * cos(ecat[i].theta);
+        if (fabs(fabs(trace_val) - fabs(trace_from_theta)) < 1e-10)
+            n_trace_ok++;
+    }
+    sprintf(msg, "Trace = 2*cos(theta) for all %d quaternions", qcat_size);
+    check(msg, n_trace_ok == qcat_size);
+
+    /* Count defined vs undefined axes */
+    for (i = 0; i < qcat_size; i++) {
+        if (ecat[i].axis_defined) n_defined++;
+        else n_undef++;
+    }
+    printf("  INFO: Axes defined: %d, undefined: %d\n", n_defined, n_undef);
+
+    /* A5: All defined axes are unit vectors */
+    {
+        int all_unit = 1;
+        double max_err = 0.0;
+        for (i = 0; i < qcat_size; i++) {
+            if (ecat[i].axis_defined) {
+                double n2 = ecat[i].ax*ecat[i].ax + ecat[i].ay*ecat[i].ay +
+                            ecat[i].az*ecat[i].az;
+                double err = fabs(n2 - 1.0);
+                if (err > max_err) max_err = err;
+                if (err > 1e-10) all_unit = 0;
+            }
+        }
+        sprintf(msg, "All axes are unit vectors (max err=%.2e)", max_err);
+        check(msg, all_unit);
+    }
+
+    /* A6: Count (angle, direction) pairs vs quaternions vs brackets */
+    {
+        /* Count distinct (angle_idx, dir_idx) pairs */
+        int n_pairs = 0;
+        int seen_pairs[128][128];
+        memset(seen_pairs, 0, sizeof(seen_pairs));
+        for (i = 0; i < qcat_size; i++) {
+            int ai = pair_cat[i][0];
+            int di = pair_cat[i][1];
+            if (ai >= 0 && di >= 0 && ai < 128 && di < 128) {
+                if (!seen_pairs[ai][di]) {
+                    seen_pairs[ai][di] = 1;
+                    n_pairs++;
+                }
+            } else if (ai >= 0 && di < 0) {
+                /* Degenerate axis: count as unique pair per angle */
+                n_pairs++;
+            }
+        }
+        printf("  INFO: Distinct (angle, direction) pairs: %d\n", n_pairs);
+        printf("  INFO: Distinct quaternions (mod +-): %d\n", qcat_size);
+        printf("  INFO: Distinct bracket values: %d\n", bcat_size);
+
+        sprintf(msg, "(angle,dir) pairs: %d vs %d quaternions vs %d brackets",
+                n_pairs, qcat_size, bcat_size);
+        check(msg, n_pairs > 0);
+    }
+
+    /* A7: Print eigenvalue angles in sorted order */
+    {
+        double sorted[MAX_ECAT];
+        int j;
+        memcpy(sorted, angle_cat, (size_t)angle_cat_size * sizeof(double));
+        for (i = 0; i < angle_cat_size - 1; i++) {
+            for (j = i + 1; j < angle_cat_size; j++) {
+                if (sorted[j] < sorted[i]) {
+                    double tmp = sorted[i];
+                    sorted[i] = sorted[j];
+                    sorted[j] = tmp;
+                }
+            }
+        }
+        printf("  INFO: Eigenvalue angles (sorted, radians):\n");
+        for (i = 0; i < angle_cat_size; i++) {
+            printf("    theta[%d] = %.6f (%.1f deg, pi*%.4f)\n",
+                   i, sorted[i], sorted[i] * 180.0 / M_PI,
+                   sorted[i] / M_PI);
+        }
+    }
+
+    /* A8: Print eigenvector directions */
+    {
+        printf("  INFO: Eigenvector directions on S^2 (mod +-):\n");
+        for (i = 0; i < dir_cat_size && i < 30; i++) {
+            printf("    dir[%2d] = (%+.4f, %+.4f, %+.4f)\n",
+                   i, dir_cat[i][0], dir_cat[i][1], dir_cat[i][2]);
+        }
+    }
+
+    /* A9: Angle-sharing analysis — which directions share eigenvalue angles? */
+    {
+        int di, ai2;
+        int n_shared = 0, n_unique = 0;
+
+        printf("  INFO: Direction-angle sharing analysis:\n");
+        for (di = 0; di < dir_cat_size; di++) {
+            int angles_at_dir[MAX_ECAT];
+            int n_angles_at_dir = 0;
+            int j2;
+
+            for (i = 0; i < qcat_size; i++) {
+                if (pair_cat[i][1] == di) {
+                    ai2 = pair_cat[i][0];
+                    /* Check if already seen this angle at this direction */
+                    {
+                        int found = 0;
+                        for (j2 = 0; j2 < n_angles_at_dir; j2++) {
+                            if (angles_at_dir[j2] == ai2) { found = 1; break; }
+                        }
+                        if (!found && n_angles_at_dir < MAX_ECAT) {
+                            angles_at_dir[n_angles_at_dir++] = ai2;
+                        }
+                    }
+                }
+            }
+            printf("    dir[%2d] (%+.3f,%+.3f,%+.3f): %d angle(s)",
+                   di, dir_cat[di][0], dir_cat[di][1], dir_cat[di][2],
+                   n_angles_at_dir);
+            for (j2 = 0; j2 < n_angles_at_dir; j2++) {
+                printf(" %.0f°",
+                       angle_cat[angles_at_dir[j2]] * 180.0 / M_PI);
+            }
+            printf("\n");
+
+            if (n_angles_at_dir > 1) n_shared++;
+            else n_unique++;
+        }
+        printf("  INFO: Directions with unique angle: %d\n", n_unique);
+        printf("  INFO: Directions shared across angles: %d\n", n_shared);
+
+        sprintf(msg, "Angle-sharing: %d unique, %d shared of %d directions",
+                n_unique, n_shared, dir_cat_size);
+        check(msg, 1); /* info test */
+    }
+}
+
+/* ================================================================
+ * Part B: S^2 activation (eigenvector direction)
+ * ================================================================ */
+
+static void part_b_s2_activation(void) {
+    char msg[256];
+    int ai, aj, ak;
+    int n_tested, n_pass_q;
+
+    printf("\n=== Part B: S^2 activation (eigenvector) ===\n");
+
+    /* We search antipodal pairs only (3 pairs = 6 weights)
+     * based on Demo 65+66 findings. */
+
+    {
+        struct {
+            const char *name;
+            s2_cell_fn fn;
+            int n_cells;
+        } configs[] = {
+            { "Lat/Lon 4x4",     s2_latlon_4x4,     16 },
+            { "Lat/Lon 6x6",     s2_latlon_6x6,     36 },
+            { "Lat/Lon 8x8",     s2_latlon_8x8,     64 },
+            { "Octahedral",      s2_octahedral_w,    6  },
+            { "Icosahedral",     s2_icosahedral_w,   12 },
+            { "Cuboctahedral",   s2_cuboctahedral_w, 12 }
+        };
+        int nc = 6;
+        int ci;
+
+        printf("  INFO: Searching XOR6 with eigenvector S^2 activation\n");
+        printf("  INFO: Using antipodal pairs from %d-value quaternion catalog\n",
+               qcat_size);
+
+        for (ci = 0; ci < nc; ci++) {
+            n_pass_q = 0;
+            n_tested = 0;
+
+            printf("    %s (%d cells): ", configs[ci].name,
+                   configs[ci].n_cells);
+            fflush(stdout);
+
+            for (ai = 0; ai < qcat_size; ai++) {
+                for (aj = ai + 1; aj < qcat_size; aj++) {
+                    for (ak = aj + 1; ak < qcat_size; ak++) {
+                        Quat w6[6];
+                        w6[0] = qcat[ai];
+                        w6[1] = quat_neg(qcat[ai]);
+                        w6[2] = qcat[aj];
+                        w6[3] = quat_neg(qcat[aj]);
+                        w6[4] = qcat[ak];
+                        w6[5] = quat_neg(qcat[ak]);
+                        if (check_xor6_s2(w6, configs[ci].fn,
+                                          configs[ci].n_cells))
+                            n_pass_q++;
+                        n_tested++;
+                    }
+                }
+            }
+            printf("%d/%d pass\n", n_pass_q, n_tested);
+        }
+
+        /* Test: at least one S^2 activation finds solutions */
+        /* (We expect this to work based on Demo 66 findings) */
+        /* Re-run 8x8 to get count for check */
+        {
+            n_pass_q = 0;
+            n_tested = 0;
+            for (ai = 0; ai < qcat_size; ai++) {
+                for (aj = ai + 1; aj < qcat_size; aj++) {
+                    for (ak = aj + 1; ak < qcat_size; ak++) {
+                        Quat w6[6];
+                        w6[0] = qcat[ai];
+                        w6[1] = quat_neg(qcat[ai]);
+                        w6[2] = qcat[aj];
+                        w6[3] = quat_neg(qcat[aj]);
+                        w6[4] = qcat[ak];
+                        w6[5] = quat_neg(qcat[ak]);
+                        if (check_xor6_s2(w6, s2_latlon_8x8, 64))
+                            n_pass_q++;
+                        n_tested++;
+                    }
+                }
+            }
+            sprintf(msg, "S^2 Lat/Lon 8x8 XOR6: %d solutions from %d tuples",
+                    n_pass_q, n_tested);
+            check(msg, 1); /* info test — always pass, record count */
+        }
+    }
+
+    /* B2: Compare with 24-cell Voronoi (25 cells) from Demo 66 */
+    {
+        int n_voronoi = 0;
+        n_tested = 0;
+
+        printf("  INFO: 24-cell Voronoi comparison (25 cells):\n");
+        for (ai = 0; ai < qcat_size; ai++) {
+            for (aj = ai + 1; aj < qcat_size; aj++) {
+                for (ak = aj + 1; ak < qcat_size; ak++) {
+                    Quat w6[6];
+                    w6[0] = qcat[ai];
+                    w6[1] = quat_neg(qcat[ai]);
+                    w6[2] = qcat[aj];
+                    w6[3] = quat_neg(qcat[aj]);
+                    w6[4] = qcat[ak];
+                    w6[5] = quat_neg(qcat[ak]);
+                    if (check_xor6_voronoi_24(w6))
+                        n_voronoi++;
+                    n_tested++;
+                }
+            }
+        }
+        printf("    24-cell Voronoi (25 cells): %d/%d pass\n",
+               n_voronoi, n_tested);
+
+        sprintf(msg, "24-cell Voronoi XOR6: %d solutions (expected 35)",
+                n_voronoi);
+        check(msg, n_voronoi == 35);
+    }
+
+    /* B2b: Custom 13-direction Voronoi on S^2 */
+    {
+        int n_custom13 = 0;
+        n_tested = 0;
+
+        printf("  INFO: Custom 13-direction Voronoi (%d+1 = %d cells):\n",
+               dir_cat_size, dir_cat_size + 1);
+        for (ai = 0; ai < qcat_size; ai++) {
+            for (aj = ai + 1; aj < qcat_size; aj++) {
+                for (ak = aj + 1; ak < qcat_size; ak++) {
+                    Quat w6[6];
+                    w6[0] = qcat[ai];
+                    w6[1] = quat_neg(qcat[ai]);
+                    w6[2] = qcat[aj];
+                    w6[3] = quat_neg(qcat[aj]);
+                    w6[4] = qcat[ak];
+                    w6[5] = quat_neg(qcat[ak]);
+                    if (check_xor6_s2(w6, s2_cell_custom13,
+                                      dir_cat_size))
+                        n_custom13++;
+                    n_tested++;
+                }
+            }
+        }
+        printf("    Custom 13-dir Voronoi (%d cells): %d/%d pass\n",
+               dir_cat_size + 1, n_custom13, n_tested);
+
+        sprintf(msg, "Custom 13-dir S^2 Voronoi: %d solutions at %d cells",
+                n_custom13, dir_cat_size + 1);
+        check(msg, 1); /* info test */
+    }
+
+    /* B3: Test that eigenvector extraction is consistent for generators */
+    {
+        EigenData e1 = quat_to_eigen(q_gen[1]);
+        EigenData e2 = quat_to_eigen(q_gen[2]);
+        int ok;
+
+        printf("  INFO: Generator eigenvectors:\n");
+        printf("    sigma_1: theta=%.4f (%.1f deg)  "
+               "axis=(%+.4f,%+.4f,%+.4f)\n",
+               e1.theta, e1.theta * 180.0 / M_PI,
+               e1.ax, e1.ay, e1.az);
+        printf("    sigma_2: theta=%.4f (%.1f deg)  "
+               "axis=(%+.4f,%+.4f,%+.4f)\n",
+               e2.theta, e2.theta * 180.0 / M_PI,
+               e2.ax, e2.ay, e2.az);
+
+        /* sigma_1 = (1+i)/sqrt(2) -> theta=pi/4, axis=(1,0,0) */
+        ok = fabs(e1.theta - M_PI / 4.0) < 1e-10;
+        sprintf(msg, "sigma_1 eigenvalue angle = pi/4 (%.6f)", e1.theta);
+        check(msg, ok);
+
+        /* sigma_2 = (1-k)/sqrt(2) -> theta=pi/4, axis=(0,0,-1) */
+        ok = fabs(e2.theta - M_PI / 4.0) < 1e-10;
+        sprintf(msg, "sigma_2 eigenvalue angle = pi/4 (%.6f)", e2.theta);
+        check(msg, ok);
+    }
+
+    /* B4: Test octahedral and icosahedral vertex structure */
+    {
+        int i;
+        int oct_used[6], ico_used[12];
+        int n_oct = 0, n_ico = 0;
+        memset(oct_used, 0, sizeof(oct_used));
+        memset(ico_used, 0, sizeof(ico_used));
+
+        for (i = 0; i < qcat_size; i++) {
+            if (ecat[i].axis_defined) {
+                int oc = s2_cell_octahedral(ecat[i].ax, ecat[i].ay,
+                                            ecat[i].az);
+                int ic = s2_cell_icosahedral(ecat[i].ax, ecat[i].ay,
+                                             ecat[i].az);
+                if (oc >= 0 && oc < 6) oct_used[oc] = 1;
+                if (ic >= 0 && ic < 12) ico_used[ic] = 1;
+            }
+        }
+        for (i = 0; i < 6; i++) n_oct += oct_used[i];
+        for (i = 0; i < 12; i++) n_ico += ico_used[i];
+
+        printf("  INFO: Octahedral cells used by eigenvectors: %d/6\n",
+               n_oct);
+        printf("  INFO: Icosahedral cells used by eigenvectors: %d/12\n",
+               n_ico);
+
+        sprintf(msg, "Eigenvectors cover %d/6 octahedral cells", n_oct);
+        check(msg, n_oct > 0);
+    }
+}
+
+/* ================================================================
+ * Part C: Eigenvalue-only activation
+ * ================================================================ */
+
+static void part_c_eigenvalue(void) {
+    char msg[256];
+    int ai, aj, ak;
+    int n_tested;
+
+    printf("\n=== Part C: Eigenvalue-only activation ===\n");
+    printf("  INFO: Partition [0,pi] into k sectors; cell = eigenvalue angle\n");
+
+    {
+        int ks[] = {4, 6, 8, 12, 16, 24, 32};
+        int nk = 7;
+        int ki;
+
+        for (ki = 0; ki < nk; ki++) {
+            int k = ks[ki];
+            int n_pass_q = 0;
+            n_tested = 0;
+
+            printf("    k=%d sectors: ", k);
+            fflush(stdout);
+
+            for (ai = 0; ai < qcat_size; ai++) {
+                for (aj = ai + 1; aj < qcat_size; aj++) {
+                    for (ak = aj + 1; ak < qcat_size; ak++) {
+                        Quat w6[6];
+                        w6[0] = qcat[ai];
+                        w6[1] = quat_neg(qcat[ai]);
+                        w6[2] = qcat[aj];
+                        w6[3] = quat_neg(qcat[aj]);
+                        w6[4] = qcat[ak];
+                        w6[5] = quat_neg(qcat[ak]);
+                        if (check_xor6_eigenvalue(w6, k))
+                            n_pass_q++;
+                        n_tested++;
+                    }
+                }
+            }
+            printf("%d/%d pass\n", n_pass_q, n_tested);
+        }
+    }
+
+    /* C2: Check if eigenvalue-only matches trace S^1 at k=24 */
+    {
+        int n_eigen24 = 0;
+        n_tested = 0;
+        for (ai = 0; ai < qcat_size; ai++) {
+            for (aj = ai + 1; aj < qcat_size; aj++) {
+                for (ak = aj + 1; ak < qcat_size; ak++) {
+                    Quat w6[6];
+                    w6[0] = qcat[ai];
+                    w6[1] = quat_neg(qcat[ai]);
+                    w6[2] = qcat[aj];
+                    w6[3] = quat_neg(qcat[aj]);
+                    w6[4] = qcat[ak];
+                    w6[5] = quat_neg(qcat[ak]);
+                    if (check_xor6_eigenvalue(w6, 24))
+                        n_eigen24++;
+                    n_tested++;
+                }
+            }
+        }
+        sprintf(msg, "Eigenvalue k=24: %d solutions from %d tuples",
+                n_eigen24, n_tested);
+        check(msg, 1); /* info test */
+    }
+}
+
+/* ================================================================
+ * Part D: Hopf decomposition
+ * ================================================================ */
+
+static void part_d_hopf(void) {
+    char msg[256];
+    int ai, aj, ak;
+    int n_tested;
+
+    printf("\n=== Part D: Hopf decomposition ===\n");
+
+    /* Print Hopf coordinates for catalog */
+    {
+        int i;
+        printf("  INFO: Hopf coordinates for quaternion catalog:\n");
+        for (i = 0; i < qcat_size && i < 24; i++) {
+            HopfData h = quat_to_hopf(qcat[i]);
+            printf("    [%2d] q=(%+.3f,%+.3f,%+.3f,%+.3f)  "
+                   "eta=%.3f (%.1f deg)  xi1=%.3f  xi2=%.3f\n",
+                   i, qcat[i].a, qcat[i].b, qcat[i].c, qcat[i].d,
+                   h.eta, h.eta * 180.0 / M_PI, h.xi1, h.xi2);
+        }
+    }
+
+    /* D1: Hopf S^2 base activation */
+    printf("  INFO: Hopf S^2 base (eta x xi1 grid):\n");
+    {
+        int configs[][2] = {{4,4},{6,6},{8,8},{4,6},{3,4}};
+        int nc = 5;
+        int ci;
+
+        for (ci = 0; ci < nc; ci++) {
+            int ne = configs[ci][0], nl = configs[ci][1];
+            int total = ne * nl;
+            int n_pass_q = 0;
+            n_tested = 0;
+
+            printf("    %dx%d = %d cells: ", ne, nl, total);
+            fflush(stdout);
+
+            for (ai = 0; ai < qcat_size; ai++) {
+                for (aj = ai + 1; aj < qcat_size; aj++) {
+                    for (ak = aj + 1; ak < qcat_size; ak++) {
+                        Quat w6[6];
+                        w6[0] = qcat[ai];
+                        w6[1] = quat_neg(qcat[ai]);
+                        w6[2] = qcat[aj];
+                        w6[3] = quat_neg(qcat[aj]);
+                        w6[4] = qcat[ak];
+                        w6[5] = quat_neg(qcat[ak]);
+                        if (check_xor6_hopf_base(w6, ne, nl))
+                            n_pass_q++;
+                        n_tested++;
+                    }
+                }
+            }
+            printf("%d/%d pass\n", n_pass_q, n_tested);
+        }
+    }
+
+    /* D2: Hopf phase-only (xi1) activation */
+    printf("  INFO: Hopf phase-only (xi1 sectors):\n");
+    {
+        int ks[] = {4, 6, 8, 12, 16, 24, 32};
+        int nk = 7;
+        int ki;
+
+        for (ki = 0; ki < nk; ki++) {
+            int k = ks[ki];
+            int n_pass_q = 0;
+            n_tested = 0;
+
+            printf("    k=%d sectors: ", k);
+            fflush(stdout);
+
+            for (ai = 0; ai < qcat_size; ai++) {
+                for (aj = ai + 1; aj < qcat_size; aj++) {
+                    for (ak = aj + 1; ak < qcat_size; ak++) {
+                        Quat w6[6];
+                        w6[0] = qcat[ai];
+                        w6[1] = quat_neg(qcat[ai]);
+                        w6[2] = qcat[aj];
+                        w6[3] = quat_neg(qcat[aj]);
+                        w6[4] = qcat[ak];
+                        w6[5] = quat_neg(qcat[ak]);
+                        if (check_xor6_hopf_phase(w6, k))
+                            n_pass_q++;
+                        n_tested++;
+                    }
+                }
+            }
+            printf("%d/%d pass\n", n_pass_q, n_tested);
+        }
+    }
+
+    /* D3: Best Hopf base result */
+    {
+        int n_best = 0;
+        n_tested = 0;
+        for (ai = 0; ai < qcat_size; ai++) {
+            for (aj = ai + 1; aj < qcat_size; aj++) {
+                for (ak = aj + 1; ak < qcat_size; ak++) {
+                    Quat w6[6];
+                    w6[0] = qcat[ai];
+                    w6[1] = quat_neg(qcat[ai]);
+                    w6[2] = qcat[aj];
+                    w6[3] = quat_neg(qcat[aj]);
+                    w6[4] = qcat[ak];
+                    w6[5] = quat_neg(qcat[ak]);
+                    if (check_xor6_hopf_base(w6, 8, 8))
+                        n_best++;
+                    n_tested++;
+                }
+            }
+        }
+        sprintf(msg, "Hopf base 8x8: %d solutions from %d tuples",
+                n_best, n_tested);
+        check(msg, 1); /* info test */
+    }
+}
+
+/* ================================================================
+ * Part E: Cayley-Klein activation
+ * ================================================================ */
+
+static void part_e_cayley_klein(void) {
+    char msg[256];
+    int ai, aj, ak;
+    int n_tested;
+
+    printf("\n=== Part E: Cayley-Klein activation ===\n");
+    printf("  INFO: 2D grid on (|alpha|, arg(alpha))\n");
+
+    {
+        int configs[][2] = {{2,4},{2,8},{3,4},{3,8},{4,4},{4,8},{4,16},{6,6},{8,8}};
+        int nc = 9;
+        int ci;
+
+        for (ci = 0; ci < nc; ci++) {
+            int nr = configs[ci][0], nt = configs[ci][1];
+            int total = nr * nt;
+            int n_pass_q = 0;
+            n_tested = 0;
+
+            printf("    %dx%d = %d cells: ", nr, nt, total);
+            fflush(stdout);
+
+            for (ai = 0; ai < qcat_size; ai++) {
+                for (aj = ai + 1; aj < qcat_size; aj++) {
+                    for (ak = aj + 1; ak < qcat_size; ak++) {
+                        Quat w6[6];
+                        w6[0] = qcat[ai];
+                        w6[1] = quat_neg(qcat[ai]);
+                        w6[2] = qcat[aj];
+                        w6[3] = quat_neg(qcat[aj]);
+                        w6[4] = qcat[ak];
+                        w6[5] = quat_neg(qcat[ak]);
+                        if (check_xor6_cayley_klein(w6, nr, nt))
+                            n_pass_q++;
+                        n_tested++;
+                    }
+                }
+            }
+            printf("%d/%d pass\n", n_pass_q, n_tested);
+        }
+    }
+
+    /* E2: Best Cayley-Klein result */
+    {
+        int n_best = 0;
+        n_tested = 0;
+        for (ai = 0; ai < qcat_size; ai++) {
+            for (aj = ai + 1; aj < qcat_size; aj++) {
+                for (ak = aj + 1; ak < qcat_size; ak++) {
+                    Quat w6[6];
+                    w6[0] = qcat[ai];
+                    w6[1] = quat_neg(qcat[ai]);
+                    w6[2] = qcat[aj];
+                    w6[3] = quat_neg(qcat[aj]);
+                    w6[4] = qcat[ak];
+                    w6[5] = quat_neg(qcat[ak]);
+                    if (check_xor6_cayley_klein(w6, 8, 8))
+                        n_best++;
+                    n_tested++;
+                }
+            }
+        }
+        sprintf(msg, "Cayley-Klein 8x8: %d solutions from %d tuples",
+                n_best, n_tested);
+        check(msg, 1); /* info test */
+    }
+}
+
+/* ================================================================
+ * Part F: Head-to-head comparison summary
+ * ================================================================ */
+
+static void part_f_comparison(void) {
+    char msg[256];
+    int ai, aj, ak;
+    int n_tested;
+
+    /* Summary counts at comparable cell counts */
+    int n_s2_16 = 0, n_s2_custom14 = 0;
+    int n_eigen_4 = 0, n_eigen_8 = 0, n_eigen_24 = 0;
+    int n_hopf_16 = 0, n_hopf_phase_24 = 0;
+    int n_ck_16 = 0;
+    int n_voronoi_25 = 0;
+
+    printf("\n=== Part F: Head-to-head comparison ===\n");
+
+    n_tested = 0;
+    for (ai = 0; ai < qcat_size; ai++) {
+        for (aj = ai + 1; aj < qcat_size; aj++) {
+            for (ak = aj + 1; ak < qcat_size; ak++) {
+                Quat w6[6];
+                w6[0] = qcat[ai];
+                w6[1] = quat_neg(qcat[ai]);
+                w6[2] = qcat[aj];
+                w6[3] = quat_neg(qcat[aj]);
+                w6[4] = qcat[ak];
+                w6[5] = quat_neg(qcat[ak]);
+
+                /* S^2 eigenvector lat/lon 4x4 = 16 cells */
+                if (check_xor6_s2(w6, s2_latlon_4x4, 16)) n_s2_16++;
+
+                /* S^2 custom 13-dir Voronoi = 14 cells */
+                if (check_xor6_s2(w6, s2_cell_custom13, dir_cat_size))
+                    n_s2_custom14++;
+
+                /* Eigenvalue k=4 */
+                if (check_xor6_eigenvalue(w6, 4)) n_eigen_4++;
+
+                /* Eigenvalue k=8 */
+                if (check_xor6_eigenvalue(w6, 8)) n_eigen_8++;
+
+                /* Eigenvalue k=24 */
+                if (check_xor6_eigenvalue(w6, 24)) n_eigen_24++;
+
+                /* Hopf base 4x4 = 16 cells */
+                if (check_xor6_hopf_base(w6, 4, 4)) n_hopf_16++;
+
+                /* Hopf phase k=24 */
+                if (check_xor6_hopf_phase(w6, 24)) n_hopf_phase_24++;
+
+                /* Cayley-Klein 4x4 = 16 cells */
+                if (check_xor6_cayley_klein(w6, 4, 4)) n_ck_16++;
+
+                /* 24-cell Voronoi */
+                if (check_xor6_voronoi_24(w6)) n_voronoi_25++;
+
+                n_tested++;
+            }
+        }
+    }
+
+    printf("  INFO: Head-to-head comparison (%d tuples tested):\n", n_tested);
+    printf("  +---------------------------------+------+-----------+\n");
+    printf("  | Coordinate System               | Cells| Solutions |\n");
+    printf("  +---------------------------------+------+-----------+\n");
+    printf("  | Eigenvector S^2 LatLon 4x4      |   16 | %9d |\n", n_s2_16);
+    printf("  | Eigenvector S^2 Custom 13-dir    |   14 | %9d |\n", n_s2_custom14);
+    printf("  | Eigenvalue-only k=4              |    5 | %9d |\n", n_eigen_4);
+    printf("  | Eigenvalue-only k=8              |    9 | %9d |\n", n_eigen_8);
+    printf("  | Eigenvalue-only k=24             |   25 | %9d |\n", n_eigen_24);
+    printf("  | Hopf base 4x4                    |   16 | %9d |\n", n_hopf_16);
+    printf("  | Hopf phase k=24                  |   25 | %9d |\n", n_hopf_phase_24);
+    printf("  | Cayley-Klein 4x4                 |   16 | %9d |\n", n_ck_16);
+    printf("  | 24-cell Voronoi (S^3)            |   25 | %9d |\n", n_voronoi_25);
+    printf("  +---------------------------------+------+-----------+\n");
+
+    sprintf(msg, "Comparison complete: S^2 custom=%d, Voronoi=%d, Eigen24=%d",
+            n_s2_custom14, n_voronoi_25, n_eigen_24);
+    check(msg, 1); /* info test */
+
+    /* F2: Verify 24-cell still gets 35 */
+    sprintf(msg, "24-cell Voronoi consistency: %d (expected 35)", n_voronoi_25);
+    check(msg, n_voronoi_25 == 35);
+}
+
+/* ================================================================
+ * Main
+ * ================================================================ */
+
+int main(void) {
+    /* Suppress unused function warnings for utility functions */
+    (void)quat_norm2;
+    (void)cyc8_to_cx;
+
+    printf("KNOTAPEL DEMO 67: Coordinate System Zoo\n");
+    printf("========================================\n");
+
+    part_a_eigenvectors();
+    part_b_s2_activation();
+    part_c_eigenvalue();
+    part_d_hopf();
+    part_e_cayley_klein();
+    part_f_comparison();
+
+    printf("\n========================================\n");
+    printf("Results: %d pass, %d fail\n", n_pass, n_fail);
+    return n_fail > 0 ? 1 : 0;
+}

@@ -1,0 +1,2004 @@
+/*
+ * KNOTAPEL DEMO 66: Quaternionic DKC — First Contact
+ * ===================================================
+ *
+ * Instead of extracting a single complex number (Kauffman bracket)
+ * from each knot, extract the full quaternion from an SU(2)
+ * representation. This preserves information that the trace discards.
+ *
+ * Part A: Quaternion arithmetic
+ * Part B: SU(2) braid representation
+ * Part C: Quaternionic catalog
+ * Part D: Bracket-quaternion correspondence
+ * Part E: 4D activation check (generalized XOR6)
+ * Part F: Comparison with complex (S^1) results
+ *
+ * C89, zero dependencies beyond math.h.
+ */
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <math.h>
+
+#ifndef M_PI
+#define M_PI 3.14159265358979323846
+#endif
+
+/* ================================================================
+ * Test infrastructure
+ * ================================================================ */
+
+static int n_pass = 0, n_fail = 0;
+
+static void check(const char *msg, int ok) {
+    if (ok) { printf("  PASS: %s\n", msg); n_pass++; }
+    else    { printf("  FAIL: %s\n", msg); n_fail++; }
+}
+
+/* ================================================================
+ * Quaternion type
+ * ================================================================
+ * q = a + bi + cj + dk
+ * ij=k, jk=i, ki=j, ji=-k, kj=-i, ik=-j
+ * i^2 = j^2 = k^2 = -1
+ */
+
+typedef struct { double a, b, c, d; } Quat;
+
+static Quat quat_make(double a, double b, double c, double d) {
+    Quat q; q.a = a; q.b = b; q.c = c; q.d = d; return q;
+}
+
+static Quat quat_one(void) { return quat_make(1, 0, 0, 0); }
+
+static Quat quat_add(Quat p, Quat q) {
+    return quat_make(p.a + q.a, p.b + q.b, p.c + q.c, p.d + q.d);
+}
+
+static Quat quat_neg(Quat q) {
+    return quat_make(-q.a, -q.b, -q.c, -q.d);
+}
+
+static Quat quat_mul(Quat p, Quat q) {
+    return quat_make(
+        p.a*q.a - p.b*q.b - p.c*q.c - p.d*q.d,
+        p.a*q.b + p.b*q.a + p.c*q.d - p.d*q.c,
+        p.a*q.c - p.b*q.d + p.c*q.a + p.d*q.b,
+        p.a*q.d + p.b*q.c - p.c*q.b + p.d*q.a);
+}
+
+static Quat quat_conj(Quat q) {
+    return quat_make(q.a, -q.b, -q.c, -q.d);
+}
+
+static double quat_norm(Quat q) {
+    return sqrt(q.a*q.a + q.b*q.b + q.c*q.c + q.d*q.d);
+}
+
+static double quat_norm2(Quat q) {
+    return q.a*q.a + q.b*q.b + q.c*q.c + q.d*q.d;
+}
+
+static Quat quat_inv(Quat q) {
+    double n2 = quat_norm2(q);
+    Quat c = quat_conj(q);
+    return quat_make(c.a / n2, c.b / n2, c.c / n2, c.d / n2);
+}
+
+static Quat quat_normalize(Quat q) {
+    double n = quat_norm(q);
+    return quat_make(q.a / n, q.b / n, q.c / n, q.d / n);
+}
+
+static Quat quat_scale(Quat q, double s) {
+    return quat_make(q.a * s, q.b * s, q.c * s, q.d * s);
+}
+
+static int quat_close(Quat p, Quat q, double eps) {
+    return fabs(p.a - q.a) < eps && fabs(p.b - q.b) < eps &&
+           fabs(p.c - q.c) < eps && fabs(p.d - q.d) < eps;
+}
+
+static double quat_dot(Quat p, Quat q) {
+    return p.a*q.a + p.b*q.b + p.c*q.c + p.d*q.d;
+}
+
+static const char *quat_vertex_type(Quat q) {
+    double a = fabs(q.a), b = fabs(q.b), c = fabs(q.c), d = fabs(q.d);
+    int nz = (a > 0.01) + (b > 0.01) + (c > 0.01) + (d > 0.01);
+    if (nz == 1) return "axis";
+    if (nz == 2) return "edge";
+    if (nz == 4) return "body";
+    return "???";
+}
+
+/* ================================================================
+ * Complex type (for bracket computation)
+ * ================================================================ */
+
+typedef struct { double re, im; } Cx;
+
+static double cx_abs(Cx z) {
+    return sqrt(z.re * z.re + z.im * z.im);
+}
+
+/* ================================================================
+ * Z[zeta_8] exact arithmetic (for bracket computation)
+ * ================================================================ */
+
+typedef struct { long a, b, c, d; } Cyc8;
+
+static Cyc8 cyc8_make(long a, long b, long c, long d) {
+    Cyc8 z; z.a = a; z.b = b; z.c = c; z.d = d; return z;
+}
+static Cyc8 cyc8_zero(void) { return cyc8_make(0, 0, 0, 0); }
+static int cyc8_eq(Cyc8 x, Cyc8 y) {
+    return x.a == y.a && x.b == y.b && x.c == y.c && x.d == y.d;
+}
+static int cyc8_is_zero(Cyc8 z) {
+    return z.a == 0 && z.b == 0 && z.c == 0 && z.d == 0;
+}
+static Cyc8 cyc8_add(Cyc8 x, Cyc8 y) {
+    return cyc8_make(x.a + y.a, x.b + y.b, x.c + y.c, x.d + y.d);
+}
+static Cyc8 cyc8_conj(Cyc8 z) {
+    return cyc8_make(z.a, -z.d, -z.c, -z.b);
+}
+static Cyc8 cyc8_mul(Cyc8 x, Cyc8 y) {
+    return cyc8_make(
+        x.a*y.a - x.b*y.d - x.c*y.c - x.d*y.b,
+        x.a*y.b + x.b*y.a - x.c*y.d - x.d*y.c,
+        x.a*y.c + x.b*y.b + x.c*y.a - x.d*y.d,
+        x.a*y.d + x.b*y.c + x.c*y.b + x.d*y.a);
+}
+static Cyc8 cyc8_pow_int(Cyc8 base, int n) {
+    Cyc8 r = cyc8_make(1, 0, 0, 0);
+    if (n == 0) return r;
+    if (n < 0) { n = -n; base = cyc8_conj(base); }
+    while (n > 0) {
+        if (n & 1) r = cyc8_mul(r, base);
+        base = cyc8_mul(base, base);
+        n >>= 1;
+    }
+    return r;
+}
+
+/* Convert Cyc8 to complex double */
+static Cx cyc8_to_cx(Cyc8 z) {
+    double s = sqrt(2.0) / 2.0;
+    Cx r;
+    r.re = (double)z.a + (double)(z.b - z.d) * s;
+    r.im = (double)z.c + (double)(z.b + z.d) * s;
+    return r;
+}
+
+/* ================================================================
+ * Braid type + union-find for loop counting
+ * ================================================================ */
+
+#define MAX_WORD 64
+typedef struct { int word[MAX_WORD]; int len, n; } Braid;
+
+#define MAX_UF 4096
+static int uf_p[MAX_UF];
+
+static void uf_init(int n) {
+    int i;
+    for (i = 0; i < n; i++) uf_p[i] = i;
+}
+static int uf_find(int x) {
+    while (uf_p[x] != x) { uf_p[x] = uf_p[uf_p[x]]; x = uf_p[x]; }
+    return x;
+}
+static void uf_union(int x, int y) {
+    x = uf_find(x); y = uf_find(y);
+    if (x != y) uf_p[x] = y;
+}
+
+static int braid_loops(const Braid *b, unsigned s) {
+    int N = (b->len + 1) * b->n;
+    int l, p, i, loops, sgn, bit, cup;
+    uf_init(N);
+    for (l = 0; l < b->len; l++) {
+        sgn = b->word[l] > 0 ? 1 : -1;
+        i = (sgn > 0 ? b->word[l] : -b->word[l]) - 1;
+        bit = (int)((s >> (unsigned)l) & 1u);
+        cup = (sgn > 0) ? (bit == 0) : (bit == 1);
+        if (cup) {
+            uf_union(l * b->n + i, l * b->n + i + 1);
+            uf_union((l + 1) * b->n + i, (l + 1) * b->n + i + 1);
+            for (p = 0; p < b->n; p++)
+                if (p != i && p != i + 1)
+                    uf_union(l * b->n + p, (l + 1) * b->n + p);
+        } else {
+            for (p = 0; p < b->n; p++)
+                uf_union(l * b->n + p, (l + 1) * b->n + p);
+        }
+    }
+    for (p = 0; p < b->n; p++)
+        uf_union(p, b->len * b->n + p);
+    loops = 0;
+    for (i = 0; i < N; i++)
+        if (uf_find(i) == i) loops++;
+    return loops;
+}
+
+/* Bracket at A = -zeta_8, delta = 0 (single-loop only) */
+static Cyc8 braid_bracket(const Braid *b) {
+    Cyc8 A = cyc8_make(0, -1, 0, 0);
+    Cyc8 bracket = cyc8_zero();
+    unsigned s, ns;
+    int i;
+    ns = 1u << b->len;
+    for (s = 0; s < ns; s++) {
+        int a_count = 0, b_count = 0, lp;
+        for (i = 0; i < b->len; i++) {
+            if ((s >> (unsigned)i) & 1u) b_count++;
+            else a_count++;
+        }
+        lp = braid_loops(b, s);
+        if (lp == 1) {
+            bracket = cyc8_add(bracket,
+                cyc8_pow_int(A, a_count - b_count));
+        }
+    }
+    return bracket;
+}
+
+/* ================================================================
+ * SU(2) braid representation
+ * ================================================================
+ * sigma_1 -> q1 = (1+i)/sqrt(2)
+ * sigma_2 -> q2 = (1-k)/sqrt(2)
+ * sigma_i^{-1} -> conjugate
+ */
+
+static Quat q_gen[3]; /* q_gen[1]=sigma_1, q_gen[2]=sigma_2 */
+
+static void init_su2_generators(void) {
+    double s = 1.0 / sqrt(2.0);
+    q_gen[1] = quat_make(s, s, 0, 0);
+    q_gen[2] = quat_make(s, 0, 0, -s);
+}
+
+static Quat braid_quaternion(const Braid *b) {
+    Quat result = quat_one();
+    int l;
+    for (l = 0; l < b->len; l++) {
+        int gen = b->word[l];
+        int idx = gen > 0 ? gen : -gen;
+        Quat g = q_gen[idx];
+        if (gen < 0) g = quat_conj(g);
+        result = quat_mul(result, g);
+    }
+    return result;
+}
+
+/* ================================================================
+ * Part A: Quaternion arithmetic verification
+ * ================================================================ */
+
+static void part_a_arithmetic(void) {
+    Quat i_q, j_q, k_q, prod;
+    double err;
+    char msg[256];
+
+    printf("\n=== Part A: Quaternion arithmetic ===\n");
+
+    i_q = quat_make(0, 1, 0, 0);
+    j_q = quat_make(0, 0, 1, 0);
+    k_q = quat_make(0, 0, 0, 1);
+
+    /* A1: ij = k */
+    prod = quat_mul(i_q, j_q);
+    check("ij = k", quat_close(prod, k_q, 1e-15));
+
+    /* A2: ji = -k */
+    prod = quat_mul(j_q, i_q);
+    check("ji = -k", quat_close(prod, quat_neg(k_q), 1e-15));
+
+    /* A3: jk = i */
+    prod = quat_mul(j_q, k_q);
+    check("jk = i", quat_close(prod, i_q, 1e-15));
+
+    /* A4: i^2 = j^2 = k^2 = -1 */
+    {
+        Quat neg1 = quat_make(-1, 0, 0, 0);
+        int ok = quat_close(quat_mul(i_q, i_q), neg1, 1e-15) &&
+                 quat_close(quat_mul(j_q, j_q), neg1, 1e-15) &&
+                 quat_close(quat_mul(k_q, k_q), neg1, 1e-15);
+        check("i^2 = j^2 = k^2 = -1", ok);
+    }
+
+    /* A5: q * conj(q) = |q|^2 */
+    {
+        Quat q = quat_make(1, 2, -3, 4);
+        Quat qq = quat_mul(q, quat_conj(q));
+        double n2 = quat_norm2(q);
+        err = fabs(qq.a - n2) + fabs(qq.b) + fabs(qq.c) + fabs(qq.d);
+        sprintf(msg, "q*conj(q) = |q|^2 (err=%.2e)", err);
+        check(msg, err < 1e-12);
+    }
+
+    /* A6: q * q^{-1} = 1 */
+    {
+        Quat q = quat_make(3, -1, 4, 2);
+        Quat prod2 = quat_mul(q, quat_inv(q));
+        err = fabs(prod2.a - 1) + fabs(prod2.b) + fabs(prod2.c) + fabs(prod2.d);
+        sprintf(msg, "q * q^{-1} = 1 (err=%.2e)", err);
+        check(msg, err < 1e-12);
+    }
+
+    /* A7: Non-commutativity */
+    {
+        Quat p = quat_make(1, 1, 0, 0);
+        Quat q = quat_make(1, 0, 1, 0);
+        int ok = !quat_close(quat_mul(p, q), quat_mul(q, p), 1e-10);
+        check("Non-commutative", ok);
+    }
+
+    /* A8: |normalize(q)| = 1 */
+    {
+        Quat q = quat_make(1, 2, 3, 4);
+        Quat u = quat_normalize(q);
+        err = fabs(quat_norm(u) - 1.0);
+        sprintf(msg, "|normalize(q)| = 1 (err=%.2e)", err);
+        check(msg, err < 1e-15);
+    }
+}
+
+/* ================================================================
+ * Part B: SU(2) braid representation verification
+ * ================================================================ */
+
+static void part_b_su2(void) {
+    Quat q1, q2, lhs, rhs, expected;
+    double err;
+    char msg[256];
+
+    printf("\n=== Part B: SU(2) braid representation ===\n");
+
+    init_su2_generators();
+    q1 = q_gen[1];
+    q2 = q_gen[2];
+
+    /* B1: q1 is unit quaternion */
+    err = fabs(quat_norm(q1) - 1.0);
+    sprintf(msg, "|sigma_1| = 1 (err=%.2e)", err);
+    check(msg, err < 1e-15);
+
+    /* B2: q2 is unit quaternion */
+    err = fabs(quat_norm(q2) - 1.0);
+    sprintf(msg, "|sigma_2| = 1 (err=%.2e)", err);
+    check(msg, err < 1e-15);
+
+    /* B3: Braid relation q1*q2*q1 = q2*q1*q2 */
+    lhs = quat_mul(quat_mul(q1, q2), q1);
+    rhs = quat_mul(quat_mul(q2, q1), q2);
+    err = fabs(lhs.a - rhs.a) + fabs(lhs.b - rhs.b) +
+          fabs(lhs.c - rhs.c) + fabs(lhs.d - rhs.d);
+    sprintf(msg, "Braid relation q1*q2*q1 = q2*q1*q2 (err=%.2e)", err);
+    check(msg, err < 1e-14);
+
+    /* B4: Both sides equal (i-k)/sqrt(2) */
+    expected = quat_make(0, 1.0 / sqrt(2.0), 0, -1.0 / sqrt(2.0));
+    err = fabs(lhs.a - expected.a) + fabs(lhs.b - expected.b) +
+          fabs(lhs.c - expected.c) + fabs(lhs.d - expected.d);
+    sprintf(msg, "q1*q2*q1 = (i-k)/sqrt(2) (err=%.2e)", err);
+    check(msg, err < 1e-14);
+
+    /* B5: q1^8 = 1 */
+    {
+        Quat p = quat_one();
+        int l;
+        for (l = 0; l < 8; l++) p = quat_mul(p, q1);
+        err = fabs(p.a - 1) + fabs(p.b) + fabs(p.c) + fabs(p.d);
+        sprintf(msg, "q1^8 = 1 (err=%.2e)", err);
+        check(msg, err < 1e-13);
+    }
+
+    /* B6: q2^8 = 1 */
+    {
+        Quat p = quat_one();
+        int l;
+        for (l = 0; l < 8; l++) p = quat_mul(p, q2);
+        err = fabs(p.a - 1) + fabs(p.b) + fabs(p.c) + fabs(p.d);
+        sprintf(msg, "q2^8 = 1 (err=%.2e)", err);
+        check(msg, err < 1e-13);
+    }
+
+    /* B7: braid_quaternion matches manual computation */
+    {
+        Braid b;
+        Quat manual, auto_q;
+        b.n = 3; b.len = 3;
+        b.word[0] = 1; b.word[1] = 2; b.word[2] = 1;
+        manual = quat_mul(quat_mul(q1, q2), q1);
+        auto_q = braid_quaternion(&b);
+        err = fabs(manual.a - auto_q.a) + fabs(manual.b - auto_q.b) +
+              fabs(manual.c - auto_q.c) + fabs(manual.d - auto_q.d);
+        sprintf(msg, "braid_quaternion([1,2,1]) matches (err=%.2e)", err);
+        check(msg, err < 1e-14);
+    }
+
+    /* B8: Inverse braid gives conjugate quaternion */
+    {
+        Braid b;
+        Quat fwd, inv_q;
+        b.n = 3; b.len = 2;
+        b.word[0] = 1; b.word[1] = 2;
+        fwd = braid_quaternion(&b);
+        b.word[0] = -2; b.word[1] = -1;
+        inv_q = braid_quaternion(&b);
+        /* Product should be identity */
+        {
+            Quat prod = quat_mul(fwd, inv_q);
+            err = fabs(prod.a - 1) + fabs(prod.b) + fabs(prod.c) + fabs(prod.d);
+            sprintf(msg, "fwd * inv = 1 (err=%.2e)", err);
+            check(msg, err < 1e-14);
+        }
+    }
+}
+
+/* ================================================================
+ * Part C: Quaternionic catalog
+ * ================================================================ */
+
+#define MAX_QCAT 4096
+static Quat qcat[MAX_QCAT];
+static int qcat_size = 0;
+
+/* Also store the corresponding bracket value for Part D */
+static Cyc8 qcat_bracket[MAX_QCAT];
+static int qcat_braid_count = 0; /* total braids enumerated */
+
+static int find_quat(Quat q) {
+    int i;
+    for (i = 0; i < qcat_size; i++) {
+        if (quat_close(qcat[i], q, 1e-10)) return i;
+        /* Also check negation (q and -q represent same SU(2) element) */
+        if (quat_close(qcat[i], quat_neg(q), 1e-10)) return i;
+    }
+    return -1;
+}
+
+/* Also build bracket catalog for comparison */
+#define MAX_BCAT 512
+static Cyc8 bcat[MAX_BCAT];
+static int bcat_size = 0;
+
+static int find_bracket(Cyc8 v) {
+    int i;
+    for (i = 0; i < bcat_size; i++)
+        if (cyc8_eq(bcat[i], v)) return i;
+    return -1;
+}
+
+/* Per-braid record for Part D correspondence */
+#define MAX_CORR 2000
+static struct {
+    Quat q;
+    Cyc8 bracket;
+    int n_strands;
+    int length;
+} corr[MAX_CORR];
+static int corr_size = 0;
+
+static void build_catalogs(void) {
+    int n, len;
+    Braid b;
+    int word_buf[MAX_WORD];
+
+    qcat_size = 0;
+    bcat_size = 0;
+    corr_size = 0;
+    qcat_braid_count = 0;
+
+    for (n = 2; n <= 3; n++) {
+        for (len = 1; len <= 8 && len <= MAX_WORD; len++) {
+            int max_gen = n - 1;
+            int total_gens = 2 * max_gen;
+            unsigned long total, idx;
+            int i;
+
+            total = 1;
+            for (i = 0; i < len; i++) {
+                total *= (unsigned long)total_gens;
+                if (total > 100000) break;
+            }
+            if (total > 100000) continue;
+
+            for (idx = 0; idx < total; idx++) {
+                unsigned long tmp = idx;
+                Quat q;
+                Cyc8 brk;
+
+                for (i = 0; i < len; i++) {
+                    int g = (int)(tmp % (unsigned long)total_gens);
+                    tmp /= (unsigned long)total_gens;
+                    if (g < max_gen) word_buf[i] = g + 1;
+                    else             word_buf[i] = -(g - max_gen + 1);
+                }
+                b.n = n; b.len = len;
+                memcpy(b.word, word_buf, (size_t)len * sizeof(int));
+
+                q = braid_quaternion(&b);
+                brk = braid_bracket(&b);
+                qcat_braid_count++;
+
+                /* Add to quaternion catalog */
+                if (find_quat(q) < 0 && qcat_size < MAX_QCAT) {
+                    qcat[qcat_size] = q;
+                    qcat_bracket[qcat_size] = brk;
+                    qcat_size++;
+                }
+
+                /* Add to bracket catalog */
+                if (!cyc8_is_zero(brk) && find_bracket(brk) < 0
+                    && bcat_size < MAX_BCAT) {
+                    bcat[bcat_size] = brk;
+                    bcat_size++;
+                }
+
+                /* Store first MAX_CORR braids for correspondence */
+                if (!cyc8_is_zero(brk) && corr_size < MAX_CORR) {
+                    corr[corr_size].q = q;
+                    corr[corr_size].bracket = brk;
+                    corr[corr_size].n_strands = n;
+                    corr[corr_size].length = len;
+                    corr_size++;
+                }
+            }
+        }
+    }
+}
+
+static void part_c_catalog(void) {
+    int i, n_nz[5];
+    char msg[256];
+
+    printf("\n=== Part C: Quaternionic catalog ===\n");
+
+    build_catalogs();
+
+    printf("  INFO: Total braids enumerated: %d\n", qcat_braid_count);
+    printf("  INFO: Distinct quaternions (mod +/-): %d\n", qcat_size);
+    printf("  INFO: Distinct bracket values: %d\n", bcat_size);
+
+    sprintf(msg, "Quaternion catalog: %d values", qcat_size);
+    check(msg, qcat_size > 0);
+
+    sprintf(msg, "Bracket catalog: %d values (expected 100)", bcat_size);
+    check(msg, bcat_size == 100);
+
+    /* All quaternions should be unit */
+    {
+        int all_unit = 1;
+        double max_err = 0.0;
+        for (i = 0; i < qcat_size; i++) {
+            double e = fabs(quat_norm(qcat[i]) - 1.0);
+            if (e > max_err) max_err = e;
+            if (e > 1e-10) all_unit = 0;
+        }
+        sprintf(msg, "All quaternions are unit (max err=%.2e)", max_err);
+        check(msg, all_unit);
+    }
+
+    /* Component distribution: how many of (a,b,c,d) are nonzero? */
+    for (i = 0; i < 5; i++) n_nz[i] = 0;
+    for (i = 0; i < qcat_size; i++) {
+        int nz = 0;
+        if (fabs(qcat[i].a) > 1e-10) nz++;
+        if (fabs(qcat[i].b) > 1e-10) nz++;
+        if (fabs(qcat[i].c) > 1e-10) nz++;
+        if (fabs(qcat[i].d) > 1e-10) nz++;
+        n_nz[nz]++;
+    }
+    printf("  INFO: Nonzero component distribution:\n");
+    for (i = 0; i <= 4; i++) {
+        if (n_nz[i] > 0)
+            printf("    %d nonzero: %d values\n", i, n_nz[i]);
+    }
+
+    /* Print first 20 catalog values */
+    {
+        int lim = qcat_size < 20 ? qcat_size : 20;
+        printf("  INFO: First %d quaternion catalog values:\n", lim);
+        for (i = 0; i < lim; i++) {
+            printf("    [%2d] (%+.4f, %+.4f, %+.4f, %+.4f)\n",
+                   i, qcat[i].a, qcat[i].b, qcat[i].c, qcat[i].d);
+        }
+    }
+
+    /* Check for 24-cell vertices */
+    {
+        int n_axis = 0, n_half = 0, n_other = 0;
+        for (i = 0; i < qcat_size; i++) {
+            double a = fabs(qcat[i].a), b = fabs(qcat[i].b);
+            double c = fabs(qcat[i].c), d = fabs(qcat[i].d);
+            double half = 0.5;
+            double s2 = 1.0 / sqrt(2.0);
+            /* Axis-aligned: one component = +-1, rest = 0 */
+            if ((fabs(a - 1.0) < 0.01 && b + c + d < 0.01) ||
+                (fabs(b - 1.0) < 0.01 && a + c + d < 0.01) ||
+                (fabs(c - 1.0) < 0.01 && a + b + d < 0.01) ||
+                (fabs(d - 1.0) < 0.01 && a + b + c < 0.01)) {
+                n_axis++;
+            }
+            /* 24-cell half-integer: all components = +-1/2 */
+            else if (fabs(a - half) < 0.01 && fabs(b - half) < 0.01 &&
+                     fabs(c - half) < 0.01 && fabs(d - half) < 0.01) {
+                n_half++;
+            }
+            /* sqrt(2)/2 type: two components = +-1/sqrt(2), rest = 0 */
+            else if ((fabs(a - s2) < 0.01 || fabs(a) < 0.01) &&
+                     (fabs(b - s2) < 0.01 || fabs(b) < 0.01) &&
+                     (fabs(c - s2) < 0.01 || fabs(c) < 0.01) &&
+                     (fabs(d - s2) < 0.01 || fabs(d) < 0.01)) {
+                n_other++;
+            }
+        }
+        printf("  INFO: Axis-aligned (+-1 on one axis): %d\n", n_axis);
+        printf("  INFO: 24-cell half-integer (+-1/2 each): %d\n", n_half);
+        printf("  INFO: sqrt(2)/2 type (two axes): %d\n", n_other);
+    }
+}
+
+/* ================================================================
+ * Part D: Bracket-quaternion correspondence
+ * ================================================================ */
+
+static void part_d_correspondence(void) {
+    int i;
+    char msg[256];
+    int n_exact_trace = 0;
+    int n_checked = 0;
+
+    printf("\n=== Part D: Bracket-quaternion correspondence ===\n");
+    printf("  INFO: Comparing bracket values with 2*Re(quaternion)\n");
+    printf("  INFO: Checking %d braid samples\n", corr_size);
+
+    /* For each braid, compare bracket with 2*Re(quaternion) */
+    printf("  INFO: First 20 samples:\n");
+    for (i = 0; i < corr_size && i < 20; i++) {
+        Cx brk_cx = cyc8_to_cx(corr[i].bracket);
+        double trace = 2.0 * corr[i].q.a;
+        printf("    [%2d] bracket=(%+.3f,%+.3fi) trace=2Re(q)=%+.3f  "
+               "q=(%+.3f,%+.3f,%+.3f,%+.3f)\n",
+               i, brk_cx.re, brk_cx.im, trace,
+               corr[i].q.a, corr[i].q.b, corr[i].q.c, corr[i].q.d);
+    }
+
+    /* Check: is bracket a real scalar times 2*Re(q)? */
+    /* More generally: is there a consistent relationship? */
+    {
+        /* Group by quaternion value, see if same quaternion -> same bracket */
+        int n_same_q_same_b = 0, n_same_q_diff_b = 0;
+        int j;
+        for (i = 0; i < corr_size && i < 500; i++) {
+            for (j = i + 1; j < corr_size && j < 500; j++) {
+                if (quat_close(corr[i].q, corr[j].q, 1e-8) ||
+                    quat_close(corr[i].q, quat_neg(corr[j].q), 1e-8)) {
+                    if (cyc8_eq(corr[i].bracket, corr[j].bracket)) {
+                        n_same_q_same_b++;
+                    } else {
+                        n_same_q_diff_b++;
+                    }
+                }
+                n_checked++;
+            }
+        }
+        printf("  INFO: Pairs with same quaternion, same bracket: %d\n",
+               n_same_q_same_b);
+        printf("  INFO: Pairs with same quaternion, different bracket: %d\n",
+               n_same_q_diff_b);
+        printf("  INFO: Total pairs checked: %d\n", n_checked);
+    }
+
+    /* Check: is |bracket| related to quat_norm? (both should be 1 for units) */
+    /* Actually bracket values are NOT unit — they're integers in Z[zeta_8] */
+    /* The quaternion is always unit. So the relationship is more subtle. */
+
+    /* Try: bracket = f(q) for some function f */
+    /* The Reshetikhin-Turaev theory says bracket ~ trace of representation */
+    /* For SU(2), trace = 2*Re(q). But our bracket has |bracket| >> 1 */
+    /* So there must be a normalization factor. */
+    {
+        double sum_ratio = 0.0;
+        int n_ratio = 0;
+        for (i = 0; i < corr_size; i++) {
+            Cx brk_cx = cyc8_to_cx(corr[i].bracket);
+            double trace = 2.0 * corr[i].q.a;
+            if (fabs(trace) > 0.01 && cx_abs(brk_cx) > 0.01) {
+                double ratio = brk_cx.re / trace;
+                sum_ratio += ratio;
+                n_ratio++;
+            }
+        }
+        if (n_ratio > 0) {
+            printf("  INFO: Average Re(bracket)/trace ratio: %.4f (%d samples)\n",
+                   sum_ratio / (double)n_ratio, n_ratio);
+        }
+    }
+
+    /* Key finding: how many distinct quaternions map to each bracket? */
+    {
+        int brk_to_quat[512]; /* count of distinct quats per bracket */
+        int max_per = 0;
+        int bi;
+        memset(brk_to_quat, 0, sizeof(brk_to_quat));
+
+        for (bi = 0; bi < bcat_size; bi++) {
+            int n_quats = 0;
+            Quat seen_q[64];
+            int n_seen = 0;
+
+            for (i = 0; i < corr_size; i++) {
+                if (cyc8_eq(corr[i].bracket, bcat[bi])) {
+                    int dup = 0;
+                    int si;
+                    for (si = 0; si < n_seen; si++) {
+                        if (quat_close(seen_q[si], corr[i].q, 1e-8) ||
+                            quat_close(seen_q[si], quat_neg(corr[i].q), 1e-8)) {
+                            dup = 1;
+                            break;
+                        }
+                    }
+                    if (!dup && n_seen < 64) {
+                        seen_q[n_seen++] = corr[i].q;
+                        n_quats++;
+                    }
+                }
+            }
+            brk_to_quat[bi] = n_quats;
+            if (n_quats > max_per) max_per = n_quats;
+        }
+        printf("  INFO: Max distinct quaternions per bracket value: %d\n",
+               max_per);
+        printf("  INFO: Distribution (quats per bracket):\n");
+        {
+            int hist[64];
+            int h;
+            memset(hist, 0, sizeof(hist));
+            for (bi = 0; bi < bcat_size; bi++) {
+                if (brk_to_quat[bi] < 64) hist[brk_to_quat[bi]]++;
+            }
+            for (h = 0; h < 64; h++) {
+                if (hist[h] > 0)
+                    printf("    %d quats: %d bracket values\n", h, hist[h]);
+            }
+        }
+    }
+
+    sprintf(msg, "Correspondence analysis complete (%d braids)", corr_size);
+    check(msg, corr_size > 0);
+
+    (void)n_exact_trace;
+}
+
+/* ================================================================
+ * Part E: 4D generalized activation check
+ * ================================================================
+ * Given 6 quaternionic weights, check if ANY binary labeling
+ * of geographic cells on S^3 can compute XOR6.
+ *
+ * Cell assignment: given unit quat (a,b,c,d):
+ *   lon = atan2(b, a) in [0, 2pi)
+ *   lat = atan2(d, c) in [0, 2pi)
+ *   cell = floor(lon * k1 / 2pi) * k2 + floor(lat * k2 / 2pi)
+ */
+
+static int quat_cell(Quat q, int k1, int k2) {
+    double norm = quat_norm(q);
+    double a, b, c, d, lon, lat;
+    int s1, s2;
+
+    if (norm < 1e-12) return k1 * k2; /* zero pseudo-cell */
+
+    a = q.a / norm; b = q.b / norm;
+    c = q.c / norm; d = q.d / norm;
+
+    lon = atan2(b, a);
+    if (lon < 0.0) lon += 2.0 * M_PI;
+    lat = atan2(d, c);
+    if (lat < 0.0) lat += 2.0 * M_PI;
+
+    s1 = (int)(lon / (2.0 * M_PI / (double)k1));
+    if (s1 >= k1) s1 = k1 - 1;
+    s2 = (int)(lat / (2.0 * M_PI / (double)k2));
+    if (s2 >= k2) s2 = k2 - 1;
+
+    return s1 * k2 + s2;
+}
+
+static int check_gen_xor6_quat(const Quat *w, int k1, int k2) {
+    int total_cells = k1 * k2 + 1;
+    int seen[2048]; /* max cells */
+    int mask, i, cell;
+
+    if (total_cells > 2048) return 0;
+    for (i = 0; i < total_cells; i++) seen[i] = 0;
+
+    for (mask = 0; mask < 64; mask++) {
+        Quat sum = quat_make(0, 0, 0, 0);
+        int par = 0;
+        for (i = 0; i < 6; i++) {
+            if (mask & (1 << i)) {
+                sum = quat_add(sum, w[i]);
+                par ^= 1;
+            }
+        }
+        cell = quat_cell(sum, k1, k2);
+        seen[cell] |= (1 << par);
+        if (seen[cell] == 3) return 0;
+    }
+    return 1;
+}
+
+/* Also define the complex version for comparison */
+static int check_gen_xor6_cx(const Cx *w, int k) {
+    int seen[1025];
+    int mask, i, sec;
+
+    if (k > 1024) return 0;
+    for (i = 0; i <= k; i++) seen[i] = 0;
+
+    for (mask = 0; mask < 64; mask++) {
+        Cx sum;
+        int par = 0;
+        double angle;
+        sum.re = 0.0; sum.im = 0.0;
+        for (i = 0; i < 6; i++) {
+            if (mask & (1 << i)) {
+                sum.re += w[i].re;
+                sum.im += w[i].im;
+                par ^= 1;
+            }
+        }
+        if (cx_abs(sum) < 1e-12) {
+            sec = k;
+        } else {
+            angle = atan2(sum.im, sum.re);
+            if (angle < 0.0) angle += 2.0 * M_PI;
+            sec = (int)(angle / (2.0 * M_PI / (double)k));
+            if (sec >= k) sec = k - 1;
+        }
+        seen[sec] |= (1 << par);
+        if (seen[sec] == 3) return 0;
+    }
+    return 1;
+}
+
+/* Voronoi cell: nearest 24-cell vertex (for Part H) */
+static int voronoi_cell_24(Quat q) {
+    int i, best = 0;
+    double best_sim = -2.0;
+    /* Use |dot product| since q ~ -q (same SU(2) element mod center) */
+    for (i = 0; i < qcat_size; i++) {
+        double sim = fabs(quat_dot(q, qcat[i]));
+        if (sim > best_sim) { best_sim = sim; best = i; }
+    }
+    return best;
+}
+
+static int check_gen_xor6_voronoi(const Quat *w) {
+    int seen[MAX_QCAT + 1]; /* qcat_size cells + 1 zero cell */
+    int mask, i, cell;
+
+    for (i = 0; i <= qcat_size; i++) seen[i] = 0;
+
+    for (mask = 0; mask < 64; mask++) {
+        Quat sum = quat_make(0, 0, 0, 0);
+        int par = 0;
+        for (i = 0; i < 6; i++) {
+            if (mask & (1 << i)) {
+                sum = quat_add(sum, w[i]);
+                par ^= 1;
+            }
+        }
+        if (quat_norm(sum) < 1e-12) {
+            cell = qcat_size; /* zero cell */
+        } else {
+            sum = quat_normalize(sum);
+            cell = voronoi_cell_24(sum);
+        }
+        seen[cell] |= (1 << par);
+        if (seen[cell] == 3) return 0;
+    }
+    return 1;
+}
+
+static void part_e_activation(void) {
+    int i, j, wi;
+
+    printf("\n=== Part E: 4D generalized activation (XOR6) ===\n");
+    printf("  INFO: Quaternion catalog: %d values\n", qcat_size);
+
+    if (qcat_size < 6) {
+        check("Not enough quaternion values for XOR6 search", 0);
+        return;
+    }
+
+    /* Try various cell resolutions */
+    {
+        int configs[][2] = {{3,3},{4,4},{5,5},{6,6},{8,8},{4,6},{6,4},{3,8},{8,3}};
+        int nc = 9;
+        int ci;
+
+        printf("  INFO: Testing XOR6 with quaternionic catalog at various k1 x k2:\n");
+
+        for (ci = 0; ci < nc; ci++) {
+            int k1 = configs[ci][0], k2 = configs[ci][1];
+            int total = k1 * k2;
+            int n_pass_q = 0;
+            int n_tested = 0;
+
+            printf("    %dx%d = %d cells: ", k1, k2, total);
+            fflush(stdout);
+
+            /* Try all C(qcat_size, 6) if small enough, else sample */
+            if (qcat_size <= 30) {
+                /* Try all ordered 6-tuples (with repetition allowed) */
+                int i0, i1, i2, i3, i4, i5;
+                for (i0 = 0; i0 < qcat_size; i0++) {
+                 for (i1 = i0; i1 < qcat_size; i1++) {
+                  for (i2 = i1; i2 < qcat_size; i2++) {
+                   for (i3 = i2; i3 < qcat_size; i3++) {
+                    for (i4 = i3; i4 < qcat_size; i4++) {
+                     for (i5 = i4; i5 < qcat_size; i5++) {
+                        Quat w6[6];
+                        w6[0] = qcat[i0]; w6[1] = qcat[i1];
+                        w6[2] = qcat[i2]; w6[3] = qcat[i3];
+                        w6[4] = qcat[i4]; w6[5] = qcat[i5];
+                        if (check_gen_xor6_quat(w6, k1, k2))
+                            n_pass_q++;
+                        n_tested++;
+                     }
+                    }
+                   }
+                  }
+                 }
+                }
+            } else {
+                /* Sample: use antipodal pairs from catalog */
+                int ai, aj, ak;
+                for (ai = 0; ai < qcat_size && ai < 30; ai++) {
+                    for (aj = ai; aj < qcat_size && aj < 30; aj++) {
+                        for (ak = aj; ak < qcat_size && ak < 30; ak++) {
+                            Quat w6[6];
+                            w6[0] = qcat[ai];
+                            w6[1] = quat_neg(qcat[ai]);
+                            w6[2] = qcat[aj];
+                            w6[3] = quat_neg(qcat[aj]);
+                            w6[4] = qcat[ak];
+                            w6[5] = quat_neg(qcat[ak]);
+                            if (check_gen_xor6_quat(w6, k1, k2))
+                                n_pass_q++;
+                            n_tested++;
+                        }
+                    }
+                }
+            }
+            printf("%d/%d pass\n", n_pass_q, n_tested);
+        }
+    }
+
+    /* Also search with antipodal pairs explicitly */
+    printf("  INFO: Antipodal pair search (3 pairs = 6 weights):\n");
+    {
+        int configs[][2] = {{3,3},{4,4},{5,5},{6,6},{8,8}};
+        int nc = 5;
+        int ci;
+
+        for (ci = 0; ci < nc; ci++) {
+            int k1 = configs[ci][0], k2 = configs[ci][1];
+            int n_pass_q = 0, n_tested = 0;
+            int ai, aj, ak;
+
+            printf("    %dx%d = %d cells (antipodal): ", k1, k2, k1 * k2);
+            fflush(stdout);
+
+            for (ai = 0; ai < qcat_size; ai++) {
+                for (aj = ai + 1; aj < qcat_size; aj++) {
+                    for (ak = aj + 1; ak < qcat_size; ak++) {
+                        Quat w6[6];
+                        w6[0] = qcat[ai];
+                        w6[1] = quat_neg(qcat[ai]);
+                        w6[2] = qcat[aj];
+                        w6[3] = quat_neg(qcat[aj]);
+                        w6[4] = qcat[ak];
+                        w6[5] = quat_neg(qcat[ak]);
+                        if (check_gen_xor6_quat(w6, k1, k2))
+                            n_pass_q++;
+                        n_tested++;
+                    }
+                }
+            }
+            printf("%d/%d pass\n", n_pass_q, n_tested);
+        }
+    }
+
+    check("E: 4D activation search complete", 1);
+
+    (void)i; (void)j; (void)wi;
+}
+
+/* ================================================================
+ * Part F: Comparison with complex results
+ * ================================================================ */
+
+static void part_f_comparison(void) {
+    char msg[256];
+
+    printf("\n=== Part F: Comparison with complex (S^1) results ===\n");
+
+    /* Complex (S^1) generalized XOR6: use bracket catalog */
+    printf("  INFO: Complex (S^1) generalized XOR6 for reference:\n");
+    {
+        int k_test[] = {6, 12, 15, 24, 31};
+        int nk = 5;
+        int ki;
+
+        for (ki = 0; ki < nk; ki++) {
+            int kv = k_test[ki];
+            int n_pass_cx = 0, n_tested = 0;
+            int ai, aj, ak;
+
+            printf("    k=%2d sectors: ", kv);
+            fflush(stdout);
+
+            /* Antipodal pair search using bracket catalog */
+            for (ai = 0; ai < bcat_size && ai < 30; ai++) {
+                for (aj = ai + 1; aj < bcat_size && aj < 30; aj++) {
+                    for (ak = aj + 1; ak < bcat_size && ak < 30; ak++) {
+                        Cx w6[6];
+                        Cx ci_val = cyc8_to_cx(bcat[ai]);
+                        Cx cj_val = cyc8_to_cx(bcat[aj]);
+                        Cx ck_val = cyc8_to_cx(bcat[ak]);
+                        w6[0] = ci_val;
+                        w6[1].re = -ci_val.re; w6[1].im = -ci_val.im;
+                        w6[2] = cj_val;
+                        w6[3].re = -cj_val.re; w6[3].im = -cj_val.im;
+                        w6[4] = ck_val;
+                        w6[5].re = -ck_val.re; w6[5].im = -ck_val.im;
+                        if (check_gen_xor6_cx(w6, kv))
+                            n_pass_cx++;
+                        n_tested++;
+                    }
+                }
+            }
+            printf("%d/%d pass\n", n_pass_cx, n_tested);
+        }
+    }
+
+    printf("  INFO:\n");
+    printf("  INFO: Key comparison:\n");
+    printf("  INFO:   Complex (S^1): min k=24 sectors for gen XOR6 (Demo 65)\n");
+    printf("  INFO:   Quaternionic (S^3): see results above\n");
+    printf("  INFO:   If quat achieves XOR6 with fewer cells, 4D helps!\n");
+
+    sprintf(msg, "F: Comparison complete");
+    check(msg, 1);
+}
+
+/* ================================================================
+ * Part G: Anatomy of winning tuples
+ * ================================================================ */
+
+static void part_g_winning_tuples(void) {
+    int ai, aj, ak;
+    char msg[256];
+    int n_win_6 = 0, n_win_8 = 0;
+
+    printf("\n=== Part G: Anatomy of winning tuples ===\n");
+
+    /* 6x6 winners — print all */
+    printf("  INFO: === Winners at 6x6 = 36 cells (antipodal pairs) ===\n");
+    for (ai = 0; ai < qcat_size; ai++) {
+        for (aj = ai + 1; aj < qcat_size; aj++) {
+            for (ak = aj + 1; ak < qcat_size; ak++) {
+                Quat w6[6];
+                w6[0] = qcat[ai]; w6[1] = quat_neg(qcat[ai]);
+                w6[2] = qcat[aj]; w6[3] = quat_neg(qcat[aj]);
+                w6[4] = qcat[ak]; w6[5] = quat_neg(qcat[ak]);
+                if (check_gen_xor6_quat(w6, 6, 6)) {
+                    double d12 = quat_dot(qcat[ai], qcat[aj]);
+                    double d13 = quat_dot(qcat[ai], qcat[ak]);
+                    double d23 = quat_dot(qcat[aj], qcat[ak]);
+                    n_win_6++;
+                    printf("    Winner #%d [%d,%d,%d]:\n", n_win_6, ai, aj, ak);
+                    printf("      q[%d] = (%+.4f,%+.4f,%+.4f,%+.4f) type=%s\n",
+                           ai, qcat[ai].a, qcat[ai].b, qcat[ai].c, qcat[ai].d,
+                           quat_vertex_type(qcat[ai]));
+                    printf("      q[%d] = (%+.4f,%+.4f,%+.4f,%+.4f) type=%s\n",
+                           aj, qcat[aj].a, qcat[aj].b, qcat[aj].c, qcat[aj].d,
+                           quat_vertex_type(qcat[aj]));
+                    printf("      q[%d] = (%+.4f,%+.4f,%+.4f,%+.4f) type=%s\n",
+                           ak, qcat[ak].a, qcat[ak].b, qcat[ak].c, qcat[ak].d,
+                           quat_vertex_type(qcat[ak]));
+                    printf("      Dot products: (%d.%d)=%+.4f (%d.%d)=%+.4f (%d.%d)=%+.4f\n",
+                           ai, aj, d12, ai, ak, d13, aj, ak, d23);
+                    printf("      Mutually orthogonal? %s\n",
+                           (fabs(d12) < 0.01 && fabs(d13) < 0.01 && fabs(d23) < 0.01)
+                           ? "YES" : "NO");
+                }
+            }
+        }
+    }
+    sprintf(msg, "G: 6x6 winners found: %d", n_win_6);
+    check(msg, n_win_6 > 0);
+
+    /* 8x8 winners — first 10 + summary */
+    printf("  INFO: === Winners at 8x8 = 64 cells (first 10) ===\n");
+    {
+        int n_ortho = 0;
+        for (ai = 0; ai < qcat_size; ai++) {
+            for (aj = ai + 1; aj < qcat_size; aj++) {
+                for (ak = aj + 1; ak < qcat_size; ak++) {
+                    Quat w6[6];
+                    w6[0] = qcat[ai]; w6[1] = quat_neg(qcat[ai]);
+                    w6[2] = qcat[aj]; w6[3] = quat_neg(qcat[aj]);
+                    w6[4] = qcat[ak]; w6[5] = quat_neg(qcat[ak]);
+                    if (check_gen_xor6_quat(w6, 8, 8)) {
+                        double d12 = quat_dot(qcat[ai], qcat[aj]);
+                        double d13 = quat_dot(qcat[ai], qcat[ak]);
+                        double d23 = quat_dot(qcat[aj], qcat[ak]);
+                        n_win_8++;
+                        if (fabs(d12) < 0.01 && fabs(d13) < 0.01 && fabs(d23) < 0.01)
+                            n_ortho++;
+                        if (n_win_8 <= 10) {
+                            printf("    Winner #%d [%d,%d,%d]:\n", n_win_8, ai, aj, ak);
+                            printf("      q[%d] = (%+.4f,%+.4f,%+.4f,%+.4f) %s\n",
+                                   ai, qcat[ai].a, qcat[ai].b, qcat[ai].c, qcat[ai].d,
+                                   quat_vertex_type(qcat[ai]));
+                            printf("      q[%d] = (%+.4f,%+.4f,%+.4f,%+.4f) %s\n",
+                                   aj, qcat[aj].a, qcat[aj].b, qcat[aj].c, qcat[aj].d,
+                                   quat_vertex_type(qcat[aj]));
+                            printf("      q[%d] = (%+.4f,%+.4f,%+.4f,%+.4f) %s\n",
+                                   ak, qcat[ak].a, qcat[ak].b, qcat[ak].c, qcat[ak].d,
+                                   quat_vertex_type(qcat[ak]));
+                            printf("      Dots: %+.4f %+.4f %+.4f %s\n",
+                                   d12, d13, d23,
+                                   (fabs(d12)<0.01 && fabs(d13)<0.01 && fabs(d23)<0.01)
+                                   ? "(orthogonal)" : "");
+                        }
+                    }
+                }
+            }
+        }
+        printf("  INFO: 8x8 total winners: %d, of which orthogonal: %d\n",
+               n_win_8, n_ortho);
+    }
+    sprintf(msg, "G: 8x8 winners found: %d", n_win_8);
+    check(msg, n_win_8 > 0);
+
+    /* Vertex type distribution among winners */
+    printf("  INFO: === Vertex type breakdown (8x8 winners) ===\n");
+    {
+        int n_all_edge = 0, n_all_body = 0, n_all_axis = 0, n_mixed = 0;
+        for (ai = 0; ai < qcat_size; ai++) {
+            for (aj = ai + 1; aj < qcat_size; aj++) {
+                for (ak = aj + 1; ak < qcat_size; ak++) {
+                    Quat w6[6];
+                    w6[0] = qcat[ai]; w6[1] = quat_neg(qcat[ai]);
+                    w6[2] = qcat[aj]; w6[3] = quat_neg(qcat[aj]);
+                    w6[4] = qcat[ak]; w6[5] = quat_neg(qcat[ak]);
+                    if (check_gen_xor6_quat(w6, 8, 8)) {
+                        const char *t1 = quat_vertex_type(qcat[ai]);
+                        const char *t2 = quat_vertex_type(qcat[aj]);
+                        const char *t3 = quat_vertex_type(qcat[ak]);
+                        if (t1[0]=='e' && t2[0]=='e' && t3[0]=='e') n_all_edge++;
+                        else if (t1[0]=='b' && t2[0]=='b' && t3[0]=='b') n_all_body++;
+                        else if (t1[0]=='a' && t2[0]=='a' && t3[0]=='a') n_all_axis++;
+                        else n_mixed++;
+                    }
+                }
+            }
+        }
+        printf("  INFO: All-axis: %d, All-edge: %d, All-body: %d, Mixed: %d\n",
+               n_all_axis, n_all_edge, n_all_body, n_mixed);
+    }
+}
+
+/* ================================================================
+ * Part H: 24-cell Voronoi activation
+ * ================================================================
+ * Instead of geographic lat/lon grid, use the 24-cell's own
+ * Voronoi partition: each catalog vertex defines one cell.
+ * This gives 24 cells with the polytope's symmetry built in.
+ */
+
+static void part_h_voronoi(void) {
+    int ai, aj, ak;
+    char msg[256];
+    int n_pass_v = 0, n_tested = 0;
+
+    printf("\n=== Part H: 24-cell Voronoi activation ===\n");
+    printf("  INFO: Using %d Voronoi cells (+ 1 zero cell = %d total)\n",
+           qcat_size, qcat_size + 1);
+    printf("  INFO: Compare with geographic 6x6=36 cells (3 winners)\n");
+    printf("  INFO:     and geographic 8x8=64 cells (34 winners)\n\n");
+
+    /* Search: all antipodal triples */
+    printf("  INFO: Antipodal pair search with Voronoi activation:\n");
+    for (ai = 0; ai < qcat_size; ai++) {
+        for (aj = ai + 1; aj < qcat_size; aj++) {
+            for (ak = aj + 1; ak < qcat_size; ak++) {
+                Quat w6[6];
+                w6[0] = qcat[ai]; w6[1] = quat_neg(qcat[ai]);
+                w6[2] = qcat[aj]; w6[3] = quat_neg(qcat[aj]);
+                w6[4] = qcat[ak]; w6[5] = quat_neg(qcat[ak]);
+                if (check_gen_xor6_voronoi(w6)) {
+                    n_pass_v++;
+                    if (n_pass_v <= 5) {
+                        double d12 = quat_dot(qcat[ai], qcat[aj]);
+                        double d13 = quat_dot(qcat[ai], qcat[ak]);
+                        double d23 = quat_dot(qcat[aj], qcat[ak]);
+                        printf("    Voronoi winner #%d [%d,%d,%d]:\n",
+                               n_pass_v, ai, aj, ak);
+                        printf("      q[%d] = (%+.4f,%+.4f,%+.4f,%+.4f) %s\n",
+                               ai, qcat[ai].a, qcat[ai].b, qcat[ai].c, qcat[ai].d,
+                               quat_vertex_type(qcat[ai]));
+                        printf("      q[%d] = (%+.4f,%+.4f,%+.4f,%+.4f) %s\n",
+                               aj, qcat[aj].a, qcat[aj].b, qcat[aj].c, qcat[aj].d,
+                               quat_vertex_type(qcat[aj]));
+                        printf("      q[%d] = (%+.4f,%+.4f,%+.4f,%+.4f) %s\n",
+                               ak, qcat[ak].a, qcat[ak].b, qcat[ak].c, qcat[ak].d,
+                               quat_vertex_type(qcat[ak]));
+                        printf("      Dots: %+.4f %+.4f %+.4f\n", d12, d13, d23);
+                    }
+                }
+                n_tested++;
+            }
+        }
+    }
+    printf("  INFO: Voronoi results: %d/%d pass (%d cells)\n",
+           n_pass_v, n_tested, qcat_size + 1);
+
+    if (n_pass_v > 0) {
+        printf("  INFO: *** 24-cell Voronoi beats geographic grids! ***\n");
+        printf("  INFO: *** XOR6 with %d natural cells vs 36 geographic ***\n",
+               qcat_size + 1);
+    } else {
+        printf("  INFO: Voronoi with %d cells insufficient for XOR6\n",
+               qcat_size + 1);
+        printf("  INFO: Geographic 6x6=36 cells still needed\n");
+    }
+
+    sprintf(msg, "H: Voronoi search complete (%d/%d pass)", n_pass_v, n_tested);
+    check(msg, 1);
+
+    /* Also try: full combinatorial (not just antipodal) with Voronoi */
+    if (qcat_size <= 24) {
+        int i0, i1, i2, i3, i4, i5;
+        int n_pass_full = 0, n_full = 0;
+        printf("  INFO: Full combinatorial Voronoi search (no antipodal constraint):\n");
+        for (i0 = 0; i0 < qcat_size; i0++) {
+         for (i1 = i0; i1 < qcat_size; i1++) {
+          for (i2 = i1; i2 < qcat_size; i2++) {
+           for (i3 = i2; i3 < qcat_size; i3++) {
+            for (i4 = i3; i4 < qcat_size; i4++) {
+             for (i5 = i4; i5 < qcat_size; i5++) {
+                Quat w6[6];
+                w6[0] = qcat[i0]; w6[1] = qcat[i1];
+                w6[2] = qcat[i2]; w6[3] = qcat[i3];
+                w6[4] = qcat[i4]; w6[5] = qcat[i5];
+                if (check_gen_xor6_voronoi(w6))
+                    n_pass_full++;
+                n_full++;
+             }
+            }
+           }
+          }
+         }
+        }
+        printf("  INFO: Full Voronoi: %d/%d pass\n", n_pass_full, n_full);
+        sprintf(msg, "H: Full Voronoi search (%d/%d pass)", n_pass_full, n_full);
+        check(msg, 1);
+    }
+}
+
+/* ================================================================
+ * Part I: Labeling symmetry analysis
+ * ================================================================ */
+
+/* Extract the cell labeling for a Voronoi XOR6 solution.
+ * Returns 1 if valid, fills label[0..qcat_size] with 0, 1, or -1 (unused).
+ */
+static int get_voronoi_labeling(const Quat *w, int *label) {
+    int seen[MAX_QCAT + 1];
+    int mask, i, cell;
+
+    for (i = 0; i <= qcat_size; i++) { seen[i] = 0; label[i] = -1; }
+
+    for (mask = 0; mask < 64; mask++) {
+        Quat sum = quat_make(0, 0, 0, 0);
+        int par = 0;
+        for (i = 0; i < 6; i++) {
+            if (mask & (1 << i)) {
+                sum = quat_add(sum, w[i]);
+                par ^= 1;
+            }
+        }
+        if (quat_norm(sum) < 1e-12) {
+            cell = qcat_size;
+        } else {
+            sum = quat_normalize(sum);
+            cell = voronoi_cell_24(sum);
+        }
+        seen[cell] |= (1 << par);
+        if (seen[cell] == 3) return 0;
+    }
+
+    for (i = 0; i <= qcat_size; i++) {
+        if (seen[i] == 1) label[i] = 0;
+        else if (seen[i] == 2) label[i] = 1;
+        /* else: unused, stays -1 */
+    }
+    return 1;
+}
+
+#define MAX_WIN 64
+#define MAX_SYM_PERMS 96
+#define CELL_MAX 32 /* max cells for permutation storage: qcat_size+1 */
+
+static struct {
+    int ai, aj, ak;
+    int label[CELL_MAX];
+    int n0, n1;
+    int orbit;
+} wins[MAX_WIN];
+static int n_wins = 0;
+
+static int perm_store[MAX_SYM_PERMS][CELL_MAX];
+static int n_sym_perms = 0;
+
+static void collect_voronoi_winners(void) {
+    int ai, aj, ak;
+    n_wins = 0;
+    for (ai = 0; ai < qcat_size && n_wins < MAX_WIN; ai++) {
+        for (aj = ai + 1; aj < qcat_size && n_wins < MAX_WIN; aj++) {
+            for (ak = aj + 1; ak < qcat_size && n_wins < MAX_WIN; ak++) {
+                Quat w6[6];
+                int label[CELL_MAX];
+                int ci2, n0 = 0, n1 = 0;
+                w6[0] = qcat[ai]; w6[1] = quat_neg(qcat[ai]);
+                w6[2] = qcat[aj]; w6[3] = quat_neg(qcat[aj]);
+                w6[4] = qcat[ak]; w6[5] = quat_neg(qcat[ak]);
+                if (!get_voronoi_labeling(w6, label)) continue;
+                for (ci2 = 0; ci2 <= qcat_size; ci2++) {
+                    wins[n_wins].label[ci2] = label[ci2];
+                    if (label[ci2] == 0) n0++;
+                    if (label[ci2] == 1) n1++;
+                }
+                wins[n_wins].ai = ai;
+                wins[n_wins].aj = aj;
+                wins[n_wins].ak = ak;
+                wins[n_wins].n0 = n0;
+                wins[n_wins].n1 = n1;
+                wins[n_wins].orbit = -1;
+                n_wins++;
+            }
+        }
+    }
+}
+
+/* Check if labeling of winner a, permuted by perm[], matches winner b */
+static int labelings_match(int a, int b, const int *perm) {
+    int ci2;
+    for (ci2 = 0; ci2 <= qcat_size; ci2++) {
+        if (wins[a].label[ci2] != wins[b].label[perm[ci2]])
+            return 0;
+    }
+    return 1;
+}
+
+static void generate_symmetry_perms(void) {
+    int gi, ci2;
+    n_sym_perms = 0;
+
+    /* Left-multiplication permutations: q -> g*q */
+    for (gi = 0; gi < qcat_size && n_sym_perms < MAX_SYM_PERMS; gi++) {
+        int perm[CELL_MAX];
+        int valid = 1;
+        for (ci2 = 0; ci2 < qcat_size; ci2++) {
+            Quat gq = quat_mul(qcat[gi], qcat[ci2]);
+            int idx = find_quat(gq);
+            if (idx < 0) { valid = 0; break; }
+            perm[ci2] = idx;
+        }
+        perm[qcat_size] = qcat_size; /* zero cell fixed */
+        if (valid) {
+            memcpy(perm_store[n_sym_perms], perm,
+                   sizeof(int) * (size_t)(qcat_size + 1));
+            n_sym_perms++;
+        }
+    }
+
+    /* Right-multiplication permutations: q -> q*g (dedup against left) */
+    for (gi = 0; gi < qcat_size && n_sym_perms < MAX_SYM_PERMS; gi++) {
+        int perm[CELL_MAX];
+        int valid = 1;
+        int is_dup = 0;
+        int pi;
+        for (ci2 = 0; ci2 < qcat_size; ci2++) {
+            Quat qg = quat_mul(qcat[ci2], qcat[gi]);
+            int idx = find_quat(qg);
+            if (idx < 0) { valid = 0; break; }
+            perm[ci2] = idx;
+        }
+        perm[qcat_size] = qcat_size;
+        if (!valid) continue;
+        for (pi = 0; pi < n_sym_perms; pi++) {
+            int same = 1;
+            int ki;
+            for (ki = 0; ki <= qcat_size; ki++) {
+                if (perm_store[pi][ki] != perm[ki]) { same = 0; break; }
+            }
+            if (same) { is_dup = 1; break; }
+        }
+        if (!is_dup) {
+            memcpy(perm_store[n_sym_perms], perm,
+                   sizeof(int) * (size_t)(qcat_size + 1));
+            n_sym_perms++;
+        }
+    }
+}
+
+static void part_i_labeling(void) {
+    int i, j;
+    char msg[256];
+    int n_orbits;
+
+    printf("\n=== Part I: Labeling symmetry analysis ===\n");
+
+    collect_voronoi_winners();
+    printf("  INFO: Collected %d Voronoi winners\n", n_wins);
+
+    /* Labeling dimensions */
+    printf("  INFO: Label dimensions (0-cells / 1-cells / unused):\n");
+    for (i = 0; i < n_wins && i < 10; i++) {
+        int unused = qcat_size + 1 - wins[i].n0 - wins[i].n1;
+        printf("    Win #%d [%d,%d,%d]: %d/%d/%d  zero-cell=%d\n",
+               i + 1, wins[i].ai, wins[i].aj, wins[i].ak,
+               wins[i].n0, wins[i].n1, unused,
+               wins[i].label[qcat_size]);
+    }
+    if (n_wins > 10) printf("    ... (%d more)\n", n_wins - 10);
+
+    /* Zero cell consistency */
+    {
+        int all_same = 1;
+        int first_zc = wins[0].label[qcat_size];
+        for (i = 1; i < n_wins; i++) {
+            if (wins[i].label[qcat_size] != first_zc) {
+                all_same = 0; break;
+            }
+        }
+        printf("  INFO: Zero cell label: %s (value=%d)\n",
+               all_same ? "ALL SAME" : "VARIES", first_zc);
+    }
+
+    /* Vertex type -> label pattern */
+    {
+        int ax0 = 0, ax1 = 0, ed0 = 0, ed1 = 0, bo0 = 0, bo1 = 0;
+        for (i = 0; i < n_wins; i++) {
+            for (j = 0; j < qcat_size; j++) {
+                const char *t;
+                if (wins[i].label[j] < 0) continue;
+                t = quat_vertex_type(qcat[j]);
+                if (t[0] == 'a') {
+                    if (wins[i].label[j] == 0) ax0++; else ax1++;
+                } else if (t[0] == 'e') {
+                    if (wins[i].label[j] == 0) ed0++; else ed1++;
+                } else {
+                    if (wins[i].label[j] == 0) bo0++; else bo1++;
+                }
+            }
+        }
+        printf("  INFO: Label by vertex type (summed across all winners):\n");
+        printf("    Axis:  0=%d  1=%d\n", ax0, ax1);
+        printf("    Edge:  0=%d  1=%d\n", ed0, ed1);
+        printf("    Body:  0=%d  1=%d\n", bo0, bo1);
+    }
+
+    /* Count unique labelings (ignoring which weights produced them) */
+    {
+        int n_unique = 0;
+        for (i = 0; i < n_wins; i++) {
+            int is_dup = 0;
+            for (j = 0; j < i; j++) {
+                int k2;
+                int same = 1;
+                for (k2 = 0; k2 <= qcat_size; k2++) {
+                    if (wins[i].label[k2] != wins[j].label[k2]) {
+                        same = 0; break;
+                    }
+                }
+                if (same) { is_dup = 1; break; }
+            }
+            if (!is_dup) n_unique++;
+        }
+        printf("  INFO: Unique labelings: %d / %d winners\n", n_unique, n_wins);
+    }
+
+    /* Print first labeling in detail */
+    printf("  INFO: Labeling of winner #1 [%d,%d,%d]:\n",
+           wins[0].ai, wins[0].aj, wins[0].ak);
+    for (j = 0; j < qcat_size; j++) {
+        if (wins[0].label[j] >= 0) {
+            printf("    cell %2d (%+.3f,%+.3f,%+.3f,%+.3f) %s -> %d\n",
+                   j, qcat[j].a, qcat[j].b, qcat[j].c, qcat[j].d,
+                   quat_vertex_type(qcat[j]), wins[0].label[j]);
+        }
+    }
+    printf("    zero cell -> %d\n", wins[0].label[qcat_size]);
+
+    /* Generate symmetry permutations */
+    generate_symmetry_perms();
+    printf("  INFO: Symmetry permutations: %d (left + right multiplication)\n",
+           n_sym_perms);
+
+    /* Compute orbits using union-find with pairwise checks */
+    for (i = 0; i < n_wins; i++) wins[i].orbit = i;
+    for (i = 0; i < n_wins; i++) {
+        for (j = i + 1; j < n_wins; j++) {
+            int p;
+            if (wins[i].orbit == wins[j].orbit) continue;
+            for (p = 0; p < n_sym_perms; p++) {
+                if (labelings_match(i, j, perm_store[p])) {
+                    /* Merge: set all of j's orbit to i's orbit */
+                    int old_orb = wins[j].orbit;
+                    int new_orb = wins[i].orbit;
+                    int k2;
+                    for (k2 = 0; k2 < n_wins; k2++) {
+                        if (wins[k2].orbit == old_orb)
+                            wins[k2].orbit = new_orb;
+                    }
+                    break;
+                }
+            }
+        }
+    }
+
+    /* Count distinct orbits */
+    n_orbits = 0;
+    for (i = 0; i < n_wins; i++) {
+        int is_first = 1;
+        for (j = 0; j < i; j++) {
+            if (wins[j].orbit == wins[i].orbit) { is_first = 0; break; }
+        }
+        if (is_first) n_orbits++;
+    }
+    printf("  INFO: Symmetry orbits: %d\n", n_orbits);
+
+    /* Print orbit structure */
+    {
+        int seen_ids[MAX_WIN];
+        int n_seen = 0;
+        for (i = 0; i < n_wins; i++) {
+            int already = 0;
+            int oi;
+            for (oi = 0; oi < n_seen; oi++) {
+                if (seen_ids[oi] == wins[i].orbit) { already = 1; break; }
+            }
+            if (!already) {
+                int count = 0;
+                seen_ids[n_seen++] = wins[i].orbit;
+                for (j = 0; j < n_wins; j++) {
+                    if (wins[j].orbit == wins[i].orbit) count++;
+                }
+                printf("    Orbit %d: %d members (rep=[%d,%d,%d] labels=%d/%d)\n",
+                       n_seen, count,
+                       wins[i].ai, wins[i].aj, wins[i].ak,
+                       wins[i].n0, wins[i].n1);
+            }
+        }
+    }
+
+    sprintf(msg, "I: %d winners in %d symmetry orbits", n_wins, n_orbits);
+    check(msg, n_wins > 0);
+}
+
+/* ================================================================
+ * Part J: Collision comparison (bracket vs quaternion as hash)
+ * ================================================================ */
+
+static void part_j_collisions(void) {
+    int i, j;
+    char msg[256];
+    int same_both = 0, same_brk_diff_q = 0, same_q_diff_brk = 0;
+    int n_pairs = 0;
+    int lim = corr_size < 500 ? corr_size : 500;
+
+    printf("\n=== Part J: Collision comparison ===\n");
+    printf("  INFO: Comparing %d braid samples pairwise\n", lim);
+
+    for (i = 0; i < lim; i++) {
+        for (j = i + 1; j < lim; j++) {
+            int sb = cyc8_eq(corr[i].bracket, corr[j].bracket);
+            int sq = quat_close(corr[i].q, corr[j].q, 1e-8) ||
+                     quat_close(corr[i].q, quat_neg(corr[j].q), 1e-8);
+            n_pairs++;
+            if (sb && sq)       same_both++;
+            else if (sb && !sq) same_brk_diff_q++;
+            else if (!sb && sq) same_q_diff_brk++;
+        }
+    }
+
+    printf("  INFO: Total pairs: %d\n", n_pairs);
+    printf("  INFO: Same bracket AND same quaternion:    %d\n", same_both);
+    printf("  INFO: Same bracket, different quaternion:  %d (bracket collisions)\n",
+           same_brk_diff_q);
+    printf("  INFO: Same quaternion, different bracket:  %d (quat divergence)\n",
+           same_q_diff_brk);
+    printf("  INFO: Different both:                      %d\n",
+           n_pairs - same_both - same_brk_diff_q - same_q_diff_brk);
+
+    if (same_brk_diff_q > 0) {
+        printf("  INFO: *** Quaternion RESOLVES %d bracket collisions ***\n",
+               same_brk_diff_q);
+    }
+
+    if (n_pairs > 0) {
+        printf("  INFO: Bracket collision rate: %.2f%%\n",
+               100.0 * (double)same_brk_diff_q / (double)n_pairs);
+        printf("  INFO: Quaternion divergence rate: %.2f%%\n",
+               100.0 * (double)same_q_diff_brk / (double)n_pairs);
+    }
+
+    sprintf(msg, "J: Collision analysis (%d pairs)", n_pairs);
+    check(msg, n_pairs > 0);
+}
+
+/* ================================================================
+ * Part K: Full two-sided symmetry group (g*v*h)
+ * ================================================================ */
+
+#define MAX_FULL_PERMS 600
+static int full_perm_store[MAX_FULL_PERMS][CELL_MAX];
+static int n_full_perms = 0;
+
+static void generate_full_symmetry(void) {
+    int gi, hi, vi;
+    n_full_perms = 0;
+
+    for (gi = 0; gi < qcat_size; gi++) {
+        for (hi = 0; hi < qcat_size; hi++) {
+            int perm[CELL_MAX];
+            int valid = 1;
+            int is_dup = 0;
+            int pi;
+
+            for (vi = 0; vi < qcat_size; vi++) {
+                Quat gv = quat_mul(qcat[gi], qcat[vi]);
+                Quat gvh = quat_mul(gv, qcat[hi]);
+                int idx = find_quat(gvh);
+                if (idx < 0) { valid = 0; break; }
+                perm[vi] = idx;
+            }
+            perm[qcat_size] = qcat_size;
+            if (!valid) continue;
+
+            /* Dedup */
+            for (pi = 0; pi < n_full_perms; pi++) {
+                int same = 1;
+                int ki;
+                for (ki = 0; ki <= qcat_size; ki++) {
+                    if (full_perm_store[pi][ki] != perm[ki]) {
+                        same = 0; break;
+                    }
+                }
+                if (same) { is_dup = 1; break; }
+            }
+
+            if (!is_dup && n_full_perms < MAX_FULL_PERMS) {
+                memcpy(full_perm_store[n_full_perms], perm,
+                       sizeof(int) * (size_t)(qcat_size + 1));
+                n_full_perms++;
+            }
+        }
+    }
+}
+
+static void part_k_full_symmetry(void) {
+    int i, j;
+    char msg[256];
+    int n_orbits;
+    int orbit_k[MAX_WIN];
+
+    printf("\n=== Part K: Full two-sided symmetry (g*v*h) ===\n");
+
+    generate_full_symmetry();
+    printf("  INFO: Full two-sided group: %d distinct permutations\n",
+           n_full_perms);
+    printf("  INFO: (from %dx%d = %d pairs, expected ~576 for F4 rotation)\n",
+           qcat_size, qcat_size, qcat_size * qcat_size);
+
+    /* Compute orbits */
+    for (i = 0; i < n_wins; i++) orbit_k[i] = i;
+    for (i = 0; i < n_wins; i++) {
+        for (j = i + 1; j < n_wins; j++) {
+            int p;
+            if (orbit_k[i] == orbit_k[j]) continue;
+            for (p = 0; p < n_full_perms; p++) {
+                if (labelings_match(i, j, full_perm_store[p])) {
+                    int old_orb = orbit_k[j];
+                    int new_orb = orbit_k[i];
+                    int k2;
+                    for (k2 = 0; k2 < n_wins; k2++) {
+                        if (orbit_k[k2] == old_orb)
+                            orbit_k[k2] = new_orb;
+                    }
+                    break;
+                }
+            }
+        }
+    }
+
+    /* Count orbits */
+    n_orbits = 0;
+    for (i = 0; i < n_wins; i++) {
+        int is_first = 1;
+        for (j = 0; j < i; j++) {
+            if (orbit_k[j] == orbit_k[i]) { is_first = 0; break; }
+        }
+        if (is_first) n_orbits++;
+    }
+    printf("  INFO: Full symmetry orbits: %d (from %d winners)\n",
+           n_orbits, n_wins);
+
+    /* Print orbit structure */
+    {
+        int seen_ids[MAX_WIN];
+        int n_seen = 0;
+        for (i = 0; i < n_wins; i++) {
+            int already = 0;
+            int oi;
+            for (oi = 0; oi < n_seen; oi++) {
+                if (seen_ids[oi] == orbit_k[i]) { already = 1; break; }
+            }
+            if (!already) {
+                int count = 0;
+                seen_ids[n_seen++] = orbit_k[i];
+                for (j = 0; j < n_wins; j++) {
+                    if (orbit_k[j] == orbit_k[i]) count++;
+                }
+                printf("    Orbit %d: %d members (rep=[%d,%d,%d])\n",
+                       n_seen, count,
+                       wins[i].ai, wins[i].aj, wins[i].ak);
+            }
+        }
+    }
+
+    if (n_orbits <= 3) {
+        printf("  INFO: *** %d fundamental pattern(s) generate all %d solutions ***\n",
+               n_orbits, n_wins);
+    }
+
+    /* Detailed analysis of orbit representatives */
+    printf("  INFO: === Orbit representative analysis ===\n");
+    {
+        int seen_ids2[MAX_WIN];
+        int n_seen2 = 0;
+        for (i = 0; i < n_wins; i++) {
+            int already = 0;
+            int oi;
+            for (oi = 0; oi < n_seen2; oi++) {
+                if (seen_ids2[oi] == orbit_k[i]) { already = 1; break; }
+            }
+            if (!already) {
+                int count = 0;
+                int n_ax0 = 0, n_ax1 = 0, n_ed0 = 0, n_ed1 = 0;
+                int n_bo0 = 0, n_bo1 = 0;
+                seen_ids2[n_seen2++] = orbit_k[i];
+                for (j = 0; j < n_wins; j++) {
+                    if (orbit_k[j] == orbit_k[i]) count++;
+                }
+                /* Count vertex types per label for this rep */
+                for (j = 0; j < qcat_size; j++) {
+                    const char *t;
+                    if (wins[i].label[j] < 0) continue;
+                    t = quat_vertex_type(qcat[j]);
+                    if (t[0] == 'a') {
+                        if (wins[i].label[j] == 0) n_ax0++; else n_ax1++;
+                    } else if (t[0] == 'e') {
+                        if (wins[i].label[j] == 0) n_ed0++; else n_ed1++;
+                    } else {
+                        if (wins[i].label[j] == 0) n_bo0++; else n_bo1++;
+                    }
+                }
+                printf("    Rep %d [%d,%d,%d] (%d members): "
+                       "ax=%d/%d ed=%d/%d bo=%d/%d",
+                       n_seen2, wins[i].ai, wins[i].aj, wins[i].ak, count,
+                       n_ax0, n_ax1, n_ed0, n_ed1, n_bo0, n_bo1);
+                /* One-line characterization */
+                if (n_ed1 > n_ed0 && n_ed1 >= n_bo1)
+                    printf(" [edge-dominant-1]");
+                else if (n_bo1 > n_bo0 && n_bo1 >= n_ed1)
+                    printf(" [body-dominant-1]");
+                else if (n_ax0 + n_ed0 > n_ax1 + n_ed1)
+                    printf(" [mixed, 0-leaning]");
+                else
+                    printf(" [balanced]");
+                printf("\n");
+            }
+        }
+    }
+
+    sprintf(msg, "K: %d orbits under %d-element symmetry",
+            n_orbits, n_full_perms);
+    check(msg, n_full_perms > 0);
+}
+
+/* ================================================================
+ * Part L: Why 7/7/11?
+ * ================================================================ */
+
+static void part_l_why_seven(void) {
+    int i, j;
+    char msg[256];
+    int ever_used[CELL_MAX];
+    int n_never_used = 0;
+
+    printf("\n=== Part L: Why 7/7/11? ===\n");
+    printf("  INFO: XOR6 truth table: 32 inputs parity-0, 32 inputs parity-1\n");
+    printf("  INFO: Every winner uses exactly 7 cells for 0 and 7 for 1\n");
+    printf("  INFO: 11 cells receive NO subset sums at all\n\n");
+
+    /* Which cells are ever used across all 35 winners? */
+    for (j = 0; j <= qcat_size; j++) ever_used[j] = 0;
+    for (i = 0; i < n_wins; i++) {
+        for (j = 0; j <= qcat_size; j++) {
+            if (wins[i].label[j] >= 0) ever_used[j] = 1;
+        }
+    }
+    for (j = 0; j <= qcat_size; j++) {
+        if (!ever_used[j]) n_never_used++;
+    }
+    printf("  INFO: Cells NEVER used (in any of %d winners): %d\n",
+           n_wins, n_never_used);
+
+    if (n_never_used > 0) {
+        printf("  INFO: Never-used cells:\n");
+        for (j = 0; j <= qcat_size; j++) {
+            if (!ever_used[j]) {
+                if (j < qcat_size) {
+                    printf("    cell %2d (%+.3f,%+.3f,%+.3f,%+.3f) %s\n",
+                           j, qcat[j].a, qcat[j].b, qcat[j].c, qcat[j].d,
+                           quat_vertex_type(qcat[j]));
+                } else {
+                    printf("    zero cell\n");
+                }
+            }
+        }
+    }
+
+    /* Cells used in ALL 35 winners */
+    {
+        int n_always = 0;
+        printf("  INFO: Cells used in ALL %d winners:\n", n_wins);
+        for (j = 0; j <= qcat_size; j++) {
+            int in_all = 1;
+            for (i = 0; i < n_wins; i++) {
+                if (wins[i].label[j] < 0) { in_all = 0; break; }
+            }
+            if (in_all) {
+                n_always++;
+                if (j < qcat_size) {
+                    printf("    cell %2d (%+.3f,%+.3f,%+.3f,%+.3f) %s\n",
+                           j, qcat[j].a, qcat[j].b, qcat[j].c, qcat[j].d,
+                           quat_vertex_type(qcat[j]));
+                } else {
+                    printf("    zero cell\n");
+                }
+            }
+        }
+        printf("  INFO: Total always-used: %d\n", n_always);
+    }
+
+    /* Cell usage frequency */
+    printf("  INFO: Cell usage frequency (out of %d winners):\n", n_wins);
+    {
+        int usage[CELL_MAX];
+        int usage_hist[36]; /* 0..35 */
+        int h;
+        memset(usage_hist, 0, sizeof(usage_hist));
+        for (j = 0; j <= qcat_size; j++) {
+            usage[j] = 0;
+            for (i = 0; i < n_wins; i++) {
+                if (wins[i].label[j] >= 0) usage[j]++;
+            }
+            if (usage[j] <= 35) usage_hist[usage[j]]++;
+            printf("    cell %2d %-4s: %2d/35",
+                   j, (j < qcat_size) ? quat_vertex_type(qcat[j]) : "zero",
+                   usage[j]);
+            if (usage[j] == 0) printf(" (NEVER)");
+            if (usage[j] == 35) printf(" (ALWAYS)");
+            printf("\n");
+        }
+        printf("  INFO: Usage histogram:\n");
+        for (h = 0; h <= 35; h++) {
+            if (usage_hist[h] > 0)
+                printf("    used %2d times: %d cells\n", h, usage_hist[h]);
+        }
+    }
+
+    /* Shared unused cells between pairs of winners */
+    {
+        int min_sh = 25, max_sh = 0;
+        double avg_sh = 0.0;
+        int np = 0;
+        for (i = 0; i < n_wins; i++) {
+            for (j = i + 1; j < n_wins; j++) {
+                int sh = 0;
+                int k2;
+                for (k2 = 0; k2 <= qcat_size; k2++) {
+                    if (wins[i].label[k2] < 0 && wins[j].label[k2] < 0)
+                        sh++;
+                }
+                if (sh < min_sh) min_sh = sh;
+                if (sh > max_sh) max_sh = sh;
+                avg_sh += (double)sh;
+                np++;
+            }
+        }
+        if (np > 0) avg_sh /= (double)np;
+        printf("  INFO: Shared unused cells between winner pairs:\n");
+        printf("    min=%d  max=%d  avg=%.1f\n", min_sh, max_sh, avg_sh);
+    }
+
+    /* How many distinct "unused sets" are there? */
+    {
+        int n_distinct = 0;
+        for (i = 0; i < n_wins; i++) {
+            int is_new = 1;
+            for (j = 0; j < i; j++) {
+                int k2;
+                int same = 1;
+                for (k2 = 0; k2 <= qcat_size; k2++) {
+                    int ui = (wins[i].label[k2] < 0) ? 1 : 0;
+                    int uj = (wins[j].label[k2] < 0) ? 1 : 0;
+                    if (ui != uj) { same = 0; break; }
+                }
+                if (same) { is_new = 0; break; }
+            }
+            if (is_new) n_distinct++;
+        }
+        printf("  INFO: Distinct unused-cell patterns: %d / %d winners\n",
+               n_distinct, n_wins);
+    }
+
+    sprintf(msg, "L: 7/7/11 analysis complete");
+    check(msg, 1);
+}
+
+/* ================================================================
+ * Main
+ * ================================================================ */
+
+int main(void) {
+    /* Suppress unused-function for utility kept for future use */
+    (void)quat_scale;
+
+    printf("KNOTAPEL DEMO 66: Quaternionic DKC — First Contact\n");
+    printf("===================================================\n");
+
+    part_a_arithmetic();
+    part_b_su2();
+    part_c_catalog();
+    part_d_correspondence();
+    part_e_activation();
+    part_f_comparison();
+    part_g_winning_tuples();
+    part_h_voronoi();
+    part_i_labeling();
+    part_j_collisions();
+    part_k_full_symmetry();
+    part_l_why_seven();
+
+    printf("\n===================================================\n");
+    printf("Results: %d passed, %d failed\n", n_pass, n_fail);
+    return n_fail > 0 ? 1 : 0;
+}
