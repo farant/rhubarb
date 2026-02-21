@@ -2758,5 +2758,61 @@ DKC uses the Kauffman bracket (writhe-dependent), NOT the Jones polynomial (writ
 4. Is the 0.62 ≈ 1/φ coefficient in the (now-superseded) log scaling law meaningful or coincidence?
 5. Research PDF deep reading in progress (18 papers in knot-pdfs/ and research-ingress/)
 
+## PDF Research Findings — Key Implications for DKC
+
+*Source: 18 papers across knot-pdfs/ and research-ingress/, analyzed February 2026. Full per-paper notes in knot-pdfs/notes-*.md*
+
+### The Framing Anomaly Thesis (FOUNDATION)
+
+Kirby (1978) proved framing determines 3-manifold topology. Jones (1985) normalizes framing away. Witten's TQFT subtracts the "framing anomaly." DKC KEEPS the framing (uses bracket, not Jones). The computational content of DKC lives in exactly the data that mainstream knot theory and physics discard. This was our bracket-vs-Jones hypothesis from the strand theory discussion — the PDFs confirm it from two independent directions:
+- **Kirby's surgery theorem**: framing IS the essential surgical datum. Without it you cannot distinguish 3-manifolds.
+- **Witten's TQFT structure**: delta=0 is where TQFT becomes maximally degenerate (level k=0, only trivial representation). The "framing anomaly" that physicists subtract to get topological invariants contains the computational content DKC exploits.
+
+Kirby established this 8 years before Jones, then the field followed Jones anyway. DKC is recovering what was discarded.
+
+### The 4-Manifold Bridge Is Confirmed
+
+Craven et al (2022) show Jones polynomial evaluated at roots of unity e^{πin/(k+2)} for k=3-10 predicts 4D invariants (Rasmussen s-invariant, slice genus) at >96% accuracy. Accuracy is STABLE across k values. Even the raw Jones polynomial (no root evaluation) gets ~95%. Simple 2-layer networks suffice — consistent with our 24-element binary octahedral group being the right-sized structure. This validates the Kirby calculus demo direction and Fran's manifold framework. DKC at roots of unity IS 4-manifold computation.
+
+Central open question from the paper: "What is four-dimensional about the Jones polynomial?" DKC may be part of the answer.
+
+### Circuit Interpretation Is Now Precise
+
+Kirby's blowing-up procedure (Section 5 of his 1978 paper) establishes: k crossings in a knot ↔ unknot + k additional ±1-framed unknotted components. Each R-matrix multiplication in our closure algorithm = one gate. Depth = circuit depth. Demo 82's "capacity linear in depth" = "capacity linear in circuit depth." This makes the neural network analogy exact — not metaphorical, literally a circuit.
+
+Handle slides are non-commutative (sliding γ_i over γ_j ≠ sliding γ_j over γ_i), matching braid group non-commutativity.
+
+### Crossing Depth Bounded by Genus
+
+Ozsváth-Szabó (2004) note in a single sentence (p.316) that Kauffman states can be identified with simultaneous trajectories on Heegaard diagrams. This connects DKC's state-sum bracket evaluation directly to Heegaard Floer homology — the most powerful modern knot invariant. The filtration level in HFK is bounded by the Seifert genus: HFK(K, i) = 0 for |i| > g(K). Our crossing depth measure has a topological interpretation — bounded by genus of the knot. Demo 82's depth structure maps onto genus stratification. L-spaces (minimal HF rank) parallel DKC's finite-group ceiling at lattice roots.
+
+### Two Gates Suffice
+
+Piergallini & Zuddas (2018): only cones and nodes (= positive and negative crossings) needed for ALL 4-manifolds. Minimal gate set. Our R-matrix and its inverse are the two gates. The "borrow-and-return" technique (introduce temporary node to create relabeling room, then remove it) is the 4-manifold version of ancilla qubits — could inspire DKC: temporary crossings to enable otherwise-blocked computations.
+
+### The 24 Coincidence
+
+|S₄| = 24 = |binary octahedral group|. Different groups, same order, both create capacity ceilings:
+- DKC: binary octahedral group bounds distinct bracket values → computational ceiling for Boolean functions
+- Piergallini: S₄ is the minimum symmetric group to represent all 4-manifolds as branched coverings
+
+Stabilization (adding trivial 5th sheet to resolve node singularities) directly parallels MVN k=4→k=6 unlocking parity. Both are "adding trivial resources that enable topological rearrangements previously blocked." S₄ and the binary octahedral group are both related to the symmetries of the cube/octahedron — the 24 appears structurally, not coincidentally.
+
+### Entanglement Vanishing = Node Singularity
+
+At nodes in branching surfaces, two sheets cross with DISJOINT monodromy transpositions (i j) and (k l) where {i,j}∩{k,l}=∅. This is the covering-space version of DKC's entanglement vanishing (non-interleaving braids have bracket=0 at delta=0). The singularity exists precisely because the two branching sheets DON'T entangle.
+
+### Parity Effect in Signature
+
+Davies et al (2022, DeepMind): σ(K) ≈ -(1/2)Σℓᵢ²qᵢ where ℓᵢ is linking number and qᵢ is twist count. Linking number QUADRATICALLY amplifies signature contribution. Correction terms only come from geodesics with ODD linking number — even-parity contributes nothing. We compute XOR (parity). The parity selectivity in 4D signature might be the same phenomenon viewed from the manifold side.
+
+### Open Leads for Future Demos
+
+1. **Mod-16 vs mod-8**: Rohlin's theorem (signature divisible by 16 for spin 4-manifolds) vs our ζ₈ periodicity. Unexplored relationship.
+2. **Cobordism witnesses as computational paths**: Kirby's proof constructs then discards a 5D cobordism. "Proves programs are equivalent but throws away the compiler." The compilation path might carry computational content.
+3. **Grid diagram permutation pairs as bridge to catalog**: Grid diagrams = (σ_X, σ_O) ∈ S_n × S_n. Interleaving commutation = single crossing change. Knot fauna phase transition at grid number 9-16 (like DKC four-tier structure).
+4. **"What is 4D about Jones?"**: DKC may be part of the answer — the bracket at roots of unity accesses 4-manifold structure via the framing data Jones discards.
+5. **3D vs 2D computational complexity**: Only linking number is proven faster to compute in 3D (Bar-Natan et al). Jones, Alexander, HOMFLY-PT all have UNKNOWN 3D computational status. V^{4/3} projection inflation means 2D crossing count is dimensionally distorted.
+
 ---
 *End of Explorer's Log*
