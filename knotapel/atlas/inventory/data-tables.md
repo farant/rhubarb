@@ -4,6 +4,8 @@ All numerical tables extracted from the demo index and explorer's log. Exact num
 
 *Updated 2026-02-20: Added Demo 38 (dimension reduction), Demo 39 (symmetry decomposition), Demo 60 (ell=7 cubic wall), Demo 63 (angular anatomy), Demo 39 Parts G-J (three gram forms) data.*
 
+*Updated 2026-02-21: Added Demos 64–71 (parity matroid recursion, Clifford staircase, quaternionic DKC, coordinate system zoo, stereographic DKC, multi-root S² comparison, musica nodorum, spectral DKC).*
+
 ---
 
 ## 1. Axiality Hierarchy Table
@@ -733,6 +735,14 @@ ALL 24 angles (every 15°) give EXACTLY 11/13.
 | 60 | 15/15 | COMPLETE |
 | 61 | ~14 (12/12) | COMPLETE |
 | 62 | 7/7 | COMPLETE |
+| 64 | 22/22 | COMPLETE |
+| 65 | 38/38 | COMPLETE |
+| 66 | 30/30 | COMPLETE |
+| 67 | 18/18 | COMPLETE |
+| 68 | 9/9 | COMPLETE |
+| 69 | 9/9 | COMPLETE |
+| 70 | 8/8 | COMPLETE |
+| 71 | 10/10 | COMPLETE |
 
 **Provenance:** Demo index, all entries.
 
@@ -863,8 +873,16 @@ Result: CSS approach fails. Radical is self-orthogonal under Gram form (tautolog
 | 60 | ℓ=7 cubic wall. All radical formulas universal. | First cubic field; 2ℓ-3, ℓ²-ℓ-3, F(ℓ-1) all hold. |
 | 61 | 11/13 half-plane theorem (pure integer proof). | Computational proof. |
 | 62 | Analytical proof: WHY 0x06 and 0x1B blocked. | Geometric obstruction identified. |
+| 64 | Matroid minor chain. Funnel collapses at n=6. Min wall distance d=4. | Parity hierarchy is deletion-contraction closed; XOR6 wall characterized. |
+| 65 | Z[ζ₁₆] leaves parity ceiling at n=5. k=24 breaks convention wall. | Gap-of-2 refuted; generalized activations first break XOR6 at k=24. |
+| 66 | 24-cell as braid image. Voronoi beats geographic grid (35 vs 34). | 4D polytope is natural computational geometry; antipodal constraint absolute. |
+| 67 | S² is the sweet spot: 14 cells, 36 solutions. Hopf phase is inert. | DKC lives on rotation axis S²; Hopf fiber carries zero information. |
+| 68 | Stereographic projection: S² metric preserves solutions; Euclidean gives zero. | Computation is intrinsically curved; plane is a window, not a workspace. |
+| 69 | Direction Nesting Theorem. ζ_8 is computational sweet spot. Trivialization at ζ_16. | Coarsest root structures S²; finer roots nest it but trivialize XOR6. |
+| 70 | 4 knot notes: C, Eb, E, F#. Yang-Baxter = same melody. Icosahedron fails. | Braid words are melodies; music-space orthogonality r=-0.06. |
+| 71 | Sharp phase transition at l=6. 13=13 theorem. 3.5× super-Nyquist compression. | Spectral characterization of XOR6 on S²; bandwidth DOF explains trivialization. |
 
-**Provenance:** Explorer's Log landmark table + Demos 38-39, 55-62.
+**Provenance:** Explorer's Log landmark table + Demos 38-39, 55-71.
 
 ---
 
@@ -1116,4 +1134,493 @@ Formula: excess = Σ (dim L_j)² for j ≥ ℓ-1 (same parity as n).
 
 ---
 
-*Generated 2026-02-20 from demo-index.md (2845 lines) and explorers-log.md (1273 lines). Updated with Demos 38, 39, 60.*
+---
+
+## 26. Parity Matroid Funnel — Demo 64
+
+### Upward Coverage (Funnel)
+
+| Transition | Extensible sets | Total sets | Coverage |
+|-----------|----------------|------------|----------|
+| XOR3 → XOR2 | 1459 | 1469 | 99.3% |
+| XOR4 → XOR3 | 1503 | 3834 | 39.2% |
+| XOR5 → XOR4 | 129 | 673 | 19.2% |
+| XOR6 → XOR5 | 0 | 27 | 0% |
+
+The n=6 wall casts a shadow: 80% of XOR4 weight sets are already dead ends (cannot extend to XOR5).
+
+**Provenance:** Demo 64.
+
+### Distinct Unordered Weight Sets
+
+| Level | Distinct sets | Ordered solutions | Notes |
+|-------|--------------|------------------|-------|
+| XOR2 | 1,469 | — | — |
+| XOR3 | 3,834 | — | — |
+| XOR4 | 673 | — | — |
+| XOR5 | 27 | 3,020 | ~112 per set (≈5!=120, near-complete permutation symmetry) |
+
+**Provenance:** Demo 64.
+
+### Parent-Child Multiplicity
+
+| Transition | Max parents | Mean parents | Notes |
+|-----------|-------------|--------------|-------|
+| XOR5 → XOR4 | 2 | 1.05 | Near-tree at wall |
+| XOR4 → XOR3 | 8 | 1.79 | — |
+| XOR3 → XOR2 | 29 | 7.88 | Dense mesh away from wall |
+
+6 collisions in XOR5→XOR4 deletion map: 27×5=135 instances → 129 distinct children + 6 collisions.
+
+**Provenance:** Demo 64.
+
+### Vocabulary Stratification
+
+| Category | Count | Octants |
+|----------|-------|---------|
+| Good values (extensible) | 44 | — |
+| Poison values (orphan-only) | 31 | {1,2,3,5,6,7} — octant 4 absent |
+| Total class-1 at k=15 | 83 | — |
+| Values appearing in any XOR4 | 75 | — |
+
+Strictly nested: the same 44 good values appear in XOR5 solutions and extensible XOR4 solutions.
+
+**Provenance:** Demo 64.
+
+### Wall Hamming Distance Distribution
+
+| Distance d | Cases | Notes |
+|-----------|-------|-------|
+| 0 | 0 | — |
+| 1 | 0 | — |
+| 2 | 0 | — |
+| 3 | 0 | — |
+| 4 | 38 | Minimum (closest failures); 34/38 = 89.5% are self-doubling |
+| ≤8 | 195 | Near-misses total |
+| ~15–16 | peak | Distribution peak |
+
+2,241 total extension attempts (27 XOR5 sets × 83 values).
+
+**Provenance:** Demo 64.
+
+### Error Weight Distribution (Near-misses)
+
+| Input weight | Cases |
+|-------------|-------|
+| 0 | 0 |
+| 1 | 0 |
+| 2 | 237 |
+| 3 | 370 |
+| 4 | 446 (peak) |
+| 5 | 172 |
+| 6 | 23 |
+
+Zero errors at weight 0 or 1 — wall manifests only at pairwise interaction level and above.
+Second wall layer: d=7 (2 cases, 0 broken pairs), d=8 (16 cases, 0 broken pairs) — GHZ-type higher-order obstruction.
+
+**Provenance:** Demo 64.
+
+---
+
+## 27. Clifford Hierarchy Staircase — Demo 65
+
+### Z[ζ₈] vs Z[ζ₁₆] Tier Threshold Comparison
+
+| Ring | XOR3 min k | XOR4 min k | XOR5 min k | XOR6 min k (standard) | Parity ceiling |
+|------|-----------|-----------|-----------|----------------------|---------------|
+| Z[ζ₈] | 6 | 8 | 15 | impossible | n=5 |
+| Z[ζ₁₆] | 6 | 8 | 14 | impossible | n=5 |
+
+Tier thresholds are identical. Parity ceiling is algebra-independent.
+
+**Provenance:** Demo 65.
+
+### Z[ζ₁₆] Catalog Structure
+
+| Property | Value |
+|---------|-------|
+| Base catalog size | 36 distinct values |
+| Extended catalog size | 56 values (+20 from 4-strand braids) |
+| Angular directions occupied | 14/16 (missing dirs 2 and 11, at 45.0° and 247.5°) |
+| Axial / two-component split | 24/36 axial, 12/36 two-component |
+| Overlap with Z[ζ₈] | 8/100 Z[ζ₈] values appear in Z[ζ₁₆]; 20/36 Z[ζ₁₆] values lie in Z[ζ₈] subring |
+| Pigeonhole bound | 14 (vs 7 for Z[ζ₈]) |
+| Gap from pigeonhole to ceiling | 9 (14-5) — widened from 2 (7-5) |
+
+**Provenance:** Demo 65.
+
+### XOR5 Solution Landscape at Z[ζ₁₆]
+
+| k | XOR5 solutions | Notes |
+|---|---------------|-------|
+| 14 | 120 | Min k for XOR5 |
+| 15 | 1,080 (extended) | Incompleteness artifact corrected by catalog extension |
+| 17 | 240 | — |
+| 21 | 240 | — |
+| 31 | 960 | k=31 zero was incompleteness artifact; recovered to 960 with extended catalog |
+
+**Provenance:** Demo 65.
+
+### Generalized XOR6 Results by k (Even k Landscape)
+
+| k | Generalized XOR6 pass count | Notes |
+|---|----------------------------|-------|
+| ≤23 | 0 | Absolute wall regardless of labeling |
+| 24 | 3 | First break; 3/2,700 pass |
+| 26 | 4 | — |
+| 28 | 4 | — |
+| 30 | 10 | — |
+| 32 | 6 | — |
+| 38 | **0** | Only even k ≥ 24 with zero solutions (38 = 2×19) |
+| 40 | 2 | — |
+| 62 | 34 | — |
+
+All odd k ≥ 25 tested: 0 solutions. Generalized XOR6 exists only at even k near threshold.
+All 3 passing tuples at k=24 consist of exactly 3 antipodal pairs (w, -w). Min margin to sector boundary: 0.000000 rad — zero margin universally.
+
+**Provenance:** Demo 65.
+
+### XOR7 Scaling Data
+
+| k | XOR7 solutions (narrow search) | XOR7 solutions (broader C(100,2) search) |
+|---|--------------------------------|------------------------------------------|
+| 91 | 1 | — |
+| 120 | — | 5 |
+| 127 | 1 (narrow) | 4 (broader) |
+
+XOR7 minimum k: 91. Winner anatomy: 3 antipodal pairs + 1 lone weight at 90° (purely imaginary).
+Scaling ratio: XOR7/XOR6 = 91/24 ≈ 3.8.
+
+**Provenance:** Demo 65.
+
+---
+
+## 28. 24-Cell Geometry — Demo 66
+
+### 24-Cell Vertex Decomposition
+
+| Type | Count | Coordinates | Notes |
+|------|-------|------------|-------|
+| Axis-aligned | 4 | ±1, ±i, ±j, ±k | One nonzero component |
+| Edge-midpoint | 12 | two components at ±1/√2 | — |
+| Body-diagonal | 8 | all components at ±½ | — |
+| **Total** | **24** | 4+12+8=24 | Vertices of the 24-cell |
+
+With negatives: 48 quaternions = binary octahedral group.
+
+**Provenance:** Demo 66.
+
+### Geographic Grid vs Voronoi Solution Counts (XOR6)
+
+| Method | Cells | Solutions | Notes |
+|--------|-------|-----------|-------|
+| 3×3 geographic | 9 | 0 | — |
+| 4×4 geographic | 16 | 0 | — |
+| 5×5 geographic | 25 | 0 | — |
+| 6×6 geographic | 36 | 3 | Antipodal-pairs only |
+| 8×8 geographic | 64 | 34 | Antipodal-pairs only |
+| 24-cell Voronoi | 25 cells | **35** | Beats 64-cell geographic grid |
+
+Full C(24,6)=475,020 unrestricted search: 0 solutions at any resolution. Antipodal constraint is absolute.
+
+**Provenance:** Demo 66.
+
+### F4 Orbit Decomposition (35 Voronoi XOR6 Solutions)
+
+| Orbit | Size | Type | Notes |
+|-------|------|------|-------|
+| 1 | 12 | Edge-dominant | Edge cells → label 1 |
+| 2 | 7 | Edge-dominant | — |
+| 3 | 5 | Body-dominant | Axis/body cells → label 1 |
+| 4 | 5 | Body-dominant | — |
+| 5 | 4 | Edge-dominant | — |
+| 6 | 2 | Body-dominant | — |
+| **Total** | **35** | — | Edge-dominant: 22; body-dominant: 13 |
+
+F4 symmetry group order: 576 (two-sided symmetry of 24-cell).
+
+**Provenance:** Demo 66.
+
+### Complementary Hash Collision Table (Bracket vs Quaternion)
+
+| Category | Count | Percentage |
+|---------|-------|------------|
+| Same bracket, same quaternion (agree both) | 16,047 | 12.86% |
+| Same bracket, differ in quaternion | 450 | 0.36% |
+| Same quaternion, differ in bracket | 8,424 | 6.75% |
+| Differ on both | 99,829 | 80.03% |
+
+Total: 124,750 braid pairs. Quaternion resolves 450 bracket collisions; bracket resolves 8,424 quaternion collisions.
+
+**Provenance:** Demo 66.
+
+### Universal 7/7/11 Cell Structure
+
+All 35 Voronoi XOR6 solutions: exactly 7 cells labeled 0, 7 cells labeled 1, 11 cells unused.
+Zero cell always labeled 0. 3 antipodal pairs define 3 great circles on S³; 64 subset sums touch only 14/25 Voronoi cells.
+
+**Provenance:** Demo 66.
+
+---
+
+## 29. Coordinate System Zoo — Demo 67
+
+### Activation Comparison (XOR6 Solutions per Cell Count)
+
+| Coordinate system | Cells | Solutions | Sol/cell | Notes |
+|------------------|-------|-----------|---------|-------|
+| Custom 13-dir S² Voronoi | 14 | 36 | 2.57 | Data-derived directions |
+| 24-cell S³ Voronoi (Demo 66) | 25 | 35 | 1.40 | — |
+| Hopf base (8×8) | 64 | 292 | 4.56 | Dominator at high resolution |
+| Eigenvector lat/lon (8×8) | 64 | 204 | 3.19 | — |
+| Cayley-Klein (8×8) | 64 | 106 | 1.66 | Worst at all resolutions |
+| Octahedral Voronoi | 6 | 0 | — | Platonic solid: fails |
+| Icosahedral Voronoi | 12 | 0 | — | Platonic solid: fails |
+| Cuboctahedral Voronoi | 12 | 0 | — | Platonic solid: fails |
+| Hopf phase-only | all k | 0 | — | Completely inert |
+| Complex S¹ k=24 (Demo 65) | 25 | 3 | 0.12 | — |
+
+**Provenance:** Demo 67.
+
+### Eigenvalue Decomposition
+
+| Property | Value |
+|---------|-------|
+| Distinct eigenvalue angles | 4 (0°, 45°, 60°, 90°) |
+| Distinct eigenvector directions (mod ±) | 13 (3 axis + 6 edge-midpoint + 4 body-diagonal) |
+| (angle, direction) pairs | 17 |
+| Quaternions (mod ±) | 24 |
+| Bracket values | 100 |
+
+Axis-aligned directions shared across two eigenvalue angles; body-diagonals appear only at 60°; edge-midpoints only at 90°.
+
+**Provenance:** Demo 67.
+
+### Hopf Phase Zero Results (all k tested)
+
+| k | Hopf phase-only solutions |
+|---|--------------------------|
+| 4 | 0 |
+| 8 | 0 |
+| 12 | 0 |
+| 16 | 0 |
+| 24 | 0 |
+| 32 | 0 |
+
+Hopf fiber carries zero DKC computational information at all resolutions. All information lives in the S² Hopf base.
+
+**Provenance:** Demo 67.
+
+### Eigenvalue k-Sector Solutions
+
+| k | Solutions |
+|---|-----------|
+| 4 | 0 |
+| 6 | 0 |
+| 8 | 4 (first solutions) |
+| 12 | 64 |
+| 16 | 76 |
+| 24 | 72 |
+| 32 | 80 (peak) |
+
+**Provenance:** Demo 67.
+
+### Cross-Demo Cell Count Progression
+
+| Demo | Space | Cells | XOR6 Solutions |
+|------|-------|-------|----------------|
+| D65 | Complex S¹ | 25 sectors | 3 |
+| D66 | Quaternionic S³ | 25 Voronoi | 35 |
+| D67 | Eigenvector S² | 14 Voronoi | 36 |
+| D68 | R² (visualization) | — | — |
+
+The 2D S² projection is the most efficient; full S³ is redundant.
+
+**Provenance:** Demos 65–68.
+
+---
+
+## 30. Stereographic DKC — Demo 68
+
+### S² Metric vs Euclidean Metric Comparison
+
+| Metric for nearest-neighbor | Solutions | Cells | Notes |
+|---------------------------|-----------|-------|-------|
+| S² great-circle (dot product) | 36 | 14 | Exact match to Demo 67 |
+| R² Euclidean distance | 0 | 14 | Broken by area distortion |
+
+7/7/11 cell label structure preserved in R² with S² metric. Computation is intrinsically curved.
+
+**Provenance:** Demo 68.
+
+### Planar Grid Results
+
+| Grid | Cells | Solutions |
+|------|-------|-----------|
+| 4×4 | 16 | 0 |
+| 4×8 | 32 | 2 |
+| 6×6 | 36 | 4 |
+| 8×4 | 32 | 7 |
+| 8×8 | 64 | 33 |
+
+vs 14 cells / 36 solutions with S² Voronoi. Grids cover empty bounding-box regions.
+
+**Provenance:** Demo 68.
+
+### Conformality Distortion (S² → R²)
+
+| Property | Value |
+|---------|-------|
+| Largest cell (cell 8) area fraction | 17% (4.33 normalized) |
+| Smallest cell (cell 1) area fraction | 1% (0.26 normalized) |
+| Area ratio largest/smallest | **16.5×** |
+| Solution count change | 0 (36 → 36) |
+| Metric used | S² dot product (not Euclidean) |
+
+Stereographic projection is angle-preserving but not area-preserving. 16.5× distortion does not affect solutions when S² metric is used.
+Bounding box: x∈[−2.41, 1.37], y∈[−1.00, 2.41]; round-trip precision ~1e-15.
+
+**Provenance:** Demo 68.
+
+---
+
+## 31. Multi-Root Catalog Explosion and Nesting — Demo 69
+
+### Catalog Explosion by Root
+
+| Root | Quaternions enumerated | Eigenvector directions | Dir/quat ratio |
+|------|----------------------|----------------------|---------------|
+| ζ_8 | 24 | 13 | 0.54 |
+| ζ_16 | 7,952 | 3,457 | 0.43 |
+| ζ_32 | 32,768+ (cap limited) | 4,096+ (cap limited) | 0.13 |
+
+**Provenance:** Demo 69.
+
+### Direction Nesting Results (ζ_8 → ζ_{2N})
+
+| Source → Target | Matched | Avg drift | Max drift | Classification |
+|----------------|---------|-----------|-----------|----------------|
+| ζ_8 → ζ_16 | 13/13 | 0.0000° | 0.0000° | RIGIDITY |
+| ζ_8 → ζ_32 (large cap) | 8/13 | — | 2.07° | DRIFT (cap artifact) |
+| ζ_8 → ζ_32 (small cap) | 6/13 | — | 10.9° | CAP ARTIFACT |
+
+Algebraic proof: ζ_8 = (ζ_16)² and ζ_8 = (ζ_32)⁴; squaring a quaternion preserves rotation axis.
+
+**Provenance:** Demo 69.
+
+### XOR6 Trivialization by Root (Natural Voronoi)
+
+| Root | Voronoi cells | Solutions | Sol/cell | % of all triples |
+|------|--------------|-----------|---------|-----------------|
+| ζ_8 | 14 | 36 | 2.57 | 0.007% |
+| ζ_16 | 3,458 | 499,367 | 144.4 | 90.6% |
+| ζ_32 | 4,097 | 493,654 | 120.5 | 89.6% |
+
+At 3,457+ cells the pigeonhole effect dominates — topology is irrelevant.
+
+**Provenance:** Demo 69.
+
+### Fixed-Resolution Comparison (16 Cells)
+
+| Root | Solutions at 16 cells |
+|------|----------------------|
+| ζ_16 | 450 |
+| ζ_32 | 393 |
+
+Finer roots not monotonically better at fixed resolution. Which directions land in which cells matters more than direction count.
+
+**Provenance:** Demo 69.
+
+---
+
+## 32. Knot Notes — Demo 70
+
+### 4 Knot Notes Table
+
+| Eigenvalue angle | Cents | Note | Trace | Interval from C |
+|-----------------|-------|------|-------|----------------|
+| 0° (identity) | 0 | C | 2.000 | Unison |
+| 45° | 300 | Eb | √2 ≈ 1.414 | Minor 3rd |
+| 60° | 400 | E | 1.000 | Major 3rd |
+| 90° | 600 | F# | 0.000 | Tritone |
+
+Trace descends from maximum consonance (C, 2.000) to maximum dissonance (F#, 0.000).
+6 pairwise intervals: m2 (45→60°), M2 (60→90°), m3 (0→45°, 45→90°), M3 (0→60°), tritone (0→90°).
+Pearson r (pitch vs spatial distance): -0.0624 over 253 pairs; 72 same-note/different-direction pairs.
+Music and space are orthogonal dimensions of a unit quaternion.
+Garside element (s₁s₂)³ melody: Eb4 E4 F#4 E4 Eb4 C4.
+
+**Provenance:** Demo 70.
+
+### XOR6 by Polyhedron / Voronoi Type
+
+| Voronoi type | Cells | XOR6 solutions |
+|-------------|-------|----------------|
+| Eigenvector 13-dir | 14 | 36 |
+| Icosahedron | 6 (after antipodal collapse) | 0 |
+| Dodecahedron | 10 (after antipodal collapse) | 0 |
+
+Wrong symmetry group → zero solutions. Only the data-intrinsic binary octahedral structure works.
+Tritone-antipodal correspondence: antipodal dodecahedron faces carry tritone pairs (C/F#, G/Db, D/Ab, A/Eb, E/Bb, B/F) — dissonance IS the antipodal map.
+
+**Provenance:** Demo 70.
+
+---
+
+## 33. Spectral DKC — Demo 71
+
+### Spectral Power by Mode (36 XOR6 Winners)
+
+| Mode l | Avg power fraction | Range | Notes |
+|--------|-------------------|-------|-------|
+| Odd modes (all) | 0% | — | Antipodal symmetry forces zero |
+| l=2 | 4.1% | 0.02%–17.6% | Highest inter-winner variance |
+| l=4 | ~6.0% | 5.6%–6.3% | Low spread, secondary peak |
+| l=6 | 80.7% | 70.0%–83.9% | **Dominant mode; structural invariant** |
+| l=8 | — | — | — |
+| l=12 | ~6.4%–7.3% | — | Tertiary peak |
+
+Best single winner: 83.9% in l=6. All 36 winners share same spectral shape — spectrum is a structural invariant of XOR6 solutions.
+
+**Provenance:** Demo 71.
+
+### Bandwidth Phase Transition
+
+| Bandwidth l_cut | Winner recovery |
+|----------------|----------------|
+| ≤5 | 0% |
+| 6 | **100%** |
+
+Phase transition is exact and sharp — no partial recovery. Proof: mode l has (2l+1) spherical harmonic components; 2×6+1 = 13 = number of eigenvector directions. At l=5: 11 components trying to address 13 regions (underdetermined). At l=6: exactly 13 (determined).
+
+**Provenance:** Demo 71.
+
+### Nyquist vs Actual Compression
+
+| Property | Value |
+|---------|-------|
+| Nyquist prediction for l=6 | (6+1)² = 49 cells |
+| Actual cells needed | 14 |
+| Super-Nyquist compression | 3.5× |
+| Explanation | Compressed sensing: binary function at 13 known support positions |
+
+**Provenance:** Demo 71.
+
+### Trivialization Prediction by Root
+
+| Root | Eigenvector directions N | Predicted min bandwidth l | Nyquist cell count |
+|------|------------------------|--------------------------|-------------------|
+| ζ_8 | 13 | 6 | 49 (actual: 14) |
+| ζ_16 | 3,457 | 1,728 | ~2,989,441 (1,729²) |
+
+ζ_16 prediction l≥1728 explains the ~90% XOR6 solution rate in Demo 69 (pigeonhole saturation at bandwidth this high).
+
+Direction density spectrum (von Mises-Fisher, κ=50): l=0 (51.6%), l=8 (35.8%) — spectrum of WHERE directions are, not what computation does.
+Musical mapping: l=6 → 200 cents (D, whole tone); computation lives ABOVE the eigenvalue-resonant modes l=2,3,4 (F#, E, Eb).
+Quadrature grid: 64θ × 128φ = 8,192 points. Orthonormality max error: 6.82e-14.
+
+**Provenance:** Demo 71.
+
+---
+
+*Generated 2026-02-20 from demo-index.md (2845 lines) and explorers-log.md (1273 lines). Updated with Demos 38, 39, 60. Updated 2026-02-21 with Demos 64–71.*

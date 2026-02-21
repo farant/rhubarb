@@ -23,37 +23,39 @@ lattices = exact computation). Each step is published; the intersection is unocc
 | 1 | Forward DKC: exact Z[zeta_8] bracket values compute XOR (100+ triples, RMS=0.000) | 29 | PROVEN |
 | 2 | Parity wall: XNOR3 has 0/100M quartets under split-sigmoid; 0/2.18B with neglectons | 48-49 | PROVEN |
 | 3 | Parity reachable at k=6 MVN sectors (906 solutions); all 13 NPN classes computable | 50 | PROVEN |
-| 4 | Four-tier NPN hierarchy reproduced from pure octant-sector geometry alone | 50,63 | PROVEN |
-| 5 | 11/13 half-plane theorem: 0x06 and 0x1B unreachable; clean analytical proofs | 61-62 | PROVEN |
-| 6 | Complex Minsky-Papert: k=2 half-plane cannot compute 3-input parity, any weights | 49 | PROVEN |
-| 7 | Parity ceiling n=5 for Z[zeta_8]: n=3→k=6, n=4→k=8 (96 sol), n=5→k=15 (3020 sol), n≥6 impossible | 63 | PROVEN |
-| 8 | Parity requires alternating OM type; 0/1M non-alternating triples achieve parity | 63 | PROVEN |
-| 9 | Radical dimension formula: rad(TL_ℓ) = 2ℓ−3 via Graham-Lehrer cellular theory | 51-52,60 | PROVEN |
-| 10 | Next-level radical: rad(TL_{ℓ+1}) = ℓ²−ℓ−3; universal corank 1 at first degeneracy | 39 | PROVEN |
-| 11 | Markov RT truncation: dim ker(B_M) = dim J(A) + Σ (dim L_j)² for j≥ℓ−1 | 39 | PROVEN |
-| 12 | Sandwich theorem: rad^2(TL_{2k}(0)) isomorphic to TL_{2k-1}(0) | 51 | VERIFIED |
-| 13 | Catalan trace theorem: nonzero TL traces are Catalan numbers; window formula | 51 | VERIFIED |
-| 14 | Fibonacci rank: bilinear rank of rad^2 generator = F(ell-1) across ell=3..7 | 52,60 | VERIFIED |
-| 15 | Axiality: every bracket at delta=0 is axial in Z[zeta_8] (131K braids, 0 exceptions) | 35 | VERIFIED |
+| 4 | Parity ceiling n=5 is algebra-independent: identical at Z[zeta_8] and Z[zeta_16] | 63,65 | PROVEN |
+| 5 | Two-layer wall: absolute (k≤23, no labeling works) + convention (k≥24, custom works) | 65 | PROVEN |
+| 6 | Generalized XOR6 at k=24, XOR7 at k=91 with non-standard sector labelings | 65 | PROVEN |
+| 7 | DKC computation lives on S² (eigenvector direction); Hopf phase is inert | 67 | PROVEN |
+| 8 | 24-cell polytope emerges from SU(2) braid rep; Voronoi beats geographic grids | 66 | PROVEN |
+| 9 | The 13=13 theorem: S² bandwidth l=6 because 2l+1 = 13 = eigenvector directions | 71 | PROVEN |
+| 10 | Parity hierarchy is a funnel-shaped matroid; self-doubling impossibility theorem | 64 | PROVEN |
+| 11 | 11/13 half-plane theorem: 0x06 and 0x1B unreachable; clean analytical proofs | 61-62 | PROVEN |
+| 12 | Radical dimension formula: rad(TL_ℓ) = 2ℓ−3 via Graham-Lehrer cellular theory | 51-52,60 | PROVEN |
+| 13 | Next-level radical: rad(TL_{ℓ+1}) = ℓ²−ℓ−3; universal corank 1 at first degeneracy | 39 | PROVEN |
+| 14 | Markov RT truncation: dim ker(B_M) = dim J(A) + Σ (dim L_j)² for j≥ℓ−1 | 39 | PROVEN |
+| 15 | Direction Nesting: ζ_8 eigenvectors nest exactly in ζ_16 (rigidity, 0° drift) | 69 | PROVEN |
 
 ## Current Frontier
 
-Most recent landmarks: Demo 63 (Angular Anatomy) established the complete parity scaling law
-for Z[zeta_8] — n=5 is the ceiling, with 4-input parity at k=8 (96 solutions) and 5-input
-parity at k=15 (3020 solutions). The four-tier NPN structure is now derived from pure
-octant-sector geometry. The triskelion generalization k=2n is **falsified** (n=5 needs k=15,
-not k=10); the true law is the universal k theorem: k=2M−1. Three formal proofs now filed:
-radical dimension (P01), next-level radical (P02), and Markov RT truncation (P03). Demo 39
-Parts G-J added three Gram forms and the "shadow interpretation" (fixpt = algebraic light,
-Markov = topological light, excess = what topology cannot see).
+Most recent landmarks: Demos 64-71 opened two major arcs. **The wall arc** (D64-65): the
+parity hierarchy is a funnel-shaped matroid with self-doubling as the dominant mechanism;
+the ceiling n=5 is algebra-independent (identical at Z[zeta_8] and Z[zeta_16], gap-of-2
+REFUTED); but generalized activations break the convention layer at k=24 for XOR6. **The
+quaternionic-spherical arc** (D66-71): SU(2) braid representations produce the 24-cell
+polytope (24 quaternions); the computation lives on S² (eigenvector direction), NOT S¹ or
+S³; the Hopf phase carries zero computational information; a custom 13-direction S² Voronoi
+achieves 36 XOR6 solutions at only 14 cells; and the 13=13 theorem (D71) explains why:
+bandwidth l=6 because 2×6+1 = 13 = number of eigenvector directions. Three formal proofs
+filed (P01-P03). 59 demos total.
 
 **Next (Tier 1 priorities):**
-1. **Sandwich theorem formal proof** -- radical dimension formula PROVEN; remaining:
+1. **Analytical proof of the 13=13 bandwidth bound** -- prove l=⌈(N-1)/2⌉ for N-point
+   binary Voronoi on S². Cleanest standalone publication target. Unlocks Paper 5.
+2. **XOR7 on S²** -- D65 showed XOR7 needs k=127 sectors on S¹. Does S² reduce this
+   dramatically (as it did for XOR6: k=24→14 cells)? Tests spectral framework scaling.
+3. **Sandwich theorem formal proof** -- radical dimension formula PROVEN; remaining:
    algebra isomorphism, nilpotency=3, Fibonacci rank. Small-medium effort. Unlocks Paper 3.
-2. **Z[zeta_16] scaling** -- parity ceiling rises (pigeonhole bound n=15). What is the
-   actual constraint ceiling? Is the gap always 2? Tests universality of D63 results.
-3. **Catalog completeness bound** -- prove the 100-value catalog contains all bracket
-   values up to braid length L. Small effort. Closes the key reviewer objection for Paper 1.
 
 ## Deeper Reading (all paths relative to `knotapel/`)
 

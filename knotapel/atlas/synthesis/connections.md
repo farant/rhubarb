@@ -1,6 +1,6 @@
 # Cross-Demo Connections
 
-How 51 demos feed into each other, what recurs, and where threads unexpectedly converge.
+How 59 demos feed into each other, what recurs, and where threads unexpectedly converge.
 
 ---
 
@@ -182,6 +182,48 @@ D62 (analytical proof: algebraic contradictions for 0x06 and 0x1B)
 D62 closes the investigation: the wall is geometric (parallelogram gap on circle),
 not algebraic. Zero floating-point in the proof.
 
+### Quaternionic Arc (D64-D71)
+Matroid anatomy, Clifford hierarchy, and quaternionic lift:
+
+```
+D63 (angular anatomy, parity ceiling n=5)
+ |
+ v
+D64 (parity matroid recursion: funnel, vocabulary stratification, wall d=4)
+ |
+ v
+D65 (Clifford staircase: Z[zeta_16] test, generalized XOR6 at k=24)
+ |
+ v
+D66 (quaternionic DKC: 24-cell emergence, Voronoi activation, 35 solutions)
+ |
+ v
+D67 (coordinate zoo: S² sweet spot, 13-direction Voronoi 36 solutions, Hopf inertness)
+ |
+ v
+D68 (stereographic DKC: intrinsic curvature proof, ASCII visualization)
+ |         \
+ v          v
+D69         D70 (musica nodorum: 4 notes, music-space orthogonality)
+(ζ nesting) |
+ \          v
+  \--> D71 (spectral DKC: 13=13 theorem, l=6 phase transition)
+```
+
+D64 reveals the parity hierarchy as a matroid minor chain and proves the n=6 wall
+geometrically (self-doubling impossibility). D65 tests the Clifford hierarchy conjecture
+from D64: standard Z[zeta_16] leaves the ceiling unchanged (REFUTED for standard
+activations), but generalized binary labelings break it at k=24 (CONFIRMED for
+generalized). D66 lifts the bracket from S¹ to S³, discovers the 24-cell as the
+natural braid geometry, and explains the k=24 threshold as a projection of its 24
+vertices. D67 proves S² (rotation axis) is the computational sweet spot and that the
+Hopf fiber phase is completely inert. D68 proves the computation is intrinsically
+curved and cannot be flattened to R². D69 proves universal direction nesting (ζ_8 ⊂
+ζ_16 ⊂ ζ_32 exactly on S²) and explains trivialization at finer roots. D70 maps the
+algebraic structure to music and confirms Hopf orthogonality. D71 closes with a
+degrees-of-freedom proof: minimum bandwidth l=6 because 2×6+1=13 equals the
+eigenvector direction count.
+
 ---
 
 ## 2. Code Reuse Patterns
@@ -210,16 +252,22 @@ Z (integers) -- D01-D09
   |
   Z[omega] -- D53
   |
-  Z[zeta_16] -- D54-D57
+  Z[zeta_16] -- D54-D57, D65, D69
   |
   Z[zeta_5] -- D58
   |
   Z[zeta_24] -- D59
+  |
+  Z[zeta_32] -- D69 (braid group infinite; enumeration cap-limited)
+  |
+  H (quaternions, SU(2)) -- D66, D67, D68, D69, D70, D71
 ```
 
 Each ring carries the same API surface: zero/one/add/mul/eq/to_cx/print.
 The TL matrix engine sits on top, parameterized by ring. Swapping the coefficient
-ring is the only change between D53, D54, D58, and D59.
+ring is the only change between D53, D54, D58, and D59. The quaternionic arc (D66+)
+introduces a genuinely different algebra — unit quaternions as SU(2) braid
+representations — complementary to the cyclotomic scalar bracket.
 
 ### The Two Oracles
 
@@ -317,6 +365,60 @@ This angular structure determines computational capability:
 - The parity function requires 3 odd sectors at 120-degree spacing (triskelion
   principle, D50) which is incommensurable with the pi/4 lattice at k=2
 
+### Dimensional Projection and the S² Sweet Spot
+
+The quaternionic arc (D66-D71) establishes a hierarchy of projections:
+
+```
+SU(2) / S³ (full quaternion)  -->  S² (rotation axis / Hopf base)
+     D66: 35 solutions               D67: 36 solutions (more, fewer cells)
+         |                                |
+         v                                v
+     S¹ (complex trace)             R² (stereographic)
+     D65: 25 cells needed           D68: visualization only, not workspace
+```
+
+The counter-intuitive result: projecting DOWN increases computational efficiency.
+The full S³ geometry is redundant; the Hopf fiber phase (S¹) is completely inert
+(r = -0.06 with spatial direction, D67/D70). The computation is entirely determined
+by the rotation axis on S². Moreover, R² is insufficient — the computation is
+intrinsically curved (D68: Euclidean metric gives zero solutions, S² metric gives 36).
+
+The 13-direction S² Voronoi is data-derived, not Platonic: octahedral (6 cells),
+icosahedral (12 cells), cuboctahedral (12 cells), dodecahedral (10 cells) all give
+zero XOR6 solutions (D67, D70). The natural polyhedral symmetries are wrong; only
+the braid-intrinsic 13 eigenvector directions work.
+
+### The 13-Direction Structure and Its Rigidity
+
+The binary octahedral group produces exactly 13 distinct rotation-axis directions
+(mod ±) from the 24 SU(2) quaternions. This 13 is not arbitrary:
+- It matches the minimum sectors needed for XOR6 on S¹ after projection (D65 k=24
+  connected to D66 24-cell vertex count → D67 13-direction Voronoi)
+- 2×6+1=13, so l=6 spherical harmonics are exactly sufficient to address them (D71,
+  the 13=13 theorem)
+- All 13 directions nest exactly into ζ_16 and ζ_32 catalogs (D69 direction nesting
+  theorem), with ζ_8 the coarsest root producing this structure
+
+Finer cyclotomic roots produce thousands of additional directions, causing
+pigeonhole trivialization (~90% XOR6 rate at ζ_16) — the 13-direction structure is
+the computational optimum, not a stepping stone.
+
+### Music-Space Orthogonality
+
+The quaternionic structure separates into two orthogonal dimensions (D67, D70):
+- **Eigenvalue angle θ** (trace): maps to pitch. Four values → four notes (C, Eb,
+  E, F#), spanning unison to tritone. Yang-Baxter equivalent braids produce
+  identical melodies step by step.
+- **Eigenvector direction** (rotation axis): maps to space. 13 distinct directions
+  determine all DKC computational information.
+
+Pearson r = -0.06 between pitch and spatial direction across 253 pairs — effectively
+zero, confirming these are independent dimensions of the quaternion. The Hopf
+fibration S³ → S² physically realizing this split: fiber (S¹, phase ξ₁) carries the
+pitch; base (S², rotation axis) carries the computation. Music is the fiber; logic
+is the base.
+
 ---
 
 ## 4. Surprise Connections
@@ -373,6 +475,81 @@ algebraic properties, different delta values. The wall is purely activation-geom
 
 Despite both being "unreachable by half-plane," they are obstructed by fundamentally
 different mechanisms. This hints at a richer obstruction theory.
+
+### Matroid Theory Enters DKC (D63-D64)
+
+D63 introduces oriented matroids to explain the parity scaling law. D64 deepens
+this by proving the parity hierarchy {XOR2, XOR3, XOR4, XOR5} is a legitimate
+matroid minor chain: deletion gives XOR_{n-1}, contraction gives XNOR_{n-1}, both
+100% verified exhaustively. The upward funnel (99.3% → 39.2% → 19.2% → 0%)
+collapses catastrophically at n=6, and the wall geometry is exactly explained by the
+self-doubling impossibility theorem. This connects DKC for the first time to the
+classical theory of matroids (Reiner's cyclotomic matroids mu_N are the candidate
+framework for the 44 good / 31 poison vocabulary split).
+
+### The k=24 Coincidence (D65↔D66)
+
+D65 discovers generalized XOR6 first appears at k=24 sectors on S¹ — an empirical
+fact with no immediate explanation. D66 independently discovers that SU(2) braid
+representations produce exactly 24 distinct quaternions (the vertices of the 24-cell
+in S³). These two 24s are not coincidental: the S¹ minimum sector count is the
+projection (via trace) of the 24-cell's 24 vertices onto the circle. The complex
+S¹ computation is a shadow of the S³ geometry.
+
+### The 24-Cell as Braid Geometry (D66↔D29)
+
+D29 established that the Kauffman bracket at delta=0 takes values in Z[zeta_8],
+computing exact XOR triples from scalar bracket values. D66 lifts this to full SU(2):
+the same braids that produce 100 distinct scalar values in Z[zeta_8] produce exactly
+24 distinct unit quaternions — the binary octahedral group, vertices of the 24-cell.
+The scalar bracket is the trace of the quaternion (a 1D projection of 4D geometry).
+D66 Part J quantifies the information content: bracket and quaternion agree on only
+12.86% of braid pairs, resolve each other's collisions at different rates (450 vs
+8,424), confirming they are genuinely complementary.
+
+### Hopf Phase Inertness (D67↔D70)
+
+D67 proves computationally that the Hopf fiber phase ξ₁ carries zero DKC information
+(zero XOR6 solutions at all k=4..32). D70 confirms this musically: pitch (eigenvalue
+angle θ = arccos(a), related to trace) and space (eigenvector direction) have
+Pearson r = -0.06. Two independent methods — exhaustive combinatorial search and
+continuous correlation over 253 pairs — both find the fiber inert. The Hopf
+fibration S³ → S² is not just a geometric description; it is the exact decomposition
+separating computationally active (base) from inert (fiber) information.
+
+### The 13=13 Theorem (D71↔D67↔D69)
+
+D67 discovers empirically that a 13-direction Voronoi solves XOR6 at 14 cells.
+D69 shows these 13 directions are universal across all ζ_N (nesting theorem) and
+that ζ_8 is the coarsest root producing them. D71 explains WHY 13 is the magic
+number: spherical harmonic mode l has (2l+1) independent components; 2×6+1=13;
+therefore l=6 is the exact bandwidth threshold with a sharp 0%→100% phase
+transition. The three demos form a closed explanatory loop: data-derived directions
+(D67) → algebraic universality (D69) → harmonic-analytic necessity (D71). The DOF
+formula l≥(N-1)/2 also predicts D69's trivialization: ζ_16 has 3,457 directions,
+requiring l≥1728, which makes any coarse partition trivially sufficient.
+
+### Vocabulary Stratification and the Poison Octant (D64)
+
+Of 83 class-1 catalog values at k=15, exactly 44 appear in XOR5 solutions
+("good") and 31 appear only in dead-end XOR4 solutions ("poison"). The 31 poison
+values span octants {1,2,3,5,6,7} but never octant 4 — an asymmetry with no
+obvious geometric explanation that connects to Reiner's cyclotomic matroid mu_8
+theory (values at 8th roots of unity as matroid elements, octant 4 as a
+distinguished cocircuit). The exact-arithmetic requirement (D64) — floating-point
+produces 420 spurious failures at sector boundaries — echoes D29's discovery that
+exact Z[zeta_8] arithmetic was essential for forward DKC.
+
+### 4 Notes Spanning All Musical Tension (D70)
+
+The binary octahedral group's 4 eigenvalue angles (0°, 45°, 60°, 90°) map to
+exactly the four foundational interval types: unison (C, perfect consonance),
+minor third (Eb), major third (E), tritone (F#, maximum dissonance). The six
+pairwise intervals cover all basic dyad categories. The Garside element (σ₁σ₂)³
+produces the melody Eb E F# E Eb C — a complete arch visiting all four knot notes.
+The tritone-antipodal correspondence on the dodecahedron (antipodal faces carry
+tritone pairs) suggests the circle of fifths and the braid group share a deeper
+symmetry argument, not merely a notational coincidence.
 
 ---
 
@@ -455,6 +632,60 @@ interpretation" — fixpt trace is algebraic light, Markov trace is topological 
 excess = what topology cannot see — provides the deepest framing of how DKC uses
 pre-closure information that RT truncation would discard.
 
+### D64: Angular Anatomy Meets Matroid Theory
+
+Threads converging:
+- D63's octant geometry and parity ceiling (n=5, oriented matroid type)
+- Deletion-contraction operations from classical matroid theory
+- Exact Z[zeta_8] arithmetic (from D29, critical again for sector-boundary precision)
+- Vocabulary stratification from the 83 class-1 catalog values at k=15
+
+Result: The parity hierarchy is a funnel-shaped matroid minor chain. Deletion =
+XOR_{n-1}, contraction = XNOR_{n-1}, both 100% verified. Upward coverage collapses
+to zero at n=6 (XOR6→XOR5: 0% of 27 extension attempts). Self-doubling impossibility
+theorem explains 89.5% of closest wall misses geometrically. Vocabulary splits into
+44 good / 31 poison values, with poison values avoiding octant 4.
+
+### D65-D66: The k=24 Resolution
+
+Threads converging:
+- D64's open question: does XOR6 become achievable at Z[zeta_16]?
+- D65's empirical discovery: generalized XOR6 first appears at k=24 sectors
+- D66's independent discovery: braids produce exactly 24 quaternions (24-cell)
+
+Result: Standard Z[zeta_16] activation leaves parity ceiling at n=5 (Clifford
+staircase conjecture from D64 REFUTED for standard activations). But generalized
+binary labelings break the wall at k=24, and D66 explains this: complex k=24 is
+the projection of the 24-cell's 24 vertices onto S¹ via the trace. Two experiments
+arrive at the same number from opposite directions.
+
+### D67: The S² Discovery
+
+Threads converging:
+- D66's 24 quaternions and their eigenvector decomposition
+- Hopf fibration structure (S³ → S² → S¹)
+- Systematic comparison of every natural SU(2) coordinate system
+- The Platonic-solid-failure pattern (octahedral, icosahedral, cuboctahedral all give 0)
+
+Result: The computation is entirely determined by the rotation axis on S². Custom
+13-direction Voronoi achieves 36 solutions at 14 cells — more than the full S³
+Voronoi with 25 cells. The Hopf fiber phase is completely inert. Natural polyhedral
+geometries all fail; only the data-derived 13 eigenvector directions work.
+
+### D71: The 13=13 Theorem
+
+Threads converging:
+- D67's 13-direction Voronoi (empirical sweet spot)
+- D69's direction nesting theorem (ζ_8 → ζ_16 rigid, 13/13 exact)
+- D69's trivialization observation (ζ_16 at ~90% because too many directions)
+- Spherical harmonic theory (2l+1 components per mode)
+
+Result: Minimum bandwidth l=6 because 2×6+1=13. The phase transition is sharp and
+all-or-nothing. Trivialization at ζ_16 is explained: 3,457 directions require
+l≥1728, making any coarse partition sufficient. The 13=13 theorem closes the
+loop from D67's discovery through D69's universality to D71's harmonic-analytic
+necessity. Three demos form one argument.
+
 ---
 
 ## Summary: The Project's Logic
@@ -472,10 +703,34 @@ D61-D62 prove the half-plane wall analytically. D63 establishes the parity scali
 ceiling at n=5 inputs. D39 Parts G-J provide three formal proofs anchoring the
 algebraic theory.
 
+D64 reveals the parity hierarchy as a matroid minor chain and proves the n=6 wall
+via the self-doubling impossibility theorem. D65 tests the Clifford staircase
+conjecture: standard Z[zeta_16] leaves the ceiling unchanged, but generalized
+binary labelings first break XOR6 at k=24 sectors — with zero margin, exact lattice
+alignment. D66 lifts the scalar bracket to full SU(2) quaternions, discovering the
+24-cell as the natural braid geometry and resolving the k=24 mystery as a projection
+of 24-cell vertices. D67 proves S² is the computational sweet spot: a 13-direction
+Voronoi on the rotation-axis sphere achieves more solutions (36) with fewer cells
+(14) than the full S³ or the S¹ approaches, while the Hopf fiber phase is
+completely inert. D68 proves the computation is intrinsically curved — stereographic
+projection preserves solutions only when using the S² great-circle metric, not
+Euclidean distance. D69 proves universal direction nesting (ζ_8 ⊂ ζ_16 ⊂ ζ_32
+exactly on S²) and explains why ζ_8 is the computational sweet spot: finer roots
+trivialize XOR6 through pigeonhole saturation. D70 maps the algebra to music:
+4 eigenvalue angles give 4 notes spanning consonance to tritone, Yang-Baxter
+equivalent braids produce identical melodies, and music-space orthogonality
+(r = -0.06) confirms the Hopf base/fiber split physically. D71 closes with the
+13=13 theorem: minimum spherical harmonic bandwidth l=6 because 2×6+1=13, the
+eigenvector direction count — a sharp, all-or-nothing phase transition explained
+entirely by degrees of freedom.
+
 The answer: yes, with caveats. The bracket algebra computes 12/13 NPN classes
 through its natural structure. The 13th (parity) requires reading angular information
 that half-plane activations cannot access but k-sector activations can. The wall is
 geometric, not topological. Demo 63 establishes the fundamental capacity limit:
 parity up to n=5 inputs in Z[zeta_8], with two distinct impossibility mechanisms
 beyond. Three formal proofs (radical dimension, next-level radical, Markov RT
-truncation) now anchor the algebraic theory.
+truncation) anchor the algebraic theory. The quaternionic arc (D64-D71) reveals
+the deeper geometric structure underneath: the computation lives on S² (not S¹,
+not S³), is intrinsically curved, is governed by exactly 13 eigenvector directions,
+and is fully characterized by the l=6 spherical harmonic mode — because 2×6+1=13.

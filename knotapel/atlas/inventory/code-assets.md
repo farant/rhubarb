@@ -1,6 +1,6 @@
 # Code Assets Catalog
 
-Reusable code patterns across 50 knotapel demos. Updated 2026-02-20 (added Demos 38, 39, 60, 63; D39 Parts G-J).
+Reusable code patterns across 59 knotapel demos. Updated 2026-02-21 (added Demos 64-71).
 
 ---
 
@@ -24,7 +24,7 @@ Reusable code patterns across 50 knotapel demos. Updated 2026-02-20 (added Demos
 
 - **What it does**: Double-precision complex number type with full arithmetic, unit-circle evaluation, and approximate equality — the numerical workhorse for all demos from 10 onward.
 - **Introduced in**: Demo 10
-- **Reused in**: Demos 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 35, 45, 46, 47, 48, 49, 50, 53, 54, 55, 56, 57, 58, 59, 61, 62
+- **Reused in**: Demos 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 35, 45, 46, 47, 48, 49, 50, 53, 54, 55, 56, 57, 58, 59, 61, 62, 64, 65, 66, 67, 68, 69, 70, 71
 - **Key types/functions**:
   - `Cx` struct: `re`, `im` doubles
   - `cx_make()`, `cx_zero()`, `cx_one()`, `cx_real()` — constructors
@@ -43,7 +43,7 @@ Reusable code patterns across 50 knotapel demos. Updated 2026-02-20 (added Demos
 
 - **What it does**: Exact integer arithmetic in the 8th cyclotomic ring — basis {1, zeta_8, zeta_8^2, zeta_8^3} with zeta_8^4 = -1. The natural home for bracket values at delta=0 (A = e^{i*5pi/4}).
 - **Introduced in**: Demo 29
-- **Reused in**: Demos 35, 48, 49, 50, 63
+- **Reused in**: Demos 35, 48, 49, 50, 63, 64
 - **Key types/functions**:
   - `Cyc8` struct: 4 `long` coefficients `(a, b, c, d)`
   - `cyc8_make()`, `cyc8_zero()`, `cyc8_one()` — constructors
@@ -56,7 +56,7 @@ Reusable code patterns across 50 knotapel demos. Updated 2026-02-20 (added Demos
   - `cyc8_is_axial()` — tests single-component property (at most one nonzero coordinate)
   - `cyc8_print()` — formatted output
 - **Approximate size**: ~200 lines
-- **Notes**: All bracket values at A = -zeta_8 are cyclotomic integers in this ring. The delta=0 condition (A^2 + A^{-2} = 0) means only single-loop smoothing states survive, massively simplifying exact computation.
+- **Notes**: All bracket values at A = -zeta_8 are cyclotomic integers in this ring. The delta=0 condition (A^2 + A^{-2} = 0) means only single-loop smoothing states survive, massively simplifying exact computation. Reused in Demo 64 for matroid deletion-contraction verification — exact arithmetic is critical to eliminate floating-point association-order failures near sector boundaries (420 spurious failures eliminated).
 
 ### 1.4 Eisenstein Integers Z[omega] (Eis)
 
@@ -77,7 +77,7 @@ Reusable code patterns across 50 knotapel demos. Updated 2026-02-20 (added Demos
 
 - **What it does**: Exact 8-dimensional cyclotomic integer arithmetic for bracket evaluation at ell=4 (delta=sqrt(2), Ising anyons).
 - **Introduced in**: Demo 54
-- **Reused in**: Demos 55, 56, 57
+- **Reused in**: Demos 55, 56, 57, 65
 - **Key types/functions**:
   - `Cyc16` struct: 8 `long` coefficients, basis {1, zeta_16, ..., zeta_16^7}, zeta^8 = -1
   - `cyc16_zero()`, `cyc16_one()`, `cyc16_make()`, `cyc16_zeta_power()` — constructors
@@ -173,7 +173,7 @@ Reusable code patterns across 50 knotapel demos. Updated 2026-02-20 (added Demos
 
 - **What it does**: Path-compressed union-find for counting connected components (loops) in resolved knot/braid diagrams. The most-reused utility across all demos.
 - **Introduced in**: Demo 02
-- **Reused in**: Demos 03, 04, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 45, 46, 47, 48, 49, 50, 53, 54, 55, 56, 57, 58, 59
+- **Reused in**: Demos 03, 04, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 45, 46, 47, 48, 49, 50, 53, 54, 55, 56, 57, 58, 59, 64, 65, 66, 67, 68, 69, 70, 71
 - **Key types/functions**:
   - `uf_parent[]` — global or local parent array
   - `uf_init(n)`, `uf_find(x)`, `uf_union(x, y)` — standard union-find with path compression
@@ -298,7 +298,7 @@ Reusable code patterns across 50 knotapel demos. Updated 2026-02-20 (added Demos
 
 - **What it does**: Converts integer indices to braid crossing sequences for exhaustive enumeration of all braids up to a given length.
 - **Introduced in**: Demo 22
-- **Reused in**: Demos 23, 25, 35, 48, 49, 50, 53, 54, 55, 56, 57, 58, 59
+- **Reused in**: Demos 23, 25, 35, 48, 49, 50, 53, 54, 55, 56, 57, 58, 59, 64, 65, 66, 67, 68, 69, 70, 71
 - **Key types/functions**:
   - `decode_word(code, len, word)` — maps integer to braid word using generator map
   - `decode_word3()` — 3-strand variant (4 generators: {1,-1,2,-2})
@@ -567,7 +567,7 @@ Reusable code patterns across 50 knotapel demos. Updated 2026-02-20 (added Demos
 
 - **What it does**: Classifies all 256 3-input Boolean truth tables into 14 NPN equivalence classes (13 non-trivial + constant) via exhaustive application of input permutation, input negation, and output negation.
 - **Introduced in**: Demo 23
-- **Reused in**: Demos 45, 46, 47, 48, 49, 50, 55, 56, 57, 58, 59, 61, 62
+- **Reused in**: Demos 45, 46, 47, 48, 49, 50, 55, 56, 57, 58, 59, 61, 62, 64, 65, 66, 67, 68, 69, 70, 71
 - **Key types/functions**:
   - `npn_canon[256]` — precomputed canonical form for all truth tables
   - `npn_init()` — computes canonical forms via 96 transforms (6 perms x 8 input-neg x 2 output-neg)
@@ -651,7 +651,7 @@ Reusable code patterns across 50 knotapel demos. Updated 2026-02-20 (added Demos
 
 - **What it does**: Collection of complex-valued activation functions with uniform classification interface for DKC Boolean function search.
 - **Introduced in**: Demo 28 (split-sigmoid, modReLU, cardioid, phase-only)
-- **Extended in**: Demo 47 (MVN-continuous, MVN-k8), Demo 50 (k-sector), Demo 55+ (Re>0, Im>0, magnitude)
+- **Extended in**: Demo 47 (MVN-continuous, MVN-k8), Demo 50 (k-sector), Demo 55+ (Re>0, Im>0, magnitude), Demo 65 (generalized binary labeling — arbitrary binary sector coloring as activation), Demo 66 (quaternion Voronoi, 24-cell nearest-vertex), Demo 67 (eigenvalue k-sector, Hopf base/phase, Cayley-Klein, custom S² Voronoi), Demo 68 (stereographic Voronoi with S²/Euclidean metric), Demo 70 (dodecahedral/icosahedral Voronoi), Demo 71 (spherical harmonic reconstruction threshold)
 - **Key types/functions**:
   - `split_sigmoid_classify(z)` — smooth XOR of Re/Im sigmoids > 0.5
   - `sector_classify(z, k)` — k-sector MVN: angle → sector → j mod 2
@@ -695,7 +695,7 @@ Reusable code patterns across 50 knotapel demos. Updated 2026-02-20 (added Demos
 
 - **What it does**: Exhaustive search over bracket catalog quartets/triples to find exact weight configurations that compute Boolean functions without training.
 - **Introduced in**: Demo 29 (XOR triples)
-- **Extended in**: Demo 48 (all 13 NPN classes, 100M quartets), Demo 50 (k-sector activation)
+- **Extended in**: Demo 48 (all 13 NPN classes, 100M quartets), Demo 50 (k-sector activation), Demo 64 (matroid deletion-contraction), Demo 65 (generalized binary labeling), Demo 66 (quaternionic S³), Demo 67 (multi-coordinate-system), Demo 68 (stereographic), Demo 69 (multi-root comparison)
 - **Key types/functions**:
   - Quartet search: O(n^4) with precomputed partial sums (s12 outside w3 loop)
   - `test_xor_triple(w1, w2, b)` — split-sigmoid XOR verification
@@ -832,6 +832,127 @@ Reusable code patterns across 50 knotapel demos. Updated 2026-02-20 (added Demos
   - `pj_search(n, k)`: general recursive n-input parity search — iterates over all n-tuples of catalog values, checks all 2^n-1 subset sums for correct sector parity
 - **Approximate size**: ~200 lines (Part H: 4-input ~80 lines, Part I: 5-input ~60 lines, Part J: recursive ~60 lines)
 - **Notes**: Search pruning is critical for performance — 4-input uses early rejection at each weight addition. 5-input at k=15 has 7 class-1 octants (100 values each), making brute force feasible.
+
+### 5.21 Matroid Deletion-Contraction Infrastructure (Demo 64)
+
+- **What it does**: Exhaustive weight-set subtraction and contraction across the XOR parity hierarchy {XOR2, XOR3, XOR4, XOR5}, verifying 100% deletion-contraction closure (minor chain), tracking collision multiplicity, and analyzing vocabulary stratification.
+- **Introduced in**: Demo 64
+- **Reused in**: (foundational for future matroid/parity scaling studies)
+- **Key types/functions**:
+  - Deletion map with collision tracking: for each XOR_n solution set, subtracts each weight and records which XOR_{n-1} child it maps to; counts distinct children vs. total instances to identify collisions
+  - Upward extension search: for each XOR_n weight set, tests all 83 class-1 catalog values as candidate (n+1)-th weight, records Hamming distance to XOR_{n+1} truth table
+  - Vocabulary stratification analysis: separates catalog values into good (appear in extensible sets), poison (appear only in orphan sets), and absent categories; annotates by octant
+  - Error-weight decomposition: bins output errors by input Hamming weight (weight-0 through weight-6) to isolate interaction-level vs. single-weight failures
+  - Self-doubling classifier: detects w[n+1]=w[i] cases; computes angle-preservation argument symbolically showing scalar doubling preserves sector class
+- **Approximate size**: ~400 lines
+- **Notes**: Key findings — 100% downward closure (deletion→XOR_{n-1}, contraction→XNOR_{n-1}) verified at all levels. Upward coverage collapses funnel-shaped: 99.3% → 39.2% → 19.2% → 0% from XOR3→XOR2 up to XOR6→XOR5. 44 good values / 31 poison values in the class-1 k=15 catalog; poison values avoid octant 4. Minimum wall Hamming distance is d=4; self-doubling accounts for 89.5% of closest misses. Exact Cyc8 arithmetic is mandatory — float arithmetic introduces 420 spurious failures near sector boundaries.
+
+### 5.22 Generalized Binary Sector Labeling (Demo 65)
+
+- **What it does**: Tests arbitrary binary colorings of k sectors (not just the standard odd/even convention) as DKC activations, enabling a much larger search space for XOR6 and XOR7 solutions.
+- **Introduced in**: Demo 65
+- **Reused in**: (Demo 65 only — new framework for non-standard MVN colorings)
+- **Key types/functions**:
+  - `generalized_xor6_check(k)`: iterates over all (XOR5-set, extension-weight) candidate pairs at arbitrary k, tests all 2^k binary colorings for whether any coloring of k sectors realizes XOR6; reports passing count
+  - Even/odd k landscape sweep: systematic sweep of even k=2..64 generalized XOR6 pass counts
+  - Antipodal structure analyzer: decomposes n-tuple into antipodal pairs and lone weights, reports margin to sector boundaries
+  - XOR7 broader search: extends from single extensions to all C(100,2) weight pairs, 136,350 7-tuples per k
+  - Multi-catalog XOR search: runs full sector sweep with both 36-value and 56-value catalogs, distinguishes catalog incompleteness artifacts from genuine walls
+- **Approximate size**: ~400 lines
+- **Notes**: Key findings — absolute wall at k<=23 (zero solutions under ANY binary labeling); first generalized XOR6 at k=24 (3 of 2700 pairs). All passing solutions have exactly zero margin to sector boundary (lattice sums land exactly on lattice directions). Even k works near threshold; odd k (25, 27, 29, 31) all fail. k=38 is sole even exception with zero solutions. Parity ceiling n=5 is algebra-independent: identical at Z[zeta_8] and Z[zeta_16]. Gap-of-2 hypothesis refuted: pigeonhole rises to 14 at Cyc16 but ceiling stays at n=5 (gap widens to 9).
+
+### 5.23 SU(2) Braid Representation and 24-Cell Geometry (Demo 66)
+
+- **What it does**: Lifts the Kauffman bracket from S^1 (complex trace) to S^3 (unit quaternion) via an SU(2) braid representation, generates the 24-cell polytope from braid enumeration, and searches for XOR6 solutions using quaternionic Voronoi activation.
+- **Introduced in**: Demo 66
+- **Reused in**: Demos 67, 68, 69, 70, 71 (24-cell catalog and quaternion arithmetic used throughout the arc)
+- **Key types/functions**:
+  - `quat_mul(p, q)`: quaternion multiplication (4-component real vector)
+  - `quat_norm(q)`: quaternion normalization to unit sphere S^3
+  - `quat_nearest_24cell(q, catalog)`: finds nearest 24-cell vertex by dot-product maximization
+  - `enumerate_braids(max_len, gen_sigma1, gen_sigma2, catalog)`: generates all braids up to target length, applies SU(2) generators, collects distinct quaternion outputs (finds exactly 24 = binary octahedral group)
+  - Voronoi partition on S^3: assigns arbitrary unit quaternions to nearest 24-cell vertex; 25 cells = 24 vertices + 1 zero cell
+  - Antipodal-pair XOR6 search: restricts combinatorial search to 3-antipodal-pair sextets; evaluates XOR6 over Voronoi cells
+  - F4 symmetry orbit computation: generates all 576 two-sided symmetry elements of the 24-cell and groups solutions into orbits
+  - Hash collision analysis: pair-table construction and four-way bracket/quaternion intersection counting
+- **Approximate size**: ~500 lines
+- **Notes**: SU(2) generators sigma_1 -> (1+i)/sqrt(2), sigma_2 -> (1-k)/sqrt(2). Produces exactly 24 quaternions from 87,890 braids (binary octahedral group). 35 Voronoi XOR6 solutions; universal 7/7/11 cell-label structure. F4 symmetry group (576 elements) decomposes 35 solutions into 6 orbits in two families: edge-dominant (22) and body-dominant (13). Complementary with bracket: quaternion resolves 450 bracket collisions; bracket resolves 8,424 quaternion collisions.
+
+### 5.24 Eigenvector Extraction and Multi-Coordinate Activation (Demo 67)
+
+- **What it does**: Decomposes SU(2) quaternions into eigenvector direction (S^2) and eigenvalue angle, then systematically compares all natural coordinate systems (Hopf, Cayley-Klein, eigenvalue k-sector, custom S^2 Voronoi) as DKC activations.
+- **Introduced in**: Demo 67
+- **Reused in**: Demos 68, 69, 70, 71 (13-direction S^2 Voronoi is the canonical activation going forward)
+- **Key types/functions**:
+  - `eigenvector_extract(q, dir_out, theta_out)`: decomposes SU(2) quaternion into eigenvector direction (mod +-) and eigenvalue angle theta = arccos(a)
+  - Custom Voronoi on S^2: assigns quaternion to nearest of 13 data-derived directions (3 axis + 6 edge-midpoint + 4 body-diagonal); handles identity/zero as degenerate cell 0
+  - Platonic solid Voronois: octahedral (6 cells), icosahedral (12 cells), cuboctahedral (12 cells) — all yield zero XOR6 solutions
+  - Hopf coordinate decomposition: converts quaternion to Hopf (eta, xi_1, xi_2); separates base (eta, xi_2) and fiber (xi_1) activations
+  - Cayley-Klein parameterization: (|alpha|, arg(alpha)) grid activation
+  - Eigenvalue k-sector activation: partitions [0, pi] into k equal sectors on eigenvalue angle theta
+  - Comparative activation harness: unified XOR6 DKC search applicable across all coordinate systems; reports solutions and sol/cell efficiency
+- **Approximate size**: ~400 lines
+- **Notes**: Key finding: Hopf PHASE (fiber xi_1) carries zero DKC information at ALL tested resolutions (k=4..32, exhaustive). Computation lives entirely on S^2 Hopf base. Custom 13-dir Voronoi achieves 36 solutions at 14 cells (2.57 sol/cell) — more than full 25-cell S^3 Voronoi (35). Platonic solids fail because they have wrong symmetry group. Eigenvalue paradox: theta = arccos(a) succeeds; Hopf fiber xi_1 = atan2(b,a) fails — they extract different information. High-resolution rankings at 64 cells: Hopf base (292) > eigenvector lat-lon (204) > Cayley-Klein (106).
+
+### 5.25 Stereographic Projection and ASCII Voronoi Renderer (Demo 68)
+
+- **What it does**: Projects the S^2 eigenvector Voronoi onto R^2 via stereographic projection, renders solutions as ASCII images, extracts perceptron weights, and measures conformality via Monte Carlo area estimation.
+- **Introduced in**: Demo 68
+- **Reused in**: (Demo 68 only — visualization and planarity-proof infrastructure)
+- **Key types/functions**:
+  - Stereographic projection / inverse: north-pole projection of S^2 to R^2 and back; round-trip precision ~1e-15 (machine epsilon); south pole is excluded as it coincides with a catalog direction
+  - Projected Voronoi with S^2 metric: assigns R^2 query point to nearest of 13 projected centers using back-projected dot product; preserves all 36 solutions identical to Demo 67
+  - Euclidean Voronoi in R^2: same structure but using Euclidean distance; yields ZERO solutions (preserved as negative-result comparison proving intrinsic curvature)
+  - ASCII renderer: 65x33 grid over bounding box; renders 0/1 regions, Voronoi boundaries (+), weight positions (*), and center labels (0-9, A-C)
+  - Perceptron weight extractor: builds 6x2 matrix from stereographic projections of winning solution weight quaternions
+  - Monte Carlo area estimator: samples Voronoi cell areas in R^2 for conformality analysis; largest cell 17%, smallest 1%, ratio 16.5x
+- **Approximate size**: ~350 lines
+- **Notes**: Key finding: Euclidean metric in R^2 gives zero solutions; S^2 great-circle metric gives 36. Area distortion (16.5x) is irrelevant when S^2 metric is used — conformality is sufficient, area-preservation is not needed. The stereographic image is a valid visualization but not a valid computational domain. "Visualize on the plane, compute on the sphere." 13 catalog direction centers project to bounding box x in [-2.41, 1.37], y in [-1.00, 2.41].
+
+### 5.26 Multi-Root SU(2) Catalog Comparison (Demo 69)
+
+- **What it does**: Generates quaternion and eigenvector catalogs for multiple cyclotomic roots (zeta_8, zeta_16, zeta_32), verifies direction nesting (zeta_N subset zeta_{2N}), and compares XOR6 solution counts across roots at both natural Voronoi and fixed cell counts.
+- **Introduced in**: Demo 69
+- **Reused in**: (Demo 69 only — multi-root comparison infrastructure)
+- **Key types/functions**:
+  - Multi-root catalog enumeration: generates quaternion and eigenvector catalogs for arbitrary zeta_N with configurable MAX_QCAT and MAX_ECAT caps; fair comparison at same braid enumeration depth across roots
+  - Direction nesting comparator: for each zeta_8 direction, finds nearest match in zeta_{2N} catalog and reports angular distance; classifies as RIGIDITY (0 degrees), DRIFT (small positive), or INDEPENDENCE (large positive)
+  - Adaptive Voronoi XOR6 search: builds natural Voronoi from catalog directions, enumerates all weight triples, reports sol/cell and percentage of C(N,3)
+  - Fixed-resolution grid activation: lat-lon grid with specified cell count applied to all roots for apples-to-apples comparison
+  - Catalog explosion enumeration: counts quaternions and directions as braid length grows for each root
+  - Trivialization detection: identifies when solution rate approaches 100% (pigeonhole saturation — too many cells, too few constraint inputs)
+- **Approximate size**: ~300 lines
+- **Notes**: Key finding: zeta_8 -> zeta_16 nesting is RIGID (13/13, 0.000 degrees drift). Algebraic proof: (zeta_16)^2 = zeta_8 so every zeta_8 braid word is a doubled word in zeta_16; squaring a quaternion preserves the rotation axis. zeta_8 is the computational sweet spot: coarsest root producing the 13-direction structure. At natural Voronoi resolution, zeta_16 (3,457 cells): 90.6% solutions; zeta_32 (4,096+ cells): 89.6% — pigeonhole trivialization. At fixed 16 cells: zeta_16 (450) > zeta_32 (393).
+
+### 5.27 Eigenvalue-to-Pitch Mapping and Braid Melody Extraction (Demo 70)
+
+- **What it does**: Maps SU(2) quaternion eigenvalue angles to musical intervals and note names, extracts melodies from braid words, and provides spatial sound mapping from eigenvector directions to stereo pan and pitch.
+- **Introduced in**: Demo 70
+- **Reused in**: Demo 71 (musical note connection in spectral analysis)
+- **Key types/functions**:
+  - Eigenvalue-to-interval mapping: quaternion trace -> theta = arccos(trace/2) -> cents = theta * (1200/pi) -> note name (C=0, Eb=45, E=60, F#=90 degrees); covers unison through tritone
+  - Braid word melody generator: running quaternion product per crossing; extracts note at each step from the partial product eigenvalue angle
+  - Spatial sound mapper: eigenvector direction -> latitude/longitude -> MIDI pitch (C3 south to C5 north) + stereo pan (longitude)
+  - Platonic solid vertex generators: icosahedron (12 vertices) and dodecahedron (20 vertices / 10 effective post-antipodal-collapse) for comparative Voronoi testing — both give zero XOR6 solutions
+  - XOR6 checker: evaluates XOR6 truth table against arbitrary Voronoi cell assignments
+  - ABC notation formatter: outputs top braid melodies in standard ABC music notation for rendering/playback
+- **Approximate size**: ~300 lines
+- **Notes**: 4 eigenvalue angles (0, 45, 60, 90 degrees) map to 4 notes (C, Eb, E, F#): maximum consonance to maximum dissonance. Conjugation-invariance of melody proven: tr(q) = 2cos(theta) is conjugation-invariant so melody depends only on product length not which generators used. Yang-Baxter relation sigma_1*sigma_2*sigma_1 = sigma_2*sigma_1*sigma_2 produces identical melodies step-by-step. Hopf orthogonality: pitch and spatial position are independent (Pearson r = -0.0624). Garside element (s1*s2)^3 melody: Eb E F# E Eb C. Tritone-antipodal correspondence: antipodal dodecahedron faces carry tritone pairs.
+
+### 5.28 Spherical Harmonic Engine and Spectral Analysis (Demo 71)
+
+- **What it does**: Full spherical harmonic analysis infrastructure for decomposing arbitrary S^2 functions into per-l-mode power, finding the phase-transition bandwidth for DKC solutions, and characterizing XOR6 Voronoi labelings spectrally.
+- **Introduced in**: Demo 71
+- **Reused in**: (foundational for future analytical S^2 bandwidth proofs)
+- **Key types/functions**:
+  - Spherical harmonic engine: real Y_lm via associated Legendre polynomials with stable three-term recurrence; numerically stable to l=12+; orthonormality max error 6.82e-14
+  - Gauss-Legendre quadrature on S^2: 64-point integration in theta; uniform 128-point grid in phi; 64x128=8,192 total grid points; produces integration weights on S^2
+  - `spectrum_of_function(voronoi_label_fn, l_max)`: decomposes arbitrary S^2 function (given as Voronoi label array evaluated over grid) into power per l-mode from l=0 to l_max
+  - `bandwidth_test(winners, l_cut)`: reconstructs function from spherical harmonic coefficients up to l_cut, evaluates winner recovery fraction; finds sharp phase-transition threshold
+  - von Mises-Fisher density on S^2: direction density representation for the 13-direction catalog; high-kappa (kappa=50) approximation of point-like directions
+  - Comparative spectrum harness: runs spectral decomposition over all 36 winners, aggregates power-per-mode statistics (mean, min, max per mode)
+- **Approximate size**: ~450 lines
+- **Notes**: Key finding: sharp phase transition at l=6 (0% recovery at l<=5, 100% at l=6). The 13=13 theorem: minimum bandwidth l=6 because 2*6+1=13 = number of eigenvector directions — at l=5 system is underdetermined (11 components for 13 regions). l=6 mode carries ~80.7% of power on average across all 36 winners (spectral universality). Only even modes carry power (antipodal symmetry of the Voronoi partition). 3.5x super-Nyquist compression explained by compressed sensing (binary function at known support positions). Musical connection: l=6 maps to 200 cents (note D, whole tone) — above the eigenvalue-resonant modes (l=2 tritone, l=3 major 3rd, l=4 minor 3rd). Trivialization prediction for zeta_16: minimum bandwidth l>=1728 (2*1728+1=3,457 directions), Nyquist ~3M cells — explains Demo 69's ~90% solution rate.
 
 ---
 
@@ -990,6 +1111,18 @@ Every new computation method is cross-validated against prior oracles:
 - Exact Cyc8 validates float Cx (Demo 29)
 - Two-prime cross-validation for cubic field results (Demo 60)
 
+### Quaternionic / S^2 Arc Architecture (Demos 66-71)
+
+Demos 66-71 follow a consistent pattern that lifts DKC from complex S^1 to quaternionic S^3 and then projects onto S^2:
+1. Generate the SU(2) braid representation (Demo 66) — produces exactly 24 quaternions (24-cell / binary octahedral group)
+2. Decompose quaternions into eigenvector direction (S^2) and eigenvalue angle (Demo 67) — identifies 13 data-intrinsic directions
+3. Build the custom 13-direction Voronoi on S^2 — the canonical activation for the arc (36 XOR6 solutions at 14 cells)
+4. Verify the computation lives on S^2, not S^1 fiber (Hopf phase inert, Demo 67) and not R^2 Euclidean (Demo 68)
+5. Confirm direction nesting across cyclotomic roots — zeta_8 is the computational sweet spot (Demo 69)
+6. Analyze spectral structure: l=6 bandwidth threshold = 13=13 theorem (Demo 71)
+
+Key progression: D65 S^1 needs k=24 sectors (25 cells) -> D66 S^3 Voronoi needs 25 cells -> D67 S^2 Voronoi needs only 14 cells -> D68 R^2 is visualization only (zero solutions with Euclidean metric).
+
 ### Catalog Size Summary
 | Ring | Delta | Catalog | Distinct Values |
 |------|-------|---------|-----------------|
@@ -998,3 +1131,10 @@ Every new computation method is cross-validated against prior oracles:
 | Z[zeta_16] | sqrt(2) | 2-4 strand, len 1-6 | ~56 |
 | Z[zeta_5] | phi | 2-4 strand, len 1-6 | >56 |
 | Z[zeta_24] | sqrt(3) | 2-4 strand, len 1-10 | varies |
+
+### SU(2) / Quaternionic Catalog Summary (Demos 66-69)
+| Root | Quaternions | Directions on S^2 | XOR6 at natural Voronoi | XOR6 at 16 cells |
+|------|-------------|-------------------|--------------------------|------------------|
+| zeta_8 | 24 | 13 | 36 (14 cells, 0.007%) | — |
+| zeta_16 | 7,952 | 3,457 | 499,367 (90.6%) | 450 |
+| zeta_32 | 32,768+ | 4,096+ | 493,654 (89.6%) | 393 |

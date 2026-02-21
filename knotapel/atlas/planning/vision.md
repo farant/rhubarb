@@ -235,11 +235,17 @@ for 3 inputs (~100^4 = 100M, seconds), unclear for larger inputs.
 
 Status: DEPENDS ON scaling (Gap 6).
 
-### Gap 6: Scaling Beyond 3 Inputs — PARTIALLY RESOLVED
+### Gap 6: Scaling Beyond 3 Inputs — SUBSTANTIALLY RESOLVED
 Demo 63 extended DKC to 4-input (k=8, 96 solutions) and 5-input (k=15, 3020
 solutions) parity, establishing the parity ceiling at n=5 for Z[zeta_8]. The
 triskelion generalization (k=2n) was FALSIFIED; the true scaling law is
 k=2M-1 where M is the ray count.
+
+Demo 65 confirmed Z[zeta_16] does NOT raise the parity ceiling — it stays at
+n=5 (tier thresholds identical: XOR3 k=6, XOR4 k=8, XOR5 k=14). The gap-of-2
+hypothesis was REFUTED: pigeonhole rises from 7 to 14 but actual ceiling stays
+at 5, widening the gap to 9. This supports the Conjecture (Universal Ceiling)
+that the n=5 bound is topological, not algebraic.
 
 For the vision, this means:
 - **Individual DKC neurons handle up to 5-input parity** (the hardest function).
@@ -249,12 +255,67 @@ For the vision, this means:
 - **Larger functions require composition** — multi-layer DKC (Gap 3) is the
   path for anything beyond 5 inputs. This is architecturally consistent with
   syllogistic chains.
-- **Z[zeta_16] may push the ceiling higher** — 16 directions give a pigeonhole
-  ceiling of n=15. Whether the constraint ceiling is close to that is an open
-  question (Demo 68 proposal).
+- **The ceiling is algebra-independent** — Z[zeta_16] and Z[zeta_8] agree
+  exactly. The wall appears to be topological.
 
-Status: n<=5 resolved. Compositional approach needed for n>5. Z[zeta_16]
-scaling is the natural next investigation.
+Status: n<=5 resolved at both Z[zeta_8] and Z[zeta_16]. Compositional approach
+needed for n>5. The ceiling is likely not an algebra artifact.
+
+### Gap 7: The Wall Is Two-Layered — NEW (D65)
+
+The XOR6 wall has two distinct layers that require different tools:
+
+- **Absolute geometric wall (k≤23)**: No binary partition of any number of
+  sectors (for any k≤23) can separate the XOR6 truth table using Z[zeta_8]
+  weights. PROVEN exhaustively. This is a topological obstruction — the
+  self-doubling impossibility theorem (D64) and the matroid minor chain
+  structure (D64) explain WHY the wall exists. The minimum Hamming distance
+  from any 6-weight candidate to XOR6 is d=4, with no candidate achieving
+  d=0,1,2,3.
+
+- **Convention wall (standard labeling fails, custom succeeds)**: At k=24,
+  generalized binary labelings (not just standard odd/even) break through.
+  Exactly 3 of 2700 candidate pairs admit XOR6 at k=24. The standard
+  odd/even convention used since Aizenberg is one specific choice; relaxing it
+  reveals that the hard wall is at k<=23, not at all k.
+
+**Implication for the hybrid LLM**: When designing compiled DKC neurons, the
+activation function design matters. The standard odd/even convention may not be
+optimal; the principled approach is to derive the activation from the underlying
+geometry (Voronoi cells on S²) rather than treating it as a fixed convention.
+
+Status: Two-layer structure PROVEN. The convention wall is now understood as
+an activation design choice, not a fundamental limit.
+
+### Gap 8: Quaternionic DKC and the Bloch Sphere — NEW (D66-D71)
+
+D66-D71 opened a wholly new dimension: the computation lives on S² (the Bloch
+sphere / rotation axis direction), not on S¹ (complex circle) or S³ (full
+unit quaternion). This is not a minor generalization — it changes the geometry
+of DKC entirely.
+
+Key discoveries:
+- Kauffman braid representations in SU(2) produce exactly the 24 vertices of
+  the 24-cell (binary octahedral group). The bracket and quaternion are
+  complementary projections of the same braid group representation.
+- The Hopf fibration S³ → S² is respected: the Hopf fiber (phase ξ₁) is
+  computationally INERT — it carries zero DKC information at all resolutions
+  tested. The computation lives entirely on the S² Hopf base (eigenvector
+  directions, i.e., the rotation axis).
+- The natural computational object is the 13-direction eigenvector Voronoi on
+  S². 14 cells suffice for 36 XOR6 solutions — more than the 25-cell S³
+  Voronoi (35 solutions) or the 25-cell S¹ approach.
+- The 13=13 theorem (D71): minimum bandwidth l=6 exactly because 2×6+1=13
+  equals the number of eigenvector directions. This is the cleanest theoretical
+  result yet.
+
+**Implication for the hybrid LLM**: DKC neurons can be understood as computing
+on the Bloch sphere S²=CP¹, the state space of a qubit. This connects compiled
+DKC weights directly to quantum information theory — the 13-direction Voronoi
+may correspond to a specific quantum measurement basis. Whether this connection
+is formal or merely structural is an open research question.
+
+Status: ACTIVE RESEARCH FRONTIER. Multiple open questions across D66-D71.
 
 ---
 
@@ -272,6 +333,17 @@ scaling is the natural next investigation.
    4-input parity at k=8 (96 solutions), 5-input at k=15 (3020 solutions),
    parity ceiling n=5, triskelion FALSIFIED, oriented matroid classification.
 
+   ~~**Parity matroid recursion** (Demo 64)~~ — **DONE**. Funnel-shaped matroid
+   minor chain, self-doubling impossibility theorem, two-layer wall anatomy.
+
+   ~~**Clifford staircase / Z[zeta_16]** (Demo 65)~~ — **DONE**. Parity ceiling
+   algebra-independent. Two-layer wall structure. Generalized XOR6 at k=24.
+
+   ~~**Quaternionic DKC** (Demos 66-71)~~ — **DONE**. 24-cell emergence, Hopf
+   inertness, S² as computational home, 13-direction Voronoi, 13=13 spectral
+   theorem, musical mapping, direction nesting theorem, stereographic proof of
+   intrinsic curvature.
+
 4. **Toy taxonomy → weight pipeline** — Take a 5-node taxonomy, manually encode
    as braids (even if the encoding is ad hoc), compile to DKC weights, verify
    logical inference works end-to-end. Proof of concept, not general solution.
@@ -285,6 +357,141 @@ scaling is the natural next investigation.
    opaque tokens (e.g., subject=OPAQUE_1, predicate=OPAQUE_2), verify the net
    produces correct logical output with opaque tokens in the right positions,
    then substitute back to get the natural language answer.
+
+---
+
+## New Research Axes (from D64-D71)
+
+### 1. Quaternionic DKC as a Research Axis
+
+D66-D71 established that the computation is intrinsically quaternionic and
+lives on S². This is a genuinely new dimension of the research, not an
+extension of the S¹ (complex) approach:
+
+- **Bloch sphere = qubit state space = DKC computation space.** The S²=CP¹
+  identification is not incidental. The rotation axis of a unit quaternion
+  IS the Bloch sphere representation of a qubit. DKC with quaternionic weights
+  is computing on the same geometric object that quantum information theory uses
+  to represent single-qubit states.
+- **The 13-direction Voronoi as a quantum measurement basis.** The 13
+  eigenvector directions of the binary octahedral group form a specific
+  structured arrangement on S². Whether these 13 directions correspond to a
+  known quantum measurement basis (e.g., a SIC-POVM or a mutually unbiased
+  basis construction) is unexplored.
+- **24-cell as the natural computational polytope.** The 24-cell is unique in
+  4D: the only regular self-dual polytope with no 3D analogue. Its 24 vertices
+  arise naturally from SU(2) braid representations. The F4 symmetry group (576
+  elements) decomposes XOR6 solutions into exactly 6 orbits, which may reflect
+  the partition structure of XOR arity (6 = 1+2+3).
+- **Hopf fibration as a computational factorization.** The fiber phase carries
+  nothing; the base carries everything. This means DKC naturally factors through
+  the Hopf fibration: braid → SU(2) quaternion → S² direction → computation.
+
+### 2. Spectral Theory of DKC
+
+D71 gave the first frequency-domain characterization of DKC. The 13=13 theorem
+is the cleanest theoretical result in the arc:
+
+**Statement**: The minimum spherical harmonic bandwidth for XOR6 DKC on the
+13-direction S² eigenvector Voronoi is exactly l=6, because 2l+1 = 13 = the
+number of eigenvector directions. The phase transition at l=6 is sharp (0%
+recovery at l≤5, 100% at l=6) and all-or-nothing.
+
+**Why this matters for the vision**:
+- It explains, from first principles, WHY 14 cells suffice (compressed sensing
+  + known support) and WHY the specific number 13 appears (degrees of freedom
+  count at minimum bandwidth).
+- It opens a spectral approach to DKC that is orthogonal to the algebraic
+  (bracket value / cyclotomic integer) approach. Two independent frameworks for
+  the same object strengthen the theoretical foundation.
+- The spectral universality (all 36 XOR6 winners share the same spectral shape:
+  l=6 dominant at ~80%) means the spectrum is a structural invariant of XOR6
+  solutions, not a per-solution artifact. This could enable spectral
+  classification of what DKC can and cannot compute.
+- The trivialization prediction works: for Z[zeta_16] with 3,457 directions,
+  the DOF formula predicts l≥1728 minimum bandwidth, explaining the ~90%
+  solution rate at Z[zeta_16] resolution. The spectral framework predicted this
+  correctly from the direction count alone.
+
+### 3. Music as an Application and Outreach Direction
+
+D70 showed that the Z[zeta_8] algebra produces a natural musical system:
+4 eigenvalue angles → 4 notes (C, Eb, E, F#), spanning maximum consonance
+(unison) to maximum dissonance (tritone). Braid words become melodies; the
+Yang-Baxter relation σ₁σ₂σ₁ = σ₂σ₁σ₂ produces identical melodies step by
+step (not just at the final note). Dissonance IS the antipodal map on the
+dodecahedron (tritone pairs = antipodal faces).
+
+**Potential directions**:
+- Knot invariants as a composition algorithm: the Garside element melody
+  (Eb E F# E Eb C) is a complete rising-falling arch visiting all 4 knot notes.
+  Different knot types produce structurally distinct melodies.
+- Artistic collaborations: composers working with algebraic constraint rather
+  than pure taste.
+- Educational tools: music as an entry point to braid group theory, the Yang-
+  Baxter equation, and knot theory. The Yang-Baxter identity becomes audible.
+- Accessibility: DKC results that are otherwise abstract (bracket values,
+  cyclotomic integers) become perceivable through pitch and rhythm.
+
+### 4. Matroid Theory Integration
+
+D64 showed the parity hierarchy {XOR2, XOR3, XOR4, XOR5} is a matroid minor
+chain with perfect downward deletion-contraction closure. The 44 good / 31
+poison value split in the catalog vocabulary is structurally unexplored but
+possibly related to Reiner's cyclotomic matroids (mu_8, arXiv:math/0402206):
+
+- Deletion: removing any weight from XOR_n gives XOR_{n-1} (100%).
+- Contraction: fixing any input to 1 gives XNOR_{n-1} (100%).
+- The 44 good values (extensible upward) vs. 31 poison values (orphan-only)
+  may be the matroid's independent sets vs. circuits.
+- Poison values avoid octant 4 entirely — a geometric constraint on the
+  circuit structure.
+
+**Why this matters**: Matroid theory provides a combinatorial language for
+talking about which weight sets are "compatible" for extension. A matroid
+characterization of the DKC catalog would:
+- Unify the combinatorial (which sets work?) and algebraic (why do those
+  values appear in the catalog?) sides of DKC.
+- Provide a polynomial-time algorithm for testing extensibility (matroid
+  membership tests are poly-time).
+- Connect to the geometric (S² Voronoi) side via oriented matroid theory
+  (oriented matroids = chirotopes = sign patterns of determinants, which are
+  exactly what sector classification computes).
+
+Status: UNEXPLORED. Reiner connection flagged. Needs a dedicated investigation.
+
+### 5. Activation Function Design Theory
+
+The progression across D50-D71 suggests a principled theory of activation
+function design grounded in representation theory:
+
+```
+Half-plane (binary threshold)
+  → Sector (k-sector MVN, Aizenberg)
+    → Generalized sector (non-standard binary labeling of k sectors, D65)
+      → Voronoi on S¹ (k=24, D65)
+        → Voronoi on S³ (24-cell, 25 cells, D66)
+          → Voronoi on S² (13-direction eigenvector, 14 cells, D67)
+            → Spectral (bandwidth l=6, 13=13 theorem, D71)
+```
+
+Each step reduces cell count while maintaining or improving XOR6 solvability.
+The endpoint — spectral characterization via spherical harmonics — provides an
+analytical framework that transcends the enumeration approach.
+
+**The 13=13 theorem provides the DOF count**: minimum bandwidth = minimum cell
+count needed for the computation, set by the number of data-intrinsic
+directions. This is a principled design criterion:
+- Don't choose activation cell count by convention (Aizenberg's odd/even) or
+  by grid resolution (k sectors). Derive it from the data-intrinsic directions.
+- The spectral bandwidth l tells you the minimum representation complexity of
+  the labeling function. Functions below this bandwidth cannot be expressed;
+  functions at or above it can.
+- The representation-theoretic source of the directions (binary octahedral
+  group, braid group SU(2) image) determines what bandwidth is needed.
+
+This bridges pure math (representation theory, spectral analysis on S²) and
+practical ML architecture (how many neurons / activation cells do you need?).
 
 ---
 
@@ -328,9 +535,24 @@ The hybrid LLM vision connects to rhubarb's larger goals:
   are mammals" requires disambiguation (bank=financial vs bank=riverbank)
   before syllogistic compilation.
 
+- **Quantum information connection**: DKC computation lives on S²=CP¹ (the
+  Bloch sphere). The 13-direction eigenvector Voronoi might correspond to a
+  known quantum measurement basis. The l=6 spherical harmonic bandwidth maps
+  to hexadecapole operators in quantum optics. Is there a formal connection
+  between DKC compiled weights and quantum circuits, beyond the geometric
+  analogy?
+- **Matroid structure of the catalog**: The 44 good / 31 poison value split
+  in the DKC catalog may reflect a matroid structure (Reiner's cyclotomic
+  matroids mu_8). If so, matroid membership tests would provide poly-time
+  extensibility checking — replacing exhaustive catalog search.
+
 ---
 
 *First recorded: 2026-02-20. Source: conversation during atlas defrag.*
 *Updated: 2026-02-20. Source: second vision discussion — opaque tokens,
 syllogism-as-training, wired integration, deterministic NL parser.*
 *Updated: 2026-02-20. D63 resolved Gap 6 scaling (parity ceiling n=5).*
+*Updated: 2026-02-21. D64-D71 quaternionic arc: Gap 6 fully resolved, Gap 7
+(two-layer wall) and Gap 8 (quaternionic DKC / Bloch sphere) added. New
+research axes: quaternionic DKC, spectral theory, music, matroid theory,
+activation function design theory.*
