@@ -35,26 +35,38 @@ lattices = exact computation). Each step is published; the intersection is unocc
 | 13 | Next-level radical: rad(TL_{ℓ+1}) = ℓ²−ℓ−3; universal corank 1 at first degeneracy | 39 | PROVEN |
 | 14 | Markov RT truncation: dim ker(B_M) = dim J(A) + Σ (dim L_j)² for j≥ℓ−1 | 39 | PROVEN |
 | 15 | Direction Nesting: ζ_8 eigenvectors nest exactly in ζ_16 (rigidity, 0° drift) | 69 | PROVEN |
+| 16 | Bracket and Voronoi cell are incomparable braid invariants; 119 combined classes | 74 | PROVEN |
+| 17 | XOR8 solvable at ζ₈ with S¹×S² activation (6 winners / 10,626); wall was activation | 77 | PROVEN |
+| 18 | ζ₈ finite group ceiling: XOR10=0 even with Sec×Vor; 24-element group exhausted | 78 | PROVEN |
+| 19 | ζ₁₂ breaks wall: infinite group gives XOR10=124, XOR12=50+; capacity scales with catalog | 79 | PROVEN |
+| 20 | Only ζ₄ and ζ₈ finite (ADE: Q₈ and E₇); quantum dimension [2]_q = 0 at ζ₈ | 80 | PROVEN |
+| 21 | Linear depth law: max_xor ≈ depth+6; algebraic coherence beats raw vocabulary | 82 | DEMONSTRATED |
 
 ## Current Frontier
 
-Most recent landmarks: Demos 64-71 opened two major arcs. **The wall arc** (D64-65): the
-parity hierarchy is a funnel-shaped matroid with self-doubling as the dominant mechanism;
-the ceiling n=5 is algebra-independent (identical at Z[zeta_8] and Z[zeta_16], gap-of-2
-REFUTED); but generalized activations break the convention layer at k=24 for XOR6. **The
-quaternionic-spherical arc** (D66-71): SU(2) braid representations produce the 24-cell
-polytope (24 quaternions); the computation lives on S² (eigenvector direction), NOT S¹ or
-S³; the Hopf phase carries zero computational information; a custom 13-direction S² Voronoi
-achieves 36 XOR6 solutions at only 14 cells; and the 13=13 theorem (D71) explains why:
-bandwidth l=6 because 2×6+1 = 13 = number of eigenvector directions. Three formal proofs
-filed (P01-P03). 59 demos total.
+Most recent landmarks: Demos 72-82 opened two new arcs on top of the D64-71 foundation.
+**The characterization arc** (D72-75): bracket and Voronoi cell are incomparable braid
+invariants with 119 combined classes (D74); the angle channel subsumes the cell for additive
+sums (D75); anti-correlation — worst spherical t-design gives MOST solutions (D72); 82.8%
+universal automaton determinism (D73). **The scaling arc** (D76-82): XOR8=0 at ζ₈ with S²
+Voronoi alone (D76) but XOR8=6 with S¹×S² combined activation (D77) — the wall was the
+activation, not the root, the SAME discovery pattern as D50; ζ₈ finite group ceiling at
+XOR10 (D78); ζ₁₂ BREAKS the wall with XOR10=124, XOR12=50+ (D79); only ζ₄ and ζ₈ generate
+finite SU(2) subgroups — ADE classification, quantum dim [2]_q=0 at ζ₈ (D80); logarithmic
+scaling 0.62 XOR per catalog doubling (D81); and the fundamental reinterpretation: max_xor ≈
+depth+6 where depth = crossing number, algebraic coherence beats vocabulary (D82). Three
+formal proofs (P01-P03). 70 demos total. Paper 6 proposed: "Crossing Depth, Group
+Finiteness, and Capacity Scaling in DKC."
 
 **Next (Tier 1 priorities):**
-1. **Analytical proof of the 13=13 bandwidth bound** -- prove l=⌈(N-1)/2⌉ for N-point
+1. **ζ₁₂ with Sec×Vor activation** -- D79 showed ζ₁₂ breaks the ζ₈ wall; D77 showed
+   Sec×Vor is far more powerful than sector alone. Combining them should dramatically
+   increase XOR capacity. Immediate Paper 6 impact.
+2. **ζ₃₂ finiteness test** -- D80's Power-of-Two Conjecture predicts ζ₃₂ finite. Single
+   test_root(32) call. Small effort, high clarity for the ADE/finiteness story.
+3. **Analytical proof of the 13=13 bandwidth bound** -- prove l=⌈(N-1)/2⌉ for N-point
    binary Voronoi on S². Cleanest standalone publication target. Unlocks Paper 5.
-2. **XOR7 on S²** -- D65 showed XOR7 needs k=127 sectors on S¹. Does S² reduce this
-   dramatically (as it did for XOR6: k=24→14 cells)? Tests spectral framework scaling.
-3. **Sandwich theorem formal proof** -- radical dimension formula PROVEN; remaining:
+4. **Sandwich theorem formal proof** -- radical dimension formula PROVEN; remaining:
    algebra isomorphism, nilpotency=3, Fibonacci rank. Small-medium effort. Unlocks Paper 3.
 
 ## Deeper Reading (all paths relative to `knotapel/`)

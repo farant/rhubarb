@@ -235,7 +235,7 @@ for 3 inputs (~100^4 = 100M, seconds), unclear for larger inputs.
 
 Status: DEPENDS ON scaling (Gap 6).
 
-### Gap 6: Scaling Beyond 3 Inputs — SUBSTANTIALLY RESOLVED
+### Gap 6: Scaling Beyond 3 Inputs — FURTHER RESOLVED (D76-D82)
 Demo 63 extended DKC to 4-input (k=8, 96 solutions) and 5-input (k=15, 3020
 solutions) parity, establishing the parity ceiling at n=5 for Z[zeta_8]. The
 triskelion generalization (k=2n) was FALSIFIED; the true scaling law is
@@ -247,19 +247,70 @@ hypothesis was REFUTED: pigeonhole rises from 7 to 14 but actual ceiling stays
 at 5, widening the gap to 9. This supports the Conjecture (Universal Ceiling)
 that the n=5 bound is topological, not algebraic.
 
-For the vision, this means:
+For the original vision, this meant:
 - **Individual DKC neurons handle up to 5-input parity** (the hardest function).
   Simpler functions (AND, OR, MAJ) likely have higher ceilings.
 - **3-input syllogisms are well within capacity** — the natural fit between
   syllogisms and DKC is confirmed by the n=5 ceiling.
-- **Larger functions require composition** — multi-layer DKC (Gap 3) is the
-  path for anything beyond 5 inputs. This is architecturally consistent with
-  syllogistic chains.
+- **Larger functions require composition** — multi-layer DKC (Gap 3) was
+  thought to be the path for anything beyond 5 inputs.
 - **The ceiling is algebra-independent** — Z[zeta_16] and Z[zeta_8] agree
   exactly. The wall appears to be topological.
 
-Status: n<=5 resolved at both Z[zeta_8] and Z[zeta_16]. Compositional approach
-needed for n>5. The ceiling is likely not an algebra artifact.
+**UPDATED — D76-D82 substantially revised this picture:**
+
+D77 showed that XOR8 IS solvable at ζ₈ with S¹×S² product activation
+(Sec(8)×Voronoi, 112 cells, 6 solutions). The n=5 ceiling was
+activation-specific: it was the S¹-only sector activation that capped at
+XOR5, not the root of unity. D78 then confirmed that XOR10 = 0 at ζ₈ even
+with Sec×Vor activation — ζ₈ is a finite group (24 elements, binary octahedral,
+E₇) and its combinatorial catalog diversity is genuinely exhausted at XOR8.
+
+D79 broke through the ζ₈ ceiling by switching to ζ₁₂ (infinite group): XOR10
+= 124 winners, XOR12 = 50+ winners. The finite-vs-infinite group distinction is
+the key variable, not the subscript on ζ.
+
+D82 identified the **fundamental variable governing XOR capacity: crossing
+depth**. The linear depth law is:
+
+```
+max_xor ≈ depth + 6
+```
+
+Each unit of crossing depth (= generator multiplications = braid crossings)
+adds a fixed increment to computational capacity. The Demo 81 logarithmic law
+(0.62 XOR per doubling of catalog size at ζ₁₂) is a corollary: catalog grows
+as ~2^depth, so log₂(catalog) ≈ depth, giving max_xor ≈ 0.62 × log₂(catalog).
+The logarithmic law was an artifact of exponential catalog growth — depth is the
+real variable.
+
+D82 also demonstrated **algebraic coherence beats raw vocabulary**: a deep
+subset of 564 entries (fewer directions, fewer angles) outcomputes a strided
+subset of 564 entries with maximum vocabulary coverage, reaching XOR12 vs
+XOR10. The determining factor is shared intermediate products from generator
+multiplication chains — deep entries carry algebraic coherence, not just
+geometric coverage.
+
+**Revised vision implications:**
+
+- **ζ₈ (finite group, 24 elements, E₇)**: ceiling at XOR8 with S¹×S² activation.
+  The ADE classification identifies this as the binary octahedral group. Quantum
+  dimension [2]_q vanishes at ζ₈ — this is the most singular point of quantum
+  group parameter space.
+- **ζ₁₂ (infinite group)**: XOR12 reachable with ~1140-entry catalog; XOR14
+  predicted at ~38K entries. Capacity grows logarithmically with catalog size.
+- **Depth law: max_xor ≈ depth + 6**: the deepest entries (8 generator
+  multiplications deep) are 2× more efficient than shallow or strided entries
+  at equal count. More complex knots = more computational power.
+- **Implication for multi-layer DKC (Gap 3)**: multi-layer composition may
+  not be needed if deep infinite-group catalogs can reach high XOR targets
+  directly in a single neuron. The architectural question shifts from
+  "how do we compose neurons?" to "what is the right depth profile for the
+  catalog?"
+
+Status: ζ₈ ceiling confirmed at XOR8. ζ₁₂ breaks the wall with logarithmic/
+depth-linear scaling. The fundamental capacity variable is crossing depth, not
+catalog vocabulary or root-of-unity subscript.
 
 ### Gap 7: The Wall Is Two-Layered — NEW (D65)
 
@@ -286,6 +337,58 @@ geometry (Voronoi cells on S²) rather than treating it as a fixed convention.
 
 Status: Two-layer structure PROVEN. The convention wall is now understood as
 an activation design choice, not a fundamental limit.
+
+### Gap 9: Finite vs. Infinite Group Choice — NEW (D80)
+
+D80 established that under the standard two-generator construction, only ζ₄
+and ζ₈ generate finite SU(2) subgroups. All other tested roots (ζ₆, ζ₁₀,
+ζ₁₂, ζ₁₆, ζ₂₀) generate infinite groups. The boundary is non-monotonic:
+ζ₆ is infinite despite sitting between the two finite cases.
+
+**The two computational regimes:**
+
+- **Finite-group roots (ζ₄, ζ₈)**: structured, small catalog with complete
+  algebraic closure; every entry has an exact place in the ADE classification
+  (ζ₄ → Binary Dihedral Q₈, ζ₈ → Binary Octahedral E₇); hard capacity
+  ceiling because combinatorial diversity is genuinely exhausted. At ζ₈,
+  the quantum dimension [2]_q = q + q⁻¹ = i + (-i) = 0: this is the most
+  singular point in quantum group parameter space, where the TL category
+  becomes maximally non-semisimple. The computation is tractable (Kuperberg:
+  lattice roots are outside the #P-hard regime).
+- **Infinite-group roots (ζ₁₂, ζ₁₀, ζ₁₆, ...)**: catalog grows without
+  bound; capacity scales logarithmically with catalog size (depth-linearly
+  with crossing depth); no hard ceiling within feasible search. These roots
+  approach dense subgroups of SU(2) — the directions eventually cover S²
+  uniformly.
+
+**The architecturally fundamental question:**
+
+Can you get the best of both worlds — the structural guarantees of a finite
+group (every entry has an exact algebraic meaning; catalog is fully
+characterizable; computation is provably tractable) combined with the scaling
+capacity of an infinite group (no ceiling; depth drives power)?
+
+Possible directions:
+- **Union catalog** (ζ₈ + ζ₁₂): the two groups are largely non-overlapping
+  (only 12% quaternion overlap, 15% direction overlap by D79). A union might
+  combine finite-group structural guarantees for the ζ₈ component with
+  infinite-group capacity for the ζ₁₂ component. Whether this provides
+  superadditive capacity is an open question.
+- **Finite substructure extraction**: even within an infinite group, there
+  may be finite sub-catalogs with desirable structural properties (e.g., all
+  entries up to depth d form a well-characterized set). The depth law
+  (D82) already shows these subsets have predictable capacity.
+- **ADE gaps**: E₆ (binary tetrahedral, 24 elements) and E₈ (binary
+  icosahedral, 120 elements) are NOT reached by the two-perpendicular-axes
+  construction. A different generator construction might access them,
+  potentially providing finite groups with higher capacity than ζ₈.
+
+**Power-of-two finiteness conjecture (D80):** ζ₂ₖ for k ≥ 1 (i.e., ζ₄,
+ζ₈, ζ₁₆, ζ₃₂, ...) may all be finite under this construction. D80 confirmed
+the first two; ζ₃₂ is the next test.
+
+Status: Two-regime structure established. Union catalog, ADE gaps, and
+power-of-two conjecture are the active research directions.
 
 ### Gap 8: Quaternionic DKC and the Bloch Sphere — NEW (D66-D71)
 
@@ -357,6 +460,28 @@ Status: ACTIVE RESEARCH FRONTIER. Multiple open questions across D66-D71.
    opaque tokens (e.g., subject=OPAQUE_1, predicate=OPAQUE_2), verify the net
    produces correct logical output with opaque tokens in the right positions,
    then substitute back to get the natural language answer.
+
+7. **ζ₁₂ with Sec×Vor activation** — D77 showed Sec(8)×Voronoi unlocks
+   XOR8 at ζ₈. D79/D82 showed ζ₁₂ reaches XOR12 with the same activation
+   family. The combination has not been rigorously tested: apply D77's
+   activation-zoo methodology to ζ₁₂ to find the minimum k for XOR10 and
+   XOR12 and confirm the activation determines capacity principle holds at the
+   infinite-group scale.
+
+8. **ζ₃₂ finiteness test** — D80's power-of-two conjecture predicts ζ₃₂
+   (θ = π/16) generates a finite SU(2) subgroup. A single test_root(32)
+   call would confirm or refute. If finite, it would be a new ADE-type member
+   between E₇ (ζ₈) and potentially E₈ territory, with its own capacity
+   ceiling higher than ζ₈ but tractable.
+
+9. **Direct deep-entry generation at ζ₁₂** — D82's key insight: deep entries
+   (depth ≥ 6) are twice as efficient as shallow or strided entries at the same
+   count. But the current approach generates them by building the full BFS
+   closure through all shallower rounds. D82 asks: can depth-d entries be
+   generated directly from their algebraic properties (shared intermediate
+   products, angular refinement structure) without computing all shallower
+   depths? This would make ζ₁₂'s high-XOR regimes computationally accessible
+   without exponential catalog growth.
 
 ---
 
@@ -493,6 +618,99 @@ directions. This is a principled design criterion:
 This bridges pure math (representation theory, spectral analysis on S²) and
 practical ML architecture (how many neurons / activation cells do you need?).
 
+### 6. Depth-Based Catalog Engineering
+
+D82's central insight: algebraic coherence beats raw vocabulary. The depth law
+(max_xor ≈ depth + 6) means that what matters is not how many directions or
+angles the catalog covers, but how deeply the entries are constructed as
+products of generators.
+
+**What this suggests for catalog design:**
+
+The current approach is BFS enumeration — build the full group closure round by
+round, accept all resulting entries. This is expensive (exponential in depth)
+and produces a catalog with most entries at the deepest rounds (D82 data:
+round 8 alone contributes 44% of all 4096 entries). But the shallow rounds are
+necessary because:
+1. Depth-0 entries (generators + identity) appear in every winner at every XOR
+   level — they are the invariant skeleton.
+2. The recursive structure (XOR8 winner = XOR6 triple + shadow) means shallower
+   entries propagate into deeper selections.
+
+**The engineering question:** Is there a catalog construction that generates
+entries with depth ≥ d directly, without the exponential intermediate cost?
+Characteristics of deep entries that might be exploitable:
+- They share common intermediate algebraic factors (products of 4 generators
+  appear as sub-products of products of 8 generators).
+- They occupy the "angle refinement" regime (depth 7-8 add new angles while
+  directions are saturated) — angular resolution is the bottleneck, not
+  directional coverage.
+- The two-component winner structure (shallow core + deep extensions) is known:
+  winners at XOR(n) have mean depth ~n/6. This is a design spec, not just an
+  observation.
+
+**Connection to the vision:** For the hybrid LLM, compiled DKC neurons need to
+be generated efficiently at the inference/update time. If deep-entry generation
+can be done directly (without full BFS), the compilation cost drops from
+exponential to manageable. This is the bottleneck for making Gap 5 (dynamic
+recompilation) practical at ζ₁₂.
+
+Status: CONCEPTUAL. D82 identified the phenomenon and posed the direct-
+generation question. No implementation yet.
+
+### 7. Finite/Infinite Group Duality
+
+D80 established the two computational regimes. The vision question — getting
+the best of both — is more than an engineering optimization; it touches the
+deep structure of why DKC works at all.
+
+**Why the finite/infinite distinction matters:**
+
+In the finite case (ζ₈): the binary octahedral group closes at 24 elements.
+Every entry has an exact, named place in the ADE/McKay classification. The
+quantum dimension [2]_q = 0 at ζ₈ means the TL category is maximally non-
+semisimple at this point. The XOR capacity (ceiling at 8 inputs) can in
+principle be proven, not just measured. Kuperberg's #P-hardness doesn't apply
+because ζ₈ is a lattice root.
+
+In the infinite case (ζ₁₂): the group never closes; it approaches a dense
+subgroup of SU(2). Every BFS round produces genuinely new algebraic structure.
+The XOR capacity is not bounded by group order — it is bounded only by the
+depth you can reach and the computational resources for catalog construction
+and search. But: the catalog is no longer fully characterizable. Entries at
+depth d are products of d generators, but the algebraic classification of the
+full infinite group is open (it's related to Kuperberg's #P-hard territory
+for irrational angles).
+
+**Two research directions toward duality:**
+
+1. **Finite subgroups of infinite catalogs**: at any depth d in a ζ₁₂ catalog,
+   the entries up to depth d form a finite set (though not closed under
+   multiplication). D82's winner architecture (shallow core + deep extensions)
+   means the "shallow core" is a small finite structure that provides the
+   invariant skeleton, even when the overall catalog is infinite. Can this
+   shallow core be characterized as a finite algebraic object with ADE-style
+   guarantees?
+
+2. **Union catalogs**: ζ₈ and ζ₁₂ are largely non-overlapping (12-15%
+   quaternion/direction overlap, D79). Their union could combine ζ₈'s fully
+   characterized structure with ζ₁₂'s depth-scalable capacity. The union
+   catalog hypothesis: using ζ₈ entries as the "shallow core" and ζ₁₂ entries
+   as the "deep extensions" in a winner construction might give higher capacity
+   than ζ₁₂ alone (because the ζ₈ core is algebraically specialized) while
+   maintaining ζ₁₂'s scalability.
+
+**Connection to quantum information:** The quantum dimension vanishing at ζ₈
+is connected to the TL category being non-semisimple at this root — the same
+non-semisimplicity that gives DKC its computational power via the
+bracket-blind computation (D74). Infinite-group roots are non-semisimple in a
+different, less controlled way. The duality question may have a precise
+formulation in terms of monoidal category theory.
+
+Status: CONCEPTUAL. Mathematical framework needed. Potentially a deep
+connection between TL non-semisimplicity, the ADE classification, and
+computational capacity.
+
 ---
 
 ## Connection to Broader Rhubarb Project
@@ -507,6 +725,36 @@ The hybrid LLM vision connects to rhubarb's larger goals:
   computation native to the tradition.
 - **Smaragda**: Already a taxonomy/entity system. Natural source of structured
   knowledge for the compilation pipeline.
+
+**The depth law as a cost model for compilation (updated, D82):**
+
+The linear depth law (max_xor ≈ depth + 6) gives DKC compilation a concrete
+cost structure for the first time. Specifically:
+- A compiled neuron capable of expressing an n-input Boolean function requires
+  catalog entries of crossing depth ≈ n - 6. For a 3-input syllogism (XOR3),
+  depth 0 entries suffice. For a 6-input composition, depth ≈ 0 entries still
+  suffice (XOR6 at depth 0). For higher-arity compiled functions, depth scales
+  linearly with arity.
+- More complex knots = more powerful compiled neurons. This is a direct
+  translation: the crossing complexity of a braid used to generate a catalog
+  entry determines the computational power that entry contributes.
+- Catalog construction cost scales exponentially with depth (D82: ~2× per
+  round). But the gain is linear. This means: for the hybrid LLM, there is a
+  sweet spot where you build the catalog to the depth you need and stop. You
+  don't need the entire infinite group — just the first d rounds for XOR(d+6).
+- The two-component winner structure (shallow core + deep extensions) maps
+  onto the hybrid LLM's architecture: the "shallow core" of a compiled neuron
+  (generators and depth-0 entries) plays the role of the fixed logical skeleton,
+  while the "deep extensions" provide the fine-grained capacity for more complex
+  computations. This parallels the compiled (skeletal, exact) vs. trained
+  (fine-grained, statistical) distinction in the hybrid model itself.
+
+For building a practical hybrid LLM, this means: catalog depth is a
+hyperparameter that you set based on the maximum arity of logical functions
+you want to compile. For syllogistic logic (arity 3), the catalog is trivially
+small. For richer logical operations (arity 8-12), you need ~5-8 rounds of BFS
+at ζ₁₂. This is a concrete engineering specification, not just a theoretical
+result.
 
 ---
 
@@ -556,3 +804,12 @@ syllogism-as-training, wired integration, deterministic NL parser.*
 (two-layer wall) and Gap 8 (quaternionic DKC / Bloch sphere) added. New
 research axes: quaternionic DKC, spectral theory, music, matroid theory,
 activation function design theory.*
+*Updated: 2026-02-21. D72-D82 scaling arc: finite/infinite group boundary,
+depth law, activation determines capacity. Gap 6 further revised (ζ₈ ceiling
+at XOR8 with S¹×S² activation; ζ₁₂ breaks the wall; depth is the fundamental
+variable, not catalog size). Gap 9 added (finite vs infinite group choice;
+ADE classification; quantum dimension vanishing). Research axes 6 and 7 added
+(depth-based catalog engineering; finite/infinite group duality). Near-term
+explorations 7-9 added (ζ₁₂ activation zoo; ζ₃₂ finiteness; direct deep-entry
+generation). Connection to Broader Rhubarb Project updated with depth law as
+compilation cost model.*

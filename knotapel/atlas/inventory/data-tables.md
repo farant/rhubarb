@@ -6,6 +6,8 @@ All numerical tables extracted from the demo index and explorer's log. Exact num
 
 *Updated 2026-02-21: Added Demos 64–71 (parity matroid recursion, Clifford staircase, quaternionic DKC, coordinate system zoo, stereographic DKC, multi-root S² comparison, musica nodorum, spectral DKC).*
 
+*Updated 2026-02-21: Added Demos 72–82 (spherical design test, eigenvector automaton, computational invariant, binocular DKC, 8-input scaling, activation zoo, recursive scaling/phase diagram, ζ₁₂ capacity, group finiteness survey, capacity scaling law, crossing depth).*
+
 ---
 
 ## 1. Axiality Hierarchy Table
@@ -678,73 +680,6 @@ Total unreachable truth tables: 48 of 256.
 ALL 24 angles (every 15°) give EXACTLY 11/13.
 
 **Provenance:** Demo 59; Explorer's Log.
-
----
-
-## 12. Demo Test Counts
-
-| Demo | Tests | Status |
-|------|-------|--------|
-| 01 | 9/9 | COMPLETE |
-| 02 | 9/9 | COMPLETE (6 unused warnings) |
-| 03 | 8/8 | COMPLETE |
-| 04 | 12/12 | COMPLETE |
-| 05 | ~30 | COMPLETE |
-| 06 | 19/19 | COMPLETE |
-| 07 | 25/25 | COMPLETE |
-| 08 | 47/47 | COMPLETE |
-| 09 | 30/30 | COMPLETE |
-| 10 | ~50+ | COMPLETE |
-| 11 | ~16 | COMPLETE |
-| 12 | 6 parts | COMPLETE |
-| 13 | ~8+ | COMPLETE |
-| 14 | 7/7 | COMPLETE |
-| 15 | ~8 | COMPLETE |
-| 16 | 8 | COMPLETE |
-| 17 | ~6 | COMPLETE |
-| 18 | ~8 | COMPLETE |
-| 19 | ~15 | COMPLETE |
-| 20 | ~7 | COMPLETE |
-| 21 | 6/6 | COMPLETE |
-| 22 | ~6 | COMPLETE |
-| 23 | 4 | COMPLETE |
-| 24 | ~7 | COMPLETE |
-| 25 | 8/8 | COMPLETE |
-| 26 | 8/8 | COMPLETE |
-| 27 | ~7 | COMPLETE |
-| 28 | ~12-15 | COMPLETE |
-| 29 | ~20 | COMPLETE |
-| 35 | ~40 (52/52) | COMPLETE |
-| 38 | 13/13 | COMPLETE |
-| 39 | 18/18 | COMPLETE |
-| 45 | ~11 | COMPLETE |
-| 46 | 6/10 | COMPLETE |
-| 47 | ~12 | COMPLETE |
-| 48 | 14/14 | COMPLETE |
-| 49 | ~10 | COMPLETE |
-| 50 | ~6 | COMPLETE |
-| 51 | 57/57 | COMPLETE |
-| 52 | 75/75 | COMPLETE |
-| 53 | 59/59 | COMPLETE |
-| 54 | 53/53 | COMPLETE |
-| 55 | 7/7 | COMPLETE |
-| 56 | 17/17 | COMPLETE |
-| 57 | ~8 | COMPLETE |
-| 58 | 16/16 | COMPLETE |
-| 59 | ~15+ | COMPLETE |
-| 60 | 15/15 | COMPLETE |
-| 61 | ~14 (12/12) | COMPLETE |
-| 62 | 7/7 | COMPLETE |
-| 64 | 22/22 | COMPLETE |
-| 65 | 38/38 | COMPLETE |
-| 66 | 30/30 | COMPLETE |
-| 67 | 18/18 | COMPLETE |
-| 68 | 9/9 | COMPLETE |
-| 69 | 9/9 | COMPLETE |
-| 70 | 8/8 | COMPLETE |
-| 71 | 10/10 | COMPLETE |
-
-**Provenance:** Demo index, all entries.
 
 ---
 
@@ -1623,4 +1558,506 @@ Quadrature grid: 64θ × 128φ = 8,192 points. Orthonormality max error: 6.82e-1
 
 ---
 
-*Generated 2026-02-20 from demo-index.md (2845 lines) and explorers-log.md (1273 lines). Updated with Demos 38, 39, 60. Updated 2026-02-21 with Demos 64–71.*
+---
+
+## 34. Spherical Design Data — Demo 72
+
+### T-Design Residuals per Harmonic Level (13 Eigenvector Directions)
+
+| Mode l | Residual max|S_{l,m}|| | Status for DKC |
+|--------|------------------------|----------------|
+| l=1 (odd) | 2.435 | First failure; not DKC-relevant |
+| l=2 (even) | 5.11e-16 (machine precision) | PASS — single exact pass |
+| l=3 (odd) | large | Fail; odd mode, irrelevant |
+| l=4 (even) | 0.576 | First DKC-relevant failure |
+| l=5+ | large | Fail |
+| l=6 (DKC bandwidth) | large | Fail; compressed sensing explains why this works anyway |
+
+T-design parameter achieved: t=0 (directed). t_even=2; t_odd=0; undirected (26 points, both ±dir): t=3.
+S³ full 48-element binary octahedral group: t=1. 24-cell vertices (binary tetrahedral subgroup): 5-design; additional 24 elements break at degree 2.
+Delsarte maximum possible for N=13 points: t=7. Achieved: t=0 (worst possible).
+
+**Provenance:** Demo 72 Parts A–E.
+
+### Delsarte Bounds
+
+| t | Min points for t-design on S² | Achieved by 13 dirs? |
+|---|-------------------------------|----------------------|
+| 1 | 3 | No (t=0) |
+| 2 | 6 | No |
+| 3 | 10 | No (undirected version yes) |
+| 7 | 10 | No (max feasible with 13 points, not achieved) |
+
+**Provenance:** Demo 72 Part E; Delsarte, Goethals, Seidel (1977).
+
+### Perturbation Sensitivity (eps° perturbation → mean XOR6 count)
+
+| Perturbation (mean°) | Mean XOR6 count | Notes |
+|---------------------|-----------------|-------|
+| 0° (unperturbed) | 36 | Baseline |
+| 1° | 38.0 | Exceeds unperturbed — local not global optimum |
+| 5° | 35.8 | Robust; approximate Voronoi cell boundary |
+| 10° | 11.5 | Collapse begins |
+| 20° | 2.1 | Near-total collapse |
+
+**Provenance:** Demo 72 Part H.
+
+### Optimized Design vs Eigenvector Comparison
+
+| Configuration | t=6 design residual | XOR6 solutions |
+|--------------|---------------------|----------------|
+| Eigenvectors (binary octahedral) | 2.43 | **36** |
+| Stochastic-optimized 13 points | 0.93 (2.6× better geometry) | **4** |
+
+Better geometric distribution gives fewer XOR6 solutions. Sampling quality and computational quality are anti-correlated.
+
+**Provenance:** Demo 72 Part G.
+
+---
+
+## 35. Eigenvector Automaton Determinism — Demo 73
+
+### Determinism Table (Multiplicative vs Additive vs Signed)
+
+| Formulation | Transitions | Deterministic | Fraction | XOR6? |
+|------------|-------------|---------------|----------|-------|
+| Multiplicative braid product | 32 | 26 | 81.2% | NO (balanced in every cell) |
+| Additive weight sum (unsigned 13 cells) | 58 | 48 | **82.8%** | YES |
+| Signed partition (27 cells) | — | — | **87.1%** | YES |
+
+All 36 winning triples have exactly 82.8% additive determinism — zero variation. Universal structural constant.
+
+**Provenance:** Demo 73 Parts B, D, E, F, G.
+
+### Distinct Partial Sums by Step (Additive Formulation)
+
+| Step | Distinct partial sums | Notes |
+|------|----------------------|-------|
+| 0 | 2 | Initial |
+| 1 | 3 | After first weight |
+| 2 | 6 | — |
+| 3 | 9 | — |
+| 4 | 18 | — |
+| 5 | 27 | Final (minimum state count for 100% determinism) |
+
+27 signed cells needed for direction-level 87.1% determinism. 17 of 27 cells occupied at step 5.
+Cell collisions (same cell, different partial sum history): 1,296 instances across all steps.
+
+**Provenance:** Demo 73 Parts E, F.
+
+---
+
+## 36. Invariant Hierarchy — Demo 74
+
+### Equivalence Class Counts (Incomparability Table)
+
+| Invariant | Equivalence classes | Notes |
+|-----------|---------------------|-------|
+| Cell (Voronoi) alone | **14** | Very coarse |
+| Quaternion catalog | **24** | Natural mid-level |
+| Kauffman bracket alone | **100** | Standard invariant |
+| (Bracket, Cell) combined | **119** | 19% improvement over bracket alone |
+
+**Provenance:** Demo 74 Part C.
+
+### Collision Separation at Quaternion Catalog Level
+
+| Pair type | Total pairs | Separated by other invariant | Fraction |
+|-----------|-------------|------------------------------|----------|
+| Same bracket, different quaternion | 30 | 24 separated by cell | 80% |
+| Same cell, different quaternion | 13 | 7 separated by bracket | 54% |
+| Same cell AND same bracket | 6 | Unseparated by either | — |
+
+At braid level: 58,078 same-bracket pairs → 56,825 (97.8%) in different cells; 1,253 in same cell (2.2% unseparated).
+
+**Provenance:** Demo 74 Parts A, B, F.
+
+### 6 Computational Type Vectors
+
+| Type | Cells | Quaternion count | Description |
+|------|-------|-----------------|-------------|
+| 0 | Cell 0 | 3 | Axis σ₁ |
+| 1 | Cell 1 | 3 | Axis σ₂ |
+| 2 | Cells 2,3,4,5 | 8 | Body 60° cells |
+| 3 | Cells 6,7,8,9,11,12 | 6 | Edge cells |
+| 4 | Cell 10 | 3 | Third axis |
+| 5 | Cell 13 | 1 | Identity |
+
+XOR6-separating winners: 33/36 (92%). Total XOR6-separated bracket collisions across 36 winners: 186.
+Refinement chain: 43 bracket groups → 61 type subgroups → 168 quaternion subgroups.
+
+**Provenance:** Demo 74 Parts D, G, I.
+
+---
+
+## 37. Binocular DKC Channel Inventory — Demo 75
+
+### Five-Channel Data Table
+
+| Channel | Entropy (bits) | XOR6 perfect? | Notes |
+|---------|---------------|---------------|-------|
+| Cell (Voronoi S²) | 1.000 | YES (all 36) | Coarsest channel |
+| Eigenvalue angle | 2.004 | YES (all 36) | Subsumes cell |
+| (Angle, Cell) joint | 2.282 | YES | 2.3× capacity vs cell |
+| Magnitude |S|| | 1.839 | 44% (16/36 triples) | Not reliable predictor |
+| Multiplicative product | 4.241 | NO (0/36) | Preserves 24-cell group structure |
+
+**Provenance:** Demo 75 Parts B–H.
+
+### Eigenvalue Angles and Parity (Sum Quaternions, 36 Winning Triples)
+
+| Eigenvalue angle | Origin | XOR parity role |
+|-----------------|--------|-----------------|
+| 0° | Canonical octahedral | — |
+| 30° | Non-canonical (addition-only) | — |
+| 35.264° (tetrahedral) | Non-canonical (addition-only) | — |
+| 45° | Canonical octahedral | — |
+| 60° | Canonical octahedral | — |
+| 65.905° | Non-canonical (addition-only) | — |
+| 90° | Canonical octahedral | — |
+
+Total distinct: 7 (3 non-canonical, arising only through vector addition breaking 24-cell group closure).
+Multiplicative channel: only 4 canonical angles; 0 XOR6 solutions.
+
+**Provenance:** Demo 75 Parts C, H.
+
+### |S| Magnitude Quantization (√n Pattern)
+
+| |S| value | Present? | Notes |
+|-----------|---------|-------|
+| √0 = 0 | YES | — |
+| √1 = 1 | YES | — |
+| √2 | YES | — |
+| √3 | YES | — |
+| √4 = 2 | YES | — |
+| √5 | **NO** | Unreachable from 24-cell inner products {-1,-½,0,½,1} |
+| √6 | YES | — |
+
+H(|S|) = 1.839 bits. 8 distinct triple families based on angle function; group 0 is largest (8 triples).
+
+**Provenance:** Demo 75 Parts G, E.
+
+---
+
+## 38. 6-vs-8 Input Comparison — Demo 76
+
+### XOR6 vs XOR8 Under S² Voronoi Activation
+
+| Property | XOR6 (3 weights) | XOR8 (4 weights) |
+|----------|-----------------|-----------------|
+| Candidates | C(24,3) = 2,024 | C(24,4) = 10,626 |
+| Winners | 36 (1.78%) | **0 (0%)** |
+| Masks per cell | 64/14 ≈ 4.6 | 256/14 ≈ 18.3 |
+| Min conflict cells (best case) | — | 2 (11 quadruples, 0.1%) |
+| Best accuracy | 100% | 50.0% (random chance) |
+
+**Provenance:** Demo 76 Parts A–C.
+
+### Algebraic Structure Breakdown (3-term vs 4-term Sums)
+
+| Property | 3-term sums (XOR6) | 4-term sums (XOR8) |
+|----------|-------------------|-------------------|
+| Distinct eigenvalue angles | **7** (algebraic, clean) | **86** (near-continuous) |
+| Distinct |S| values | **6** (√{0,1,2,3,4,6}) | **28** (including non-algebraic like 0.4142) |
+| Algebraic structure | CLEAN | BROKEN |
+| ζ_16 equivalent masks/cell (XOR8) | — | 256/3,458 ≈ 0.07 (trivial) |
+
+**Provenance:** Demo 76 Parts D–E.
+
+---
+
+## 39. 14-Activation Comparison Table — Demo 77
+
+### XOR8 Accuracy and Winners by Activation (10,626 quadruples)
+
+| Activation | Cells | Best accuracy | Winners | Notes |
+|-----------|-------|--------------|---------|-------|
+| S² Voronoi | 14 | 50.0% | 0 | Demo 76 result |
+| Sec(4) | 4 | 77.7% | 0 | — |
+| Sec(8) | 8 | 85.2% | 0 | — |
+| S³ Voronoi (24-cell) | 24 | 90.2% | 0 | Worse than Sec(16) despite more cells |
+| Sec(10) | 10 | 92.6% | 0 | — |
+| Sec(12) | 12 | 90.6% | 0 | Non-monotone |
+| Polar 14×3 (dir×mag) | 42 | 93.0% | 0 | — |
+| Sec(4)×Vor | 56 | 93.8% | 0 | — |
+| Polar 14×2 | 28 | 93.8% | 0 | — |
+| Sec(16) | 16 | 96.9% | 0 | — |
+| Sec(6)×Vor | 84 | 96.9% | 0 | — |
+| Polar 14×6 | 84 | **99.2%** | 0 | One misclassified pair |
+| **Sec(8)×Vor** | **112** | **100.0%** | **6** | **Phase transition winner** |
+
+Phase transition: 0 winners at 84 cells (Sec6×Vor), 6 winners at 112 cells (Sec8×Vor). Critical threshold ~100 cells.
+
+**Provenance:** Demo 77 Part D, accuracy table.
+
+### XOR8 Winning Quadruples (6 total)
+
+| Quadruple | XOR6-winning triple subsets | Eigenvalue angles used |
+|-----------|----------------------------|----------------------|
+| [0,1,9,23] | 2 | 45° and 90° only |
+| [0,1,18,22] | 2 | 45° and 90° only |
+| [2,4,5,23] | 2 | 45° and 90° only |
+| [2,9,19,21] | 2 | 45° and 90° only |
+| [4,5,15,16] | 2 | 45° and 90° only |
+| [17,19,20,21] | 2 | 45° and 90° only |
+
+Every winner: exactly 2 XOR6-winning triple subsets. 12 of 24 embedded triples (50%) are XOR6 winners.
+Dominant Voronoi cells: 0, 1, 10 — each appearing 6 times. 15 of 24 catalog quaternions participate.
+
+**Provenance:** Demo 77 Parts D, F.
+
+---
+
+## 40. Phase Diagram Table — Demo 78
+
+### XOR Hierarchy at ζ₈ (Sec(k)×Vor Activation)
+
+| XOR level | Min cells (activation) | Winners | Masks/cell | Hit rate | Status |
+|-----------|----------------------|---------|------------|---------|--------|
+| XOR6 | 14 (Voronoi only) | 36 | 4.6 | 1.779% | SOLVED |
+| XOR8 | 112 (Sec8×Vor) | 6 | 2.3 | 0.057% | SOLVED |
+| XOR10 | — | **0** | — | 0% | WALL |
+| XOR12+ | — | 0 | — | 0% | IMPOSSIBLE at ζ₈ |
+
+Best XOR10 accuracy at ζ₈: 98.4% = 1008/1024 masks at k=10 and k=16.
+Non-monotonicity: k=12 accuracy (96.9%) worse than k=10 (98.4%), mirroring Demo 50's pi/4 incommensurability.
+
+**Provenance:** Demo 78 Parts A–E.
+
+### Recursive Shadow Structure (XOR6 → XOR8)
+
+| Property | Value |
+|----------|-------|
+| XOR8 winners containing exactly 2 XOR6 sub-triples | 6/6 (100%) |
+| Shadows sharing Voronoi cell with parent member | 12/12 (100%) |
+| All shadows half-angle | exactly 45° |
+| Shadow pairs (share direction+half-angle, differ in orientation) | {0,1}, {4,5}, {19,21} |
+
+**Provenance:** Demo 78 Part E.
+
+---
+
+## 41. ζ₈ vs ζ₁₂ Comparison — Demo 79
+
+### Root of Unity Capacity Comparison (256-entry cap)
+
+| Property | ζ₈ | ζ₁₂ (256 entries) |
+|---------|-----|------------------|
+| Quaternions | 24 (finite, closes at round 4) | 256 (capped; group continues) |
+| Eigenvector directions | 13 | 64 (4.9×) |
+| Distinct half-angles | 4 | 12 (3×) |
+| Voronoi cells | 14 | 65 (4.6×) |
+| XOR6 winners | 36 | 1024+ (capped) |
+| XOR8 winners | 6 | 1024+ (capped) |
+| XOR10 winners | 0 | **124** |
+| XOR12 winners | 0 | 0 (truncation artifact) |
+
+**Provenance:** Demo 79 Parts A–C.
+
+### ζ₁₂ Expanded Catalog (4096 entries)
+
+| Property | Value |
+|----------|-------|
+| Quaternions | 4096+ |
+| Directions | 512 |
+| Half-angles | 43 |
+| XOR12 winners | 50+ (first 11 of 124 XOR10 parents searched) |
+| Every XOR12 winner | requires at least 1 entry with index > 256 |
+
+ζ₁₂ group closure rounds: 5 → 17 → 51 → 127 → 275 → 564 → 1140 → 2292 → 4096+ (roughly doubling each round).
+Non-nesting: 3/24 ζ₈ quaternions in ζ₁₂ catalog (12%); 2/13 ζ₈ directions in ζ₁₂ (15%).
+
+**Provenance:** Demo 79 Parts C, D, E.
+
+---
+
+## 42. Group Finiteness Survey — Demo 80
+
+### Seven Roots Tested
+
+| Root | θ | Elements | Closure rounds | Directions | Half-angles | ADE type | Finite? |
+|------|---|---------|---------------|------------|-------------|----------|---------|
+| ζ₄ | π/2 | 4 | 2 | 3 | 2 | Binary Dihedral 2D₂ | **YES** |
+| ζ₆ | π/3 | >4096 | 10 (cap) | 512 | 37 | — | NO |
+| ζ₈ | π/4 | 24 | 4 | 13 | 4 | Binary Octahedral (E₇) | **YES** |
+| ζ₁₀ | π/5 | >4096 | 7 (cap) | 512 | 71 | — | NO |
+| ζ₁₂ | π/6 | >4096 | 8 (cap) | 512 | 43 | — | NO |
+| ζ₁₆ | π/8 | >4096 | 8 (cap) | 512 | 51 | — | NO |
+| ζ₂₀ | π/10 | >4096 | 7 (cap) | 512 | 67 | — | NO |
+
+Finite: 2. Infinite: 5. Non-monotone: ζ₆ is infinite despite sitting between the two finite cases.
+Quantum dimension [2]_q at ζ₈: exactly 0 (q=i, [2]_q = i + 1/i = 0).
+ζ₁₀ (Fibonacci anyons territory): INFINITE — not the binary icosahedral group (E₈, order 120).
+Angle algebraic degrees: cos(π/2)=0 (rational, finite), cos(π/4)=√2/2 (degree 2, finite), cos(π/3)=1/2 (rational, INFINITE), cos(π/5)=φ/2 (degree 2, INFINITE) — degree alone does not predict finiteness.
+
+**Provenance:** Demo 80.
+
+---
+
+## 43. Capacity Scaling Law — Demo 81
+
+### ζ₁₂ Snapshot Table (9 rounds: catalog, dirs, angles, max XOR)
+
+| Round | Catalog size | Directions | Angles | Max XOR level |
+|-------|-------------|------------|--------|--------------|
+| 0 | 5 | 2 | 2 | 6 |
+| 1 | 17 | 6 | 4 | 6 |
+| 2 | 51 | 22 | 6 | **8** |
+| 3 | 127 | 46 | 10 | 8 |
+| 4 | 275 | 114 | 12 | **10** |
+| 5 | 564 | 239 | 16 | 10 |
+| 6 | 1140 | 507 | 21 | **12** |
+| 7 | 2292 | 512 (saturated) | 35 | 12 |
+| 8 | 4096 | 512 (saturated) | 43 | 12 |
+
+Logarithmic scaling law: max_xor ≈ 0.62 × log₂(catalog_size) + 4.6
+Each doubling of catalog size adds ~0.62 to max XOR. Each +2 XOR level costs ~3.2 doublings (~10× more entries).
+
+**Provenance:** Demo 81.
+
+### XOR Transition Costs
+
+| Transition | Catalog sizes | Doublings required |
+|-----------|--------------|-------------------|
+| XOR6 → XOR8 | ~5 → ~51 | 3.35 |
+| XOR8 → XOR10 | ~51 → ~275 | 2.43 |
+| XOR10 → XOR12 | ~275 → ~1140 | 2.05 |
+
+Decreasing transition gap — possibly sub-logarithmic O(log N / log log N). Requires XOR14 data to confirm.
+Direction saturation: MAX_DIR=512 reached at round 7 (catalog=2292).
+
+Predictions: XOR14 at ~38,000 entries (~11 rounds); XOR16 at ~615,000 entries; XOR20 at ~160M; XOR32 at ~10¹⁴ (infeasible).
+
+**Provenance:** Demo 81.
+
+---
+
+## 44. Depth Census and Shallow/Strided/Deep Comparison — Demo 82
+
+### Depth Census (ζ₁₂ closure, per round)
+
+| Depth (round) | New entries | Cumulative entries |
+|---------------|------------|-------------------|
+| 0 | 5 | 5 |
+| 1 | 12 | 17 |
+| 2 | 34 | 51 |
+| 3 | 76 | 127 |
+| 4 | 148 | 275 |
+| 5 | 289 | 564 |
+| 6 | 576 | 1140 |
+| 7 | 1152 | 2292 |
+| 8 | 1804 | 4096 |
+
+Round 8 alone is 44% of all entries. Growth: roughly 2× per round (exponential).
+Linear depth law: max_xor ≈ depth + 6 (each unit of crossing depth adds one XOR level).
+
+**Provenance:** Demo 82.
+
+### Shallow vs Strided vs Deep Comparison at 127 and 564 Entries
+
+| Subset | Size | Directions | Angles | Max XOR |
+|--------|------|-----------|--------|---------|
+| Shallow-127 (first N entries) | 127 | — | — | 8 |
+| Strided-127 (every K-th) | 127 | — | — | 10 |
+| Deep-127 (last N entries) | 127 | — | — | 10 |
+| Shallow-564 | 564 | — | — | 10 |
+| Strided-564 | 564 | **512** (full) | **43** (full) | 10 |
+| Deep-564 | 564 | **476** (less) | **19** (less!) | **12** |
+
+Algebraic coherence beats vocabulary: Strided-564 has maximum possible vocabulary (512 dirs, 43 angles matching the full 4096-entry catalog) yet cannot reach XOR12. Deep-564 with strictly less vocabulary does reach XOR12. Deep entries are 2× more efficient.
+
+**Provenance:** Demo 82 Parts B, C.
+
+### Winner Mean Depth (Monotone Increase)
+
+| XOR level | Mean entry depth in winners |
+|-----------|---------------------------|
+| XOR6 | 0.52 |
+| XOR8 | 0.63 |
+| XOR10 | 1.00 |
+| XOR12 | 1.98 |
+
+Sample XOR12 winner: indices [0,1,3,6,52,388], depths [0,0,0,1,3,5] — shallow core + progressively deeper harmonics.
+ζ₈ control: 24 entries, 4 rounds, max depth 3, max XOR 8; same depth→XOR pattern confirmed.
+
+**Provenance:** Demo 82 Part D.
+
+---
+
+## 12. Demo Test Counts (Extended)
+
+| Demo | Tests | Status |
+|------|-------|--------|
+| 01 | 9/9 | COMPLETE |
+| 02 | 9/9 | COMPLETE (6 unused warnings) |
+| 03 | 8/8 | COMPLETE |
+| 04 | 12/12 | COMPLETE |
+| 05 | ~30 | COMPLETE |
+| 06 | 19/19 | COMPLETE |
+| 07 | 25/25 | COMPLETE |
+| 08 | 47/47 | COMPLETE |
+| 09 | 30/30 | COMPLETE |
+| 10 | ~50+ | COMPLETE |
+| 11 | ~16 | COMPLETE |
+| 12 | 6 parts | COMPLETE |
+| 13 | ~8+ | COMPLETE |
+| 14 | 7/7 | COMPLETE |
+| 15 | ~8 | COMPLETE |
+| 16 | 8 | COMPLETE |
+| 17 | ~6 | COMPLETE |
+| 18 | ~8 | COMPLETE |
+| 19 | ~15 | COMPLETE |
+| 20 | ~7 | COMPLETE |
+| 21 | 6/6 | COMPLETE |
+| 22 | ~6 | COMPLETE |
+| 23 | 4 | COMPLETE |
+| 24 | ~7 | COMPLETE |
+| 25 | 8/8 | COMPLETE |
+| 26 | 8/8 | COMPLETE |
+| 27 | ~7 | COMPLETE |
+| 28 | ~12-15 | COMPLETE |
+| 29 | ~20 | COMPLETE |
+| 35 | ~40 (52/52) | COMPLETE |
+| 38 | 13/13 | COMPLETE |
+| 39 | 18/18 | COMPLETE |
+| 45 | ~11 | COMPLETE |
+| 46 | 6/10 | COMPLETE |
+| 47 | ~12 | COMPLETE |
+| 48 | 14/14 | COMPLETE |
+| 49 | ~10 | COMPLETE |
+| 50 | ~6 | COMPLETE |
+| 51 | 57/57 | COMPLETE |
+| 52 | 75/75 | COMPLETE |
+| 53 | 59/59 | COMPLETE |
+| 54 | 53/53 | COMPLETE |
+| 55 | 7/7 | COMPLETE |
+| 56 | 17/17 | COMPLETE |
+| 57 | ~8 | COMPLETE |
+| 58 | 16/16 | COMPLETE |
+| 59 | ~15+ | COMPLETE |
+| 60 | 15/15 | COMPLETE |
+| 61 | ~14 (12/12) | COMPLETE |
+| 62 | 7/7 | COMPLETE |
+| 64 | 22/22 | COMPLETE |
+| 65 | 38/38 | COMPLETE |
+| 66 | 30/30 | COMPLETE |
+| 67 | 18/18 | COMPLETE |
+| 68 | 9/9 | COMPLETE |
+| 69 | 9/9 | COMPLETE |
+| 70 | 8/8 | COMPLETE |
+| 71 | 10/10 | COMPLETE |
+| 72 | 8/8 | COMPLETE |
+| 73 | 7/7 | COMPLETE |
+| 74 | 20/20 | COMPLETE |
+| 75 | 23/23 | COMPLETE |
+| 76 | 10/10 | COMPLETE |
+| 77 | 14/14 | COMPLETE |
+| 78 | 9/9 | COMPLETE |
+| 79 | 14/14 | COMPLETE |
+| 80 | 11/11 | COMPLETE |
+| 81 | 14/14 | COMPLETE |
+| 82 | 17/17 | COMPLETE |
+
+**Provenance:** Demo index, all entries.
+
+*Generated 2026-02-20 from demo-index.md (2845 lines) and explorers-log.md (1273 lines). Updated with Demos 38, 39, 60. Updated 2026-02-21 with Demos 64–71. Updated 2026-02-21 with Demos 72–82.*

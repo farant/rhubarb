@@ -1,6 +1,6 @@
 # Code Assets Catalog
 
-Reusable code patterns across 59 knotapel demos. Updated 2026-02-21 (added Demos 64-71).
+Reusable code patterns across 82 knotapel demos. Updated 2026-02-21 (added Demos 72-82).
 
 ---
 
@@ -43,7 +43,7 @@ Reusable code patterns across 59 knotapel demos. Updated 2026-02-21 (added Demos
 
 - **What it does**: Exact integer arithmetic in the 8th cyclotomic ring — basis {1, zeta_8, zeta_8^2, zeta_8^3} with zeta_8^4 = -1. The natural home for bracket values at delta=0 (A = e^{i*5pi/4}).
 - **Introduced in**: Demo 29
-- **Reused in**: Demos 35, 48, 49, 50, 63, 64
+- **Reused in**: Demos 35, 48, 49, 50, 63, 64, 74 (union-find loop counter for bracket in full catalog builder)
 - **Key types/functions**:
   - `Cyc8` struct: 4 `long` coefficients `(a, b, c, d)`
   - `cyc8_make()`, `cyc8_zero()`, `cyc8_one()` — constructors
@@ -173,7 +173,7 @@ Reusable code patterns across 59 knotapel demos. Updated 2026-02-21 (added Demos
 
 - **What it does**: Path-compressed union-find for counting connected components (loops) in resolved knot/braid diagrams. The most-reused utility across all demos.
 - **Introduced in**: Demo 02
-- **Reused in**: Demos 03, 04, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 45, 46, 47, 48, 49, 50, 53, 54, 55, 56, 57, 58, 59, 64, 65, 66, 67, 68, 69, 70, 71
+- **Reused in**: Demos 03, 04, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 45, 46, 47, 48, 49, 50, 53, 54, 55, 56, 57, 58, 59, 64, 65, 66, 67, 68, 69, 70, 71, 74 (bracket loop counting in full catalog builder)
 - **Key types/functions**:
   - `uf_parent[]` — global or local parent array
   - `uf_init(n)`, `uf_find(x)`, `uf_union(x, y)` — standard union-find with path compression
@@ -298,7 +298,7 @@ Reusable code patterns across 59 knotapel demos. Updated 2026-02-21 (added Demos
 
 - **What it does**: Converts integer indices to braid crossing sequences for exhaustive enumeration of all braids up to a given length.
 - **Introduced in**: Demo 22
-- **Reused in**: Demos 23, 25, 35, 48, 49, 50, 53, 54, 55, 56, 57, 58, 59, 64, 65, 66, 67, 68, 69, 70, 71
+- **Reused in**: Demos 23, 25, 35, 48, 49, 50, 53, 54, 55, 56, 57, 58, 59, 64, 65, 66, 67, 68, 69, 70, 71, 74 (catalog builder)
 - **Key types/functions**:
   - `decode_word(code, len, word)` — maps integer to braid word using generator map
   - `decode_word3()` — 3-strand variant (4 generators: {1,-1,2,-2})
@@ -567,7 +567,7 @@ Reusable code patterns across 59 knotapel demos. Updated 2026-02-21 (added Demos
 
 - **What it does**: Classifies all 256 3-input Boolean truth tables into 14 NPN equivalence classes (13 non-trivial + constant) via exhaustive application of input permutation, input negation, and output negation.
 - **Introduced in**: Demo 23
-- **Reused in**: Demos 45, 46, 47, 48, 49, 50, 55, 56, 57, 58, 59, 61, 62, 64, 65, 66, 67, 68, 69, 70, 71
+- **Reused in**: Demos 45, 46, 47, 48, 49, 50, 55, 56, 57, 58, 59, 61, 62, 64, 65, 66, 67, 68, 69, 70, 71, 75, 76, 77, 78, 79, 80, 81, 82
 - **Key types/functions**:
   - `npn_canon[256]` — precomputed canonical form for all truth tables
   - `npn_init()` — computes canonical forms via 96 transforms (6 perms x 8 input-neg x 2 output-neg)
@@ -651,7 +651,7 @@ Reusable code patterns across 59 knotapel demos. Updated 2026-02-21 (added Demos
 
 - **What it does**: Collection of complex-valued activation functions with uniform classification interface for DKC Boolean function search.
 - **Introduced in**: Demo 28 (split-sigmoid, modReLU, cardioid, phase-only)
-- **Extended in**: Demo 47 (MVN-continuous, MVN-k8), Demo 50 (k-sector), Demo 55+ (Re>0, Im>0, magnitude), Demo 65 (generalized binary labeling — arbitrary binary sector coloring as activation), Demo 66 (quaternion Voronoi, 24-cell nearest-vertex), Demo 67 (eigenvalue k-sector, Hopf base/phase, Cayley-Klein, custom S² Voronoi), Demo 68 (stereographic Voronoi with S²/Euclidean metric), Demo 70 (dodecahedral/icosahedral Voronoi), Demo 71 (spherical harmonic reconstruction threshold)
+- **Extended in**: Demo 47 (MVN-continuous, MVN-k8), Demo 50 (k-sector), Demo 55+ (Re>0, Im>0, magnitude), Demo 65 (generalized binary labeling — arbitrary binary sector coloring as activation), Demo 66 (quaternion Voronoi, 24-cell nearest-vertex), Demo 67 (eigenvalue k-sector, Hopf base/phase, Cayley-Klein, custom S² Voronoi), Demo 68 (stereographic Voronoi with S²/Euclidean metric), Demo 70 (dodecahedral/icosahedral Voronoi), Demo 71 (spherical harmonic reconstruction threshold), Demo 77 (S¹×S² combined product activation — Sec(k)×Voronoi, S³ Voronoi, polar direction×magnitude), Demo 81 (combined_cell Sec×Vor for capacity scaling), Demo 82 (sector activation with depth-tracked subsets)
 - **Key types/functions**:
   - `split_sigmoid_classify(z)` — smooth XOR of Re/Im sigmoids > 0.5
   - `sector_classify(z, k)` — k-sector MVN: angle → sector → j mod 2
@@ -695,7 +695,7 @@ Reusable code patterns across 59 knotapel demos. Updated 2026-02-21 (added Demos
 
 - **What it does**: Exhaustive search over bracket catalog quartets/triples to find exact weight configurations that compute Boolean functions without training.
 - **Introduced in**: Demo 29 (XOR triples)
-- **Extended in**: Demo 48 (all 13 NPN classes, 100M quartets), Demo 50 (k-sector activation), Demo 64 (matroid deletion-contraction), Demo 65 (generalized binary labeling), Demo 66 (quaternionic S³), Demo 67 (multi-coordinate-system), Demo 68 (stereographic), Demo 69 (multi-root comparison)
+- **Extended in**: Demo 48 (all 13 NPN classes, 100M quartets), Demo 50 (k-sector activation), Demo 64 (matroid deletion-contraction), Demo 65 (generalized binary labeling), Demo 66 (quaternionic S³), Demo 67 (multi-coordinate-system), Demo 68 (stereographic), Demo 69 (multi-root comparison), Demo 75 (multi-channel angle+cell search over 36 winning triples), Demo 76 (exhaustive C(24,4) quadruple search with conflict counting), Demo 77 (14-activation comparative search for XOR8), Demo 78 (recursive XOR10 from XOR8 parents), Demo 79 (multi-root recursive ladder at ζ₁₂), Demo 81 (snapshot-based XOR capacity scaling), Demo 82 (subset-based capacity measurement)
 - **Key types/functions**:
   - Quartet search: O(n^4) with precomputed partial sums (s12 outside w3 loop)
   - `test_xor_triple(w1, w2, b)` — split-sigmoid XOR verification
@@ -865,7 +865,7 @@ Reusable code patterns across 59 knotapel demos. Updated 2026-02-21 (added Demos
 
 - **What it does**: Lifts the Kauffman bracket from S^1 (complex trace) to S^3 (unit quaternion) via an SU(2) braid representation, generates the 24-cell polytope from braid enumeration, and searches for XOR6 solutions using quaternionic Voronoi activation.
 - **Introduced in**: Demo 66
-- **Reused in**: Demos 67, 68, 69, 70, 71 (24-cell catalog and quaternion arithmetic used throughout the arc)
+- **Reused in**: Demos 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82 (24-cell catalog and quaternion arithmetic used throughout the extended arc)
 - **Key types/functions**:
   - `quat_mul(p, q)`: quaternion multiplication (4-component real vector)
   - `quat_norm(q)`: quaternion normalization to unit sphere S^3
@@ -882,7 +882,7 @@ Reusable code patterns across 59 knotapel demos. Updated 2026-02-21 (added Demos
 
 - **What it does**: Decomposes SU(2) quaternions into eigenvector direction (S^2) and eigenvalue angle, then systematically compares all natural coordinate systems (Hopf, Cayley-Klein, eigenvalue k-sector, custom S^2 Voronoi) as DKC activations.
 - **Introduced in**: Demo 67
-- **Reused in**: Demos 68, 69, 70, 71 (13-direction S^2 Voronoi is the canonical activation going forward)
+- **Reused in**: Demos 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82 (13-direction S^2 Voronoi and eigenvector extraction are the canonical activation throughout D68-D82)
 - **Key types/functions**:
   - `eigenvector_extract(q, dir_out, theta_out)`: decomposes SU(2) quaternion into eigenvector direction (mod +-) and eigenvalue angle theta = arccos(a)
   - Custom Voronoi on S^2: assigns quaternion to nearest of 13 data-derived directions (3 axis + 6 edge-midpoint + 4 body-diagonal); handles identity/zero as degenerate cell 0
@@ -962,7 +962,7 @@ Reusable code patterns across 59 knotapel demos. Updated 2026-02-21 (added Demos
 
 - **What it does**: Linear Congruential Generator for reproducible random experiments across all DKC and neural network demos.
 - **Introduced in**: Demo 13
-- **Reused in**: Demos 26, 27, 28, 45, 46, 47, 48, 49, 50
+- **Reused in**: Demos 26, 27, 28, 45, 46, 47, 48, 49, 50, 72 (perturbation trials for spherical optimizer)
 - **Key types/functions**:
   - `rng_seed(s)` — set seed
   - `rng_uniform()` — uniform [0, 1) double
@@ -1072,6 +1072,374 @@ Reusable code patterns across 59 knotapel demos. Updated 2026-02-21 (added Demos
 
 ---
 
+## 7. Spherical Design and Geometric Optimization
+
+### 7.1 Spherical t-Design Tester
+
+- **What it does**: Tests whether a finite point set on S² achieves the t-design property by computing max |S_{l,m}| for each l up to t, where S_{l,m} = (1/N) Σ Y_lm(p_i). Supports both directed (N points) and undirected (antipodal identification) modes, and independent even/odd mode streams.
+- **Introduced in**: Demo 72
+- **Reused in**: (Demo 72 only — foundational for future spherical integration quality analysis)
+- **Key types/functions**:
+  - Real spherical harmonics Y_lm evaluated at arbitrary direction vectors (associated Legendre + trig)
+  - `design_residual(pts, N, T)`: computes max over l=1..T of max_m |S_{l,m}|; single reusable quality metric
+  - Even/odd mode separation: independent t-design test for even and odd l separately
+  - S³ monomial design test: tests degree-d polynomial averages over quaternion sets against exact S³ integrals via double-factorial formula
+  - Delsarte bound lookup: theoretical minimum N for degree-t designs on S^d
+- **Approximate size**: ~200 lines
+- **Notes**: Key finding: the 13 eigenvector directions are t=0 (worst possible) for directed design but t_even=2 for even modes (DKC-relevant). First DKC-relevant (even) failure is l=4. The undirected 26-point configuration (both ± directions) achieves t=3. Design quality anti-correlates with DKC computational quality: better-distributed designs give fewer XOR6 solutions (36 vs 4).
+
+### 7.2 Stochastic Spherical Optimizer
+
+- **What it does**: Gradient-free simulated annealing optimizer that minimizes the t-design residual of an N-point configuration on S² via Gaussian perturbation and normalization. Used to find "geometrically optimal" directions for comparison with the algebraically selected eigenvectors.
+- **Introduced in**: Demo 72
+- **Reused in**: (Demo 72 only)
+- **Key types/functions**:
+  - Gaussian perturbation + re-normalization: perturbs each coordinate by N(0,σ), renormalizes to unit sphere; no explicit gradient
+  - Simulated annealing: 20 random restarts, 2000 steps each; accept-by-improvement only (T=0 SA)
+  - `count_xor6_ext(pts, N)`: counts XOR6 solutions for an arbitrary direction set (not just the canonical 13)
+  - LCG + Box-Muller for perturbation trials (self-contained, no stdlib rand dependency)
+- **Approximate size**: ~100 lines
+- **Notes**: Achieves 2.6× better geometric distribution vs eigenvectors (residual 0.93 vs 2.43) with only 4 XOR6 solutions vs 36. Confirms Algebra > Geometry Principle.
+
+### 7.3 Perturbation Sensitivity Harness
+
+- **What it does**: Applies random angular perturbations (1°, 5°, 10°, 20°) to the canonical 13-direction configuration and measures mean XOR6 solution count over multiple trials, establishing robustness thresholds.
+- **Introduced in**: Demo 72
+- **Reused in**: (Demo 72 only)
+- **Key types/functions**:
+  - Spherical cap perturbation: rotate direction by random angle up to δ around random axis via cross product + Rodrigues formula
+  - Batch trial loop: N_TRIALS replicates per perturbation magnitude; accumulates mean count
+  - Non-monotonicity detector: reports when perturbed mean exceeds unperturbed count (local optimum signature)
+- **Approximate size**: ~80 lines
+- **Notes**: Robustness threshold ~5° (matching Voronoi cell angular radius). Non-monotonic at 1° (mean 38 > baseline 36) indicates local-not-global optimum. Collapses at 10° (mean 11.5). The algebraic placement is sharp to ~5°.
+
+---
+
+## 8. Automaton / Trajectory Analysis
+
+### 8.1 Generic Automaton Determinism Checker
+
+- **What it does**: Given a trajectory array (N_inputs × N_steps) of state assignments, measures what fraction of (prev_state, input_bit, step) triples are deterministic — i.e., always produce the same next state regardless of history. Reports per-step determinism and prints split events.
+- **Introduced in**: Demo 73
+- **Reused in**: (Demo 73 only)
+- **Key types/functions**:
+  - `determinism_test(trajs, N_inputs, N_steps, n_states)`: full report version with split event printing
+  - `determinism_pct(trajs, N_inputs, N_steps, n_states)`: quiet version returning fraction; used in batch loop over all 36 winners
+  - Split event: a (prev_cell, bit, step) triple where different histories reaching the same cell produce different next cells
+- **Approximate size**: ~80 lines
+- **Notes**: Found universal structural constant: all 36 XOR6 winning triples have exactly 82.8% (48/58) determinism. Universality follows from binary octahedral group acting transitively on the 13 directions.
+
+### 8.2 Multiplicative vs Additive Trajectory Builder
+
+- **What it does**: Computes the per-input cell-trajectory tables for both the multiplicative braid product formulation and the additive weight-sum formulation of DKC, enabling comparison of their automaton properties.
+- **Introduced in**: Demo 73
+- **Reused in**: (Demo 73 only)
+- **Key types/functions**:
+  - `compute_mul_trajectories(trajs)`: 64×6 cell trajectory table for braid product M = σ₁^±1 · σ₂^±1 · ...
+  - `compute_add_trajectories(triple, trajs)`: 64×6 cell trajectory table for additive sum S_k = S_{k-1} + w_k
+  - `vor_cell_signed(q)`: signed Voronoi partition (26 directions, no antipodal identification); returns cell in 0..25 with identity pseudo-cell at 26
+  - Distinct partial sum counter: counts unique quaternion vectors at each step (O(N²) exact comparison)
+  - Sufficient statistic tester: for each cell at each step, checks whether all inputs reaching that cell have a consistent final output
+- **Approximate size**: ~150 lines
+- **Notes**: Key finding: multiplicative formulation cannot compute XOR6 at all — every cell is perfectly balanced (parity-blind by M→M⁻¹ argument). Additive formulation achieves 82.8% determinism and computes XOR6. 27 cells needed for 100% direction-level determinism; signed 27-cell partition only reaches 87.1%.
+
+### 8.3 Cell Collision Detector
+
+- **What it does**: Identifies instances where distinct quaternion partial sums land in the same Voronoi cell, characterizing the source of non-determinism in the DKC automaton.
+- **Introduced in**: Demo 73
+- **Reused in**: (Demo 73 only — the concept is central to all D74+ analyses)
+- **Key types/functions**:
+  - Pair-scan over all partial sums at each step: O(N²) collision detection
+  - Collision classification: same cell but different magnitude vs different eigenvalue angle
+  - Cell 0 split count: specific tracking for the main non-determinism source
+- **Approximate size**: ~60 lines
+- **Notes**: 1,296 collision instances across all steps (N_inputs=64, N_steps=6). Cell 0 is the main split point. The Voronoi cell discards magnitude information (odometer) — this is the precise source of non-determinism.
+
+---
+
+## 9. Braid Invariant Comparison
+
+### 9.1 Full Catalog Builder with Bracket Computation
+
+- **What it does**: Simultaneously computes Kauffman bracket at A=-ζ₈ and SU(2) quaternion for every braid up to length 8 on 2 and 3 strands, building a unified correspondence record for collision and separation analysis between the two invariants.
+- **Introduced in**: Demo 74
+- **Reused in**: (Demo 74 only — the 2,000-braid correspondence dataset is specific to this analysis)
+- **Key types/functions**:
+  - Per-braid `CorrespondenceRecord` struct: stores (quaternion, bracket, qcat_idx, bcat_idx, braid_word, word_len, n_strands) simultaneously
+  - Union-find loop counter reused for TL state-sum bracket (exact Cyc8)
+  - Braid word enumerator reused for catalog generation
+  - Deduplication at both quaternion catalog and bracket catalog levels
+- **Approximate size**: ~150 lines
+- **Notes**: 2,000 braids yield 24 distinct quaternions, 100 distinct bracket values, 119 (bracket,cell) combined classes. The combined invariant is 19% finer than bracket alone.
+
+### 9.2 Bracket Collision Separation Analysis
+
+- **What it does**: Given a correspondence dataset, counts pairs by (same/different bracket) × (same/different cell) at both the braid level and the quaternion-catalog level; computes the separation fractions in both directions.
+- **Introduced in**: Demo 74
+- **Reused in**: (Demo 74 only)
+- **Key types/functions**:
+  - Braid-level pair scan: O(N²) over all braid pairs; classifies into (B=B', Q=Q'), (B=B', Q≠Q'), (B≠B', Q=Q'), (B≠B', Q≠Q')
+  - Catalog-level pair scan: O(24²) over unique quaternions; same 4-way classification
+  - Separation fraction computation: fraction of bracket collisions separated by cell (97.8% at braid level), fraction of cell collisions separated by bracket (54% at catalog level)
+- **Approximate size**: ~100 lines
+- **Notes**: Key finding: the two invariants capture orthogonal information — neither subsumes the other. Cell separates 97.8% of bracket collisions; bracket separates 54% of cell collisions.
+
+### 9.3 Computational Type Vector Extractor
+
+- **What it does**: For each of the 14 Voronoi cells, computes the 36-bit type vector encoding its parity label (0 or 1) under each of the 36 XOR6 winning triples. Groups cells by identical type vector to identify the 6 computational orbit types.
+- **Introduced in**: Demo 74
+- **Reused in**: (Demo 74 only)
+- **Key types/functions**:
+  - `TypeVec` struct: 36-bit array (one per winning triple) representing the cell's parity role
+  - `typevec_eq()`: equality check for type vector comparison
+  - `compute_type_vectors(winners, cells, catalog)`: fills type vector for all 14 cells from all 36 winning triples
+  - `braid_type_idx(cell)`: maps cell index to type index (0–5)
+  - Orbit type map: axis-σ₁ (type 0), axis-σ₂ (type 1), body-60° (type 2), edge (type 3), axis-third (type 4), identity (type 5)
+- **Approximate size**: ~80 lines
+- **Notes**: 6 computational types from 14 cells — 4 body cells are interchangeable, 6 edge cells are interchangeable. The DKC computation is invariant under permutation within each symmetry orbit.
+
+### 9.4 Refinement Chain Builder
+
+- **What it does**: Constructs the hierarchical refinement chain bracket → type → quaternion for the set of braids in the correspondence dataset, reporting subgroup counts at each level.
+- **Introduced in**: Demo 74
+- **Reused in**: (Demo 74 only)
+- **Key types/functions**:
+  - For each of the 100 bracket values appearing in braids, partition its braids by type vector (type subgroups)
+  - For each type subgroup, partition by quaternion (quaternion subgroups)
+  - Chain: 43 bracket groups → 61 type subgroups → 168 quaternion subgroups
+  - Max types per bracket value: 4; max quaternions per type within a bracket: 8
+- **Approximate size**: ~60 lines
+- **Notes**: Chain uses only braids appearing in the length-1–8 catalog. The ratio (bracket→type→quat) is an empirical measure of how much information the type vector adds beyond the bracket.
+
+---
+
+## 10. Multi-Channel DKC and Activation Architecture
+
+### 10.1 Quaternion Arithmetic Suite (Demos 75–82)
+
+- **What it does**: Full quaternion arithmetic — add, multiply, conjugate, normalize, eigenvalue-angle extraction — shared across the extended DKC arc from Demo 75 onward. Includes the core binocular channel decomposition.
+- **Introduced in**: Demo 66 (core); extended with angle/magnitude analysis in Demo 75
+- **Reused in**: Demos 75, 76, 77, 78, 79, 80, 81, 82
+- **Key types/functions**:
+  - `eigenvalue_angle(q)`: computes rotation half-angle arccos(q.a) for a unit quaternion (S¹ component)
+  - `classify_magnitude(s)`: bins |S| into algebraic classes {√0, √1, √2, √3, √4, √6}; identifies the √n pattern
+  - `mutual_information(chan_a, chan_b, N)`: entropy-based MI computation for two discrete channels over N inputs
+  - `triple_angle_function(triple, masks, N)`: maps each of N input masks to an angle class for a given winning triple
+  - `product_channel_analysis(catalog, triple)`: computes quaternion product and extracts eigenvalue + eigenvector for the multiplicative channel
+- **Approximate size**: ~120 lines (angle/channel extensions beyond D66 core)
+- **Notes**: Seven distinct eigenvalue angles appear in additive sums: 0°, 30°, 35.264°, 45°, 60°, 65.905°, 90°. The three non-canonical angles (30°, 35.264°, 65.905°) arise only through quaternion addition breaking the 24-cell group structure. √5 is algebraically unreachable from the 24-cell inner product structure.
+
+### 10.2 14-Activation Comparison Framework
+
+- **What it does**: Exhaustive search over all C(24,k) k-tuples under each of 14 distinct activation functions in a single loop, with pluggable activation callback. The canonical benchmark harness for the D77 activation zoo.
+- **Introduced in**: Demo 77
+- **Reused in**: Demo 78 (test_combined reused), Demo 81 (combined_cell reused)
+- **Key types/functions**:
+  - `sector_activate(q, k)`: bins quaternion eigenvalue angle into k equal sectors on [0°, 360°); Aizenberg MVN in quaternion context
+  - `polar_activate(q, n_dir, n_mag)`: joint direction (Voronoi cell) × magnitude bin; configurable bin count for magnitude axis
+  - `s3_voronoi_activate(q, catalog)`: nearest-quaternion in 24-cell catalog on S³ (no antipodal identification)
+  - `product_activate(q, k_sec, n_dir)`: S¹ × S² combined activation; cell = sector_index * n_dir + voronoi_cell; the key new activation enabling XOR8
+  - Accuracy ladder: 14 activations ranked by best XOR8 accuracy — S²Vor(50%) → Sec4(77.7%) → Sec8(85.2%) → S³Vor(90.2%) → ... → Sec8×Vor(100%)
+- **Approximate size**: ~200 lines
+- **Notes**: Critical finding: neither S¹ (sector) alone nor S² (Voronoi) alone can compute XOR8. Only the product S¹ × S² achieves 100%. This confirms the incomparability of bracket and cell invariants (Demo 74) is computationally load-bearing.
+
+### 10.3 Combined Sec(k)×Vor Activation (`test_combined` / `combined_cell`)
+
+- **What it does**: Pre-computes all 2^N quaternion sums for a given N-tuple once, then tests multiple k-sector values cheaply by sweeping k without recomputing sums. The combined activation maps each sum to (sector, Voronoi-cell) pair. Used as the standard XOR tester for all D78-D82 capacity searches.
+- **Introduced in**: Demo 78 (as `test_combined`)
+- **Reused in**: Demos 79, 80, 81, 82
+- **Key types/functions**:
+  - `test_combined(indices, n_idx, k_sec, acc_out)`: generic XOR tester; pre-computes all 2^N sums, caches angle and cell, sweeps k values cheaply
+  - `combined_cell(q, k_sec, n_dir)`: maps a quaternion sum to a (sector × n_dir + voronoi_cell) index; the inner function used in capacity surveys
+  - Early-exit XOR verification with sparse cell cleanup via `touched_cells[]` array
+  - Handles up to 4096 masks and 512 cells without heap allocation
+- **Approximate size**: ~80 lines
+- **Notes**: The pre-computation pattern (compute all 2^N sums once, then sweep k values) is the critical performance optimization for the D78–D82 capacity survey work — avoids redundant sum computation across multiple k tests.
+
+### 10.4 Paired Quaternion Detector
+
+- **What it does**: For a winning k-tuple, enumerates all C(k, k-2) sub-tuples (dropping pairs) to identify "shadow" or "paired" quaternions — entries sharing the same eigenvector direction but differing in eigenvalue angle. Establishes the recursive structure of XOR winners.
+- **Introduced in**: Demo 77 (as `xor6_subsets`)
+- **Reused in**: Demo 78 (`part_e_recursive` verifies shadow structure for XOR8→XOR6 decomposition)
+- **Key types/functions**:
+  - `xor6_subsets(quad_indices)`: for a winning quadruple, enumerates all C(4,3)=4 triples and identifies which are XOR6 winners
+  - `part_e_recursive(winners8, n8, winners6, n6)`: verifies parent-shadow structure — reports cell sharing, half-angle, and pairing for each shadow
+  - Shadow detection: checks that dropped element shares Voronoi cell with at least one remaining parent element; verifies half-angle
+- **Approximate size**: ~100 lines
+- **Notes**: All 6 XOR8 winners contain exactly 2 XOR6-winning triple subsets. All shadows have eigenvalue half-angle = 45°. Shadow pairs are {0,1}, {4,5}, {19,21} — each pair shares direction and half-angle, differs only in sign/orientation. Recursive Shadow Conjecture confirmed for XOR6→XOR8.
+
+### 10.5 Exhaustive k-Tuple Search with Conflict Counting
+
+- **What it does**: Enumerates all C(N,k) index k-tuples from a quaternion catalog, computes all 2^(2n) sums under a given activation, counts conflict cells (cells containing both even and odd parity inputs), and returns the minimum conflict count and best accuracy.
+- **Introduced in**: Demo 76 (quadruple search for XOR8)
+- **Reused in**: Demo 78 (quintuple search for XOR10)
+- **Key types/functions**:
+  - `conflict_count(weights, k, activation)`: counts Voronoi cells containing mixed parity masks
+  - `best_accuracy(weights, k, activation)`: majority-vote accuracy per cell for non-zero-conflict configurations
+  - Direction concentration metric: counts cells used and fraction of masks per dominant cell
+  - Eigenvalue angle histogram: bins sum-quaternion angles to discover algebraic structure at different input counts
+  - Deduplication with `is_win6/8/10` linear-scan lookups to prevent redundant testing
+- **Approximate size**: ~120 lines
+- **Notes**: C(24,4)=10,626 quadruples for XOR8; C(24,5)=42,504 quintuples for XOR10 (both fully exhausted). 4-term sums yield 86 near-continuous angles vs 7 discrete for 3-term sums — algebraic structure breakdown.
+
+---
+
+## 11. Group Theory and Algebraic Structure
+
+### 11.1 Group Closure Algorithm (`build_closure`)
+
+- **What it does**: Starting from a set of generators (and their inverses and the identity), iteratively multiplies all current group elements by all generators until no new elements appear or a size cap is hit. Returns 1 if the group is finite (closed below cap), 0 if it hit the cap (infinite).
+- **Introduced in**: Demo 80
+- **Reused in**: Demo 81 (as `init_su2_generators` + BFS closure with snapshot tracking), Demo 82 (closure with depth tracking)
+- **Key types/functions**:
+  - `build_closure(generators, n_gen, catalog_out, max_size, rounds_out)`: generic closure; quaternion multiplication with deduplication by tolerance comparison
+  - Closure round tracking: records which round each element was born in (gives depth/crossing-depth interpretation)
+  - Convergence test: compares pre/post element count; terminates when stable
+- **Approximate size**: ~80 lines
+- **Notes**: ζ₄ closes in 2 rounds (4 elements, Binary Dihedral Q₄); ζ₈ closes in 4 rounds (24 elements, Binary Octahedral). All other tested roots (ζ₆, ζ₁₀, ζ₁₂, ζ₁₆, ζ₂₀) hit the cap (infinite groups).
+
+### 11.2 ADE Type Detector
+
+- **What it does**: Maps a finite SU(2) subgroup (identified by order) to its ADE classification — binary cyclic (A), binary dihedral (D), binary tetrahedral/octahedral/icosahedral (E₆/E₇/E₈).
+- **Introduced in**: Demo 80
+- **Reused in**: (Demo 80 only)
+- **Key types/functions**:
+  - `identify_ade(order)`: maps group size to ADE string; handles Q₄ (order 8), binary tetrahedral (24), binary octahedral (48), binary icosahedral (120), binary dihedral (4n), cyclic (n)
+  - `RootResult` struct: compact per-root survey storage (N, angle, finite flag, size, rounds, dirs, angles, ADE string)
+  - Summary table formatter: side-by-side comparison across all surveyed roots
+- **Approximate size**: ~50 lines
+- **Notes**: ζ₄ → Binary Dihedral (D-series, order 8). ζ₈ → Binary Octahedral (E₇, order 48). E₆ and E₈ are not reachable under the two-perpendicular-axes generator construction. Quantum dimension [2]_q vanishes exactly at ζ₈ (q=i, [2]_q = i + 1/i = 0).
+
+### 11.3 Quantum Dimension Computation
+
+- **What it does**: Computes the quantum dimension [2]_q = q + q⁻¹ at q = exp(2πi/N) for each root of unity, identifying lattice points where the dimension vanishes (Kuperberg tractability condition).
+- **Introduced in**: Demo 80
+- **Reused in**: (Demo 80 only)
+- **Key types/functions**:
+  - Inline computation: [2]_q = 2cos(2π/N); check against 0 and ±2 (classical limits)
+  - Classification: [2]_q = 0 ↔ lattice root ↔ finite group ↔ Kuperberg tractable
+- **Approximate size**: ~20 lines
+- **Notes**: At ζ₈, [2]_q = 0 exactly. The two finite-group roots (ζ₄, ζ₈) are precisely the roots where [2]_q ∈ {-2, 0} — the lattice/tractable regime. Non-lattice roots (all infinite groups) correspond to the #P-hard regime of Kuperberg.
+
+### 11.4 Parameterized SU(2) Generator Initializer
+
+- **What it does**: Initializes the two SU(2) braid generators σ₁ and σ₂ for an arbitrary cyclotomic root ζ_N, enabling catalog construction for any root without code changes.
+- **Introduced in**: Demo 79 (as `init_su2_generators(half_angle)`)
+- **Reused in**: Demos 80, 81, 82
+- **Key types/functions**:
+  - `init_su2_generators(half_angle)`: sets σ₁ = rotation by 2*half_angle around x-axis, σ₂ = rotation by 2*half_angle around z-axis
+  - Inverse generator computation: quaternion conjugation
+  - Multi-root sweep: `test_root(N)` calls init with half_angle = 2π/N
+- **Approximate size**: ~40 lines
+- **Notes**: Pattern: half_angle = π/N for ζ_N. Previously the generators were hardcoded for ζ₈ only; this parameterization enables the multi-root surveys of D79-D82.
+
+### 11.5 Catalog Save/Restore Pattern
+
+- **What it does**: Saves the full current quaternion catalog (quaternions + depth arrays + metadata) to a static backup, then restores it; enables repeated subset experiments with different roots or subsets without rebuilding the full closure.
+- **Introduced in**: Demo 79
+- **Reused in**: Demos 80, 81, 82
+- **Key types/functions**:
+  - `save_catalog()`: copies `g_cat[]`, `g_cat_size`, `g_depth[]`, `g_nd`, `g_na` to static backup arrays
+  - `restore_catalog()`: restores from backup; resets derived quantities (directions, angles)
+  - `find_quat_in(q, arr, arr_size)`: searches for a quaternion in an arbitrary array (not just global catalog); used for nesting/overlap verification
+- **Approximate size**: ~40 lines
+- **Notes**: Eliminates the need for separate static arrays per root. Critical for Demo 79 Part E (nesting verification between ζ₈ and ζ₁₂) and Demo 82 (shallow/strided/deep subset comparisons).
+
+### 11.6 Recursive XOR Ladder (`find_recursive`)
+
+- **What it does**: Generic recursive extension from level-(N-2) XOR winners to level-N XOR winners by appending one new catalog entry to each existing winner and testing with `test_combined`. Replaces per-level search functions with a single parameterized routine.
+- **Introduced in**: Demo 79
+- **Reused in**: Demos 81, 82
+- **Key types/functions**:
+  - `find_recursive(level)`: searches all (winner at level-1, new_entry) combinations; deduplicates via sorted-tuple comparison
+  - Sorted tuple insertion: maintains sorted index arrays when extending N-tuples without full re-sort
+  - `g_win[8][MAX_WIN][MAX_TUPLE]`: unified winner storage for XOR6 through XOR14 (levels 3–7) in a single array indexed by level
+  - Generic winner storage: `g_nwin[8]` count array; `g_win_depth[8][][]` for depth analysis (Demo 82)
+- **Approximate size**: ~80 lines
+- **Notes**: Replaces the per-XOR-level functions of Demo 78 (`find_xor6`, `find_xor8`, `find_xor10`) with one routine. The pattern scales cleanly to XOR14 and beyond.
+
+### 11.7 Depth-Tracked Closure and Subset Constructors
+
+- **What it does**: Augments group closure with per-element birth-round tracking (depth), then provides three reusable subset construction strategies — shallow (first N entries), strided (every K-th entry), deep (last N entries from deepest round) — for capacity comparison experiments.
+- **Introduced in**: Demo 82
+- **Reused in**: (Demo 82 only — pattern for future depth-stratified experiments)
+- **Key types/functions**:
+  - `g_depth[]` array: assigned the current closure round index at element birth; identity + generators get depth 0
+  - Shallow subset: copy first N entries from `g_cat[]` by natural closure order
+  - Strided subset: copy every K-th entry from full catalog (deterministic, maximum spatial spread)
+  - Deep subset: copy last N entries (all from deepest closure round, maximum algebraic coherence)
+  - `CapResult` struct: captures dirs, angles, xor6, xor8, xor10, xor12, max_xor in one place; enables clean side-by-side comparison tables
+  - `find_capacity()`: unified driver — builds dirs, counts angles, runs find_xor6 + find_recursive chain up to XOR12; returns `CapResult`
+- **Approximate size**: ~150 lines
+- **Notes**: Key finding: deep subsets (maximum algebraic coherence) consistently outperform strided subsets (maximum vocabulary) at matched size — deep 564 entries reach XOR12 while strided 564 entries (with more directions and angles) only reach XOR10. Linear depth law: max_xor ≈ depth + 6.
+
+### 11.8 Vocabulary-by-Depth Scanner
+
+- **What it does**: Single-pass O(N²) scan accumulating unique directions (eigenvector axes) and unique half-angles in per-depth buckets, characterizing the direction-explosion regime (new directions dominate, depths 0–6) and the angle-refinement regime (directions saturate, angles accelerate, depths 7–8).
+- **Introduced in**: Demo 82
+- **Reused in**: (Demo 82 only)
+- **Key types/functions**:
+  - Per-depth direction count: new directions contributed by each round (explosion: 2/4/16/24/68/125/268 per depth 0–6)
+  - Per-depth angle count: new angles per round (slow early, accelerating at saturation: +14 at depth 7, +8 at depth 8)
+  - Phase boundary detection: identifies the round where new-direction growth slows and angle growth accelerates
+- **Approximate size**: ~60 lines
+- **Notes**: Direction saturation (MAX_DIR=512) occurs at depth 7 for ζ₁₂ (catalog round 7). After saturation, angular diversity alone drives further XOR capacity gains (XOR10→XOR12 transition).
+
+### 11.9 Snapshot-Based Scaling Measurement
+
+- **What it does**: Records per-round "snapshots" of the group closure process, running the full XOR6→XOR12 capacity pipeline at each snapshot. Produces the data needed to fit the logarithmic (or linear) scaling law.
+- **Introduced in**: Demo 81
+- **Reused in**: (Demo 81 only)
+- **Key types/functions**:
+  - `Snap` struct: stores (round, catalog_size, n_dirs, n_angles, max_xor, winner_counts) per snapshot
+  - `test_snapshot(round_end_idx)`: runs full XOR6→XOR12 pipeline on catalog prefix up to round_end_idx
+  - `round_end[]` array: BFS-style group closure records where each round ends in the catalog
+  - Logarithmic fit: inline slope/intercept computation from (log₂(catalog_size), max_xor) data points
+  - Transition cost in doublings: between XOR level transitions, compute doublings = log₂(cat_hi / cat_lo)
+- **Approximate size**: ~100 lines
+- **Notes**: Scaling law: max_xor ≈ 0.62 × log₂(catalog_size) + 4.6 for ζ₁₂. Equivalently, each +2 XOR level costs ~3.2 more doublings (~10× more entries). The decreasing gap series (3.35 → 2.43 → 2.05 doublings) hints at possible O(log N / log log N) behavior.
+
+### 11.10 Winner Depth Analysis
+
+- **What it does**: For each XOR level (XOR6 through XOR12), computes depth histogram and mean depth of all winning tuples, verifying that mean depth is monotonically non-decreasing as the required XOR level increases.
+- **Introduced in**: Demo 82
+- **Reused in**: (Demo 82 only)
+- **Key types/functions**:
+  - Per-level depth histogram: iterates over all winner tuples, indexes into `g_depth[]`, accumulates histogram
+  - Min/max/mean depth per XOR level: characterizes the depth profile of winning sets
+  - Monotonicity verifier: checks mean_depth(XOR_{n+2}) >= mean_depth(XOR_n)
+  - Two-component architecture check: verifies that depth-0 entries (generators + identity) appear in every winner at every XOR level
+- **Approximate size**: ~50 lines
+- **Notes**: Mean winner depth: XOR6=0.52, XOR8=0.63, XOR10=1.00, XOR12=1.98. Every winner has at least one depth-0 element (generator), forming the "shallow core." The progressively deeper elements provide additional eigenvalue resolution. Sample XOR12 winner depths: [0,0,0,1,3,5].
+
+---
+
+## 12. Capacity Theory
+
+### 12.1 Masks-per-Cell Capacity Argument
+
+- **What it does**: The elementary pigeonhole bound that limits DKC computational capacity: with 2^n input masks and C cells, each cell receives 2^n/C masks on average. Parity-pure cells require at most one parity class per cell, so C must be at least 2^n / (max_masks_per_cell) where max_masks_per_cell is empirically ~4.6 for the ζ₈ sweet spot.
+- **Introduced in**: Demo 76 (explicit 256/14 argument)
+- **Reused in**: Demo 77 (motivates product activation threshold ~100 cells), Demo 78 (confirms wall at ζ₈), Demo 81 (capacity scaling law interpretations)
+- **Key types/functions**:
+  - No explicit function — the bound is computed inline as (2^n) / C
+  - Direction concentration metric (Demo 76): fraction of 2^n masks mapping to dominant cell
+  - Phase transition threshold computation: find k where n_cells = k * n_dir crosses ~100
+- **Approximate size**: ~20 lines (inline in each demo)
+- **Notes**: Sweet spot at ζ₈ XOR6: 64 masks / 14 cells = 4.57. At XOR8 with S² only: 256/14 = 18.3 — geometrically impossible. Product activation expands to 112 cells: 256/112 = 2.29 — achievable. The ~4.6 masks/cell empirical constant may be a universal sweet spot for this lattice structure.
+
+### 12.2 Finite vs Infinite Group Capacity Ceiling Theorem
+
+- **What it does**: The mathematical relationship between group finiteness and DKC computational capacity: finite SU(2) subgroups (only ζ₄ and ζ₈ under the standard construction) impose hard XOR capacity ceilings because their catalogs are fixed; infinite groups have no such ceiling.
+- **Introduced in**: Demo 79 (finiteness as key variable), Demo 80 (exhaustive group survey)
+- **Reused in**: Demo 81 (logarithmic scaling is consequence of infinite group growth), Demo 82 (depth law as mechanism)
+- **Key types/functions**:
+  - No separate function — the insight is demonstrated by running closure on multiple roots and comparing XOR capacity
+  - `build_closure` (Section 11.1) is the core test
+- **Notes**: ζ₈ (finite, 24 elements) caps at XOR8. ζ₁₂ (infinite, doubling per round) has no observed ceiling through XOR12. The linear depth law (max_xor ≈ depth + 6) is the mechanistic explanation: finite groups have bounded depth (ζ₈ max depth 3), infinite groups grow without bound.
+
+---
+
 ## Cross-Cutting Patterns
 
 ### Copy-Paste Codebase Pattern
@@ -1111,17 +1479,32 @@ Every new computation method is cross-validated against prior oracles:
 - Exact Cyc8 validates float Cx (Demo 29)
 - Two-prime cross-validation for cubic field results (Demo 60)
 
-### Quaternionic / S^2 Arc Architecture (Demos 66-71)
+### Quaternionic / S^2 Arc Architecture (Demos 66-82)
 
-Demos 66-71 follow a consistent pattern that lifts DKC from complex S^1 to quaternionic S^3 and then projects onto S^2:
-1. Generate the SU(2) braid representation (Demo 66) — produces exactly 24 quaternions (24-cell / binary octahedral group)
-2. Decompose quaternions into eigenvector direction (S^2) and eigenvalue angle (Demo 67) — identifies 13 data-intrinsic directions
-3. Build the custom 13-direction Voronoi on S^2 — the canonical activation for the arc (36 XOR6 solutions at 14 cells)
-4. Verify the computation lives on S^2, not S^1 fiber (Hopf phase inert, Demo 67) and not R^2 Euclidean (Demo 68)
-5. Confirm direction nesting across cyclotomic roots — zeta_8 is the computational sweet spot (Demo 69)
-6. Analyze spectral structure: l=6 bandwidth threshold = 13=13 theorem (Demo 71)
+Demos 66-71 establish the foundation; Demos 72-82 extend it into a full capacity theory:
 
-Key progression: D65 S^1 needs k=24 sectors (25 cells) -> D66 S^3 Voronoi needs 25 cells -> D67 S^2 Voronoi needs only 14 cells -> D68 R^2 is visualization only (zero solutions with Euclidean metric).
+**Foundation arc (D66-D71):**
+1. Generate the SU(2) braid representation (D66) — produces exactly 24 quaternions (24-cell / binary octahedral group)
+2. Decompose quaternions into eigenvector direction (S^2) and eigenvalue angle (D67) — identifies 13 data-intrinsic directions
+3. Build the custom 13-direction Voronoi on S^2 — canonical activation (36 XOR6 solutions at 14 cells)
+4. Verify computation lives on S^2, not S^1 fiber (Hopf phase inert, D67) and not R^2 Euclidean (D68)
+5. Confirm direction nesting across cyclotomic roots — zeta_8 is the computational sweet spot (D69)
+6. Analyze spectral structure: l=6 bandwidth threshold = 13=13 theorem (D71)
+
+**Extension arc (D72-D82):**
+7. Prove the 13 directions are geometrically worst (t=0 design) yet algebraically optimal (D72); confirm anti-correlation between sampling quality and computational quality
+8. Characterize DKC as a near-finite-automaton: 82.8% universal determinism, additive not multiplicative (D73)
+9. Prove Kauffman bracket and Voronoi cell are incomparable invariants; identify 6 computational orbit types (D74)
+10. Discover binocular channel: angle subsumes cell (2.3× capacity), 8 triple families, √n magnitude quantization (D75)
+11. Establish ζ₈ S²-capacity ceiling at XOR8; characterize algebraic structure breakdown (D76)
+12. Break the ceiling with S¹×S² product activation: XOR8 solvable at ζ₈ (D77); recursive paired-quaternion structure identified
+13. Confirm ζ₈ XOR hierarchy terminates at 8 via exhaustive C(24,5) search; non-monotonicity from π/4 incommensurability (D78)
+14. Break the ζ₈ wall entirely with ζ₁₂: XOR10=124 winners, XOR12=50+ winners; finite vs infinite group identified as key variable (D79)
+15. Survey all SU(2) subgroups: only ζ₄ and ζ₈ are finite; ADE classification; quantum dimension vanishes at ζ₈ (D80)
+16. Fit logarithmic capacity scaling law for ζ₁₂: max_xor ≈ 0.62 × log₂(catalog) + 4.6 (D81)
+17. Unify as linear depth law: max_xor ≈ depth + 6; crossing depth = knot crossing depth; algebraic coherence beats vocabulary (D82)
+
+Key progression: D65 S^1 k=24 → D66 S^3 25 cells → D67 S^2 14 cells → D68 R^2 visualization only → D72-73 algebraic structure analysis → D74 incomparability theorem → D75-77 binocular + product activation → D78-79 wall confirmation + ζ₁₂ breakthrough → D80 ADE survey → D81-82 scaling laws.
 
 ### Catalog Size Summary
 | Ring | Delta | Catalog | Distinct Values |
@@ -1132,9 +1515,24 @@ Key progression: D65 S^1 needs k=24 sectors (25 cells) -> D66 S^3 Voronoi needs 
 | Z[zeta_5] | phi | 2-4 strand, len 1-6 | >56 |
 | Z[zeta_24] | sqrt(3) | 2-4 strand, len 1-10 | varies |
 
-### SU(2) / Quaternionic Catalog Summary (Demos 66-69)
-| Root | Quaternions | Directions on S^2 | XOR6 at natural Voronoi | XOR6 at 16 cells |
-|------|-------------|-------------------|--------------------------|------------------|
-| zeta_8 | 24 | 13 | 36 (14 cells, 0.007%) | — |
-| zeta_16 | 7,952 | 3,457 | 499,367 (90.6%) | 450 |
-| zeta_32 | 32,768+ | 4,096+ | 493,654 (89.6%) | 393 |
+### SU(2) / Quaternionic Catalog Summary (Demos 66-82)
+| Root | Quaternions | Directions on S^2 | XOR6 at natural Voronoi | XOR8 (product activation) | XOR10 | XOR12 |
+|------|-------------|-------------------|--------------------------|--------------------------|-------|-------|
+| zeta_4 | 4 | 2 | — | — | — | — |
+| zeta_6 | infinite (>4096) | 512 (saturated) | — | — | — | — |
+| zeta_8 | 24 | 13 | 36 (14 cells) | 6 (Sec8×Vor, 112 cells) | 0 (wall) | 0 (wall) |
+| zeta_10 | infinite (>4096) | 512 (saturated, 71 angles) | — | — | — | — |
+| zeta_12 | infinite (>4096) | 512 (saturated) | 1024+ | 1024+ | 124 | 50+ |
+| zeta_16 | 7,952 | 3,457 | 499,367 (90.6%) | — | — | — |
+| zeta_32 | 32,768+ | 4,096+ | 493,654 (89.6%) | — | — | — |
+
+### DKC XOR Capacity Scaling (ζ₁₂, Demos 81-82)
+| XOR Level | Catalog Size | Closure Round | Directions | Half-Angles | Linear Depth |
+|-----------|-------------|---------------|------------|-------------|--------------|
+| XOR6 | ~5 | 0 | 2 | 2 | depth 0 |
+| XOR8 | ~51 | 2 | 22 | 6 | depth 2 |
+| XOR10 | ~275 | 4 | 114 | 12 | depth 4 |
+| XOR12 | ~1140 | 6 | 507 | 21 | depth 6 |
+| XOR14 (predicted) | ~38,000 | ~11 | — | — | depth ~8 |
+
+Scaling law: max_xor ≈ 0.62 × log₂(catalog_size) + 4.6 (logarithmic) ≡ depth + 6 (linear, since catalog grows as ~2^depth).

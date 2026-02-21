@@ -1,6 +1,6 @@
 # Cross-Demo Connections
 
-How 59 demos feed into each other, what recurs, and where threads unexpectedly converge.
+How 82 demos feed into each other, what recurs, and where threads unexpectedly converge.
 
 ---
 
@@ -224,6 +224,78 @@ algebraic structure to music and confirms Hopf orthogonality. D71 closes with a
 degrees-of-freedom proof: minimum bandwidth l=6 because 2×6+1=13 equals the
 eigenvector direction count.
 
+### Spherical Design and Automaton Arc (D72-D75)
+Algebraic optimality, automaton structure, invariant theory, and binocular channels:
+
+```
+D71 (DOF argument: 13 directions, l=6 bandwidth)
+ |
+ v
+D72 (spherical design test: t=0 design, anti-correlation between geometry and computation)
+ |
+ v
+D73 (eigenvector automaton: DKC is additive not multiplicative, 82.8% universal determinism)
+ |
+ v
+D74 (computational invariant: bracket vs cell incomparable, 119 combined classes)
+ |
+ v
+D75 (binocular DKC: angle subsumes cell for sums, 2.3× capacity, √n magnitudes)
+```
+
+D72 shows that the 13 directions achieve the worst possible geometric distribution (t=0)
+yet 2.6× better-distributed directions give 9× fewer solutions (4 vs 36). The algebraic
+placement is sharp to ~5° (Voronoi cell boundary). D73 establishes that DKC is
+fundamentally additive: the multiplicative braid product cannot compute XOR6 (complement-
+all-bits maps M to M⁻¹, which shares the same eigenvector cell). Additive 82.8%
+determinism is a universal constant across all 36 winning triples. D74 proves the bracket
+and Voronoi cell are incomparable invariants (neither refines the other), with the combined
+(bracket, cell) pair giving 119 classes vs 100 bracket-alone. D75 discovers that at the
+sum level, the eigenvalue angle subsumes the cell entirely (angle perfectly predicts parity
+for all 36 winners), giving 2.3× capacity over cell-only, while the multiplicative channel
+(which stays inside the 24-cell group) has zero XOR6 solutions.
+
+### Scaling and Finiteness Arc (D76-D82)
+The wall-was-activation pattern recurs, then group finiteness governs capacity:
+
+```
+D75 (binocular DKC, 6-input complete)
+ |
+ v
+D76 (scaling to 8 inputs: 0 winners under S² Voronoi) <-- WALL
+ |
+ v
+D77 (activation zoo: XOR8 solved at S¹×S² activation, 6 winners) <-- RESOLUTION
+ |
+ v
+D78 (recursive scaling: XOR10 = 0 at ζ₈, wall confirmed exhaustively) <-- WALL
+ |
+ v
+D79 (ζ₁₂ capacity: XOR10 = 124 winners, XOR12 = 50+) <-- RESOLUTION
+ |
+ v
+D80 (group finiteness: only ζ₄ and ζ₈ finite; ζ₁₂ infinite = no hard ceiling)
+ |
+ v
+D81 (scaling law: max_xor ≈ 0.62 × log₂(catalog) + 4.6 for ζ₁₂)
+ |
+ v
+D82 (crossing depth law: max_xor ≈ depth + 6; log law is corollary of depth law)
+```
+
+D76 confirms zero XOR8 solutions at ζ₈ with S²-only activation (pigeonhole: 256 masks /
+14 cells ≈ 18.3 per cell). D77 resolves this by adding the S¹ (eigenvalue angle) channel:
+S¹×S² product activation with 112 cells gives 6 XOR8 winners. D78 then exhaustively
+confirms XOR10 = 0 at ζ₈ under all activation functions tested — the ζ₈ XOR hierarchy
+terminates at 8 inputs because the binary octahedral group has only 24 elements and the
+catalog's combinatorial diversity is exhausted at 5-element selection. D79 breaks this
+wall by switching to ζ₁₂, whose group is infinite (or very large): 124 XOR10 winners,
+50+ XOR12 winners. D80 surveys 7 roots and finds only ζ₄ and ζ₈ generate finite SU(2)
+subgroups; all others (including ζ₁₂) are infinite. D81 measures the logarithmic scaling
+law for ζ₁₂. D82 reinterprets it: depth (group-closure birth round = number of generator
+multiplications = crossing number) is the fundamental variable, and the logarithmic law is
+a corollary of the linear depth law plus the exponential catalog growth per round.
+
 ---
 
 ## 2. Code Reuse Patterns
@@ -260,8 +332,15 @@ Z (integers) -- D01-D09
   |
   Z[zeta_32] -- D69 (braid group infinite; enumeration cap-limited)
   |
-  H (quaternions, SU(2)) -- D66, D67, D68, D69, D70, D71
+  H (quaternions, SU(2)) -- D66, D67, D68, D69, D70, D71, D72-D82
+  |
+  ζ₁₂ group (infinite SU(2) subgroup) -- D79, D81, D82
 ```
+
+D72-D82 all work in the H / SU(2) quaternion setting. D76-D79 additionally introduce
+ζ₁₂ (half-angle π/6) as a new generator, revealing that different roots produce
+non-nesting finite or infinite SU(2) subgroups with dramatically different capacity
+profiles. D80 surveys 7 roots and classifies their finiteness.
 
 Each ring carries the same API surface: zero/one/add/mul/eq/to_cx/print.
 The TL matrix engine sits on top, parameterized by ring. Swapping the coefficient
@@ -419,6 +498,90 @@ fibration S³ → S² physically realizing this split: fiber (S¹, phase ξ₁) 
 pitch; base (S², rotation axis) carries the computation. Music is the fiber; logic
 is the base.
 
+### Algebra Beats Geometry
+
+D72 crystallizes a principle latent throughout the project: the 13 eigenvector directions
+are algebraically selected, not geometrically optimized, and geometric improvement
+destroys computation. The 13 directions achieve t=0 design (worst possible for sampling)
+but stochastic optimization to t≈1 drops XOR6 solutions from 36 to 4. The computation is
+algebraic, not geometric. Moving directions to "better" positions breaks the Voronoi
+partition structure.
+
+This principle recurs at every level:
+- D68: Euclidean metric on R² gives zero solutions; S² geodesic metric gives 36
+- D71: the DOF coincidence 2×6+1=13 is algebraic, not a sampling theorem
+- D72: geometric distribution quality and computational quality are anti-correlated
+- D82: algebraic coherence (shared intermediate products at depth d) beats vocabulary
+  (more directions and angles from strided sampling)
+
+### The "Wall Was X Not Y" Pattern
+
+A structural pattern that recurs three times, always with the same form: an apparent
+capacity ceiling is identified, exhaustive search confirms zero solutions, then the
+wall is located in a specific component and bypassed by changing that component:
+
+1. **D48→D50**: XOR parity at ζ₈ has zero solutions out of 100M quartets with split-sigmoid
+   activation. Wall was in the **activation** (split-sigmoid destroys phase), not the
+   lattice. Resolution: k-sector activation, 906 solutions at k=6.
+
+2. **D76→D77**: XOR8 at ζ₈ has zero solutions out of 10,626 quadruples with S²-Voronoi
+   activation. Wall was in the **activation** (S²-only discards eigenvalue angle), not
+   the root of unity. Resolution: S¹×S² product activation, 6 solutions.
+
+3. **D78→D79**: XOR10 at ζ₈ has zero solutions exhaustively confirmed under all tested
+   activations. Wall was in **group finiteness** (binary octahedral group closes at 24
+   elements), not the architecture. Resolution: ζ₁₂ (infinite group), 124 solutions.
+
+The pattern teaches: before concluding a function is unreachable, locate the specific
+component enforcing the wall. The topology/algebra is almost never the ultimate bottleneck.
+
+### DKC is Additive
+
+D73 proves formally what D29 and D50 assumed operationally: DKC is fundamentally an
+additive computation (weight vector sum), not a multiplicative one (braid matrix product).
+The algebraic reason: complementing all input bits maps the braid matrix M to its inverse
+M⁻¹, which shares the same eigenvector cell (antipodal identification), but changes
+parity. Multiplicative braid products are structurally parity-blind. This connects
+retroactively to the entire forward DKC arc (D29, D48-D50): those demos always used
+additive weight vectors and the present demo explains why multiplicative formulations were
+never viable.
+
+The same finding appears independently in the Nazer-Gastpar connection noted from D29: the
+"compute-and-forward" structure of lattice codes is additive by design. D73 confirms DKC
+is a concrete instance of that framework.
+
+### Finite vs Infinite Group as the Capacity Governor
+
+D79 and D80 establish that the fundamental variable governing maximum XOR capacity is
+group finiteness, not the root of unity index N or the arithmetic details of the ring.
+A finite quaternion group (ζ₄: Q₄ with 4 elements; ζ₈: binary octahedral with 24) imposes
+a hard ceiling — the catalog closes, combinatorial diversity saturates, and XOR capacity
+terminates. An infinite group (all other tested roots: ζ₆, ζ₁₀, ζ₁₂, ζ₁₆, ζ₂₀) has no
+such ceiling within the explored range.
+
+The two finite cases correspond to quantum-dimension-zero points ([2]_q = 0 at ζ₄ and ζ₈),
+where the TL algebra is maximally non-semisimple. These are exactly the lattice roots where
+Kuperberg's #P-hardness theorem does NOT apply — the tractable computational regime. The
+non-lattice infinite-group roots are where hardness applies, and those roots are also where
+unbounded XOR capacity is possible.
+
+### Crossing Depth as Computational Capacity
+
+D82 reinterprets the scaling law from D81 through the lens of knot theory: each closure
+round = one generator multiplication = one crossing in the braid/knot sense. A depth-d
+quaternion encodes d crossings of the associated knot diagram. The capacity law
+max_xor ≈ depth + 6 says computational power scales linearly with crossing depth.
+
+This connects knot topology directly to computational capacity: more complexly knotted
+strands compute more than many simply-knotted strands with the same or greater vocabulary.
+The logarithmic scaling law from D81 is a corollary: catalog grows exponentially per depth
+round (roughly 2× each round), so log₂(catalog) ≈ depth, giving
+max_xor ≈ 0.62 × log₂(catalog) + const.
+
+Consistent with Kuperberg's #P-hardness: the hardness is in *generating* deep entries
+(exponential BFS cost to compute d crossings), while the algebraic gain from those entries
+is linear — the #P structure reflects the generation cost, not the usage cost.
+
 ---
 
 ## 4. Surprise Connections
@@ -550,6 +713,107 @@ produces the melody Eb E F# E Eb C — a complete arch visiting all four knot no
 The tritone-antipodal correspondence on the dodecahedron (antipodal faces carry
 tritone pairs) suggests the circle of fifths and the braid group share a deeper
 symmetry argument, not merely a notational coincidence.
+
+### D72 Confirms D71's DOF Argument from the Negative Direction (D72↔D71)
+
+D71 explains why 13 directions suffice for XOR6: the DOF coincidence 2×6+1=13 means
+l=6 spherical harmonics can exactly address 13 independent directions. D72 tests this
+from the opposite direction: can better geometric distribution (higher t-design) do
+better? The answer is definitively no — the eigenvector configuration achieves t=0 (worst
+possible), yet stochastic optimization to t≈1 (2.6× better geometry) produces 9× fewer
+XOR6 solutions (4 vs 36). D72 thus confirms D71 by contradiction: if the DOF coincidence
+were irrelevant and sampling quality were what mattered, better-distributed directions
+would compute MORE functions, not fewer. The fact that they compute fewer proves that the
+mechanism is algebraic DOF matching, not sampling theory.
+
+### D73's Additive Finding Retroactively Connects All Forward DKC Demos (D73↔D29, D48-D50)
+
+D73 proves that DKC is fundamentally additive. This is not a new discovery operationally
+— all forward DKC demos since D29 used weight-vector sums — but D73 provides the algebraic
+explanation for why multiplication was never viable: the complement-bits symmetry maps M to
+M⁻¹, which shares the same eigenvector cell, making parity invisible to any multiplicative
+formulation. This retroactively explains a silent design choice in D29 and every subsequent
+DKC demo. It also explains why the split-sigmoid wall (D48) and the S²-only wall (D76) were
+in the *activation* and not the *algebra*: the algebra was always additive-capable; the
+question was always which activation could read it.
+
+### D74 Incomparability and D75 Subsumption Concern Different Mathematical Objects (D74↔D75)
+
+D74 proves bracket and Voronoi cell are incomparable at the individual-quaternion catalog
+level (neither refines the other: 80% of bracket collisions separated by cell, 54% of cell
+collisions separated by bracket). D75 proves eigenvalue angle subsumes Voronoi cell at the
+sum-quaternion level (angle perfectly predicts parity for all 36 winners). These two results
+are not in tension — they concern different objects. D74 is about individual catalog entries
+(24 quaternions from the binary octahedral group); D75 is about additive sums of three such
+entries. The subsumption in D75 emerges from the addition process breaking the 24-cell group
+structure and creating 7 distinct angles (including 3 non-canonical ones) that carry strictly
+more information than the 13-direction Voronoi partition.
+
+### D76→D77 is the Same Pattern as D48→D50 (D76↔D48, D77↔D50)
+
+D48 proved XOR parity has zero solutions out of 100M quartets with split-sigmoid activation
+at ζ₈. D50 resolved this by changing the activation to k-sector, finding 906 solutions from
+the same catalog. D76 proved XOR8 has zero solutions under S²-Voronoi activation at ζ₈.
+D77 resolved this by changing the activation to S¹×S² product, finding 6 solutions from the
+same catalog. In both cases: the topology and algebra were never the obstruction; the wall was
+entirely in the activation function's choice of what to read from the quaternion. Both
+resolutions use a finer activation that reads angular information the original activation
+discarded. The two instances separated by 27 demos are structurally identical.
+
+### D78→D79 is the Same Pattern Again, but the Wall Was Group Finiteness (D78↔D79↔D48↔D76)
+
+D78 exhaustively confirms XOR10 = 0 at ζ₈ under all tested activations. Unlike D48 and D76
+(where the wall was in the activation), this wall is in the group structure: the binary
+octahedral group closes at 24 elements, and the combinatorial diversity of 24 elements is
+exhausted at 5-element selection (quintuples). No activation change can solve XOR10 at ζ₈ —
+there is no 5-element subset of 24 elements with the required parity structure. D79 resolves
+this by switching to ζ₁₂ (infinite group), confirming 124 XOR10 winners. The "wall was
+finiteness not architecture" resolution is the third instance of the pattern.
+
+### D80's ADE Classification Connects to D66's 24-Cell (D80↔D66)
+
+D66 discovered that SU(2) braid representations from ζ₈ produce exactly 24 distinct unit
+quaternions — identified as the binary octahedral group, vertices of the 24-cell. D80
+formally classifies this: ζ₈ (half-angle π/4, cube/octahedron symmetry angle) generates
+the Binary Octahedral group 2O (ADE type E₇, order 48 as a group in SU(2) with ±
+identification giving 24 distinct quaternion directions). D66 arrived at the 24-cell through
+braid geometry; D80 arrives at it through the ADE classification of finite SU(2) subgroups.
+The quantum dimension vanishing at ζ₈ ([2]_q = i + (-i) = 0) that D80 identifies as the
+algebraic singularity is the same non-semisimplicity that the entire radical anatomy arc
+(D38-D39, D51-D52) was studying from the TL side.
+
+### D81 Scaling Law and D82 Depth Reinterpretation Form a Single Discovery Arc (D81↔D82)
+
+D81 measures the empirical scaling law for ζ₁₂: max_xor ≈ 0.62 × log₂(catalog) + 4.6.
+D82 reveals the mechanism: catalog size grows exponentially per closure round (roughly 2×),
+so log₂(catalog) ≈ round_number ≈ depth. The true linear variable is crossing depth
+(max_xor ≈ depth + 6), and the logarithmic law is its corollary. D81 discovers the
+phenomenology; D82 identifies the underlying cause. Together they establish that
+computational power in this framework scales linearly with knot complexity (crossing number),
+while the cost of generating depth-d entries scales exponentially — exactly the structure
+that Kuperberg's #P-hardness theorem would predict for the non-lattice regime.
+
+### √n Magnitude Quantization (D75↔D73)
+
+D75 finds that the magnitude of additive quaternion sums takes only 6 values: √{0,1,2,3,4,6}
+(√5 is absent). D73 finds that distinct partial sums after 6 steps number exactly 27 (not
+64). Both results reflect the same algebraic constraint: the inner product structure of the
+24-cell allows only half-integer values {-1, -½, 0, ½, 1}, so integer sums can only reach
+specific norms. The magnitude constraint (D75) explains why the partial sum space is
+compressed (D73): even though 6 weights from a 24-element catalog could in principle produce
+2^6 = 64 distinct sums, the lattice structure reduces this to 27 — the "odometer" that
+D73's compass-without-odometer metaphor describes.
+
+### Non-Monotonicity of Activation Count Recurs at Every Scale (D50↔D78)
+
+D50 found that parity solutions at ζ₈ are non-monotone in k (sector count): 906 at k=6,
+756 at k=7, 96 at k=8. D78 finds the same non-monotonicity for XOR10 accuracy across sector
+counts: k=10 achieves 98.4%, k=12 drops to 96.9%, k=16 returns to 98.4%. Both instances
+are attributed to the π/4 incommensurability of the ζ₈ lattice: certain sector boundaries
+align destructively with the lattice angles, reducing rather than increasing the number of
+correctly classified inputs. The pattern appears at both the "near-success" regime (D78, best
+accuracy near 100%) and the "success" regime (D50, counting exact solutions), confirming
+it is a structural feature of ζ₈ arithmetic, not a boundary artifact.
 
 ---
 
@@ -686,6 +950,89 @@ l≥1728, making any coarse partition sufficient. The 13=13 theorem closes the
 loop from D67's discovery through D69's universality to D71's harmonic-analytic
 necessity. Three demos form one argument.
 
+### D72-D73: The Algebraic Optimality Loop
+
+Threads converging:
+- D71's DOF argument (13=13 theorem, bandwidth l=6)
+- D67's 13-direction empirical discovery
+- Stochastic spherical design optimization (D72)
+- Mealy/Moore automaton theory and Nazer-Gastpar additive structure (D73)
+
+Result: D72 confirms D71's DOF argument by demonstrating the anti-correlation between
+sampling quality and computational quality — better-distributed directions destroy the
+computation. D73 proves the additive formulation is the only viable one, explaining why
+all forward DKC demos used weight sums rather than braid products. Together they close
+the explanatory gap between the empirical 13-direction discovery (D67), the harmonic-
+analytic necessity (D71), and the algebraic mechanism (D73). The computation works because
+of specific angular relationships between 13 algebraically-selected directions, not
+because of their geometric distribution.
+
+### D74-D75: Two Levels of Invariant Structure
+
+Threads converging:
+- D66's bracket-quaternion relationship (12.86% agreement on braid pairs)
+- D67's Voronoi cell as braid invariant
+- D70's music-space orthogonality (eigenvalue and eigenvector independent)
+- Braid invariant theory (Kauffman bracket, Jones polynomial)
+
+Result: D74 proves incomparability at the catalog level: the bracket (eigenvalue /
+trace operation) and the Voronoi cell (eigenvector direction) discard orthogonal
+information. The combined (bracket, cell) invariant gives 119 classes vs 100
+bracket-alone — 19% finer. D75 proves subsumption at the sum level: eigenvalue angle
+perfectly predicts parity for all 36 winning triples, and the cell is a coarsening of
+it. The two results form a layered picture: individual catalog entries are incomparable
+by bracket and cell; additive sums of those entries are fully ordered (angle subsumes
+cell). The additive operation creates a hierarchy not present in the individual entries.
+
+### D77: Product Activation as Quaternionic MVN
+
+Threads converging:
+- D74's incomparability theorem (bracket and cell carry independent information)
+- D50's k-sector resolution (parity needed k=6 to access angular information)
+- D75's binocular channel (angle and cell are orthogonal, each carrying ~1 bit)
+- Aizenberg MVN theory (k-sector reads S¹ argument)
+
+Result: The S¹×S² product activation is the quaternionic generalization of Aizenberg's
+MVN: instead of reading the complex argument (S¹), read both the eigenvalue half-angle
+(S¹) and eigenvector direction (S²). The incomparability result from D74 is not merely
+structural — it is computationally load-bearing. Neither channel alone can compute XOR8;
+their product (112 cells) can (6 solutions). D74's proof that the two invariants are
+incomparable is the exact reason their combination is necessary.
+
+### D79-D80: Finite Group Ceiling Explained
+
+Threads converging:
+- D78's exhaustive XOR10=0 confirmation at ζ₈
+- D66's identification of the 24-quaternion binary octahedral group
+- ADE classification of finite SU(2) subgroups (from mathematical literature)
+- Kuperberg #P-hardness and lattice root tractability
+
+Result: The ζ₈ XOR wall at 8 inputs is explained completely by group finiteness: the
+binary octahedral group has 24 elements (ADE type E₇), and 5-element subsets of 24
+cannot provide the parity structure needed for XOR10. ζ₁₂ (infinite group) has no such
+ceiling. D80 identifies the exact boundary: only ζ₄ (Q₄, 4 elements) and ζ₈ (2O, 24
+elements) are finite under the two-generator construction — both are quantum-dimension-
+zero points. The tractable-computation regime (lattice roots, [2]_q ∈ {-2, 0}) is
+exactly the finite-group regime, and finiteness is what imposes the capacity ceiling.
+
+### D81-D82: Logarithm and Depth Form One Argument
+
+Threads converging:
+- D79's confirmed scaling from XOR10 to XOR12 at ζ₁₂
+- D80's exponential group closure growth (~2× per round)
+- Knot theory crossing number interpretation
+- Kuperberg #P-hardness (exponential generation cost, linear algebraic gain)
+
+Result: D81 measures the log scaling empirically (0.62 XOR per log₂ doubling). D82
+identifies the mechanism: depth = round number = crossing number is the linear variable;
+the log appearance is an artifact of expressing the exponential catalog size as a
+logarithm. The two constants are consistent: catalog ≈ 2^depth implies
+0.62 × log₂(2^depth) = 0.62 × depth, giving the linear depth law with slope 0.62.
+D82 also demonstrates algebraic coherence beats vocabulary: deep entries (same depth,
+fewer total) outperform strided entries (full vocabulary, mixed depth) by two XOR levels.
+The framework explains Kuperberg's hardness: you need exponentially many crossings to
+reach depth d, but each crossing unit buys only a linear increment in XOR capacity.
+
 ---
 
 ## Summary: The Project's Logic
@@ -724,13 +1071,43 @@ equivalent braids produce identical melodies, and music-space orthogonality
 eigenvector direction count — a sharp, all-or-nothing phase transition explained
 entirely by degrees of freedom.
 
-The answer: yes, with caveats. The bracket algebra computes 12/13 NPN classes
-through its natural structure. The 13th (parity) requires reading angular information
-that half-plane activations cannot access but k-sector activations can. The wall is
-geometric, not topological. Demo 63 establishes the fundamental capacity limit:
-parity up to n=5 inputs in Z[zeta_8], with two distinct impossibility mechanisms
-beyond. Three formal proofs (radical dimension, next-level radical, Markov RT
-truncation) anchor the algebraic theory. The quaternionic arc (D64-D71) reveals
-the deeper geometric structure underneath: the computation lives on S² (not S¹,
-not S³), is intrinsically curved, is governed by exactly 13 eigenvector directions,
-and is fully characterized by the l=6 spherical harmonic mode — because 2×6+1=13.
+D72 tests the 13 directions as a spherical design and finds they achieve t=0 (worst
+possible), yet geometrically optimized directions produce 9× fewer solutions — confirming
+D71's DOF argument from the negative direction and establishing that algebraic placement,
+not geometric distribution, governs DKC computation. D73 proves DKC is fundamentally
+additive (not multiplicative), establishes 82.8% universal automaton determinism across
+all 36 XOR6 winners, and identifies the "compass without odometer" structure: the Voronoi
+cell captures eigenvector direction but discards magnitude, the precise source of the 17%
+non-determinism. D74 proves the Kauffman bracket and Voronoi cell are incomparable braid
+invariants, with the combined (bracket, cell) pair giving 119 equivalence classes vs 100
+bracket-alone, and identifies 6 distinct computational orbit types in the 14-cell partition.
+D75 establishes the binocular channel: for additive sums, the eigenvalue angle subsumes the
+cell (angle perfectly predicts parity for all 36 winners), giving 2.3× capacity over
+cell-only, while the multiplicative channel (staying inside the 24-cell group) has zero XOR6
+solutions.
+
+D76 scales to 8 inputs and confirms 0 solutions under S²-only activation (pigeonhole: 256
+masks / 14 cells). D77 resolves this with S¹×S² product activation (112 cells, 6 winners) —
+the same "wall was activation not algebra" discovery as D50, one level up. D78 exhaustively
+confirms XOR10 = 0 at ζ₈ under all activations, revealing a new type of wall: group
+finiteness. The binary octahedral group's 24 elements are simply insufficient for 5-element
+XOR10. D79 breaks this wall by switching to ζ₁₂ (infinite group): 124 XOR10 winners,
+50+ XOR12. D80 surveys 7 roots of unity and finds only ζ₄ and ζ₈ generate finite SU(2)
+subgroups — both corresponding to quantum-dimension-zero points, ADE types D and E₇ —
+while all other roots generate infinite groups with no capacity ceiling within the explored
+range. D81 measures the ζ₁₂ scaling law: max_xor ≈ 0.62 × log₂(catalog) + 4.6. D82
+reinterprets this: depth (closure round = generator multiplication count = knot crossing
+number) is the linear variable; catalog grows exponentially per round, making the logarithm
+of catalog equal to depth. The linear depth law (max_xor ≈ depth + 6) reveals that
+computational power scales linearly with crossing complexity, while the cost of generating
+depth-d entries scales exponentially — consistent with Kuperberg's #P-hardness structure.
+
+The answer: yes, with a complete capacity theory. The bracket algebra computes Boolean
+functions through a mechanism that is additive (not multiplicative), algebraic (not
+geometric), and governed by activation choice (not topology). For ζ₈: 12/13 NPN classes
+via forward DKC, parity requires k-sector activation, maximum XOR inputs is 8 (hard
+ceiling from binary octahedral group finiteness). For infinite-group roots (ζ₁₂ and
+beyond): XOR capacity scales logarithmically with catalog size (equivalently: linearly
+with knot crossing depth), with no observed ceiling. The 13-direction structure on S² is
+the computational sweet spot for ζ₈: algebraically forced, geometrically worst, and
+exactly explained by the 13=13 spherical harmonic DOF theorem.

@@ -1,6 +1,6 @@
 # DKC Research: Next Priorities
 
-Generated 2026-02-20. Updated after D71. Informed by synthesis documents (narrative, novelty, connections, four-lenses). D64–D71 added: matroid recursion, Clifford staircase (Z[zeta_16]), 24-cell / quaternionic arc (D66–D71), spectral DKC.
+Generated 2026-02-20. Updated 2026-02-21 after D72-D82. Informed by synthesis documents (narrative, novelty, connections, four-lenses). D64–D71 added: matroid recursion, Clifford staircase (Z[zeta_16]), 24-cell / quaternionic arc (D66–D71), spectral DKC. D72–D82 added: spherical design, eigenvector automaton, computational invariant, binocular DKC, 8-input scaling, activation zoo, recursive scaling, ζ₁₂ capacity, group finiteness survey, capacity scaling law, crossing depth.
 
 ---
 
@@ -19,10 +19,12 @@ The **radical dimension formula** (rad(TL_ℓ) = 2ℓ−3) is now formally prove
 **Why:** The 13=13 theorem is the cleanest standalone publication target in the arc — self-contained, striking, and proven at the computational level already. An analytical proof would make it a rigorous theorem rather than a verified result, and would immediately imply the trivialization prediction for finer roots (ζ_16 → l≥1728) analytically.
 **Effort:** SMALL to MEDIUM (key insight is degrees-of-freedom counting; the hard part is formalizing "general position" and proving no sub-Nyquist trick works at l=5).
 **Unblocks:** Strengthens Paper 5 (24-Cell, S², Spectral Geometry). Turns D71's computational phase transition into a publishable theorem.
+**D72 context:** D72's anti-correlation result (better t-design geometry → fewer XOR6 solutions) directly supports this theorem: the algebraic placement of the 13 directions is precisely what creates the l=6 bandwidth need. The DOF-not-Design mechanism (t-design property is irrelevant; the 2l+1=13=directions DOF coincidence is what matters) is a key component of the analytical proof argument.
 
-### 1.4-NEW XOR7 on S² — **NEW**
+### 1.4-NEW XOR7 on S² — context updated by D78/D80
 **What:** Test the spectral framework scaling on XOR7. D65 showed XOR7 requires k=127 sectors on S¹. D67 showed XOR6 drops from k=24 (S¹) to 14 cells (S²). If the DOF formula generalizes, XOR7 on S² should need l=⌈(N_7−1)/2⌉ where N_7 is the number of XOR7-relevant eigenvector directions. Measure: does S² reduce XOR7 from k=127 as dramatically as it did XOR6?
 **Why:** Directly tests whether the spectral framework is a systematic tool for climbing the parity hierarchy, or whether XOR6 on S² is a special case. A positive result would establish S² spectral DKC as the natural framework for the entire parity arc.
+**Context update (D78/D80):** At ζ₈, D78 confirmed XOR10 = 0 (ζ₈ wall is hard). D80 established that ζ₈ generates a finite group (24 elements) and this is the fundamental ceiling. XOR7 on S² is therefore a question about what can be achieved within the finite-group regime — the S² spectral framework reduces the cell count but cannot overcome the group-finiteness ceiling. This narrows the question: does the S² DOF argument give an intermediate XOR level (7, 8) that Voronoi-only misses, or does it find a different path to XOR8 than the Sec×Vor activation of D77?
 **Effort:** MEDIUM (build on D67/D69 Voronoi machinery; requires expanding catalog to XOR7-weight 7-tuples).
 **Unblocks:** Determines whether Paper 5 covers a theorem or a single data point. Feeds into the scaling law conjecture.
 
@@ -37,6 +39,18 @@ The **radical dimension formula** (rad(TL_ℓ) = 2ℓ−3) is now formally prove
 **Why:** The 11/13 theorem (Paper 2) has clean proofs for the two unreachable classes, but the UNIFYING explanation (convexity) is informal. A formal convexity theorem would elevate Paper 2 from "two separate impossibility results" to "one structural theorem with two corollaries."
 **Effort:** SMALL (1 demo — mostly writing, possibly one verification).
 **Unblocks:** Paper 2 becomes a stronger, more unified submission.
+
+### 1.7 ζ₁₂ Sec×Vor activation for XOR10+ — **NEW (HIGH PRIORITY)**
+**What:** D79 demonstrated that ζ₁₂ breaks the ζ₈ wall for XOR10 (124 winners) and XOR12 (50+ winners) using Sec×Vor activation with the default sector count. D77 showed that Sec(8)×Vor (112 cells) is far more powerful than Voronoi alone (14 cells) at ζ₈ — XOR8 goes from 0 to 6 solutions. The combination has not yet been tested at ζ₁₂: does Sec(k)×Vor at ζ₁₂ dramatically outperform Voronoi-only ζ₁₂, just as it did at ζ₈? What is the optimal k? What is the XOR capacity ceiling at ζ₁₂ with product activation?
+**Why:** This is the direct next step in the scaling arc. D79 used k=8 and found 124 XOR10 winners; optimizing k and using the full product activation should substantially increase this count and potentially reveal XOR14+ at manageable catalog sizes. HIGH priority: immediate publication impact for Paper 6.
+**Effort:** SMALL to MEDIUM (Sec×Vor infrastructure exists from D77; port to ζ₁₂ catalog, sweep k, measure capacity per round).
+**Unblocks:** Paper 6 capacity chapter. Confirms whether the logarithmic scaling law (D81) holds under optimized product activation or shifts. Direct comparison to D81's k=8 baseline reveals how much capacity is left on the table.
+
+### 1.8 ζ₃₂ finiteness test — **NEW**
+**What:** D80 established that ζ₄ and ζ₈ are the only finite groups among the roots tested (N=4,6,8,10,12,16,20). D80 proposed the Power-of-Two Finiteness Conjecture: finite groups occur exactly at angles of the form π/2^k (k ≥ 1), predicting ζ₃₂ (θ = π/16) should also be finite. A single test_root(32) call with the existing D80 infrastructure confirms or refutes this conjecture.
+**Why:** If ζ₃₂ is finite, the power-of-two pattern holds and the ADE/finiteness story gains a third data point, making it publishable on its own. If ζ₃₂ is infinite, the pattern breaks and the real criterion must be found — equally important. Either outcome directly impacts the Paper 6 framing.
+**Effort:** SMALL (single additional test in D80's framework; ~1 hour of work).
+**Unblocks:** Confirms or refutes Power-of-Two Conjecture. Completes the ADE/finiteness survey for Paper 6. If finite: adds to the story that only lattice roots (quantum dimension vanishes) generate finite groups.
 
 ---
 
@@ -72,23 +86,55 @@ All predictions confirmed: rad(TL_7) = 11 = 2*7-3, rad(TL_8) = 39 = 49-7-3, rad^
 ### ~~2.6 Z[zeta_16] scaling~~ — DONE (Demo 65)
 Parity ceiling n=5 is unchanged at Z[zeta_16]. Gap-of-2 hypothesis REFUTED: pigeonhole bound rises from 7 to 14 but ceiling stays at 5, widening gap to 9. Standard XOR6 = 0 at all k=2..31 (both 36-value and 56-value catalogs). Generalized (non-standard) activations break the wall at k=24. Direction Nesting Theorem (D69): ζ_8 directions nest exactly into ζ_16 and ζ_32 catalogs (algebraically forced).
 
-### 2.7 Exact Cyc8 arithmetic for generalized activation check — **NEW**
+### 2.7 Exact Cyc8 arithmetic for generalized activation check — still open
 **What:** D65's generalized XOR6 check (binary labeling of k sectors) uses floating-point atan2 for sector assignment. All passing solutions have exactly zero margin to sector boundaries, making boundary cases ambiguous under floating-point. Rewrite the generalized check with exact Cyc8 arithmetic (no atan2) to formally eliminate boundary ambiguity.
 **Why:** Zero margin universality is a theorem (D65 proven), but if the sector assignments are made by floating-point atan2, there is a non-zero probability that a case at exact boundary is misclassified, creating ghost solutions or missed solutions. Cyc8 arithmetic eliminates this concern entirely and removes the last floating-point gap in the generalized DKC results.
+**Note:** D72 is a spherical design test, NOT an exact activation verification. This item remains open. A floating-point audit of the generalized activation framework identifies this as medium-difficulty exactification: the Cyc8 infrastructure exists from D29/D64, but porting sector classification from atan2 to exact rational angle comparison requires careful rethinking of boundary conditions.
 **Effort:** SMALL (Cyc8 infrastructure exists from D29/D64; port sector classification from atan2 to exact angle comparison using numerator/denominator rational arithmetic).
 **Unblocks:** Formalizes all generalized XOR6 results. Required before claiming the k=24 threshold is proven rather than verified.
 
-### 2.8 Trivialization threshold localization — **NEW**
+### 2.8 Trivialization threshold localization — still open
 **What:** D69 shows ζ_8 Voronoi (14 cells) gives 36 solutions (topology-driven) and ζ_16 Voronoi (3,457 cells) gives ~90% solutions (pigeonhole-dominated). The transition lies somewhere in ~50–500 cells. Map the solution fraction as a function of cell count in this range to locate the transition precisely.
 **Why:** The trivialization threshold is where the geometric structure of DKC ceases to be the controlling factor and statistical abundance takes over. Knowing this threshold tells you exactly how fine a resolution you can use before the computation becomes trivial — relevant to both theory (where does topology end?) and practice (how coarse can an implementation be?).
+**Note:** D74 is a computational invariant result (bracket/cell incomparability, 119 classes), NOT a trivialization threshold measurement. This item remains open.
 **Effort:** SMALL (extend D69's fixed-resolution comparison across the 50–500 cell range using the existing Voronoi search harness).
 **Unblocks:** Confirms or refutes the ζ_16 prediction from D71's DOF formula. Closes a key open question from D69.
 
-### 2.9 k=38 anomaly investigation — **NEW**
+### 2.9 k=38 anomaly investigation — still open
 **What:** In D65's even-k generalized XOR6 sweep, k=38 is the only even k ≥ 24 with zero solutions. Every other even k in the range (24, 26, 28, ..., 62) has at least 2 solutions. k=38 = 2×19 where 19 is prime. Investigate whether 19 is special with respect to the Z[zeta_8] lattice (e.g., 19 ≡ 3 mod 8, or some incommensurability with the pi/4 angular spacing).
 **Why:** Anomalies at specific k values in the generalized search indicate deeper lattice structure. The k=38 gap is unexplained and may hide a nontrivial number-theoretic obstruction — or it may be a coincidence that disappears with a larger candidate set. Either outcome is informative.
 **Effort:** SMALL (focused arithmetic investigation; no new infrastructure needed).
 **Unblocks:** Either resolves as a coincidence or reveals a structural result about 19-fold symmetry and the Z[zeta_8] lattice.
+
+### 2.10 Direct deep-entry generation — **NEW**
+**What:** D82 showed that deep entries (depth 8 in the ζ₁₂ closure) are 2× more efficient than shallow or strided entries at equal catalog size: 564 pure depth-8 entries reach XOR12, while mixed catalogs need ~1140 entries. Can depth-d entries be characterized and generated/sampled directly without first computing all shallower depths via full BFS closure? The algebraic signature of a depth-8 entry is that it is a product of exactly 8 generators — but can we enumerate these without traversing the full exponential BFS tree?
+**Why:** If direct deep-entry generation is possible, it eliminates the exponential BFS cost and allows immediate access to the high-capacity part of the catalog. This would be a practical breakthrough for high-XOR computation and would separate the "hard part" (generating deep entries) from the "easy part" (searching for winners).
+**Effort:** MEDIUM (requires characterizing the algebraic structure of depth-d entries; may involve coset enumeration or lattice-basis techniques).
+**Unblocks:** Reduces the computational cost of high-XOR DKC. Potential connection to group theory (generator word enumeration without full BFS).
+
+### 2.11 Optimal depth for target XOR level — **NEW**
+**What:** D82 demonstrated that pure depth-8 entries outperform shallow and strided at equal catalog size (564 entries → XOR12 vs XOR10). But is pure depth-8 truly optimal, or would a mixed depth (e.g., pure depth-6 or depth-7, or a calibrated shallow-core + deep-extensions mix) achieve XOR12 with fewer total entries? The two-component winner architecture (shallow core + deep extensions, D82) suggests a hybrid strategy might be near-optimal.
+**Why:** The optimal depth strategy minimizes the catalog size needed for a target XOR level, which directly determines the computational cost of building the catalog (exponential BFS). If XOR12 is reachable at 200 entries with the right depth mix, instead of 564 pure-deep entries, that is a 2.8× efficiency gain.
+**Effort:** SMALL (sweep depth composition at matched catalog sizes; D82 infrastructure already handles arbitrary subsets).
+**Unblocks:** Practical optimization for high-XOR computation. Feeds into the XOR14 search (D81 predicts ~38K entries; optimal depth composition may reduce this significantly).
+
+### 2.12 Union catalog ζ₈ + ζ₁₂ — **NEW**
+**What:** D79 confirmed that ζ₈ and ζ₁₂ catalogs are largely non-overlapping (12% quaternion overlap, 15% direction overlap). D82 showed algebraic coherence (shared intermediate products within a root) determines capacity. A union catalog ζ₈ ∪ ζ₁₂ exploits two independent algebraic structures simultaneously — does this provide superadditive XOR capacity, or does the incoherence between the two roots prevent synergy?
+**Why:** If the union catalog outperforms either alone at matched size, it establishes that algebraic diversity (multiple roots) and algebraic coherence (depth within a root) are complementary, not competing, mechanisms. This would be a significant practical result: the best strategy combines roots rather than going deeper within one.
+**Effort:** SMALL (combine D66's ζ₈ and D79's ζ₁₂ catalogs; run the existing search harness on the union).
+**Unblocks:** Directly tests D79's Union Catalog Conjecture. Feeds into Paper 6 as the "best known" capacity baseline.
+
+### 2.13 Depth law at other roots of unity — **NEW**
+**What:** D82 established max_xor ≈ depth + 6 for ζ₁₂. Does this linear law hold at ζ₁₀? With a different constant? D80 showed ζ₁₀ has 71 distinct half-angles at 4096 entries (most of any surveyed root) — its angular richness may shift the constant or alter the depth law character entirely. Similarly, does the law hold at ζ₁₆?
+**Why:** If the depth law is universal (same constant across all infinite-group roots), it is a fundamental property of the quaternionic DKC mechanism. If the constant varies, it is a function of angular density per closure round — which would give a formula relating root of unity to computational efficiency, directly informing root selection for practical applications.
+**Effort:** SMALL to MEDIUM (port D82's depth-tracking closure and capacity measurement to ζ₁₀ and ζ₁₆; D80 already has the closure infrastructure).
+**Unblocks:** Universality vs. root-dependence of the depth law. Critical for Paper 6's claims about scaling.
+
+### 2.14 Formal "activation determines capacity" theorem — **NEW**
+**What:** D77 empirically demonstrated across 14 activation functions that the activation choice, not the root of unity, determines computational capacity: same ζ₈, same 24-cell, 0 XOR8 solutions with S²-Voronoi, 6 solutions with S¹×S²-Sec×Vor. Can this be stated and proven as a formal theorem? The statement would be roughly: for any finite quaternion group G and any target Boolean function f, there exists an activation function A such that DKC(G, A) computes f if and only if f is below the group's structural capacity ceiling.
+**Why:** "Activation determines capacity" is currently a striking empirical result (14 activations compared, monotone phase transition measured). A formal theorem would make it the central theoretical contribution of Paper 6 — elevating it from "we found an activation that works" to "we proved why activation is the key variable."
+**Effort:** MEDIUM (requires formalizing the capacity ceiling of a finite quaternion group; the incomparability result from D74 — that eigenvalue and eigenvector directions capture orthogonal information — is the key ingredient).
+**Unblocks:** Paper 6's theoretical core. Connects D74 (incomparability), D77 (activation zoo), and D80 (finiteness) into a unified theorem.
 
 ---
 
@@ -126,6 +172,12 @@ Parity ceiling n=5 is unchanged at Z[zeta_16]. Gap-of-2 hypothesis REFUTED: pige
 **Why:** Speculative but would connect DKC to the deepest open problem in quantum topology.
 **Effort:** LARGE (research program).
 **Unblocks:** Connection to hyperbolic geometry and the broader quantum topology program.
+
+### 3.7 Exact 27-state DKC automaton
+**What:** D73 showed the 13-cell Voronoi partition achieves 82.8% automaton determinism for XOR6. The signed 27-cell partition achieves 87.1%. A fully deterministic 27-state automaton (if it exists) would compute XOR6 with guaranteed state transitions — no probabilistic ambiguity. Is there a 27-partition of S² achieving 100% determinism, or does 100% require tracking magnitude information beyond direction?
+**Why:** A fully deterministic finite automaton for DKC would be the cleanest possible formal model of the computation. The 82.8% universal constant (identical across all 36 winning triples) is a compelling structural result; 100% would be a theorem.
+**Effort:** MEDIUM (requires searching over 27-cell partitions of S²; no new infrastructure needed but the search space is large).
+**Unblocks:** Formal automaton model of DKC. Potential connection to the 13=13 bandwidth theorem.
 
 ---
 
@@ -170,7 +222,7 @@ The shortest path to Paper 3 (radical anatomy):
 
 Paper 3 strengthened by Markov RT truncation proof and next-level radical formula proof.
 
-The shortest path to Paper 5 (24-Cell, S², and Spectral Geometry of DKC) — **NEW**:
+The shortest path to Paper 5 (24-Cell, S², and Spectral Geometry of DKC):
 
 ```
 D66 (24-cell emergence, F4 orbits, 7/7/11 theorem)
@@ -179,17 +231,41 @@ D68 (stereographic: computation intrinsically curved)
 D69 (Direction Nesting Theorem, ζ_8 = sweet spot)
 D70 (musical mapping, Yang-Baxter melody invariance)
 D71 (spectral DKC, 13=13 bandwidth theorem — COMPUTED)
+D72 (anti-correlation: worst t-design = most solutions — STRENGTHENS Paper 5)
+D74 (bracket/cell incomparability, 119 classes — STRENGTHENS Paper 5)
          |
          v
 1.3 NEW (analytical proof of 13=13 bandwidth bound)
-1.4-NEW (XOR7 on S² — tests framework scaling)
+1.4-NEW (XOR7 on S² — tests framework scaling, updated by D78/D80 context)
 2.7 (Cyc8 arithmetic for generalized activation check)
          |
          v
   Paper 5 submission
 ```
 
-Paper 5 is entirely new — enabled by D66–D71. The S² arc significantly strengthens Paper 1 as well (the 24-cell as the natural computational geometry for DKC is a compelling reframing of the entire forward-DKC result). D65's Clifford staircase conjecture (XOR_n climbs one Clifford hierarchy rung per input) is PARTIALLY REFUTED: standard activations keep ceiling at n=5 across cyclotomic levels; generalized activations do break the wall, but at k=24 rather than by Clifford level. The clean Clifford interpretation does not hold for standard DKC.
+Paper 5 is entirely new — enabled by D66–D71. D72's anti-correlation result (algebraic eigenvector placement is anti-correlated with sampling quality, proving the computation is algebraic not geometric) and D74's incomparability theorem (bracket and cell are incomparable invariants with 119 combined classes) both strengthen the Paper 5 narrative. The S² arc significantly strengthens Paper 1 as well.
+
+The shortest path to Paper 6 (Crossing Depth, Group Finiteness, and Capacity Scaling in DKC) — **NEW**:
+
+```
+D76 (XOR8 = 0 at ζ₈ S²-Voronoi: capacity limit)
+D77 (XOR8 = 6 with Sec8×Vor: wall was activation, not root — 14 activation comparison)
+D78 (XOR10 = 0 at ζ₈: finite group ceiling confirmed)
+D79 (XOR10 = 124, XOR12 = 50+ at ζ₁₂: infinite group breaks wall)
+D80 (only ζ₄/ζ₈ finite: ADE classification, quantum dimension vanishes at ζ₈)
+D81 (0.62 XOR per doubling: logarithmic scaling law)
+D82 (max_xor ≈ depth+6: linear depth law, algebraic coherence > vocabulary)
+         |
+         v
+1.7 NEW (ζ₁₂ Sec×Vor activation — optimize product activation at ζ₁₂)
+1.8 NEW (ζ₃₂ finiteness test — confirm/refute Power-of-Two Conjecture)
+2.14 NEW (formal "activation determines capacity" theorem)
+         |
+         v
+  Paper 6 submission
+```
+
+Paper 6 arc is the most complete new arc since the original DKC discovery. The key narrative: the research shifted from "can DKC compute parity?" (answered at Demo 50) to "how far does DKC scale?" (D76–D82). The scaling arc established: (1) the finite-group ceiling at ζ₈ (XOR8 maximum), (2) logarithmic scaling at ζ₁₂ (0.62 XOR per catalog doubling), (3) the linear depth law (max_xor ≈ depth+6, explaining the logarithmic law as an artifact of exponential BFS growth), and (4) the activation-determines-capacity principle (D77). Two key small experiments remain: optimizing product activation at ζ₁₂ (1.7, high impact) and the ζ₃₂ finiteness test (1.8, small effort, high clarity).
 
 ---
 
@@ -201,14 +277,35 @@ Paper 5 is entirely new — enabled by D66–D71. The S² arc significantly stre
 - ~~Complex k=24 as projection of 24-cell~~: CONFIRMED (D66). S¹ k=24 minimum is the trace projection of the 24-cell's 24 vertices.
 - ~~ζ_8 vs ζ_16 eigenvector nesting~~: PROVEN algebraically (D69). All 13 ζ_8 directions appear identically in ζ_16 (13/13, 0.000° drift).
 
+### Resolved by D72–D82
+- ~~Is ζ₈ the only root supporting XOR8?~~: RESOLVED (D77). XOR8 is solvable at ζ₈ with Sec(8)×Voronoi activation. The Demo 76 failure was activation-specific, not root-specific.
+- ~~Is XOR10 solvable?~~: RESOLVED (D79). XOR10 = 124 winners at ζ₁₂. The wall was finite-group exhaustion at ζ₈, not a fundamental impossibility.
+- ~~Why does the 24-cell generate a finite group?~~: RESOLVED (D80). Binary octahedral group (E₇, ADE classification). Only ζ₄ and ζ₈ generate finite groups under the two-generator construction; these are exactly the lattice points where quantum dimension [2]_q vanishes.
+- ~~What is the scaling law for XOR capacity vs. catalog size?~~: RESOLVED (D81). Logarithmic: max_xor ≈ 0.62 × log₂(catalog_size) + 4.6 at ζ₁₂.
+- ~~Why logarithmic?~~: RESOLVED (D82). The logarithm is an artifact: catalog grows exponentially per closure round, and capacity grows linearly with depth, so log(exponential) = linear. The fundamental law is max_xor ≈ depth + 6.
+- ~~DKC is additive or multiplicative?~~: RESOLVED (D73). Additive. Multiplicative braid product formulation cannot compute XOR6 — flipping all bits maps M→M⁻¹, which shares the same cell but changes parity.
+- ~~Does sampling quality (t-design) explain why 13 directions suffice?~~: RESOLVED (D72). No. The 13 eigenvector directions are the worst possible t-design (t=0). Sampling quality is anti-correlated with computational quality. The DOF coincidence (2l+1=13=directions) explains DKC, not the t-design property.
+
 ### Still Open
-- Analytical proof of the 13=13 bandwidth bound (D71 open question — top priority, see 1.3 NEW).
+- Analytical proof of the 13=13 bandwidth bound (D71/D72 — top priority, see 1.3).
 - n=6 constraint wall algebraic proof: is there a clean proof that the 63 constraints are unsatisfiable, or is it inherently a finite-verification result?
-- Trivialization threshold: exactly where (50–500 cells) does the computation transition from topology-driven to pigeonhole-dominated? (see 2.8 NEW)
-- k=38 anomaly: why is k=38 the only even k ≥ 24 with zero generalized XOR6 solutions? (see 2.9 NEW)
-- XOR7 on S²: does the DOF formula generalize, and does S² reduce the k=127 S¹ requirement as dramatically as it did for XOR6? (see 1.4-NEW)
-- Exact Cyc8 arithmetic for generalized activation sector classification — eliminates zero-margin boundary ambiguity (see 2.7 NEW).
+- Trivialization threshold: exactly where (50–500 cells) does the computation transition from topology-driven to pigeonhole-dominated? (see 2.8)
+- k=38 anomaly: why is k=38 the only even k ≥ 24 with zero generalized XOR6 solutions? (see 2.9)
+- XOR7 on S²: does the DOF formula generalize, and does S² reduce the k=127 S¹ requirement within the ζ₈ finite-group regime? (see 1.4-NEW, updated by D78/D80)
+- Exact Cyc8 arithmetic for generalized activation sector classification — eliminates zero-margin boundary ambiguity (see 2.7).
 - Oriented matroid generalization: what OM type characterizes n-input parity for n=4,5? (D64 open, not yet answered)
 - Funnel rate formula: is the coverage fraction decay (99.3% → 39.2% → 19.2% → 0%) exponential, algebraic, or other?
 - Poison octant 4 gap: why do poison values avoid octant 4 entirely (D64)?
 - Edge-dominant/body-dominant F4 orbit split (22/13) in D66: does this exchange under 24-cell self-duality?
+- ζ₃₂ finiteness: does the Power-of-Two Conjecture (finite groups at π/2^k only) hold? (see 1.8)
+- ζ₁₂ Sec×Vor capacity: how much does product activation increase XOR capacity at ζ₁₂ beyond the k=8 baseline of D79? (see 1.7)
+- Depth law universality: does max_xor ≈ depth + 6 hold at ζ₁₀, ζ₁₆? Different constant? (see 2.13)
+- Formal "activation determines capacity" theorem: can D77's empirical result across 14 activations be proven formally? (see 2.14)
+- Union catalog ζ₈ + ζ₁₂: does combining two largely non-overlapping catalogs provide superadditive XOR capacity? (see 2.12)
+- Optimal depth composition for target XOR: is pure depth-8 the best, or does a mixed shallow-core + deep-extensions strategy reach XOR12 with fewer entries? (see 2.11)
+- Direct deep-entry generation: can depth-d entries be sampled without full BFS closure? (see 2.10)
+- 6 unseparated pairs (D74): what stronger invariant separates the 6 braid pairs sharing both Voronoi cell and bracket value?
+- Exact 27-state DKC automaton: does a 27-partition of S² exist achieving 100% automaton determinism for XOR6? (see 3.7)
+- Is ζ₁₂ truly infinite or very large finite? (D79 open — concrete group theory question)
+- Does the 2.3× binocular capacity gain over cell-only hold for other roots, or is it ζ₈-specific? (D75 open)
+- Information-theoretic lower bound for ζ₈ XOR ceiling: clean formula relating max computable N to catalog size, direction count, and angle count?

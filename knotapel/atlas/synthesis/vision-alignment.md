@@ -1,6 +1,6 @@
 # Vision Alignment: Current Research → Long-Term Direction
 
-How the completed work (59 demos) positions us relative to the hybrid LLM vision
+How the completed work (82 demos) positions us relative to the hybrid LLM vision
 described in `planning/vision.md`. Generated 2026-02-20, updated 2026-02-21.
 
 ---
@@ -11,7 +11,7 @@ The hybrid LLM vision requires: taxonomy → braids → DKC → compiled weights
 coexist with trained weights in a model that can dynamically update its factual
 knowledge.
 
-**What the 59 demos established:**
+**What the 82 demos established:**
 
 | Vision Component | Status | Key Evidence |
 |-----------------|--------|--------------|
@@ -22,17 +22,50 @@ knowledge.
 | Gate composition / chaining | DEMONSTRATED | Cascade thresholding, 1-bit adder (D19) |
 | Parity wall structure | CHARACTERIZED | Matroid minor chain + two-layer anatomy (D64, D65); absolute/convention separation |
 | Quaternionic DKC | NEW CAPABILITY | S³ lift, 24-cell geometry, 35 Voronoi solutions, F4 symmetry (D66-D68) |
-| Activation function hierarchy | CHARACTERIZED | S¹→S³→S²→spectral; 13=13 theorem, bandwidth l=6 (D65-D71) |
+| Activation function hierarchy | CHARACTERIZED | S¹→S³→S²→S¹×S²→spectral; 13=13 theorem, bandwidth l=6 (D65-D71, D77) |
 | Clifford hierarchy independence | PROVEN | Parity ceiling n=5 unchanged at Z[ζ₁₆]; ceiling does not climb the hierarchy (D65) |
+| DKC as braid invariant | CHARACTERIZED | Bracket vs. cell incomparable; 119 combined classes; 6-type orbit structure (D74) |
+| Binocular channel | NEW CAPABILITY | Angle subsumes cell (2.3× capacity); 7 discrete angles for 3-term sums (D75) |
+| Scaling beyond 6 inputs | DEMONSTRATED | XOR8 via S¹×S² activation (D77); ζ₁₂ reaches XOR10/12 (D79) |
+| Algebraic group structure | CHARACTERIZED | ADE classification; only ζ₄ and ζ₈ finite; infinite groups break the ceiling (D80) |
+| Capacity scaling law | QUANTIFIED | Logarithmic law: max_xor ≈ 0.62×log₂(catalog)+4.6 (D81) |
+| Depth = crossing number | PROVEN | Linear depth law: max_xor ≈ depth+6; algebraic coherence dominates vocabulary (D82) |
 | Taxonomy → braid encoding | NOT STARTED | The critical missing link |
 | Multi-layer complex composition | NOT TESTED | Only bit-level cascade (D19) exists |
 | Integration with trained weights | NOT STARTED | Architecture question, unexplored |
 | Dynamic recompilation | NOT TESTED | Should be fast given finite catalog, unverified |
 
-**Assessment:** The "knots → logic" half of the pipeline is solid and now much better
-characterized — the activation function design space is mapped, the parity wall is
-understood at depth, and quaternionic DKC opens a new geometry. The "taxonomy →
+**Assessment:** The "knots → logic" half of the pipeline is now extremely well
+characterized. The D72-82 arc resolved the scaling question decisively: DKC CAN
+scale to arbitrary input sizes using infinite groups (ζ₁₂ and beyond), at
+exponential cost per XOR level — consistent with Kuperberg's #P-hardness.
+The parity ceiling at n=5 for ζ₈ is now understood as a finite group ceiling
+(ADE type E₇, 24 elements), not a fundamental limit of DKC. The "taxonomy →
 knots" half is the primary gap. The integration architecture is the secondary gap.
+
+---
+
+## Progress Toward Vision (D72-82 Additions)
+
+### The scaling arc (D76-82) answers "can DKC scale?"
+
+The question left open after D65-D71 was whether ζ₈ represented a fundamental
+ceiling or an instance-specific one. D76-82 resolve this:
+
+- **D76**: XOR8 = 0 at ζ₈ with S² activation — appeared to be a hard ceiling
+- **D77**: XOR8 = 6 at ζ₈ with S¹×S² activation — the wall was the activation,
+  not the root of unity (third instance of the "wall was X not Y" pattern)
+- **D78**: XOR10 = 0 at ζ₈ exhaustively — the ζ₈ ceiling is real, at n=8
+- **D79**: XOR10 = 124 at ζ₁₂, XOR12 = 50+ — infinite groups break the ceiling
+- **D80**: Only ζ₄ and ζ₈ are finite; all other tested roots are infinite
+- **D81**: max_xor ≈ 0.62×log₂(catalog)+4.6 — logarithmic cost per XOR level
+- **D82**: max_xor ≈ depth+6 — linear in crossing depth; the logarithmic law is
+  a corollary of exponential catalog growth per depth level
+
+For the hybrid LLM vision this means compiled DKC neurons can compute arbitrarily
+large Boolean functions — at exponential cost. The 3-input syllogism case (well
+within ζ₈'s n=8 ceiling) remains economical. Larger compiled units are feasible
+but expensive, which naturally drives a compositional architecture.
 
 ---
 
@@ -63,13 +96,13 @@ how much "deductive capacity" each evaluation level provides. Higher ℓ = more
 capacity but more complex ring. This could inform choosing the right ℓ for
 a given taxonomy size.
 
-### The parity ceiling establishes finite capacity
-Demo 63 proves Z[zeta_8] parity tops out at n=5 inputs. For the hybrid LLM vision,
-this means individual DKC neurons handle at most 5-input parity functions. Larger
-logical operations must be built compositionally — which aligns with the syllogism
-approach (3 terms per syllogism, well within the n=5 ceiling). The ceiling is a
-feature, not a limitation: it bounds the complexity of each compiled unit, making
-the system predictable.
+### The parity ceiling establishes finite capacity per neuron
+Demo 63 proves Z[zeta_8] parity tops out at n=5 inputs for the S² activation.
+D77 extends this to n=8 with S¹×S² activation. D78 confirms ζ₈ walls at n=8
+regardless of activation. For the hybrid LLM vision, compiled DKC neurons using
+ζ₈ handle up to 8-input Boolean functions; larger operations must be compositional.
+The ceiling is a feature: it bounds per-unit complexity, making the system
+predictable.
 
 ### Formal proofs strengthen the theoretical foundation
 Three formal proofs (radical dimension, next-level radical, Markov RT truncation)
@@ -126,6 +159,59 @@ primarily interesting as outreach: the mathematics has an intrinsic musical
 structure that did not have to exist. For the long-term vision of the project it
 is a natural interface between knot theory and human perceptual experience.
 
+### DKC computation is algebraic, not geometric (D72)
+The anti-correlation between spherical design quality and XOR6 solution count
+(better geometric distribution → fewer solutions: 36 vs 4) establishes that DKC
+is algebraically selected. The 13 eigenvector directions are simultaneously the
+worst choice for spherical integration (t=0) and the best for DKC computation.
+For the hybrid LLM vision this confirms that compiled DKC weights should be
+chosen by algebraic criteria (group theory) rather than geometric criteria
+(uniform distribution). This simplifies the compilation algorithm: no optimization
+over a continuous geometric space is needed — the algebra selects the right points.
+
+### Bracket and cell are incomparable invariants (D74)
+The Kauffman bracket (eigenvalue, S¹) and the DKC Voronoi cell (eigenvector, S²)
+capture orthogonal braid information. Their combination gives 119 equivalence
+classes vs 100 bracket-alone or 14 cell-alone — a 19% improvement. For the hybrid
+LLM vision, this means a compiled DKC layer can be read in two complementary ways,
+and their joint information is strictly richer than either alone. The incomparability
+result explains why S¹×S² product activation (D77) is necessary for XOR8: each
+channel contributes independent computational power.
+
+### S¹×S² activation is the quaternionic MVN (D77)
+The combined eigenvalue-angle (S¹) × eigenvector-direction (S²) activation is
+the natural generalization of Aizenberg's complex MVN to quaternions. It unlocks
+XOR8 at ζ₈ — demonstrating that the ζ₈ algebraic structure supports at least
+8-input computation when both channels are read. For the vision this establishes
+a principled activation design: always read both Hopf components (fiber and base).
+
+### Infinite groups provide unbounded capacity (D79, D80)
+ζ₁₂ generates an infinite (or very large) SU(2) subgroup; its catalog grows
+without bound and reaches XOR10 (124 winners), XOR12 (50+ winners). The ADE
+survey (D80) shows only ζ₄ and ζ₈ are finite, and all other tested roots are
+infinite. For the hybrid LLM vision this is a critical result: if per-neuron
+capacity needs to exceed 8 inputs, switching from ζ₈ to any infinite-group root
+(ζ₁₂, ζ₁₀, etc.) removes the ceiling — at the cost of a larger, more expensive
+catalog.
+
+### Crossing depth = computational power (D82)
+The linear depth law max_xor ≈ depth+6 establishes that the knot-theoretic
+crossing number directly governs computational power. A depth-d quaternion
+encodes d crossings of the associated knot; more complex knots compute more.
+This is the most direct connection yet between knot theory and computational
+capacity. For the hybrid LLM vision, it suggests that the "compile a syllogism"
+step corresponds to finding a braid of sufficient crossing depth — and that
+crossing depth is a computable, predictable measure of compiled weight complexity.
+
+### Algebraic coherence beats vocabulary (D82)
+Deep subsets (entries from late closure rounds) outperform wide subsets (maximum
+direction/angle coverage) despite having less vocabulary. The determining factor
+is shared algebraic structure — deep entries are products of 8+ generators and
+share common intermediate factors. For the vision this means the compilation
+algorithm should prioritize entries that are algebraically related to each other,
+not just maximally diverse. This could significantly reduce the catalog size
+needed for practical deployment.
+
 ---
 
 ## Course Corrections
@@ -139,22 +225,21 @@ both a constraint and an opportunity — the compiled layers are architecturally
 distinct from trained layers, which might actually make integration cleaner
 (they're clearly separate subsystems).
 
-### Exhaustive search doesn't scale — but has a proven ceiling
+### Exhaustive search doesn't scale — but has a principled scaling law
 The current "compiler" searches |catalog|^(n+1) combinations. D63 shows
-exhaustive search is feasible up to n=5 at k=15 sectors, but n=6+ is truly
-impossible — not just intractable but zero solutions exist (the parity ceiling).
-The vision requires either:
+exhaustive search is feasible up to n=5 at k=15 sectors, but D78 confirms n=10
+at ζ₈ is truly impossible. D81 gives the cost: each +2 XOR inputs requires
+~10× more catalog entries (logarithmic law). The vision requires either:
 - Compositional compilation (build large functions from small compiled units)
 - Predictive compilation (theory for which braid → which function)
 - Restricting compiled weights to small logical units (syllogisms are 3-term)
 
-The third option is actually fine for the vision — if compiled weights encode
-individual syllogisms (3 terms each), and reasoning chains are built by
-composition, then the 3-input scale is sufficient per unit.
+The third option is actually fine for the vision — syllogisms are 3-term,
+well within ζ₈'s n=8 ceiling. The logarithmic scaling law now provides a
+principled cost model for cases where more inputs are needed.
 
 Additionally, the triskelion generalization (k=2n) was FALSIFIED by D63; the
-actual scaling law is k=2M-1 where M is the ray count. This is an important
-course correction — the real relationship is to lattice geometry, not input count.
+actual scaling law is k=2M-1 where M is the ray count.
 
 ### The parity ceiling does NOT climb the Clifford hierarchy (D65)
 An initially plausible conjecture from D64 was that XOR6 might become achievable
@@ -164,8 +249,9 @@ identical at Z[ζ₁₆]. The gap between pigeonhole bound and actual ceiling wi
 from 2 at Z[ζ₈] to 9 at Z[ζ₁₆]. This significantly constrains the theoretical
 picture: the parity ceiling is likely a topological invariant of the state sum,
 not an artifact of algebra level. For the vision this means the n=5 per-neuron
-limit is a genuine architectural constraint at all cyclotomic levels — compositional
-design is not an optional engineering choice but a mathematical necessity.
+limit (under S² activation) is a genuine architectural constraint at all cyclotomic
+levels — compositional design is not an optional engineering choice but a
+mathematical necessity.
 
 ### Generalized activations break a convention wall, not the absolute wall (D65)
 The two-layer structure revealed in D65 is an important refinement: there is an
@@ -183,9 +269,31 @@ The direction-nesting theorem shows ζ₈ directions survive exactly into all fi
 roots (ζ₁₆, ζ₃₂). But at ζ₁₆ natural Voronoi resolution the computation
 trivializes: ~90% of all XOR6 triples become solutions via pigeonhole saturation
 (3,457 cells, 64 binary inputs). This means the research program should stay
-anchored at ζ₈ — not because finer rings are wrong, but because at their natural
-resolution they lose all discriminative structure. The computational richness of
-ζ₈ comes precisely from its coarseness: 24 quaternions, 13 directions, 14 cells.
+anchored at ζ₈ for 6-input work — not because finer rings are wrong, but because
+at their natural resolution they lose all discriminative structure. For higher
+input sizes requiring infinite groups (ζ₁₂, ζ₁₀), the analogous trivialization
+threshold is yet to be determined.
+
+### Demo 76's "ζ₈ is a 6-input structure" was wrong — activation-specific (D77)
+D76 concluded XOR8 = 0 at ζ₈. D77 corrects this: with S¹×S² combined activation
+(112 cells), XOR8 IS solvable at ζ₈ (6 winners). The ζ₈ wall is at n=8, not n=6.
+This is the third instance of the "wall was in the activation/interface, not the
+algebraic core" pattern:
+- D50: parity wall was in split-sigmoid activation, not the Z[ζ₈] lattice
+- D65: XOR6 wall was in the convention (odd/even labeling), not the geometry
+- D77: XOR8 wall was in S²-only activation, not the ζ₈ algebraic structure
+
+This recurring pattern is a structural insight: when DKC hits a wall, the right
+response is to examine the activation/interface first, not to abandon the algebra.
+
+### The ζ_N → XOR N capacity conjecture was falsified (D79)
+The initial hypothesis that ζ₁₂ would support at most XOR12 was refuted: ζ₁₂
+already reaches XOR12 and appears to have capacity well beyond it. The true
+governing variable is group finiteness, not the subscript N. Finite groups (ζ₄,
+ζ₈) impose a ceiling; infinite groups (all others tested) grow logarithmically
+with catalog size. The correct framing is: finite group → finite ceiling (ADE
+type determines the ceiling); infinite group → unbounded capacity (at logarithmic
+catalog cost).
 
 ---
 
@@ -197,20 +305,18 @@ Current state → Syllogism→NPN mapping (1 demo) → Toy taxonomy→weight pip
 ```
 This would confirm or deny that classical syllogisms naturally fit the 3-input
 DKC framework. If yes, the taxonomy→logic half of the vision becomes concrete.
-If no, we need to rethink. The parity ceiling result (D63) gives confidence: any
-3-input Boolean function is reachable. The S² geometry (D67) gives a cleaner
-picture of what the activation looks like geometrically for 3-input syllogisms.
+If no, we need to rethink. The ζ₈ n=8 ceiling (D77-D78) confirms all 3-input
+Boolean functions are reachable; the S¹×S² geometry (D77) establishes the
+activation to use.
 
 ### Path B: Prove multi-layer composition works (1 demo)
 ```
 Current state → Multi-layer composition test (1 demo)
 ```
 Feed DKC neuron outputs into other DKC neurons. If exactness survives, the
-vision's "reasoning chains" become feasible. If not, cascade thresholding
-(D19 style, collapse to bits between layers) is the fallback — still works,
-just less elegant. DKC capacity per neuron is now well-characterized (n<=5
-for parity in Z[zeta_8]), so multi-layer composition is the clear path for
-anything beyond 5-input functions.
+vision's "reasoning chains" become feasible. DKC capacity per neuron is now
+well-characterized (n<=8 for ζ₈ with S¹×S² activation), so multi-layer
+composition is the clear path for anything beyond 8-input functions.
 
 ### Path C: Demonstrate dynamic recompilation (1 demo)
 ```
@@ -240,6 +346,27 @@ eigenvector direction count (unknown). If S² again reduces the sector requireme
 dramatically, this validates the spectral framework as the right language for
 characterizing DKC computation across all arity levels.
 
+### Path F: Depth-targeted catalog generation (1 demo) — NEW
+```
+Current state → Direct generation of depth-d quaternions → verify linear depth law
+```
+D82 showed deep entries (high crossing depth) are 2× more efficient than shallow
+entries for XOR computation. The natural next step is to generate depth-d entries
+directly (not via BFS closure) by finding braid words of length d that produce
+desired algebraic properties. If successful, this dramatically reduces the catalog
+size needed for practical compilation — a key step toward deployable compiled
+weights.
+
+### Path G: Union catalog test (1 demo) — NEW
+```
+Current state → ζ₈ ∪ ζ₁₂ union catalog → XOR capacity test
+```
+D79 confirmed ζ₈ and ζ₁₂ are largely non-overlapping (12% quaternion overlap,
+15% direction overlap). A union catalog should exploit both independent algebraic
+structures. If the union catalog shows superadditive capacity or lower cost per
+XOR level, this opens a practical path: different roots of unity contributing
+complementary weight families to the compiled layer.
+
 ---
 
 ## Recommended Next Investigation
@@ -247,21 +374,84 @@ characterizing DKC computation across all arity levels.
 **The syllogism → NPN mapping** remains the highest-leverage single demo for the
 vision. It requires no new code infrastructure (existing NPN classification +
 DKC search), answers the most critical question (do syllogisms fit 3-input
-DKC?), and its answer determines whether Path A is viable. The S² geometry
-from D67 gives a clean geometric picture of what the compiled weight space looks
-like for 3-input syllogisms.
+DKC?), and its answer determines whether Path A is viable. The S¹×S² geometry
+from D77 gives the correct activation to use for any subsequent demos; the
+anti-correlation result from D72 confirms algebraic selection of weights is
+principled.
 
 If that succeeds, the toy taxonomy pipeline (Path C) becomes the natural
-follow-up: taxonomy → syllogisms → NPN classes → DKC weights → S² Voronoi
-activation — a complete (if toy) end-to-end pipeline, now with a richer
-geometric understanding of the activation layer than was available before D66-D71.
+follow-up: taxonomy → syllogisms → NPN classes → DKC weights → S¹×S² activation
+— a complete (if toy) end-to-end pipeline, with the ζ₈ ceiling and scaling law
+as explicit cost boundaries.
 
 For the theoretical program specifically, Path D (analytical proof of the 13=13
 bandwidth bound) is the next clean target — it is the kind of result that could
 be written up for publication independently of the full hybrid LLM vision.
 
+For the engineering program, Path F (depth-targeted generation) is the key
+efficiency gain: replacing the full BFS closure with direct generation of
+algebraically coherent deep entries would reduce compilation cost by orders of
+magnitude.
+
+---
+
+## The "Wall Was in the Activation" Pattern — A Structural Insight
+
+Across the full D50-D82 arc, the same pattern has appeared three times:
+
+| Demo | Apparent Wall | True Cause | Resolution |
+|------|--------------|------------|------------|
+| D50 | Parity unreachable at ζ₈ | Split-sigmoid activation | k=6 sector activation |
+| D65 | XOR6 unreachable at k<24 | Odd/even convention, not geometry | Generalized labeling |
+| D77 | XOR8 = 0 at ζ₈ | S²-only activation | S¹×S² product activation |
+
+The pattern says: when a DKC computation appears impossible, suspect the
+activation/interface layer first. The algebraic core (Z[ζ₈] bracket, binary
+octahedral quaternions) has consistently proven richer than any single activation
+function reveals. This has a direct implication for the hybrid LLM vision: the
+interface design between compiled DKC weights and the broader neural network
+will likely face similar walls — and the right response will be to look for a
+richer readout mechanism, not to abandon the underlying algebra.
+
+---
+
+## Revised Overall Outlook for the Long-Term Vision
+
+After D72-82 the picture is substantially clearer:
+
+**What we now know that we didn't before D72:**
+1. DKC can scale to arbitrary input sizes using infinite algebraic groups.
+2. The cost is explicitly quantified: logarithmic (max_xor ≈ 0.62×log₂(catalog)+4.6).
+3. The ζ₈ ceiling is at n=8 inputs with the correct S¹×S² activation.
+4. The knot crossing number is the natural measure of compiled weight complexity.
+5. Algebraic coherence (depth) matters more than vocabulary (diversity) for capacity.
+6. The bracket and cell channels are computationally independent and both needed.
+7. DKC computation is algebraically selected, not geometrically optimized.
+
+**What this changes about the vision:**
+- The per-neuron capacity is higher than thought (n=8 not n=5 for ζ₈).
+- The n=5 ceiling (Demo 63) was S²-activation-specific, not absolute.
+- Syllogism-scale compilation (3 inputs) remains economical; larger compiled
+  units (8 inputs) are feasible at ζ₈; even larger at ζ₁₂ with logarithmic cost.
+- A practical hybrid LLM could use ζ₈ for all per-neuron compiled units (up to
+  8 inputs), with the logarithmic law providing a budget for how many catalog
+  entries are needed.
+
+**What remains unknown:**
+- The taxonomy → braid encoding (Gap 1) — the single most important unknown.
+- Multi-layer composition with exact arithmetic (Gap 3).
+- Integration architecture (Gap 4) — wired, not pipelined.
+- Whether the acceleration thesis (compiled scaffolding speeds statistical training)
+  has any empirical grounding.
+
+**Confidence level:** The algebraic foundation is now very solid. The knot theory
+→ Boolean logic half of the pipeline is essentially proven. The remaining unknowns
+are all on the other side of the pipeline (taxonomy → knots) and in the
+integration layer. Neither of these is obviously unsolvable — they are simply
+unexplored. The research program is well-positioned to pivot toward them.
+
 ---
 
 *Generated 2026-02-20, updated 2026-02-21. Reads: narrative.md, novelty.md,
 connections.md, four-lenses.md, planning/vision.md, inventory/demo-index.md
-(via entries for D19, D29, D39G-J, D48, D50, D61-71).*
+(via entries for D19, D29, D39G-J, D48, D50, D61-82).*

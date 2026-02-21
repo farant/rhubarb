@@ -1,6 +1,6 @@
 # Floating-Point Usage Audit
 
-Last updated: 2026-02-21 (68 demos, D01-D80)
+Last updated: 2026-02-21 (70 demos, D01-D82)
 
 ## Purpose
 
@@ -90,6 +90,8 @@ DKC's core thesis is exact arithmetic in Z[zeta_8] — zero floating-point error
 | 78 | GEOMETRIC | Combined Sec(k)xVor activation in minimum-cells-vs-inputs phase diagram |
 | 79 | GEOMETRIC | cos/sin for zeta_12 generators + same combined activation capacity ladder |
 | 80 | MIXED (geom+stat) | cos/sin generators + atan2 half-angle census + gap statistics for group finiteness |
+| 81 | GEOMETRIC | Quaternion group closure in FP; eigenvector extraction (sqrt/atan2/acos); Voronoi cell assignment; log/pow for scaling law analysis; entire computation path is continuous geometry |
+| 82 | MIXED (geom+stat) | Same quaternion/geometric engine as D81; depth analysis adds mean-depth statistics (sum_d/(double)cnt) and percentage display across winner tuples; atan2 for per-depth angle vocabulary |
 
 ## Summary by Category
 
@@ -99,8 +101,8 @@ DKC's core thesis is exact arithmetic in Z[zeta_8] — zero floating-point error
 | DISPLAY-ONLY | 1 | 38 |
 | VALIDATION | 8 | 29, 35, 51, 52, 53, 54, 72 |
 | EXACT-CORE | 15 | 10-19, 21, 23, 24, 45-47, 50 |
-| GEOMETRIC | 13 | 62, 63, 65, 67-69, 71, 73, 75, 77-79 |
-| MIXED | 19 | 12, 20, 22, 25-28, 48-49, 55-59, 64, 66, 70, 74, 76, 80 |
+| GEOMETRIC | 14 | 62, 63, 65, 67-69, 71, 73, 75, 77-79, 81 |
+| MIXED | 20 | 12, 20, 22, 25-28, 48-49, 55-59, 64, 66, 70, 74, 76, 80, 82 |
 
 ## Three Regimes
 
