@@ -22,6 +22,7 @@ atlas/
     theorems.md                 <- all proven/conjectured results + status
     data-tables.md              <- key numerical tables
     code-assets.md              <- reusable code patterns across demos
+    floating-point-audit.md     <- FP usage classification per demo
 
   synthesis/                    <- "what does it mean"
     narrative.md                <- the research story arc
@@ -107,6 +108,7 @@ Why worker pool, not fixed batches: Agent context windows cannot handle 10+ demo
 - Agent B -> `inventory/data-tables.md`: Extract all key numerical tables (axiality hierarchy, radical dimensions, DKC landscape matrix, catalog sizes, compression ratios, etc.)
 - Agent C -> `research/literature-index.md` + `research/four-pillars.md` + `research/key-sources.md`: Consolidate all literature references across demos, deduplicate, tag.
 - Agent D -> `inventory/code-assets.md`: Catalog reusable code patterns with which demo introduced them and which demos reuse them.
+- Agent E -> `inventory/floating-point-audit.md`: For each new/modified demo, read main.c and classify its floating-point usage (INTEGER, DISPLAY-ONLY, VALIDATION, EXACT-CORE, GEOMETRIC, STATISTICAL, or MIXED). Update the audit table, summary counts, and regime descriptions. This tracks the boundary between exact and FP computation across the codebase.
 
 **IMPORTANT — Assign tasks explicitly per agent.** Do NOT use a shared task list that agents can self-assign from. In the initial run, one agent finished its own task and then grabbed another agent's task, producing duplicate files that had to be manually merged. Set explicit ownership before launching.
 
