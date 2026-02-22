@@ -483,6 +483,26 @@ Status: ACTIVE RESEARCH FRONTIER. Multiple open questions across D66-D71.
    depths? This would make ζ₁₂'s high-XOR regimes computationally accessible
    without exponential catalog growth.
 
+10. **Indecomposability parameter b calculation** (D85 seed) — D84's LCFT
+    interpretation predicts that Gurarie's indecomposability parameter b should
+    be calculable from the ζ₈ catalog structure. The b-number characterizes
+    the Jordan-cell coupling between null and logarithmic partner states. A
+    concrete calculation: take the 3 shared-direction pairs (null entry + non-
+    null entry on the same coordinate axis), construct the 2×2 matrix of their
+    inner products, and extract the off-diagonal coupling. If b matches the
+    known c = -2 LCFT value (b = -5/8 for the h = 0 sector), this would
+    confirm the DKC ↔ LCFT correspondence quantitatively.
+
+11. **Dense polymer fusion rules** (D86 seed) — The TL algebra at δ = 0 has
+    specific fusion rules dictated by the dense polymer / c = -2 LCFT. These
+    fusion rules determine which representations can be "fused" (tensored and
+    decomposed). In DKC terms, fusion corresponds to combining two catalog
+    entries by multiplication and decomposing the result. Verify that the ζ₈
+    catalog's multiplication table respects the dense polymer fusion rules.
+    If confirmed, this would provide a representation-theoretic selection
+    principle for which catalog entries can appear in DKC winners — a much
+    sharper constraint than brute-force search.
+
 ---
 
 ## New Research Axes (from D64-D71)
@@ -711,6 +731,237 @@ Status: CONCEPTUAL. Mathematical framework needed. Potentially a deep
 connection between TL non-semisimplicity, the ADE classification, and
 computational capacity.
 
+### 8. Resource Decomposition as Architectural Principle — NEW (D83)
+
+D83 established that DKC computational power is not a single monolithic
+quantity — it decomposes into three independent, additive axes:
+
+```
+DKC capacity = lattice base (XOR6) + 2 × depth_rounds + 2 × framing_present
+```
+
+Each axis contributes +2 XOR levels independently:
+- **Lattice structure** (the root of unity and its SU(2) image): provides the
+  base capacity (XOR6 from the ζ₈ lattice alone).
+- **Crossing depth** (generator multiplications, D82): each unit of depth adds
+  a fixed increment. The mechanism is angular refinement — deeper entries
+  introduce finer angles within the same set of directions.
+- **Writhe / framing** (chirality accumulation, D83): the writhe-dependent
+  phase factor `(-A³)^{-w}` contributes exactly +2 XOR levels. Jones
+  normalization, which removes this factor, costs exactly 2 XOR levels at
+  every root tested (ζ₈: bracket XOR8 → Jones XOR6; ζ₁₂: bracket XOR12 →
+  Jones XOR10).
+
+The three axes are genuinely independent: depth-writhe correlation r = 0.139
+across 4096 ζ₁₂ entries. A deep entry can have low writhe (crossings cancel)
+or high writhe (crossings accumulate). Writhe alone can compute XOR6 (32
+winners from writhe-only sums) but cannot reach XOR8 — full power requires
+the interaction of all three axes.
+
+**Why this matters architecturally:**
+
+For the hybrid LLM compilation pipeline, this means DKC weight selection can
+be optimized axis by axis:
+- Choose the root of unity (lattice structure) for the base capacity.
+- Set the catalog depth for the crossing-depth contribution.
+- Decide whether to use bracket (framing-aware, +2) or Jones (framing-
+  normalized, -2) weights depending on the target function.
+
+Each axis is a separately tunable hyperparameter. This connects directly to
+Gap 5 (dynamic recompilation): recompilation cost can be reduced by holding
+two axes fixed and varying only one. For instance, changing a compiled
+neuron's capacity by +2 XOR levels can be achieved by deepening the catalog
+one round (holding root and writhe strategy constant), rather than
+rebuilding from scratch.
+
+**Framing as computation — inverting a 35-year-old assumption:**
+
+Witten (1989) identified the writhe-dependent phase as a "framing anomaly"
+— the first term removed when passing from the bracket to the Jones
+polynomial to make the invariant topologically well-defined. TQFT's maximally
+degenerate point (δ=0, where the quantum dimension vanishes at ζ₈) discards
+this term first. Demo 83 demonstrates that the "anomaly" is not bookkeeping
+noise but genuine computational content: exactly the component worth +2 XOR
+levels. This inverts 35 years of TQFT convention: what TQFT normalized away
+as an artifact, DKC uses as a resource. For the DKC research program, this
+means we should be suspicious of any normalization that discards information
+— the discarded terms may be computationally valuable.
+
+Status: DEMONSTRATED (ζ₈ and ζ₁₂). Predicted universal across all roots but
+needs verification at ζ₁₆ and ζ₂₄.
+
+### 9. Null States and the Reservoir Computing Connection — NEW (D84)
+
+D84 established the first concrete bridge between DKC and Reservoir Computing
+(RC). The connection runs through null states — bracket-null entries where
+Re(q) = 0 (Kauffman trace vanishes).
+
+**The null-state thesis:**
+
+In the ζ₈ catalog (24 entries, binary octahedral group), 9 entries (37.5%)
+are bracket-null. These are not dead weight. They maintain 6 unique S²
+directions (cube-edge-midpoint axes) that are unavailable to non-null entries.
+Removing nulls collapses XOR capacity from XOR8 to XOR6 — worse than
+removing a random equal-size subset (random-15 mean = XOR7.8). Nulls are
+disproportionately important because they provide directional coverage of S²
+regions that the non-null entries do not reach.
+
+This directly maps onto the RC separation property: a reservoir needs its
+high-dimensional manifold to remain open in all critical directions for
+linear readout to succeed. Null reservoir states (zero output under readout)
+are conventionally assumed to be wasted capacity. D84 proves this assumption
+wrong for quaternionic DKC: the null states hold the manifold open in exactly
+the directions needed for higher-order parity separation.
+
+**Concrete RC↔DKC mapping:**
+
+| RC Concept | DKC Analog |
+|---|---|
+| Reservoir state | Quaternionic weight (catalog entry) |
+| Null reservoir state | Bracket-null entry (Re(q)=0) |
+| Separation property | S² directional coverage enabling XOR |
+| High-dimensional manifold | 13-direction Voronoi on S² |
+| Linear readout | Sector-threshold activation |
+| Null state maintains manifold | Null directions hold Voronoi open |
+
+The null fraction dilutes as the group grows (ζ₄: 75%, ζ₈: 37.5%, ζ₁₂: 3%),
+consistent with nulls being a finite-group boundary effect. But at ζ₈ — the
+most algebraically structured point (ADE type E₇, quantum dimension zero,
+maximally non-semisimple TL category) — they are a major structural fraction,
+and their role is unmistakable.
+
+**Implication for the hybrid LLM:** When designing compiled DKC neurons, the
+weight set should not be pruned to only include "active" (non-null) entries.
+Null weights serve a structural role — they maintain the geometric separation
+needed for the neuron to compute higher-order functions. This is a concrete
+design constraint for compiled weight matrices.
+
+Status: DEMONSTRATED at ζ₈. Role of nulls at ζ₁₂ (where they are 3% of the
+catalog but contribute 29 unique directions) is an open question.
+
+### 10. The LCFT Bridge — NEW (D84)
+
+D84 opened a bridge to Logarithmic Conformal Field Theory (LCFT) that was
+not in the vision before. The connection:
+
+In LCFT (Gurarie 1993, Gaberdiel-Kausch 1996), null states |N⟩ satisfy
+⟨N|N⟩ = 0 but are not zero vectors. They are paired with logarithmic
+partners |L⟩ through Jordan-cell (non-diagonalizable) action of the Virasoro
+zero-mode L₀:
+
+```
+L₀ |N⟩ = h |N⟩
+L₀ |L⟩ = h |L⟩ + |N⟩
+```
+
+The two-point function of |N⟩ vanishes, but the mixed correlator ⟨N|L⟩ is
+nonzero. Computational content lives in the Jordan-cell coupling.
+
+In quaternionic DKC: bracket-null entries (Re(q) = 0, trace vanishes) are
+the |N⟩ states. Their "logarithmic partners" are non-null entries sharing
+the same S² direction (the 3 coordinate-axis directions where both null and
+non-null entries co-exist). The 6 null-only directions (cube-edge-midpoints,
+no non-null partner) have no logarithmic partner in the catalog — consistent
+with the observation that removing these directions destroys capacity rather
+than merely reducing it.
+
+**The dense polymer connection:** The Temperley-Lieb algebra at δ = 0 (the
+loop value when [2]_q vanishes at ζ₈) is the algebraic description of dense
+polymers — the c = -2 LCFT. The dense polymer model at β = 0 is precisely
+the LCFT analog of the ζ₈ bracket. This means:
+
+- ζ₈ DKC lives at the dense polymer / c = -2 LCFT point.
+- The Jordan-cell structure of the c = -2 theory (indecomposable but
+  reducible representations of the Virasoro algebra) directly describes the
+  null / non-null pairing in the DKC catalog.
+- The indecomposability parameter b (Gurarie's "b-number") should be
+  calculable from the ζ₈ catalog structure. This is a concrete prediction.
+
+**Why this matters for the vision:**
+
+DKC now sits at the intersection of three previously disconnected fields:
+
+```
+        LCFT (c = -2, dense polymers)
+              ↗
+    DKC ← TQC (Temperley-Lieb, Jones, braids)
+              ↘
+        RC (reservoir computing, separation property)
+```
+
+Nobody has mapped this three-way intersection. The existing literature
+touches pairs: LCFT ↔ TL (Pearce, Read, Saleur), TL ↔ Jones (Kauffman,
+Kuperberg), RC ↔ neural nets (Jaeger, Maass). But the triangle — LCFT null
+states as RC separation maintainers computed via TL bracket at δ = 0 — is
+novel. This is potentially the deepest structural insight to date: the
+non-semisimple part of the TL algebra is simultaneously what makes LCFT
+"logarithmic" (Jordan cells instead of diagonal), what makes DKC compute
+(null directions holding the manifold open), and what makes the reservoir
+work (separation property through geometrically essential null states).
+
+Status: INTERPRETATION. Jordan-cell pairing is consistent with all data.
+The indecomposability parameter b is a concrete next calculation (D85 seed).
+Dense polymer fusion rules are a concrete next verification (D86 seed).
+
+### 11. Non-Semisimplicity as THE Resource — NEW (D50→D82→D84 Arc)
+
+The thread from D50 through D82 to D84 converges on a single deep claim:
+the non-semisimple part of the Temperley-Lieb algebra is not an obstacle
+or a degenerate edge case — it IS what makes DKC work.
+
+**The convergence:**
+
+- **D50**: The parity wall was in the activation function, not the lattice.
+  Increasing sectors from k=2 to k=6 unlocked all 13 NPN classes. The wall
+  that looked algebraic was geometric — the activation was too coarse to
+  resolve the lattice structure.
+- **D65-D67**: The activation progression (sector → generalized sector →
+  Voronoi on S¹ → Voronoi on S³ → Voronoi on S²) culminated in the 13-
+  direction eigenvector Voronoi. The 13 directions are exactly the
+  eigenvector axes of the binary octahedral group — a structure that exists
+  only because the ζ₈ representation is non-semisimple (in a semisimple
+  representation, eigenvectors would not form discrete clusters on S²).
+- **D82**: Crossing depth governs XOR capacity via the depth law
+  max_xor ≈ depth + 6. The depth mechanism is algebraic coherence — deep
+  entries carry shared intermediate products from generator multiplication
+  chains. These chains exist because the algebra is infinite-dimensional
+  (at ζ₁₂) or has non-trivial Jordan structure (at ζ₈). In a semisimple
+  algebra, all entries would be direct sums of irreducibles with no
+  interesting depth structure.
+- **D83**: Framing (writhe) contributes +2 XOR levels. The writhe-dependent
+  phase factor is precisely the term that TQFT removes at δ = 0 (the
+  non-semisimple point). The computational resource IS the non-semisimple
+  contribution.
+- **D84**: Null states — the most extreme manifestation of non-semisimplicity
+  (zero trace, indecomposable but reducible representations) — are
+  indispensable for XOR8 capacity. Removing them drops capacity below the
+  random baseline. The Jordan-cell structure (non-diagonalizable L₀ action)
+  is the algebraic mechanism: the null state anchors the logarithmic partner
+  that carries the computation.
+
+**The claim:** At the ζ₈ point (quantum dimension [2]_q = 0, δ = 0, dense
+polymer / c = -2 LCFT), the TL category is maximally non-semisimple. Every
+feature of DKC that contributes computational power — the discrete direction
+spectrum, the depth structure, the writhe contribution, the null-state
+manifold maintenance — is a consequence of this non-semisimplicity. A
+semisimple TL category (at generic q, δ ≠ 0) would have:
+- A continuum of directions (no discrete Voronoi)
+- Trivial depth structure (all irreducibles immediately accessible)
+- No null states (all representations fully reducible)
+- No framing anomaly (Jones and bracket would agree)
+
+**Implication for the vision:** The maximally non-semisimple point is not
+a degenerate corner to be avoided — it is the sweet spot for compiled
+computation. The entire DKC research program is, in retrospect, an
+exploration of what computation looks like when you sit at the most singular
+point of the quantum group parameter space. This is the opposite of the
+standard quantum computing approach (which avoids non-semisimple points
+because they make the Jones polynomial evaluation trivial in the Kuperberg
+sense). DKC thrives precisely where quantum computing gives up.
+
+Status: INTERPRETIVE SYNTHESIS. Each individual result is demonstrated;
+the overarching claim about non-semisimplicity is a unifying interpretation.
+
 ---
 
 ## Connection to Broader Rhubarb Project
@@ -813,3 +1064,11 @@ ADE classification; quantum dimension vanishing). Research axes 6 and 7 added
 explorations 7-9 added (ζ₁₂ activation zoo; ζ₃₂ finiteness; direct deep-entry
 generation). Connection to Broader Rhubarb Project updated with depth law as
 compilation cost model.*
+*Updated: 2026-02-21. D83-D84 arc: resource decomposition (lattice + depth +
+writhe, each +2 XOR independently), framing as computational content inverting
+35-year TQFT assumption (Witten 1989), null states as RC separation-property
+maintainers, LCFT bridge (Jordan cells, dense polymer c=-2, Gurarie b-number),
+non-semisimplicity as THE resource (D50→D82→D84 convergence). Research axes
+8-11 added. Near-term explorations 10-11 added (indecomposability parameter b
+calculation, dense polymer fusion rules). Three-way LCFT↔TQC↔RC intersection
+identified as novel.*

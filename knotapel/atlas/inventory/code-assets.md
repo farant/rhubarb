@@ -1,6 +1,6 @@
 # Code Assets Catalog
 
-Reusable code patterns across 82 knotapel demos. Updated 2026-02-21 (added Demos 72-82).
+Reusable code patterns across 84 knotapel demos. Updated 2026-02-21 (added Demos 83-84).
 
 ---
 
@@ -1245,9 +1245,9 @@ Reusable code patterns across 82 knotapel demos. Updated 2026-02-21 (added Demos
 
 ### 10.3 Combined Sec(k)×Vor Activation (`test_combined` / `combined_cell`)
 
-- **What it does**: Pre-computes all 2^N quaternion sums for a given N-tuple once, then tests multiple k-sector values cheaply by sweeping k without recomputing sums. The combined activation maps each sum to (sector, Voronoi-cell) pair. Used as the standard XOR tester for all D78-D82 capacity searches.
+- **What it does**: Pre-computes all 2^N quaternion sums for a given N-tuple once, then tests multiple k-sector values cheaply by sweeping k without recomputing sums. The combined activation maps each sum to (sector, Voronoi-cell) pair. Used as the standard XOR tester for all D78-D84 capacity searches.
 - **Introduced in**: Demo 78 (as `test_combined`)
-- **Reused in**: Demos 79, 80, 81, 82
+- **Reused in**: Demos 79, 80, 81, 82, 83 (via `find_capacity`), 84 (via `find_capacity` + `count_xor6_at_k`)
 - **Key types/functions**:
   - `test_combined(indices, n_idx, k_sec, acc_out)`: generic XOR tester; pre-computes all 2^N sums, caches angle and cell, sweeps k values cheaply
   - `combined_cell(q, k_sec, n_dir)`: maps a quaternion sum to a (sector × n_dir + voronoi_cell) index; the inner function used in capacity surveys
@@ -1290,13 +1290,14 @@ Reusable code patterns across 82 knotapel demos. Updated 2026-02-21 (added Demos
 
 - **What it does**: Starting from a set of generators (and their inverses and the identity), iteratively multiplies all current group elements by all generators until no new elements appear or a size cap is hit. Returns 1 if the group is finite (closed below cap), 0 if it hit the cap (infinite).
 - **Introduced in**: Demo 80
-- **Reused in**: Demo 81 (as `init_su2_generators` + BFS closure with snapshot tracking), Demo 82 (closure with depth tracking)
+- **Reused in**: Demo 81 (as `init_su2_generators` + BFS closure with snapshot tracking), Demo 82 (closure with depth tracking), Demo 83 (writhe tracking added alongside depth), Demo 84 (writhe tracking + cross-root loop)
 - **Key types/functions**:
   - `build_closure(generators, n_gen, catalog_out, max_size, rounds_out)`: generic closure; quaternion multiplication with deduplication by tolerance comparison
   - Closure round tracking: records which round each element was born in (gives depth/crossing-depth interpretation)
   - Convergence test: compares pre/post element count; terminates when stable
-- **Approximate size**: ~80 lines
-- **Notes**: ζ₄ closes in 2 rounds (4 elements, Binary Dihedral Q₄); ζ₈ closes in 4 rounds (24 elements, Binary Octahedral). All other tested roots (ζ₆, ζ₁₀, ζ₁₂, ζ₁₆, ζ₂₀) hit the cap (infinite groups).
+  - `g_writhe[]` array (added D83/D84): updated alongside `g_depth[]`; each new product inherits parent writhe plus generator writhe contribution (σ₁=+1, σ₁⁻¹=-1, σ₂=+1, σ₂⁻¹=-1)
+- **Approximate size**: ~80 lines (core); ~10 lines added for writhe tracking in D83-84
+- **Notes**: ζ₄ closes in 2 rounds (4 elements, Binary Dihedral Q₄); ζ₈ closes in 4 rounds (24 elements, Binary Octahedral). All other tested roots (ζ₆, ζ₁₀, ζ₁₂, ζ₁₆, ζ₂₀) hit the cap (infinite groups). Writhe range at ζ₁₂ (4096 entries): [-9, 9]; 91.4% of entries have nonzero writhe.
 
 ### 11.2 ADE Type Detector
 
@@ -1337,13 +1338,14 @@ Reusable code patterns across 82 knotapel demos. Updated 2026-02-21 (added Demos
 
 - **What it does**: Saves the full current quaternion catalog (quaternions + depth arrays + metadata) to a static backup, then restores it; enables repeated subset experiments with different roots or subsets without rebuilding the full closure.
 - **Introduced in**: Demo 79
-- **Reused in**: Demos 80, 81, 82
+- **Reused in**: Demos 80, 81, 82, 83 (extended to also save writhe array), 84 (same extension; also enables bracket→Jones→bracket switching)
 - **Key types/functions**:
-  - `save_catalog()`: copies `g_cat[]`, `g_cat_size`, `g_depth[]`, `g_nd`, `g_na` to static backup arrays
+  - `save_catalog()`: copies `g_cat[]`, `g_cat_size`, `g_depth[]`, `g_nd`, `g_na` to static backup arrays; extended in D83-84 to also save `g_writhe[]`
   - `restore_catalog()`: restores from backup; resets derived quantities (directions, angles)
   - `find_quat_in(q, arr, arr_size)`: searches for a quaternion in an arbitrary array (not just global catalog); used for nesting/overlap verification
-- **Approximate size**: ~40 lines
-- **Notes**: Eliminates the need for separate static arrays per root. Critical for Demo 79 Part E (nesting verification between ζ₈ and ζ₁₂) and Demo 82 (shallow/strided/deep subset comparisons).
+  - `load_subset(indices, count)` (added D84): loads an arbitrary index subset of the saved catalog into `g_cat[]`; enables null-only / non-null-only experiments without separate catalog arrays
+- **Approximate size**: ~40 lines (core); ~10 lines added in D83-84 for writhe array and `load_subset`
+- **Notes**: Eliminates the need for separate static arrays per root. Critical for Demo 79 Part E (nesting verification between ζ₈ and ζ₁₂), Demo 82 (shallow/strided/deep subset comparisons), Demo 83 (bracket→Jones→bracket switching without rebuilding closure), and Demo 84 (null-only vs non-null-only subset experiments).
 
 ### 11.6 Recursive XOR Ladder (`find_recursive`)
 
@@ -1362,16 +1364,16 @@ Reusable code patterns across 82 knotapel demos. Updated 2026-02-21 (added Demos
 
 - **What it does**: Augments group closure with per-element birth-round tracking (depth), then provides three reusable subset construction strategies — shallow (first N entries), strided (every K-th entry), deep (last N entries from deepest round) — for capacity comparison experiments.
 - **Introduced in**: Demo 82
-- **Reused in**: (Demo 82 only — pattern for future depth-stratified experiments)
+- **Reused in**: Demo 83 (`find_capacity()` reused unchanged — called three times: bracket, Jones, ζ₈ control), Demo 84 (`find_capacity()` reused; also called on null-only and non-null-only subsets via `load_subset`)
 - **Key types/functions**:
   - `g_depth[]` array: assigned the current closure round index at element birth; identity + generators get depth 0
   - Shallow subset: copy first N entries from `g_cat[]` by natural closure order
   - Strided subset: copy every K-th entry from full catalog (deterministic, maximum spatial spread)
   - Deep subset: copy last N entries (all from deepest closure round, maximum algebraic coherence)
   - `CapResult` struct: captures dirs, angles, xor6, xor8, xor10, xor12, max_xor in one place; enables clean side-by-side comparison tables
-  - `find_capacity()`: unified driver — builds dirs, counts angles, runs find_xor6 + find_recursive chain up to XOR12; returns `CapResult`
+  - `find_capacity(cat_size, CapResult *r)`: unified driver — builds dirs, counts angles, runs find_xor6 + find_recursive chain up to XOR12; returns `CapResult`; extended in D83-84 to accept explicit `cat_size` parameter rather than using global size
 - **Approximate size**: ~150 lines
-- **Notes**: Key finding: deep subsets (maximum algebraic coherence) consistently outperform strided subsets (maximum vocabulary) at matched size — deep 564 entries reach XOR12 while strided 564 entries (with more directions and angles) only reach XOR10. Linear depth law: max_xor ≈ depth + 6.
+- **Notes**: Key finding: deep subsets (maximum algebraic coherence) consistently outperform strided subsets (maximum vocabulary) at matched size — deep 564 entries reach XOR12 while strided 564 entries (with more directions and angles) only reach XOR10. Linear depth law: max_xor ≈ depth + 6. In D83-84, `find_capacity` is the main workhorse called repeatedly on different catalog views (bracket, Jones-normalized, null-only, non-null-only, cross-root).
 
 ### 11.8 Vocabulary-by-Depth Scanner
 
@@ -1411,6 +1413,64 @@ Reusable code patterns across 82 knotapel demos. Updated 2026-02-21 (added Demos
   - Two-component architecture check: verifies that depth-0 entries (generators + identity) appear in every winner at every XOR level
 - **Approximate size**: ~50 lines
 - **Notes**: Mean winner depth: XOR6=0.52, XOR8=0.63, XOR10=1.00, XOR12=1.98. Every winner has at least one depth-0 element (generator), forming the "shallow core." The progressively deeper elements provide additional eigenvalue resolution. Sample XOR12 winner depths: [0,0,0,1,3,5].
+
+### 11.11 Jones Normalization (`jones_normalize_catalog`)
+
+- **What it does**: Applies the Jones polynomial's writhe-normalization phase to each quaternion in the catalog — rotating by `w * -(3*half_angle + pi)` for each entry with writhe `w`. Converts a bracket-value catalog into a Jones-value catalog in-place. Works for any root via `g_half_angle`.
+- **Introduced in**: Demo 83
+- **Reused in**: (Demo 83 only — first test of Jones vs bracket capacity)
+- **Key types/functions**:
+  - `jones_normalize_catalog(cat_size)`: iterates all entries; computes `jones_phase_per_w = -(3*g_half_angle + pi)`; for each entry applies rotation by `phi = writhe[i] * jones_phase_per_w` as a unit quaternion left-multiplier
+  - `save_catalog()` / `restore_catalog()` (Section 11.5): called before normalization to preserve bracket catalog; called after Jones XOR measurement to restore original
+- **Approximate size**: ~30 lines
+- **Notes**: Jones normalization reduces distinct quaternions from 4096 to 2710 (-33.8%) and angles from 43 to 31 (-28%) at ζ₁₂, while leaving direction count unchanged (512 → 512). The angular vocabulary reduction is the mechanism of the exact 2-level XOR capacity loss. The function is root-agnostic: the same code confirms -2 at both ζ₈ and ζ₁₂.
+
+### 11.12 Writhe-Sourced XOR Verifier (`test_xor_writhe`)
+
+- **What it does**: Standalone XOR verifier that uses writhe sums (instead of quaternion sums) as the cell index. Treats writhe as a scalar computational channel: maps each of 2^N input masks to a writhe sum in the range [-64, +64] (offset by 64 for array indexing), tests whether the mapping is parity-pure.
+- **Introduced in**: Demo 83
+- **Reused in**: (Demo 83 only — single-channel writhe test)
+- **Key types/functions**:
+  - `test_xor_writhe(tuple, n)`: flat array of 129 cells (writhe offset 64, range -64 to +64); computes writhe sum for each mask; checks parity consistency per cell
+  - Winner writhe analysis loop: iterates saved winner tuples and indexes into `g_writhe[]`; per-level writhe histogram, min/max/mean absolute writhe, mixed-writhe fraction
+- **Approximate size**: ~60 lines
+- **Notes**: 32 XOR6 winners found using writhe-only scoring, confirming writhe as a standalone computational unit. Writhe alone cannot reach XOR8 — full power requires writhe × lattice interaction. Mixed-writhe fractions at XOR winners: XOR6 41%, XOR8 25%, XOR10 9%, XOR12 12%; higher XOR levels exploit chirality variation.
+
+### 11.13 Exact Quaternion Deduplication Counter (`count_distinct_quats`)
+
+- **What it does**: O(N²) exact comparison over all pairs in a quaternion catalog, checking both `q` and `-q` as representatives (antipodal identification), to count truly distinct quaternions after a transformation such as Jones normalization.
+- **Introduced in**: Demo 83
+- **Reused in**: (Demo 83 only)
+- **Key types/functions**:
+  - `count_distinct_quats(cat, size)`: double loop; two quaternions are the same if `|q1 - q2| < tol` or `|q1 + q2| < tol`
+- **Approximate size**: ~25 lines
+- **Notes**: Used to measure information collapse between bracket and Jones catalogs (4096 → 2710 at ζ₁₂). The `-q` check is necessary because antipodal quaternions represent the same rotation.
+
+### 11.14 Null Classifier and Subset Index Arrays (`classify_null`, `null_idx`, `nonnull_idx`)
+
+- **What it does**: Classifies each catalog entry as bracket-null (|Re(q)| < 1e-10) or non-null; builds two index arrays that partition the catalog; these arrays are reused throughout all subsequent subset experiments.
+- **Introduced in**: Demo 84
+- **Reused in**: (Demo 84 only — first null anatomy study)
+- **Key types/functions**:
+  - `classify_null(cat_size)`: single pass over catalog; fills `is_null[]` boolean array; returns null count
+  - `null_idx[]` / `nonnull_idx[]`: index arrays built once after `classify_null`; reused for `load_subset` calls in Parts C–F
+  - `is_null[]` array: persistent boolean per entry; used in winner null-prevalence analysis (Part D) and direction geometry analysis (Part E)
+- **Approximate size**: ~30 lines
+- **Notes**: ζ₈ null count: 9/24 (37.5%). Depth distribution: depth-0 = 0% null, depth-1 = 20%, depth-2 = 75%, depth-3 = 100%. Every maximally-deep ζ₈ entry is bracket-null. Distinct |Re(q)| spectrum: exactly 4 values {0, 0.5, 0.707, 1.0} with a hard gap of 0.5 between null and nearest non-null.
+
+### 11.15 Direction Geometry Analyzer and Cross-Root Comparison Loop
+
+- **What it does**: Two related patterns: (1) per-direction null/non-null count arrays that classify each S² direction as null-only, non-null-only, or both, computing directional efficiency ratio; (2) a multi-root loop that calls `init_su2()` with different half-angles (ζ₄, ζ₈, ζ₁₂), runs `build_closure()`, `classify_null()`, and direction analysis for each, producing a unified cross-root null-fraction table.
+- **Introduced in**: Demo 84
+- **Reused in**: (Demo 84 only)
+- **Key types/functions**:
+  - Per-direction null/non-null arrays: for each of the n_dirs S² directions, count how many catalog entries pointing there are null vs non-null; classify into three groups
+  - Directional efficiency: null efficiency = null-only directions / null count; non-null efficiency = non-null-only dirs / non-null count
+  - `count_xor6_at_k(bf_limit, k_sec)`: XOR6 count at a fixed k_sec without winner storage; used for the k_sec sweep (Part C.4) that decomposes S¹ vs S² contributions to null-only capacity
+  - `random_subset(subset, subset_size, total_size)`: Fisher-Yates partial shuffle producing a random size-N subset of [0, total_size); used for 100-trial random-control experiment to establish baseline max_xor for 15-entry subsets
+  - Cross-root loop: iterates [ζ₄=π/2, ζ₈=π/4, ζ₁₂=π/6]; for each root calls init, close, classify, direction-analyze; reports unified table
+- **Approximate size**: ~120 lines
+- **Notes**: Null-only directions: 6 (cube edge midpoints, ±1/√2 components). Non-null-only directions: 4 (tetrahedral axes, ±1/√3 components). Shared: 3 (coordinate axes). Directional efficiency: null = 1.00 dir/entry, non-null = 0.47 dir/entry. Cross-root null fractions: ζ₄=75%, ζ₈=37.5%, ζ₁₂=3.0%. The k_sec sweep confirming flat XOR6 count across k=1,2,4,6,8 for null-only establishes that all bracket-null entries sit at a single S¹ point (half-angle=90°), so all capacity comes from S² directional diversity alone.
 
 ---
 
@@ -1503,8 +1563,10 @@ Demos 66-71 establish the foundation; Demos 72-82 extend it into a full capacity
 15. Survey all SU(2) subgroups: only ζ₄ and ζ₈ are finite; ADE classification; quantum dimension vanishes at ζ₈ (D80)
 16. Fit logarithmic capacity scaling law for ζ₁₂: max_xor ≈ 0.62 × log₂(catalog) + 4.6 (D81)
 17. Unify as linear depth law: max_xor ≈ depth + 6; crossing depth = knot crossing depth; algebraic coherence beats vocabulary (D82)
+18. Prove Jones normalization costs exactly 2 XOR levels at all tested roots; writhe and depth are independent additive resources; framing is not a bookkeeping artifact — it is one discrete computational unit (D83)
+19. Prove bracket-null entries (Re(q)=0) are indispensable: they hold 6 S² directions unavailable to non-null entries; removing them drops capacity from XOR8 to XOR6, below the random-subset baseline; connect to LCFT Jordan-cell structure and Reservoir Computing null-state hypothesis (D84)
 
-Key progression: D65 S^1 k=24 → D66 S^3 25 cells → D67 S^2 14 cells → D68 R^2 visualization only → D72-73 algebraic structure analysis → D74 incomparability theorem → D75-77 binocular + product activation → D78-79 wall confirmation + ζ₁₂ breakthrough → D80 ADE survey → D81-82 scaling laws.
+Key progression: D65 S^1 k=24 → D66 S^3 25 cells → D67 S^2 14 cells → D68 R^2 visualization only → D72-73 algebraic structure analysis → D74 incomparability theorem → D75-77 binocular + product activation → D78-79 wall confirmation + ζ₁₂ breakthrough → D80 ADE survey → D81-82 scaling laws → D83 framing as resource → D84 null-state anatomy.
 
 ### Catalog Size Summary
 | Ring | Delta | Catalog | Distinct Values |
@@ -1515,16 +1577,16 @@ Key progression: D65 S^1 k=24 → D66 S^3 25 cells → D67 S^2 14 cells → D68 
 | Z[zeta_5] | phi | 2-4 strand, len 1-6 | >56 |
 | Z[zeta_24] | sqrt(3) | 2-4 strand, len 1-10 | varies |
 
-### SU(2) / Quaternionic Catalog Summary (Demos 66-82)
-| Root | Quaternions | Directions on S^2 | XOR6 at natural Voronoi | XOR8 (product activation) | XOR10 | XOR12 |
-|------|-------------|-------------------|--------------------------|--------------------------|-------|-------|
-| zeta_4 | 4 | 2 | — | — | — | — |
-| zeta_6 | infinite (>4096) | 512 (saturated) | — | — | — | — |
-| zeta_8 | 24 | 13 | 36 (14 cells) | 6 (Sec8×Vor, 112 cells) | 0 (wall) | 0 (wall) |
-| zeta_10 | infinite (>4096) | 512 (saturated, 71 angles) | — | — | — | — |
-| zeta_12 | infinite (>4096) | 512 (saturated) | 1024+ | 1024+ | 124 | 50+ |
-| zeta_16 | 7,952 | 3,457 | 499,367 (90.6%) | — | — | — |
-| zeta_32 | 32,768+ | 4,096+ | 493,654 (89.6%) | — | — | — |
+### SU(2) / Quaternionic Catalog Summary (Demos 66-84)
+| Root | Quaternions | Directions on S^2 | XOR6 at natural Voronoi | XOR8 (product activation) | XOR10 | XOR12 | Jones cap (bracket −2) |
+|------|-------------|-------------------|--------------------------|--------------------------|-------|-------|------------------------|
+| zeta_4 | 4 | 2 | — | — | — | — | — |
+| zeta_6 | infinite (>4096) | 512 (saturated) | — | — | — | — | — |
+| zeta_8 | 24 (9 null) | 13 | 36 (14 cells) | 6 (Sec8×Vor, 112 cells) | 0 (wall) | 0 (wall) | XOR6 (D83) |
+| zeta_10 | infinite (>4096) | 512 (saturated, 71 angles) | — | — | — | — | — |
+| zeta_12 | infinite (>4096, 121 null) | 512 (saturated) | 1024+ | 1024+ | 124 | 50+ | XOR10 (D83) |
+| zeta_16 | 7,952 | 3,457 | 499,367 (90.6%) | — | — | — | — |
+| zeta_32 | 32,768+ | 4,096+ | 493,654 (89.6%) | — | — | — | — |
 
 ### DKC XOR Capacity Scaling (ζ₁₂, Demos 81-82)
 | XOR Level | Catalog Size | Closure Round | Directions | Half-Angles | Linear Depth |

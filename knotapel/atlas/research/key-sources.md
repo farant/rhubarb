@@ -137,7 +137,7 @@ Papers that have directly shaped DKC research, with specific notes on what we ex
 | Paper | Times Referenced | In Which Documents |
 |-------|-----------------|-------------------|
 | Abramsky 2007 | 6+ | D27 survey, D29 survey, prior-art, integration notes, explorer's log, open directions |
-| Habiro 2002 | 6+ | D29 survey, prior-art, integration notes, README, explorer's log, four-pillars |
+| Habiro 2002 | 6+ | D29 survey, prior-art, integration notes, README, explorer's log, five-pillars |
 | Aizenberg 2000 | 5+ | D27 survey, D29 survey (implicit), prior-art, README, explorer's log |
 | Nazer-Gastpar 2011 | 5+ | D29 survey, prior-art, integration notes, README, open directions |
 | Freedman-Kitaev-Wang 2003 | 4+ | D27 survey, prior-art, integration notes, correspondence |

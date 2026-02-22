@@ -1,6 +1,6 @@
 # DKC Research Questions
 
-Collected from 82 demos (incl. D63-D71, D72-D82, D39 Parts G-J), four-lenses.md, novelty.md, connections.md. Updated 2026-02-21.
+Collected from 84 demos (incl. D63-D71, D72-D84, D39 Parts G-J), four-lenses.md, novelty.md, connections.md. Updated 2026-02-21.
 
 ---
 
@@ -185,6 +185,12 @@ Collected from 82 demos (incl. D63-D71, D72-D82, D39 Parts G-J), four-lenses.md,
 **Q6.15. Bloch sphere / quantum information connection.** DKC computation lives on S²=CP¹ (the Bloch sphere of a qubit). The minimum bandwidth l=6 corresponds to hexadecapole operators in quantum optics. Is there a direct quantum-information interpretation of the XOR6 bandwidth result?
 - Source: D67, D71 | Difficulty: OPEN PROBLEM | Publication: connects DKC to quantum information theory
 
+**Q6.16. Jones XOR6 at ζ₈ vs standard sector activation.** At ζ₈, Jones normalization reduces bracket XOR8 to Jones XOR6 (D83). Is this Jones XOR6 exactly the same regime as the "standard sector activation" XOR6 capacity identified in Demo 63? If so, Jones normalization is not degradation but recovery of the baseline lattice-only capacity — a structural coincidence linking TQFT normalization to the sector-activation framework.
+- Source: D63, D83 | Difficulty: APPROACHABLE | Publication: unifies Jones normalization with activation geometry
+
+**Q6.17. Writhe distribution of 24-cell vertices.** The 24 entries of the ζ₈ closure form the binary octahedral group. Do antipodal pairs (q and -q) have opposite writhes (writhe inversion under negation)? What is the full writhe distribution across the 24-cell, and does it reflect the symmetry group structure?
+- Source: D83 | Difficulty: APPROACHABLE | Publication: connects 24-cell combinatorics to writhe geometry
+
 ---
 
 ## 7. Scaling and Capacity
@@ -219,14 +225,14 @@ Collected from 82 demos (incl. D63-D71, D72-D82, D39 Parts G-J), four-lenses.md,
 **Q7.10. Paired-quaternion channel necessity.** D77 shows every XOR8 winning quadruple contains exactly one pair of quaternions sharing the same eigenvector direction but differing in eigenvalue angle, and removing either pair member leaves an XOR6-winning triple. Is the paired-quaternion structure necessary for XOR8 (i.e., does every XOR8 solution decompose this way), or is it a feature specific to the 6 solutions found? Does the recursive structure extend: XOR10 winners = XOR8 winners plus another paired partner?
 - Source: D75, D77, D78 | Difficulty: MODERATE | Publication: proves the recursive shadow conjecture at the next level
 
-**Q7.11. Activation determines capacity — formalization.** D77 demonstrates that the same ζ_8 root and same 24-element catalog yield 0 XOR8 solutions under S²-only activation and 6 solutions under S¹×S² activation. Can "Activation Determines Capacity" be formalized as a theorem? Specifically: for a fixed algebraic catalog, is there a lattice ordering on activation functions under which higher activations always achieve at least as many XOR solutions, with the S¹×S² product sitting above pure S¹ and pure S² in that ordering?
-- Source: D77 | Difficulty: HARD | Publication: theoretical foundation for activation design
+**Q7.11. Activation determines capacity — formalization.** D77 demonstrates that the same ζ_8 root and same 24-element catalog yield 0 XOR8 solutions under S²-only activation and 6 solutions under S¹×S² activation. Can "Activation Determines Capacity" be formalized as a theorem? Specifically: for a fixed algebraic catalog, is there a lattice ordering on activation functions under which higher activations always achieve at least as many XOR solutions, with the S¹×S² product sitting above pure S¹ and pure S² in that ordering? *Note: D83's resource decomposition (lattice base + depth + framing = additive capacity) partially formalizes this by showing three independent resources that contribute to capacity, but a full lattice-theoretic formalization remains open.*
+- Source: D77, D83 | Difficulty: HARD | Publication: theoretical foundation for activation design
 
 **Q7.12. Critical cell count universality.** D77 observes a phase transition between 84 cells (0 XOR8 winners) and 112 cells (6 winners), conjecturing a critical threshold near 100 cells related to masks-per-cell dropping below ~2.56. Is the critical cell count ~100 a universal threshold for 8-input DKC regardless of root of unity, or does it scale with catalog and activation structure? Does the masks-per-cell ≈ 4.6 sweet spot observed for XOR6 at ζ_8 hold across other input sizes and roots of unity?
 - Source: D76, D77 | Difficulty: MODERATE | Publication: practical design rule for DKC activation
 
-**Q7.13. ζ_8 XOR ceiling — wall characterization.** D78 confirms XOR10 = 0 at ζ_8 across all 42,504 quintuples and all tested sector counts. The diagnosis is catalog exhaustion: 24 quaternions with only 13 directions and 2 half-angles cannot produce 1024-mask separation. Is there a clean information-theoretic lower bound formula: max_n = f(|catalog|, n_directions, n_angles)? Is the wall at XOR8 specific to the binary octahedral group, or is it a general consequence of any ADE-type finite group?
-- Source: D78 | Difficulty: MODERATE | Publication: closes the ζ_8 capacity story
+**Q7.13. ζ_8 XOR ceiling — wall characterization.** D78 confirms XOR10 = 0 at ζ_8 across all 42,504 quintuples and all tested sector counts. The diagnosis is catalog exhaustion: 24 quaternions with only 13 directions and 2 half-angles cannot produce 1024-mask separation. Is there a clean information-theoretic lower bound formula: max_n = f(|catalog|, n_directions, n_angles)? Is the wall at XOR8 specific to the binary octahedral group, or is it a general consequence of any ADE-type finite group? **PARTIALLY ADDRESSED by D83-D84**: D83's resource decomposition provides the formula max_xor = lattice_base(6) + 2×depth_rounds + 2×framing_present. D84's null indispensability theorem shows that n_directions is critical (removing 6 null-only directions drops capacity by one full level), and the formula must account for directional coverage quality, not just count. A clean information-theoretic formalization remains open.
+- Source: D78, D83, D84 | Difficulty: MODERATE | Publication: closes the ζ_8 capacity story
 
 **Q7.14. Infinite group XOR capacity.** D79 shows ζ_12 (infinite group) breaks the ζ_8 wall entirely: XOR10 goes from 0 to 124 winners, XOR12 yields 50+ winners. Do ALL infinite groups under the two-perpendicular-axes construction provide unbounded XOR capacity? Or can some infinite groups have structural limitations imposing their own ceilings?
 - Source: D79, D80 | Difficulty: MODERATE | Publication: characterizes the finite/infinite capacity dichotomy
@@ -249,25 +255,65 @@ Collected from 82 demos (incl. D63-D71, D72-D82, D39 Parts G-J), four-lenses.md,
 **Q7.20. Direct generation of deep entries.** D82 shows pure depth-8 entries are 2× more efficient than shallow or strided entries at matched catalog size — 564 deep entries reach XOR12 while 1140 mixed entries first reach XOR12 at round 6. But deep entries are currently obtained only by running the full BFS closure. Can depth-d quaternions be characterized algebraically and generated directly without computing all shallower depths? What algebraic property does strided-564 lack that deep-564 possesses (presumably shared common-factor structure from the many-generator products)?
 - Source: D82 | Difficulty: HARD | Publication: practical shortcut for DKC catalog construction
 
-**Q7.21. Depth law universality.** D82 demonstrates max_xor ≈ depth + 6 for ζ_12. Does the linear depth law hold for other infinite-group roots (ζ_10, ζ_16)? Does the constant ("+6") change with root, or is it a universal offset related to the XOR6 baseline? Does it hold for finite groups with ζ_8 as control (confirmed: ζ_8 closes at depth 3, max XOR=8, consistent with depth+5)?
-- Source: D82 | Difficulty: MODERATE | Publication: establishes depth law as a general principle
+**Q7.21. Depth law universality.** D82 demonstrates max_xor ≈ depth + 6 for ζ_12. Does the linear depth law hold for other infinite-group roots (ζ_10, ζ_16)? Does the constant ("+6") change with root, or is it a universal offset related to the XOR6 baseline? Does it hold for finite groups with ζ_8 as control (confirmed: ζ_8 closes at depth 3, max XOR=8, consistent with depth+5)? *Note: D83 adds the writhe resource — the "+6" offset may itself decompose as lattice_base(6) = lattice(6) + framing(+2) - 2, or more precisely the depth law may need to be restated as max_xor = lattice_base + 2×depth + 2×framing when framing is tracked separately.*
+- Source: D82, D83 | Difficulty: MODERATE | Publication: establishes depth law as a general principle
 
 **Q7.22. Direction explosion / angle refinement phase transition.** D82 observes a clean regime boundary at depth 6–7 for ζ_12: below depth 6, new directions dominate the catalog growth (direction explosion); above depth 6, directions saturate at MAX_DIR=512 and angle refinement dominates. Is this phase transition present for all infinite-group roots? Is the transition depth related to the point at which the group's direction catalog achieves dense S² coverage?
 - Source: D82 | Difficulty: MODERATE | Publication: structural insight into group closure dynamics
+
+**Q7.23. Framing loss universality across roots.** D83 shows Jones normalization costs exactly 2 XOR levels at both ζ₈ and ζ₁₂. Does the +2 loss hold at ζ₁₆ and ζ₂₄? The loss is constant despite very different group sizes (24 vs 4096), suggesting universality, but verification at additional roots is needed. If universal, does the proof follow directly from the (-A³)^w factor's action on angular vocabulary?
+- Source: D83 | Difficulty: APPROACHABLE | Publication: extends framing-as-resource to all roots
+
+**Q7.24. Analytical proof of "+2 per writhe unit."** The Jones phase factor (-A³)^{-w} acts as a rotation by -(3×half_angle + π)×w per entry, reducing distinct angles from 43 to 31 at ζ₁₂ while leaving directions unchanged (512 → 512). Can the 2-level capacity loss be proved analytically from a direct count of angle equivalence classes before and after normalization? The mechanism is angular vocabulary reduction — is there a closed-form expression for the number of collapsed angle classes as a function of the half-angle and writhe distribution?
+- Source: D83 | Difficulty: MODERATE | Publication: theoretical heart of the framing resource
+
+**Q7.25. Writhe constancy across depth.** D83 shows framing = +2 at the group's maximum capacity level. But at intermediate depths, does the bracket also beat Jones by exactly 2, or does the gap vary with depth? If the gap is not constant across depths, what determines the depth at which the full +2 framing resource becomes available?
+- Source: D83 | Difficulty: APPROACHABLE | Publication: completes the depth×writhe interaction picture
+
+**Q7.26. Null indispensability at ζ₁₂.** D84 shows 121/4096 entries (3%) are bracket-null at ζ₁₂, with 29 null-only directions (vs 453 non-null-only, 30 shared). Are any of those 29 null-only directions essential for the XOR12 solutions found in Demo 79? If so, null indispensability extends beyond the finite-group (ζ₈) regime to infinite groups.
+- Source: D84 | Difficulty: APPROACHABLE | Publication: tests null indispensability beyond finite groups
+
+**Q7.27. LCFT Jordan-cell structure made explicit.** D84 identifies 3 shared S² directions (coordinate axes) containing both null and non-null entries. Do these null/non-null pairs on the same axis form a literal Jordan-cell pair in some representation of the braid group algebra? Making the LCFT connection rigorous would connect DKC directly to logarithmic conformal field theory.
+- Source: D84 | Difficulty: HARD | Publication: bridges DKC to LCFT rigorously
+
+**Q7.28. Null fraction and directional role at ζ₁₀.** ζ₁₀ (Fibonacci anyons) was identified as infinite in Demo 80 with 71 distinct half-angles at 4096 entries. The null fraction and directional role of null entries at ζ₁₀ has not been measured. Does the ζ₁₀ null fraction follow the dilution trend (75% → 37.5% → 3.0% for ζ₄ → ζ₈ → ζ₁₂)?
+- Source: D80, D84 | Difficulty: APPROACHABLE | Publication: extends null-state census to Fibonacci anyons
+
+**Q7.29. Maximum-depth null generalization.** In ζ₈, every depth-3 entry is bracket-null (100%). Is this a general theorem: does the maximum-depth stratum of any finite SU(2) subgroup consist entirely of bracket-null entries? If so, maximal depth ↔ vanishing trace is a structural property of finite subgroup closures.
+- Source: D84 | Difficulty: MODERATE | Publication: structural theorem about finite group closures
+
+**Q7.30. Null entries and knot complexity.** D82 established crossing depth governs XOR capacity; D84 shows bracket-null entries are maximally deep (depth-3 in ζ₈). Do depth-d null entries correspond to specific knot types whose Jones polynomial vanishes at δ=0? If the nullness/depth/LCFT connection has a direct knot-theoretic interpretation, it would link DKC computational anatomy to classical knot theory.
+- Source: D82, D84 | Difficulty: HARD | Publication: connects null-state structure to knot classification
+
+**Q7.31. RC exactification via null-state geometry.** The RC null-state hypothesis now has a precise DKC analog (D84). Can the quaternionic DKC framework be used to design reservoir weight matrices where null-state geometry is explicitly controlled, yielding provably optimal XOR capacity per parameter? This would be a constructive application of the null indispensability theorem.
+- Source: D84 | Difficulty: HARD | Publication: applied DKC for reservoir computing design
+
+---
+
+## 8. Resource Decomposition (NEW — D83-D84)
+
+**Q8.1. Additive resource decomposition proof.** D83 proposes max_xor = lattice_base(6) + 2×depth_rounds + 2×framing_present. The "+2 per resource unit" pattern matches across depth (D82) and writhe (D83). Is this decomposition exact, or approximate? Does it hold across all roots, or only ζ₈ and ζ₁₂? A full proof would require showing that depth, writhe, and lattice structure contribute independently to angular vocabulary — no interaction terms.
+- Source: D82, D83 | Difficulty: MODERATE | Publication: foundational formula for DKC capacity theory
+
+**Q8.2. N-2 pattern as Jones capacity.** ~~The "N-2" observation from D79 (capacity appeared to stop 2 levels below what the bracket achieves).~~ **RESOLVED by D83**: the N-2 pattern was the Jones polynomial's capacity all along, not a bracket truncation artifact. Earlier demos that stopped at XOR10 at ζ₁₂ were inadvertently computing Jones-normalized quantities. The bracket genuinely reaches XOR12.
+- Source: D79, D83 | Difficulty: N/A | Publication: resolved
+
+**Q8.3. TQFT anomaly as computational resource — deeper implications.** D83 demonstrates that what TQFT calls a "framing anomaly" (the writhe-dependent phase factor removed by Jones normalization) is not noise but computation — exactly the component contributing 2 XOR levels. Does this have implications for topological quantum computation? If the framing anomaly carries computation, should TQC schemes preserve rather than normalize it?
+- Source: D83 | Difficulty: OPEN PROBLEM | Publication: potentially transformative for TQC design philosophy
 
 ---
 
 ## Priority Ranking
 
 **Tier 1 -- Immediate (APPROACHABLE, high impact):**
-Q1.10 (universal k proof), Q1.4 (k=9..16 counts), Q6.2 (duality at 4 inputs), Q4.3 (axiality known?), Q1.7 (multi-sector multiplicative), Q1.16 (odd k generalized XOR6), Q6.12 (trivialization threshold — D72 provides new data point), Q6.13 (gradient descent to knot weights), Q6.14 (XOR7 bandwidth on S²), Q7.3 (perturbation non-monotonicity), Q7.7 (119 near-optimal?), Q7.15 (optimal infinite group), Q7.16 (ζ_32 power-of-two conjecture), Q7.19 (logarithmic vs sub-logarithmic — XOR14 test)
+Q1.10 (universal k proof), Q1.4 (k=9..16 counts), Q6.2 (duality at 4 inputs), Q4.3 (axiality known?), Q1.7 (multi-sector multiplicative), Q1.16 (odd k generalized XOR6), Q6.12 (trivialization threshold — D72 provides new data point), Q6.13 (gradient descent to knot weights), Q6.14 (XOR7 bandwidth on S²), Q6.16 (Jones XOR6 vs standard sector activation), Q6.17 (writhe distribution of 24-cell), Q7.3 (perturbation non-monotonicity), Q7.7 (119 near-optimal?), Q7.15 (optimal infinite group), Q7.16 (ζ_32 power-of-two conjecture), Q7.19 (logarithmic vs sub-logarithmic — XOR14 test), Q7.23 (framing loss universality — test at ζ₁₆, ζ₂₄), Q7.25 (writhe constancy across depth), Q7.26 (null indispensability at ζ₁₂), Q7.28 (null fraction at ζ₁₀)
 
 **Tier 2 -- Soon (MODERATE, strengthens papers):**
-Q2.1 (sandwich proof), Q3.4 (catalog completeness), Q1.9 (OM generalization), Q2.8 (cross-sector kernel), Q6.6 (non-parity ceiling), Q1.13 (n=6 higher-order constraints), Q1.14 (funnel rate formula), Q1.15 (k=38 anomaly), Q6.9 (F4 orbit count formula), Q6.10 (Hopf phase inertness — partially addressed by D75, proof still needed), Q7.1 (anti-correlation mechanism), Q7.2 (hidden quadrupole symmetry), Q7.4 (universal automaton determinism), Q7.6 (6 unseparated pairs), Q7.8 ([*,18,22] dead zone), Q7.9 (sqrt(n) magnitude continuation), Q7.10 (paired-quaternion channel necessity), Q7.12 (critical cell count universality), Q7.13 (ζ_8 XOR ceiling formula), Q7.14 (infinite group capacity), Q7.18 (scaling constant vs root), Q7.21 (depth law universality), Q7.22 (direction explosion phase transition)
+Q2.1 (sandwich proof), Q3.4 (catalog completeness), Q1.9 (OM generalization), Q2.8 (cross-sector kernel), Q6.6 (non-parity ceiling), Q1.13 (n=6 higher-order constraints), Q1.14 (funnel rate formula), Q1.15 (k=38 anomaly), Q6.9 (F4 orbit count formula), Q6.10 (Hopf phase inertness — partially addressed by D75, proof still needed), Q7.1 (anti-correlation mechanism), Q7.2 (hidden quadrupole symmetry), Q7.4 (universal automaton determinism), Q7.6 (6 unseparated pairs), Q7.8 ([*,18,22] dead zone), Q7.9 (sqrt(n) magnitude continuation), Q7.10 (paired-quaternion channel necessity), Q7.12 (critical cell count universality), Q7.13 (ζ_8 XOR ceiling formula — PARTIALLY ADDRESSED by D83/D84), Q7.14 (infinite group capacity), Q7.18 (scaling constant vs root), Q7.21 (depth law universality — refined by D83 writhe data), Q7.22 (direction explosion phase transition), Q7.24 (analytical proof of +2 per writhe unit), Q7.29 (maximum-depth null generalization), Q8.1 (resource decomposition proof)
 
 **Tier 3 -- Deep work (HARD, transformative):**
-Q1.5 (incommensurability theorem), Q3.1 (two-channel coding), Q5.3 (TQC/DKC independence), Q2.2 (Galois symmetry), Q1.11 (n=6 wall proof), Q6.11 (13=13 theorem analytical proof), Q6.15 (Bloch sphere / quantum info connection), Q7.5 (minimum state count for 100% automaton determinism), Q7.11 (activation determines capacity — formalization), Q7.17 (E_6 and E_8 reachability), Q7.20 (direct generation of deep entries)
+Q1.5 (incommensurability theorem), Q3.1 (two-channel coding), Q5.3 (TQC/DKC independence), Q2.2 (Galois symmetry), Q1.11 (n=6 wall proof), Q6.11 (13=13 theorem analytical proof), Q6.15 (Bloch sphere / quantum info connection), Q7.5 (minimum state count for 100% automaton determinism), Q7.11 (activation determines capacity — formalization, PARTIALLY ADDRESSED by D83), Q7.17 (E_6 and E_8 reachability), Q7.20 (direct generation of deep entries), Q7.27 (LCFT Jordan-cell structure explicit), Q7.30 (null entries and knot complexity), Q7.31 (RC exactification via null-state geometry), Q8.3 (TQFT anomaly as computational resource)
 
 ---
 
-*Source: demo-index.md (82 demos incl. D63-D82, D39 Parts G-J), four-lenses.md, novelty.md, connections.md.*
+*Source: demo-index.md (84 demos incl. D63-D84, D39 Parts G-J), four-lenses.md, novelty.md, connections.md.*

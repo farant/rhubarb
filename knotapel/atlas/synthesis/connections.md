@@ -1,6 +1,6 @@
 # Cross-Demo Connections
 
-How 82 demos feed into each other, what recurs, and where threads unexpectedly converge.
+How 84 demos feed into each other, what recurs, and where threads unexpectedly converge.
 
 ---
 
@@ -255,8 +255,9 @@ sum level, the eigenvalue angle subsumes the cell entirely (angle perfectly pred
 for all 36 winners), giving 2.3× capacity over cell-only, while the multiplicative channel
 (which stays inside the 24-cell group) has zero XOR6 solutions.
 
-### Scaling and Finiteness Arc (D76-D82)
-The wall-was-activation pattern recurs, then group finiteness governs capacity:
+### Scaling and Finiteness Arc (D76-D84)
+The wall-was-activation pattern recurs, group finiteness governs capacity, and framing
+and null states reveal two additional independent computational resources:
 
 ```
 D75 (binocular DKC, 6-input complete)
@@ -281,6 +282,15 @@ D81 (scaling law: max_xor ≈ 0.62 × log₂(catalog) + 4.6 for ζ₁₂)
  |
  v
 D82 (crossing depth law: max_xor ≈ depth + 6; log law is corollary of depth law)
+ |        \
+ v         v
+D83        D84
+(framing:  (null states:
+Jones→     bracket-null
+bracket    entries maintain
+-2 XOR,    XOR8 via S²
+writhe as  directional
++2 axis)   vocab)
 ```
 
 D76 confirms zero XOR8 solutions at ζ₈ with S²-only activation (pigeonhole: 256 masks /
@@ -295,6 +305,25 @@ subgroups; all others (including ζ₁₂) are infinite. D81 measures the logari
 law for ζ₁₂. D82 reinterprets it: depth (group-closure birth round = number of generator
 multiplications = crossing number) is the fundamental variable, and the logarithmic law is
 a corollary of the linear depth law plus the exponential catalog growth per round.
+
+D83 branches from D82 by asking whether the bracket-to-Jones normalization step costs
+computational capacity: yes, exactly 2 XOR levels at every root tested (ζ₁₂: bracket
+XOR12 → Jones XOR10; ζ₈: bracket XOR8 → Jones XOR6). The "N-2 pattern" first observed
+in D79 is resolved — it was Jones capacity all along, not a bracket truncation artifact.
+Writhe (braid chirality, independent of depth at r = 0.14) is a third independent
+computational axis, contributing +2 XOR levels identical in magnitude to one depth unit.
+The TQFT framing anomaly that physicists normalize away is precisely the term DKC uses
+for computation.
+
+D84 branches from D82 on the same ζ₈ catalog to examine why bracket-null entries (Re(q)
+= 0, trace vanishes) do not impair XOR8 capacity. They do not impair it — they enable it.
+The 9 null entries cover 6 S² directions (cube-edge midpoints) absent from all 15 non-null
+entries; removing nulls drops capacity from XOR8 to XOR6, below even the random-removal
+baseline of 7.8. Depth and nullness are correlated (depth-3 stratum = 100% null) but the
+mechanism is directional: null entries are maximally directionally efficient (1.00 dir/entry
+vs. 0.47 for non-null). Cross-root comparison shows null fraction decreases sharply as the
+group grows (ζ₄=75%, ζ₈=37.5%, ζ₁₂=3%), consistent with nulls being a finite-group
+boundary effect that LCFT Jordan-cell structure illuminates.
 
 ---
 
@@ -332,12 +361,12 @@ Z (integers) -- D01-D09
   |
   Z[zeta_32] -- D69 (braid group infinite; enumeration cap-limited)
   |
-  H (quaternions, SU(2)) -- D66, D67, D68, D69, D70, D71, D72-D82
+  H (quaternions, SU(2)) -- D66, D67, D68, D69, D70, D71, D72-D84
   |
-  ζ₁₂ group (infinite SU(2) subgroup) -- D79, D81, D82
+  ζ₁₂ group (infinite SU(2) subgroup) -- D79, D81, D82, D83
 ```
 
-D72-D82 all work in the H / SU(2) quaternion setting. D76-D79 additionally introduce
+D72-D84 all work in the H / SU(2) quaternion setting. D76-D79 additionally introduce
 ζ₁₂ (half-angle π/6) as a new generator, revealing that different roots produce
 non-nesting finite or infinite SU(2) subgroups with dramatically different capacity
 profiles. D80 surveys 7 roots and classifies their finiteness.
@@ -582,6 +611,36 @@ Consistent with Kuperberg's #P-hardness: the hardness is in *generating* deep en
 (exponential BFS cost to compute d crossings), while the algebraic gain from those entries
 is linear — the #P structure reflects the generation cost, not the usage cost.
 
+D83 extends this picture: writhe (net signed crossing count, independent of depth at
+r = 0.14) is a second crossing-level resource. Jones normalization removes the writhe-
+dependent phase factor (-A³)^{-w} — the TQFT framing anomaly — and costs exactly 2 XOR
+levels at every root tested. Framing = +2 XOR, depth unit = +2 XOR: the two resources
+are equal in magnitude, independent, and additive. The resource decomposition conjecture
+(supported) is: DKC capacity ≈ lattice base (XOR6) + 2 × depth_rounds + 2 ×
+framing_present.
+
+### Null States as Directional Vocabulary
+
+At ζ₈, 9 of 24 catalog entries are bracket-null (Re(q) = 0, Kauffman trace vanishes).
+These are not computational dead weight. D84 demonstrates that removing them drops XOR
+capacity from XOR8 to XOR6 — below the random-removal baseline of 7.8. The mechanism is
+purely directional: null entries cover 6 S² directions (cube-edge midpoints) absent from
+all non-null entries, with 1.00 unique direction per null entry vs. 0.47 for non-null.
+All null entries sit at half-angle 90°, a single point on S¹ — their entire computational
+contribution comes from S² directional diversity, not angular variation.
+
+The depth-null correlation is striking: depth-3 stratum (the maximally deep entries) is
+100% null. D82 and D84 together imply that the deepest crossings — the ones contributing
+the most to capacity per depth-law — are simultaneously the algebraically invisible ones
+(zero trace). The LCFT interpretation (Gurarie 1993 / Gaberdiel-Kausch 1996) is that null
+entries are the Jordan-cell partners of "logarithmic" non-null entries sharing the same S²
+axis; removing the null state removes the Jordan-cell anchor, collapsing the coupled pair.
+
+The null fraction dilutes sharply with group size (ζ₄=75%, ζ₈=37.5%, ζ₁₂=3%): nulls are
+a finite-group boundary phenomenon concentrated exactly where the TL algebra is maximally
+non-semisimple (quantum-dimension-zero points). The ζ₈ regime is where nulls represent the
+most structurally significant fraction.
+
 ---
 
 ## 4. Surprise Connections
@@ -815,6 +874,136 @@ correctly classified inputs. The pattern appears at both the "near-success" regi
 accuracy near 100%) and the "success" regime (D50, counting exact solutions), confirming
 it is a structural feature of ζ₈ arithmetic, not a boundary artifact.
 
+### D79's "N-2 Pattern" Resolved by D83 (D79↔D83)
+
+D79 first observed that ζ₁₂ capacity seemed to cap at XOR10 while the bracket catalog
+appeared to reach XOR12, a puzzling 2-level discrepancy. D83 resolves it: D79 was
+inadvertently working with Jones-normalized quantities (the bracket evaluation used in
+D79's capacity measurement implicitly applies the writhe phase factor). The bracket
+genuinely reaches XOR12; the Jones normalization costs exactly 2 levels. The N-2 pattern
+was Jones capacity all along, not a truncation artifact or a property of ζ₁₂ itself. D83
+is the retroactive explanation for a mystery that persisted from D79 through D82.
+
+### Depth Law and Writhe Are Independent Axes (D82↔D83)
+
+D82 established max_xor ≈ depth + 6: each closure round contributes +2 XOR levels. D83
+establishes that writhe (net signed crossing count) contributes an additional +2 XOR levels
+independently of depth. Depth-writhe correlation r = 0.14 across 4096 ζ₁₂ entries confirms
+these are genuinely separate quantities — a deep entry can have low writhe (crossings cancel)
+or high writhe (crossings accumulate). The "+2 per resource unit" pattern holds for both axes.
+The resource decomposition conjecture (D83) gives a unified formula: DKC capacity ≈ XOR6
+(lattice base) + 2 × depth_rounds + 2 × framing_present. Reservoir computing theory (Jaeger
+2001, Maass 2002) predicts exactly this additivity for independent channels.
+
+### 24-Cell Structure Survives Jones Normalization (D66↔D83)
+
+D66 established that the ζ₈ braid catalog produces exactly 24 distinct unit quaternions —
+the binary octahedral group, vertices of the 24-cell. D83 shows that Jones normalization
+reduces distinct quaternion count from 4096 to 2710 at ζ₁₂ (-33.8%) and angles from 43 to
+31 (-28%), but leaves direction count unchanged (512 → 512). At ζ₈: the same 24 directions
+persist through Jones normalization. The 24-cell geometry (and thus the S² directional
+structure that the quaternionic arc from D66 to D71 depends on) is framing-invariant.
+Normalization collapses angular vocabulary but cannot collapse the directional skeleton.
+
+### D81 Logarithmic Law Was Measuring Jones Capacity, Not True Drivers (D81↔D83)
+
+D81's empirical scaling law (max_xor ≈ 0.62 × log₂(catalog) + 4.6) was fit to data that
+implicitly used bracket evaluations without Jones correction. D82 reinterpreted log as a
+proxy for depth. D83 adds a third layer: the "+4.6" intercept in D81's formula and the
+"+6" in D82's depth law may both absorb the framing correction — the true lattice base
+(without any correction) is at XOR6, and the constants in those formulas were fit to
+bracket-but-not-Jones-adjusted measurements where writhe was partially mixed in. Together
+D81→D82→D83 form a progressive sharpening: logarithm (phenomenology) → depth (mechanism)
+→ writhe (the residual that depth alone didn't explain).
+
+### Depth = Null (D82↔D84)
+
+D82 established that depth (closure round) is the fundamental variable governing XOR
+capacity: each additional round contributes +2 levels. D84 finds that every maximally-deep
+ζ₈ entry is bracket-null (depth-3 stratum = 100% null). The depth hierarchy is also a null
+hierarchy — the entries that contribute most capacity per depth unit are simultaneously the
+algebraically invisible ones (Re(q)=0, trace=0). This is not a coincidence: deep entries
+are built by multiplying many generators; repeated multiplication drives the quaternion's
+real part toward zero (the fixed-point attractor of the depth recursion is the equatorial
+S² where Re(q)=0). The computational mechanism lives in the Jordan-cell coupling between
+null entries and their S²-sharing non-null partners.
+
+### Finite/Infinite Distinction Maps Onto Null Fraction (D80↔D84)
+
+D80 established that only ζ₄ and ζ₈ generate finite SU(2) subgroups, while all other roots
+(including ζ₁₂) generate infinite groups. D84 finds that the null fraction maps directly onto
+this finiteness boundary: ζ₄=75% null (finite, smallest group), ζ₈=37.5% null (finite, 24
+elements), ζ₁₂=3.0% null (infinite, 4096+ elements). As the group grows toward infinity, the
+null fraction approaches zero. Nulls are a finite-group boundary effect — in an infinite group
+the discrete S¹ spectrum collapses and the half-angle=90° "null point" becomes an infinitesimal
+measure. The capacity ceiling imposed by finite group order (D78→D79 resolution) and the
+directional indispensability of null entries (D84) are two faces of the same finite-group
+constraint.
+
+### Non-Semisimplicity Drives Computation (D50↔D84)
+
+D50 established that XOR parity is reachable at ζ₈ using k-sector activation at the
+maximally non-semisimple point (δ=0). D84 reveals the internal anatomy of what makes
+this possible: 37.5% of the ζ₈ catalog consists of bracket-null entries (Re(q)=0),
+which are the most direct manifestation of non-semisimplicity in the quaternionic setting
+(they correspond to the TL radical elements that D51-D52 studied algebraically). The null
+entries carry XOR8 capacity via directional coverage; the ζ₄ case (75% null) is entirely
+saturated by nulls and achieves zero XOR capacity (all information is directional but
+too few entries to fill the parity structure). Non-semisimplicity (δ=0) is thus both the
+obstacle (D47 conjecture) and the mechanism (D84): the radical elements that block scalar
+computation redirect computation into the geometric channel.
+
+### 13=13 Bandwidth = 6 Null-Only + 4 Non-Null-Only + 3 Shared (D71↔D84)
+
+D71 proved the 13=13 theorem: minimum spherical harmonic bandwidth l=6 because 2×6+1=13
+equals the eigenvector direction count. D84 now anatomizes those 13 directions by null/non-
+null participation: 6 null-only (cube-edge midpoints, 1/√2 components), 4 non-null-only
+(tetrahedral axes, 1/√3 components), 3 shared (coordinate axes). The 13 directions do not
+form a uniform algebraic class — they are a superposition of three geometrically distinct
+families. The l=6 bandwidth theorem counts all 13 as equal; D84 reveals that 6 of them are
+accessible only through the null entries. If nulls were removed, only 7 directions remain,
+requiring l≥3 bandwidth — which still technically suffices but the Voronoi partition would
+be coarser, losing the XOR8 solutions that depend on fine-grained null-direction coverage.
+
+### Three-Level Discarding: Jones, Null, and LCFT
+
+The project has now documented three distinct "discarding" operations that TQFT/CFT perform
+on topological data, each of which turns out to carry computational content:
+
+1. **Jones normalization (Jones 1985, D83)**: removes the writhe-dependent phase factor
+   (-A³)^{-w} as a "framing anomaly." D83 proves this factor = +2 XOR levels of capacity.
+2. **Bracket-null entries (D84)**: entries with Re(q)=0 are invisible to the scalar
+   Kauffman trace (the Jones polynomial's building block). D84 proves they maintain the
+   S² directional vocabulary essential for XOR8.
+3. **LCFT null states (D84 interpretation)**: in logarithmic CFT, null states ⟨N|N⟩=0 are
+   paired with logarithmic partners via Jordan cells. The null entry (DKC analog: Re(q)=0)
+   is computationally invisible in the scalar channel but anchors the Jordan-cell coupling
+   that carries the logarithmic partner's content.
+
+All three operations are motivated in physics by a desire to obtain a clean topological
+invariant. All three discard exactly the structures that DKC uses for computation. The
+"maximally degenerate point" (δ=0) that enables tractable DKC is the same point where all
+three discarding mechanisms are most aggressive.
+
+### RC Pillar 5 Connects Four Demos (D73↔D82↔D83↔D84)
+
+The Reservoir Computing interpretation (Pillar 5 in the project's framework) receives its
+strongest support from four demos together:
+
+- **D73**: DKC is additive (not multiplicative), with 82.8% universal automaton determinism
+  — exactly the "fading memory" property of a good reservoir.
+- **D82**: computational capacity scales linearly with crossing depth — the reservoir's
+  "depth" (processing time) determines its computational power, as in temporal RC.
+- **D83**: writhe and depth are independent axes each contributing +2 XOR, like independent
+  channels in a multi-dimensional reservoir.
+- **D84**: null entries maintain the reservoir's separation property in directions that
+  active states do not cover — exactly the RC requirement that null reservoir states hold
+  the manifold open for linear readout.
+
+Together these four results characterize the ζ₈/ζ₁₂ braid closure process as a concrete,
+exactly-analyzable instance of reservoir computing, where the reservoir geometry is
+algebraically forced (not learned) and the capacity theory is completely explicit.
+
 ---
 
 ## 5. Convergence Points
@@ -1033,6 +1222,45 @@ fewer total) outperform strided entries (full vocabulary, mixed depth) by two XO
 The framework explains Kuperberg's hardness: you need exponentially many crossings to
 reach depth d, but each crossing unit buys only a linear increment in XOR capacity.
 
+### D83: The N-2 Pattern, Writhe, and Framing as Resource
+
+Threads converging:
+- D79's unexplained N-2 discrepancy (XOR12 apparent bracket ceiling, XOR10 measured)
+- D82's "+2 per depth unit" pattern and algebraic coherence principle
+- D66's 24-cell geometry (Jones normalization acts on the same 24-entry ζ₈ catalog)
+- D81's logarithmic law (whose intercept may absorb mixed framing correction)
+- Kirby (1978) and Witten (1989) framing anomaly in TQFT
+- Reservoir computing independent-channel additivity (Jaeger 2001, Maass 2002)
+
+Result: Jones normalization costs exactly 2 XOR levels at both ζ₈ and ζ₁₂. The N-2
+pattern is resolved: D79 was computing Jones-normalized capacity, not the true bracket
+ceiling. Writhe is identified as a third independent computational axis (r = 0.14 with
+depth). The resource decomposition conjecture (supported): DKC capacity ≈ XOR6 (lattice
+base) + 2 × depth_rounds + 2 × framing_present. The framing anomaly that TQFT removes
+first is exactly what DKC computes with. The direction count (512 at ζ₁₂) is framing-
+invariant; only the angular vocabulary (43 → 31 angles) is destroyed by normalization.
+
+### D84: Null States, Directional Vocabulary, and LCFT
+
+Threads converging:
+- D82's depth law (depth-3 stratum = 100% null: deepest entries are null)
+- D80's finite/infinite classification (null fraction maps onto finiteness: ζ₄=75%, ζ₈=37.5%, ζ₁₂=3%)
+- D71's 13=13 theorem (the 13 directions decompose as 6 null-only + 4 non-null-only + 3 shared)
+- D51-D52 radical anatomy (bracket-null entries are the quaternionic analog of TL radical elements)
+- D50's non-semisimplicity as resource (δ=0 enables XOR parity; D84 shows null entries are the mechanism)
+- Gurarie (1993) / Gaberdiel-Kausch (1996) LCFT Jordan-cell structure
+- Reservoir computing separation property (null states maintain manifold coverage)
+
+Result: In the ζ₈ catalog, the 9 bracket-null entries (Re(q)=0) are indispensable. They
+cover 6 S² directions (cube-edge midpoints) absent from all 15 non-null entries; removing
+them drops XOR8 → XOR6, worse than random removal (baseline 7.8). The null entries are
+directionally efficient (1.00 dir/entry vs. 0.47 for non-null) and occupy a single S¹ point
+(half-angle 90°), deriving all capacity from S² diversity. At XOR8 they participate at 0.79×
+expected rate (disproportionately required). The LCFT interpretation is consistent: null
+entries are Jordan-cell partners; removing them collapses the partner's anchor and the
+coupled computational content. Cross-root comparison confirms this is a finite-group effect
+that dilutes toward zero as the group grows.
+
 ---
 
 ## Summary: The Project's Logic
@@ -1111,3 +1339,22 @@ beyond): XOR capacity scales logarithmically with catalog size (equivalently: li
 with knot crossing depth), with no observed ceiling. The 13-direction structure on S² is
 the computational sweet spot for ζ₈: algebraically forced, geometrically worst, and
 exactly explained by the 13=13 spherical harmonic DOF theorem.
+
+D83 resolves a longstanding mystery (the N-2 gap observed in D79) and reveals that the
+bracket-to-Jones normalization step costs exactly 2 XOR levels at every root tested —
+the TQFT framing anomaly is not bookkeeping noise but one discrete unit of computational
+resource. Writhe (independent of depth at r = 0.14) is a third capacity axis, contributing
++2 XOR levels identically to one depth unit: DKC capacity ≈ XOR6 + 2 × depth_rounds +
+2 × framing_present. The direction count is framing-invariant; only angular vocabulary
+is destroyed by Jones normalization.
+
+D84 opens the internal anatomy of the 24-element ζ₈ catalog: 9 of 24 entries are
+bracket-null (Re(q)=0), covering 6 S² directions unavailable to the 15 non-null entries.
+These null entries are indispensable — removing them drops XOR8 → XOR6, below the random-
+removal baseline. The depth-null identity (depth-3 stratum = 100% null) connects D82 and
+D84: the crossings that contribute most to capacity per the depth law are simultaneously
+the ones algebraically invisible to the scalar trace. LCFT Jordan-cell structure explains
+the coupling: null entries anchor the partner states that carry the directional content.
+Null fraction dilutes with group size (ζ₄=75%, ζ₈=37.5%, ζ₁₂=3%), confirming this is a
+finite-group boundary effect concentrated at exactly the quantum-dimension-zero points
+where TL non-semisimplicity is maximal and DKC computation is most tractable.

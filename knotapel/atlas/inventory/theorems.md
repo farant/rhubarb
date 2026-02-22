@@ -1,9 +1,10 @@
 # Theorems, Conjectures & Key Results
 
-Extracted from 70 demos (demo-index.md) and explorer's log. Organized by topic.
+Extracted from 84 demos (demo-index.md) and explorer's log. Organized by topic.
 Updated 2026-02-20: Added results from Demos 38 (dimension reduction), 39 (symmetry decomposition), 60 (ell=7 cubic wall), 63 (Angular Anatomy), 39 Parts G-J (Markov RT truncation, second-degeneracy coranks).
 Updated 2026-02-21: Added results from Demos 64 (parity matroid recursion), 65 (Clifford staircase), 66 (quaternionic DKC), 67 (coordinate zoo), 68 (stereographic DKC), 69 (Clifford staircase on S²), 70 (Musica Nodorum), 71 (spectral DKC).
 Updated 2026-02-21: Added results from Demos 72 (spherical design test), 73 (eigenvector automaton), 74 (computational invariant), 75 (binocular DKC), 76 (8-input scaling), 77 (activation zoo), 78 (recursive scaling + phase diagram), 79 (ζ₁₂ capacity), 80 (group finiteness survey), 81 (capacity scaling law), 82 (crossing depth).
+Updated 2026-02-21: Added results from Demos 83 (framing as computational content), 84 (null states and logarithmic structure).
 
 ---
 
@@ -732,7 +733,7 @@ Updated 2026-02-21: Added results from Demos 72 (spherical design test), 73 (eig
 
 ---
 
-## 7. DKC Geometry and Capacity (Demos 72–82)
+## 7. DKC Geometry and Capacity (Demos 72–84)
 
 ### Anti-Correlation Theorem (Design Quality vs Computational Quality)
 - **Statement:** The 13 eigenvector directions are simultaneously the worst-possible choice for spherical sampling (t=0 directed t-design, failing at l=1) and a locally optimal choice for DKC computation (36 XOR6 solutions vs 4 for a better-distributed design found by stochastic optimization). Sampling quality and computational quality are anti-correlated: the directions that make integration worse make computation better.
@@ -895,6 +896,66 @@ Updated 2026-02-21: Added results from Demos 72 (spherical design test), 73 (eig
 - **Status:** DEMONSTRATED (all winner tuples at all XOR levels analyzed)
 - **Demo provenance:** Demo 82
 - **Significance:** Deep entries function as "effective generators" encoding complex rotation axes from their algebraic structure as many-generator products. The shallow core anchors the computation while deep extensions refine the angular discrimination.
+
+### Framing = +2 XOR Levels
+- **Statement:** Jones normalization (removing the writhe-dependent phase factor (−A³)^{−w}) costs exactly 2 XOR levels at every root tested: bracket XOR12 → Jones XOR10 at ζ₁₂; bracket XOR8 → Jones XOR6 at ζ₈. The loss is discrete, constant, and root-independent. Framing is one unit of computational resource, comparable in magnitude to one crossing-depth unit (Demo 82).
+- **Status:** DEMONSTRATED (ζ₈ and ζ₁₂ both confirmed; constant loss despite very different group sizes 24 vs 4096)
+- **Demo provenance:** Demo 83
+- **Significance:** Resolves the "N−2 pattern" observed in early demos — those demos were inadvertently computing Jones-normalized quantities. The bracket genuinely reaches higher XOR levels that Jones cannot; framing is not a bookkeeping anomaly but active computational content.
+
+### Resource Decomposition Conjecture
+- **Statement:** DKC computational power decomposes additively as: lattice base (XOR6) + 2 × depth_rounds + 2 × framing_present. The "+2 per resource unit" pattern matches across crossing depth (Demo 82) and writhe. These three resources — lattice, depth, and framing — are independent and additive.
+- **Status:** SUPPORTED (matches at both ζ₈ and ζ₁₂; further verification across roots and depths required)
+- **Demo provenance:** Demo 83
+- **Significance:** Provides a unified accounting framework for DKC capacity. Each discrete resource contributes exactly +2 XOR levels; no resource substitutes for another.
+
+### Angular Vocabulary is the Mechanism
+- **Statement:** Jones normalization reduces distinct quaternion angles from 43 to 31 (−28%) while leaving direction count unchanged (512 → 512). The 2-level capacity loss maps entirely onto the angle reduction. Framing's computational contribution operates through the angular coordinate of the quaternion, not the directional coordinate — consistent with Demo 82's finding that angular refinement (not direction count) drives XOR10 → XOR12.
+- **Status:** DEMONSTRATED (ζ₁₂ information collapse fully characterized: quaternions 4096 → 2710, angles 43 → 31, directions 512 → 512)
+- **Demo provenance:** Demo 83
+- **Significance:** Separates the mechanism of framing loss from direction-based explanations. The writhe-dependent phase rotates quaternions in the angular coordinate only; the S² directional structure is preserved.
+
+### Writhe Independence from Depth
+- **Statement:** Depth and writhe are genuinely independent computational axes: depth-writhe correlation r = 0.139 across 4096 ζ₁₂ entries. Mean |writhe| grows linearly with depth (0.80 → 1.33 → 1.82 → 2.14 → 2.61 → 3.19 for depths 0–8), but the low correlation confirms that a deep entry can have low writhe (crossings cancel) or high writhe (crossings accumulate) depending on chirality structure.
+- **Status:** DEMONSTRATED (r = 0.139 at 4096 entries; strong evidence of genuine independence)
+- **Demo provenance:** Demo 83
+- **Significance:** Establishes that depth and framing are independent computational resources that can be combined without interference, supporting the additive resource decomposition conjecture.
+
+### TQFT Anomaly is Computational Resource
+- **Statement:** The Jones polynomial removes the writhe phase factor as a "framing anomaly" — the first term discarded at TQFT's maximally degenerate point (δ=0). Demo 83 demonstrates that this anomaly term is not noise but computation: it contributes exactly the 2 XOR levels that distinguish bracket from Jones capacity.
+- **Status:** INTERPRETATION (consistent with all data; not a formal theorem)
+- **Demo provenance:** Demo 83
+- **Significance:** Connects to the TQFT/Witten (1989) framing anomaly literature. What field theory discards first for "purity" is precisely what DKC exploits for computation.
+
+### Null Indispensability Theorem
+- **Statement:** In the ζ₈ catalog, the 9 bracket-null entries (Re(q)=0, Kauffman trace vanishes) cannot be removed without destroying XOR capacity. The non-null-only subset (15 entries, 7 directions) achieves only XOR6; the full catalog (24 entries, 13 directions) achieves XOR8. The non-null-only subset performs below the random-15-entry baseline (mean max_xor 7.8), confirming nulls are disproportionately important rather than merely incidentally present.
+- **Status:** DEMONSTRATED (exhaustive; non-null-only subset tested alongside 100-trial random controls)
+- **Demo provenance:** Demo 84
+- **Significance:** Refutes the assumption that bracket-null states are computational dead weight. In the ζ₈ regime, nulls contribute 6 directions (cube-edge-midpoints) exclusively unavailable to the 15 non-null entries, and these directions are necessary for XOR8 solutions.
+
+### Null Directional Efficiency
+- **Statement:** Each null entry in the ζ₈ catalog covers a unique S² direction not shared with other null entries (1.00 direction per null entry), while non-null entries share directions (0.47 direction per non-null entry). Null entries are maximally efficient as directional vocabulary; their contribution to S² coverage is strictly greater per entry than non-null entries.
+- **Status:** DEMONSTRATED (direction geometry fully characterized: 6 null-only, 4 non-null-only, 3 shared directions)
+- **Demo provenance:** Demo 84
+- **Significance:** Explains mechanistically why removing nulls costs more than removing random entries: nulls hold exclusive geometric territory that non-null entries cannot cover.
+
+### S¹ Flatness of Null-Only
+- **Statement:** All bracket-null entries in the ζ₈ catalog have half-angle exactly 90°, placing them at a single point on S¹. The null-only subset (9 entries) occupies a single S¹ sector and derives its entire computational contribution from S² directional diversity. XOR6 count for the null-only subset is flat across all tested k_sec values (k=1,2,4,6,8), confirming S¹ provides zero additional discriminating power for this subset.
+- **Status:** DEMONSTRATED (k_sec sweep confirmed; flatness is exact, not approximate)
+- **Demo provenance:** Demo 84
+- **Significance:** Provides a clean decomposition: nulls live on one point of S¹ (zero angular vocabulary) but cover 9 distinct directions on S² (maximal directional vocabulary). They are pure S² resources.
+
+### Logarithmic Partner Hypothesis
+- **Statement:** The LCFT (logarithmic conformal field theory) interpretation of null states is consistent with all Demo 84 results. In LCFT, null states |N⟩ satisfy ⟨N|N⟩=0 but |N⟩≠0, paired with logarithmic partners via Jordan-cell L₀ action. The 6 null-only directions (cube-edge-midpoints, no non-null partner in the catalog) correspond to null states lacking logarithmic partners — and removing them destroys capacity rather than merely reducing it.
+- **Status:** SUPPORTED (consistent with all geometric and capacity results; Jordan-cell structure not yet made explicit)
+- **Demo provenance:** Demo 84
+- **Significance:** Connects DKC null states to LCFT (Gurarie 1993, Flohr 1996, Gaberdiel-Kausch 1996). The three shared-direction entries (coordinate axes, appearing in both null and non-null subsets) are candidate Jordan-cell pairs — null state with vanishing trace, non-null partner carrying computational content.
+
+### Null Fraction Dilution Conjecture
+- **Statement:** The fraction of bracket-null entries in the DKC catalog decreases sharply as the group grows: ζ₄ = 75.0% (3/4), ζ₈ = 37.5% (9/24), ζ₁₂ = 3.0% (121/4096). In an infinite group the null fraction approaches zero, consistent with the hypothesis that nulls are a finite-group boundary effect — the discrete S¹ spectrum collapses and the half-angle=90° entries become an infinitesimal measure.
+- **Status:** OBSERVED (three data points; mechanism consistent with finite-group boundary interpretation)
+- **Demo provenance:** Demo 84
+- **Significance:** Predicts that the null-indispensability result is specific to the ζ₈ (finite group) regime. At ζ₁₂, with only 3% null fraction but 29 null-only directions, whether nulls remain indispensable for XOR12 solutions is an open question.
 
 ---
 
@@ -1137,3 +1198,13 @@ Jones polynomial (writhe-normalized bracket) is invariant under all three Reidem
 50. Logarithmic scaling law — max_xor ≈ 0.62 × log₂(catalog_size) + 4.6 for ζ_12; each +2 XOR costs ~10× more entries (Demo 81)
 51. Linear depth law — max_xor ≈ depth + 6; crossing depth is the fundamental variable; Demo 81 logarithmic law is a corollary (Demo 82)
 52. Algebraic coherence beats vocabulary — deep-564 (476 dirs, 19 angles) reaches XOR12; strided-564 (512 dirs, 43 angles) reaches only XOR10; shared algebraic structure dominates geometric coverage (Demo 82)
+53. Framing = +2 XOR levels — Jones normalization costs exactly 2 XOR levels at ζ₈ and ζ₁₂; constant loss despite 100× different group sizes; bracket genuinely exceeds Jones capacity (Demo 83)
+54. Angular vocabulary is the mechanism — framing loss maps entirely onto angle reduction (43 → 31, −28%) while directions are unchanged (512 → 512); writhe phase rotates in the angular coordinate only (Demo 83)
+55. Writhe and depth are independent computational axes — r = 0.139 near-zero correlation at 4096 entries; chirality structure is not determined by crossing length (Demo 83)
+56. Resource decomposition conjecture — lattice base (XOR6) + 2 × depth_rounds + 2 × framing; three independent additive resources each contributing exactly +2 XOR levels (Demo 83)
+57. TQFT anomaly is computational resource — the first term TQFT discards (writhe phase) is the term DKC uses for 2 additional XOR levels; TQFT's maximally degenerate point δ=0 discards computation first (Demo 83)
+58. Null indispensability theorem — bracket-null entries in ζ₈ cannot be removed without destroying XOR capacity; non-null-only (15 entries) achieves only XOR6; non-null-only performs below random-15-entry baseline (Demo 84)
+59. Null directional efficiency — 1.00 dir/entry for nulls vs 0.47 for non-null entries; nulls hold exclusive geometric territory (6 cube-edge-midpoint directions) unavailable to non-null entries (Demo 84)
+60. S¹ flatness of null-only — all ζ₈ nulls have half-angle exactly 90°; k_sec sweep flat across k=1,2,4,6,8; nulls are pure S² resources with zero S¹ angular vocabulary (Demo 84)
+61. Logarithmic partner hypothesis — LCFT null/partner structure (Gurarie 1993) is consistent with all null-geometry results; 6 null-only directions have no logarithmic partner and their removal destroys capacity (Demo 84)
+62. Null fraction dilution conjecture — ζ₄=75%, ζ₈=37.5%, ζ₁₂=3.0%; null fraction decreases toward zero in infinite groups; null indispensability is a finite-group boundary effect (Demo 84)

@@ -12,9 +12,10 @@ but reachable at k=6 MVN sectors (906 solutions); (3) two Boolean classes are pr
 unreachable by ANY half-plane activation on multiplicative encodings (the 11/13 theorem).
 The wall is in activation geometry (convexity), not the weight lattice. Nobody in knot
 theory, neural networks, lattice coding, or TQC has connected these four fields before.
-The four-pillar assembly: Abramsky (TL = computation) -> Habiro (bracket = cyclotomic
+The five-pillar assembly: Abramsky (TL = computation) -> Habiro (bracket = cyclotomic
 integer) -> Aizenberg (root-of-unity neurons = Boolean logic) -> Nazer-Gastpar (algebraic
-lattices = exact computation). Each step is published; the intersection is unoccupied.
+lattices = exact computation) -> Reservoir Computing (braid depth = computational capacity).
+Each step is published; the intersection is unoccupied.
 
 ## Key Results
 
@@ -41,33 +42,38 @@ lattices = exact computation). Each step is published; the intersection is unocc
 | 19 | ζ₁₂ breaks wall: infinite group gives XOR10=124, XOR12=50+; capacity scales with catalog | 79 | PROVEN |
 | 20 | Only ζ₄ and ζ₈ finite (ADE: Q₈ and E₇); quantum dimension [2]_q = 0 at ζ₈ | 80 | PROVEN |
 | 21 | Linear depth law: max_xor ≈ depth+6; algebraic coherence beats raw vocabulary | 82 | DEMONSTRATED |
+| 22 | Framing = +2 XOR levels: Jones normalization destroys exactly 2 levels at every root; writhe and depth are independent resources (r=0.14) | 83 | DEMONSTRATED |
+| 23 | Null indispensability: 9/24 bracket-null entries at ζ₈ maintain 6 exclusive S² directions; removing them drops XOR8→XOR6, worse than random removal | 84 | DEMONSTRATED |
 
 ## Current Frontier
 
-Most recent landmarks: Demos 72-82 opened two new arcs on top of the D64-71 foundation.
+Most recent landmarks: Demos 72-84 opened three arcs on top of the D64-71 foundation.
 **The characterization arc** (D72-75): bracket and Voronoi cell are incomparable braid
 invariants with 119 combined classes (D74); the angle channel subsumes the cell for additive
 sums (D75); anti-correlation — worst spherical t-design gives MOST solutions (D72); 82.8%
-universal automaton determinism (D73). **The scaling arc** (D76-82): XOR8=0 at ζ₈ with S²
-Voronoi alone (D76) but XOR8=6 with S¹×S² combined activation (D77) — the wall was the
-activation, not the root, the SAME discovery pattern as D50; ζ₈ finite group ceiling at
-XOR10 (D78); ζ₁₂ BREAKS the wall with XOR10=124, XOR12=50+ (D79); only ζ₄ and ζ₈ generate
-finite SU(2) subgroups — ADE classification, quantum dim [2]_q=0 at ζ₈ (D80); logarithmic
-scaling 0.62 XOR per catalog doubling (D81); and the fundamental reinterpretation: max_xor ≈
-depth+6 where depth = crossing number, algebraic coherence beats vocabulary (D82). Three
-formal proofs (P01-P03). 70 demos total. Paper 6 proposed: "Crossing Depth, Group
-Finiteness, and Capacity Scaling in DKC."
+universal automaton determinism (D73). **The scaling arc** (D76-82): XOR8=6 with S¹×S²
+combined activation (D77); ζ₈ finite group ceiling at XOR10 (D78); ζ₁₂ BREAKS the wall with
+XOR12 (D79); only ζ₄ and ζ₈ finite — ADE classification (D80); logarithmic scaling (D81);
+depth law max_xor ≈ depth+6 (D82). **The decomposition arc** (D83-84): Jones normalization
+destroys exactly 2 XOR levels at every root — framing is a discrete computational resource,
+not a bookkeeping anomaly (D83); writhe and depth are independent axes (r=0.14); resource
+decomposition: lattice (XOR6) + depth (+2/round) + writhe (+2). Bracket-null entries (9/24
+at ζ₈) maintain 6 exclusive S² directions; removing them drops capacity worse than random
+removal — nulls are indispensable (D84). LCFT Jordan-cell interpretation: null states pair
+with logarithmic partners. Three formal proofs (P01-P03). 72 demos total. Paper 6 scope
+expanded to D72-D84.
 
 **Next (Tier 1 priorities):**
 1. **ζ₁₂ with Sec×Vor activation** -- D79 showed ζ₁₂ breaks the ζ₈ wall; D77 showed
    Sec×Vor is far more powerful than sector alone. Combining them should dramatically
    increase XOR capacity. Immediate Paper 6 impact.
-2. **ζ₃₂ finiteness test** -- D80's Power-of-Two Conjecture predicts ζ₃₂ finite. Single
-   test_root(32) call. Small effort, high clarity for the ADE/finiteness story.
-3. **Analytical proof of the 13=13 bandwidth bound** -- prove l=⌈(N-1)/2⌉ for N-point
-   binary Voronoi on S². Cleanest standalone publication target. Unlocks Paper 5.
-4. **Sandwich theorem formal proof** -- radical dimension formula PROVEN; remaining:
-   algebra isomorphism, nilpotency=3, Fibonacci rank. Small-medium effort. Unlocks Paper 3.
+2. **Framing test at ζ₁₆/ζ₂₄** -- D83 showed +2 loss at ζ₈ and ζ₁₂. Confirming at
+   additional roots establishes universality. Small effort, high clarity.
+3. **ζ₁₂ null indispensability** -- D84 showed nulls indispensable at ζ₈ (9/24). Are the
+   121 null entries (3%) at ζ₁₂ similarly critical? 29 null-only directions suggest yes.
+4. **ζ₃₂ finiteness test** -- D80's Power-of-Two Conjecture. Single test_root(32) call.
+5. **Analytical proof of the 13=13 bandwidth bound** -- cleanest standalone pub target.
+6. **Sandwich theorem formal proof** -- remaining: algebra iso, nilpotency=3, Fibonacci rank.
 
 ## Deeper Reading (all paths relative to `knotapel/`)
 

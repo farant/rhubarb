@@ -33,7 +33,7 @@ atlas/
 
   research/                     <- external sources
     literature-index.md         <- all papers, one-line each, tagged
-    four-pillars.md             <- Habiro / Nazer-Gastpar / Abramsky / Aizenberg
+    five-pillars.md             <- Habiro / Nazer-Gastpar / Abramsky / Aizenberg / Reservoir Computing
     key-sources.md              <- particularly valuable papers with notes
 
   planning/                     <- todo lists + direction
@@ -106,7 +106,7 @@ Why worker pool, not fixed batches: Agent context windows cannot handle 10+ demo
 
 - Agent A -> `inventory/theorems.md`: Extract all theorems/conjectures from demo-index entries, organize by topic, track status.
 - Agent B -> `inventory/data-tables.md`: Extract all key numerical tables (axiality hierarchy, radical dimensions, DKC landscape matrix, catalog sizes, compression ratios, etc.)
-- Agent C -> `research/literature-index.md` + `research/four-pillars.md` + `research/key-sources.md`: Consolidate all literature references across demos, deduplicate, tag.
+- Agent C -> `research/literature-index.md` + `research/five-pillars.md` + `research/key-sources.md`: Consolidate all literature references across demos, deduplicate, tag.
 - Agent D -> `inventory/code-assets.md`: Catalog reusable code patterns with which demo introduced them and which demos reuse them.
 - Agent E -> `inventory/floating-point-audit.md`: For each new/modified demo, read main.c and classify its floating-point usage (INTEGER, DISPLAY-ONLY, VALIDATION, EXACT-CORE, GEOMETRIC, STATISTICAL, or MIXED). Update the audit table, summary counts, and regime descriptions. This tracks the boundary between exact and FP computation across the codebase.
 
@@ -192,3 +192,4 @@ The "modified existing demo" case is the one the old process missed — if someo
 | 2026-02-20 | `1548c73` | +D63, D39 updated, +P02, +P03 | Major incremental defrag. D63 (Angular Anatomy): parity ceiling n=5, 4/5-input parity, OM classification, triskelion k=2n FALSIFIED, universal k=2M−1. D39 Parts G-J: three Gram forms, Markov RT truncation, next-level radical. Two new proofs indexed (P02, P03). 51 demos total. All phases parallel where possible. |
 | 2026-02-21 | `76b0f62` | +D64-D71 (8 new demos) | Largest incremental defrag. Two arcs: wall (D64-65: matroid funnel, self-doubling impossibility, algebra-independence of ceiling, two-layer wall, generalized XOR6 at k=24) and quaternionic-spherical (D66-71: 24-cell, S² sweet spot, Hopf inertness, 13-direction Voronoi, stereographic visualization, direction nesting, knots-as-music, 13=13 bandwidth theorem). 59 demos, 86 literature refs. Paper 5 proposed. |
 | 2026-02-21 | `1548c73` | +D72-D82 (11 new demos) | Two arcs: characterization (D72-75: anti-correlation/t-design, eigenvector automaton, bracket/cell incomparability 119 classes, binocular DKC angle-subsumes-cell) and scaling (D76-82: XOR8=6 via S¹×S² activation, ζ₈ finite ceiling at XOR10, ζ₁₂ breaks wall XOR12, only ζ₄/ζ₈ finite ADE, 0.62 XOR/doubling log law, depth law max_xor≈depth+6). FP audit added as Phase 2 Agent E. 70 demos, 101 literature refs. Paper 6 proposed. |
+| 2026-02-21 | `8e5a93a` | +D83-D84 (2 new demos) | Decomposition arc: D83 (framing = +2 XOR, writhe/depth independent r=0.14, resource decomposition lattice+depth+writhe, TQFT anomaly = computation) and D84 (null indispensability, 9/24 bracket-null at ζ₈, 6 exclusive S² directions, LCFT Jordan-cell interpretation, RC Pillar 5 connection, null fraction dilution law). Phase 1: 2 parallel agents with explorer's log as source. Phase 2: 5 parallel agents. Phase 3: 4 parallel agents. Phase 4-5: 4 parallel + sequential. 72 demos, 108 literature refs. Paper 6 scope expanded D72-D84. |

@@ -2985,5 +2985,266 @@ For periodic systems (bulk LCFT), the Hamiltonian L₀+L̄₀ admits Jordan cell
 
 At the free fermion point (DKC's operating point), the lattice W-algebras are "closely connected with known wall Brauer algebras." Brauer algebras are the algebraic framework for SO(n)/Sp(n) representation theory, distinct from the TL/SU(2) framework. There is ADDITIONAL algebraic structure at q=i beyond what TL captures — from a different classical group family. This is completely unexplored territory for DKC.
 
+## Demo 84: Null States and Logarithmic Structure — Spec and Reinterpretation
+
+**Status:** NEXT to build. Demo 83 complete (12/12 pass). Demos 79-83 all complete with findings.
+
+### Critical Reinterpretation: What "Null" Means in DKC
+
+SU(2) is a group — products of unit quaternions are always unit quaternions. You CANNOT get q = 0 from multiplying generators. So "null state" needs reinterpretation:
+
+**Bracket-null = Re(q) = 0** (purely imaginary quaternion)
+
+The Kauffman bracket trace formula involves Re(q). When Re(q) = 0, the bracket trace vanishes — the entry is "invisible" to the scalar bracket, just as null states in LCFT are invisible to the inner product (⟨T|T⟩ = 0). But the quaternion itself is still a unit quaternion with full directional information.
+
+- Bracket-null entries are purely imaginary quaternions = **rotations by exactly 180°** (half-angle = 90°, or at ζ₈: half-angle = 45° means cos(π/4) ≈ 0.707, so exact bracket-null requires half-angle = π/2)
+- The **logarithmic partner** in DKC terms = the non-scalar quaternionic structure (direction + angle) that persists even when the bracket trace vanishes
+- **Additive cancellation pairs**: Re(q_i + q_j) ≈ 0 is the additive analog relevant to XOR computation (subset sums in DKC use addition, not multiplication)
+
+### The N-2 Insight (Demo 83)
+
+Bracket capacity = N (XOR-N reachable). Jones capacity = N-2. The "N-2 pattern" from Demo 79 was Jones capacity all along:
+
+| Root | Bracket capacity | Jones capacity | Difference |
+|------|-----------------|----------------|------------|
+| ζ₈   | 8 (XOR8)       | 6 (XOR6)      | 2          |
+| ζ₁₂  | 12 (XOR12)     | 10 (XOR10)    | 2          |
+
+Framing lives in **angles, not directions**: Jones normalization preserves 512 directions but kills 12 of 43 angles (28% angular vocabulary destroyed).
+
+### Demo 84 Six-Part Spec
+
+- **Part A: Bracket-Null Census** — Count entries with |Re(q)| < threshold. Distribution by depth, writhe, direction.
+- **Part B: Near-Null Spectrum** — Distribution of |Re(q)| across full catalog. Gap vs continuum? Fraction below various thresholds.
+- **Part C: Computational Role** — THE CRUX TEST. Split catalog by |Re(q)|: bracket-null vs bracket-rich subsets at matched sizes. Compare XOR capacity. If null entries are computationally dead weight, removing them should not hurt capacity.
+- **Part D: Additive Cancellation Pairs** — For all pairs (i,j), compute Re(q_i + q_j). Count near-zero pairs. Do XOR winners use cancelling pairs preferentially?
+- **Part E: Direction-of-Null** — Bracket-null entries are purely imaginary. How many of the 13 ζ₈ directions have bracket-null entries? Is nullity direction-selective?
+- **Part F: ζ₈ vs ζ₁₂ Comparison** — Null fractions, near-null distributions, cancellation pair density at both roots.
+
+## Demo 84: Null States and Logarithmic Structure — COMPLETE (2026-02-22)
+
+17 pass, 0 fail. C89, zero dependencies. Most findings-dense demo since Demo 50.
+
+### The Three Headline Findings
+
+**1. Computational Non-Additivity (k_sec=1)**
+Neither null-only (9 entries, 9 dirs) nor non-null (15 entries, 7 dirs) can compute XOR6 alone. Their union gets 36 winners. This is the computational manifestation of non-semisimplicity: the whole exceeds the sum of its parts, just as indecomposable modules exceed their composition factors.
+
+**2. Null Entries as Efficiency Amplifiers (k_sec sweep)**
+The non-null subset CAN reach XOR8, but only at k_sec=16-20 (3x the full catalog's optimal k=6). Null entries don't add new computational LEVELS — they provide angular efficiency. The mechanism: null entries contribute 6 exclusive directions (cube edge midpoints) that widen the Voronoi vocabulary, letting the combined_cell activation discriminate at lower angular resolution.
+
+**3. Semisimple = Zero (ζ₄ vs ζ₈ vs ζ₁₂)**
+ζ₄ (δ=2, semisimple): zero capacity.
+ζ₈ (δ=0, non-semisimple): full capacity.
+Non-semisimplicity IS the computational resource. The radical provides both the null entries AND the memory mechanism (nilpotent shearing) that enables depth scaling.
+
+### Part A: Bracket-Null Census
+
+| Depth | Total | Null | % |
+|-------|-------|------|---|
+| 0 | 5 | 0 | 0% |
+| 1 | 10 | 2 | 20% |
+| 2 | 8 | 6 | 75% |
+| 3 | 1 | 1 | 100% |
+
+9/24 bracket-null (37.5%). Deeper = more null. All null entries have Re(q)=0, half-angle=90°.
+
+### Part B: Gap Theorem
+
+4 discrete |Re(q)| values: {0, 0.5, 0.707, 1.0}. Hard gap of 0.5 between null and non-null. No continuum — nullity is binary.
+
+### Part E: Direction Geometry
+
+13 directions partition into three geometric types:
+- **6 NULL-ONLY**: cube edge midpoints (1/√2 components)
+- **4 NON-NULL-ONLY**: tetrahedral axes (1/√3 components)
+- **3 BOTH**: coordinate axes
+
+Null entries have 1.00 dir/entry efficiency. Non-null: 0.47 dir/entry. Each null occupies a unique direction.
+
+### Baseline + Part D: Winner Analysis
+
+Full catalog: max_xor=8, XOR6=32, XOR8=32 (at k=6).
+
+| Level | Winners | MeanNull | Expected | Ratio |
+|-------|---------|----------|----------|-------|
+| XOR6 | 32 | 0.344 | 1.125 | 0.31 |
+| XOR8 | 32 | 1.188 | 1.500 | 0.79 |
+
+Winners AVOID nulls at XOR6 (ratio 0.31) but approach expected at XOR8 (0.79). Level-dependent effect: low complexity avoids nulls, high complexity needs them.
+
+### Part C: The Crux — Capacity Without Nulls
+
+| Catalog | Size | Dirs | MaxXOR | XOR6 |
+|---------|------|------|--------|------|
+| Full | 24 | 13 | 8 | 32 |
+| Non-null | 15 | 7 | 8 | 32 |
+| Null-only | 9 | 9 | 0 | 0 |
+| Random-15 | 15 | — | 7.7 | 32.0 |
+| Random-9 | 9 | — | 6.7 | 30.6 |
+
+Non-null retains max_xor=8 but XOR8 drops 32→4 winners (87.5% reduction). Null-only has ZERO capacity — worse than every random-9 control (mean 6.7).
+
+**k_sec Sweep Table (THE KEY RESULT)**:
+
+| k_sec | Full(24) | NonNull(15) | NullOnly(9) |
+|-------|----------|-------------|-------------|
+| 1 | 36 | 0 | 0 |
+| 2 | 137 | 12 | 0 |
+| 4 | 185 | 22 | 0 |
+| 6 | 370 | 46 | 0 |
+| 8 | 459 | 66 | 0 |
+
+Null-only flat at zero (confirmed: single S¹ sector). Non-null dead at k_sec=1 (7 dirs insufficient for directional parity separation). Full catalog achieves 36 at k_sec=1 — the 13-direction diversity from COMBINING null and non-null enables computation.
+
+**k_sec Cost Finding**: Non-null XOR8 winners require k=16-20 (vs full catalog k=6). 3x angular resolution needed to compensate for lost directional vocabulary. Nulls are "efficiency amplifiers."
+
+### Part F: Cross-Root Comparison
+
+| Root | δ | Semisimple? | Entries | Null% | XOR6 | XOR8 | k_sec needed |
+|------|---|-------------|---------|-------|------|------|-------------|
+| ζ₄ | 2 | YES | 4 | 75% | 0 | 0 | N/A |
+| ζ₈ | 0 | NO | 24 | 37.5% | 32 | 32 | 6 |
+| ζ₁₂ | ~1.73 | NO | 4096* | 3.0% | — | — | — |
+
+(*truncated — infinite group, Demo 79)
+
+Null fraction monotonically decreases: 75%→37.5%→3%. Finite groups are null-heavy. ζ₄ (abelian/semisimple): zero capacity, saturates at depth 1 (Klein four-group mod ±1).
+
+### The LCFT Mapping (Revised)
+
+| LCFT concept | DKC realization | Demo 84 evidence |
+|---|---|---|
+| ⟨T\|T⟩ = 0 (null self-norm) | Null-only capacity = 0 | 0 XOR winners at ALL k_sec |
+| ⟨t\|t⟩ ≠ 0 but insufficient | Non-null at k=1 = 0 | 0 XOR winners at k_sec=1 |
+| ⟨T\|t⟩ = b (coupling) | Combined capacity at k=1 = 36 | k_sec=1 synergy |
+| Jordan cell (non-diag L₀) | Non-semisimple radical | k_sec cost: 6 vs 16-20 |
+
+### Theoretical Connections Generated
+
+1. **Reservoir Computing as 5th Pillar**: DKC architecture = fixed reservoir + tunable readout. The ζ₈→ζ₁₂ transition = edge of chaos. The radical = reservoir memory mechanism.
+
+2. **Moiré Interference**: Optimal k where LCM(k, lattice_period) ≈ catalog_size. k=6 for ζ₈ because LCM(6,8)=24. Non-null subset needs k=16-20 because its effective catalog is sparser.
+
+3. **depth+6 Unification**: The +6 constant in max_xor ≈ depth+6 IS the spectral bandwidth l=6 from the 13=13 theorem. RC capacity formula: capacity = intrinsic_dimension + mixing_rate × depth.
+
+4. **Three-Level Discarding Pattern**: Jones→writhe (1985), bracket trace→null entries, LCFT→null states. Same mistake at three scales.
+
+5. **Non-Semisimplicity Thesis**: Semisimple = Markov (memoryless). Non-semisimple = counter machine (radical provides memory via nilpotent Jordan blocks). Slope in capacity formula comes from Loewy length / radical depth.
+
+### Five Predictions Generated, Status
+
+| # | Prediction | Status |
+|---|---|---|
+| 1 | Null advantage at k_sec=1 | REFUTED (neither subset works — synergy more interesting) |
+| 2 | Null-only flat across k_sec | CONFIRMED (flat at zero) |
+| 3 | 7-dir intercept ≈ 3 | INCONCLUSIVE (non-null reaches XOR8 but at high k_sec) |
+| 4 | ζ₄ abelian flatline | CONFIRMED (zero capacity) |
+| 5 | Fibonacci anyon slope ≈ 1.38 | UNTESTED (needs new root) |
+
+### Seeds for Next Demos
+
+- **Demo 85: Indecomposability Parameter** — compute DKC analog of the b parameter from finite lattice systems. The k_sec=1 synergy value (36) might itself encode b.
+- **Demo 86: Dense Polymer Fusion** — the open Gainutdinov calculation at p=2. Would give algebraic description of DKC composition.
+- **Demo 87: Depth Scaling Slopes** — verify slope=0 at semisimple point (need larger semisimple catalog or accept ζ₄ saturation as the finding). Compare ζ₈ vs ζ₁₂ slopes.
+- **Demo 88: Moiré Optimal k_sec** — systematic sweep: for each catalog size, find optimal k_sec and test LCM prediction.
+
+---
+Demo 85 Context (not yet in log)
+
+The b Parameter Algorithm (from Gemini, validated)
+
+1. Build Gram matrix G (Demo 51 infrastructure)
+2. Build Hamiltonian H = -Σ e_i (Demo 35 generators)
+3. Find ground state eigenvalue E₀ and eigenvector |T⟩
+4. Verify null: ⟨T|G|T⟩ = 0
+5. Solve singular system (H - E₀I)|t⟩ = |T⟩ (pseudoinverse/Gaussian elimination)
+6. Gauge-fix: ⟨T|G|t⟩ = 1
+7. b = ⟨t|G|t⟩
+
+Prediction: b = -2
+
+From symplectic fermion continuum theory at c=-2. Percolation (c=0) has b = -5/8 (boundary), b = -5 (bulk). Dense
+polymer value NOT in literature — we'd be first.
+
+Hybrid approach (team lead's feasibility finding)
+
+- Don't need full Jordan decomposition
+- Demo 35 gives integer TL generators at δ=0 (ζ₈ gives δ=0 exactly)
+- Demo 51 gives Gram matrix + radical basis (null states directly)
+- Just need: Gram nullspace + eigenvalues of H + one singular linear solve per null state
+- n=4 (14×14): trivial. n=6 (132×132): moderate. n=8 (1430×1430): stretch goal.
+
+Pitfall
+
+Step 5 is a singular system. |t⟩ defined up to multiples of |T⟩. Step 6 gauge-fixes this ambiguity.
+
+---
+Theoretical Framework from This Session (not yet fully in log)
+
+Reservoir Computing as 5th Pillar
+
+- DKC architecture = fixed reservoir (braid catalog) + tunable readout (activation/k_sec)
+- ζ₈→ζ₁₂ transition = edge of chaos in RC dynamics
+- Radical = reservoir memory mechanism
+- Jaeger (2001) memory capacity bounds may formalize 11/13 theorem
+
+Pure Synergy (Williams & Beer 2010)
+
+- Formal PID name for the 0+0=36 result
+- Unique_null = 0, unique_nonnull = 0, synergistic = all
+- Paper-ready terminology
+
+Binary Indicator Capacity Formula
+
+- Capacity ≈ [I(Extension ≠ 0) × Bandwidth] + N(Radical) × Depth
+- Bandwidth is GATED — binary switch, not gradual degradation
+- Extension intact (both factors present) → full bandwidth. Broken → zero.
+
+"Conditioning, Not Computing"
+
+- Nulls maximize effective rank of weight space
+- 3x resolution penalty (k=6→k=16-20) = Cramér-Rao cost of ill-conditioned basis
+- Single-sentence Demo 84 summary
+
+Non-Semisimplicity Thesis
+
+- Semisimple = Markov chain (memoryless, transitions only)
+- Non-semisimple = counter machine (nilpotent Jordan blocks accumulate depth history)
+- Slope in capacity formula comes from Loewy length / radical depth
+- ζ₄ (semisimple): zero capacity confirmed
+- The radical provides BOTH null entries AND the memory mechanism
+
+Moiré Interference for k_sec
+
+- Optimal k where LCM(k, lattice_period) ≈ catalog_size
+- k=6 optimal for ζ₈ because LCM(6,8)=24=catalog size
+- Too small LCM → resonance collapse. Too large → empty cells.
+- Non-null subset needs k=16-20 because effective catalog is sparser
+
+depth+6 Unification
+
+- The +6 constant = spectral bandwidth l=6 from 13=13 theorem (Demo 71)
+- RC formula: capacity = intrinsic_dimension + mixing_rate × depth
+- Two independent discoveries (D71 + D82) unified by one equation
+
+ζ₄ Saturation Caveat
+
+- ζ₄ has only 4 entries, saturates at depth 1 (Klein four-group)
+- "Slope = 0" is trivially true — catalog too small, not a clean semisimplicity test
+- Better framing: "semisimple points can't BUILD deep catalogs"
+- Decisive test needs ζ₈ vs ζ₁₂ slope comparison (both non-semisimple, different radical richness)
+
+Three-Level Discarding Pattern
+
+1. Polynomial level: Jones (1985) normalizes away writhe → loses 2 XOR levels
+2. State level: bracket trace projects onto Re(q) → loses 6/13 directions
+3. CFT level: ⟨T|T⟩=0 null states treated as trivial → loses logarithmic partners
+
+Cross-Model Research Workflow
+
+- Gemini surfaced RC connection → Claude sharpened into non-semisimplicity thesis → data confirmed → Gemini named it (pure synergy, conditioning)
+- Different training distributions finding different patterns on same object
+
 ---
 *End of Explorer's Log*

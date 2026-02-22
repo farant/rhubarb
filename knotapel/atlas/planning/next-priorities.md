@@ -1,6 +1,6 @@
 # DKC Research: Next Priorities
 
-Generated 2026-02-20. Updated 2026-02-21 after D72-D82. Informed by synthesis documents (narrative, novelty, connections, four-lenses). D64–D71 added: matroid recursion, Clifford staircase (Z[zeta_16]), 24-cell / quaternionic arc (D66–D71), spectral DKC. D72–D82 added: spherical design, eigenvector automaton, computational invariant, binocular DKC, 8-input scaling, activation zoo, recursive scaling, ζ₁₂ capacity, group finiteness survey, capacity scaling law, crossing depth.
+Generated 2026-02-20. Updated 2026-02-21 after D72-D84. Informed by synthesis documents (narrative, novelty, connections, four-lenses). D64–D71 added: matroid recursion, Clifford staircase (Z[zeta_16]), 24-cell / quaternionic arc (D66–D71), spectral DKC. D72–D82 added: spherical design, eigenvector automaton, computational invariant, binocular DKC, 8-input scaling, activation zoo, recursive scaling, ζ₁₂ capacity, group finiteness survey, capacity scaling law, crossing depth. D83–D84 added: framing as computational content (+2 writhe loss), null states and logarithmic structure (null indispensability, LCFT Jordan-cell interpretation).
 
 ---
 
@@ -51,6 +51,24 @@ The **radical dimension formula** (rad(TL_ℓ) = 2ℓ−3) is now formally prove
 **Why:** If ζ₃₂ is finite, the power-of-two pattern holds and the ADE/finiteness story gains a third data point, making it publishable on its own. If ζ₃₂ is infinite, the pattern breaks and the real criterion must be found — equally important. Either outcome directly impacts the Paper 6 framing.
 **Effort:** SMALL (single additional test in D80's framework; ~1 hour of work).
 **Unblocks:** Confirms or refutes Power-of-Two Conjecture. Completes the ADE/finiteness survey for Paper 6. If finite: adds to the story that only lattice roots (quantum dimension vanishes) generate finite groups.
+
+### 1.9 Framing test at ζ₁₆/ζ₂₄ — **NEW (D83)**
+**What:** D83 demonstrated that Jones normalization destroys exactly 2 XOR levels at both ζ₈ (bracket XOR8 → Jones XOR6) and ζ₁₂ (bracket XOR12 → Jones XOR10). The +2 loss is exact and constant across these two roots despite very different group sizes (24 vs. 4096 entries). Testing at ζ₁₆ and ζ₂₄ would confirm whether the loss is truly universal across all roots of unity.
+**Why:** The "+2 per writhe unit" is the most elegant single result in the framing arc. Two data points (ζ₈, ζ₁₂) strongly suggest universality, but a reviewer can always ask for more. Two additional data points at very different roots (ζ₁₆: infinite group, finer lattice; ζ₂₄: even finer) would close this concern. If the loss is NOT +2 at some root, that is equally important — it means framing cost depends on lattice structure, which changes the resource decomposition formula.
+**Effort:** SMALL (D83 infrastructure auto-adapts via `g_half_angle`; `jones_normalize_catalog()` already works for any root; one demo, two test runs).
+**Unblocks:** Universality claim for the resource decomposition conjecture. Directly feeds Paper 6 framing chapter.
+
+### 1.10 Analytical proof of +2 writhe loss — **NEW (D83)**
+**What:** D83 showed that Jones normalization costs exactly 2 XOR levels through angular vocabulary reduction (43 → 31 angles at ζ₁₂, directions unchanged at 512). The mechanism is the (-A³)^{-w} phase factor, which acts as a rotation by `-(3*half_angle + pi)*w` per entry. Prove analytically that this rotation collapses exactly enough angle equivalence classes to destroy 2 XOR levels for any root.
+**Why:** The "+2 per writhe unit" is currently a demonstrated computational result at two roots. An analytical proof would elevate it from "verified at ζ₈ and ζ₁₂" to a theorem about the bracket-to-Jones relationship. The key insight is that the Jones phase per unit writhe creates angle equivalence classes whose count reduction corresponds to exactly 2 XOR levels — this should be provable by counting orbits of the phase rotation on the angular lattice.
+**Effort:** MEDIUM (the mechanism is identified — angle reduction via phase rotation — but formalizing "2 XOR levels worth of angle classes" requires connecting the D82 depth law to angle counting).
+**Unblocks:** Elevates the framing result from empirical to proven. High publication value — directly connects Kirby's framing (1978) and Witten's anomaly (1989) to a computational capacity theorem.
+
+### 1.11 ζ₁₂ null indispensability — **NEW (D84)**
+**What:** D84 demonstrated null indispensability at ζ₈: 9/24 entries are bracket-null (Re(q)=0), they contribute 6 exclusive directions (cube-edge-midpoints), and removing them drops capacity from XOR8 to XOR6 — worse than removing a random equal-size subset. At ζ₁₂ (4096-entry truncation), 121 entries (3%) are null with 29 null-only directions. Are those 29 null-only directions similarly essential for the XOR12 solutions found in D79? The null fraction dilution (75% → 37.5% → 3.0% across ζ₄ → ζ₈ → ζ₁₂) suggests nulls become rarer but possibly remain critical.
+**Why:** If ζ₁₂ nulls are indispensable despite being only 3% of the catalog, it establishes null indispensability as a universal structural property rather than a finite-group artifact. If they are dispensable, the LCFT interpretation is specific to the finite-group regime and the reservoir computing connection narrows accordingly.
+**Effort:** SMALL (D84's `load_subset()` and `find_capacity()` infrastructure already exists; port to ζ₁₂ catalog, run non-null-only capacity test, compare to random controls).
+**Unblocks:** Determines whether null indispensability is universal or ζ₈-specific. Critical for the LCFT/Reservoir Computing narrative in Paper 6.
 
 ---
 
@@ -135,6 +153,24 @@ Parity ceiling n=5 is unchanged at Z[zeta_16]. Gap-of-2 hypothesis REFUTED: pige
 **Why:** "Activation determines capacity" is currently a striking empirical result (14 activations compared, monotone phase transition measured). A formal theorem would make it the central theoretical contribution of Paper 6 — elevating it from "we found an activation that works" to "we proved why activation is the key variable."
 **Effort:** MEDIUM (requires formalizing the capacity ceiling of a finite quaternion group; the incomparability result from D74 — that eigenvalue and eigenvector directions capture orthogonal information — is the key ingredient).
 **Unblocks:** Paper 6's theoretical core. Connects D74 (incomparability), D77 (activation zoo), and D80 (finiteness) into a unified theorem.
+
+### 2.15 Explicit Jordan-cell pairs — **NEW (D84)**
+**What:** D84's LCFT interpretation identifies 3 shared-direction entries (coordinate axes) where both null and non-null entries exist on the same S² direction. These are the candidate Jordan-cell pairs: the null entry is |N⟩ (trace=0) and the non-null entry is its logarithmic partner |L⟩. Do these 3 pairs form literal Jordan cells in some representation of the braid group algebra? Specifically, is there a natural operator O on the 24-dimensional space (indexed by catalog entries) such that O acts on the null/non-null pair with a 2×2 Jordan block?
+**Why:** Making the LCFT connection explicit (from "interpretation" to "theorem") would be a significant result connecting DKC to logarithmic CFT in a formally verifiable way. If no such operator exists, the LCFT analogy is suggestive but not structural.
+**Effort:** MEDIUM (requires constructing the braid group representation on the 24-element catalog space and checking for non-diagonalizable blocks at the shared directions).
+**Unblocks:** Formally connects DKC to LCFT. Determines whether the Jordan-cell interpretation is analogy or isomorphism.
+
+### 2.16 ζ₁₀ null census — **NEW (D84)**
+**What:** D84 measured null fractions at ζ₄ (75%), ζ₈ (37.5%), and ζ₁₂ (3.0%) but not ζ₁₀. ζ₁₀ is the Fibonacci anyon root with infinite group and 71 distinct half-angles at 4096 entries (D80). The null fraction and directional role of null entries at ζ₁₀ is unknown. Does the null fraction follow the dilution pattern, or does ζ₁₀'s anomalous angular richness (71 half-angles vs. 43 at ζ₁₂) create a different null geometry?
+**Why:** ζ₁₀ is the canonical "Fibonacci anyon" root with deep connections to topological quantum computation. Its null structure completes the cross-root comparison and tests whether null dilution is monotonic or shows anomalies at specific roots. The 71-angle richness may make the ζ₁₀ null geometry qualitatively different.
+**Effort:** SMALL (D84's cross-root comparison loop already handles arbitrary roots; add ζ₁₀ as a third test case).
+**Unblocks:** Completes the null census across all major roots. Feeds into the null dilution conjecture and LCFT narrative.
+
+### 2.17 Resource decomposition at intermediate depths — **NEW (D83)**
+**What:** D83 established the additive resource decomposition at the maximum capacity level: lattice base (XOR6) + 2 × depth_rounds + 2 × framing_present. The "+2 per resource unit" pattern is confirmed at maximum depth. But does the bracket-vs-Jones gap hold at every depth level, or does the +2 writhe contribution vary with depth? At intermediate depths (e.g., depth-4 or depth-6 in the ζ₁₂ catalog), does the bracket outperform Jones by exactly 2, or does the gap open gradually?
+**Why:** If the +2 gap is constant across all depths, the resource decomposition is truly additive and depth-independent. If the gap varies, the interaction between depth and writhe is nontrivial, which would modify the resource formula and may reveal a depth-writhe coupling term.
+**Effort:** SMALL (D83's `save_catalog()` / `restore_catalog()` and `jones_normalize_catalog()` infrastructure supports arbitrary depth-limited subsets; run bracket vs. Jones at each depth stratum).
+**Unblocks:** Confirms or refines the additive resource decomposition. Determines whether depth and writhe are truly independent axes or coupled.
 
 ---
 
@@ -245,7 +281,7 @@ D74 (bracket/cell incomparability, 119 classes — STRENGTHENS Paper 5)
 
 Paper 5 is entirely new — enabled by D66–D71. D72's anti-correlation result (algebraic eigenvector placement is anti-correlated with sampling quality, proving the computation is algebraic not geometric) and D74's incomparability theorem (bracket and cell are incomparable invariants with 119 combined classes) both strengthen the Paper 5 narrative. The S² arc significantly strengthens Paper 1 as well.
 
-The shortest path to Paper 6 (Crossing Depth, Group Finiteness, and Capacity Scaling in DKC) — **NEW**:
+The shortest path to Paper 6 (Crossing Depth, Group Finiteness, and Capacity Scaling in DKC) — **NEW, updated D72-D84**:
 
 ```
 D76 (XOR8 = 0 at ζ₈ S²-Voronoi: capacity limit)
@@ -255,17 +291,22 @@ D79 (XOR10 = 124, XOR12 = 50+ at ζ₁₂: infinite group breaks wall)
 D80 (only ζ₄/ζ₈ finite: ADE classification, quantum dimension vanishes at ζ₈)
 D81 (0.62 XOR per doubling: logarithmic scaling law)
 D82 (max_xor ≈ depth+6: linear depth law, algebraic coherence > vocabulary)
+D83 (framing = +2 XOR levels: bracket vs Jones, writhe as independent resource axis)
+D84 (null indispensability: 9/24 nulls essential for XOR8, LCFT Jordan-cell interpretation)
          |
          v
 1.7 NEW (ζ₁₂ Sec×Vor activation — optimize product activation at ζ₁₂)
 1.8 NEW (ζ₃₂ finiteness test — confirm/refute Power-of-Two Conjecture)
+1.9 NEW (framing test at ζ₁₆/ζ₂₄ — confirm +2 universality)
+1.10 NEW (analytical proof of +2 writhe loss — theorem-level framing result)
+1.11 NEW (ζ₁₂ null indispensability — universal or ζ₈-specific?)
 2.14 NEW (formal "activation determines capacity" theorem)
          |
          v
   Paper 6 submission
 ```
 
-Paper 6 arc is the most complete new arc since the original DKC discovery. The key narrative: the research shifted from "can DKC compute parity?" (answered at Demo 50) to "how far does DKC scale?" (D76–D82). The scaling arc established: (1) the finite-group ceiling at ζ₈ (XOR8 maximum), (2) logarithmic scaling at ζ₁₂ (0.62 XOR per catalog doubling), (3) the linear depth law (max_xor ≈ depth+6, explaining the logarithmic law as an artifact of exponential BFS growth), and (4) the activation-determines-capacity principle (D77). Two key small experiments remain: optimizing product activation at ζ₁₂ (1.7, high impact) and the ζ₃₂ finiteness test (1.8, small effort, high clarity).
+Paper 6 arc is the most complete new arc since the original DKC discovery. The key narrative: the research shifted from "can DKC compute parity?" (answered at Demo 50) to "how far does DKC scale?" (D76–D84). The scaling arc established: (1) the finite-group ceiling at ζ₈ (XOR8 maximum), (2) logarithmic scaling at ζ₁₂ (0.62 XOR per catalog doubling), (3) the linear depth law (max_xor ≈ depth+6, explaining the logarithmic law as an artifact of exponential BFS growth), (4) the activation-determines-capacity principle (D77), (5) framing as a discrete computational resource worth +2 XOR levels, independent of and additive with depth (D83), and (6) null states as structurally indispensable despite zero trace, with LCFT Jordan-cell interpretation (D84). The paper scope is now D72–D84. Key remaining experiments: framing universality at additional roots (1.9, small), analytical writhe loss proof (1.10, medium, high publication value), ζ₁₂ null test (1.11, small), product activation optimization at ζ₁₂ (1.7, high impact), and the ζ₃₂ finiteness test (1.8, small effort, high clarity). D85 (indecomposability parameter b) is currently in development and will further extend the LCFT connection.
 
 ---
 
@@ -277,7 +318,7 @@ Paper 6 arc is the most complete new arc since the original DKC discovery. The k
 - ~~Complex k=24 as projection of 24-cell~~: CONFIRMED (D66). S¹ k=24 minimum is the trace projection of the 24-cell's 24 vertices.
 - ~~ζ_8 vs ζ_16 eigenvector nesting~~: PROVEN algebraically (D69). All 13 ζ_8 directions appear identically in ζ_16 (13/13, 0.000° drift).
 
-### Resolved by D72–D82
+### Resolved by D72–D84
 - ~~Is ζ₈ the only root supporting XOR8?~~: RESOLVED (D77). XOR8 is solvable at ζ₈ with Sec(8)×Voronoi activation. The Demo 76 failure was activation-specific, not root-specific.
 - ~~Is XOR10 solvable?~~: RESOLVED (D79). XOR10 = 124 winners at ζ₁₂. The wall was finite-group exhaustion at ζ₈, not a fundamental impossibility.
 - ~~Why does the 24-cell generate a finite group?~~: RESOLVED (D80). Binary octahedral group (E₇, ADE classification). Only ζ₄ and ζ₈ generate finite groups under the two-generator construction; these are exactly the lattice points where quantum dimension [2]_q vanishes.
@@ -285,6 +326,8 @@ Paper 6 arc is the most complete new arc since the original DKC discovery. The k
 - ~~Why logarithmic?~~: RESOLVED (D82). The logarithm is an artifact: catalog grows exponentially per closure round, and capacity grows linearly with depth, so log(exponential) = linear. The fundamental law is max_xor ≈ depth + 6.
 - ~~DKC is additive or multiplicative?~~: RESOLVED (D73). Additive. Multiplicative braid product formulation cannot compute XOR6 — flipping all bits maps M→M⁻¹, which shares the same cell but changes parity.
 - ~~Does sampling quality (t-design) explain why 13 directions suffice?~~: RESOLVED (D72). No. The 13 eigenvector directions are the worst possible t-design (t=0). Sampling quality is anti-correlated with computational quality. The DOF coincidence (2l+1=13=directions) explains DKC, not the t-design property.
+- ~~What is the N-2 pattern?~~: RESOLVED (D83). The "N-2" observation from D79 was Jones capacity, not a bracket truncation artifact. The bracket genuinely reaches XOR(N) at each root; earlier demos that stopped at XOR(N-2) were inadvertently computing Jones-normalized quantities. Framing (writhe) is a discrete computational resource worth exactly +2 XOR levels: bracket XOR12 → Jones XOR10 at ζ₁₂, bracket XOR8 → Jones XOR6 at ζ₈.
+- ~~Are bracket-null entries computational dead weight?~~: RESOLVED (D84). No. At ζ₈, 9/24 entries are bracket-null (Re(q)=0) but contribute 6 exclusive S² directions (cube-edge-midpoints). Removing them drops capacity from XOR8 to XOR6 — worse than removing a random equal-size subset. Null entries are directionally efficient (1.00 dir/entry vs. 0.47 for non-null) and disproportionately important for higher-capacity solutions.
 
 ### Still Open
 - Analytical proof of the 13=13 bandwidth bound (D71/D72 — top priority, see 1.3).
@@ -309,3 +352,12 @@ Paper 6 arc is the most complete new arc since the original DKC discovery. The k
 - Is ζ₁₂ truly infinite or very large finite? (D79 open — concrete group theory question)
 - Does the 2.3× binocular capacity gain over cell-only hold for other roots, or is it ζ₈-specific? (D75 open)
 - Information-theoretic lower bound for ζ₈ XOR ceiling: clean formula relating max computable N to catalog size, direction count, and angle count?
+- Framing universality: does the +2 writhe loss hold at ζ₁₆ and ζ₂₄? (D83 open, see 1.9)
+- Analytical proof of +2 writhe loss: can the (-A³)^{-w} phase rotation's angle-class collapse be counted to prove the 2-level loss? (D83 open, see 1.10)
+- ζ₁₂ null indispensability: are the 29 null-only directions at ζ₁₂ essential for XOR12 solutions? (D84 open, see 1.11)
+- Explicit Jordan-cell pairs: do the 3 shared-direction null/non-null pairs at ζ₈ form literal Jordan cells in a braid group representation? (D84 open, see 2.15)
+- ζ₁₀ null census: what is the null fraction and directional role at the Fibonacci anyon root? (D84 open, see 2.16)
+- Resource decomposition at intermediate depths: does the +2 bracket-vs-Jones gap hold at every depth level, or does it vary? (D83 open, see 2.17)
+- Writhe distribution of 24-cell vertices: do antipodal pairs (q and -q) have opposite writhes? (D83 open)
+- Depth-3 → 100% null generalization: does the maximum-depth stratum of any finite SU(2) subgroup consist entirely of null entries? (D84 open)
+- D85 (indecomposability parameter b) currently in development — will extend the LCFT connection from D84

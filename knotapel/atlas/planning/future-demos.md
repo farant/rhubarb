@@ -1,9 +1,9 @@
 # DKC Future Demos Backlog
 
-Consolidated 2026-02-20. Updated 2026-02-21 with D64-D71 results and D72-D77 proposals. Updated 2026-02-21 with D72-D82 results and Arc 6 + new proposals.
+Consolidated 2026-02-20. Updated 2026-02-21 with D64-D71 results and D72-D77 proposals. Updated 2026-02-21 with D72-D82 results and Arc 6 + new proposals. Updated 2026-02-21 with D83-D84 results, Arc 7 renumbering, and new proposals from D83-D84 open questions + explorer's log seeds.
 
-70 demos completed (D01-D29, D35, D38-D39, D45-D82). D72-D82 added 2026-02-21.
-13 prior proposals remain from future-demos/. 5 new demos added from synthesis open questions. 6 new proposals added from D64-D71 open questions. 7 new proposals added from D72-D82 open questions.
+72 demos completed (D01-D29, D35, D38-D39, D45-D84). D83-D84 added 2026-02-21.
+13 prior proposals remain from future-demos/. 5 new demos added from synthesis open questions. 6 new proposals added from D64-D71 open questions. 7 new proposals added from D72-D82 open questions (2 now SUPERSEDED by actual D83-D84). 8 new proposals added from D83-D84 open questions and explorer's log seeds.
 
 ---
 
@@ -29,6 +29,8 @@ Consolidated 2026-02-20. Updated 2026-02-21 with D64-D71 results and D72-D77 pro
 | D75 (old proposal) | Analytical Bandwidth Proof | SUPERSEDED -- became different demo. Actual D75 is "Binocular DKC" (see Arc 5 below). |
 | D76 (old proposal) | 120-Cell / Binary Icosahedral Group | SUPERSEDED -- became different demo. Actual D76 is "Scaling 8-input" (see Arc 6 below). |
 | D77 (old proposal) | Gradient Descent vs. Knot Weights | SUPERSEDED -- became different demo. Actual D77 is "Activation Zoo" (see Arc 6 below). |
+| D83 (old proposal) | Exact Sector Classification for Cyc8 | SUPERSEDED -- actual D83 is "Framing as Computational Content" (see Arc 7 below). Original proposal (exact Z[zeta_8] sector arithmetic) remains valid as a future demo, renumbered to D91. |
+| D84 (old proposal) | XOR10 at ζ₁₂ with Sec×Vor Activation | SUPERSEDED -- actual D84 is "Null States and Logarithmic Structure" (see Arc 7 below). Original proposal (Sec×Vor activation at ζ₁₂) remains valid as a future demo, renumbered to D92. |
 
 ---
 
@@ -233,47 +235,136 @@ These emerged naturally from the D72-D75 geometric arc and pushed the DKC system
 
 ---
 
-## Arc 7: New Proposals from D72-D82 Open Questions
+## Arc 7: Framing, Null States, and LCFT (D83-D84)
 
-### D83 -- Exact Sector Classification for Cyc8
+These emerged from the scaling/depth arc and the LCFT literature study. D83 discovered that framing (writhe) is an independent computational resource worth exactly +2 XOR levels, resolving the "N-2" mystery from D79. D84 proved that bracket-null entries (Re(q)=0) are computationally indispensable despite producing zero scalar output, connecting DKC to logarithmic conformal field theory. Both are DONE.
+
+### D83 -- Framing as Computational Content — DONE
+- **Completed as demo_83_framing_test/**. 12/12 tests pass.
+- Jones normalization destroys exactly 2 XOR levels at every root tested: ζ₁₂ bracket XOR12 → Jones XOR10; ζ₈ bracket XOR8 → Jones XOR6. The "N-2" pattern from D79 was Jones capacity all along. Framing is not a bookkeeping anomaly — it is one discrete computational resource worth +2 XOR levels, independent of and additive with crossing depth. Writhe and depth are independent axes (r=0.139). Writhe alone computes XOR6 (32 winners) but cannot reach XOR8. Angular vocabulary is the mechanism: Jones normalization reduces angles (43→31) but leaves directions unchanged (512→512). Resource decomposition: lattice base (XOR6) + 2 × depth_rounds + 2 × framing_present.
+- See atlas/inventory/entries/demo_83.md for full results.
+
+### D84 -- Null States and Logarithmic Structure — DONE
+- **Completed as demo_84_null_states/**. 17/17 tests pass.
+- 9/24 ζ₈ entries are bracket-null (Re(q)=0, 37.5%). Depth distribution: d0=0%, d1=20%, d2=75%, d3=100% null. Removing nulls drops XOR8 to XOR6 — worse than removing random entries of equal count (random-15 mean=7.8 vs non-null-only=6.0). Null entries cover 6 exclusive directions (cube-edge-midpoints) with 1.00 dir/entry efficiency vs 0.47 for non-null. All nulls have half-angle=90° (single S¹ point), deriving all computational power from S² directional diversity. Cross-root null fraction dilution: ζ₄=75%, ζ₈=37.5%, ζ₁₂=3.0%. LCFT interpretation: null entries are |N⟩ states with vanishing two-point function, paired with logarithmic partners via Jordan cells.
+- See atlas/inventory/entries/demo_84.md for full results.
+
+---
+
+## Arc 8: New Proposals from D83-D84 Open Questions and Explorer's Log Seeds
+
+### D85 -- Indecomposability Parameter b
+- Compute the DKC analog of the LCFT indecomposability parameter b from finite lattice TL systems. Algorithm: build Gram matrix (D51 infrastructure) + Hamiltonian H = -Σ e_i (D35 generators), find ground state |T⟩, verify null (⟨T|G|T⟩=0), solve singular system (H-E₀I)|t⟩=|T⟩, gauge-fix ⟨T|G|t⟩=1, compute b=⟨t|G|t⟩. Prediction: b=-2 from symplectic fermion theory at c=-2. Dense polymer value NOT in literature — would be first computation.
+- Seeded by D84 LCFT connection and explorer's log b parameter algorithm.
+- Dependencies: D35 (done), D51 (done), D84 (done)
+- Priority: **HIGH** -- low implementation cost (eigenvalue + singular solve), potentially first computation of dense polymer indecomposability parameter; directly tests whether the Jordan-cell structure in D84 is quantitatively correct
+
+### D86 -- Dense Polymer Fusion on Lattice
+- Implement lattice fusion for TL at β=0 (dense polymer point, p=2, q=i, c=-2) and work out fusion rules explicitly. Compare with how DKC catalog entries combine under braid composition. Gainutdinov et al. (2013) performed this calculation for percolation (p=3) but NOT for dense polymers (p=2) — DKC's operating point. This is a gap in the literature.
+- Seeded by explorer's log LCFT study and D84 null-state results.
+- Dependencies: D35 (done), D84 (done)
+- Priority: **HIGH** -- fills a literature gap (dense polymer fusion rules not computed); would give the first algebraic description of DKC's composition structure; directly relevant to understanding how null and non-null entries interact under braid multiplication
+
+### D87 -- Framing Loss at Other Roots (ζ₁₆, ζ₂₄)
+- Test whether the +2 Jones normalization loss holds at ζ₁₆ and ζ₂₄ (and potentially ζ₆, ζ₁₀). D83 demonstrated the loss at ζ₈ and ζ₁₂ despite very different group sizes (24 vs 4096), suggesting universality. More roots needed to confirm.
+- Direct follow-up to D83 open question 1.
+- Dependencies: D83 (done), D54 (done, Z[ζ₁₆]), D59 (done, Z[ζ₂₄])
+- Priority: **HIGH** -- if the +2 loss is universal across all roots, the Resource Decomposition Conjecture becomes a theorem; if it varies, understanding why would be equally important
+
+### D88 -- Analytical Proof of +2 Per Writhe Unit
+- Prove analytically that the (-A³)^{-w} Jones phase factor costs exactly 2 XOR levels. The rotation -(3*half_angle+pi)*w per entry redistributes angular vocabulary. A direct count of angle equivalence classes before and after normalization should yield the proof. D83 demonstrated the result computationally at two roots.
+- Direct follow-up to D83 open question 2.
+- Dependencies: D83 (done)
+- Priority: **MEDIUM** -- converts a demonstrated result into a proven theorem; may require characterizing the angle-equivalence-class structure of the binary octahedral group under arbitrary phase rotations
+
+### D89 -- Jones-Sector Coincidence at ζ₈
+- Test whether the Jones-normalized ζ₈ capacity (XOR6) is exactly the "standard 6-sector activation" capacity from D63. If the 6-sector regime that saturates at XOR6 in D63 produces the same solutions as the Jones-normalized catalog, this is a non-trivial structural coincidence linking the early sector-based DKC to the quaternionic framework.
+- Direct follow-up to D83 open question 3.
+- Dependencies: D63 (done), D83 (done)
+- Priority: **MEDIUM** -- bridges the sector-based (D45-D63) and quaternionic (D66+) DKC frameworks; would unify two independently discovered XOR6 regimes
+
+### D90 -- Writhe Distribution of 24-Cell Vertices
+- Characterize the writhe distribution of the 24 entries forming the binary octahedral group. Test whether antipodal pairs (q and -q) have opposite writhes (writhe inversion under negation). Examine the relationship between writhe and the 6-type orbit structure from D74.
+- Direct follow-up to D83 open question 4 and connection to D74's 6-type orbit theorem.
+- Dependencies: D83 (done), D74 (done)
+- Priority: **LOW** -- structural characterization; primarily of interest if writhe-orbit correlations reveal new group-theoretic structure
+
+### D91 -- Exact Sector Classification for Cyc8
 - Rewrite sector assignment using exact Z[zeta_8] integer arithmetic (Cyc8 representation) to eliminate all floating-point atan2 calls and formally remove zero-margin boundary ambiguity from the generalized XOR6 result.
-- The zero-margin universality result (all passing solutions land exactly on lattice directions) makes this tractable: no approximate sector boundaries exist, so exact arithmetic is both necessary and sufficient.
-- Direct follow-up to the floating-point audit open question surfaced by D72 (l=2 passes to machine precision, quadrupole symmetry suggests algebraic identity).
+- Originally proposed as D83 (see Obsolete Proposals table); renumbered after actual D83 became "Framing as Computational Content."
 - Dependencies: D65 (done), D72 (done)
-- Priority: **HIGH** -- closes the last floating-point caveat in the generalized XOR6 result; would formalize the k=24 absolute-wall theorem and allow even/odd-k pattern to be tested at odd k without boundary ambiguity
+- Priority: **MEDIUM** -- closes the last floating-point caveat in the generalized XOR6 result; would formalize the k=24 absolute-wall theorem
 
-### D84 -- XOR10 at ζ₁₂ with Sec×Vor Activation
-- Extend D77's combined Sec(k) × Voronoi activation approach to the ζ_12 system and test whether XOR10 (which has 124 winners at ζ_12 under Voronoi-only) can be solved with a finer activation and whether XOR14 becomes reachable.
-- D77 proved activation determines capacity at ζ_8; D79 proved ζ_12 breaks the ζ_8 wall under Voronoi. The natural question is whether product activation provides the same kind of unlock one level up.
+### D92 -- XOR10 at ζ₁₂ with Sec×Vor Activation
+- Extend D77's combined Sec(k) × Voronoi activation approach to the ζ₁₂ system and test whether XOR10 (which has 124 winners at ζ₁₂ under Voronoi-only) can be solved with a finer activation and whether XOR14 becomes reachable.
+- Originally proposed as D84 (see Obsolete Proposals table); renumbered after actual D84 became "Null States and Logarithmic Structure."
 - Dependencies: D77 (done), D79 (done), D81 (done)
-- Priority: **HIGH** -- directly tests whether the activation-determines-capacity theorem (D77) generalizes to infinite groups; could unlock XOR14 at ζ_12 and validate the recursive architecture
+- Priority: **MEDIUM** -- tests whether the activation-determines-capacity theorem (D77) generalizes to infinite groups; could unlock XOR14 at ζ₁₂
 
-### D85 -- ζ₃₂ Finiteness Test
+### D93 -- ζ₁₂ Null Indispensability Test
+- Test whether the 121 null entries (3% of 4096) in the ζ₁₂ catalog are indispensable for XOR12 capacity, as the 9 null entries are for XOR8 at ζ₈. D84 Part F showed 29 null-only directions at ζ₁₂ — are any essential for XOR12 solutions?
+- Direct follow-up to D84 open question 1.
+- Dependencies: D79 (done), D84 (done)
+- Priority: **MEDIUM** -- determines whether null indispensability is a ζ₈-specific phenomenon or a universal structural feature; the 3% null fraction vs 37.5% makes this a very different regime
+
+### D94 -- Explicit LCFT Jordan-Cell Pairs
+- Construct explicit Jordan-cell pairs from the 3 shared-direction entries (coordinate axes) where both null and non-null entries coexist. Test whether these form a literal Jordan-cell pair in some representation of the braid group algebra. This would make the LCFT connection from D84 algebraically precise rather than analogical.
+- Direct follow-up to D84 open question 2.
+- Dependencies: D84 (done), D35 (done)
+- Priority: **MEDIUM** -- converts D84's LCFT analogy into algebraic proof; requires working with the TL representation theory at δ=0
+
+### D95 -- ζ₁₀ Null Fraction and Directional Role
+- Measure the null entry count, null fraction, and directional role of null entries at ζ₁₀ (Fibonacci anyons). D80 found ζ₁₀ has 71 distinct half-angles at 4096 entries. The null anatomy at ζ₁₀ has not been characterized.
+- Direct follow-up to D84 open question 3.
+- Dependencies: D80 (done), D84 (done)
+- Priority: **LOW** -- characterization at the universal quantum computation root; completes the cross-root null picture (ζ₄, ζ₈, ζ₁₂ done in D84)
+
+### D96 -- Depth-3 → 100% Null Generalization
+- Test whether the maximum-depth stratum of any finite SU(2) subgroup consists entirely of bracket-null entries. In ζ₈, every depth-3 entry is null. Does this hold for ζ₄ (depth-1)? For hypothetical other finite groups (if ζ₃₂ turns out finite per D85)?
+- Direct follow-up to D84 open question 4.
+- Dependencies: D80 (done), D84 (done)
+- Priority: **LOW** -- would establish a general theorem about the boundary structure of finite SU(2) subgroups; small scope if ζ₃₂ is infinite (only ζ₄ to test)
+
+### D97 -- RC Exactification with Null-State Geometry
+- Use the quaternionic DKC framework to design reservoir weight matrices where null-state geometry is explicitly controlled, yielding provably optimal XOR capacity per parameter. This bridges D84's null-state results to the Reservoir Computing pillar (Pillar 5).
+- Direct follow-up to D84 open question 6.
+- Dependencies: D84 (done), D82 (done)
+- Priority: **LOW** -- speculative but high-impact if successful; requires formalizing the DKC-to-RC translation
+
+---
+
+## Continuing Proposals from D72-D82 (renumbered where necessary)
+
+The following proposals from the previous Arc 7 are unchanged in content, only renumbered to avoid collision with actual D83-D84.
+
+### D85 (old numbering) -- ζ₃₂ Finiteness Test
 - Test the Power-of-Two Finiteness Conjecture from D80: run a single `test_root(32)` call (θ = π/16) to determine whether ζ_32 generates a finite SU(2) subgroup under the two-generator construction.
 - D80 found only ζ_4 and ζ_8 finite of 7 tested roots and proposed that the finite cases are exactly angles π/2^k (k ≥ 1). ζ_32 (k=4) is the next power-of-two case and has not been tested.
 - Dependencies: D80 (done)
 - Priority: **HIGH** -- single test_root(32) call; either confirms the conjecture (adding a third finite case with potentially new ADE type) or refutes it; extremely low implementation cost, high payoff
+- NOTE: Retains old number D85 since actual D85 is now "Indecomposability Parameter b." If built next, will be assigned whatever demo number is current.
 
-### D86 -- Direct Deep-Entry Generation
+### D86 (old numbering) -- Direct Deep-Entry Generation
 - Investigate whether algebraic properties of depth-d quaternions (shared intermediate products, angular refinement structure) can be characterized and sampled directly without computing all shallower depths via BFS closure.
 - D82 showed deep entries are 2× more efficient than shallow or strided entries at matched size, and that the critical property is algebraic coherence (shared common-factor structure), not vocabulary coverage. Generating all shallower entries as scaffolding is computationally wasteful.
 - Dependencies: D82 (done)
 - Priority: **MEDIUM** -- would dramatically reduce the computational cost of extending the scaling law to XOR14+; requires characterizing what algebraic property "depth-d entry" encodes that can be sampled without full BFS
+- NOTE: Retains old number D86 since actual D86 is now "Dense Polymer Fusion on Lattice." If built next, will be assigned whatever demo number is current.
 
-### D87 -- Optimal Depth Selection for Target XOR
+### D87 (old numbering) -- Optimal Depth Selection for Target XOR
 - Determine whether pure depth-d subsets are optimal for a target XOR level or whether a mixed-depth subset (e.g., some depth-5 + depth-7 entries) achieves the same XOR level with fewer total entries.
 - D82 demonstrated pure depth-8 beats shallow and strided at matched size, but did not compare pure depth-8 against pure depth-6 or depth-7 at 564 entries. The linear depth law predicts depth-6 should cap at XOR12 (depth+6=12), so depth-7 and depth-8 should both work.
 - Dependencies: D82 (done)
 - Priority: **MEDIUM** -- refines the practical recipe for constructing XOR-capable catalogs; pure depth may not be optimal and mixed-depth structures might offer better winner counts at smaller catalog sizes
 
-### D88 -- Union Catalog ζ₈ + ζ₁₂
+### D88 (old numbering) -- Union Catalog ζ₈ + ζ₁₂
 - Build a combined catalog merging the finite ζ_8 group (24 elements) with the ζ_12 group (first N rounds) and test whether the union provides superadditive XOR capacity beyond what either achieves alone.
 - D79 confirmed only 3/24 ζ_8 quaternions appear in ζ_12 (12% overlap, 15% direction overlap) — the two groups are largely independent. D73 showed DKC is additive; independent algebraic structures in a union catalog might combine constructively.
 - Union Catalog Conjecture from D79 remains open.
 - Dependencies: D79 (done), D80 (done), D82 (done)
 - Priority: **MEDIUM** -- tests whether algebraic independence of the two finite/infinite systems provides superadditive capacity; directly addresses D79's Union Catalog Conjecture
 
-### D89 -- ζ₁₀ Depth Analysis
+### D89 (old numbering) -- ζ₁₀ Depth Analysis
 - Apply the linear depth law analysis from D82 to ζ_10 to determine whether max_xor ≈ depth + const holds with the same or a different constant, and whether the 0.62 scaling constant from D81 is root-of-unity-dependent.
 - D80 showed ζ_10 has 71 distinct half-angles at 4096 entries — more than ζ_12 (43) or ζ_16 (51), suggesting richer angular diversity. D81 proposed the 0.62 constant may depend on angular density per closure round. ζ_10 is also the Fibonacci anyon / universal quantum computation parameter.
 - Dependencies: D80 (done), D81 (done), D82 (done)
@@ -284,31 +375,42 @@ These emerged naturally from the D72-D75 geometric arc and pushed the DKC system
 ## Priority Summary
 
 ### HIGH (do these first -- direct publication impact)
-1. **D83** -- Exact Sector Classification for Cyc8. Closes floating-point caveat in D65's k=24 wall result.
-2. **D84** -- XOR10 at ζ₁₂ with Sec×Vor Activation. Tests whether activation-determines-capacity generalizes to infinite groups; may unlock XOR14.
-3. **D85** -- ζ₃₂ Finiteness Test. Single test_root(32) call confirms or refutes Power-of-Two Finiteness Conjecture from D80.
-4. **D65 (remaining)** -- Sandwich Theorem: algebra isomorphism and nilpotency=3 still needed for Paper 3.
+1. **D85** -- Indecomposability Parameter b. First computation of dense polymer b; tests D84 Jordan-cell structure quantitatively.
+2. **D86** -- Dense Polymer Fusion on Lattice. Fills literature gap; algebraic description of DKC composition.
+3. **D87** -- Framing Loss at Other Roots (ζ₁₆, ζ₂₄). Confirms or refines the +2 universality from D83.
+4. **ζ₃₂ Finiteness Test** (old D85). Single test confirms or refutes Power-of-Two Finiteness Conjecture.
+5. **D65 (remaining)** -- Sandwich Theorem: algebra isomorphism and nilpotency=3 still needed for Paper 3.
 
 ### MEDIUM (do next -- strengthen claims or open new connections)
-5. **D86** -- Direct Deep-Entry Generation. Enables efficient extension of scaling law to XOR14+.
-6. **D87** -- Optimal Depth Selection. Refines practical catalog construction recipe for target XOR levels.
-7. **D88** -- Union Catalog ζ₈ + ζ₁₂. Tests Union Catalog Conjecture from D79.
-8. **D89** -- ζ₁₀ Depth Analysis. Determines whether 0.62 scaling constant is universal or root-dependent.
-9. **D44** -- Path Integral / Ising. Physics interpretation.
-10. **D36** -- Long Braid Scaling. Practical ceiling validation.
+6. **D88** -- Analytical Proof of +2 Per Writhe Unit. Converts D83 demonstration into theorem.
+7. **D89** -- Jones-Sector Coincidence at ζ₈. Bridges sector-based and quaternionic DKC frameworks.
+8. **D91** -- Exact Sector Classification for Cyc8 (old D83 proposal). Closes floating-point caveat.
+9. **D92** -- XOR10 at ζ₁₂ with Sec×Vor (old D84 proposal). Tests activation generalization to infinite groups.
+10. **D93** -- ζ₁₂ Null Indispensability Test. Tests universality of null indispensability.
+11. **D94** -- Explicit LCFT Jordan-Cell Pairs. Makes D84 LCFT connection algebraically precise.
+12. **Direct Deep-Entry Generation** (old D86). Enables scaling law extension to XOR14+.
+13. **Optimal Depth Selection** (old D87). Refines catalog construction recipe.
+14. **Union Catalog ζ₈ + ζ₁₂** (old D88). Tests Union Catalog Conjecture.
+15. **ζ₁₀ Depth Analysis** (old D89). Tests universality of 0.62 scaling constant.
+16. **D44** -- Path Integral / Ising. Physics interpretation.
+17. **D36** -- Long Braid Scaling. Practical ceiling validation.
 
 ### LOW (backlog -- valid but not urgent)
-11. **D37** -- Diakoptics
-12. **D40** -- Impedance Tensor
-13. **D41** -- Axis Elimination
-14. **D30** -- Taxonomy-to-Braid Compiler
-15. **D31** -- Execution-as-Traversal
-16. **D32** -- Two-Thread Coordinates
-17. **D33** -- Full Pipeline
-18. **D34** -- Torus Knots
-19. **D43** -- Landauer Verification
+18. **D90** -- Writhe Distribution of 24-Cell Vertices.
+19. **D95** -- ζ₁₀ Null Fraction.
+20. **D96** -- Depth-3 → 100% Null Generalization.
+21. **D97** -- RC Exactification with Null-State Geometry.
+22. **D37** -- Diakoptics
+23. **D40** -- Impedance Tensor
+24. **D41** -- Axis Elimination
+25. **D30** -- Taxonomy-to-Braid Compiler
+26. **D31** -- Execution-as-Traversal
+27. **D32** -- Two-Thread Coordinates
+28. **D33** -- Full Pipeline
+29. **D34** -- Torus Knots
+30. **D43** -- Landauer Verification
 
-### COMPLETED (D64-D82)
+### COMPLETED (D64-D84)
 - ~~**D64** -- Parity Matroid Recursion.~~ **DONE** (demo_64_parity_matroid_recursion/)
 - ~~**D65** -- Clifford Hierarchy Staircase.~~ **DONE** (demo_65_clifford_staircase/)
 - ~~**D66** -- Quaternionic DKC — First Contact.~~ **DONE** (demo_66_quaternionic_dkc/)
@@ -328,6 +430,8 @@ These emerged naturally from the D72-D75 geometric arc and pushed the DKC system
 - ~~**D80** -- Group Finiteness Survey.~~ **DONE** (demo_80_group_finiteness/)
 - ~~**D81** -- Capacity Scaling Law.~~ **DONE** (demo_81_capacity_scaling/)
 - ~~**D82** -- Crossing Depth and Computational Role.~~ **DONE** (demo_82_crossing_depth/)
+- ~~**D83** -- Framing as Computational Content.~~ **DONE** (demo_83_framing_test/)
+- ~~**D84** -- Null States and Logarithmic Structure.~~ **DONE** (demo_84_null_states/)
 
 ---
 
@@ -338,7 +442,7 @@ These emerged from synthesis but don't have a clear single-demo scope yet:
 - **Multi-layer DKC**: cascading bracket-valued neurons for circuit-level compilation (narrative Section 10). Needs design work before scoping.
 - **Galois symmetry conjecture**: sandwich duality from Galois automorphisms of Gal(Q(zeta_8)/Q). Highly speculative; may resolve itself during remaining D65 work.
 - **Abramsky depth**: full Geometry of Interaction interpretation to predict which bracket triples compute which functions. Needs significant theoretical development.
-- **Costello-Francis-Gwilliam connection**: Witten=RT now proven (2026); DKC compiles QFT transition amplitudes into Boolean logic. Framing question more than a demo.
+- **Costello-Francis-Gwilliam connection**: Witten=RT now proven (2026); DKC compiles QFT transition amplitudes into Boolean logic. Framing question more than a demo. NOTE: D83's framing result adds a new angle — the "framing anomaly" that TQFT discards is exactly where DKC's +2 capacity lives.
 - **OM generalization**: what OM type characterizes n-input parity for n=4,5? (D64 established 21 distinct oriented matroid types; characterization of which types are required is open.)
 - **n=6 constraint wall proof**: clean algebraic proof, or inherently finite-verification? (D64 proven d=4 minimum wall distance exhaustively; triple-interaction weight-3+ obstruction not yet characterized.)
 - **Hopf base vs eigenvector geometry**: why does Hopf base S² (292 solutions at 64 cells) beat eigenvector lat/lon (204) at high resolution? Geometric relationship between the two S² parameterizations is not yet understood.
@@ -364,3 +468,8 @@ These emerged from synthesis but don't have a clear single-demo scope yet:
 - **What algebraic property does strided-564 lack?**: D82 showed strided-564 has full vocabulary (512 dirs, 43 angles) but cannot reach XOR12 while deep-564 can. The missing property is presumably shared common-factor structure — can this be made algebraically precise?
 - **Depth law for other roots**: D82 demonstrated max_xor ≈ depth + 6 for ζ_12. Does the constant 6 shift for ζ_10 or ζ_16? Comparison not yet run.
 - **Knot complexity and computational power**: D82 interpreted depth as crossing depth. Does a more complexly knotted strand compute more than many simply knotted strands with equal or greater total vocabulary? Connection to known results about torus knots vs. hyperbolic knots unexplored.
+- **Three-level discarding pattern** (NEW from D83-D84): (1) Jones normalizes away writhe → loses 2 XOR levels. (2) Bracket trace projects onto Re(q) → loses 6/13 directions. (3) LCFT ⟨T|T⟩=0 null states treated as trivial → loses logarithmic partners. Each level of "simplification" in the literature discards computational content. Is there a fourth level?
+- **Does writhe add exactly +2 regardless of depth?** (NEW from D83): D83 shows framing=+2 at the group's maximum capacity. At intermediate depths, does bracket also beat Jones by exactly 2, or does the gap vary with depth?
+- **Null entries and knot complexity** (NEW from D84): bracket-null entries are maximally deep (depth-3 in ζ₈). Do depth-d null entries correspond to specific knot types whose Jones polynomial vanishes at δ=0?
+- **Non-semisimplicity thesis** (NEW from explorer's log): semisimple = Markov chain (memoryless), non-semisimple = counter machine (nilpotent Jordan blocks accumulate depth history). The radical provides BOTH null entries AND the memory mechanism. The slope in the capacity formula comes from Loewy length / radical depth. Needs formalization.
+- **Depth-level framing gap measurement** (NEW from D83): at each individual depth level d, what is the bracket-vs-Jones capacity gap? If it is always exactly 2, the resource decomposition is truly additive. If it varies, depth and framing interact.

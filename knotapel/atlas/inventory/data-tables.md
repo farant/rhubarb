@@ -8,6 +8,8 @@ All numerical tables extracted from the demo index and explorer's log. Exact num
 
 *Updated 2026-02-21: Added Demos 72–82 (spherical design test, eigenvector automaton, computational invariant, binocular DKC, 8-input scaling, activation zoo, recursive scaling/phase diagram, ζ₁₂ capacity, group finiteness survey, capacity scaling law, crossing depth).*
 
+*Updated 2026-02-21: Added Demos 83–84 (framing as computational content, null states and logarithmic structure).*
+
 ---
 
 ## 1. Axiality Hierarchy Table
@@ -1984,6 +1986,153 @@ Sample XOR12 winner: indices [0,1,3,6,52,388], depths [0,0,0,1,3,5] — shallow 
 
 ---
 
+## 45. Framing as Computational Content — Demo 83
+
+### Bracket vs Jones Capacity by Root
+
+| Root | Catalog size | Bracket max XOR | Jones max XOR | Loss |
+|------|-------------|-----------------|---------------|------|
+| ζ₁₂ | 4096 | XOR12 | XOR10 | -2 |
+| ζ₈ | 24 | XOR8 | XOR6 | -2 |
+
+The loss is exact and constant: bracket capacity = N, Jones capacity = N-2 at every root tested. The "N-2" pattern from Demo 79 was Jones capacity, not a bracket truncation artifact.
+
+**Provenance:** Demo 83 Parts A–C.
+
+### Information Collapse Under Jones Normalization (ζ₁₂)
+
+| Quantity | Bracket | Jones | Change |
+|---------|---------|-------|--------|
+| Distinct quaternions | 4096 | 2710 | -33.8% |
+| Directions (S²) | 512 | 512 | unchanged |
+| Distinct angles | 43 | 31 | -28% |
+
+Framing lives in angles, not directions. The writhe-dependent phase rotates quaternions in the angular coordinate only; the directional vocabulary is entirely preserved.
+
+**Provenance:** Demo 83 Part B.
+
+### Writhe Census (ζ₁₂, 4096 entries)
+
+| Statistic | Value |
+|-----------|-------|
+| Writhe range | [-9, 9] |
+| Nonzero writhe fraction | 91.4% |
+| Mean writhe | 1.697 (positive bias from generator structure) |
+| Depth-writhe correlation r | 0.139 |
+
+**Provenance:** Demo 83 Data section.
+
+### Mean |Writhe| by Crossing Depth
+
+| Depth | Mean |writhe| |
+|-------|--------------|
+| 0 | 0.80 |
+| 1 | 1.33 |
+| 2 | 1.82 |
+| 4 | 2.14 |
+| 6 | 2.61 |
+| 8 | 3.19 |
+
+Mean |writhe| grows linearly with depth. Low correlation (r=0.139) means these are genuinely independent resources: a deep entry can have low writhe (crossings cancel) or high writhe (crossings accumulate).
+
+**Provenance:** Demo 83 Data section.
+
+### Mixed-Writhe Winner Fractions by XOR Level
+
+| XOR level | Mixed-writhe fraction | Count |
+|-----------|----------------------|-------|
+| XOR6 | 41% | 13/32 |
+| XOR8 | 25% | 8/32 |
+| XOR10 | 9% | 3/32 |
+| XOR12 | 12% | 4/32 |
+
+Higher-capacity XOR levels use both positive and negative writhe entries. Computation exploits chirality variation, not just magnitude. Writhe-only XOR6 winners: 32 (writhe as standalone unit cannot reach XOR8).
+
+**Provenance:** Demo 83 Part D.
+
+---
+
+## 46. Null States and Logarithmic Structure — Demo 84
+
+### Null Count by Crossing Depth (ζ₈, 24 entries)
+
+| Depth | Total entries | Null entries | Null fraction |
+|-------|--------------|--------------|--------------|
+| 0 | 5 | 0 | 0% |
+| 1 | 10 | 2 | 20% |
+| 2 | 8 | 6 | 75% |
+| 3 | 1 | 1 | 100% |
+
+Every maximally-deep entry in the ζ₈ catalog is bracket-null (Re(q)=0). Null fraction increases monotonically with depth.
+
+**Provenance:** Demo 84 Part A.
+
+### Gap Theorem: Discrete |Re(q)| Spectrum
+
+| |Re(q)| value | Present in catalog | Notes |
+|-------------|-------------------|-------|
+| 0 | YES (null) | 9 entries |
+| 0.5 | YES | nearest non-null; hard gap of 0.5 from null |
+| 0.707 (1/√2) | YES | — |
+| 1.0 | YES | — |
+
+Exactly 4 discrete values. No continuum — reflects algebraic structure of the binary octahedral group.
+
+**Provenance:** Demo 84 Part B.
+
+### Direction Geometry (ζ₈ catalog, 13 total S² directions)
+
+| Direction type | Count | Components | Notes |
+|---------------|-------|-----------|-------|
+| Null-only | 6 | ±1/√2 (cube edge midpoints) | 1.00 dir/entry — maximally efficient |
+| Non-null-only | 4 | ±1/√3 (tetrahedral axes) | 0.47 dir/entry |
+| Shared | 3 | coordinate axes | appear in both null and non-null entries |
+
+Null entries are disproportionately important: each null entry uniquely covers a distinct direction unavailable to non-null entries.
+
+**Provenance:** Demo 84 Part E.
+
+### Capacity Comparison: Full vs Null vs Non-Null Subsets
+
+| Subset | Size | Directions | Max XOR | vs random-15 baseline |
+|--------|------|-----------|---------|----------------------|
+| Full catalog | 24 | 13 | XOR8 | — |
+| Non-null-only | 15 | 7 | XOR6 | **below baseline** |
+| Null-only | 9 | 9 | XOR6 | — |
+| Random-15 mean | 15 | — | 7.8 | baseline |
+
+Removing nulls destroys one full XOR level. The non-null-only subset performs strictly worse than random subsets of the same size — nulls are disproportionately important, not incidental.
+
+**Provenance:** Demo 84 Parts C, C.3.
+
+### k_sec Sweep (Null-Only XOR6 Count)
+
+| k_sec | Null-only XOR6 count | Notes |
+|-------|---------------------|-------|
+| 1 | flat | null-only beats non-null-only on direction alone |
+| 2 | flat | — |
+| 4 | flat | — |
+| 6 | flat | — |
+| 8 | flat | — |
+
+Count is flat across all tested k_sec values, confirming all null-only entries share half-angle exactly 90° (single point on S¹). Their entire computational contribution comes from S² directional diversity.
+
+**Provenance:** Demo 84 Part C.4.
+
+### Cross-Root Null Fraction
+
+| Root | Total entries | Null entries | Null fraction |
+|------|--------------|--------------|--------------|
+| ζ₄ | 4 | 3 | 75% |
+| ζ₈ | 24 | 9 | 37.5% |
+| ζ₁₂ (truncated at 4096) | 4096 | 121 | 3.0% |
+
+As group order grows, null fraction decreases sharply. ζ₁₂ direction breakdown: 29 null-only, 453 non-null-only, 30 shared. The ζ₈ regime is where nulls represent a structurally significant fraction.
+
+**Provenance:** Demo 84 Part F.
+
+---
+
 ## 12. Demo Test Counts (Extended)
 
 | Demo | Tests | Status |
@@ -2057,7 +2206,9 @@ Sample XOR12 winner: indices [0,1,3,6,52,388], depths [0,0,0,1,3,5] — shallow 
 | 80 | 11/11 | COMPLETE |
 | 81 | 14/14 | COMPLETE |
 | 82 | 17/17 | COMPLETE |
+| 83 | 12/12 | COMPLETE |
+| 84 | 17/17 | COMPLETE |
 
 **Provenance:** Demo index, all entries.
 
-*Generated 2026-02-20 from demo-index.md (2845 lines) and explorers-log.md (1273 lines). Updated with Demos 38, 39, 60. Updated 2026-02-21 with Demos 64–71. Updated 2026-02-21 with Demos 72–82.*
+*Generated 2026-02-20 from demo-index.md (2845 lines) and explorers-log.md (1273 lines). Updated with Demos 38, 39, 60. Updated 2026-02-21 with Demos 64–71. Updated 2026-02-21 with Demos 72–82. Updated 2026-02-21 with Demos 83–84.*

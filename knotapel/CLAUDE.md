@@ -30,3 +30,23 @@ IMPORTANT
 
 important:
 this is a long running way of working, it is not a task oriented thing so once we start this mode we are not going to "shut down" explorer once we finish a particular task as it might typically work in a team.
+
+## Gemini CLI as Cross-Model Research Tool
+
+we have the gemini cli installed and it's useful as a "different lens" on the research. team lead can invoke it via bash and relay insights to/from the explorer. the workflow:
+
+- `gemini -m "gemini-3-pro-preview" -p "prompt"` for single-shot headless mode
+- `gemini --resume <session-uuid> -p "prompt"` for multi-turn (sessions persist)
+- pipe file content via stdin: `cat file.c | gemini -m "gemini-3-pro-preview" -p "instruction"`
+- must use `2>&1` to capture output (responses go to stderr)
+- `gemini --list-sessions` to see available sessions
+- available models: gemini-2.5-pro, gemini-2.5-flash, gemini-3-pro-preview, gemini-3-flash-preview
+
+tips for productive use:
+- gemini 3 pro is the strongest model for substantive technical analysis
+- it has a strong pull toward tool calls / executing tasks. explicitly say "do not use any tools" when you want it to think
+- it will try to snap back to code every 2-3 turns even when told not to — just redirect it
+- it accepts corrections gracefully, don't be afraid to push back
+- best used for "what does this look like from a different field" questions — it pattern-matches from different training data than claude and surfaces connections we miss
+- team lead acts as relay to protect the researcher's context from gemini back-and-forth
+- this workflow generated the Reservoir Computing 5th pillar connection, the pure synergy framing, and the conditioning-not-computing insight for Demo 84
