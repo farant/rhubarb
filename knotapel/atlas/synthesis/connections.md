@@ -1,6 +1,6 @@
 # Cross-Demo Connections
 
-How 94 demos feed into each other, what recurs, and where threads unexpectedly converge.
+How 101 demos feed into each other, what recurs, and where threads unexpectedly converge.
 
 ---
 
@@ -1782,3 +1782,116 @@ topology, signed weight sum = linear readout, phase_cell = nonlinear output func
 BFS depth = memory depth. The testable prediction — rank(K_2I)/rank(K_z8) > 120/24 if
 non-solvability contributes above raw size — is a single RKHS kernel computation (seeded
 as D95) that could confirm or refute the entire algebraic reservoir interpretation.
+
+### D95 Synergy Universality: D84 and D95 Are Independent Partitions (D95↔D84)
+
+D84 established 0+0=36 pure synergy: null-only and non-null-only each produce zero XOR6
+at k_sec=1, but their union produces 36. D95 found the same pattern at the derived series
+level: COMM-only (12 entries) and NON-COMM-only (12 entries) perform similarly in isolation,
+but ALL(24) gives 2.7x the rate at N=5. The question was whether these are the same split
+seen through different lenses. D96 answered definitively: they are INDEPENDENT partitions.
+The 9 bracket-null entries come from TWO derived levels (6 from D0, 3 from Q8/D2), and
+the derived series cuts across the null boundary. Their cross-product creates the 5-cell
+landscape that fully explains DKC capacity structure.
+
+### D96 Cross-Classification Resolves D84+D95 (D96↔D84↔D95)
+
+D96 is the synthesis of D84 and D95. D84's partition (null/non-null, 9/15) and D95's
+partition (derived series, 12/8/3/1) are confirmed independent by cross-tabulation. The
+5-cell landscape (A-E) reveals that D84's "null indispensability" specifically refers to
+Cell A (D0-null, outermost) -- these are synergy enhancers when mixed with non-null entries.
+Cell D (Q8-null, deep) is not indispensable; it is noise. Removing Cell D improves capacity
+at every N. D95's "COMM vs NON-COMM parity" is explained by contamination: both partitions
+contain null cells that drag down their individual scores. The true signal is B+C (non-null
+x cross-derived synergy), which was masked when averaging over all entries in each partition.
+
+### D97 Geometric Explanation Connects to D66/D68 (D97↔D66↔D68)
+
+D66 discovered the 24-cell polytope as the natural DKC geometry, with binary octahedral
+group vertices. D68 established intrinsic curvature of DKC on S^2. D97 identifies the
+specific geometric mechanism: Cell B's 6 entries form a regular octahedron (the dual of
+the cube, one of the 24-cell's constituent polytopes). The 3 mutually orthogonal directions
+at the S^2 level provide maximally separated Voronoi cells. The lever arm mechanism (nonzero
+real component enables phase_cell discrimination) is a concrete realization of D67's Hopf
+phase inertness finding: the S^1 fiber is irrelevant, but the magnitude of the S^1 projection
+(cosine of half-angle) determines the lever arm strength.
+
+### D98 Readout Bottleneck Connects to D35 and D67 (D98↔D35↔D67)
+
+D35 established entanglement vanishing (non-interleaving braids have zero bracket) and the
+axiality theorem (bracket values have single nonzero Cyc8 component). D98 confirmed both
+at scale: 31/31 non-interleaving entries have zero bracket, and traces are axial. D67
+showed that the Hopf phase is inert (wrong readout kills computation even when data is rich).
+D98 is the multi-strand analog: the trace readout is catastrophically lossy (5.1% retention),
+destroying computation that the algebra fully supports (column-4 is lossless). The lesson
+from D67 — wrong readout kills computation — applies at the representation level, not just
+the activation level.
+
+### D99 Delta_1 Module Connects to D51 Semisimplicity (D99↔D51)
+
+D51 established that TL_3 at delta=0 is semisimple (n=3 odd). D99 builds on this: TL_3 is
+semisimple, but the braid group image through the Delta_1 standard module is infinite. The
+Jordan block in sigma_1 proves the extension does not split: Ext^1(L(0), L(1)) is non-zero.
+This is not a contradiction — TL_3 semisimplicity governs the TL algebra, while the braid
+group image has richer structure. The non-split extension is the computational resource
+that enables XOR14, something impossible in the 2-strand finite group.
+
+### D99 Depth Scaling Connects to D82 Depth Law (D99↔D82)
+
+D82 established the linear depth law: max_xor ~ depth + 6 for 2-strand DKC. D99 shows
+that depth is equally critical for 3-strand: XOR14 requires deep entries (d>=6), and
+shallow entries give definitively zero. The depth law mechanism (algebraic coherence from
+cross-depth composition) generalizes to matrix-valued DKC: super-hubs at d=6 combine with
+satellites at d=7, and 100% of XOR14 winners are mixed-depth. The crossing depth interpretation
+from D82 extends directly to multi-strand braids.
+
+### D100↔D101 Simple vs Non-Semisimple Comparison (D100↔D101)
+
+D100 (W_{4,2}, non-semisimple, n=4 even) and D101 (W_{5,3}, simple, n=5 odd) provide the
+first controlled comparison of DKC on modules of different types. Key contrasts:
+- Growth rate: ~3.1x (D100) vs ~4x (D101), tracking n-1 as predicted
+- Hub count: 6 (D100) vs 3 (D101), falsifying the sl_d scaling prediction
+- XOR14: 70 (D100) vs 0 (D101), demonstrating non-semisimple advantage at depth
+- Casimir correlation: uniformly positive (D100) vs inverted at high XOR levels (D101)
+- Radical content: constant at all depths (D100) vs absent (D101)
+- Hub commutators: traceless with zero radical content (D100) vs zero matrix (D101)
+The simple module has broader shallow capacity but strictly less deep capacity, confirming
+that the non-semisimple extension structure is computationally load-bearing.
+
+### Ext^1 Thesis Across D99-D101 (D99↔D100↔D101↔D84)
+
+D84 first identified non-semisimplicity as the computational resource (null states = LCFT
+Jordan-cell structure). D99 made this precise: the non-split extension Ext^1(L(0), L(1)) is
+the catalytic preparation mechanism. D100 confirmed: constant radical content at all depths,
+hub commutators annihilate the radical. D101 provided the negative control: the simple module
+(no radical, no extension) achieves zero XOR14 despite larger dimension and faster growth.
+The causal chain is now established across four demos:
+1. Non-semisimplicity creates the extension structure (D84 principle)
+2. Extension creates Jordan blocks giving infinite group (D99 mechanism)
+3. Deep entries accumulate algebraic complexity (Casimir growth, D100 data)
+4. Cross-depth composition with extension-prepared entries produces high-XOR capacity
+5. Without extension, the chain breaks at step 2 and deep capacity vanishes (D101 control)
+
+### D93-D101 Complete the "Wall Was X Not Y" Pattern (Extension)
+
+The wall-identification pattern now has a sixth instance: D98's trace readout gives ZERO
+XOR despite the 3-strand algebra being infinite and rich. D99's Delta_1 module + sign-hash
+activation recovers 500K+ XOR6 solutions. The wall was in the representation/readout, not
+the algebra:
+1. D48→D50: wall in split-sigmoid activation, not Z[zeta_8] lattice
+2. D76→D77: wall in S²-only activation, not ζ₈ root of unity
+3. D78→D79: wall in group finiteness, not DKC architecture
+4. D92: wall in +/-q encoding, not the activation (parity lock)
+5. D93: wall in combined_cell normalization, not 1wpi encoding
+6. D98→D99: wall in trace readout / reducible representation, not multi-strand algebra
+
+### Traceless Hub Commutator Universal Pattern (D99↔D100↔D101)
+
+A new recurring pattern: super-hub commutators are traceless in EVERY multi-strand demo
+where hubs appear. D99: 2 hubs, commutator traceless with strong sl_2 bracket structure
+(Cartan L1=84, e-root L1=108). D100: 6 hubs, ALL six commutators traceless AND radical
+content = 0 (commutators live entirely in the semisimple quotient). D101: 3 hubs, ALL
+commutators are the ZERO matrix (hubs mutually commute). The pattern strengthens across
+demos: from traceless (D99) to traceless + radical-annihilating (D100) to zero (D101).
+Whether this is a theorem (commutators of hub-type entries on TL standard modules are
+always traceless) or specific to these examples remains open.

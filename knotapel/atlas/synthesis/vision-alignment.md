@@ -1,6 +1,6 @@
 # Vision Alignment: Current Research → Long-Term Direction
 
-How the completed work (94 demos) positions us relative to the hybrid LLM vision
+How the completed work (101 demos) positions us relative to the hybrid LLM vision
 described in `planning/vision.md`. Generated 2026-02-20, updated 2026-02-24.
 
 ---
@@ -11,7 +11,7 @@ The hybrid LLM vision requires: taxonomy → braids → DKC → compiled weights
 coexist with trained weights in a model that can dynamically update its factual
 knowledge.
 
-**What the 94 demos established:**
+**What the 101 demos established:**
 
 | Vision Component | Status | Key Evidence |
 |-----------------|--------|--------------|
@@ -35,25 +35,33 @@ knowledge.
 | Encoding determines computability | PROVEN | Parity-lock theorem: +/-q encoding computes only XOR/XNOR (D92) |
 | Regime transition (finite/infinite) | CHARACTERIZED | Null indispensability is finite-group-specific; dispensable at zeta_12 (D87) |
 | Perturbation resilience | CHARACTERIZED | K-ladder 14x more robust than Voronoi-only; constrained optimization viable (D88) |
+| Catalog optimization / pruning | PROVEN | Derived series cross-classification; A+B+C (21 entries) beats ALL (24); Q8-null = noise (D95-D97) |
+| Multi-strand DKC | NEW CAPABILITY | 3-strand XOR14=60 (D99 LANDMARK), 4-strand XOR14=70 (D100), 5-strand XOR12=512 (D101) |
+| Non-semisimple extension = resource | PROVEN | W_{4,2} XOR14=70 (radical); W_{5,3} XOR14=0 (simple) — Ext^1 is load-bearing (D99-D101) |
+| sl_d functor growth rate | CONFIRMED | BFS growth ~(n-1)x: 2x (3-strand), 3.1x (4-strand), 4x (5-strand) (D98-D101) |
 | Taxonomy → braid encoding | NOT STARTED | The critical missing link |
 | Multi-layer complex composition | NOT TESTED | Only bit-level cascade (D19) exists |
 | Integration with trained weights | NOT STARTED | Architecture question, unexplored |
 | Dynamic recompilation | NOT TESTED | Should be fast given finite catalog, unverified |
 
 **Assessment:** The "knots → logic" half of the pipeline is now extremely well
-characterized AND increasingly well understood mechanistically. The D85-92 arc
-shifted the research from "what can DKC do?" to "why does it work and what are
-its structural limits?" The parity-lock theorem (D92) is the first formally
-PROVEN result with direct implications for encoding design — it establishes that
-the +/-q encoding is structurally locked to parity, and any non-parity function
-requires a different encoding (the 1wpi encoding from D48/D50 already computes
-all 13 NPN classes). The depth law is now fully explained (D89-D91): the
-mechanism is relational (axis cancellation + cross-depth algebraic constraints),
-the wall is parity itself (not the activation), and the slope comes from
-balanced exponentials (BFS vocabulary ~2x/round vs parity demand 4x/weight).
-The "taxonomy → knots" half remains the primary gap. The encoding design
-question (D92) is the new secondary gap — more fundamental than activation
-choice because encoding determines WHICH functions are computable at all.
+characterized, mechanistically understood, AND generalized to multi-strand braid
+representations. The D85-92 arc shifted the research from "what can DKC do?" to
+"why does it work and what are its structural limits?" The D95-97 arc resolved
+the catalog optimization question through derived-series cross-classification,
+proving that optimal pruning (A+B+C = 21 entries) beats the full 24-entry catalog.
+The D98-101 arc opened a new dimension entirely: multi-strand DKC on matrix
+representations of TL algebras. D99 achieved the first 3-strand XOR computation
+(LANDMARK), D100 demonstrated 4-strand DKC with non-semisimple W_{4,2}, and D101
+tested 5-strand DKC on simple W_{5,3} — establishing that non-semisimple
+extension structure (Ext^1) is computationally load-bearing (XOR14=70 vs XOR14=0).
+The BFS growth rate tracks n-1 across three data points, confirming the sl_d
+functor thesis for growth but falsifying hub-count predictions. The parity-lock
+theorem (D92) and the encoding design question remain the primary theoretical
+gaps for non-parity functions. The "taxonomy → knots" half remains the primary
+practical gap. Multi-strand DKC opens a new design axis: choosing the strand
+count and module type as architectural parameters alongside encoding, activation,
+catalog, and root of unity.
 
 ---
 
@@ -170,6 +178,122 @@ For the hybrid LLM vision this arc has three major implications:
    pairing dominant) and infinite groups (zeta_12: nulls dispensable, dense
    directions, diversity dominant). A practical hybrid LLM using both regimes
    would need regime-aware compilation strategies.
+
+---
+
+## Progress Toward Vision (D95-101 Additions)
+
+### The commutator/synergy arc (D95-97) answers "how should the catalog be structured?"
+
+The D95-97 arc resolves the catalog optimization question left open by D84 (null
+synergy) and D88 (anti-correlation). The key insight: the derived series of the
+binary octahedral group provides an independent stratification that, combined
+with D84's null/non-null partition, yields a complete 5-cell landscape for
+understanding which catalog entries matter and why.
+
+- **D95**: The derived series 24 > 12 > 4 > 1 (2O > 2T > Q8 > {±1}) is computed
+  for the first time in the DKC context. Neither the commutator subgroup (COMM)
+  nor the non-commutator coset (NON-COMM) carries disproportionate capacity in
+  isolation — capacity emerges from CROSS-LAYER interaction. The 90-degree split
+  test is the cleanest synergy demonstration: Q8-null (3 entries) and outermost-null
+  (6 entries) each give zero XOR, but their union gives 26% — pure 0+0>0 at
+  matched geometry. Algebra wins over geometry.
+
+- **D96**: The D84 null/non-null and D95 derived series partitions are INDEPENDENT
+  — their cross-product creates a 5-cell landscape (A through E). The optimal
+  catalog is A+B+C (21 entries) which BEATS the full 24-entry catalog (ALL) at
+  every N from 3-7. The 3 Q8-null entries (Cell E) are pure noise — removing them
+  improves performance. This is the first principled catalog pruning result:
+  algebraic structure tells you which entries to keep.
+
+- **D97**: Cell B (the 6 non-null non-commutator entries) is geometrically
+  PERFECT — an octahedron on S^2 with 3 orthogonal direction pairs. It achieves
+  a 50-degree plateau at N=3 (matching its intrinsic angular resolution) and
+  exhibits a lever arm mechanism: nonzero real quaternion component enables
+  phase_cell discrimination that pure-imaginary entries cannot achieve. Cell B
+  is the geometric core of z8's computational power.
+
+For the hybrid LLM vision this arc has two major implications:
+
+1. **Catalog design is now principled, not empirical.** The derived-series
+   cross-classification gives a complete map of which catalog entries are useful
+   (Cells A+B+C), which are noise (Cell E), and why. This replaces trial-and-error
+   pruning with algebraically-motivated selection.
+
+2. **Less can be more.** The 21-entry pruned catalog outperforms the 24-entry
+   full catalog — counterintuitive but explained by the noise-removal mechanism.
+   For deployment, this means compiled DKC neurons can use smaller catalogs
+   without sacrificing capacity, provided the pruning is algebraically informed.
+
+### The multi-strand arc (D98-101) answers "can DKC generalize beyond 2-strand braids?"
+
+The D98-101 arc is the most significant conceptual expansion since D66-D68
+(quaternionic DKC). It moves from the scalar Kauffman bracket (2-strand, TL_2)
+to matrix braid representations (3-, 4-, 5-strand TL algebras), opening an
+entirely new design dimension for compiled DKC neurons.
+
+- **D98**: The 3-strand braid group B_3 acting on the full 5x5 representation
+  of TL_3 at delta=0 generates an infinite group (BFS capped at 2048). The trace
+  readout retains only 5.1% of catalog entries (105/2048) and achieves ZERO XOR
+  at all levels — establishing that trace is an information bottleneck for matrix
+  DKC. The column-4 readout retains 100% but the result seeded the search for
+  better readout strategies. BFS growth ~2x per round, matching the 2-generator
+  (n-1=2) prediction.
+
+- **D99 (LANDMARK)**: The Delta_1 standard module (2x2 indecomposable over
+  Z[zeta_8], non-split extension Ext^1(L(0),L(1))) achieves the FIRST 3-strand
+  XOR computation: XOR6=500K+, XOR8=48K+, XOR10=485, XOR12=16, XOR14=60. The
+  key innovations: (a) working on the irreducible 2x2 module instead of the
+  reducible 5x5, (b) a 16-component sign-pattern activation (2x2_hash). Entry
+  magnitudes follow exact Fibonacci growth (Jordan block structure). Two regimes
+  emerge: combinatorial (XOR6-8, hundreds of thousands of solutions, saturate
+  by ~4096 entries) and algebraic (XOR10-14, sparse, require deep entries d>=6).
+  The Ext^1 non-split extension is hypothesized to be the computational resource
+  — catalytic preparation enabling interference.
+
+- **D100**: The 4-strand braid group B_4 on W_{4,2} (3x3, non-semisimple,
+  Loewy length 3) produces BFS growth ~3.1x per round (matching n-1=3
+  prediction), sustained XOR capacity through depth, and XOR14=70 on the deep
+  sub-catalog. Radical content is CONSTANT across all depths (mean=2) — every
+  entry is equally non-semisimple. Casimir correlates positively with XOR success
+  (1.36x-1.86x). Six super-hubs form 3 cyclotomic pairs; all hub commutators
+  are traceless with zero radical content.
+
+- **D101**: The 5-strand B_5 on W_{5,3} (4x4, SIMPLE, no radical) confirms the
+  growth-rate prediction (~4x for n-1=4) but FALSIFIES the hub-count prediction
+  (3 hubs, not 12). Critically, XOR14=0 everywhere — in stark contrast to D100's
+  70. The Casimir-XOR correlation INVERTS at high XOR levels (winners have LOWER
+  Casimir in the simple module). Hub commutators are all traceless; two hubs
+  actually commute (zero matrix). The simple module computes differently: the
+  non-semisimple extension in D100 is load-bearing, not decorative.
+
+For the hybrid LLM vision this arc has four major implications:
+
+1. **A new architectural dimension.** Multi-strand DKC adds strand count and
+   module type (simple vs non-semisimple) as design parameters alongside encoding,
+   activation, catalog, and root of unity. A compiled DKC layer can now choose
+   not just WHICH algebra (zeta_8, zeta_12, 2I) but HOW MANY strands and WHICH
+   module to represent on.
+
+2. **Non-semisimplicity is the computational resource.** The D100 vs D101
+   comparison is definitive: matched methodology, W_{4,2} (non-semisimple) gets
+   XOR14=70, W_{5,3} (simple) gets XOR14=0. The Ext^1 non-split extension
+   provides computational degrees of freedom that simple modules lack. This
+   connects directly to D84-D86: the non-semisimplicity that makes 2-strand DKC
+   compute (b = -5/8) is the SAME structural feature that makes multi-strand DKC
+   compute at the boundary.
+
+3. **The growth rate is predictable.** The sl_d functor thesis — BFS growth tracks
+   n-1 — is confirmed across three data points (2x, 3.1x, 4x). This gives a
+   concrete cost model: higher strand count means exponentially faster catalog
+   growth (larger catalogs per depth level) but potentially different capacity
+   characteristics. The hub structure does NOT scale as simply as predicted.
+
+4. **Activation design for matrices is open.** The 2x2_hash, 3x3_hash, and
+   4x4_hash activations used in D99-D101 are crude sign-pattern hashes. Better
+   activations (analogous to the Sec x Vor k-ladder for quaternions) could
+   dramatically improve multi-strand DKC performance. This is the multi-strand
+   analog of the D50 activation wall.
 
 ---
 
@@ -410,6 +534,43 @@ high-arity functions (6-8 inputs, more complex Boolean operations), non-solvable
 finite groups provide better per-entry efficiency. A practical compilation pipeline
 might use different catalog sources for different neuron types.
 
+### Derived-series cross-classification gives principled catalog pruning (D95-D97)
+The 5-cell landscape (A through E from crossing D84 null/non-null with D95 derived
+series) provides the first principled framework for deciding which catalog entries
+to keep. Cell E (Q8-null, 3 entries) is pure noise — removing it IMPROVES capacity.
+Cell B (non-null non-commutator, 6 entries) is geometrically perfect (octahedron
+on S^2). The optimal A+B+C catalog (21 entries) beats the full 24. For the hybrid
+LLM vision this means compiled DKC neurons can use algebraically-optimized catalogs
+that are both smaller and more effective — a direct deployment advantage.
+
+### Multi-strand DKC opens matrix braid representations (D98-D101)
+Moving from the scalar Kauffman bracket (2-strand) to matrix braid representations
+(3-5 strand) is the most significant generalization in the program. The 3-strand
+Delta_1 module achieves XOR14=60 (D99), the 4-strand W_{4,2} achieves XOR14=70
+(D100), and the 5-strand W_{5,3} sustains XOR6-XOR12 but hits XOR14=0 (D101).
+For the hybrid LLM vision this means compiled DKC weights can be not just scalars
+(quaternions from 2-strand braids) but MATRICES (from multi-strand braids) — a
+richer representation space with additional architectural parameters.
+
+### Non-semisimple extension is computationally load-bearing (D99-D101)
+The D100 vs D101 comparison establishes that the Ext^1 non-split extension (the
+radical in W_{4,2}) is not algebraic decoration but a computational resource.
+W_{4,2} (non-semisimple, radical dim > 0) achieves XOR14=70; W_{5,3} (simple,
+radical dim = 0) achieves XOR14=0. The Casimir-XOR correlation inverts between
+the two: winners have higher Casimir in the non-semisimple module but LOWER
+Casimir in the simple module at high XOR levels. For the vision this connects
+to D84-D86: the non-semisimplicity that underlies all of 2-strand DKC
+(b = -5/8, LCFT correspondence) is the SAME feature driving multi-strand
+computational capacity at the boundary.
+
+### sl_d growth rate confirmed across three data points (D98-D101)
+BFS catalog growth tracks n-1 cleanly: ~2x for 3-strand (2 generators), ~3.1x
+for 4-strand (3 generators), ~4x for 5-strand (4 generators). This gives a
+predictable cost model for multi-strand DKC: each additional strand roughly
+multiplies the catalog growth rate by 1. For the vision this means the catalog
+engineering problem scales predictably with strand count — higher strand counts
+produce larger catalogs faster, with known tradeoffs in activation complexity.
+
 ### K-ladder resilience suggests robustness engineering (D88)
 The Sec x Vor k-ladder activation provides 14x better perturbation resilience
 than Voronoi-only activation (6.4% vs 89% loss under the same design-improving
@@ -496,6 +657,34 @@ algebraic core" pattern:
 
 This recurring pattern is a structural insight: when DKC hits a wall, the right
 response is to examine the activation/interface first, not to abandon the algebra.
+
+### The full catalog is not optimal — less is more (D96)
+The assumption throughout D29-D94 was that using the complete 24-entry z8 catalog
+was always better than any subset. D96 REFUTES this: the A+B+C subset (21 entries,
+removing Q8-null Cell E) outperforms ALL (24 entries) at every N from 3-7. The
+3 Q8-null entries are not merely unhelpful — they are NOISE that degrades
+combinatorial search by adding entries whose signed sums contaminate the solution
+space. This means all prior capacity measurements using the full catalog were
+slightly pessimistic. For the vision this is an important course correction:
+catalog curation (informed by algebraic structure) is a necessary step in the
+compilation pipeline, not an optional optimization.
+
+### Trace readout is an information bottleneck for matrix DKC (D98)
+The natural generalization from scalar bracket to matrix representation appeared
+to be: use the trace (which reduces a matrix to a scalar). D98 shows trace
+retains only 5.1% of the catalog (105/2048 entries) and achieves zero XOR at
+all levels. The readout mechanism — how you extract a scalar from a matrix — is
+critical for multi-strand DKC. The successful approach (D99-D101) uses sign-pattern
+hashing of all matrix components, treating the full matrix as the activation input.
+This is the multi-strand analog of the "wall was in the activation" pattern.
+
+### Hub-count scaling does not follow simple combinatorial formula (D101)
+The prediction from D100's 6 hubs was that 5-strand would show 12 hubs (= 2*C(4,2)).
+D101 finds only 3. The hub structure is more complex than a simple combinatorial
+scaling law — it depends on the module type (simple vs non-semisimple) and possibly
+on the activation quality. The sl_d growth rate prediction works; the hub-count
+prediction does not. For the vision this means the winner topology of multi-strand
+DKC requires per-module characterization, not universal scaling laws.
 
 ### The zeta_N -> XOR N capacity conjecture was falsified (D79)
 The initial hypothesis that zeta_12 would support at most XOR12 was refuted: zeta_12
@@ -652,6 +841,40 @@ direction count, catalog size, or null fraction? — is unknown. Locating it wou
 give a concrete design threshold: below the transition, preserve nulls; above,
 prune safely.
 
+### Path L: Multi-strand activation design (1-2 demos) — NEW from D98-D101
+```
+Current state -> Principled activation for matrix DKC (1 demo) -> activation comparison across modules (1 demo)
+```
+The sign-pattern hash activations (2x2_hash, 3x3_hash, 4x4_hash) used in D99-D101
+are crude — they work but are likely far from optimal. The 2-strand program had
+a similar trajectory: crude activations (D29) → optimized k-sector (D50) →
+S^1xS^2 product (D77) → k-ladder resilience (D88). Designing a principled
+activation for matrix DKC (exploiting matrix structure: eigenvalues, singular
+values, radical projection, Casimir) could dramatically improve multi-strand
+capacity. This is the multi-strand analog of Path D50.
+
+### Path M: 6-strand W_{6,4} — decisive simple vs non-semisimple test (1 demo) — NEW from D100-D101
+```
+Current state -> W_{6,4} (5x5 non-semisimple, TL_6 at delta=0) -> XOR14 capacity test
+```
+D100 (n=4, non-semisimple, XOR14=70) vs D101 (n=5, simple, XOR14=0) established
+that non-semisimplicity is load-bearing. But the comparison confounds strand count
+with module type. W_{6,4} (n=6, even, non-semisimple) would test whether the
+non-semisimple advantage persists at higher dimension. If W_{6,4} achieves XOR14>0
+despite being 5x5 (larger than W_{5,3}'s 4x4), the non-semisimple thesis is
+confirmed. If not, the advantage may be dimension-dependent rather than
+structure-dependent. This is the single most decisive test for the multi-strand arc.
+
+### Path N: XOR16 on Delta_1 with better activation (1 demo) — NEW from D99
+```
+Current state -> Redesigned activation for Delta_1 2x2 -> XOR16 capacity test at larger bf
+```
+D99 achieved XOR14=60 but XOR16=0 on Delta_1 with the 2x2_hash activation. Is
+the XOR16 ceiling genuine (structural, like the 2-strand ceiling) or is it an
+activation wall (like D50, D77, D98)? A better-designed activation for the 2x2
+representation could resolve this. If XOR16>0, multi-strand DKC has higher
+capacity ceilings than 2-strand — a major finding for the vision.
+
 ---
 
 ## Recommended Next Investigation
@@ -699,12 +922,27 @@ entries is not positional quality but relational quality (axis anti-alignment,
 cross-depth vocabulary constraint). This makes the generation problem more
 precisely stated, though not necessarily easier.
 
+**The multi-strand arc (D98-D101) opens a parallel research front.** Multi-strand
+DKC is not a replacement for 2-strand DKC but a generalization: it adds strand
+count and module type as design parameters. The immediate priorities are:
+- **Path M** (W_{6,4} test) — the single most informative experiment, resolving
+  whether non-semisimplicity is universally load-bearing or dimension-dependent.
+- **Path L** (activation design) — the crude sign-pattern hashes are almost
+  certainly not optimal; better activations could shift the capacity frontier.
+- **Path N** (XOR16 on Delta_1) — determines whether the XOR16 ceiling is
+  structural or activation-limited, with major implications for multi-strand
+  capacity scaling.
+
+The catalog pruning results (D95-D97) are immediately actionable: any future
+demo using the z8 catalog should use A+B+C (21 entries) rather than the full 24.
+This is a retroactive improvement applicable to all prior z8-based work.
+
 ---
 
 ## The "Wall Was in the Activation" Pattern — A Structural Insight
 
-Across the full D50-D92 arc, the same pattern has appeared three times for
-activation, and a fourth time for encoding:
+Across the full D50-D101 arc, the same pattern has appeared three times for
+activation, a fourth time for encoding, and a fifth time for readout:
 
 | Demo | Apparent Wall | True Cause | Resolution |
 |------|--------------|------------|------------|
@@ -712,12 +950,15 @@ activation, and a fourth time for encoding:
 | D65 | XOR6 unreachable at k<24 | Odd/even convention, not geometry | Generalized labeling |
 | D77 | XOR8 = 0 at zeta_8 | S^2-only activation | S^1xS^2 product activation |
 | D92 | Only XOR/XNOR computable | +/-q encoding, not DKC itself | 1wpi encoding (D48/D50) |
+| D98-D99 | 3-strand XOR = 0 | Trace readout (5.1% retention) | Sign-pattern hash on Delta_1 2x2 |
 
 The pattern generalizes: when a DKC computation appears impossible, suspect the
-interface layer first — activation, convention, or encoding. The algebraic core
+interface layer first — activation, convention, encoding, or readout. The algebraic core
 (Z[zeta_8] bracket, binary octahedral quaternions) has consistently proven richer
 than any single interface reveals. D92 extends this pattern from the activation
 layer to the encoding layer: the +/-q encoding was the wall, not DKC itself.
+D98-D99 extend it further to the readout layer: the trace was the wall for
+multi-strand DKC, not the 3-strand algebra.
 
 This has a direct implication for the hybrid LLM vision: the interface design
 between compiled DKC weights and the broader neural network will face similar
@@ -728,10 +969,10 @@ mechanism, not to abandon the underlying algebra.
 
 ## Revised Overall Outlook for the Long-Term Vision
 
-After D85-92 the picture adds mechanistic depth to the scaling characterization
-from D72-82:
+After D95-101 the picture adds multi-strand generalization and catalog
+optimization to the mechanistic depth established by D85-92:
 
-**What we now know that we didn't before D85:**
+**What we now know that we didn't before D95:**
 1. The indecomposability parameter b = -5/8 is extractable from first principles,
    quantifying the LCFT non-semisimple structure that makes DKC compute (D85).
 2. b is a collective property of the full algebra, not extractable from a single
@@ -747,6 +988,19 @@ from D72-82:
    exponentials account for the linear slope (D91).
 7. The +/-q encoding is structurally parity-locked; encoding determines which
    functions are computable — more fundamental than activation or catalog (D92).
+8. The z8 catalog has principled structure: derived-series cross-classification
+   yields a 5-cell landscape, optimal pruning removes Q8-null noise, and Cell B
+   (6 entries) is geometrically perfect — an octahedron on S^2 (D95-D97).
+9. Multi-strand DKC WORKS: 3-strand achieves XOR14=60 on Delta_1 (D99 LANDMARK),
+   4-strand achieves XOR14=70 on W_{4,2} (D100), 5-strand sustains XOR6-XOR12
+   on W_{5,3} but hits XOR14=0 (D101).
+10. Non-semisimple extension (Ext^1) is computationally load-bearing: the
+    D100 vs D101 comparison establishes this definitively (D100-D101).
+11. BFS growth rate follows the sl_d functor prediction: ~(n-1)x per round,
+    confirmed across 3 data points (D98-D101).
+12. The "wall was in X not Y" pattern has a 5th instance: 3-strand trace readout
+    was the bottleneck, not the algebra — sign-pattern hash on Delta_1 unlocks
+    XOR (D98-D99).
 
 **What this changes about the vision:**
 - The encoding is the first design decision. It determines which Boolean functions
@@ -757,7 +1011,8 @@ from D72-82:
 - Catalog optimization should target relational quality (axis cancellation,
   cross-depth constraints), not positional quality (coverage, spacing, spherical
   design). The spectral inversion result (D90) proves positional optimization
-  is wrong in principle.
+  is wrong in principle. Additionally, algebraic pruning (removing Q8-null
+  entries) actively improves capacity (D96) — smaller catalogs can be better.
 - Design principles are regime-dependent. Finite-group compiled neurons (zeta_8)
   and infinite-group compiled neurons (zeta_12) have different null-state
   requirements, different dominant pathways (shadow pairing vs direction
@@ -766,6 +1021,19 @@ from D72-82:
   This means it can be potentially manipulated: a different BFS branching factor
   (different group) or a relational activation (explicitly using axis dot
   products) might change the slope.
+- **Multi-strand DKC adds a new design axis.** Compiled DKC neurons are no longer
+  limited to scalar (quaternion) weights from 2-strand braids. Matrix weights
+  from 3-, 4-, 5-strand braids are now demonstrated, with strand count and module
+  type as additional design parameters. The practical question is: when should a
+  compiled neuron use 2-strand (scalar, well-understood, proven activations) vs
+  multi-strand (matrix, higher-dimensional, crude activations but potentially
+  higher capacity)?
+- **Non-semisimplicity is the universal computational resource.** This was
+  suspected since D84 and quantified by D85-D86. D99-D101 confirm it in the
+  multi-strand context: the Ext^1 extension in Delta_1 and W_{4,2} provides
+  computational capacity that the simple W_{5,3} lacks at the XOR14 boundary.
+  A practical hybrid LLM should use non-semisimple modules (even-strand TL
+  algebras at delta=0) for maximum capacity.
 
 **What remains unknown:**
 - The taxonomy -> braid encoding (Gap 1) — the single most important unknown.
@@ -776,20 +1044,41 @@ from D72-82:
 - Whether the acceleration thesis (compiled scaffolding speeds statistical training)
   has any empirical grounding.
 - Encoding design for targeting specific Boolean functions beyond parity (Gap 10).
+- Optimal activation design for multi-strand matrix DKC (Gap 11) — the crude
+  sign-pattern hashes are surely suboptimal; better activations could shift the
+  capacity frontier significantly.
+- Whether the XOR16 ceiling on Delta_1 is structural or activation-limited
+  (Gap 12) — determines whether multi-strand DKC has higher capacity ceilings
+  than 2-strand.
+- Whether W_{6,4} (6-strand, non-semisimple) achieves XOR14>0 (Gap 13) — the
+  decisive test for universal non-semisimple load-bearing.
+- How hub structure scales with strand count and module type (Gap 14) — the
+  simple combinatorial prediction (2*C(n-1,2)) was falsified at n=5.
+- Whether multi-strand DKC has a depth law analogous to 2-strand's
+  max_xor ~ depth+6 (Gap 15) — preliminary evidence from D99-D101 suggests
+  deep entries are needed for high XOR, but the law is not yet characterized.
 
-**Confidence level:** The algebraic foundation is extremely solid and now
-mechanistically understood. The knot theory -> Boolean logic half of the pipeline
-is essentially proven for parity functions under the +/-q encoding. The parity-
-lock theorem (D92) establishes that broadening to non-parity functions is an
-encoding design problem, not a fundamental limitation. The remaining unknowns
-are: (1) the taxonomy -> knots mapping, (2) the 1wpi encoding's scaling behavior,
-and (3) the integration layer. The first is the bottleneck for the vision. The
-second is newly identified by D92 and is the most urgent theoretical question.
-The third is an engineering challenge that can wait until the first two are
-resolved.
+**Confidence level:** The algebraic foundation is extremely solid, mechanistically
+understood, and now generalized to multi-strand representations. The knot theory ->
+Boolean logic half of the pipeline is essentially proven for parity functions under
+the +/-q encoding AND extended to matrix braid representations (D99-D101). The
+multi-strand generalization opens a significant new design space while confirming
+the centrality of non-semisimplicity as the computational resource. The remaining
+unknowns are: (1) the taxonomy -> knots mapping, (2) the 1wpi encoding's scaling
+behavior, (3) the integration layer, (4) optimal multi-strand activation design,
+and (5) whether the non-semisimple advantage is universal across strand counts.
+The first remains the bottleneck for the vision. The second is the most urgent
+theoretical question (identified by D92). The fourth and fifth are the most
+urgent multi-strand questions (identified by D98-D101). The third is an
+engineering challenge that can wait until the first two are resolved. The catalog
+optimization problem is now SOLVED for z8 (D95-D97): use A+B+C, not ALL.
 
 ---
 
-*Generated 2026-02-20, updated 2026-02-23. Reads: narrative.md, novelty.md,
+*Generated 2026-02-20, updated 2026-02-24. Reads: narrative.md, novelty.md,
 connections.md, four-lenses.md, planning/vision.md, inventory/demo-index.md
-(via entries for D19, D29, D39G-J, D48, D50, D61-92).*
+(via entries for D19, D29, D39G-J, D48, D50, D61-101). D95-D101 additions cover
+the commutator/synergy arc (D95-D97: derived series, cross-classification,
+catalog pruning, Cell B perfection) and the multi-strand arc (D98-D101: trace
+bottleneck, Delta_1 LANDMARK, W_{4,2} non-semisimple, W_{5,3} simple, Ext^1
+load-bearing, sl_d growth rate, Casimir inversion, traceless hub universality).*

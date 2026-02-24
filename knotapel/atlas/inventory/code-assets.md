@@ -1,6 +1,6 @@
 # Code Assets Catalog
 
-Reusable code patterns across 94 knotapel demos. Updated 2026-02-24 (added Demos 93-94).
+Reusable code patterns across 101 knotapel demos. Updated 2026-02-24 (added Demos 95-101).
 
 ---
 
@@ -2113,6 +2113,267 @@ Reusable code patterns across 94 knotapel demos. Updated 2026-02-24 (added Demos
 - **Approximate size**: ~80 lines
 - **Notes**: The multi-group infrastructure enables Phases 2-4's controlled comparisons: z8 vs random-2I-subset vs full-2I vs truncated-z12. Each comparison loads the relevant catalog, builds its direction set, and runs the same capacity pipeline.
 
+## 22. Commutator Structure and Derived Series (Demo 95)
+
+### 22.1 Z[sqrt2] Ring Arithmetic (`Zr2`)
+
+- **What it does**: Exact integer type representing a + b*sqrt(2) in the ring Z[sqrt2]. The natural coefficient ring for the binary octahedral group's quaternions.
+- **Introduced in**: Demo 95
+- **Reused in**: Demos 96, 97
+- **Key types/functions**:
+  - `Zr2` struct: two `long` components (a, b) representing a + b*sqrt(2)
+  - `zr2_make()`, `zr2_add()`, `zr2_sub()`, `zr2_neg()`, `zr2_mul()`, `zr2_eq()`, `zr2_div2()`
+  - Multiplication uses the identity sqrt(2)^2 = 2 for exact integer arithmetic
+- **Approximate size**: ~60 lines
+- **Notes**: Companion to Q2I's Z[sqrt5] (Demo 94). Both rings arise from quadratic extensions needed for binary polyhedral groups. Division by 2 (`zr2_div2`) handles renormalization after quaternion multiplication (products have /4 denominators that reduce to /2).
+
+### 22.2 Quaternion over Z[sqrt2] (`QZ8`)
+
+- **What it does**: Four-component quaternion with Zr2 entries, representing elements of the binary octahedral group (order 48, 24 bracket values mod sign).
+- **Introduced in**: Demo 95
+- **Reused in**: Demos 96, 97
+- **Key types/functions**:
+  - `QZ8` struct: four Zr2 components (a, b, c, d) each representing (a + b*sqrt(2))/2
+  - `qz8_make()`, `qz8_eq()`, `qz8_neg()`, `qz8_conj()`, `qz8_mul()`
+  - `qz8_to_float()` — converts to double-precision Quat for phase_cell activation
+- **Approximate size**: ~80 lines
+- **Notes**: Exact arithmetic for all group operations — no floating point in the algebra layer. FP only at the readout boundary (qz8_to_float). Compare Q2I (Demo 94) which uses Z[sqrt5] for the binary icosahedral group.
+
+### 22.3 BFS Group Closure with Depth Tracking (`build_z8`)
+
+- **What it does**: BFS closure of the binary octahedral group from generators, with mod-sign identification and depth tracking.
+- **Introduced in**: Demo 95
+- **Reused in**: Demos 96, 97
+- **Key types/functions**:
+  - `build_z8(verbose)` — BFS from 4 generators: (sqrt2/2)(1+i), (sqrt2/2)(1-k), plus conjugates
+  - Stores 24 bracket values in global array with depth per entry
+  - Handles mod-sign identification (48 elements -> 24 bracket values)
+- **Approximate size**: ~60 lines
+
+### 22.4 Derived Series Infrastructure
+
+- **What it does**: Iteratively computes the commutator subgroup and derived series of a finite group, partitioning elements by algebraic depth.
+- **Introduced in**: Demo 95
+- **Reused in**: Demos 96, 97
+- **Key types/functions**:
+  - `z8_commutator(a, b)` / `i2_commutator(a, b)` — compute [a,b] = a*b*a^{-1}*b^{-1}
+  - `close_z8_subgroup(in_set)` — closes subset under multiplication and inverse
+  - `phase1_commutators()` — enumerates all single commutators, classifies COMM vs NON-COMM
+  - `phase2_derived_series()` — iterative commutator subgroup chain: G0 > G1 > G2 > ... assigns level per element
+- **Approximate size**: ~200 lines
+- **Notes**: z8 derived series is 24 > 12 > 4 > 1 (2O > 2T > Q8 > center). 2I terminates immediately (perfect group, G1=G0).
+
+## 23. TL-Group Cross-Classification (Demo 96)
+
+### 23.1 Cell Cross-Tabulation (`compute_cells`)
+
+- **What it does**: Cross-product of two independent partitions (bracket-null/non-null from D84 x derived series level from D95) to produce a 5-cell landscape (A through E) for the z8 bracket values.
+- **Introduced in**: Demo 96
+- **Reused in**: (Demo 96 only)
+- **Key types/functions**:
+  - `compute_null_classification()` — tests Re(q)=0 for each quaternion entry
+  - `compute_cells()` — assigns cell label (A-E) from derived_level x null_status cross-product
+  - `load_cells(cell_mask)` — flexible subset loader: 5-element bitmask selects union of cells into global catalog
+  - `run_subset_capacity()` / `print_subset_result()` — XOR capacity test at N=3,4,5,6 for loaded catalog
+- **Approximate size**: ~150 lines
+- **Notes**: Five cells: A(D0-null,6), B(D0-nonnull,6), C(D1-nonnull,8), D(D2-null,3), E(D3-identity,1). Key result: A+B+C (21 entries) beats ALL (24) — pruning Q8-null entries improves capacity.
+
+## 24. Cell B Geometric Analysis (Demo 97)
+
+### 24.1 Cell B Extraction and Angle Sensitivity Sweep
+
+- **What it does**: Isolates Cell B entries (derived level 0, non-null) and parametrically tests XOR capacity across half-angles to determine the perfection mechanism.
+- **Introduced in**: Demo 97
+- **Reused in**: (Demo 97 only)
+- **Key types/functions**:
+  - `extract_cell_b()` — filters z8 elements by derived level 0 and non-null real component; produces 6 entries in exact (QZ8) and float (Quat) form
+  - Angle sweep: same 3 orthogonal directions tested at 21 half-angles from 10 to 90 degrees using synthetic quaternions
+  - `count_xor()` — iterates C(n,k) combinations at multiple k_sec values (6,12,24), reports XOR-separable tuples
+  - `test_1wpi_xor()` — single-tuple XOR test with signed-sum and cell-based class counting
+- **Approximate size**: ~200 lines
+- **Notes**: Key finding: 50-degree perfection plateau (25-75 degrees). 45 degrees is the midpoint, not a magic number. Isolated anomaly at 35 degrees (N=5 only).
+
+## 25. 3-Strand TL Infrastructure (Demo 98)
+
+### 25.1 TL_3 5x5 Matrix Representation (`TLMat`)
+
+- **What it does**: Full 5x5 matrix algebra over Z[zeta_8] for the 3-strand Temperley-Lieb representation (C_3=5 non-crossing matchings).
+- **Introduced in**: Demo 98
+- **Reused in**: (Demo 98 only — superseded by 2x2 Delta_1 in Demo 99)
+- **Key types/functions**:
+  - `TLMat` struct: 5x5 matrix of Cyc8 entries (100 long integers)
+  - `tlm_zero()`, `tlm_identity()`, `tlm_add()`, `tlm_neg()`, `tlm_scale()`, `tlm_mul()`, `tlm_eq()`, `tlm_trace()`
+  - `PMatch` / `enumerate_basis()` — planar matching representation (6 boundary points, 5 matchings)
+  - `compose_diagrams()` — diagram multiplication with closed-loop counting
+  - `build_gen_matrix()` — constructs TL generator matrices e_1, e_2
+- **Approximate size**: ~250 lines
+- **Notes**: The 5x5 representation is REDUCIBLE. Trace readout retains only 5.1% of diversity (105/2048 distinct traces). Column 4 is LOSSLESS (2048 distinct vectors from 2048 matrices).
+
+### 25.2 3-Strand BFS Catalog Builder (`build_3strand_catalog`)
+
+- **What it does**: BFS closure of the braid group B_3 on TL_3, with bracket computation, depth/writhe tracking, and interleaving classification.
+- **Introduced in**: Demo 98
+- **Reused in**: (Demo 98 only)
+- **Key types/functions**:
+  - `build_braid_generators()` — constructs sigma_1+/-, sigma_2+/- from A = -zeta_8
+  - `build_3strand_catalog()` — BFS with 4 generators, cap at 2048 entries
+  - Interleaving bitmask: bit0=uses_sigma1, bit1=uses_sigma2
+  - `phase_cell_cyc8()` — trace-based activation for 3-strand (angle-based sector)
+- **Approximate size**: ~200 lines
+- **Notes**: Group is INFINITE at zeta_8. 98.5% interleaving. 100% entanglement vanishing for non-interleaving entries.
+
+## 26. Delta_1 Standard Module Infrastructure (Demo 99)
+
+### 26.1 2x2 Matrix over Cyc8 (`Mat2`)
+
+- **What it does**: The irreducible 2-dimensional standard module Delta_1 of TL_3 at delta=0, represented as 2x2 matrices over Z[zeta_8]. The key breakthrough enabling first-ever 3-strand XOR.
+- **Introduced in**: Demo 99
+- **Reused in**: (Demo 99 only)
+- **Key types/functions**:
+  - `Mat2` struct: 4 Cyc8 entries = 16 long integers
+  - `mat2_zero()`, `mat2_identity()`, `mat2_mul()`, `mat2_eq()`, `mat2_add()`, `mat2_neg()`, `mat2_max_abs()`, `mat2_commutator()`
+  - `CycQuat` — quaternion extraction from Mat2: q_0=a+d, q_1=b+c, q_2=b-c, q_3=a-d
+  - Hash table for BFS deduplication (FNV-style over 16 long components)
+- **Approximate size**: ~200 lines
+- **Notes**: Delta_1 is indecomposable but reducible: submodule L(0) and quotient L(1), extension Ext^1(L(0),L(1)) is non-zero. The Jordan block structure (sigma_1^n has off-diagonal n*A^{n-2}) proves the extension does not split and gives infinite order.
+
+### 26.2 Multi-Activation Framework for Mat2
+
+- **What it does**: Four activation functions for 2x2 matrix DKC, parametrized by number of cells.
+- **Introduced in**: Demo 99
+- **Reused in**: (Demo 99 only)
+- **Key types/functions**:
+  - `ACT_4ENT_HASH` — 4 matrix entry octants hashed
+  - `ACT_QUAT_HASH` — 4 quaternion component octants hashed
+  - `ACT_2x2_HASH` — 16-component sign-bit hash (3-valued per component: pos/zero/neg). BEST activation.
+  - `ACT_TRACE_OCT` — trace octant only (8 cells). WORST activation.
+  - `test_xor_mat2()` — XOR test for Mat2 with touched-cell optimization
+  - `count_xor_bf()` — brute-force search over C(bf_limit, n_weights) tuples, supports 3-8 weights (XOR6-XOR16)
+- **Approximate size**: ~150 lines
+- **Notes**: Activation hierarchy: 2x2_hash >> 4ent_hash >> quat_hash >> trace_oct. The 2x2_hash achieves XOR6=500K, XOR8=48K, XOR10=485, XOR12=16, XOR14=60. XOR16=0 (genuine ceiling).
+
+### 26.3 Casimir Discriminant (`mat2_casimir`)
+
+- **What it does**: Computes C(S) = (a-d)^2 + 4*b*c for summed Mat2 matrices. Exact computation in Z[zeta_8]. Distinguishes Jordan blocks (C=0) from diagonalizable matrices.
+- **Introduced in**: Demo 99
+- **Reused in**: Demos 100, 101 (generalized to C_d formula)
+- **Key types/functions**:
+  - `mat2_casimir()` — returns Cyc8 value, L1 norm for magnitude comparison
+  - Two-regime discovery: XOR6-8 winners have LOWER |C| (inverted), XOR10-14 winners have 4.4x HIGHER |C|
+- **Approximate size**: ~20 lines
+- **Notes**: The Casimir measures "non-scalar-ness." Winner vs control gap (4.4x at XOR14) is the first quantitative measure of algebraic reservoir quality. Phase transition at XOR8->XOR10 coincides with shallow->deep entry transition.
+
+### 26.4 sl_2 Decomposition Analysis
+
+- **What it does**: Decomposes 2x2 matrices into sl_2 components (scalar, Cartan h, e-root, f-root) for hub anatomy analysis.
+- **Introduced in**: Demo 99
+- **Reused in**: (Demo 99 only)
+- **Key types/functions**:
+  - Hub commutator [hub7, hub9]: traceless, strong Cartan component, e/f ratio = 6.0
+  - Anti-trace classification: a=d entries have zero Cartan component
+  - U-shaped Cartan correlation: both cartan=0 and cartan=11+ compute, middle is dead
+- **Approximate size**: ~40 lines
+
+## 27. 4-Strand W_{4,2} Infrastructure (Demo 100)
+
+### 27.1 3x3 Matrix over Cyc8 (`Mat3`)
+
+- **What it does**: 3-dimensional standard module W_{4,2} of TL_4 at delta=0 (non-semisimple), represented as 3x3 matrices over Z[zeta_8].
+- **Introduced in**: Demo 100
+- **Reused in**: (Demo 100 only)
+- **Key types/functions**:
+  - `Mat3` struct: 9 Cyc8 entries = 36 long integers
+  - `mat3_zero()`, `mat3_identity()`, `mat3_mul()`, `mat3_eq()`, `mat3_add()`, `mat3_neg()`, `mat3_scale()`, `mat3_max_abs()`, `mat3_print()`
+  - Hash table for BFS (FNV over 36 longs, HASH_SIZE=65537)
+- **Approximate size**: ~200 lines
+- **Notes**: Extension structure 0 -> L_{4,4} -> W_{4,2} -> L_{4,2} -> 0. Radical direction r=(1,0,-1) verified: all TL generators annihilate r. Every braid matrix preserves the non-semisimple structure (constant radical_content=2 at all depths).
+
+### 27.2 TL_4 Generator and Braid Generator Construction
+
+- **What it does**: Constructs TL_4 generators (3x3 integer matrices e_1, e_2, e_3) and braid generators (sigma_i = A*I + A^{-1}*e_i) for the W_{4,2} module.
+- **Introduced in**: Demo 100
+- **Reused in**: (Demo 100 only)
+- **Key types/functions**:
+  - `build_tl_generators()` — 3 TL generators as 3x3 integer matrices on basis {h_0, h_1, h_2}
+  - `build_braid_generators()` — 6 braid generators (sigma_1..3 and inverses) over Z[zeta_8]
+  - Verification: e_i^2=0, Jones-Wenzl relations, far commutativity, braid relations, Hecke relations
+- **Approximate size**: ~100 lines
+
+### 27.3 3x3 Activation and XOR Test (`mat3_activate`, `test_xor_mat3`)
+
+- **What it does**: Novel sign-pattern activation for 3x3 matrix DKC and exhaustive XOR search infrastructure.
+- **Introduced in**: Demo 100
+- **Reused in**: (Demo 100 only)
+- **Key types/functions**:
+  - `mat3_activate(m, k_param)` — sign pattern of 36 integer components (3-valued: pos/zero/neg), base-3 hash mod k_param
+  - `test_xor_mat3()` — 1wpi XOR test for Mat3 catalog (N weights -> 2N inputs)
+  - `count_xor_bf(n_weights, k_param, bf_limit)` — brute-force search, supports 3-7 weights (XOR6-XOR14)
+- **Approximate size**: ~100 lines
+- **Notes**: XOR14=70 from deep entries (d>=4). 6 super-hubs in 3 Cyc8-component pairs. ALL hub commutators traceless with zero radical content.
+
+### 27.4 Radical Analysis Infrastructure
+
+- **What it does**: Measures radical content of catalog entries and their products. Tracks how the non-semisimple module structure interacts with XOR capacity.
+- **Introduced in**: Demo 100
+- **Reused in**: (Demo 100 only)
+- **Key types/functions**:
+  - Radical direction r=(1,0,-1): verified e_i*r=0 for all TL generators
+  - `radical_content(M)` — computes r^T M r (how much M "touches" the radical direction)
+  - Modified Casimir: C3(M) = 3*tr(M^2) - (tr M)^2 (coefficient matches module dimension)
+  - Per-depth radical/Casimir statistics: radical constant at 2, Casimir grows ~2x per round
+- **Approximate size**: ~60 lines
+
+## 28. 5-Strand W_{5,3} Infrastructure (Demo 101)
+
+### 28.1 4x4 Matrix over Cyc8 (`Mat4`)
+
+- **What it does**: 4-dimensional standard module W_{5,3} of TL_5 at delta=0 (SIMPLE — no radical), represented as 4x4 matrices over Z[zeta_8].
+- **Introduced in**: Demo 101
+- **Reused in**: (Demo 101 only)
+- **Key types/functions**:
+  - `Mat4` struct: 16 Cyc8 entries = 64 long integers
+  - `mat4_zero()`, `mat4_identity()`, `mat4_mul()`, `mat4_eq()`, `mat4_add()`, `mat4_neg()`, `mat4_scale()`, `mat4_max_abs()`, `mat4_print()`
+  - `mat4_trace()`, `mat4_tr_sq()` — trace and trace-of-square for Casimir computation
+  - `mat4_casimir(m)` — C4(M) = 4*tr(M^2) - (tr M)^2 (coefficient = dim(W_{5,3}) = 4)
+  - `mat4_frob_l1()` — Frobenius L1 norm
+  - Hash table for BFS (FNV over 64 longs, HASH_SIZE=65537)
+- **Approximate size**: ~250 lines
+- **Notes**: W_{5,3} is SIMPLE (radical dimension = 0). Key structural difference from D100's W_{4,2}. BFS growth ~4x per round (confirming sl_4 thesis). Only 3 super-hubs (not predicted 12). XOR14=0 everywhere (vs 70 for D100). Casimir-XOR correlation INVERTS at higher XOR levels.
+
+### 28.2 TL_5 Generator and Braid Generator Construction
+
+- **What it does**: Constructs 4 TL generators (4x4 integer matrices e_1..e_4) and 8 braid generators for the W_{5,3} module.
+- **Introduced in**: Demo 101
+- **Reused in**: (Demo 101 only)
+- **Key types/functions**:
+  - `build_tl_generators()` — 4 TL generators on basis {h_0, h_1, h_2, h_3} (A_3 Dynkin diagram pattern)
+  - `build_braid_generators()` — 8 braid generators (sigma_1..4 and inverses) over Z[zeta_8]
+  - Verification: e_i^2=0, Jones-Wenzl relations (3 adjacent pairs), far commutativity (3 far pairs), braid relations, Hecke relations (30 tests total)
+- **Approximate size**: ~120 lines
+
+### 28.3 4x4 Activation and XOR Test (`mat4_activate`, `test_xor_mat4`)
+
+- **What it does**: Sign-pattern activation for 4x4 matrix DKC (64 integer components) and exhaustive XOR search.
+- **Introduced in**: Demo 101
+- **Reused in**: (Demo 101 only)
+- **Key types/functions**:
+  - `mat4_activate(m, k_param)` — sign pattern of 64 integer components (4x4 x 4 Cyc8), 3-valued, base-3 hash mod k_param
+  - `test_xor_mat4()` — 1wpi XOR test for Mat4 catalog (supports up to 8 weights / 16 inputs)
+  - `count_xor_bf(n_weights, k_param, bf_limit)` — brute-force search, supports 3-7 weights (XOR6-XOR14)
+- **Approximate size**: ~100 lines
+- **Notes**: XOR6-XOR12 sustained at depth. XOR14=0 at all k values (128 through 4096). Simple module has broader but shallower capacity than D100's non-semisimple module.
+
+### 28.4 Casimir C_d Formula (Generalized)
+
+- **What it does**: Generalized Casimir discriminant C_d(M) = d*tr(M^2) - (tr M)^2 where d = module dimension. Uniform formula across D99/D100/D101.
+- **Introduced in**: Demo 99 (as C2), generalized in Demo 100 (C3) and Demo 101 (C4)
+- **Key types/functions**:
+  - D99: C(S) = (a-d)^2 + 4bc (2x2 form)
+  - D100: C3(M) = 3*tr(M^2) - (tr M)^2
+  - D101: C4(M) = 4*tr(M^2) - (tr M)^2
+  - All computations exact in Z[zeta_8], L1 norm for magnitude comparison
+- **Notes**: Casimir-XOR correlation is POSITIVE in non-semisimple modules (D99/D100) but INVERTS in simple modules (D101) at high XOR levels. The coefficient tracks module dimension: d=2,3,4 for TL_3/TL_4/TL_5.
+
 ---
 
 ## Cross-Cutting Patterns
@@ -2199,7 +2460,18 @@ Demos 66-71 establish the foundation; Demos 72-84 extend it into a full capacity
 **Solvability bottleneck (D94):**
 29. Binary icosahedral group 2I (order 120, unique non-solvable finite SU(2) subgroup) outperforms solvable z8 at matched catalog size, confirming Barrington's theorem prediction. AND/XOR hierarchy universal across all group structures. Crossover at N=6: 2I overtakes truncated zeta_12 where computation is hardest. Exact Z[sqrt5] arithmetic for 2I group operations (D94).
 
-Key progression: D65 S^1 k=24 → D66 S^3 25 cells → D67 S^2 14 cells → D68 R^2 visualization only → D72-73 algebraic structure analysis → D74 incomparability theorem → D75-77 binocular + product activation → D78-79 wall confirmation + ζ₁₂ breakthrough → D80 ADE survey → D81-82 scaling laws → D83 framing as resource → D84 null-state anatomy → D85-86 TL representation theory (b = -5/8 + universal divergence on P_{0,0}) → D87-88 null dispensability + anti-correlation → D89-91 depth law mechanism (axis cancellation + parity wall) → D92 parity-lock theorem → D93 complement-blindness + phase_cell recovery + circuit complexity hierarchy → D94 solvability bottleneck (2I vs z8, Barrington confirmed).
+**Commutator structure and cross-classification (D95-D97):**
+30. Derived series of z8 (24>12>4>1) reveals algebraic stratification; cross-layer synergy is the active mechanism, not commutators in isolation; 0+0>0 synergy traced to algebraic origin (D95).
+31. Two independent partitions (null/non-null x derived level) create 5-cell landscape; optimal catalog is 21 entries not 24 — pruning Q8-null noise improves capacity (D96).
+32. Cell B perfection is geometric inevitability from orthogonal frame, not algebraic fine-tuning; 50-degree robust plateau (25-75 degrees); octahedral optimality on S^2 (D97).
+
+**Multi-strand matrix DKC (D98-D101):**
+33. 3-strand TL_3 5x5 representation: infinite group, 2048 entries, but trace readout catastrophically lossy (ZERO XOR6). Column-4 is lossless (100% diversity). Readout, not algebra, is the bottleneck (D98).
+34. LANDMARK: 3-strand Delta_1 (2x2 irreducible module) achieves first-ever 3-strand XOR at ALL levels through XOR14. 2x2_hash activation (16-component sign-pattern). Infinite group via Jordan block (Fibonacci growth). Ext^1 catalytic preparation thesis. Two-regime discovery: combinatorial (XOR6-8) vs algebraic (XOR10-14). Super-hub star-graph topology (D99).
+35. 4-strand W_{4,2} (3x3, non-semisimple): ~3.1x BFS growth, XOR14=70, 6 super-hubs in 3 Cyc8-component pairs, constant radical content, Casimir-XOR positive correlation. All hub commutators traceless with zero radical content (D100).
+36. 5-strand W_{5,3} (4x4, SIMPLE): ~4x BFS growth (confirms sl_d functor thesis across 3 data points), only 3 hubs (not predicted 12, hub-count prediction falsified), XOR14=0 (simple module ceiling), Casimir-XOR correlation INVERTS at high XOR levels. Non-semisimplicity is computationally load-bearing (D101).
+
+Key progression: D65 S^1 k=24 → D66 S^3 25 cells → D67 S^2 14 cells → D68 R^2 visualization only → D72-73 algebraic structure analysis → D74 incomparability theorem → D75-77 binocular + product activation → D78-79 wall confirmation + ζ₁₂ breakthrough → D80 ADE survey → D81-82 scaling laws → D83 framing as resource → D84 null-state anatomy → D85-86 TL representation theory (b = -5/8 + universal divergence on P_{0,0}) → D87-88 null dispensability + anti-correlation → D89-91 depth law mechanism (axis cancellation + parity wall) → D92 parity-lock theorem → D93 complement-blindness + phase_cell recovery + circuit complexity hierarchy → D94 solvability bottleneck (2I vs z8, Barrington confirmed) → D95-97 commutator structure + cross-classification + Cell B perfection → D98 3-strand readout bottleneck → D99 Delta_1 LANDMARK (first 3-strand XOR, Ext^1 thesis) → D100 4-strand non-semisimple DKC → D101 5-strand simple module (sl_d functor, Casimir inversion).
 
 ### Catalog Size Summary
 | Ring | Delta | Catalog | Distinct Values |

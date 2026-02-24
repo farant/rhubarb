@@ -1,7 +1,7 @@
 # Novelty Assessment: DKC Research Program
 
-Assessment date: 2026-02-20. Updated 2026-02-21 (added D38, D39, D60, D63, D39 Parts G-J; added D64-D71 S² arc; added D72-D82 automaton/group/capacity arc; added D83-D84 framing/null-states arc). Updated 2026-02-23 (added D85-D92 indecomposability/depth-law-mechanism/parity-lock arc; added P04). Updated 2026-02-24 (added D93-D94 circuit complexity hierarchy/solvability bottleneck arc). Based on
-76+ cataloged papers (literature-index.md), 94 demos, 4 proofs, and the theorem inventory.
+Assessment date: 2026-02-20. Updated 2026-02-21 (added D38, D39, D60, D63, D39 Parts G-J; added D64-D71 S² arc; added D72-D82 automaton/group/capacity arc; added D83-D84 framing/null-states arc). Updated 2026-02-23 (added D85-D92 indecomposability/depth-law-mechanism/parity-lock arc; added P04). Updated 2026-02-24 (added D93-D94 circuit complexity hierarchy/solvability bottleneck arc; added D95-D101 commutator/synergy arc and multi-strand arc). Based on
+76+ cataloged papers (literature-index.md), 101 demos, 4 proofs, and the theorem inventory.
 Honest where uncertain.
 
 ---
@@ -823,6 +823,139 @@ Things we believe are genuinely new. No prior work found across 72 papers.
   frameworks. The intersection remains unoccupied in the literature.
   **Confidence: HIGH** for the connection; the synthesis is ours.
 
+### 2ac. Cross-Layer Synergy and Optimal Catalog Pruning (D95-D97)
+
+- **Cross-Layer Synergy Mechanism (DEMONSTRATED, D95).** Neither the commutator subgroup
+  (COMM, 12 entries) nor the non-commutator coset (NON-COMM, 12 entries) carries
+  disproportionate XOR capacity in isolation -- they perform within 1.14x of each other.
+  But ALL(24) is 2.7x better at N=5. Computational power emerges from CROSS-LAYER
+  interaction between derived series strata. At matched 90-degree geometry, Q8-null and
+  outermost-null entries each produce zero XOR alone, but their union achieves 26% at N=4.
+  This is pure algebra-over-geometry synergy. Nobody has demonstrated that capacity in a
+  topological computation model arises specifically from cross-layer interaction between
+  group-theoretic strata rather than from the strata themselves.
+  **Confidence: HIGH.** Multiple subsets tested exhaustively.
+
+- **Two Independent Stratifications Creating 5-Cell Landscape (CONFIRMED, D96).**
+  The D84 null/non-null partition (9/15) and the D95 derived series partition (12/8/3/1)
+  are INDEPENDENT -- they cut across each other, confirmed by cross-tabulation and
+  character table analysis. Their 2D cross-product creates 5 cells (A-E) that fully
+  explain DKC capacity structure. This is the first 2D algebraic classification of
+  a topological computation model's weight catalog.
+  **Confidence: HIGH.** Exact integer computation, all cross-checks verified.
+
+- **Optimal Catalog Pruning Principle (CONFIRMED, D96).** A+B+C (21 entries, skip Q8-null)
+  BEATS ALL(24) at every N: 74.06% vs 71.94% (N=3), 77.51% vs 75.04% (N=4), 45.10% vs
+  40.76% (N=5), 12.98% vs 9.64% (N=6). Quality over quantity: removing the 3 Q8-null
+  noise entries improves capacity. Nobody has shown that removing entries from a topological
+  computation catalog can IMPROVE capacity -- the assumption is always that more is better.
+  **Confidence: HIGH.** Exhaustive verification at N=3-6.
+
+- **Cross-Derived Synergy Principle (CONFIRMED, D96).** Non-null entries from DIFFERENT
+  derived levels (Cell B from D0, Cell C from D1) produce maximum synergy. B+C dominates
+  all 6 pairwise combinations at every N. The null/non-null boundary matters more than the
+  derived level boundary at every arity tested.
+  **Confidence: HIGH.** All 6 pairs and 4 triples compared exhaustively.
+
+- **Geometric Perfection from Orthonormal Frame (CONFIRMED, D97).** Cell B's 100% XOR is
+  geometric inevitability from 3 mutually orthogonal directions (regular octahedron on S^2)
+  at any half-angle in a ~50-degree plateau (25-75 degrees). The lever arm mechanism: nonzero
+  real component provides phase_cell discrimination; at 90 degrees (null) the lever vanishes.
+  Nobody has identified the octahedral geometry as the optimal XOR separator for a
+  knot-theoretic weight catalog, or the lever arm as the mechanism connecting quaternion
+  geometry to Boolean computation.
+  **Confidence: HIGH.** 21-point angle sweep, exhaustive at all N.
+
+### 2ad. Multi-Strand DKC: First 3-Strand XOR and the Ext^1 Thesis (D98-D99)
+
+- **Readout Bottleneck Discovery (DEMONSTRATED, D98).** 3-strand TL_3 algebra at zeta_8
+  is infinite (2048 entries at cap, ~2.2x growth per round) with 98.5% interleaving and
+  column-4 lossless diversity (100% retention). But the trace readout retains only 5.1%
+  of information (105 distinct values from 2048 matrices), producing ZERO XOR at every
+  k_sec. The readout, not the algebra, is the bottleneck. Nobody has identified the
+  readout problem as the key barrier for multi-strand topological computation.
+  **Confidence: HIGH.** Exhaustive k_sec sweep.
+
+- **First-Ever 3-Strand XOR Computation (LANDMARK, D99).** The 2x2 Delta_1 standard module
+  over Z[zeta_8] with 16-component sign-pattern activation (2x2_hash) achieves XOR6=500,261,
+  XOR8=48,143, XOR10=485, XOR12=16, XOR14=60. This is the first demonstration that
+  multi-strand braid representations can compute Boolean functions in the DKC framework.
+  Nobody has computed Boolean functions from multi-strand braid group representations.
+  **Confidence: HIGH.** Multiple activations compared, saturation verified.
+
+- **Ext^1 Catalytic Preparation Thesis (ESTABLISHED, D99).** The non-split extension class
+  Ext^1(L(0), L(1)) in the restricted quantum group u_q(sl_2) at ell=2 is the computational
+  resource. Jordan block proves infinite group. The non-semisimplicity is catalytic
+  preparation (like magic state distillation but reusable), not the computation mechanism
+  itself. End-to-end causal chain: Ext^1 -> complementary pairing -> high-Casimir sums ->
+  eigenvalue discrimination -> Boolean computation. Nobody has identified the extension
+  class of a quantum group representation as a discrete computational resource.
+  **Confidence: HIGH.** Casimir discriminant 4.4x winner/control gap, swap test confirms
+  hub irreplaceability.
+
+- **Two-Regime Discovery (CONFIRMED, D99).** Combinatorial regime (XOR6-8): nilpotent-
+  proximate, diversity-driven, shallow entries suffice. Algebraic regime (XOR10-14):
+  Ext^1 catalytic preparation, deep entries required. Phase transition at XOR8->XOR10.
+  Casimir-XOR correlation inverts between regimes (0.7x at XOR6-8, 3.3x-5.3x at XOR10-14).
+  **Confidence: HIGH.** Monotonic within each regime.
+
+- **Fibonacci Growth in Matrix DKC (DEMONSTRATED, D99).** max_abs follows exact Fibonacci:
+  1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233. Mechanism: sigma_1 Jordan block gives
+  linear growth, but mixed products of sigma_1 and sigma_2 feed Fibonacci recursion through
+  off-diagonal entries. Connected to golden ratio phi through spectral radius of trace-zero
+  SL_2 elements. **Confidence: HIGH.** Exact integer computation.
+
+- **Super-Hub Star Graph Topology (DEMONSTRATED, D99).** XOR14 winners form a star graph:
+  2 irreplaceable hubs (both d=6, appear in 100% of 60 winners) + 5 rotating satellites
+  from ~12 d=7 entries. Structurally different from 2-strand Cell B's mutual orthogonality.
+  0/1 substitutions survive for hub7, 0/7 for hub9. Hubs are specific algebraic objects,
+  not just structurally typed entries.
+  **Confidence: HIGH.** Complete anatomy of all 60 winners.
+
+### 2ae. Multi-Strand Scaling: sl_d Functor and Simple vs Non-Semisimple (D100-D101)
+
+- **sl_d Functor Growth Rate Confirmed (THREE DATA POINTS, D98/D100/D101).** BFS growth
+  rate tracks n-1 across three strand counts: ~2.2x (3-strand/sl_2), ~3.1x (4-strand/sl_3),
+  ~4.0x (5-strand/sl_4). Nobody has identified this scaling pattern in braid group
+  representations on TL standard modules.
+  **Confidence: HIGH.** Three data points with clean convergence.
+
+- **Hub Count Prediction FALSIFIED (D101).** The sl_d functor thesis predicted 12 super-hubs
+  (6 pairs for sl_4) at 5-strand. Only 3 were found. D100 had 6 hubs (3 pairs for sl_3),
+  matching the prediction. Growth rate prediction confirmed, hub count prediction falsified.
+  **Confidence: HIGH** for the falsification. The growth rate is the real signal; hub count
+  does not scale as 2*C(n-1,2).
+
+- **Non-Semisimple Extension Is Computationally Load-Bearing (DEMONSTRATED, D100-D101).**
+  W_{4,2} (non-semisimple, radical dim=9) achieves XOR14=70. W_{5,3} (simple, no radical)
+  achieves XOR14=0 despite larger dimension (4x4 vs 3x3) and faster growth (~4x vs ~3.1x).
+  The simple module has broader shallow capacity (more XOR6-8) but strictly less deep
+  capacity (zero XOR14). Nobody has demonstrated that non-semisimple module structure
+  provides strictly more Boolean computation capacity than simple modules at the depth
+  boundary.
+  **Confidence: HIGH.** Direct controlled comparison.
+
+- **Casimir-XOR Correlation Inversion (NEW FINDING, D100-D101).** In non-semisimple W_{4,2},
+  XOR winners consistently have higher Casimir (1.36x-1.86x). In simple W_{5,3}, the
+  correlation INVERTS at higher XOR levels: XOR6 ratio 1.17x, XOR8 ratio 1.51x, but
+  XOR10 ratio 0.89x, XOR12 ratio 0.54x. Simple modules compute differently: the hardest
+  XOR computations select for low-Casimir (near-scalar) entries. Nobody has documented
+  Casimir-XOR correlation or its inversion in any computation model.
+  **Confidence: HIGH.** Complete Casimir-by-XOR-level data at all tested levels.
+
+- **Constant Radical Content (DEMONSTRATED, D100).** All W_{4,2} catalog entries have
+  mean radical_content = 2 regardless of BFS depth. The non-semisimple structure is equally
+  present in every braid matrix. Casimir grows exponentially (~2x per round) while radical
+  content stays constant — algebraic complexity grows without changing module-theoretic
+  character.
+  **Confidence: HIGH.** Measured at all depths 0-8.
+
+- **Traceless Hub Commutator Universality (OBSERVED across D99-D101).** All hub commutators
+  across all three multi-strand demos are traceless. D100: all 6 hub commutators additionally
+  have zero radical content (live in semisimple quotient). D101: all 3 hub commutators are
+  the ZERO MATRIX (hubs mutually commute). Whether this is a theorem or coincidence is open.
+  **Confidence: HIGH** for the observation; theoretical explanation open.
+
 ### 2c. TL Algebraic Structure
 - **Sandwich theorem.** rad^2(TL_{2k}(0)) is isomorphic to TL_{2k-1}(0) as an algebra.
   Literature proves head iso socle for individual PIMs (module-level). Nobody identifies
@@ -1233,6 +1366,49 @@ encoding-specific, not a fundamental limit of DKC.
   Target: Journal of Mathematical Physics or a TQC venue for D85-D86; Nature Machine
   Intelligence or a complexity theory venue for D89-D92.
 
+**Paper 8 (NEW): "Multi-Strand DKC: From Readout Bottleneck to the Ext^1 Thesis" (D98-D101)**
+- Results: (1) readout bottleneck discovery — trace retains 5.1% of 3-strand information,
+  zero XOR (D98); (2) first-ever 3-strand XOR computation via Delta_1 standard module
+  (XOR6=500K+, XOR14=60, LANDMARK D99); (3) Ext^1 catalytic preparation thesis — non-split
+  extension is the computational resource (D99); (4) two-regime discovery with phase
+  transition at XOR8->XOR10 (D99); (5) Fibonacci growth mechanism in matrix DKC (D99);
+  (6) sl_d functor growth rate confirmed across 3 data points (D98/D100/D101); (7) constant
+  radical content in non-semisimple modules (D100); (8) non-semisimple extension is
+  computationally load-bearing — W_{4,2} achieves XOR14=70, W_{5,3} achieves XOR14=0 (D100/D101);
+  (9) Casimir-XOR correlation inversion between simple and non-semisimple modules (D100/D101);
+  (10) traceless hub commutator universality across all multi-strand demos (D99-D101).
+- Strength: This is a complete NEW FRONTIER paper. The readout bottleneck -> solution ->
+  scaling law -> simple vs non-semisimple comparison is a clean narrative arc. The Ext^1
+  thesis connects to LCFT, non-semisimple TQFTs, and reservoir computing in ways no prior
+  work has. The sl_d growth rate with three data points is publishable on its own. The
+  D100/D101 comparison is the first controlled experiment testing non-semisimple vs simple
+  module DKC capacity. The Casimir inversion is counterintuitive and striking.
+- Weakness: Activations are ad hoc (sign-pattern hashes). The sl_d hub count prediction
+  was falsified, requiring honest reporting. Only 3 strand counts tested. The connection
+  to non-semisimple TQFTs (Voss-Kim-Bhatt) is structural, not formal.
+- Recommendation: Strongest paper candidate from D95-D101. The multi-strand extension is
+  genuinely new territory. Target: Nature Machine Intelligence (computational breakthrough),
+  Journal of Mathematical Physics (Ext^1 + sl_d + Casimir results), or Physical Review
+  Letters (compact: readout bottleneck + first multi-strand XOR + non-semisimplicity
+  load-bearing).
+
+**Paper 9 (NEW): "Cross-Layer Synergy and Catalog Pruning in DKC" (D95-D97)**
+- Results: (1) cross-layer synergy mechanism — neither COMM nor NON-COMM carries capacity
+  alone, it emerges from mixing (D95); (2) two independent stratifications creating 5-cell
+  landscape (D96); (3) optimal catalog pruning — removing 3 Q8-null entries improves
+  capacity (D96); (4) cross-derived synergy principle — B+C dominates all pairs (D96);
+  (5) geometric perfection from orthonormal frame with 50-degree plateau (D97); (6) lever
+  arm mechanism connecting quaternion geometry to Boolean computation (D97).
+- Strength: Clean narrative from algebraic strata -> independence confirmed -> landscape
+  mapped -> pruning principle -> geometric explanation. The catalog pruning result is
+  counterintuitive (removing entries helps) and directly actionable as a design rule.
+  The 50-degree plateau is experimentally clean and visually compelling.
+- Weakness: Results are specific to z8 group; generalization to 2I and z12 untested.
+  The lever arm mechanism is demonstrated, not proven. The 35-degree N=5 anomaly is
+  unexplained.
+- Recommendation: Could be a focused paper or a section within a larger paper (Paper 2
+  or Paper 6). Target: a group theory / computational algebra venue if standalone.
+
 ### Needs Additional Work
 
 **Paper 3: "Sandwich Theorem and Radical Anatomy of TL at Roots of Unity"**
@@ -1412,3 +1588,31 @@ encoding-specific, not a fundamental limit of DKC.
     identifies the per-weight pair cancellation as the structural mechanism. Can encodings
     be constructed where different cancellation patterns target AND, OR, or MAJ? This
     would open a new research direction in DKC encoding theory.
+19. **Catalog pruning universality.** D96 shows removing Q8-null entries from z8 improves
+    capacity. Does analogous pruning (bracket-null in deep derived subgroups) improve
+    capacity for 2I? If the pruning principle is universal across DKC groups, it becomes
+    a general optimization rule.
+20. **Cell B recipe for arbitrary groups.** D97 shows orthonormal frame + non-extreme
+    half-angle gives perfection. Can "perfect cells" be constructed for 2I, z12, or other
+    groups by choosing orthogonal directions in the 25-75 degree plateau?
+21. **Activation design for Cyc8^5 space.** Column 4 of 3-strand TL_3 preserves 100%
+    diversity (2048 distinct 20-integer vectors, D98). How to partition the 20-integer
+    Cyc8^5 space into cells for XOR separation? This is the key design question for
+    multi-strand DKC beyond the irreducible module approach.
+22. **XOR16 on Delta_1: genuine ceiling or search limit?** D99 found XOR16=0 at bf=14.
+    Larger bf or smarter search might find solutions. If genuinely zero, what structural
+    property of the 2x2 representation creates the ceiling?
+23. **Simple vs non-semisimple as general pattern.** D100 (non-semisimple) beats D101
+    (simple) at deep XOR. Is this universal: do non-semisimple modules always have
+    strictly more deep XOR capacity than simple modules of comparable dimension?
+24. **6-strand W_{6,4} as decisive test.** W_{6,4} (n=6, even, non-semisimple) should have
+    ~5x growth (sl_5 thesis). If it has XOR14>0 and 6+ hubs, non-semisimplicity is confirmed
+    as the key variable for hub count and deep capacity. If it matches D101 (few hubs,
+    XOR14=0), the explanation is dimensional/structural.
+25. **Casimir inversion mechanism.** Why does Casimir-XOR correlation invert at higher XOR
+    levels in simple modules (D101) but not in non-semisimple modules (D100)? Hypothesis:
+    near-scalar entries (low Casimir) provide stability in simple modules that the radical
+    extension provides automatically in non-semisimple modules.
+26. **Commutative hub subalgebra.** D101's three hubs mutually commute (all commutators =
+    zero matrix). Does this commutative subalgebra have a name in the representation theory
+    of B_5 on W_{5,3}? Is it related to a maximal torus or Cartan subalgebra?

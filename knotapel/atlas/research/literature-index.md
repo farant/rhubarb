@@ -1,6 +1,6 @@
 # Literature Index — DKC Research Program
 
-One-line-per-paper quick reference across all knotapel literature surveys and demo references. Deduplicated, sorted alphabetically by first author. Generated 2026-02-20, updated 2026-02-24 (added D93-D94 references: Barrington, LMN, Burrello et al., Liu-Calderbank, Mochon, Gonon-Ortega RC papers; updated source lists for existing entries).
+One-line-per-paper quick reference across all knotapel literature surveys and demo references. Deduplicated, sorted alphabetically by first author. Generated 2026-02-20, updated 2026-02-24 (added D95-D101 references: Liebeck-O'Brien-Shalev-Tiep, Kirillov-Ostrik, Voss-Kim-Bhatt non-semisimple TQFT, Property F/Freedman-Larsen-Wang, Fibonacci/SL_2, Kerler-Lyubashenko; updated source lists for existing entries).
 
 ## Relevance Tags
 
@@ -24,7 +24,7 @@ One-line-per-paper quick reference across all knotapel literature surveys and de
 
 | # | Author(s) | Year | Title (short) | Tags | Sources | Link |
 |---|-----------|------|---------------|------|---------|------|
-| 1 | Abramsky | 2007/2009 | TL algebra: knot theory to logic and computation | `[CORE]` `[BRIDGE]` | D27, D29, D47, D48, D77, D94 | [arXiv:0910.2737](https://arxiv.org/abs/0910.2737) |
+| 1 | Abramsky | 2007/2009 | TL algebra: knot theory to logic and computation | `[CORE]` `[BRIDGE]` | D27, D29, D47, D48, D77, D94, D95 | [arXiv:0910.2737](https://arxiv.org/abs/0910.2737) |
 | 2 | Aharonov, Jones, Landau | 2009 | Polynomial quantum algorithm for Jones polynomial (BQP-complete) | `[CORE]` `[TOPOLOGY]` | D27 | [arXiv:quant-ph/0511096](https://arxiv.org/abs/quant-ph/0511096) |
 | 3 | Aizenberg, Aizenberg, Vandewalle | 2000 | Multi-valued and universal binary neurons (MVN theory) | `[CORE]` `[CVNN]` | D27, D45-50 | [Springer](https://link.springer.com/book/10.1007/978-1-4757-3115-6) |
 | 4 | Aizenberg | 2008 | Solving XOR and parity-N using a single universal binary neuron | `[CORE]` `[CVNN]` | D47, D48, D49, D50, D63, D64, D65, D66, D67, D68, D69, D70, D71, D72, D75, D76, D77, D78, D79, D81, D82, D83, D84, D91, D92, D93, D94 | [Springer](https://link.springer.com/article/10.1007/s00500-007-0204-9) |
@@ -35,9 +35,9 @@ One-line-per-paper quick reference across all knotapel literature surveys and de
 | 9 | Arjovsky, Shah, Bengio | 2016 | Unitary evolution recurrent neural networks | `[CONTEXT]` `[CVNN]` | D27, D28, D29 | [arXiv:1511.06464](https://arxiv.org/abs/1511.06464) |
 | 10 | Artin | 1947 | Theory of braids (braid group B_n generators and relations) | `[CONTEXT]` `[TOPOLOGY]` | D73, D82 | — |
 | 11 | Baldoni | 2025 | Primitive Eisenstein integers in coding theory | `[ADJACENT]` `[LATTICE]` | D29 | [MDPI](https://www.mdpi.com/1099-4300/27/4/337) |
-| 12 | Barrington | 1989 | Bounded-width polynomial-size branching programs recognize exactly NC^1 (NC^1 = programs over non-solvable groups) | `[CORE]` `[COMPLEXITY]` | D93, D94 | — |
+| 12 | Barrington | 1989 | Bounded-width polynomial-size branching programs recognize exactly NC^1 (NC^1 = programs over non-solvable groups) | `[CORE]` `[COMPLEXITY]` | D93, D94, D95, D96 | — |
 | 13 | Barth, Leon | — | Radical nilpotency of TL algebras (master thesis) | `[CONTEXT]` `[TL-ALG]` | D51, D52 | — |
-| 13 | Belletête, Ridout, Saint-Aubin | 2016 | Indecomposable TL modules; PIM diamond Loewy length 3 | `[CORE]` `[TL-ALG]` | D51, D52, D86 | [arXiv:1605.05159](https://arxiv.org/abs/1605.05159) |
+| 13 | Belletête, Ridout, Saint-Aubin | 2016 | Indecomposable TL modules; PIM diamond Loewy length 3 | `[CORE]` `[TL-ALG]` | D51, D52, D86, D100 | [arXiv:1605.05159](https://arxiv.org/abs/1605.05159) |
 | 14 | Birman, Lin | 1993 | Knot polynomials and Vassiliev invariants | `[TOPOLOGY]` | Correspondence | — |
 | 15 | Bjorner, Las Vergnas, Sturmfels, White, Ziegler | 1999 | Oriented Matroids (Cambridge, 2nd ed.) | `[CONTEXT]` `[ADJACENT]` | D63 | — |
 | 16 | Blanchet, Habegger, Masbaum, Vogel | 1995 | Topological Quantum Field Theories derived from the Kauffman bracket | `[CONTEXT]` `[TQFT]` | D77 | — |
@@ -67,7 +67,7 @@ One-line-per-paper quick reference across all knotapel literature surveys and de
 | 39 | Fields, Glazebrook, Marciano | 2022b | Sequential measurements, TQFTs, and TQNNs | `[CONTEXT]` `[TQFT]` | D27 | [Wiley](https://onlinelibrary.wiley.com/doi/abs/10.1002/prop.202200104) |
 | 40 | Flohr | 1996 | W-algebras, new rational models and the classification of logarithmic CFTs | `[CONTEXT]` `[CFT]` | D84, D87 | — |
 | 41 | Freedman, Kitaev, Larsen, Wang | 2003 | Topological quantum computation (BQP-completeness) | `[CORE]` `[TQFT]` | D27 | [arXiv:quant-ph/0101025](https://arxiv.org/abs/quant-ph/0101025) |
-| 42 | Freedman, Larsen, Wang | 2002 | Fibonacci anyon braid representations dense in PSU(2) | `[CORE]` `[TQFT]` | D58 | — |
+| 42 | Freedman, Larsen, Wang | 2002 | Fibonacci anyon braid representations dense in PSU(2); Property F does NOT hold at delta=0 | `[CORE]` `[TQFT]` | D58, D99 | — |
 | 43 | Frohman, Kania-Bartoszynska, Le | 2019 | Unicity for representations of Kauffman bracket skein algebra | `[CONTEXT]` `[TOPOLOGY]` | D27 | [arXiv:1707.09234](https://arxiv.org/abs/1707.09234) |
 | 44 | Furst, Saxe, Sipser | 1984 | Parity cannot be computed by constant-depth polynomial-size circuits | `[CORE]` `[COMPLEXITY]` | D92, D93 | — |
 | 45 | Gaberdiel, Kausch | 1996 | A rational logarithmic conformal field theory (Jordan-cell L₀ action, explicit null/log partner structure) | `[CONTEXT]` `[CFT]` | D84, D87 | — |
@@ -77,40 +77,42 @@ One-line-per-paper quick reference across all knotapel literature surveys and de
 | 49 | Garside | 1969 | The braid group and other groups (Garside normal form, fundamental element Δ) | `[CONTEXT]` `[TOPOLOGY]` | D70, D73 | — |
 | 50 | Goldberg, Guo | 2021 | Complex Potts model: #P-hardness for all non-real parameters | `[CONTEXT]` `[TOPOLOGY]` | D47 lit. | — |
 | 51 | Goldberg, Jerrum | 2017 | Computing the Ising partition function is #P-hard | `[CONTEXT]` `[TOPOLOGY]` | D47, D56 | — |
-| 52 | Gonon, Ortega | 2020 | Reservoir computing universality with stochastic inputs (fading memory + separation property formalism) | `[CORE]` `[RC]` | D94 | — |
-| 53 | Gonon, Grigoryeva, Ortega | 2022 | Risk bounds for reservoir computing (RKHS kernel framework for reservoir separation capacity) | `[CORE]` `[RC]` | D94 | — |
+| 52 | Gonon, Ortega | 2020 | Reservoir computing universality with stochastic inputs (fading memory + separation property formalism) | `[CORE]` `[RC]` | D94, D99 | — |
+| 53 | Gonon, Grigoryeva, Ortega | 2022 | Risk bounds for reservoir computing (RKHS kernel framework for reservoir separation capacity) | `[CORE]` `[RC]` | D94, D99 | — |
 | 54 | Goodman, Wenzl | 1993 | TL algebra at roots of unity (non-semisimple) | `[CORE]` `[TL-ALG]` | D38, D47, D51, D52, D60 | [Project Euclid](https://projecteuclid.org/journals/pacific-journal-of-mathematics/volume-161/issue-2/The-Temperley-Lieb-algebra-at-roots-of-unity/pjm/1102623233.full) |
 | 53 | Goodman, de la Harpe, Jones | 1989 | Coxeter Graphs and Towers of Algebras (trace form radical framework) | `[CORE]` `[TL-ALG]` | D38 | [Springer MSRI](https://link.springer.com/book/10.1007/978-1-4613-9641-3) |
 | 54 | Gordon, Luecke | 1989 | Knot complement uniqueness | `[CORE]` `[TOPOLOGY]` | Correspondence | — |
 | 55 | GPTQ/Babai | 2025 | Lattice geometry of neural network quantization | `[BRIDGE]` `[LATTICE]` | D29, D46, D47 | [arXiv:2508.01077](https://arxiv.org/abs/2508.01077) |
-| 56 | Graham, Lehrer | 1996 | Cellular algebras (Inventiones Math.) | `[CORE]` `[TL-ALG]` | D39, D51, D52 | — |
+| 56 | Graham, Lehrer | 1996 | Cellular algebras; TL standard modules Delta_k (Inventiones Math.) | `[CORE]` `[TL-ALG]` | D39, D51, D52, D99, D100, D101 | — |
 | 57 | Gukov, Halverson, Ruehle | 2024 | Rigor with ML from field theory to Poincare conjecture | `[CONTEXT]` `[ML-KNOTS]` | D27 | [Nature Rev. Phys.](https://www.nature.com/articles/s42254-024-00709-0) |
 | 58 | Gurarie | 1993 | Logarithmic operators in conformal field theory (first LCFT paper; null states paired with logarithmic partners) | `[CONTEXT]` `[CFT]` | D84, D87 | — |
 | 59 | Guzeltepe, Sarmasik | 2024 | Codes over Eisenstein integers | `[ADJACENT]` `[LATTICE]` | D29 | [arXiv:2412.18328](https://arxiv.org/html/2412.18328v1) |
-| 60 | Habiro | 2002 | Cyclotomic expansion of colored Jones polynomials | `[CORE]` `[TOPOLOGY]` | D29, D48, D71, D77, D79, D80, D81, D84, D85, D87, D90, D92, D93, D94 | [arXiv:math/0209324](https://arxiv.org/abs/math/0209324) |
+| 60 | Habiro | 2002 | Cyclotomic expansion of colored Jones polynomials | `[CORE]` `[TOPOLOGY]` | D29, D48, D71, D77, D79, D80, D81, D84, D85, D87, D90, D92, D93, D94, D95, D99, D100, D101 | [arXiv:math/0209324](https://arxiv.org/abs/math/0209324) |
 | 61 | Hardness of learning fixed parities | 2025 | Gradient descent fails on parity | `[CONTEXT]` `[CVNN]` | D47 lit. | [arXiv:2501.00817](https://arxiv.org/abs/2501.00817) |
 | 62 | Håstad | 1987 | Computational limitations of small-depth circuits (exponential lower bounds for parity in AC^0) | `[CORE]` `[COMPLEXITY]` | D92, D93 | — |
 | 63 | Hirose, Yoshida | 2012 | Generalization characteristics of CVNNs | `[CONTEXT]` `[CVNN]` | D27, D46 | — |
 | 64 | Hopf | 1931 | Über die Abbildungen der dreidimensionalen Sphäre auf die Kugelfläche (Hopf fibration S³→S²) | `[CONTEXT]` `[ADJACENT]` | D67, D68 | — |
 | 65 | Huang, Narayanan, Wang | 2018 | Lattices over algebraic integers for compute-and-forward | `[BRIDGE]` `[LATTICE]` | D29 | [IEEE](https://ieeexplore.ieee.org/document/8387793/) |
 | 66 | Hughes | 2016 | Neural network approach to knot invariants | `[ADJACENT]` `[ML-KNOTS]` | D27, D29 | [arXiv:1610.05744](https://arxiv.org/pdf/1610.05744) |
-| 67 | Jaeger | 2001 | The echo state approach to analysing and training recurrent neural networks (echo state networks) | `[CORE]` `[RC]` | D83, D84, D87, D89, D90, D94 | — |
+| 67 | Jaeger | 2001 | The echo state approach to analysing and training recurrent neural networks (echo state networks) | `[CORE]` `[RC]` | D83, D84, D87, D89, D90, D94, D98, D99, D100 | — |
 | 68 | Jaeger, Vertigan, Welsh | 1990 | On the computational complexity of the Jones and Tutte polynomials | `[CONTEXT]` `[TOPOLOGY]` | D77, D82, D84 | — |
 | 69 | Jing et al. | 2017 | Tunable efficient unitary neural networks (EUNN) | `[CONTEXT]` `[CVNN]` | D29 | [arXiv:1612.05231](https://arxiv.org/abs/1612.05231) |
 | 70 | Jones | 1985 | A polynomial invariant for knots via von Neumann algebras | `[CORE]` `[TOPOLOGY]` | D74, D77, D82 | — |
 | 71 | Kauffman | 1987 | The bracket polynomial | `[CORE]` `[TOPOLOGY]` | D1-D62 (foundation), D66, D67, D68, D74 | [Kauffman](http://homepages.math.uic.edu/~kauffman/Bracket.pdf) |
 | 72 | Kauffman | 2006 | q-Deformed spin networks, knot polynomials and anyonic topological quantum computation | `[CONTEXT]` `[TQFT]` | D77 | — |
 | 73 | Kirby | 1978 | A calculus for framed links in S³ (Kirby moves, framing = 3-manifold topology) | `[CONTEXT]` `[TOPOLOGY]` | D83 | — |
-| 74 | Kochen, Specker | 1967 | The problem of hidden variables in quantum mechanics (contextuality, consistent-assignment obstruction) | `[CONTEXT]` `[ADJACENT]` | D64 | — |
+| 74 | Kirillov, Ostrik | 2002 | On q-analog of McKay correspondence and ADE classification of sl(2) conformal field theories (character table of 2O, 8 conjugacy classes) | `[CONTEXT]` `[TL-ALG]` | D96 | — |
+| 75 | Kochen, Specker | 1967 | The problem of hidden variables in quantum mechanics (contextuality, consistent-assignment obstruction) | `[CONTEXT]` `[ADJACENT]` | D64 | — |
 | 75 | Kontsevich | 1993 | Weight systems suffice for Vassiliev invariants | `[CORE]` `[TOPOLOGY]` | Correspondence | — |
 | 76 | Kuperberg | 2015 | How hard is it to approximate the Jones polynomial? | `[CORE]` `[TOPOLOGY]` | D27, D29, D79, D80, D81, D82, D83, D84 | [arXiv:0908.0512](https://arxiv.org/abs/0908.0512) |
 | 77 | Lattice quantizers from complex integers | 2022 | Better lattice quantizers constructed from complex integers | `[ADJACENT]` `[LATTICE]` | D47 lit. | [arXiv:2204.01105](https://arxiv.org/pdf/2204.01105) |
 | 78 | Lee et al. | 2010 | Phase-encoded weights in complex-valued NNs | `[CONTEXT]` `[CVNN]` | D27 | [Optica](https://opg.optica.org/ao/abstract.cfm?uri=ao-49-10-b71) |
 | 79 | Levitt | 2025 | On the learnability of knot invariants | `[ADJACENT]` `[ML-KNOTS]` | D27, D29 | [arXiv:2502.12243](https://arxiv.org/abs/2502.12243) |
 | 80 | Lickorish / Wallace | 1960/1962 | Dehn surgery completeness (knots build all 3-manifolds) | `[CORE]` `[TOPOLOGY]` | Correspondence | — |
-| 81 | Linial, Mansour, Nisan | 1993 | Constant-depth circuits, Fourier transform, and learnability (AC^0 Fourier mass below degree (log n)^d) | `[CORE]` `[COMPLEXITY]` | D93 | — |
+| 81 | Liebeck, O'Brien, Shalev, Tiep | 2011 | The Ore conjecture (every element of a finite simple group is a commutator; confirmed for SL(2,5) = 2I) | `[CONTEXT]` `[ADJACENT]` | D95 | — |
+| 82 | Linial, Mansour, Nisan | 1993 | Constant-depth circuits, Fourier transform, and learnability (AC^0 Fourier mass below degree (log n)^d) | `[CORE]` `[COMPLEXITY]` | D93 | — |
 | 82 | Liu, Calderbank | 2008 | E8 lattice and icosian code (IEEE Trans IT; ring of icosians = E8 lattice, maximal distinguishability) | `[BRIDGE]` `[LATTICE]` `[COMPLEXITY]` | D94 | — |
-| 83 | Maass, Natschläger, Markram | 2002 | Real-time computing without stable states: a new framework for neural computation based on perturbations (liquid state machines) | `[CORE]` `[RC]` | D83, D84, D87, D89, D90, D94 | — |
+| 83 | Maass, Natschläger, Markram | 2002 | Real-time computing without stable states: a new framework for neural computation based on perturbations (liquid state machines) | `[CORE]` `[RC]` | D83, D84, D87, D89, D90, D94, D98, D99, D100 | — |
 | 82 | Martinez et al. | 2024 | Multilevel lattice codes from Hurwitz quaternions | `[ADJACENT]` `[LATTICE]` | D29 | [arXiv:2401.10773](https://arxiv.org/html/2401.10773) |
 | 83 | McKay | 1980 | Graphs, singularities, and finite groups (McKay correspondence: finite SU(2) subgroups ↔ ADE Dynkin diagrams) | `[CONTEXT]` `[ADJACENT]` | D70, D80 | — |
 | 84 | Metamaterials group | 2025 | Topological computation by classical braiding | `[ADJACENT]` `[TQFT]` | D27 | [arXiv:2502.16006](https://arxiv.org/html/2502.16006) |
@@ -120,7 +122,7 @@ One-line-per-paper quick reference across all knotapel literature surveys and de
 | 87 | Murakami | 2021 | Cyclotomic expansion of generalized Jones polynomials | `[CONTEXT]` `[TOPOLOGY]` | D29 | [arXiv:1908.04415](https://arxiv.org/abs/1908.04415) |
 | 88 | Nazer, Gastpar | 2011 | Compute-and-forward: harnessing interference | `[CORE]` `[LATTICE]` | D29, D48, D71, D73, D75, D77, D78, D79, D82, D93, D94 | [arXiv:1107.0300](https://arxiv.org/pdf/1107.0300) |
 | 89 | Nayak, Simon, Stern, Freedman, Das Sarma | 2008 | Non-Abelian anyons and topological quantum computation (Rev. Mod. Phys.) | `[CONTEXT]` `[TQFT]` | D77 | — |
-| 90 | Neglectons (Nature Comms) | 2025 | Non-semisimple TQFTs rescue universality for Ising anyons | `[BRIDGE]` `[TQFT]` `[TL-ALG]` | D47, D49, D89 | [Nature Comms](https://www.nature.com/articles/s41467-025-61342-8) |
+| 90 | Neglectons / Voss-Kim-Bhatt (Nature Comms) | 2025 | Non-semisimple TQFTs rescue universality for Ising anyons; alpha-anyon anchor + sigma-anyon qubits + semisimple readout | `[BRIDGE]` `[TQFT]` `[TL-ALG]` | D47, D49, D89, D99 | [Nature Comms](https://www.nature.com/articles/s41467-025-61342-8) |
 | 91 | Nitta | 2003 | Solving XOR with a single complex-valued neuron | `[CORE]` `[CVNN]` | D27 | [PubMed](https://pubmed.ncbi.nlm.nih.gov/13678617/) |
 | 92 | Nitta | 2003b | Inherent property of decision boundaries in CVNNs | `[CONTEXT]` `[CVNN]` | D27 | [ScienceDirect](https://www.sciencedirect.com/science/article/abs/pii/S0925231202005684) |
 | 93 | Nitta | 2004 | Orthogonality of decision boundaries in CVNNs | `[CONTEXT]` `[CVNN]` | D27 | [MIT Press](https://direct.mit.edu/neco/article/16/1/73/6809) |
@@ -131,7 +133,7 @@ One-line-per-paper quick reference across all knotapel literature surveys and de
 | 98 | Rasmussen | 2004 | Khovanov homology and the slice genus (writhe in q-grading, not normalized away) | `[CONTEXT]` `[TOPOLOGY]` | D83 | [arXiv:math/0402131](https://arxiv.org/abs/math/0402131) |
 | 99 | Reiner | 2004 | The cyclotomic polynomial topologically (arXiv:math/0402206) | `[CONTEXT]` `[TL-ALG]` | D63, D64 | [arXiv:math/0402206](https://arxiv.org/abs/math/0402206) |
 | 100 | Reshetikhin, Turaev | 1991 | Quantum group invariants of knots and 3-manifolds | `[CORE]` `[TQFT]` | Correspondence, D39 | — |
-| 101 | Ridout, Saint-Aubin | 2014/2019 | TL standard modules / non-semisimplicity | `[CORE]` `[TL-ALG]` | D39, D47, D51, D52 | [arXiv:1204.4505](https://arxiv.org/abs/1204.4505) |
+| 101 | Ridout, Saint-Aubin | 2014/2019 | TL standard modules / non-semisimplicity | `[CORE]` `[TL-ALG]` | D39, D47, D51, D52, D99, D100, D101 | [arXiv:1204.4505](https://arxiv.org/abs/1204.4505) |
 | 102 | Rowell, Wang | 2017 | Mathematics of topological quantum computing | `[CONTEXT]` `[TQFT]` | D77 | — |
 | 103 | Rui | 2005 | Semi-simplicity of cyclotomic TL algebras | `[CONTEXT]` `[TL-ALG]` | D29 | [Project Euclid](https://projecteuclid.org/journals/michigan-mathematical-journal/volume-53/issue-1/) |
 | 104 | Rui, Xi | 2004 | Representation theory of cyclotomic TL algebras | `[BRIDGE]` `[TL-ALG]` | D29 | [EMS Press](https://ems.press/journals/cmh/articles/440) |
@@ -149,17 +151,17 @@ One-line-per-paper quick reference across all knotapel literature surveys and de
 
 ## Statistics
 
-- **Total unique papers/results:** 120
+- **Total unique papers/results:** 122
 - **By importance:**
   - `[CORE]`: 40 — Directly foundational
   - `[BRIDGE]`: 10 — Cross-domain connections
-  - `[CONTEXT]`: 57 — Background/methodology
-  - `[ADJACENT]`: 27 — Related but not directly applicable
+  - `[CONTEXT]`: 58 — Background/methodology
+  - `[ADJACENT]`: 28 — Related but not directly applicable
 - **By domain:**
   - `[TOPOLOGY]`: 26
   - `[CVNN]`: 18
   - `[TQFT]`: 17
-  - `[TL-ALG]`: 13
+  - `[TL-ALG]`: 14
   - `[LATTICE]`: 12
   - `[RC]`: 4
   - `[ML-KNOTS]`: 5
@@ -193,6 +195,9 @@ Gainutdinov-Read-Saleur (#48, D85/D86 — quantum group b parameter, projective 
 
 ### New additions from D93-94 (7 papers):
 Barrington 1989 (#12, D93/D94 — NC^1 = programs over non-solvable groups, foundational for solvability bottleneck), Linial-Mansour-Nisan 1993 (#81, D93 — AC^0 Fourier mass concentration, explains AND robustness), Liu-Calderbank 2008 (#82, D94 — E8 lattice/icosian ring, Z[sqrt5] quaternions ARE E8), Burrello-Mussardo-Xu-Wan 2010 (#21, D94 — Fibonacci anyons use 2I for universal gate compilation), Mochon 2003 (#86, D94 — Fibonacci parameter phi^{-1} maximally computational for TQC), Gonon-Ortega 2020 (#52, D94 — reservoir computing universality, separation property), Gonon-Grigoryeva-Ortega 2022 (#53, D94 — RKHS kernel framework for reservoir capacity). `[COMPLEXITY]` tag grows from 2 to 5. `[RC]` tag grows from 2 to 4. Updated source lists for existing entries: Håstad (+D93), Furst-Saxe-Sipser (+D93), Habiro (+D93/D94), Aizenberg 2008 (+D93/D94), Nazer-Gastpar (+D93/D94), Abramsky (+D94), Jaeger RC (+D94), Maass RC (+D94).
+
+### New additions from D95-101 (2 new papers + 12 source list updates):
+Liebeck-O'Brien-Shalev-Tiep 2011 (D95 — Ore conjecture, every element of finite simple group is a commutator, confirmed for 2I), Kirillov-Ostrik 2002 (D96 — character table of 2O, 8 conjugacy classes, E7 Dynkin diagram connection). Updated source lists: Barrington (+D95/D96), Habiro (+D95/D99/D100/D101), Freedman-Larsen-Wang (+D99, Property F falsified at delta=0), Graham-Lehrer (+D99/D100/D101, standard modules), Gonon-Ortega (+D99), Gonon-Grigoryeva-Ortega (+D99), Neglectons/Voss-Kim-Bhatt (+D99, structural identification), Jaeger RC (+D98/D99/D100), Maass RC (+D98/D99/D100), Ridout-Saint-Aubin (+D99/D100/D101), Belletête et al. (+D100), Abramsky (+D95). `[TL-ALG]` grows from 13 to 14.
 
 ## Sources Consolidated
 
@@ -240,3 +245,10 @@ Barrington 1989 (#12, D93/D94 — NC^1 = programs over non-solvable groups, foun
 - `atlas/inventory/entries/demo_92.md` — Parity-lock theorem (Furst-Saxe-Sipser 1984 / Håstad 1987 AC^0 parity lower bounds, Habiro, Aizenberg, D48/D50 contrast)
 - `atlas/inventory/entries/demo_93.md` — Function scaling / 1wpi complement-blindness (Håstad 1987, Barrington 1989, LMN 1993, Furst-Saxe-Sipser 1984, Habiro, Aizenberg, Nazer-Gastpar, D48/D50 contrast)
 - `atlas/inventory/entries/demo_94.md` — Binary icosahedral group / solvability bottleneck (Barrington 1989, Burrello et al. 2010, Liu-Calderbank 2008, Mochon 2003, Reservoir Computing Jaeger/Maass/Gonon-Ortega, Habiro, Nazer-Gastpar, Abramsky, ADE classification)
+- `atlas/inventory/entries/demo_95.md` — Commutator depth and XOR capacity (Barrington 1989 refined, Liebeck-O'Brien-Shalev-Tiep 2011 Ore conjecture, ADE derived series, Habiro Z[zeta_8])
+- `atlas/inventory/entries/demo_96.md` — TL-group cross-classification (Kirillov-Ostrik 2002 character table 2O, Barrington reinterpreted, D84/D95 synergy reinterpreted)
+- `atlas/inventory/entries/demo_97.md` — Cell B perfection / geometric robustness (D96 cell taxonomy, D84 null-is-dead, octahedral symmetry on S^2)
+- `atlas/inventory/entries/demo_98.md` — 3-strand readout bottleneck (TL_3 5x5, Kauffman bracket at zeta_8, braid group B_3 infinite, reservoir computing Maass/Jaeger)
+- `atlas/inventory/entries/demo_99.md` — 3-strand Delta_1 LANDMARK (Graham-Lehrer standard modules, Ext^1 non-semisimple rep theory, Voss-Kim-Bhatt non-semisimple TQFT, Property F Freedman-Larsen-Wang, Fibonacci/SL_2, reservoir computing Gonon-Ortega, magic state distillation analogy, Habiro Z[zeta_8])
+- `atlas/inventory/entries/demo_100.md` — 4-strand W_{4,2} DKC (non-semisimple TL_4 at delta=0, Habiro Z[zeta_8] matrix extension, Casimir invariant, reservoir computing, Belletête et al. Loewy length)
+- `atlas/inventory/entries/demo_101.md` — 5-strand W_{5,3} scaling verification (TL_5 simple module, sl_d functor thesis, root systems A_3, Habiro Z[zeta_8], Casimir C_d formula)

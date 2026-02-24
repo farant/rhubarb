@@ -1,9 +1,9 @@
 # DKC Future Demos Backlog
 
-Consolidated 2026-02-20. Updated 2026-02-21 with D64-D71 results and D72-D77 proposals. Updated 2026-02-21 with D72-D82 results and Arc 6 + new proposals. Updated 2026-02-21 with D83-D84 results, Arc 7 renumbering, and new proposals from D83-D84 open questions + explorer's log seeds. Updated 2026-02-24 with D85-D92 results, Arc 8/9 completion, new proposals from D85-D92 open questions, and vision-alignment Paths H/I/J.
+Consolidated 2026-02-20. Updated 2026-02-21 with D64-D71 results and D72-D77 proposals. Updated 2026-02-21 with D72-D82 results and Arc 6 + new proposals. Updated 2026-02-21 with D83-D84 results, Arc 7 renumbering, and new proposals from D83-D84 open questions + explorer's log seeds. Updated 2026-02-24 with D85-D92 results, Arc 8/9 completion, new proposals from D85-D92 open questions, and vision-alignment Paths H/I/J. Updated 2026-02-24 with D95-D101 results (multi-strand DKC arc), new proposals from D95-D101 open questions.
 
-82 demos completed (D01-D29, D35, D38-D39, D45-D94). D93-D94 added 2026-02-24.
-13 prior proposals remain from future-demos/. 5 new demos added from synthesis open questions. 6 new proposals added from D64-D71 open questions. 7 new proposals added from D72-D82 open questions (2 now SUPERSEDED by actual D83-D84). 8 new proposals added from D83-D84 open questions and explorer's log seeds. 8 of those proposals completed as actual D85-D92; 6 new proposals added from D85-D92 open questions and vision-alignment Paths H/I/J. D93-D94 completed; 1 new proposal (D95 RKHS kernel rank) added from D93-D94 open questions.
+89 demos completed (D01-D29, D35, D38-D39, D45-D101). D95-D101 added 2026-02-24.
+13 prior proposals remain from future-demos/. 5 new demos added from synthesis open questions. 6 new proposals added from D64-D71 open questions. 7 new proposals added from D72-D82 open questions (2 now SUPERSEDED by actual D83-D84). 8 new proposals added from D83-D84 open questions and explorer's log seeds. 8 of those proposals completed as actual D85-D92; 6 new proposals added from D85-D92 open questions and vision-alignment Paths H/I/J. D93-D94 completed; 1 new proposal (D95 RKHS kernel rank) added from D93-D94 open questions. D95-D101 completed (multi-strand DKC arc: commutator depth, cross-classification, Cell B perfection, 3-strand readout bottleneck, Delta_1 LANDMARK, 4-strand W_{4,2}, 5-strand sl_d functor thesis). 6 new proposals added from D95-D101 open questions.
 
 ---
 
@@ -433,6 +433,74 @@ The following proposals from previous arcs remain valid. Some have been partiall
 
 ---
 
+## Arc 11: Multi-Strand DKC and sl_d Functor Thesis (D95-D101)
+
+The multi-strand arc opened a major new research direction. D95-D96 completed the 2-strand algebraic anatomy (commutator depth, cross-classification, Cell B perfection). D98-D101 extended DKC to 3-strand, 4-strand, and 5-strand representations, discovering the readout bottleneck, the Ext^1 catalytic preparation thesis, and the sl_d functor thesis. All seven are DONE.
+
+### D95 -- Commutator Depth and XOR Capacity -- DONE
+- **Completed as demo_95_commutator_depth/**. 19/19 tests pass.
+- See atlas/inventory/entries/demo_95.md for full results.
+
+### D96 -- TL-Group Cross-Classification -- DONE (LANDMARK)
+- **Completed as demo_96_tl_group_cross/**. 14/14 tests pass.
+- See atlas/inventory/entries/demo_96.md for full results.
+
+### D97 -- Why Is Cell B Perfect? -- DONE
+- **Completed as demo_97_cell_b_perfect/**. 8/8 tests pass.
+- See atlas/inventory/entries/demo_97.md for full results.
+
+### D98 -- 3-Strand DKC Proof of Concept -- DONE
+- **Completed as demo_98_3strand_dkc/**. 10/10 tests pass.
+- See atlas/inventory/entries/demo_98.md for full results.
+
+### D99 -- 3-Strand Delta_1 Block Decomposition -- DONE (LANDMARK)
+- **Completed as demo_99_column_readout/**. 24+ tests pass.
+- See atlas/inventory/entries/demo_99.md for full results.
+
+### D100 -- 4-Strand DKC on W_{4,2} -- DONE
+- **Completed as demo_100_4strand_dkc/**. 36/36 tests pass.
+- See atlas/inventory/entries/demo_100.md for full results.
+
+### D101 -- 5-Strand DKC Scaling on W_{5,3} -- DONE
+- **Completed as demo_101_5strand_dkc/**. 44/44 tests pass.
+- See atlas/inventory/entries/demo_101.md for full results.
+
+---
+
+## Arc 12: New Proposals from D95-D101 Open Questions
+
+### 6-Strand W_{6,4} Decisive Test
+- W_{6,4} (n=6, even, non-semisimple) should have ~5x BFS growth (sl_5 thesis). If it also has 6+ super-hubs and XOR14 > 0, this confirms non-semisimplicity is the key variable for hub count and deep XOR capacity. If it matches D101's pattern (few hubs, XOR14=0), the explanation is dimensional/structural rather than semisimplicity. This is the decisive test between the two explanations for D101's falsified hub-count prediction.
+- Dependencies: D100 (done), D101 (done)
+- Priority: **HIGH** -- resolves the simple vs non-semisimple question definitively; sl_5 growth rate prediction testable
+
+### Radical Content XOR Correlation Study
+- D100 showed radical content is CONSTANT across all depths (mean=2) and does NOT distinguish XOR winners from non-winners (14 vs 14). But hub commutators have zero radical content -- they annihilate the radical direction. Is this a general theorem (commutators of braid matrices on W_{n,k} always annihilate the radical) or specific to these hub entries? Systematic test: compute radical content of commutators across all entry pairs, not just hubs.
+- Dependencies: D100 (done)
+- Priority: **MEDIUM** -- if general, establishes radical-annihilating commutators as a structural theorem for non-semisimple TL modules
+
+### Activation Zoo for Multi-Strand DKC
+- The 2x2_hash, 3x3_hash, and 4x4_hash activations used in D99-D101 are crude sign-pattern hashes. Can Sec x Vor be adapted for Cyc8 matrix entries? Can activation functions respect the module structure (projecting onto radical vs semisimple components separately)? D99 showed the activation hierarchy (2x2_hash >> 4ent_hash >> quat_hash >> trace_oct); the gap between sign-hash and a principled activation may be large. What activation recovers XOR14 on W_{5,3}?
+- Dependencies: D99 (done), D100 (done), D101 (done)
+- Priority: **MEDIUM** -- the activation is likely the bottleneck explaining D101's XOR14=0 (D100 achieves XOR14=70 on a smaller matrix with non-semisimple structure)
+
+### Fibonacci Direct Test at q=exp(2pi*i/5)
+- Test DKC capacity directly at the Fibonacci parameter q = exp(2*pi*i/5) on the Delta_1 module. The Fibonacci parameter yields [2]_q = phi^{-1} ~ 0.618 (non-vanishing quantum dimension). At this parameter, does the 2x2 Delta_1 module give different computational characteristics than at q = zeta_8 (where delta=0, quantum dimension vanishes)? If non-vanishing quantum dimension avoids the Jordan block structure, this directly tests whether non-semisimplicity (Ext^1) is essential for the high-XOR algebraic regime.
+- Dependencies: D99 (done), D94 (done, Fibonacci context)
+- Priority: **MEDIUM** -- bridges the finite 2I group and the Fibonacci anyon parameter through the multi-strand lens
+
+### Artificial Perfect Cell Construction
+- D97 showed Cell B's 100% XOR perfection comes from 3 mutually orthogonal directions at any half-angle in a 50-degree plateau. Can we construct "perfect cells" for arbitrary groups by choosing orthogonal directions at angles in this plateau? Does the orthonormal-frame recipe generalize to 2I (31 directions, 9 half-angles)? For multi-strand matrices: is there an analog of orthogonal-frame perfection in the Mat2/Mat3/Mat4 activation spaces?
+- Dependencies: D97 (done), D96 (done, catalog pruning principle)
+- Priority: **MEDIUM** -- if successful, provides a constructive recipe for optimal DKC catalogs from first principles
+
+### Non-Semisimple TQFT DKC Formalization
+- D99's Ext^1 catalytic preparation thesis mirrors the structure of non-semisimple TQFT (Voss-Kim-Bhatt 2025): alpha-anyon anchor (quantum trace zero) + sigma-anyon qubits + semisimple readout. D100 confirms: non-semisimple W_{4,2} achieves XOR14=70 while simple W_{5,3} achieves XOR14=0. Formalize this connection: is there a functor from the non-semisimple TQFT category to the DKC computation category that maps alpha-anyons to super-hubs and sigma-anyons to satellites?
+- Dependencies: D99 (done), D100 (done), D101 (done)
+- Priority: **MEDIUM** -- if successful, connects DKC to the cutting edge of non-semisimple TQFT; high publication value
+
+---
+
 ## Priority Summary
 
 ### HIGH (do these first -- direct publication impact or architecturally consequential)
@@ -443,6 +511,7 @@ The following proposals from previous arcs remain valid. Some have been partiall
 5. **zeta_32 Finiteness Test**. Single test, extremely low cost, high payoff.
 6. **D65 (remaining)** -- Sandwich Theorem: algebra isomorphism and nilpotency=3 still needed for Paper 3.
 7. **Higher k_sec with 2I** — NEW from D94. Does k_sec=24 push the N=8 XOR cliff further for 2I? The 384-cell space (k=12, 31 directions) may not fully exploit 2I's angular richness (9 half-angles). Quick test, high information content.
+8. **6-Strand W_{6,4} Decisive Test** — NEW from D101. Resolves simple vs non-semisimple question: does non-semisimplicity restore hub count and XOR14? sl_5 growth rate prediction testable.
 
 ### MEDIUM (do next -- strengthen claims or open new connections)
 6. **Null Dispensability Transition Location** (Path J). Locates the regime boundary for compilation design rules.
@@ -461,6 +530,11 @@ The following proposals from previous arcs remain valid. Some have been partiall
 19. **zeta_10 Depth Analysis**. Tests universality of scaling constant.
 20. **D44** -- Path Integral / Ising. Physics interpretation.
 21. **D36** -- Long Braid Scaling. Practical ceiling validation.
+22. **Radical Content XOR Correlation Study** — NEW from D100. Are radical-annihilating commutators a general theorem for non-semisimple TL modules?
+23. **Activation Zoo for Multi-Strand DKC** — NEW from D99-D101. What activation recovers XOR14 on W_{5,3}? Can Sec x Vor adapt to Cyc8 matrix entries?
+24. **Fibonacci Direct Test at q=exp(2pi*i/5)** — NEW from D99/D94. Does non-vanishing quantum dimension avoid Jordan blocks?
+25. **Artificial Perfect Cell Construction** — NEW from D97. Orthonormal-frame recipe for constructing optimal catalogs from first principles.
+26. **Non-Semisimple TQFT DKC Formalization** — NEW from D99-D101. Functor from non-semisimple TQFT category to DKC computation.
 
 ### RKHS Kernel Rank Test (D95) — NEW (D94)
 - Compute the DKC kernel matrix K(m,m') = quaternion inner product of signed sums for 2I (60 entries) vs z8 (24 entries). Rank of kernel matrix predicts reservoir separation capacity. If rank(K_2I)/rank(K_z8) > 120/24 = 5, then non-solvability contributes above raw catalog size — confirming the "discrete algebraic reservoir computer" interpretation from D94.
@@ -535,6 +609,13 @@ The following proposals from previous arcs remain valid. Some have been partiall
 - ~~**D92** -- Function Scaling / Parity-Lock Theorem.~~ **DONE** (demo_92_function_scaling/)
 - ~~**D93** -- Function Scaling — 1-Weight-Per-Input Encoding.~~ **DONE** (demo_93_function_scaling_1wpi/) -- LANDMARK: complement-blindness theorem, phase_cell recovery, circuit complexity hierarchy (AND/XOR ratio 1.01 to infinity, N=3-8), pigeonhole mechanism
 - ~~**D94** -- Binary Icosahedral Group (2I, E8).~~ **DONE** (demo_94_binary_icosahedral/) -- RESULT: solvability bottleneck confirmed, circuit complexity hierarchy universal across groups, crossover hypothesis demonstrated, "discrete algebraic reservoir computer" framing proposed
+- ~~**D95** -- Commutator Depth and XOR Capacity.~~ **DONE** (demo_95_commutator_depth/) -- RESULT: cross-layer synergy mechanism demonstrated, derived series partition 12/8/3/1, neither COMM nor NON-COMM carries disproportionate capacity alone, 0+0=26% synergy from mixed algebraic strata, algebra-over-geometry at 90 degrees
+- ~~**D96** -- TL-Group Cross-Classification.~~ **DONE** (demo_96_tl_group_cross/) -- LANDMARK: D84 null/non-null and D95 derived series are INDEPENDENT partitions, 5-cell landscape (A-E), optimal z8 catalog is A+B+C (21 entries, beats ALL 24), Cell B 100% XOR perfection, catalog pruning principle proposed
+- ~~**D97** -- Why Is Cell B Perfect?~~ **DONE** (demo_97_cell_b_perfect/) -- RESULT: perfection is geometric inevitability from orthogonal frame, 50-degree robust plateau (25-75 degrees), octahedral optimality, lever arm mechanism explains null-is-dead
+- ~~**D98** -- 3-Strand DKC Proof of Concept.~~ **DONE** (demo_98_3strand_dkc/) -- RESULT: 3-strand algebra is rich (infinite group, 2048 entries, 98.5% interleaving) but trace readout catastrophically lossy (ZERO XOR6), column-4 is lossless (100% retention), readout bottleneck thesis established
+- ~~**D99** -- 3-Strand Delta_1 Block Decomposition.~~ **DONE** (demo_99_column_readout/) -- LANDMARK: first-ever 3-strand XOR at ALL levels (XOR6=500K, XOR14=60), Ext^1 catalytic preparation thesis, Fibonacci growth, two-regime hypothesis (combinatorial XOR6-8 vs algebraic XOR10-14), star-graph topology, Casimir inversion, XOR16=0 ceiling
+- ~~**D100** -- 4-Strand DKC on W_{4,2}.~~ **DONE** (demo_100_4strand_dkc/) -- RESULT: infinite catalog (3x3 over Z[zeta_8]), ~3.1x BFS growth, 6 super-hubs, constant radical content, Casimir-XOR correlation (1.36x-1.86x), all hub commutators traceless with zero radical content, hub pairing by Cyc8 component
+- ~~**D101** -- 5-Strand DKC Scaling on W_{5,3}.~~ **DONE** (demo_101_5strand_dkc/) -- RESULT: sl_d growth rate CONFIRMED (~4x for sl_4), hub count FALSIFIED (3 not 12), Casimir inversion in simple modules, XOR14=0 (simple module ceiling), simple vs non-semisimple is computationally load-bearing
 
 ---
 

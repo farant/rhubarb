@@ -2813,6 +2813,564 @@ z12 truncated: depth<=2, 51 entries, 22 directions, 276 cells. Crossover at N=6:
 
 ---
 
+## 57. Commutator Depth and XOR Capacity — Demo 95
+
+### z8 Derived Series Level Membership
+
+| Level | Size | Algebraic identity |
+|-------|------|--------------------|
+| D0\D1 | 12 | Outermost, non-commutator |
+| D1\D2 | 8 | First commutator layer (2T\Q8) |
+| D2\D3 | 3 | Deep commutator (Q8\center) |
+| D3 | 1 | Identity |
+
+Derived series: 24 > 12 > 4 > 1 (2O > 2T > Q8 > {±1}).
+
+**Provenance:** Demo 95, Phase 2.
+
+### COMM vs NON-COMM vs ALL XOR Hit Rates
+
+| N | COMM(12) | NON-COMM(12) | ALL(24) | COMM/NONC |
+|---|----------|--------------|---------|-----------|
+| 3 | 48.64% | 42.73% | 71.94% | 1.14x |
+| 4 | 44.04% | 51.52% | 75.04% | 0.85x |
+| 5 | 15.15% | 13.64% | 40.76% | 1.11x |
+| 6 | 6.28% | 5.63% | 9.64% | 1.12x |
+| 7 | 1.01% | 0.00% | 0.18% | inf |
+
+ALL(24) dramatically outperforms either 12-element subset — 2.7x at N=5. Cross-layer interaction is the active mechanism.
+
+**Provenance:** Demo 95, Phase 3.
+
+### 90-Degree Split (Re=0, Matched Half-Angle)
+
+| Subset | Size | N=3 XOR | N=4 XOR | N=5 XOR | N=6 XOR |
+|--------|------|---------|---------|---------|---------|
+| Q8-null (D2) | 3 | 0 | 0 | 0 | 0 |
+| Outermost-null (D0) | 6 | 0 | 0 | 0 | 0 |
+| All-null (mixed) | 9 | 0 | 33/126 = 26.19% | 0 | 0 |
+
+Pure 0+0=26% synergy at matched geometry. Algebra wins over geometry.
+
+**Provenance:** Demo 95, Phase 3b.
+
+### Matched Comparison — z8-COMM vs 2I-first-12
+
+| N | z8-COMM (12) | 2I-first-12 | ratio (2I/z8) |
+|---|-------------|-------------|---------------|
+| 3 | 48.64% | 75.91% | 1.56x |
+| 4 | 44.04% | 72.12% | 1.64x |
+| 5 | 15.15% | 32.58% | 2.15x |
+| 6 | 6.28% | 5.95% | 0.95x |
+| 7 | 1.01% | 0.00% | 0.00x |
+
+2I wins at N=3-5 (no stratification bottleneck); crossover at N=6 mirrors D94 Phase 4 pattern.
+
+**Provenance:** Demo 95, Phase 4.
+
+---
+
+## 58. TL-Group 2D Synergy Landscape — Demo 96
+
+### Cross-Tabulation (5 Cells)
+
+| Cell | Description | Count | Half-angle | Derived | Null? |
+|------|-------------|-------|------------|---------|-------|
+| A | D0-null (outermost, bracket-null) | 6 | 90 deg | D0 | Yes |
+| B | D0-nonnull (outermost, non-null) | 6 | 45 deg | D0 | No |
+| C | D1-nonnull (2T commutators) | 8 | 60 deg | D1 | No |
+| D | D2-null (Q8 deep) | 3 | 90 deg | D2 | Yes |
+| E | D3-identity | 1 | 0 deg | D3 | No |
+
+Cross-checks: Null (A+D) = 9, COMM (C+D+E) = 12, NONCOMM (A+B) = 12, Grand = 24.
+
+**Provenance:** Demo 96, Phase 1.
+
+### Individual Cell XOR Capacity
+
+| Cell | Size | Dirs | N=3 | N=4 | N=5 | N=6 |
+|------|------|------|-----|-----|-----|-----|
+| A (D0-null) | 6 | 6 | 0.00% | 0.00% | 0.00% | 0.00% |
+| B (D0-nonnull) | 6 | 3 | 100.00% | 100.00% | 100.00% | 100.00% |
+| C (D1-nonnull) | 8 | 4 | 100.00% | 100.00% | 42.86% | 57.14% |
+| D (D2-null) | 3 | 3 | 0.00% | n/a | n/a | n/a |
+| E (D3-identity) | 1 | 0 | n/a | n/a | n/a | n/a |
+
+Cell B = 100% at EVERY N with only 6 entries and 3 directions. Null cells A, D completely dead.
+
+**Provenance:** Demo 96, Phase 2.
+
+### Pairwise Synergy Matrix
+
+| Pair | Size | Dirs | N=3 | N=4 | N=5 | N=6 |
+|------|------|------|-----|-----|-----|-----|
+| A+B (outermost shell) | 12 | 9 | 42.73% | 51.52% | 13.64% | 5.63% |
+| A+C (cross both dims) | 14 | 10 | 46.15% | 74.93% | 14.99% | 1.33% |
+| A+D (both null, 90-deg) | 9 | 9 | 0.00% | 26.19% | 0.00% | 0.00% |
+| B+C (both nonnull, cross derived) | 14 | 7 | 96.70% | 94.01% | 73.18% | 31.00% |
+| B+D (cross both dims) | 9 | 3 | 23.81% | 11.90% | 4.76% | 1.19% |
+| C+D (comm subgroup) | 11 | 7 | 48.48% | 49.09% | 20.78% | 7.36% |
+
+Best pair at EVERY N: B+C (both nonnull, cross derived).
+
+**Provenance:** Demo 96, Phase 3.
+
+### Triple Combinations vs ALL
+
+| Subset | Size | Dirs | N=3 | N=4 | N=5 | N=6 |
+|--------|------|------|-----|-----|-----|-----|
+| ALL (A+B+C+D+E) | 24 | 13 | 71.94% | 75.04% | 40.76% | 9.64% |
+| A+B+C (skip Q8) | 21 | 13 | 74.06% | 77.51% | 45.10% | 12.98% |
+| A+B+D (skip 2T) | 16 | 9 | 51.43% | 50.55% | 22.34% | 3.97% |
+| A+C+D (skip D0nn) | 18 | 13 | 55.39% | 65.59% | 23.07% | 3.31% |
+| B+C+D (skip D0null) | 18 | 7 | 75.12% | 71.24% | 32.03% | 7.37% |
+
+A+B+C (skip Q8/D) BEATS full ALL(24) at EVERY N. The 3 Q8-deep-null entries are noise.
+
+Missing cell impact (triple rate minus ALL rate):
+
+| Missing | N=3 | N=4 | N=5 | N=6 |
+|---------|-----|-----|-----|-----|
+| D (Q8) | +2.12% | +2.47% | +4.34% | +3.34% |
+| C (2T) | -20.51% | -24.49% | -18.42% | -5.67% |
+| B (D0nn) | -16.54% | -9.45% | -17.69% | -6.33% |
+| A (D0null) | +3.19% | -3.80% | -8.73% | -2.27% |
+
+**Provenance:** Demo 96, Phase 4.
+
+---
+
+## 59. Cell B Geometric Perfection — Demo 97
+
+### Angle Sensitivity Sweep (6 Quaternions, 3 Orthogonal Directions)
+
+| Half-angle | N=3 XOR% | N=4 XOR% | N=5 XOR% | N=6 XOR% |
+|------------|----------|----------|----------|----------|
+| 10 | 100% | 20% | 0% | 100% |
+| 15 | 100% | 100% | 0% | 100% |
+| 20 | 100% | 100% | 0% | 100% |
+| 25 | 100% | 100% | 100% | 100% |
+| 30 | 100% | 100% | 100% | 100% |
+| 35 | 100% | 100% | 0% | 100% |
+| 40 | 100% | 100% | 100% | 100% |
+| 42 | 100% | 100% | 100% | 100% |
+| 44 | 100% | 100% | 100% | 100% |
+| 45 | 100% | 100% | 100% | 100% |
+| 46 | 100% | 100% | 100% | 100% |
+| 48 | 100% | 100% | 100% | 100% |
+| 50 | 100% | 100% | 100% | 100% |
+| 55 | 100% | 100% | 100% | 100% |
+| 60 | 100% | 100% | 100% | 100% |
+| 65 | 100% | 100% | 100% | 100% |
+| 70 | 100% | 100% | 100% | 100% |
+| 75 | 100% | 100% | 100% | 100% |
+| 80 | 100% | 100% | 100% | 0% |
+| 85 | 100% | 0% | 0% | 0% |
+| 90 | 0% | 0% | 0% | 0% |
+
+Full perfection plateau: 25-75 degrees (~50 degree range). 45 degrees is midpoint, not a critical value. 90 degrees = total collapse. Isolated anomaly at 35 degrees (N=5 drops to 0%).
+
+**Provenance:** Demo 97, Phase 3.
+
+### Large N Exhaustive Test (Cell B, 6 Entries, 3 Directions)
+
+| N | C(6,N) | XOR count | XOR% |
+|---|--------|-----------|------|
+| 3 | 20 | 20 | 100% |
+| 4 | 15 | 15 | 100% |
+| 5 | 6 | 6 | 100% |
+| 6 | 1 | 1 | 100% |
+
+100% at ALL N through N=6 (exhaustive). Beyond N=6, C(6,N) = 0.
+
+**Provenance:** Demo 97, Phase 4.
+
+### Cell B Separation Quality (N=3, k=12)
+
+| Metric | Value |
+|--------|-------|
+| XOR pass | 20/20 (100%) |
+| Cell-index margin (min) | 4 |
+| Cell-index margin (max) | 8 |
+| Cell-index margin (mean) | 5.6 |
+
+**Provenance:** Demo 97, Phase 2.
+
+---
+
+## 60. 3-Strand DKC Readout Bottleneck — Demo 98
+
+### 3-Strand BFS Catalog Growth
+
+| Round | Entries | New |
+|-------|---------|-----|
+| 0 | 1 | 1 |
+| 1 | 5 | 4 |
+| 2 | 17 | 12 |
+| 3 | 47 | 30 |
+| 4 | 115 | 68 |
+| 5 | 263 | 148 |
+| 6 | 577 | 314 |
+| 7 | 1233 | 656 |
+| 8 | 2048 | 815 (hit cap) |
+
+Group is INFINITE at zeta_8. 2017/2048 (98.5%) interleaving. 113/2048 (5.5%) zero bracket.
+
+**Provenance:** Demo 98, Phase 1.
+
+### Readout Diversity Comparison
+
+| Readout | Distinct | Retention | DOFs |
+|---------|----------|-----------|------|
+| Trace | 105 | 5.1% | 4 integers |
+| Column 0 | 1166 | 56.9% | 20 integers |
+| Column 1 | 1166 | 56.9% | 20 integers |
+| Column 2 | 1167 | 57.0% | 20 integers |
+| Column 3 | 1167 | 57.0% | 20 integers |
+| Column 4 | 2048 | 100.0% | 20 integers |
+
+Column 4 is LOSSLESS (100% retention). Trace collapses 25 Cyc8 entries to 1 = 96% information loss.
+
+**Provenance:** Demo 98, Phase 2/2b.
+
+### 2-Strand vs 3-Strand Structural Comparison
+
+| Property | 2-strand | 3-strand |
+|----------|----------|----------|
+| TL dimension | 2x2 (C_2=2) | 5x5 (C_3=5) |
+| Group order | 24 (finite) | Infinite (at zeta_8) |
+| Generators | 2 | 4 |
+| Interleaving | N/A | 98.5% |
+| Readout DOFs (trace) | 4 integers (sufficient) | 4 integers (catastrophically lossy) |
+| Readout DOFs (column) | N/A | 20 integers (lossless at col 4) |
+| XOR6 capacity | 1109 (at k=20) | 0 (trace readout) |
+
+The readout, not the algebra, is the bottleneck. 3-strand has MORE structure but trace destroys it.
+
+**Provenance:** Demo 98, Phases 1-5.
+
+---
+
+## 61. 3-Strand Delta_1 Block Decomposition — Demo 99
+
+### Activation Hierarchy (XOR Capacity Scan)
+
+| Activation | N=3(XOR6) | N=4(XOR8) | N=5(XOR10) | N=6(XOR12) |
+|------------|-----------|-----------|------------|------------|
+| 4ent(16) | 227624 | 5990 | 126 | 0 |
+| 4ent(32) | 258764 | 8098 | 206 | 8 |
+| 4ent(64) | 230568 | 7792 | 210 | 8 |
+| quat(16) | 28748 | 284 | 0 | 0 |
+| quat(32) | 29832 | 298 | 0 | 0 |
+| quat(64) | 29124 | 294 | 0 | 0 |
+| 2x2(32) | 373194 | 11974 | 325 | 16 |
+| 2x2(64) | 373194 | 16404 | 485 | 16 |
+| 2x2(128) | 373194 | 16404 | 485 | 16 |
+| tr_oct(8) | 0 | 0 | 0 | 0 |
+
+Hierarchy: 2x2_hash >> 4ent_hash >> quat_hash >> trace_oct. Best per level: XOR6=500,261 at 2x2(64), XOR8=48,143 at 2x2(128), XOR10=485 at 2x2(128), XOR12=16 at 2x2(32+).
+
+**Provenance:** Demo 99, Phase 3.
+
+### XOR Capacity at Depth (Ceiling Breaking)
+
+| Cells | XOR10 | XOR12 | XOR14 |
+|-------|-------|-------|-------|
+| 64 | 2641 | 675 | 60 |
+| 128 | 2966 | 675 | 60 |
+| 256 | 4335 | 675 | 60 |
+| 512 | 6883 | 759 | 60 |
+| 1024 | 9418 | 1452 | 60 |
+
+XOR14=60 from deep entries (d>=6), XOR14=0 from full catalog. Depth is a genuine computational resource. XOR16 is ZERO (genuine ceiling for Delta_1 at ell=2).
+
+**Provenance:** Demo 99, Phases 6 and 8.
+
+### XOR14 Super-Hub Structure
+
+| Hub | Entry | Depth | Writhe | a (Cyc8) | d (Cyc8) | b (Cyc8) | c (Cyc8) | Cartan L1 |
+|-----|-------|-------|--------|----------|----------|----------|----------|-----------|
+| 7 | idx=7 | d=6 | w=2 | (0,0,5,0) | (0,0,5,0) | (12,0,0,0) | (-2,0,0,0) | 0 |
+| 9 | idx=9 | d=6 | w=-6 | (0,0,-8,0) | (0,0,1,0) | (-3,0,0,0) | (-3,0,0,0) | 9 |
+
+Hub commutator: traceless, Cartan L1=84, e-root L1=108, f-root L1=18, e/f ratio=6.0. 100% of 60 winners contain both hubs. 100% mixed-depth (d=6+d=7). Star graph topology. 0/1 survive hub7 swap, 0/7 survive hub9 swap.
+
+**Provenance:** Demo 99, Phases 7/7b/7d.
+
+### Casimir Discriminant (Winner vs Control)
+
+| Metric | Winners | Control |
+|--------|---------|---------|
+| Mean |C|_L1 | 1301 | 297 |
+| Jordan blocks | 384/16384 | 816/16384 |
+
+Winners are 4.4x MORE semisimple than control. Computation happens in the semisimple layer.
+
+**Provenance:** Demo 99, Phase 7c.
+
+### Casimir Gap Scaling (Two-Regime Discovery)
+
+| XOR level | Winner |C| | Control |C| | Ratio |
+|-----------|-----------|-------------|-------|
+| XOR6 | 54 | 75 | 0.7x (INVERTED) |
+| XOR8 | 73 | 104 | 0.7x (INVERTED) |
+| XOR10 | 513 | 154 | 3.3x |
+| XOR12 | 892 | 219 | 4.1x |
+| XOR14 | 1301 | 245 | 5.3x |
+
+Phase transition at XOR8->XOR10 coincides with shallow->deep entry transition. Two regimes: Combinatorial (XOR6-8, nilpotent-proximate, shallow) and Algebraic (XOR10-14, Ext^1 catalytic, deep).
+
+**Provenance:** Demo 99, Phase 10.
+
+### BFS Growth (Fibonacci max_abs)
+
+| Round | Entries | max_abs |
+|-------|---------|---------|
+| 0 | 1 | - |
+| 1 | 5 | 1 |
+| 2 | 17 | 2 |
+| 3 | 47 | 3 |
+| 4 | 115 | 5 |
+| 5 | 263 | 8 |
+| 6 | 577 | 13 |
+| 7 | 1233 | 21 |
+| 8 | 2581 | 34 |
+| 9 | 5377 | 55 |
+| 10 | 8192 | 89 (hit cap) |
+
+max_abs follows exact Fibonacci: 1, 2, 3, 5, 8, 13, 21, 34, 55, 89.
+
+**Provenance:** Demo 99, Phase 1.
+
+### 2-Strand vs 3-Strand Comparison
+
+| Property | 2-strand (TL_2) | 3-strand (Delta_1) |
+|----------|-----------------|---------------------|
+| Group | Finite (cyclic, order 8) | Infinite (Jordan block) |
+| Module | Simple L(1) | Indecomposable Delta_1 |
+| Extension | None (semisimple) | Ext^1(L(0),L(1)) != 0 |
+| XOR topology | Mutual orthogonality graph | Star graph (2 hubs + sats) |
+| XOR ceiling | XOR12 (Cell B) | XOR14 (deep entries) |
+| Matched (N=24) | 1109 XOR6 | 527 XOR6 |
+
+2-strand wins at matched small size. 3-strand wins at scale (infinite catalog). Crossover ~100 entries.
+
+**Provenance:** Demo 99, Phase 4.
+
+---
+
+## 62. 4-Strand DKC on W_{4,2} — Demo 100
+
+### BFS Catalog Growth
+
+| Depth | New entries | Cumulative | Growth ratio | Max magnitude |
+|-------|------------|------------|--------------|---------------|
+| 0 | 1 | 1 | -- | 1 |
+| 1 | 6 | 7 | 6.00 | 1 |
+| 2 | 26 | 33 | 4.33 | 2 |
+| 3 | 98 | 131 | 3.77 | 3 |
+| 4 | 338 | 469 | 3.45 | 5 |
+| 5 | 1110 | 1579 | 3.28 | 8 |
+| 6 | 3444 | 5023 | 3.10 | 13 |
+| 7 | 10390 | 15413 | 3.02 | 21 |
+| 8 | 17355 | 32768 | 1.67* | 34 |
+
+*Truncated by 32768 cap. Growth stabilizes near 3.1x. sigma_1 max_abs grows linearly (n=k), confirming infinite order.
+
+**Provenance:** Demo 100, Phases 1-2.
+
+### XOR Capacity Scan (bf=30, First 30 Entries)
+
+| k_cells | XOR6 | XOR8 | XOR10 | XOR12 |
+|---------|------|------|-------|-------|
+| 64 | 1158 | 393 | 176 | 48 |
+| 128 | 1937 | 822 | 208 | 48 |
+| 256 | 2510 | 2376 | 251 | 48 |
+| 512 | 2961 | 6187 | 541 | 48 |
+
+Deep sub-catalog (d>=4, bf=30, k=128):
+
+| XOR level | Winners |
+|-----------|---------|
+| XOR6 | 2017 |
+| XOR8 | 1169 |
+| XOR10 | 654 |
+| XOR12 | 305 |
+| XOR14 | 70 |
+
+Deep entries SUSTAIN XOR capacity through XOR14=70.
+
+**Provenance:** Demo 100, Phase 3.
+
+### Radical/Casimir by Depth
+
+| Depth | mean_rad | mean_rMr | mean_C3 | Count |
+|-------|----------|----------|---------|-------|
+| 0 | 2 | 2 | 0 | 1 |
+| 1 | 2 | 2 | 0 | 6 |
+| 2 | 2 | 2 | 3 | 26 |
+| 3 | 2 | 2 | 7 | 98 |
+| 4 | 2 | 2 | 16 | 338 |
+| 5 | 2 | 2 | 36 | 1110 |
+| 6 | 2 | 2 | 80 | 3444 |
+| 7 | 2 | 2 | 176 | 10390 |
+| 8 | 2 | 2 | 308 | 17355 |
+
+Radical content CONSTANT (=2) at all depths. Casimir ~2x per round (exponential growth).
+
+**Provenance:** Demo 100, Phase 4.
+
+### Casimir-by-XOR-Level (Deep bf=30, k=128)
+
+| XOR level | Winners | Win C3 | Ctrl C3 | Ratio |
+|-----------|---------|--------|---------|-------|
+| XOR6 | 2017 | 64 | 47 | 1.36x |
+| XOR8 | 1169 | 93 | 50 | 1.86x |
+| XOR10 | 654 | 123 | 76 | 1.62x |
+| XOR12 | 305 | 148 | 103 | 1.44x |
+
+Winners consistently have HIGHER Casimir at all XOR levels. Radical content does NOT distinguish (14 vs 14).
+
+**Provenance:** Demo 100, Phase 4.
+
+### Super-Hub Anatomy (6 Hubs, >50% of 70 XOR14 Winners)
+
+| Hub | Entry | Freq% | Depth | Writhe | Trace (Cyc8) | |C3| | Frob L1 |
+|-----|-------|-------|-------|--------|--------------|------|---------|
+| 0 | 4 | 91.4% | 4 | 2 | (0,0,3,0) | 0 | 15 |
+| 1 | 5 | 91.4% | 4 | 2 | (0,0,6,0) | 36 | 19 |
+| 2 | 10 | 54.3% | 5 | 3 | (0,0,0,-7) | 56 | 17 |
+| 3 | 21 | 65.7% | 5 | 1 | (0,-5,0,0) | 20 | 19 |
+| 4 | 24 | 65.7% | 5 | -3 | (0,3,0,0) | 0 | 21 |
+| 5 | 25 | 54.3% | 5 | -1 | (0,0,0,5) | 20 | 11 |
+
+Hub pairing by Cyc8 component: {h0,h1} zeta_8^2, {h2,h5} zeta_8^3, {h3,h4} zeta_8.
+
+### Hub Commutators (All Traceless, All Radical_content = 0)
+
+| Pair | Trace | |C3| | Rad | Frob L1 |
+|------|-------|------|-----|---------|
+| [h0,h1] zeta_8^2 pair | (0,0,0,0) | 24 | 0 | 44 |
+| [h2,h5] zeta_8^3 pair | (0,0,0,0) | 426 | 0 | 55 |
+| [h3,h4] zeta_8 pair | (0,0,0,0) | 216 | 0 | 86 |
+| [h0,h3] top x mid | (0,0,0,0) | 96 | 0 | 84 |
+| [h0,h2] top x low | (0,0,0,0) | 384 | 0 | 84 |
+| [h3,h2] mid x low | (0,0,0,0) | 552 | 0 | 94 |
+
+Commutators annihilate the radical direction. Co-occurrence: 121 edges, 19/30 entries participate.
+
+**Provenance:** Demo 100, Phases 4-5.
+
+---
+
+## 63. 5-Strand DKC Scaling on W_{5,3} — Demo 101
+
+### Growth Rate Comparison (sl_d Thesis)
+
+| n (strands) | Demo | Module | dim | Generators | Growth rate | Predicted (sl_{n-1}) |
+|-------------|------|--------|-----|------------|-------------|---------------------|
+| 3 | D98 | TL_3 | 5x5 | 4 | ~2.2x | 2 (sl_2) |
+| 4 | D100 | W_{4,2} | 3x3 | 6 | ~3.1x | 3 (sl_3) |
+| 5 | D101 | W_{5,3} | 4x4 | 8 | ~4.0x | 4 (sl_4) |
+
+Growth rate CONFIRMED across 3 data points: tracks n-1 cleanly.
+
+**Provenance:** Demo 101, Phase 2 + D98/D100 comparison.
+
+### BFS Catalog Growth
+
+| Depth | New entries | Cumulative | Growth ratio | Max magnitude |
+|-------|------------|------------|--------------|---------------|
+| 0 | 1 | 1 | -- | 1 |
+| 1 | 8 | 9 | 8.00 | 1 |
+| 2 | 44 | 53 | 5.50 | 2 |
+| 3 | 206 | 259 | 4.68 | 3 |
+| 4 | 884 | 1143 | 4.29 | 5 |
+| 5 | 3600 | 4743 | 4.07 | 8 |
+| 6 | 14198 | 18941 | 3.94 | 13 |
+| 7 | 13827 | 32768 | 0.97* | 21 |
+
+*Truncated by 32768 cap. Converging toward ~4x per round.
+
+**Provenance:** Demo 101, Phase 1.
+
+### XOR Comparison — D100 (3x3, Non-Semisimple) vs D101 (4x4, Simple)
+
+Deep sub-catalog (d>=4, bf=30, k=128):
+
+| XOR level | D100 (W_{4,2}) | D101 (W_{5,3}) |
+|-----------|---------------|---------------|
+| XOR6 | 2017 | 2579 |
+| XOR8 | 1169 | 2228 |
+| XOR10 | 654 | 203 |
+| XOR12 | 305 | 27 |
+| XOR14 | 70 | 0 |
+
+D101 wins at XOR6-XOR8, D100 wins at XOR10-XOR14. Simple module = broader but shallower capacity. Non-semisimple extension is computationally load-bearing at depth.
+
+**Provenance:** Demo 101, Phase 3.
+
+### XOR Capacity K-Sweep (bf=30, First 30 Entries)
+
+| k_cells | XOR6 | XOR8 | XOR10 | XOR12 |
+|---------|------|------|-------|-------|
+| 64 | 1916 | 1330 | 732 | 441 |
+| 128 | 2600 | 3316 | 844 | 441 |
+| 256 | 3080 | 7918 | 1876 | 465 |
+| 512 | 3297 | 12229 | 5729 | 512 |
+
+XOR14 at all k values (256-4096): ZERO.
+
+**Provenance:** Demo 101, Phase 3.
+
+### Casimir Inversion (Simple Module vs Non-Semisimple)
+
+Casimir-by-XOR-level (deep bf=30, k=128):
+
+| XOR level | Winners | Win C4 | Ctrl C4 | Ratio |
+|-----------|---------|--------|---------|-------|
+| XOR6 | 2579 | 55 | 47 | 1.17x |
+| XOR8 | 2228 | 71 | 47 | 1.51x |
+| XOR10 | 203 | 57 | 64 | 0.89x |
+| XOR12 | 27 | 43 | 79 | 0.54x |
+
+INVERSION at XOR10-12: winners have LOWER Casimir. In D100 (non-semisimple) all ratios > 1 (1.36x-1.86x). Simple modules select for near-scalar entries at hard XOR levels.
+
+Casimir by depth:
+
+| Depth | mean_C4 | Count |
+|-------|---------|-------|
+| 0 | 0 | 1 |
+| 1 | 0 | 8 |
+| 2 | 4 | 44 |
+| 3 | 9 | 206 |
+| 4 | 20 | 884 |
+| 5 | 41 | 3600 |
+| 6 | 83 | 14198 |
+| 7 | 118 | 13827 |
+
+~2x per round, matching D100 pattern.
+
+**Provenance:** Demo 101, Phase 4.
+
+### Super-Hub Anatomy (3 Hubs, >1/3 of 203 XOR10 Winners)
+
+| Hub | Entry | Freq% | Depth | Writhe | Trace (Cyc8) | |C4| | Frob L1 |
+|-----|-------|-------|-------|--------|--------------|------|---------|
+| 0 | 0 | 42.9% | 4 | 4 | (-4,0,0,0) | 0 | 8 |
+| 1 | 26 | 67.5% | 5 | 5 | (0,4,0,0) | 0 | 9 |
+| 2 | 27 | 70.0% | 5 | 3 | (0,0,0,-5) | 11 | 12 |
+
+Only 3 hubs (sl_4 prediction of 12 FALSIFIED). Hubs 0,1 have |C4|=0 (nearly scalar). Hub commutators: ALL are the zero matrix (all 3 hubs MUTUALLY COMMUTE). Much stronger than D100's tracelessness.
+
+XOR12 hub dominance (27 winners): entries 0, 26, 27 each at 96.3% frequency.
+
+Co-occurrence: 247 edges, 30/30 entries participate. NOT a star topology.
+
+**Provenance:** Demo 101, Phase 5.
+
+---
+
 ## 12. Demo Test Counts (Extended)
 
 | Demo | Tests | Status |
@@ -2898,7 +3456,14 @@ z12 truncated: depth<=2, 51 entries, 22 directions, 276 cells. Crossover at N=6:
 | 92 | 13/16 | COMPLETE (3 informative fails) |
 | 93 | 37/37 | COMPLETE (LANDMARK) |
 | 94 | 20/20 | COMPLETE (RESULT) |
+| 95 | 19/19 | COMPLETE (RESULT) |
+| 96 | 14/14 | COMPLETE (LANDMARK) |
+| 97 | 8/8 | COMPLETE (RESULT) |
+| 98 | 10/10 | COMPLETE (RESULT) |
+| 99 | 24+/24+ | COMPLETE (LANDMARK) |
+| 100 | 36/36 | COMPLETE (RESULT) |
+| 101 | 44/44 | COMPLETE (RESULT) |
 
 **Provenance:** Demo index, all entries.
 
-*Generated 2026-02-20 from demo-index.md (2845 lines) and explorers-log.md (1273 lines). Updated with Demos 38, 39, 60. Updated 2026-02-21 with Demos 64–71. Updated 2026-02-21 with Demos 72–82. Updated 2026-02-21 with Demos 83–84. Updated 2026-02-23 with Demos 85–92. Updated 2026-02-24 with Demos 93–94.*
+*Generated 2026-02-20 from demo-index.md (2845 lines) and explorers-log.md (1273 lines). Updated with Demos 38, 39, 60. Updated 2026-02-21 with Demos 64–71. Updated 2026-02-21 with Demos 72–82. Updated 2026-02-21 with Demos 83–84. Updated 2026-02-23 with Demos 85–92. Updated 2026-02-24 with Demos 93–94. Updated 2026-02-24 with Demos 95–101.*

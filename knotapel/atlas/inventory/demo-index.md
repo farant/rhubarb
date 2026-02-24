@@ -1,6 +1,6 @@
 # Demo Index
 
-82 demos cataloged. Generated 2026-02-20. Updated 2026-02-24 (added D93-D94: complement-blindness theorem + circuit complexity hierarchy LANDMARK, binary icosahedral group 2I solvability bottleneck).
+89 demos cataloged. Generated 2026-02-20. Updated 2026-02-24 (added D95-D101: commutator depth, TL-group cross-classification LANDMARK, Cell B perfection, 3-strand DKC proof-of-concept, 3-strand Delta_1 LANDMARK, 4-strand W_{4,2}, 5-strand W_{5,3} sl_d functor thesis).
 
 ---
 
@@ -5203,3 +5203,1138 @@ The binary icosahedral group 2I (order 120, unique non-solvable finite SU(2) sub
 - Higher k_sec with 2I: does 384-cell space fully exploit 9 half-angles?
 - N=6-7 crossover mechanism: why does 2I overtake z12 specifically there?
 - Size vs solvability disentangling: 2I truncated to 51 entries vs z12 at 51
+
+---
+
+## Demo 95: Commutator Depth and XOR Capacity
+
+- **Status**: COMPLETE (RESULT)
+- **File**: `demo_95_commutator_depth/main.c` (~1242 lines)
+- **Tests**: 19 pass, 0 fail (Phases 1-4 + 3b)
+- **Depends on**: Demo 94 (binary icosahedral 2I vs solvable z8, solvability bottleneck confirmed), Demo 93 (1wpi phase_cell framework, circuit complexity hierarchy), Demo 84 (0+0=36 null synergy), Demo 88 (anti-correlation, load-bearing non-null directions), Demo 89 (depth law: max_xor ~ depth + 6)
+- **Feeds into**: Demo 96 (TL-group cross-classification: are D84 null/non-null and D95 derived series the same partition?), unify D84/D95 synergy, cross-depth synergy matrix (all 4 level-pairs of derived series), RKHS kernel rank (does kernel rank predict synergy?), zeta_12 stratification question
+
+### Headline
+The commutator structure of solvable vs non-solvable groups is made VISIBLE through derived series computation and subset XOR capacity testing. The key result: neither the commutator subgroup nor the non-commutator coset carries disproportionate XOR capacity in isolation. Computational power emerges from CROSS-LAYER interaction between algebraic strata. This is the same 0+0>0 synergy pattern as D84, now traced to its algebraic origin.
+
+### Key Results
+
+- **Phase 1 -- Commutator Classification (5 tests)**: z8 (binary octahedral, 24 bracket values): 12/24 entries are single commutators (exactly the binary tetrahedral 2T subgroup). G1 (commutator subgroup) = 12 entries. G0\G1 (non-commutator coset) = 12 entries. 2I (binary icosahedral, 60 bracket values): 60/60 entries are single commutators -- PERFECT GROUP confirmed computationally. Matches Liebeck-O'Brien-Shalev-Tiep (2011): since 2I is isomorphic to SL(2,5), every element is a commutator.
+- **Phase 2 -- Derived Series (5 tests)**: z8 derived series: 24 > 12 > 4 > 1. Matches the chain 2O > 2T > Q8 > {+/-1} (binary octahedral > binary tetrahedral > quaternion group > center). Level membership partition: Level 0 (D0\D1) = 12 entries (outermost, non-commutator), Level 1 (D1\D2) = 8 entries (first commutator layer), Level 2 (D2\D3) = 3 entries (deep commutator, Q8), Level 3 (D3) = 1 entry (identity). 2I: G1 = G0 = 60 -> PERFECT. Derived series terminates immediately. First direct computation of this partition in the DKC context.
+- **Phase 3 -- COMM vs NON-COMM XOR Capacity (3 tests)**: COMM (G1, 12 entries) and NON-COMM (G0\G1, 12 entries) perform SIMILARLY in isolation (~1.1x COMM edge). But ALL(24) dramatically outperforms both -- 2.7x the rate at N=5. The computational power is in the CROSS-TERMS between solvable layers, not in either layer alone. This is the same DKC synergy mechanism as D84's 0+0=36. COMM survives at N=7 (1.01%) while NON-COMM dies (0%) -- algebraic depth provides last-resort structure at the computational boundary.
+- **Phase 3b -- 90-Degree Split Test (3 tests)**: 9 bracket-null entries (half-angle 90 degrees, Re=0) come from TWO derived levels: 3 from Q8 (algebraically deep, D2) and 6 from outermost shell (algebraically shallow, D0). Same half-angle, different algebraic origin. Q8-null (3 entries): XOR = 0 at all N. Outermost-null (6 entries): XOR = 0 at all N. All-null combined (9 entries): XOR = 33/126 = 26.19% at N=4, zero elsewhere. NEITHER subset can do XOR alone. Only the MIX produces capacity. Cleanest synergy demonstration in the project: pure 0+0=26% at matched geometry. Algebra wins over geometry.
+- **Phase 4 -- Matched Comparison z8-COMM-12 vs 2I-first-12 (3 tests)**: 2I-first-12 crushes z8-COMM at N=3-5 (1.56x to 2.15x). Crossover at N=6-7 mirrors D94 Phase 4 pattern (z8-COMM slightly leads at N=6 with 6.28% vs 5.95%). Non-solvable 2I wins at matched size because it has no stratification bottleneck -- every element is a commutator, so all 60 entries participate equally.
+
+### Theorems/Conjectures
+
+- **Cross-Layer Synergy Mechanism (DEMONSTRATED computationally)**: Neither the commutator subgroup (COMM) nor the non-commutator coset (NON-COMM) of z8 carries disproportionate XOR capacity. Capacity emerges from mixing algebraic strata. The Barrington mechanism works through CROSSING between algebraic layers, not through commutators alone.
+- **Solvability Bottleneck via Stratification (REFINED from D94)**: Solvable groups waste combinatorial budget on cross-layer constraints. Having derived series layers forces cross-layer dependence which constrains how many useful signed sums exist. 2I's perfection (G1=G0) means every pair (i,j) contributes commutator-quality interference. Solvability bottleneck operates THROUGH stratification.
+- **90-Degree Algebra-over-Geometry (DEMONSTRATED)**: Within the same half-angle (90 degrees), algebraic origin creates computational capacity. Entries from Q8 (D2) and outermost shell (D0) are geometrically identical but algebraically distinct. Neither subset alone produces XOR solutions, but their union does. Geometry is necessary but not sufficient; algebraic depth is the active ingredient.
+- **Synergy Universality Conjecture (PROPOSED)**: D84 synergy (TL null/non-null = 0+0=36) and D95 synergy (derived series layers = 0+0=26%) may be the same algebraic split seen through different lenses. Seeded D96 to test this.
+
+### Data
+
+**z8 group structure (Phase 1-2):**
+- |z8| = 24 bracket values (binary octahedral 2O, order 48 mod sign)
+- Generators: g1 = (sqrt2/2)(1 + i), g2 = (sqrt2/2)(1 - k), plus their conjugates
+- 12/24 entries are single commutators
+- G1 (commutator subgroup) = 12 entries (binary tetrahedral 2T)
+- Derived series: 24 > 12 > 4 > 1
+
+**z8 derived series level membership:**
+
+| Level | Size | Algebraic identity |
+|-------|------|--------------------|
+| D0\D1 | 12 | Outermost, non-commutator |
+| D1\D2 | 8 | First commutator layer (2T\Q8) |
+| D2\D3 | 3 | Deep commutator (Q8\center) |
+| D3 | 1 | Identity |
+
+**2I group structure (Phase 1):**
+- |2I| = 60 bracket values (binary icosahedral, order 120 mod sign)
+- 60/60 entries are single commutators -- PERFECT GROUP
+- Derived series: 60 = 60 (terminates immediately)
+
+**Phase 3 -- COMM vs NON-COMM vs ALL XOR hit rates:**
+
+| N | COMM(12) | NON-COMM(12) | ALL(24) | COMM/NONC |
+|---|----------|--------------|---------|-----------|
+| 3 | 48.64% | 42.73% | 71.94% | 1.14x |
+| 4 | 44.04% | 51.52% | 75.04% | 0.85x |
+| 5 | 15.15% | 13.64% | 40.76% | 1.11x |
+| 6 | 6.28% | 5.63% | 9.64% | 1.12x |
+| 7 | 1.01% | 0.00% | 0.18% | inf |
+
+**Phase 3b -- 90-degree split (Re=0 entries, matched half-angle):**
+
+| Subset | Size | N=3 XOR | N=4 XOR | N=5 XOR | N=6 XOR |
+|--------|------|---------|---------|---------|---------|
+| Q8-null (D2) | 3 | 0 | 0 | 0 | 0 |
+| Outermost-null (D0) | 6 | 0 | 0 | 0 | 0 |
+| All-null (mixed) | 9 | 0 | 33/126 = 26.19% | 0 | 0 |
+
+**Phase 4 -- Matched comparison (12 entries each):**
+
+XOR hit rates:
+
+| N | z8-COMM (12) | 2I-first-12 | ratio (2I/z8) |
+|---|-------------|-------------|---------------|
+| 3 | 48.64% | 75.91% | 1.56x |
+| 4 | 44.04% | 72.12% | 1.64x |
+| 5 | 15.15% | 32.58% | 2.15x |
+| 6 | 6.28% | 5.95% | 0.95x |
+| 7 | 1.01% | 0.00% | 0.00x |
+
+### Code Assets
+
+- **`Zr2` (Z[sqrt2] ring arithmetic)**: Exact integer type representing a + b*sqrt(2). Operations: `zr2_make`, `zr2_add`, `zr2_sub`, `zr2_neg`, `zr2_mul`, `zr2_eq`, `zr2_div2`. Multiplication uses sqrt(2)^2 = 2. Reusable for any computation in Z[sqrt2].
+- **`QZ8` (quaternion over Z[sqrt2])**: Four-component quaternion with Zr2 entries (representing (a + b*sqrt2)/2 per component). Operations: `qz8_make`, `qz8_eq`, `qz8_neg`, `qz8_conj`, `qz8_mul`. Multiplication includes `zr2_div2` for /4 -> /2 renormalization. Exact arithmetic, no floating point in group operations.
+- **`Zr5` / `Q2I` (from D94)**: Z[sqrt5] ring and quaternion arithmetic for binary icosahedral group. Carried forward unchanged.
+- **`build_z8(verbose)`**: BFS closure of binary octahedral group from generators (sqrt2/2)(1+i) and (sqrt2/2)(1-k) plus conjugates. Stores elements in global array with depth tracking. Handles mod-sign identification (48 elements -> 24 bracket values).
+- **`build_2i(verbose)`**: BFS closure of binary icosahedral group from generators s and t (from D94). 120 elements -> 60 bracket values.
+- **`z8_commutator(a, b)` / `i2_commutator(a, b)`**: Compute [a,b] = a*b*a^{-1}*b^{-1} for z8 and 2I respectively. Uses conjugate as inverse (unit quaternions).
+- **`close_z8_subgroup(in_set)`**: Takes a subset indicator array, closes under multiplication and inverse to produce a subgroup. Used for derived series computation. Returns size of closed subgroup.
+- **`phase1_commutators()`**: Enumerates all single commutators [g_i, g_j] in both z8 and 2I. Classifies each group element as commutator or not. Verifies 2I is perfect (all elements are commutators).
+- **`phase2_derived_series()`**: Iteratively computes derived series G0 > G1 > G2 > ... by taking commutator subgroup at each level. Tracks level membership (which derived layer each element belongs to). Verifies z8 series terminates at 1 and 2I is perfect.
+- **`phase3_capacity_comparison()`**: Tests XOR and AND capacity for COMM subset, NON-COMM subset, and full z8 group independently. Uses 1wpi phase_cell framework with k_sec shortlist {6, 12, 24}. Produces comparison table with hit rates.
+- **`phase3b_ninety_degree_split()`**: Isolates Re=0 (90-degree half-angle) entries and splits them by derived series level (Q8-level vs outermost). Tests each subset and their union for XOR. Demonstrates algebra-over-geometry synergy.
+- **`phase4_matched_comparison()`**: Size-controlled comparison: z8-COMM (12 entries) vs first 12 entries from 2I (by BFS depth). Tests XOR and AND. Demonstrates 2I advantage at matched size using the commutator subset as the solvable baseline.
+- **`load_z8_subset(mask)` / `load_2i_first_n(n)`**: Catalog loading helpers that populate the global float catalog from subset masks or first-N selection.
+- **`qz8_to_float()` / `q2i_to_float()`**: Convert exact algebraic quaternions to floating-point Quat for use with 1wpi phase_cell framework. Shared with D94.
+- **`phase_cell()` / `vor_cell()` / `build_dirs()` / `count_phase_ex()`**: 1wpi activation and testing infrastructure. Shared pattern across D92-D95.
+- **`make_xor_tt()` / `make_and_tt()`**: Truth table generators for XOR and AND Boolean functions.
+- **`next_combo()` / `comb_nk()`**: Combinatorial utilities for exhaustive weight-tuple enumeration.
+
+### Literature Touched
+
+- **Barrington (1989) -- branching programs over groups**: NC1 = programs over non-solvable groups. D95 refines the mechanism: the bottleneck is not that commutators are individually weaker, but that stratification (having derived series layers) forces cross-layer dependence which wastes combinatorial budget. Non-solvable groups avoid this by being perfect (G1=G0).
+- **Liebeck, O'Brien, Shalev, Tiep (2011) -- Ore conjecture for finite simple groups**: Every element of a finite simple group is a commutator. Computationally confirmed for 2I (isomorphic to SL(2,5) / perfect group): 60/60 bracket values are single commutators.
+- **ADE classification of finite SU(2) subgroups**: z8 derived series 24 > 12 > 4 > 1 corresponds exactly to 2O > 2T > Q8 > {+/-1} in the ADE chain (E7 > E6 > D4 > A1). First direct computation of this partition in the DKC context.
+- **Barrington mechanism (refinement from D95)**: Cross-layer interaction, not commutators in isolation, is the active mechanism. The commutator subgroup and its coset have nearly equal XOR capacity when tested alone. The 2.7x boost from ALL(24) over either 12-element subset demonstrates that the signed-sum interference between algebraic strata is load-bearing.
+- **Habiro (2002) / Z[zeta_8] bracket**: Algebraic substrate for the z8 group; D95 uses exact Z[sqrt2] arithmetic to compute derived series without floating-point error.
+
+### Open Questions
+
+- **Are D84 and D95 synergy the same split?** D84 synergy (TL null/non-null = 0+0=36) and D95 synergy (derived series layers = 0+0=26%) -- are they the same algebraic partition seen through different lenses, or independent? (Directly seeded D96.)
+- **Cross-depth synergy matrix**: For z8, test ALL level-pair combinations (D0xD1, D0xD2, D1xD2, etc.) to map which crossings are most productive. The 90-degree split (Phase 3b) tested D0xD2; the full matrix would reveal the synergy landscape.
+- **Layer combination map**: Which 2-layer and 3-layer combinations of derived series produce the most synergy? Is there a hierarchy of layer crossings?
+- **RKHS kernel rank**: Does kernel rank predict synergy? If the kernel rank of the COMM+NON-COMM union exceeds the sum of individual ranks, that would mathematically quantify the cross-term mechanism.
+- **zeta_12 stratification**: Does the dense (non-solvable, infinite) group have algebraic strata? If not, does that explain its high capacity?
+- **N=7 COMM survival mechanism**: COMM survives at N=7 (1.01%) while NON-COMM dies (0%). What structural property of the commutator subgroup (2T) provides this last-resort capacity? Is it related to 2T's own commutator structure (Q8)?
+
+---
+
+## Demo 96: TL-Group Cross-Classification — 2D Synergy Landscape
+
+- **Status**: COMPLETE (LANDMARK)
+- **File**: `demo_96_tl_group_cross/main.c` (~1022 lines)
+- **Tests**: 14 pass, 0 fail (Phases 1-4)
+- **Depends on**: Demo 84 (null/non-null split, 9/15 partition), Demo 95 (derived series, 12/8/3/1 partition, Z[sqrt2] quaternion arithmetic, QZ8 type), Demo 93 (circuit complexity hierarchy, 1wpi framework), Demo 88 (anti-correlation, body-diagonal directions)
+- **Feeds into**: Demo 97 (Cell B perfection analysis), catalog pruning for 2I (D94 follow-up), cross-derived synergy principle as general DKC design rule
+
+### Headline
+The D84 null/non-null split and the D95 derived series split are INDEPENDENT partitions of the z8 bracket values. Their 2D cross-product creates a 5-cell landscape (A through E) that fully explains which entries carry computational capacity, which are synergy enhancers, and which are noise. The optimal z8 catalog is A+B+C (21 entries), not ALL (24) — removing the 3 Q8-null entries IMPROVES capacity.
+
+### Key Results
+
+- **Phase 1 — Cross-Tabulation (8 tests)**: The 24 z8 bracket values partition into 5 cells: A = D0-null (6 entries, half-angle 90 deg), B = D0-nonnull (6 entries, 45 deg), C = D1-nonnull (8 entries, 60 deg, 2T commutators), D = D2-null (3 entries, 90 deg, Q8 deep), E = D3-identity (1 entry, 0 deg). Cross-checks: null total (A+D) = 9, commutator total (C+D+E) = 12, non-commutator total (A+B) = 12, grand total = 24. All counts verified exact.
+
+- **Phase 2 — Individual Cell Capacity (1 test)**: Cell B achieves 100% XOR at EVERY N (3 through 6) with only 6 entries and 3 directions. Cell C achieves 100% at N=3,4 but drops to 42.86% at N=5 and 57.14% at N=6 (4 directions). Null cells A and D are completely dead individually (0% at all N). The rule: non-null is necessary AND sufficient for individual capacity; among non-null cells, 45 deg (B) outperforms 60 deg (C).
+
+- **Phase 3 — Pairwise Synergy Matrix (2 tests)**: B+C wins at EVERY N despite having fewer directions (7) than A+B (9) or A+C (10). B+C rates: 96.70% (N=3), 94.01% (N=4), 73.18% (N=5), 31.00% (N=6). A+D (both null, 90 deg) is worst pair: 0% at N=3,5,6 with only 26.19% at N=4. Dimension analysis shows crossing the null boundary matters more than crossing the derived boundary at every N.
+
+- **Phase 4 — Triple Combinations (2 tests)**: A+B+C (skip Q8/D) BEATS the full ALL(24) at EVERY N: 74.06% vs 71.94% (N=3), 77.51% vs 75.04% (N=4), 45.10% vs 40.76% (N=5), 12.98% vs 9.64% (N=6). The 3 Q8-deep-null entries are noise that actively degrades capacity. Missing cell impact: C (2T) is most important at N=3-5 (removing it loses 18-25%), B (D0-nonnull) is most important at N=6.
+
+### Theorems/Conjectures
+
+- **Two Independent Stratifications (CONFIRMED)**: The bracket-null/non-null partition (9/15 from D84) and the derived series partition (12/8/3/1 from D95) cut ACROSS each other, creating a genuine 2D classification. Confirmed by character table analysis of 2O (8 conjugacy classes, Kirillov-Ostrik 2002). Independence at element level, unity at categorical level via ADE/E7 Dynkin diagram.
+
+- **Non-null = Load-bearing (CONFIRMED)**: Null cells carry zero individual XOR capacity. Non-null is necessary AND sufficient for solo capacity. This sharpens D84's "null indispensability" finding: Cell A (D0-null, outermost) enhances synergy when combined with non-null cells; Cell D (Q8-null, deep) is pure noise.
+
+- **Cross-derived Synergy Principle (CONFIRMED)**: Non-null entries from DIFFERENT derived levels (B from D0, C from D1) produce maximum synergy. B+C dominates all 6 pairwise combinations at every N tested.
+
+- **Catalog Pruning Principle (PROPOSED)**: For any DKC group, prune bracket-null entries in deep derived subgroups. Quality > quantity. Optimal z8 catalog is 21 entries (A+B+C), not 24 (ALL). Testable prediction: analogous pruning improves 2I capacity.
+
+- **Prediction Scoreboard**: Three pre-computation predictions tested. Barrington depth=capacity: WRONG (B beats C, A=D=0, depth hurts). Angular diversity outer>inner: HALF RIGHT (B is best but A is also outer and dead). Dual-info both-dimensions: CLOSEST (B>C>>A=D confirmed, but null/non-null binary distinction overpowers derived dimension).
+
+### Data
+
+**Phase 1 — Cross-tabulation (5 cells):**
+
+| Cell | Description | Count | Half-angle | Derived | Null? |
+|------|-------------|-------|------------|---------|-------|
+| A | D0-null (outermost, bracket-null) | 6 | 90 deg | D0 | Yes |
+| B | D0-nonnull (outermost, non-null) | 6 | 45 deg | D0 | No |
+| C | D1-nonnull (2T commutators) | 8 | 60 deg | D1 | No |
+| D | D2-null (Q8 deep) | 3 | 90 deg | D2 | Yes |
+| E | D3-identity | 1 | 0 deg | D3 | No |
+
+Cross-checks: Null total (A+D) = 9, COMM total (C+D+E) = 12, NONCOMM total (A+B) = 12, Grand total = 24.
+
+**Phase 2 — Individual cell XOR capacity:**
+
+| Cell | Size | Dirs | N=3 | N=4 | N=5 | N=6 |
+|------|------|------|-----|-----|-----|-----|
+| A (D0-null) | 6 | 6 | 0/20 (0.00%) | 0/15 (0.00%) | 0/6 (0.00%) | 0/1 (0.00%) |
+| B (D0-nonnull) | 6 | 3 | 20/20 (100.00%) | 15/15 (100.00%) | 6/6 (100.00%) | 1/1 (100.00%) |
+| C (D1-nonnull) | 8 | 4 | 56/56 (100.00%) | 70/70 (100.00%) | 24/56 (42.86%) | 16/28 (57.14%) |
+| D (D2-null) | 3 | 3 | 0/1 (0.00%) | n/a | n/a | n/a |
+| E (D3-identity) | 1 | 0 | n/a | n/a | n/a | n/a |
+
+**Phase 3 — Pairwise synergy XOR rates:**
+
+| Pair | Size | Dirs | N=3 | N=4 | N=5 | N=6 |
+|------|------|------|-----|-----|-----|-----|
+| A+B (outermost shell) | 12 | 9 | 94/220 (42.73%) | 255/495 (51.52%) | 108/792 (13.64%) | 52/924 (5.63%) |
+| A+C (cross both dims) | 14 | 10 | 168/364 (46.15%) | 750/1001 (74.93%) | 300/2002 (14.99%) | 40/3003 (1.33%) |
+| A+D (both null, 90-deg) | 9 | 9 | 0/84 (0.00%) | 33/126 (26.19%) | 0/126 (0.00%) | 0/84 (0.00%) |
+| B+C (both nonnull, cross derived) | 14 | 7 | 352/364 (96.70%) | 941/1001 (94.01%) | 1465/2002 (73.18%) | 931/3003 (31.00%) |
+| B+D (cross both dims) | 9 | 3 | 20/84 (23.81%) | 15/126 (11.90%) | 6/126 (4.76%) | 1/84 (1.19%) |
+| C+D (comm subgroup) | 11 | 7 | 80/165 (48.48%) | 162/330 (49.09%) | 96/462 (20.78%) | 34/462 (7.36%) |
+
+Best pair at every N: B+C.
+
+Dimension analysis (average rates for cross-category pairs):
+
+| N | CrossNull (A+B, C+D) | CrossDerived (A+C, B+D) |
+|---|----------------------|-------------------------|
+| 3 | 45.61% | 34.98% |
+| 4 | 50.30% | 43.41% |
+| 5 | 17.21% | 9.87% |
+| 6 | 6.49% | 1.26% |
+
+CrossNull > CrossDerived at every N: the null/non-null boundary matters more than the derived level boundary.
+
+**Phase 4 — Triple combinations vs ALL:**
+
+| Subset | Size | Dirs | N=3 | N=4 | N=5 | N=6 |
+|--------|------|------|-----|-----|-----|-----|
+| ALL (A+B+C+D+E) | 24 | 13 | 1456/2024 (71.94%) | 7974/10626 (75.04%) | 17325/42504 (40.76%) | 12975/134596 (9.64%) |
+| A+B+C (skip Q8) | 21 | 13 | 985/1330 (74.06%) | 4639/5985 (77.51%) | 9178/20349 (45.10%) | 7043/54264 (12.98%) |
+| A+B+D (skip 2T) | 16 | 9 | 288/560 (51.43%) | 920/1820 (50.55%) | 976/4368 (22.34%) | 318/8008 (3.97%) |
+| A+C+D (skip D0nn) | 18 | 13 | 452/816 (55.39%) | 2007/3060 (65.59%) | 1977/8568 (23.07%) | 614/18564 (3.31%) |
+| B+C+D (skip D0null) | 18 | 7 | 613/816 (75.12%) | 2180/3060 (71.24%) | 2744/8568 (32.03%) | 1369/18564 (7.37%) |
+
+Missing cell impact (triple rate minus ALL rate):
+
+| Missing | N=3 | N=4 | N=5 | N=6 |
+|---------|-----|-----|-----|-----|
+| D (Q8) | +2.12% | +2.47% | +4.34% | +3.34% |
+| C (2T) | -20.51% | -24.49% | -18.42% | -5.67% |
+| B (D0nn) | -16.54% | -9.45% | -17.69% | -6.33% |
+| A (D0null) | +3.19% | -3.80% | -8.73% | -2.27% |
+
+Most important cell: C (2T) at N=3-5, B (D0-nonnull) at N=6.
+
+### Code Assets
+
+- **`Zr2` (Z[sqrt2] ring arithmetic, from D95)**: Exact integer type representing a + b*sqrt(2). Operations: `zr2_make`, `zr2_add`, `zr2_sub`, `zr2_neg`, `zr2_mul`, `zr2_eq`, `zr2_div2`. Multiplication uses the identity sqrt(2)^2 = 2. Reused from D95 without modification.
+- **`QZ8` (quaternion over Z[sqrt2]/2, from D95)**: Four-component quaternion with Zr2 entries (representing (a + b*sqrt(2))/2 per component). Operations: `qz8_make`, `qz8_eq`, `qz8_neg`, `qz8_conj`, `qz8_mul`. Exact arithmetic, reused from D95.
+- **`qz8_to_float()`**: Converts exact Z[sqrt2] quaternion to floating-point `Quat` for use with phase_cell framework.
+- **`build_z8()`**: BFS closure from 4 generators (two generator pairs + conjugates). Produces 24 bracket values (mod sign).
+- **`z8_commutator()` / `close_z8_subgroup()` / `compute_derived_series()`**: Derived series computation: generates commutator subgroups, closes under multiplication, assigns derived level to each element. Produces the D0/D1/D2/D3 partition (12/8/3/1).
+- **`compute_null_classification()`**: Tests if scalar component (Re part) of each quaternion is zero. Produces the null/non-null partition (9/15).
+- **`compute_cells()`**: Cross-product of derived level x null classification -> 5-cell assignment (A through E). Core new contribution of D96.
+- **`load_cells(cell_mask)`**: Flexible subset loader: given a 5-element bitmask, loads the union of selected cells into the global catalog. Enables arbitrary cell combination testing.
+- **`run_subset_capacity()` / `print_subset_result()`**: Runs exhaustive XOR capacity test at N=3,4,5,6 for the currently loaded catalog. k_sec sweep over {6, 12, 24}. Reports hit counts, totals, and percentages.
+- **`build_dirs()` / `vor_cell()` / `phase_cell()`**: Voronoi direction extraction and 1wpi phase-cell activation framework. Shared with D93/D94/D95.
+- **`count_phase_ex()` / `next_combo()`**: Exhaustive combinatorial weight-tuple testing. Iterates all C(n,k) combinations.
+
+### Literature Touched
+
+- **Kirillov-Ostrik (2002) — character table of 2O**: 8 conjugacy classes of the binary octahedral group. The two stratifications (bracket-null/non-null = TL radical lens, derived series = group-theoretic) connect to E7 Dynkin diagram through different pathways — representation-theoretic for TL, group-theoretic for derived series. Independent at element level, unified at categorical level.
+- **Barrington (1989) — branching programs**: D96 partially refutes naive depth=capacity interpretation. Cell B (shallowest non-null, D0) is the BEST individual performer, while deeper cells (D, D2) are noise. Depth in the derived series HURTS capacity for null entries. The correct reading: non-solvability matters at the group level (D94), but within a solvable group, derived depth is secondary to the null/non-null distinction.
+- **D84 null indispensability (reinterpreted)**: The original finding that null entries are "indispensable" specifically refers to Cell A (D0-null, outermost). Cell D (Q8-null, deep) is not indispensable — it is noise. The null/non-null distinction is load-bearing only in combination with derived level.
+- **D95 COMM vs NONCOMM (reinterpreted)**: The near-equal capacity of commutator vs non-commutator subgroups in isolation is explained by contamination from null cells in both partitions. The true signal is B+C (non-null x cross-derived synergy), which was masked when averaging over all entries in each partition.
+
+### Open Questions
+
+- **Cell B perfection mechanism**: WHY does every combination of 6 Cell B entries compute XOR? What geometric/algebraic property of 3 mutually orthogonal directions at 45 deg half-angle makes this work? (Seeded as D97, now completed.)
+- **Catalog pruning for 2I**: Does removing analogous "noise" entries (bracket-null in deep derived subgroups) from the binary icosahedral group 2I improve its capacity? If the pruning principle is universal across DKC groups, this is a general optimization rule.
+- **Non-monotonicity of missing-cell impact**: Cell A (D0-null) shows +3.19% at N=3 (removing it helps) but -8.73% at N=5 (removing it hurts). Why does the synergy-enhancer role of outermost null entries depend on arity?
+- **BFS-as-braids dogfooding demo**: Seeded from researcher manifold report during D96 session.
+
+---
+
+## Demo 97: Why Is Cell B Perfect? — Geometric Robustness of Orthogonal-Frame XOR Separation
+
+- **Status**: COMPLETE (RESULT)
+- **File**: `demo_97_cell_b_perfect/main.c` (~815 lines)
+- **Tests**: 8 pass, 0 fail (Phases 1-4)
+- **Depends on**: Demo 96 (cell taxonomy, Cell B identification as D^0-nonnull with 100% XOR), Demo 95 (Z[sqrt2] + QZ8 arithmetic, derived series, phase_cell framework), Demo 84 (null = dead discovery)
+- **Feeds into**: Artificial perfect cell construction (can we build perfect cells for arbitrary groups?), 2I orthogonal structure analysis (do 2I entries show similar geometry?), 35-degree N=5 dip investigation (number-theoretic resonance?)
+
+### Headline
+Cell B's 100% XOR perfection at every N is NOT a fine-tuned algebraic coincidence — it is geometric inevitability from 3 mutually orthogonal directions at any half-angle in a ~50-degree robust plateau (25-75 degrees). The 45-degree half-angle is simply the midpoint of this zone. Perfection is the octahedron.
+
+### Key Results
+
+- **Phase 1 — Anatomy of Cell B (2 tests)**: Cell B = 6 entries from the z8 group (24 bracket values) at derived level 0, non-null. Structure: 3 mutually orthogonal directions (i, j, k axes) x 2 signs (+-q) per direction. All at half-angle 45 degrees (cos = sin = sqrt(2)/2, exact Z[sqrt2] representation: (0,1)/2). Direction pair angles: ALL 90 degrees. Entries per direction: exactly 2. Geometry = regular octahedron on S^2 (most symmetric 6-point arrangement). Cell B is NOT closed under multiplication — products escape to other cells (e.g., B[0]*B[0] lands at derived level 2).
+- **Phase 2 — Exhaustive Separation Analysis at N=3 (2 tests)**: All 20 3-combinations of 6 entries pass XOR (100%). Cell-index margin at k=12: min=4, max=8, mean=5.6. Separation is substantial, not marginal — XOR=0 and XOR=1 signed sums land in well-separated phase_cell regions.
+- **Phase 3 — Angle Sensitivity Sweep (1 test)**: Same 3 orthogonal directions tested at 21 half-angles from 10 to 90 degrees. Wide perfection plateau: 25-75 degrees achieves 100% at ALL N through N=6. 45 degrees is NOT a critical value — the midpoint of a ~50-degree robust zone. Boundary effects: low angles (<25 degrees) lose N=5 first (imaginary differences shrink), high angles (>75 degrees) lose N=6 first (approaching null collapse), 90 degrees = total collapse (zero real component, phase_cell blind). Isolated anomaly at 35 degrees: N=5 drops to 0% while N=3,4,6 remain 100%.
+- **Phase 4 — Large N Test (2 tests)**: 100% XOR at ALL N from 3 through 6 (exhaustive — every combination passes). N=3: 20/20, N=4: 15/15, N=5: 6/6, N=6: 1/1. Beyond N=6, C(6,N) = 0 so the catalog is fully exhausted.
+
+### Theorems/Conjectures
+
+- **Geometric Perfection Thesis (CONFIRMED computationally)**: XOR perfection at Cell B arises from orthogonal direction separation, not algebraic fine-tuning. The 50-degree angle plateau (25-75 degrees) demonstrates that any half-angle in this range produces identical 100% results — the mechanism is geometric inevitability from the orthonormal frame, not a magic-number coincidence.
+- **Lever Arm Mechanism (DEMONSTRATED)**: Nonzero real component of the quaternion provides the "lever arm" for phase_cell to distinguish XOR=0 from XOR=1 signed sums. At 90 degrees (null), real component = 0, lever arm vanishes, total separation collapse. This geometrically explains D96's finding that null entries are dead and non-null entries are load-bearing.
+- **Octahedral Optimality (OBSERVED)**: 6 points forming a regular octahedron on S^2 is the maximally symmetric arrangement for 6 points — maximal mutual separation. This is the geometric reason Cell B outperforms other cells.
+- **35-Degree N=5 Resonance (OPEN)**: Isolated failure at 35 degrees for N=5 only (N=3,4,6 all 100%). Possibly related to C(6,5) = 6 creating exact cancellation at this angle. Number-theoretic origin unresolved.
+
+### Data
+
+**Cell B entries (exact Z[sqrt2] representation, all components /2):**
+
+| # | a(Zr2) | b(Zr2) | c(Zr2) | d(Zr2) | Direction | Float (a,b,c,d) |
+|---|--------|--------|--------|--------|-----------|-----------------|
+| 0 | (0,1) | (0,1) | (0,0) | (0,0) | +i | (0.7071, +0.7071, 0, 0) |
+| 1 | (0,1) | (0,-1) | (0,0) | (0,0) | -i | (0.7071, -0.7071, 0, 0) |
+| 2 | (0,1) | (0,0) | (0,0) | (0,-1) | -k | (0.7071, 0, 0, -0.7071) |
+| 3 | (0,1) | (0,0) | (0,0) | (0,1) | +k | (0.7071, 0, 0, +0.7071) |
+| 4 | (0,1) | (0,0) | (0,1) | (0,0) | +j | (0.7071, 0, +0.7071, 0) |
+| 5 | (0,1) | (0,0) | (0,-1) | (0,0) | -j | (0.7071, 0, -0.7071, 0) |
+
+**Direction structure:**
+- d0 = (1, 0, 0) — i axis
+- d1 = (0, 0, -1) — -k axis
+- d2 = (0, 1, 0) — j axis
+- All direction pair angles: 90.00 degrees (mutually orthogonal)
+- 2 entries per direction (antipodal coverage)
+
+**Phase 2 — Exhaustive separation at N=3 (k=12):**
+
+| Metric | Value |
+|--------|-------|
+| XOR pass | 20/20 (100%) |
+| Cell-index margin (min) | 4 |
+| Cell-index margin (max) | 8 |
+| Cell-index margin (mean) | 5.6 |
+
+**Phase 3 — Angle sensitivity sweep (6 quaternions, 3 orthogonal directions, varying half-angle):**
+
+| Half-angle | N=3 XOR% | N=4 XOR% | N=5 XOR% | N=6 XOR% |
+|------------|----------|----------|----------|----------|
+| 10 | 100% | 20% | 0% | 100% |
+| 15 | 100% | 100% | 0% | 100% |
+| 20 | 100% | 100% | 0% | 100% |
+| 25 | 100% | 100% | 100% | 100% |
+| 30 | 100% | 100% | 100% | 100% |
+| 35 | 100% | 100% | 0% | 100% |
+| 40 | 100% | 100% | 100% | 100% |
+| 42 | 100% | 100% | 100% | 100% |
+| 44 | 100% | 100% | 100% | 100% |
+| 45 | 100% | 100% | 100% | 100% |
+| 46 | 100% | 100% | 100% | 100% |
+| 48 | 100% | 100% | 100% | 100% |
+| 50 | 100% | 100% | 100% | 100% |
+| 55 | 100% | 100% | 100% | 100% |
+| 60 | 100% | 100% | 100% | 100% |
+| 65 | 100% | 100% | 100% | 100% |
+| 70 | 100% | 100% | 100% | 100% |
+| 75 | 100% | 100% | 100% | 100% |
+| 80 | 100% | 100% | 100% | 0% |
+| 85 | 100% | 0% | 0% | 0% |
+| 90 | 0% | 0% | 0% | 0% |
+
+Full perfection plateau (all N through 6): 25-75 degrees (~50 degree range).
+N=3 perfection range: 10-85 degrees. N=3 first fails at 90 degrees.
+
+**Phase 4 — Large N test (Cell B, 6 entries, 3 directions):**
+
+| N | C(6,N) | XOR count | XOR% |
+|---|--------|-----------|------|
+| 3 | 20 | 20 | 100% |
+| 4 | 15 | 15 | 100% |
+| 5 | 6 | 6 | 100% |
+| 6 | 1 | 1 | 100% |
+
+100% at ALL N through N=6 (exhaustive). Beyond N=6, C(6,N) = 0.
+
+### Code Assets
+
+- **`Zr2` (Z[sqrt2] ring arithmetic)**: Exact integer type representing a + b*sqrt(2). Operations: `zr2_make`, `zr2_add`, `zr2_sub`, `zr2_neg`, `zr2_mul`, `zr2_eq`, `zr2_div2`. Multiplication uses sqrt(2)^2 = 2. Reused from D95.
+- **`QZ8` (quaternion over Z[sqrt2])**: Four-component quaternion with Zr2 entries (each representing (a + b*sqrt(2))/2). Operations: `qz8_make`, `qz8_eq`, `qz8_neg`, `qz8_conj`, `qz8_mul`. Exact integer arithmetic throughout group operations. Reused from D95.
+- **`build_z8()`**: BFS closure of the z8 group from 4 generators. Produces 24 bracket values (mod +/- sign identification). Stores in global array.
+- **`compute_derived_series()`**: Iterated commutator subgroup computation. Assigns each z8 element a derived level (0, 1, 2, ...). Cell B = derived level 0, non-null.
+- **`extract_cell_b()`**: Filters z8 elements by derived level 0 and non-null real component. Produces the 6 Cell B entries in both exact (QZ8) and float (Quat) form.
+- **`qz8_to_float()`**: Converts exact Z[sqrt2] quaternion to double-precision Quat for use with phase_cell framework.
+- **`build_dirs(cat_size)`**: Extracts distinct S^2 directions from catalog quaternions (axis of rotation, deduplication at 1e-8 tolerance). Handles antipodal identification.
+- **`phase_cell()` / `vor_cell()`**: 1wpi activation framework — sector (angle binning) x Voronoi cell (nearest direction). k_sec parameter controls angular resolution.
+- **`test_1wpi_xor()`**: Tests whether a specific weight tuple achieves XOR separation at a given k_sec. Uses signed-sum accumulation and cell-based class counting with fast cleanup via touched_cells array.
+- **`count_xor()`**: Iterates over all C(n,k) weight combinations, testing each at multiple k_sec values (6, 12, 24). Returns count of XOR-separable tuples.
+- **`next_combo()`**: Combinatorial iterator for ordered k-subsets. Standard lexicographic advancement.
+- **`comb_nk()`**: Binomial coefficient C(n,k) computation.
+
+### Literature Touched
+
+- **D96 cell taxonomy**: Cell B identified as D^0-nonnull, 6 entries, 45-degree half-angle, 3 directions, 100% XOR at every N=3-6. D97 explains WHY this cell is perfect.
+- **D84/D96 null-is-dead**: Null entries (90-degree half-angle, zero real component) contribute nothing to XOR separation. D97 explains the mechanism: null = zero lever arm for phase_cell = blind readout.
+- **Octahedral symmetry / S^2 optimal packings**: 6 points at vertices of a regular octahedron form the most symmetric arrangement on the 2-sphere. This maximal mutual separation is the geometric engine of Cell B's perfection.
+
+### Open Questions
+
+- **Artificial perfect cells**: Can we construct "perfect cells" for arbitrary groups by choosing orthogonal directions at any angle in the 25-75 degree plateau? Does the orthonormal-frame recipe generalize beyond z8?
+- **2I orthogonal structure**: Do 2I's entries exhibit similar orthogonal subsets? With 9 distinct half-angles and ~31 directions, do overlapping perfection plateaus exist within 2I?
+- **35-degree N=5 dip**: Isolated resonance where N=5 fails at 35 degrees while N=3,4,6 remain at 100%. Possibly number-theoretic — does this connect to C(6,5) = 6 or to some angular commensurability condition?
+- **Perfection-breaking threshold at large catalog**: Cell B with 6 entries is perfect through N=6 (all combinations exhausted). For larger perfect cells (if they exist), at what N does perfection first break?
+- **Boundary asymmetry**: Low-angle failure (N=5 first, then N=4) vs high-angle failure (N=6 first, then N=4) — the failure order reverses at the two boundaries. What determines which N is most fragile at each boundary?
+
+---
+
+## Demo 98: 3-Strand DKC Proof of Concept — Readout Bottleneck Discovery
+
+- **Status**: COMPLETE (RESULT)
+- **File**: `demo_98_3strand_dkc/main.c` (~1417 lines)
+- **Tests**: 10 pass, 0 fail (Phases 1-5)
+- **Depends on**: Demo 35 (TL infrastructure, Cyc8 arithmetic, entanglement vanishing, axiality theorem), Demo 67 (Hopf phase inert — wrong readout kills computation), Demo 93 (circuit complexity hierarchy, 1wpi framework), Demo 97 (orthogonal directions = perfection, quaternion readout structure)
+- **Feeds into**: Demo 99b (column-vector readout on irreducible Delta_1 module — LANDMARK, first-ever 3-strand XOR), activation design for Cyc8^5 partitioning, multiple trace readout (Tr(M), Tr(M^2), Tr(M^3)), Fran's dimensional thesis testing
+
+### Headline
+3-strand algebra is rich (infinite group, 2048 entries at cap, 98.5% interleaving, entanglement vanishing confirmed, column-4 has PERFECT diversity) but the trace readout is catastrophically lossy — ZERO XOR6 at any k_sec. The readout, not the algebra, is the research frontier for multi-strand DKC.
+
+### Key Results
+
+- **Phase 1 — 3-Strand BFS Catalog (2 tests)**: Built via TL_3 matrix representation (5x5 over Z[zeta_8], from Demo 35 infrastructure). BFS with 4 generators (sigma1+, sigma1-, sigma2+, sigma2-) reaches 2048-entry cap in 8 rounds. Growth: 1, 4, 12, 30, 68, 148, 314, 656, 815 (hit cap). Group is INFINITE at zeta_8 (unlike 2-strand's 24-element binary octahedral). Interleaving (uses both sigma1 and sigma2): 2017/2048 (98.5%). Non-interleaving: 31 entries, ALL with zero bracket (entanglement vanishing: 100%). Zero-bracket entries: 113/2048 (5.5%). Writhe range: [-8, 8].
+- **Phase 2 — Trace Readout (1 test)**: 105 distinct trace values from 2048 matrices (5.1% retention). Traces are AXIAL (single nonzero Cyc8 component). Trace collapses 25 Cyc8 entries (100 integers) to 1 Cyc8 (4 integers) = 96% information loss.
+- **Phase 2b — Column Vector Diversity (1 test)**: Column-0 through column-3 each yield ~1166-1167 distinct vectors (56.9-57.0% retention, 20 integer DOFs each). Column 4 is LOSSLESS: 2048 distinct vectors from 2048 matrices (100% retention). This is 11-20x more diversity than trace.
+- **Phase 3 — 3-Strand XOR Capacity (1 test)**: Zero XOR6 at k=4,6,8,10,12,16,20,24,32. Zero even restricting to 1935 non-zero-bracket entries. The readout, not the algebra, is the bottleneck.
+- **Phase 4 — Matched Comparison at size 24 (1 test)**: 3-strand XOR6 = 0, 2-strand XOR6 = 1109 (best at k=20). 2-strand wins completely — but this is a readout problem, not an algebraic one. 2-strand uses Voronoi + sector activation (all 4 quaternion DOFs); 3-strand trace readout collapses to 1D.
+- **Phase 5 — Interleaving Analysis (1 test)**: Neither interleaving (2017 entries) nor non-interleaving (31) produces XOR6. The trace readout fails uniformly across all subsets.
+
+### Theorems/Conjectures
+
+- **Readout Bottleneck Thesis (DEMONSTRATED)**: Multi-strand TL algebras contain MORE computational structure than 2-strand (infinite group, higher diversity, richer interleaving), but the standard trace readout destroys this information. The 2-strand pipeline succeeds because quaternions ARE the readout — SU(2) is isomorphic to S^3 and the Voronoi+sector activation uses all 4 real DOFs. For 3-strand, trace collapses 20 integers (column vector) to 4 integers (trace), losing 96% of information.
+- **Entanglement Vanishing at Scale (CONFIRMED)**: All 31 non-interleaving entries (using only sigma1 or only sigma2) have zero bracket, confirming Demo 35's result at 2048-entry scale. Interleaving (using both generators) is necessary for non-trivial bracket values.
+- **Axiality Constraint (CONFIRMED)**: Demo 35's axiality theorem (bracket values have single nonzero Cyc8 component) explains why both trace AND bracket readouts fail for 3-strand: axial = effectively 1D information, insufficient for XOR separation.
+- **Column-4 Losslessness (NEW FINDING)**: Column 4 of the TL_3 representation preserves 100% of algebraic diversity (2048 distinct vectors). This directly seeds the activation design question: how to partition the 20-integer Cyc8^5 space into cells that enable XOR separation.
+
+### Data
+
+**3-strand BFS catalog growth:**
+
+| Round | Entries | New |
+|-------|---------|-----|
+| 0 | 1 | 1 |
+| 1 | 5 | 4 |
+| 2 | 17 | 12 |
+| 3 | 47 | 30 |
+| 4 | 115 | 68 |
+| 5 | 263 | 148 |
+| 6 | 577 | 314 |
+| 7 | 1233 | 656 |
+| 8 | 2048 | 815 (hit cap) |
+
+**Readout diversity comparison:**
+
+| Readout | Distinct | Retention | DOFs |
+|---------|----------|-----------|------|
+| Trace | 105 | 5.1% | 4 integers |
+| Column 0 | 1166 | 56.9% | 20 integers |
+| Column 1 | 1166 | 56.9% | 20 integers |
+| Column 2 | 1167 | 57.0% | 20 integers |
+| Column 3 | 1167 | 57.0% | 20 integers |
+| Column 4 | 2048 | 100.0% | 20 integers |
+
+**Phase 4 — Matched comparison (size 24):**
+
+| Metric | 3-strand | 2-strand |
+|--------|----------|----------|
+| XOR6 winners | 0 | 1109 |
+| Best k_sec | 0 | 20 |
+
+**Phase 5 — Interleaving analysis:**
+
+| Subset | Count | XOR6 | Best k |
+|--------|-------|------|--------|
+| Interleaving | 2017 | 0 | 0 |
+| Non-interleaving | 31 | 0 | 0 |
+
+**2-strand vs 3-strand structural comparison:**
+
+| Property | 2-strand | 3-strand |
+|----------|----------|----------|
+| TL dimension | 2x2 (TL_2, C_2=2) | 5x5 (TL_3, C_3=5) |
+| Group order | 24 (finite, binary octahedral) | Infinite (at zeta_8) |
+| Generators | 2 (sigma1+, sigma1-) | 4 (sigma1+/-, sigma2+/-) |
+| Interleaving | N/A (1 crossing) | 98.5% (2017/2048) |
+| Entanglement vanishing | N/A | 100% (31/31 non-interleaving = zero bracket) |
+| Readout DOFs (trace) | 4 integers (Cyc8 = sufficient) | 4 integers (Cyc8 = catastrophically lossy) |
+| Readout DOFs (quaternion) | 4 reals (full SU(2)) | N/A |
+| Readout DOFs (column) | N/A | 20 integers (Cyc8^5 = lossless at col 4) |
+| Fran's dim formula | dim=4 (2*2+0) | dim=6 (2*3+0) |
+| XOR6 capacity | 1109 (at k=20, size 24) | 0 (trace readout) |
+
+### Code Assets
+
+- **`Cyc8` (Z[zeta_8] cyclotomic arithmetic)**: Exact integer type with basis {1, zeta_8, zeta_8^2, zeta_8^3}, zeta_8^4 = -1. Operations: `cyc8_make`, `cyc8_zero`, `cyc8_one`, `cyc8_add`, `cyc8_neg`, `cyc8_mul`, `cyc8_eq`, `cyc8_is_zero`, `cyc8_conj`, `cyc8_to_double`. Reused from Demo 35.
+- **`TLMat` (5x5 TL_3 matrix)**: Matrix over Cyc8 for the 3-strand Temperley-Lieb representation (C_3=5 basis elements). Operations: `tlm_zero`, `tlm_identity`, `tlm_add`, `tlm_neg`, `tlm_scale`, `tlm_mul`, `tlm_eq`, `tlm_trace`.
+- **`PMatch` / diagram composition**: Planar matching representation for TL_3 (6 boundary points). `enumerate_basis()` builds all 5 non-crossing matchings. `compose_diagrams()` computes diagram multiplication with closed-loop counting. `build_gen_matrix()` constructs TL generator matrices e_1, e_2.
+- **`build_braid_generators()`**: Constructs 4 braid generators from A = -zeta_8: sigma_i = A*I + A^{-1}*e_i, sigma_i^{-1} = A^{-1}*I + A*e_i. Verifies sigma*sigma^{-1} = I and braid relation sigma1*sigma2*sigma1 = sigma2*sigma1*sigma2.
+- **`build_3strand_catalog()`**: BFS closure over 4 generators with bracket computation, depth tracking, writhe tracking, and interleaving bitmask (bit0=uses_sigma1, bit1=uses_sigma2). Caps at MAX_3CAT=2048.
+- **`Quat` / `build_2strand_catalog()`**: Quaternionic 2-strand catalog (24 entries, binary octahedral group) for matched comparison. BFS closure with mod-sign identification.
+- **`phase_cell_cyc8()`**: Trace-based activation for 3-strand: converts Cyc8 trace to complex via `cyc8_to_double`, uses angle-based sector assignment. k_sec sectors + 1 degenerate cell.
+- **`combined_cell_2s()` / `vor_cell_2s()` / `build_2strand_dirs()`**: 1wpi Voronoi+sector activation for 2-strand quaternionic readout. Extracts S2 directions, assigns Voronoi cells, combines with angular sectors. Shared with D93-97.
+- **`test_xor_3strand()` / `test_xor_2strand()`**: Exhaustive 1wpi XOR separability tests. 3-strand: matrix sum then trace then phase_cell. 2-strand: quaternion sum then combined_cell. Both use touched-cell optimization for fast cleanup.
+- **`count_xor_bf()` / `search_xor()`**: Brute-force XOR6 search over all 3-element subsets, with multi-k_sec sweep (k=4,6,8,10,12,16,20,24,32).
+
+### Connection to Earlier Demos
+
+| Demo | Finding | Relevance to D98 |
+|------|---------|-------------------|
+| D35 | Entanglement vanishing | CONFIRMED at scale: 31/31 non-interleaving have zero bracket |
+| D35 | Axiality theorem | Explains why trace/bracket readouts fail: axial = 1D information |
+| D67 | Hopf phase inert | Analogous lesson: wrong readout kills computation even when data is rich |
+| D97 | Orthogonal directions = perfection | 2-strand works because quaternion components map to orthogonal axes. 3-strand needs analogous structure in Cyc8^5 |
+
+### Literature Touched
+
+- **Temperley-Lieb algebra TL_3**: 5-dimensional representation (C_3 = Catalan number = 5 non-crossing matchings on 6 boundary points). Standard construction: planar matching composition with closed-loop counting. D98 builds the full representation machinery from scratch.
+- **Kauffman bracket at zeta_8**: 3-strand bracket values are axial in Z[zeta_8] (single nonzero component), extending D35's axiality theorem from 2-strand to 3-strand. The axiality constraint is structural, not size-dependent.
+- **Braid group B_3**: Infinite group (unlike B_2 which maps to finite subgroups of SU(2)). At the zeta_8 parameter, the TL_3 representation yields an infinite image — 2048 distinct matrices reached without closure. The braid relation sigma1*sigma2*sigma1 = sigma2*sigma1*sigma2 is verified computationally.
+- **Reservoir computing (Maass et al. 2002)**: D98 demonstrates the readout bottleneck in reservoir computing terms: the reservoir (3-strand BFS catalog) has high separation capacity (column-4 is lossless), but the linear readout (trace) destroys the information. This motivates D99b's approach of working on the irreducible module directly.
+
+### Open Questions
+
+- **Column-vector activation design**: Column 4 preserves 100% diversity (2048 distinct 20-integer vectors). How to partition Cyc8^5 into cells for XOR separation? This is the key design question for multi-strand DKC.
+- **Multiple trace readout**: Using Tr(M), Tr(M^2), Tr(M^3) as characteristic polynomial coefficients could recover more information than single trace. 3 traces x 4 integers = 12 DOFs vs 4 DOFs for single trace.
+- **Irreducible module approach**: The 5x5 representation is reducible (TL_3 decomposes into standard modules). Working on irreducible pieces may avoid the lossy trace problem — this is exactly what D99b pursues with the 2x2 Delta_1 module, achieving first-ever 3-strand XOR.
+- **Dimensional thesis**: Fran's formula gives dim=6 for 3-strand vs dim=4 for 2-strand, predicting higher capacity. Cannot test until readout problem is solved. The algebra supports more complexity; the question is whether that complexity is computationally accessible.
+
+---
+
+## Demo 99: 3-Strand Delta_1 Block Decomposition — LANDMARK
+
+- **Status**: COMPLETE (LANDMARK)
+- **Designation**: Demo 99b (labeled 99b in source and explorer's log; supersedes earlier D99 column-readout attempt)
+- **File**: `demo_99_column_readout/main.c` (~2678 lines)
+- **Tests**: 24+ pass, 0 fail (Phases 0-11, plus sub-phases 7b/7c/7d)
+- **Depends on**: Demo 51 (TL_3 semisimplicity at delta=0), Demo 98 (5x5 trace readout gives ZERO XOR), Demo 99 original (5oct_hash on 5x5 gives 3100 XOR6), Demo 82 (depth law max_xor ~ depth+6), Demo 97 (orthogonal directions = perfection)
+- **Feeds into**: Demo 99c (algebraic classification, Cell B analog), Demo 100 (4-strand W_{4,2} DKC), Demo 101 (dimensionally-matched activation)
+
+### Headline
+First-ever 3-strand XOR computation at ALL levels: XOR6=500,261, XOR8=48,143, XOR10=485, XOR12=16, XOR14=60 (best across activations). The key was building the irreducible 2x2 standard module Delta_1 directly over Z[zeta_8] instead of using the reducible 5x5 representation, combined with a 16-component sign-pattern activation (2x2_hash). The braid group image is INFINITE (Jordan block structure, sigma_1 has infinite order), with entry magnitudes growing by exact Fibonacci ratios. XOR counts saturate by ~4096 catalog entries. XOR14 requires deep entries (d>=6); shallow entries give definitively ZERO. XOR16 is ZERO (genuine ceiling for this representation).
+
+### Key Results
+
+- **Phase 0 -- Representation Verification (8 tests)**: A * A_inv = 1 (A = -zeta_8). A^2 + A^{-2} = 0 (delta=0 confirmed). sigma_1 * sigma_1_inv = I. sigma_2 * sigma_2_inv = I. Braid relation s1*s2*s1 = s2*s1*s2. Correct Hecke relation verified: sigma - sigma_inv = (A - A_inv)(I - e_i). Standard quadratic form (sigma-A)(sigma+A_inv)=0 does NOT hold on Delta_1 because 1+A^{-2} != 0. e_1^2 = 0 on Delta_1. e_1*e_2 = [[0,0],[0,1]] (projector).
+
+- **Phase 1 -- BFS Catalog (cap 32768)**: Group is INFINITE. BFS produces 8192+ entries (32768 at full cap). Growth per round ~2.1x. max_abs sequence follows exact Fibonacci: 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233. Fibonacci mechanism: sigma_1 alone grows linearly (Jordan block), but mixed products of sigma_1 and sigma_2 feed each other's off-diagonal entries via Fibonacci recursion.
+
+- **Phase 2 -- Catalog Statistics**: Depth distribution across BFS rounds 0-10+. Triangular entries 104 (1.3%), anti-trace (a=d) entries ~1.1%, dense entries 99.5%+ beyond d=0. Quaternion structure: trace-zero and anti-trace-zero populations tracked.
+
+- **Phase 3 -- XOR Capacity Scan (activation hierarchy)**:
+
+| Activation | N=3(XOR6) | N=4(XOR8) | N=5(XOR10) | N=6(XOR12) |
+|------------|-----------|-----------|------------|------------|
+| 4ent(16)   | 227624    | 5990      | 126        | 0          |
+| 4ent(32)   | 258764    | 8098      | 206        | 8          |
+| 4ent(64)   | 230568    | 7792      | 210        | 8          |
+| quat(16)   | 28748     | 284       | 0          | 0          |
+| quat(32)   | 29832     | 298       | 0          | 0          |
+| quat(64)   | 29124     | 294       | 0          | 0          |
+| 2x2(32)    | 373194    | 11974     | 325        | 16         |
+| 2x2(64)    | 373194    | 16404     | 485        | 16         |
+| 2x2(128)   | 373194    | 16404     | 485        | 16         |
+| tr_oct(8)  | 0         | 0         | 0          | 0          |
+
+Best per XOR level (bf=200/60/30/18): XOR6=500,261 at 2x2(64), XOR8=48,143 at 2x2(128), XOR10=485 at 2x2(128), XOR12=16 at 2x2(32+). Activation hierarchy: 2x2_hash >> 4ent_hash >> quat_hash >> trace_oct.
+
+- **Phase 3b -- Scaling Saturation**: XOR counts do NOT increase with catalog size beyond ~4096 entries at fixed bf_limit. More activation cells DO help: 2x2(128) gives 48K XOR8 vs 2x2(64)'s 23.7K. bf_limit (search depth) is the real constraint, not catalog size.
+
+- **Phase 4 -- Matched Comparison (size 24, XOR6)**:
+
+| Metric       | 3-strand | 2-strand |
+|--------------|----------|----------|
+| XOR6 winners | 527      | 1109     |
+| Catalog size | 24       | 24       |
+
+2-strand leads 2.1:1 at matched size with first-24 entries.
+
+- **Phase 4b -- Depth-Sampled Comparison (24 entries, d=6-8)**: Gap closes from 2.1:1 to 1.4:1 (808 vs 1109 XOR6). Confirms deeper entries are richer. Remaining gap attributed to activation quality (Sec x Vor tuned for quaternions vs crude 2x2_hash). At full cap the 3-strand advantage is massive (500K vs 1109).
+
+- **Phase 5 -- Jordan Block Structure**: sigma_1^n has off-diagonal (2,1) entry = n * A^{n-2}, growing linearly. Diagonal entries cycle with period 8 (A^8 = 1). sigma_1^8 has diagonal = I but (2,1) entry = 8*A^6 != 0. sigma_1^8 != I, confirming infinite order. Property F does NOT apply at delta=0.
+
+- **Phase 6 -- XOR14 = 60 (CEILING BROKEN)**: Deep entries (d>=6, bf=30) with 2x2_hash:
+
+| Cells | XOR10 | XOR12 | XOR14 |
+|-------|-------|-------|-------|
+| 64    | 2641  | 675   | 60    |
+| 128   | 2966  | 675   | 60    |
+| 256   | 4335  | 675   | 60    |
+| 512   | 6883  | 759   | 60    |
+| 1024  | 9418  | 1452  | 60    |
+
+XOR14=60 from deep entries, XOR14=0 from full catalog (shallow entries). Depth is a genuine computational resource.
+
+- **Phase 7 -- XOR14 Winner Anatomy**: 60 XOR14 winners analyzed. Super-hubs discovered: idx=7 and idx=9 appear in ALL 60 winners (100%). Both d=6, dense. idx=7 is anti-trace (a=d). 100% of winners are mixed depth (d=6 + d=7). Cross-depth mandatory. Star graph topology: 2 fixed core hubs + 5 rotating satellites from ~12 d=7 entries. Pairwise commutators are large (mean=126, typical entries are 1-89).
+
+- **Phase 7b -- Hub Commutator [hub7, hub9]**: Traceless (scalar = 0), strong Cartan component (L1=84), e-root L1=108, f-root L1=18, e/f ratio = 6.0. Hallmark of sl_2 bracket structure.
+
+  Super-hub idx=7 (d=6, w=2, anti-trace): a = d = (0,0,5,0), b = (12,0,0,0), c = (-2,0,0,0). Cartan L1 = 0. Pure scalar+nilpotent ("e-root carrier").
+
+  Super-hub idx=9 (d=6, w=-6, non-anti-trace): a = (0,0,-8,0), d = (0,0,1,0), b = c = (-3,0,0,0). Cartan L1 = 9. Strong h-carrier. b=c symmetry.
+
+- **Phase 7c -- Casimir Discriminant Test**: C(S) = (a-d)^2 + 4bc for 1wpi sums. Winner mean |C| = 1301 vs control mean |C| = 297 (4.4x higher). Winner has FEWER Jordan blocks (C=0): 384 total vs 816 control. Mechanism is NOT "more Jordan blocks = more computation." Winner entries are MORE diagonalizable. Computation happens in the semisimple layer; Jordan block is infrastructure creating the infinite group.
+
+- **Phase 7d -- Swap Test**: ZERO substitutions preserve XOR14. Hub7 replacement: 0/1 survive. Hub9 replacement: 0/7 survive. Super-hubs are specific algebraic objects, not just structurally typed entries.
+
+- **Phase 8 -- XOR16 Push**: XOR14 at bf=40, deep, cells=256: 4016 (abundant, not rare). XOR16 at bf=14, deep, cells=256: 0. C(14,8) = 3003 tuples tested with 65536 masks each. XOR16 is a genuine ceiling for Delta_1 at ell=2.
+
+- **Phase 9 -- Depth Parity Test**: Mean writhe = 0.000 at every depth level (d=0 through d=12). Anti-trace fraction ~1.1% at all depths. Dense fraction 99.5%+ beyond d=0. No even/odd depth effect. Writhe perfectly balanced.
+
+- **Phase 10 -- Casimir Gap Scaling (Two-Regime Discovery)**:
+
+| XOR level | Winner |C| | Control |C| | Ratio |
+|-----------|-----------|-------------|-------|
+| XOR6      | 54        | 75          | 0.7x (INVERTED) |
+| XOR8      | 73        | 104         | 0.7x (INVERTED) |
+| XOR10     | 513       | 154         | 3.3x  |
+| XOR12     | 892       | 219         | 4.1x  |
+| XOR14     | 1301      | 245         | 5.3x  |
+
+Phase transition at XOR8 -> XOR10 coincides with shallow -> deep entry transition. Two computational mechanisms: (1) Combinatorial (XOR6-8): nilpotent-proximate, diversity-driven, shallow entries suffice. (2) Algebraic (XOR10-14): Ext^1 catalytic preparation, eigenvalue separation, deep entries required.
+
+- **Phase 11 -- Casimir Distribution vs Tuple Size**: Random walk exits nilpotent neighborhood as tuple size grows. Mean |C| and fraction with |C|<50 tracked across N=4 through N=14.
+
+### Theorems/Conjectures
+
+- **Ext^1 Catalytic Preparation Thesis (ESTABLISHED)**: 3-strand DKC computation at delta=0 lives on the non-trivial extension class Ext^1(L(0), L(1)) between simple modules of the restricted quantum group u_q(sl_2) at ell=2. The standard module Delta_1 is indecomposable but reducible: submodule L(0) and quotient L(1), extension does NOT split. Non-split extension is the computational resource. End-to-end causal chain: Ext^1 -> complementary pairing -> high-C sums -> eigenvalue discrimination -> Boolean computation.
+
+- **Jordan Block = Non-Split Extension**: sigma_1^n has off-diagonal n*A^{n-2} (linear growth proves indecomposable). Extension class in Ext^1(L(0), L(1)) is non-zero.
+
+- **Fibonacci Growth**: max_abs follows Fibonacci: connected to golden ratio phi through the spectral radius of trace-zero SL_2 elements and the 2x2 transfer matrix.
+
+- **Anti-Trace = Cartan-Zero**: Entries with a=d have zero Cartan component in sl_2 decomposition M = scalar*I + b*e + c*f + ((a-d)/2)*h. These are "pure nilpotent+scalar" elements. Computationally powerful only IN COMBINATION with non-anti-trace entries (infrastructure, not engines).
+
+- **U-Shaped Cartan Correlation**: XOR capacity vs Cartan |a-d| magnitude: cartan=0 is XOR12 champion (4292), cartan=1-5 is dead, cartan=11+ has 794. Both extremes compute; the middle is dead. Two complementary mechanisms.
+
+- **Two-Regime Hypothesis (CONFIRMED)**: Combinatorial regime (XOR6-8) uses nilpotent-proximate, diversity-driven computation with shallow entries. Algebraic regime (XOR10-14) uses Ext^1 catalytic preparation with deep entries. The Ext^1 thesis governs specifically the algebraic (high-XOR) regime. Monotonic within each regime but not overall.
+
+- **Star-Graph Topology**: XOR14 winners form a star graph (2 irreplaceable hubs + rotating satellites), structurally different from 2-strand Cell B's mutual orthogonality graph.
+
+- **Casimir Inversion**: Non-semisimplicity is catalytic preparation, not the computation mechanism. Preparation selects complementary entries; evaluation produces high-C sums (4.4x control); readout discriminates eigenvalue structure. Shared architecture with non-semisimple TQFT, reservoir computing, and magic state distillation (but catalytic).
+
+- **Registered Prediction**: Casimir gap (winner/control ratio) should increase monotonically with XOR level within the algebraic regime. CONFIRMED for XOR10 -> XOR12 -> XOR14.
+
+### Data
+
+**Direct standard module construction (Delta_1 basis and generators):**
+- Basis: {h_0, h_2} -- half-diagrams with 1 through-strand at position 0 or 2
+- TL generators: e_1|_{D1} = [[0,0],[1,0]], e_2|_{D1} = [[0,1],[0,0]]
+- Braid generators: sigma_1 = [[A, 0], [A_inv, A]], sigma_2 = [[A, A_inv], [0, A]]
+- A = -zeta_8 = (0,-1,0,0), A_inv = (0,0,0,1)
+- 16 DOF per entry: 4 Cyc8 components x 4 matrix entries = 16 integers (vs 8 for 2-strand quaternions)
+
+**BFS growth (Fibonacci max_abs):**
+
+| Round | Entries | max_abs |
+|-------|---------|---------|
+| 0     | 1       | -       |
+| 1     | 5       | 1       |
+| 2     | 17      | 2       |
+| 3     | 47      | 3       |
+| 4     | 115     | 5       |
+| 5     | 263     | 8       |
+| 6     | 577     | 13      |
+| 7     | 1233    | 21      |
+| 8     | 2581    | 34      |
+| 9     | 5377    | 55      |
+| 10    | 8192    | 89 (hit cap) |
+
+**2-strand vs 3-strand comparison:**
+
+| Property         | 2-strand (TL_2)            | 3-strand (Delta_1)            |
+|------------------|----------------------------|-------------------------------|
+| Group            | Finite (cyclic, order 8)   | Infinite (Jordan block)       |
+| Module           | Simple L(1)                | Indecomposable Delta_1        |
+| Extension        | None (semisimple)          | Ext^1(L(0),L(1)) != 0        |
+| XOR topology     | Mutual orthogonality graph | Star graph (2 hubs + sats)    |
+| XOR ceiling      | XOR12 (Cell B)             | XOR14 (deep entries)          |
+| Matched (N=24)   | 1109 XOR6                  | 527 XOR6                      |
+
+2-strand wins at matched small size (finite group better density). 3-strand wins at scale (infinite group unbounded catalog depth). Crossover around catalog size ~100.
+
+**XOR14 super-hub structure:**
+- Hub idx=7: a = d = (0,0,5,0), b = (12,0,0,0), c = (-2,0,0,0). d=6, w=2, anti-trace. Cartan L1=0.
+- Hub idx=9: a = (0,0,-8,0), d = (0,0,1,0), b = c = (-3,0,0,0). d=6, w=-6. Cartan L1=9.
+- Hub commutator: traceless, Cartan L1=84, e-root L1=108, f-root L1=18.
+- 100% of 60 winners contain both hubs. 100% are mixed-depth (d=6 + d=7).
+- 0/1 substitutions survive for hub7. 0/7 substitutions survive for hub9.
+
+**Casimir discriminant (winner vs control):**
+- Winner: mean |C|_L1 = 1301 (even: 1301, odd: 1300). Jordan blocks: 384/16384.
+- Control: mean |C|_L1 = 297. Jordan blocks: 816/16384.
+- Winner is 4.4x MORE semisimple than control.
+
+**D99c results (algebraic classification, separate program):**
+- ALL entries have unit determinant (100%). 4 distinct det values = 4 units in Z[i]: {+/-1, +/-i}. Representation is in SL_2(Z[zeta_8]).
+- Triangular entries (104, 1.3%) have 67.9% XOR6 hit rate -- nearly double next best class.
+- Cell B analog (24 curated anti-trace+dense+deep entries): XOR12=896 (56x improvement over first-24).
+
+### Code Assets
+
+- **`Cyc8` (cyclotomic integer arithmetic in Z[zeta_8])**: Basis {1, zeta_8, zeta_8^2, zeta_8^3} with zeta_8^4 = -1. Operations: `cyc8_make`, `cyc8_zero`, `cyc8_one`, `cyc8_add`, `cyc8_sub`, `cyc8_neg`, `cyc8_mul`, `cyc8_eq`, `cyc8_is_zero`, `cyc8_conj` (Galois conjugate: zeta_8 -> zeta_8^7 = -zeta_8^3). `cyc8_to_cplx` converts to scaled integer complex (707 ~ 1000/sqrt(2)). `cyc8_octant` classifies into 8 octants (3 bits: sign of Re, sign of Im, |Im|>|Re|). Fully exact long integer arithmetic.
+- **`Mat2` (2x2 matrix over Cyc8)**: Operations: `mat2_zero`, `mat2_identity`, `mat2_mul`, `mat2_eq`, `mat2_add`, `mat2_neg`, `mat2_max_abs`, `mat2_commutator`. Each entry is a Cyc8 (4 longs), so each matrix has 16 integer components.
+- **`CycQuat` (quaternion extraction from Mat2)**: q_0 = a+d, q_1 = b+c, q_2 = b-c, q_3 = a-d. Maps 2x2 matrices to quaternion components. All operations stay in Cyc8.
+- **`build_generators()`**: Constructs the 4 braid generators (sigma_1, sigma_1_inv, sigma_2, sigma_2_inv) on the Delta_1 standard module. A = -zeta_8 = (0,-1,0,0).
+- **`build_catalog()`**: BFS catalog builder with hash table deduplication. Tracks depth and writhe per entry. Overflow protection (max_abs > 10^11). Global arrays: g_cat (Mat2), g_depth, g_writhe, g_cat_size.
+- **Hash table for Mat2 BFS**: FNV-style hash over 16 long components. Separate chaining. HASH_SIZE=65537, MAX_CAT=32768.
+- **Activation functions (4 types)**: ACT_4ENT_HASH (4 matrix entry octants hashed), ACT_QUAT_HASH (4 quaternion component octants hashed), ACT_2x2_HASH (16-component sign-bit hash, 3-valued per component), ACT_TRACE_OCT (trace octant only, 8 cells). Parameterized by k_param (number of cells).
+- **`test_xor_mat2()`**: Tests whether a weight tuple computes XOR under 1wpi encoding on Mat2. 2N inputs from N weights (+/- pairs). Early termination on first parity violation. O(1) cleanup via touched-cell tracking.
+- **`count_xor_bf()`**: Brute-force XOR search over all C(bf_limit, n_weights) tuples. Supports 3-8 weights (XOR6 through XOR16).
+- **2-strand comparison infrastructure**: `Quat` type (floating-point quaternions), `build_2strand_catalog()` (BFS closure of z8, order 24), `build_2strand_dirs()` (S2 direction extraction), `combined_cell_2s()` (sector x Voronoi activation), `test_xor_2strand()`, `count_xor_2s_bf()`.
+- **Casimir discriminant**: C(S) = (a-d)^2 + 4*b*c for summed Mat2. Exact computation in Z[zeta_8]. L1 norm for magnitude. Distinguishes Jordan blocks (C=0) from diagonalizable matrices.
+
+### Literature Touched
+
+- **Temperley-Lieb algebra standard modules (Graham-Lehrer)**: TL_3(delta=0) decomposes as V = Delta_3(1) + Delta_1(2) + Delta_1(2) via Wedderburn-Artin. Delta_1 is the 2-dimensional standard module on half-diagram basis {h_0, h_2}. At delta=0, TL_3 is semisimple (n=3 odd, Demo 51 confirms), but the braid group image is infinite.
+- **Ext^1 and non-semisimple representation theory**: Delta_1 is an indecomposable but reducible module of the restricted quantum group u_q(sl_2) at ell=2 (q = e^{i*pi/4} = zeta_8). Extension class Ext^1(L(0), L(1)) is non-zero. Jordan block proves the extension does not split.
+- **Non-semisimple TQFT (Voss-Kim-Bhatt, Nature Comms 2025)**: Alpha-anyon anchor (quantum trace zero) + sigma-anyon qubits + semisimple readout. Structural identification with D99 findings: non-semisimplicity as catalytic preparation, computation in semisimple layer.
+- **Reservoir Computing (Maass et al. 2002, Gonon & Ortega 2020)**: Casimir = separation property. 4.4x winner/control gap = first quantitative measure of algebraic reservoir quality. DKC maps precisely to a discrete algebraic reservoir computer.
+- **Magic state distillation analogy**: But CATALYTIC -- super-hubs are reused, not consumed.
+- **Property F (Freedman-Larsen-Wang)**: Does NOT apply at delta=0. The braid group image through Delta_1 is infinite despite the representation being finite-dimensional, because Delta_1 is not a direct sum of simple modules.
+- **Fibonacci numbers and SL_2**: max_abs Fibonacci growth connected to spectral radius of trace-zero SL_2 element and golden ratio phi = (1+sqrt5)/2 through the 2x2 transfer matrix.
+- **Habiro (2002) / Z[zeta_8] bracket**: The algebraic substrate. All computation exact over cyclotomic integers.
+
+### Open Questions
+
+- **Is XOR16 truly unreachable, or just search-limited?** bf=14 may be insufficient. Need larger bf or smarter search.
+- **Two Delta_1 copies**: TL_3 has two copies of Delta_1 in the decomposition. Do they give different or redundant XOR sets?
+- **Can the super-hub pair be characterized purely algebraically?** What property of idx=7 and idx=9 makes them unique among all d=6 entries?
+- **Ext^1 dimension**: Is dim Ext^1(L(0), L(1)) = 1 at ell=2? If so, Delta_1 is the UNIQUE non-trivial extension, explaining why super-hubs are irreplaceable.
+- **Higher strands**: Does 4-strand (n=4, even, non-semisimple TL) give qualitatively different structure? ANSWERED by D100: yes, frozen radical, 6-hub positive-root ecology, no Casimir inversion.
+- **Better activations**: 2x2_hash is a crude sign-pattern hash. Can Sec x Vor be adapted for Cyc8 quaternions (16 DOF)?
+
+---
+
+## Demo 100: 4-Strand DKC on W_{4,2} — Non-Semisimple Matrix Braid Representation
+
+- **Status**: COMPLETE (RESULT)
+- **File**: `demo_100_4strand_dkc/main.c` (~1749 lines)
+- **Tests**: 36 pass, 0 fail (Phases 0-5)
+- **Depends on**: Demo 80 (finite/infinite capacity boundary, quantum dimension), Demo 92 (parity-lock theorem), Demo 93 (circuit complexity hierarchy, 1wpi framework), Demo 94 (binary icosahedral group, solvability bottleneck)
+- **Feeds into**: Higher-strand W_{n,k} modules, radical-content XOR correlation studies, non-semisimple TL DKC theory, Casimir-guided weight selection
+
+### Headline
+4-strand braid group B_4 acting on the 3-dimensional standard module W_{4,2} of TL_4 at delta=0 (non-semisimple) produces an infinite catalog of 3x3 matrices over Z[zeta_8] with exponential BFS growth (~3.1x per round), sustained XOR capacity through depth, and a 6-hub star-like winner topology where all hub commutators are traceless with zero radical content.
+
+### Key Results
+
+- **Phase 0 -- Representation verification (19 tests)**: TL_4 at delta=0 is non-semisimple (n=4 even). Radical dim=9, Loewy length 3. Two simple modules: L_{4,2} (dim 2), L_{4,4} (dim 1). W_{4,2} is the standard module with 2 through-lines, dim=3. Extension: 0 -> L_{4,4} -> W_{4,2} -> L_{4,2} -> 0. Three TL generators e_1, e_2, e_3 verified as 3x3 integer matrices. All satisfy e_i^2 = 0 (delta=0), Jones-Wenzl relations (e_i*e_{i+1}*e_i = e_i), and far commutativity (e_1*e_3 = e_3*e_1). Braid generators sigma_i = A*I + A^{-1}*e_i where A = -zeta_8 = (0,-1,0,0), A^{-1} = (0,0,0,1). Verified: A*A^{-1} = 1, A^2 + A^{-2} = 0 (delta=0 condition). All sigma_i*sigma_i_inv = I. Braid relations s1*s2*s1 = s2*s1*s2, s2*s3*s2 = s3*s2*s3 verified. Far commutativity s1*s3 = s3*s1 verified. Hecke relations sigma_i - sigma_i_inv = (A-A_inv)(I-e_i) verified for all three generators.
+- **Phase 1 -- BFS catalog (1 test)**: 6 generators (sigma_1, sigma_1_inv, sigma_2, sigma_2_inv, sigma_3, sigma_3_inv). BFS hits 32768-entry cap at depth 8 -- group is INFINITE. Depth profile: d0=1, d1=6, d2=26, d3=98, d4=338, d5=1110, d6=3444, d7=10390, d8=17355. Max entry magnitude at cap: 34. sigma_1 has infinite order (max_abs grows linearly with power: n=k gives max_abs=k; sigma_1^8 != I).
+- **Phase 2 -- Catalog statistics (1 test)**: Growth rate stabilizes near 3.1x per round (d1: 6.00, d2: 4.33, d3: 3.77, d4: 3.45, d5: 3.28, d6: 3.10, d7: 3.02, d8: 1.67 -- last round truncated by cap). 15.0% of entries (4905/32768) have at least one zero diagonal element.
+- **Phase 3 -- XOR capacity scan (3 tests)**: Activation function: 3x3_hash -- sign pattern of all 36 integer components (9 entries x 4 Cyc8 components), 3-valued (pos=2, zero=1, neg=0), hash mod k_param. At bf=30 (first 30 entries): XOR6 peaks at k=512 (2961 solutions), XOR8 also peaks at k=512 (6187), XOR10 peaks at k=512 (541), XOR12 steady at 48 across all k values. Deep sub-catalog (d>=4, bf=30): XOR6=2017, XOR8=1169, XOR10=654, XOR12=305, XOR14=70. Key finding: deep entries SUSTAIN XOR capacity -- XOR14=70 at depth>=4 demonstrates non-trivial computational power at 7-weight XOR.
+- **Phase 4 -- Radical analysis (6 tests)**: Radical direction r = (1, 0, -1) verified: e_i * r = 0 for all three TL generators (r spans the L_{4,4} submodule). Mean radical_content = 2 across all depths (constant). Mean |rMr| = 2 across all depths (constant). Mean |C3| (Casimir C3(M) = 3*tr(M^2) - (tr M)^2) grows exponentially with depth: d0=0, d1=0, d2=3, d3=7, d4=16, d5=36, d6=80, d7=176, d8=308. XOR14 winners (70 total) vs control (1000): mean_rad identical (14 vs 14), mean_rMr identical (14 vs 14), mean_C3 slightly higher for winners (172 vs 148). Casimir-by-XOR-level: XOR6 win/ctrl C3 ratio 1.36x, XOR8 ratio 1.86x, XOR10 ratio 1.62x, XOR12 ratio 1.44x -- Casimir consistently higher in winners across all XOR levels.
+- **Phase 5 -- Winner anatomy (5 tests)**: 70 XOR14 winners from bf=30 deep sub-catalog. 6 super-hubs (frequency > 50% of winners): entry 4 (91.4%, d=4, w=2), entry 5 (91.4%, d=4, w=2), entry 10 (54.3%, d=5, w=3), entry 21 (65.7%, d=5, w=1), entry 24 (65.7%, d=5, w=-3), entry 25 (54.3%, d=5, w=-1). Hub pairing by trace Cyc8 component: hubs 4,5 are zeta_8^2 pair (traces (0,0,3,0) and (0,0,6,0)), hubs 10,25 are zeta_8^3 pair (traces (0,0,0,-7) and (0,0,0,5)), hubs 21,24 are zeta_8 pair (traces (0,-5,0,0) and (0,3,0,0)). ALL six hub commutators are traceless. ALL six hub commutators have radical_content = 0 (commutators annihilate the radical direction). Co-occurrence graph: 121 edges, max co-occurrence 58, 77 hub-involved edges, 44 satellite-only edges -- NOT a pure star topology. 19 participating entries out of 30, 11 entries with zero frequency (never appear in any winner).
+
+### Theorems/Conjectures
+
+- **Infinite Group from Non-Semisimple TL (CONFIRMED computationally)**: The 4-strand braid group B_4 acting on W_{4,2} (non-semisimple standard module of TL_4 at delta=0) generates an infinite group of 3x3 matrices over Z[zeta_8]. BFS does not close -- hits 32768 cap at depth 8 with sustained ~3.1x growth per round. sigma_1 has infinite order (max_abs grows linearly). This contrasts with the 2-strand case (TL_2 at delta=0) where the catalog is finite.
+- **Constant Radical Content (CONFIRMED)**: All catalog entries have mean radical_content = 2 regardless of BFS depth. The radical direction r = (1, 0, -1) is preserved uniformly. This means the non-semisimple structure (the extension 0 -> L_{4,4} -> W_{4,2} -> L_{4,2} -> 0) is equally present in every braid matrix -- "every BFS entry is already non-semisimple" as predicted in the header.
+- **Casimir Exponential Growth with Depth (OBSERVED)**: Mean |C3| grows approximately as 2^d (doubling per depth): 0, 0, 3, 7, 16, 36, 80, 176, 308. Casimir measures "non-scalar-ness" of the matrix. Deeper entries are more algebraically complex while maintaining constant radical content.
+- **Casimir-XOR Correlation (OBSERVED)**: XOR-winning weight tuples consistently have higher mean Casimir than non-winners, across all XOR levels tested (1.36x-1.86x ratio). Winners need algebraically complex entries. However, radical content does NOT distinguish winners from non-winners (identical at 14 vs 14).
+- **Traceless Commutator Universality (CONFIRMED for all hub pairs)**: All six hub commutators [h_i, h_j] have zero trace and zero radical content. The tracelessness is expected for commutators in GL(3). The zero radical content means commutators live entirely in the semisimple quotient L_{4,2} -- they annihilate the radical direction.
+- **Hub Pairing by Cyclotomic Component (OBSERVED)**: The 6 super-hubs pair naturally by which Cyc8 basis element dominates their trace: {h0,h1} traces in zeta_8^2, {h2,h5} traces in zeta_8^3, {h3,h4} traces in zeta_8. Within each pair, writhes are conjugate (sum to 4, 2, -2 respectively).
+
+### Data
+
+**TL_4 at delta=0 structure:**
+- Radical dim = 9, Loewy length = 3
+- Simple modules: L_{4,2} (dim 2), L_{4,4} (dim 1)
+- W_{4,2}: dim 3, extension 0 -> L_{4,4} -> W_{4,2} -> L_{4,2} -> 0
+- Radical direction: r = (1, 0, -1)
+
+**TL generators (3x3 over Z):**
+
+| Generator | Matrix |
+|-----------|--------|
+| e_1 | [[0,1,0],[0,0,0],[0,0,0]] |
+| e_2 | [[0,0,0],[1,0,1],[0,0,0]] |
+| e_3 | [[0,0,0],[0,0,0],[0,1,0]] |
+
+**Braid generators (3x3 over Z[zeta_8]):**
+- A = -zeta_8 = (0,-1,0,0), A^{-1} = (0,0,0,1)
+- sigma_i = A*I + A^{-1}*e_i, sigma_i_inv = A^{-1}*I + A*e_i
+- 6 generators indexed 0-5: sigma_1, sigma_1_inv, sigma_2, sigma_2_inv, sigma_3, sigma_3_inv
+
+**BFS catalog (cap 32768):**
+
+| Depth | New entries | Cumulative | Growth ratio | Max magnitude |
+|-------|------------|------------|--------------|---------------|
+| 0 | 1 | 1 | -- | 1 |
+| 1 | 6 | 7 | 6.00 | 1 |
+| 2 | 26 | 33 | 4.33 | 2 |
+| 3 | 98 | 131 | 3.77 | 3 |
+| 4 | 338 | 469 | 3.45 | 5 |
+| 5 | 1110 | 1579 | 3.28 | 8 |
+| 6 | 3444 | 5023 | 3.10 | 13 |
+| 7 | 10390 | 15413 | 3.02 | 21 |
+| 8 | 17355 | 32768 | 1.67* | 34 |
+
+*Truncated by 32768 cap.
+
+**sigma_1 power growth:**
+
+| n | max_abs(sigma_1^n) |
+|---|-------------------|
+| 1 | 1 |
+| 2 | 2 |
+| 3 | 3 |
+| 4 | 4 |
+| 5 | 5 |
+| 6 | 6 |
+| 7 | 7 |
+| 8 | 8 |
+
+Linear growth confirms infinite order (Jordan block structure).
+
+**Phase 3 -- XOR capacity scan (bf=30, first 30 entries):**
+
+| k_cells | XOR6 | XOR8 | XOR10 | XOR12 |
+|---------|------|------|-------|-------|
+| 64 | 1158 | 393 | 176 | 48 |
+| 128 | 1937 | 822 | 208 | 48 |
+| 256 | 2510 | 2376 | 251 | 48 |
+| 512 | 2961 | 6187 | 541 | 48 |
+
+**Deep sub-catalog (d>=4, bf=30, k=128):**
+
+| XOR level | Winners |
+|-----------|---------|
+| XOR6 | 2017 |
+| XOR8 | 1169 |
+| XOR10 | 654 |
+| XOR12 | 305 |
+| XOR14 | 70 |
+
+**Radical/Casimir by depth:**
+
+| Depth | mean_rad | mean_rMr | mean_C3 | Count |
+|-------|----------|----------|---------|-------|
+| 0 | 2 | 2 | 0 | 1 |
+| 1 | 2 | 2 | 0 | 6 |
+| 2 | 2 | 2 | 3 | 26 |
+| 3 | 2 | 2 | 7 | 98 |
+| 4 | 2 | 2 | 16 | 338 |
+| 5 | 2 | 2 | 36 | 1110 |
+| 6 | 2 | 2 | 80 | 3444 |
+| 7 | 2 | 2 | 176 | 10390 |
+| 8 | 2 | 2 | 308 | 17355 |
+
+**Casimir-by-XOR-level (deep bf=30, k=128):**
+
+| XOR level | Winners | Win C3 | Ctrl C3 | Ratio |
+|-----------|---------|--------|---------|-------|
+| XOR6 | 2017 | 64 | 47 | 1.36x |
+| XOR8 | 1169 | 93 | 50 | 1.86x |
+| XOR10 | 654 | 123 | 76 | 1.62x |
+| XOR12 | 305 | 148 | 103 | 1.44x |
+
+**XOR14 winners vs control (deep bf=30, k=128):**
+
+| Metric | Winners (70) | Control (1000) |
+|--------|-------------|----------------|
+| mean_rad | 14 | 14 |
+| mean_rMr | 14 | 14 |
+| mean_C3 | 172 | 148 |
+
+**Super-hubs (6 hubs, frequency > 50% of 70 winners):**
+
+| Hub | Entry | Freq | Freq% | Depth | Writhe | Trace | |C3| | Frob L1 |
+|-----|-------|------|-------|-------|--------|-------|------|---------|
+| 0 | 4 | 64 | 91.4% | 4 | 2 | (0,0,3,0) | 0 | 15 |
+| 1 | 5 | 64 | 91.4% | 4 | 2 | (0,0,6,0) | 36 | 19 |
+| 2 | 10 | 38 | 54.3% | 5 | 3 | (0,0,0,-7) | 56 | 17 |
+| 3 | 21 | 46 | 65.7% | 5 | 1 | (0,-5,0,0) | 20 | 19 |
+| 4 | 24 | 46 | 65.7% | 5 | -3 | (0,3,0,0) | 0 | 21 |
+| 5 | 25 | 38 | 54.3% | 5 | -1 | (0,0,0,5) | 20 | 11 |
+
+**Hub commutators (all traceless, all radical_content = 0):**
+
+| Pair | Trace | |C3| | Rad | Frob L1 |
+|------|-------|------|-----|---------|
+| [h0,h1] zeta_8^2 pair | (0,0,0,0) | 24 | 0 | 44 |
+| [h2,h5] zeta_8^3 pair | (0,0,0,0) | 426 | 0 | 55 |
+| [h3,h4] zeta_8 pair | (0,0,0,0) | 216 | 0 | 86 |
+| [h0,h3] top x mid | (0,0,0,0) | 96 | 0 | 84 |
+| [h0,h2] top x low | (0,0,0,0) | 384 | 0 | 84 |
+| [h3,h2] mid x low | (0,0,0,0) | 552 | 0 | 94 |
+
+**Co-occurrence topology:**
+- 121 edges total, max co-occurrence 58
+- 77 hub-involved edges, 44 satellite-only edges
+- NOT a pure star topology
+- 19/30 entries participate in at least one winner
+
+### Code Assets
+
+- **`Cyc8` (Z[zeta_8] cyclotomic arithmetic)**: Exact integer type representing a + b*zeta_8 + c*zeta_8^2 + d*zeta_8^3 with zeta_8^4 = -1. Operations: `cyc8_make`, `cyc8_add`, `cyc8_sub`, `cyc8_neg`, `cyc8_mul`, `cyc8_eq`, `cyc8_is_zero`, `cyc8_conj`, `cyc8_max_abs`. Multiplication uses the relation zeta_8^4 = -1 for reduction. Fully reusable for any computation in Z[zeta_8].
+- **`Mat3` (3x3 matrix over Cyc8)**: Matrix type for W_{4,2} representation. 9 Cyc8 entries = 36 long integers. Operations: `mat3_zero`, `mat3_identity`, `mat3_mul`, `mat3_eq`, `mat3_add`, `mat3_neg`, `mat3_scale`, `mat3_max_abs`, `mat3_print`. All operations exact -- no floating point.
+- **Hash table for Mat3 BFS**: FNV-style hash over 36 long components, chained-bucket lookup. MAX_CAT = 32768, HASH_SIZE = 65537. Used for BFS deduplication of matrix catalog.
+- **`build_tl_generators()`**: Constructs 3x3 integer matrices e_1, e_2, e_3 for TL_4 on W_{4,2} basis {h_0, h_1, h_2} (three half-diagrams with 2 through-lines).
+- **`build_braid_generators()`**: Constructs 6 braid generators sigma_i = A*I + A^{-1}*e_i and sigma_i_inv = A^{-1}*I + A*e_i over Z[zeta_8]. Tracks writhe (+1 for sigma, -1 for sigma_inv).
+- **`build_catalog(max_depth)`**: BFS closure with 6 generators. Overflow protection at max_abs > 10^11. Reports per-round growth and closure/cap/depth-limit status.
+- **`mat3_activate(m, k_param)`**: 3x3_hash activation -- sign pattern of all 36 integer components (3-valued: pos/zero/neg), base-3 hash mod k_param. Novel activation function designed for matrix-valued DKC.
+- **`test_xor_mat3(indices, n_weights, k_param)`**: 1wpi XOR test for Mat3 catalog. N weights -> 2N inputs. Signed sum in Mat3 space, activation via mat3_activate. Touch-list cleanup pattern for efficient cell reuse.
+- **`count_xor_bf(n_weights, k_param, bf_limit)`**: Brute-force combinatorial XOR search over C(bf,n_weights) tuples. Supports n_weights = 3-7 (XOR6 through XOR14).
+
+### Literature Touched
+
+- **Temperley-Lieb algebra at delta=0 (non-semisimple regime)**: TL_n at delta=0 with n even is the most singular point -- radical has maximal dimension, Loewy length reaches maximum. Standard modules W_{n,k} are indecomposable but not simple. D100 works with W_{4,2} (dim 3), which has the non-split extension 0 -> L_{4,4} -> W_{4,2} -> L_{4,2} -> 0. Every braid matrix preserves this structure (constant radical content = 2 at all depths).
+- **Braid group representations via Kauffman bracket**: sigma_i = A*I + A^{-1}*e_i gives a representation of the braid group B_n on TL_n modules. At the special value A = -zeta_8 (corresponding to delta = -(A^2 + A^{-2}) = 0), this representation is infinite-dimensional on W_{4,2}. The linear growth of max_abs(sigma_1^n) = n indicates a non-trivial Jordan block in the representation.
+- **Habiro (2002) / Z[zeta_8] bracket**: The algebraic substrate. D100 extends the scalar Z[zeta_8] bracket (used in D80-D94) to matrix-valued computation: each catalog entry is now a 3x3 matrix over Z[zeta_8] rather than a single Z[zeta_8] element. The DKC signed-sum framework generalizes directly to matrix addition.
+- **Casimir invariant as complexity measure**: The modified Casimir C3(M) = 3*tr(M^2) - (tr M)^2 measures deviation from scalar matrices. Its exponential growth with BFS depth (~2x per round) while radical content stays constant shows that braid words become algebraically richer without changing their module-theoretic character. Its correlation with XOR capacity (1.36x-1.86x higher in winners) suggests Casimir as a heuristic for weight selection in matrix DKC.
+- **Reservoir computing connection**: The infinite catalog (vs finite groups in D80-D94) means the reservoir has unbounded size. The 3x3_hash activation is a novel nonlinear readout designed for matrix-valued reservoirs. The 36-component sign pattern provides much finer discrimination than the scalar phase_cell used in D80-D94.
+
+### Open Questions
+
+- **Higher-strand generalization**: W_{6,2} (dim 5) and W_{6,4} (dim 9) on TL_6 at delta=0 -- does the Casimir-XOR correlation persist? Does the hub pairing structure generalize to larger representations?
+- **Optimal activation for matrix DKC**: The 3x3_hash activation (sign pattern of 36 components) is ad hoc. Is there a natural activation that respects the module structure (e.g., projects onto radical vs semisimple components separately)?
+- **Radical-annihilating commutators**: All hub commutators have zero radical content. Is this a general theorem (commutators of braid matrices on W_{n,k} always annihilate the radical) or specific to these hub entries?
+- **Connection to D80-D94 scalar DKC**: Can the matrix DKC be reduced to scalar DKC by projecting onto specific module components? The radical content being constant suggests the extension structure adds something that projection would lose.
+- **Casimir-guided weight selection**: Can Casimir be used as a pre-filter to reduce the combinatorial search space for XOR-winning tuples? The 1.36x-1.86x ratio suggests moderate predictive power but not strong enough to be a standalone selector.
+- **Cap-free growth rate**: The d=8 growth ratio (1.67x) is depressed by the 32768 cap. What is the true asymptotic growth rate? The stabilization toward ~3.0x suggests the free growth rate may be exactly 3 (related to 3 non-adjacent generator pairs: sigma_1, sigma_2, sigma_3).
+
+---
+
+## Demo 101: 5-Strand DKC Scaling Verification on W_{5,3} — sl_d Functor Thesis
+
+- **Status**: COMPLETE (RESULT)
+- **File**: `demo_101_5strand_dkc/main.c` (~1569 lines)
+- **Tests**: 44 pass, 0 fail (Phases 0-5)
+- **Depends on**: Demo 80 (finite/infinite capacity boundary, quantum dimension), Demo 93 (circuit complexity hierarchy, 1wpi framework), Demo 100 (4-strand DKC on W_{4,2}, non-semisimple matrix braid representation, radical analysis, Casimir-XOR correlation, hub anatomy methodology)
+- **Feeds into**: Higher-strand W_{n,k} modules, sl_d functor series completion, radical-free vs radical-containing DKC comparison, Casimir-XOR correlation in simple modules, hub-count scaling law
+
+### Headline
+PREDICTION-DENSE DEMO testing the sl_d functor thesis. 5-strand braid group B_5 acting on W_{5,3} (the SIMPLE standard module of TL_5 at delta=0 -- no radical, key structural difference from D100) produces an infinite catalog of 4x4 matrices over Z[zeta_8] with ~4x BFS growth per round (CONFIRMING the growth-rate prediction), sustained XOR6-XOR12 capacity, and all-traceless hub commutators. However, the hub-count prediction is FALSIFIED (3 hubs, not 12), XOR14 vanishes entirely (vs 70 in D100), and the Casimir-XOR correlation INVERTS at higher XOR levels. The simple module computes differently from D100's non-semisimple module: the radical extension is computationally load-bearing, not decorative.
+
+### Key Results
+
+- **Phase 0 -- Representation verification (30 tests)**: W_{5,3} is the 4-dimensional standard module of TL_5 at delta=0. KEY STRUCTURAL DIFFERENCE: W_{5,3} is SIMPLE (no radical). ker(e_1) intersect ... intersect ker(e_4) = {0} (radical dimension verified = 0). Basis: four half-diagrams for 5 strands with 3 through-lines (h_0: {1,2} paired, h_1: {2,3} paired, h_2: {3,4} paired, h_3: {4,5} paired). Four TL generators e_1..e_4 as 4x4 integer matrices, following A_3 Dynkin diagram (path graph) pattern. All satisfy e_i^2 = 0 (delta=0), Jones-Wenzl relations (e_i*e_{i+1}*e_i = e_i and e_{i+1}*e_i*e_{i+1} = e_{i+1} for 3 adjacent pairs), and far commutativity (e_1*e_3, e_1*e_4, e_2*e_4). Braid generators sigma_i = A*I + A^{-1}*e_i where A = -zeta_8 = (0,-1,0,0), A^{-1} = (0,0,0,1). Verified: A*A^{-1} = 1, A^2 + A^{-2} = 0 (delta=0 condition). All four sigma_i*sigma_i_inv = I. Braid relations s_i*s_{i+1}*s_i = s_{i+1}*s_i*s_{i+1} for 3 adjacent pairs. Far braid commutativity for 3 far pairs. Hecke relations s_i - s_i_inv = (A-A_inv)(I-e_i) for all 4 generators.
+- **Phase 1 -- BFS catalog (1 test)**: 8 generators (sigma_1..4 and inverses). BFS hits 32768-entry cap at depth 7 -- group is INFINITE. Depth profile: d0=1, d1=8, d2=44, d3=206, d4=884, d5=3600, d6=14198, d7=13827. Max entry magnitude at cap: 21. Growth rate confirms prediction: ~4x per round (8/1=8.00, 44/8=5.50, 206/44=4.68, 884/206=4.29, 3600/884=4.07, 14198/3600=3.94, 13827/14198=0.97* -- last round truncated by cap).
+- **Phase 2 -- Catalog statistics (1 test)**: Growth rate stabilizes near 4x per round (contrasting with D100's ~3.1x for 6 generators/3-dim). sigma_1 has infinite order: max_abs grows linearly with power (n=1: 1, n=2: 2, n=3: 3, n=4: 4, n=5: 5, n=6: 6, n=7: 7, n=8: 8 -- exactly linear, matching D100's pattern). sigma_1^8 != identity confirmed. Linear max_abs growth indicates Jordan block structure in the representation.
+- **Phase 3 -- XOR capacity scan (2 tests)**: Activation function: 4x4_hash -- sign pattern of all 64 integer components (16 entries x 4 Cyc8 components), 3-valued (pos=2, zero=1, neg=0), hash mod k_param. K-sweep at bf=30 (first 30 entries): XOR6 peaks at k=512 (3297), XOR8 peaks at k=512 (12229), XOR10 peaks at k=512 (5729), XOR12 peaks at k=512 (512). Deep sub-catalog (d>=4, bf=30, k=128): XOR6=2579, XOR8=2228, XOR10=203, XOR12=27, XOR14=0. XOR14 ZERO at all k values (k=256 through 4096). Key finding: deep entries sustain XOR6-XOR12 capacity but XOR14 vanishes entirely -- contrasting with D100 where XOR14=70 on 3x3 matrices.
+- **Phase 4 -- Casimir analysis (3 tests)**: No radical (W_{5,3} simple), so no radical_content analysis (unlike D100). C4(M) = 4*tr(M^2) - (tr M)^2 computed integer-exact for all 32768 entries. Mean |C4| = 91 across full catalog. C4 by depth: d0=0, d1=0, d2=4, d3=9, d4=20, d5=41, d6=83, d7=118 -- approximately 2x per round, matching D100's exponential growth pattern. XOR10 winners (203) vs control (1000): mean C4 = 57 vs 67 -- winners have LOWER Casimir (ratio 0.85x). Casimir-by-XOR-level: XOR6 ratio 1.17x (winners higher), XOR8 ratio 1.51x (winners higher), XOR10 ratio 0.89x (winners LOWER), XOR12 ratio 0.54x (winners LOWER). INVERSION of D100 pattern: Casimir-XOR correlation reverses at higher XOR levels in simple modules.
+- **Phase 5 -- Hub anatomy (7 tests)**: 203 XOR10 winners from deep bf=30 sub-catalog. Only 3 super-hubs (frequency > 1/3 of winners) -- NOT the predicted 12. Hub 0: entry 0, freq=87 (42.9%), d=4, w=4, |C4|=0, Frob=8. Hub 1: entry 26, freq=137 (67.5%), d=5, w=5, |C4|=0, Frob=9. Hub 2: entry 27, freq=142 (70.0%), d=5, w=3, |C4|=11, Frob=12. Hub traces by Cyc8 component: hub 0 real (-4,0,0,0), hub 1 zeta_8 (0,4,0,0), hub 2 zeta_8^3 (0,0,0,-5). All 3 hub-pair commutators traceless (3/3). First commutator [hub_0, hub_1] is the ZERO MATRIX (hubs 0 and 1 COMMUTE). Co-occurrence: 247 edges, max co-occurrence 102, 62 hub-involved edges, 185 satellite-only edges -- strongly NOT a star topology. XOR12: 27 winners, entry 0 and entries 26-27 dominate (freq=26 each). sl_4 hub-count prediction FALSIFIED: 3 hubs, not 12.
+
+### Theorems/Conjectures
+
+- **sl_d Functor Thesis (PARTIALLY CONFIRMED, PARTIALLY FALSIFIED)**: Growth rate prediction CONFIRMED: ~4x per round converging toward 4 as expected for sl_4 (D100 showed ~3.1x for sl_3). Hub count prediction FALSIFIED: only 3 super-hubs found (not the predicted 12 = 6 pairs for sl_4). The growth rate tracks n-1 cleanly across three data points (2, 3, 4), but the hub count does NOT scale as 2*C(n-1,2). The discrepancy may be due to the simple-module context (W_{5,3} has no radical) vs D100's non-semisimple module (W_{4,2} has radical), or to the bf=30 deep-entry sampling which may miss hubs at other depths.
+- **Simple Module DKC (DEMONSTRATED)**: W_{5,3} is simple (radical dimension = 0), in contrast to D100's W_{4,2} which is non-semisimple (radical dim > 0, Loewy length 3). DKC still produces infinite catalogs and sustained XOR6-XOR12 capacity. However, the detailed structure differs: only 3 hubs (vs 6 for D100), XOR14 vanishes entirely (vs 70 for D100), and the Casimir-XOR correlation INVERTS at higher XOR levels. Simplicity changes the computational character, not just removes the radical.
+- **BFS Growth Rate Prediction (CONFIRMED)**: Predicted ~4x per round for 4 TL generators (n-1=4 for 5 strands). Observed: 8.00, 5.50, 4.68, 4.29, 4.07, 3.94 -- converging toward 4 as expected. D100 showed ~3.1x converging toward 3 for 3 generators. The growth rate tracks the number of TL generators (n-1), consistent with the sl_{n-1} thesis. This is now confirmed across THREE data points (n=3,4,5).
+- **No Radical Content, Still Computes (CONFIRMED)**: All catalog entries live in a simple module -- there is no radical to measure. XOR6-XOR12 capacity is sustained through depth. However, XOR14=0 everywhere suggests a capacity ceiling that D100 (non-semisimple) does not have. The radical extension in D100 may provide additional computational degrees of freedom that the simple module lacks.
+- **Traceless Commutator Universality (CONFIRMED for all 3 hub pairs)**: All 3 super-hub commutators are traceless (3/3). Moreover, [hub_0, hub_1] is the ZERO MATRIX -- these two hubs actually commute. This is stronger than tracelessness and suggests hub_0 and hub_1 live in a commutative subalgebra. Note that hub_0 (entry 0) is near-scalar: diagonal (-1,-1,-1,-1) with a single off-diagonal (0,0,4,0) entry. Hub_1 is similarly structured: diagonal (0,1,0,0) entries with a single off-diagonal (0,0,0,-5).
+- **Casimir-XOR Correlation INVERSION (NEW FINDING)**: D100 showed winners consistently have HIGHER Casimir (1.36x-1.86x ratio). D101 shows the pattern INVERTS: XOR6 ratio 1.17x and XOR8 ratio 1.51x (winners higher, matching D100), but XOR10 ratio 0.89x and XOR12 ratio 0.54x (winners LOWER). In the simple module, the hardest XOR computations select for LOW-Casimir entries. This is the opposite of D100's non-semisimple module. Possible explanation: in simple modules, near-scalar entries (low C4) provide the stability that the radical direction provided in D100.
+- **XOR14 Vanishing in Simple Module (NEW FINDING)**: XOR14=0 at ALL k values tested (128 through 4096) on the deep sub-catalog. D100 achieved XOR14=70 on 3x3 matrices with the same bf=30 and k=128. The simple module (no radical) has strictly less XOR14 capacity than the non-semisimple module. This suggests the non-semisimple extension structure in D100 is computationally load-bearing at the XOR14 boundary, not just algebraic decoration.
+
+### Data
+
+**W_{5,3} module structure:**
+- TL_5 at delta=0, n=5 (ODD) -- W_{5,3} is SIMPLE
+- dim(W_{5,3}) = 4 (Catalan path count for 5 strands, 3 through-lines)
+- Radical dimension = 0 (ker(e_1) intersect ... intersect ker(e_4) = {0})
+- Basis: 4 half-diagrams h_0..h_3 (one pair each from {1,2}, {2,3}, {3,4}, {4,5})
+
+**TL generators (4x4 over Z):**
+
+| Generator | Matrix | Pattern |
+|-----------|--------|---------|
+| e_1 | [[0,1,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0]] | h_1 -> h_0 |
+| e_2 | [[0,0,0,0],[1,0,1,0],[0,0,0,0],[0,0,0,0]] | h_0 -> h_1, h_2 -> h_1 |
+| e_3 | [[0,0,0,0],[0,0,0,0],[0,1,0,1],[0,0,0,0]] | h_1 -> h_2, h_3 -> h_2 |
+| e_4 | [[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,1,0]] | h_2 -> h_3 |
+
+**Braid generators (4x4 over Z[zeta_8]):**
+- A = -zeta_8 = (0,-1,0,0), A^{-1} = (0,0,0,1)
+- sigma_i = A*I + A^{-1}*e_i, sigma_i_inv = A^{-1}*I + A*e_i
+- 8 generators indexed 0-7: sigma_1, sigma_1_inv, sigma_2, sigma_2_inv, sigma_3, sigma_3_inv, sigma_4, sigma_4_inv
+- Writhe tracking: +1 for sigma, -1 for sigma_inv
+
+**BFS catalog (cap 32768):**
+
+| Depth | New entries | Cumulative | Growth ratio | Max magnitude |
+|-------|------------|------------|--------------|---------------|
+| 0 | 1 | 1 | -- | 1 |
+| 1 | 8 | 9 | 8.00 | 1 |
+| 2 | 44 | 53 | 5.50 | 2 |
+| 3 | 206 | 259 | 4.68 | 3 |
+| 4 | 884 | 1143 | 4.29 | 5 |
+| 5 | 3600 | 4743 | 4.07 | 8 |
+| 6 | 14198 | 18941 | 3.94 | 13 |
+| 7 | 13827 | 32768 | 0.97* | 21 |
+
+*Truncated by 32768 cap.
+
+**sigma_1 power growth:**
+
+| n | max_abs(sigma_1^n) |
+|---|-------------------|
+| 1 | 1 |
+| 2 | 2 |
+| 3 | 3 |
+| 4 | 4 |
+| 5 | 5 |
+| 6 | 6 |
+| 7 | 7 |
+| 8 | 8 |
+
+Linear growth confirms infinite order (Jordan block structure). Matches D100 exactly.
+
+**Growth rate comparison across strand count (sl_d thesis):**
+
+| n (strands) | Demo | Module | dim | Generators | Growth rate | Predicted (sl_{n-1}) |
+|-------------|------|--------|-----|------------|-------------|---------------------|
+| 3 | D98 | TL_3 | 5x5 | 4 | ~2.2x | 2 (sl_2) |
+| 4 | D100 | W_{4,2} | 3x3 | 6 | ~3.1x | 3 (sl_3) |
+| 5 | D101 | W_{5,3} | 4x4 | 8 | ~4.0x | 4 (sl_4) |
+
+**Phase 3 -- XOR capacity scan (bf=30, first 30 entries):**
+
+| k_cells | XOR6 | XOR8 | XOR10 | XOR12 |
+|---------|------|------|-------|-------|
+| 64 | 1916 | 1330 | 732 | 441 |
+| 128 | 2600 | 3316 | 844 | 441 |
+| 256 | 3080 | 7918 | 1876 | 465 |
+| 512 | 3297 | 12229 | 5729 | 512 |
+
+**Deep sub-catalog (d>=4, bf=30, k=128):**
+
+| XOR level | Winners |
+|-----------|---------|
+| XOR6 | 2579 |
+| XOR8 | 2228 |
+| XOR10 | 203 |
+| XOR12 | 27 |
+| XOR14 | 0 |
+
+**Deep XOR14 k-sweep (all zero):**
+
+| k | XOR14 |
+|------|-------|
+| 256 | 0 |
+| 512 | 0 |
+| 1024 | 0 |
+| 2048 | 0 |
+| 4096 | 0 |
+
+**Comparison: D100 (3x3 non-semisimple) vs D101 (4x4 simple) deep bf=30 k=128:**
+
+| XOR level | D100 (W_{4,2}) | D101 (W_{5,3}) |
+|-----------|---------------|---------------|
+| XOR6 | 2017 | 2579 |
+| XOR8 | 1169 | 2228 |
+| XOR10 | 654 | 203 |
+| XOR12 | 305 | 27 |
+| XOR14 | 70 | 0 |
+
+D101 wins at XOR6-XOR8, D100 wins at XOR10-XOR14. The simple module has broader but shallower capacity.
+
+**Phase 4 -- Casimir C4 by depth:**
+
+| Depth | mean_C4 | Count |
+|-------|---------|-------|
+| 0 | 0 | 1 |
+| 1 | 0 | 8 |
+| 2 | 4 | 44 |
+| 3 | 9 | 206 |
+| 4 | 20 | 884 |
+| 5 | 41 | 3600 |
+| 6 | 83 | 14198 |
+| 7 | 118 | 13827 |
+
+Mean |C4| across full catalog: 91. Growth approximately 2x per round (matching D100 pattern).
+
+**Phase 4 -- Casimir-by-XOR-level (deep bf=30, k=128):**
+
+| XOR level | Winners | Win C4 | Ctrl C4 | Ratio |
+|-----------|---------|--------|---------|-------|
+| XOR6 | 2579 | 55 | 47 | 1.17x |
+| XOR8 | 2228 | 71 | 47 | 1.51x |
+| XOR10 | 203 | 57 | 64 | 0.89x |
+| XOR12 | 27 | 43 | 79 | 0.54x |
+
+INVERSION at XOR10-XOR12: winners have LOWER Casimir. Contrast with D100 where all ratios > 1 (1.36x-1.86x).
+
+**XOR10 winners vs control (deep bf=30, k=128):**
+
+| Metric | Winners (203) | Control (1000) |
+|--------|-------------|----------------|
+| mean_C4 | 57 | 67 |
+
+**Phase 5 -- Super-hubs (3 hubs, frequency > 67 = 1/3 of 203 winners):**
+
+| Hub | Entry | Freq | Freq% | Depth | Writhe | Trace | |C4| | Frob L1 |
+|-----|-------|------|-------|-------|--------|-------|------|---------|
+| 0 | 0 | 87 | 42.9% | 4 | 4 | (-4,0,0,0) | 0 | 8 |
+| 1 | 26 | 137 | 67.5% | 5 | 5 | (0,4,0,0) | 0 | 9 |
+| 2 | 27 | 142 | 70.0% | 5 | 3 | (0,0,0,-5) | 11 | 12 |
+
+Hub traces by Cyc8 component: hub 0 = real (1-component), hub 1 = zeta_8 (b-component), hub 2 = zeta_8^3 (d-component). Three of four Cyc8 basis elements represented. Hubs 0 and 1 have |C4|=0 (nearly scalar).
+
+**Phase 5 -- Hub commutators (all traceless):**
+
+| Pair | Trace | |C4| | Frob L1 |
+|------|-------|------|---------|
+| [h0,h1] | (0,0,0,0) | 0 | 0 |
+| [h0,h2] | (0,0,0,0) | 0 | 0 |
+| [h1,h2] | (0,0,0,0) | 0 | 0 |
+
+ALL commutators are the zero matrix -- all three hubs MUTUALLY COMMUTE. This is much stronger than D100's tracelessness. The three hubs live in a commutative subalgebra of Mat_4(Z[zeta_8]).
+
+**Phase 5 -- Co-occurrence topology:**
+- 247 edges total, max co-occurrence 102
+- 62 hub-involved edges, 185 satellite-only edges
+- NOT a star topology (satellites connect to each other extensively)
+- 30/30 entries participate in at least one winner
+
+**Phase 5 -- XOR12 hub frequency (27 winners):**
+
+| Entry | Freq12 | Depth | C4 |
+|-------|--------|-------|----|
+| 0 | 26 | 4 | 0 |
+| 26 | 26 | 5 | 0 |
+| 27 | 26 | 5 | 11 |
+
+The same 3 hubs dominate XOR12 even more strongly (26/27 = 96.3% each). All three hubs appear in almost every XOR12 winner.
+
+### Code Assets
+
+- **`Cyc8` (Z[zeta_8] cyclotomic arithmetic)**: Exact integer type representing a + b*zeta_8 + c*zeta_8^2 + d*zeta_8^3 with zeta_8^4 = -1. Operations: `cyc8_make`, `cyc8_zero`, `cyc8_one`, `cyc8_add`, `cyc8_sub`, `cyc8_neg`, `cyc8_mul`, `cyc8_eq`, `cyc8_is_zero`, `cyc8_conj`, `cyc8_max_abs`, `cyc8_l1`. Shared with D100, D98, D35.
+- **`Mat4` (4x4 matrix over Cyc8)**: Matrix type for W_{5,3} representation. 16 Cyc8 entries = 64 long integers. Operations: `mat4_zero`, `mat4_identity`, `mat4_mul`, `mat4_eq`, `mat4_add`, `mat4_neg`, `mat4_scale`, `mat4_max_abs`, `mat4_print`, `mat4_trace`, `mat4_tr_sq`, `mat4_casimir`, `mat4_frob_l1`. All operations exact -- no floating point.
+- **Hash table for Mat4 BFS**: FNV-style hash over 64 long components, chained-bucket lookup. MAX_CAT = 32768, HASH_SIZE = 65537. Used for BFS deduplication.
+- **`build_tl_generators()`**: Constructs 4x4 integer matrices e_1..e_4 for TL_5 on W_{5,3} basis {h_0, h_1, h_2, h_3}. Pattern: A_3 Dynkin diagram (path graph on 4 nodes). Each e_i has rank 1: maps specific basis elements to a single target.
+- **`build_braid_generators()`**: Constructs 8 braid generators sigma_1..4 and inverses over Z[zeta_8]. Writhe tracked per generator (+1/-1).
+- **`build_catalog(max_depth)`**: BFS closure with 8 generators. Depth and writhe tracking per entry. Overflow protection at max_abs > 10^11. Reports per-round growth, max magnitude, and closure/cap/depth-limit status.
+- **`mat4_activate(m, k_param)`**: 4x4_hash activation -- sign pattern of all 64 integer components (4x4 matrix x 4 Cyc8 components), 3-valued (pos=2, zero=1, neg=0), base-3 hash mod k_param. Novel activation for 4x4 matrix-valued DKC.
+- **`test_xor_mat4(indices, n_weights, k_param)`**: 1wpi XOR test for Mat4 catalog. N weights -> 2N inputs (pos/neg pairs). Signed sum in Mat4 space, activation via mat4_activate. Supports up to 8 weights (16 inputs). Touch-list cleanup for efficient cell reuse.
+- **`count_xor_bf(n_weights, k_param, bf_limit)`**: Brute-force combinatorial XOR search over C(bf,n_weights) tuples. Supports n_weights = 3-7 (XOR6 through XOR14).
+- **`mat4_casimir(m)`**: C4(M) = 4*tr(M^2) - (tr M)^2. Integer-exact Casimir computation for 4x4 matrices. Uses `mat4_tr_sq` (trace of matrix squared via double sum) and `mat4_trace`. Note the coefficient 4 = dim(W_{5,3}), matching the D100 pattern where C3 used coefficient 3 = dim(W_{4,2}).
+
+### Connection to Earlier Demos
+
+| Demo | Finding | Relevance to D101 |
+|------|---------|-------------------|
+| D98 | 3-strand BFS infinite, trace readout catastrophically lossy | D101 avoids trace readout entirely -- uses sign-hash activation on full matrix |
+| D100 | 4-strand W_{4,2}: ~3.1x growth, 6 hubs, Casimir-XOR correlation, constant radical content, all commutators traceless | D101 tests same phenomena at 5 strands on simple module (no radical) -- isolates sl_d structure from non-semisimple effects |
+| D100 | Hub pairing by Cyc8 component (zeta_8, zeta_8^2, zeta_8^3) | D101 tests whether hub pairing extends to 12 hubs in 6 pairs for sl_4 |
+| D93 | 1wpi framework, circuit complexity hierarchy | D101 reuses activation/XOR framework adapted for 4x4 matrices |
+| D80 | Finite/infinite capacity boundary at quantum dimension | W_{5,3} is infinite (simple, n odd), confirming infinite group from simple TL module |
+
+### Literature Touched
+
+- **Temperley-Lieb algebra TL_5 at delta=0**: TL_5 with n=5 (odd) has different semisimplicity behavior than even n. W_{5,3} (standard module with 3 through-lines, dim=4) is SIMPLE -- no radical, no extensions. This contrasts sharply with D100's W_{4,2} (n=4 even, non-semisimple, radical dim=9). The simplicity means D101 tests DKC capacity in the "clean" case without non-semisimple complications.
+- **Representation theory of braid groups on TL modules**: sigma_i = A*I + A^{-1}*e_i gives B_5 acting on the 4-dimensional W_{5,3}. The 4 TL generators form an A_3 Dynkin diagram (path graph on 4 nodes), and the sl_d functor thesis predicts the braid image inherits sl_4 structure: growth rate ~4x (Weyl group size ratio), hub count = 2*C(4,2) = 12 (positive roots of A_3).
+- **Root systems and Lie algebra structure**: The positive roots of sl_4 (type A_3) are: e_1-e_2, e_2-e_3, e_3-e_4, e_1-e_3, e_2-e_4, e_1-e_4 -- six roots. The sl_d functor thesis predicts 12 super-hubs (6 pairs, one pair per positive root). D100 confirmed 6 hubs = 3 pairs for sl_3 (type A_2, 3 positive roots). D101 tests the A_3 case.
+- **Habiro (2002) / Z[zeta_8] bracket**: The algebraic substrate. D101 continues the matrix-valued extension: each catalog entry is a 4x4 matrix over Z[zeta_8]. The DKC signed-sum framework operates in the 4x4 matrix ring, which is associative but non-commutative -- the non-commutativity is what makes hub commutators a meaningful diagnostic.
+- **Casimir invariants**: C4(M) = 4*tr(M^2) - (tr M)^2 generalizes D100's C3(M) = 3*tr(M^2) - (tr M)^2. The coefficient matches the module dimension (3 for W_{4,2}, 4 for W_{5,3}), suggesting a uniform formula C_d(M) = d*tr(M^2) - (tr M)^2 for d-dimensional modules. Casimir measures "non-scalar-ness" of the matrix -- distance from scalar multiples of identity in the space of d x d matrices.
+
+### Open Questions
+
+- **Why only 3 hubs, not 12?**: The sl_4 prediction (12 super-hubs = 6 pairs) was falsified. Three possible explanations: (1) simple modules have fundamentally different hub structure than non-semisimple ones; (2) the bf=30 deep sub-catalog at d>=4 misses hubs that appear at shallower depths or in different sampling windows; (3) the hub-count prediction from sl_d was wrong and the growth-rate prediction was the real signal. Testing: repeat with bf=30 from ALL depths (not just d>=4), and try different hub thresholds.
+- **Commuting hubs and commutative subalgebra**: All three hub commutators are the zero matrix, not just traceless. The hubs live in a commutative subalgebra. Is this related to hub 0's near-scalar structure (diagonal -I with one off-diagonal entry)? Does the commutative subalgebra have a name in the representation theory of B_5 on W_{5,3}?
+- **Casimir inversion mechanism**: Why does the Casimir-XOR correlation invert at XOR10-12? At XOR6-8, high-Casimir entries win (like D100). At XOR10-12, low-Casimir entries win. Hypothesis: harder XOR computations in simple modules require near-scalar entries (low C4) for stability, while in non-semisimple modules the radical extension provides that stability automatically. Test: compute Casimir-by-XOR-level in D100 at XOR6 and XOR8 to see if the same inversion trend starts there.
+- **XOR14 vanishing -- simple vs non-semisimple capacity ceiling**: D100 has XOR14=70 on 3x3 non-semisimple, D101 has XOR14=0 on 4x4 simple. Is this a dimension effect (64 vs 36 activation components -- too fine-grained?), a module effect (simple vs non-semisimple), or a sampling effect (different entries at d>=4)? Test: try D101 with mat3-style activation (reduce to 36 or fewer sign components) and see if XOR14 appears.
+- **6-strand W_{6,4} as decisive test**: W_{6,4} (n=6, even, non-semisimple) should have ~5x growth (sl_5 thesis). If it also has 6+ super-hubs and XOR14 > 0, this confirms that non-semisimplicity is the key variable for hub count and deep XOR capacity. If it matches D101's pattern (few hubs, XOR14=0), the explanation is dimensional/structural rather than semisimplicity.
+- **Growth rate convergence**: The ratios (8.00, 5.50, 4.68, 4.29, 4.07, 3.94) are converging toward 4 but not yet stabilized (3.94 at d=6, truncated at d=7). Larger cap or deeper BFS needed to confirm asymptotic rate is exactly 4.
+- **Hub entry 0 structure**: Hub 0 (entry 0 at d=4) is near-scalar: M = -I + (0,0,4,0)*e_{01}. This is sigma_1^4 or a related simple braid word. Its dominance as a hub (42.9% of XOR10 winners, 26/27 of XOR12 winners) suggests a structural role. Is it the image of a central element or a power of a generator? Its near-scalar form (C4=0) is consistent with the Casimir inversion finding.
+- **Broad vs deep capacity**: D101 has MORE XOR6-8 solutions than D100 (2579 vs 2017, 2228 vs 1169) but FEWER XOR10-14 solutions (203 vs 654, 27 vs 305, 0 vs 70). The simple module has broader shallow capacity but less deep capacity. Is this a general simple-vs-non-semisimple pattern?

@@ -573,11 +573,10 @@ Status: ACTIVE RESEARCH FRONTIER. Multiple open questions across D66-D71.
     linear depth law and achieve superlinear scaling. Speculative but
     potentially high-impact. 1-2 demos.
 
-17. **D95: RKHS kernel rank test** (D94 seed) — THE quantitative validation
-    of the five-pillar synthesis. Compute DKC kernel K(m,m') = quaternion inner
-    product of signed sums for 2I vs z8. If rank(K_2I)/rank(K_z8) > 120/24,
-    non-solvability contributes above raw catalog size. One number, one demo.
-    HIGHEST PRIORITY among new seeds.
+17. ~~**D95: RKHS kernel rank test** (D94 seed)~~ — **REPURPOSED**. D95 became
+    the commutator depth and cross-layer synergy demo instead. The RKHS kernel
+    test remains valuable but has not been executed. Original plan: compute DKC
+    kernel K(m,m') = quaternion inner product of signed sums for 2I vs z8.
 
 18. **Higher k_sec with 2I** (D94 seed) — D94 used k_sec=12 (384 cells).
     2I has 9 half-angles and 31 directions — richer than z8. k_sec=24 doubles
@@ -603,9 +602,52 @@ Status: ACTIVE RESEARCH FRONTIER. Multiple open questions across D66-D71.
     at z12 (D82)? Tests depth law applicability to non-solvable finite groups.
     Single demo.
 
+22. **6-strand W_{6,4} decisive test** (D101 seed) — The sl_d functor thesis
+    predicts ~5x BFS growth rate at n=6 (5 generators). W_{6,4} is the next
+    standard module in the sequence. If growth ~5x is confirmed, the functor
+    thesis holds for 4 consecutive strand counts. If hub count deviates from
+    both the D100 prediction (predicted scaling) and D101 observation (3 hubs),
+    it constrains what governs hub formation. **HIGHEST MULTI-STRAND PRIORITY.**
+    Single demo.
+
+23. **Radical content vs XOR correlation study** (D100 seed) — D100 found
+    constant radical content across hubs despite varying XOR capacity (Casimir
+    1.36x-1.86x correlation). D101 found zero radical content everywhere
+    (simple module). Is radical content a prerequisite for computation, or is
+    the Casimir eigenvalue the true predictor? Test on W_{4,3} (different module
+    of the same TL_4 algebra, potentially different radical structure). 1-2 demos.
+
+24. **Multi-strand activation zoo** (D99 seed) — D99 used sector activation
+    on individual matrix entries. Richer activations (Frobenius norm sectors,
+    eigenvalue sectors, determinant sectors) may access different computational
+    regimes. The readout bottleneck (trace=0 XOR at 3-strand) shows that
+    activation/readout design is the critical frontier. Systematic survey of
+    readout × activation combinations. 2-3 demos.
+
+25. **Fibonacci parameter direct test** (D94 seed) — Test at q = e^{2πi/5}
+    where [2]_q = φ^{-1} ≈ 0.618, the Fibonacci/Jones-Wenzl point that is
+    "maximally computational" for TQC (Mochon 2003). Compare dense catalog
+    structure to 2I's finite catalog. If the Fibonacci point produces a clean
+    finite group with universal computation, it bridges TQC and DKC most
+    directly. 1-2 demos.
+
+26. **Artificial perfect cell construction** (D96-D97 seed) — D96 showed Cell B
+    (null-derived, non-commutator) achieves 100% XOR at every N. D97 proved
+    this is geometric inevitability from orthogonal-frame structure with a
+    50-degree robust plateau. Can artificial catalogs be constructed that
+    reproduce Cell B's geometry WITHOUT the BFS enumeration? If so, DKC
+    compilation can bypass BFS entirely for this cell type. Single demo.
+
+27. **Non-semisimple TQFT DKC formalization** (D99 seed) — D99's Ext^1
+    catalytic preparation thesis is empirical. The connection to Gainutdinov-
+    Read-Saleur non-semisimple TQFT is structural but not formal. A rigorous
+    formulation connecting TL module Ext^1 groups to DKC algebraic regime
+    capacity would be a major theoretical result and potential paper core.
+    Theory-heavy, 1-2 demos plus formal writeup.
+
 ---
 
-## New Research Axes (from D64-D94)
+## New Research Axes (from D64-D101)
 
 ### 1. Quaternionic DKC as a Research Axis
 
@@ -1343,6 +1385,106 @@ quantitative validation. If confirmed, this is the deepest structural result
 in the program — not a new observation but a new framework connecting all
 previous observations.
 
+### 17. Multi-Strand DKC and the sl_d Functor Thesis — NEW (D95-D101)
+
+D95-D101 open a major new research axis: extending DKC from 2-strand (quaternionic)
+representations to n-strand Temperley-Lieb representations over Z[zeta_8]. This is
+not a straightforward generalization — it reveals qualitatively new phenomena at
+every strand count tested.
+
+**The sl_d functor thesis (D100-D101):**
+
+The BFS growth rate on n-strand TL standard modules tracks n-1 (the number of TL
+generators):
+- n=3 (W_{3,1}): growth ~2x/round → 2 generators
+- n=4 (W_{4,2}): growth ~3.1x/round → 3 generators
+- n=5 (W_{5,3}): growth ~4x/round → 4 generators
+
+This is the sl_d functor in action: the standard module W_{n,k} carries an
+action of sl_{n-1} through the TL generators e_1, ..., e_{n-2}, and the BFS
+growth rate measures the effective branching factor of this action. CONFIRMED
+at n=3,4,5. The n=6 test (W_{6,4}, predicted ~5x growth) is the decisive
+next validation.
+
+**Key findings by strand count:**
+
+**3-strand (D98-D99):**
+- Infinite group (2048 BFS entries at depth 7, still growing)
+- Readout bottleneck: trace readout = ZERO XOR6 (catastrophically lossy);
+  column-vector readout = 100% retention. The trace contracts 3x3 matrices
+  to scalars, destroying the multi-strand information
+- Ext^1 catalytic preparation (D99 — LANDMARK): non-semisimple extensions
+  (Jordan blocks in the 6D W_{3,1} module) enable an algebraic regime
+  producing XOR6=500K solutions, XOR10-14=60 solutions. WITHOUT the Ext^1
+  structure, zero solutions above XOR6
+- Two regimes: combinatorial (XOR6-8, proportional to catalog size) vs
+  algebraic (XOR10-14, from non-semisimple extension structure)
+- Star-graph topology: all entries connected through 2-3 super-hubs
+- XOR16=0 ceiling (hard wall at current parameters)
+
+**4-strand (D100):**
+- W_{4,2}: 3x3 matrices over Z[zeta_8], ~3.1x BFS growth
+- Radical dimension 9 (non-semisimple, significant radical content)
+- 6 super-hubs, constant radical content across hubs
+- Casimir-XOR correlation: higher Casimir → higher XOR (1.36x-1.86x)
+- All hub commutators are traceless with zero radical content
+
+**5-strand (D101):**
+- W_{5,3}: 5x5 matrices over Z[zeta_8], ~4x BFS growth
+- SIMPLE module (radical dimension = 0, no non-semisimple extensions)
+- Only 3 super-hubs (hub count FALSIFIED — predicted 12, observed 3)
+- Casimir INVERSION: high-XOR winners have LOWER Casimir (opposite of D100)
+- XOR14=0 ceiling (simple module ceiling, likely structural)
+
+**The Ext^1 finding — non-semisimple extensions are computationally load-bearing:**
+
+D99's most significant result is that the Ext^1 structure (non-trivial extensions
+between simple modules creating Jordan blocks) is what enables the algebraic
+computation regime. This directly extends Research Axis 11 (non-semisimplicity as
+THE resource): the resource is not just non-semisimplicity in the TL algebra
+itself, but non-semisimplicity in the specific MODULE being used as the
+computational substrate.
+
+The comparison between D100 (W_{4,2}, non-semisimple, radical dim=9) and D101
+(W_{5,3}, simple, radical dim=0) is the cleanest evidence: the non-semisimple
+module produces richer computation (higher XOR capacity relative to module
+dimension) despite operating on smaller matrices. The simple module has more
+algebraic room (5x5 vs 3x3) but less computational leverage because it lacks
+the Jordan-block structure that enables the algebraic regime.
+
+**Readout as the multi-strand frontier:**
+
+The trace readout catastrophe at 3-strand (D98) identifies readout design as
+the critical problem for multi-strand DKC. The column-vector readout preserves
+information but requires choosing WHICH column — a new design dimension that
+does not exist in 2-strand (where the quaternion IS the readout). For multi-
+strand, the readout function maps n×n matrices to scalars (or vectors), and
+the choice of readout determines whether the multi-strand information is
+preserved or destroyed.
+
+**Connection to the vision:**
+
+Multi-strand DKC dramatically expands the DKC design space along three new
+dimensions:
+1. **Strand count** (n): determines BFS growth rate, module dimension, and
+   the sl_d algebraic structure
+2. **Module choice** (simple vs non-semisimple): determines whether the
+   algebraic computation regime is accessible
+3. **Readout function** (trace vs column vs other): determines whether
+   multi-strand information survives to the activation layer
+
+For the hybrid LLM compilation pipeline, multi-strand opens the possibility
+of higher-dimensional compiled neurons with richer computational capacity,
+at the cost of more complex readout design. The sl_d functor thesis provides
+a systematic program: test each strand count, each module type, each readout
+— with predictions from the functor (growth rate = n-1) guiding which
+configurations to prioritize.
+
+Status: ACTIVE RESEARCH FRONTIER. sl_d growth confirmed at n=3,4,5. Hub
+count scaling FALSIFIED. Ext^1 thesis established but needs formalization.
+Simple vs non-semisimple comparison is the key qualitative finding. n=6
+(W_{6,4}) is the decisive next test.
+
 ---
 
 ## Connection to Broader Rhubarb Project
@@ -1476,3 +1618,21 @@ prediction. Gap 9 updated (E₈/2I resolved). Near-term explorations 17-21 added
 (D95 RKHS kernel rank, higher k_sec with 2I, depth law under phase_cell,
 Fibonacci parameter direct test, cross-depth 2I analysis). Paper 8 path
 identified: circuit complexity + five-pillar synthesis.*
+*Updated: 2026-02-24. D95-D101 multi-strand DKC arc: Research axis 17 added
+(Multi-Strand DKC and the sl_d Functor Thesis). D95: commutator depth and
+cross-layer synergy (COMM+NON-COMM 2.7x boost, cross-layer synergy 0+0=26%).
+D96: LANDMARK — TL-group cross-classification, 5-cell landscape, Cell B 100%
+XOR perfection, optimal z8 catalog = A+B+C (21 entries). D97: Cell B geometric
+inevitability, orthogonal-frame proof, 50-degree robust plateau. D98: 3-strand
+proof of concept, infinite group (2048 entries), readout bottleneck (trace=0,
+column=100%). D99: LANDMARK — first-ever 3-strand XOR (XOR6=500K, XOR14=60),
+Ext^1 catalytic preparation thesis, two-regime hypothesis. D100: 4-strand
+W_{4,2}, 3x3 matrices, ~3.1x growth, Casimir-XOR correlation. D101: 5-strand
+W_{5,3}, sl_d functor confirmed (~4x growth), hub count falsified (3 not 12),
+Casimir inversion in simple modules, XOR14=0 ceiling. Near-term explorations
+17 marked repurposed, 22-27 added (W_{6,4} decisive test, radical content
+study, multi-strand activation zoo, Fibonacci parameter, artificial perfect
+cell, non-semisimple TQFT formalization). Key findings: Ext^1 extensions are
+computationally load-bearing; simple vs non-semisimple modules produce
+qualitatively different computation; readout design is the multi-strand
+frontier; sl_d functor provides systematic program for all strand counts.*
