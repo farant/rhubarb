@@ -1,0 +1,1786 @@
+/*
+ * KNOTAPEL DEMO 86: Direct b on P_{0,0} via Delta-Parameterized Forms
+ * ====================================================================
+ *
+ * RESULT: NEGATIVE (hypothesis falsified)
+ *
+ * Attempted to compute the indecomposability parameter b DIRECTLY on
+ * a single projective cover P_{0,0} (left ideal of TL_n at delta=0).
+ *
+ * Two forms tested:
+ *   Loop (Markov trace) form  -> predict b = -5/8 (Pearce-Rasmussen)
+ *   Trace (algebraic) form    -> predict b = -2   (GRS)
+ *
+ * Finding: The delta-form valuation diverges universally on a single
+ * P_{0,0} at EVERY eigenvalue (0, +-sqrt2, +-sqrt3, +-(sqrt3+-1)).
+ * The condition p_tt = 2*p_Tt never holds. The multiplicity from
+ * the regular representation is structurally essential, not just a
+ * scale factor.
+ *
+ * Literature (Gemini): This is a known issue. The standard method
+ * (Pearce-Rasmussen) extracts b from off-diagonal Jordan cell
+ * coupling in the Hamiltonian, not from Gram matrix norms.
+ *
+ * TL_8: completely semisimple at lambda=0 (no Jordan blocks).
+ *
+ * C89, zero dependencies beyond math.h.
+ */
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <math.h>
+
+/* ================================================================ */
+/* Limits                                                           */
+/* ================================================================ */
+
+#define MAX_ALG_N 8
+#define MAX_ALG_2N 16
+#define MAX_ALG_DIM 1430  /* C_8 = 1430 */
+#define MAX_ALG_SEGS 20
+#define MAX_IDEAL_DIM 200 /* P_{0,0} at TL_8 ~ 42? */
+
+/* ================================================================ */
+/* Test infrastructure                                              */
+/* ================================================================ */
+
+static int n_pass = 0, n_fail = 0;
+
+static void check(const char *titulis, int ok) {
+    if (ok) { printf("  PASS: %s\n", titulis); n_pass++; }
+    else    { printf("  FAIL: %s\n", titulis); n_fail++; }
+}
+
+/* ================================================================ */
+/* TL Algebra Infrastructure (from Demo 85)                         */
+/* ================================================================ */
+
+typedef struct {
+    int match[MAX_ALG_2N];
+} AlgDiagram;
+
+typedef struct {
+    int points[MAX_ALG_2N];
+    int count;
+} AlgSegment;
+
+static int alg_n;
+static int alg_dim;
+static AlgDiagram alg_basis[MAX_ALG_DIM];
+static int alg_id_idx;
+static int alg_gen_idx[MAX_ALG_N];
+static int alg_n_gens;
+static int alg_mt[MAX_ALG_DIM][MAX_ALG_DIM];
+static int alg_mt_full[MAX_ALG_DIM][MAX_ALG_DIM];
+static int alg_mt_nloops[MAX_ALG_DIM][MAX_ALG_DIM];
+static int alg_star_idx[MAX_ALG_DIM];
+
+static void alg_build_boundary(int n, int *bp) {
+    int i;
+    for (i = 0; i < n; i++) bp[i] = i;
+    for (i = 0; i < n; i++) bp[n + i] = 2 * n - 1 - i;
+}
+
+static void alg_enum_segs(AlgSegment *segs, int n_segs, int *match_buf,
+                          AlgDiagram *basis_out, int *count, int n) {
+    int s, j, k, first_seg;
+    AlgSegment new_segs[MAX_ALG_SEGS];
+    int new_n;
+    int *pts, cnt;
+
+    first_seg = -1;
+    for (s = 0; s < n_segs; s++) {
+        if (segs[s].count > 0) { first_seg = s; break; }
+    }
+    if (first_seg == -1) {
+        if (*count < MAX_ALG_DIM) {
+            memcpy(basis_out[*count].match, match_buf,
+                   (size_t)(2 * n) * sizeof(int));
+            (*count)++;
+        }
+        return;
+    }
+
+    pts = segs[first_seg].points;
+    cnt = segs[first_seg].count;
+
+    for (j = 1; j < cnt; j += 2) {
+        match_buf[pts[0]] = pts[j];
+        match_buf[pts[j]] = pts[0];
+
+        new_n = 0;
+        for (k = 0; k < n_segs; k++) {
+            if (k == first_seg) {
+                if (j > 1) {
+                    memcpy(new_segs[new_n].points, &pts[1],
+                           (size_t)(j - 1) * sizeof(int));
+                    new_segs[new_n].count = j - 1;
+                    new_n++;
+                }
+                if (cnt - j - 1 > 0) {
+                    memcpy(new_segs[new_n].points, &pts[j + 1],
+                           (size_t)(cnt - j - 1) * sizeof(int));
+                    new_segs[new_n].count = cnt - j - 1;
+                    new_n++;
+                }
+            } else {
+                new_segs[new_n] = segs[k];
+                new_n++;
+            }
+        }
+        alg_enum_segs(new_segs, new_n, match_buf, basis_out, count, n);
+    }
+}
+
+static int alg_enumerate_basis(int n, AlgDiagram *basis_out) {
+    AlgSegment segs[1];
+    int match_buf[MAX_ALG_2N];
+    int count = 0;
+    alg_build_boundary(n, segs[0].points);
+    segs[0].count = 2 * n;
+    memset(match_buf, -1, sizeof(match_buf));
+    alg_enum_segs(segs, 1, match_buf, basis_out, &count, n);
+    return count;
+}
+
+static int alg_compose(int n, const AlgDiagram *d1, const AlgDiagram *d2,
+                       AlgDiagram *result) {
+    int glue_visited[MAX_ALG_N];
+    int i, loops;
+
+    memset(result->match, -1, (size_t)(2 * n) * sizeof(int));
+    memset(glue_visited, 0, (size_t)n * sizeof(int));
+    loops = 0;
+
+    for (i = 0; i < 2 * n; i++) {
+        int in_d1, cur;
+        if (result->match[i] >= 0) continue;
+        if (i < n) { in_d1 = 1; cur = i; }
+        else       { in_d1 = 0; cur = i; }
+
+        for (;;) {
+            int partner;
+            if (in_d1) {
+                partner = d1->match[cur];
+                if (partner < n) {
+                    result->match[i] = partner;
+                    result->match[partner] = i;
+                    break;
+                }
+                glue_visited[partner - n] = 1;
+                in_d1 = 0;
+                cur = partner - n;
+            } else {
+                partner = d2->match[cur];
+                if (partner >= n) {
+                    result->match[i] = partner;
+                    result->match[partner] = i;
+                    break;
+                }
+                glue_visited[partner] = 1;
+                in_d1 = 1;
+                cur = n + partner;
+            }
+        }
+    }
+
+    for (i = 0; i < n; i++) {
+        int cur, p, q;
+        if (glue_visited[i]) continue;
+        loops++;
+        cur = i;
+        do {
+            glue_visited[cur] = 1;
+            p = d2->match[cur];
+            glue_visited[p] = 1;
+            q = d1->match[n + p];
+            cur = q - n;
+        } while (cur != i);
+    }
+
+    return loops;
+}
+
+static AlgDiagram alg_make_identity(int n) {
+    AlgDiagram m;
+    int k;
+    for (k = 0; k < n; k++) {
+        m.match[k] = n + k;
+        m.match[n + k] = k;
+    }
+    return m;
+}
+
+static AlgDiagram alg_make_generator(int n, int gen) {
+    AlgDiagram m = alg_make_identity(n);
+    m.match[gen] = gen + 1;
+    m.match[gen + 1] = gen;
+    m.match[n + gen] = n + gen + 1;
+    m.match[n + gen + 1] = n + gen;
+    return m;
+}
+
+static int alg_find_index(const AlgDiagram *m, const AlgDiagram *basis_arr,
+                          int num, int n) {
+    int i, j, eq;
+    for (i = 0; i < num; i++) {
+        eq = 1;
+        for (j = 0; j < 2 * n; j++) {
+            if (m->match[j] != basis_arr[i].match[j]) { eq = 0; break; }
+        }
+        if (eq) return i;
+    }
+    return -1;
+}
+
+static void alg_compute_mult_table(void) {
+    int i, j;
+    for (i = 0; i < alg_dim; i++) {
+        for (j = 0; j < alg_dim; j++) {
+            AlgDiagram result;
+            int loops = alg_compose(alg_n, &alg_basis[i],
+                                    &alg_basis[j], &result);
+            int ridx = alg_find_index(&result, alg_basis,
+                                      alg_dim, alg_n);
+            alg_mt_full[i][j] = ridx;
+            alg_mt_nloops[i][j] = loops;
+            if (loops > 0) {
+                alg_mt[i][j] = -1;
+            } else {
+                alg_mt[i][j] = ridx;
+            }
+        }
+    }
+}
+
+/* Adjoint (vertical flip): swap top <-> bottom */
+static AlgDiagram alg_star(const AlgDiagram *d, int n) {
+    AlgDiagram ds;
+    int k;
+    for (k = 0; k < 2 * n; k++) {
+        int fk = k < n ? k + n : k - n;
+        int partner = d->match[fk];
+        int fp = partner < n ? partner + n : partner - n;
+        ds.match[k] = fp;
+    }
+    return ds;
+}
+
+static void alg_compute_star_indices(void) {
+    int k;
+    for (k = 0; k < alg_dim; k++) {
+        AlgDiagram ds = alg_star(&alg_basis[k], alg_n);
+        alg_star_idx[k] = alg_find_index(&ds, alg_basis,
+                                          alg_dim, alg_n);
+    }
+}
+
+/* Count loops when closing a diagram by connecting top_k to bottom_k */
+static int alg_closure_loops(const AlgDiagram *d, int n) {
+    int visited[MAX_ALG_2N];
+    int p, nloops, two_n;
+    two_n = 2 * n;
+    memset(visited, 0, (size_t)two_n * sizeof(int));
+    nloops = 0;
+    for (p = 0; p < two_n; p++) {
+        int cur;
+        if (visited[p]) continue;
+        nloops++;
+        cur = p;
+        do {
+            int partner;
+            visited[cur] = 1;
+            partner = d->match[cur];
+            visited[partner] = 1;
+            if (partner < n) cur = n + partner;
+            else cur = partner - n;
+        } while (cur != p);
+    }
+    return nloops;
+}
+
+/* Count through-lines in a diagram */
+static int alg_count_through(const AlgDiagram *d, int n) {
+    int k, count = 0;
+    for (k = 0; k < n; k++) {
+        if (d->match[k] >= n) count++;
+    }
+    return count;
+}
+
+static void alg_init(int n) {
+    AlgDiagram diag;
+    int g;
+    alg_n = n;
+    alg_dim = alg_enumerate_basis(n, alg_basis);
+    alg_n_gens = n - 1;
+
+    diag = alg_make_identity(n);
+    alg_id_idx = alg_find_index(&diag, alg_basis, alg_dim, n);
+
+    for (g = 0; g < n - 1; g++) {
+        diag = alg_make_generator(n, g);
+        alg_gen_idx[g] = alg_find_index(&diag, alg_basis, alg_dim, n);
+    }
+
+    alg_compute_mult_table();
+    alg_compute_star_indices();
+}
+
+/* ================================================================ */
+/* Left Ideal Construction (from Demo 85)                           */
+/* ================================================================ */
+
+static int left_ideal_closure(const int *gens, int n_gens,
+                              int *ideal, int *ideal_size) {
+    int in_ideal[MAX_ALG_DIM];
+    int queue[MAX_ALG_DIM];
+    int head, tail, i, img;
+
+    memset(in_ideal, 0, sizeof(in_ideal));
+    head = 0;
+    tail = 0;
+
+    for (i = 0; i < n_gens; i++) {
+        if (!in_ideal[gens[i]]) {
+            in_ideal[gens[i]] = 1;
+            queue[tail++] = gens[i];
+        }
+    }
+
+    while (head < tail) {
+        int elem = queue[head++];
+        for (i = 0; i < alg_dim; i++) {
+            img = alg_mt[i][elem];
+            if (img >= 0 && !in_ideal[img]) {
+                in_ideal[img] = 1;
+                queue[tail++] = img;
+            }
+        }
+    }
+
+    *ideal_size = 0;
+    for (i = 0; i < alg_dim; i++) {
+        if (in_ideal[i]) {
+            ideal[*ideal_size] = i;
+            (*ideal_size)++;
+        }
+    }
+
+    return *ideal_size;
+}
+
+/* ================================================================ */
+/* Hamiltonian: L_H = left mult by H = -(e_0 + ... + e_{n-2})      */
+/* ================================================================ */
+
+/* build_alg_hamiltonian: now inlined in build_restricted_hamiltonian */
+
+/* Build L_H restricted to an ideal subspace */
+static void build_restricted_hamiltonian(
+    const int *ideal, int ideal_size,
+    int L_sub[][MAX_IDEAL_DIM])
+{
+    /* Full L_H on algebra */
+    static int L_H_full[MAX_ALG_DIM][MAX_ALG_DIM];
+    int in_ideal[MAX_ALG_DIM];
+    int idx_map[MAX_ALG_DIM]; /* alg index -> ideal position */
+    int g, col, target, ri, ci;
+
+    memset(L_H_full, 0, sizeof(L_H_full));
+    memset(in_ideal, 0, sizeof(in_ideal));
+    memset(idx_map, -1, sizeof(idx_map));
+
+    for (ri = 0; ri < ideal_size; ri++) {
+        in_ideal[ideal[ri]] = 1;
+        idx_map[ideal[ri]] = ri;
+    }
+
+    /* Build full Hamiltonian */
+    for (g = 0; g < alg_n_gens; g++) {
+        int gi = alg_gen_idx[g];
+        for (col = 0; col < alg_dim; col++) {
+            target = alg_mt[gi][col];
+            if (target >= 0) {
+                L_H_full[target][col] -= 1;
+            }
+        }
+    }
+
+    /* Verify invariance and restrict */
+    for (ri = 0; ri < ideal_size; ri++)
+        for (ci = 0; ci < ideal_size; ci++)
+            L_sub[ri][ci] = 0;
+
+    for (ci = 0; ci < ideal_size; ci++) {
+        int acol = ideal[ci];
+        for (ri = 0; ri < alg_dim; ri++) {
+            if (L_H_full[ri][acol] != 0) {
+                if (!in_ideal[ri]) {
+                    printf("  WARNING: L_H maps ideal[%d]=%d "
+                           "to non-ideal %d!\n", ci, acol, ri);
+                } else {
+                    L_sub[idx_map[ri]][ci] += L_H_full[ri][acol];
+                }
+            }
+        }
+    }
+}
+
+/* ================================================================ */
+/* Modular arithmetic for minimal polynomial                        */
+/* ================================================================ */
+
+#define MOD_P 1000000007L
+
+static long mod_pos(long x) {
+    long r = x % MOD_P;
+    return r < 0 ? r + MOD_P : r;
+}
+
+static long mod_mul(long a, long b) {
+    return mod_pos(a) * mod_pos(b) % MOD_P;
+}
+
+static long mod_add(long a, long b) {
+    return (mod_pos(a) + mod_pos(b)) % MOD_P;
+}
+
+static long mod_sub(long a, long b) {
+    return mod_pos(mod_pos(a) - mod_pos(b));
+}
+
+static long mod_pow(long base, long exp) {
+    long result = 1;
+    base = mod_pos(base);
+    while (exp > 0) {
+        if (exp % 2 == 1) result = result * base % MOD_P;
+        base = base * base % MOD_P;
+        exp /= 2;
+    }
+    return result;
+}
+
+static long mod_inv(long a) {
+    return mod_pow(a, MOD_P - 2);
+}
+
+/* Polynomial derivative mod p */
+static int poly_deriv_mod(const long *f, int deg_f, long *fp) {
+    int k;
+    if (deg_f <= 0) { fp[0] = 0; return 0; }
+    for (k = 1; k <= deg_f; k++) {
+        fp[k - 1] = mod_mul(f[k], (long)k);
+    }
+    return deg_f - 1;
+}
+
+/* Polynomial GCD mod p — returns degree of GCD */
+static int poly_gcd_degree_mod(const long *a_in, int deg_a,
+                               const long *b_in, int deg_b) {
+    long a[MAX_IDEAL_DIM + 2], b[MAX_IDEAL_DIM + 2],
+         r[MAX_IDEAL_DIM + 2];
+    int i, da, db;
+    long lc_inv;
+
+    for (i = 0; i <= deg_a; i++) a[i] = a_in[i];
+    da = deg_a;
+    for (i = 0; i <= deg_b; i++) b[i] = b_in[i];
+    db = deg_b;
+
+    if (db > da) {
+        long tmp[MAX_IDEAL_DIM + 2];
+        int td;
+        for (i = 0; i <= db; i++) tmp[i] = b[i];
+        for (i = 0; i <= da; i++) b[i] = a[i];
+        for (i = 0; i <= db; i++) a[i] = tmp[i];
+        td = da; da = db; db = td;
+    }
+
+    while (db >= 0 && (db > 0 || b[0] != 0)) {
+        for (i = 0; i <= da; i++) r[i] = a[i];
+        lc_inv = mod_inv(b[db]);
+        while (da >= db) {
+            long coeff = mod_mul(r[da], lc_inv);
+            for (i = 0; i <= db; i++) {
+                r[da - db + i] = mod_sub(r[da - db + i],
+                                         mod_mul(coeff, b[i]));
+            }
+            da--;
+        }
+        while (da >= 0 && r[da] == 0) da--;
+        if (da < 0) da = 0;
+        for (i = 0; i <= db; i++) a[i] = b[i];
+        for (i = 0; i <= da; i++) b[i] = r[i];
+        { int td2 = da; da = db; db = td2; }
+    }
+    while (da > 0 && a[da] == 0) da--;
+    return (da == 0 && a[0] != 0) ? 0 : da;
+}
+
+/* Minimal polynomial via Krylov iteration mod p */
+static int min_poly_mod(const int H[][MAX_IDEAL_DIM], int dim,
+                        long *mpoly) {
+    static long K[MAX_IDEAL_DIM + 2][MAX_IDEAL_DIM];
+    static long row[MAX_IDEAL_DIM + 2][MAX_IDEAL_DIM + 2];
+    int pivot_col[MAX_IDEAL_DIM + 2];
+    int j, i, k, rank, deg;
+    long lc_inv;
+
+    for (i = 0; i < dim; i++)
+        K[0][i] = 1;
+
+    memset(row, 0, sizeof(row));
+    memset(pivot_col, -1, sizeof(pivot_col));
+    rank = 0;
+
+    for (j = 0; j <= dim; j++) {
+        if (j > 0) {
+            for (i = 0; i < dim; i++) {
+                long sum = 0;
+                for (k = 0; k < dim; k++) {
+                    sum = mod_add(sum,
+                        mod_mul((long)H[i][k], K[j-1][k]));
+                }
+                K[j][i] = sum;
+            }
+        }
+
+        {
+            long tmp_row[MAX_IDEAL_DIM];
+            long coeffs[MAX_IDEAL_DIM + 2];
+
+            for (i = 0; i < dim; i++) tmp_row[i] = K[j][i];
+            memset(coeffs, 0, sizeof(coeffs));
+            coeffs[j] = 1;
+
+            for (k = 0; k < rank; k++) {
+                int pc = pivot_col[k];
+                if (tmp_row[pc] != 0) {
+                    long factor = mod_mul(tmp_row[pc],
+                                          mod_inv(row[k][pc]));
+                    for (i = 0; i < dim; i++)
+                        tmp_row[i] = mod_sub(tmp_row[i],
+                            mod_mul(factor, row[k][i]));
+                    for (i = 0; i <= j; i++)
+                        coeffs[i] = mod_sub(coeffs[i],
+                            mod_mul(factor,
+                                (i < rank + 1 ?
+                                 row[k][dim + i] : 0)));
+                }
+            }
+
+            {
+                int is_zero = 1;
+                for (i = 0; i < dim; i++) {
+                    if (tmp_row[i] != 0) { is_zero = 0; break; }
+                }
+
+                if (is_zero) {
+                    deg = j;
+                    lc_inv = mod_inv(coeffs[j]);
+                    for (i = 0; i <= deg; i++)
+                        mpoly[i] = mod_mul(coeffs[i], lc_inv);
+                    return deg;
+                }
+
+                for (i = 0; i < dim; i++) {
+                    if (tmp_row[i] != 0) {
+                        pivot_col[rank] = i;
+                        for (k = 0; k < dim; k++)
+                            row[rank][k] = tmp_row[k];
+                        for (k = 0; k <= j; k++)
+                            row[rank][dim + k] = coeffs[k];
+                        rank++;
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
+    deg = dim;
+    memset(mpoly, 0, (size_t)(dim + 1) * sizeof(long));
+    mpoly[dim] = 1;
+    return deg;
+}
+
+/* Check for Jordan blocks via min poly square-freeness */
+static int has_jordan_blocks(const int H[][MAX_IDEAL_DIM], int dim) {
+    long mpoly[MAX_IDEAL_DIM + 2];
+    long dpoly[MAX_IDEAL_DIM + 2];
+    int deg_m, deg_d, gcd_deg;
+
+    deg_m = min_poly_mod(H, dim, mpoly);
+    deg_d = poly_deriv_mod(mpoly, deg_m, dpoly);
+    gcd_deg = poly_gcd_degree_mod(mpoly, deg_m, dpoly, deg_d);
+
+    printf("  [min poly degree = %d, gcd(mu,mu') degree = %d]\n",
+           deg_m, gcd_deg);
+
+    return gcd_deg > 0;
+}
+
+/* ================================================================ */
+/* Null space extraction (double precision RREF)                    */
+/* ================================================================ */
+
+static int extract_null_space(const int M[][MAX_IDEAL_DIM], int dim,
+                              double null_vecs[][MAX_IDEAL_DIM]) {
+    static double work[MAX_IDEAL_DIM][MAX_IDEAL_DIM];
+    int pivot_col[MAX_IDEAL_DIM];
+    int is_pivot[MAX_IDEAL_DIM];
+    int i, j, k, pivot_row, rank, n_null;
+    double max_val, factor;
+    double eps = 1e-9;
+
+    for (i = 0; i < dim; i++)
+        for (j = 0; j < dim; j++)
+            work[i][j] = (double)M[i][j];
+
+    memset(pivot_col, -1, sizeof(pivot_col));
+    memset(is_pivot, 0, sizeof(is_pivot));
+    rank = 0;
+
+    for (j = 0; j < dim; j++) {
+        pivot_row = -1;
+        max_val = eps;
+        for (i = rank; i < dim; i++) {
+            double av = work[i][j] < 0 ? -work[i][j] : work[i][j];
+            if (av > max_val) { max_val = av; pivot_row = i; }
+        }
+        if (pivot_row == -1) continue;
+
+        if (pivot_row != rank) {
+            for (k = 0; k < dim; k++) {
+                double tmp = work[rank][k];
+                work[rank][k] = work[pivot_row][k];
+                work[pivot_row][k] = tmp;
+            }
+        }
+
+        pivot_col[rank] = j;
+        is_pivot[j] = 1;
+
+        factor = work[rank][j];
+        for (k = 0; k < dim; k++) {
+            work[rank][k] /= factor;
+        }
+
+        for (i = 0; i < dim; i++) {
+            if (i == rank) continue;
+            factor = work[i][j];
+            if (factor == 0.0) continue;
+            for (k = 0; k < dim; k++) {
+                work[i][k] -= factor * work[rank][k];
+            }
+        }
+
+        rank++;
+    }
+
+    n_null = 0;
+    for (j = 0; j < dim; j++) {
+        if (is_pivot[j]) continue;
+        for (i = 0; i < dim; i++)
+            null_vecs[n_null][i] = 0.0;
+        null_vecs[n_null][j] = 1.0;
+        for (k = 0; k < rank; k++) {
+            null_vecs[n_null][pivot_col[k]] = -work[k][j];
+        }
+        n_null++;
+    }
+
+    return n_null;
+}
+
+/* Integer matrix multiply C = A*B (dim x dim) */
+static void mat_mul_int(const int A[][MAX_IDEAL_DIM],
+                        const int B[][MAX_IDEAL_DIM],
+                        int C[][MAX_IDEAL_DIM], int dim) {
+    int i, j, k;
+    for (i = 0; i < dim; i++) {
+        for (j = 0; j < dim; j++) {
+            double sum = 0.0;
+            for (k = 0; k < dim; k++) {
+                sum += (double)A[i][k] * (double)B[k][j];
+            }
+            C[i][j] = (int)(sum + 0.5 * (sum >= 0.0 ? 1.0 : -1.0));
+        }
+    }
+}
+
+/* ================================================================ */
+/* CORE: Delta-form b computation on a left ideal                   */
+/* ================================================================ */
+
+/*
+ * Compute the total loop count for G_delta[i][j] using:
+ *   use_star=1 (loop form): L = loops(star(a) * b) + closure_loops(result)
+ *   use_star=0 (trace form): L = loops(a * b) + closure_loops(result)
+ *
+ * Returns the loop power L(ideal[ii], ideal[jj]).
+ */
+static int compute_loop_power(int ii_alg, int jj_alg, int use_star) {
+    int si, ridx, intl, clos;
+
+    si = use_star ? alg_star_idx[ii_alg] : ii_alg;
+    ridx = alg_mt_full[si][jj_alg];
+    intl = alg_mt_nloops[si][jj_alg];
+    clos = (ridx >= 0) ?
+        alg_closure_loops(&alg_basis[ridx], alg_n) : alg_n;
+
+    return intl + clos;
+}
+
+/*
+ * Compute b via delta-form leading coefficients on a left ideal.
+ *
+ * For each Jordan partner (t, T=L_H*t) on the restricted space:
+ *   <T|G_d|t> = sum_ij T_i * t_j * d^{L(i,j)}
+ *   <t|G_d|t> = sum_ij t_i * t_j * d^{L(i,j)}
+ *
+ * Extract leading (minimum) power and coefficient.
+ * If p_tt = 2*p_Tt: b = coeff_tt / coeff_Tt^2
+ *
+ * Parameters:
+ *   ideal[0..ideal_size-1]: algebra basis indices in the ideal
+ *   L_sub: restricted Hamiltonian (ideal_size x ideal_size)
+ *   use_star: 1 for loop form, 0 for trace form
+ *   form_name: label for printing
+ *
+ * Returns b value, or NAN if valuation fails.
+ */
+static double compute_b_on_ideal(
+    const int *ideal, int ideal_size,
+    const int L_sub[][MAX_IDEAL_DIM],
+    int use_star, const char *form_name)
+{
+    static int L_H2[MAX_IDEAL_DIM][MAX_IDEAL_DIM];
+    static double null1[MAX_IDEAL_DIM][MAX_IDEAL_DIM];
+    static double null2[MAX_IDEAL_DIM][MAX_IDEAL_DIM];
+    int n_null1, n_null2;
+    int dim = ideal_size;
+    int k, i, j;
+    double b_result = 0.0 / 0.0; /* NAN */
+    int found_partner = 0;
+
+    printf("\n  --- %s (dim=%d) ---\n", form_name, dim);
+
+    /* L_H^2 */
+    mat_mul_int(L_sub, L_sub, L_H2, dim);
+
+    /* Null spaces */
+    n_null1 = extract_null_space(L_sub, dim, null1);
+    n_null2 = extract_null_space(L_H2, dim, null2);
+    printf("  dim ker(L_H) = %d, dim ker(L_H^2) = %d\n",
+           n_null1, n_null2);
+
+    if (n_null2 <= n_null1) {
+        printf("  No Jordan blocks — semisimple on this ideal\n");
+        return b_result;
+    }
+
+    printf("  Jordan partners: %d\n", n_null2 - n_null1);
+
+    /* Find Jordan partners: vectors in ker(L_H^2) \ ker(L_H) */
+    for (k = 0; k < n_null2 && !found_partner; k++) {
+        double Lv[MAX_IDEAL_DIM]; /* T = L_H * t */
+        double norm_sq = 0.0;
+
+        /* Compute T = L_sub * null2[k] */
+        for (i = 0; i < dim; i++) {
+            Lv[i] = 0.0;
+            for (j = 0; j < dim; j++) {
+                Lv[i] += (double)L_sub[i][j] * null2[k][j];
+            }
+            norm_sq += Lv[i] * Lv[i];
+        }
+
+        if (norm_sq < 1e-12) continue;
+
+        found_partner = 1;
+        printf("\n  Jordan partner (null2 vec %d):\n", k);
+
+        /* Print t and T for small dimensions */
+        if (dim <= 20) {
+            printf("    t = [");
+            for (i = 0; i < dim; i++) {
+                if (i > 0) printf(", ");
+                printf("%.4f", null2[k][i]);
+            }
+            printf("]\n");
+
+            printf("    T = L_H*t = [");
+            for (i = 0; i < dim; i++) {
+                if (i > 0) printf(", ");
+                printf("%.4f", Lv[i]);
+            }
+            printf("]\n");
+        }
+
+        /* Use T_GRS = -L_H*t convention */
+        {
+            double T_grs[MAX_IDEAL_DIM];
+            int min_Tt = 999, min_tt = 999;
+            double coeff_Tt = 0.0, coeff_tt = 0.0;
+            int di, dj;
+
+            for (i = 0; i < dim; i++)
+                T_grs[i] = -Lv[i];
+
+            /* Build loop power matrix and print for small dims */
+            if (dim <= 20) {
+                printf("\n    L_%s matrix (loop powers):\n",
+                       use_star ? "loop" : "trace");
+                for (di = 0; di < dim; di++) {
+                    printf("      [");
+                    for (dj = 0; dj < dim; dj++) {
+                        int lp = compute_loop_power(
+                            ideal[di], ideal[dj], use_star);
+                        if (dj > 0) printf(" ");
+                        printf("%2d", lp);
+                    }
+                    printf("]\n");
+                }
+            }
+
+            /* Scan for minimum powers */
+            for (di = 0; di < dim; di++) {
+                for (dj = 0; dj < dim; dj++) {
+                    int Lij = compute_loop_power(
+                        ideal[di], ideal[dj], use_star);
+                    double cTt, ctt;
+
+                    cTt = T_grs[di] * null2[k][dj];
+                    ctt = null2[k][di] * null2[k][dj];
+
+                    if ((cTt < 0 ? -cTt : cTt) > 1e-15
+                        && Lij < min_Tt)
+                        min_Tt = Lij;
+                    if ((ctt < 0 ? -ctt : ctt) > 1e-15
+                        && Lij < min_tt)
+                        min_tt = Lij;
+                }
+            }
+
+            /* Sum leading coefficients */
+            for (di = 0; di < dim; di++) {
+                for (dj = 0; dj < dim; dj++) {
+                    int Lij = compute_loop_power(
+                        ideal[di], ideal[dj], use_star);
+
+                    if (Lij == min_Tt)
+                        coeff_Tt += T_grs[di] * null2[k][dj];
+                    if (Lij == min_tt)
+                        coeff_tt += null2[k][di] * null2[k][dj];
+                }
+            }
+
+            printf("\n    <T|G_d|t>: pow=%d coeff=%.9f\n",
+                   min_Tt, coeff_Tt);
+            printf("    <t|G_d|t>: pow=%d coeff=%.9f\n",
+                   min_tt, coeff_tt);
+            printf("    p_tt=%d, 2*p_Tt=%d\n",
+                   min_tt, 2 * min_Tt);
+
+            if (min_tt == 2 * min_Tt &&
+                (coeff_Tt > 1e-15 || coeff_Tt < -1e-15)) {
+                b_result = coeff_tt / (coeff_Tt * coeff_Tt);
+                printf("    *** b = %.12f ***\n", b_result);
+            } else if (min_tt != 2 * min_Tt) {
+                printf("    DIVERGES: d^{%d}\n",
+                       min_tt - 2 * min_Tt);
+            } else {
+                printf("    coeff_Tt = 0, cannot compute b\n");
+            }
+        }
+    }
+
+    if (!found_partner) {
+        printf("  No suitable Jordan partner found\n");
+    }
+
+    return b_result;
+}
+
+/* ================================================================ */
+/* Shifted b: compute at non-zero eigenvalue (double precision)     */
+/* ================================================================ */
+
+/*
+ * Like compute_b_on_ideal but uses a double-precision shifted
+ * operator M = L_sub - lambda*I. For irrational eigenvalues.
+ */
+static double compute_b_shifted(
+    const int *ideal, int ideal_size,
+    const int L_sub_int[][MAX_IDEAL_DIM],
+    double lambda,
+    int use_star, const char *form_name)
+{
+    static double M[MAX_IDEAL_DIM][MAX_IDEAL_DIM];
+    static double M2[MAX_IDEAL_DIM][MAX_IDEAL_DIM];
+    static double null1[MAX_IDEAL_DIM][MAX_IDEAL_DIM];
+    static double null2[MAX_IDEAL_DIM][MAX_IDEAL_DIM];
+    int dim = ideal_size;
+    int i, j, k;
+    int n_null1, n_null2;
+    double b_result = 0.0 / 0.0;
+    int found_partner = 0;
+
+    printf("\n  --- %s (lambda=%.6f, dim=%d) ---\n",
+           form_name, lambda, dim);
+
+    /* Build M = L_sub - lambda*I (double) */
+    for (i = 0; i < dim; i++)
+        for (j = 0; j < dim; j++)
+            M[i][j] = (double)L_sub_int[i][j]
+                       - (i == j ? lambda : 0.0);
+
+    /* M^2 (double) */
+    for (i = 0; i < dim; i++) {
+        for (j = 0; j < dim; j++) {
+            double sum = 0.0;
+            for (k = 0; k < dim; k++)
+                sum += M[i][k] * M[k][j];
+            M2[i][j] = sum;
+        }
+    }
+
+    /* Extract null spaces via double RREF */
+    /* We need a double-precision null space extractor.
+     * Convert M to int-like by rounding is wrong since
+     * entries are irrational. Use direct double RREF. */
+    {
+        /* Null space of M (double precision RREF) */
+        static double work[MAX_IDEAL_DIM][MAX_IDEAL_DIM];
+        int pivot_col[MAX_IDEAL_DIM];
+        int is_pivot[MAX_IDEAL_DIM];
+        int pivot_row, rank;
+        double max_val, factor;
+        double eps = 1e-9;
+
+        /* --- null space of M --- */
+        for (i = 0; i < dim; i++)
+            for (j = 0; j < dim; j++)
+                work[i][j] = M[i][j];
+
+        memset(pivot_col, -1, sizeof(pivot_col));
+        memset(is_pivot, 0, sizeof(is_pivot));
+        rank = 0;
+
+        for (j = 0; j < dim; j++) {
+            pivot_row = -1;
+            max_val = eps;
+            for (i = rank; i < dim; i++) {
+                double av = work[i][j] < 0 ?
+                    -work[i][j] : work[i][j];
+                if (av > max_val) {
+                    max_val = av; pivot_row = i;
+                }
+            }
+            if (pivot_row == -1) continue;
+            if (pivot_row != rank) {
+                for (k = 0; k < dim; k++) {
+                    double tmp = work[rank][k];
+                    work[rank][k] = work[pivot_row][k];
+                    work[pivot_row][k] = tmp;
+                }
+            }
+            pivot_col[rank] = j;
+            is_pivot[j] = 1;
+            factor = work[rank][j];
+            for (k = 0; k < dim; k++)
+                work[rank][k] /= factor;
+            for (i = 0; i < dim; i++) {
+                if (i == rank) continue;
+                factor = work[i][j];
+                if (factor > -1e-15 && factor < 1e-15) continue;
+                for (k = 0; k < dim; k++)
+                    work[i][k] -= factor * work[rank][k];
+            }
+            rank++;
+        }
+        n_null1 = 0;
+        for (j = 0; j < dim; j++) {
+            if (is_pivot[j]) continue;
+            for (i = 0; i < dim; i++)
+                null1[n_null1][i] = 0.0;
+            null1[n_null1][j] = 1.0;
+            for (k = 0; k < rank; k++)
+                null1[n_null1][pivot_col[k]] = -work[k][j];
+            n_null1++;
+        }
+
+        /* --- null space of M^2 --- */
+        for (i = 0; i < dim; i++)
+            for (j = 0; j < dim; j++)
+                work[i][j] = M2[i][j];
+
+        memset(pivot_col, -1, sizeof(pivot_col));
+        memset(is_pivot, 0, sizeof(is_pivot));
+        rank = 0;
+
+        for (j = 0; j < dim; j++) {
+            pivot_row = -1;
+            max_val = eps;
+            for (i = rank; i < dim; i++) {
+                double av = work[i][j] < 0 ?
+                    -work[i][j] : work[i][j];
+                if (av > max_val) {
+                    max_val = av; pivot_row = i;
+                }
+            }
+            if (pivot_row == -1) continue;
+            if (pivot_row != rank) {
+                for (k = 0; k < dim; k++) {
+                    double tmp = work[rank][k];
+                    work[rank][k] = work[pivot_row][k];
+                    work[pivot_row][k] = tmp;
+                }
+            }
+            pivot_col[rank] = j;
+            is_pivot[j] = 1;
+            factor = work[rank][j];
+            for (k = 0; k < dim; k++)
+                work[rank][k] /= factor;
+            for (i = 0; i < dim; i++) {
+                if (i == rank) continue;
+                factor = work[i][j];
+                if (factor > -1e-15 && factor < 1e-15) continue;
+                for (k = 0; k < dim; k++)
+                    work[i][k] -= factor * work[rank][k];
+            }
+            rank++;
+        }
+        n_null2 = 0;
+        for (j = 0; j < dim; j++) {
+            if (is_pivot[j]) continue;
+            for (i = 0; i < dim; i++)
+                null2[n_null2][i] = 0.0;
+            null2[n_null2][j] = 1.0;
+            for (k = 0; k < rank; k++)
+                null2[n_null2][pivot_col[k]] = -work[k][j];
+            n_null2++;
+        }
+    }
+
+    printf("  dim ker(M) = %d, dim ker(M^2) = %d\n",
+           n_null1, n_null2);
+
+    if (n_null2 <= n_null1) {
+        printf("  No Jordan blocks at lambda=%.6f\n", lambda);
+        return b_result;
+    }
+
+    printf("  Jordan partners: %d\n", n_null2 - n_null1);
+
+    /* Find Jordan partner in ker(M^2)\ker(M) */
+    for (k = 0; k < n_null2 && !found_partner; k++) {
+        double Mv[MAX_IDEAL_DIM];
+        double norm_sq = 0.0;
+
+        /* Compute T = M * null2[k] */
+        for (i = 0; i < dim; i++) {
+            Mv[i] = 0.0;
+            for (j = 0; j < dim; j++)
+                Mv[i] += M[i][j] * null2[k][j];
+            norm_sq += Mv[i] * Mv[i];
+        }
+
+        if (norm_sq < 1e-12) continue;
+
+        found_partner = 1;
+        printf("\n  Jordan partner (null2 vec %d):\n", k);
+
+        if (dim <= 20) {
+            printf("    t = [");
+            for (i = 0; i < dim; i++) {
+                if (i > 0) printf(", ");
+                printf("%.4f", null2[k][i]);
+            }
+            printf("]\n");
+            printf("    T = M*t = [");
+            for (i = 0; i < dim; i++) {
+                if (i > 0) printf(", ");
+                printf("%.4f", Mv[i]);
+            }
+            printf("]\n");
+        }
+
+        /* T_grs = -M*t (sign convention) */
+        {
+            double T_grs[MAX_IDEAL_DIM];
+            int min_Tt = 999, min_tt = 999;
+            double coeff_Tt = 0.0, coeff_tt = 0.0;
+            int di, dj;
+
+            for (i = 0; i < dim; i++)
+                T_grs[i] = -Mv[i];
+
+            /* Scan for minimum powers */
+            for (di = 0; di < dim; di++) {
+                for (dj = 0; dj < dim; dj++) {
+                    int Lij = compute_loop_power(
+                        ideal[di], ideal[dj], use_star);
+                    double cTt, ctt;
+
+                    cTt = T_grs[di] * null2[k][dj];
+                    ctt = null2[k][di] * null2[k][dj];
+
+                    if ((cTt < 0 ? -cTt : cTt) > 1e-15
+                        && Lij < min_Tt)
+                        min_Tt = Lij;
+                    if ((ctt < 0 ? -ctt : ctt) > 1e-15
+                        && Lij < min_tt)
+                        min_tt = Lij;
+                }
+            }
+
+            /* Sum leading coefficients */
+            for (di = 0; di < dim; di++) {
+                for (dj = 0; dj < dim; dj++) {
+                    int Lij = compute_loop_power(
+                        ideal[di], ideal[dj], use_star);
+                    if (Lij == min_Tt)
+                        coeff_Tt += T_grs[di] * null2[k][dj];
+                    if (Lij == min_tt)
+                        coeff_tt += null2[k][di] * null2[k][dj];
+                }
+            }
+
+            printf("\n    <T|G_d|t>: pow=%d coeff=%.9f\n",
+                   min_Tt, coeff_Tt);
+            printf("    <t|G_d|t>: pow=%d coeff=%.9f\n",
+                   min_tt, coeff_tt);
+            printf("    p_tt=%d, 2*p_Tt=%d\n",
+                   min_tt, 2 * min_Tt);
+
+            if (min_tt == 2 * min_Tt &&
+                (coeff_Tt > 1e-15 || coeff_Tt < -1e-15)) {
+                b_result = coeff_tt / (coeff_Tt * coeff_Tt);
+                printf("    *** b = %.12f ***\n", b_result);
+            } else if (min_tt != 2 * min_Tt) {
+                printf("    DIVERGES: d^{%d}\n",
+                       min_tt - 2 * min_Tt);
+            } else {
+                printf("    coeff_Tt = 0, cannot compute b\n");
+            }
+        }
+    }
+
+    return b_result;
+}
+
+/* ================================================================ */
+/* Test: b at ground state eigenvalue (non-zero)                    */
+/* ================================================================ */
+
+static void test_b_at_ground_state(void) {
+    int ideal[MAX_ALG_DIM], ideal_size;
+    static int L_sub[MAX_IDEAL_DIM][MAX_IDEAL_DIM];
+    int i, gen, t;
+    double b_loop, b_trace;
+    double sqrt2 = 1.41421356237309504880;
+    double sqrt3 = 1.73205080756887729353;
+
+    /* Eigenvalues to try at each size.
+     * TL_4 char poly: x(x^2-2)^2
+     *   Eigenvalues: 0 (simple), ±sqrt(2) (mult 2, Jordan)
+     * TL_6 char poly: x^2(u-1)(u-3)(u^2-8u+4)^2, u=x^2
+     *   Eigenvalues: 0 (mult 2, Jordan), ±1 (simple),
+     *   ±sqrt(3) (simple), ±(sqrt3+1) (mult 2),
+     *   ±(sqrt3-1) (mult 2)
+     */
+    int trial_n[12];
+    double trial_lam[12];
+    const char *trial_desc[12];
+    int n_trials = 12;
+    int cur_n = 0;
+
+    trial_n[0] = 4; trial_lam[0] = 0.0;
+    trial_desc[0] = "0";
+    trial_n[1] = 4; trial_lam[1] = -sqrt2;
+    trial_desc[1] = "-sqrt2";
+    trial_n[2] = 4; trial_lam[2] = sqrt2;
+    trial_desc[2] = "+sqrt2";
+    trial_n[3] = 6; trial_lam[3] = 0.0;
+    trial_desc[3] = "0";
+    trial_n[4] = 6; trial_lam[4] = -1.0;
+    trial_desc[4] = "-1";
+    trial_n[5] = 6; trial_lam[5] = 1.0;
+    trial_desc[5] = "+1";
+    trial_n[6] = 6; trial_lam[6] = -sqrt3;
+    trial_desc[6] = "-sqrt3";
+    trial_n[7] = 6; trial_lam[7] = sqrt3;
+    trial_desc[7] = "+sqrt3";
+    trial_n[8] = 6; trial_lam[8] = -(sqrt3+1.0);
+    trial_desc[8] = "-(sqrt3+1)";
+    trial_n[9] = 6; trial_lam[9] = sqrt3+1.0;
+    trial_desc[9] = "+(sqrt3+1)";
+    trial_n[10] = 6; trial_lam[10] = -(sqrt3-1.0);
+    trial_desc[10] = "-(sqrt3-1)";
+    trial_n[11] = 6; trial_lam[11] = sqrt3-1.0;
+    trial_desc[11] = "+(sqrt3-1)";
+
+    printf("\n=== Exhaustive Eigenvalue Scan for b ===\n");
+
+    for (t = 0; t < n_trials; t++) {
+        if (trial_n[t] != cur_n) {
+            cur_n = trial_n[t];
+            printf("\n--- TL_%d ---\n", cur_n);
+            alg_init(cur_n);
+            gen = -1;
+            for (i = 0; i < alg_dim; i++) {
+                if (alg_count_through(&alg_basis[i], cur_n)
+                    == 2) {
+                    gen = i;
+                    break;
+                }
+            }
+            left_ideal_closure(&gen, 1, ideal, &ideal_size);
+            build_restricted_hamiltonian(ideal, ideal_size,
+                                         L_sub);
+            printf("  Ideal dim: %d\n", ideal_size);
+        }
+
+        printf("\n  === lambda = %s (%.9f) ===\n",
+               trial_desc[t], trial_lam[t]);
+
+        b_loop = compute_b_shifted(ideal, ideal_size, L_sub,
+            trial_lam[t], 1, "Loop form");
+
+        if (b_loop == b_loop) {
+            printf("  b_loop = %.12f\n", b_loop);
+            printf("  |b-(-5/8)| = %.12e\n",
+                b_loop < -0.625 ?
+                -(b_loop+0.625) : b_loop+0.625);
+            printf("  |b-(-2)| = %.12e\n",
+                b_loop < -2.0 ?
+                -(b_loop+2.0) : b_loop+2.0);
+        }
+
+        b_trace = compute_b_shifted(ideal, ideal_size, L_sub,
+            trial_lam[t], 0, "Trace form");
+
+        if (b_trace == b_trace) {
+            printf("  b_trace = %.12f\n", b_trace);
+            printf("  |b-(-5/8)| = %.12e\n",
+                b_trace < -0.625 ?
+                -(b_trace+0.625) : b_trace+0.625);
+            printf("  |b-(-2)| = %.12e\n",
+                b_trace < -2.0 ?
+                -(b_trace+2.0) : b_trace+2.0);
+        }
+    }
+}
+
+/* ================================================================ */
+/* Test: Ideal construction and basic properties                    */
+/* ================================================================ */
+
+static void test_ideal_construction(void) {
+    int sizes[] = {4, 6};
+    int expected_ideal_dims[] = {5, 14};
+    int num_sizes = 2;
+    int s;
+
+    printf("\n=== Ideal Construction Tests ===\n");
+
+    for (s = 0; s < num_sizes; s++) {
+        int n_val = sizes[s];
+        int ideal[MAX_ALG_DIM], ideal_size;
+        int i, n_zero_tl, gen_found;
+
+        printf("\n--- TL_%d ---\n", n_val);
+        alg_init(n_val);
+        printf("  TL_%d dimension: %d\n", n_val, alg_dim);
+
+        /* Find a 2-through-line diagram as generator for P_{0,0}.
+         * The projective cover is TL_n * d where d has 2 through-lines,
+         * NOT 0 through-lines (those give the standard module W_{n,0}). */
+        n_zero_tl = 0;
+        gen_found = -1;
+        for (i = 0; i < alg_dim; i++) {
+            int tl = alg_count_through(&alg_basis[i], n_val);
+            if (tl == 0) n_zero_tl++;
+            if (tl == 2 && gen_found < 0) gen_found = i;
+        }
+        printf("  0-TL diagrams (= dim(V_0)^2): %d\n", n_zero_tl);
+        printf("  Using 2-TL generator: basis[%d]\n", gen_found);
+
+        left_ideal_closure(&gen_found, 1, ideal, &ideal_size);
+        printf("  Left ideal dim: %d (expected %d)\n",
+               ideal_size, expected_ideal_dims[s]);
+
+        {
+            char buf[80];
+            sprintf(buf, "TL_%d ideal dim = %d",
+                    n_val, expected_ideal_dims[s]);
+            check(buf, ideal_size == expected_ideal_dims[s]);
+        }
+
+        /* Verify ideal contains the generator */
+        {
+            int found = 0;
+            for (i = 0; i < ideal_size; i++) {
+                if (ideal[i] == gen_found) { found = 1; break; }
+            }
+            check("generator in ideal", found);
+        }
+
+        /* Verify all ideal elements have through-line count info */
+        {
+            int max_tl = 0;
+            for (i = 0; i < ideal_size; i++) {
+                int tl = alg_count_through(&alg_basis[ideal[i]],
+                                           n_val);
+                if (tl > max_tl) max_tl = tl;
+            }
+            printf("  Max through-lines in ideal: %d\n", max_tl);
+        }
+    }
+}
+
+/* ================================================================ */
+/* Test: Jordan blocks on restricted ideal                          */
+/* ================================================================ */
+
+static void test_jordan_on_ideal(void) {
+    int sizes[] = {4, 6};
+    int num_sizes = 2;
+    int s;
+
+    printf("\n=== Jordan Blocks on P_{0,0} ===\n");
+
+    for (s = 0; s < num_sizes; s++) {
+        int n_val = sizes[s];
+        int ideal[MAX_ALG_DIM], ideal_size;
+        static int L_sub[MAX_IDEAL_DIM][MAX_IDEAL_DIM];
+        int i, gen;
+        int jb;
+
+        printf("\n--- TL_%d ---\n", n_val);
+        alg_init(n_val);
+
+        /* Find first 2-TL generator for P_{0,0} */
+        gen = -1;
+        for (i = 0; i < alg_dim; i++) {
+            if (alg_count_through(&alg_basis[i], n_val) == 2) {
+                gen = i;
+                break;
+            }
+        }
+
+        left_ideal_closure(&gen, 1, ideal, &ideal_size);
+        printf("  Ideal dim: %d\n", ideal_size);
+
+        build_restricted_hamiltonian(ideal, ideal_size, L_sub);
+
+        /* Print restricted L_H for small dims */
+        if (ideal_size <= 15) {
+            int ri, ci;
+            printf("  L_H restricted (%dx%d):\n",
+                   ideal_size, ideal_size);
+            for (ri = 0; ri < ideal_size; ri++) {
+                printf("    [");
+                for (ci = 0; ci < ideal_size; ci++) {
+                    if (ci > 0) printf(" ");
+                    printf("%3d", L_sub[ri][ci]);
+                }
+                printf("]\n");
+            }
+        }
+
+        jb = has_jordan_blocks(L_sub, ideal_size);
+        printf("  Jordan blocks on P_{0,0}? %s\n",
+               jb ? "YES" : "no");
+
+        {
+            char buf[80];
+            sprintf(buf, "TL_%d P_{0,0} has Jordan blocks",
+                    n_val);
+            check(buf, jb);
+        }
+    }
+}
+
+/* Gauss rank for integer matrices */
+static int gauss_rank(const int M[][MAX_IDEAL_DIM], int dim) {
+    static double work[MAX_IDEAL_DIM][MAX_IDEAL_DIM];
+    int i, j, k, pivot_row, rank;
+    double max_val, factor;
+    double eps = 1e-9;
+
+    for (i = 0; i < dim; i++)
+        for (j = 0; j < dim; j++)
+            work[i][j] = (double)M[i][j];
+
+    rank = 0;
+    for (k = 0; k < dim; k++) {
+        pivot_row = -1;
+        max_val = eps;
+        for (i = rank; i < dim; i++) {
+            double av = work[i][k] < 0 ? -work[i][k]
+                                        : work[i][k];
+            if (av > max_val) {
+                max_val = av; pivot_row = i;
+            }
+        }
+        if (pivot_row == -1) continue;
+        if (pivot_row != rank) {
+            for (j = 0; j < dim; j++) {
+                double tmp = work[rank][j];
+                work[rank][j] = work[pivot_row][j];
+                work[pivot_row][j] = tmp;
+            }
+        }
+        for (i = rank + 1; i < dim; i++) {
+            factor = work[i][k] / work[rank][k];
+            for (j = k + 1; j < dim; j++) {
+                work[i][j] -= factor * work[rank][j];
+            }
+            work[i][k] = 0;
+        }
+        rank++;
+    }
+    return rank;
+}
+
+/* ================================================================ */
+/* Diagnostic: Eigenvalue scan for Jordan blocks                    */
+/* ================================================================ */
+
+/*
+ * Scan integer eigenvalues of L_sub for Jordan blocks.
+ * Also try the delta-form b computation at each eigenvalue
+ * that has Jordan blocks.
+ */
+static void test_eigenvalue_scan(void) {
+    int sizes[] = {4, 6};
+    int num_sizes = 2;
+    int s;
+
+    printf("\n=== Eigenvalue Scan for Jordan Blocks ===\n");
+
+    for (s = 0; s < num_sizes; s++) {
+        int n_val = sizes[s];
+        int ideal[MAX_ALG_DIM], ideal_size;
+        static int L_sub[MAX_IDEAL_DIM][MAX_IDEAL_DIM];
+        static int M_shifted[MAX_IDEAL_DIM][MAX_IDEAL_DIM];
+        static int M2[MAX_IDEAL_DIM][MAX_IDEAL_DIM];
+        int i, j, gen, lam;
+
+        printf("\n--- TL_%d ---\n", n_val);
+        alg_init(n_val);
+
+        gen = -1;
+        for (i = 0; i < alg_dim; i++) {
+            if (alg_count_through(&alg_basis[i], n_val) == 2) {
+                gen = i;
+                break;
+            }
+        }
+
+        left_ideal_closure(&gen, 1, ideal, &ideal_size);
+        build_restricted_hamiltonian(ideal, ideal_size, L_sub);
+
+        printf("  Scanning lambda = -10..10:\n");
+        for (lam = -10; lam <= 10; lam++) {
+            int r1, r2, n1, n2;
+
+            /* M = L_sub - lambda*I */
+            for (i = 0; i < ideal_size; i++)
+                for (j = 0; j < ideal_size; j++)
+                    M_shifted[i][j] = L_sub[i][j]
+                        - (i == j ? lam : 0);
+
+            r1 = gauss_rank(M_shifted, ideal_size);
+            n1 = ideal_size - r1;
+
+            if (n1 == 0) continue; /* not an eigenvalue */
+
+            /* M^2 */
+            mat_mul_int(M_shifted, M_shifted, M2, ideal_size);
+            r2 = gauss_rank(M2, ideal_size);
+            n2 = ideal_size - r2;
+
+            printf("    lambda=%3d: null(M)=%d, null(M^2)=%d",
+                   lam, n1, n2);
+            if (n2 > n1)
+                printf(" -> JORDAN (size 2+ blocks: %d)",
+                       n2 - n1);
+            printf("\n");
+
+            /* If Jordan blocks found, try delta-form b */
+            if (n2 > n1) {
+                double b;
+                char label[80];
+                sprintf(label,
+                    "Loop form at lambda=%d", lam);
+                printf("    Attempting b computation "
+                       "at lambda=%d...\n", lam);
+
+                /* For the delta-form, we need to shift:
+                 * use (L_sub - lambda*I) as the operator */
+                b = compute_b_on_ideal(ideal, ideal_size,
+                    M_shifted, 1, label);
+                printf("    b_loop(lambda=%d) = %.12f\n",
+                       lam, b);
+
+                if (b == b) { /* not NaN */
+                    printf("    |b-(-5/8)| = %.12e\n",
+                        b < -0.625 ? -(b+0.625) : b+0.625);
+                    printf("    |b-(-2)| = %.12e\n",
+                        b < -2.0 ? -(b+2.0) : b+2.0);
+                }
+            }
+        }
+
+        /* Also print the characteristic polynomial info */
+        printf("\n  Characteristic polynomial analysis:\n");
+        {
+            long cpoly[MAX_IDEAL_DIM + 2];
+            int deg = ideal_size;
+            long S[MAX_IDEAL_DIM][MAX_IDEAL_DIM];
+            long T_mat[MAX_IDEAL_DIM][MAX_IDEAL_DIM];
+            int step, k;
+            long trace, c;
+
+            cpoly[deg] = 1;
+            for (i = 0; i < ideal_size; i++)
+                for (j = 0; j < ideal_size; j++)
+                    S[i][j] = mod_pos((long)L_sub[i][j]);
+
+            trace = 0;
+            for (i = 0; i < ideal_size; i++)
+                trace = mod_add(trace, S[i][i]);
+            cpoly[deg - 1] = mod_sub(0, trace);
+
+            for (step = 2; step <= deg; step++) {
+                c = cpoly[deg - step + 1];
+                for (i = 0; i < ideal_size; i++)
+                    for (j = 0; j < ideal_size; j++)
+                        T_mat[i][j] = mod_add(S[i][j],
+                            i == j ? c : 0);
+                for (i = 0; i < ideal_size; i++) {
+                    for (j = 0; j < ideal_size; j++) {
+                        long sum = 0;
+                        for (k = 0; k < ideal_size; k++)
+                            sum = mod_add(sum,
+                                mod_mul(
+                                    (long)L_sub[i][k],
+                                    T_mat[k][j]));
+                        S[i][j] = sum;
+                    }
+                }
+                trace = 0;
+                for (i = 0; i < ideal_size; i++)
+                    trace = mod_add(trace, S[i][i]);
+                cpoly[deg - step] = mod_mul(
+                    mod_sub(0, trace),
+                    mod_inv((long)step));
+            }
+
+            printf("  chi(lambda) mod %ld:\n  ", MOD_P);
+            for (i = deg; i >= 0; i--) {
+                if (i < deg) printf(" + ");
+                printf("%ld*x^%d", cpoly[i], i);
+                if (i > 0 && (deg - i) % 3 == 2)
+                    printf("\n  ");
+            }
+            printf("\n");
+        }
+    }
+}
+
+/* ================================================================ */
+/* Test: Valuation divergence on single P_{0,0} (NEGATIVE RESULT)   */
+/* The delta-form b computation diverges on a single copy at every  */
+/* eigenvalue. This test VERIFIES the divergence (p_tt != 2*p_Tt).  */
+/* ================================================================ */
+
+static void test_valuation_diverges(void) {
+    int sizes[] = {4, 6};
+    int num_sizes = 2;
+    int s;
+
+    printf("\n=== Valuation Divergence Test ===\n");
+    printf("Verify: delta-form diverges on single P_{0,0}\n");
+
+    for (s = 0; s < num_sizes; s++) {
+        int n_val = sizes[s];
+        int ideal[MAX_ALG_DIM], ideal_size;
+        static int L_sub[MAX_IDEAL_DIM][MAX_IDEAL_DIM];
+        int i, gen;
+        double b_loop, b_trace;
+
+        printf("\n--- TL_%d ---\n", n_val);
+        alg_init(n_val);
+
+        gen = -1;
+        for (i = 0; i < alg_dim; i++) {
+            if (alg_count_through(&alg_basis[i], n_val) == 2) {
+                gen = i;
+                break;
+            }
+        }
+
+        left_ideal_closure(&gen, 1, ideal, &ideal_size);
+        build_restricted_hamiltonian(ideal, ideal_size, L_sub);
+
+        /* At lambda=0: b should be NaN (diverges or no Jordan) */
+        b_loop = compute_b_on_ideal(ideal, ideal_size, L_sub,
+                                    1, "Loop form (lambda=0)");
+        b_trace = compute_b_on_ideal(ideal, ideal_size, L_sub,
+                                     0, "Trace form (lambda=0)");
+
+        {
+            char buf[80];
+            /* b should be NaN (diverges) */
+            sprintf(buf,
+                "TL_%d loop form diverges at lambda=0",
+                n_val);
+            check(buf, b_loop != b_loop); /* NaN != NaN */
+            sprintf(buf,
+                "TL_%d trace form diverges at lambda=0",
+                n_val);
+            check(buf, b_trace != b_trace);
+        }
+    }
+}
+
+/* ================================================================ */
+/* Test: Generator independence                                     */
+/* ================================================================ */
+
+static void test_generator_independence(void) {
+    int sizes[] = {4, 6};
+    int num_sizes = 2;
+    int s;
+
+    printf("\n=== Generator Independence ===\n");
+
+    for (s = 0; s < num_sizes; s++) {
+        int n_val = sizes[s];
+        int i, n_gens_tried;
+        double b_values[20];
+
+        printf("\n--- TL_%d ---\n", n_val);
+        alg_init(n_val);
+
+        n_gens_tried = 0;
+
+        for (i = 0; i < alg_dim && n_gens_tried < 4; i++) {
+            if (alg_count_through(&alg_basis[i], n_val) == 2) {
+                int ideal[MAX_ALG_DIM], ideal_size;
+                static int L_sub[MAX_IDEAL_DIM][MAX_IDEAL_DIM];
+                double b;
+                char label[80];
+
+                left_ideal_closure(&i, 1, ideal, &ideal_size);
+                build_restricted_hamiltonian(ideal, ideal_size,
+                                             L_sub);
+
+                sprintf(label, "Loop form, gen=%d (dim=%d)",
+                        i, ideal_size);
+                b = compute_b_on_ideal(ideal, ideal_size, L_sub,
+                                       1, label);
+
+                b_values[n_gens_tried] = b;
+                printf("  Generator %d: b = %.12f\n", i, b);
+                n_gens_tried++;
+            }
+        }
+
+        /* Check all generators give same b */
+        if (n_gens_tried >= 2) {
+            int all_same = 1;
+            for (i = 1; i < n_gens_tried; i++) {
+                double diff = b_values[i] - b_values[0];
+                if (diff < 0) diff = -diff;
+                if (diff > 1e-6) all_same = 0;
+            }
+            {
+                char buf[80];
+                sprintf(buf, "TL_%d all generators give same b",
+                        n_val);
+                check(buf, all_same);
+            }
+        }
+    }
+}
+
+/* ================================================================ */
+/* Test: TL_8 (third lattice size, if feasible)                     */
+/* ================================================================ */
+
+static void test_tl8(void) {
+    int ideal[MAX_ALG_DIM], ideal_size;
+    static int L_sub[MAX_IDEAL_DIM][MAX_IDEAL_DIM];
+    int i, gen;
+    double b_loop, b_trace;
+
+    printf("\n=== TL_8 (Third Lattice Size) ===\n");
+    printf("  Initializing TL_8 (C_8 = 1430 diagrams)...\n");
+    fflush(stdout);
+    alg_init(8);
+    printf("  TL_8 dimension: %d\n", alg_dim);
+
+    gen = -1;
+    for (i = 0; i < alg_dim; i++) {
+        if (alg_count_through(&alg_basis[i], 8) == 2) {
+            gen = i;
+            break;
+        }
+    }
+    printf("  Using generator: basis[%d]\n", gen);
+
+    left_ideal_closure(&gen, 1, ideal, &ideal_size);
+    printf("  Left ideal dim (P_{0,0}): %d\n", ideal_size);
+
+    /* P_{0,0} at TL_8 should have dim = C_5 = 42 */
+    check("TL_8 ideal dim = 42", ideal_size == 42);
+
+    build_restricted_hamiltonian(ideal, ideal_size, L_sub);
+
+    /* At lambda=0, TL_8 is completely semisimple —
+     * no Jordan blocks, so b returns NaN */
+    printf("\n  Computing loop form b at lambda=0...\n");
+    fflush(stdout);
+    b_loop = compute_b_on_ideal(ideal, ideal_size, L_sub,
+                                1, "Loop form (TL_8, lambda=0)");
+
+    printf("\n  Computing trace form b at lambda=0...\n");
+    fflush(stdout);
+    b_trace = compute_b_on_ideal(ideal, ideal_size, L_sub,
+                                 0, "Trace form (TL_8, lambda=0)");
+
+    /* Semisimple at lambda=0 means NaN (no Jordan blocks) */
+    check("TL_8 loop form semisimple at lambda=0",
+          b_loop != b_loop);
+    check("TL_8 trace form semisimple at lambda=0",
+          b_trace != b_trace);
+}
+
+/* ================================================================ */
+/* Main                                                             */
+/* ================================================================ */
+
+int main(void) {
+    printf("KNOTAPEL DEMO 86: Direct b on P_{0,0}\n");
+    printf("======================================\n");
+
+    test_ideal_construction();
+    test_jordan_on_ideal();
+    test_eigenvalue_scan();
+    test_b_at_ground_state();
+    test_valuation_diverges();
+    test_generator_independence();
+    test_tl8();
+
+    printf("\n======================================\n");
+    printf("Results: %d passed, %d failed\n", n_pass, n_fail);
+    return n_fail > 0 ? 1 : 0;
+}

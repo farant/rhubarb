@@ -1,0 +1,1964 @@
+/*
+ * KNOTAPEL DEMO 89: Depth Law Mechanism
+ * ======================================
+ *
+ * Demo 82 established: max_xor ~ depth + 6 (linear, not logarithmic).
+ * Deep entries are 2x more efficient than shallow ones. But WHY?
+ *
+ * This demo investigates the mechanism through four lenses:
+ *   Phase 1: Depth decomposition (single-depth & cumulative capacity)
+ *   Phase 2: Discriminating experiment (single-depth vs random at same N)
+ *   Phase 3: Coherence tracking (pairwise bracket correlation by depth)
+ *   Phase 4: The "+6" intercept (direction coverage by depth at zeta_8)
+ *
+ * C89, zero dependencies beyond math.h.
+ */
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <math.h>
+
+#ifndef M_PI
+#define M_PI 3.14159265358979323846
+#endif
+
+/* ================================================================ */
+/* Test infrastructure                                              */
+/* ================================================================ */
+
+static int n_pass = 0, n_fail = 0;
+
+static void check(const char *titulis, int ok) {
+    if (ok) { printf("  PASS: %s\n", titulis); n_pass++; }
+    else    { printf("  FAIL: %s\n", titulis); n_fail++; }
+}
+
+/* ================================================================ */
+/* Quaternion                                                       */
+/* ================================================================ */
+
+typedef struct { double a, b, c, d; } Quat;
+
+static Quat qmul(const Quat *p, const Quat *g) {
+    Quat r;
+    r.a = p->a*g->a - p->b*g->b - p->c*g->c - p->d*g->d;
+    r.b = p->a*g->b + p->b*g->a + p->c*g->d - p->d*g->c;
+    r.c = p->a*g->c - p->b*g->d + p->c*g->a + p->d*g->b;
+    r.d = p->a*g->d + p->b*g->c - p->c*g->b + p->d*g->a;
+    return r;
+}
+
+static double qdot(const Quat *p, const Quat *q) {
+    return p->a*q->a + p->b*q->b + p->c*q->c + p->d*q->d;
+}
+
+/* ================================================================ */
+/* SU(2) generators + group closure with depth tracking             */
+/* ================================================================ */
+
+#define MAX_QCAT 4096
+#define MAX_DIR 2048
+#define MAX_ROUNDS 16
+
+static Quat g_cat[MAX_QCAT];
+static int g_cat_size = 0;
+static int g_depth[MAX_QCAT];      /* birth round of each entry */
+static int n_rounds = 0;
+
+/* Per-round counts */
+static int round_start[MAX_ROUNDS]; /* first index at this round */
+static int round_count[MAX_ROUNDS]; /* entries born this round   */
+
+static Quat g_gen[3];
+
+static void init_su2(double half_angle) {
+    double co = cos(half_angle), si = sin(half_angle);
+    g_gen[1].a = co; g_gen[1].b = si; g_gen[1].c = 0; g_gen[1].d = 0;
+    g_gen[2].a = co; g_gen[2].b = 0;  g_gen[2].c = 0; g_gen[2].d = -si;
+}
+
+static int find_in_cat(const Quat *q, int n) {
+    int i;
+    for (i = 0; i < n; i++) {
+        if (fabs(g_cat[i].a - q->a) < 1e-10 &&
+            fabs(g_cat[i].b - q->b) < 1e-10 &&
+            fabs(g_cat[i].c - q->c) < 1e-10 &&
+            fabs(g_cat[i].d - q->d) < 1e-10)
+            return i;
+        if (fabs(g_cat[i].a + q->a) < 1e-10 &&
+            fabs(g_cat[i].b + q->b) < 1e-10 &&
+            fabs(g_cat[i].c + q->c) < 1e-10 &&
+            fabs(g_cat[i].d + q->d) < 1e-10)
+            return i;
+    }
+    return -1;
+}
+
+static void build_closure(int verbose) {
+    Quat gens[4];
+    int prev, i, gi, rd;
+
+    g_cat_size = 0;
+    n_rounds = 0;
+    memset(round_start, 0, sizeof(round_start));
+    memset(round_count, 0, sizeof(round_count));
+
+    /* Round 0: identity */
+    g_cat[0].a = 1; g_cat[0].b = 0; g_cat[0].c = 0; g_cat[0].d = 0;
+    g_depth[0] = 0;
+    g_cat_size = 1;
+
+    gens[0] = g_gen[1];
+    gens[1].a =  g_gen[1].a; gens[1].b = -g_gen[1].b;
+    gens[1].c = -g_gen[1].c; gens[1].d = -g_gen[1].d;
+    gens[2] = g_gen[2];
+    gens[3].a =  g_gen[2].a; gens[3].b = -g_gen[2].b;
+    gens[3].c = -g_gen[2].c; gens[3].d = -g_gen[2].d;
+
+    round_start[0] = 0;
+    for (gi = 0; gi < 4; gi++) {
+        if (find_in_cat(&gens[gi], g_cat_size) < 0 &&
+            g_cat_size < MAX_QCAT) {
+            g_depth[g_cat_size] = 0;
+            g_cat[g_cat_size++] = gens[gi];
+        }
+    }
+    round_count[0] = g_cat_size;
+    n_rounds = 1;
+    if (verbose) printf("  Round 0: %d entries\n", g_cat_size);
+
+    rd = 1;
+    do {
+        prev = g_cat_size;
+        round_start[rd] = prev;
+        for (i = 0; i < prev; i++) {
+            for (gi = 0; gi < 4; gi++) {
+                Quat prod = qmul(&g_cat[i], &gens[gi]);
+                if (find_in_cat(&prod, g_cat_size) < 0) {
+                    if (g_cat_size < MAX_QCAT) {
+                        g_depth[g_cat_size] = rd;
+                        g_cat[g_cat_size++] = prod;
+                    }
+                }
+            }
+        }
+        round_count[rd] = g_cat_size - prev;
+        if (g_cat_size > prev) {
+            if (verbose)
+                printf("  Round %d: %d entries (+%d)\n",
+                       rd, g_cat_size, g_cat_size - prev);
+            n_rounds++;
+        }
+        rd++;
+    } while (g_cat_size > prev && rd < MAX_ROUNDS);
+}
+
+/* ================================================================ */
+/* Saved catalog for subset restoration                             */
+/* ================================================================ */
+
+static Quat saved_cat[MAX_QCAT];
+static int saved_depth[MAX_QCAT];
+static int saved_cat_size;
+
+static void save_catalog(void) {
+    int i;
+    saved_cat_size = g_cat_size;
+    for (i = 0; i < g_cat_size; i++) {
+        saved_cat[i] = g_cat[i];
+        saved_depth[i] = g_depth[i];
+    }
+}
+
+static void restore_catalog(void) {
+    int i;
+    g_cat_size = saved_cat_size;
+    for (i = 0; i < g_cat_size; i++) {
+        g_cat[i] = saved_cat[i];
+        g_depth[i] = saved_depth[i];
+    }
+}
+
+/* ================================================================ */
+/* Direction catalog                                                */
+/* ================================================================ */
+
+static double g_dir[MAX_DIR][3];
+static int g_nd = 0;
+
+static void build_dirs(int cat_size) {
+    int i, j;
+    g_nd = 0;
+    for (i = 0; i < cat_size; i++) {
+        double qa = g_cat[i].a, qb = g_cat[i].b;
+        double qc = g_cat[i].c, qd = g_cat[i].d;
+        double nv, ax, ay, az;
+        int found = 0;
+        if (qa < 0) { qa = -qa; qb = -qb; qc = -qc; qd = -qd; }
+        nv = sqrt(qb*qb + qc*qc + qd*qd);
+        if (nv < 1e-12) continue;
+        ax = qb/nv; ay = qc/nv; az = qd/nv;
+        for (j = 0; j < g_nd; j++) {
+            double d1 = fabs(g_dir[j][0]-ax) + fabs(g_dir[j][1]-ay) +
+                         fabs(g_dir[j][2]-az);
+            double d2 = fabs(g_dir[j][0]+ax) + fabs(g_dir[j][1]+ay) +
+                         fabs(g_dir[j][2]+az);
+            if (d1 < 1e-8 || d2 < 1e-8) { found = 1; break; }
+        }
+        if (!found && g_nd < MAX_DIR) {
+            g_dir[g_nd][0] = ax; g_dir[g_nd][1] = ay; g_dir[g_nd][2] = az;
+            g_nd++;
+        }
+    }
+}
+
+/* ================================================================ */
+/* Voronoi cell + combined cell + XOR test                          */
+/* ================================================================ */
+
+#define MAX_ACT 65536
+
+static int cell_even[MAX_ACT], cell_odd[MAX_ACT];
+static int touched_cells[MAX_ACT];
+
+static int vor_cell(double ax, double ay, double az) {
+    int i, best = 0;
+    double bd = -2.0;
+    for (i = 0; i < g_nd; i++) {
+        double dp = fabs(ax*g_dir[i][0] + ay*g_dir[i][1] + az*g_dir[i][2]);
+        if (dp > bd) { bd = dp; best = i; }
+    }
+    return best;
+}
+
+static int combined_cell(double sa, double sb, double sc, double sd,
+                         int k_sec) {
+    double n2 = sa*sa + sb*sb + sc*sc + sd*sd;
+    double nm, qa, nv, half_ang, ang;
+    int sec, vor, n_vor;
+
+    n_vor = g_nd + 1;
+    if (n2 < 1e-24) return (k_sec - 1) * n_vor + g_nd;
+
+    nm = sqrt(n2);
+    qa = sa / nm;
+    if (qa < 0) { qa = -qa; sb = -sb; sc = -sc; sd = -sd; }
+    if (qa > 1.0) qa = 1.0;
+
+    half_ang = acos(qa);
+    ang = 2.0 * half_ang * 180.0 / M_PI;
+    sec = (int)(ang * (double)k_sec / 360.0);
+    if (sec >= k_sec) sec = k_sec - 1;
+    if (sec < 0) sec = 0;
+
+    nv = sqrt(sb*sb + sc*sc + sd*sd) / nm;
+    if (nv < 1e-12) {
+        vor = g_nd;
+    } else {
+        double inv = nm * nv;
+        double ax2 = sb / inv, ay2 = sc / inv, az2 = sd / inv;
+        vor = vor_cell(ax2, ay2, az2);
+    }
+
+    return sec * n_vor + vor;
+}
+
+static int test_xor(const int *indices, int n_weights, int k_sec) {
+    int n_inputs = 2 * n_weights;
+    int n_masks, n_vor, n_cells;
+    double wa[14], wb[14], wc[14], wd[14];
+    int n_touched = 0;
+    int mask, i, result = 1;
+
+    n_masks = 1 << n_inputs;
+    n_vor = g_nd + 1;
+    n_cells = k_sec * n_vor;
+
+    if (n_cells > MAX_ACT || n_inputs > 14) return 0;
+
+    for (i = 0; i < n_weights; i++) {
+        const Quat *q = &g_cat[indices[i]];
+        wa[2*i]   =  q->a; wb[2*i]   =  q->b;
+        wc[2*i]   =  q->c; wd[2*i]   =  q->d;
+        wa[2*i+1] = -q->a; wb[2*i+1] = -q->b;
+        wc[2*i+1] = -q->c; wd[2*i+1] = -q->d;
+    }
+
+    for (mask = 0; mask < n_masks; mask++) {
+        double sa = 0, sb = 0, sc = 0, sd = 0;
+        int par = 0, cell;
+
+        for (i = 0; i < n_inputs; i++) {
+            if (mask & (1 << i)) {
+                sa += wa[i]; sb += wb[i]; sc += wc[i]; sd += wd[i];
+                par ^= 1;
+            }
+        }
+
+        cell = combined_cell(sa, sb, sc, sd, k_sec);
+
+        if (cell_even[cell] == 0 && cell_odd[cell] == 0)
+            touched_cells[n_touched++] = cell;
+
+        if (par == 0) {
+            cell_even[cell]++;
+            if (cell_odd[cell] > 0) { result = 0; goto cleanup; }
+        } else {
+            cell_odd[cell]++;
+            if (cell_even[cell] > 0) { result = 0; goto cleanup; }
+        }
+    }
+
+cleanup:
+    for (i = 0; i < n_touched; i++) {
+        cell_even[touched_cells[i]] = 0;
+        cell_odd[touched_cells[i]] = 0;
+    }
+    return result;
+}
+
+/* ================================================================ */
+/* XOR counter with k-ladder                                        */
+/* ================================================================ */
+
+static const int K_LADDER[] = {1, 6, 8, 10, 12, 16, 20, 24};
+#define N_KLADDER 8
+
+static int count_xor6(int bf_limit) {
+    int ai, aj, ak, ki;
+    int count = 0;
+    int indices[3];
+
+    if (bf_limit > g_cat_size) bf_limit = g_cat_size;
+    for (ai = 0; ai < bf_limit; ai++)
+    for (aj = ai+1; aj < bf_limit; aj++)
+    for (ak = aj+1; ak < bf_limit; ak++) {
+        indices[0] = ai; indices[1] = aj; indices[2] = ak;
+        for (ki = 0; ki < N_KLADDER; ki++) {
+            int nv2 = g_nd + 1;
+            int nc2 = K_LADDER[ki] * nv2;
+            if (nc2 > MAX_ACT) continue;
+            if (test_xor(indices, 3, K_LADDER[ki])) {
+                count++;
+                break;
+            }
+        }
+    }
+    return count;
+}
+
+/* ================================================================ */
+/* Simple LCG random number generator                               */
+/* ================================================================ */
+
+static unsigned long g_rng = 42UL;
+
+static double rng_uniform(void) {
+    g_rng = g_rng * 6364136223846793005UL + 1442695040888963407UL;
+    return (double)(g_rng >> 33) / (double)(1UL << 31);
+}
+
+/* Fisher-Yates shuffle of first n elements of arr */
+static void shuffle(int *arr, int n) {
+    int i;
+    for (i = n - 1; i > 0; i--) {
+        int j = (int)(rng_uniform() * (double)(i + 1));
+        if (j > i) j = i;
+        { int tmp = arr[i]; arr[i] = arr[j]; arr[j] = tmp; }
+    }
+}
+
+/* ================================================================ */
+/* Subset extraction utilities                                      */
+/* ================================================================ */
+
+/* Load entries at exactly depth d into g_cat[0..], return count */
+static int load_single_depth(int depth) {
+    int i, n = 0;
+    for (i = 0; i < saved_cat_size; i++) {
+        if (saved_depth[i] == depth) {
+            g_cat[n] = saved_cat[i];
+            g_depth[n] = saved_depth[i];
+            n++;
+        }
+    }
+    g_cat_size = n;
+    return n;
+}
+
+/* Load entries at depth 0..max_d into g_cat[0..], return count */
+static int load_cumulative(int max_d) {
+    int i, n = 0;
+    for (i = 0; i < saved_cat_size; i++) {
+        if (saved_depth[i] <= max_d) {
+            g_cat[n] = saved_cat[i];
+            g_depth[n] = saved_depth[i];
+            n++;
+        }
+    }
+    g_cat_size = n;
+    return n;
+}
+
+/* Load N random entries from depth d, return actual count loaded */
+static int load_random_from_depth(int depth, int n_want) {
+    int indices[4096];
+    int pool_size = 0;
+    int i, n;
+
+    for (i = 0; i < saved_cat_size; i++) {
+        if (saved_depth[i] == depth)
+            indices[pool_size++] = i;
+    }
+    shuffle(indices, pool_size);
+
+    n = (n_want < pool_size) ? n_want : pool_size;
+    for (i = 0; i < n; i++) {
+        g_cat[i] = saved_cat[indices[i]];
+        g_depth[i] = saved_depth[indices[i]];
+    }
+    g_cat_size = n;
+    return n;
+}
+
+/* Load N random entries from full catalog */
+static int load_random_full(int n_want) {
+    int indices[4096];
+    int i, n;
+
+    for (i = 0; i < saved_cat_size; i++)
+        indices[i] = i;
+    shuffle(indices, saved_cat_size);
+
+    n = (n_want < saved_cat_size) ? n_want : saved_cat_size;
+    for (i = 0; i < n; i++) {
+        g_cat[i] = saved_cat[indices[i]];
+        g_depth[i] = saved_depth[indices[i]];
+    }
+    g_cat_size = n;
+    return n;
+}
+
+/* ================================================================ */
+/* Coherence metric: mean pairwise |quaternion dot product|         */
+/* ================================================================ */
+
+static double mean_pairwise_qdot(int cat_size) {
+    int i, j, count = 0;
+    double sum = 0.0;
+    for (i = 0; i < cat_size; i++) {
+        for (j = i + 1; j < cat_size; j++) {
+            sum += fabs(qdot(&g_cat[i], &g_cat[j]));
+            count++;
+        }
+    }
+    if (count == 0) return 0.0;
+    return sum / (double)count;
+}
+
+/* ================================================================ */
+/* Phase 1: Depth Decomposition at zeta_12                          */
+/* ================================================================ */
+
+static void phase1_depth_decomposition(void) {
+    int d, n_loaded;
+    int max_d = n_rounds - 1;
+
+    printf("\n=== Phase 1: Depth Decomposition (zeta_12) ===\n\n");
+
+    /* Brute-force limit: keep small to avoid O(bf^3 * nd) blowup */
+    {
+        int bf = 24;
+
+        printf("  --- Single-depth capacity (bf_limit=%d) ---\n", bf);
+        printf("  Depth | Count | Dirs | XOR6  |\n");
+        printf("  ------|-------|------|-------|\n");
+
+        for (d = 0; d <= max_d; d++) {
+            int dirs, xor6;
+            n_loaded = load_single_depth(d);
+            build_dirs(g_cat_size);
+            dirs = g_nd;
+            xor6 = count_xor6(n_loaded < bf ? n_loaded : bf);
+            printf("  %5d | %5d | %4d | %5d |\n", d, n_loaded, dirs, xor6);
+            fflush(stdout);
+        }
+
+        printf("\n  --- Cumulative capacity (depth 0..d, bf_limit=%d) ---\n", bf);
+        printf("  MaxD | Count | Dirs | XOR6  | DepthLaw |\n");
+        printf("  -----|-------|------|-------|----------|\n");
+
+        for (d = 0; d <= max_d; d++) {
+            int dirs, xor6;
+            n_loaded = load_cumulative(d);
+            build_dirs(g_cat_size);
+            dirs = g_nd;
+            xor6 = count_xor6(n_loaded < bf ? n_loaded : bf);
+            printf("  %4d | %5d | %4d | %5d | d+6=%d   |\n",
+                   d, n_loaded, dirs, xor6, d + 6);
+            fflush(stdout);
+        }
+    }
+
+    restore_catalog();
+
+    check("Phase 1 completed", 1);
+}
+
+/* ================================================================ */
+/* Phase 2: Discriminating Experiment                               */
+/* ================================================================ */
+
+static void phase2_discriminating(void) {
+    int sample_sizes[] = {20, 50};
+    int n_samples = 2;
+    int n_trials = 10;
+    int si, d, t;
+    int max_d = n_rounds - 1;
+
+    printf("\n=== Phase 2: Discriminating Experiment (zeta_12) ===\n");
+    printf("  Single-depth vs random at matched sample size\n");
+    printf("  %d trials per condition\n\n", n_trials);
+
+    for (si = 0; si < n_samples; si++) {
+        int N = sample_sizes[si];
+        int any_deep_wins = 0;
+
+        printf("  --- N = %d ---\n", N);
+        printf("  Depth | Pool | DepthXOR6(mean) | RandXOR6(mean) | Winner   |\n");
+        printf("  ------|------|-----------------|----------------|----------|\n");
+
+        for (d = 0; d <= max_d; d++) {
+            int pool = round_count[d];
+            double depth_sum = 0, rand_sum = 0;
+
+            if (pool < N) {
+                printf("  %5d | %4d | (pool < %d)     |                |          |\n",
+                       d, pool, N);
+                continue;
+            }
+
+            for (t = 0; t < n_trials; t++) {
+                int xor6;
+                int bf2 = 24;
+
+                /* Draw N from this depth */
+                load_random_from_depth(d, N);
+                build_dirs(g_cat_size);
+                xor6 = count_xor6(g_cat_size < bf2 ? g_cat_size : bf2);
+                depth_sum += (double)xor6;
+
+                /* Draw N random from full catalog */
+                load_random_full(N);
+                build_dirs(g_cat_size);
+                xor6 = count_xor6(g_cat_size < bf2 ? g_cat_size : bf2);
+                rand_sum += (double)xor6;
+            }
+
+            {
+                double depth_mean = depth_sum / (double)n_trials;
+                double rand_mean = rand_sum / (double)n_trials;
+                const char *winner = depth_mean > rand_mean ? "DEPTH" :
+                                     depth_mean < rand_mean ? "random" : "tie";
+                printf("  %5d | %4d | %15.1f | %14.1f | %-8s |\n",
+                       d, pool, depth_mean, rand_mean, winner);
+                fflush(stdout);
+                if (depth_mean > rand_mean && d >= 4)
+                    any_deep_wins = 1;
+            }
+        }
+        printf("\n");
+
+        if (si == n_samples - 1) {
+            check("Phase 2: deep single-depth beats random",
+                  any_deep_wins);
+        }
+    }
+
+    restore_catalog();
+}
+
+/* ================================================================ */
+/* Phase 3: Coherence Tracking                                      */
+/* ================================================================ */
+
+static void phase3_coherence(void) {
+    int d;
+    int max_d = n_rounds - 1;
+    double coh[MAX_ROUNDS];
+    int xor6[MAX_ROUNDS];
+    int count[MAX_ROUNDS];
+    int dirs[MAX_ROUNDS];
+
+    printf("\n=== Phase 3: Coherence by Depth (zeta_12) ===\n\n");
+
+    printf("  Depth | Count | Dirs | Coherence | XOR6  |\n");
+    printf("  ------|-------|------|-----------|-------|\n");
+
+    for (d = 0; d <= max_d; d++) {
+        int n_loaded = load_single_depth(d);
+        build_dirs(g_cat_size);
+        dirs[d] = g_nd;
+        count[d] = n_loaded;
+
+        /* Coherence: limit to first 200 entries for speed */
+        {
+            int coh_limit = n_loaded < 200 ? n_loaded : 200;
+            int orig_size = g_cat_size;
+            g_cat_size = coh_limit;
+            coh[d] = mean_pairwise_qdot(coh_limit);
+            g_cat_size = orig_size;
+        }
+
+        /* XOR capacity */
+        xor6[d] = count_xor6(n_loaded < 100 ? n_loaded : 100);
+
+        printf("  %5d | %5d | %4d | %9.4f | %5d |\n",
+               d, count[d], dirs[d], coh[d], xor6[d]);
+    }
+
+    /* Correlation: does XOR6 track coherence or count? */
+    printf("\n  Correlation analysis:\n");
+    {
+        /* Simple check: among depths with enough entries (count>=20),
+           does higher coherence correspond to higher XOR6? */
+        int n_valid = 0;
+        int coh_xor_agree = 0;
+        int prev_d = -1;
+
+        for (d = 0; d <= max_d; d++) {
+            if (count[d] < 20) continue;
+            if (prev_d >= 0) {
+                int coh_up = (coh[d] > coh[prev_d]) ? 1 : 0;
+                int xor_up = (xor6[d] > xor6[prev_d]) ? 1 : 0;
+                if (coh_up == xor_up) coh_xor_agree++;
+                n_valid++;
+            }
+            prev_d = d;
+        }
+
+        if (n_valid > 0)
+            printf("    Coherence-XOR direction agreement: %d/%d (%.0f%%)\n",
+                   coh_xor_agree, n_valid,
+                   100.0 * (double)coh_xor_agree / (double)n_valid);
+        else
+            printf("    Not enough data for correlation\n");
+    }
+
+    /* Also compute coherence for random samples at same sizes */
+    printf("\n  Random baseline coherence (20 trials each):\n");
+    printf("  Size | DepthCoh | RandCoh | Ratio |\n");
+    printf("  -----|----------|---------|-------|\n");
+    {
+        int sizes[] = {50, 100, 200};
+        int ns = 3;
+        int si, t;
+
+        for (si = 0; si < ns; si++) {
+            int sz = sizes[si];
+            double rand_coh_sum = 0;
+            double depth_coh_best = 0;
+            int best_d = -1;
+
+            /* Find best-matching depth */
+            for (d = 0; d <= max_d; d++) {
+                if (count[d] >= sz && (best_d < 0 || coh[d] > depth_coh_best)) {
+                    depth_coh_best = coh[d];
+                    best_d = d;
+                }
+            }
+
+            for (t = 0; t < 20; t++) {
+                int coh_n;
+                load_random_full(sz);
+                coh_n = g_cat_size < 200 ? g_cat_size : 200;
+                rand_coh_sum += mean_pairwise_qdot(coh_n);
+            }
+
+            if (best_d >= 0) {
+                double rand_mean = rand_coh_sum / 20.0;
+                printf("  %4d | %8.4f(d%d) | %7.4f | %5.2f |\n",
+                       sz, depth_coh_best, best_d, rand_mean,
+                       depth_coh_best / rand_mean);
+            }
+        }
+    }
+
+    restore_catalog();
+    check("Phase 3: coherence computed", 1);
+}
+
+/* ================================================================ */
+/* Phase 4: Direction Coverage by Depth at zeta_8                   */
+/* ================================================================ */
+
+static void phase4_intercept(void) {
+    /* Build zeta_8 catalog */
+    int z8_nd, d, i, j;
+    int max_d;
+    double z8_dirs[64][3];
+    int z8_is_null[64];
+    int first_depth[64];  /* first depth at which this direction appears */
+    int all_covered_depth = -1;
+
+    printf("\n=== Phase 4: Direction Coverage by Depth (zeta_8) ===\n\n");
+    fflush(stdout);
+    fprintf(stderr, "DBG: phase4 about to init_su2\n");
+
+    init_su2(M_PI / 4.0);
+    fprintf(stderr, "DBG: phase4 gen1=(%f,%f,%f,%f) gen2=(%f,%f,%f,%f)\n",
+            g_gen[1].a, g_gen[1].b, g_gen[1].c, g_gen[1].d,
+            g_gen[2].a, g_gen[2].b, g_gen[2].c, g_gen[2].d);
+    build_closure(1);
+    fflush(stdout);
+    max_d = n_rounds - 1;
+    fprintf(stderr, "DBG: phase4 closure: %d entries, %d rounds, max_d=%d\n",
+            g_cat_size, n_rounds, max_d);
+
+    printf("  %d entries, %d rounds\n\n", g_cat_size, n_rounds);
+
+    /* Build direction catalog for full zeta_8 */
+    build_dirs(g_cat_size);
+    z8_nd = g_nd;
+    for (i = 0; i < z8_nd; i++) {
+        z8_dirs[i][0] = g_dir[i][0];
+        z8_dirs[i][1] = g_dir[i][1];
+        z8_dirs[i][2] = g_dir[i][2];
+    }
+
+    printf("  %d total directions\n\n", z8_nd);
+
+    /* Classify directions: null-only, shared, non-null */
+    for (i = 0; i < z8_nd; i++) {
+        z8_is_null[i] = 0; /* will classify below */
+        first_depth[i] = 99;
+    }
+
+    /* Find which direction each entry points to, and its null status */
+    {
+        int dir_has_null[64], dir_has_nonnull[64];
+        memset(dir_has_null, 0, sizeof(dir_has_null));
+        memset(dir_has_nonnull, 0, sizeof(dir_has_nonnull));
+
+        for (i = 0; i < g_cat_size; i++) {
+            double qa = g_cat[i].a, qb = g_cat[i].b;
+            double qc = g_cat[i].c, qd = g_cat[i].d;
+            double nv, ax, ay, az;
+            int dir_idx = -1;
+            int entry_is_null;
+
+            if (qa < 0) { qa = -qa; qb = -qb; qc = -qc; qd = -qd; }
+            entry_is_null = (qa < 1e-10) ? 1 : 0;
+
+            nv = sqrt(qb*qb + qc*qc + qd*qd);
+            if (nv < 1e-12) continue;
+            ax = qb/nv; ay = qc/nv; az = qd/nv;
+
+            for (j = 0; j < z8_nd; j++) {
+                double d1 = fabs(z8_dirs[j][0]-ax) + fabs(z8_dirs[j][1]-ay) +
+                             fabs(z8_dirs[j][2]-az);
+                double d2 = fabs(z8_dirs[j][0]+ax) + fabs(z8_dirs[j][1]+ay) +
+                             fabs(z8_dirs[j][2]+az);
+                if (d1 < 1e-8 || d2 < 1e-8) { dir_idx = j; break; }
+            }
+
+            if (dir_idx >= 0) {
+                if (entry_is_null) dir_has_null[dir_idx] = 1;
+                else               dir_has_nonnull[dir_idx] = 1;
+
+                if (g_depth[i] < first_depth[dir_idx])
+                    first_depth[dir_idx] = g_depth[i];
+            }
+        }
+
+        /* Classify: 0=null-only, 1=shared, 2=non-null-only */
+        for (i = 0; i < z8_nd; i++) {
+            if (dir_has_null[i] && !dir_has_nonnull[i])
+                z8_is_null[i] = 0;
+            else if (dir_has_null[i] && dir_has_nonnull[i])
+                z8_is_null[i] = 1;
+            else
+                z8_is_null[i] = 2;
+        }
+    }
+
+    /* Report first-appearance depth for each direction */
+    printf("  Dir | Type       | First Depth | Coordinates\n");
+    printf("  ----|------------|-------------|---------------------------\n");
+    for (i = 0; i < z8_nd; i++) {
+        const char *tn = z8_is_null[i] == 0 ? "NULL-ONLY " :
+                         z8_is_null[i] == 1 ? "shared    " : "non-null  ";
+        printf("  %3d | %s | %11d | (%+.4f, %+.4f, %+.4f)\n",
+               i, tn, first_depth[i],
+               z8_dirs[i][0], z8_dirs[i][1], z8_dirs[i][2]);
+    }
+
+    /* Find when all directions are covered */
+    for (d = 0; d <= max_d; d++) {
+        int all = 1;
+        for (i = 0; i < z8_nd; i++) {
+            if (first_depth[i] > d) { all = 0; break; }
+        }
+        if (all) {
+            all_covered_depth = d;
+            break;
+        }
+    }
+
+    printf("\n  Full coverage at depth d* = %d\n", all_covered_depth);
+
+    /* Coverage by depth and type */
+    printf("\n  Depth | Null-only covered | Non-null covered | Shared covered | Total covered\n");
+    printf("  ------|-------------------|------------------|----------------|-------------\n");
+    for (d = 0; d <= max_d; d++) {
+        int cn = 0, cnn = 0, cs = 0, ct = 0;
+        int tn = 0, tnn = 0, ts = 0;
+        for (i = 0; i < z8_nd; i++) {
+            if (z8_is_null[i] == 0) { tn++; if (first_depth[i] <= d) cn++; }
+            if (z8_is_null[i] == 2) { tnn++; if (first_depth[i] <= d) cnn++; }
+            if (z8_is_null[i] == 1) { ts++; if (first_depth[i] <= d) cs++; }
+        }
+        ct = cn + cnn + cs;
+        printf("  %5d | %2d/%d             | %2d/%d            | %2d/%d           | %2d/%d\n",
+               d, cn, tn, cnn, tnn, cs, ts, ct, z8_nd);
+    }
+
+    /* Check: does d* relate to the +6 intercept? */
+    printf("\n  Depth law intercept: +6\n");
+    printf("  Full direction coverage depth: d* = %d\n", all_covered_depth);
+    if (all_covered_depth >= 0 && all_covered_depth <= 3) {
+        printf("  Note: zeta_8 has only %d rounds; coverage is fast.\n",
+               n_rounds);
+        printf("  The '+6' likely relates to the XOR6 base capacity,\n");
+        printf("  not direction coverage depth.\n");
+    }
+
+    /* Also check: per-depth direction novelty */
+    printf("\n  New directions per depth:\n");
+    printf("  Depth | NewDirs |\n");
+    printf("  ------|---------|\n");
+    for (d = 0; d <= max_d; d++) {
+        int nd = 0;
+        for (i = 0; i < z8_nd; i++) {
+            if (first_depth[i] == d) nd++;
+        }
+        printf("  %5d | %7d |\n", d, nd);
+    }
+
+    check("Phase 4: direction coverage computed", 1);
+    check("Phase 4: all directions covered",
+          all_covered_depth >= 0 && all_covered_depth <= max_d);
+}
+
+/* ================================================================ */
+/* Phase 5: Cross-depth coherence comparison at zeta_12             */
+/* ================================================================ */
+
+static void phase5_cross_depth_coherence(void) {
+    int i, j, d1, d2;
+    int max_d;
+    double cross_coh[MAX_ROUNDS][MAX_ROUNDS];
+
+    printf("\n=== Phase 5: Cross-Depth Coherence Matrix (zeta_12) ===\n\n");
+
+    /* Rebuild zeta_12 */
+    init_su2(M_PI / 6.0);
+    build_closure(0);
+    save_catalog();
+    max_d = n_rounds - 1;
+
+    /* For each pair of depths, compute mean |qdot| between entries */
+    printf("  Computing cross-depth coherence (first 100 entries per depth)...\n");
+    for (d1 = 0; d1 <= max_d; d1++) {
+        for (d2 = d1; d2 <= max_d; d2++) {
+            /* Collect entries for each depth */
+            Quat set1[100], set2[100];
+            int n1 = 0, n2 = 0;
+            double sum = 0.0;
+            int count = 0;
+
+            for (i = 0; i < saved_cat_size && n1 < 100; i++) {
+                if (saved_depth[i] == d1)
+                    set1[n1++] = saved_cat[i];
+            }
+            for (i = 0; i < saved_cat_size && n2 < 100; i++) {
+                if (saved_depth[i] == d2)
+                    set2[n2++] = saved_cat[i];
+            }
+
+            if (d1 == d2) {
+                for (i = 0; i < n1; i++)
+                    for (j = i + 1; j < n1; j++) {
+                        sum += fabs(qdot(&set1[i], &set1[j]));
+                        count++;
+                    }
+            } else {
+                for (i = 0; i < n1; i++)
+                    for (j = 0; j < n2; j++) {
+                        sum += fabs(qdot(&set1[i], &set2[j]));
+                        count++;
+                    }
+            }
+
+            cross_coh[d1][d2] = (count > 0) ? sum / (double)count : 0.0;
+            cross_coh[d2][d1] = cross_coh[d1][d2];
+        }
+    }
+
+    /* Print matrix */
+    printf("\n  Cross-depth |qdot| matrix:\n  ");
+    for (d2 = 0; d2 <= max_d; d2++) printf("    d%d   ", d2);
+    printf("\n");
+    for (d1 = 0; d1 <= max_d; d1++) {
+        printf("  d%d", d1);
+        for (d2 = 0; d2 <= max_d; d2++) {
+            printf(" %7.4f", cross_coh[d1][d2]);
+        }
+        printf("\n");
+    }
+
+    /* Diagnostic: is intra-depth coherence higher than inter-depth? */
+    {
+        double intra_sum = 0, inter_sum = 0;
+        int intra_n = 0, inter_n = 0;
+        for (d1 = 0; d1 <= max_d; d1++) {
+            if (round_count[d1] < 10) continue;
+            intra_sum += cross_coh[d1][d1];
+            intra_n++;
+            for (d2 = d1 + 1; d2 <= max_d; d2++) {
+                if (round_count[d2] < 10) continue;
+                inter_sum += cross_coh[d1][d2];
+                inter_n++;
+            }
+        }
+        if (intra_n > 0 && inter_n > 0) {
+            printf("\n  Mean intra-depth coherence: %.4f (over %d depths)\n",
+                   intra_sum / (double)intra_n, intra_n);
+            printf("  Mean inter-depth coherence: %.4f (over %d pairs)\n",
+                   inter_sum / (double)inter_n, inter_n);
+            check("Phase 5: intra > inter coherence",
+                  intra_sum / (double)intra_n > inter_sum / (double)inter_n);
+        }
+    }
+
+    restore_catalog();
+}
+
+/* ================================================================ */
+/* Phase 6: Pairwise Sum Cell Diversity by Cumulative Depth         */
+/* ================================================================ */
+
+static void phase6_cell_diversity(void) {
+    int d, i, j, ki;
+    int max_d;
+    static int seen[MAX_ACT]; /* cell-seen flags, static to avoid stack */
+
+    printf("\n=== Phase 6: Pairwise Sum Cell Diversity (zeta_12) ===\n\n");
+
+    /* Rebuild zeta_12 */
+    init_su2(M_PI / 6.0);
+    build_closure(0);
+    save_catalog();
+    max_d = n_rounds - 1;
+
+    printf("  For each cumulative depth, count distinct cells hit by all\n");
+    printf("  pairwise quaternion sums through combined_cell activation.\n\n");
+
+    printf("  Depth | Entries | Dirs | Pairs     | k_sec | Cells | Distinct | Fill%%\n");
+    printf("  ------|---------|------|-----------|-------|-------|----------|------\n");
+
+    for (d = 0; d <= max_d; d++) {
+        int n_loaded, n_dir, n_cells, n_distinct;
+        long n_pairs;
+
+        n_loaded = load_cumulative(d);
+        build_dirs(g_cat_size);
+        n_dir = g_nd;
+
+        /* Try multiple k_sec values to see cell diversity scaling */
+        for (ki = 0; ki < 3; ki++) {
+            int k_vals[] = {6, 12, 24};
+            int k_sec = k_vals[ki];
+            int n_vor = n_dir + 1;
+
+            n_cells = k_sec * n_vor;
+            if (n_cells > MAX_ACT) {
+                printf("  %5d | %7d | %4d |           | %5d | %5d | (too big)| \n",
+                       d, n_loaded, n_dir, k_sec, n_cells);
+                continue;
+            }
+
+            /* Clear seen array */
+            for (i = 0; i < n_cells; i++) seen[i] = 0;
+            n_distinct = 0;
+            n_pairs = 0;
+
+            /* All unordered pairs including self */
+            for (i = 0; i < n_loaded; i++) {
+                for (j = i; j < n_loaded; j++) {
+                    double sa = g_cat[i].a + g_cat[j].a;
+                    double sb = g_cat[i].b + g_cat[j].b;
+                    double sc = g_cat[i].c + g_cat[j].c;
+                    double sd = g_cat[i].d + g_cat[j].d;
+                    int cell = combined_cell(sa, sb, sc, sd, k_sec);
+                    if (!seen[cell]) {
+                        seen[cell] = 1;
+                        n_distinct++;
+                    }
+                    n_pairs++;
+                }
+                /* Progress for large depths */
+                if (d >= 7 && i % 500 == 0) {
+                    fprintf(stderr, "  DBG phase6: d=%d k=%d i=%d/%d\n",
+                            d, k_sec, i, n_loaded);
+                }
+            }
+
+            printf("  %5d | %7d | %4d | %9ld | %5d | %5d | %8d | %5.1f\n",
+                   d, n_loaded, n_dir, n_pairs, k_sec, n_cells,
+                   n_distinct,
+                   100.0 * (double)n_distinct / (double)n_cells);
+            fflush(stdout);
+        }
+        printf("  ------|---------|------|-----------|-------|-------|----------|------\n");
+    }
+
+    restore_catalog();
+
+    check("Phase 6: cell diversity computed", 1);
+}
+
+/* ================================================================ */
+/* Phase 7: Sector-Only Diversity by Cumulative Depth               */
+/* ================================================================ */
+
+static void phase7_sector_diversity(void) {
+    int d, i, j, ki;
+    int max_d;
+
+    printf("\n=== Phase 7: Sector-Only vs Voronoi-Only Diversity (zeta_12) ===\n\n");
+
+    /* Rebuild zeta_12 */
+    init_su2(M_PI / 6.0);
+    build_closure(0);
+    save_catalog();
+    max_d = n_rounds - 1;
+
+    printf("  Pairwise sums: sector (angle) and Voronoi (axis) diversity separately.\n");
+    printf("  Generator half-angle = pi/6 = 30deg. Expect max angle = 2*d*30 = 60d deg.\n\n");
+
+    /* Also report single-entry angle range per depth */
+    printf("  --- Single-entry angle range by depth ---\n");
+    printf("  Depth | Count | MinAngle | MaxAngle | AngleSpan | Sectors@6 |\n");
+    printf("  ------|-------|----------|----------|-----------|----------|\n");
+    for (d = 0; d <= max_d; d++) {
+        int n_loaded = load_single_depth(d);
+        double min_ang = 999.0, max_ang = -1.0;
+        int n_sec6 = 0;
+        int sec_seen[64];
+        memset(sec_seen, 0, sizeof(sec_seen));
+
+        for (i = 0; i < n_loaded; i++) {
+            double qa = g_cat[i].a;
+            double n2 = g_cat[i].a*g_cat[i].a + g_cat[i].b*g_cat[i].b +
+                         g_cat[i].c*g_cat[i].c + g_cat[i].d*g_cat[i].d;
+            double nm = sqrt(n2);
+            double half_ang, ang;
+            int sec;
+
+            if (nm < 1e-12) continue;
+            qa = qa / nm;
+            if (qa < 0) qa = -qa;
+            if (qa > 1.0) qa = 1.0;
+            half_ang = acos(qa);
+            ang = 2.0 * half_ang * 180.0 / M_PI;
+
+            if (ang < min_ang) min_ang = ang;
+            if (ang > max_ang) max_ang = ang;
+
+            sec = (int)(ang * 6.0 / 360.0);
+            if (sec >= 6) sec = 5;
+            if (sec < 0) sec = 0;
+            if (!sec_seen[sec]) { sec_seen[sec] = 1; n_sec6++; }
+        }
+
+        if (n_loaded == 0) { min_ang = 0; max_ang = 0; }
+        printf("  %5d | %5d | %8.1f | %8.1f | %9.1f | %9d |\n",
+               d, n_loaded, min_ang, max_ang, max_ang - min_ang, n_sec6);
+    }
+
+    /* Pairwise sum sector diversity */
+    printf("\n  --- Pairwise sum diversity: sector vs Voronoi ---\n");
+    {
+        int k_vals[] = {6, 12, 24};
+        int nk = 3;
+
+        for (ki = 0; ki < nk; ki++) {
+            int k_sec = k_vals[ki];
+
+            printf("\n  k_sec = %d\n", k_sec);
+            printf("  Depth | Entries | SecOnly | VorOnly | Both(S*V)\n");
+            printf("  ------|---------|---------|---------|----------\n");
+
+            for (d = 0; d <= max_d; d++) {
+                int n_loaded, n_dir;
+                int sec_seen2[64];
+                int vor_seen[MAX_DIR + 1];
+                int n_sec = 0, n_vor = 0;
+                int n_vor_total;
+
+                n_loaded = load_cumulative(d);
+                build_dirs(g_cat_size);
+                n_dir = g_nd;
+                n_vor_total = n_dir + 1;
+
+                memset(sec_seen2, 0, sizeof(sec_seen2));
+                if (n_vor_total <= MAX_DIR + 1)
+                    memset(vor_seen, 0, (size_t)(n_vor_total) * sizeof(int));
+
+                for (i = 0; i < n_loaded; i++) {
+                    for (j = i; j < n_loaded; j++) {
+                        double sa = g_cat[i].a + g_cat[j].a;
+                        double sb = g_cat[i].b + g_cat[j].b;
+                        double sc = g_cat[i].c + g_cat[j].c;
+                        double sd = g_cat[i].d + g_cat[j].d;
+                        double n2 = sa*sa + sb*sb + sc*sc + sd*sd;
+                        double nm, qa, nv, half_ang, ang;
+                        int sec, vor;
+
+                        if (n2 < 1e-24) {
+                            sec = k_sec - 1;
+                            vor = n_dir;
+                        } else {
+                            nm = sqrt(n2);
+                            qa = sa / nm;
+                            if (qa < 0) { qa = -qa; sb = -sb; sc = -sc; sd = -sd; }
+                            if (qa > 1.0) qa = 1.0;
+                            half_ang = acos(qa);
+                            ang = 2.0 * half_ang * 180.0 / M_PI;
+                            sec = (int)(ang * (double)k_sec / 360.0);
+                            if (sec >= k_sec) sec = k_sec - 1;
+                            if (sec < 0) sec = 0;
+
+                            nv = sqrt(sb*sb + sc*sc + sd*sd) / nm;
+                            if (nv < 1e-12) {
+                                vor = n_dir;
+                            } else {
+                                double inv = nm * nv;
+                                double ax2 = sb/inv, ay2 = sc/inv, az2 = sd/inv;
+                                vor = vor_cell(ax2, ay2, az2);
+                            }
+                        }
+
+                        if (!sec_seen2[sec]) { sec_seen2[sec] = 1; n_sec++; }
+                        if (vor < n_vor_total && !vor_seen[vor]) {
+                            vor_seen[vor] = 1; n_vor++;
+                        }
+                    }
+
+                    if (d >= 7 && i % 500 == 0) {
+                        fprintf(stderr, "  DBG phase7: d=%d k=%d i=%d/%d\n",
+                                d, k_sec, i, n_loaded);
+                    }
+                }
+
+                printf("  %5d | %7d | %3d/%3d | %4d/%4d | %5d/%5d\n",
+                       d, n_loaded, n_sec, k_sec, n_vor, n_vor_total,
+                       n_sec * n_vor, k_sec * n_vor_total);
+                fflush(stdout);
+            }
+        }
+    }
+
+    restore_catalog();
+
+    check("Phase 7: sector diversity computed", 1);
+}
+
+/* ================================================================ */
+/* Phase 8: Cayley Graph Density by Depth                           */
+/* ================================================================ */
+
+static int is_cayley_neighbor(const Quat *a, const Quat *b,
+                              const Quat *gens, int n_gens) {
+    int gi;
+    for (gi = 0; gi < n_gens; gi++) {
+        Quat prod = qmul(b, &gens[gi]);
+        /* Check a == prod or a == -prod */
+        if ((fabs(a->a - prod.a) < 1e-10 &&
+             fabs(a->b - prod.b) < 1e-10 &&
+             fabs(a->c - prod.c) < 1e-10 &&
+             fabs(a->d - prod.d) < 1e-10) ||
+            (fabs(a->a + prod.a) < 1e-10 &&
+             fabs(a->b + prod.b) < 1e-10 &&
+             fabs(a->c + prod.c) < 1e-10 &&
+             fabs(a->d + prod.d) < 1e-10))
+            return 1;
+    }
+    return 0;
+}
+
+static void phase8_cayley_density(void) {
+    int d, i, j;
+    int max_d;
+    Quat gens[4];
+
+    printf("\n=== Phase 8: Cayley Graph Density by Depth (zeta_12) ===\n\n");
+
+    /* Rebuild zeta_12 */
+    init_su2(M_PI / 6.0);
+    build_closure(0);
+    save_catalog();
+    max_d = n_rounds - 1;
+
+    /* Build generator list (gen1, gen1^-1, gen2, gen2^-1) */
+    gens[0] = g_gen[1];
+    gens[1].a =  g_gen[1].a; gens[1].b = -g_gen[1].b;
+    gens[1].c = -g_gen[1].c; gens[1].d = -g_gen[1].d;
+    gens[2] = g_gen[2];
+    gens[3].a =  g_gen[2].a; gens[3].b = -g_gen[2].b;
+    gens[3].c = -g_gen[2].c; gens[3].d = -g_gen[2].d;
+
+    /* Part A: Cayley density by cumulative depth */
+    printf("  Part A: Cumulative depth Cayley density\n");
+    printf("  Depth | Entries | Edges   | Density(E/N) | Edges/Entry\n");
+    printf("  ------|---------|---------|--------------|----------\n");
+
+    for (d = 0; d <= max_d; d++) {
+        int n_loaded;
+        long n_edges = 0;
+
+        n_loaded = load_cumulative(d);
+
+        /* Count Cayley edges: unordered pairs where one = gen * other */
+        for (i = 0; i < n_loaded; i++) {
+            for (j = i + 1; j < n_loaded; j++) {
+                if (is_cayley_neighbor(&g_cat[i], &g_cat[j], gens, 4))
+                    n_edges++;
+            }
+            if (d >= 6 && i % 200 == 0) {
+                fprintf(stderr, "  DBG phase8a: d=%d i=%d/%d edges=%ld\n",
+                        d, i, n_loaded, n_edges);
+            }
+        }
+
+        printf("  %5d | %7d | %7ld | %12.4f | %10.2f\n",
+               d, n_loaded, n_edges,
+               n_loaded > 1 ?
+                   (double)n_edges / (double)(((long)n_loaded *
+                    ((long)n_loaded - 1)) / 2) : 0.0,
+               n_loaded > 0 ? (double)n_edges / (double)n_loaded : 0.0);
+        fflush(stdout);
+    }
+
+    /* Part B: Single-depth Cayley density */
+    printf("\n  Part B: Single-depth Cayley density\n");
+    printf("  Depth | Entries | Edges   | Density      | Edges/Entry\n");
+    printf("  ------|---------|---------|--------------|----------\n");
+
+    for (d = 0; d <= max_d; d++) {
+        int n_loaded;
+        long n_edges = 0;
+
+        n_loaded = load_single_depth(d);
+
+        for (i = 0; i < n_loaded; i++) {
+            for (j = i + 1; j < n_loaded; j++) {
+                if (is_cayley_neighbor(&g_cat[i], &g_cat[j], gens, 4))
+                    n_edges++;
+            }
+        }
+
+        printf("  %5d | %7d | %7ld | %12.4f | %10.2f\n",
+               d, n_loaded, n_edges,
+               n_loaded > 1 ?
+                   (double)n_edges / (double)(((long)n_loaded *
+                    ((long)n_loaded - 1)) / 2) : 0.0,
+               n_loaded > 0 ? (double)n_edges / (double)n_loaded : 0.0);
+        fflush(stdout);
+    }
+
+    /* Part C: Cross-depth Cayley edges (how many depth-d entries are
+       connected to depth-(d-1) entries?) */
+    printf("\n  Part C: Cross-depth Cayley connectivity\n");
+    printf("  Depth | Entries(d) | Entries(d-1) | CrossEdges | Fraction(d connected)\n");
+    printf("  ------|-----------|-------------|------------|---------------------\n");
+
+    for (d = 1; d <= max_d; d++) {
+        Quat set_d[2048], set_dm1[2048];
+        int n_d = 0, n_dm1 = 0;
+        int connected_d = 0;
+        long cross_edges = 0;
+
+        for (i = 0; i < saved_cat_size && n_d < 2048; i++)
+            if (saved_depth[i] == d) set_d[n_d++] = saved_cat[i];
+        for (i = 0; i < saved_cat_size && n_dm1 < 2048; i++)
+            if (saved_depth[i] == d - 1) set_dm1[n_dm1++] = saved_cat[i];
+
+        for (i = 0; i < n_d; i++) {
+            int found = 0;
+            for (j = 0; j < n_dm1; j++) {
+                if (is_cayley_neighbor(&set_d[i], &set_dm1[j], gens, 4)) {
+                    cross_edges++;
+                    found = 1;
+                }
+            }
+            if (found) connected_d++;
+        }
+
+        printf("  %5d | %9d | %11d | %10ld | %8.1f%%\n",
+               d, n_d, n_dm1, cross_edges,
+               n_d > 0 ? 100.0 * (double)connected_d / (double)n_d : 0.0);
+        fflush(stdout);
+    }
+
+    /* Part D: Strided vs deep Cayley density comparison (N=564) */
+    printf("\n  Part D: Strided-564 vs Deep-564 Cayley density\n");
+    {
+        long deep_edges = 0, strided_edges = 0;
+        int deep_n, strided_n, step;
+
+        /* Deep 564: last 564 entries (highest depth) */
+        deep_n = 0;
+        for (i = saved_cat_size - 1; i >= 0 && deep_n < 564; i--) {
+            g_cat[deep_n] = saved_cat[i];
+            deep_n++;
+        }
+        g_cat_size = deep_n;
+
+        for (i = 0; i < deep_n; i++)
+            for (j = i + 1; j < deep_n; j++)
+                if (is_cayley_neighbor(&g_cat[i], &g_cat[j], gens, 4))
+                    deep_edges++;
+
+        printf("  Deep-564:    %ld edges, %.2f edges/entry\n",
+               deep_edges, (double)deep_edges / 564.0);
+
+        /* Strided 564: every Nth entry */
+        step = saved_cat_size / 564;
+        if (step < 1) step = 1;
+        strided_n = 0;
+        for (i = 0; i < saved_cat_size && strided_n < 564; i += step) {
+            g_cat[strided_n] = saved_cat[i];
+            strided_n++;
+        }
+        g_cat_size = strided_n;
+
+        for (i = 0; i < strided_n; i++)
+            for (j = i + 1; j < strided_n; j++)
+                if (is_cayley_neighbor(&g_cat[i], &g_cat[j], gens, 4))
+                    strided_edges++;
+
+        printf("  Strided-564: %ld edges, %.2f edges/entry\n",
+               strided_edges, (double)strided_edges / (double)strided_n);
+        printf("  Ratio (deep/strided): %.2f\n",
+               strided_edges > 0 ?
+                   (double)deep_edges / (double)strided_edges : 0.0);
+
+        check("Phase 8: deep has higher Cayley density than strided",
+              deep_edges > strided_edges);
+    }
+
+    restore_catalog();
+    check("Phase 8: Cayley density computed", 1);
+}
+
+/* ================================================================ */
+/* Phase 9: Multi-Element Sum Sector Diversity by Depth             */
+/* ================================================================ */
+
+static void phase9_multielement_sectors(void) {
+    int d, trial, nw_idx;
+    int max_d;
+    int n_weights_list[] = {3, 4, 5};  /* XOR6, XOR8, XOR10 */
+    int n_weights_count = 3;
+    int n_trials = 200;
+    int k_sec = 24;  /* high resolution to see growth */
+
+    printf("\n=== Phase 9: Multi-Element Sum Sector Diversity (zeta_12) ===\n\n");
+    printf("  For random weight tuples, count distinct sectors across all\n");
+    printf("  2^(2*n_weights) input patterns. k_sec=%d, %d trials/point.\n\n",
+           k_sec, n_trials);
+
+    /* Rebuild zeta_12 */
+    init_su2(M_PI / 6.0);
+    build_closure(0);
+    save_catalog();
+    max_d = n_rounds - 1;
+
+    printf("  Depth | NW=3(XOR6) | NW=4(XOR8) | NW=5(XOR10)\n");
+    printf("  ------|------------|------------|------------\n");
+
+    for (d = 0; d <= max_d; d++) {
+        int n_loaded = load_cumulative(d);
+        build_dirs(g_cat_size);
+
+        printf("  %5d |", d);
+        fflush(stdout);
+
+        for (nw_idx = 0; nw_idx < n_weights_count; nw_idx++) {
+            int nw = n_weights_list[nw_idx];
+            int n_inputs = 2 * nw;
+            int n_masks = 1 << n_inputs;
+            double sec_sum = 0.0;
+
+            if (n_loaded < nw || n_inputs > 14) {
+                printf(" %10s |", "N/A");
+                continue;
+            }
+
+            for (trial = 0; trial < n_trials; trial++) {
+                int indices[5];
+                double wa[10], wb[10], wc[10], wd[10];
+                int sec_seen[64];
+                int n_sec = 0;
+                int wi, mask;
+
+                memset(sec_seen, 0, sizeof(sec_seen));
+
+                /* Pick random nw entries */
+                {
+                    int picks[5];
+                    int pi;
+                    for (pi = 0; pi < nw; pi++) {
+                        int ok;
+                        do {
+                            ok = 1;
+                            picks[pi] = (int)(rng_uniform() * (double)n_loaded);
+                            if (picks[pi] >= n_loaded) picks[pi] = n_loaded - 1;
+                            { int pj; for (pj = 0; pj < pi; pj++)
+                                if (picks[pj] == picks[pi]) { ok = 0; break; }
+                            }
+                        } while (!ok);
+                        indices[pi] = picks[pi];
+                    }
+                }
+
+                /* Build input weights (w_i and -w_i) */
+                for (wi = 0; wi < nw; wi++) {
+                    const Quat *q = &g_cat[indices[wi]];
+                    wa[2*wi]   =  q->a; wb[2*wi]   =  q->b;
+                    wc[2*wi]   =  q->c; wd[2*wi]   =  q->d;
+                    wa[2*wi+1] = -q->a; wb[2*wi+1] = -q->b;
+                    wc[2*wi+1] = -q->c; wd[2*wi+1] = -q->d;
+                }
+
+                /* For each input mask, compute sum and extract sector */
+                for (mask = 0; mask < n_masks; mask++) {
+                    double sa = 0, sb = 0, sc = 0, sd = 0;
+                    double n2, nm, qa, half_ang, ang;
+                    int sec, inp;
+
+                    for (inp = 0; inp < n_inputs; inp++) {
+                        if (mask & (1 << inp)) {
+                            sa += wa[inp]; sb += wb[inp];
+                            sc += wc[inp]; sd += wd[inp];
+                        }
+                    }
+
+                    n2 = sa*sa + sb*sb + sc*sc + sd*sd;
+                    if (n2 < 1e-24) {
+                        sec = k_sec - 1;
+                    } else {
+                        nm = sqrt(n2);
+                        qa = sa / nm;
+                        if (qa < 0) qa = -qa;
+                        if (qa > 1.0) qa = 1.0;
+                        half_ang = acos(qa);
+                        ang = 2.0 * half_ang * 180.0 / M_PI;
+                        sec = (int)(ang * (double)k_sec / 360.0);
+                        if (sec >= k_sec) sec = k_sec - 1;
+                        if (sec < 0) sec = 0;
+                    }
+
+                    if (!sec_seen[sec]) { sec_seen[sec] = 1; n_sec++; }
+                }
+
+                sec_sum += (double)n_sec;
+            }
+
+            printf(" %8.1f/%d |",
+                   sec_sum / (double)n_trials, k_sec);
+        }
+        printf("\n");
+        fflush(stdout);
+    }
+
+    /* Also report distinct ANGLES per cumulative depth */
+    printf("\n  Distinct rotation angles by cumulative depth:\n");
+    printf("  Depth | Entries | Angles\n");
+    printf("  ------|---------|-------\n");
+    for (d = 0; d <= max_d; d++) {
+        int n_loaded = load_cumulative(d);
+        double angles[4096];
+        int n_ang = 0;
+        int i, j2;
+
+        for (i = 0; i < n_loaded; i++) {
+            double qa = g_cat[i].a;
+            double n2 = g_cat[i].a*g_cat[i].a + g_cat[i].b*g_cat[i].b +
+                         g_cat[i].c*g_cat[i].c + g_cat[i].d*g_cat[i].d;
+            double nm = sqrt(n2);
+            double half_ang, ang;
+            int found = 0;
+
+            if (nm < 1e-12) continue;
+            qa = qa / nm;
+            if (qa < 0) qa = -qa;
+            if (qa > 1.0) qa = 1.0;
+            half_ang = acos(qa);
+            ang = 2.0 * half_ang * 180.0 / M_PI;
+
+            for (j2 = 0; j2 < n_ang; j2++) {
+                if (fabs(angles[j2] - ang) < 0.01) { found = 1; break; }
+            }
+            if (!found && n_ang < 4096)
+                angles[n_ang++] = ang;
+        }
+
+        printf("  %5d | %7d | %5d\n", d, n_loaded, n_ang);
+    }
+
+    restore_catalog();
+    check("Phase 9: multi-element sector diversity computed", 1);
+}
+
+/* ================================================================ */
+/* Phase 10: Angle Coherence Within Depth Shells                    */
+/* ================================================================ */
+
+static double extract_angle(const Quat *q) {
+    double qa = q->a;
+    double n2 = q->a*q->a + q->b*q->b + q->c*q->c + q->d*q->d;
+    double nm = sqrt(n2);
+    double half_ang;
+    if (nm < 1e-12) return 0.0;
+    qa = qa / nm;
+    if (qa < 0) qa = -qa;
+    if (qa > 1.0) qa = 1.0;
+    half_ang = acos(qa);
+    return 2.0 * half_ang * 180.0 / M_PI;
+}
+
+static void phase10_angle_coherence(void) {
+    int d, i, t;
+    int max_d;
+    double all_angles[MAX_QCAT];
+    double all_mean, all_var;
+    int n_trials = 100;
+
+    printf("\n=== Phase 10: Angle Coherence Within Depth Shells (zeta_12) ===\n\n");
+
+    /* Rebuild zeta_12 */
+    init_su2(M_PI / 6.0);
+    build_closure(0);
+    save_catalog();
+    max_d = n_rounds - 1;
+
+    /* Compute full catalog angle stats */
+    all_mean = 0.0;
+    for (i = 0; i < saved_cat_size; i++) {
+        all_angles[i] = extract_angle(&saved_cat[i]);
+        all_mean += all_angles[i];
+    }
+    all_mean /= (double)saved_cat_size;
+    all_var = 0.0;
+    for (i = 0; i < saved_cat_size; i++) {
+        double diff = all_angles[i] - all_mean;
+        all_var += diff * diff;
+    }
+    all_var /= (double)saved_cat_size;
+
+    printf("  Full catalog: %d entries, mean angle=%.1f, stddev=%.1f\n\n",
+           saved_cat_size, all_mean, sqrt(all_var));
+
+    /* Part A: Per-depth angle distribution */
+    printf("  Part A: Angle distribution per depth shell\n");
+    printf("  Depth | Count | MeanAng | StdDev | #Angles | Ratio(sd/full_sd)\n");
+    printf("  ------|-------|---------|--------|---------|------------------\n");
+
+    for (d = 0; d <= max_d; d++) {
+        double shell_angles[2048];
+        int n = 0;
+        double mean2 = 0, var2 = 0;
+        double distinct[200];
+        int n_dist = 0;
+
+        for (i = 0; i < saved_cat_size && n < 2048; i++) {
+            if (saved_depth[i] == d) {
+                shell_angles[n] = extract_angle(&saved_cat[i]);
+                mean2 += shell_angles[n];
+                n++;
+            }
+        }
+        if (n > 0) mean2 /= (double)n;
+        for (i = 0; i < n; i++) {
+            double diff = shell_angles[i] - mean2;
+            var2 += diff * diff;
+        }
+        if (n > 0) var2 /= (double)n;
+
+        /* Count distinct angles */
+        for (i = 0; i < n; i++) {
+            int found = 0;
+            int j2;
+            for (j2 = 0; j2 < n_dist; j2++) {
+                if (fabs(distinct[j2] - shell_angles[i]) < 0.01) {
+                    found = 1; break;
+                }
+            }
+            if (!found && n_dist < 200)
+                distinct[n_dist++] = shell_angles[i];
+        }
+
+        printf("  %5d | %5d | %7.1f | %6.1f | %7d | %11.3f\n",
+               d, n, mean2, sqrt(var2), n_dist,
+               all_var > 0 ? sqrt(var2) / sqrt(all_var) : 0.0);
+    }
+
+    /* Part B: Compare to random samples of matched size */
+    printf("\n  Part B: Depth-shell vs random-sample angle variance\n");
+    printf("  Depth | ShellSize | ShellStd | RandStd(mean) | Ratio(Shell/Rand)\n");
+    printf("  ------|-----------|----------|---------------|------------------\n");
+
+    for (d = 0; d <= max_d; d++) {
+        double shell_angles2[2048];
+        int n = 0;
+        double shell_mean = 0, shell_var = 0;
+        double rand_var_sum = 0;
+
+        for (i = 0; i < saved_cat_size && n < 2048; i++) {
+            if (saved_depth[i] == d) {
+                shell_angles2[n] = extract_angle(&saved_cat[i]);
+                shell_mean += shell_angles2[n];
+                n++;
+            }
+        }
+        if (n == 0) continue;
+        shell_mean /= (double)n;
+        for (i = 0; i < n; i++) {
+            double diff = shell_angles2[i] - shell_mean;
+            shell_var += diff * diff;
+        }
+        shell_var /= (double)n;
+
+        /* Random samples of same size */
+        for (t = 0; t < n_trials; t++) {
+            double r_mean = 0, r_var = 0;
+            double r_angles[2048];
+            int ri;
+
+            for (ri = 0; ri < n; ri++) {
+                int idx = (int)(rng_uniform() * (double)saved_cat_size);
+                if (idx >= saved_cat_size) idx = saved_cat_size - 1;
+                r_angles[ri] = all_angles[idx];
+                r_mean += r_angles[ri];
+            }
+            r_mean /= (double)n;
+            for (ri = 0; ri < n; ri++) {
+                double diff = r_angles[ri] - r_mean;
+                r_var += diff * diff;
+            }
+            r_var /= (double)n;
+            rand_var_sum += sqrt(r_var);
+        }
+
+        printf("  %5d | %9d | %8.1f | %13.1f | %11.3f\n",
+               d, n, sqrt(shell_var),
+               rand_var_sum / (double)n_trials,
+               (rand_var_sum / (double)n_trials) > 0 ?
+                   sqrt(shell_var) / (rand_var_sum / (double)n_trials) : 0.0);
+    }
+
+    /* Part C: List the actual angle values per depth */
+    printf("\n  Part C: Distinct angle values per depth shell\n");
+    for (d = 0; d <= max_d; d++) {
+        double distinct2[200];
+        int n_dist2 = 0;
+
+        for (i = 0; i < saved_cat_size; i++) {
+            if (saved_depth[i] == d) {
+                double ang = extract_angle(&saved_cat[i]);
+                int found = 0;
+                int j2;
+                for (j2 = 0; j2 < n_dist2; j2++) {
+                    if (fabs(distinct2[j2] - ang) < 0.01) {
+                        found = 1; break;
+                    }
+                }
+                if (!found && n_dist2 < 200)
+                    distinct2[n_dist2++] = ang;
+            }
+        }
+
+        printf("  d=%d (%d values): ", d, n_dist2);
+        { int j2; for (j2 = 0; j2 < n_dist2; j2++)
+            printf("%.1f ", distinct2[j2]);
+        }
+        printf("\n");
+    }
+
+    restore_catalog();
+
+    check("Phase 10: angle coherence computed", 1);
+}
+
+/* ================================================================ */
+/* Phase 11: Paired Extension Verification                          */
+/* ================================================================ */
+
+/* Get Voronoi cell index for a quaternion's rotation axis */
+static int quat_vor(const Quat *q) {
+    double qa = q->a, qb = q->b, qc = q->c, qd = q->d;
+    double nv, ax, ay, az;
+    if (qa < 0) { qa = -qa; qb = -qb; qc = -qc; qd = -qd; }
+    nv = sqrt(qb*qb + qc*qc + qd*qd);
+    if (nv < 1e-12) return g_nd; /* identity: special cell */
+    ax = qb/nv; ay = qc/nv; az = qd/nv;
+    return vor_cell(ax, ay, az);
+}
+
+static void phase11_paired_extension(void) {
+    int bf, ai, aj, ak, al, ki;
+    int n_xor6_win = 0, n_xor8_win = 0;
+    int xor6_shadow = 0, xor8_shadow = 0;
+    int xor8_nested = 0;
+
+    printf("\n=== Phase 11: Paired Extension Verification (zeta_12) ===\n\n");
+
+    /* Use cumulative depth 4 (275 entries, 114 dirs) — enough for XOR8 */
+    init_su2(M_PI / 6.0);
+    build_closure(0);
+    save_catalog();
+    load_cumulative(4);
+    build_dirs(g_cat_size);
+
+    bf = 30; /* brute force limit */
+    if (bf > g_cat_size) bf = g_cat_size;
+
+    printf("  Catalog: %d entries, %d dirs, bf_limit=%d\n", g_cat_size, g_nd, bf);
+    printf("  Testing shadow pair structure of XOR winners...\n\n");
+
+    /* Part A: XOR6 winners (3 weights) — check for shadow pairs */
+    printf("  --- XOR6 winners (3 weights, bf=%d) ---\n", bf);
+    for (ai = 0; ai < bf; ai++)
+    for (aj = ai+1; aj < bf; aj++)
+    for (ak = aj+1; ak < bf; ak++) {
+        int indices[3];
+        indices[0] = ai; indices[1] = aj; indices[2] = ak;
+        for (ki = 0; ki < N_KLADDER; ki++) {
+            int nc2 = K_LADDER[ki] * (g_nd + 1);
+            if (nc2 > MAX_ACT) continue;
+            if (test_xor(indices, 3, K_LADDER[ki])) {
+                int v0 = quat_vor(&g_cat[ai]);
+                int v1 = quat_vor(&g_cat[aj]);
+                int v2 = quat_vor(&g_cat[ak]);
+                double a0 = extract_angle(&g_cat[ai]);
+                double a1 = extract_angle(&g_cat[aj]);
+                double a2 = extract_angle(&g_cat[ak]);
+                int has_shadow = 0;
+
+                /* Check all pairs for shadow (same vor, diff angle) */
+                if (v0 == v1 && fabs(a0-a1) > 1.0) has_shadow = 1;
+                if (v0 == v2 && fabs(a0-a2) > 1.0) has_shadow = 1;
+                if (v1 == v2 && fabs(a1-a2) > 1.0) has_shadow = 1;
+
+                n_xor6_win++;
+                if (has_shadow) xor6_shadow++;
+
+                /* Print first few */
+                if (n_xor6_win <= 5) {
+                    printf("    Win#%d: [%d,%d,%d] vor=[%d,%d,%d] "
+                           "ang=[%.0f,%.0f,%.0f] shadow=%s\n",
+                           n_xor6_win, ai, aj, ak, v0, v1, v2,
+                           a0, a1, a2, has_shadow ? "YES" : "no");
+                }
+                break; /* count once per triple */
+            }
+        }
+    }
+    printf("  XOR6: %d winners, %d with shadow pair (%.0f%%)\n\n",
+           n_xor6_win, xor6_shadow,
+           n_xor6_win > 0 ? 100.0*(double)xor6_shadow/(double)n_xor6_win : 0.0);
+
+    /* Part B: XOR8 winners (4 weights) — check shadow + nested */
+    printf("  --- XOR8 winners (4 weights, bf=%d) ---\n", bf);
+    {
+        int bf8 = 20; /* smaller for 4-weight search */
+        if (bf8 > g_cat_size) bf8 = g_cat_size;
+
+        for (ai = 0; ai < bf8; ai++)
+        for (aj = ai+1; aj < bf8; aj++)
+        for (ak = aj+1; ak < bf8; ak++)
+        for (al = ak+1; al < bf8; al++) {
+            int indices[4];
+            indices[0] = ai; indices[1] = aj;
+            indices[2] = ak; indices[3] = al;
+            for (ki = 0; ki < N_KLADDER; ki++) {
+                int nc2 = K_LADDER[ki] * (g_nd + 1);
+                if (nc2 > MAX_ACT) continue;
+                if (test_xor(indices, 4, K_LADDER[ki])) {
+                    int vors[4], pi2, pj2;
+                    double angs[4];
+                    int has_shadow = 0;
+                    int has_nested = 0;
+
+                    vors[0] = quat_vor(&g_cat[ai]);
+                    vors[1] = quat_vor(&g_cat[aj]);
+                    vors[2] = quat_vor(&g_cat[ak]);
+                    vors[3] = quat_vor(&g_cat[al]);
+                    angs[0] = extract_angle(&g_cat[ai]);
+                    angs[1] = extract_angle(&g_cat[aj]);
+                    angs[2] = extract_angle(&g_cat[ak]);
+                    angs[3] = extract_angle(&g_cat[al]);
+
+                    /* Check all pairs for shadow */
+                    for (pi2 = 0; pi2 < 4 && !has_shadow; pi2++)
+                    for (pj2 = pi2+1; pj2 < 4; pj2++) {
+                        if (vors[pi2] == vors[pj2] &&
+                            fabs(angs[pi2] - angs[pj2]) > 1.0) {
+                            has_shadow = 1;
+
+                            /* Nested test: remove one shadow element,
+                               test remaining 3 as XOR6 */
+                            {
+                                int rem[3], ri = 0, mi;
+                                int ki2;
+                                int all4[4];
+                                all4[0]=ai; all4[1]=aj;
+                                all4[2]=ak; all4[3]=al;
+
+                                for (mi = 0; mi < 4; mi++)
+                                    if (mi != pj2) rem[ri++] = all4[mi];
+
+                                for (ki2 = 0; ki2 < N_KLADDER; ki2++) {
+                                    int nc3 = K_LADDER[ki2] * (g_nd+1);
+                                    if (nc3 > MAX_ACT) continue;
+                                    if (test_xor(rem, 3, K_LADDER[ki2])) {
+                                        has_nested = 1;
+                                        break;
+                                    }
+                                }
+                            }
+                            break;
+                        }
+                    }
+
+                    n_xor8_win++;
+                    if (has_shadow) xor8_shadow++;
+                    if (has_nested) xor8_nested++;
+
+                    if (n_xor8_win <= 5) {
+                        printf("    Win#%d: [%d,%d,%d,%d] "
+                               "vor=[%d,%d,%d,%d] "
+                               "ang=[%.0f,%.0f,%.0f,%.0f] "
+                               "shadow=%s nested=%s\n",
+                               n_xor8_win, ai, aj, ak, al,
+                               vors[0],vors[1],vors[2],vors[3],
+                               angs[0],angs[1],angs[2],angs[3],
+                               has_shadow ? "YES" : "no",
+                               has_nested ? "YES" : "no");
+                    }
+                    break;
+                }
+            }
+        }
+    }
+    printf("  XOR8: %d winners, %d shadow (%.0f%%), %d nested (%.0f%%)\n\n",
+           n_xor8_win, xor8_shadow,
+           n_xor8_win > 0 ? 100.0*(double)xor8_shadow/(double)n_xor8_win : 0.0,
+           xor8_nested,
+           n_xor8_win > 0 ? 100.0*(double)xor8_nested/(double)n_xor8_win : 0.0);
+
+    check("Phase 11: XOR6 winners found", n_xor6_win > 0);
+    check("Phase 11: XOR8 winners found", n_xor8_win > 0);
+    check("Phase 11: shadow pair fraction > 50%",
+          n_xor8_win > 0 &&
+          (double)xor8_shadow / (double)n_xor8_win > 0.5);
+
+    restore_catalog();
+}
+
+/* ================================================================ */
+/* Main                                                             */
+/* ================================================================ */
+
+int main(void) {
+    printf("KNOTAPEL DEMO 89: Depth Law Mechanism\n");
+    printf("======================================\n\n");
+    fflush(stdout);
+
+    /* Build zeta_12 catalog */
+    printf("  Building zeta_12 catalog...\n");
+    fflush(stdout);
+    init_su2(M_PI / 6.0);
+    build_closure(1);
+    save_catalog();
+
+    printf("  %d entries, %d rounds\n\n", g_cat_size, n_rounds);
+    fflush(stdout);
+    check("zeta_12 catalog built", g_cat_size > 3000);
+    fflush(stdout);
+
+    /* Phase 1: Depth decomposition */
+    fprintf(stderr, "DBG: starting phase1\n");
+    phase1_depth_decomposition();
+    fprintf(stderr, "DBG: phase1 done\n");
+
+    /* Phase 2: Discriminating experiment */
+    fprintf(stderr, "DBG: starting phase2\n");
+    phase2_discriminating();
+    fprintf(stderr, "DBG: phase2 done\n");
+
+    /* Phase 3: Coherence by depth */
+    fprintf(stderr, "DBG: starting phase3\n");
+    phase3_coherence();
+    fprintf(stderr, "DBG: phase3 done\n");
+
+    /* Phase 4: Direction coverage at zeta_8 */
+    fprintf(stderr, "DBG: starting phase4\n");
+    phase4_intercept();
+    fprintf(stderr, "DBG: phase4 done\n");
+
+    /* Phase 5: Cross-depth coherence matrix */
+    fprintf(stderr, "DBG: starting phase5\n");
+    phase5_cross_depth_coherence();
+    fprintf(stderr, "DBG: phase5 done\n");
+
+    /* Phase 6: Cell diversity */
+    fprintf(stderr, "DBG: starting phase6\n");
+    phase6_cell_diversity();
+    fprintf(stderr, "DBG: phase6 done\n");
+
+    /* Phase 7: Sector diversity */
+    fprintf(stderr, "DBG: starting phase7\n");
+    phase7_sector_diversity();
+    fprintf(stderr, "DBG: phase7 done\n");
+
+    /* Phase 8: Cayley density */
+    fprintf(stderr, "DBG: starting phase8\n");
+    phase8_cayley_density();
+    fprintf(stderr, "DBG: phase8 done\n");
+
+    /* Phase 9: Multi-element sector diversity */
+    fprintf(stderr, "DBG: starting phase9\n");
+    phase9_multielement_sectors();
+    fprintf(stderr, "DBG: phase9 done\n");
+
+    /* Phase 10: Angle coherence */
+    fprintf(stderr, "DBG: starting phase10\n");
+    phase10_angle_coherence();
+    fprintf(stderr, "DBG: phase10 done\n");
+
+    /* Phase 11: Paired Extension */
+    fprintf(stderr, "DBG: starting phase11\n");
+    phase11_paired_extension();
+    fprintf(stderr, "DBG: phase11 done\n");
+
+    /* Summary */
+    printf("\n======================================\n");
+    printf("Results: %d pass, %d fail\n", n_pass, n_fail);
+
+    return n_fail;
+}

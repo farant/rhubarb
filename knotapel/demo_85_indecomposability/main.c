@@ -1,0 +1,6860 @@
+/*
+ * KNOTAPEL DEMO 85: Indecomposability Parameter
+ * ==============================================
+ *
+ * Compute the indecomposability parameter b for TL_n at delta=0
+ * (dense polymer model, c=-2).
+ *
+ * Two candidate values from literature:
+ *   b = -2   (GRS, projective cover, algebraic definition)
+ *   b = -5/8 (Pearce-Rasmussen, finite-size scaling)
+ *
+ * We compute both and determine the relationship.
+ *
+ * Phase 1: Standard module W_{n,0} -- link states, Hamiltonian, Jordan blocks
+ * Phase 2: Algebra-level projective cover (uses Demo 51 infrastructure)
+ *
+ * C89, zero dependencies beyond math.h.
+ */
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <math.h>
+
+#define MAX_SITES 12    /* max n (even) for standard module */
+#define MAX_LS_DIM 132  /* C_6 = 132 for n=12 */
+
+/* ================================================================ */
+/* Test infrastructure                                              */
+/* ================================================================ */
+
+static int n_pass = 0, n_fail = 0;
+
+static void check(const char *titulis, int ok) {
+    if (ok) { printf("  PASS: %s\n", titulis); n_pass++; }
+    else    { printf("  FAIL: %s\n", titulis); n_fail++; }
+}
+
+/* ================================================================ */
+/* Part A: Link State (Standard Module W_{n,0})                     */
+/* ================================================================ */
+
+/*
+ * A link state is a non-crossing perfect matching on n sites (n even).
+ * pair[i] = j means site i is paired with site j, with i < j.
+ * Sites are labeled 0, 1, ..., n-1.
+ *
+ * Example for n=4:
+ *   State 0: pair = {1, 0, 3, 2}  -- sites (0,1) and (2,3) paired
+ *   State 1: pair = {3, 2, 1, 0}  -- sites (0,3) and (1,2) paired
+ *
+ * dim(W_{n,0}) = C_{n/2} (Catalan number of n/2)
+ *   n=4:  C_2 = 2
+ *   n=6:  C_3 = 5
+ *   n=8:  C_4 = 14
+ *   n=10: C_5 = 42
+ *   n=12: C_6 = 132
+ */
+
+typedef struct {
+    int pair[MAX_SITES];  /* pair[i] = j means site i paired with site j */
+} LinkState;
+
+/*
+ * Recursive enumeration of non-crossing perfect matchings.
+ * Sites first..n-1 need to be matched. Site 'first' must pair with
+ * some site 'first+1', 'first+3', 'first+5', ... (odd offset, so that
+ * both sides have even count for further matching).
+ */
+static void enum_ls_recurse(int n, int *pair,
+                            LinkState *basis, int *count) {
+    int first, k, j, all_free;
+    /* find first unpaired site */
+    for (first = 0; first < n; first++) {
+        if (pair[first] == -1) break;
+    }
+    if (first >= n) {
+        /* all sites matched -- record this state */
+        memcpy(basis[*count].pair, pair, (size_t)n * sizeof(int));
+        (*count)++;
+        return;
+    }
+    /* For non-crossing matching: first pairs with k where all sites
+     * between first and k must be unpaired (so they can match among
+     * themselves), and the count (k-first-1) must be even. */
+    for (k = first + 1; k < n; k++) {
+        /* check all sites first+1..k-1 are unpaired */
+        all_free = 1;
+        for (j = first + 1; j < k; j++) {
+            if (pair[j] != -1) { all_free = 0; break; }
+        }
+        if (!all_free) continue;
+        /* check even number of sites between first and k */
+        if ((k - first - 1) % 2 != 0) continue;
+
+        pair[first] = k;
+        pair[k] = first;
+        enum_ls_recurse(n, pair, basis, count);
+        pair[first] = -1;
+        pair[k] = -1;
+    }
+}
+
+static int enumerate_link_states(int n, LinkState *basis) {
+    int pair[MAX_SITES];
+    int count = 0;
+    memset(pair, -1, sizeof(pair));
+    enum_ls_recurse(n, pair, basis, &count);
+    return count;
+}
+
+/*
+ * Action of e_i on a link state.
+ *
+ * Generator e_i connects sites i and i+1.
+ *
+ * Case 1: sites i and i+1 are already paired with each other.
+ *   Then e_i creates a closed loop -> result is 0 (killed) at delta=0.
+ *
+ * Case 2: site i is paired with some a != i+1, site i+1 is paired with some b != i.
+ *   Then e_i reconnects: pair i with i+1 (cup on top), pair a with b (the
+ *   two free ends join). But wait -- this creates a new arc (i, i+1) on top
+ *   AND we need to check if the reconnection creates a loop.
+ *
+ *   Actually at the standard module level: e_i acts by:
+ *   - If pair[i] == i+1: result = delta * |state> = 0 (at delta=0)
+ *   - Else: let a = pair[i], b = pair[i+1].
+ *     New state: pair i<->i+1, pair a<->b. No loops created.
+ *     Returns 1 with the new state in *out.
+ */
+static int apply_ei(int i, const LinkState *in, LinkState *out, int n) {
+    int a, b;
+    if (in->pair[i] == i + 1) {
+        /* sites i and i+1 already paired -- loop at delta=0 -> killed */
+        return 0;
+    }
+    a = in->pair[i];       /* site i was paired with a */
+    b = in->pair[i + 1];   /* site i+1 was paired with b */
+
+    /* copy input state */
+    memcpy(out->pair, in->pair, (size_t)n * sizeof(int));
+
+    /* reconnect: i <-> i+1, a <-> b */
+    out->pair[i] = i + 1;
+    out->pair[i + 1] = i;
+    out->pair[a] = b;
+    out->pair[b] = a;
+
+    return 1;
+}
+
+/*
+ * Find index of a link state in the basis.
+ * Returns -1 if not found.
+ */
+static int find_ls_index(const LinkState *ls, const LinkState *basis,
+                         int dim, int n) {
+    int idx, j, eq;
+    for (idx = 0; idx < dim; idx++) {
+        eq = 1;
+        for (j = 0; j < n; j++) {
+            if (basis[idx].pair[j] != ls->pair[j]) { eq = 0; break; }
+        }
+        if (eq) return idx;
+    }
+    return -1;
+}
+
+/*
+ * Build Hamiltonian matrix H on W_{n,0}.
+ *
+ * H = -(e_1 + e_2 + ... + e_{n-1})
+ *
+ * (using 0-indexed generators: e_0, e_1, ..., e_{n-2})
+ * so H = -(e_0 + e_1 + ... + e_{n-2})
+ *
+ * Since each e_i either kills a state or maps it to another basis state
+ * with coefficient 1, all matrix entries of H are non-positive integers.
+ * In fact H[row][col] = -(number of generators mapping |col> to |row>).
+ */
+static void build_hamiltonian(int n, const LinkState *basis, int dim,
+                              int H[MAX_LS_DIM][MAX_LS_DIM]) {
+    int gen, col, target;
+    LinkState out;
+
+    memset(H, 0, sizeof(int) * MAX_LS_DIM * MAX_LS_DIM);
+
+    for (gen = 0; gen < n - 1; gen++) {
+        for (col = 0; col < dim; col++) {
+            if (apply_ei(gen, &basis[col], &out, n)) {
+                target = find_ls_index(&out, basis, dim, n);
+                if (target >= 0) {
+                    H[target][col] -= 1;  /* H = -sum(e_i) */
+                }
+            }
+            /* if killed (loop), contributes 0 */
+        }
+    }
+}
+
+/* ================================================================ */
+/* Part B: Integer Matrix Operations + Jordan Detection             */
+/* ================================================================ */
+
+/*
+ * Bareiss algorithm for fraction-free Gaussian elimination.
+ * Computes the rank of an integer matrix using only integer arithmetic.
+ * The key identity: at each step, the division is guaranteed exact.
+ *
+ * We work on a copy to avoid destroying the input.
+ */
+
+/*
+ * Gaussian elimination with partial pivoting over doubles.
+ * For our matrices (entries <= 8, sizes <= 42), standard double
+ * arithmetic is more than sufficient.
+ */
+
+static int gauss_rank(const int M[MAX_LS_DIM][MAX_LS_DIM], int dim) {
+    double work[MAX_LS_DIM][MAX_LS_DIM];
+    int i, j, k, pivot_row, rank;
+    double max_val, factor;
+    double eps = 1e-9;
+
+    /* copy to working matrix */
+    for (i = 0; i < dim; i++)
+        for (j = 0; j < dim; j++)
+            work[i][j] = (double)M[i][j];
+
+    rank = 0;
+
+    for (k = 0; k < dim; k++) {
+        /* find pivot row with largest absolute value */
+        pivot_row = -1;
+        max_val = eps;
+        for (i = rank; i < dim; i++) {
+            double av = work[i][k] < 0 ? -work[i][k] : work[i][k];
+            if (av > max_val) { max_val = av; pivot_row = i; }
+        }
+        if (pivot_row == -1) continue;  /* zero column, skip */
+
+        /* swap pivot row into position */
+        if (pivot_row != rank) {
+            for (j = 0; j < dim; j++) {
+                double tmp = work[rank][j];
+                work[rank][j] = work[pivot_row][j];
+                work[pivot_row][j] = tmp;
+            }
+        }
+
+        /* eliminate below pivot */
+        for (i = rank + 1; i < dim; i++) {
+            factor = work[i][k] / work[rank][k];
+            for (j = k + 1; j < dim; j++) {
+                work[i][j] -= factor * work[rank][j];
+            }
+            work[i][k] = 0;
+        }
+
+        rank++;
+    }
+
+    return rank;
+}
+
+/*
+ * Matrix multiply: C = A * B (integer, exact)
+ * A is dim x dim, B is dim x dim, C is dim x dim
+ */
+static void mat_mul_int(const int A[MAX_LS_DIM][MAX_LS_DIM],
+                        const int B[MAX_LS_DIM][MAX_LS_DIM],
+                        int C[MAX_LS_DIM][MAX_LS_DIM], int dim) {
+    int i, j, k;
+    double sum;
+    for (i = 0; i < dim; i++) {
+        for (j = 0; j < dim; j++) {
+            sum = 0.0;
+            for (k = 0; k < dim; k++) {
+                sum += (double)A[i][k] * (double)B[k][j];
+            }
+            C[i][j] = (int)(sum + 0.5 * (sum >= 0.0 ? 1.0 : -1.0));
+        }
+    }
+}
+
+/*
+ * Jordan block detection at eigenvalue lambda.
+ *
+ * Build M = H - lambda*I, compute:
+ *   nullity_1 = dim - rank(M)    = dim(ker(M))
+ *   nullity_2 = dim - rank(M^2)  = dim(ker(M^2))
+ *
+ * Jordan blocks of size >= 2 exist iff nullity_2 > nullity_1.
+ * Number of size-2+ blocks = nullity_2 - nullity_1.
+ *
+ * For lambda=0: M = H directly.
+ */
+static void jordan_analysis(const int H[MAX_LS_DIM][MAX_LS_DIM],
+                            int dim, int lambda,
+                            int *rank1, int *rank2,
+                            int *nullity1, int *nullity2) {
+    int M[MAX_LS_DIM][MAX_LS_DIM];
+    int M2[MAX_LS_DIM][MAX_LS_DIM];
+    int i, j, max_m, max_m2;
+
+    /* M = H - lambda * I */
+    for (i = 0; i < dim; i++)
+        for (j = 0; j < dim; j++)
+            M[i][j] = H[i][j] - (i == j ? lambda : 0);
+
+    *rank1 = gauss_rank(M, dim);
+    *nullity1 = dim - *rank1;
+
+    /* M^2 */
+    mat_mul_int(M, M, M2, dim);
+
+    /* check max absolute entries for overflow diagnosis */
+    max_m = 0;
+    max_m2 = 0;
+    for (i = 0; i < dim; i++) {
+        for (j = 0; j < dim; j++) {
+            int av = M[i][j] < 0 ? -M[i][j] : M[i][j];
+            int av2 = M2[i][j] < 0 ? -M2[i][j] : M2[i][j];
+            if (av > max_m) max_m = av;
+            if (av2 > max_m2) max_m2 = av2;
+        }
+    }
+    printf("  [max|M|=%d, max|M^2|=%d]\n", max_m, max_m2);
+
+    /* verify: Mv should be 0 for any v in ker(M) */
+    /* verify: M^2 v should be 0 for any v in ker(M) */
+    if (*nullity1 > 0 && *nullity2 < *nullity1) {
+        /* something is wrong -- print a few rows of M^2 for diagnosis */
+        printf("  DIAG: first 5 rows of M^2 (n=%d):\n", dim);
+        for (i = 0; i < dim && i < 5; i++) {
+            printf("    [");
+            for (j = 0; j < dim && j < 10; j++) {
+                printf("%3d ", M2[i][j]);
+            }
+            printf("...]\n");
+        }
+    }
+
+    *rank2 = gauss_rank(M2, dim);
+    *nullity2 = dim - *rank2;
+}
+
+/* ================================================================ */
+/* Part C: Modular Characteristic Polynomial + Diagonalizability     */
+/* ================================================================ */
+
+/*
+ * All arithmetic mod a large prime p. On macOS arm64, long is 64-bit,
+ * so long * long (each < 10^9) fits within 10^18 < 2^63.
+ *
+ * A matrix is diagonalizable iff gcd(chi, chi') = 1, where chi is
+ * the characteristic polynomial. We compute chi mod p via
+ * Faddeev-LeVerrier, then check gcd degree.
+ */
+
+#define MOD_P 1000000007L
+
+static long mod_pos(long x) {
+    long r = x % MOD_P;
+    return r < 0 ? r + MOD_P : r;
+}
+
+static long mod_mul(long a, long b) {
+    return mod_pos(a) * mod_pos(b) % MOD_P;
+}
+
+static long mod_add(long a, long b) {
+    return (mod_pos(a) + mod_pos(b)) % MOD_P;
+}
+
+static long mod_sub(long a, long b) {
+    return mod_pos(mod_pos(a) - mod_pos(b));
+}
+
+/* modular exponentiation: base^exp mod p */
+static long mod_pow(long base, long exp) {
+    long result = 1;
+    base = mod_pos(base);
+    while (exp > 0) {
+        if (exp % 2 == 1) result = result * base % MOD_P;
+        base = base * base % MOD_P;
+        exp /= 2;
+    }
+    return result;
+}
+
+/* modular inverse via Fermat's little theorem: a^(p-2) mod p */
+static long mod_inv(long a) {
+    return mod_pow(a, MOD_P - 2);
+}
+
+/*
+ * Faddeev-LeVerrier algorithm for characteristic polynomial mod p.
+ *
+ * Computes coefficients cpoly[0..dim] where:
+ *   chi(lambda) = lambda^dim + cpoly[dim-1]*lambda^(dim-1) + ... + cpoly[0]
+ *
+ * cpoly[dim] is always 1 (monic).
+ *
+ * Algorithm:
+ *   S_1 = H,                   c_{dim-1} = -tr(S_1)
+ *   S_k = H*(S_{k-1} + c_{dim-k+1}*I),  c_{dim-k} = -tr(S_k)/k
+ */
+static void char_poly_mod(const int H[MAX_LS_DIM][MAX_LS_DIM], int dim,
+                          long *cpoly) {
+    /* S is a dim x dim matrix mod p */
+    long S[MAX_LS_DIM][MAX_LS_DIM];
+    long T[MAX_LS_DIM][MAX_LS_DIM]; /* temp for S + c*I, then H*T */
+    int i, j, k, step;
+    long trace, c;
+
+    /* cpoly[dim] = 1 (monic), fill cpoly[0..dim-1] */
+    cpoly[dim] = 1;
+
+    /* S_1 = H mod p */
+    for (i = 0; i < dim; i++)
+        for (j = 0; j < dim; j++)
+            S[i][j] = mod_pos((long)H[i][j]);
+
+    /* c_{dim-1} = -tr(S_1) mod p */
+    trace = 0;
+    for (i = 0; i < dim; i++)
+        trace = mod_add(trace, S[i][i]);
+    cpoly[dim - 1] = mod_sub(0, trace);
+
+    for (step = 2; step <= dim; step++) {
+        /* T = S_{step-1} + c_{dim-step+1} * I */
+        c = cpoly[dim - step + 1];
+        for (i = 0; i < dim; i++)
+            for (j = 0; j < dim; j++)
+                T[i][j] = mod_add(S[i][j], i == j ? c : 0);
+
+        /* S_step = H * T (mod p) */
+        for (i = 0; i < dim; i++) {
+            for (j = 0; j < dim; j++) {
+                long sum = 0;
+                for (k = 0; k < dim; k++) {
+                    sum = mod_add(sum, mod_mul((long)H[i][k], T[k][j]));
+                }
+                S[i][j] = sum;
+            }
+        }
+
+        /* c_{dim-step} = -tr(S_step) / step */
+        trace = 0;
+        for (i = 0; i < dim; i++)
+            trace = mod_add(trace, S[i][i]);
+        cpoly[dim - step] = mod_mul(mod_sub(0, trace), mod_inv((long)step));
+    }
+}
+
+/*
+ * Polynomial derivative mod p.
+ * f has degree deg_f, coefficients f[0..deg_f] (f[k] = coeff of x^k).
+ * Result fp has degree deg_f - 1.
+ */
+static int poly_deriv_mod(const long *f, int deg_f, long *fp) {
+    int k;
+    if (deg_f <= 0) { fp[0] = 0; return 0; }
+    for (k = 1; k <= deg_f; k++) {
+        fp[k - 1] = mod_mul(f[k], (long)k);
+    }
+    return deg_f - 1;
+}
+
+/*
+ * Polynomial GCD mod p (Euclidean algorithm).
+ * Returns the degree of the GCD.
+ * a has degree deg_a, b has degree deg_b.
+ * Operates in place on copies.
+ */
+static int poly_gcd_degree_mod(const long *a_in, int deg_a,
+                               const long *b_in, int deg_b) {
+    long a[MAX_LS_DIM + 2], b[MAX_LS_DIM + 2], r[MAX_LS_DIM + 2];
+    int i, da, db;
+    long lc_inv;
+
+    /* copy inputs */
+    for (i = 0; i <= deg_a; i++) a[i] = a_in[i];
+    da = deg_a;
+    for (i = 0; i <= deg_b; i++) b[i] = b_in[i];
+    db = deg_b;
+
+    /* make sure a has higher degree */
+    if (db > da) {
+        /* swap */
+        long tmp[MAX_LS_DIM + 2];
+        int td;
+        for (i = 0; i <= db; i++) tmp[i] = b[i];
+        for (i = 0; i <= da; i++) b[i] = a[i];
+        for (i = 0; i <= db; i++) a[i] = tmp[i];
+        td = da; da = db; db = td;
+    }
+
+    while (db >= 0 && (db > 0 || b[0] != 0)) {
+        /* polynomial division: a = q*b + r */
+        for (i = 0; i <= da; i++) r[i] = a[i];
+
+        lc_inv = mod_inv(b[db]);
+        while (da >= db) {
+            long coeff = mod_mul(r[da], lc_inv);
+            for (i = 0; i <= db; i++) {
+                r[da - db + i] = mod_sub(r[da - db + i], mod_mul(coeff, b[i]));
+            }
+            da--;
+        }
+        /* trim leading zeros of r */
+        while (da >= 0 && r[da] == 0) da--;
+        if (da < 0) da = 0;
+
+        /* a = b, b = r */
+        for (i = 0; i <= db; i++) a[i] = b[i];
+        for (i = 0; i <= da; i++) b[i] = r[i];
+        { int td2 = da; da = db; db = td2; }
+    }
+
+    /* a is the GCD; find its true degree */
+    while (da > 0 && a[da] == 0) da--;
+    /* if a is just a nonzero constant, gcd has degree 0 */
+    return (da == 0 && a[0] != 0) ? 0 : da;
+}
+
+/*
+ * Check if H is diagonalizable by computing gcd(chi, chi') mod p.
+ * Returns 1 if diagonalizable (gcd degree = 0), 0 if not.
+ * Also prints diagnostic information.
+ */
+static int check_diagonalizable(const int H[MAX_LS_DIM][MAX_LS_DIM],
+                                int dim) {
+    long cpoly[MAX_LS_DIM + 2];
+    long dpoly[MAX_LS_DIM + 2];
+    int deg_c, deg_d, gcd_deg;
+
+    deg_c = dim;
+    char_poly_mod(H, dim, cpoly);
+    deg_d = poly_deriv_mod(cpoly, deg_c, dpoly);
+    gcd_deg = poly_gcd_degree_mod(cpoly, deg_c, dpoly, deg_d);
+
+    printf("  [gcd(chi,chi') degree = %d]\n", gcd_deg);
+
+    return gcd_deg == 0;
+}
+
+/*
+ * Minimal polynomial via Krylov iteration mod p.
+ *
+ * For a random vector v, compute v, Hv, H²v, ..., H^k v (mod p).
+ * Find the first linear dependence: the coefficients give the
+ * minimal polynomial of v (which divides the minimal poly of H).
+ * For a random v over F_p, this equals the min poly of H with
+ * probability >= 1 - dim/p.
+ *
+ * Returns the degree of the minimal polynomial.
+ * Stores coefficients in mpoly[0..degree].
+ */
+static int min_poly_mod(const int H[MAX_LS_DIM][MAX_LS_DIM], int dim,
+                        long *mpoly) {
+    /* Krylov vectors: K[j][i] = (H^j v)[i] mod p */
+    long K[MAX_LS_DIM + 2][MAX_LS_DIM];
+    long row[MAX_LS_DIM + 2][MAX_LS_DIM + 2]; /* row echelon for dependence */
+    int pivot_col[MAX_LS_DIM + 2];
+    int j, i, k, rank, deg;
+    long lc_inv;
+
+    /* v = (1, 1, 1, ..., 1) mod p — avoids accidental structure */
+    for (i = 0; i < dim; i++)
+        K[0][i] = 1;
+
+    /* zero out row echelon */
+    memset(row, 0, sizeof(row));
+    memset(pivot_col, -1, sizeof(pivot_col));
+    rank = 0;
+
+    for (j = 0; j <= dim; j++) {
+        if (j > 0) {
+            /* K[j] = H * K[j-1] mod p */
+            for (i = 0; i < dim; i++) {
+                long sum = 0;
+                for (k = 0; k < dim; k++) {
+                    sum = mod_add(sum, mod_mul((long)H[i][k], K[j-1][k]));
+                }
+                K[j][i] = sum;
+            }
+        }
+
+        /* Try to add K[j] to the echelon form.
+         * Build an augmented row: [K[j] | e_j] where e_j tracks
+         * the coefficients of the linear combination.
+         * We represent this as row[rank] = K[j] extended with
+         * a coefficient vector. */
+
+        /* Copy K[j] into a temporary row with coefficient tracking */
+        {
+            long tmp_row[MAX_LS_DIM];
+            long coeffs[MAX_LS_DIM + 2]; /* coeffs[k] = coefficient of H^k v */
+
+            for (i = 0; i < dim; i++) tmp_row[i] = K[j][i];
+            memset(coeffs, 0, sizeof(coeffs));
+            coeffs[j] = 1;
+
+            /* Reduce against existing echelon rows */
+            for (k = 0; k < rank; k++) {
+                int pc = pivot_col[k];
+                if (tmp_row[pc] != 0) {
+                    long factor = mod_mul(tmp_row[pc], mod_inv(row[k][pc]));
+                    for (i = 0; i < dim; i++)
+                        tmp_row[i] = mod_sub(tmp_row[i], mod_mul(factor, row[k][i]));
+                    for (i = 0; i <= j; i++)
+                        coeffs[i] = mod_sub(coeffs[i],
+                                            mod_mul(factor,
+                                                    (i < rank + 1 ? row[k][dim + i] : 0)));
+                    /* store coeffs in row after dim */
+                }
+            }
+
+            /* Check if reduced to zero */
+            {
+                int is_zero = 1;
+                for (i = 0; i < dim; i++) {
+                    if (tmp_row[i] != 0) { is_zero = 0; break; }
+                }
+
+                if (is_zero) {
+                    /* Found dependence! coeffs gives the min poly. */
+                    /* mpoly[k] = coeffs[k] means sum_{k} mpoly[k] * H^k * v = 0 */
+                    deg = j;
+                    /* Normalize: make leading coefficient = 1 */
+                    lc_inv = mod_inv(coeffs[j]);
+                    for (i = 0; i <= deg; i++)
+                        mpoly[i] = mod_mul(coeffs[i], lc_inv);
+                    return deg;
+                }
+
+                /* Not zero — add to echelon */
+                /* Find pivot column */
+                for (i = 0; i < dim; i++) {
+                    if (tmp_row[i] != 0) {
+                        pivot_col[rank] = i;
+                        for (k = 0; k < dim; k++) row[rank][k] = tmp_row[k];
+                        for (k = 0; k <= j; k++) row[rank][dim + k] = coeffs[k];
+                        rank++;
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
+    /* Should not reach here — min poly degree <= dim */
+    deg = dim;
+    memset(mpoly, 0, (size_t)(dim + 1) * sizeof(long));
+    mpoly[dim] = 1;
+    return deg;
+}
+
+/*
+ * Check if H has Jordan blocks by comparing char poly and min poly.
+ * Specifically: check if min poly is square-free.
+ * Returns 1 if Jordan blocks exist, 0 if diagonalizable.
+ */
+static int has_jordan_blocks(const int H[MAX_LS_DIM][MAX_LS_DIM], int dim) {
+    long mpoly[MAX_LS_DIM + 2];
+    long dpoly[MAX_LS_DIM + 2];
+    int deg_m, deg_d, gcd_deg;
+
+    deg_m = min_poly_mod(H, dim, mpoly);
+    deg_d = poly_deriv_mod(mpoly, deg_m, dpoly);
+    gcd_deg = poly_gcd_degree_mod(mpoly, deg_m, dpoly, deg_d);
+
+    printf("  [min poly degree = %d, gcd(mu,mu') degree = %d]\n",
+           deg_m, gcd_deg);
+
+    return gcd_deg > 0;
+}
+
+/* ================================================================ */
+/* Part E: TL Algebra Level (Regular Representation)                */
+/* ================================================================ */
+
+/*
+ * Full TL algebra infrastructure, ported from Demo 51.
+ * PlanarMatch diagrams have 2n boundary points: 0..n-1 (top), n..2n-1 (bottom).
+ * At delta=0: any diagram composition producing loops -> 0.
+ *
+ * Algebra dimensions: C_n (Catalan numbers)
+ *   n=2: 2, n=3: 5, n=4: 14, n=5: 42, n=6: 132
+ */
+
+#define MAX_ALG_N 6
+#define MAX_ALG_2N 12
+#define MAX_ALG_DIM 132  /* C_6 */
+#define MAX_ALG_SEGS 16
+
+typedef struct {
+    int match[MAX_ALG_2N];
+} AlgDiagram;
+
+typedef struct {
+    int points[MAX_ALG_2N];
+    int count;
+} AlgSegment;
+
+/* Static TL algebra (heap would be better for larger n but this fits) */
+static int alg_n;
+static int alg_dim;
+static AlgDiagram alg_basis[MAX_ALG_DIM];
+static int alg_id_idx;
+static int alg_gen_idx[MAX_ALG_N];
+static int alg_n_gens;
+/* multiplication table: mt[i][j] = index of basis[i]*basis[j], or -1 if zero */
+static int alg_mt[MAX_ALG_DIM][MAX_ALG_DIM];
+/* loop-aware multiplication: result index and loop count for all products */
+static int alg_mt_full[MAX_ALG_DIM][MAX_ALG_DIM]; /* result index always */
+static int alg_mt_nloops[MAX_ALG_DIM][MAX_ALG_DIM]; /* compose loop count */
+
+static void alg_build_boundary(int n, int *bp) {
+    int i;
+    for (i = 0; i < n; i++) bp[i] = i;
+    for (i = 0; i < n; i++) bp[n + i] = 2 * n - 1 - i;
+}
+
+static void alg_enum_segs(AlgSegment *segs, int n_segs, int *match_buf,
+                          AlgDiagram *basis_out, int *count, int n) {
+    int s, j, k, first_seg;
+    AlgSegment new_segs[MAX_ALG_SEGS];
+    int new_n;
+    int *pts, cnt;
+
+    first_seg = -1;
+    for (s = 0; s < n_segs; s++) {
+        if (segs[s].count > 0) { first_seg = s; break; }
+    }
+    if (first_seg == -1) {
+        if (*count < MAX_ALG_DIM) {
+            memcpy(basis_out[*count].match, match_buf,
+                   (size_t)(2 * n) * sizeof(int));
+            (*count)++;
+        }
+        return;
+    }
+
+    pts = segs[first_seg].points;
+    cnt = segs[first_seg].count;
+
+    for (j = 1; j < cnt; j += 2) {
+        match_buf[pts[0]] = pts[j];
+        match_buf[pts[j]] = pts[0];
+
+        new_n = 0;
+        for (k = 0; k < n_segs; k++) {
+            if (k == first_seg) {
+                if (j > 1) {
+                    memcpy(new_segs[new_n].points, &pts[1],
+                           (size_t)(j - 1) * sizeof(int));
+                    new_segs[new_n].count = j - 1;
+                    new_n++;
+                }
+                if (cnt - j - 1 > 0) {
+                    memcpy(new_segs[new_n].points, &pts[j + 1],
+                           (size_t)(cnt - j - 1) * sizeof(int));
+                    new_segs[new_n].count = cnt - j - 1;
+                    new_n++;
+                }
+            } else {
+                new_segs[new_n] = segs[k];
+                new_n++;
+            }
+        }
+        alg_enum_segs(new_segs, new_n, match_buf, basis_out, count, n);
+    }
+}
+
+static int alg_enumerate_basis(int n, AlgDiagram *basis_out) {
+    AlgSegment segs[1];
+    int match_buf[MAX_ALG_2N];
+    int count = 0;
+    alg_build_boundary(n, segs[0].points);
+    segs[0].count = 2 * n;
+    memset(match_buf, -1, sizeof(match_buf));
+    alg_enum_segs(segs, 1, match_buf, basis_out, &count, n);
+    return count;
+}
+
+static int alg_compose(int n, const AlgDiagram *d1, const AlgDiagram *d2,
+                       AlgDiagram *result) {
+    int glue_visited[MAX_ALG_N];
+    int i, loops;
+
+    memset(result->match, -1, (size_t)(2 * n) * sizeof(int));
+    memset(glue_visited, 0, (size_t)n * sizeof(int));
+    loops = 0;
+
+    for (i = 0; i < 2 * n; i++) {
+        int in_d1, cur;
+        if (result->match[i] >= 0) continue;
+        if (i < n) { in_d1 = 1; cur = i; }
+        else       { in_d1 = 0; cur = i; }
+
+        for (;;) {
+            int partner;
+            if (in_d1) {
+                partner = d1->match[cur];
+                if (partner < n) {
+                    result->match[i] = partner;
+                    result->match[partner] = i;
+                    break;
+                }
+                glue_visited[partner - n] = 1;
+                in_d1 = 0;
+                cur = partner - n;
+            } else {
+                partner = d2->match[cur];
+                if (partner >= n) {
+                    result->match[i] = partner;
+                    result->match[partner] = i;
+                    break;
+                }
+                glue_visited[partner] = 1;
+                in_d1 = 1;
+                cur = n + partner;
+            }
+        }
+    }
+
+    for (i = 0; i < n; i++) {
+        int cur, p, q;
+        if (glue_visited[i]) continue;
+        loops++;
+        cur = i;
+        do {
+            glue_visited[cur] = 1;
+            p = d2->match[cur];
+            glue_visited[p] = 1;
+            q = d1->match[n + p];
+            cur = q - n;
+        } while (cur != i);
+    }
+
+    return loops;
+}
+
+static AlgDiagram alg_make_identity(int n) {
+    AlgDiagram m;
+    int k;
+    for (k = 0; k < n; k++) {
+        m.match[k] = n + k;
+        m.match[n + k] = k;
+    }
+    return m;
+}
+
+static AlgDiagram alg_make_generator(int n, int gen) {
+    AlgDiagram m = alg_make_identity(n);
+    m.match[gen] = gen + 1;
+    m.match[gen + 1] = gen;
+    m.match[n + gen] = n + gen + 1;
+    m.match[n + gen + 1] = n + gen;
+    return m;
+}
+
+static int alg_find_index(const AlgDiagram *m, const AlgDiagram *basis_arr,
+                          int num, int n) {
+    int i, j, eq;
+    for (i = 0; i < num; i++) {
+        eq = 1;
+        for (j = 0; j < 2 * n; j++) {
+            if (m->match[j] != basis_arr[i].match[j]) { eq = 0; break; }
+        }
+        if (eq) return i;
+    }
+    return -1;
+}
+
+static void alg_compute_mult_table(void) {
+    int i, j;
+    for (i = 0; i < alg_dim; i++) {
+        for (j = 0; j < alg_dim; j++) {
+            AlgDiagram result;
+            int loops = alg_compose(alg_n, &alg_basis[i], &alg_basis[j], &result);
+            int ridx = alg_find_index(&result, alg_basis, alg_dim, alg_n);
+            alg_mt_full[i][j] = ridx;
+            alg_mt_nloops[i][j] = loops;
+            if (loops > 0) {
+                alg_mt[i][j] = -1;
+            } else {
+                alg_mt[i][j] = ridx;
+            }
+        }
+    }
+}
+
+static void alg_compute_star_indices(void);
+
+static void alg_init(int n) {
+    AlgDiagram diag;
+    int g;
+    alg_n = n;
+    alg_dim = alg_enumerate_basis(n, alg_basis);
+    alg_n_gens = n - 1;
+
+    diag = alg_make_identity(n);
+    alg_id_idx = alg_find_index(&diag, alg_basis, alg_dim, n);
+
+    for (g = 0; g < n - 1; g++) {
+        diag = alg_make_generator(n, g);
+        alg_gen_idx[g] = alg_find_index(&diag, alg_basis, alg_dim, n);
+    }
+
+    alg_compute_mult_table();
+    alg_compute_star_indices();
+}
+
+/*
+ * Build left-multiplication Hamiltonian on the full TL algebra.
+ *
+ * L_H[row][col] = coefficient of basis[row] in H * basis[col]
+ * where H = -(e_0 + e_1 + ... + e_{n-2}).
+ *
+ * Since e_g * basis[col] is either 0 (mt=-1) or basis[mt[gen_idx[g]][col]]:
+ *   L_H[ mt[gen_idx[g]][col] ][ col ] -= 1   for each g where mt != -1
+ *
+ * Uses the global alg_* state (must call alg_init first).
+ */
+static void build_alg_hamiltonian(int L_H[MAX_ALG_DIM][MAX_ALG_DIM]) {
+    int g, col, target;
+
+    memset(L_H, 0, sizeof(int) * MAX_ALG_DIM * MAX_ALG_DIM);
+
+    for (g = 0; g < alg_n_gens; g++) {
+        int gi = alg_gen_idx[g];
+        for (col = 0; col < alg_dim; col++) {
+            target = alg_mt[gi][col];
+            if (target >= 0) {
+                L_H[target][col] -= 1;
+            }
+        }
+    }
+}
+
+/* ================================================================ */
+/* Part E Tests: Algebra-Level Jordan Detection                     */
+/* ================================================================ */
+
+static void test_algebra_jordan(void) {
+    static int L_H[MAX_ALG_DIM][MAX_ALG_DIM];
+    int sizes[] = {2, 3, 4, 5};
+    int expected_dims[] = {2, 5, 14, 42};
+    int num_sizes = 4;
+    int s;
+
+    printf("\n=== Algebra-Level Jordan Block Detection ===\n");
+    printf("(Regular representation L_H = left mult by H on full TL algebra)\n\n");
+    printf("%-4s  %-5s  %-20s  %-20s\n", "n", "dim",
+           "char poly sq-free?", "min poly sq-free?");
+    printf("----  -----  --------------------  --------------------\n");
+
+    for (s = 0; s < num_sizes; s++) {
+        int n = sizes[s];
+        int diag, jordan;
+
+        printf("\nInitializing TL_%d algebra...\n", n);
+        alg_init(n);
+        printf("  dim = %d (expected %d)\n", alg_dim, expected_dims[s]);
+        check("algebra dimension matches Catalan number",
+              alg_dim == expected_dims[s]);
+
+        /* Verify identity found */
+        printf("  identity index = %d\n", alg_id_idx);
+        check("identity found in basis", alg_id_idx >= 0);
+
+        /* Verify generators found */
+        {
+            int g, all_found = 1;
+            for (g = 0; g < n - 1; g++) {
+                if (alg_gen_idx[g] < 0) all_found = 0;
+            }
+            printf("  generators: ");
+            for (g = 0; g < n - 1; g++)
+                printf("e_%d=%d ", g, alg_gen_idx[g]);
+            printf("\n");
+            check("all generators found in basis", all_found);
+        }
+
+        /* Verify e_i^2 = 0 at delta=0 via multiplication table */
+        {
+            int g, all_zero = 1;
+            for (g = 0; g < n - 1; g++) {
+                int gi = alg_gen_idx[g];
+                int ei_sq = alg_mt[gi][gi];
+                if (ei_sq != -1) {
+                    printf("  e_%d^2 = basis[%d] (expected -1=zero)\n",
+                           g, ei_sq);
+                    all_zero = 0;
+                }
+            }
+            check("e_i^2 = 0 in algebra mult table", all_zero);
+        }
+
+        /* Build L_H */
+        build_alg_hamiltonian(L_H);
+
+        /* Print L_H for small n */
+        if (alg_dim <= 5) {
+            int i, j;
+            printf("  L_H (%dx%d):\n", alg_dim, alg_dim);
+            for (i = 0; i < alg_dim; i++) {
+                printf("    [");
+                for (j = 0; j < alg_dim; j++) {
+                    if (j > 0) printf(" ");
+                    printf("%3d", L_H[i][j]);
+                }
+                printf("]\n");
+            }
+        }
+
+        /* Rank of L_H */
+        {
+            int r = gauss_rank(L_H, alg_dim);
+            printf("  rank(L_H) = %d, nullity = %d\n", r, alg_dim - r);
+        }
+
+        /* Jordan detection via rank comparison at lambda=0 */
+        {
+            int r1, r2, n1, n2;
+            jordan_analysis(L_H, alg_dim, 0, &r1, &r2, &n1, &n2);
+            printf("  At lambda=0: null(L_H)=%d, null(L_H^2)=%d",
+                   n1, n2);
+            if (n2 > n1) printf(" -> JORDAN BLOCKS!");
+            printf("\n");
+        }
+
+        /* Char poly square-free test */
+        diag = check_diagonalizable(L_H, alg_dim);
+
+        /* Min poly square-free test (DEFINITIVE) */
+        jordan = has_jordan_blocks(L_H, alg_dim);
+
+        printf("%-4d  %-5d  %-20s  %-20s\n", n, alg_dim,
+               diag ? "YES (no repeated)" : "NO (repeated roots)",
+               jordan ? "NO -> JORDAN BLOCKS" : "YES -> diagonalizable");
+
+        if (n == 3) {
+            /* n=3: TL_3 has radical of dimension 0 (semisimple!)
+             * so L_H SHOULD be diagonalizable */
+            check("TL_3 (semisimple): L_H diagonalizable", jordan == 0);
+        }
+        if (n == 4) {
+            /* n=4: TL_4 has radical of dimension 9 (non-semisimple)
+             * This is where we EXPECT Jordan blocks */
+            if (jordan) {
+                printf("  *** TL_4: Jordan blocks found in regular rep! ***\n");
+                printf("  This confirms indecomposable structure.\n");
+            } else {
+                printf("  TL_4: No Jordan blocks in L_H.\n");
+                printf("  (May need to look at specific submodules)\n");
+            }
+        }
+    }
+}
+
+/* ================================================================ */
+/* Part F: Indecomposability Parameter b                            */
+/* ================================================================ */
+
+/*
+ * Fixed-point trace: count through-lines that go straight (top-k to bottom-k).
+ * For a TL_n diagram d with 2n boundary points:
+ *   fixpt(d) = #{k : 0 <= k < n, d.match[k] == n+k}
+ *
+ * This defines a bilinear form G[i][j] = fixpt(basis[i] * basis[j])
+ * that is non-degenerate modulo the radical.
+ */
+static int alg_fixpt(const AlgDiagram *d, int n) {
+    int k, count = 0;
+    for (k = 0; k < n; k++) {
+        if (d->match[k] == n + k) count++;
+    }
+    return count;
+}
+
+/*
+ * Compute the adjoint (vertical flip) of a TL diagram.
+ * d* swaps top and bottom: d*.match[k] = flip(d.match[flip(k)])
+ * where flip(x) = x < n ? x+n : x-n.
+ */
+static AlgDiagram alg_star(const AlgDiagram *d, int n) {
+    AlgDiagram ds;
+    int k;
+    for (k = 0; k < 2 * n; k++) {
+        int fk = k < n ? k + n : k - n;
+        int partner = d->match[fk];
+        int fp = partner < n ? partner + n : partner - n;
+        ds.match[k] = fp;
+    }
+    return ds;
+}
+
+/* Precomputed star indices: star_idx[k] = index of basis[k]* */
+static int alg_star_idx[MAX_ALG_DIM];
+
+static void alg_compute_star_indices(void) {
+    int k;
+    for (k = 0; k < alg_dim; k++) {
+        AlgDiagram ds = alg_star(&alg_basis[k], alg_n);
+        alg_star_idx[k] = alg_find_index(&ds, alg_basis,
+                                          alg_dim, alg_n);
+    }
+}
+
+/*
+ * Count loops when closing a diagram by connecting top_k to bottom_k.
+ * The closed diagram = overlay of d's matching with the closure matching
+ * (k <-> n+k). Count alternating cycles in this overlay.
+ */
+static int alg_closure_loops(const AlgDiagram *d, int n) {
+    int visited[MAX_ALG_2N];
+    int p, nloops, two_n;
+    two_n = 2 * n;
+    memset(visited, 0, (size_t)two_n * sizeof(int));
+    nloops = 0;
+    for (p = 0; p < two_n; p++) {
+        int cur;
+        if (visited[p]) continue;
+        nloops++;
+        cur = p;
+        do {
+            int partner;
+            visited[cur] = 1;
+            partner = d->match[cur];
+            visited[partner] = 1;
+            /* follow closure: k <-> n+k */
+            if (partner < n) cur = n + partner;
+            else cur = partner - n;
+        } while (cur != p);
+    }
+    return nloops;
+}
+
+/*
+ * Build Gram matrix G[i][j] = fixpt(basis[i] * basis[j]).
+ * If product has loops (mt=-1), G[i][j] = 0 (product is zero at delta=0).
+ */
+static void build_gram_matrix(double G[MAX_ALG_DIM][MAX_ALG_DIM]) {
+    int i, j;
+    for (i = 0; i < alg_dim; i++) {
+        for (j = 0; j < alg_dim; j++) {
+            int prod = alg_mt[i][j];
+            if (prod < 0) {
+                G[i][j] = 0.0;
+            } else {
+                G[i][j] = (double)alg_fixpt(&alg_basis[prod], alg_n);
+            }
+        }
+    }
+}
+
+/*
+ * Extract null space of integer matrix via reduced row echelon form.
+ * Returns number of null vectors found.
+ * null_vecs[k][i] = k-th null vector, component i.
+ */
+static int extract_null_space(const int M[MAX_LS_DIM][MAX_LS_DIM], int dim,
+                              double null_vecs[MAX_ALG_DIM][MAX_ALG_DIM]) {
+    static double work[MAX_ALG_DIM][MAX_ALG_DIM];
+    int pivot_col[MAX_ALG_DIM];
+    int is_pivot[MAX_ALG_DIM];
+    int i, j, k, pivot_row, rank, n_null;
+    double max_val, factor;
+    double eps = 1e-9;
+
+    for (i = 0; i < dim; i++)
+        for (j = 0; j < dim; j++)
+            work[i][j] = (double)M[i][j];
+
+    memset(pivot_col, -1, sizeof(pivot_col));
+    memset(is_pivot, 0, sizeof(is_pivot));
+    rank = 0;
+
+    /* Reduced row echelon form with partial pivoting */
+    for (j = 0; j < dim; j++) {
+        pivot_row = -1;
+        max_val = eps;
+        for (i = rank; i < dim; i++) {
+            double av = work[i][j] < 0 ? -work[i][j] : work[i][j];
+            if (av > max_val) { max_val = av; pivot_row = i; }
+        }
+        if (pivot_row == -1) continue;
+
+        /* Swap */
+        if (pivot_row != rank) {
+            for (k = 0; k < dim; k++) {
+                double tmp = work[rank][k];
+                work[rank][k] = work[pivot_row][k];
+                work[pivot_row][k] = tmp;
+            }
+        }
+
+        pivot_col[rank] = j;
+        is_pivot[j] = 1;
+
+        /* Normalize pivot row */
+        factor = work[rank][j];
+        for (k = 0; k < dim; k++) {
+            work[rank][k] /= factor;
+        }
+
+        /* Eliminate above AND below (RREF) */
+        for (i = 0; i < dim; i++) {
+            if (i == rank) continue;
+            factor = work[i][j];
+            if (factor == 0.0) continue;
+            for (k = 0; k < dim; k++) {
+                work[i][k] -= factor * work[rank][k];
+            }
+        }
+
+        rank++;
+    }
+
+    /* Build null vectors from free columns */
+    n_null = 0;
+    for (j = 0; j < dim; j++) {
+        if (is_pivot[j]) continue;
+        /* Free variable j = 1, pivot variables from RREF */
+        for (i = 0; i < dim; i++)
+            null_vecs[n_null][i] = 0.0;
+        null_vecs[n_null][j] = 1.0;
+        for (k = 0; k < rank; k++) {
+            null_vecs[n_null][pivot_col[k]] = -work[k][j];
+        }
+        n_null++;
+    }
+
+    return n_null;
+}
+
+/*
+ * Count through-lines in a diagram.
+ * A through-line connects a top point (0..n-1) to a bottom point (n..2n-1).
+ */
+static int alg_count_through(const AlgDiagram *d, int n) {
+    int k, count = 0;
+    for (k = 0; k < n; k++) {
+        if (d->match[k] >= n) count++;
+    }
+    return count;
+}
+
+/*
+ * Sector decomposition of the regular representation.
+ * Classify basis diagrams by through-line count.
+ * Within each sector, extract the sub-matrix of L_H.
+ * The 0-through-line sector corresponds to the projective cover P_{0,0}.
+ *
+ * IMPORTANT: Left multiplication by e_i can change through-line count,
+ * so L_H does NOT preserve through-line sectors in general.
+ * But the LEFT ideal generated by 0-through-line diagrams IS L_H-invariant.
+ *
+ * Actually, through-lines are NOT preserved by left multiplication.
+ * We need to think about this differently.
+ * The cell structure uses the NUMBER of THROUGH-LINES on the RIGHT
+ * (bottom boundary) of the diagram.
+ *
+ * For the left-regular representation, the correct invariant is:
+ * the number of RIGHT through-lines. A diagram d has j right-TL
+ * iff exactly j of its bottom points connect to top points.
+ * Left-multiplying by any element cannot INCREASE the right TL count,
+ * but can DECREASE it. So the diagrams with right-TL <= j form a
+ * left ideal, and the successive quotients are the cell modules.
+ */
+static void analyze_through_line_sectors(void) {
+    int i, j, n, tl_count[MAX_ALG_DIM];
+    int sector_size[MAX_ALG_N + 1];
+    int sector_idx[MAX_ALG_N + 1][MAX_ALG_DIM];
+
+    n = alg_n;
+    printf("\n--- Through-line sector analysis (TL_%d, dim=%d) ---\n",
+           n, alg_dim);
+
+    memset(sector_size, 0, sizeof(sector_size));
+
+    /* Classify basis diagrams by through-line count */
+    for (i = 0; i < alg_dim; i++) {
+        tl_count[i] = alg_count_through(&alg_basis[i], n);
+        sector_idx[tl_count[i]][sector_size[tl_count[i]]] = i;
+        sector_size[tl_count[i]]++;
+    }
+
+    for (j = 0; j <= n; j++) {
+        if (sector_size[j] > 0) {
+            printf("  %d through-lines: %d diagrams", j, sector_size[j]);
+            if (sector_size[j] <= 8) {
+                printf(" [");
+                for (i = 0; i < sector_size[j]; i++) {
+                    if (i > 0) printf(",");
+                    printf("%d", sector_idx[j][i]);
+                }
+                printf("]");
+            }
+            printf("\n");
+        }
+    }
+
+    /* Check if L_H preserves through-line sectors */
+    {
+        static int L_H_local[MAX_ALG_DIM][MAX_ALG_DIM];
+        int violations = 0;
+        build_alg_hamiltonian(L_H_local);
+
+        printf("  Checking L_H sector mixing:\n");
+        for (i = 0; i < alg_dim; i++) {
+            for (j = 0; j < alg_dim; j++) {
+                if (L_H_local[i][j] != 0 && tl_count[i] != tl_count[j]) {
+                    if (violations < 5)
+                        printf("    L_H[%d][%d]=%d: %d-TL -> %d-TL\n",
+                               i, j, L_H_local[i][j],
+                               tl_count[j], tl_count[i]);
+                    violations++;
+                }
+            }
+        }
+        printf("    Total sector-crossing entries: %d\n", violations);
+
+        if (violations == 0) {
+            printf("    L_H PRESERVES through-line sectors!\n");
+            /* Extract sub-matrix for 0-through-line sector */
+            if (sector_size[0] > 0) {
+                int d0 = sector_size[0];
+                static int L_sub[MAX_ALG_DIM][MAX_ALG_DIM];
+                int ri, ci;
+                printf("    0-TL sector dim = %d\n", d0);
+                for (ri = 0; ri < d0; ri++)
+                    for (ci = 0; ci < d0; ci++)
+                        L_sub[ri][ci] = L_H_local
+                            [sector_idx[0][ri]]
+                            [sector_idx[0][ci]];
+                /* Print sub-matrix */
+                if (d0 <= 10) {
+                    printf("    L_H restricted to 0-TL sector:\n");
+                    for (ri = 0; ri < d0; ri++) {
+                        printf("      [");
+                        for (ci = 0; ci < d0; ci++) {
+                            if (ci > 0) printf(" ");
+                            printf("%3d", L_sub[ri][ci]);
+                        }
+                        printf("]\n");
+                    }
+                }
+                /* Check for Jordan blocks in 0-TL sector */
+                {
+                    int jb = has_jordan_blocks(L_sub, d0);
+                    printf("    0-TL sector: Jordan blocks? %s\n",
+                           jb ? "YES" : "no");
+                }
+            }
+        } else {
+            printf("    L_H mixes sectors (expected).\n");
+            /* Check if 0-TL sector is at least a LEFT IDEAL:
+             * L_H maps 0-TL diagrams into 0-TL diagrams?
+             * (lower TL can map to higher, but not vice versa) */
+            {
+                int mixes_out = 0;
+                for (j = 0; j < sector_size[0]; j++) {
+                    int col = sector_idx[0][j];
+                    for (i = 0; i < alg_dim; i++) {
+                        if (L_H_local[i][col] != 0
+                            && tl_count[i] > 0) {
+                            mixes_out++;
+                        }
+                    }
+                }
+                printf("    0-TL as source: entries going to"
+                       " higher TL: %d\n", mixes_out);
+                if (mixes_out == 0) {
+                    printf("    0-TL sector IS L_H-invariant!\n");
+                    /* Extract and analyze */
+                    {
+                        int d0 = sector_size[0];
+                        static int L_sub[MAX_ALG_DIM][MAX_ALG_DIM];
+                        int ri, ci;
+                        printf("    0-TL sector dim = %d\n", d0);
+                        for (ri = 0; ri < d0; ri++)
+                            for (ci = 0; ci < d0; ci++)
+                                L_sub[ri][ci] = L_H_local
+                                    [sector_idx[0][ri]]
+                                    [sector_idx[0][ci]];
+                        if (d0 <= 10) {
+                            printf("    L_H on 0-TL sector:\n");
+                            for (ri = 0; ri < d0; ri++) {
+                                printf("      [");
+                                for (ci = 0; ci < d0; ci++) {
+                                    if (ci > 0) printf(" ");
+                                    printf("%3d", L_sub[ri][ci]);
+                                }
+                                printf("]\n");
+                            }
+                        }
+                        {
+                            int jb = has_jordan_blocks(L_sub, d0);
+                            printf("    0-TL Jordan? %s\n",
+                                   jb ? "YES" : "no");
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+/*
+ * Compute the left ideal generated by a set of basis elements.
+ * Start with generators, repeatedly apply all left multiplications
+ * until no new elements appear (closure under left TL action).
+ *
+ * Returns sorted indices of all basis elements in the ideal.
+ */
+static int left_ideal_closure(const int *gens, int n_gens,
+                              int *ideal, int *ideal_size) {
+    int in_ideal[MAX_ALG_DIM];
+    int queue[MAX_ALG_DIM];
+    int head, tail, i, j, img;
+
+    memset(in_ideal, 0, sizeof(in_ideal));
+    head = 0;
+    tail = 0;
+
+    /* seed with generators */
+    for (i = 0; i < n_gens; i++) {
+        if (!in_ideal[gens[i]]) {
+            in_ideal[gens[i]] = 1;
+            queue[tail++] = gens[i];
+        }
+    }
+
+    /* BFS: for each element in ideal, apply all left multiplications */
+    while (head < tail) {
+        int elem = queue[head++];
+        for (i = 0; i < alg_dim; i++) {
+            img = alg_mt[i][elem];
+            if (img >= 0 && !in_ideal[img]) {
+                in_ideal[img] = 1;
+                queue[tail++] = img;
+            }
+        }
+    }
+
+    /* Also add all right multiples (for two-sided ideal behavior):
+     * Actually, we want the LEFT ideal = {a * d : a in TL_n},
+     * which means multiply on the LEFT of each generator.
+     * We already did that above. But the ideal should also be
+     * closed under taking LINEAR COMBINATIONS acted on by the algebra.
+     * Since we're working over a field and using the basis,
+     * the span of {a_i * d_j : d_j in ideal, a_i in basis}
+     * might be larger than the set of non-zero products.
+     * However, for an ideal generated by a SINGLE basis element,
+     * the set of images IS the ideal (no linear combinations needed
+     * because e_i acts by permutation-or-zero on basis elements).
+     */
+
+    *ideal_size = 0;
+    for (j = 0; j < alg_dim; j++) {
+        if (in_ideal[j]) {
+            ideal[*ideal_size] = j;
+            (*ideal_size)++;
+        }
+    }
+
+    return *ideal_size;
+}
+
+/*
+ * Analyze the projective cover P_{0,0} via left ideal generation.
+ *
+ * Strategy: pick each 0-TL diagram d, compute TL_n*d (left ideal),
+ * restrict L_H and G to that ideal, check for Jordan blocks and
+ * compute b if Jordan blocks exist.
+ */
+static void analyze_projective_cover(void) {
+    int tl_count[MAX_ALG_DIM];
+    int zero_tl[MAX_ALG_DIM], n_zero_tl;
+    static int L_sub[MAX_ALG_DIM][MAX_ALG_DIM];
+    static double G_sub[MAX_ALG_DIM][MAX_ALG_DIM];
+    int ideal[MAX_ALG_DIM], ideal_size;
+    int n, i, j, d_idx;
+
+    n = alg_n;
+    printf("\n--- Projective Cover Analysis (TL_%d) ---\n", n);
+
+    /* Find 0-TL diagrams */
+    n_zero_tl = 0;
+    for (i = 0; i < alg_dim; i++) {
+        tl_count[i] = alg_count_through(&alg_basis[i], n);
+        if (tl_count[i] == 0) {
+            zero_tl[n_zero_tl++] = i;
+        }
+    }
+    printf("0-TL diagrams: %d\n", n_zero_tl);
+
+    /* Try left ideals from ALL basis elements to find ones with Jordan */
+    printf("\nScanning ALL left ideals for Jordan blocks:\n");
+    for (d_idx = 0; d_idx < alg_dim; d_idx++) {
+        int gen2 = d_idx;
+        int ideal2[MAX_ALG_DIM], isz2;
+        left_ideal_closure(&gen2, 1, ideal2, &isz2);
+        {
+            static int Ls[MAX_ALG_DIM][MAX_ALG_DIM];
+            static int LH_f[MAX_ALG_DIM][MAX_ALG_DIM];
+            int in_i[MAX_ALG_DIM], viol = 0;
+            int ri, ci, jb;
+            build_alg_hamiltonian(LH_f);
+            memset(in_i, 0, sizeof(in_i));
+            for (ri = 0; ri < isz2; ri++) in_i[ideal2[ri]] = 1;
+            for (ci = 0; ci < isz2; ci++)
+                for (ri = 0; ri < alg_dim; ri++)
+                    if (LH_f[ri][ideal2[ci]] != 0 && !in_i[ri])
+                        viol++;
+            if (viol > 0) continue; /* not invariant */
+            for (ri = 0; ri < isz2; ri++)
+                for (ci = 0; ci < isz2; ci++)
+                    Ls[ri][ci] = LH_f[ideal2[ri]][ideal2[ci]];
+            jb = has_jordan_blocks(Ls, isz2);
+            if (jb) {
+                printf("  basis[%d] (%d-TL): ideal dim=%d -> "
+                       "JORDAN BLOCKS\n",
+                       d_idx, tl_count[d_idx], isz2);
+                /* Print composition */
+                {
+                    int tc2[MAX_ALG_N + 1];
+                    memset(tc2, 0, sizeof(tc2));
+                    for (ri = 0; ri < isz2; ri++)
+                        tc2[tl_count[ideal2[ri]]]++;
+                    printf("    Composition: ");
+                    for (ri = 0; ri <= n; ri++)
+                        if (tc2[ri] > 0)
+                            printf("%d-TL:%d ", ri, tc2[ri]);
+                    printf("\n");
+                }
+            }
+        }
+    }
+
+    /* Also try left ideals from individual 0-TL generators */
+    printf("\n0-TL generator left ideals:\n");
+    for (d_idx = 0; d_idx < n_zero_tl; d_idx++) {
+        int gen = zero_tl[d_idx];
+        int has_jb;
+
+        left_ideal_closure(&gen, 1, ideal, &ideal_size);
+        printf("\nLeft ideal TL_%d * basis[%d]: dim = %d\n",
+               n, gen, ideal_size);
+
+        /* Print through-line composition */
+        {
+            int t_counts[MAX_ALG_N + 1];
+            memset(t_counts, 0, sizeof(t_counts));
+            for (i = 0; i < ideal_size; i++)
+                t_counts[tl_count[ideal[i]]]++;
+            printf("  Composition: ");
+            for (i = 0; i <= n; i++) {
+                if (t_counts[i] > 0)
+                    printf("%d-TL:%d ", i, t_counts[i]);
+            }
+            printf("\n");
+        }
+
+        /* Restrict L_H to the ideal */
+        {
+            static int L_H_full[MAX_ALG_DIM][MAX_ALG_DIM];
+            build_alg_hamiltonian(L_H_full);
+
+            /* Check ideal is L_H-invariant */
+            {
+                int in_ideal[MAX_ALG_DIM];
+                int violations = 0;
+                memset(in_ideal, 0, sizeof(in_ideal));
+                for (i = 0; i < ideal_size; i++)
+                    in_ideal[ideal[i]] = 1;
+
+                for (j = 0; j < ideal_size; j++) {
+                    int col = ideal[j];
+                    for (i = 0; i < alg_dim; i++) {
+                        if (L_H_full[i][col] != 0 && !in_ideal[i])
+                            violations++;
+                    }
+                }
+                if (violations > 0) {
+                    printf("  WARNING: ideal NOT L_H-invariant "
+                           "(%d violations)\n", violations);
+                    continue;
+                }
+                printf("  Ideal is L_H-invariant\n");
+            }
+
+            /* Extract sub-matrix */
+            for (i = 0; i < ideal_size; i++)
+                for (j = 0; j < ideal_size; j++)
+                    L_sub[i][j] = L_H_full[ideal[i]][ideal[j]];
+        }
+
+        /* Print L_sub for small ideals */
+        if (ideal_size <= 10) {
+            printf("  L_H restricted (%dx%d):\n",
+                   ideal_size, ideal_size);
+            for (i = 0; i < ideal_size; i++) {
+                printf("    [");
+                for (j = 0; j < ideal_size; j++) {
+                    if (j > 0) printf(" ");
+                    printf("%3d", L_sub[i][j]);
+                }
+                printf("]\n");
+            }
+        }
+
+        /* Check for Jordan blocks */
+        has_jb = has_jordan_blocks(L_sub, ideal_size);
+        printf("  Jordan blocks? %s\n", has_jb ? "YES" : "no");
+
+        if (has_jb) {
+            /* Extract Gram sub-matrix */
+            {
+                static double G_full[MAX_ALG_DIM][MAX_ALG_DIM];
+                build_gram_matrix(G_full);
+                for (i = 0; i < ideal_size; i++)
+                    for (j = 0; j < ideal_size; j++)
+                        G_sub[i][j] =
+                            G_full[ideal[i]][ideal[j]];
+            }
+
+            /* Null spaces of L_sub and L_sub^2 */
+            {
+                static int L_sub2[MAX_ALG_DIM][MAX_ALG_DIM];
+                static double ns1[MAX_ALG_DIM][MAX_ALG_DIM];
+                static double ns2[MAX_ALG_DIM][MAX_ALG_DIM];
+                int nn1, nn2, k;
+
+                mat_mul_int(L_sub, L_sub, L_sub2, ideal_size);
+                nn1 = extract_null_space(L_sub, ideal_size, ns1);
+                nn2 = extract_null_space(L_sub2, ideal_size, ns2);
+                printf("  ker(L_H|_P) = %d, ker(L_H|_P ^2) = %d\n",
+                       nn1, nn2);
+
+                /* Find Jordan partner and compute b */
+                for (k = 0; k < nn2; k++) {
+                    double Lv[MAX_ALG_DIM];
+                    double norm2 = 0.0;
+
+                    for (i = 0; i < ideal_size; i++) {
+                        Lv[i] = 0.0;
+                        for (j = 0; j < ideal_size; j++)
+                            Lv[i] += (double)L_sub[i][j]
+                                * ns2[k][j];
+                        norm2 += Lv[i] * Lv[i];
+                    }
+                    if (norm2 < 1e-12) continue;
+
+                    /* Jordan partner found */
+                    printf("  Jordan partner in P:\n");
+                    if (ideal_size <= 10) {
+                        printf("    t = [");
+                        for (i = 0; i < ideal_size; i++) {
+                            if (i > 0) printf(",");
+                            printf("%.4f", ns2[k][i]);
+                        }
+                        printf("]\n    T = [");
+                        for (i = 0; i < ideal_size; i++) {
+                            if (i > 0) printf(",");
+                            printf("%.4f", Lv[i]);
+                        }
+                        printf("]\n");
+                    }
+
+                    /* Compute b on the restricted module */
+                    {
+                        double b_v = 0.0, TGt = 0.0, TGT = 0.0;
+                        double Gt[MAX_ALG_DIM];
+                        double GT[MAX_ALG_DIM];
+
+                        for (i = 0; i < ideal_size; i++) {
+                            Gt[i] = 0.0;
+                            GT[i] = 0.0;
+                            for (j = 0; j < ideal_size; j++){
+                                Gt[i] += G_sub[i][j]
+                                    * ns2[k][j];
+                                GT[i] += G_sub[i][j]
+                                    * Lv[j];
+                            }
+                        }
+                        for (i = 0; i < ideal_size; i++) {
+                            b_v += ns2[k][i] * Gt[i];
+                            TGt += Lv[i] * Gt[i];
+                            TGT += Lv[i] * GT[i];
+                        }
+
+                        printf("    <t|G|t> = %.6f\n", b_v);
+                        printf("    <T|G|t> = %.6f\n", TGt);
+                        printf("    <T|G|T> = %.6f\n", TGT);
+
+                        /* GRS: T_GRS = -T, <T_GRS|t>=1 */
+                        {
+                            double tg = -TGt;
+                            if (tg > 1e-12 || tg < -1e-12) {
+                                printf("    b_GRS = %.6f\n",
+                                       b_v / (tg * tg));
+                            }
+                        }
+
+                        /* Coset check on restricted module */
+                        {
+                            int p2;
+                            double mx = 0.0;
+                            for (p2 = 0; p2 < nn1; p2++) {
+                                for (j = 0; j < ideal_size;
+                                     j++) {
+                                    double ip = 0.0;
+                                    for (i = 0;
+                                         i < ideal_size; i++)
+                                        ip += ns1[p2][i]
+                                            * G_sub[i][j];
+                                    if (ip > mx) mx = ip;
+                                    if (-ip > mx) mx = -ip;
+                                }
+                            }
+                            printf("    Coset-indep on P? "
+                                   "max|<v|G|e>| = %.6f "
+                                   "(%s)\n",
+                                   mx,
+                                   mx < 1e-9 ? "YES" : "NO");
+                        }
+                    }
+                    break; /* just analyze first Jordan partner */
+                }
+            }
+        }
+    }
+}
+
+static void test_compute_b(void) {
+    static int L_H[MAX_ALG_DIM][MAX_ALG_DIM];
+    static int L_H2[MAX_ALG_DIM][MAX_ALG_DIM];
+    static double G[MAX_ALG_DIM][MAX_ALG_DIM];
+    static double null1[MAX_ALG_DIM][MAX_ALG_DIM];
+    static double null2[MAX_ALG_DIM][MAX_ALG_DIM];
+    int sizes[] = {2, 3, 4, 5, 6};
+    int num_sizes = 5;
+    int s;
+
+    printf("\n=== Computing Indecomposability Parameter b ===\n");
+
+    for (s = 0; s < num_sizes; s++) {
+        int n_val = sizes[s];
+        int dim, n_null1, n_null2, i, j, k;
+
+        printf("\n--- TL_%d ---\n", n_val);
+        alg_init(n_val);
+        dim = alg_dim;
+        build_alg_hamiltonian(L_H);
+
+        /* L_H^2 */
+        mat_mul_int(L_H, L_H, L_H2, dim);
+
+        /* Gram matrix */
+        build_gram_matrix(G);
+
+        if (dim <= 5) {
+            printf("Gram matrix G (%dx%d):\n", dim, dim);
+            for (i = 0; i < dim; i++) {
+                printf("  [");
+                for (j = 0; j < dim; j++) {
+                    if (j > 0) printf(" ");
+                    printf("%5.1f", G[i][j]);
+                }
+                printf("]\n");
+            }
+        }
+
+        /* Null spaces */
+        n_null1 = extract_null_space(L_H, dim, null1);
+        n_null2 = extract_null_space(L_H2, dim, null2);
+        printf("dim ker(L_H) = %d, dim ker(L_H^2) = %d\n",
+               n_null1, n_null2);
+
+        if (n_null2 <= n_null1) {
+            printf("No Jordan blocks at lambda=0 (semisimple)\n");
+            continue;
+        }
+
+        printf("Jordan partners at lambda=0: %d\n", n_null2 - n_null1);
+
+        /* Find Jordan partners: vectors in ker(L_H^2) \ ker(L_H) */
+        for (k = 0; k < n_null2; k++) {
+            double Lv[MAX_ALG_DIM];
+            double norm_sq = 0.0;
+
+            /* Compute L_H * null2[k] */
+            for (i = 0; i < dim; i++) {
+                Lv[i] = 0.0;
+                for (j = 0; j < dim; j++) {
+                    Lv[i] += (double)L_H[i][j] * null2[k][j];
+                }
+                norm_sq += Lv[i] * Lv[i];
+            }
+
+            if (norm_sq < 1e-12) continue; /* in ker(L_H), not a partner */
+
+            /* Jordan partner found: t = null2[k], T = L_H*t = Lv */
+            printf("\nJordan partner (null2 vec %d):\n", k);
+            if (dim <= 14) {
+                printf("  t = [");
+                for (i = 0; i < dim; i++) {
+                    if (i > 0) printf(", ");
+                    printf("%.4f", null2[k][i]);
+                }
+                printf("]\n");
+
+                printf("  T = L_H*t = [");
+                for (i = 0; i < dim; i++) {
+                    if (i > 0) printf(", ");
+                    printf("%.4f", Lv[i]);
+                }
+                printf("]\n");
+            }
+
+            /* b = t^T * G * t */
+            {
+                double b_val = 0.0;
+                double Gt[MAX_ALG_DIM];
+                double TGt = 0.0;
+                double TGT = 0.0;
+                double GT_vec[MAX_ALG_DIM];
+
+                /* Gt = G * t */
+                for (i = 0; i < dim; i++) {
+                    Gt[i] = 0.0;
+                    for (j = 0; j < dim; j++) {
+                        Gt[i] += G[i][j] * null2[k][j];
+                    }
+                }
+
+                /* b = t^T * Gt */
+                for (i = 0; i < dim; i++)
+                    b_val += null2[k][i] * Gt[i];
+
+                /* <T|t> = T^T * G * t (normalization) */
+                for (i = 0; i < dim; i++)
+                    TGt += Lv[i] * Gt[i];
+
+                /* <T|T> = T^T * G * T (should be 0 if T is in radical) */
+                for (i = 0; i < dim; i++) {
+                    GT_vec[i] = 0.0;
+                    for (j = 0; j < dim; j++)
+                        GT_vec[i] += G[i][j] * Lv[j];
+                }
+                for (i = 0; i < dim; i++)
+                    TGT += Lv[i] * GT_vec[i];
+
+                printf("  <t|t> = t^T G t = %.6f\n", b_val);
+                printf("  <T|t> = T^T G t = %.6f\n", TGt);
+                printf("  <T|T> = T^T G T = %.6f (expect 0)\n", TGT);
+
+                if (TGt > 1e-12 || TGt < -1e-12) {
+                    printf("  b_normalized = <t|t> / <T|t> = %.6f\n",
+                           b_val / TGt);
+                } else {
+                    printf("  WARNING: <T|t> = 0, cannot normalize\n");
+                    printf("  Raw b = <t|t> = %.6f\n", b_val);
+                }
+
+                /*
+                 * GRS convention: (H-E0)|t> = -|T>, <T|t>=1
+                 * Our L_H*t = T (positive), so T_GRS = -T.
+                 * <T_GRS|G|t> = -TGt.
+                 * To get <T_GRS|t'>=1, scale: t' = t/(-TGt)
+                 * b_GRS(scaled) = <t'|G|t'> = b_val / TGt^2
+                 *
+                 * But coset shift t -> t + c*v (v in kerL_H)
+                 * changes b. Proper GRS b requires projecting
+                 * out the ker(L_H) component using G.
+                 *
+                 * Full GRS: find t_opt = t + sum c_i v_i such
+                 * that <T_GRS|t_opt>=1 and b is minimized/canonical.
+                 * The <T_GRS|t_opt>=<T_GRS|t> (shift doesn't change
+                 * this since <T_GRS|G|v>=0 when T_GRS is in radical?
+                 * Not necessarily true for TL_4...)
+                 */
+                printf("\n  GRS convention ((H-E0)|t>=-|T>, <T|t>=1):\n");
+                {
+                    double TGt_grs = -TGt;
+                    printf("    <T_GRS|t_raw> = %.6f\n", TGt_grs);
+
+                    if (TGt_grs > 1e-12 || TGt_grs < -1e-12) {
+                        double b_grs;
+                        b_grs = b_val / (TGt_grs * TGt_grs);
+                        printf("    b_GRS (scale only) = %.6f\n", b_grs);
+
+                        /* Try shifting t by ker(L_H) vectors to match
+                         * literature b = -2. Search over a grid of
+                         * coset shifts. */
+                        if (n_null1 > 0) {
+                            int ci;
+                            double best_b = b_grs;
+                            printf("    Scanning coset shifts:\n");
+                            for (ci = -5; ci <= 5; ci++) {
+                                double t_s[MAX_ALG_DIM];
+                                double Gt_s[MAX_ALG_DIM];
+                                double bv = 0.0, tgt_s = 0.0;
+                                double tgt_grs, b_s;
+                                for (i = 0; i < dim; i++)
+                                    t_s[i] = null2[k][i]
+                                        + (double)ci * null1[0][i];
+                                for (i = 0; i < dim; i++) {
+                                    Gt_s[i] = 0.0;
+                                    for (j = 0; j < dim; j++)
+                                        Gt_s[i] += G[i][j] * t_s[j];
+                                }
+                                for (i = 0; i < dim; i++)
+                                    bv += t_s[i] * Gt_s[i];
+                                for (i = 0; i < dim; i++)
+                                    tgt_s += Lv[i] * Gt_s[i];
+                                tgt_grs = -tgt_s;
+                                if (tgt_grs > 1e-12
+                                    || tgt_grs < -1e-12) {
+                                    b_s = bv/(tgt_grs*tgt_grs);
+                                    printf("      c=%2d: <t|t>=%.4f"
+                                           " <T|t>=%.4f"
+                                           " b_GRS=%.6f\n",
+                                           ci, bv, tgt_grs, b_s);
+                                    (void)best_b;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        /* Coset independence check: verify ker(L_H) is in radical of G */
+        {
+            int p, q;
+            double max_inner = 0.0;
+            printf("\nCoset independence check (ker(L_H) vs radical of G):\n");
+            for (p = 0; p < n_null1; p++) {
+                for (q = 0; q < dim; q++) {
+                    /* compute <null1[p] | G | e_q> */
+                    double inner = 0.0;
+                    for (i = 0; i < dim; i++) {
+                        double Ge_q = G[i][q];
+                        inner += null1[p][i] * Ge_q;
+                    }
+                    if (inner > max_inner) max_inner = inner;
+                    if (-inner > max_inner) max_inner = -inner;
+                }
+            }
+            printf("  max |<v|G|e_j>| over all v in ker(L_H), all basis e_j: %.6f\n",
+                   max_inner);
+            if (max_inner < 1e-9) {
+                printf("  ker(L_H) IS in radical of G -> b is coset-independent\n");
+                check("ker(L_H) in radical of G (coset independence)",
+                      max_inner < 1e-9);
+            } else {
+                printf("  ker(L_H) is NOT fully in radical of G\n");
+                printf("  b depends on coset representative!\n");
+                /* Compute b for a few different coset reps to see range */
+                /* t' = t + c*null1[0] for c = 0, 1, -1 */
+                for (k = 0; k < n_null2; k++) {
+                    double Lv_test[MAX_ALG_DIM];
+                    double ns = 0.0;
+                    for (i = 0; i < dim; i++) {
+                        Lv_test[i] = 0.0;
+                        for (j = 0; j < dim; j++)
+                            Lv_test[i] += (double)L_H[i][j] * null2[k][j];
+                        ns += Lv_test[i] * Lv_test[i];
+                    }
+                    if (ns < 1e-12) continue;
+
+                    /* found the Jordan partner, try perturbations */
+                    {
+                        double coeffs[] = {0.0, 1.0, -1.0, 2.0, -2.0};
+                        int nc = 5;
+                        int ci;
+                        printf("  b sensitivity to coset rep:\n");
+                        for (ci = 0; ci < nc; ci++) {
+                            double t_pert[MAX_ALG_DIM];
+                            double Gt_p[MAX_ALG_DIM];
+                            double bv = 0.0;
+                            for (i = 0; i < dim; i++)
+                                t_pert[i] = null2[k][i]
+                                    + coeffs[ci] * null1[0][i];
+                            for (i = 0; i < dim; i++) {
+                                Gt_p[i] = 0.0;
+                                for (j = 0; j < dim; j++)
+                                    Gt_p[i] += G[i][j] * t_pert[j];
+                            }
+                            for (i = 0; i < dim; i++)
+                                bv += t_pert[i] * Gt_p[i];
+                            printf("    c=%.1f: b = %.6f\n",
+                                   coeffs[ci], bv);
+                        }
+                        /* Gauge analysis: b_GRS(c) is
+                         * affine in c, solve for -2, -5/8
+                         * b_raw = <t+c*v|G|t+c*v>
+                         * b_GRS = b_raw / <T_GRS|t>^2 */
+                        {
+                            double TGt_g, b_at[2];
+                            int ci2;
+                            TGt_g = 0;
+                            for (i = 0; i < dim; i++) {
+                                double Gt_i = 0;
+                                for (j = 0; j < dim; j++)
+                                    Gt_i += G[i][j]
+                                        * null2[k][j];
+                                TGt_g += Lv_test[i]*Gt_i;
+                            }
+                            TGt_g = -TGt_g;
+                            for (ci2 = 0; ci2 < 2; ci2++){
+                                double cc = (double)ci2;
+                                double tp[MAX_ALG_DIM];
+                                double bv = 0;
+                                for(i=0;i<dim;i++)
+                                    tp[i] = null2[k][i]
+                                        + cc*null1[0][i];
+                                for(i=0;i<dim;i++){
+                                    double gi = 0;
+                                    for(j=0;j<dim;j++)
+                                        gi += G[i][j]*tp[j];
+                                    bv += tp[i]*gi;
+                                }
+                                b_at[ci2] = bv;
+                            }
+                            {
+                                double slope =
+                                    b_at[1] - b_at[0];
+                                double TGt2 = TGt_g*TGt_g;
+                                printf("\n  === Gauge "
+                                    "Analysis ===\n");
+                                printf("  b_raw(0) = %.6f"
+                                    "  b_raw(1) = %.6f\n",
+                                    b_at[0], b_at[1]);
+                                printf("  b_raw(c) = %.3f"
+                                    " + (%.3f)*c\n",
+                                    b_at[0], slope);
+                                printf("  <T_GRS|t> = "
+                                    "%.6f (const)\n",
+                                    TGt_g);
+                                if (TGt2 > 1e-24) {
+                                    double bg0, sl;
+                                    double c2, c5;
+                                    bg0 = b_at[0]/TGt2;
+                                    sl = slope/TGt2;
+                                    printf("  b_GRS(c) = "
+                                        "%.6f + "
+                                        "(%.6f)*c\n",
+                                        bg0, sl);
+                                    if (sl<-1e-15 ||
+                                        sl>1e-15) {
+                                        c2 =
+                                            (-2.0-bg0)/sl;
+                                        c5 =
+                                            (-0.625-bg0)/
+                                            sl;
+                                        printf("  b_GRS="
+                                            "-2 at c="
+                                            "%.6f\n",
+                                            c2);
+                                        printf("  b_GRS="
+                                            "-5/8 at c="
+                                            "%.6f\n",
+                                            c5);
+                                    }
+                                }
+                            }
+                        }
+                        /* === Full 3D coset scan ===
+                         * b_GRS(c) = num(c) / den(c)^2
+                         * num(c) = A + 2*L.c + c^T*M*c
+                         * den(c) = D + E.c
+                         * A = <t|G|t>, L_i = <t|G|v_i>,
+                         * M_ij = <v_i|G|v_j>,
+                         * D = <T_GRS|G|t>, E_i = <T_GRS|G|v_i>
+                         * v_i = null1[i] (ker(L_H) basis)
+                         */
+                        if (n_null1 > 0) {
+                            double A_val, D_val;
+                            double L_vec[MAX_ALG_DIM];
+                            double E_vec[MAX_ALG_DIM];
+                            double M_mat[MAX_ALG_DIM]
+                                        [MAX_ALG_DIM];
+                            double T_GRS[MAX_ALG_DIM];
+                            double Gt_vec[MAX_ALG_DIM];
+                            int p, q;
+
+                            printf("\n  === Full %dD Coset"
+                                " Scan ===\n", n_null1);
+
+                            /* T_GRS = -L_H * t */
+                            for (i = 0; i < dim; i++)
+                                T_GRS[i] = -Lv_test[i];
+
+                            /* G*t */
+                            for (i = 0; i < dim; i++){
+                                Gt_vec[i] = 0;
+                                for(j=0;j<dim;j++)
+                                    Gt_vec[i] +=
+                                        G[i][j]*null2[k][j];
+                            }
+
+                            /* A = <t|G|t> */
+                            A_val = 0;
+                            for(i=0;i<dim;i++)
+                                A_val +=
+                                    null2[k][i]*Gt_vec[i];
+
+                            /* D = <T_GRS|G|t> */
+                            D_val = 0;
+                            for(i=0;i<dim;i++)
+                                D_val +=
+                                    T_GRS[i]*Gt_vec[i];
+
+                            printf("  A = <t|G|t> = "
+                                "%.6f\n", A_val);
+                            printf("  D = <T_GRS|G|t> ="
+                                " %.6f\n", D_val);
+
+                            /* L_i = <t|G|v_i> and
+                             * E_i = <T_GRS|G|v_i> */
+                            for(p=0;p<n_null1;p++){
+                                double Gv[MAX_ALG_DIM];
+                                for(i=0;i<dim;i++){
+                                    Gv[i]=0;
+                                    for(j=0;j<dim;j++)
+                                        Gv[i] +=
+                                            G[i][j]
+                                            *null1[p][j];
+                                }
+                                L_vec[p] = 0;
+                                E_vec[p] = 0;
+                                for(i=0;i<dim;i++){
+                                    L_vec[p] +=
+                                        null2[k][i]*Gv[i];
+                                    E_vec[p] +=
+                                        T_GRS[i]*Gv[i];
+                                }
+                            }
+
+                            printf("  L = <t|G|v_i>: [");
+                            for(p=0;p<n_null1;p++){
+                                if(p>0)printf(", ");
+                                printf("%.6f",L_vec[p]);
+                            }
+                            printf("]\n");
+
+                            printf("  E = <T_GRS|G|v_i>:"
+                                " [");
+                            for(p=0;p<n_null1;p++){
+                                if(p>0)printf(", ");
+                                printf("%.6f",E_vec[p]);
+                            }
+                            printf("]\n");
+
+                            /* M_ij = <v_i|G|v_j> */
+                            for(p=0;p<n_null1;p++){
+                                double Gv[MAX_ALG_DIM];
+                                for(i=0;i<dim;i++){
+                                    Gv[i]=0;
+                                    for(j=0;j<dim;j++)
+                                        Gv[i] +=
+                                            G[i][j]
+                                            *null1[p][j];
+                                }
+                                for(q=0;q<n_null1;q++){
+                                    M_mat[p][q]=0;
+                                    for(i=0;i<dim;i++)
+                                        M_mat[p][q] +=
+                                            null1[q][i]
+                                            *Gv[i];
+                                }
+                            }
+
+                            printf("  M = <v_i|G|v_j>:\n");
+                            for(p=0;p<n_null1;p++){
+                                printf("    [");
+                                for(q=0;q<n_null1;q++){
+                                    if(q>0)printf(" ");
+                                    printf("%9.4f",
+                                        M_mat[p][q]);
+                                }
+                                printf("]\n");
+                            }
+
+                            /* Classification:
+                             * if E=0: den=D (const),
+                             *   b_GRS = quadratic/D^2
+                             * if E!=0: rational function
+                             * if M=0 and E=0:
+                             *   b_GRS is affine */
+                            {
+                                double e_norm=0,m_norm=0;
+                                for(p=0;p<n_null1;p++){
+                                    double ea = E_vec[p];
+                                    e_norm +=
+                                        ea<0?-ea:ea;
+                                    for(q=0;q<n_null1;
+                                        q++){
+                                        double ma =
+                                            M_mat[p][q];
+                                        m_norm +=
+                                            ma<0?-ma:ma;
+                                    }
+                                }
+                                printf("\n  ||E||_1 = "
+                                    "%.9f\n", e_norm);
+                                printf("  ||M||_1 = "
+                                    "%.9f\n", m_norm);
+                                if(e_norm < 1e-9)
+                                    printf("  E=0 => "
+                                        "denominator "
+                                        "constant\n");
+                                if(m_norm < 1e-9 &&
+                                   e_norm < 1e-9)
+                                    printf("  M=0,E=0 =>"
+                                        " b_GRS is "
+                                        "AFFINE in c\n");
+                                else if(m_norm < 1e-9)
+                                    printf("  M=0,E!=0 "
+                                        "=> b_GRS is "
+                                        "rational\n");
+                                else if(e_norm < 1e-9)
+                                    printf("  M!=0,E=0 "
+                                        "=> b_GRS is "
+                                        "QUADRATIC/D^2"
+                                        "\n");
+                                else
+                                    printf("  M!=0,E!=0"
+                                        " => b_GRS is"
+                                        " RATIONAL\n");
+                            }
+
+                            /* If E=0 (constant denom),
+                             * print the affine/quadratic
+                             * decomposition */
+                            {
+                                double e_norm = 0;
+                                double D2;
+                                for(p=0;p<n_null1;p++){
+                                    double ea = E_vec[p];
+                                    e_norm +=
+                                        ea<0?-ea:ea;
+                                }
+                                D2 = D_val*D_val;
+                                if(e_norm < 1e-9 &&
+                                   D2 > 1e-24){
+                                    printf("\n  b_GRS ="
+                                        " (A + 2*L.c +"
+                                        " c^T*M*c)"
+                                        " / D^2\n");
+                                    printf("  = %.6f"
+                                        " + 2*[",
+                                        A_val/D2);
+                                    for(p=0;p<n_null1;
+                                        p++){
+                                        if(p>0)
+                                            printf(",");
+                                        printf("%.6f",
+                                            L_vec[p]/D2);
+                                    }
+                                    printf("].c");
+                                    printf(" + c^T*M'/D^2"
+                                        "*c\n");
+                                    printf("  where M'"
+                                        "/D^2 =\n");
+                                    for(p=0;p<n_null1;
+                                        p++){
+                                        printf("    [");
+                                        for(q=0;
+                                            q<n_null1;
+                                            q++){
+                                            if(q>0)
+                                                printf(
+                                                " ");
+                                            printf(
+                                                "%9.6f",
+                                                M_mat[p]
+                                                [q]/D2);
+                                        }
+                                        printf("]\n");
+                                    }
+
+                                    /* Gradient = 0
+                                     * condition for
+                                     * critical point:
+                                     * M*c = -L
+                                     * Solve if M is
+                                     * invertible */
+                                    {
+                                        double det3;
+                                        if(n_null1==3){
+                                            det3 =
+                                                M_mat[0][0]
+                                                *(M_mat[1][1]
+                                                *M_mat[2][2]
+                                                -M_mat[1][2]
+                                                *M_mat[2][1])
+                                                -M_mat[0][1]
+                                                *(M_mat[1][0]
+                                                *M_mat[2][2]
+                                                -M_mat[1][2]
+                                                *M_mat[2][0])
+                                                +M_mat[0][2]
+                                                *(M_mat[1][0]
+                                                *M_mat[2][1]
+                                                -M_mat[1][1]
+                                                *M_mat[2][0]);
+                                            printf("\n  "
+                                                "det(M) ="
+                                                " %.9f\n",
+                                                det3);
+                                            if(det3>1e-9
+                                            ||det3<-1e-9){
+                                                /* M inv
+                                                 * by
+                                                 * Cramer */
+                                                double
+                                                Mi[3][3];
+                                                double
+                                                c_opt[3];
+                                                double
+                                                b_opt;
+                                                Mi[0][0]=
+                                                (M_mat[1][1]
+                                                *M_mat[2][2]
+                                                -M_mat[1][2]
+                                                *M_mat[2][1])
+                                                /det3;
+                                                Mi[0][1]=
+                                                (M_mat[0][2]
+                                                *M_mat[2][1]
+                                                -M_mat[0][1]
+                                                *M_mat[2][2])
+                                                /det3;
+                                                Mi[0][2]=
+                                                (M_mat[0][1]
+                                                *M_mat[1][2]
+                                                -M_mat[0][2]
+                                                *M_mat[1][1])
+                                                /det3;
+                                                Mi[1][0]=
+                                                (M_mat[1][2]
+                                                *M_mat[2][0]
+                                                -M_mat[1][0]
+                                                *M_mat[2][2])
+                                                /det3;
+                                                Mi[1][1]=
+                                                (M_mat[0][0]
+                                                *M_mat[2][2]
+                                                -M_mat[0][2]
+                                                *M_mat[2][0])
+                                                /det3;
+                                                Mi[1][2]=
+                                                (M_mat[0][2]
+                                                *M_mat[1][0]
+                                                -M_mat[0][0]
+                                                *M_mat[1][2])
+                                                /det3;
+                                                Mi[2][0]=
+                                                (M_mat[1][0]
+                                                *M_mat[2][1]
+                                                -M_mat[1][1]
+                                                *M_mat[2][0])
+                                                /det3;
+                                                Mi[2][1]=
+                                                (M_mat[0][1]
+                                                *M_mat[2][0]
+                                                -M_mat[0][0]
+                                                *M_mat[2][1])
+                                                /det3;
+                                                Mi[2][2]=
+                                                (M_mat[0][0]
+                                                *M_mat[1][1]
+                                                -M_mat[0][1]
+                                                *M_mat[1][0])
+                                                /det3;
+                                                /* c_opt =
+                                                 * -M^{-1}
+                                                 * * L */
+                                                for(p=0;
+                                                    p<3;
+                                                    p++){
+                                                    c_opt[p]
+                                                    =0;
+                                                    for(q=0;
+                                                    q<3;
+                                                    q++)
+                                                    c_opt[p]
+                                                    -=Mi[p]
+                                                    [q]*
+                                                    L_vec[q];
+                                                }
+                                                printf(
+                                                "  Critical"
+                                                " point c*"
+                                                " = [%.6f,"
+                                                " %.6f,"
+                                                " %.6f]\n",
+                                                c_opt[0],
+                                                c_opt[1],
+                                                c_opt[2]);
+                                                /* b at
+                                                 * critical
+                                                 * point */
+                                                b_opt =
+                                                    A_val;
+                                                for(p=0;
+                                                    p<3;
+                                                    p++)
+                                                    b_opt
+                                                    += 2*
+                                                    L_vec[p]
+                                                    *c_opt
+                                                    [p];
+                                                for(p=0;
+                                                    p<3;
+                                                    p++)
+                                                for(q=0;
+                                                    q<3;
+                                                    q++)
+                                                    b_opt
+                                                    +=
+                                                    c_opt[p]
+                                                    *M_mat
+                                                    [p][q]*
+                                                    c_opt
+                                                    [q];
+                                                b_opt /=D2;
+                                                printf(
+                                                "  b_GRS"
+                                                " at c* ="
+                                                " %.9f\n",
+                                                b_opt);
+                                                /* Check if
+                                                 * -2 or
+                                                 * -5/8 */
+                                                printf(
+                                                "  b*=-2? "
+                                                "%.9f\n",
+                                                b_opt+2.0);
+                                                printf(
+                                                "  b*=-5/8?"
+                                                " %.9f\n",
+                                                b_opt
+                                                +0.625);
+                                            }
+                                            else{
+                                                printf(
+                                                "  M is "
+                                                "SINGULAR"
+                                                " => no "
+                                                "unique "
+                                                "critical"
+                                                " point\n");
+                                                /* eigen
+                                                 * analysis
+                                                 * of M
+                                                 * (rank) */
+                                                printf(
+                                                "  Rank "
+                                                "deficiency"
+                                                " implies "
+                                                "flat "
+                                                "directions"
+                                                "\n");
+                                            }
+                                        }
+                                        else if(n_null1
+                                            ==1){
+                                            printf(
+                                            "  1D:"
+                                            " b_GRS(c)"
+                                            " = %.6f"
+                                            " + %.6f*c"
+                                            " + %.6f*c^2"
+                                            "\n",
+                                            A_val/D2,
+                                            2*L_vec[0]/D2,
+                                            M_mat[0][0]
+                                            /D2);
+                                            if(M_mat[0][0]
+                                            >1e-12 ||
+                                            M_mat[0][0]
+                                            <-1e-12){
+                                                double
+                                                c_min =
+                                                -L_vec[0]
+                                                /M_mat
+                                                [0][0];
+                                                double
+                                                b_min =
+                                                (A_val -
+                                                L_vec[0]*
+                                                L_vec[0]/
+                                                M_mat
+                                                [0][0])
+                                                /D2;
+                                                printf(
+                                                "  c_min"
+                                                " = %.6f,"
+                                                " b_min"
+                                                " = %.9f"
+                                                "\n",
+                                                c_min,
+                                                b_min);
+                                            }
+                                        }
+                                        else{
+                                            printf(
+                                            "  %dD scan"
+                                            " (generic"
+                                            " case)\n",
+                                            n_null1);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    /* === delta-form leading coefficients
+                     * on full algebra ===
+                     * G_d[i][j] = d^{L(star(i),j)}
+                     * L(a,b) = internal_loops(a,b)
+                     *   + closure_loops(product(a,b))
+                     * <T|G|t> = Sum T_i*t_j*d^L(i*,j)
+                     * Leading: find min L(i*,j) where
+                     * T_i*t_j != 0, sum those coefficients
+                     */
+                    {
+                        int min_Tt, min_tt;
+                        double coeff_Tt, coeff_tt;
+                        int di2, dj2;
+                        double T_full[MAX_ALG_DIM];
+
+                        printf("\n  === delta-form "
+                            "leading coeffs "
+                            "(full algebra) ===\n");
+
+                        /* T_GRS = -L_H*t */
+                        for (i = 0; i < dim; i++)
+                            T_full[i] = -Lv_test[i];
+
+                        /* Scan for minimum powers */
+                        min_Tt = 999;
+                        min_tt = 999;
+                        for(di2=0;di2<dim;di2++)
+                        for(dj2=0;dj2<dim;dj2++){
+                            int si, ridx, intl, clos, Lij;
+                            double cTt, ctt;
+                            si = alg_star_idx[di2];
+                            ridx = alg_mt_full[si][dj2];
+                            intl = alg_mt_nloops[si][dj2];
+                            clos = (ridx >= 0) ?
+                                alg_closure_loops(
+                                    &alg_basis[ridx],
+                                    alg_n) : alg_n;
+                            Lij = intl + clos;
+
+                            cTt = T_full[di2]
+                                * null2[k][dj2];
+                            ctt = null2[k][di2]
+                                * null2[k][dj2];
+
+                            if((cTt<0?-cTt:cTt)>1e-15
+                                && Lij < min_Tt)
+                                min_Tt = Lij;
+                            if((ctt<0?-ctt:ctt)>1e-15
+                                && Lij < min_tt)
+                                min_tt = Lij;
+                        }
+
+                        /* Sum leading coefficients */
+                        coeff_Tt = 0;
+                        coeff_tt = 0;
+                        for(di2=0;di2<dim;di2++)
+                        for(dj2=0;dj2<dim;dj2++){
+                            int si, ridx, intl, clos, Lij;
+                            si = alg_star_idx[di2];
+                            ridx = alg_mt_full[si][dj2];
+                            intl = alg_mt_nloops[si][dj2];
+                            clos = (ridx >= 0) ?
+                                alg_closure_loops(
+                                    &alg_basis[ridx],
+                                    alg_n) : alg_n;
+                            Lij = intl + clos;
+
+                            if(Lij == min_Tt)
+                                coeff_Tt +=
+                                    T_full[di2]
+                                    * null2[k][dj2];
+                            if(Lij == min_tt)
+                                coeff_tt +=
+                                    null2[k][di2]
+                                    * null2[k][dj2];
+                        }
+
+                        printf("  <T|G_d|t>: pow=%d"
+                            " coeff=%.9f\n",
+                            min_Tt, coeff_Tt);
+                        printf("  <t|G_d|t>: pow=%d"
+                            " coeff=%.9f\n",
+                            min_tt, coeff_tt);
+
+                        if(min_Tt < 999 && min_tt < 999){
+                            printf("  p_tt=%d, "
+                                "2*p_Tt=%d\n",
+                                min_tt, 2*min_Tt);
+                            if(min_tt == 2*min_Tt &&
+                               (coeff_Tt>1e-15 ||
+                                coeff_Tt<-1e-15)){
+                                double bdc;
+                                bdc = coeff_tt /
+                                    (coeff_Tt*coeff_Tt);
+                                printf("  *** b_delta"
+                                    " = %.9f ***\n",
+                                    bdc);
+                                printf("  |b-(-2)| ="
+                                    " %.9f\n",
+                                    bdc<-2 ?
+                                    -(bdc+2):bdc+2);
+                                printf("  |b-(-5/8)|"
+                                    " = %.9f\n",
+                                    bdc<-0.625 ?
+                                    -(bdc+0.625)
+                                    :bdc+0.625);
+                                /* Normalize by 0-TL
+                                 * sector dimension
+                                 * (regular rep has
+                                 * dim(V_0)^2 copies) */
+                                {
+                                    int n0tl = 0;
+                                    int dd4;
+                                    double bpr;
+                                    for(dd4=0;dd4<dim;
+                                        dd4++)
+                                        if(
+                                        alg_count_through(
+                                        &alg_basis[dd4],
+                                        alg_n)==0)
+                                        n0tl++;
+                                    bpr = bdc /
+                                        (double)n0tl;
+                                    printf(
+                                    "\n  === "
+                                    "NORMALIZATION "
+                                    "===\n");
+                                    printf(
+                                    "  0-TL sector"
+                                    " dim = %d\n",
+                                    n0tl);
+                                    printf(
+                                    "  b_delta / "
+                                    "dim(0-TL) = "
+                                    "%.9f / %d = "
+                                    "%.9f\n",
+                                    bdc, n0tl, bpr);
+                                    printf(
+                                    "  |b_PR - "
+                                    "(-5/8)| = "
+                                    "%.12f\n",
+                                    bpr < -0.625 ?
+                                    -(bpr+0.625)
+                                    : bpr+0.625);
+                                    if(bpr+0.625 <
+                                        1e-9 &&
+                                       bpr+0.625 >
+                                       -1e-9)
+                                        printf(
+                                        "  *** "
+                                        "CONFIRMED: "
+                                        "b = -5/8 "
+                                        "(Pearce-"
+                                        "Rasmussen)"
+                                        " ***\n");
+                                }
+                            } else if(min_tt
+                                != 2*min_Tt){
+                                printf("  b diverges"
+                                    ": d^{%d}\n",
+                                    min_tt
+                                    - 2*min_Tt);
+                                /* === Valuation repair ===
+                                 * Decompose C_p(c) as
+                                 * quadratic in coset params
+                                 * where p = min_tt.
+                                 * C_p = a0 + a.c + c^T.B.c
+                                 * Find c s.t. C_p=0 so
+                                 * leading power increases */
+                                if(n_null1>0 &&
+                                   n_null1<=14){
+                                    static double
+                                        a_vec[14];
+                                    static double
+                                        B_mat[14][14];
+                                    double a0_v;
+                                    int pp, qq, di3, dj3;
+                                    int target_p = min_tt;
+
+                                    printf("\n  === "
+                                        "Valuation "
+                                        "repair "
+                                        "(target "
+                                        "power %d)"
+                                        " ===\n",
+                                        target_p);
+
+                                    /* a0 = sum_{L=p}
+                                     * t_i*t_j */
+                                    a0_v = 0;
+                                    for(di3=0;di3<dim;
+                                        di3++)
+                                    for(dj3=0;dj3<dim;
+                                        dj3++){
+                                        int si3,ridx3,
+                                            intl3,clos3,
+                                            Lij3;
+                                        si3=
+                                            alg_star_idx
+                                            [di3];
+                                        ridx3=
+                                            alg_mt_full
+                                            [si3][dj3];
+                                        intl3=
+                                            alg_mt_nloops
+                                            [si3][dj3];
+                                        clos3=(ridx3>=0)
+                                            ?
+                                            alg_closure_loops(
+                                            &alg_basis
+                                            [ridx3],
+                                            alg_n)
+                                            :alg_n;
+                                        Lij3=intl3+clos3;
+                                        if(Lij3
+                                            ==target_p)
+                                            a0_v +=
+                                            null2[k][di3]
+                                            *null2[k]
+                                            [dj3];
+                                    }
+                                    printf("  a0 = "
+                                        "%.6f\n",
+                                        a0_v);
+
+                                    /* a_p = 2*sum_{L=p}
+                                     * t_i*v_p_j */
+                                    for(pp=0;pp<n_null1;
+                                        pp++){
+                                        a_vec[pp]=0;
+                                        for(di3=0;
+                                            di3<dim;
+                                            di3++)
+                                        for(dj3=0;
+                                            dj3<dim;
+                                            dj3++){
+                                            int si3,ridx3,
+                                            intl3,clos3,
+                                            Lij3;
+                                            si3=
+                                            alg_star_idx
+                                            [di3];
+                                            ridx3=
+                                            alg_mt_full
+                                            [si3][dj3];
+                                            intl3=
+                                            alg_mt_nloops
+                                            [si3][dj3];
+                                            clos3=
+                                            (ridx3>=0)?
+                                            alg_closure_loops(
+                                            &alg_basis
+                                            [ridx3],
+                                            alg_n)
+                                            :alg_n;
+                                            Lij3=intl3
+                                            +clos3;
+                                            if(Lij3
+                                            ==target_p)
+                                            a_vec[pp]+=
+                                            null2[k]
+                                            [di3]*
+                                            null1[pp]
+                                            [dj3];
+                                        }
+                                        a_vec[pp]*=2;
+                                    }
+
+                                    /* B_pq = sum_{L=p}
+                                     * v_p_i * v_q_j */
+                                    for(pp=0;pp<n_null1;
+                                        pp++)
+                                    for(qq=0;qq<n_null1;
+                                        qq++){
+                                        B_mat[pp][qq]=0;
+                                        for(di3=0;
+                                            di3<dim;
+                                            di3++)
+                                        for(dj3=0;
+                                            dj3<dim;
+                                            dj3++){
+                                            int si3,ridx3,
+                                            intl3,clos3,
+                                            Lij3;
+                                            si3=
+                                            alg_star_idx
+                                            [di3];
+                                            ridx3=
+                                            alg_mt_full
+                                            [si3][dj3];
+                                            intl3=
+                                            alg_mt_nloops
+                                            [si3][dj3];
+                                            clos3=
+                                            (ridx3>=0)?
+                                            alg_closure_loops(
+                                            &alg_basis
+                                            [ridx3],
+                                            alg_n)
+                                            :alg_n;
+                                            Lij3=intl3
+                                            +clos3;
+                                            if(Lij3
+                                            ==target_p)
+                                            B_mat[pp]
+                                            [qq]+=
+                                            null1[pp]
+                                            [di3]*
+                                            null1[qq]
+                                            [dj3];
+                                        }
+                                    }
+
+                                    printf("  a = [");
+                                    for(pp=0;pp<n_null1;
+                                        pp++){
+                                        if(pp>0)
+                                            printf(", ");
+                                        printf("%.4f",
+                                            a_vec[pp]);
+                                    }
+                                    printf("]\n");
+
+                                    printf("  B diag = "
+                                        "[");
+                                    for(pp=0;pp<n_null1;
+                                        pp++){
+                                        if(pp>0)
+                                            printf(", ");
+                                        printf("%.4f",
+                                            B_mat[pp]
+                                            [pp]);
+                                    }
+                                    printf("]\n");
+
+                                    /* Check rank of B */
+                                    {
+                                        double bnorm=0;
+                                        for(pp=0;
+                                            pp<n_null1;
+                                            pp++)
+                                        for(qq=0;
+                                            qq<n_null1;
+                                            qq++){
+                                            double bv=
+                                                B_mat[pp]
+                                                [qq];
+                                            bnorm +=
+                                                bv<0?
+                                                -bv:bv;
+                                        }
+                                        printf("  ||B||"
+                                            "_1 = "
+                                            "%.6f\n",
+                                            bnorm);
+                                    }
+
+                                    /* Try 1D solutions:
+                                     * for each dir p,
+                                     * C_p(c_p) =
+                                     * a0+a_p*c+B_pp*c^2=0
+                                     * disc = a_p^2
+                                     * - 4*B_pp*a0 */
+                                    {
+                                        int found=0;
+                                        printf("  1D "
+                                            "solutions"
+                                            " per "
+                                            "direction:"
+                                            "\n");
+                                        for(pp=0;
+                                            pp<n_null1;
+                                            pp++){
+                                            double a2=
+                                                a_vec[pp];
+                                            double b2=
+                                                B_mat[pp]
+                                                [pp];
+                                            double disc=
+                                                a2*a2
+                                                -4*b2
+                                                *a0_v;
+                                            if(disc>=0 &&
+                                               (b2>1e-15
+                                               ||b2
+                                               <-1e-15)){
+                                                double sq=
+                                                    sqrt(
+                                                    disc);
+                                                double c1=
+                                                    (-a2+sq)
+                                                    /(2*b2);
+                                                double c2=
+                                                    (-a2-sq)
+                                                    /(2*b2);
+                                                printf(
+                                                "    dir"
+                                                " %d: c="
+                                                "%.6f or"
+                                                " %.6f\n",
+                                                pp,c1,c2);
+                                                found=1;
+
+                                                /* Test
+                                                 * the
+                                                 * first
+                                                 * root:
+                                                 * eval b
+                                                 * at d=
+                                                 * 0.001 */
+                                                {
+                                                double
+                                                dd3=0.001;
+                                                double
+                                                ts3
+                                                [MAX_ALG_DIM];
+                                                double
+                                                Tt4=0,
+                                                tt4=0;
+                                                for(i=0;
+                                                i<dim;
+                                                i++)
+                                                ts3[i]=
+                                                null2[k]
+                                                [i]+c1*
+                                                null1[pp]
+                                                [i];
+                                                for(di3=0;
+                                                di3<dim;
+                                                di3++)
+                                                for(dj3=0;
+                                                dj3<dim;
+                                                dj3++){
+                                                int si3,
+                                                ridx3,
+                                                intl3,
+                                                clos3,
+                                                Lij3;
+                                                double gv;
+                                                si3=
+                                                alg_star_idx
+                                                [di3];
+                                                ridx3=
+                                                alg_mt_full
+                                                [si3]
+                                                [dj3];
+                                                intl3=
+                                                alg_mt_nloops
+                                                [si3]
+                                                [dj3];
+                                                clos3=
+                                                (ridx3>=0)
+                                                ?
+                                                alg_closure_loops(
+                                                &alg_basis
+                                                [ridx3],
+                                                alg_n)
+                                                :alg_n;
+                                                Lij3=
+                                                intl3+
+                                                clos3;
+                                                gv=pow(
+                                                dd3,
+                                                (double)
+                                                Lij3);
+                                                Tt4+=
+                                                T_full
+                                                [di3]*gv
+                                                *ts3
+                                                [dj3];
+                                                tt4+=
+                                                ts3[di3]
+                                                *gv*ts3
+                                                [dj3];
+                                                }
+                                                printf(
+                                                "      "
+                                                "test "
+                                                "c=%.4f:"
+                                                " <T|t>="
+                                                "%.4e "
+                                                "<t|t>="
+                                                "%.4e "
+                                                "b=",
+                                                c1,Tt4,
+                                                tt4);
+                                                if((Tt4<0
+                                                ?-Tt4:Tt4)
+                                                >1e-30)
+                                                printf(
+                                                "%.6f\n",
+                                                tt4/
+                                                (Tt4*
+                                                Tt4));
+                                                else
+                                                printf(
+                                                "div/0\n"
+                                                );
+                                                }
+                                            } else if(
+                                                b2>-1e-15
+                                                &&b2<1e-15
+                                                &&(a2>1e-15
+                                                ||a2
+                                                <-1e-15)){
+                                                double cs=
+                                                    -a0_v/
+                                                    a2;
+                                                printf(
+                                                "    dir"
+                                                " %d: "
+                                                "linear,"
+                                                " c="
+                                                "%.6f\n",
+                                                pp, cs);
+                                                found=1;
+                                            } else {
+                                                printf(
+                                                "    dir"
+                                                " %d: no"
+                                                " real"
+                                                " root"
+                                                " (disc="
+                                                "%.4f)\n",
+                                                pp,disc);
+                                            }
+                                        }
+                                        if(!found)
+                                            printf(
+                                            "  No 1D "
+                                            "solution "
+                                            "found.\n");
+                                    }
+
+                                    /* Cross-term power
+                                     * analysis: for each
+                                     * direction p and
+                                     * each power q<target,
+                                     * compute cross(p,q) =
+                                     * sum_{L=q} v_p_i*t_j.
+                                     * "Safe" directions
+                                     * have cross=0 for
+                                     * all q < target_p. */
+                                    {
+                                        int safe_dirs = 0;
+                                        printf("\n  Cross"
+                                            "-term power"
+                                            " analysis:\n");
+                                        printf("  (showing"
+                                            " |cross(p,q)|"
+                                            " for q<"
+                                            "%d)\n",
+                                            target_p);
+                                        for(pp=0;
+                                            pp<n_null1;
+                                            pp++){
+                                            double max_c=0;
+                                            int is_safe=1;
+                                            printf("  dir"
+                                                " %2d:",pp);
+                                            for(qq=0;
+                                                qq<target_p;
+                                                qq++){
+                                                double cv=0;
+                                                for(di3=0;
+                                                di3<dim;
+                                                di3++)
+                                                for(dj3=0;
+                                                dj3<dim;
+                                                dj3++){
+                                                int si3,
+                                                ridx3,
+                                                intl3,
+                                                clos3,
+                                                Lij3;
+                                                si3=
+                                                alg_star_idx
+                                                [di3];
+                                                ridx3=
+                                                alg_mt_full
+                                                [si3]
+                                                [dj3];
+                                                intl3=
+                                                alg_mt_nloops
+                                                [si3]
+                                                [dj3];
+                                                clos3=
+                                                (ridx3>=0)
+                                                ?
+                                                alg_closure_loops(
+                                                &alg_basis
+                                                [ridx3],
+                                                alg_n)
+                                                :alg_n;
+                                                Lij3=intl3
+                                                +clos3;
+                                                if(Lij3==qq)
+                                                cv+=
+                                                null1[pp]
+                                                [di3]*
+                                                null2[k]
+                                                [dj3];
+                                                }
+                                                printf(
+                                                " q%d="
+                                                "%.3f",
+                                                qq,cv);
+                                                if(cv>1e-9
+                                                ||cv<-1e-9)
+                                                is_safe=0;
+                                                if(cv<0)
+                                                cv=-cv;
+                                                if(cv>
+                                                max_c)
+                                                max_c=cv;
+                                            }
+                                            if(is_safe){
+                                                printf(
+                                                " SAFE");
+                                                safe_dirs++;
+                                            }
+                                            printf("\n");
+                                        }
+                                        printf("  Safe "
+                                            "directions"
+                                            ": %d/%d\n",
+                                            safe_dirs,
+                                            n_null1);
+                                    }
+                                }
+                            }
+                        } else {
+                            printf("  (some form "
+                                "is identically"
+                                " zero)\n");
+                        }
+
+                        /* Numerical verification */
+                        {
+                            double ds[]={0.5,0.1,
+                                0.01,0.001};
+                            int ddi;
+                            printf("  Numerical "
+                                "verification:\n");
+                            printf("  delta      "
+                                "<T|G|t>      "
+                                "<t|G|t>      "
+                                "b\n");
+                            for(ddi=0;ddi<4;ddi++){
+                                double dd=ds[ddi];
+                                double Tt2=0,tt2=0;
+                                for(di2=0;di2<dim;
+                                    di2++)
+                                for(dj2=0;dj2<dim;
+                                    dj2++){
+                                    int si,ridx,intl,
+                                        clos,Lij;
+                                    double gv;
+                                    si=alg_star_idx
+                                        [di2];
+                                    ridx=
+                                        alg_mt_full
+                                        [si][dj2];
+                                    intl=
+                                        alg_mt_nloops
+                                        [si][dj2];
+                                    clos=(ridx>=0)?
+                                        alg_closure_loops(
+                                        &alg_basis
+                                        [ridx],
+                                        alg_n):alg_n;
+                                    Lij=intl+clos;
+                                    gv=pow(dd,
+                                        (double)Lij);
+                                    Tt2+=T_full[di2]
+                                        *gv
+                                        *null2[k]
+                                        [dj2];
+                                    tt2+=null2[k]
+                                        [di2]*gv
+                                        *null2[k]
+                                        [dj2];
+                                }
+                                printf("  %.4f "
+                                    "%12.6e "
+                                    "%12.6e ",
+                                    dd, Tt2, tt2);
+                                if((Tt2<0?-Tt2:Tt2)
+                                    >1e-30)
+                                    printf(
+                                    "%12.6f\n",
+                                    tt2/
+                                    (Tt2*Tt2));
+                                else
+                                    printf(
+                                    "div/0\n");
+                            }
+                        }
+
+                    /* === delta-form coset scan ===
+                     * Evaluate b at delta=0.001 for
+                     * each coset direction to see
+                     * gauge dependence in delta-form */
+                    if (n_null1 > 0) {
+                        int p2;
+                        double dd2 = 0.001;
+                        printf("\n  === delta-form "
+                            "coset scan "
+                            "(d=%.4f) ===\n", dd2);
+                        printf("  dir  c    "
+                            "<T|G|t>     "
+                            "<t|G|t>     "
+                            "b\n");
+                        for(p2=0;p2<n_null1;p2++){
+                            double cs2[] = {-2,-1,
+                                0,1,2};
+                            int ci3;
+                            for(ci3=0;ci3<5;ci3++){
+                                double cc2=cs2[ci3];
+                                double ts2[MAX_ALG_DIM];
+                                double Tt3=0,tt3=0;
+                                for(i=0;i<dim;i++)
+                                    ts2[i]=
+                                        null2[k][i]
+                                        +cc2
+                                        *null1[p2][i];
+                                for(di2=0;di2<dim;
+                                    di2++)
+                                for(dj2=0;dj2<dim;
+                                    dj2++){
+                                    int si,ridx,intl,
+                                        clos,Lij;
+                                    double gv;
+                                    si=alg_star_idx
+                                        [di2];
+                                    ridx=
+                                        alg_mt_full
+                                        [si][dj2];
+                                    intl=
+                                        alg_mt_nloops
+                                        [si][dj2];
+                                    clos=(ridx>=0)?
+                                        alg_closure_loops(
+                                        &alg_basis
+                                        [ridx],
+                                        alg_n):alg_n;
+                                    Lij=intl+clos;
+                                    gv=pow(dd2,
+                                        (double)Lij);
+                                    Tt3+=
+                                        T_full[di2]
+                                        *gv
+                                        *ts2[dj2];
+                                    tt3+=ts2[di2]
+                                        *gv
+                                        *ts2[dj2];
+                                }
+                                printf("  %d %5.1f "
+                                    "%12.4e "
+                                    "%12.4e ",
+                                    p2, cc2,
+                                    Tt3, tt3);
+                                if((Tt3<0?-Tt3:Tt3)
+                                    >1e-30)
+                                    printf(
+                                    "%12.6f\n",
+                                    tt3/
+                                    (Tt3*Tt3));
+                                else
+                                    printf(
+                                    "div/0\n");
+                            }
+                        }
+                    }
+                    }
+                    break;
+                }
+            }
+        }
+
+        if (n_val == 2) {
+            check("TL_2: Jordan blocks found (n_null2 > n_null1)",
+                  n_null2 > n_null1);
+        }
+
+        /* Run sector analysis for even n (non-semisimple cases) */
+        if (n_val % 2 == 0 && n_val >= 2) {
+            analyze_through_line_sectors();
+            analyze_projective_cover();
+        }
+    }
+}
+
+/* ================================================================ */
+/* Part D: Numerical Eigenvalues + Jordan Block Identification      */
+/* ================================================================ */
+
+/*
+ * Compute determinant via Gaussian elimination with partial pivoting.
+ * Works on double matrix. Returns det value.
+ */
+static double gauss_det(const int H[MAX_LS_DIM][MAX_LS_DIM],
+                        int dim, double lambda) {
+    double work[MAX_LS_DIM][MAX_LS_DIM];
+    double det_val, max_val, factor;
+    int i, j, k, pivot_row, swaps;
+
+    /* M = H - lambda * I */
+    for (i = 0; i < dim; i++)
+        for (j = 0; j < dim; j++)
+            work[i][j] = (double)H[i][j] - (i == j ? lambda : 0.0);
+
+    det_val = 1.0;
+    swaps = 0;
+
+    for (k = 0; k < dim; k++) {
+        /* partial pivoting */
+        pivot_row = k;
+        max_val = work[k][k] < 0 ? -work[k][k] : work[k][k];
+        for (i = k + 1; i < dim; i++) {
+            double av = work[i][k] < 0 ? -work[i][k] : work[i][k];
+            if (av > max_val) { max_val = av; pivot_row = i; }
+        }
+        if (max_val < 1e-15) return 0.0;  /* singular */
+
+        if (pivot_row != k) {
+            for (j = 0; j < dim; j++) {
+                double tmp = work[k][j];
+                work[k][j] = work[pivot_row][j];
+                work[pivot_row][j] = tmp;
+            }
+            swaps++;
+        }
+
+        det_val *= work[k][k];
+
+        for (i = k + 1; i < dim; i++) {
+            factor = work[i][k] / work[k][k];
+            for (j = k + 1; j < dim; j++) {
+                work[i][j] -= factor * work[k][j];
+            }
+        }
+    }
+
+    return swaps % 2 == 0 ? det_val : -det_val;
+}
+
+/*
+ * Find eigenvalues by sweeping det(H - lambda*I) and finding sign changes.
+ * Then refine by bisection. Simple, robust, C89-friendly.
+ */
+static int find_eigenvalues_sweep(const int H[MAX_LS_DIM][MAX_LS_DIM],
+                                  int dim, double *evals) {
+    double lam_min = -20.0, lam_max = 20.0;
+    double step = dim > 50 ? 0.001 : 0.005;
+    int n_evals = 0;
+    double prev_det, curr_det, next_det, lo, hi, mid;
+    double lam;
+    int iter;
+    double prev_lam;
+
+    prev_det = gauss_det(H, dim, lam_min);
+    prev_lam = lam_min;
+
+    for (lam = lam_min + step; lam <= lam_max; lam += step) {
+        curr_det = gauss_det(H, dim, lam);
+
+        /* Case 1: sign change (simple root) */
+        if ((prev_det > 0 && curr_det < 0) ||
+            (prev_det < 0 && curr_det > 0)) {
+            lo = prev_lam;
+            hi = lam;
+            for (iter = 0; iter < 60; iter++) {
+                mid = (lo + hi) * 0.5;
+                if (gauss_det(H, dim, mid) * gauss_det(H, dim, lo) < 0)
+                    hi = mid;
+                else
+                    lo = mid;
+            }
+            evals[n_evals++] = (lo + hi) * 0.5;
+        }
+
+        /* Case 2: double root (det touches zero, same sign on both sides)
+         * Detect: prev and next have same sign, curr is smaller in magnitude
+         * and close to zero. Check if the local minimum of |det| is near zero. */
+        if (lam + step <= lam_max) {
+            next_det = gauss_det(H, dim, lam + step);
+            if (((prev_det > 0 && curr_det > 0 && next_det > 0) ||
+                 (prev_det < 0 && curr_det < 0 && next_det < 0))) {
+                double ac = curr_det < 0 ? -curr_det : curr_det;
+                double ap = prev_det < 0 ? -prev_det : prev_det;
+                double an = next_det < 0 ? -next_det : next_det;
+                /* local minimum of |det| near lam */
+                if (ac < ap && ac < an && ac < 1e-4) {
+                    /* refine: find minimum of |det| by golden section */
+                    double a = prev_lam, b = lam + step;
+                    double gr = 0.6180339887;
+                    double c2, d, fc, fd;
+                    c2 = b - gr * (b - a);
+                    d = a + gr * (b - a);
+                    for (iter = 0; iter < 60; iter++) {
+                        fc = gauss_det(H, dim, c2);
+                        fd = gauss_det(H, dim, d);
+                        fc = fc < 0 ? -fc : fc;
+                        fd = fd < 0 ? -fd : fd;
+                        if (fc < fd) b = d;
+                        else a = c2;
+                        c2 = b - gr * (b - a);
+                        d = a + gr * (b - a);
+                    }
+                    mid = (a + b) * 0.5;
+                    fc = gauss_det(H, dim, mid);
+                    fc = fc < 0 ? -fc : fc;
+                    if (fc < 1e-6) {
+                        /* double root found */
+                        evals[n_evals++] = mid;
+                        evals[n_evals++] = mid;
+                    }
+                }
+            }
+        }
+
+        prev_det = curr_det;
+        prev_lam = lam;
+    }
+
+    return n_evals;
+}
+
+/*
+ * Sort eigenvalues and identify clusters (repeated eigenvalues).
+ * Two eigenvalues are "repeated" if they differ by less than tol.
+ */
+static void sort_doubles(double *arr, int n) {
+    int i, j;
+    double tmp;
+    for (i = 0; i < n - 1; i++)
+        for (j = i + 1; j < n; j++)
+            if (arr[j] < arr[i]) {
+                tmp = arr[i]; arr[i] = arr[j]; arr[j] = tmp;
+            }
+}
+
+/*
+ * Check geometric multiplicity at a given eigenvalue lambda.
+ * geo_mult = dim - rank(H - lambda*I)
+ */
+static int geometric_multiplicity(const int H[MAX_LS_DIM][MAX_LS_DIM],
+                                  int dim, double lambda) {
+    double work[MAX_LS_DIM][MAX_LS_DIM];
+    int i, j, k, pivot_row, rank;
+    double max_val, factor;
+    double eps = 1e-9;
+
+    /* M = H - lambda * I */
+    for (i = 0; i < dim; i++)
+        for (j = 0; j < dim; j++)
+            work[i][j] = (double)H[i][j] - (i == j ? lambda : 0.0);
+
+    rank = 0;
+    for (k = 0; k < dim; k++) {
+        pivot_row = -1;
+        max_val = eps;
+        for (i = rank; i < dim; i++) {
+            double av = work[i][k] < 0 ? -work[i][k] : work[i][k];
+            if (av > max_val) { max_val = av; pivot_row = i; }
+        }
+        if (pivot_row == -1) continue;
+
+        if (pivot_row != rank) {
+            for (j = 0; j < dim; j++) {
+                double tmp = work[rank][j];
+                work[rank][j] = work[pivot_row][j];
+                work[pivot_row][j] = tmp;
+            }
+        }
+
+        for (i = rank + 1; i < dim; i++) {
+            factor = work[i][k] / work[rank][k];
+            for (j = k + 1; j < dim; j++) {
+                work[i][j] -= factor * work[rank][j];
+            }
+        }
+        rank++;
+    }
+
+    return dim - rank;
+}
+
+/* ================================================================ */
+/* Part A Tests                                                      */
+/* ================================================================ */
+
+static void print_link_state(const LinkState *ls, int n) {
+    int i;
+    printf("  [");
+    for (i = 0; i < n; i++) {
+        if (i > 0) printf(", ");
+        printf("%d", ls->pair[i]);
+    }
+    printf("]\n");
+}
+
+static void print_matrix(const char *label, int M[MAX_LS_DIM][MAX_LS_DIM],
+                         int dim) {
+    int i, j;
+    printf("%s (%dx%d):\n", label, dim, dim);
+    for (i = 0; i < dim; i++) {
+        printf("  [");
+        for (j = 0; j < dim; j++) {
+            if (j > 0) printf(" ");
+            printf("%3d", M[i][j]);
+        }
+        printf("]\n");
+    }
+}
+
+static void test_link_state_enumeration(void) {
+    LinkState basis[MAX_LS_DIM];
+    int dim, i;
+
+    printf("\n=== Test: Link State Enumeration ===\n");
+
+    /* n=4: C_2 = 2 */
+    dim = enumerate_link_states(4, basis);
+    printf("n=4: dim = %d (expected 2)\n", dim);
+    for (i = 0; i < dim; i++) print_link_state(&basis[i], 4);
+    check("n=4 dim = C_2 = 2", dim == 2);
+
+    /* n=6: C_3 = 5 */
+    dim = enumerate_link_states(6, basis);
+    printf("n=6: dim = %d (expected 5)\n", dim);
+    for (i = 0; i < dim; i++) print_link_state(&basis[i], 6);
+    check("n=6 dim = C_3 = 5", dim == 5);
+
+    /* n=8: C_4 = 14 */
+    dim = enumerate_link_states(8, basis);
+    printf("n=8: dim = %d (expected 14)\n", dim);
+    check("n=8 dim = C_4 = 14", dim == 14);
+
+    /* n=10: C_5 = 42 */
+    dim = enumerate_link_states(10, basis);
+    printf("n=10: dim = %d (expected 42)\n", dim);
+    check("n=10 dim = C_5 = 42", dim == 42);
+
+    /* n=12: C_6 = 132 */
+    dim = enumerate_link_states(12, basis);
+    printf("n=12: dim = %d (expected 132)\n", dim);
+    check("n=12 dim = C_6 = 132", dim == 132);
+}
+
+static void test_ei_action(void) {
+    LinkState basis[MAX_LS_DIM];
+    LinkState out;
+    int dim, ok, target;
+
+    printf("\n=== Test: e_i Action on Link States ===\n");
+
+    /* n=4 basis: state 0 = {1,0,3,2} (01)(23), state 1 = {3,2,1,0} (03)(12) */
+    dim = enumerate_link_states(4, basis);
+
+    /* e_0 on state 0: sites 0,1 already paired -> killed */
+    ok = apply_ei(0, &basis[0], &out, 4);
+    check("e_0 kills state (01)(23)", ok == 0);
+
+    /* e_0 on state 1: site 0 paired with 3, site 1 paired with 2 */
+    /* reconnect: 0<->1, 3<->2 -> state (01)(23) = state 0 */
+    ok = apply_ei(0, &basis[1], &out, 4);
+    target = find_ls_index(&out, basis, dim, 4);
+    check("e_0 maps (03)(12) to (01)(23)", ok == 1 && target == 0);
+
+    /* e_1 on state 0: site 1 paired with 0, site 2 paired with 3 */
+    /* reconnect: 1<->2, 0<->3 -> state (03)(12) = state 1 */
+    ok = apply_ei(1, &basis[0], &out, 4);
+    target = find_ls_index(&out, basis, dim, 4);
+    check("e_1 maps (01)(23) to (03)(12)", ok == 1 && target == 1);
+
+    /* e_1 on state 1: sites 1,2 already paired -> killed */
+    ok = apply_ei(1, &basis[1], &out, 4);
+    check("e_1 kills state (03)(12)", ok == 0);
+
+    /* e_2 on state 0: site 2 paired with 3 -> killed */
+    ok = apply_ei(2, &basis[0], &out, 4);
+    check("e_2 kills state (01)(23)", ok == 0);
+
+    /* e_2 on state 1: site 2 paired with 1, site 3 paired with 0 */
+    /* reconnect: 2<->3, 1<->0 -> state (01)(23) = state 0 */
+    ok = apply_ei(2, &basis[1], &out, 4);
+    target = find_ls_index(&out, basis, dim, 4);
+    check("e_2 maps (03)(12) to (01)(23)", ok == 1 && target == 0);
+}
+
+static void test_tl_relations(void) {
+    LinkState basis[MAX_LS_DIM];
+    LinkState tmp, result1, result2;
+    int dim, n, gen, col, ok1, ok2, ok3;
+    int all_ok;
+
+    printf("\n=== Test: TL Relations on Standard Module ===\n");
+
+    n = 6;
+    dim = enumerate_link_states(n, basis);
+
+    /* e_i^2 = delta * e_i = 0 at delta=0 */
+    all_ok = 1;
+    for (gen = 0; gen < n - 1; gen++) {
+        for (col = 0; col < dim; col++) {
+            ok1 = apply_ei(gen, &basis[col], &tmp, n);
+            if (ok1) {
+                ok2 = apply_ei(gen, &tmp, &result1, n);
+                /* e_i^2 should kill (delta=0) */
+                if (ok2 != 0) {
+                    printf("  VIOLATION: e_%d^2 on state %d not killed\n",
+                           gen, col);
+                    all_ok = 0;
+                }
+            }
+            /* if first application killed, e_i^2 = 0 trivially */
+        }
+    }
+    check("e_i^2 = 0 for all generators (n=6)", all_ok);
+
+    /* e_i * e_j = e_j * e_i for |i-j| >= 2 */
+    all_ok = 1;
+    for (gen = 0; gen < n - 3; gen++) {
+        int gen2 = gen + 2;  /* |gen - gen2| = 2 */
+        for (col = 0; col < dim; col++) {
+            int t1 = -1, t2 = -1;
+
+            /* e_gen * e_gen2 on |col> */
+            ok1 = apply_ei(gen2, &basis[col], &tmp, n);
+            if (ok1) {
+                ok2 = apply_ei(gen, &tmp, &result1, n);
+                if (ok2) t1 = find_ls_index(&result1, basis, dim, n);
+            }
+
+            /* e_gen2 * e_gen on |col> */
+            ok1 = apply_ei(gen, &basis[col], &tmp, n);
+            if (ok1) {
+                ok2 = apply_ei(gen2, &tmp, &result2, n);
+                if (ok2) t2 = find_ls_index(&result2, basis, dim, n);
+            }
+
+            if (t1 != t2) {
+                printf("  VIOLATION: e_%d e_%d != e_%d e_%d on state %d\n",
+                       gen, gen2, gen2, gen, col);
+                all_ok = 0;
+            }
+        }
+    }
+    check("e_i * e_j = e_j * e_i for |i-j|>=2 (n=6)", all_ok);
+
+    /* e_i * e_{i+1} * e_i = e_i */
+    all_ok = 1;
+    for (gen = 0; gen < n - 2; gen++) {
+        for (col = 0; col < dim; col++) {
+            int lhs = -1, rhs = -1;
+
+            /* LHS: e_i * e_{i+1} * e_i on |col> */
+            ok1 = apply_ei(gen, &basis[col], &tmp, n);
+            if (ok1) {
+                ok2 = apply_ei(gen + 1, &tmp, &result1, n);
+                if (ok2) {
+                    ok3 = apply_ei(gen, &result1, &result2, n);
+                    if (ok3) lhs = find_ls_index(&result2, basis, dim, n);
+                }
+            }
+
+            /* RHS: e_i on |col> */
+            ok1 = apply_ei(gen, &basis[col], &tmp, n);
+            if (ok1) rhs = find_ls_index(&tmp, basis, dim, n);
+
+            if (lhs != rhs) {
+                printf("  VIOLATION: e_%d e_%d e_%d != e_%d on state %d (lhs=%d rhs=%d)\n",
+                       gen, gen+1, gen, gen, col, lhs, rhs);
+                all_ok = 0;
+            }
+        }
+    }
+    check("e_i * e_{i+1} * e_i = e_i (n=6)", all_ok);
+}
+
+static void test_hamiltonian(void) {
+    LinkState basis[MAX_LS_DIM];
+    int H[MAX_LS_DIM][MAX_LS_DIM];
+    int dim;
+
+    printf("\n=== Test: Hamiltonian Construction ===\n");
+
+    /* n=4 */
+    dim = enumerate_link_states(4, basis);
+    build_hamiltonian(4, basis, dim, H);
+    print_matrix("H (n=4)", H, dim);
+
+    /* For n=4 with basis {(01)(23), (03)(12)}:
+     * e_0: kills state 0, maps state 1 -> state 0
+     * e_1: maps state 0 -> state 1, kills state 1
+     * e_2: kills state 0, maps state 1 -> state 0
+     *
+     * H = -(e_0 + e_1 + e_2):
+     *   H[0][0] = 0, H[0][1] = -(1+0+1) = -2
+     *   H[1][0] = -(0+1+0) = -1, H[1][1] = 0
+     */
+    check("H(n=4)[0][0] = 0", H[0][0] == 0);
+    check("H(n=4)[0][1] = -2", H[0][1] == -2);
+    check("H(n=4)[1][0] = -1", H[1][0] == -1);
+    check("H(n=4)[1][1] = 0", H[1][1] == 0);
+
+    /* eigenvalues of [[0,-2],[-1,0]] are +-sqrt(2) */
+    /* det = 0*0 - (-2)(-1) = -2, tr = 0 */
+    /* lambda^2 = 2, lambda = +-sqrt(2) */
+    printf("  Expected eigenvalues: +/-sqrt(2) = +/-1.4142...\n");
+    printf("  (fully diagonalizable, no Jordan blocks at n=4)\n");
+
+    /* n=6 */
+    dim = enumerate_link_states(6, basis);
+    build_hamiltonian(6, basis, dim, H);
+    print_matrix("H (n=6)", H, dim);
+}
+
+/* ================================================================ */
+/* Part B Tests: Bareiss Rank + Jordan Detection                    */
+/* ================================================================ */
+
+static void test_gauss_rank(void) {
+    int M[MAX_LS_DIM][MAX_LS_DIM];
+
+    printf("\n=== Test: Bareiss Rank ===\n");
+
+    memset(M, 0, sizeof(M));
+
+    /* 2x2 identity: rank 2 */
+    M[0][0] = 1; M[1][1] = 1;
+    check("rank(I_2) = 2", gauss_rank(M, 2) == 2);
+
+    /* 2x2 zero: rank 0 */
+    memset(M, 0, sizeof(M));
+    check("rank(0_2) = 0", gauss_rank(M, 2) == 0);
+
+    /* 3x3 with rank 2 (row 2 = row 0 + row 1) */
+    memset(M, 0, sizeof(M));
+    M[0][0] = 1; M[0][1] = 2; M[0][2] = 3;
+    M[1][0] = 4; M[1][1] = 5; M[1][2] = 6;
+    M[2][0] = 5; M[2][1] = 7; M[2][2] = 9;
+    check("rank([[1,2,3],[4,5,6],[5,7,9]]) = 2", gauss_rank(M, 3) == 2);
+
+    /* n=4 Hamiltonian: [[0,-2],[-1,0]], rank should be 2 (det=-2 != 0) */
+    {
+        LinkState basis[MAX_LS_DIM];
+        int H[MAX_LS_DIM][MAX_LS_DIM];
+        int dim = enumerate_link_states(4, basis);
+        build_hamiltonian(4, basis, dim, H);
+        check("rank(H, n=4) = 2 (full rank)", gauss_rank(H, dim) == 2);
+    }
+}
+
+static void test_jordan_detection(void) {
+    LinkState basis[MAX_LS_DIM];
+    int H[MAX_LS_DIM][MAX_LS_DIM];
+    int dim;
+    int r1, r2, n1, n2;
+    int sizes[] = {4, 6, 8, 10, 12};
+    int expected_dims[] = {2, 5, 14, 42, 132};
+    int num_sizes = 5;
+    int s;
+
+    printf("\n=== Jordan Block Detection at lambda=0 ===\n");
+    printf("%-4s  %-5s  %-7s  %-7s  %-8s  %-8s  %-8s\n",
+           "n", "dim", "rank(H)", "rank(H2)", "null(H)", "null(H2)", "Jordan?");
+    printf("----  -----  -------  --------  --------  --------  --------\n");
+
+    for (s = 0; s < num_sizes; s++) {
+        int n = sizes[s];
+
+        /* skip n=12 for now to avoid stack issues with 132x132 mat_mul */
+        if (n > 10) {
+            printf("%-4d  %-5d  (skipped -- stack size)\n", n, expected_dims[s]);
+            continue;
+        }
+
+        dim = enumerate_link_states(n, basis);
+        build_hamiltonian(n, basis, dim, H);
+        jordan_analysis(H, dim, 0, &r1, &r2, &n1, &n2);
+
+        printf("%-4d  %-5d  %-7d  %-8d  %-8d  %-8d  %s\n",
+               n, dim, r1, r2, n1, n2,
+               n2 > n1 ? "YES" : "no");
+
+        /* sanity: ker(H) must be subset of ker(H^2), so null2 >= null1 */
+        if (n2 < n1) {
+            printf("  WARNING: null(H^2) < null(H) -- arithmetic error!\n");
+        }
+
+        if (n == 4) {
+            check("n=4: rank(H)=2, full rank", r1 == 2);
+            check("n=4: no Jordan blocks at 0", n2 == n1);
+        }
+        if (n == 6) {
+            /* rows 1,2 identical => rank <= 4, so nullity >= 1 */
+            check("n=6: H has nontrivial kernel", n1 >= 1);
+        }
+    }
+}
+
+/* ================================================================ */
+/* Part C Tests: Diagonalizability                                  */
+/* ================================================================ */
+
+static void test_char_poly(void) {
+    int M[MAX_LS_DIM][MAX_LS_DIM];
+    long cpoly[MAX_LS_DIM + 2];
+
+    printf("\n=== Test: Characteristic Polynomial (mod p) ===\n");
+
+    /* 2x2 identity: chi = lambda^2 - 2*lambda + 1 = (lambda-1)^2 */
+    memset(M, 0, sizeof(M));
+    M[0][0] = 1; M[1][1] = 1;
+    char_poly_mod(M, 2, cpoly);
+    /* cpoly[2]=1, cpoly[1]=-2 mod p, cpoly[0]=1 */
+    check("chi(I_2): const term = 1", cpoly[0] == 1);
+    check("chi(I_2): linear term = p-2", cpoly[1] == MOD_P - 2);
+    check("chi(I_2): leading = 1", cpoly[2] == 1);
+
+    /* 2x2 [[0,-2],[-1,0]]: chi = lambda^2 - 2 */
+    /* cpoly[0] = -2 mod p, cpoly[1] = 0, cpoly[2] = 1 */
+    memset(M, 0, sizeof(M));
+    M[0][1] = -2; M[1][0] = -1;
+    char_poly_mod(M, 2, cpoly);
+    check("chi(H_4): const = -2 mod p", cpoly[0] == MOD_P - 2);
+    check("chi(H_4): linear = 0", cpoly[1] == 0);
+    check("chi(H_4): leading = 1", cpoly[2] == 1);
+
+    /* For H_4: chi = lambda^2 - 2, chi' = 2*lambda
+     * gcd(lambda^2 - 2, 2*lambda) = gcd depends on whether lambda divides lambda^2 - 2
+     * lambda^2 - 2 mod (2*lambda) ... since 2 is invertible mod p, gcd = 1 (no repeated roots)
+     * So H_4 should be diagonalizable */
+}
+
+static void test_diagonalizability(void) {
+    LinkState basis[MAX_LS_DIM];
+    int H[MAX_LS_DIM][MAX_LS_DIM];
+    int dim;
+    int sizes[] = {4, 6, 8, 10, 12};
+    int num_sizes = 5;
+    int s, diag;
+
+    printf("\n=== Diagonalizability Test (all eigenvalues) ===\n");
+    printf("%-4s  %-5s  %-20s  %-20s\n", "n", "dim",
+           "char poly sq-free?", "min poly sq-free?");
+    printf("----  -----  --------------------  --------------------\n");
+
+    for (s = 0; s < num_sizes; s++) {
+        int n = sizes[s];
+        int jordan;
+        dim = enumerate_link_states(n, basis);
+        build_hamiltonian(n, basis, dim, H);
+        diag = check_diagonalizable(H, dim);
+        jordan = has_jordan_blocks(H, dim);
+        printf("%-4d  %-5d  %-20s  %-20s\n", n, dim,
+               diag ? "YES (no repeated)" : "NO (repeated roots)",
+               jordan ? "NO -> JORDAN BLOCKS" : "YES -> diagonalizable");
+
+        if (n == 4) {
+            check("H(n=4) is diagonalizable", diag == 1);
+            check("H(n=4) no Jordan blocks", jordan == 0);
+        }
+    }
+}
+
+/* ================================================================ */
+/* Part D Tests: Eigenvalues + Jordan Block Identification          */
+/* ================================================================ */
+
+/*
+ * For n=12, the sweep misses double roots. Use a rank-based scan instead:
+ * sweep lambda and look for where rank(H - lambda*I) drops below dim.
+ * Where rank drops to dim-k, the eigenvalue has algebraic multiplicity >= k.
+ */
+static void scan_rank_drops(const int H[MAX_LS_DIM][MAX_LS_DIM], int dim) {
+    double lam;
+    double step = 0.0025;
+    int prev_geo = 0;
+    int n_jordan = 0;
+    int n_degen = 0;
+
+    printf("  Rank-drop scan for double roots:\n");
+
+    for (lam = -10.0; lam <= 10.0; lam += step) {
+        int geo = geometric_multiplicity(H, dim, lam);
+        if (geo >= 2 && prev_geo < 2) {
+            /* entering a region where geo_mult >= 2 */
+            /* refine to find the exact eigenvalue */
+            double a = lam - step, b = lam;
+            double mid_lam;
+            int iter, best_geo = geo;
+            for (iter = 0; iter < 40; iter++) {
+                mid_lam = (a + b) * 0.5;
+                if (geometric_multiplicity(H, dim, mid_lam) >= 2)
+                    b = mid_lam;
+                else
+                    a = mid_lam;
+            }
+            /* now scan right to find the peak */
+            {
+                double peak_lam = b;
+                int peak_geo = geometric_multiplicity(H, dim, b);
+                double test_lam;
+                for (test_lam = b; test_lam < b + 0.1; test_lam += 0.0001) {
+                    int g = geometric_multiplicity(H, dim, test_lam);
+                    if (g > peak_geo) { peak_geo = g; peak_lam = test_lam; }
+                    if (g < 2) break;
+                }
+                best_geo = peak_geo;
+                mid_lam = peak_lam;
+            }
+            printf("    lambda ~ %10.6f  geo_mult = %d", mid_lam, best_geo);
+            /* algebraic multiplicity >= geo_mult for a repeated root */
+            /* For Jordan: need alg > geo. We know alg >= 2 (repeated root). */
+            /* check if this is a Jordan block or degenerate-diagonalizable */
+            /* At this lambda, geo_mult = dim - rank(H - lambda*I) */
+            /* We'd need the exact algebraic multiplicity from the char poly */
+            /* For now, flag anything with geo_mult >= 2 */
+            if (best_geo >= 2) {
+                n_degen++;
+                printf("  [degenerate eigenvalue]\n");
+            }
+        }
+        prev_geo = geo;
+    }
+
+    printf("  Total degenerate eigenvalues found: %d\n", n_degen);
+    (void)n_jordan;
+}
+
+static void test_eigenvalues_and_jordan(void) {
+    LinkState basis[MAX_LS_DIM];
+    int H[MAX_LS_DIM][MAX_LS_DIM];
+    double evals[MAX_LS_DIM];
+    int dim, n_evals, i;
+    int sizes[] = {4, 6, 8, 10, 12};
+    int num_sizes = 5;
+    int s;
+    double tol = 1e-6;
+
+    printf("\n=== Eigenvalues + Jordan Block Identification ===\n");
+
+    for (s = 0; s < num_sizes; s++) {
+        int n = sizes[s];
+        int alg_mult, geo_mult;
+        dim = enumerate_link_states(n, basis);
+        build_hamiltonian(n, basis, dim, H);
+
+        n_evals = find_eigenvalues_sweep(H, dim, evals);
+        sort_doubles(evals, n_evals);
+
+        printf("\nn=%d (dim=%d): found %d eigenvalues\n", n, dim, n_evals);
+
+        /* print eigenvalues and identify clusters */
+        i = 0;
+        while (i < n_evals) {
+            double lam = evals[i];
+            alg_mult = 1;
+            /* count how many eigenvalues in this cluster */
+            while (i + alg_mult < n_evals &&
+                   evals[i + alg_mult] - lam < tol) {
+                alg_mult++;
+            }
+
+            if (alg_mult > 1) {
+                /* repeated eigenvalue — check geometric multiplicity */
+                double lam_avg = 0.0;
+                int j;
+                for (j = 0; j < alg_mult; j++)
+                    lam_avg += evals[i + j];
+                lam_avg /= (double)alg_mult;
+
+                geo_mult = geometric_multiplicity(H, dim, lam_avg);
+                printf("  lambda = %10.6f  alg_mult = %d  geo_mult = %d",
+                       lam_avg, alg_mult, geo_mult);
+                if (geo_mult < alg_mult) {
+                    printf("  *** JORDAN BLOCK (size >= %d) ***",
+                           alg_mult - geo_mult + 1);
+                } else {
+                    printf("  (degenerate but diagonalizable)");
+                }
+                printf("\n");
+            } else {
+                printf("  lambda = %10.6f  (simple)\n", lam);
+            }
+
+            i += alg_mult;
+        }
+
+        /* eigenvalue count check */
+        if (n_evals != dim) {
+            printf("  WARNING: found %d eigenvalues but dim=%d"
+                   " (missing %d, likely double roots or complex)\n",
+                   n_evals, dim, dim - n_evals);
+
+            /* if significant number missing, run rank-drop scan */
+            if (dim - n_evals > 2) {
+                scan_rank_drops(H, dim);
+            }
+        }
+    }
+}
+
+/* ================================================================ */
+/* Double-precision null space extraction                           */
+/* ================================================================ */
+
+/*
+ * Same algorithm as extract_null_space but takes double input.
+ * Needed for shifted matrices (L - lambda*I) with irrational lambda.
+ */
+static int extract_null_space_d(
+        const double M[MAX_ALG_DIM][MAX_ALG_DIM], int dim,
+        double null_vecs[MAX_ALG_DIM][MAX_ALG_DIM]) {
+    static double work[MAX_ALG_DIM][MAX_ALG_DIM];
+    int pivot_col[MAX_ALG_DIM];
+    int is_pivot[MAX_ALG_DIM];
+    int i, j, k, pivot_row, rank, n_null;
+    double max_val, factor;
+    double eps = 1e-9;
+
+    for (i = 0; i < dim; i++)
+        for (j = 0; j < dim; j++)
+            work[i][j] = M[i][j];
+
+    memset(pivot_col, -1, sizeof(pivot_col));
+    memset(is_pivot, 0, sizeof(is_pivot));
+    rank = 0;
+
+    for (j = 0; j < dim; j++) {
+        pivot_row = -1;
+        max_val = eps;
+        for (i = rank; i < dim; i++) {
+            double av = work[i][j] < 0 ? -work[i][j] : work[i][j];
+            if (av > max_val) { max_val = av; pivot_row = i; }
+        }
+        if (pivot_row == -1) continue;
+
+        if (pivot_row != rank) {
+            for (k = 0; k < dim; k++) {
+                double tmp = work[rank][k];
+                work[rank][k] = work[pivot_row][k];
+                work[pivot_row][k] = tmp;
+            }
+        }
+
+        pivot_col[rank] = j;
+        is_pivot[j] = 1;
+
+        factor = work[rank][j];
+        for (k = 0; k < dim; k++)
+            work[rank][k] /= factor;
+
+        for (i = 0; i < dim; i++) {
+            if (i == rank) continue;
+            factor = work[i][j];
+            if (factor > -1e-15 && factor < 1e-15) continue;
+            for (k = 0; k < dim; k++)
+                work[i][k] -= factor * work[rank][k];
+        }
+        rank++;
+    }
+
+    n_null = 0;
+    for (j = 0; j < dim; j++) {
+        if (is_pivot[j]) continue;
+        for (i = 0; i < dim; i++)
+            null_vecs[n_null][i] = 0.0;
+        null_vecs[n_null][j] = 1.0;
+        for (k = 0; k < rank; k++)
+            null_vecs[n_null][pivot_col[k]] = -work[k][j];
+        n_null++;
+    }
+
+    return n_null;
+}
+
+/* ================================================================ */
+/* Phase 4: Spin Chain Representation at q = i                      */
+/* ================================================================ */
+
+/*
+ * The algebraic Gram (fixpt trace) form is degenerate at delta=0:
+ * almost all diagram products create loops -> 0. This kills <T|G|t>.
+ *
+ * Fix: use the TL representation on the spin chain (C^2)^{otimes n}
+ * at q = i (so delta = q + q^{-1} = 0). The standard inner product
+ * on the spin chain is non-degenerate.
+ *
+ * For the indecomposability parameter b, we use the CONFORMAL bilinear
+ * form x^T * y (no complex conjugation), which is the appropriate
+ * form for LCFT / non-Hermitian systems.
+ *
+ * Generators e_i act on sites (i, i+1) via the q-deformed singlet
+ * projector. At q = i:
+ *   e_i |uu> = 0
+ *   e_i |ud> = -i|ud> + |du>
+ *   e_i |du> = |ud> + i|du>
+ *   e_i |dd> = 0
+ * where u=up, d=down.
+ *
+ * We restrict to the Sz = 0 sector (n/2 up, n/2 down) since the
+ * ground state and its logarithmic partner live there.
+ */
+
+/* Complex number type (C89 has no <complex.h>) */
+typedef struct { double re, im; } Cx;
+
+static Cx cx(double r, double i) { Cx z; z.re = r; z.im = i; return z; }
+static Cx cx_add(Cx a, Cx b) { return cx(a.re+b.re, a.im+b.im); }
+static Cx cx_sub(Cx a, Cx b) { return cx(a.re-b.re, a.im-b.im); }
+static Cx cx_mul(Cx a, Cx b) {
+    return cx(a.re*b.re - a.im*b.im, a.re*b.im + a.im*b.re);
+}
+static Cx cx_neg(Cx a) { return cx(-a.re, -a.im); }
+static double cx_abs2(Cx a) { return a.re*a.re + a.im*a.im; }
+static double cx_abs(Cx a) { return sqrt(cx_abs2(a)); }
+static Cx cx_div(Cx a, Cx b) {
+    double d = cx_abs2(b);
+    return cx((a.re*b.re + a.im*b.im)/d, (a.im*b.re - a.re*b.im)/d);
+}
+
+#define MAX_SC_DIM 70  /* C(10,5) = 252, but we only need n<=8: C(8,4)=70 */
+
+/*
+ * Enumerate Sz=0 basis states for n sites (n/2 up, n/2 down).
+ * Each state is an int with bit k=1 meaning site k is spin-up.
+ * Returns count. States are in lex order.
+ */
+static int sc_enumerate_sz0(int n, int states[MAX_SC_DIM]) {
+    int half = n / 2;
+    int total = 1 << n;
+    int count = 0;
+    int s, k, nup;
+    for (s = 0; s < total; s++) {
+        nup = 0;
+        for (k = 0; k < n; k++)
+            if (s & (1 << k)) nup++;
+        if (nup == half)
+            states[count++] = s;
+    }
+    return count;
+}
+
+/*
+ * Find index of state s in the basis array. Returns -1 if not found.
+ */
+static int sc_find_idx(int s, const int *states, int dim) {
+    int k;
+    for (k = 0; k < dim; k++)
+        if (states[k] == s) return k;
+    return -1;
+}
+
+/*
+ * Apply TL generator e_i to a spin state (acting on sites i, i+1)
+ * at q = i. Returns number of output terms (0-2).
+ *
+ * The q-singlet projector at q = i:
+ *   e_i = (1/delta) * (q^{-1} |ud> - |du>) (<ud| - q<du|)
+ *
+ * But delta=0 at q=i! This looks divergent.
+ *
+ * The correct formulation uses the Temperley-Lieb algebra relation
+ * directly. The action of e_i on the tensor product is:
+ *
+ *   e_i |uu> = 0,  e_i |dd> = 0
+ *   e_i |ud> = q^{-1}|ud> - |du>
+ *   e_i |du> = -q|du> + |ud>
+ *
+ * Verification: e_i^2 = (q+q^{-1}) e_i = delta * e_i.
+ * At q=i: q^{-1} = -i, q+q^{-1} = 0 = delta. Check.
+ *
+ * Let's verify e_i^2 on |ud>:
+ *   e_i|ud> = -i|ud> - |du>
+ *   e_i(-i|ud> - |du>) = -i(-i|ud> - |du>) + (-i|du> + |ud>)
+ *                       = -1*|ud> + i|du> - i|du> + |ud> = 0 = delta*e_i|ud>. Correct!
+ *
+ * So: at q = i (q^{-1} = -i):
+ *   e_i |ud> = -i|ud> - |du>
+ *   e_i |du> = -i|du> + |ud>
+ */
+static int sc_apply_ei(int gen_i, int state, int n,
+                       int out_states[2], Cx out_coeffs[2]) {
+    int si   = (state >> gen_i) & 1;       /* spin at site i */
+    int si1  = (state >> (gen_i + 1)) & 1; /* spin at site i+1 */
+
+    (void)n;
+
+    if (si == si1) return 0;  /* uu or dd -> 0 */
+
+    if (si == 1 && si1 == 0) {
+        /* |ud> -> q|ud> + |du> = i|ud> + |du> */
+        int flipped = state ^ (1 << gen_i) ^ (1 << (gen_i + 1));
+        out_states[0] = state;
+        out_coeffs[0] = cx(0.0, 1.0);   /* +i = q */
+        out_states[1] = flipped;
+        out_coeffs[1] = cx(1.0, 0.0);   /* +1 */
+        return 2;
+    }
+    /* si==0, si1==1: |du> -> |ud> + q^{-1}|du> = |ud> - i|du> */
+    {
+        int flipped = state ^ (1 << gen_i) ^ (1 << (gen_i + 1));
+        out_states[0] = state;
+        out_coeffs[0] = cx(0.0, -1.0);  /* -i */
+        out_states[1] = flipped;
+        out_coeffs[1] = cx(1.0, 0.0);   /* +1 */
+        return 2;
+    }
+}
+
+/*
+ * Build TL generator matrix e_i on the Sz=0 spin chain.
+ */
+static void sc_build_generator(int gen_i, int n,
+                                const int *states, int dim,
+                                Cx E[MAX_SC_DIM][MAX_SC_DIM]) {
+    int col, nt, t;
+    int out_s[2];
+    Cx out_c[2];
+
+    memset(E, 0, sizeof(Cx) * (size_t)MAX_SC_DIM * (size_t)MAX_SC_DIM);
+
+    for (col = 0; col < dim; col++) {
+        nt = sc_apply_ei(gen_i, states[col], n, out_s, out_c);
+        for (t = 0; t < nt; t++) {
+            int row = sc_find_idx(out_s[t], states, dim);
+            if (row >= 0)
+                E[row][col] = cx_add(E[row][col], out_c[t]);
+        }
+    }
+}
+
+/*
+ * Build Hamiltonian H = -(e_0 + e_1 + ... + e_{n-2}) on Sz=0 sector.
+ */
+static void sc_build_hamiltonian(int n, const int *states, int dim,
+                                  Cx H[MAX_SC_DIM][MAX_SC_DIM]) {
+    int gen, i, j;
+    static Cx Eg[MAX_SC_DIM][MAX_SC_DIM];
+
+    memset(H, 0, sizeof(Cx) * (size_t)MAX_SC_DIM * (size_t)MAX_SC_DIM);
+
+    for (gen = 0; gen < n - 1; gen++) {
+        sc_build_generator(gen, n, states, dim, Eg);
+        for (i = 0; i < dim; i++)
+            for (j = 0; j < dim; j++)
+                H[i][j] = cx_sub(H[i][j], Eg[i][j]);
+    }
+}
+
+/*
+ * Complex matrix multiply: C = A * B (dim x dim).
+ */
+static void cx_mat_mul(const Cx A[MAX_SC_DIM][MAX_SC_DIM],
+                        const Cx B[MAX_SC_DIM][MAX_SC_DIM],
+                        Cx C[MAX_SC_DIM][MAX_SC_DIM], int dim) {
+    int i, j, k;
+    for (i = 0; i < dim; i++)
+        for (j = 0; j < dim; j++) {
+            Cx s = cx(0.0, 0.0);
+            for (k = 0; k < dim; k++)
+                s = cx_add(s, cx_mul(A[i][k], B[k][j]));
+            C[i][j] = s;
+        }
+}
+
+/*
+ * Complex matrix-vector multiply: y = M * x.
+ */
+static void cx_mat_vec(const Cx M[MAX_SC_DIM][MAX_SC_DIM],
+                        const Cx *x, Cx *y, int dim) {
+    int i, j;
+    for (i = 0; i < dim; i++) {
+        y[i] = cx(0.0, 0.0);
+        for (j = 0; j < dim; j++)
+            y[i] = cx_add(y[i], cx_mul(M[i][j], x[j]));
+    }
+}
+
+/*
+ * Complex RREF + null space extraction.
+ * Returns number of null vectors.
+ */
+static int cx_null_space(const Cx M[MAX_SC_DIM][MAX_SC_DIM], int dim,
+                          Cx null_vecs[MAX_SC_DIM][MAX_SC_DIM]) {
+    static Cx work[MAX_SC_DIM][MAX_SC_DIM];
+    int pivot_col[MAX_SC_DIM];
+    int is_pivot[MAX_SC_DIM];
+    int i, j, k, pivot_row, rank, n_null;
+    double eps = 1e-9;
+
+    for (i = 0; i < dim; i++)
+        for (j = 0; j < dim; j++)
+            work[i][j] = M[i][j];
+
+    memset(pivot_col, -1, sizeof(pivot_col));
+    memset(is_pivot, 0, sizeof(is_pivot));
+    rank = 0;
+
+    for (j = 0; j < dim; j++) {
+        double best = eps;
+        pivot_row = -1;
+        for (i = rank; i < dim; i++) {
+            double a = cx_abs(work[i][j]);
+            if (a > best) { best = a; pivot_row = i; }
+        }
+        if (pivot_row == -1) continue;
+
+        if (pivot_row != rank) {
+            for (k = 0; k < dim; k++) {
+                Cx tmp = work[rank][k];
+                work[rank][k] = work[pivot_row][k];
+                work[pivot_row][k] = tmp;
+            }
+        }
+
+        pivot_col[rank] = j;
+        is_pivot[j] = 1;
+
+        {
+            Cx piv = work[rank][j];
+            for (k = 0; k < dim; k++)
+                work[rank][k] = cx_div(work[rank][k], piv);
+        }
+
+        for (i = 0; i < dim; i++) {
+            Cx f;
+            if (i == rank) continue;
+            f = work[i][j];
+            if (cx_abs(f) < 1e-15) continue;
+            for (k = 0; k < dim; k++)
+                work[i][k] = cx_sub(work[i][k], cx_mul(f, work[rank][k]));
+        }
+        rank++;
+    }
+
+    n_null = 0;
+    for (j = 0; j < dim; j++) {
+        if (is_pivot[j]) continue;
+        for (i = 0; i < dim; i++)
+            null_vecs[n_null][i] = cx(0.0, 0.0);
+        null_vecs[n_null][j] = cx(1.0, 0.0);
+        for (k = 0; k < rank; k++)
+            null_vecs[n_null][pivot_col[k]] = cx_neg(work[k][j]);
+        n_null++;
+    }
+
+    return n_null;
+}
+
+/*
+ * Verify TL relations on the spin chain at q=i.
+ * Check: e_i^2 = delta * e_i (= 0 at delta=0).
+ * Check: e_i e_j = e_j e_i for |i-j| >= 2.
+ * Check: e_i e_{i+1} e_i = e_i (braid relation).
+ */
+static void test_sc_tl_relations(void) {
+    int n = 4;
+    int states[MAX_SC_DIM];
+    int dim;
+    static Cx E[3][MAX_SC_DIM][MAX_SC_DIM];
+    static Cx prod[MAX_SC_DIM][MAX_SC_DIM];
+    int gen, i, j;
+    double max_err;
+
+    printf("\n=== Spin Chain TL Relations (n=%d, q=i) ===\n", n);
+
+    dim = sc_enumerate_sz0(n, states);
+    printf("Sz=0 dim = %d\n", dim);
+
+    for (gen = 0; gen < n - 1; gen++)
+        sc_build_generator(gen, n, states, dim, E[gen]);
+
+    /* Check e_i^2 = 0 */
+    {
+        int all_ok = 1;
+        for (gen = 0; gen < n - 1; gen++) {
+            cx_mat_mul(E[gen], E[gen], prod, dim);
+            max_err = 0.0;
+            for (i = 0; i < dim; i++)
+                for (j = 0; j < dim; j++) {
+                    double e = cx_abs(prod[i][j]);
+                    if (e > max_err) max_err = e;
+                }
+            printf("  e_%d^2: max|entry| = %.2e %s\n",
+                   gen, max_err, max_err < 1e-10 ? "OK" : "FAIL");
+            if (max_err >= 1e-10) all_ok = 0;
+        }
+        check("e_i^2 = 0 (all generators)", all_ok);
+    }
+
+    /* Check braid: e_0 e_1 e_0 = e_0 */
+    {
+        static Cx tmp[MAX_SC_DIM][MAX_SC_DIM];
+        cx_mat_mul(E[0], E[1], tmp, dim);
+        cx_mat_mul(tmp, E[0], prod, dim);
+        max_err = 0.0;
+        for (i = 0; i < dim; i++)
+            for (j = 0; j < dim; j++) {
+                double e = cx_abs(cx_sub(prod[i][j], E[0][i][j]));
+                if (e > max_err) max_err = e;
+            }
+        printf("  e_0 e_1 e_0 - e_0: max err = %.2e %s\n",
+               max_err, max_err < 1e-10 ? "OK" : "FAIL");
+        check("e_0 e_1 e_0 = e_0 (braid)", max_err < 1e-10);
+    }
+
+    /* Check far commutativity: e_0 e_2 = e_2 e_0 (n>=4) */
+    if (n >= 4) {
+        static Cx ab[MAX_SC_DIM][MAX_SC_DIM];
+        static Cx ba[MAX_SC_DIM][MAX_SC_DIM];
+        cx_mat_mul(E[0], E[2], ab, dim);
+        cx_mat_mul(E[2], E[0], ba, dim);
+        max_err = 0.0;
+        for (i = 0; i < dim; i++)
+            for (j = 0; j < dim; j++) {
+                double e = cx_abs(cx_sub(ab[i][j], ba[i][j]));
+                if (e > max_err) max_err = e;
+            }
+        printf("  e_0 e_2 - e_2 e_0: max err = %.2e %s\n",
+               max_err, max_err < 1e-10 ? "OK" : "FAIL");
+        check("e_0 e_2 = e_2 e_0 (far comm)", max_err < 1e-10);
+    }
+}
+
+/*
+ * Complex LU determinant: compute |det(A)| and the determinant
+ * using partial-pivoting LU decomposition.
+ */
+static double cx_absdet(const Cx A[MAX_SC_DIM][MAX_SC_DIM],
+                         int dim) {
+    static Cx work[MAX_SC_DIM][MAX_SC_DIM];
+    int i, j, k, pivot;
+    double det_abs = 1.0;
+
+    for (i = 0; i < dim; i++)
+        for (j = 0; j < dim; j++)
+            work[i][j] = A[i][j];
+
+    for (k = 0; k < dim; k++) {
+        double best = 0.0;
+        pivot = k;
+        for (i = k; i < dim; i++) {
+            double a = cx_abs(work[i][k]);
+            if (a > best) { best = a; pivot = i; }
+        }
+        if (best < 1e-15) return 0.0;
+
+        if (pivot != k) {
+            for (j = 0; j < dim; j++) {
+                Cx tmp = work[k][j];
+                work[k][j] = work[pivot][j];
+                work[pivot][j] = tmp;
+            }
+        }
+
+        det_abs *= cx_abs(work[k][k]);
+
+        for (i = k + 1; i < dim; i++) {
+            Cx f = cx_div(work[i][k], work[k][k]);
+            for (j = k + 1; j < dim; j++)
+                work[i][j] = cx_sub(work[i][j],
+                    cx_mul(f, work[k][j]));
+            work[i][k] = cx(0, 0);
+        }
+    }
+    return det_abs;
+}
+
+/*
+ * Helper: evaluate |det(A - x*I)| for real x.
+ */
+static double eval_absdet_at(const Cx A[MAX_SC_DIM][MAX_SC_DIM],
+                              int dim, double x) {
+    static Cx shifted[MAX_SC_DIM][MAX_SC_DIM];
+    int i, j;
+    for (i = 0; i < dim; i++)
+        for (j = 0; j < dim; j++)
+            shifted[i][j] = cx_sub(A[i][j],
+                i == j ? cx(x, 0) : cx(0, 0));
+    return cx_absdet(shifted, dim);
+}
+
+/*
+ * Find all REAL eigenvalues of a complex matrix by scanning
+ * |det(A - x*I)| along the real axis.
+ *
+ * Strategy: evaluate |det| on a fine grid, detect LOCAL MINIMA
+ * (three-point test: d[k-1] >= d[k] <= d[k+1]), then refine
+ * minima that are close to zero via golden-section search.
+ * This correctly handles both simple zeros (V-shaped) and
+ * double/higher-multiplicity zeros (U-shaped touching zero).
+ */
+static int cx_find_real_evals(const Cx A[MAX_SC_DIM][MAX_SC_DIM],
+                               int dim, double lo, double hi,
+                               double *evals, int *mults,
+                               int max_ev) {
+    static Cx shifted[MAX_SC_DIM][MAX_SC_DIM];
+    int n_ev = 0;
+    int i, j;
+    int npts = 4000;
+    double step = (hi - lo) / (double)npts;
+    double d_prev2, d_prev, d_cur;
+    int k;
+
+    /* Evaluate |det| at first two grid points */
+    d_prev2 = eval_absdet_at(A, dim, lo);
+    d_prev = eval_absdet_at(A, dim, lo + step);
+
+    for (k = 2; k <= npts && n_ev < max_ev; k++) {
+        double x = lo + (double)k * step;
+        d_cur = eval_absdet_at(A, dim, x);
+
+        /* Three-point local minimum test */
+        if (d_prev <= d_prev2 && d_prev <= d_cur
+            && d_prev < 1e-3) {
+            /* Refine: golden-section search on [x-2*step, x] */
+            double a = x - 2.0 * step;
+            double b = x;
+            double gr = 0.381966;  /* 1 - golden ratio */
+            int iter;
+
+            for (iter = 0; iter < 80; iter++) {
+                double m1 = a + gr * (b - a);
+                double m2 = b - gr * (b - a);
+                double f1 = eval_absdet_at(A, dim, m1);
+                double f2 = eval_absdet_at(A, dim, m2);
+                if (f1 < f2) b = m2;
+                else a = m1;
+            }
+            {
+                double lam = (a + b) / 2.0;
+                double val = eval_absdet_at(A, dim, lam);
+                int dup = 0;
+
+                /* Only accept if |det| is truly small */
+                if (val < 1e-4) {
+                    for (i = 0; i < n_ev; i++) {
+                        double dd = evals[i] - lam;
+                        if (dd < 0) dd = -dd;
+                        if (dd < 0.005) { dup = 1; break; }
+                    }
+                    if (!dup) {
+                        evals[n_ev] = lam;
+                        mults[n_ev] = 0;
+                        n_ev++;
+                    }
+                }
+            }
+        }
+
+        d_prev2 = d_prev;
+        d_prev = d_cur;
+    }
+
+    /* Always check x=0 explicitly */
+    {
+        int has_zero = 0;
+        for (i = 0; i < n_ev; i++) {
+            double dd = evals[i];
+            if (dd < 0) dd = -dd;
+            if (dd < 0.005) { has_zero = 1; break; }
+        }
+        if (!has_zero && n_ev < max_ev) {
+            if (eval_absdet_at(A, dim, 0.0) < 1e-6) {
+                evals[n_ev] = 0.0;
+                mults[n_ev] = 0;
+                n_ev++;
+            }
+        }
+    }
+
+    /* Compute geometric multiplicities via null space */
+    for (i = 0; i < n_ev; i++) {
+        static Cx nstmp[MAX_SC_DIM][MAX_SC_DIM];
+        int nn;
+        for (j = 0; j < dim; j++) {
+            int jj;
+            for (jj = 0; jj < dim; jj++)
+                shifted[j][jj] = cx_sub(A[j][jj],
+                    j == jj ? cx(evals[i], 0) : cx(0, 0));
+        }
+        nn = cx_null_space(shifted, dim, nstmp);
+        mults[i] = nn > 0 ? nn : 1;
+    }
+
+    /* Sort by eigenvalue */
+    for (i = 0; i < n_ev - 1; i++)
+        for (j = i + 1; j < n_ev; j++)
+            if (evals[j] < evals[i]) {
+                double tmp = evals[i];
+                int mtmp = mults[i];
+                evals[i] = evals[j]; mults[i] = mults[j];
+                evals[j] = tmp; mults[j] = mtmp;
+            }
+
+    return n_ev;
+}
+
+/*
+ * Phase 4 main: compute b on the spin chain.
+ *
+ * GRS conventions (confirmed via Gemini):
+ *   (H - E_0)|t> = -|T>
+ *   <T|t> = 1  (normalization)
+ *   <T|T> = 0
+ *   b = <t|t>  (the indecomposability parameter)
+ *   b = -2 for dense polymers (c=-2, delta=0)
+ *
+ * Bilinear form: conformal (transpose) form x^T * y (no conjugation).
+ * H is symmetric under this form (H^T = H), which guarantees
+ * im(M) perp ker(M) where M = H - lam*I, making b coset-independent.
+ *
+ * Algorithm:
+ * 1. Build H on Sz=0 sector
+ * 2. Compute characteristic polynomial (Faddeev-LeVerrier)
+ * 3. Find all roots (Durand-Kerner)
+ * 4. For each eigenvalue, check for Jordan blocks via ker/ker^2
+ * 5. Find Jordan partner t, eigenvector T = -M*t
+ * 6. Normalize: <T|t> = 1, then b = <t|t>
+ */
+static void test_b_spin_chain(void) {
+    int sizes[] = {4, 6, 8};
+    int ns = 3;
+    int si;
+
+    printf("\n=== Phase 4: b via Spin Chain at q=i ===\n");
+
+    for (si = 0; si < ns; si++) {
+        int n_val = sizes[si];
+        int states[MAX_SC_DIM];
+        int dim;
+        static Cx H_sc[MAX_SC_DIM][MAX_SC_DIM];
+        static Cx Mc[MAX_SC_DIM][MAX_SC_DIM];
+        static Cx nsc1[MAX_SC_DIM][MAX_SC_DIM];
+        static Cx cpoly[MAX_SC_DIM + 1];
+        int nn1;
+        int i, j;
+        int have_cpoly = 0;
+
+        double ev_list[MAX_SC_DIM];
+        int ev_mults[MAX_SC_DIM];
+        int n_ev, ei;
+
+        if (n_val > 8) continue;
+
+        printf("\n--- Spin chain n=%d ---\n", n_val);
+        dim = sc_enumerate_sz0(n_val, states);
+        printf("Sz=0 dim = %d\n", dim);
+
+        sc_build_hamiltonian(n_val, states, dim, H_sc);
+
+        /* Print H for small cases */
+        if (dim <= 10) {
+            printf("H = -(e_0+...+e_%d):\n", n_val - 2);
+            for (i = 0; i < dim; i++) {
+                printf("  [");
+                for (j = 0; j < dim; j++) {
+                    if (j > 0) printf("  ");
+                    printf("(%6.3f,%6.3f)",
+                           H_sc[i][j].re, H_sc[i][j].im);
+                }
+                printf("]\n");
+            }
+        }
+
+        /* Verify H is symmetric */
+        {
+            double sym_err = 0.0;
+            for (i = 0; i < dim; i++)
+                for (j = 0; j < dim; j++) {
+                    double e = cx_abs(cx_sub(H_sc[i][j],
+                                             H_sc[j][i]));
+                    if (e > sym_err) sym_err = e;
+                }
+            printf("H symmetry check: max|H-H^T| = %.2e\n",
+                   sym_err);
+            check("H is symmetric (H^T = H)", sym_err < 1e-12);
+        }
+
+        /* Diagnostic: characteristic polynomial via
+         * Faddeev-LeVerrier */
+        if (dim <= 20) {
+            static Cx Mk[MAX_SC_DIM][MAX_SC_DIM];
+            static Cx AM[MAX_SC_DIM][MAX_SC_DIM];
+            Cx tr;
+            int k;
+
+            have_cpoly = 1;
+            cpoly[dim] = cx(1.0, 0.0);
+            for (i = 0; i < dim; i++)
+                for (j = 0; j < dim; j++)
+                    Mk[i][j] = H_sc[i][j];
+            tr = cx(0, 0);
+            for (i = 0; i < dim; i++)
+                tr = cx_add(tr, Mk[i][i]);
+            cpoly[dim - 1] = cx_neg(tr);
+
+            for (k = 2; k <= dim; k++) {
+                for (i = 0; i < dim; i++)
+                    Mk[i][i] = cx_add(Mk[i][i],
+                                       cpoly[dim - k + 1]);
+                for (i = 0; i < dim; i++)
+                    for (j = 0; j < dim; j++) {
+                        Cx s = cx(0, 0);
+                        int m;
+                        for (m = 0; m < dim; m++)
+                            s = cx_add(s, cx_mul(
+                                H_sc[i][m], Mk[m][j]));
+                        AM[i][j] = s;
+                    }
+                for (i = 0; i < dim; i++)
+                    for (j = 0; j < dim; j++)
+                        Mk[i][j] = AM[i][j];
+                tr = cx(0, 0);
+                for (i = 0; i < dim; i++)
+                    tr = cx_add(tr, Mk[i][i]);
+                cpoly[dim - k] = cx_div(cx_neg(tr),
+                                         cx((double)k, 0));
+            }
+
+            printf("Char poly det(xI-H) coefficients:\n");
+            for (k = dim; k >= 0; k--)
+                printf("  c[%d] = (%10.6f, %10.6f)\n",
+                       k, cpoly[k].re, cpoly[k].im);
+        }
+
+        /* Find eigenvalues via determinant sweep */
+        n_ev = cx_find_real_evals(H_sc, dim, -6.0, 6.0,
+                                   ev_list, ev_mults, MAX_SC_DIM);
+
+        printf("Eigenvalues (%d distinct):\n", n_ev);
+        for (ei = 0; ei < n_ev; ei++)
+            printf("  lam = %8.5f  geo=%d\n",
+                   ev_list[ei], ev_mults[ei]);
+
+        /* Determine algebraic multiplicities from char poly. */
+
+        /* For each eigenvalue, Jordan analysis + b computation.
+         *
+         * NEW approach: detect Jordan blocks via char poly
+         * (algebraic mult > geometric mult), then find Jordan
+         * partner by solving M*t = -T via augmented RREF
+         * (avoids the numerically problematic ker(M^2)). */
+        for (ei = 0; ei < n_ev; ei++) {
+            Cx lam = cx(ev_list[ei], 0.0);
+            int geo, alg_mult;
+
+            /* Build M = H - lam*I */
+            for (i = 0; i < dim; i++)
+                for (j = 0; j < dim; j++)
+                    Mc[i][j] = cx_sub(H_sc[i][j],
+                        i == j ? lam : cx(0, 0));
+
+            nn1 = cx_null_space(Mc, dim, nsc1);
+            geo = nn1;
+
+            /* Get algebraic multiplicity: evaluate char poly
+             * at lam. If p(lam)=0, check p'(lam), p''(lam)...
+             * We use the fact that for a root of mult m,
+             * p through p^(m-1) all vanish at lam.
+             * For safety, count how many times (x-lam)
+             * divides p(x) by deflation. */
+            alg_mult = 0;
+            if (have_cpoly) {
+                /* Deflate char poly by (x-lam) repeatedly.
+                 * Synthetic division. */
+                Cx temp_poly[MAX_SC_DIM + 1];
+                int cur_deg = dim;
+                int kk;
+                for (kk = 0; kk <= dim; kk++)
+                    temp_poly[kk] = cpoly[kk];
+                while (cur_deg >= 1) {
+                    /* Evaluate temp_poly at lam via Horner */
+                    Cx val = temp_poly[cur_deg];
+                    for (kk = cur_deg - 1; kk >= 0; kk--)
+                        val = cx_add(cx_mul(val, lam),
+                                      temp_poly[kk]);
+                    if (cx_abs(val) > 0.01) break;
+
+                    /* Divide by (x - lam): synthetic div */
+                    {
+                        Cx quot[MAX_SC_DIM + 1];
+                        quot[cur_deg - 1] = temp_poly[cur_deg];
+                        for (kk = cur_deg - 2; kk >= 0; kk--)
+                            quot[kk] = cx_add(
+                                temp_poly[kk + 1],
+                                cx_mul(lam, quot[kk + 1]));
+                        cur_deg--;
+                        for (kk = 0; kk <= cur_deg; kk++)
+                            temp_poly[kk] = quot[kk];
+                    }
+                    alg_mult++;
+                }
+            } else {
+                alg_mult = geo; /* fallback */
+            }
+
+            printf("  lam=%8.5f: geo=%d alg=%d%s\n",
+                   ev_list[ei], geo, alg_mult,
+                   alg_mult > geo ? " **JORDAN**" : "");
+
+            if (alg_mult <= geo) continue;
+
+            /* Jordan block found!
+             * T = eigenvector (from ker(M), already in nsc1[0])
+             * Solve M*t = -T for the Jordan partner.
+             *
+             * Use augmented RREF: [M | -T] -> RREF -> read t.
+             * The system is consistent (T in im(M) by Jordan).
+             * Solution is unique up to ker(M); we project out
+             * ker(M) afterward (minimum-norm gauge).
+             *
+             * Then: <T|t> = T^T * t (transpose bilinear form),
+             * b = <t|t>/<T|t>^2.
+             */
+            {
+                static Cx aug[MAX_SC_DIM][MAX_SC_DIM + 1];
+                static Cx sol[MAX_SC_DIM];
+                Cx T_vec[MAX_SC_DIM];
+                int pivot_col[MAX_SC_DIM];
+                int rank, r, c, p_row;
+                double eps2 = 1e-9;
+
+                /* T = first eigenvector */
+                for (i = 0; i < dim; i++)
+                    T_vec[i] = nsc1[0][i];
+
+                /* Build augmented [M | -T] */
+                for (i = 0; i < dim; i++) {
+                    for (j = 0; j < dim; j++)
+                        aug[i][j] = Mc[i][j];
+                    aug[i][dim] = cx_neg(T_vec[i]);
+                }
+
+                /* RREF with partial pivoting */
+                memset(pivot_col, -1, sizeof(pivot_col));
+                rank = 0;
+                for (c = 0; c < dim; c++) {
+                    double best = eps2;
+                    p_row = -1;
+                    for (r = rank; r < dim; r++) {
+                        double a = cx_abs(aug[r][c]);
+                        if (a > best) {
+                            best = a; p_row = r;
+                        }
+                    }
+                    if (p_row == -1) continue;
+                    if (p_row != rank) {
+                        int cc;
+                        for (cc = 0; cc <= dim; cc++) {
+                            Cx tmp = aug[rank][cc];
+                            aug[rank][cc] = aug[p_row][cc];
+                            aug[p_row][cc] = tmp;
+                        }
+                    }
+                    pivot_col[rank] = c;
+                    {
+                        Cx piv = aug[rank][c];
+                        int cc;
+                        for (cc = 0; cc <= dim; cc++)
+                            aug[rank][cc] = cx_div(
+                                aug[rank][cc], piv);
+                    }
+                    for (r = 0; r < dim; r++) {
+                        Cx f;
+                        int cc;
+                        if (r == rank) continue;
+                        f = aug[r][c];
+                        if (cx_abs(f) < 1e-15) continue;
+                        for (cc = 0; cc <= dim; cc++)
+                            aug[r][cc] = cx_sub(aug[r][cc],
+                                cx_mul(f, aug[rank][cc]));
+                    }
+                    rank++;
+                }
+
+                /* Extract solution: free vars = 0 */
+                for (i = 0; i < dim; i++)
+                    sol[i] = cx(0, 0);
+                for (r = rank - 1; r >= 0; r--)
+                    sol[pivot_col[r]] = aug[r][dim];
+
+                /* Project out ker(M) for minimum-norm gauge */
+                for (j = 0; j < nn1; j++) {
+                    Cx ip = cx(0, 0);
+                    double nn = 0.0;
+                    for (i = 0; i < dim; i++) {
+                        ip = cx_add(ip, cx_mul(
+                            cx(nsc1[j][i].re,
+                               -nsc1[j][i].im), sol[i]));
+                        nn += cx_abs2(nsc1[j][i]);
+                    }
+                    if (nn < 1e-15) continue;
+                    {
+                        Cx coeff = cx_div(ip, cx(nn, 0));
+                        for (i = 0; i < dim; i++)
+                            sol[i] = cx_sub(sol[i],
+                                cx_mul(coeff, nsc1[j][i]));
+                    }
+                }
+
+                /* Verify: M*sol should equal -T */
+                {
+                    Cx Msol[MAX_SC_DIM];
+                    double res_norm = 0.0;
+                    cx_mat_vec(Mc, sol, Msol, dim);
+                    for (i = 0; i < dim; i++) {
+                        Cx diff = cx_add(Msol[i], T_vec[i]);
+                        res_norm += cx_abs2(diff);
+                    }
+                    printf("    ||M*t + T|| = %.2e\n",
+                           sqrt(res_norm));
+                }
+
+                /* Compute b */
+                {
+                    Cx coupling = cx(0, 0);
+                    Cx b_raw = cx(0, 0);
+                    Cx TT_raw = cx(0, 0);
+
+                    for (i = 0; i < dim; i++) {
+                        coupling = cx_add(coupling,
+                            cx_mul(T_vec[i], sol[i]));
+                        b_raw = cx_add(b_raw,
+                            cx_mul(sol[i], sol[i]));
+                        TT_raw = cx_add(TT_raw,
+                            cx_mul(T_vec[i], T_vec[i]));
+                    }
+
+                    printf("    <T|t> = (%.6f, %.6f)\n",
+                           coupling.re, coupling.im);
+                    printf("    <T|T> = (%.6f, %.6f)\n",
+                           TT_raw.re, TT_raw.im);
+                    printf("    <t|t> = (%.6f, %.6f)\n",
+                           b_raw.re, b_raw.im);
+
+                    if (cx_abs(coupling) < 1e-12) {
+                        printf("    <T|t> ~ 0, skip\n");
+                    } else {
+                        Cx coup2 = cx_mul(coupling,
+                                           coupling);
+                        Cx b_grs = cx_div(b_raw, coup2);
+                        double d_m2, d_m58;
+
+                        printf("    *** b = <t|t>/<T|t>^2"
+                               " = (%.6f, %.6f) ***\n",
+                               b_grs.re, b_grs.im);
+
+                        d_m2 = cx_abs(cx_sub(b_grs,
+                                              cx(-2, 0)));
+                        d_m58 = cx_abs(cx_sub(b_grs,
+                                               cx(-0.625,0)));
+                        printf("    |b-(-2)| = %.6f\n", d_m2);
+                        printf("    |b-(-5/8)| = %.6f\n",
+                               d_m58);
+                    }
+                }
+            }
+        }
+    }
+}
+
+/* ================================================================ */
+/* Phase 5: b via delta-perturbation on the algebra                 */
+/* ================================================================ */
+
+/*
+ * Build Gram matrix parameterized by delta:
+ *
+ * G_delta(i,j) = delta^{compose_loops(i,j)} * fixpt(result(i,j))
+ *
+ * At delta=0 this is the fixpoint-trace Gram (our existing form).
+ * At delta!=0, products that created loops now contribute nonzero entries,
+ * making the form non-degenerate.
+ */
+static void build_gram_matrix_delta(double delta,
+                                     double G[MAX_ALG_DIM][MAX_ALG_DIM]) {
+    int i, j;
+    for (i = 0; i < alg_dim; i++) {
+        for (j = 0; j < alg_dim; j++) {
+            int ridx = alg_mt_full[i][j];
+            int loops = alg_mt_nloops[i][j];
+            if (ridx < 0) {
+                G[i][j] = 0.0;
+            } else {
+                double fp = (double)alg_fixpt(
+                    &alg_basis[ridx], alg_n);
+                G[i][j] = pow(delta, (double)loops) * fp;
+            }
+        }
+    }
+}
+
+/*
+ * Build Hamiltonian that accounts for delta:
+ * L_H_delta[row][col] = coefficient of basis[row] in H*basis[col]
+ * where H*basis[col] = -sum_g (e_g * basis[col])
+ *
+ * At delta!=0, products with loops contribute delta^loops.
+ * Since left multiplication maps TL -> TL, the coefficient is
+ * delta^loops if the result matches row.
+ */
+static void build_hamiltonian_delta(double delta,
+    double LH[MAX_ALG_DIM][MAX_ALG_DIM]) {
+    int i, j, g;
+    for (i = 0; i < alg_dim; i++)
+        for (j = 0; j < alg_dim; j++)
+            LH[i][j] = 0.0;
+
+    for (g = 0; g < alg_n_gens; g++) {
+        int gi = alg_gen_idx[g];
+        for (j = 0; j < alg_dim; j++) {
+            int ridx = alg_mt_full[gi][j];
+            int loops = alg_mt_nloops[gi][j];
+            if (ridx >= 0) {
+                LH[ridx][j] -= pow(delta, (double)loops);
+            }
+        }
+    }
+}
+
+/*
+ * Phase 5: compute b(delta) for several delta values,
+ * then extrapolate to delta=0.
+ *
+ * Strategy:
+ * 1. For each delta, build the delta-parameterized Hamiltonian and Gram
+ * 2. Find a 2-TL left ideal (projective cover of W_{0,0})
+ * 3. Restrict H and G to this ideal
+ * 4. Find Jordan blocks of H
+ * 5. Compute b = <t|G|t>/<T|G|t>^2 (normalized)
+ * 6. Plot b(delta) and extrapolate
+ */
+static void test_b_delta_perturbation(void) {
+    double deltas[] = {0.5, 0.4, 0.3, 0.2, 0.15,
+                       0.1, 0.08, 0.06, 0.04, 0.02, 0.01};
+    int n_deltas = 11;
+    int sizes[] = {4, 6};
+    int ns = 2;
+    int si, di;
+
+    printf("\n=== Phase 5: b via delta-perturbation ===\n");
+
+    for (si = 0; si < ns; si++) {
+        int n_val = sizes[si];
+        int first_2tl = -1;
+        int d_idx;
+
+        printf("\n--- TL_%d ---\n", n_val);
+        alg_init(n_val);
+        printf("dim = %d\n", alg_dim);
+
+        /* Find first 2-TL basis element (for left ideal) */
+        for (d_idx = 0; d_idx < alg_dim; d_idx++) {
+            int tl = alg_fixpt(&alg_basis[d_idx], alg_n);
+            if (tl == 2) { first_2tl = d_idx; break; }
+        }
+        if (first_2tl < 0) {
+            printf("No 2-TL basis element found!\n");
+            continue;
+        }
+        printf("Using basis[%d] as 2-TL generator\n", first_2tl);
+
+        /* Compute left ideal at delta=0 to get ideal basis */
+        {
+            int ideal_basis[MAX_ALG_DIM];
+            int ideal_dim = 0;
+            int i, j;
+            int in_ideal[MAX_ALG_DIM];
+            memset(in_ideal, 0, sizeof(in_ideal));
+
+            for (i = 0; i < alg_dim; i++) {
+                int ridx = alg_mt_full[i][first_2tl];
+                if (ridx >= 0 && !in_ideal[ridx]) {
+                    in_ideal[ridx] = 1;
+                    ideal_basis[ideal_dim++] = ridx;
+                }
+            }
+            printf("Ideal dim = %d\n", ideal_dim);
+
+            if (ideal_dim < 3) {
+                printf("Ideal too small, skip\n");
+                continue;
+            }
+
+            printf("delta        b_val        |b+2|        |b+5/8|\n");
+
+            for (di = 0; di < n_deltas; di++) {
+                double delta = deltas[di];
+                static double G_d[MAX_ALG_DIM][MAX_ALG_DIM];
+                static double LH_d[MAX_ALG_DIM][MAX_ALG_DIM];
+                static double G_sub[MAX_LS_DIM][MAX_LS_DIM];
+                static double LH_sub[MAX_LS_DIM][MAX_LS_DIM];
+                double evals[MAX_LS_DIM];
+                int n_eval;
+
+                build_gram_matrix_delta(delta, G_d);
+                build_hamiltonian_delta(delta, LH_d);
+
+                /* Restrict to ideal */
+                for (i = 0; i < ideal_dim; i++)
+                    for (j = 0; j < ideal_dim; j++) {
+                        G_sub[i][j] = G_d[ideal_basis[i]]
+                                         [ideal_basis[j]];
+                        LH_sub[i][j] = 0.0;
+                    }
+
+                /* Build restricted Hamiltonian:
+                 * LH_sub[i][j] = coeff of basis[ideal_basis[i]]
+                 * in H*basis[ideal_basis[j]] */
+                for (j = 0; j < ideal_dim; j++) {
+                    int col = ideal_basis[j];
+                    int g;
+                    for (g = 0; g < alg_n_gens; g++) {
+                        int gi = alg_gen_idx[g];
+                        int ridx = alg_mt_full[gi][col];
+                        int loops = alg_mt_nloops[gi][col];
+                        if (ridx >= 0) {
+                            double coeff = -pow(delta,
+                                                 (double)loops);
+                            /* Find ridx in ideal_basis */
+                            for (i = 0; i < ideal_dim; i++) {
+                                if (ideal_basis[i] == ridx) {
+                                    LH_sub[i][j] += coeff;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                /* Find eigenvalues of LH_sub (real matrix) */
+                {
+                    double step, x;
+                    int k;
+                    n_eval = 0;
+
+                    /* Scan for eigenvalues via |det| local
+                     * minimum (catches double roots too) */
+                    {
+                        int npts = 4000;
+                        double lo = -3.0, hi = 3.0;
+                        double dvals[4001];
+                        step = (hi - lo) / npts;
+
+                        /* Sample |det(LH_sub - xI)| */
+                        for (k = 0; k <= npts; k++) {
+                            static double shifted
+                                [MAX_LS_DIM][MAX_LS_DIM];
+                            double det = 1.0;
+                            int pivot;
+                            x = lo + k * step;
+
+                            for (i = 0; i < ideal_dim; i++)
+                                for (j = 0; j < ideal_dim; j++)
+                                    shifted[i][j] =
+                                        LH_sub[i][j]
+                                        - (i == j ? x : 0.0);
+
+                            /* LU |det| */
+                            for (i = 0; i < ideal_dim; i++) {
+                                double best = 0.0;
+                                pivot = i;
+                                for (j = i; j < ideal_dim;
+                                     j++) {
+                                    double a = shifted[j][i];
+                                    if (a < 0) a = -a;
+                                    if (a > best) {
+                                        best = a;
+                                        pivot = j;
+                                    }
+                                }
+                                if (best < 1e-15) {
+                                    det = 0.0;
+                                    break;
+                                }
+                                if (pivot != i) {
+                                    int c;
+                                    for (c = 0;
+                                         c < ideal_dim; c++){
+                                        double tmp =
+                                            shifted[i][c];
+                                        shifted[i][c] =
+                                            shifted[pivot][c];
+                                        shifted[pivot][c] =
+                                            tmp;
+                                    }
+                                }
+                                det *= shifted[i][i];
+                                if (det < 0) det = -det;
+                                {
+                                    int r;
+                                    for (r = i+1;
+                                         r < ideal_dim; r++){
+                                        double f =
+                                            shifted[r][i]
+                                            / shifted[i][i];
+                                        int c;
+                                        for (c = i+1;
+                                             c < ideal_dim;
+                                             c++)
+                                            shifted[r][c] -=
+                                                f *
+                                                shifted[i][c];
+                                    }
+                                }
+                            }
+                            dvals[k] = det;
+                        }
+
+                        /* Three-point local minimum test */
+                        for (k = 1; k < npts; k++) {
+                            if (dvals[k] <= dvals[k-1] &&
+                                dvals[k] <= dvals[k+1] &&
+                                dvals[k] < 1e-3 &&
+                                n_eval < ideal_dim) {
+                                /* Golden-section refine */
+                                double a2 = lo + (k-1)*step;
+                                double b2 = lo + (k+1)*step;
+                                double gr =
+                                    0.3819660112501051;
+                                int it;
+                                for (it = 0; it < 80; it++) {
+                                    double x1, x2, d1, d2;
+                                    x1 = a2 + gr*(b2-a2);
+                                    x2 = b2 - gr*(b2-a2);
+                                    /* eval |det| at x1 */
+                                    {
+                                    static double sh
+                                        [MAX_LS_DIM]
+                                        [MAX_LS_DIM];
+                                    int p2;
+                                    d1 = 1.0;
+                                    for(i=0;i<ideal_dim;i++)
+                                      for(j=0;j<ideal_dim;j++)
+                                        sh[i][j]=LH_sub[i][j]
+                                          -(i==j?x1:0.0);
+                                    for(i=0;i<ideal_dim;i++){
+                                        double bst=0; p2=i;
+                                        for(j=i;j<ideal_dim;
+                                            j++){
+                                            double a=sh[j][i];
+                                            if(a<0)a=-a;
+                                            if(a>bst){
+                                                bst=a;p2=j;}
+                                        }
+                                        if(bst<1e-15){
+                                            d1=0; break;}
+                                        if(p2!=i){
+                                            int c;
+                                            for(c=0;
+                                                c<ideal_dim;
+                                                c++){
+                                                double t=
+                                                    sh[i][c];
+                                                sh[i][c]=
+                                                    sh[p2][c];
+                                                sh[p2][c]=t;
+                                            }
+                                        }
+                                        d1*=sh[i][i];
+                                        if(d1<0) d1=-d1;
+                                        {int r;
+                                        for(r=i+1;
+                                            r<ideal_dim;r++){
+                                            double f=
+                                                sh[r][i]
+                                                /sh[i][i];
+                                            int c;
+                                            for(c=i+1;
+                                                c<ideal_dim;
+                                                c++)
+                                                sh[r][c]-=
+                                                    f*sh[i][c];
+                                        }}
+                                    }
+                                    /* eval |det| at x2 */
+                                    d2 = 1.0;
+                                    for(i=0;i<ideal_dim;i++)
+                                      for(j=0;j<ideal_dim;j++)
+                                        sh[i][j]=LH_sub[i][j]
+                                          -(i==j?x2:0.0);
+                                    for(i=0;i<ideal_dim;i++){
+                                        double bst=0; p2=i;
+                                        for(j=i;j<ideal_dim;
+                                            j++){
+                                            double a=sh[j][i];
+                                            if(a<0)a=-a;
+                                            if(a>bst){
+                                                bst=a;p2=j;}
+                                        }
+                                        if(bst<1e-15){
+                                            d2=0; break;}
+                                        if(p2!=i){
+                                            int c;
+                                            for(c=0;
+                                                c<ideal_dim;
+                                                c++){
+                                                double t=
+                                                    sh[i][c];
+                                                sh[i][c]=
+                                                    sh[p2][c];
+                                                sh[p2][c]=t;
+                                            }
+                                        }
+                                        d2*=sh[i][i];
+                                        if(d2<0) d2=-d2;
+                                        {int r;
+                                        for(r=i+1;
+                                            r<ideal_dim;r++){
+                                            double f=
+                                                sh[r][i]
+                                                /sh[i][i];
+                                            int c;
+                                            for(c=i+1;
+                                                c<ideal_dim;
+                                                c++)
+                                                sh[r][c]-=
+                                                    f*sh[i][c];
+                                        }}
+                                    }
+                                    }
+                                    if (d1 < d2)
+                                        b2 = x2;
+                                    else
+                                        a2 = x1;
+                                }
+                                evals[n_eval++] = (a2+b2)/2.0;
+                            }
+                        }
+                    }
+
+                    /* For each eigenvalue, check Jordan */
+                    for (k = 0; k < n_eval; k++) {
+                        double lam = evals[k];
+                        static double M[MAX_LS_DIM][MAX_LS_DIM];
+                        static double ns1
+                            [MAX_LS_DIM][MAX_LS_DIM];
+                        int geo, alg_lb;
+
+                        for (i = 0; i < ideal_dim; i++)
+                            for (j = 0; j < ideal_dim; j++)
+                                M[i][j] = LH_sub[i][j]
+                                    - (i==j ? lam : 0.0);
+
+                        /* Real null space */
+                        {
+                            static double wk
+                                [MAX_LS_DIM][MAX_LS_DIM];
+                            int piv_col[MAX_LS_DIM];
+                            int is_piv[MAX_LS_DIM];
+                            int rank, rr, cc, pr;
+                            double eps3 = 1e-9;
+
+                            for(rr=0;rr<ideal_dim;rr++)
+                                for(cc=0;cc<ideal_dim;cc++)
+                                    wk[rr][cc] = M[rr][cc];
+                            memset(piv_col,-1,sizeof(piv_col));
+                            memset(is_piv,0,sizeof(is_piv));
+                            rank = 0;
+                            for(cc=0;cc<ideal_dim;cc++){
+                                double bst = eps3;
+                                pr = -1;
+                                for(rr=rank;rr<ideal_dim;rr++){
+                                    double a = wk[rr][cc];
+                                    if(a<0) a=-a;
+                                    if(a>bst){bst=a;pr=rr;}
+                                }
+                                if(pr<0) continue;
+                                if(pr!=rank){
+                                    for(j=0;j<ideal_dim;j++){
+                                        double tmp=wk[rank][j];
+                                        wk[rank][j]=wk[pr][j];
+                                        wk[pr][j]=tmp;
+                                    }
+                                }
+                                piv_col[rank]=cc;
+                                is_piv[cc]=1;
+                                {
+                                    double pv = wk[rank][cc];
+                                    for(j=0;j<ideal_dim;j++)
+                                        wk[rank][j] /= pv;
+                                }
+                                for(rr=0;rr<ideal_dim;rr++){
+                                    double f;
+                                    if(rr==rank) continue;
+                                    f = wk[rr][cc];
+                                    if((f<0?-f:f) < 1e-15)
+                                        continue;
+                                    for(j=0;j<ideal_dim;j++)
+                                        wk[rr][j] -=
+                                            f * wk[rank][j];
+                                }
+                                rank++;
+                            }
+                            geo = ideal_dim - rank;
+
+                            /* Extract first null vector */
+                            {
+                                int nv = 0;
+                                for(cc=0;cc<ideal_dim;cc++){
+                                    if(is_piv[cc]) continue;
+                                    for(rr=0;rr<ideal_dim;rr++)
+                                        ns1[nv][rr] = 0.0;
+                                    ns1[nv][cc] = 1.0;
+                                    for(rr=0;rr<rank;rr++)
+                                        ns1[nv][piv_col[rr]] =
+                                            -wk[rr][cc];
+                                    nv++;
+                                }
+                            }
+                        }
+
+                        /* M^2 null space for Jordan detect */
+                        {
+                            static double M2
+                                [MAX_LS_DIM][MAX_LS_DIM];
+                            static double wk
+                                [MAX_LS_DIM][MAX_LS_DIM];
+                            int rr, cc, pr, rank;
+                            double eps3 = 1e-9;
+
+                            for(i=0;i<ideal_dim;i++)
+                                for(j=0;j<ideal_dim;j++){
+                                    double s = 0;
+                                    int m;
+                                    for(m=0;m<ideal_dim;m++)
+                                        s += M[i][m]*M[m][j];
+                                    M2[i][j] = s;
+                                }
+
+                            for(rr=0;rr<ideal_dim;rr++)
+                                for(cc=0;cc<ideal_dim;cc++)
+                                    wk[rr][cc] = M2[rr][cc];
+                            rank = 0;
+                            for(cc=0;cc<ideal_dim;cc++){
+                                double bst = eps3;
+                                pr = -1;
+                                for(rr=rank;rr<ideal_dim;rr++){
+                                    double a = wk[rr][cc];
+                                    if(a<0) a=-a;
+                                    if(a>bst){bst=a;pr=rr;}
+                                }
+                                if(pr<0) continue;
+                                if(pr!=rank){
+                                    for(j=0;j<ideal_dim;j++){
+                                        double tmp=wk[rank][j];
+                                        wk[rank][j]=wk[pr][j];
+                                        wk[pr][j]=tmp;
+                                    }
+                                }
+                                {
+                                    double pv = wk[rank][cc];
+                                    for(j=0;j<ideal_dim;j++)
+                                        wk[rank][j] /= pv;
+                                }
+                                for(rr=0;rr<ideal_dim;rr++){
+                                    double f;
+                                    if(rr==rank) continue;
+                                    f = wk[rr][cc];
+                                    if((f<0?-f:f) < 1e-15)
+                                        continue;
+                                    for(j=0;j<ideal_dim;j++)
+                                        wk[rr][j] -=
+                                            f * wk[rank][j];
+                                }
+                                rank++;
+                            }
+                            alg_lb = ideal_dim - rank;
+                        }
+
+                        if (alg_lb <= geo) continue;
+
+                        /* Jordan block: solve M*t = -T.
+                         * T = ns1[0] (first eigenvector).
+                         * Use augmented RREF. */
+                        {
+                            static double aug
+                                [MAX_LS_DIM][MAX_LS_DIM+1];
+                            double sol[MAX_LS_DIM];
+                            int rr, cc, pr, rank;
+                            double eps3 = 1e-9;
+
+                            for(rr=0;rr<ideal_dim;rr++){
+                                for(cc=0;cc<ideal_dim;cc++)
+                                    aug[rr][cc] = M[rr][cc];
+                                aug[rr][ideal_dim] =
+                                    -ns1[0][rr];
+                            }
+                            rank = 0;
+                            for(cc=0;cc<ideal_dim;cc++){
+                                double bst = eps3;
+                                pr = -1;
+                                for(rr=rank;rr<ideal_dim;rr++){
+                                    double a = aug[rr][cc];
+                                    if(a<0) a=-a;
+                                    if(a>bst){bst=a;pr=rr;}
+                                }
+                                if(pr<0) continue;
+                                if(pr!=rank){
+                                    for(j=0;j<=ideal_dim;j++){
+                                        double tmp=
+                                            aug[rank][j];
+                                        aug[rank][j]=
+                                            aug[pr][j];
+                                        aug[pr][j]=tmp;
+                                    }
+                                }
+                                {
+                                    double pv = aug[rank][cc];
+                                    for(j=0;j<=ideal_dim;j++)
+                                        aug[rank][j] /= pv;
+                                }
+                                for(rr=0;rr<ideal_dim;rr++){
+                                    double f;
+                                    if(rr==rank) continue;
+                                    f = aug[rr][cc];
+                                    if((f<0?-f:f) < 1e-15)
+                                        continue;
+                                    for(j=0;j<=ideal_dim;j++)
+                                        aug[rr][j] -=
+                                            f * aug[rank][j];
+                                }
+                                rank++;
+                            }
+                            for(i=0;i<ideal_dim;i++)
+                                sol[i] = 0.0;
+                            for(rr=rank-1;rr>=0;rr--)
+                                /* pivot_col tracking would
+                                 * be cleaner but this works
+                                 * for full-rank-minus-1 */
+                                sol[rr] = aug[rr][ideal_dim];
+
+                            /* Compute b = <t|G|t>/<T|G|t>^2
+                             * where <u|G|v> = sum_ij u_i G_ij v_j */
+                            {
+                                double tGt = 0, TGt = 0;
+                                double b_val;
+                                for(i=0;i<ideal_dim;i++)
+                                    for(j=0;j<ideal_dim;j++){
+                                        tGt += sol[i]
+                                            * G_sub[i][j]
+                                            * sol[j];
+                                        TGt += ns1[0][i]
+                                            * G_sub[i][j]
+                                            * sol[j];
+                                    }
+                                if (TGt * TGt < 1e-20) {
+                                    printf("%.4f     "
+                                           "TGt~0       "
+                                           "---          "
+                                           "---\n",
+                                           delta);
+                                } else {
+                                    b_val = tGt/(TGt*TGt);
+                                    printf("%.4f     "
+                                           "%12.6f   "
+                                           "%12.6f   "
+                                           "%12.6f\n",
+                                           delta, b_val,
+                                           b_val < -2 ?
+                                             -(b_val+2) :
+                                             b_val+2,
+                                           b_val < -0.625 ?
+                                             -(b_val+0.625) :
+                                             b_val+0.625);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+/* ================================================================ */
+/* Phase 3: b on the Projective Cover P_{0,0}                      */
+/* ================================================================ */
+
+/*
+ * The 0-TL left ideals (dim 2 for TL_4) are too small: they equal
+ * the standard module W_{0,0} and have NO Jordan blocks.
+ *
+ * The 2-TL left ideals (dim 5 for TL_4, composition 0-TL:2 + 2-TL:3)
+ * DO have Jordan blocks. These are copies of the projective cover
+ * P_{0,0} and are the correct module for computing b.
+ *
+ * Strategy: for each 2-TL basis diagram, compute TL_n * d (left ideal),
+ * restrict L_H and G, find Jordan partner, compute b_GRS.
+ * Verify b is consistent across all generators and coset-independent.
+ */
+static void test_b_projective_cover(void) {
+    int sizes[] = {4, 6};
+    int s;
+
+    printf("\n=== b on Projective Cover Candidates ===\n");
+
+    for (s = 0; s < 2; s++) {
+        int n_val = sizes[s];
+        static int LHf[MAX_ALG_DIM][MAX_ALG_DIM];
+        static double Gf[MAX_ALG_DIM][MAX_ALG_DIM];
+        double b_collected[MAX_ALG_DIM];
+        int n_collected, d_idx, i, j, first_detail;
+
+        printf("\n--- TL_%d ---\n", n_val);
+        alg_init(n_val);
+        printf("dim = %d\n", alg_dim);
+
+        build_alg_hamiltonian(LHf);
+        build_gram_matrix(Gf);
+
+        n_collected = 0;
+        first_detail = 1;
+
+        for (d_idx = 0; d_idx < alg_dim; d_idx++) {
+            int tl_d, gen_arr;
+            int ideal[MAX_ALG_DIM], isz;
+            static int Ls[MAX_ALG_DIM][MAX_ALG_DIM];
+            static double Gs[MAX_ALG_DIM][MAX_ALG_DIM];
+            static double ns1[MAX_ALG_DIM][MAX_ALG_DIM];
+            static double ns2[MAX_ALG_DIM][MAX_ALG_DIM];
+            int ini[MAX_ALG_DIM];
+            int viol, nn1, nn2, k;
+
+            tl_d = alg_count_through(&alg_basis[d_idx], alg_n);
+
+            /* Skip 0-TL (too small) and n-TL (full algebra) */
+            if (tl_d == 0 || tl_d == n_val) continue;
+
+            gen_arr = d_idx;
+            left_ideal_closure(&gen_arr, 1, ideal, &isz);
+
+            /* Skip if ideal is the full algebra */
+            if (isz >= alg_dim) continue;
+
+            /* Check L_H-invariance */
+            memset(ini, 0, sizeof(ini));
+            for (i = 0; i < isz; i++) ini[ideal[i]] = 1;
+            viol = 0;
+            for (i = 0; i < isz; i++) {
+                int col = ideal[i];
+                for (j = 0; j < alg_dim; j++) {
+                    if (LHf[j][col] != 0 && !ini[j]) viol++;
+                }
+            }
+            if (viol > 0) continue;
+
+            /* Restrict L_H and G to this ideal */
+            for (i = 0; i < isz; i++) {
+                for (j = 0; j < isz; j++) {
+                    Ls[i][j] = LHf[ideal[i]][ideal[j]];
+                    Gs[i][j] = Gf[ideal[i]][ideal[j]];
+                }
+            }
+
+            /* Jordan check via min poly (handles all eigenvalues) */
+            {
+                int jb = has_jordan_blocks(Ls, isz);
+                if (!jb) continue;
+            }
+
+            /* Find eigenvalues and locate the Jordan block */
+            {
+                double evals[MAX_LS_DIM];
+                double jordan_lam = 0.0;
+                static double Md[MAX_ALG_DIM][MAX_ALG_DIM];
+                static double M2d[MAX_ALG_DIM][MAX_ALG_DIM];
+                int n_ev, ei, found_jb = 0;
+                int a, b;
+
+                n_ev = find_eigenvalues_sweep(Ls, isz, evals);
+                sort_doubles(evals, n_ev);
+
+                if (first_detail) {
+                    int r, c;
+                    printf("  basis[%d] (%d-TL): ideal dim=%d "
+                           "-> JORDAN BLOCKS\n",
+                           d_idx, tl_d, isz);
+                    if (isz <= 10) {
+                        printf("  L_sub:\n");
+                        for (r = 0; r < isz; r++) {
+                            printf("    [");
+                            for (c = 0; c < isz; c++) {
+                                if (c > 0) printf(" ");
+                                printf("%3d", Ls[r][c]);
+                            }
+                            printf("]\n");
+                        }
+                    }
+                    printf("  Eigenvalues (%d found):", n_ev);
+                    for (ei = 0; ei < n_ev; ei++)
+                        printf(" %.6f", evals[ei]);
+                    printf("\n");
+                }
+
+                /* Find eigenvalue with Jordan block:
+                 * alg_mult > geo_mult */
+                ei = 0;
+                while (ei < n_ev) {
+                    double lam = evals[ei];
+                    int alg_m = 1;
+                    int geo_m;
+                    while (ei + alg_m < n_ev
+                           && evals[ei + alg_m] - lam < 1e-6)
+                        alg_m++;
+                    geo_m = geometric_multiplicity(
+                        Ls, isz, lam);
+                    if (first_detail)
+                        printf("  lam=%.6f alg=%d geo=%d%s\n",
+                               lam, alg_m, geo_m,
+                               geo_m < alg_m ?
+                               " **JORDAN**" : "");
+                    if (geo_m < alg_m && !found_jb) {
+                        jordan_lam = lam;
+                        found_jb = 1;
+                    }
+                    ei += alg_m;
+                }
+                if (!found_jb) continue;
+
+                /* Build M = Ls - jordan_lam*I (double) */
+                for (a = 0; a < isz; a++)
+                    for (b = 0; b < isz; b++)
+                        Md[a][b] = (double)Ls[a][b]
+                            - (a == b ? jordan_lam : 0.0);
+
+                /* M^2 */
+                for (a = 0; a < isz; a++)
+                    for (b = 0; b < isz; b++) {
+                        double sv = 0.0;
+                        int c;
+                        for (c = 0; c < isz; c++)
+                            sv += Md[a][c] * Md[c][b];
+                        M2d[a][b] = sv;
+                    }
+
+                nn1 = extract_null_space_d(Md, isz, ns1);
+                nn2 = extract_null_space_d(M2d, isz, ns2);
+
+                if (first_detail)
+                    printf("  At lam=%.6f: ker(M)=%d "
+                           "ker(M^2)=%d\n",
+                           jordan_lam, nn1, nn2);
+
+                if (nn2 <= nn1) continue;
+
+                /* Print details for first qualifying generator */
+                if (first_detail) {
+                    int tc[MAX_ALG_N + 1];
+                    int m;
+                    printf("\n  Composition: ");
+                    memset(tc, 0, sizeof(tc));
+                    for (m = 0; m < isz; m++)
+                        tc[alg_count_through(
+                            &alg_basis[ideal[m]], alg_n)]++;
+                    for (m = 0; m <= n_val; m++)
+                        if (tc[m] > 0)
+                            printf("%d-TL:%d ", m, tc[m]);
+                    printf("\n");
+                    if (isz <= 10) {
+                        int r, c;
+                        printf("  G|_P:\n");
+                        for (r = 0; r < isz; r++) {
+                            printf("    [");
+                            for (c = 0; c < isz; c++) {
+                                if (c > 0) printf(" ");
+                                printf("%5.1f", Gs[r][c]);
+                            }
+                            printf("]\n");
+                        }
+                    }
+                }
+
+                /* Find Jordan partner: v in ker(M^2) \ ker(M) */
+                for (k = 0; k < nn2; k++) {
+                    double Mv[MAX_ALG_DIM];
+                    double norm2 = 0.0;
+
+                    /* T = M * t where M = Ls - lam*I */
+                    for (i = 0; i < isz; i++) {
+                        Mv[i] = 0.0;
+                        for (j = 0; j < isz; j++)
+                            Mv[i] += Md[i][j] * ns2[k][j];
+                        norm2 += Mv[i] * Mv[i];
+                    }
+                    if (norm2 < 1e-12) continue;
+
+                    if (first_detail && isz <= 10) {
+                        printf("  t = [");
+                        for (i = 0; i < isz; i++) {
+                            if (i > 0) printf(", ");
+                            printf("%.4f", ns2[k][i]);
+                        }
+                        printf("]\n  T = M*t = [");
+                        for (i = 0; i < isz; i++) {
+                            if (i > 0) printf(", ");
+                            printf("%.4f", Mv[i]);
+                        }
+                        printf("]\n");
+                    }
+
+                    /* Compute bilinear form values */
+                    {
+                        double b_val, TGt, TGT;
+                        double Gt_v[MAX_ALG_DIM];
+                        double GT_v[MAX_ALG_DIM];
+                        double TGt_grs;
+
+                        b_val = 0.0;
+                        TGt = 0.0;
+                        TGT = 0.0;
+                        for (i = 0; i < isz; i++) {
+                            Gt_v[i] = 0.0;
+                            GT_v[i] = 0.0;
+                            for (j = 0; j < isz; j++) {
+                                Gt_v[i] += Gs[i][j]
+                                    * ns2[k][j];
+                                GT_v[i] += Gs[i][j]
+                                    * Mv[j];
+                            }
+                        }
+                        for (i = 0; i < isz; i++) {
+                            b_val += ns2[k][i] * Gt_v[i];
+                            TGt += Mv[i] * Gt_v[i];
+                            TGT += Mv[i] * GT_v[i];
+                        }
+
+                        if (first_detail) {
+                            printf("  <t|G|t> = %.6f\n", b_val);
+                            printf("  <T|G|t> = %.6f\n", TGt);
+                            printf("  <T|G|T> = %.6f\n", TGT);
+                        }
+
+                        /* GRS: (H-E0)|t> = -|T> means
+                         * T_GRS = -T = -M*t.
+                         * <T_GRS|G|t> = -TGt.
+                         * Scale: t' = t/(-TGt) gives
+                         * <T_GRS|G|t'> = 1.
+                         * b_GRS = b_val / TGt^2 */
+                        TGt_grs = -TGt;
+                        if (TGt_grs > 1e-12
+                            || TGt_grs < -1e-12) {
+                            double b_grs;
+                            b_grs = b_val
+                                / (TGt_grs * TGt_grs);
+
+                            if (first_detail) {
+                                int p2, j2, i2;
+                                double mx = 0.0;
+                                printf("  <T_GRS|t> ="
+                                       " %.6f\n",
+                                       TGt_grs);
+                                printf("  b_GRS = %.6f\n",
+                                       b_grs);
+                                /* Coset independence */
+                                for (p2 = 0; p2 < nn1;
+                                     p2++) {
+                                    for (j2 = 0;
+                                         j2 < isz; j2++) {
+                                        double ip = 0.0;
+                                        for (i2 = 0;
+                                             i2 < isz;
+                                             i2++)
+                                            ip +=
+                                                ns1[p2][i2]
+                                                * Gs[i2][j2];
+                                        if (ip > mx)
+                                            mx = ip;
+                                        if (-ip > mx)
+                                            mx = -ip;
+                                    }
+                                }
+                                printf("  Coset-indep? "
+                                       "max|<v|G|e>|"
+                                       " = %.9f (%s)\n",
+                                       mx, mx < 1e-9 ?
+                                       "YES" : "NO");
+                            }
+                            b_collected[n_collected++]
+                                = b_grs;
+                        } else if (first_detail) {
+                            printf("  <T_GRS|t> ~ 0,"
+                                   " cannot normalize\n");
+                        }
+                    }
+                    break; /* first Jordan partner only */
+                }
+            }
+            first_detail = 0;
+        }
+
+        /* Summary for this n */
+        if (n_collected > 0) {
+            int all_same = 1;
+            double diff;
+
+            printf("\nb_GRS from %d generators:\n", n_collected);
+            for (i = 0; i < n_collected; i++) {
+                printf("  [%d] %.6f\n", i, b_collected[i]);
+                if (i > 0) {
+                    diff = b_collected[i] - b_collected[0];
+                    if (diff > 1e-6 || diff < -1e-6)
+                        all_same = 0;
+                }
+            }
+            check("b_GRS consistent across generators", all_same);
+
+            diff = b_collected[0] - (-2.0);
+            if (diff < 0) diff = -diff;
+            printf("b_GRS = %.6f vs GRS b = -2.0 (diff = %.6f)\n",
+                   b_collected[0], diff);
+            {
+                double diff2 = b_collected[0] - (-0.625);
+                if (diff2 < 0) diff2 = -diff2;
+                printf("b_GRS = %.6f vs PR b = -5/8 (diff = %.6f)\n",
+                       b_collected[0], diff2);
+            }
+        } else {
+            printf("No qualifying ideals found.\n");
+        }
+    }
+}
+
+/* ================================================================ */
+/* Phase 6: b via Leading Coefficients (explorer's approach)        */
+/* ================================================================ */
+
+/*
+ * At delta != 0, the standard TL trace form is:
+ *   G_delta[i][j] = delta^{L(i,j)}
+ * where L(i,j) = internal_loops(compose(i,j)) + closure_loops(result).
+ *
+ * Both <t|G_delta|t> and <T|G_delta|t> are polynomials in delta.
+ * b = [leading coeff of <t|G_delta|t>] / [leading coeff of <T|G_delta|t>]^2
+ *
+ * This is purely combinatorial -- no floating point eigenvalues needed.
+ */
+static void test_b_leading_coeff(void) {
+    int sizes[] = {4, 6};
+    int s;
+
+    printf("\n=== Phase 6: b via Leading Coefficients ===\n");
+
+    for (s = 0; s < 2; s++) {
+        int n_val = sizes[s];
+        int i, j, d_idx;
+
+        printf("\n--- TL_%d ---\n", n_val);
+        alg_init(n_val);
+        printf("dim = %d\n", alg_dim);
+
+        /* Find first 2-TL generator that produces Jordan blocks */
+        for (d_idx = 0; d_idx < alg_dim; d_idx++) {
+            int tl_d = alg_count_through(&alg_basis[d_idx], alg_n);
+            int ideal[MAX_ALG_DIM], isz;
+            int ini[MAX_ALG_DIM];
+            int L_sub[MAX_ALG_DIM][MAX_ALG_DIM];
+            int ideal_dim;
+            int ev;
+
+            if (tl_d != 2) continue;
+
+            /* Build left ideal TL_n * basis[d_idx] */
+            {
+                int seen[MAX_ALG_DIM];
+                int queue[MAX_ALG_DIM];
+                int head = 0, tail = 0;
+                memset(seen, 0, sizeof(seen));
+                isz = 0;
+
+                /* seed: all a * basis[d_idx] */
+                for (i = 0; i < alg_dim; i++) {
+                    int p = alg_mt_full[i][d_idx];
+                    if (p >= 0 && !seen[p]) {
+                        seen[p] = 1;
+                        ideal[isz++] = p;
+                        queue[tail++] = p;
+                    }
+                }
+                /* close under left mult by generators */
+                while (head < tail) {
+                    int cur = queue[head++];
+                    int g;
+                    for (g = 0; g < alg_n_gens; g++) {
+                        int gi = alg_gen_idx[g];
+                        int p = alg_mt_full[gi][cur];
+                        if (p >= 0 && !seen[p]) {
+                            seen[p] = 1;
+                            ideal[isz++] = p;
+                            queue[tail++] = p;
+                        }
+                    }
+                }
+            }
+            ideal_dim = isz;
+            /* sort ideal basis */
+            {
+                int a, b;
+                for (a = 0; a < ideal_dim - 1; a++)
+                    for (b = a + 1; b < ideal_dim; b++)
+                        if (ideal[a] > ideal[b]) {
+                            int tmp = ideal[a];
+                            ideal[a] = ideal[b];
+                            ideal[b] = tmp;
+                        }
+            }
+            /* build index map */
+            memset(ini, -1, sizeof(ini));
+            for (i = 0; i < ideal_dim; i++)
+                ini[ideal[i]] = i;
+
+            /* Check ideal composition */
+            {
+                int n0 = 0, n2 = 0;
+                for (i = 0; i < ideal_dim; i++) {
+                    int tl = alg_count_through(
+                        &alg_basis[ideal[i]], alg_n);
+                    if (tl == 0) n0++;
+                    else if (tl == 2) n2++;
+                }
+                printf("basis[%d] (2-TL): ideal dim=%d "
+                       "(0-TL:%d 2-TL:%d)\n",
+                       d_idx, ideal_dim, n0, n2);
+            }
+
+            /* Build restricted Hamiltonian (integer, delta=0) */
+            memset(L_sub, 0, sizeof(L_sub));
+            for (j = 0; j < ideal_dim; j++) {
+                int col = ideal[j];
+                int g;
+                for (g = 0; g < alg_n_gens; g++) {
+                    int gi = alg_gen_idx[g];
+                    int ridx = alg_mt[gi][col];
+                    if (ridx >= 0 && ini[ridx] >= 0) {
+                        L_sub[ini[ridx]][j] += -1;
+                    }
+                }
+            }
+
+            printf("  L_H restricted (%dx%d):\n", ideal_dim,
+                   ideal_dim);
+            for (i = 0; i < ideal_dim; i++) {
+                printf("    [");
+                for (j = 0; j < ideal_dim; j++)
+                    printf("%3d", L_sub[i][j]);
+                printf("]\n");
+            }
+
+            /* Proceed directly to per-eigenvalue Jordan
+             * detection (Jordan blocks may be at nonzero
+             * eigenvalues, e.g. +-sqrt(2) for TL_4) */
+
+            /* ==== Jordan pair extraction ==== */
+            /* Find eigenvalues of integer matrix L_sub */
+            {
+                double evals_d[MAX_ALG_DIM];
+                int n_ev, k;
+
+                /* Use |det| local minimum on real axis */
+                {
+                    int npts = 4000;
+                    double lo = -6.0, hi = 6.0;
+                    double step2;
+                    double dvals[4001];
+                    step2 = (hi - lo) / npts;
+
+                    for (k = 0; k <= npts; k++) {
+                        double x = lo + k * step2;
+                        static double sh[MAX_ALG_DIM]
+                            [MAX_ALG_DIM];
+                        double det = 1.0;
+                        int pv;
+
+                        for (i = 0; i < ideal_dim; i++)
+                            for (j = 0; j < ideal_dim; j++)
+                                sh[i][j] = (double)L_sub[i][j]
+                                    - (i == j ? x : 0.0);
+
+                        for (i = 0; i < ideal_dim; i++) {
+                            double best = 0.0; pv = i;
+                            for (j = i; j < ideal_dim; j++) {
+                                double a = sh[j][i];
+                                if (a < 0) a = -a;
+                                if (a > best) {
+                                    best = a; pv = j;
+                                }
+                            }
+                            if (best < 1e-15) {
+                                det = 0.0; break;
+                            }
+                            if (pv != i) {
+                                int c;
+                                for (c = 0; c < ideal_dim;
+                                     c++) {
+                                    double tmp = sh[i][c];
+                                    sh[i][c] = sh[pv][c];
+                                    sh[pv][c] = tmp;
+                                }
+                            }
+                            det *= sh[i][i];
+                            if (det < 0) det = -det;
+                            {
+                                int r;
+                                for (r = i+1;
+                                     r < ideal_dim; r++) {
+                                    double f = sh[r][i]
+                                        / sh[i][i];
+                                    int c;
+                                    for (c = i+1;
+                                         c < ideal_dim; c++)
+                                        sh[r][c] -=
+                                            f * sh[i][c];
+                                }
+                            }
+                        }
+                        dvals[k] = det;
+                    }
+
+                    n_ev = 0;
+                    for (k = 1; k < npts; k++) {
+                        if (dvals[k] <= dvals[k-1] &&
+                            dvals[k] <= dvals[k+1] &&
+                            dvals[k] < 1e-3 &&
+                            n_ev < ideal_dim) {
+                            /* golden-section refine */
+                            double a2 = lo + (k-1)*step2;
+                            double b2 = lo + (k+1)*step2;
+                            double gr = 0.3819660112501051;
+                            int it;
+                            for (it = 0; it < 80; it++) {
+                                double x1 = a2 + gr*(b2-a2);
+                                double x2 = b2 - gr*(b2-a2);
+                                double d1, d2;
+                                /* |det| at x1 */
+                                {
+                                    static double
+                                        sh2[MAX_ALG_DIM]
+                                            [MAX_ALG_DIM];
+                                    int pv2;
+                                    d1 = 1.0;
+                                    for(i=0;i<ideal_dim;i++)
+                                      for(j=0;j<ideal_dim;j++)
+                                        sh2[i][j] =
+                                            (double)L_sub[i][j]
+                                            - (i==j?x1:0.0);
+                                    for(i=0;i<ideal_dim;i++){
+                                        double bst=0; pv2=i;
+                                        for(j=i;j<ideal_dim;
+                                            j++){
+                                            double a=sh2[j][i];
+                                            if(a<0) a=-a;
+                                            if(a>bst){
+                                                bst=a;pv2=j;}
+                                        }
+                                        if(bst<1e-15){
+                                            d1=0; break;}
+                                        if(pv2!=i){
+                                            int c;
+                                            for(c=0;
+                                                c<ideal_dim;
+                                                c++){
+                                                double t=
+                                                    sh2[i][c];
+                                                sh2[i][c]=
+                                                    sh2[pv2][c];
+                                                sh2[pv2][c]=t;
+                                            }
+                                        }
+                                        d1*=sh2[i][i];
+                                        if(d1<0) d1=-d1;
+                                        {int r;
+                                        for(r=i+1;
+                                            r<ideal_dim;r++){
+                                            double f=
+                                                sh2[r][i]
+                                                /sh2[i][i];
+                                            int c;
+                                            for(c=i+1;
+                                                c<ideal_dim;
+                                                c++)
+                                                sh2[r][c]-=
+                                                    f*
+                                                    sh2[i][c];
+                                        }}
+                                    }
+                                    /* |det| at x2 */
+                                    d2 = 1.0;
+                                    for(i=0;i<ideal_dim;i++)
+                                      for(j=0;j<ideal_dim;j++)
+                                        sh2[i][j] =
+                                            (double)L_sub[i][j]
+                                            - (i==j?x2:0.0);
+                                    for(i=0;i<ideal_dim;i++){
+                                        double bst=0; pv2=i;
+                                        for(j=i;j<ideal_dim;
+                                            j++){
+                                            double a=sh2[j][i];
+                                            if(a<0) a=-a;
+                                            if(a>bst){
+                                                bst=a;pv2=j;}
+                                        }
+                                        if(bst<1e-15){
+                                            d2=0; break;}
+                                        if(pv2!=i){
+                                            int c;
+                                            for(c=0;
+                                                c<ideal_dim;
+                                                c++){
+                                                double t=
+                                                    sh2[i][c];
+                                                sh2[i][c]=
+                                                    sh2[pv2][c];
+                                                sh2[pv2][c]=t;
+                                            }
+                                        }
+                                        d2*=sh2[i][i];
+                                        if(d2<0) d2=-d2;
+                                        {int r;
+                                        for(r=i+1;
+                                            r<ideal_dim;r++){
+                                            double f=
+                                                sh2[r][i]
+                                                /sh2[i][i];
+                                            int c;
+                                            for(c=i+1;
+                                                c<ideal_dim;
+                                                c++)
+                                                sh2[r][c]-=
+                                                    f*
+                                                    sh2[i][c];
+                                        }}
+                                    }
+                                }
+                                if (d1 < d2) b2 = x2;
+                                else a2 = x1;
+                            }
+                            evals_d[n_ev++] = (a2+b2)/2.0;
+                        }
+                    }
+                }
+
+                printf("  Eigenvalues (%d found):", n_ev);
+                for (k = 0; k < n_ev; k++)
+                    printf(" %.6f", evals_d[k]);
+                printf("\n");
+
+                /* For each eigenvalue, check alg mult and
+                 * extract Jordan pair if alg > geo */
+                for (ev = 0; ev < n_ev; ev++) {
+                    double lam = evals_d[ev];
+                    static double M[MAX_ALG_DIM][MAX_ALG_DIM];
+                    static double wk[MAX_ALG_DIM][MAX_ALG_DIM];
+                    int piv_col[MAX_ALG_DIM];
+                    int is_piv[MAX_ALG_DIM];
+                    int rank, rr, cc, pr, geo;
+                    double eps3 = 1e-9;
+                    double T_vec[MAX_ALG_DIM];
+                    double t_vec[MAX_ALG_DIM];
+                    int alg_mult;
+
+                    for (i = 0; i < ideal_dim; i++)
+                        for (j = 0; j < ideal_dim; j++)
+                            M[i][j] = (double)L_sub[i][j]
+                                - (i==j ? lam : 0.0);
+
+                    /* RREF for null space (geo mult) */
+                    for (rr = 0; rr < ideal_dim; rr++)
+                        for (cc = 0; cc < ideal_dim; cc++)
+                            wk[rr][cc] = M[rr][cc];
+                    memset(piv_col, -1, sizeof(piv_col));
+                    memset(is_piv, 0, sizeof(is_piv));
+                    rank = 0;
+                    for (cc = 0; cc < ideal_dim; cc++) {
+                        double bst = eps3;
+                        pr = -1;
+                        for (rr = rank; rr < ideal_dim;
+                             rr++) {
+                            double a = wk[rr][cc];
+                            if (a < 0) a = -a;
+                            if (a > bst) {
+                                bst = a; pr = rr;
+                            }
+                        }
+                        if (pr < 0) continue;
+                        if (pr != rank) {
+                            for (j = 0; j < ideal_dim; j++){
+                                double tmp = wk[rank][j];
+                                wk[rank][j] = wk[pr][j];
+                                wk[pr][j] = tmp;
+                            }
+                        }
+                        piv_col[rank] = cc;
+                        is_piv[cc] = 1;
+                        {
+                            double pv = wk[rank][cc];
+                            for(j=0;j<ideal_dim;j++)
+                                wk[rank][j] /= pv;
+                        }
+                        for (rr = 0; rr < ideal_dim; rr++){
+                            double f;
+                            if (rr == rank) continue;
+                            f = wk[rr][cc];
+                            if ((f<0?-f:f) < 1e-15)
+                                continue;
+                            for(j=0;j<ideal_dim;j++)
+                                wk[rr][j] -=
+                                    f * wk[rank][j];
+                        }
+                        rank++;
+                    }
+                    geo = ideal_dim - rank;
+
+                    /* Get first null vector = T */
+                    memset(T_vec, 0,
+                        sizeof(double)*(size_t)ideal_dim);
+                    {
+                        int found = 0;
+                        for (cc = 0; cc < ideal_dim; cc++) {
+                            if (is_piv[cc]) continue;
+                            if (found) continue;
+                            T_vec[cc] = 1.0;
+                            for (rr = 0; rr < rank; rr++)
+                                T_vec[piv_col[rr]] =
+                                    -wk[rr][cc];
+                            found = 1;
+                        }
+                    }
+
+                    /* Check alg mult: try deflating char
+                     * poly at this eigenvalue.
+                     * Actually, check ker(M^2) vs ker(M). */
+                    {
+                        static double M2[MAX_ALG_DIM]
+                            [MAX_ALG_DIM];
+                        int rank2;
+                        for (i = 0; i < ideal_dim; i++)
+                            for (j = 0; j < ideal_dim; j++){
+                                double s = 0;
+                                int m;
+                                for(m=0;m<ideal_dim;m++)
+                                    s += M[i][m]*M[m][j];
+                                M2[i][j] = s;
+                            }
+                        for (rr = 0; rr < ideal_dim; rr++)
+                            for (cc = 0; cc < ideal_dim; cc++)
+                                wk[rr][cc] = M2[rr][cc];
+                        rank2 = 0;
+                        for (cc = 0; cc < ideal_dim; cc++){
+                            double bst = eps3;
+                            pr = -1;
+                            for(rr=rank2;rr<ideal_dim;rr++){
+                                double a = wk[rr][cc];
+                                if(a<0)a=-a;
+                                if(a>bst){bst=a;pr=rr;}
+                            }
+                            if(pr<0) continue;
+                            if(pr!=rank2){
+                                for(j=0;j<ideal_dim;j++){
+                                    double tmp=wk[rank2][j];
+                                    wk[rank2][j]=wk[pr][j];
+                                    wk[pr][j]=tmp;
+                                }
+                            }
+                            {
+                                double pv = wk[rank2][cc];
+                                for(j=0;j<ideal_dim;j++)
+                                    wk[rank2][j] /= pv;
+                            }
+                            for(rr=0;rr<ideal_dim;rr++){
+                                double f;
+                                if(rr==rank2) continue;
+                                f = wk[rr][cc];
+                                if((f<0?-f:f)<1e-15)
+                                    continue;
+                                for(j=0;j<ideal_dim;j++)
+                                    wk[rr][j] -=
+                                        f * wk[rank2][j];
+                            }
+                            rank2++;
+                        }
+                        alg_mult = ideal_dim - rank2;
+                    }
+
+                    printf("  lam=%.6f geo=%d alg_lb=%d",
+                           lam, geo, alg_mult);
+
+                    if (alg_mult <= geo) {
+                        printf(" (no Jordan)\n");
+                        continue;
+                    }
+                    printf(" **JORDAN**\n");
+
+                    /* Solve M*t = -T via augmented RREF */
+                    {
+                        static double aug[MAX_ALG_DIM]
+                            [MAX_ALG_DIM + 1];
+                        int aug_piv[MAX_ALG_DIM];
+                        int aug_is_piv[MAX_ALG_DIM];
+                        int aug_rank;
+                        for (rr = 0; rr < ideal_dim; rr++){
+                            for(cc=0;cc<ideal_dim;cc++)
+                                aug[rr][cc] = M[rr][cc];
+                            aug[rr][ideal_dim] =
+                                -T_vec[rr];
+                        }
+                        memset(aug_piv,-1,sizeof(aug_piv));
+                        memset(aug_is_piv,0,
+                            sizeof(aug_is_piv));
+                        aug_rank = 0;
+                        for(cc=0;cc<ideal_dim;cc++){
+                            double bst = eps3;
+                            pr = -1;
+                            for(rr=aug_rank;
+                                rr<ideal_dim;rr++){
+                                double a = aug[rr][cc];
+                                if(a<0)a=-a;
+                                if(a>bst){bst=a;pr=rr;}
+                            }
+                            if(pr<0) continue;
+                            if(pr!=aug_rank){
+                                for(j=0;j<=ideal_dim;j++){
+                                    double tmp=
+                                        aug[aug_rank][j];
+                                    aug[aug_rank][j]=
+                                        aug[pr][j];
+                                    aug[pr][j]=tmp;
+                                }
+                            }
+                            aug_piv[aug_rank] = cc;
+                            aug_is_piv[cc] = 1;
+                            {
+                                double pv=aug[aug_rank][cc];
+                                for(j=0;j<=ideal_dim;j++)
+                                    aug[aug_rank][j] /= pv;
+                            }
+                            for(rr=0;rr<ideal_dim;rr++){
+                                double f;
+                                if(rr==aug_rank) continue;
+                                f = aug[rr][cc];
+                                if((f<0?-f:f)<1e-15)
+                                    continue;
+                                for(j=0;j<=ideal_dim;j++)
+                                    aug[rr][j] -=
+                                        f *
+                                        aug[aug_rank][j];
+                            }
+                            aug_rank++;
+                        }
+                        /* Extract t_vec from RREF */
+                        memset(t_vec, 0,
+                            sizeof(double)
+                            *(size_t)ideal_dim);
+                        for (rr = 0; rr < aug_rank; rr++)
+                            t_vec[aug_piv[rr]] =
+                                aug[rr][ideal_dim];
+                    }
+
+                    /* Verify: ||M*t + T|| */
+                    {
+                        double err = 0;
+                        for (i = 0; i < ideal_dim; i++) {
+                            double s = T_vec[i];
+                            for (j = 0; j < ideal_dim; j++)
+                                s += M[i][j] * t_vec[j];
+                            err += s * s;
+                        }
+                        err = sqrt(err);
+                        printf("    ||M*t + T|| = %.2e\n",
+                               err);
+                    }
+
+                    printf("    T = [");
+                    for (i = 0; i < ideal_dim; i++)
+                        printf("%.4f%s", T_vec[i],
+                               i<ideal_dim-1?", ":"");
+                    printf("]\n");
+                    printf("    t = [");
+                    for (i = 0; i < ideal_dim; i++)
+                        printf("%.4f%s", t_vec[i],
+                               i<ideal_dim-1?", ":"");
+                    printf("]\n");
+
+                    /* === Leading coefficient computation ===
+                     * Compute BOTH bilinear forms:
+                     * Gram: G_gram[i][j] = delta^{L(i*,j)}
+                     *   where i* = star(i) (flip)
+                     * Trace: G_tr[i][j] = delta^{L(i,j)}
+                     *   (no flip)
+                     * L(a,b) = compose_loops(a,b)
+                     *        + closure_loops(result(a,b))
+                     */
+                    {
+                        int L_gram[MAX_ALG_DIM][MAX_ALG_DIM];
+                        int L_trace[MAX_ALG_DIM][MAX_ALG_DIM];
+                        int form;
+                        int ii, jj;
+
+                        for (ii = 0; ii < ideal_dim; ii++)
+                            for (jj = 0; jj < ideal_dim;
+                                 jj++) {
+                                int bi, bj, ridx, intl, clos;
+                                /* Gram (with star) */
+                                bi = alg_star_idx[ideal[ii]];
+                                bj = ideal[jj];
+                                ridx = alg_mt_full[bi][bj];
+                                intl = alg_mt_nloops[bi][bj];
+                                clos = (ridx >= 0) ?
+                                    alg_closure_loops(
+                                        &alg_basis[ridx],
+                                        alg_n) : alg_n;
+                                L_gram[ii][jj] = intl + clos;
+                                /* Trace (no star) */
+                                bi = ideal[ii];
+                                ridx = alg_mt_full[bi][bj];
+                                intl = alg_mt_nloops[bi][bj];
+                                clos = (ridx >= 0) ?
+                                    alg_closure_loops(
+                                        &alg_basis[ridx],
+                                        alg_n) : alg_n;
+                                L_trace[ii][jj] = intl + clos;
+                            }
+
+                        for (form = 0; form < 2; form++) {
+                            int (*L)[MAX_ALG_DIM] =
+                                form == 0 ? L_gram : L_trace;
+                            const char *label =
+                                form == 0 ? "Gram (a*b)"
+                                          : "Trace (ab)";
+                            int min_Tt, min_tt;
+                            double coeff_Tt, coeff_tt;
+                            double b_val;
+
+                            printf("\n    --- %s form ---\n",
+                                   label);
+                            printf("    L matrix:\n");
+                            for (ii=0;ii<ideal_dim;ii++){
+                                printf("      [");
+                                for(jj=0;jj<ideal_dim;jj++)
+                                    printf("%3d",
+                                           L[ii][jj]);
+                                printf("]\n");
+                            }
+
+                            min_Tt = 999;
+                            min_tt = 999;
+                            for (ii=0;ii<ideal_dim;ii++)
+                                for(jj=0;jj<ideal_dim;jj++){
+                                    double c_Tt =
+                                        T_vec[ii]*t_vec[jj];
+                                    double c_tt =
+                                        t_vec[ii]*t_vec[jj];
+                                    if ((c_Tt<0?-c_Tt:c_Tt)
+                                        > 1e-15 &&
+                                        L[ii][jj] < min_Tt)
+                                        min_Tt = L[ii][jj];
+                                    if ((c_tt<0?-c_tt:c_tt)
+                                        > 1e-15 &&
+                                        L[ii][jj] < min_tt)
+                                        min_tt = L[ii][jj];
+                                }
+
+                            coeff_Tt = 0;
+                            coeff_tt = 0;
+                            for (ii=0;ii<ideal_dim;ii++)
+                                for(jj=0;jj<ideal_dim;jj++){
+                                    if(L[ii][jj]==min_Tt)
+                                        coeff_Tt +=
+                                            T_vec[ii]
+                                            * t_vec[jj];
+                                    if(L[ii][jj]==min_tt)
+                                        coeff_tt +=
+                                            t_vec[ii]
+                                            * t_vec[jj];
+                                }
+
+                            printf("    <T|G|t>: pow=%d "
+                                   "coeff=%.6f\n",
+                                   min_Tt, coeff_Tt);
+                            printf("    <t|G|t>: pow=%d "
+                                   "coeff=%.6f\n",
+                                   min_tt, coeff_tt);
+
+                            if ((coeff_Tt<0?-coeff_Tt
+                                 :coeff_Tt) < 1e-15) {
+                                printf("    <T|G|t>=0!\n");
+                            } else if (min_tt!=2*min_Tt) {
+                                printf("    Powers: p_tt=%d"
+                                    " 2*p_Tt=%d\n",
+                                    min_tt, 2*min_Tt);
+                                printf("    b ~ d^{%d} *"
+                                    " %.6f\n",
+                                    min_tt - 2*min_Tt,
+                                    coeff_tt /
+                                    (coeff_Tt*coeff_Tt));
+                            } else {
+                                b_val = coeff_tt /
+                                    (coeff_Tt*coeff_Tt);
+                                printf("    *** b = "
+                                    "%.6f ***\n", b_val);
+                                printf("    |b-(-2)|="
+                                    "%.6f |b-(-5/8)|="
+                                    "%.6f\n",
+                                    b_val<-2 ?
+                                    -(b_val+2):b_val+2,
+                                    b_val<-0.625 ?
+                                    -(b_val+0.625)
+                                    :b_val+0.625);
+                            }
+
+                            /* Numerical verification */
+                            {
+                                double ds[] =
+                                    {0.5,0.1,0.01,0.001};
+                                int di;
+                                printf("    delta     "
+                                    "<T|G|t>      "
+                                    "<t|G|t>      "
+                                    "b\n");
+                                for(di=0;di<4;di++){
+                                    double d2=ds[di];
+                                    double Tt2=0,tt2=0;
+                                    for(ii=0;ii<ideal_dim;
+                                        ii++)
+                                      for(jj=0;
+                                          jj<ideal_dim;
+                                          jj++){
+                                        double g2=pow(d2,
+                                            (double)
+                                            L[ii][jj]);
+                                        Tt2+=T_vec[ii]*g2
+                                            *t_vec[jj];
+                                        tt2+=t_vec[ii]*g2
+                                            *t_vec[jj];
+                                      }
+                                    printf("    %.4f "
+                                        "%12.6e "
+                                        "%12.6e ",
+                                        d2, Tt2, tt2);
+                                    if((Tt2<0?-Tt2:Tt2)
+                                        >1e-30)
+                                        printf("%12.6f\n",
+                                            tt2/
+                                            (Tt2*Tt2));
+                                    else
+                                        printf("div/0\n");
+                                }
+                            }
+                        }
+                    }
+
+                    /* === Fixpt Gram forms (delta=0) === */
+                    /* G_fp[i][j] = fixpt(product(i,j))
+                     * G_fp_star[i][j] = fixpt(product(i*,j))
+                     * These are well-defined at delta=0
+                     * (only count non-zero products) */
+                    {
+                        double G_fp[MAX_ALG_DIM][MAX_ALG_DIM];
+                        double G_fps[MAX_ALG_DIM][MAX_ALG_DIM];
+                        int fp_form, ii, jj;
+
+                        for (ii = 0; ii < ideal_dim; ii++)
+                            for (jj = 0; jj < ideal_dim; jj++){
+                                int bi, bj, pidx;
+                                /* No star */
+                                bi = ideal[ii];
+                                bj = ideal[jj];
+                                pidx = alg_mt[bi][bj];
+                                G_fp[ii][jj] = (pidx >= 0) ?
+                                    (double)alg_fixpt(
+                                        &alg_basis[pidx],
+                                        alg_n) : 0.0;
+                                /* With star */
+                                bi = alg_star_idx[ideal[ii]];
+                                pidx = alg_mt[bi][bj];
+                                G_fps[ii][jj] = (pidx >= 0) ?
+                                    (double)alg_fixpt(
+                                        &alg_basis[pidx],
+                                        alg_n) : 0.0;
+                            }
+
+                        for (fp_form = 0; fp_form < 2;
+                             fp_form++) {
+                            double (*Gf)[MAX_ALG_DIM] =
+                                fp_form == 0 ? G_fps : G_fp;
+                            const char *fl =
+                                fp_form == 0 ?
+                                "Fixpt-Gram (a*b)" :
+                                "Fixpt-Trace (ab)";
+                            double TGt2 = 0, TGT2 = 0;
+                            double tGt2 = 0;
+                            double b_fp;
+
+                            printf("\n    --- %s form ---\n",
+                                   fl);
+                            printf("    G_fp:\n");
+                            for (ii = 0; ii < ideal_dim; ii++){
+                                printf("      [");
+                                for (jj = 0;
+                                     jj < ideal_dim; jj++)
+                                    printf("%4.0f",
+                                           Gf[ii][jj]);
+                                printf("]\n");
+                            }
+
+                            for (ii = 0; ii < ideal_dim; ii++)
+                                for(jj=0;jj<ideal_dim;jj++){
+                                    TGt2 += T_vec[ii]
+                                        * Gf[ii][jj]
+                                        * t_vec[jj];
+                                    tGt2 += t_vec[ii]
+                                        * Gf[ii][jj]
+                                        * t_vec[jj];
+                                    TGT2 += T_vec[ii]
+                                        * Gf[ii][jj]
+                                        * T_vec[jj];
+                                }
+
+                            printf("    <T|G|t> = %.6f\n",
+                                   TGt2);
+                            printf("    <t|G|t> = %.6f\n",
+                                   tGt2);
+                            printf("    <T|G|T> = %.6f\n",
+                                   TGT2);
+
+                            if ((TGt2<0?-TGt2:TGt2) < 1e-12){
+                                printf("    <T|G|t>=0!\n");
+                            } else {
+                                /* b = <t|t>/<T|t>^2
+                                 * (GRS scaling) */
+                                b_fp = tGt2 /
+                                    (TGt2 * TGt2);
+                                printf("    b_GRS = "
+                                    "<t|t>/<T|t>^2 = "
+                                    "%.6f\n", b_fp);
+                                /* b_simple = <t|t>/<T|t> */
+                                printf("    b_simple = "
+                                    "<t|t>/<T|t> = "
+                                    "%.6f\n",
+                                    tGt2 / TGt2);
+                                printf("    |b-(-2)| = "
+                                    "%.6f\n",
+                                    b_fp < -2 ?
+                                    -(b_fp+2) : b_fp+2);
+                                printf("    |b-(-5/8)| = "
+                                    "%.6f\n",
+                                    b_fp < -0.625 ?
+                                    -(b_fp+0.625)
+                                    : b_fp+0.625);
+                            }
+
+                            /* Coset scan: t' = t + c*T */
+                            {
+                                int ci;
+                                printf("    Coset scan:\n");
+                                for (ci = -3; ci <= 3; ci++){
+                                    double ts[MAX_ALG_DIM];
+                                    double Tt3=0,tt3=0,TT3=0;
+                                    for(i=0;i<ideal_dim;i++)
+                                        ts[i] = t_vec[i]
+                                            + (double)ci
+                                            * T_vec[i];
+                                    for(i=0;i<ideal_dim;i++)
+                                      for(j=0;j<ideal_dim;j++){
+                                        Tt3 += T_vec[i]
+                                            *Gf[i][j]*ts[j];
+                                        tt3 += ts[i]
+                                            *Gf[i][j]*ts[j];
+                                        TT3 += T_vec[i]
+                                            *Gf[i][j]
+                                            *T_vec[j];
+                                      }
+                                    (void)TT3;
+                                    if ((Tt3<0?-Tt3:Tt3)
+                                        > 1e-12)
+                                        printf("      c=%2d"
+                                            " b=%.6f\n",
+                                            ci,
+                                            tt3/(Tt3*Tt3));
+                                    else
+                                        printf("      c=%2d"
+                                            " <T|t>=0\n",
+                                            ci);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            /* Only process first qualifying ideal */
+            break;
+        }
+    }
+}
+
+/* ================================================================ */
+/* Main                                                             */
+/* ================================================================ */
+
+int main(void) {
+    printf("KNOTAPEL DEMO 85: Indecomposability Parameter\n");
+    printf("==============================================\n");
+
+    test_link_state_enumeration();
+    test_ei_action();
+    test_tl_relations();
+    test_hamiltonian();
+    test_gauss_rank();
+    test_jordan_detection();
+    test_char_poly();
+    test_diagonalizability();
+    test_eigenvalues_and_jordan();
+    test_algebra_jordan();
+    test_compute_b();
+    test_b_projective_cover();
+    test_b_delta_perturbation();
+    test_b_leading_coeff();
+    test_sc_tl_relations();
+    test_b_spin_chain();
+
+    printf("\n=== Summary ===\n");
+    printf("Passed: %d, Failed: %d\n", n_pass, n_fail);
+
+    return n_fail > 0 ? 1 : 0;
+}

@@ -1,0 +1,30 @@
+---
+triple:          'arm64-apple-darwin'
+binary-path:     demo_85
+relocations:
+  - { offset: 0x26, size: 0x8, addend: 0x0, symName: _main, symObjAddr: 0x0, symBinAddr: 0x1000016FC, symSize: 0x5A94 }
+  - { offset: 0x6C, size: 0x8, addend: 0x0, symName: _alg_n, symObjAddr: 0x43380, symBinAddr: 0x1000320A8, symSize: 0x0 }
+  - { offset: 0x82, size: 0x8, addend: 0x0, symName: _alg_basis, symObjAddr: 0x43384, symBinAddr: 0x1000320AC, symSize: 0x0 }
+  - { offset: 0xCF, size: 0x8, addend: 0x0, symName: _alg_n_gens, symObjAddr: 0x44C44, symBinAddr: 0x10003396C, symSize: 0x0 }
+  - { offset: 0xE5, size: 0x8, addend: 0x0, symName: _alg_dim, symObjAddr: 0x32320, symBinAddr: 0x100021048, symSize: 0x0 }
+  - { offset: 0xFB, size: 0x8, addend: 0x0, symName: _alg_id_idx, symObjAddr: 0x32324, symBinAddr: 0x10002104C, symSize: 0x0 }
+  - { offset: 0x111, size: 0x8, addend: 0x0, symName: _alg_gen_idx, symObjAddr: 0x32328, symBinAddr: 0x100021050, symSize: 0x0 }
+  - { offset: 0x133, size: 0x8, addend: 0x0, symName: _alg_mt, symObjAddr: 0x32340, symBinAddr: 0x100021068, symSize: 0x0 }
+  - { offset: 0x155, size: 0x8, addend: 0x0, symName: _extract_null_space, symObjAddr: 0x8AC4, symBinAddr: 0x10000A1C0, symSize: 0x5B8 }
+  - { offset: 0x17C, size: 0x8, addend: 0x0, symName: _extract_null_space.work, symObjAddr: 0xCCE48, symBinAddr: 0x1000BBB70, symSize: 0x0 }
+  - { offset: 0x2AA, size: 0x8, addend: 0x0, symName: _n_pass, symObjAddr: 0x212D8, symBinAddr: 0x100010000, symSize: 0x0 }
+  - { offset: 0x2BF, size: 0x8, addend: 0x0, symName: _n_fail, symObjAddr: 0x212DC, symBinAddr: 0x100010004, symSize: 0x0 }
+  - { offset: 0x13EF, size: 0x8, addend: 0x0, symName: _main, symObjAddr: 0x0, symBinAddr: 0x1000016FC, symSize: 0x5A94 }
+  - { offset: 0x4472, size: 0x8, addend: 0x0, symName: _enum_ls_recurse, symObjAddr: 0x5A94, symBinAddr: 0x100007190, symSize: 0x130 }
+  - { offset: 0x4528, size: 0x8, addend: 0x0, symName: _build_hamiltonian, symObjAddr: 0x5BC4, symBinAddr: 0x1000072C0, symSize: 0x174 }
+  - { offset: 0x464B, size: 0x8, addend: 0x0, symName: _print_matrix, symObjAddr: 0x5D38, symBinAddr: 0x100007434, symSize: 0xF8 }
+  - { offset: 0x46F4, size: 0x8, addend: 0x0, symName: _gauss_rank, symObjAddr: 0x5E30, symBinAddr: 0x10000752C, symSize: 0x458 }
+  - { offset: 0x47E5, size: 0x8, addend: 0x0, symName: _jordan_analysis, symObjAddr: 0x6288, symBinAddr: 0x100007984, symSize: 0x4FC }
+  - { offset: 0x4A61, size: 0x8, addend: 0x0, symName: _char_poly_mod, symObjAddr: 0x6784, symBinAddr: 0x100007E80, symSize: 0x54C }
+  - { offset: 0x4F12, size: 0x8, addend: 0x0, symName: _poly_gcd_degree_mod, symObjAddr: 0x7350, symBinAddr: 0x100008A4C, symSize: 0x308 }
+  - { offset: 0x518F, size: 0x8, addend: 0x0, symName: _has_jordan_blocks, symObjAddr: 0x6CD0, symBinAddr: 0x1000083CC, symSize: 0x680 }
+  - { offset: 0x578D, size: 0x8, addend: 0x0, symName: _gauss_det, symObjAddr: 0x7B88, symBinAddr: 0x100009284, symSize: 0x564 }
+  - { offset: 0x5897, size: 0x8, addend: 0x0, symName: _geometric_multiplicity, symObjAddr: 0x7658, symBinAddr: 0x100008D54, symSize: 0x530 }
+  - { offset: 0x59A6, size: 0x8, addend: 0x0, symName: _alg_init, symObjAddr: 0x80EC, symBinAddr: 0x1000097E8, symSize: 0x7A4 }
+  - { offset: 0x612D, size: 0x8, addend: 0x0, symName: _alg_enum_segs, symObjAddr: 0x8890, symBinAddr: 0x100009F8C, symSize: 0x234 }
+...
