@@ -1,6 +1,6 @@
 # DKC Research: Next Priorities
 
-Generated 2026-02-20. Updated 2026-02-24 after D85-D92 mechanistic arc. Informed by synthesis documents (narrative, novelty, connections, four-lenses, vision-alignment). D64–D71 added: matroid recursion, Clifford staircase (Z[zeta_16]), 24-cell / quaternionic arc (D66–D71), spectral DKC. D72–D82 added: spherical design, eigenvector automaton, computational invariant, binocular DKC, 8-input scaling, activation zoo, recursive scaling, ζ₁₂ capacity, group finiteness survey, capacity scaling law, crossing depth. D83–D84 added: framing as computational content (+2 writhe loss), null states and logarithmic structure (null indispensability, LCFT Jordan-cell interpretation). D85–D92 added: indecomposability parameter b = -5/8 (D85-D86), regime transition for null dispensability (D87), anti-correlation mechanism and k-ladder resilience (D88), depth law mechanism fully explained (D89-D91: axis cancellation, cross-depth algebraic constraint, balanced exponentials, parity wall), parity-lock theorem (D92: +/-q encoding structurally locked to XOR/XNOR).
+Generated 2026-02-20. Updated 2026-02-24 after D85-D94 arc. Informed by synthesis documents (narrative, novelty, connections, four-lenses, vision-alignment). D64–D71 added: matroid recursion, Clifford staircase (Z[zeta_16]), 24-cell / quaternionic arc (D66–D71), spectral DKC. D72–D82 added: spherical design, eigenvector automaton, computational invariant, binocular DKC, 8-input scaling, activation zoo, recursive scaling, ζ₁₂ capacity, group finiteness survey, capacity scaling law, crossing depth. D83–D84 added: framing as computational content (+2 writhe loss), null states and logarithmic structure (null indispensability, LCFT Jordan-cell interpretation). D85–D92 added: indecomposability parameter b = -5/8 (D85-D86), regime transition for null dispensability (D87), anti-correlation mechanism and k-ladder resilience (D88), depth law mechanism fully explained (D89-D91: axis cancellation, cross-depth algebraic constraint, balanced exponentials, parity wall), parity-lock theorem (D92: +/-q encoding structurally locked to XOR/XNOR). D93–D94 added: complement-blindness theorem and phase_cell recovery (D93: 1wpi circuit complexity hierarchy, AND/XOR ratio explosion N=3-8, pigeonhole mechanism), solvability as capacity bottleneck confirmed via binary icosahedral group 2I (D94: Barrington's theorem computationally validated, five-pillar synthesis complete, "discrete algebraic reservoir computer" framing proposed).
 
 ---
 
@@ -90,6 +90,24 @@ D87 demonstrated that null indispensability is regime-dependent. At ζ₁₂ (in
 **Why:** A sharp threshold theorem for null dispensability would give a concrete design rule: below the transition, preserve nulls; above, prune safely. This connects to the regime-dependent design principle established by D87.
 **Effort:** SMALL (port D87 infrastructure to ζ₁₀ and truncated ζ₁₂; sweep catalog size; locate crossover).
 **Unblocks:** Completes the finite/infinite group regime characterization. Feeds Paper 7 regime-dependent design section.
+
+### 1.17-NEW RKHS kernel rank test (D95) — **NEW (HIGHEST PRIORITY, from D94)**
+**What:** Compute the DKC kernel matrix K(m,m') = quaternion inner product of signed sums for 2I (60 entries, non-solvable) vs z8 (24 entries, solvable). The rank of the kernel matrix predicts the reservoir's separation capacity. If rank(K_2I)/rank(K_z8) > 120/24 = 5, then non-solvability contributes above raw catalog size — confirming the "discrete algebraic reservoir computer" interpretation. If the ratio equals 120/24, non-solvability adds only proportional capacity (still confirms reservoir mapping but less dramatically).
+**Why:** This is one number that validates or falsifies the entire five-pillar synthesis completed in D94 (TL-as-computation + Barrington + Nazer-Gastpar + MVN + reservoir computing). The five-pillar synthesis is the most important theoretical result since the original DKC discovery. If the kernel rank test confirms the prediction, the reservoir computing pillar is quantitatively grounded, not just an analogy. If it fails, the reservoir framing needs revision.
+**Effort:** SMALL (single demo — compute kernel matrices from existing 2I and z8 catalogs, SVD for rank, compare ratios).
+**Unblocks:** Validates the reservoir computing pillar. Determines whether DKC-as-reservoir is a precise mathematical mapping or a suggestive analogy. Critical for any paper presenting the five-pillar synthesis.
+
+### 1.18-NEW Higher k_sec with 2I — **NEW (from D94)**
+**What:** D94 used k_sec=12 (384 cells with 31 directions). 2I has 9 conjugacy classes / half-angles — richer angular structure than z8. At k_sec=24, cell count roughly doubles (~768). Does N=8 XOR become nonzero for 2I? The pigeonhole mechanism (D93: 256 masks > 84 cells at depth 1) may be pushed back by doubling cell count.
+**Why:** Quick parameter sweep that tests whether the circuit complexity hierarchy is activation-tunable. If higher k_sec extends 2I's capacity to N=8, it confirms that the pigeonhole wall is a resolution limit, not a structural one. This has practical implications: the DKC compilation pipeline can tune activation resolution to target function arity.
+**Effort:** SMALL (change k_sec parameter in D94 infrastructure, re-run Phase 3).
+**Unblocks:** Determines whether 2I's angular richness is under-exploited at k=12. Informs activation design for non-solvable groups.
+
+### 1.19-NEW Depth law under phase_cell — **NEW (from D93)**
+**What:** D93 demonstrated that phase_cell (removing the sign-flip symmetry) recovers all 13 NPN classes and reveals the circuit complexity hierarchy. The depth law (max_xor ~ depth + 6) was established under combined_cell (D82-D91). Does the linear relationship hold under phase_cell? If so, does the slope differ for different Boolean functions (AND, MAJ, XOR)?
+**Why:** This is the natural successor to the 1wpi depth law test (1.12). D93 shows that phase_cell + 1wpi computes all functions, but the scaling behavior is unknown. If the depth law holds under phase_cell with the same slope, the compilation cost model is encoding-independent. If different functions have different slopes, the cost model is function-dependent — a richer but more complex picture.
+**Effort:** SMALL to MEDIUM (build depth-tracking closure for 1wpi/phase_cell catalogs; measure per-function capacity at each depth stratum).
+**Unblocks:** Completes the depth law generalization from parity-only (+/-q) to all functions (1wpi/phase_cell). Critical for Paper 7 and the compilation pipeline.
 
 ### 1.16-NEW Paper 7 potential: D85-D92 mechanistic arc — **NEW**
 **What:** The D85-D92 arc forms a coherent publication: (1) quantifying non-semisimplicity via b = -5/8 (D85-D86), (2) regime-dependent null dispensability (D87), (3) anti-correlation mechanism and robustness engineering (D88), (4) depth law mechanism fully explained — axis cancellation, cross-depth algebraic constraint, spectral inversion (D89-D90), (5) parity wall confirmation (D91), (6) parity-lock theorem (D92). The arc answers "why does DKC work and what are its structural limits?"
@@ -373,6 +391,23 @@ D92 (parity-lock theorem: +/-q encoding locked to XOR/XNOR, 6-part proof)
 
 Paper 7 is qualitatively different from Paper 6. Paper 6 asks "how far does DKC scale?"; Paper 7 asks "why does it work and what are its structural limits?" The headline results are: (1) the parity-lock theorem — encoding determines computability, more fundamental than activation or catalog (D92), (2) the depth law mechanism fully explained — relational, not positional (D89-D91), (3) the indecomposability parameter b = -5/8 quantifying the LCFT non-semisimple structure (D85-D86), (4) regime-dependent design rules (D87), (5) robustness engineering via k-ladder resilience (D88). The 1wpi depth law test (1.12) and balanced exponentials proof (1.14) would significantly strengthen the paper.
 
+**The shortest path to Paper 8 (Circuit Complexity and Algebraic Reservoir Computing: The D93-D94 Arc) — NEW:**
+
+```
+D93 (complement-blindness theorem, phase_cell recovery, circuit complexity hierarchy)
+D94 (solvability bottleneck, Barrington confirmation, five-pillar synthesis)
+         |
+         v
+1.17-NEW (D95 RKHS kernel rank — validates reservoir computing pillar)
+1.18-NEW (higher k_sec with 2I — tests activation-tunable pigeonhole wall)
+1.19-NEW (depth law under phase_cell — generalizes scaling to all functions)
+         |
+         v
+  Paper 8 submission
+```
+
+Paper 8 is the synthesis paper — it connects five previously separate theoretical traditions (TL algebra, Barrington branching programs, Nazer-Gastpar compute-and-forward, MVN neurons, reservoir computing) through the DKC lens. The headline results are: (1) complement-blindness theorem — activation symmetry determines function reachability (D93), (2) circuit complexity hierarchy in DKC — Hastad/LMN/Furst-Saxe-Sipser made concrete (D93), (3) solvability as capacity bottleneck — Barrington's theorem computationally confirmed (D94), (4) the "discrete algebraic reservoir computer" framing with testable kernel-rank prediction (D94). The RKHS kernel test (1.17) is the ONE experiment that would make this paper's central claim quantitative rather than structural. MILESTONE: with D94, the five-pillar synthesis is COMPLETE — all five pillars are connected through computational results, not just analogies.
+
 ---
 
 ## Open Questions
@@ -402,6 +437,13 @@ Paper 7 is qualitatively different from Paper 6. Paper 6 asks "how far does DKC 
 - ~~Can DKC compute non-parity functions (AND, OR, MAJ)?~~: RESOLVED (D92). Not under the +/-q encoding. The parity-lock theorem proves masks 0...0 and 1...1 always produce identical sums (both zero), making any f where f(0...0) ≠ f(1...1) impossible. XOR survives because XOR(0...0) = XOR(1...1) = 0 for even-length inputs. The 1wpi encoding (D48/D50) computes all 13 NPN classes — the limitation is encoding-specific, not DKC-inherent.
 - ~~What is the indecomposability parameter b?~~: RESOLVED (D85). b = -5/8 (Pearce-Rasmussen convention, per-cell/physical value). Computed from first principles at TL_4 via leading-coefficient extraction from delta-parameterized Markov trace on full regular representation. The b = -2 vs -5/8 "controversy" dissolved: different normalization conventions (regular rep vs per-cell, factor of 4 = dim(0-TL sector)).
 - ~~Can b be extracted from a single projective cover P_{0,0}?~~: RESOLVED (D86). No. Universal divergence — the valuation condition p_tt = 2·p_Tt never holds on a single P_{0,0}. The multiplicity from the regular representation is structurally essential, not just a scale factor. Novel negative result.
+
+### Resolved by D93–D94
+- ~~Can DKC compute AND/OR/MAJ under 1wpi encoding?~~: RESOLVED (D93). Yes. Phase_cell (removing the sign-flip normalization) recovers all 13 NPN classes at N=3 (12/13 at d=0, last at d=1). Complement-blindness was the obstruction under combined_cell; phase_cell breaks it.
+- ~~What is the circuit complexity hierarchy in DKC?~~: RESOLVED (D93-D94). AND (AC^0) degrades gracefully (97% to 42%, N=3-8). MAJ (TC^0) shows cliff at N=8 (2.4%). XOR (not in AC^0) killed by pigeonhole at N>=7. Hierarchy universal across group structures (z8, 2I, z12). Fourier degree determines partition geometry complexity.
+- ~~Can E₈ (binary icosahedral) be reached for DKC?~~: RESOLVED (D94). Yes, via explicit Z[sqrt5] generators. |2I| = 120, 60 bracket values, 31 distinct S² directions, 9 conjugacy classes. BFS closure in 7 rounds. Exact integer arithmetic in Z[sqrt5].
+- ~~Does non-solvability predict computational capacity (Barrington)?~~: RESOLVED (D94). Yes. At matched catalog size (24 vs 24), non-solvable 2I outperforms solvable z8 for XOR, with advantage growing with arity (1.07x at N=3 to 1.67x at N=6). The unique non-solvable finite SU(2) subgroup IS the capacity maximizer among finite groups.
+- ~~Is the finite/infinite capacity boundary the solvable/non-solvable boundary?~~: PARTIALLY RESOLVED (D94). 2I is the bridge: finite (120 elements, hard ceiling) but non-solvable (higher capacity than solvable z8 at matched size). The crossover at N=6-7 where 2I overtakes even truncated z12 demonstrates that non-solvability provides specifically the structure parity needs at the computational boundary.
 
 ### Still Open
 - Analytical proof of the 13=13 bandwidth bound (D71/D72 — top priority, see 1.3).
@@ -446,3 +488,14 @@ Paper 7 is qualitatively different from Paper 6. Paper 6 asks "how far does DKC 
 - Does the linear depth law hold for ALL Boolean functions, or just parity under +/-q encoding? (D91/D92 open — 1.12 addresses this)
 - Can a phase-sensitive activation that distinguishes S from -S break the parity lock? (D92 open)
 - Hybrid encodings: can a mixed (+/-q for some inputs, 1wpi for others) balance function breadth with depth scaling? (D92 open)
+- **RKHS kernel rank: does rank(K_2I)/rank(K_z8) > 120/24? One number validates the five-pillar synthesis. (D94 open, see 1.17 — HIGHEST PRIORITY)**
+- **Higher k_sec with 2I: does k_sec=24 push pigeonhole wall for 2I at N=8? (D94 open, see 1.18)**
+- **Depth law under phase_cell: does max_xor ~ depth + 6 hold without sign-flip symmetry? (D93 open, see 1.19)**
+- MAJ cliff mechanism: is the 28x drop from N=7 to N=8 a threshold or gradual? Related to TC^0-completeness? (D93 open)
+- N=6-7 crossover: why does 2I overtake z12 specifically at N=6? What structural feature of non-solvable finite groups is load-bearing? (D94 open)
+- Size vs solvability: 2I truncated to 51 entries vs z12 at 51 for clean disentangling. (D94 open)
+- Quantum dimension direct test at Fibonacci parameter: dense catalog at q = e^{2*pi*i/5} vs 2I. (D94 open)
+- Cross-depth 2I analysis: does the symmetric BFS profile (5,8,11,12,11,8,4,1) translate to symmetric contribution profile? (D94 open)
+- XOR growth curve shape: N=6 logarithmic saturation — universal or N-dependent? Connection to Barrington scaling. (D93 open)
+- Complement-blindness generalization: full characterization of complement-blind Boolean function families under various activations. (D93 open)
+- Circuit complexity hierarchy rate dependence: does the group structure affect the AND/XOR ratio divergence rate? (D93/D94 open)

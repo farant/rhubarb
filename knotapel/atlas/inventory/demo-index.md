@@ -1,6 +1,6 @@
 # Demo Index
 
-80 demos cataloged. Generated 2026-02-20. Updated 2026-02-23 (added D85-D92: indecomposability parameter b=-5/8, direct b negative result, null dispensability at zeta_12, anti-correlation mechanism, depth law mechanism arc D89-D91, parity-lock theorem D92).
+82 demos cataloged. Generated 2026-02-20. Updated 2026-02-24 (added D93-D94: complement-blindness theorem + circuit complexity hierarchy LANDMARK, binary icosahedral group 2I solvability bottleneck).
 
 ---
 
@@ -5057,3 +5057,149 @@ The +/-q input encoding is structurally parity-locked — only XOR/XNOR are comp
 - **Phase-sensitive activation**: The sign-flip symmetry (combined_cell(S) = combined_cell(-S)) is identified as a second parity-lock mechanism (exploited in D93). Can a phase-sensitive activation that distinguishes S from -S break the parity lock while preserving the depth law structure?
 - **Hybrid encodings**: Can a mixed encoding (some weights +/-q paired, some 1wpi) achieve a richer set of Boolean functions while maintaining some depth-law structure?
 - **MAJ conflict count (19/27)**: MAJ has the most class conflicts of any tested function. Is this related to MAJ's computational complexity (MAJ is TC^0-complete, strictly between AC^0 and NC^1)?
+
+---
+
+## Demo 93: Function Scaling — 1-Weight-Per-Input Encoding
+
+- **Status**: COMPLETE (LANDMARK)
+- **File**: `demo_93_function_scaling_1wpi/main.c` (~1636 lines)
+- **Tests**: 37/37 pass (Phases 1-8)
+- **Depends on**: Demo 92 (parity-lock theorem, +/-q encoding is XOR-only), Demo 82-91 (depth-law arc, combined_cell activation framework), Demo 48/50 (forward DKC, 1wpi encoding computes all 13 NPN classes with split-sigmoid/MVN), Demo 80 (finite/infinite boundary)
+- **Feeds into**: Demo 94 (binary icosahedral group, solvability as capacity bottleneck), Demo 95 (RKHS kernel computation), activation zoo research, encoding design theory, depth law under phase_cell
+
+### Headline
+The 1-weight-per-input encoding under combined_cell is complement-blind (only complement-invariant functions achievable); removing the sign flip (phase_cell) recovers all 13 NPN classes, and a circuit complexity hierarchy emerges as hit-rate divergence: AND/XOR ratio explodes from 1.01 to infinity as N grows from 3 to 8.
+
+### Key Results
+
+- **Complement-Blindness Theorem (Phases 1-4)**: Under combined_cell, mask m and ~m produce sums S and -S; the `if (qa < 0)` normalization maps both to the same cell. ANY function where f(m) != f(~m) is impossible. At odd N, NO standard Boolean function survives. At N=3, only 2 obscure NPN classes (out of 14) are complement-invariant — none contains AND, OR, XOR, or MAJ.
+- **Phase 5 — Phase-sensitive activation recovery (N=3)**: Removing the `if (qa < 0)` flip creates phase_cell: sector spans [0,360) not [0,180). Complement-pair sharing drops from 100% to 1.1%. ALL 13 NPN classes recovered (12/13 at depth 0, last at depth 1).
+- **Phases 6-8 — Circuit Complexity Hierarchy**: AND/XOR ratio at depth 1: 1.01 (N=3), 1.08 (N=4), 1.44 (N=5), 7.27 (N=6), 2762 (N=7), infinity (N=8). Three regimes: AND (AC^0) degrades gracefully 97%→42%, MAJ (TC^0) cliff at N=8 (2.4%), XOR (parity, outside AC^0) killed by pigeonhole at N≥7.
+- **Pigeonhole mechanism**: 84 cells at depth 1. XOR dies when 2^N > cells. AND survives (1-hot needs one unique cell).
+- **MAJ/XOR crossover at depth ≈3-4 (N=6)**: Depth disproportionately helps parity.
+
+### Theorems/Conjectures
+
+- **Complement-Blindness Theorem (PROVED + computationally verified)**: combined_cell(S) = combined_cell(-S) due to |qa| normalization. Extends D92's Parity-Lock Theorem: encoding provides algebra, activation selects extractable functions.
+- **Circuit Complexity Hierarchy in DKC (DEMONSTRATED)**: Universal across group structures (confirmed by D94).
+- **Pigeonhole Mechanism (DEMONSTRATED)**: The circuit depth bottleneck in finite discrete systems.
+
+### Data
+
+- **Phase 8 headline table (depth 1, 17 entries, 84 cells, exhaustive)**:
+
+| N | masks | XOR% | AND% | MAJ% | AND/XOR ratio |
+|---|-------|------|------|------|---------------|
+| 3 | 8 | 96.8% | 97.7% | 99.7% | 1.01 |
+| 4 | 16 | 85.6% | 92.3% | 91.1% | 1.08 |
+| 5 | 32 | 58.3% | 84.1% | 94.3% | 1.44 |
+| 6 | 64 | 9.9% | 71.7% | 49.6% | 7.27 |
+| 7 | 128 | 0.02% | 56.8% | 68.7% | 2762 |
+| 8 | 256 | 0.00% | 41.6% | 2.4% | infinity |
+
+- **Phase 7 N=6 AND/XOR ratio by depth**: d=1: 7.27, d=2: 2.77, d=3: 1.75, d=4: 1.27, d=5: 1.13, d=6: 1.08 (convergence)
+- **Pigeonhole**: 84 cells at depth 1. N≥7: 2^N > cells → XOR impossible.
+
+### Code Assets
+
+- **`phase_cell`**: Phase-sensitive activation — combined_cell WITHOUT sign flip. THE key activation for circuit complexity hierarchy.
+- **`test_1wpi_phase`**: 1wpi Boolean function test under phase_cell.
+- **`init_npn()` / `sweep_triple_npn()`**: NPN equivalence class enumeration for 3-input functions.
+
+### Literature Touched
+
+- **Hastad (1986/1987)**: Parity requires exp(Omega(n^{1/(d-1)})) gates at bounded depth. D93 makes concrete: AND/XOR = 1→2762→∞.
+- **Barrington (1989)**: NC^1 = programs over non-solvable groups. Solvable/non-solvable boundary predicts capacity walls.
+- **LMN (1993)**: AC^0 Fourier concentration below degree (log n)^d. AND's robustness to cell limits.
+- **Furst-Saxe-Sipser (1984)**: Parity-not-in-AC^0. Theoretical backdrop.
+- **Nazer-Gastpar**: DKC = multiplicative catalog + additive readout + activation. Novel hybrid model.
+
+### Open Questions
+
+- Higher k_sec: does N=8 XOR become nonzero at k_sec=24?
+- Depth law under phase_cell: does max_xor ≈ depth+6 still hold?
+- MAJ cliff mechanism: threshold phenomenon or gradual?
+- RKHS kernel rank test (seeded as D95)
+
+---
+
+## Demo 94: Binary Icosahedral Group (2I, E8) — Solvability as Capacity Bottleneck
+
+- **Status**: COMPLETE (RESULT)
+- **File**: `demo_94_binary_icosahedral/main.c` (~1282 lines)
+- **Tests**: 20/20 pass (Phases 0-4)
+- **Depends on**: Demo 93 (circuit complexity hierarchy, 1wpi framework), Demo 80 (finite/infinite capacity boundary), Demo 92 (parity-lock theorem), Demo 48/50 (forward DKC)
+- **Feeds into**: Demo 95 (RKHS kernel computation), higher k_sec with 2I, quantum dimension direct test, cross-depth 2I analysis
+
+### Headline
+The binary icosahedral group 2I (order 120, unique non-solvable finite SU(2) subgroup) outperforms solvable z8 at matched catalog size, confirming solvability as the capacity bottleneck predicted by Barrington's theorem.
+
+### Key Results
+
+- **Phase 0 — Z[sqrt5] exact arithmetic**: All group operations in exact integer arithmetic. Generators: s = (1+i+j+k)/2 (order 6), t = (phi+phi_inv*i+j)/2 (order 10). 11 verification tests.
+- **Phase 1 — BFS closure**: |2I| = 60 (mod sign), 7 BFS rounds. Depth profile: 5,8,11,12,11,8,4,1 (symmetric diamond). 9 conjugacy classes, ~31 S^2 directions (vs 13 for z8).
+- **Phase 2 — Size-controlled comparison (24 vs 24)**: N=6 XOR: 2I wins by 78% (23137 vs 12983). N=7 XOR: 2I wins ~3.4x. N=7 AND: 2I wins ~3.4x.
+- **Phase 2b — Depth-matched**: 2I advantage ACCELERATES: 1.07x (N=3) → 1.14x (N=4) → 1.21x (N=5) → 1.67x (N=6).
+- **Phase 3 — Full 2I (60 entries, 384 cells)**: AND/XOR ratio 1.25→68827 (N=3→8). Hierarchy universal across groups. N=7 XOR: 2I=2.38% vs z12=0.02% (119x).
+- **Phase 4 — Three-way**: Crossover at N=6: z12 wins small N (angular variety), 2I wins N=6-7 (non-solvability at computational boundary).
+
+### Theorems/Conjectures
+
+- **Solvability Bottleneck (CONFIRMED computationally)**: Non-solvable 2I beats solvable z8 at matched size, advantage growing with arity.
+- **Circuit Complexity Hierarchy Universality (CONFIRMED)**: AND/XOR explosion in ALL tested groups.
+- **DKC as Discrete Algebraic Reservoir Computer (PROPOSED)**: Testable: rank(K_2I)/rank(K_z8) > 120/24 if non-solvability contributes above size.
+
+### Data
+
+**Phase 2b depth-matched (first 24 from 2I by BFS vs z8, 12 dirs, 156 cells):**
+
+| N | z8 XOR% | 2I-24 XOR% | ratio |
+|---|---------|------------|-------|
+| 3 | 73.12% | 78.06% | 1.07x |
+| 4 | 75.38% | 85.77% | 1.14x |
+| 5 | 40.47% | 48.95% | 1.21x |
+| 6 | 9.65% | 16.11% | 1.67x |
+
+**Phase 3 full capacity (60 entries, 31 dirs, 384 cells):**
+
+| N | XOR% | AND% | MAJ% | AND/XOR |
+|---|------|------|------|---------|
+| 3 | 74.80% | 93.42% | 74.78% | 1.25 |
+| 4 | 91.33% | 94.73% | 74.50% | 1.04 |
+| 5 | 59.98% | 93.74% | 61.34% | 1.56 |
+| 6 | 37.12% | 89.72% | 26.20% | 2.42 |
+| 7 | 2.38% | 81.62% | 5.06% | 34.29 |
+| 8 | 0.00% | 68.83% | 0.01% | 68827 |
+
+**Quantum dimension table:**
+
+| Root | [2]_q | Finite? | Group | Solvable? | Capacity |
+|------|-------|---------|-------|-----------|----------|
+| z4 | -2 | YES (4) | Q8 | Yes | Very limited |
+| z8 | 0 | YES (24) | 2O (E7) | Yes | XOR8 ceiling |
+| z12 | 1 | NO (inf) | Dense | N/A | XOR12+ |
+| 2I | phi | YES (120) | 2I (E8) | NO | Higher than z8 |
+
+### Code Assets
+
+- **`Zr5` / `Q2I`**: Exact Z[sqrt5] quaternion arithmetic. Fully reusable.
+- **`build_2i()`**: BFS closure of 2I from generators s,t. Depth tracking.
+- **`build_z12_truncated(max_depth)`**: Truncated z12 catalog for controlled comparisons.
+- **Fisher-Yates shuffle**: Random subset selection for size-controlled experiments.
+
+### Literature Touched
+
+- **Barrington (1989)**: NC^1 = non-solvable groups. D94 confirms computationally.
+- **ADE classification**: 2I is the unique non-solvable finite SU(2) subgroup (E8).
+- **Burrello et al. (2010 PRL)**: Fibonacci anyons use 2I for universal TQC.
+- **Liu & Calderbank (2008 IEEE)**: Icosian ring = E8 lattice. DKC sums are icosian ring elements.
+- **Mochon (2003)**: Fibonacci parameter [2]_q = phi^{-1}, maximally computational for TQC.
+- **Reservoir computing (Maass/Gonon)**: DKC = discrete algebraic reservoir. Five-pillar synthesis complete.
+
+### Open Questions
+
+- RKHS kernel rank (D95): does rank(K_2I)/rank(K_z8) > 120/24?
+- Higher k_sec with 2I: does 384-cell space fully exploit 9 half-angles?
+- N=6-7 crossover mechanism: why does 2I overtake z12 specifically there?
+- Size vs solvability disentangling: 2I truncated to 51 entries vs z12 at 51

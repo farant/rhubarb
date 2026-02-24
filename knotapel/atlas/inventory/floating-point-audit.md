@@ -1,6 +1,6 @@
 # Floating-Point Usage Audit
 
-Last updated: 2026-02-23 (80 demos, D01-D92)
+Last updated: 2026-02-24 (82 demos, D01-D94)
 
 ## Purpose
 
@@ -102,6 +102,8 @@ DKC's core thesis is exact arithmetic in Z[zeta_8] — zero floating-point error
 | 90 | MIXED (geom+stat) | Quaternion engine + extract_angle (acos) for pairwise sum-angle census. Statistics: sum-angle histograms (min/max/mean/distinct counts), depth-stratified angle distributions, random-vs-structured comparison, winner anti-alignment statistics (axis-dot), entries-per-direction concentration |
 | 91 | MIXED (geom+stat) | Quaternion engine + combined_cell with k_sec sweep (activation resolution experiment). Core question is about the FP geometric activation (acos sector classification). Statistics: XOR/XNOR/AND/OR/MAJ separation rates as percentages, collision analysis, masks-per-cell ratios |
 | 92 | MIXED (geom+stat) | Same quaternion engine + sector_of/voronoi_of for multi-function scaling. FP quaternion sums, sector classification (acos). Statistics: per-function separation rates at each depth, scaling comparison across AND/OR/MAJ/XOR, percentage displays |
+| 93 | MIXED (geom+stat) | Exact BFS closure (quaternion group elements stored as FP from generators). FP phase_cell/combined_cell activation (atan2/acos sector classification). FP Voronoi cell assignment. FP comparison for complement-pair sharing test (1e-6 tolerance). Statistics: hit rates, ratios, growth factors across N=3-8 and depths 0-8 |
+| 94 | EXACT-CORE | Z[sqrt5] exact integer arithmetic for ALL group operations (Zr5 ring, Q2I quaternion multiply, BFS closure, norm check). FP only at readout boundary: q2i_to_float() converts exact Q2I to FP Quat for phase_cell/Voronoi activation and hit rate computation. Group theory is fully exact; activation/comparison is FP |
 
 ## Summary by Category
 
@@ -110,9 +112,9 @@ DKC's core thesis is exact arithmetic in Z[zeta_8] — zero floating-point error
 | INTEGER | 12 | 01-09, 39, 60, 61 |
 | DISPLAY-ONLY | 1 | 38 |
 | VALIDATION | 8 | 29, 35, 51, 52, 53, 54, 72, 85 |
-| EXACT-CORE | 17 | 10, 11, 13-19, 21, 23, 24, 45-47, 50, 86 |
+| EXACT-CORE | 18 | 10, 11, 13-19, 21, 23, 24, 45-47, 50, 86, 94 |
 | GEOMETRIC | 13 | 62, 63, 65, 67-69, 71, 73, 75, 77-79, 81 |
-| MIXED | 29 | 12, 20, 22, 25-28, 48-49, 55-59, 64, 66, 70, 74, 76, 80, 82-84, 87-92 |
+| MIXED | 30 | 12, 20, 22, 25-28, 48-49, 55-59, 64, 66, 70, 74, 76, 80, 82-84, 87-93 |
 
 ## Three Regimes
 
@@ -128,7 +130,7 @@ Everything computational is complex doubles. The bracket itself is computed as `
 D29 introduces exact Z[zeta_8] integer arithmetic. From here, the *values* (bracket weights) are exact. But FP persists at two boundaries:
 
 - **Activation boundary (D45-D65)**: The activation function (split-sigmoid, sector_classify via atan2, magnitude threshold) converts exact cyclotomic values into Boolean outputs. The classification step is inherently FP even though the inputs are exact.
-- **Geometric boundary (D62-D92)**: S2 geometry, quaternion rotations, spherical harmonics. The *where* (eigenvector directions on S2) is continuous geometry, even though the *what* (bracket values) is exact algebra. D81-D92 extend this boundary with quaternion group closure, depth-stratified analysis, sum-angle structure, activation resolution sweeps, and multi-function scaling — all built on the same FP geometric engine.
+- **Geometric boundary (D62-D93)**: S2 geometry, quaternion rotations, spherical harmonics. The *where* (eigenvector directions on S2) is continuous geometry, even though the *what* (bracket values) is exact algebra. D81-D93 extend this boundary with quaternion group closure, depth-stratified analysis, sum-angle structure, activation resolution sweeps, multi-function scaling, and the complement-blindness/phase-cell recovery analysis — all built on the same FP geometric engine. D94 introduces a notable refinement: the group algebra (Z[sqrt5] quaternion multiplication, BFS closure, norm checking) is fully exact integer arithmetic; FP appears only at the q2i_to_float() readout boundary where exact group elements are converted to the FP activation framework.
 
 ## Exactification Opportunities
 

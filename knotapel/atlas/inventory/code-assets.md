@@ -1,6 +1,6 @@
 # Code Assets Catalog
 
-Reusable code patterns across 92 knotapel demos. Updated 2026-02-23 (added Demos 85-92).
+Reusable code patterns across 94 knotapel demos. Updated 2026-02-24 (added Demos 93-94).
 
 ---
 
@@ -1977,6 +1977,144 @@ Reusable code patterns across 92 knotapel demos. Updated 2026-02-23 (added Demos
 
 ---
 
+## 20. Complement-Blindness and Phase-Cell Activation (Demo 93)
+
+### 20.1 Phase-Sensitive Activation (`phase_cell`)
+
+- **What it does**: Identical to `combined_cell` but WITHOUT the `if (qa < 0)` sign-flip normalization. The sector spans [0, 360) instead of [0, 180), breaking the S <-> -S complement symmetry. This is the key activation enabling computation of all Boolean functions under 1wpi encoding.
+- **Introduced in**: Demo 93
+- **Reused in**: Demo 94 (1wpi framework for all three group comparisons)
+- **Key types/functions**:
+  - `phase_cell(sa, sb, sc, sd, k_sec)` — maps quaternion sum to (sector x Voronoi cell) index; sector computed from atan2 without absolute-value normalization; returns cell index in [0, k_sec * n_dir)
+  - Contrast with `combined_cell`: same inputs, same Voronoi partition, different sector computation (full [0,360) vs folded [0,180))
+- **Approximate size**: ~20 lines
+- **Notes**: The removal of one line of code (`if (qa < 0) { qa = -qa; ... }`) transforms the activation from complement-blind to complement-sensitive. Under combined_cell: mask m and ~m always map to the same cell (100% sharing). Under phase_cell: sharing drops to 1.1%, and all 13 NPN classes become achievable at N=3. This is the architectural discovery enabling the circuit complexity hierarchy.
+
+### 20.2 1wpi Boolean Function Testers (`test_1wpi`, `test_1wpi_phase`)
+
+- **What it does**: Tests whether a weight tuple in the 1-weight-per-input encoding separates class-0 from class-1 masks for an arbitrary Boolean function under either combined_cell or phase_cell activation.
+- **Introduced in**: Demo 93
+- **Reused in**: Demo 94 (shared pattern for all group comparisons)
+- **Key types/functions**:
+  - `test_1wpi(indices, n_weights, k_sec, truth_table)` — 1wpi test under combined_cell; for each input mask, builds quaternion sum with signs {+1,-1} determined by mask bits; maps through combined_cell; checks purity
+  - `test_1wpi_phase(indices, n_weights, k_sec, truth_table)` — same as test_1wpi but uses phase_cell
+  - `count_phase_ex(n_weights, bf_limit, truth_table)` — exhaustive winner counting under phase_cell across K_SHORT = {6, 12, 24} ladder
+  - `sample_phase(n_weights, bf, n_samples, truth_table, rng)` — Monte Carlo winner sampling for larger N where exhaustive enumeration is intractable (used for N=7,8)
+- **Approximate size**: ~120 lines
+- **Notes**: The 1wpi encoding assigns one catalog quaternion per input bit. Mask bits determine sign: bit=1 gives +q_i, bit=0 gives -q_i. The sum S = sum(+/-q_i) is then mapped through activation. This is distinct from the +/-q encoding of D92 where both paired values are in the catalog.
+
+### 20.3 NPN Equivalence Class Enumeration (`init_npn`, `sweep_triple_npn`)
+
+- **What it does**: Enumerates all 14 NPN equivalence classes for 3-input Boolean functions. For each weight triple under phase_cell, identifies which NPN classes are achievable by testing all possible cell-to-output assignments.
+- **Introduced in**: Demo 93
+- **Reused in**: (Demo 93 only — used for Phase 4 and Phase 5 complement-invariant and phase-cell diagnostics)
+- **Key types/functions**:
+  - `init_npn()` — generates canonical truth table for each of 14 NPN classes by enumerating all 6 input permutations x 8 input complementations x output negation; deduplicates to find 14 unique representatives
+  - `npn_xform()` — applies an NPN transformation (permutation + complement + negation) to a truth table
+  - `sweep_triple_npn(idx, k_sec, cls_hit)` — for a given 3-weight triple under phase_cell, tries all possible cell-to-output assignments; records which NPN classes are achievable; fills cls_hit boolean array
+- **Approximate size**: ~120 lines
+- **Notes**: 14 NPN classes at 3 inputs include constant (1), threshold/AND/OR (4), XOR (1), MAJ (1), and 7 others. Only 2 non-trivial classes are complement-invariant. Under phase_cell: 12/13 non-trivial classes achieved at depth 0, last class at depth 1. Under combined_cell: 0/13 at any depth (all zero for odd N).
+
+### 20.4 BFS Closure with Depth Tracking (`build_closure`)
+
+- **What it does**: SU(2) group closure with BFS round tracking, producing a catalog with per-element depth assignments. Extended from D80-D92 with snapshot/filter pattern for cumulative depth experiments.
+- **Introduced in**: Demo 80 (original); Demo 93 (snapshot/filter extensions)
+- **Reused in**: Demo 94 (shared infrastructure)
+- **Key types/functions**:
+  - `build_closure(verbose)` — BFS closure with g_depth[] tracking; identity + generators at depth 0
+  - `save_catalog()` / `load_up_to_depth(max_d)` — snapshot/filter pattern enabling depth-stratified experiments without rebuilding closure
+- **Approximate size**: ~80 lines
+- **Notes**: D93 uses zeta_12 with 4096 entries across 9 BFS rounds. The snapshot pattern enables rapid iteration across depth cutoffs for the scaling analysis in Phases 7-8.
+
+---
+
+## 21. Binary Icosahedral Group and Exact Z[sqrt5] Arithmetic (Demo 94)
+
+### 21.1 Z[sqrt5] Ring Arithmetic (`Zr5`)
+
+- **What it does**: Exact integer arithmetic in the ring Z[sqrt5]. Each element represents a + b*sqrt(5) using two long integers. Full ring operations with no floating point.
+- **Introduced in**: Demo 94
+- **Reused in**: (Demo 94 only — but reusable for any Z[sqrt5] computation including icosian ring, Fibonacci-parameter TQC)
+- **Key types/functions**:
+  - `Zr5` struct: two `long` fields `a`, `b` representing a + b*sqrt(5)
+  - `zr5_make(a, b)`, `zr5_add(x, y)`, `zr5_sub(x, y)`, `zr5_neg(x)` — basic ring operations
+  - `zr5_mul(x, y)` — multiplication using identity (a + b*sqrt5)(c + d*sqrt5) = (ac + 5bd) + (ad + bc)*sqrt5
+  - `zr5_eq(x, y)` — exact equality
+  - `zr5_div4(x)` — division by 4 (for quaternion renormalization after /16 -> /4)
+- **Approximate size**: ~50 lines
+- **Notes**: The key algebraic innovation: 2I group elements are quaternions over Z[sqrt5]/4, not Z[zeta_8]. phi = (1+sqrt5)/2 is represented as Zr5{1,1} (before the /2 that is absorbed into the quaternion's /4 denominator). Fully exact — no floating point in any group operation.
+
+### 21.2 Quaternion over Z[sqrt5] (`Q2I`)
+
+- **What it does**: Four-component quaternion with Zr5 entries, representing (a + b*sqrt5)/4 per component. Full quaternion algebra for the binary icosahedral group.
+- **Introduced in**: Demo 94
+- **Reused in**: (Demo 94 only — but reusable for icosian ring computations)
+- **Key types/functions**:
+  - `Q2I` struct: four `Zr5` fields `a`, `b`, `c`, `d` representing quaternion components (real, i, j, k), each divided by 4
+  - `q2i_make(a, b, c, d)` — constructor from four Zr5 values
+  - `q2i_eq(p, q)` — exact equality
+  - `q2i_neg(p)` — quaternion negation
+  - `q2i_conj(p)` — quaternion conjugate (negate i, j, k components)
+  - `q2i_mul(p, q)` — Hamilton product with `zr5_div4` renormalization (products of /4 quaternions give /16 results, divided back to /4)
+  - `q2i_is_unit(p)` — unit norm check: |p|^2 = a^2 + b^2 + c^2 + d^2 = 16 (in the /4 representation)
+  - `q2i_to_float(p)` — converts exact Q2I to floating-point Quat for use with the phase_cell/Voronoi framework
+- **Approximate size**: ~80 lines
+- **Notes**: The /4 representation means the norm check is q.a^2 + q.b^2 + q.c^2 + q.d^2 = 16 (not 1). Multiplication involves zr5_mul for each Hamilton product term, then zr5_div4 to renormalize from /16 back to /4. The 120 elements of 2I are all unit quaternions under this representation.
+
+### 21.3 Binary Icosahedral Group BFS Closure (`build_2i`)
+
+- **What it does**: BFS closure of the binary icosahedral group from two generators s and t. Stores elements in a global array with depth tracking. Handles mod-sign identification (120 elements -> 60 bracket values).
+- **Introduced in**: Demo 94
+- **Reused in**: (Demo 94 only)
+- **Key types/functions**:
+  - `build_2i(verbose)` — BFS closure: starts from identity + generators s and t; at each round, multiplies all current elements by both generators; deduplicates via exact Q2I equality (checking both +q and -q); terminates when no new elements appear
+  - Generator s: (1 + i + j + k)/2, order 6 (s^6 = 1)
+  - Generator t: (phi + phi_inv*i + j)/2, order 10 (involves golden ratio)
+  - `g_2i[]` global array: stores all 60 bracket values (120 mod sign)
+  - `g_2i_depth[]`: per-element BFS depth tracking
+  - Depth profile: 5, 8, 11, 12, 11, 8, 4, 1 (symmetric diamond in 7 rounds)
+- **Approximate size**: ~100 lines
+- **Notes**: The symmetric diamond depth profile is characteristic of 2I's Cayley graph. 9 conjugacy classes with half-angles at 0, 36, 60, 72, 90, 108, 120, 144, 180 degrees. ~31 distinct S2 directions (vs 13 for z8). The group is the unique non-solvable finite SU(2) subgroup.
+
+### 21.4 Zeta-12 Truncated Catalog Builder (`build_z12_truncated`)
+
+- **What it does**: Constructs a zeta_12 catalog truncated to a given BFS depth, using four generators (e^{i*pi/6} rotations). Used for the three-way comparison in Phase 4.
+- **Introduced in**: Demo 94
+- **Reused in**: (Demo 94 only)
+- **Key types/functions**:
+  - `build_z12_truncated(max_depth)` — BFS closure of zeta_12 generators, stopping at the specified depth; stores in global catalog with depth tracking
+  - Four generators: perpendicular-axis rotations at zeta_12 half-angle (pi/6)
+  - At depth<=2: produces 51 entries, 22 directions, 276 cells
+- **Approximate size**: ~60 lines
+- **Notes**: Provides the infinite-group non-solvable baseline for the three-way comparison. Truncation to depth<=2 gives a catalog comparable in size to 2I's 60 entries, enabling fair comparison.
+
+### 21.5 Fisher-Yates Shuffle for Random Subset Selection
+
+- **What it does**: Produces random subsets of a given size from a larger array using partial Fisher-Yates shuffle with LCG-based RNG. Used for drawing random 24-element subsets from the 60-element 2I catalog.
+- **Introduced in**: Demo 89 (`shuffle` companion to LCG); Demo 94 (partial shuffle variant for subset selection)
+- **Reused in**: (Demo 94 Phases 2/2b)
+- **Key types/functions**:
+  - Partial Fisher-Yates: shuffles first K elements of an N-element array without completing the full permutation
+  - LCG-based RNG with deterministic seeds for reproducible trials
+  - 10-trial averaging for Monte Carlo comparison (Phase 2)
+- **Approximate size**: ~20 lines
+- **Notes**: Deterministic seeds enable reproducible comparison across groups. The 10-trial mean smooths variance from random subset selection while keeping runtime tractable for exhaustive N<=6 testing.
+
+### 21.6 Catalog Save/Load and Multi-Group Comparison Infrastructure
+
+- **What it does**: Extends the catalog save/restore pattern from D79-D92 to support multiple group catalogs (z8, 2I, z12) in a single demo, enabling controlled comparisons without rebuilding closures.
+- **Introduced in**: Demo 94
+- **Reused in**: (Demo 94 only)
+- **Key types/functions**:
+  - `build_z8_catalog()` / `init_z8()` — constructs zeta_8 catalog (24 entries) via BFS closure of three generators; provides solvable-group baseline
+  - `load_catalog()` — restores a saved catalog snapshot into the global working catalog
+  - `save_z8[]` / `saved_2i[]` / `saved_z12[]` — static arrays for each group's catalog
+  - `build_dirs(cat_size)` — extracts distinct S2 directions from current catalog (1e-6 tolerance dedup); shared across all groups
+- **Approximate size**: ~80 lines
+- **Notes**: The multi-group infrastructure enables Phases 2-4's controlled comparisons: z8 vs random-2I-subset vs full-2I vs truncated-z12. Each comparison loads the relevant catalog, builds its direction set, and runs the same capacity pipeline.
+
+---
+
 ## Cross-Cutting Patterns
 
 ### Copy-Paste Codebase Pattern
@@ -2054,10 +2192,14 @@ Demos 66-71 establish the foundation; Demos 72-84 extend it into a full capacity
 25. Depth law mechanism FOUND: axis cancellation (anti-aligned axes → low sum angles) + cross-depth algebraic constraints (BFS ancestry → limited sum-angle vocabulary). Spectral inversion: S² point cloud bandwidth DECREASES with depth while computation INCREASES. Mechanism is relational, not positional (D90).
 26. Activation is NOT the bottleneck: max_xor invariant across k_sec 2-48 and direction counts 2-114. Resolution affects count, not existence. Balanced exponentials confirmed: supply ~2x/depth, demand 4x/weight → slope 1 (D91).
 
-**Function scaling (D92):**
+**Function scaling (D92-D93):**
 27. Parity-Lock Theorem: the +/-q encoding is structurally parity-locked — XOR/XNOR are the ONLY computable functions. AND/OR/MAJ = 0 winners at ALL depths. 6-part proof: (0,0)≡(1,1) collision, 3^k equivalence classes, sign-flip symmetry. Encoding concentrates on the hardest function (outside AC^0) (D92).
+28. Complement-Blindness Theorem + Phase-Cell Recovery: under combined_cell, mask m and ~m always map to the same cell (complement-blind); all non-complement-invariant functions impossible. Removing the sign flip (phase_cell) breaks the symmetry: complement sharing drops 100% to 1.1%, all 13 NPN classes recovered. Circuit complexity hierarchy emerges as AND/XOR ratio: 1.01 to infinity (N=3-8). Pigeonhole mechanism at N>=7: 84 cells < 128 masks kills XOR (D93).
 
-Key progression: D65 S^1 k=24 → D66 S^3 25 cells → D67 S^2 14 cells → D68 R^2 visualization only → D72-73 algebraic structure analysis → D74 incomparability theorem → D75-77 binocular + product activation → D78-79 wall confirmation + ζ₁₂ breakthrough → D80 ADE survey → D81-82 scaling laws → D83 framing as resource → D84 null-state anatomy → D85-86 TL representation theory (b = -5/8 + universal divergence on P_{0,0}) → D87-88 null dispensability + anti-correlation → D89-91 depth law mechanism (axis cancellation + parity wall) → D92 parity-lock theorem.
+**Solvability bottleneck (D94):**
+29. Binary icosahedral group 2I (order 120, unique non-solvable finite SU(2) subgroup) outperforms solvable z8 at matched catalog size, confirming Barrington's theorem prediction. AND/XOR hierarchy universal across all group structures. Crossover at N=6: 2I overtakes truncated zeta_12 where computation is hardest. Exact Z[sqrt5] arithmetic for 2I group operations (D94).
+
+Key progression: D65 S^1 k=24 → D66 S^3 25 cells → D67 S^2 14 cells → D68 R^2 visualization only → D72-73 algebraic structure analysis → D74 incomparability theorem → D75-77 binocular + product activation → D78-79 wall confirmation + ζ₁₂ breakthrough → D80 ADE survey → D81-82 scaling laws → D83 framing as resource → D84 null-state anatomy → D85-86 TL representation theory (b = -5/8 + universal divergence on P_{0,0}) → D87-88 null dispensability + anti-correlation → D89-91 depth law mechanism (axis cancellation + parity wall) → D92 parity-lock theorem → D93 complement-blindness + phase_cell recovery + circuit complexity hierarchy → D94 solvability bottleneck (2I vs z8, Barrington confirmed).
 
 ### Catalog Size Summary
 | Ring | Delta | Catalog | Distinct Values |
@@ -2068,7 +2210,7 @@ Key progression: D65 S^1 k=24 → D66 S^3 25 cells → D67 S^2 14 cells → D68 
 | Z[zeta_5] | phi | 2-4 strand, len 1-6 | >56 |
 | Z[zeta_24] | sqrt(3) | 2-4 strand, len 1-10 | varies |
 
-### SU(2) / Quaternionic Catalog Summary (Demos 66-84)
+### SU(2) / Quaternionic Catalog Summary (Demos 66-84, 94)
 | Root | Quaternions | Directions on S^2 | XOR6 at natural Voronoi | XOR8 (product activation) | XOR10 | XOR12 | Jones cap (bracket −2) |
 |------|-------------|-------------------|--------------------------|--------------------------|-------|-------|------------------------|
 | zeta_4 | 4 | 2 | — | — | — | — | — |
@@ -2076,6 +2218,7 @@ Key progression: D65 S^1 k=24 → D66 S^3 25 cells → D67 S^2 14 cells → D68 
 | zeta_8 | 24 (9 null) | 13 | 36 (14 cells) | 6 (Sec8×Vor, 112 cells) | 0 (wall) | 0 (wall) | XOR6 (D83) |
 | zeta_10 | infinite (>4096) | 512 (saturated, 71 angles) | — | — | — | — | — |
 | zeta_12 | infinite (>4096, 121 null) | 512 (saturated) | 1024+ | 1024+ | 124 | 50+ | XOR10 (D83) |
+| 2I | 60 (mod sign) | 31 | 74.8% (384 cells) | — | — | — | — |
 | zeta_16 | 7,952 | 3,457 | 499,367 (90.6%) | — | — | — | — |
 | zeta_32 | 32,768+ | 4,096+ | 493,654 (89.6%) | — | — | — | — |
 

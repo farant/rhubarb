@@ -12,6 +12,8 @@ All numerical tables extracted from the demo index and explorer's log. Exact num
 
 *Updated 2026-02-23: Added Demos 85–92 (indecomposability parameter b, direct b on P_{0,0}, null indispensability at zeta_12, anti-correlation mechanism, depth law mechanism, sum-angle structure, activation bottleneck, function scaling/parity-lock theorem).*
 
+*Updated 2026-02-24: Added Demos 93–94 (1wpi function scaling/complement-blindness/pigeonhole, binary icosahedral group/solvability bottleneck).*
+
 ---
 
 ## 1. Axiality Hierarchy Table
@@ -2654,6 +2656,163 @@ combined_cell(S) = combined_cell(-S) for all sums S. Provably, 3^k classes colla
 
 ---
 
+## 55. Function Scaling — 1-Weight-Per-Input Encoding — Demo 93
+
+### Phase 8 Headline Table (depth 1, 17 entries, 84 cells, exhaustive under phase_cell)
+
+| N | masks | XOR% | AND% | MAJ% | AND/XOR ratio |
+|---|-------|------|------|------|---------------|
+| 3 | 8 | 96.8% | 97.7% | 99.7% | 1.01 |
+| 4 | 16 | 85.6% | 92.3% | 91.1% | 1.08 |
+| 5 | 32 | 58.3% | 84.1% | 94.3% | 1.44 |
+| 6 | 64 | 9.9% | 71.7% | 49.6% | 7.27 |
+| 7 | 128 | 0.02% | 56.8% | 68.7% | 2762 |
+| 8 | 256 | 0.00% | 41.6% | 2.4% | infinity |
+
+AND/XOR ratio explodes from 1.01 to infinity as N grows from 3 to 8. XOR is parity (not in AC^0); AND is AC^0; MAJ is TC^0. The circuit complexity hierarchy becomes a hit-rate divergence.
+
+**Provenance:** Demo 93, Phase 8.
+
+### N=6 AND/XOR Ratio by Depth (Convergence)
+
+| Depth | AND/XOR ratio |
+|-------|---------------|
+| 1 | 7.27 |
+| 2 | 2.77 |
+| 3 | 1.75 |
+| 4 | 1.27 |
+| 5 | 1.13 |
+| 6 | 1.08 |
+
+Depth disproportionately helps parity. XOR growth factors d=1 to d=6: 3.4x, 1.6x, 1.4x, 1.1x, 1.1x (logarithmic saturation, not exponential).
+
+**Provenance:** Demo 93, Phase 7.
+
+### MAJ/XOR Crossover Data (N=6)
+
+| Depth | MAJ% | XOR% | Easier |
+|-------|------|------|--------|
+| 1 | 49.6% | 9.9% | MAJ |
+| 2 | — | — | — |
+| 3 | — | — | crossover region |
+| 4 | 73.6% | 76.9% | XOR |
+| 6 | 89.0% | 92.2% | XOR |
+
+MAJ easier at low depth (d=1), XOR overtakes at d~3-4. Depth disproportionately benefits parity.
+
+**Provenance:** Demo 93, Phase 7.
+
+### Pigeonhole Numbers
+
+| Parameter | Value |
+|-----------|-------|
+| Cells at depth 1 (k_sec=12) | 84 |
+| N=6 masks | 64 (< 84, XOR survives at 9.9%) |
+| N=7 masks | 128 (> 84, XOR dies at 0.02%) |
+| N=8 masks | 256 (> 84, XOR dead at 0.00%) |
+
+XOR requires balanced bisection of 2^N masks into cells. When 2^N > cells, impossible. AND requires only 1 unique cell for mask 1...1, so survives well past the pigeonhole wall. Threshold at N=7.
+
+**Provenance:** Demo 93, Phase 8.
+
+---
+
+## 56. Binary Icosahedral Group (2I, E8) — Demo 94
+
+### 2I Group Structure
+
+| Property | Value |
+|----------|-------|
+| Order | 120 (60 mod ±identity) |
+| Generators | s = (1+i+j+k)/2 (order 6), t = (phi + phi_inv·i + j)/2 (order 10) |
+| BFS rounds | 7 |
+| Conjugacy classes | 9 (half-angles: 0, 36, 60, 72, 90, 108, 120, 144, 180 degrees) |
+| Distinct S2 directions | ~31 (vs 13 for z8) |
+| Solvable | NO (unique non-solvable finite SU(2) subgroup) |
+| ADE type | E8 |
+
+BFS depth profile (symmetric diamond): d0=5, d1=8, d2=11, d3=12, d4=11, d5=8, d6=4, d7=1.
+
+**Provenance:** Demo 94, Phase 1.
+
+### Size-Controlled Comparison — 24 vs 24
+
+z8 (24 entries, solvable) vs 2I random 24-subsets (10-trial mean, non-solvable):
+
+| N | z8 XOR | 2I XOR | z8 AND | 2I AND | Winner |
+|---|--------|--------|--------|--------|--------|
+| 3 | 1480 | 1514 | 1907 | 1888 | tie |
+| 4 | 8010 | 9475 | 9723 | 10025 | 2I |
+| 5 | 17201 | 21990 | 37835 | 38862 | 2I |
+| 6 | 12983 | 23137 | 111290 | 112408 | 2I |
+| 7 | 197 | 672 | 72003 | 241854 | 2I |
+| 8 | 1 | 1 | 57449 | 375756 | z8 |
+
+N=6 XOR: 2I wins by 78%. N=7 XOR: 2I wins ~3.4x. N=8: both XOR near zero (pigeonhole), but 2I AND = 375K vs z8 AND = 57K (6.5x).
+
+**Provenance:** Demo 94, Phase 2.
+
+### Depth-Matched Comparison (First 24 from 2I by BFS, 12 directions, 156 cells)
+
+| N | z8 XOR% | 2I-24 XOR% | ratio |
+|---|---------|------------|-------|
+| 3 | 73.12% | 78.06% | 1.07x |
+| 4 | 75.38% | 85.77% | 1.14x |
+| 5 | 40.47% | 48.95% | 1.21x |
+| 6 | 9.65% | 16.11% | 1.67x |
+| 7 | 0.20% | 0.17% | 0.84x |
+| 8 | 0.001% | 0.001% | ~1x |
+
+2I advantage ACCELERATES with computational difficulty: 1.07x → 1.14x → 1.21x → 1.67x (N=3 to N=6). At N=7 both near-dead (pigeonhole: only 12 directions → 156 cells for 2I-24 vs 168 for z8).
+
+**Provenance:** Demo 94, Phase 2b.
+
+### Full 2I Capacity (60 entries, 31 directions, 384 cells)
+
+| N | masks | XOR% | AND% | MAJ% | AND/XOR |
+|---|-------|------|------|------|---------|
+| 3 | 8 | 74.80% | 93.42% | 74.78% | 1.25 |
+| 4 | 16 | 91.33% | 94.73% | 74.50% | 1.04 |
+| 5 | 32 | 59.98% | 93.74% | 61.34% | 1.56 |
+| 6 | 64 | 37.12% | 89.72% | 26.20% | 2.42 |
+| 7 | 128 | 2.38% | 81.62% | 5.06% | 34.29 |
+| 8 | 256 | 0.00% | 68.83% | 0.01% | 68827 |
+
+Circuit complexity hierarchy universal across group structures. Compared to D93 zeta_12 (17 entries, depth 1): N=6 XOR 37.12% vs 9.85% (3.8x), N=7 XOR 2.38% vs 0.02% (119x), N=8 XOR 0.001% vs 0.00%.
+
+**Provenance:** Demo 94, Phase 3.
+
+### Three-Way XOR Comparison
+
+| N | z8 (24, solvable) | 2I (60, non-solv finite) | z12 (51, non-solv trunc) |
+|---|-------------------|--------------------------|--------------------------|
+| 3 | 73.1% | 74.8% | 90.5% |
+| 4 | 75.4% | 91.3% | 93.2% |
+| 5 | 40.5% | 60.0% | 68.1% |
+| 6 | 9.6% | 37.1% | 33.8% |
+| 7 | 0.20% | 2.38% | 1.64% |
+| 8 | 0.001% | 0.001% | 0.00% |
+
+z12 truncated: depth<=2, 51 entries, 22 directions, 276 cells. Crossover at N=6: z12 wins small N (angular variety), 2I wins N=6-7 (non-solvability at computational boundary).
+
+**Provenance:** Demo 94, Phase 4.
+
+### Quantum Dimension Table
+
+| Root | [2]_q | Finite? | Group | Solvable? | Capacity | Kuperberg |
+|------|-------|---------|-------|-----------|----------|-----------|
+| z4 | -2 | YES (4) | Q8 | Yes | Very limited | Lattice (P) |
+| z8 | 0 | YES (24) | 2O (E7) | Yes | XOR8 ceiling | Lattice (P) |
+| z12 | 1 | NO (inf) | Dense | N/A (infinite) | XOR12+ | Lattice (P) |
+| z10 | phi^-1 ~ 0.618 | NO (inf) | Dense | N/A | Unknown | #P-hard |
+| 2I | phi ~ 1.618 | YES (120) | 2I (E8) | NO | Higher than z8 | #P-hard |
+
+2I is the unique non-solvable finite SU(2) subgroup — the bridge between finite/ceiling (solvable groups) and dense/infinite (unbounded). Barrington's theorem predicts the solvable/non-solvable boundary is the computational capacity boundary; D94 confirms this.
+
+**Provenance:** Demo 94, Phase 4 + D80 data.
+
+---
+
 ## 12. Demo Test Counts (Extended)
 
 | Demo | Tests | Status |
@@ -2737,7 +2896,9 @@ combined_cell(S) = combined_cell(-S) for all sums S. Provably, 3^k classes colla
 | 90 | 10/12 | COMPLETE (2 informative fails) |
 | 91 | 6/7 | COMPLETE (1 informative fail) |
 | 92 | 13/16 | COMPLETE (3 informative fails) |
+| 93 | 37/37 | COMPLETE (LANDMARK) |
+| 94 | 20/20 | COMPLETE (RESULT) |
 
 **Provenance:** Demo index, all entries.
 
-*Generated 2026-02-20 from demo-index.md (2845 lines) and explorers-log.md (1273 lines). Updated with Demos 38, 39, 60. Updated 2026-02-21 with Demos 64–71. Updated 2026-02-21 with Demos 72–82. Updated 2026-02-21 with Demos 83–84. Updated 2026-02-23 with Demos 85–92.*
+*Generated 2026-02-20 from demo-index.md (2845 lines) and explorers-log.md (1273 lines). Updated with Demos 38, 39, 60. Updated 2026-02-21 with Demos 64–71. Updated 2026-02-21 with Demos 72–82. Updated 2026-02-21 with Demos 83–84. Updated 2026-02-23 with Demos 85–92. Updated 2026-02-24 with Demos 93–94.*

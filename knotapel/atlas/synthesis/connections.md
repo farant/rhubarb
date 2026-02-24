@@ -1,6 +1,6 @@
 # Cross-Demo Connections
 
-How 92 demos feed into each other, what recurs, and where threads unexpectedly converge.
+How 94 demos feed into each other, what recurs, and where threads unexpectedly converge.
 
 ---
 
@@ -356,6 +356,12 @@ D91 (activation bottleneck -- parity is the wall, balanced exponentials confirme
  |
  v
 D92 (function scaling -- parity-lock theorem, encoding determines function)
+ |
+ v
+D93 (1wpi function scaling -- complement-blindness, circuit complexity hierarchy)
+ |
+ v
+D94 (binary icosahedral group -- solvability bottleneck, five-pillar synthesis)
 ```
 
 D85→D86 form a two-demo chain on the indecomposability parameter b: D85 computes
@@ -1650,3 +1656,129 @@ structurally locked to XOR/XNOR only (AND/OR/MAJ/THRESHOLD = 0 winners at all de
 contrasting sharply with D48/D50's 1wpi encoding that achieves all 13 NPN classes. The
 depth law is parity-specific, and the encoding determines which Boolean functions are
 accessible from the same underlying algebraic structure.
+
+D93-D94 complete the circuit complexity and group-theory arcs simultaneously.
+
+D93 discovers the complement-blindness theorem (combined_cell maps m and ~m to the same
+cell via |qa| normalization) and its phase_cell resolution, then measures the circuit
+complexity hierarchy (AND/XOR ratio explosion from 1.01 to infinity across N=3-8). D94
+extends this to the binary icosahedral group 2I (the unique non-solvable finite SU(2)
+subgroup), confirms the hierarchy is universal across all tested groups, and demonstrates
+the solvability bottleneck predicted by Barrington's theorem. The crossover at N=6 — where
+non-solvable finite 2I overtakes truncated-infinite z12 — shows that non-solvability
+provides specifically the structure parity needs at the computational boundary. The five-
+pillar synthesis (Abramsky + Habiro + Aizenberg + Nazer-Gastpar + Reservoir Computing) is
+completed with a precise, testable mapping to discrete algebraic reservoir computers.
+
+### D93↔D92: Parallel Parity Locks — Encoding vs Activation (D93↔D92)
+
+D92 proved the parity-lock theorem: the +/-q encoding creates 3^k equivalence classes,
+making XOR/XNOR the only computable functions regardless of activation. D93 discovers an
+analogous lock operating on a different axis: the combined_cell activation's sign-flip
+normalization creates complement-pair collisions, making complement-invariant functions the
+only achievable class. D92's lock is in the encoding (applies to all activations); D93's
+lock is in the activation (applies to all encodings under combined_cell). The two locks
+are independent constraints: the encoding determines WHICH function family, the activation
+determines WHICH subfamilies within that family. Phase_cell breaks D93's activation lock
+just as 1wpi encoding breaks D92's encoding lock — the same "wall was in X not Y" pattern
+at its fourth occurrence.
+
+### D93↔D48/D50: 1wpi Encoding Across Activations (D93↔D48↔D50)
+
+D48 proved zero parity solutions under split-sigmoid with 1wpi encoding. D50 resolved this
+with k-sector activation. D93 shows a different activation restriction on the same 1wpi
+encoding: combined_cell kills all non-complement-invariant functions through the sign-flip
+symmetry. Phase_cell recovers all 13 NPN classes (matching D50's result from a different
+activation pathway). The 1wpi encoding is a versatile substrate — it supports all Boolean
+functions — but only under activations that preserve the full S^1 phase information. Any
+activation that normalizes sign (split-sigmoid via magnitude, combined_cell via |qa|)
+collapses the function repertoire.
+
+### D93 Pigeonhole ↔ D63 Parity Ceiling (D93↔D63)
+
+D63 established the parity ceiling at n=5 for Z[zeta_8] under k-sector activation, with
+two types of impossibility: constraint-geometric wall (n=6,7) and pigeonhole (n>=8). D93
+independently discovers a pigeonhole mechanism at the phase_cell level: at 84 cells (depth
+1, 17 entries), XOR requires balanced bisection of 2^N masks. When 2^N > 84 (N>=7), XOR
+dies. AND survives because it only needs one unique cell (for the all-1s mask). The two
+pigeonhole mechanisms operate at different levels — D63's operates on the Z[zeta_8] angular
+lattice structure, D93's operates on the Voronoi × sector cell count — but they share the
+same mathematical form: computation fails when the function's partition complexity exceeds
+the discrete partition capacity of the activation. Both confirm that parity's difficulty is
+fundamentally a capacity problem, not an algebraic one.
+
+### D94↔D80: Finite/Infinite = Solvable/Non-Solvable (D94↔D80)
+
+D80 established the finite/infinite group boundary as the capacity governor: only ζ₄ and ζ₈
+generate finite SU(2) subgroups, and finite groups impose hard XOR ceilings while infinite
+groups scale without bound. D94 adds a new dimension to this picture: within the finite
+groups, solvability determines capacity. The binary octahedral group z8 (E₇, order 48,
+solvable) has lower XOR capacity than the binary icosahedral group 2I (E₈, order 120,
+non-solvable) at matched catalog size. The D80 landscape now has three regimes:
+- **Solvable finite** (z8, E₇): hard ceiling, lowest per-entry capacity
+- **Non-solvable finite** (2I, E₈): hard ceiling, higher per-entry capacity
+- **Infinite** (z12, z10, etc.): no ceiling, logarithmic scaling
+The finite/infinite boundary governs whether a ceiling exists; the solvable/non-solvable
+boundary governs how much computation is available within that ceiling.
+
+### D94↔Barrington: Theoretical Prediction Confirmed Computationally (D94↔Barrington)
+
+Barrington's theorem (1989) proves NC¹ = programs over non-solvable groups, and that
+solvable groups are strictly weaker for branching program computation. D94 is the first
+computational confirmation of this prediction in a topological computation model. The DKC
+catalog construction (BFS closure, multiplicative group generation) is Barrington-like:
+braid words are branching programs, group elements are states, and the additive readout
+separates Boolean function values. At matched catalog size (24 entries), 2I (non-solvable)
+beats z8 (solvable) at XOR with the advantage accelerating precisely as the computation
+becomes harder — exactly Barrington's prediction made concrete in DKC.
+
+### Circuit Complexity AC⁰/TC⁰/Parity Hierarchy in DKC (D93↔D94↔Hastad)
+
+D93's AND/XOR ratio table is Hastad's theorem (1987) made visible. AND is in AC⁰ (low
+Fourier degree, simple partition geometry). MAJ is TC⁰-complete (intermediate Fourier
+degree). XOR is parity (full Fourier degree, requires exponential depth in bounded-width).
+The LMN theorem (1993) explains AND's robustness: AC⁰ Fourier mass concentrates below
+degree (log n)^d, so AND needs only coarse cell partitions. XOR requires balanced global
+partitions — the most demanding geometric constraint. D94 confirms this hierarchy is
+universal: it manifests identically in z8, 2I, and z12. The readout mechanism (1wpi +
+phase_cell) is the bottleneck, and the group merely modulates how much capacity is available
+to overcome that bottleneck. The circuit complexity hierarchy is not an abstract classification
+for DKC — it is a measurable, quantitative prediction about hit-rate divergence.
+
+### D93-D94 Complete the "Wall Was X Not Y" Pattern (D93↔D50↔D77↔D79)
+
+The fifth instance: D93's combined_cell activation kills non-complement-invariant functions
+under 1wpi. Phase_cell (no sign flip) recovers all 13 NPN classes. The wall was in the
+activation's normalization convention, not the encoding or lattice. The full pattern:
+1. D48→D50: wall in split-sigmoid activation, not Z[zeta_8] lattice
+2. D76→D77: wall in S²-only activation, not ζ₈ root of unity
+3. D78→D79: wall in group finiteness, not DKC architecture
+4. D92: wall in +/-q encoding, not the activation (parity lock)
+5. D93: wall in combined_cell normalization, not 1wpi encoding (complement blindness)
+
+Each instance deepens understanding of the modular architecture: encoding, activation,
+group structure, and normalization convention are independent design variables, each with
+its own constraint set.
+
+### D94 Quantum Dimension Table Extends D80 (D94↔D80↔D58)
+
+D80's survey classified roots by finiteness and quantum dimension. D94 extends this to the
+non-solvable case: 2I at the Fibonacci parameter has [2]_q = phi^{-1} ≈ 0.618 (non-zero,
+non-degenerate), placing it in the "hard" regime where Kuperberg's #P-hardness applies.
+Yet 2I IS finite (120 elements). The quantum dimension table now maps directly onto
+computational capacity: [2]_q = 0 (z8, solvable, ceiling), [2]_q ≠ 0 + finite + non-
+solvable (2I, higher ceiling), [2]_q ≠ 0 + infinite (z12/z10, no ceiling). The Fibonacci
+parameter from D58 (ell=5, delta=phi, universal TQC) connects to D94's 2I through the
+same golden ratio: phi is the quantum dimension at the Fibonacci point, and 2I IS the
+Fibonacci anyon group realized as a finite SU(2) subgroup.
+
+### D94 Reservoir Computing Mapping Completes Five-Pillar Synthesis (D94↔D73↔D82↔D83↔D84)
+
+D73 (additive DKC), D82 (depth = crossing depth), D83 (writhe as independent axis), and
+D84 (null states maintain manifold separation) each contributed one aspect of the reservoir
+computing interpretation. D94 completes the mapping with precise (not metaphorical)
+identification: fixed catalog = reservoir state matrix, Cayley graph = connectivity
+topology, signed weight sum = linear readout, phase_cell = nonlinear output function,
+BFS depth = memory depth. The testable prediction — rank(K_2I)/rank(K_z8) > 120/24 if
+non-solvability contributes above raw size — is a single RKHS kernel computation (seeded
+as D95) that could confirm or refute the entire algebraic reservoir interpretation.

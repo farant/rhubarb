@@ -1,7 +1,7 @@
 # Vision Alignment: Current Research → Long-Term Direction
 
-How the completed work (92 demos) positions us relative to the hybrid LLM vision
-described in `planning/vision.md`. Generated 2026-02-20, updated 2026-02-23.
+How the completed work (94 demos) positions us relative to the hybrid LLM vision
+described in `planning/vision.md`. Generated 2026-02-20, updated 2026-02-24.
 
 ---
 
@@ -11,7 +11,7 @@ The hybrid LLM vision requires: taxonomy → braids → DKC → compiled weights
 coexist with trained weights in a model that can dynamically update its factual
 knowledge.
 
-**What the 92 demos established:**
+**What the 94 demos established:**
 
 | Vision Component | Status | Key Evidence |
 |-----------------|--------|--------------|
@@ -381,6 +381,35 @@ finite-group neurons (zeta_8) must preserve null entries; infinite-group neurons
 separation property interpretation of nulls (D84) applies only in sparse-direction
 regimes.
 
+### Circuit complexity hierarchy quantifies function difficulty (D93)
+D93 measures the AND/XOR hit-rate ratio explosion (1.01 to infinity across N=3-8)
+under phase_cell activation, making the Hastad circuit depth hierarchy visible in
+DKC. For the hybrid LLM vision this is significant: AND-type functions (syllogistic
+logic) are in AC^0 and are the EASIEST to compute — they degrade gracefully even at
+large arity. XOR/parity is the hardest (outside AC^0). MAJ shows a cliff at N=8.
+This means compiled DKC neurons for logical inference (AND/OR/implication) are
+inherently more robust and efficient than parity neurons — the compilation cost
+model is function-dependent, not uniform. The pigeonhole mechanism (84 cells, XOR
+dies at N>=7) gives a concrete capacity bound per activation resolution.
+
+### Solvability as a catalog design parameter (D94)
+D94 confirms that non-solvable groups (2I) outperform solvable groups (z8) at
+matched catalog size, with the advantage growing at the computational boundary.
+For the hybrid LLM vision this opens a new catalog design axis: the group used
+to generate the weight catalog affects not just capacity ceiling but per-entry
+efficiency. The Z[sqrt5] arithmetic infrastructure extends the algebraic substrate
+beyond cyclotomic integers. The five-pillar synthesis (Abramsky + Habiro + Aizenberg
++ Nazer-Gastpar + Reservoir Computing) is now complete — the DKC framework has a
+precise theoretical home in each of five established research communities.
+
+### The crossover reveals regime-dependent group selection (D94)
+The N=6 crossover (z12 wins at small N, 2I wins at large N) means optimal catalog
+design depends on the target arity. For low-arity functions (3-5 inputs, typical
+for syllogistic reasoning), dense infinite-group catalogs are optimal. For
+high-arity functions (6-8 inputs, more complex Boolean operations), non-solvable
+finite groups provide better per-entry efficiency. A practical compilation pipeline
+might use different catalog sources for different neuron types.
+
 ### K-ladder resilience suggests robustness engineering (D88)
 The Sec x Vor k-ladder activation provides 14x better perturbation resilience
 than Voronoi-only activation (6.4% vs 89% loss under the same design-improving
@@ -602,6 +631,17 @@ BFS branching factor to parity constraint growth would make this a theorem rathe
 than a demonstrated conjecture. This is the next clean formal proof candidate
 after the parity-lock theorem (D92).
 
+### Path K: RKHS kernel rank test — solvability as reservoir quality (1 demo) — NEW from D94
+```
+Current state -> Compute K(m,m') for 2I and z8 -> rank ratio vs size ratio
+```
+D94 proposes a single testable prediction: rank(K_2I)/rank(K_z8) should exceed
+120/24 = 5x if non-solvability contributes above raw catalog size. The kernel
+K(m,m') = quaternion inner product of signed sums. If confirmed, this establishes
+non-solvability as a reservoir quality metric — not just "more elements" but
+"better algebraic structure per element." This is seeded as D95 and is the
+cleanest single-number test of the five-pillar reservoir computing interpretation.
+
 ### Path J: Regime transition characterization (1 demo) — NEW from D87
 ```
 Current state -> Intermediate roots (zeta_10, truncated zeta_12) -> locate transition threshold
@@ -644,6 +684,14 @@ proof. The next candidates are:
 - **Regime transition** (Path J) — a sharp threshold theorem for null dispensability
 - **Spectral inversion** (from D90) — the S^2 bandwidth decreasing with depth
   while computation increases
+- **RKHS kernel rank** (Path K) — a single number testing the algebraic reservoir interpretation
+
+D94's five-pillar synthesis completion means the theoretical framework is now
+fully instantiated. The next phase is empirical validation (Path K: kernel rank)
+and practical deployment (Path A: syllogism mapping, Path H: encoding design).
+D93's circuit complexity hierarchy result provides a concrete cost model for
+function-dependent compilation: AND-type operations are cheap, parity is expensive,
+and the pigeonhole mechanism gives exact capacity bounds per activation resolution.
 
 For the engineering program, Path F (depth-targeted generation) is now informed
 by the mechanistic understanding from D89-D91: the target property for deep

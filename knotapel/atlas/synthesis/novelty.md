@@ -1,7 +1,7 @@
 # Novelty Assessment: DKC Research Program
 
-Assessment date: 2026-02-20. Updated 2026-02-21 (added D38, D39, D60, D63, D39 Parts G-J; added D64-D71 S² arc; added D72-D82 automaton/group/capacity arc; added D83-D84 framing/null-states arc). Updated 2026-02-23 (added D85-D92 indecomposability/depth-law-mechanism/parity-lock arc; added P04). Based on
-76 cataloged papers (literature-index.md), 92 demos, 4 proofs, and the theorem inventory.
+Assessment date: 2026-02-20. Updated 2026-02-21 (added D38, D39, D60, D63, D39 Parts G-J; added D64-D71 S² arc; added D72-D82 automaton/group/capacity arc; added D83-D84 framing/null-states arc). Updated 2026-02-23 (added D85-D92 indecomposability/depth-law-mechanism/parity-lock arc; added P04). Updated 2026-02-24 (added D93-D94 circuit complexity hierarchy/solvability bottleneck arc). Based on
+76+ cataloged papers (literature-index.md), 94 demos, 4 proofs, and the theorem inventory.
 Honest where uncertain.
 
 ---
@@ -731,6 +731,98 @@ Things we believe are genuinely new. No prior work found across 72 papers.
   design as a research direction.
   **Confidence: HIGH.**
 
+### 2aa. Circuit Complexity Hierarchy in a Topological Computation Model (D93)
+
+- **Complement-Blindness Theorem (PROVED + computationally verified, D93).** Under 1wpi
+  encoding with combined_cell activation, mask m produces sum S, complement ~m produces -S,
+  and the |qa| normalization maps both to the same cell. ANY function where f(m) != f(~m)
+  is impossible. At odd N, no standard Boolean function survives; at even N, only XOR (which
+  is complement-invariant). 100% complement-pair cell sharing verified at N=3-6 (400-3200
+  pairs each). This is the activation-side analog of D92's encoding-side parity lock — two
+  independent constraint mechanisms operating on different architectural axes.
+  **Confidence: PROVEN.** Analytical proof + exhaustive computational verification.
+
+- **Phase-Cell Recovery (DEMONSTRATED, D93).** Removing the `if (qa < 0)` sign flip creates
+  phase_cell with sector span [0,360) instead of [0,180). Complement-pair sharing drops from
+  100% to 1.1%. All 13 NPN classes recovered at N=3 (12/13 at d=0, last at d=1). This is
+  the fifth instance of the "wall was in X not Y" pattern.
+  **Confidence: HIGH.**
+
+- **Circuit Complexity Hierarchy in DKC (DEMONSTRATED, D93).** Under phase_cell, the AND/XOR
+  hit-rate ratio at depth 1 explodes: 1.01 (N=3), 1.08 (N=4), 1.44 (N=5), 7.27 (N=6),
+  2762 (N=7), infinity (N=8). This is Hastad's theorem (1987) made quantitatively visible
+  in a topological computation model. AND (AC^0, low Fourier degree) degrades gracefully
+  (97% to 42%). MAJ (TC^0-complete) shows a cliff at N=8 (2.4%). XOR (parity, not in AC^0)
+  is killed by pigeonhole at N>=7 (0.02% at N=7, 0% at N=8). Nobody has measured the
+  classical circuit complexity hierarchy (AC^0 / TC^0 / parity) as a quantitative hit-rate
+  divergence in any topological or algebraic computation model.
+  **Confidence: HIGH.** Exhaustive at small N; sampling at large N. The hierarchy matches
+  known circuit complexity theory exactly.
+
+- **Pigeonhole Mechanism for Circuit Depth Bottleneck (DEMONSTRATED, D93).** With 84 cells
+  at depth 1 (17 entries, k_sec=12), XOR requires balanced bisection of 2^N masks into cells.
+  When 2^N > 84 (N>=7), balanced bisection is impossible. AND survives because it only needs
+  one unique cell for the all-1s mask. This is the circuit depth bottleneck made concrete in
+  a discrete system. The Fourier degree determines the geometric complexity of the required
+  partition — low-degree functions (AND) need simple partitions, full-degree functions (XOR)
+  need exponentially complex partitions.
+  **Confidence: HIGH.**
+
+- **Depth Disproportionately Helps Parity (DEMONSTRATED, D93).** At N=6, MAJ is easier than
+  XOR at low depth (49.6% vs 9.9% at d=1) but XOR overtakes at d~4 (76.9% vs 73.6%). The
+  AND/XOR ratio converges from 7.27 (d=1) to 1.08 (d=6). XOR's growth is logarithmic
+  saturation. This is the first measurement of differential depth sensitivity across circuit
+  complexity classes in a physical model.
+  **Confidence: HIGH.**
+
+### 2ab. Solvability Bottleneck and Five-Pillar Synthesis (D94)
+
+- **Solvability as Capacity Bottleneck (CONFIRMED computationally, D94).** At matched catalog
+  size (24 entries each), the non-solvable binary icosahedral group 2I consistently outperforms
+  the solvable binary octahedral group z8 for XOR, with the advantage accelerating with arity:
+  1.07x at N=3, 1.14x at N=4, 1.21x at N=5, 1.67x at N=6. This is the first computational
+  confirmation of Barrington's theorem (1989) prediction in a topological computation model.
+  Barrington proved NC^1 = programs over non-solvable groups; D94 demonstrates the solvable
+  vs non-solvable capacity difference concretely in DKC.
+  **Confidence: HIGH.** Size-controlled (24 vs 24) and depth-matched comparisons both confirm.
+
+- **Circuit Complexity Hierarchy Universality (CONFIRMED, D94).** The AND/XOR ratio explosion
+  occurs identically in z8 (solvable), 2I (non-solvable finite), and z12 (non-solvable
+  infinite): 2I full catalog AND/XOR = 1.25→1.04→1.56→2.42→34.29→68827 for N=3-8. The
+  hierarchy is a property of the readout mechanism (1wpi + phase_cell), not the group.
+  Nobody has demonstrated that circuit complexity hierarchies are readout-universal across
+  algebraically distinct computation substrates.
+  **Confidence: HIGH.** Three group structures tested.
+
+- **N=6 Crossover (DEMONSTRATED, D94).** At small N, truncated-infinite z12 (51 entries)
+  beats both finite groups due to angular variety. At N=6-7 (the computational boundary
+  where parity becomes genuinely hard), non-solvable finite 2I overtakes z12 despite having
+  more entries (60 vs 51). Non-solvability provides specifically the structure parity needs
+  at the boundary — density and solvability contribute differently to capacity.
+  **Confidence: HIGH.** Three-way comparison across 6 arities.
+
+- **Z[sqrt5] Arithmetic for DKC (NEW CAPABILITY, D94).** Exact integer arithmetic in Z[sqrt5]
+  for quaternion components stored as (a + b*sqrt5)/4. All 2I group operations verified:
+  generator orders (s^6=1), unit norms, closure (120 elements in 7 BFS rounds), 9 conjugacy
+  classes. Extends the DKC algebraic substrate from cyclotomic integers (Z[zeta_8], Z[zeta_16])
+  to algebraic integers in a quadratic number field. Fully reusable infrastructure.
+  **Confidence: HIGH.**
+
+- **DKC as Discrete Algebraic Reservoir Computer — Precise Mapping (PROPOSED, D94).** The
+  mapping is precise (not metaphorical): fixed catalog = reservoir state matrix, Cayley graph
+  = connectivity topology, signed sum = linear readout, phase_cell = nonlinear output, BFS
+  depth = memory depth. Testable prediction: rank(K_2I)/rank(K_z8) > 120/24 if non-solvability
+  contributes above raw size. Seeded as D95 (RKHS kernel computation).
+  **Confidence: MEDIUM.** The mapping is structural; the testable prediction is concrete.
+
+- **Five-Pillar Synthesis Complete (CLAIMED, D94).** The five-pillar framework for DKC is now
+  fully instantiated: (1) Abramsky / TL algebra as computation, (2) Habiro / cyclotomic
+  integrality (extended to Z[sqrt5]), (3) Aizenberg / MVN activation (generalized to
+  phase_cell), (4) Nazer-Gastpar / compute-and-forward (additive readout), (5) Reservoir
+  Computing / Maass-Jaeger (fixed catalog + tunable readout). No prior work connects all five
+  frameworks. The intersection remains unoccupied in the literature.
+  **Confidence: HIGH** for the connection; the synthesis is ours.
+
 ### 2c. TL Algebraic Structure
 - **Sandwich theorem.** rad^2(TL_{2k}(0)) is isomorphic to TL_{2k-1}(0) as an algebra.
   Literature proves head iso socle for individual PIMs (module-level). Nobody identifies
@@ -917,6 +1009,13 @@ The automaton/group/capacity arc (Demos 72-82) adds three more layers.
 The framing/null-states arc (Demos 83-84) adds a fourth layer.
 
 The indecomposability/depth-law-mechanism/parity-lock arc (Demos 85-92) adds a fifth layer.
+
+The circuit-complexity/solvability arc (Demos 93-94) adds a sixth layer: the classical
+circuit complexity hierarchy (AC⁰ / TC⁰ / parity) manifests quantitatively in DKC as
+hit-rate divergence, universal across all tested group structures. The solvability
+bottleneck predicted by Barrington's theorem is computationally confirmed — non-solvable
+2I outperforms solvable z8 at matched catalog size with the advantage growing at the
+computational boundary. The five-pillar synthesis is complete.
 
 First, the structural character of the computation is now precisely diagnosed: DKC is
 additive (not multiplicative), the 13-cell partition operates as a near-automaton with a

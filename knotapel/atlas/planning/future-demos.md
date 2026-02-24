@@ -2,8 +2,8 @@
 
 Consolidated 2026-02-20. Updated 2026-02-21 with D64-D71 results and D72-D77 proposals. Updated 2026-02-21 with D72-D82 results and Arc 6 + new proposals. Updated 2026-02-21 with D83-D84 results, Arc 7 renumbering, and new proposals from D83-D84 open questions + explorer's log seeds. Updated 2026-02-24 with D85-D92 results, Arc 8/9 completion, new proposals from D85-D92 open questions, and vision-alignment Paths H/I/J.
 
-80 demos completed (D01-D29, D35, D38-D39, D45-D92). D85-D92 added 2026-02-24.
-13 prior proposals remain from future-demos/. 5 new demos added from synthesis open questions. 6 new proposals added from D64-D71 open questions. 7 new proposals added from D72-D82 open questions (2 now SUPERSEDED by actual D83-D84). 8 new proposals added from D83-D84 open questions and explorer's log seeds. 8 of those proposals completed as actual D85-D92; 6 new proposals added from D85-D92 open questions and vision-alignment Paths H/I/J.
+82 demos completed (D01-D29, D35, D38-D39, D45-D94). D93-D94 added 2026-02-24.
+13 prior proposals remain from future-demos/. 5 new demos added from synthesis open questions. 6 new proposals added from D64-D71 open questions. 7 new proposals added from D72-D82 open questions (2 now SUPERSEDED by actual D83-D84). 8 new proposals added from D83-D84 open questions and explorer's log seeds. 8 of those proposals completed as actual D85-D92; 6 new proposals added from D85-D92 open questions and vision-alignment Paths H/I/J. D93-D94 completed; 1 new proposal (D95 RKHS kernel rank) added from D93-D94 open questions.
 
 ---
 
@@ -436,11 +436,13 @@ The following proposals from previous arcs remain valid. Some have been partiall
 ## Priority Summary
 
 ### HIGH (do these first -- direct publication impact or architecturally consequential)
-1. **1wpi Encoding Depth Law** (Path H). THE most consequential open question from D92: does the non-parity encoding scale?
-2. **Balanced Exponentials Analytical Proof** (Path I). Next formal proof candidate after parity-lock theorem.
-3. **Framing Loss at Other Roots** (zeta_16, zeta_24). Confirms or refines +2 universality from D83.
-4. **zeta_32 Finiteness Test**. Single test, extremely low cost, high payoff.
-5. **D65 (remaining)** -- Sandwich Theorem: algebra isomorphism and nilpotency=3 still needed for Paper 3.
+1. **RKHS Kernel Rank Test (D95)** — NEW from D94. Compute DKC kernel K(m,m') = quaternion inner product of sums for 2I vs z8. If rank(K_2I)/rank(K_z8) > 120/24, non-solvability contributes above raw catalog size. One number confirms or refutes the "discrete algebraic reservoir computer" interpretation. Single demo, extremely high leverage — validates the five-pillar synthesis.
+2. **1wpi Encoding Depth Law** (Path H). THE most consequential open question from D92: does the non-parity encoding scale? **D93 context:** D93 confirms all 13 NPN classes under phase_cell at N=3, and demonstrates circuit complexity hierarchy under 1wpi. Depth-law test under 1wpi/phase_cell is the next step.
+3. **Balanced Exponentials Analytical Proof** (Path I). Next formal proof candidate after parity-lock theorem.
+4. **Framing Loss at Other Roots** (zeta_16, zeta_24). Confirms or refines +2 universality from D83.
+5. **zeta_32 Finiteness Test**. Single test, extremely low cost, high payoff.
+6. **D65 (remaining)** -- Sandwich Theorem: algebra isomorphism and nilpotency=3 still needed for Paper 3.
+7. **Higher k_sec with 2I** — NEW from D94. Does k_sec=24 push the N=8 XOR cliff further for 2I? The 384-cell space (k=12, 31 directions) may not fully exploit 2I's angular richness (9 half-angles). Quick test, high information content.
 
 ### MEDIUM (do next -- strengthen claims or open new connections)
 6. **Null Dispensability Transition Location** (Path J). Locates the regime boundary for compilation design rules.
@@ -459,6 +461,32 @@ The following proposals from previous arcs remain valid. Some have been partiall
 19. **zeta_10 Depth Analysis**. Tests universality of scaling constant.
 20. **D44** -- Path Integral / Ising. Physics interpretation.
 21. **D36** -- Long Braid Scaling. Practical ceiling validation.
+
+### RKHS Kernel Rank Test (D95) — NEW (D94)
+- Compute the DKC kernel matrix K(m,m') = quaternion inner product of signed sums for 2I (60 entries) vs z8 (24 entries). Rank of kernel matrix predicts reservoir separation capacity. If rank(K_2I)/rank(K_z8) > 120/24 = 5, then non-solvability contributes above raw catalog size — confirming the "discrete algebraic reservoir computer" interpretation from D94.
+- Testable prediction from D94's reservoir computing mapping: fixed catalog = reservoir, Cayley graph = connectivity, signed sum = linear readout, activation = nonlinear output.
+- Dependencies: D94 (done), D93 (done, 1wpi/phase_cell framework)
+- Priority: **HIGH** -- single computation, one number, confirms or refutes an entire theoretical pillar. The five-pillar synthesis (TL-as-computation, Barrington, Nazer-Gastpar, MVN, reservoir computing) is complete in D94; this tests its central quantitative prediction.
+
+### Higher k_sec with 2I — NEW (D94)
+- At k_sec=24 instead of k_sec=12, the cell count roughly doubles (768 vs 384). Test whether N=8 XOR becomes nonzero for 2I. 2I has 9 conjugacy classes / half-angles and 31 distinct S2 directions — the angular richness may not be fully exploited at k=12.
+- Dependencies: D94 (done)
+- Priority: **HIGH** -- quick parameter sweep, tests whether 2I's capacity is activation-limited
+
+### Quantum Dimension Direct Test at Fibonacci Parameter — NEW (D94)
+- Test DKC capacity directly at the Fibonacci parameter q = e^{2*pi*i/5} rather than through the 2I finite group. The Fibonacci parameter yields [2]_q = phi^{-1} ~ 0.618 (non-vanishing, non-degenerate) — uniquely "maximally computational" for TQC. How does a dense catalog at this parameter compare to 2I's finite catalog?
+- Dependencies: D94 (done), D80 (done, Fibonacci anyon context from zeta_10)
+- Priority: **MEDIUM** -- bridges the finite 2I group and its infinite dense counterpart
+
+### Cross-Depth 2I Analysis — NEW (D94)
+- Do deeper 2I entries (BFS depth d=5-7) contribute more than shallow ones to XOR capacity? 2I's BFS depth profile is symmetric (5,8,11,12,11,8,4,1). Does the contribution profile mirror this symmetry, or are deeper entries disproportionately valuable as they are for zeta_12 (D82)?
+- Dependencies: D94 (done), D82 (done, depth law context)
+- Priority: **MEDIUM** -- tests whether the depth law mechanism applies to non-solvable finite groups
+
+### Size vs Solvability Disentangling — NEW (D94)
+- Phase 2 controls for size (24 vs 24) and Phase 4 shows crossover, but 2I has 60 entries vs z12's 51 in the three-way comparison. A sharper test: 2I truncated to exactly 51 entries vs z12 at 51 entries. Removes the last confound in the solvability bottleneck demonstration.
+- Dependencies: D94 (done)
+- Priority: **MEDIUM** -- strengthens the solvability bottleneck claim for publication
 
 ### LOW (backlog -- valid but not urgent)
 22. **zeta_10 Null Fraction**. Characterization + transition location data.
@@ -505,6 +533,8 @@ The following proposals from previous arcs remain valid. Some have been partiall
 - ~~**D90** -- Sum-Angle Structure.~~ **DONE** (demo_90_sum_angle_structure/)
 - ~~**D91** -- Activation Bottleneck Test.~~ **DONE** (demo_91_activation_bottleneck/)
 - ~~**D92** -- Function Scaling / Parity-Lock Theorem.~~ **DONE** (demo_92_function_scaling/)
+- ~~**D93** -- Function Scaling — 1-Weight-Per-Input Encoding.~~ **DONE** (demo_93_function_scaling_1wpi/) -- LANDMARK: complement-blindness theorem, phase_cell recovery, circuit complexity hierarchy (AND/XOR ratio 1.01 to infinity, N=3-8), pigeonhole mechanism
+- ~~**D94** -- Binary Icosahedral Group (2I, E8).~~ **DONE** (demo_94_binary_icosahedral/) -- RESULT: solvability bottleneck confirmed, circuit complexity hierarchy universal across groups, crossover hypothesis demonstrated, "discrete algebraic reservoir computer" framing proposed
 
 ---
 
