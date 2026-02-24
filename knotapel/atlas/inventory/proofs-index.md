@@ -48,3 +48,17 @@ Generated 2026-02-20.
 - **Related demos**: D39 Parts G-J (discovery and verification), D63 (angular anatomy, uses RT truncation connection)
 - **Corollaries**: (1) Markov rank = Σ_{j ≤ ℓ-2} (dim L_j)². (2) Shadow algebra TL_n/ker(B_M) ≅ ⊕_{j ≤ ℓ-2} M_{dim L_j} — the RT TQFT algebra. (3) The "shadow interpretation": fixpt = algebraic light (sees all simples), Markov = topological light (sees only RT-physical modules j ≤ ℓ-2). Excess = what topology cannot see.
 - **Open threads**: Cross-sector kernel structure (coefficient matrix J−δI at ℓ=4 — does this generalize?). Composite shadows (intersection of two RT truncations). DKC interpretation of ℓ−2 threshold.
+
+---
+
+## P04: Parity-Lock Theorem
+
+- **File**: `proofs/parity-lock-theorem.md`
+- **Statement**: Under the ±q paired input encoding with k weights (2k input bits), the (0,0)≡(1,1) collision per weight creates 3^k equivalence classes. XOR/XNOR are the only standard Boolean functions constant on all classes. AND, OR, MAJ, and threshold functions are structurally impossible.
+- **Method**: Direct computation of per-weight contributions under all 4 bit patterns. Equivalence class construction via effective state {-q, 0, +q}. Hamming parity preservation within classes. Sign-flip symmetry (S ↔ -S) as supplementary result.
+- **Status**: PROVEN
+- **Previously**: DEMONSTRATED computationally (Demo 92 — 0 winners for AND/OR/MAJ/THR2 at all depths 0-8, 76/76 collisions same-parity, 0/27 class conflicts for XOR)
+- **Verification**: All 16 numerical tests in Demo 92 confirm theorem predictions. 13/13 sign-flip pairs verified identical.
+- **Propagates to**: theorems.md (new entry), narrative.md (encoding constraint section), novelty.md (parity-lock as novel result), connections.md (link to D48/D50 encoding contrast)
+- **Related demos**: D92 (discovery and verification), D89-D91 (depth law arc that motivated the investigation), D48/D50 (1-weight-per-input encoding computes all 13 NPN classes — contrast)
+- **Corollaries**: (1) The depth law max_xor ≈ depth + 6 describes scaling for the ONLY achievable function family under ±q encoding. (2) Sign-flip symmetry collapses 3^k classes to at most (3^k+1)/2 distinguishable groups. (3) The ±q encoding concentrates all computational power on the highest-frequency Boolean function (parity), the one outside AC⁰.

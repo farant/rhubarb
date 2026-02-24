@@ -390,6 +390,44 @@ the first two; ζ₃₂ is the next test.
 Status: Two-regime structure established. Union catalog, ADE gaps, and
 power-of-two conjecture are the active research directions.
 
+### Gap 10: Encoding Design — NEW (D92)
+
+D92 proves that the +/-q input encoding is structurally parity-locked: masks
+0...0 and 1...1 always produce identical quaternion sums (both zero), so any
+function where f(0...0) != f(1...1) is impossible under ANY activation. This
+means AND, OR, MAJ, THRESHOLD — every standard Boolean function except XOR/XNOR
+— have exactly zero winners at all depths, all resolutions, all roots of unity.
+
+The encoding is more fundamental than the activation, the catalog, or the root
+of unity. It determines which Boolean functions are computable AT ALL. The
+design hierarchy is now:
+
+```
+Encoding  →  determines which functions are computable
+  Activation  →  determines how many solutions exist (resolution)
+    Catalog depth  →  determines maximum arity
+      Root of unity  →  determines capacity ceiling (finite vs infinite)
+```
+
+The 1wpi (one-weight-per-input) encoding from D48/D50 computes all 13 NPN
+classes — so DKC is NOT parity-locked, only the +/-q encoding is. But the
+1wpi encoding has not been tested for depth-law behavior. Key sub-questions:
+
+- Does max_and or max_maj scale linearly with depth under 1wpi?
+- If so, what is the slope? (Parity's slope is ~1 under +/-q.)
+- Can hybrid encodings (some inputs +/-q, some 1wpi) balance function breadth
+  with depth-law scaling?
+- Is the +/-q encoding provably optimal for parity among all 2-bit-per-weight
+  encodings?
+
+For the hybrid LLM vision, syllogistic logic requires AND, OR, and implication
+— not just XOR. The encoding must be designed to support these functions.
+The 1wpi encoding is the current candidate, but its scaling behavior is the
+most urgent open question for the compilation pipeline.
+
+Status: PARITY-LOCK PROVED (D92). 1wpi depth-law behavior UNTESTED. This is
+the most architecturally consequential gap identified since D50.
+
 ### Gap 8: Quaternionic DKC and the Bloch Sphere — NEW (D66-D71)
 
 D66-D71 opened a wholly new dimension: the computation lives on S² (the Bloch
@@ -483,29 +521,59 @@ Status: ACTIVE RESEARCH FRONTIER. Multiple open questions across D66-D71.
    depths? This would make ζ₁₂'s high-XOR regimes computationally accessible
    without exponential catalog growth.
 
-10. **Indecomposability parameter b calculation** (D85 seed) — D84's LCFT
-    interpretation predicts that Gurarie's indecomposability parameter b should
-    be calculable from the ζ₈ catalog structure. The b-number characterizes
-    the Jordan-cell coupling between null and logarithmic partner states. A
-    concrete calculation: take the 3 shared-direction pairs (null entry + non-
-    null entry on the same coordinate axis), construct the 2×2 matrix of their
-    inner products, and extract the off-diagonal coupling. If b matches the
-    known c = -2 LCFT value (b = -5/8 for the h = 0 sector), this would
-    confirm the DKC ↔ LCFT correspondence quantitatively.
+10. ~~**Indecomposability parameter b calculation** (D85 seed)~~ — **DONE**
+    (Demo 85). b = -5/8 confirmed at TL_4 via leading-coefficient extraction
+    from delta-parameterized Markov trace on the full regular representation.
+    The "controversy" (b = -2 vs b = -5/8) dissolved: different normalization
+    conventions. b is a collective property of the full algebra (Demo 86
+    established that single P_{0,0} universally diverges).
 
-11. **Dense polymer fusion rules** (D86 seed) — The TL algebra at δ = 0 has
-    specific fusion rules dictated by the dense polymer / c = -2 LCFT. These
-    fusion rules determine which representations can be "fused" (tensored and
-    decomposed). In DKC terms, fusion corresponds to combining two catalog
-    entries by multiplication and decomposing the result. Verify that the ζ₈
-    catalog's multiplication table respects the dense polymer fusion rules.
-    If confirmed, this would provide a representation-theoretic selection
-    principle for which catalog entries can appear in DKC winners — a much
-    sharper constraint than brute-force search.
+11. ~~**Dense polymer fusion rules** (D86 seed)~~ — **PARTIALLY ADDRESSED**
+    (Demo 86). The delta-parameterized approach on single projective covers
+    universally diverges — a novel negative result. The multiplicity from the
+    full regular representation is structurally essential. The actual fusion
+    rule verification remains open; the method must be different from the
+    delta-parameterized Gram matrix approach.
+
+12. **1wpi encoding depth law** (D92 seed) — The most architecturally urgent
+    question. The +/-q encoding is parity-locked (D92). The 1wpi encoding
+    computes all 13 NPN classes (D48/D50) but its depth-law behavior is
+    unknown. Does max_and or max_maj scale linearly with depth under 1wpi?
+    If yes, what slope? If no, the entire compilation cost model for
+    non-parity functions is open. Single demo, high leverage.
+
+13. **Encoding space exploration** (D92 seed) — Systematic survey of encodings
+    between +/-q (paired, parity-only) and 1wpi (independent, all functions).
+    How many bits per weight? Which pairing structures? What equivalence
+    classes does each encoding produce? Goal: map the encoding design space
+    and identify the right encoding for syllogistic logic (AND, OR,
+    implication). 1-2 demos.
+
+14. **Balanced exponentials formal proof** (D91 seed) — The linear depth law
+    slope arises from BFS branching factor (~2×/round) vs parity demand growth
+    (4×/weight). An analytical derivation connecting these two exponentials
+    would upgrade the balanced exponentials conjecture to a theorem (P05).
+    The BFS branching factor depends on the group structure; the parity demand
+    growth is combinatorial. Single demo, clean formal proof candidate.
+
+15. **Regime transition threshold** (D87 seed) — D87 established the two
+    regimes (nulls critical at ζ₈, dispensable at ζ₁₂). The exact transition
+    point is unknown. Testing at intermediate catalog sizes (truncated ζ₁₂,
+    ζ₁₀) would locate the threshold. Is it a specific direction count, null
+    fraction, or catalog size? A sharp threshold would give a concrete design
+    criterion. Single demo.
+
+16. **Relational activation function** (D90 seed) — Current activations
+    (sector, Voronoi, combined) treat entries independently. D90 proves the
+    depth law mechanism is relational (axis cancellation between entries). An
+    activation function that explicitly uses axis dot products between entries
+    in a tuple (rather than classifying entries individually) might break the
+    linear depth law and achieve superlinear scaling. Speculative but
+    potentially high-impact. 1-2 demos.
 
 ---
 
-## New Research Axes (from D64-D71)
+## New Research Axes (from D64-D92)
 
 ### 1. Quaternionic DKC as a Research Axis
 
@@ -899,9 +967,12 @@ non-semisimple part of the TL algebra is simultaneously what makes LCFT
 (null directions holding the manifold open), and what makes the reservoir
 work (separation property through geometrically essential null states).
 
-Status: INTERPRETATION. Jordan-cell pairing is consistent with all data.
-The indecomposability parameter b is a concrete next calculation (D85 seed).
-Dense polymer fusion rules are a concrete next verification (D86 seed).
+Status: INTERPRETATION, PARTIALLY CONFIRMED. Jordan-cell pairing is consistent
+with all data. The indecomposability parameter b = -5/8 has been computed from
+first principles at TL_4 (D85), confirming the LCFT correspondence
+quantitatively. D86 established that b is a collective property of the full
+algebra (single P_{0,0} universally diverges). Dense polymer fusion rules
+remain a concrete next verification.
 
 ### 11. Non-Semisimplicity as THE Resource — NEW (D50→D82→D84 Arc)
 
@@ -961,6 +1032,203 @@ sense). DKC thrives precisely where quantum computing gives up.
 
 Status: INTERPRETIVE SYNTHESIS. Each individual result is demonstrated;
 the overarching claim about non-semisimplicity is a unifying interpretation.
+
+### 12. Encoding as a Design Dimension — NEW (D92)
+
+D92 proves that the encoding — how input bits are mapped to quaternion
+multipliers — determines which Boolean functions are computable at all. This
+is not a tuning knob; it is a structural selector. The +/-q encoding creates
+3^k equivalence classes (per-weight effective states {-q, 0, +q}), and XOR/XNOR
+are the ONLY standard Boolean functions constant on all classes.
+
+**Why this is a new research axis, not just a gap:**
+
+The encoding question is not "which encoding is best?" but "what is the space
+of possible encodings, and what does each one select for?" This is a design
+dimension in the sense that different points in encoding space produce
+qualitatively different computational capabilities:
+
+- **+/-q paired encoding**: selects for parity (the hardest function outside
+  AC^0). Creates equivalence classes via per-weight pair cancellation. The
+  depth law holds with slope ~1.
+- **1wpi encoding**: selects for all 13 NPN classes (D48/D50). One weight per
+  input bit, no pairing. Depth-law behavior unknown.
+- **Hybrid encodings**: some weights paired, some independent. Potentially
+  access intermediate function sets. Completely unexplored.
+
+The encoding design dimension is orthogonal to the activation design dimension
+(Research Axis 5). Activation determines resolution (how many solutions);
+encoding determines reachability (which functions). Together they form a 2D
+design space where each (encoding, activation) pair produces a specific
+computational profile.
+
+**Connection to the vision:** For the hybrid LLM, different compiled neurons
+may need different encodings depending on the logical function they implement.
+A syllogism-implementing neuron needs AND/OR/implication (1wpi encoding); a
+parity-check neuron needs XOR (+/-q encoding). The encoding is part of the
+compilation specification, not a global architectural choice.
+
+The parity-lock theorem (D92) is also the 4th formal proof in the program
+(after radical dimension, next-level radical, and Markov RT truncation). It
+is the first proof that constrains the design space rather than characterizing
+capacity — a qualitative shift in the theoretical program's maturity.
+
+Status: PARITY-LOCK PROVED. Encoding space exploration NOT STARTED. The 1wpi
+depth law is the immediate next question.
+
+### 13. Relational Computation as a Design Principle — NEW (D89-D91)
+
+D89-D91 establish that the depth law mechanism is relational: what matters is
+how catalog entries RELATE to each other (axis cancellation, cross-depth
+algebraic constraints), not where they individually sit on S². The spectral
+inversion result (D90) is the cleanest evidence: the S² point cloud bandwidth
+DECREASES with depth while computation INCREASES — positional information
+degrades monotonically while relational information grows.
+
+**The relational computation thesis:**
+
+```
+Positional properties:    entry direction, entry angle, spherical design quality
+                          → DECREASE with depth (spectral inversion)
+                          → WRONG optimization target
+
+Relational properties:    axis cancellation (anti-aligned pairs, min_dot ≈ -0.75),
+                          cross-depth algebraic constraint (73 distinct angles
+                          from 50K gen×deep pairs), BFS ancestry structure
+                          → INCREASE with depth
+                          → CORRECT optimization target
+```
+
+This is not just a correction of one hypothesis — it inverts the entire
+intuition about what "good" catalog entries look like. Individual entry quality
+(positional metrics like angular spacing, direction coverage, spherical design
+residual) is fundamentally misleading. Optimizing for positional quality would
+move the catalog AWAY from computation (D72: 89% XOR loss under Voronoi
+optimization).
+
+**Implications for catalog engineering:**
+
+The correct catalog optimization problem is not: "place N entries to maximize
+coverage of S²." It is: "select N entries to maximize pairwise axis
+cancellation quality and cross-depth algebraic constraint density." This is a
+combinatorial optimization over relationships, not a geometric optimization
+over positions.
+
+Specific relational metrics identified by D89-D91:
+- **Axis cancellation quality**: XOR winners have mean(min_dot) = -0.75 vs
+  -0.65 for non-winners. Deeper entries produce more anti-aligned axis pairs.
+- **Cross-depth vocabulary constraint**: Gen × deep-entry sums produce only
+  73 distinct angles from 50K pairs. BFS ancestry creates algebraic
+  relationships that restrict pairwise sum-angle vocabularies.
+- **Balanced exponentials**: BFS vocabulary grows ~2x/round, parity demand
+  grows 4x/weight. The ratio determines the depth law slope (~1).
+
+**Connection to the vision:** For the hybrid LLM compilation pipeline, this
+means weight selection algorithms should optimize relational properties of the
+weight set, not individual weight quality. A compiled neuron's power depends on
+how its weights interact, not on where they individually sit in the algebraic
+catalog.
+
+Status: MECHANISM DEMONSTRATED (D89-D91). Relational optimization algorithms
+NOT STARTED. The balanced exponentials slope derivation is the next clean
+formal proof candidate.
+
+### 14. Regime-Dependent Design Principles — NEW (D87-D88)
+
+D87-D88 establish that design principles for DKC neurons are not universal —
+they depend qualitatively on whether the underlying group is finite or infinite.
+
+**The two regimes:**
+
+| Property | Finite (ζ₈, 24 entries) | Infinite (ζ₁₂, 4096 entries) |
+|----------|------------------------|------------------------------|
+| Null fraction | 37.5% | 3.0% |
+| Null indispensability | CRITICAL (XOR8→XOR4 without nulls) | DISPENSABLE (XOR12 preserved) |
+| Direction density | 13 dirs (sparse) | 2043 dirs (dense) |
+| Per-dir residual | 0.171 | 0.021 (8× lower) |
+| Dominant pathway | Shadow pairing (100%) | Direction diversity (80-94%) |
+| Perturbation sensitivity | Non-null anchors fragile, null scaffolding flexible | Dense dirs absorb perturbation |
+
+The transition mechanism is direction density: when non-null directions are
+dense enough on S², losing null-only directions cannot constrain combinatorial
+search. At ζ₈ (13 directions, 6 null-only), every direction matters. At ζ₁₂
+(2043 directions, 67 null-only), the 1976 non-null directions provide
+sufficient combinatorial diversity.
+
+**The two-role direction architecture (D88):**
+
+At ζ₈, the 13 cuboctahedral directions serve two distinct computational roles:
+- 4 non-null body diagonals = rigid computational anchors (perturbation-
+  sensitive, load-bearing for XOR). Moving them 10° causes 8% XOR loss.
+- 6 null-only edge midpoints = flexible topological scaffolding (perturbation-
+  tolerant, movable). Moving them 10° causes -2.4% loss (a GAIN).
+
+Constrained optimization (nulls free, non-nulls clamped to 2°) captures 92%
+of design improvement with only 2.8% XOR loss. The k-ladder activation
+provides 14× better perturbation resilience than Voronoi-only (6.4% vs 89%
+loss under the same design-improving gradient).
+
+**Implications for the vision:**
+
+A practical hybrid LLM using compiled DKC neurons would need regime-aware
+compilation strategies:
+- **Finite-group neurons** (ζ₈): preserve null entries, protect non-null
+  anchor positions, use k-ladder activation for robustness.
+- **Infinite-group neurons** (ζ₁₂): safe to prune null entries, direction
+  diversity is the dominant capacity driver, perturbation resilience is
+  inherent.
+
+The exact transition threshold (at what catalog size / direction density /
+null fraction does the regime change?) is unknown. Locating it would give a
+concrete design criterion: below the threshold, use finite-group design rules;
+above, use infinite-group rules.
+
+Status: TWO REGIMES DEMONSTRATED (D87-D88). Transition threshold UNKNOWN.
+The regime question may have a sharp answer in terms of direction density or
+null fraction.
+
+### 15. Formal Proofs as a Maturing Theoretical Framework — NEW (D92)
+
+The parity-lock theorem (D92) is the 4th formal proof in the program:
+
+| # | Proof | Demo | What it establishes |
+|---|-------|------|---------------------|
+| P01 | Radical dimension formula | D39 | dim(rad) = f(l) — algebraic structure |
+| P02 | Next-level radical structure | D39 | radical propagation — algebraic depth |
+| P03 | Markov RT truncation | D51 | trace form properties — algebraic tools |
+| P04 | Parity-lock theorem | D92 | +/-q encoding computes only XOR/XNOR — design constraint |
+
+The qualitative shift: P01-P03 characterize the algebraic substrate (what the
+algebra looks like). P04 constrains the design space (what the algebra can and
+cannot do under a specific encoding). This is the transition from "what is
+DKC?" to "what are DKC's structural limits?" — from exploration to theory.
+
+**The proof pipeline is accelerating:**
+
+D89-D91 identified two more proof-ready results:
+- **Balanced exponentials**: the linear depth law slope as a theorem (BFS
+  branching factor ~2×/round vs parity demand 4×/weight → slope ~1). This
+  would be P05.
+- **Spectral inversion**: S² bandwidth decreases with depth while computation
+  increases. A formal statement and proof would be P06.
+
+D87 identified a potential threshold theorem:
+- **Regime transition**: a sharp threshold for null dispensability as a
+  function of direction density. This would be P07 if it admits a clean
+  statement.
+
+**Why this matters for the vision:**
+
+The hybrid LLM vision requires credibility in academic and engineering
+contexts. Moving from "computationally verified" to "formally proved" is the
+difference between an empirical observation and a structural guarantee. Four
+proofs (and a pipeline of candidates) means the theoretical framework is
+approaching the maturity needed for external engagement — publications,
+collaborations, and engineering specifications grounded in proven properties
+rather than measured heuristics.
+
+Status: 4 FORMAL PROOFS COMPLETE. 3 candidates in pipeline (balanced
+exponentials, spectral inversion, regime transition threshold).
 
 ---
 
@@ -1072,3 +1340,13 @@ non-semisimplicity as THE resource (D50→D82→D84 convergence). Research axes
 8-11 added. Near-term explorations 10-11 added (indecomposability parameter b
 calculation, dense polymer fusion rules). Three-way LCFT↔TQC↔RC intersection
 identified as novel.*
+*Updated: 2026-02-24. D85-D92 mechanistic arc: Gap 10 added (encoding design
+— D92 parity-lock theorem proves encoding determines computability, more
+fundamental than activation or catalog). Research axes 12-15 added: encoding
+as design dimension (D92), relational computation thesis (D89-D91, spectral
+inversion proves positional optimization is wrong), regime-dependent design
+(D87-D88, finite vs infinite group principles differ qualitatively), formal
+proofs as maturing framework (P04 parity-lock, pipeline of P05-P07). Near-term
+explorations 10-11 marked DONE/partial, 12-16 added (1wpi depth law, encoding
+space exploration, balanced exponentials proof, regime transition threshold,
+relational activation function).*

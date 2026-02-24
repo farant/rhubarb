@@ -10,6 +10,8 @@ All numerical tables extracted from the demo index and explorer's log. Exact num
 
 *Updated 2026-02-21: Added Demos 83–84 (framing as computational content, null states and logarithmic structure).*
 
+*Updated 2026-02-23: Added Demos 85–92 (indecomposability parameter b, direct b on P_{0,0}, null indispensability at zeta_12, anti-correlation mechanism, depth law mechanism, sum-angle structure, activation bottleneck, function scaling/parity-lock theorem).*
+
 ---
 
 ## 1. Axiality Hierarchy Table
@@ -819,7 +821,19 @@ Result: CSS approach fails. Radical is self-orthogonal under Gram form (tautolog
 | 70 | 4 knot notes: C, Eb, E, F#. Yang-Baxter = same melody. Icosahedron fails. | Braid words are melodies; music-space orthogonality r=-0.06. |
 | 71 | Sharp phase transition at l=6. 13=13 theorem. 3.5× super-Nyquist compression. | Spectral characterization of XOR6 on S²; bandwidth DOF explains trivialization. |
 
-**Provenance:** Explorer's Log landmark table + Demos 38-39, 55-71.
+| 82 | Depth law: max_xor ~ depth + 6. Deep beats vocabulary. | Linear capacity growth; algebraic coherence. |
+| 83 | Framing = computational content. Bracket capacity = Jones + 2. | Writhe is independent information. |
+| 84 | Null indispensability at ζ₈. 6+3+4 direction partition. | Null entries hold manifold open. |
+| 85 | b = -5/8 confirmed. Standard modules fully diagonalizable. | GRS/PR controversy resolved; Jordan blocks on P_{0,0} only. |
+| 86 | Delta-form universally diverges on single P_{0,0}. | Novel negative result; multiplicity structurally essential. |
+| 87 | Null dispensability at ζ₁₂. Regime transition finite↔infinite. | Direction density absorbs null-only directions. |
+| 88 | Anti-correlation: worst integration = best computation. | Body diagonals = anchors; edge midpoints = scaffolding. |
+| 89 | 8 hypotheses tested, 5 killed. Algebraic coherence remains. | Cayley density, pairwise coherence, sector saturation all dead. |
+| 90 | Axis cancellation + cross-depth constraint = depth law mechanism. | Spectral inversion: bandwidth DOWN while computation UP. |
+| 91 | Activation NOT the bottleneck. Parity is the wall. | Depth gap invariant across all resolutions k=2 to k=48. |
+| 92 | Parity-Lock Theorem. +/-q encoding computes only XOR/XNOR. | AND/OR/MAJ structurally impossible; 3^k equivalence classes. |
+
+**Provenance:** Explorer's Log landmark table + Demos 38-39, 55-71, 82-92.
 
 ---
 
@@ -2133,6 +2147,513 @@ As group order grows, null fraction decreases sharply. ζ₁₂ direction breakd
 
 ---
 
+## 47. Indecomposability Parameter b — Demo 85
+
+### TL Algebra and Standard Module Dimensions
+
+| n | dim(TL_n) = C_n | dim(W_{n,0}) = C_{n/2} |
+|---|-----------------|----------------------|
+| 2 | 2 | — |
+| 3 | 5 | — |
+| 4 | 14 | 2 (= C_2) |
+| 5 | 42 | — |
+| 6 | 132 | 5 (= C_3) |
+| 8 | — | 14 (= C_4) |
+| 10 | — | 42 (= C_5) |
+| 12 | — | 132 (= C_6) |
+
+**Provenance:** Demo 85.
+
+### b Value Extraction at TL_4
+
+| Quantity | Value |
+|----------|-------|
+| b_delta (regular rep) | -5/2 |
+| 0-TL sector dim | 4 (diagrams: id, e₁, e₂, e₁·e₂) |
+| b_PR = b_delta / dim(0-TL) | -5/8 |
+| Accuracy | \|b_PR - (-5/8)\| < 10⁻¹² |
+
+**Provenance:** Demo 85.
+
+### Valuation Condition (Leading Coefficients)
+
+| Size | p_Tt | p_tt | 2·p_Tt | Condition p_tt = 2·p_Tt | Result |
+|------|------|------|--------|--------------------------|--------|
+| TL_4 | 1 | 2 | 2 | 2 = 2 | SATISFIED — b finite |
+| TL_6 | 3 | 4 | 6 | 4 ≠ 6 | FAILS — diverges as δ⁻² |
+
+TL_6: 0/14 safe kernel directions; 25-fold multiplicity (dim(0-TL)² = 25) does not rescue valuation.
+
+**Provenance:** Demo 85.
+
+### Standard Module Jordan Block Analysis (H on W_{n,0})
+
+| n | dim(W_{n,0}) | Jordan blocks? | Min poly square-free? |
+|---|-------------|----------------|----------------------|
+| 4 | 2 | NO | YES |
+| 6 | 5 | NO | YES |
+| 8 | 14 | NO | YES |
+| 10 | 42 | NO | YES |
+| 12 | 132 | NO | YES |
+
+Standard modules are fully diagonalizable at every tested size. Jordan blocks exist only on projective covers (P_{0,0}).
+
+**Provenance:** Demo 85.
+
+### Projective Cover P_{0,0} Structure
+
+| Size | dim(P_{0,0}) | Catalan pattern | Composition | Char poly | Jordan blocks at |
+|------|-------------|----------------|-------------|-----------|-----------------|
+| TL_4 | 5 | C_3 | 0-TL:2 + 2-TL:3 | x(x²-2)² | λ = ±√2 |
+| TL_6 | 14 | C_4 | — | x²(u-1)(u-3)(u²-8u+4)² where u=x² | λ = 0, ±(√3+1), ±(√3-1) |
+| TL_8 | 42 | C_5 | — | — | **NONE** (completely semisimple) |
+
+P_{0,0} dimension follows Catalan: dim(P_{n,0,0}) = C_{n/2+1}.
+
+**Provenance:** Demos 85, 86.
+
+### Spin Chain Sz=0 Dimensions
+
+| n | dim(Sz=0 sector) |
+|---|-----------------|
+| 4 | 6 |
+| 6 | 20 |
+| 8 | 70 |
+
+**Provenance:** Demo 85.
+
+### Fixed-Point Form Gauge Analysis (TL_4)
+
+| Matrix | Value | Meaning |
+|--------|-------|---------|
+| M (quadratic coefficient) | 0 | b_fixpt is purely affine (flat manifold) |
+| E (linear denominator) | 0 | No unique critical point |
+| Gauge freedom | 3-dimensional | Both -2 and -5/8 reachable on the manifold |
+
+The delta-parameterized Markov trace breaks the degeneracy and selects b = -5/8.
+
+**Provenance:** Demo 85.
+
+---
+
+## 48. P_{0,0} Divergence Table — Demo 86
+
+### Delta-Form Divergence on Single P_{0,0}
+
+| Size | λ | Form | p_Tt | p_tt | 2·p_Tt | Gap | Result |
+|------|---|------|------|------|--------|-----|--------|
+| TL_4 | ±√2 | loop | 2 | 2 | 4 | -2 | DIVERGE |
+| TL_4 | ±√2 | trace | 1 | 1 | 2 | -1 | DIVERGE |
+| TL_6 | 0 | loop | 3 | 4 | 6 | -2 | DIVERGE |
+| TL_6 | 0 | trace | 3 | 2 | 6 | -4 | DIVERGE |
+| TL_6 | ±(√3+1) | loop | 3 | 3 | 6 | -3 | DIVERGE |
+| TL_6 | ±(√3+1) | trace | 1 | 1 | 2 | -1 | DIVERGE |
+| TL_6 | ±(√3-1) | loop | 3 | 3 | 6 | -3 | DIVERGE |
+| TL_6 | ±(√3-1) | trace | 1 | 1 | 2 | -1 | DIVERGE |
+
+Universal negative result: valuation condition p_tt = 2·p_Tt never holds on a single P_{0,0}. All eigenvalues, all sizes, both forms diverge.
+
+Formal coefficient ratios (divergent): TL_4 λ=-√2 loop gives 1/2; TL_6 λ=0 loop gives -5/18. Neither matches -5/8 or -2.
+
+**Provenance:** Demo 86.
+
+---
+
+## 49. Null Dispensability at ζ₁₂ — Demo 87
+
+### Cross-Root Null Statistics
+
+| Root | Total entries | Null entries | Null fraction | Directions | Null-only dirs | Shared dirs | Non-null dirs |
+|------|-------------|-------------|--------------|-----------|---------------|------------|--------------|
+| ζ₈ | 24 | 9 | 37.5% | 13 | 6 | 3 | 4 |
+| ζ₁₂ | 4096 | 121 | 3.0% | 2043 | 67 | 54 | 1922 |
+
+**Provenance:** Demos 84, 87.
+
+### Capacity Comparison: Full vs Non-Null (ζ₁₂)
+
+| Subset | Size | Directions | XOR6 | XOR8 | XOR10 | XOR12 |
+|--------|------|-----------|------|------|-------|-------|
+| Full catalog | 4096 | 2043 | 32 | 32 | 32 | 32 |
+| Non-null only | 3975 | 1976 | 32 | 32 | 32 | 32 |
+
+Removing 121 null entries has **zero** effect on computational capacity at ζ₁₂.
+
+**Provenance:** Demo 87.
+
+### Capacity Comparison: Full vs Non-Null (ζ₈, control)
+
+| Subset | Size | Directions | XOR6 | XOR8 |
+|--------|------|-----------|------|------|
+| Full catalog | 24 | 13 | 32 | 32 |
+| Non-null only | 15 | 7 | 32 | 4 |
+
+Removing nulls at ζ₈ **destroys** XOR8 capacity (32 → 4 winners). Confirms Demo 84.
+
+**Provenance:** Demo 87.
+
+### Null Fraction Dilution Curve
+
+| Root | Null fraction |
+|------|--------------|
+| ζ₄ | 75% |
+| ζ₈ | 37.5% |
+| ζ₁₂ | 3.0% |
+
+**Provenance:** Demos 84, 87.
+
+---
+
+## 50. Anti-Correlation and Cuboctahedral Geometry — Demo 88
+
+### Cuboctahedral Orbit Decomposition (13 ζ₈ Directions)
+
+| Orbit | Count | Type | Mutual angle | DKC role |
+|-------|-------|------|-------------|----------|
+| Coordinate axes | 3 | Shared | 90° | — |
+| Body diagonals | 4 | Non-null-only | 70.5° (arccos(1/3)) | Rigid computational anchors |
+| Edge midpoints | 6 | Null-only | 60° or 90° | Flexible topological scaffolding |
+| **Total** | **13** | — | — | — |
+
+Pairwise angle statistics (78 pairs): min=35.3°, max=90.0°, mean=63.1°.
+
+**Provenance:** Demo 88.
+
+### Perturbation Sensitivity (ε=10°)
+
+| Perturbation target | XOR6 change | Notes |
+|--------------------|------------|-------|
+| Null-only dirs | -2.4% (GAIN) | Perturbing nulls slightly improves computation |
+| Non-null-only dirs | +8.0% loss | Non-nulls are fragile load-bearing anchors |
+| All random dirs | +3.7% loss | Intermediate |
+
+Prediction that null directions would be more sensitive was INVERTED.
+
+**Provenance:** Demo 88.
+
+### Design Optimization Results
+
+| Method | Residual change | XOR6 change | Notes |
+|--------|----------------|------------|-------|
+| D72 Voronoi-only optimization | — | 36 → 4 (89% loss) | Catastrophic |
+| D88 unconstrained gradient (5000 steps) | 2.23 → 1.06 (52% improvement) | 1239 → 1160 (6.4% loss) | k-ladder provides 14× better resilience |
+| D88 constrained (nulls free, non-nulls clamped 2°) | 2.23 → 1.16 (48% improvement) | 1239 → 1204 (2.8% loss) | Best tradeoff |
+
+**Provenance:** Demos 72, 88.
+
+### Cross-Root Per-Direction Residual
+
+| Root | Directions | Res(t=6) | Res/N (per-direction) |
+|------|-----------|---------|----------------------|
+| ζ₈ | 13 | 2.225 | 0.171 |
+| ζ₁₂ | 2043 | 42.400 | 0.021 |
+
+Per-direction residual at ζ₁₂ is 8× lower — explains null dispensability (Demo 87).
+
+**Provenance:** Demo 88.
+
+### Gram Eigenspectrum (13×13 |dot| Gram Matrix)
+
+| Eigenvalue | Multiplicity | Notes |
+|-----------|-------------|-------|
+| 6.110 | 1 | Leading |
+| 2.000 | 3 | — |
+| φ = 1.618 | 2 | Golden ratio pair |
+| 0.520 | 1 | — |
+| -1/3 | 3 | — |
+| -φ+1 = -0.618 | 2 | Golden ratio pair |
+| -0.630 | 1 | — |
+
+Golden ratio eigenvalue pairs arise from the specific angular ratios of ζ₈'s three Oₕ orbits.
+
+**Provenance:** Demo 88.
+
+---
+
+## 51. Depth Law Mechanism Hypothesis Tests — Demo 89
+
+### 8 Hypotheses Tested
+
+| # | Hypothesis | Phase | Result | Status |
+|---|-----------|-------|--------|--------|
+| 1 | Pairwise coherence | 3 | Mean \|qdot\| flat at ~0.42 across all depths, = random | **KILLED** |
+| 2 | Direction coverage | 4 | All 13 ζ₈ dirs covered by depth 2 | **KILLED** (as intercept explanation) |
+| 3 | Intra > inter-depth coherence | 5 | Intra (0.4214) < inter (0.4254) — opposite direction | **KILLED** |
+| 4 | Sector diversity | 7 | Saturates at 4/6 (k=6), 7/12 (k=12), 13/24 (k=24) | **KILLED** |
+| 5 | Cayley graph density | 8 | Same-depth entries have 0 edges; deep has fewer yet higher XOR | **KILLED + INVERTED** |
+| 6 | Angle coherence (deep) | 10 | Deep shells (d≥3) have random-like angle variance | **KILLED** for deep |
+| 7 | Cell diversity | 6 | log₂(distinct_cells) ~ 1.17d + 2, ~66% fill — tracks max_xor | Correlates (causal?) |
+| 8 | Paired extension | 11 | Real (100% nesting) but minority at ζ₁₂ (6-20%) | Confirmed as one pathway |
+
+5 cleanly killed, 1 inverted, 2 remain as partial/correlative explanations.
+
+**Provenance:** Demo 89.
+
+### Structural Constants
+
+| Constant | Value | Notes |
+|----------|-------|-------|
+| Cell fill ratio (k=6) | ~66% | Regardless of depth |
+| Voronoi coverage | 100% | Always full at all depths |
+| Cayley edges/entry | 4/3 | Convergent |
+| Sectors per additional weight | +2 | Matches +2 XOR input step |
+| Deep-564 Cayley edges | 0 | vs strided-564: 58 edges |
+| Intra-depth coherence | 0.4214 | < inter-depth (0.4254) |
+
+**Provenance:** Demo 89.
+
+### Direction Count by Cumulative Depth (ζ₁₂)
+
+| Depth | Directions |
+|-------|-----------|
+| 0 | 2 |
+| 1 | 6 |
+| 2 | 22 |
+| 3 | 46 |
+| 4 | 114 |
+| 5 | 239 |
+| 6 | 507 |
+| 7 | 975 |
+| 8 | 2043 |
+
+**Provenance:** Demo 89.
+
+### Paired Extension at ζ₁₂ (Depth 4, 275 entries, 114 dirs)
+
+| XOR level | Total winners | Shadow winners | Shadow fraction | Nesting rate |
+|-----------|--------------|---------------|----------------|-------------|
+| XOR6 | 3736 | 234 | 6% | — |
+| XOR8 | 2200 | 430 | 20% | 100% |
+
+At ζ₈ (24 entries, 13 dirs): shadow fraction was 100%. Direction scarcity forces shadow pairing; direction abundance enables diversity-dominant pathway.
+
+**Provenance:** Demo 89.
+
+### Distinct Rotation Angles by Cumulative Depth (ζ₁₂)
+
+| Cumulative depth | Distinct angles |
+|-----------------|----------------|
+| 0 | 2 |
+| 1 | 4 |
+| 2 | 6 |
+| 3 | 10 |
+| 4 | 12 |
+| 5 | 16 |
+| 6 | 21 |
+| 7 | 35 |
+| 8 | 44 |
+
+Growth rate: ~5 new angles per depth level.
+
+**Provenance:** Demo 89.
+
+---
+
+## 52. Sum-Angle Structure and Spectral Inversion — Demo 90
+
+### Axis Cancellation Data (XOR8 Winners vs Non-Winners)
+
+| Metric | XOR8 winners | Random non-winners |
+|--------|-------------|-------------------|
+| Mean min_dot (axis alignment) | -0.75 | -0.65 |
+| Sum angle range | 30–66° | — |
+
+Winners select anti-aligned axis pairs: partial cancellation of opposite rotation axes produces low sum angles needed for sector separation.
+
+**Provenance:** Demo 90.
+
+### Cross-Depth Sum-Angle Vocabulary
+
+| Pair type | Distinct angles (from 50K pairs) |
+|-----------|--------------------------------|
+| Shallow × shallow (d=0-1) | 15 |
+| Shallow × deep (cross-depth) | 73 |
+| Deep × deep (d=7-8) | 1313 |
+
+BFS ancestry constrains pairwise sum-angle vocabulary between related entries.
+
+**Provenance:** Demo 90.
+
+### New Cross-Depth Angle Vocabulary by Depth Level
+
+| Depth | New distinct angles | Useful (<70°) fraction |
+|-------|--------------------|-----------------------|
+| 1 | 3 | 80% |
+| 2 | 6 | — |
+| 3 | 10 | — |
+| 4 | 22 | — |
+| 5 | 33 | — |
+| 6 | 72 | — |
+| 7 | 120 | — |
+| 8 | 258 | 32% |
+| cumul. | 381 | — |
+
+Growth ~2× per depth round. Useful (<70°) fraction drops from 80% to 32%.
+
+**Provenance:** Demo 90.
+
+### Spectral Inversion: S² Point Cloud Bandwidth by Depth
+
+| Depth range | BW_90% | BW_99% |
+|------------|--------|--------|
+| Depth 0 only | l=4 | l=11 |
+| Cumulative all | l=2 | l=6 |
+
+Bandwidth DECREASES with depth. Computation improves while positional information content shrinks. Rules out all positional/bandwidth explanations.
+
+**Provenance:** Demo 90.
+
+### XOR Winner Sum-Angle Diversity
+
+| XOR level | Mean distinct pairwise sum angles per winner |
+|-----------|---------------------------------------------|
+| XOR6 | 2.80 |
+| XOR8 | 5.18 |
+
+Higher-level winners use more angular diversity within each tuple.
+
+**Provenance:** Demo 90.
+
+---
+
+## 53. Activation Bottleneck Test — Demo 91
+
+### k_sec Sweep at Fixed Depth 0–4 (275 entries, 114 directions)
+
+| k_sec | Max XOR | XOR8 winners | Notes |
+|-------|---------|-------------|-------|
+| 2 | 8 | 586 | Minimum resolution (4 total cells) |
+| 4 | 8 | 1166 | — |
+| 6 | 8 | 2034 | — |
+| 8 | 8 | 3280 | — |
+| 12 | 8 | 4322 | — |
+| 16 | 8 | 5210 | — |
+| 24 | 8 | 5800 | — |
+| 32 | 8 | 6894 | — |
+| 48 | 8 | 7652 | Maximum resolution |
+
+max_xor = 8 at ALL k_sec values. Resolution affects winner count (13× growth), not existence.
+
+**Provenance:** Demo 91.
+
+### Depth Gap Invariance
+
+| k_sec | Depth of first XOR6 | Depth of first XOR8 | Depth gap |
+|-------|--------------------|--------------------|-----------|
+| 2 | 1 | 2 | 1 |
+| 4 | 1 | 2 | 1 |
+| 6 | 0 | 1 | 1 |
+| 8 | 0 | 1 | 1 |
+| 12 | 0 | 1 | 1 |
+| 16 | 0 | 1 | 1 |
+| 24 | 0 | 1 | 1 |
+| 32 | 0 | 1 | 1 |
+| 48 | 0 | 1 | 1 |
+
+The depth gap between XOR6 and XOR8 is invariant across all angular resolutions.
+
+**Provenance:** Demo 91.
+
+### Voronoi Direction Count Sweep (k_sec=24, full catalog)
+
+| Direction source | Dirs | XOR8 winners | Max XOR |
+|-----------------|------|-------------|---------|
+| Depth 0 only | 2 | 2 | 8 |
+| Depth 0-1 | 6 | 35 | 8 |
+| All (depth 0-4) | 114 | 5800 | 8 |
+
+More directions produce more solutions, not higher arity.
+
+**Provenance:** Demo 91.
+
+---
+
+## 54. Parity-Lock Theorem Data — Demo 92
+
+### Function Comparison Across Depths (ζ₁₂, 4096 entries)
+
+**6-input:**
+
+| Depth | XOR winners | AND winners | OR winners | MAJ winners | THR2 winners |
+|-------|-----------|-----------|----------|-----------|-------------|
+| 0 | 8 | 0 | 0 | 0 | 0 |
+| 4 | ~1500 | 0 | 0 | 0 | 0 |
+| 8 | 3866 | 0 | 0 | 0 | 0 |
+
+**8-input:**
+
+| Depth | XOR winners | AND winners | OR winners | MAJ winners |
+|-------|-----------|-----------|----------|-----------|
+| 0 | 0 | 0 | 0 | 0 |
+| 8 | 3080 | 0 | 0 | 0 |
+
+AND/OR/MAJ/THRESHOLD = 0 winners at ALL depths and both arities.
+
+**Provenance:** Demo 92.
+
+### Truth Table Census (10,000 Random 3-Weight Triples)
+
+| Function | Separable | Fraction |
+|----------|-----------|----------|
+| XOR6 | 8370 | 83.7% |
+| AND | 0 | 0.0% |
+| OR | 0 | 0.0% |
+| MAJ | 0 | 0.0% |
+
+**Provenance:** Demo 92.
+
+### Mask Collision Analysis
+
+| Category | Count | Of total 2016 pairs |
+|----------|-------|-------------------|
+| Exact quaternion-sum collisions | 76 | 3.8% |
+| Same-parity collisions | 76 | 100% of collisions |
+| Cross-parity collisions | 0 | 0% |
+
+All collisions are same-parity — preserves XOR but breaks non-XOR functions.
+
+**Provenance:** Demo 92.
+
+### Equivalence Class Analysis (k=3 Weights, 27 = 3³ Classes)
+
+| Function | Class conflicts | Conflicting fraction |
+|----------|----------------|---------------------|
+| XOR | 0 | 0/27 |
+| AND | 1 | 1/27 |
+| OR | 1 | 1/27 |
+| MAJ | 19 | 19/27 |
+
+Critical class: (0,0,0) contains both mask 000000 and 111111 (both produce sum=0), but AND(000000)=0 and AND(111111)=1.
+
+Distinct cells for 27 classes at k_sec=12: 11.
+
+**Provenance:** Demo 92.
+
+### Sign-Flip Symmetry Verification
+
+| Property | Result |
+|----------|--------|
+| Sign-flip pairs tested | 13/13 |
+| Same sector | 13/13 (100%) |
+| Same Voronoi cell | 13/13 (100%) |
+| Same combined cell | 13/13 (100%) |
+| Same parity | 13/13 (100%) |
+
+combined_cell(S) = combined_cell(-S) for all sums S. Provably, 3^k classes collapse to at most (3^k + 1)/2 distinguishable groups. For k=3: 27 → ≤14 groups; observed: 11 distinct cells.
+
+**Provenance:** Demo 92.
+
+### XOR Winner Cell Counts (Multi-Triple Analysis)
+
+| Category | Distinct cells (of 27 classes) |
+|----------|-------------------------------|
+| XOR winners | 11–13 |
+| Non-winners | 6–11 |
+
+**Provenance:** Demo 92.
+
+---
+
 ## 12. Demo Test Counts (Extended)
 
 | Demo | Tests | Status |
@@ -2208,7 +2729,15 @@ As group order grows, null fraction decreases sharply. ζ₁₂ direction breakd
 | 82 | 17/17 | COMPLETE |
 | 83 | 12/12 | COMPLETE |
 | 84 | 17/17 | COMPLETE |
+| 85 | 58/58 | COMPLETE |
+| 86 | 15/15 | COMPLETE (NEGATIVE RESULT) |
+| 87 | 14/14 | COMPLETE |
+| 88 | 8/8 | COMPLETE |
+| 89 | 14/14 | PRELIMINARY (2 expected fails) |
+| 90 | 10/12 | COMPLETE (2 informative fails) |
+| 91 | 6/7 | COMPLETE (1 informative fail) |
+| 92 | 13/16 | COMPLETE (3 informative fails) |
 
 **Provenance:** Demo index, all entries.
 
-*Generated 2026-02-20 from demo-index.md (2845 lines) and explorers-log.md (1273 lines). Updated with Demos 38, 39, 60. Updated 2026-02-21 with Demos 64–71. Updated 2026-02-21 with Demos 72–82. Updated 2026-02-21 with Demos 83–84.*
+*Generated 2026-02-20 from demo-index.md (2845 lines) and explorers-log.md (1273 lines). Updated with Demos 38, 39, 60. Updated 2026-02-21 with Demos 64–71. Updated 2026-02-21 with Demos 72–82. Updated 2026-02-21 with Demos 83–84. Updated 2026-02-23 with Demos 85–92.*

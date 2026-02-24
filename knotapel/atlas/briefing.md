@@ -2,84 +2,39 @@
 
 ## What Is This
 
-Discrete Knotted Computation (DKC) compiles topological invariants -- Kauffman bracket
-values evaluated at roots of unity -- into neural network weights that compute Boolean
-functions without training. At A = e^{i*5pi/4}, delta = 0, and every bracket value is a
-cyclotomic integer in Z[zeta_8] with exact arithmetic (zero floating-point error, ever).
-We proved: (1) these exact bracket values compute XOR and all 13 NPN Boolean classes;
-(2) the parity function is unreachable under split-sigmoid activation (0/100M quartets)
-but reachable at k=6 MVN sectors (906 solutions); (3) two Boolean classes are provably
-unreachable by ANY half-plane activation on multiplicative encodings (the 11/13 theorem).
-The wall is in activation geometry (convexity), not the weight lattice. Nobody in knot
-theory, neural networks, lattice coding, or TQC has connected these four fields before.
-The five-pillar assembly: Abramsky (TL = computation) -> Habiro (bracket = cyclotomic
-integer) -> Aizenberg (root-of-unity neurons = Boolean logic) -> Nazer-Gastpar (algebraic
-lattices = exact computation) -> Reservoir Computing (braid depth = computational capacity).
-Each step is published; the intersection is unoccupied.
+Discrete Knotted Computation (DKC) compiles topological invariants -- Kauffman bracket values evaluated at roots of unity -- into neural network weights that compute Boolean functions without training. At A = e^{i*5pi/4}, delta = 0, and every bracket value is a cyclotomic integer in Z[zeta_8] with exact arithmetic (zero floating-point error, ever). Over 92 demos we proved: forward DKC works (D29), all 13 NPN Boolean classes are computable (D45-50), the parity wall is in activation geometry not the weight lattice (D48-50, D61-62), capacity scales linearly with braid crossing depth (D82), and the +/-q encoding is structurally locked to parity -- the single Boolean function outside AC^0 (D92, formally proven). The mechanism is now understood: axis cancellation and cross-depth algebraic constraints produce a relational depth law where deep entries are individually less informative but collectively more powerful (D89-91). Five published pillars (Abramsky, Habiro, Aizenberg, Nazer-Gastpar, Reservoir Computing) are each established; their intersection is unoccupied.
 
 ## Key Results
 
 | # | Result | Demo | Status |
 |---|--------|------|--------|
-| 1 | Forward DKC: exact Z[zeta_8] bracket values compute XOR (100+ triples, RMS=0.000) | 29 | PROVEN |
-| 2 | Parity wall: XNOR3 has 0/100M quartets under split-sigmoid; 0/2.18B with neglectons | 48-49 | PROVEN |
-| 3 | Parity reachable at k=6 MVN sectors (906 solutions); all 13 NPN classes computable | 50 | PROVEN |
-| 4 | Parity ceiling n=5 is algebra-independent: identical at Z[zeta_8] and Z[zeta_16] | 63,65 | PROVEN |
-| 5 | Two-layer wall: absolute (k≤23, no labeling works) + convention (k≥24, custom works) | 65 | PROVEN |
-| 6 | Generalized XOR6 at k=24, XOR7 at k=91 with non-standard sector labelings | 65 | PROVEN |
-| 7 | DKC computation lives on S² (eigenvector direction); Hopf phase is inert | 67 | PROVEN |
-| 8 | 24-cell polytope emerges from SU(2) braid rep; Voronoi beats geographic grids | 66 | PROVEN |
-| 9 | The 13=13 theorem: S² bandwidth l=6 because 2l+1 = 13 = eigenvector directions | 71 | PROVEN |
-| 10 | Parity hierarchy is a funnel-shaped matroid; self-doubling impossibility theorem | 64 | PROVEN |
-| 11 | 11/13 half-plane theorem: 0x06 and 0x1B unreachable; clean analytical proofs | 61-62 | PROVEN |
-| 12 | Radical dimension formula: rad(TL_ℓ) = 2ℓ−3 via Graham-Lehrer cellular theory | 51-52,60 | PROVEN |
-| 13 | Next-level radical: rad(TL_{ℓ+1}) = ℓ²−ℓ−3; universal corank 1 at first degeneracy | 39 | PROVEN |
-| 14 | Markov RT truncation: dim ker(B_M) = dim J(A) + Σ (dim L_j)² for j≥ℓ−1 | 39 | PROVEN |
-| 15 | Direction Nesting: ζ_8 eigenvectors nest exactly in ζ_16 (rigidity, 0° drift) | 69 | PROVEN |
-| 16 | Bracket and Voronoi cell are incomparable braid invariants; 119 combined classes | 74 | PROVEN |
-| 17 | XOR8 solvable at ζ₈ with S¹×S² activation (6 winners / 10,626); wall was activation | 77 | PROVEN |
-| 18 | ζ₈ finite group ceiling: XOR10=0 even with Sec×Vor; 24-element group exhausted | 78 | PROVEN |
-| 19 | ζ₁₂ breaks wall: infinite group gives XOR10=124, XOR12=50+; capacity scales with catalog | 79 | PROVEN |
-| 20 | Only ζ₄ and ζ₈ finite (ADE: Q₈ and E₇); quantum dimension [2]_q = 0 at ζ₈ | 80 | PROVEN |
-| 21 | Linear depth law: max_xor ≈ depth+6; algebraic coherence beats raw vocabulary | 82 | DEMONSTRATED |
-| 22 | Framing = +2 XOR levels: Jones normalization destroys exactly 2 levels at every root; writhe and depth are independent resources (r=0.14) | 83 | DEMONSTRATED |
-| 23 | Null indispensability: 9/24 bracket-null entries at ζ₈ maintain 6 exclusive S² directions; removing them drops XOR8→XOR6, worse than random removal | 84 | DEMONSTRATED |
+| 1 | Forward DKC: exact Z[zeta_8] bracket values compute XOR (100+ triples, RMS=0.000) | D29 | PROVEN |
+| 2 | All 13 NPN classes computable via MVN activation; parity at k=6 (906 solutions) | D45-50 | PROVEN |
+| 3 | 11/13 half-plane theorem: 0x06 and 0x1B unreachable by ANY half-plane activation | D61-62 | PROVEN |
+| 4 | Radical dimension: rad(TL_l) = 2l-3 via Graham-Lehrer cellular theory | D51-52,60 | PROVEN |
+| 5 | Linear depth law: max_xor ~ depth + 6; algebraic coherence beats raw vocabulary | D82 | DEMONSTRATED |
+| 6 | b = -5/8 (Pearce-Rasmussen): first exact first-principles indecomposability parameter | D85-86 | DEMONSTRATED |
+| 7 | Null dispensability regime transition: nulls critical at zeta_8 (finite), dispensable at zeta_12 (infinite) | D87 | DEMONSTRATED |
+| 8 | Depth law mechanism: axis cancellation + cross-depth algebraic constraint; relational, not positional | D89-91 | DEMONSTRATED |
+| 9 | Parity-lock theorem: +/-q encoding structurally locked to XOR/XNOR; AND/OR/MAJ impossible | D92 | **PROVEN (P04)** |
+| 10 | Framing = +2 XOR levels: Jones normalization destroys exactly 2 levels at every root tested | D83 | DEMONSTRATED |
 
 ## Current Frontier
 
-Most recent landmarks: Demos 72-84 opened three arcs on top of the D64-71 foundation.
-**The characterization arc** (D72-75): bracket and Voronoi cell are incomparable braid
-invariants with 119 combined classes (D74); the angle channel subsumes the cell for additive
-sums (D75); anti-correlation — worst spherical t-design gives MOST solutions (D72); 82.8%
-universal automaton determinism (D73). **The scaling arc** (D76-82): XOR8=6 with S¹×S²
-combined activation (D77); ζ₈ finite group ceiling at XOR10 (D78); ζ₁₂ BREAKS the wall with
-XOR12 (D79); only ζ₄ and ζ₈ finite — ADE classification (D80); logarithmic scaling (D81);
-depth law max_xor ≈ depth+6 (D82). **The decomposition arc** (D83-84): Jones normalization
-destroys exactly 2 XOR levels at every root — framing is a discrete computational resource,
-not a bookkeeping anomaly (D83); writhe and depth are independent axes (r=0.14); resource
-decomposition: lattice (XOR6) + depth (+2/round) + writhe (+2). Bracket-null entries (9/24
-at ζ₈) maintain 6 exclusive S² directions; removing them drops capacity worse than random
-removal — nulls are indispensable (D84). LCFT Jordan-cell interpretation: null states pair
-with logarithmic partners. Three formal proofs (P01-P03). 72 demos total. Paper 6 scope
-expanded to D72-D84.
+- **Just proved (D92):** The parity-lock theorem -- the +/-q encoding concentrates ALL computational power on parity, the hardest Boolean function (outside AC^0). Formal proof via 3^k equivalence class argument.
+- **Key open question:** Does the depth law generalize beyond parity? The 1wpi encoding (D48/D50) computes all 13 NPN classes but has never been tested for depth-law scaling. This determines whether the compilation cost model extends to AND/OR for syllogistic logic.
+- **Next experiments:** (1) 1wpi encoding depth law test -- does max_and or max_maj scale linearly with depth? (2) Balanced exponentials analytical proof -- formalize BFS ~2x/round vs parity 4x/weight. (3) Regime transition characterization -- locate the exact null-dispensability threshold between zeta_8 and zeta_12.
+- **Paper pipeline:** Paper 7 (D85-D92 mechanistic arc: "why does DKC work and what are its limits?") is the immediate publication target. Papers 1-6 are at various stages of readiness (see next-priorities.md for critical paths).
+- **Architectural implication:** Encoding is more fundamental than activation or catalog -- it determines which functions are computable at all (D92). This is the first design decision in any DKC pipeline.
 
-**Next (Tier 1 priorities):**
-1. **ζ₁₂ with Sec×Vor activation** -- D79 showed ζ₁₂ breaks the ζ₈ wall; D77 showed
-   Sec×Vor is far more powerful than sector alone. Combining them should dramatically
-   increase XOR capacity. Immediate Paper 6 impact.
-2. **Framing test at ζ₁₆/ζ₂₄** -- D83 showed +2 loss at ζ₈ and ζ₁₂. Confirming at
-   additional roots establishes universality. Small effort, high clarity.
-3. **ζ₁₂ null indispensability** -- D84 showed nulls indispensable at ζ₈ (9/24). Are the
-   121 null entries (3%) at ζ₁₂ similarly critical? 29 null-only directions suggest yes.
-4. **ζ₃₂ finiteness test** -- D80's Power-of-Two Conjecture. Single test_root(32) call.
-5. **Analytical proof of the 13=13 bandwidth bound** -- cleanest standalone pub target.
-6. **Sandwich theorem formal proof** -- remaining: algebra iso, nilpotency=3, Fibonacci rank.
+## Deeper Reading
 
-## Deeper Reading (all paths relative to `knotapel/`)
+All paths relative to `knotapel/`:
 
-- Research narrative: `atlas/synthesis/narrative.md` | Four-lens analysis: `atlas/synthesis/four-lenses.md`
-- Cross-demo connections: `atlas/synthesis/connections.md` | Novelty: `atlas/synthesis/novelty.md`
-- Demo inventory: `atlas/inventory/demo-index.md` | Theorems: `atlas/inventory/theorems.md` | Proofs: `atlas/inventory/proofs-index.md`
-- Literature: `atlas/research/literature-index.md`
-- Next priorities: `atlas/planning/next-priorities.md` | Future demos: `atlas/planning/future-demos.md`
-- Open questions: `atlas/planning/research-questions.md` | Vision: `atlas/planning/vision.md`
+- **Full narrative:** `atlas/synthesis/narrative.md` -- the story from D01 to D92
+- **Key results & proofs:** `atlas/inventory/theorems.md` | `atlas/inventory/proofs-index.md`
+- **Demo index:** `atlas/inventory/demo-index.md` -- all 92 demos with one-line summaries
+- **What's next:** `atlas/planning/next-priorities.md` -- tiered priority list with critical paths
+- **Cross-demo patterns:** `atlas/synthesis/connections.md` | `atlas/synthesis/four-lenses.md`
+- **Novelty claims:** `atlas/synthesis/novelty.md`
+- **Open questions & vision:** `atlas/planning/research-questions.md` | `atlas/planning/vision.md`

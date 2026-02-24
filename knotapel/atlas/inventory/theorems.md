@@ -1,10 +1,11 @@
 # Theorems, Conjectures & Key Results
 
-Extracted from 84 demos (demo-index.md) and explorer's log. Organized by topic.
+Extracted from 92 demos (demo-index.md) and explorer's log. Organized by topic.
 Updated 2026-02-20: Added results from Demos 38 (dimension reduction), 39 (symmetry decomposition), 60 (ell=7 cubic wall), 63 (Angular Anatomy), 39 Parts G-J (Markov RT truncation, second-degeneracy coranks).
 Updated 2026-02-21: Added results from Demos 64 (parity matroid recursion), 65 (Clifford staircase), 66 (quaternionic DKC), 67 (coordinate zoo), 68 (stereographic DKC), 69 (Clifford staircase on S²), 70 (Musica Nodorum), 71 (spectral DKC).
 Updated 2026-02-21: Added results from Demos 72 (spherical design test), 73 (eigenvector automaton), 74 (computational invariant), 75 (binocular DKC), 76 (8-input scaling), 77 (activation zoo), 78 (recursive scaling + phase diagram), 79 (ζ₁₂ capacity), 80 (group finiteness survey), 81 (capacity scaling law), 82 (crossing depth).
 Updated 2026-02-21: Added results from Demos 83 (framing as computational content), 84 (null states and logarithmic structure).
+Updated 2026-02-23: Added results from Demos 85 (indecomposability parameter b), 86 (direct b on P_{0,0} — negative result), 87 (null indispensability at ζ₁₂), 88 (anti-correlation mechanism), 89 (depth law mechanism), 90 (sum-angle structure), 91 (activation bottleneck), 92 (function scaling / parity-lock theorem). P04 Parity-Lock Theorem upgraded to PROVEN (formal proof in proofs/).
 
 ---
 
@@ -138,6 +139,48 @@ Updated 2026-02-21: Added results from Demos 83 (framing as computational conten
 - **Status:** COMPUTATIONALLY VERIFIED (n=4,6,8)
 - **Demo provenance:** Demo 39
 - **Significance:** Cross-sector dependencies prevent naive sector-by-sector dimension reduction at larger n.
+
+### Indecomposability Parameter b = -5/8 for Dense Polymers
+- **Statement:** The indecomposability parameter b = -5/8 (Pearce-Rasmussen) is computed exactly from first principles at TL_4 via leading-coefficient extraction from the delta-parameterized Markov trace on the full regular representation. The regular-representation value b_delta = -5/2 divides by dim(0-TL sector) = 4 to give b_PR = -5/2 / 4 = -5/8, exact to 12 decimal places. The literature "controversy" between b = -2 (GRS normalization) and b = -5/8 (PR normalization) dissolves: they are the same structure under different conventions.
+- **Status:** DEMONSTRATED (at TL_4; TL_6 regular rep diverges)
+- **Demo provenance:** Demo 85
+- **Cross-references:** Valuation Condition (below), Delta-Form Divergence on P_{0,0} (Demo 86 negative result)
+- **Significance:** First exact first-principles computation of b from the diagram algebra. Resolves the GRS/PR normalization question.
+
+### Valuation Condition for b Extraction
+- **Statement:** The leading-coefficient b extraction requires p_tt = 2 * p_Tt (where p_tt and p_Tt are the minimum delta-powers in the bilinear forms). At TL_4: p_tt = 2, p_Tt = 1, satisfied. At TL_6: p_tt = 4, p_Tt = 3, FAILS — b diverges as delta^{-2}.
+- **Status:** VERIFIED (at TL_4); FAILS (at TL_6)
+- **Demo provenance:** Demo 85
+- **Cross-references:** Indecomposability Parameter b (above), Delta-Form Divergence on P_{0,0} (Demo 86)
+- **Significance:** Identifies the structural condition governing when the leading-coefficient method produces a finite b. The TL_6 failure with 25-fold multiplicity (vs TL_4's 4-fold) shows cross-copy interference grows faster than the multiplicity rescue.
+
+### Standard Modules Have No Jordan Blocks at delta=0
+- **Statement:** The Hamiltonian H on the standard module W_{n,0} (link states) has NO Jordan blocks at any size tested (n=4,6,8,10,12). The minimal polynomial is square-free (gcd(mu,mu') degree = 0) at all sizes. Jordan blocks exist exclusively on projective covers (P_{0,0}) and the full regular representation.
+- **Status:** DEMONSTRATED (n=4,6,8,10,12)
+- **Demo provenance:** Demo 85
+- **Cross-references:** Indecomposability Parameter b (above), Delta-Form Divergence on P_{0,0} (Demo 86)
+- **Significance:** FALSIFIES the claim (Gemini 3 Pro) that b is extracted from standard module Jordan structure. The non-semisimple structure needed for b computation lives in the projective cover, not the standard module.
+
+### Fixed-Point Form Gauge Manifold is Flat
+- **Statement:** At TL_4, the fixed-point trace bilinear form G[i][j] = fixpt(star(i)*j) is degenerate at delta=0 with 3-dimensional gauge freedom. The quadratic coefficient matrix M = 0, making b_fixpt an affine function of gauge parameters with no unique critical point. Both b = -2 and b = -5/8 are reachable points on this flat manifold. The delta-parameterized Gram matrix breaks the degeneracy.
+- **Status:** DEMONSTRATED (at TL_4)
+- **Demo provenance:** Demo 85
+- **Cross-references:** Indecomposability Parameter b (above)
+- **Significance:** Explains why different normalization conventions can produce different b values — the fixpt form has gauge freedom that the delta-form resolves.
+
+### Delta-Form Divergence on Single P_{0,0} (Negative Result)
+- **Statement:** The delta-parameterized Gram matrix approach universally diverges on a single projective cover P_{0,0} at every eigenvalue, every lattice size (TL_4, TL_6), and for both loop and trace forms. The valuation condition p_tt = 2*p_Tt never holds on a single copy. The multiplicity from the regular representation is structurally essential to the b computation, not just a scale factor.
+- **Status:** DEMONSTRATED (novel negative finding — this approach has not been tried in the literature)
+- **Demo provenance:** Demo 86
+- **Cross-references:** Indecomposability Parameter b (Demo 85), Valuation Condition (Demo 85)
+- **Significance:** The dim(V_0)^2 multiplicity from the regular representation participates in the valuation balance required for the b ratio to converge. TL_8 P_{0,0} is additionally found to be completely semisimple at lambda=0 (no Jordan blocks).
+
+### Projective Cover Dimension Pattern
+- **Statement:** dim(P_{0,0}) at TL_n equals C_{n/2+1} (the next Catalan number): TL_4 → 5 = C_3, TL_6 → 14 = C_4, TL_8 → 42 = C_5.
+- **Status:** OBSERVED (three data points)
+- **Demo provenance:** Demo 86
+- **Cross-references:** Catalan Number Dimensions (Section: Verified Facts)
+- **Significance:** Connects projective cover dimension to the Catalan sequence — one step up from the algebra dimension itself.
 
 ---
 
@@ -448,6 +491,41 @@ Updated 2026-02-21: Added results from Demos 83 (framing as computational conten
 - **Status:** EXPLAINED (compressed sensing argument; not yet proven as a general theorem)
 - **Demo provenance:** Demo 71
 - **Significance:** Connects DKC to compressed sensing theory on S². The Voronoi cells need only distinguish 13 directions from each other, not generically sample an arbitrary l=6 function.
+
+### Parity-Lock Theorem (±q Encoding)
+- **Statement:** Under the ±q paired input encoding with k weights (2k input bits), the (0,0)≡(1,1) collision per weight creates 3^k equivalence classes. XOR/XNOR are the only standard Boolean functions constant on all classes. AND, OR, MAJ, and threshold functions are structurally impossible — zero winners at ALL depths (0-8) for both 6-input and 8-input arities. The mechanism: masks 0...0 and 1...1 always produce identical sums (both zero), so any f with f(0...0) ≠ f(1...1) is impossible under ANY activation. Sign-flip symmetry (combined_cell(S) = combined_cell(-S)) collapses 3^k classes to at most (3^k+1)/2 distinguishable groups.
+- **Status:** **PROVEN** (formal proof in `proofs/parity-lock-theorem.md`; computationally verified: 0 winners for AND/OR/MAJ/THR2 at all depths 0-8, 76/76 collisions same-parity, 0/27 class conflicts for XOR, all 16 numerical tests confirm theorem, 13/13 sign-flip pairs verified identical)
+- **Demo provenance:** Demo 92. **Proof:** `proofs/parity-lock-theorem.md` (P04)
+- **Cross-references:** Parity Unreachability (Demo 48), Parity Reachability at k=6 (Demo 50), Depth Law (Demo 82/89/91)
+- **Significance:** The ±q encoding concentrates all computational power on parity — the single Boolean function outside AC⁰. The depth law max_xor ≈ depth + 6 describes scaling for the ONLY achievable function family under this encoding. Contrasts with 1-weight-per-input encoding (Demos 48/50) which computes all 13 NPN classes.
+
+### Encoding Concentrates on Hardest Function
+- **Statement:** The ±q paired encoding channels all computational power into parity — the single Boolean function outside AC⁰ (constant-depth polynomial-size circuits). 83.7% of random 3-weight triples are XOR6-separable; AND/OR/MAJ separability is exactly 0.0%. This is not a limitation to be overcome but a structural feature.
+- **Status:** DEMONSTRATED (10,000 random triple census)
+- **Demo provenance:** Demo 92
+- **Cross-references:** Parity-Lock Theorem (above), Furst-Saxe-Sipser/Hastad parity-not-in-AC⁰
+- **Significance:** The encoding naturally selects for the computationally hardest Boolean function, providing a bridge between DKC and circuit complexity.
+
+### Parity Wall Theorem (Activation Is Not the Bottleneck)
+- **Statement:** The maximum achievable XOR arity at a given catalog depth is determined entirely by the parity constraint (whether any weight tuple separates even vs odd input subsets). Activation resolution (angular sectors k_sec = 2 to 48, Voronoi direction counts 2 to 114) controls the number of solutions but not their existence. max_xor = 8 at ALL k_sec values with 275 entries at ζ₁₂.
+- **Status:** DEMONSTRATED (exhaustive k_sec sweep 2-48, Voronoi sweep 2-114 dirs)
+- **Demo provenance:** Demo 91
+- **Cross-references:** Depth Law (Demo 82), Balanced Exponentials Linearity (below), Axis Cancellation Mechanism (Demo 90)
+- **Significance:** Confirms that the linear depth law is a property of the parity constraint and BFS vocabulary growth, not an activation geometry artifact.
+
+### Depth Gap Invariance
+- **Statement:** The depth gap between consecutive XOR levels (e.g., XOR6 first appearing at depth d₁ and XOR8 first appearing at depth d₂) is constant across all tested activation resolutions (k_sec = 2 to 48, direction counts 2 to 114). The depth law slope is fixed by parity, not activation geometry.
+- **Status:** DEMONSTRATED (9×9 depth × k_sec interaction grid)
+- **Demo provenance:** Demo 91
+- **Cross-references:** Parity Wall Theorem (above), Balanced Exponentials Linearity (below)
+- **Significance:** Key diagnostic: if activation were the bottleneck, finer resolution would shift the depth gap — it does not.
+
+### Balanced Exponentials Linearity
+- **Statement:** The linear depth law max_xor ≈ depth + 6 arises because BFS closure rounds add vocabulary at rate ~2×/round while parity demand grows at 4×/weight (2^{2N} masks). The ratio yields ~2 depth rounds per additional weight, producing the observed slope ≈ 1. Confirmed from three independent directions: D90 (supply side — vocabulary growth), D91 (demand side — activation invariance), and the quantitative match.
+- **Status:** CONFIRMED (from both supply and demand sides)
+- **Demo provenance:** Demo 89 (proposed), Demo 90 (supply analysis), Demo 91 (demand confirmation)
+- **Cross-references:** Linear Depth Law (Demo 82), Parity Wall Theorem (Demo 91), Axis Cancellation Mechanism (Demo 90)
+- **Significance:** Provides the mechanistic explanation for the linear depth law. The linearity emerges from the ratio of two exponential processes (BFS branching vs parity constraint growth).
 
 ### Trivialization DOF Prediction
 - **Statement:** The minimum bandwidth scales as l ≥ (N−1)/2 where N is the number of eigenvector directions. For ζ_16 (N=3,457 directions) this predicts l ≥ 1728, with Nyquist cell count ~3M. At such enormous bandwidth any coarse partition trivially resolves the computation, explaining the ~90% solution rate seen in Demo 69 for the ζ_16 Voronoi.
@@ -957,6 +1035,129 @@ Updated 2026-02-21: Added results from Demos 83 (framing as computational conten
 - **Demo provenance:** Demo 84
 - **Significance:** Predicts that the null-indispensability result is specific to the ζ₈ (finite group) regime. At ζ₁₂, with only 3% null fraction but 29 null-only directions, whether nulls remain indispensable for XOR12 solutions is an open question.
 
+### Null Dispensability at Infinite Groups
+- **Statement:** At ζ₁₂ (infinite group, 4096 entries, 121 null entries = 3.0%), removing all bracket-null entries preserves full XOR capacity (XOR6/8/10/12 all 32 winners, identical to full catalog). Null entries are directionally indispensable (67 exclusive S² axes) but computationally dispensable. This contrasts with ζ₈ where removing nulls destroys XOR8 capacity (32 → 4 winners).
+- **Status:** DEMONSTRATED (exhaustive; non-null-only subset tested at all XOR levels)
+- **Demo provenance:** Demo 87
+- **Cross-references:** Null Indispensability Theorem (Demo 84), Null Fraction Dilution Conjecture (Demo 84), Regime Transition Theorem (below)
+- **Significance:** Null indispensability does NOT generalize from finite to infinite groups. The transition mechanism is direction density — when the non-null direction count is large enough (1976 out of 2043), losing 67 null-only directions cannot constrain combinatorial search.
+
+### Regime Transition Theorem (Null Indispensability)
+- **Statement:** There is a qualitative transition between finite groups (ζ₈: nulls computationally critical, 37.5% of catalog, 6/13 exclusive directions in a sparse direction set) and infinite groups (ζ₁₂: nulls computationally redundant, 3% of catalog, 67/2043 exclusive directions in a dense direction set). Directional indispensability (owning exclusive S² axes) is necessary but not sufficient for computational indispensability.
+- **Status:** DEMONSTRATED (two-root comparison)
+- **Demo provenance:** Demo 87
+- **Cross-references:** Null Indispensability Theorem (Demo 84), Null Dispensability at Infinite Groups (above)
+- **Significance:** Establishes that the controlling variable for null indispensability is direction density, not null fraction per se. At ζ₈ the non-null directions are too sparse; at ζ₁₂ they are dense enough.
+
+### Two-Role Direction Theorem
+- **Statement:** In the ζ₈ cuboctahedral direction set, the 13 directions serve two distinct computational roles: the 4 non-null body-diagonal directions are rigid computational anchors (perturbation-sensitive, load-bearing for XOR), and the 6 null-only edge-midpoint directions are flexible topological scaffolding (perturbation-tolerant, movable, provide S² coverage). At eps=10° perturbation: null-only causes -2.4% XOR loss (actually a gain), non-null-only causes 8.0% loss.
+- **Status:** DEMONSTRATED
+- **Demo provenance:** Demo 88
+- **Cross-references:** Anti-Correlation Theorem (Demo 72), Null Indispensability Theorem (Demo 84), Null Directional Efficiency (Demo 84)
+- **Significance:** The initial prediction (null directions more sensitive) was INVERTED. Non-null body-diagonal directions are the fragile, load-bearing anchors; null edge-midpoint directions are redundant scaffolding.
+
+### Constrained Optimality (Rigid Anchors, Flexible Scaffolding)
+- **Statement:** Constraining non-null directions to within 2° of algebraic placement while allowing null directions to move freely captures 92% of unconstrained spherical design improvement (48% vs 52% design residual reduction) while reducing computational loss by 56% (2.8% vs 6.4% XOR loss). Null directions carry nearly all the design-improvement capacity.
+- **Status:** DEMONSTRATED
+- **Demo provenance:** Demo 88
+- **Cross-references:** Two-Role Direction Theorem (above), Anti-Correlation Theorem (Demo 72)
+- **Significance:** Provides a practical optimization strategy: improve geometric quality (for sampling/integration) while preserving computational structure by only moving non-load-bearing directions.
+
+### K-Ladder Resilience Theorem
+- **Statement:** The Sec×Vor k-ladder activation (K_LADDER = {1,6,8,10,12,16,20,24}) provides an order-of-magnitude better perturbation resilience than Voronoi-only activation under the same design-improving gradient: 6.4% XOR loss vs 89% XOR loss (Demo 72). The mechanism: multiple k_sec values provide fallback angular resolutions when direction perturbation invalidates the optimal sector assignment.
+- **Status:** DEMONSTRATED
+- **Demo provenance:** Demo 88
+- **Cross-references:** Anti-Correlation Theorem (Demo 72), Activation Determines Capacity (Demo 77)
+- **Significance:** The activation function (Voronoi-only vs k-ladder) is the primary variable controlling perturbation sensitivity, not the optimization procedure. The same Sec×Vor activation introduced for capacity (Demo 77) also provides computational robustness — dual benefit.
+
+---
+
+## 8. Depth Law Mechanism (Demos 89–91)
+
+### Pairwise Coherence Non-Mechanism
+- **Statement:** Mean pairwise |qdot| (quaternion alignment) is flat at ~0.42 across all depth shells (0-8) and identical to random baseline. Intra-depth coherence (0.4214) is actually LESS than inter-depth coherence (0.4254) — depth shells are more internally orthogonal than across shells. Quaternion alignment does NOT explain the depth advantage.
+- **Status:** DEMONSTRATED (KILLED as explanation)
+- **Demo provenance:** Demo 89 (Phase 3, Phase 5)
+- **Cross-references:** Linear Depth Law (Demo 82), Axis Cancellation Mechanism (Demo 90)
+- **Significance:** One of 5 candidate mechanisms eliminated in the D89-D90-D91 depth law arc.
+
+### Direction Coverage Non-Mechanism
+- **Statement:** All 13 ζ₈ directions are covered by depth 2. The +6 intercept in max_xor ≈ depth + 6 relates to XOR6 base capacity, not direction coverage timing.
+- **Status:** DEMONSTRATED (KILLED as intercept explanation)
+- **Demo provenance:** Demo 89 (Phase 4)
+- **Cross-references:** Linear Depth Law (Demo 82)
+- **Significance:** Direction coverage completes much earlier than the depth law begins to operate.
+
+### Cayley Density Non-Mechanism
+- **Statement:** Same-depth entries have ZERO mutual Cayley edges (mathematically necessary from BFS construction). Deep-564 subset has 0 internal Cayley edges; strided-564 has 58. Yet deep beats strided on XOR capacity. Graph density and computational capacity are ANTI-CORRELATED.
+- **Status:** DEMONSTRATED (KILLED and INVERTED)
+- **Demo provenance:** Demo 89 (Phase 8)
+- **Cross-references:** Algebraic Coherence Beats Vocabulary (Demo 82)
+- **Significance:** Cayley graph connectivity is not the mechanism; in fact, less graph connectivity correlates with more computational power.
+
+### Sector Saturation Non-Mechanism
+- **Statement:** Pairwise sum sectors saturate early and do not grow with depth. Voronoi coverage is always 100%. Sectors are NOT the bottleneck for the depth law.
+- **Status:** DEMONSTRATED (KILLED)
+- **Demo provenance:** Demo 89 (Phases 7, 9)
+- **Cross-references:** Linear Depth Law (Demo 82)
+- **Significance:** Individual sectors saturate quickly; the bottleneck is relational (how entries combine), not positional.
+
+### Axis Cancellation Mechanism
+- **Statement:** XOR winners preferentially contain anti-aligned quaternion pairs. Mean min_dot for XOR8 winners = -0.75 vs -0.65 for random non-winners. Two quaternions with nearly opposite rotation axes partially cancel, yielding a sum quaternion with a small rotation angle (30-66°) — exactly what sector activation needs for parity satisfaction. This is the geometric content of "algebraic coherence" identified in Demo 82.
+- **Status:** DEMONSTRATED
+- **Demo provenance:** Demo 90 (Phase 2b)
+- **Cross-references:** Algebraic Coherence Beats Vocabulary (Demo 82), Cross-Depth Algebraic Constraint (below), Relational Computation Thesis (below)
+- **Significance:** First identification of the geometric mechanism underlying the depth law. Winners select for anti-alignment, which produces low sum angles needed for fine-grained sector discrimination.
+
+### Cross-Depth Algebraic Constraint
+- **Statement:** BFS-derived entries at depth d have constrained pairwise sums with generators: generator × deep (d=7-8) produces only 73 distinct angles from 50K pairs, compared to 1313 for deep × deep and 15 for shallow × shallow. The BFS ancestry creates algebraic relationships that restrict the sum-angle vocabulary between related entries.
+- **Status:** DEMONSTRATED
+- **Demo provenance:** Demo 90 (Phase 2c)
+- **Cross-references:** Axis Cancellation Mechanism (above), Algebraic Coherence Beats Vocabulary (Demo 82)
+- **Significance:** The concrete realization of "algebraic coherence": BFS ancestry forces entries to share intermediate algebraic structure, constraining their pairwise sums to a small, well-structured vocabulary.
+
+### Spectral Inversion Theorem
+- **Statement:** The S² point cloud bandwidth (spherical harmonic decomposition of rotation axis positions) DECREASES as depth increases. BW_90% drops from l=4 (depth 0 only) to l=2 (cumulative all depths). BW_99% drops from l=11 to l=6. The point cloud converges to spherical uniformity (l=0 dominant). Computational power grows while positional information content shrinks.
+- **Status:** DEMONSTRATED
+- **Demo provenance:** Demo 90 (Phase 5)
+- **Cross-references:** Relational Computation Thesis (below), 13=13 Theorem (Demo 71)
+- **Significance:** RULES OUT all positional/bandwidth-based explanations for the depth law. The Altschuler-Parrilo hypothesis (deeper = higher bandwidth = more computational modes) is INVERTED: deeper entries are more uniformly distributed, meaning individual positions carry less information. The mechanism must be relational.
+
+### Relational Computation Thesis
+- **Statement:** The depth law is relational: what matters is how entries combine (axis cancellation, cross-depth algebraic constraints), not where they individually sit on S². The spectral inversion is the cleanest evidence — positional information degrades monotonically while computation improves linearly.
+- **Status:** DEMONSTRATED (synthesis of D89/D90/D91 results)
+- **Demo provenance:** Demos 89, 90, 91
+- **Cross-references:** Axis Cancellation Mechanism (D90), Cross-Depth Algebraic Constraint (D90), Spectral Inversion (D90), Parity Wall Theorem (D91)
+- **Significance:** Resolves the "algebraic coherence" mystery from Demo 82. Deep entries compose better not because they are individually special, but because their algebraic ancestry creates favorable relational structure (anti-aligned axes, constrained sum vocabularies).
+
+### Paired Extension as Minority Pathway
+- **Statement:** Shadow pairing (two quaternions sharing the same Voronoi direction but different eigenvalue angle) is real (100% nesting when present) but constitutes only 6-20% of XOR winners at ζ₁₂ (cumulative depth 4, 275 entries, 114 dirs). At ζ₈ (24 entries, 13 dirs) it was 100%. The dominant pathway (80-94% at ζ₁₂) uses all-distinct-direction tuples.
+- **Status:** DEMONSTRATED (ζ₈ and ζ₁₂ compared)
+- **Demo provenance:** Demo 89 (Phase 11)
+- **Cross-references:** Paired Extension Conjecture (Demo 77), Paired Quaternion Structure for XOR8 (Demo 77)
+- **Significance:** Shadow pairing dominates when direction vocabulary is small (ζ₈); direction diversity dominates when large (ζ₁₂). Both depend on the same underlying algebra but represent different computational strategies.
+
+### +2 Sectors per Weight
+- **Statement:** Each additional weight in multi-element quaternion sums adds approximately 2 sectors to the coverage count, matching the +2 XOR input step per additional weight in the depth law.
+- **Status:** OBSERVED
+- **Demo provenance:** Demo 89 (Phase 9)
+- **Cross-references:** Balanced Exponentials Linearity (D91), Linear Depth Law (D82)
+- **Significance:** Provides a per-weight sector accounting that connects the depth law slope to the activation cell structure.
+
+### log2(Cell Diversity) Linear in Depth
+- **Statement:** Pairwise sum cell diversity (number of distinct cells occupied by pairwise quaternion sums) grows exponentially with depth: log2(distinct_cells) ≈ 1.17d + 2, which is linear and tracks max_xor quantitatively. ~66% cell fill ratio at k=6 regardless of depth.
+- **Status:** OBSERVED (causality vs epiphenomenality unresolved)
+- **Demo provenance:** Demo 89 (Phase 6)
+- **Cross-references:** Linear Depth Law (D82), Balanced Exponentials Linearity (D91)
+- **Significance:** Quantitative correspondence with max_xor is real, but both may be driven by the same underlying cause (BFS vocabulary growth).
+
+### Activation Resolution–Solution Count Scaling
+- **Statement:** XOR8 winner count at fixed catalog depth scales roughly linearly with activation cell count (k_sec × n_dirs), growing from hundreds at minimal resolution (k=2, 4 total cells) to tens of thousands at maximum resolution (k=48). Winner count grows 13× from k=2 to k=48 while max_xor remains unchanged.
+- **Status:** DEMONSTRATED
+- **Demo provenance:** Demo 91
+- **Cross-references:** Parity Wall Theorem (D91), Depth Gap Invariance (D91)
+- **Significance:** Resolution reveals MORE solutions to the same parity constraint; it does not enable HIGHER parity. This is the key diagnostic separating the activation's role (counting) from the parity constraint's role (existence).
+
 ---
 
 ## Named Conjectures (Open)
@@ -1099,6 +1300,36 @@ Updated 2026-02-21: Added results from Demos 83 (framing as computational conten
 - **Demo provenance:** Demo 39 (multi-ell boundary data), Demo 60 (ell=7 confirmation). **Proof:** `proofs/radical-dimension-formula.md`
 - **Significance:** The ell=5 exception (semisimple at n=ell) is the Fibonacci anyon case — a structural anomaly in the radical landscape.
 
+### Valuation Condition Repair Conjecture (b at Larger Lattices)
+- **Statement:** The delta-parameterized leading-coefficient method for computing b succeeds only at TL_4 (where p_tt = 2*p_Tt holds) and diverges at TL_6 and on single P_{0,0} copies. The actual Pearce-Rasmussen method likely uses transfer matrix + finite-size scaling rather than the diagram-algebraic approach. Identifying and implementing their exact method remains open.
+- **Status:** OPEN CONJECTURE
+- **Demo provenance:** Demo 85 (valuation condition), Demo 86 (universal divergence on P_{0,0})
+- **Significance:** Would resolve how to compute b from first principles at lattice sizes beyond TL_4.
+
+### Combinatorial-Algebraic Balance Conjecture
+- **Statement:** The linear depth law (max_xor ≈ depth + 6, slope ≈ 1) arises from the ratio of two exponential processes: catalog growth ~2×/depth round (BFS branching) vs parity constraint difficulty ~4×/weight level (2^{2N} masks). These two exponentials balance to give ~2 depth rounds per XOR level. The precise coefficient (slope = 1) comes from the BFS branching factor of the specific SU(2) generator construction. Different generators or groups could yield different slopes.
+- **Status:** SUPPORTED (confirmed from supply and demand sides in D90/D91; not analytically derived from first principles)
+- **Demo provenance:** Demo 89 (proposed), Demo 90 (supply side), Demo 91 (demand confirmation)
+- **Significance:** Would be a genuine theoretical result if the BFS branching factor could be connected to the parity constraint growth rate analytically.
+
+### Casimir Balance Hypothesis
+- **Statement:** Catalog doubling vs linear eigenvalue gap yields ~1 new representation per depth round, potentially explaining the linear depth law via representation-theoretic capacity growth.
+- **Status:** CONJECTURED (suggested by researcher; consistent with angle data but not proven)
+- **Demo provenance:** Demo 89
+- **Significance:** Would provide a representation-theoretic rather than combinatorial explanation for the depth law.
+
+### Anti-Correlation Persistence Conjecture
+- **Statement:** The anti-correlation between spherical design quality and computational power (better sampling = fewer XOR solutions) persists at ζ₁₂, though the mechanism shifts from null-direction-driven to sheer direction-count-driven as the group grows. Per-direction residual at ζ₁₂ is 8× lower than ζ₈.
+- **Status:** SUPPORTED (two data points: ζ₈ and ζ₁₂)
+- **Demo provenance:** Demo 88 (Phase 4)
+- **Significance:** Would establish that algebraic DKC computation is fundamentally anti-correlated with geometric sampling quality across all roots of unity.
+
+### Depth Law Generalization to Non-Parity Functions
+- **Statement:** Does the linear depth law hold for ALL Boolean functions, or just parity? Different functions have different constraint growth rates (parity is hardest — outside AC⁰), so different slopes are expected. Sub-linear slopes for easier functions, potentially no depth dependence for the simplest.
+- **Status:** OPEN CONJECTURE
+- **Demo provenance:** Demo 91 (open question), Demo 92 (parity-lock shows only XOR achievable under ±q encoding)
+- **Significance:** Would characterize the full Boolean function landscape under the depth law framework.
+
 ---
 
 ## Verified Computational Facts (Not Theorems Per Se)
@@ -1208,3 +1439,15 @@ Jones polynomial (writhe-normalized bracket) is invariant under all three Reidem
 60. S¹ flatness of null-only — all ζ₈ nulls have half-angle exactly 90°; k_sec sweep flat across k=1,2,4,6,8; nulls are pure S² resources with zero S¹ angular vocabulary (Demo 84)
 61. Logarithmic partner hypothesis — LCFT null/partner structure (Gurarie 1993) is consistent with all null-geometry results; 6 null-only directions have no logarithmic partner and their removal destroys capacity (Demo 84)
 62. Null fraction dilution conjecture — ζ₄=75%, ζ₈=37.5%, ζ₁₂=3.0%; null fraction decreases toward zero in infinite groups; null indispensability is a finite-group boundary effect (Demo 84)
+63. Indecomposability parameter b = -5/8 from first principles — exact leading-coefficient extraction at TL_4 via delta-parameterized Gram matrix; resolves GRS/PR normalization controversy (Demo 85)
+64. Standard modules have no Jordan blocks at delta=0 — falsifies Gemini's claim; non-semisimple structure lives exclusively in projective covers (Demo 85)
+65. Delta-form divergence on P_{0,0} — novel negative finding; multiplicity from regular rep is structurally essential, not a removable scale factor (Demo 86)
+66. Null dispensability at infinite groups — ζ₁₂ nulls are directionally indispensable but computationally dispensable; regime transition from ζ₈ where nulls are critical (Demo 87)
+67. Two-role direction theorem — non-null body diagonals are rigid computational anchors (8% loss under perturbation); null edge midpoints are flexible scaffolding (-2.4% = gain under perturbation) (Demo 88)
+68. K-ladder resilience — Sec×Vor activation provides 14× better perturbation resilience than Voronoi-only (6.4% vs 89% loss); dual benefit of capacity + robustness (Demo 88)
+69. Axis cancellation mechanism — depth law explained: XOR winners select anti-aligned quaternion pairs (min_dot -0.75 vs -0.65 random); partial cancellation produces discriminating low sum angles (Demo 90)
+70. Cross-depth algebraic constraint — BFS ancestry constrains sum-angle vocabulary: gen×deep = only 73 distinct angles from 50K pairs vs 1313 for deep×deep; the concrete "algebraic coherence" (Demo 90)
+71. Spectral inversion — S² point cloud bandwidth DECREASES with depth (BW_90% l=4→l=2); positional information degrades while computation improves; rules out ALL positional explanations (Demo 90)
+72. Relational computation thesis — depth law is relational (axis cancellation + cross-depth constraints), not positional; spectral inversion is the cleanest evidence (Demos 89-90-91)
+73. Parity-Lock Theorem — ±q encoding structurally locked to XOR/XNOR only; AND/OR/MAJ impossible via 3^k equivalence class argument — **FORMALLY PROVEN** (`proofs/parity-lock-theorem.md`) (Demo 92)
+74. Balanced exponentials linearity — BFS ~2×/round vs parity 4×/weight balances to linear depth law; confirmed from supply side (D90) and demand side (D91)

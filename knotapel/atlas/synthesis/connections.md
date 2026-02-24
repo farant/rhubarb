@@ -1,6 +1,6 @@
 # Cross-Demo Connections
 
-How 84 demos feed into each other, what recurs, and where threads unexpectedly converge.
+How 92 demos feed into each other, what recurs, and where threads unexpectedly converge.
 
 ---
 
@@ -325,6 +325,66 @@ vs. 0.47 for non-null). Cross-root comparison shows null fraction decreases shar
 group grows (ζ₄=75%, ζ₈=37.5%, ζ₁₂=3%), consistent with nulls being a finite-group
 boundary effect that LCFT Jordan-cell structure illuminates.
 
+### Non-Semisimplicity and Depth Law Arc (D85-D92)
+Two interleaved chains investigating the algebraic anatomy (D85-D87) and the
+depth law mechanism (D89-D92), with D88 bridging the two:
+
+```
+D85 (b = -5/8 indecomposability parameter, TL_4 only)
+ |
+ v
+D86 (direct b on single P_{0,0} -- NEGATIVE RESULT, universal divergence)
+
+D84 (null states, directional vocabulary)
+ |
+ v
+D87 (null indispensability at ζ₁₂ -- regime transition, dispensable at infinite groups)
+ |
+ v
+D88 (anti-correlation mechanism -- rigid anchors vs flexible scaffolding)
+
+D82 (crossing depth law)
+ |
+ v
+D89 (depth law mechanism -- 8 hypotheses, 5 killed)
+ |
+ v
+D90 (sum-angle structure -- axis cancellation, spectral inversion)
+ |
+ v
+D91 (activation bottleneck -- parity is the wall, balanced exponentials confirmed)
+ |
+ v
+D92 (function scaling -- parity-lock theorem, encoding determines function)
+```
+
+D85→D86 form a two-demo chain on the indecomposability parameter b: D85 computes
+b = -5/8 (Pearce-Rasmussen) at TL_4 via leading-coefficient extraction from the
+delta-parameterized Markov trace, resolving the b = -2 vs b = -5/8 "controversy" as
+a normalization difference. D86 attempts to isolate the computation on a single
+projective cover P_{0,0} — and fails universally. The multiplicity from the regular
+representation is structurally essential, not removable. A novel negative result.
+
+D84→D87→D88 form a null-state investigation chain. D84 established null indispensability
+at ζ₈; D87 tests this at ζ₁₂ and discovers a regime transition — nulls are directionally
+indispensable (67 exclusive S² axes) but computationally dispensable (XOR capacity fully
+preserved without them). D88 explains why D72's Voronoi optimization catastrophically
+destroyed computation: the 4 non-null body-diagonal directions are rigid computational
+anchors while the 6 null-only edge-midpoint directions are flexible scaffolding; the
+k-ladder activation provides 14× better perturbation resilience than Voronoi-only.
+
+D82→D89→D90→D91→D92 form the depth law mechanism arc. D89 systematically tests 8
+mechanistic hypotheses and kills 5 (pairwise coherence, direction coverage, Cayley
+density, sector diversity, angle coherence), leaving "algebraic coherence" as the
+remaining candidate. D90 cracks it: the mechanism is axis cancellation (anti-aligned
+rotation axes producing low sum angles) combined with cross-depth algebraic constraints
+from BFS ancestry, and the advantage is relational not positional — the S² point cloud
+bandwidth actually DECREASES with depth (spectral inversion). D91 confirms the balanced
+exponentials explanation from the complementary direction: the activation is not the
+bottleneck. D92 closes the arc by showing that the +/-q encoding is structurally
+parity-locked — only XOR/XNOR are computable, AND/OR/MAJ/THRESHOLD = 0 winners at all
+depths. The depth law is parity-specific.
+
 ---
 
 ## 2. Code Reuse Patterns
@@ -640,6 +700,76 @@ The null fraction dilutes sharply with group size (ζ₄=75%, ζ₈=37.5%, ζ₁
 a finite-group boundary phenomenon concentrated exactly where the TL algebra is maximally
 non-semisimple (quantum-dimension-zero points). The ζ₈ regime is where nulls represent the
 most structurally significant fraction.
+
+### Null Indispensability as Regime-Dependent Phenomenon
+
+D84 established null indispensability at ζ₈. D87 reveals this is a finite-group phenomenon:
+at ζ₁₂ (infinite group, 4096 entries), removing all 121 bracket-null entries preserves full
+XOR capacity (XOR6/8/10/12 all 32 winners). The transition mechanism is direction density —
+ζ₈ has 13 total directions with 6 null-only (sparse, loss is catastrophic), ζ₁₂ has 2043
+directions with 67 null-only (dense, non-null coverage absorbs the loss). D88 provides the
+geometric explanation: per-direction spherical design residual at ζ₁₂ is 8× lower than ζ₈.
+
+This refines the LCFT interpretation from D84: null entries as Jordan-cell anchors are
+structurally critical only in the sparse-direction finite-group regime. In the dense-direction
+infinite-group regime, the non-null states alone provide sufficient manifold dimensionality.
+The RC (Reservoir Computing) null-state hypothesis similarly applies only in sparse regimes.
+
+### Rigid Anchors vs Flexible Scaffolding
+
+D88 anatomizes the 13 ζ₈ directions into two computational roles:
+- **4 non-null body-diagonal directions** (70.5° mutual angle): rigid computational anchors.
+  Perturbation causes 8% XOR loss at 10°. Load-bearing for parity satisfaction.
+- **6 null-only edge-midpoint directions** (60°/90° mutual angles): flexible topological
+  scaffolding. Perturbation causes -2.4% XOR loss (a slight GAIN). Movable without damage.
+
+This explains D72's catastrophic Voronoi destruction (36→4 XOR6, 89% loss): D72 used
+Voronoi-only activation, which has knife-edge sensitivity to direction perturbation. D88's
+k-ladder activation (8 k_sec values) provides 14× better resilience (6.4% loss vs 89%)
+because small direction shifts are absorbed by switching angular resolution. Constrained
+optimization (nulls free, non-nulls clamped to 2°) achieves 48% design improvement with
+only 2.8% XOR loss.
+
+### Axis Cancellation and Relational Computation
+
+D90 identifies the concrete mechanism behind "algebraic coherence" (the unexplained term
+from D82): XOR winners preferentially contain anti-aligned quaternion pairs (axis dot
+product ≈ -0.75 vs -0.65 for random). Nearly-opposite rotation axes partially cancel,
+yielding sum quaternions with low rotation angles (30-66°) that create the fine-grained
+sector separations needed for parity.
+
+The mechanism is relational, not positional. D90's spectral inversion proves this: the S²
+point cloud bandwidth DECREASES with depth (BW_90% drops from l=4 to l=2, power
+concentrates at l=0 = uniform), yet computation improves linearly. Individual entry positions
+become LESS informative as the catalog grows; what matters is how entries combine. Cross-depth
+algebraic constraints (BFS ancestry restricts gen × deep sums to 73 distinct angles from
+50K pairs) provide the relational structure.
+
+### Balanced Exponentials and the Parity Wall
+
+D90 proposes and D91 confirms the balanced exponentials explanation for the linear depth law:
+BFS closure adds vocabulary at ~2×/round; parity constraints demand 4×/XOR weight level.
+The ratio 2:4 = 1:2 predicts ~2 depth rounds per additional weight, giving max_xor ≈
+depth + 6. D91 proves this from the complementary direction: the activation is not the
+bottleneck. Sweeping k_sec from 2 to 48 and Voronoi directions from 2 to 114 changes
+XOR8 winner count from hundreds to thousands but never changes max_xor. Finer resolution
+reveals more solutions to the same parity constraint; it does not enable higher parity.
+
+D92 closes the arc: the +/-q encoding is structurally parity-locked. The (0,0)≡(1,1)
+collision (masks 0...0 and 1...1 always produce identical sums = zero) means any function
+where f(0...0) ≠ f(1...1) is impossible — ruling out AND, OR, MAJ, THRESHOLD under any
+activation whatsoever. The depth law describes the capacity curve for the encoding's ONLY
+achievable function family: parity.
+
+### Encoding Determines Function
+
+D48/D50's 1-weight-per-input (1wpi) encoding with split-sigmoid/MVN activation computes
+all 13 NPN classes including parity. D92's +/-q paired encoding is parity-locked. The
+contrast is encoding-specific, not a fundamental DKC limit. The 1wpi encoding assigns one
+catalog entry per input bit, giving each weight independent combinatorial freedom. The +/-q
+encoding constrains each weight to contribute ±q or 0, creating per-weight pair
+cancellations (sign-flip symmetry: combined_cell(S) = combined_cell(-S)) that funnel all
+computational power into parity — the single Boolean function outside AC⁰.
 
 ---
 
@@ -1004,6 +1134,73 @@ Together these four results characterize the ζ₈/ζ₁₂ braid closure proces
 exactly-analyzable instance of reservoir computing, where the reservoir geometry is
 algebraically forced (not learned) and the capacity theory is completely explicit.
 
+### D85→D86: b Computation to Structural Failure (D85↔D86)
+
+D85 computes the indecomposability parameter b = -5/8 (Pearce-Rasmussen) at TL_4 via
+leading-coefficient extraction from the delta-parameterized Markov trace on the full
+14-dimensional regular representation. The "controversy" between b = -2 (GRS) and b = -5/8
+(PR) dissolves: b_delta = -5/2 on the regular rep divides by dim(0-TL sector) = 4 to give
+b_PR = -5/8. D86 attempts to isolate this on a single projective cover P_{0,0} and finds
+universal divergence — the valuation condition p_tt = 2*p_Tt never holds on a single copy.
+The multiplicity from the regular representation is structurally essential, not removable.
+The TL_6 regular rep also diverges (gap = -2), and TL_8 P_{0,0} is completely semisimple.
+The b = -5/8 success at TL_4 may be a "smallest nontrivial case" coincidence where cross-copy
+terms accidentally provide the right extra delta-power.
+
+### D85↔D87: Non-Semisimplicity Bridges TL Algebra and LCFT (D85↔D87)
+
+D85's indecomposability parameter b quantifies the non-semisimple structure of TL_n at
+delta=0: Jordan blocks exist only on projective covers, never on standard modules (verified
+at n=4,6,8,10,12). D87's null indispensability regime transition is the computational
+manifestation of the same non-semisimplicity viewed from the LCFT side: bracket-null entries
+(Re(q)=0) are the Jordan-cell partners whose indispensability depends on direction density.
+Both demos explore different faces of the same object — TL non-semisimplicity at the
+quantum-dimension-zero point — one algebraically (diagram composition, Gram matrices, Jordan
+analysis) and one computationally (XOR capacity, direction partition, group regime).
+
+### D72↔D88: Voronoi Catastrophe Explained (D72↔D88)
+
+D72 found that optimizing 13 eigenvector directions for spherical design quality destroys
+computation (36→4 XOR6, 89% loss) but offered no mechanistic explanation beyond "algebra
+beats geometry." D88 provides the anatomy: the 4 non-null body-diagonal directions are rigid
+computational anchors (8% XOR loss at 10° perturbation) while the 6 null-only edge-midpoint
+directions are flexible scaffolding (-2.4% loss = slight gain). D72's Voronoi-only activation
+has knife-edge sensitivity because each XOR triple gets ONE chance at a specific angular
+resolution; D88's k-ladder activation gives 8 chances at different resolutions, providing
+14× better resilience. The catastrophe was an activation fragility, not a geometric necessity.
+
+### D48/D50↔D92: 1wpi vs ±q Encoding Contrast (D48↔D50↔D92)
+
+D48 proved zero parity solutions out of 100M quartets using split-sigmoid activation with
+1-weight-per-input (1wpi) encoding. D50 resolved this by changing the activation to k-sector,
+finding 906 parity solutions — demonstrating all 13 NPN classes are reachable under 1wpi.
+D92 shows the +/-q paired encoding is structurally parity-locked: ONLY XOR/XNOR are
+computable, with AND/OR/MAJ/THRESHOLD at zero winners across all depths. The 1wpi encoding
+gives each weight independent combinatorial freedom (different catalog entries per input bit);
+the +/-q encoding constrains each weight to ±q or 0, creating the (0,0)≡(1,1) collision that
+blocks all non-parity functions. The depth law (max_xor ≈ depth + 6) describes capacity for
+the +/-q encoding's only function; the 1wpi encoding accesses a fundamentally richer function
+space but has its own activation-dependent constraints.
+
+### D89→D90→D91→D92: The Depth Law Arc Closure (D89↔D90↔D91↔D92)
+
+Four demos form a single progressive argument resolving D82's depth law:
+- **D89**: tests 8 mechanistic hypotheses, kills 5 (coherence, coverage, Cayley, sector,
+  angle), identifies paired extension as real but minority (6-20% at ζ₁₂), leaves "algebraic
+  coherence" as the remaining open question.
+- **D90**: cracks it — axis cancellation (anti-aligned axes → low sum angles) plus cross-depth
+  algebraic constraints (BFS ancestry → 73 distinct angles from 50K gen×deep pairs). Spectral
+  inversion (bandwidth DECREASES with depth) proves the mechanism is relational not positional.
+- **D91**: confirms from the complementary direction — the activation is not the bottleneck.
+  max_xor is k_sec-invariant. Balanced exponentials: vocabulary ~2×/round, demand 4×/weight.
+- **D92**: identifies the wall as parity itself. The +/-q encoding is parity-locked; the depth
+  law is function-specific, not universal.
+
+The four demos complete a diagnostic sequence: what is the mechanism (D90), what is NOT the
+bottleneck (D91), and what IS the wall (D92). The depth law is now fully characterized:
+linear because of balanced exponentials, relational because of axis cancellation, and
+parity-specific because of encoding structure.
+
 ---
 
 ## 5. Convergence Points
@@ -1261,6 +1458,76 @@ entries are Jordan-cell partners; removing them collapses the partner's anchor a
 coupled computational content. Cross-root comparison confirms this is a finite-group effect
 that dilutes toward zero as the group grows.
 
+### D85: Indecomposability Parameter b
+
+Threads converging:
+- TL algebra infrastructure from D35 (integer TL generators at delta=0)
+- Radical anatomy from D51-D52 (TL non-semisimplicity, Gram matrices)
+- Projective cover construction (left ideal closure from regular representation)
+- Delta-parameterized trace methods (perturbation analysis at delta→0)
+
+Result: b = -5/8 confirmed at TL_4 via leading-coefficient extraction. The b = -2 (GRS) vs
+b = -5/8 (PR) "controversy" resolved as normalization: b_delta = -5/2 on the regular rep
+divided by dim(0-TL sector) = 4. Standard modules have no Jordan blocks at any tested size
+(n=4,6,8,10,12). Jordan blocks live exclusively on projective covers. The fixed-point form
+is too degenerate (affine 3D gauge freedom at TL_4). The delta-parameterized Markov trace
+breaks the degeneracy. D86 then proves the single-P_{0,0} extraction universally diverges.
+
+### D87-D88: Null State Regime Transition and Anti-Correlation Anatomy
+
+Threads converging:
+- D84 null indispensability (ζ₈: 6 null-only directions, removing nulls drops XOR8→XOR6)
+- D72 Voronoi destruction (36→4 XOR6 under design-improving optimization)
+- D80 finite/infinite group classification (ζ₈ finite, ζ₁₂ infinite)
+- D79 ζ₁₂ capacity (XOR12 at infinite group)
+- Cuboctahedral geometry (octahedral symmetry orbits on S²)
+- Spherical design theory (Delsarte-Goethals-Seidel, t-design residuals)
+
+Result: D87 discovers the regime transition — null indispensability is finite-group-specific.
+At ζ₁₂ (2043 directions, 67 null-only), removing nulls preserves full capacity. D88
+anatomizes the mechanism: 4 non-null body-diagonal directions are rigid computational anchors,
+6 null-only edge-midpoint directions are flexible scaffolding. Constrained optimization
+(nulls free, non-nulls clamped to 2°) gets 48% design improvement with 2.8% XOR loss. The
+k-ladder activation provides 14× better resilience than D72's Voronoi-only (6.4% vs 89%).
+
+### D89-D90-D91: The Depth Law Mechanism
+
+Threads converging:
+- D82 crossing depth law (max_xor ≈ depth + 6, algebraic coherence)
+- D77 paired extension at ζ₈ (shadow pairing in sparse-direction regime)
+- D75 binocular DKC (non-canonical sum angles required for computation)
+- D66 24-cell geometry (BFS closure of SU(2) generators)
+- Altschuler-Parrilo spherical configuration theory (tested and INVERTED)
+- Spherical harmonic decomposition of S² point clouds
+- Cayley graph theory (BFS structure implies zero intra-depth edges)
+- Reservoir computing separation property
+
+Result: D89 kills 5 of 8 mechanistic hypotheses and finds paired extension is real but
+minority (6-20% at ζ₁₂ vs 100% at ζ₈). D90 identifies axis cancellation as the geometric
+mechanism: XOR winners contain anti-aligned axis pairs (mean min_dot = -0.75 vs -0.65 for
+random), and cross-depth algebraic constraints from BFS ancestry restrict sum-angle
+vocabularies. Spectral inversion (S² bandwidth DECREASES with depth) proves the mechanism
+is relational not positional. D91 confirms the balanced exponentials explanation: vocabulary
+~2×/round, demand 4×/weight → linear slope. The activation is not the bottleneck — max_xor
+is invariant under k_sec sweep from 2 to 48.
+
+### D92: Parity-Lock Theorem and Encoding Contrast
+
+Threads converging:
+- D89-D91 depth law arc (balanced exponentials, parity as the wall)
+- D48/D50 forward DKC NPN class zoo (1wpi encoding achieves all 13 classes)
+- D82 +/-q encoding convention (paired input encoding)
+- AC⁰ circuit complexity (parity outside AC⁰, Furst-Saxe-Sipser/Hastad)
+- Aizenberg MVN k-sector theory (combined_cell decomposition)
+
+Result: The +/-q encoding is structurally parity-locked. The (0,0)≡(1,1) collision (masks
+0...0 and 1...1 always produce identical sums) blocks any function where f(0...0) ≠ f(1...1).
+AND/OR/MAJ/THRESHOLD all have this property — zero winners at all depths. XOR/XNOR satisfy
+the constraint because parity is constant on all 3^k equivalence classes. Sign-flip symmetry
+(combined_cell(S) = combined_cell(-S)) is a second lock mechanism. The encoding concentrates
+all computational power on parity — the single function outside AC⁰. The 1wpi encoding from
+D48/D50, which assigns independent catalog entries per input, escapes this lock entirely.
+
 ---
 
 ## Summary: The Project's Logic
@@ -1358,3 +1625,28 @@ the coupling: null entries anchor the partner states that carry the directional 
 Null fraction dilutes with group size (ζ₄=75%, ζ₈=37.5%, ζ₁₂=3%), confirming this is a
 finite-group boundary effect concentrated at exactly the quantum-dimension-zero points
 where TL non-semisimplicity is maximal and DKC computation is most tractable.
+
+D85 connects TL non-semisimplicity to the LCFT indecomposability parameter b, computing
+b = -5/8 at TL_4 via leading-coefficient extraction from the delta-parameterized Markov
+trace and resolving the b = -2 vs -5/8 controversy as a normalization difference. D86
+proves the single-copy approach universally diverges — a novel negative result showing
+the regular-representation multiplicity is structurally essential. D87 reveals that null
+indispensability is a finite-group phenomenon: at ζ₁₂ (infinite group, 4096 entries),
+removing all bracket-null entries preserves full XOR capacity. D88 anatomizes the anti-
+correlation between spherical design quality and computation: 4 non-null body-diagonal
+directions are rigid computational anchors while 6 null-only edge-midpoints are flexible
+scaffolding, and the k-ladder activation provides 14× better perturbation resilience than
+D72's Voronoi-only activation, explaining the D72 catastrophe.
+
+D89-D92 form a four-demo arc resolving the depth law mechanism from D82. D89 kills 5 of
+8 hypotheses via systematic testing. D90 identifies the mechanism: axis cancellation
+(anti-aligned quaternion pairs produce low sum angles needed for parity) combined with
+cross-depth algebraic constraints from BFS ancestry. The spectral inversion (S² bandwidth
+DECREASES with depth while computation improves) proves the mechanism is relational not
+positional. D91 confirms from the complementary direction that the activation is not the
+bottleneck — balanced exponentials (vocabulary ~2×/round, demand 4×/weight) produce the
+linear slope. D92 closes the arc with the parity-lock theorem: the +/-q encoding is
+structurally locked to XOR/XNOR only (AND/OR/MAJ/THRESHOLD = 0 winners at all depths),
+contrasting sharply with D48/D50's 1wpi encoding that achieves all 13 NPN classes. The
+depth law is parity-specific, and the encoding determines which Boolean functions are
+accessible from the same underlying algebraic structure.

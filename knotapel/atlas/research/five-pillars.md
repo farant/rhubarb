@@ -4,6 +4,8 @@ The DKC thesis lives at an unoccupied intersection of five established fields. N
 
 *Updated 2026-02-21: Reservoir Computing added as Pillar 5, motivated by the scaling arc (D73, D76-D82). The braid-as-reservoir connection gives DKC its temporal/dynamical dimension.*
 
+*Updated 2026-02-23: Demos 85-92 added. D85-86 connect to Pillar 3 (TL non-semisimplicity deepened via indecomposability parameter). D87-88-90 refine Pillar 5 (null dispensability regime transition, relational-not-positional mechanism). D89-91 confirm balanced exponentials (supply/demand linearity). D92 adds circuit complexity connection (AC^0 parity lower bounds).*
+
 ---
 
 ## Pillar 1: Habiro (2002) — Bracket Values Are Cyclotomic Integers
@@ -20,7 +22,7 @@ The DKC thesis lives at an unoccupied intersection of five established fields. N
 
 **Strengthened by:** Costello-Francis-Gwilliam (2026, arXiv:2602.12412) proving Witten = RT, which means the bracket values are not just algebraic integers but rigorously quantum field theory transition amplitudes.
 
-**Which demos use it:** D29 (forward DKC, exact Z[ζ₈] arithmetic), D35 (TL matrices over Z[ζ₈]), D48 (exhaustive 100M quartet search with exact arithmetic), D49 (neglecton weights in Z[ζ₈]), D50 (parity reachability with Z[ζ₈] catalog), D53 (Z[ω] at ℓ=3), D54 (Z[ζ₁₆] at ℓ=4), D58 (Z[ζ₅] at ℓ=5), D59 (Z[ζ₂₄] at ℓ=6)
+**Which demos use it:** D29 (forward DKC, exact Z[ζ₈] arithmetic), D35 (TL matrices over Z[ζ₈]), D48 (exhaustive 100M quartet search with exact arithmetic), D49 (neglecton weights in Z[ζ₈]), D50 (parity reachability with Z[ζ₈] catalog), D53 (Z[ω] at ℓ=3), D54 (Z[ζ₁₆] at ℓ=4), D58 (Z[ζ₅] at ℓ=5), D59 (Z[ζ₂₄] at ℓ=6), D85 (delta-parameterized b extraction uses Z[ζ₈] infrastructure), D87 (zeta_8 vs zeta_12 null fraction), D90 (algebraic substrate for cross-depth constraints), D92 (weight catalog for parity-lock analysis)
 
 ---
 
@@ -58,7 +60,9 @@ The DKC thesis lives at an unoccupied intersection of five established fields. N
 
 **Demo 35 implements Abramsky directly:** General TL_n matrices over Cyc8, verified for n=2-5. The matrix representation of TL generators IS Abramsky's computational primitives, made concrete in C89 exact arithmetic.
 
-**Which demos use it:** D27 (reverse DKC conceptual framework), D29 (forward DKC), D35 (TL matrices as computational engine), D47-50 (TL non-semisimplicity as parity barrier), D51-52 (radical anatomy — the algebraic obstruction theory)
+**Demos 85-86 deepen the non-semisimple structure:** The indecomposability parameter b = -5/8 (Pearce-Rasmussen) computed via delta-parameterized forms on the TL_4 regular representation. This connects to the LCFT structure constants that govern how TL modules compose — the non-semisimplicity that Abramsky's framework predicts but does not explicitly compute. The b parameter quantifies the "computational obstruction" in the TL radical: it measures the coupling between head and socle of projective indecomposable modules, which is the algebraic mechanism behind DKC's parity wall (D47-50).
+
+**Which demos use it:** D27 (reverse DKC conceptual framework), D29 (forward DKC), D35 (TL matrices as computational engine), D47-50 (TL non-semisimplicity as parity barrier), D51-52 (radical anatomy — the algebraic obstruction theory), D85-86 (indecomposability parameter — quantifying the non-semisimple coupling)
 
 **The formal chain:**
 1. Abramsky: TL diagrams = computation
@@ -86,7 +90,11 @@ The DKC thesis lives at an unoccupied intersection of five established fields. N
 
 **Key extension — Aizenberg (2008):** "Solving the XOR and parity N problems using a single universal binary neuron." *Soft Computing*, 12(3). This paper proved parity solvable with a single UBN, and its weight construction (w₁=ζ₈, w₂=i, w₃=−1) lives IN the Z[ζ₈] bracket catalog — confirming that the lattice contains parity-capable weights even though split-sigmoid cannot access them.
 
-**Which demos use it:** D45 (NPN classification with complex neurons), D47 (MVN activation comparison, topology-frequency correlation reversal), D48 (parity wall under split-sigmoid), D49 (neglecton weights — lattice contains parity weights), D50 (k-sector MVN resolves parity at k=6)
+**Demo 91 confirmation:** The k-sector MVN activation is NOT the bottleneck for the depth law. Varying k_sec from 2 to 48 does not shift the depth gap between XOR levels — finer resolution reveals more solutions but not higher arity. The parity constraint itself is the wall, and the activation resolution only controls how many solutions are visible. This confirms Aizenberg's architecture as sufficient but not limiting.
+
+**Demo 92 parity-lock:** The +/-q input encoding concentrates all computational power on parity — the single Boolean function outside AC^0 (Furst-Saxe-Sipser 1984, Hastad 1987). Under the 1-weight-per-input encoding (D48/D50), all 13 NPN classes including parity are achievable. The encoding-dependence of function accessibility is a refinement of Aizenberg's general MVN theory: the activation architecture (Aizenberg) determines what functions ARE computable in principle; the encoding determines which subset is ACCESSIBLE from a given weight catalog.
+
+**Which demos use it:** D45 (NPN classification with complex neurons), D47 (MVN activation comparison, topology-frequency correlation reversal), D48 (parity wall under split-sigmoid), D49 (neglecton weights — lattice contains parity weights), D50 (k-sector MVN resolves parity at k=6), D91 (activation not the bottleneck — k_sec invariance), D92 (encoding-dependent function selection)
 
 ---
 
@@ -107,6 +115,13 @@ The DKC thesis lives at an unoccupied intersection of five established fields. N
 - **D82 (Crossing Depth) IS a reservoir memory capacity result.** max_xor ≈ depth+6 says computational power scales linearly with the number of dynamical steps through the reservoir. This is exactly what RC theory predicts: more time steps = richer transient dynamics = more computational separation between input classes.
 - **D82's "algebraic coherence beats vocabulary"** is a reservoir quality result. Deep entries (many generator multiplications = many reservoir steps) with shared intermediate products outperform diverse entries (many distinct directions) with no shared structure. In RC terms: a reservoir with coherent internal dynamics computes more than a reservoir with maximal state diversity.
 
+**Demos 87-88-89-90 refine the RC connection:**
+
+- **D87 (Null Dispensability):** Null reservoir states (bracket-null entries) are indispensable at finite groups (zeta_8) but dispensable at infinite groups (zeta_12). The regime transition — from null-critical to null-redundant — maps to RC capacity theory: when the reservoir is small (finite group, 24 states), every state matters including null ones that maintain the manifold; when the reservoir is large (infinite group, 4096+ states), null states become redundant because non-null states alone provide sufficient dimensionality. This refines the "logarithmic partner hypothesis" from D84.
+- **D88 (Anti-Correlation):** The directions worst for spherical integration (design residual) are best for computation (XOR capacity). In RC terms: the reservoir state distribution that maximizes the separation property (computational utility) is NOT the distribution that maximizes entropy (uniform coverage). The 4 non-null body-diagonal directions are the rigid computational anchors; the 6 null-only edge-midpoint directions are flexible scaffolding. This is a concrete instance of the RC no-free-lunch theorem applied to the DKC braid reservoir.
+- **D89 (Depth Law Mechanism):** Systematic elimination of 5 candidate mechanisms (pairwise coherence, direction coverage, Cayley density, sector diversity, angle coherence) plus confirmation that paired extension is real but minority (6-20% at zeta_12 vs 100% at zeta_8). The surviving explanation — "algebraic coherence" — IS the RC separation property: deep entries maintain richer relational structure because BFS ancestry creates algebraic constraints between entries.
+- **D90 (Relational, Not Positional):** The S² point cloud bandwidth DECREASES with depth while computation INCREASES. This is the cleanest proof that the depth law mechanism is relational (how entries combine via axis cancellation and cross-depth algebraic constraints), not positional (where entries sit in state space). In RC terms: reservoir quality is about the dynamics of state transitions, not the static geometry of the state space.
+
 **The key difference from classical RC:**
 - Classical RC: the reservoir is random or physical (water, memristors, optical cavities). The computational power is empirically discovered.
 - DKC: the reservoir is ALGEBRAIC (braid group representation in SU(2)). The computational power is EXACTLY characterizable via the cyclotomic integer structure. The reservoir dynamics are not arbitrary — they are constrained by the braid group relations (Yang-Baxter equation), which GUARANTEE certain computational properties (e.g., D70's melody invariance under Yang-Baxter moves).
@@ -118,9 +133,9 @@ The DKC thesis lives at an unoccupied intersection of five established fields. N
 - Nazer-Gastpar tells you the ring structure guarantees exactness (the MEDIUM)
 - **Reservoir Computing tells you WHY DEPTH MATTERS (the DYNAMICS)**
 
-Without the RC pillar, the other four treat braid evaluation as a black box: input a braid, get a bracket value. The RC pillar opens the box: the SEQUENTIAL PROCESSING of crossings is itself a computation, and the depth/length of the braid word directly determines computational capacity. D82's linear depth law (max_xor ≈ depth+6) is the RC memory capacity theorem applied to the braid reservoir.
+Without the RC pillar, the other four treat braid evaluation as a black box: input a braid, get a bracket value. The RC pillar opens the box: the SEQUENTIAL PROCESSING of crossings is itself a computation, and the depth/length of the braid word directly determines computational capacity. D82's linear depth law (max_xor ≈ depth+6) is the RC memory capacity theorem applied to the braid reservoir. D89-91 confirm the mechanism: balanced exponentials (vocabulary ~2x/depth vs parity 4x/weight) with axis cancellation as the geometric realization of the separation property.
 
-**Which demos use it:** D73 (eigenvector automaton — reservoir cell transitions), D76-78 (capacity ceilings — finite reservoir limits), D79 (infinite reservoir breaks ceiling), D81 (logarithmic scaling — reservoir capacity law), D82 (depth law — reservoir memory capacity, algebraic coherence as reservoir quality)
+**Which demos use it:** D73 (eigenvector automaton — reservoir cell transitions), D76-78 (capacity ceilings — finite reservoir limits), D79 (infinite reservoir breaks ceiling), D81 (logarithmic scaling — reservoir capacity law), D82 (depth law — reservoir memory capacity, algebraic coherence as reservoir quality), D87 (null dispensability — regime transition in reservoir state importance), D88 (anti-correlation — RC no-free-lunch in DKC geometry), D89 (depth law mechanism — RC separation property surviving 5 elimination tests), D90 (relational-not-positional — the cleanest RC alignment)
 
 **The structural identity (exact, not analogical):**
 
@@ -132,6 +147,8 @@ Without the RC pillar, the other four treat braid evaluation as a black box: inp
 | Edge of chaos = max capacity | ζ₈→ζ₁₂ = finite→infinite group transition |
 | Separation property | XOR capacity / NPN class coverage |
 | Echo state property | Axiality theorem (bounded, structured outputs) |
+| Null reservoir states maintain manifold | D87: true at finite groups, redundant at infinite |
+| Reservoir quality = dynamics, not state geometry | D90: relational, not positional |
 
 **Edge of chaos mapping — the quantitative bridge:**
 
@@ -146,11 +163,15 @@ This is not metaphorical. The ordered→edge-of-chaos transition in RC is charac
 
 In RC literature, reservoir null states — directions in state space that don't contribute to a specific readout — are recognized as structurally necessary for the reservoir's dynamical richness. They're not dead weight; they maintain the high-dimensional manifold that ENABLES the separation property. This is exactly the logarithmic partner hypothesis from D84: bracket-null entries (Re(q) = 0 for some readout) look useless to that specific readout but maintain the S² directional vocabulary that enables XOR computation.
 
+**D87 refinement:** This hypothesis is REGIME-DEPENDENT. At finite groups (zeta_8, 24 entries), null states are indispensable — removing them destroys XOR8 capacity. At infinite groups (zeta_12, 4096 entries), null states are dispensable — removing 121 nulls has zero effect on XOR12 capacity. The transition mechanism is direction density: when non-null states alone provide enough S² coverage, null states become redundant scaffolding.
+
 **No free lunch prediction — the k=6 sweet spot:**
 
 RC has a no free lunch theorem: you can't maximize memory capacity and nonlinear processing capacity simultaneously. In DKC terms, this may explain the non-monotonic k=6 result from D50 (906 solutions at k=6 > 756 at k=7 > 96 at k=8). Increasing k_sec trades angular resolution (more sectors = more precision) against effective dimensionality (too many sectors = most cells empty = wasted capacity). k=6 is the sweet spot where the tradeoff is optimized for the Z[ζ₈] lattice with its pi/4 angular structure.
 
 If correct, this PREDICTS: the optimal k_sec for ζ₁₂ is different from ζ₈'s optimal k=6, because ζ₁₂ has 43 half-angles instead of 4 — it can "fill" more S¹ sectors before hitting diminishing returns.
+
+**D88 confirmation:** The k-ladder activation (8 k_sec values tested simultaneously) provides 14x better perturbation resilience than Voronoi-only activation (6.4% XOR loss vs 89% under the same design-improving gradient). The k-ladder IS a multi-scale readout that mitigates the no-free-lunch tradeoff by covering multiple resolution scales simultaneously.
 
 **Memory capacity bound prediction:**
 
@@ -196,6 +217,8 @@ Reservoir Computing: braid depth determines computational capacity
 
 This is the five-pillar chain. Each step is individually grounded in established mathematics. The assembly is novel.
 
+**Circuit complexity connection (D92):** The parity-lock theorem adds a sixth field to the intersection — circuit complexity. Parity is the canonical function outside AC^0 (Furst-Saxe-Sipser 1984, Hastad 1987). The +/-q encoding naturally concentrates all computational power on this hardest-possible function. The DKC framework computes parity WITHOUT gradient descent, WITHOUT constant-depth circuits — it uses the algebraic structure of the braid reservoir to bypass both the gradient hardness (D47 lit.) and the circuit depth barrier. This is not a sixth pillar (circuit complexity does not contribute a constructive ingredient) but it is a uniquely strong validation: the framework naturally targets the function that is provably hardest for conventional approaches.
+
 ---
 
 ## Verification Status
@@ -205,6 +228,12 @@ This is the five-pillar chain. Each step is individually grounded in established
 | Habiro integrality | Proven (2002) | All bracket values in Z[ζ₈] | D29 |
 | Nazer-Gastpar exactness | Proven (2011) | Zero floating-point error in forward DKC | D29 |
 | Abramsky bridge | Proven (2007) | TL matrices produce same brackets as state-sum | D35 |
+| Abramsky non-semisimple | Proven (via Goodman-Wenzl/GRS) | b = -5/8 at TL_4, diverges at TL_6 | D85-86 |
 | Aizenberg MVN | Proven (2000) | All 13 NPN classes at k=6 sectors | D50 |
+| Aizenberg not bottleneck | — | k_sec invariance of depth gap | D91 |
 | RC / braid reservoir | Established (2001) | max_xor ≈ depth+6; 82.8% echo state determinism | D73, D82 |
+| RC / null dispensability | — | Regime transition confirmed (zeta_8 vs zeta_12) | D87 |
+| RC / relational mechanism | — | Spectral inversion + axis cancellation | D90 |
+| RC / balanced exponentials | — | Activation invariance confirms supply/demand ratio | D91 |
 | **Combined (forward DKC)** | **Novel thesis** | **65,536+ XOR triples, 906 parity solutions, XOR12 at ζ₁₂** | **D29, D50, D79** |
+| **Parity-lock theorem** | **Proved (D92)** | **AND/OR/MAJ = 0 winners; XOR/XNOR only under +/-q** | **D92** |

@@ -1,6 +1,6 @@
 # DKC Research: Next Priorities
 
-Generated 2026-02-20. Updated 2026-02-21 after D72-D84. Informed by synthesis documents (narrative, novelty, connections, four-lenses). D64–D71 added: matroid recursion, Clifford staircase (Z[zeta_16]), 24-cell / quaternionic arc (D66–D71), spectral DKC. D72–D82 added: spherical design, eigenvector automaton, computational invariant, binocular DKC, 8-input scaling, activation zoo, recursive scaling, ζ₁₂ capacity, group finiteness survey, capacity scaling law, crossing depth. D83–D84 added: framing as computational content (+2 writhe loss), null states and logarithmic structure (null indispensability, LCFT Jordan-cell interpretation).
+Generated 2026-02-20. Updated 2026-02-24 after D85-D92 mechanistic arc. Informed by synthesis documents (narrative, novelty, connections, four-lenses, vision-alignment). D64–D71 added: matroid recursion, Clifford staircase (Z[zeta_16]), 24-cell / quaternionic arc (D66–D71), spectral DKC. D72–D82 added: spherical design, eigenvector automaton, computational invariant, binocular DKC, 8-input scaling, activation zoo, recursive scaling, ζ₁₂ capacity, group finiteness survey, capacity scaling law, crossing depth. D83–D84 added: framing as computational content (+2 writhe loss), null states and logarithmic structure (null indispensability, LCFT Jordan-cell interpretation). D85–D92 added: indecomposability parameter b = -5/8 (D85-D86), regime transition for null dispensability (D87), anti-correlation mechanism and k-ladder resilience (D88), depth law mechanism fully explained (D89-D91: axis cancellation, cross-depth algebraic constraint, balanced exponentials, parity wall), parity-lock theorem (D92: +/-q encoding structurally locked to XOR/XNOR).
 
 ---
 
@@ -64,11 +64,38 @@ The **radical dimension formula** (rad(TL_ℓ) = 2ℓ−3) is now formally prove
 **Effort:** MEDIUM (the mechanism is identified — angle reduction via phase rotation — but formalizing "2 XOR levels worth of angle classes" requires connecting the D82 depth law to angle counting).
 **Unblocks:** Elevates the framing result from empirical to proven. High publication value — directly connects Kirby's framing (1978) and Witten's anomaly (1989) to a computational capacity theorem.
 
-### 1.11 ζ₁₂ null indispensability — **NEW (D84)**
-**What:** D84 demonstrated null indispensability at ζ₈: 9/24 entries are bracket-null (Re(q)=0), they contribute 6 exclusive directions (cube-edge-midpoints), and removing them drops capacity from XOR8 to XOR6 — worse than removing a random equal-size subset. At ζ₁₂ (4096-entry truncation), 121 entries (3%) are null with 29 null-only directions. Are those 29 null-only directions similarly essential for the XOR12 solutions found in D79? The null fraction dilution (75% → 37.5% → 3.0% across ζ₄ → ζ₈ → ζ₁₂) suggests nulls become rarer but possibly remain critical.
-**Why:** If ζ₁₂ nulls are indispensable despite being only 3% of the catalog, it establishes null indispensability as a universal structural property rather than a finite-group artifact. If they are dispensable, the LCFT interpretation is specific to the finite-group regime and the reservoir computing connection narrows accordingly.
-**Effort:** SMALL (D84's `load_subset()` and `find_capacity()` infrastructure already exists; port to ζ₁₂ catalog, run non-null-only capacity test, compare to random controls).
-**Unblocks:** Determines whether null indispensability is universal or ζ₈-specific. Critical for the LCFT/Reservoir Computing narrative in Paper 6.
+### ~~1.11 ζ₁₂ null indispensability~~ — DONE (Demo 87)
+D87 demonstrated that null indispensability is regime-dependent. At ζ₁₂ (infinite group, 4096 entries), removing all 121 bracket-null entries preserves full XOR6/8/10/12 capacity. This establishes that null indispensability is a finite-group phenomenon (ζ₈: nulls critical) that does not generalize to infinite groups (ζ₁₂: nulls dispensable). The transition mechanism is direction density — when non-null directions are dense enough on S², null-only directions become computationally redundant. Null fraction dilution confirmed: ζ₄ = 75%, ζ₈ = 37.5%, ζ₁₂ = 3.0%.
+
+### 1.12-NEW 1wpi encoding depth law test — **NEW (HIGH PRIORITY, from D92)**
+**What:** D92 proves the +/-q encoding is parity-locked. The 1wpi encoding (D48/D50) computes all 13 NPN classes but has never been tested for depth-law behavior. Does max_and or max_maj scale linearly with crossing depth under 1wpi encoding? If so, the compilation cost model generalizes beyond parity.
+**Why:** This is the most architecturally consequential open question for the compilation pipeline. The hybrid LLM vision needs AND/OR for syllogistic logic, not just parity. If the depth law holds under 1wpi, the entire scaling framework extends to non-parity functions. If not, a fundamentally different cost model is needed for non-parity compilation, which changes the architecture.
+**Effort:** SMALL to MEDIUM (1wpi encoding exists from D48/D50; build depth-tracking closure for 1wpi catalog; measure AND/OR/MAJ capacity at each depth stratum).
+**Unblocks:** Determines whether the depth law is parity-specific or encoding-general. Primary research axis for broadening DKC's function repertoire. Critical for Paper 7 and the hybrid LLM vision.
+
+### 1.13-NEW Encoding design for non-parity functions — **NEW (from D92)**
+**What:** D92 establishes that encoding determines computability more fundamentally than activation or catalog. The +/-q encoding is parity-locked; the 1wpi encoding computes all 13 NPN classes but is untested at depth. Hybrid encodings (some inputs +/-q, some 1wpi) and novel encodings targeting specific Boolean functions are unexplored.
+**Why:** The parity-lock theorem (D92) establishes encoding as the first architectural decision — it constrains everything downstream. For any non-parity function (AND, OR, implication for syllogistic logic), a different encoding is required. The 1wpi depth law test (1.12) informs this, but the broader question of principled encoding design for targeting specific functions is the next research frontier.
+**Effort:** MEDIUM (1-2 demos — encoding space exploration + capacity measurement under new encodings).
+**Unblocks:** Opens the path from parity-only DKC to general Boolean function DKC. Critical for the taxonomy → braid → weight pipeline.
+
+### 1.14-NEW Prove balanced exponentials analytically — **NEW (from D91)**
+**What:** D91 confirmed the balanced exponentials explanation for the linear depth law: BFS vocabulary grows ~2x/round, parity demand grows 4x/weight, yielding slope ~1. An analytical derivation connecting BFS branching factor to parity constraint growth would make this a theorem rather than a demonstrated conjecture.
+**Why:** This is the next clean formal proof candidate after the parity-lock theorem (D92). The mechanism is understood (D89-D91); what remains is formalizing the BFS branching factor for SU(2) generators and connecting it to the parity constraint counting argument.
+**Effort:** SMALL to MEDIUM (1 demo — BFS branching factor analysis + parity demand growth + slope derivation).
+**Unblocks:** Elevates the depth law from "demonstrated at ζ₁₂" to a theorem about BFS closure of SU(2) subgroups. Feeds Paper 7.
+
+### 1.15-NEW Regime transition characterization — **NEW (from D87)**
+**What:** D87 established the regime transition between ζ₈ (nulls indispensable) and ζ₁₂ (nulls dispensable). The exact transition point — specific direction count, catalog size, or null fraction threshold — is unknown. Testing at intermediate roots (ζ₁₀, truncated ζ₁₂ catalogs) could locate the transition precisely.
+**Why:** A sharp threshold theorem for null dispensability would give a concrete design rule: below the transition, preserve nulls; above, prune safely. This connects to the regime-dependent design principle established by D87.
+**Effort:** SMALL (port D87 infrastructure to ζ₁₀ and truncated ζ₁₂; sweep catalog size; locate crossover).
+**Unblocks:** Completes the finite/infinite group regime characterization. Feeds Paper 7 regime-dependent design section.
+
+### 1.16-NEW Paper 7 potential: D85-D92 mechanistic arc — **NEW**
+**What:** The D85-D92 arc forms a coherent publication: (1) quantifying non-semisimplicity via b = -5/8 (D85-D86), (2) regime-dependent null dispensability (D87), (3) anti-correlation mechanism and robustness engineering (D88), (4) depth law mechanism fully explained — axis cancellation, cross-depth algebraic constraint, spectral inversion (D89-D90), (5) parity wall confirmation (D91), (6) parity-lock theorem (D92). The arc answers "why does DKC work and what are its structural limits?"
+**Why:** This arc is qualitatively different from the scaling arc (D72-D82/Paper 6). Paper 6 asks "how far does DKC scale?"; Paper 7 asks "what is the underlying mechanism?" The parity-lock theorem is the headline result with direct design implications, and the depth law explanation is the deepest mechanistic contribution.
+**Effort:** MEDIUM (writing + possibly 1-2 confirming experiments: 1.12 and 1.14 would strengthen it significantly).
+**Unblocks:** Seventh publication target. The mechanistic understanding is the foundation for all future engineering decisions.
 
 ---
 
@@ -97,7 +124,7 @@ All predictions confirmed: rad(TL_7) = 11 = 2*7-3, rad(TL_8) = 39 = 49-7-3, rad^
 
 ### 2.5 Multi-layer DKC
 **What:** Cascade two bracket-valued neurons: output of layer 1 feeds layer 2. Can a 2-layer DKC network compute functions that a single layer cannot (e.g., parity under split-sigmoid)?
-**Why:** Single-layer DKC with split-sigmoid hits the parity wall. If multi-layer circumvents it WITHOUT changing activation, the wall is about depth, not just activation geometry. This would be a significant structural result.
+**Why:** Single-layer DKC with split-sigmoid hits the parity wall. If multi-layer circumvents it WITHOUT changing activation, the wall is about depth, not just activation geometry. This would be a significant structural result. **D92 context:** Multi-layer composition is now especially important because D92 shows the +/-q encoding limits single-layer to parity. Multi-layer with 1wpi encoding could be the path to arbitrary Boolean functions with depth-law scaling.
 **Effort:** MEDIUM (2 demos — 2-layer architecture + systematic search).
 **Unblocks:** Determines whether DKC's computational limits are single-layer phenomena or fundamental to the bracket algebra.
 
@@ -127,6 +154,7 @@ Parity ceiling n=5 is unchanged at Z[zeta_16]. Gap-of-2 hypothesis REFUTED: pige
 ### 2.10 Direct deep-entry generation — **NEW**
 **What:** D82 showed that deep entries (depth 8 in the ζ₁₂ closure) are 2× more efficient than shallow or strided entries at equal catalog size: 564 pure depth-8 entries reach XOR12, while mixed catalogs need ~1140 entries. Can depth-d entries be characterized and generated/sampled directly without first computing all shallower depths via full BFS closure? The algebraic signature of a depth-8 entry is that it is a product of exactly 8 generators — but can we enumerate these without traversing the full exponential BFS tree?
 **Why:** If direct deep-entry generation is possible, it eliminates the exponential BFS cost and allows immediate access to the high-capacity part of the catalog. This would be a practical breakthrough for high-XOR computation and would separate the "hard part" (generating deep entries) from the "easy part" (searching for winners).
+**D89-D90 context:** The depth law mechanism is now understood (axis cancellation + cross-depth algebraic constraints). Deep entries are valuable not because of their positions but because of their pairwise relationships. This relational property may make direct generation harder — the value comes from algebraic ancestry, not individual entry characteristics.
 **Effort:** MEDIUM (requires characterizing the algebraic structure of depth-d entries; may involve coset enumeration or lattice-basis techniques).
 **Unblocks:** Reduces the computational cost of high-XOR DKC. Potential connection to group theory (generator word enumeration without full BFS).
 
@@ -142,21 +170,23 @@ Parity ceiling n=5 is unchanged at Z[zeta_16]. Gap-of-2 hypothesis REFUTED: pige
 **Effort:** SMALL (combine D66's ζ₈ and D79's ζ₁₂ catalogs; run the existing search harness on the union).
 **Unblocks:** Directly tests D79's Union Catalog Conjecture. Feeds into Paper 6 as the "best known" capacity baseline.
 
-### 2.13 Depth law at other roots of unity — **NEW**
+### 2.13 Depth law at other roots of unity — **NEW, updated by D89-D91**
 **What:** D82 established max_xor ≈ depth + 6 for ζ₁₂. Does this linear law hold at ζ₁₀? With a different constant? D80 showed ζ₁₀ has 71 distinct half-angles at 4096 entries (most of any surveyed root) — its angular richness may shift the constant or alter the depth law character entirely. Similarly, does the law hold at ζ₁₆?
 **Why:** If the depth law is universal (same constant across all infinite-group roots), it is a fundamental property of the quaternionic DKC mechanism. If the constant varies, it is a function of angular density per closure round — which would give a formula relating root of unity to computational efficiency, directly informing root selection for practical applications.
+**D89-D91 context:** The depth law mechanism is now understood (axis cancellation + balanced exponentials). Different roots have different BFS branching factors — the balanced exponentials argument predicts the slope should vary with the branching factor. Testing at ζ₁₀ and ζ₁₆ would confirm whether the slope really depends on the group's BFS growth rate.
 **Effort:** SMALL to MEDIUM (port D82's depth-tracking closure and capacity measurement to ζ₁₀ and ζ₁₆; D80 already has the closure infrastructure).
 **Unblocks:** Universality vs. root-dependence of the depth law. Critical for Paper 6's claims about scaling.
 
-### 2.14 Formal "activation determines capacity" theorem — **NEW**
+### 2.14 Formal "activation determines capacity" theorem — **NEW, updated by D92**
 **What:** D77 empirically demonstrated across 14 activation functions that the activation choice, not the root of unity, determines computational capacity: same ζ₈, same 24-cell, 0 XOR8 solutions with S²-Voronoi, 6 solutions with S¹×S²-Sec×Vor. Can this be stated and proven as a formal theorem? The statement would be roughly: for any finite quaternion group G and any target Boolean function f, there exists an activation function A such that DKC(G, A) computes f if and only if f is below the group's structural capacity ceiling.
+**D92 update:** D92 shows that encoding is MORE fundamental than activation — encoding determines which functions are computable at all, while activation determines how many solutions exist. The formal theorem must now account for the encoding layer: for a given encoding E and activation A, which functions are computable? The parity-lock theorem gives the answer for E = +/-q (only XOR/XNOR). The general statement requires characterizing the computability frontier for arbitrary encodings.
 **Why:** "Activation determines capacity" is currently a striking empirical result (14 activations compared, monotone phase transition measured). A formal theorem would make it the central theoretical contribution of Paper 6 — elevating it from "we found an activation that works" to "we proved why activation is the key variable."
 **Effort:** MEDIUM (requires formalizing the capacity ceiling of a finite quaternion group; the incomparability result from D74 — that eigenvalue and eigenvector directions capture orthogonal information — is the key ingredient).
-**Unblocks:** Paper 6's theoretical core. Connects D74 (incomparability), D77 (activation zoo), and D80 (finiteness) into a unified theorem.
+**Unblocks:** Paper 6's theoretical core. Connects D74 (incomparability), D77 (activation zoo), D80 (finiteness), and D92 (parity-lock) into a unified theorem.
 
 ### 2.15 Explicit Jordan-cell pairs — **NEW (D84)**
 **What:** D84's LCFT interpretation identifies 3 shared-direction entries (coordinate axes) where both null and non-null entries exist on the same S² direction. These are the candidate Jordan-cell pairs: the null entry is |N⟩ (trace=0) and the non-null entry is its logarithmic partner |L⟩. Do these 3 pairs form literal Jordan cells in some representation of the braid group algebra? Specifically, is there a natural operator O on the 24-dimensional space (indexed by catalog entries) such that O acts on the null/non-null pair with a 2×2 Jordan block?
-**Why:** Making the LCFT connection explicit (from "interpretation" to "theorem") would be a significant result connecting DKC to logarithmic CFT in a formally verifiable way. If no such operator exists, the LCFT analogy is suggestive but not structural.
+**Why:** Making the LCFT connection explicit (from "interpretation" to "theorem") would be a significant result connecting DKC to logarithmic CFT in a formally verifiable way. If no such operator exists, the LCFT analogy is suggestive but not structural. D85 computed b = -5/8 from first principles, strengthening the LCFT connection; D86 showed b is a collective property requiring the full regular representation. This makes Jordan-cell identification on the 24-entry catalog more plausible as a collective phenomenon.
 **Effort:** MEDIUM (requires constructing the braid group representation on the 24-element catalog space and checking for non-diagonalizable blocks at the shared directions).
 **Unblocks:** Formally connects DKC to LCFT. Determines whether the Jordan-cell interpretation is analogy or isomorphism.
 
@@ -171,6 +201,18 @@ Parity ceiling n=5 is unchanged at Z[zeta_16]. Gap-of-2 hypothesis REFUTED: pige
 **Why:** If the +2 gap is constant across all depths, the resource decomposition is truly additive and depth-independent. If the gap varies, the interaction between depth and writhe is nontrivial, which would modify the resource formula and may reveal a depth-writhe coupling term.
 **Effort:** SMALL (D83's `save_catalog()` / `restore_catalog()` and `jones_normalize_catalog()` infrastructure supports arbitrary depth-limited subsets; run bracket vs. Jones at each depth stratum).
 **Unblocks:** Confirms or refines the additive resource decomposition. Determines whether depth and writhe are truly independent axes or coupled.
+
+### 2.18-NEW Spectral inversion formal proof — **NEW (from D90)**
+**What:** D90 demonstrated spectral inversion: the S² point cloud bandwidth DECREASES with depth while computational power INCREASES. BW_90% drops from l=4 (depth 0) to l=2 (cumulative). Prove that BFS closure of finite SU(2) generators converges to uniform distribution on S² (bandwidth → 0) as depth → ∞.
+**Why:** Spectral inversion is the single cleanest piece of evidence that the depth law mechanism is relational, not positional. A formal proof would establish that deep entries are provably LESS informative individually while being MORE useful collectively — a striking theorem with implications for any lattice-based computation scheme.
+**Effort:** SMALL to MEDIUM (the convergence to uniform likely follows from standard results on random walks on compact groups; the novelty is connecting it to the computational capacity paradox).
+**Unblocks:** Strengthens the relational computation thesis (D89-D90). Feeds Paper 7.
+
+### 2.19-NEW Robustness engineering: constrained optimization at ζ₁₂ — **NEW (from D88)**
+**What:** D88 demonstrated that constrained optimization (null directions free, non-null clamped to 2°) achieves 48% design improvement with only 2.8% XOR loss at ζ₈. The k-ladder provides 14× better perturbation resilience than Voronoi-only. At ζ₁₂ (2043 directions), can a similar constrained optimization be defined, and does the resilience scale?
+**Why:** D87 shows ζ₁₂ nulls are dispensable, so the ζ₈ two-role partition (anchors vs scaffolding) may not apply. But ζ₁₂ might have its own two-role structure (e.g., core directions vs peripheral). Identifying whether ζ₁₂ has load-bearing subsets would inform practical robustness engineering for infinite-group neurons.
+**Effort:** MEDIUM (extend D88's perturbation framework to ζ₁₂; identify whether direction subsets have differential sensitivity).
+**Unblocks:** Engineering design rules for infinite-group compiled neurons. Feeds Paper 7 robustness section.
 
 ---
 
@@ -281,7 +323,7 @@ D74 (bracket/cell incomparability, 119 classes — STRENGTHENS Paper 5)
 
 Paper 5 is entirely new — enabled by D66–D71. D72's anti-correlation result (algebraic eigenvector placement is anti-correlated with sampling quality, proving the computation is algebraic not geometric) and D74's incomparability theorem (bracket and cell are incomparable invariants with 119 combined classes) both strengthen the Paper 5 narrative. The S² arc significantly strengthens Paper 1 as well.
 
-The shortest path to Paper 6 (Crossing Depth, Group Finiteness, and Capacity Scaling in DKC) — **NEW, updated D72-D84**:
+The shortest path to Paper 6 (Crossing Depth, Group Finiteness, and Capacity Scaling in DKC) — **updated D72-D84**:
 
 ```
 D76 (XOR8 = 0 at ζ₈ S²-Voronoi: capacity limit)
@@ -299,14 +341,37 @@ D84 (null indispensability: 9/24 nulls essential for XOR8, LCFT Jordan-cell inte
 1.8 NEW (ζ₃₂ finiteness test — confirm/refute Power-of-Two Conjecture)
 1.9 NEW (framing test at ζ₁₆/ζ₂₄ — confirm +2 universality)
 1.10 NEW (analytical proof of +2 writhe loss — theorem-level framing result)
-1.11 NEW (ζ₁₂ null indispensability — universal or ζ₈-specific?)
-2.14 NEW (formal "activation determines capacity" theorem)
+2.14 NEW (formal "activation determines capacity" theorem — updated by D92)
          |
          v
   Paper 6 submission
 ```
 
-Paper 6 arc is the most complete new arc since the original DKC discovery. The key narrative: the research shifted from "can DKC compute parity?" (answered at Demo 50) to "how far does DKC scale?" (D76–D84). The scaling arc established: (1) the finite-group ceiling at ζ₈ (XOR8 maximum), (2) logarithmic scaling at ζ₁₂ (0.62 XOR per catalog doubling), (3) the linear depth law (max_xor ≈ depth+6, explaining the logarithmic law as an artifact of exponential BFS growth), (4) the activation-determines-capacity principle (D77), (5) framing as a discrete computational resource worth +2 XOR levels, independent of and additive with depth (D83), and (6) null states as structurally indispensable despite zero trace, with LCFT Jordan-cell interpretation (D84). The paper scope is now D72–D84. Key remaining experiments: framing universality at additional roots (1.9, small), analytical writhe loss proof (1.10, medium, high publication value), ζ₁₂ null test (1.11, small), product activation optimization at ζ₁₂ (1.7, high impact), and the ζ₃₂ finiteness test (1.8, small effort, high clarity). D85 (indecomposability parameter b) is currently in development and will further extend the LCFT connection.
+Paper 6 arc is the most complete new arc since the original DKC discovery. The key narrative: the research shifted from "can DKC compute parity?" (answered at Demo 50) to "how far does DKC scale?" (D76–D84). The scaling arc established: (1) the finite-group ceiling at ζ₈ (XOR8 maximum), (2) logarithmic scaling at ζ₁₂ (0.62 XOR per catalog doubling), (3) the linear depth law (max_xor ≈ depth+6, explaining the logarithmic law as an artifact of exponential BFS growth), (4) the activation-determines-capacity principle (D77), (5) framing as a discrete computational resource worth +2 XOR levels, independent of and additive with depth (D83), and (6) null states as structurally indispensable despite zero trace, with LCFT Jordan-cell interpretation (D84). Key remaining experiments: framing universality at additional roots (1.9, small), analytical writhe loss proof (1.10, medium, high publication value), product activation optimization at ζ₁₂ (1.7, high impact), the ζ₃₂ finiteness test (1.8, small effort, high clarity), and the formal theorem (2.14, updated by D92 encoding hierarchy).
+
+**The shortest path to Paper 7 (Mechanism and Limits: The D85-D92 Arc) — NEW:**
+
+```
+D85 (b = -5/8 from first principles, normalization controversy resolved)
+D86 (single P_{0,0} divergence: b is collective, novel negative result)
+D87 (null dispensability at ζ₁₂: regime transition)
+D88 (anti-correlation mechanism: anchors vs scaffolding, k-ladder 14× resilience)
+D89 (depth law: 5 hypotheses killed, paired extension minority at ζ₁₂)
+D90 (axis cancellation + cross-depth algebraic constraint + spectral inversion)
+D91 (parity wall invariant across all resolutions: balanced exponentials confirmed)
+D92 (parity-lock theorem: +/-q encoding locked to XOR/XNOR, 6-part proof)
+         |
+         v
+1.12-NEW (1wpi depth law test — does linear law hold for AND/OR/MAJ?)
+1.14-NEW (balanced exponentials analytical proof — theorem-level depth law)
+1.15-NEW (regime transition characterization — sharp threshold for null dispensability)
+2.18-NEW (spectral inversion formal proof — convergence to uniform on S²)
+         |
+         v
+  Paper 7 submission
+```
+
+Paper 7 is qualitatively different from Paper 6. Paper 6 asks "how far does DKC scale?"; Paper 7 asks "why does it work and what are its structural limits?" The headline results are: (1) the parity-lock theorem — encoding determines computability, more fundamental than activation or catalog (D92), (2) the depth law mechanism fully explained — relational, not positional (D89-D91), (3) the indecomposability parameter b = -5/8 quantifying the LCFT non-semisimple structure (D85-D86), (4) regime-dependent design rules (D87), (5) robustness engineering via k-ladder resilience (D88). The 1wpi depth law test (1.12) and balanced exponentials proof (1.14) would significantly strengthen the paper.
 
 ---
 
@@ -329,6 +394,15 @@ Paper 6 arc is the most complete new arc since the original DKC discovery. The k
 - ~~What is the N-2 pattern?~~: RESOLVED (D83). The "N-2" observation from D79 was Jones capacity, not a bracket truncation artifact. The bracket genuinely reaches XOR(N) at each root; earlier demos that stopped at XOR(N-2) were inadvertently computing Jones-normalized quantities. Framing (writhe) is a discrete computational resource worth exactly +2 XOR levels: bracket XOR12 → Jones XOR10 at ζ₁₂, bracket XOR8 → Jones XOR6 at ζ₈.
 - ~~Are bracket-null entries computational dead weight?~~: RESOLVED (D84). No. At ζ₈, 9/24 entries are bracket-null (Re(q)=0) but contribute 6 exclusive S² directions (cube-edge-midpoints). Removing them drops capacity from XOR8 to XOR6 — worse than removing a random equal-size subset. Null entries are directionally efficient (1.00 dir/entry vs. 0.47 for non-null) and disproportionately important for higher-capacity solutions.
 
+### Resolved by D85–D92
+- ~~Is null indispensability universal or regime-specific?~~: RESOLVED (D87). Regime-specific. At ζ₈ (finite group, 24 entries), nulls are computationally critical. At ζ₁₂ (infinite group, 4096 entries), removing all 121 nulls preserves full XOR6/8/10/12 capacity. Transition mechanism: direction density — when non-null directions are dense enough, null-only directions become redundant.
+- ~~What explains the anti-correlation between design quality and computation?~~: RESOLVED (D88). Two-role direction architecture: 4 non-null body diagonals are rigid computational anchors (perturbation-sensitive), 6 null-only edge midpoints are flexible topological scaffolding (perturbation-tolerant). K-ladder provides 14× perturbation resilience over Voronoi-only.
+- ~~What is the mechanism behind the depth law?~~: RESOLVED (D89-D91). Axis cancellation (anti-aligned rotation axes producing low sum angles) + cross-depth algebraic constraints (BFS ancestry restricting pairwise sum-angle vocabularies). The advantage is RELATIONAL, not positional — spectral inversion proves the S² point cloud bandwidth DECREASES with depth. Balanced exponentials (BFS ~2×/round, parity 4×/weight) account for the linear slope.
+- ~~Is the depth law activation an artifact of the combined_cell activation?~~: RESOLVED (D91). No. The depth gap is invariant across all angular resolutions (k_sec 2–48) and all Voronoi direction counts (2–114). The wall is parity itself.
+- ~~Can DKC compute non-parity functions (AND, OR, MAJ)?~~: RESOLVED (D92). Not under the +/-q encoding. The parity-lock theorem proves masks 0...0 and 1...1 always produce identical sums (both zero), making any f where f(0...0) ≠ f(1...1) impossible. XOR survives because XOR(0...0) = XOR(1...1) = 0 for even-length inputs. The 1wpi encoding (D48/D50) computes all 13 NPN classes — the limitation is encoding-specific, not DKC-inherent.
+- ~~What is the indecomposability parameter b?~~: RESOLVED (D85). b = -5/8 (Pearce-Rasmussen convention, per-cell/physical value). Computed from first principles at TL_4 via leading-coefficient extraction from delta-parameterized Markov trace on full regular representation. The b = -2 vs -5/8 "controversy" dissolved: different normalization conventions (regular rep vs per-cell, factor of 4 = dim(0-TL sector)).
+- ~~Can b be extracted from a single projective cover P_{0,0}?~~: RESOLVED (D86). No. Universal divergence — the valuation condition p_tt = 2·p_Tt never holds on a single P_{0,0}. The multiplicity from the regular representation is structurally essential, not just a scale factor. Novel negative result.
+
 ### Still Open
 - Analytical proof of the 13=13 bandwidth bound (D71/D72 — top priority, see 1.3).
 - n=6 constraint wall algebraic proof: is there a clean proof that the 63 constraints are unsatisfiable, or is it inherently a finite-verification result?
@@ -342,11 +416,11 @@ Paper 6 arc is the most complete new arc since the original DKC discovery. The k
 - Edge-dominant/body-dominant F4 orbit split (22/13) in D66: does this exchange under 24-cell self-duality?
 - ζ₃₂ finiteness: does the Power-of-Two Conjecture (finite groups at π/2^k only) hold? (see 1.8)
 - ζ₁₂ Sec×Vor capacity: how much does product activation increase XOR capacity at ζ₁₂ beyond the k=8 baseline of D79? (see 1.7)
-- Depth law universality: does max_xor ≈ depth + 6 hold at ζ₁₀, ζ₁₆? Different constant? (see 2.13)
-- Formal "activation determines capacity" theorem: can D77's empirical result across 14 activations be proven formally? (see 2.14)
+- Depth law universality: does max_xor ≈ depth + 6 hold at ζ₁₀, ζ₁₆? Different constant? (see 2.13, updated by D89-D91 mechanism)
+- Formal "activation determines capacity" theorem: can D77's empirical result across 14 activations be proven formally, accounting for D92's encoding hierarchy? (see 2.14)
 - Union catalog ζ₈ + ζ₁₂: does combining two largely non-overlapping catalogs provide superadditive XOR capacity? (see 2.12)
 - Optimal depth composition for target XOR: is pure depth-8 the best, or does a mixed shallow-core + deep-extensions strategy reach XOR12 with fewer entries? (see 2.11)
-- Direct deep-entry generation: can depth-d entries be sampled without full BFS closure? (see 2.10)
+- Direct deep-entry generation: can depth-d entries be sampled without full BFS closure? (see 2.10, updated by D89-D90 relational insight)
 - 6 unseparated pairs (D74): what stronger invariant separates the 6 braid pairs sharing both Voronoi cell and bracket value?
 - Exact 27-state DKC automaton: does a 27-partition of S² exist achieving 100% automaton determinism for XOR6? (see 3.7)
 - Is ζ₁₂ truly infinite or very large finite? (D79 open — concrete group theory question)
@@ -354,10 +428,21 @@ Paper 6 arc is the most complete new arc since the original DKC discovery. The k
 - Information-theoretic lower bound for ζ₈ XOR ceiling: clean formula relating max computable N to catalog size, direction count, and angle count?
 - Framing universality: does the +2 writhe loss hold at ζ₁₆ and ζ₂₄? (D83 open, see 1.9)
 - Analytical proof of +2 writhe loss: can the (-A³)^{-w} phase rotation's angle-class collapse be counted to prove the 2-level loss? (D83 open, see 1.10)
-- ζ₁₂ null indispensability: are the 29 null-only directions at ζ₁₂ essential for XOR12 solutions? (D84 open, see 1.11)
-- Explicit Jordan-cell pairs: do the 3 shared-direction null/non-null pairs at ζ₈ form literal Jordan cells in a braid group representation? (D84 open, see 2.15)
+- Explicit Jordan-cell pairs: do the 3 shared-direction null/non-null pairs at ζ₈ form literal Jordan cells in a braid group representation? (D84 open, see 2.15, strengthened by D85 b = -5/8)
 - ζ₁₀ null census: what is the null fraction and directional role at the Fibonacci anyon root? (D84 open, see 2.16)
 - Resource decomposition at intermediate depths: does the +2 bracket-vs-Jones gap hold at every depth level, or does it vary? (D83 open, see 2.17)
 - Writhe distribution of 24-cell vertices: do antipodal pairs (q and -q) have opposite writhes? (D83 open)
 - Depth-3 → 100% null generalization: does the maximum-depth stratum of any finite SU(2) subgroup consist entirely of null entries? (D84 open)
-- D85 (indecomposability parameter b) currently in development — will extend the LCFT connection from D84
+- **1wpi encoding depth law: does max_and or max_maj scale linearly with depth under the 1wpi encoding? (D92 open, see 1.12 — HIGH PRIORITY)**
+- **Encoding design space: can encodings be engineered to target specific Boolean functions? What is the space of achievable function classes as a function of encoding type? (D92 open, see 1.13)**
+- **Balanced exponentials analytical proof: can the BFS branching factor (~2×/round) vs parity demand (4×/weight) ratio be derived from first principles? (D91 open, see 1.14)**
+- **Regime transition threshold: at what direction count / catalog size / null fraction does the transition from null-indispensable to null-dispensable occur? (D87 open, see 1.15)**
+- **Spectral inversion proof: does BFS closure on SU(2) provably converge to uniform S² distribution? (D90 open, see 2.18)**
+- **Robustness at ζ₁₂: does the ζ₁₂ direction set have load-bearing subsets analogous to ζ₈'s body-diagonal anchors? (D88 open, see 2.19)**
+- Why does the valuation condition fail at TL_6? Can b = -5/8 be confirmed at lattice sizes beyond TL_4? (D85 open)
+- How does the literature (Pearce-Rasmussen) actually compute b at larger lattice sizes? (D85/D86 open)
+- Why is TL_8 P_{0,0} completely semisimple when TL_4 and TL_6 have Jordan blocks? (D86 open)
+- Can axis cancellation be exploited for direct weight selection without brute-force XOR testing? (D90 open)
+- Does the linear depth law hold for ALL Boolean functions, or just parity under +/-q encoding? (D91/D92 open — 1.12 addresses this)
+- Can a phase-sensitive activation that distinguishes S from -S break the parity lock? (D92 open)
+- Hybrid encodings: can a mixed (+/-q for some inputs, 1wpi for others) balance function breadth with depth scaling? (D92 open)

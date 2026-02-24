@@ -1,6 +1,6 @@
 # Floating-Point Usage Audit
 
-Last updated: 2026-02-21 (72 demos, D01-D84)
+Last updated: 2026-02-23 (80 demos, D01-D92)
 
 ## Purpose
 
@@ -94,6 +94,14 @@ DKC's core thesis is exact arithmetic in Z[zeta_8] — zero floating-point error
 | 82 | MIXED (geom+stat) | Same quaternion/geometric engine as D81; depth analysis adds mean-depth statistics (sum_d/(double)cnt) and percentage display across winner tuples; atan2 for per-depth angle vocabulary |
 | 83 | MIXED (geom+stat) | Quaternion group closure (cos/sin generators, qmul) + Jones normalization (FP phase rotation per writhe unit); Pearson depth-writhe correlation, mean/mean-abs writhe per depth level, information-loss percentages; acos/atan2 sector in combined_cell |
 | 84 | MIXED (geom+val+stat) | Same quaternion/S2 geometric engine as D83; FP threshold (fabs(qa)<1e-10) classifies null states; Part B gap theorem validates min non-null |Re| > 0.4; Part D null-prevalence ratio (mean null vs 9/24 expected) and Part C random-control means are statistical |
+| 85 | VALIDATION | Integer TL algebra (link states, Hamiltonian); FP only for Gaussian elimination (rank, null spaces) and Gram matrix analysis to extract Jordan structure. Same pattern as D51-52: exact integer objects, FP linear algebra to determine structural properties |
+| 86 | EXACT-CORE | b-parameter computed in double precision with irrational eigenvalues (sqrt2, sqrt3, sqrt3+-1); double-precision RREF for null spaces at non-zero lambda; all b_loop/b_trace results are FP values. Eigenvalues are inherently irrational, computation cannot be exact integer |
+| 87 | MIXED (geom+stat) | Quaternion group closure (cos/sin zeta_12 generators); eigenvector extraction (sqrt/acos); Voronoi cell + combined_cell (sector via acos/atan2); spherical harmonics (Y_lm); Jacobi eigenvalue solver; simulated annealing perturbation. Statistics: null/non-null direction partition percentages, mean angle comparisons, XOR capacity loss percentages |
+| 88 | MIXED (geom+stat) | Same quaternion/S2 geometric engine; pairwise angle analysis (Gram matrix, eigenspectrum); spherical design residuals (Y_lm); simulated annealing perturbation sensitivity; cross-root comparison (zeta_8 vs zeta_12). Statistics: mean angles by partition, perturbation loss percentages, condition ratios, per-direction residual comparisons |
+| 89 | MIXED (geom+stat) | Quaternion group closure + combined_cell for catalog/capacity. Heavy statistics: mean pairwise quaternion dot (coherence), single-depth vs random discriminating experiment, cross-depth coherence matrices, angle variance ratios (stddev/stddev), spherical harmonic power spectra by depth shell |
+| 90 | MIXED (geom+stat) | Quaternion engine + extract_angle (acos) for pairwise sum-angle census. Statistics: sum-angle histograms (min/max/mean/distinct counts), depth-stratified angle distributions, random-vs-structured comparison, winner anti-alignment statistics (axis-dot), entries-per-direction concentration |
+| 91 | MIXED (geom+stat) | Quaternion engine + combined_cell with k_sec sweep (activation resolution experiment). Core question is about the FP geometric activation (acos sector classification). Statistics: XOR/XNOR/AND/OR/MAJ separation rates as percentages, collision analysis, masks-per-cell ratios |
+| 92 | MIXED (geom+stat) | Same quaternion engine + sector_of/voronoi_of for multi-function scaling. FP quaternion sums, sector classification (acos). Statistics: per-function separation rates at each depth, scaling comparison across AND/OR/MAJ/XOR, percentage displays |
 
 ## Summary by Category
 
@@ -101,10 +109,10 @@ DKC's core thesis is exact arithmetic in Z[zeta_8] — zero floating-point error
 |----------|-------|-------|
 | INTEGER | 12 | 01-09, 39, 60, 61 |
 | DISPLAY-ONLY | 1 | 38 |
-| VALIDATION | 8 | 29, 35, 51, 52, 53, 54, 72 |
-| EXACT-CORE | 15 | 10-19, 21, 23, 24, 45-47, 50 |
-| GEOMETRIC | 14 | 62, 63, 65, 67-69, 71, 73, 75, 77-79, 81 |
-| MIXED | 22 | 12, 20, 22, 25-28, 48-49, 55-59, 64, 66, 70, 74, 76, 80, 82, 83, 84 |
+| VALIDATION | 8 | 29, 35, 51, 52, 53, 54, 72, 85 |
+| EXACT-CORE | 17 | 10, 11, 13-19, 21, 23, 24, 45-47, 50, 86 |
+| GEOMETRIC | 13 | 62, 63, 65, 67-69, 71, 73, 75, 77-79, 81 |
+| MIXED | 29 | 12, 20, 22, 25-28, 48-49, 55-59, 64, 66, 70, 74, 76, 80, 82-84, 87-92 |
 
 ## Three Regimes
 
@@ -120,20 +128,20 @@ Everything computational is complex doubles. The bracket itself is computed as `
 D29 introduces exact Z[zeta_8] integer arithmetic. From here, the *values* (bracket weights) are exact. But FP persists at two boundaries:
 
 - **Activation boundary (D45-D65)**: The activation function (split-sigmoid, sector_classify via atan2, magnitude threshold) converts exact cyclotomic values into Boolean outputs. The classification step is inherently FP even though the inputs are exact.
-- **Geometric boundary (D62-D80)**: S2 geometry, quaternion rotations, spherical harmonics. The *where* (eigenvector directions on S2) is continuous geometry, even though the *what* (bracket values) is exact algebra.
+- **Geometric boundary (D62-D92)**: S2 geometry, quaternion rotations, spherical harmonics. The *where* (eigenvector directions on S2) is continuous geometry, even though the *what* (bracket values) is exact algebra. D81-D92 extend this boundary with quaternion group closure, depth-stratified analysis, sum-angle structure, activation resolution sweeps, and multi-function scaling — all built on the same FP geometric engine.
 
 ## Exactification Opportunities
 
 Three levels of difficulty for eliminating remaining FP:
 
 ### Easy: Remove VALIDATION FP
-Demos 29, 35, 51-54, 72 use FP only to cross-check exact results. The FP could be removed entirely without affecting any result. The Gaussian elimination in D51-52 could use exact rational arithmetic (integer num/denom pairs).
+Demos 29, 35, 51-54, 72, 85 use FP only to cross-check exact results. The FP could be removed entirely without affecting any result. The Gaussian elimination in D51-52 and D85 could use exact rational arithmetic (integer num/denom pairs).
 
 ### Medium: Exact sector classification
 The activation functions in D45-D65 use atan2 to determine which angular sector a cyclotomic integer falls in. But for Z[zeta_8] values, the sector boundaries at multiples of pi/4 align with the ring structure. You can determine which octant a cyclotomic integer (a + b*zeta_8 + c*zeta_8^2 + d*zeta_8^3) falls in purely from the integer coefficients — no trig needed. This would make the entire DKC pipeline from bracket to Boolean output fully exact.
 
 ### Hard: Exact S2 geometry
-Quaternion products are algebraic (polynomial multiplication). Eigenvector extraction from 2x2 unitary matrices is algebraic. Voronoi cell assignment is a finite set of dot-product comparisons. In principle all of D66-D80 could be done in exact algebraic arithmetic. In practice the expressions are complex and the code would be significantly more verbose.
+Quaternion products are algebraic (polynomial multiplication). Eigenvector extraction from 2x2 unitary matrices is algebraic. Voronoi cell assignment is a finite set of dot-product comparisons. In principle all of D66-D92 could be done in exact algebraic arithmetic. In practice the expressions are complex and the code would be significantly more verbose. D87-D92 add further FP-geometric layers (spherical harmonics, simulated annealing, coherence matrices, sum-angle analysis, activation resolution sweeps, multi-function scaling) that would all need algebraic reformulation.
 
 ## Update Process
 

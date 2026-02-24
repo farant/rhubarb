@@ -1,6 +1,6 @@
 # Code Assets Catalog
 
-Reusable code patterns across 84 knotapel demos. Updated 2026-02-21 (added Demos 83-84).
+Reusable code patterns across 92 knotapel demos. Updated 2026-02-23 (added Demos 85-92).
 
 ---
 
@@ -24,7 +24,7 @@ Reusable code patterns across 84 knotapel demos. Updated 2026-02-21 (added Demos
 
 - **What it does**: Double-precision complex number type with full arithmetic, unit-circle evaluation, and approximate equality — the numerical workhorse for all demos from 10 onward.
 - **Introduced in**: Demo 10
-- **Reused in**: Demos 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 35, 45, 46, 47, 48, 49, 50, 53, 54, 55, 56, 57, 58, 59, 61, 62, 64, 65, 66, 67, 68, 69, 70, 71
+- **Reused in**: Demos 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 35, 45, 46, 47, 48, 49, 50, 53, 54, 55, 56, 57, 58, 59, 61, 62, 64, 65, 66, 67, 68, 69, 70, 71, 85
 - **Key types/functions**:
   - `Cx` struct: `re`, `im` doubles
   - `cx_make()`, `cx_zero()`, `cx_one()`, `cx_real()` — constructors
@@ -472,7 +472,7 @@ Reusable code patterns across 84 knotapel demos. Updated 2026-02-21 (added Demos
 
 - **What it does**: Prime-field arithmetic needed for exact computation at algebraic delta values.
 - **Introduced in**: Demo 52
-- **Reused in**: Demos 38, 39, 60
+- **Reused in**: Demos 38, 39, 60, 85, 86
 - **Key types/functions**:
   - `mod_reduce(x, p)` — reduction to [0, p)
   - `mod_inv(x, p)` — modular inverse via extended Euclidean algorithm
@@ -962,13 +962,13 @@ Reusable code patterns across 84 knotapel demos. Updated 2026-02-21 (added Demos
 
 - **What it does**: Linear Congruential Generator for reproducible random experiments across all DKC and neural network demos.
 - **Introduced in**: Demo 13
-- **Reused in**: Demos 26, 27, 28, 45, 46, 47, 48, 49, 50, 72 (perturbation trials for spherical optimizer)
+- **Reused in**: Demos 26, 27, 28, 45, 46, 47, 48, 49, 50, 72 (perturbation trials for spherical optimizer), 88 (simulated annealing), 89 (random subset baselines), 90 (random subset loading), 92 (Monte Carlo census)
 - **Key types/functions**:
   - `rng_seed(s)` — set seed
   - `rng_uniform()` — uniform [0, 1) double
   - `rng_normal()` — standard normal via Box-Muller transform
 - **Approximate size**: ~25 lines
-- **Notes**: Standard LCG constants (multiplier, increment, modulus). Seed 12345 used for most baseline experiments.
+- **Notes**: Standard LCG constants (multiplier, increment, modulus). Seed 12345 used for most baseline experiments. D89+ uses `shuffle()` companion (Fisher-Yates) for random subset generation.
 
 ### 6.2 Quantization
 
@@ -1078,7 +1078,7 @@ Reusable code patterns across 84 knotapel demos. Updated 2026-02-21 (added Demos
 
 - **What it does**: Tests whether a finite point set on S² achieves the t-design property by computing max |S_{l,m}| for each l up to t, where S_{l,m} = (1/N) Σ Y_lm(p_i). Supports both directed (N points) and undirected (antipodal identification) modes, and independent even/odd mode streams.
 - **Introduced in**: Demo 72
-- **Reused in**: (Demo 72 only — foundational for future spherical integration quality analysis)
+- **Reused in**: Demo 88 (`design_residual` for anti-correlation analysis and constrained optimization), Demo 90 (spherical harmonic decomposition of S² point clouds for spectral inversion analysis)
 - **Key types/functions**:
   - Real spherical harmonics Y_lm evaluated at arbitrary direction vectors (associated Legendre + trig)
   - `design_residual(pts, N, T)`: computes max over l=1..T of max_m |S_{l,m}|; single reusable quality metric
@@ -1245,9 +1245,9 @@ Reusable code patterns across 84 knotapel demos. Updated 2026-02-21 (added Demos
 
 ### 10.3 Combined Sec(k)×Vor Activation (`test_combined` / `combined_cell`)
 
-- **What it does**: Pre-computes all 2^N quaternion sums for a given N-tuple once, then tests multiple k-sector values cheaply by sweeping k without recomputing sums. The combined activation maps each sum to (sector, Voronoi-cell) pair. Used as the standard XOR tester for all D78-D84 capacity searches.
+- **What it does**: Pre-computes all 2^N quaternion sums for a given N-tuple once, then tests multiple k-sector values cheaply by sweeping k without recomputing sums. The combined activation maps each sum to (sector, Voronoi-cell) pair. Used as the standard XOR tester for all D78-D92 capacity searches.
 - **Introduced in**: Demo 78 (as `test_combined`)
-- **Reused in**: Demos 79, 80, 81, 82, 83 (via `find_capacity`), 84 (via `find_capacity` + `count_xor6_at_k`)
+- **Reused in**: Demos 79, 80, 81, 82, 83 (via `find_capacity`), 84 (via `find_capacity` + `count_xor6_at_k`), 87, 88, 89, 90, 91, 92 (standard activation infrastructure throughout the depth-law and function-scaling arcs)
 - **Key types/functions**:
   - `test_combined(indices, n_idx, k_sec, acc_out)`: generic XOR tester; pre-computes all 2^N sums, caches angle and cell, sweeps k values cheaply
   - `combined_cell(q, k_sec, n_dir)`: maps a quaternion sum to a (sector × n_dir + voronoi_cell) index; the inner function used in capacity surveys
@@ -1290,7 +1290,7 @@ Reusable code patterns across 84 knotapel demos. Updated 2026-02-21 (added Demos
 
 - **What it does**: Starting from a set of generators (and their inverses and the identity), iteratively multiplies all current group elements by all generators until no new elements appear or a size cap is hit. Returns 1 if the group is finite (closed below cap), 0 if it hit the cap (infinite).
 - **Introduced in**: Demo 80
-- **Reused in**: Demo 81 (as `init_su2_generators` + BFS closure with snapshot tracking), Demo 82 (closure with depth tracking), Demo 83 (writhe tracking added alongside depth), Demo 84 (writhe tracking + cross-root loop)
+- **Reused in**: Demo 81 (as `init_su2_generators` + BFS closure with snapshot tracking), Demo 82 (closure with depth tracking), Demo 83 (writhe tracking added alongside depth), Demo 84 (writhe tracking + cross-root loop), Demos 87, 88, 89, 90, 91, 92 (standard BFS closure with depth tracking — core infrastructure for all D87-D92 experiments)
 - **Key types/functions**:
   - `build_closure(generators, n_gen, catalog_out, max_size, rounds_out)`: generic closure; quaternion multiplication with deduplication by tolerance comparison
   - Closure round tracking: records which round each element was born in (gives depth/crossing-depth interpretation)
@@ -1338,7 +1338,7 @@ Reusable code patterns across 84 knotapel demos. Updated 2026-02-21 (added Demos
 
 - **What it does**: Saves the full current quaternion catalog (quaternions + depth arrays + metadata) to a static backup, then restores it; enables repeated subset experiments with different roots or subsets without rebuilding the full closure.
 - **Introduced in**: Demo 79
-- **Reused in**: Demos 80, 81, 82, 83 (extended to also save writhe array), 84 (same extension; also enables bracket→Jones→bracket switching)
+- **Reused in**: Demos 80, 81, 82, 83 (extended to also save writhe array), 84 (same extension; also enables bracket→Jones→bracket switching), 87 (null-removal experiments), 88 (perturbation experiments), 89 (depth-stratified experiments), 90 (subset loading for comparative tests), 91 (depth-cutoff experiments), 92 (depth-sweep experiments)
 - **Key types/functions**:
   - `save_catalog()`: copies `g_cat[]`, `g_cat_size`, `g_depth[]`, `g_nd`, `g_na` to static backup arrays; extended in D83-84 to also save `g_writhe[]`
   - `restore_catalog()`: restores from backup; resets derived quantities (directions, angles)
@@ -1351,7 +1351,7 @@ Reusable code patterns across 84 knotapel demos. Updated 2026-02-21 (added Demos
 
 - **What it does**: Generic recursive extension from level-(N-2) XOR winners to level-N XOR winners by appending one new catalog entry to each existing winner and testing with `test_combined`. Replaces per-level search functions with a single parameterized routine.
 - **Introduced in**: Demo 79
-- **Reused in**: Demos 81, 82
+- **Reused in**: Demos 81, 82, 87 (capacity pipeline for null-removal experiments), 89 (depth-stratified capacity measurement), 90 (winner search for axis cancellation analysis)
 - **Key types/functions**:
   - `find_recursive(level)`: searches all (winner at level-1, new_entry) combinations; deduplicates via sorted-tuple comparison
   - Sorted tuple insertion: maintains sorted index arrays when extending N-tuples without full re-sort
@@ -1364,7 +1364,7 @@ Reusable code patterns across 84 knotapel demos. Updated 2026-02-21 (added Demos
 
 - **What it does**: Augments group closure with per-element birth-round tracking (depth), then provides three reusable subset construction strategies — shallow (first N entries), strided (every K-th entry), deep (last N entries from deepest round) — for capacity comparison experiments.
 - **Introduced in**: Demo 82
-- **Reused in**: Demo 83 (`find_capacity()` reused unchanged — called three times: bracket, Jones, ζ₈ control), Demo 84 (`find_capacity()` reused; also called on null-only and non-null-only subsets via `load_subset`)
+- **Reused in**: Demo 83 (`find_capacity()` reused unchanged — called three times: bracket, Jones, ζ₈ control), Demo 84 (`find_capacity()` reused; also called on null-only and non-null-only subsets via `load_subset`), Demos 89, 90 (`load_single_depth`, `load_cumulative`, `load_deep`, `load_shallow`, `load_strided`, `load_random` for depth-stratified experiments), Demos 91, 92 (`load_up_to_depth` for depth-sweep experiments)
 - **Key types/functions**:
   - `g_depth[]` array: assigned the current closure round index at element birth; identity + generators get depth 0
   - Shallow subset: copy first N entries from `g_cat[]` by natural closure order
@@ -1450,7 +1450,7 @@ Reusable code patterns across 84 knotapel demos. Updated 2026-02-21 (added Demos
 
 - **What it does**: Classifies each catalog entry as bracket-null (|Re(q)| < 1e-10) or non-null; builds two index arrays that partition the catalog; these arrays are reused throughout all subsequent subset experiments.
 - **Introduced in**: Demo 84
-- **Reused in**: (Demo 84 only — first null anatomy study)
+- **Reused in**: Demos 87 (null dispensability at zeta_12), 88 (perturbation sensitivity by null/non-null type)
 - **Key types/functions**:
   - `classify_null(cat_size)`: single pass over catalog; fills `is_null[]` boolean array; returns null count
   - `null_idx[]` / `nonnull_idx[]`: index arrays built once after `classify_null`; reused for `load_subset` calls in Parts C–F
@@ -1500,6 +1500,483 @@ Reusable code patterns across 84 knotapel demos. Updated 2026-02-21 (added Demos
 
 ---
 
+## 13. TL Algebra Full Infrastructure (Demos 85-86)
+
+### 13.1 Full TL Algebra Infrastructure (AlgDiagram)
+
+- **What it does**: Complete TL_n algebra representation using explicit planar matching diagrams (as opposed to the standard-module link states of Section 3.1). Enumerates the full Catalan-number-dimensional basis, builds the complete multiplication table with loop counts, implements the star anti-involution, closure loop counting, and through-line sector analysis — everything needed for representation-theoretic computations on the regular representation.
+- **Introduced in**: Demo 85
+- **Reused in**: Demo 86 (reused verbatim for left ideal construction and restricted Hamiltonian)
+- **Key types/functions**:
+  - `AlgDiagram` struct: `match[MAX_ALG_2N]` — planar matching on 2n boundary points (top n + bottom n)
+  - `AlgSegment` struct: `points[MAX_ALG_2N]` with `count` — for recursive segment-based enumeration
+  - `alg_enumerate_basis(n, basis_out)` — segment-based recursive enumeration of all non-crossing matchings on 2n points; produces Catalan(n) diagrams
+  - `alg_compose(n, d1, d2, result, loops)` — vertical stacking of two diagrams: connects bottom of d1 to top of d2, traces through glue layer counting closed loops, returns composed diagram + loop count
+  - `alg_compute_mult_table()` — fills `alg_mt[i][j]` (result index at delta=0, -1 if loops>0), `alg_mt_full[i][j]` (result index always), `alg_mt_nloops[i][j]` (loop count) for all i,j pairs
+  - `alg_star(d, n)` — star anti-involution: top/bottom swap (vertical flip); `alg_compute_star_indices()` precomputes star[i] for all basis elements
+  - `alg_closure_loops(d, n)` — counts loops formed when trace-closing a single diagram (connecting top to bottom directly)
+  - `alg_count_through(d, n)` — counts propagating strands (top point matched to bottom point); classifies basis elements by through-line sector
+  - `alg_make_identity(n)`, `alg_make_generator(n, gen)` — construct identity (straight-through matchings) and TL generator e_i (pair sites 2i,2i+1 on both top and bottom)
+  - `alg_find_index(m, basis, num, n)` — looks up a diagram in the enumerated basis
+  - `alg_init(n)` — full initialization: enumerate basis, find identity/generators, build multiplication table, compute star indices
+  - `analyze_through_line_sectors()` — classifies basis by through-line count, checks L_H sector preservation
+- **Approximate size**: ~400 lines
+- **Notes**: This is structurally different from the link-state standard module (Section 3.1). Link states enumerate the standard module W_{n,0} (dimension C_{n/2}); AlgDiagram enumerates the FULL algebra TL_n (dimension C_n). TL_4 standard module dim=2; TL_4 full algebra dim=14. The full algebra supports left ideal construction, projective cover analysis, and regular representation — none of which are possible on the standard module alone. The multiplication table is O(dim^2) entries, each requiring an O(n) composition — total build cost O(C_n^2 * n).
+
+### 13.2 Link State Enumeration and Hamiltonian (Standard Module at delta=0)
+
+- **What it does**: Recursive enumeration of non-crossing perfect matchings on n boundary points (the link states of the standard module W_{n,0}) with TL generator action at delta=0 and Hamiltonian construction H = -(e_0 + ... + e_{n-2}).
+- **Introduced in**: Demo 85 (standalone implementation independent of Section 3.1)
+- **Reused in**: (Demo 85 only — used for the standard-module diagonalizability proof)
+- **Key types/functions**:
+  - `LinkState` struct: `pair[MAX_SITES]` — pairing array for n/2 non-crossing arcs
+  - `enumerate_link_states(n, basis)` — recursive generator; dimensions match C_{n/2}: W_4=2, W_6=5, W_8=14, W_10=42, W_12=132
+  - `apply_ei(i, in, out, n)` — TL generator e_i action on a link state at delta=0: creates new pairing; returns 1 if no loops created, 0 if loop (annihilates at delta=0)
+  - `find_ls_index(ls, basis, dim, n)` — lookup by exhaustive comparison
+  - `build_hamiltonian(n, basis, dim, H)` — constructs H = -(e_0 + ... + e_{n-2}) as integer matrix on the standard module
+- **Approximate size**: ~120 lines
+- **Notes**: Key finding: the Hamiltonian on the standard module is FULLY DIAGONALIZABLE at delta=0 for all tested sizes (n=4,6,8,10,12). Jordan blocks only exist on the full regular representation and projective covers. This falsified Gemini's claim about standard-module Jordan structure.
+
+### 13.3 Faddeev-LeVerrier Characteristic Polynomial (Modular)
+
+- **What it does**: Computes the characteristic polynomial of an integer matrix via the Faddeev-LeVerrier algorithm in modular arithmetic (mod 10^9+7), avoiding floating-point entirely.
+- **Introduced in**: Demo 85
+- **Reused in**: Demo 86 (for characteristic polynomial of restricted Hamiltonian on left ideals)
+- **Key types/functions**:
+  - `char_poly_mod(H, dim, c)` — fills coefficient array c[0..dim] with modular char poly coefficients; algorithm: iterate A_k = A_{k-1}*H + c_k*I where c_k = -tr(A_{k-1}*H)/k
+  - `poly_deriv_mod(f, deg_f, fp)` — formal derivative of polynomial mod p
+  - `poly_gcd_degree_mod(a, deg_a, b, deg_b)` — Euclidean algorithm GCD degree; returns degree(gcd(a,b)) mod p
+- **Approximate size**: ~80 lines
+- **Notes**: The Faddeev-LeVerrier algorithm avoids eigenvalue computation entirely — it produces the characteristic polynomial symbolically from the trace sequence. Combined with the polynomial GCD, this gives the definitive diagonalizability test: gcd(char_poly, char_poly') = 0 iff fully diagonalizable (no repeated roots). Used for both standard module and full algebra diagonalizability tests.
+
+### 13.4 Krylov Minimal Polynomial (Modular)
+
+- **What it does**: Computes the minimal polynomial of an integer matrix via Krylov iteration in modular arithmetic. The minimal polynomial is the lowest-degree polynomial annihilating the matrix — more informative than the characteristic polynomial for Jordan block detection.
+- **Introduced in**: Demo 85
+- **Reused in**: Demo 86 (for Jordan block detection on left ideals)
+- **Key types/functions**:
+  - `min_poly_mod(H, dim, m, deg_m)` — Krylov iteration: starting from random vector v, compute v, Hv, H^2v, ...; maintain echelon form of the Krylov matrix; when a new column becomes linearly dependent, read off the minimal polynomial from the dependency relation
+  - `has_jordan_blocks(H, dim)` — convenience wrapper: computes min poly and its derivative, returns 1 if gcd(mu, mu') > 0 (i.e., repeated roots in minimal polynomial = Jordan blocks)
+- **Approximate size**: ~100 lines
+- **Notes**: The minimal polynomial divides the characteristic polynomial and has the same roots but potentially lower multiplicity. gcd(mu, mu') > 0 is necessary and sufficient for Jordan blocks. This is more definitive than the char_poly test because the char_poly can have repeated roots from geometric multiplicity (multiple eigenspaces of same eigenvalue) without Jordan blocks. The min_poly test catches only actual non-diagonalizability.
+
+### 13.5 Left Ideal Closure (Projective Cover Construction)
+
+- **What it does**: BFS closure of a set of seed algebra elements under left multiplication by all algebra elements (at delta=0). Generates the left ideal e*TL_n for any idempotent or generator e — this is the projective cover P_{0,0} when seeded with a 2-through-line generator.
+- **Introduced in**: Demo 85
+- **Reused in**: Demo 86 (constructs P_{0,0} at TL_4, TL_6, TL_8 for direct b computation)
+- **Key types/functions**:
+  - `left_ideal_closure(gens, n_gens, ideal, ideal_size)` — BFS queue; starts from seed generators; at each step multiplies each ideal element by all algebra basis elements; adds results not already in the ideal; terminates when queue empty
+  - `in_ideal[]` boolean array for O(1) membership test
+  - Returns ideal as sorted index array into the algebra basis
+- **Approximate size**: ~50 lines
+- **Notes**: At TL_4, seeding with any 2-through-line generator produces P_{0,0} of dimension 5 = C_3 (next Catalan number). At TL_6, P_{0,0} has dimension 14 = C_4. At TL_8, dimension 42 = C_5. Pattern: dim(P_{0,0}) at TL_n = C_{n/2+1}. All 2-through-line generators produce IDENTICAL left ideals (generator independence, confirmed in D86).
+
+### 13.6 Eigenvalue Sweep and Geometric Multiplicity
+
+- **What it does**: Numerical sweep for real eigenvalues of integer matrices via characteristic polynomial sign changes and golden-section refinement; plus rank-based geometric multiplicity computation at given eigenvalue.
+- **Introduced in**: Demo 85
+- **Reused in**: (Demo 85 only — used for eigenvalue analysis of H on standard module and projective covers)
+- **Key types/functions**:
+  - `find_eigenvalues_sweep(H, dim, evals, n_evals)` — evaluates char poly on fine grid [-max..max], detects sign changes, refines roots by golden-section search; handles both simple and double roots (via local minimum detection for same-sign dips)
+  - `geometric_multiplicity(H, dim, lambda)` — computes dim(ker(H - lambda*I)) by RREF rank subtraction
+  - `extract_null_space(M, dim, null_vecs, n_null)` — RREF-based null space extraction for integer matrices
+  - `extract_null_space_d(M, dim, null_vecs, n_null)` — double-precision version for irrational eigenvalues
+- **Approximate size**: ~150 lines
+- **Notes**: Handles both integer eigenvalues (from integer char poly) and irrational eigenvalues (e.g., +/-sqrt(2) at TL_4 P_{0,0}). Golden-section refinement achieves ~10^{-12} precision. Used to establish that standard modules have no Jordan blocks while projective covers do.
+
+### 13.7 Jordan Analysis (ker/ker^2 Method)
+
+- **What it does**: Detects Jordan blocks at a specific integer eigenvalue by comparing ker(H-lambda*I) vs ker((H-lambda*I)^2). If dim(ker(M^2)) > dim(ker(M)), there is a Jordan block of size >= 2 at lambda.
+- **Introduced in**: Demo 85
+- **Reused in**: (Demo 85 only — the Krylov min_poly method supersedes this for definitive testing)
+- **Key types/functions**:
+  - `jordan_analysis(H, dim, lambda, rank1, rank2, nullity1, nullity2)` — computes M = H - lambda*I, M^2, ranks of both; Jordan blocks exist iff nullity2 > nullity1
+- **Approximate size**: ~40 lines
+- **Notes**: This is the direct definition-based test. Limited to integer eigenvalues. The Krylov minimal polynomial method (Section 13.4) is more general (works for irrational eigenvalues via modular arithmetic) and more definitive.
+
+### 13.8 Complex Arithmetic Suite (Cx for Demo 85)
+
+- **What it does**: Complex number type with matrix operations — multiplication, null space, absolute determinant — used for spin chain representation at q=i.
+- **Introduced in**: Demo 85 (matrix extensions beyond the basic Cx from Section 1.2)
+- **Reused in**: (Demo 85 only — specific to the spin chain representation analysis)
+- **Key types/functions**:
+  - `Cx` struct (same as Section 1.2): `re`, `im` doubles
+  - `cx_mat_mul(A, B, C, dim)` — complex matrix multiplication
+  - `cx_mat_vec(A, v, w, dim)` — complex matrix-vector product
+  - `cx_null_space(M, dim, null_vecs, n_null)` — RREF-based complex null space
+  - `cx_absdet(M, dim)` — complex matrix absolute determinant via LU decomposition
+  - `cx_find_real_evals(H, dim, evals, n_evals)` — finds real eigenvalues of a complex matrix by sweeping |det(H-lambda*I)| for local minima
+- **Approximate size**: ~200 lines
+- **Notes**: Used for the spin chain representation of TL_n at q=i (delta=0): basis is Sz=0 sector of (C^2)^{tensor n}, generators involve complex entries. The eigenvalue finder works by detecting local minima of |det|, then refining with golden-section search.
+
+### 13.9 Spin Chain Representation at q=i
+
+- **What it does**: Builds the TL representation on the Sz=0 sector of (C^2)^{tensor n} at q=i (delta=0). Constructs generator matrices, verifies all TL relations, and builds the Hamiltonian for Jordan block analysis on the spin chain.
+- **Introduced in**: Demo 85
+- **Reused in**: (Demo 85 only)
+- **Key types/functions**:
+  - `sc_enumerate_sz0(n, basis)` — enumerates all n-bit strings with equal 0s and 1s (Sz=0 sector); dimensions: n=4→6, n=6→20, n=8→70
+  - `sc_apply_ei(i, in_state, q)` — applies e_i on spin chain at q=i: projects sites (i, i+1) onto singlet, replaces with q-weighted singlet reconstruction
+  - `sc_build_generator(i, n, basis, dim, gen)` — builds full dim×dim complex matrix for e_i
+  - `sc_build_hamiltonian(n, basis, dim, H)` — H = -(e_0 + ... + e_{n-2}) on spin chain
+- **Approximate size**: ~150 lines
+- **Notes**: Verified: e_i^2=0, braid relation e_i*e_{i+1}*e_i = e_i, far commutativity. H is symmetric (conformal/transpose form). The spin chain provides an independent representation for Jordan block analysis, complementing the diagram-algebraic approach.
+
+### 13.10 Delta-Parameterized Form Builders
+
+- **What it does**: Constructs Gram and Hamiltonian matrices as functions of a formal delta parameter, enabling perturbative analysis of the delta→0 limit. The delta-form G_delta[i][j] = delta^{L(i,j)} where L = compose_loops + closure_loops; the leading coefficients as delta→0 extract the indecomposability parameter b.
+- **Introduced in**: Demo 85
+- **Reused in**: Demo 86 (delta-parameterized b computation on left ideals — the approach that universally diverges)
+- **Key types/functions**:
+  - `build_gram_matrix_delta(...)` — per-pair delta-power computation L[i][j] = compose_loops + closure_loops; builds integer matrix of delta exponents for star (loop) form
+  - `build_hamiltonian_delta(...)` — similar for the trace (no star) form
+  - Leading-coefficient extraction: for each pair, identifies minimum delta-power, sums coefficients at that power, computes ratio b = coeff_Tt / coeff_tt
+- **Approximate size**: ~100 lines
+- **Notes**: This is the core method that produces b = -5/8 at TL_4. The key insight is that at delta=0, almost all products vanish (loops→0); the delta-parameterized approach retains the structure by working at finite delta and taking the limit. The valuation condition p_tt = 2*p_Tt must hold for b to be finite; it fails at TL_6 and on all single P_{0,0} copies (Demo 86).
+
+### 13.11 Gauge Analysis Infrastructure
+
+- **What it does**: Exhaustive scan over gauge parameters (cosets of the null space of the bilinear form) computing the quadratic decomposition b(c) = (c^T M c + E^T c + L) / (c^T M' c + E'^T c + L') for the fixed-point form. Detects flat (affine) manifolds vs quadratic surfaces.
+- **Introduced in**: Demo 85
+- **Reused in**: (Demo 85 only)
+- **Key types/functions**:
+  - Full N-dimensional coset scan computing A, D, L, E, M matrices for the quadratic b decomposition
+  - Critical point finding via Cramer's rule (3D case)
+  - Gauge freedom dimension = dim(ker(Gram)), typically 3 at TL_4
+- **Approximate size**: ~100 lines
+- **Notes**: At TL_4, the quadratic coefficient matrix M = 0, making b_fixpt purely AFFINE in gauge parameters with no unique critical point. Both -2 and -5/8 are reachable on this flat manifold. The delta-form breaks the gauge degeneracy by introducing a non-degenerate form.
+
+---
+
+## 14. Direct b Computation on Projective Covers (Demo 86)
+
+### 14.1 Restricted Hamiltonian Builder
+
+- **What it does**: Constructs L_H = -(e_0 + ... + e_{n-2}) restricted to an arbitrary left ideal subspace of TL_n, with verification that the subspace is actually L_H-invariant.
+- **Introduced in**: Demo 86
+- **Reused in**: (Demo 86 only)
+- **Key types/functions**:
+  - `build_restricted_hamiltonian(ideal, ideal_size, L_sub)` — builds the full algebra L_H first, then restricts to the ideal subspace by extracting the relevant rows/columns with index remapping; verifies invariance by checking that L_H maps ideal elements to ideal elements
+- **Approximate size**: ~60 lines
+- **Notes**: The ideal subspace is typically P_{0,0} from `left_ideal_closure`. Invariance verification catches bugs where the ideal is not actually a left module.
+
+### 14.2 Delta-Form b Computation (Shifted and Unshifted)
+
+- **What it does**: Computes the indecomposability parameter b on a restricted subspace (left ideal) using the delta-parameterized Gram matrix approach, at both integer eigenvalues (lambda=0, unshifted) and irrational eigenvalues (lambda≠0, shifted to double precision).
+- **Introduced in**: Demo 86
+- **Reused in**: (Demo 86 only — the approach universally diverges, so it is a negative-result asset)
+- **Key types/functions**:
+  - `compute_b_on_ideal(ideal, ideal_size, L_sub)` — integer arithmetic version for lambda=0: finds Jordan partners via ker(L_H^2)\ker(L_H), computes loop power matrix, extracts leading delta-power coefficients, tests valuation condition
+  - `compute_b_shifted(ideal, ideal_size, L_sub, lambda)` — double-precision version for irrational eigenvalues: same algorithm but with floating-point shifted operator M = L_sub - lambda*I
+  - `compute_loop_power(i, j, ideal, ideal_size, use_star)` — computes total loop count for G_delta[i][j] using either star (loop form, predicting b=-5/8) or direct (trace form, predicting b=-2) composition
+- **Approximate size**: ~150 lines
+- **Notes**: Universal negative result: the valuation condition p_tt = 2*p_Tt NEVER holds on a single P_{0,0} at any eigenvalue, any lattice size, either form. The multiplicity from the regular representation is structurally essential. This is a novel finding — nobody in the literature has tried this specific approach.
+
+---
+
+## 15. Null Indispensability and Direction Partition (Demo 87)
+
+### 15.1 Direction Partition Framework (DirPartition)
+
+- **What it does**: Builds the direction catalog from a quaternion catalog, then classifies each S² direction as null-only (all entries pointing there are bracket-null), non-null-only (all non-null), or shared (both types present). Returns a compact `DirPartition` struct summarizing the partition.
+- **Introduced in**: Demo 87
+- **Reused in**: Demo 88 (direction classification for perturbation sensitivity by type)
+- **Key types/functions**:
+  - `DirPartition` struct: `{total_dirs, null_only, nonnull_only, shared}` — compact partition summary
+  - `compute_dir_partition(cat_size)` — builds local direction catalog, per-direction null/non-null counts (`dir_null_cnt[]`, `dir_nonnull_cnt[]`), classifies each direction, returns `DirPartition`
+  - Operates on the global `is_null[]` array populated by `classify_null()`
+- **Approximate size**: ~80 lines
+- **Notes**: At zeta_8: 6 null-only + 3 shared + 4 non-null-only = 13 directions. At zeta_12: 67 null-only + 54 shared + 1922 non-null-only = 2043 directions. The partition reveals that null entries command exclusive S² directions unavailable to non-null entries — this is the geometric basis of null indispensability.
+
+### 15.2 Capacity Pipeline (find_capacity + CapResult)
+
+- **What it does**: Unified capacity measurement pipeline — builds direction catalog, runs XOR6 brute-force search then recursive extension through XOR8/10/12 with k-ladder, returns a compact result struct.
+- **Introduced in**: Demo 87
+- **Reused in**: Demo 88 (capacity measurement before/after perturbation), Demo 89 (depth-stratified capacity)
+- **Key types/functions**:
+  - `CapResult` struct: `{n_dirs, xor6, xor8, xor10, xor12, max_xor}` — reusable capacity result type
+  - `find_capacity(cat_size, bf_limit, CapResult *r)` — unified driver: builds dirs, runs `find_xor6(bf_limit)` + `find_recursive(4)` + `find_recursive(5)` + `find_recursive(6)` chain; fills CapResult
+  - Uses K_LADDER = {1, 6, 8, 10, 12, 16, 20, 24} for multi-resolution XOR testing
+- **Approximate size**: ~40 lines
+- **Notes**: The `bf_limit` parameter controls the brute-force window for XOR6 (first `bf_limit` entries in the catalog for triple search). Extension to XOR8+ uses all stored XOR6 winners. The pipeline pattern is reused in multiple demos for comparing capacity across catalog subsets (null-only, non-null-only, depth-filtered, perturbation-filtered).
+
+### 15.3 Phase-Modular Demo Structure
+
+- **What it does**: Organizes the demo into self-contained phase functions (phase1_catalog, phase2_capacity, phase3_direction_analysis, phase4_depth) each taking a root name as parameter, enabling the same analysis pipeline to run on multiple roots of unity.
+- **Introduced in**: Demo 87
+- **Reused in**: (Demo 87 only — but the pattern is adopted in D89-D92)
+- **Key types/functions**:
+  - `phase1_catalog(root_name)` — build closure, classify null, print summary
+  - `phase2_capacity(root_name)` — run find_capacity on full catalog and non-null subset, compare
+  - `phase3_direction_analysis(root_name)` — compute direction partition, print classification
+  - `phase4_depth(root_name)` — depth distribution cross-tabulated with null status
+- **Approximate size**: ~40 lines per phase
+- **Notes**: Each phase is independently callable and prints its own test assertions. This modular structure makes it easy to add new phases or skip phases during debugging.
+
+---
+
+## 16. Anti-Correlation and Spherical Design (Demo 88)
+
+### 16.1 Spherical Design Residual Function
+
+- **What it does**: Computes the spherical t-design residual for an arbitrary set of S² directions, using real spherical harmonics Y_lm evaluated via associated Legendre polynomials.
+- **Introduced in**: Demo 88
+- **Reused in**: Demo 90 (spherical harmonic decomposition for spectral inversion analysis)
+- **Key types/functions**:
+  - `design_residual(dirs, nd, t)` — computes max over all (l,m) with 1<=l<=t of |sum_i Y_l^m(dir_i)|; single scalar quality metric
+  - `assoc_legendre(l, m, x)` — associated Legendre polynomial P_l^m(x) via three-term recurrence; stable to l=16+
+  - `ylm_real(l, m, theta, phi)` — real spherical harmonic evaluation with normalization
+  - `factorial_d(n)`, `ylm_norm(l, m)` — helper functions for normalization constants
+- **Approximate size**: ~80 lines
+- **Notes**: The residual metric quantifies how far a point set is from a t-design. Key finding: the 13 zeta_8 directions have Res(t=6) = 2.225, among the worst for 13 points on S². Yet they are computationally optimal for DKC — establishing the anti-correlation between spherical design quality and computational power.
+
+### 16.2 Jacobi Eigendecomposition
+
+- **What it does**: Jacobi eigenvalue algorithm for small symmetric real matrices — iterative rotation sweeps that zero off-diagonal elements until convergence. Returns sorted eigenvalues (descending).
+- **Introduced in**: Demo 88
+- **Reused in**: (Demo 88 only — used for Gram eigenspectrum analysis)
+- **Key types/functions**:
+  - `jacobi_eigen(a, n, evals)` — in-place Jacobi rotation with convergence check; up to 200 iterations; eigenvalues sorted in descending order
+- **Approximate size**: ~60 lines
+- **Notes**: Used to analyze the |dot| Gram matrix of the 13 directions. Discovered golden ratio eigenvalue pairs (phi = 1.618, -phi+1 = -0.618) arising from the specific angular ratios of the three Oh (octahedral) orbits.
+
+### 16.3 Perturbation Sensitivity Framework
+
+- **What it does**: Applies Gaussian random perturbation to S² directions (selective by type: null-only, non-null-only, or all), measures XOR6 solution count change. Supports both unconstrained perturbation and constrained perturbation (angular clamp relative to original algebraic placement).
+- **Introduced in**: Demo 88
+- **Reused in**: (Demo 88 only)
+- **Key types/functions**:
+  - Gaussian direction perturbation: adds N(0,eps) noise to direction components, renormalize to unit sphere
+  - Selective perturbation by direction type (using `dir_type[]` from `classify_directions`)
+  - Constrained mode: clamps angular displacement from original algebraic direction to maximum eps degrees
+  - `normalize3(x, y, z)` — renormalize perturbed direction to unit sphere
+- **Approximate size**: ~60 lines
+- **Notes**: Key finding: non-null body-diagonal directions are the fragile computational anchors (8% loss at eps=10), while null edge-midpoint directions are flexible scaffolding (-2.4% loss at eps=10, actually improving computation). This inverted the prediction that null directions would be more sensitive.
+
+### 16.4 Simulated Annealing Optimizer
+
+- **What it does**: Temperature-decay random jitter optimizer that minimizes spherical design residual, with optional angular clamping for constrained optimization (null directions free, non-null clamped to max angular displacement).
+- **Introduced in**: Demo 88
+- **Reused in**: (Demo 88 only)
+- **Key types/functions**:
+  - Simulated annealing loop: 5000 steps with accept-if-better policy (T=0)
+  - Per-direction Gaussian jitter + renormalization
+  - Optional angular clamp: if direction type is non-null or shared, clamp displacement to max_deg degrees from original
+  - Residual evaluation via `design_residual` at each step
+- **Approximate size**: ~60 lines
+- **Notes**: Constrained optimization (nulls free, non-nulls clamped to 2 deg) achieves 48% design improvement with only 2.8% XOR loss. Unconstrained achieves 52% improvement with 6.4% loss. D72's Voronoi-only showed 89% loss under similar optimization — the k-ladder activation provides 14x better perturbation resilience.
+
+### 16.5 Direction Classification (`classify_directions`)
+
+- **What it does**: Extends the direction partition from Demo 87 with explicit per-direction type labels (null-only=0, shared=1, non-null-only=2), enabling type-selective perturbation, analysis, and constrained optimization.
+- **Introduced in**: Demo 88
+- **Reused in**: (Demo 88 only)
+- **Key types/functions**:
+  - `classify_directions(cat_size)` — builds per-direction null/non-null counts, assigns `dir_type[i]` for each direction, counts `n_null_only_dirs`, `n_shared_dirs`, `n_nonnull_only_dirs`
+  - `dir_type[]` array: 0=null-only, 1=shared, 2=non-null-only; used by perturbation framework and constrained optimizer
+- **Approximate size**: ~50 lines
+- **Notes**: At zeta_8: 6 null-only (cube edge midpoints), 3 shared (coordinate axes), 4 non-null-only (body diagonals). The three types form the three orbits of the octahedral symmetry group acting on RP².
+
+---
+
+## 17. Depth Law Mechanism (Demos 89-91)
+
+### 17.1 Depth-Stratified Subset Loaders
+
+- **What it does**: A family of subset-loading functions that extract specific depth slices or depth-filtered subsets from the saved catalog, enabling controlled experiments that isolate depth as a variable.
+- **Introduced in**: Demo 89
+- **Reused in**: Demo 90 (`load_deep`, `load_shallow`, `load_strided`, `load_random`), Demo 91 (`load_up_to_depth`)
+- **Key types/functions**:
+  - `load_single_depth(d)` — loads entries at exactly depth d into g_cat[]
+  - `load_cumulative(max_d)` — loads all entries up to depth max_d
+  - `load_random_from_depth(d, n)` — Fisher-Yates shuffle to select n random entries from depth d
+  - `load_random_full(n)` — n random entries from entire catalog
+  - `load_deep(n)` / `load_shallow(n)` / `load_strided(n)` / `load_random(n)` (Demo 90) — four strategies for N=564 comparative tests
+  - `load_up_to_depth(max_d)` (Demo 91, 92) — loads saved catalog up to depth max_d, returns loaded count
+- **Approximate size**: ~100 lines (all variants combined)
+- **Notes**: The subset-loading pattern is the key experimental infrastructure for the depth-law arc. By controlling which entries are loaded, each phase can isolate the effect of depth, size, or randomness on computational capacity.
+
+### 17.2 Pairwise Coherence Metrics
+
+- **What it does**: Computes mean absolute quaternion dot product across all pairs in a catalog subset — a measure of collective alignment/coherence. Used to test (and KILL) the hypothesis that pairwise quaternion alignment explains the depth law.
+- **Introduced in**: Demo 89
+- **Reused in**: (Demo 89 only — the hypothesis was killed)
+- **Key types/functions**:
+  - `qdot(p, q)` — absolute quaternion dot product |p.a*q.a + p.b*q.b + p.c*q.c + p.d*q.d|
+  - `mean_pairwise_qdot(cat_size)` — O(N²) mean over all pairs in g_cat[0..cat_size-1]
+- **Approximate size**: ~30 lines
+- **Notes**: Result: mean |qdot| is flat at ~0.42 across all depths and identical to random baseline. Pairwise coherence is NOT the mechanism for the depth law.
+
+### 17.3 Cayley Graph Density Analysis
+
+- **What it does**: Tests whether entries close in the Cayley graph (one generator step apart) are better for DKC computation than entries far apart. Counts Cayley edges within subsets and compares to XOR capacity.
+- **Introduced in**: Demo 89
+- **Reused in**: (Demo 89 only — the hypothesis was killed and INVERTED)
+- **Key types/functions**:
+  - `is_cayley_neighbor(a, b, gens, n_gens)` — tests whether quaternions a and b are one generator step apart (|a*g - b| < tol for some generator g)
+- **Approximate size**: ~30 lines
+- **Notes**: Same-depth entries have ZERO mutual Cayley edges (mathematically necessary from BFS construction). Deep-564 has 0 edges; strided-564 has 58. Yet deep beats strided on XOR capacity. The mechanism is ANTI-correlated with Cayley density.
+
+### 17.4 Angle and Direction Extractors
+
+- **What it does**: Extracts rotation angle in degrees from a quaternion, and Voronoi cell index from quaternion rotation axis. Used across multiple phases of the depth-law investigation.
+- **Introduced in**: Demo 89
+- **Reused in**: Demo 90 (`extract_angle`, `extract_axis`, `axis_dot`), Demo 92 (angle extraction)
+- **Key types/functions**:
+  - `extract_angle(q)` — full rotation angle in degrees [0, 360) from quaternion; handles non-unit quaternions via normalization
+  - `quat_vor(q)` — Voronoi cell index from quaternion rotation axis; used for shadow pair detection
+  - `extract_axis(q, ax, ay, az)` (Demo 90) — unit rotation axis from quaternion, sign-canonicalized
+  - `axis_dot(p, q)` (Demo 90) — dot product between rotation axes of two quaternions
+- **Approximate size**: ~40 lines
+- **Notes**: `extract_angle` and `extract_axis` together decompose a quaternion into its S¹ (angle) and S² (axis) components. This decomposition is the basis for axis cancellation analysis (Demo 90) and spectral decomposition (Demo 90 Phase 5).
+
+### 17.5 Paired Extension Framework (Shadow Pair Detector)
+
+- **What it does**: Detects "shadow pairs" in XOR winners — entries sharing the same Voronoi direction but differing in eigenvalue angle. Tests the nesting property: does removing a shadow element leave a valid lower-arity winner?
+- **Introduced in**: Demo 89 (Phase 11)
+- **Reused in**: (Demo 89 only — confirms D77's shadow pair structure at zeta_12)
+- **Key types/functions**:
+  - Shadow pair detection: for each winner tuple element, checks whether another element shares its Voronoi direction (same `quat_vor` value) but has a different angle
+  - Nesting test: remove shadow element, check whether remaining elements form a valid winner at (n_weights-1) level
+  - Reports: total winners, shadow count, shadow fraction, nesting verification
+- **Approximate size**: ~60 lines
+- **Notes**: At zeta_12 (275 entries, 114 dirs): XOR6 has 6% shadow pairs, XOR8 has 20%, with 100% nesting. At zeta_8 (24 entries, 13 dirs): 100% shadow pairs. The shift from shadow-dominant (sparse directions) to diversity-dominant (dense directions) is a key structural insight.
+
+### 17.6 Resolution Sweep Infrastructure (Demo 91)
+
+- **What it does**: Systematic sweep of activation resolution parameters (k_sec from 2 to 48, Voronoi direction counts from 2 to 114) at fixed catalog depth, measuring whether increased resolution enables higher XOR arity or just more solutions at the same arity.
+- **Introduced in**: Demo 91
+- **Reused in**: (Demo 91 only)
+- **Key types/functions**:
+  - `count_xor_winners(n_weights, bf_limit, k_sec)` — brute-force enumeration of all C(bf, n_weights) tuples that pass test_xor at a specific k_sec; supports 3/4/5-weight tuples
+  - `phase1_ksec_sweep()` — sweeps k_sec at fixed depth, measures XOR6/XOR8/XOR10 counts and max arity
+  - `phase2_voronoi_sweep()` — sweeps Voronoi direction count at fixed k_sec, measures capacity
+  - `phase3_depth_ksec_interaction()` — full 9×9 grid (depths 0-8 × k_sec 2-48), computes max arity + winner counts + depth gap analysis
+  - `build_dirs_from_saved(max_d)` — builds direction set from saved catalog up to a specific depth (not from current loaded catalog)
+- **Approximate size**: ~200 lines
+- **Notes**: Key finding: max_xor is INDEPENDENT of activation resolution (k_sec 2-48 all give max_xor=8 at depth 4). Resolution affects count (586 to 7652 XOR8 winners, ~13x), not existence. The depth gap (XOR6→XOR8) is invariant across all k_sec values. This confirms the balanced exponentials explanation: the wall is parity, not activation.
+
+---
+
+## 18. Sum-Angle Structure and Spectral Analysis (Demo 90)
+
+### 18.1 Sum-Angle Census
+
+- **What it does**: Computes all pairwise quaternion sum angles for a catalog subset, generates histogram, and counts distinct angles within tolerance. Used to characterize the distribution of sum angles across different subsets (deep, shallow, strided, random).
+- **Introduced in**: Demo 90
+- **Reused in**: (Demo 90 only)
+- **Key types/functions**:
+  - `sum_angle_census(label, out_n_distinct)` — computes all C(N,2) pairwise quaternion sums, extracts rotation angle of each sum, prints 12-bin histogram (0-180°), min/max/mean, and distinct count (via `count_distinct`)
+  - `entry_angle_census(label)` — individual entry angle statistics for comparison
+  - `count_distinct(angles, n, tol)` — counts distinct values within tolerance using `g_distinct[]` buffer (MAX_DISTINCT=2048)
+- **Approximate size**: ~80 lines
+- **Notes**: All subsets (deep, strided, shallow, random at N=564) produce 2048+ distinct pairwise sum angles. The discriminating feature is the distribution shape (deep skews toward 135-180°), not the count.
+
+### 18.2 Axis Cancellation Analysis
+
+- **What it does**: Compares axis alignment (rotation axis dot product) between XOR winners and random non-winners. Identifies anti-aligned axis pairs as the geometric mechanism of "algebraic coherence."
+- **Introduced in**: Demo 90 (Phase 2b)
+- **Reused in**: (Demo 90 only)
+- **Key types/functions**:
+  - `extract_axis(q, ax, ay, az)` — extracts unit rotation axis from quaternion (sign-canonicalized)
+  - `axis_dot(p, q)` — dot product between rotation axes; negative values indicate anti-alignment
+  - `phase2b_winning_anatomy()` — for XOR8 winners vs random non-winners, computes min_dot, mean_dot, and mean sum angle; reports statistical comparison
+- **Approximate size**: ~60 lines
+- **Notes**: XOR8 winners: mean(min_dot) = -0.75 vs -0.65 for non-winners. Anti-aligned axis pairs produce low sum angles (30-66°) needed for sector separation. This is the concrete geometric realization of "algebraic coherence."
+
+### 18.3 Cross-Depth Sum-Angle Vocabulary
+
+- **What it does**: Analyzes how the sum-angle vocabulary grows across depth levels. Measures distinct pairwise sum angles for shallow×shallow, deep×deep, and (critically) generator×deep cross-depth pairs.
+- **Introduced in**: Demo 90 (Phases 2c, 2d, 2e)
+- **Reused in**: (Demo 90 only)
+- **Key types/functions**:
+  - `phase2c_cross_depth_sum_angles()` — shallow×shallow vs deep×deep vs cross-depth angle count comparison
+  - `phase2d_cross_depth_by_level()` — per-depth-level vocabulary growth: computes gen × depth_d pairwise sum angles, tracks cumulative distinct set, measures growth rate
+  - Phase 2e: low-angle (<70°) tail analysis — exponential growth but shrinking fraction
+- **Approximate size**: ~100 lines
+- **Notes**: Key finding: generator × deep-entry sums produce only 73 distinct angles from 50K pairs, vs 1313 for deep × deep. BFS-derived entries have constrained pairwise sums with their ancestors — this is the algebraic constraint underlying the depth law.
+
+### 18.4 Spherical Harmonic Decomposition of S² Point Cloud
+
+- **What it does**: Full spherical harmonic power spectrum P(l) = sum_m f_lm^2 of the S² point cloud of rotation axes, per depth level and cumulative. Computes bandwidth metrics BW_90% and BW_99% (minimum l capturing that fraction of total power).
+- **Introduced in**: Demo 90 (Phase 5)
+- **Reused in**: (Demo 90 only)
+- **Key types/functions**:
+  - `assoc_legendre(l, m, x)` — associated Legendre polynomial (same implementation as Demo 88)
+  - `ylm_real(l, m, theta, phi)` — real spherical harmonic evaluation, LMAX=16 (289 coefficients)
+  - `cart_to_sph(ax, ay, az, theta, phi)` — Cartesian to spherical coordinate conversion
+  - `phase5_spectral_decomposition()` — per-depth and cumulative spectral tables with BW_90% and BW_99% bandwidth
+- **Approximate size**: ~100 lines
+- **Notes**: Key finding (SPECTRAL INVERSION): bandwidth DECREASES with depth. BW_90% drops from l=4 (depth 0) to l=2 (cumulative). The point cloud converges to uniform (l=0 dominant). Computational power grows while positional information content SHRINKS — proving the depth law mechanism is relational (axis cancellation, cross-depth constraints), not positional.
+
+---
+
+## 19. Function Scaling and Parity Lock (Demo 92)
+
+### 19.1 Generalized Boolean Function Tester
+
+- **What it does**: Tests whether a weight tuple computes an arbitrary Boolean function (not just XOR) by checking whether the combined_cell activation separates class-0 from class-1 masks as defined by any truth table.
+- **Introduced in**: Demo 92
+- **Reused in**: (foundational for future encoding design and function-targeting work)
+- **Key types/functions**:
+  - `test_bool_func(indices, n_weights, k_sec, truth_table)` — generalized test: for each input mask, computes quaternion sum, maps through combined_cell activation, checks whether all masks in each cell have the same truth value according to the provided truth table. Returns 1 if separable, 0 if not.
+  - `count_bool_winners(n_weights, bf_limit, truth_table)` — counts weight tuples achieving a given Boolean function across the short k-ladder {6, 12, 24}; supports 3/4/5-weight tuples
+- **Approximate size**: ~80 lines
+- **Notes**: Generalizes the XOR-specific `test_xor` used in D78-D91 to arbitrary Boolean functions. The truth table is passed as an integer array indexed by mask. This is the key tool for proving that AND/OR/MAJ are structurally impossible under the +/-q encoding.
+
+### 19.2 Truth Table Generators
+
+- **What it does**: Generates truth tables for standard Boolean functions given n_inputs: XOR, AND, OR, MAJ (majority), and THRESHOLD-k.
+- **Introduced in**: Demo 92
+- **Reused in**: (foundational for future Boolean function exploration)
+- **Key types/functions**:
+  - `make_xor_tt(tt, n_inputs)` — popcount mod 2
+  - `make_and_tt(tt, n_inputs)` — all bits set
+  - `make_or_tt(tt, n_inputs)` — any bit set
+  - `make_maj_tt(tt, n_inputs)` — popcount > n/2
+  - `make_threshold_tt(tt, n_inputs, k)` — popcount >= k
+  - `popcount(x)` — bit population count helper
+- **Approximate size**: ~50 lines
+- **Notes**: XOR is the only function where f(0...0) = f(1...1) (both 0 for even-length inputs). This property is what makes XOR uniquely compatible with the +/-q encoding where masks 0...0 and 1...1 produce identical quaternion sums (both zero).
+
+### 19.3 Equivalence Class Analysis
+
+- **What it does**: Analyzes the 3^k equivalence classes induced by the +/-q encoding (per-weight effective states {-q, 0, +q}), checking each standard Boolean function for constancy on each class to identify structural impossibilities.
+- **Introduced in**: Demo 92 (Phase 1d)
+- **Reused in**: (Demo 92 only)
+- **Key types/functions**:
+  - `phase1d_class_analysis()` — enumerates all 27 (=3^3) equivalence classes for 3 weights; for each class computes the set of masks it contains; checks XOR/AND/OR/MAJ for constancy on each class; reports conflict counts and cell assignments
+- **Approximate size**: ~80 lines
+- **Notes**: XOR has 0/27 class conflicts (constant on all classes). AND has 1/27 (class (0,0,0) contains masks 000000 and 111111, which have different AND values). MAJ has 19/27 — the most conflicts. The encoding creates a quotient structure that perfectly preserves parity but destroys all non-parity functions.
+
+### 19.4 Separability Checker and Truth Table Census
+
+- **What it does**: Checks whether a given cell-labeling can separate a truth table (all masks in each cell have the same truth value), and runs Monte Carlo census of separability across random weight triples.
+- **Introduced in**: Demo 92 (Phases 1b, 1c)
+- **Reused in**: (Demo 92 only)
+- **Key types/functions**:
+  - `check_separability(cell_labels, truth_table, n_masks)` — checks whether the cell labeling is consistent with the truth table
+  - `phase1b_truth_table_census()` — 10,000 random 3-weight triples; tests XOR/AND/OR/MAJ separability; reports fraction separable
+  - `phase1c_mask_collisions()` — exhaustive pairwise collision check (C(64,2) pairs), classifies by parity agreement; confirms same-parity-only collision structure
+  - `tt_equal(a, b, n)` — truth table equality check
+- **Approximate size**: ~100 lines
+- **Notes**: 83.7% of random triples are XOR6-separable. AND/OR/MAJ = 0.0% each. 76 exact quaternion-sum collisions, ALL 76 same-parity (0 cross-parity). The parity-lock is structural, not statistical.
+
+### 19.5 Sign-Flip Symmetry Decomposition
+
+- **What it does**: Decomposes the combined_cell activation into its sector (S¹) and Voronoi (S²) components, then verifies that sign-flipped sums (+S and -S) produce identical cell assignments — establishing a second parity-lock mechanism.
+- **Introduced in**: Demo 92 (Phase 1e)
+- **Reused in**: (Demo 92 only — feeds into D93 complement-blindness theorem)
+- **Key types/functions**:
+  - `sector_of(sa, sb, sc, sd, k_sec)` — extracts angular sector index from quaternion sum
+  - `voronoi_of(sa, sb, sc, sd)` — extracts Voronoi cell index from quaternion sum
+  - `phase1e_sign_flip_symmetry()` — checks all 13 sign-flip pairs for sector/Voronoi/cell/parity agreement; also multi-triple analysis comparing winners vs non-winners on distinct cell count
+- **Approximate size**: ~60 lines
+- **Notes**: All 13 sign-flip pairs map to identical sector, Voronoi cell, combined cell, and parity. This is provable from the combined_cell code: normalization by |qa| maps S and -S identically. XOR winners use 11-13 distinct cells (of 27 classes); non-winners use 6-11.
+
+---
+
 ## Cross-Cutting Patterns
 
 ### Copy-Paste Codebase Pattern
@@ -1539,9 +2016,9 @@ Every new computation method is cross-validated against prior oracles:
 - Exact Cyc8 validates float Cx (Demo 29)
 - Two-prime cross-validation for cubic field results (Demo 60)
 
-### Quaternionic / S^2 Arc Architecture (Demos 66-82)
+### Quaternionic / S^2 Arc Architecture (Demos 66-92)
 
-Demos 66-71 establish the foundation; Demos 72-82 extend it into a full capacity theory:
+Demos 66-71 establish the foundation; Demos 72-84 extend it into a full capacity theory; Demos 85-86 establish TL algebra representation theory; Demos 87-92 investigate mechanism and limits:
 
 **Foundation arc (D66-D71):**
 1. Generate the SU(2) braid representation (D66) — produces exactly 24 quaternions (24-cell / binary octahedral group)
@@ -1551,7 +2028,7 @@ Demos 66-71 establish the foundation; Demos 72-82 extend it into a full capacity
 5. Confirm direction nesting across cyclotomic roots — zeta_8 is the computational sweet spot (D69)
 6. Analyze spectral structure: l=6 bandwidth threshold = 13=13 theorem (D71)
 
-**Extension arc (D72-D82):**
+**Extension arc (D72-D84):**
 7. Prove the 13 directions are geometrically worst (t=0 design) yet algebraically optimal (D72); confirm anti-correlation between sampling quality and computational quality
 8. Characterize DKC as a near-finite-automaton: 82.8% universal determinism, additive not multiplicative (D73)
 9. Prove Kauffman bracket and Voronoi cell are incomparable invariants; identify 6 computational orbit types (D74)
@@ -1566,7 +2043,21 @@ Demos 66-71 establish the foundation; Demos 72-82 extend it into a full capacity
 18. Prove Jones normalization costs exactly 2 XOR levels at all tested roots; writhe and depth are independent additive resources; framing is not a bookkeeping artifact — it is one discrete computational unit (D83)
 19. Prove bracket-null entries (Re(q)=0) are indispensable: they hold 6 S² directions unavailable to non-null entries; removing them drops capacity from XOR8 to XOR6, below the random-subset baseline; connect to LCFT Jordan-cell structure and Reservoir Computing null-state hypothesis (D84)
 
-Key progression: D65 S^1 k=24 → D66 S^3 25 cells → D67 S^2 14 cells → D68 R^2 visualization only → D72-73 algebraic structure analysis → D74 incomparability theorem → D75-77 binocular + product activation → D78-79 wall confirmation + ζ₁₂ breakthrough → D80 ADE survey → D81-82 scaling laws → D83 framing as resource → D84 null-state anatomy.
+**Representation theory branch (D85-D86):**
+20. Full TL algebra infrastructure: diagram basis, multiplication table, star anti-involution, left ideal closure, projective cover construction. Compute b = -5/8 exactly at TL_4 via leading-coefficient extraction from delta-parameterized Gram matrix (D85). Falsify Gemini's claim about standard-module Jordan blocks.
+21. Attempt direct b computation on single P_{0,0} — UNIVERSAL DIVERGENCE at all eigenvalues, all lattice sizes, both forms. Multiplicity from the regular representation is structurally essential, not a scale factor (D86). Novel negative result.
+
+**Depth law mechanism arc (D87-D91):**
+22. Null dispensability at zeta_12: removing 121 null entries preserves full XOR capacity. Regime transition between finite groups (nulls critical) and infinite groups (nulls redundant). Direction density is the control parameter (D87).
+23. Anti-correlation mechanism: non-null body-diagonal directions are rigid computational anchors; null edge-midpoint directions are flexible scaffolding. K-ladder provides 14x better perturbation resilience than Voronoi-only (6.4% vs 89% loss). Constrained optimization captures 92% of design improvement at 56% less computational cost (D88).
+24. Systematic elimination of 8 depth-law hypotheses: KILL pairwise coherence, direction coverage, Cayley density, sector diversity, angle coherence. Paired extension is real but minority (6-20% at ζ₁₂). Algebraic coherence remains the open question (D89).
+25. Depth law mechanism FOUND: axis cancellation (anti-aligned axes → low sum angles) + cross-depth algebraic constraints (BFS ancestry → limited sum-angle vocabulary). Spectral inversion: S² point cloud bandwidth DECREASES with depth while computation INCREASES. Mechanism is relational, not positional (D90).
+26. Activation is NOT the bottleneck: max_xor invariant across k_sec 2-48 and direction counts 2-114. Resolution affects count, not existence. Balanced exponentials confirmed: supply ~2x/depth, demand 4x/weight → slope 1 (D91).
+
+**Function scaling (D92):**
+27. Parity-Lock Theorem: the +/-q encoding is structurally parity-locked — XOR/XNOR are the ONLY computable functions. AND/OR/MAJ = 0 winners at ALL depths. 6-part proof: (0,0)≡(1,1) collision, 3^k equivalence classes, sign-flip symmetry. Encoding concentrates on the hardest function (outside AC^0) (D92).
+
+Key progression: D65 S^1 k=24 → D66 S^3 25 cells → D67 S^2 14 cells → D68 R^2 visualization only → D72-73 algebraic structure analysis → D74 incomparability theorem → D75-77 binocular + product activation → D78-79 wall confirmation + ζ₁₂ breakthrough → D80 ADE survey → D81-82 scaling laws → D83 framing as resource → D84 null-state anatomy → D85-86 TL representation theory (b = -5/8 + universal divergence on P_{0,0}) → D87-88 null dispensability + anti-correlation → D89-91 depth law mechanism (axis cancellation + parity wall) → D92 parity-lock theorem.
 
 ### Catalog Size Summary
 | Ring | Delta | Catalog | Distinct Values |
