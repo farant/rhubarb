@@ -1,0 +1,500 @@
+/*
+ * KNOTAPEL D105 Supplement: Retroactive Rank Computation
+ * ======================================================
+ *
+ * Compute raw rank and sign-rank for D99b/D100/D101 catalogs.
+ *
+ * D99b: Delta_1 (TL_3, dim=2) -> 16 components
+ * D100: W_{4,2} (TL_4, dim=3) -> 36 components
+ * D101: W_{5,3} (TL_5, dim=4) -> 64 components
+ *
+ * All three use the same TL pattern: tridiagonal path graph.
+ * Reuses D105's MatN + Cyc8 infrastructure.
+ *
+ * C89, zero dependencies.
+ */
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+/* ================================================================
+ * Cyc8: Z[zeta_8], basis {1, z, z^2, z^3}, z^4 = -1
+ * ================================================================ */
+
+typedef struct { long a, b, c, d; } Cyc8;
+
+static Cyc8 cyc8_make(long a, long b, long c, long d) {
+    Cyc8 z; z.a = a; z.b = b; z.c = c; z.d = d; return z;
+}
+static Cyc8 cyc8_one(void)  { return cyc8_make(1,0,0,0); }
+
+static Cyc8 cyc8_add(Cyc8 x, Cyc8 y) {
+    return cyc8_make(x.a+y.a, x.b+y.b, x.c+y.c, x.d+y.d);
+}
+static Cyc8 cyc8_mul(Cyc8 x, Cyc8 y) {
+    return cyc8_make(
+        x.a*y.a - x.b*y.d - x.c*y.c - x.d*y.b,
+        x.a*y.b + x.b*y.a - x.c*y.d - x.d*y.c,
+        x.a*y.c + x.b*y.b + x.c*y.a - x.d*y.d,
+        x.a*y.d + x.b*y.c + x.c*y.b + x.d*y.a);
+}
+static int cyc8_eq(Cyc8 x, Cyc8 y) {
+    return x.a==y.a && x.b==y.b && x.c==y.c && x.d==y.d;
+}
+
+/* ================================================================
+ * MatN: variable-dimension matrix over Cyc8
+ * ================================================================ */
+
+#define MAX_DIM 4  /* largest is D101 dim=4 */
+
+static int g_dim = 2;
+
+typedef struct { Cyc8 m[MAX_DIM][MAX_DIM]; } MatN;
+
+static MatN matN_zero(void) {
+    MatN r;
+    memset(&r, 0, sizeof(MatN));
+    return r;
+}
+
+static MatN matN_identity(void) {
+    MatN r;
+    int i;
+    memset(&r, 0, sizeof(MatN));
+    for (i = 0; i < g_dim; i++)
+        r.m[i][i] = cyc8_one();
+    return r;
+}
+
+static void matN_mul_to(const MatN *p, const MatN *q, MatN *out) {
+    int i, j, k;
+    memset(out, 0, sizeof(MatN));
+    for (i = 0; i < g_dim; i++)
+        for (j = 0; j < g_dim; j++)
+            for (k = 0; k < g_dim; k++)
+                out->m[i][j] = cyc8_add(out->m[i][j],
+                    cyc8_mul(p->m[i][k], q->m[k][j]));
+}
+
+static int matN_eq(const MatN *p, const MatN *q) {
+    int i, j;
+    for (i = 0; i < g_dim; i++)
+        for (j = 0; j < g_dim; j++)
+            if (!cyc8_eq(p->m[i][j], q->m[i][j])) return 0;
+    return 1;
+}
+
+static MatN matN_add(const MatN *p, const MatN *q) {
+    MatN r;
+    int i, j;
+    memset(&r, 0, sizeof(MatN));
+    for (i = 0; i < g_dim; i++)
+        for (j = 0; j < g_dim; j++)
+            r.m[i][j] = cyc8_add(p->m[i][j], q->m[i][j]);
+    return r;
+}
+
+static MatN matN_scale(Cyc8 s, const MatN *p) {
+    MatN r;
+    int i, j;
+    memset(&r, 0, sizeof(MatN));
+    for (i = 0; i < g_dim; i++)
+        for (j = 0; j < g_dim; j++)
+            r.m[i][j] = cyc8_mul(s, p->m[i][j]);
+    return r;
+}
+
+static long matN_max_abs(const MatN *m) {
+    long mx = 0, v;
+    int i, j;
+    for (i = 0; i < g_dim; i++)
+        for (j = 0; j < g_dim; j++) {
+            v = m->m[i][j].a; if (v<0) v=-v; if(v>mx) mx=v;
+            v = m->m[i][j].b; if (v<0) v=-v; if(v>mx) mx=v;
+            v = m->m[i][j].c; if (v<0) v=-v; if(v>mx) mx=v;
+            v = m->m[i][j].d; if (v<0) v=-v; if(v>mx) mx=v;
+        }
+    return mx;
+}
+
+/* ================================================================
+ * Hash table for BFS deduplication
+ * ================================================================ */
+
+#define MAX_CAT 32768
+#define HASH_SIZE 65537
+
+static MatN *g_cat;
+static int   g_depth[MAX_CAT];
+static int   g_writhe[MAX_CAT];
+static int   g_cat_size = 0;
+
+static int g_hash_head[HASH_SIZE];
+static int g_hash_next[MAX_CAT];
+
+static unsigned long hash_matN(const MatN *m) {
+    unsigned long h = 2166136261UL;
+    int i, j;
+    for (i = 0; i < g_dim; i++)
+        for (j = 0; j < g_dim; j++) {
+            h = (h * 1000003UL) ^ (unsigned long)m->m[i][j].a;
+            h = (h * 1000003UL) ^ (unsigned long)m->m[i][j].b;
+            h = (h * 1000003UL) ^ (unsigned long)m->m[i][j].c;
+            h = (h * 1000003UL) ^ (unsigned long)m->m[i][j].d;
+        }
+    return h;
+}
+
+static void hash_init(void) {
+    memset(g_hash_head, -1, sizeof(g_hash_head));
+}
+
+static int hash_find(const MatN *m) {
+    int bucket = (int)(hash_matN(m) % (unsigned long)HASH_SIZE);
+    int idx = g_hash_head[bucket];
+    while (idx >= 0) {
+        if (matN_eq(&g_cat[idx], m)) return idx;
+        idx = g_hash_next[idx];
+    }
+    return -1;
+}
+
+static void hash_insert(int cat_idx) {
+    int bucket = (int)(hash_matN(&g_cat[cat_idx]) % (unsigned long)HASH_SIZE);
+    g_hash_next[cat_idx] = g_hash_head[bucket];
+    g_hash_head[bucket] = cat_idx;
+}
+
+/* ================================================================
+ * TL + Braid generator infrastructure
+ * ================================================================ */
+
+#define MAX_TL 4  /* max n-1 TL generators */
+#define MAX_GEN 8 /* max 2*(n-1) braid generators */
+
+static MatN g_e[MAX_TL];
+static Cyc8 g_A, g_A_inv;
+static MatN g_gen[MAX_GEN];
+static int g_gen_writhe[MAX_GEN];
+static int g_n_tl = 0;
+static int g_n_gen = 0;
+
+/*
+ * Build tridiagonal TL generators for any j>0 module.
+ * Pattern for W_{n,j} with dim = n_tl:
+ *   e_1: m[0][1] = 1
+ *   e_i (middle): m[i-1][i-2] = 1, m[i-1][i] = 1
+ *   e_last: m[dim-1][dim-2] = 1
+ *
+ * Actually more precisely for the path graph:
+ *   e_1: m[0][1] = 1
+ *   e_2: m[1][0] = 1, m[1][2] = 1  (if dim>=3)
+ *   e_3: m[2][1] = 1, m[2][3] = 1  (if dim>=4)
+ *   e_k: m[k-1][k-2] = 1 (end generator)
+ */
+static void build_tridiag_tl(int n_tl) {
+    int gen;
+    g_n_tl = n_tl;
+
+    for (gen = 0; gen < n_tl; gen++) {
+        g_e[gen] = matN_zero();
+        if (gen == 0) {
+            /* First: m[0][1] = 1 */
+            g_e[gen].m[0][1] = cyc8_one();
+        } else if (gen == n_tl - 1 && n_tl > 1) {
+            /* Last: m[dim-1][dim-2] = 1 */
+            g_e[gen].m[gen][gen-1] = cyc8_one();
+        } else {
+            /* Middle: m[gen][gen-1] = 1, m[gen][gen+1] = 1 */
+            g_e[gen].m[gen][gen-1] = cyc8_one();
+            g_e[gen].m[gen][gen+1] = cyc8_one();
+        }
+    }
+}
+
+static void build_braid_gen(void) {
+    int i;
+    MatN id_mat = matN_identity();
+    MatN a_id = matN_scale(g_A, &id_mat);
+    MatN ai_id = matN_scale(g_A_inv, &id_mat);
+
+    g_n_gen = 2 * g_n_tl;
+    for (i = 0; i < g_n_tl; i++) {
+        MatN ai_e = matN_scale(g_A_inv, &g_e[i]);
+        MatN a_e  = matN_scale(g_A, &g_e[i]);
+        g_gen[2*i]     = matN_add(&a_id, &ai_e);
+        g_gen[2*i + 1] = matN_add(&ai_id, &a_e);
+        g_gen_writhe[2*i] = 1;
+        g_gen_writhe[2*i + 1] = -1;
+    }
+}
+
+/* ================================================================
+ * BFS catalog builder
+ * ================================================================ */
+
+static void build_catalog(void) {
+    int prev, gi, i, rd;
+    MatN prod;
+
+    g_cat_size = 0;
+    hash_init();
+
+    g_cat[0] = matN_identity();
+    g_depth[0] = 0;
+    g_writhe[0] = 0;
+    hash_insert(0);
+    g_cat_size = 1;
+
+    printf("    Round 0: 1 entry\n");
+
+    rd = 1;
+    do {
+        long round_max = 0;
+        prev = g_cat_size;
+        for (i = 0; i < prev && g_cat_size < MAX_CAT; i++) {
+            if (g_depth[i] != rd - 1) continue;
+            for (gi = 0; gi < g_n_gen && g_cat_size < MAX_CAT; gi++) {
+                long mabs;
+                matN_mul_to(&g_cat[i], &g_gen[gi], &prod);
+                if (hash_find(&prod) < 0) {
+                    mabs = matN_max_abs(&prod);
+                    if (mabs > round_max) round_max = mabs;
+                    g_cat[g_cat_size] = prod;
+                    g_depth[g_cat_size] = rd;
+                    g_writhe[g_cat_size] = g_writhe[i] + g_gen_writhe[gi];
+                    hash_insert(g_cat_size);
+                    g_cat_size++;
+                }
+            }
+        }
+        if (g_cat_size > prev)
+            printf("    Round %d: %d entries (+%d), max_abs=%ld\n",
+                   rd, g_cat_size, g_cat_size - prev, round_max);
+        rd++;
+    } while (g_cat_size > prev && g_cat_size < MAX_CAT && rd <= 50);
+
+    if (g_cat_size == prev)
+        printf("    GROUP CLOSED at %d entries\n", g_cat_size);
+    else if (g_cat_size >= MAX_CAT)
+        printf("    HIT CAP at %d entries\n", MAX_CAT);
+}
+
+/* ================================================================
+ * Rank computation (Gaussian elimination over Z)
+ * ================================================================ */
+
+#define MAX_COLS 64  /* max for dim=4: 4*4*4=64 */
+
+static int compute_rank(int n_entries, int sign_mode) {
+    static long basis[MAX_COLS][MAX_COLS];
+    int n_cols = g_dim * g_dim * 4;
+    int rank = 0;
+    int ei, col, r;
+
+    memset(basis, 0, sizeof(basis));
+
+    for (ei = 0; ei < n_entries; ei++) {
+        long row[MAX_COLS];
+        int ci = 0;
+        int i, j;
+
+        memset(row, 0, sizeof(row));
+        for (i = 0; i < g_dim; i++)
+            for (j = 0; j < g_dim; j++) {
+                if (sign_mode) {
+                    row[ci++] = g_cat[ei].m[i][j].a > 0 ? 2 : (g_cat[ei].m[i][j].a < 0 ? 0 : 1);
+                    row[ci++] = g_cat[ei].m[i][j].b > 0 ? 2 : (g_cat[ei].m[i][j].b < 0 ? 0 : 1);
+                    row[ci++] = g_cat[ei].m[i][j].c > 0 ? 2 : (g_cat[ei].m[i][j].c < 0 ? 0 : 1);
+                    row[ci++] = g_cat[ei].m[i][j].d > 0 ? 2 : (g_cat[ei].m[i][j].d < 0 ? 0 : 1);
+                } else {
+                    row[ci++] = g_cat[ei].m[i][j].a;
+                    row[ci++] = g_cat[ei].m[i][j].b;
+                    row[ci++] = g_cat[ei].m[i][j].c;
+                    row[ci++] = g_cat[ei].m[i][j].d;
+                }
+            }
+
+        for (r = 0; r < rank; r++) {
+            int lead = -1;
+            for (col = 0; col < n_cols; col++) {
+                if (basis[r][col] != 0) { lead = col; break; }
+            }
+            if (lead < 0) continue;
+            if (row[lead] != 0) {
+                long rf = row[lead];
+                long bf = basis[r][lead];
+                for (col = 0; col < n_cols; col++)
+                    row[col] = row[col] * bf - basis[r][col] * rf;
+            }
+        }
+
+        {
+            int is_zero = 1;
+            for (col = 0; col < n_cols; col++) {
+                if (row[col] != 0) { is_zero = 0; break; }
+            }
+
+            if (!is_zero && rank < n_cols) {
+                long g = 0;
+                for (col = 0; col < n_cols; col++) {
+                    long v = row[col] < 0 ? -row[col] : row[col];
+                    if (v > 0) {
+                        if (g == 0) g = v;
+                        else {
+                            long aa = g, bb = v;
+                            while (bb != 0) {
+                                long t = bb;
+                                bb = aa % bb;
+                                aa = t;
+                            }
+                            g = aa;
+                        }
+                    }
+                }
+                if (g > 1) {
+                    for (col = 0; col < n_cols; col++)
+                        row[col] /= g;
+                }
+                for (col = 0; col < n_cols; col++)
+                    basis[rank][col] = row[col];
+                rank++;
+                if (rank >= n_cols) break;
+            }
+        }
+    }
+
+    return rank;
+}
+
+/* ================================================================
+ * Run one module
+ * ================================================================ */
+
+static void run_module(const char *label, int dim, int n_tl) {
+    int n_cols = dim * dim * 4;
+    int n_entries;
+    int raw_rank, sign_rank;
+
+    printf("\n--- %s (dim=%d, %d cols) ---\n\n", label, dim, n_cols);
+
+    g_dim = dim;
+    g_n_tl = n_tl;
+
+    build_tridiag_tl(n_tl);
+    g_A = cyc8_make(0, -1, 0, 0);
+    g_A_inv = cyc8_make(0, 0, 0, 1);
+    build_braid_gen();
+
+    /* Verify e_i^2 = 0 */
+    {
+        MatN prod, zero_m;
+        int ei;
+        zero_m = matN_zero();
+        for (ei = 0; ei < n_tl; ei++) {
+            matN_mul_to(&g_e[ei], &g_e[ei], &prod);
+            if (!matN_eq(&prod, &zero_m)) {
+                printf("  FAIL: e_%d^2 != 0\n", ei+1);
+                return;
+            }
+        }
+        printf("  PASS: All e_i^2 = 0 (delta=0)\n");
+    }
+
+    build_catalog();
+
+    n_entries = g_cat_size < 1024 ? g_cat_size : 1024;
+    raw_rank = compute_rank(n_entries, 0);
+    sign_rank = compute_rank(n_entries, 1);
+
+    printf("\n  Raw rank:  %d / %d (%.1f%%)\n",
+           raw_rank, n_cols, 100.0 * (double)raw_rank / (double)n_cols);
+    printf("  Sign-rank: %d / %d (%.1f%%)\n",
+           sign_rank, n_cols, 100.0 * (double)sign_rank / (double)n_cols);
+
+    if (sign_rank > raw_rank)
+        printf("  => Sign EXPANSION (ratio %.2fx)\n",
+               (double)sign_rank / (double)raw_rank);
+    else if (sign_rank == raw_rank)
+        printf("  => Sign quantization LOSSLESS\n");
+    else
+        printf("  => Sign COMPRESSION (ratio %.2fx)\n",
+               (double)sign_rank / (double)raw_rank);
+}
+
+/* ================================================================
+ * Main
+ * ================================================================ */
+
+int main(void) {
+    printf("KNOTAPEL D105 Supplement: Retroactive Rank Computation\n");
+    printf("======================================================\n");
+
+    g_cat = (MatN *)malloc((size_t)MAX_CAT * sizeof(MatN));
+    if (!g_cat) {
+        printf("FATAL: malloc failed\n");
+        return 1;
+    }
+
+    /* D99b: Delta_1, TL_3, dim=2
+     * 2 TL generators (e_1, e_2), 4 braid generators
+     * e_1: m[0][1]=1, e_2: m[1][0]=1 */
+    run_module("D99b: Delta_1 (TL_3)", 2, 2);
+
+    /* D100: W_{4,2}, TL_4, dim=3
+     * 3 TL generators (e_1, e_2, e_3), 6 braid generators */
+    run_module("D100: W_{4,2} (TL_4)", 3, 3);
+
+    /* D101: W_{5,3}, TL_5, dim=4
+     * 4 TL generators (e_1..e_4), 8 braid generators */
+    run_module("D101: W_{5,3} (TL_5)", 4, 4);
+
+    /* Also include D102/D105 for comparison table */
+    printf("\n\n=== Summary Table ===\n");
+    printf("  %-20s  %4s  %4s  %6s  %6s  %6s  %6s\n",
+           "Module", "dim", "cols", "raw", "sign", "raw%", "exp");
+    printf("  --------------------  ----  ----  ------  ------  ------  ------\n");
+
+    /* Re-run each quickly just for the numbers */
+    {
+        int dims[]  = {2, 3, 4};
+        int n_tls[] = {2, 3, 4};
+        const char *names[] = {"D99b: Delta_1", "D100: W_{4,2}", "D101: W_{5,3}"};
+        int mi;
+
+        for (mi = 0; mi < 3; mi++) {
+            int dim = dims[mi];
+            int n_cols = dim * dim * 4;
+            int n_entries, raw, sign;
+
+            g_dim = dim;
+            build_tridiag_tl(n_tls[mi]);
+            g_A = cyc8_make(0, -1, 0, 0);
+            g_A_inv = cyc8_make(0, 0, 0, 1);
+            build_braid_gen();
+            build_catalog();
+
+            n_entries = g_cat_size < 1024 ? g_cat_size : 1024;
+            raw = compute_rank(n_entries, 0);
+            sign = compute_rank(n_entries, 1);
+
+            printf("  %-20s  %4d  %4d  %6d  %6d  %5.1f%%  %5.2fx\n",
+                   names[mi], dim, n_cols, raw, sign,
+                   100.0 * (double)raw / (double)n_cols,
+                   raw > 0 ? (double)sign / (double)raw : 0.0);
+        }
+
+        /* D102/D105 values from previous runs */
+        printf("  %-20s  %4d  %4d  %6d  %6d  %5.1f%%  %5.2fx\n",
+               "D102: W_{6,0}", 5, 100, 100, 100, 100.0, 1.00);
+        printf("  %-20s  %4d  %4d  %6d  %6d  %5.1f%%  %5.2fx\n",
+               "D104: W_{6,2}", 9, 324, 244, 292, 75.3, 1.20);
+        printf("  %-20s  %4d  %4d  %6d  %6d  %5.1f%%  %5.2fx\n",
+               "D105: W_{8,0}", 14, 784, 274, 425, 34.9, 1.55);
+    }
+
+    free(g_cat);
+    return 0;
+}

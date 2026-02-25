@@ -1,0 +1,1870 @@
+/*
+ * KNOTAPEL DEMO 102: 6-Strand Radical A/B Test
+ * =============================================
+ *
+ * Head-to-head: W_{6,0} (simple, dim=5) vs W_{6,4} (non-simple, dim=5, rad=1)
+ * Both on B_6 (6-strand braid group), both at delta=0.
+ * The ONLY structural difference: W_{6,4} has a 1-dim radical.
+ *
+ * 13 pre-computation predictions registered:
+ *   P1:  W_{6,4} radical dim = 1
+ *   P2:  sigma_i * r = A * r (writhe character on generators)
+ *   P3:  W_{6,0} generators sparser than W_{6,4}  [ALREADY KNOWN FALSE]
+ *   P4:  W_{6,0} radical dim = 0
+ *   P5:  Growth ~ 5x per BFS round for both
+ *   P6:  Frozen radical: M*r = A^{writhe} * r for ALL catalog entries
+ *   P7:  radical_content L1 constant across W_{6,4} catalog
+ *   P8:  W_{6,4} outperforms W_{6,0} by >= 2 XOR levels
+ *   P9:  W_{6,0} Casimir inversion at high XOR, W_{6,4} no inversion
+ *   P10: W_{6,0} commuting hubs, W_{6,4} non-commuting hubs
+ *   P11: Commutator radical scalar = 0 for all W_{6,4} hub pairs
+ *   P12: Mixing row >= 90% of commutator L1 in W_{6,4}
+ *   P13: W_{6,4} commutator L1 ~ half of D100's
+ *
+ * Block decomposition for W_{6,4} (basis change r = h0 - h2 + h4 last):
+ *   M_new = [[Q(4x4), 0(4x1)], [c(1x4), s(1x1)]]
+ *   Q[0][j] = M[0][j] - M[4][j],  Q[1][j] = M[1][j]
+ *   Q[2][j] = M[2][j] + M[4][j],  Q[3][j] = M[3][j]
+ *   c[j] = M[4][j] for j=0..3   (mixing row)
+ *   s = M[4][0] - M[4][2] + M[4][4]  (radical scalar = A^writhe)
+ *
+ * C89, zero dependencies beyond stdio/stdlib/string.
+ */
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+/* ================================================================
+ * Test infrastructure
+ * ================================================================ */
+
+static int n_pass = 0, n_fail = 0;
+
+static void check(const char *msg, int ok) {
+    if (ok) { printf("  PASS: %s\n", msg); n_pass++; }
+    else    { printf("  FAIL: %s\n", msg); n_fail++; }
+}
+
+/* ================================================================
+ * Exact Cyclotomic Arithmetic -- Z[zeta_8]
+ * Basis: {1, zeta_8, zeta_8^2, zeta_8^3} with zeta_8^4 = -1
+ * ================================================================ */
+
+typedef struct { long a, b, c, d; } Cyc8;
+
+static Cyc8 cyc8_make(long a, long b, long c, long d) {
+    Cyc8 z; z.a = a; z.b = b; z.c = c; z.d = d; return z;
+}
+static Cyc8 cyc8_zero(void) { return cyc8_make(0,0,0,0); }
+static Cyc8 cyc8_one(void)  { return cyc8_make(1,0,0,0); }
+
+static Cyc8 cyc8_add(Cyc8 x, Cyc8 y) {
+    return cyc8_make(x.a+y.a, x.b+y.b, x.c+y.c, x.d+y.d);
+}
+static Cyc8 cyc8_sub(Cyc8 x, Cyc8 y) {
+    return cyc8_make(x.a-y.a, x.b-y.b, x.c-y.c, x.d-y.d);
+}
+static Cyc8 cyc8_neg(Cyc8 x) {
+    return cyc8_make(-x.a, -x.b, -x.c, -x.d);
+}
+static Cyc8 cyc8_mul(Cyc8 x, Cyc8 y) {
+    return cyc8_make(
+        x.a*y.a - x.b*y.d - x.c*y.c - x.d*y.b,
+        x.a*y.b + x.b*y.a - x.c*y.d - x.d*y.c,
+        x.a*y.c + x.b*y.b + x.c*y.a - x.d*y.d,
+        x.a*y.d + x.b*y.c + x.c*y.b + x.d*y.a);
+}
+static int cyc8_eq(Cyc8 x, Cyc8 y) {
+    return x.a==y.a && x.b==y.b && x.c==y.c && x.d==y.d;
+}
+static int cyc8_is_zero(Cyc8 x) {
+    return x.a==0 && x.b==0 && x.c==0 && x.d==0;
+}
+static Cyc8 cyc8_conj(Cyc8 z) {
+    return cyc8_make(z.a, -z.d, -z.c, -z.b);
+}
+static long cyc8_max_abs(Cyc8 z) {
+    long m = 0, v;
+    v = z.a<0?-z.a:z.a; if(v>m) m=v;
+    v = z.b<0?-z.b:z.b; if(v>m) m=v;
+    v = z.c<0?-z.c:z.c; if(v>m) m=v;
+    v = z.d<0?-z.d:z.d; if(v>m) m=v;
+    return m;
+}
+static long cyc8_l1(Cyc8 z) {
+    long v = 0;
+    v += z.a<0?-z.a:z.a; v += z.b<0?-z.b:z.b;
+    v += z.c<0?-z.c:z.c; v += z.d<0?-z.d:z.d;
+    return v;
+}
+
+/* A^n for n mod 8 */
+static Cyc8 cyc8_A_pow(int n) {
+    /* A = (0,-1,0,0) = -zeta_8 */
+    int nm = ((n % 8) + 8) % 8;
+    switch (nm) {
+        case 0: return cyc8_make( 1, 0, 0, 0);
+        case 1: return cyc8_make( 0,-1, 0, 0);
+        case 2: return cyc8_make( 0, 0, 1, 0);
+        case 3: return cyc8_make( 0, 0, 0,-1);
+        case 4: return cyc8_make(-1, 0, 0, 0);
+        case 5: return cyc8_make( 0, 1, 0, 0);
+        case 6: return cyc8_make( 0, 0,-1, 0);
+        case 7: return cyc8_make( 0, 0, 0, 1);
+    }
+    return cyc8_zero();
+}
+
+/* ================================================================
+ * 5x5 Matrix over Cyc8
+ * ================================================================ */
+
+#define DIM 5
+
+typedef struct { Cyc8 m[DIM][DIM]; } Mat5;
+
+static Mat5 mat5_zero(void) {
+    Mat5 r;
+    int i, j;
+    for (i = 0; i < DIM; i++)
+        for (j = 0; j < DIM; j++)
+            r.m[i][j] = cyc8_zero();
+    return r;
+}
+
+static Mat5 mat5_identity(void) {
+    Mat5 r = mat5_zero();
+    int i;
+    for (i = 0; i < DIM; i++)
+        r.m[i][i] = cyc8_one();
+    return r;
+}
+
+static Mat5 mat5_mul(const Mat5 *p, const Mat5 *q) {
+    Mat5 r;
+    int i, j, k;
+    for (i = 0; i < DIM; i++)
+        for (j = 0; j < DIM; j++) {
+            r.m[i][j] = cyc8_zero();
+            for (k = 0; k < DIM; k++)
+                r.m[i][j] = cyc8_add(r.m[i][j],
+                    cyc8_mul(p->m[i][k], q->m[k][j]));
+        }
+    return r;
+}
+
+static int mat5_eq(const Mat5 *p, const Mat5 *q) {
+    int i, j;
+    for (i = 0; i < DIM; i++)
+        for (j = 0; j < DIM; j++)
+            if (!cyc8_eq(p->m[i][j], q->m[i][j])) return 0;
+    return 1;
+}
+
+static Mat5 mat5_add(const Mat5 *p, const Mat5 *q) {
+    Mat5 r;
+    int i, j;
+    for (i = 0; i < DIM; i++)
+        for (j = 0; j < DIM; j++)
+            r.m[i][j] = cyc8_add(p->m[i][j], q->m[i][j]);
+    return r;
+}
+
+static Mat5 mat5_sub(const Mat5 *p, const Mat5 *q) {
+    Mat5 r;
+    int i, j;
+    for (i = 0; i < DIM; i++)
+        for (j = 0; j < DIM; j++)
+            r.m[i][j] = cyc8_sub(p->m[i][j], q->m[i][j]);
+    return r;
+}
+
+static Mat5 mat5_neg(const Mat5 *p) {
+    Mat5 r;
+    int i, j;
+    for (i = 0; i < DIM; i++)
+        for (j = 0; j < DIM; j++)
+            r.m[i][j] = cyc8_neg(p->m[i][j]);
+    return r;
+}
+
+static Mat5 mat5_scale(Cyc8 s, const Mat5 *p) {
+    Mat5 r;
+    int i, j;
+    for (i = 0; i < DIM; i++)
+        for (j = 0; j < DIM; j++)
+            r.m[i][j] = cyc8_mul(s, p->m[i][j]);
+    return r;
+}
+
+static long mat5_max_abs(const Mat5 *m) {
+    long mx = 0, v;
+    int i, j;
+    for (i = 0; i < DIM; i++)
+        for (j = 0; j < DIM; j++) {
+            v = cyc8_max_abs(m->m[i][j]);
+            if (v > mx) mx = v;
+        }
+    return mx;
+}
+
+static void mat5_print(const char *name, const Mat5 *m) {
+    int i, j;
+    printf("  %s:\n", name);
+    for (i = 0; i < DIM; i++) {
+        printf("    [");
+        for (j = 0; j < DIM; j++) {
+            printf("(%ld,%ld,%ld,%ld)",
+                   m->m[i][j].a, m->m[i][j].b,
+                   m->m[i][j].c, m->m[i][j].d);
+            if (j < DIM - 1) printf(", ");
+        }
+        printf("]\n");
+    }
+}
+
+static Cyc8 mat5_trace(const Mat5 *m) {
+    Cyc8 t = cyc8_zero();
+    int i;
+    for (i = 0; i < DIM; i++)
+        t = cyc8_add(t, m->m[i][i]);
+    return t;
+}
+
+/* tr(M^2) = sum_{j,k} M[j][k]*M[k][j] */
+static Cyc8 mat5_tr_sq(const Mat5 *m) {
+    Cyc8 t = cyc8_zero();
+    int j, k;
+    for (j = 0; j < DIM; j++)
+        for (k = 0; k < DIM; k++)
+            t = cyc8_add(t, cyc8_mul(m->m[j][k], m->m[k][j]));
+    return t;
+}
+
+/* C5(M) = 5*tr(M^2) - (tr M)^2 */
+static Cyc8 mat5_casimir(const Mat5 *m) {
+    Cyc8 tr = mat5_trace(m);
+    Cyc8 trsq = mat5_tr_sq(m);
+    Cyc8 five = cyc8_make(DIM, 0, 0, 0);
+    return cyc8_sub(cyc8_mul(five, trsq), cyc8_mul(tr, tr));
+}
+
+static long mat5_frob_l1(const Mat5 *m) {
+    long f = 0;
+    const long *p = &m->m[0][0].a;
+    int i;
+    for (i = 0; i < DIM * DIM * 4; i++) {
+        long v = p[i];
+        f += v < 0 ? -v : v;
+    }
+    return f;
+}
+
+/* Count non-zero Cyc8 entries in a Mat5 */
+static int mat5_nonzero_count(const Mat5 *m) {
+    int cnt = 0, i, j;
+    for (i = 0; i < DIM; i++)
+        for (j = 0; j < DIM; j++)
+            if (!cyc8_is_zero(m->m[i][j])) cnt++;
+    return cnt;
+}
+
+/* ================================================================
+ * Hash table for Mat5 BFS
+ * ================================================================ */
+
+#define MAX_CAT 32768
+#define HASH_SIZE 65537
+
+static Mat5  g_cat[MAX_CAT];
+static int   g_depth[MAX_CAT];
+static int   g_writhe[MAX_CAT];
+static int   g_cat_size = 0;
+
+static int g_hash_head[HASH_SIZE];
+static int g_hash_next[MAX_CAT];
+
+static unsigned long hash_mat5(const Mat5 *m) {
+    unsigned long h = 2166136261UL;
+    const long *p = &m->m[0][0].a;
+    int i;
+    for (i = 0; i < DIM * DIM * 4; i++)
+        h = (h * 1000003UL) ^ (unsigned long)p[i];
+    return h;
+}
+
+static void hash_init(void) {
+    memset(g_hash_head, -1, sizeof(g_hash_head));
+}
+
+static int hash_find(const Mat5 *m) {
+    int bucket = (int)(hash_mat5(m) % (unsigned long)HASH_SIZE);
+    int idx = g_hash_head[bucket];
+    while (idx >= 0) {
+        if (mat5_eq(&g_cat[idx], m)) return idx;
+        idx = g_hash_next[idx];
+    }
+    return -1;
+}
+
+static void hash_insert(int cat_idx) {
+    int bucket = (int)(hash_mat5(&g_cat[cat_idx]) % (unsigned long)HASH_SIZE);
+    g_hash_next[cat_idx] = g_hash_head[bucket];
+    g_hash_head[bucket] = cat_idx;
+}
+
+/* ================================================================
+ * TL generators
+ *
+ * W_{6,0}: 5 half-diagrams, all arcs (0 through-lines)
+ *   h0=(1,2)(3,4)(5,6), h1=(1,2)(3,6)(4,5), h2=(1,4)(2,3)(5,6)
+ *   h3=(1,6)(2,3)(4,5), h4=(1,6)(2,5)(3,4)
+ *
+ * W_{6,4}: 5 half-diagrams, 4 through-lines + 1 arc
+ *   h0=thr:1234 arc:(5,6), h1=thr:1236 arc:(4,5)
+ *   h2=thr:1256 arc:(3,4), h3=thr:1456 arc:(2,3)
+ *   h4=thr:3456 arc:(1,2)
+ * ================================================================ */
+
+#define N_TL 5
+
+static Mat5 g_e[N_TL];
+
+static void build_tl_a(void) {
+    int i;
+    for (i = 0; i < N_TL; i++) g_e[i] = mat5_zero();
+
+    /* e_1: h2->h0, h4->h0, h3->h1 */
+    g_e[0].m[0][2] = cyc8_one();
+    g_e[0].m[0][4] = cyc8_one();
+    g_e[0].m[1][3] = cyc8_one();
+
+    /* e_2: h0->h2, h1->h3, h4->h3 */
+    g_e[1].m[2][0] = cyc8_one();
+    g_e[1].m[3][1] = cyc8_one();
+    g_e[1].m[3][4] = cyc8_one();
+
+    /* e_3: h1->h0, h2->h0, h3->h4 */
+    g_e[2].m[0][1] = cyc8_one();
+    g_e[2].m[0][2] = cyc8_one();
+    g_e[2].m[4][3] = cyc8_one();
+
+    /* e_4: h0->h1, h2->h3, h4->h3 */
+    g_e[3].m[1][0] = cyc8_one();
+    g_e[3].m[3][2] = cyc8_one();
+    g_e[3].m[3][4] = cyc8_one();
+
+    /* e_5: h1->h0, h4->h0, h3->h2 */
+    g_e[4].m[0][1] = cyc8_one();
+    g_e[4].m[0][4] = cyc8_one();
+    g_e[4].m[2][3] = cyc8_one();
+}
+
+static void build_tl_b(void) {
+    int i;
+    for (i = 0; i < N_TL; i++) g_e[i] = mat5_zero();
+
+    /* e_1: h3->h4 */
+    g_e[0].m[4][3] = cyc8_one();
+
+    /* e_2: h2->h3, h4->h3 */
+    g_e[1].m[3][2] = cyc8_one();
+    g_e[1].m[3][4] = cyc8_one();
+
+    /* e_3: h1->h2, h3->h2 */
+    g_e[2].m[2][1] = cyc8_one();
+    g_e[2].m[2][3] = cyc8_one();
+
+    /* e_4: h0->h1, h2->h1 */
+    g_e[3].m[1][0] = cyc8_one();
+    g_e[3].m[1][2] = cyc8_one();
+
+    /* e_5: h1->h0 */
+    g_e[4].m[0][1] = cyc8_one();
+}
+
+/* ================================================================
+ * Braid generators: sigma_i = A*I + A^{-1}*e_i
+ *                   sigma_i_inv = A^{-1}*I + A*e_i
+ * 10 generators: sigma_1..5 and inverses
+ * ================================================================ */
+
+#define N_GEN 10
+
+static Cyc8 g_A, g_A_inv;
+static Mat5 g_gen[N_GEN];
+static const int g_gen_writhe[N_GEN] = {1,-1,1,-1,1,-1,1,-1,1,-1};
+
+static void build_braid_generators(void) {
+    int i;
+    Mat5 id5 = mat5_identity();
+    Mat5 a_id = mat5_scale(g_A, &id5);
+    Mat5 ai_id = mat5_scale(g_A_inv, &id5);
+
+    for (i = 0; i < N_TL; i++) {
+        Mat5 ai_e = mat5_scale(g_A_inv, &g_e[i]);
+        Mat5 a_e  = mat5_scale(g_A, &g_e[i]);
+        g_gen[2*i]     = mat5_add(&a_id, &ai_e);
+        g_gen[2*i + 1] = mat5_add(&ai_id, &a_e);
+    }
+}
+
+/* ================================================================
+ * BFS catalog builder
+ * ================================================================ */
+
+static void build_catalog(int max_depth) {
+    int prev, gi, i, rd;
+
+    g_cat_size = 0;
+    hash_init();
+
+    g_cat[0] = mat5_identity();
+    g_depth[0] = 0;
+    g_writhe[0] = 0;
+    hash_insert(0);
+    g_cat_size = 1;
+
+    printf("  Round 0: 1 entry\n");
+
+    rd = 1;
+    do {
+        long round_max = 0;
+        prev = g_cat_size;
+        for (i = 0; i < prev && g_cat_size < MAX_CAT; i++) {
+            if (g_depth[i] != rd - 1) continue;
+            for (gi = 0; gi < N_GEN && g_cat_size < MAX_CAT; gi++) {
+                Mat5 prod = mat5_mul(&g_cat[i], &g_gen[gi]);
+                if (hash_find(&prod) < 0) {
+                    long mabs = mat5_max_abs(&prod);
+                    if (mabs > round_max) round_max = mabs;
+                    g_cat[g_cat_size] = prod;
+                    g_depth[g_cat_size] = rd;
+                    g_writhe[g_cat_size] = g_writhe[i] + g_gen_writhe[gi];
+                    hash_insert(g_cat_size);
+                    g_cat_size++;
+                }
+            }
+        }
+        if (g_cat_size > prev)
+            printf("  Round %d: %d entries (+%d), max_abs=%ld\n",
+                   rd, g_cat_size, g_cat_size - prev, round_max);
+        if (round_max > 100000000000L) {
+            printf("  WARNING: approaching overflow\n");
+            break;
+        }
+        rd++;
+    } while (g_cat_size > prev && g_cat_size < MAX_CAT && rd <= max_depth);
+
+    if (g_cat_size == prev)
+        printf("  GROUP CLOSED at %d entries\n", g_cat_size);
+    else if (g_cat_size >= MAX_CAT)
+        printf("  HIT CAP at %d entries (group is infinite)\n", MAX_CAT);
+}
+
+/* ================================================================
+ * Radical dimension via Gaussian elimination on stacked TL matrix
+ * TL generators are integer matrices (only .a component nonzero).
+ * Stacks N_TL*DIM rows x DIM columns, finds rank.
+ * Radical dim = DIM - rank.
+ * ================================================================ */
+
+static int compute_radical_dim(void) {
+    long stk[25][5]; /* N_TL * DIM = 25 rows, DIM = 5 cols */
+    int row, col, prow, r, c, rank;
+
+    /* Fill stacked matrix */
+    row = 0;
+    for (r = 0; r < N_TL; r++)
+        for (c = 0; c < DIM; c++) {
+            int j;
+            for (j = 0; j < DIM; j++)
+                stk[row][j] = g_e[r].m[c][j].a;
+            row++;
+        }
+
+    /* Gaussian elimination */
+    rank = 0;
+    for (col = 0; col < DIM; col++) {
+        prow = -1;
+        for (r = rank; r < 25; r++) {
+            if (stk[r][col] != 0) { prow = r; break; }
+        }
+        if (prow < 0) continue;
+        if (prow != rank) {
+            for (c = 0; c < DIM; c++) {
+                long tmp = stk[rank][c];
+                stk[rank][c] = stk[prow][c];
+                stk[prow][c] = tmp;
+            }
+        }
+        for (r = rank + 1; r < 25; r++) {
+            if (stk[r][col] != 0) {
+                long fn = stk[r][col], fd = stk[rank][col];
+                for (c = 0; c < DIM; c++)
+                    stk[r][c] = stk[r][c] * fd - stk[rank][c] * fn;
+            }
+        }
+        rank++;
+    }
+    return DIM - rank;
+}
+
+/* ================================================================
+ * Activation: sign hash of all DIM*DIM*4 = 100 integer components
+ * 3-valued: pos=2, zero=1, neg=0.  Polynomial hash mod k_param.
+ * ================================================================ */
+
+static int mat5_activate(const Mat5 *m, int k_param) {
+    unsigned long h = 0;
+    const long *p = &m->m[0][0].a;
+    int i;
+    for (i = 0; i < DIM * DIM * 4; i++)
+        h = h * 3UL + (unsigned long)(p[i] > 0 ? 2 : (p[i] < 0 ? 0 : 1));
+    return (int)(h % (unsigned long)k_param);
+}
+
+/* Quotient-only activation for W_{6,4}: hash the 4x4 quotient block
+ * Q[0][j] = M[0][j] - M[4][j], Q[1][j] = M[1][j],
+ * Q[2][j] = M[2][j] + M[4][j], Q[3][j] = M[3][j]  for j=0..3 */
+static int mat5_activate_quot(const Mat5 *m, int k_param) {
+    unsigned long h = 0;
+    int i, j, comp;
+    for (i = 0; i < 4; i++) {
+        for (j = 0; j < 4; j++) {
+            const long *base;
+            const long *row4;
+            long q;
+            base = &m->m[i][j].a;
+            row4 = &m->m[4][j].a;
+            for (comp = 0; comp < 4; comp++) {
+                if (i == 0)      q = base[comp] - row4[comp];
+                else if (i == 2) q = base[comp] + row4[comp];
+                else             q = base[comp];
+                h = h * 3UL + (unsigned long)(q > 0 ? 2 : (q < 0 ? 0 : 1));
+            }
+        }
+    }
+    return (int)(h % (unsigned long)k_param);
+}
+
+/* ================================================================
+ * XOR test infrastructure (identical pattern to D100/D101)
+ * ================================================================ */
+
+#define MAX_ACT_CELLS 8192
+
+static int cell_even[MAX_ACT_CELLS], cell_odd[MAX_ACT_CELLS];
+static int touched[MAX_ACT_CELLS];
+
+/* test_xor with function pointer for activation */
+typedef int (*ActivateFn)(const Mat5 *, int);
+
+static int test_xor_fn(const int *indices, int n_weights, int k_param,
+                        ActivateFn act) {
+    int n_inputs = 2 * n_weights;
+    int n_masks = 1 << n_inputs;
+    int n_touched = 0;
+    int mask, i, w;
+    int result = 1;
+    Mat5 pos[8], neg[8];
+
+    if (k_param > MAX_ACT_CELLS || n_inputs > 16 || n_weights > 8)
+        return 0;
+
+    for (w = 0; w < n_weights; w++) {
+        pos[w] = g_cat[indices[w]];
+        neg[w] = mat5_neg(&g_cat[indices[w]]);
+    }
+
+    for (mask = 0; mask < n_masks; mask++) {
+        Mat5 sum = mat5_zero();
+        int par = 0, cell;
+
+        for (i = 0; i < n_inputs; i++) {
+            if (mask & (1 << i)) {
+                w = i / 2;
+                if (i % 2 == 0)
+                    sum = mat5_add(&sum, &pos[w]);
+                else
+                    sum = mat5_add(&sum, &neg[w]);
+                par ^= 1;
+            }
+        }
+
+        cell = act(&sum, k_param);
+
+        if (cell_even[cell] == 0 && cell_odd[cell] == 0)
+            touched[n_touched++] = cell;
+
+        if (par == 0) {
+            cell_even[cell]++;
+            if (cell_odd[cell] > 0) { result = 0; goto cleanup; }
+        } else {
+            cell_odd[cell]++;
+            if (cell_even[cell] > 0) { result = 0; goto cleanup; }
+        }
+    }
+
+cleanup:
+    for (i = 0; i < n_touched; i++) {
+        cell_even[touched[i]] = 0;
+        cell_odd[touched[i]] = 0;
+    }
+    return result;
+}
+
+static int test_xor(const int *indices, int n_weights, int k_param) {
+    return test_xor_fn(indices, n_weights, k_param, mat5_activate);
+}
+
+/* Brute-force XOR search */
+static int count_xor_bf(int n_weights, int k_param, int bf_limit) {
+    int count = 0;
+    int limit = g_cat_size < bf_limit ? g_cat_size : bf_limit;
+    int i0, i1, i2, i3, i4, i5, i6;
+    int indices[8];
+
+    if (n_weights == 3) {
+        for (i0 = 0; i0 < limit; i0++)
+        for (i1 = i0+1; i1 < limit; i1++)
+        for (i2 = i1+1; i2 < limit; i2++) {
+            indices[0]=i0; indices[1]=i1; indices[2]=i2;
+            if (test_xor(indices, 3, k_param)) count++;
+        }
+    } else if (n_weights == 4) {
+        for (i0 = 0; i0 < limit; i0++)
+        for (i1 = i0+1; i1 < limit; i1++)
+        for (i2 = i1+1; i2 < limit; i2++)
+        for (i3 = i2+1; i3 < limit; i3++) {
+            indices[0]=i0; indices[1]=i1; indices[2]=i2; indices[3]=i3;
+            if (test_xor(indices, 4, k_param)) count++;
+        }
+    } else if (n_weights == 5) {
+        for (i0 = 0; i0 < limit; i0++)
+        for (i1 = i0+1; i1 < limit; i1++)
+        for (i2 = i1+1; i2 < limit; i2++)
+        for (i3 = i2+1; i3 < limit; i3++)
+        for (i4 = i3+1; i4 < limit; i4++) {
+            indices[0]=i0; indices[1]=i1; indices[2]=i2;
+            indices[3]=i3; indices[4]=i4;
+            if (test_xor(indices, 5, k_param)) count++;
+        }
+    } else if (n_weights == 6) {
+        for (i0 = 0; i0 < limit; i0++)
+        for (i1 = i0+1; i1 < limit; i1++)
+        for (i2 = i1+1; i2 < limit; i2++)
+        for (i3 = i2+1; i3 < limit; i3++)
+        for (i4 = i3+1; i4 < limit; i4++)
+        for (i5 = i4+1; i5 < limit; i5++) {
+            indices[0]=i0; indices[1]=i1; indices[2]=i2;
+            indices[3]=i3; indices[4]=i4; indices[5]=i5;
+            if (test_xor(indices, 6, k_param)) count++;
+        }
+    } else if (n_weights == 7) {
+        for (i0 = 0; i0 < limit; i0++)
+        for (i1 = i0+1; i1 < limit; i1++)
+        for (i2 = i1+1; i2 < limit; i2++)
+        for (i3 = i2+1; i3 < limit; i3++)
+        for (i4 = i3+1; i4 < limit; i4++)
+        for (i5 = i4+1; i5 < limit; i5++)
+        for (i6 = i5+1; i6 < limit; i6++) {
+            indices[0]=i0; indices[1]=i1; indices[2]=i2;
+            indices[3]=i3; indices[4]=i4; indices[5]=i5;
+            indices[6]=i6;
+            if (test_xor(indices, 7, k_param)) count++;
+        }
+    }
+    return count;
+}
+
+static int count_xor_bf_fn(int n_weights, int k_param, int bf_limit,
+                            ActivateFn act) {
+    int count = 0;
+    int limit = g_cat_size < bf_limit ? g_cat_size : bf_limit;
+    int i0, i1, i2, i3, i4;
+    int indices[8];
+
+    if (n_weights == 3) {
+        for (i0 = 0; i0 < limit; i0++)
+        for (i1 = i0+1; i1 < limit; i1++)
+        for (i2 = i1+1; i2 < limit; i2++) {
+            indices[0]=i0; indices[1]=i1; indices[2]=i2;
+            if (test_xor_fn(indices, 3, k_param, act)) count++;
+        }
+    } else if (n_weights == 5) {
+        for (i0 = 0; i0 < limit; i0++)
+        for (i1 = i0+1; i1 < limit; i1++)
+        for (i2 = i1+1; i2 < limit; i2++)
+        for (i3 = i2+1; i3 < limit; i3++)
+        for (i4 = i3+1; i4 < limit; i4++) {
+            indices[0]=i0; indices[1]=i1; indices[2]=i2;
+            indices[3]=i3; indices[4]=i4;
+            if (test_xor_fn(indices, 5, k_param, act)) count++;
+        }
+    }
+    return count;
+}
+
+/* ================================================================
+ * Radical column computation for W_{6,4}
+ * r = (1, 0, -1, 0, 1)
+ * M*r = col0 - col2 + col4 of M
+ * ================================================================ */
+
+static void compute_Mr(const Mat5 *m, Cyc8 *out) {
+    int i;
+    for (i = 0; i < DIM; i++)
+        out[i] = cyc8_add(cyc8_sub(m->m[i][0], m->m[i][2]), m->m[i][4]);
+}
+
+/* radical_content = L1 norm of M*r */
+static long radical_content(const Mat5 *m) {
+    Cyc8 mr[DIM];
+    long rc = 0;
+    int i;
+    compute_Mr(m, mr);
+    for (i = 0; i < DIM; i++)
+        rc += cyc8_l1(mr[i]);
+    return rc;
+}
+
+/* Block decomposition: extract radical scalar s = (M*r)[0] when M*r = s*r */
+static Cyc8 radical_scalar(const Mat5 *m) {
+    /* s = M[0][0] - M[0][2] + M[0][4] */
+    return cyc8_add(cyc8_sub(m->m[0][0], m->m[0][2]), m->m[0][4]);
+}
+
+/* Mixing row L1 norm: sum of L1 norms of M[4][j] for j=0..3 */
+static long mixing_row_l1(const Mat5 *m) {
+    long v = 0;
+    int j;
+    for (j = 0; j < 4; j++)
+        v += cyc8_l1(m->m[4][j]);
+    return v;
+}
+
+/* Quotient block L1 norm */
+static long quotient_block_l1(const Mat5 *m) {
+    long v = 0;
+    int i, j;
+    for (i = 0; i < 4; i++)
+        for (j = 0; j < 4; j++) {
+            Cyc8 q;
+            if (i == 0)      q = cyc8_sub(m->m[0][j], m->m[4][j]);
+            else if (i == 2) q = cyc8_add(m->m[2][j], m->m[4][j]);
+            else             q = m->m[i][j];
+            v += cyc8_l1(q);
+        }
+    return v;
+}
+
+/* ================================================================
+ * Saved data from Module A (W_{6,0})
+ * ================================================================ */
+
+#define BF_SAVE 30
+
+static Mat5 g_save_cat[BF_SAVE];
+static int  g_save_depth[BF_SAVE], g_save_writhe[BF_SAVE];
+static long g_save_cas[BF_SAVE];
+static int  g_save_bf;
+
+static int g_save_cat_size;
+static int g_save_depth_counts[20];
+static int g_save_xor[4]; /* XOR6..XOR12 at k=128, bf=30 deep */
+
+/* ================================================================
+ * Main
+ * ================================================================ */
+
+int main(void) {
+    char msg[256];
+    int i;
+
+    g_A = cyc8_make(0, -1, 0, 0);
+    g_A_inv = cyc8_conj(g_A); /* (0,0,0,1) */
+
+    printf("KNOTAPEL DEMO 102: 6-Strand Radical A/B Test\n");
+    printf("W_{6,0} (simple) vs W_{6,4} (non-simple, rad=1)\n");
+    printf("=============================================\n");
+
+    /* ============================================================
+     * Phase 0: Generator Verification
+     * ============================================================ */
+    printf("\n=== Phase 0: Generator Verification ===\n");
+
+    /* --- Module A: W_{6,0} --- */
+    printf("\n--- Module A: W_{6,0} (simple, dim=5) ---\n\n");
+    {
+        int ei, rad_dim;
+
+        build_tl_a();
+
+        printf("  A = (0,-1,0,0), A_inv = (0,0,0,1)\n");
+        {
+            Cyc8 prod = cyc8_mul(g_A, g_A_inv);
+            check("A * A_inv = 1", cyc8_eq(prod, cyc8_one()));
+        }
+        {
+            Cyc8 a2 = cyc8_mul(g_A, g_A);
+            Cyc8 ai2 = cyc8_mul(g_A_inv, g_A_inv);
+            check("A^2 + A^{-2} = 0 (delta=0)",
+                  cyc8_is_zero(cyc8_add(a2, ai2)));
+        }
+
+        /* e_i^2 = 0 */
+        for (ei = 0; ei < N_TL; ei++) {
+            Mat5 sq = mat5_mul(&g_e[ei], &g_e[ei]);
+            Mat5 z = mat5_zero();
+            sprintf(msg, "A: e_%d^2 = 0", ei+1);
+            check(msg, mat5_eq(&sq, &z));
+        }
+
+        /* Jones-Wenzl: e_i * e_{i+1} * e_i = e_i */
+        for (ei = 0; ei < N_TL - 1; ei++) {
+            Mat5 t = mat5_mul(&g_e[ei], &g_e[ei+1]);
+            t = mat5_mul(&t, &g_e[ei]);
+            sprintf(msg, "A: e_%d*e_%d*e_%d = e_%d", ei+1,ei+2,ei+1,ei+1);
+            check(msg, mat5_eq(&t, &g_e[ei]));
+            t = mat5_mul(&g_e[ei+1], &g_e[ei]);
+            t = mat5_mul(&t, &g_e[ei+1]);
+            sprintf(msg, "A: e_%d*e_%d*e_%d = e_%d", ei+2,ei+1,ei+2,ei+2);
+            check(msg, mat5_eq(&t, &g_e[ei+1]));
+        }
+
+        /* Far commutativity: |i-j| >= 2 */
+        {
+            int pairs[][2] = {{0,2},{0,3},{0,4},{1,3},{1,4},{2,4}};
+            int pi;
+            for (pi = 0; pi < 6; pi++) {
+                int a = pairs[pi][0], b = pairs[pi][1];
+                Mat5 ab = mat5_mul(&g_e[a], &g_e[b]);
+                Mat5 ba = mat5_mul(&g_e[b], &g_e[a]);
+                sprintf(msg, "A: e_%d*e_%d = e_%d*e_%d", a+1,b+1,b+1,a+1);
+                check(msg, mat5_eq(&ab, &ba));
+            }
+        }
+
+        /* Radical dimension (P4) */
+        rad_dim = compute_radical_dim();
+        printf("  Radical dimension: %d\n", rad_dim);
+        check("P4: W_{6,0} radical dim = 0 (simple)", rad_dim == 0);
+
+        /* Sparsity */
+        {
+            int total_nz = 0;
+            for (ei = 0; ei < N_TL; ei++)
+                total_nz += mat5_nonzero_count(&g_e[ei]);
+            printf("  Generator sparsity A: %d/%d nonzero\n",
+                   total_nz, N_TL * DIM * DIM);
+        }
+
+        /* Braid generators and relations */
+        build_braid_generators();
+
+        {
+            int si;
+            Mat5 id5 = mat5_identity();
+            for (si = 0; si < N_TL; si++) {
+                Mat5 prod = mat5_mul(&g_gen[2*si], &g_gen[2*si+1]);
+                sprintf(msg, "A: s%d * s%d_inv = I", si+1, si+1);
+                check(msg, mat5_eq(&prod, &id5));
+            }
+        }
+        {
+            int si;
+            for (si = 0; si < N_TL - 1; si++) {
+                Mat5 lhs = mat5_mul(&g_gen[2*si], &g_gen[2*(si+1)]);
+                Mat5 rhs;
+                lhs = mat5_mul(&lhs, &g_gen[2*si]);
+                rhs = mat5_mul(&g_gen[2*(si+1)], &g_gen[2*si]);
+                rhs = mat5_mul(&rhs, &g_gen[2*(si+1)]);
+                sprintf(msg, "A: s%d*s%d*s%d = s%d*s%d*s%d",
+                        si+1,si+2,si+1,si+2,si+1,si+2);
+                check(msg, mat5_eq(&lhs, &rhs));
+            }
+        }
+        /* Hecke */
+        {
+            int si;
+            Cyc8 a_m_ai = cyc8_sub(g_A, g_A_inv);
+            Mat5 id5 = mat5_identity();
+            for (si = 0; si < N_TL; si++) {
+                Mat5 ns = mat5_neg(&g_gen[2*si+1]);
+                Mat5 lhs = mat5_add(&g_gen[2*si], &ns);
+                Mat5 ne = mat5_neg(&g_e[si]);
+                Mat5 ime = mat5_add(&id5, &ne);
+                Mat5 rhs = mat5_scale(a_m_ai, &ime);
+                sprintf(msg, "A: Hecke s%d", si+1);
+                check(msg, mat5_eq(&lhs, &rhs));
+            }
+        }
+    }
+
+    /* --- Module B: W_{6,4} --- */
+    printf("\n--- Module B: W_{6,4} (non-simple, dim=5, rad=1) ---\n\n");
+    {
+        int ei, rad_dim;
+
+        build_tl_b();
+
+        /* e_i^2 = 0 */
+        for (ei = 0; ei < N_TL; ei++) {
+            Mat5 sq = mat5_mul(&g_e[ei], &g_e[ei]);
+            Mat5 z = mat5_zero();
+            sprintf(msg, "B: e_%d^2 = 0", ei+1);
+            check(msg, mat5_eq(&sq, &z));
+        }
+
+        /* Jones-Wenzl */
+        for (ei = 0; ei < N_TL - 1; ei++) {
+            Mat5 t = mat5_mul(&g_e[ei], &g_e[ei+1]);
+            t = mat5_mul(&t, &g_e[ei]);
+            sprintf(msg, "B: e_%d*e_%d*e_%d = e_%d", ei+1,ei+2,ei+1,ei+1);
+            check(msg, mat5_eq(&t, &g_e[ei]));
+            t = mat5_mul(&g_e[ei+1], &g_e[ei]);
+            t = mat5_mul(&t, &g_e[ei+1]);
+            sprintf(msg, "B: e_%d*e_%d*e_%d = e_%d", ei+2,ei+1,ei+2,ei+2);
+            check(msg, mat5_eq(&t, &g_e[ei+1]));
+        }
+
+        /* Far commutativity */
+        {
+            int pairs[][2] = {{0,2},{0,3},{0,4},{1,3},{1,4},{2,4}};
+            int pi;
+            for (pi = 0; pi < 6; pi++) {
+                int a = pairs[pi][0], b = pairs[pi][1];
+                Mat5 ab = mat5_mul(&g_e[a], &g_e[b]);
+                Mat5 ba = mat5_mul(&g_e[b], &g_e[a]);
+                sprintf(msg, "B: e_%d*e_%d = e_%d*e_%d", a+1,b+1,b+1,a+1);
+                check(msg, mat5_eq(&ab, &ba));
+            }
+        }
+
+        /* Radical dimension (P1) */
+        rad_dim = compute_radical_dim();
+        printf("  Radical dimension: %d\n", rad_dim);
+        check("P1: W_{6,4} radical dim = 1", rad_dim == 1);
+
+        /* Verify radical vector r = (1,0,-1,0,1) */
+        printf("  Verifying r = (1, 0, -1, 0, 1):\n");
+        {
+            Cyc8 r_vec[DIM];
+            r_vec[0] = cyc8_one();
+            r_vec[1] = cyc8_zero();
+            r_vec[2] = cyc8_make(-1,0,0,0);
+            r_vec[3] = cyc8_zero();
+            r_vec[4] = cyc8_one();
+
+            for (ei = 0; ei < N_TL; ei++) {
+                int ri, ok = 1;
+                for (ri = 0; ri < DIM && ok; ri++) {
+                    Cyc8 res = cyc8_zero();
+                    int ci;
+                    for (ci = 0; ci < DIM; ci++)
+                        res = cyc8_add(res,
+                            cyc8_mul(g_e[ei].m[ri][ci], r_vec[ci]));
+                    if (!cyc8_is_zero(res)) ok = 0;
+                }
+                sprintf(msg, "B: e_%d * r = 0", ei+1);
+                check(msg, ok);
+            }
+        }
+
+        /* Sparsity */
+        {
+            int total_nz = 0;
+            for (ei = 0; ei < N_TL; ei++)
+                total_nz += mat5_nonzero_count(&g_e[ei]);
+            printf("  Generator sparsity B: %d/%d nonzero\n",
+                   total_nz, N_TL * DIM * DIM);
+        }
+
+        /* Braid generators and relations */
+        build_braid_generators();
+
+        {
+            int si;
+            Mat5 id5 = mat5_identity();
+            for (si = 0; si < N_TL; si++) {
+                Mat5 prod = mat5_mul(&g_gen[2*si], &g_gen[2*si+1]);
+                sprintf(msg, "B: s%d * s%d_inv = I", si+1, si+1);
+                check(msg, mat5_eq(&prod, &id5));
+            }
+        }
+        {
+            int si;
+            for (si = 0; si < N_TL - 1; si++) {
+                Mat5 lhs = mat5_mul(&g_gen[2*si], &g_gen[2*(si+1)]);
+                Mat5 rhs;
+                lhs = mat5_mul(&lhs, &g_gen[2*si]);
+                rhs = mat5_mul(&g_gen[2*(si+1)], &g_gen[2*si]);
+                rhs = mat5_mul(&rhs, &g_gen[2*(si+1)]);
+                sprintf(msg, "B: s%d*s%d*s%d = s%d*s%d*s%d",
+                        si+1,si+2,si+1,si+2,si+1,si+2);
+                check(msg, mat5_eq(&lhs, &rhs));
+            }
+        }
+        /* Hecke */
+        {
+            int si;
+            Cyc8 a_m_ai = cyc8_sub(g_A, g_A_inv);
+            Mat5 id5 = mat5_identity();
+            for (si = 0; si < N_TL; si++) {
+                Mat5 ns = mat5_neg(&g_gen[2*si+1]);
+                Mat5 lhs = mat5_add(&g_gen[2*si], &ns);
+                Mat5 ne = mat5_neg(&g_e[si]);
+                Mat5 ime = mat5_add(&id5, &ne);
+                Mat5 rhs = mat5_scale(a_m_ai, &ime);
+                sprintf(msg, "B: Hecke s%d", si+1);
+                check(msg, mat5_eq(&lhs, &rhs));
+            }
+        }
+
+        /* P2: Writhe character on generators */
+        printf("\n  Writhe character on generators (P2):\n");
+        {
+            Cyc8 r_vec[DIM];
+            int si, all_ok = 1;
+            r_vec[0] = cyc8_one();
+            r_vec[1] = cyc8_zero();
+            r_vec[2] = cyc8_make(-1,0,0,0);
+            r_vec[3] = cyc8_zero();
+            r_vec[4] = cyc8_one();
+
+            for (si = 0; si < N_GEN; si++) {
+                /* Compute g_gen[si] * r */
+                Cyc8 sr[DIM];
+                Cyc8 expected_scalar = cyc8_A_pow(g_gen_writhe[si]);
+                int ri, ok = 1;
+                for (ri = 0; ri < DIM; ri++) {
+                    int ci;
+                    sr[ri] = cyc8_zero();
+                    for (ci = 0; ci < DIM; ci++)
+                        sr[ri] = cyc8_add(sr[ri],
+                            cyc8_mul(g_gen[si].m[ri][ci], r_vec[ci]));
+                }
+                /* Check sr = expected_scalar * r */
+                for (ri = 0; ri < DIM; ri++) {
+                    Cyc8 exp = cyc8_mul(expected_scalar, r_vec[ri]);
+                    if (!cyc8_eq(sr[ri], exp)) ok = 0;
+                }
+                if (!ok) all_ok = 0;
+            }
+            check("P2: sigma_i * r = A^{writhe} * r for all generators",
+                  all_ok);
+        }
+    }
+
+    /* ============================================================
+     * Phase 1: BFS Catalog — Module A (W_{6,0})
+     * ============================================================ */
+    printf("\n=== Phase 1: BFS Catalog — Module A: W_{6,0} ===\n\n");
+    {
+        int d;
+
+        build_tl_a();
+        build_braid_generators();
+        build_catalog(12);
+
+        g_save_cat_size = g_cat_size;
+        sprintf(msg, "A: Catalog has %d entries", g_cat_size);
+        check(msg, g_cat_size > 100);
+
+        memset(g_save_depth_counts, 0, sizeof(g_save_depth_counts));
+        for (i = 0; i < g_cat_size; i++)
+            if (g_depth[i] < 20) g_save_depth_counts[g_depth[i]]++;
+
+        printf("\n  Depth distribution:\n");
+        for (d = 0; d < 20 && g_save_depth_counts[d] > 0; d++)
+            printf("    d=%d: %d entries\n", d, g_save_depth_counts[d]);
+
+        printf("  Growth rate:\n");
+        {
+            int prev_c = 1;
+            for (d = 1; d < 20 && g_save_depth_counts[d] > 0; d++) {
+                printf("    d=%d: +%d (ratio: %.2f)\n",
+                       d, g_save_depth_counts[d],
+                       prev_c > 0 ? (double)g_save_depth_counts[d]
+                                  / (double)prev_c : 0.0);
+                prev_c = g_save_depth_counts[d];
+            }
+        }
+
+        /* Save deep subcatalog for later comparison */
+        {
+            int deep_idx[1024];
+            int nd = 0, bf, step, j;
+
+            for (i = 0; i < g_cat_size && nd < 1024; i++)
+                if (g_depth[i] >= 4) deep_idx[nd++] = i;
+
+            printf("\n  Deep entries (d>=4): %d\n", nd);
+            bf = nd < BF_SAVE ? nd : BF_SAVE;
+            g_save_bf = bf;
+
+            step = nd / bf;
+            if (step < 1) step = 1;
+
+            for (j = 0; j < bf; j++) {
+                int src = deep_idx[j * step];
+                g_save_cat[j] = g_cat[src];
+                g_save_depth[j] = g_depth[src];
+                g_save_writhe[j] = g_writhe[src];
+            }
+
+            /* XOR scan on deep subcatalog */
+            {
+                Mat5 orig_cat[BF_SAVE];
+                int orig_d[BF_SAVE], orig_w[BF_SAVE];
+                int orig_sz = g_cat_size;
+
+                for (j = 0; j < bf; j++) {
+                    orig_cat[j] = g_cat[j];
+                    orig_d[j] = g_depth[j];
+                    orig_w[j] = g_writhe[j];
+                }
+                for (j = 0; j < bf; j++) {
+                    g_cat[j] = g_save_cat[j];
+                    g_depth[j] = g_save_depth[j];
+                    g_writhe[j] = g_save_writhe[j];
+                }
+                g_cat_size = bf;
+
+                g_save_xor[0] = count_xor_bf(3, 128, bf);
+                g_save_xor[1] = count_xor_bf(4, 128, bf);
+                g_save_xor[2] = count_xor_bf(5, 128, bf);
+                g_save_xor[3] = count_xor_bf(6, 128, bf);
+
+                printf("  A deep bf=%d: XOR6=%d XOR8=%d XOR10=%d XOR12=%d\n",
+                       bf, g_save_xor[0], g_save_xor[1],
+                       g_save_xor[2], g_save_xor[3]);
+                check("A: XOR scan completed", 1);
+
+                /* Casimir for saved entries */
+                for (j = 0; j < bf; j++) {
+                    Cyc8 c5 = mat5_casimir(&g_save_cat[j]);
+                    g_save_cas[j] = cyc8_l1(c5);
+                }
+
+                /* Restore */
+                for (j = 0; j < bf; j++) {
+                    g_cat[j] = orig_cat[j];
+                    g_depth[j] = orig_d[j];
+                    g_writhe[j] = orig_w[j];
+                }
+                g_cat_size = orig_sz;
+            }
+        }
+    }
+
+    /* ============================================================
+     * Phase 2: BFS Catalog — Module B (W_{6,4})
+     * ============================================================ */
+    printf("\n=== Phase 2: BFS Catalog — Module B: W_{6,4} ===\n\n");
+    {
+        int d;
+        int depth_counts_b[20];
+
+        build_tl_b();
+        build_braid_generators();
+        build_catalog(12);
+
+        sprintf(msg, "B: Catalog has %d entries", g_cat_size);
+        check(msg, g_cat_size > 100);
+
+        memset(depth_counts_b, 0, sizeof(depth_counts_b));
+        for (i = 0; i < g_cat_size; i++)
+            if (g_depth[i] < 20) depth_counts_b[g_depth[i]]++;
+
+        printf("\n  Depth distribution:\n");
+        for (d = 0; d < 20 && depth_counts_b[d] > 0; d++)
+            printf("    d=%d: %d entries\n", d, depth_counts_b[d]);
+
+        printf("  Growth rate:\n");
+        {
+            int prev_c = 1;
+            for (d = 1; d < 20 && depth_counts_b[d] > 0; d++) {
+                printf("    d=%d: +%d (ratio: %.2f)\n",
+                       d, depth_counts_b[d],
+                       prev_c > 0 ? (double)depth_counts_b[d]
+                                  / (double)prev_c : 0.0);
+                prev_c = depth_counts_b[d];
+            }
+        }
+
+        /* P5: Growth comparison */
+        printf("\n  Growth comparison (P5: both ~5x):\n");
+        printf("  %-6s  %10s  %10s\n", "depth", "A (W60)", "B (W64)");
+        for (d = 0; d < 20; d++) {
+            if (g_save_depth_counts[d] > 0 || depth_counts_b[d] > 0)
+                printf("  d=%-4d  %10d  %10d\n",
+                       d, g_save_depth_counts[d], depth_counts_b[d]);
+        }
+    }
+
+    /* ============================================================
+     * Phase 3: Radical Verification + XOR Comparison
+     * ============================================================ */
+    printf("\n=== Phase 3: Radical Verification + XOR Comparison ===\n\n");
+
+    /* P6: Writhe character for ALL catalog entries */
+    printf("  P6: Writhe character verification (all %d entries):\n",
+           g_cat_size);
+    {
+        int n_ok = 0, n_fail_wr = 0;
+        Cyc8 r_vec[DIM];
+        r_vec[0] = cyc8_one();
+        r_vec[1] = cyc8_zero();
+        r_vec[2] = cyc8_make(-1,0,0,0);
+        r_vec[3] = cyc8_zero();
+        r_vec[4] = cyc8_one();
+
+        for (i = 0; i < g_cat_size; i++) {
+            Cyc8 mr[DIM];
+            Cyc8 expected = cyc8_A_pow(g_writhe[i]);
+            int ri, ok = 1;
+            compute_Mr(&g_cat[i], mr);
+            for (ri = 0; ri < DIM; ri++) {
+                Cyc8 exp = cyc8_mul(expected, r_vec[ri]);
+                if (!cyc8_eq(mr[ri], exp)) ok = 0;
+            }
+            if (ok) n_ok++; else n_fail_wr++;
+        }
+        printf("  Verified: %d/%d entries match A^{writhe} * r\n",
+               n_ok, g_cat_size);
+        check("P6: Frozen radical exact for ALL entries",
+              n_fail_wr == 0);
+    }
+
+    /* P7: radical_content constant */
+    printf("\n  P7: radical_content constancy:\n");
+    {
+        long first_rc = -1;
+        int all_same = 1;
+        for (i = 0; i < g_cat_size; i++) {
+            long rc = radical_content(&g_cat[i]);
+            if (first_rc < 0) first_rc = rc;
+            else if (rc != first_rc) all_same = 0;
+        }
+        printf("  radical_content = %ld for all entries: %s\n",
+               first_rc, all_same ? "YES" : "NO");
+        check("P7: radical_content constant across catalog", all_same);
+    }
+
+    /* XOR comparison */
+    printf("\n  XOR Capacity Comparison (k=128, deep bf=30):\n");
+    {
+        int deep_idx[1024];
+        int nd = 0, bf, step, j;
+        int xor_b[4];
+        int xor_b_quot[2]; /* XOR6, XOR10 with quotient activation */
+        Mat5 orig_cat[BF_SAVE];
+        int orig_d[BF_SAVE], orig_w[BF_SAVE];
+        int orig_sz;
+
+        for (i = 0; i < g_cat_size && nd < 1024; i++)
+            if (g_depth[i] >= 4) deep_idx[nd++] = i;
+
+        bf = nd < BF_SAVE ? nd : BF_SAVE;
+        step = nd / bf;
+        if (step < 1) step = 1;
+
+        /* Save and replace */
+        orig_sz = g_cat_size;
+        for (j = 0; j < bf; j++) {
+            orig_cat[j] = g_cat[j];
+            orig_d[j] = g_depth[j];
+            orig_w[j] = g_writhe[j];
+        }
+        for (j = 0; j < bf; j++) {
+            int src = deep_idx[j * step];
+            g_cat[j] = g_cat[src];
+            g_depth[j] = g_depth[src];
+            g_writhe[j] = g_writhe[src];
+        }
+        g_cat_size = bf;
+
+        xor_b[0] = count_xor_bf(3, 128, bf);
+        xor_b[1] = count_xor_bf(4, 128, bf);
+        xor_b[2] = count_xor_bf(5, 128, bf);
+        xor_b[3] = count_xor_bf(6, 128, bf);
+
+        /* Quotient-only activation XOR for W_{6,4} */
+        xor_b_quot[0] = count_xor_bf_fn(3, 128, bf, mat5_activate_quot);
+        xor_b_quot[1] = count_xor_bf_fn(5, 128, bf, mat5_activate_quot);
+
+        printf("  %-8s  %10s  %10s  %10s\n",
+               "XOR", "A (W60)", "B (W64)", "B quot");
+        printf("  %-8s  %10s  %10s  %10s\n",
+               "--------", "----------", "----------", "----------");
+        printf("  XOR6     %10d  %10d  %10d\n",
+               g_save_xor[0], xor_b[0], xor_b_quot[0]);
+        printf("  XOR8     %10d  %10d          -\n",
+               g_save_xor[1], xor_b[1]);
+        printf("  XOR10    %10d  %10d  %10d\n",
+               g_save_xor[2], xor_b[2], xor_b_quot[1]);
+        printf("  XOR12    %10d  %10d          -\n",
+               g_save_xor[3], xor_b[3]);
+
+        check("P8: XOR comparison completed", 1);
+
+        /* ============================================================
+         * Phase 4: Casimir Analysis
+         * ============================================================ */
+        printf("\n=== Phase 4: Casimir Analysis ===\n\n");
+        {
+            static long cas_b[BF_SAVE];
+
+            for (j = 0; j < bf; j++) {
+                Cyc8 c5 = mat5_casimir(&g_cat[j]);
+                cas_b[j] = cyc8_l1(c5);
+            }
+
+            /* Mean Casimir comparison */
+            {
+                long sum_a = 0, sum_b = 0;
+                int lim = g_save_bf < bf ? g_save_bf : bf;
+                for (j = 0; j < lim; j++) {
+                    sum_a += g_save_cas[j];
+                    sum_b += cas_b[j];
+                }
+                printf("  Mean |C5| (bf=%d): A=%ld  B=%ld\n",
+                       lim, sum_a / (long)lim, sum_b / (long)lim);
+            }
+
+            /* P9: Casimir by XOR level */
+            printf("\n  Casimir by XOR level (P9):\n");
+            printf("  %-8s  %8s  %12s  %12s  %8s\n",
+                   "XOR", "winners", "win_C5", "ctrl_C5", "ratio");
+
+            /* XOR6 winners vs control */
+            {
+                int a0, a1, a2;
+                int nw = 0, nc = 0;
+                long wc = 0, cc = 0;
+                int idx[8];
+                for (a0 = 0; a0 < bf; a0++)
+                for (a1 = a0+1; a1 < bf; a1++)
+                for (a2 = a1+1; a2 < bf; a2++) {
+                    long tc;
+                    idx[0]=a0; idx[1]=a1; idx[2]=a2;
+                    tc = cas_b[a0]+cas_b[a1]+cas_b[a2];
+                    if (test_xor(idx, 3, 128)) {
+                        nw++; wc += tc;
+                    } else if (nc < 500) {
+                        nc++; cc += tc;
+                    }
+                }
+                if (nw > 0 && nc > 0)
+                    printf("  XOR6     %8d  %12ld  %12ld  %7.2fx\n",
+                           nw, wc/(long)nw, cc/(long)nc,
+                           cc>0?(double)(wc/(long)nw)/(double)(cc/(long)nc):0.0);
+            }
+
+            /* XOR10 winners vs control */
+            {
+                int a0, a1, a2, a3, a4;
+                int nw = 0, nc = 0;
+                long wc = 0, cc = 0;
+                int idx[8];
+                for (a0 = 0; a0 < bf; a0++)
+                for (a1 = a0+1; a1 < bf; a1++)
+                for (a2 = a1+1; a2 < bf; a2++)
+                for (a3 = a2+1; a3 < bf; a3++)
+                for (a4 = a3+1; a4 < bf; a4++) {
+                    long tc;
+                    idx[0]=a0; idx[1]=a1; idx[2]=a2;
+                    idx[3]=a3; idx[4]=a4;
+                    tc = cas_b[a0]+cas_b[a1]+cas_b[a2]
+                       + cas_b[a3]+cas_b[a4];
+                    if (test_xor(idx, 5, 128)) {
+                        nw++; wc += tc;
+                    } else if (nc < 500) {
+                        nc++; cc += tc;
+                    }
+                }
+                if (nw > 0 && nc > 0)
+                    printf("  XOR10    %8d  %12ld  %12ld  %7.2fx\n",
+                           nw, wc/(long)nw, cc/(long)nc,
+                           cc>0?(double)(wc/(long)nw)/(double)(cc/(long)nc):0.0);
+            }
+
+            check("P9: Casimir-by-XOR analysis completed", 1);
+
+            /* ============================================================
+             * Phase 5: Hub Anatomy
+             * ============================================================ */
+            printf("\n=== Phase 5: Hub Anatomy (W_{6,4}) ===\n\n");
+
+            /* Entry frequency in XOR10 winners */
+            printf("  Step 1: Entry frequency in XOR10 winners\n");
+            {
+                static int entry_freq[BF_SAVE];
+                int n_win10 = 0;
+                int hub_idx[20];
+                int n_hubs = 0;
+                int a0, a1, a2, a3, a4;
+                int idx5[8];
+
+                memset(entry_freq, 0, (size_t)bf * sizeof(int));
+
+                for (a0 = 0; a0 < bf; a0++)
+                for (a1 = a0+1; a1 < bf; a1++)
+                for (a2 = a1+1; a2 < bf; a2++)
+                for (a3 = a2+1; a3 < bf; a3++)
+                for (a4 = a3+1; a4 < bf; a4++) {
+                    idx5[0]=a0; idx5[1]=a1; idx5[2]=a2;
+                    idx5[3]=a3; idx5[4]=a4;
+                    if (test_xor(idx5, 5, 128)) {
+                        n_win10++;
+                        entry_freq[a0]++;
+                        entry_freq[a1]++;
+                        entry_freq[a2]++;
+                        entry_freq[a3]++;
+                        entry_freq[a4]++;
+                    }
+                }
+
+                printf("  Total XOR10 winners: %d\n\n", n_win10);
+
+                /* Frequency histogram */
+                {
+                    int freq_hist[200];
+                    int max_freq = 0, fi;
+                    memset(freq_hist, 0, sizeof(freq_hist));
+                    for (fi = 0; fi < bf; fi++) {
+                        if (entry_freq[fi] > max_freq)
+                            max_freq = entry_freq[fi];
+                        if (entry_freq[fi] < 200)
+                            freq_hist[entry_freq[fi]]++;
+                    }
+                    printf("  %-6s  %6s\n", "freq", "entries");
+                    for (fi = 0; fi <= max_freq && fi < 200; fi++)
+                        if (freq_hist[fi] > 0)
+                            printf("  %-6d  %6d\n", fi, freq_hist[fi]);
+                }
+
+                /* Super-hubs (>33% of winners) */
+                {
+                    int threshold = n_win10 > 0 ? n_win10 / 3 : 1;
+                    int fi;
+                    printf("\n  Super-hubs (freq > %d):\n", threshold);
+                    for (fi = 0; fi < bf && n_hubs < 20; fi++) {
+                        if (entry_freq[fi] > threshold) {
+                            hub_idx[n_hubs] = fi;
+                            printf("    Hub %d: entry %d, freq=%d "
+                                   "(%.1f%%), d=%d, w=%d\n",
+                                   n_hubs, fi, entry_freq[fi],
+                                   n_win10 > 0 ?
+                                   100.0*(double)entry_freq[fi]
+                                        /(double)n_win10 : 0.0,
+                                   g_depth[fi], g_writhe[fi]);
+                            n_hubs++;
+                        }
+                    }
+                }
+
+                sprintf(msg, "B: Super-hubs found: %d", n_hubs);
+                check(msg, n_hubs > 0);
+
+                /* Step 2: Hub properties */
+                if (n_hubs >= 1) {
+                    int hi;
+                    printf("\n  Step 2: Hub properties\n");
+                    for (hi = 0; hi < n_hubs && hi < 6; hi++) {
+                        int hidx = hub_idx[hi];
+                        Cyc8 tr_h = mat5_trace(&g_cat[hidx]);
+                        Cyc8 c5_h = mat5_casimir(&g_cat[hidx]);
+                        Cyc8 rs = radical_scalar(&g_cat[hidx]);
+                        long mix = mixing_row_l1(&g_cat[hidx]);
+                        long quot = quotient_block_l1(&g_cat[hidx]);
+                        long frob = mat5_frob_l1(&g_cat[hidx]);
+
+                        printf("\n    Hub %d (entry %d, d=%d, w=%d):\n",
+                               hi, hidx, g_depth[hidx], g_writhe[hidx]);
+                        printf("    trace = (%ld,%ld,%ld,%ld)\n",
+                               tr_h.a, tr_h.b, tr_h.c, tr_h.d);
+                        printf("    |C5| = %ld\n", cyc8_l1(c5_h));
+                        printf("    radical_scalar = (%ld,%ld,%ld,%ld)"
+                               " = A^%d\n",
+                               rs.a, rs.b, rs.c, rs.d, g_writhe[hidx]);
+                        printf("    mixing_row_L1 = %ld\n", mix);
+                        printf("    quotient_block_L1 = %ld\n", quot);
+                        printf("    Frobenius L1 = %ld\n", frob);
+                    }
+                    check("B: Hub properties reported", 1);
+                }
+
+                /* Step 3: Hub commutators + block decomposition */
+                if (n_hubs >= 2) {
+                    int hi, hj;
+                    int n_traceless = 0;
+                    int n_rad_zero = 0;
+                    long total_mix_l1 = 0, total_comm_l1 = 0;
+
+                    printf("\n  Step 3: Hub commutators "
+                           "(P10, P11, P12)\n");
+                    printf("  %-4s %-4s  %20s  %8s  %8s  %8s"
+                           "  %8s  %6s\n",
+                           "i", "j", "trace", "|C5|",
+                           "Q_L1", "mix_L1", "rad_L1", "mix%%");
+
+                    for (hi = 0; hi < n_hubs && hi < 10; hi++) {
+                        for (hj = hi+1; hj < n_hubs && hj < 10; hj++) {
+                            int ha = hub_idx[hi], hb = hub_idx[hj];
+                            Mat5 comm;
+                            Mat5 ab, ba;
+                            Cyc8 tr_c, rs_c;
+                            long q_l1, m_l1, r_l1, f_l1;
+                            double mix_pct;
+
+                            ab = mat5_mul(&g_cat[ha], &g_cat[hb]);
+                            ba = mat5_mul(&g_cat[hb], &g_cat[ha]);
+                            comm = mat5_sub(&ab, &ba);
+
+                            tr_c = mat5_trace(&comm);
+                            rs_c = radical_scalar(&comm);
+                            q_l1 = quotient_block_l1(&comm);
+                            m_l1 = mixing_row_l1(&comm);
+                            r_l1 = cyc8_l1(rs_c);
+                            f_l1 = mat5_frob_l1(&comm);
+
+                            if (cyc8_is_zero(tr_c)) n_traceless++;
+                            if (cyc8_is_zero(rs_c)) n_rad_zero++;
+
+                            total_mix_l1 += m_l1;
+                            total_comm_l1 += f_l1;
+
+                            mix_pct = f_l1 > 0 ?
+                                100.0*(double)m_l1/(double)f_l1 : 0.0;
+
+                            printf("  %-4d %-4d  "
+                                   "(%3ld,%3ld,%3ld,%3ld)  "
+                                   "%8ld  %8ld  %8ld  %8ld  %5.1f%%\n",
+                                   hi, hj,
+                                   tr_c.a, tr_c.b, tr_c.c, tr_c.d,
+                                   cyc8_l1(mat5_casimir(&comm)),
+                                   q_l1, m_l1, r_l1, mix_pct);
+                        }
+                    }
+
+                    {
+                        int nh = n_hubs < 10 ? n_hubs : 10;
+                        int total = nh * (nh - 1) / 2;
+
+                        sprintf(msg, "P10: Traceless commutators: %d/%d",
+                                n_traceless, total);
+                        check(msg, 1);
+
+                        sprintf(msg, "P11: Radical scalar=0 in "
+                                "commutators: %d/%d",
+                                n_rad_zero, total);
+                        check(msg, n_rad_zero == total);
+
+                        if (total_comm_l1 > 0) {
+                            double mix_frac = 100.0 *
+                                (double)total_mix_l1 /
+                                (double)total_comm_l1;
+                            printf("\n  Mixing dominance (P12): "
+                                   "%.1f%% of total L1\n", mix_frac);
+                        }
+                    }
+
+                    /* First commutator detail */
+                    if (n_hubs >= 2) {
+                        Mat5 ab2 = mat5_mul(&g_cat[hub_idx[0]],
+                                            &g_cat[hub_idx[1]]);
+                        Mat5 ba2 = mat5_mul(&g_cat[hub_idx[1]],
+                                            &g_cat[hub_idx[0]]);
+                        Mat5 comm2 = mat5_sub(&ab2, &ba2);
+                        printf("\n  [hub_0, hub_1] detail:\n");
+                        mat5_print("commutator", &comm2);
+                        printf("    Frobenius L1 = %ld\n",
+                               mat5_frob_l1(&comm2));
+                    }
+
+                    check("Hub commutator analysis completed", 1);
+                }
+            }
+        }
+
+        /* Restore catalog */
+        for (j = 0; j < bf; j++) {
+            g_cat[j] = orig_cat[j];
+            g_depth[j] = orig_d[j];
+            g_writhe[j] = orig_w[j];
+        }
+        g_cat_size = orig_sz;
+    }
+
+    /* ============================================================
+     * Phase 6: Follow-up Analysis
+     * ============================================================ */
+    printf("\n=== Phase 6: Follow-up Analysis ===\n\n");
+
+    /* Q1: Max abs by depth (B catalog is currently live) */
+    {
+        long ma_b[20];
+        int d, max_d_b = 0;
+        memset(ma_b, 0, sizeof(ma_b));
+        for (i = 0; i < g_cat_size; i++) {
+            if (g_depth[i] < 20) {
+                long v = mat5_max_abs(&g_cat[i]);
+                if (v > ma_b[g_depth[i]]) ma_b[g_depth[i]] = v;
+                if (g_depth[i] > max_d_b) max_d_b = g_depth[i];
+            }
+        }
+
+        /* Q2: Mixing row statistics for B */
+        printf("  Q2: Mixing row variation (W_{6,4})\n");
+        {
+            long min_mix = 999999999L, max_mix = 0, sum_mix = 0;
+            int n_zero_mix = 0, d2;
+            long mix_by_depth[20];
+            int cnt_by_depth[20];
+            memset(mix_by_depth, 0, sizeof(mix_by_depth));
+            memset(cnt_by_depth, 0, sizeof(cnt_by_depth));
+
+            for (i = 0; i < g_cat_size; i++) {
+                long ml = mixing_row_l1(&g_cat[i]);
+                sum_mix += ml;
+                if (ml < min_mix) min_mix = ml;
+                if (ml > max_mix) max_mix = ml;
+                if (ml == 0) n_zero_mix++;
+                if (g_depth[i] < 20) {
+                    mix_by_depth[g_depth[i]] += ml;
+                    cnt_by_depth[g_depth[i]]++;
+                }
+            }
+            printf("  Mixing row L1: min=%ld max=%ld mean=%ld "
+                   "zero=%d/%d\n",
+                   min_mix, max_mix, sum_mix / (long)g_cat_size,
+                   n_zero_mix, g_cat_size);
+            printf("  Mixing row L1 by depth:\n");
+            for (d2 = 0; d2 <= max_d_b; d2++) {
+                if (cnt_by_depth[d2] > 0)
+                    printf("    d=%d: mean_mix=%ld (n=%d)\n",
+                           d2,
+                           mix_by_depth[d2] / (long)cnt_by_depth[d2],
+                           cnt_by_depth[d2]);
+            }
+        }
+
+        /* Rebuild A for max_abs by depth comparison */
+        printf("\n  Q1: Max coefficient magnitude by depth\n");
+        build_tl_a();
+        build_braid_generators();
+        build_catalog(12);
+
+        {
+            long ma_a[20];
+            int max_d_a = 0;
+            memset(ma_a, 0, sizeof(ma_a));
+            for (i = 0; i < g_cat_size; i++) {
+                if (g_depth[i] < 20) {
+                    long v = mat5_max_abs(&g_cat[i]);
+                    if (v > ma_a[g_depth[i]]) ma_a[g_depth[i]] = v;
+                    if (g_depth[i] > max_d_a) max_d_a = g_depth[i];
+                }
+            }
+            printf("  %-6s  %10s  %10s\n", "depth", "A (W60)", "B (W64)");
+            {
+                int lim = max_d_a > max_d_b ? max_d_a : max_d_b;
+                for (d = 0; d <= lim; d++)
+                    printf("  d=%-4d  %10ld  %10ld\n", d,
+                           d <= max_d_a ? ma_a[d] : 0,
+                           d <= max_d_b ? ma_b[d] : 0);
+            }
+        }
+
+        /* Q3: The lone A XOR10 winner */
+        printf("\n  Q3: A's lone XOR10 winner\n");
+        {
+            int j, bf_a = g_save_bf;
+            Mat5 hold_cat[BF_SAVE];
+            int hold_d[BF_SAVE], hold_w[BF_SAVE];
+            int hold_sz = g_cat_size;
+
+            for (j = 0; j < bf_a; j++) {
+                hold_cat[j] = g_cat[j];
+                hold_d[j] = g_depth[j];
+                hold_w[j] = g_writhe[j];
+            }
+            for (j = 0; j < bf_a; j++) {
+                g_cat[j] = g_save_cat[j];
+                g_depth[j] = g_save_depth[j];
+                g_writhe[j] = g_save_writhe[j];
+            }
+            g_cat_size = bf_a;
+
+            /* Find the XOR10 winner */
+            {
+                int a0, a1, a2, a3, a4;
+                int idx5[8];
+                int found = 0;
+                for (a0 = 0; a0 < bf_a && !found; a0++)
+                for (a1 = a0+1; a1 < bf_a && !found; a1++)
+                for (a2 = a1+1; a2 < bf_a && !found; a2++)
+                for (a3 = a2+1; a3 < bf_a && !found; a3++)
+                for (a4 = a3+1; a4 < bf_a && !found; a4++) {
+                    idx5[0]=a0; idx5[1]=a1; idx5[2]=a2;
+                    idx5[3]=a3; idx5[4]=a4;
+                    if (test_xor(idx5, 5, 128)) {
+                        int wi;
+                        printf("  Winner: entries {%d,%d,%d,%d,%d}\n",
+                               a0, a1, a2, a3, a4);
+                        for (wi = 0; wi < 5; wi++) {
+                            int ei = idx5[wi];
+                            Cyc8 tr_e = mat5_trace(&g_cat[ei]);
+                            Cyc8 c5_e = mat5_casimir(&g_cat[ei]);
+                            printf("    e%d: d=%d w=%d |C5|=%ld "
+                                   "tr=(%ld,%ld,%ld,%ld) frob=%ld\n",
+                                   ei, g_depth[ei], g_writhe[ei],
+                                   cyc8_l1(c5_e),
+                                   tr_e.a, tr_e.b, tr_e.c, tr_e.d,
+                                   mat5_frob_l1(&g_cat[ei]));
+                        }
+                        found = 1;
+                    }
+                }
+                if (!found) printf("  (not found in re-scan)\n");
+                check("Q3: A XOR10 winner identified", found);
+            }
+
+            /* Q4: A's XOR6 hub analysis */
+            printf("\n  Q4: A (W_{6,0}) XOR6 hub analysis\n");
+            {
+                static int ef[BF_SAVE];
+                int n6 = 0;
+                int hub_a[20];
+                int nh = 0;
+                int a0, a1, a2;
+                int idx3[8];
+
+                memset(ef, 0, (size_t)bf_a * sizeof(int));
+
+                for (a0 = 0; a0 < bf_a; a0++)
+                for (a1 = a0+1; a1 < bf_a; a1++)
+                for (a2 = a1+1; a2 < bf_a; a2++) {
+                    idx3[0]=a0; idx3[1]=a1; idx3[2]=a2;
+                    if (test_xor(idx3, 3, 128)) {
+                        n6++;
+                        ef[a0]++;
+                        ef[a1]++;
+                        ef[a2]++;
+                    }
+                }
+
+                printf("  Total A XOR6 winners: %d\n", n6);
+
+                /* Frequency distribution */
+                {
+                    int freq_hist[200];
+                    int max_freq = 0, fi;
+                    memset(freq_hist, 0, sizeof(freq_hist));
+                    for (fi = 0; fi < bf_a; fi++) {
+                        if (ef[fi] > max_freq) max_freq = ef[fi];
+                        if (ef[fi] < 200) freq_hist[ef[fi]]++;
+                    }
+                    printf("  %-6s  %6s\n", "freq", "entries");
+                    for (fi = 0; fi <= max_freq && fi < 200; fi++)
+                        if (freq_hist[fi] > 0)
+                            printf("  %-6d  %6d\n", fi, freq_hist[fi]);
+                }
+
+                /* Super-hubs (>33%) */
+                {
+                    int threshold = n6 > 0 ? n6 / 3 : 1;
+                    int fi;
+                    printf("\n  Super-hubs (freq > %d):\n", threshold);
+                    for (fi = 0; fi < bf_a && nh < 20; fi++) {
+                        if (ef[fi] > threshold) {
+                            hub_a[nh] = fi;
+                            printf("    Hub %d: entry %d, freq=%d "
+                                "(%.1f%%), d=%d, w=%d\n",
+                                nh, fi, ef[fi],
+                                n6 > 0 ? 100.0 * (double)ef[fi]
+                                        / (double)n6 : 0.0,
+                                g_depth[fi], g_writhe[fi]);
+                            nh++;
+                        }
+                    }
+                }
+
+                sprintf(msg, "A: XOR6 super-hubs: %d", nh);
+                check(msg, nh > 0);
+
+                /* Hub properties */
+                if (nh >= 1) {
+                    int hi;
+                    printf("\n  Hub properties:\n");
+                    for (hi = 0; hi < nh && hi < 6; hi++) {
+                        int hidx = hub_a[hi];
+                        Cyc8 tr_h = mat5_trace(&g_cat[hidx]);
+                        Cyc8 c5_h = mat5_casimir(&g_cat[hidx]);
+                        printf("    Hub %d (e%d, d=%d, w=%d): "
+                               "tr=(%ld,%ld,%ld,%ld) |C5|=%ld "
+                               "frob=%ld\n",
+                               hi, hidx, g_depth[hidx],
+                               g_writhe[hidx],
+                               tr_h.a, tr_h.b, tr_h.c, tr_h.d,
+                               cyc8_l1(c5_h),
+                               mat5_frob_l1(&g_cat[hidx]));
+                    }
+                }
+
+                /* Hub commutators */
+                if (nh >= 2) {
+                    int hi, hj;
+                    int n_comm = 0, n_zero_comm = 0;
+                    printf("\n  Hub commutators (P10: simple->commuting?):\n");
+                    printf("  %-4s %-4s  %24s  %8s  %8s\n",
+                           "i", "j", "trace", "|C5|", "frob_L1");
+                    for (hi = 0; hi < nh && hi < 6; hi++) {
+                        for (hj = hi+1; hj < nh && hj < 6; hj++) {
+                            Mat5 ab5, ba5, cm5;
+                            Cyc8 tr_cm;
+                            long f5;
+                            ab5 = mat5_mul(&g_cat[hub_a[hi]],
+                                           &g_cat[hub_a[hj]]);
+                            ba5 = mat5_mul(&g_cat[hub_a[hj]],
+                                           &g_cat[hub_a[hi]]);
+                            cm5 = mat5_sub(&ab5, &ba5);
+                            tr_cm = mat5_trace(&cm5);
+                            f5 = mat5_frob_l1(&cm5);
+                            n_comm++;
+                            if (f5 == 0) n_zero_comm++;
+                            printf("  %-4d %-4d  "
+                                "(%3ld,%3ld,%3ld,%3ld)  "
+                                "%8ld  %8ld\n",
+                                hi, hj,
+                                tr_cm.a, tr_cm.b, tr_cm.c, tr_cm.d,
+                                cyc8_l1(mat5_casimir(&cm5)), f5);
+                        }
+                    }
+                    printf("  Commuting pairs: %d/%d\n",
+                           n_zero_comm, n_comm);
+                    check("A: Hub commutator analysis", 1);
+                }
+            }
+
+            /* Restore */
+            for (j = 0; j < bf_a; j++) {
+                g_cat[j] = hold_cat[j];
+                g_depth[j] = hold_d[j];
+                g_writhe[j] = hold_w[j];
+            }
+            g_cat_size = hold_sz;
+        }
+    }
+
+    /* ============================================================
+     * Summary
+     * ============================================================ */
+    printf("\n=============================================\n");
+    printf("Results: %d pass, %d fail\n", n_pass, n_fail);
+    return n_fail > 0 ? 1 : 0;
+}

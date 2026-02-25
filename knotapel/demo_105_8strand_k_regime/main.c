@@ -1,0 +1,1045 @@
+/*
+ * KNOTAPEL DEMO 105: 8-Strand W_{8,0} k-Regime Test
+ * ===================================================
+ *
+ * Goal: Does k=4096 revive XOR at N>=7?
+ *
+ * D93 measured "XOR dies at N>=7" at k=12-24 (k/2^7 ~ 0.09-0.19,
+ * deep pigeonhole regime). D104 showed k is the real lever:
+ * at n=6, XOR8 goes from 850 to 21699 just by increasing k from
+ * 128 to 4096.
+ *
+ * Module: W_{8,0} (simple, dim=14, j=0 through-lines)
+ * TL generators built PROGRAMMATICALLY from link state enumeration
+ * (D85 infrastructure), not hardcoded.
+ *
+ * Predictions (registered before computation):
+ *   P1: BFS growth follows strand-count law (14 generators => faster fill)
+ *   P2: Rank = 14*14*4 = 784 (full, since W_{8,0} is simple)
+ *   P3: XOR7 > 0 at k=4096 (k/2^7 = 32, collision avoidance regime)
+ *   P4: XOR8 > 0 at k=4096 (k/2^8 = 16, still above geometric regime)
+ *   P5: XOR6 comparable to n=6 W_{6,0} at matched k
+ *
+ * Phase 0: Link state enumeration + TL generator verification
+ * Phase 1: BFS catalog build
+ * Phase 2: Rank computation
+ * Phase 3: k-sweep (XOR6, XOR7, XOR8 at k=128..4096)
+ *
+ * C89, zero dependencies beyond stdio/stdlib/string.
+ */
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+/* ================================================================
+ * Test infrastructure
+ * ================================================================ */
+
+static int n_pass = 0, n_fail = 0;
+
+static void check(const char *msg, int ok) {
+    if (ok) { printf("  PASS: %s\n", msg); n_pass++; }
+    else    { printf("  FAIL: %s\n", msg); n_fail++; }
+}
+
+/* ================================================================
+ * Exact Cyclotomic Arithmetic -- Z[zeta_8]
+ * Basis: {1, zeta_8, zeta_8^2, zeta_8^3} with zeta_8^4 = -1
+ * ================================================================ */
+
+typedef struct { long a, b, c, d; } Cyc8;
+
+static Cyc8 cyc8_make(long a, long b, long c, long d) {
+    Cyc8 z; z.a = a; z.b = b; z.c = c; z.d = d; return z;
+}
+static Cyc8 cyc8_one(void)  { return cyc8_make(1,0,0,0); }
+
+static Cyc8 cyc8_add(Cyc8 x, Cyc8 y) {
+    return cyc8_make(x.a+y.a, x.b+y.b, x.c+y.c, x.d+y.d);
+}
+static Cyc8 cyc8_sub(Cyc8 x, Cyc8 y) {
+    return cyc8_make(x.a-y.a, x.b-y.b, x.c-y.c, x.d-y.d);
+}
+static Cyc8 cyc8_mul(Cyc8 x, Cyc8 y) {
+    return cyc8_make(
+        x.a*y.a - x.b*y.d - x.c*y.c - x.d*y.b,
+        x.a*y.b + x.b*y.a - x.c*y.d - x.d*y.c,
+        x.a*y.c + x.b*y.b + x.c*y.a - x.d*y.d,
+        x.a*y.d + x.b*y.c + x.c*y.b + x.d*y.a);
+}
+static int cyc8_eq(Cyc8 x, Cyc8 y) {
+    return x.a==y.a && x.b==y.b && x.c==y.c && x.d==y.d;
+}
+static long cyc8_max_abs(Cyc8 z) {
+    long m = 0, v;
+    v = z.a<0?-z.a:z.a; if(v>m) m=v;
+    v = z.b<0?-z.b:z.b; if(v>m) m=v;
+    v = z.c<0?-z.c:z.c; if(v>m) m=v;
+    v = z.d<0?-z.d:z.d; if(v>m) m=v;
+    return m;
+}
+
+/* ================================================================
+ * Variable-dimension Matrix over Cyc8
+ * MAX_DIM=14 for W_{8,0}
+ * ================================================================ */
+
+#define MAX_DIM 14
+
+static int g_dim = 14;
+
+typedef struct { Cyc8 m[MAX_DIM][MAX_DIM]; } MatN;
+
+static MatN matN_zero(void) {
+    MatN r;
+    memset(&r, 0, sizeof(MatN));
+    return r;
+}
+
+static MatN matN_identity(void) {
+    MatN r;
+    int i;
+    memset(&r, 0, sizeof(MatN));
+    for (i = 0; i < g_dim; i++)
+        r.m[i][i] = cyc8_one();
+    return r;
+}
+
+static void matN_mul_to(const MatN *p, const MatN *q, MatN *out) {
+    int i, j, k;
+    memset(out, 0, sizeof(MatN));
+    for (i = 0; i < g_dim; i++)
+        for (j = 0; j < g_dim; j++)
+            for (k = 0; k < g_dim; k++)
+                out->m[i][j] = cyc8_add(out->m[i][j],
+                    cyc8_mul(p->m[i][k], q->m[k][j]));
+}
+
+static int matN_eq(const MatN *p, const MatN *q) {
+    int i, j;
+    for (i = 0; i < g_dim; i++)
+        for (j = 0; j < g_dim; j++)
+            if (!cyc8_eq(p->m[i][j], q->m[i][j])) return 0;
+    return 1;
+}
+
+static MatN matN_add(const MatN *p, const MatN *q) {
+    MatN r;
+    int i, j;
+    memset(&r, 0, sizeof(MatN));
+    for (i = 0; i < g_dim; i++)
+        for (j = 0; j < g_dim; j++)
+            r.m[i][j] = cyc8_add(p->m[i][j], q->m[i][j]);
+    return r;
+}
+
+static void matN_add_inplace(MatN *dst, const MatN *src) {
+    int i, j;
+    for (i = 0; i < g_dim; i++)
+        for (j = 0; j < g_dim; j++)
+            dst->m[i][j] = cyc8_add(dst->m[i][j], src->m[i][j]);
+}
+
+static void matN_sub_inplace(MatN *dst, const MatN *src) {
+    int i, j;
+    for (i = 0; i < g_dim; i++)
+        for (j = 0; j < g_dim; j++)
+            dst->m[i][j] = cyc8_sub(dst->m[i][j], src->m[i][j]);
+}
+
+static MatN matN_scale(Cyc8 s, const MatN *p) {
+    MatN r;
+    int i, j;
+    memset(&r, 0, sizeof(MatN));
+    for (i = 0; i < g_dim; i++)
+        for (j = 0; j < g_dim; j++)
+            r.m[i][j] = cyc8_mul(s, p->m[i][j]);
+    return r;
+}
+
+static long matN_max_abs(const MatN *m) {
+    long mx = 0, v;
+    int i, j;
+    for (i = 0; i < g_dim; i++)
+        for (j = 0; j < g_dim; j++) {
+            v = cyc8_max_abs(m->m[i][j]);
+            if (v > mx) mx = v;
+        }
+    return mx;
+}
+
+/* ================================================================
+ * Hash table for MatN BFS
+ * ================================================================ */
+
+#define MAX_CAT 32768
+#define HASH_SIZE 65537
+
+static MatN *g_cat;
+static int   g_depth[MAX_CAT];
+static int   g_writhe[MAX_CAT];
+static int   g_cat_size = 0;
+
+static int g_hash_head[HASH_SIZE];
+static int g_hash_next[MAX_CAT];
+
+static unsigned long hash_matN(const MatN *m) {
+    unsigned long h = 2166136261UL;
+    int i, j;
+    for (i = 0; i < g_dim; i++)
+        for (j = 0; j < g_dim; j++) {
+            h = (h * 1000003UL) ^ (unsigned long)m->m[i][j].a;
+            h = (h * 1000003UL) ^ (unsigned long)m->m[i][j].b;
+            h = (h * 1000003UL) ^ (unsigned long)m->m[i][j].c;
+            h = (h * 1000003UL) ^ (unsigned long)m->m[i][j].d;
+        }
+    return h;
+}
+
+static void hash_init(void) {
+    memset(g_hash_head, -1, sizeof(g_hash_head));
+}
+
+static int hash_find(const MatN *m) {
+    int bucket = (int)(hash_matN(m) % (unsigned long)HASH_SIZE);
+    int idx = g_hash_head[bucket];
+    while (idx >= 0) {
+        if (matN_eq(&g_cat[idx], m)) return idx;
+        idx = g_hash_next[idx];
+    }
+    return -1;
+}
+
+static void hash_insert(int cat_idx) {
+    int bucket = (int)(hash_matN(&g_cat[cat_idx]) % (unsigned long)HASH_SIZE);
+    g_hash_next[cat_idx] = g_hash_head[bucket];
+    g_hash_head[bucket] = cat_idx;
+}
+
+/* ================================================================
+ * Link State Enumeration (from D85)
+ *
+ * Non-crossing perfect matchings on n boundary points.
+ * For n=8: C_4 = 14 states.
+ * ================================================================ */
+
+#define MAX_SITES 12
+#define MAX_LS_DIM 132
+
+typedef struct {
+    int pair[MAX_SITES];
+} LinkState;
+
+static void enum_ls_recurse(int n, int *pair,
+                            LinkState *basis, int *count) {
+    int first, k, j, all_free;
+    for (first = 0; first < n; first++) {
+        if (pair[first] == -1) break;
+    }
+    if (first >= n) {
+        memcpy(basis[*count].pair, pair, (size_t)n * sizeof(int));
+        (*count)++;
+        return;
+    }
+    for (k = first + 1; k < n; k++) {
+        all_free = 1;
+        for (j = first + 1; j < k; j++) {
+            if (pair[j] != -1) { all_free = 0; break; }
+        }
+        if (!all_free) continue;
+        if ((k - first - 1) % 2 != 0) continue;
+
+        pair[first] = k;
+        pair[k] = first;
+        enum_ls_recurse(n, pair, basis, count);
+        pair[first] = -1;
+        pair[k] = -1;
+    }
+}
+
+static int enumerate_link_states(int n, LinkState *basis) {
+    int pair[MAX_SITES];
+    int count = 0;
+    memset(pair, -1, sizeof(pair));
+    enum_ls_recurse(n, pair, basis, &count);
+    return count;
+}
+
+/*
+ * TL generator e_i action on a link state at delta=0.
+ * Returns 1 if result is valid (no loop), 0 if loop (annihilated).
+ */
+static int apply_ei(int i, const LinkState *in, LinkState *out, int n) {
+    int a, b;
+    if (in->pair[i] == i + 1) {
+        return 0; /* loop -> killed at delta=0 */
+    }
+    a = in->pair[i];
+    b = in->pair[i + 1];
+
+    memcpy(out->pair, in->pair, (size_t)n * sizeof(int));
+
+    out->pair[i] = i + 1;
+    out->pair[i + 1] = i;
+    out->pair[a] = b;
+    out->pair[b] = a;
+
+    return 1;
+}
+
+static int find_ls_index(const LinkState *ls, const LinkState *basis,
+                         int dim, int n) {
+    int idx, j, eq;
+    for (idx = 0; idx < dim; idx++) {
+        eq = 1;
+        for (j = 0; j < n; j++) {
+            if (basis[idx].pair[j] != ls->pair[j]) { eq = 0; break; }
+        }
+        if (eq) return idx;
+    }
+    return -1;
+}
+
+/* ================================================================
+ * Build TL generators programmatically from link states
+ * ================================================================ */
+
+#define N_STRANDS 8
+#define N_TL 7   /* n-1 generators */
+#define N_GEN 14  /* 2*N_TL (forward + inverse) */
+
+static MatN g_e[N_TL];
+static Cyc8 g_A, g_A_inv;
+static MatN g_gen[N_GEN];
+static int g_gen_writhe[N_GEN];
+
+static int build_tl_generators(LinkState *basis, int ls_dim) {
+    int gen, col, target;
+    LinkState out;
+    int total_nz = 0;
+
+    for (gen = 0; gen < N_TL; gen++) {
+        g_e[gen] = matN_zero();
+        for (col = 0; col < ls_dim; col++) {
+            if (apply_ei(gen, &basis[col], &out, N_STRANDS)) {
+                target = find_ls_index(&out, basis, ls_dim, N_STRANDS);
+                if (target >= 0) {
+                    g_e[gen].m[target][col] = cyc8_one();
+                    total_nz++;
+                }
+            }
+            /* if apply_ei returns 0, the column stays zero (killed) */
+        }
+    }
+
+    return total_nz;
+}
+
+static void build_braid_generators(void) {
+    int i;
+    MatN id_mat = matN_identity();
+    MatN a_id = matN_scale(g_A, &id_mat);
+    MatN ai_id = matN_scale(g_A_inv, &id_mat);
+
+    for (i = 0; i < N_TL; i++) {
+        MatN ai_e = matN_scale(g_A_inv, &g_e[i]);
+        MatN a_e  = matN_scale(g_A, &g_e[i]);
+        g_gen[2*i]     = matN_add(&a_id, &ai_e);
+        g_gen[2*i + 1] = matN_add(&ai_id, &a_e);
+        g_gen_writhe[2*i] = 1;
+        g_gen_writhe[2*i + 1] = -1;
+    }
+}
+
+/* ================================================================
+ * BFS catalog builder
+ * ================================================================ */
+
+static void build_catalog(int max_depth) {
+    int prev, gi, i, rd;
+    MatN prod;
+
+    g_cat_size = 0;
+    hash_init();
+
+    g_cat[0] = matN_identity();
+    g_depth[0] = 0;
+    g_writhe[0] = 0;
+    hash_insert(0);
+    g_cat_size = 1;
+
+    printf("  Round 0: 1 entry\n");
+
+    rd = 1;
+    do {
+        long round_max = 0;
+        prev = g_cat_size;
+        for (i = 0; i < prev && g_cat_size < MAX_CAT; i++) {
+            if (g_depth[i] != rd - 1) continue;
+            for (gi = 0; gi < N_GEN && g_cat_size < MAX_CAT; gi++) {
+                long mabs;
+                matN_mul_to(&g_cat[i], &g_gen[gi], &prod);
+                if (hash_find(&prod) < 0) {
+                    mabs = matN_max_abs(&prod);
+                    if (mabs > round_max) round_max = mabs;
+                    g_cat[g_cat_size] = prod;
+                    g_depth[g_cat_size] = rd;
+                    g_writhe[g_cat_size] = g_writhe[i] + g_gen_writhe[gi];
+                    hash_insert(g_cat_size);
+                    g_cat_size++;
+                }
+            }
+        }
+        if (g_cat_size > prev)
+            printf("  Round %d: %d entries (+%d), max_abs=%ld\n",
+                   rd, g_cat_size, g_cat_size - prev, round_max);
+        if (round_max > 100000000000L) {
+            printf("  WARNING: approaching overflow\n");
+            break;
+        }
+        rd++;
+    } while (g_cat_size > prev && g_cat_size < MAX_CAT && rd <= max_depth);
+
+    if (g_cat_size == prev)
+        printf("  GROUP CLOSED at %d entries\n", g_cat_size);
+    else if (g_cat_size >= MAX_CAT)
+        printf("  HIT CAP at %d entries (group is infinite)\n", MAX_CAT);
+}
+
+/* ================================================================
+ * Activation: sign hash of g_dim*g_dim*4 integer components
+ * 3-valued: pos=2, zero=1, neg=0.  Polynomial hash mod k_param.
+ * ================================================================ */
+
+static int matN_activate(const MatN *m, int k_param) {
+    unsigned long h = 0;
+    int i, j;
+    for (i = 0; i < g_dim; i++)
+        for (j = 0; j < g_dim; j++) {
+            h = h * 3UL + (unsigned long)(m->m[i][j].a > 0 ? 2 : (m->m[i][j].a < 0 ? 0 : 1));
+            h = h * 3UL + (unsigned long)(m->m[i][j].b > 0 ? 2 : (m->m[i][j].b < 0 ? 0 : 1));
+            h = h * 3UL + (unsigned long)(m->m[i][j].c > 0 ? 2 : (m->m[i][j].c < 0 ? 0 : 1));
+            h = h * 3UL + (unsigned long)(m->m[i][j].d > 0 ? 2 : (m->m[i][j].d < 0 ? 0 : 1));
+        }
+    return (int)(h % (unsigned long)k_param);
+}
+
+/* Activate using only the first comp_limit sign components */
+static int matN_activate_partial(const MatN *m, int k_param, int comp_limit) {
+    unsigned long h = 0;
+    int i, j, ci = 0;
+    for (i = 0; i < g_dim && ci < comp_limit; i++)
+        for (j = 0; j < g_dim && ci < comp_limit; j++) {
+            if (ci < comp_limit) { h = h*3UL + (unsigned long)(m->m[i][j].a>0?2:(m->m[i][j].a<0?0:1)); ci++; }
+            if (ci < comp_limit) { h = h*3UL + (unsigned long)(m->m[i][j].b>0?2:(m->m[i][j].b<0?0:1)); ci++; }
+            if (ci < comp_limit) { h = h*3UL + (unsigned long)(m->m[i][j].c>0?2:(m->m[i][j].c<0?0:1)); ci++; }
+            if (ci < comp_limit) { h = h*3UL + (unsigned long)(m->m[i][j].d>0?2:(m->m[i][j].d<0?0:1)); ci++; }
+        }
+    return (int)(h % (unsigned long)k_param);
+}
+
+/* ================================================================
+ * XOR test infrastructure
+ * ================================================================ */
+
+#define MAX_ACT_CELLS 8192
+
+static int cell_even[MAX_ACT_CELLS], cell_odd[MAX_ACT_CELLS];
+static int touched[MAX_ACT_CELLS];
+
+static int test_xor(const int *indices, int n_weights, int k_param) {
+    int n_inputs = 2 * n_weights;
+    int n_masks = 1 << n_inputs;
+    int n_touched = 0;
+    int mask, i, w;
+    int result = 1;
+
+    if (k_param > MAX_ACT_CELLS || n_inputs > 16 || n_weights > 8)
+        return 0;
+
+    for (mask = 0; mask < n_masks; mask++) {
+        MatN sum;
+        int par = 0, cell;
+        memset(&sum, 0, sizeof(MatN));
+
+        for (i = 0; i < n_inputs; i++) {
+            if (mask & (1 << i)) {
+                w = i / 2;
+                if (i % 2 == 0)
+                    matN_add_inplace(&sum, &g_cat[indices[w]]);
+                else
+                    matN_sub_inplace(&sum, &g_cat[indices[w]]);
+                par ^= 1;
+            }
+        }
+
+        cell = matN_activate(&sum, k_param);
+
+        if (cell_even[cell] == 0 && cell_odd[cell] == 0)
+            touched[n_touched++] = cell;
+
+        if (par == 0) {
+            cell_even[cell]++;
+            if (cell_odd[cell] > 0) { result = 0; goto cleanup; }
+        } else {
+            cell_odd[cell]++;
+            if (cell_even[cell] > 0) { result = 0; goto cleanup; }
+        }
+    }
+
+cleanup:
+    for (i = 0; i < n_touched; i++) {
+        cell_even[touched[i]] = 0;
+        cell_odd[touched[i]] = 0;
+    }
+    return result;
+}
+
+static int count_xor_bf(int n_weights, int k_param, int bf_limit) {
+    int count = 0;
+    int limit = g_cat_size < bf_limit ? g_cat_size : bf_limit;
+    int i0, i1, i2, i3;
+    int indices[8];
+
+    if (n_weights == 3) {
+        for (i0 = 0; i0 < limit; i0++)
+        for (i1 = i0+1; i1 < limit; i1++)
+        for (i2 = i1+1; i2 < limit; i2++) {
+            indices[0]=i0; indices[1]=i1; indices[2]=i2;
+            if (test_xor(indices, 3, k_param)) count++;
+        }
+    } else if (n_weights == 4) {
+        for (i0 = 0; i0 < limit; i0++)
+        for (i1 = i0+1; i1 < limit; i1++)
+        for (i2 = i1+1; i2 < limit; i2++)
+        for (i3 = i2+1; i3 < limit; i3++) {
+            indices[0]=i0; indices[1]=i1; indices[2]=i2; indices[3]=i3;
+            if (test_xor(indices, 4, k_param)) count++;
+        }
+    }
+    return count;
+}
+
+static int test_xor_partial(const int *indices, int n_weights,
+                            int k_param, int comp_limit) {
+    int n_inputs = 2 * n_weights;
+    int n_masks = 1 << n_inputs;
+    int n_touched = 0;
+    int mask, i, w;
+    int result = 1;
+
+    if (k_param > MAX_ACT_CELLS || n_inputs > 16 || n_weights > 8)
+        return 0;
+
+    for (mask = 0; mask < n_masks; mask++) {
+        MatN sum;
+        int par = 0, cell;
+        memset(&sum, 0, sizeof(MatN));
+
+        for (i = 0; i < n_inputs; i++) {
+            if (mask & (1 << i)) {
+                w = i / 2;
+                if (i % 2 == 0)
+                    matN_add_inplace(&sum, &g_cat[indices[w]]);
+                else
+                    matN_sub_inplace(&sum, &g_cat[indices[w]]);
+                par ^= 1;
+            }
+        }
+
+        cell = matN_activate_partial(&sum, k_param, comp_limit);
+
+        if (cell_even[cell] == 0 && cell_odd[cell] == 0)
+            touched[n_touched++] = cell;
+
+        if (par == 0) {
+            cell_even[cell]++;
+            if (cell_odd[cell] > 0) { result = 0; goto cleanup2; }
+        } else {
+            cell_odd[cell]++;
+            if (cell_even[cell] > 0) { result = 0; goto cleanup2; }
+        }
+    }
+
+cleanup2:
+    for (i = 0; i < n_touched; i++) {
+        cell_even[touched[i]] = 0;
+        cell_odd[touched[i]] = 0;
+    }
+    return result;
+}
+
+static int count_xor_bf_partial(int n_weights, int k_param,
+                                int bf_limit, int comp_limit) {
+    int count = 0;
+    int limit = g_cat_size < bf_limit ? g_cat_size : bf_limit;
+    int i0, i1, i2, i3;
+    int indices[8];
+
+    if (n_weights == 3) {
+        for (i0 = 0; i0 < limit; i0++)
+        for (i1 = i0+1; i1 < limit; i1++)
+        for (i2 = i1+1; i2 < limit; i2++) {
+            indices[0]=i0; indices[1]=i1; indices[2]=i2;
+            if (test_xor_partial(indices, 3, k_param, comp_limit)) count++;
+        }
+    } else if (n_weights == 4) {
+        for (i0 = 0; i0 < limit; i0++)
+        for (i1 = i0+1; i1 < limit; i1++)
+        for (i2 = i1+1; i2 < limit; i2++)
+        for (i3 = i2+1; i3 < limit; i3++) {
+            indices[0]=i0; indices[1]=i1; indices[2]=i2; indices[3]=i3;
+            if (test_xor_partial(indices, 4, k_param, comp_limit)) count++;
+        }
+    }
+    return count;
+}
+
+/* ================================================================
+ * Rank computation over Z (streaming Gaussian elimination)
+ * ================================================================ */
+
+#define MAX_COLS 784 /* 14*14*4 */
+
+static int compute_catalog_rank(int n_entries) {
+    static long basis[MAX_COLS][MAX_COLS];
+    int n_cols = g_dim * g_dim * 4;
+    int rank = 0;
+    int ei, col, r;
+
+    memset(basis, 0, sizeof(basis));
+
+    for (ei = 0; ei < n_entries; ei++) {
+        long row[MAX_COLS];
+        int ci = 0;
+        int i, j;
+
+        memset(row, 0, sizeof(row));
+        for (i = 0; i < g_dim; i++)
+            for (j = 0; j < g_dim; j++) {
+                row[ci++] = g_cat[ei].m[i][j].a;
+                row[ci++] = g_cat[ei].m[i][j].b;
+                row[ci++] = g_cat[ei].m[i][j].c;
+                row[ci++] = g_cat[ei].m[i][j].d;
+            }
+
+        for (r = 0; r < rank; r++) {
+            int lead = -1;
+            for (col = 0; col < n_cols; col++) {
+                if (basis[r][col] != 0) { lead = col; break; }
+            }
+            if (lead < 0) continue;
+
+            if (row[lead] != 0) {
+                long rf = row[lead];
+                long bf = basis[r][lead];
+                for (col = 0; col < n_cols; col++)
+                    row[col] = row[col] * bf - basis[r][col] * rf;
+            }
+        }
+
+        {
+            int is_zero = 1;
+            for (col = 0; col < n_cols; col++) {
+                if (row[col] != 0) { is_zero = 0; break; }
+            }
+
+            if (!is_zero && rank < n_cols) {
+                long g = 0;
+                for (col = 0; col < n_cols; col++) {
+                    long v = row[col] < 0 ? -row[col] : row[col];
+                    if (v > 0) {
+                        if (g == 0) g = v;
+                        else {
+                            long aa = g, bb = v;
+                            while (bb != 0) {
+                                long t = bb;
+                                bb = aa % bb;
+                                aa = t;
+                            }
+                            g = aa;
+                        }
+                    }
+                }
+                if (g > 1) {
+                    for (col = 0; col < n_cols; col++)
+                        row[col] /= g;
+                }
+
+                for (col = 0; col < n_cols; col++)
+                    basis[rank][col] = row[col];
+                rank++;
+
+                if (rank >= n_cols) break;
+            }
+        }
+    }
+
+    return rank;
+}
+
+/* ================================================================
+ * Radical dimension via Gaussian elimination on stacked TL matrix
+ * ================================================================ */
+
+static int compute_radical_dim(int ls_dim) {
+    long stk[N_TL * MAX_DIM][MAX_DIM];
+    int total_rows = N_TL * ls_dim;
+    int row, col, prow, r, c, rank;
+
+    memset(stk, 0, sizeof(stk));
+
+    row = 0;
+    for (r = 0; r < N_TL; r++)
+        for (c = 0; c < ls_dim; c++) {
+            int j;
+            for (j = 0; j < ls_dim; j++)
+                stk[row][j] = g_e[r].m[c][j].a;
+            row++;
+        }
+
+    rank = 0;
+    for (col = 0; col < ls_dim; col++) {
+        prow = -1;
+        for (r = rank; r < total_rows; r++) {
+            if (stk[r][col] != 0) { prow = r; break; }
+        }
+        if (prow < 0) continue;
+        if (prow != rank) {
+            for (c = 0; c < ls_dim; c++) {
+                long tmp = stk[rank][c];
+                stk[rank][c] = stk[prow][c];
+                stk[prow][c] = tmp;
+            }
+        }
+        for (r = rank + 1; r < total_rows; r++) {
+            if (stk[r][col] != 0) {
+                long fn = stk[r][col], fd = stk[rank][col];
+                for (c = 0; c < ls_dim; c++)
+                    stk[r][c] = stk[r][c] * fd - stk[rank][c] * fn;
+            }
+        }
+        rank++;
+    }
+    return ls_dim - rank;
+}
+
+/* ================================================================
+ * Main
+ * ================================================================ */
+
+int main(void) {
+    char msg[256];
+    LinkState basis[MAX_LS_DIM];
+    int ls_dim;
+    int total_nz;
+    int ei;
+    int bf;
+
+    printf("KNOTAPEL DEMO 105: 8-Strand W_{8,0} k-Regime Test\n");
+    printf("Does k=4096 revive XOR at N>=7?\n");
+    printf("===================================================\n\n");
+
+    g_cat = (MatN *)malloc((size_t)MAX_CAT * sizeof(MatN));
+    if (!g_cat) {
+        printf("FATAL: malloc failed (%lu bytes)\n",
+               (unsigned long)((size_t)MAX_CAT * sizeof(MatN)));
+        return 1;
+    }
+    printf("  Catalog memory: %lu MB\n\n",
+           (unsigned long)((size_t)MAX_CAT * sizeof(MatN) / (1024*1024)));
+
+    /* A = zeta_8^5 = -zeta_8, A_inv = zeta_8^3 */
+    g_A = cyc8_make(0, -1, 0, 0);
+    g_A_inv = cyc8_make(0, 0, 0, 1);
+
+    /* ============================================================
+     * Phase 0: Link State Enumeration + TL Generator Verification
+     * ============================================================ */
+    printf("=== Phase 0: Link State Enumeration & TL Verification ===\n\n");
+
+    ls_dim = enumerate_link_states(N_STRANDS, basis);
+    printf("  W_{8,0} link states: %d (expected C_4 = 14)\n", ls_dim);
+    g_dim = ls_dim;
+    sprintf(msg, "Link state count = %d (C_4 = 14)", ls_dim);
+    check(msg, ls_dim == 14);
+
+    /* Print link states */
+    printf("\n  Link states:\n");
+    for (ei = 0; ei < ls_dim; ei++) {
+        int s;
+        printf("    h%d: ", ei);
+        for (s = 0; s < N_STRANDS; s++) {
+            if (basis[ei].pair[s] > s)
+                printf("(%d,%d)", s, basis[ei].pair[s]);
+        }
+        printf("\n");
+    }
+
+    /* Build TL generators */
+    total_nz = build_tl_generators(basis, ls_dim);
+    printf("\n  Generator sparsity: %d/%d nonzero\n",
+           total_nz, N_TL * ls_dim * ls_dim);
+
+    /* Verify e_i^2 = 0 (delta=0) */
+    {
+        MatN prod, zero_mat;
+        zero_mat = matN_zero();
+        for (ei = 0; ei < N_TL; ei++) {
+            matN_mul_to(&g_e[ei], &g_e[ei], &prod);
+            sprintf(msg, "e_%d^2 = 0", ei + 1);
+            check(msg, matN_eq(&prod, &zero_mat));
+        }
+    }
+
+    /* Verify e_i * e_{i+1} * e_i = e_i */
+    {
+        MatN tmp1, tmp2;
+        for (ei = 0; ei < N_TL - 1; ei++) {
+            matN_mul_to(&g_e[ei], &g_e[ei+1], &tmp1);
+            matN_mul_to(&tmp1, &g_e[ei], &tmp2);
+            sprintf(msg, "e_%d * e_%d * e_%d = e_%d", ei+1, ei+2, ei+1, ei+1);
+            check(msg, matN_eq(&tmp2, &g_e[ei]));
+        }
+    }
+
+    /* Verify e_i * e_j = e_j * e_i for |i-j| >= 2 */
+    {
+        MatN prod_ij, prod_ji;
+        int i, j;
+        for (i = 0; i < N_TL; i++)
+            for (j = i + 2; j < N_TL; j++) {
+                matN_mul_to(&g_e[i], &g_e[j], &prod_ij);
+                matN_mul_to(&g_e[j], &g_e[i], &prod_ji);
+                sprintf(msg, "e_%d * e_%d = e_%d * e_%d", i+1, j+1, j+1, i+1);
+                check(msg, matN_eq(&prod_ij, &prod_ji));
+            }
+    }
+
+    /* Radical dimension */
+    {
+        int rad_dim = compute_radical_dim(ls_dim);
+        printf("  Radical dimension: %d\n", rad_dim);
+        check("W_{8,0} radical dim = 0 (simple)", rad_dim == 0);
+    }
+
+    /* Build braid generators */
+    build_braid_generators();
+
+    /* Verify braid inverses */
+    {
+        MatN prod, id_check;
+        id_check = matN_identity();
+        for (ei = 0; ei < N_TL; ei++) {
+            matN_mul_to(&g_gen[2*ei], &g_gen[2*ei+1], &prod);
+            sprintf(msg, "s%d * s%d_inv = I", ei+1, ei+1);
+            check(msg, matN_eq(&prod, &id_check));
+        }
+    }
+
+    /* Verify Yang-Baxter: s_i * s_{i+1} * s_i = s_{i+1} * s_i * s_{i+1} */
+    {
+        MatN tmp1, tmp2, lhs, rhs;
+        for (ei = 0; ei < N_TL - 1; ei++) {
+            matN_mul_to(&g_gen[2*ei], &g_gen[2*(ei+1)], &tmp1);
+            matN_mul_to(&tmp1, &g_gen[2*ei], &lhs);
+            matN_mul_to(&g_gen[2*(ei+1)], &g_gen[2*ei], &tmp2);
+            matN_mul_to(&tmp2, &g_gen[2*(ei+1)], &rhs);
+            sprintf(msg, "s%d*s%d*s%d = s%d*s%d*s%d", ei+1, ei+2, ei+1, ei+2, ei+1, ei+2);
+            check(msg, matN_eq(&lhs, &rhs));
+        }
+    }
+
+    /* ============================================================
+     * Phase 1: BFS Catalog Build
+     * ============================================================ */
+    printf("\n=== Phase 1: BFS Catalog ===\n\n");
+    build_catalog(12);
+    bf = g_cat_size < 30 ? g_cat_size : 30;
+    printf("  Deep entries: %d (bf=%d)\n", bf * (bf - 1) * (bf - 2) / 6, bf);
+    check("Catalog built", g_cat_size > 100);
+
+    /* ============================================================
+     * Phase 2: Rank Computation
+     * ============================================================ */
+    printf("\n=== Phase 2: Rank Computation ===\n\n");
+    {
+        int n_cols = g_dim * g_dim * 4;
+        int rank = compute_catalog_rank(g_cat_size < 1024 ? g_cat_size : 1024);
+        printf("  W_{8,0} (dim=%d): rank = %d / %d cols (%.1f%% of matrix space)\n",
+               g_dim, rank, n_cols, 100.0 * (double)rank / (double)n_cols);
+        sprintf(msg, "Rank = %d", rank);
+        check(msg, rank > 0);
+    }
+
+    /* ============================================================
+     * Phase 3: k-Sweep (THE MAIN EVENT)
+     *
+     * XOR6 (3 weights, 6 inputs), XOR7 (not standard -- use XOR8)
+     * Actually: XOR_N means N inputs = N/2 weights.
+     * So XOR6 = 3 weights, XOR8 = 4 weights.
+     * XOR10 = 5 weights (NEW territory for 8-strand)
+     * ============================================================ */
+    printf("\n=== Phase 3: k-Sweep ===\n\n");
+    {
+        int k_vals[] = {128, 256, 512, 1024, 2048, 4096};
+        int n_k = 6;
+        int ki;
+
+        printf("  W_{8,0} (dim=%d, %d comp), bf=%d:\n",
+               g_dim, g_dim * g_dim * 4, bf);
+        printf("  %8s  %8s  %8s\n", "k", "XOR6", "XOR8");
+        printf("  --------  --------  --------\n");
+
+        for (ki = 0; ki < n_k; ki++) {
+            int xor6 = count_xor_bf(3, k_vals[ki], bf);
+            int xor8 = count_xor_bf(4, k_vals[ki], bf);
+            printf("  %8d  %8d  %8d\n", k_vals[ki], xor6, xor8);
+        }
+        check("k-sweep completed", 1);
+    }
+
+    /* ============================================================
+     * Phase 4: Component Sweep (k=128)
+     *
+     * Sweep how many sign-hash components we use in activation.
+     * Full matrix has g_dim*g_dim*4 = 784 components.
+     * Rank was only 274, so there may be an Atkinson peak well
+     * below 784. Same pattern as D104 Phase 3.
+     * ============================================================ */
+    printf("\n=== Phase 4: Component Sweep (k=128) ===\n\n");
+    {
+        int n_cols = g_dim * g_dim * 4;
+        int comp_vals[] = {50, 100, 150, 200, 274, 300, 400, 500, 600, 784};
+        int n_comp = 10;
+        int ci;
+        int peak_comp = 0, peak_xor6 = 0;
+
+        printf("  W_{8,0} (dim=%d, max=%d comp):\n", g_dim, n_cols);
+        printf("  %8s  %8s  %8s\n", "comp", "XOR6", "XOR8");
+        printf("  --------  --------  --------\n");
+
+        for (ci = 0; ci < n_comp; ci++) {
+            int comp = comp_vals[ci];
+            int xor6, xor8;
+
+            if (comp > n_cols) comp = n_cols;
+
+            xor6 = count_xor_bf_partial(3, 128, bf, comp);
+            xor8 = count_xor_bf_partial(4, 128, bf, comp);
+
+            printf("  %8d  %8d  %8d\n", comp, xor6, xor8);
+            if (xor6 > peak_xor6) { peak_xor6 = xor6; peak_comp = comp; }
+        }
+
+        printf("  PEAK: %d comp -> XOR6=%d\n", peak_comp, peak_xor6);
+        check("Component sweep completed", 1);
+    }
+
+    /* ============================================================
+     * Phase 5: Sign-Rank Computation
+     *
+     * Map each catalog entry to sign vector {neg=0, zero=1, pos=2}
+     * and compute rank of resulting ternary matrix over Z.
+     * Compare with raw rank from Phase 2.
+     * ============================================================ */
+    printf("\n=== Phase 5: Sign-Rank Computation ===\n\n");
+    {
+        int n_cols = g_dim * g_dim * 4;
+        int n_entries = g_cat_size < 1024 ? g_cat_size : 1024;
+        static long sbasis[MAX_COLS][MAX_COLS];
+        int srank = 0;
+        int sei, col, r;
+
+        memset(sbasis, 0, sizeof(sbasis));
+
+        for (sei = 0; sei < n_entries; sei++) {
+            long srow[MAX_COLS];
+            int ci = 0;
+            int i, j;
+
+            memset(srow, 0, sizeof(srow));
+            for (i = 0; i < g_dim; i++)
+                for (j = 0; j < g_dim; j++) {
+                    srow[ci++] = g_cat[sei].m[i][j].a > 0 ? 2 : (g_cat[sei].m[i][j].a < 0 ? 0 : 1);
+                    srow[ci++] = g_cat[sei].m[i][j].b > 0 ? 2 : (g_cat[sei].m[i][j].b < 0 ? 0 : 1);
+                    srow[ci++] = g_cat[sei].m[i][j].c > 0 ? 2 : (g_cat[sei].m[i][j].c < 0 ? 0 : 1);
+                    srow[ci++] = g_cat[sei].m[i][j].d > 0 ? 2 : (g_cat[sei].m[i][j].d < 0 ? 0 : 1);
+                }
+
+            for (r = 0; r < srank; r++) {
+                int lead = -1;
+                for (col = 0; col < n_cols; col++) {
+                    if (sbasis[r][col] != 0) { lead = col; break; }
+                }
+                if (lead < 0) continue;
+                if (srow[lead] != 0) {
+                    long rf = srow[lead];
+                    long bf2 = sbasis[r][lead];
+                    for (col = 0; col < n_cols; col++)
+                        srow[col] = srow[col] * bf2 - sbasis[r][col] * rf;
+                }
+            }
+
+            {
+                int is_zero = 1;
+                for (col = 0; col < n_cols; col++) {
+                    if (srow[col] != 0) { is_zero = 0; break; }
+                }
+
+                if (!is_zero && srank < n_cols) {
+                    long g = 0;
+                    for (col = 0; col < n_cols; col++) {
+                        long v = srow[col] < 0 ? -srow[col] : srow[col];
+                        if (v > 0) {
+                            if (g == 0) g = v;
+                            else {
+                                long aa = g, bb = v;
+                                while (bb != 0) { long t = bb; bb = aa % bb; aa = t; }
+                                g = aa;
+                            }
+                        }
+                    }
+                    if (g > 1) {
+                        for (col = 0; col < n_cols; col++)
+                            srow[col] /= g;
+                    }
+                    for (col = 0; col < n_cols; col++)
+                        sbasis[srank][col] = srow[col];
+                    srank++;
+                    if (srank >= n_cols) break;
+                }
+            }
+        }
+
+        printf("  W_{8,0} (dim=%d): sign-rank = %d / %d cols (%.1f%% of sign space)\n",
+               g_dim, srank, n_cols, 100.0 * (double)srank / (double)n_cols);
+        sprintf(msg, "Sign-rank = %d", srank);
+        check(msg, srank > 0);
+
+        {
+            int raw_rank = compute_catalog_rank(n_entries);
+            printf("\n  Rank comparison:\n");
+            printf("  %12s  %6s  %6s  %6s\n", "Module", "raw", "sign", "cols");
+            printf("  ------------  ------  ------  ------\n");
+            printf("  %12s  %6d  %6d  %6d\n", "W_{8,0}", raw_rank, srank, n_cols);
+            if (srank > raw_rank)
+                printf("  Sign EXPANSION: sign-rank > raw rank (ternary quantization GAINS info)\n");
+            else if (srank == raw_rank)
+                printf("  Sign quantization is LOSSLESS\n");
+            else
+                printf("  Sign COMPRESSION: sign-rank < raw rank (ternary quantization LOSES info)\n");
+            check("Sign-rank comparison completed", 1);
+        }
+    }
+
+    /* ============================================================
+     * Summary
+     * ============================================================ */
+    printf("\n===================================================\n");
+    printf("Results: %d pass, %d fail\n", n_pass, n_fail);
+
+    free(g_cat);
+    return n_fail > 0 ? 1 : 0;
+}

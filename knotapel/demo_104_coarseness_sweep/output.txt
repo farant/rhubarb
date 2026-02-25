@@ -1,0 +1,219 @@
+KNOTAPEL DEMO 104: Activation Coarseness Sweep
+W_{6,0} (dim=5) vs W_{6,2} (dim=9)
+=============================================
+
+=== Phase 0: Generator Verification ===
+
+--- Module A: W_{6,0} (dim=5) ---
+
+  PASS: A: e_1^2 = 0
+  PASS: A: e_2^2 = 0
+  PASS: A: e_3^2 = 0
+  PASS: A: e_4^2 = 0
+  PASS: A: e_5^2 = 0
+  PASS: A: s1 * s1_inv = I
+  PASS: A: s2 * s2_inv = I
+  PASS: A: s3 * s3_inv = I
+  PASS: A: s4 * s4_inv = I
+  PASS: A: s5 * s5_inv = I
+  Generator sparsity A: 15/125 nonzero
+
+--- Module B: W_{6,2} (dim=9) ---
+
+  PASS: B: e_1^2 = 0
+  PASS: B: e_2^2 = 0
+  PASS: B: e_3^2 = 0
+  PASS: B: e_4^2 = 0
+  PASS: B: e_5^2 = 0
+  PASS: B: s1 * s1_inv = I
+  PASS: B: s2 * s2_inv = I
+  PASS: B: s3 * s3_inv = I
+  PASS: B: s4 * s4_inv = I
+  PASS: B: s5 * s5_inv = I
+  Generator sparsity B: 25/405 nonzero
+
+=== Phase 1: BFS Catalogs ===
+
+--- Module A: W_{6,0} (dim=5) ---
+
+  Round 0: 1 entry
+  Round 1: 11 entries (+10), max_abs=1
+  Round 2: 77 entries (+66), max_abs=2
+  Round 3: 439 entries (+362), max_abs=3
+  Round 4: 2233 entries (+1794), max_abs=5
+  Round 5: 10603 entries (+8370), max_abs=8
+  Round 6: 32768 entries (+22165), max_abs=16
+  HIT CAP at 32768 entries (group is infinite)
+  PASS: A: Catalog built
+  A deep entries: 1024 (bf=30)
+
+--- Module B: W_{6,2} (dim=9) ---
+
+  Round 0: 1 entry
+  Round 1: 11 entries (+10), max_abs=1
+  Round 2: 77 entries (+66), max_abs=2
+  Round 3: 439 entries (+362), max_abs=3
+  Round 4: 2233 entries (+1794), max_abs=5
+  Round 5: 10603 entries (+8370), max_abs=8
+  Round 6: 32768 entries (+22165), max_abs=16
+  HIT CAP at 32768 entries (group is infinite)
+  PASS: B: Catalog built
+  B deep entries: 1024 (bf=30)
+
+=== Phase 2: Rank Computation ===
+
+  W_{6,2} (dim=9): rank = 244 / 324 cols (75.3% of matrix space)
+  PASS: B rank = 244
+  W_{6,0} (dim=5): rank = 100 / 100 cols (100.0% of matrix space)
+  PASS: A rank = 100
+
+=== Phase 3: Component Count Sweep (XOR6, k=128) ===
+
+  W_{6,0} (dim=5, max=100 comp):
+      comp      XOR6
+  --------  --------
+        10       234
+        20      1166
+        25      1457
+        40      1678
+        50      2372
+        60      2353
+        75      2318
+        80      2370
+       100      2449
+  PEAK: 100 comp -> XOR6=2449
+  PASS: A: Component sweep completed
+
+  W_{6,2} (dim=9, max=324 comp):
+      comp      XOR6
+  --------  --------
+        10       254
+        20       817
+        25      1186
+        40      1703
+        50      1704
+        60      1885
+        75      2164
+        80      2101
+       100      2360
+       120      2486
+       140      2375
+       150      2300
+       175      2195
+       200      2265
+       250      2190
+       300      2412
+       324      2238
+  PEAK: 120 comp -> XOR6=2486
+  PASS: B: Component sweep completed
+
+  Head-to-head at 100 components:
+    A@100 = 2449    B@100 = 2360
+    A WINS at matched component count
+  PASS: Matched-100 comparison completed
+
+=== Phase 4: Random-100 Variants (W_{6,2}) ===
+
+  B first-100 (sequential): XOR6=2360
+  B random-100 trial 1: XOR6=2318
+  B random-100 trial 2: XOR6=2195
+  B random-100 trial 3: XOR6=2347
+  B random-100 trial 4: XOR6=2367
+  B random-100 trial 5: XOR6=2105
+  Random-100 stats: min=2105 max=2367 mean=2266
+  Spread (max-min) = 262
+  INFO: High spread => information concentrated in specific components
+  PASS: Random-100 test completed
+
+=== Phase 5: Branching Decomposition Tests (W_{6,2}) ===
+
+  (a) sub6 (first 6x6 = 144 comp): XOR6=2415
+  (b) cross-block (off-diag = 160 comp): XOR6=2412
+  (c) within-block (diag = 164 comp): XOR6=2235
+
+  XOR8 comparison:
+    full (324 comp): XOR8=557
+    sub6 (144 comp): XOR8=720
+    cross-block (160 comp): XOR8=952
+
+  Branching Decomposition Summary:
+  Activation        comp      XOR6      XOR8
+  --------------  ------  --------  --------
+  A full             100      2449     (ref)
+  B full             324      2238       557
+  B sub6             144      2415       720
+  B cross-block      160      2412       952
+  B within-block     164      2235         -
+
+  VERDICT: Cross-block > within-block => branching interaction IS the signal
+  sub6 jump: adding row/col 5 (h5) carries significant signal
+  PASS: Branching decomposition tests completed
+
+=== Phase 6: Sign-Rank Computation ===
+
+  Round 0: 1 entry
+  Round 1: 11 entries (+10), max_abs=1
+  Round 2: 77 entries (+66), max_abs=2
+  Round 3: 439 entries (+362), max_abs=3
+  Round 4: 2233 entries (+1794), max_abs=5
+  Round 5: 10603 entries (+8370), max_abs=8
+  Round 6: 32768 entries (+22165), max_abs=16
+  HIT CAP at 32768 entries (group is infinite)
+  W_{6,2} (dim=9): sign-rank = 292 / 324 cols (90.1% of sign space)
+  PASS: B sign-rank = 292
+  W_{6,0} (dim=5): sign-rank = 100 / 100 cols (100.0% of sign space)
+  PASS: A sign-rank = 100
+
+  Rank comparison:
+  Module             raw    sign    cols
+  --------------  ------  ------  ------
+  W_{6,0}            100     100     100
+  W_{6,2}            244     292     324
+  A sign-rank = raw rank: quantization is LOSSLESS for W_{6,0}
+  PASS: Sign-rank comparison completed
+
+=== Phase 7: Multi-Hash Tests (W_{6,2}, k=64x64=4096) ===
+
+  Reference: cross-block single-hash k=4096 (160 comp): XOR6=3635 XOR8=19994
+
+  Test 1 (row split: 180+144 comp): XOR6=3852 XOR8=22005
+  Test 2 (cross-block split: 80+80 comp): XOR6=3534 XOR8=17939
+  Test 3 (cross-block+diag: 160+64 comp): XOR6=3806 XOR8=21525
+
+  Multi-Hash Summary:
+  Test                            comp    XOR6    XOR8
+  ----------------------------  ------  ------  ------
+  Ref: cross 1-hash k=4096         160    3635   19994
+  T1: row split 64x64           180+144    3852   22005
+  T2: cross-dir split 64x64      80+80    3534   17939
+  T3: cross+diag 64x64          160+64    3806   21525
+
+  VERDICT: Multi-hash does NOT beat single-hash => bottleneck is elsewhere
+  PASS: Multi-hash tests completed
+
+=== Phase 8: k-Sweep ===
+
+  W_{6,2} cross-block (160 comp):
+         k      XOR6      XOR8
+  --------  --------  --------
+       128      2412       952
+       256      2978      3985
+       512      3369      9510
+      1024      3511     14503
+      2048      3566     17549
+      4096      3635     19994
+  PASS: B cross-block k-sweep completed
+
+  W_{6,0} full (100 comp):
+         k      XOR6      XOR8
+  --------  --------  --------
+       128      2449       850
+       256      3128      3894
+       512      3508      9414
+      1024      3730     15173
+      2048      3807     19059
+      4096      3866     21699
+  PASS: A full k-sweep completed
+
+=============================================
+Results: 35 pass, 0 fail

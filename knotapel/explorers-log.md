@@ -5066,5 +5066,483 @@ pair                     trace         |C3|   rad   Frob
 3. **Non-standard W_{4,0}** — should show Casimir inversion (variable non-semisimplicity, analogous to 3-strand)
 4. **Activation bottleneck investigation** — current 3×3 hash uses all 36 components but XOR14=70 is surprisingly close to 3-strand's 60 despite 3.2x information advantage per round. Investigate whether structure-aware activation can unlock more capacity.
 
+## Session: D102-D103-D104 Arc (Feb 2026)
+
+### D102: W_{6,0} vs W_{6,4} — Radical A/B Test (COMPLETE, 84 pass 2 fail)
+- **Head-to-head**: W_{6,0} (dim 5, simple) vs W_{6,4} (dim 5, non-simple, rad=1), same n=6
+- **Writhe character CONFIRMED (LANDMARK)**: M·r = A^{writhe}·r for ALL 32,768 catalog entries. The radical is a 1-dim character of B_6, carrying framing/writhe data. Proven computationally.
+- **Radical-as-resource REFUTED**: Simple module WINS at every XOR level (XOR6: 2449 vs 2370, XOR8: 850 vs 793, XOR10: 1 vs 0)
+- **Barrington-Radical Principle**: The radical carries an abelian character (writhe homomorphism B_n → Z/8Z). Barrington's theorem (D94) says abelian groups can't compute parity. Therefore radical is THEORETICALLY guaranteed useless for XOR. Named insight.
+- **Nuance**: B_full (2370) > B_quotient-only (2195), so radical helps relative to bare quotient (+8% from mixing row). But simple dim 5 beats the 4+1 decomposition.
+- **Fibonacci max_abs**: Both modules follow 1,1,2,3,5,8 through depth 5. B stays Fibonacci at d=6 (13), A breaks to 16. Radical constrains coefficient growth to strict Fibonacci.
+- **Identical BFS trees**: Same catalog size at every depth for all modules at n=6. Growth is braid group property.
+
+### D103: W_{6,2} vs W_{6,0} — Dimension Scaling Test (COMPLETE, 76 pass 2 fail)
+- **Head-to-head**: W_{6,2} (dim 9, simple) vs W_{6,0} (dim 5, simple), same n=6
+- **dim(W) law ELIMINATED**: Growth PERFECTLY identical across all three n=6 modules at every depth. Growth is intrinsic to B_6.
+- **max_abs also identical** for both simples (1,1,2,3,5,8,16). Fibonacci coefficient growth is braid group property for simple modules.
+- **Higher dimension HURTS XOR**: W_{6,2} WORSE at every level (XOR6: 2238 vs 2449, XOR8: 557 vs 850). Curse of dimensionality in the sign hash.
+- **Phase 7 subset-hash test (CRITICAL)**:
+  - B sub5 (100 comp) = 2238 XOR6 — identical to B full (324 comp). Extra components add ZERO separating power.
+  - B sub7 (196 comp) = 2538 XOR6 — BEATS A full (2449). The information lives in rows/columns 5-6.
+  - B stride3 (~108 comp) = 2087 XOR6 — worse, but hits XOR10=3 while B full gets 0.
+  - VERDICT: dim-9 IS richer, but information lives in specific subblocks (h5-h8), not uniformly.
+- **Combined ranking**: W_{6,0}(dim5,simple) > W_{6,4}(dim5,rad) > W_{6,2}(dim9,simple) at full hash
+- **Casimir**: W_{6,2} has MORE energy (mean 123 vs 48) — algebraic information EXISTS but hash can't extract it.
+
+### Theoretical Breakthroughs
+
+1. **Barrington-Radical Principle**: Radical = abelian character → can't compute parity (Barrington). Named theorem connecting TL representation structure to computational complexity.
+2. **Atkinson Dithering Connection**: DKC activation IS a dithering algorithm. Sign hash = coarse quantization of exact algebraic data. Computation requires the RIGHT amount of quantization error. Too little (dim 9, 324 components) = no useful collisions. Sweet spot ≈ 100 components at current catalog size.
+3. **Reservoir Computing Frame**: Braid representation = reservoir. Sign hash = readout (deliberately lossy). XOR computation = exploiting collision patterns in the quantized output.
+4. **1-Bit Compressed Sensing Framework**: Sign hash = 1-bit CS of algebraic integers (Boufounos-Baraniuk 2008). Fibonacci growth → golden ratio coefficient ratios → optimal 1-bit quantization.
+5. **Effective Dimension Hypothesis**: Key metric isn't raw dim but effective_dim/dim² — action density. W_{6,0} (j=0) may have highest action density because all TL generators create/destroy arcs.
+
+### D104: Activation Coarseness Sweep (SPEC, awaiting build)
+- Reuse D103 catalogs, vary sign-hash component count
+- W_{6,0}: hash 25/50/75/100 components. W_{6,2}: hash 25/50/75/100/150/200/324 components
+- Add rank computation: effective dimension of image algebra for both modules
+- Add random-100 variant for W_{6,2}
+- Key prediction: W_{6,2} at 100 components may beat W_{6,0} at 100 components
+
+### Prediction Track Record
+- D102: 7/13 confirmed, 1 major refutation (P8), 5 untestable. P6 (writhe character) = landmark.
+- D103: Growth law settled (strand not dim). XOR prediction wrong (higher dim hurts). Fibonacci universal.
+- Pattern: structural/algebraic predictions reliable, computational/performance predictions often wrong.
+
+## Session: D104 — Activation Coarseness Sweep + Branching Decomposition
+Date: 2026-02-24/25
+
+### Results Summary
+D104: 32 pass, 0 fail. Six phases testing how activation coarseness (number of sign-hash components) affects XOR capacity for W_{6,0} (dim=5, 100 comp) vs W_{6,2} (dim=9, 324 comp).
+
+### Phase 2: Rank
+- W_{6,0}: raw rank = 100 / 100 (100% of matrix space)
+- W_{6,2}: raw rank = 244 / 324 (75.3% of matrix space)
+- W_{6,2} has 80 linearly dependent dimensions in its 324-component space
+
+### Phase 3: Component Sweep — Atkinson Peak
+- W_{6,0}: monotonically increases, peaks at 100 comp (XOR6=2449) — uses everything
+- W_{6,2}: peaks at 120 comp (XOR6=2486), BEATS W_{6,0} at optimal tuning
+- B > A at optimal component count — the dim-9 "deficit" was a hash problem, not algebra
+- Non-monotonic curve for B: rises to 120, drops, recovers partially at 300, drops at 324
+- Named: "Atkinson sweet spot" — optimal information-per-collision tradeoff
+
+### Phase 4: Random-100 Variants
+- Random-100 spread = 262 (max=2367, min=2105, mean=2266)
+- HIGH spread → information concentrated in specific components, not uniformly distributed
+- Sequential first-100 (2360) beats random mean (2266) — early components carry more signal
+
+### Phase 5: Branching Decomposition — LANDMARK
+Cross-block activation isolates branching interaction between TL_5 pieces of W_{6,2}:
+- h0-h4: through-strand piece (W_{5,1}-like)
+- h5-h8: arc-bound piece (W_{5,3}-like)
+- Cross-block = off-diagonal blocks only (rows 0-4 × cols 5-8 + rows 5-8 × cols 0-4)
+
+```
+Activation        comp      XOR6      XOR8
+A full             100      2449     (ref)
+B full             324      2238       557
+B sub6             144      2415       720
+B cross-block      160      2412       952
+B within-block     164      2235         -
+```
+
+**VERDICT: Cross-block > within-block → branching interaction IS the computational signal.**
+- Cross-block XOR8=952 crushes B-full's 557 and would beat A-full's 850 (from D103)
+- Within-block XOR6=2235 ≈ B-full — diagonal blocks alone ≈ full matrix. Adding cross-block to within-block would DEGRADE, not improve
+- Sub6 jump: adding row/col 5 (first h5 component) adds +177 XOR6 over sub5
+- Branching advantage grows dramatically with difficulty (modest at XOR6, dramatic at XOR8)
+
+### Phase 6: Sign-Rank — SURPRISE
+Explorer predicted sign-rank(B) ~ 120 (matching component sweep peak). Actual:
+- W_{6,0}: sign-rank = 100 / 100 (100%) — quantization LOSSLESS
+- W_{6,2}: sign-rank = 292 / 324 (90.1%) — HIGHER than raw rank (244)!
+
+Sign quantization is an EXPANDER for W_{6,2}:
+- Raw: 244 independent directions in Z-space
+- Sign: 292 independent directions in {-1,0,+1}-space
+- The nonlinear sign() function breaks linear dependencies, creating 48 new independent sign patterns
+- For A: sign-rank = raw rank (already maximally exploitable)
+- Atkinson peak at 120 is a hash-collision bottleneck, not a sign-dimension bottleneck
+
+### Theoretical Framework (from researcher)
+- **Compressed sensing connection**: sign-hash = 1-bit CS measurement. Cross-block works because branching cross-terms have low intra-block coherence (different TL_5 pieces are nearly orthogonal)
+- **RG analogy**: sign quantization = coarse-graining. Optimal component count = critical point. Too few = loss, too many = noise amplification
+- **Symmetry manufacturing**: sign hash doesn't just LOSE information — it CREATES new symmetries (gauge symmetry from quantization). The 48 extra sign-rank dimensions are manufactured by the nonlinear floor.
+- **General recipe**: for W_{n,j}, optimal activation = cross-block hash under TL_{n-1} restriction
+- **Prediction**: W_{8,2} (dim 28) cross-block (~1568 comp) should beat W_{8,0} (dim 14, 784 comp)
+
+### Connection Chain
+TL branching → cross-block structure → sign-incoherence (CS) → Atkinson curve → sign-rank expansion → RG criticality
+
+### Phase 7: Multi-Hash Tests
+Three tests with k=64×64=4096 cells, comparing multi-hash to single-hash:
+```
+Test                            comp    XOR6    XOR8
+Ref: cross 1-hash k=4096         160    3635   19994
+T1: row split 64×64           180+144    3852   22005
+T2: cross-dir split 64×64      80+80    3534   17939
+T3: cross+diag 64×64          160+64    3806   21525
+```
+
+**Multi-hash REFUTED as lever:**
+- Splitting cross-block into two directional hashes (T2) HURTS — 17939 vs 19994
+- The two branching directions (R0-4×C5-8 and R5-8×C0-4) are CORRELATED, not independent
+- T1 (row split, 324 total comp) beats reference only because it uses MORE components, not because of two hashes
+- **Conclusion: k (cell count) is the real lever, not hash architecture**
+
+### Phase 8: k-Sweep — CRITICAL FINDING
+Swept k = {128, 256, 512, 1024, 2048, 4096} on both modules:
+
+```
+W_{6,2} cross-block (160 comp):
+    k       XOR6    XOR8
+    128     2412     952
+    256     2978    3985
+    512     3369    9510
+   1024     3511   14503
+   2048     3566   17549
+   4096     3635   19994
+
+W_{6,0} full (100 comp):
+    k       XOR6    XOR8
+    128     2449     850
+    256     3128    3894
+    512     3508    9414
+   1024     3730   15173
+   2048     3807   19059
+   4096     3866   21699
+```
+
+**Critical findings:**
+1. **A beats B at EVERY k for both XOR6 and XOR8.** The cross-block advantage at k=128 (952 vs 850) was a low-k artifact. At k=4096: A=21699, B=19994.
+2. **XOR8 grows ~exponentially at low k, saturates at high k.** The 128→256 jump is 4x (phase transition from geometric to collision-avoidance regime).
+3. **XOR6 saturates by k=512.** XOR6 is "easy" — doesn't need many cells.
+4. **Both modules follow similar scaling** — roughly 2x per doubling of k for XOR8.
+5. **Implication: cross-block is a better ACTIVATION DESIGN (extracts more from limited cells), but W_{6,0} has more fundamental capacity at sufficient k.**
+6. **The branching decomposition result is about efficiency, not raw power.** Cross-block extracts the most capacity per cell, which matters in the pigeonhole regime (low k).
+
+### Bottleneck Chain (revised)
+```
+324 total → 292 ternary-independent (sign EXPANDS) → all exploitable at high k
+                                                    → ~120 exploitable at k=128 (pigeonhole)
+```
+The "Atkinson sweet spot" at 120 comp is specific to k=128. At higher k, more components can be used.
+
+### D105 Planning — W_{8,2} Branching Generalization
+
+**Goal:** Test whether branching decomposition generalizes from n=6 to n=8. One data point = hypothesis, two = pattern.
+
+**Key structural fact: symmetric branching at n=8.**
+W_{8,2} ↓_{TL_7} ≅ W_{7,1}(dim 14) ⊕ W_{7,3}(dim 14) — perfectly balanced (unlike n=6's 5+4).
+- W_{8,0}: dim = C(8,4) - C(8,3) = 70 - 56 = 14
+- W_{8,2}: dim = C(8,3) - C(8,2) = 56 - 28 = 28
+- Cross-block at n=8: 14×14×2×4 = 1568 comp (50% of 3136 total)
+
+**8 predictions registered (before computation):**
+- P1: BFS growth identical for W_{8,0} and W_{8,2} (strand-count law)
+- P2: W_{8,2} raw rank < 784 (non-full utilization)
+- P3: Ternary rank > raw rank (sign expansion persists at n=8)
+- P4: Symmetric branching 14+14 confirmed by basis enumeration
+- P5: Cross-block (1568 comp) beats W_{8,0} full (784 comp) at low k (pigeonhole regime)
+- P6: Cross-block beats W_{8,2} full at low k (same mechanism as n=6)
+- P7: At high k, W_{8,0} full beats W_{8,2} cross-block (k-sweep lesson)
+- P8: Optimal sequential peak ~200-400 comp at k=128
+
+**Infrastructure needed:**
+- Link-state enumerator for (n,j)-link states (generalize Demo 85's j=0 to j=2)
+- TL generator action on link states with through-strands (5 cases, case d is new for j>0)
+- MAX_DIM=28, memory ~400-800MB for BFS catalog
+- Demo 85 has the cleanest infrastructure to generalize (apply_ei function)
+- Demo 35 has diagram composition code for reference
+
+**Two-phase approach:**
+- Phase A: W_{8,0} (dim 14) — simpler, uses existing j=0 enumeration pattern
+- Phase B: W_{8,2} (dim 28) — requires new j=2 enumeration + case d in generator action
+
+**k-sweep revision:** Test at both k=128 (pigeonhole regime, where cross-block shines) and k=4096 (collision-avoidance regime, raw capacity comparison).
+
+### Prediction Track Record Update
+- D104 sign-rank prediction: WRONG (predicted ~120, got 292). Sign quantization expands.
+- D104 structural predictions: CONFIRMED (cross-block > within-block, branching IS signal)
+- D104 k-sweep finding: cross-block advantage is regime-dependent (low k only). Revised P5/P7.
+- Multi-hash prediction: partially wrong (splitting same components hurts). k is the lever.
+- Pattern: algebraic structure predictions reliable, quantitative performance predictions unreliable
+
+### Error Log
+- count_xor_bf was initially hardcoded to 3 weights in D104 (XOR6 only). Fixed. D103 code was correct.
+- Sign-rank prediction wrong direction (expansion not compression).
+- Cross-block "superiority" at k=128 is regime-dependent, not absolute (k-sweep corrected this).
+
+### D105 Phase A: 8-Strand W_{8,0} k-Regime Test
+Date: 2026-02-24. 46 pass, 0 fail, 49 sec runtime.
+
+**Goal:** Test k/2^N regime theory at n=8. Does k=4096 revive XOR at N≥7?
+
+**Module:** W_{8,0}, dim=14 (simple, j=0). 7 TL generators built programmatically from D85 link state enumeration.
+
+**Phase 0 — Verification:** 14 link states (C_4=14). All TL relations pass (e_i^2=0, braid relation, commutativity). Radical dim=0 (simple). Yang-Baxter confirmed. Sparsity: 63/1372 nonzero.
+
+**Phase 1 — BFS Catalog:**
+Round 0→5: 1→15→137→987→6189→32768 (hit cap). Growth per round: 14, 122, 850, 5202, 26579. Fills in 5 rounds vs 6 at n=6 (14 generators vs 10). max_abs: 1,1,2,3,5,8 (Fibonacci pattern again).
+
+**Phase 2 — Rank:** 274/784 (34.9%). SURPRISE — predicted full rank based on W_{6,0}=100%. P2 REFUTED. Simple module does NOT guarantee full rank at higher dimension. Massive redundancy in 14×14 sign-pattern space.
+
+**Phase 3 — k-Sweep (LANDMARK):**
+```
+k       XOR6    XOR8    k/2^8
+128     2943    5824    0.5
+256     3280    10456   1.0
+512     3524    15771   2.0
+1024    3674    19620   4.0
+2048    3705    21332   8.0
+4096    3721    22266   16.0
+```
+
+**Key findings:**
+1. XOR8 ALIVE at n=8. D93's "XOR dies at N≥7" REVISED — it was a k-regime artifact.
+2. n=8 beats n=6 at every k for XOR8. At k=128: 5824 vs 850 (6.9x). At k=4096: 22266 vs 21699 (modest lead). More strands = richer hash, especially at low k.
+3. k/2^N regime theory CONFIRMED at n=8. Pigeonhole → geometric → collision avoidance transition holds.
+4. Rank surprise opens component sweep question: can optimal ~274 comp activation improve XOR further?
+
+**Predictions scorecard:** P2 (full rank) REFUTED. k-regime theory CONFIRMED. BFS fills faster as expected.
+
+**Next:** Component sweep at n=8, then Phase B (W_{8,2}, dim 28).
+
+### Theoretical Note: Kirby-Dimensional Formula Bridge
+Date: 2026-02-24
+
+The ingredients (Kirby calculus, Piergallini branched coverings, Fran's dimensional formula) were documented separately in the explorer log (lines 2706-2812). The synthesis connecting them:
+
+**Kirby calculus (1978) IS the proof of Fran's dimensional formula for dim=4.** In Kirby diagrams, every closed oriented 4-manifold is encoded as a framed link in S³. Link components = strands. Framing coefficients = writhe. Therefore dim = 2*strands + writhe is Kirby calculus restated in our notation. For dim=3, Hilden-Montesinos (1974) provides the same via 3-fold branched covers of knots in S³.
+
+**Connection to D105 rank drop:** The representation dimensions (5, 14, 28...) are algebraic scaffolding for objects that live in 3D (Piergallini: "ALL topological information encoded in monodromy labeling"). The rank fraction (100% at dim 5, 34.9% at dim 14) may measure the ratio of 3D topological content to algebraic scaffolding. BUT the edges-not-nodes principle (line 4725) complicates this: "redundant" components contribute through nonlinear interactions in the sign hash. Sign expansion (274 raw → 425 sign at dim 14) is the signature of this — the nonlinear activation extracts edge-like information from linearly dependent components.
+
+### D105 Supplement: Retroactive Rank Computation
+Date: 2026-02-24
+
+Computed raw rank and sign-rank for D99b/D100/D101 to fill in the rank fraction data series:
+
+```
+Module              dim  cols   raw  sign   raw%    exp
+D99b: Delta_1         2    16    16    16  100.0%  1.00x
+D100: W_{4,2}         3    36    28    32   77.8%  1.14x
+D101: W_{5,3}         4    64    62    64   96.9%  1.03x
+D102: W_{6,0}         5   100   100   100  100.0%  1.00x
+D104: W_{6,2}         9   324   244   292   75.3%  1.20x
+D105: W_{8,0}        14   784   274   425   34.9%  1.55x
+```
+
+Key patterns:
+- j=0 simple modules: full raw rank at dim 2,5 but COLLAPSES at dim 14
+- j>0 modules: reduced raw rank (77-97%)
+- Sign expansion grows monotonically with dimension: 1.00→1.03→1.14→1.20→1.55
+- BFS max_abs follows Fibonacci universally across all modules
+
+---
+### Theoretical Note: Macramé Hypothesis — Tangle Networks for Higher-Dimensional Encoding
+Date: 2026-02-24
+
+**Origin:** Conversation with Fran about whether very high-dimensional manifolds (e.g., dim 4096) might require not a single decorated knot but a GRAPH of knots as their 3D encoding — similar to how DKC chains braid words as logic gates.
+
+**Three independent mathematical supports:**
+
+1. **HDG Manifolds (Frigerio, Lafont & Sisto, 2011):** Higher-dimensional manifolds (n ≥ 3) decompose into pieces (torus × hyperbolic), glued along tori, with fundamental group realized as a graph of groups. Each piece is encodable as a decorated knot via Piergallini. Therefore: higher-dim manifold = graph of knots + gluing data. Recovers classical JSJ in dim 3.
+
+2. **Tangle Networks = Tensor Networks = Circuits (Aharonov-Jones-Landau 2006/2009, Markov-Shi 2008):** Braid evaluation is BQP-complete. The key complexity parameter is TREEWIDTH of the tangle network graph. Linear braids (current DKC) have treewidth = strand count. Graph-structured tangle networks can have higher treewidth, enabling strictly harder computation.
+
+3. **Piergallini singularity graph:** Even for single branched coverings of 4-manifolds, the branch set has nodes and cones (only two types needed for ALL 4-manifolds) forming their own graph structure. The graph is always present — hidden in singularities at dim 4, explicit in JSJ/HDG at dim ≥ 5.
+
+**Fran's macramé metaphor:** A complex knot fabric where macro deformations propagate through connected regions, applying transformations to all knots in the affected area. The fabric topology encodes dimensional structure; the tension patterns encode geometric content.
+
+**Connection to existing DKC results:**
+- Edges-not-nodes principle (line 4725): computation lives in connections between knots, not individual knots — the macramé's tension, not its individual knots
+- BFS depth as propagation: each multiplication step = pulling on the fabric, propagating tension further through the network
+- Rank collapse at dim 14: light cone of local generators hasn't propagated far enough through the larger fabric — 5 rounds of tension only reaches 35% of the structure
+- Cross-block branching (D104): the off-diagonal interactions between sub-modules ARE the tangle connections between pieces
+
+**Testable direction (future demo arc):**
+Compute XOR with a TREE of tangles instead of a single linear braid word. Tangles share boundary strands at connection points. If tangle trees compute functions that single braids of equal crossing count cannot, the graph structure adds computational power — and that power IS the encoding of higher-dimensional topology. The treewidth result (Markov-Shi) predicts this should work.
+
+**Assessment:** The synthesis connecting HDG manifolds + Piergallini + treewidth + DKC is new. Nobody has built "graph-of-braids Boolean computation." The two needs (more computational power, higher-dimensional encoding) converge on the same structure: tangle networks.
+
+**Sources:** Frigerio-Lafont-Sisto 2011 (HDG manifolds), Aharonov-Jones-Landau 2009 (BQP-completeness), Markov-Shi 2008 (treewidth simulation), Piergallini-Zuddas 2018 (4-manifold branched coverings), Yetter 2001 (functorial knot theory).
+
+---
+### D105 Phase B Results: W_{8,2} (dim=28, j=2 through-lines)
+Date: 2026-02-24
+
+**50 pass, 0 fail.**
+
+**Phase 0 — Enumeration & Verification:**
+- 28 link states confirmed (14 W_{7,1} block + 14 W_{7,3} block)
+- All TL relations verified: e_i^2=0, braid relations, Yang-Baxter, commutativity
+- Generator sparsity: 119/5488 nonzero
+- Radical dimension = 0 — W_{8,2} is SIMPLE at delta=0 (verified: TL generators have entries in {0,1} only, so .a-only computation is exact)
+
+**Phase 1 — BFS Catalog:**
+- Growth: 1→15→137→987→6189→16384 (hit cap at round 5)
+
+**Phase 2 — Rank (initial, 512 entries):**
+- Raw rank = 217/3136 (6.9%)
+- Sign-rank = 310/3136 (9.9%)
+- Sign expansion = 1.43x
+
+**Phase 3 — Branching Decomposition (k=128):**
+- Full (3136 comp): XOR6=2898, XOR8=5664
+- Cross-block (1568 comp): XOR6=532, XOR8=733
+- Within-block (1568 comp): XOR6=2940, XOR8=4743
+- **VERDICT: within-block > cross-block** — OPPOSITE of D104's W_{6,2}!
+- Branching interaction is NOT the dominant signal for W_{8,2}
+
+**Phase 4 — k-Sweep:**
+- Full: k=128→XOR6=2898/XOR8=5664, k=4096→XOR6=3703/XOR8=22133
+- Cross-block: k=128→XOR6=532, k=4096→XOR6=663 (dead)
+
+### D105 Rank Saturation Test (CRITICAL CORRECTION)
+Date: 2026-02-24
+
+**The 6.9% rank fraction was a sampling artifact.** Phase B only used 512 catalog entries for rank computation. Full saturation curve:
+
+Raw rank progression:
+- 128→81, 256→139, **512→217**, 1024→290, 2048→448, 4096→608, 8192→840, **16384→1096 (34.9%)**
+
+Sign-rank progression:
+- 128→90, 256→180, **512→310**, 1024→499, 2048→902, 4096→1178, 8192→1702, **16384→2003 (63.9%)**
+
+**Key findings:**
+1. Rank NOT saturated at any checkpoint — still growing at 16384
+2. At full catalog: raw=1096 (34.9%), sign=2003 (63.9%), expansion=1.83x
+3. 34.9% matches W_{8,0}'s reported fraction exactly (274/784) — but W_{8,0} also used limited entries (1024), likely also unsaturated
+4. At matched 1024 entries: W_{8,2} rank=290 vs W_{8,0} rank=274 (very close)
+5. Sign expansion grows with data: 1.43x@512 → 1.83x@16384
+6. The "rank collapse" narrative for n=8 was wrong — both modules are under-sampled
+
+**Methodological lesson:** Always report rank saturation curve, not just a single checkpoint. Rank computation at any fixed entry count is an underestimate. The true rank fraction requires either catalog saturation (impossible for infinite groups) or asymptotic extrapolation.
+
+### D105 W_{8,0} Rank Saturation (CONFIRMS CONFOUND)
+Date: 2026-02-24
+
+W_{8,0} was also severely under-reported. The 34.9% match between modules was coincidental (same checkpoint-to-cols ratio).
+
+**W_{8,0} saturation (784 cols, 32768 catalog):**
+- Raw: 128→81, 256→139, 512→211, **1024→274**, 2048→416, 4096→498, 8192→614, 16384→684, **32768→710 (90.6%)**
+- Sign: 128→91, 256→186, 512→310, **1024→425**, 2048→651, 4096→686, 8192→729, 16384→757, **32768→767 (97.8%)**
+
+**Side-by-side at matched entry counts:**
+```
+Entries  W80_raw  W82_raw  W80_sign  W82_sign
+    128       81       81        91        90
+    256      139      139       186       180
+    512      211      217       310       310
+   1024      274      290       425       499
+   2048      416      448       651       902
+   4096      498      608       686      1178
+   8192      614      840       729      1702
+  16384      684     1096       757      2003
+  32768      710        -       767         -
+```
+
+**At matched oversampling (5.2x entries/cols):**
+- W_{8,0}: 4096/784 → raw 63.5%, sign 87.5%
+- W_{8,2}: 16384/3136 → raw 34.9%, sign 63.9%
+
+**Key conclusions:**
+1. W_{8,0} approaches saturation: 90.6% raw, 97.8% sign at 32768 entries
+2. W_{8,2} still far from saturation (would need ~130K entries for comparable oversampling)
+3. At matched oversampling, W_{8,0} has ~2x the rank fraction — smaller dim = denser structure
+4. At 128-512 entries, ranks are IDENTICAL between modules — early BFS structure is universal
+5. Sign expansion: W_{8,0} modest (1.08x at saturation), W_{8,2} dramatic (1.83x and growing)
+6. W_{8,0} sign-rank 97.8% — ternary quantization preserves nearly everything for simple module
+7. ALL earlier retroactive rank comparisons are confounded — need saturation curves for honest comparison
+
+---
+### Theoretical Note: Phase Space / Topological Entropy Connection
+Date: 2026-02-24
+
+**Origin:** Fran's insight that braids are phase space trajectories (threads that can't cross = trajectories that can't intersect).
+
+**Key mathematical facts:**
+- Conf_n(R²) has π₁ = B_n (Fadell-Neuwirth 1962). Braids ARE trajectories of non-colliding particles. Not a metaphor — a theorem.
+- Goldman (1984) symplectic form on character variety Hom(B_n, SU(2))/SU(2) — our TL representation matrices live on a symplectic manifold. Sign hash is a projection from continuous symplectic space to discrete cells.
+- Thurston-Nielsen classification: braids are periodic (entropy 0), reducible (entropy 0), or pseudo-Anosov (entropy log(λ) > 0).
+- Boyland-Aref-Stremler (2000): braid type gives LOWER BOUND on fluid mixing. Pseudo-Anosov forces chaotic advection.
+- Thiffeault: TEPO (topological entropy per operation/crossing) measures mixing efficiency per crossing = "computational capacity per crossing" in DKC.
+
+**Testable prediction (registered BEFORE computation):**
+- XOR-computing braid words should be pseudo-Anosov (positive topological entropy)
+- Non-computing braid words should be periodic or reducible (zero entropy)
+- TEPO of computing braids should correlate with XOR capacity
+- Golden ratio φ appears in maximal TEPO — connects to Fibonacci patterns in TL algebras and BFS max_abs growth
+
+**DKC distinction:** DKC uses braid WORDS (geometric representatives), not braid equivalence classes (topological invariants). The representation matrix is determined by the braid class, but the CATALOG structure (BFS adjacency, growth pattern) is determined by the word-level geometry. Continuous deformation within a braid class doesn't change computation; deformation across classes does.
+
+**Connection to existing results:**
+- Edges-not-nodes: the computation lives in chaining braids (trajectory through phase space), not individual braids (points)
+- BFS depth as propagation: each round = one more time step in the phase space dynamics
+- Macramé hypothesis: tangle networks = graphs of trajectories in configuration space
+- Writhe = abelian character (D102), computationally inert — consistent with pseudo-Anosov prediction (abelian = periodic, can't mix)
+
+**Future demo direction:** Compute topological entropy of BFS catalog entries. Correlate with XOR capacity. Test pseudo-Anosov prediction. Tools: train track algorithms (Bestvina-Handel 1995).
+
+---
+### Observation: Branching Interaction Reverses at n=8
+Date: 2026-02-24
+
+At n=6 (D104): cross-block (off-diagonal) CRUSHED within-block. W_{6,2} branching: W_{5,1}(dim 5) ⊕ W_{5,3}(dim 4) — ASYMMETRIC blocks.
+
+At n=8 (D105B): within-block WINS decisively. W_{8,2} branching: W_{7,1}(dim 14) ⊕ W_{7,3}(dim 14) — SYMMETRIC blocks.
+
+Interpretation: edges-not-nodes has a REGIME TRANSITION based on node complexity. When individual blocks are simple (dim 4-5), computation requires interaction between them (edges). When blocks are complex (dim 14), each block is self-sufficient (nodes). The crossover is somewhere between dim 5 and dim 14.
+
+This is the macramé principle at module scale: when individual knots are simple, the fabric's power comes from connections. When individual knots are complex, connections add less.
+
+---
+### Retroactive Rank Computation Across All Modules (CORRECTED)
+Date: 2026-02-24
+
+CAUTION: These fractions are NOT comparable across modules because catalog sizes differ. The first 4 modules are heavily oversampled (catalog >> cols). W_{8,0} moderately (41.8x). W_{8,2} lightly (5.2x). Fair comparison requires matched ratios.
+
+| Module | dim | cols | catalog | raw | raw% | sign | sign% | exp |
+|--------|-----|------|---------|-----|------|------|-------|-----|
+| Δ₁ | 2 | 16 | 32768 | 16 | 100% | 16 | 100% | 1.00x |
+| W_{4,2} | 3 | 36 | 32768 | 28 | 77.8% | 32 | 88.9% | 1.14x |
+| W_{5,3} | 4 | 64 | 32768 | 62 | 96.9% | 64 | 100% | 1.03x |
+| W_{6,0} | 5 | 100 | 32768 | 100 | 100% | 100 | 100% | 1.00x |
+| W_{6,2} | 9 | 324 | 32768 | 244 | 75.3% | 292 | 90.1% | 1.20x |
+| W_{8,0} | 14 | 784 | 32768 | 710 | 90.6% | 767 | 97.8% | 1.08x |
+| W_{8,2} | 28 | 3136 | 16384 | 1096 | 34.9% | 2003 | 63.9% | 1.83x |
+
+Note: W_{8,0} and W_{8,2} raw/sign values are from full saturation tests (32768 and 16384 entries respectively). Earlier reported values (274/425 for W_{8,0}, 217/310 for W_{8,2}) were from truncated computations.
+
+---
+### Session Summary: D105 Arc + Theoretical Developments
+Date: 2026-02-24
+
+**Completed this session:**
+- D105 Phase A: W_{8,0} (dim 14) k-regime test — XOR8 alive at n=8, D93 revised
+- D105 Phase A addendum: component sweep (no Atkinson peak, full 784 best) + sign-rank (425, 1.55x expansion)
+- D105 Phase B: W_{8,2} (dim 28) branching test — within-block wins (reversal from n=6), radical=0 (simple)
+- Retroactive rank for D99-101 + saturation test — rank collapse was sampling artifact
+- Kirby-dimensional formula bridge logged
+- Macramé hypothesis logged (HDG manifolds + treewidth + Piergallini)
+- Phase space / topological entropy prediction logged (pseudo-Anosov = computation)
+- Algebraic graph density concept explored (algebraic matroids, matroid hierarchy)
+
+**Open items for next session:**
+- Phase B XOR results at matched conditions (head-to-head W_{8,0} vs W_{8,2})
+- Topological entropy demo (compute TEPO for catalog entries, test pseudo-Anosov prediction)
+- Algebraic graph density demo (mutual information on sign components, matroid hierarchy computation)
+- Tangle tree DKC demo (graph-of-braids computation, treewidth exploration)
+- SnapPy visualization ("the shape of XOR" — feed braid words into SnapPy)
+
+**Key conceptual shifts this session:**
+1. k is the real computational lever, not module choice (k-regime theory confirmed at n=8)
+2. Edges-not-nodes has a regime transition: at dim 14, blocks are self-sufficient
+3. Rank fraction is a function of sampling ratio, not dimension — the "scaffolding" narrative was premature
+4. Braids as phase space trajectories: topological entropy should predict computational capacity
+5. Higher-dimensional manifolds are graphs of 3D knots (HDG + Kirby + Piergallini) — Fran's dimensional formula is essentially Kirby calculus
+
 ---
 *End of Explorer's Log*

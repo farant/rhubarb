@@ -1,0 +1,257 @@
+KNOTAPEL DEMO 102: 6-Strand Radical A/B Test
+W_{6,0} (simple) vs W_{6,4} (non-simple, rad=1)
+=============================================
+
+=== Phase 0: Generator Verification ===
+
+--- Module A: W_{6,0} (simple, dim=5) ---
+
+  A = (0,-1,0,0), A_inv = (0,0,0,1)
+  PASS: A * A_inv = 1
+  PASS: A^2 + A^{-2} = 0 (delta=0)
+  PASS: A: e_1^2 = 0
+  PASS: A: e_2^2 = 0
+  PASS: A: e_3^2 = 0
+  PASS: A: e_4^2 = 0
+  PASS: A: e_5^2 = 0
+  PASS: A: e_1*e_2*e_1 = e_1
+  PASS: A: e_2*e_1*e_2 = e_2
+  PASS: A: e_2*e_3*e_2 = e_2
+  PASS: A: e_3*e_2*e_3 = e_3
+  PASS: A: e_3*e_4*e_3 = e_3
+  PASS: A: e_4*e_3*e_4 = e_4
+  PASS: A: e_4*e_5*e_4 = e_4
+  PASS: A: e_5*e_4*e_5 = e_5
+  PASS: A: e_1*e_3 = e_3*e_1
+  PASS: A: e_1*e_4 = e_4*e_1
+  PASS: A: e_1*e_5 = e_5*e_1
+  PASS: A: e_2*e_4 = e_4*e_2
+  PASS: A: e_2*e_5 = e_5*e_2
+  PASS: A: e_3*e_5 = e_5*e_3
+  Radical dimension: 0
+  PASS: P4: W_{6,0} radical dim = 0 (simple)
+  Generator sparsity A: 15/125 nonzero
+  PASS: A: s1 * s1_inv = I
+  PASS: A: s2 * s2_inv = I
+  PASS: A: s3 * s3_inv = I
+  PASS: A: s4 * s4_inv = I
+  PASS: A: s5 * s5_inv = I
+  PASS: A: s1*s2*s1 = s2*s1*s2
+  PASS: A: s2*s3*s2 = s3*s2*s3
+  PASS: A: s3*s4*s3 = s4*s3*s4
+  PASS: A: s4*s5*s4 = s5*s4*s5
+  PASS: A: Hecke s1
+  PASS: A: Hecke s2
+  PASS: A: Hecke s3
+  PASS: A: Hecke s4
+  PASS: A: Hecke s5
+
+--- Module B: W_{6,4} (non-simple, dim=5, rad=1) ---
+
+  PASS: B: e_1^2 = 0
+  PASS: B: e_2^2 = 0
+  PASS: B: e_3^2 = 0
+  PASS: B: e_4^2 = 0
+  PASS: B: e_5^2 = 0
+  PASS: B: e_1*e_2*e_1 = e_1
+  PASS: B: e_2*e_1*e_2 = e_2
+  PASS: B: e_2*e_3*e_2 = e_2
+  PASS: B: e_3*e_2*e_3 = e_3
+  PASS: B: e_3*e_4*e_3 = e_3
+  PASS: B: e_4*e_3*e_4 = e_4
+  PASS: B: e_4*e_5*e_4 = e_4
+  PASS: B: e_5*e_4*e_5 = e_5
+  PASS: B: e_1*e_3 = e_3*e_1
+  PASS: B: e_1*e_4 = e_4*e_1
+  PASS: B: e_1*e_5 = e_5*e_1
+  PASS: B: e_2*e_4 = e_4*e_2
+  PASS: B: e_2*e_5 = e_5*e_2
+  PASS: B: e_3*e_5 = e_5*e_3
+  Radical dimension: 1
+  PASS: P1: W_{6,4} radical dim = 1
+  Verifying r = (1, 0, -1, 0, 1):
+  PASS: B: e_1 * r = 0
+  PASS: B: e_2 * r = 0
+  PASS: B: e_3 * r = 0
+  PASS: B: e_4 * r = 0
+  PASS: B: e_5 * r = 0
+  Generator sparsity B: 8/125 nonzero
+  PASS: B: s1 * s1_inv = I
+  PASS: B: s2 * s2_inv = I
+  PASS: B: s3 * s3_inv = I
+  PASS: B: s4 * s4_inv = I
+  PASS: B: s5 * s5_inv = I
+  PASS: B: s1*s2*s1 = s2*s1*s2
+  PASS: B: s2*s3*s2 = s3*s2*s3
+  PASS: B: s3*s4*s3 = s4*s3*s4
+  PASS: B: s4*s5*s4 = s5*s4*s5
+  PASS: B: Hecke s1
+  PASS: B: Hecke s2
+  PASS: B: Hecke s3
+  PASS: B: Hecke s4
+  PASS: B: Hecke s5
+
+  Writhe character on generators (P2):
+  PASS: P2: sigma_i * r = A^{writhe} * r for all generators
+
+=== Phase 1: BFS Catalog — Module A: W_{6,0} ===
+
+  Round 0: 1 entry
+  Round 1: 11 entries (+10), max_abs=1
+  Round 2: 77 entries (+66), max_abs=2
+  Round 3: 439 entries (+362), max_abs=3
+  Round 4: 2233 entries (+1794), max_abs=5
+  Round 5: 10603 entries (+8370), max_abs=8
+  Round 6: 32768 entries (+22165), max_abs=16
+  HIT CAP at 32768 entries (group is infinite)
+  PASS: A: Catalog has 32768 entries
+
+  Depth distribution:
+    d=0: 1 entries
+    d=1: 10 entries
+    d=2: 66 entries
+    d=3: 362 entries
+    d=4: 1794 entries
+    d=5: 8370 entries
+    d=6: 22165 entries
+  Growth rate:
+    d=1: +10 (ratio: 10.00)
+    d=2: +66 (ratio: 6.60)
+    d=3: +362 (ratio: 5.48)
+    d=4: +1794 (ratio: 4.96)
+    d=5: +8370 (ratio: 4.67)
+    d=6: +22165 (ratio: 2.65)
+
+  Deep entries (d>=4): 1024
+  A deep bf=30: XOR6=2449 XOR8=850 XOR10=1 XOR12=0
+  PASS: A: XOR scan completed
+
+=== Phase 2: BFS Catalog — Module B: W_{6,4} ===
+
+  Round 0: 1 entry
+  Round 1: 11 entries (+10), max_abs=1
+  Round 2: 77 entries (+66), max_abs=2
+  Round 3: 439 entries (+362), max_abs=3
+  Round 4: 2233 entries (+1794), max_abs=5
+  Round 5: 10603 entries (+8370), max_abs=8
+  Round 6: 32768 entries (+22165), max_abs=13
+  HIT CAP at 32768 entries (group is infinite)
+  PASS: B: Catalog has 32768 entries
+
+  Depth distribution:
+    d=0: 1 entries
+    d=1: 10 entries
+    d=2: 66 entries
+    d=3: 362 entries
+    d=4: 1794 entries
+    d=5: 8370 entries
+    d=6: 22165 entries
+  Growth rate:
+    d=1: +10 (ratio: 10.00)
+    d=2: +66 (ratio: 6.60)
+    d=3: +362 (ratio: 5.48)
+    d=4: +1794 (ratio: 4.96)
+    d=5: +8370 (ratio: 4.67)
+    d=6: +22165 (ratio: 2.65)
+
+  Growth comparison (P5: both ~5x):
+  depth      A (W60)     B (W64)
+  d=0              1           1
+  d=1             10          10
+  d=2             66          66
+  d=3            362         362
+  d=4           1794        1794
+  d=5           8370        8370
+  d=6          22165       22165
+
+=== Phase 3: Radical Verification + XOR Comparison ===
+
+  P6: Writhe character verification (all 32768 entries):
+  Verified: 32768/32768 entries match A^{writhe} * r
+  PASS: P6: Frozen radical exact for ALL entries
+
+  P7: radical_content constancy:
+  radical_content = 3 for all entries: YES
+  PASS: P7: radical_content constant across catalog
+
+  XOR Capacity Comparison (k=128, deep bf=30):
+  XOR          A (W60)     B (W64)      B quot
+  --------  ----------  ----------  ----------
+  XOR6           2449        2370        2195
+  XOR8            850         793          -
+  XOR10             1           0           0
+  XOR12             0           0          -
+  PASS: P8: XOR comparison completed
+
+=== Phase 4: Casimir Analysis ===
+
+  Mean |C5| (bf=30): A=48  B=23
+
+  Casimir by XOR level (P9):
+  XOR        winners        win_C5       ctrl_C5     ratio
+  XOR6         2370            68            59     1.15x
+  PASS: P9: Casimir-by-XOR analysis completed
+
+=== Phase 5: Hub Anatomy (W_{6,4}) ===
+
+  Step 1: Entry frequency in XOR10 winners
+  Total XOR10 winners: 0
+
+  freq    entries
+  0           30
+
+  Super-hubs (freq > 1):
+  FAIL: B: Super-hubs found: 0
+
+=== Phase 6: Follow-up Analysis ===
+
+  Q2: Mixing row variation (W_{6,4})
+  Mixing row L1: min=0 max=26 mean=2 zero=7628/32768
+  Mixing row L1 by depth:
+    d=0: mean_mix=0 (n=1)
+    d=1: mean_mix=0 (n=10)
+    d=2: mean_mix=0 (n=66)
+    d=3: mean_mix=0 (n=362)
+    d=4: mean_mix=1 (n=1794)
+    d=5: mean_mix=1 (n=8370)
+    d=6: mean_mix=3 (n=22165)
+
+  Q1: Max coefficient magnitude by depth
+  Round 0: 1 entry
+  Round 1: 11 entries (+10), max_abs=1
+  Round 2: 77 entries (+66), max_abs=2
+  Round 3: 439 entries (+362), max_abs=3
+  Round 4: 2233 entries (+1794), max_abs=5
+  Round 5: 10603 entries (+8370), max_abs=8
+  Round 6: 32768 entries (+22165), max_abs=16
+  HIT CAP at 32768 entries (group is infinite)
+  depth      A (W60)     B (W64)
+  d=0              1           1
+  d=1              1           1
+  d=2              2           2
+  d=3              3           3
+  d=4              5           5
+  d=5              8           8
+  d=6             16          13
+
+  Q3: A's lone XOR10 winner
+  Winner: entries {2,3,4,21,27}
+    e2: d=4 w=2 |C5|=0 tr=(0,0,5,0) frob=20
+    e3: d=4 w=0 |C5|=14 tr=(3,0,0,0) frob=16
+    e4: d=4 w=0 |C5|=250 tr=(15,0,0,0) frob=41
+    e21: d=4 w=2 |C5|=114 tr=(0,0,11,0) frob=26
+    e27: d=4 w=0 |C5|=0 tr=(5,0,0,0) frob=15
+  PASS: Q3: A XOR10 winner identified
+
+  Q4: A (W_{6,0}) XOR6 hub analysis
+  Total A XOR6 winners: 2449
+  freq    entries
+  181          1
+  191          1
+  198          1
+
+  Super-hubs (freq > 816):
+  FAIL: A: XOR6 super-hubs: 0
+
+=============================================
+Results: 84 pass, 2 fail
