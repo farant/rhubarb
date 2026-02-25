@@ -89,3 +89,53 @@ each dead end was essential to understanding the final result
 
 ### Computational claims need computational verification
 if the theoretical argument says "divide by dim(0-TL sector) = 4", the strongest verification is computing b on a single P_{0,0} copy and getting -5/8 directly. theoretical arguments + cross-model agreement is suggestive. direct computation is conclusive.
+
+
+## Raqiya Library (knotapel/raqiya/)
+
+Raqiya ("firmament") is a reusable C89 single-header library for analyzing Z[zeta_8] cyclotomic values. It provides exact arithmetic in Z[zeta_8] and 6 relationship detectors that reveal algebraic structure.
+
+### Files
+- `raqiya/raqiya.h` — single-header library (include directly, all functions are static)
+- `raqiya/probatio_raqiya.c` — unit tests (86 tests covering all detectors + arithmetic)
+- Compile tests: `cd knotapel/raqiya && cc -std=c89 -pedantic -Wall -Wextra -Werror -Wconversion -Wsign-conversion -Wcast-qual -Wstrict-prototypes -Wmissing-prototypes -Wwrite-strings -o probatio_raqiya probatio_raqiya.c && ./probatio_raqiya`
+
+### Usage
+```c
+#include <stdio.h>
+#define RAQ_PRINT          /* enables raq_print_* functions (requires stdio.h) */
+#include "../raqiya/raqiya.h"
+
+/* Collect distinct values */
+Raq_ValueSet vs;
+raq_vs_init(&vs, 8192);
+raq_vs_insert(&vs, raq_cyc8_make(0, 1, 0, 0));  /* zeta_8 */
+/* ... insert more values ... */
+
+/* Run full analysis */
+Raq_Analysis a = raq_analyze(vs.values, vs.count);
+raq_print_analysis(&a, vs.values);
+
+/* Or run individual detectors */
+Raq_Partition orbits = raq_detect_root_orbits(vs.values, vs.count);
+Raq_Partition norms = raq_detect_norm_classes(vs.values, vs.count);
+Raq_Partition galois = raq_detect_galois_orbits(vs.values, vs.count);
+
+/* Cleanup */
+raq_partition_free(&orbits);
+raq_analysis_free(&a);
+raq_vs_free(&vs);
+```
+
+### Key Types
+- `Raq_Cyc8` — element of Z[zeta_8], basis {1, zeta, zeta^2, zeta^3}, zeta^4=-1
+- `Raq_ValueSet` — hash-based distinct value collector
+- `Raq_Partition` — group assignment result (group_id[], group_sizes[], n_groups)
+- `Raq_PairHist` — pairwise distance histogram (bins[0..4])
+- `Raq_Analysis` — full analysis result (all 6 detectors)
+
+### Regression Safety
+- **Every time raqiya is used in a new demo or gains new functionality, add corresponding test coverage to probatio_raqiya.c**
+- Run probatio_raqiya before and after any changes to raqiya.h
+- The test file includes D107-specific regression tests (13 values, 4 orbits, 7 Galois orbits, axis alignment)
+- When adding new detectors or modifying existing ones, add test cases that validate the specific behavior used by existing demos
