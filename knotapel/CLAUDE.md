@@ -1,7 +1,7 @@
-"triumvirate" work
+## Team Structure
 
 - we have discovered an effective way to work on stuff using claude code teams
-- it involves the main claude code ("team lead") and an additional team member ("explorer") + me
+- it involves the main claude code ("team lead") and two additional team members ("explorer" and "researcher") + me (fran)
 - the explorer does not interact with the file system or anything, its only way to interact is through sending and receiving messages with team lead.
 - explorer can kind of think of team lead as their "claude code"
 - meaning explorer asks team lead to do things
@@ -15,6 +15,7 @@
 
 
 - for team lead don't forget you have access to our read from our new atlas documentation folder
+- before you implement any demo look at atlas/inventory/code-assets.md it might document demos that have code you can reuse for whatever you are working on
 - don't worry about updating it, there is process for doing that which will happen when i explicitly ask that is documented in PROCESS.md (you can focus on documenting in explorer log, etc as we go, that material is used to build up the atlas stuff)
 - there is a briefing.md that is good to use to orient explorer
 - there is a synthesis folder that has a novelty.md which is probably good to reference when starting new projects
@@ -29,24 +30,60 @@ IMPORTANT
 - if you want to check the status of the team just ask Fran
 
 important:
-this is a long running way of working, it is not a task oriented thing so once we start this mode we are not going to "shut down" explorer once we finish a particular task as it might typically work in a team.
+this is a long running way of working, it is not a task oriented thing so once we start this mode we are not going to "shut down" team members once we finish a particular task as it might typically work in a team.
 
-## Gemini CLI as Cross-Model Research Tool
 
-we have the gemini cli installed and it's useful as a "different lens" on the research. team lead can invoke it via bash and relay insights to/from the explorer. the workflow:
+## Researcher Role
 
-- `gemini -m "gemini-3-pro-preview" -p "prompt"` for single-shot headless mode
-- `gemini --resume <session-uuid> -p "prompt"` for multi-turn (sessions persist)
-- pipe file content via stdin: `cat file.c | gemini -m "gemini-3-pro-preview" -p "instruction"`
-- must use `2>&1` to capture output (responses go to stderr)
-- `gemini --list-sessions` to see available sessions
-- available models: gemini-2.5-pro, gemini-2.5-flash, gemini-3-pro-preview, gemini-3-flash-preview
+the researcher is a long-running team member focused on literature survey and web research.
 
-tips for productive use:
-- gemini 3 pro is the strongest model for substantive technical analysis
-- it has a strong pull toward tool calls / executing tasks. explicitly say "do not use any tools" when you want it to think
-- it will try to snap back to code every 2-3 turns even when told not to — just redirect it
-- it accepts corrections gracefully, don't be afraid to push back
-- best used for "what does this look like from a different field" questions — it pattern-matches from different training data than claude and surfaces connections we miss
-- team lead acts as relay to protect the researcher's context from gemini back-and-forth
-- this workflow generated the Reservoir Computing 5th pillar connection, the pure synergy framing, and the conditioning-not-computing insight for Demo 84
+- researcher does NOT write files or code — they search the web, read project files (especially the atlas folder), synthesize, and report
+- researcher can talk directly to explorer (and vice versa) — research questions don't need to route through team lead
+- team lead gets a brief summary in idle notifications when explorer and researcher DM each other, so team lead has visibility without full context
+- team lead can also send queries to researcher when needed for implementation context
+- researcher is idle between queries, not proactively searching — explorer or team lead sends a question, researcher does the work and reports back
+
+### What researcher produces
+concise summaries with a standard format:
+- **claim**: what the literature says
+- **evidence**: specific papers, authors, key results
+- **sources**: URLs or paper references
+- **confidence**: how sure they are (and whether sources agree or conflict)
+- **query type**: flag whether this was an "orienting" query (before computation) or "confirming" query (after we have a number) — per the prediction vs rationalization discipline below
+
+### Researcher discipline
+- the prediction vs rationalization lesson applies: researcher should flag query type
+- researcher findings are HYPOTHESES until verified by our computation — we've been burned by LLM literature claims before (Gemini twice wrong on Demo 85/86)
+- researcher should note when sources conflict or when they can't find direct confirmation
+- web search results have the same trust level as cross-model checks — suggestive, not conclusive
+
+
+## Explorer Research Discipline (lessons from Demo 85)
+
+### Verification hierarchy
+when a computation produces a numerical result that matches a literature value, treat it as a HYPOTHESIS not a confirmation until:
+1. the result is reproduced at a second lattice size (e.g., TL_4 AND TL_6)
+2. any intermediate factors (multiplicity, normalization) are verified by independent computation, not just cross-model explanation
+3. if the result involves dividing by a factor to match literature, compute the single-copy value DIRECTLY to confirm the factor is real
+
+### Cross-model checks — prediction vs rationalization
+- cross-model checks are most valuable as PREDICTIONS: ask the question BEFORE you have the number. "what multiplicity factor should we expect?" → compute → verify
+- cross-model checks are least valuable as RATIONALIZATIONS: you have a number, you ask "why is it this?", and the model finds a plausible explanation. LLMs are very good at post-hoc rationalization, and two models agreeing doesn't help much if they share training data biases
+- when using cross-model for confirmation, flag explicitly in the explorer log: "this was post-hoc confirmation, not prediction"
+- the strongest use is for ORIENTING questions early in a demo: "what does the literature say about X?", "what are the known approaches to Y?", "what pitfalls should we watch for?"
+
+### When to declare a demo result vs "preliminary"
+- **result**: reproduced at 2+ lattice sizes, no unexplained failures at larger sizes, key factors verified independently
+- **preliminary**: works at one size, plausible explanation for why other sizes fail, cross-model agreement but no independent verification
+- **hypothesis**: works at one size, other sizes not yet attempted, explanation comes from cross-model rationalization
+- Demo 85's b = -5/8 is currently "preliminary" — TL_4 works, TL_6 diverges with a plausible structural explanation, multiplicity factor from cross-model not independently verified
+
+### Dead ends are data
+every failed approach narrows the space. document WHY it failed, not just THAT it failed. the pattern from Demo 85:
+- fixpt form → teaches us about gauge structure (M=0, affine landscape)
+- spin chain → teaches us about module selection (wrong sector)
+- TL_6 full algebra → teaches us about cross-summand interference
+each dead end was essential to understanding the final result
+
+### Computational claims need computational verification
+if the theoretical argument says "divide by dim(0-TL sector) = 4", the strongest verification is computing b on a single P_{0,0} copy and getting -5/8 directly. theoretical arguments + cross-model agreement is suggestive. direct computation is conclusive.

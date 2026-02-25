@@ -1,0 +1,1242 @@
+/*
+ * KNOTAPEL DEMO 95: Commutator Depth and XOR Capacity
+ * ====================================================
+ *
+ * D94 confirmed: non-solvable 2I outperforms solvable z8 at matched size.
+ * Barrington's theorem works through commutator cancellation.
+ * This demo makes that mechanism VISIBLE.
+ *
+ * Phase 1: Commutator classification (which elements are commutators?)
+ * Phase 2: Derived series for z8 (how deep is the solvability?)
+ * Phase 3: COMM vs NON-COMM subset XOR capacity
+ * Phase 4: Matched comparison (z8-COMM vs 2I-first-12)
+ *
+ * C89, zero dependencies beyond math.h.
+ */
+
+#include <stdio.h>
+#include <string.h>
+#include <math.h>
+
+#ifndef M_PI
+#define M_PI 3.14159265358979323846
+#endif
+
+/* ================================================================ */
+/* Test infrastructure                                              */
+/* ================================================================ */
+
+static int n_pass = 0, n_fail = 0;
+
+static void check(const char *titulis, int ok) {
+    if (ok) { printf("  PASS: %s\n", titulis); n_pass++; }
+    else    { printf("  FAIL: %s\n", titulis); n_fail++; }
+}
+
+/* ================================================================ */
+/* Part A: Z[sqrt2] arithmetic                                      */
+/* Value = (a + b*sqrt2). Integer coefficients.                     */
+/* ================================================================ */
+
+typedef struct { int a; int b; } Zr2;
+
+static Zr2 zr2_make(int a, int b) { Zr2 r; r.a = a; r.b = b; return r; }
+static Zr2 zr2_add(Zr2 x, Zr2 y) { Zr2 r; r.a = x.a+y.a; r.b = x.b+y.b; return r; }
+static Zr2 zr2_sub(Zr2 x, Zr2 y) { Zr2 r; r.a = x.a-y.a; r.b = x.b-y.b; return r; }
+static Zr2 zr2_neg(Zr2 x) { Zr2 r; r.a = -x.a; r.b = -x.b; return r; }
+
+static Zr2 zr2_mul(Zr2 x, Zr2 y) {
+    /* (a1+b1*sqrt2)(a2+b2*sqrt2) = (a1*a2+2*b1*b2) + (a1*b2+b1*a2)*sqrt2 */
+    Zr2 r;
+    r.a = x.a*y.a + 2*x.b*y.b;
+    r.b = x.a*y.b + x.b*y.a;
+    return r;
+}
+
+static int zr2_eq(Zr2 x, Zr2 y) { return x.a == y.a && x.b == y.b; }
+
+static Zr2 zr2_div2(Zr2 x) {
+    Zr2 r; r.a = x.a / 2; r.b = x.b / 2; return r;
+}
+
+/* ================================================================ */
+/* Part B: QZ8 quaternion arithmetic over Z[sqrt2]/2                */
+/* Each component stored as Zr2, actual value = Zr2/2              */
+/* ================================================================ */
+
+typedef struct { Zr2 a, b, c, d; } QZ8;
+
+static QZ8 qz8_make(Zr2 a, Zr2 b, Zr2 c, Zr2 d) {
+    QZ8 r; r.a = a; r.b = b; r.c = c; r.d = d; return r;
+}
+
+static int qz8_eq(const QZ8 *p, const QZ8 *q) {
+    return zr2_eq(p->a, q->a) && zr2_eq(p->b, q->b) &&
+           zr2_eq(p->c, q->c) && zr2_eq(p->d, q->d);
+}
+
+static QZ8 qz8_neg(const QZ8 *q) {
+    return qz8_make(zr2_neg(q->a), zr2_neg(q->b),
+                    zr2_neg(q->c), zr2_neg(q->d));
+}
+
+static QZ8 qz8_conj(const QZ8 *q) {
+    return qz8_make(q->a, zr2_neg(q->b), zr2_neg(q->c), zr2_neg(q->d));
+}
+
+static QZ8 qz8_mul(const QZ8 *p, const QZ8 *q) {
+    /*
+     * Quaternion multiplication. Components are Zr2/2.
+     * Product of two /2 values = /4. Sum of 4 products = /4.
+     * Divide by 2 -> /2 form.
+     */
+    QZ8 r;
+    Zr2 t;
+
+    /* scalar: p.a*q.a - p.b*q.b - p.c*q.c - p.d*q.d */
+    t = zr2_mul(p->a, q->a);
+    t = zr2_sub(t, zr2_mul(p->b, q->b));
+    t = zr2_sub(t, zr2_mul(p->c, q->c));
+    t = zr2_sub(t, zr2_mul(p->d, q->d));
+    r.a = zr2_div2(t);
+
+    /* i: p.a*q.b + p.b*q.a + p.c*q.d - p.d*q.c */
+    t = zr2_mul(p->a, q->b);
+    t = zr2_add(t, zr2_mul(p->b, q->a));
+    t = zr2_add(t, zr2_mul(p->c, q->d));
+    t = zr2_sub(t, zr2_mul(p->d, q->c));
+    r.b = zr2_div2(t);
+
+    /* j: p.a*q.c - p.b*q.d + p.c*q.a + p.d*q.b */
+    t = zr2_mul(p->a, q->c);
+    t = zr2_sub(t, zr2_mul(p->b, q->d));
+    t = zr2_add(t, zr2_mul(p->c, q->a));
+    t = zr2_add(t, zr2_mul(p->d, q->b));
+    r.c = zr2_div2(t);
+
+    /* k: p.a*q.d + p.b*q.c - p.c*q.b + p.d*q.a */
+    t = zr2_mul(p->a, q->d);
+    t = zr2_add(t, zr2_mul(p->b, q->c));
+    t = zr2_sub(t, zr2_mul(p->c, q->b));
+    t = zr2_add(t, zr2_mul(p->d, q->a));
+    r.d = zr2_div2(t);
+
+    return r;
+}
+
+/* ================================================================ */
+/* Part C: Z[sqrt5] / Q2I arithmetic (from D94)                     */
+/* ================================================================ */
+
+typedef struct { int a; int b; } Zr5;
+
+static Zr5 zr5_make(int a, int b) { Zr5 r; r.a = a; r.b = b; return r; }
+static Zr5 zr5_add(Zr5 x, Zr5 y) { Zr5 r; r.a = x.a+y.a; r.b = x.b+y.b; return r; }
+static Zr5 zr5_sub(Zr5 x, Zr5 y) { Zr5 r; r.a = x.a-y.a; r.b = x.b-y.b; return r; }
+static Zr5 zr5_neg(Zr5 x) { Zr5 r; r.a = -x.a; r.b = -x.b; return r; }
+
+static Zr5 zr5_mul(Zr5 x, Zr5 y) {
+    Zr5 r;
+    r.a = x.a*y.a + 5*x.b*y.b;
+    r.b = x.a*y.b + x.b*y.a;
+    return r;
+}
+
+static int zr5_eq(Zr5 x, Zr5 y) { return x.a == y.a && x.b == y.b; }
+
+static Zr5 zr5_div4(Zr5 x) {
+    Zr5 r; r.a = x.a / 4; r.b = x.b / 4; return r;
+}
+
+typedef struct { Zr5 a, b, c, d; } Q2I;
+
+static Q2I q2i_make(Zr5 a, Zr5 b, Zr5 c, Zr5 d) {
+    Q2I r; r.a = a; r.b = b; r.c = c; r.d = d; return r;
+}
+
+static int q2i_eq(const Q2I *p, const Q2I *q) {
+    return zr5_eq(p->a, q->a) && zr5_eq(p->b, q->b) &&
+           zr5_eq(p->c, q->c) && zr5_eq(p->d, q->d);
+}
+
+static Q2I q2i_neg(const Q2I *q) {
+    return q2i_make(zr5_neg(q->a), zr5_neg(q->b),
+                    zr5_neg(q->c), zr5_neg(q->d));
+}
+
+static Q2I q2i_conj(const Q2I *q) {
+    return q2i_make(q->a, zr5_neg(q->b), zr5_neg(q->c), zr5_neg(q->d));
+}
+
+static Q2I q2i_mul(const Q2I *p, const Q2I *q) {
+    Q2I r;
+    Zr5 t;
+
+    t = zr5_mul(p->a, q->a);
+    t = zr5_sub(t, zr5_mul(p->b, q->b));
+    t = zr5_sub(t, zr5_mul(p->c, q->c));
+    t = zr5_sub(t, zr5_mul(p->d, q->d));
+    r.a = zr5_div4(t);
+
+    t = zr5_mul(p->a, q->b);
+    t = zr5_add(t, zr5_mul(p->b, q->a));
+    t = zr5_add(t, zr5_mul(p->c, q->d));
+    t = zr5_sub(t, zr5_mul(p->d, q->c));
+    r.b = zr5_div4(t);
+
+    t = zr5_mul(p->a, q->c);
+    t = zr5_sub(t, zr5_mul(p->b, q->d));
+    t = zr5_add(t, zr5_mul(p->c, q->a));
+    t = zr5_add(t, zr5_mul(p->d, q->b));
+    r.c = zr5_div4(t);
+
+    t = zr5_mul(p->a, q->d);
+    t = zr5_add(t, zr5_mul(p->b, q->c));
+    t = zr5_sub(t, zr5_mul(p->c, q->b));
+    t = zr5_add(t, zr5_mul(p->d, q->a));
+    r.d = zr5_div4(t);
+
+    return r;
+}
+
+/* ================================================================ */
+/* Part D: Float quaternion + phase_cell activation (from D93/D94)  */
+/* ================================================================ */
+
+typedef struct { double a, b, c, d; } Quat;
+
+#define MAX_QCAT 128
+#define MAX_DIR 64
+#define MAX_ACT 65536
+
+static Quat g_cat[MAX_QCAT];
+static int g_cat_size = 0;
+
+static double g_dir[MAX_DIR][3];
+static int g_nd = 0;
+
+static int cell_class0[MAX_ACT], cell_class1[MAX_ACT];
+static int touched_cells[MAX_ACT];
+
+static void build_dirs(int cat_size) {
+    int i, j;
+    g_nd = 0;
+    for (i = 0; i < cat_size; i++) {
+        double qa = g_cat[i].a, qb = g_cat[i].b;
+        double qc = g_cat[i].c, qd = g_cat[i].d;
+        double nv, ax, ay, az;
+        int found = 0;
+        if (qa < 0) { qa = -qa; qb = -qb; qc = -qc; qd = -qd; }
+        nv = sqrt(qb*qb + qc*qc + qd*qd);
+        if (nv < 1e-12) continue;
+        ax = qb/nv; ay = qc/nv; az = qd/nv;
+        for (j = 0; j < g_nd; j++) {
+            double d1 = fabs(g_dir[j][0]-ax) + fabs(g_dir[j][1]-ay) +
+                         fabs(g_dir[j][2]-az);
+            double d2 = fabs(g_dir[j][0]+ax) + fabs(g_dir[j][1]+ay) +
+                         fabs(g_dir[j][2]+az);
+            if (d1 < 1e-8 || d2 < 1e-8) { found = 1; break; }
+        }
+        if (!found && g_nd < MAX_DIR) {
+            g_dir[g_nd][0] = ax; g_dir[g_nd][1] = ay; g_dir[g_nd][2] = az;
+            g_nd++;
+        }
+    }
+}
+
+static int vor_cell(double ax, double ay, double az) {
+    int i, best = 0;
+    double bd = -2.0;
+    for (i = 0; i < g_nd; i++) {
+        double dp = fabs(ax*g_dir[i][0] + ay*g_dir[i][1] + az*g_dir[i][2]);
+        if (dp > bd) { bd = dp; best = i; }
+    }
+    return best;
+}
+
+static int phase_cell(double sa, double sb, double sc, double sd,
+                      int k_sec) {
+    double n2 = sa*sa + sb*sb + sc*sc + sd*sd;
+    double nm, qa, half_ang, ang, rv;
+    int sec, vor, n_vor;
+
+    n_vor = g_nd + 1;
+    if (n2 < 1e-24) return (k_sec - 1) * n_vor + g_nd;
+
+    nm = sqrt(n2);
+    qa = sa / nm;
+    if (qa > 1.0) qa = 1.0;
+    if (qa < -1.0) qa = -1.0;
+
+    half_ang = acos(qa);
+    ang = 2.0 * half_ang * 180.0 / M_PI;
+    sec = (int)(ang * (double)k_sec / 360.0);
+    if (sec >= k_sec) sec = k_sec - 1;
+    if (sec < 0) sec = 0;
+
+    rv = sqrt(sb*sb + sc*sc + sd*sd);
+    if (rv / nm < 1e-12) {
+        vor = g_nd;
+    } else {
+        vor = vor_cell(sb / rv, sc / rv, sd / rv);
+    }
+
+    return sec * n_vor + vor;
+}
+
+/* Float conversions */
+static Quat qz8_to_float(const QZ8 *q) {
+    static const double SQRT2 = 1.4142135623730950488;
+    Quat r;
+    r.a = ((double)q->a.a + (double)q->a.b * SQRT2) / 2.0;
+    r.b = ((double)q->b.a + (double)q->b.b * SQRT2) / 2.0;
+    r.c = ((double)q->c.a + (double)q->c.b * SQRT2) / 2.0;
+    r.d = ((double)q->d.a + (double)q->d.b * SQRT2) / 2.0;
+    return r;
+}
+
+static Quat q2i_to_float(const Q2I *q) {
+    static const double SQRT5 = 2.2360679774997896964;
+    Quat r;
+    r.a = ((double)q->a.a + (double)q->a.b * SQRT5) / 4.0;
+    r.b = ((double)q->b.a + (double)q->b.b * SQRT5) / 4.0;
+    r.c = ((double)q->c.a + (double)q->c.b * SQRT5) / 4.0;
+    r.d = ((double)q->d.a + (double)q->d.b * SQRT5) / 4.0;
+    return r;
+}
+
+/* 1wpi testing */
+#define MAX_TT 256
+
+static int popcount(int x) {
+    int c = 0;
+    while (x) { c += x & 1; x >>= 1; }
+    return c;
+}
+
+static void make_xor_tt(int *tt, int n) {
+    int mask;
+    for (mask = 0; mask < (1 << n); mask++)
+        tt[mask] = popcount(mask) & 1;
+}
+
+static void make_and_tt(int *tt, int n) {
+    int mask, all = (1 << n) - 1;
+    for (mask = 0; mask < (1 << n); mask++)
+        tt[mask] = (mask == all) ? 1 : 0;
+}
+
+static int test_1wpi_phase(const int *indices, int n_weights, int k_sec,
+                           const int *truth_table) {
+    int n_masks, n_touched = 0;
+    int mask, i, result = 1;
+
+    n_masks = 1 << n_weights;
+    if (n_weights > 8) return 0;
+
+    for (mask = 0; mask < n_masks; mask++) {
+        double sa = 0, sb = 0, sc = 0, sd = 0;
+        int cls, cell;
+
+        for (i = 0; i < n_weights; i++) {
+            const Quat *q = &g_cat[indices[i]];
+            double sign = ((mask >> i) & 1) ? 1.0 : -1.0;
+            sa += sign * q->a; sb += sign * q->b;
+            sc += sign * q->c; sd += sign * q->d;
+        }
+
+        cell = phase_cell(sa, sb, sc, sd, k_sec);
+        cls = truth_table[mask];
+
+        if (cell_class0[cell] == 0 && cell_class1[cell] == 0)
+            touched_cells[n_touched++] = cell;
+
+        if (cls == 0) {
+            cell_class0[cell]++;
+            if (cell_class1[cell] > 0) { result = 0; goto done; }
+        } else {
+            cell_class1[cell]++;
+            if (cell_class0[cell] > 0) { result = 0; goto done; }
+        }
+    }
+
+done:
+    for (i = 0; i < n_touched; i++) {
+        cell_class0[touched_cells[i]] = 0;
+        cell_class1[touched_cells[i]] = 0;
+    }
+    return result;
+}
+
+/* Combination generator */
+static int next_combo(int *combo, int n, int bf) {
+    int i = n - 1;
+    while (i >= 0) {
+        combo[i]++;
+        if (combo[i] <= bf - n + i) {
+            int j;
+            for (j = i + 1; j < n; j++)
+                combo[j] = combo[j-1] + 1;
+            return 1;
+        }
+        i--;
+    }
+    return 0;
+}
+
+static const int K_SHORT[] = {6, 12, 24};
+#define N_KSHORT 3
+
+static int count_phase_ex(int n_weights, int bf_limit,
+                          const int *truth_table) {
+    int count = 0;
+    int combo[8];
+    int i, ki;
+
+    if (bf_limit > g_cat_size) bf_limit = g_cat_size;
+    if (n_weights > 8 || bf_limit < n_weights) return 0;
+
+    for (i = 0; i < n_weights; i++) combo[i] = i;
+
+    do {
+        for (ki = 0; ki < N_KSHORT; ki++) {
+            int nc = K_SHORT[ki] * (g_nd + 1);
+            if (nc > MAX_ACT) continue;
+            if (test_1wpi_phase(combo, n_weights, K_SHORT[ki], truth_table)) {
+                count++;
+                break;
+            }
+        }
+    } while (next_combo(combo, n_weights, bf_limit));
+
+    return count;
+}
+
+static long comb_nk(int n, int k) {
+    long r = 1;
+    int i;
+    if (k > n - k) k = n - k;
+    for (i = 0; i < k; i++) {
+        r = r * (long)(n - i) / (long)(i + 1);
+    }
+    return r;
+}
+
+/* ================================================================ */
+/* Part E: Group construction                                        */
+/* ================================================================ */
+
+#define MAX_GRP 64
+
+/* z8 group (exact Z[sqrt2]/2) */
+static QZ8 g_z8[MAX_GRP];
+static int g_z8_depth[MAX_GRP];
+static int g_z8_size = 0;
+
+/* 2I group (exact Z[sqrt5]/4) */
+static Q2I g_2i[MAX_GRP];
+static int g_2i_depth[MAX_GRP];
+static int g_2i_size = 0;
+
+static int find_z8(const QZ8 *q) {
+    int i;
+    QZ8 nq = qz8_neg(q);
+    for (i = 0; i < g_z8_size; i++) {
+        if (qz8_eq(q, &g_z8[i]) || qz8_eq(&nq, &g_z8[i]))
+            return i;
+    }
+    return -1;
+}
+
+static int find_2i(const Q2I *q) {
+    int i;
+    Q2I nq = q2i_neg(q);
+    for (i = 0; i < g_2i_size; i++) {
+        if (q2i_eq(q, &g_2i[i]) || q2i_eq(&nq, &g_2i[i]))
+            return i;
+    }
+    return -1;
+}
+
+static void build_z8(int verbose) {
+    QZ8 gens[4];
+    QZ8 identity;
+    int prev, i, gi, rd;
+
+    /* identity = 1 in /2 form: (2,0) */
+    identity = qz8_make(zr2_make(2,0), zr2_make(0,0),
+                         zr2_make(0,0), zr2_make(0,0));
+
+    /* g1 = (sqrt2/2, sqrt2/2, 0, 0) -> /2 form: (0,1; 0,1; 0,0; 0,0) */
+    gens[0] = qz8_make(zr2_make(0,1), zr2_make(0,1),
+                        zr2_make(0,0), zr2_make(0,0));
+    gens[1] = qz8_conj(&gens[0]);
+    /* g2 = (sqrt2/2, 0, 0, -sqrt2/2) */
+    gens[2] = qz8_make(zr2_make(0,1), zr2_make(0,0),
+                        zr2_make(0,0), zr2_make(0,-1));
+    gens[3] = qz8_conj(&gens[2]);
+
+    g_z8_size = 0;
+    g_z8[0] = identity;
+    g_z8_depth[0] = 0;
+    g_z8_size = 1;
+
+    for (gi = 0; gi < 4; gi++) {
+        if (find_z8(&gens[gi]) < 0 && g_z8_size < MAX_GRP) {
+            g_z8_depth[g_z8_size] = 0;
+            g_z8[g_z8_size++] = gens[gi];
+        }
+    }
+    if (verbose) printf("  z8 Round 0: %d entries\n", g_z8_size);
+
+    rd = 1;
+    do {
+        prev = g_z8_size;
+        for (i = 0; i < prev; i++) {
+            for (gi = 0; gi < 4; gi++) {
+                QZ8 prod = qz8_mul(&g_z8[i], &gens[gi]);
+                if (find_z8(&prod) < 0 && g_z8_size < MAX_GRP) {
+                    g_z8_depth[g_z8_size] = rd;
+                    g_z8[g_z8_size++] = prod;
+                }
+            }
+        }
+        if (verbose && g_z8_size > prev)
+            printf("  z8 Round %d: %d entries (+%d)\n",
+                   rd, g_z8_size, g_z8_size - prev);
+        rd++;
+    } while (g_z8_size > prev && rd < 20);
+}
+
+static void build_2i(int verbose) {
+    Q2I gens[4];
+    Q2I s, si, t, ti;
+    int prev, i, gi, rd;
+
+    s = q2i_make(zr5_make(2,0), zr5_make(2,0),
+                 zr5_make(2,0), zr5_make(2,0));
+    si = q2i_conj(&s);
+    t = q2i_make(zr5_make(1,1), zr5_make(-1,1),
+                 zr5_make(2,0), zr5_make(0,0));
+    ti = q2i_conj(&t);
+
+    gens[0] = s; gens[1] = si; gens[2] = t; gens[3] = ti;
+
+    g_2i_size = 0;
+    g_2i[0] = q2i_make(zr5_make(4,0), zr5_make(0,0),
+                        zr5_make(0,0), zr5_make(0,0));
+    g_2i_depth[0] = 0;
+    g_2i_size = 1;
+
+    for (gi = 0; gi < 4; gi++) {
+        if (find_2i(&gens[gi]) < 0 && g_2i_size < MAX_GRP) {
+            g_2i_depth[g_2i_size] = 0;
+            g_2i[g_2i_size++] = gens[gi];
+        }
+    }
+    if (verbose) printf("  2I Round 0: %d entries\n", g_2i_size);
+
+    rd = 1;
+    do {
+        prev = g_2i_size;
+        for (i = 0; i < prev; i++) {
+            for (gi = 0; gi < 4; gi++) {
+                Q2I prod = q2i_mul(&g_2i[i], &gens[gi]);
+                if (find_2i(&prod) < 0 && g_2i_size < MAX_GRP) {
+                    g_2i_depth[g_2i_size] = rd;
+                    g_2i[g_2i_size++] = prod;
+                }
+            }
+        }
+        if (verbose && g_2i_size > prev)
+            printf("  2I Round %d: %d entries (+%d)\n",
+                   rd, g_2i_size, g_2i_size - prev);
+        rd++;
+    } while (g_2i_size > prev && rd < 20);
+}
+
+/* ================================================================ */
+/* Part F: Commutator computation helpers                            */
+/* ================================================================ */
+
+/* Compute [a,b] = a * b * a^-1 * b^-1 for z8 */
+static QZ8 z8_commutator(const QZ8 *a, const QZ8 *b) {
+    QZ8 ai = qz8_conj(a);
+    QZ8 bi = qz8_conj(b);
+    QZ8 ab = qz8_mul(a, b);
+    QZ8 abi = qz8_mul(&ab, &ai);
+    return qz8_mul(&abi, &bi);
+}
+
+/* Compute [a,b] for 2I */
+static Q2I i2_commutator(const Q2I *a, const Q2I *b) {
+    Q2I ai = q2i_conj(a);
+    Q2I bi = q2i_conj(b);
+    Q2I ab = q2i_mul(a, b);
+    Q2I abi = q2i_mul(&ab, &ai);
+    return q2i_mul(&abi, &bi);
+}
+
+/* Close a subset of z8 under multiplication (subgroup closure).
+ * in_set[i] = 1 if entry i is in the set.
+ * Returns count of entries in closed set. */
+static int close_z8_subgroup(int *in_set) {
+    int changed, i, j, count;
+    QZ8 prod, inv;
+    int k;
+
+    in_set[0] = 1; /* identity always in subgroup */
+
+    do {
+        changed = 0;
+        for (i = 0; i < g_z8_size; i++) {
+            if (!in_set[i]) continue;
+            /* Add inverse */
+            inv = qz8_conj(&g_z8[i]);
+            k = find_z8(&inv);
+            if (k >= 0 && !in_set[k]) { in_set[k] = 1; changed = 1; }
+            /* Multiply with all other members */
+            for (j = 0; j < g_z8_size; j++) {
+                if (!in_set[j]) continue;
+                prod = qz8_mul(&g_z8[i], &g_z8[j]);
+                k = find_z8(&prod);
+                if (k >= 0 && !in_set[k]) { in_set[k] = 1; changed = 1; }
+            }
+        }
+    } while (changed);
+
+    count = 0;
+    for (i = 0; i < g_z8_size; i++) {
+        if (in_set[i]) count++;
+    }
+    return count;
+}
+
+/* ================================================================ */
+/* Phase 1: Commutator Classification                                */
+/* ================================================================ */
+
+static int g_z8_is_comm[MAX_GRP];  /* 1 if single commutator */
+static int g_z8_in_g1[MAX_GRP];   /* 1 if in commutator subgroup G1 */
+static int g_2i_is_comm[MAX_GRP];
+
+static void phase1_commutators(void) {
+    int i, j, z8_single = 0, i2_single = 0;
+    int z8_g1_size;
+
+    printf("\n=== Phase 1: Commutator Classification ===\n\n");
+    fflush(stdout);
+
+    memset(g_z8_is_comm, 0, sizeof(g_z8_is_comm));
+    memset(g_2i_is_comm, 0, sizeof(g_2i_is_comm));
+
+    /* z8: find all single commutators */
+    for (i = 0; i < g_z8_size; i++) {
+        for (j = 0; j < g_z8_size; j++) {
+            QZ8 comm;
+            int k;
+            comm = z8_commutator(&g_z8[i], &g_z8[j]);
+            k = find_z8(&comm);
+            if (k >= 0) g_z8_is_comm[k] = 1;
+        }
+    }
+
+    for (i = 0; i < g_z8_size; i++)
+        if (g_z8_is_comm[i]) z8_single++;
+
+    printf("  z8: %d/%d entries are single commutators\n",
+           z8_single, g_z8_size);
+
+    /* Close commutators to get G1 (commutator subgroup) */
+    memcpy(g_z8_in_g1, g_z8_is_comm, sizeof(g_z8_in_g1));
+    z8_g1_size = close_z8_subgroup(g_z8_in_g1);
+    printf("  z8: G1 (commutator subgroup) = %d entries\n", z8_g1_size);
+    printf("  z8: G0\\G1 (non-commutator) = %d entries\n",
+           g_z8_size - z8_g1_size);
+
+    /* 2I: find all single commutators */
+    for (i = 0; i < g_2i_size; i++) {
+        for (j = 0; j < g_2i_size; j++) {
+            Q2I comm;
+            int k;
+            comm = i2_commutator(&g_2i[i], &g_2i[j]);
+            k = find_2i(&comm);
+            if (k >= 0) g_2i_is_comm[k] = 1;
+        }
+    }
+
+    for (i = 0; i < g_2i_size; i++)
+        if (g_2i_is_comm[i]) i2_single++;
+
+    printf("  2I: %d/%d entries are single commutators\n",
+           i2_single, g_2i_size);
+
+    check("z8 has commutators", z8_single > 0);
+    check("z8 NOT all commutators (solvable)", z8_single < g_z8_size);
+    check("z8 G1 < G0", z8_g1_size < g_z8_size);
+    check("2I all commutators (perfect group)", i2_single == g_2i_size);
+    check("[q,q] = identity in z8", g_z8_is_comm[0] == 1);
+}
+
+/* ================================================================ */
+/* Phase 2: Derived Series                                           */
+/* ================================================================ */
+
+static int g_z8_level[MAX_GRP]; /* which derived level entry is in */
+
+static void phase2_derived_series(void) {
+    int level_set[MAX_GRP]; /* current subgroup */
+    int comm_set[MAX_GRP];  /* commutator subgroup of current */
+    int level, i, j, k;
+    int sizes[10];
+    int n_levels = 0;
+
+    printf("\n=== Phase 2: Derived Series ===\n\n");
+    fflush(stdout);
+
+    /* Initialize: G0 = full group */
+    for (i = 0; i < g_z8_size; i++) level_set[i] = 1;
+    sizes[0] = g_z8_size;
+
+    /* Initialize all levels to 0 (deepest = stays longest) */
+    for (i = 0; i < g_z8_size; i++) g_z8_level[i] = 0;
+
+    printf("  G0 = %d entries (full z8)\n", g_z8_size);
+
+    for (level = 1; level < 10; level++) {
+        int cur_size = 0;
+
+        /* Compute commutators within current level_set */
+        memset(comm_set, 0, sizeof(comm_set));
+        for (i = 0; i < g_z8_size; i++) {
+            if (!level_set[i]) continue;
+            for (j = 0; j < g_z8_size; j++) {
+                QZ8 comm;
+                if (!level_set[j]) continue;
+                comm = z8_commutator(&g_z8[i], &g_z8[j]);
+                k = find_z8(&comm);
+                if (k >= 0) comm_set[k] = 1;
+            }
+        }
+
+        /* Close under multiplication */
+        cur_size = close_z8_subgroup(comm_set);
+        sizes[level] = cur_size;
+
+        printf("  G%d = %d entries", level, cur_size);
+
+        /* Mark entries that LEFT at this level */
+        {
+            int left = 0;
+            for (i = 0; i < g_z8_size; i++) {
+                if (level_set[i] && !comm_set[i]) {
+                    g_z8_level[i] = level - 1; /* leaves at G_{level-1} -> G_{level} */
+                    left++;
+                }
+            }
+            printf(" (%d entries left at G%d->G%d)\n", left, level-1, level);
+        }
+
+        /* Update for next iteration */
+        memcpy(level_set, comm_set, sizeof(level_set));
+        n_levels = level;
+
+        if (cur_size <= 1) {
+            /* Mark the identity */
+            for (i = 0; i < g_z8_size; i++) {
+                if (comm_set[i]) g_z8_level[i] = level;
+            }
+            break;
+        }
+    }
+
+    printf("\n  Derived series: ");
+    for (level = 0; level <= n_levels; level++) {
+        printf("%d", sizes[level]);
+        if (level < n_levels) printf(" > ");
+    }
+    printf("\n");
+
+    /* Verify 2I is perfect: G1 = G0 */
+    {
+        int i2_comm[MAX_GRP];
+        int i2_g1;
+        memset(i2_comm, 0, sizeof(i2_comm));
+        for (i = 0; i < g_2i_size; i++) {
+            for (j = 0; j < g_2i_size; j++) {
+                Q2I comm;
+                comm = i2_commutator(&g_2i[i], &g_2i[j]);
+                k = find_2i(&comm);
+                if (k >= 0) i2_comm[k] = 1;
+            }
+        }
+        i2_g1 = 0;
+        for (i = 0; i < g_2i_size; i++)
+            if (i2_comm[i]) i2_g1++;
+        printf("  2I: G1 = %d (G0 = %d) -> %s\n",
+               i2_g1, g_2i_size,
+               (i2_g1 == g_2i_size) ? "PERFECT" : "not perfect");
+        check("2I is perfect (G1 = G0)", i2_g1 == g_2i_size);
+    }
+
+    /* Expected: 24 > 12 > 4 > 1 (matching 2O > 2T > Q8 > {+/-1}) */
+    check("z8 derived series has 4 levels",
+          n_levels >= 3 && sizes[n_levels] <= 1);
+    check("z8 G1 = 12 (binary tetrahedral)", sizes[1] == 12);
+    check("z8 G2 = 4 (Q8 bracket values)", sizes[2] == 4);
+    check("z8 G3 = 1 (just identity)", sizes[3] == 1);
+
+    /* Report level membership */
+    printf("\n  Level membership:\n");
+    for (level = 0; level <= n_levels; level++) {
+        int cnt = 0;
+        for (i = 0; i < g_z8_size; i++)
+            if (g_z8_level[i] == level) cnt++;
+        printf("    Level %d: %d entries\n", level, cnt);
+    }
+    printf("\n");
+}
+
+/* ================================================================ */
+/* Phase 3: COMM vs NON-COMM Subset XOR Capacity                     */
+/* ================================================================ */
+
+static void load_z8_subset(const int *mask) {
+    int i;
+    g_cat_size = 0;
+    for (i = 0; i < g_z8_size; i++) {
+        if (mask[i]) {
+            g_cat[g_cat_size] = qz8_to_float(&g_z8[i]);
+            g_cat_size++;
+        }
+    }
+}
+
+static void load_2i_first_n(int n) {
+    int i;
+    g_cat_size = 0;
+    for (i = 0; i < g_2i_size && g_cat_size < n; i++) {
+        g_cat[g_cat_size] = q2i_to_float(&g_2i[i]);
+        g_cat_size++;
+    }
+}
+
+static void phase3_capacity_comparison(void) {
+    int xor_tt[MAX_TT], and_tt[MAX_TT];
+    int n_list[] = {3, 4, 5, 6, 7};
+    int ni;
+    int not_g1[MAX_GRP];
+    int comm_size, noncomm_size;
+    int comm_xor[5], comm_and[5];
+    int nonc_xor[5], nonc_and[5];
+    int all_xor[5], all_and[5];
+    long comm_tot[5], nonc_tot[5], all_tot[5];
+    int i;
+
+    printf("\n=== Phase 3: COMM vs NON-COMM XOR Capacity ===\n\n");
+    fflush(stdout);
+
+    /* Build NOT-G1 mask */
+    for (i = 0; i < g_z8_size; i++)
+        not_g1[i] = g_z8_in_g1[i] ? 0 : 1;
+
+    comm_size = 0;
+    noncomm_size = 0;
+    for (i = 0; i < g_z8_size; i++) {
+        if (g_z8_in_g1[i]) comm_size++;
+        else noncomm_size++;
+    }
+    printf("  COMM (G1) subset: %d entries\n", comm_size);
+    printf("  NON-COMM (G0\\G1) subset: %d entries\n", noncomm_size);
+    printf("  ALL: %d entries\n\n", g_z8_size);
+
+    /* Test COMM subset */
+    printf("  --- COMM subset (%d entries) ---\n", comm_size);
+    load_z8_subset(g_z8_in_g1);
+    build_dirs(g_cat_size);
+    printf("  Directions: %d, Cells(k=12): %d\n", g_nd, 12*(g_nd+1));
+    fflush(stdout);
+
+    for (ni = 0; ni < 5; ni++) {
+        int nw = n_list[ni];
+        if (g_cat_size < nw) { comm_xor[ni]=0; comm_and[ni]=0; comm_tot[ni]=0; continue; }
+        make_xor_tt(xor_tt, nw);
+        make_and_tt(and_tt, nw);
+        comm_tot[ni] = comb_nk(g_cat_size, nw);
+        comm_xor[ni] = count_phase_ex(nw, g_cat_size, xor_tt);
+        comm_and[ni] = count_phase_ex(nw, g_cat_size, and_tt);
+        printf("    N=%d: XOR=%d AND=%d / %ld\n",
+               nw, comm_xor[ni], comm_and[ni], comm_tot[ni]);
+        fflush(stdout);
+    }
+
+    /* Test NON-COMM subset */
+    printf("\n  --- NON-COMM subset (%d entries) ---\n", noncomm_size);
+    load_z8_subset(not_g1);
+    build_dirs(g_cat_size);
+    printf("  Directions: %d, Cells(k=12): %d\n", g_nd, 12*(g_nd+1));
+    fflush(stdout);
+
+    for (ni = 0; ni < 5; ni++) {
+        int nw = n_list[ni];
+        if (g_cat_size < nw) { nonc_xor[ni]=0; nonc_and[ni]=0; nonc_tot[ni]=0; continue; }
+        make_xor_tt(xor_tt, nw);
+        make_and_tt(and_tt, nw);
+        nonc_tot[ni] = comb_nk(g_cat_size, nw);
+        nonc_xor[ni] = count_phase_ex(nw, g_cat_size, xor_tt);
+        nonc_and[ni] = count_phase_ex(nw, g_cat_size, and_tt);
+        printf("    N=%d: XOR=%d AND=%d / %ld\n",
+               nw, nonc_xor[ni], nonc_and[ni], nonc_tot[ni]);
+        fflush(stdout);
+    }
+
+    /* Test ALL z8 */
+    {
+        int all_mask[MAX_GRP];
+        for (i = 0; i < g_z8_size; i++) all_mask[i] = 1;
+        printf("\n  --- ALL z8 (%d entries) ---\n", g_z8_size);
+        load_z8_subset(all_mask);
+        build_dirs(g_cat_size);
+        printf("  Directions: %d, Cells(k=12): %d\n", g_nd, 12*(g_nd+1));
+        fflush(stdout);
+
+        for (ni = 0; ni < 5; ni++) {
+            int nw = n_list[ni];
+            if (g_cat_size < nw) { all_xor[ni]=0; all_and[ni]=0; all_tot[ni]=0; continue; }
+            make_xor_tt(xor_tt, nw);
+            make_and_tt(and_tt, nw);
+            all_tot[ni] = comb_nk(g_cat_size, nw);
+            all_xor[ni] = count_phase_ex(nw, g_cat_size, xor_tt);
+            all_and[ni] = count_phase_ex(nw, g_cat_size, and_tt);
+            printf("    N=%d: XOR=%d AND=%d / %ld\n",
+                   nw, all_xor[ni], all_and[ni], all_tot[ni]);
+            fflush(stdout);
+        }
+    }
+
+    /* Comparison table */
+    printf("\n  --- XOR Hit Rate Comparison ---\n");
+    printf("    N | COMM(%d) | NON-COMM(%d) | ALL(%d) | COMM/NONC\n",
+           comm_size, noncomm_size, g_z8_size);
+    printf("    --|---------|-------------|--------|----------\n");
+    for (ni = 0; ni < 5; ni++) {
+        double cr = (comm_tot[ni] > 0) ?
+            100.0 * (double)comm_xor[ni] / (double)comm_tot[ni] : 0;
+        double nr = (nonc_tot[ni] > 0) ?
+            100.0 * (double)nonc_xor[ni] / (double)nonc_tot[ni] : 0;
+        double ar = (all_tot[ni] > 0) ?
+            100.0 * (double)all_xor[ni] / (double)all_tot[ni] : 0;
+        printf("    %d | %6.2f%% | %10.2f%% | %5.2f%% |",
+               n_list[ni], cr, nr, ar);
+        if (nr > 0.001)
+            printf(" %6.2fx\n", cr / nr);
+        else if (cr > 0.001)
+            printf("    inf\n");
+        else
+            printf("    ---\n");
+    }
+    printf("\n");
+
+    check("COMM XOR > 0 at N=3", comm_xor[0] > 0);
+    check("COMM XOR > 0 at N=5", comm_xor[2] > 0);
+    {
+        /* Check if COMM rate > NON-COMM rate at N=5 */
+        double cr5 = (comm_tot[2] > 0) ?
+            (double)comm_xor[2] / (double)comm_tot[2] : 0;
+        double nr5 = (nonc_tot[2] > 0) ?
+            (double)nonc_xor[2] / (double)nonc_tot[2] : 0;
+        check("COMM XOR rate >= NON-COMM at N=5", cr5 >= nr5 - 0.001);
+    }
+}
+
+/* ================================================================ */
+/* Phase 3b: 90-degree Split Test                                    */
+/* Half-angle=90 entries (Re=0, pure quaternions) come from TWO      */
+/* derived levels: 3 from Q8 (D2) + 6 from outermost (D0).          */
+/* Same geometry, different algebraic origin.                        */
+/* ================================================================ */
+
+static void phase3b_ninety_degree_split(void) {
+    int xor_tt[MAX_TT];
+    int n_list[] = {3, 4, 5, 6};
+    int ni;
+    int q8_null[MAX_GRP];   /* D2 entries with Re=0 */
+    int outer_null[MAX_GRP]; /* D0 entries with Re=0 */
+    int all_null[MAX_GRP];   /* all entries with Re=0 */
+    int q8_cnt = 0, outer_cnt = 0, all_null_cnt = 0;
+    int i;
+    int q8_xor[4], outer_xor[4], allnull_xor[4];
+    long q8_tot[4], outer_tot[4], allnull_tot[4];
+
+    printf("\n=== Phase 3b: 90-degree Split Test ===\n\n");
+    fflush(stdout);
+
+    memset(q8_null, 0, sizeof(q8_null));
+    memset(outer_null, 0, sizeof(outer_null));
+    memset(all_null, 0, sizeof(all_null));
+
+    /* Classify 90-degree entries by derived level.
+     * Re=0 means scalar component = 0 in /2 form: q.a = (0,0) */
+    for (i = 0; i < g_z8_size; i++) {
+        int is_pure = (g_z8[i].a.a == 0 && g_z8[i].a.b == 0);
+        if (!is_pure) continue;
+        all_null[i] = 1;
+        all_null_cnt++;
+        if (g_z8_level[i] >= 2) {
+            /* D2 or deeper = Q8 level */
+            q8_null[i] = 1;
+            q8_cnt++;
+        } else if (g_z8_level[i] == 0) {
+            /* D0\D1 = outermost shell */
+            outer_null[i] = 1;
+            outer_cnt++;
+        }
+    }
+
+    printf("  90-degree (Re=0) entries: %d total\n", all_null_cnt);
+    printf("    Q8 level (D2): %d entries\n", q8_cnt);
+    printf("    Outermost (D0): %d entries\n", outer_cnt);
+    printf("  Same half-angle, different algebraic depth.\n\n");
+
+    check("90-deg from Q8 = 3", q8_cnt == 3);
+    check("90-deg from outermost = 6", outer_cnt == 6);
+    check("90-deg total = 9", all_null_cnt == 9);
+
+    /* Test Q8-null subset */
+    printf("\n  --- Q8-null (%d entries, D2 level) ---\n", q8_cnt);
+    load_z8_subset(q8_null);
+    build_dirs(g_cat_size);
+    printf("  Directions: %d\n", g_nd);
+    fflush(stdout);
+
+    for (ni = 0; ni < 4; ni++) {
+        int nw = n_list[ni];
+        if (g_cat_size < nw) { q8_xor[ni]=0; q8_tot[ni]=0; continue; }
+        make_xor_tt(xor_tt, nw);
+        q8_tot[ni] = comb_nk(g_cat_size, nw);
+        q8_xor[ni] = count_phase_ex(nw, g_cat_size, xor_tt);
+        printf("    N=%d: XOR=%d / %ld\n", nw, q8_xor[ni], q8_tot[ni]);
+        fflush(stdout);
+    }
+
+    /* Test outermost-null subset */
+    printf("\n  --- Outermost-null (%d entries, D0 level) ---\n", outer_cnt);
+    load_z8_subset(outer_null);
+    build_dirs(g_cat_size);
+    printf("  Directions: %d\n", g_nd);
+    fflush(stdout);
+
+    for (ni = 0; ni < 4; ni++) {
+        int nw = n_list[ni];
+        if (g_cat_size < nw) { outer_xor[ni]=0; outer_tot[ni]=0; continue; }
+        make_xor_tt(xor_tt, nw);
+        outer_tot[ni] = comb_nk(g_cat_size, nw);
+        outer_xor[ni] = count_phase_ex(nw, g_cat_size, xor_tt);
+        printf("    N=%d: XOR=%d / %ld\n", nw, outer_xor[ni], outer_tot[ni]);
+        fflush(stdout);
+    }
+
+    /* Test all-null subset */
+    printf("\n  --- All-null (%d entries, mixed depth) ---\n", all_null_cnt);
+    load_z8_subset(all_null);
+    build_dirs(g_cat_size);
+    printf("  Directions: %d\n", g_nd);
+    fflush(stdout);
+
+    for (ni = 0; ni < 4; ni++) {
+        int nw = n_list[ni];
+        if (g_cat_size < nw) { allnull_xor[ni]=0; allnull_tot[ni]=0; continue; }
+        make_xor_tt(xor_tt, nw);
+        allnull_tot[ni] = comb_nk(g_cat_size, nw);
+        allnull_xor[ni] = count_phase_ex(nw, g_cat_size, xor_tt);
+        printf("    N=%d: XOR=%d / %ld\n", nw, allnull_xor[ni], allnull_tot[ni]);
+        fflush(stdout);
+    }
+
+    /* Per-entry comparison */
+    printf("\n  --- Per-entry XOR rate (normalized by C(size,N)) ---\n");
+    printf("    N | Q8(%d)%%  | Outer(%d)%% | All(%d)%%  | Q8/Outer\n",
+           q8_cnt, outer_cnt, all_null_cnt);
+    printf("    --|---------|-----------|---------|--------\n");
+    for (ni = 0; ni < 4; ni++) {
+        double qr = (q8_tot[ni] > 0) ?
+            100.0 * (double)q8_xor[ni] / (double)q8_tot[ni] : 0;
+        double or_ = (outer_tot[ni] > 0) ?
+            100.0 * (double)outer_xor[ni] / (double)outer_tot[ni] : 0;
+        double ar = (allnull_tot[ni] > 0) ?
+            100.0 * (double)allnull_xor[ni] / (double)allnull_tot[ni] : 0;
+        printf("    %d | %6.2f%% | %8.2f%% | %6.2f%% |",
+               n_list[ni], qr, or_, ar);
+        if (or_ > 0.001)
+            printf(" %5.2fx\n", qr / or_);
+        else if (qr > 0.001)
+            printf("   inf\n");
+        else
+            printf("   ---\n");
+    }
+    printf("\n");
+    printf("  Interpretation:\n");
+    printf("    Q8/Outer > 1 => algebraic depth matters (Barrington)\n");
+    printf("    Q8/Outer ~ 1 => geometry dominates, not algebra\n");
+    printf("    Q8/Outer < 1 => angular diversity matters more\n\n");
+}
+
+/* ================================================================ */
+/* Phase 4: Matched Comparison (z8-COMM vs 2I-first-k)               */
+/* ================================================================ */
+
+static void phase4_matched_comparison(void) {
+    int xor_tt[MAX_TT], and_tt[MAX_TT];
+    int n_list[] = {3, 4, 5, 6, 7};
+    int ni;
+    int comm_size = 0;
+    int i;
+    int z8c_xor[5], z8c_and[5];
+    int i2m_xor[5], i2m_and[5];
+    long z8c_tot[5], i2m_tot[5];
+
+    printf("\n=== Phase 4: Matched Comparison (z8-COMM vs 2I-first-k) ===\n\n");
+    fflush(stdout);
+
+    for (i = 0; i < g_z8_size; i++)
+        if (g_z8_in_g1[i]) comm_size++;
+
+    printf("  z8-COMM: %d entries\n", comm_size);
+    printf("  2I-first-%d: first %d entries from 2I by BFS depth\n\n",
+           comm_size, comm_size);
+
+    /* Test z8-COMM */
+    printf("  --- z8-COMM (%d entries) ---\n", comm_size);
+    load_z8_subset(g_z8_in_g1);
+    build_dirs(g_cat_size);
+    printf("  Directions: %d, Cells(k=12): %d\n", g_nd, 12*(g_nd+1));
+    fflush(stdout);
+
+    for (ni = 0; ni < 5; ni++) {
+        int nw = n_list[ni];
+        if (g_cat_size < nw) { z8c_xor[ni]=0; z8c_and[ni]=0; z8c_tot[ni]=0; continue; }
+        make_xor_tt(xor_tt, nw);
+        make_and_tt(and_tt, nw);
+        z8c_tot[ni] = comb_nk(g_cat_size, nw);
+        z8c_xor[ni] = count_phase_ex(nw, g_cat_size, xor_tt);
+        z8c_and[ni] = count_phase_ex(nw, g_cat_size, and_tt);
+        printf("    N=%d: XOR=%d AND=%d / %ld\n",
+               nw, z8c_xor[ni], z8c_and[ni], z8c_tot[ni]);
+        fflush(stdout);
+    }
+
+    /* Test 2I first-k (matched size) */
+    printf("\n  --- 2I-first-%d (by BFS depth) ---\n", comm_size);
+    load_2i_first_n(comm_size);
+    build_dirs(g_cat_size);
+    printf("  Directions: %d, Cells(k=12): %d\n", g_nd, 12*(g_nd+1));
+    fflush(stdout);
+
+    for (ni = 0; ni < 5; ni++) {
+        int nw = n_list[ni];
+        if (g_cat_size < nw) { i2m_xor[ni]=0; i2m_and[ni]=0; i2m_tot[ni]=0; continue; }
+        make_xor_tt(xor_tt, nw);
+        make_and_tt(and_tt, nw);
+        i2m_tot[ni] = comb_nk(g_cat_size, nw);
+        i2m_xor[ni] = count_phase_ex(nw, g_cat_size, xor_tt);
+        i2m_and[ni] = count_phase_ex(nw, g_cat_size, and_tt);
+        printf("    N=%d: XOR=%d AND=%d / %ld\n",
+               nw, i2m_xor[ni], i2m_and[ni], i2m_tot[ni]);
+        fflush(stdout);
+    }
+
+    /* Comparison table */
+    printf("\n  --- XOR Comparison (matched at %d entries) ---\n", comm_size);
+    printf("    N | z8-COMM%% | 2I-%d%%   | ratio\n", comm_size);
+    printf("    --|----------|---------|------\n");
+    for (ni = 0; ni < 5; ni++) {
+        double zr = (z8c_tot[ni] > 0) ?
+            100.0 * (double)z8c_xor[ni] / (double)z8c_tot[ni] : 0;
+        double ir = (i2m_tot[ni] > 0) ?
+            100.0 * (double)i2m_xor[ni] / (double)i2m_tot[ni] : 0;
+        printf("    %d | %7.2f%% | %6.2f%% |",
+               n_list[ni], zr, ir);
+        if (zr > 0.001)
+            printf(" %5.2fx\n", ir / zr);
+        else if (ir > 0.001)
+            printf("   inf\n");
+        else
+            printf("   ---\n");
+    }
+    printf("\n");
+
+    /* AND comparison */
+    printf("  --- AND Comparison (matched at %d entries) ---\n", comm_size);
+    printf("    N | z8-COMM%% | 2I-%d%%   | ratio\n", comm_size);
+    printf("    --|----------|---------|------\n");
+    for (ni = 0; ni < 5; ni++) {
+        double zr = (z8c_tot[ni] > 0) ?
+            100.0 * (double)z8c_and[ni] / (double)z8c_tot[ni] : 0;
+        double ir = (i2m_tot[ni] > 0) ?
+            100.0 * (double)i2m_and[ni] / (double)i2m_tot[ni] : 0;
+        printf("    %d | %7.2f%% | %6.2f%% |",
+               n_list[ni], zr, ir);
+        if (zr > 0.001)
+            printf(" %5.2fx\n", ir / zr);
+        else if (ir > 0.001)
+            printf("   inf\n");
+        else
+            printf("   ---\n");
+    }
+    printf("\n");
+
+    {
+        double zr5 = (z8c_tot[2] > 0) ?
+            (double)z8c_xor[2] / (double)z8c_tot[2] : 0;
+        double ir5 = (i2m_tot[2] > 0) ?
+            (double)i2m_xor[2] / (double)i2m_tot[2] : 0;
+        check("2I XOR rate >= z8-COMM at N=5", ir5 >= zr5 - 0.01);
+    }
+}
+
+/* ================================================================ */
+/* Main                                                             */
+/* ================================================================ */
+
+int main(void) {
+    printf("KNOTAPEL DEMO 95: Commutator Depth and XOR Capacity\n");
+    printf("====================================================\n");
+    fflush(stdout);
+
+    /* Build groups */
+    printf("\n  Building groups...\n");
+    build_z8(1);
+    printf("  z8: %d bracket values\n\n", g_z8_size);
+    check("z8 has 24 bracket values", g_z8_size == 24);
+
+    build_2i(1);
+    printf("  2I: %d bracket values\n\n", g_2i_size);
+    check("2I has 60 bracket values", g_2i_size == 60);
+    fflush(stdout);
+
+    /* Phase 1 */
+    phase1_commutators();
+    fflush(stdout);
+
+    /* Phase 2 */
+    phase2_derived_series();
+    fflush(stdout);
+
+    /* Phase 3 */
+    phase3_capacity_comparison();
+    fflush(stdout);
+
+    /* Phase 3b */
+    phase3b_ninety_degree_split();
+    fflush(stdout);
+
+    /* Phase 4 */
+    phase4_matched_comparison();
+    fflush(stdout);
+
+    /* Summary */
+    printf("\n====================================================\n");
+    printf("Results: %d pass, %d fail\n", n_pass, n_fail);
+
+    return n_fail;
+}
