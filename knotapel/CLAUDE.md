@@ -8,6 +8,7 @@
 - explorer can ask team lead for all kinds of information, etc
 - there is a file called explorers-log.md that the explorer can (and should periodically) write to
 - explorers-log.md is supposed to be one document that the explorer can get oriented in the project with
+- explorers-log.md is big, be prepared to search and tail it as necessary
 - i can talk directly to the explorer, it doesn't need to to through the team lead
 - don't worry about writing things in latin like the rest of rhubarb, just follow the c89/no dependencies style of existing demos
 - to the explorer: just imagine you are using claude code. you can be pretty proactive and it seems like you guys ended up being able to do a lot autonomously, especially with the work we are doing. so feel free to ask for whatever information you want. don't worry too much about what is in other CLAUDE.md files, in parent folders, knotapel is kind of a different context. if i throw out an idea you can discuss it with me before sending to team lead if you want to
@@ -23,6 +24,7 @@
 - for team lead: it might be worthwhile to just 100% avoid floating point, occasionally we have artifacts in results that are from floating point, i think we've caught them so far but wouldn't want that kind of thing to slip through
 - another source of bad results can be truncated catalogs / limits where we don't explore the whole space, obviously sometimes this might be necessary or proudent but good to keep in mind
 - if you are writing something that you expect to be more compute expensive it might be worthwhile to think about inlining functions in hot loop, using pointers instead of copying to stack, etc
+- its good to have a findings.md in the demo folder before moving on to the next one, explorer should prepare this as well as updates to explorers log for team lead once we move on to next demo.
 
 IMPORTANT
 - NEVER DELETE OR SPAWN TEAM OR TEAM MEMBER AFTER COMPACTION
