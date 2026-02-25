@@ -1322,6 +1322,29 @@ static void test_extended_edge_generators(void) {
         raq_el_free(&el);
     }
 
+    /* Difference closure: a-b or b-a in set. No axis restriction.
+     * val[0]=(1,0,0,0) - val[5]=(2,0,0,0) = (-1,0,0,0)... not in set.
+     * val[5]=(2,0,0,0) - val[0]=(1,0,0,0) = (1,0,0,0)=val[0]. Edge! */
+    {
+        Raq_EdgeList el = raq_edges_difference_closure(vals, 13, &vs);
+        check("difference_closure: undirected", el.directus == 0);
+        check("difference_closure: edges > 0", el.count > 0);
+        raq_el_free(&el);
+    }
+
+    /* Negation: z and -z. val[4]=(0,0,1,0) and val[6]=(0,0,-1,0). Edge!
+     * val[11]=(0,1,0,0) and val[2]=(0,-1,0,0). Edge! */
+    {
+        Raq_EdgeList el = raq_edges_negation(vals, 13);
+        check("negation: undirected", el.directus == 0);
+        check("negation: edges > 0", el.count > 0);
+        /* Count: (4,6), (3,7), (11,2), (9,10 via -2b vs 2d? no, different axes).
+         * Actually (0,0,0,2) neg = (0,0,0,-2)... not in set. (0,-2,0,0) neg = (0,2,0,0)... not in set.
+         * So: (4,6), (3,7), (11,2) = 3 edges */
+        check("negation: 3 neg pairs", el.count == 3);
+        raq_el_free(&el);
+    }
+
     raq_vs_free(&vs);
 }
 
@@ -1433,6 +1456,168 @@ static void test_quotient_and_degsq(void) {
 }
 
 /* ================================================================
+ * Graph New Features: Density, Diameter, Degree Histogram
+ * ================================================================ */
+static void test_graph_new_features(void) {
+    printf("\n--- Graph New Features ---\n");
+
+    /* K4: density = 1000 (complete), diameter = 1 */
+    {
+        Raq_EdgeList el;
+        Raq_GraphResult gr;
+        raq_el_init(&el, 6, "k4", 0);
+        raq_el_add(&el, 0, 1); raq_el_add(&el, 0, 2);
+        raq_el_add(&el, 0, 3); raq_el_add(&el, 1, 2);
+        raq_el_add(&el, 1, 3); raq_el_add(&el, 2, 3);
+        gr = raq_graph_analyze(&el, 4);
+        check("K4: density = 1000 (100%)", gr.densitas_pm == 1000);
+        check("K4: diameter = 1", gr.diameter == 1);
+        check("K4: hist len = 4", gr.gradus_hist_len == 4);
+        check("K4: hist[3] = 4 (all degree 3)", gr.gradus_hist[3] == 4);
+        raq_graph_result_free(&gr);
+        raq_el_free(&el);
+    }
+
+    /* P5: density = 4/10 = 400pm, diameter = 4 */
+    {
+        Raq_EdgeList el;
+        Raq_GraphResult gr;
+        raq_el_init(&el, 4, "p5", 0);
+        raq_el_add(&el, 0, 1); raq_el_add(&el, 1, 2);
+        raq_el_add(&el, 2, 3); raq_el_add(&el, 3, 4);
+        gr = raq_graph_analyze(&el, 5);
+        check("P5: density = 400", gr.densitas_pm == 400);
+        check("P5: diameter = 4", gr.diameter == 4);
+        check("P5: hist[1] = 2 (endpoints)", gr.gradus_hist[1] == 2);
+        check("P5: hist[2] = 3 (internal)", gr.gradus_hist[2] == 3);
+        raq_graph_result_free(&gr);
+        raq_el_free(&el);
+    }
+
+    /* Disconnected: diameter = -1 */
+    {
+        Raq_EdgeList el;
+        Raq_GraphResult gr;
+        raq_el_init(&el, 2, "discon", 0);
+        raq_el_add(&el, 0, 1); raq_el_add(&el, 2, 3);
+        gr = raq_graph_analyze(&el, 5);
+        check("disconnected: diameter = -1", gr.diameter == -1);
+        check("disconnected: density > 0", gr.densitas_pm > 0);
+        raq_graph_result_free(&gr);
+        raq_el_free(&el);
+    }
+}
+
+/* ================================================================
+ * Partition Comparison (refines, equal)
+ * ================================================================ */
+
+static void test_partition_compare(void) {
+    printf("\n--- Partition Comparison ---\n");
+
+    /* Self-refinement and self-equality */
+    {
+        Raq_Cyc8 vals[3];
+        Raq_Partition p;
+        vals[0] = raq_cyc8_make(1, 0, 0, 0);
+        vals[1] = raq_cyc8_make(0, 1, 0, 0);
+        vals[2] = raq_cyc8_make(2, 0, 0, 0);
+        p = raq_detect_axis_classes(vals, 3);
+        check("self-refinement", raq_partition_refines(&p, &p));
+        check("self-equality", raq_partition_equal(&p, &p));
+        raq_partition_free(&p);
+    }
+
+    /* Strict refinement: galois is finer than root
+     * z, z^3, -z, -z^3 are in same root orbit but split across galois orbits */
+    {
+        Raq_Cyc8 vals[4];
+        Raq_Partition galois_p, root_p;
+        vals[0] = raq_cyc8_make(1, 0, 0, 0);   /* galois-fixed */
+        vals[1] = raq_cyc8_make(0, 1, 0, 0);   /* z: galois orbit with z^3 */
+        vals[2] = raq_cyc8_make(0, 0, 0, 1);   /* z^3: galois orbit with z */
+        vals[3] = raq_cyc8_make(0, 0, 1, 0);   /* z^2: galois orbit alone */
+        galois_p = raq_detect_galois_orbits(vals, 4);
+        root_p = raq_detect_root_orbits(vals, 4);
+        /* galois splits more finely, root groups all 4 together */
+        check("galois refines root",
+              raq_partition_refines(&galois_p, &root_p));
+        check("root does NOT refine galois",
+              !raq_partition_refines(&root_p, &galois_p));
+        check("galois != root",
+              !raq_partition_equal(&galois_p, &root_p));
+        raq_partition_free(&galois_p);
+        raq_partition_free(&root_p);
+    }
+
+    /* Known equal: root == norm for axis-aligned integers */
+    {
+        Raq_Cyc8 vals[4];
+        Raq_Partition root_p, norm_p;
+        vals[0] = raq_cyc8_make(1, 0, 0, 0);
+        vals[1] = raq_cyc8_make(-1, 0, 0, 0);
+        vals[2] = raq_cyc8_make(2, 0, 0, 0);
+        vals[3] = raq_cyc8_make(-2, 0, 0, 0);
+        root_p = raq_detect_root_orbits(vals, 4);
+        norm_p = raq_detect_norm_classes(vals, 4);
+        check("root == norm for axis-aligned",
+              raq_partition_equal(&root_p, &norm_p));
+        raq_partition_free(&root_p);
+        raq_partition_free(&norm_p);
+    }
+
+    /* D107 13-value regression: root == norm == v2 */
+    {
+        Raq_Cyc8 d107[13];
+        Raq_Partition root_p, norm_p, v2_p, axis_p, galois_p;
+        d107[0]  = raq_cyc8_make(1, 0, 0, 0);
+        d107[1]  = raq_cyc8_make(0, 0, 0, 0);
+        d107[2]  = raq_cyc8_make(0, -1, 0, 0);
+        d107[3]  = raq_cyc8_make(0, 0, 0, 1);
+        d107[4]  = raq_cyc8_make(0, 0, 1, 0);
+        d107[5]  = raq_cyc8_make(2, 0, 0, 0);
+        d107[6]  = raq_cyc8_make(0, 0, -1, 0);
+        d107[7]  = raq_cyc8_make(0, 0, 0, -1);
+        d107[8]  = raq_cyc8_make(0, -3, 0, 0);
+        d107[9]  = raq_cyc8_make(0, -2, 0, 0);
+        d107[10] = raq_cyc8_make(0, 0, 0, 2);
+        d107[11] = raq_cyc8_make(0, 1, 0, 0);
+        d107[12] = raq_cyc8_make(0, 0, 0, 3);
+
+        root_p   = raq_detect_root_orbits(d107, 13);
+        norm_p   = raq_detect_norm_classes(d107, 13);
+        v2_p     = raq_detect_2adic_classes(d107, 13);
+        axis_p   = raq_detect_axis_classes(d107, 13);
+        galois_p = raq_detect_galois_orbits(d107, 13);
+
+        check("D107: root == norm", raq_partition_equal(&root_p, &norm_p));
+        check("D107: root != v2 (v2 coarser: 3 vs 4 groups)",
+              !raq_partition_equal(&root_p, &v2_p));
+        check("D107: galois refines root",
+              raq_partition_refines(&galois_p, &root_p));
+        check("D107: root does NOT refine galois",
+              !raq_partition_refines(&root_p, &galois_p));
+        check("D107: root refines v2 (finer)",
+              raq_partition_refines(&root_p, &v2_p));
+        check("D107: v2 does NOT refine root",
+              !raq_partition_refines(&v2_p, &root_p));
+        check("D107: galois refines v2 (transitive)",
+              raq_partition_refines(&galois_p, &v2_p));
+        /* axis is independent: root spans multiple axes, axis spans multiple root groups */
+        check("D107: root does NOT refine axis",
+              !raq_partition_refines(&root_p, &axis_p));
+        check("D107: axis does NOT refine root",
+              !raq_partition_refines(&axis_p, &root_p));
+
+        raq_partition_free(&root_p);
+        raq_partition_free(&norm_p);
+        raq_partition_free(&v2_p);
+        raq_partition_free(&axis_p);
+        raq_partition_free(&galois_p);
+    }
+}
+
+/* ================================================================
  * Main
  * ================================================================ */
 
@@ -1464,6 +1649,8 @@ int main(void) {
     test_extended_edge_generators();
     test_cross_integration();
     test_quotient_and_degsq();
+    test_graph_new_features();
+    test_partition_compare();
 
     printf("\n==========================================\n");
     printf("  %d pass, %d fail\n", n_pass, n_fail);

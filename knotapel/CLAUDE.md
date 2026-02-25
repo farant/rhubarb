@@ -6,6 +6,7 @@
 - explorer can kind of think of team lead as their "claude code"
 - meaning explorer asks team lead to do things
 - explorer can ask team lead for all kinds of information, etc
+- explorer should not read files or worry to much about specific implementation, ie don't ask team lead "please let me see this and this file". instead ask the team lead questions and follow up questions. generally you are more focused on math and high level stuff than implementation, although obviously you and team lead can talk about implementation if necessary.
 - there is a file called explorers-log.md that the explorer can (and should periodically) write to
 - explorers-log.md is supposed to be one document that the explorer can get oriented in the project with
 - explorers-log.md is big, be prepared to search and tail it as necessary
@@ -13,7 +14,7 @@
 - don't worry about writing things in latin like the rest of rhubarb, just follow the c89/no dependencies style of existing demos
 - to the explorer: just imagine you are using claude code. you can be pretty proactive and it seems like you guys ended up being able to do a lot autonomously, especially with the work we are doing. so feel free to ask for whatever information you want. don't worry too much about what is in other CLAUDE.md files, in parent folders, knotapel is kind of a different context. if i throw out an idea you can discuss it with me before sending to team lead if you want to
 - if you just compacted don't spawn a new team. it is possible you are the explorer that team lead spawned and if you try to spawn a team yourself things get glitchy
-
+- also for the explorer: if you want to ask questions about past demos or the project as a whole this is a great job for the researcher
 
 - for team lead don't forget you have access to our read from our new atlas documentation folder
 - before you implement any demo look at atlas/inventory/code-assets.md it might document demos that have code you can reuse for whatever you are working on

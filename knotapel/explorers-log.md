@@ -6008,4 +6008,198 @@ Structural/computational claims:
 - q-ballot evaluation at other roots of unity
 
 ---
+
+## Demo 108: Parity Vocabulary — Graph Structure Predicts Computational Capacity
+
+**Date:** 2026-02-25
+**Status:** COMPLETE. 3 pass / 0 fail. 8 claims (6 NOVEL).
+
+### Motivation
+
+The central question: Can Raqiya's graph-structural analysis of Z[ζ₈] values PREDICT which bracket values are parity-capable? This closes the loop: D106 (capacity is relational) → D107 (Raqiya measures relational structure) → D108 (relational structure predicts capacity).
+
+### Method
+
+Raqiya analysis on three value sets from the 100 standard bracket catalog:
+- **Parity (41):** Values participating in k=6 parity solutions (from D50)
+- **Poison (17):** XOR4-active values that cannot extend to XOR5, after removing 14 that overlap with parity (from D64)
+- **Neutral (42):** Remaining catalog values
+
+Raqiya comparison mode (new in this session): side-by-side edge density, diameter, components, bipartiteness, quotient graphs across all 15 edge types for each pair.
+
+### Raqiya Library Enhancements (this session)
+
+Before running D108, six new capabilities were added to Raqiya (238 → 238 tests):
+1. **Edge density** (permille, avoids float)
+2. **Graph diameter** (BFS all-pairs)
+3. **Degree histogram** (full distribution)
+4. **Difference closure** edge generator (a-b, no axis restriction)
+5. **Negation pairing** edge generator (z ↔ -z)
+6. **Comparison mode** (`raq_print_comparison`, side-by-side analysis of two value sets)
+
+### Key Results — The Dual-Channel Theorem
+
+Both channels of the D107 orthogonality theorem independently distinguish parity from poison:
+
+| Channel | Parity (41) | Poison (17) |
+|---------|------------|------------|
+| **Multiplicative (phase)** | P₃ quotient, 17 edges, connected | 0 edges, EMPTY |
+| **Additive (magnitude/v₂)** | 83% v₂ density, 4/5 classes | K₂ trivial, 2/6 classes |
+
+**Product closure = 0 for poison** is the maximum possible structural contrast. No pair of poison values multiplies to give another poison value. Parity values form a multiplicatively self-reinforcing set.
+
+**Additive v₂ connectivity:** Parity connects 4 of 5 v₂ classes through addition. Poison connects 2 of 6. Parity generates magnitude diversity; poison cannot.
+
+### Additional Structural Findings
+
+1. **Axis-0 multiplicative isolation:** The real axis (axis 0) is the disconnected vertex in parity's P₃ product quotient. Mechanism: all parity axis-0 values are negative, and every product with a negative real value produces the wrong sign for the parity vocabulary. Axis-0 values contribute through ADDITION only (pure magnitude contributors).
+
+2. **Octant complementarity:** Parity octants = {2,4,5,7}. Poison octants = {1,2,3,6}. Almost perfectly complementary (overlap only at octant 2). Together they tile all non-zero octants except octant 0.
+
+3. **Partition coincidence in poison:** Root = Galois = Norm (15 groups). Poison values have ZERO internal algebraic organization — all partitions collapse to the same grouping. Parity values have distinct, non-coincident partitions.
+
+4. **Selection rules:** Parity has 0 negation pairs, 0 σ₇ edges, only 4 sign patterns (of 81 possible). These are consequences of the octant constraint — parity's sign structure is incompatible with σ₅ and σ₇ symmetry.
+
+5. **Resolution dependence (14-value overlap):** 14 values are simultaneously parity-capable (k=6) and D64-poison (k=15). Computational role is sector-resolution-dependent, not an intrinsic value property.
+
+### The Amy Bridge — DKC ↔ Quantum Circuit Theory
+
+The dual-channel structure maps onto the T-gate/Hadamard decomposition in quantum circuit synthesis (Amy, Glaudell & Ross 2023, arXiv:2311.07741):
+
+| Circuit Synthesis | DKC | Graph Structure |
+|---|---|---|
+| T gate → ζ₈ → phase | Multiplication → axis | K₅ on axis quotient |
+| Hadamard → 1/√2 → magnitude | Addition → v₂ | K₇ on v₂ quotient |
+| T and H independent | Mul and Add orthogonal | Complete on different quotients |
+
+All bracket values have sde = 0 (smallest denominator exponent) — they live in Z[ζ₈] with no 1/√2 denominators. In Amy's framework, sde = 0 = pure Clifford = classically simulable. Yet DKC computes parity.
+
+**Resolution:** DKC's computational power comes from the activation function, not denominators. The activation function is the Hadamard analog — it CONSUMES the 2-adic/magnitude diversity that addition PRODUCES. Individual values are "Clifford" (sde=0). Sums of values generate magnitude diversity (additive K₇ completeness on v₂). The activation reads the result.
+
+### Binary Orthogonality Theorem (sharpened from D107)
+
+The D107 orthogonality theorem refines to a clean duality:
+
+| | Axis quotient | v₂ quotient |
+|---|---|---|
+| **Multiplication** | K₅ (complete) | 71.4% (incomplete) |
+| **Addition/Subtraction** | Star tree (incomplete) | K₇ (complete) |
+
+Each operation type is complete exactly where the other isn't. Multiplication navigates phase; addition navigates magnitude. This IS the T-gate/Hadamard decomposition expressed as graph structure.
+
+Difference closure ≈ additive closure on both quotients (star on axis, K₇ on v₂) with 7.8% more edges. Subtraction and addition are structurally isomorphic at the quotient level.
+
+### Prediction Scorecard (all registered BEFORE computation)
+
+| # | Prediction | Result | Verdict |
+|---|---|---|---|
+| 1 | Additive density: parity > poison | 9% vs 3 edges total | **CONFIRMED** |
+| 2 | Product closure reveals selection | P₃ vs 0 edges (!) | **CONFIRMED (stronger than predicted)** |
+| 3 | Galois stabilizer: larger stab → more parity | INVERTED: stab4=32%, stab1=47% | **DISCONFIRMED (informatively)** |
+| 4 | Joint: both channels needed | Both channels distinguish | **CONFIRMED** |
+| 5 | Null: sets indistinguishable | Maximum contrast on product closure | **FALSIFIED** |
+| 6 | v₂ completeness: parity complete | Neither complete, but 83% vs trivial | **PARTIAL (direction confirmed)** |
+
+**Meta-observation:** Structural predictions (WHAT distinguishes) reliable. Specific forms (HOW it distinguishes) sometimes inverted. Consistent with project-wide pattern noted by researcher: "structural/algebraic predictions reliable, performance predictions often wrong."
+
+### Historical Context — Loop Closure
+
+D108 closes a loop opened 60+ demos ago:
+- D48: Forward DKC wall discovered (0 parity solutions from 100M trials)
+- D49: Wall located in activation, not lattice (Aizenberg surprise)
+- D50: Wall broken with k=6 MVN (906 parity solutions, triskelion mechanism)
+- D63: WHY k=6 explained (unique octant partition {2,4,5,7})
+- D64: Vocabulary structure mapped (funnel theorem, poison values, matroid minors)
+- D107: Raqiya analysis toolkit built (9 detectors, graph layer, quotient graphs)
+- **D108: Toolkit PREDICTS computational capacity from graph structure alone**
+
+The dual-channel theorem retroactively explains:
+1. "Wall is in activation" (D49) → activation = Hadamard-equivalent resource
+2. Parity-lock (D92, ±q → only parity) → only function fitting both channels
+3. δ=√2 breakthrough (D55, Re(z)>0 = 9334 solutions) → different algebra = different graph = simpler activation
+
+### Open Questions
+
+1. Can dual-channel analysis predict which custom sector labelings at k≥24 achieve XOR6? (extends D65)
+2. Does Z[i] lattice at δ=√2 have intrinsically better product closure? (explains D55)
+3. Is parity-lock (D92) precisely the dual-channel constraint under ±q encoding?
+4. Threshold prediction: how much product closure + v₂ connectivity does a value set NEED for parity?
+5. Does dual-channel predict non-monotonic solution counts (906@k=6 > 756@k=7 > 96@k=8)?
+6. The 14-value overlap: what changes in graph structure between k=6 and k=15 that flips these values from capable to poison?
+7. Phase B comparison: parity vs poison at matched conditions (W_{8,0} vs W_{8,2}) — does the dual-channel distinction hold for module-specific value sets?
+
+---
+
+## Demo 109: D55 Value Set Graph Analysis — Encoding-Dependent Dual Channel
+
+**Date:** 2026-02-25
+**Status:** COMPLETE. 5 pass / 0 fail. 6 claims (5 NOVEL).
+
+### Motivation
+
+Test whether the dual-channel theorem (D108) generalizes to δ=√2. At δ=0, Raqiya strongly discriminated parity from poison. Does it discriminate at δ=√2, where even Re>0 suffices for parity?
+
+### Method
+
+Custom Z[i]+axis analysis on D55's 56 Z[ζ₁₆] bracket values (Z[i]-axial, represented as Gaussian integer + axis tag). Parity vocabulary extracted from 9,334 Re>0 XNOR3 solutions. 8 edge types computed on parity (28) vs non-parity (28).
+
+### Key Results
+
+**Perfect algebraic symmetry.** Parity and non-parity are IDENTICAL on 7/8 edge metrics: same_axis (86e), additive (20e), difference (52e), same_norm (90e), same_v₂ (90e), negation (0e), divisibility (50e). Same axis distribution (8,6,8,6). Same Galois orbits (15). Same norm classes (4). Same v₂ classes (4).
+
+**Product closure is the sole discriminator — and it's INVERTED.** Parity: 56 edges (14.8%), 6 components. Non-parity: 176 edges (46.6%), 1 component. Non-parity has 3× denser product closure.
+
+**Both sets have identical quotient structure.** Product axis quotient = K₄ (100%) for both. Additive v₂ quotient = 50% (3/6 edges) for both.
+
+### Interpretation: Encoding-Dependent Dual Channel
+
+The product closure inversion is CORRECT for multiplicative encoding. Under z = Π wᵢ^xᵢ, XNOR3 requires:
+- Individual weights → class 0
+- Pair products → class 1
+- Triple product → class 0
+
+Products must ESCAPE the vocabulary for sector alternation. Low product closure = products cross angular regions = parity alternation works. This flips the D108 prediction:
+
+| Encoding | Parity wants | D108/D109 result |
+|----------|-------------|-----------------|
+| Additive (D108) | HIGH product closure (self-reinforcement) | Parity 21%, Poison 0% ✓ |
+| Multiplicative (D109) | LOW product closure (self-escape) | Parity 14.8%, Non-parity 46.6% ✓ |
+
+### Why Re>0 Suffices (Structural Universality)
+
+The perfect symmetry means ALL 56 values satisfy the structural prerequisites for parity (K₄ product quotient, identical v₂/norm/Galois structure). The algebra is so rich (j=0 sector alive at δ≠0) that every value has the necessary algebraic relationships. The activation doesn't compensate for structural deficits — it just performs angular classification on an already-rich set.
+
+Contrast with δ=0: j=0 DEAD → algebra impoverished → structural asymmetry → only k≥6 can compensate.
+
+### D108 + D109 as Paired Experiment
+
+| | D108 (δ=0, additive) | D109 (δ=√2, multiplicative) |
+|---|---|---|
+| Structural discrimination | STRONG (P₃ vs empty, 83% vs trivial) | WEAK (identical on 7/8 metrics) |
+| Product closure direction | Parity HIGH, poison LOW | Parity LOW, non-parity HIGH |
+| Algebra richness | Impoverished (j=0 dead) | Rich (j=0 alive) |
+| Activation requirement | k≥6 (complex) | Re>0 (simplest) |
+| Meta-lesson | Graph predicts capacity | Graph explains why prediction is unnecessary |
+
+**Raqiya is most valuable where algebra is most constrained.** At δ=0, structural asymmetry creates detectable signatures. At δ=√2, structural universality makes the parity distinction invisible to algebraic graph analysis.
+
+### Researcher Contributions
+
+Comprehensive activation × parity survey across 20+ demos:
+- δ=0 is the ONLY regime requiring k≥6 for parity (all other δ: k=2 suffices)
+- Non-monotonicity REVERSES: gcd anti-correlation at δ=0, gcd correlation at δ=√2
+- j=0 sector liveness is the binary structural switch
+- Encoding × activation × algebra cube as organizing framework
+- Amy 2023 bridge refined: activation = Hadamard analog, sde=0 paradox
+
+### Open Questions
+
+1. Does additive encoding at δ=√2 (D57-style) restore D108-style discrimination?
+2. What distinguishes the 28 parity values if not algebraic structure? Angular position relative to activation?
+3. Can Re bias be quantified as a discriminator?
+4. Does perfect symmetry hold at all activations (k=4, k=8) or is it Re>0-specific?
+5. Is the 28/28 split a consequence of a specific algebraic automorphism?
+6. Raqiya Z[ζ₁₆] extension: worth building if more δ≠0 analysis needed
+
+---
 *End of Explorer's Log*

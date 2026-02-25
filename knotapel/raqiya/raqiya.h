@@ -334,6 +334,32 @@ static int raq_partition_max_size(const Raq_Partition *p) {
     return mx;
 }
 
+/* Returns 1 if partition a refines partition b:
+ * every a-group is contained within a single b-group. */
+static int raq_partition_refines(const Raq_Partition *a,
+                                  const Raq_Partition *b) {
+    int ga, i;
+    if (a->n_values != b->n_values) return 0;
+    for (ga = 0; ga < a->n_groups; ga++) {
+        int first_b = -1;
+        for (i = 0; i < a->n_values; i++) {
+            if (a->group_id[i] != ga) continue;
+            if (first_b == -1)
+                first_b = b->group_id[i];
+            else if (b->group_id[i] != first_b)
+                return 0;
+        }
+    }
+    return 1;
+}
+
+/* Returns 1 if partitions a and b are structurally identical
+ * (same grouping, regardless of group ID labeling). */
+static int raq_partition_equal(const Raq_Partition *a,
+                                const Raq_Partition *b) {
+    return raq_partition_refines(a, b) && raq_partition_refines(b, a);
+}
+
 /* ================================================================
  * Raq_PairHist -- Pairwise analysis histogram (distance 0-4)
  * ================================================================ */
@@ -891,11 +917,28 @@ typedef struct {
     int gradus_summa;
     int est_regularis;       /* 1 if all non-isolated vertices have same degree */
     int gradus_regularis;    /* the common degree if regular, -1 otherwise */
+
+    /* Degree histogram: gradus_hist[k] = number of vertices with degree k.
+     * Length = gradus_max + 1. NULL if no edges. */
+    int *gradus_hist;
+    int gradus_hist_len;
+
+    /* Edge density: edges / max_possible. -1 if < 2 active vertices.
+     * For undirected: 2*edges / (n_active * (n_active-1)).
+     * For directed: edges / (n_active * (n_active-1)).
+     * Stored as permille (0..1000) to avoid floating point. */
+    int densitas_pm;
+
+    /* Graph diameter: longest shortest path among connected non-isolated pairs.
+     * -1 if disconnected or < 2 active vertices. Only for undirected. */
+    int diameter;
 } Raq_GraphResult;
 
 static void raq_graph_result_free(Raq_GraphResult *gr) {
     free(gr->component_sizes);
     gr->component_sizes = NULL;
+    free(gr->gradus_hist);
+    gr->gradus_hist = NULL;
 }
 
 /* --- Sort helper for component sizes (descending) --- */
@@ -933,6 +976,10 @@ static Raq_GraphResult raq_graph_analyze(const Raq_EdgeList *el, int n) {
     gr.gradus_max = -1;
     gr.est_regularis = 0;
     gr.gradus_regularis = -1;
+    gr.gradus_hist = NULL;
+    gr.gradus_hist_len = 0;
+    gr.densitas_pm = -1;
+    gr.diameter = -1;
 
     if (n == 0) {
         gr.component_sizes = (int *)calloc(1, sizeof(int));
@@ -1053,8 +1100,25 @@ static Raq_GraphResult raq_graph_analyze(const Raq_EdgeList *el, int n) {
         }
     }
 
+    /* Degree histogram */
+    if (gr.gradus_max >= 0) {
+        gr.gradus_hist_len = gr.gradus_max + 1;
+        gr.gradus_hist = (int *)calloc((size_t)gr.gradus_hist_len, sizeof(int));
+        for (i = 0; i < n; i++) {
+            if (bfs_deg[i] == 0) continue;  /* skip isolated */
+            gr.gradus_hist[degree[i]]++;
+        }
+    }
+
     n_active = n - iso;
     n_ntcomp = nc - iso;
+
+    /* Edge density (permille) */
+    if (n_active >= 2) {
+        long max_edges = (long)n_active * (long)(n_active - 1);
+        if (!el->directus) max_edges /= 2;
+        gr.densitas_pm = (int)((long)el->count * 1000L / max_edges);
+    }
 
     if (!el->directus) {
         /* --- Undirected analyses --- */
@@ -1108,6 +1172,33 @@ static Raq_GraphResult raq_graph_analyze(const Raq_EdgeList *el, int n) {
             if (min_cycle <= n) gr.ambitus = min_cycle;
             free(dist);
             free(parent);
+        }
+
+        /* Diameter: BFS from each non-isolated vertex, track max shortest path.
+         * Only valid if graph is connected (n_ntcomp == 1). */
+        if (n_ntcomp == 1 && n_active >= 2) {
+            int max_sp = 0;
+            int *dist2 = (int *)malloc((size_t)n * sizeof(int));
+            for (i = 0; i < n; i++) {
+                int qi2, qt2;
+                if (degree[i] == 0) continue;
+                for (j = 0; j < n; j++) dist2[j] = -1;
+                dist2[i] = 0;
+                qi2 = 0; qt2 = 0;
+                queue[qt2++] = i;
+                while (qi2 < qt2) {
+                    int u = queue[qi2++];
+                    int v;
+                    for (v = 0; v < n; v++) {
+                        if (!adj[u * n + v] || dist2[v] >= 0) continue;
+                        dist2[v] = dist2[u] + 1;
+                        if (dist2[v] > max_sp) max_sp = dist2[v];
+                        queue[qt2++] = v;
+                    }
+                }
+            }
+            gr.diameter = max_sp;
+            free(dist2);
         }
     } else {
         /* --- Directed analyses: DAG + longest chain --- */
@@ -1393,6 +1484,42 @@ static Raq_EdgeList raq_edges_gcd(const Raq_Cyc8 *values, int n) {
     return el;
 }
 
+/* Difference closure: undirected edge i-j when (val[i] - val[j]) or
+ * (val[j] - val[i]) is in the value set. No axis restriction —
+ * subtraction's axis behavior is itself interesting data. */
+static Raq_EdgeList raq_edges_difference_closure(const Raq_Cyc8 *values,
+                                                  int n,
+                                                  const Raq_ValueSet *vs) {
+    Raq_EdgeList el;
+    int i, j;
+    raq_el_init(&el, n > 1 ? n * 4 : 1, "difference_closure", 0);
+    for (i = 0; i < n; i++) {
+        for (j = i + 1; j < n; j++) {
+            Raq_Cyc8 d1 = raq_cyc8_sub(values[i], values[j]);
+            Raq_Cyc8 d2 = raq_cyc8_sub(values[j], values[i]);
+            if (raq_vs_find(vs, d1) >= 0 || raq_vs_find(vs, d2) >= 0)
+                raq_el_add(&el, i, j);
+        }
+    }
+    return el;
+}
+
+/* Negation pairing: undirected edge i-j when val[i] = -val[j].
+ * In Z[zeta_8], -z = zeta_8^4 * z. Distinct from conjugation (sigma_7). */
+static Raq_EdgeList raq_edges_negation(const Raq_Cyc8 *values, int n) {
+    Raq_EdgeList el;
+    int i, j;
+    raq_el_init(&el, n > 1 ? n : 1, "negation", 0);
+    for (i = 0; i < n; i++) {
+        Raq_Cyc8 neg_i = raq_cyc8_neg(values[i]);
+        for (j = i + 1; j < n; j++) {
+            if (raq_cyc8_eq(neg_i, values[j]))
+                raq_el_add(&el, i, j);
+        }
+    }
+    return el;
+}
+
 /* --- Cross-Integration --- */
 
 /* Restrict edge list to vertices in partition group g, re-indexing to 0..size-1 */
@@ -1551,18 +1678,128 @@ static void raq_print_partition(const char *titulis,
             printf("    Size %2d: %d groups\n", sz, cnt);
     }
 
-    /* Print each group with members */
-    printf("  Groups:\n");
-    for (gi = 0; gi < p->n_groups; gi++) {
-        printf("    [%d] (n=%d):", gi, p->group_sizes[gi]);
-        for (i = 0; i < p->n_values; i++) {
-            if (p->group_id[i] == gi) {
-                printf(" ");
-                raq_print_cyc8_named(values[i]);
+    /* Count singletons for possible collapse */
+    {
+        int n_singletons = 0;
+        for (gi = 0; gi < p->n_groups; gi++)
+            if (p->group_sizes[gi] == 1) n_singletons++;
+
+        if (n_singletons > 3) {
+            /* Collapse singletons into one line */
+            printf("  Groups:\n");
+            for (gi = 0; gi < p->n_groups; gi++) {
+                if (p->group_sizes[gi] == 1) continue;
+                printf("    [%d] (n=%d):", gi, p->group_sizes[gi]);
+                if (p->group_sizes[gi] > 8) {
+                    int printed = 0, last_idx = -1;
+                    for (i = 0; i < p->n_values; i++) {
+                        if (p->group_id[i] != gi) continue;
+                        last_idx = i;
+                        if (printed < 4) {
+                            printf(" ");
+                            raq_print_cyc8_named(values[i]);
+                        }
+                        printed++;
+                    }
+                    printf(" ...");
+                    if (last_idx >= 0) {
+                        printf(" ");
+                        raq_print_cyc8_named(values[last_idx]);
+                    }
+                    printf(" (%d total)", p->group_sizes[gi]);
+                } else {
+                    for (i = 0; i < p->n_values; i++) {
+                        if (p->group_id[i] == gi) {
+                            printf(" ");
+                            raq_print_cyc8_named(values[i]);
+                        }
+                    }
+                }
+                printf("\n");
+            }
+            printf("  Singletons (%d):", n_singletons);
+            for (i = 0; i < p->n_values; i++) {
+                if (p->group_sizes[p->group_id[i]] == 1) {
+                    printf(" ");
+                    raq_print_cyc8_named(values[i]);
+                }
+            }
+            printf("\n");
+        } else {
+            /* Normal group listing */
+            printf("  Groups:\n");
+            for (gi = 0; gi < p->n_groups; gi++) {
+                printf("    [%d] (n=%d):", gi, p->group_sizes[gi]);
+                if (p->group_sizes[gi] > 8) {
+                    int printed = 0, last_idx = -1;
+                    for (i = 0; i < p->n_values; i++) {
+                        if (p->group_id[i] != gi) continue;
+                        last_idx = i;
+                        if (printed < 4) {
+                            printf(" ");
+                            raq_print_cyc8_named(values[i]);
+                        }
+                        printed++;
+                    }
+                    printf(" ...");
+                    if (last_idx >= 0) {
+                        printf(" ");
+                        raq_print_cyc8_named(values[last_idx]);
+                    }
+                    printf(" (%d total)", p->group_sizes[gi]);
+                } else {
+                    for (i = 0; i < p->n_values; i++) {
+                        if (p->group_id[i] == gi) {
+                            printf(" ");
+                            raq_print_cyc8_named(values[i]);
+                        }
+                    }
+                }
+                printf("\n");
             }
         }
-        printf("\n");
     }
+}
+
+static void raq_fprint_partition_hierarchy(FILE *f,
+                                            const Raq_Partition **parts,
+                                            const char **names,
+                                            int n_parts) {
+    int i, j, found_any = 0;
+
+    /* Equalities first */
+    for (i = 0; i < n_parts; i++) {
+        for (j = i + 1; j < n_parts; j++) {
+            if (raq_partition_equal(parts[i], parts[j])) {
+                fprintf(f, "  %s == %s (%d groups)\n",
+                        names[i], names[j], parts[i]->n_groups);
+                found_any = 1;
+            }
+        }
+    }
+
+    /* Strict refinements (skip pairs already reported as equal) */
+    for (i = 0; i < n_parts; i++) {
+        for (j = 0; j < n_parts; j++) {
+            if (i == j) continue;
+            if (raq_partition_equal(parts[i], parts[j])) continue;
+            if (raq_partition_refines(parts[i], parts[j])) {
+                fprintf(f, "  %s (%d grp) refines %s (%d grp)\n",
+                        names[i], parts[i]->n_groups,
+                        names[j], parts[j]->n_groups);
+                found_any = 1;
+            }
+        }
+    }
+
+    if (!found_any)
+        fprintf(f, "  (no refinement relationships found)\n");
+}
+
+static void raq_print_partition_hierarchy(const Raq_Partition **parts,
+                                           const char **names,
+                                           int n_parts) {
+    raq_fprint_partition_hierarchy(stdout, parts, names, n_parts);
 }
 
 static void raq_print_pair_hist(const char *titulis, const Raq_PairHist *h) {
@@ -1597,7 +1834,11 @@ static void raq_print_analysis(const Raq_Analysis *a,
     raq_print_partition("root-of-unity orbits", &a->root_orbits, values);
 
     printf("\n--- Norm-Squared Classes ---\n");
-    raq_print_partition("norm-sq classes", &a->norm_classes, values);
+    if (raq_partition_equal(&a->norm_classes, &a->root_orbits))
+        printf("  (identical to root-of-unity orbits, %d groups)\n",
+               a->norm_classes.n_groups);
+    else
+        raq_print_partition("norm-sq classes", &a->norm_classes, values);
 
     printf("\n--- Galois Orbits ---\n");
     raq_print_partition("Galois orbits", &a->galois_orbits, values);
@@ -1609,7 +1850,14 @@ static void raq_print_analysis(const Raq_Analysis *a,
     raq_print_divis(&a->divisibility);
 
     printf("\n--- 2-Adic Valuation Classes ---\n");
-    raq_print_partition("2-adic classes", &a->twoadic_classes, values);
+    if (raq_partition_equal(&a->twoadic_classes, &a->root_orbits))
+        printf("  (identical to root-of-unity orbits, %d groups)\n",
+               a->twoadic_classes.n_groups);
+    else if (raq_partition_equal(&a->twoadic_classes, &a->norm_classes))
+        printf("  (identical to norm-squared classes, %d groups)\n",
+               a->twoadic_classes.n_groups);
+    else
+        raq_print_partition("2-adic classes", &a->twoadic_classes, values);
 
     printf("\n--- Sign Pattern Distance ---\n");
     raq_print_pair_hist("Sign distance", &a->sign_distances);
@@ -1634,6 +1882,60 @@ static void raq_print_analysis(const Raq_Analysis *a,
                100.0 * (double)a->products.n_imag
                    / (double)a->products.zero_components.n_pairs);
     }
+
+    /* Partition hierarchy */
+    {
+        const Raq_Partition *parts[5];
+        const char *names[5];
+        parts[0] = &a->galois_orbits;   names[0] = "galois";
+        parts[1] = &a->root_orbits;     names[1] = "root";
+        parts[2] = &a->norm_classes;    names[2] = "norm";
+        parts[3] = &a->twoadic_classes; names[3] = "v2";
+        parts[4] = &a->axis_classes;    names[4] = "axis";
+        printf("\n--- Partition Hierarchy ---\n");
+        raq_print_partition_hierarchy(parts, names, 5);
+    }
+}
+
+/* Compact summary: call after raq_analyze() for quick overview */
+static void raq_print_summary(const Raq_Analysis *a,
+                                const Raq_Cyc8 *values) {
+    int i, n_galois_singletons = 0;
+    int n_axes[5]; /* 0-3 = axis a/b/c/d, 4 = zero */
+
+    memset(n_axes, 0, sizeof(n_axes));
+    for (i = 0; i < a->n_values; i++) {
+        int ax = raq_cyc8_axis(values[i]);
+        if (ax >= 0 && ax <= 3) n_axes[ax]++;
+        else n_axes[4]++;
+    }
+
+    printf("  %d values: %da + %db + %dc + %dd",
+           a->n_values, n_axes[0], n_axes[1], n_axes[2], n_axes[3]);
+    if (n_axes[4] > 0) printf(" + %dzero", n_axes[4]);
+    printf("\n");
+
+    printf("  Partitions: %d galois, %d root, %d norm, %d v2, %d axis\n",
+           a->galois_orbits.n_groups,
+           a->root_orbits.n_groups,
+           a->norm_classes.n_groups,
+           a->twoadic_classes.n_groups,
+           a->axis_classes.n_groups);
+
+    if (raq_partition_equal(&a->root_orbits, &a->norm_classes))
+        printf("  root == norm\n");
+    if (raq_partition_equal(&a->root_orbits, &a->twoadic_classes))
+        printf("  root == v2\n");
+
+    for (i = 0; i < a->galois_orbits.n_groups; i++)
+        if (a->galois_orbits.group_sizes[i] == 1)
+            n_galois_singletons++;
+    if (n_galois_singletons > 0)
+        printf("  Galois singletons: %d/%d orbits\n",
+               n_galois_singletons, a->galois_orbits.n_groups);
+
+    printf("  Sign patterns: %d/81, neg pairs: %d\n",
+           a->n_sign_patterns, a->n_neg_pairs);
 }
 
 /* ================================================================
@@ -1674,17 +1976,267 @@ static void raq_fprint_graph_result(FILE *f, const char *label,
     if (gr->gradus_min >= 0)
         fprintf(f, "  degree: min=%d max=%d sum=%d\n",
                 gr->gradus_min, gr->gradus_max, gr->gradus_summa);
+    if (gr->densitas_pm >= 0)
+        fprintf(f, "  density: %d.%d%%\n",
+                gr->densitas_pm / 10, gr->densitas_pm % 10);
+    if (gr->diameter >= 0)
+        fprintf(f, "  diameter: %d\n", gr->diameter);
 }
 
-static void raq_graph_sweep(const Raq_Cyc8 *values, int count, FILE *f) {
+/* Compare structural fingerprints of two graph results.
+ * Returns 1 if they would produce identical printed output. */
+static int raq_graph_result_same_structure(const Raq_GraphResult *a,
+                                            const Raq_GraphResult *b) {
+    return a->n_vertices == b->n_vertices &&
+           a->n_edges == b->n_edges &&
+           a->n_components == b->n_components &&
+           a->n_isolated == b->n_isolated &&
+           a->est_bipartitus == b->est_bipartitus &&
+           a->bipartitio_a == b->bipartitio_a &&
+           a->bipartitio_b == b->bipartitio_b &&
+           a->est_completus == b->est_completus &&
+           a->est_arbor == b->est_arbor &&
+           a->est_via == b->est_via &&
+           a->est_cyclus == b->est_cyclus &&
+           a->ambitus == b->ambitus &&
+           a->est_dag == b->est_dag &&
+           a->longitudo_catena == b->longitudo_catena &&
+           a->gradus_min == b->gradus_min &&
+           a->gradus_max == b->gradus_max &&
+           a->gradus_summa == b->gradus_summa &&
+           a->est_regularis == b->est_regularis &&
+           a->gradus_regularis == b->gradus_regularis &&
+           a->densitas_pm == b->densitas_pm &&
+           a->diameter == b->diameter;
+}
+
+/* Compact one-line graph result (no label, no newline at end).
+ * Used for collapsed identical restricted analyses. */
+static void raq_fprint_graph_result_compact(FILE *f,
+                                             const Raq_GraphResult *gr) {
+    int nc_nt = gr->n_components - gr->n_isolated;
+    fprintf(f, "%dv %de", gr->n_vertices, gr->n_edges);
+    if (nc_nt > 0) {
+        fprintf(f, ", %d comp", nc_nt);
+        if (gr->n_isolated > 0) fprintf(f, " (+%d iso)", gr->n_isolated);
+    }
+    if (gr->est_bipartitus == 1)
+        fprintf(f, ", bip %d+%d", gr->bipartitio_a, gr->bipartitio_b);
+    if (gr->est_completus)
+        fprintf(f, ", K_%d", gr->n_vertices - gr->n_isolated);
+    if (gr->est_arbor) {
+        if (gr->est_via)
+            fprintf(f, ", P_%d", gr->n_vertices - gr->n_isolated);
+        else
+            fprintf(f, ", tree");
+    }
+    if (gr->est_cyclus)
+        fprintf(f, ", C_%d", gr->n_vertices - gr->n_isolated);
+    if (gr->ambitus > 0)
+        fprintf(f, ", girth %d", gr->ambitus);
+    if (gr->est_dag == 1)
+        fprintf(f, ", DAG chain %d", gr->longitudo_catena);
+    if (gr->est_regularis)
+        fprintf(f, ", %d-reg", gr->gradus_regularis);
+    if (gr->densitas_pm >= 0)
+        fprintf(f, ", %d.%d%%", gr->densitas_pm / 10, gr->densitas_pm % 10);
+    if (gr->diameter >= 0)
+        fprintf(f, ", diam %d", gr->diameter);
+}
+
+/* Entry for collecting restricted analysis results before collapsing */
+typedef struct {
+    int group_idx;
+    int group_size;
+    Raq_GraphResult gr;
+} Raq_RestrictedEntry;
+
+/* ================================================================
+ * Graph Comparison: side-by-side analysis of two value sets
+ * Define RAQ_COMPARE before including to enable.
+ * ================================================================ */
+#ifdef RAQ_COMPARE
+
+/* Compare two value sets by running all edge generators on each and printing
+ * a side-by-side table. Also compares partition counts and analysis summaries.
+ * name_a / name_b are labels for the two sets (e.g., "parity", "poison"). */
+static void raq_print_comparison(const Raq_Cyc8 *vals_a, int n_a,
+                                  const Raq_Cyc8 *vals_b, int n_b,
+                                  const char *name_a, const char *name_b) {
+    Raq_Analysis aa, ab;
+    Raq_ValueSet vs_a, vs_b;
+    int ne = 15, i;
+
+    struct {
+        const char *name;
+        Raq_EdgeList el_a;
+        Raq_EdgeList el_b;
+    } eg[15];
+
+    aa = raq_analyze(vals_a, n_a);
+    ab = raq_analyze(vals_b, n_b);
+
+    /* Summary comparison */
+    printf("\n===== COMPARISON: %s (%d) vs %s (%d) =====\n\n",
+           name_a, n_a, name_b, n_b);
+
+    printf("--- Analysis Summary ---\n");
+    printf("  %-20s  %8s  %8s\n", "", name_a, name_b);
+    printf("  %-20s  %8d  %8d\n", "values", aa.n_values, ab.n_values);
+    printf("  %-20s  %8d  %8d\n", "root orbits",
+           aa.root_orbits.n_groups, ab.root_orbits.n_groups);
+    printf("  %-20s  %8d  %8d\n", "galois orbits",
+           aa.galois_orbits.n_groups, ab.galois_orbits.n_groups);
+    printf("  %-20s  %8d  %8d\n", "norm classes",
+           aa.norm_classes.n_groups, ab.norm_classes.n_groups);
+    printf("  %-20s  %8d  %8d\n", "v2 classes",
+           aa.twoadic_classes.n_groups, ab.twoadic_classes.n_groups);
+    printf("  %-20s  %8d  %8d\n", "axis classes",
+           aa.axis_classes.n_groups, ab.axis_classes.n_groups);
+    printf("  %-20s  %8d  %8d\n", "sign patterns",
+           aa.n_sign_patterns, ab.n_sign_patterns);
+    printf("  %-20s  %8d  %8d\n", "neg pairs",
+           aa.n_neg_pairs, ab.n_neg_pairs);
+
+    /* Axis distribution */
+    {
+        int ax_a[5], ax_b[5];
+        memset(ax_a, 0, sizeof(ax_a));
+        memset(ax_b, 0, sizeof(ax_b));
+        for (i = 0; i < n_a; i++) {
+            int ax = raq_cyc8_axis(vals_a[i]);
+            ax_a[(ax >= 0 && ax <= 3) ? ax : 4]++;
+        }
+        for (i = 0; i < n_b; i++) {
+            int ax = raq_cyc8_axis(vals_b[i]);
+            ax_b[(ax >= 0 && ax <= 3) ? ax : 4]++;
+        }
+        printf("  %-20s  %8s  %8s\n", "axis a", "", "");
+        printf("    a-axis             %8d  %8d\n", ax_a[0], ax_b[0]);
+        printf("    b-axis             %8d  %8d\n", ax_a[1], ax_b[1]);
+        printf("    c-axis             %8d  %8d\n", ax_a[2], ax_b[2]);
+        printf("    d-axis             %8d  %8d\n", ax_a[3], ax_b[3]);
+        printf("    zero               %8d  %8d\n", ax_a[4], ax_b[4]);
+    }
+
+    /* Build value sets for edge generators */
+    raq_vs_init(&vs_a, n_a + 1);
+    raq_vs_init(&vs_b, n_b + 1);
+    for (i = 0; i < n_a; i++) raq_vs_insert(&vs_a, vals_a[i]);
+    for (i = 0; i < n_b; i++) raq_vs_insert(&vs_b, vals_b[i]);
+
+    /* Generate all edge types for both sets */
+    eg[0].name  = "same_axis";
+    eg[0].el_a  = raq_edges_from_partition(&aa.axis_classes, "sa");
+    eg[0].el_b  = raq_edges_from_partition(&ab.axis_classes, "sa");
+    eg[1].name  = "same_root";
+    eg[1].el_a  = raq_edges_from_partition(&aa.root_orbits, "sr");
+    eg[1].el_b  = raq_edges_from_partition(&ab.root_orbits, "sr");
+    eg[2].name  = "same_galois";
+    eg[2].el_a  = raq_edges_from_partition(&aa.galois_orbits, "sg");
+    eg[2].el_b  = raq_edges_from_partition(&ab.galois_orbits, "sg");
+    eg[3].name  = "same_v2";
+    eg[3].el_a  = raq_edges_from_partition(&aa.twoadic_classes, "sv");
+    eg[3].el_b  = raq_edges_from_partition(&ab.twoadic_classes, "sv");
+    eg[4].name  = "divisibility";
+    eg[4].el_a  = raq_edges_divisibility(vals_a, n_a);
+    eg[4].el_b  = raq_edges_divisibility(vals_b, n_b);
+    eg[5].name  = "product_closure";
+    eg[5].el_a  = raq_edges_product_closure(vals_a, n_a, &vs_a);
+    eg[5].el_b  = raq_edges_product_closure(vals_b, n_b, &vs_b);
+    eg[6].name  = "pos_divisibility";
+    eg[6].el_a  = raq_edges_positive_divisibility(vals_a, n_a);
+    eg[6].el_b  = raq_edges_positive_divisibility(vals_b, n_b);
+    eg[7].name  = "galois_s3";
+    eg[7].el_a  = raq_edges_galois_sigma3(vals_a, n_a, &vs_a);
+    eg[7].el_b  = raq_edges_galois_sigma3(vals_b, n_b, &vs_b);
+    eg[8].name  = "galois_s5";
+    eg[8].el_a  = raq_edges_galois_sigma5(vals_a, n_a, &vs_a);
+    eg[8].el_b  = raq_edges_galois_sigma5(vals_b, n_b, &vs_b);
+    eg[9].name  = "galois_s7";
+    eg[9].el_a  = raq_edges_galois_sigma7(vals_a, n_a, &vs_a);
+    eg[9].el_b  = raq_edges_galois_sigma7(vals_b, n_b, &vs_b);
+    eg[10].name = "additive_closure";
+    eg[10].el_a = raq_edges_additive_closure(vals_a, n_a, &vs_a);
+    eg[10].el_b = raq_edges_additive_closure(vals_b, n_b, &vs_b);
+    eg[11].name = "power2";
+    eg[11].el_a = raq_edges_power2(vals_a, n_a, &vs_a);
+    eg[11].el_b = raq_edges_power2(vals_b, n_b, &vs_b);
+    eg[12].name = "gcd";
+    eg[12].el_a = raq_edges_gcd(vals_a, n_a);
+    eg[12].el_b = raq_edges_gcd(vals_b, n_b);
+    eg[13].name = "difference_closure";
+    eg[13].el_a = raq_edges_difference_closure(vals_a, n_a, &vs_a);
+    eg[13].el_b = raq_edges_difference_closure(vals_b, n_b, &vs_b);
+    eg[14].name = "negation";
+    eg[14].el_a = raq_edges_negation(vals_a, n_a);
+    eg[14].el_b = raq_edges_negation(vals_b, n_b);
+
+    /* Edge comparison table */
+    printf("\n--- Edge Comparison ---\n");
+    printf("  %-22s  %6s %6s %6s  %6s %6s %6s\n",
+           "", "edg_A", "den_A", "dia_A", "edg_B", "den_B", "dia_B");
+    for (i = 0; i < ne; i++) {
+        Raq_GraphResult gr_a = raq_graph_analyze(&eg[i].el_a, n_a);
+        Raq_GraphResult gr_b = raq_graph_analyze(&eg[i].el_b, n_b);
+        printf("  %-22s  %6d %5d%%  %4d  %6d %5d%%  %4d\n",
+               eg[i].name,
+               gr_a.n_edges,
+               gr_a.densitas_pm >= 0 ? gr_a.densitas_pm / 10 : -1,
+               gr_a.diameter,
+               gr_b.n_edges,
+               gr_b.densitas_pm >= 0 ? gr_b.densitas_pm / 10 : -1,
+               gr_b.diameter);
+        raq_graph_result_free(&gr_a);
+        raq_graph_result_free(&gr_b);
+    }
+
+    /* Bipartiteness + components comparison */
+    printf("\n--- Structure Comparison ---\n");
+    printf("  %-22s  %6s %6s  %6s %6s\n",
+           "", "comp_A", "bip_A", "comp_B", "bip_B");
+    for (i = 0; i < ne; i++) {
+        Raq_GraphResult gr_a = raq_graph_analyze(&eg[i].el_a, n_a);
+        Raq_GraphResult gr_b = raq_graph_analyze(&eg[i].el_b, n_b);
+        int ca = gr_a.n_components - gr_a.n_isolated;
+        int cb = gr_b.n_components - gr_b.n_isolated;
+        printf("  %-22s  %6d %6s  %6d %6s\n",
+               eg[i].name,
+               ca, gr_a.est_bipartitus == 1 ? "yes" : (gr_a.est_bipartitus == 0 ? "no" : "-"),
+               cb, gr_b.est_bipartitus == 1 ? "yes" : (gr_b.est_bipartitus == 0 ? "no" : "-"));
+        raq_graph_result_free(&gr_a);
+        raq_graph_result_free(&gr_b);
+    }
+
+    printf("\n===== END COMPARISON =====\n");
+
+    for (i = 0; i < ne; i++) {
+        raq_el_free(&eg[i].el_a);
+        raq_el_free(&eg[i].el_b);
+    }
+    raq_vs_free(&vs_a);
+    raq_vs_free(&vs_b);
+    raq_analysis_free(&aa);
+    raq_analysis_free(&ab);
+}
+
+#endif /* RAQ_COMPARE */
+
+/* Verbosity levels for graph sweep */
+#define RAQ_VERB_SUMMARY 0
+#define RAQ_VERB_VERBOSE 1
+
+static void raq_graph_sweep_v(const Raq_Cyc8 *values, int count,
+                                FILE *f, int verbosity) {
     Raq_Partition p_axis, p_root, p_galois, p_norm, p_v2;
     const Raq_Partition *parts[5];
     const char *part_names[5];
-    Raq_EdgeList edges[13];
-    const char *edge_names[13];
+    Raq_EdgeList edges[15];
+    const char *edge_names[15];
     Raq_ValueSet vs;
-    int ne = 13, np = 5;
+    int ne = 15, np = 5;
     int i, j, g;
+    int min_group_sz = (verbosity == RAQ_VERB_SUMMARY) ? 4 : 3;
 
     fprintf(f, "\n===== GRAPH ANALYSIS SWEEP (%d values) =====\n\n", count);
     if (count < 2) {
@@ -1705,33 +2257,10 @@ static void raq_graph_sweep(const Raq_Cyc8 *values, int count, FILE *f) {
     parts[3] = &p_norm;   part_names[3] = "norm";
     parts[4] = &p_v2;     part_names[4] = "v2";
 
-    /* Partition equivalence check */
-    {
-        int root_eq_norm = 1, root_eq_v2 = 1;
-        if (p_root.n_groups == p_norm.n_groups &&
-            p_root.n_groups == p_v2.n_groups) {
-            for (i = 0; i < count; i++) {
-                if (p_root.group_id[i] != p_norm.group_id[i])
-                    root_eq_norm = 0;
-                if (p_root.group_id[i] != p_v2.group_id[i])
-                    root_eq_v2 = 0;
-            }
-        } else {
-            root_eq_norm = 0;
-            root_eq_v2 = 0;
-        }
-        fprintf(f, "--- Partition Equivalences ---\n");
-        fprintf(f, "  root (%d groups) %s norm (%d groups)\n",
-                p_root.n_groups, root_eq_norm ? "==" : "!=",
-                p_norm.n_groups);
-        fprintf(f, "  root (%d groups) %s v2 (%d groups)\n",
-                p_root.n_groups, root_eq_v2 ? "==" : "!=",
-                p_v2.n_groups);
-        if (root_eq_norm && root_eq_v2)
-            fprintf(f, "  THEOREM: root = norm = v2 "
-                    "(axis-aligned => |coeff| determines all three)\n");
-        fprintf(f, "\n");
-    }
+    /* Partition hierarchy (replaces old pairwise equivalence check) */
+    fprintf(f, "--- Partition Hierarchy ---\n");
+    raq_fprint_partition_hierarchy(f, parts, part_names, np);
+    fprintf(f, "\n");
 
     /* Build value set for product closure lookup */
     raq_vs_init(&vs, count + 1);
@@ -1751,6 +2280,8 @@ static void raq_graph_sweep(const Raq_Cyc8 *values, int count, FILE *f) {
     edges[10] = raq_edges_additive_closure(values, count, &vs);
     edges[11] = raq_edges_power2(values, count, &vs);
     edges[12] = raq_edges_gcd(values, count);
+    edges[13] = raq_edges_difference_closure(values, count, &vs);
+    edges[14] = raq_edges_negation(values, count);
     edge_names[0]  = "same_axis";
     edge_names[1]  = "same_root";
     edge_names[2]  = "same_galois";
@@ -1764,6 +2295,8 @@ static void raq_graph_sweep(const Raq_Cyc8 *values, int count, FILE *f) {
     edge_names[10] = "additive_closure";
     edge_names[11] = "power2";
     edge_names[12] = "gcd";
+    edge_names[13] = "difference_closure";
+    edge_names[14] = "negation";
 
     /* Phase 1: Base edge types */
     fprintf(f, "--- Base Edge Types ---\n\n");
@@ -1778,19 +2311,27 @@ static void raq_graph_sweep(const Raq_Cyc8 *values, int count, FILE *f) {
     fprintf(f, "--- Restricted Analyses ---\n\n");
     for (i = 0; i < ne; i++) {
         for (j = 0; j < np; j++) {
+            Raq_RestrictedEntry *entries;
+            int n_entries = 0;
+            int max_entries;
+
             /* Skip self-restrictions (trivially complete within each class) */
             if (i == 0 && j == 0) continue;  /* same_axis | axis */
             if (i == 1 && j == 1) continue;  /* same_root | root */
             if (i == 2 && j == 2) continue;  /* same_galois | galois */
             if (i == 3 && j == 4) continue;  /* same_v2 | v2 */
 
+            max_entries = parts[j]->n_groups;
+            entries = (Raq_RestrictedEntry *)malloc(
+                (size_t)max_entries * sizeof(Raq_RestrictedEntry));
+
+            /* Collect interesting restricted results */
             for (g = 0; g < parts[j]->n_groups; g++) {
-                int sub_n;
+                int sub_n, n_active;
                 Raq_EdgeList sub_el;
                 Raq_GraphResult sub_gr;
-                char label[128];
 
-                if (parts[j]->group_sizes[g] < 3) continue;
+                if (parts[j]->group_sizes[g] < min_group_sz) continue;
                 sub_el = raq_el_restrict(&edges[i], parts[j], g, &sub_n);
                 if (sub_el.count == 0) { raq_el_free(&sub_el); continue; }
                 sub_gr = raq_graph_analyze(&sub_el, sub_n);
@@ -1798,14 +2339,75 @@ static void raq_graph_sweep(const Raq_Cyc8 *values, int count, FILE *f) {
                 if (sub_gr.est_bipartitus == 1 || sub_gr.est_arbor ||
                     sub_gr.est_completus || sub_gr.est_cyclus ||
                     sub_gr.est_dag == 1 || sub_gr.est_regularis) {
-                    sprintf(label, "%s | %s#%d (n=%d)",
-                            edge_names[i], part_names[j], g,
-                            parts[j]->group_sizes[g]);
-                    raq_fprint_graph_result(f, label, &sub_gr);
+                    n_active = sub_gr.n_vertices - sub_gr.n_isolated;
+                    if (verbosity == RAQ_VERB_SUMMARY &&
+                        ((sub_gr.est_completus && n_active <= 2) ||
+                         (sub_gr.est_via && n_active <= 2))) {
+                        raq_graph_result_free(&sub_gr);
+                        raq_el_free(&sub_el);
+                        continue;
+                    }
+                    entries[n_entries].group_idx = g;
+                    entries[n_entries].group_size = parts[j]->group_sizes[g];
+                    entries[n_entries].gr = sub_gr;
+                    n_entries++;
+                } else {
+                    raq_graph_result_free(&sub_gr);
                 }
-                raq_graph_result_free(&sub_gr);
                 raq_el_free(&sub_el);
             }
+
+            /* In summary mode, collapse identical results */
+            if (verbosity == RAQ_VERB_SUMMARY && n_entries > 0) {
+                int *used = (int *)calloc((size_t)n_entries, sizeof(int));
+                int e1, e2;
+                for (e1 = 0; e1 < n_entries; e1++) {
+                    int run_count;
+                    if (used[e1]) continue;
+                    /* Count how many match this fingerprint */
+                    run_count = 1;
+                    used[e1] = 1;
+                    for (e2 = e1 + 1; e2 < n_entries; e2++) {
+                        if (!used[e2] && raq_graph_result_same_structure(
+                                &entries[e1].gr, &entries[e2].gr)) {
+                            used[e2] = 1;
+                            run_count++;
+                        }
+                    }
+                    if (run_count > 1) {
+                        /* Collapsed output */
+                        fprintf(f, "[%s | %s] %dx (n=%d): ",
+                                edge_names[i], part_names[j],
+                                run_count, entries[e1].group_size);
+                        raq_fprint_graph_result_compact(f, &entries[e1].gr);
+                        fprintf(f, "\n");
+                    } else {
+                        /* Unique — print normally */
+                        char label[128];
+                        sprintf(label, "%s | %s#%d (n=%d)",
+                                edge_names[i], part_names[j],
+                                entries[e1].group_idx,
+                                entries[e1].group_size);
+                        raq_fprint_graph_result(f, label, &entries[e1].gr);
+                    }
+                }
+                free(used);
+            } else {
+                /* Verbose mode: print each individually */
+                int e1;
+                for (e1 = 0; e1 < n_entries; e1++) {
+                    char label[128];
+                    sprintf(label, "%s | %s#%d (n=%d)",
+                            edge_names[i], part_names[j],
+                            entries[e1].group_idx,
+                            entries[e1].group_size);
+                    raq_fprint_graph_result(f, label, &entries[e1].gr);
+                }
+            }
+
+            { int e1; for (e1 = 0; e1 < n_entries; e1++)
+                raq_graph_result_free(&entries[e1].gr); }
+            free(entries);
         }
     }
 
@@ -1816,10 +2418,22 @@ static void raq_graph_sweep(const Raq_Cyc8 *values, int count, FILE *f) {
             Raq_EdgeList inter;
             Raq_GraphResult igr;
             char label[128];
+            int n_active;
 
             inter = raq_el_intersect(&edges[i], &edges[j], count);
             if (inter.count == 0) { raq_el_free(&inter); continue; }
             igr = raq_graph_analyze(&inter, count);
+
+            /* In summary mode, skip intersections with < 3 edges */
+            n_active = igr.n_vertices - igr.n_isolated;
+            if (verbosity == RAQ_VERB_SUMMARY && (igr.n_edges < 3 ||
+                (igr.est_completus && n_active <= 2) ||
+                (igr.est_via && n_active <= 2))) {
+                raq_graph_result_free(&igr);
+                raq_el_free(&inter);
+                continue;
+            }
+
             sprintf(label, "%s ^ %s", edge_names[i], edge_names[j]);
             raq_fprint_graph_result(f, label, &igr);
             raq_graph_result_free(&igr);
@@ -1970,6 +2584,12 @@ static void raq_graph_sweep(const Raq_Cyc8 *values, int count, FILE *f) {
     raq_partition_free(&p_norm);
     raq_partition_free(&p_v2);
 }
+
+/* Backward-compatible wrapper: verbose by default.
+ * Callers that include RAQ_PRINT but don't use this should use
+ * raq_graph_sweep_v() directly with RAQ_VERB_SUMMARY or RAQ_VERB_VERBOSE. */
+#define raq_graph_sweep(values, count, f) \
+    raq_graph_sweep_v((values), (count), (f), RAQ_VERB_VERBOSE)
 
 #endif /* RAQ_PRINT */
 

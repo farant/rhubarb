@@ -448,6 +448,8 @@ int main(void) {
     printf("\n=== Phase 2: Raqiya Analysis ===\n");
 
     analysis = raq_analyze(vs.values, vs.count);
+    printf("\n--- Summary ---\n");
+    raq_print_summary(&analysis, vs.values);
     raq_print_analysis(&analysis, vs.values);
 
     /* Verification checks */
@@ -694,6 +696,8 @@ int main(void) {
 
         /* Run all 9 detectors */
         full_analysis = raq_analyze(full_vs.values, full_vs.count);
+        printf("\n--- Summary ---\n");
+        raq_print_summary(&full_analysis, full_vs.values);
         raq_print_analysis(&full_analysis, full_vs.values);
 
         sprintf(msg, "Full analysis: %d axis classes",
@@ -1505,7 +1509,7 @@ int main(void) {
      * Phase 7: Graph Analysis Sweep
      * ============================================================ */
     printf("\n=== Phase 7a: Graph Analysis Sweep (first-128 values) ===\n");
-    raq_graph_sweep(vs.values, vs.count, stdout);
+    raq_graph_sweep_v(vs.values, vs.count, stdout, RAQ_VERB_SUMMARY);
 
     printf("\n=== Phase 7b: Graph Analysis Sweep (full catalog) ===\n");
     {
@@ -1515,7 +1519,8 @@ int main(void) {
             for (r = 0; r < 3; r++)
                 for (c = 0; c < 3; c++)
                     raq_vs_insert(&full_sweep_vs, g_cat_tl[i].m[r][c]);
-        raq_graph_sweep(full_sweep_vs.values, full_sweep_vs.count, stdout);
+        raq_graph_sweep_v(full_sweep_vs.values, full_sweep_vs.count, stdout,
+                          RAQ_VERB_SUMMARY);
         raq_vs_free(&full_sweep_vs);
     }
 
