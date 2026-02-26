@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>inventory/entries/demo_55.md</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+    <link rel="stylesheet" href="../../style.css">
+</head>
+<body>
+    <nav><a href="../../index.html">← Back to Index</a></nav><hr>
+    <h2>Demo 55: DKC Boolean Search at ell=4 (delta=sqrt(2))</h2>
+<ul>
+<li><strong>Status</strong>: COMPLETE</li>
+<li><strong>File</strong>: <code><a href="../../demo_55_dkc_boolean/main.c.html">demo_55_dkc_boolean/main.c</a></code> (~1062 lines)</li>
+<li><strong>Tests</strong>: ~7 checks (4 parts: A=4 catalog verification + Z[i]-axial + algebra identities, B=1 XOR achievable, C=1 NPN count, D=1 parity achievable)</li>
+<li><strong>Depends on</strong>: Demo 54 (bracket catalog at delta=sqrt(2), Z[i]-axial structure), Demo 48/50 (delta=0 baseline: forward DKC zoo, activation zoo)</li>
+<li><strong>Feeds into</strong>: Understanding Boolean computability at non-zero delta; multiplicative vs additive DKC encoding comparison; ell-parameterized DKC theory</li>
+</ul>
+<h3>Headline</h3>
+Searches for Boolean functions computable by DKC neurons at ell=4 (delta=sqrt(2)) using multiplicative encoding (z = w1^x1 <em> w2^x2 </em> w3^x3) across five activation function families, comparing the achievable function landscape to delta=0 results from Demos 48-50.
+<h3>Key Results</h3>
+<ul>
+<li><strong>Part A (Catalog)</strong>: State-sum bracket catalog built at delta=sqrt(2) using Z[zeta_16] exact arithmetic (A = zeta_16^5); enumerates n=2 (len 1-10), n=3 (len 1-6), n=4 (len 1-6); all values confirmed 100% Z[i]-axial; algebraic identities verified (A * A^{-1} = 1, delta^2 = 2)</li>
+<li><strong>Part B (2-input search)</strong>: 10 activation functions tested on all catalog pairs with multiplicative encoding; quartet (1, w2, w1, w1*w2) produces 4-bit truth tables; activations include Re&gt;0, Im&gt;0, split-sigmoid, sector k=2/4/6/8, magnitude tau=0.5/1.0/1.5; XOR/XNOR confirmed achievable</li>
+<li><strong>Part C (3-input search)</strong>: 8 activation functions tested on all catalog triples; octet (1, w3, w2, w2w3, w1, w1w3, w1w2, w1w2w3) produces 8-bit truth tables; NPN classification into 13 non-trivial classes; per-activation reachability reported</li>
+<li><strong>Part D (Analysis)</strong>: k-sector sweep k=2..8 with 3-input multiplicative encoding; parity solution counts tracked per k; reachable NPN class counts per k; comparison with delta=0 additive encoding results</li>
+</ul>
+<h3>Theorems/Conjectures</h3>
+<ul>
+<li><strong>Multiplicative encoding</strong>: z(x) = w1^x1 <em> w2^x2 </em> ... * wn^xn (product of weights raised to binary input powers) is a natural encoding for delta != 0 because bracket values at non-zero delta have multiplicative structure (delta^k scaling)</li>
+<li><strong>Z[i]-axiality at delta=sqrt(2)</strong>: Every bracket value equals (a+bi) * zeta_16^c for some Gaussian integer a+bi and power c — confirmed by Demo 54, verified here in catalog construction</li>
+<li><strong>Encoding comparison caveat</strong>: Delta=0 (Demos 48-50) used additive encoding (z = sum wi*xi); delta=sqrt(2) uses multiplicative encoding — not directly comparable, but structural parallels in reachability hierarchy are informative</li>
+<li><strong>Bit 0 is fixed</strong>: Under multiplicative encoding, (0,...,0) → z = 1 always, so bit 0 of the truth table is determined by the activation function's classification of z=1 (not a free parameter)</li>
+</ul>
+<h3>Data</h3>
+<ul>
+<li>Bracket catalog at delta=sqrt(2): distinct nonzero values (first 20 printed with Z[zeta_16] coordinates and magnitudes)</li>
+<li>2-input: 16 possible truth tables × 10 activations, achievable counts per function per activation</li>
+<li>3-input: 13 NPN classes × 8 activations, solution counts per class per activation</li>
+<li>k-sector sweep (k=2..8): reachable NPN class count and parity solution count per k</li>
+<li>Comparison table: delta=0 (64 catalog values, parity at k=6 with 906 solutions, additive) vs delta=sqrt(2) (multiplicative)</li>
+</ul>
+<h3>Code Assets</h3>
+<ul>
+<li><code>Cyc16</code> struct: exact cyclotomic integer type Z[zeta_16] with 8-element basis {1, zeta, ..., zeta^7} where zeta^8 = -1</li>
+<li><code>cyc16_zero()</code>, <code>cyc16_one()</code>, <code>cyc16_zeta_power()</code>, <code>cyc16_add()</code>, <code>cyc16_neg()</code>, <code>cyc16_mul()</code>, <code>cyc16_eq()</code>, <code>cyc16_is_zero()</code>, <code>cyc16_to_cx()</code>, <code>cyc16_print()</code> — full Z[zeta_16] arithmetic</li>
+<li><code>cyc16_a_power()</code> — A^n where A = zeta^5</li>
+<li><code>cyc16_delta_power()</code> — delta^k where delta = sqrt(2) = zeta^2 - zeta^6; even powers are integers (2^{k/2}), odd powers are multiples of delta</li>
+<li><code>cyc16_is_zi_axial()</code> — checks if value has at most one active coordinate pair (Z[i]-axiality)</li>
+<li><code>PlanarMatch</code> struct: planar matching diagram for n strands (2n endpoints)</li>
+<li><code>make_identity_diagram()</code>, <code>make_generator_diagram()</code> — TL diagram constructors</li>
+<li><code>compose_diagrams()</code> — diagram composition with glue-loop counting (returns number of closed loops)</li>
+<li><code>trace_closure_loops()</code> — trace closure loop counting for bracket computation</li>
+<li><code>state_sum_bracket()</code> — full state-sum bracket at delta=sqrt(2) using planar matching diagrams instead of union-find (exact Z[zeta_16] arithmetic)</li>
+<li><code>split_sigmoid_classify()</code> — XOR-like activation: sigma(Re)<em>(1-sigma(Im)) + (1-sigma(Re))</em>sigma(Im) &gt; 0.5</li>
+<li><code>sector_classify()</code>, <code>magnitude_classify()</code>, <code>re_positive_classify()</code>, <code>im_positive_classify()</code> — multiple activation functions with uniform interface</li>
+<li><code>search_2input()</code>, <code>search_3input()</code> — exhaustive search with multiplicative encoding, per-activation truth table counting</li>
+<li>NPN classification machinery (from Demo 48/50): <code>npn_init()</code>, <code>npn_transform()</code>, <code>npn_build_classes()</code></li>
+</ul>
+<h3>Literature Touched</h3>
+<ul>
+<li>Multi-valued neuron (MVN) with k-sector classification applied to multiplicative encoding</li>
+<li>Kauffman bracket at non-zero delta (ell=4, Jones-Wenzl level)</li>
+<li>Z[zeta_16] cyclotomic ring as algebraic setting for ell=4 bracket values</li>
+<li>Gaussian integers Z[i] as structural constraint on bracket catalog</li>
+<li>Multiplicative vs additive neural encoding for Boolean functions</li>
+<li>Planar matching diagrams for Temperley-Lieb algebra composition</li>
+</ul>
+<h3>Open Questions</h3>
+<ul>
+<li>How does the reachability landscape at delta=sqrt(2) compare quantitatively to delta=0? (Encoding difference makes direct comparison difficult)</li>
+<li>Does multiplicative encoding have inherent advantages for certain function classes (e.g., AND-like functions where product structure is natural)?</li>
+<li>At what ell values does parity first become achievable under multiplicative encoding?</li>
+<li>Can additive encoding be used at delta=sqrt(2), and if so, how does reachability change?</li>
+<li>Does the four-tier hierarchy from Demo 50 (k=2/3/4/6) persist under multiplicative encoding, or does the tier structure shift?</li>
+</ul>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/c.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</body>
+</html>

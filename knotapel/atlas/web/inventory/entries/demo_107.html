@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>inventory/entries/demo_107.md</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+    <link rel="stylesheet" href="../../style.css">
+</head>
+<body>
+    <nav><a href="../../index.html">← Back to Index</a></nav><hr>
+    <h2>Demo 107: Algebraic Graph Density -- Cyc8 Relationship Analysis</h2>
+<ul>
+<li><strong>Status</strong>: COMPLETE (RESULT)</li>
+<li><strong>File</strong>: <code><a href="../../demo_107_algebraic_graph/main.c.html">demo_107_algebraic_graph/main.c</a></code> (~2075 lines)</li>
+<li><strong>Tests</strong>: 42/42 pass</li>
+<li><strong>Depends on</strong>: Demo 35 (planar matching types, {0,1}-valued TL generators at delta=0), Demo 99 (W_{3,1} module), Demo 100 (W_{4,2} module, 3x3 braid representation), Demo 101 (W_{5,3} module), Demo 102 (W_{6,0} and W_{6,4} modules), Demo 103 (W_{6,2} dimension scaling, 9x9 generator matrices), Demo 106 (relational computation thesis connecting to DKC capacity)</li>
+<li><strong>Feeds into</strong>: Demo 108 (Raqiya toolkit predicts parity capability from graph structure), Demo 109 (<a href="./demo_55.html">D55</a> graph analysis reuses Raqiya)</li>
+</ul>
+<h3>Headline</h3>
+Universal axis-alignment of braid matrices at delta=0 is a provable theorem (not just empirical), with a constructive Z/4Z phase formula based on nesting parity, plus five novel results including the major index bipartite invariant and a q-Catalan identity.
+<h3>Key Results</h3>
+<ul>
+<li><strong>Universal axis-alignment (Claim #2)</strong>: ALL 186 distinct Z[zeta_8] values from the 32768-entry W_{4,2} BFS catalog have exactly one nonzero component. Every matrix entry is of the form n*zeta_8^k where n is an integer and k in {0,1,2,3}. The representation NEVER produces mixed-axis values like (1,1,0,0).</li>
+<li><strong>Fixed phase mask FALSIFIED (Claim #3)</strong>: Every matrix position (r,c) has ALL FOUR zeta-powers appearing across the catalog (0/9 positions fixed). Phase depends on the braid word, not the matrix position.</li>
+<li><strong>Z/4Z Axis-Alignment Theorem (Claim #7, PROVEN)</strong>: Axis-alignment is provably guaranteed for ALL TL representations at delta=0. Proof chain: (1) TL generators have {0,1} entries, (2) braid generators give entries from {0, A, A^{-1}}, (3) axis-aligned * axis-aligned = axis-aligned, (4) same-axis addition preserves axis, (5) bipartiteness ensures only same-axis values are added at each (r,c).</li>
+<li><strong>Bipartiteness verified (Claim #10)</strong>: Link-state transition graphs are bipartite for TL_n left regular (n=2,3,4,5,6, all connected) and 6 standard modules W_{3,1}, W_{4,2}, W_{5,3}, W_{6,0}, W_{6,2}, W_{6,4}.</li>
+<li><strong>Nesting Parity = Z/2Z Grading (Claim #11, NOVEL THEOREM)</strong>: The bipartite 2-coloring of TL link-state graphs IS nesting count mod 2 (a nesting = pair of arcs (a,b),(c,d) with a &lt; c &lt; d &lt; b). Verified for ALL n=2,3,4,5,6 (195 matchings, 0 mismatches). Confirmed by researcher as NOT a consequence of known KLR Z-grading (Plaza-Ryom-Hansen 2013).</li>
+<li><strong>Constructive Z/4Z phase formula (Claim #11)</strong>: Entry(r,c) = (path count) <em> zeta_8^{(w - 2</em>(nest(r) + nest(c))) mod 4}, where w = writhe, nest(s) = nesting number of link state s mod 2. Three numbers fully determine the cyclotomic phase.</li>
+<li><strong>Major Index Bipartite Invariant (Claim #16, NOVEL)</strong>: For TL standard modules W_{n,j}, the bipartite invariant is maj mod 2 = sum of right-endpoint positions of arcs, mod 2. Verified: W_{4,2} (3/3), W_{6,2} (9/9, the ONLY winning candidate out of 4 tested). For full matchings (j=0), maj mod 2 = nest mod 2 (special case).</li>
+<li><strong>q-Catalan Identity (Claim #17, NOVEL)</strong>: C_{2m+1}(-1) = (-1)^m * C_m. Gives exact bipartition class sizes for W_{n,0} modules. Proved algebraically, verified against all 5 data points (n=2,3,4,5,6).</li>
+<li><strong>Orthogonality Theorem (Claim #15)</strong>: Quotient graph analysis reveals product_closure/axis = K_5 (Z/4Z multiplication table, complete 4-regular) while additive_closure/axis = star tree centered on 0 (axis-preserving). Multiplication = Z/4Z rotation across axes; addition = growth within each axis.</li>
+<li><strong>zeta_8 uniqueness (Claim #8)</strong>: zeta_8 is the unique root of unity where delta=0 AND #axes = cyclotomic rank (both = 4). zeta_4 has delta=0 but only 2 axes; all other zeta_n with n &lt;= 12 have delta != 0.</li>
+<li><strong>2-adic neutrality (Claim #13, NOVEL observation)</strong>: v_2 distribution decays geometrically (95-&gt;48-&gt;24-&gt;11-&gt;7, approx halving per level). TL nilpotency (e_i^2=0) introduces factors of 2 symmetrically.</li>
+<li><strong>Writhe-parity depth mechanism (Claim #12)</strong>: Full-catalog "even axis dominance" is entirely a depth-8 truncation artifact. At complete depths 0-7: odd axis dominates (72 vs 41). Depth 8 (truncated) is 100% even axis.</li>
+<li><strong>Galois asymmetry (Claim #18)</strong>: sigma_5 fixes ALL 126 even-axis values; sigma_3 fixes 66; sigma_7 fixes 54. All Galois edge sets are 1-regular (perfect matchings on non-fixed points). b-axis isomorphic to d-axis across all 13 edge types.</li>
+<li><strong>DKC implication (Claim #14)</strong>: DKC at delta=0 reduces to integer path counting + three-variable phase formula. Effective computation is Z x Z/4Z per matrix entry.</li>
+</ul>
+<h3>Theorems/Conjectures</h3>
+<ul>
+<li><strong>Z/4Z Axis-Alignment Theorem</strong> (PROVEN): Every entry of a braid representation matrix over a TL module at delta=0 is axis-aligned (exactly one nonzero cyclotomic component).</li>
+<li><strong>Nesting Parity Z/2Z Grading</strong> (PROVEN computationally, n=2..6): Nesting count mod 2 equals the bipartite 2-coloring for all TL link-state transition graphs. 195 matchings, 0 mismatches.</li>
+<li><strong>Major Index Bipartite Invariant</strong> (CONJECTURED for general n,j; verified at W_{4,2} and W_{6,2}): For TL standard modules W_{n,j}, maj mod 2 = BFS bipartite coloring. Generalizes nesting parity (the j=0 case).</li>
+<li><strong>q-Catalan Identity</strong> (PROVEN algebraically): C_{2m+1}(-1) = (-1)^m * C_m.</li>
+<li><strong>2-Adic Neutrality of Nilpotent TL</strong> (CONJECTURED): v_2 distribution of TL matrix entries decays geometrically. Five candidate proof frameworks identified but not formalized.</li>
+<li><strong>Orthogonality Theorem</strong> (PROVEN computationally): Multiplicative quotient graph = K_5 (Z/4Z), additive quotient graph = star tree. Multiplication rotates axes; addition preserves axes.</li>
+</ul>
+<h3>Data</h3>
+<p><strong>Module</strong>: W_{4,2} (4-strand, dim 3, non-semisimple), generators sigma_i = A<em>I + A^{-1}</em>e_i where A = -zeta_8 = (0,-1,0,0), delta = 0.</p>
+<p><strong>BFS catalog</strong>: 32768 entries (depth 8, hit cap). 294,912 matrix components examined.</p>
+<p><strong>Distinct value growth by depth</strong>:</p>
+<table><thead><tr><th>Depth</th><th>Entries</th><th>Cumul Distinct</th><th>New</th></tr></thead><tbody><tr><td>0</td><td>1</td><td>2</td><td>+2</td></tr><tr><td>1</td><td>6</td><td>4</td><td>+2</td></tr><tr><td>2</td><td>26</td><td>7</td><td>+3</td></tr><tr><td>3</td><td>98</td><td>13</td><td>+6</td></tr><tr><td>4</td><td>338</td><td>23</td><td>+10</td></tr><tr><td>5</td><td>1110</td><td>41</td><td>+18</td></tr><tr><td>6</td><td>3444</td><td>68</td><td>+27</td></tr><tr><td>7</td><td>10390</td><td>114</td><td>+46</td></tr><tr><td>8</td><td>17355</td><td>186</td><td>+72</td></tr></tbody></table>
+<p>Value set NOT closed at depth 8 (still growing, 72 new values at final depth).</p>
+<p><strong>186 values decomposed by axis</strong>: a-axis (zeta^0) range [-19,+34] (53 values), b-axis (zeta^1) range [-21,+15] (36 values), c-axis (zeta^2) range [-30,+30] (60 values), d-axis (zeta^3) range [-15,+21] (36 values), plus 1 zero.</p>
+<p><strong>Axis distribution (complete depths 0-7)</strong>: even (a+c) = 41, odd (b+d) = 72. Odd dominates at unbiased depths; even dominance in full catalog is truncation artifact.</p>
+<p><strong>Orbit structure (full 186 values)</strong>: 35 root-of-unity orbits = 35 norm classes (identical for axis-aligned values), 105 Galois orbits (finer partition). Divisibility density: 14.2%.</p>
+<p><strong>2-adic valuation cumulative</strong>: v_2=0: 95, v_2=1: 48, v_2=2: 24, v_2=3: 11, v_2&gt;=4: 7 (geometric decay ~0.5x per level).</p>
+<p><strong>Bipartiteness verification</strong>:</p>
+<table><thead><tr><th>Module</th><th>Dim</th><th>Bipartite</th><th>Connected</th><th>Partition</th></tr></thead><tbody><tr><td>TL_2</td><td>2</td><td>YES</td><td>YES</td><td>1+1</td></tr><tr><td>TL_3</td><td>5</td><td>YES</td><td>YES</td><td>3+2</td></tr><tr><td>TL_4</td><td>14</td><td>YES</td><td>YES</td><td>7+7</td></tr><tr><td>TL_5</td><td>42</td><td>YES</td><td>YES</td><td>21+21</td></tr><tr><td>TL_6</td><td>132</td><td>YES</td><td>YES</td><td>66+66</td></tr><tr><td>W_{3,1}</td><td>2</td><td>YES</td><td>--</td><td>1+1</td></tr><tr><td>W_{4,2}</td><td>3</td><td>YES</td><td>--</td><td>2+1</td></tr><tr><td>W_{5,3}</td><td>4</td><td>YES</td><td>--</td><td>2+2</td></tr><tr><td>W_{6,0}</td><td>5</td><td>YES</td><td>--</td><td>3+2</td></tr><tr><td>W_{6,2}</td><td>9</td><td>YES</td><td>--</td><td>5+4</td></tr><tr><td>W_{6,4}</td><td>5</td><td>YES</td><td>--</td><td>3+2</td></tr></tbody></table>
+<p><strong>W_{6,2} bipartite invariant candidates</strong>: maj mod 2: 9/9 MATCH, nest mod 2: 7/9 FAIL, tsl mod 2: 6/9 FAIL, lae mod 2: 5/9 FAIL. Major index is the ONLY working invariant.</p>
+<p><strong>Phase 8b verification</strong>: Independent TL action from planar stacking mechanics matches <a href="./demo_103.html">D103</a>'s 9x9 generator matrices with 0/45 mismatches.</p>
+<h3>Code Assets</h3>
+<ul>
+<li><strong>Raqiya library</strong> (<code>raqiya/raqiya.h</code>): Single-header stb-style C89 library for Z[zeta_8] algebraic analysis. 9 relationship detectors (root-of-unity orbits, sign distances, sum/diff zeros, norm-squared classes, product structure, Galois orbits, axis agreement, divisibility, 2-adic valuation). Graph analysis layer with 13 edge generators, quotient graph computation, restricted graph analysis. 208 unit tests in <a href="../../raqiya/probatio_raqiya.c.html">probatio_raqiya.c</a>. Raq_ValueSet (hash-based distinct value collector), Raq_Partition, Raq_PairHist, Raq_Analysis types.</li>
+<li><strong>Mat3 over Raq_Cyc8</strong>: 3x3 matrix type with multiply, add, scale, equality. Used for W_{4,2} representation.</li>
+<li><strong>BFS catalog with hash dedup</strong>: FNV-style hash over 36 longs, chained-bucket lookup, MAX_CAT=32768, HASH_SIZE=65537. Depth tracking per entry.</li>
+<li><strong>Non-crossing matching enumerator</strong>: Iterative stack-based enumeration of planar matchings for TL_n basis states, up to n=6 (C_6=132 states).</li>
+<li><strong>Nesting counter</strong>: count_nestings() computes arc-nesting count for non-crossing matchings in boundary order.</li>
+<li><strong>Bipartiteness checker</strong>: Generic BFS 2-coloring for adjacency matrices up to 16x16 (BP_CHECK_MAX).</li>
+<li><strong>W_{6,2} state enumerator</strong>: Brute-force enumeration of non-crossing partial matchings with 2 through-strands and non-enclosure constraint.</li>
+<li><strong>TL planar stacking action</strong>: Independent computation of TL generator action on W_{6,2} states from first principles (cup stacking mechanics with 4 cases).</li>
+</ul>
+<h3>Literature Touched</h3>
+<ul>
+<li><strong>Temperley-Lieb algebra at delta=0</strong>: TL generators e_i have {0,1}-valued matrices; e_i^2 = delta*e_i = 0 (nilpotent). Basis: non-crossing matchings (Catalan numbers C_n).</li>
+<li><strong>Habiro (2002)</strong>: Z[zeta_8] cyclotomic integers as the algebraic substrate for colored Jones polynomial brackets. A = -zeta_8, delta = -(A^2 + A^{-2}) = 0.</li>
+<li><strong>Plaza-Ryom-Hansen (2013)</strong>: KLR Z-grading of TL algebras. Researcher confirmed that TL generators e_i are NOT homogeneous in the KLR grading, meaning the nesting parity Z/2Z grading (Claim #11) is genuinely novel and not a consequence of known graded TL theory.</li>
+<li><strong>Harary (1990)</strong>: Integral sum graphs. The additive closure graph on 186 values (3432 edges) is an integral sum graph.</li>
+<li><strong>q-Catalan numbers / Gaussian binomial coefficients</strong>: C_n(q) specialization at q=-1 gives bipartition sizes. Novel identity C_{2m+1}(-1) = (-1)^m * C_m.</li>
+<li><strong>Galois group Gal(Q(zeta_8)/Q) = Z/2 x Z/2</strong>: Generated by sigma_3: zeta_8 -&gt; zeta_8^3 and sigma_5: zeta_8 -&gt; zeta_8^5 = -zeta_8. sigma_7 = sigma_5 o sigma_3 is complex conjugation.</li>
+</ul>
+<h3>Open Questions</h3>
+<p>1. <strong>Does the value set converge?</strong> 186 values at depth 8 with 72 new at that depth -- still growing fast. Need deeper catalogs (beyond 32768 cap) to check. 2. <strong>zeta_12 axis-alignment prediction</strong> (registered before computation): At delta=sqrt(3) != 0, expect mostly axis-aligned but with occasional mixing. Amount of mixing proportional to |delta|. 3. <strong>Does integer-level Raqiya structure predict computational capacity?</strong> Connects <a href="./demo_107.html">D107</a> algebraic analysis back to <a href="./demo_106.html">D106</a>'s relational computation thesis. (Partially answered by <a href="./demo_108.html">D108</a>: yes, dual-channel theorem.) 4. <strong>Major index theorem for all W_{n,j}?</strong> Verified at W_{4,2} (3/3) and W_{6,2} (9/9). Need W_{8,2}, W_{6,4}, etc. for more evidence. Proof for general n,j open. 5. <strong>Strongly regular parameters?</strong> Some regular subgraphs may have (n,k,lambda,mu) parameters -- not yet checked. 6. <strong>Integer spectrum of transition graphs?</strong> Deferred (lower priority). 7. <strong>q-ballot evaluation</strong>: Does q-Catalan have a clean evaluation at other roots of unity beyond q=-1? 8. <strong>2-adic neutrality formal proof</strong>: Five converging frameworks identified (Kummer carry-counting, nilpotent TL, Goodman-Wenzl, unipotent, Stirling) -- need to select one and formalize.</p>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/c.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</body>
+</html>

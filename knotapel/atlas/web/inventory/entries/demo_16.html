@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>inventory/entries/demo_16.md</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+    <link rel="stylesheet" href="../../style.css">
+</head>
+<body>
+    <nav><a href="../../index.html">← Back to Index</a></nav><hr>
+    <h2>Demo 16: Reduced Bracket Characterization — What IS g?</h2>
+<ul>
+<li><strong>Status</strong>: COMPLETE</li>
+<li><strong>File</strong>: <code><a href="../../demo_16_reduced_bracket/main.c.html">demo_16_reduced_bracket/main.c</a></code> (~975 lines)</li>
+<li><strong>Tests</strong>: 8 checks across 6 parts (A-F): waveform, peak localization, Pareto frontier, connected-sum factorization, minimal angle set, amplitude statistics</li>
+<li><strong>Depends on</strong>: Demo 14 (bracket = delta^k * g factorization), Demo 15 (g optimal angles, 4.3x classification improvement)</li>
+<li><strong>Feeds into</strong>: Demo 17 (multilayer DKC), later demos using g as the primary classification signal</li>
+</ul>
+<h3>Headline</h3>
+Deep characterization of the reduced bracket g(K,A) = bracket(K,A) / delta^k(A): waveform analysis, peak localization showing a broad plateau near 1.266*pi, Pareto frontier proving g needs fewer bits than raw bracket, connected-sum factorization test (fails — structural issue), greedy angle selection showing g achieves higher min_dist, and amplitude statistics by knot family.
+<h3>Key Results</h3>
+<ul>
+<li><strong>Waveform</strong> (Part A): g has fewer zeros than raw bracket (removes delta zeros for k&gt;0 knots), but is NOT smoother — dividing by delta near its zeros amplifies roughness. 256-sample characterization with smoothness/range/zero metrics per knot.</li>
+<li><strong>Peak localization</strong> (Part B): g peak at ~1.266<em>pi is a broad plateau (half-max width &gt; 0.05</em>pi, not a spike). g peak min_dist &gt; raw peak min_dist — confirms Demo 15's finding with fine-grained 256-sample scan over [1.0<em>pi, 1.5</em>pi].</li>
+<li><strong>Pareto frontier</strong> (Part C): bit-depth sweep 2-16 bits. g reaches full classification in fewer or equal bits than raw bracket at optimal angles. Uniform quantization with fixed amplitude range ±50.</li>
+<li><strong>Connected-sum factorization</strong> (Part D): g(K1#K2) vs g(K1)*g(K2) tested at 8 angles for 8 composites. <strong>Finding: g does NOT factorize</strong> — braid-encoded connected sum != standard connected sum. The delta removal doesn't fix this; the issue is structural.</li>
+<li><strong>Minimal angle set</strong> (Part E): greedy max-min-dist selection at 128-sample resolution. g achieves higher min_dist than raw at 1 angle. Both stop when diminishing returns (&lt;1% improvement).</li>
+<li><strong>Amplitude statistics</strong> (Part F): knots classified into families (torus, mirror, composite, fig-eight, unknot). Torus and mirror families have similar g amplitudes. Composite g amplitudes differ from prime knots.</li>
+</ul>
+<h3>Theorems/Conjectures</h3>
+<ul>
+<li>Five predictions tested: 1. g waveforms smoother — <strong>PARTIALLY FALSE</strong> (fewer zeros, but more rough near delta zeros) 2. Optimal angle peak is broad plateau — <strong>CONFIRMED</strong> (half-max width &gt; 0.05*pi) 3. g Pareto frontier 1-2 bits better — <strong>CONFIRMED</strong> (g needs fewer bits) 4. g factorizes under connected sum — <strong>FALSE</strong> (structural issue with braid concatenation) 5. g needs fewer angles — tested via greedy; g achieves higher min_dist per angle</li>
+</ul>
+<h3>Data</h3>
+<ul>
+<li>21 knots after dedup (from ~25): unknot, T(2,3) through T(2,13) + mirrors, figure-eight, granny, square, T23#T25, T23#T25<em>, T25#T25, T25#T25</em>, granny*, T23#fig8</li>
+<li>8 composite knots with tracked component indices</li>
+<li>Delta exponents (k values) cached per knot</li>
+<li>Waveform metrics: smoothness (mean |derivative|), amplitude range (max/min), zero count</li>
+<li>Peak scan: 256 samples over [pi, 1.5*pi], half-maximum width measurement</li>
+<li>Pareto table: 15 bit-depths x {raw, g} pair separation counts</li>
+<li>Greedy angle selection: up to 20 rounds with diminishing-returns cutoff</li>
+</ul>
+<h3>Code Assets</h3>
+<ul>
+<li><strong><code>delta_exponent()</code></strong>: determines k by testing bracket at 4 delta-zero angles (pi/4, 3pi/4, 5pi/4, 7pi/4) + perturbation test</li>
+<li><strong><code>reduced_bracket_at()</code></strong>: computes g = bracket / delta^k at a specific A value</li>
+<li><strong><code>min_dist_from_vals()</code></strong>: minimum pairwise distance across all knot pairs from precomputed values</li>
+<li><strong><code>dedup_knots()</code></strong>: removes duplicate braids by comparing bracket values at 2 reference angles, maintains composite index remapping</li>
+<li><strong><code>add_connected_sum()</code></strong>: builds composite braid by concatenating words, tracks component indices in CompositeInfo struct</li>
+<li><strong>Greedy angle selection</strong>: precompute-all-then-sweep approach with accumulated distance² per pair — more efficient than Demo 12's per-round recomputation</li>
+<li>Reuses: complex arithmetic, braid state-sum oracle, union-find</li>
+</ul>
+<h3>Literature Touched</h3>
+<ul>
+<li>Reduced Kauffman bracket (dividing out delta factors)</li>
+<li>Connected sum of knots and multiplicativity of invariants</li>
+<li>Quantization Pareto frontiers (precision vs classification accuracy)</li>
+<li>Greedy feature selection (max-min-dist criterion)</li>
+</ul>
+<h3>Open Questions</h3>
+<ul>
+<li>Why doesn't g factorize under braid concatenation? Is there a different braid encoding of connected sum that would restore multiplicativity?</li>
+<li>Can the peak plateau shape be explained algebraically (relationship to delta zeros at 1.25*pi)?</li>
+<li>What happens to the Pareto frontier as the knot table grows beyond 21 entries?</li>
+</ul>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/c.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</body>
+</html>

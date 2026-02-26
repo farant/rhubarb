@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>inventory/entries/demo_98.md</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+    <link rel="stylesheet" href="../../style.css">
+</head>
+<body>
+    <nav><a href="../../index.html">← Back to Index</a></nav><hr>
+    <h2>Demo 98: 3-Strand DKC Proof of Concept — Readout Bottleneck Discovery</h2>
+<ul>
+<li><strong>Status</strong>: COMPLETE (RESULT)</li>
+<li><strong>File</strong>: <code><a href="../../demo_98_3strand_dkc/main.c.html">demo_98_3strand_dkc/main.c</a></code> (~1417 lines)</li>
+<li><strong>Tests</strong>: 10 pass, 0 fail (Phases 1-5)</li>
+<li><strong>Depends on</strong>: Demo 35 (TL infrastructure, Cyc8 arithmetic, entanglement vanishing, axiality theorem), Demo 67 (Hopf phase inert — wrong readout kills computation), Demo 93 (circuit complexity hierarchy, 1wpi framework), Demo 97 (orthogonal directions = perfection, quaternion readout structure)</li>
+<li><strong>Feeds into</strong>: Demo 99b (column-vector readout on irreducible Delta_1 module — LANDMARK, first-ever 3-strand XOR), activation design for Cyc8^5 partitioning, multiple trace readout (Tr(M), Tr(M^2), Tr(M^3)), Fran's dimensional thesis testing</li>
+</ul>
+<h3>Headline</h3>
+3-strand algebra is rich (infinite group, 2048 entries at cap, 98.5% interleaving, entanglement vanishing confirmed, column-4 has PERFECT diversity) but the trace readout is catastrophically lossy — ZERO XOR6 at any k_sec. The readout, not the algebra, is the research frontier for multi-strand DKC.
+<h3>Key Results</h3>
+<ul>
+<li><strong>Phase 1 — 3-Strand BFS Catalog (2 tests)</strong>: Built via TL_3 matrix representation (5x5 over Z[zeta_8], from Demo 35 infrastructure). BFS with 4 generators (sigma1+, sigma1-, sigma2+, sigma2-) reaches 2048-entry cap in 8 rounds. Growth: 1, 4, 12, 30, 68, 148, 314, 656, 815 (hit cap). Group is INFINITE at zeta_8 (unlike 2-strand's 24-element binary octahedral). Interleaving (uses both sigma1 and sigma2): 2017/2048 (98.5%). Non-interleaving: 31 entries, ALL with zero bracket (entanglement vanishing: 100%). Zero-bracket entries: 113/2048 (5.5%). Writhe range: [-8, 8].</li>
+<li><strong>Phase 2 — Trace Readout (1 test)</strong>: 105 distinct trace values from 2048 matrices (5.1% retention). Traces are AXIAL (single nonzero Cyc8 component). Trace collapses 25 Cyc8 entries (100 integers) to 1 Cyc8 (4 integers) = 96% information loss.</li>
+<li><strong>Phase 2b — Column Vector Diversity (1 test)</strong>: Column-0 through column-3 each yield ~1166-1167 distinct vectors (56.9-57.0% retention, 20 integer DOFs each). Column 4 is LOSSLESS: 2048 distinct vectors from 2048 matrices (100% retention). This is 11-20x more diversity than trace.</li>
+<li><strong>Phase 3 — 3-Strand XOR Capacity (1 test)</strong>: Zero XOR6 at k=4,6,8,10,12,16,20,24,32. Zero even restricting to 1935 non-zero-bracket entries. The readout, not the algebra, is the bottleneck.</li>
+<li><strong>Phase 4 — Matched Comparison at size 24 (1 test)</strong>: 3-strand XOR6 = 0, 2-strand XOR6 = 1109 (best at k=20). 2-strand wins completely — but this is a readout problem, not an algebraic one. 2-strand uses Voronoi + sector activation (all 4 quaternion DOFs); 3-strand trace readout collapses to 1D.</li>
+<li><strong>Phase 5 — Interleaving Analysis (1 test)</strong>: Neither interleaving (2017 entries) nor non-interleaving (31) produces XOR6. The trace readout fails uniformly across all subsets.</li>
+</ul>
+<h3>Theorems/Conjectures</h3>
+<ul>
+<li><strong>Readout Bottleneck Thesis (DEMONSTRATED)</strong>: Multi-strand TL algebras contain MORE computational structure than 2-strand (infinite group, higher diversity, richer interleaving), but the standard trace readout destroys this information. The 2-strand pipeline succeeds because quaternions ARE the readout — SU(2) is isomorphic to S^3 and the Voronoi+sector activation uses all 4 real DOFs. For 3-strand, trace collapses 20 integers (column vector) to 4 integers (trace), losing 96% of information.</li>
+<li><strong>Entanglement Vanishing at Scale (CONFIRMED)</strong>: All 31 non-interleaving entries (using only sigma1 or only sigma2) have zero bracket, confirming Demo 35's result at 2048-entry scale. Interleaving (using both generators) is necessary for non-trivial bracket values.</li>
+<li><strong>Axiality Constraint (CONFIRMED)</strong>: Demo 35's axiality theorem (bracket values have single nonzero Cyc8 component) explains why both trace AND bracket readouts fail for 3-strand: axial = effectively 1D information, insufficient for XOR separation.</li>
+<li><strong>Column-4 Losslessness (NEW FINDING)</strong>: Column 4 of the TL_3 representation preserves 100% of algebraic diversity (2048 distinct vectors). This directly seeds the activation design question: how to partition the 20-integer Cyc8^5 space into cells that enable XOR separation.</li>
+</ul>
+<h3>Data</h3>
+<p><strong>3-strand BFS catalog growth:</strong></p>
+<table><thead><tr><th>Round</th><th>Entries</th><th>New</th></tr></thead><tbody><tr><td>0</td><td>1</td><td>1</td></tr><tr><td>1</td><td>5</td><td>4</td></tr><tr><td>2</td><td>17</td><td>12</td></tr><tr><td>3</td><td>47</td><td>30</td></tr><tr><td>4</td><td>115</td><td>68</td></tr><tr><td>5</td><td>263</td><td>148</td></tr><tr><td>6</td><td>577</td><td>314</td></tr><tr><td>7</td><td>1233</td><td>656</td></tr><tr><td>8</td><td>2048</td><td>815 (hit cap)</td></tr></tbody></table>
+<p><strong>Readout diversity comparison:</strong></p>
+<table><thead><tr><th>Readout</th><th>Distinct</th><th>Retention</th><th>DOFs</th></tr></thead><tbody><tr><td>Trace</td><td>105</td><td>5.1%</td><td>4 integers</td></tr><tr><td>Column 0</td><td>1166</td><td>56.9%</td><td>20 integers</td></tr><tr><td>Column 1</td><td>1166</td><td>56.9%</td><td>20 integers</td></tr><tr><td>Column 2</td><td>1167</td><td>57.0%</td><td>20 integers</td></tr><tr><td>Column 3</td><td>1167</td><td>57.0%</td><td>20 integers</td></tr><tr><td>Column 4</td><td>2048</td><td>100.0%</td><td>20 integers</td></tr></tbody></table>
+<p><strong>Phase 4 — Matched comparison (size 24):</strong></p>
+<table><thead><tr><th>Metric</th><th>3-strand</th><th>2-strand</th></tr></thead><tbody><tr><td>XOR6 winners</td><td>0</td><td>1109</td></tr><tr><td>Best k_sec</td><td>0</td><td>20</td></tr></tbody></table>
+<p><strong>Phase 5 — Interleaving analysis:</strong></p>
+<table><thead><tr><th>Subset</th><th>Count</th><th>XOR6</th><th>Best k</th></tr></thead><tbody><tr><td>Interleaving</td><td>2017</td><td>0</td><td>0</td></tr><tr><td>Non-interleaving</td><td>31</td><td>0</td><td>0</td></tr></tbody></table>
+<p><strong>2-strand vs 3-strand structural comparison:</strong></p>
+<table><thead><tr><th>Property</th><th>2-strand</th><th>3-strand</th></tr></thead><tbody><tr><td>TL dimension</td><td>2x2 (TL_2, C_2=2)</td><td>5x5 (TL_3, C_3=5)</td></tr><tr><td>Group order</td><td>24 (finite, binary octahedral)</td><td>Infinite (at zeta_8)</td></tr><tr><td>Generators</td><td>2 (sigma1+, sigma1-)</td><td>4 (sigma1+/-, sigma2+/-)</td></tr><tr><td>Interleaving</td><td>N/A (1 crossing)</td><td>98.5% (2017/2048)</td></tr><tr><td>Entanglement vanishing</td><td>N/A</td><td>100% (31/31 non-interleaving = zero bracket)</td></tr><tr><td>Readout DOFs (trace)</td><td>4 integers (Cyc8 = sufficient)</td><td>4 integers (Cyc8 = catastrophically lossy)</td></tr><tr><td>Readout DOFs (quaternion)</td><td>4 reals (full SU(2))</td><td>N/A</td></tr><tr><td>Readout DOFs (column)</td><td>N/A</td><td>20 integers (Cyc8^5 = lossless at col 4)</td></tr><tr><td>Fran's dim formula</td><td>dim=4 (2<em>2+0)</td><td>dim=6 (2</em>3+0)</td></tr><tr><td>XOR6 capacity</td><td>1109 (at k=20, size 24)</td><td>0 (trace readout)</td></tr></tbody></table>
+<h3>Code Assets</h3>
+<ul>
+<li><strong><code>Cyc8</code> (Z[zeta_8] cyclotomic arithmetic)</strong>: Exact integer type with basis {1, zeta_8, zeta_8^2, zeta_8^3}, zeta_8^4 = -1. Operations: <code>cyc8_make</code>, <code>cyc8_zero</code>, <code>cyc8_one</code>, <code>cyc8_add</code>, <code>cyc8_neg</code>, <code>cyc8_mul</code>, <code>cyc8_eq</code>, <code>cyc8_is_zero</code>, <code>cyc8_conj</code>, <code>cyc8_to_double</code>. Reused from Demo 35.</li>
+<li><strong><code>TLMat</code> (5x5 TL_3 matrix)</strong>: Matrix over Cyc8 for the 3-strand Temperley-Lieb representation (C_3=5 basis elements). Operations: <code>tlm_zero</code>, <code>tlm_identity</code>, <code>tlm_add</code>, <code>tlm_neg</code>, <code>tlm_scale</code>, <code>tlm_mul</code>, <code>tlm_eq</code>, <code>tlm_trace</code>.</li>
+<li><strong><code>PMatch</code> / diagram composition</strong>: Planar matching representation for TL_3 (6 boundary points). <code>enumerate_basis()</code> builds all 5 non-crossing matchings. <code>compose_diagrams()</code> computes diagram multiplication with closed-loop counting. <code>build_gen_matrix()</code> constructs TL generator matrices e_1, e_2.</li>
+<li><strong><code>build_braid_generators()</code></strong>: Constructs 4 braid generators from A = -zeta_8: sigma_i = A<em>I + A^{-1}</em>e_i, sigma_i^{-1} = A^{-1}<em>I + A</em>e_i. Verifies sigma<em>sigma^{-1} = I and braid relation sigma1</em>sigma2<em>sigma1 = sigma2</em>sigma1*sigma2.</li>
+<li><strong><code>build_3strand_catalog()</code></strong>: BFS closure over 4 generators with bracket computation, depth tracking, writhe tracking, and interleaving bitmask (bit0=uses_sigma1, bit1=uses_sigma2). Caps at MAX_3CAT=2048.</li>
+<li><strong><code>Quat</code> / <code>build_2strand_catalog()</code></strong>: Quaternionic 2-strand catalog (24 entries, binary octahedral group) for matched comparison. BFS closure with mod-sign identification.</li>
+<li><strong><code>phase_cell_cyc8()</code></strong>: Trace-based activation for 3-strand: converts Cyc8 trace to complex via <code>cyc8_to_double</code>, uses angle-based sector assignment. k_sec sectors + 1 degenerate cell.</li>
+<li><strong><code>combined_cell_2s()</code> / <code>vor_cell_2s()</code> / <code>build_2strand_dirs()</code></strong>: 1wpi Voronoi+sector activation for 2-strand quaternionic readout. Extracts S2 directions, assigns Voronoi cells, combines with angular sectors. Shared with <a href="./demo_93.html">D93</a>-<a href="./demo_97.html">97</a>.</li>
+<li><strong><code>test_xor_3strand()</code> / <code>test_xor_2strand()</code></strong>: Exhaustive 1wpi XOR separability tests. 3-strand: matrix sum then trace then phase_cell. 2-strand: quaternion sum then combined_cell. Both use touched-cell optimization for fast cleanup.</li>
+<li><strong><code>count_xor_bf()</code> / <code>search_xor()</code></strong>: Brute-force XOR6 search over all 3-element subsets, with multi-k_sec sweep (k=4,6,8,10,12,16,20,24,32).</li>
+</ul>
+<h3>Connection to Earlier Demos</h3>
+<table><thead><tr><th>Demo</th><th>Finding</th><th>Relevance to <a href="./demo_98.html">D98</a></th></tr></thead><tbody><tr><td><a href="./demo_35.html">D35</a></td><td>Entanglement vanishing</td><td>CONFIRMED at scale: 31/31 non-interleaving have zero bracket</td></tr><tr><td><a href="./demo_35.html">D35</a></td><td>Axiality theorem</td><td>Explains why trace/bracket readouts fail: axial = 1D information</td></tr><tr><td><a href="./demo_67.html">D67</a></td><td>Hopf phase inert</td><td>Analogous lesson: wrong readout kills computation even when data is rich</td></tr><tr><td><a href="./demo_97.html">D97</a></td><td>Orthogonal directions = perfection</td><td>2-strand works because quaternion components map to orthogonal axes. 3-strand needs analogous structure in Cyc8^5</td></tr></tbody></table>
+<h3>Literature Touched</h3>
+<ul>
+<li><strong>Temperley-Lieb algebra TL_3</strong>: 5-dimensional representation (C_3 = Catalan number = 5 non-crossing matchings on 6 boundary points). Standard construction: planar matching composition with closed-loop counting. <a href="./demo_98.html">D98</a> builds the full representation machinery from scratch.</li>
+<li><strong>Kauffman bracket at zeta_8</strong>: 3-strand bracket values are axial in Z[zeta_8] (single nonzero component), extending <a href="./demo_35.html">D35</a>'s axiality theorem from 2-strand to 3-strand. The axiality constraint is structural, not size-dependent.</li>
+<li><strong>Braid group B_3</strong>: Infinite group (unlike B_2 which maps to finite subgroups of SU(2)). At the zeta_8 parameter, the TL_3 representation yields an infinite image — 2048 distinct matrices reached without closure. The braid relation sigma1<em>sigma2</em>sigma1 = sigma2<em>sigma1</em>sigma2 is verified computationally.</li>
+<li><strong>Reservoir computing (Maass et al. 2002)</strong>: <a href="./demo_98.html">D98</a> demonstrates the readout bottleneck in reservoir computing terms: the reservoir (3-strand BFS catalog) has high separation capacity (column-4 is lossless), but the linear readout (trace) destroys the information. This motivates D99b's approach of working on the irreducible module directly.</li>
+</ul>
+<h3>Open Questions</h3>
+<ul>
+<li><strong>Column-vector activation design</strong>: Column 4 preserves 100% diversity (2048 distinct 20-integer vectors). How to partition Cyc8^5 into cells for XOR separation? This is the key design question for multi-strand DKC.</li>
+<li><strong>Multiple trace readout</strong>: Using Tr(M), Tr(M^2), Tr(M^3) as characteristic polynomial coefficients could recover more information than single trace. 3 traces x 4 integers = 12 DOFs vs 4 DOFs for single trace.</li>
+<li><strong>Irreducible module approach</strong>: The 5x5 representation is reducible (TL_3 decomposes into standard modules). Working on irreducible pieces may avoid the lossy trace problem — this is exactly what D99b pursues with the 2x2 Delta_1 module, achieving first-ever 3-strand XOR.</li>
+<li><strong>Dimensional thesis</strong>: Fran's formula gives dim=6 for 3-strand vs dim=4 for 2-strand, predicting higher capacity. Cannot test until readout problem is solved. The algebra supports more complexity; the question is whether that complexity is computationally accessible.</li>
+</ul>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/c.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</body>
+</html>

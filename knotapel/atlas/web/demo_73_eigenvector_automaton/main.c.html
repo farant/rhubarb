@@ -1,0 +1,1062 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>demo_73_eigenvector_automaton/main.c</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+    <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+    <nav><a href="../index.html">← Back to Index</a></nav><hr>
+    <h1>demo_73_eigenvector_automaton/main.c</h1><pre><code class="language-c">/*
+ * KNOTAPEL DEMO 73: Eigenvector Automaton
+ * ========================================
+ *
+ * Can DKC be modeled as a finite automaton on Voronoi cells?
+ *
+ * Two formulations:
+ * 1. Multiplicative: braid product M_k = M_{k-1} * gen_k^{+-1}
+ * 2. Additive: weight sum S_k = S_{k-1} + w_k (DKC winning triple)
+ *
+ * Part A: Generator eigenvectors (sigma_1, sigma_2 and inverses)
+ * Part B: Multiplicative trajectory tracking (all 64 inputs)
+ * Part C: Multiplicative determinism test
+ * Part D: Additive DKC trajectories (first winning triple)
+ * Part E: Additive determinism test
+ *
+ * C89, zero dependencies beyond math.h.
+ */
+
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;math.h&gt;
+
+#ifndef M_PI
+#define M_PI 3.14159265358979323846
+#endif
+
+/* ================================================================
+ * Test infrastructure
+ * ================================================================ */
+
+static int g_pass = 0, g_fail = 0;
+
+static void check(const char *t, int ok) {
+    if (ok) { printf("  PASS: %s\n", t); g_pass++; }
+    else    { printf("  FAIL: %s\n", t); g_fail++; }
+}
+
+/* ================================================================
+ * Quaternion
+ * ================================================================ */
+
+typedef struct { double a, b, c, d; } Quat;
+
+static Quat qm(double a, double b, double c, double d) {
+    Quat q; q.a=a; q.b=b; q.c=c; q.d=d; return q;
+}
+static Quat qadd(Quat p, Quat q) {
+    return qm(p.a+q.a, p.b+q.b, p.c+q.c, p.d+q.d);
+}
+static Quat qneg(Quat q) { return qm(-q.a,-q.b,-q.c,-q.d); }
+static Quat qmul(Quat p, Quat q) {
+    return qm(p.a*q.a-p.b*q.b-p.c*q.c-p.d*q.d,
+              p.a*q.b+p.b*q.a+p.c*q.d-p.d*q.c,
+              p.a*q.c-p.b*q.d+p.c*q.a+p.d*q.b,
+              p.a*q.d+p.b*q.c-p.c*q.b+p.d*q.a);
+}
+static Quat qconj(Quat q) { return qm(q.a,-q.b,-q.c,-q.d); }
+static double qnorm(Quat q) {
+    return sqrt(q.a*q.a+q.b*q.b+q.c*q.c+q.d*q.d);
+}
+static Quat qnormalize(Quat q) {
+    double n = qnorm(q);
+    if (n &lt; 1e-15) return qm(0,0,0,0);
+    return qm(q.a/n, q.b/n, q.c/n, q.d/n);
+}
+
+/* ================================================================
+ * Eigenvector extraction
+ * ================================================================ */
+
+typedef struct {
+    double theta, ax, ay, az;
+    int axis_ok;
+} Eigen;
+
+static Eigen to_eigen(Quat q) {
+    Eigen e;
+    double nv;
+    if (q.a &lt; 0) { q.a=-q.a; q.b=-q.b; q.c=-q.c; q.d=-q.d; }
+    if (q.a &gt; 1.0) q.a = 1.0;
+    e.theta = acos(q.a);
+    nv = sqrt(q.b*q.b+q.c*q.c+q.d*q.d);
+    if (nv &lt; 1e-12) { e.ax=0; e.ay=0; e.az=1; e.axis_ok=0; }
+    else { e.ax=q.b/nv; e.ay=q.c/nv; e.az=q.d/nv; e.axis_ok=1; }
+    return e;
+}
+
+/* ================================================================
+ * Braid generators at zeta_8 (theta = pi/4)
+ * ================================================================ */
+
+static Quat g_s1, g_s2;
+
+static void init_gens(void) {
+    double c = cos(M_PI/4.0), s = sin(M_PI/4.0);
+    g_s1 = qm(c, s, 0, 0);
+    g_s2 = qm(c, 0, 0, -s);
+}
+
+static Quat braid_gen(int g) {
+    if (g == 1)  return g_s1;
+    if (g == 2)  return g_s2;
+    if (g == -1) return qconj(g_s1);
+    return qconj(g_s2);
+}
+
+/* ================================================================
+ * Quaternion + direction catalogs
+ * ================================================================ */
+
+#define MAXQ 512
+#define MAXD 64
+
+static Quat g_cat[MAXQ];
+static Eigen g_eig[MAXQ];
+static int g_nq = 0;
+
+static double g_dir[MAXD][3];
+static int g_nd = 0;
+
+static int find_q(Quat q) {
+    int i;
+    for (i = 0; i &lt; g_nq; i++) {
+        double d1 = fabs(g_cat[i].a-q.a)+fabs(g_cat[i].b-q.b)+
+                     fabs(g_cat[i].c-q.c)+fabs(g_cat[i].d-q.d);
+        double d2 = fabs(g_cat[i].a+q.a)+fabs(g_cat[i].b+q.b)+
+                     fabs(g_cat[i].c+q.c)+fabs(g_cat[i].d+q.d);
+        if (d1 &lt; 1e-10 || d2 &lt; 1e-10) return i;
+    }
+    return -1;
+}
+
+static int find_d(double x, double y, double z) {
+    int i;
+    for (i = 0; i &lt; g_nd; i++) {
+        double d1 = fabs(g_dir[i][0]-x)+fabs(g_dir[i][1]-y)+fabs(g_dir[i][2]-z);
+        double d2 = fabs(g_dir[i][0]+x)+fabs(g_dir[i][1]+y)+fabs(g_dir[i][2]+z);
+        if (d1 &lt; 1e-8 || d2 &lt; 1e-8) return i;
+    }
+    return -1;
+}
+
+static void build_cat(void) {
+    int n, len, w[32], i;
+    g_nq = 0; g_nd = 0;
+    for (n = 2; n &lt;= 3; n++) {
+        int mg = n-1, tg = 2*mg;
+        for (len = 1; len &lt;= 8; len++) {
+            unsigned long total = 1, idx;
+            for (i = 0; i &lt; len; i++) {
+                total *= (unsigned long)tg;
+                if (total &gt; 100000) break;
+            }
+            if (total &gt; 100000) continue;
+            for (idx = 0; idx &lt; total; idx++) {
+                unsigned long tmp = idx;
+                Quat q = qm(1,0,0,0);
+                for (i = 0; i &lt; len; i++) {
+                    int g2 = (int)(tmp % (unsigned long)tg);
+                    tmp /= (unsigned long)tg;
+                    w[i] = g2 &lt; mg ? g2+1 : -(g2-mg+1);
+                }
+                for (i = 0; i &lt; len; i++) q = qmul(q, braid_gen(w[i]));
+                if (find_q(q) &lt; 0 &amp;&amp; g_nq &lt; MAXQ)
+                    g_cat[g_nq++] = q;
+            }
+        }
+    }
+    for (i = 0; i &lt; g_nq; i++) {
+        g_eig[i] = to_eigen(g_cat[i]);
+        if (g_eig[i].axis_ok &amp;&amp;
+            find_d(g_eig[i].ax, g_eig[i].ay, g_eig[i].az) &lt; 0 &amp;&amp;
+            g_nd &lt; MAXD) {
+            g_dir[g_nd][0] = g_eig[i].ax;
+            g_dir[g_nd][1] = g_eig[i].ay;
+            g_dir[g_nd][2] = g_eig[i].az;
+            g_nd++;
+        }
+    }
+}
+
+/* ================================================================
+ * Voronoi cell assignment
+ * ================================================================ */
+
+#define IDENT_CELL 13   /* special cell for identity/zero quaternion */
+#define NCELLS 14       /* cells 0..12 = directions, 13 = identity */
+
+static int vor_cell(double ax, double ay, double az) {
+    int i, best = 0;
+    double bd = -2.0;
+    for (i = 0; i &lt; g_nd; i++) {
+        double d = fabs(ax*g_dir[i][0] + ay*g_dir[i][1] + az*g_dir[i][2]);
+        if (d &gt; bd) { bd = d; best = i; }
+    }
+    return best;
+}
+
+static int quat_to_cell(Quat q) {
+    double n = qnorm(q);
+    Eigen e;
+    if (n &lt; 1e-12) return IDENT_CELL;
+    q = qnormalize(q);
+    e = to_eigen(q);
+    if (!e.axis_ok) return IDENT_CELL;
+    return vor_cell(e.ax, e.ay, e.az);
+}
+
+/* ================================================================
+ * XOR6 checker (additive formulation)
+ * ================================================================ */
+
+static int xor6_check(const Quat *w) {
+    int seen[NCELLS + 1];
+    int mask, i, cell;
+    for (i = 0; i &lt;= NCELLS; i++) seen[i] = 0;
+    for (mask = 0; mask &lt; 64; mask++) {
+        Quat sum = qm(0,0,0,0);
+        int par = 0;
+        for (i = 0; i &lt; 6; i++)
+            if (mask &amp; (1&lt;&lt;i)) { sum = qadd(sum, w[i]); par ^= 1; }
+        cell = quat_to_cell(sum);
+        if (cell &gt;= NCELLS) cell = NCELLS - 1;
+        seen[cell] |= (1 &lt;&lt; par);
+        if (seen[cell] == 3) return 0;
+    }
+    return 1;
+}
+
+/* ================================================================
+ * Find first winning triple for additive XOR6
+ * ================================================================ */
+
+static int g_win[3];
+static Quat g_weights[6];
+
+static int find_winner(void) {
+    int ai, aj, ak;
+    Quat w[6];
+    for (ai = 0; ai &lt; g_nq; ai++)
+        for (aj = ai+1; aj &lt; g_nq; aj++)
+            for (ak = aj+1; ak &lt; g_nq; ak++) {
+                w[0]=g_cat[ai]; w[1]=qneg(g_cat[ai]);
+                w[2]=g_cat[aj]; w[3]=qneg(g_cat[aj]);
+                w[4]=g_cat[ak]; w[5]=qneg(g_cat[ak]);
+                if (xor6_check(w)) {
+                    g_win[0]=ai; g_win[1]=aj; g_win[2]=ak;
+                    g_weights[0]=w[0]; g_weights[1]=w[1];
+                    g_weights[2]=w[2]; g_weights[3]=w[3];
+                    g_weights[4]=w[4]; g_weights[5]=w[5];
+                    return 1;
+                }
+            }
+    return 0;
+}
+
+/* ================================================================
+ * Part A: Generator eigenvectors
+ * ================================================================ */
+
+static void part_a(void) {
+    int i;
+    int gens[] = {1, -1, 2, -2};
+    const char *names[] = {"sigma_1  ", "sigma_1^-", "sigma_2  ", "sigma_2^-"};
+    char msg[256];
+
+    printf("\n=== Part A: Generator eigenvectors ===\n\n");
+    printf("  Braid generators at zeta_8 (theta = pi/4):\n\n");
+    printf("  | Generator  | Quaternion                    | Axis            | Cell | Angle  |\n");
+    printf("  |------------|-------------------------------|-----------------|------|--------|\n");
+
+    for (i = 0; i &lt; 4; i++) {
+        Quat q = braid_gen(gens[i]);
+        Eigen e = to_eigen(q);
+        int cell = e.axis_ok ? vor_cell(e.ax, e.ay, e.az) : IDENT_CELL;
+
+        printf("  | %s  | (%+.4f,%+.4f,%+.4f,%+.4f) | (%+.3f,%+.3f,%+.3f) | %4d | %5.1f  |\n",
+               names[i], q.a, q.b, q.c, q.d,
+               e.ax, e.ay, e.az, cell,
+               e.theta * 180.0 / M_PI);
+    }
+
+    printf("\n  6-step braid assignment (alternating sigma_1/sigma_2):\n");
+    printf("    Step 0: sigma_1 or sigma_1^-1 (bit 0)\n");
+    printf("    Step 1: sigma_2 or sigma_2^-1 (bit 1)\n");
+    printf("    Step 2: sigma_1 or sigma_1^-1 (bit 2)\n");
+    printf("    Step 3: sigma_2 or sigma_2^-1 (bit 3)\n");
+    printf("    Step 4: sigma_1 or sigma_1^-1 (bit 4)\n");
+    printf("    Step 5: sigma_2 or sigma_2^-1 (bit 5)\n");
+
+    /* Check generator cell structure */
+    {
+        int c1, c2;
+        Eigen e1 = to_eigen(g_s1);
+        Eigen e2 = to_eigen(g_s2);
+        c1 = e1.axis_ok ? vor_cell(e1.ax, e1.ay, e1.az) : IDENT_CELL;
+        c2 = e2.axis_ok ? vor_cell(e2.ax, e2.ay, e2.az) : IDENT_CELL;
+        printf("\n  sigma_1 and sigma_1^-1 share cell %d (antipodal axes)\n", c1);
+        printf("  sigma_2 and sigma_2^-1 share cell %d (antipodal axes)\n", c2);
+        printf("  Only %d distinct generator cells out of %d directions\n",
+               (c1 == c2) ? 1 : 2, g_nd);
+    }
+
+    sprintf(msg, "Generator analysis: 4 generators, %d directions", g_nd);
+    check(msg, g_nd == 13);
+}
+
+/* ================================================================
+ * Part B: Multiplicative trajectory tracking
+ * ================================================================ */
+
+#define NSTEPS 6
+#define NINPUTS 64
+
+static int g_mul_traj[NINPUTS][NSTEPS]; /* cell after each step */
+
+static Quat step_gen_mul(int step, int bit) {
+    int gen_idx = (step % 2 == 0) ? 1 : 2;
+    return bit ? braid_gen(gen_idx) : braid_gen(-gen_idx);
+}
+
+static void compute_mul_trajectories(void) {
+    int mask, k;
+    for (mask = 0; mask &lt; NINPUTS; mask++) {
+        Quat M = qm(1, 0, 0, 0);
+        for (k = 0; k &lt; NSTEPS; k++) {
+            int bit = (mask &gt;&gt; k) &amp; 1;
+            M = qmul(M, step_gen_mul(k, bit));
+            g_mul_traj[mask][k] = quat_to_cell(M);
+        }
+    }
+}
+
+static int parity6(int mask) {
+    int i, p = 0;
+    for (i = 0; i &lt; 6; i++) p ^= (mask &gt;&gt; i) &amp; 1;
+    return p;
+}
+
+static void part_b(void) {
+    int mask, k;
+    char msg[256];
+    int cells_parity[NCELLS][2];
+    int parity_pure;
+    int n_used;
+
+    printf("\n=== Part B: Multiplicative trajectory tracking ===\n\n");
+    compute_mul_trajectories();
+
+    /* Print example trajectories */
+    {
+        int examples[] = {0, 63, 42, 21, 1, 32, 5, 10};
+        int ne = 8;
+
+        printf("  Example trajectories (cell at each step):\n\n");
+        printf("  | Input | Bits   | S0 | S1 | S2 | S3 | S4 | S5 | Par |\n");
+        printf("  |-------|--------|----|----|----|----|----|----|-----|\n");
+
+        for (k = 0; k &lt; ne; k++) {
+            int m = examples[k];
+            printf("  | %5d | %d%d%d%d%d%d | %2d | %2d | %2d | %2d | %2d | %2d | %3d |\n",
+                   m,
+                   (m&gt;&gt;0)&amp;1, (m&gt;&gt;1)&amp;1, (m&gt;&gt;2)&amp;1, (m&gt;&gt;3)&amp;1, (m&gt;&gt;4)&amp;1, (m&gt;&gt;5)&amp;1,
+                   g_mul_traj[m][0], g_mul_traj[m][1], g_mul_traj[m][2],
+                   g_mul_traj[m][3], g_mul_traj[m][4], g_mul_traj[m][5],
+                   parity6(m));
+        }
+    }
+
+    /* Check if multiplicative product computes XOR6 */
+    for (k = 0; k &lt; NCELLS; k++) {
+        cells_parity[k][0] = 0;
+        cells_parity[k][1] = 0;
+    }
+    for (mask = 0; mask &lt; NINPUTS; mask++) {
+        int par = parity6(mask);
+        int cell = g_mul_traj[mask][NSTEPS - 1];
+        if (cell &lt; NCELLS) cells_parity[cell][par]++;
+    }
+
+    parity_pure = 1;
+    printf("\n  Final cell parity assignment (does product compute XOR6?):\n\n");
+    printf("  | Cell | Even | Odd | Pure? |\n");
+    printf("  |------|------|-----|-------|\n");
+
+    for (k = 0; k &lt; NCELLS; k++) {
+        if (cells_parity[k][0] + cells_parity[k][1] &gt; 0) {
+            int pure = (cells_parity[k][0] == 0 || cells_parity[k][1] == 0);
+            if (!pure) parity_pure = 0;
+            printf("  | %4d | %4d | %3d | %5s |\n",
+                   k, cells_parity[k][0], cells_parity[k][1],
+                   pure ? "yes" : "NO");
+        }
+    }
+
+    printf("\n  Multiplicative product %s XOR6\n",
+           parity_pure ? "COMPUTES" : "does NOT compute");
+
+    /* Count distinct final cells and reachable cells per step */
+    {
+        int used[NCELLS];
+        printf("\n  Distinct cells reachable at each step:\n");
+        printf("    ");
+        for (k = 0; k &lt; NSTEPS; k++) {
+            int j;
+            n_used = 0;
+            for (j = 0; j &lt; NCELLS; j++) used[j] = 0;
+            for (mask = 0; mask &lt; NINPUTS; mask++)
+                if (g_mul_traj[mask][k] &lt; NCELLS)
+                    used[g_mul_traj[mask][k]] = 1;
+            for (j = 0; j &lt; NCELLS; j++) n_used += used[j];
+            printf("step%d: %2d  ", k, n_used);
+        }
+        printf("\n");
+    }
+
+    sprintf(msg, "Multiplicative trajectories: XOR6=%s",
+            parity_pure ? "yes" : "no");
+    check(msg, 1);
+}
+
+/* ================================================================
+ * Part C: Determinism test (generic, works for both formulations)
+ * ================================================================
+ *
+ * At each step k, test: do all inputs in the SAME cell at step k-1
+ * using the SAME bit at step k always land in the SAME cell at step k?
+ *
+ * For step 0, the "previous state" is the start_cell.
+ */
+
+static void determinism_test(const int traj[][NSTEPS],
+                              const char *label, int start_cell) {
+    int k, total = 0, determ = 0, non_determ = 0;
+    int prev_cell, bit;
+    char msg[256];
+    int max_split = 1;
+    int ndet_examples = 0;
+
+    printf("\n  Determinism test for %s:\n\n", label);
+    printf("  | Step | Triples | Determ | Non-det | Pct     |\n");
+    printf("  |------|---------|--------|---------|--------|\n");
+
+    for (k = 0; k &lt; NSTEPS; k++) {
+        int step_total = 0, step_det = 0, step_ndet = 0;
+
+        for (prev_cell = 0; prev_cell &lt; NCELLS; prev_cell++) {
+            for (bit = 0; bit &lt;= 1; bit++) {
+                int first_next = -1;
+                int all_same = 1;
+                int count = 0;
+                int mask;
+                int distinct_next[NCELLS];
+                int n_distinct = 0;
+                int j;
+
+                for (j = 0; j &lt; NCELLS; j++) distinct_next[j] = 0;
+
+                for (mask = 0; mask &lt; NINPUTS; mask++) {
+                    int this_bit = (mask &gt;&gt; k) &amp; 1;
+                    int this_prev;
+                    int this_next;
+
+                    if (this_bit != bit) continue;
+
+                    this_prev = (k == 0) ? start_cell : traj[mask][k-1];
+                    if (this_prev != prev_cell) continue;
+
+                    this_next = traj[mask][k];
+                    count++;
+
+                    if (first_next &lt; 0) first_next = this_next;
+                    else if (this_next != first_next) all_same = 0;
+
+                    if (this_next &lt; NCELLS) distinct_next[this_next] = 1;
+                }
+
+                if (count &gt; 0) {
+                    step_total++;
+                    if (all_same) {
+                        step_det++;
+                    } else {
+                        step_ndet++;
+                        n_distinct = 0;
+                        for (j = 0; j &lt; NCELLS; j++)
+                            if (distinct_next[j]) n_distinct++;
+                        if (n_distinct &gt; max_split) max_split = n_distinct;
+
+                        /* Print first few non-deterministic transitions */
+                        if (ndet_examples &lt; 8) {
+                            printf("    SPLIT: step %d, cell %d, bit %d -&gt; %d cells (%d inputs)\n",
+                                   k, prev_cell, bit, n_distinct, count);
+                            ndet_examples++;
+                        }
+                    }
+                }
+            }
+        }
+
+        total += step_total;
+        determ += step_det;
+        non_determ += step_ndet;
+
+        printf("  | %4d | %7d | %6d | %7d | %5.1f%% |\n",
+               k, step_total, step_det, step_ndet,
+               step_total &gt; 0 ? 100.0 * (double)step_det / (double)step_total : 0.0);
+    }
+
+    printf("  |------|---------|--------|---------|--------|\n");
+    printf("  | ALL  | %7d | %6d | %7d | %5.1f%% |\n",
+           total, determ, non_determ,
+           total &gt; 0 ? 100.0 * (double)determ / (double)total : 0.0);
+
+    if (non_determ &gt; 0)
+        printf("\n  Max split factor: %d cells (cell -&gt; multiple next cells)\n", max_split);
+
+    if (non_determ == 0)
+        printf("\n  FULLY DETERMINISTIC: cell transitions define an automaton!\n");
+    else
+        printf("\n  NOT fully deterministic: cell loses information about state.\n");
+
+    sprintf(msg, "%s determinism: %d/%d (%.1f%%)",
+            label, determ, total,
+            total &gt; 0 ? 100.0 * (double)determ / (double)total : 0.0);
+    check(msg, 1);
+}
+
+static void part_c(void) {
+    printf("\n=== Part C: Multiplicative determinism test ===\n");
+    determinism_test(g_mul_traj, "multiplicative", IDENT_CELL);
+}
+
+/* ================================================================
+ * Part D: Additive DKC trajectories
+ * ================================================================
+ *
+ * For a winning triple, process the 6 weights sequentially.
+ * At each step k:
+ *   - bit_k = 1: add w[k] to running sum
+ *   - bit_k = 0: do not add (sum unchanged)
+ * Cell = Voronoi cell of eigenvector of running sum.
+ * Cell = IDENT_CELL when sum is near zero.
+ */
+
+static int g_add_traj[NINPUTS][NSTEPS];
+
+static void compute_add_trajectories(void) {
+    int mask, k;
+    for (mask = 0; mask &lt; NINPUTS; mask++) {
+        Quat S = qm(0,0,0,0);
+        for (k = 0; k &lt; NSTEPS; k++) {
+            int bit = (mask &gt;&gt; k) &amp; 1;
+            if (bit) S = qadd(S, g_weights[k]);
+            g_add_traj[mask][k] = quat_to_cell(S);
+        }
+    }
+}
+
+static void part_d(void) {
+    int k, mask;
+    char msg[256];
+
+    printf("\n=== Part D: Additive DKC trajectories ===\n\n");
+
+    printf("  Finding first winning triple...\n");
+    if (!find_winner()) {
+        printf("  ERROR: No winning triple found!\n");
+        check("Additive DKC trajectories", 0);
+        return;
+    }
+
+    printf("  Winning triple: catalog[%d, %d, %d]\n", g_win[0], g_win[1], g_win[2]);
+    printf("\n  Weights and their cells:\n");
+    for (k = 0; k &lt; 6; k++) {
+        int cell = quat_to_cell(g_weights[k]);
+        printf("    w[%d] = (%+.4f,%+.4f,%+.4f,%+.4f) -&gt; cell %d\n",
+               k, g_weights[k].a, g_weights[k].b,
+               g_weights[k].c, g_weights[k].d, cell);
+    }
+
+    compute_add_trajectories();
+
+    /* Print example trajectories */
+    {
+        int examples[] = {0, 63, 42, 21, 1, 32, 7, 56};
+        int ne = 8;
+
+        printf("\n  Example trajectories (cell at each step, I=%d=zero):\n\n", IDENT_CELL);
+        printf("  | Input | Bits   | S0 | S1 | S2 | S3 | S4 | S5 | Par |\n");
+        printf("  |-------|--------|----|----|----|----|----|----|-----|\n");
+
+        for (k = 0; k &lt; ne; k++) {
+            int m = examples[k];
+            printf("  | %5d | %d%d%d%d%d%d | %2d | %2d | %2d | %2d | %2d | %2d | %3d |\n",
+                   m,
+                   (m&gt;&gt;0)&amp;1, (m&gt;&gt;1)&amp;1, (m&gt;&gt;2)&amp;1, (m&gt;&gt;3)&amp;1, (m&gt;&gt;4)&amp;1, (m&gt;&gt;5)&amp;1,
+                   g_add_traj[m][0], g_add_traj[m][1], g_add_traj[m][2],
+                   g_add_traj[m][3], g_add_traj[m][4], g_add_traj[m][5],
+                   parity6(m));
+        }
+    }
+
+    /* Verify XOR6 */
+    {
+        int xor_ok = 1;
+        int cells_par[NCELLS][2];
+        int n_used;
+        for (k = 0; k &lt; NCELLS; k++) { cells_par[k][0] = 0; cells_par[k][1] = 0; }
+        for (mask = 0; mask &lt; NINPUTS; mask++) {
+            int par = parity6(mask);
+            int cell = g_add_traj[mask][NSTEPS - 1];
+            if (cell &lt; NCELLS) cells_par[cell][par]++;
+        }
+
+        printf("\n  Final cell parity (additive DKC):\n\n");
+        printf("  | Cell | Even | Odd | Pure? |\n");
+        printf("  |------|------|-----|-------|\n");
+        for (k = 0; k &lt; NCELLS; k++) {
+            if (cells_par[k][0] + cells_par[k][1] &gt; 0) {
+                int pure = (cells_par[k][0] == 0 || cells_par[k][1] == 0);
+                if (!pure) xor_ok = 0;
+                printf("  | %4d | %4d | %3d | %5s |\n",
+                       k, cells_par[k][0], cells_par[k][1],
+                       pure ? "yes" : "NO");
+            }
+        }
+
+        printf("\n  Additive DKC %s XOR6 (expected: yes)\n",
+               xor_ok ? "COMPUTES" : "does NOT compute");
+
+        /* Distinct cells per step */
+        printf("\n  Distinct cells at each step:\n    ");
+        for (k = 0; k &lt; NSTEPS; k++) {
+            int used[NCELLS];
+            int j;
+            n_used = 0;
+            for (j = 0; j &lt; NCELLS; j++) used[j] = 0;
+            for (mask = 0; mask &lt; NINPUTS; mask++)
+                if (g_add_traj[mask][k] &lt; NCELLS)
+                    used[g_add_traj[mask][k]] = 1;
+            for (j = 0; j &lt; NCELLS; j++) n_used += used[j];
+            printf("step%d: %2d  ", k, n_used);
+        }
+        printf("\n");
+
+        /* Count collisions: inputs with same cell but different partial sums */
+        {
+            int n_collisions = 0;
+            for (k = 0; k &lt; NSTEPS; k++) {
+                int ci, cj;
+                for (ci = 0; ci &lt; NINPUTS; ci++)
+                    for (cj = ci+1; cj &lt; NINPUTS; cj++) {
+                        /* Same cell at step k? */
+                        if (g_add_traj[ci][k] != g_add_traj[cj][k]) continue;
+                        /* Same bits up to step k? */
+                        {
+                            int same_bits = 1;
+                            int s;
+                            for (s = 0; s &lt;= k; s++) {
+                                if (((ci &gt;&gt; s) &amp; 1) != ((cj &gt;&gt; s) &amp; 1)) {
+                                    same_bits = 0;
+                                    break;
+                                }
+                            }
+                            if (!same_bits) n_collisions++;
+                        }
+                    }
+            }
+            printf("  Cell collisions (same cell, different history): %d\n", n_collisions);
+        }
+
+        sprintf(msg, "Additive DKC: XOR6=%s", xor_ok ? "yes" : "no");
+        check(msg, xor_ok);
+    }
+}
+
+/* ================================================================
+ * Part E: Additive determinism test
+ * ================================================================ */
+
+static void part_e(void) {
+    printf("\n=== Part E: Additive determinism test ===\n");
+    determinism_test(g_add_traj, "additive DKC", IDENT_CELL);
+
+    /* Additional analysis: check if cell is sufficient statistic
+     * for the final output. I.e., do all inputs that reach the same
+     * cell at step k, with the same remaining bits, produce the same
+     * final output cell?
+     *
+     * Simpler version: do all inputs in the same cell at step k
+     * always produce the same final parity assignment?
+     */
+    {
+        int k;
+        printf("\n  Sufficient statistic test:\n");
+        printf("  (Does knowing the cell at step k predict the final XOR6 output?)\n\n");
+        printf("  | Step | Cell-states | All predict output? |\n");
+        printf("  |------|-------------|--------------------|\n");
+
+        for (k = 0; k &lt; NSTEPS; k++) {
+            int cell;
+            int all_predict = 1;
+
+            for (cell = 0; cell &lt; NCELLS; cell++) {
+                /* For each cell at step k, check if all inputs
+                 * that reach this cell have consistent final output */
+                int mask;
+                int first_final = -1;
+                int consistent = 1;
+
+                for (mask = 0; mask &lt; NINPUTS; mask++) {
+                    int this_cell = g_add_traj[mask][k];
+                    int final_cell;
+                    if (this_cell != cell) continue;
+
+                    final_cell = g_add_traj[mask][NSTEPS - 1];
+                    if (first_final &lt; 0) first_final = final_cell;
+                    else if (final_cell != first_final) consistent = 0;
+                }
+
+                if (first_final &gt;= 0 &amp;&amp; !consistent) all_predict = 0;
+            }
+
+            {
+                int n_states = 0;
+                int used[NCELLS];
+                int j;
+                for (j = 0; j &lt; NCELLS; j++) used[j] = 0;
+                for (j = 0; j &lt; NINPUTS; j++) {
+                    int c = g_add_traj[j][k];
+                    if (c &lt; NCELLS) used[c] = 1;
+                }
+                for (j = 0; j &lt; NCELLS; j++) n_states += used[j];
+
+                printf("  | %4d | %11d | %18s |\n",
+                       k, n_states,
+                       all_predict ? "yes" : "NO");
+            }
+        }
+
+        printf("\n  Note: 'sufficient statistic' means the cell alone\n");
+        printf("  (ignoring future bits) determines the final cell.\n");
+        printf("  This is WEAKER than step-by-step determinism.\n");
+    }
+}
+
+/* ================================================================
+ * Part F: Finer partition determinism
+ * ================================================================
+ *
+ * Test whether a finer Voronoi partition achieves 100% determinism.
+ * 1. Count distinct partial sums per step (theoretical minimum cells)
+ * 2. Try 26-cell signed partition (no antipodal identification)
+ * 3. Compare to 14-cell result
+ */
+
+/* 26-cell partition: signed directions (no antipodal identification) */
+#define IDENT_CELL_26 26
+#define NCELLS_26 27
+
+static int vor_cell_signed(double ax, double ay, double az) {
+    int i, best = 0;
+    double bd = -2.0;
+    for (i = 0; i &lt; g_nd; i++) {
+        double dp = ax*g_dir[i][0] + ay*g_dir[i][1] + az*g_dir[i][2];
+        if (dp &gt; bd) { bd = dp; best = i; }
+        if (-dp &gt; bd) { bd = -dp; best = i + g_nd; }
+    }
+    return best;
+}
+
+static int quat_to_cell_26(Quat q) {
+    double n = qnorm(q);
+    Eigen e;
+    if (n &lt; 1e-12) return IDENT_CELL_26;
+    q = qnormalize(q);
+    e = to_eigen(q);
+    if (!e.axis_ok) return IDENT_CELL_26;
+    return vor_cell_signed(e.ax, e.ay, e.az);
+}
+
+/* Generic determinism percentage (quiet version) */
+static double determinism_pct(const int traj[][NSTEPS], int start_cell, int ncells) {
+    int k, total = 0, determ = 0;
+    int prev_cell, bit;
+    for (k = 0; k &lt; NSTEPS; k++) {
+        for (prev_cell = 0; prev_cell &lt; ncells; prev_cell++) {
+            for (bit = 0; bit &lt;= 1; bit++) {
+                int first_next = -1, all_same = 1, count = 0, mask;
+                for (mask = 0; mask &lt; NINPUTS; mask++) {
+                    int this_bit = (mask &gt;&gt; k) &amp; 1;
+                    int this_prev;
+                    if (this_bit != bit) continue;
+                    this_prev = (k == 0) ? start_cell : traj[mask][k-1];
+                    if (this_prev != prev_cell) continue;
+                    count++;
+                    if (first_next &lt; 0) first_next = traj[mask][k];
+                    else if (traj[mask][k] != first_next) all_same = 0;
+                }
+                if (count &gt; 0) {
+                    total++;
+                    if (all_same) determ++;
+                }
+            }
+        }
+    }
+    return total &gt; 0 ? 100.0 * (double)determ / (double)total : 0.0;
+}
+
+static void part_f(void) {
+    int k, mask;
+    char msg[256];
+    int add_traj_26[NINPUTS][NSTEPS];
+    double det_14, det_26;
+    int max_distinct = 0;
+
+    printf("\n=== Part F: Finer partition determinism ===\n\n");
+
+    /* 1. Count distinct partial sums per step */
+    printf("  Distinct partial sums per step (theoretical minimum cells):\n\n");
+    printf("  | Step | Possible | Distinct | Cells needed |\n");
+    printf("  |------|----------|----------|--------------|\n");
+
+    for (k = 0; k &lt; NSTEPS; k++) {
+        Quat sums[NINPUTS];
+        int n_distinct = 0;
+
+        /* Compute all partial sums at step k */
+        for (mask = 0; mask &lt; NINPUTS; mask++) {
+            Quat S = qm(0,0,0,0);
+            int s;
+            for (s = 0; s &lt;= k; s++) {
+                int bit = (mask &gt;&gt; s) &amp; 1;
+                if (bit) S = qadd(S, g_weights[s]);
+            }
+            sums[mask] = S;
+        }
+
+        /* Count distinct (including zero vector) */
+        {
+            int i, j;
+            for (i = 0; i &lt; NINPUTS; i++) {
+                int dup = 0;
+                for (j = 0; j &lt; i; j++) {
+                    double d = fabs(sums[i].a-sums[j].a)
+                             + fabs(sums[i].b-sums[j].b)
+                             + fabs(sums[i].c-sums[j].c)
+                             + fabs(sums[i].d-sums[j].d);
+                    if (d &lt; 1e-10) { dup = 1; break; }
+                }
+                if (!dup) n_distinct++;
+            }
+        }
+
+        if (n_distinct &gt; max_distinct) max_distinct = n_distinct;
+
+        printf("  | %4d | %8d | %8d | %12d |\n",
+               k, 1 &lt;&lt; (k+1), n_distinct, n_distinct);
+    }
+
+    printf("\n  Maximum distinct partial sums at any step: %d\n", max_distinct);
+    printf("  =&gt; Minimum cells for 100%% determinism: %d\n\n", max_distinct);
+
+    /* 2. Compute 26-cell trajectories */
+    for (mask = 0; mask &lt; NINPUTS; mask++) {
+        Quat S = qm(0,0,0,0);
+        for (k = 0; k &lt; NSTEPS; k++) {
+            int bit = (mask &gt;&gt; k) &amp; 1;
+            if (bit) S = qadd(S, g_weights[k]);
+            add_traj_26[mask][k] = quat_to_cell_26(S);
+        }
+    }
+
+    /* 3. Compare determinism */
+    det_14 = determinism_pct(g_add_traj, IDENT_CELL, NCELLS);
+    det_26 = determinism_pct(add_traj_26, IDENT_CELL_26, NCELLS_26);
+
+    printf("  Partition comparison (first winning triple):\n\n");
+    printf("  | Partition | Cells | Determinism |\n");
+    printf("  |----------|-------|-------------|\n");
+    printf("  | Unsigned | %5d | %10.1f%% |\n", NCELLS, det_14);
+    printf("  | Signed   | %5d | %10.1f%% |\n", NCELLS_26, det_26);
+
+    /* Count distinct cells used at each step for 26-cell */
+    {
+        printf("\n  26-cell distinct states per step:\n    ");
+        for (k = 0; k &lt; NSTEPS; k++) {
+            int used[NCELLS_26];
+            int j, n = 0;
+            for (j = 0; j &lt; NCELLS_26; j++) used[j] = 0;
+            for (mask = 0; mask &lt; NINPUTS; mask++)
+                used[add_traj_26[mask][k]] = 1;
+            for (j = 0; j &lt; NCELLS_26; j++) n += used[j];
+            printf("step%d: %2d  ", k, n);
+        }
+        printf("\n");
+    }
+
+    if (det_26 &gt; det_14 + 0.1)
+        printf("\n  Signed partition IMPROVES determinism (%.1f%% -&gt; %.1f%%)\n",
+               det_14, det_26);
+    else if (det_26 &gt; 99.9)
+        printf("\n  26-cell partition achieves 100%% determinism!\n");
+    else
+        printf("\n  Signed partition does NOT significantly improve determinism.\n");
+
+    printf("  The bottleneck is likely magnitude/angle information, not direction.\n");
+
+    sprintf(msg, "Finer partition: 14-cell=%.1f%%, 26-cell=%.1f%%, min_cells=%d",
+            det_14, det_26, max_distinct);
+    check(msg, 1);
+}
+
+/* ================================================================
+ * Part G: All winning triples determinism
+ * ================================================================ */
+
+static void part_g(void) {
+    int ai, aj, ak;
+    int n_winners = 0;
+    double min_det = 100.0, max_det = 0.0, sum_det = 0.0;
+    int best_ai = -1, best_aj = -1, best_ak = -1;
+    int worst_ai = -1, worst_aj = -1, worst_ak = -1;
+    int n_perfect = 0;
+    char msg[256];
+    double det_values[64]; /* at most 36 winners */
+
+    printf("\n=== Part G: All winning triples determinism ===\n\n");
+    printf("  Testing additive determinism for all 36 winning triples...\n\n");
+
+    for (ai = 0; ai &lt; g_nq; ai++) {
+        for (aj = ai+1; aj &lt; g_nq; aj++) {
+            for (ak = aj+1; ak &lt; g_nq; ak++) {
+                Quat w[6];
+                int local_traj[NINPUTS][NSTEPS];
+                double det;
+                int mask2, k2;
+
+                w[0]=g_cat[ai]; w[1]=qneg(g_cat[ai]);
+                w[2]=g_cat[aj]; w[3]=qneg(g_cat[aj]);
+                w[4]=g_cat[ak]; w[5]=qneg(g_cat[ak]);
+
+                if (!xor6_check(w)) continue;
+
+                /* Compute trajectories */
+                for (mask2 = 0; mask2 &lt; NINPUTS; mask2++) {
+                    Quat S = qm(0,0,0,0);
+                    for (k2 = 0; k2 &lt; NSTEPS; k2++) {
+                        int bit = (mask2 &gt;&gt; k2) &amp; 1;
+                        if (bit) S = qadd(S, w[k2]);
+                        local_traj[mask2][k2] = quat_to_cell(S);
+                    }
+                }
+
+                det = determinism_pct(local_traj, IDENT_CELL, NCELLS);
+
+                if (n_winners &lt; 64) det_values[n_winners] = det;
+                n_winners++;
+                sum_det += det;
+                if (det &lt; min_det) {
+                    min_det = det;
+                    worst_ai = ai; worst_aj = aj; worst_ak = ak;
+                }
+                if (det &gt; max_det) {
+                    max_det = det;
+                    best_ai = ai; best_aj = aj; best_ak = ak;
+                }
+                if (det &gt; 99.9) n_perfect++;
+            }
+        }
+    }
+
+    printf("  | Metric          | Value           |\n");
+    printf("  |-----------------|----------------|\n");
+    printf("  | Winners found   | %14d |\n", n_winners);
+    printf("  | Min determinism | %13.1f%% |\n", min_det);
+    printf("  | Max determinism | %13.1f%% |\n", max_det);
+    printf("  | Mean determ.    | %13.1f%% |\n", sum_det / (double)n_winners);
+    printf("  | 100%% determ.    | %14d |\n", n_perfect);
+
+    printf("\n  Best triple:  catalog[%d, %d, %d] at %.1f%%\n",
+           best_ai, best_aj, best_ak, max_det);
+    printf("  Worst triple: catalog[%d, %d, %d] at %.1f%%\n",
+           worst_ai, worst_aj, worst_ak, min_det);
+
+    /* Distribution */
+    {
+        int i;
+        int buckets[11]; /* 0-10%, 10-20%, ..., 90-100% */
+        for (i = 0; i &lt; 11; i++) buckets[i] = 0;
+        for (i = 0; i &lt; n_winners &amp;&amp; i &lt; 64; i++) {
+            int b = (int)(det_values[i] / 10.0);
+            if (b &gt; 10) b = 10;
+            buckets[b]++;
+        }
+        printf("\n  Distribution:\n");
+        for (i = 0; i &lt; 11; i++) {
+            if (buckets[i] &gt; 0)
+                printf("    %3d-%3d%%: %d triples\n", i*10, (i+1)*10, buckets[i]);
+        }
+    }
+
+    if (max_det &gt; 99.9)
+        printf("\n  FOUND: %d triple(s) with 100%% determinism (IS an automaton)!\n", n_perfect);
+    else if (max_det &gt; min_det + 5.0)
+        printf("\n  Determinism VARIES by triple (%.1f%% spread).\n", max_det - min_det);
+    else
+        printf("\n  Determinism is UNIVERSAL (~%.1f%%) across all triples.\n",
+               sum_det / (double)n_winners);
+
+    sprintf(msg, "All %d triples: min=%.1f%%, max=%.1f%%, mean=%.1f%%",
+            n_winners, min_det, max_det, sum_det / (double)n_winners);
+    check(msg, n_winners == 36);
+}
+
+/* ================================================================
+ * Main
+ * ================================================================ */
+
+int main(void) {
+    printf("KNOTAPEL DEMO 73: Eigenvector Automaton\n");
+    printf("========================================\n");
+
+    init_gens();
+
+    printf("\n  Building zeta_8 catalog...\n");
+    build_cat();
+    printf("    %d quaternions, %d directions\n", g_nq, g_nd);
+
+    part_a();
+    part_b();
+    part_c();
+    part_d();
+    part_e();
+    part_f();
+    part_g();
+
+    printf("\n========================================\n");
+    printf("Results: %d pass, %d fail\n", g_pass, g_fail);
+    return g_fail &gt; 0 ? 1 : 0;
+}
+</code></pre>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/c.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</body>
+</html>

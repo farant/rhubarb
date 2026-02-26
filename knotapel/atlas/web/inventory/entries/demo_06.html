@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>inventory/entries/demo_06.md</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+    <link rel="stylesheet" href="../../style.css">
+</head>
+<body>
+    <nav><a href="../../index.html">← Back to Index</a></nav><hr>
+    <h2>Demo 06: Jones-Wenzl Idempotents</h2>
+<ul>
+<li><strong>Status</strong>: COMPLETE</li>
+<li><strong>File</strong>: <code><a href="../../demo_06_jones_wenzl/main.c.html">demo_06_jones_wenzl/main.c</a></code> (~800 lines)</li>
+<li><strong>Tests</strong>: 19/19 pass (4 parts: A=4, B=3, C=4, D=4x2 braids = 8 minimum, varies)</li>
+<li><strong>Depends on</strong>: Demo 03 (TL standard modules, bracket formula), Demo 04 (tensor product R-matrix, quantum trace)</li>
+<li><strong>Feeds into</strong>: Any demo needing projectors onto irreducible components; Markov trace decomposition</li>
+</ul>
+<h3>Headline</h3>
+Constructs scaled Jones-Wenzl idempotents p_2 (4x4) and p_3 (8x8) over Laurent polynomials, proving they are the projectors that explain Demo 03/04's quantum dimension weights via Schur-Weyl decomposition.
+<h3>Key Results</h3>
+<ul>
+<li>TL relations verified on V^{tensor 3} (8x8): U_i^2 = delta<em>U_i, U_1</em>U_2<em>U_1 = U_1, U_2</em>U_1*U_2 = U_2</li>
+<li>Scaled JW p_2 (Q_2 = delta<em>I - U, D_2 = delta): Q_2^2 = delta</em>Q_2, U<em>Q_2 = 0, tr_q(Q_2) = delta</em>[3]_q</li>
+<li>Scaled JW p_3 (Q_3 = [3]_q<em>iota(Q_2) - iota(Q_2)</em>U_2<em>iota(Q_2), D_3 = delta</em>[3]_q): Q_3^2 = D_3<em>Q_3, U_1</em>Q_3 = 0, U_2<em>Q_3 = 0, tr_q(Q_3) = D_3</em>[4]_q</li>
+<li><strong>Markov trace decomposition</strong>: W_3 component tr_q(Q_3<em>rho) = D_3</em>[4]<em>q*tr</em>{W_3}(rho) verified for identity, sigma_1, trefoil, figure-eight</li>
+<li>W_1 component verified divisible by D_3*[2]_q, confirming both module traces factor correctly</li>
+<li>Sum W_1 + W_3 components = D_3*tr_q(rho) verified (decomposition is exhaustive)</li>
+</ul>
+<h3>Theorems/Conjectures</h3>
+<ul>
+<li>Jones-Wenzl recursion stays polynomial via scaling trick: Q_n = D_n*p_n avoids rational function entries</li>
+<li>Key simplification: [2]_q/delta = -1 keeps n=3 recursion entirely in Z[A, A^{-1}]</li>
+<li>On W_3 (all through-lines, 1D module): each braid generator acts as A^{-1}, so tr_{W_3}(rho(beta)) = product of A^{-sgn(word[i])}</li>
+<li>Quantum dimensions [n+1]_q computed via recurrence: [n+1]_q = [2]_q*[n]_q - [n-1]_q</li>
+</ul>
+<h3>Code Assets</h3>
+<ul>
+<li><code>Poly</code> Laurent polynomial ring with <code>p_neg</code>, <code>p_sub</code>, <code>p_div_exact</code> (exact polynomial division with remainder check) — extensions beyond Demo 04</li>
+<li><code>Mat</code> polynomial matrix library (same MAXN=8 infrastructure) with <code>mat_is_zero</code></li>
+<li>Quantum dimension computation via Chebyshev recurrence ([n+1]_q = [2]_q*[n]_q - [n-1]_q)</li>
+<li><code>braid_product()</code> mapping braid words to 8x8 matrix products</li>
+<li>Scaled Jones-Wenzl construction pattern: avoids rational functions entirely</li>
+</ul>
+<h3>Literature Touched</h3>
+<ul>
+<li>Jones-Wenzl idempotents (original construction)</li>
+<li>Temperley-Lieb algebra relations</li>
+<li>Schur-Weyl duality decomposition for U_q(sl_2)</li>
+<li>Markov trace and its decomposition into irreducible components</li>
+<li>Quantum dimensions as traces of idempotents</li>
+</ul>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/c.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</body>
+</html>

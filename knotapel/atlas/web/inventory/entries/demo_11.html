@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>inventory/entries/demo_11.md</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+    <link rel="stylesheet" href="../../style.css">
+</head>
+<body>
+    <nav><a href="../../index.html">← Back to Index</a></nav><hr>
+    <h2>Demo 11: Waveform Signatures</h2>
+<ul>
+<li><strong>Status</strong>: COMPLETE</li>
+<li><strong>File</strong>: <code><a href="../../demo_11_waveform/main.c.html">demo_11_waveform/main.c</a></code> (~649 lines)</li>
+<li><strong>Tests</strong>: ~16 pass (symmetry checks, greedy angle separation, cross-validation)</li>
+<li><strong>Depends on</strong>: Demo 10 (unit-circle bracket evaluation, complex arithmetic, state-sum oracle)</li>
+<li><strong>Feeds into</strong>: Demo 12 (selected optimal angles for classification)</li>
+</ul>
+<h3>Headline</h3>
+Sweeps the Kauffman bracket around the full unit circle (256 samples, 10 knots) to produce waveform signatures, proving chiral pairs share amplitude and greedy angle selection separates all knots.
+<h3>Key Results</h3>
+<ul>
+<li>Chiral pairs (trefoil/mirror trefoil, torus(2,5)/cinquefoil mirror) have <strong>identical amplitude waveforms</strong> — only phase distinguishes them</li>
+<li>Amphichiral knot (figure-eight) has amplitude symmetric about theta=0: |f(theta)| = |f(-theta)|</li>
+<li>Mirror bracket relation verified: bracket_mirror(e^{i<em>theta}) = bracket(e^{i</em>(2pi-theta)})</li>
+<li>Greedy angle selection finds a small set of angles (&lt;=8) that separates all 10 knots (threshold 0.001)</li>
+<li>Best single angle identified that maximizes minimum pairwise separation</li>
+<li>Hardest-to-distinguish pair identified across all angles</li>
+<li>Full pairwise separation matrix computed at best angle</li>
+</ul>
+<h3>Theorems/Conjectures</h3>
+<ul>
+<li>PROVEN (numerically): |bracket(A)| = |bracket(A^{-1})| on the unit circle (chiral amplitude invariance)</li>
+<li>PROVEN (numerically): Amphichiral knots have theta-reflection-symmetric amplitude</li>
+<li>PROVEN (numerically): bracket_mirror(e^{i<em>theta}) = bracket(e^{-i</em>theta}) — the mirror bracket is the time-reversed waveform</li>
+</ul>
+<h3>Data</h3>
+<ul>
+<li>10 knots: unknot, trefoil, mirror trefoil, figure-eight, torus(2,5), torus(2,7), granny, square, cinquefoil mirror, single crossing</li>
+<li>256 samples per knot over theta in [0, 2*pi)</li>
+<li>Waveform statistics table: min/max amplitude, ratio, zero count per knot</li>
+<li>Pairwise separation matrix at optimal angle</li>
+<li>Greedy-selected angle set for Demo 12</li>
+</ul>
+<h3>Code Assets</h3>
+<ul>
+<li><code>waveforms[NUM_KNOTS][NSAMP]</code>: full complex waveform table (Cx values)</li>
+<li><code>amplitudes[NUM_KNOTS][NSAMP]</code>: precomputed amplitude table</li>
+<li><code>compute_waveforms()</code>: sweeps bracket evaluation around unit circle for all knots</li>
+<li><code>test_symmetries()</code>: tests chiral amplitude identity, amphichiral reflection symmetry, mirror bracket relation</li>
+<li><code>waveform_stats()</code>: min/max amplitude, dynamic range ratio, near-zero count per knot</li>
+<li><code>pairwise_separation()</code>: finds best single angle (max-min separation), hardest pair, prints separation matrix</li>
+<li><code>greedy_angles()</code>: iterative greedy selection of optimal angles maximizing worst-case pairwise distance; terminates when all pairs separated above threshold</li>
+<li><code>ascii_waveforms()</code>: ASCII art visualization of amplitude waveforms (60-column, 5 intensity bands)</li>
+<li><code>cross_validate()</code>: confirms consistency with Demo 10's direct evaluation</li>
+<li>Complex arithmetic library: <code>cx_make</code>, <code>cx_add</code>, <code>cx_sub</code>, <code>cx_mul</code>, <code>cx_div</code>, <code>cx_abs</code>, <code>cx_exp_i</code>, <code>cx_pow_int</code>, <code>cx_near</code></li>
+</ul>
+<h3>Literature Touched</h3>
+<ul>
+<li>Kauffman bracket on unit circle as signal processing / waveform analysis</li>
+<li>Chiral knot detection via phase vs amplitude separation</li>
+<li>Greedy sensor placement / optimal angle selection (information-theoretic flavor)</li>
+</ul>
+<h3>Open Questions</h3>
+<ul>
+<li>How many angles are needed to separate ALL prime knots up to N crossings? (scaling question)</li>
+<li>Can the greedy-selected angles be interpreted geometrically or algebraically?</li>
+<li>Trefoil period test: is the waveform period pi or 2pi? (logged as INFO, not asserted)</li>
+<li>Connection between waveform zeros and knot invariants unexplored</li>
+</ul>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/c.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</body>
+</html>

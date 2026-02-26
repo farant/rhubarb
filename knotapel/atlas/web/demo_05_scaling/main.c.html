@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>demo_05_scaling/main.c</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+    <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+    <nav><a href="../index.html">← Back to Index</a></nav><hr>
+    <h1>demo_05_scaling/main.c</h1><pre><code class="language-c">/*
+ * KNOTAPEL DEMO 05: Scaling the Spin Chain
+ * ==========================================
+ *
+ * Demo 04 proved the quantum trace formula for n=3 strands (8x8 matrices):
+ *   bracket(b) = tr(K^{x3} * rho(b)) / [2]_q
+ *   where K = diag(A^2, A^{-2}), [2]_q = A^2 + A^{-2} = -delta
+ *
+ * This demo tests whether the SAME formula works for ANY number of strands:
+ *   n=2:  4x4    (1 generator)
+ *   n=3:  8x8    (2 generators, Demo 04 already proved this)
+ *   n=4: 16x16   (3 generators)
+ *   n=5: 32x32   (4 generators)
+ *
+ * For n strands, R_i = I^{x(i-1)} x R x I^{x(n-i-1)} is 2^n x 2^n.
+ * The braid group B_n has generators sigma_1,...,sigma_{n-1} with relations:
+ *   R_i R_{i+1} R_i = R_{i+1} R_i R_{i+1}  (adjacent Yang-Baxter)
+ *   R_i R_j = R_j R_i  for |i-j| &gt;= 2      (far commutativity)
+ *
+ * PLAN:
+ *   Part A: Quantum dimension formula [n]_q recurrence
+ *   Part B: n=2 (warmup: 4x4, one generator, simplest case)
+ *   Part C: n=4 (16x16, three generators, Yang-Baxter + far commutativity)
+ *   Part D: n=5 (32x32, four generators, Fibonacci TQFT boundary)
+ *
+ * C89, zero dependencies. Heap-allocated matrices for n &gt;= 4.
+ */
+
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;string.h&gt;
+
+/* ================================================================
+ * Laurent polynomial ring (from Demo 03/04)
+ * ================================================================ */
+#define MAX_TERMS 200
+
+typedef struct { int c[MAX_TERMS]; int lo, len; } Poly;
+
+static void p_zero(Poly *p) { memset(p, 0, sizeof(Poly)); }
+
+static void p_mono(Poly *p, int coeff, int exp) {
+    p_zero(p);
+    if (!coeff) return;
+    p-&gt;lo = exp; p-&gt;len = 1; p-&gt;c[0] = coeff;
+}
+
+static void p_trim(Poly *p) {
+    int a = 0, b;
+    if (!p-&gt;len) return;
+    while (a &lt; p-&gt;len &amp;&amp; !p-&gt;c[a]) a++;
+    if (a == p-&gt;len) { p_zero(p); return; }
+    b = p-&gt;len - 1;
+    while (b &gt; a &amp;&amp; !p-&gt;c[b]) b--;
+    if (a &gt; 0) memmove(p-&gt;c, p-&gt;c + a, (size_t)(b - a + 1) * sizeof(int));
+    p-&gt;lo += a; p-&gt;len = b - a + 1;
+}
+
+static void p_add(Poly *r, const Poly *a, const Poly *b) {
+    Poly t; int lo, hi, i;
+    if (!a-&gt;len) { *r = *b; return; }
+    if (!b-&gt;len) { *r = *a; return; }
+    lo = a-&gt;lo &lt; b-&gt;lo ? a-&gt;lo : b-&gt;lo;
+    hi = (a-&gt;lo + a-&gt;len - 1) &gt; (b-&gt;lo + b-&gt;len - 1)
+       ? (a-&gt;lo + a-&gt;len - 1) : (b-&gt;lo + b-&gt;len - 1);
+    p_zero(&amp;t); t.lo = lo; t.len = hi - lo + 1;
+    for (i = 0; i &lt; a-&gt;len; i++) t.c[(a-&gt;lo + i) - lo] += a-&gt;c[i];
+    for (i = 0; i &lt; b-&gt;len; i++) t.c[(b-&gt;lo + i) - lo] += b-&gt;c[i];
+    p_trim(&amp;t); *r = t;
+}
+
+static void p_neg(Poly *r, const Poly *a) {
+    int i;
+    *r = *a;
+    for (i = 0; i &lt; r-&gt;len; i++) r-&gt;c[i] = -r-&gt;c[i];
+}
+
+static void p_mul(Poly *r, const Poly *a, const Poly *b) {
+    Poly t; int i, j;
+    if (!a-&gt;len || !b-&gt;len) { p_zero(r); return; }
+    p_zero(&amp;t); t.lo = a-&gt;lo + b-&gt;lo; t.len = a-&gt;len + b-&gt;len - 1;
+    for (i = 0; i &lt; a-&gt;len; i++)
+        for (j = 0; j &lt; b-&gt;len; j++)
+            t.c[i + j] += a-&gt;c[i] * b-&gt;c[j];
+    p_trim(&amp;t); *r = t;
+}
+
+static int p_eq(const Poly *a, const Poly *b) {
+    if (a-&gt;len != b-&gt;len) return 0;
+    if (!a-&gt;len) return 1;
+    if (a-&gt;lo != b-&gt;lo) return 0;
+    return memcmp(a-&gt;c, b-&gt;c, (size_t)a-&gt;len * sizeof(int)) == 0;
+}
+
+static void p_print(const Poly *p, const char *name) {
+    int i, e, first;
+    printf("%s = ", name);
+    if (!p-&gt;len) { printf("0\n"); return; }
+    first = 1;
+    for (i = 0; i &lt; p-&gt;len; i++) {
+        if (!p-&gt;c[i]) continue;
+        e = p-&gt;lo + i;
+        if (!first &amp;&amp; p-&gt;c[i] &gt; 0) printf(" + ");
+        if (!first &amp;&amp; p-&gt;c[i] &lt; 0) printf(" - ");
+        if (first &amp;&amp; p-&gt;c[i] &lt; 0) printf("-");
+        first = 0;
+        if (abs(p-&gt;c[i]) != 1 || e == 0) printf("%d", abs(p-&gt;c[i]));
+        if (e == 1) printf("A");
+        else if (e == -1) printf("A^-1");
+        else if (e) printf("A^%d", e);
+    }
+    printf("\n");
+}
+
+/* ================================================================
+ * Heap-allocated NxN polynomial matrix
+ *
+ * For n=5 strands, matrices are 32x32 = 1024 Poly entries.
+ * Each Poly is ~808 bytes, so one matrix is ~800KB.
+ * Stack allocation would overflow, so we use malloc.
+ * ================================================================ */
+
+typedef struct {
+    Poly *data;  /* n*n Poly entries, row-major */
+    int n;
+} Mat;
+
+static Mat mat_alloc(int n) {
+    Mat m;
+    m.n = n;
+    m.data = (Poly *)calloc((size_t)(n * n), sizeof(Poly));
+    if (!m.data) { fprintf(stderr, "mat_alloc: out of memory (n=%d)\n", n); exit(1); }
+    return m;
+}
+
+static void mat_free(Mat *m) {
+    if (m-&gt;data) { free(m-&gt;data); m-&gt;data = NULL; }
+    m-&gt;n = 0;
+}
+
+#define MAT(m, i, j) ((m)-&gt;data[(i) * (m)-&gt;n + (j)])
+
+static void mat_zero(Mat *m) {
+    int i, n2;
+    n2 = m-&gt;n * m-&gt;n;
+    for (i = 0; i &lt; n2; i++) p_zero(&amp;m-&gt;data[i]);
+}
+
+static void mat_id(Mat *m) {
+    int i, j;
+    for (i = 0; i &lt; m-&gt;n; i++)
+        for (j = 0; j &lt; m-&gt;n; j++) {
+            if (i == j) p_mono(&amp;MAT(m, i, j), 1, 0);
+            else p_zero(&amp;MAT(m, i, j));
+        }
+}
+
+static void mat_mul(Mat *R, const Mat *A, const Mat *B) {
+    Mat T; int i, j, k, n; Poly t;
+    n = A-&gt;n;
+    T = mat_alloc(n);
+    for (i = 0; i &lt; n; i++)
+        for (j = 0; j &lt; n; j++)
+            for (k = 0; k &lt; n; k++) {
+                p_mul(&amp;t, &amp;MAT(A, i, k), &amp;MAT(B, k, j));
+                p_add(&amp;MAT(&amp;T, i, j), &amp;MAT(&amp;T, i, j), &amp;t);
+            }
+    /* Copy result into R (which may alias A or B) */
+    memcpy(R-&gt;data, T.data, (size_t)(n * n) * sizeof(Poly));
+    mat_free(&amp;T);
+}
+
+static void mat_scale(Mat *R, const Mat *M, const Poly *s) {
+    int i, j, n;
+    n = M-&gt;n;
+    for (i = 0; i &lt; n; i++)
+        for (j = 0; j &lt; n; j++)
+            p_mul(&amp;MAT(R, i, j), &amp;MAT(M, i, j), s);
+}
+
+static void mat_add(Mat *R, const Mat *A, const Mat *B) {
+    int i, j, n;
+    n = A-&gt;n;
+    for (i = 0; i &lt; n; i++)
+        for (j = 0; j &lt; n; j++)
+            p_add(&amp;MAT(R, i, j), &amp;MAT(A, i, j), &amp;MAT(B, i, j));
+}
+
+static int mat_eq(const Mat *A, const Mat *B) {
+    int i, j;
+    if (A-&gt;n != B-&gt;n) return 0;
+    for (i = 0; i &lt; A-&gt;n; i++)
+        for (j = 0; j &lt; A-&gt;n; j++)
+            if (!p_eq(&amp;MAT(A, i, j), &amp;MAT(B, i, j))) return 0;
+    return 1;
+}
+
+/* Tensor product: C = A x B
+ * C[i1*n2+i2][j1*n2+j2] = A[i1][j1] * B[i2][j2] */
+static void mat_tensor(Mat *C, const Mat *A, const Mat *B) {
+    int i1, i2, j1, j2, n1, n2;
+    n1 = A-&gt;n; n2 = B-&gt;n;
+    /* C must already be allocated with size n1*n2 */
+    for (i1 = 0; i1 &lt; n1; i1++)
+        for (i2 = 0; i2 &lt; n2; i2++)
+            for (j1 = 0; j1 &lt; n1; j1++)
+                for (j2 = 0; j2 &lt; n2; j2++)
+                    p_mul(&amp;MAT(C, i1*n2+i2, j1*n2+j2),
+                          &amp;MAT(A, i1, j1), &amp;MAT(B, i2, j2));
+}
+
+/* Quantum trace: tr(diag_weights * M) = sum_i w[i] * M[i][i] */
+static void mat_qtrace(Poly *tr, const Mat *M, const Poly *w) {
+    int i; Poly t;
+    p_zero(tr);
+    for (i = 0; i &lt; M-&gt;n; i++) {
+        p_mul(&amp;t, &amp;w[i], &amp;MAT(M, i, i));
+        p_add(tr, tr, &amp;t);
+    }
+}
+
+/* ================================================================
+ * State-sum oracle (from Demo 03/04)
+ * ================================================================ */
+#define MAX_UF 512
+static int uf_p[MAX_UF];
+static void uf_init(int n) { int i; for (i = 0; i &lt; n; i++) uf_p[i] = i; }
+static int uf_find(int x) {
+    while (uf_p[x] != x) { uf_p[x] = uf_p[uf_p[x]]; x = uf_p[x]; }
+    return x;
+}
+static void uf_union(int x, int y) {
+    x = uf_find(x); y = uf_find(y); if (x != y) uf_p[x] = y;
+}
+
+typedef struct { int word[20]; int len, n; } Braid;
+
+static int braid_loops(const Braid *b, unsigned s) {
+    int N = (b-&gt;len + 1) * b-&gt;n, l, p, i, loops, sgn, bit, cup;
+    uf_init(N);
+    for (l = 0; l &lt; b-&gt;len; l++) {
+        sgn = b-&gt;word[l] &gt; 0 ? 1 : -1;
+        i = (sgn &gt; 0 ? b-&gt;word[l] : -b-&gt;word[l]) - 1;
+        bit = (int)((s &gt;&gt; l) &amp; 1u);
+        cup = (sgn &gt; 0) ? (bit == 0) : (bit == 1);
+        if (cup) {
+            uf_union(l * b-&gt;n + i, l * b-&gt;n + i + 1);
+            uf_union((l + 1) * b-&gt;n + i, (l + 1) * b-&gt;n + i + 1);
+            for (p = 0; p &lt; b-&gt;n; p++)
+                if (p != i &amp;&amp; p != i + 1)
+                    uf_union(l * b-&gt;n + p, (l + 1) * b-&gt;n + p);
+        } else {
+            for (p = 0; p &lt; b-&gt;n; p++)
+                uf_union(l * b-&gt;n + p, (l + 1) * b-&gt;n + p);
+        }
+    }
+    for (p = 0; p &lt; b-&gt;n; p++)
+        uf_union(p, b-&gt;len * b-&gt;n + p);
+    loops = 0;
+    for (i = 0; i &lt; N; i++)
+        if (uf_find(i) == i) loops++;
+    return loops;
+}
+
+static void braid_bracket(Poly *r, const Braid *b) {
+    unsigned s, ns; int i, a, bc, lp, j;
+    Poly d, dp, t, c, t1, t2;
+    p_zero(r);
+    p_mono(&amp;t1, -1, 2); p_mono(&amp;t2, -1, -2); p_add(&amp;d, &amp;t1, &amp;t2);
+    if (!b-&gt;len) {
+        p_mono(r, 1, 0);
+        for (i = 0; i &lt; b-&gt;n - 1; i++) p_mul(r, r, &amp;d);
+        return;
+    }
+    ns = 1u &lt;&lt; b-&gt;len;
+    for (s = 0; s &lt; ns; s++) {
+        a = 0; bc = 0;
+        for (i = 0; i &lt; b-&gt;len; i++) {
+            if ((s &gt;&gt; i) &amp; 1u) bc++; else a++;
+        }
+        lp = braid_loops(b, s);
+        p_mono(&amp;t, 1, a - bc);
+        p_mono(&amp;dp, 1, 0);
+        for (j = 0; j &lt; lp - 1; j++) p_mul(&amp;dp, &amp;dp, &amp;d);
+        p_mul(&amp;c, &amp;t, &amp;dp);
+        p_add(r, r, &amp;c);
+    }
+    p_trim(r);
+}
+
+/* ================================================================
+ * Core construction: R-matrix and generators for n strands
+ * ================================================================ */
+
+static Poly DELTA, PA, PAinv;
+
+static void init_globals(void) {
+    Poly t1, t2;
+    p_mono(&amp;t1, -1, 2); p_mono(&amp;t2, -1, -2); p_add(&amp;DELTA, &amp;t1, &amp;t2);
+    p_mono(&amp;PA, 1, 1);
+    p_mono(&amp;PAinv, 1, -1);
+}
+
+static int n_pass = 0, n_fail = 0;
+static void check(const char *msg, int ok) {
+    if (ok) { printf("  PASS: %s\n", msg); n_pass++; }
+    else    { printf("  FAIL: %s\n", msg); n_fail++; }
+}
+
+/* Build the 4x4 R-matrix on V x V (same as Demo 04) */
+static void build_R4(Mat *R, Mat *Rinv) {
+    Mat U, I4, AU, AinvI, AinvU, AI;
+    Poly neg_Ainv2, neg_A2;
+
+    U = mat_alloc(4); I4 = mat_alloc(4);
+    AU = mat_alloc(4); AinvI = mat_alloc(4);
+    AinvU = mat_alloc(4); AI = mat_alloc(4);
+
+    p_mono(&amp;neg_Ainv2, -1, -2);
+    p_mono(&amp;neg_A2, -1, 2);
+    mat_zero(&amp;U);
+    MAT(&amp;U, 1, 1) = neg_Ainv2;
+    p_mono(&amp;MAT(&amp;U, 1, 2), 1, 0);
+    p_mono(&amp;MAT(&amp;U, 2, 1), 1, 0);
+    MAT(&amp;U, 2, 2) = neg_A2;
+
+    mat_id(&amp;I4);
+    mat_scale(&amp;AU, &amp;U, &amp;PA);
+    mat_scale(&amp;AinvI, &amp;I4, &amp;PAinv);
+    mat_add(R, &amp;AU, &amp;AinvI);
+
+    mat_scale(&amp;AinvU, &amp;U, &amp;PAinv);
+    mat_scale(&amp;AI, &amp;I4, &amp;PA);
+    mat_add(Rinv, &amp;AinvU, &amp;AI);
+
+    mat_free(&amp;U); mat_free(&amp;I4);
+    mat_free(&amp;AU); mat_free(&amp;AinvI);
+    mat_free(&amp;AinvU); mat_free(&amp;AI);
+}
+
+/* Build R_i for n strands: R_i = I^{x(i-1)} x R x I^{x(n-i-1)}
+ * where i is 1-indexed (generator sigma_i acts on strands i, i+1)
+ * Result is 2^n x 2^n */
+static void build_Ri(Mat *result, const Mat *R4, int i, int n) {
+    int dim = 1 &lt;&lt; n; /* 2^n */
+    int left_dim, right_dim;
+    Mat Ileft, Iright, temp;
+
+    /* i is 1-indexed: left has i-1 identity factors, right has n-i-1 */
+    left_dim = 1 &lt;&lt; (i - 1);   /* 2^(i-1) */
+    right_dim = 1 &lt;&lt; (n - i - 1); /* 2^(n-i-1) */
+
+    /* Build I_left x R4 first */
+    if (left_dim == 1) {
+        /* No left identity needed */
+        if (right_dim == 1) {
+            /* R_i = R4 directly (n=2 case) */
+            memcpy(result-&gt;data, R4-&gt;data, (size_t)(4 * 4) * sizeof(Poly));
+            return;
+        }
+        /* R4 x I_right */
+        Iright = mat_alloc(right_dim);
+        mat_id(&amp;Iright);
+        mat_tensor(result, R4, &amp;Iright);
+        mat_free(&amp;Iright);
+    } else if (right_dim == 1) {
+        /* I_left x R4 */
+        Ileft = mat_alloc(left_dim);
+        mat_id(&amp;Ileft);
+        mat_tensor(result, &amp;Ileft, R4);
+        mat_free(&amp;Ileft);
+    } else {
+        /* I_left x R4 first, then tensor with I_right */
+        Ileft = mat_alloc(left_dim);
+        mat_id(&amp;Ileft);
+        temp = mat_alloc(left_dim * 4);
+        mat_tensor(&amp;temp, &amp;Ileft, R4);
+
+        Iright = mat_alloc(right_dim);
+        mat_id(&amp;Iright);
+        mat_tensor(result, &amp;temp, &amp;Iright);
+
+        mat_free(&amp;Ileft); mat_free(&amp;temp); mat_free(&amp;Iright);
+    }
+    (void)dim;
+}
+
+/* Build K^{xn} diagonal weights for quantum trace */
+static void build_Kn(Poly *w, int n) {
+    int dim = 1 &lt;&lt; n;
+    int idx, bit, s;
+    Poly k[2], t;
+    p_mono(&amp;k[0], 1, 2);   /* A^2 */
+    p_mono(&amp;k[1], 1, -2);  /* A^{-2} */
+
+    for (idx = 0; idx &lt; dim; idx++) {
+        p_mono(&amp;w[idx], 1, 0); /* start with 1 */
+        for (bit = n - 1; bit &gt;= 0; bit--) {
+            s = (idx &gt;&gt; bit) &amp; 1;
+            p_mul(&amp;t, &amp;w[idx], &amp;k[s]);
+            w[idx] = t;
+        }
+    }
+}
+
+/* Compute braid product on 2^n x 2^n space */
+static void braid_product_n(Mat *result, const Braid *b,
+                            Mat *Ri, Mat *Ri_inv) {
+    int i, j, gen;
+    mat_id(result);
+    for (i = 0; i &lt; b-&gt;len; i++) {
+        j = b-&gt;word[i];
+        gen = j &gt; 0 ? j : -j; /* 1-indexed generator */
+        if (j &gt; 0) {
+            mat_mul(result, result, &amp;Ri[gen - 1]);
+        } else {
+            mat_mul(result, result, &amp;Ri_inv[gen - 1]);
+        }
+    }
+}
+
+/* ================================================================
+ * TESTS
+ * ================================================================ */
+
+static void test_part_a(void) {
+    /* Quantum dimension recurrence:
+     * [1]_q = 1
+     * [2]_q = A^2 + A^{-2}
+     * [n+1]_q = (A^2 + A^{-2}) * [n]_q - [n-1]_q
+     *
+     * Also verify explicit formula:
+     * [n]_q = (A^{2n} - A^{-2n}) / (A^2 - A^{-2})
+     * which means [n]_q * (A^2 - A^{-2}) = A^{2n} - A^{-2n}
+     */
+    Poly qd[7]; /* [0]_q through [6]_q */
+    Poly t1, t2, denom, lhs, rhs;
+    int n;
+    char msg[80];
+
+    printf("\n=== PART A: Quantum Dimension Recurrence ===\n");
+
+    /* [0]_q = 0 */
+    p_zero(&amp;qd[0]);
+    /* [1]_q = 1 */
+    p_mono(&amp;qd[1], 1, 0);
+    /* [2]_q = A^2 + A^{-2} = -delta */
+    p_mono(&amp;t1, 1, 2); p_mono(&amp;t2, 1, -2); p_add(&amp;qd[2], &amp;t1, &amp;t2);
+
+    /* Recurrence: [n+1]_q = [2]_q * [n]_q - [n-1]_q */
+    for (n = 2; n &lt;= 5; n++) {
+        p_mul(&amp;t1, &amp;qd[2], &amp;qd[n]);
+        p_neg(&amp;t2, &amp;qd[n - 1]);
+        p_add(&amp;qd[n + 1], &amp;t1, &amp;t2);
+    }
+
+    /* Print them */
+    for (n = 1; n &lt;= 6; n++) {
+        sprintf(msg, "[%d]_q", n);
+        p_print(&amp;qd[n], msg);
+    }
+
+    /* Verify: [n]_q * (A^2 - A^{-2}) = A^{2n} - A^{-2n} */
+    p_mono(&amp;t1, 1, 2); p_mono(&amp;t2, -1, -2); p_add(&amp;denom, &amp;t1, &amp;t2);
+
+    for (n = 1; n &lt;= 6; n++) {
+        p_mul(&amp;lhs, &amp;qd[n], &amp;denom);
+        p_mono(&amp;t1, 1, 2 * n); p_mono(&amp;t2, -1, -2 * n);
+        p_add(&amp;rhs, &amp;t1, &amp;t2);
+        sprintf(msg, "[%d]_q * (A^2-A^{-2}) = A^%d - A^{-%d}", n, 2*n, 2*n);
+        check(msg, p_eq(&amp;lhs, &amp;rhs));
+    }
+}
+
+static void test_n_strands(int n) {
+    int dim = 1 &lt;&lt; n;
+    int ngen = n - 1;
+    int i;
+    Mat R4, R4inv;
+    Mat *Ri, *Ri_inv;
+    Poly *w;
+    Poly neg_delta, oracle, qtrace, expected;
+    Poly t1, t2;
+    char msg[120];
+    Braid braids[4];
+    const char *bnames[4];
+    int nbr, bi;
+    Mat prod;
+
+    printf("\n=== n=%d strands (%dx%d, %d generators) ===\n", n, dim, dim, ngen);
+
+    /* Build base R4 */
+    R4 = mat_alloc(4);
+    R4inv = mat_alloc(4);
+    build_R4(&amp;R4, &amp;R4inv);
+
+    /* Build all generators */
+    Ri = (Mat *)malloc((size_t)ngen * sizeof(Mat));
+    Ri_inv = (Mat *)malloc((size_t)ngen * sizeof(Mat));
+    for (i = 0; i &lt; ngen; i++) {
+        Ri[i] = mat_alloc(dim);
+        Ri_inv[i] = mat_alloc(dim);
+        build_Ri(&amp;Ri[i], &amp;R4, i + 1, n);
+        build_Ri(&amp;Ri_inv[i], &amp;R4inv, i + 1, n);
+    }
+
+    /* === Yang-Baxter: R_i R_{i+1} R_i = R_{i+1} R_i R_{i+1} === */
+    {
+        Mat t, lhs, rhs;
+        lhs = mat_alloc(dim);
+        rhs = mat_alloc(dim);
+        t = mat_alloc(dim);
+        for (i = 0; i &lt; ngen - 1; i++) {
+            mat_mul(&amp;t, &amp;Ri[i], &amp;Ri[i + 1]);
+            mat_mul(&amp;lhs, &amp;t, &amp;Ri[i]);
+            mat_mul(&amp;t, &amp;Ri[i + 1], &amp;Ri[i]);
+            mat_mul(&amp;rhs, &amp;t, &amp;Ri[i + 1]);
+            sprintf(msg, "Yang-Baxter: R%d*R%d*R%d = R%d*R%d*R%d (%dx%d)",
+                    i+1, i+2, i+1, i+2, i+1, i+2, dim, dim);
+            check(msg, mat_eq(&amp;lhs, &amp;rhs));
+        }
+        mat_free(&amp;lhs); mat_free(&amp;rhs); mat_free(&amp;t);
+    }
+
+    /* === Far commutativity: R_i R_j = R_j R_i for |i-j| &gt;= 2 === */
+    if (ngen &gt;= 3) {
+        Mat ab, ba;
+        int j;
+        ab = mat_alloc(dim);
+        ba = mat_alloc(dim);
+        for (i = 0; i &lt; ngen; i++)
+            for (j = i + 2; j &lt; ngen; j++) {
+                mat_mul(&amp;ab, &amp;Ri[i], &amp;Ri[j]);
+                mat_mul(&amp;ba, &amp;Ri[j], &amp;Ri[i]);
+                sprintf(msg, "Far commutativity: R%d*R%d = R%d*R%d (%dx%d)",
+                        i+1, j+1, j+1, i+1, dim, dim);
+                check(msg, mat_eq(&amp;ab, &amp;ba));
+            }
+        mat_free(&amp;ab); mat_free(&amp;ba);
+    }
+
+    /* === R_i * R_i^{-1} = I === */
+    {
+        Mat prod_check, Id;
+        Id = mat_alloc(dim);
+        prod_check = mat_alloc(dim);
+        mat_id(&amp;Id);
+        for (i = 0; i &lt; ngen; i++) {
+            mat_mul(&amp;prod_check, &amp;Ri[i], &amp;Ri_inv[i]);
+            sprintf(msg, "R%d * R%d_inv = I (%dx%d)", i+1, i+1, dim, dim);
+            check(msg, mat_eq(&amp;prod_check, &amp;Id));
+        }
+        mat_free(&amp;prod_check); mat_free(&amp;Id);
+    }
+
+    /* === Quantum trace tests === */
+    w = (Poly *)calloc((size_t)dim, sizeof(Poly));
+    build_Kn(w, n);
+
+    /* -delta = A^2 + A^{-2} */
+    p_mono(&amp;t1, 1, 2); p_mono(&amp;t2, 1, -2); p_add(&amp;neg_delta, &amp;t1, &amp;t2);
+
+    prod = mat_alloc(dim);
+
+    /* Set up test braids for this n */
+    nbr = 0;
+
+    /* Identity braid (n-unlink) */
+    braids[nbr].n = n; braids[nbr].len = 0;
+    bnames[nbr] = "identity";
+    nbr++;
+
+    /* Single crossing sigma_1 */
+    braids[nbr].n = n; braids[nbr].len = 1;
+    braids[nbr].word[0] = 1;
+    bnames[nbr] = "sigma_1";
+    nbr++;
+
+    if (n &gt;= 3) {
+        /* sigma_1 sigma_2 (uses two generators) */
+        braids[nbr].n = n; braids[nbr].len = 2;
+        braids[nbr].word[0] = 1; braids[nbr].word[1] = 2;
+        bnames[nbr] = "sigma_1*sigma_2";
+        nbr++;
+    }
+
+    if (n &gt;= 4) {
+        /* sigma_1 sigma_3 (far generators, tests commutativity) */
+        braids[nbr].n = n; braids[nbr].len = 2;
+        braids[nbr].word[0] = 1; braids[nbr].word[1] = 3;
+        bnames[nbr] = "sigma_1*sigma_3";
+        nbr++;
+    }
+
+    /*
+     * DISCOVERED: The sign depends on strand count.
+     *   tr_q = (-1)^n * delta * oracle
+     *
+     * Equivalently: bracket = (-1)^{n+1} * tr_q / [2]_q
+     *
+     * For odd n (3, 5): tr_q = -delta * oracle  (what Demo 04 found)
+     * For even n (2, 4): tr_q = +delta * oracle
+     *
+     * This comes from tr_q(I) = (-delta)^n while oracle(identity) = delta^{n-1}.
+     * The ratio picks up a factor of (-1)^n.
+     */
+    {
+        if (n % 2 == 0) {
+            /* even n: tr_q = delta * oracle, so expected = -(-delta) * oracle */
+            p_print(&amp;neg_delta, "    [2]_q ");
+            printf("  Sign factor: (-1)^%d = +1, so tr_q = delta * oracle\n", n);
+        } else {
+            printf("  Sign factor: (-1)^%d = -1, so tr_q = -delta * oracle\n", n);
+        }
+    }
+    printf("\n  Quantum trace tests (bracket = (-1)^{n+1} * tr_q / [2]_q):\n");
+    for (bi = 0; bi &lt; nbr; bi++) {
+        Poly sign_delta;
+        braid_bracket(&amp;oracle, &amp;braids[bi]);
+        braid_product_n(&amp;prod, &amp;braids[bi], Ri, Ri_inv);
+        mat_qtrace(&amp;qtrace, &amp;prod, w);
+
+        /* expected = (-1)^n * delta * oracle */
+        if (n % 2 == 0) {
+            /* +delta * oracle: delta = -neg_delta */
+            p_neg(&amp;sign_delta, &amp;neg_delta);
+            p_mul(&amp;expected, &amp;sign_delta, &amp;oracle);
+        } else {
+            /* -delta * oracle = neg_delta * oracle */
+            p_mul(&amp;expected, &amp;neg_delta, &amp;oracle);
+        }
+
+        printf("  %s:\n", bnames[bi]);
+        p_print(&amp;oracle, "    oracle");
+        p_print(&amp;qtrace, "    tr_q  ");
+
+        sprintf(msg, "n=%d %s: tr_q = (-1)^n * delta * oracle", n, bnames[bi]);
+        check(msg, p_eq(&amp;qtrace, &amp;expected));
+    }
+
+    /* Cleanup */
+    mat_free(&amp;prod);
+    free(w);
+    for (i = 0; i &lt; ngen; i++) {
+        mat_free(&amp;Ri[i]);
+        mat_free(&amp;Ri_inv[i]);
+    }
+    free(Ri); free(Ri_inv);
+    mat_free(&amp;R4); mat_free(&amp;R4inv);
+}
+
+int main(void) {
+    printf("KNOTAPEL DEMO 05: Scaling the Spin Chain\n");
+    printf("=========================================\n");
+
+    init_globals();
+    p_print(&amp;DELTA, "delta");
+
+    test_part_a();
+
+    printf("\n--- Testing n=2 (4x4) ---\n");
+    test_n_strands(2);
+
+    printf("\n--- Testing n=3 (8x8, reproducing Demo 04) ---\n");
+    test_n_strands(3);
+
+    printf("\n--- Testing n=4 (16x16) ---\n");
+    test_n_strands(4);
+
+    printf("\n--- Testing n=5 (32x32) ---\n");
+    test_n_strands(5);
+
+    printf("\n=========================================\n");
+    printf("Results: %d passed, %d failed\n", n_pass, n_fail);
+    printf("=========================================\n");
+    return n_fail &gt; 0 ? 1 : 0;
+}
+</code></pre>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/c.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</body>
+</html>

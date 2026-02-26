@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>inventory/entries/demo_90.md</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+    <link rel="stylesheet" href="../../style.css">
+</head>
+<body>
+    <nav><a href="../../index.html">← Back to Index</a></nav><hr>
+    <h2>Demo 90: Sum-Angle Structure — Why Deep Entries Compose Better</h2>
+<ul>
+<li><strong>Status</strong>: COMPLETE</li>
+<li><strong>File</strong>: <code><a href="../../demo_90_sum_angle_structure/main.c.html">demo_90_sum_angle_structure/main.c</a></code> (~1713 lines)</li>
+<li><strong>Tests</strong>: 10/12 pass (2 informative fails: Phase 1 count hypothesis — all subsets produce 2048+ distinct sum angles, so deep vs strided/random distinct-count comparisons fail because count is not the discriminating feature)</li>
+<li><strong>Depends on</strong>: Demo 89 (depth law mechanism elimination — narrowed to "algebraic coherence"), Demo 82 (crossing depth law, deep-564 vs strided-564), Demo 75 (computation requires non-canonical sum angles), Demo 79 (zeta_12 capacity, infinite group)</li>
+<li><strong>Feeds into</strong>: Demo 91 (activation bottleneck test — tests whether linear depth law is activation artifact or parity wall), <a href="./demo_89.html">D89</a>-<a href="./demo_90.html">D90</a>-<a href="./demo_91.html">D91</a> arc summary (depth law explained)</li>
+</ul>
+<h3>Headline</h3>
+The depth law mechanism is <strong>axis cancellation</strong> (anti-aligned rotation axes producing low sum angles) combined with <strong>cross-depth algebraic constraints</strong> (BFS ancestry creating limited sum-angle vocabularies between related entries), and the computational advantage is <strong>relational, not positional</strong> — the S² point cloud bandwidth actually DECREASES with depth (spectral inversion), ruling out all positional/bandwidth explanations.
+<h3>Key Results</h3>
+<ul>
+<li><strong>Axis cancellation mechanism (Phase 2b)</strong>: XOR8 winners select anti-aligned axis pairs. Mean min_dot for winners = -0.75 vs -0.65 for random non-winners. Two quaternions with nearly opposite rotation axes partially cancel, yielding a sum quaternion with a small rotation angle (30-66°) — exactly what sector activation needs for parity satisfaction. This is the geometric mechanism underlying "algebraic coherence."</li>
+<li><strong>Cross-depth algebraic constraint (Phase 2c)</strong>: Generator × deep-entry (d=7-8) sums produce only 73 distinct angles from 50K pairs. Compare: shallow × shallow = 15 distinct, deep × deep = 1313 distinct. BFS-derived entries are algebraically related to generators, constraining their pairwise sums to a small vocabulary. This is the concrete realization of the abstract "algebraic coherence" identified in <a href="./demo_82.html">D82</a>.</li>
+<li><strong>Relational, not positional (Phase 5)</strong>: Spherical harmonic decomposition of the S² point cloud (rotation axes on the sphere) shows bandwidth DECREASES with depth. BW_90% drops from l=4 (depth 0 only) to l=2 (cumulative all depths). BW_99% drops from l=11 to l=6. The point cloud converges to uniform — individual entry positions become LESS informative with depth, yet computation improves. The mechanism is relational (axis alignment between entries, cross-depth algebraic constraints), not positional.</li>
+<li><strong>Vocabulary is not the bottleneck (Phases 2d, 2e)</strong>: New cross-depth angle vocabulary grows exponentially with depth: 3 → 6 → 10 → 22 → 33 → 72 → 120 → 258 → 381 new distinct angles per depth level (~2x per depth round). The useful subset (&lt;70°) also grows exponentially but its fraction drops from 80% to 32%. The linear depth law is NOT caused by vocabulary running out.</li>
+<li><strong>Pairwise sum-angle census (Phase 1)</strong>: All subsets (deep-564, strided-564, shallow-564, random-564) produce 2048+ distinct pairwise sum angles. Raw count is not discriminating. However distributions differ: deep skews toward 135-180° range. The informative result is that WHICH angles appear matters, not HOW MANY.</li>
+<li><strong>XOR winner sum-angle diversity (Phase 2)</strong>: XOR6 winners have mean 2.80 distinct pairwise sum angles; XOR8 winners have 5.18 distinct. Higher-level winners use more angular diversity within each tuple.</li>
+<li><strong>Direction concentration null result (Phase 3)</strong>: Entries-per-direction is flat at ~2 across all depths. There is no concentration effect — depth does not cause entries to cluster onto fewer directions.</li>
+<li><strong>Balanced exponentials linearity (PRELIMINARY)</strong>: Supply (vocabulary, entries) grows ~2× per depth round via BFS closure. Demand (parity constraints) grows 4× per XOR weight (2^(2N) masks). Ratio gives ~2 depth rounds per weight → max_xor ≈ depth + 6. Consistent with all data but not analytically derived. (Later confirmed by <a href="./demo_91.html">D91</a> from the activation side.)</li>
+</ul>
+<h3>Theorems/Conjectures</h3>
+<ul>
+<li><strong>Axis Cancellation Mechanism (DEMONSTRATED)</strong>: XOR winners preferentially contain anti-aligned quaternion pairs (axis dot product ≈ -0.75). The partial cancellation of nearly-opposite rotation axes produces low sum angles that create the fine-grained sector separations needed for parity satisfaction. This is the geometric content of "algebraic coherence."</li>
+<li><strong>Cross-Depth Algebraic Constraint (DEMONSTRATED)</strong>: BFS-derived entries at depth d have constrained pairwise sums with generators: only 73 distinct angles from 50K gen × deep pairs, compared to 1313 for deep × deep. The BFS ancestry creates algebraic relationships that restrict the sum-angle vocabulary between related entries.</li>
+<li><strong>Spectral Inversion (DEMONSTRATED)</strong>: The S² point cloud bandwidth DECREASES as depth increases. The point cloud converges to spherical uniformity (l=0 dominant in spherical harmonics). Computational power grows while positional information content shrinks — ruling out ALL positional/bandwidth-based explanations for the depth law.</li>
+<li><strong>Relational Computation Thesis (DEMONSTRATED)</strong>: The depth law is relational: what matters is how entries combine (axis cancellation, cross-depth constraints), not where they individually sit on S². The spectral inversion is the cleanest evidence — positional information degrades monotonically while computation improves linearly.</li>
+<li><strong>Balanced Exponentials Conjecture (PRELIMINARY)</strong>: BFS branching produces ~2× entries per depth round; parity constraints require 4× masks per XOR weight. The ratio 2:4 = 1:2 predicts ~2 depth per weight → linear slope ≈ 1. Consistent with all data; later supported by <a href="./demo_91.html">D91</a>'s activation invariance test.</li>
+<li><strong>Altschuler-Parrilo Point Cloud Hypothesis (DEAD as formulated)</strong>: The hypothesis that deeper point clouds access higher spherical harmonic modes (giving quadratic capacity growth) is INVERTED — bandwidth shrinks, not grows. The AP framework may still apply via kernel rank analysis of the activation matrix, but the point-cloud-spectrum version is dead.</li>
+</ul>
+<h3>Data</h3>
+<ul>
+<li>Lattice: ζ₁₂ (pi/6 half-angle), &gt;3000 entries in catalog, 8-9 closure rounds</li>
+<li>Subset size for comparative tests: N=564 (matching <a href="./demo_82.html">D82</a> protocol)</li>
+<li><strong>Phase 1 sum-angle census</strong>: deep-564, strided-564, shallow-564, random-564 all produce 2048+ distinct angles (0.01° tolerance). Discriminating feature is distribution shape, not count.</li>
+<li><strong>Phase 2 winner diversity</strong>: XOR6 winners (3 weights, bf=30): mean 2.80 distinct pairwise sum angles. XOR8 winners (4 weights, bf=20): mean 5.18 distinct.</li>
+<li><strong>Phase 2b axis cancellation</strong>: XOR8 winners mean(min_dot) = -0.75, non-winners mean(min_dot) = -0.65. Winners mean(mean_dot) lower than non-winners. Sum angle range for winners: 30-66°.</li>
+<li><strong>Phase 2c cross-depth</strong>: shallow×shallow (d=0-1) = 15 distinct angles. deep×deep (d=7-8) = 1313 distinct. shallow×deep (cross-depth) = 73 distinct from 50K pairs.</li>
+<li><strong>Phase 2d vocabulary growth</strong>: New distinct angles per depth level: 3→6→10→22→33→72→120→258→381 (~2× per round).</li>
+<li><strong>Phase 2e useful (&lt;70°) angle growth</strong>: Exponential growth but fraction drops from 80% (depth 1) to 32% (depth 8).</li>
+<li><strong>Phase 3 direction concentration</strong>: Entries/direction ≈ 2 at all depths (flat, no concentration effect).</li>
+<li><strong>Phase 5 spectral decomposition</strong>: Per-depth BW_90% decreases from l=4 (d=0) toward l=2 (cumulative). BW_99% decreases from l=11 to l=6. Power concentrates at l=0 (uniform) as depth increases.</li>
+</ul>
+<h3>Code Assets</h3>
+<ul>
+<li><strong><code>build_closure(verbose)</code></strong>: BFS closure of SU(2) generators with depth tracking. Builds <code>g_cat[]</code> with <code>g_depth[]</code>, <code>round_start[]</code>, <code>round_count[]</code>. Supports ζ₁₂ catalogs up to MAX_QCAT=4096 entries.</li>
+<li><strong><code>save_catalog()</code> / <code>restore_catalog()</code></strong>: Snapshot/restore pattern for switching between subsets while preserving the full catalog.</li>
+<li><strong><code>load_deep(n)</code> / <code>load_shallow(n)</code> / <code>load_strided(n)</code> / <code>load_random(n)</code></strong>: Four subset-loading strategies for comparative experiments (SUBSET_N=564).</li>
+<li><strong><code>extract_angle(q)</code></strong>: Extracts full rotation angle in degrees [0,360) from a (possibly non-unit) quaternion.</li>
+<li><strong><code>extract_axis(q, ax, ay, az)</code></strong>: Extracts unit rotation axis from quaternion (normalizing and canonicalizing sign).</li>
+<li><strong><code>axis_dot(p, q)</code></strong>: Computes dot product between rotation axes of two quaternions — the key metric for axis cancellation analysis.</li>
+<li><strong><code>count_distinct(angles, n, tol)</code></strong>: Counts distinct angles within tolerance, using g_distinct[] buffer (MAX_DISTINCT=2048).</li>
+<li><strong><code>sum_angle_census(label, out_n_distinct)</code></strong>: Computes all pairwise quaternion sum angles for current catalog subset, prints histogram (12 bins, 0-180°), min/max/mean, and distinct count.</li>
+<li><strong><code>entry_angle_census(label)</code></strong>: Individual entry angle statistics for comparison with sum-angle census.</li>
+<li><strong><code>find_winners(n_weights, bf_limit)</code></strong>: Brute-force XOR winner search at given weight count with k-ladder optimization. Stores winning tuples in <code>g_winners[]</code>.</li>
+<li><strong><code>phase2b_winning_anatomy()</code></strong>: Axis cancellation analysis comparing XOR8 winners vs random non-winners on min_dot, mean_dot, and mean sum angle.</li>
+<li><strong><code>phase2c_cross_depth_sum_angles()</code></strong>: Cross-depth sum-angle analysis: shallow×shallow vs deep×deep vs shallow×deep.</li>
+<li><strong><code>phase2d_cross_depth_by_level()</code></strong>: Per-depth-level vocabulary growth tracking (gen × depth_d), including cumulative distinct set and Phase 2e low-angle tail (&lt;70°) growth.</li>
+<li><strong><code>assoc_legendre(l, m, x)</code></strong>: Associated Legendre polynomial P_l^m(x) for spherical harmonic computation.</li>
+<li><strong><code>ylm_real(l, m, theta, phi)</code></strong>: Real spherical harmonic Y_lm evaluation, LMAX=16 (289 coefficients).</li>
+<li><strong><code>phase5_spectral_decomposition()</code></strong>: Full spherical harmonic power spectrum P(l) = sum_m f_lm^2 of S² point cloud per depth, with BW_90% and BW_99% bandwidth metrics. Both per-depth and cumulative tables.</li>
+<li><strong><code>combined_cell()</code> / <code>vor_cell()</code> / <code>test_xor()</code></strong>: Standard DKC XOR test infrastructure (Voronoi cell + angular sector combined activation, parity verification).</li>
+<li><strong>K_LADDER[]</strong>: k-sector ladder {1, 6, 8, 10, 12, 16, 20, 24} for multi-resolution XOR testing.</li>
+<li><strong>LCG RNG</strong>: Simple deterministic <code>rng_uniform()</code> for reproducible random subset generation and random baseline sampling.</li>
+</ul>
+<h3>Literature Touched</h3>
+<ul>
+<li><strong>Altschuler &amp; Parrilo (2023)</strong>: Spherical point configurations and polynomial energy — the hypothesis that S² point cloud quality (spherical harmonic bandwidth) drives computational capacity. Demo 90 INVERTS this: bandwidth decreases with depth while computation increases. The AP framework may still apply via kernel rank analysis of the activation matrix rather than the point cloud geometry.</li>
+<li><strong>Habiro (2002) / Z[ζ₈] bracket</strong>: The algebraic substrate; Demo 90 reveals that BFS ancestry within the group algebra creates cross-depth algebraic constraints (73 distinct angles from 50K gen × deep pairs) that are the concrete manifestation of algebraic coherence.</li>
+<li><strong>Reservoir Computing (Jaeger 2001, Maass et al. 2002)</strong>: The relational-not-positional finding connects to RC theory — reservoir quality is about the separation property (how inputs map to distinguishable states), not about where reservoir states sit in space. The axis cancellation mechanism is the DKC analog of reservoir separation.</li>
+<li><strong>BFS closure and Cayley graphs</strong>: The depth-tracking BFS closure is a walk on the Cayley graph of the SU(2) subgroup. The cross-depth algebraic constraint (gen × deep = constrained vocabulary) reflects the algebraic structure of Cayley graph neighborhoods.</li>
+</ul>
+<h3>Open Questions</h3>
+<ul>
+<li><strong>Can axis cancellation be exploited for weight selection?</strong> If the mechanism is anti-aligned axis pairs, can we directly select weight tuples by maximizing anti-alignment rather than brute-force XOR testing?</li>
+<li><strong>Kernel rank analysis (seeded for <a href="./demo_91.html">D91</a>+)</strong>: Apply Altschuler-Parrilo to the Gram matrix of combined_cell activations rather than the S² point cloud. The point cloud spectrum is dead as an explanation, but the activation kernel might reveal quadratic potential.</li>
+<li><strong>Relational activation</strong>: If the mechanism is axis cancellation (relational), could an activation function that explicitly uses axis dot products between entries break the linear depth law? Current sector/Voronoi activations treat entries independently.</li>
+<li><strong>Why slope = 1 analytically</strong>: The balanced-exponentials argument (supply ~2×/depth, demand 4×/weight → slope 1) is consistent with data but not derived from first principles. Connecting BFS branching factor to parity constraint growth rate would be a genuine theoretical result.</li>
+<li><strong>Generalization beyond parity</strong>: Does the linear depth law hold for ALL Boolean functions, or just parity? Different functions might have different constraint growth rates, giving different slopes.</li>
+<li><strong>Group dependence</strong>: How does the depth law change with a different group (not SU(2))? Different groups have different BFS branching factors and algebraic structures.</li>
+</ul>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/c.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</body>
+</html>

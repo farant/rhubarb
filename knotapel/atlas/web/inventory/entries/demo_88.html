@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>inventory/entries/demo_88.md</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+    <link rel="stylesheet" href="../../style.css">
+</head>
+<body>
+    <nav><a href="../../index.html">← Back to Index</a></nav><hr>
+    <h2>Demo 88: Anti-Correlation Mechanism</h2>
+<ul>
+<li><strong>Status</strong>: COMPLETE</li>
+<li><strong>File</strong>: <code><a href="../../demo_88_anti_correlation/main.c.html">demo_88_anti_correlation/main.c</a></code> (~1175 lines)</li>
+<li><strong>Tests</strong>: 8/8 pass</li>
+<li><strong>Depends on</strong>: Demo 72 (Voronoi optimization destroys computation, 36-&gt;4 XOR6), Demo 84 (null states and direction classification: 6 null-only + 3 shared + 4 non-null), Demo 87 (null indispensability at zeta_12)</li>
+<li><strong>Feeds into</strong>: Demo 89 (depth law mechanism), reservoir computing robustness pillar, future constrained optimization work, zeta_12 Sec*Vor optimization priority assessment</li>
+</ul>
+<h3>Headline</h3>
+The algebraic directions that are worst for spherical integration are best for DKC computation because the 4 non-null body-diagonal directions are the rigid computational anchors while the 6 null-only edge-midpoint directions are flexible topological scaffolding; constrained optimization (nulls free, non-nulls clamped to 2 deg) achieves 48% design improvement with only 2.8% XOR loss, and the k-ladder activation provides 14x better perturbation resilience than <a href="./demo_72.html">D72</a>'s Voronoi-only activation (6.4% vs 89% loss under design-improving gradient).
+<h3>Key Results</h3>
+<ul>
+<li><strong>Phase 1 (Geometric Characterization)</strong>: The 13 zeta_8 directions form a cuboctahedron on S^2. Three orbits under octahedral symmetry: 3 coordinate axes (shared, mutual angle 90 deg), 4 body diagonals (non-null-only, mutual angle 70.5 deg = arccos(1/3)), 6 edge midpoints (null-only, mutual angle 60 deg or 90 deg). Pairwise angle statistics: min=35.3 deg, max=90.0 deg, mean=63.1 deg over 78 pairs.</li>
+<li><strong>Phase 1 (Gram eigenspectrum)</strong>: The 13x13 |dot| Gram matrix has eigenvalues including golden ratio pairs (phi=1.618 x2 and -phi+1=-0.618 x2), leading eigenvalue 6.110, three eigenvalues at 2.000, three at -1/3. Negative eigenvalues expected for |dot| kernel on RP^2 (not PSD). The golden ratio eigenvalues arise from the specific angular ratios of zeta_8's three Oh orbits (54.7/45/35.3 deg).</li>
+<li><strong>Phase 1 (Spherical design quality)</strong>: Residual(t=6) = 2.225. NOT a 2-design (residual &gt; 0.01). The algebraic directions are among the worst possible for 13 points on S^2 in terms of spherical integration quality.</li>
+<li><strong>Phase 2 (Algebraic Characterization)</strong>: Direction partition confirmed: 6 null-only (type 0, cube edge midpoints), 3 shared (type 1, coordinate axes), 4 non-null-only (type 2, body diagonals). Intra-group mean angles: null-only=66.0 deg, non-null=70.5 deg, shared=90.0 deg, null-to-non-null inter=62.6 deg. Null and non-null groups have geometrically distinct clustering (difference &gt; 1.0 deg).</li>
+<li><strong>Phase 3 SURPRISE (Perturbation Sensitivity)</strong>: Baseline XOR6 = 1239 out of 2024 triples. At eps=10 deg: null-only perturbation causes -2.4% loss (i.e., a GAIN -- perturbing nulls slightly improves computation), non-null-only perturbation causes 8.0% loss. The prediction that null directions would be more sensitive (radical-driven anti-correlation) was INVERTED. Non-null body-diagonal directions are the fragile, load-bearing computational anchors. Null edge-midpoint directions are redundant scaffolding.</li>
+<li><strong>Phase 3b (Unconstrained design gradient)</strong>: Starting from algebraic directions, 5000-step simulated-annealing optimization toward lower spherical design residual: 52% residual improvement (2.23 -&gt; 1.06) with only 6.4% XOR loss (1239 -&gt; 1160). This is dramatically less catastrophic than <a href="./demo_72.html">D72</a>'s 89% destruction (36 -&gt; 4).</li>
+<li><strong>Phase 3e (Constrained optimization -- KEY RESULT)</strong>: Null directions move freely, non-null and shared clamped to 2 deg from original. Result: 48% design improvement (residual 2.23 -&gt; 1.16) with only 2.8% XOR loss (1239 -&gt; 1204). Null directions carry nearly all the design-improvement capacity (48% vs 52% unconstrained) while non-null rigidity cuts computational loss in half (2.8% vs 6.4%).</li>
+<li><strong>Phase 4 (Cross-root comparison)</strong>: zeta_8 has 13 directions with Res(t=6)=2.225, Res/N=0.171. zeta_12 has 2043 directions with Res(t=6)=42.400, Res/N=0.021. Per-direction residual at zeta_12 is 8x lower than zeta_8. More directions = better per-direction integration = nulls dispensable at larger groups. Connects directly to Demo 87's dispensability finding.</li>
+<li><strong>K-Ladder Robustness (standalone insight)</strong>: <a href="./demo_72.html">D72</a> (Voronoi-only activation) shows catastrophic 89% destruction under design-improving optimization. <a href="./demo_88.html">D88</a> (k-ladder activation with K_LADDER={1,6,8,10,12,16,20,24}) shows only 6.4% loss for the same gradient. The k-ladder provides perturbation resilience: Voronoi-only gives each triple ONE chance at a specific angular resolution (knife-edge sensitivity), k-ladder gives each triple 8 chances at different resolutions (small direction shifts absorbed by switching k_sec). The Sec*Vor activation introduced for capacity also provides computational robustness. Dual benefit.</li>
+</ul>
+<h3>Theorems/Conjectures</h3>
+<ul>
+<li><strong>Two-Role Direction Theorem (DEMONSTRATED)</strong>: In the zeta_8 cuboctahedral direction set, the 13 directions serve two distinct computational roles: the 4 non-null body-diagonal directions are rigid computational anchors (perturbation-sensitive, load-bearing for XOR), and the 6 null-only edge-midpoint directions are flexible topological scaffolding (perturbation-tolerant, movable, provide S^2 coverage for spherical integration).</li>
+<li><strong>Constrained Optimality (DEMONSTRATED)</strong>: Constraining non-null directions to within 2 deg of algebraic placement while allowing null directions to move freely captures 92% of unconstrained design improvement (48% vs 52%) while reducing computational loss by 56% (2.8% vs 6.4%).</li>
+<li><strong>K-Ladder Resilience Theorem (DEMONSTRATED)</strong>: The Sec*Vor k-ladder activation provides an order-of-magnitude better perturbation resilience than Voronoi-only activation under the same design-improving gradient (6.4% loss vs 89% loss). The mechanism is that multiple k_sec values provide fallback resolutions when direction perturbation invalidates the optimal sector assignment.</li>
+<li><strong>Anti-Correlation Persistence Conjecture (SUPPORTED)</strong>: The anti-correlation between spherical design quality and computational power persists at zeta_12 (per-direction residual 8x lower but still nonzero), though the mechanism shifts from null-direction-driven to sheer direction-count-driven as the group grows.</li>
+<li><strong>Activation Function as Variable (CONFIRMED)</strong>: The dramatic difference between <a href="./demo_72.html">D72</a> (89% loss) and <a href="./demo_88.html">D88</a> (6.4% loss) under the same geometric optimization confirms that the activation function (Voronoi-only vs Sec*Vor k-ladder) is the primary variable controlling perturbation sensitivity, not the optimization procedure itself.</li>
+</ul>
+<h3>Data</h3>
+<ul>
+<li>zeta_8 catalog: 24 entries, 13 directions</li>
+<li>Direction partition: 6 null-only + 3 shared + 4 non-null-only = 13</li>
+<li>Cuboctahedral orbits: 3 coordinate axes (90 deg mutual), 4 body diagonals (70.5 deg mutual), 6 edge midpoints (60/90 deg mutual)</li>
+<li>Pairwise angle stats: min=35.3 deg, max=90.0 deg, mean=63.1 deg (78 pairs)</li>
+<li>Gram eigenspectrum: 6.110, 2.000(x3), phi(x2), 0.520, -1/3(x3), -phi+1(x2), -0.630</li>
+<li>Spherical design residual(t=6): 2.225 (NOT a 2-design)</li>
+<li>Baseline XOR6 count: 1239 / 2024 triples</li>
+<li>Perturbation at eps=10 deg: null-only = -2.4% loss (gain), non-null-only = 8.0% loss, all-random = 3.7% loss</li>
+<li>Unconstrained design gradient (5000 steps): residual 2.23 -&gt; 1.06 (52% improvement), XOR6 1239 -&gt; 1160 (6.4% loss)</li>
+<li>Constrained optimization (nulls free, non-nulls clamped 2 deg): residual 2.23 -&gt; 1.16 (48% improvement), XOR6 1239 -&gt; 1204 (2.8% loss)</li>
+<li><a href="./demo_72.html">D72</a> Voronoi-only design optimization: 36 -&gt; 4 XOR6 solutions (89% loss)</li>
+<li>zeta_12: 2043 directions, Res(t=6)=42.400, Res/N=0.021 (8x lower per-direction than zeta_8)</li>
+<li>zeta_12 pairwise angle (sampled): min~0 deg, max~90 deg, mean=57.3 deg</li>
+<li>K_LADDER = {1, 6, 8, 10, 12, 16, 20, 24} (8 values)</li>
+</ul>
+<h3>Code Assets</h3>
+<ul>
+<li><strong><code>build_closure(verbose)</code></strong>: SU(2) group closure from two generators with inverse augmentation; returns catalog size in <code>g_cat_size</code>, round count in <code>n_rounds</code>; supports verbose output per round</li>
+<li><strong><code>classify_null(cat_size)</code></strong>: classifies each catalog entry as null (|Re(q)| &lt; 1e-10) or non-null; fills <code>is_null[]</code> array with counts <code>n_null_total</code>, <code>n_nonnull_total</code></li>
+<li><strong><code>build_dirs(cat_size)</code></strong>: extracts distinct S^2 axis directions from catalog (antipodal-identified); populates <code>g_dir[]</code> with <code>g_nd</code> count</li>
+<li><strong><code>classify_directions(cat_size)</code></strong>: per-direction null/non-null counts; classifies each direction as null-only (type 0), shared (type 1), or non-null-only (type 2); fills <code>dir_type[]</code>, counts <code>n_null_only_dirs</code>, <code>n_shared_dirs</code>, <code>n_nonnull_only_dirs</code></li>
+<li><strong><code>combined_cell(sa,sb,sc,sd,k_sec)</code></strong>: Sec<em>Vor activation function mapping quaternion sum to integer cell index via angular sector (k_sec divisions of [0,360)) crossed with Voronoi nearest-direction; returns <code>sec </em> (n_dir+1) + vor</code></li>
+<li><strong><code>test_xor(indices, n_weights, k_sec)</code></strong>: XOR parity test for a given weight tuple and k_sec; uses cell-based even/odd accumulation with touched-cell cleanup</li>
+<li><strong><code>count_xor6(bf_limit)</code></strong>: brute-force XOR6 counter over all 3-element subsets with k-ladder fallback (tests 8 k_sec values, counts success on first hit)</li>
+<li><strong><code>design_residual(dirs, nd, t)</code></strong>: spherical t-design residual via real spherical harmonics Y_l^m; max over all (l,m) with 1&lt;=l&lt;=t of |sum_i Y_l^m(dir_i)|; uses <code>assoc_legendre</code> and <code>ylm_real</code></li>
+<li><strong><code>jacobi_eigen(a, n, evals)</code></strong>: Jacobi eigendecomposition for small symmetric matrices (up to 200 iterations); returns sorted (descending) eigenvalues</li>
+<li><strong>Phase 3 perturbation framework</strong>: Gaussian direction perturbation with normalize3; supports selective perturbation by direction type (null-only, non-null-only, or all); constrained mode with angular clamp relative to original algebraic placement</li>
+<li><strong>Simulated annealing optimizer</strong>: temperature-decay random jitter, accept-if-better for spherical design residual; with optional angular clamping for constrained optimization</li>
+</ul>
+<h3>Literature Touched</h3>
+<ul>
+<li><strong>Demo 72 (Voronoi Design Destruction)</strong>: <a href="./demo_72.html">D72</a> showed that optimizing 13 eigenvector directions for spherical design quality using Voronoi-only activation destroys computation (36-&gt;4 XOR6, 89% loss). <a href="./demo_88.html">D88</a> identifies the mechanism: the activation function (Voronoi-only vs k-ladder) is the variable, and k-ladder provides order-of-magnitude better resilience.</li>
+<li><strong>Demo 84 (Null States)</strong>: <a href="./demo_84.html">D84</a> established the 6+3+4 direction partition (null-only, shared, non-null-only) and the directional efficiency of null entries. <a href="./demo_88.html">D88</a> extends this by showing the partition maps to distinct computational roles (scaffolding vs anchors).</li>
+<li><strong>Demo 87 (Null Indispensability at zeta_12)</strong>: <a href="./demo_87.html">D87</a> showed nulls become dispensable at zeta_12. <a href="./demo_88.html">D88</a>'s Phase 4 cross-root comparison provides the geometric explanation: per-direction residual is 8x lower at zeta_12, so null directions are no longer needed for coverage.</li>
+<li><strong>Spherical t-designs (Delsarte, Goethals, Seidel 1977)</strong>: the design residual metric quantifies how far a point set is from a t-design; <a href="./demo_88.html">D88</a> shows the algebraic directions are maximally far from a 2-design but this is precisely what makes them computationally optimal.</li>
+<li><strong>Cuboctahedron / Archimedean solids</strong>: the 13 zeta_8 directions form a cuboctahedron (3+4+6 orbits under Oh symmetry); recognized as the complete orbit structure of the octahedral group acting on RP^2.</li>
+<li><strong>Golden ratio in eigenspectrum</strong>: phi and -phi+1 eigenvalue pairs in the |dot| Gram matrix arise from the specific angular ratios of the three Oh orbits, connecting Fibonacci-like structure to the octahedral geometry.</li>
+</ul>
+<h3>Open Questions</h3>
+<ul>
+<li>At zeta_12 with 2043 directions, is there ANY subset that is computationally load-bearing (analogous to the 4 body-diagonal anchors at zeta_8), or is the direction set fully redundant?</li>
+<li>The algebraic placement is slightly off-peak for null directions (~6% improvement accessible at eps=10 deg, with the -2.4% gain suggesting room for optimization). Is this universal across roots or specific to zeta_8?</li>
+<li>Does the k-ladder robustness finding change the priority of "zeta_12 Sec*Vor optimization" as a research direction? (The resilience may make optimization less necessary.)</li>
+<li>Can the constrained optimization approach (flexible nulls + rigid non-nulls) be formulated as a principled optimization problem rather than simulated annealing, e.g., as a semidefinite program preserving non-null directions?</li>
+<li>The golden ratio eigenvalue pairs (phi, -phi+1) in the Gram spectrum: do these appear at other roots (zeta_10, zeta_12), or are they specific to zeta_8's octahedral geometry?</li>
+</ul>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/c.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</body>
+</html>

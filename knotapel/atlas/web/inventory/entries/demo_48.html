@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>inventory/entries/demo_48.md</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+    <link rel="stylesheet" href="../../style.css">
+</head>
+<body>
+    <nav><a href="../../index.html">← Back to Index</a></nav><hr>
+    <h2>Demo 48: Forward DKC Zoo</h2>
+<ul>
+<li><strong>Status</strong>: COMPLETE</li>
+<li><strong>File</strong>: <code><a href="../../demo_48_forward_dkc_zoo/main.c.html">demo_48_forward_dkc_zoo/main.c</a></code> (~1078 lines)</li>
+<li><strong>Tests</strong>: 14/14 pass, 7/7 predictions confirmed</li>
+<li><strong>Depends on</strong>: Demo 29 (forward DKC for XOR, Cyc8 arithmetic, bracket catalog), Demo 45 (complex function zoo, topology frequency, reverse RMS data), Demo 47 (parity investigation, NPN classification, MVN activation findings)</li>
+<li><strong>Feeds into</strong>: Demo 39 (symmetry decomposition — algebraic explanation of parity wall), Demo 49 (neglecton weights), Demo 50 (parity reachability at higher k)</li>
+</ul>
+<h3>Headline</h3>
+Exhaustive search of 100 million exact Z[zeta_8] bracket quartets proves XNOR3 (parity) is the ONLY 3-input Boolean function with zero valid forward DKC constructions — the wall is razor-thin (1 Hamming bit from EXACT1) yet categorically impassable.
+<h3>Key Results</h3>
+<ul>
+<li><strong>Parity wall CONFIRMED</strong>: XNOR3 has exactly 0 solutions out of 100,000,000 quartets; all other 12 NPN classes have solutions (127K to 25M)</li>
+<li><strong>Four-tier hierarchy</strong>: AND-type (&gt;10M) &gt; intermediate (1-4M) &gt; boundary (127K-371K) &gt; unreachable (0)</li>
+<li><strong>Triple correlation</strong>: Forward solution count correlates with Demo 45 topology frequency (rho = +0.78), anti-correlates with reverse RMS (rho = -0.79), weakly correlates with orbit size (rho = +0.47)</li>
+<li><strong>Wall thickness = 1 Hamming bit</strong>: EXACT1 (tt=0x16) is distance 1 from parity and has 127K solutions — the algebra gets within one bit flip but cannot cross</li>
+<li><strong>XOR2 vs XNOR3</strong>: 2-input XOR has 1.6M solutions; 3-input parity has 0 — the 2→3 barrier is absolute</li>
+<li><strong>Constants</strong>: 22% of quartets produce constant functions (FALSE=17.3M, TRUE=4.7M) — large-magnitude bracket values saturate sigmoid</li>
+<li><strong>Unit-magnitude observation</strong>: All non-trivial computations use low-magnitude catalog values (|z| = 1-2), confirming the computational core lives near the unit circle</li>
+<li><strong>Three topo_freq=0 classes have solutions</strong>: ISOLATE (371K), XOR2 (1.6M), A^(B|C) (2.3M) — quartet combinatorics is strictly more powerful than single-braid enumeration</li>
+</ul>
+<h3>Theorems/Conjectures</h3>
+<ul>
+<li><strong>Parity unreachability (split-sigmoid, Z[zeta_8])</strong>: A single complex neuron with split-sigmoid activation and weights drawn from the Z[zeta_8] bracket catalog CANNOT compute 3-input parity — PROVEN (exhaustive, 100M quartets)</li>
+<li><strong>Bracket self-consistency</strong>: Forward construction, forward enumeration, and reverse decomposition produce the same preference ordering over Boolean functions — CONFIRMED (rho = +0.78, -0.79)</li>
+<li><strong>Non-semisimplicity explanation</strong>: The parity wall is the Clifford boundary — bracket evaluation factors through TL/radical (semisimple quotient), killing exactly the degrees of freedom needed for parity — CONJECTURED (algebraic proof deferred to Demo 39)</li>
+<li><strong>Neglecton prediction</strong>: TL_4 radical elements (neglecton weights) should enable parity computation — CONJECTURED (tested in Demo 49)</li>
+<li><strong>Distance-solution anti-correlation</strong>: Functions closer to parity in Hamming distance have fewer solutions — CONFIRMED empirically</li>
+</ul>
+<h3>Data</h3>
+<ul>
+<li>Catalog: 100 distinct Z[zeta_8] bracket values from 2-3 strand braids (length 1-8)</li>
+<li>Search space: 100^4 = 100,000,000 quartets (w1, w2, w3, bias)</li>
+<li>Solution counts by NPN class:</li>
+<li>AND2' (0x03): 25,085,227 (32.2%)</li>
+<li>BUF (0x0F): 16,711,816 (21.4%)</li>
+<li>~A~(BC) (0x07): 13,574,170 (17.4%)</li>
+<li>AND3' (0x01): 10,108,257 (13.0%)</li>
+<li>3v-0x19 (0x19): 3,843,271 (4.9%)</li>
+<li>A^(B|C) (0x1E): 2,263,901 (2.9%)</li>
+<li>3v-0x1B (0x1B): 1,690,752 (2.2%)</li>
+<li>XOR2 (0x3C): 1,613,217 (2.1%)</li>
+<li>~A(B^C) (0x06): 1,402,076 (1.8%)</li>
+<li>MAJ' (0x17): 1,160,474 (1.5%)</li>
+<li>ISOLATE (0x18): 371,435 (0.5%)</li>
+<li>EXACT1 (0x16): 126,666 (0.2%)</li>
+<li>XNOR3 (0x69): 0 (0.0%)</li>
+<li>Constants: FALSE=17,299,057, TRUE=4,749,681 (22.0% total)</li>
+<li>Spearman correlations: rho(sol,topo)=+0.7830, rho(sol,RMS)=-0.7912, rho(sol,orbit)=+0.4698</li>
+<li>Parity wall min Hamming distance: 1 (EXACT1 → XNOR3)</li>
+<li>Demo 45 reference data hardcoded for cross-correlation</li>
+</ul>
+<h3>Code Assets</h3>
+<ul>
+<li><strong>Cyc8 exact arithmetic</strong>: full Z[zeta_8] ring (add, sub, mul, neg, conj, pow_int, eq, to_cx)</li>
+<li><strong>Braid bracket oracle</strong>: both exact (Cyc8, delta=0 optimized) and float (Cx, general) implementations</li>
+<li><strong>Dual-storage catalog builder</strong>: exact + float for each distinct bracket value</li>
+<li><strong>NPN classifier</strong>: brute-force 96-transform canonicalization, orbit size computation, 13 non-trivial class identification</li>
+<li><strong>Split-sigmoid activation</strong>: h = sig(Re) + i<em>sig(Im), p = h_r</em>(1-h_i) + (1-h_r)*h_i</li>
+<li><strong>Exhaustive quartet search</strong>: O(n^4) with precomputed partial sums (s12 outside w3 loop), example quartet storage per class</li>
+<li><strong>Parity distance tracker</strong>: Hamming distance LUT to 0x69/0x96, global minimum tracking</li>
+<li><strong>Spearman rank correlation</strong>: handles ties, reused from Demo 47</li>
+<li><strong>Master comparison table</strong>: solution count vs topology frequency vs reverse RMS vs orbit size</li>
+</ul>
+<h3>Literature Touched</h3>
+<ul>
+<li>Aizenberg (2007, 2011): single MVN computes parity with arbitrary complex weights — proves the wall is in the lattice, not the neuron</li>
+<li>Non-semisimple TQFT / neglectons (2025 Nature Communications): radical of TL at root of unity contains degrees of freedom for universality — the bracket evaluation kills exactly these</li>
+<li>Habiro: quantum topology, non-semisimple invariants</li>
+<li>Nazer-Gastpar: lattice codes (connection via Z[zeta_8] as integer lattice)</li>
+<li>Abramsky: categorical QM + TL non-semisimplicity</li>
+<li><strong>Novelty claim</strong>: No existing work connects Kauffman bracket evaluation ↔ Boolean function computability boundaries ↔ neural network weight lattices (four-community intersection unoccupied)</li>
+</ul>
+<h3>Open Questions</h3>
+<ul>
+<li>Can Demo 39's TL_4 block decomposition explicitly identify which blocks are "dead" at delta=0 and show they correspond to parity?</li>
+<li>Do neglecton (radical) elements as weights enable parity? (→ Demo 49)</li>
+<li>Is the four-tier structure (&gt;10M / 1-4M / &lt;500K / 0) invariant under catalog size scaling?</li>
+<li>Why does EXACT1 (distance 1 from parity) survive as reachable — what algebraic property distinguishes it from the one extra bit flip needed for parity?</li>
+<li>Does the unit-magnitude observation mean that a smaller catalog restricted to |z| ≈ 1 would preserve all non-constant computational classes?</li>
+</ul>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/c.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</body>
+</html>

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>pitches/pitch-computational.md</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+    <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+    <nav><a href="../index.html">← Back to Index</a></nav><hr>
+    <h1>Computational Mathematician Pitch: New Atlas Documents</h1>
+<p>Date: 2026-02-26</p>
+<p>---</p>
+<h2>Pitch 1: Scaling Law Catalog</h2>
+<p><strong>Location:</strong> <code>atlas/synthesis/scaling-laws.md</code></p>
+<p><strong>What it would contain:</strong></p>
+<p>A unified catalog of every empirical scaling relationship discovered across 101 demos, each with: <ul> <li>The law itself (formula, exponent, constant)</li> <li>The independent variable and its domain</li> <li>Number of data points supporting it</li> <li>Regime boundaries (where the law breaks or transitions)</li> <li>Whether it has a mechanistic explanation or is purely empirical</li> <li>Cross-references to the demo(s) that established and tested it</li> </ul>
+<p>Currently identified scaling laws scattered across <a href="../inventory/data-tables.html">data-tables.md</a> and <a href="../synthesis/connections.html">connections.md</a> include: <ul> <li><code>max_xor ~ depth + 6</code> (<a href="../inventory/entries/demo_82.html">D82</a>, linear capacity growth with crossing depth)</li> <li><code>max_xor ~ 0.62 * log2(catalog) + 4.6</code> (<a href="../inventory/entries/demo_81.html">D81</a>, logarithmic law as corollary of depth law)</li> <li><code>BFS catalog growth ~ 2x per round</code> (<a href="../inventory/entries/demo_82.html">D82</a>, exponential vocabulary generation)</li> <li><code>BFS growth ~ d*x per round</code> at d strands (<a href="../inventory/entries/demo_99.html">D99</a>-<a href="../inventory/entries/demo_101.html">D101</a>, three data points at d=2,3,4)</li> <li><code>rad(TL_l) = 2l - 3</code> (<a href="../inventory/entries/demo_51.html">D51</a>-<a href="../inventory/entries/demo_52.html">D52</a>, <a href="../inventory/entries/demo_60.html">D60</a>, universal radical dimension)</li> <li><code>rad(TL_{l+1}) = l^2 - l - 3</code> (<a href="../inventory/entries/demo_39.html">D39</a>, next-level radical)</li> <li><code>Fibonacci rank F(l-1)</code> for rad^2 bilinear rank total (<a href="../inventory/entries/demo_52.html">D52</a>, <a href="../inventory/entries/demo_60.html">D60</a>)</li> <li>Null fraction dilution: zeta_4=75%, zeta_8=37.5%, zeta_12=3% (<a href="../inventory/entries/demo_84.html">D84</a>, <a href="../inventory/entries/demo_87.html">D87</a>)</li> <li>Decoherence rate (2l-3)/C_l decaying from 60% at l=3 to 2.6% at l=7 (<a href="../inventory/entries/demo_60.html">D60</a>)</li> <li>Compression ratio growth with braid length (<a href="../inventory/entries/demo_35.html">D35</a>, roughly linear in length)</li> <li>Funnel coverage collapse: 99.3% -&gt; 39.2% -&gt; 19.2% -&gt; 0% (<a href="../inventory/entries/demo_64.html">D64</a>)</li> <li>Upward XOR7/XOR6 sector threshold ratio: 91/24 ~ 3.8 (<a href="../inventory/entries/demo_65.html">D65</a>)</li> <li>Framing cost: exactly 2 XOR levels at every root tested (<a href="../inventory/entries/demo_83.html">D83</a>)</li> <li>Circuit complexity hierarchy: AND/XOR ratio 1.01 -&gt; 2762 -&gt; infinity (<a href="../inventory/entries/demo_93.html">D93</a>)</li> <li>Solution count monotonic decrease: 23004 -&gt; 16108 -&gt; 3020 -&gt; 0 as inputs grow (<a href="../inventory/entries/demo_63.html">D63</a>)</li> <li>Non-monotonic parity solutions: 906@k=6 &gt; 756@k=7 &gt; 96@k=8 (<a href="../inventory/entries/demo_50.html">D50</a>)</li> </ul>
+<p><strong>Why it matters:</strong></p>
+<p>Scaling laws are the empirical heartbeat of any computational physics program. Right now they are diffused across at least four atlas documents and the explorer's log. Some are proven theorems, some are three-point fits, some are single-regime observations. Without a single document that organizes them by type (algebraic, combinatorial, computational), status (proven/demonstrated/conjectural), and regime, it is too easy to (a) forget a law exists, (b) assume a demonstrated law has been proven, or (c) miss that two laws are the same law in different variables (as <a href="../inventory/entries/demo_82.html">D82</a> showed for the depth/log laws). A catalog would also immediately surface the weakest laws -- the ones with fewest data points or narrowest regimes -- prioritizing which experiments to run next.</p>
+<p><strong>Gap it fills:</strong></p>
+<p><a href="../inventory/data-tables.html">data-tables.md</a> records raw numbers. <a href="../inventory/theorems.html">theorems.md</a> records proven results. Neither organizes the <em>empirical regularities</em> that sit between raw data and proven theorems. This document would be the atlas's equivalent of a table of physical constants: the empirical backbone that theory must explain.</p>
+<p>---</p>
+<h2>Pitch 2: Parameter Space Map</h2>
+<p><strong>Location:</strong> <code>atlas/synthesis/parameter-space.md</code></p>
+<p><strong>What it would contain:</strong></p>
+<p>A systematic map of the multi-dimensional parameter space that DKC has explored, organized as a coordinate grid with coverage annotations. The primary axes are:</p>
+<p>1. <strong>Root of unity</strong> (zeta_4, zeta_6, zeta_8, zeta_10, zeta_12, zeta_16, zeta_20, zeta_24, zeta_32): group finiteness, catalog size, ring dimension, axiality type 2. <strong>Strand count</strong> (n=2,3,4,5): planar matching dimension, module type 3. <strong>Braid length / crossing depth</strong> (1 through ~8): vocabulary size, BFS generation 4. <strong>Activation type</strong> (half-plane, split-sigmoid, MVN, k-sector, S^2 Voronoi, S^1 x S^2, generalized binary): geometric projection 5. <strong>Encoding</strong> (1wpi multiplicative, +/-q additive, neglecton): what the neuron reads 6. <strong>Module type</strong> (standard V_{n,j}, projective P_{0,0}, Delta_1 irreducible, W_{n,k} non-semisimple extension, W_{n,k} simple): representation-theoretic source</p>
+<p>For each explored coordinate, record: demo number, catalog size, max_xor achieved, key finding. For unexplored coordinates, record: why unexplored (combinatorial explosion, known impossibility, not yet attempted).</p>
+<p>The document should include:</p>
+<ul>
+<li>A "heat map" table showing max_xor achievement across (root x strand-count x activation) triples</li>
+<li>A "coverage density" analysis: how much of the theoretically reachable parameter space has been probed</li>
+<li>Identified "phase boundaries" where behavior changes qualitatively (finite/infinite group transition at zeta_8/zeta_12, semisimple/non-semisimple transition at n=l, 1wpi/additive encoding function-lock)</li>
+<li>A "diminishing returns" assessment: which parameter-space directions have been thoroughly characterized vs. which still have unexplored interior</li>
+</ul>
+<p><strong>Why it matters:</strong></p>
+<p>With 101 demos it is increasingly difficult to answer the question "have we looked at X?" The parameter space is at least 6-dimensional and exploration has been driven by conceptual arcs rather than systematic grid-filling. This is not a criticism -- conceptual arcs are the right way to do research -- but it means there may be systematically unexplored pockets. For example: what happens at zeta_12 with 3-strand modules? What does the DKC landscape look like for the Delta_1 module at zeta_12 instead of zeta_8? The multi-strand arc (<a href="../inventory/entries/demo_99.html">D99</a>-<a href="../inventory/entries/demo_101.html">D101</a>) opened a new axis but has only been explored at one root. A parameter-space map would make these gaps immediately visible.</p>
+<p><strong>Gap it fills:</strong></p>
+<p><a href="../synthesis/connections.html">connections.md</a> maps <em>conceptual</em> dependencies between demos. This would map <em>parameter-space</em> coverage. The demo-index tells you what each demo did; the parameter-space map tells you what the collective 101 demos have and have not covered. It is the difference between a bibliography and a survey map.</p>
+<p>---</p>
+<h2>Pitch 3: Numerical Coincidences and Unexplained Constants</h2>
+<p><strong>Location:</strong> <code>atlas/inventory/coincidences.md</code></p>
+<p><strong>What it would contain:</strong></p>
+<p>A curated list of every numerical pattern, structural coincidence, or unexplained constant observed computationally but not yet given a theoretical explanation. Each entry with:</p>
+<ul>
+<li>The coincidence (stated precisely)</li>
+<li>Status: EXPLAINED (with citation), PARTIALLY EXPLAINED, UNEXPLAINED</li>
+<li>Plausibility assessment: is this likely deep or likely an artifact?</li>
+<li>Attempted explanations that failed</li>
+</ul>
+<p>Currently identified candidates:</p>
+<ul>
+<li><strong>82.8% additive determinism</strong> (<a href="../inventory/entries/demo_73.html">D73</a>): universal across all 36 winning triples, zero variation. Why 82.8%? Is this an algebraic fraction related to the 24-cell?</li>
+<li><strong>sqrt(5) absence in magnitude quantization</strong> (<a href="../inventory/entries/demo_75.html">D75</a>): sum magnitudes take values sqrt{0,1,2,3,4,6} but never sqrt(5). Traced to 24-cell inner products. But why exactly those inner products?</li>
+<li><strong>6 F4 orbits from 35 solutions</strong> (<a href="../inventory/entries/demo_66.html">D66</a>): is 6 = C(4,2)? Is 35 = C(7,3)? The orbit sizes {12,7,5,5,4,2} -- do these come from some partition or Young diagram?</li>
+<li><strong>k=38 anomaly</strong> (<a href="../inventory/entries/demo_65.html">D65</a>): only even k &gt;= 24 with zero generalized XOR6 solutions. 38 = 2 x 19. Why 19?</li>
+<li><strong>Octant 4 absent from poison values</strong> (<a href="../inventory/entries/demo_64.html">D64</a>): 31 poison values avoid octant 4 entirely, spanning all other octants. Why octant 4?</li>
+<li><strong>13 = 2x6+1 = |eigenvector directions|</strong> (<a href="../inventory/entries/demo_71.html">D71</a>): the DOF coincidence may be deeper than the sampling argument.</li>
+<li><strong>Depth constant +6</strong> (<a href="../inventory/entries/demo_82.html">D82</a>): <code>max_xor ~ depth + 6</code>. Where does the 6 come from?</li>
+<li><strong>Framing always costs exactly 2</strong> (<a href="../inventory/entries/demo_83.html">D83</a>): writhe normalization costs exactly 2 XOR levels at every root. Why 2?</li>
+<li><strong>3.8x sector threshold ratio</strong> (<a href="../inventory/entries/demo_65.html">D65</a>): XOR7/XOR6 minimum k ratio = 91/24 ~ 3.79. Algebraic?</li>
+<li><strong>Non-monotonic k-optimum at k=6</strong> (<a href="../inventory/entries/demo_50.html">D50</a>): why does k=6 give more parity solutions (906) than k=7 (756) or k=8 (96)?</li>
+<li><strong>44/31 good/poison split</strong> (<a href="../inventory/entries/demo_64.html">D64</a>): why 44 and 31 specifically?</li>
+</ul>
+<p><strong>Why it matters:</strong></p>
+<p>In experimental physics, unexplained constants and coincidences are the primary generators of new theory. Kepler's third law was a numerical coincidence until Newton explained it. The 82.8% determinism constant, the "+6" in the depth law, the "+2" framing cost -- each of these is either a deep structural fact waiting for a theorem or an artifact. A dedicated tracking document prevents these observations from being forgotten during context resets and creates a natural "to-explain" queue for theoretical work. It also serves as an honesty mechanism: claims in <a href="../synthesis/narrative.html">narrative.md</a> and <a href="../synthesis/novelty.html">novelty.md</a> should distinguish "we proved this" from "we observed this number and it keeps coming up."</p>
+<p><strong>Gap it fills:</strong></p>
+<p><a href="../inventory/theorems.html">theorems.md</a> tracks results stated as theorems or conjectures. <a href="../planning/research-questions.html">research-questions.md</a> tracks questions. Neither tracks <em>numbers that appear significant but whose significance is not yet understood</em>. These are pre-conjectures -- patterns not yet sharp enough to be conjectures but too persistent to ignore. The coincidences document is the nursery where future conjectures incubate.</p>
+<p>---</p>
+<h2>Pitch 4: Computational Complexity Profile</h2>
+<p><strong>Location:</strong> <code>atlas/inventory/complexity-profile.md</code></p>
+<p><strong>What it would contain:</strong></p>
+<p>For every major computational task in the DKC pipeline, a profile recording:</p>
+<ul>
+<li><strong>Time complexity</strong> (theoretical big-O and measured wall-clock at representative sizes)</li>
+<li><strong>Space complexity</strong> (peak memory, dominant data structure)</li>
+<li><strong>Bottleneck analysis</strong> (what dominates runtime as n grows)</li>
+<li><strong>Feasibility frontier</strong> (largest instance computed, estimated resource for next step)</li>
+</ul>
+<p>Pipeline tasks:</p>
+<p>1. <strong>State-sum bracket</strong> (<a href="../inventory/entries/demo_01.html">D01</a>): O(2^n * n). Feasible to n ~ 20-25 crossings. 2. <strong>TL matrix construction</strong> (<a href="../inventory/entries/demo_35.html">D35</a>): O(C_n^2 <em> C_n). C_8 = 1430, so TL_8 is 1430x1430. Memory: O(C_n^2 </em> ring_rank). 3. <strong>BFS catalog generation</strong> (<a href="../inventory/entries/demo_79.html">D79</a>, <a href="../inventory/entries/demo_82.html">D82</a>): exponential in depth rounds. ~2x growth per round at zeta_12. 4. <strong>Exhaustive Boolean search</strong> (<a href="../inventory/entries/demo_48.html">D48</a>): O(catalog^k <em> 2^N). <a href="../inventory/entries/demo_48.html">D48</a> searched 100^4 </em> 2^3 = 800B operations. 5. <strong>Gram rank computation</strong> (<a href="../inventory/entries/demo_51.html">D51</a>-<a href="../inventory/entries/demo_52.html">D52</a>): O(C_n^3). At TL_8: 1430^3 ~ 2.9 billion operations. 6. <strong>Multi-strand module construction</strong> (<a href="../inventory/entries/demo_99.html">D99</a>-<a href="../inventory/entries/demo_101.html">D101</a>): d-strand dimensions grow as C(2d,d). 3-strand: 20. 4-strand: 70. 5-strand: 252. 6-strand: 924. 7. <strong>Raqiya/Scrutinium analysis</strong>: O(n^2) pairwise for n catalog values.</p>
+<p>Key feasibility questions:</p>
+<ul>
+<li>Can we compute TL_9 or TL_10 radical anatomy? (C_10 = 16796: ~282M matrix entries, Gaussian elimination ~ 4.7T ops. Probably infeasible without sparse methods.)</li>
+<li>What is the actual wall-clock for 6-strand W_{6,4} BFS? (924-dim module.)</li>
+<li>How far can zeta_12 BFS be pushed before memory becomes limiting?</li>
+<li>At what point does exhaustive search become infeasible and statistical sampling is needed?</li>
+</ul>
+<p><strong>Why it matters:</strong></p>
+<p>The project has hit genuine computational walls (TL_6 P_{0,0} in <a href="../inventory/entries/demo_86.html">D86</a>, 100M search in <a href="../inventory/entries/demo_48.html">D48</a>, zeta_12 BFS in <a href="../inventory/entries/demo_81.html">D81</a>). Some were mathematical impossibilities; some were computational limits. Distinguishing between the two is critical for planning. A complexity profile prevents wasted effort: if 6-strand BFS requires 10 hours, that is useful to know before launching. If it requires 10 years, the research question needs reformulating.</p>
+<p>From a "computational experimental physics" perspective, this is knowing the resolution limits of your instruments. Every empirical result has an implicit "at the resolution/scale we could compute" qualifier. Making those qualifiers explicit strengthens every claim.</p>
+<p><strong>Gap it fills:</strong></p>
+<p><a href="../inventory/code-assets.html">code-assets.md</a> catalogs reusable code patterns. <a href="../inventory/floating-point-audit.html">floating-point-audit.md</a> classifies FP usage. Neither addresses "how hard is this computation, and how much harder is the next step?" The complexity profile turns "we should try X" into "we can try X at this cost" or "X is infeasible without algorithmic improvement."</p>
+<p>---</p>
+<h2>Summary Table</h2>
+<table><thead><tr><th>#</th><th>Document</th><th>Location</th><th>Type</th><th>Primary Gap</th></tr></thead><tbody><tr><td>1</td><td>Scaling Law Catalog</td><td>synthesis/scaling-laws.md</td><td>Synthesis</td><td>Empirical regularities between raw data and proven theorems</td></tr><tr><td>2</td><td>Parameter Space Map</td><td>synthesis/parameter-space.md</td><td>Synthesis</td><td>Coverage/gap analysis of the multi-dimensional experiment space</td></tr><tr><td>3</td><td>Numerical Coincidences</td><td>inventory/coincidences.md</td><td>Inventory</td><td>Pre-conjectures: significant numbers without explanations</td></tr><tr><td>4</td><td>Complexity Profile</td><td>inventory/complexity-profile.md</td><td>Inventory</td><td>Feasibility frontiers and computational cost of next steps</td></tr></tbody></table>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/c.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</body>
+</html>

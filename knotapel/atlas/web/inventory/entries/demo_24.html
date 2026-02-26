@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>inventory/entries/demo_24.md</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+    <link rel="stylesheet" href="../../style.css">
+</head>
+<body>
+    <nav><a href="../../index.html">← Back to Index</a></nav><hr>
+    <h2>Demo 24: Rational Tangle Arithmetic</h2>
+<ul>
+<li><strong>Status</strong>: COMPLETE</li>
+<li><strong>File</strong>: <code><a href="../../demo_24_rational_tangles/main.c.html">demo_24_rational_tangles/main.c</a></code> (~890 lines)</li>
+<li><strong>Tests</strong>: ~7 pass (5 parts: A=2 alpha/beta formula + state-sum, B=1 multiplicativity, C=2 CF assembly + fraction tracking, D=1 angle correlation, E=1 Fibonacci analysis)</li>
+<li><strong>Depends on</strong>: Demo 03-04 (bracket, TL algebra concepts), Demo 18-19 (delta=0 insights)</li>
+<li><strong>Feeds into</strong>: Understanding bracket-rational correspondence; continued fraction approaches to tangle classification</li>
+</ul>
+<h3>Headline</h3>
+Implements Conway's rational tangle arithmetic in the Temperley-Lieb algebra TL_2, proving that at delta=0 the bracket polynomial literally counts twists (|D(n)| = n) and that continued fraction assembly builds rational tangles whose bracket values track p/q.
+<h3>Key Results</h3>
+<ul>
+<li><strong>Part A (Integer tangles)</strong>: n-twist tangles verified for n=0..20 at delta=0; alpha_n = A^n, beta_n = n*A^{n-2} confirmed; |D(n)| = n (denominator closure magnitude equals twist count); state-sum oracle cross-check matches TL2 algebra for n=1..10</li>
+<li><strong>Part B (Twist analysis)</strong>: Twist is a linear/multiplicative map on (alpha, beta) space; alpha ratio is constant A; beta_n/n = A^{n-2}; matrix form at delta=0: [[A, 0], [A^{-1}, A]]</li>
+<li><strong>Part C (Continued fractions)</strong>: 14 test rationals (0/1 through 7/11) built from continued fraction assembly; |D|/|N| ratio compared to p/q; partial convergent tracking shown for 8/13 = [0;1,1,1,1,2]; majority of test cases have |D|/|N| tracking p/q</li>
+<li><strong>Part D (Angle sweep)</strong>: 256-angle sweep computing Pearson correlation between |D|/|N| and p/q for 12 test rationals; best angle found (may or may not be delta=0); bracket values compared at best angle vs delta=0</li>
+<li><strong>Part E (Fibonacci tangles)</strong>: CF = [0;1,1,...,1] (all 1s) for k=1..12; these converge to F(k)/F(k+1) → 1/phi; |D| growth ratio tested for convergence to golden ratio (~1.618)</li>
+</ul>
+<h3>Theorems/Conjectures</h3>
+<ul>
+<li><strong>Conway's theorem</strong>: Twist (T(r) = r+1) and Rotate (R(r) = -1/r) generate all rationals on 2-strand tangles</li>
+<li>At delta=0: N(T) = alpha, D(T) = beta (closures simplify)</li>
+<li>Integer n-twist: alpha_n = A^n, beta_n = n*A^{n-2}, so |D(n)| = n — <strong>the bracket counts twists</strong></li>
+<li>Rotation swaps alpha and beta — corresponds to R(r) = -1/r in tangle arithmetic</li>
+<li>Twist recurrence at delta=0: alpha' = A<em>alpha, beta' = A^{-1}</em>alpha + A*beta (upper-triangular structure)</li>
+</ul>
+<h3>Data</h3>
+<ul>
+<li>21 integer tangles (n=0..20) with alpha, beta, |N|, |D| at delta=0</li>
+<li>14 test rationals with continued fractions and closure magnitudes</li>
+<li>Partial convergent tracking for 8/13 (6 steps)</li>
+<li>256-angle sweep with Pearson correlation</li>
+<li>12 Fibonacci tangles (k=1..12) with |D| growth ratios</li>
+</ul>
+<h3>Code Assets</h3>
+<ul>
+<li><code>TL2</code> struct (alpha, beta pair in TL_2 basis {1, e1})</li>
+<li><code>tl2_identity()</code>, <code>tl2_twist_pos()</code>, <code>tl2_twist_neg()</code>, <code>tl2_twist_n()</code> — tangle construction by twisting</li>
+<li><code>tl2_rotate()</code> — 90-degree rotation (swaps alpha/beta)</li>
+<li><code>tl2_num_closure()</code>, <code>tl2_den_closure()</code> — numerator and denominator closures</li>
+<li><code>cf_to_double()</code> — evaluate continued fraction as floating-point</li>
+<li><code>fraction_to_cf()</code> — convert p/q to continued fraction via Euclidean algorithm</li>
+<li><code>tangle_from_cf()</code> — inside-out assembly of rational tangle from continued fraction</li>
+<li><code>braid_loops_closure()</code> — state-sum loop counting with selectable closure type (numerator vs denominator)</li>
+<li><code>braid_bracket_closure()</code> — state-sum bracket with closure type for verification</li>
+</ul>
+<h3>Literature Touched</h3>
+<ul>
+<li>Conway's rational tangle theory</li>
+<li>Temperley-Lieb algebra TL_2 (2-strand basis {1, e1})</li>
+<li>Continued fractions as tangle assembly programs</li>
+<li>Kauffman bracket of tangles (numerator/denominator closures)</li>
+<li>Fibonacci numbers and golden ratio in tangle sequences</li>
+</ul>
+<h3>Open Questions</h3>
+<ul>
+<li>Does exact |D|/|N| = p/q hold with a different normalization/closure convention?</li>
+<li>What is the best angle (beyond delta=0) for rational tracking, and why?</li>
+<li>How does this extend to 3-strand tangles and non-rational tangles?</li>
+<li>Connection to the fraction group (PSL(2,Z)) action on tangles?</li>
+</ul>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/c.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</body>
+</html>

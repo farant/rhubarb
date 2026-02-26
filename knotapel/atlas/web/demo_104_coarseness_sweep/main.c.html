@@ -1,0 +1,1818 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>demo_104_coarseness_sweep/main.c</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+    <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+    <nav><a href="../index.html">← Back to Index</a></nav><hr>
+    <h1>demo_104_coarseness_sweep/main.c</h1><pre><code class="language-c">/*
+ * KNOTAPEL DEMO 104: Activation Coarseness Sweep
+ * ================================================
+ *
+ * Reuses D103 catalogs (W_{6,0} dim=5, W_{6,2} dim=9).
+ * Varies the number of sign-hash components and measures XOR6
+ * at each level.
+ *
+ * KEY QUESTION: Is dim-9's XOR deficit from the HASH (fixable)
+ * or the ALGEBRA (fundamental)?
+ *
+ * D103 Phase 7 preview:
+ *   B sub5 (100 comp) = 2238 XOR6 (same as B full)
+ *   B sub7 (196 comp) = 2538 XOR6 (BEATS A full 2449)
+ *   Crossover is between 100 and 196 components.
+ *
+ * Phases:
+ *   0: Generator verification (both modules)
+ *   1: BFS catalogs (both modules, deep entry selection)
+ *   2: Rank computation (effective dimension of catalog)
+ *   3: Component count sweep (XOR6 vs num_components)
+ *   4: Random-100 variant for W_{6,2}
+ *
+ * C89, zero dependencies beyond stdio/stdlib/string.
+ */
+
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;string.h&gt;
+
+/* ================================================================
+ * Test infrastructure
+ * ================================================================ */
+
+static int n_pass = 0, n_fail = 0;
+
+static void check(const char *msg, int ok) {
+    if (ok) { printf("  PASS: %s\n", msg); n_pass++; }
+    else    { printf("  FAIL: %s\n", msg); n_fail++; }
+}
+
+/* ================================================================
+ * Exact Cyclotomic Arithmetic -- Z[zeta_8]
+ * Basis: {1, zeta_8, zeta_8^2, zeta_8^3} with zeta_8^4 = -1
+ * ================================================================ */
+
+typedef struct { long a, b, c, d; } Cyc8;
+
+static Cyc8 cyc8_make(long a, long b, long c, long d) {
+    Cyc8 z; z.a = a; z.b = b; z.c = c; z.d = d; return z;
+}
+static Cyc8 cyc8_one(void)  { return cyc8_make(1,0,0,0); }
+
+static Cyc8 cyc8_add(Cyc8 x, Cyc8 y) {
+    return cyc8_make(x.a+y.a, x.b+y.b, x.c+y.c, x.d+y.d);
+}
+static Cyc8 cyc8_sub(Cyc8 x, Cyc8 y) {
+    return cyc8_make(x.a-y.a, x.b-y.b, x.c-y.c, x.d-y.d);
+}
+static Cyc8 cyc8_mul(Cyc8 x, Cyc8 y) {
+    return cyc8_make(
+        x.a*y.a - x.b*y.d - x.c*y.c - x.d*y.b,
+        x.a*y.b + x.b*y.a - x.c*y.d - x.d*y.c,
+        x.a*y.c + x.b*y.b + x.c*y.a - x.d*y.d,
+        x.a*y.d + x.b*y.c + x.c*y.b + x.d*y.a);
+}
+static int cyc8_eq(Cyc8 x, Cyc8 y) {
+    return x.a==y.a &amp;&amp; x.b==y.b &amp;&amp; x.c==y.c &amp;&amp; x.d==y.d;
+}
+static int cyc8_is_zero(Cyc8 x) {
+    return x.a==0 &amp;&amp; x.b==0 &amp;&amp; x.c==0 &amp;&amp; x.d==0;
+}
+static long cyc8_max_abs(Cyc8 z) {
+    long m = 0, v;
+    v = z.a&lt;0?-z.a:z.a; if(v&gt;m) m=v;
+    v = z.b&lt;0?-z.b:z.b; if(v&gt;m) m=v;
+    v = z.c&lt;0?-z.c:z.c; if(v&gt;m) m=v;
+    v = z.d&lt;0?-z.d:z.d; if(v&gt;m) m=v;
+    return m;
+}
+
+/* ================================================================
+ * Variable-dimension Matrix over Cyc8
+ * ================================================================ */
+
+#define MAX_DIM 9
+
+static int g_dim = 5;
+
+typedef struct { Cyc8 m[MAX_DIM][MAX_DIM]; } MatN;
+
+static MatN matN_zero(void) {
+    MatN r;
+    memset(&amp;r, 0, sizeof(MatN));
+    return r;
+}
+
+static MatN matN_identity(void) {
+    MatN r;
+    int i;
+    memset(&amp;r, 0, sizeof(MatN));
+    for (i = 0; i &lt; g_dim; i++)
+        r.m[i][i] = cyc8_one();
+    return r;
+}
+
+static MatN matN_mul(const MatN *p, const MatN *q) {
+    MatN r;
+    int i, j, k;
+    memset(&amp;r, 0, sizeof(MatN));
+    for (i = 0; i &lt; g_dim; i++)
+        for (j = 0; j &lt; g_dim; j++)
+            for (k = 0; k &lt; g_dim; k++)
+                r.m[i][j] = cyc8_add(r.m[i][j],
+                    cyc8_mul(p-&gt;m[i][k], q-&gt;m[k][j]));
+    return r;
+}
+
+static void matN_mul_to(const MatN *p, const MatN *q, MatN *out) {
+    int i, j, k;
+    memset(out, 0, sizeof(MatN));
+    for (i = 0; i &lt; g_dim; i++)
+        for (j = 0; j &lt; g_dim; j++)
+            for (k = 0; k &lt; g_dim; k++)
+                out-&gt;m[i][j] = cyc8_add(out-&gt;m[i][j],
+                    cyc8_mul(p-&gt;m[i][k], q-&gt;m[k][j]));
+}
+
+static int matN_eq(const MatN *p, const MatN *q) {
+    int i, j;
+    for (i = 0; i &lt; g_dim; i++)
+        for (j = 0; j &lt; g_dim; j++)
+            if (!cyc8_eq(p-&gt;m[i][j], q-&gt;m[i][j])) return 0;
+    return 1;
+}
+
+static MatN matN_add(const MatN *p, const MatN *q) {
+    MatN r;
+    int i, j;
+    memset(&amp;r, 0, sizeof(MatN));
+    for (i = 0; i &lt; g_dim; i++)
+        for (j = 0; j &lt; g_dim; j++)
+            r.m[i][j] = cyc8_add(p-&gt;m[i][j], q-&gt;m[i][j]);
+    return r;
+}
+
+static MatN matN_scale(Cyc8 s, const MatN *p) {
+    MatN r;
+    int i, j;
+    memset(&amp;r, 0, sizeof(MatN));
+    for (i = 0; i &lt; g_dim; i++)
+        for (j = 0; j &lt; g_dim; j++)
+            r.m[i][j] = cyc8_mul(s, p-&gt;m[i][j]);
+    return r;
+}
+
+/* In-place add/sub for XOR test hot path */
+static void matN_add_inplace(MatN *dst, const MatN *src) {
+    int i, j;
+    for (i = 0; i &lt; g_dim; i++)
+        for (j = 0; j &lt; g_dim; j++)
+            dst-&gt;m[i][j] = cyc8_add(dst-&gt;m[i][j], src-&gt;m[i][j]);
+}
+
+static void matN_sub_inplace(MatN *dst, const MatN *src) {
+    int i, j;
+    for (i = 0; i &lt; g_dim; i++)
+        for (j = 0; j &lt; g_dim; j++)
+            dst-&gt;m[i][j] = cyc8_sub(dst-&gt;m[i][j], src-&gt;m[i][j]);
+}
+
+static long matN_max_abs(const MatN *m) {
+    long mx = 0, v;
+    int i, j;
+    for (i = 0; i &lt; g_dim; i++)
+        for (j = 0; j &lt; g_dim; j++) {
+            v = cyc8_max_abs(m-&gt;m[i][j]);
+            if (v &gt; mx) mx = v;
+        }
+    return mx;
+}
+
+static int matN_nonzero_count(const MatN *m) {
+    int cnt = 0, i, j;
+    for (i = 0; i &lt; g_dim; i++)
+        for (j = 0; j &lt; g_dim; j++)
+            if (!cyc8_is_zero(m-&gt;m[i][j])) cnt++;
+    return cnt;
+}
+
+/* ================================================================
+ * Hash table for MatN BFS
+ * ================================================================ */
+
+#define MAX_CAT 32768
+#define HASH_SIZE 65537
+
+static MatN *g_cat = NULL;
+static int   g_depth[MAX_CAT];
+static int   g_writhe[MAX_CAT];
+static int   g_cat_size = 0;
+
+static int g_hash_head[HASH_SIZE];
+static int g_hash_next[MAX_CAT];
+
+static unsigned long hash_matN(const MatN *m) {
+    unsigned long h = 2166136261UL;
+    int i, j;
+    for (i = 0; i &lt; g_dim; i++)
+        for (j = 0; j &lt; g_dim; j++) {
+            h = (h * 1000003UL) ^ (unsigned long)m-&gt;m[i][j].a;
+            h = (h * 1000003UL) ^ (unsigned long)m-&gt;m[i][j].b;
+            h = (h * 1000003UL) ^ (unsigned long)m-&gt;m[i][j].c;
+            h = (h * 1000003UL) ^ (unsigned long)m-&gt;m[i][j].d;
+        }
+    return h;
+}
+
+static void hash_init(void) {
+    memset(g_hash_head, -1, sizeof(g_hash_head));
+}
+
+static int hash_find(const MatN *m) {
+    int bucket = (int)(hash_matN(m) % (unsigned long)HASH_SIZE);
+    int idx = g_hash_head[bucket];
+    while (idx &gt;= 0) {
+        if (matN_eq(&amp;g_cat[idx], m)) return idx;
+        idx = g_hash_next[idx];
+    }
+    return -1;
+}
+
+static void hash_insert(int cat_idx) {
+    int bucket = (int)(hash_matN(&amp;g_cat[cat_idx]) % (unsigned long)HASH_SIZE);
+    g_hash_next[cat_idx] = g_hash_head[bucket];
+    g_hash_head[bucket] = cat_idx;
+}
+
+/* ================================================================
+ * TL generators (same as D103)
+ * ================================================================ */
+
+#define N_TL 5
+
+static MatN g_e[N_TL];
+
+static void build_tl_a(void) {
+    int i;
+    for (i = 0; i &lt; N_TL; i++) g_e[i] = matN_zero();
+    g_e[0].m[0][2] = cyc8_one();
+    g_e[0].m[0][4] = cyc8_one();
+    g_e[0].m[1][3] = cyc8_one();
+    g_e[1].m[2][0] = cyc8_one();
+    g_e[1].m[3][1] = cyc8_one();
+    g_e[1].m[3][4] = cyc8_one();
+    g_e[2].m[0][1] = cyc8_one();
+    g_e[2].m[0][2] = cyc8_one();
+    g_e[2].m[4][3] = cyc8_one();
+    g_e[3].m[1][0] = cyc8_one();
+    g_e[3].m[3][2] = cyc8_one();
+    g_e[3].m[3][4] = cyc8_one();
+    g_e[4].m[0][1] = cyc8_one();
+    g_e[4].m[0][4] = cyc8_one();
+    g_e[4].m[2][3] = cyc8_one();
+}
+
+static void build_tl_b(void) {
+    int i;
+    for (i = 0; i &lt; N_TL; i++) g_e[i] = matN_zero();
+    g_e[0].m[0][1] = cyc8_one();
+    g_e[0].m[0][5] = cyc8_one();
+    g_e[0].m[2][4] = cyc8_one();
+    g_e[0].m[3][6] = cyc8_one();
+    g_e[1].m[1][0] = cyc8_one();
+    g_e[1].m[4][2] = cyc8_one();
+    g_e[1].m[4][5] = cyc8_one();
+    g_e[1].m[4][8] = cyc8_one();
+    g_e[1].m[6][3] = cyc8_one();
+    g_e[1].m[6][7] = cyc8_one();
+    g_e[2].m[0][1] = cyc8_one();
+    g_e[2].m[0][2] = cyc8_one();
+    g_e[2].m[5][4] = cyc8_one();
+    g_e[2].m[7][6] = cyc8_one();
+    g_e[2].m[7][8] = cyc8_one();
+    g_e[3].m[2][0] = cyc8_one();
+    g_e[3].m[2][3] = cyc8_one();
+    g_e[3].m[4][1] = cyc8_one();
+    g_e[3].m[4][5] = cyc8_one();
+    g_e[3].m[4][6] = cyc8_one();
+    g_e[3].m[8][7] = cyc8_one();
+    g_e[4].m[3][2] = cyc8_one();
+    g_e[4].m[6][4] = cyc8_one();
+    g_e[4].m[7][5] = cyc8_one();
+    g_e[4].m[7][8] = cyc8_one();
+}
+
+/* ================================================================
+ * Braid generators: sigma_i = A*I + A^{-1}*e_i
+ * ================================================================ */
+
+#define N_GEN 10
+
+static Cyc8 g_A, g_A_inv;
+static MatN g_gen[N_GEN];
+static const int g_gen_writhe[N_GEN] = {1,-1,1,-1,1,-1,1,-1,1,-1};
+
+static void build_braid_generators(void) {
+    int i;
+    MatN id_mat = matN_identity();
+    MatN a_id = matN_scale(g_A, &amp;id_mat);
+    MatN ai_id = matN_scale(g_A_inv, &amp;id_mat);
+
+    for (i = 0; i &lt; N_TL; i++) {
+        MatN ai_e = matN_scale(g_A_inv, &amp;g_e[i]);
+        MatN a_e  = matN_scale(g_A, &amp;g_e[i]);
+        g_gen[2*i]     = matN_add(&amp;a_id, &amp;ai_e);
+        g_gen[2*i + 1] = matN_add(&amp;ai_id, &amp;a_e);
+    }
+}
+
+/* ================================================================
+ * BFS catalog builder
+ * ================================================================ */
+
+static void build_catalog(int max_depth) {
+    int prev, gi, i, rd;
+    MatN prod;
+
+    g_cat_size = 0;
+    hash_init();
+
+    g_cat[0] = matN_identity();
+    g_depth[0] = 0;
+    g_writhe[0] = 0;
+    hash_insert(0);
+    g_cat_size = 1;
+
+    printf("  Round 0: 1 entry\n");
+
+    rd = 1;
+    do {
+        long round_max = 0;
+        prev = g_cat_size;
+        for (i = 0; i &lt; prev &amp;&amp; g_cat_size &lt; MAX_CAT; i++) {
+            if (g_depth[i] != rd - 1) continue;
+            for (gi = 0; gi &lt; N_GEN &amp;&amp; g_cat_size &lt; MAX_CAT; gi++) {
+                long mabs;
+                matN_mul_to(&amp;g_cat[i], &amp;g_gen[gi], &amp;prod);
+                if (hash_find(&amp;prod) &lt; 0) {
+                    mabs = matN_max_abs(&amp;prod);
+                    if (mabs &gt; round_max) round_max = mabs;
+                    g_cat[g_cat_size] = prod;
+                    g_depth[g_cat_size] = rd;
+                    g_writhe[g_cat_size] = g_writhe[i] + g_gen_writhe[gi];
+                    hash_insert(g_cat_size);
+                    g_cat_size++;
+                }
+            }
+        }
+        if (g_cat_size &gt; prev)
+            printf("  Round %d: %d entries (+%d), max_abs=%ld\n",
+                   rd, g_cat_size, g_cat_size - prev, round_max);
+        if (round_max &gt; 100000000000L) {
+            printf("  WARNING: approaching overflow\n");
+            break;
+        }
+        rd++;
+    } while (g_cat_size &gt; prev &amp;&amp; g_cat_size &lt; MAX_CAT &amp;&amp; rd &lt;= max_depth);
+
+    if (g_cat_size == prev)
+        printf("  GROUP CLOSED at %d entries\n", g_cat_size);
+    else if (g_cat_size &gt;= MAX_CAT)
+        printf("  HIT CAP at %d entries (group is infinite)\n", MAX_CAT);
+}
+
+/* ================================================================
+ * TL relation verification (abbreviated — just e_i^2=0 and Hecke)
+ * ================================================================ */
+
+static void verify_tl(const char *label) {
+    int i;
+    char msg[128];
+
+    for (i = 0; i &lt; N_TL; i++) {
+        MatN sq = matN_mul(&amp;g_e[i], &amp;g_e[i]);
+        MatN zero = matN_zero();
+        sprintf(msg, "%s: e_%d^2 = 0", label, i+1);
+        check(msg, matN_eq(&amp;sq, &amp;zero));
+    }
+
+    /* Hecke: s_i^2 = (A^2 - A^{-2})*s_i + I */
+    for (i = 0; i &lt; N_TL; i++) {
+        MatN s = g_gen[2*i];
+        MatN sinv = g_gen[2*i+1];
+        MatN prod = matN_mul(&amp;s, &amp;sinv);
+        MatN id = matN_identity();
+        sprintf(msg, "%s: s%d * s%d_inv = I", label, i+1, i+1);
+        check(msg, matN_eq(&amp;prod, &amp;id));
+    }
+}
+
+/* ================================================================
+ * Activation with configurable component count
+ *
+ * Flattens the g_dim*g_dim matrix entries (each has 4 Cyc8 components)
+ * into a linear sequence, hashes the first num_comp components.
+ * Total components = g_dim * g_dim * 4.
+ * ================================================================ */
+
+static int matN_activate_n(const MatN *m, int k_param, int num_comp) {
+    unsigned long h = 0;
+    int cnt = 0;
+    int i, j;
+    for (i = 0; i &lt; g_dim &amp;&amp; cnt &lt; num_comp; i++)
+        for (j = 0; j &lt; g_dim &amp;&amp; cnt &lt; num_comp; j++) {
+            if (cnt &lt; num_comp) {
+                h = h * 3UL + (unsigned long)(m-&gt;m[i][j].a &gt; 0 ? 2 :
+                    (m-&gt;m[i][j].a &lt; 0 ? 0 : 1));
+                cnt++;
+            }
+            if (cnt &lt; num_comp) {
+                h = h * 3UL + (unsigned long)(m-&gt;m[i][j].b &gt; 0 ? 2 :
+                    (m-&gt;m[i][j].b &lt; 0 ? 0 : 1));
+                cnt++;
+            }
+            if (cnt &lt; num_comp) {
+                h = h * 3UL + (unsigned long)(m-&gt;m[i][j].c &gt; 0 ? 2 :
+                    (m-&gt;m[i][j].c &lt; 0 ? 0 : 1));
+                cnt++;
+            }
+            if (cnt &lt; num_comp) {
+                h = h * 3UL + (unsigned long)(m-&gt;m[i][j].d &gt; 0 ? 2 :
+                    (m-&gt;m[i][j].d &lt; 0 ? 0 : 1));
+                cnt++;
+            }
+        }
+    return (int)(h % (unsigned long)k_param);
+}
+
+/* Random subset activation: hash components at indices in g_rand_idx[] */
+#define MAX_RAND_IDX 400
+static int g_rand_idx[MAX_RAND_IDX];
+static int g_rand_n = 0;
+
+static int matN_activate_rand(const MatN *m, int k_param) {
+    unsigned long h = 0;
+    int ci;
+    for (ci = 0; ci &lt; g_rand_n; ci++) {
+        int idx = g_rand_idx[ci];
+        int entry = idx / 4;   /* which (i,j) pair */
+        int comp = idx % 4;    /* which a,b,c,d */
+        int mi = entry / g_dim;
+        int mj = entry % g_dim;
+        long val = 0;
+        switch (comp) {
+            case 0: val = m-&gt;m[mi][mj].a; break;
+            case 1: val = m-&gt;m[mi][mj].b; break;
+            case 2: val = m-&gt;m[mi][mj].c; break;
+            case 3: val = m-&gt;m[mi][mj].d; break;
+        }
+        h = h * 3UL + (unsigned long)(val &gt; 0 ? 2 : (val &lt; 0 ? 0 : 1));
+    }
+    return (int)(h % (unsigned long)k_param);
+}
+
+/* ================================================================
+ * Multi-hash activation: two independent hashes → 2D cell ID
+ * Cell = hash1(k1) * k2 + hash2(k2)
+ * Uses two separate index arrays for the two subsets.
+ * ================================================================ */
+
+#define MAX_MULTI_IDX 200
+static int g_multi_idx1[MAX_MULTI_IDX], g_multi_n1 = 0;
+static int g_multi_idx2[MAX_MULTI_IDX], g_multi_n2 = 0;
+static int g_multi_k = 64; /* k for each sub-hash */
+
+static int matN_activate_multi(const MatN *m, int k_param) {
+    unsigned long h1 = 0, h2 = 0;
+    int ci;
+    (void)k_param; /* we use g_multi_k internally */
+
+    for (ci = 0; ci &lt; g_multi_n1; ci++) {
+        int idx = g_multi_idx1[ci];
+        int entry = idx / 4;
+        int comp = idx % 4;
+        int mi = entry / g_dim;
+        int mj = entry % g_dim;
+        long val = 0;
+        switch (comp) {
+            case 0: val = m-&gt;m[mi][mj].a; break;
+            case 1: val = m-&gt;m[mi][mj].b; break;
+            case 2: val = m-&gt;m[mi][mj].c; break;
+            case 3: val = m-&gt;m[mi][mj].d; break;
+        }
+        h1 = h1 * 3UL + (unsigned long)(val &gt; 0 ? 2 : (val &lt; 0 ? 0 : 1));
+    }
+
+    for (ci = 0; ci &lt; g_multi_n2; ci++) {
+        int idx = g_multi_idx2[ci];
+        int entry = idx / 4;
+        int comp = idx % 4;
+        int mi = entry / g_dim;
+        int mj = entry % g_dim;
+        long val = 0;
+        switch (comp) {
+            case 0: val = m-&gt;m[mi][mj].a; break;
+            case 1: val = m-&gt;m[mi][mj].b; break;
+            case 2: val = m-&gt;m[mi][mj].c; break;
+            case 3: val = m-&gt;m[mi][mj].d; break;
+        }
+        h2 = h2 * 3UL + (unsigned long)(val &gt; 0 ? 2 : (val &lt; 0 ? 0 : 1));
+    }
+
+    return (int)((h1 % (unsigned long)g_multi_k) *
+                 (unsigned long)g_multi_k +
+                 (h2 % (unsigned long)g_multi_k));
+}
+
+/* Global activation state for function-pointer switching */
+static int g_num_comp = 0; /* for matN_activate_n wrapper */
+
+static int matN_activate_nwrap(const MatN *m, int k_param) {
+    return matN_activate_n(m, k_param, g_num_comp);
+}
+
+typedef int (*activate_fn)(const MatN *, int);
+static activate_fn g_activate = matN_activate_nwrap;
+
+/* ================================================================
+ * XOR test infrastructure (same as D103)
+ * ================================================================ */
+
+#define MAX_ACT_CELLS 8192 /* supports up to 64x64=4096 multi-hash */
+
+static int cell_even[MAX_ACT_CELLS], cell_odd[MAX_ACT_CELLS];
+static int touched[MAX_ACT_CELLS];
+
+static int test_xor(const int *indices, int n_weights, int k_param) {
+    int n_inputs = 2 * n_weights;
+    int n_masks = 1 &lt;&lt; n_inputs;
+    int n_touched = 0;
+    int mask, i, w;
+    int result = 1;
+
+    if (k_param &gt; MAX_ACT_CELLS || n_inputs &gt; 16 || n_weights &gt; 8)
+        return 0;
+
+    for (mask = 0; mask &lt; n_masks; mask++) {
+        MatN sum;
+        int par = 0, cell;
+        memset(&amp;sum, 0, sizeof(MatN));
+
+        for (i = 0; i &lt; n_inputs; i++) {
+            if (mask &amp; (1 &lt;&lt; i)) {
+                w = i / 2;
+                if (i % 2 == 0)
+                    matN_add_inplace(&amp;sum, &amp;g_cat[indices[w]]);
+                else
+                    matN_sub_inplace(&amp;sum, &amp;g_cat[indices[w]]);
+                par ^= 1;
+            }
+        }
+
+        cell = g_activate(&amp;sum, k_param);
+
+        if (cell_even[cell] == 0 &amp;&amp; cell_odd[cell] == 0)
+            touched[n_touched++] = cell;
+
+        if (par == 0) {
+            cell_even[cell]++;
+            if (cell_odd[cell] &gt; 0) { result = 0; goto cleanup; }
+        } else {
+            cell_odd[cell]++;
+            if (cell_even[cell] &gt; 0) { result = 0; goto cleanup; }
+        }
+    }
+
+cleanup:
+    for (i = 0; i &lt; n_touched; i++) {
+        cell_even[touched[i]] = 0;
+        cell_odd[touched[i]] = 0;
+    }
+    return result;
+}
+
+static int count_xor_bf(int n_weights, int k_param, int bf_limit) {
+    int count = 0;
+    int limit = g_cat_size &lt; bf_limit ? g_cat_size : bf_limit;
+    int i0, i1, i2, i3;
+    int indices[8];
+
+    if (n_weights == 3) {
+        for (i0 = 0; i0 &lt; limit; i0++)
+        for (i1 = i0+1; i1 &lt; limit; i1++)
+        for (i2 = i1+1; i2 &lt; limit; i2++) {
+            indices[0]=i0; indices[1]=i1; indices[2]=i2;
+            if (test_xor(indices, 3, k_param)) count++;
+        }
+    } else if (n_weights == 4) {
+        for (i0 = 0; i0 &lt; limit; i0++)
+        for (i1 = i0+1; i1 &lt; limit; i1++)
+        for (i2 = i1+1; i2 &lt; limit; i2++)
+        for (i3 = i2+1; i3 &lt; limit; i3++) {
+            indices[0]=i0; indices[1]=i1; indices[2]=i2; indices[3]=i3;
+            if (test_xor(indices, 4, k_param)) count++;
+        }
+    }
+    return count;
+}
+
+/* ================================================================
+ * Rank computation over Z (Gaussian elimination)
+ *
+ * Each catalog entry is a flat vector of g_dim*g_dim*4 integer
+ * components. We want the rank of the matrix formed by stacking
+ * all catalog entries as rows.
+ *
+ * Since rank &lt;= g_dim*g_dim*4 (max 324 for dim=9), we only need
+ * to track 324 pivot columns. We process catalog entries one at
+ * a time in streaming fashion to avoid allocating a 32768x324
+ * matrix.
+ * ================================================================ */
+
+#define MAX_COLS 324 /* 9*9*4 */
+
+static int compute_catalog_rank(int n_entries) {
+    /* Reduced row echelon basis: up to MAX_COLS rows x MAX_COLS cols */
+    static long basis[MAX_COLS][MAX_COLS];
+    int n_cols = g_dim * g_dim * 4;
+    int rank = 0;
+    int ei, col, r;
+
+    memset(basis, 0, sizeof(basis));
+
+    for (ei = 0; ei &lt; n_entries; ei++) {
+        /* Extract flat vector from catalog entry */
+        long row[MAX_COLS];
+        int ci = 0;
+        int i, j;
+
+        memset(row, 0, sizeof(row));
+        for (i = 0; i &lt; g_dim; i++)
+            for (j = 0; j &lt; g_dim; j++) {
+                row[ci++] = g_cat[ei].m[i][j].a;
+                row[ci++] = g_cat[ei].m[i][j].b;
+                row[ci++] = g_cat[ei].m[i][j].c;
+                row[ci++] = g_cat[ei].m[i][j].d;
+            }
+
+        /* Try to reduce this row against existing basis */
+        for (r = 0; r &lt; rank; r++) {
+            /* Find leading column of basis row r */
+            int lead = -1;
+            for (col = 0; col &lt; n_cols; col++) {
+                if (basis[r][col] != 0) { lead = col; break; }
+            }
+            if (lead &lt; 0) continue;
+
+            if (row[lead] != 0) {
+                /* Eliminate: row = row * basis[r][lead] - basis[r] * row[lead] */
+                long rf = row[lead];
+                long bf = basis[r][lead];
+                for (col = 0; col &lt; n_cols; col++)
+                    row[col] = row[col] * bf - basis[r][col] * rf;
+            }
+        }
+
+        /* Check if row is now zero */
+        {
+            int is_zero = 1;
+            for (col = 0; col &lt; n_cols; col++) {
+                if (row[col] != 0) { is_zero = 0; break; }
+            }
+
+            if (!is_zero &amp;&amp; rank &lt; MAX_COLS) {
+                /* Normalize: divide out GCD to prevent overflow */
+                long g = 0;
+                for (col = 0; col &lt; n_cols; col++) {
+                    long v = row[col] &lt; 0 ? -row[col] : row[col];
+                    if (v &gt; 0) {
+                        if (g == 0) g = v;
+                        else {
+                            /* GCD */
+                            long aa = g, bb = v;
+                            while (bb != 0) {
+                                long t = bb;
+                                bb = aa % bb;
+                                aa = t;
+                            }
+                            g = aa;
+                        }
+                    }
+                }
+                if (g &gt; 1) {
+                    for (col = 0; col &lt; n_cols; col++)
+                        row[col] /= g;
+                }
+
+                for (col = 0; col &lt; n_cols; col++)
+                    basis[rank][col] = row[col];
+                rank++;
+
+                /* Early exit: rank can't exceed n_cols */
+                if (rank &gt;= n_cols) break;
+            }
+        }
+    }
+
+    return rank;
+}
+
+/* ================================================================
+ * Sign-rank: rank of ternary sign matrix
+ * Same streaming Gaussian elimination, but each component is
+ * sign(x) in {-1, 0, +1} instead of raw integer.
+ * ================================================================ */
+
+static int compute_sign_rank(int n_entries) {
+    static long basis[MAX_COLS][MAX_COLS];
+    int n_cols = g_dim * g_dim * 4;
+    int rank = 0;
+    int ei, col, r;
+
+    memset(basis, 0, sizeof(basis));
+
+    for (ei = 0; ei &lt; n_entries; ei++) {
+        long row[MAX_COLS];
+        int ci = 0;
+        int i, j;
+
+        memset(row, 0, sizeof(row));
+        for (i = 0; i &lt; g_dim; i++)
+            for (j = 0; j &lt; g_dim; j++) {
+                long vals[4];
+                int v;
+                vals[0] = g_cat[ei].m[i][j].a;
+                vals[1] = g_cat[ei].m[i][j].b;
+                vals[2] = g_cat[ei].m[i][j].c;
+                vals[3] = g_cat[ei].m[i][j].d;
+                for (v = 0; v &lt; 4; v++)
+                    row[ci++] = vals[v] &gt; 0 ? 1 : (vals[v] &lt; 0 ? -1 : 0);
+            }
+
+        /* Reduce against existing basis */
+        for (r = 0; r &lt; rank; r++) {
+            int lead = -1;
+            for (col = 0; col &lt; n_cols; col++) {
+                if (basis[r][col] != 0) { lead = col; break; }
+            }
+            if (lead &lt; 0) continue;
+
+            if (row[lead] != 0) {
+                long rf = row[lead];
+                long bf2 = basis[r][lead];
+                for (col = 0; col &lt; n_cols; col++)
+                    row[col] = row[col] * bf2 - basis[r][col] * rf;
+            }
+        }
+
+        {
+            int is_zero = 1;
+            for (col = 0; col &lt; n_cols; col++) {
+                if (row[col] != 0) { is_zero = 0; break; }
+            }
+
+            if (!is_zero &amp;&amp; rank &lt; MAX_COLS) {
+                long g = 0;
+                for (col = 0; col &lt; n_cols; col++) {
+                    long v = row[col] &lt; 0 ? -row[col] : row[col];
+                    if (v &gt; 0) {
+                        if (g == 0) g = v;
+                        else {
+                            long aa = g, bb = v;
+                            while (bb != 0) {
+                                long t = bb;
+                                bb = aa % bb;
+                                aa = t;
+                            }
+                            g = aa;
+                        }
+                    }
+                }
+                if (g &gt; 1) {
+                    for (col = 0; col &lt; n_cols; col++)
+                        row[col] /= g;
+                }
+
+                for (col = 0; col &lt; n_cols; col++)
+                    basis[rank][col] = row[col];
+                rank++;
+
+                if (rank &gt;= n_cols) break;
+            }
+        }
+    }
+
+    return rank;
+}
+
+/* ================================================================
+ * Simple deterministic PRNG for random subset selection
+ * ================================================================ */
+
+static unsigned long g_rng_state = 12345678901UL;
+
+static unsigned long rng_next(void) {
+    g_rng_state ^= g_rng_state &lt;&lt; 13;
+    g_rng_state ^= g_rng_state &gt;&gt; 7;
+    g_rng_state ^= g_rng_state &lt;&lt; 17;
+    return g_rng_state;
+}
+
+/* Fisher-Yates shuffle first n elements of arr[0..total-1] */
+static void shuffle_first_n(int *arr, int total, int n) {
+    int i;
+    for (i = 0; i &lt; n &amp;&amp; i &lt; total - 1; i++) {
+        int j = i + (int)(rng_next() % (unsigned long)(total - i));
+        int tmp = arr[i];
+        arr[i] = arr[j];
+        arr[j] = tmp;
+    }
+}
+
+/* ================================================================
+ * Saved catalog storage (A's deep entries)
+ * ================================================================ */
+
+#define BF_SAVE 30
+
+static MatN g_save_cat[BF_SAVE];
+static int  g_save_depth[BF_SAVE];
+static int  g_save_bf;
+static int  g_save_dim;
+static int  g_save_cat_size;
+
+/* ================================================================
+ * Main
+ * ================================================================ */
+
+int main(void) {
+    char msg[256];
+    int i;
+
+    printf("KNOTAPEL DEMO 104: Activation Coarseness Sweep\n");
+    printf("W_{6,0} (dim=5) vs W_{6,2} (dim=9)\n");
+    printf("=============================================\n\n");
+
+    g_cat = (MatN *)malloc((size_t)MAX_CAT * sizeof(MatN));
+    if (!g_cat) {
+        printf("FATAL: malloc failed\n");
+        return 1;
+    }
+
+    /* A = zeta_8^5 = -zeta_8, A_inv = zeta_8^3 */
+    g_A = cyc8_make(0, -1, 0, 0);
+    g_A_inv = cyc8_make(0, 0, 0, 1);
+
+    /* ============================================================
+     * Phase 0: Generator Verification
+     * ============================================================ */
+    printf("=== Phase 0: Generator Verification ===\n\n");
+
+    /* Module A: W_{6,0} dim=5 */
+    printf("--- Module A: W_{6,0} (dim=5) ---\n\n");
+    g_dim = 5;
+    build_tl_a();
+    build_braid_generators();
+    verify_tl("A");
+
+    printf("  Generator sparsity A: %d/%d nonzero\n",
+           matN_nonzero_count(&amp;g_e[0]) + matN_nonzero_count(&amp;g_e[1]) +
+           matN_nonzero_count(&amp;g_e[2]) + matN_nonzero_count(&amp;g_e[3]) +
+           matN_nonzero_count(&amp;g_e[4]),
+           g_dim * g_dim * N_TL);
+
+    /* Module B: W_{6,2} dim=9 */
+    printf("\n--- Module B: W_{6,2} (dim=9) ---\n\n");
+    g_dim = 9;
+    build_tl_b();
+    build_braid_generators();
+    verify_tl("B");
+
+    printf("  Generator sparsity B: %d/%d nonzero\n",
+           matN_nonzero_count(&amp;g_e[0]) + matN_nonzero_count(&amp;g_e[1]) +
+           matN_nonzero_count(&amp;g_e[2]) + matN_nonzero_count(&amp;g_e[3]) +
+           matN_nonzero_count(&amp;g_e[4]),
+           g_dim * g_dim * N_TL);
+
+    /* ============================================================
+     * Phase 1: BFS Catalogs + Deep Entry Selection
+     * ============================================================ */
+    printf("\n=== Phase 1: BFS Catalogs ===\n\n");
+
+    /* Build A catalog */
+    printf("--- Module A: W_{6,0} (dim=5) ---\n\n");
+    g_dim = 5;
+    build_tl_a();
+    build_braid_generators();
+    build_catalog(20);
+    check("A: Catalog built", g_cat_size &gt;= MAX_CAT);
+
+    /* Select A deep entries */
+    {
+        int deep_idx[1024];
+        int nd = 0, bf, step, j;
+
+        for (i = 0; i &lt; g_cat_size &amp;&amp; nd &lt; 1024; i++)
+            if (g_depth[i] &gt;= 4) deep_idx[nd++] = i;
+
+        bf = nd &lt; BF_SAVE ? nd : BF_SAVE;
+        step = nd / bf;
+        if (step &lt; 1) step = 1;
+
+        g_save_bf = bf;
+        g_save_dim = g_dim;
+        g_save_cat_size = g_cat_size;
+
+        for (j = 0; j &lt; bf; j++) {
+            int src = deep_idx[j * step];
+            g_save_cat[j] = g_cat[src];
+            g_save_depth[j] = g_depth[src];
+        }
+
+        printf("  A deep entries: %d (bf=%d)\n", nd, bf);
+    }
+
+    /* Build B catalog */
+    printf("\n--- Module B: W_{6,2} (dim=9) ---\n\n");
+    g_dim = 9;
+    build_tl_b();
+    build_braid_generators();
+    build_catalog(20);
+    check("B: Catalog built", g_cat_size &gt;= MAX_CAT);
+
+    /* Select B deep entries (keep in g_cat for Phase 3) */
+    {
+        int deep_idx[1024];
+        int nd = 0, bf_b, step_b, j;
+        static MatN b_deep[BF_SAVE];
+        static int b_deep_d[BF_SAVE];
+        int bf;
+
+        for (i = 0; i &lt; g_cat_size &amp;&amp; nd &lt; 1024; i++)
+            if (g_depth[i] &gt;= 4) deep_idx[nd++] = i;
+
+        bf_b = nd &lt; BF_SAVE ? nd : BF_SAVE;
+        step_b = nd / bf_b;
+        if (step_b &lt; 1) step_b = 1;
+
+        printf("  B deep entries: %d (bf=%d)\n", nd, bf_b);
+        bf = bf_b;
+
+        for (j = 0; j &lt; bf; j++) {
+            int src = deep_idx[j * step_b];
+            b_deep[j] = g_cat[src];
+            b_deep_d[j] = g_depth[src];
+        }
+
+        /* ============================================================
+         * Phase 2: Rank Computation (effective dimension)
+         * ============================================================ */
+        printf("\n=== Phase 2: Rank Computation ===\n\n");
+
+        /* B rank (catalog is still live, dim=9) */
+        {
+            int rank_b = compute_catalog_rank(g_cat_size);
+            int max_cols_b = g_dim * g_dim * 4;
+            printf("  W_{6,2} (dim=9): rank = %d / %d cols "
+                   "(%.1f%% of matrix space)\n",
+                   rank_b, max_cols_b,
+                   max_cols_b &gt; 0 ?
+                   100.0 * (double)rank_b / (double)max_cols_b : 0.0);
+            sprintf(msg, "B rank = %d", rank_b);
+            check(msg, rank_b &gt; 0);
+        }
+
+        /* A rank (need to rebuild A catalog) */
+        g_dim = 5;
+        build_tl_a();
+        build_braid_generators();
+        hash_init();
+        g_cat_size = 0;
+        /* Quick rebuild without printing */
+        {
+            int prev, gi, rd2;
+            MatN prod2;
+
+            g_cat[0] = matN_identity();
+            g_depth[0] = 0;
+            g_writhe[0] = 0;
+            hash_insert(0);
+            g_cat_size = 1;
+
+            rd2 = 1;
+            do {
+                prev = g_cat_size;
+                for (i = 0; i &lt; prev &amp;&amp; g_cat_size &lt; MAX_CAT; i++) {
+                    if (g_depth[i] != rd2 - 1) continue;
+                    for (gi = 0; gi &lt; N_GEN &amp;&amp; g_cat_size &lt; MAX_CAT; gi++) {
+                        matN_mul_to(&amp;g_cat[i], &amp;g_gen[gi], &amp;prod2);
+                        if (hash_find(&amp;prod2) &lt; 0) {
+                            g_cat[g_cat_size] = prod2;
+                            g_depth[g_cat_size] = rd2;
+                            g_writhe[g_cat_size] = g_writhe[i] +
+                                                   g_gen_writhe[gi];
+                            hash_insert(g_cat_size);
+                            g_cat_size++;
+                        }
+                    }
+                }
+                rd2++;
+            } while (g_cat_size &gt; prev &amp;&amp; g_cat_size &lt; MAX_CAT &amp;&amp; rd2 &lt;= 20);
+        }
+
+        {
+            int rank_a = compute_catalog_rank(g_cat_size);
+            int max_cols_a = g_dim * g_dim * 4;
+            printf("  W_{6,0} (dim=5): rank = %d / %d cols "
+                   "(%.1f%% of matrix space)\n",
+                   rank_a, max_cols_a,
+                   max_cols_a &gt; 0 ?
+                   100.0 * (double)rank_a / (double)max_cols_a : 0.0);
+            sprintf(msg, "A rank = %d", rank_a);
+            check(msg, rank_a &gt; 0);
+        }
+
+        /* ============================================================
+         * Phase 3: Component Count Sweep
+         * ============================================================ */
+        printf("\n=== Phase 3: Component Count Sweep (XOR6, k=128) ===\n\n");
+
+        /* A sweep: 25, 50, 75, 100 components */
+        {
+            int comp_levels_a[] = {10, 20, 25, 40, 50, 60, 75, 80, 100};
+            int n_levels_a = 9;
+            int xor_a[20];
+            int li;
+
+            /* Load A deep entries */
+            g_dim = 5;
+            for (j = 0; j &lt; g_save_bf; j++) {
+                g_cat[j] = g_save_cat[j];
+                g_depth[j] = g_save_depth[j];
+            }
+            g_cat_size = g_save_bf;
+
+            printf("  W_{6,0} (dim=5, max=100 comp):\n");
+            printf("  %8s  %8s\n", "comp", "XOR6");
+            printf("  %8s  %8s\n", "--------", "--------");
+
+            for (li = 0; li &lt; n_levels_a; li++) {
+                g_num_comp = comp_levels_a[li];
+                g_activate = matN_activate_nwrap;
+                xor_a[li] = count_xor_bf(3, 128, g_save_bf);
+                printf("  %8d  %8d\n", comp_levels_a[li], xor_a[li]);
+            }
+
+            /* Find peak */
+            {
+                int peak_idx = 0;
+                for (li = 1; li &lt; n_levels_a; li++)
+                    if (xor_a[li] &gt; xor_a[peak_idx]) peak_idx = li;
+                printf("  PEAK: %d comp -&gt; XOR6=%d\n",
+                       comp_levels_a[peak_idx], xor_a[peak_idx]);
+            }
+            check("A: Component sweep completed", 1);
+        }
+
+        /* B sweep: 25, 50, 75, 100, 120, 150, 200, 250, 324 */
+        {
+            int comp_levels_b[] = {10, 20, 25, 40, 50, 60, 75, 80, 100,
+                                   120, 140, 150, 175, 200, 250, 300, 324};
+            int n_levels_b = 17;
+            int xor_b[20];
+            int li;
+
+            /* Load B deep entries */
+            g_dim = 9;
+            for (j = 0; j &lt; bf; j++) {
+                g_cat[j] = b_deep[j];
+                g_depth[j] = b_deep_d[j];
+            }
+            g_cat_size = bf;
+
+            printf("\n  W_{6,2} (dim=9, max=324 comp):\n");
+            printf("  %8s  %8s\n", "comp", "XOR6");
+            printf("  %8s  %8s\n", "--------", "--------");
+
+            for (li = 0; li &lt; n_levels_b; li++) {
+                g_num_comp = comp_levels_b[li];
+                g_activate = matN_activate_nwrap;
+                xor_b[li] = count_xor_bf(3, 128, bf);
+                printf("  %8d  %8d\n", comp_levels_b[li], xor_b[li]);
+            }
+
+            /* Find peak */
+            {
+                int peak_idx = 0;
+                for (li = 1; li &lt; n_levels_b; li++)
+                    if (xor_b[li] &gt; xor_b[peak_idx]) peak_idx = li;
+                printf("  PEAK: %d comp -&gt; XOR6=%d\n",
+                       comp_levels_b[peak_idx], xor_b[peak_idx]);
+            }
+            check("B: Component sweep completed", 1);
+
+            /* Head-to-head at matched 100 components */
+            {
+                int a_at_100, b_at_100;
+
+                g_dim = 5;
+                for (j = 0; j &lt; g_save_bf; j++) {
+                    g_cat[j] = g_save_cat[j];
+                    g_depth[j] = g_save_depth[j];
+                }
+                g_cat_size = g_save_bf;
+
+                g_num_comp = 100;
+                g_activate = matN_activate_nwrap;
+                a_at_100 = count_xor_bf(3, 128, g_save_bf);
+
+                g_dim = 9;
+                for (j = 0; j &lt; bf; j++) {
+                    g_cat[j] = b_deep[j];
+                    g_depth[j] = b_deep_d[j];
+                }
+                g_cat_size = bf;
+
+                g_num_comp = 100;
+                g_activate = matN_activate_nwrap;
+                b_at_100 = count_xor_bf(3, 128, bf);
+
+                printf("\n  Head-to-head at 100 components:\n");
+                printf("    A@100 = %d    B@100 = %d\n", a_at_100, b_at_100);
+                if (b_at_100 &gt; a_at_100)
+                    printf("    B WINS at matched component count\n");
+                else if (a_at_100 &gt; b_at_100)
+                    printf("    A WINS at matched component count\n");
+                else
+                    printf("    TIED at matched component count\n");
+                check("Matched-100 comparison completed", 1);
+            }
+        }
+
+        /* ============================================================
+         * Phase 4: Random-100 Variants for W_{6,2}
+         * ============================================================
+         * Test whether information is uniformly spread or concentrated
+         * in specific components.
+         * ============================================================ */
+        printf("\n=== Phase 4: Random-100 Variants (W_{6,2}) ===\n\n");
+
+        {
+            int total_comp = 9 * 9 * 4; /* 324 */
+            int all_idx[400];
+            int trial;
+            int xor_rand[5]; /* 5 random trials */
+
+            /* Load B deep entries */
+            g_dim = 9;
+            for (j = 0; j &lt; bf; j++) {
+                g_cat[j] = b_deep[j];
+                g_depth[j] = b_deep_d[j];
+            }
+            g_cat_size = bf;
+
+            /* First 100 (sequential baseline) */
+            g_num_comp = 100;
+            g_activate = matN_activate_nwrap;
+
+            printf("  B first-100 (sequential): XOR6=%d\n",
+                   count_xor_bf(3, 128, bf));
+
+            /* 5 random trials of 100 components */
+            for (trial = 0; trial &lt; 5; trial++) {
+                int ti;
+                g_rng_state = (unsigned long)(12345678901UL +
+                              (unsigned long)trial * 999983UL);
+
+                /* Build index array */
+                for (ti = 0; ti &lt; total_comp; ti++)
+                    all_idx[ti] = ti;
+
+                /* Shuffle and take first 100 */
+                shuffle_first_n(all_idx, total_comp, 100);
+
+                /* Sort the selected indices for cache-friendliness */
+                {
+                    int a, b2;
+                    for (a = 0; a &lt; 100; a++)
+                        for (b2 = a + 1; b2 &lt; 100; b2++)
+                            if (all_idx[a] &gt; all_idx[b2]) {
+                                int tmp = all_idx[a];
+                                all_idx[a] = all_idx[b2];
+                                all_idx[b2] = tmp;
+                            }
+                }
+
+                g_rand_n = 100;
+                for (ti = 0; ti &lt; 100; ti++)
+                    g_rand_idx[ti] = all_idx[ti];
+
+                g_activate = matN_activate_rand;
+                xor_rand[trial] = count_xor_bf(3, 128, bf);
+
+                printf("  B random-100 trial %d: XOR6=%d\n",
+                       trial + 1, xor_rand[trial]);
+            }
+
+            /* Statistics */
+            {
+                long sum = 0;
+                int mn, mx;
+                mn = mx = xor_rand[0];
+                for (trial = 0; trial &lt; 5; trial++) {
+                    sum += (long)xor_rand[trial];
+                    if (xor_rand[trial] &lt; mn) mn = xor_rand[trial];
+                    if (xor_rand[trial] &gt; mx) mx = xor_rand[trial];
+                }
+                printf("  Random-100 stats: min=%d max=%d mean=%ld\n",
+                       mn, mx, sum / 5);
+                printf("  Spread (max-min) = %d\n", mx - mn);
+
+                if (mx - mn &lt; 200)
+                    printf("  INFO: Low spread =&gt; information "
+                           "uniformly distributed\n");
+                else
+                    printf("  INFO: High spread =&gt; information "
+                           "concentrated in specific components\n");
+            }
+
+            check("Random-100 test completed", 1);
+        }
+
+        /* ============================================================
+         * Phase 5: Branching Decomposition Tests (W_{6,2})
+         * ============================================================
+         * W_{6,2} basis splits under TL_6 -&gt; TL_5 restriction:
+         *   h0-h4: point 1 is through-strand ("W_{5,1} piece")
+         *   h5-h8: point 1 is in arc ("W_{5,3} piece")
+         * Cross-block = rows 0-4 x cols 5-8 + rows 5-8 x cols 0-4
+         *   = branching interaction between the two pieces
+         *
+         * Tests:
+         *   (a) sub6: first 6x6 = 144 comp (adds row/col 5 to sub5)
+         *   (b) cross-block: off-diagonal blocks only = 160 comp
+         *   (c) within-block: diagonal blocks only = 164 comp
+         *   (d) XOR8 at key activation levels
+         * ============================================================ */
+        printf("\n=== Phase 5: Branching Decomposition Tests (W_{6,2}) ===\n\n");
+
+        {
+            int xor_sub6, xor_cross, xor_within;
+            int xor8_full, xor8_sub6, xor8_cross;
+            int ci, ri, cj;
+
+            /* Load B deep entries */
+            g_dim = 9;
+            for (j = 0; j &lt; bf; j++) {
+                g_cat[j] = b_deep[j];
+                g_depth[j] = b_deep_d[j];
+            }
+            g_cat_size = bf;
+
+            /* (a) sub6: first 6x6 block = 144 components */
+            g_num_comp = 144; /* 6*6*4 */
+            g_activate = matN_activate_nwrap;
+            xor_sub6 = count_xor_bf(3, 128, bf);
+            printf("  (a) sub6 (first 6x6 = 144 comp): XOR6=%d\n", xor_sub6);
+
+            /* (b) cross-block: rows 0-4 x cols 5-8 + rows 5-8 x cols 0-4 */
+            /* Build index array for cross-block components */
+            ci = 0;
+            for (ri = 0; ri &lt; 5; ri++)
+                for (cj = 5; cj &lt; 9; cj++) {
+                    /* entry (ri, cj), 4 components each */
+                    int base = (ri * 9 + cj) * 4;
+                    g_rand_idx[ci++] = base;
+                    g_rand_idx[ci++] = base + 1;
+                    g_rand_idx[ci++] = base + 2;
+                    g_rand_idx[ci++] = base + 3;
+                }
+            for (ri = 5; ri &lt; 9; ri++)
+                for (cj = 0; cj &lt; 5; cj++) {
+                    int base = (ri * 9 + cj) * 4;
+                    g_rand_idx[ci++] = base;
+                    g_rand_idx[ci++] = base + 1;
+                    g_rand_idx[ci++] = base + 2;
+                    g_rand_idx[ci++] = base + 3;
+                }
+            g_rand_n = ci; /* should be (5*4 + 4*5) * 4 = 160 */
+            g_activate = matN_activate_rand;
+            xor_cross = count_xor_bf(3, 128, bf);
+            printf("  (b) cross-block (off-diag = %d comp): XOR6=%d\n",
+                   ci, xor_cross);
+
+            /* (c) within-block: rows 0-4 x cols 0-4 + rows 5-8 x cols 5-8 */
+            ci = 0;
+            for (ri = 0; ri &lt; 5; ri++)
+                for (cj = 0; cj &lt; 5; cj++) {
+                    int base = (ri * 9 + cj) * 4;
+                    g_rand_idx[ci++] = base;
+                    g_rand_idx[ci++] = base + 1;
+                    g_rand_idx[ci++] = base + 2;
+                    g_rand_idx[ci++] = base + 3;
+                }
+            for (ri = 5; ri &lt; 9; ri++)
+                for (cj = 5; cj &lt; 9; cj++) {
+                    int base = (ri * 9 + cj) * 4;
+                    g_rand_idx[ci++] = base;
+                    g_rand_idx[ci++] = base + 1;
+                    g_rand_idx[ci++] = base + 2;
+                    g_rand_idx[ci++] = base + 3;
+                }
+            g_rand_n = ci; /* should be (5*5 + 4*4) * 4 = 164 */
+            g_activate = matN_activate_rand;
+            xor_within = count_xor_bf(3, 128, bf);
+            printf("  (c) within-block (diag = %d comp): XOR6=%d\n",
+                   ci, xor_within);
+
+            /* (d) XOR8 at key activation levels */
+            printf("\n  XOR8 comparison:\n");
+
+            /* Full (324) */
+            g_num_comp = 324;
+            g_activate = matN_activate_nwrap;
+            xor8_full = count_xor_bf(4, 128, bf);
+            printf("    full (324 comp): XOR8=%d\n", xor8_full);
+
+            /* sub6 (144) */
+            g_num_comp = 144;
+            g_activate = matN_activate_nwrap;
+            xor8_sub6 = count_xor_bf(4, 128, bf);
+            printf("    sub6 (144 comp): XOR8=%d\n", xor8_sub6);
+
+            /* cross-block (160) */
+            ci = 0;
+            for (ri = 0; ri &lt; 5; ri++)
+                for (cj = 5; cj &lt; 9; cj++) {
+                    int base = (ri * 9 + cj) * 4;
+                    g_rand_idx[ci++] = base;
+                    g_rand_idx[ci++] = base + 1;
+                    g_rand_idx[ci++] = base + 2;
+                    g_rand_idx[ci++] = base + 3;
+                }
+            for (ri = 5; ri &lt; 9; ri++)
+                for (cj = 0; cj &lt; 5; cj++) {
+                    int base = (ri * 9 + cj) * 4;
+                    g_rand_idx[ci++] = base;
+                    g_rand_idx[ci++] = base + 1;
+                    g_rand_idx[ci++] = base + 2;
+                    g_rand_idx[ci++] = base + 3;
+                }
+            g_rand_n = ci;
+            g_activate = matN_activate_rand;
+            xor8_cross = count_xor_bf(4, 128, bf);
+            printf("    cross-block (%d comp): XOR8=%d\n", ci, xor8_cross);
+
+            /* Summary table */
+            printf("\n  Branching Decomposition Summary:\n");
+            printf("  %-14s  %6s  %8s  %8s\n",
+                   "Activation", "comp", "XOR6", "XOR8");
+            printf("  %-14s  %6s  %8s  %8s\n",
+                   "--------------", "------", "--------", "--------");
+            printf("  %-14s  %6d  %8d  %8s\n",
+                   "A full", 100, 2449, "(ref)");
+            printf("  %-14s  %6d  %8d  %8d\n",
+                   "B full", 324, 2238, xor8_full);
+            printf("  %-14s  %6d  %8d  %8d\n",
+                   "B sub6", 144, xor_sub6, xor8_sub6);
+            printf("  %-14s  %6d  %8d  %8d\n",
+                   "B cross-block", 160, xor_cross, xor8_cross);
+            printf("  %-14s  %6d  %8d  %8s\n",
+                   "B within-block", 164, xor_within, "-");
+
+            /* Diagnostic */
+            if (xor_cross &gt; xor_within)
+                printf("\n  VERDICT: Cross-block &gt; within-block "
+                       "=&gt; branching interaction IS the signal\n");
+            else
+                printf("\n  VERDICT: Within-block &gt;= cross-block "
+                       "=&gt; branching interaction is NOT the signal\n");
+
+            if (xor_sub6 &gt; 2238 + 100)
+                printf("  sub6 jump: adding row/col 5 (h5) "
+                       "carries significant signal\n");
+            else
+                printf("  sub6 flat: row/col 5 alone adds little\n");
+
+            check("Branching decomposition tests completed", 1);
+        }
+
+        /* ============================================================
+         * Phase 6: Sign-Rank Computation
+         * ============================================================
+         * The sign-rank is the rank of the ternary matrix where each
+         * integer component is replaced by its sign {-1, 0, +1}.
+         * This measures how many distinct sign patterns exist in the
+         * catalog — the effective dimension of the activation space.
+         *
+         * Prediction: sign-rank(B) ~ 120 (matching component sweep peak)
+         *             sign-rank(A) ~ 100 (full rank, since raw rank=100)
+         * ============================================================ */
+        printf("\n=== Phase 6: Sign-Rank Computation ===\n\n");
+
+        {
+            int srank_b, srank_a;
+            int max_cols_b, max_cols_a;
+
+            /* B sign-rank (need full B catalog) */
+            g_dim = 9;
+            build_tl_b();
+            build_braid_generators();
+            build_catalog(20);
+
+            max_cols_b = g_dim * g_dim * 4;
+            srank_b = compute_sign_rank(g_cat_size);
+            printf("  W_{6,2} (dim=9): sign-rank = %d / %d cols "
+                   "(%.1f%% of sign space)\n",
+                   srank_b, max_cols_b,
+                   max_cols_b &gt; 0 ?
+                   100.0 * (double)srank_b / (double)max_cols_b : 0.0);
+            sprintf(msg, "B sign-rank = %d", srank_b);
+            check(msg, srank_b &gt; 0);
+
+            /* A sign-rank (rebuild A catalog) */
+            g_dim = 5;
+            build_tl_a();
+            build_braid_generators();
+            hash_init();
+            g_cat_size = 0;
+            {
+                int prev2, gi2, rd3;
+                MatN prod3;
+
+                g_cat[0] = matN_identity();
+                g_depth[0] = 0;
+                g_writhe[0] = 0;
+                hash_insert(0);
+                g_cat_size = 1;
+
+                rd3 = 1;
+                do {
+                    prev2 = g_cat_size;
+                    for (i = 0; i &lt; prev2 &amp;&amp; g_cat_size &lt; MAX_CAT; i++) {
+                        if (g_depth[i] != rd3 - 1) continue;
+                        for (gi2 = 0; gi2 &lt; N_GEN &amp;&amp;
+                             g_cat_size &lt; MAX_CAT; gi2++) {
+                            matN_mul_to(&amp;g_cat[i], &amp;g_gen[gi2], &amp;prod3);
+                            if (hash_find(&amp;prod3) &lt; 0) {
+                                g_cat[g_cat_size] = prod3;
+                                g_depth[g_cat_size] = rd3;
+                                g_writhe[g_cat_size] = g_writhe[i] +
+                                                       g_gen_writhe[gi2];
+                                hash_insert(g_cat_size);
+                                g_cat_size++;
+                            }
+                        }
+                    }
+                    rd3++;
+                } while (g_cat_size &gt; prev2 &amp;&amp; g_cat_size &lt; MAX_CAT &amp;&amp;
+                         rd3 &lt;= 20);
+            }
+
+            max_cols_a = g_dim * g_dim * 4;
+            srank_a = compute_sign_rank(g_cat_size);
+            printf("  W_{6,0} (dim=5): sign-rank = %d / %d cols "
+                   "(%.1f%% of sign space)\n",
+                   srank_a, max_cols_a,
+                   max_cols_a &gt; 0 ?
+                   100.0 * (double)srank_a / (double)max_cols_a : 0.0);
+            sprintf(msg, "A sign-rank = %d", srank_a);
+            check(msg, srank_a &gt; 0);
+
+            /* Comparison with raw rank */
+            printf("\n  Rank comparison:\n");
+            printf("  %-14s  %6s  %6s  %6s\n",
+                   "Module", "raw", "sign", "cols");
+            printf("  %-14s  %6s  %6s  %6s\n",
+                   "--------------", "------", "------", "------");
+            printf("  %-14s  %6d  %6d  %6d\n",
+                   "W_{6,0}", 100, srank_a, max_cols_a);
+            printf("  %-14s  %6d  %6d  %6d\n",
+                   "W_{6,2}", 244, srank_b, max_cols_b);
+
+            if (srank_b &lt; 244)
+                printf("\n  Sign quantization COMPRESSES B: "
+                       "%d -&gt; %d (%.1f%% reduction)\n",
+                       244, srank_b,
+                       100.0 * (1.0 - (double)srank_b / 244.0));
+            if (srank_a == 100)
+                printf("  A sign-rank = raw rank: "
+                       "quantization is LOSSLESS for W_{6,0}\n");
+
+            check("Sign-rank comparison completed", 1);
+        }
+
+        /* ============================================================
+         * Phase 7: Multi-Hash Tests (W_{6,2})
+         * ============================================================
+         * Two independent polynomial hashes on disjoint component
+         * subsets, combined into a 2D cell: hash1*64 + hash2.
+         * Tests whether the hash is the bottleneck (292 sign dims
+         * available, single hash exploits ~120).
+         *
+         * Test 1: Row split (rows 0-4 = 180 comp, rows 5-8 = 144 comp)
+         * Test 2: Cross-block directional split (R0-4×C5-8 vs R5-8×C0-4)
+         * Test 3: Cross-block (160) + sub7 diagonal (36)
+         * ============================================================ */
+        printf("\n=== Phase 7: Multi-Hash Tests (W_{6,2}, k=64x64=4096) ===\n\n");
+
+        {
+            int xor6_t1, xor8_t1;
+            int xor6_t2, xor8_t2;
+            int xor6_t3, xor8_t3;
+            int xor6_ref, xor8_ref;
+            int ci1, ci2, ri, cj;
+
+            /* Load B deep entries */
+            g_dim = 9;
+            for (j = 0; j &lt; bf; j++) {
+                g_cat[j] = b_deep[j];
+                g_depth[j] = b_deep_d[j];
+            }
+            g_cat_size = bf;
+
+            g_multi_k = 64;
+
+            /* Reference: single hash at k=4096 with 160 cross-block comp */
+            ci1 = 0;
+            for (ri = 0; ri &lt; 5; ri++)
+                for (cj = 5; cj &lt; 9; cj++) {
+                    int base = (ri * 9 + cj) * 4;
+                    g_rand_idx[ci1++] = base;
+                    g_rand_idx[ci1++] = base + 1;
+                    g_rand_idx[ci1++] = base + 2;
+                    g_rand_idx[ci1++] = base + 3;
+                }
+            for (ri = 5; ri &lt; 9; ri++)
+                for (cj = 0; cj &lt; 5; cj++) {
+                    int base = (ri * 9 + cj) * 4;
+                    g_rand_idx[ci1++] = base;
+                    g_rand_idx[ci1++] = base + 1;
+                    g_rand_idx[ci1++] = base + 2;
+                    g_rand_idx[ci1++] = base + 3;
+                }
+            g_rand_n = ci1;
+            g_activate = matN_activate_rand;
+            xor6_ref = count_xor_bf(3, 4096, bf);
+            xor8_ref = count_xor_bf(4, 4096, bf);
+            printf("  Reference: cross-block single-hash k=4096 "
+                   "(160 comp): XOR6=%d XOR8=%d\n\n",
+                   xor6_ref, xor8_ref);
+
+            /* --------------------------------------------------
+             * Test 1: Row split
+             * Hash1: rows 0-4 (all cols) = 5*9*4 = 180 comp
+             * Hash2: rows 5-8 (all cols) = 4*9*4 = 144 comp
+             * -------------------------------------------------- */
+            ci1 = 0;
+            for (ri = 0; ri &lt; 5; ri++)
+                for (cj = 0; cj &lt; 9; cj++) {
+                    int base = (ri * 9 + cj) * 4;
+                    g_multi_idx1[ci1++] = base;
+                    g_multi_idx1[ci1++] = base + 1;
+                    g_multi_idx1[ci1++] = base + 2;
+                    g_multi_idx1[ci1++] = base + 3;
+                }
+            g_multi_n1 = ci1;
+
+            ci2 = 0;
+            for (ri = 5; ri &lt; 9; ri++)
+                for (cj = 0; cj &lt; 9; cj++) {
+                    int base = (ri * 9 + cj) * 4;
+                    g_multi_idx2[ci2++] = base;
+                    g_multi_idx2[ci2++] = base + 1;
+                    g_multi_idx2[ci2++] = base + 2;
+                    g_multi_idx2[ci2++] = base + 3;
+                }
+            g_multi_n2 = ci2;
+
+            g_activate = matN_activate_multi;
+            xor6_t1 = count_xor_bf(3, 4096, bf);
+            xor8_t1 = count_xor_bf(4, 4096, bf);
+            printf("  Test 1 (row split: %d+%d comp): "
+                   "XOR6=%d XOR8=%d\n",
+                   g_multi_n1, g_multi_n2, xor6_t1, xor8_t1);
+
+            /* --------------------------------------------------
+             * Test 2: Cross-block directional split
+             * Hash1: rows 0-4 x cols 5-8 = 5*4*4 = 80 comp
+             * Hash2: rows 5-8 x cols 0-4 = 4*5*4 = 80 comp
+             * -------------------------------------------------- */
+            ci1 = 0;
+            for (ri = 0; ri &lt; 5; ri++)
+                for (cj = 5; cj &lt; 9; cj++) {
+                    int base = (ri * 9 + cj) * 4;
+                    g_multi_idx1[ci1++] = base;
+                    g_multi_idx1[ci1++] = base + 1;
+                    g_multi_idx1[ci1++] = base + 2;
+                    g_multi_idx1[ci1++] = base + 3;
+                }
+            g_multi_n1 = ci1;
+
+            ci2 = 0;
+            for (ri = 5; ri &lt; 9; ri++)
+                for (cj = 0; cj &lt; 5; cj++) {
+                    int base = (ri * 9 + cj) * 4;
+                    g_multi_idx2[ci2++] = base;
+                    g_multi_idx2[ci2++] = base + 1;
+                    g_multi_idx2[ci2++] = base + 2;
+                    g_multi_idx2[ci2++] = base + 3;
+                }
+            g_multi_n2 = ci2;
+
+            g_activate = matN_activate_multi;
+            xor6_t2 = count_xor_bf(3, 4096, bf);
+            xor8_t2 = count_xor_bf(4, 4096, bf);
+            printf("  Test 2 (cross-block split: %d+%d comp): "
+                   "XOR6=%d XOR8=%d\n",
+                   g_multi_n1, g_multi_n2, xor6_t2, xor8_t2);
+
+            /* --------------------------------------------------
+             * Test 3: Cross-block + diagonal supplement
+             * Hash1: all cross-block = 160 comp
+             * Hash2: diagonal rows 0-6 x cols 0-6 minus
+             *        cross-block portion = sub7 diagonal only
+             *        = rows 0-4 x cols 0-4 (100) + rows 5-6 x cols 5-6 (16)
+             *        Hmm, simpler: h5-h6 diagonal = rows 5-6 x cols 5-6
+             *        = 2*2*4 = 16 comp. But that's tiny.
+             *        Better: full diagonal (5*5 + 4*4)*4 = 164 comp
+             *        but that's too many for MAX_MULTI_IDX=200.
+             *        Use: rows 5-8 x cols 5-8 = 4*4*4 = 64 comp
+             * -------------------------------------------------- */
+            ci1 = 0;
+            for (ri = 0; ri &lt; 5; ri++)
+                for (cj = 5; cj &lt; 9; cj++) {
+                    int base = (ri * 9 + cj) * 4;
+                    g_multi_idx1[ci1++] = base;
+                    g_multi_idx1[ci1++] = base + 1;
+                    g_multi_idx1[ci1++] = base + 2;
+                    g_multi_idx1[ci1++] = base + 3;
+                }
+            for (ri = 5; ri &lt; 9; ri++)
+                for (cj = 0; cj &lt; 5; cj++) {
+                    int base = (ri * 9 + cj) * 4;
+                    g_multi_idx1[ci1++] = base;
+                    g_multi_idx1[ci1++] = base + 1;
+                    g_multi_idx1[ci1++] = base + 2;
+                    g_multi_idx1[ci1++] = base + 3;
+                }
+            g_multi_n1 = ci1; /* 160 */
+
+            ci2 = 0;
+            for (ri = 5; ri &lt; 9; ri++)
+                for (cj = 5; cj &lt; 9; cj++) {
+                    int base = (ri * 9 + cj) * 4;
+                    g_multi_idx2[ci2++] = base;
+                    g_multi_idx2[ci2++] = base + 1;
+                    g_multi_idx2[ci2++] = base + 2;
+                    g_multi_idx2[ci2++] = base + 3;
+                }
+            g_multi_n2 = ci2; /* 64 */
+
+            g_activate = matN_activate_multi;
+            xor6_t3 = count_xor_bf(3, 4096, bf);
+            xor8_t3 = count_xor_bf(4, 4096, bf);
+            printf("  Test 3 (cross-block+diag: %d+%d comp): "
+                   "XOR6=%d XOR8=%d\n",
+                   g_multi_n1, g_multi_n2, xor6_t3, xor8_t3);
+
+            /* Summary */
+            printf("\n  Multi-Hash Summary:\n");
+            printf("  %-28s  %6s  %6s  %6s\n",
+                   "Test", "comp", "XOR6", "XOR8");
+            printf("  %-28s  %6s  %6s  %6s\n",
+                   "----------------------------", "------",
+                   "------", "------");
+            printf("  %-28s  %6d  %6d  %6d\n",
+                   "Ref: cross 1-hash k=4096", 160,
+                   xor6_ref, xor8_ref);
+            printf("  %-28s  %6s  %6d  %6d\n",
+                   "T1: row split 64x64", "180+144",
+                   xor6_t1, xor8_t1);
+            printf("  %-28s  %6s  %6d  %6d\n",
+                   "T2: cross-dir split 64x64", "80+80",
+                   xor6_t2, xor8_t2);
+            printf("  %-28s  %6s  %6d  %6d\n",
+                   "T3: cross+diag 64x64", "160+64",
+                   xor6_t3, xor8_t3);
+
+            /* Diagnostic */
+            if (xor8_t2 &gt; xor8_ref)
+                printf("\n  VERDICT: Multi-hash BEATS single-hash "
+                       "=&gt; hash WAS the bottleneck\n");
+            else
+                printf("\n  VERDICT: Multi-hash does NOT beat "
+                       "single-hash =&gt; bottleneck is elsewhere\n");
+
+            if (xor8_t2 &gt; xor8_t1)
+                printf("  Cross-block split &gt; row split "
+                       "=&gt; branching directions carry "
+                       "independent info\n");
+
+            check("Multi-hash tests completed", 1);
+        }
+
+        /* ============================================================
+         * Phase 8: k-Sweep on Cross-Block (W_{6,2}) and Full (W_{6,0})
+         * ============================================================
+         * How does XOR capacity scale with k (number of hash cells)?
+         * Tests k = 128, 256, 512, 1024, 2048, 4096.
+         * Reveals geometric→collision-avoidance transition.
+         * ============================================================ */
+        printf("\n=== Phase 8: k-Sweep ===\n\n");
+
+        {
+            int k_vals[] = {128, 256, 512, 1024, 2048, 4096};
+            int n_k = 6;
+            int ki;
+            int ci2, ri2, cj2;
+
+            /* B cross-block k-sweep */
+            printf("  W_{6,2} cross-block (160 comp):\n");
+            printf("  %8s  %8s  %8s\n", "k", "XOR6", "XOR8");
+            printf("  %8s  %8s  %8s\n", "--------", "--------",
+                   "--------");
+
+            g_dim = 9;
+            for (j = 0; j &lt; bf; j++) {
+                g_cat[j] = b_deep[j];
+                g_depth[j] = b_deep_d[j];
+            }
+            g_cat_size = bf;
+
+            /* Build cross-block index */
+            ci2 = 0;
+            for (ri2 = 0; ri2 &lt; 5; ri2++)
+                for (cj2 = 5; cj2 &lt; 9; cj2++) {
+                    int base = (ri2 * 9 + cj2) * 4;
+                    g_rand_idx[ci2++] = base;
+                    g_rand_idx[ci2++] = base + 1;
+                    g_rand_idx[ci2++] = base + 2;
+                    g_rand_idx[ci2++] = base + 3;
+                }
+            for (ri2 = 5; ri2 &lt; 9; ri2++)
+                for (cj2 = 0; cj2 &lt; 5; cj2++) {
+                    int base = (ri2 * 9 + cj2) * 4;
+                    g_rand_idx[ci2++] = base;
+                    g_rand_idx[ci2++] = base + 1;
+                    g_rand_idx[ci2++] = base + 2;
+                    g_rand_idx[ci2++] = base + 3;
+                }
+            g_rand_n = ci2;
+            g_activate = matN_activate_rand;
+
+            for (ki = 0; ki &lt; n_k; ki++) {
+                int xk6, xk8;
+                xk6 = count_xor_bf(3, k_vals[ki], bf);
+                xk8 = count_xor_bf(4, k_vals[ki], bf);
+                printf("  %8d  %8d  %8d\n", k_vals[ki], xk6, xk8);
+            }
+            check("B cross-block k-sweep completed", 1);
+
+            /* A full k-sweep */
+            printf("\n  W_{6,0} full (100 comp):\n");
+            printf("  %8s  %8s  %8s\n", "k", "XOR6", "XOR8");
+            printf("  %8s  %8s  %8s\n", "--------", "--------",
+                   "--------");
+
+            g_dim = 5;
+            for (j = 0; j &lt; g_save_bf; j++) {
+                g_cat[j] = g_save_cat[j];
+                g_depth[j] = g_save_depth[j];
+            }
+            g_cat_size = g_save_bf;
+
+            g_num_comp = 100;
+            g_activate = matN_activate_nwrap;
+
+            for (ki = 0; ki &lt; n_k; ki++) {
+                int xk6, xk8;
+                xk6 = count_xor_bf(3, k_vals[ki], g_save_bf);
+                xk8 = count_xor_bf(4, k_vals[ki], g_save_bf);
+                printf("  %8d  %8d  %8d\n", k_vals[ki], xk6, xk8);
+            }
+            check("A full k-sweep completed", 1);
+        }
+    }
+
+    /* ============================================================
+     * Summary
+     * ============================================================ */
+    printf("\n=============================================\n");
+    printf("Results: %d pass, %d fail\n", n_pass, n_fail);
+
+    free(g_cat);
+    return n_fail &gt; 0 ? 1 : 0;
+}
+</code></pre>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/c.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</body>
+</html>

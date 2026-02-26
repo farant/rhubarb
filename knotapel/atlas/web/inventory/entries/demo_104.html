@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>inventory/entries/demo_104.md</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+    <link rel="stylesheet" href="../../style.css">
+</head>
+<body>
+    <nav><a href="../../index.html">← Back to Index</a></nav><hr>
+    <h2>Demo 104: Activation Coarseness Sweep — Sign-Hash Component Tuning for W_{6,0} vs W_{6,2}</h2>
+<ul>
+<li><strong>Status</strong>: COMPLETE (RESULT)</li>
+<li><strong>File</strong>: <code><a href="../../demo_104_coarseness_sweep/main.c.html">demo_104_coarseness_sweep/main.c</a></code> (~1798 lines)</li>
+<li><strong>Tests</strong>: 35/35 pass (Phases 0-8)</li>
+<li><strong>Depends on</strong>: Demo 103 (W_{6,2} vs W_{6,0} dimension scaling test, catalogs and generator code reused), Demo 101 (5-strand DKC on W_{5,3}, sign-hash activation pattern), Demo 93 (1wpi XOR framework)</li>
+<li><strong>Feeds into</strong>: Demo 105 (W_{8,2} branching generalization, 8-strand k-regime test), future cross-block activation design for higher-strand modules</li>
+</ul>
+<h3>Headline</h3>
+The dim-9 W_{6,2} module's XOR deficit versus dim-5 W_{6,0} (observed in <a href="./demo_103.html">D103</a>) is a HASH problem, not an algebra problem: at optimal component count (120 of 324), W_{6,2} beats W_{6,0} (XOR6=2486 vs 2449), and the computational signal lives in the cross-block (off-diagonal branching interaction) components, not the within-block (diagonal) components -- but a k-sweep reveals this cross-block advantage is regime-dependent (low-k pigeonhole only), with W_{6,0} winning at every k value.
+<h3>Key Results</h3>
+<ul>
+<li><strong>Phase 0 -- Generator verification (20 tests)</strong>: Both modules verified. W_{6,0} (dim=5): 5 TL generators, sparsity 15/125 nonzero. W_{6,2} (dim=9): 5 TL generators, sparsity 25/405 nonzero. All e_i^2=0 and sigma_i * sigma_i_inv = I confirmed for both.</li>
+<li><strong>Phase 1 -- BFS catalogs (2 tests)</strong>: Both modules hit 32768-entry cap at round 6 with IDENTICAL growth profiles (1, 11, 77, 439, 2233, 10603, 32768). Growth per round: 10, 66, 362, 1794, 8370, 22165. max_abs progression: 1, 2, 3, 5, 8, 16. Confirms <a href="./demo_103.html">D103</a>'s strand-count growth law: same n=6, same growth regardless of module dimension.</li>
+<li><strong>Phase 2 -- Rank computation (2 tests)</strong>: W_{6,0} raw rank = 100/100 cols (100% of matrix space -- every component independent). W_{6,2} raw rank = 244/324 cols (75.3% -- 80 linearly dependent dimensions). This rank gap explains the <a href="./demo_103.html">D103</a> XOR deficit: W_{6,2} wastes hash bits on redundant information.</li>
+<li><strong>Phase 3 -- Component count sweep (3 tests)</strong>: W_{6,0} peaks monotonically at 100 comp (XOR6=2449). W_{6,2} peaks at 120 comp (XOR6=2486), BEATS W_{6,0}. Non-monotonic curve for B: rises to 120, drops through 150-250, partial recovery at 300, drops at 324 (2238). Named "Atkinson sweet spot" -- optimal information-per-collision tradeoff. Head-to-head at 100 comp: A=2449, B=2360 (A wins at matched count).</li>
+<li><strong>Phase 4 -- Random-100 variants (1 test)</strong>: 5 random selections of 100 components from W_{6,2}: min=2105, max=2367, mean=2266, spread=262. Sequential first-100 (2360) beats random mean (2266). HIGH spread indicates information concentrated in specific components, not uniformly distributed.</li>
+<li><strong>Phase 5 -- Branching decomposition (1 test, LANDMARK)</strong>: W_{6,2} decomposes under TL_5 restriction into through-strand piece (rows 0-4) and arc-bound piece (rows 5-8). Cross-block (off-diagonal, 160 comp) XOR6=2412, XOR8=952. Within-block (diagonal, 164 comp) XOR6=2235. Sub6 (first 6x6=144 comp) XOR6=2415, XOR8=720. VERDICT: cross-block &gt; within-block -- branching interaction IS the computational signal. XOR8 advantage dramatic: cross-block 952 vs B-full 557 vs within-block omitted.</li>
+<li><strong>Phase 6 -- Sign-rank computation (2 tests)</strong>: W_{6,0} sign-rank = 100/100 (100%, quantization LOSSLESS). W_{6,2} sign-rank = 292/324 (90.1%), HIGHER than raw rank (244). Sign quantization is an EXPANDER: the nonlinear sign() function breaks 48 linear dependencies, creating new independent ternary patterns. The Atkinson peak at 120 components is a hash-collision bottleneck, not a sign-dimension bottleneck.</li>
+<li><strong>Phase 7 -- Multi-hash tests (1 test)</strong>: Three multi-hash variants with k=64x64=4096: row split (180+144 comp, XOR6=3852, XOR8=22005), cross-block split (80+80 comp, XOR6=3534, XOR8=17939), cross+diag (160+64 comp, XOR6=3806, XOR8=21525). Reference: single-hash cross-block (160 comp, XOR6=3635, XOR8=19994). VERDICT: multi-hash does NOT beat single-hash. Cross-block split HURTS (17939 vs 19994) -- the two branching directions are correlated, not independent. k (cell count) is the real lever, not hash architecture.</li>
+<li><strong>Phase 8 -- k-sweep (2 tests, CRITICAL)</strong>: Swept k={128, 256, 512, 1024, 2048, 4096}. W_{6,0} full (100 comp) beats W_{6,2} cross-block (160 comp) at EVERY k for BOTH XOR6 and XOR8. At k=4096: A XOR8=21699, B XOR8=19994. The cross-block advantage at k=128 (952 vs 850) was a low-k artifact. Revised understanding: cross-block is a better ACTIVATION DESIGN (extracts more per cell), but W_{6,0} has more fundamental capacity at sufficient k.</li>
+</ul>
+<h3>Theorems/Conjectures</h3>
+<ul>
+<li><strong>Atkinson Sweet Spot (DEMONSTRATED)</strong>: For W_{6,2} at k=128, optimal component count is ~120 (of 324 total), producing XOR6=2486 which beats W_{6,0}'s maximum 2449. Named after Atkinson dithering -- optimal information-per-collision tradeoff in sign-hash quantization. The peak is k-dependent: at higher k, more components become usable.</li>
+<li><strong>Branching Interaction Thesis (CONFIRMED)</strong>: The computational signal in non-simple modules lives in the cross-block (off-diagonal) components under TL_{n-1} branching restriction. Cross-block activation (160 comp) outperforms within-block (164 comp) and full (324 comp) at matched k. This is because the branching cross-terms between the two TL_5 sub-pieces have low intra-block coherence.</li>
+<li><strong>Sign-Rank Expansion (NEW FINDING)</strong>: Sign quantization (ternary {-1,0,+1} projection) can INCREASE effective rank. W_{6,2}: raw rank 244, sign-rank 292 -- a gain of 48 independent directions. The nonlinear sign() function breaks linear dependencies that exist over Z. W_{6,0}: raw rank = sign-rank = 100 (already maximally independent, no expansion possible).</li>
+<li><strong>k is the Real Lever (DEMONSTRATED, partially REFUTES <a href="./demo_103.html">D103</a> conclusion)</strong>: Multi-hash architecture does not improve XOR capacity. Increasing k (cell count) is the primary scaling lever. The cross-block advantage at k=128 vanishes at k=4096. W_{6,0} wins at every k in the sweep.</li>
+<li><strong>Strand-Count Growth Law (RE-CONFIRMED)</strong>: Both dim-5 and dim-9 modules of TL_6 produce identical BFS growth profiles (1, 11, 77, 439, 2233, 10603, 32768). Growth rate is determined by strand count n, not module dimension.</li>
+</ul>
+<h3>Data</h3>
+<p><strong>Phase 2 -- Rank comparison:</strong></p>
+<table><thead><tr><th>Module</th><th>Raw Rank</th><th>Sign Rank</th><th>Total Cols</th><th>Raw %</th><th>Sign %</th></tr></thead><tbody><tr><td>W_{6,0} (dim=5)</td><td>100</td><td>100</td><td>100</td><td>100.0%</td><td>100.0%</td></tr><tr><td>W_{6,2} (dim=9)</td><td>244</td><td>292</td><td>324</td><td>75.3%</td><td>90.1%</td></tr></tbody></table>
+<p><strong>Phase 3 -- Component sweep (k=128):</strong></p>
+<p>W_{6,0} (dim=5, max=100 comp):</p>
+<table><thead><tr><th>comp</th><th>XOR6</th></tr></thead><tbody><tr><td>10</td><td>234</td></tr><tr><td>20</td><td>1166</td></tr><tr><td>25</td><td>1457</td></tr><tr><td>40</td><td>1678</td></tr><tr><td>50</td><td>2372</td></tr><tr><td>60</td><td>2353</td></tr><tr><td>75</td><td>2318</td></tr><tr><td>80</td><td>2370</td></tr><tr><td>100</td><td>2449</td></tr></tbody></table>
+<p>W_{6,2} (dim=9, max=324 comp):</p>
+<table><thead><tr><th>comp</th><th>XOR6</th></tr></thead><tbody><tr><td>10</td><td>254</td></tr><tr><td>20</td><td>817</td></tr><tr><td>25</td><td>1186</td></tr><tr><td>40</td><td>1703</td></tr><tr><td>50</td><td>1704</td></tr><tr><td>60</td><td>1885</td></tr><tr><td>75</td><td>2164</td></tr><tr><td>80</td><td>2101</td></tr><tr><td>100</td><td>2360</td></tr><tr><td><strong>120</strong></td><td><strong>2486</strong></td></tr><tr><td>140</td><td>2375</td></tr><tr><td>150</td><td>2300</td></tr><tr><td>175</td><td>2195</td></tr><tr><td>200</td><td>2265</td></tr><tr><td>250</td><td>2190</td></tr><tr><td>300</td><td>2412</td></tr><tr><td>324</td><td>2238</td></tr></tbody></table>
+<p><strong>Phase 4 -- Random-100 variants (W_{6,2}):</strong></p>
+<table><thead><tr><th>Trial</th><th>XOR6</th></tr></thead><tbody><tr><td>Sequential first-100</td><td>2360</td></tr><tr><td>Random trial 1</td><td>2318</td></tr><tr><td>Random trial 2</td><td>2195</td></tr><tr><td>Random trial 3</td><td>2347</td></tr><tr><td>Random trial 4</td><td>2367</td></tr><tr><td>Random trial 5</td><td>2105</td></tr><tr><td>Mean</td><td>2266</td></tr><tr><td>Spread (max-min)</td><td>262</td></tr></tbody></table>
+<p><strong>Phase 5 -- Branching decomposition:</strong></p>
+<table><thead><tr><th>Activation</th><th>comp</th><th>XOR6</th><th>XOR8</th></tr></thead><tbody><tr><td>A full</td><td>100</td><td>2449</td><td>(ref)</td></tr><tr><td>B full</td><td>324</td><td>2238</td><td>557</td></tr><tr><td>B sub6</td><td>144</td><td>2415</td><td>720</td></tr><tr><td>B cross-block</td><td>160</td><td>2412</td><td>952</td></tr><tr><td>B within-block</td><td>164</td><td>2235</td><td>-</td></tr></tbody></table>
+<p><strong>Phase 7 -- Multi-hash summary (k=64x64=4096):</strong></p>
+<table><thead><tr><th>Test</th><th>comp</th><th>XOR6</th><th>XOR8</th></tr></thead><tbody><tr><td>Ref: cross 1-hash</td><td>160</td><td>3635</td><td>19994</td></tr><tr><td>T1: row split</td><td>180+144</td><td>3852</td><td>22005</td></tr><tr><td>T2: cross-dir split</td><td>80+80</td><td>3534</td><td>17939</td></tr><tr><td>T3: cross+diag</td><td>160+64</td><td>3806</td><td>21525</td></tr></tbody></table>
+<p><strong>Phase 8 -- k-sweep:</strong></p>
+<p>W_{6,2} cross-block (160 comp):</p>
+<table><thead><tr><th>k</th><th>XOR6</th><th>XOR8</th></tr></thead><tbody><tr><td>128</td><td>2412</td><td>952</td></tr><tr><td>256</td><td>2978</td><td>3985</td></tr><tr><td>512</td><td>3369</td><td>9510</td></tr><tr><td>1024</td><td>3511</td><td>14503</td></tr><tr><td>2048</td><td>3566</td><td>17549</td></tr><tr><td>4096</td><td>3635</td><td>19994</td></tr></tbody></table>
+<p>W_{6,0} full (100 comp):</p>
+<table><thead><tr><th>k</th><th>XOR6</th><th>XOR8</th></tr></thead><tbody><tr><td>128</td><td>2449</td><td>850</td></tr><tr><td>256</td><td>3128</td><td>3894</td></tr><tr><td>512</td><td>3508</td><td>9414</td></tr><tr><td>1024</td><td>3730</td><td>15173</td></tr><tr><td>2048</td><td>3807</td><td>19059</td></tr><tr><td>4096</td><td>3866</td><td>21699</td></tr></tbody></table>
+<h3>Code Assets</h3>
+<ul>
+<li><strong><code>MatN</code> (variable-dimension matrix over Cyc8)</strong>: Generic NxN matrix (MAX_DIM=9) with runtime dimension <code>g_dim</code>. Operations: <code>matN_zero</code>, <code>matN_identity</code>, <code>matN_mul</code>, <code>matN_mul_to</code> (in-place output), <code>matN_eq</code>, <code>matN_add</code>, <code>matN_scale</code>, <code>matN_add_inplace</code>, <code>matN_sub_inplace</code>, <code>matN_max_abs</code>, <code>matN_nonzero_count</code>. All exact integer arithmetic.</li>
+<li><strong><code>matN_activate_n(m, k_param, num_comp)</code></strong>: Configurable-coarseness sign-hash activation. Hashes the first <code>num_comp</code> of the <code>g_dim<em>g_dim</em>4</code> ternary sign components (pos=2, zero=1, neg=0) using base-3 polynomial hash mod k_param. Enables the component-count sweep that is the core experiment of this demo.</li>
+<li><strong><code>matN_activate_rand(m, k_param)</code></strong>: Random-subset activation using index array <code>g_rand_idx[]</code>. Hashes components at arbitrary positions rather than sequential prefix, enabling the random-100 experiment.</li>
+<li><strong><code>matN_activate_multi(m, k_param)</code></strong>: Multi-hash activation using two independent index arrays, producing 2D cell ID = hash1 * k + hash2. Used in Phase 7 multi-hash tests.</li>
+<li><strong><code>compute_catalog_rank(n_entries)</code></strong>: Streaming Gaussian elimination over Z to compute rank of catalog as row vectors in R^{dim<em>dim</em>4}. Processes entries one at a time to avoid allocating full 32768 x 324 matrix. GCD normalization prevents integer overflow. Reusable for any MatN catalog.</li>
+<li><strong><code>compute_sign_rank(n_entries)</code></strong>: Same streaming Gaussian elimination but on ternary sign-projected vectors ({-1,0,+1}). Reveals the effective dimension of the activation's input space, which can EXCEED raw rank due to nonlinear projection.</li>
+<li><strong>Function-pointer activation switching</strong>: <code>g_activate</code> function pointer plus <code>activate_fn</code> typedef allows runtime switching between <code>matN_activate_nwrap</code>, <code>matN_activate_rand</code>, and <code>matN_activate_multi</code> without modifying the XOR test infrastructure.</li>
+<li><strong>Fisher-Yates shuffle with deterministic PRNG</strong>: xorshift PRNG (<code>rng_next</code>) with <code>shuffle_first_n</code> for reproducible random subset selection.</li>
+</ul>
+<h3>Literature Touched</h3>
+<ul>
+<li><strong>Atkinson dithering / quantization theory</strong>: The non-monotonic component-count curve resembles optimal quantization in dithering: too little quantization loses signal, too much loses useful collision structure. Named the peak "Atkinson sweet spot."</li>
+<li><strong>1-bit compressed sensing (Boufounos-Baraniuk 2008)</strong>: Sign-hash activation maps to 1-bit compressed sensing measurements. Cross-block works because branching cross-terms have low intra-block coherence (near-orthogonal TL_5 pieces), which is the incoherence condition for CS recovery.</li>
+<li><strong>Temperley-Lieb branching rules</strong>: W_{6,2} restricts to TL_5 as W_{5,1} (dim=5, through-strand piece) plus W_{5,3} (dim=4, arc-bound piece). The cross-block components encode interaction between these two pieces. This branching decomposition is the structural basis for the "branching interaction IS the signal" finding.</li>
+<li><strong>Reservoir computing frame</strong>: Braid representation = reservoir, sign hash = readout (deliberately lossy), XOR computation = exploiting collision patterns. Cross-block = optimized readout layer.</li>
+</ul>
+<h3>Open Questions</h3>
+<ul>
+<li><strong>Why does W_{6,0} win at high k despite W_{6,2} having richer algebra?</strong> At k=4096, A (100 comp) produces XOR8=21699 vs B cross-block (160 comp) at 19994. The 100% rank utilization of W_{6,0} may be the decisive factor -- no wasted hash bits. Or the dim-5 matrices may have a more uniform sign distribution that maps better to high-k cell grids.</li>
+<li><strong>Is the Atkinson peak k-dependent?</strong> At k=128, the peak is at 120 comp. Does it shift (to more components) at higher k? The sign-rank of 292 suggests much more could be exploited. Testing component sweep at k=4096 would answer this.</li>
+<li><strong>General cross-block recipe</strong>: For W_{n,j}, is the optimal activation always the cross-block under TL_{n-1} branching? <a href="./demo_105.html">D105</a> tests this at n=8 where branching is symmetric (14+14). If cross-block wins at n=8 too, this becomes a design principle.</li>
+<li><strong>Sign-rank expansion mechanism</strong>: What determines whether sign quantization expands or preserves rank? W_{6,0}: preserved (100=100). W_{6,2}: expanded (244 to 292). Is the expansion related to the 80 Z-linear dependencies being "nearly independent" in sign space? What about at n=8?</li>
+<li><strong>Information concentration in early components</strong>: Sequential first-100 (2360) beats random mean (2266) with high spread (262). Which specific components carry the most signal? A component-by-component importance ranking could identify the algebraically meaningful dimensions.</li>
+<li><strong>Branching advantage vs k regime</strong>: Cross-block advantage is dramatic at k=128 (XOR8: 952 vs 557) but disappears by k=4096. Is there a k threshold formula relating module dimension, rank, and crossover point?</li>
+</ul>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/c.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</body>
+</html>

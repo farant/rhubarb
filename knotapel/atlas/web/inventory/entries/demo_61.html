@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>inventory/entries/demo_61.md</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+    <link rel="stylesheet" href="../../style.css">
+</head>
+<body>
+    <nav><a href="../../index.html">← Back to Index</a></nav><hr>
+    <h2>Demo 61: Angular Proof of 11/13 Half-Plane Theorem</h2>
+<ul>
+<li><strong>Status</strong>: COMPLETE</li>
+<li><strong>File</strong>: <code><a href="../../demo_61_angular_proof/main.c.html">demo_61_angular_proof/main.c</a></code> (~662 lines)</li>
+<li><strong>Tests</strong>: ~14 checks (Phase 1: A=4 NPN verification, B=3 fast search N=120, C=5 full proof N=360 + cross-check; Phase 2: H=1 obstruction 0x06, I=1 obstruction 0x1B)</li>
+<li><strong>Depends on</strong>: Demo 55 (DKC Boolean at delta=sqrt(2), multiplicative encoding), Demo 48/50 (NPN classification framework)</li>
+<li><strong>Feeds into</strong>: Definitive classification of half-plane computability for multiplicative DKC; obstruction theory for Boolean function reachability</li>
+</ul>
+<h3>Headline</h3>
+Proves via pure integer arithmetic (zero floating-point) that exactly 11 of 13 non-trivial NPN classes are reachable by half-plane activations on multiplicative encodings z(a,b,c) = w1^a <em> w2^b </em> w3^c, with 0x06 (XOR-AND) and 0x1B (CROSS) provably unreachable independent of angles or half-plane orientation.
+<h3>Key Results</h3>
+<ul>
+<li><strong>Part A (NPN verification)</strong>: 14 NPN equivalence classes confirmed; canonical pairings verified (TRUE~FALSE, AND3~NOR3, XOR3~XNOR3)</li>
+<li><strong>Part B (Fast search N=120)</strong>: 1.7M triples (120^3) searched; 12 classes found; 0x06 and 0x1B absent; establishes initial conjecture</li>
+<li><strong>Part C (Full proof N=360)</strong>: 46.7M triples (360^3) searched with 8 boundary orientations each; 0x06 and 0x1B proven unreachable; exactly 12 achieved classes (11 non-trivial + FALSE); N=120 and N=360 results agree (cross-check); achieved set = {all 14} \ {0x06, 0x1B}</li>
+<li><strong>Part D (Witnesses)</strong>: Each achieved class displayed with witness triple (p1, p2, p3), Hamming weight, and affinity flag</li>
+<li><strong>Part E (Structural analysis)</strong>: All 14 classes displayed with weight, GF(2)-affinity, achievability, and TRUE set; key observation: affinity does NOT predict reachability (0x06 is affine but unreachable; 0x07, 0x16 are non-affine but reachable)</li>
+<li><strong>Part F (NPN orbit sizes)</strong>: Orbit size, Hamming weight, affinity, and achievability tabulated for all 14 classes</li>
+<li><strong>Part G (Additive triple analysis)</strong>: 6 non-trivial additive triples (b1,b2 → b3=b1|b2 where b1&amp;b2=0) analyzed for "additive conflicts" (b1 IN, b2 IN, b3 OUT); 0x06 has local additive conflicts explaining its obstruction; 0x1B has NO local conflicts (Cnt0=0) — its obstruction is global, not local</li>
+<li><strong>Part H (Minimal obstruction for 0x06)</strong>: Exhaustive search over all constraint subsets at N=60 finds minimum-size infeasible subsets; proves 0x06 blocked by small constraint sets</li>
+<li><strong>Part I (Minimal obstruction for 0x1B)</strong>: Same analysis for 0x1B; proves 0x1B blocked despite lacking local additive conflicts</li>
+</ul>
+<h3>Theorems/Conjectures</h3>
+<ul>
+<li><strong>11/13 Half-Plane Theorem</strong>: For ALL half-plane activations on multiplicative encodings z(a,b,c) = w1^a <em> w2^b </em> w3^c, exactly 11 of 13 non-trivial NPN classes are reachable; the unreachable classes are 0x06 (XOR-AND) and 0x1B (CROSS), independent of angles (phi1, phi2, phi3) and half-plane orientation</li>
+<li><strong>Additive angle structure</strong>: With multiplicative encoding, angle(z(a,b,c)) = a<em>phi1 + b</em>phi2 + c*phi3 (mod 2pi) — the 8 z-values form an additively structured configuration on the circle; half-plane classification = semicircle separability on this additive circle</li>
+<li><strong>0x06 obstruction (local)</strong>: Requires two angles in a semicircle with their sum outside — impossible for any additive angle structure (the sum of two angles in a semicircle is at most one more semicircle away)</li>
+<li><strong>0x1B obstruction (global)</strong>: Requires {0, phi3, phi2+phi3, phi1} in semicircle but phi2 outside — the gap structure is incompatible with semicircle separation despite no local additive triple conflict</li>
+<li><strong>Affinity ≠ reachability</strong>: GF(2) affine structure of the TRUE set does not determine half-plane reachability; the obstruction is geometric (semicircle separability on additively-structured circle), not algebraic</li>
+<li><strong>Proof completeness</strong>: 8 angles form C(8,2)=28 coincidence hyperplanes on the 3-torus [0,N)^3, creating O(10^4) chambers; grid spacing 1 at N=360 guarantees every chamber contains ~10^4 grid points, making the search provably exhaustive</li>
+</ul>
+<h3>Data</h3>
+<ul>
+<li>N=120 fast search: 120^3 = 1,728,000 triples × 8 boundaries = ~13.8M configurations</li>
+<li>N=360 full proof: 360^3 = 46,656,000 triples × 8 boundaries = ~373M configurations</li>
+<li>12 achieved NPN classes with witness triples (p1, p2, p3)</li>
+<li>2 unreachable classes: 0x06 (weight 2, affine) and 0x1B (weight 4, non-affine)</li>
+<li>6 additive triples with conflict counts per NPN class</li>
+<li>Minimal obstruction sizes for 0x06 and 0x1B at N=60</li>
+</ul>
+<h3>Code Assets</h3>
+<ul>
+<li><code>build_npn()</code> — NPN canonical form computation for all 256 truth tables (includes output negation in the NPN group)</li>
+<li><code>search(grid_n, show_progress)</code> — exhaustive grid search over all (p1, p2, p3) in {0..N-1}^3; computes 8 integer angles mod N; tests 8 semicircle boundary positions per triple; records achieved NPN classes and witness triples</li>
+<li><code>masked_feasible(target, mask, grid_n)</code> — checks if a partial truth table (target restricted to mask bits) is achievable at given grid resolution</li>
+<li><code>find_min_obstruction(target, grid_n, ...)</code> — finds minimum-size infeasible constraint subsets by exhaustive search over all masks of increasing size</li>
+<li><code>is_affine(tt)</code> — tests if truth table's TRUE set forms a GF(2) affine subspace (a^b^c closed)</li>
+<li><code>print_true_set()</code>, <code>print_constraints()</code>, <code>angle_label()</code> — display utilities for truth table analysis</li>
+<li><code>popcnt()</code> — Hamming weight (population count)</li>
+</ul>
+<h3>Literature Touched</h3>
+<ul>
+<li>NPN equivalence classes of 3-input Boolean functions (complete enumeration)</li>
+<li>Semicircle separability on additively-structured angle configurations</li>
+<li>Coincidence hyperplane arrangements on the 3-torus</li>
+<li>GF(2) affine subspaces and Boolean function classification</li>
+<li>Minimal infeasible subsystems (obstruction theory for geometric feasibility)</li>
+<li>Multiplicative encoding as natural DKC representation (angles are additive)</li>
+</ul>
+<h3>Open Questions</h3>
+<ul>
+<li>Can the 0x06 and 0x1B obstructions be expressed as closed-form algebraic conditions (not just computational proof)?</li>
+<li>Does the 11/13 ratio persist for 4+ inputs, or do more classes become unreachable with higher-dimensional additive angle structures?</li>
+<li>Is there a deeper connection between the two unreachable classes (0x06 and 0x1B seem structurally different — one has local conflicts, one has global-only)?</li>
+<li>Can multi-sector activation (k&gt;2) recover 0x06 and 0x1B under multiplicative encoding, as it recovered parity under additive encoding in Demo 50?</li>
+</ul>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/c.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</body>
+</html>

@@ -1,0 +1,1157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>raqiya/probatio_gauss_scrutinium.c</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+    <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+    <nav><a href="../index.html">← Back to Index</a></nav><hr>
+    <h1>raqiya/probatio_gauss_scrutinium.c</h1><pre><code class="language-c">/*
+ * probatio_gauss_scrutinium.c
+ *
+ * Reimplement Z[i] detectors using scrutinium.h scaffolding.
+ * Compare results with original gauss.h detectors.
+ * Measures code reduction and validates the abstraction.
+ */
+
+#include &lt;stdio.h&gt;
+#include &lt;string.h&gt;
+
+#define GAUSS_PRINT
+#define SCR_PRINT
+#include "gauss.h"
+#include "scrutinium.h"
+
+static int n_tests = 0;
+static int n_pass = 0;
+static int n_fail = 0;
+
+static void check(int cond, const char *msg) {
+    n_tests++;
+    if (cond) {
+        n_pass++;
+    } else {
+        n_fail++;
+        printf("  FAIL: %s\n", msg);
+    }
+}
+
+/* ================================================================
+ * void* wrapper functions for Z[i] arithmetic
+ *
+ * Sprint 4B: Using SCR_WRAP_* macros from scrutinium.h.
+ * 16 macro invocations + 3 custom replace ~130 lines.
+ * ================================================================ */
+
+/* --- Genus vtable wrappers (all via macros) --- */
+
+SCR_WRAP_EQ(gauss_eq_v, Gauss_Z, gauss_eq)
+SCR_WRAP_HASH(gauss_hash_v, Gauss_Z, gauss_hash)
+SCR_WRAP_BINOP(gauss_add_v, Gauss_Z, gauss_add)
+SCR_WRAP_BINOP(gauss_mul_v, Gauss_Z, gauss_mul)
+SCR_WRAP_UNOP(gauss_neg_v, Gauss_Z, gauss_neg)
+SCR_WRAP_UNOP(gauss_conj_v, Gauss_Z, gauss_conj)
+
+SCR_WRAP_CLASSIS_HASH_LONG(gauss_norm_hash_v, Gauss_Z, gauss_norm)
+SCR_WRAP_CLASSIS_EQ(gauss_norm_eq_v, Gauss_Z, gauss_norm)
+
+SCR_WRAP_GEN_ITER(gauss_unit_gen_v, Gauss_Z, gauss_mul_i)
+SCR_WRAP_GEN_GALOIS2(gauss_auto_gen_v, Gauss_Z, gauss_conj)
+
+SCR_WRAP_PARS2(gauss_pars_v, Gauss_Z, a, b)
+SCR_WRAP_AXIS(gauss_axis_classis_v, Gauss_Z, gauss_axis)
+
+/* --- Comparison test wrappers (also via macros where possible) --- */
+
+/* Axis: hash is custom (non-trivial int mapping), eq via macro */
+static unsigned long gauss_axis_hash_v(const void *a, const void *config) {
+    int ax = gauss_axis(*(const Gauss_Z *)a);
+    (void)config;
+    /* Map: 0-&gt;0, 1-&gt;1, -1-&gt;2, -2-&gt;3 */
+    if (ax &gt;= 0) return (unsigned long)ax;
+    if (ax == -1) return 2;
+    return 3;
+}
+SCR_WRAP_CLASSIS_EQ(gauss_axis_eq_v, Gauss_Z, gauss_axis)
+
+/* 2-adic norm valuation */
+SCR_WRAP_CLASSIS_HASH_INT(gauss_v2norm_hash_v, Gauss_Z, gauss_norm_2adic_val)
+SCR_WRAP_CLASSIS_EQ(gauss_v2norm_eq_v, Gauss_Z, gauss_norm_2adic_val)
+
+/* Negation edge generator (alias of gauss_neg_v for edge tests) */
+SCR_WRAP_UNOP(gauss_neg_op_v, Gauss_Z, gauss_neg)
+
+/* --- Custom comparison test wrappers (composition, no macro) --- */
+
+static int gauss_sign_dist_v(const void *a, const void *b,
+                              const void *config) {
+    (void)config;
+    return gauss_sign_distance(*(const Gauss_Z *)a, *(const Gauss_Z *)b);
+}
+
+static int gauss_sum_zeros_v(const void *a, const void *b,
+                              const void *config) {
+    Gauss_Z s = gauss_add(*(const Gauss_Z *)a, *(const Gauss_Z *)b);
+    (void)config;
+    return gauss_zero_count(s);
+}
+
+static int gauss_diff_zeros_v(const void *a, const void *b,
+                               const void *config) {
+    Gauss_Z d = gauss_sub(*(const Gauss_Z *)a, *(const Gauss_Z *)b);
+    (void)config;
+    return gauss_zero_count(d);
+}
+
+/* ================================================================
+ * Comparison: partitions_match
+ *
+ * Two partitions are "the same" if they have the same grouping
+ * (possibly with different group_id labels).
+ * ================================================================ */
+
+static int partitions_match(const Gauss_Partition *old, const Scr_Partition *new_p) {
+    int i, j;
+    if (old-&gt;n_values != new_p-&gt;n_values) return 0;
+    if (old-&gt;n_groups != new_p-&gt;n_groups) return 0;
+    /* Check: for all i,j: old says same group iff new says same group */
+    for (i = 0; i &lt; old-&gt;n_values; i++)
+        for (j = i + 1; j &lt; old-&gt;n_values; j++) {
+            int old_same = (old-&gt;group_id[i] == old-&gt;group_id[j]);
+            int new_same = (new_p-&gt;group_id[i] == new_p-&gt;group_id[j]);
+            if (old_same != new_same) return 0;
+        }
+    return 1;
+}
+
+/* ================================================================
+ * Test: scaffolded detectors vs original detectors
+ * ================================================================ */
+
+static void test_norm_classes(void) {
+    Gauss_Z vals[6];
+    Gauss_Partition old_p;
+    Scr_Partition new_p;
+
+    printf("--- Norm Classes: old vs scaffolded ---\n");
+
+    vals[0] = gauss_make(1, 1);    /* norm 2 */
+    vals[1] = gauss_make(1, -1);   /* norm 2 */
+    vals[2] = gauss_make(-1, 1);   /* norm 2 */
+    vals[3] = gauss_make(2, 1);    /* norm 5 */
+    vals[4] = gauss_make(1, 2);    /* norm 5 */
+    vals[5] = gauss_make(3, 0);    /* norm 9 */
+
+    old_p = gauss_detect_norm_classes(vals, 6);
+    new_p = scr_partitio_a_classe(vals, 6, sizeof(Gauss_Z),
+                                    gauss_norm_hash_v, gauss_norm_eq_v, NULL);
+
+    check(partitions_match(&amp;old_p, &amp;new_p), "norm classes match");
+    check(new_p.n_groups == old_p.n_groups, "same group count");
+    printf("  old: %d groups, new: %d groups\n", old_p.n_groups, new_p.n_groups);
+
+    gauss_partition_free(&amp;old_p);
+    scr_partition_free(&amp;new_p);
+}
+
+static void test_unit_orbits(void) {
+    Gauss_Z vals[9];
+    Gauss_Partition old_p;
+    Scr_Partition new_p;
+
+    printf("--- Unit Orbits: old vs scaffolded ---\n");
+
+    vals[0] = gauss_make(1, 0);
+    vals[1] = gauss_make(0, 1);
+    vals[2] = gauss_make(-1, 0);
+    vals[3] = gauss_make(0, -1);
+    vals[4] = gauss_make(2, 0);
+    vals[5] = gauss_make(0, 2);
+    vals[6] = gauss_make(-2, 0);
+    vals[7] = gauss_make(0, -2);
+    vals[8] = gauss_make(3, 0);
+
+    old_p = gauss_detect_unit_orbits(vals, 9);
+    new_p = scr_partitio_ab_generatoribus(
+        vals, 9, sizeof(Gauss_Z),
+        gauss_eq_v, gauss_hash_v,
+        4, gauss_unit_gen_v, NULL);
+
+    check(partitions_match(&amp;old_p, &amp;new_p), "unit orbits match");
+    check(new_p.n_groups == old_p.n_groups, "same group count");
+    printf("  old: %d groups, new: %d groups\n", old_p.n_groups, new_p.n_groups);
+
+    gauss_partition_free(&amp;old_p);
+    scr_partition_free(&amp;new_p);
+}
+
+static void test_galois_orbits(void) {
+    Gauss_Z vals[5];
+    Gauss_Partition old_p;
+    Scr_Partition new_p;
+
+    printf("--- Galois Orbits: old vs scaffolded ---\n");
+
+    vals[0] = gauss_make(3, 4);
+    vals[1] = gauss_make(3, -4);
+    vals[2] = gauss_make(5, 0);
+    vals[3] = gauss_make(1, 7);
+    vals[4] = gauss_make(1, -7);
+
+    old_p = gauss_detect_galois_orbits(vals, 5);
+    new_p = scr_partitio_ab_generatoribus(
+        vals, 5, sizeof(Gauss_Z),
+        gauss_eq_v, gauss_hash_v,
+        2, gauss_auto_gen_v, NULL);
+
+    check(partitions_match(&amp;old_p, &amp;new_p), "galois orbits match");
+    check(new_p.n_groups == old_p.n_groups, "same group count");
+    printf("  old: %d groups, new: %d groups\n", old_p.n_groups, new_p.n_groups);
+
+    gauss_partition_free(&amp;old_p);
+    scr_partition_free(&amp;new_p);
+}
+
+static void test_axis_classes(void) {
+    Gauss_Z vals[5];
+    Gauss_Partition old_p;
+    Scr_Partition new_p;
+
+    printf("--- Axis Classes: old vs scaffolded ---\n");
+
+    vals[0] = gauss_make(3, 0);
+    vals[1] = gauss_make(-7, 0);
+    vals[2] = gauss_make(0, 4);
+    vals[3] = gauss_make(0, -2);
+    vals[4] = gauss_make(1, 1);
+
+    old_p = gauss_detect_axis_classes(vals, 5);
+    new_p = scr_partitio_a_classe(vals, 5, sizeof(Gauss_Z),
+                                    gauss_axis_hash_v, gauss_axis_eq_v, NULL);
+
+    check(partitions_match(&amp;old_p, &amp;new_p), "axis classes match");
+    check(new_p.n_groups == old_p.n_groups, "same group count");
+    printf("  old: %d groups, new: %d groups\n", old_p.n_groups, new_p.n_groups);
+
+    gauss_partition_free(&amp;old_p);
+    scr_partition_free(&amp;new_p);
+}
+
+static void test_v2_classes(void) {
+    Gauss_Z vals[4];
+    Gauss_Partition old_p;
+    Scr_Partition new_p;
+
+    printf("--- 2-Adic Norm Classes: old vs scaffolded ---\n");
+
+    vals[0] = gauss_make(1, 0);   /* norm 1, v2=0 */
+    vals[1] = gauss_make(1, 1);   /* norm 2, v2=1 */
+    vals[2] = gauss_make(2, 0);   /* norm 4, v2=2 */
+    vals[3] = gauss_make(2, 2);   /* norm 8, v2=3 */
+
+    old_p = gauss_detect_norm_2adic_classes(vals, 4);
+    new_p = scr_partitio_a_classe(vals, 4, sizeof(Gauss_Z),
+                                    gauss_v2norm_hash_v, gauss_v2norm_eq_v, NULL);
+
+    check(partitions_match(&amp;old_p, &amp;new_p), "v2 norm classes match");
+    check(new_p.n_groups == old_p.n_groups, "same group count");
+    printf("  old: %d groups, new: %d groups\n", old_p.n_groups, new_p.n_groups);
+
+    gauss_partition_free(&amp;old_p);
+    scr_partition_free(&amp;new_p);
+}
+
+static void test_sign_distances(void) {
+    Gauss_Z vals[4];
+    Gauss_PairHist old_h;
+    Scr_PairHist new_h;
+
+    printf("--- Sign Distances: old vs scaffolded ---\n");
+
+    vals[0] = gauss_make(1, 1);
+    vals[1] = gauss_make(-1, 1);
+    vals[2] = gauss_make(1, -1);
+    vals[3] = gauss_make(0, 1);
+
+    old_h = gauss_detect_sign_distances(vals, 4);
+    new_h = scr_parhist_a_distantia(vals, 4, sizeof(Gauss_Z),
+                                      gauss_sign_dist_v, 3, NULL);
+
+    check(old_h.bins[0] == new_h.bins[0], "bin 0 match");
+    check(old_h.bins[1] == new_h.bins[1], "bin 1 match");
+    check(old_h.bins[2] == new_h.bins[2], "bin 2 match");
+    check(old_h.total == new_h.total, "total match");
+    printf("  old bins: %d %d %d, new bins: %d %d %d\n",
+           old_h.bins[0], old_h.bins[1], old_h.bins[2],
+           new_h.bins[0], new_h.bins[1], new_h.bins[2]);
+}
+
+static void test_sum_zeros(void) {
+    Gauss_Z vals[4];
+    Gauss_PairHist old_h;
+    Scr_PairHist new_h;
+
+    printf("--- Sum Zeros: old vs scaffolded ---\n");
+
+    vals[0] = gauss_make(1, 2);
+    vals[1] = gauss_make(-1, -2);
+    vals[2] = gauss_make(3, 0);
+    vals[3] = gauss_make(0, 5);
+
+    old_h = gauss_detect_sum_zeros(vals, 4);
+    new_h = scr_parhist_a_distantia(vals, 4, sizeof(Gauss_Z),
+                                      gauss_sum_zeros_v, 3, NULL);
+
+    check(old_h.bins[0] == new_h.bins[0], "bin 0 match");
+    check(old_h.bins[1] == new_h.bins[1], "bin 1 match");
+    check(old_h.bins[2] == new_h.bins[2], "bin 2 match");
+    check(old_h.total == new_h.total, "total match");
+}
+
+static void test_diff_zeros(void) {
+    Gauss_Z vals[4];
+    Gauss_PairHist old_h;
+    Scr_PairHist new_h;
+
+    printf("--- Diff Zeros: old vs scaffolded ---\n");
+
+    vals[0] = gauss_make(1, 2);
+    vals[1] = gauss_make(1, 5);
+    vals[2] = gauss_make(3, 2);
+    vals[3] = gauss_make(0, 2);
+
+    old_h = gauss_detect_diff_zeros(vals, 4);
+    new_h = scr_parhist_a_distantia(vals, 4, sizeof(Gauss_Z),
+                                      gauss_diff_zeros_v, 3, NULL);
+
+    check(old_h.bins[0] == new_h.bins[0], "bin 0 match");
+    check(old_h.bins[1] == new_h.bins[1], "bin 1 match");
+    check(old_h.bins[2] == new_h.bins[2], "bin 2 match");
+    check(old_h.total == new_h.total, "total match");
+}
+
+/* ================================================================
+ * Test: edge generators via scaffolding
+ * ================================================================ */
+
+static void test_negation_edges(void) {
+    Gauss_Z vals[5];
+    Scr_EdgeList el;
+
+    printf("--- Negation Edges (scaffolded) ---\n");
+
+    vals[0] = gauss_make(1, 2);
+    vals[1] = gauss_make(-1, -2);   /* neg of 0 */
+    vals[2] = gauss_make(3, 0);
+    vals[3] = gauss_make(-3, 0);    /* neg of 2 */
+    vals[4] = gauss_make(5, 5);     /* no partner */
+
+    el = scr_edges_ab_operatione(
+        vals, 5, sizeof(Gauss_Z),
+        gauss_eq_v, gauss_hash_v,
+        gauss_neg_op_v, NULL, "negation", 0);
+
+    check(el.count == 2, "2 negation edges");
+
+    scr_el_free(&amp;el);
+}
+
+static void test_additive_closure_edges(void) {
+    Gauss_Z vals[4];
+    Scr_EdgeList el;
+
+    printf("--- Additive Closure Edges (scaffolded) ---\n");
+
+    vals[0] = gauss_make(1, 0);   /* 1 */
+    vals[1] = gauss_make(2, 0);   /* 2 */
+    vals[2] = gauss_make(3, 0);   /* 3 = 1+2 */
+    vals[3] = gauss_make(0, 1);   /* i */
+
+    el = scr_edges_ab_operatione_binaria(
+        vals, 4, sizeof(Gauss_Z),
+        gauss_eq_v, gauss_hash_v,
+        gauss_add_v, NULL, "additive_closure", 0);
+
+    /* 1+2=3 (yes), 1+3=4 (no), 1+i (no), 2+3=5 (no), 2+i (no), 3+i (no) */
+    check(el.count == 1, "1 additive closure edge (1+2=3)");
+
+    scr_el_free(&amp;el);
+}
+
+static void test_product_closure_edges(void) {
+    Gauss_Z vals[4];
+    Scr_EdgeList el;
+
+    printf("--- Product Closure Edges (scaffolded) ---\n");
+
+    vals[0] = gauss_make(1, 0);   /* 1 */
+    vals[1] = gauss_make(0, 1);   /* i */
+    vals[2] = gauss_make(-1, 0);  /* -1 = i*i */
+    vals[3] = gauss_make(2, 0);   /* 2 */
+
+    el = scr_edges_ab_operatione_binaria(
+        vals, 4, sizeof(Gauss_Z),
+        gauss_eq_v, gauss_hash_v,
+        gauss_mul_v, NULL, "product_closure", 0);
+
+    /* 1*i=i(yes), 1*(-1)=-1(yes), 1*2=2(yes), i*(-1)=-i(no),
+     * i*2=2i(no), (-1)*2=-2(no) */
+    check(el.count == 3, "3 product closure edges");
+
+    scr_el_free(&amp;el);
+}
+
+/* ================================================================
+ * Test: partition lattice on real Z[i] data
+ * ================================================================ */
+
+static void test_partition_lattice(void) {
+    Gauss_Z vals[9];
+    Scr_Partition parts[5];
+    const char *names[5];
+    int dag[25]; /* 5x5 */
+    int dups[5];
+    int i;
+
+    printf("--- Partition Lattice on Z[i] data ---\n");
+
+    vals[0] = gauss_make(1, 0);    /* 1, norm=1, real, v2=0 */
+    vals[1] = gauss_make(0, 1);    /* i, norm=1, imag, v2=0 */
+    vals[2] = gauss_make(-1, 0);   /* -1, norm=1, real, v2=0 */
+    vals[3] = gauss_make(0, -1);   /* -i, norm=1, imag, v2=0 */
+    vals[4] = gauss_make(1, 1);    /* 1+i, norm=2, off-axis, v2=1 */
+    vals[5] = gauss_make(1, -1);   /* 1-i, norm=2, off-axis, v2=1 */
+    vals[6] = gauss_make(2, 0);    /* 2, norm=4, real, v2=2 */
+    vals[7] = gauss_make(0, 2);    /* 2i, norm=4, imag, v2=2 */
+    vals[8] = gauss_make(3, 0);    /* 3, norm=9, real, v2=0 */
+
+    /* Run all partition detectors via scaffolding */
+    names[0] = "unit_orbits";
+    parts[0] = scr_partitio_ab_generatoribus(
+        vals, 9, sizeof(Gauss_Z),
+        gauss_eq_v, gauss_hash_v,
+        4, gauss_unit_gen_v, NULL);
+
+    names[1] = "norm_classes";
+    parts[1] = scr_partitio_a_classe(
+        vals, 9, sizeof(Gauss_Z),
+        gauss_norm_hash_v, gauss_norm_eq_v, NULL);
+
+    names[2] = "galois_orbits";
+    parts[2] = scr_partitio_ab_generatoribus(
+        vals, 9, sizeof(Gauss_Z),
+        gauss_eq_v, gauss_hash_v,
+        2, gauss_auto_gen_v, NULL);
+
+    names[3] = "axis_classes";
+    parts[3] = scr_partitio_a_classe(
+        vals, 9, sizeof(Gauss_Z),
+        gauss_axis_hash_v, gauss_axis_eq_v, NULL);
+
+    names[4] = "v2_norm";
+    parts[4] = scr_partitio_a_classe(
+        vals, 9, sizeof(Gauss_Z),
+        gauss_v2norm_hash_v, gauss_v2norm_eq_v, NULL);
+
+    printf("\n  Partition summary:\n");
+    for (i = 0; i &lt; 5; i++)
+        printf("    %s: %d groups\n", names[i], parts[i].n_groups);
+
+    /* Compute refinement DAG */
+    scr_partition_refinement_dag(parts, 5, dag);
+
+    printf("\n  Refinement relations (A -&gt; B means A refines B):\n");
+    for (i = 0; i &lt; 5; i++) {
+        int j;
+        for (j = 0; j &lt; 5; j++) {
+            if (i == j) continue;
+            if (dag[i * 5 + j])
+                printf("    %s -&gt; %s\n", names[i], names[j]);
+        }
+    }
+
+    /* Check key structural facts */
+    /* Unit orbits should refine norm classes (associates have same norm) */
+    check(dag[0 * 5 + 1] == 1, "unit_orbits refines norm_classes");
+
+    /* Galois orbits should refine norm classes (conjugates have same norm) */
+    check(dag[2 * 5 + 1] == 1, "galois_orbits refines norm_classes");
+
+    /* Find duplicates */
+    scr_partition_find_duplicates(parts, 5, dups);
+    printf("\n  Duplicates:");
+    {
+        int any = 0;
+        for (i = 0; i &lt; 5; i++) {
+            if (dups[i]) { printf(" %s", names[i]); any = 1; }
+        }
+        if (!any) printf(" (none)");
+    }
+    printf("\n");
+
+    /* Compute meet of all partitions */
+    {
+        Scr_Partition meet_all = scr_partition_meet_all(parts, 5);
+        printf("\n  Meet of all 5 partitions: %d groups", meet_all.n_groups);
+        printf(" (max possible = %d)\n", 9);
+
+        /* If meet == discrete (9 groups), the detectors are collectively exhaustive */
+        if (meet_all.n_groups == 9)
+            printf("  -&gt; Detectors are COLLECTIVELY EXHAUSTIVE (meet = discrete)\n");
+        else
+            printf("  -&gt; Detectors leave %d-element classes unresolved\n",
+                   scr_partition_max_size(&amp;meet_all));
+
+        scr_partition_free(&amp;meet_all);
+    }
+
+    /* Check complementary pairs */
+    {
+        Scr_Partition join;
+        printf("\n  Complementary pair checks (join = trivial?):\n");
+
+        join = scr_partition_join(&amp;parts[0], &amp;parts[3]);
+        printf("    unit_orbits + axis_classes: join = %d groups %s\n",
+               join.n_groups, join.n_groups == 1 ? "(COMPLEMENTARY)" : "");
+        scr_partition_free(&amp;join);
+
+        join = scr_partition_join(&amp;parts[1], &amp;parts[3]);
+        printf("    norm_classes + axis_classes: join = %d groups %s\n",
+               join.n_groups, join.n_groups == 1 ? "(COMPLEMENTARY)" : "");
+        scr_partition_free(&amp;join);
+    }
+
+    printf("\n");
+
+    for (i = 0; i &lt; 5; i++)
+        scr_partition_free(&amp;parts[i]);
+}
+
+/* ================================================================
+ * Scr_Genus for Z[i] + detector registration + pipeline test
+ * ================================================================ */
+
+static Scr_Genus gauss_genus_crea(void) {
+    Scr_Genus g;
+    memset(&amp;g, 0, sizeof(g));
+
+    g.titulis = "Z[i]";
+    g.magnitudo = (unsigned long)sizeof(Gauss_Z);
+
+    g.aequalis = gauss_eq_v;
+    g.dispersio = gauss_hash_v;
+
+    g.nega = gauss_neg_v;
+    g.adde = gauss_add_v;
+    g.multiplica = gauss_mul_v;
+    g.conjuga = gauss_conj_v;
+
+    g.norma_dispersio = gauss_norm_hash_v;
+    g.norma_aequalis = gauss_norm_eq_v;
+
+    g.unitas_numerus = 4;
+    g.unitas_generator = gauss_unit_gen_v;
+
+    g.automorphismus_numerus = 2;
+    g.automorphismus_generator = gauss_auto_gen_v;
+
+    g.partes_numerus = 2;
+    g.pars = gauss_pars_v;
+    g.axis_classis = gauss_axis_classis_v;
+
+    g.config = NULL;
+
+    return g;
+}
+
+static void gauss_registra_indagatores(Scr_Registrum *reg,
+                                       const Scr_Genus *genus) {
+    Scr_Indagator ind;
+
+    /* Universal detectors (14 for Z[i]):
+     * norm, unit, galois, true_norm, partial_norm_sigma_1,
+     * true_trace, partial_trace_sigma_1, neg_edges, add_edges,
+     * mul_edges, axis_classes, sign_distances, sum_zeros, diff_zeros */
+    scr_registra_universales(reg, genus);
+
+    /* Type-specific: v2_norm_classes (2-adic valuation) */
+    memset(&amp;ind, 0, sizeof(ind));
+    ind.titulis = "v2_norm_classes";
+    ind.genus_indagatoris = SCR_IND_PARTITIO;
+    ind.requisita = SCR_REQ_NIHIL;
+    ind.classis_dispersio = gauss_v2norm_hash_v;
+    ind.classis_aequalis = gauss_v2norm_eq_v;
+    scr_registrum_adde(reg, &amp;ind);
+}
+
+/* ================================================================
+ * Pipeline test: one-call full analysis
+ * ================================================================ */
+
+static void test_pipeline(void) {
+    Scr_Genus genus;
+    Scr_Registrum reg;
+    Scr_Scrutinium s;
+    Gauss_Z vals[9];
+    int i, pi;
+
+    printf("--- Pipeline Test: scr_scrutare ---\n");
+
+    /* Same test data as partition lattice test */
+    vals[0] = gauss_make(1, 0);
+    vals[1] = gauss_make(0, 1);
+    vals[2] = gauss_make(-1, 0);
+    vals[3] = gauss_make(0, -1);
+    vals[4] = gauss_make(1, 1);
+    vals[5] = gauss_make(1, -1);
+    vals[6] = gauss_make(2, 0);
+    vals[7] = gauss_make(0, 2);
+    vals[8] = gauss_make(3, 0);
+
+    /* Setup: 14 universal + 1 type-specific (v2) = 15 */
+    genus = gauss_genus_crea();
+    scr_registrum_init(&amp;reg);
+    gauss_registra_indagatores(&amp;reg, &amp;genus);
+
+    check(reg.numerus == 15, "registered 15 detectors");
+
+    /* Run pipeline */
+    s = scr_scrutare(&amp;reg, &amp;genus, vals, 9);
+
+    /* Verify counts */
+    check(s.numerus_totalis == 15, "15 total detectors");
+    check(s.numerus_activi == 15, "all 15 ran (Z[i] has all capabilities)");
+    check(s.numerus_partitionum == 9,
+          "9 partition detectors (norm+unit+galois+tn+pn+tt+pt+axis+v2)");
+
+    /* Verify partition results match manual tests */
+    /* Find norm_classes partition */
+    for (i = 0; i &lt; s.numerus_totalis; i++) {
+        if (!s.activi[i]) continue;
+        if (s.genera[i] != SCR_IND_PARTITIO) continue;
+
+        if (strcmp(s.nomina[i], "norm_classes") == 0) {
+            check(s.partitiones[i].n_groups == 4,
+                  "pipeline: norm_classes = 4 groups");
+        }
+        if (strcmp(s.nomina[i], "unit_orbits") == 0) {
+            check(s.partitiones[i].n_groups == 4,
+                  "pipeline: unit_orbits = 4 groups");
+        }
+        if (strcmp(s.nomina[i], "galois_orbits") == 0) {
+            check(s.partitiones[i].n_groups == 7,
+                  "pipeline: galois_orbits = 7 groups");
+        }
+        if (strcmp(s.nomina[i], "axis_classes") == 0) {
+            check(s.partitiones[i].n_groups == 3,
+                  "pipeline: axis_classes = 3 groups");
+        }
+        if (strcmp(s.nomina[i], "v2_norm_classes") == 0) {
+            check(s.partitiones[i].n_groups == 3,
+                  "pipeline: v2_norm_classes = 3 groups");
+        }
+    }
+
+    /* Verify lattice computed correctly */
+    check(s.conventus.n_groups == 7, "pipeline: meet of all = 7 groups");
+
+    /* Verify refinement DAG: galois_orbits refines everything.
+     * NOTE: This is DATA-DEPENDENT, not structural. It holds here because
+     * the only conjugate pairs present {(0,1)/(0,-1), (1,1)/(1,-1)} lie
+     * on special lines (imag axis, a=b diagonal) where conjugates are
+     * also associates. See test_discriminating_values for the V-shape. */
+    {
+        int galois_pi = -1;
+        for (pi = 0; pi &lt; s.numerus_partitionum; pi++) {
+            int idx = s.partitio_indices[pi];
+            if (strcmp(s.nomina[idx], "galois_orbits") == 0) {
+                galois_pi = pi;
+                break;
+            }
+        }
+        check(galois_pi &gt;= 0, "pipeline: found galois_orbits in lattice");
+        if (galois_pi &gt;= 0) {
+            /* galois should refine every other partition */
+            int refines_all = 1;
+            for (pi = 0; pi &lt; s.numerus_partitionum; pi++) {
+                if (pi == galois_pi) continue;
+                if (!s.ordo[galois_pi * s.numerus_partitionum + pi])
+                    refines_all = 0;
+            }
+            check(refines_all, "pipeline: galois_orbits refines all others");
+        }
+    }
+
+    /* Verify duplicate detection: norm = unit_orbits for this data */
+    {
+        int norm_pi = -1, unit_pi = -1;
+        int has_dup = 0;
+        for (pi = 0; pi &lt; s.numerus_partitionum; pi++) {
+            int idx = s.partitio_indices[pi];
+            if (strcmp(s.nomina[idx], "norm_classes") == 0) norm_pi = pi;
+            if (strcmp(s.nomina[idx], "unit_orbits") == 0) unit_pi = pi;
+        }
+        if (norm_pi &gt;= 0 &amp;&amp; unit_pi &gt;= 0) {
+            has_dup = s.duplices[norm_pi] || s.duplices[unit_pi];
+        }
+        check(has_dup, "pipeline: detected norm/unit duplicate");
+    }
+
+    /* Verify histogram results */
+    for (i = 0; i &lt; s.numerus_totalis; i++) {
+        if (!s.activi[i] || s.genera[i] != SCR_IND_HISTOGRAM) continue;
+        if (strcmp(s.nomina[i], "sign_distances") == 0) {
+            /* 9 values: 36 pairs, bins [0]=4 [1]=15 [2]=17 */
+            check(s.histogrammata[i].bins[0] == 4 &amp;&amp;
+                  s.histogrammata[i].bins[1] == 15 &amp;&amp;
+                  s.histogrammata[i].bins[2] == 17,
+                  "pipeline: sign_distances bins match");
+        }
+    }
+
+    /* Verify edge results */
+    for (i = 0; i &lt; s.numerus_totalis; i++) {
+        if (!s.activi[i] || s.genera[i] != SCR_IND_ACIES) continue;
+        if (strcmp(s.nomina[i], "negation_edges") == 0) {
+            check(s.acies[i].count &gt; 0, "pipeline: negation_edges produced edges");
+        }
+    }
+
+    /* Print full analysis */
+    printf("\n");
+    scr_print_scrutinium(&amp;s);
+    printf("\n");
+
+    scr_scrutinium_libera(&amp;s);
+}
+
+/* ================================================================
+ * Prerequisite skipping test
+ * ================================================================ */
+
+static void test_prerequisite_skipping(void) {
+    Scr_Genus genus;
+    Scr_Registrum reg;
+    Scr_Scrutinium s;
+    Gauss_Z vals[4];
+
+    printf("--- Prerequisite Skipping Test ---\n");
+
+    vals[0] = gauss_make(1, 0);
+    vals[1] = gauss_make(0, 1);
+    vals[2] = gauss_make(1, 1);
+    vals[3] = gauss_make(2, 0);
+
+    /* Create a crippled genus: no norm, no units, no automorphisms,
+     * but HAS adde, nega, pars, axis_classis */
+    memset(&amp;genus, 0, sizeof(genus));
+    genus.titulis = "Z[i] (crippled)";
+    genus.magnitudo = (unsigned long)sizeof(Gauss_Z);
+    genus.aequalis = gauss_eq_v;
+    genus.dispersio = gauss_hash_v;
+    genus.nega = gauss_neg_v;
+    genus.adde = gauss_add_v;
+    genus.partes_numerus = 2;
+    genus.pars = gauss_pars_v;
+    genus.axis_classis = gauss_axis_classis_v;
+    /* No: multiplica, conjuga, norma, unitates, automorphismi */
+
+    /* Register using universal + v2. Universal will only register what
+     * the crippled genus supports: neg_edges, add_edges,
+     * axis_classes, sign_distances, sum_zeros, diff_zeros = 6.
+     * Plus v2 (no prereqs) = 7 total. */
+    scr_registrum_init(&amp;reg);
+    gauss_registra_indagatores(&amp;reg, &amp;genus);
+
+    s = scr_scrutare(&amp;reg, &amp;genus, vals, 4);
+
+    /* All 7 should run (nothing registered that can't run) */
+    {
+        int i;
+        printf("  Registered: %d, Ran: %d\n",
+               s.numerus_totalis, s.numerus_activi);
+        for (i = 0; i &lt; s.numerus_totalis; i++) {
+            if (!s.activi[i])
+                printf("  Skipped: %s\n", s.nomina[i]);
+        }
+        check(s.numerus_totalis == 7,
+              "7 detectors registered for crippled genus");
+        check(s.numerus_activi == 7,
+              "all 7 ran (only registered what crippled genus supports)");
+    }
+
+    /* Verify axis_classes works without norm/unit/auto */
+    {
+        int i;
+        for (i = 0; i &lt; s.numerus_totalis; i++) {
+            if (s.activi[i] &amp;&amp; strcmp(s.nomina[i], "axis_classes") == 0) {
+                check(s.partitiones[i].n_groups &gt; 0,
+                      "axis_classes ran without norm/unit/auto");
+            }
+        }
+    }
+
+    scr_scrutinium_libera(&amp;s);
+}
+
+/* ================================================================
+ * Universal detectors test
+ *
+ * Uses scr_registra_universales to auto-register detectors from
+ * the Genus vtable, then adds type-specific ones manually.
+ * ================================================================ */
+
+static void test_universal_detectors(void) {
+    Scr_Genus genus;
+    Scr_Registrum reg;
+    Scr_Scrutinium s;
+    Gauss_Z vals[4];
+    int n_universal;
+
+    printf("--- Universal Detectors Test ---\n");
+
+    vals[0] = gauss_make(1, 0);
+    vals[1] = gauss_make(0, 1);
+    vals[2] = gauss_make(1, 1);
+    vals[3] = gauss_make(2, 0);
+
+    genus = gauss_genus_crea();
+    scr_registrum_init(&amp;reg);
+
+    /* Auto-register universal detectors.
+     * 14 = 10 algebraic + 4 component-derived
+     *   (axis_classes, sign_distances, sum_zeros, diff_zeros) */
+    n_universal = scr_registra_universales(&amp;reg, &amp;genus);
+    check(n_universal == 14,
+          "universal: 14 detectors auto-registered for Z[i]");
+
+    s = scr_scrutare(&amp;reg, &amp;genus, vals, 4);
+
+    check(s.numerus_activi == 14, "universal: all 14 ran");
+    check(s.numerus_partitionum == 8,
+          "universal: 8 partition detectors (norms+traces+unit+galois+axis)");
+
+    scr_print_scrutinium(&amp;s);
+    printf("\n");
+
+    scr_scrutinium_libera(&amp;s);
+}
+
+/* ================================================================
+ * Discriminating test: richer value set that breaks coincidences
+ *
+ * Values chosen to reveal the V-shape lattice topology:
+ *   - 2+i and 1+2i have the same norm (5) but are NOT associates
+ *     → breaks norm = unit_orbits
+ *   - 2-i = conj(2+i) is included, and 2-i is NOT an associate of 2+i
+ *     (associates of 2+i are: {2+i, -1+2i, -2-i, 1-2i})
+ *     → breaks galois refines unit_orbits
+ *   - Similarly 3-i = conj(3+i), not an associate of 3+i
+ *
+ * Result: galois and unit_orbits are INCOMPARABLE (V-shape).
+ * This is STRUCTURAL for Z[i], not data-dependent — it holds for
+ * any generic element off the special lines {b=0, a=0, a=b, a=-b}.
+ * ================================================================ */
+
+static void test_discriminating_values(void) {
+    Scr_Genus genus;
+    Scr_Registrum reg;
+    Scr_Scrutinium s;
+    Gauss_Z vals[14];
+    int i, pi;
+    int norm_groups = -1, unit_groups = -1, galois_groups = -1;
+    int axis_groups = -1, v2_groups = -1;
+
+    printf("--- Discriminating Value Set Test (V-Shape) ---\n");
+
+    vals[0]  = gauss_make(1, 0);     /* norm=1,  real,     v2=0 */
+    vals[1]  = gauss_make(0, 1);     /* norm=1,  imag,     v2=0 */
+    vals[2]  = gauss_make(2, 0);     /* norm=4,  real,     v2=2 */
+    vals[3]  = gauss_make(0, 2);     /* norm=4,  imag,     v2=2 */
+    vals[4]  = gauss_make(1, 1);     /* norm=2,  off-axis, v2=1 */
+    vals[5]  = gauss_make(2, 1);     /* norm=5,  off-axis, v2=0 */
+    vals[6]  = gauss_make(1, 2);     /* norm=5,  off-axis, v2=0 */
+    vals[7]  = gauss_make(3, 0);     /* norm=9,  real,     v2=0 */
+    vals[8]  = gauss_make(3, 1);     /* norm=10, off-axis, v2=1 */
+    vals[9]  = gauss_make(1, 3);     /* norm=10, off-axis, v2=1 */
+    vals[10] = gauss_make(5, 0);     /* norm=25, real,     v2=0 */
+    vals[11] = gauss_make(2, 3);     /* norm=13, off-axis, v2=0 */
+    /* Conjugate pairs: these reveal the V-shape */
+    vals[12] = gauss_make(2, -1);    /* conj(2+i), norm=5, v2=0.
+                                      * Associate of 1+2i (=i^3*(2-i)),
+                                      * NOT associate of 2+i. */
+    vals[13] = gauss_make(3, -1);    /* conj(3+i), norm=10, v2=1.
+                                      * Associate of 1+3i (=i^3*(3-i)),
+                                      * NOT associate of 3+i. */
+
+    genus = gauss_genus_crea();
+    scr_registrum_init(&amp;reg);
+
+    /* Universal detectors (includes axis_classes, sign/sum/diff) */
+    scr_registra_universales(&amp;reg, &amp;genus);
+
+    /* Type-specific: v2_norm_classes (2-adic valuation, not universal) */
+    {
+        Scr_Indagator ind;
+
+        memset(&amp;ind, 0, sizeof(ind));
+        ind.titulis = "v2_norm_classes";
+        ind.genus_indagatoris = SCR_IND_PARTITIO;
+        ind.classis_dispersio = gauss_v2norm_hash_v;
+        ind.classis_aequalis = gauss_v2norm_eq_v;
+        scr_registrum_adde(&amp;reg, &amp;ind);
+    }
+
+    s = scr_scrutare(&amp;reg, &amp;genus, vals, 14);
+
+    /* Extract group counts for each partition detector */
+    for (i = 0; i &lt; s.numerus_totalis; i++) {
+        if (!s.activi[i] || s.genera[i] != SCR_IND_PARTITIO) continue;
+        if (strcmp(s.nomina[i], "norm_classes") == 0)
+            norm_groups = s.partitiones[i].n_groups;
+        if (strcmp(s.nomina[i], "unit_orbits") == 0)
+            unit_groups = s.partitiones[i].n_groups;
+        if (strcmp(s.nomina[i], "galois_orbits") == 0)
+            galois_groups = s.partitiones[i].n_groups;
+        if (strcmp(s.nomina[i], "axis_classes") == 0)
+            axis_groups = s.partitiones[i].n_groups;
+        if (strcmp(s.nomina[i], "v2_norm_classes") == 0)
+            v2_groups = s.partitiones[i].n_groups;
+    }
+
+    printf("  norm=%d, unit=%d, galois=%d, axis=%d, v2=%d\n",
+           norm_groups, unit_groups, galois_groups, axis_groups, v2_groups);
+
+    /* KEY CHECK: norm != unit_orbits (broken by 2+i / 1+2i) */
+    check(norm_groups != unit_groups,
+          "discriminating: norm != unit_orbits (coincidence broken)");
+
+    /* All five partitions should be distinct */
+    check(norm_groups != axis_groups,
+          "discriminating: norm != axis");
+    check(norm_groups != v2_groups,
+          "discriminating: norm != v2");
+    check(unit_groups != galois_groups,
+          "discriminating: unit != galois");
+    (void)axis_groups; (void)v2_groups;
+
+    /* ---- V-SHAPE: galois and unit_orbits are INCOMPARABLE ----
+     *
+     * galois orbit {2+i, 2-i}: conj(2+i)=2-i.
+     *   But 2+i has unit orbit {2+i} and 2-i has unit orbit {1+2i, 2-i}.
+     *   → galois orbit spans 2 unit orbits → galois does NOT refine unit.
+     *
+     * unit orbit {1+2i, 2-i}: 2-i = i^3*(1+2i).
+     *   But 1+2i is a galois singleton (conj(1+2i)=1-2i not in set)
+     *   and 2-i is in galois orbit {2+i, 2-i}.
+     *   → unit orbit spans 2 galois orbits → unit does NOT refine galois.
+     *
+     * Both refine norm (structural: associates and conjugates preserve norm).
+     */
+    {
+        int galois_pi = -1, unit_pi = -1, norm_pi = -1;
+        for (pi = 0; pi &lt; s.numerus_partitionum; pi++) {
+            int idx = s.partitio_indices[pi];
+            if (strcmp(s.nomina[idx], "galois_orbits") == 0)
+                galois_pi = pi;
+            if (strcmp(s.nomina[idx], "unit_orbits") == 0)
+                unit_pi = pi;
+            if (strcmp(s.nomina[idx], "norm_classes") == 0)
+                norm_pi = pi;
+        }
+
+        /* galois refines norm (structural: N(conj(z)) = N(z)) */
+        if (galois_pi &gt;= 0 &amp;&amp; norm_pi &gt;= 0)
+            check(s.ordo[galois_pi * s.numerus_partitionum + norm_pi],
+                  "discriminating: galois refines norm (structural)");
+
+        /* unit refines norm (structural: associates have same norm) */
+        if (unit_pi &gt;= 0 &amp;&amp; norm_pi &gt;= 0)
+            check(s.ordo[unit_pi * s.numerus_partitionum + norm_pi],
+                  "discriminating: unit refines norm (structural)");
+
+        /* galois does NOT refine unit_orbits (V-shape!) */
+        if (galois_pi &gt;= 0 &amp;&amp; unit_pi &gt;= 0)
+            check(!s.ordo[galois_pi * s.numerus_partitionum + unit_pi],
+                  "discriminating: galois does NOT refine unit (V-shape!)");
+
+        /* unit does NOT refine galois (incomparable) */
+        if (unit_pi &gt;= 0 &amp;&amp; galois_pi &gt;= 0)
+            check(!s.ordo[unit_pi * s.numerus_partitionum + galois_pi],
+                  "discriminating: unit does NOT refine galois (incomparable)");
+    }
+
+    /* For Z[i]: true_norm = norm (because Gal = {id, conj}).
+     * So true_norm_classes should be a duplicate of norm_classes.
+     * This is a STRUCTURAL THEOREM for Z[i]. */
+    {
+        int found_tn_dup = 0;
+        for (pi = 0; pi &lt; s.numerus_partitionum; pi++) {
+            int idx = s.partitio_indices[pi];
+            if (strcmp(s.nomina[idx], "true_norm_classes") == 0 &amp;&amp;
+                s.duplices[pi])
+                found_tn_dup = 1;
+        }
+        check(found_tn_dup,
+              "discriminating: true_norm = norm for Z[i] (structural)");
+    }
+
+    /* Print the full analysis */
+    printf("\n");
+    scr_print_scrutinium(&amp;s);
+    printf("\n");
+
+    scr_scrutinium_libera(&amp;s);
+}
+
+/* ================================================================
+ * Test: Structural signature extraction
+ *
+ * Uses the discriminating value set (14 values) which reveals
+ * the V-shape topology. Extracts Scr_Signatura and validates
+ * topology flags.
+ * ================================================================ */
+
+static void test_signatura(void) {
+    Scr_Genus genus;
+    Scr_Registrum reg;
+    Scr_Scrutinium s;
+    Scr_Signatura sig;
+    Gauss_Z vals[14];
+
+    printf("--- Structural Signature Test (Z[i]) ---\n");
+
+    /* Same discriminating data set */
+    vals[0]  = gauss_make(1, 0);
+    vals[1]  = gauss_make(0, 1);
+    vals[2]  = gauss_make(2, 0);
+    vals[3]  = gauss_make(0, 2);
+    vals[4]  = gauss_make(1, 1);
+    vals[5]  = gauss_make(2, 1);
+    vals[6]  = gauss_make(1, 2);
+    vals[7]  = gauss_make(3, 0);
+    vals[8]  = gauss_make(3, 1);
+    vals[9]  = gauss_make(1, 3);
+    vals[10] = gauss_make(5, 0);
+    vals[11] = gauss_make(2, 3);
+    vals[12] = gauss_make(2, -1);
+    vals[13] = gauss_make(3, -1);
+
+    genus = gauss_genus_crea();
+    scr_registrum_init(&amp;reg);
+    gauss_registra_indagatores(&amp;reg, &amp;genus);
+    s = scr_scrutare(&amp;reg, &amp;genus, vals, 14);
+
+    /* Extract signature */
+    sig = scr_signatura_ex(&amp;s);
+
+    printf("  unique=%d, dups=%d, alt=%d, width=%d\n",
+           sig.partitiones_numerus, sig.duplices_numerus,
+           sig.altitudo, sig.latitudo);
+
+    /* Topology flags */
+    check(!sig.est_catena, "Z[i] sig: NOT a chain");
+    check(sig.est_V, "Z[i] sig: V-shape (galois || unit)");
+    check(!sig.est_diamas, "Z[i] sig: no diamond (|Gal|=2)");
+
+    /* Structural counts */
+    check(sig.altitudo &gt;= 2,
+          "Z[i] sig: altitude &gt;= 2 (galois-&gt;norm-&gt;v2)");
+    check(sig.latitudo &gt;= 2,
+          "Z[i] sig: width &gt;= 2 (galois || unit)");
+    check(sig.incomparabiles_numerus &gt;= 1,
+          "Z[i] sig: at least 1 incomparable pair");
+
+    /* Self-equality via scr_signatura_aequalis */
+    check(scr_signatura_aequalis(&amp;sig, &amp;sig),
+          "Z[i] sig: self-equality holds");
+
+    scr_signatura_imprime(&amp;sig);
+
+    scr_signatura_libera(&amp;sig);
+    scr_scrutinium_libera(&amp;s);
+}
+
+/* ================================================================
+ * Code reduction summary
+ * ================================================================ */
+
+static void print_code_reduction(void) {
+    printf("=== Code Reduction Summary ===\n\n");
+    printf("  Detector               Old (lines)  New (lines)  Scaffolding\n");
+    printf("  --------------------   -----------  -----------  -----------\n");
+    printf("  norm_classes                  32           1       a_classe\n");
+    printf("  unit_orbits                   29           1       ab_generatoribus\n");
+    printf("  galois_orbits                 29           1       ab_generatoribus\n");
+    printf("  axis_classes                  38           1       a_classe\n");
+    printf("  v2_norm_classes               28           1       a_classe\n");
+    printf("  sign_distances                15           1       parhist_a_distantia\n");
+    printf("  sum_zeros                     15           1       parhist_a_distantia\n");
+    printf("  diff_zeros                    15           1       parhist_a_distantia\n");
+    printf("  --------------------   -----------  -----------\n");
+    printf("  TOTAL                        201           8\n");
+    printf("\n");
+    printf("  Wrapper functions needed: 14 (thin casts, ~3 lines each = ~42 lines)\n");
+    printf("  Net reduction: 201 -&gt; 50 lines (75%% reduction)\n");
+    printf("  The wrappers are reusable across detectors.\n");
+    printf("\n");
+}
+
+int main(void) {
+    printf("=== probatio_gauss_scrutinium ===\n");
+    printf("=== Z[i] detectors: original vs scaffolded ===\n\n");
+
+    /* Partition detectors */
+    test_norm_classes();
+    test_unit_orbits();
+    test_galois_orbits();
+    test_axis_classes();
+    test_v2_classes();
+
+    /* Histogram detectors */
+    test_sign_distances();
+    test_sum_zeros();
+    test_diff_zeros();
+
+    /* Edge generators */
+    test_negation_edges();
+    test_additive_closure_edges();
+    test_product_closure_edges();
+
+    /* Partition lattice on real data */
+    test_partition_lattice();
+
+    /* Pipeline: one-call full analysis */
+    test_pipeline();
+
+    /* Prerequisite skipping */
+    test_prerequisite_skipping();
+
+    /* Universal detectors */
+    test_universal_detectors();
+
+    /* Discriminating value set */
+    test_discriminating_values();
+
+    /* Structural signature */
+    test_signatura();
+
+    print_code_reduction();
+
+    printf("=== Results: %d tests, %d passed, %d failed ===\n",
+           n_tests, n_pass, n_fail);
+
+    return n_fail &gt; 0 ? 1 : 0;
+}
+</code></pre>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/c.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</body>
+</html>

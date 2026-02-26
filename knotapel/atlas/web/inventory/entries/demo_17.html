@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>inventory/entries/demo_17.md</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+    <link rel="stylesheet" href="../../style.css">
+</head>
+<body>
+    <nav><a href="../../index.html">← Back to Index</a></nav><hr>
+    <h2>Demo 17: Multi-Layer DKC</h2>
+<ul>
+<li><strong>Status</strong>: COMPLETE</li>
+<li><strong>File</strong>: <code><a href="../../demo_17_multilayer_dkc/main.c.html">demo_17_multilayer_dkc/main.c</a></code> (~1468 lines)</li>
+<li><strong>Tests</strong>: ~6 pass (5 parts: A=flat baseline, B=Arf split, C=hierarchical tree, D=GD vs analytical, E=Pareto comparison)</li>
+<li><strong>Depends on</strong>: Demo 10 (numerical engine), Demo 12-16 (greedy angle selection, quantization, Pareto framework, reduced bracket g, delta exponent k)</li>
+<li><strong>Feeds into</strong>: Later DKC architecture decisions (flat vs hierarchical tradeoffs)</li>
+</ul>
+<h3>Headline</h3>
+Tests whether hierarchical knot classification (Arf-split, greedy binary tree) outperforms flat evaluation at low bit budgets, comparing analytical angle selection against gradient descent on ~21 unique 3-strand knots.
+<h3>Key Results</h3>
+<ul>
+<li><strong>Part A (Flat baseline)</strong>: Greedy angle selection over 256-sample survey; Pareto grid at 1/2/4 angles x 1-10 bits; finds minimum bits for full 210/210 pair classification</li>
+<li><strong>Part B (Arf split)</strong>: Layer 1 = delta exponent k (k=0 vs k&gt;0) separates cross-group pairs for free (1 bit); per-group optimal angles found independently; Pareto shows bits savings vs flat</li>
+<li><strong>Part C (Hierarchical tree)</strong>: Greedy bisection up to depth 4; splits on real-part threshold at optimal survey angle; counts cross-leaf pairs separated by tree structure alone; Pareto includes tree bits + per-leaf value bits</li>
+<li><strong>Part D (GD vs analytical)</strong>: 50 random starts x 100 iterations with simulated annealing (step *= 0.95); analytical (exhaustive survey) matches or beats gradient descent within 1% tolerance</li>
+<li><strong>Part E (Pareto comparison)</strong>: All four methods (flat-1A, flat-2A, arf-split, tree) on same bit-budget axes; identifies which methods achieve full classification first; diagnoses "stubborn pairs" at 1-bit tree</li>
+</ul>
+<h3>Five Predictions Tested</h3>
+1. Arf split saves 1-2 bits over flat
+2. Greedy hierarchical tree beats Arf split
+3. Analytical matches/beats gradient descent
+4. Biggest gains at low bit budgets (4-8 bits)
+5. Flat catches up at high bit budgets (16+)
+<h3>Data</h3>
+<ul>
+<li>~21 unique knot types after dedup (from 24 candidates: 13 torus knots+mirrors, 8 connected sums, figure-eight, plus 2 not in this table)</li>
+<li>256-sample survey waveforms for greedy angle selection</li>
+<li>Pareto grid: 1-10 bits x {flat-1A, flat-2A, arf-split, tree}</li>
+<li>Gradient descent: 50 starts x 100 iterations, step annealing 0.95</li>
+<li>Stubborn pair diagnostics at 1-bit resolution</li>
+</ul>
+<h3>Theorems/Conjectures</h3>
+<ul>
+<li><strong>DKC thesis</strong>: algebraically compiled weights encode topology, not statistical patterns — hierarchy exploits algebraic structure (Arf invariant, delta exponent) for free bits</li>
+<li>Arf invariant as Layer 1: Craven et al. (2025) found neural networks CANNOT learn the Arf invariant; DKC computes it analytically for free</li>
+<li>Analytical angle selection matches gradient descent because the objective landscape (min pairwise distance) is smooth and low-dimensional</li>
+</ul>
+<h3>Code Assets</h3>
+<ul>
+<li><code>delta_exponent()</code> — computes k (delta factor) by evaluating bracket at delta-zero angles (pi/4, 3pi/4, 5pi/4, 7pi/4) plus perturbation test</li>
+<li><code>reduced_bracket_at()</code> — g(A) = bracket(A) / delta^k, the reduced invariant</li>
+<li><code>k_cache[]</code> with lazy <code>ensure_k_cache()</code> — cached delta exponents per knot</li>
+<li><code>g_survey[256][MAX_KNOTS]</code> with lazy <code>ensure_survey()</code> — precomputed reduced bracket at 256 equispaced angles</li>
+<li><code>min_dist_subset()</code> / <code>min_dist_all()</code> — min pairwise distance for knot subsets from precomputed values</li>
+<li><code>QuantVal</code> struct with <code>quantize()</code> — integer quantization (B bits, clamped)</li>
+<li><code>count_separated_pairs()</code> — multi-angle quantized separation counter</li>
+<li><code>find_best_bisection()</code> — greedy bisection: searches all survey angles x all midpoint thresholds, scores by min(min_dist_left, min_dist_right)</li>
+<li><code>TreeNode</code> and <code>build_tree()</code> — recursive binary tree construction up to MAX_TREE_DEPTH=4</li>
+<li>Gradient descent with multi-start and annealing for angle optimization (50 starts x 100 iters)</li>
+</ul>
+<h3>Literature Touched</h3>
+<ul>
+<li>Craven et al. (2025): neural networks cannot learn the Arf invariant</li>
+<li>Hierarchical classification / decision trees for topological invariants</li>
+<li>Greedy feature selection vs gradient-based optimization</li>
+<li>Quantization-aware classification (bit-budget Pareto analysis)</li>
+<li>Arf invariant as a topological splitting criterion</li>
+</ul>
+<h3>Open Questions</h3>
+<ul>
+<li>Does the hierarchical advantage grow with knot table size (100+ knots)?</li>
+<li>Can deeper trees (depth &gt; 4) provide further gains, or do they overfit to training angles?</li>
+<li>Are there other algebraic invariants beyond Arf that provide free bits at Layer 1?</li>
+</ul>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/c.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</body>
+</html>

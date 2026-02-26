@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>inventory/entries/demo_106.md</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+    <link rel="stylesheet" href="../../style.css">
+</head>
+<body>
+    <nav><a href="../../index.html">← Back to Index</a></nav><hr>
+    <h2>Demo 106: Topological Entropy of XOR-Computing Braids</h2>
+<ul>
+<li><strong>Status</strong>: COMPLETE (RESULT)</li>
+<li><strong>File</strong>: <code><a href="../../demo_106_topological_entropy/main.c.html">demo_106_topological_entropy/main.c</a></code> (~1408 lines)</li>
+<li><strong>Tests</strong>: 20/20 pass</li>
+<li><strong>Depends on</strong>: Demo 100 (W_{4,2} module, 3x3 TL representation, mat3/Cyc8 code, 3x3_hash activation, XOR framework), Demo 83 (writhe correlation with DKC output), Demo 93 (circuit complexity hierarchy, derived series strata), Demo 95 (cross-stratum mixing), Demo 50 (k parameter / parity reachability)</li>
+<li><strong>Feeds into</strong>: Demo 107 (Raqiya algebraic graph density -- <a href="./demo_106.html">D106</a> establishes "capacity is relational," <a href="./demo_107.html">D107</a> measures relational structure), Demo 108 (Raqiya predicts parity -- closes the loop <a href="./demo_106.html">D106</a>-&gt;<a href="./demo_107.html">D107</a>-&gt;<a href="./demo_108.html">D108</a>)</li>
+</ul>
+<h3>Headline</h3>
+Pre-registered prediction FALSIFIED: topological entropy (Thurston-Nielsen classification) is completely orthogonal to DKC Boolean computation -- both periodic and pseudo-Anosov braids compute XOR at 100% participation with near-identical scores, because the TL quotient at delta=0 erases all dynamical information while preserving algebraic structure.
+<h3>Key Results</h3>
+<ul>
+<li><strong>Prediction falsified</strong>: Both periodic (88 entries, mean score 3969) and pseudo-Anosov (39 entries, mean score 3857) braids compute XOR at 100% participation rate in the first 128 catalog entries. No separation whatsoever.</li>
+<li><strong>Total Boolean function null</strong>: Entropy classification is orthogonal to ALL 8 Boolean functions tested (AND3, OR3, XOR3, MAJ3, NAND3, NOR3, AND2, XOR2). Maximum gap between periodic and pA rates: 3.7pp (XOR2), well within noise.</li>
+<li><strong>Fibonacci pseudo-Anosov at depth 2</strong>: All 8 depth-2 pA entries share characteristic polynomial x^3 - 4x^2 + 4x - 1 with spectral radius phi^2 = (3+sqrt(5))/2 = 2.618..., giving entropy per crossing = log(phi) = 0.481212... (theoretical optimum per Band &amp; Boyland 2007).</li>
+<li><strong>Pseudo-Anosov fraction increases with depth</strong>: From 0% at depth 1 to 77.2% at depth 8, crossover at depth 5 (50.6%). Consistent with Caruso 2013 genericity theorem.</li>
+<li><strong>Entropy per crossing decreases with depth</strong>: Mean 0.4812 at depth 2 (optimal), 0.4390 at depth 3, decreasing further. Deeper braids are less efficiently chaotic per generator.</li>
+<li><strong>TL visibility filter explains the null</strong>: Writhe survives the TL quotient (multiplies bracket by (-A^3)^w), so writhe correlates with DKC output (<a href="./demo_83.html">D83</a>). Entropy does NOT survive the TL quotient (e_i^2=0 kills expanding eigenvalues), so entropy is invisible to the bracket.</li>
+<li><strong>DKC computation is collective/algebraic, not individual/dynamical</strong>: Sharpens the relational computation thesis -- the question is never "is this braid good?" but "does this collection span the right algebraic structure?"</li>
+</ul>
+<h3>Theorems/Conjectures</h3>
+<ul>
+<li><strong>TL Visibility Filter (DEMONSTRATED)</strong>: Properties visible in the Kauffman bracket (writhe) correlate with DKC output; properties invisible in the bracket (topological entropy, Burau spectral radius) do not. The TL quotient at delta=0 is the filter.</li>
+<li><strong>Relational Computation Thesis (STRENGTHENED)</strong>: Across the DKC program, the strongest predictors of computational capacity are always relational/algebraic (derived series strata, cross-stratum mixing, orthogonal frame geometry, k-granularity, non-semisimplicity). Individual dynamical properties (entropy, spectral radius, writhe, word length) are consistently non-predictive or invisible.</li>
+<li><strong>Caruso Genericity (CONFIRMED)</strong>: Pseudo-Anosov braids become generic at higher word lengths, crossing from minority to majority at depth 5 (50.6%) and reaching 77.2% at depth 8.</li>
+</ul>
+<h3>Data</h3>
+<p><strong>Contingency table (k=128, first 128 entries):</strong></p>
+<table><thead><tr><th>Class</th><th>Total</th><th>XOR&gt;0</th><th>XOR=0</th><th>Rate</th><th>Mean Score</th></tr></thead><tbody><tr><td>Identity</td><td>1</td><td>1</td><td>0</td><td>100%</td><td>4574</td></tr><tr><td>Periodic</td><td>88</td><td>88</td><td>0</td><td>100%</td><td>3969</td></tr><tr><td>Pseudo-Anosov</td><td>39</td><td>39</td><td>0</td><td>100%</td><td>3857</td></tr></tbody></table>
+<p><strong>Boolean function sweep (periodic rate vs pA rate, k=128):</strong></p>
+<table><thead><tr><th>Function</th><th>Periodic</th><th>pA</th><th>Gap</th></tr></thead><tbody><tr><td>AND3</td><td>92.0%</td><td>92.9%</td><td>+0.9pp</td></tr><tr><td>OR3</td><td>95.1%</td><td>93.4%</td><td>-1.7pp</td></tr><tr><td>XOR3</td><td>86.9%</td><td>86.0%</td><td>-0.9pp</td></tr><tr><td>MAJ3</td><td>86.3%</td><td>87.5%</td><td>+1.2pp</td></tr><tr><td>NAND3</td><td>92.0%</td><td>92.9%</td><td>+0.9pp</td></tr><tr><td>NOR3</td><td>95.1%</td><td>93.4%</td><td>-1.7pp</td></tr><tr><td>AND2</td><td>88.4%</td><td>87.9%</td><td>-0.5pp</td></tr><tr><td>XOR2</td><td>90.8%</td><td>87.1%</td><td>-3.7pp</td></tr></tbody></table>
+<p><strong>Pseudo-Anosov fraction by depth:</strong></p>
+<table><thead><tr><th>Depth</th><th>Total</th><th>Periodic</th><th>pA</th><th>pA%</th></tr></thead><tbody><tr><td>0</td><td>1</td><td>0</td><td>0</td><td>--</td></tr><tr><td>1</td><td>6</td><td>6</td><td>0</td><td>0.0%</td></tr><tr><td>2</td><td>26</td><td>18</td><td>8</td><td>30.8%</td></tr><tr><td>3</td><td>98</td><td>66</td><td>32</td><td>32.7%</td></tr><tr><td>4</td><td>338</td><td>192</td><td>146</td><td>43.2%</td></tr><tr><td>5</td><td>1110</td><td>548</td><td>562</td><td>50.6%</td></tr><tr><td>6</td><td>3444</td><td>1210</td><td>2234</td><td>64.9%</td></tr><tr><td>7</td><td>10390</td><td>2974</td><td>7416</td><td>71.4%</td></tr><tr><td>8</td><td>17355</td><td>3952</td><td>13403</td><td>77.2%</td></tr></tbody></table>
+<p><strong>BFS catalog</strong>: 32768 entries (cap hit at depth 8). Module W_{4,2} (4-strand, dim 3, non-semisimple).</p>
+<p><strong>Dual representation</strong>: TL (3x3 over Z[zeta_8]) for bracket + reduced Burau at t=-1 (3x3 integer, SL(3,Z)) for entropy.</p>
+<p><strong>Fibonacci pA characteristic polynomial</strong>: x^3 - 4x^2 + 4x - 1, spectral radius phi^2 = 2.618034..., entropy/crossing = log(phi) = 0.481212...</p>
+<p><strong>Mean entropy/crossing for pA entries (first 128)</strong>: 0.4476</p>
+<h3>Code Assets</h3>
+<ul>
+<li><strong>Dual BFS with parallel representations</strong>: Maintains both TL (3x3 Cyc8) and Burau (3x3 integer) matrices simultaneously during BFS, with shared parent/generator backtracking. Novel pattern for correlating algebraic and dynamical properties of the same braid words.</li>
+<li><strong>Reduced Burau representation at t=-1 for B_4</strong>: 3x3 integer matrices in SL(3,Z). Generators built from the standard reduced Burau formula with t=-1 substitution.</li>
+<li><strong>Exact integer entropy classification</strong>: Characteristic polynomial p(x) = x^3 + c2<em>x^2 + c1</em>x - 1 (det=1 always for braids). If p(1) = c2+c1 != 0, always pseudo-Anosov. If p(1) = 0, check quadratic factor |1-tr(M)| &gt; 2. No floating point needed for the classification itself.</li>
+<li><strong>Spectral radius by bisection</strong>: Double-precision bisection on characteristic polynomial (100 iterations) for entropy-per-crossing analysis. Classification uses exact integers; bisection used only for the quantitative entropy value.</li>
+<li><strong>Boolean function sweep with +/- encoding</strong>: 3 weights -&gt; 8 input patterns via signed addition. 8 truth tables tested (AND3, OR3, XOR3, MAJ3, NAND3, NOR3, AND2, XOR2). Reusable pattern for testing entropy correlation against arbitrary Boolean functions.</li>
+<li><strong><code>iMat3</code> (3x3 integer matrix)</strong>: Separate integer matrix type for Burau representation. Operations: <code>imat3_zero</code>, <code>imat3_identity</code>, <code>imat3_mul</code>, <code>imat3_eq</code>, <code>imat3_det</code>, <code>imat3_char_poly</code>. Parallel to Cyc8-based Mat3 but pure integer for exact determinant/polynomial computation.</li>
+</ul>
+<h3>Literature Touched</h3>
+<ul>
+<li><strong>Band &amp; Boyland 2007</strong> -- "The Burau estimate for the entropy of a braid." Reduced Burau at t=-1 gives exact topological entropy for 3-braids and optimal lower bound for 4+ strands. Establishes log(phi) = 0.481212... as the optimal mixing efficiency per crossing.</li>
+<li><strong>Fadell &amp; Neuwirth 1962</strong> -- Braids = fundamental group of configuration space of non-colliding particles. Theoretical foundation for the phase-space interpretation of DKC.</li>
+<li><strong>Boyland, Aref &amp; Stremler 2000</strong> -- Pseudo-Anosov braid type forces chaotic fluid mixing. Motivated the (falsified) prediction that computation requires chaos.</li>
+<li><strong>Thurston 1988 (FLP)</strong> -- Classification of surface homeomorphisms into periodic, reducible, and pseudo-Anosov. Framework for the entropy classification used in <a href="./demo_106.html">D106</a>.</li>
+<li><strong>Caruso 2013</strong> -- Genericity of pseudo-Anosov braids at large word length. Confirmed by the depth-vs-pA-fraction data.</li>
+<li><strong>Bigelow 1999 / Krammer 2000</strong> -- Faithfulness of Burau representation for B_4. Ensures the Burau matrices faithfully track braid dynamics (even though this turns out irrelevant to DKC).</li>
+</ul>
+<h3>Open Questions</h3>
+<ul>
+<li><strong>What DOES predict per-entry XOR participation strength?</strong> If not entropy, what algebraic property of the TL matrix determines how often an individual entry appears in XOR-computing triples? This is the motivating question for <a href="./demo_107.html">D107</a>-<a href="./demo_108.html">D108</a>.</li>
+<li><strong>Does the null extend to higher strand counts?</strong> <a href="./demo_106.html">D106</a> uses W_{4,2} (4-strand). Would the null hold on W_{5,3}, W_{6,4}, etc.? Expected yes, since the TL visibility filter argument is representation-independent.</li>
+<li><strong>Burau faithfulness vs TL quotient</strong>: The Burau representation is faithful for B_4 (Bigelow/Krammer), retaining all dynamical information. The TL representation is a quotient, discarding dynamics. <a href="./demo_106.html">D106</a> empirically confirms this algebraic distinction has computational consequences -- the faithful representation's extra information is computationally inert for DKC.</li>
+<li><strong>Can entropy predict ANYTHING in DKC?</strong> The null is total for Boolean function computation. But could entropy correlate with other catalog properties (e.g., hub frequency, co-occurrence topology, Raqiya graph structure)?</li>
+</ul>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/c.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</body>
+</html>

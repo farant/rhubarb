@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>inventory/entries/demo_09.md</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+    <link rel="stylesheet" href="../../style.css">
+</head>
+<body>
+    <nav><a href="../../index.html">← Back to Index</a></nav><hr>
+    <h2>Demo 09: Reidemeister Move Invariance</h2>
+<ul>
+<li><strong>Status</strong>: COMPLETE</li>
+<li><strong>File</strong>: <code><a href="../../demo_09_reidemeister/main.c.html">demo_09_reidemeister/main.c</a></code> (~717 lines)</li>
+<li><strong>Tests</strong>: 30/30 pass (5 parts: R1 bracket, R1 writhe/Jones, R2, R3 braid, combined)</li>
+<li><strong>Depends on</strong>: Demo 07 (braid closure → PD), Demo 08 (PD bracket, Vogel algorithm)</li>
+<li><strong>Feeds into</strong>: Later demos using Jones polynomial invariance as ground truth</li>
+</ul>
+<h3>Headline</h3>
+Proves computationally that the Kauffman bracket satisfies the R1 twist relation and is invariant under R2/R3, and that the Jones polynomial (writhe-normalized bracket) is a true knot invariant under all three Reidemeister moves.
+<h3>Key Results</h3>
+<ul>
+<li><strong>R1 (twist/kink)</strong>: bracket(K + kink_s) = -A^{3s} * bracket(K), writhe changes by s, Jones invariant — verified on unknot, trefoil, figure-eight, Hopf link with both positive and negative kinks</li>
+<li><strong>R2 (poke)</strong>: bracket, writhe, and Jones all unchanged — verified on R2-poked unknot, trefoil, figure-eight, Hopf link</li>
+<li><strong>R3 (slide)</strong>: tested via braid relation sigma_1<em>sigma_2</em>sigma_1 = sigma_2<em>sigma_1</em>sigma_2 — bracket and Jones identical for both positive and negative generators, also on 4-strand braids</li>
+<li><strong>Combined moves</strong>: R1(+) then R1(-) bracket factors cancel; R1+R2 Jones invariant; double R1(+) Jones invariant</li>
+</ul>
+<h3>Code Assets</h3>
+<ul>
+<li><strong><code>writhe()</code></strong>: computes writhe (sum of crossing signs) from PD notation</li>
+<li><strong><code>jones_poly()</code></strong>: Jones/f-polynomial = (-A^3)^{-w} * bracket(K) — clean 4-line implementation</li>
+<li><strong><code>apply_r1()</code></strong>: adds a positive or negative kink to a specified edge in PD notation — splits edge, creates loop arc, adds crossing</li>
+<li><strong><code>apply_r2()</code></strong>: adds an R2 poke (pair of opposite-sign crossings) between two edges — splits both edges, creates intermediate arcs</li>
+<li><strong><code>remap_second()</code></strong>: utility to replace second occurrence of an arc label (for edge splitting)</li>
+<li><strong><code>make_r2_unknot()</code></strong>: manually constructed 2-crossing unknot (R2 poke of trivial unknot)</li>
+<li>Reuses: Laurent polynomial ring, PD bracket state-sum, braid-to-PD conversion, known PD knots (trefoil, figure-eight, Hopf)</li>
+</ul>
+<h3>Literature Touched</h3>
+<ul>
+<li>Reidemeister's theorem: any two diagrams of equivalent links are connected by R1, R2, R3 moves</li>
+<li>Kauffman bracket behavior under R1: not invariant (picks up -A^{3s} factor), hence is a "regular isotopy" invariant</li>
+<li>Writhe normalization: (-A^3)^{-w} corrects R1 factor to produce true (ambient isotopy) invariant</li>
+<li>Jones polynomial as writhe-normalized Kauffman bracket</li>
+</ul>
+<h3>Open Questions</h3>
+<ul>
+<li>R3 is tested only via the braid relation (algebraic equivalence), not via direct PD-level R3 move application — a direct <code>apply_r3()</code> on PD crossings would be more complete but is more complex to implement</li>
+</ul>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/c.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</body>
+</html>

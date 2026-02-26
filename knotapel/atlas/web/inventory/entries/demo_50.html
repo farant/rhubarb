@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>inventory/entries/demo_50.md</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+    <link rel="stylesheet" href="../../style.css">
+</head>
+<body>
+    <nav><a href="../../index.html">← Back to Index</a></nav><hr>
+    <h2>Demo 50: Activation Function Zoo</h2>
+<ul>
+<li><strong>Status</strong>: COMPLETE</li>
+<li><strong>File</strong>: <code><a href="../../demo_50_activation_zoo/main.c.html">demo_50_activation_zoo/main.c</a></code> (~1094 lines)</li>
+<li><strong>Tests</strong>: ~6 checks (4 parts: A=1 k=2 impossibility, B=2 k=2 confirm + k=8 parity, C=3 parity-min-k + Aizenberg catalog + Aizenberg parity, D=0 analysis only); 4/6 pass, 2 informative failures (Aizenberg weights not in catalog, Aizenberg computes wrong function under j mod 2)</li>
+<li><strong>Depends on</strong>: Demo 48 (forward DKC zoo, 100M quartets, XNOR3 zero solutions), Demo 49 (neglecton weights add no new angles)</li>
+<li><strong>Feeds into</strong>: Understanding that the DKC parity wall is in the activation function, not the lattice; non-semisimplicity reinterpretation; future multi-input parity investigations</li>
+</ul>
+<h3>Headline</h3>
+Proves the DKC parity wall was in the activation function, not the weight lattice: replacing split-sigmoid with k-sector MVN classification makes parity reachable at k=6 with 906 solutions from the same 100-value Z[zeta_8] bracket catalog that Demo 48 exhaustively searched, revealing a four-tier hierarchy of activation complexity across all 13 NPN classes.
+<h3>Key Results</h3>
+<ul>
+<li><strong>Part A (k=2 impossibility)</strong>: Exhaustive search of 100^3 = 1M triples confirms zero parity solutions under half-plane classification; computational verification of the complex Minsky-Papert theorem</li>
+<li><strong>Part B (k-sector search, k=2..8)</strong>: For each k, all 1M triples searched with k-sector MVN (sector j mod 2 = output); parity first appears at k=6 (906 solutions), persists at k=7 (756) and k=8 (96); all 13 NPN classes reachable by k=6</li>
+<li><strong>Part C (minimum sector analysis)</strong>: Four-tier hierarchy: k=2 (5 classes: AND3', AND2', ~A~(BC), BUF, MAJ'), k=3 (+1: ~A(B^C)), k=4 (+6: EXACT1, ISOLATE, 3v-0x19, 3v-0x1B, A^(B|C), XOR2), k=6 (+1: XNOR3 = parity); Aizenberg's construction (w1=zeta_8, w2=i, w3=-1) verified: zeta_8 is NOT in the bracket catalog (only -zeta_8 is), and under k=8 with j mod 2 mapping it computes 3v-0x19, not parity</li>
+<li><strong>Part D (parity solution anatomy)</strong>: 41/100 catalog values participate; all 906 solutions use three distinct weights; weights confined to octants {2, 4, 5, 7} (class-1 under k=6 sector mapping); every solution places one weight per odd sector (triskelion pattern at 120° intervals); ~151 distinct unordered triples; non-monotonic solution count: 906@k=6 &gt; 756@k=7 &gt; 96@k=8 anti-correlated with gcd(k,8)</li>
+</ul>
+<h3>Theorems/Conjectures</h3>
+<ul>
+<li><strong>Parity wall is in the activation, not the lattice</strong>: The standard 100-value bracket catalog contains parity-capable weights; split-sigmoid destroys angular information needed for parity; k-sector MVN reads angles directly</li>
+<li><strong>Four-tier hierarchy</strong>: 13 NPN classes partition into 4 tiers by minimum sector count {k=2, k=3, k=4, k=6}, with parity uniquely isolated at the highest tier</li>
+<li><strong>Triskelion principle</strong>: For 3-input parity, k=6 is minimum because it provides exactly 3 odd sectors (at 120° intervals), matching the 3 inputs; each input requires its own odd sector (single-input constraint forces all weights into class-1 octants)</li>
+<li><strong>Incommensurability hypothesis</strong>: Parity solutions anti-correlate with gcd(k,8) — sector boundaries that misalign with the lattice's pi/4 angular structure break the symmetry that blocks parity; k=6 (gcd=2) optimal, k=8 (gcd=8, perfect alignment) minimal (96 solutions)</li>
+<li><strong>Class-1 octant constraint</strong>: Parity's truth table logically forces all three weights into octants {2, 4, 5, 7} (the class-1 angles under k=6); this is a necessary condition derivable from f(1,0,0) = f(0,1,0) = f(0,0,1) = 1</li>
+</ul>
+<h3>Data</h3>
+<ul>
+<li>13 NPN classes × 7 k-values = full reachability heatmap</li>
+<li>Per-class minimum sector count with solution counts at min k (range: 127,164 for BUF at k=2 down to 906 for XNOR3 at k=6)</li>
+<li>Parity solution counts by k: 0, 0, 0, 0, 906, 756, 96 for k=2..8</li>
+<li>gcd(k,8) vs parity solutions table</li>
+<li>41/100 catalog values in parity solutions, top 20 by frequency (|z| range 6-17)</li>
+<li>Octant distribution: 906 in octant 2, 270 in octant 4, 636 in octant 5, 906 in octant 7</li>
+<li>Two octant-set combinations only: {2,5,7} (636 solutions, 70.2%) and {2,4,7} (270 solutions, 29.8%)</li>
+<li>Aizenberg construction trace: per-input z values, angles, sectors, resulting truth table 0x58 (3v-0x19)</li>
+<li>k=6 sector-class map for all 8 powers of zeta_8</li>
+</ul>
+<h3>Code Assets</h3>
+<ul>
+<li><code>Cyc8</code> struct: exact cyclotomic integer type Z[zeta_8] with basis {1, zeta_8, zeta_8^2, zeta_8^3} where zeta_8^4 = -1</li>
+<li><code>cyc8_make()</code>, <code>cyc8_zero()</code>, <code>cyc8_one()</code>, <code>cyc8_add()</code>, <code>cyc8_mul()</code>, <code>cyc8_eq()</code>, <code>cyc8_conj()</code>, <code>cyc8_pow_int()</code>, <code>cyc8_to_cx()</code> — full exact cyclotomic arithmetic</li>
+<li><code>build_catalog()</code> — exact bracket catalog builder (standard, loops=1 only); enumerates 2-3 strand braids length 1-8, stores both exact Cyc8 and floating-point Cx representations</li>
+<li><code>sector_classify(z, k)</code> — k-sector MVN classification: angle → sector number → j mod 2 binary output</li>
+<li><code>search_for_k(k)</code> — exhaustive triple search with precomputed w1+w2 sum optimization; tracks per-NPN-class solution counts, truth table histogram, and parity example triples</li>
+<li><code>NPNClass</code> struct, <code>npn_init()</code>, <code>npn_build_classes()</code>, <code>npn_class_index()</code>, <code>npn_transform()</code> — NPN classification machinery</li>
+<li><code>Triple</code> struct — stores catalog indices of parity solution triples for post-hoc analysis</li>
+<li>Union-find (<code>uf_init</code>, <code>uf_find</code>, <code>uf_union</code>) and <code>braid_loops()</code> for state-sum loop counting</li>
+<li><code>bracket_cl()</code> equivalent via exact Cyc8 arithmetic (loops=1 standard bracket)</li>
+</ul>
+<h3>Literature Touched</h3>
+<ul>
+<li>Aizenberg's multi-valued neuron (MVN) and k-valued logic — parity construction with k=2^n sectors</li>
+<li>Complex Minsky-Papert theorem — k=2 half-plane cannot compute parity regardless of weights</li>
+<li>NPN equivalence classes as computational complexity hierarchy</li>
+<li>Incommensurability of lattice symmetry (Z[zeta_8], 8-fold) with sector geometry (k-fold)</li>
+<li>Non-semisimplicity of TL_n at delta=0 — reinterpreted: radical limits operations, not values</li>
+<li>Triskelion geometry — 3-fold rotational symmetry in parity weight placement</li>
+</ul>
+<h3>Open Questions</h3>
+<ul>
+<li>Does the triskelion principle generalize: does n-input parity require k=2n sectors (n odd sectors for n inputs)?</li>
+<li>What is the algebraic structure of the 151 distinct unordered parity triples — do they form a lattice or group?</li>
+<li>Can the incommensurability hypothesis be made rigorous as a theorem about gcd(k,8) and NPN reachability?</li>
+<li>Does the non-monotonicity (906 &gt; 756 &gt; 96) continue: what are the parity solutions for k=9..16?</li>
+<li>How does the four-tier structure change with 4+ inputs and the 222 NPN classes?</li>
+</ul>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/c.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</body>
+</html>

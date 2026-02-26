@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>inventory/entries/demo_13.md</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+    <link rel="stylesheet" href="../../style.css">
+</head>
+<body>
+    <nav><a href="../../index.html">← Back to Index</a></nav><hr>
+    <h2>Demo 13: DKC Test</h2>
+<ul>
+<li><strong>Status</strong>: COMPLETE</li>
+<li><strong>File</strong>: <code><a href="../../demo_13_dkc_test/main.c.html">demo_13_dkc_test/main.c</a></code> (~949 lines)</li>
+<li><strong>Tests</strong>: ~8+ pass (6 parts: A=separation, B=multi-angle, C=Pareto, D=train/test+self-class+alt-trefoil, E=baseline, F=scaling)</li>
+<li><strong>Depends on</strong>: Demo 10 (numerical evaluation engine), Demo 11/12 (greedy angle selection, quantization, Pareto frontier)</li>
+<li><strong>Feeds into</strong>: Later DKC demos (scaling to larger knot tables, forward DKC)</li>
+</ul>
+<h3>Headline</h3>
+Scales DKC (Deterministic Knowledge Compilation) from 10 knots to ~28 candidate braids (deduplicated to ~20+ unique knot types), validating that algebraically compiled weights generalize without training via train/test split, random baseline comparison, and scaling-law analysis.
+<h3>Key Results</h3>
+<ul>
+<li>28 candidate 3-strand braids initialized across 3 groups: torus knots T(2,n) with mirrors (n=3,5,7,9,11,13), connected sums (granny, square, T23#T25, etc.), and miscellaneous braid patterns (commutator, mixed-sign words)</li>
+<li>Deduplication via bracket evaluation at 2 reference angles removes equivalent braids</li>
+<li>Greedy angle selection from 256-sample waveforms, up to 8 angles</li>
+<li><strong>Multi-angle separation</strong>: determines minimum angles for 100% pairwise separation at scale</li>
+<li><strong>Precision x Width Pareto frontier</strong>: bits-per-component vs number of angles grid; finds minimum total bits per knot for full separation (compared to Demo 12's 8 bits for 10 knots)</li>
+<li><strong>Train/test DKC validation</strong>: 70/30 split, training self-classification must be 100%, test knots correctly differentiated from training set, invariance test (alt trefoil s2.s1.s2 matches canonical s1.s2.s1)</li>
+<li><strong>Random baseline</strong>: 100 LCG trials confirm DKC achieves 100% separation while random signatures don't guarantee it</li>
+<li><strong>Scaling law</strong>: min pairwise separation decreases with knot count (below Demo 12's 0.907 for 10 knots); extrapolation suggests 1/sqrt(N) decay, predicting quantization limits</li>
+</ul>
+<h3>Data</h3>
+<ul>
+<li>28 candidate braids, 3 groups: torus knots (14 with mirrors), connected sums (8), other 3-strand braids (6)</li>
+<li>256-sample waveforms for greedy angle selection</li>
+<li>Pareto grid: bits {1,2,3,4,8} x angles {1,2,3,4,8}</li>
+<li>Train/test split: 70% train, 30% test</li>
+<li>Random baseline: 100 trials, LCG RNG (seed 12345)</li>
+<li>Scaling analysis: subset sizes {5, 10, 15, 20, 25} + full table</li>
+</ul>
+<h3>Theorems/Conjectures</h3>
+<ul>
+<li><strong>DKC thesis</strong>: weights compiled from algebraic structure (Kauffman bracket) generalize without training because they encode topology, not statistical patterns</li>
+<li>Min separation scales as ~1/sqrt(N) — implies quantization bit requirements grow logarithmically with knot table size</li>
+<li>4-bit quantization fails when step_size (range/15) exceeds min_sep</li>
+</ul>
+<h3>Code Assets</h3>
+<ul>
+<li><code>add_torus_2n()</code> — generates T(2,n) torus knot braid word with sign control (mirror)</li>
+<li><code>add_connected_sum()</code> — concatenates two braid words for connected sum construction</li>
+<li><code>dedup_knots()</code> — removes duplicate knot types by bracket comparison at 2 reference angles</li>
+<li><code>select_greedy_angles()</code> — max-min-distance greedy selection from 256-sample waveforms (heap-allocated)</li>
+<li><code>quantize()</code> / <code>cx_quantize()</code> — uniform scalar/complex quantization with configurable bits</li>
+<li><code>test_quantized_sep()</code> — counts separated pairs after quantization at given bits and angles</li>
+<li><code>classify_against_table()</code> — nearest-neighbor classifier against reference signature table</li>
+<li>LCG random number generator for reproducible baseline trials</li>
+<li><code>count_separated_pairs()</code> — utility for multi-angle pairwise distance check</li>
+</ul>
+<h3>Literature Touched</h3>
+<ul>
+<li>Deterministic Knowledge Compilation (DKC) — algebraic classifier without training</li>
+<li>Kauffman bracket as topological invariant for classification</li>
+<li>Greedy sensor/feature selection (max-min pairwise distance criterion)</li>
+<li>Quantization theory for discrete classifiers</li>
+<li>Scaling laws in combinatorial discrimination</li>
+</ul>
+<h3>Open Questions</h3>
+<ul>
+<li>How does the Pareto frontier evolve at 50, 100, 250+ knots?</li>
+<li>Is 1/sqrt(N) the correct scaling exponent, or is it knot-family-dependent?</li>
+<li>Can connected sums always be distinguished from prime knots at finite precision?</li>
+</ul>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/c.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</body>
+</html>

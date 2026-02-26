@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>inventory/entries/demo_95.md</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+    <link rel="stylesheet" href="../../style.css">
+</head>
+<body>
+    <nav><a href="../../index.html">← Back to Index</a></nav><hr>
+    <h2>Demo 95: Commutator Depth and XOR Capacity</h2>
+<ul>
+<li><strong>Status</strong>: COMPLETE (RESULT)</li>
+<li><strong>File</strong>: <code><a href="../../demo_95_commutator_depth/main.c.html">demo_95_commutator_depth/main.c</a></code> (~1242 lines)</li>
+<li><strong>Tests</strong>: 19 pass, 0 fail (Phases 1-4 + 3b)</li>
+<li><strong>Depends on</strong>: Demo 94 (binary icosahedral 2I vs solvable z8, solvability bottleneck confirmed), Demo 93 (1wpi phase_cell framework, circuit complexity hierarchy), Demo 84 (0+0=36 null synergy), Demo 88 (anti-correlation, load-bearing non-null directions), Demo 89 (depth law: max_xor ~ depth + 6)</li>
+<li><strong>Feeds into</strong>: Demo 96 (TL-group cross-classification: are <a href="./demo_84.html">D84</a> null/non-null and <a href="./demo_95.html">D95</a> derived series the same partition?), unify <a href="./demo_84.html">D84</a>/<a href="./demo_95.html">D95</a> synergy, cross-depth synergy matrix (all 4 level-pairs of derived series), RKHS kernel rank (does kernel rank predict synergy?), zeta_12 stratification question</li>
+</ul>
+<h3>Headline</h3>
+The commutator structure of solvable vs non-solvable groups is made VISIBLE through derived series computation and subset XOR capacity testing. The key result: neither the commutator subgroup nor the non-commutator coset carries disproportionate XOR capacity in isolation. Computational power emerges from CROSS-LAYER interaction between algebraic strata. This is the same 0+0&gt;0 synergy pattern as <a href="./demo_84.html">D84</a>, now traced to its algebraic origin.
+<h3>Key Results</h3>
+<ul>
+<li><strong>Phase 1 -- Commutator Classification (5 tests)</strong>: z8 (binary octahedral, 24 bracket values): 12/24 entries are single commutators (exactly the binary tetrahedral 2T subgroup). G1 (commutator subgroup) = 12 entries. G0\G1 (non-commutator coset) = 12 entries. 2I (binary icosahedral, 60 bracket values): 60/60 entries are single commutators -- PERFECT GROUP confirmed computationally. Matches Liebeck-O'Brien-Shalev-Tiep (2011): since 2I is isomorphic to SL(2,5), every element is a commutator.</li>
+<li><strong>Phase 2 -- Derived Series (5 tests)</strong>: z8 derived series: 24 &gt; 12 &gt; 4 &gt; 1. Matches the chain 2O &gt; 2T &gt; Q8 &gt; {+/-1} (binary octahedral &gt; binary tetrahedral &gt; quaternion group &gt; center). Level membership partition: Level 0 (D0\<a href="./demo_01.html">D1</a>) = 12 entries (outermost, non-commutator), Level 1 (<a href="./demo_01.html">D1</a>\<a href="./demo_02.html">D2</a>) = 8 entries (first commutator layer), Level 2 (<a href="./demo_02.html">D2</a>\<a href="./demo_03.html">D3</a>) = 3 entries (deep commutator, Q8), Level 3 (<a href="./demo_03.html">D3</a>) = 1 entry (identity). 2I: G1 = G0 = 60 -&gt; PERFECT. Derived series terminates immediately. First direct computation of this partition in the DKC context.</li>
+<li><strong>Phase 3 -- COMM vs NON-COMM XOR Capacity (3 tests)</strong>: COMM (G1, 12 entries) and NON-COMM (G0\G1, 12 entries) perform SIMILARLY in isolation (~1.1x COMM edge). But ALL(24) dramatically outperforms both -- 2.7x the rate at N=5. The computational power is in the CROSS-TERMS between solvable layers, not in either layer alone. This is the same DKC synergy mechanism as <a href="./demo_84.html">D84</a>'s 0+0=36. COMM survives at N=7 (1.01%) while NON-COMM dies (0%) -- algebraic depth provides last-resort structure at the computational boundary.</li>
+<li><strong>Phase 3b -- 90-Degree Split Test (3 tests)</strong>: 9 bracket-null entries (half-angle 90 degrees, Re=0) come from TWO derived levels: 3 from Q8 (algebraically deep, <a href="./demo_02.html">D2</a>) and 6 from outermost shell (algebraically shallow, D0). Same half-angle, different algebraic origin. Q8-null (3 entries): XOR = 0 at all N. Outermost-null (6 entries): XOR = 0 at all N. All-null combined (9 entries): XOR = 33/126 = 26.19% at N=4, zero elsewhere. NEITHER subset can do XOR alone. Only the MIX produces capacity. Cleanest synergy demonstration in the project: pure 0+0=26% at matched geometry. Algebra wins over geometry.</li>
+<li><strong>Phase 4 -- Matched Comparison z8-COMM-12 vs 2I-first-12 (3 tests)</strong>: 2I-first-12 crushes z8-COMM at N=3-5 (1.56x to 2.15x). Crossover at N=6-7 mirrors <a href="./demo_94.html">D94</a> Phase 4 pattern (z8-COMM slightly leads at N=6 with 6.28% vs 5.95%). Non-solvable 2I wins at matched size because it has no stratification bottleneck -- every element is a commutator, so all 60 entries participate equally.</li>
+</ul>
+<h3>Theorems/Conjectures</h3>
+<ul>
+<li><strong>Cross-Layer Synergy Mechanism (DEMONSTRATED computationally)</strong>: Neither the commutator subgroup (COMM) nor the non-commutator coset (NON-COMM) of z8 carries disproportionate XOR capacity. Capacity emerges from mixing algebraic strata. The Barrington mechanism works through CROSSING between algebraic layers, not through commutators alone.</li>
+<li><strong>Solvability Bottleneck via Stratification (REFINED from <a href="./demo_94.html">D94</a>)</strong>: Solvable groups waste combinatorial budget on cross-layer constraints. Having derived series layers forces cross-layer dependence which constrains how many useful signed sums exist. 2I's perfection (G1=G0) means every pair (i,j) contributes commutator-quality interference. Solvability bottleneck operates THROUGH stratification.</li>
+<li><strong>90-Degree Algebra-over-Geometry (DEMONSTRATED)</strong>: Within the same half-angle (90 degrees), algebraic origin creates computational capacity. Entries from Q8 (<a href="./demo_02.html">D2</a>) and outermost shell (D0) are geometrically identical but algebraically distinct. Neither subset alone produces XOR solutions, but their union does. Geometry is necessary but not sufficient; algebraic depth is the active ingredient.</li>
+<li><strong>Synergy Universality Conjecture (PROPOSED)</strong>: <a href="./demo_84.html">D84</a> synergy (TL null/non-null = 0+0=36) and <a href="./demo_95.html">D95</a> synergy (derived series layers = 0+0=26%) may be the same algebraic split seen through different lenses. Seeded <a href="./demo_96.html">D96</a> to test this.</li>
+</ul>
+<h3>Data</h3>
+<p><strong>z8 group structure (Phase 1-2):</strong> <ul> <li>|z8| = 24 bracket values (binary octahedral 2O, order 48 mod sign)</li> <li>Generators: g1 = (sqrt2/2)(1 + i), g2 = (sqrt2/2)(1 - k), plus their conjugates</li> <li>12/24 entries are single commutators</li> <li>G1 (commutator subgroup) = 12 entries (binary tetrahedral 2T)</li> <li>Derived series: 24 &gt; 12 &gt; 4 &gt; 1</li> </ul>
+<p><strong>z8 derived series level membership:</strong></p>
+<table><thead><tr><th>Level</th><th>Size</th><th>Algebraic identity</th></tr></thead><tbody><tr><td>D0\<a href="./demo_01.html">D1</a></td><td>12</td><td>Outermost, non-commutator</td></tr><tr><td><a href="./demo_01.html">D1</a>\<a href="./demo_02.html">D2</a></td><td>8</td><td>First commutator layer (2T\Q8)</td></tr><tr><td><a href="./demo_02.html">D2</a>\<a href="./demo_03.html">D3</a></td><td>3</td><td>Deep commutator (Q8\center)</td></tr><tr><td><a href="./demo_03.html">D3</a></td><td>1</td><td>Identity</td></tr></tbody></table>
+<p><strong>2I group structure (Phase 1):</strong> <ul> <li>|2I| = 60 bracket values (binary icosahedral, order 120 mod sign)</li> <li>60/60 entries are single commutators -- PERFECT GROUP</li> <li>Derived series: 60 = 60 (terminates immediately)</li> </ul>
+<p><strong>Phase 3 -- COMM vs NON-COMM vs ALL XOR hit rates:</strong></p>
+<table><thead><tr><th>N</th><th>COMM(12)</th><th>NON-COMM(12)</th><th>ALL(24)</th><th>COMM/NONC</th></tr></thead><tbody><tr><td>3</td><td>48.64%</td><td>42.73%</td><td>71.94%</td><td>1.14x</td></tr><tr><td>4</td><td>44.04%</td><td>51.52%</td><td>75.04%</td><td>0.85x</td></tr><tr><td>5</td><td>15.15%</td><td>13.64%</td><td>40.76%</td><td>1.11x</td></tr><tr><td>6</td><td>6.28%</td><td>5.63%</td><td>9.64%</td><td>1.12x</td></tr><tr><td>7</td><td>1.01%</td><td>0.00%</td><td>0.18%</td><td>inf</td></tr></tbody></table>
+<p><strong>Phase 3b -- 90-degree split (Re=0 entries, matched half-angle):</strong></p>
+<table><thead><tr><th>Subset</th><th>Size</th><th>N=3 XOR</th><th>N=4 XOR</th><th>N=5 XOR</th><th>N=6 XOR</th></tr></thead><tbody><tr><td>Q8-null (<a href="./demo_02.html">D2</a>)</td><td>3</td><td>0</td><td>0</td><td>0</td><td>0</td></tr><tr><td>Outermost-null (D0)</td><td>6</td><td>0</td><td>0</td><td>0</td><td>0</td></tr><tr><td>All-null (mixed)</td><td>9</td><td>0</td><td>33/126 = 26.19%</td><td>0</td><td>0</td></tr></tbody></table>
+<p><strong>Phase 4 -- Matched comparison (12 entries each):</strong></p>
+<p>XOR hit rates:</p>
+<table><thead><tr><th>N</th><th>z8-COMM (12)</th><th>2I-first-12</th><th>ratio (2I/z8)</th></tr></thead><tbody><tr><td>3</td><td>48.64%</td><td>75.91%</td><td>1.56x</td></tr><tr><td>4</td><td>44.04%</td><td>72.12%</td><td>1.64x</td></tr><tr><td>5</td><td>15.15%</td><td>32.58%</td><td>2.15x</td></tr><tr><td>6</td><td>6.28%</td><td>5.95%</td><td>0.95x</td></tr><tr><td>7</td><td>1.01%</td><td>0.00%</td><td>0.00x</td></tr></tbody></table>
+<h3>Code Assets</h3>
+<ul>
+<li><strong><code>Zr2</code> (Z[sqrt2] ring arithmetic)</strong>: Exact integer type representing a + b*sqrt(2). Operations: <code>zr2_make</code>, <code>zr2_add</code>, <code>zr2_sub</code>, <code>zr2_neg</code>, <code>zr2_mul</code>, <code>zr2_eq</code>, <code>zr2_div2</code>. Multiplication uses sqrt(2)^2 = 2. Reusable for any computation in Z[sqrt2].</li>
+<li><strong><code>QZ8</code> (quaternion over Z[sqrt2])</strong>: Four-component quaternion with Zr2 entries (representing (a + b*sqrt2)/2 per component). Operations: <code>qz8_make</code>, <code>qz8_eq</code>, <code>qz8_neg</code>, <code>qz8_conj</code>, <code>qz8_mul</code>. Multiplication includes <code>zr2_div2</code> for /4 -&gt; /2 renormalization. Exact arithmetic, no floating point in group operations.</li>
+<li><strong><code>Zr5</code> / <code>Q2I</code> (from <a href="./demo_94.html">D94</a>)</strong>: Z[sqrt5] ring and quaternion arithmetic for binary icosahedral group. Carried forward unchanged.</li>
+<li><strong><code>build_z8(verbose)</code></strong>: BFS closure of binary octahedral group from generators (sqrt2/2)(1+i) and (sqrt2/2)(1-k) plus conjugates. Stores elements in global array with depth tracking. Handles mod-sign identification (48 elements -&gt; 24 bracket values).</li>
+<li><strong><code>build_2i(verbose)</code></strong>: BFS closure of binary icosahedral group from generators s and t (from <a href="./demo_94.html">D94</a>). 120 elements -&gt; 60 bracket values.</li>
+<li><strong><code>z8_commutator(a, b)</code> / <code>i2_commutator(a, b)</code></strong>: Compute [a,b] = a<em>b</em>a^{-1}*b^{-1} for z8 and 2I respectively. Uses conjugate as inverse (unit quaternions).</li>
+<li><strong><code>close_z8_subgroup(in_set)</code></strong>: Takes a subset indicator array, closes under multiplication and inverse to produce a subgroup. Used for derived series computation. Returns size of closed subgroup.</li>
+<li><strong><code>phase1_commutators()</code></strong>: Enumerates all single commutators [g_i, g_j] in both z8 and 2I. Classifies each group element as commutator or not. Verifies 2I is perfect (all elements are commutators).</li>
+<li><strong><code>phase2_derived_series()</code></strong>: Iteratively computes derived series G0 &gt; G1 &gt; G2 &gt; ... by taking commutator subgroup at each level. Tracks level membership (which derived layer each element belongs to). Verifies z8 series terminates at 1 and 2I is perfect.</li>
+<li><strong><code>phase3_capacity_comparison()</code></strong>: Tests XOR and AND capacity for COMM subset, NON-COMM subset, and full z8 group independently. Uses 1wpi phase_cell framework with k_sec shortlist {6, 12, 24}. Produces comparison table with hit rates.</li>
+<li><strong><code>phase3b_ninety_degree_split()</code></strong>: Isolates Re=0 (90-degree half-angle) entries and splits them by derived series level (Q8-level vs outermost). Tests each subset and their union for XOR. Demonstrates algebra-over-geometry synergy.</li>
+<li><strong><code>phase4_matched_comparison()</code></strong>: Size-controlled comparison: z8-COMM (12 entries) vs first 12 entries from 2I (by BFS depth). Tests XOR and AND. Demonstrates 2I advantage at matched size using the commutator subset as the solvable baseline.</li>
+<li><strong><code>load_z8_subset(mask)</code> / <code>load_2i_first_n(n)</code></strong>: Catalog loading helpers that populate the global float catalog from subset masks or first-N selection.</li>
+<li><strong><code>qz8_to_float()</code> / <code>q2i_to_float()</code></strong>: Convert exact algebraic quaternions to floating-point Quat for use with 1wpi phase_cell framework. Shared with <a href="./demo_94.html">D94</a>.</li>
+<li><strong><code>phase_cell()</code> / <code>vor_cell()</code> / <code>build_dirs()</code> / <code>count_phase_ex()</code></strong>: 1wpi activation and testing infrastructure. Shared pattern across <a href="./demo_92.html">D92</a>-<a href="./demo_95.html">D95</a>.</li>
+<li><strong><code>make_xor_tt()</code> / <code>make_and_tt()</code></strong>: Truth table generators for XOR and AND Boolean functions.</li>
+<li><strong><code>next_combo()</code> / <code>comb_nk()</code></strong>: Combinatorial utilities for exhaustive weight-tuple enumeration.</li>
+</ul>
+<h3>Literature Touched</h3>
+<ul>
+<li><strong>Barrington (1989) -- branching programs over groups</strong>: NC1 = programs over non-solvable groups. <a href="./demo_95.html">D95</a> refines the mechanism: the bottleneck is not that commutators are individually weaker, but that stratification (having derived series layers) forces cross-layer dependence which wastes combinatorial budget. Non-solvable groups avoid this by being perfect (G1=G0).</li>
+<li><strong>Liebeck, O'Brien, Shalev, Tiep (2011) -- Ore conjecture for finite simple groups</strong>: Every element of a finite simple group is a commutator. Computationally confirmed for 2I (isomorphic to SL(2,5) / perfect group): 60/60 bracket values are single commutators.</li>
+<li><strong>ADE classification of finite SU(2) subgroups</strong>: z8 derived series 24 &gt; 12 &gt; 4 &gt; 1 corresponds exactly to 2O &gt; 2T &gt; Q8 &gt; {+/-1} in the ADE chain (E7 &gt; E6 &gt; <a href="./demo_04.html">D4</a> &gt; A1). First direct computation of this partition in the DKC context.</li>
+<li><strong>Barrington mechanism (refinement from <a href="./demo_95.html">D95</a>)</strong>: Cross-layer interaction, not commutators in isolation, is the active mechanism. The commutator subgroup and its coset have nearly equal XOR capacity when tested alone. The 2.7x boost from ALL(24) over either 12-element subset demonstrates that the signed-sum interference between algebraic strata is load-bearing.</li>
+<li><strong>Habiro (2002) / Z[zeta_8] bracket</strong>: Algebraic substrate for the z8 group; <a href="./demo_95.html">D95</a> uses exact Z[sqrt2] arithmetic to compute derived series without floating-point error.</li>
+</ul>
+<h3>Open Questions</h3>
+<ul>
+<li><strong>Are <a href="./demo_84.html">D84</a> and <a href="./demo_95.html">D95</a> synergy the same split?</strong> <a href="./demo_84.html">D84</a> synergy (TL null/non-null = 0+0=36) and <a href="./demo_95.html">D95</a> synergy (derived series layers = 0+0=26%) -- are they the same algebraic partition seen through different lenses, or independent? (Directly seeded <a href="./demo_96.html">D96</a>.)</li>
+<li><strong>Cross-depth synergy matrix</strong>: For z8, test ALL level-pair combinations (D0xD1, D0xD2, D1xD2, etc.) to map which crossings are most productive. The 90-degree split (Phase 3b) tested D0xD2; the full matrix would reveal the synergy landscape.</li>
+<li><strong>Layer combination map</strong>: Which 2-layer and 3-layer combinations of derived series produce the most synergy? Is there a hierarchy of layer crossings?</li>
+<li><strong>RKHS kernel rank</strong>: Does kernel rank predict synergy? If the kernel rank of the COMM+NON-COMM union exceeds the sum of individual ranks, that would mathematically quantify the cross-term mechanism.</li>
+<li><strong>zeta_12 stratification</strong>: Does the dense (non-solvable, infinite) group have algebraic strata? If not, does that explain its high capacity?</li>
+<li><strong>N=7 COMM survival mechanism</strong>: COMM survives at N=7 (1.01%) while NON-COMM dies (0%). What structural property of the commutator subgroup (2T) provides this last-resort capacity? Is it related to 2T's own commutator structure (Q8)?</li>
+</ul>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/c.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</body>
+</html>

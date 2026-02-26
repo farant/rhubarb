@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>research/key-sources.md</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+    <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+    <nav><a href="../index.html">← Back to Index</a></nav><hr>
+    <h1>Key Sources: Particularly Valuable Papers with Notes</h1>
+<p>Papers that have directly shaped DKC research, with specific notes on what we extracted and how they connect.</p>
+<p>---</p>
+<h2>Tier 1: The Five Pillars</h2>
+<h3>Habiro (2002) — Cyclotomic Expansion</h3>
+<ul>
+<li><strong>arXiv:</strong> <a href="https://arxiv.org/abs/math/0209324">math/0209324</a></li>
+<li><strong>Why it matters:</strong> Mathematical foundation for ALL of forward DKC. Proves bracket values at roots of unity are cyclotomic integers.</li>
+<li><strong>What we use:</strong> The specific instance at A = e^{i5π/4}: Z[ζ₈] integrality. Basis {1, ζ₈, ζ₈², ζ₈³}, class number 1 (UFD).</li>
+<li><strong>What we DON'T use (yet):</strong> The full colored Jones polynomial expansion. We only evaluate the uncolored bracket. Higher representations would give richer catalogs.</li>
+<li><strong>Status:</strong> Core theorem, fully exploited at ℓ=2. Extensions at ℓ=3,4,5,6 confirmed computationally (Demos 53-59).</li>
+</ul>
+<h3>Nazer-Gastpar (2011) — Compute-and-Forward</h3>
+<ul>
+<li><strong>arXiv:</strong> <a href="https://arxiv.org/pdf/1107.0300">1107.0300</a></li>
+<li><strong>Why it matters:</strong> Proves that algebraic integer lattices support exact function computation. The information-theoretic frame for DKC.</li>
+<li><strong>What we use:</strong> The conceptual parallel — algebraic ring closure enables computation without optimization.</li>
+<li><strong>What we DON'T use (yet):</strong> The formal capacity bounds. The compute-and-forward rate region could potentially bound DKC saturation rates.</li>
+<li><strong>Best companion:</strong> Tunali et al. (2015), extending to Eisenstein integers Z[ω]. Closest existing work to DKC's spirit.</li>
+</ul>
+<h3>Abramsky (2007/2009) — TL as Computation</h3>
+<ul>
+<li><strong>arXiv:</strong> <a href="https://arxiv.org/abs/0910.2737">0910.2737</a></li>
+<li><strong>Why it matters:</strong> The ONLY paper that proves TL diagrams encode computation. The theoretical ancestor of forward DKC.</li>
+<li><strong>What we use:</strong> The existence proof — TL diagrams are a computational calculus. Our bracket evaluation IS evaluation in Abramsky's planar lambda calculus.</li>
+<li><strong>What we DON'T use (yet):</strong> The full formal semantics. Abramsky's Geometry of Interaction interpretation could characterize WHICH bracket triples compute WHICH functions.</li>
+<li><strong>Open direction:</strong> Tier 3 in our research priorities — full Abramsky depth.</li>
+</ul>
+<h3>Aizenberg (2000, 2011) — MVN Theory</h3>
+<ul>
+<li><strong>Springer:</strong> <a href="https://link.springer.com/book/10.1007/978-1-4757-3115-6">book</a></li>
+<li><strong>Why it matters:</strong> The neural network architecture. MVN = roots-of-unity activation → arbitrary Boolean functions.</li>
+<li><strong>What we use:</strong> k-sector activation function. Demo 50 result (all 13 NPN at k=6) is direct application.</li>
+<li><strong>Key insight we extracted:</strong> Aizenberg prescribes root-of-unity structure by design. We show it emerges from topology. The convergence of prescribed and emergent structure is the core DKC result.</li>
+</ul>
+<p>---</p>
+<h2>Tier 2: Structural Foundations</h2>
+<h3>Kauffman (1987) — The Bracket Polynomial</h3>
+<ul>
+<li><strong>Link:</strong> <a href="http://homepages.math.uic.edu/~kauffman/Bracket.pdf">Kauffman's page</a></li>
+<li><strong>Why it matters:</strong> The mathematical object we compute. State-sum over all 2^k smoothings.</li>
+<li><strong>What we use:</strong> The exact formula: ⟨K⟩ = Σ_s A^{σ(s)} · δ^{|s|-1}. At δ=0, only single-loop states survive.</li>
+<li><strong>Implementation:</strong> <code>braid_bracket_at()</code> in every DKC demo from Demo 01 onward.</li>
+</ul>
+<h3>Freedman, Kitaev, Larsen, Wang (2003) — Topological QC</h3>
+<ul>
+<li><strong>arXiv:</strong> <a href="https://arxiv.org/abs/quant-ph/0101025">quant-ph/0101025</a></li>
+<li><strong>Why it matters:</strong> BQP-completeness of Jones polynomial at roots of unity. Establishes that what we compute is quantum-hard in general.</li>
+<li><strong>Key nuance:</strong> At ℓ=5 (δ=φ, Fibonacci anyons), braid representations are DENSE in PSU(2) → TQC universality. But Demo 58 showed this DOESN'T help DKC — density in PSU(2) doesn't translate to angular diversity in scalar bracket output.</li>
+</ul>
+<h3>Costello, Francis, Gwilliam (2026) — Witten = RT Proven</h3>
+<ul>
+<li><strong>arXiv:</strong> 2602.12412</li>
+<li><strong>Why it matters:</strong> Rigorously proves the algebraic path (state sum = composing quantum group reps) and the physical path (Chern-Simons path integral) give identical answers. Our bracket computation is now QFT-grounded.</li>
+<li><strong>Status:</strong> Preliminary version (75 pages), but authors are leading figures (Costello = foundational mathematical QFT).</li>
+</ul>
+<h3>Witten (1989) — QFT and the Jones Polynomial</h3>
+<ul>
+<li><strong>Springer:</strong> <a href="https://link.springer.com/article/10.1007/BF01217730">article</a></li>
+<li><strong>Why it matters:</strong> Physical interpretation — bracket values are Chern-Simons transition amplitudes, not arbitrary numbers.</li>
+</ul>
+<h3>Nitta (2003) — Complex XOR Neuron</h3>
+<ul>
+<li><strong>PubMed:</strong> <a href="https://pubmed.ncbi.nlm.nih.gov/13678617/">13678617</a></li>
+<li><strong>Why it matters:</strong> A single complex neuron (6 real params) solves XOR. Direct theoretical justification for our complex-valued DKC architecture. The 4-region partition from orthogonal decision boundaries is EXACTLY what XOR needs.</li>
+</ul>
+<h3>Aizenberg (2008) — Solving XOR and Parity-N with a Single UBN</h3>
+<ul>
+<li><strong>Springer:</strong> <a href="https://link.springer.com/article/10.1007/s00500-007-0204-9">article</a></li>
+<li><strong>Why it matters:</strong> Proves a single Universal Binary Neuron with 2n sectors solves n-input parity. Crucially, the weight construction (w₁=ζ₈, w₂=i, w₃=−1) for 3-input parity uses values IN the Z[ζ₈] bracket catalog.</li>
+<li><strong>What we extracted:</strong> This paper reframes the Demo 48 parity wall from "lattice limitation" to "activation limitation" — the lattice contains parity-capable weights; split-sigmoid just can't read them.</li>
+<li><strong>Status:</strong> Key result for understanding the Demo 48→50 arc. Extended by <a href="../inventory/entries/demo_91.html">D91</a> (activation not the bottleneck for depth law) and <a href="../inventory/entries/demo_92.html">D92</a> (encoding determines function accessibility).</li>
+</ul>
+<p>---</p>
+<h2>Tier 2.5: Indecomposability / LCFT Structure (NEW — <a href="../inventory/entries/demo_85.html">D85</a>-<a href="../inventory/entries/demo_86.html">86</a>)</h2>
+<h3>Gainutdinov, Read, Saleur (GRS) — Quantum Group b Parameter</h3>
+<ul>
+<li><strong>Why it matters:</strong> Defines the indecomposability parameter b algebraically via the quantum group / projective cover approach. Predicts b = -2 under their normalization conventions for the symplectic fermion theory at c = -2.</li>
+<li><strong>What we extracted (<a href="../inventory/entries/demo_85.html">D85</a>):</strong> The "controversy" between b = -2 (GRS) and b = -5/8 (PR) dissolves when normalization is accounted for. b_delta = -5/2 on the regular representation divides by dim(0-TL sector) = 4 to give b_PR = -5/8. GRS and PR measure the same thing at different scales.</li>
+<li><strong>What we extracted (<a href="../inventory/entries/demo_86.html">D86</a>):</strong> The multiplicity from the regular representation is structurally essential — it participates in the valuation balance, not just a scale factor. Single P_{0,0} universally diverges.</li>
+<li><strong>Status:</strong> Key for understanding how TL non-semisimplicity governs DKC's computational obstruction structure.</li>
+</ul>
+<h3>Pearce, Rasmussen — Lattice b = -5/8</h3>
+<ul>
+<li><strong>Why it matters:</strong> The finite-size lattice scaling computation of b for critical dense polymers (c = -2, p = 2). This is the physical/lattice value that Demo 85 confirms from first principles.</li>
+<li><strong>What we extracted (<a href="../inventory/entries/demo_85.html">D85</a>):</strong> b_PR = -5/8 confirmed at TL_4 to 12 decimal places via leading-coefficient extraction from delta-parameterized Gram matrix. Valuation condition p_tt = 2*p_Tt holds at TL_4 but fails at TL_6.</li>
+<li><strong>What we extracted (<a href="../inventory/entries/demo_86.html">D86</a>):</strong> The method diverges on a single P_{0,0} — a novel negative finding. The actual PR lattice method likely uses transfer matrices + finite-size scaling, not diagram algebra.</li>
+<li><strong>Open direction:</strong> Identifying and implementing the actual PR method for sizes beyond TL_4.</li>
+</ul>
+<h3>Symplectic Fermion Theory at c = -2</h3>
+<ul>
+<li><strong>Why it matters:</strong> The continuum CFT that the TL algebra at delta=0 discretizes. Predicts b = -2 (GRS convention) as a structure constant in the logarithmic CFT.</li>
+<li><strong>What we extracted:</strong> The symplectic fermion theory is the c = -2 member of the dense polymer family (p = 2 in Gainutdinov et al. 2013 classification). Our computation at TL_4 reaches the correct physical value after proper normalization.</li>
+</ul>
+<p>---</p>
+<h2>Tier 3: TL Algebra / Radical Anatomy</h2>
+<h3>Goodman, Wenzl (1993) — TL at Roots of Unity</h3>
+<ul>
+<li><strong>Link:</strong> <a href="https://projecteuclid.org/journals/pacific-journal-of-mathematics/volume-161/issue-2/The-Temperley-Lieb-algebra-at-roots-of-unity/pjm/1102623233.full">Project Euclid</a></li>
+<li><strong>Why it matters:</strong> Proves TL is non-semisimple at roots of unity, identifying the radical structure that Demo 51 computes exactly.</li>
+<li><strong>What we extracted:</strong> This non-semisimplicity is the algebraic obstruction that limits which Boolean functions the bracket can compute (Demo 47's hypothesis, Demo 48's confirmation).</li>
+</ul>
+<h3>Graham, Lehrer (1996) — Cellular Algebras</h3>
+<ul>
+<li><strong>Journal:</strong> Inventiones Mathematicae</li>
+<li><strong>Why it matters:</strong> TL_n is cellular → Loewy length ≤ 3. This is the theoretical ceiling that our Demos 51-52 confirmed computationally across all roots of unity tested (ℓ=2,3,4,5,6,7).</li>
+<li><strong>What we extracted:</strong> The cellularity bound explains WHY rad³ = 0 universally.</li>
+</ul>
+<h3>Belletete, Ridout, Saint-Aubin (2016)</h3>
+<ul>
+<li><strong>arXiv:</strong> <a href="https://arxiv.org/abs/1605.05159">1605.05159</a></li>
+<li><strong>Why it matters:</strong> Complete classification of indecomposable TL modules. PIM diamond structure (head ≅ socle, Loewy length 3) is the MODULE-level version of our sandwich theorem.</li>
+<li><strong>Our contribution beyond this:</strong> We identified the ALGEBRA-level structure (rad²(TL_{2k}) ≅ TL_{2k-1} as a named algebra), which this paper doesn't do.</li>
+</ul>
+<h3>Gainutdinov et al. (2013) — Logarithmic CFT Lattice Approach</h3>
+<ul>
+<li><strong>arXiv:</strong> <a href="https://arxiv.org/abs/1303.2082">1303.2082</a></li>
+<li><strong>Why it matters:</strong> Our δ=0 case = dense polymers, p=2, q=i, central charge c = -2. The TL → Virasoro correspondence is explicitly shown. Tilting modules have the same diamond structure.</li>
+<li><strong>Key figure:</strong> Figure 5 shows bimodule structure for exactly our case.</li>
+<li><strong>Extended by <a href="../inventory/entries/demo_86.html">D86</a>:</strong> Dense polymer fusion calculation seeded as a future direction for algebraic description of DKC composition.</li>
+</ul>
+<h3>Ridout, Saint-Aubin (2014) — Standard Modules and Induction</h3>
+<ul>
+<li><strong>arXiv:</strong> <a href="https://arxiv.org/abs/1204.4505">1204.4505</a></li>
+<li><strong>Why it matters:</strong> Module-level structure that implies our results but doesn't explicitly compute dimension tables or identify named algebra isomorphisms.</li>
+</ul>
+<h3>Creutzig (2024) — Non-Semisimple Verlinde</h3>
+<ul>
+<li><strong>arXiv:</strong> <a href="https://arxiv.org/abs/2411.11383">2411.11383</a></li>
+<li><strong>Why it matters:</strong> Extends Verlinde formula to logarithmic CFT. Our TL_n at δ=0 is the discrete lattice version of his continuum theory.</li>
+</ul>
+<h3>Gurarie (1993) / Flohr (1996) / Gaberdiel-Kausch (1996) — LCFT Foundations</h3>
+<ul>
+<li><strong>Why they matter:</strong> The logarithmic CFT framework where null states pair with logarithmic partners via Jordan-cell L₀ action. Directly relevant to <a href="../inventory/entries/demo_84.html">D84</a>'s null-state analysis and <a href="../inventory/entries/demo_87.html">D87</a>'s regime transition.</li>
+<li><strong>What we extracted (<a href="../inventory/entries/demo_84.html">D84</a>):</strong> Null entries as Jordan-cell anchors — the LCFT interpretation of bracket-null catalog entries.</li>
+<li><strong>What we extracted (<a href="../inventory/entries/demo_87.html">D87</a>):</strong> The LCFT null-state interpretation is regime-dependent: critical at finite groups where direction sparsity makes every null direction essential, redundant at infinite groups where direction density absorbs the loss.</li>
+</ul>
+<p>---</p>
+<h2>Tier 3.5: Circuit Complexity (NEW — <a href="../inventory/entries/demo_92.html">D92</a>)</h2>
+<h3>Furst, Saxe, Sipser (1984) — Parity Not in AC^0</h3>
+<ul>
+<li><strong>Why it matters:</strong> Proved that parity cannot be computed by constant-depth polynomial-size circuits of AND/OR/NOT gates. The theoretical backdrop for why parity is hard.</li>
+<li><strong>What we extracted (<a href="../inventory/entries/demo_92.html">D92</a>):</strong> The +/-q encoding naturally concentrates all DKC computational power on EXACTLY this function — the canonical function outside AC^0. The encoding does not just happen to compute parity; it is structurally incapable of computing anything else (AND/OR/MAJ = 0 winners at all depths).</li>
+</ul>
+<h3>Hastad (1987) — Exponential Lower Bounds for Parity in AC^0</h3>
+<ul>
+<li><strong>Why it matters:</strong> Strengthened Furst-Saxe-Sipser with exponential lower bounds. Any depth-d circuit computing parity on n bits requires exp(n^{1/(d-1)}) gates.</li>
+<li><strong>What we extracted (<a href="../inventory/entries/demo_92.html">D92</a>):</strong> DKC bypasses this barrier entirely. The braid reservoir is not a circuit — it is a fixed algebraic dynamical system with a single-neuron readout. The linear depth law (max_xor ~ depth+6) is linear in depth, not exponential, because the "depth" is braid word length (reservoir steps), not circuit depth.</li>
+</ul>
+<p>---</p>
+<h2>Tier 3.6: Geometric Analysis (NEW — <a href="../inventory/entries/demo_88.html">D88</a>-<a href="../inventory/entries/demo_90.html">90</a>)</h2>
+<h3>Altschuler, Parrilo (2023) — Spherical Point Configurations</h3>
+<ul>
+<li><strong>Why it matters:</strong> Framework for analyzing point configurations on S² via spherical harmonic decomposition and polynomial energy minimization.</li>
+<li><strong>What we extracted (<a href="../inventory/entries/demo_90.html">D90</a>):</strong> The AP hypothesis — that deeper S² point clouds access higher spherical harmonic modes — is INVERTED for DKC. Bandwidth DECREASES with depth while computation INCREASES. The depth law mechanism is relational (axis cancellation, cross-depth algebraic constraints), not positional (point cloud geometry).</li>
+<li><strong>What survives:</strong> The AP framework may still apply via kernel rank analysis of the activation matrix (Gram matrix of combined_cell outputs), but the point-cloud-spectrum version is dead.</li>
+</ul>
+<h3>Tahmasebi, Jegelka (NeurIPS 2023) — Group Invariance Implies Dimension Reduction</h3>
+<ul>
+<li><strong>Why it matters:</strong> SU(2)/U(1) = S² — group invariance reduces the effective dimensionality of the representation space.</li>
+<li><strong>What we extracted (<a href="../inventory/entries/demo_89.html">D89</a>):</strong> Consistent with DKC's independent discovery (<a href="../inventory/entries/demo_67.html">D67</a>) that S² directional structure matters. The SU(2) → S² projection via the Hopf fibration is an instance of this general principle.</li>
+</ul>
+<p>---</p>
+<h2>Tier 3.7: Braid Dynamics / Activation Theory / Dual-Channel (NEW — <a href="../inventory/entries/demo_102.html">D102</a>-<a href="../inventory/entries/demo_109.html">D109</a>)</h2>
+<h3>Amy, Glaudell, Ross (2023) — Quantum Circuit Synthesis over Z[ζ₈]</h3>
+<ul>
+<li><strong>arXiv:</strong> <a href="https://arxiv.org/abs/2311.07741">2311.07741</a></li>
+<li><strong>Why it matters:</strong> T-gate/Hadamard decomposition for quantum circuit synthesis. The "smallest denominator exponent" (sde) resource measure classifies Z[ζ₈] elements by computational cost.</li>
+<li><strong>What we extracted (<a href="../inventory/entries/demo_108.html">D108</a>):</strong> The DKC dual-channel theorem maps directly onto this framework: product closure = T-gate (phase rotation across axes), additive v₂ connectivity = Hadamard (magnitude diversity). Activation function plays the Hadamard role, providing magnitude diversity that enables sde=0 ("Clifford") values to participate in parity computation.</li>
+<li><strong>What we extracted (<a href="../inventory/entries/demo_109.html">D109</a>):</strong> At δ=√2, the algebra is rich enough that Re&gt;0 suffices as activation — universal structural satisfaction means no elaborate activation engineering needed.</li>
+<li><strong>Status:</strong> The bridge between DKC and quantum circuit synthesis. Confirms that the dual-channel structure is not ad hoc but a recognized decomposition in an adjacent field.</li>
+</ul>
+<h3>Boufounos, Baraniuk (2008) — 1-Bit Compressed Sensing</h3>
+<ul>
+<li><strong>Why it matters:</strong> Establishes sign quantization as a valid compressed sensing measurement strategy. The sign-hash activation in DKC = 1-bit compressed sensing of algebraic integer vectors.</li>
+<li><strong>What we extracted (<a href="../inventory/entries/demo_103.html">D103</a>/<a href="../inventory/entries/demo_104.html">D104</a>/<a href="../inventory/entries/demo_105.html">D105</a>):</strong> Cross-block activation works because TL branching creates low intra-block coherence (near-orthogonal sub-module pieces), which is exactly the incoherence condition for CS recovery. Sign-rank expansion (<a href="../inventory/entries/demo_104.html">D104</a>: raw rank 244 → sign rank 292 for W_{6,2}) demonstrates that the nonlinear sign() projection can INCREASE effective dimension, breaking Z-linear dependencies.</li>
+<li><strong>Status:</strong> Theoretical frame for all sign-hash activation analysis from <a href="../inventory/entries/demo_103.html">D103</a> onward.</li>
+</ul>
+<h3>Band, Boyland (2007) — Burau Estimate for Braid Entropy</h3>
+<ul>
+<li><strong>Why it matters:</strong> Reduced Burau at t=−1 gives exact topological entropy for 3-braids and optimal lower bound for 4+. Establishes log(φ) = 0.481212... as the theoretical mixing efficiency ceiling per crossing.</li>
+<li><strong>What we extracted (<a href="../inventory/entries/demo_106.html">D106</a>):</strong> Used to classify all 32,768 catalog entries as periodic or pseudo-Anosov. Both types compute XOR at 100% participation — entropy is completely orthogonal to DKC Boolean computation. The TL quotient at δ=0 erases dynamical information while preserving algebraic structure.</li>
+</ul>
+<h3>Thurston (FLP, 1988) — Nielsen-Thurston Classification</h3>
+<ul>
+<li><strong>Why it matters:</strong> Framework for classifying surface homeomorphisms (and hence braids) as periodic, reducible, or pseudo-Anosov. The topological dynamics classification.</li>
+<li><strong>What we extracted (<a href="../inventory/entries/demo_106.html">D106</a>):</strong> The classification is INVISIBLE to the Kauffman bracket at δ=0. TL generators have e_i²=0 (nilpotent), killing expanding eigenvalues that carry entropy information. Writhe survives the quotient; entropy does not. This establishes the "TL visibility filter" principle.</li>
+</ul>
+<h3>Plaza, Ryom-Hansen (2013) — KLR Z-Grading of TL Algebras</h3>
+<ul>
+<li><strong>Why it matters:</strong> Establishes a Z-grading on TL algebras via the KLR (Khovanov-Lauda-Rouquier) framework.</li>
+<li><strong>What we extracted (<a href="../inventory/entries/demo_107.html">D107</a>):</strong> Researcher confirmed that TL generators e_i are NOT homogeneous in the KLR Z-grading. This means the nesting parity Z/2Z grading discovered in <a href="../inventory/entries/demo_107.html">D107</a> (nesting count mod 2 = bipartite 2-coloring for ALL TL link-state transition graphs) is genuinely novel and cannot be derived from known graded TL theory.</li>
+</ul>
+<p>---</p>
+<h2>Tier 4: Adjacent / Methodological</h2>
+<h3>GPTQ/Babai (2025) — NN Quantization = Lattice Problem</h3>
+<ul>
+<li><strong>arXiv:</strong> <a href="https://arxiv.org/abs/2508.01077">2508.01077</a></li>
+<li><strong>Why it matters:</strong> Closest the ML community has come to our territory. Proves GPTQ (standard weight quantization) is equivalent to Babai's nearest-plane algorithm for the closest vector problem on a lattice. But they only consider Z^n, not algebraic integer lattices like Z[ζ₈].</li>
+<li><strong>The gap:</strong> They notice quantization IS a lattice problem but haven't made the leap to non-standard lattices.</li>
+</ul>
+<h3>Davies et al. (2021) — ML-Guided Math Discovery</h3>
+<ul>
+<li><strong>Nature:</strong> <a href="https://www.nature.com/articles/s41586-021-04086-x">article</a></li>
+<li><strong>Why it matters:</strong> ML revealed knot signature ↔ hyperbolic geometry connection. The "ML as mathematical conjecture generator" paradigm. Our DKC arc is in this spirit.</li>
+</ul>
+<h3>Gaier, Ha (2019) — Weight Agnostic Neural Networks</h3>
+<ul>
+<li><strong>arXiv:</strong> <a href="https://arxiv.org/abs/1906.04358">1906.04358</a></li>
+<li><strong>Why it matters:</strong> Closest conceptual neighbor to forward DKC, but from the opposite direction. WANNs fix weights, search topologies. Forward DKC fixes topology, searches weights from a finite pre-computed catalog. Both bypass gradient descent.</li>
+</ul>
+<h3>Neglectons (Nature Communications 2025) — Non-Semisimple TQFTs</h3>
+<ul>
+<li><strong>Link:</strong> <a href="https://www.nature.com/articles/s41467-025-61342-8">Nature Comms</a></li>
+<li><strong>Why it matters:</strong> Extending to non-semisimple TQFTs introduces "neglectons" — radical elements that rescue universality for Ising anyons (limited to Clifford gates otherwise).</li>
+<li><strong>What we extracted:</strong> Demo 49 tested whether neglecton weights enable parity — they add 148 new Z[ζ₈] values but no new angles. The wall is in the activation, not the lattice. <a href="../inventory/entries/demo_89.html">D89</a> references Lauda et al. (2025) as external validation of Demo 84's null-indispensability findings.</li>
+</ul>
+<h3>Costello, Francis, Gwilliam (2026) — Witten = RT Proven</h3>
+<ul>
+<li><strong>arXiv:</strong> 2602.12412</li>
+<li><strong>Why it matters:</strong> Rigorously proves the algebraic path (state sum = composing quantum group reps) and the physical path (Chern-Simons path integral) give identical answers.</li>
+<li><strong>What we extracted:</strong> Our bracket computation is now QFT-grounded. Preliminary version (75 pages), but authors are leading figures in mathematical QFT.</li>
+</ul>
+<h3>Parity Hardness (2025)</h3>
+<ul>
+<li><strong>arXiv:</strong> <a href="https://arxiv.org/abs/2501.00817">2501.00817</a></li>
+<li><strong>Why it matters:</strong> Gradient descent FAILS on parity. Forward DKC SUCCEEDS on parity (906 solutions at k=6, 9,334 at δ=√2 Re&gt;0). The algebraic approach bypasses the gradient hardness entirely.</li>
+</ul>
+<h3>Faddeev-LeVerrier Algorithm (1840/1853)</h3>
+<ul>
+<li><strong>Why it matters:</strong> Classical method for computing characteristic polynomials via a sequence of matrix-trace operations. Used in <a href="../inventory/entries/demo_85.html">D85</a> for modular and complex characteristic polynomial computation as part of the Jordan block analysis infrastructure.</li>
+<li><strong>What we extracted:</strong> Efficient char poly computation enabling the definitive diagonalizability test (gcd of min poly and its derivative) at the heart of the b = -5/8 extraction.</li>
+</ul>
+<p>---</p>
+<h2>Cross-Reference: Most-Cited Across Our Documents</h2>
+<table><thead><tr><th>Paper</th><th>Times Referenced</th><th>In Which Documents</th></tr></thead><tbody><tr><td>Abramsky 2007</td><td>6+</td><td><a href="../inventory/entries/demo_27.html">D27</a> survey, <a href="../inventory/entries/demo_29.html">D29</a> survey, prior-art, integration notes, explorer's log, open directions</td></tr><tr><td>Habiro 2002</td><td>10+</td><td><a href="../inventory/entries/demo_29.html">D29</a> survey, prior-art, integration notes, README, explorer's log, five-pillars, <a href="../inventory/entries/demo_85.html">D85</a>, <a href="../inventory/entries/demo_87.html">D87</a>, <a href="../inventory/entries/demo_90.html">D90</a>, <a href="../inventory/entries/demo_92.html">D92</a>, <a href="../inventory/entries/demo_102.html">D102</a>, <a href="../inventory/entries/demo_105.html">D105</a>, <a href="../inventory/entries/demo_107.html">D107</a>, <a href="../inventory/entries/demo_108.html">D108</a>, <a href="../inventory/entries/demo_109.html">D109</a></td></tr><tr><td>Aizenberg 2000</td><td>5+</td><td><a href="../inventory/entries/demo_27.html">D27</a> survey, <a href="../inventory/entries/demo_29.html">D29</a> survey (implicit), prior-art, README, explorer's log</td></tr><tr><td>Aizenberg 2008</td><td>7+</td><td><a href="../inventory/entries/demo_47.html">D47</a>-<a href="../inventory/entries/demo_50.html">D50</a>, <a href="../inventory/entries/demo_63.html">D63</a>-<a href="../inventory/entries/demo_84.html">D84</a>, <a href="../inventory/entries/demo_91.html">D91</a>, <a href="../inventory/entries/demo_92.html">D92</a>, <a href="../inventory/entries/demo_108.html">D108</a></td></tr><tr><td>Nazer-Gastpar 2011</td><td>6+</td><td><a href="../inventory/entries/demo_29.html">D29</a> survey, prior-art, integration notes, README, open directions, <a href="../inventory/entries/demo_108.html">D108</a></td></tr><tr><td>Freedman-Kitaev-Wang 2003</td><td>4+</td><td><a href="../inventory/entries/demo_27.html">D27</a> survey, prior-art, integration notes, correspondence</td></tr><tr><td>Witten 1989</td><td>4+</td><td><a href="../inventory/entries/demo_27.html">D27</a> survey, prior-art, correspondence, integration notes</td></tr><tr><td>Kauffman 1987</td><td>5+</td><td><a href="../inventory/entries/demo_27.html">D27</a> survey, prior-art, all demos, <a href="../inventory/entries/demo_102.html">D102</a>, <a href="../inventory/entries/demo_107.html">D107</a>, <a href="../inventory/entries/demo_109.html">D109</a></td></tr><tr><td>Graham-Lehrer 1996</td><td>4+</td><td>Explorer's log (<a href="../inventory/entries/demo_51.html">D51</a>, <a href="../inventory/entries/demo_52.html">D52</a>), prior-art</td></tr><tr><td>Jaeger/Maass RC 2001/2002</td><td>7+</td><td><a href="../inventory/entries/demo_83.html">D83</a>, <a href="../inventory/entries/demo_84.html">D84</a>, <a href="../inventory/entries/demo_87.html">D87</a>, <a href="../inventory/entries/demo_89.html">D89</a>, <a href="../inventory/entries/demo_90.html">D90</a>, five-pillars, <a href="../inventory/entries/demo_103.html">D103</a>, <a href="../inventory/entries/demo_104.html">D104</a>, <a href="../inventory/entries/demo_106.html">D106</a></td></tr><tr><td>Nitta 2003</td><td>3+</td><td><a href="../inventory/entries/demo_27.html">D27</a> survey (twice), prior-art</td></tr><tr><td>Belletete-Ridout-SA 2016</td><td>3+</td><td>Explorer's log (<a href="../inventory/entries/demo_51.html">D51</a>), prior-art, <a href="../inventory/entries/demo_86.html">D86</a></td></tr><tr><td>Gainutdinov-Read-Saleur (GRS)</td><td>2+</td><td><a href="../inventory/entries/demo_85.html">D85</a>, <a href="../inventory/entries/demo_86.html">D86</a></td></tr><tr><td>Pearce-Rasmussen</td><td>2+</td><td><a href="../inventory/entries/demo_85.html">D85</a>, <a href="../inventory/entries/demo_86.html">D86</a></td></tr><tr><td>Furst-Saxe-Sipser / Hastad</td><td>1+</td><td><a href="../inventory/entries/demo_92.html">D92</a></td></tr><tr><td>Amy-Glaudell-Ross 2023</td><td>2</td><td><a href="../inventory/entries/demo_108.html">D108</a>, <a href="../inventory/entries/demo_109.html">D109</a> (NEW — dual-channel theorem bridge)</td></tr><tr><td>Barrington 1989</td><td>5+</td><td><a href="../inventory/entries/demo_93.html">D93</a>, <a href="../inventory/entries/demo_94.html">D94</a>, <a href="../inventory/entries/demo_95.html">D95</a>, <a href="../inventory/entries/demo_96.html">D96</a>, <a href="../inventory/entries/demo_102.html">D102</a></td></tr><tr><td>Boufounos-Baraniuk 2008</td><td>3</td><td><a href="../inventory/entries/demo_103.html">D103</a>, <a href="../inventory/entries/demo_104.html">D104</a>, <a href="../inventory/entries/demo_105.html">D105</a> (NEW — 1-bit CS frame for sign-hash)</td></tr></tbody></table>
+<p>---</p>
+<h2>The Novelty Statement</h2>
+<p>From the <a href="../inventory/entries/demo_29.html">D29</a> literature survey summary table:</p>
+<table><thead><tr><th>Territory</th><th>Status</th></tr></thead><tbody><tr><td>Cyclotomic integers + NNs</td><td><strong>UNEXPLORED</strong> (GPTQ/Babai 2025 is adjacent)</td></tr><tr><td>Forward compilation of topological invariants into NN weights</td><td><strong>UNEXPLORED</strong> (WANNs tangential)</td></tr><tr><td>Lattice codes + NN computation</td><td>Established for communication, NOT for NNs</td></tr><tr><td>Bracket + exact cyclotomic arithmetic</td><td>Established in topology, NOT applied to computation</td></tr><tr><td>TL algebra + computation</td><td>Abramsky made the bridge; we cross it concretely</td></tr><tr><td>Algebraic NT + error-correcting codes</td><td>Established framework we apply</td></tr><tr><td>Braid groups as reservoirs</td><td><strong>UNEXPLORED</strong> (<a href="../inventory/entries/demo_73.html">D73</a>, <a href="../inventory/entries/demo_82.html">D82</a>, <a href="../inventory/entries/demo_87.html">D87</a>-<a href="../inventory/entries/demo_90.html">90</a>, <a href="../inventory/entries/demo_103.html">D103</a>, <a href="../inventory/entries/demo_104.html">D104</a>, <a href="../inventory/entries/demo_106.html">D106</a>)</td></tr><tr><td>Indecomposability parameter + computation</td><td><strong>UNEXPLORED</strong> (b connects to DKC obstruction, <a href="../inventory/entries/demo_85.html">D85</a>-<a href="../inventory/entries/demo_86.html">86</a>)</td></tr><tr><td>Parity-lock from input encoding</td><td><strong>UNEXPLORED</strong> (<a href="../inventory/entries/demo_92.html">D92</a> — +/-q encoding computes ONLY parity)</td></tr><tr><td>Radical carries abelian character → Barrington uselessness</td><td><strong>UNEXPLORED</strong> (<a href="../inventory/entries/demo_102.html">D102</a> — Barrington-Radical Principle)</td></tr><tr><td>Braid entropy orthogonal to bracket computation</td><td><strong>UNEXPLORED</strong> (<a href="../inventory/entries/demo_106.html">D106</a> — TL visibility filter)</td></tr><tr><td>Graph-structure predicts parity capability</td><td><strong>UNEXPLORED</strong> (<a href="../inventory/entries/demo_108.html">D108</a> — dual-channel theorem)</td></tr><tr><td>Encoding-dependent dual-channel polarity</td><td><strong>UNEXPLORED</strong> (<a href="../inventory/entries/demo_109.html">D109</a> — product closure sign flips with encoding)</td></tr><tr><td>Nesting parity Z/2Z grading on TL link states</td><td><strong>UNEXPLORED</strong> (<a href="../inventory/entries/demo_107.html">D107</a> — confirmed novel vs KLR by Plaza-Ryom-Hansen)</td></tr><tr><td>Sign-hash as 1-bit CS with rank expansion</td><td><strong>UNEXPLORED</strong> (<a href="../inventory/entries/demo_104.html">D104</a> — sign quantization expands effective rank)</td></tr></tbody></table>
+<p><strong>Bottom line:</strong> The question "can topological invariants be compiled into neural network weights?" has no direct precedent in the literature. The five pillars prove it should work; the demos prove it does. The <a href="../inventory/entries/demo_85.html">D85</a>-<a href="../inventory/entries/demo_92.html">92</a> arc adds: the non-semisimple structure quantifies the computational obstruction (b = -5/8), the depth law mechanism is relational algebra not positional geometry, and the encoding naturally selects for the hardest Boolean function (parity, outside AC^0). The <a href="../inventory/entries/demo_102.html">D102</a>-<a href="../inventory/entries/demo_109.html">109</a> arc adds: the radical is provably computationally inert via Barrington's theorem (<a href="../inventory/entries/demo_102.html">D102</a>), topological entropy is invisible to bracket computation (<a href="../inventory/entries/demo_106.html">D106</a>), BFS growth is a braid group invariant not module-dependent (<a href="../inventory/entries/demo_102.html">D102</a>-<a href="../inventory/entries/demo_103.html">103</a>), sign-hash activation is 1-bit compressed sensing with rank expansion (<a href="../inventory/entries/demo_103.html">D103</a>-<a href="../inventory/entries/demo_105.html">105</a>), algebraic graph structure predicts parity capability via the dual-channel theorem (<a href="../inventory/entries/demo_108.html">D108</a>-<a href="../inventory/entries/demo_109.html">109</a>), and the nesting parity Z/2Z grading is a novel combinatorial invariant of TL link states (<a href="../inventory/entries/demo_107.html">D107</a>).</p>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/c.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</body>
+</html>

@@ -1,0 +1,933 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>raqiya/probatio_scrutinium.c</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+    <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+    <nav><a href="../index.html">← Back to Index</a></nav><hr>
+    <h1>raqiya/probatio_scrutinium.c</h1><pre><code class="language-c">/*
+ * probatio_scrutinium.c -- Tests for scrutinium.h (generic analysis engine)
+ */
+
+#include &lt;stdio.h&gt;
+#include &lt;string.h&gt;
+
+#define SCR_PRINT
+#include "scrutinium.h"
+
+static int n_tests = 0;
+static int n_pass = 0;
+static int n_fail = 0;
+
+static void check(int cond, const char *msg) {
+    n_tests++;
+    if (cond) {
+        n_pass++;
+    } else {
+        n_fail++;
+        printf("  FAIL: %s\n", msg);
+    }
+}
+
+/* Helper: build a partition from an array of group assignments */
+static Scr_Partition make_partition(const int *ids, int n) {
+    Scr_Partition p;
+    int i;
+    p.n_values = n;
+    p.n_groups = 0;
+    p.group_id = (int *)malloc((size_t)n * sizeof(int));
+    memcpy(p.group_id, ids, (size_t)n * sizeof(int));
+    for (i = 0; i &lt; n; i++)
+        if (ids[i] &gt;= p.n_groups) p.n_groups = ids[i] + 1;
+    p.group_sizes = (int *)calloc((size_t)p.n_groups, sizeof(int));
+    for (i = 0; i &lt; n; i++)
+        p.group_sizes[p.group_id[i]]++;
+    return p;
+}
+
+/* ---- Partition basics ---- */
+
+static void test_partition_basics(void) {
+    /* {0,0,1,1,2} -&gt; 3 groups, sizes 2,2,1 */
+    int ids[] = {0, 0, 1, 1, 2};
+    Scr_Partition p = make_partition(ids, 5);
+
+    printf("--- Partition Basics ---\n");
+
+    check(p.n_groups == 3, "3 groups");
+    check(p.group_sizes[0] == 2, "group 0 size 2");
+    check(p.group_sizes[1] == 2, "group 1 size 2");
+    check(p.group_sizes[2] == 1, "group 2 size 1");
+    check(scr_partition_max_size(&amp;p) == 2, "max size 2");
+    check(scr_partition_min_size(&amp;p) == 1, "min size 1");
+    check(scr_partition_n_singletons(&amp;p) == 1, "1 singleton");
+    /* C(2,2)+C(2,2)+C(1,2) = 1+1+0 = 2 */
+    check(scr_partition_related_pairs(&amp;p) == 2, "2 related pairs");
+
+    scr_partition_free(&amp;p);
+}
+
+/* ---- Partition refinement ---- */
+
+static void test_partition_refinement(void) {
+    /* fine:   {0,0,1,2,2,1}  -&gt; 3 groups: {0,1}, {2,5}, {3,4} */
+    /* coarse: {0,0,0,1,1,0}  -&gt; 2 groups: {0,1,2,5}, {3,4} */
+    /* fine refines coarse (each fine group is within one coarse group) */
+    int fine_ids[]   = {0, 0, 1, 2, 2, 1};
+    int coarse_ids[] = {0, 0, 0, 1, 1, 0};
+    Scr_Partition fine = make_partition(fine_ids, 6);
+    Scr_Partition coarse = make_partition(coarse_ids, 6);
+
+    printf("--- Partition Refinement ---\n");
+
+    check(scr_partition_refines(&amp;fine, &amp;coarse),
+          "fine refines coarse");
+    check(!scr_partition_refines(&amp;coarse, &amp;fine),
+          "coarse does not refine fine");
+    check(!scr_partition_equal(&amp;fine, &amp;coarse),
+          "fine != coarse");
+    check(scr_partition_equal(&amp;fine, &amp;fine),
+          "fine == fine");
+
+    scr_partition_free(&amp;fine);
+    scr_partition_free(&amp;coarse);
+}
+
+/* ---- Partition refinement: non-refinement ---- */
+
+static void test_partition_non_refinement(void) {
+    /* p1: {0,0,1,1}  -&gt; {a,a,b,b} */
+    /* p2: {0,1,0,1}  -&gt; {a,b,a,b} */
+    /* Neither refines the other (they cross-cut) */
+    int ids1[] = {0, 0, 1, 1};
+    int ids2[] = {0, 1, 0, 1};
+    Scr_Partition p1 = make_partition(ids1, 4);
+    Scr_Partition p2 = make_partition(ids2, 4);
+
+    printf("--- Non-Refinement ---\n");
+
+    check(!scr_partition_refines(&amp;p1, &amp;p2), "p1 does not refine p2");
+    check(!scr_partition_refines(&amp;p2, &amp;p1), "p2 does not refine p1");
+
+    scr_partition_free(&amp;p1);
+    scr_partition_free(&amp;p2);
+}
+
+/* ---- Meet ---- */
+
+static void test_partition_meet(void) {
+    /* p1: {0,0,1,1}  -&gt; {a,a,b,b} */
+    /* p2: {0,1,0,1}  -&gt; {a,b,a,b} */
+    /* Meet: each element in its own class -&gt; 4 groups */
+    int ids1[] = {0, 0, 1, 1};
+    int ids2[] = {0, 1, 0, 1};
+    Scr_Partition p1 = make_partition(ids1, 4);
+    Scr_Partition p2 = make_partition(ids2, 4);
+    Scr_Partition m = scr_partition_meet(&amp;p1, &amp;p2);
+
+    printf("--- Meet ---\n");
+
+    check(m.n_groups == 4, "meet of cross-cutting = discrete (4 groups)");
+    check(scr_partition_refines(&amp;m, &amp;p1), "meet refines p1");
+    check(scr_partition_refines(&amp;m, &amp;p2), "meet refines p2");
+
+    scr_partition_free(&amp;p1);
+    scr_partition_free(&amp;p2);
+    scr_partition_free(&amp;m);
+}
+
+static void test_partition_meet_refining(void) {
+    /* fine:   {0,1,2,3}  -&gt; discrete */
+    /* coarse: {0,0,1,1}  -&gt; 2 groups */
+    /* Meet = the finer one (fine) */
+    int fine_ids[]   = {0, 1, 2, 3};
+    int coarse_ids[] = {0, 0, 1, 1};
+    Scr_Partition fine = make_partition(fine_ids, 4);
+    Scr_Partition coarse = make_partition(coarse_ids, 4);
+    Scr_Partition m = scr_partition_meet(&amp;fine, &amp;coarse);
+
+    printf("--- Meet (refining pair) ---\n");
+
+    check(m.n_groups == 4, "meet of fine+coarse = fine (4 groups)");
+    check(scr_partition_equal(&amp;m, &amp;fine), "meet equals the finer partition");
+
+    scr_partition_free(&amp;fine);
+    scr_partition_free(&amp;coarse);
+    scr_partition_free(&amp;m);
+}
+
+/* ---- Join ---- */
+
+static void test_partition_join(void) {
+    /* p1: {0,0,1,1}  -&gt; {a,a,b,b} */
+    /* p2: {0,1,0,1}  -&gt; {a,b,a,b} */
+    /* Join: all connected -&gt; 1 group (0-1 via p1, 0-2 via p2, so all linked) */
+    int ids1[] = {0, 0, 1, 1};
+    int ids2[] = {0, 1, 0, 1};
+    Scr_Partition p1 = make_partition(ids1, 4);
+    Scr_Partition p2 = make_partition(ids2, 4);
+    Scr_Partition j = scr_partition_join(&amp;p1, &amp;p2);
+
+    printf("--- Join ---\n");
+
+    check(j.n_groups == 1, "join of cross-cutting = trivial (1 group)");
+    check(scr_partition_refines(&amp;p1, &amp;j), "p1 refines join");
+    check(scr_partition_refines(&amp;p2, &amp;j), "p2 refines join");
+
+    scr_partition_free(&amp;p1);
+    scr_partition_free(&amp;p2);
+    scr_partition_free(&amp;j);
+}
+
+static void test_partition_join_disjoint(void) {
+    /* p1: {0,0,1,1,2,2}  groups: {0,1}, {2,3}, {4,5} */
+    /* p2: {0,1,2,0,1,2}  groups: {0,3}, {1,4}, {2,5} */
+    /* Join: 0-1(p1), 0-3(p2) -&gt; 0,1,3. 2-3(p1), 3-0(p2) -&gt; 2 joins 0,1,3.
+     *       4-5(p1), 4-1(p2) -&gt; 4,5 join 1 -&gt; all connected. */
+    int ids1[] = {0, 0, 1, 1, 2, 2};
+    int ids2[] = {0, 1, 2, 0, 1, 2};
+    Scr_Partition p1 = make_partition(ids1, 6);
+    Scr_Partition p2 = make_partition(ids2, 6);
+    Scr_Partition j = scr_partition_join(&amp;p1, &amp;p2);
+
+    printf("--- Join (full coverage) ---\n");
+
+    check(j.n_groups == 1, "join covers everything -&gt; 1 group");
+
+    scr_partition_free(&amp;p1);
+    scr_partition_free(&amp;p2);
+    scr_partition_free(&amp;j);
+}
+
+static void test_partition_join_independent(void) {
+    /* p1: {0,0,1,1}  groups: {0,1}, {2,3} */
+    /* p2: {0,0,1,1}  same partition */
+    /* Join of identical = identical */
+    int ids[] = {0, 0, 1, 1};
+    Scr_Partition p1 = make_partition(ids, 4);
+    Scr_Partition p2 = make_partition(ids, 4);
+    Scr_Partition j = scr_partition_join(&amp;p1, &amp;p2);
+
+    printf("--- Join (identical) ---\n");
+
+    check(j.n_groups == 2, "join of identical = same (2 groups)");
+    check(scr_partition_equal(&amp;j, &amp;p1), "join equals input");
+
+    scr_partition_free(&amp;p1);
+    scr_partition_free(&amp;p2);
+    scr_partition_free(&amp;j);
+}
+
+/* ---- Meet/Join all ---- */
+
+static void test_meet_all(void) {
+    int ids1[] = {0, 0, 1, 1};
+    int ids2[] = {0, 1, 0, 1};
+    int ids3[] = {0, 0, 0, 1};
+    Scr_Partition parts[3];
+    Scr_Partition m;
+
+    printf("--- Meet All ---\n");
+
+    parts[0] = make_partition(ids1, 4);
+    parts[1] = make_partition(ids2, 4);
+    parts[2] = make_partition(ids3, 4);
+
+    m = scr_partition_meet_all(parts, 3);
+    check(m.n_groups == 4, "meet of 3 cross-cutting = discrete");
+
+    scr_partition_free(&amp;parts[0]);
+    scr_partition_free(&amp;parts[1]);
+    scr_partition_free(&amp;parts[2]);
+    scr_partition_free(&amp;m);
+}
+
+static void test_join_all(void) {
+    /* Three partitions that together cover everything */
+    int ids1[] = {0, 0, 1, 1, 2, 2};
+    int ids2[] = {0, 1, 0, 1, 2, 2};
+    int ids3[] = {0, 0, 0, 0, 0, 1};
+    Scr_Partition parts[3];
+    Scr_Partition j;
+
+    printf("--- Join All ---\n");
+
+    parts[0] = make_partition(ids1, 6);
+    parts[1] = make_partition(ids2, 6);
+    parts[2] = make_partition(ids3, 6);
+
+    j = scr_partition_join_all(parts, 3);
+    check(j.n_groups == 1, "join of 3 = trivial");
+
+    scr_partition_free(&amp;parts[0]);
+    scr_partition_free(&amp;parts[1]);
+    scr_partition_free(&amp;parts[2]);
+    scr_partition_free(&amp;j);
+}
+
+/* ---- Refinement DAG ---- */
+
+static void test_refinement_dag(void) {
+    /* discrete: {0,1,2,3} refines everything
+     * middle:   {0,0,1,1}
+     * trivial:  {0,0,0,0}
+     * discrete refines middle, middle refines trivial
+     */
+    int disc_ids[]  = {0, 1, 2, 3};
+    int mid_ids[]   = {0, 0, 1, 1};
+    int triv_ids[]  = {0, 0, 0, 0};
+    Scr_Partition parts[3];
+    int dag[9]; /* 3x3 */
+    const char *names[] = {"discrete", "middle", "trivial"};
+
+    printf("--- Refinement DAG ---\n");
+
+    parts[0] = make_partition(disc_ids, 4);
+    parts[1] = make_partition(mid_ids, 4);
+    parts[2] = make_partition(triv_ids, 4);
+
+    scr_partition_refinement_dag(parts, 3, dag);
+
+    /* diagonal = 1 */
+    check(dag[0] == 1, "disc refines disc");
+    check(dag[4] == 1, "mid refines mid");
+    check(dag[8] == 1, "triv refines triv");
+
+    /* discrete refines middle and trivial */
+    check(dag[0*3 + 1] == 1, "disc refines mid");
+    check(dag[0*3 + 2] == 1, "disc refines triv");
+
+    /* middle refines trivial but not discrete */
+    check(dag[1*3 + 2] == 1, "mid refines triv");
+    check(dag[1*3 + 0] == 0, "mid does NOT refine disc");
+
+    /* trivial refines nothing else */
+    check(dag[2*3 + 0] == 0, "triv does NOT refine disc");
+    check(dag[2*3 + 1] == 0, "triv does NOT refine mid");
+
+    scr_print_refinement_dag(names, dag, 3);
+
+    scr_partition_free(&amp;parts[0]);
+    scr_partition_free(&amp;parts[1]);
+    scr_partition_free(&amp;parts[2]);
+}
+
+/* ---- Duplicate detection ---- */
+
+static void test_find_duplicates(void) {
+    int ids1[] = {0, 0, 1, 1};
+    int ids2[] = {1, 1, 0, 0};  /* same grouping, different labels */
+    int ids3[] = {0, 1, 0, 1};  /* different */
+    Scr_Partition parts[3];
+    int redundans[3];
+
+    printf("--- Duplicate Detection ---\n");
+
+    parts[0] = make_partition(ids1, 4);
+    parts[1] = make_partition(ids2, 4);
+    parts[2] = make_partition(ids3, 4);
+
+    scr_partition_find_duplicates(parts, 3, redundans);
+
+    check(redundans[0] == 0, "first is not redundant");
+    check(redundans[1] == 1, "second is redundant (same as first)");
+    check(redundans[2] == 0, "third is not redundant");
+
+    scr_partition_free(&amp;parts[0]);
+    scr_partition_free(&amp;parts[1]);
+    scr_partition_free(&amp;parts[2]);
+}
+
+/* ---- PairHist ---- */
+
+static void test_pair_hist(void) {
+    Scr_PairHist h;
+
+    printf("--- PairHist ---\n");
+
+    h = scr_pair_hist_make(3);
+    check(h.n_bins == 3, "3 bins");
+    check(h.n_pairs == 0, "0 pairs initially");
+    check(h.total == 0, "0 total initially");
+
+    h = scr_pair_hist_make(100);
+    check(h.n_bins == SCR_MAX_BINS, "capped at SCR_MAX_BINS");
+}
+
+/* ---- EdgeList ---- */
+
+static void test_edge_list(void) {
+    Scr_EdgeList el;
+
+    printf("--- EdgeList ---\n");
+
+    scr_el_init(&amp;el, 4, "test", 0);
+    check(el.count == 0, "empty initially");
+
+    scr_el_add(&amp;el, 0, 1);
+    scr_el_add(&amp;el, 1, 2);
+    scr_el_add(&amp;el, 2, 3);
+    check(el.count == 3, "3 edges");
+
+    /* Test realloc by exceeding capacity */
+    scr_el_add(&amp;el, 3, 0);
+    scr_el_add(&amp;el, 0, 2);
+    check(el.count == 5, "5 edges after growth");
+
+    scr_el_free(&amp;el);
+}
+
+/* ---- Edges from partition ---- */
+
+static void test_edges_from_partition(void) {
+    int ids[] = {0, 0, 0, 1, 1};
+    Scr_Partition p = make_partition(ids, 5);
+    Scr_EdgeList el = scr_edges_from_partition(&amp;p, "test");
+
+    printf("--- Edges from Partition ---\n");
+
+    /* Group 0 has 3 elements -&gt; C(3,2)=3 edges
+     * Group 1 has 2 elements -&gt; C(2,2)=1 edge
+     * Total: 4 edges */
+    check(el.count == 4, "4 edges from partition");
+    check(el.directus == 0, "undirected");
+
+    scr_el_free(&amp;el);
+    scr_partition_free(&amp;p);
+}
+
+/* ---- Graph analysis: complete graph ---- */
+
+static void test_graph_complete(void) {
+    Scr_EdgeList el;
+    Scr_GraphResult gr;
+
+    printf("--- Graph: Complete K4 ---\n");
+
+    scr_el_init(&amp;el, 6, "K4", 0);
+    scr_el_add(&amp;el, 0, 1);
+    scr_el_add(&amp;el, 0, 2);
+    scr_el_add(&amp;el, 0, 3);
+    scr_el_add(&amp;el, 1, 2);
+    scr_el_add(&amp;el, 1, 3);
+    scr_el_add(&amp;el, 2, 3);
+
+    gr = scr_graph_analyze(&amp;el, 4);
+
+    check(gr.n_components == 1, "1 component");
+    check(gr.n_isolated == 0, "0 isolated");
+    check(gr.est_completus == 1, "is complete");
+    check(gr.est_regularis == 1, "is regular");
+    check(gr.gradus_regularis == 3, "degree 3");
+    check(gr.densitas_pm == 1000, "density 1000 permille");
+    check(gr.diameter == 1, "diameter 1");
+    check(gr.est_bipartitus == 0, "not bipartite (odd clique)");
+
+    scr_print_graph_result("K4", &amp;gr);
+
+    scr_graph_result_free(&amp;gr);
+    scr_el_free(&amp;el);
+}
+
+/* ---- Graph analysis: path graph ---- */
+
+static void test_graph_path(void) {
+    Scr_EdgeList el;
+    Scr_GraphResult gr;
+
+    printf("--- Graph: Path P4 ---\n");
+
+    scr_el_init(&amp;el, 3, "P4", 0);
+    scr_el_add(&amp;el, 0, 1);
+    scr_el_add(&amp;el, 1, 2);
+    scr_el_add(&amp;el, 2, 3);
+
+    gr = scr_graph_analyze(&amp;el, 4);
+
+    check(gr.n_components == 1, "1 component");
+    check(gr.est_arbor == 1, "is tree");
+    check(gr.est_via == 1, "is path");
+    check(gr.est_bipartitus == 1, "is bipartite");
+    check(gr.diameter == 3, "diameter 3");
+
+    scr_graph_result_free(&amp;gr);
+    scr_el_free(&amp;el);
+}
+
+/* ---- Graph analysis: cycle ---- */
+
+static void test_graph_cycle(void) {
+    Scr_EdgeList el;
+    Scr_GraphResult gr;
+
+    printf("--- Graph: Cycle C5 ---\n");
+
+    scr_el_init(&amp;el, 5, "C5", 0);
+    scr_el_add(&amp;el, 0, 1);
+    scr_el_add(&amp;el, 1, 2);
+    scr_el_add(&amp;el, 2, 3);
+    scr_el_add(&amp;el, 3, 4);
+    scr_el_add(&amp;el, 4, 0);
+
+    gr = scr_graph_analyze(&amp;el, 5);
+
+    check(gr.est_cyclus == 1, "is cycle");
+    check(gr.est_regularis == 1, "is regular");
+    check(gr.gradus_regularis == 2, "degree 2");
+    check(gr.ambitus == 5, "girth 5 (odd cycle)");
+    check(gr.est_bipartitus == 0, "not bipartite (odd cycle)");
+
+    scr_graph_result_free(&amp;gr);
+    scr_el_free(&amp;el);
+}
+
+/* ---- Graph analysis: DAG ---- */
+
+static void test_graph_dag(void) {
+    Scr_EdgeList el;
+    Scr_GraphResult gr;
+
+    printf("--- Graph: DAG ---\n");
+
+    scr_el_init(&amp;el, 4, "dag", 1);
+    scr_el_add(&amp;el, 0, 1);
+    scr_el_add(&amp;el, 0, 2);
+    scr_el_add(&amp;el, 1, 3);
+    scr_el_add(&amp;el, 2, 3);
+
+    gr = scr_graph_analyze(&amp;el, 4);
+
+    check(gr.est_dag == 1, "is DAG");
+    check(gr.longitudo_catena == 2, "longest chain = 2");
+
+    scr_graph_result_free(&amp;gr);
+    scr_el_free(&amp;el);
+}
+
+/* ---- Graph analysis: disconnected ---- */
+
+static void test_graph_disconnected(void) {
+    Scr_EdgeList el;
+    Scr_GraphResult gr;
+
+    printf("--- Graph: Disconnected ---\n");
+
+    scr_el_init(&amp;el, 3, "discon", 0);
+    scr_el_add(&amp;el, 0, 1);
+    scr_el_add(&amp;el, 2, 3);
+    /* vertex 4 is isolated */
+
+    gr = scr_graph_analyze(&amp;el, 5);
+
+    check(gr.n_components == 3, "3 components");
+    check(gr.n_isolated == 1, "1 isolated");
+    check(gr.component_sizes[0] == 2, "largest component = 2");
+
+    scr_graph_result_free(&amp;gr);
+    scr_el_free(&amp;el);
+}
+
+/* ---- Edge restrict ---- */
+
+static void test_edge_restrict(void) {
+    int ids[] = {0, 0, 1, 1};
+    Scr_Partition p = make_partition(ids, 4);
+    Scr_EdgeList el;
+    Scr_EdgeList restricted;
+    int n_verts;
+
+    printf("--- Edge Restrict ---\n");
+
+    scr_el_init(&amp;el, 6, "full", 0);
+    scr_el_add(&amp;el, 0, 1);
+    scr_el_add(&amp;el, 0, 2);
+    scr_el_add(&amp;el, 1, 3);
+    scr_el_add(&amp;el, 2, 3);
+
+    restricted = scr_el_restrict(&amp;el, &amp;p, 0, &amp;n_verts);
+    check(n_verts == 2, "group 0 has 2 vertices");
+    check(restricted.count == 1, "1 edge within group 0");
+
+    scr_el_free(&amp;restricted);
+    scr_el_free(&amp;el);
+    scr_partition_free(&amp;p);
+}
+
+/* ---- Degree sequence match ---- */
+
+static void test_degree_seq(void) {
+    Scr_EdgeList a, b, c;
+
+    printf("--- Degree Sequence ---\n");
+
+    /* Two isomorphic triangles */
+    scr_el_init(&amp;a, 3, "tri1", 0);
+    scr_el_add(&amp;a, 0, 1);
+    scr_el_add(&amp;a, 1, 2);
+    scr_el_add(&amp;a, 2, 0);
+
+    scr_el_init(&amp;b, 3, "tri2", 0);
+    scr_el_add(&amp;b, 0, 1);
+    scr_el_add(&amp;b, 0, 2);
+    scr_el_add(&amp;b, 1, 2);
+
+    check(scr_degree_seq_match(&amp;a, 3, &amp;b, 3) == 1,
+          "two triangles have same degree seq");
+
+    /* A path is different */
+    scr_el_init(&amp;c, 2, "path", 0);
+    scr_el_add(&amp;c, 0, 1);
+    scr_el_add(&amp;c, 1, 2);
+
+    check(scr_degree_seq_match(&amp;a, 3, &amp;c, 3) == 0,
+          "triangle vs path differ");
+
+    scr_el_free(&amp;a);
+    scr_el_free(&amp;b);
+    scr_el_free(&amp;c);
+}
+
+/* ---- Edge intersect ---- */
+
+static void test_edge_intersect(void) {
+    Scr_EdgeList a, b, c;
+
+    printf("--- Edge Intersect ---\n");
+
+    /* Graph a: 0-1, 1-2, 2-3 */
+    scr_el_init(&amp;a, 3, "a", 0);
+    scr_el_add(&amp;a, 0, 1);
+    scr_el_add(&amp;a, 1, 2);
+    scr_el_add(&amp;a, 2, 3);
+
+    /* Graph b: 1-2, 2-3, 3-0 */
+    scr_el_init(&amp;b, 3, "b", 0);
+    scr_el_add(&amp;b, 1, 2);
+    scr_el_add(&amp;b, 2, 3);
+    scr_el_add(&amp;b, 3, 0);
+
+    c = scr_el_intersect(&amp;a, &amp;b, 4);
+    /* Intersection: 1-2 and 2-3 */
+    check(c.count == 2, "intersect has 2 edges");
+
+    scr_el_free(&amp;a);
+    scr_el_free(&amp;b);
+    scr_el_free(&amp;c);
+}
+
+/* ---- Print functions ---- */
+
+static void test_print_functions(void) {
+    int ids[] = {0, 0, 1, 1, 2};
+    Scr_Partition p = make_partition(ids, 5);
+    Scr_PairHist h = scr_pair_hist_make(3);
+
+    printf("--- Print Functions ---\n");
+
+    h.n_pairs = 10;
+    h.bins[0] = 3;
+    h.bins[1] = 5;
+    h.bins[2] = 2;
+    h.total = 9;
+
+    scr_print_partition("test partition", &amp;p);
+    scr_print_pair_hist("test histogram", &amp;h);
+
+    /* Just verifying they don't crash */
+    check(1, "print functions work");
+
+    scr_partition_free(&amp;p);
+}
+
+/* ---- Quotient graph ---- */
+
+static void test_quotient(void) {
+    int ids[] = {0, 0, 1, 1};
+    Scr_Partition p = make_partition(ids, 4);
+    Scr_EdgeList el;
+    Scr_EdgeList q;
+    int ng;
+
+    printf("--- Quotient Graph ---\n");
+
+    scr_el_init(&amp;el, 4, "base", 0);
+    scr_el_add(&amp;el, 0, 2);  /* cross-group */
+    scr_el_add(&amp;el, 1, 3);  /* cross-group */
+    scr_el_add(&amp;el, 0, 1);  /* within group 0 */
+
+    q = scr_el_quotient(&amp;el, &amp;p, &amp;ng);
+    check(ng == 2, "2 super-vertices");
+    check(q.count == 1, "1 quotient edge (0-&gt;1, deduped)");
+
+    scr_el_free(&amp;q);
+    scr_el_free(&amp;el);
+    scr_partition_free(&amp;p);
+}
+
+/* ==== Scaffolding tests ====
+ * Use simple long integers as the "algebraic type" to test generic scaffolding.
+ * This proves the scaffolding works without any actual algebraic library. */
+
+static unsigned long scaff_long_hash(const void *a) {
+    long v = *(const long *)a;
+    return (unsigned long)(v + 1000000) * 2654435761UL;
+}
+
+static int scaff_long_eq(const void *a, const void *b) {
+    return *(const long *)a == *(const long *)b;
+}
+
+/* Classifier: group by value mod 3 */
+static unsigned long scaff_mod3_hash(const void *a, const void *config) {
+    long v = *(const long *)a;
+    long m = v % 3;
+    (void)config;
+    if (m &lt; 0) m += 3;
+    return (unsigned long)m;
+}
+
+static int scaff_mod3_eq(const void *a, const void *b, const void *config) {
+    long va = *(const long *)a;
+    long vb = *(const long *)b;
+    long ma = va % 3, mb = vb % 3;
+    (void)config;
+    if (ma &lt; 0) ma += 3;
+    if (mb &lt; 0) mb += 3;
+    return ma == mb;
+}
+
+static void test_scaffolding_classifier(void) {
+    /* Values: 1, 2, 3, 4, 5, 6, 7, 8, 9
+     * mod 3: 1, 2, 0, 1, 2, 0, 1, 2, 0
+     * 3 groups: {3,6,9}, {1,4,7}, {2,5,8} */
+    long vals[] = {1, 2, 3, 4, 5, 6, 7, 8, 9};
+    Scr_Partition p;
+
+    printf("--- Scaffolding: Classifier ---\n");
+
+    p = scr_partitio_a_classe(vals, 9, sizeof(long),
+                               scaff_mod3_hash, scaff_mod3_eq, NULL);
+
+    check(p.n_groups == 3, "3 groups (mod 3)");
+    /* 1 and 4 should be in the same group */
+    check(p.group_id[0] == p.group_id[3], "1 and 4 same group");
+    check(p.group_id[0] == p.group_id[6], "1 and 7 same group");
+    /* 1 and 2 should be different */
+    check(p.group_id[0] != p.group_id[1], "1 and 2 different");
+    /* 3 and 6 should be same */
+    check(p.group_id[2] == p.group_id[5], "3 and 6 same group");
+
+    scr_partition_free(&amp;p);
+}
+
+/* Generator: negate (two elements are equivalent if one is the negation) */
+static void scaff_negate(void *result, const void *a, int gen_index,
+                          const void *config) {
+    (void)config;
+    if (gen_index == 0) {
+        *(long *)result = -(*(const long *)a);
+    }
+}
+
+static void test_scaffolding_generator(void) {
+    /* Values: -3, -1, 1, 2, 3
+     * Orbits: {-3, 3}, {-1, 1}, {2} */
+    long vals[] = {-3, -1, 1, 2, 3};
+    Scr_Partition p;
+
+    printf("--- Scaffolding: Generator ---\n");
+
+    p = scr_partitio_ab_generatoribus(
+        vals, 5, sizeof(long),
+        scaff_long_eq, scaff_long_hash,
+        1, scaff_negate, NULL);
+
+    check(p.n_groups == 3, "3 orbits under negation");
+    check(p.group_id[0] == p.group_id[4], "-3 and 3 same orbit");
+    check(p.group_id[1] == p.group_id[2], "-1 and 1 same orbit");
+    check(p.group_id[0] != p.group_id[3], "-3 and 2 different");
+
+    scr_partition_free(&amp;p);
+}
+
+/* Pairwise predicate: same absolute value */
+static int scaff_same_abs(const void *a, const void *b, const void *config) {
+    long va = *(const long *)a;
+    long vb = *(const long *)b;
+    (void)config;
+    if (va &lt; 0) va = -va;
+    if (vb &lt; 0) vb = -vb;
+    return va == vb;
+}
+
+static void test_scaffolding_pairwise_pred(void) {
+    long vals[] = {-3, -1, 1, 2, 3};
+    Scr_Partition p;
+
+    printf("--- Scaffolding: Pairwise Predicate ---\n");
+
+    p = scr_partitio_a_praedicato(vals, 5, sizeof(long),
+                                    scaff_same_abs, NULL);
+
+    check(p.n_groups == 3, "3 groups (same abs)");
+    check(p.group_id[0] == p.group_id[4], "-3 and 3 same");
+    check(p.group_id[1] == p.group_id[2], "-1 and 1 same");
+
+    scr_partition_free(&amp;p);
+}
+
+/* Distance: absolute difference (capped at 4) */
+static int scaff_abs_diff(const void *a, const void *b, const void *config) {
+    long d = *(const long *)a - *(const long *)b;
+    (void)config;
+    if (d &lt; 0) d = -d;
+    if (d &gt; 4) d = 4;
+    return (int)d;
+}
+
+static void test_scaffolding_parhist(void) {
+    long vals[] = {0, 1, 2, 3};
+    Scr_PairHist h;
+
+    printf("--- Scaffolding: PairHist ---\n");
+
+    h = scr_parhist_a_distantia(vals, 4, sizeof(long),
+                                  scaff_abs_diff, 5, NULL);
+
+    check(h.n_pairs == 6, "6 pairs");
+    /* Distances: 0-1=1, 0-2=2, 0-3=3, 1-2=1, 1-3=2, 2-3=1 */
+    check(h.bins[0] == 0, "0 pairs at distance 0");
+    check(h.bins[1] == 3, "3 pairs at distance 1");
+    check(h.bins[2] == 2, "2 pairs at distance 2");
+    check(h.bins[3] == 1, "1 pair at distance 3");
+    /* total = 3*1 + 2*2 + 1*3 = 10 */
+    check(h.total == 10, "total distance = 10");
+}
+
+/* Unary operation edge: double (edge i-&gt;j if 2*vals[i] == vals[j]) */
+static void scaff_double(void *result, const void *a, const void *config) {
+    (void)config;
+    *(long *)result = 2 * (*(const long *)a);
+}
+
+static void test_scaffolding_unary_edges(void) {
+    long vals[] = {1, 2, 3, 4, 6, 8};
+    Scr_EdgeList el;
+
+    printf("--- Scaffolding: Unary Edges ---\n");
+
+    el = scr_edges_ab_operatione(
+        vals, 6, sizeof(long),
+        scaff_long_eq, scaff_long_hash,
+        scaff_double, NULL, "double", 1);
+
+    /* 1-&gt;2, 2-&gt;4, 3-&gt;6, 4-&gt;8 = 4 directed edges */
+    check(el.count == 4, "4 directed edges (doubling)");
+
+    scr_el_free(&amp;el);
+}
+
+/* Binary operation edge: sum (edge i-j if vals[i]+vals[j] is in set) */
+static void scaff_sum(void *result, const void *a, const void *b,
+                       const void *config) {
+    (void)config;
+    *(long *)result = *(const long *)a + *(const long *)b;
+}
+
+static void test_scaffolding_binary_edges(void) {
+    long vals[] = {1, 2, 3, 4, 5};
+    Scr_EdgeList el;
+
+    printf("--- Scaffolding: Binary Edges ---\n");
+
+    el = scr_edges_ab_operatione_binaria(
+        vals, 5, sizeof(long),
+        scaff_long_eq, scaff_long_hash,
+        scaff_sum, NULL, "additive_closure", 0);
+
+    /* Undirected pairs where sum is in set:
+     * 1+2=3 yes, 1+3=4 yes, 1+4=5 yes, 2+3=5 yes
+     * 2+4=6 no, 3+4=7 no, etc.
+     * = 4 edges */
+    check(el.count == 4, "4 additive closure edges");
+
+    scr_el_free(&amp;el);
+}
+
+/* Predicate edge: differ by exactly 1 */
+static int scaff_adjacent(const void *a, const void *b, const void *config) {
+    long d = *(const long *)a - *(const long *)b;
+    (void)config;
+    return d == 1 || d == -1;
+}
+
+static void test_scaffolding_predicate_edges(void) {
+    long vals[] = {1, 3, 4, 7, 8, 9};
+    Scr_EdgeList el;
+
+    printf("--- Scaffolding: Predicate Edges ---\n");
+
+    el = scr_edges_a_praedicato(
+        vals, 6, sizeof(long),
+        scaff_adjacent, NULL, "adjacent", 0);
+
+    /* Adjacent pairs: 3-4, 7-8, 8-9 = 3 edges */
+    check(el.count == 3, "3 adjacency edges");
+
+    scr_el_free(&amp;el);
+}
+
+int main(void) {
+    printf("=== probatio_scrutinium ===\n\n");
+
+    test_partition_basics();
+    test_partition_refinement();
+    test_partition_non_refinement();
+    test_partition_meet();
+    test_partition_meet_refining();
+    test_partition_join();
+    test_partition_join_disjoint();
+    test_partition_join_independent();
+    test_meet_all();
+    test_join_all();
+    test_refinement_dag();
+    test_find_duplicates();
+    test_pair_hist();
+    test_edge_list();
+    test_edges_from_partition();
+    test_graph_complete();
+    test_graph_path();
+    test_graph_cycle();
+    test_graph_dag();
+    test_graph_disconnected();
+    test_edge_restrict();
+    test_degree_seq();
+    test_edge_intersect();
+    test_print_functions();
+    test_quotient();
+    test_scaffolding_classifier();
+    test_scaffolding_generator();
+    test_scaffolding_pairwise_pred();
+    test_scaffolding_parhist();
+    test_scaffolding_unary_edges();
+    test_scaffolding_binary_edges();
+    test_scaffolding_predicate_edges();
+
+    printf("\n=== Results: %d tests, %d passed, %d failed ===\n",
+           n_tests, n_pass, n_fail);
+
+    return n_fail &gt; 0 ? 1 : 0;
+}
+</code></pre>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/c.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</body>
+</html>

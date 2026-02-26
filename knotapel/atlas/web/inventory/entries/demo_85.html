@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>inventory/entries/demo_85.md</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+    <link rel="stylesheet" href="../../style.css">
+</head>
+<body>
+    <nav><a href="../../index.html">← Back to Index</a></nav><hr>
+    <h2>Demo 85: Indecomposability Parameter b for TL_n at delta=0</h2>
+<ul>
+<li><strong>Status</strong>: COMPLETE</li>
+<li><strong>File</strong>: <code><a href="../../demo_85_indecomposability/main.c.html">demo_85_indecomposability/main.c</a></code> (~6861 lines)</li>
+<li><strong>Tests</strong>: 58/58 pass</li>
+<li><strong>Depends on</strong>: Demo 51 (TL algebra infrastructure, Gram matrix, radical basis), Demo 35 (integer TL generators at delta=0)</li>
+<li><strong>Feeds into</strong>: Demo 86 (direct b on single P_{0,0} -- negative result, divergence), Demo 87+ (non-semisimplicity thesis, logarithmic CFT structure constants)</li>
+</ul>
+<h3>Headline</h3>
+The indecomposability parameter b = -5/8 (Pearce-Rasmussen) is computed exactly from first principles at TL_4 using leading-coefficient extraction from the delta-parameterized Markov trace on the full regular representation. The literature "controversy" between b = -2 (GRS) and b = -5/8 (PR) dissolves: b_delta = -5/2 on the regular rep divides by dim(0-TL sector) = 4 to give b_PR = -5/8 exactly to 12 decimal places.
+<h3>Key Results</h3>
+<ul>
+<li><strong>b = -5/8 confirmed at TL_4</strong>: leading-coefficient extraction from delta-parameterized Gram matrix on the full 14-dimensional regular representation gives b_delta = -5/2. Normalizing by the 0-TL sector dimension (4 diagrams with zero through-lines) yields b_PR = -5/2 / 4 = -5/8, exact to 12 decimal places.</li>
+<li><strong>Valuation condition</strong>: the method requires p_tt = 2 <em> p_Tt (where p_tt and p_Tt are the minimum delta-powers in the bilinear forms). At TL_4: p_tt = 2, p_Tt = 1, so 2 = 2</em>1 -- satisfied. At TL_6: p_tt = 4, p_Tt = 3, so 4 != 6 -- fails, b diverges as delta^{-2}.</li>
+<li><strong>-2 vs -5/8 resolved</strong>: these are NOT competing predictions. b = -5/8 is the per-cell (physical/lattice) value. b = -5/2 is the regular-representation value. The factor of 4 = dim(0-TL sector for TL_4) = C_2 = number of 0-through-line diagrams. The quantum group approach (GRS) uses different normalization conventions for the bilinear form.</li>
+<li><strong>Standard modules are fully diagonalizable</strong>: H on W_{n,0} (standard module = link states) has NO Jordan blocks at any size tested (n=4,6,8,10,12). Jordan blocks only exist on projective covers (P_{0,0}) and the full regular representation. This falsifies Gemini's claim that b is extracted from standard module Jordan structure.</li>
+<li><strong>Fixed-point form is degenerate</strong>: the fixpt-trace bilinear form G[i][j] = fixpt(star(i)*j) is too degenerate at delta=0 -- almost all products create loops -&gt; 0. It gives an affine b with 3-dimensional gauge freedom (TL_4) or all zeros (TL_6). Not the right form.</li>
+<li><strong>Delta-parameterized Markov trace is the correct form</strong>: G_delta[i][j] = delta^{L(i,j)} where L = compose_loops + closure_loops. This form is non-degenerate at delta != 0 and the leading-coefficient extraction as delta -&gt; 0 gives the physical b.</li>
+<li><strong>Projective cover P_{0,0} has Jordan blocks at nonzero eigenvalues</strong>: TL_4 P_{0,0} (dim=5, composition 0-TL:2 + 2-TL:3) has eigenvalues from char poly x(x^2-2)^2, with Jordan blocks at lambda = +/-sqrt(2), NOT at lambda = 0. The 0-TL left ideals (dim=2) equal W_{0,0} and have no Jordan blocks -- they are too small.</li>
+<li><strong>TL_3 is semisimple</strong>: L_H on the 5-dimensional TL_3 algebra is fully diagonalizable (radical dimension 0). TL_2 (dim=2) has Jordan blocks. TL_4 (dim=14) and TL_5 (dim=42) have Jordan blocks in the regular representation.</li>
+<li><strong>Gauge analysis (bonus)</strong>: the fixed-point form has 3-dimensional gauge freedom at TL_4. Full quadratic decomposition: M (quadratic coefficient matrix) = 0, E (linear denominator) = 0, so b_fixpt(c) is purely AFFINE in gauge parameters. Both -2 and -5/8 are reachable points on this flat manifold. The delta-form breaks the degeneracy.</li>
+<li><strong>TL_6 divergence is structural</strong>: all 14 kernel directions at TL_6 introduce lower-power cross-terms; 0 safe directions exist. The 25-fold multiplicity (dim(0-TL for TL_6)^2 = 25) does not rescue the valuation condition as the 4-fold multiplicity does at TL_4.</li>
+<li><strong>Cross-model verification</strong>: both Gemini 3 Pro and GPT-5 (Codex) independently confirmed the factor-of-4 relationship and dim(0-TL)^2 multiplicity structure. Gemini's claim about standard-module Jordan blocks was FALSIFIED by computation.</li>
+<li><strong>Spin chain at q=i</strong>: Phase 4 builds the TL representation on (C^2)^{tensor n} at q=i (delta=0). Verified e_i^2=0, braid relation, far commutativity. H is symmetric (conformal/transpose form). Jordan blocks found at specific eigenvalues; b computed via augmented RREF for Jordan partner solve + minimum-norm gauge projection.</li>
+</ul>
+<h3>Theorems/Conjectures</h3>
+<ul>
+<li><strong>b = -5/8 for dense polymers at delta=0 (DEMONSTRATED at TL_4)</strong>: exact computation via leading-coefficient extraction from delta-parameterized Gram matrix on full regular representation, normalized by 0-TL sector dimension.</li>
+<li><strong>Valuation condition p_tt = 2*p_Tt (VERIFIED at TL_4, FAILS at TL_6)</strong>: this condition is necessary for the leading-coefficient method to produce a finite b. Its failure at TL_6 means the regular-representation approach requires modification for larger lattices.</li>
+<li><strong>Standard modules have no Jordan blocks at delta=0 (DEMONSTRATED at n=4,6,8,10,12)</strong>: H on W_{n,0} is fully diagonalizable at every size tested. The min poly is square-free (gcd(mu,mu') degree = 0) at all sizes. Jordan structure lives exclusively in projective covers.</li>
+<li><strong>TL algebra dimensions match Catalan numbers (VERIFIED)</strong>: dim(TL_n) = C_n at n=2,3,4,5,6. dim(W_{n,0}) = C_{n/2} at n=4,6,8,10,12.</li>
+<li><strong>e_i^2 = 0 at delta=0 (VERIFIED)</strong>: all TL relations (e_i^2=delta<em>e_i, braid relation e_i</em>e_{i+1}*e_i = e_i, far commutativity) verified on both link-state standard module (n=6) and spin chain representation (n=4).</li>
+<li><strong>Fixed-point form gauge manifold is flat (DEMONSTRATED at TL_4)</strong>: the quadratic coefficient matrix M = 0, making b_fixpt an affine function of gauge parameters with no unique critical point.</li>
+</ul>
+<h3>Data</h3>
+<ul>
+<li>TL algebra dimensions: TL_2=2, TL_3=5, TL_4=14, TL_5=42, TL_6=132</li>
+<li>Standard module dimensions: W_{4,0}=2, W_{6,0}=5, W_{8,0}=14, W_{10,0}=42, W_{12,0}=132</li>
+<li>TL_4 regular rep: b_delta = -5/2, 0-TL sector dim = 4 (diagrams: id, e_1, e_2, e_1*e_2), b_PR = -5/8</li>
+<li>TL_4 standard module H: eigenvalues +/-sqrt(2), 2x2 matrix [[0,-2],[-1,0]], fully diagonalizable</li>
+<li>TL_4 P_{0,0}: dim=5, composition 0-TL:2 + 2-TL:3, char poly x(x^2-2)^2, Jordan blocks at lambda=+/-sqrt(2)</li>
+<li>TL_4 leading coefficients: p_Tt=1, coeff_Tt computed; p_tt=2, coeff_tt computed; valuation 2=2*1 satisfied</li>
+<li>TL_6 leading coefficients: p_Tt=3, p_tt=4; valuation 4 != 6 FAILS; diverges as delta^{-2}; 0/14 safe directions</li>
+<li>Spin chain Sz=0 dimensions: n=4 -&gt; dim=6, n=6 -&gt; dim=20, n=8 -&gt; dim=70</li>
+<li>b accuracy: |b_PR - (-5/8)| &lt; 10^{-12}</li>
+</ul>
+<h3>Code Assets</h3>
+<ul>
+<li><strong>Link state enumeration (<code>enumerate_link_states</code>)</strong>: recursive non-crossing perfect matching generator for W_{n,0}, sizes n=4 through n=12</li>
+<li><strong>e_i action on link states (<code>apply_ei</code>)</strong>: TL generator action with loop detection at delta=0</li>
+<li><strong>Hamiltonian construction (<code>build_hamiltonian</code>)</strong>: H = -(e_0+...+e_{n-2}) on standard module</li>
+<li><strong>Gauss rank with partial pivoting (<code>gauss_rank</code>)</strong>: fraction-free rank computation for integer matrices</li>
+<li><strong>Jordan analysis (<code>jordan_analysis</code>)</strong>: ker(M) vs ker(M^2) comparison for Jordan block detection at given eigenvalue</li>
+<li><strong>Modular arithmetic suite</strong>: mod_pos, mod_mul, mod_add, mod_sub, mod_pow, mod_inv over prime 10^9+7</li>
+<li><strong>Faddeev-LeVerrier characteristic polynomial (<code>char_poly_mod</code>)</strong>: modular char poly computation</li>
+<li><strong>Polynomial GCD mod p (<code>poly_gcd_degree_mod</code>)</strong>: Euclidean algorithm for diagonalizability test</li>
+<li><strong>Minimal polynomial via Krylov iteration (<code>min_poly_mod</code>)</strong>: definitive Jordan block detection via gcd(mu,mu')</li>
+<li><strong>Full TL algebra infrastructure</strong>: <code>AlgDiagram</code> type, basis enumeration (<code>alg_enumerate_basis</code>), composition with loop counting (<code>alg_compose</code>), multiplication table (<code>alg_compute_mult_table</code>), identity/generator construction, star anti-involution</li>
+<li><strong>Star operation (<code>alg_star</code>, <code>alg_compute_star_indices</code>)</strong>: top/bottom flip for adjoint diagrams</li>
+<li><strong>Through-line sector analysis (<code>analyze_through_line_sectors</code>)</strong>: classifies basis by through-line count, checks L_H sector preservation</li>
+<li><strong>Left ideal closure (<code>left_ideal_closure</code>)</strong>: BFS closure under left multiplication for projective cover construction</li>
+<li><strong>Null space extraction (<code>extract_null_space</code>, <code>extract_null_space_d</code>)</strong>: RREF-based null space for integer and double matrices</li>
+<li><strong>Eigenvalue sweep (<code>find_eigenvalues_sweep</code>)</strong>: sign-change + golden-section refinement for real eigenvalues; handles both simple and double roots</li>
+<li><strong>Geometric multiplicity (<code>geometric_multiplicity</code>)</strong>: rank-based computation at given eigenvalue</li>
+<li><strong>Complex arithmetic suite</strong>: Cx type with add/sub/mul/div/neg/abs, cx_mat_mul, cx_mat_vec, cx_null_space, cx_absdet</li>
+<li><strong>Spin chain representation</strong>: Sz=0 basis enumeration (<code>sc_enumerate_sz0</code>), generator action at q=i (<code>sc_apply_ei</code>), generator/Hamiltonian matrix builders</li>
+<li><strong>Complex eigenvalue finder (<code>cx_find_real_evals</code>)</strong>: |det| local-minimum sweep with golden-section refinement for complex matrices</li>
+<li><strong>Delta-parameterized Gram/Hamiltonian builders</strong>: <code>build_gram_matrix_delta</code>, <code>build_hamiltonian_delta</code> for perturbation analysis</li>
+<li><strong>Leading-coefficient extraction (Phase 6)</strong>: per-pair delta-power computation L[i][j] = compose_loops + closure_loops, minimum power detection, coefficient summation, both Gram (star) and Trace (no star) forms</li>
+<li><strong>Gauge analysis infrastructure</strong>: full N-dimensional coset scan computing A, D, L, E, M matrices for quadratic b decomposition; critical point finding via Cramer's rule (3D case)</li>
+</ul>
+<h3>Literature Touched</h3>
+<ul>
+<li><strong>Gainutdinov-Read-Saleur (GRS)</strong>: quantum group / algebraic definition of b, projective cover approach. Demo 85 shows this gives different normalization (b = -2 under GRS conventions) but the same underlying structure.</li>
+<li><strong>Pearce-Rasmussen (PR)</strong>: finite-size lattice scaling approach giving b = -5/8. Demo 85 confirms this is the per-cell physical value.</li>
+<li><strong>Symplectic fermion continuum theory at c=-2</strong>: b = -2 predicted (GRS convention). Demo 85 shows the exact relationship: b_GRS convention differs from b_PR convention by normalization factor.</li>
+<li><strong>Gemini 3 Pro literature claims (FALSIFIED)</strong>: Gemini claimed b is extracted from off-diagonal Jordan cell coupling in standard modules. Demo 85 proved standard modules are fully diagonalizable at all tested sizes -- Jordan blocks only exist on projective covers.</li>
+<li><strong>Faddeev-LeVerrier algorithm</strong>: used for characteristic polynomial computation in both modular and complex arithmetic.</li>
+<li><strong>Krylov iteration</strong>: used for minimal polynomial computation (definitive Jordan block test).</li>
+</ul>
+<h3>Open Questions</h3>
+<ul>
+<li><strong>Why does the valuation condition fail at TL_6?</strong> The structural reason for p_tt = 4, p_Tt = 3 (gap = -2) at TL_6 is understood (cross-copy interference from 25-fold multiplicity), but is there a modified extraction that works for larger sizes?</li>
+<li><strong>Can b = -5/8 be confirmed at TL_6 or TL_8?</strong> The regular-representation approach diverges. The standard module has no Jordan blocks. The single P_{0,0} also diverges (Demo 86). What is the correct finite-lattice method beyond TL_4?</li>
+<li><strong>How does the literature (PR) actually compute b at larger lattice sizes?</strong> The method likely uses transfer matrix + finite-size scaling, not the diagram-algebraic approach tested here. Identifying and implementing their exact method remains open.</li>
+<li><strong>Does the spin chain approach give b = -2 at larger sizes?</strong> Phase 4 computes b on (C^2)^{tensor n} at q=i. Results at n=4,6,8 should be compared with the algebraic approach. The conformal (transpose) bilinear form may give different normalization.</li>
+<li><strong>What is the relationship between b and the DKC computational capacity?</strong> The k_sec=1 synergy value (36) from Demo 84 was hypothesized to encode b. This connection remains unexplored.</li>
+</ul>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/c.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</body>
+</html>

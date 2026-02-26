@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>inventory/entries/demo_02.md</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+    <link rel="stylesheet" href="../../style.css">
+</head>
+<body>
+    <nav><a href="../../index.html">← Back to Index</a></nav><hr>
+    <h2>Demo 02: Braid Words</h2>
+<ul>
+<li><strong>Status</strong>: COMPLETE</li>
+<li><strong>File</strong>: <code><a href="../../demo_02_braid_words/main.c.html">demo_02_braid_words/main.c</a></code> (~953 lines)</li>
+<li><strong>Tests</strong>: 9/9 pass (with warnings — 6 unused PolyMat functions; does not compile clean with -Werror)</li>
+<li><strong>Depends on</strong>: Demo 01 (reuses Laurent polynomial algebra — Poly type copied, not imported)</li>
+<li><strong>Feeds into</strong>: Demo 03 (Markov trace / TL module structure deferred there)</li>
+</ul>
+<h3>Headline</h3>
+Computes Kauffman brackets of knots from braid word input via state-sum over resolutions, confirming agreement with Demo 01's PD-code approach.
+<h3>Key Results</h3>
+<ul>
+<li>Braid closure state-sum reproduces all Demo 01 bracket values (trefoil, figure-eight, Hopf link, unknot)</li>
+<li>Chirality detected: sigma_1^3 and sigma_1^{-3} produce mirror-image brackets (A ↔ A^{-1})</li>
+<li>Figure-eight bracket is palindromic (amphichiral confirmation)</li>
+<li>2-strand TL representation: rho(sigma_1) = -A^{-3}, rho(sigma_1^{-1}) = -A^3 (scalar in 1D module)</li>
+<li>Markov equivalence across braid representations (2-strand vs 3-strand trefoil) documented as open — writhe normalization alone insufficient, Markov stabilization correction needed</li>
+</ul>
+<h3>Theorems/Conjectures</h3>
+<ul>
+<li><strong>Confirmed</strong>: Braid closure state-sum = PD-code state-sum for Kauffman bracket</li>
+<li><strong>Open</strong>: Markov stabilization correction (adding strands changes bracket; f-polynomial doesn't fully normalize this)</li>
+<li><strong>Noted</strong>: Full Markov trace via TL module structure deferred to Demo 03</li>
+</ul>
+<h3>Code Assets</h3>
+<ul>
+<li><code>Poly</code> type: Laurent polynomial ring (copy of Demo 01 — p_zero, p_mono, p_trim, p_add, p_mul, p_eq, p_print)</li>
+<li><code>PolyMat</code> type: matrices over polynomial ring (pm_zero, pm_identity, pm_mul, pm_scale, pm_add, pm_trace, pm_print) — implemented but <strong>unused</strong> in tests, scaffolded for future TL representation work</li>
+<li><code>Braid</code> type: braid word representation (word array of signed generator indices, strand count)</li>
+<li><code>braid_count_loops()</code>: union-find loop counter for resolved braid closures</li>
+<li><code>braid_bracket()</code>: state-sum Kauffman bracket from braid word</li>
+<li><code>braid_writhe()</code> / <code>braid_jones()</code>: writhe computation and writhe-normalized f-polynomial</li>
+<li>Union-find (global arrays, path-compressed): reusable pattern for loop counting in any diagram resolution</li>
+</ul>
+<h3>Literature Touched</h3>
+<ul>
+<li>Temperley-Lieb algebra TL_n(delta) and its path/standard module representation</li>
+<li>Kauffman bracket via braid closure (Kauffman 1987)</li>
+<li>Markov's theorem (braid equivalence under stabilization and conjugation)</li>
+<li>Reduced Burau representation (mentioned, not implemented)</li>
+<li>Spin-chain / tensor product representation of TL generators (explored in comments, abandoned for simpler state-sum)</li>
+</ul>
+<h3>Open Questions</h3>
+<ul>
+<li>Markov stabilization: how to normalize bracket across different braid strand counts for same knot</li>
+<li>PolyMat infrastructure unused — will Demo 03 use it for explicit TL module matrices?</li>
+<li>Code duplication: Poly type copied verbatim from Demo 01 (no shared library extraction yet)</li>
+<li>Does not compile with <code>-Werror</code> due to 6 unused PolyMat functions</li>
+</ul>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/c.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</body>
+</html>

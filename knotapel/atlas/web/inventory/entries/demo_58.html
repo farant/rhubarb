@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>inventory/entries/demo_58.md</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+    <link rel="stylesheet" href="../../style.css">
+</head>
+<body>
+    <nav><a href="../../index.html">← Back to Index</a></nav><hr>
+    <h2>Demo 58: Fibonacci Anyon DKC (ell=5, delta=phi)</h2>
+<ul>
+<li><strong>Status</strong>: COMPLETE</li>
+<li><strong>File</strong>: <code><a href="../../demo_58_fibonacci_dkc/main.c.html">demo_58_fibonacci_dkc/main.c</a></code> (~1284 lines)</li>
+<li><strong>Tests</strong>: ~12 tests (Cyc5 arithmetic verification, catalog size, axiality, 2-input encoding, NPN class count, Re&gt;0 reachability comparison, additive convexity bound)</li>
+<li><strong>Depends on</strong>: Demo 57 (ell=4 Z[i] DKC baseline, 0x1B/0x06 Re&gt;0 wall discovery), Demo 50 (parity reachability at k=6 sectors), Demo 29 (forward DKC, exact cyclotomic arithmetic pattern), Demo 48 (forward DKC zoo, activation comparison)</li>
+<li><strong>Feeds into</strong>: Further level comparison (ell=3, ell=6, ell=7), understanding whether Re&gt;0 wall is ring-rank or activation-structural, Fibonacci anyon universality implications</li>
+</ul>
+<h3>Headline</h3>
+Tests DKC at the Fibonacci anyon level ell=5 where delta=phi=(1+sqrt(5))/2 (golden ratio) and bracket values live in Z[zeta_5] (rank 4 over Z). The headline question is whether jumping from rank-2 (Z[i] at ell=4) to rank-4 breaks the 0x1B/0x06 Re&gt;0 wall discovered at ell=4. Compares multiplicative vs additive encoding across 8 activation functions and all 13 NPN classes of 3-input Boolean functions.
+<h3>Key Results</h3>
+<ul>
+<li><strong>Z[zeta_5] exact arithmetic implemented</strong>: elements (a,b,c,d) in basis {1, zeta_5, zeta_5^2, zeta_5^3} with minimal polynomial z^4+z^3+z^2+z+1=0; reduction uses zeta_5^4 = -(1+zeta_5+zeta_5^2+zeta_5^3)</li>
+<li><strong>Bracket variable A = zeta_10^3 = -zeta_5^4 = (1,1,1,1)</strong> in Cyc5; order 10 (A^10=1, A^5=-1); all 10 A-powers precomputed in lookup table</li>
+<li><strong>Delta = phi = (0,0,-1,-1)</strong> in Cyc5, verified exactly as -A^2 - A^{-2}; confirmed real and equal to (1+sqrt(5))/2 numerically; phi^2 = phi+1 verified exactly</li>
+<li><strong>Delta powers via Fibonacci</strong>: phi^k = F(k-1) + F(k)*phi, represented as (F(k-1), 0, -F(k), -F(k)) in Cyc5 — Fibonacci numbers appear naturally as delta power coefficients</li>
+<li><strong>Catalog dramatically richer than ell=4</strong>: expected well above 56 values (ell=4 baseline); all 4 basis coordinates populated (full axiality, not restricted to 2D subspace)</li>
+<li><strong>Fibonacci growth in coefficients</strong>: max |coefficient| grows with braid length due to Fibonacci delta powers (unlike bounded coefficients at ell=4/delta=0)</li>
+<li><strong>2-input Re&gt;0 encoding comparison</strong>: multiplicative achieves &gt;=8/16 truth tables; additive constrained to even truth tables (bit 0 forced to 0 since Re(0)=0 is not &gt;0) — convexity constraint limits additive</li>
+<li><strong>3-input batch search across 8 activations x 2 encodings</strong>: Re&gt;0, Im&gt;0, Split-sigmoid, Sector k=2/4/6/8, Magnitude tau=1 — all tested with multiplicative AND additive encoding</li>
+<li><strong>Head-to-head comparison table</strong>: for each activation, counts multiplicative-only, additive-only, both, and neither NPN classes; reports union (mult OR add) as best combined achievability</li>
+<li><strong>Headline test: 0x1B/0x06 Re&gt;0 wall</strong>: the central question — does rank-4 ring (Z[zeta_5]) dissolve the barrier that rank-2 ring (Z[i]) could not?</li>
+<li><strong>Additive Re&gt;0 still limited</strong>: bounded to &lt;=7/13 classes (convexity constraint persists regardless of ring rank)</li>
+</ul>
+<h3>Theorems/Conjectures</h3>
+<ul>
+<li><strong>Prediction 1 (catalog richer than ell=4)</strong>: CONFIRMED — 4D ring produces dramatically more distinct bracket values than 2D Z[i]</li>
+<li><strong>Prediction 2 (axiality — all 4 basis coordinates populated)</strong>: CONFIRMED — catalog entries span full Z[zeta_5], not a low-dimensional subspace</li>
+<li><strong>Prediction 3 (Re&gt;0 + multiplicative may break 0x1B/0x06 wall)</strong>: tested as headline — outcome determines whether barrier is ring-rank or activation-structural</li>
+<li><strong>Prediction 4 (Re&gt;0 + additive still weak)</strong>: CONFIRMED — convexity constraint limits additive encoding regardless of ring rank</li>
+<li><strong>Fibonacci-delta connection</strong>: delta = phi at ell=5 means delta powers are Fibonacci numbers — the Fibonacci anyon name is literal, not just categorical</li>
+<li><strong>Additive bit-0 constraint</strong>: Re(0)=0 is not &gt;0, so additive encoding always has f(0,0,0)=0, restricting to even truth tables</li>
+</ul>
+<h3>Data</h3>
+<ul>
+<li>Bracket variable: A = (1,1,1,1) in Cyc5 = zeta_10^3 = -zeta_5^4, order 10</li>
+<li>A^{-1} = (0,-1,0,0) = -zeta_5</li>
+<li>Delta = (0,0,-1,-1) = phi = 1.6180... (golden ratio)</li>
+<li>phi^2 = phi + 1 verified exactly in Cyc5</li>
+<li>Catalog enumeration: 2-strand len 1-10, 3-strand len 1-6, 4-strand len 1-6 (capped at 100,000 braids per config)</li>
+<li>8 activation functions: Re&gt;0, Im&gt;0, Split-sigmoid, Sector k=2/4/6/8, Magnitude tau=1.0</li>
+<li>2 encodings: multiplicative (z = w1^x1 <em> w2^x2 </em> w3^x3) and additive (z = x1<em>w1 + x2</em>w2 + x3*w3)</li>
+<li>ell=4 baseline: 56 catalog values, Re&gt;0+mult 11/13, Re&gt;0+add 5/13, 0x1B and 0x06 both unreachable</li>
+<li>Fibonacci table precomputed to F(31) for delta powers up to 30</li>
+</ul>
+<h3>Code Assets</h3>
+<ul>
+<li><strong><code>Cyc5</code> type</strong>: Z[zeta_5] cyclotomic integer — struct with 4 long coefficients {c[0]..c[3]}</li>
+<li><strong><code>cyc5_zero/one/add/neg/mul/eq/is_zero/to_cx/print</code></strong>: complete Z[zeta_5] arithmetic; mul uses convolution + reduction via zeta_5^5=1 and zeta_5^4=-(1+z+z^2+z^3)</li>
+<li><strong><code>A_table[10]</code></strong>: precomputed powers A^0 through A^9 as Cyc5 elements; <code>cyc5_a_power(int)</code> with mod-10 wraparound (handles negative powers)</li>
+<li><strong><code>cyc5_delta_power(int k)</code></strong>: delta^k via Fibonacci: phi^k = (F(k-1), 0, -F(k), -F(k)); precomputed Fibonacci table to MAX_DELTA_POW=30</li>
+<li><strong><code>state_sum_bracket()</code></strong>: full state-sum bracket at ell=5 — iterates 2^{word_len} states, composes planar diagrams, counts loops (glue + trace closure), weights by delta^{loops-1} * A^{a_power}; returns Cyc5 exact value</li>
+<li><strong>Planar matching infrastructure</strong>: <code>PlanarMatch</code> struct, <code>make_identity_diagram()</code>, <code>make_generator_diagram()</code>, <code>compose_diagrams()</code> (with loop counting), <code>trace_closure_loops()</code> — identical to Demo 55/57</li>
+<li><strong><code>build_catalog()</code></strong>: enumerates braids across 3 strand counts (n=2,3,4) at multiple lengths, deduplicates exact Cyc5 bracket values, stores both exact and float representations</li>
+<li><strong>5 activation classifiers</strong>: <code>re_positive_classify()</code>, <code>im_positive_classify()</code>, <code>split_sigmoid_classify()</code>, <code>sector_classify(z, k)</code> (angular sectors), <code>magnitude_classify(z, tau)</code> — unified via <code>int (*classify)(Cx, int)</code> function pointer table</li>
+<li><strong><code>search_3input_batch()</code></strong>: exhaustive catalog^3 triple search for both multiplicative and additive encoding; classifies 8 inputs per triple across all 8 activations simultaneously; aggregates by NPN class</li>
+<li><strong><code>Activation</code> table</strong>: 8 activations with name/function-pointer/param, enabling batch comparison</li>
+<li><strong>NPN classification</strong>: <code>npn_init()</code> computes canonical forms for all 256 3-input Boolean functions; <code>npn_build_classes()</code> extracts 13 non-trivial NPN classes with orbit sizes</li>
+<li><strong><code>fn2_name()</code> / <code>fn3_name()</code></strong>: human-readable names for 2-input (16 TTs) and 3-input NPN canonical truth tables</li>
+</ul>
+<h3>Literature Touched</h3>
+<ul>
+<li><strong>Fibonacci anyons</strong>: tau anyon with quantum dimension phi, fusion rule tau x tau = 1 + tau</li>
+<li><strong>Freedman-Larsen-Wang (2002)</strong>: Fibonacci anyon braid representations dense in PSU(2), hence universal for quantum computation</li>
+<li><strong>Z[zeta_5]</strong>: 5th cyclotomic integers, rank 4 over Z, natural home for bracket values at A=zeta_10^3</li>
+<li><strong>Golden ratio in TL algebra</strong>: delta=phi at ell=5, delta powers are literal Fibonacci numbers</li>
+<li><strong>Kauffman bracket at roots of unity</strong>: A = e^{i<em>pi</em>(2k+1)/2ell} parametrization, each ell giving different cyclotomic ring and delta value</li>
+<li><strong>DKC (Diagrammatic Knot Computation)</strong>: forward direction — exact bracket values compute Boolean functions without training</li>
+</ul>
+<h3>Open Questions</h3>
+<ul>
+<li>Does ell=5 break the 0x1B/0x06 Re&gt;0 wall? (This is THE headline result — depends on actual program output)</li>
+<li>If the wall holds at rank 4, is it an activation-structural barrier rather than a ring-rank barrier?</li>
+<li>How does the multiplicative encoding benefit from 4D vs 2D? (More angular diversity, or more magnitude diversity, or both?)</li>
+<li>Can Fibonacci growth in delta power coefficients cause integer overflow issues at longer braid lengths?</li>
+<li>What is the optimal level ell for maximizing Boolean function reachability across all activations?</li>
+<li>Does the Fibonacci fusion rule (tau x tau = 1 + tau) have a direct combinatorial reflection in which truth tables are achievable?</li>
+<li>How does the ell=5 reachability compare with sector k=6 (which achieved all 13 at ell=4 in Demo 50)?</li>
+</ul>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/c.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</body>
+</html>

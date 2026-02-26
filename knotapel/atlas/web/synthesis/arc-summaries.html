@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>synthesis/arc-summaries.md</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+    <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+    <nav><a href="../index.html">← Back to Index</a></nav><hr>
+    <h1>Research Arc Summaries</h1>
+<p>Backbone document grouping all demos into natural research arcs by intellectual unit.</p>
+<p>---</p>
+<h2>Arc 1: Foundation (<a href="../inventory/entries/demo_01.html">D01</a>-<a href="../inventory/entries/demo_09.html">D09</a>)</h2>
+<p><strong>Question</strong>: Can the Kauffman bracket be computed exactly from scratch using multiple algebraic representations? <strong>Answer</strong>: Yes -- five independent computation methods (state-sum, braid, TL module, spin chain, Jones-Wenzl) all agree, and the bracket is verified invariant under Reidemeister moves.</p>
+<h3>Journey</h3>
+<ul>
+<li><a href="../inventory/entries/demo_01.html">D01</a> built the state-sum oracle (brute-force 2^n enumeration), the ground truth for all later work</li>
+<li><a href="../inventory/entries/demo_02.html">D02</a>-<a href="../inventory/entries/demo_06.html">D06</a> constructed algebraic representations: braid words, TL standard modules, tensor-product spin chains, Jones-Wenzl projectors</li>
+<li><a href="../inventory/entries/demo_07.html">D07</a>-<a href="../inventory/entries/demo_08.html">D08</a> bridged PD-code and braid-word representations bidirectionally (Vogel algorithm)</li>
+<li><a href="../inventory/entries/demo_09.html">D09</a> verified Reidemeister invariance, closing the foundation</li>
+<li>The quantum trace formula tr_q = (-1)^n <em> delta </em> bracket(oracle) was confirmed at every scale by <a href="../inventory/entries/demo_05.html">D05</a></li>
+</ul>
+<h3>Key Artifacts</h3>
+<ul>
+<li><code>Poly</code> type: symbolic Laurent polynomial ring (808 bytes/entry), exact but expensive</li>
+<li>State-sum oracle: ground truth for all bracket computations</li>
+<li>Union-find loop counter: used in 37+ subsequent demos</li>
+<li>TL matrix representation infrastructure (reused through <a href="../inventory/entries/demo_109.html">D109</a>)</li>
+</ul>
+<h3>What It Unlocked</h3>
+<ul>
+<li>Arc 2 (Classification) built directly on this for numerical exploration</li>
+<li>The state-sum oracle remained the validation target through <a href="../inventory/entries/demo_59.html">D59</a></li>
+<li>TL infrastructure became the backbone of the entire project</li>
+</ul>
+<h3>Open Threads</h3>
+<ul>
+<li>Symbolic <code>Poly</code> type too expensive for large-scale work (resolved by <a href="../inventory/entries/demo_10.html">D10</a>'s numerical pivot)</li>
+</ul>
+<p>---</p>
+<h2>Arc 2: Classification (<a href="../inventory/entries/demo_10.html">D10</a>-<a href="../inventory/entries/demo_17.html">D17</a>)</h2>
+<p><strong>Question</strong>: What information can be extracted from bracket values when treated as numerical signals? <strong>Answer</strong>: The bracket encodes quantized angular structure, waveform classification, and a discrete information-theoretic landscape that converges to algebraically special evaluation points (WRT).</p>
+<h3>Journey</h3>
+<ul>
+<li><a href="../inventory/entries/demo_10.html">D10</a> replaced symbolic <code>Poly</code> (808 bytes) with numerical <code>Cx</code> (16 bytes), enabling 50-100x scaling</li>
+<li><a href="../inventory/entries/demo_11.html">D11</a>-<a href="../inventory/entries/demo_12.html">D12</a> explored bracket waveforms and discovered quantization</li>
+<li><a href="../inventory/entries/demo_13.html">D13</a> performed the first "DKC test" -- can bracket values distinguish Boolean functions?</li>
+<li><a href="../inventory/entries/demo_14.html">D14</a>-<a href="../inventory/entries/demo_15.html">D15</a> mapped zero structure and WRT angles; greedy angle selection converged to within 1.5% of the Chern-Simons evaluation point</li>
+<li><a href="../inventory/entries/demo_16.html">D16</a>-<a href="../inventory/entries/demo_17.html">D17</a> explored reduced brackets and multi-layer architectures</li>
+</ul>
+<h3>Key Artifacts</h3>
+<ul>
+<li><code>Cx</code> complex arithmetic: numerical workhorse used in 35+ demos</li>
+<li>WRT convergence result: topology "knows" information theory (<a href="../inventory/entries/demo_15.html">D15</a>)</li>
+<li>NPN classification machinery introduced (<a href="../inventory/entries/demo_17.html">D17</a>, refined in <a href="../inventory/entries/demo_23.html">D23</a>)</li>
+</ul>
+<h3>What It Unlocked</h3>
+<ul>
+<li>Arc 3 (Gate) used the numerical engine for circuit compilation</li>
+<li>The WRT convergence hinted at the algebraic evaluation points that Arc 4-6 would exploit</li>
+</ul>
+<h3>Open Threads</h3>
+<ul>
+<li>Floating-point approximation limits (resolved by exact cyclotomic rings in <a href="../inventory/entries/demo_29.html">D29</a>+)</li>
+</ul>
+<p>---</p>
+<h2>Arc 3: Gate (<a href="../inventory/entries/demo_18.html">D18</a>-<a href="../inventory/entries/demo_25.html">D25</a>)</h2>
+<p><strong>Question</strong>: Can braids serve as universal classical logic gates, and what does topology prefer to compute? <strong>Answer</strong>: Yes -- braids achieve computational universality (NOT, NAND), but the parity function has zero appearances across 1554 braids x 4 closures, establishing the parity barrier.</p>
+<h3>Journey</h3>
+<ul>
+<li><a href="../inventory/entries/demo_18.html">D18</a>-<a href="../inventory/entries/demo_19.html">D19</a> proved universality via NOT/NAND gate construction and circuit compilation</li>
+<li><a href="../inventory/entries/demo_20.html">D20</a> mapped the error landscape of approximate gate realization</li>
+<li><a href="../inventory/entries/demo_21.html">D21</a>-<a href="../inventory/entries/demo_22.html">D22</a> explored reversible gates and minimum braid complexity for each Boolean function</li>
+<li><a href="../inventory/entries/demo_23.html">D23</a> built the "function zoo" with NPN classification (13 non-trivial classes)</li>
+<li><a href="../inventory/entries/demo_24.html">D24</a> was a standalone tangent connecting brackets to rational tangle arithmetic</li>
+<li><a href="../inventory/entries/demo_25.html">D25</a> measured closure-type effects and first surfaced the parity barrier (zero appearances)</li>
+</ul>
+<h3>Key Artifacts</h3>
+<ul>
+<li>NPN classification: used in 13+ subsequent demos</li>
+<li>Braid word decoder for exhaustive enumeration (13+ demos)</li>
+<li>Parity barrier: the central mystery driving Arcs 4-6</li>
+</ul>
+<h3>What It Unlocked</h3>
+<ul>
+<li>Arc 4 (Reverse DKC) attacked the parity barrier from the neural network direction</li>
+<li>The function zoo and NPN machinery became standard infrastructure</li>
+</ul>
+<h3>Open Threads</h3>
+<ul>
+<li>Parity barrier unexplained (resolved across Arcs 5-6 and Arc 9)</li>
+</ul>
+<p>---</p>
+<h2>Arc 4: Reverse DKC (<a href="../inventory/entries/demo_26.html">D26</a>-<a href="../inventory/entries/demo_28.html">D28</a>)</h2>
+<p><strong>Question</strong>: Can trained neural network weights be decomposed into Kauffman bracket values? <strong>Answer</strong>: Yes -- reverse decomposition works for real and complex weights, with U(1) gauge symmetry discovered, and different activations (split-sigmoid, modReLU, cardioid) access different parts of the bracket algebra.</p>
+<h3>Journey</h3>
+<ul>
+<li><a href="../inventory/entries/demo_26.html">D26</a> demonstrated reverse DKC with real-valued weights</li>
+<li><a href="../inventory/entries/demo_27.html">D27</a> extended to complex weights, discovering U(1) gauge symmetry in the decomposition</li>
+<li><a href="../inventory/entries/demo_28.html">D28</a> compared activation functions (modReLU, cardioid, split-sigmoid), finding each accesses different algebraic sectors</li>
+<li>The "training as focusing" thesis emerged: trained weights converge to bracket lattice points</li>
+</ul>
+<h3>Key Artifacts</h3>
+<ul>
+<li>U(1) gauge symmetry of bracket-weight correspondence</li>
+<li>Split-sigmoid activation as the primary DKC readout</li>
+<li>Training-as-focusing thesis</li>
+</ul>
+<h3>What It Unlocked</h3>
+<ul>
+<li>Arc 5 (Forward DKC) reversed the direction: bracket values compute directly without training</li>
+<li>Activation function comparison seeded the "wall was activation" pattern</li>
+</ul>
+<h3>Open Threads</h3>
+<ul>
+<li>Can forward DKC work without training? (Answered immediately by <a href="../inventory/entries/demo_29.html">D29</a>)</li>
+</ul>
+<p>---</p>
+<h2>Arc 5: Forward DKC (<a href="../inventory/entries/demo_29.html">D29</a>, <a href="../inventory/entries/demo_45.html">D45</a>-<a href="../inventory/entries/demo_48.html">D48</a>)</h2>
+<p><strong>Question</strong>: Can exact bracket values compute Boolean functions without any training? <strong>Answer</strong>: Yes -- forward DKC is confirmed with 100+ exact XOR triples from Z[zeta_8] bracket values. All 13 NPN classes are computable. But parity has zero solutions out of 100M quartets under split-sigmoid, and XNOR3 has exactly zero solutions under the k-sector search.</p>
+<h3>Journey</h3>
+<ul>
+<li><a href="../inventory/entries/demo_29.html">D29</a> (LANDMARK): forward DKC confirmed -- exact Z[zeta_8] values at delta=0 compute XOR with RMS=0.000</li>
+<li><a href="../inventory/entries/demo_45.html">D45</a> mapped all 13 NPN classes and discovered forward-reverse duality (Spearman rho = -0.82)</li>
+<li><a href="../inventory/entries/demo_46.html">D46</a> investigated per-neuron gauge and phase decoherence</li>
+<li><a href="../inventory/entries/demo_47.html">D47</a> tested MVN activation, finding correlation reversal (rho = -0.78 vs +0.55 under split-sigmoid)</li>
+<li><a href="../inventory/entries/demo_48.html">D48</a> (LANDMARK): exhaustive 100M quartet search proved zero parity solutions under split-sigmoid, sharpening the wall</li>
+</ul>
+<h3>Key Artifacts</h3>
+<ul>
+<li>Forward DKC catalog: 100 exact Z[zeta_8] bracket values (ground truth for all Boolean reachability)</li>
+<li>Forward-reverse duality measurement</li>
+<li>Split-sigmoid parity wall (zero out of 100M)</li>
+<li><a href="../inventory/entries/demo_47.html">D47</a> conjecture: TL non-semisimplicity is the parity barrier</li>
+</ul>
+<h3>What It Unlocked</h3>
+<ul>
+<li>Arc 6 (Activation Breakthrough) resolved the parity wall</li>
+<li><a href="../inventory/entries/demo_47.html">D47</a>'s conjecture drove Arc 7 (Radical Anatomy)</li>
+<li>The catalog became the substrate for Arcs 8-20</li>
+</ul>
+<h3>Open Threads</h3>
+<ul>
+<li>Parity unreachable under split-sigmoid (resolved by <a href="../inventory/entries/demo_50.html">D50</a>)</li>
+<li>Non-semisimplicity conjecture (explored in Arc 7, partially confirmed, partially superseded)</li>
+</ul>
+<p>---</p>
+<h2>Arc 6: Activation Breakthrough (<a href="../inventory/entries/demo_49.html">D49</a>-<a href="../inventory/entries/demo_50.html">D50</a>)</h2>
+<p><strong>Question</strong>: Is the parity wall in the weight lattice or the activation function? <strong>Answer</strong>: The wall is entirely in the activation. The same 100-value catalog that yielded zero parity solutions under split-sigmoid yields 906 solutions at k=6 sectors. Neglecton weights (radical elements) add no new angular directions.</p>
+<h3>Journey</h3>
+<ul>
+<li><a href="../inventory/entries/demo_49.html">D49</a> tested perturbation via radical elements ("neglectons"): 148 new Z[zeta_8] values from 15,242 braids, but ALL share angles with existing values -- the perturbation approach is closed</li>
+<li><a href="../inventory/entries/demo_50.html">D50</a> (LANDMARK): k-sector activation solves parity at k=6 with 906 solutions from the same catalog</li>
+<li>Four-tier NPN hierarchy discovered: k=2(5 classes), k=3(+1), k=4(+6), k=6(+1 = all 13)</li>
+<li>Non-monotonicity: 906 at k=6 &gt; 756 at k=7 &gt; 96 at k=8 (pi/4 incommensurability)</li>
+</ul>
+<h3>Key Artifacts</h3>
+<ul>
+<li>906 parity solutions at k=6</li>
+<li>Four-tier NPN hierarchy</li>
+<li>Pi/4 incommensurability hypothesis</li>
+<li>First instance of "wall was activation, not lattice" pattern (recurs 5+ more times)</li>
+</ul>
+<h3>What It Unlocked</h3>
+<ul>
+<li>All subsequent DKC work builds on the confirmed 13/13 class reachability</li>
+<li>The "wall was X not Y" pattern became a recurring structural insight</li>
+</ul>
+<h3>Open Threads</h3>
+<ul>
+<li>41/100 catalog values participate in parity solutions, octants {2,4,5,7} only (explored in Arc 20)</li>
+<li>Incommensurability with pi/4 lattice (explored in Arc 9)</li>
+</ul>
+<p>---</p>
+<h2>Arc 7: Radical Anatomy (<a href="../inventory/entries/demo_38.html">D38</a>-<a href="../inventory/entries/demo_39.html">D39</a>, <a href="../inventory/entries/demo_51.html">D51</a>-<a href="../inventory/entries/demo_52.html">D52</a>, <a href="../inventory/entries/demo_60.html">D60</a>)</h2>
+<p><strong>Question</strong>: What is the algebraic structure of TL non-semisimplicity at delta=0, and how does it connect to computational barriers? <strong>Answer</strong>: The radical has dimension 2l-3 (Graham-Lehrer), the sandwich theorem holds (rad^2 isomorphic to previous odd TL), and the alternating semisimplicity pattern (even=non-semisimple, odd=semisimple) extends across all tested delta values including the first cubic number field.</p>
+<h3>Journey</h3>
+<ul>
+<li><a href="../inventory/entries/demo_38.html">D38</a> proved the dimension reduction theorem: TL_n/rad is isomorphic to TL_{n-1} at even n</li>
+<li><a href="../inventory/entries/demo_39.html">D39</a> decomposed TL into cellular sectors, verified d(n,j)^2 sizes, mapped multi-delta Gram ranks, and proved three formal theorems (Markov RT truncation, shadow interpretation)</li>
+<li><a href="../inventory/entries/demo_51.html">D51</a> discovered the sandwich theorem and alternating semisimplicity at delta=0</li>
+<li><a href="../inventory/entries/demo_52.html">D52</a> extended to the full Chebyshev parameter space: delta=0,1,sqrt(2),phi,sqrt(3)</li>
+<li><a href="../inventory/entries/demo_60.html">D60</a> confirmed universality at the first cubic number field (ell=7)</li>
+</ul>
+<h3>Key Artifacts</h3>
+<ul>
+<li>Sandwich theorem: rad^2(TL_{2m}) isomorphic to TL_{2m-3}</li>
+<li>Catalan trace theorem, Fibonacci rank theorem</li>
+<li>Cross-ell radical dimension formulas: rad(TL_l) = 2l-3</li>
+<li>Markov RT truncation theorem (<a href="../inventory/entries/demo_39.html">D39</a>)</li>
+</ul>
+<h3>What It Unlocked</h3>
+<ul>
+<li>Arc 8 (Cross-ell Survey) used the radical framework for ring-parametric DKC</li>
+<li>Arc 14 (Mechanistic) built on the non-semisimplicity understanding</li>
+<li>The radical anatomy informed the null-state analysis in Arc 12</li>
+</ul>
+<h3>Open Threads</h3>
+<ul>
+<li>Connection between radical structure and computational capacity (explored in Arcs 14, 17)</li>
+</ul>
+<p>---</p>
+<h2>Arc 8: Cross-ell Survey (<a href="../inventory/entries/demo_53.html">D53</a>-<a href="../inventory/entries/demo_59.html">D59</a>)</h2>
+<p><strong>Question</strong>: Does DKC work at evaluation levels beyond ell=2 (delta=0)? <strong>Answer</strong>: Yes -- the same topology code works verbatim across five cyclotomic rings, and the same 11/13 NPN wall appears universally under Re&gt;0 activation with the same two unreachable classes (0x06, 0x1B).</p>
+<h3>Journey</h3>
+<ul>
+<li><a href="../inventory/entries/demo_53.html">D53</a> (ell=3, Z[omega], delta=1), <a href="../inventory/entries/demo_54.html">D54</a> (ell=4, Z[zeta_16], delta=sqrt(2)), <a href="../inventory/entries/demo_58.html">D58</a> (ell=5, Z[zeta_5], delta=phi), <a href="../inventory/entries/demo_59.html">D59</a> (ell=6, Z[zeta_24], delta=sqrt(3)) -- each implemented a new ring</li>
+<li><a href="../inventory/entries/demo_55.html">D55</a> ran Boolean search at ell=4, <a href="../inventory/entries/demo_56.html">D56</a>-<a href="../inventory/entries/demo_57.html">D57</a> explored Potts-TL and additive encoding</li>
+<li>The topology code (planar matchings, diagram composition, trace closure) was ring-independent</li>
+<li>Fibonacci golden ratio discovered at ell=5: delta powers are literal Fibonacci numbers</li>
+<li>11/13 wall observed independently at ell=4, ell=5, ell=6</li>
+</ul>
+<h3>Key Artifacts</h3>
+<ul>
+<li>Five cyclotomic ring implementations with common API</li>
+<li>Universal 11/13 wall: same two classes unreachable regardless of ring</li>
+<li>Ring tower: Z -&gt; Cx -&gt; Z[zeta_8] -&gt; Z[omega] -&gt; Z[zeta_16] -&gt; Z[zeta_5] -&gt; Z[zeta_24]</li>
+</ul>
+<h3>What It Unlocked</h3>
+<ul>
+<li>Arc 9 (Analytical Wall) proved the 11/13 universality analytically</li>
+<li>The cross-ell data established that the wall is activation-geometric, not algebraic</li>
+</ul>
+<h3>Open Threads</h3>
+<ul>
+<li>Why exactly 0x06 and 0x1B? (Answered by <a href="../inventory/entries/demo_62.html">D62</a>'s two distinct proof structures)</li>
+</ul>
+<p>---</p>
+<h2>Arc 9: Analytical Wall (<a href="../inventory/entries/demo_61.html">D61</a>-<a href="../inventory/entries/demo_65.html">D65</a>)</h2>
+<p><strong>Question</strong>: Can the 11/13 wall be proven analytically, and what governs parity scaling? <strong>Answer</strong>: Yes -- integer-arithmetic proofs show 0x06 and 0x1B are unreachable by ANY half-plane activation (two different geometric obstructions), and the parity hierarchy is a matroid minor chain with a hard ceiling at n=5 inputs.</p>
+<h3>Journey</h3>
+<ul>
+<li><a href="../inventory/entries/demo_61.html">D61</a> gave a computational proof via N=360 integer grid</li>
+<li><a href="../inventory/entries/demo_62.html">D62</a> gave analytical proofs: 0x06 fails by local parallelogram argument, 0x1B by global interval squeeze -- two fundamentally different mechanisms</li>
+<li><a href="../inventory/entries/demo_63.html">D63</a> established the complete parity scaling law for Z[zeta_8]: ceiling n=5, extending from <a href="../inventory/entries/demo_50.html">D50</a>'s n=3</li>
+<li><a href="../inventory/entries/demo_64.html">D64</a> revealed the parity hierarchy as a matroid minor chain (deletion = XOR_{n-1}, contraction = XNOR_{n-1}) with vocabulary stratification (44 good / 31 poison)</li>
+<li><a href="../inventory/entries/demo_65.html">D65</a> tested the Clifford staircase conjecture: standard Z[zeta_16] leaves ceiling at n=5, but generalized labelings break XOR6 at k=24</li>
+</ul>
+<h3>Key Artifacts</h3>
+<ul>
+<li>Zero-floating-point analytical proofs of the 11/13 wall</li>
+<li>Matroid minor chain for parity hierarchy</li>
+<li>Self-doubling impossibility theorem (<a href="../inventory/entries/demo_64.html">D64</a>)</li>
+<li>k=24 coincidence (explained by <a href="../inventory/entries/demo_66.html">D66</a>)</li>
+</ul>
+<h3>What It Unlocked</h3>
+<ul>
+<li>Arc 10 (Quaternionic) explained the k=24 coincidence as 24-cell projection</li>
+<li>The matroid framework connected DKC to classical combinatorics</li>
+</ul>
+<h3>Open Threads</h3>
+<ul>
+<li>k=24 mystery (resolved by <a href="../inventory/entries/demo_66.html">D66</a>)</li>
+<li>Cyclotomic matroid mu_8 for the 44/31 vocabulary split (open)</li>
+</ul>
+<p>---</p>
+<h2>Arc 10: Quaternionic/Spherical (<a href="../inventory/entries/demo_66.html">D66</a>-<a href="../inventory/entries/demo_71.html">D71</a>)</h2>
+<p><strong>Question</strong>: What is the natural geometric setting for DKC, and why does the 13-direction structure work? <strong>Answer</strong>: SU(2) quaternions are the natural setting. The 24-cell (binary octahedral group) is the braid geometry. S^2 (rotation axis) is the computational sweet spot. The Hopf fiber phase is inert. 2*6+1=13 is the exact DOF coincidence explaining why 13 directions suffice.</p>
+<h3>Journey</h3>
+<ul>
+<li><a href="../inventory/entries/demo_66.html">D66</a> lifted the bracket from S^1 to S^3, discovering the 24-cell as braid geometry and resolving the k=24 coincidence</li>
+<li><a href="../inventory/entries/demo_67.html">D67</a> proved S^2 is the computational sweet spot: 13-direction Voronoi gives 36 solutions at 14 cells, beating full S^3</li>
+<li><a href="../inventory/entries/demo_68.html">D68</a> proved the computation is intrinsically curved (Euclidean metric gives zero solutions)</li>
+<li><a href="../inventory/entries/demo_69.html">D69</a> proved universal direction nesting (zeta_8 subset of zeta_16 subset of zeta_32) and trivialization at finer roots</li>
+<li><a href="../inventory/entries/demo_70.html">D70</a> mapped the algebra to music: 4 notes, Yang-Baxter melodies, pitch-space orthogonality (r = -0.06)</li>
+<li><a href="../inventory/entries/demo_71.html">D71</a> closed with the 13=13 theorem: minimum bandwidth l=6 because 2*6+1=13, sharp phase transition</li>
+</ul>
+<h3>Key Artifacts</h3>
+<ul>
+<li>24-cell as the natural DKC geometry (binary octahedral group, 24 quaternions)</li>
+<li>S^2 sweet spot: Hopf base carries computation, fiber carries pitch</li>
+<li>13=13 theorem: harmonic-analytic necessity for the direction count</li>
+<li>Music-space orthogonality</li>
+</ul>
+<h3>What It Unlocked</h3>
+<ul>
+<li>Arc 11 (Characterization) tested the algebraic optimality of the 13 directions</li>
+<li>Arc 12 (Scaling) used the quaternionic framework for capacity theory</li>
+<li>The Hopf fibration decomposition informed all subsequent activation design</li>
+</ul>
+<h3>Open Threads</h3>
+<ul>
+<li>Are the 13 directions truly optimal? (<a href="../inventory/entries/demo_72.html">D72</a> shows they are algebraically optimal but geometrically worst)</li>
+</ul>
+<p>---</p>
+<h2>Arc 11: Characterization (<a href="../inventory/entries/demo_72.html">D72</a>-<a href="../inventory/entries/demo_75.html">D75</a>)</h2>
+<p><strong>Question</strong>: What makes the 13 eigenvector directions computationally optimal, and what is the full invariant theory of DKC? <strong>Answer</strong>: The directions are algebraically selected, not geometrically optimized -- geometric improvement destroys computation (t=0 design, 9x fewer solutions). DKC is fundamentally additive (not multiplicative). Bracket and Voronoi cell are incomparable invariants that become ordered at the sum level.</p>
+<h3>Journey</h3>
+<ul>
+<li><a href="../inventory/entries/demo_72.html">D72</a> confirmed anti-correlation: t=0 design (worst possible) yet 2.6x better geometry gives 9x fewer solutions</li>
+<li><a href="../inventory/entries/demo_73.html">D73</a> proved DKC is additive: multiplicative braid product cannot compute XOR6 (complement maps M to M^{-1}, same eigenvector cell). 82.8% universal determinism constant</li>
+<li><a href="../inventory/entries/demo_74.html">D74</a> proved bracket and cell are incomparable: combined gives 119 classes vs 100 bracket-alone</li>
+<li><a href="../inventory/entries/demo_75.html">D75</a> discovered binocular DKC: eigenvalue angle subsumes cell at the sum level, 2.3x capacity, sqrt(n) magnitude quantization</li>
+</ul>
+<h3>Key Artifacts</h3>
+<ul>
+<li>Anti-Correlation Theorem: sampling quality anti-correlates with computation</li>
+<li>Additive DKC proof: 82.8% universal determinism</li>
+<li>Incomparability Theorem: 119 combined classes</li>
+<li>Binocular channel: angle + direction = complete readout</li>
+</ul>
+<h3>What It Unlocked</h3>
+<ul>
+<li>Arc 12 (Scaling) used the product activation (S^1 x S^2) derived from the binocular insight</li>
+<li>The additive formulation retroactively explained all forward DKC since <a href="../inventory/entries/demo_29.html">D29</a></li>
+</ul>
+<h3>Open Threads</h3>
+<ul>
+<li>sqrt(n) magnitude quantization mechanism (partially explained by inner product structure of 24-cell)</li>
+</ul>
+<p>---</p>
+<h2>Arc 12: Scaling and Finiteness (<a href="../inventory/entries/demo_76.html">D76</a>-<a href="../inventory/entries/demo_84.html">D84</a>)</h2>
+<p><strong>Question</strong>: How does XOR capacity scale with inputs, and what governs the capacity ceiling? <strong>Answer</strong>: Group finiteness is the capacity governor. Finite groups (zeta_4, zeta_8) impose hard ceilings; infinite groups (zeta_12) scale as max_xor ~ depth + 6. Framing and null states are independent computational resources that TQFT discards but DKC uses.</p>
+<h3>Journey</h3>
+<ul>
+<li><a href="../inventory/entries/demo_76.html">D76</a>-<a href="../inventory/entries/demo_77.html">D77</a>: XOR8 = 0 under S^2-only -&gt; resolved by S^1xS^2 product activation (6 solutions). Second "wall was activation" instance</li>
+<li><a href="../inventory/entries/demo_78.html">D78</a>-<a href="../inventory/entries/demo_79.html">D79</a>: XOR10 = 0 at zeta_8 exhaustively -&gt; resolved by switching to zeta_12 (infinite group, 124 solutions). Wall was group finiteness</li>
+<li><a href="../inventory/entries/demo_80.html">D80</a> surveyed 7 roots: only zeta_4 and zeta_8 generate finite SU(2) subgroups (ADE classification)</li>
+<li><a href="../inventory/entries/demo_81.html">D81</a> measured logarithmic scaling law: max_xor ~ 0.62 * log2(catalog) + 4.6</li>
+<li><a href="../inventory/entries/demo_82.html">D82</a> reinterpreted as depth law: max_xor ~ depth + 6 (log is corollary of exponential catalog growth)</li>
+<li><a href="../inventory/entries/demo_83.html">D83</a> discovered framing = +2 XOR levels (Jones normalization costs exactly 2), writhe is independent axis</li>
+<li><a href="../inventory/entries/demo_84.html">D84</a> proved null states are directionally indispensable at zeta_8 (removing them drops XOR8 to XOR6)</li>
+</ul>
+<h3>Key Artifacts</h3>
+<ul>
+<li>Linear depth law: max_xor ~ depth + 6</li>
+<li>Resource decomposition: capacity ~ XOR6 + 2<em>depth + 2</em>framing</li>
+<li>Null indispensability at zeta_8 (6 exclusive S^2 directions)</li>
+<li>ADE classification of DKC capacity regimes</li>
+</ul>
+<h3>What It Unlocked</h3>
+<ul>
+<li>Arc 14 (Mechanistic) explained the depth law mechanism</li>
+<li>Arc 15 (Circuit Complexity) built on the function-specific capacity theory</li>
+<li>Arc 16 (Catalog Optimization) used the null/non-null anatomy</li>
+</ul>
+<h3>Open Threads</h3>
+<ul>
+<li>What is the mechanism behind algebraic coherence? (Answered by <a href="../inventory/entries/demo_89.html">D89</a>-<a href="../inventory/entries/demo_90.html">D90</a>)</li>
+<li>Does null indispensability generalize? (<a href="../inventory/entries/demo_87.html">D87</a> shows it is regime-dependent)</li>
+</ul>
+<p>---</p>
+<h2>Arc 13: Framing/Null (<a href="../inventory/entries/demo_83.html">D83</a>-<a href="../inventory/entries/demo_84.html">D84</a>)</h2>
+<p><em>Folded into Arc 12 above. <a href="../inventory/entries/demo_83.html">D83</a> and <a href="../inventory/entries/demo_84.html">D84</a> are integral parts of the Scaling arc -- <a href="../inventory/entries/demo_83.html">D83</a> resolved the N-2 mystery from <a href="../inventory/entries/demo_79.html">D79</a> and established writhe as an independent axis; <a href="../inventory/entries/demo_84.html">D84</a> opened the internal anatomy of the catalog that drove Arcs 14 and 16.</em></p>
+<p>---</p>
+<h2>Arc 14: Mechanistic (<a href="../inventory/entries/demo_85.html">D85</a>-<a href="../inventory/entries/demo_92.html">D92</a>)</h2>
+<p><strong>Question</strong>: What is the algebraic mechanism behind the depth law, and what determines which Boolean functions are computable? <strong>Answer</strong>: Axis cancellation (anti-aligned rotation axes) combined with cross-depth algebraic constraints produces the linear depth law. The activation is not the bottleneck. The +/-q encoding is structurally parity-locked: only XOR/XNOR are computable, AND/OR/MAJ = 0 winners at all depths.</p>
+<h3>Journey</h3>
+<ul>
+<li><a href="../inventory/entries/demo_85.html">D85</a> computed b = -5/8 (Pearce-Rasmussen indecomposability parameter) at TL_4, resolving the b = -2 vs -5/8 controversy as normalization</li>
+<li><a href="../inventory/entries/demo_86.html">D86</a> proved single-copy P_{0,0} extraction universally diverges -- the regular-representation multiplicity is structurally essential</li>
+<li><a href="../inventory/entries/demo_87.html">D87</a> discovered null indispensability is regime-dependent: dispensable at zeta_12 (infinite group)</li>
+<li><a href="../inventory/entries/demo_88.html">D88</a> anatomized rigid anchors (4 body-diagonal) vs flexible scaffolding (6 edge-midpoint), explaining <a href="../inventory/entries/demo_72.html">D72</a>'s Voronoi catastrophe</li>
+<li><a href="../inventory/entries/demo_89.html">D89</a> tested 8 mechanistic hypotheses, killed 5, identified algebraic coherence as the remaining candidate</li>
+<li><a href="../inventory/entries/demo_90.html">D90</a> cracked it: axis cancellation + cross-depth constraints; spectral inversion proves mechanism is relational, not positional</li>
+<li><a href="../inventory/entries/demo_91.html">D91</a> confirmed balanced exponentials: vocabulary ~2x/round, demand 4x/weight -&gt; linear slope</li>
+<li><a href="../inventory/entries/demo_92.html">D92</a> closed with parity-lock theorem: +/-q encoding is structurally locked to XOR/XNOR only</li>
+</ul>
+<h3>Key Artifacts</h3>
+<ul>
+<li>b = -5/8 indecomposability parameter (first exact first-principles computation)</li>
+<li>Parity-lock theorem (PROVEN): encoding determines function family</li>
+<li>Axis cancellation mechanism for depth law</li>
+<li>Balanced exponentials explanation</li>
+<li>Null dispensability regime transition</li>
+</ul>
+<h3>What It Unlocked</h3>
+<ul>
+<li>Arc 15 (Circuit Complexity) extended the function-specificity insight</li>
+<li>The parity-lock theorem distinguished encoding effects from activation effects</li>
+</ul>
+<h3>Open Threads</h3>
+<ul>
+<li>b computation does not extend to larger lattices via diagram-algebraic approach</li>
+<li>Transfer-matrix finite-size scaling likely needed for larger TL sizes</li>
+</ul>
+<p>---</p>
+<h2>Arc 15: Circuit Complexity (<a href="../inventory/entries/demo_93.html">D93</a>-<a href="../inventory/entries/demo_94.html">D94</a>)</h2>
+<p><strong>Question</strong>: How does the classical circuit complexity hierarchy (AC^0 / TC^0 / parity) manifest in DKC? <strong>Answer</strong>: AND/XOR ratio explodes from 1.01 to infinity (N=3 to 8) -- Hastad's theorem made visible. The binary icosahedral group (2I, non-solvable) outperforms solvable groups at matched size, confirming Barrington's theorem computationally. DKC maps precisely to a discrete algebraic reservoir computer.</p>
+<h3>Journey</h3>
+<ul>
+<li><a href="../inventory/entries/demo_93.html">D93</a> discovered complement-blindness theorem under combined_cell activation; phase_cell (no sign flip) recovers all 13 NPN classes; AND/XOR ratio explosion measured across N=3-8</li>
+<li><a href="../inventory/entries/demo_94.html">D94</a> introduced the binary icosahedral group 2I (order 120, unique non-solvable finite SU(2) subgroup) with exact Z[sqrt5] arithmetic; confirmed solvability bottleneck at matched catalog size; three-way comparison (z8 vs 2I vs z12) showed crossover at N=6</li>
+<li><a href="../inventory/entries/demo_94.html">D94</a> completed the five-pillar synthesis: Abramsky + Habiro + Aizenberg + Nazer-Gastpar + Reservoir Computing</li>
+</ul>
+<h3>Key Artifacts</h3>
+<ul>
+<li>Complement-blindness theorem; phase_cell activation</li>
+<li>Circuit complexity hierarchy table (AND/XOR = 1.01 to infinity)</li>
+<li>Solvability bottleneck confirmation (Barrington's theorem in DKC)</li>
+<li>Five-pillar synthesis with precise reservoir computing mapping</li>
+<li>Z[sqrt5] quaternion arithmetic for 2I</li>
+</ul>
+<h3>What It Unlocked</h3>
+<ul>
+<li>Arc 16 (Catalog Optimization) used the commutator/derived-series framework from <a href="../inventory/entries/demo_94.html">D94</a>'s group theory</li>
+<li>The reservoir computing mapping became the theoretical frame for all subsequent work</li>
+</ul>
+<h3>Open Threads</h3>
+<ul>
+<li>RKHS kernel rank test: rank(K_2I)/rank(K_z8) &gt; 120/24? (seeded, not yet computed)</li>
+</ul>
+<p>---</p>
+<h2>Arc 16: Catalog Optimization (<a href="../inventory/entries/demo_95.html">D95</a>-<a href="../inventory/entries/demo_97.html">D97</a>)</h2>
+<p><strong>Question</strong>: What is the optimal composition of the z8 bracket catalog, and why is Cell B perfect? <strong>Answer</strong>: Null/non-null and derived series are INDEPENDENT partitions creating a 5-cell landscape. Optimal z8 = 21 entries (removing 3 Q8-null improves capacity). Cell B perfection is geometric inevitability: 3 orthogonal directions at any half-angle in a 50-degree plateau.</p>
+<h3>Journey</h3>
+<ul>
+<li><a href="../inventory/entries/demo_95.html">D95</a> computed derived series of z8 (24 &gt; 12 &gt; 4 &gt; 1, matching 2O &gt; 2T &gt; Q8 &gt; center); confirmed 2I is perfect (every element is a commutator); found cross-layer synergy (0+0 &gt; 0 pattern)</li>
+<li><a href="../inventory/entries/demo_96.html">D96</a> (LANDMARK): cross-tabulated null/non-null with derived series, producing 5-cell taxonomy (A-E); optimal z8 = A+B+C (21 entries), removing Cell D (Q8-null noise) IMPROVES capacity</li>
+<li><a href="../inventory/entries/demo_97.html">D97</a> explained Cell B perfection: 6 entries = regular octahedron on S^2, 3 mutually orthogonal directions, 50-degree robust plateau (25-75 degrees)</li>
+</ul>
+<h3>Key Artifacts</h3>
+<ul>
+<li>5-cell catalog taxonomy (A through E)</li>
+<li>Optimal z8 = 21 entries (first principled pruning)</li>
+<li>Cell B geometric perfection thesis</li>
+<li>Cross-layer synergy principle: mixing algebraic strata creates capacity</li>
+</ul>
+<h3>What It Unlocked</h3>
+<ul>
+<li>Catalog pruning principle applicable to any DKC group</li>
+<li>Cell B geometry informed activation design in subsequent arcs</li>
+</ul>
+<h3>Open Threads</h3>
+<ul>
+<li>Does analogous pruning improve 2I capacity?</li>
+<li>35-degree N=5 resonance anomaly unexplained</li>
+</ul>
+<p>---</p>
+<h2>Arc 17: Multi-strand (<a href="../inventory/entries/demo_98.html">D98</a>-<a href="../inventory/entries/demo_101.html">D101</a>)</h2>
+<p><strong>Question</strong>: Does DKC work beyond 2-strand braids, and does non-semisimplicity provide computational advantage? <strong>Answer</strong>: Yes -- first-ever 3-strand XOR via irreducible Delta_1 module (XOR14=60). Non-semisimple extensions are computationally load-bearing: W_{4,2} (radical) achieves XOR14=70 while W_{5,3} (simple) caps at XOR12. BFS growth rate tracks n-1 (sl_d functor thesis confirmed at d=2,3,4).</p>
+<h3>Journey</h3>
+<ul>
+<li><a href="../inventory/entries/demo_98.html">D98</a> proved 3-strand algebra is rich (infinite group, 2048 entries) but trace readout is catastrophically lossy (5.1% retention, zero XOR6). Column-4 is lossless (100% retention)</li>
+<li><a href="../inventory/entries/demo_99.html">D99</a> (LANDMARK): built Delta_1 (2x2 irreducible) directly; 16-component sign-hash activation; XOR14=60 from deep entries (d&gt;=6); XOR16=0 (genuine ceiling). Jordan block proves non-split extension; Fibonacci growth of entry magnitudes; star-graph hub topology</li>
+<li><a href="../inventory/entries/demo_100.html">D100</a> extended to 4-strand W_{4,2} (3x3, non-semisimple): ~3.1x BFS growth, XOR14=70, 6 super-hubs with traceless commutators, constant radical content at all depths</li>
+<li><a href="../inventory/entries/demo_101.html">D101</a> tested 5-strand W_{5,3} (4x4, simple): ~4x growth (confirming sl_4), but only 3 hubs, XOR14=0, Casimir-XOR correlation INVERTS at high XOR levels</li>
+</ul>
+<h3>Key Artifacts</h3>
+<ul>
+<li>First 3-strand XOR (<a href="../inventory/entries/demo_99.html">D99</a>, LANDMARK)</li>
+<li>Ext^1 catalytic preparation thesis: non-semisimple = infinite group = deep capacity</li>
+<li>sl_d growth rate: ~(n-1)x per BFS round (confirmed at 3 data points)</li>
+<li>Two-regime hypothesis: combinatorial (XOR6-8) vs algebraic (XOR10-14)</li>
+<li>Traceless hub commutator universal pattern</li>
+</ul>
+<h3>What It Unlocked</h3>
+<ul>
+<li>Arc 18 (Multi-strand Scaling) tested the sl_d thesis at higher strand counts</li>
+<li>The Ext^1 thesis reframed non-semisimplicity from obstacle to resource</li>
+</ul>
+<h3>Open Threads</h3>
+<ul>
+<li>Hub count prediction falsified (3 vs predicted 12 for sl_4)</li>
+<li>Is XOR16 truly unreachable on Delta_1?</li>
+</ul>
+<p>---</p>
+<h2>Arc 18: Multi-strand Scaling/Diagnostics (<a href="../inventory/entries/demo_102.html">D102</a>-<a href="../inventory/entries/demo_105.html">D105</a>)</h2>
+<p><strong>Question</strong>: How does multi-strand DKC scale with strand count, and what role does the radical play at higher dimensions? <strong>Answer</strong>: BFS growth is a braid group invariant (not module dimension). The radical carries an abelian writhe character -- by Barrington's theorem, it is provably useless for parity (Barrington-Radical Principle). Higher-k regimes revive XOR at large N, refuting earlier pigeonhole claims.</p>
+<h3>Journey</h3>
+<ul>
+<li><a href="../inventory/entries/demo_102.html">D102</a> ran head-to-head A/B test of W_{6,0} (simple) vs W_{6,4} (radical dim=1): simple WINS at every XOR level, refuting radical-as-resource. Discovered writhe character: M<em>r = A^{writhe}</em>r for all 32768 entries</li>
+<li><a href="../inventory/entries/demo_103.html">D103</a> proved BFS growth is strand-count-invariant: W_{6,0} (dim=5) and W_{6,2} (dim=9) have identical BFS trees. Higher dimension HURTS XOR via curse of dimensionality in sign-hash</li>
+<li><a href="../inventory/entries/demo_104.html">D104</a> identified the Atkinson sweet spot (~120 of 324 components optimal for W_{6,2}); cross-block (branching interaction) is the computational signal; but k is the real lever, not hash architecture</li>
+<li><a href="../inventory/entries/demo_105.html">D105</a> tested 8-strand W_{8,0} and W_{8,2}: revived XOR8 at high k, REFUTING <a href="../inventory/entries/demo_93.html">D93</a>'s "XOR dies at N&gt;=7" as a k-regime artifact. Discovered macrame principle: branching interaction reverses at n=8 (within-block &gt; cross-block). Rank saturation confound identified in all prior cross-module comparisons</li>
+</ul>
+<h3>Key Artifacts</h3>
+<ul>
+<li>Barrington-Radical Principle: radical carries abelian character, provably useless for parity</li>
+<li>Strand-count growth law: ~(n-1)x per BFS round, independent of module dimension (now 4 data points)</li>
+<li>k-regime theory: k/2^N ratio controls capacity (pigeonhole vs collision-avoidance)</li>
+<li>Macrame principle: branching interaction regime transition based on block complexity</li>
+<li>Sign-rank expansion: sign quantization increases effective rank</li>
+</ul>
+<h3>What It Unlocked</h3>
+<ul>
+<li>Arc 19 (Topological Entropy) used the relational computation thesis established here</li>
+<li>The k-regime discovery means prior XOR ceiling claims need re-examination at higher k</li>
+</ul>
+<h3>Open Threads</h3>
+<ul>
+<li>Optimal activation design for matrix-valued DKC remains open</li>
+<li>Does the macrame principle crossover occur between dim 5 and dim 14, or is it more nuanced?</li>
+</ul>
+<p>---</p>
+<h2>Arc 19: Topological Entropy (<a href="../inventory/entries/demo_106.html">D106</a>)</h2>
+<p><strong>Question</strong>: Does the dynamical classification of braids (periodic vs pseudo-Anosov) predict DKC computational capability? <strong>Answer</strong>: No -- topological entropy is completely orthogonal to DKC Boolean computation. Both periodic and pseudo-Anosov braids compute XOR at 100% participation with near-identical scores, because the TL quotient at delta=0 erases all dynamical information.</p>
+<h3>Journey</h3>
+<ul>
+<li>Pre-registered prediction falsified: entropy classification has zero discriminative power across ALL 8 Boolean functions tested</li>
+<li>Fibonacci pseudo-Anosov entries discovered at depth 2 (spectral radius phi^2, optimal entropy per crossing)</li>
+<li>Pseudo-Anosov fraction increases with depth (0% to 77.2%), confirming Caruso genericity theorem</li>
+<li>TL visibility filter identified: properties surviving the TL quotient (writhe) correlate with DKC; properties erased (entropy) do not</li>
+</ul>
+<h3>Key Artifacts</h3>
+<ul>
+<li>TL visibility filter principle</li>
+<li>Strengthened relational computation thesis: individual dynamical properties never predict capacity</li>
+<li>Fibonacci pseudo-Anosov classification</li>
+</ul>
+<h3>What It Unlocked</h3>
+<ul>
+<li>Arc 20 (Raqiya Graph Analysis) measured the relational algebraic structure that <a href="../inventory/entries/demo_106.html">D106</a> showed matters</li>
+</ul>
+<h3>Open Threads</h3>
+<ul>
+<li>Is the TL visibility filter the complete characterization of what DKC can "see"?</li>
+</ul>
+<p>---</p>
+<h2>Arc 20: Raqiya Graph Analysis (<a href="../inventory/entries/demo_107.html">D107</a>-<a href="../inventory/entries/demo_109.html">D109</a>)</h2>
+<p><strong>Question</strong>: Can algebraic graph structure predict which bracket values compute parity? <strong>Answer</strong>: Yes -- the dual-channel theorem: parity capability requires BOTH multiplicative phase coherence (product closure) AND additive magnitude diversity (v2 connectivity). But the polarity is encoding-dependent: at delta=sqrt(2) with multiplicative encoding, the product closure discriminator INVERTS.</p>
+<h3>Journey</h3>
+<ul>
+<li><a href="../inventory/entries/demo_107.html">D107</a> proved universal axis-alignment of braid matrices at delta=0 as a theorem with constructive Z/4Z phase formula; discovered nesting parity = Z/2Z grading, major index bipartite invariant, and q-Catalan identity</li>
+<li><a href="../inventory/entries/demo_108.html">D108</a> classified 100 bracket values into parity/poison/neutral: product closure is maximum contrast discriminator (17 edges vs 0 for poison); additive v2 connectivity also discriminates (83% vs trivial)</li>
+<li><a href="../inventory/entries/demo_109.html">D109</a> tested at delta=sqrt(2) (Z[zeta_16]): parity and non-parity are structurally identical on 7/8 edge types; product closure is sole discriminator but with INVERTED polarity (parity = LOW closure vs <a href="../inventory/entries/demo_108.html">D108</a>'s HIGH)</li>
+</ul>
+<h3>Key Artifacts</h3>
+<ul>
+<li>Z/4Z Axis-Alignment Theorem (proven)</li>
+<li>Nesting Parity Z/2Z Grading (novel)</li>
+<li>Major Index Bipartite Invariant (novel)</li>
+<li>q-Catalan Identity (proven)</li>
+<li>Dual-Channel Theorem: phase coherence + magnitude diversity, encoding-dependent polarity</li>
+<li>Partition coincidence as incapacity signature</li>
+</ul>
+<h3>What It Unlocked</h3>
+<ul>
+<li>Raqiya library (raqiya.h) created as reusable cyclotomic analysis tool</li>
+<li>The dual-channel theorem provides a principled vocabulary for predicting DKC capability at new evaluation points</li>
+</ul>
+<h3>Open Threads</h3>
+<ul>
+<li>Does the dual-channel polarity inversion follow a general rule based on encoding type?</li>
+<li>Can Raqiya diagnostics predict optimal activation function choice?</li>
+<li>j=0 liveness implies structural universality conjecture (from <a href="../inventory/entries/demo_109.html">D109</a>)</li>
+</ul>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/c.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</body>
+</html>

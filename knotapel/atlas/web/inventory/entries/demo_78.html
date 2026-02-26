@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>inventory/entries/demo_78.md</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+    <link rel="stylesheet" href="../../style.css">
+</head>
+<body>
+    <nav><a href="../../index.html">← Back to Index</a></nav><hr>
+    <h2>Demo 78: Recursive Scaling + Phase Diagram</h2>
+<ul>
+<li><strong>Status</strong>: COMPLETE</li>
+<li><strong>File</strong>: <code><a href="../../demo_78_recursive_scaling/main.c.html">demo_78_recursive_scaling/main.c</a></code> (~1052 lines)</li>
+<li><strong>Tests</strong>: 9/9 pass</li>
+<li><strong>Depends on</strong>: Demo 66 (24-quaternion catalog, 24-cell geometry), Demo 67 (13 directions, 36 XOR6 solutions), Demo 77 (XOR8 = 6 solutions via Sec8×Vor activation, shadow structure)</li>
+<li><strong>Feeds into</strong>: Demo 79 (zeta_12 capacity, breaking the wall), Demo 80 (group finiteness survey)</li>
+</ul>
+<h3>Headline</h3>
+XOR10 = 0 winners at ζ₈, confirmed by both recursive search (120 candidates) and exhaustive brute-force (all 42,504 quintuples); the ζ₈ XOR hierarchy terminates at 8 inputs, with non-monotonic accuracy in sector count echoing Demo 50's pi/4 incommensurability.
+<h3>Key Results</h3>
+<ul>
+<li><strong>XOR10 = 0 (exhaustive)</strong>: All C(24,5) = 42,504 quintuples tested at k=8, 10, 12, 16. Zero winners at any sector count. Best accuracy 98.4% (1008/1024 masks) at k=10 and k=16.</li>
+<li><strong>Non-monotonicity</strong>: k=12 accuracy (96.9%) is worse than k=10 (98.4%). The pi/4 lattice incommensurability creates destructive interference at certain k values, mirroring Demo 50's finding (906 solutions at k=6 &gt; 756 at k=7 &gt; 96 at k=8).</li>
+<li><strong>XOR12 skipped</strong>: No XOR10 parents to extend, so recursive XOR12 search was vacuously skipped.</li>
+<li><strong>Recursive structure confirmed (Part E)</strong>: All 6 XOR8 winners contain exactly 2 XOR6 sub-triples (100% verified). Each shadow entry shares its Voronoi cell with at least one parent member (12/12 = 100%). All shadows have eigenvalue half-angle = 45 degrees. Shadow pairs are {0,1}, {4,5}, {19,21} — each pair shares direction and half-angle, differs only in sign/orientation.</li>
+<li><strong>Phase diagram</strong>: XOR6 (14 cells, 36 winners, Voronoi) → XOR8 (112 cells, 6 winners, Sec8×Vor) → XOR10 (WALL, 0 winners). Capacity/masks ratios: XOR6 = 4.6, XOR8 = 2.3.</li>
+<li><strong>Catalog exhaustion diagnosis</strong>: The ζ₈ catalog has only 13 distinct eigenvector directions and 2 half-angles (45°, 90°). Selecting 5 entries from 24 exhausts structural diversity — too many entries share properties for 1024-mask separation.</li>
+</ul>
+<h3>Theorems/Conjectures</h3>
+<ul>
+<li><strong>ζ₈ Wall Theorem (CONFIRMED)</strong>: The binary octahedral group (24 elements) generates a fixed catalog whose combinatorial diversity is exhausted at 5-element selection. XOR8 is the maximum computable XOR function at ζ₈.</li>
+<li><strong>Recursive Shadow Conjecture (CONFIRMED for XOR6→XOR8)</strong>: Every XOR(N+2) winner = XOR(N) winner + one "shadow" quaternion that shares the same eigenvector direction but provides additional eigenvalue resolution. All 6 XOR8 winners decompose this way.</li>
+<li><strong>Non-Monotonicity Conjecture (SUPPORTED)</strong>: The pi/4 incommensurability of the ζ₈ lattice creates sector boundaries that produce destructive interference at specific k values, causing accuracy to decrease as k increases in some ranges.</li>
+</ul>
+<h3>Data</h3>
+<ul>
+<li>XOR6: 36 winners, 14 cells minimum, Voronoi-only activation, 1.779% hit rate</li>
+<li>XOR8: 6 winners, 112 cells minimum (k=8), Sec8×Vor activation, 0.057% hit rate</li>
+<li>XOR10: 0 winners, 42,504 quintuples exhaustively tested</li>
+<li>Best XOR10 accuracy: 98.4% = 1008/1024 masks at k=10 and k=16</li>
+<li>Non-monotonic dip: k=12 achieves only 96.9% (worse than k=10)</li>
+<li>Shadow cell-sharing: 12/12 (100%) of XOR8 shadows share Voronoi cell with a parent</li>
+<li>All 6 XOR8 shadows have half-angle exactly 45 degrees</li>
+<li>Catalog: 24 quaternions, 13 directions, 2 half-angles (45°, 90°)</li>
+</ul>
+<h3>Code Assets</h3>
+<ul>
+<li><strong><code>test_combined(indices, n_idx, k_sec, acc_out)</code></strong>: Generic XOR tester using Combined Sec(k)×Vor activation; pre-computes all 2^N sums once and tests multiple k values; handles up to 4096 masks and 512 cells</li>
+<li><strong>Brute-force XOR10 harness (Part B)</strong>: Computes all 1024 sums once per quintuple, caches angle and Voronoi cell, then sweeps k values cheaply — avoids redundant sum computation across multiple k tests</li>
+<li><strong><code>part_e_recursive()</code></strong>: Verifies parent-shadow structure for any XOR(N) → XOR(N-2) decomposition; reports cell sharing, half-angle, and paired quaternion structure for each shadow</li>
+<li><strong>Sorted tuple insertion</strong>: Pattern for maintaining sorted index arrays when extending N-tuples to (N+1)-tuples without full re-sort (find insertion position, shift)</li>
+<li><strong>Deduplication with lookup</strong>: is_win6/is_win8/is_win10 linear-scan lookups prevent redundant testing when multiple parent winners produce the same extended tuple</li>
+</ul>
+<h3>Literature Touched</h3>
+<ul>
+<li><strong>Aizenberg (2008)</strong>: Combined Sec(k)×Voronoi activation generalizes the k-sector MVN; the wall at XOR10 sets a concrete capacity limit for the ζ₈ instantiation</li>
+<li><strong>Nazer &amp; Gastpar (2011)</strong>: The information-theoretic framing of catalog exhaustion — fixed algebraic structure provides fixed diversity, determining the compute-and-forward capacity ceiling</li>
+<li><strong>Demo 50 connection</strong>: Non-monotonicity in sector count previously observed (906@k=6 &gt; 756@k=7 &gt; 96@k=8 for XOR4 parity); the pi/4 incommensurability pattern is confirmed as a recurring structural feature</li>
+</ul>
+<h3>Open Questions</h3>
+<ul>
+<li><strong>16 misclassified masks at XOR10</strong>: The 98.4% best accuracy leaves 16 masks wrong. Do these form a structured pattern (same Hamming weight? same bit-pattern class?)</li>
+<li><strong>Information-theoretic lower bound</strong>: Is there a clean formula relating max computable N to catalog size |C|, direction count, and angle count?</li>
+<li><strong>What does ζ_16 buy?</strong>: Higher roots produce larger catalogs with more directions and angles. Is there a scaling law max_N = f(|catalog|, n_directions, n_angles)?</li>
+<li><strong>Is the wall at 8 specific to the octahedral group?</strong>: Other finite groups (binary tetrahedral at ζ₄, binary icosahedral in principle) should have their own walls at different N values.</li>
+</ul>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/c.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</body>
+</html>

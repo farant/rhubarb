@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>inventory/entries/demo_05.md</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+    <link rel="stylesheet" href="../../style.css">
+</head>
+<body>
+    <nav><a href="../../index.html">← Back to Index</a></nav><hr>
+    <h2>Demo 05: Scaling the Spin Chain</h2>
+<ul>
+<li><strong>Status</strong>: COMPLETE</li>
+<li><strong>File</strong>: <code><a href="../../demo_05_scaling/main.c.html">demo_05_scaling/main.c</a></code> (~678 lines)</li>
+<li><strong>Tests</strong>: ~30 pass (6 quantum dimension, Yang-Baxter per n, far commutativity, R*Rinv=I per generator, quantum trace per braid per n)</li>
+<li><strong>Depends on</strong>: Demo 03 (Yang-Baxter / R-matrix), Demo 04 (quantum trace formula for n=3)</li>
+<li><strong>Feeds into</strong>: later demos needing multi-strand braid representations; establishes that the trace formula is universal across strand counts</li>
+</ul>
+<h3>Headline</h3>
+The quantum trace formula <code>tr_q = (-1)^n <em> delta </em> bracket</code> generalizes from n=3 to arbitrary strand count (verified n=2 through n=5, matrices up to 32x32).
+<h3>Key Results</h3>
+<ul>
+<li>Quantum dimension recurrence [n+1]_q = [2]_q * [n]_q - [n-1]_q verified for n=1..6</li>
+<li>Explicit formula [n]_q * (A^2 - A^{-2}) = A^{2n} - A^{-2n} confirmed for all n</li>
+<li>Yang-Baxter relation R_i R_{i+1} R_i = R_{i+1} R_i R_{i+1} holds at every scale (4x4 through 32x32)</li>
+<li>Far commutativity R_i R_j = R_j R_i for |i-j| &gt;= 2 verified (first testable at n=4)</li>
+<li>R_i * R_i^{-1} = I for all generators at all scales</li>
+<li><strong>Key discovery</strong>: sign depends on strand count — <code>tr_q = (-1)^n <em> delta </em> oracle</code> — even n gives +delta, odd n gives -delta (Demo 04 only saw odd case)</li>
+</ul>
+<h3>Theorems/Conjectures</h3>
+<ul>
+<li>PROVEN (computationally, n=2..5): Quantum trace formula generalizes with (-1)^n sign factor</li>
+<li>PROVEN: Sign factor arises from tr_q(I) = (-delta)^n vs oracle(identity) = delta^{n-1}</li>
+<li>VERIFIED: Yang-Baxter + far commutativity hold for all tested tensor-product generators</li>
+</ul>
+<h3>Data</h3>
+<ul>
+<li>n=2: 4x4 matrices, 1 generator</li>
+<li>n=3: 8x8 matrices, 2 generators (reproduces Demo 04)</li>
+<li>n=4: 16x16 matrices, 3 generators (first far commutativity test)</li>
+<li>n=5: 32x32 matrices, 4 generators (1024 Poly entries per matrix, ~800KB each)</li>
+<li>[1]_q = 1, [2]_q = A^2 + A^{-2}, [3]_q = A^4 + 1 + A^{-4}, etc.</li>
+</ul>
+<h3>Code Assets</h3>
+<ul>
+<li>Heap-allocated <code>Mat</code> struct with <code>mat_alloc</code>/<code>mat_free</code> (needed for n&gt;=4, stack would overflow)</li>
+<li><code>mat_tensor(C, A, B)</code>: tensor product of polynomial matrices — key for building R_i from base R4</li>
+<li><code>build_Ri(result, R4, i, n)</code>: constructs I^{x(i-1)} x R x I^{x(n-i-1)} for arbitrary strand count</li>
+<li><code>build_Kn(w, n)</code>: builds K^{xn} diagonal weights for quantum trace at any n</li>
+<li><code>braid_product_n()</code>: evaluates braid word as matrix product in 2^n x 2^n space</li>
+<li><code>mat_qtrace()</code>: quantum trace with diagonal weights</li>
+<li>State-sum oracle (<code>braid_bracket</code>, <code>braid_loops</code> via union-find) carried forward from Demo 03/04</li>
+<li><code>MAT(m, i, j)</code> macro for row-major access into heap-allocated polynomial matrices</li>
+</ul>
+<h3>Literature Touched</h3>
+<ul>
+<li>Quantum dimension / quantum integers [n]_q (standard in quantum groups)</li>
+<li>Chebyshev recurrence for quantum dimensions</li>
+<li>Temperley-Lieb representation theory at general n</li>
+<li>Yang-Baxter equation in tensor-product form</li>
+</ul>
+<h3>Open Questions</h3>
+<ul>
+<li>Can the formula be pushed to n=6 (64x64) or beyond? Memory is the constraint (~50MB per matrix at n=6)</li>
+<li>The (-1)^n sign factor — is there a cleaner normalization that absorbs it?</li>
+<li>Connection to Fibonacci TQFT mentioned in header ("n=5 is Fibonacci TQFT boundary") but not explored</li>
+</ul>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/c.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</body>
+</html>

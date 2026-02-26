@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>inventory/entries/demo_12.md</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+    <link rel="stylesheet" href="../../style.css">
+</head>
+<body>
+    <nav><a href="../../index.html">← Back to Index</a></nav><hr>
+    <h2>Demo 12: Quantization</h2>
+<ul>
+<li><strong>Status</strong>: COMPLETE</li>
+<li><strong>File</strong>: <code><a href="../../demo_12_quantization/main.c.html">demo_12_quantization/main.c</a></code> (~780 lines)</li>
+<li><strong>Tests</strong>: 6 parts (A-F): reference signatures, bit-depth sweep, component analysis, precision x width matrix, weight table, nearest-neighbor classifier</li>
+<li><strong>Depends on</strong>: Demo 10 (numerical bracket evaluation), Demo 11 (waveform / greedy angle selection)</li>
+<li><strong>Feeds into</strong>: Later demos exploring DKC and classification with quantized representations</li>
+</ul>
+<h3>Headline</h3>
+Investigates how aggressively Kauffman bracket complex weights can be quantized while retaining 100% knot classification across 10 test knots, finding a Pareto-optimal precision x width tradeoff and drawing an explicit parallel to BitNet's 1.58-bit LLM weights.
+<h3>Key Results</h3>
+<ul>
+<li><strong>Bit-depth sweep</strong> (Part B): scans 16/12/8/6/4/3/2/1 bits per component at a single optimal angle, then binary searches for minimum bits achieving 100% pair separation</li>
+<li><strong>Component analysis</strong> (Part C): amplitude-only FAILS (granny/square have identical |bracket| — predicted from Demo 11), phase-only also insufficient alone, sign-only (quadrant / 1-bit) and ternary ({-1,0,+1} / 1.58-bit) tested</li>
+<li><strong>Precision x width matrix</strong> (Part D): explores {1,2,3,4,8} bits x {1,2,3,4,8} angles, finds Pareto optimum (minimum total bits per knot for 100% classification)</li>
+<li><strong>Compiled weight table</strong> (Part E): prints full-precision and quantized weight vectors, reports total model size in bits/bytes</li>
+<li><strong>Nearest-neighbor classifier</strong> (Part F): self-classification of all 10 knots at full precision, plus invariance tests with alternate braid representations (alt trefoil s2<em>s1</em>s2, alt figure-eight s2^{-1}<em>s1</em>s2^{-1}*s1)</li>
+</ul>
+<h3>Theorems/Conjectures</h3>
+<ul>
+<li>Granny and square knots have identical bracket amplitude at any single angle (they're connected sums of trefoil with itself vs its mirror) — phase is required to distinguish them</li>
+<li>BitNet parallel: if LLMs work with 1.58-bit weights, can knot classification work with similarly extreme quantization? The precision x width matrix explores this tradeoff systematically</li>
+</ul>
+<h3>Data</h3>
+<ul>
+<li>10-knot test suite: unknot, trefoil, mirror trefoil, figure-eight, torus(2,5), torus(2,7), granny, square, cinquefoil mirror, single crossing</li>
+<li>256-sample waveform discretization for greedy angle selection (up to 8 angles)</li>
+<li>Tradeoff matrix: bits x angles → pairs separated (out of 45 total pairs)</li>
+</ul>
+<h3>Code Assets</h3>
+<ul>
+<li><strong><code>quantize()</code></strong>: uniform quantize-dequantize for a double in [lo, hi] to B bits</li>
+<li><strong><code>cx_quantize()</code></strong>: independently quantizes real and imaginary components</li>
+<li><strong><code>cx_ternary()</code></strong>: ternary quantization {-1, 0, +1} per component with threshold (BitNet-style 1.58-bit)</li>
+<li><strong><code>cx_sign()</code></strong>: pure quadrant / 1-bit per component sign extraction</li>
+<li><strong><code>test_quantized_separation()</code></strong>: tests whether B-bit quantization at M angles separates all knot pairs — core of the sweep</li>
+<li><strong><code>classify_braid()</code></strong>: nearest-neighbor classifier in quantized weight space — computes bracket at greedy angles, quantizes, finds closest reference</li>
+<li><strong><code>select_greedy_angles()</code></strong>: greedy max-min angle selection from Demo 11 (reused)</li>
+<li>Reuses: complex arithmetic, braid state-sum bracket, union-find loop counter</li>
+</ul>
+<h3>Literature Touched</h3>
+<ul>
+<li>BitNet / extreme quantization in neural networks ({-1, 0, +1} weights)</li>
+<li>Knot classification via bracket evaluation at specific angles (waveform approach from Demo 11)</li>
+<li>Connected sum structure: bracket of granny vs square</li>
+</ul>
+<h3>Open Questions</h3>
+<ul>
+<li>What is the actual Pareto-optimal point? (depends on runtime — not hardcoded in source)</li>
+<li>Does the ternary/sign quantization achieve 100% with multiple angles even though it fails at 1 angle?</li>
+<li>How does quantization robustness scale as the knot table grows beyond 10 entries?</li>
+</ul>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/c.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</body>
+</html>

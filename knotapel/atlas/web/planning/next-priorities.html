@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>planning/next-priorities.md</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+    <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+    <nav><a href="../index.html">← Back to Index</a></nav><hr>
+    <h1>DKC Research: Next Priorities</h1>
+<p>Generated 2026-02-20. Updated 2026-02-26 after <a href="../inventory/entries/demo_102.html">D102</a>-<a href="../inventory/entries/demo_109.html">D109</a> arc. Informed by synthesis documents (narrative, novelty, connections, four-lenses, vision-alignment, obstructions, arc-summaries, conjecture-graph). <a href="../inventory/entries/demo_64.html">D64</a>–<a href="../inventory/entries/demo_71.html">D71</a> added: matroid recursion, Clifford staircase (Z[zeta_16]), 24-cell / quaternionic arc (<a href="../inventory/entries/demo_66.html">D66</a>–<a href="../inventory/entries/demo_71.html">D71</a>), spectral DKC. <a href="../inventory/entries/demo_72.html">D72</a>–<a href="../inventory/entries/demo_82.html">D82</a> added: spherical design, eigenvector automaton, computational invariant, binocular DKC, 8-input scaling, activation zoo, recursive scaling, ζ₁₂ capacity, group finiteness survey, capacity scaling law, crossing depth. <a href="../inventory/entries/demo_83.html">D83</a>–<a href="../inventory/entries/demo_84.html">D84</a> added: framing as computational content (+2 writhe loss), null states and logarithmic structure (null indispensability, LCFT Jordan-cell interpretation). <a href="../inventory/entries/demo_85.html">D85</a>–<a href="../inventory/entries/demo_92.html">D92</a> added: indecomposability parameter b = -5/8 (<a href="../inventory/entries/demo_85.html">D85</a>-<a href="../inventory/entries/demo_86.html">D86</a>), regime transition for null dispensability (<a href="../inventory/entries/demo_87.html">D87</a>), anti-correlation mechanism and k-ladder resilience (<a href="../inventory/entries/demo_88.html">D88</a>), depth law mechanism fully explained (<a href="../inventory/entries/demo_89.html">D89</a>-<a href="../inventory/entries/demo_91.html">D91</a>: axis cancellation, cross-depth algebraic constraint, balanced exponentials, parity wall), parity-lock theorem (<a href="../inventory/entries/demo_92.html">D92</a>: +/-q encoding structurally locked to XOR/XNOR). <a href="../inventory/entries/demo_93.html">D93</a>–<a href="../inventory/entries/demo_94.html">D94</a> added: complement-blindness theorem and phase_cell recovery (<a href="../inventory/entries/demo_93.html">D93</a>: 1wpi circuit complexity hierarchy, AND/XOR ratio explosion N=3-8, pigeonhole mechanism), solvability as capacity bottleneck confirmed via binary icosahedral group 2I (<a href="../inventory/entries/demo_94.html">D94</a>: Barrington's theorem computationally validated, five-pillar synthesis complete, "discrete algebraic reservoir computer" framing proposed). <a href="../inventory/entries/demo_95.html">D95</a>–<a href="../inventory/entries/demo_101.html">D101</a> added: multi-strand DKC arc — commutator depth and cross-layer synergy (<a href="../inventory/entries/demo_95.html">D95</a>), 2D synergy landscape and catalog pruning (<a href="../inventory/entries/demo_96.html">D96</a>, LANDMARK), Cell B geometric perfection (<a href="../inventory/entries/demo_97.html">D97</a>), 3-strand readout bottleneck (<a href="../inventory/entries/demo_98.html">D98</a>), Delta_1 first-ever 3-strand XOR and Ext^1 catalytic preparation thesis (<a href="../inventory/entries/demo_99.html">D99</a>, LANDMARK), 4-strand non-semisimple DKC on W_{4,2} (<a href="../inventory/entries/demo_100.html">D100</a>), 5-strand sl_d functor thesis with Casimir inversion (<a href="../inventory/entries/demo_101.html">D101</a>). <a href="../inventory/entries/demo_102.html">D102</a>–<a href="../inventory/entries/demo_109.html">D109</a> added: multi-strand scaling/diagnostics arc — 6-strand radical A/B test and Barrington-Radical Principle (<a href="../inventory/entries/demo_102.html">D102</a>), BFS growth as braid group invariant (<a href="../inventory/entries/demo_103.html">D103</a>), Atkinson sweet spot and branching decomposition (<a href="../inventory/entries/demo_104.html">D104</a>), 8-strand k-regime and macrame principle (<a href="../inventory/entries/demo_105.html">D105</a>); relational computation arc — topological entropy orthogonality and TL visibility filter (<a href="../inventory/entries/demo_106.html">D106</a>), Z/4Z Axis-Alignment Theorem with constructive proof + 5 novel results (<a href="../inventory/entries/demo_107.html">D107</a>), Dual-Channel Theorem and Amy bridge (<a href="../inventory/entries/demo_108.html">D108</a>), Encoding-Dependent Dual-Channel and polarity inversion (<a href="../inventory/entries/demo_109.html">D109</a>). Raqiya library created and deployed across <a href="../inventory/entries/demo_107.html">D107</a>-<a href="../inventory/entries/demo_109.html">D109</a>.</p>
+<p>---</p>
+<h2>Tier 1: Do Next</h2>
+<h3>~~1.1 Formal proof of the sandwich theorem~~ — PARTIALLY DONE</h3>
+The <strong>radical dimension formula</strong> (rad(TL_ℓ) = 2ℓ−3) is now formally proven in <code>proofs/radical-dimension-formula.md</code>. Method: Graham-Lehrer cellular theory, unique degenerate cell module V_{ℓ-2} with corank 1, Chebyshev determinant. Corollary: ℓ²−ℓ−3 at n=ℓ+1.
+<strong>Additionally proven:</strong> Markov RT truncation (<code>proofs/markov-rt-truncation.md</code>) and next-level radical formula (<code>proofs/next-level-radical-formula.md</code>). These strengthen Paper 3.
+<strong>Remaining:</strong> The full sandwich theorem (rad^2(TL_{2k}(0)) ≅ TL_{2k-1}(0) as algebras) is a stronger claim than the dimension formula. The proof proves dimensions match; the algebra isomorphism still needs formal proof. Also: nilpotency=3 and Fibonacci rank remain computationally verified, not proven.
+<strong>Conjecture-graph priority:</strong> Rank 1 (C3). Unlocks C6, C7, C5, C9 downstream.
+<h3>~~1.2 4-input parity: test the triskelion generalization~~ — DONE (Demo 63)</h3>
+4-input parity reachable at k=8 (96 solutions, tetraskelion). 5-input parity at k=15 (3020 solutions, pentaskelion). <strong>Parity ceiling for Z[zeta_8] is n=5.</strong> Triskelion generalization (k=2n) <strong>FALSIFIED</strong> — n=5 requires k=15, not k=10. True scaling: k=2M-1 where M is ray count. Oriented matroid classification: alternating OM type required for parity. Two types of impossibility: constraint wall (n=6,7) vs pigeonhole (n&gt;=8).
+<h3>1.3 Analytical proof of the 13=13 bandwidth bound</h3>
+<strong>What:</strong> Prove analytically that the minimum bandwidth for a binary Voronoi partition separating N points on S² in general position is l = ⌈(N−1)/2⌉. For XOR6 DKC, N=13 (eigenvector directions) giving l=6. <a href="../inventory/entries/demo_71.html">D71</a> verified this computationally with a sharp phase transition (0% recovery at l≤5, 100% at l=6) and 80.7% average power in mode l=6 across all 36 solutions.
+<strong>Why:</strong> The 13=13 theorem is the cleanest standalone publication target in the arc — self-contained, striking, and proven at the computational level already. An analytical proof would make it a rigorous theorem rather than a verified result, and would immediately imply the trivialization prediction for finer roots (ζ_16 → l≥1728) analytically.
+<strong>Effort:</strong> SMALL to MEDIUM (key insight is degrees-of-freedom counting; the hard part is formalizing "general position" and proving no sub-Nyquist trick works at l=5).
+<strong>Unblocks:</strong> Strengthens Paper 5 (24-Cell, S², Spectral Geometry). Turns <a href="../inventory/entries/demo_71.html">D71</a>'s computational phase transition into a publishable theorem.
+<strong>Conjecture-graph priority:</strong> Rank 4 (C19). Downstream: C20 (trivialization DOF prediction).
+<h3>1.4-NEW XOR7 on S² — context updated by <a href="../inventory/entries/demo_78.html">D78</a>/<a href="../inventory/entries/demo_80.html">D80</a></h3>
+<strong>What:</strong> Test the spectral framework scaling on XOR7. <a href="../inventory/entries/demo_65.html">D65</a> showed XOR7 requires k=127 sectors on S¹. <a href="../inventory/entries/demo_67.html">D67</a> showed XOR6 drops from k=24 (S¹) to 14 cells (S²). If the DOF formula generalizes, XOR7 on S² should need l=⌈(N_7−1)/2⌉ where N_7 is the number of XOR7-relevant eigenvector directions. Measure: does S² reduce XOR7 from k=127 as dramatically as it did XOR6?
+<strong>Why:</strong> Directly tests whether the spectral framework is a systematic tool for climbing the parity hierarchy, or whether XOR6 on S² is a special case.
+<strong>Context update (<a href="../inventory/entries/demo_78.html">D78</a>/<a href="../inventory/entries/demo_80.html">D80</a>):</strong> At ζ₈, <a href="../inventory/entries/demo_78.html">D78</a> confirmed XOR10 = 0 (ζ₈ wall is hard). <a href="../inventory/entries/demo_80.html">D80</a> established that ζ₈ generates a finite group (24 elements) and this is the fundamental ceiling. XOR7 on S² is therefore a question about what can be achieved within the finite-group regime.
+<strong>Effort:</strong> MEDIUM.
+<strong>Unblocks:</strong> Determines whether Paper 5 covers a theorem or a single data point.
+<h3>1.5 Catalog completeness argument</h3>
+<strong>What:</strong> Prove or bound that the 100-value Z[zeta_8] catalog at delta=0 contains all distinct bracket values up to braid length L. Alternatively, prove asymptotic saturation (new values per additional crossing approaches zero).
+<strong>Why:</strong> Every forward DKC exhaustive search ("0 out of 100M") depends on the catalog being complete enough. Without a completeness argument, a reviewer can ask "what if you missed a value?" This is the single most important gap for Paper 1.
+<strong><a href="../inventory/entries/demo_107.html">D107</a> context:</strong> <a href="../inventory/entries/demo_107.html">D107</a> found 186 distinct Z[zeta_8] values from 32768-entry catalog, with 72 new values at depth 8 (still growing). The value set has NOT converged — this makes the completeness argument harder but the characterization more urgent.
+<strong>Effort:</strong> SMALL (1 demo — extend enumeration to length 10-12, track saturation curve, attempt an algebraic bound using axiality + single-loop selection).
+<strong>Unblocks:</strong> Strengthens Paper 1 from "exhaustive over our catalog" to "exhaustive over all bracket values up to length L."
+<h3>1.6 Convexity thesis: complete the formal proof</h3>
+<strong>What:</strong> Formalize the argument that the 11/13 wall is a consequence of activation convexity (not just encoding geometry). <a href="../inventory/entries/demo_57.html">D57</a> and <a href="../inventory/entries/demo_62.html">D62</a> have the ingredients; what's missing is a single clean theorem statement with a self-contained proof.
+<strong>Why:</strong> The 11/13 theorem (Paper 2) has clean proofs for the two unreachable classes, but the UNIFYING explanation (convexity) is informal. A formal convexity theorem would elevate Paper 2 from "two separate impossibility results" to "one structural theorem with two corollaries."
+<strong>Effort:</strong> SMALL (1 demo — mostly writing, possibly one verification).
+<strong>Unblocks:</strong> Paper 2 becomes a stronger, more unified submission.
+<strong>Conjecture-graph priority:</strong> Rank 3 (C14). Downstream: C15 (unified 0x06/0x1B proof).
+<h3>1.7 ζ₁₂ Sec×Vor activation for XOR10+ — <strong>HIGH PRIORITY</strong></h3>
+<strong>What:</strong> <a href="../inventory/entries/demo_79.html">D79</a> demonstrated that ζ₁₂ breaks the ζ₈ wall for XOR10 (124 winners) and XOR12 (50+ winners) using Sec×Vor activation with the default sector count. <a href="../inventory/entries/demo_77.html">D77</a> showed that Sec(8)×Vor (112 cells) is far more powerful than Voronoi alone (14 cells) at ζ₈. The combination has not yet been tested at ζ₁₂.
+<strong>Why:</strong> This is the direct next step in the scaling arc. HIGH priority: immediate publication impact for Paper 6.
+<strong>Effort:</strong> SMALL to MEDIUM (Sec×Vor infrastructure exists from <a href="../inventory/entries/demo_77.html">D77</a>; port to ζ₁₂ catalog, sweep k, measure capacity per round).
+<strong>Unblocks:</strong> Paper 6 capacity chapter.
+<h3>1.8 ζ₃₂ finiteness test</h3>
+<strong>What:</strong> <a href="../inventory/entries/demo_80.html">D80</a> proposed the Power-of-Two Finiteness Conjecture: finite groups occur exactly at angles of the form π/2^k (k ≥ 1), predicting ζ₃₂ (θ = π/16) should also be finite. A single test_root(32) call confirms or refutes.
+<strong>Why:</strong> Extremely low implementation cost, high payoff either way.
+<strong>Effort:</strong> SMALL (single test).
+<strong>Unblocks:</strong> Confirms or refutes Power-of-Two Conjecture. Completes the ADE/finiteness survey for Paper 6.
+<h3>1.9 Framing test at ζ₁₆/ζ₂₄</h3>
+<strong>What:</strong> <a href="../inventory/entries/demo_83.html">D83</a> demonstrated that Jones normalization destroys exactly 2 XOR levels at both ζ₈ and ζ₁₂. Testing at ζ₁₆ and ζ₂₄ would confirm whether the loss is truly universal across all roots.
+<strong>Why:</strong> If universal, the Resource Decomposition Conjecture (C26) becomes stronger. Two additional data points close the main reviewer concern.
+<strong>Effort:</strong> SMALL (<a href="../inventory/entries/demo_83.html">D83</a> infrastructure auto-adapts).
+<strong>Unblocks:</strong> Universality claim for resource decomposition. Paper 6 framing chapter.
+<h3>1.10 Analytical proof of +2 writhe loss</h3>
+<strong>What:</strong> Prove analytically that the (-A³)^{-w} Jones phase factor costs exactly 2 XOR levels through angular vocabulary reduction. The mechanism is identified (<a href="../inventory/entries/demo_83.html">D83</a>); what remains is counting angle-class orbits.
+<strong>Effort:</strong> MEDIUM.
+<strong>Unblocks:</strong> Elevates framing result from empirical to proven. High publication value.
+<h3>~~1.11 ζ₁₂ null indispensability~~ — DONE (Demo 87)</h3>
+<a href="../inventory/entries/demo_87.html">D87</a> demonstrated that null indispensability is regime-dependent. At ζ₁₂ (infinite group, 4096 entries), removing all 121 bracket-null entries preserves full XOR6/8/10/12 capacity.
+<h3>1.12-NEW 1wpi encoding depth law test — <strong>HIGH PRIORITY (from <a href="../inventory/entries/demo_92.html">D92</a>)</strong></h3>
+<strong>What:</strong> <a href="../inventory/entries/demo_92.html">D92</a> proves the +/-q encoding is parity-locked. The 1wpi encoding (<a href="../inventory/entries/demo_48.html">D48</a>/<a href="../inventory/entries/demo_50.html">D50</a>) computes all 13 NPN classes but has never been tested for depth-law behavior. Does max_and or max_maj scale linearly with crossing depth under 1wpi encoding?
+<strong>Why:</strong> THE most architecturally consequential open question for the compilation pipeline. The hybrid LLM vision needs AND/OR for syllogistic logic, not just parity. If the depth law holds under 1wpi, the entire scaling framework extends to non-parity functions.
+<strong>Effort:</strong> SMALL to MEDIUM.
+<strong>Unblocks:</strong> Determines whether the depth law is parity-specific or encoding-general. Critical for Paper 7 and the hybrid LLM vision.
+<h3>1.13-NEW Encoding design for non-parity functions — <strong>(from <a href="../inventory/entries/demo_92.html">D92</a>)</strong></h3>
+<strong>What:</strong> The +/-q encoding is parity-locked; the 1wpi encoding computes all 13 NPN classes. Hybrid and novel encodings targeting specific Boolean functions are unexplored.
+<strong>Why:</strong> Encoding determines computability more fundamentally than activation or catalog (<a href="../inventory/entries/demo_92.html">D92</a>). For any non-parity function, a different encoding is required.
+<strong>Effort:</strong> MEDIUM (1-2 demos).
+<strong>Unblocks:</strong> Opens the path from parity-only DKC to general Boolean function DKC.
+<h3>1.14-NEW Prove balanced exponentials analytically — <strong>HIGH PRIORITY (from <a href="../inventory/entries/demo_91.html">D91</a>)</strong></h3>
+<strong>What:</strong> <a href="../inventory/entries/demo_91.html">D91</a> confirmed the balanced exponentials explanation for the linear depth law: BFS vocabulary grows ~2x/round, parity demand grows 4x/weight, yielding slope ~1. Derive this analytically.
+<strong>Why:</strong> Next clean formal proof candidate after the parity-lock theorem. Conjecture-graph Rank 2 (C23). Downstream: C26, C27, C28, C37.
+<strong>Effort:</strong> SMALL to MEDIUM.
+<strong>Unblocks:</strong> Elevates the depth law from "demonstrated at ζ₁₂" to a theorem.
+<h3>1.15-NEW Regime transition characterization — <strong>(from <a href="../inventory/entries/demo_87.html">D87</a>)</strong></h3>
+<strong>What:</strong> <a href="../inventory/entries/demo_87.html">D87</a> established the regime transition between ζ₈ (nulls indispensable) and ζ₁₂ (nulls dispensable). The exact threshold is unknown.
+<strong>Why:</strong> A sharp threshold theorem gives a concrete design rule: below transition, preserve nulls; above, prune safely.
+<strong>Effort:</strong> SMALL (port <a href="../inventory/entries/demo_87.html">D87</a> infrastructure to ζ₁₀ and truncated ζ₁₂; sweep; locate crossover).
+<strong>Unblocks:</strong> Completes finite/infinite group regime characterization.
+<h3>1.16-NEW Paper 7 potential: <a href="../inventory/entries/demo_85.html">D85</a>-<a href="../inventory/entries/demo_92.html">D92</a> mechanistic arc</h3>
+<strong>What:</strong> The <a href="../inventory/entries/demo_85.html">D85</a>-<a href="../inventory/entries/demo_92.html">D92</a> arc forms a coherent publication answering "why does DKC work and what are its structural limits?"
+<strong>Effort:</strong> MEDIUM (writing + 1-2 confirming experiments from 1.12 and 1.14).
+<h3>1.17-NEW RKHS kernel rank test (<a href="../inventory/entries/demo_95.html">D95</a>) — <strong>HIGHEST PRIORITY (from <a href="../inventory/entries/demo_94.html">D94</a>)</strong></h3>
+<strong>What:</strong> Compute DKC kernel matrix K(m,m') for 2I (60 entries) vs z8 (24 entries). If rank(K_2I)/rank(K_z8) &gt; 120/24 = 5, non-solvability contributes above raw catalog size — confirming the "discrete algebraic reservoir computer" interpretation.
+<strong>Why:</strong> One number validates or falsifies the entire five-pillar synthesis. The five-pillar synthesis is the most important theoretical result since the original DKC discovery.
+<strong>Effort:</strong> SMALL (single demo).
+<strong>Unblocks:</strong> Validates reservoir computing pillar. Critical for Paper 8.
+<h3>1.18-NEW Higher k_sec with 2I — <strong>(from <a href="../inventory/entries/demo_94.html">D94</a>)</strong></h3>
+<strong>What:</strong> At k_sec=24 instead of 12. Does N=8 XOR become nonzero for 2I?
+<strong>Effort:</strong> SMALL (parameter sweep in <a href="../inventory/entries/demo_94.html">D94</a> infrastructure).
+<strong>Unblocks:</strong> Tests whether 2I's angular richness is under-exploited at k=12.
+<h3>1.19-NEW Depth law under phase_cell — <strong>(from <a href="../inventory/entries/demo_93.html">D93</a>)</strong></h3>
+<strong>What:</strong> Does the linear depth law hold under phase_cell activation (which recovers all 13 NPN classes)? Does the slope differ for different Boolean functions?
+<strong>Effort:</strong> SMALL to MEDIUM.
+<strong>Unblocks:</strong> Completes depth law generalization to all functions.
+<h3>~~1.20-NEW 6-strand W_{6,4} decisive test~~ — RESOLVED (<a href="../inventory/entries/demo_102.html">D102</a>)</h3>
+<strong><a href="../inventory/entries/demo_102.html">D102</a> tested W_{6,4} head-to-head against W_{6,0}: Barrington-Radical Principle established.</strong> Radical carries abelian writhe character, provably useless for parity. Simple W_{6,0} WINS at every XOR level. The question is now RESOLVED: non-semisimplicity provides only modest (+8%) mixing-row advantage at XOR6, not deep capacity. See Arc 11b (<a href="../inventory/entries/demo_102.html">D102</a>) for full results.
+<h3>1.21-NEW Ext^1 thesis formalization — <strong>(from <a href="../inventory/entries/demo_99.html">D99</a>)</strong></h3>
+<strong>What:</strong> Formalize the Ext^1 catalytic preparation thesis: prove that the Ext^1 class in Ext^1(L(0), L(1)) for u_q(sl_2) at ell=2 is the unique obstruction to Property F, and that Jordan block structure is computationally necessary for XOR levels beyond the combinatorial regime.
+<strong>Why:</strong> The Ext^1 thesis is the deepest theoretical finding of the multi-strand arc. <a href="../inventory/entries/demo_102.html">D102</a> STRENGTHENS this: the radical itself is inert (abelian writhe), but the quotient structure of non-semisimple modules (the extension, not the radical) is the actual computational resource.
+<strong>Effort:</strong> MEDIUM to LARGE (theoretical work).
+<strong>Unblocks:</strong> Central theoretical contribution of Paper 9.
+<h3>1.22-NEW Simple vs non-semisimple computational difference — <strong>(from <a href="../inventory/entries/demo_100.html">D100</a>/<a href="../inventory/entries/demo_101.html">D101</a>)</strong></h3>
+<strong>What:</strong> Systematic characterization of <a href="../inventory/entries/demo_100.html">D100</a> vs <a href="../inventory/entries/demo_101.html">D101</a> pattern. W_{6,4} test (<a href="../inventory/entries/demo_102.html">D102</a>) resolved the question partially but showed the distinction is more nuanced: it's not about radical content (which is inert) but about quotient structure.
+<strong><a href="../inventory/entries/demo_102.html">D102</a>-<a href="../inventory/entries/demo_105.html">D105</a> update:</strong> <a href="../inventory/entries/demo_102.html">D102</a> proved radical-as-resource REFUTED. <a href="../inventory/entries/demo_103.html">D103</a> proved BFS is braid-group-invariant. <a href="../inventory/entries/demo_101.html">D101</a>'s simple-module-deeper-capacity-deficiency is confirmed as structural. The systematic framework is now: radical = inert (abelian writhe character), extension = resource (Ext^1 catalytic preparation), simple = broader shallow but shallower deep.
+<strong>Effort:</strong> SMALL (analysis + comparison table from existing <a href="../inventory/entries/demo_99.html">D99</a>-<a href="../inventory/entries/demo_105.html">D105</a> data).
+<strong>Unblocks:</strong> Systematic framework for representation choice. Paper 9.
+<h3>1.23-NEW Additive encoding at delta=sqrt(2) — <strong>NEW HIGH PRIORITY (from <a href="../inventory/entries/demo_109.html">D109</a>)</strong></h3>
+<strong>What:</strong> <a href="../inventory/entries/demo_109.html">D109</a> showed product closure polarity INVERTS between additive (<a href="../inventory/entries/demo_108.html">D108</a>) and multiplicative (<a href="../inventory/entries/demo_109.html">D109</a>) encodings. The cleanest confirmation: hold delta=sqrt(2) constant, switch to additive encoding. If <a href="../inventory/entries/demo_108.html">D108</a>-style discrimination (parity = HIGH product closure) returns, encoding-dependence is confirmed by a single controlled experiment.
+<strong>Why:</strong> Single controlled experiment confirms the encoding-dependent dual-channel theorem. Low implementation cost (reuse <a href="../inventory/entries/demo_109.html">D109</a> catalog, change encoding). Directly validates the polarity inversion discovered in <a href="../inventory/entries/demo_108.html">D108</a>-<a href="../inventory/entries/demo_109.html">D109</a>, which is the first result predicting computational capability from algebraic structure.
+<strong>Effort:</strong> SMALL (reuse <a href="../inventory/entries/demo_109.html">D109</a> infrastructure, change encoding parameter).
+<strong>Unblocks:</strong> Confirms the encoding-dependent dual-channel theorem. Essential for Paper 10 (Raqiya arc). Validates the predictive capability analysis framework.
+<h3>1.24-NEW Amy Bridge formalization — <strong>NEW HIGH PRIORITY (from <a href="../inventory/entries/demo_108.html">D108</a>, conjecture-graph Rank 5)</strong></h3>
+<strong>What:</strong> Map DKC dual-channel (<a href="../inventory/entries/demo_108.html">D108</a>) onto T-gate/Hadamard decomposition in Amy-Glaudell-Ross 2023. Product closure → sde (smallest denominator exponent, T-gate count); activation → Hadamard gate. Show the resource theory matches.
+<strong>Why:</strong> Would connect DKC to quantum circuit synthesis resource theory — a major publication target. The dual-channel theorem (<a href="../inventory/entries/demo_108.html">D108</a>) provides the empirical foundation; <a href="../inventory/entries/demo_109.html">D109</a>'s encoding-dependent polarity inversion constrains the mapping. Conjecture-graph Rank 5 (C51). Downstream: C53 (dual-channel generalization).
+<strong>Effort:</strong> MEDIUM (requires detailed reading of Amy et al. 2023 + formal mapping).
+<strong>Unblocks:</strong> Places DKC in established quantum circuit synthesis framework. Paper 10.
+<h3>1.25-NEW Major index theorem for general W_{n,j} — <strong>NEW (from <a href="../inventory/entries/demo_107.html">D107</a>, conjecture-graph Rank 8)</strong></h3>
+<strong>What:</strong> <a href="../inventory/entries/demo_107.html">D107</a> verified maj mod 2 = bipartite coloring at W_{4,2} (3/3) and W_{6,2} (9/9, uniquely winning among 4 candidates). Proof for general n,j is open. Need verification at W_{8,2}, W_{6,4}, W_{10,2} for more evidence.
+<strong>Why:</strong> Novel algebraic invariant of TL link states. Researcher confirmed NOT a consequence of known KLR Z-grading (Plaza-Ryom-Hansen 2013). Low-cost verification at more modules, high publication value for proof. Conjecture-graph Rank 8 (C41).
+<strong>Effort:</strong> SMALL (verification at additional modules) to MEDIUM (proof).
+<strong>Unblocks:</strong> Novel algebraic result. Generalizes nesting parity grading.
+<h3>1.26-NEW W_{8,2} rank saturation and head-to-head — <strong>NEW (from <a href="../inventory/entries/demo_105.html">D105</a>)</strong></h3>
+<strong>What:</strong> <a href="../inventory/entries/demo_105.html">D105</a> showed W_{8,2} rank was severely under-sampled (34.9% at 16384 entries, sign expansion at 1.83x and still climbing). Head-to-head W_{8,0} vs W_{8,2} XOR comparison at matched k and oversampling has NOT been performed. Need ~130K entries for comparable oversampling.
+<strong>Why:</strong> Unresolved empirical question from <a href="../inventory/entries/demo_105.html">D105</a>. Would settle whether dim-28 algebraic information provides advantage at sufficient activation resolution. <a href="../inventory/entries/demo_105.html">D105</a>'s rank saturation confound means all prior cross-module comparisons are unreliable.
+<strong>Effort:</strong> MEDIUM (requires larger BFS cap or smarter sampling).
+<strong>Unblocks:</strong> Resolves the dim-28 vs dim-14 question at sufficient activation resolution.
+<h3>1.27-NEW Macrame principle crossover location — <strong>NEW (from <a href="../inventory/entries/demo_104.html">D104</a>-<a href="../inventory/entries/demo_105.html">D105</a>)</strong></h3>
+<strong>What:</strong> <a href="../inventory/entries/demo_104.html">D104</a> showed cross-block branching dominates at n=6 (asymmetric blocks dim 5+4). <a href="../inventory/entries/demo_105.html">D105</a> showed within-block dominates at n=8 (symmetric blocks dim 14+14). Where is the exact crossover? W_{10,2} could bracket it.
+<strong>Why:</strong> Gives a design rule for multi-strand activation: when to use cross-block vs within-block components. The crossover likely depends on block complexity.
+<strong>Effort:</strong> MEDIUM.
+<strong>Unblocks:</strong> Principled activation design rule for multi-strand DKC.
+<p>---</p>
+<h2>Tier 2: Do Soon</h2>
+<h3>~~2.1 ell=7 verification~~ — DONE (Demo 60)</h3>
+All predictions confirmed. Paper 3 strengthened.
+<h3>2.2 Axiality: determine if it follows from known Galois theory</h3>
+<strong>What:</strong> Consult the cyclotomic Galois theory literature to determine whether the axiality theorem at delta=0 is a trivial consequence of Gal(Q(zeta_8)/Q).
+<strong><a href="../inventory/entries/demo_107.html">D107</a> update:</strong> <a href="../inventory/entries/demo_107.html">D107</a>'s Z/4Z Axis-Alignment Theorem STRENGTHENS the axiality question: the constructive nesting-parity phase formula provides a proof at the matrix-entry level (stronger than bracket-level axiality). Researcher confirmed the nesting parity Z/2Z grading is NOT a consequence of known KLR Z-grading. This makes formal upgrade of T1 proof sketch to rigorous proof (C1) more tractable — the proof strategy from <a href="../inventory/entries/demo_107.html">D107</a> (bipartiteness + TL generator {0,1} structure) may directly yield the bracket-level proof.
+<strong>Conjecture-graph priority:</strong> Rank 7 (C1). Downstream: C2 (axiality hierarchy).
+<strong>Effort:</strong> SMALL (research task).
+<strong>Unblocks:</strong> Determines whether Paper 4 exists as standalone.
+<h3>2.3 Sharpen the relationship to Aizenberg 2008</h3>
+<strong>What:</strong> Explicitly state how forward DKC relates to Aizenberg's known UBN parity construction. Show that these specific weights ARE bracket values in the catalog. Measure how many of the 906 parity solutions at k=6 reduce to Aizenberg's construction under gauge equivalence.
+<strong>Effort:</strong> SMALL (1 demo).
+<strong>Unblocks:</strong> Precise novelty claim for Paper 1.
+<h3>2.4 Rate region analysis</h3>
+<strong>What:</strong> Apply Nazer-Gastpar capacity bounds to the DKC lattice. How many bits per bracket value can DKC extract?
+<strong><a href="../inventory/entries/demo_108.html">D108</a>-<a href="../inventory/entries/demo_109.html">D109</a> update:</strong> <a href="../inventory/entries/demo_108.html">D108</a>'s Dual-Channel Theorem provides the algebraic anatomy of the two channels: multiplicative phase coherence (product closure) corresponds to the phase channel and additive magnitude diversity (v_2 connectivity) corresponds to the magnitude channel. <a href="../inventory/entries/demo_109.html">D109</a> refines with encoding-dependence. The information-theoretic quantification remains open but the structural foundation is stronger.
+<strong>Effort:</strong> MEDIUM (1-2 demos).
+<strong>Unblocks:</strong> Two-channel coding conjecture.
+<h3>2.5 Multi-layer DKC</h3>
+<strong>What:</strong> Cascade two bracket-valued neurons. Can a 2-layer DKC network compute functions that a single layer cannot?
+<strong><a href="../inventory/entries/demo_92.html">D92</a> context:</strong> Multi-layer composition is especially important because <a href="../inventory/entries/demo_92.html">D92</a> shows the +/-q encoding limits single-layer to parity. Multi-layer with 1wpi encoding could be the path to arbitrary Boolean functions with depth-law scaling.
+<strong>Effort:</strong> MEDIUM (2 demos).
+<strong>Unblocks:</strong> Determines whether DKC's limits are single-layer phenomena or fundamental.
+<h3>~~2.6 Z[zeta_16] scaling~~ — DONE (Demo 65)</h3>
+<h3>2.7 Exact Cyc8 arithmetic for generalized activation check — still open</h3>
+<strong>What:</strong> Rewrite <a href="../inventory/entries/demo_65.html">D65</a>'s generalized XOR6 check with exact Cyc8 arithmetic (no atan2) to formally eliminate boundary ambiguity.
+<strong>Effort:</strong> SMALL.
+<strong>Unblocks:</strong> Formalizes all generalized XOR6 results.
+<h3>2.8 Trivialization threshold localization — still open</h3>
+<strong>What:</strong> Map the solution fraction as a function of cell count in the ~50–500 cell range.
+<strong>Effort:</strong> SMALL.
+<strong>Unblocks:</strong> Confirms or refutes the ζ_16 prediction from <a href="../inventory/entries/demo_71.html">D71</a>'s DOF formula.
+<h3>2.9 k=38 anomaly investigation — still open</h3>
+<strong>What:</strong> Investigate whether 19 is special with respect to the Z[zeta_8] lattice.
+<strong>Effort:</strong> SMALL.
+<h3>2.10 Direct deep-entry generation — still open</h3>
+<strong>What:</strong> Can depth-d entries be characterized and generated directly without computing all shallower depths?
+<strong><a href="../inventory/entries/demo_89.html">D89</a>-<a href="../inventory/entries/demo_90.html">D90</a> context:</strong> Deep entries are valuable for their pairwise relationships (relational, not positional). This may make direct generation harder.
+<strong>Effort:</strong> MEDIUM.
+<strong>Unblocks:</strong> Reduces computational cost of high-XOR DKC.
+<h3>2.11 Optimal depth for target XOR level — still open</h3>
+<strong>What:</strong> Is pure depth-8 truly optimal, or would a mixed depth strategy achieve XOR12 with fewer entries?
+<strong>Effort:</strong> SMALL.
+<strong>Unblocks:</strong> Practical optimization for high-XOR computation.
+<h3>2.12 Union catalog ζ₈ + ζ₁₂ — still open</h3>
+<strong>What:</strong> Does combining two largely non-overlapping catalogs provide superadditive XOR capacity?
+<strong>Effort:</strong> SMALL.
+<strong>Unblocks:</strong> Tests Union Catalog Conjecture.
+<h3>2.13 Depth law at other roots of unity — still open, updated by <a href="../inventory/entries/demo_89.html">D89</a>-<a href="../inventory/entries/demo_91.html">D91</a></h3>
+<strong>What:</strong> Does max_xor ≈ depth + 6 hold at ζ₁₀? ζ₁₆? With a different constant?
+<strong><a href="../inventory/entries/demo_89.html">D89</a>-<a href="../inventory/entries/demo_91.html">D91</a> context:</strong> The balanced exponentials argument predicts slope should vary with BFS branching factor.
+<strong>Effort:</strong> SMALL to MEDIUM.
+<strong>Unblocks:</strong> Universality vs. root-dependence of the depth law. Critical for Paper 6.
+<h3>2.14 Formal "activation determines capacity" theorem — still open, updated by <a href="../inventory/entries/demo_92.html">D92</a> and <a href="../inventory/entries/demo_103.html">D103</a>-<a href="../inventory/entries/demo_105.html">D105</a></h3>
+<strong>What:</strong> Can <a href="../inventory/entries/demo_77.html">D77</a>'s empirical result be proven formally, accounting for <a href="../inventory/entries/demo_92.html">D92</a>'s encoding hierarchy?
+<strong><a href="../inventory/entries/demo_103.html">D103</a>-<a href="../inventory/entries/demo_105.html">D105</a> update:</strong> <a href="../inventory/entries/demo_103.html">D103</a> proves BFS growth is module-independent (activation geometry matters, not dimension). <a href="../inventory/entries/demo_104.html">D104</a> identifies Atkinson sweet spot. <a href="../inventory/entries/demo_105.html">D105</a>'s k-regime theory (k/2^N ratio controls capacity) provides the parametric foundation for formalizing what "activation determines capacity" means.
+<strong>Effort:</strong> MEDIUM.
+<strong>Unblocks:</strong> Paper 6's theoretical core.
+<h3>2.15 Explicit Jordan-cell pairs — still open, updated by <a href="../inventory/entries/demo_85.html">D85</a>-<a href="../inventory/entries/demo_86.html">D86</a></h3>
+<strong>What:</strong> Do the 3 shared-direction null/non-null pairs at ζ₈ form literal Jordan cells?
+<strong><a href="../inventory/entries/demo_85.html">D85</a>-<a href="../inventory/entries/demo_86.html">D86</a> context:</strong> b = -5/8 strengthens LCFT connection; <a href="../inventory/entries/demo_86.html">D86</a> shows b is collective.
+<strong>Effort:</strong> MEDIUM.
+<strong>Unblocks:</strong> Formally connects DKC to LCFT.
+<h3>2.16 ζ₁₀ null census — still open</h3>
+<strong>What:</strong> What is the null fraction and directional role at the Fibonacci anyon root?
+<strong>Effort:</strong> SMALL.
+<strong>Unblocks:</strong> Completes null census.
+<h3>2.17 Resource decomposition at intermediate depths — still open</h3>
+<strong>What:</strong> Does the +2 bracket-vs-Jones gap hold at every depth level?
+<strong>Effort:</strong> SMALL.
+<strong>Unblocks:</strong> Confirms or refines additive resource decomposition.
+<h3>2.18-NEW Spectral inversion formal proof — <strong>(from <a href="../inventory/entries/demo_90.html">D90</a>)</strong></h3>
+<strong>What:</strong> Prove BFS closure of finite SU(2) generators converges to uniform distribution on S² (bandwidth → 0) as depth → ∞.
+<strong>Why:</strong> Spectral inversion is the cleanest evidence that depth law mechanism is relational, not positional.
+<strong>Effort:</strong> SMALL to MEDIUM.
+<strong>Unblocks:</strong> Strengthens relational computation thesis.
+<h3>2.19-NEW Robustness engineering: constrained optimization at ζ₁₂ — <strong>(from <a href="../inventory/entries/demo_88.html">D88</a>)</strong></h3>
+<strong>What:</strong> At ζ₁₂ (2043 directions), can constrained optimization identify load-bearing subsets analogous to ζ₈'s body-diagonal anchors?
+<strong>Effort:</strong> MEDIUM.
+<strong>Unblocks:</strong> Engineering design rules for infinite-group compiled neurons.
+<h3>2.20-NEW Quantitative product-closure threshold — <strong>NEW (from <a href="../inventory/entries/demo_108.html">D108</a>-<a href="../inventory/entries/demo_109.html">D109</a>)</strong></h3>
+<strong>What:</strong> <a href="../inventory/entries/demo_108.html">D108</a> showed parity requires product closure &gt; 0. <a href="../inventory/entries/demo_109.html">D109</a> showed polarity inverts at delta=sqrt(2). At what product closure density does the additive-to-multiplicative transition occur? Is there a sharp threshold or gradual crossover?
+<strong>Why:</strong> Would make the dual-channel theorem quantitatively predictive, not just qualitatively discriminative. Test by interpolating between encoding regimes.
+<strong>Effort:</strong> MEDIUM.
+<strong>Unblocks:</strong> Quantitative dual-channel theorem. Paper 10.
+<h3>2.21-NEW TL visibility at delta != 0 — <strong>NEW (from <a href="../inventory/entries/demo_106.html">D106</a>)</strong></h3>
+<strong>What:</strong> <a href="../inventory/entries/demo_106.html">D106</a>'s TL visibility filter is sharp at delta=0 where e_i^2=0. At delta!=0, e_i^2=delta*e_i != 0, meaning TL quotient is less destructive. Do dynamical properties (entropy, spectral radius) become visible to DKC at delta!=0?
+<strong>Why:</strong> If entropy correlates with DKC at delta!=0, the TL visibility filter becomes a delta-dependent design parameter. Would test at delta=sqrt(2) using <a href="../inventory/entries/demo_109.html">D109</a>'s infrastructure.
+<strong>Effort:</strong> MEDIUM.
+<strong>Unblocks:</strong> Delta-dependent visibility theory.
+<h3>2.22-NEW Sign-rank expansion theory — <strong>NEW (from <a href="../inventory/entries/demo_104.html">D104</a>-<a href="../inventory/entries/demo_105.html">D105</a>)</strong></h3>
+<strong>What:</strong> <a href="../inventory/entries/demo_104.html">D104</a> showed sign quantization EXPANDS effective rank (244→292 for W_{6,2}). <a href="../inventory/entries/demo_105.html">D105</a> showed W_{8,2} expansion at 1.83x and still growing. What determines whether sign quantization expands or preserves rank?
+<strong>Why:</strong> Would provide foundational principle for multi-strand activation design.
+<strong>Effort:</strong> MEDIUM.
+<strong>Unblocks:</strong> Principled activation engineering for multi-strand DKC.
+<h3>2.23-NEW Radical Content XOR Correlation Study — <strong>(from <a href="../inventory/entries/demo_100.html">D100</a>)</strong></h3>
+<strong>What:</strong> Hub commutators have zero radical content — they annihilate the radical direction. Is this a general theorem for non-semisimple TL modules?
+<strong><a href="../inventory/entries/demo_102.html">D102</a> update:</strong> <a href="../inventory/entries/demo_102.html">D102</a>'s Barrington-Radical Principle (radical carries abelian writhe character) provides the theoretical framework: commutators of non-abelian group elements must annihilate the 1D abelian radical component.
+<strong>Effort:</strong> MEDIUM.
+<strong>Unblocks:</strong> Structural theorem for non-semisimple TL modules.
+<h3>2.24-NEW Fibonacci Direct Test at q=exp(2pi*i/5) — <strong>(from <a href="../inventory/entries/demo_99.html">D99</a>/<a href="../inventory/entries/demo_94.html">D94</a>)</strong></h3>
+<strong>What:</strong> Test DKC capacity directly at the Fibonacci parameter on Delta_1 module. Does non-vanishing quantum dimension avoid Jordan blocks?
+<strong>Effort:</strong> MEDIUM.
+<strong>Unblocks:</strong> Bridges finite 2I group and Fibonacci anyon parameter through multi-strand lens.
+<h3>2.25-NEW Non-Semisimple TQFT DKC Formalization — <strong>(from <a href="../inventory/entries/demo_99.html">D99</a>-<a href="../inventory/entries/demo_101.html">D101</a>)</strong></h3>
+<strong>What:</strong> Formalize connection to Voss-Kim-Bhatt 2025: is there a functor from non-semisimple TQFT category to DKC computation category?
+<strong><a href="../inventory/entries/demo_102.html">D102</a> update:</strong> Barrington-Radical Principle sharpens the mapping: alpha-anyons → extension structure (not radical itself), sigma-anyons → qubits, semisimple readout → Boolean output.
+<strong>Effort:</strong> MEDIUM.
+<strong>Unblocks:</strong> Connects DKC to cutting edge of non-semisimple TQFT.
+<p>---</p>
+<h2>Tier 3: Someday</h2>
+<h3>3.1 Abramsky depth: Geometry of Interaction interpretation</h3>
+<strong>Effort:</strong> LARGE.
+<h3>~~3.2 5-input parity and beyond~~ — DONE (Demo 63)</h3>
+<h3>3.3 Physical interpretation via Costello-Francis-Gwilliam</h3>
+<strong><a href="../inventory/entries/demo_83.html">D83</a> update:</strong> Framing result adds a new angle — the "framing anomaly" that TQFT discards is exactly where DKC's +2 capacity lives.
+<strong>Effort:</strong> LARGE.
+<h3>3.4 Galois symmetry conjecture</h3>
+<strong>Effort:</strong> MEDIUM.
+<h3>3.5 GPTQ/Babai formalization</h3>
+<strong>Effort:</strong> MEDIUM.
+<h3>3.6 Volume conjecture connection</h3>
+<strong>Effort:</strong> LARGE.
+<h3>3.7 Exact 27-state DKC automaton</h3>
+<strong>Effort:</strong> MEDIUM.
+<h3>3.8-NEW Value set convergence at depth &gt; 8 — <strong>NEW (from <a href="../inventory/entries/demo_107.html">D107</a>)</strong></h3>
+<strong>What:</strong> <a href="../inventory/entries/demo_107.html">D107</a> found 186 distinct Z[zeta_8] values from 32768-entry catalog, with 72 new at depth 8 (still growing fast). Does the value set converge?
+<strong>Effort:</strong> SMALL (increase BFS cap).
+<h3>3.9-NEW 2-adic neutrality formal proof — <strong>NEW (from <a href="../inventory/entries/demo_107.html">D107</a>)</strong></h3>
+<strong>What:</strong> Five candidate proof frameworks identified (Kummer carry-counting, nilpotent TL, Goodman-Wenzl, unipotent, Stirling). Select and formalize.
+<strong>Effort:</strong> MEDIUM.
+<h3>3.10-NEW Raqiya Z[zeta_16] extension — <strong>NEW (from <a href="../inventory/entries/demo_109.html">D109</a>)</strong></h3>
+<strong>What:</strong> Full Raqiya support for Z[zeta_16] (8-component cyclotomic ring). Only worthwhile if delta!=0 investigation continues.
+<strong>Effort:</strong> MEDIUM.
+<h3>3.11-NEW Universal BFS Tree Conjecture Verification — <strong>NEW (from <a href="../inventory/entries/demo_102.html">D102</a>-<a href="../inventory/entries/demo_103.html">D103</a>)</strong></h3>
+<strong>What:</strong> All THREE n=6 modules produce identical BFS trees. Does this hold for ALL simple TL_n modules at delta=0? Test at n=8 and n=10.
+<strong>Effort:</strong> SMALL.
+<h3>3.12-NEW TL Visibility Filter Completeness — <strong>NEW (from <a href="../inventory/entries/demo_106.html">D106</a>)</strong></h3>
+<strong>What:</strong> Is the TL quotient the COMPLETE characterization of what DKC can "see"?
+<strong>Effort:</strong> LOW (requires identifying candidate properties to test).
+<h3>3.13-NEW Fibonacci Max-Abs Radical Constraint — <strong>NEW (from <a href="../inventory/entries/demo_102.html">D102</a>)</strong></h3>
+<strong>What:</strong> Does the radical act as a constraint keeping coefficients on Fibonacci sequence?
+<strong>Effort:</strong> LOW.
+<p>---</p>
+<h2>Summary: Critical Path</h2>
+<p><strong>Conjecture-graph Top 10 proof targets (from <a href="../inventory/conjecture-graph.html">conjecture-graph.md</a> Section 3.1):</strong></p>
+<table><thead><tr><th>Rank</th><th>ID</th><th>Statement</th><th>Downstream Impact</th></tr></thead><tbody><tr><td>1</td><td>C3</td><td>Sandwich theorem proof</td><td>Unlocks C6, C7, C5, C9 (4+ results)</td></tr><tr><td>2</td><td>C23</td><td>Depth law slope=1 analytical</td><td>Unlocks C26, C27, C28, C37</td></tr><tr><td>3</td><td>C14</td><td>Convexity thesis</td><td>Unlocks C15, strengthens T32</td></tr><tr><td>4</td><td>C19</td><td>13=13 analytical proof</td><td>Unlocks C20</td></tr><tr><td>5</td><td>C51</td><td>Amy Bridge (DKC = T-gate/Hadamard)</td><td>Unlocks C53</td></tr><tr><td>6</td><td>C4</td><td>Universal nilpotency 3</td><td>Unlocks C3 transitively</td></tr><tr><td>7</td><td>C1</td><td>Axiality formal proof</td><td>Unlocks C2, strengthens T5</td></tr><tr><td>8</td><td>C41</td><td>Major index bipartite invariant</td><td>Generalizes T101</td></tr><tr><td>9</td><td>C7</td><td>Fibonacci rank proof</td><td>Unlocks C5</td></tr><tr><td>10</td><td>C26</td><td>Resource decomposition exact</td><td>Depends on C23</td></tr></tbody></table>
+<p><strong>The shortest path to Paper 1 (Forward DKC):</strong></p>
+<p><code></code>` 1.5 (catalog completeness) + 2.3 (Aizenberg relationship)             |             v     [<a href="../inventory/entries/demo_63.html">D63</a>-<a href="../inventory/entries/demo_65.html">D65</a> DONE: parity ceiling, matroid chain, algebra-independence]             |             v       Paper 1 submission <code></code>`</p>
+<p><strong>The shortest path to Paper 2 (11/13 theorem):</strong></p>
+<p><code></code>` 1.6 (convexity proof)       |       v Paper 2 submission <code></code>`</p>
+<p><strong>The shortest path to Paper 3 (radical anatomy):</strong></p>
+<p><code></code>` [1.1 rad dim formula PROVEN] --&gt; [2.1 ell=7 DONE] --&gt; [Markov RT PROVEN]          |          v   1.1 remaining (algebra isomorphism, nilpotency, Fibonacci rank)          |          v   Paper 3 submission <code></code>`</p>
+<p><strong>The shortest path to Paper 5 (24-Cell, S², Spectral Geometry):</strong></p>
+<p><code></code>` <a href="../inventory/entries/demo_66.html">D66</a>-<a href="../inventory/entries/demo_72.html">D72</a>, <a href="../inventory/entries/demo_74.html">D74</a> (DONE)          |          v 1.3 (13=13 analytical proof) 1.4-NEW (XOR7 on S²) 2.7 (Cyc8 arithmetic)          |          v   Paper 5 submission <code></code>`</p>
+<p><strong>The shortest path to Paper 6 (Crossing Depth, Group Finiteness, Capacity Scaling):</strong></p>
+<p><code></code>` <a href="../inventory/entries/demo_76.html">D76</a>-<a href="../inventory/entries/demo_84.html">D84</a> (DONE)          |          v 1.7 (ζ₁₂ Sec×Vor) 1.8 (ζ₃₂ finiteness) 1.9 (framing at ζ₁₆/ζ₂₄) 1.10 (analytical +2 proof) 2.14 (activation determines capacity — updated by <a href="../inventory/entries/demo_92.html">D92</a> + <a href="../inventory/entries/demo_103.html">D103</a>-<a href="../inventory/entries/demo_105.html">D105</a>)          |          v   Paper 6 submission <code></code>`</p>
+<p><strong>The shortest path to Paper 7 (Mechanism and Limits: <a href="../inventory/entries/demo_85.html">D85</a>-<a href="../inventory/entries/demo_92.html">D92</a> Arc):</strong></p>
+<p><code></code>` <a href="../inventory/entries/demo_85.html">D85</a>-<a href="../inventory/entries/demo_92.html">D92</a> (DONE)          |          v 1.12 (1wpi depth law) 1.14 (balanced exponentials proof) 1.15 (regime transition) 2.18 (spectral inversion proof)          |          v   Paper 7 submission <code></code>`</p>
+<p><strong>The shortest path to Paper 8 (Circuit Complexity and Reservoir Computing: <a href="../inventory/entries/demo_93.html">D93</a>-<a href="../inventory/entries/demo_94.html">D94</a>):</strong></p>
+<p><code></code>` <a href="../inventory/entries/demo_93.html">D93</a>-<a href="../inventory/entries/demo_94.html">D94</a> (DONE)          |          v 1.17 (RKHS kernel rank — ONE NUMBER validates five-pillar synthesis) 1.18 (higher k_sec with 2I) 1.19 (depth law under phase_cell)          |          v   Paper 8 submission <code></code>`</p>
+<p><strong>The shortest path to Paper 9 (Multi-strand DKC: <a href="../inventory/entries/demo_95.html">D95</a>-<a href="../inventory/entries/demo_105.html">D105</a>):</strong></p>
+<p><code></code>` <a href="../inventory/entries/demo_95.html">D95</a>-<a href="../inventory/entries/demo_105.html">D105</a> (DONE)          |          v 1.21 (Ext^1 formalization) 1.22 (simple vs non-semisimple systematic framework) 1.25 (major index theorem — novel algebraic invariant) 1.26 (W_{8,2} rank saturation) 1.27 (macrame principle crossover)          |          v   Paper 9 submission <code></code>`</p>
+<p><strong>The shortest path to Paper 10 (Raqiya and Algebraic Diagnostics: <a href="../inventory/entries/demo_106.html">D106</a>-<a href="../inventory/entries/demo_109.html">D109</a>) — NEW:</strong></p>
+<p><code></code>` <a href="../inventory/entries/demo_106.html">D106</a>-<a href="../inventory/entries/demo_109.html">D109</a> (DONE)          |          v 1.23 (additive encoding at delta=sqrt(2) — confirms polarity inversion) 1.24 (Amy Bridge formalization — connects to QCS resource theory) 2.20 (quantitative product-closure threshold) 2.21 (TL visibility at delta != 0)          |          v   Paper 10 submission <code></code>`</p>
+<p>---</p>
+<h2>Open Questions</h2>
+<h3>Resolved by <a href="../inventory/entries/demo_64.html">D64</a>–<a href="../inventory/entries/demo_71.html">D71</a></h3>
+<ul>
+<li>~~Z[zeta_16] parity ceiling~~: n=5, unchanged (<a href="../inventory/entries/demo_65.html">D65</a>). Gap-of-2 refuted; gap = 9 at Z[zeta_16].</li>
+<li>~~Clifford staircase conjecture (<a href="../inventory/entries/demo_64.html">D64</a>)~~: PARTIALLY REFUTED (<a href="../inventory/entries/demo_65.html">D65</a>). Standard activations: ceiling stays at n=5 at all cyclotomic levels.</li>
+<li>~~Complex k=24 as projection of 24-cell~~: CONFIRMED (<a href="../inventory/entries/demo_66.html">D66</a>).</li>
+<li>~~ζ_8 vs ζ_16 eigenvector nesting~~: PROVEN algebraically (<a href="../inventory/entries/demo_69.html">D69</a>).</li>
+</ul>
+<h3>Resolved by <a href="../inventory/entries/demo_72.html">D72</a>–<a href="../inventory/entries/demo_84.html">D84</a></h3>
+<ul>
+<li>~~Is ζ₈ the only root supporting XOR8?~~: RESOLVED (<a href="../inventory/entries/demo_77.html">D77</a>). XOR8 solvable at ζ₈ with Sec(8)×Voronoi.</li>
+<li>~~Is XOR10 solvable?~~: RESOLVED (<a href="../inventory/entries/demo_79.html">D79</a>). XOR10 = 124 at ζ₁₂.</li>
+<li>~~Why does the 24-cell generate a finite group?~~: RESOLVED (<a href="../inventory/entries/demo_80.html">D80</a>). Binary octahedral group (E₇, ADE).</li>
+<li>~~What is the scaling law?~~: RESOLVED (<a href="../inventory/entries/demo_81.html">D81</a>). Logarithmic: max_xor ≈ 0.62 × log₂(catalog) + 4.6.</li>
+<li>~~Why logarithmic?~~: RESOLVED (<a href="../inventory/entries/demo_82.html">D82</a>). Linear depth law: max_xor ≈ depth + 6.</li>
+<li>~~DKC additive or multiplicative?~~: RESOLVED (<a href="../inventory/entries/demo_73.html">D73</a>). Additive.</li>
+<li>~~Does sampling quality explain 13 directions?~~: RESOLVED (<a href="../inventory/entries/demo_72.html">D72</a>). No, anti-correlated.</li>
+<li>~~What is the N-2 pattern?~~: RESOLVED (<a href="../inventory/entries/demo_83.html">D83</a>). Jones capacity. Framing = +2.</li>
+<li>~~Are bracket-null entries dead weight?~~: RESOLVED (<a href="../inventory/entries/demo_84.html">D84</a>). No, directionally efficient and indispensable at ζ₈.</li>
+</ul>
+<h3>Resolved by <a href="../inventory/entries/demo_85.html">D85</a>–<a href="../inventory/entries/demo_92.html">D92</a></h3>
+<ul>
+<li>~~Null indispensability universal or regime-specific?~~: RESOLVED (<a href="../inventory/entries/demo_87.html">D87</a>). Regime-specific.</li>
+<li>~~Anti-correlation mechanism?~~: RESOLVED (<a href="../inventory/entries/demo_88.html">D88</a>). Two-role direction architecture.</li>
+<li>~~Depth law mechanism?~~: RESOLVED (<a href="../inventory/entries/demo_89.html">D89</a>-<a href="../inventory/entries/demo_91.html">D91</a>). Axis cancellation + cross-depth algebraic constraints. Relational, not positional.</li>
+<li>~~Depth law an activation artifact?~~: RESOLVED (<a href="../inventory/entries/demo_91.html">D91</a>). No. Parity itself is the wall.</li>
+<li>~~Can DKC compute AND/OR/MAJ?~~: RESOLVED (<a href="../inventory/entries/demo_92.html">D92</a>). Not under +/-q. Parity-lock theorem. 1wpi computes all 13.</li>
+<li>~~What is b?~~: RESOLVED (<a href="../inventory/entries/demo_85.html">D85</a>). b = -5/8 (per-cell). Normalization controversy dissolved.</li>
+<li>~~Can b be extracted from single P_{0,0}?~~: RESOLVED (<a href="../inventory/entries/demo_86.html">D86</a>). No. Universal divergence. Novel negative result.</li>
+</ul>
+<h3>Resolved by <a href="../inventory/entries/demo_93.html">D93</a>–<a href="../inventory/entries/demo_94.html">D94</a></h3>
+<ul>
+<li>~~AND/OR/MAJ under 1wpi?~~: RESOLVED (<a href="../inventory/entries/demo_93.html">D93</a>). Yes, via phase_cell.</li>
+<li>~~Circuit complexity hierarchy?~~: RESOLVED (<a href="../inventory/entries/demo_93.html">D93</a>-<a href="../inventory/entries/demo_94.html">D94</a>). AND graceful, MAJ cliff, XOR pigeonhole. Universal across groups.</li>
+<li>~~E₈ (2I) reachable?~~: RESOLVED (<a href="../inventory/entries/demo_94.html">D94</a>). Yes, via Z[sqrt5] generators.</li>
+<li>~~Non-solvability predicts capacity (Barrington)?~~: RESOLVED (<a href="../inventory/entries/demo_94.html">D94</a>). Yes.</li>
+</ul>
+<h3>Resolved by <a href="../inventory/entries/demo_95.html">D95</a>–<a href="../inventory/entries/demo_101.html">D101</a></h3>
+<ul>
+<li>~~Trace readout sufficient for multi-strand?~~: RESOLVED (<a href="../inventory/entries/demo_98.html">D98</a>). No. Catastrophically lossy (5.1%). Column/block readout needed.</li>
+<li>~~Does non-semisimplicity provide computational advantage?~~: RESOLVED (<a href="../inventory/entries/demo_99.html">D99</a>-<a href="../inventory/entries/demo_101.html">D101</a>). Yes. W_{4,2} (non-semisimple) XOR14=70, W_{5,3} (simple) XOR14=0.</li>
+<li>~~sl_d growth rate confirmed?~~: RESOLVED (<a href="../inventory/entries/demo_98.html">D98</a>-<a href="../inventory/entries/demo_101.html">D101</a>). Yes, ~(n-1)x at 3 data points.</li>
+<li>~~Optimal z8 catalog?~~: RESOLVED (<a href="../inventory/entries/demo_96.html">D96</a>). A+B+C (21 entries). Q8-null = noise.</li>
+</ul>
+<h3>Resolved by <a href="../inventory/entries/demo_102.html">D102</a>–<a href="../inventory/entries/demo_109.html">D109</a></h3>
+<ul>
+<li>~~6-strand W_{6,4} decisive test (radical as resource)?~~: RESOLVED (<a href="../inventory/entries/demo_102.html">D102</a>). Radical carries abelian writhe character, provably useless for parity. Simple W_{6,0} wins at every XOR level. Barrington-Radical Principle named.</li>
+<li>~~Does higher module dimension help?~~: RESOLVED (<a href="../inventory/entries/demo_103.html">D103</a>). No. BFS growth is braid group invariant. Higher dimension HURTS XOR via curse of dimensionality in sign-hash.</li>
+<li>~~"XOR dies at N&gt;=7"?~~: RESOLVED (<a href="../inventory/entries/demo_105.html">D105</a>). REFUTED as k-regime artifact. W_{8,0} XOR8=22266 at k=4096. k/2^N ratio is the control parameter.</li>
+<li>~~Does topological entropy predict DKC capability?~~: RESOLVED (<a href="../inventory/entries/demo_106.html">D106</a>). No. Completely orthogonal. TL visibility filter explains why.</li>
+<li>~~Is axis-alignment of braid matrices provable?~~: RESOLVED (<a href="../inventory/entries/demo_107.html">D107</a>). YES — Z/4Z Axis-Alignment Theorem PROVEN with constructive nesting-parity phase formula.</li>
+<li>~~Can algebraic structure predict parity capability?~~: RESOLVED (<a href="../inventory/entries/demo_108.html">D108</a>). YES — Dual-Channel Theorem: product closure + v_2 connectivity discriminate parity/poison.</li>
+<li>~~Is the dual-channel theorem encoding-independent?~~: RESOLVED (<a href="../inventory/entries/demo_109.html">D109</a>). NO — product closure polarity INVERTS between additive and multiplicative encodings. Encoding-Dependent Dual-Channel Theorem established.</li>
+</ul>
+<h3>Still Open</h3>
+<ul>
+<li>Analytical proof of the 13=13 bandwidth bound (<a href="../inventory/entries/demo_71.html">D71</a>/<a href="../inventory/entries/demo_72.html">D72</a> — see 1.3).</li>
+<li>n=6 constraint wall algebraic proof: clean proof or inherently finite-verification?</li>
+<li>Trivialization threshold: where (50–500 cells) does topology-driven → pigeonhole-dominated? (see 2.8)</li>
+<li>k=38 anomaly: why is k=38 the only even k ≥ 24 with zero generalized XOR6? (see 2.9)</li>
+<li>XOR7 on S²: does DOF formula generalize within ζ₈ finite-group regime? (see 1.4)</li>
+<li>Exact Cyc8 arithmetic for generalized activation — eliminates zero-margin boundary ambiguity (see 2.7).</li>
+<li>OM generalization: what OM type characterizes n=4,5 parity?</li>
+<li>Funnel rate formula: is coverage decay exponential, algebraic, or other?</li>
+<li>Poison octant 4 gap (<a href="../inventory/entries/demo_64.html">D64</a>).</li>
+<li>Edge/body F4 orbit split under 24-cell self-duality (<a href="../inventory/entries/demo_66.html">D66</a>).</li>
+<li>ζ₃₂ finiteness: Power-of-Two Conjecture (see 1.8).</li>
+<li>ζ₁₂ Sec×Vor capacity (see 1.7).</li>
+<li>Depth law universality at ζ₁₀, ζ₁₆ (see 2.13).</li>
+<li>Formal "activation determines capacity" theorem (see 2.14, updated by <a href="../inventory/entries/demo_92.html">D92</a> + <a href="../inventory/entries/demo_103.html">D103</a>-<a href="../inventory/entries/demo_105.html">D105</a>).</li>
+<li>Union catalog ζ₈ + ζ₁₂ superadditivity (see 2.12).</li>
+<li>Optimal depth composition for target XOR (see 2.11).</li>
+<li>Direct deep-entry generation (see 2.10).</li>
+<li>6 unseparated pairs (<a href="../inventory/entries/demo_74.html">D74</a>): what stronger invariant separates them?</li>
+<li>27-state DKC automaton: 100% determinism possible? (see 3.7)</li>
+<li>Is ζ₁₂ truly infinite or very large finite?</li>
+<li>Binocular 2.3× capacity gain root-dependence (<a href="../inventory/entries/demo_75.html">D75</a>).</li>
+<li>Info-theoretic lower bound for ζ₈ XOR ceiling.</li>
+<li>Framing universality at ζ₁₆ and ζ₂₄ (see 1.9).</li>
+<li>Analytical +2 writhe loss proof (see 1.10).</li>
+<li>Explicit Jordan-cell pairs at ζ₈ (see 2.15).</li>
+<li>ζ₁₀ null census (see 2.16).</li>
+<li>Resource decomposition at intermediate depths (see 2.17).</li>
+<li>Writhe distribution of 24-cell vertices.</li>
+<li>Depth-3 → 100% null generalization.</li>
+<li><strong>1wpi encoding depth law: does max_and/max_maj scale linearly? (see 1.12 — HIGH PRIORITY)</strong></li>
+<li><strong>Encoding design space: can encodings target specific Boolean functions? (see 1.13)</strong></li>
+<li><strong>Balanced exponentials analytical proof (see 1.14 — HIGH PRIORITY)</strong></li>
+<li><strong>Regime transition threshold (see 1.15)</strong></li>
+<li><strong>Spectral inversion proof (see 2.18)</strong></li>
+<li><strong>Robustness at ζ₁₂ (see 2.19)</strong></li>
+<li>Valuation condition failure at TL_6 (<a href="../inventory/entries/demo_85.html">D85</a> open).</li>
+<li>Literature b method at larger lattice sizes (<a href="../inventory/entries/demo_85.html">D85</a>/<a href="../inventory/entries/demo_86.html">D86</a> open).</li>
+<li>TL_8 P_{0,0} semisimplicity pattern (<a href="../inventory/entries/demo_86.html">D86</a> open).</li>
+<li>Axis cancellation for direct weight selection (<a href="../inventory/entries/demo_90.html">D90</a> open).</li>
+<li>Phase-sensitive activation to break parity lock (<a href="../inventory/entries/demo_92.html">D92</a> open).</li>
+<li>Hybrid encodings (<a href="../inventory/entries/demo_92.html">D92</a> open).</li>
+<li><strong>RKHS kernel rank: rank(K_2I)/rank(K_z8) &gt; 120/24? (see 1.17 — HIGHEST PRIORITY)</strong></li>
+<li><strong>Higher k_sec with 2I (see 1.18)</strong></li>
+<li><strong>Depth law under phase_cell (see 1.19)</strong></li>
+<li>MAJ cliff mechanism: threshold or gradual? (<a href="../inventory/entries/demo_93.html">D93</a> open)</li>
+<li>N=6-7 crossover: why does 2I overtake z12 at N=6? (<a href="../inventory/entries/demo_94.html">D94</a> open)</li>
+<li>Size vs solvability clean disentangling (<a href="../inventory/entries/demo_94.html">D94</a> open).</li>
+<li>Quantum dimension direct test at Fibonacci parameter (<a href="../inventory/entries/demo_94.html">D94</a> open).</li>
+<li>Cross-depth 2I analysis (<a href="../inventory/entries/demo_94.html">D94</a> open).</li>
+<li><strong>Additive encoding at delta=sqrt(2): confirms polarity inversion? (see 1.23 — NEW HIGH PRIORITY)</strong></li>
+<li><strong>Amy Bridge formalization: DKC dual-channel = T-gate/Hadamard? (see 1.24 — NEW HIGH PRIORITY)</strong></li>
+<li><strong>Major index theorem for general W_{n,j}: novel algebraic invariant (see 1.25 — NEW)</strong></li>
+<li><strong>W_{8,2} rank saturation at sufficient oversampling (see 1.26 — NEW)</strong></li>
+<li><strong>Macrame principle crossover location (see 1.27 — NEW)</strong></li>
+<li><strong>Quantitative product-closure threshold (see 2.20 — NEW)</strong></li>
+<li><strong>TL visibility at delta != 0 (see 2.21 — NEW)</strong></li>
+<li><strong>Sign-rank expansion theory (see 2.22 — NEW)</strong></li>
+<li><strong>Encoding-dependent dual-channel generalization: holds at all delta? (<a href="../inventory/entries/demo_108.html">D108</a>-<a href="../inventory/entries/demo_109.html">D109</a> open, C53)</strong></li>
+<li><strong>j=0 liveness implies structural universality? (<a href="../inventory/entries/demo_109.html">D109</a> open, C52)</strong></li>
+<li>Value set convergence at depth &gt; 8: do 186 values saturate? (<a href="../inventory/entries/demo_107.html">D107</a> open, see 3.8)</li>
+<li>2-adic neutrality formal proof (<a href="../inventory/entries/demo_107.html">D107</a> open, see 3.9).</li>
+<li>Universal BFS tree conjecture: identical at n=8, n=10? (<a href="../inventory/entries/demo_102.html">D102</a>-<a href="../inventory/entries/demo_103.html">D103</a> open, see 3.11)</li>
+<li>Fibonacci max-abs radical constraint (<a href="../inventory/entries/demo_102.html">D102</a> open, see 3.13).</li>
+<li>Raqiya Z[zeta_16] extension for delta!=0 investigation (<a href="../inventory/entries/demo_109.html">D109</a> open, see 3.10).</li>
+</ul>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/c.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</body>
+</html>

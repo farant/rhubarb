@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>inventory/entries/demo_99.md</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+    <link rel="stylesheet" href="../../style.css">
+</head>
+<body>
+    <nav><a href="../../index.html">← Back to Index</a></nav><hr>
+    <h2>Demo 99: 3-Strand Delta_1 Block Decomposition — LANDMARK</h2>
+<ul>
+<li><strong>Status</strong>: COMPLETE (LANDMARK)</li>
+<li><strong>Designation</strong>: Demo 99b (labeled 99b in source and explorer's log; supersedes earlier <a href="./demo_99.html">D99</a> column-readout attempt)</li>
+<li><strong>File</strong>: <code><a href="../../demo_99_column_readout/main.c.html">demo_99_column_readout/main.c</a></code> (~2678 lines)</li>
+<li><strong>Tests</strong>: 24+ pass, 0 fail (Phases 0-11, plus sub-phases 7b/7c/7d)</li>
+<li><strong>Depends on</strong>: Demo 51 (TL_3 semisimplicity at delta=0), Demo 98 (5x5 trace readout gives ZERO XOR), Demo 99 original (5oct_hash on 5x5 gives 3100 XOR6), Demo 82 (depth law max_xor ~ depth+6), Demo 97 (orthogonal directions = perfection)</li>
+<li><strong>Feeds into</strong>: Demo 99c (algebraic classification, Cell B analog), Demo 100 (4-strand W_{4,2} DKC), Demo 101 (dimensionally-matched activation)</li>
+</ul>
+<h3>Headline</h3>
+First-ever 3-strand XOR computation at ALL levels: XOR6=500,261, XOR8=48,143, XOR10=485, XOR12=16, XOR14=60 (best across activations). The key was building the irreducible 2x2 standard module Delta_1 directly over Z[zeta_8] instead of using the reducible 5x5 representation, combined with a 16-component sign-pattern activation (2x2_hash). The braid group image is INFINITE (Jordan block structure, sigma_1 has infinite order), with entry magnitudes growing by exact Fibonacci ratios. XOR counts saturate by ~4096 catalog entries. XOR14 requires deep entries (d&gt;=6); shallow entries give definitively ZERO. XOR16 is ZERO (genuine ceiling for this representation).
+<h3>Key Results</h3>
+<ul>
+<li><strong>Phase 0 -- Representation Verification (8 tests)</strong>: A <em> A_inv = 1 (A = -zeta_8). A^2 + A^{-2} = 0 (delta=0 confirmed). sigma_1 </em> sigma_1_inv = I. sigma_2 <em> sigma_2_inv = I. Braid relation s1</em>s2<em>s1 = s2</em>s1<em>s2. Correct Hecke relation verified: sigma - sigma_inv = (A - A_inv)(I - e_i). Standard quadratic form (sigma-A)(sigma+A_inv)=0 does NOT hold on Delta_1 because 1+A^{-2} != 0. e_1^2 = 0 on Delta_1. e_1</em>e_2 = [[0,0],[0,1]] (projector).</li>
+</ul>
+<ul>
+<li><strong>Phase 1 -- BFS Catalog (cap 32768)</strong>: Group is INFINITE. BFS produces 8192+ entries (32768 at full cap). Growth per round ~2.1x. max_abs sequence follows exact Fibonacci: 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233. Fibonacci mechanism: sigma_1 alone grows linearly (Jordan block), but mixed products of sigma_1 and sigma_2 feed each other's off-diagonal entries via Fibonacci recursion.</li>
+</ul>
+<ul>
+<li><strong>Phase 2 -- Catalog Statistics</strong>: Depth distribution across BFS rounds 0-10+. Triangular entries 104 (1.3%), anti-trace (a=d) entries ~1.1%, dense entries 99.5%+ beyond d=0. Quaternion structure: trace-zero and anti-trace-zero populations tracked.</li>
+</ul>
+<ul>
+<li><strong>Phase 3 -- XOR Capacity Scan (activation hierarchy)</strong>:</li>
+</ul>
+<table><thead><tr><th>Activation</th><th>N=3(XOR6)</th><th>N=4(XOR8)</th><th>N=5(XOR10)</th><th>N=6(XOR12)</th></tr></thead><tbody><tr><td>4ent(16)</td><td>227624</td><td>5990</td><td>126</td><td>0</td></tr><tr><td>4ent(32)</td><td>258764</td><td>8098</td><td>206</td><td>8</td></tr><tr><td>4ent(64)</td><td>230568</td><td>7792</td><td>210</td><td>8</td></tr><tr><td>quat(16)</td><td>28748</td><td>284</td><td>0</td><td>0</td></tr><tr><td>quat(32)</td><td>29832</td><td>298</td><td>0</td><td>0</td></tr><tr><td>quat(64)</td><td>29124</td><td>294</td><td>0</td><td>0</td></tr><tr><td>2x2(32)</td><td>373194</td><td>11974</td><td>325</td><td>16</td></tr><tr><td>2x2(64)</td><td>373194</td><td>16404</td><td>485</td><td>16</td></tr><tr><td>2x2(128)</td><td>373194</td><td>16404</td><td>485</td><td>16</td></tr><tr><td>tr_oct(8)</td><td>0</td><td>0</td><td>0</td><td>0</td></tr></tbody></table>
+<p>Best per XOR level (bf=200/60/30/18): XOR6=500,261 at 2x2(64), XOR8=48,143 at 2x2(128), XOR10=485 at 2x2(128), XOR12=16 at 2x2(32+). Activation hierarchy: 2x2_hash &gt;&gt; 4ent_hash &gt;&gt; quat_hash &gt;&gt; trace_oct.</p>
+<ul>
+<li><strong>Phase 3b -- Scaling Saturation</strong>: XOR counts do NOT increase with catalog size beyond ~4096 entries at fixed bf_limit. More activation cells DO help: 2x2(128) gives 48K XOR8 vs 2x2(64)'s 23.7K. bf_limit (search depth) is the real constraint, not catalog size.</li>
+</ul>
+<ul>
+<li><strong>Phase 4 -- Matched Comparison (size 24, XOR6)</strong>:</li>
+</ul>
+<table><thead><tr><th>Metric</th><th>3-strand</th><th>2-strand</th></tr></thead><tbody><tr><td>XOR6 winners</td><td>527</td><td>1109</td></tr><tr><td>Catalog size</td><td>24</td><td>24</td></tr></tbody></table>
+<p>2-strand leads 2.1:1 at matched size with first-24 entries.</p>
+<ul>
+<li><strong>Phase 4b -- Depth-Sampled Comparison (24 entries, d=6-8)</strong>: Gap closes from 2.1:1 to 1.4:1 (808 vs 1109 XOR6). Confirms deeper entries are richer. Remaining gap attributed to activation quality (Sec x Vor tuned for quaternions vs crude 2x2_hash). At full cap the 3-strand advantage is massive (500K vs 1109).</li>
+</ul>
+<ul>
+<li><strong>Phase 5 -- Jordan Block Structure</strong>: sigma_1^n has off-diagonal (2,1) entry = n <em> A^{n-2}, growing linearly. Diagonal entries cycle with period 8 (A^8 = 1). sigma_1^8 has diagonal = I but (2,1) entry = 8</em>A^6 != 0. sigma_1^8 != I, confirming infinite order. Property F does NOT apply at delta=0.</li>
+</ul>
+<ul>
+<li><strong>Phase 6 -- XOR14 = 60 (CEILING BROKEN)</strong>: Deep entries (d&gt;=6, bf=30) with 2x2_hash:</li>
+</ul>
+<table><thead><tr><th>Cells</th><th>XOR10</th><th>XOR12</th><th>XOR14</th></tr></thead><tbody><tr><td>64</td><td>2641</td><td>675</td><td>60</td></tr><tr><td>128</td><td>2966</td><td>675</td><td>60</td></tr><tr><td>256</td><td>4335</td><td>675</td><td>60</td></tr><tr><td>512</td><td>6883</td><td>759</td><td>60</td></tr><tr><td>1024</td><td>9418</td><td>1452</td><td>60</td></tr></tbody></table>
+<p>XOR14=60 from deep entries, XOR14=0 from full catalog (shallow entries). Depth is a genuine computational resource.</p>
+<ul>
+<li><strong>Phase 7 -- XOR14 Winner Anatomy</strong>: 60 XOR14 winners analyzed. Super-hubs discovered: idx=7 and idx=9 appear in ALL 60 winners (100%). Both d=6, dense. idx=7 is anti-trace (a=d). 100% of winners are mixed depth (d=6 + d=7). Cross-depth mandatory. Star graph topology: 2 fixed core hubs + 5 rotating satellites from ~12 d=7 entries. Pairwise commutators are large (mean=126, typical entries are 1-89).</li>
+</ul>
+<ul>
+<li><strong>Phase 7b -- Hub Commutator [hub7, hub9]</strong>: Traceless (scalar = 0), strong Cartan component (L1=84), e-root L1=108, f-root L1=18, e/f ratio = 6.0. Hallmark of sl_2 bracket structure.</li>
+</ul>
+<p>Super-hub idx=7 (d=6, w=2, anti-trace): a = d = (0,0,5,0), b = (12,0,0,0), c = (-2,0,0,0). Cartan L1 = 0. Pure scalar+nilpotent ("e-root carrier").</p>
+<p>Super-hub idx=9 (d=6, w=-6, non-anti-trace): a = (0,0,-8,0), d = (0,0,1,0), b = c = (-3,0,0,0). Cartan L1 = 9. Strong h-carrier. b=c symmetry.</p>
+<ul>
+<li><strong>Phase 7c -- Casimir Discriminant Test</strong>: C(S) = (a-d)^2 + 4bc for 1wpi sums. Winner mean |C| = 1301 vs control mean |C| = 297 (4.4x higher). Winner has FEWER Jordan blocks (C=0): 384 total vs 816 control. Mechanism is NOT "more Jordan blocks = more computation." Winner entries are MORE diagonalizable. Computation happens in the semisimple layer; Jordan block is infrastructure creating the infinite group.</li>
+</ul>
+<ul>
+<li><strong>Phase 7d -- Swap Test</strong>: ZERO substitutions preserve XOR14. Hub7 replacement: 0/1 survive. Hub9 replacement: 0/7 survive. Super-hubs are specific algebraic objects, not just structurally typed entries.</li>
+</ul>
+<ul>
+<li><strong>Phase 8 -- XOR16 Push</strong>: XOR14 at bf=40, deep, cells=256: 4016 (abundant, not rare). XOR16 at bf=14, deep, cells=256: 0. C(14,8) = 3003 tuples tested with 65536 masks each. XOR16 is a genuine ceiling for Delta_1 at ell=2.</li>
+</ul>
+<ul>
+<li><strong>Phase 9 -- Depth Parity Test</strong>: Mean writhe = 0.000 at every depth level (d=0 through d=12). Anti-trace fraction ~1.1% at all depths. Dense fraction 99.5%+ beyond d=0. No even/odd depth effect. Writhe perfectly balanced.</li>
+</ul>
+<ul>
+<li><strong>Phase 10 -- Casimir Gap Scaling (Two-Regime Discovery)</strong>:</li>
+</ul>
+<table><thead><tr><th>XOR level</th><th>Winner</th><th>C</th><th></th><th>Control</th><th>C</th><th></th><th>Ratio</th></tr></thead><tbody><tr><td>XOR6</td><td>54</td><td>75</td><td>0.7x (INVERTED)</td></tr><tr><td>XOR8</td><td>73</td><td>104</td><td>0.7x (INVERTED)</td></tr><tr><td>XOR10</td><td>513</td><td>154</td><td>3.3x</td></tr><tr><td>XOR12</td><td>892</td><td>219</td><td>4.1x</td></tr><tr><td>XOR14</td><td>1301</td><td>245</td><td>5.3x</td></tr></tbody></table>
+<p>Phase transition at XOR8 -&gt; XOR10 coincides with shallow -&gt; deep entry transition. Two computational mechanisms: (1) Combinatorial (XOR6-8): nilpotent-proximate, diversity-driven, shallow entries suffice. (2) Algebraic (XOR10-14): Ext^1 catalytic preparation, eigenvalue separation, deep entries required.</p>
+<ul>
+<li><strong>Phase 11 -- Casimir Distribution vs Tuple Size</strong>: Random walk exits nilpotent neighborhood as tuple size grows. Mean |C| and fraction with |C|&lt;50 tracked across N=4 through N=14.</li>
+</ul>
+<h3>Theorems/Conjectures</h3>
+<ul>
+<li><strong>Ext^1 Catalytic Preparation Thesis (ESTABLISHED)</strong>: 3-strand DKC computation at delta=0 lives on the non-trivial extension class Ext^1(L(0), L(1)) between simple modules of the restricted quantum group u_q(sl_2) at ell=2. The standard module Delta_1 is indecomposable but reducible: submodule L(0) and quotient L(1), extension does NOT split. Non-split extension is the computational resource. End-to-end causal chain: Ext^1 -&gt; complementary pairing -&gt; high-C sums -&gt; eigenvalue discrimination -&gt; Boolean computation.</li>
+</ul>
+<ul>
+<li><strong>Jordan Block = Non-Split Extension</strong>: sigma_1^n has off-diagonal n*A^{n-2} (linear growth proves indecomposable). Extension class in Ext^1(L(0), L(1)) is non-zero.</li>
+</ul>
+<ul>
+<li><strong>Fibonacci Growth</strong>: max_abs follows Fibonacci: connected to golden ratio phi through the spectral radius of trace-zero SL_2 elements and the 2x2 transfer matrix.</li>
+</ul>
+<ul>
+<li><strong>Anti-Trace = Cartan-Zero</strong>: Entries with a=d have zero Cartan component in sl_2 decomposition M = scalar<em>I + b</em>e + c<em>f + ((a-d)/2)</em>h. These are "pure nilpotent+scalar" elements. Computationally powerful only IN COMBINATION with non-anti-trace entries (infrastructure, not engines).</li>
+</ul>
+<ul>
+<li><strong>U-Shaped Cartan Correlation</strong>: XOR capacity vs Cartan |a-d| magnitude: cartan=0 is XOR12 champion (4292), cartan=1-5 is dead, cartan=11+ has 794. Both extremes compute; the middle is dead. Two complementary mechanisms.</li>
+</ul>
+<ul>
+<li><strong>Two-Regime Hypothesis (CONFIRMED)</strong>: Combinatorial regime (XOR6-8) uses nilpotent-proximate, diversity-driven computation with shallow entries. Algebraic regime (XOR10-14) uses Ext^1 catalytic preparation with deep entries. The Ext^1 thesis governs specifically the algebraic (high-XOR) regime. Monotonic within each regime but not overall.</li>
+</ul>
+<ul>
+<li><strong>Star-Graph Topology</strong>: XOR14 winners form a star graph (2 irreplaceable hubs + rotating satellites), structurally different from 2-strand Cell B's mutual orthogonality graph.</li>
+</ul>
+<ul>
+<li><strong>Casimir Inversion</strong>: Non-semisimplicity is catalytic preparation, not the computation mechanism. Preparation selects complementary entries; evaluation produces high-C sums (4.4x control); readout discriminates eigenvalue structure. Shared architecture with non-semisimple TQFT, reservoir computing, and magic state distillation (but catalytic).</li>
+</ul>
+<ul>
+<li><strong>Registered Prediction</strong>: Casimir gap (winner/control ratio) should increase monotonically with XOR level within the algebraic regime. CONFIRMED for XOR10 -&gt; XOR12 -&gt; XOR14.</li>
+</ul>
+<h3>Data</h3>
+<p><strong>Direct standard module construction (Delta_1 basis and generators):</strong> <ul> <li>Basis: {h_0, h_2} -- half-diagrams with 1 through-strand at position 0 or 2</li> <li>TL generators: e_1|<em>{<a href="./demo_01.html">D1</a>} = [[0,0],[1,0]], e_2|</em>{<a href="./demo_01.html">D1</a>} = [[0,1],[0,0]]</li> <li>Braid generators: sigma_1 = [[A, 0], [A_inv, A]], sigma_2 = [[A, A_inv], [0, A]]</li> <li>A = -zeta_8 = (0,-1,0,0), A_inv = (0,0,0,1)</li> <li>16 DOF per entry: 4 Cyc8 components x 4 matrix entries = 16 integers (vs 8 for 2-strand quaternions)</li> </ul>
+<p><strong>BFS growth (Fibonacci max_abs):</strong></p>
+<table><thead><tr><th>Round</th><th>Entries</th><th>max_abs</th></tr></thead><tbody><tr><td>0</td><td>1</td><td>-</td></tr><tr><td>1</td><td>5</td><td>1</td></tr><tr><td>2</td><td>17</td><td>2</td></tr><tr><td>3</td><td>47</td><td>3</td></tr><tr><td>4</td><td>115</td><td>5</td></tr><tr><td>5</td><td>263</td><td>8</td></tr><tr><td>6</td><td>577</td><td>13</td></tr><tr><td>7</td><td>1233</td><td>21</td></tr><tr><td>8</td><td>2581</td><td>34</td></tr><tr><td>9</td><td>5377</td><td>55</td></tr><tr><td>10</td><td>8192</td><td>89 (hit cap)</td></tr></tbody></table>
+<p><strong>2-strand vs 3-strand comparison:</strong></p>
+<table><thead><tr><th>Property</th><th>2-strand (TL_2)</th><th>3-strand (Delta_1)</th></tr></thead><tbody><tr><td>Group</td><td>Finite (cyclic, order 8)</td><td>Infinite (Jordan block)</td></tr><tr><td>Module</td><td>Simple L(1)</td><td>Indecomposable Delta_1</td></tr><tr><td>Extension</td><td>None (semisimple)</td><td>Ext^1(L(0),L(1)) != 0</td></tr><tr><td>XOR topology</td><td>Mutual orthogonality graph</td><td>Star graph (2 hubs + sats)</td></tr><tr><td>XOR ceiling</td><td>XOR12 (Cell B)</td><td>XOR14 (deep entries)</td></tr><tr><td>Matched (N=24)</td><td>1109 XOR6</td><td>527 XOR6</td></tr></tbody></table>
+<p>2-strand wins at matched small size (finite group better density). 3-strand wins at scale (infinite group unbounded catalog depth). Crossover around catalog size ~100.</p>
+<p><strong>XOR14 super-hub structure:</strong> <ul> <li>Hub idx=7: a = d = (0,0,5,0), b = (12,0,0,0), c = (-2,0,0,0). d=6, w=2, anti-trace. Cartan L1=0.</li> <li>Hub idx=9: a = (0,0,-8,0), d = (0,0,1,0), b = c = (-3,0,0,0). d=6, w=-6. Cartan L1=9.</li> <li>Hub commutator: traceless, Cartan L1=84, e-root L1=108, f-root L1=18.</li> <li>100% of 60 winners contain both hubs. 100% are mixed-depth (d=6 + d=7).</li> <li>0/1 substitutions survive for hub7. 0/7 substitutions survive for hub9.</li> </ul>
+<p><strong>Casimir discriminant (winner vs control):</strong> <ul> <li>Winner: mean |C|_L1 = 1301 (even: 1301, odd: 1300). Jordan blocks: 384/16384.</li> <li>Control: mean |C|_L1 = 297. Jordan blocks: 816/16384.</li> <li>Winner is 4.4x MORE semisimple than control.</li> </ul>
+<p><strong>D99c results (algebraic classification, separate program):</strong> <ul> <li>ALL entries have unit determinant (100%). 4 distinct det values = 4 units in Z[i]: {+/-1, +/-i}. Representation is in SL_2(Z[zeta_8]).</li> <li>Triangular entries (104, 1.3%) have 67.9% XOR6 hit rate -- nearly double next best class.</li> <li>Cell B analog (24 curated anti-trace+dense+deep entries): XOR12=896 (56x improvement over first-24).</li> </ul>
+<h3>Code Assets</h3>
+<ul>
+<li><strong><code>Cyc8</code> (cyclotomic integer arithmetic in Z[zeta_8])</strong>: Basis {1, zeta_8, zeta_8^2, zeta_8^3} with zeta_8^4 = -1. Operations: <code>cyc8_make</code>, <code>cyc8_zero</code>, <code>cyc8_one</code>, <code>cyc8_add</code>, <code>cyc8_sub</code>, <code>cyc8_neg</code>, <code>cyc8_mul</code>, <code>cyc8_eq</code>, <code>cyc8_is_zero</code>, <code>cyc8_conj</code> (Galois conjugate: zeta_8 -&gt; zeta_8^7 = -zeta_8^3). <code>cyc8_to_cplx</code> converts to scaled integer complex (707 ~ 1000/sqrt(2)). <code>cyc8_octant</code> classifies into 8 octants (3 bits: sign of Re, sign of Im, |Im|&gt;|Re|). Fully exact long integer arithmetic.</li>
+<li><strong><code>Mat2</code> (2x2 matrix over Cyc8)</strong>: Operations: <code>mat2_zero</code>, <code>mat2_identity</code>, <code>mat2_mul</code>, <code>mat2_eq</code>, <code>mat2_add</code>, <code>mat2_neg</code>, <code>mat2_max_abs</code>, <code>mat2_commutator</code>. Each entry is a Cyc8 (4 longs), so each matrix has 16 integer components.</li>
+<li><strong><code>CycQuat</code> (quaternion extraction from Mat2)</strong>: q_0 = a+d, q_1 = b+c, q_2 = b-c, q_3 = a-d. Maps 2x2 matrices to quaternion components. All operations stay in Cyc8.</li>
+<li><strong><code>build_generators()</code></strong>: Constructs the 4 braid generators (sigma_1, sigma_1_inv, sigma_2, sigma_2_inv) on the Delta_1 standard module. A = -zeta_8 = (0,-1,0,0).</li>
+<li><strong><code>build_catalog()</code></strong>: BFS catalog builder with hash table deduplication. Tracks depth and writhe per entry. Overflow protection (max_abs &gt; 10^11). Global arrays: g_cat (Mat2), g_depth, g_writhe, g_cat_size.</li>
+<li><strong>Hash table for Mat2 BFS</strong>: FNV-style hash over 16 long components. Separate chaining. HASH_SIZE=65537, MAX_CAT=32768.</li>
+<li><strong>Activation functions (4 types)</strong>: ACT_4ENT_HASH (4 matrix entry octants hashed), ACT_QUAT_HASH (4 quaternion component octants hashed), ACT_2x2_HASH (16-component sign-bit hash, 3-valued per component), ACT_TRACE_OCT (trace octant only, 8 cells). Parameterized by k_param (number of cells).</li>
+<li><strong><code>test_xor_mat2()</code></strong>: Tests whether a weight tuple computes XOR under 1wpi encoding on Mat2. 2N inputs from N weights (+/- pairs). Early termination on first parity violation. O(1) cleanup via touched-cell tracking.</li>
+<li><strong><code>count_xor_bf()</code></strong>: Brute-force XOR search over all C(bf_limit, n_weights) tuples. Supports 3-8 weights (XOR6 through XOR16).</li>
+<li><strong>2-strand comparison infrastructure</strong>: <code>Quat</code> type (floating-point quaternions), <code>build_2strand_catalog()</code> (BFS closure of z8, order 24), <code>build_2strand_dirs()</code> (S2 direction extraction), <code>combined_cell_2s()</code> (sector x Voronoi activation), <code>test_xor_2strand()</code>, <code>count_xor_2s_bf()</code>.</li>
+<li><strong>Casimir discriminant</strong>: C(S) = (a-d)^2 + 4<em>b</em>c for summed Mat2. Exact computation in Z[zeta_8]. L1 norm for magnitude. Distinguishes Jordan blocks (C=0) from diagonalizable matrices.</li>
+</ul>
+<h3>Literature Touched</h3>
+<ul>
+<li><strong>Temperley-Lieb algebra standard modules (Graham-Lehrer)</strong>: TL_3(delta=0) decomposes as V = Delta_3(1) + Delta_1(2) + Delta_1(2) via Wedderburn-Artin. Delta_1 is the 2-dimensional standard module on half-diagram basis {h_0, h_2}. At delta=0, TL_3 is semisimple (n=3 odd, Demo 51 confirms), but the braid group image is infinite.</li>
+<li><strong>Ext^1 and non-semisimple representation theory</strong>: Delta_1 is an indecomposable but reducible module of the restricted quantum group u_q(sl_2) at ell=2 (q = e^{i*pi/4} = zeta_8). Extension class Ext^1(L(0), L(1)) is non-zero. Jordan block proves the extension does not split.</li>
+<li><strong>Non-semisimple TQFT (Voss-Kim-Bhatt, Nature Comms 2025)</strong>: Alpha-anyon anchor (quantum trace zero) + sigma-anyon qubits + semisimple readout. Structural identification with <a href="./demo_99.html">D99</a> findings: non-semisimplicity as catalytic preparation, computation in semisimple layer.</li>
+<li><strong>Reservoir Computing (Maass et al. 2002, Gonon &amp; Ortega 2020)</strong>: Casimir = separation property. 4.4x winner/control gap = first quantitative measure of algebraic reservoir quality. DKC maps precisely to a discrete algebraic reservoir computer.</li>
+<li><strong>Magic state distillation analogy</strong>: But CATALYTIC -- super-hubs are reused, not consumed.</li>
+<li><strong>Property F (Freedman-Larsen-Wang)</strong>: Does NOT apply at delta=0. The braid group image through Delta_1 is infinite despite the representation being finite-dimensional, because Delta_1 is not a direct sum of simple modules.</li>
+<li><strong>Fibonacci numbers and SL_2</strong>: max_abs Fibonacci growth connected to spectral radius of trace-zero SL_2 element and golden ratio phi = (1+sqrt5)/2 through the 2x2 transfer matrix.</li>
+<li><strong>Habiro (2002) / Z[zeta_8] bracket</strong>: The algebraic substrate. All computation exact over cyclotomic integers.</li>
+</ul>
+<h3>Open Questions</h3>
+<ul>
+<li><strong>Is XOR16 truly unreachable, or just search-limited?</strong> bf=14 may be insufficient. Need larger bf or smarter search.</li>
+<li><strong>Two Delta_1 copies</strong>: TL_3 has two copies of Delta_1 in the decomposition. Do they give different or redundant XOR sets?</li>
+<li><strong>Can the super-hub pair be characterized purely algebraically?</strong> What property of idx=7 and idx=9 makes them unique among all d=6 entries?</li>
+<li><strong>Ext^1 dimension</strong>: Is dim Ext^1(L(0), L(1)) = 1 at ell=2? If so, Delta_1 is the UNIQUE non-trivial extension, explaining why super-hubs are irreplaceable.</li>
+<li><strong>Higher strands</strong>: Does 4-strand (n=4, even, non-semisimple TL) give qualitatively different structure? ANSWERED by <a href="./demo_100.html">D100</a>: yes, frozen radical, 6-hub positive-root ecology, no Casimir inversion.</li>
+<li><strong>Better activations</strong>: 2x2_hash is a crude sign-pattern hash. Can Sec x Vor be adapted for Cyc8 quaternions (16 DOF)?</li>
+</ul>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/c.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</body>
+</html>

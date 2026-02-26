@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>inventory/entries/demo_105.md</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+    <link rel="stylesheet" href="../../style.css">
+</head>
+<body>
+    <nav><a href="../../index.html">← Back to Index</a></nav><hr>
+    <h2>Demo 105: 8-Strand W_{8,0} and W_{8,2} k-Regime Test — Rank Saturation and Branching Generalization</h2>
+<ul>
+<li><strong>Status</strong>: COMPLETE</li>
+<li><strong>File</strong>: <code><a href="../../demo_105_8strand_k_regime/main.c.html">demo_105_8strand_k_regime/main.c</a></code> (~1046 lines) + <a href="../../demo_105_8strand_k_regime/phase_b.c.html">phase_b.c</a> (~1067 lines), <a href="../../demo_105_8strand_k_regime/rank_retroactive.c.html">rank_retroactive.c</a> (~500 lines), <a href="../../demo_105_8strand_k_regime/rank_saturation.c.html">rank_saturation.c</a> (~543 lines), <a href="../../demo_105_8strand_k_regime/rank_saturation_j0.c.html">rank_saturation_j0.c</a> (~393 lines)</li>
+<li><strong>Tests</strong>: 46 pass, 0 fail (Phase A / main.c); 50 pass, 0 fail (Phase B / phase_b.c)</li>
+<li><strong>Depends on</strong>: Demo 85 (link state enumeration infrastructure, j=0 programmatic TL generators), Demo 93 (1wpi XOR framework, circuit complexity hierarchy, "XOR dies at N&gt;=7" claim), Demo 100 (W_{4,2} DKC, non-semisimple matrix braid representation), Demo 101 (W_{5,3} DKC, simple module comparison), Demo 104 (W_{6,2} k-regime discovery, cross-block branching decomposition, sign-rank expansion, Atkinson peak)</li>
+<li><strong>Feeds into</strong>: Demo 106 (topological entropy — clean negative), Demo 107 (algebraic graph density / Raqiya axis-alignment theorem), tangle tree DKC demo (planned), W_{8,2}/W_{6,4} major index theorem verification (open)</li>
+</ul>
+<h3>Headline</h3>
+8-strand braid groups on W_{8,0} (dim=14, simple) and W_{8,2} (dim=28, simple) revive XOR8 at high k, REFUTING <a href="./demo_93.html">D93</a>'s "XOR dies at N&gt;=7" as a k-regime artifact; rank saturation analysis reveals all prior cross-module rank comparisons were confounded by under-sampling; branching interaction reverses at n=8 (within-block &gt; cross-block), discovering the "macrame principle" regime transition.
+<h3>Key Results</h3>
+<ul>
+<li><strong><a href="./demo_93.html">D93</a>'s "XOR dies at N&gt;=7" REFUTED</strong>: Was a k-regime artifact. At k=4096, W_{8,0} produces XOR8=22266 (n=8 beats n=6's 21699 at matched k). The ratio k/2^N is the real control parameter: at k=128 for N=8, k/2^N=0.5 (deep pigeonhole), but at k=4096, k/2^N=16 (collision avoidance regime), and XOR is fully alive.</li>
+<li><strong>Phase A (W_{8,0}, dim=14)</strong>: 14 link states (C_4=14), 7 TL generators, radical dim=0 (simple). BFS hits 32768 cap at round 5 (growth: 1-&gt;15-&gt;137-&gt;987-&gt;6189-&gt;32768). 14 generators fill catalog faster than n=6's 10. Raw rank=274/784 (34.9%) at 1024 entries, sign-rank=425 (54.2%), sign expansion 1.55x.</li>
+<li><strong>Phase A k-sweep (bf=30)</strong>: XOR6 peaks at k=4096 (3721), XOR8 peaks at k=4096 (22266). At k=128: XOR6=2898, XOR8=5824.</li>
+<li><strong>Phase A component sweep (k=128)</strong>: Tests partial sign-hash activation from 50 to 784 components. Identifies Atkinson peak pattern.</li>
+<li><strong>Phase A sign-rank expansion</strong>: Sign quantization EXPANDS information — ternary sign vectors have higher rank than raw Cyc8 coefficient vectors.</li>
+<li><strong>Phase B (W_{8,2}, dim=28)</strong>: 28 link states (14 W_{7,1} block + 14 W_{7,3} block = symmetric branching). New j=2 link state enumerator with 5-case TL generator action. All TL/braid relations verified. Radical dim=0 (also simple at delta=0). BFS hits 16384 cap at round 5.</li>
+<li><strong>Phase B branching decomposition (k=128, bf=30)</strong>: Full: XOR6=2898, XOR8=5664. Cross-block: XOR6=532, XOR8=733. Within-block: XOR6=2940, XOR8=4743. <strong>VERDICT: within-block &gt; cross-block</strong> — OPPOSITE of <a href="./demo_104.html">D104</a>'s W_{6,2}.</li>
+<li><strong>Branching interaction reversal ("macrame principle")</strong>: At n=6 (<a href="./demo_104.html">D104</a>, asymmetric blocks dim 5+4), cross-block dominates. At n=8 (<a href="./demo_105.html">D105</a>, symmetric blocks dim 14+14), within-block dominates. Regime transition based on block complexity: simple blocks need connections (edges), complex blocks are self-sufficient (nodes). Crossover between dim 5 and dim 14.</li>
+<li><strong>Phase B k-sweep (full activation, bf=30)</strong>: k=128-&gt;XOR6=2898/XOR8=5664, k=4096-&gt;XOR6=3703/XOR8=22133.</li>
+<li><strong>Rank saturation CONFOUND discovered</strong>: W_{8,2} rank at 512 entries was 217/3136 (6.9%) — severely under-sampled. Saturation test shows rank still growing at 16384 entries: raw=1096 (34.9%), sign=2003 (63.9%), expansion=1.83x and increasing. The 34.9% match between W_{8,0} and W_{8,2} at initial checkpoints was coincidental.</li>
+<li><strong>W_{8,0} rank saturation</strong>: Also under-reported. At 32768 entries: raw=710/784 (90.6%), sign=767/784 (97.8%). Sign-rank approaches near-complete utilization of matrix space.</li>
+<li><strong>Retroactive rank comparison across all modules</strong>: D99b Delta_1 (dim 2): 16/16 raw (100%), 16/16 sign (100%). <a href="./demo_100.html">D100</a> W_{4,2} (dim 3): 28/36 raw (77.8%), 32/36 sign (88.9%). <a href="./demo_101.html">D101</a> W_{5,3} (dim 4): 62/64 raw (96.9%), 64/64 sign (100%). <a href="./demo_102.html">D102</a> W_{6,0} (dim 5): 100/100 raw (100%), 100/100 sign (100%). <a href="./demo_104.html">D104</a> W_{6,2} (dim 9): 244/324 raw (75.3%), 292/324 sign (90.1%). <a href="./demo_105.html">D105</a> W_{8,0} (dim 14): 710/784 raw (90.6%), 767/784 sign (97.8%).</li>
+</ul>
+<h3>Theorems/Conjectures</h3>
+<ul>
+<li><strong>k-Regime Theory (CONFIRMED at n=8)</strong>: The ratio k/2^N controls XOR capacity: pigeonhole regime (k/2^N &lt;&lt; 1) kills XOR, collision avoidance regime (k/2^N &gt;&gt; 1) revives it. Confirmed across n=6 and n=8.</li>
+<li><strong>Macrame Principle (CONJECTURED)</strong>: Branching interaction (cross-block) dominates when individual sub-module blocks are small/simple (dim 4-5). Within-block dominates when blocks are complex (dim 14). Crossover regime between dim 5 and dim 14. Named by analogy: simple knots need connections for computational fabric; complex knots are self-sufficient.</li>
+<li><strong>Sign-Rank Expansion Scaling (CONJECTURED)</strong>: Sign expansion ratio increases with module dimension and decreases with oversampling. W_{8,2} at 1.83x (growing) vs W_{8,0} at 1.08x (near saturation). Larger non-semisimple modules show more dramatic expansion.</li>
+<li><strong>Rank Saturation Methodology (ESTABLISHED)</strong>: Single-checkpoint rank measurements are unreliable for infinite braid groups. Must report saturation curves at multiple checkpoints. All prior cross-module rank comparisons (D99b through <a href="./demo_104.html">D104</a>) are confounded by varying oversampling ratios.</li>
+</ul>
+<h3>Data</h3>
+<p><strong>W_{8,0} BFS catalog (cap 32768, 14 generators):</strong></p>
+<table><thead><tr><th>Round</th><th>Cumulative</th><th>New</th><th>max_abs</th></tr></thead><tbody><tr><td>0</td><td>1</td><td>1</td><td>1</td></tr><tr><td>1</td><td>15</td><td>14</td><td>1</td></tr><tr><td>2</td><td>137</td><td>122</td><td>2</td></tr><tr><td>3</td><td>987</td><td>850</td><td>3</td></tr><tr><td>4</td><td>6189</td><td>5202</td><td>5</td></tr><tr><td>5</td><td>32768</td><td>26579</td><td>8</td></tr></tbody></table>
+<p><strong>W_{8,0} k-sweep (bf=30):</strong></p>
+<table><thead><tr><th>k</th><th>XOR6</th><th>XOR8</th><th>k/2^8</th></tr></thead><tbody><tr><td>128</td><td>2898</td><td>5824</td><td>0.5</td></tr><tr><td>256</td><td>3345</td><td>10413</td><td>1.0</td></tr><tr><td>512</td><td>3529</td><td>15982</td><td>2.0</td></tr><tr><td>1024</td><td>3663</td><td>19403</td><td>4.0</td></tr><tr><td>2048</td><td>3705</td><td>21332</td><td>8.0</td></tr><tr><td>4096</td><td>3721</td><td>22266</td><td>16.0</td></tr></tbody></table>
+<p><strong>W_{8,0} rank saturation (784 cols, 32768 catalog entries):</strong></p>
+<table><thead><tr><th>Entries</th><th>Raw rank</th><th>Raw%</th><th>Sign rank</th><th>Sign%</th></tr></thead><tbody><tr><td>128</td><td>81</td><td>10.3%</td><td>91</td><td>11.6%</td></tr><tr><td>256</td><td>139</td><td>17.7%</td><td>186</td><td>23.7%</td></tr><tr><td>512</td><td>211</td><td>26.9%</td><td>310</td><td>39.5%</td></tr><tr><td>1024</td><td>274</td><td>34.9%</td><td>425</td><td>54.2%</td></tr><tr><td>2048</td><td>416</td><td>53.1%</td><td>651</td><td>83.0%</td></tr><tr><td>4096</td><td>498</td><td>63.5%</td><td>686</td><td>87.5%</td></tr><tr><td>8192</td><td>614</td><td>78.3%</td><td>729</td><td>93.0%</td></tr><tr><td>16384</td><td>684</td><td>87.2%</td><td>757</td><td>96.6%</td></tr><tr><td>32768</td><td>710</td><td>90.6%</td><td>767</td><td>97.8%</td></tr></tbody></table>
+<p><strong>W_{8,2} rank saturation (3136 cols, 16384 catalog entries):</strong></p>
+<table><thead><tr><th>Entries</th><th>Raw rank</th><th>Raw%</th><th>Sign rank</th><th>Sign%</th></tr></thead><tbody><tr><td>128</td><td>90</td><td>2.9%</td><td>128</td><td>4.1%</td></tr><tr><td>256</td><td>180</td><td>5.7%</td><td>256</td><td>8.2%</td></tr><tr><td>512</td><td>310</td><td>9.9%</td><td>443</td><td>14.1%</td></tr><tr><td>1024</td><td>499</td><td>15.9%</td><td>783</td><td>25.0%</td></tr><tr><td>2048</td><td>902</td><td>28.8%</td><td>—</td><td>—</td></tr><tr><td>4096</td><td>1178</td><td>37.6%</td><td>—</td><td>—</td></tr><tr><td>8192</td><td>1702</td><td>54.3%</td><td>—</td><td>—</td></tr><tr><td>16384</td><td>2003</td><td>63.9%</td><td>—</td><td>—</td></tr></tbody></table>
+<p>Note: sign-rank checkpoint values for W_{8,2} at entries &gt; 1024 are from <a href="../../demo_105_8strand_k_regime/rank_saturation.c.html">rank_saturation.c</a>; final sign-rank at 16384 = 2003 (63.9%), expansion 1.83x.</p>
+<p><strong>W_{8,2} branching decomposition (k=128, bf=30):</strong></p>
+<table><thead><tr><th>Activation</th><th>Components</th><th>XOR6</th><th>XOR8</th></tr></thead><tbody><tr><td>Full</td><td>3136</td><td>2898</td><td>5664</td></tr><tr><td>Cross-block</td><td>1568</td><td>532</td><td>733</td></tr><tr><td>Within-block</td><td>1568</td><td>2940</td><td>4743</td></tr></tbody></table>
+<p><strong>Corrected retroactive rank table (all modules, at catalog saturation):</strong></p>
+<table><thead><tr><th>Module</th><th>dim</th><th>cols</th><th>catalog</th><th>raw</th><th>raw%</th><th>sign</th><th>sign%</th><th>exp</th></tr></thead><tbody><tr><td>Delta_1</td><td>2</td><td>16</td><td>32768</td><td>16</td><td>100%</td><td>16</td><td>100%</td><td>1.00x</td></tr><tr><td>W_{4,2}</td><td>3</td><td>36</td><td>32768</td><td>28</td><td>77.8%</td><td>32</td><td>88.9%</td><td>1.14x</td></tr><tr><td>W_{5,3}</td><td>4</td><td>64</td><td>32768</td><td>62</td><td>96.9%</td><td>64</td><td>100%</td><td>1.03x</td></tr><tr><td>W_{6,0}</td><td>5</td><td>100</td><td>32768</td><td>100</td><td>100%</td><td>100</td><td>100%</td><td>1.00x</td></tr><tr><td>W_{6,2}</td><td>9</td><td>324</td><td>—</td><td>244</td><td>75.3%</td><td>292</td><td>90.1%</td><td>1.20x</td></tr><tr><td>W_{8,0}</td><td>14</td><td>784</td><td>32768</td><td>710</td><td>90.6%</td><td>767</td><td>97.8%</td><td>1.08x</td></tr><tr><td>W_{8,2}</td><td>28</td><td>3136</td><td>16384</td><td>1096</td><td>34.9%</td><td>2003</td><td>63.9%</td><td>1.83x</td></tr></tbody></table>
+<h3>Code Assets</h3>
+<ul>
+<li><strong>j=2 link state enumerator (<code>enumerate_ls_j2</code>)</strong>: Enumerates non-crossing perfect matchings with 2 through-strands on n=8 boundary points. Produces 28 states split into two blocks (W_{7,1} with through[1]=7, and W_{7,3} with through[1]&lt;7). Uses segment-based recursive enumeration with Cartesian products of left/mid/right matchings. First implementation of j&gt;0 link states in knotapel.</li>
+<li><strong>5-case TL generator action for j=2 (<code>apply_ei_j2</code>)</strong>: Handles all cases of e_i acting on a link state with 2 through-strands: (1) both arc-paired to each other -&gt; loop/killed; (2) both arc-paired to others -&gt; redirect; (3) i through, i+1 arc-paired -&gt; swap; (4) i arc-paired, i+1 through -&gt; swap; (5) both through -&gt; loop/killed. Through-strand positions are updated and re-sorted.</li>
+<li><strong>Cross-block / within-block activation functions</strong>: <code>matN_activate_cross</code> hashes only off-diagonal blocks (rows &lt; BLOCK_SIZE, cols &gt;= BLOCK_SIZE and vice versa). <code>matN_activate_within</code> hashes only diagonal blocks. Used for branching decomposition analysis.</li>
+<li><strong>Partial sign-hash activation (<code>matN_activate_partial</code>)</strong>: Activates using only the first <code>comp_limit</code> sign components. Used for component sweep / Atkinson peak analysis.</li>
+<li><strong>Rank computation with saturation checkpoints (<code>compute_rank_with_checkpoints</code>)</strong>: Streaming Gaussian elimination over Z with GCD normalization, reporting rank at specified entry-count checkpoints. Essential for honest rank measurement on infinite groups.</li>
+<li><strong>Retroactive rank framework (<code><a href="../../demo_105_8strand_k_regime/rank_retroactive.c.html">rank_retroactive.c</a></code>)</strong>: Generic tridiagonal TL generator builder + BFS + rank computation, parameterized by (dim, n_tl). Runs D99b/<a href="./demo_100.html">D100</a>/<a href="./demo_101.html">D101</a> modules with identical infrastructure for fair comparison.</li>
+</ul>
+<h3>Literature Touched</h3>
+<ul>
+<li><strong>Temperley-Lieb algebra TL_8 at delta=0</strong>: W_{8,0} (dim=14 = C_4, simple) and W_{8,2} (dim=28, also simple at delta=0). Both modules produce infinite braid groups. The branching rule W_{8,2} |<em>{TL_7} = W</em>{7,1}(14) + W_{7,3}(14) is symmetric, unlike W_{6,2}'s asymmetric 5+4 decomposition.</li>
+<li><strong>k-regime theory / pigeonhole-to-collision-avoidance transition</strong>: The ratio k/2^N determines XOR viability. This is an information-theoretic observation about sign-hash activation: when k &lt;&lt; 2^N, hash collisions between even/odd parity inputs are unavoidable (pigeonhole); when k &gt;&gt; 2^N, the hash has enough bins to separate them.</li>
+<li><strong>Compressed sensing / 1-bit CS analogy</strong>: Sign-hash activation = 1-bit compressed sensing measurement. Cross-block activation works when sub-module pieces have low intra-block coherence. Within-block dominance at n=8 suggests coherence structure changes with block dimension.</li>
+<li><strong>Habiro (2002) / Z[zeta_8] bracket</strong>: The algebraic substrate. A = zeta_8^5 = -zeta_8, A^{-1} = zeta_8^3. Braid generators sigma_i = A<em>I + A^{-1}</em>e_i produce exact Z[zeta_8]-valued matrices.</li>
+</ul>
+<h3>Open Questions</h3>
+<ul>
+<li><strong>W_{8,2} rank saturation</strong>: At 16384 entries / 3136 cols = 5.2x oversampling, W_{8,2} is still at 34.9% raw rank. Would need ~130K entries for comparable oversampling to W_{8,0}. What is the true saturated rank fraction?</li>
+<li><strong>Macrame principle crossover</strong>: The branching interaction regime transition occurs between block dim 5 (cross-block wins, <a href="./demo_104.html">D104</a>) and dim 14 (within-block wins, <a href="./demo_105.html">D105</a>). Where is the exact crossover? W_{6,4} or W_{10,2} could bracket it.</li>
+<li><strong>Sign expansion vs module structure</strong>: W_{8,2} shows dramatic sign expansion (1.83x at 16384 entries, still growing). Is this a function of module dimension, non-semisimplicity, or the specific block structure of the branching decomposition?</li>
+<li><strong>Phase B XOR at matched conditions</strong>: Head-to-head W_{8,0} vs W_{8,2} XOR comparison at matched k and oversampling has not been performed. Listed as open in explorer log.</li>
+<li><strong>All prior cross-module rank comparisons confounded</strong>: The retroactive rank table only corrects modules that were recomputed. Other demos' rank claims should be treated as lower bounds until saturation-verified.</li>
+</ul>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/c.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</body>
+</html>

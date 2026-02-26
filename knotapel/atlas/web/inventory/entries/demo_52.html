@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>inventory/entries/demo_52.md</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+    <link rel="stylesheet" href="../../style.css">
+</head>
+<body>
+    <nav><a href="../../index.html">← Back to Index</a></nav><hr>
+    <h2>Demo 52: Chebyshev Generalization — Radical Anatomy at delta=1</h2>
+<ul>
+<li><strong>Status</strong>: COMPLETE</li>
+<li><strong>File</strong>: <code><a href="../../demo_52_chebyshev/main.c.html">demo_52_chebyshev/main.c</a></code> (~1954 lines)</li>
+<li><strong>Tests</strong>: ~30+ pass (inline check() assertions across Parts 0-4)</li>
+<li><strong>Depends on</strong>: Demo 35 (TL_n matrices, planar matching enumeration, diagram composition), Demo 51 (radical anatomy at delta=0)</li>
+<li><strong>Feeds into</strong>: Future demos on general-delta DKC, non-semisimplicity landscape mapping</li>
+</ul>
+<h3>Headline</h3>
+Computes the radical structure of TL_n at four delta values (0, 1, sqrt(2), phi=golden ratio, sqrt(3)) for n=2..8, revealing how semisimplicity varies across the Chebyshev parameter space via exact modular arithmetic.
+<h3>Key Results</h3>
+<ul>
+<li><strong>Delta=0 cross-checks</strong>: Reproduces Demo 51 radical dimensions for n=2..5</li>
+<li><strong>Delta=1 (ell=3, percolation)</strong>: Generators are IDEMPOTENT (e_i^2 = e_i), loops contribute factor 1 (no killing). Full analysis for n=2..8 including:</li>
+<li>TL relation verification (identity, idempotent, adjacent, far commutativity)</li>
+<li>Gram matrix via trace form, radical dimension via Gaussian elimination</li>
+<li>Idempotent search (individual generators + length-2 products)</li>
+<li>Orthogonal decomposition with complement, Peirce block dimensions</li>
+<li>Radical filtration (rad^1 → rad^2 → ... until nilpotent)</li>
+<li>Peirce decomposition of rad^2 where available</li>
+<li><strong>Delta=sqrt(2) (ell=4)</strong>: Analysis for n=2..7 via modular arithmetic (Tonelli-Shanks for sqrt(2) mod p)</li>
+<li><strong>Delta=phi (ell=5, golden ratio)</strong>: phi = (1+sqrt(5))/2, verified phi^2 = phi+1 mod p. Analysis for n=2..7</li>
+<li><strong>Delta=sqrt(3) (ell=6)</strong>: Analysis for n=2..7</li>
+<li><strong>Cross-check</strong>: delta=1 via general-delta pathway matches dedicated delta=1 results for n=3,4,5</li>
+<li>Fixed-point values are Catalan numbers (labeled in output when detected)</li>
+</ul>
+<h3>Theorems/Conjectures</h3>
+<ul>
+<li><strong>Idempotency at delta=1</strong>: e_i^2 = e_i for all generators — PROVEN (verified n=2..8)</li>
+<li><strong>TL relations at delta=1</strong>: Adjacent (e_i<em>e_{i+1}</em>e_i = e_i) and far commutativity — PROVEN (verified n=2..8)</li>
+<li><strong>Semisimplicity pattern</strong>: Varies with delta — delta=0 has alternating odd/even pattern; delta=1 has different radical structure; delta=sqrt(2), phi, sqrt(3) have yet different patterns — COMPUTED (dimensions for n=2..7 or 8)</li>
+<li><strong>Peirce block sum = algebra dim</strong>: For all orthogonal decompositions computed — PROVEN (verified for applicable n)</li>
+<li><strong>Nilpotency index at delta=1</strong>: radical filtration terminates; predicted PIM Loewy length up to 2*ell-1 = 5 — TESTED</li>
+</ul>
+<h3>Data</h3>
+<ul>
+<li>Catalan number dimensions: C_2=2, C_3=5, C_4=14, C_5=42, C_6=132, C_7=429, C_8=1430</li>
+<li>Delta values: 0 (ell=2), 1 (ell=3), sqrt(2) (ell=4), phi=(1+sqrt(5))/2 (ell=5), sqrt(3) (ell=6)</li>
+<li>Modular prime: p = 10^9+7 (default), p = 999999751 (for phi/sqrt(5))</li>
+<li>Multiplication tables: full basis × basis with loop counts for n up to 8</li>
+<li>Gram matrices printed for dim ≤ 14</li>
+<li>Radical filtration sequences (rad^1, rad^2, ... dimensions) for each (n, delta) pair</li>
+<li>Distinct fixed-point values labeled as Catalan numbers where applicable</li>
+</ul>
+<h3>Code Assets</h3>
+<ul>
+<li><strong>TLAlgebra struct</strong>: Bundled algebra data (basis, identity, generators, multiplication table with loop counts) for any n up to 8</li>
+<li><strong>Planar matching enumerator</strong>: Segment-based recursive algorithm (from Demo 35/51), supports up to C_8=1430</li>
+<li><strong>Diagram composition</strong>: Returns result + loop count, stored in multiplication table</li>
+<li><strong>AlgElem integer arithmetic</strong>: Zero, basis element, add, sub, multiply (delta=1), multiply (mod p), zero test, equality, idempotent test, print</li>
+<li><strong>Gram matrix / radical dimension</strong>: Via trace form fixed points + Gaussian elimination (both float and mod-p)</li>
+<li><strong>Radical basis extraction</strong>: Float path (for small dims, gives integer vectors) and mod-p path (exact for any dim)</li>
+<li><strong>Radical filtration</strong>: Iterative rad^k computation via product of rad^1 basis with rad^{k-1} basis, echelon tracking</li>
+<li><strong>Idempotent search</strong>: Individual generators + length-2 products, orthogonality matrix, greedy maximal orthogonal set, complement computation</li>
+<li><strong>Peirce block dimensions</strong>: Full algebra and subspace-restricted versions</li>
+<li><strong>Modular arithmetic</strong>: mod_reduce, mod_inv (extended Euclidean), mod_pow, mod_sqrt_ts (Tonelli-Shanks)</li>
+<li><strong>General delta analysis</strong>: analyze_tl_delta() handles arbitrary delta via precomputed delta^k powers mod p</li>
+<li><strong>Weighted Gram matrix</strong>: General delta version with delta^loops weighting</li>
+</ul>
+<h3>Literature Touched</h3>
+<ul>
+<li>Temperley-Lieb algebra at roots of unity (delta = 2*cos(pi/ell))</li>
+<li>Non-semisimple representation theory (radical, radical filtration, nilpotency index)</li>
+<li>Peirce decomposition (orthogonal idempotents, block structure)</li>
+<li>Loewy length / PIM structure (predicted 2*ell-1 for delta=1)</li>
+<li>Percolation theory connection (delta=1, c=0 LCFT)</li>
+<li>Chebyshev polynomials (delta parametrization)</li>
+<li>Tonelli-Shanks algorithm (modular square roots)</li>
+</ul>
+<h3>Open Questions</h3>
+<ul>
+<li>What is the exact semisimplicity/non-semisimplicity pattern as a function of (n, delta)?</li>
+<li>Do the radical filtration dimensions follow a predictable formula across ell values?</li>
+<li>How does the Peirce block structure at delta=1 relate to the representation theory (which irreducibles appear, with what multiplicity)?</li>
+<li>Can the rad^2 generator elements be connected to neglecton-type objects from Demo 49?</li>
+<li>Does the Loewy length reach the predicted maximum 2*ell-1 = 5 at delta=1 for sufficiently large n?</li>
+<li>How do the general-delta radical dimensions connect to DKC computability boundaries from Demo 48?</li>
+</ul>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/c.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</body>
+</html>

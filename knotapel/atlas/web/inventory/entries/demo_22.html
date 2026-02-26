@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>inventory/entries/demo_22.md</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+    <link rel="stylesheet" href="../../style.css">
+</head>
+<body>
+    <nav><a href="../../index.html">← Back to Index</a></nav><hr>
+    <h2>Demo 22: Minimum Braid Complexity</h2>
+<ul>
+<li><strong>Status</strong>: COMPLETE</li>
+<li><strong>File</strong>: <code><a href="../../demo_22_braid_optimizer/main.c.html">demo_22_braid_optimizer/main.c</a></code> (~976 lines)</li>
+<li><strong>Tests</strong>: ~6 pass (P1: &gt;=80 functions found, P2: TL_3 braid relation, P3: cross-validation, P4: nilpotent compression, P5: braid &lt; NAND cost, P6: extended search)</li>
+<li><strong>Depends on</strong>: Demo 21 (reversible gates, closure types), Demo 23 (function zoo, truth table computation)</li>
+<li><strong>Feeds into</strong>: establishes "atomic weights" for topological computation; periodic table of braid-computable functions</li>
+</ul>
+<h3>Headline</h3>
+Exhaustive search for minimum-length braid words computing each Boolean function on 3 inputs — the "periodic table of topological computation" — with TL_3 nilpotent oracle proving algebraic compression at delta=0.
+<h3>Key Results</h3>
+<ul>
+<li><strong>Part A</strong>: Atlas of minimum braid lengths for all achievable 3-input Boolean functions (4-strand braids, lengths 1-5, 4 closure types), &gt;=80 functions found</li>
+<li><strong>Part B</strong>: TL_3 algebra at delta=0 (A=e^{i<em>pi/4}) verified — nilpotency (e_i^2=0), braid relation, TL relation (e1</em>e2*e1=e1); cross-validation shows matrix equality implies bracket equality with zero errors; distinct TL_3 matrices grow slower than 4^k (compression factor at length 6)</li>
+<li><strong>Part C</strong>: Parity barrier investigation — some XOR-containing functions missing at short lengths; braid weight beats NAND expression cost for multiple functions</li>
+<li><strong>Part D</strong>: Extended search at length 6 (trace closure, 46656 braids) discovers additional functions; targets include XOR, triple XOR, Toffoli C', MUX/Fredkin, MAJ</li>
+</ul>
+<h3>Theorems/Conjectures</h3>
+<ul>
+<li>VERIFIED: TL_3 nilpotent algebra (delta=0): e_i^2 = 0, e1<em>e2</em>e1 = e1, braid relation holds in 5x5 representation</li>
+<li>VERIFIED: Matrix equality in TL_3 implies bracket equality (zero cross-validation errors across all length-3 B_3 word pairs)</li>
+<li>VERIFIED: Nilpotent compression — distinct TL_3 matrices grow strictly slower than 4^k (many algebraically distinct braids collapse to same TL element)</li>
+<li>CONFIRMED: Braid weight &lt; NAND expression cost for multiple named functions (topological computation is more efficient than gate-tree evaluation)</li>
+<li>OBSERVED: Partial parity barrier — some XOR-family functions missing at short lengths (investigated but not fully resolved)</li>
+</ul>
+<h3>Data</h3>
+<ul>
+<li>Atlas: 254 possible non-trivial 3-input truth tables; &gt;=80 achieved at lengths 1-5</li>
+<li>Named functions tracked: A, ~A, B, ~B, C, ~C, A&amp;B, A|B, ~(A&amp;B), A^B, A XNOR B, MAJ, MUX, Toffoli C', A^B^C, etc.</li>
+<li>NAND cost reference: identity=0, NOT=6, NAND=5, AND=11, OR=17, XOR=25, Toffoli C'=58, MUX=21</li>
+<li>TL_3 distinct matrix counts per length: subexponential growth vs 4^k naive</li>
+<li>Search spaces: 6^k for 4-strand (6 generators), 4^k for 3-strand (4 generators)</li>
+<li>Evaluation angle: A = e^{i<em>5</em>pi/4} (delta=0 for TL_3 oracle at pi/4)</li>
+</ul>
+<h3>Code Assets</h3>
+<ul>
+<li><code>atlas_min_len[256]</code>, <code>atlas_word[256]</code>, <code>atlas_closure[256]</code>: minimum-complexity atlas for all truth tables</li>
+<li><code>compute_tt()</code>: evaluates 4-strand braid with 3-bit input encoding, finds best-threshold truth table from amplitude sorting</li>
+<li><code>decode_word4()</code> / <code>decode_word3()</code>: enumerates braid words from integer codes (base-6 for 4-strand, base-4 for 3-strand)</li>
+<li><code>fn_name()</code>: lookup table mapping truth table integers to named Boolean functions (~38 entries)</li>
+<li><code>tt_has_parity()</code>: classifies whether a truth table involves XOR/parity</li>
+<li><code>nand_cost()</code>: NAND tree expression cost for named functions (from Demo 21 analysis)</li>
+<li><code>Mat5</code> type: 5x5 complex matrix for TL_3 representation with <code>mat5_zero/id/scale/add/mul/eq</code></li>
+<li><code>tl3_init()</code>: builds TL_3 generator matrices (e1, e2) and sigma matrices at given A</li>
+<li><code>tl3_braid_matrix()</code>: evaluates braid word as TL_3 matrix product</li>
+<li><code>bracket_cl()</code>: state-sum bracket with closure support (trace, plat_A, plat_B, plat_C)</li>
+<li><code>braid_loops_cl()</code>: loop counting with 4 closure types</li>
+<li><code>Closure</code> enum: CL_TRACE, CL_PLAT_A, CL_PLAT_B, CL_PLAT_C</li>
+</ul>
+<h3>Literature Touched</h3>
+<ul>
+<li>Temperley-Lieb algebra TL_n at delta=0 (nilpotent regime)</li>
+<li>Catalan number C_3 = 5 as TL_3 dimension</li>
+<li>Braid group B_3 representation theory</li>
+<li>Shannon/NAND circuit complexity comparison</li>
+<li>Parity barrier in threshold logic (XOR as canonical hard function)</li>
+</ul>
+<h3>Open Questions</h3>
+<ul>
+<li>Is the parity barrier fundamental (algebraic) or just a length limitation? Do parity functions appear at length 7+?</li>
+<li>Can the TL_3 oracle be used to prune search space for the 4-strand atlas? (collapse equivalent braids before bracket evaluation)</li>
+<li>What is the asymptotic growth rate of distinct TL_3 matrices? (appears subexponential but not fully characterized)</li>
+<li>Relationship between closure type and function achievability — which closures are most "powerful"?</li>
+<li>Can connected-sum operations on braids compose functions algebraically?</li>
+</ul>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/c.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</body>
+</html>

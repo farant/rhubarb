@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>inventory/entries/demo_59.md</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+    <link rel="stylesheet" href="../../style.css">
+</head>
+<body>
+    <nav><a href="../../index.html">← Back to Index</a></nav><hr>
+    <h2>Demo 59: Q=3 Potts DKC (ell=6, delta=sqrt(3))</h2>
+<ul>
+<li><strong>Status</strong>: COMPLETE</li>
+<li><strong>File</strong>: <code><a href="../../demo_59_q3_potts_dkc/main.c.html">demo_59_q3_potts_dkc/main.c</a></code> (~1496 lines)</li>
+<li><strong>Tests</strong>: ~15+ pass (Part A: zeta_24^24=1, zeta_24^12=-1, A*A^{-1}=1, A^24=1, delta=-A^2-A^{-2}, delta real and =sqrt(3), delta^2=3, delta^3 mul==formula, catalog &gt;=20 values, &gt;=2 basis coords used; Part B: additive even-only check, 2-input mult &gt;=8; Part C: NPN=13; Part E: Re&gt;0+mult &gt;=11, additive Re&gt;0 limited; Part F: complement symmetry, theta=0 matches Re&gt;0)</li>
+<li><strong>Depends on</strong>: Demo 55/57/58 (planar matching + diagram operations, prior ell values), Demo 54 (DKC at ell=4, Z[zeta_16], 11/13 Re&gt;0 wall), Demo 56 (DKC at ell=5, Z[zeta_5]), Demos 48-50 (DKC at ell=∞/delta=0)</li>
+<li><strong>Feeds into</strong>: cross-ell comparison of the 11/13 Re&gt;0 wall; confirms wall is universal across evaluation levels; rotated half-plane sweep reveals orientation-dependent reachability</li>
+</ul>
+<h3>Headline</h3>
+Third independent verification of the 11/13 Re&gt;0 wall: at ell=6 (Q=3 Potts model, delta=sqrt(3)), bracket values live in Z[zeta_24] (rank 8 over Z), and multiplicative Re&gt;0 still reaches exactly 11/13 NPN classes with 0x1B and 0x06 unreachable — matching ell=4 (Z[i]) and ell=5 (Z[zeta_5]). Rotated half-plane sweep across 24 angles reveals orientation-dependent reachability with complement symmetry. Additive encoding is strictly weaker due to convexity constraint.
+<h3>Key Results</h3>
+<ul>
+<li><strong>Part A</strong>: Z[zeta_24] exact arithmetic with 8-component basis, reduction zeta^8=zeta^4-1 (Phi_24); A=zeta_24^7 (order 24); delta=zeta^2-zeta^6=sqrt(3); delta^2=3, delta^3 via formula matches multiplication; precomputed A^k table for k=0..23 (A^12=-1, A^{12+k}=-A^k); bracket catalog built from 2-4 strand braids up to length 6-10; axiality analysis: coefficient usage distribution, sub-ring axiality check (even-only coords → Z[zeta_12])</li>
+<li><strong>Part B</strong>: 2-input encoding comparison — multiplicative (z=w1^x1<em>w2^x2) vs additive (z=x1</em>w1+x2*w2) with Re&gt;0 activation; multiplicative achieves &gt;=8/16 2-input functions; additive constrained: bit 0 always 0 (z(0,0)=0 has Re=0, not &gt;0), so only even truth tables</li>
+<li><strong>Part C</strong>: 3-input DKC search with both encodings across 8 activation functions (Re&gt;0, Im&gt;0, split-sigmoid, sector k=2/4/6/8, magnitude tau=1); full reachability grids printed; NPN classes 0x1B and 0x06 flagged as key wall indicators</li>
+<li><strong>Part D</strong>: Head-to-head multiplicative vs additive comparison per activation; identifies MULT-ONLY, ADD-ONLY, BOTH, and NEITHER classes; per-activation best achievability with union counts; add-only classes listed</li>
+<li><strong>Part E</strong>: Cross-ell headline comparison: ell=4 (11/13, catalog 56), ell=5 (11/13, catalog 116), ell=6 (11/13 with mult Re&gt;0, 0x1B and 0x06 still NO); Im&gt;0+mult may reach 12/13 (0x06 YES, 0x1B still NO), matching ell=4 and ell=5 patterns; wall HOLDS at third independent verification</li>
+<li><strong>Part F</strong>: Rotated half-plane sweep — sigma_theta(z) = [Re(e^{i<em>theta}</em>z) &gt; 0] for 24 angles (0-345 degrees in 15-degree steps); multiplicative encoding; tracks NPN reachability, 0x1B/0x06 status per angle; complement symmetry verified (theta and theta+180 give same NPN count); theta=0 confirms 11/13 matching Part C</li>
+</ul>
+<h3>Theorems/Conjectures</h3>
+<ul>
+<li>CONFIRMED (third time): Re&gt;0 multiplicative encoding reaches exactly 11/13 NPN classes at ell=6 — 0x1B and 0x06 remain unreachable</li>
+<li>CONFIRMED: Wall is universal across evaluation levels (ell=4, 5, 6 all give 11/13 with same missing classes)</li>
+<li>CONFIRMED: Im&gt;0 breaks 0x06 but not 0x1B (12/13 pattern matches ell=4 and ell=5)</li>
+<li>CONFIRMED: Additive encoding strictly weaker due to convexity constraint (z(0,0,0)=0 forces bit 0 = 0)</li>
+<li>CONFIRMED: NPN complement symmetry for rotated half-plane (theta and theta+180 have identical reachability)</li>
+<li>CONFIRMED: Z[zeta_24] arithmetic consistent (all delta power, A power, cross-checks pass)</li>
+<li>OBSERVED: Catalog size at ell=6 potentially smaller than ell=5 despite higher-rank ring ("smaller catalog despite rank-8 ring is surprising")</li>
+<li>TESTED: Rotated half-plane orientation dependence — some angles may achieve 13/13 (full reachability)</li>
+</ul>
+<h3>Data</h3>
+<ul>
+<li>Ring: Z[zeta_24] (8-dimensional over Z), basis {1, zeta_24, ..., zeta_24^7}, minimal polynomial Phi_24(x)=x^8-x^4+1</li>
+<li>A = zeta_24^7 = e^{i<em>7</em>pi/12}, order 24; A^{-1} = A^{23}</li>
+<li>delta = sqrt(3) = (0,0,2,0,0,0,-1,0) in Cyc24; delta^2 = 3; Q = delta^2 = 3 (3-state Potts)</li>
+<li>Delta powers: delta^{2k} = 3^k, delta^{2k+1} = 3^k * sqrt(3)</li>
+<li>A^k precomputed table: 24 entries, A^12 = -1</li>
+<li>Catalog: 2-4 strand braids, lengths 1-10/6/6 respectively, capped at 100000 braids per (n,length)</li>
+<li>8 activation functions tested: Re&gt;0, Im&gt;0, split-sigmoid, sector k=2/4/6/8, magnitude tau=1.0</li>
+<li>3-input search: catalog^3 triples, both multiplicative (z=w1^x1<em>w2^x2</em>w3^x3) and additive (z=x1<em>w1+x2</em>w2+x3*w3) encodings</li>
+<li>Rotated sweep: 24 angles at 15-degree increments, multiplicative encoding only</li>
+<li>Cross-ell reference: ell=4 (56 values, 11/13), ell=5 (116 values, 11/13), ell=6 (catalog size reported, 11/13)</li>
+<li>Negation coverage tracked (entries with negative in catalog)</li>
+</ul>
+<h3>Code Assets</h3>
+<ul>
+<li><code>Cyc24</code> type: exact Z[zeta_24] cyclotomic arithmetic (8-component, Phi_24 reduction zeta^8=zeta^4-1); <code>cyc24_zero/one/add/neg/mul/eq/is_zero/to_cx/print</code></li>
+<li><code>A_table[24]</code>: precomputed A^k values for k=0..23; <code>cyc24_a_power()</code> with mod-24 lookup</li>
+<li><code>cyc24_delta_power()</code>: exact delta^k using delta^2=3 (even→3^m integer, odd→3^m*sqrt(3))</li>
+<li><code>PlanarMatch</code> / diagram operations: <code>make_identity_diagram()</code>, <code>make_generator_diagram()</code>, <code>compose_diagrams()</code>, <code>trace_closure_loops()</code> — shared topology-independent code from Demos 55/57/58</li>
+<li><code>BraidCrossing</code> + <code>state_sum_bracket()</code>: state-sum bracket at ell=6 with Cyc24 weights</li>
+<li><code>decode_braid()</code>: integer index → crossing sequence</li>
+<li><code>build_catalog()</code>: enumerates 2-4 strand braids, stores distinct nonzero Cyc24 values + precomputed Cx doubles</li>
+<li><code>Activation</code> table: 8 activation functions with uniform <code>int (*classify)(Cx, int)</code> signature; <code>wrap_split_sigmoid</code>, <code>wrap_sector</code>, <code>wrap_magnitude</code>, <code>wrap_re_positive</code>, <code>wrap_im_positive</code></li>
+<li><code>split_sigmoid_classify()</code>: smooth XOR of Re/Im sigmoids at threshold 0.5</li>
+<li><code>sector_classify()</code>: k-sector angular classification (sector mod 2)</li>
+<li><code>magnitude_classify()</code>: |z| &gt; tau threshold</li>
+<li>NPN classification: <code>npn_transform()</code>, <code>npn_init()</code>, <code>npn_build_classes()</code>, <code>npn_canon[256]</code> — same as Demos 48-50</li>
+<li><code>search_3input_batch()</code>: batch search over catalog^3 triples with both multiplicative and additive encoding, all 8 activations simultaneously; aggregates per NPN class</li>
+<li><code>fn2_name()</code> / <code>fn3_name()</code>: truth table → human-readable function names (16 2-input, 15 3-input named functions)</li>
+<li>Part F rotated sweep: 24-angle sigma_theta with precomputed cos/sin, multiplicative encoding, complement symmetry verification</li>
+</ul>
+<h3>Literature Touched</h3>
+<ul>
+<li>Q=3 Potts model at criticality (delta^2=3, SU(2) level 4)</li>
+<li>Z[zeta_24]: 24th cyclotomic integers, minimal polynomial Phi_24(x)=x^8-x^4+1</li>
+<li>Temperley-Lieb at ell=6 (delta-potent regime: e_i^2=sqrt(3)*e_i)</li>
+<li>NPN classification of 3-input Boolean functions (13 non-trivial classes)</li>
+<li>Half-plane classifiers and rotated decision boundaries</li>
+<li>Multiplicative vs additive input encoding for complex-valued neural networks</li>
+<li>Convexity constraint on additive encoding (z(0,...,0)=0 ∈ boundary)</li>
+<li>Cross-ell universality: the 11/13 Re&gt;0 wall as a structural invariant</li>
+</ul>
+<h3>Open Questions</h3>
+<ul>
+<li>Is the 11/13 Re&gt;0 wall provably universal across ALL ell values, or could some ell break it?</li>
+<li>What algebraic property of 0x1B and 0x06 makes them specifically unreachable by Re&gt;0 multiplicative?</li>
+<li>Does the rotated half-plane sweep reveal an angle where 13/13 is achieved? If so, what is the minimum such angle?</li>
+<li>Why is the ell=6 catalog smaller than ell=5 despite the higher-rank ring? Is this a search depth limitation or a structural property?</li>
+<li>Can the complement symmetry (theta ↔ theta+180) be extended to a full symmetry group acting on the reachability landscape?</li>
+<li>Is there a single activation function that achieves 13/13 across ALL ell values simultaneously?</li>
+<li>Connection between Q=3 Potts criticality (conformal field theory) and the Boolean function reachability hierarchy?</li>
+</ul>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/c.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</body>
+</html>

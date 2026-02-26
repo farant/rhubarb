@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>inventory/entries/demo_83.md</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+    <link rel="stylesheet" href="../../style.css">
+</head>
+<body>
+    <nav><a href="../../index.html">← Back to Index</a></nav><hr>
+    <h2>Demo 83: Framing as Computational Content</h2>
+<ul>
+<li><strong>Status</strong>: COMPLETE</li>
+<li><strong>File</strong>: <code><a href="../../demo_83_framing_test/main.c.html">demo_83_framing_test/main.c</a></code> (~1035 lines)</li>
+<li><strong>Tests</strong>: 12/12 pass</li>
+<li><strong>Depends on</strong>: Demo 66 (quaternionic DKC, 24-cell geometry), Demo 79 (ζ₁₂ capacity, XOR12 reachable, early "N-2" pattern first observed), Demo 81 (logarithmic scaling law), Demo 82 (crossing depth, "+2 per resource unit" pattern, depth as independent computational axis)</li>
+<li><strong>Feeds into</strong>: Future work verifying the +2 framing loss at other roots (ζ₁₆, ζ₂₄); analytic proof of "+2 per writhe unit" from the (-A³)^w factor; writhe distribution of 24-cell vertices; reservoir computing interpretation of writhe × depth as independent channels</li>
+</ul>
+<h3>Headline</h3>
+Jones normalization destroys exactly 2 XOR levels of computational capacity at every root tested. The "N-2" pattern observed in early demos was the Jones polynomial's capacity all along, not a bracket truncation artifact. Framing is not a bookkeeping anomaly to be normalized away — it is one discrete computational resource worth +2 XOR levels, independent of and additive with crossing depth.
+<h3>Key Results</h3>
+<ul>
+<li><strong>Consistent 2-level loss</strong>: bracket capacity = N, Jones capacity = N-2 at both roots tested. ζ₁₂: bracket XOR12, Jones XOR10. ζ₈: bracket XOR8, Jones XOR6. The loss is exact and constant across roots.</li>
+<li><strong>The N-2 pattern resolved</strong>: the "N-2" observation from Demo 79 was Jones capacity, not a bracket truncation artifact. The bracket genuinely reaches XOR12 at ζ₁₂; earlier demos that stopped at XOR10 were inadvertently computing Jones-normalized quantities.</li>
+<li><strong>Framing lives in angles, not directions</strong>: Jones normalization reduces distinct quaternions from 4096 to 2710 (-33.8%), angles from 43 to 31 (-28%), but leaves direction count unchanged (512 → 512). The angular vocabulary reduction is the mechanism of capacity loss.</li>
+<li><strong>Writhe and depth are independent computational axes</strong>: depth-writhe correlation r = 0.139 across 4096 entries. Mean |writhe| grows linearly with depth (0.80 → 1.33 → 1.82 → 2.14 → 2.61 → 3.19 for depths 0–8), but the low correlation means a deep entry can have low writhe (crossings cancel) or high writhe (crossings accumulate). These are genuinely separate resources.</li>
+<li><strong>Writhe alone can compute (but not far)</strong>: writhe-only XOR test (replacing quaternion sums with writhe sums) finds 32 XOR6 winners. Writhe as a standalone feature = one unit of computational resource. Writhe alone cannot reach XOR8 or higher — full power requires writhe × lattice interaction.</li>
+<li><strong>Winners use mixed writhe (chirality variation)</strong>: XOR12 winners use both positive and negative writhe entries. The computation exploits chirality variation, not just magnitude. Mixed-writhe fractions: XOR6 41%, XOR8 25%, XOR10 9%, XOR12 12%.</li>
+<li><strong>Additive resource decomposition</strong>: lattice structure provides the base (XOR6 achievable from lattice alone); depth adds +2 per closure round (Demo 82); writhe adds +2 on top. These three resources are independent and additive.</li>
+<li><strong>ζ₈ control confirms structural origin</strong>: at ζ₈ (24 entries, finite group), the same -2 loss holds: bracket XOR8, Jones XOR6. The framing effect is not an artifact of infinite-group scaling — it is a structural property of the bracket-to-Jones relationship itself.</li>
+</ul>
+<h3>Theorems/Conjectures</h3>
+<ul>
+<li><strong>Framing = +2 XOR Levels (DEMONSTRATED)</strong>: Jones normalization costs exactly 2 XOR levels at both ζ₈ and ζ₁₂. The loss is a discrete, constant, root-independent structural feature of the writhe-dependent phase factor. Framing is one discrete unit of computational resource, comparable in magnitude to one crossing-depth unit (Demo 82).</li>
+<li><strong>Resource Decomposition Conjecture (SUPPORTED)</strong>: DKC computational power decomposes as lattice base (XOR6) + 2 × depth_rounds + 2 × framing_present. The "+2 per resource unit" pattern matches across both the depth scaling (Demo 82: each closure round at transition depths) and writhe. Whether these are truly additive across all roots and depths requires further verification.</li>
+<li><strong>Angular Vocabulary is the Mechanism (DEMONSTRATED)</strong>: framing loss manifests entirely through angle reduction (43 → 31), not direction reduction (512 → 512). The writhe-dependent phase rotates quaternions in the angular coordinate, not the directional coordinate. This is consistent with the Demo 82 finding that angular refinement (not direction count) drives XOR10 → XOR12.</li>
+<li><strong>Writhe Independence from Depth (DEMONSTRATED at r=0.14)</strong>: near-zero correlation at 4096 entries is strong evidence these are genuinely independent. The interpretation is that braid words with equal crossing number can have very different writhes depending on whether crossings cancel or accumulate — chirality structure is not determined by length.</li>
+<li><strong>TQFT Anomaly is Computational Resource (INTERPRETATION)</strong>: the Jones polynomial removes the writhe phase as a "framing anomaly." TQFT's maximally degenerate point (δ=0) discards this term first. Demo 83 demonstrates that the anomaly term is not noise but computation — exactly the component that contributes 2 XOR levels.</li>
+</ul>
+<h3>Data</h3>
+<ul>
+<li>ζ₁₂ catalog: 4096 entries, 9 closure rounds</li>
+<li>Writhe range: [-9, 9]; 91.4% of entries have nonzero writhe; mean writhe 1.697 (positive bias from generator structure)</li>
+<li>Depth-writhe correlation: r = 0.139</li>
+<li>Mean |writhe| by depth: depth 0 → 0.80, depth 1 → 1.33, depth 2 → 1.82, depth 4 → 2.14, depth 6 → 2.61, depth 8 → 3.19</li>
+<li>Capacity table (ζ₁₂): bracket XOR6=32, XOR8=32, XOR10=32, XOR12=32; Jones XOR6=32, XOR8=32, XOR10=32, XOR12=0</li>
+<li>Capacity table (ζ₈): bracket XOR6=32, XOR8=32; Jones XOR6=32, XOR8=0</li>
+<li>Information collapse (ζ₁₂): distinct quaternions 4096 → 2710 (-33.8%), directions 512 → 512 (unchanged), angles 43 → 31 (-28%)</li>
+<li>Writhe-only XOR6 winners: 32 (confirming writhe as a standalone unit); writhe alone cannot reach XOR8</li>
+<li>Mixed-writhe winners: XOR6 41% (13/32), XOR8 25% (8/32), XOR10 9% (3/32), XOR12 12% (4/32)</li>
+</ul>
+<h3>Code Assets</h3>
+<ul>
+<li><strong>Writhe tracking in <code>build_closure()</code></strong>: <code>g_writhe[]</code> array updated alongside <code>g_depth[]</code>; generator writhes σ₁=+1, σ₁⁻¹=-1, σ₂=+1, σ₂⁻¹=-1; each new product inherits parent writhe plus generator writhe contribution</li>
+<li><strong><code>jones_normalize_catalog()</code></strong>: computes Jones phase per unit writhe as <code>-(3<em>half_angle + pi)</code>, applies per-entry rotation <code>phi = writhe[i] </em> jones_phase_per_w</code> as a unit quaternion left-multiplier; works for any root (auto-adapts via <code>g_half_angle</code>)</li>
+<li><strong><code>save_catalog()</code> / <code>restore_catalog()</code></strong>: snapshots and restores quaternions + depths + writhes; enables bracket→Jones→bracket switching without rebuilding closure; extends the Demo 82 pattern to also save writhe array</li>
+<li><strong><code>test_xor_writhe()</code></strong>: independent XOR verifier using writhe sums instead of quaternion sums; uses a flat array of 129 cells (writhe offset 64, range -64 to +64); confirms writhe alone as a standalone computational feature</li>
+<li><strong><code>find_capacity()</code></strong>: reused from Demo 82 pattern; unified XOR6 → XOR12 pipeline returning <code>CapResult</code> struct; used three times (bracket, Jones, ζ₈ control)</li>
+<li><strong>Winner writhe analysis (Part D)</strong>: per-level writhe histogram, min/max/mean absolute writhe, and mixed-writhe fraction; iterates saved winner tuples and indexes into <code>g_writhe[]</code>; confirms chirality variation signature of higher XOR levels</li>
+<li><strong><code>count_distinct_quats()</code></strong>: O(N²) exact quaternion comparison (checking both q and -q as representatives); used to measure information collapse between bracket and Jones catalogs</li>
+</ul>
+<h3>Literature Touched</h3>
+<ul>
+<li><strong>Kirby (1978)</strong>: framing determines 3-manifold topology; the writhe phase factor carries exactly this topological information, and Demo 83 proves it also carries computational information</li>
+<li><strong>Witten (1989)</strong>: framing anomaly is the first term removed in TQFT (maximally degenerate point δ=0); the demo proves that what TQFT calls an anomaly is what DKC computes with</li>
+<li><strong>Rasmussen (2004)</strong>: writhe appears explicitly in Khovanov q-grading and is not normalized away in categorified knot theory; the Khovanov perspective preserves the same quantity that DKC uses for computation</li>
+<li><strong>Kuperberg (2015)</strong>: #P-hardness of Jones polynomial for non-lattice roots; the demo is agnostic to hardness but uses the Jones polynomial as a controlled degraded comparison against the bracket</li>
+<li><strong>Aizenberg (2008)</strong>: k-sector MVN activation; the Sec×Vor activation here shows that framing's contribution is through angular refinement, consistent with angular resolution as the limiting factor for higher XOR levels</li>
+<li><strong>Reservoir Computing (Jaeger 2001, Maass 2002)</strong>: writhe and depth as independent computational axes is the knot-theory analog of independent channels in a reservoir — each adds capacity without interfering with the other; the "+2 per resource unit" pattern matches the independent-channel additivity expected from reservoir theory</li>
+</ul>
+<h3>Open Questions</h3>
+<ul>
+<li><strong>Does the +2 loss hold at other roots?</strong> ζ₁₆ and ζ₂₄ have not been tested. The loss is constant across ζ₈ and ζ₁₂ despite very different group sizes (24 vs. 4096), suggesting universality, but more roots are needed.</li>
+<li><strong>Can the "+2 per writhe unit" be proved analytically?</strong> The (-A³)^{-w} factor acts as a rotation by <code>-(3<em>half_angle + pi)</em>w</code> per entry. The 2-level loss should follow from how this rotation redistributes angular vocabulary. A direct count of angle equivalence classes before and after normalization would confirm.</li>
+<li><strong>At ζ₈, is Jones XOR6 exactly the "standard sector activation" capacity from Demo 63?</strong> If the 6-sector activation that saturates at XOR6 in Demo 63 is the same regime as the Jones-normalized ζ₈ catalog, this would be a non-trivial structural coincidence worth pursuing.</li>
+<li><strong>What is the writhe distribution of the 24-cell vertices?</strong> The 24 entries of the ζ₈ closure form the binary octahedral group. Do antipodal pairs (q and -q) have opposite writhes (writhe inversion under negation)?</li>
+<li><strong>Does writhe add exactly +2 regardless of depth?</strong> The demo shows framing = +2 at the group's maximum capacity level. But at intermediate depths, does the bracket also beat Jones by exactly 2, or does the gap vary with depth?</li>
+</ul>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/c.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</body>
+</html>

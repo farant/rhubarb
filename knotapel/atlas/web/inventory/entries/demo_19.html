@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>inventory/entries/demo_19.md</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+    <link rel="stylesheet" href="../../style.css">
+</head>
+<body>
+    <nav><a href="../../index.html">← Back to Index</a></nav><hr>
+    <h2>Demo 19: Braid Circuit Compiler</h2>
+<ul>
+<li><strong>Status</strong>: COMPLETE</li>
+<li><strong>File</strong>: <code><a href="../../demo_19_braid_compiler/main.c.html">demo_19_braid_compiler/main.c</a></code> (~1017 lines)</li>
+<li><strong>Tests</strong>: ~15 checks across 5 parts (A-E): root-of-unity catalog, universal gate set, boolean compiler, full adder, efficiency analysis</li>
+<li><strong>Depends on</strong>: Demo 18 (braid logic gates: NOT and NAND discovery), Demo 15 (delta-zero optimal angles)</li>
+<li><strong>Feeds into</strong>: Demo 20 (braid error analysis)</li>
+</ul>
+<h3>Headline</h3>
+Builds a complete boolean expression compiler that evaluates arbitrary logic circuits via recursive Kauffman bracket thresholding of braid gates, demonstrating a universal {NOT, NAND} gate set at the 8th root of unity (A = e^{i*5pi/4}) and compiling a full 1-bit adder that passes all 8 input combinations.
+<h3>Key Results</h3>
+<ul>
+<li><strong>Root-of-unity catalog</strong> (Part A): tests NOT and NAND gates at 4th, 6th, 8th, 10th, 12th roots of unity. Multiple roots support universal gate sets. Establishes a hierarchy of gate-supporting angles.</li>
+<li><strong>Universal set at 5pi/4</strong> (Part B): NOT (6-crossing, word: [-1,-1,-1,-1,-1,-1]) and NAND (5-crossing, word: [-1,-1,-1,2,2]) both work at convergence angle. Raw vs reduced bracket separation compared. Fallback angle sweep if 5pi/4 fails.</li>
+<li><strong>Boolean compiler</strong> (Part C): expression tree with EXPR_VAR / EXPR_NOT / EXPR_NAND nodes. Derived gates: AND = NOT(NAND), OR = NAND(NOT,NOT), XOR = NAND(NAND(a,NAND(a,b)),NAND(b,NAND(a,b))). All truth tables verified for AND (4/4), OR (4/4), XOR (4/4).</li>
+<li><strong>Full adder</strong> (Part D): sum = XOR(XOR(a,b), c_in), carry = OR(AND(a,b), AND(c_in, XOR(a,b))). All 8 input combinations correct. Reports gate counts per evaluation.</li>
+<li><strong>Efficiency analysis</strong> (Part E): expression complexity (nodes/gates per operation), linear depth scaling verified (NOT chain), timing benchmarks, crossing count analysis (NOT=6, NAND=5, AND=11, XOR=15, full adder sum up to 30 crossings).</li>
+</ul>
+<h3>Theorems/Conjectures</h3>
+<ul>
+<li><strong>Convergence thesis</strong>: the 8th root of unity (5pi/4) is where three phenomena align: Demo 15's classification angles, Demo 18's magic gate angles, and cyclotomic integer bracket values</li>
+<li>Gate composition preserves correctness through cascade thresholding (each gate produces a classical bit that feeds as braid input to the next gate)</li>
+<li>Gate count scales linearly with expression depth (verified with NOT chains of depth 1,2,4,8)</li>
+</ul>
+<h3>Data</h3>
+<ul>
+<li>NOT gate truth table: input=0 → high amplitude, input=1 → low amplitude (separation &gt; 0.001)</li>
+<li>NAND gate truth table: (0,0),(0,1),(1,0) → high, (1,1) → low (separation &gt; 0.001)</li>
+<li>Full adder: 8 input combinations, sum+carry gate counts, max gates per input</li>
+<li>Timing: full adder evaluations in ms</li>
+<li>Root-of-unity catalog: 5 root families x all angles, NOT/NAND working counts</li>
+</ul>
+<h3>Code Assets</h3>
+<ul>
+<li><strong>Expression tree compiler</strong>: <code>Expr</code> type with <code>expr_var()</code>, <code>expr_not()</code>, <code>expr_nand()</code> constructors + derived <code>expr_and()</code>, <code>expr_or()</code>, <code>expr_xor()</code></li>
+<li><strong>Arena-based expression pool</strong> (<code>EXPR_POOL_SIZE=1024</code>): simple allocation with <code>expr_pool_reset()</code> — no free needed</li>
+<li><strong><code>eval_expr()</code></strong>: recursive evaluator that thresholds bracket amplitudes at each gate, tracks gate count and max depth</li>
+<li><strong><code>expr_size()</code></strong>: counts total expression tree nodes</li>
+<li><strong>Gate evaluation helpers</strong>: <code>gate_output()</code> (1-input), <code>gate_output_2bit()</code> (2-input), plus <code>_reduced</code> variants that divide by |delta|^k</li>
+<li><strong><code>make_gate_braid()</code></strong>: concatenates input word + gate word into a single braid</li>
+<li><strong><code>test_not_at_angle()</code> / <code>test_nand_at_angle()</code></strong>: evaluate gate separation at arbitrary angle, fill Gate struct with threshold/separation</li>
+<li>Reuses: complex arithmetic, braid state-sum oracle, union-find</li>
+</ul>
+<h3>Literature Touched</h3>
+<ul>
+<li>Universality of {NOT, NAND} gate set for classical boolean logic</li>
+<li>Roots of unity as algebraic sweet spots for Kauffman bracket evaluation</li>
+<li>Cyclotomic integers and exact bracket values at roots of unity</li>
+<li>Full adder circuit decomposition into primitive gates</li>
+</ul>
+<h3>Open Questions</h3>
+<ul>
+<li>How does gate fidelity degrade as circuit depth increases? (cascade thresholding error accumulation)</li>
+<li>Can the compiler be extended to multi-bit operations (e.g., N-bit ripple-carry adder)?</li>
+<li>Is there a more crossing-efficient XOR gate than the 3-NAND decomposition?</li>
+<li>Does the convergence thesis hold for higher-strand braids (beyond 2-3 strands)?</li>
+</ul>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/c.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</body>
+</html>

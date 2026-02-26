@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>inventory/entries/demo_47.md</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+    <link rel="stylesheet" href="../../style.css">
+</head>
+<body>
+    <nav><a href="../../index.html">← Back to Index</a></nav><hr>
+    <h2>Demo 47: Parity Investigation</h2>
+<ul>
+<li><strong>Status</strong>: COMPLETE</li>
+<li><strong>File</strong>: <code><a href="../../demo_47_parity_investigation/main.c.html">demo_47_parity_investigation/main.c</a></code> (~1641 lines)</li>
+<li><strong>Tests</strong>: ~12 tests; prediction scorecard 3/6 pass (P1, P2, P4 pass; P3, P5, P6 fail — failures are informative)</li>
+<li><strong>Depends on</strong>: Demo 46 (per-neuron gauge correction, NPN classification, split-sigmoid baseline), Demo 29 (exact Z[zeta_8] catalog), Demo 45/46 (topology-frequency correlation)</li>
+<li><strong>Feeds into</strong>: Demo 48 (forward DKC zoo, hybrid decomposition), Demo 50 (parity reachability at k=6 sectors)</li>
+</ul>
+<h3>Headline</h3>
+MVN activation dramatically improves bracket decomposition for parity (pn-RMS 0.41 vs 0.77), but NOT by phase alignment to lattice — instead by creating phase coherence within each neuron's weight subspace; the topology-frequency correlation reverses sign under MVN, revealing that different activations access different sectors of the bracket algebra.
+<h3>Key Results</h3>
+<ul>
+<li><strong>Three activations compared across all 13 NPN classes</strong>: split-sigmoid (baseline), MVN-continuous (z/|z|), MVN-k8 (snap to nearest 8th root of unity)</li>
+<li><strong>All 13 NPN classes converge for all 3 activations</strong>; MVN converges 5-10x faster than split-sigmoid</li>
+<li><strong>MVN-cont improves per-neuron gauge by 20% overall</strong> (0.57→0.46 avg pn-RMS) and <strong>47% for parity</strong> (0.77→0.41)</li>
+<li><strong>Phase alignment did NOT improve</strong> (0.197 vs 0.189 rad avg error) — the mechanism is phase coherence, not lattice alignment</li>
+<li><strong>Amplitude-only got WORSE</strong> with MVN (0.36 vs 0.33) — MVN redistributes information from magnitudes into phases</li>
+<li><strong>Topology-frequency correlation REVERSED</strong>: Spearman rho = -0.78 (split-sig) → +0.55 (MVN-cont) → -0.10 (MVN-k8). Split-sig favors topology-preferred functions; MVN-cont favors topology-resistant functions. The two activations are literally complementary.</li>
+<li><strong>MVN-k8 disappointed</strong>: STE gradient noise makes it worse than continuous MVN (0.50 vs 0.46 avg, 0.59 vs 0.41 for parity)</li>
+<li><strong>More neurons DO help parity</strong> under split-sig: nh=3→nh=6 drops pn-RMS from 0.89 to 0.51 (falsified P5)</li>
+<li><strong>Per-neuron gauge gap (pn-RMS minus amp-only) reduced 60%</strong> by MVN-cont (0.097 vs 0.244), meaning phases now carry real information</li>
+</ul>
+<h3>Theorems/Conjectures</h3>
+<ul>
+<li><strong>Phase coherence (not alignment) drives gauge improvement</strong>: CONFIRMED — MVN produces intra-neuron phase correlation that gauge rotation exploits</li>
+<li><strong>Topology-frequency correlation reversal</strong>: OBSERVED — split-sig and MVN-cont access different sectors of the bracket algebra (topological vs angular)</li>
+<li><strong>Parity barrier partly architectural, partly algebraic</strong>: CONFIRMED — MVN reduces but doesn't eliminate parity's resistance (residual 0.41 RMS may relate to TL non-semisimplicity)</li>
+<li><strong>TL non-semisimplicity hypothesis</strong>: CONJECTURED — parity's residual resistance under MVN may reflect the non-semisimple structure of Temperley-Lieb algebra at q=zeta_8 (connecting neural network learnability, knot invariant evaluation, TQC, and abstract algebra)</li>
+<li><strong>Two-channel coding</strong>: CONJECTURED — bracket catalog has magnitude channel (~4.3 bits, split-sig) and phase channel (~1.5 bits, MVN-cont); joint decoder could achieve ~5.8 bits/symbol</li>
+</ul>
+<h3>Data</h3>
+<ul>
+<li>Training convergence: split-sig ~480 avg epochs (786 parity), MVN-cont ~92 (156 parity), MVN-k8 ~84 (166 parity)</li>
+<li>Decomposition averages (13 classes): split-sig gl=0.716/pn=0.572/amp=0.328/ph=0.189; MVN-cont gl=0.546/pn=0.457/amp=0.360/ph=0.197; MVN-k8 gl=0.557/pn=0.497/amp=0.399/ph=0.207</li>
+<li>Parity (XNOR3) specifically: split-sig pn=0.765, MVN-cont pn=0.407, MVN-k8 pn=0.590</li>
+<li>Parity deep dive (pn-RMS): split-sig nh=3:0.886 nh=4:0.526 nh=5:0.640 nh=6:0.514; MVN-cont nh=3:0.563 nh=4:0.454 nh=5:0.480 nh=6:0.424</li>
+<li>Spearman rho(pn-RMS, topo_freq): split-sig=-0.783, MVN-cont=+0.550, MVN-k8=-0.100 (n=9)</li>
+<li>Random baseline RMS: 0.809</li>
+<li>Prediction scorecard: P1 PASS, P2 PASS, P3 FAIL, P4 PASS, P5 FAIL, P6 FAIL</li>
+</ul>
+<h3>Code Assets</h3>
+<ul>
+<li><strong>Three activation functions</strong>: <code>cx_sigmoid()</code> (split-sigmoid), <code>cx_mvn_cont()</code> (z/|z| unit circle), <code>cx_mvn_k8()</code> (snap to nearest 8th root), unified via <code>cx_activate(z, ActType)</code></li>
+<li><strong><code>CxNetVar</code> network</strong>: variable hidden neuron count (1-6), complex weights, backprop with activation-specific gradients (sigmoid derivative for split-sig, Jacobian of normalization for MVN, STE for MVN-k8)</li>
+<li><strong>NPN classification</strong>: <code>npn_init()</code> computes canonical forms for all 256 3-input Boolean functions via all permutations/negations; 13 non-trivial NPN classes</li>
+<li><strong><code>fn_name()</code></strong>: human-readable names for NPN canonical truth tables (AND3, BUF, EXACT1, MAJ, MUX, XOR2, XOR3, XNOR3, etc.)</li>
+<li><strong>Per-neuron gauge generalized</strong>: <code>pn_gauge_3d()</code> for nh=3 (36^3 grid + refinement), <code>pn_gauge_coord()</code> for nh&gt;3 (coordinate descent, 72 steps/axis, 3 iterations)</li>
+<li><strong><code>compute_phase_error()</code></strong>: average angular distance to nearest pi/4 multiple</li>
+<li><strong><code>spearman_rho()</code></strong>: Spearman rank correlation with tie handling</li>
+<li>Bracket catalog builder, global gauge sweep, amplitude-only RMS — all reusable from Demo 46</li>
+</ul>
+<h3>Literature Touched</h3>
+<ul>
+<li><strong>Aizenberg (2008)</strong>: MVN solves parity with single neuron; parity is MVN's showcase problem</li>
+<li><strong>Aizenberg &amp; Moraga (2007)</strong>: derivative-free backpropagation for MLMVN</li>
+<li><strong>Troyer &amp; Wiese (2005)</strong>: sign problem is NP-hard; parity = maximal cancellation</li>
+<li><strong>Goldberg &amp; Jerrum (2017)</strong>: Ising partition function is #P-hard</li>
+<li><strong>Goodman &amp; Wenzl (1993)</strong>: Temperley-Lieb algebra at roots of unity is non-semisimple</li>
+<li><strong>Ridout &amp; Saint-Aubin (2019)</strong>: TL non-semisimplicity, Jones-Wenzl idempotent radical</li>
+<li><strong>"Neglectons" (Nature Comms 2025)</strong>: non-semisimple TQFTs rescue universality for Ising anyons</li>
+<li><strong>GPTQ = Babai's algorithm (ICLR 2026)</strong>: neural network quantization as lattice rounding</li>
+<li><strong>arXiv:2501.00817 (2025)</strong>: gradient descent fails on parity (hardness of fixed parities)</li>
+<li><strong>Novelty confirmed</strong>: zero papers connect MVN activation + Kauffman bracket decomposition + cyclotomic lattice structure + Boolean function difficulty. Four siloed communities.</li>
+</ul>
+<h3>Open Questions</h3>
+<ul>
+<li>Can a hybrid decoder (amplitude-only for split-sig, gauge for MVN-cont) outperform either alone?</li>
+<li>Is the residual 0.41 pn-RMS for parity under MVN-cont related to TL non-semisimplicity at q=zeta_8?</li>
+<li>Would Aizenberg's native derivative-free learning rule (instead of backprop+STE) produce better lattice alignment with MVN-k8?</li>
+<li>Does the topology-frequency correlation reversal hold at 4-input scale (222 NPN classes)?</li>
+<li>What is the intra-neuron phase variance metric, and does it cleanly separate the three activations?</li>
+<li>Can the "angular sector" accessed by MVN-cont be characterized algebraically?</li>
+</ul>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/c.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</body>
+</html>

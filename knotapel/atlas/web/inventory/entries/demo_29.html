@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>inventory/entries/demo_29.md</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+    <link rel="stylesheet" href="../../style.css">
+</head>
+<body>
+    <nav><a href="../../index.html">← Back to Index</a></nav><hr>
+    <h2>Demo 29: Cyclotomic Arithmetic — Forward DKC</h2>
+<ul>
+<li><strong>Status</strong>: COMPLETE</li>
+<li><strong>File</strong>: <code><a href="../../demo_29_cyclotomic_arithmetic/main.c.html">demo_29_cyclotomic_arithmetic/main.c</a></code> (~904 lines)</li>
+<li><strong>Tests</strong>: ~20 pass (expected: Part A has ~15 verification tests, Parts B-E add ~6 more)</li>
+<li><strong>Depends on</strong>: Demo 26-28 (reverse DKC, split-sigmoid XOR network, bracket-as-weight concept), Demo 10-13 (state-sum bracket oracle)</li>
+<li><strong>Feeds into</strong>: Demo 45+ (forward DKC zoo, all NPN classes, MVN activation, parity reachability)</li>
+</ul>
+<h3>Headline</h3>
+Implements exact Z[zeta_8] cyclotomic integer arithmetic and proves FORWARD DKC: exact bracket values at A=e^{i*5pi/4} compute XOR without any training, confirming that the topological structure is sufficient and training merely finds it.
+<h3>Key Results</h3>
+<ul>
+<li><strong>Z[zeta_8] exact arithmetic fully implemented</strong>: elements (a,b,c,d) in basis {1, zeta_8, zeta_8^2, zeta_8^3} with zeta_8^4 = -1; multiplication uses 16 integer muls, zero floating-point</li>
+<li><strong>All arithmetic operations verified</strong>: mul, sub, neg, scale, pow (positive and negative exponents), conjugation — all cross-checked against float within 1e-10</li>
+<li><strong>Critical delta=0 condition</strong>: at A = e^{i*5pi/4} = -zeta_8, A^2 + A^{-2} = 0 exactly, so delta=0 and only single-loop states (lp==1) survive in the bracket state sum. This massively simplifies exact computation.</li>
+<li><strong>Bracket catalog built</strong>: 2-3 strand braids of length 1-8, yielding 50+ distinct Z[zeta_8] values with |bracket| &gt; 0.5; exact values match float with 100% agreement</li>
+<li><strong>Forward DKC CONFIRMED</strong>: 100+ valid XOR triples found from exact bracket values + gauge rotation sweep (5-degree resolution over 360 degrees); weights are bracket values by construction (RMS = 0.000)</li>
+<li><strong>Solution manifold</strong>: solutions cluster in magnitude bands [0,2), [2,4), [4,9) with 80%+ coverage; gauge angles show structure related to zeta_8 orbit (45-degree periodicity)</li>
+<li><strong>Bracket composition is NOT multiplicative</strong>: bracket(b1<em>b2) != bracket(b1)</em>bracket(b2) for &gt;= 80% of tested pairs (trace closure is not multiplicative), but all composed values remain in Z[zeta_8] by construction</li>
+<li><strong>Training-as-Focusing thesis confirmed</strong>: topological (bracket) structure is sufficient for computation; neural network training merely locates pre-existing solutions on the Z[zeta_8] lattice</li>
+</ul>
+<h3>Theorems/Conjectures</h3>
+<ul>
+<li><strong>Forward DKC</strong>: CONFIRMED — exact Z[zeta_8] bracket values compute XOR without training</li>
+<li><strong>Training-as-Focusing</strong>: CONFIRMED — the topological structure is sufficient; training merely finds it</li>
+<li><strong>Delta=0 simplification</strong>: PROVEN (exact) — at A = -zeta_8, delta = -(A^2 + A^{-2}) = 0 exactly, reducing state sum to single-loop states only</li>
+<li><strong>Bracket non-multiplicativity</strong>: CONFIRMED — bracket(b1<em>b2) != bracket(b1)</em>bracket(b2) for trace closure</li>
+<li><strong>Z[zeta_8] closure</strong>: CONFIRMED (trivially) — all bracket values and their compositions remain in Z[zeta_8]</li>
+</ul>
+<h3>Data</h3>
+<ul>
+<li>A = (0,-1,0,0) in Z[zeta_8] basis = -zeta_8 = e^{i*5pi/4}</li>
+<li>A^{-1} = (0,0,0,1) = zeta_8^3 = e^{i*3pi/4}</li>
+<li>zeta_8^8 = 1 verified exactly</li>
+<li>Catalog: 2-3 strand braids, lengths 1-8, enumeration capped at 100,000 per (n,len) combination</li>
+<li>Forward DKC search: distinct_count^3 triples x 72 gauge angles (5-degree steps)</li>
+<li>Solution magnitude bands: [0,2), [2,4), [4,9)</li>
+<li>Split-sigmoid activation: sigma(re) and sigma(im) independently, output p = h.re<em>(1-h.im) + (1-h.re)</em>h.im</li>
+</ul>
+<h3>Code Assets</h3>
+<ul>
+<li><strong><code>Cyc8</code> type</strong>: exact Z[zeta_8] cyclotomic integer — struct with 4 long coefficients (a,b,c,d)</li>
+<li><code>cyc8_make/zero/one/add/sub/neg/mul/scale/eq/conj/pow_int/print/to_cx</code>: complete arithmetic library for cyclotomic integers</li>
+<li><code>cyc8_mul()</code>: multiplication using the relation zeta_8^4 = -1, 16 integer muls, 12 adds</li>
+<li><code>cyc8_conj()</code>: complex conjugation via conj(a,b,c,d) = (a,-d,-c,-b); doubles as inverse for units</li>
+<li><code>braid_bracket_exact()</code>: exact bracket computation in Z[zeta_8] at delta=0, only summing single-loop states</li>
+<li><code>CatalogEntry</code> and <code>build_exact_catalog()</code>: enumerates braids, computes both exact and float brackets, deduplicates distinct values</li>
+<li><code>test_xor_triple()</code>: split-sigmoid XOR verification for a (w1, w2, b) weight triple</li>
+<li><code>ValidTriple</code> and forward DKC search loop with gauge rotation sweep</li>
+<li>Standard braid infrastructure (union-find, state-sum bracket oracle) for float comparison</li>
+</ul>
+<h3>Literature Touched</h3>
+<ul>
+<li>Habiro (2002): bracket values at roots of unity are cyclotomic integers</li>
+<li>Abramsky (2007): TL diagrams encode computation</li>
+<li>Nazer-Gastpar (2011): algebraic integer lattices support function computation</li>
+<li>Z[zeta_8] = Z[e^{i*pi/4}] as the natural lattice for Kauffman bracket values at 8th root of unity</li>
+</ul>
+<h3>Open Questions</h3>
+<ul>
+<li>How does the solution count scale with the size of the bracket catalog (more braids = more distinct values = more solutions)?</li>
+<li>What is the algebraic structure of the solution manifold? Are solutions related by Z[zeta_8] automorphisms beyond gauge rotation?</li>
+<li>Can the delta=0 simplification be extended to other roots of unity where delta != 0?</li>
+<li>Does forward DKC extend to all 13 NPN classes (addressed in later demos 45-50)?</li>
+<li>What is the minimal bracket catalog needed to guarantee at least one XOR solution exists?</li>
+</ul>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/c.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</body>
+</html>

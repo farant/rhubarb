@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>inventory/entries/demo_14.md</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+    <link rel="stylesheet" href="../../style.css">
+</head>
+<body>
+    <nav><a href="../../index.html">← Back to Index</a></nav><hr>
+    <h2>Demo 14: Zero Structure</h2>
+<ul>
+<li><strong>Status</strong>: COMPLETE</li>
+<li><strong>File</strong>: <code><a href="../../demo_14_zero_structure/main.c.html">demo_14_zero_structure/main.c</a></code> (~831 lines)</li>
+<li><strong>Tests</strong>: 7/7 pass (compiles clean with all strict flags including -Werror)</li>
+<li><strong>Depends on</strong>: Demo 11 (initial observation of bracket amplitude zeros), Demo 13 (23-knot table + dedup)</li>
+<li><strong>Feeds into</strong>: (further invariant refinement, classification power analysis)</li>
+</ul>
+<h3>Headline</h3>
+Investigates zeros of |bracket(e^{i*theta})| as a knot invariant: finds that zeros occur only at universal angles (multiples of pi/4), counts take values from {0, 4, 8}, and chiral pairs have perfectly reflected zero positions.
+<h3>Key Results</h3>
+<ul>
+<li><strong>Zero counts partition into {0, 4, 8} only</strong> for torus knots T(2,n) — not monotonic with crossing number; pattern is 8,0,0,8,4,4 for n=3,5,7,9,11,13</li>
+<li><strong>All zeros occur at universal angles</strong>: pi/4 multiples (the delta zeros: pi/4, 3pi/4, 5pi/4, 7pi/4) and pi/8 multiples. Perfectly uniform spacing (ratio=1.00 for all knots)</li>
+<li><strong>Chiral pairs have reflected zero positions</strong>: theta &lt;-&gt; 2pi-theta, all pairs 100% matched</li>
+<li><strong>Figure-eight has 0 zeros</strong> with min amplitude 0.021 (amphichiral, bracket never vanishes on unit circle)</li>
+<li><strong>All composites have 0 zeros</strong> — braid connected sums don't factor like diagram connected sums</li>
+<li><strong>Braid vs diagram connected sum</strong>: factorization bracket(K1#K2) = bracket(K1)*bracket(K2)/delta does NOT hold for braid concatenation (error ~6.35), confirming braid concatenation != diagram connected sum</li>
+<li><strong>Clear amplitude gap</strong>: zero-class knots have min_amp &lt; 7.3e-15, nonzero-class have min_amp &gt; 0.021 (gap ratio ~2.85 trillion)</li>
+<li><strong>Classification power</strong>: zeros separate 61% of pairs (128/210), but 0-zero class is huge (12 knots), leaving 82 indistinguishable pairs</li>
+</ul>
+<h3>Theorems/Conjectures</h3>
+<ul>
+<li><strong>Confirmed</strong>: Zero count in {0, 4, 8} for torus knots T(2,n) in this table</li>
+<li><strong>Confirmed</strong>: Chiral pairs share zero count and have reflected positions</li>
+<li><strong>Confirmed</strong>: All zeros lie on the pi/8 lattice (subset of delta zeros or their bisections)</li>
+<li><strong>Confirmed</strong>: Braid concatenation != diagram connected sum (factorization fails)</li>
+<li><strong>Observed</strong>: Zero count is NOT monotonic with crossing number — cyclic pattern for torus knots</li>
+<li><strong>Limitation</strong>: Zeros alone cannot distinguish most 0-zero knots (composites, figure-eight, T(2,5), T(2,7) all indistinguishable)</li>
+</ul>
+<h3>Data</h3>
+<ul>
+<li>21 unique knots after dedup (T23#fig8 == T(2,5)* removed)</li>
+<li>Zero counts: unknot=4, T(2,3)/T(2,3)<em>=8, T(2,5)/T(2,5)</em>=0, T(2,7)/T(2,7)<em>=0, T(2,9)/T(2,9)</em>=8, T(2,11)/T(2,11)<em>=4, T(2,13)/T(2,13)</em>=4, fig-eight=0, all composites=0</li>
+<li>4-zero positions: 0.2500, 0.7500, 1.2500, 1.7500 (*pi) — exactly the delta zeros</li>
+<li>8-zero positions: 0.1250, 0.3750, 0.6250, 0.8750, 1.1250, 1.3750, 1.6250, 1.8750 (*pi) — pi/8 lattice</li>
+<li>Delta zeros: pi/4, 3pi/4, 5pi/4, 7pi/4 (= -2<em>cos(2</em>theta) = 0)</li>
+<li>3 distinct zero count classes across 21 knots</li>
+<li>1024 sample points, bisection with 50 iterations, threshold 1e-6</li>
+</ul>
+<h3>Code Assets</h3>
+<ul>
+<li><code>bracket_amp()</code>: evaluate |bracket| at angle theta on unit circle</li>
+<li><code>bisect_zero()</code>: golden-section-like bisection to find precise zero locations (50 iterations)</li>
+<li><code>part_a_find_zeros()</code>: high-resolution zero finder (1024 samples, per-knot zero arrays)</li>
+<li>Knot table infrastructure: <code>init_knots()</code> with 22 braids (torus knots T(2,3)-T(2,13) + mirrors, figure-eight, 7 connected sums), <code>dedup_knots()</code> using bracket evaluation at two reference angles</li>
+<li><code>add_torus_2n()</code>, <code>add_connected_sum()</code>: knot table builder helpers</li>
+<li>Reusable complex arithmetic (<code>Cx</code> type), state-sum bracket oracle, union-find — all copied from earlier demos</li>
+</ul>
+<h3>Literature Touched</h3>
+<ul>
+<li>Kauffman bracket zeros on the unit circle</li>
+<li>Delta = -A^2 - A^{-2} = -2<em>cos(2</em>theta) zeros at pi/4 multiples</li>
+<li>Connected sum bracket factorization: bracket(K1#K2) = bracket(K1)*bracket(K2)/delta (diagram level)</li>
+<li>Chiral pair reflection symmetry (A &lt;-&gt; A^{-1} = theta &lt;-&gt; 2pi-theta)</li>
+</ul>
+<h3>Open Questions</h3>
+<ul>
+<li>Why does the zero count for torus knots follow the cyclic pattern {8,0,0,8,4,4}? Is there a number-theoretic explanation (n mod something)?</li>
+<li>Can zeros distinguish within the large 0-zero class at all, or is additional invariant data always needed?</li>
+<li>The pi/8 lattice for 8-zero knots — is this exactly the 8th roots of unity? What's the algebraic explanation?</li>
+<li>Dedup found T23#fig8 == T(2,5)* — is this a real equivalence or a dedup false positive?</li>
+</ul>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/c.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</body>
+</html>

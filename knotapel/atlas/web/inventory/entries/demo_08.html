@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>inventory/entries/demo_08.md</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+    <link rel="stylesheet" href="../../style.css">
+</head>
+<body>
+    <nav><a href="../../index.html">← Back to Index</a></nav><hr>
+    <h2>Demo 08: Vogel's Algorithm (PD -&gt; Braid Word)</h2>
+<ul>
+<li><strong>Status</strong>: COMPLETE</li>
+<li><strong>File</strong>: <code><a href="../../demo_08_vogel/main.c.html">demo_08_vogel/main.c</a></code> (~887 lines)</li>
+<li><strong>Tests</strong>: 47/47 pass</li>
+<li><strong>Depends on</strong>: Demo 07 (braid -&gt; PD direction), Demo 01 (PD bracket oracle, knot PD codes)</li>
+<li><strong>Feeds into</strong>: completes the PD &lt;-&gt; braid round-trip; any later demo needing to convert arbitrary PD notation into braid words</li>
+</ul>
+<h3>Headline</h3>
+Compiler from PD notation to braid word via Seifert circle decomposition — completes the bidirectional PD/braid bridge with full bracket-preserving round-trip verification.
+<h3>Key Results</h3>
+<ul>
+<li>Seifert circle membership correctly computed via union-find for trefoil (2 circles), figure-eight (3 circles), Hopf link (2 circles)</li>
+<li>Trefoil PD -&gt; braid word [1,1,1] on 2 strands (sigma_1^3)</li>
+<li>Figure-eight PD -&gt; braid word [1,-2,1,-2] on 3 strands</li>
+<li>Hopf link PD -&gt; braid word [1,1] on 2 strands (sigma_1^2)</li>
+<li>Round-trip bracket match: pd_bracket(PD) == braid_bracket(pd_to_braid(PD)) for all three knots</li>
+<li>Double round-trip: Braid_1 -&gt; PD_1 -&gt; Braid_2 -&gt; PD_2, brackets match at every stage</li>
+<li>Also tests trefoil on 3 strands (sigma_1 sigma_2 sigma_1) for double round-trip</li>
+</ul>
+<h3>Theorems/Conjectures</h3>
+<ul>
+<li>VERIFIED: Alexander's theorem in practice — Seifert circle count = braid width</li>
+<li>VERIFIED: PD &lt;-&gt; Braid conversion preserves Kauffman bracket (round-trip and double round-trip)</li>
+<li>VERIFIED: For standard small knots, Seifert graph is always a path graph (no Vogel moves needed)</li>
+</ul>
+<h3>Data</h3>
+<ul>
+<li>Trefoil: 6 arcs -&gt; 2 Seifert circles ({0,2,4}, {1,3,5}) -&gt; 2-strand braid</li>
+<li>Figure-eight: 8 arcs -&gt; 3 Seifert circles ({0,4}, {1,3,5,7}, {2,6}) -&gt; 3-strand braid</li>
+<li>Hopf link: 4 arcs -&gt; 2 Seifert circles ({0,3}, {1,2}) -&gt; 2-strand braid</li>
+</ul>
+<h3>Code Assets</h3>
+<ul>
+<li><code>seifert_membership()</code>: union-find Seifert resolution — positive crossings use B-smoothing (0,1)(2,3), negative use A-smoothing (0,3)(1,2)</li>
+<li><code>trace_circles()</code>: traces each Seifert circle through crossings to get cyclic crossing order</li>
+<li><code>find_braid_order()</code>: brute-force cut-point search + Kahn's topological sort for consistent braid word ordering; skips same-generator constraints (they commute)</li>
+<li><code>pd_to_braid()</code>: full 7-step PD -&gt; braid compiler (Seifert membership -&gt; crossing-circle map -&gt; Seifert graph path check -&gt; circle ordering -&gt; crossing trace -&gt; braid ordering -&gt; emit generators)</li>
+<li><code>braid_to_pd()</code>: carried from Demo 07 for round-trip tests</li>
+<li>Path-graph check: all vertices degree &lt;= 2, exactly 2 leaves</li>
+<li>Returns error codes: -1 (not a path graph), -2 (no valid ordering found)</li>
+</ul>
+<h3>Literature Touched</h3>
+<ul>
+<li>Vogel's algorithm for PD -&gt; braid conversion</li>
+<li>Alexander's theorem (every link is a closed braid)</li>
+<li>Seifert circles / Seifert surface construction</li>
+<li>Kahn's algorithm for topological sort</li>
+</ul>
+<h3>Open Questions</h3>
+<ul>
+<li>Only handles path-graph Seifert graphs — full Vogel moves (for non-path Seifert graphs) not yet implemented</li>
+<li>Could the brute-force cut-point search become expensive for knots with many crossings per circle? (currently bounded by MAX_X=20)</li>
+<li>No Markov stabilization — output braid may not be minimal</li>
+</ul>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/c.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</body>
+</html>

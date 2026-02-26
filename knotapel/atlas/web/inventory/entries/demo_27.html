@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>inventory/entries/demo_27.md</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+    <link rel="stylesheet" href="../../style.css">
+</head>
+<body>
+    <nav><a href="../../index.html">← Back to Index</a></nav><hr>
+    <h2>Demo 27: Complex-Valued Reverse DKC</h2>
+<ul>
+<li><strong>Status</strong>: COMPLETE</li>
+<li><strong>File</strong>: <code><a href="../../demo_27_complex_reverse_dkc/main.c.html">demo_27_complex_reverse_dkc/main.c</a></code> (~1049 lines)</li>
+<li><strong>Tests</strong>: ~7 pass (P1: complex neuron solves XOR, P2: bracket values are cyclotomic, P3: complex catalog has more distinct values than amplitude-only, P4: gauge-corrected complex RMS &lt; 0.1, P5: complex RMS better than amplitude RMS, P6: complex matching reduces degeneracy, P7: complex (6 params) beats real (9 params), P8: complex RMS improves on Demo 26 reference)</li>
+<li><strong>Depends on</strong>: Demo 26 (real-valued reverse DKC, amplitude-only matching, RMS=0.2641 reference), Demo 10 (unit-circle bracket evaluation, complex arithmetic)</li>
+<li><strong>Feeds into</strong>: establishes that complex bracket VALUES (not just amplitudes) match trained NN weights; cyclotomic Z[zeta_8] structure; U(1) gauge symmetry in weight-bracket correspondence</li>
+</ul>
+<h3>Headline</h3>
+Complex-valued neural network (single complex neuron with split-sigmoid) solves XOR with 6 real parameters where real networks need 9, and gauge-corrected complex bracket matching outperforms Demo 26's amplitude-only decomposition — proving phase carries computational information discarded by the Born-rule projection.
+<h3>Key Results</h3>
+<ul>
+<li><strong>Part A</strong>: Single complex neuron (Nitta architecture) with split-sigmoid solves XOR; convergence rate tracked across 20 trials; 6 real parameters (w1, w2, b each complex) vs 9 for real 2-2-1 network</li>
+<li><strong>Part B</strong>: Complex bracket catalog at A = e^{i<em>5</em>pi/4} (delta=0); distinct complex values exceed distinct amplitudes (constellation expansion); majority of values near Z[zeta_8] or Z[i] cyclotomic lattice; degeneracy reduction from amplitude to complex measured</li>
+<li><strong>Part C</strong>: Complex decomposition with U(1) gauge correction — 360-angle sweep finds optimal rotation aligning weights to bracket values; gauge-corrected RMS &lt; 0.1 (beats Demo 26's 0.2641)</li>
+<li><strong>Part D</strong>: Phase distribution across 8 sectors (45-degree bins matching 8th roots of unity); phase-writhe correlation for first 20 braids; phases are structured (non-uniform)</li>
+<li><strong>Part E</strong>: Degeneracy test — complex matching dramatically reduces ambiguity vs amplitude-only (fewer braids match each weight within tolerance)</li>
+<li><strong>Part F</strong>: Head-to-head: complex neuron (6 params, gauge-corrected) beats real 2-2-1 (9 params, amplitude-only) on bracket decomposition RMS</li>
+</ul>
+<h3>Theorems/Conjectures</h3>
+<ul>
+<li>CONFIRMED: Single complex neuron with split-sigmoid solves XOR (Nitta 2003 result reproduced)</li>
+<li>CONFIRMED: Bracket values at A = e^{i<em>5</em>pi/4} are cyclotomic integers in Z[zeta_8] (coordinates are multiples of 1/sqrt(2) or integers)</li>
+<li>CONFIRMED: Complex bracket catalog contains strictly more distinct values than amplitude-only catalog (constellation expansion)</li>
+<li>CONFIRMED: U(1) gauge symmetry — global phase rotation of all weights preserves network function; optimal gauge angle aligns weights to bracket lattice</li>
+<li>CONFIRMED: Complex matching reduces degeneracy vs amplitude-only (phase information discriminates between braids sharing the same amplitude)</li>
+<li>CONFIRMED: Complex (6 params) outperforms real (9 params) on bracket decomposition — fewer parameters, better RMS</li>
+<li>KEY INSIGHT: Demo 26's amplitude-only matching is a Born-rule projection (C -&gt; R&gt;=0) that discards phase; phase carries computational information</li>
+</ul>
+<h3>Data</h3>
+<ul>
+<li>Complex neuron: w1, w2 complex weights + b complex bias = 6 real parameters</li>
+<li>20 training trials with deterministic RNG seeds</li>
+<li>Bracket catalog: 2-3 strand braids up to length 8 at A = e^{i<em>5</em>pi/4}, up to 8192 entries</li>
+<li>Amplitude threshold: &gt; 0.5 for catalog inclusion</li>
+<li>Distinct values: complex count &gt; amplitude count (constellation expansion factor reported)</li>
+<li>Cyclotomic lattice test: majority near Z[zeta_8] (tolerance 0.01 on scaled coordinates)</li>
+<li>U(1) gauge sweep: 360 angles, best angle and RMS reported</li>
+<li>Degeneracy: tolerance 0.5 for matching radius</li>
+<li>Real 2-2-1 reference: 9 parameters, amplitude-only RMS</li>
+<li>Demo 26 reference: RMS = 0.2641</li>
+</ul>
+<h3>Code Assets</h3>
+<ul>
+<li><code>Cx</code> type: complex arithmetic (<code>cx_make</code>, <code>cx_add</code>, <code>cx_sub</code>, <code>cx_mul</code>, <code>cx_div</code>, <code>cx_abs</code>, <code>cx_phase</code>, <code>cx_exp_i</code>, <code>cx_scale</code>, <code>cx_pow_int</code>, <code>cx_neg</code>)</li>
+<li><code>CxNeuron</code> struct: single complex neuron (w1, w2, b), <code>cx_neuron_init()</code>, <code>cx_neuron_forward()</code>, <code>cx_neuron_xor_output()</code>, <code>cx_neuron_predict()</code>, <code>cx_neuron_train_xor()</code> with full backprop</li>
+<li><code>cx_sigmoid()</code>: split-sigmoid activation (sigmoid applied independently to Re and Im)</li>
+<li>Smooth XOR decision: <code>p = h.re<em>(1-h.im) + (1-h.re)</em>h.im</code></li>
+<li><code>CxCatalogEntry</code> struct: braid + full complex bracket + amplitude + phase</li>
+<li><code>build_complex_catalog()</code>: enumerates braids on 2-3 strands up to given length, stores full complex bracket values</li>
+<li><code>find_nearest_cx()</code> / <code>find_nearest_amp()</code>: nearest-neighbor matching in complex plane vs amplitude line</li>
+<li>U(1) gauge sweep: rotates all weights by e^{i*theta}, minimizes complex RMS over 360 angles</li>
+<li><code>RealXorNet</code> struct: 2-2-1 real network for comparison, with <code>real_net_init()</code>, <code>real_net_forward()</code>, <code>real_net_train_xor()</code></li>
+<li><code>braid_bracket_at()</code>: full complex bracket (not just amplitude) via state-sum</li>
+<li>Union-find Seifert resolution for loop counting</li>
+</ul>
+<h3>Literature Touched</h3>
+<ul>
+<li>Nitta (2003): single complex neuron solves XOR via orthogonal decision boundaries</li>
+<li>Aizenberg: multi-valued neuron (MVN) with complex-valued weights</li>
+<li>Cyclotomic integers Z[zeta_8]: bracket values as sums of 8th roots of unity</li>
+<li>Born rule projection: |&lt;b&gt;(A)|^2 discards phase information</li>
+<li>U(1) gauge symmetry in neural networks: global phase rotation invariance</li>
+<li>Freedman-Kitaev-Wang: topological quantum computation (complex amplitudes fundamental)</li>
+<li>Demo 26 established amplitude-only baseline (RMS=0.2641)</li>
+</ul>
+<h3>Open Questions</h3>
+<ul>
+<li>Can the U(1) gauge angle be predicted from the braid structure rather than swept numerically?</li>
+<li>What happens at other cyclotomic evaluation points (not just A = e^{i<em>5</em>pi/4})?</li>
+<li>Does the constellation expansion factor have a closed-form expression in terms of the cyclotomic field degree?</li>
+<li>Can multiple complex neurons compose to match multi-weight braid decompositions (moving toward DKC "forward" direction)?</li>
+<li>Relationship between split-sigmoid orthogonal boundaries and the Z[zeta_8] lattice structure?</li>
+<li>Does the degeneracy reduction scale with braid length — do longer braids produce more phase diversity?</li>
+</ul>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/c.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</body>
+</html>

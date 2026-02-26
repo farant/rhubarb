@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>inventory/entries/demo_01.md</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+    <link rel="stylesheet" href="../../style.css">
+</head>
+<body>
+    <nav><a href="../../index.html">← Back to Index</a></nav><hr>
+    <h2>Demo 01: Kauffman Bracket</h2>
+<ul>
+<li><strong>Status</strong>: COMPLETE</li>
+<li><strong>File</strong>: <code><a href="../../demo_01_kauffman_bracket/main.c.html">demo_01_kauffman_bracket/main.c</a></code> (~498 lines)</li>
+<li><strong>Tests</strong>: 9/9 pass</li>
+<li><strong>Depends on</strong>: none — foundation</li>
+<li><strong>Feeds into</strong>: Demo 02 (matrix/TL approach comparison), Demo 03 (Yang-Baxter), Demo 04 (braid word compiler)</li>
+</ul>
+<h3>Headline</h3>
+Exact Kauffman bracket computation via state-sum model using integer Laurent polynomials — the brute-force oracle for all later demos.
+<h3>Key Results</h3>
+<ul>
+<li>Laurent polynomial arithmetic (add, multiply, trim, equality) works correctly over integers — no floating point needed</li>
+<li>Trefoil bracket matches Kauffman's known value (code gives left-handed mirror: -A^{-5} - A^3 + A^7)</li>
+<li>Figure-eight bracket correct: A^8 - A^4 + 1 - A^{-4} + A^{-8}, confirmed palindromic (amphichiral)</li>
+<li>Hopf link bracket correct: -A^4 - A^{-4}</li>
+<li>Knot discrimination works: trefoil and figure-eight produce distinct brackets</li>
+<li>f-polynomial (writhe-normalized bracket) correct for trefoil and figure-eight</li>
+</ul>
+<h3>Theorems/Conjectures</h3>
+<ul>
+<li>VERIFIED: Kauffman bracket state-sum reproduces known values for 3_1, 4_1, and Hopf link</li>
+<li>VERIFIED: Amphichiral knot (4_1) has palindromic bracket and writhe = 0</li>
+</ul>
+<h3>Data</h3>
+<ul>
+<li>Trefoil (left-handed): &lt;3_1&gt; = -A^{-5} - A^3 + A^7</li>
+<li>Figure-eight: &lt;4_1&gt; = A^8 - A^4 + 1 - A^{-4} + A^{-8}</li>
+<li>Hopf link: &lt;hopf&gt; = -A^4 - A^{-4}</li>
+<li>Loop value: d = -A^2 - A^{-2}</li>
+</ul>
+<h3>Code Assets</h3>
+<ul>
+<li><code>Poly</code> struct: Laurent polynomial with integer coefficients (lo exponent + coefficient array, MAX_TERMS=64)</li>
+<li><code>p_zero</code>, <code>p_mono</code>, <code>p_trim</code>, <code>p_add</code>, <code>p_mul</code>, <code>p_eq</code>, <code>p_print</code>: complete polynomial algebra</li>
+<li><code>Knot</code>/<code>Xing</code> structs: PD (planar diagram) notation for knot crossings with arc labels and crossing signs</li>
+<li><code>count_loops()</code>: state-sum loop tracer — resolves crossings into A/B smoothings, traces cycles through arc connectivity</li>
+<li><code>kauffman_bracket()</code>: full state-sum computation (O(2^n) over all crossing resolutions)</li>
+<li><code>jones_from_bracket()</code>: writhe normalization to get f-polynomial</li>
+<li><code>make_trefoil()</code>, <code>make_figure_eight()</code>, <code>make_hopf()</code>: PD notation constructors for standard knots</li>
+<li>Limits: MAX_X=16 crossings, MAX_ARCS=32</li>
+</ul>
+<h3>Literature Touched</h3>
+<ul>
+<li>Kauffman bracket state-sum model (Kauffman 1987)</li>
+<li>PD notation from KnotAtlas</li>
+<li>Jones polynomial via bracket normalization</li>
+</ul>
+<h3>Open Questions</h3>
+<ul>
+<li>PD notation chirality: code's "right-handed trefoil" PD gives left-handed bracket — convention subtlety noted but not fully resolved</li>
+<li>State-sum is O(2^n), limiting to ~16 crossings — Demo 02 addresses this with matrix approach</li>
+</ul>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/c.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</body>
+</html>

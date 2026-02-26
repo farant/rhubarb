@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>inventory/entries/demo_87.md</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+    <link rel="stylesheet" href="../../style.css">
+</head>
+<body>
+    <nav><a href="../../index.html">← Back to Index</a></nav><hr>
+    <h2>Demo 87: Null Indispensability at zeta_12</h2>
+<ul>
+<li><strong>Status</strong>: COMPLETE</li>
+<li><strong>File</strong>: <code><a href="../../demo_87_null_indispensability/main.c.html">demo_87_null_indispensability/main.c</a></code> (~907 lines)</li>
+<li><strong>Tests</strong>: 14/14 pass</li>
+<li><strong>Depends on</strong>: Demo 84 (null states and logarithmic structure at zeta_8, direction partition framework, null indispensability theorem), Demo 79 (zeta_12 capacity, infinite group XOR12)</li>
+<li><strong>Feeds into</strong>: Demo 88 (anti-correlation mechanism, cross-root comparison uses <a href="./demo_87.html">D87</a> dispensability finding), Reservoir Computing pillar (null-state role depends on group regime)</li>
+</ul>
+<h3>Headline</h3>
+Null indispensability is a finite-group phenomenon: at zeta_12 (infinite group, 4096 entries), bracket-null entries are directionally indispensable (67 exclusive S2 axes) but computationally dispensable (XOR capacity fully preserved without nulls) — a regime transition from zeta_8 where removing nulls destroys capacity.
+<h3>Key Results</h3>
+<ul>
+<li><strong>zeta_8 control baseline (24 entries, 13 directions)</strong>: 9 null entries (37.5%), direction partition 6 null-only + 3 shared + 4 non-null-only = 13. Full catalog achieves XOR6=32, XOR8=32. Non-null-only (15 entries, 7 dirs) achieves XOR6=32 but XOR8=4. Removing nulls destroys XOR8 capacity. Confirms Demo 84's findings as a baseline.</li>
+<li><strong>zeta_12 catalog (4096 entries, 2043 directions)</strong>: 121 null entries (3.0%), appearing at depths 2-8. Direction partition: 67 null-only + 54 shared + 1922 non-null-only = 2043. Null fraction drops from 37.5% (zeta_8) to 3.0% (zeta_12).</li>
+<li><strong>zeta_12 capacity preservation</strong>: Full catalog (4096 entries) and non-null-only subset (3975 entries) BOTH achieve XOR6=32, XOR8=32, XOR10=32, XOR12=32. Maximum XOR level and winner counts are identical. Removing 121 null entries has zero effect on computational capacity.</li>
+<li><strong>Directional vs computational indispensability decoupling</strong>: At zeta_12, nulls are directionally indispensable (67 exclusive axes that no non-null entry reaches) but computationally dispensable. The 1976 non-null directions provide enough combinatorial diversity that losing 67 null-only directions does not constrain XOR solutions.</li>
+<li><strong>Depth distribution</strong>: Null entries appear at depths 2-8 in zeta_12, with null fraction increasing at greater depths (consistent with zeta_8 pattern where depth-3 = 100% null). Detailed depth x null cross-tabulation computed per phase.</li>
+<li><strong>Half-angle of null entries</strong>: All null entries have half-angle exactly 90 degrees. This is tautological: null means Re(q)=0 means half_angle = arccos(0) = 90 degrees by definition. Not a discovery.</li>
+<li><strong>Truncation artifact caught and fixed</strong>: Initial run with MAX_DIR=600 truncated zeta_12's true 2043 directions to 600, producing a wrong partition (39/30/531) and a spurious XOR12 drop (32 to 24). Increasing MAX_DIR to 2048 fixed the issue. The capacity drop was a measurement artifact, not a real finding.</li>
+</ul>
+<h3>Theorems/Conjectures</h3>
+<ul>
+<li><strong>Null Dispensability at Infinite Groups (DEMONSTRATED)</strong>: At zeta_12, removing all 121 bracket-null entries preserves full XOR capacity (XOR6/8/10/12 all 32 winners). Null indispensability, demonstrated at zeta_8 in Demo 84, does not generalize to infinite groups.</li>
+<li><strong>Regime Transition Theorem (DEMONSTRATED)</strong>: There is a qualitative transition between finite groups (zeta_8: nulls computationally critical, 37.5% of catalog, 6/13 exclusive directions in a sparse direction set) and infinite groups (zeta_12: nulls computationally redundant, 3% of catalog, 67/2043 exclusive directions in a dense direction set). The transition mechanism is direction density — when the non-null direction count is large enough, losing null-only directions cannot constrain combinatorial search.</li>
+<li><strong>Null Fraction Dilution (CONFIRMED)</strong>: zeta_4 = 75%, zeta_8 = 37.5%, zeta_12 = 3.0%. The null fraction decreases sharply as group order grows, consistent with the Demo 84 conjecture that nulls approach measure zero in infinite groups.</li>
+<li><strong>Directional Indispensability Without Computational Indispensability (NEW OBSERVATION)</strong>: Owning exclusive S2 directions is necessary but not sufficient for computational indispensability. The question is whether the remaining directions provide enough combinatorial diversity for XOR solutions — at zeta_8 they do not (too sparse), at zeta_12 they do (dense enough).</li>
+</ul>
+<h3>Data</h3>
+<ul>
+<li>zeta_8 catalog: 24 entries, 13 directions, 9 null (37.5%), 4 closure rounds</li>
+<li>zeta_8 direction partition: 6 null-only, 3 shared, 4 non-null-only</li>
+<li>zeta_8 capacity: Full XOR8=32, Non-null XOR8=4 (capacity destroyed)</li>
+<li>zeta_12 catalog: 4096 entries, 2043 directions, 121 null (3.0%)</li>
+<li>zeta_12 direction partition: 67 null-only, 54 shared, 1922 non-null-only</li>
+<li>zeta_12 capacity (full): XOR6=32, XOR8=32, XOR10=32, XOR12=32</li>
+<li>zeta_12 capacity (non-null only, 3975 entries): XOR6=32, XOR8=32, XOR10=32, XOR12=32</li>
+<li>Brute-force limit for zeta_12: bf_limit=100 (first 100 entries for XOR6 triple search)</li>
+<li>K_LADDER values tested: {1, 6, 8, 10, 12, 16, 20, 24}</li>
+<li>MAX_DIR bug: initial 600 truncated to wrong results; fixed at 2048</li>
+</ul>
+<h3>Code Assets</h3>
+<ul>
+<li><strong><code>classify_null(cat_size)</code></strong>: classifies each catalog entry as null (|Re(q)| &lt; 1e-10) or non-null; fills <code>is_null[]</code>, <code>null_idx[]</code>, <code>nonnull_idx[]</code> arrays with counts <code>n_null_total</code>, <code>n_nonnull_total</code></li>
+<li><strong><code>compute_dir_partition(cat_size)</code></strong>: builds direction catalog and classifies each direction as null-only, non-null-only, or shared; returns <code>DirPartition</code> struct with counts; also fills <code>dir_null_cnt[]</code> and <code>dir_nonnull_cnt[]</code> per-direction arrays</li>
+<li><strong><code>DirPartition</code> struct</strong>: {total_dirs, null_only, nonnull_only, shared} — reusable partition type</li>
+<li><strong><code>load_subset(indices, count)</code></strong>: loads arbitrary subset of saved catalog into <code>g_cat[]</code> for capacity measurement; enables null-removal experiments</li>
+<li><strong><code>save_catalog()</code> / <code>restore_catalog()</code></strong>: snapshot/restore pattern for catalog state including depth tracking</li>
+<li><strong><code>find_capacity(cat_size, bf_limit, CapResult *r)</code></strong>: unified capacity pipeline — builds dirs, runs XOR6 brute force then recursive extension to XOR8/10/12; returns <code>CapResult</code> with n_dirs, xor6, xor8, xor10, xor12, max_xor</li>
+<li><strong><code>CapResult</code> struct</strong>: {n_dirs, xor6, xor8, xor10, xor12, max_xor} — reusable capacity result type</li>
+<li><strong><code>test_xor()</code> with early conflict detection</strong>: XOR test uses <code>cell_even[]</code>/<code>cell_odd[]</code> counters with touched-cell tracking for fast cleanup; <code>goto cleanup</code> on first conflict for early exit</li>
+<li><strong><code>combined_cell()</code> with k_sec sectors</strong>: Sec x Vor activation using angular sectors and Voronoi direction cells; used with K_LADDER for multi-resolution capacity search</li>
+<li><strong><code>find_xor6()</code> and <code>find_recursive(level, cat_limit)</code></strong>: two-stage winner search — brute-force triples for XOR6, then recursive extension for XOR8/10/12; stores winners in <code>g_win[][]</code> arrays</li>
+<li><strong><code>g_depth[]</code> tracking through closure</strong>: each catalog entry records its generation depth during <code>build_closure()</code>; enables depth-stratified analysis in Phase 4</li>
+<li><strong>Phase 1-4 modular structure</strong>: <code>phase1_catalog()</code>, <code>phase2_capacity()</code>, <code>phase3_direction_analysis()</code>, <code>phase4_depth()</code> — each phase is a self-contained function taking root_name as parameter, reusable for any root of unity</li>
+</ul>
+<h3>Literature Touched</h3>
+<ul>
+<li><strong>Gurarie (1993) / Flohr (1996) / Gaberdiel &amp; Kausch (1996)</strong>: LCFT null-state framework — Demo 87 shows the LCFT null-state interpretation (null entries as Jordan-cell anchors) is regime-dependent: critical at finite groups, redundant at infinite groups where direction density absorbs the loss.</li>
+<li><strong>Habiro (2002) / Z[zeta_8] bracket</strong>: the zeta_8 baseline confirms Habiro's algebraic substrate; the zeta_12 extension tests whether null-state structure persists beyond the finite-group regime.</li>
+<li><strong>Reservoir Computing (Jaeger 2001, Maass et al. 2002)</strong>: Demo 84's RC null-state hypothesis (null reservoir states hold the manifold open) is refined: this only applies in sparse-direction regimes. In dense-direction regimes (infinite groups), the non-null states alone provide sufficient manifold dimensionality.</li>
+</ul>
+<h3>Open Questions</h3>
+<ul>
+<li><strong>Where exactly is the transition?</strong> Between zeta_8 (nulls indispensable) and zeta_12 (nulls dispensable), there must be a crossover point. Is it at a specific catalog size, direction count, or null fraction? Testing at intermediate sizes (e.g., zeta_10 or truncated zeta_12 catalogs) could locate the transition.</li>
+<li><strong>Are the 67 null-only directions at zeta_12 ever needed?</strong> At larger XOR levels (XOR14, XOR16), could null-only directions become essential again? The current search stops at XOR12.</li>
+<li><strong>Does the bf_limit=100 truncation affect the result?</strong> The XOR6 brute force only searches the first 100 of 4096 (or 3975 non-null) entries. If null entries cluster in the first 100, this could bias the comparison. The identical 32-winner result for both full and non-null suggests the truncation is not an issue, but exhaustive search would confirm.</li>
+<li><strong>Null fraction at zeta_10 (Fibonacci anyons)?</strong> Demo 84 raised this question. zeta_10 was identified as infinite in Demo 80. Measuring its null fraction and direction partition would fill in the dilution curve between zeta_8 (37.5%) and zeta_12 (3.0%).</li>
+<li><strong>Is per-direction residual the right metric for the transition?</strong> Demo 88 found zeta_12's per-direction spherical design residual is 8x lower than zeta_8's. Is direction density (or equivalently per-direction residual) the control parameter for the indispensability transition?</li>
+</ul>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/c.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</body>
+</html>

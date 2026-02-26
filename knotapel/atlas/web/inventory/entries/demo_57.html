@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>inventory/entries/demo_57.md</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+    <link rel="stylesheet" href="../../style.css">
+</head>
+<body>
+    <nav><a href="../../index.html">← Back to Index</a></nav><hr>
+    <h2>Demo 57: Additive Encoding DKC</h2>
+<ul>
+<li><strong>Status</strong>: COMPLETE</li>
+<li><strong>File</strong>: <code><a href="../../demo_57_additive_dkc/main.c.html">demo_57_additive_dkc/main.c</a></code> (~1140 lines)</li>
+<li><strong>Tests</strong>: ~8 checks across 5 parts (A-E): catalog verification, 2-input encoding comparison, 3-input additive NPN search, head-to-head multiplicative vs additive, union analysis</li>
+<li><strong>Depends on</strong>: Demo 56 (five-lens analysis predicting additive encoding dissolves 0x1B/0x06 wall), Demo 55 (ell=4 bracket catalog at delta=sqrt(2))</li>
+<li><strong>Feeds into</strong>: Further encoding/activation investigation in DKC program</li>
+</ul>
+<h3>Headline</h3>
+Tests Demo 56's prediction that additive encoding (z = x1<em>w1 + x2</em>w2 + x3*w3) should dissolve the 0x1B and 0x06 wall that exists with multiplicative encoding + half-plane (Re&gt;0) activation. <strong>Key discovery: the prediction was wrong</strong> — the wall is about ACTIVATION CONVEXITY, not encoding geometry. Additive is actually WORSE (5/13 vs mult's 11/13 with Re&gt;0) because additive sums preserve convexity of half-planes, while multiplicative products can rotate out of half-planes (anti-convex). Non-convex activations (split-sigmoid, sector) work with either encoding.
+<h3>Key Results</h3>
+<ul>
+<li><strong>Catalog</strong> (Part A): builds same ell=4 (delta=sqrt(2)) bracket catalog as Demo 55 using Z[zeta_16] exact arithmetic. All values are Z[i]-axial. Verifies A*A^{-1}=1, delta^2=2.</li>
+<li><strong>2-input comparison</strong> (Part B): with Re&gt;0 activation, multiplicative achieves &gt;=8/16 truth tables while additive is constrained by z(0,0)=0 forcing bit 0=0 (all achieved TTs are even)</li>
+<li><strong>3-input additive NPN search</strong> (Part C): exhaustive catalog^3 triples across 8 activations. With Re&gt;0, 0x1B and 0x06 remain UNREACHABLE — wall holds. Additive reaches only ~5/13 NPN classes with Re&gt;0.</li>
+<li><strong>Head-to-head</strong> (Part D): for each of 8 activations, compares multiplicative vs additive reachability. With Re&gt;0: additive is a strict subset of multiplicative (0 add-only classes). With non-convex activations (split-sigmoid, sector): both encodings reach all 13.</li>
+<li><strong>Union analysis</strong> (Part E): Re&gt;0 union of mult+add = 11/13 (the two wall classes 0x1B and 0x06 unreachable by BOTH encodings). Non-convex activations reach all 13 with either encoding alone.</li>
+</ul>
+<h3>Prediction Scorecard</h3>
+<table><thead><tr><th>#</th><th>Prediction</th><th>Result</th><th>Notes</th></tr></thead><tbody><tr><td>1</td><td>Re&gt;0 + additive reaches 0x1B and 0x06</td><td>REFUTED</td><td>Wall is convexity, not encoding</td></tr><tr><td>2</td><td>Some multiplicative-easy become additive-hard</td><td>CONFIRMED</td><td>Additive only 5/13 vs mult 11/13 at Re&gt;0</td></tr><tr><td>3</td><td>Union covers all 13 NPN with Re&gt;0</td><td>REFUTED</td><td>Union = 11/13, wall classes unreachable by both</td></tr><tr><td>4</td><td>z(0,0,0) = 0 constrains bit 0 to 0</td><td>CONFIRMED</td><td>All additive TTs are even</td></tr></tbody></table>
+<h3>Theorems/Conjectures</h3>
+<ul>
+<li><strong>Convexity thesis</strong>: the 0x1B/0x06 wall is fundamentally about activation convexity, not encoding geometry. Half-planes {z : Re(z) &gt; 0} are convex sets. Additive sums of points in a convex set stay in that convex set (preserve convexity). Multiplicative products of complex numbers can rotate out of half-planes (anti-convex). Non-convex activations (split-sigmoid, sector) bypass the wall entirely.</li>
+<li><strong>Additive zero constraint</strong>: z(0,...,0) = 0 always, constraining bit 0 of the truth table to 0 for all activations. This eliminates half the truth table space immediately.</li>
+<li><strong>Encoding complementarity is minimal at Re&gt;0</strong>: additive is a strict subset of multiplicative at Re&gt;0 (no add-only classes). The two encodings are NOT complementary with convex activations.</li>
+</ul>
+<h3>Data</h3>
+<ul>
+<li>Same bracket catalog as Demo 55 (ell=4, delta=sqrt(2), Z[zeta_16] exact arithmetic)</li>
+<li>Catalog built from n=2 (lengths 1-10), n=3 (lengths 1-6), n=4 (lengths 1-6) braids, capped at 512 values</li>
+<li>8 activations: Re&gt;0, Im&gt;0, split-sigmoid, sector k=2/4/6/8, magnitude tau=1</li>
+<li>2-input: catalog^2 pairs, 16 possible truth tables</li>
+<li>3-input: catalog^3 triples (can be large), 256 truth tables, 13 NPN classes</li>
+<li>Encoding modes: multiplicative z = w1^x1 <em> w2^x2 </em> w3^x3 vs additive z = x1<em>w1 + x2</em>w2 + x3*w3</li>
+</ul>
+<h3>Code Assets</h3>
+<ul>
+<li><strong>Z[zeta_16] arithmetic</strong>: <code>Cyc16</code> type (8 coefficients), <code>cyc16_add/neg/mul/eq/is_zero</code>, <code>cyc16_zeta_power</code>, <code>cyc16_a_power</code> (A = zeta^5), <code>cyc16_delta_power</code>, <code>cyc16_to_cx</code>, <code>cyc16_is_zi_axial</code></li>
+<li><strong><code>search_3input_batch()</code></strong>: unified search engine that runs ALL 8 activations in a single pass through catalog triples, parameterized by encode_mode (ENCODE_MUL or ENCODE_ADD). Computes 8 truth tables per triple simultaneously. Aggregates per NPN class.</li>
+<li><strong>NPN classification</strong>: <code>npn_init()</code>, <code>npn_build_classes()</code>, <code>npn_transform()</code> — standard 96-transform canonicalization for 3-input functions</li>
+<li><strong>Activation wrappers</strong>: uniform <code>int classify(Cx, int)</code> signature for all 8 activations (Re&gt;0, Im&gt;0, split-sigmoid, sector, magnitude)</li>
+<li><strong>State-sum bracket</strong>: full planar matching + diagram composition + trace closure, evaluating at delta=sqrt(2)</li>
+<li>Reuses: planar matching, diagram composition, trace closure, braid decoding</li>
+</ul>
+<h3>Literature Touched</h3>
+<ul>
+<li>Convexity theory in activation functions and decision boundaries</li>
+<li>Linear separability: additive encoding with half-plane activation = linear classifier (can only implement linearly separable functions)</li>
+<li>Connection to XOR problem in classic perceptron theory (additive + threshold = linear = can't do XOR)</li>
+<li>Forward DKC: bracket values as codebook, multiplicative vs additive encoding as two "channel" options</li>
+</ul>
+<h3>Open Questions</h3>
+<ul>
+<li>Is there an encoding between additive and multiplicative that provides better complementarity with convex activations?</li>
+<li>Does the convexity insight generalize to 4+ inputs, or do higher dimensions introduce new phenomena?</li>
+<li>Can lattice-constrained additive encoding (restricting sums to stay on the Eisenstein/cyclotomic lattice) change the reachability picture?</li>
+<li>What is the theoretical minimum number of activation functions needed to cover all 13 NPN classes with additive encoding?</li>
+</ul>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/c.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</body>
+</html>

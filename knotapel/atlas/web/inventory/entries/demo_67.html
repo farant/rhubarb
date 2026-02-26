@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>inventory/entries/demo_67.md</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+    <link rel="stylesheet" href="../../style.css">
+</head>
+<body>
+    <nav><a href="../../index.html">← Back to Index</a></nav><hr>
+    <h2>Demo 67: Coordinate System Zoo — SU(2) Projections for DKC</h2>
+<ul>
+<li><strong>Status</strong>: COMPLETE</li>
+<li><strong>File</strong>: <code><a href="../../demo_67_coordinate_zoo/main.c.html">demo_67_coordinate_zoo/main.c</a></code> (~1776 lines)</li>
+<li><strong>Tests</strong>: 18/18 pass</li>
+<li><strong>Depends on</strong>: Demo 66 (quaternionic bracket catalog, 24-cell Voronoi, 35 solutions)</li>
+<li><strong>Feeds into</strong>: Demo 68, Demo 69, Demo 70, Demo 71</li>
+</ul>
+<h3>Headline</h3>
+Systematic test of every natural SU(2) coordinate system as a DKC activation for XOR6 proves that the computation lives on S² (rotation axis direction): a custom 13-direction Voronoi achieves 36 solutions at only 14 cells, while the Hopf phase is completely computationally inert at every resolution tested.
+<h3>Key Results</h3>
+<ul>
+<li><strong>Part A — Eigenvector extraction</strong>: The 24 quaternions from the binary octahedral group decompose into 4 eigenvalue angles (0°, 45°, 60°, 90°), 13 eigenvector directions (mod ±), and 17 (angle, direction) pairs. Axis-aligned directions are shared across two eigenvalue angles; body-diagonals appear only at 60°; edge-midpoints only at 90°. Trace sanity check confirms trace(SU(2)) = 2·cos(θ) for all 24 quaternions.</li>
+<li><strong>Part B — S² is the computational sweet spot</strong>: Custom 13-direction Voronoi on S² achieves 36 solutions at 14 cells (2.57 sol/cell) — more solutions with fewer cells than any other activation. Platonic solid Voronois (octahedral=6, icosahedral=12, cuboctahedral=12 cells) all yield zero solutions: natural polytopal geometry fails; data-derived directions are required.</li>
+<li><strong>Part C — Eigenvalue-only activation</strong>: First solutions appear at k=8 (4 solutions). Peak around k=32 (80 solutions). At k=24: 72 solutions, more than the 24-cell Voronoi's 35, using only 1D eigenvalue information.</li>
+<li><strong>Part D — Hopf phase is computationally inert</strong>: Phase-only activation yields ZERO solutions at every resolution tested (k=4 through k=32). All DKC information lives in the S² Hopf base; the S¹ fiber carries nothing. This is the deepest theoretical result of the demo.</li>
+<li><strong>Part E — Cayley-Klein is worst</strong>: The native SU(2) parameterization (|α|, arg(α)) requires 32 cells for first solutions (8 solutions) — worse than every other 2D system. Native does not mean natural-for-computation.</li>
+<li><strong>Part F — High-resolution rankings at 64 cells</strong>: Hopf base 8×8 = 292 solutions (4.56 sol/cell); Eigenvector LatLon 8×8 = 204 solutions (3.19 sol/cell); Cayley-Klein 8×8 = 106 solutions (1.66 sol/cell). At high resolution, Hopf base dominates because it carves up the computationally relevant S² more naturally than lat/lon on eigenvector S².</li>
+<li><strong>Progression across demos</strong>: <a href="./demo_65.html">D65</a> complex S¹ needs k=24 sectors (25 cells); <a href="./demo_66.html">D66</a> quaternionic S³ needs 25 cells; <a href="./demo_67.html">D67</a> eigenvector S² needs only 14 cells. The 2D projection is the most efficient.</li>
+</ul>
+<h3>Theorems/Conjectures</h3>
+<ul>
+<li><strong>Result (Hopf phase inertness)</strong>: The Hopf fiber phase ξ₁ carries zero DKC computational information at all resolutions (k=4 through k=32, exhaustive). The computation is entirely determined by the S² Hopf base. PROVEN (exhaustive).</li>
+<li><strong>Result (S² efficiency)</strong>: A 14-cell custom Voronoi on S² achieves more solutions (36) than the full 25-cell S³ Voronoi (35). Lower-dimensional projection outperforms the ambient space. DEMONSTRATED.</li>
+<li><strong>Result (eigenvalue paradox resolution)</strong>: The eigenvalue angle θ = arccos(a) depends on the real quaternion component and succeeds as an activation; the Hopf phase ξ₁ = atan2(b, a) fails completely. These are distinct quantities: θ extracts information from the combination of base and fiber, not the fiber alone. PROVEN.</li>
+<li><strong>Conjecture (14-cell minimum)</strong>: The natural 13+1 eigenvector Voronoi may be the true minimum cell count on S² for XOR6. Platonic geometries at 6 and 12 cells fail. Whether a different 13-direction subset could work with fewer cells is open. CONJECTURED.</li>
+</ul>
+<h3>Data</h3>
+<ul>
+<li>Eigenvalue angles: 4 (0°, 45°, 60°, 90°)</li>
+<li>Eigenvector directions (mod ±): 13 (3 axis + 6 edge-midpoint + 4 body-diagonal)</li>
+<li>(angle, direction) pairs: 17; quaternions (mod ±): 24; bracket values: 100</li>
+<li>Custom 13-dir S² Voronoi: 36 solutions at 14 cells (2.57 sol/cell)</li>
+<li>Hopf base activation: 30@16 cells, 130@36 cells, 292@64 cells (8×8)</li>
+<li>Hopf phase-only: 0 solutions at all resolutions (k=4,8,12,16,24,32)</li>
+<li>Eigenvalue k-sector: 0@k=4,6; 4@k=8; 64@k=12; 76@k=16; 72@k=24; 80@k=32</li>
+<li>Cayley-Klein: 0@8 cells, 0@24 cells, 8@32 cells, 26@36 cells, 106@64 cells</li>
+<li>Computational hierarchy: S² primary (14 cells sufficient), θ secondary, Hopf phase inert, full S³ redundant</li>
+</ul>
+<h3>Code Assets</h3>
+<ul>
+<li><strong><code>eigenvector_extract()</code></strong>: decomposes SU(2) quaternion into eigenvector direction (mod ±) and eigenvalue angle</li>
+<li><strong>Custom Voronoi on S²</strong>: assigns quaternion to nearest of 13 data-derived directions; handles identity/zero as degenerate cell 0</li>
+<li><strong>Platonic solid Voronois</strong>: octahedral, icosahedral, cuboctahedral cell partitions on S² (all fail for XOR6)</li>
+<li><strong>Hopf coordinate decomposition</strong>: converts quaternion to Hopf (η, ξ₁, ξ₂); separates base and fiber activations</li>
+<li><strong>Cayley-Klein parameterization</strong>: (|α|, arg(α)) grid activation</li>
+<li><strong>Eigenvalue k-sector activation</strong>: partitions [0, π] into k equal sectors on eigenvalue angle θ</li>
+<li><strong>Comparative activation harness</strong>: unified XOR6 DKC search usable across all coordinate systems</li>
+</ul>
+<h3>Literature Touched</h3>
+<ul>
+<li>Hopf (1931): original Hopf fibration S³ → S² with fiber S¹; this demo confirms the fibration structure is respected by DKC computation</li>
+<li>Aizenberg (2008): k-sector MVN activation on S¹; the present work extends and contrasts the S¹ approach with S² and S³ activations</li>
+<li>Conway &amp; Smith (2003): quaternion groups and the binary octahedral group; the 24 quaternions and their eigenvector decomposition</li>
+<li>Bloch (1946): Bloch sphere S² = CP¹; S² as qubit state space raises the question of a DKC/quantum information connection</li>
+</ul>
+<h3>Open Questions</h3>
+<ul>
+<li><strong>Why 36 vs 35?</strong> The 13-dir S² Voronoi finds 36 solutions vs the 24-cell S³ Voronoi's 35. Is the extra solution a genuinely new tuple or a boundary effect from different cell geometry?</li>
+<li><strong>Hopf base vs eigenvector geometry</strong>: At high resolution, Hopf base (292) beats eigenvector lat/lon (204). Does the Hopf base projection align better with the computation? What is the geometric relationship between Hopf base S² and eigenvector S²?</li>
+<li><strong>Below-14 minimum on S²</strong>: Platonic solids at 6 and 12 cells fail. Is 13+1=14 the true minimum, or could a non-catalog 13-direction subset work with fewer cells?</li>
+<li><strong>XOR7 on S²</strong>: Demo 65 showed XOR7 needs k=127 sectors on S¹. Does S² reduce this as dramatically as it did for XOR6 (24→14)?</li>
+<li><strong>Bloch sphere connection</strong>: The rotation axis lives on S² = CP¹ = the Bloch sphere of a qubit. Is there a direct connection between DKC computation on the Bloch sphere and quantum information theory?</li>
+</ul>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/c.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</body>
+</html>

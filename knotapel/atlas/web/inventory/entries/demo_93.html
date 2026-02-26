@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>inventory/entries/demo_93.md</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+    <link rel="stylesheet" href="../../style.css">
+</head>
+<body>
+    <nav><a href="../../index.html">← Back to Index</a></nav><hr>
+    <h2>Demo 93: Function Scaling — 1-Weight-Per-Input Encoding</h2>
+<ul>
+<li><strong>Status</strong>: COMPLETE (LANDMARK)</li>
+<li><strong>File</strong>: <code><a href="../../demo_93_function_scaling_1wpi/main.c.html">demo_93_function_scaling_1wpi/main.c</a></code> (~1636 lines)</li>
+<li><strong>Tests</strong>: 37/37 pass (Phases 1-8)</li>
+<li><strong>Depends on</strong>: Demo 92 (parity-lock theorem, +/-q encoding is XOR-only), Demo 82-91 (depth-law arc, combined_cell activation framework), Demo 48/50 (forward DKC, 1wpi encoding computes all 13 NPN classes with split-sigmoid/MVN), Demo 80 (finite/infinite boundary)</li>
+<li><strong>Feeds into</strong>: Demo 94 (binary icosahedral group, solvability as capacity bottleneck), Demo 95 (RKHS kernel computation), activation zoo research, encoding design theory, depth law under phase_cell</li>
+</ul>
+<h3>Headline</h3>
+The 1-weight-per-input encoding under combined_cell is complement-blind (only complement-invariant functions achievable); removing the sign flip (phase_cell) recovers all 13 NPN classes, and a circuit complexity hierarchy emerges as hit-rate divergence: AND/XOR ratio explodes from 1.01 to infinity as N grows from 3 to 8.
+<h3>Key Results</h3>
+<ul>
+<li><strong>Complement-Blindness Theorem (Phases 1-4)</strong>: Under combined_cell, mask m and ~m produce sums S and -S; the <code>if (qa &lt; 0)</code> normalization maps both to the same cell. ANY function where f(m) != f(~m) is impossible. At odd N, NO standard Boolean function survives (complement of any odd-length mask has different popcount parity). At N=3, only 2 obscure NPN classes (out of 14) are complement-invariant — none contains AND, OR, XOR, or MAJ.</li>
+<li><strong>Phase 1 — N=3,4,5 under combined_cell</strong>: N=3 (odd): ALL ZERO for every function at every depth. N=4 (even): XOR scales 5 to 4608 (depths 0-8), AND/OR/MAJ all zero. N=5 (odd): ALL ZERO. Confirms complement-blindness: even N allows XOR (complement-invariant), odd N kills everything.</li>
+<li><strong>Phase 2 — N=6,7,8 under combined_cell</strong>: N=6 (even): XOR 90 to 630. N=7 (odd): ALL ZERO. N=8 (even): XOR 0 to 3, first appearing at depth 4.</li>
+<li><strong>Phase 3 — Complement-pair cell sharing</strong>: 100% sharing at all N tested (N=3-6, 400-3200 pairs each). Every complement pair maps to the same cell under combined_cell.</li>
+<li><strong>Phase 4 — Complement-invariant diagnostic (N=3)</strong>: 14 NPN classes enumerated, 16 complement-invariant truth tables, only 2 non-trivial CI NPN classes, neither is AND/OR/XOR/MAJ.</li>
+<li><strong>Phase 5 — Phase-sensitive activation recovery (N=3)</strong>: Removing the <code>if (qa &lt; 0)</code> flip creates phase_cell: sector spans [0,360) not [0,180). Complement-pair sharing drops from 100% to 1.1%. ALL 13 NPN classes recovered (12/13 at depth 0, last at depth 1).</li>
+<li><strong>Phase 6 — Onset depth sweep (N=4,5,6 under phase_cell)</strong>: Onset depths nearly flat (all d=0 or d=1). Hierarchy manifests as hit rates, not onset depths. N=6 d=1: AND=8867, XOR=1219 (7.3x gap). N=6 d=6: AND=99.4%, XOR=92.2%, MAJ=89.0%.</li>
+<li><strong>Phase 7 — Hit rate ratio scaling</strong>: AND/XOR ratio at depth 1: 1.01 (N=3), 1.08 (N=4), 1.44 (N=5), 7.27 (N=6). Super-exponential divergence. N=6 XOR growth curve is logarithmic approach to saturation (3.4x to 1.1x growth factors d=1 to d=6). AND/XOR ratio converges with depth: 7.27 to 1.08 (d=1 to d=6). MAJ/XOR crossover at depth ~3-4 (N=6): MAJ easier at low depth (49.6% vs 9.9% at d=1), XOR overtakes at d~4. Depth disproportionately helps parity.</li>
+<li><strong>Phase 8 — N=7,8 confirmation at depth 1 (17 entries, 84 cells)</strong>: N=7: XOR=4/19448 (0.02%), AND=11049 (56.8%), MAJ=13353 (68.7%). AND/XOR = 2762. N=8: XOR=0/24310 (0.00%), AND=10102 (41.6%), MAJ=585 (2.4%). XOR dead, MAJ cliff. Pigeonhole: 84 cells at depth 1, XOR dies when 2^N &gt; cells (N&gt;=7), AND survives because 1-hot only needs one unique cell.</li>
+</ul>
+<h3>Theorems/Conjectures</h3>
+<ul>
+<li><strong>Complement-Blindness Theorem (PROVED + computationally verified)</strong>: Under 1wpi encoding, mask m produces sum S = sum_i (2<em>bit_i - 1)</em>q_i, and mask ~m produces -S. combined_cell(S) = combined_cell(-S) due to |qa| normalization. Therefore f(m) must equal f(~m) for any achievable f. AND, OR, MAJ, and XOR-at-odd-N all violate this constraint. Extends <a href="./demo_92.html">D92</a>'s Parity-Lock Theorem: encoding provides algebra, activation selects extractable functions.</li>
+<li><strong>Phase-Cell Recovery (DEMONSTRATED)</strong>: Removing the qa sign flip (phase_cell) breaks S &lt;-&gt; -S symmetry. Complement-pair sharing drops from 100% to 1.1%. All 13 NPN classes become achievable at N=3.</li>
+<li><strong>Circuit Complexity Hierarchy in DKC (DEMONSTRATED)</strong>: AND (AC^0) degrades gracefully 97% to 42%. MAJ (TC^0) shows cliff at N=8 (2.4%). XOR (parity, not in AC^0) killed by pigeonhole at N=7 (0.02%) and N=8 (0%). The Fourier degree determines the geometric complexity of the required partition. Hierarchy is universal across group structures (confirmed by <a href="./demo_94.html">D94</a>).</li>
+<li><strong>Pigeonhole Mechanism (DEMONSTRATED)</strong>: With 84 cells at depth 1, XOR requires balanced bisection of 2^N masks into cells. When 2^N &gt; cells, impossible. AND requires only 1 unique cell for mask 1...1. This IS the circuit depth bottleneck in finite discrete systems.</li>
+</ul>
+<h3>Data</h3>
+<ul>
+<li><strong>Catalog</strong>: zeta_12, 4096 entries, 9 BFS rounds</li>
+<li><strong>Phase 8 headline table (depth 1, 17 entries, 84 cells, exhaustive)</strong>:</li>
+</ul>
+<table><thead><tr><th>N</th><th>masks</th><th>XOR%</th><th>AND%</th><th>MAJ%</th><th>AND/XOR ratio</th></tr></thead><tbody><tr><td>3</td><td>8</td><td>96.8%</td><td>97.7%</td><td>99.7%</td><td>1.01</td></tr><tr><td>4</td><td>16</td><td>85.6%</td><td>92.3%</td><td>91.1%</td><td>1.08</td></tr><tr><td>5</td><td>32</td><td>58.3%</td><td>84.1%</td><td>94.3%</td><td>1.44</td></tr><tr><td>6</td><td>64</td><td>9.9%</td><td>71.7%</td><td>49.6%</td><td>7.27</td></tr><tr><td>7</td><td>128</td><td>0.02%</td><td>56.8%</td><td>68.7%</td><td>2762</td></tr><tr><td>8</td><td>256</td><td>0.00%</td><td>41.6%</td><td>2.4%</td><td>infinity</td></tr></tbody></table>
+<ul>
+<li><strong>Phase 1 combined_cell (N=4, even, depths 0-8)</strong>: XOR 5 to 4608; AND/OR/MAJ = 0 at all depths</li>
+<li><strong>Phase 2 combined_cell (N=6, even)</strong>: XOR 90 to 630; N=8: XOR 0 to 3 (first at depth 4)</li>
+<li><strong>Phase 3</strong>: 100% complement-pair sharing at all N (combined_cell)</li>
+<li><strong>Phase 4</strong>: 14 NPN classes, 16 CI truth tables, 2 CI NPN classes, 0 standard functions</li>
+<li><strong>Phase 5</strong>: 1.1% sharing under phase_cell, 13/13 NPN classes, 12/13 at d=0</li>
+<li><strong>Phase 6 onset depths</strong>: Nearly flat (d=0 or d=1) for all functions at N=4,5,6</li>
+<li><strong>Phase 7 N=6 AND/XOR ratio by depth</strong>: d=1: 7.27, d=2: 2.77, d=3: 1.75, d=4: 1.27, d=5: 1.13, d=6: 1.08 (convergence)</li>
+<li><strong>Phase 7 N=6 XOR growth factors</strong>: d=1 to d=6: 3.4x, 1.6x, 1.4x, 1.1x, 1.1x (logarithmic saturation, not exponential)</li>
+<li><strong>Phase 7 MAJ/XOR crossover (N=6)</strong>: MAJ easier at d=1 (49.6% vs 9.9%), XOR overtakes at d~4 (76.9% vs 73.6%)</li>
+<li><strong>K-ladder</strong>: K_SHORT = {6, 12, 24}</li>
+<li><strong>bf_max limits</strong>: Phase 1: 30/20/15 (N=3/4/5), Phase 2: 12/10/10 (N=6/7/8)</li>
+<li><strong>Pigeonhole</strong>: 84 cells at depth 1. N=7: 128 masks &gt; 84 cells. N=8: 256 masks &gt; 84 cells.</li>
+</ul>
+<h3>Code Assets</h3>
+<ul>
+<li><strong><code>phase_cell(sa, sb, sc, sd, k_sec)</code></strong>: Phase-sensitive activation — identical to combined_cell but WITHOUT the <code>if (qa &lt; 0)</code> sign flip. Sector spans [0,360) instead of [0,180). Breaks complement symmetry, enabling computation of all Boolean functions. THE key activation for the circuit complexity hierarchy.</li>
+<li><strong><code>test_1wpi(indices, n_weights, k_sec, truth_table)</code></strong>: 1wpi Boolean function test under combined_cell. Checks whether a weight tuple separates class-0 from class-1 masks. Returns 1 if separable, 0 if not.</li>
+<li><strong><code>test_1wpi_phase(indices, n_weights, k_sec, truth_table)</code></strong>: Same as test_1wpi but uses phase_cell instead of combined_cell. The activation used for Phases 5-8.</li>
+<li><strong><code>count_phase_ex(n_weights, bf_limit, truth_table)</code></strong>: Exhaustive winner counting under phase_cell across K_SHORT ladder.</li>
+<li><strong><code>sample_phase(n_weights, bf, n_samples, truth_table, rng)</code></strong>: Monte Carlo winner sampling under phase_cell for larger N where exhaustive enumeration is intractable.</li>
+<li><strong><code>init_npn()</code> / <code>npn_xform()</code></strong>: NPN equivalence class enumeration for 3-input Boolean functions. Finds all 14 classes (including constant). Uses all 6 input permutations x 8 input complementations x output negation.</li>
+<li><strong><code>sweep_triple_npn(idx, k_sec, cls_hit)</code></strong>: For a given 3-weight triple under phase_cell, enumerates all achievable NPN classes by testing all possible cell-to-output assignments. Used in Phase 5.</li>
+<li><strong><code>comb_nk(n, k)</code></strong>: Binomial coefficient computation (long arithmetic).</li>
+<li><strong>Truth table generators</strong>: <code>make_xor_tt</code>, <code>make_and_tt</code>, <code>make_or_tt</code>, <code>make_maj_tt</code> — reusable from <a href="./demo_92.html">D92</a>.</li>
+<li><strong><code>build_closure(verbose)</code></strong>: SU(2) group closure with BFS depth tracking. Shared infrastructure.</li>
+<li><strong><code>save_catalog()</code> / <code>load_up_to_depth(max_d)</code></strong>: Snapshot/filter pattern for cumulative depth experiments.</li>
+</ul>
+<h3>Literature Touched</h3>
+<ul>
+<li><strong>Hastad (1986/1987)</strong>: Parity requires exp(Omega(n^{1/(d-1)})) gates at bounded depth. Explains AND/XOR ratio explosion with N: AND is AC^0 (low-degree Fourier), XOR is not (full-degree Fourier). <a href="./demo_93.html">D93</a> makes this concrete: AND/XOR = 1.01, 1.08, 1.44, 7.27, 2762, infinity for N=3-8.</li>
+<li><strong>Barrington (1989)</strong>: NC^1 = programs over non-solvable groups. Non-commutativity yields computational power. DKC's multiplicative catalog construction is Barrington-like. The solvable/non-solvable boundary predicts capacity walls (confirmed by <a href="./demo_94.html">D94</a>).</li>
+<li><strong>LMN / Linial-Mansour-Nisan (1993)</strong>: AC^0 Fourier mass concentrates below degree (log n)^d. Explains AND's robustness to cell count limits (low-degree = simple partition geometry).</li>
+<li><strong>Furst-Saxe-Sipser (1984)</strong>: Original parity-not-in-AC^0 result. Theoretical backdrop for XOR's special difficulty.</li>
+<li><strong>Habiro (2002) / Z[zeta_8] bracket</strong>: Algebraic substrate underlying the weight catalog. <a href="./demo_93.html">D93</a> shows that the readout mechanism (1wpi + activation) determines what is extractable from this substrate.</li>
+<li><strong>Aizenberg (2008) / MVN neurons</strong>: k-sector activation framework. <a href="./demo_93.html">D93</a> decomposes the bottleneck: combined_cell's sign-flip symmetry restricts achievable functions; phase_cell (no sign flip) recovers full function hierarchy.</li>
+<li><strong><a href="./demo_48.html">D48</a>/<a href="./demo_50.html">D50</a> (forward DKC NPN classes)</strong>: Critical contrast — 1wpi with split-sigmoid/MVN computes all 13 NPN classes. <a href="./demo_93.html">D93</a> shows 1wpi with combined_cell is complement-blind; 1wpi with phase_cell also computes all 13 and reveals the circuit complexity hierarchy.</li>
+<li><strong>Nazer-Gastpar compute-and-forward</strong>: Closest coding theory analog to DKC's additive readout mechanism. DKC = multiplicative catalog construction + additive readout + activation. Novel hybrid model.</li>
+</ul>
+<h3>Open Questions</h3>
+<ul>
+<li><strong>Higher k_sec</strong>: Does increasing cell count push the pigeonhole wall to larger N? At k_sec=24 vs 12, cell count doubles — does N=8 XOR become nonzero?</li>
+<li><strong>Depth law under phase_cell</strong>: Does max_xor ~ depth + 6 still hold without the sign flip? The depth law was established under combined_cell (<a href="./demo_82.html">D82</a>-<a href="./demo_91.html">D91</a>).</li>
+<li><strong>Activation zoo</strong>: Systematic sweep of activation types (combined_cell, phase_cell, split-sigmoid, MVN sector) x functions x depths. Which activation properties (sign-flip symmetry, sector count, Voronoi resolution) control which aspects of the hierarchy?</li>
+<li><strong>MAJ cliff mechanism</strong>: MAJ drops from 68.7% (N=7) to 2.4% (N=8) — a 28x collapse. Is this a threshold phenomenon (TC^0-complete meets pigeonhole) or gradual degradation that happens to cross a visibility threshold?</li>
+<li><strong>XOR growth curve shape</strong>: The N=6 logarithmic saturation (3.4x to 1.1x growth factors) — is this universal across N, or does the shape change? Connection to Barrington scaling.</li>
+<li><strong>Hybrid encodings</strong>: Can a mixed encoding (some weights +/-q paired, some 1wpi) achieve richer function sets while maintaining depth-law structure?</li>
+<li><strong>RKHS kernel</strong>: DKC kernel K(m,m') = sum of quaternion inner products. Rank of kernel matrix should predict capacity. Seeded as <a href="./demo_95.html">D95</a>.</li>
+</ul>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/c.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</body>
+</html>

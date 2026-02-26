@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>inventory/entries/demo_92.md</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+    <link rel="stylesheet" href="../../style.css">
+</head>
+<body>
+    <nav><a href="../../index.html">← Back to Index</a></nav><hr>
+    <h2>Demo 92: Function Scaling — The Parity-Lock Theorem</h2>
+<ul>
+<li><strong>Status</strong>: COMPLETE</li>
+<li><strong>File</strong>: <code><a href="../../demo_92_function_scaling/main.c.html">demo_92_function_scaling/main.c</a></code> (~1399 lines)</li>
+<li><strong>Tests</strong>: 13/16 pass (3 informative fails — AND/OR/MAJ are impossible under the encoding, so tests expecting them to be achievable correctly fail; these confirm the theorem rather than indicating bugs)</li>
+<li><strong>Depends on</strong>: Demo 82 (crossing depth law, algebraic coherence), Demo 89 (depth law mechanism, max_xor ~ depth+6), Demo 91 (activation bottleneck, combined_cell framework), Demo 48/50 (forward DKC, NPN class zoo — the 1wpi encoding contrast)</li>
+<li><strong>Feeds into</strong>: Demo 93 (complement-blindness theorem under 1wpi encoding), encoding design (targeting specific Boolean functions), activation symmetry-breaking research (phase-sensitive activations)</li>
+</ul>
+<h3>Headline</h3>
+The +/-q input encoding is structurally parity-locked — only XOR/XNOR are computable. AND/OR/MAJ/THRESHOLD = 0 winners at ALL depths.
+<h3>Key Results</h3>
+<ul>
+<li><strong>Phase 1 — Function comparison across depths (zeta_12 catalog, depths 0-8)</strong>: XOR scales from 8 to 3866 winners (6-input) and 0 to 3080 (8-input) as depth increases. AND, OR, MAJ, THRESHOLD-2 produce ZERO winners at every depth for both 6-input and 8-input arities. The depth law (max_xor ~ depth+6) applies only to parity.</li>
+<li><strong>Phase 1b — Truth table census (10,000 random 3-weight triples)</strong>: 83.7% of random triples are XOR6-separable. AND, OR, MAJ separability = 0.0% each. This is not a matter of rarity — non-parity functions are structurally impossible.</li>
+<li><strong>Phase 1c — Mask collision check</strong>: 76 exact quaternion-sum collisions among C(64,2)=2016 mask pairs. ALL 76 are same-parity (0 cross-parity collisions). Same-parity collisions preserve XOR but break non-XOR functions that need to distinguish same-parity masks.</li>
+<li><strong>Phase 1d — Equivalence class analysis (27 classes for k=3 weights)</strong>: The encoding creates 3^k equivalence classes (per-weight effective states {-q, 0, +q}). XOR is constant on all 27 classes (0 conflicts). AND has 1/27 class conflicts, OR has 1/27, MAJ has 19/27. The critical class is (0,0,0): contains both mask 000000 and mask 111111 (both produce sum=0), but AND(000000)=0 and AND(111111)=1 — impossible to separate. 11 distinct cells for 27 classes at k_sec=12.</li>
+<li><strong>Phase 1e — Sign-flip symmetry</strong>: All 13 sign-flip pairs (c vs -c) map to identical sector, Voronoi cell, combined cell, and parity. This is provable from the combined_cell code: normalization by |qa| maps S and -S identically. Multi-triple analysis: XOR winners have 11-13 distinct cells (of 27 classes), non-winners have 6-11.</li>
+</ul>
+<h3>Theorems/Conjectures</h3>
+<ul>
+<li><strong>Parity-Lock Theorem (PROVED + computationally verified)</strong>: 6-part theorem. (a) The (0,0) equiv (1,1) collision means masks 0...0 and 1...1 always produce identical sums (both zero). (b) Any f where f(0...0) != f(1...1) is impossible under ANY activation. (c) AND, OR, MAJ all have f(0...0) != f(1...1) — all impossible. (d) XOR(0...0) = XOR(1...1) = 0 for even-length inputs — collision harmless. (e) 3^k equivalence classes, parity constant on each (swapping (0,0)&lt;-&gt;(1,1) changes popcount by +/-2, preserving parity). (f) XOR/XNOR are the only standard Boolean functions constant on all classes. Full proof in <code>proofs/parity-lock-theorem.md</code>.</li>
+<li><strong>Sign-Flip Symmetry (PROVED computationally)</strong>: combined_cell(S) = combined_cell(-S) for all sums S. The 3^k equivalence classes collapse to at most (3^k + 1)/2 distinguishable groups under the activation. For k=3: 27 classes -&gt; at most 14 groups. Observed: 11 distinct cells.</li>
+<li><strong>Encoding Concentrates on Hardest Function (DEMONSTRATED)</strong>: The +/-q paired encoding channels all computational power into parity — the single Boolean function outside AC^0 (the class of constant-depth polynomial-size circuits). This is not a limitation to be overcome but a structural feature of the encoding.</li>
+</ul>
+<h3>Data</h3>
+<ul>
+<li>Catalog: zeta_12, 4096 entries, 9 BFS rounds</li>
+<li>Phase 1 XOR winners (6-input): depth 0 = 8, depth 8 = 3866</li>
+<li>Phase 1 XOR winners (8-input): depth 0 = 0, depth 8 = 3080</li>
+<li>Phase 1 AND/OR/MAJ/THR2 winners: 0 at all depths, both arities</li>
+<li>Phase 1b XOR6-separable: 8370/10000 (83.7%)</li>
+<li>Phase 1b AND/OR/MAJ-separable: 0/10000 each (0.0%)</li>
+<li>Phase 1c mask collisions: 76 total, 76 same-parity, 0 cross-parity</li>
+<li>Phase 1d class conflicts: AND 1/27, OR 1/27, MAJ 19/27, XOR 0/27</li>
+<li>Phase 1d distinct cells: 11 of 27 classes at k_sec=12</li>
+<li>Phase 1e sign-flip pairs: 13/13 same sector, same Voronoi, same cell, same parity</li>
+<li>Phase 1e multi-triple distinct cells: winners 11-13, non-winners 6-11</li>
+<li>K-ladder: K_SHORT = {6, 12, 24} (short ladder for tractable runtime)</li>
+<li>bf_max limits: 30 (6-input), 20 (8-input)</li>
+</ul>
+<h3>Code Assets</h3>
+<ul>
+<li><strong><code>test_bool_func(indices, n_weights, k_sec, truth_table)</code></strong>: generalized Boolean function test — checks whether a weight tuple separates class-0 from class-1 masks in the combined_cell activation space. Returns 1 if separable, 0 if not. Reusable for any truth table.</li>
+<li><strong><code>count_bool_winners(n_weights, bf_limit, truth_table)</code></strong>: counts weight tuples that achieve a given Boolean function across the short k-ladder {6,12,24}. Supports 3/4/5-weight tuples.</li>
+<li><strong>Truth table generators</strong>: <code>make_xor_tt</code>, <code>make_and_tt</code>, <code>make_or_tt</code>, <code>make_maj_tt</code>, <code>make_threshold_tt</code> — produce truth tables for standard Boolean functions given n_inputs. Reusable.</li>
+<li><strong><code>check_separability(cell_labels, truth_table, n_masks)</code></strong>: checks whether a cell-labeling can separate a truth table (all masks in each cell have same truth value). Used in Phase 1b census.</li>
+<li><strong><code>phase1b_truth_table_census()</code></strong>: Monte Carlo census — 10,000 random 3-weight triples tested for XOR/XNOR/AND/OR/MAJ separability. Stores distinct cell-label patterns.</li>
+<li><strong><code>phase1c_mask_collisions()</code></strong>: exhaustive pairwise collision check (C(64,2) pairs), classifies collisions by parity agreement. Confirms same-parity-only collision structure.</li>
+<li><strong><code>phase1d_class_analysis()</code></strong>: enumerates all 27 equivalence classes for 3 weights, checks each standard Boolean function for constancy on each class, prints conflict counts and cell assignments.</li>
+<li><strong><code>phase1e_sign_flip_symmetry()</code></strong>: decomposes combined_cell into sector_of and voronoi_of, checks all 13 sign-flip pairs for agreement, plus multi-triple cell count comparison between winners and non-winners.</li>
+<li><strong><code>sector_of()</code> / <code>voronoi_of()</code></strong>: decomposition of the combined_cell activation into its angular (S^1) and directional (S^2) components. Useful for future activation analysis.</li>
+<li><strong><code>build_closure(verbose)</code></strong>: SU(2) group closure with BFS depth tracking and round-by-round reporting. Shared infrastructure from earlier demos.</li>
+<li><strong><code>save_catalog()</code> / <code>load_up_to_depth(max_d)</code></strong>: snapshot/filter pattern enabling cumulative depth experiments without rebuilding the catalog.</li>
+<li><strong>LCG RNG</strong>: simple <code>rng_uniform()</code> for Monte Carlo sampling (deterministic seed 42).</li>
+</ul>
+<h3>Literature Touched</h3>
+<ul>
+<li><strong>Circuit complexity (AC^0)</strong>: Parity is the canonical function outside AC^0 — it cannot be computed by constant-depth polynomial-size circuits of AND/OR/NOT gates. The +/-q encoding naturally selects for the hardest Boolean function, concentrating computational power on parity. Furst-Saxe-Sipser (1984) / Hastad (1987) parity-not-in-AC^0 result is the theoretical backdrop.</li>
+<li><strong>Habiro (2002) / Z[zeta_8] bracket</strong>: the algebraic substrate underlying the weight catalog; Demo 92 reveals that the encoding structure on top of this substrate is parity-selective.</li>
+<li><strong>Aizenberg (2008) / MVN neurons</strong>: the k-sector activation framework (k_sec parameter in combined_cell). Demo 92's Phase 1d and 1e decompose the activation into angular sectors (S^1) and Voronoi cells (S^2).</li>
+<li><strong><a href="./demo_48.html">D48</a>/<a href="./demo_50.html">D50</a> (forward DKC NPN classes)</strong>: the critical contrast — 1-weight-per-input encoding with split-sigmoid/MVN activation computes all 13 NPN classes including parity. The +/-q encoding's parity lock is encoding-specific, not a fundamental limit of the DKC framework. This contrast motivated Demo 93.</li>
+<li><strong><a href="./demo_89.html">D89</a>-<a href="./demo_91.html">D91</a> (depth law)</strong>: max_xor ~ depth+6 describes the capacity curve for the +/-q encoding's ONLY achievable function family (parity). Demo 92 reinterprets the depth law as parity-specific, not function-general.</li>
+</ul>
+<h3>Open Questions</h3>
+<ul>
+<li><strong>Encoding design</strong>: Can we construct encodings that target specific Boolean functions other than parity? The parity-lock theorem identifies the structural mechanism (per-weight pair cancellation); can this be exploited to engineer encodings for AND, OR, or MAJ?</li>
+<li><strong>Optimality</strong>: Is the +/-q encoding provably optimal for parity among all 2-bit-per-weight encodings? Among all encodings with the same number of input bits?</li>
+<li><strong>Phase-sensitive activation</strong>: The sign-flip symmetry (combined_cell(S) = combined_cell(-S)) is identified as a second parity-lock mechanism (exploited in <a href="./demo_93.html">D93</a>). Can a phase-sensitive activation that distinguishes S from -S break the parity lock while preserving the depth law structure?</li>
+<li><strong>Hybrid encodings</strong>: Can a mixed encoding (some weights +/-q paired, some 1wpi) achieve a richer set of Boolean functions while maintaining some depth-law structure?</li>
+<li><strong>MAJ conflict count (19/27)</strong>: MAJ has the most class conflicts of any tested function. Is this related to MAJ's computational complexity (MAJ is TC^0-complete, strictly between AC^0 and NC^1)?</li>
+</ul>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/c.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</body>
+</html>

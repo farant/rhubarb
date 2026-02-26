@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>raqiya/probatio_gauss.c</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+    <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+    <nav><a href="../index.html">← Back to Index</a></nav><hr>
+    <h1>raqiya/probatio_gauss.c</h1><pre><code class="language-c">/*
+ * probatio_gauss.c -- Tests for gauss.h (Z[i] analysis)
+ */
+
+#include &lt;stdio.h&gt;
+#include &lt;string.h&gt;
+
+#define GAUSS_PRINT
+#include "gauss.h"
+
+static int n_tests = 0;
+static int n_pass = 0;
+static int n_fail = 0;
+
+static void check(int cond, const char *msg) {
+    n_tests++;
+    if (cond) {
+        n_pass++;
+    } else {
+        n_fail++;
+        printf("  FAIL: %s\n", msg);
+    }
+}
+
+/* ---- Arithmetic tests ---- */
+
+static void test_arithmetic(void) {
+    Gauss_Z a, b, c;
+
+    printf("--- Arithmetic ---\n");
+
+    /* Basic construction */
+    a = gauss_make(3, 4);
+    check(a.a == 3 &amp;&amp; a.b == 4, "make(3,4)");
+
+    /* Zero and one */
+    check(gauss_is_zero(gauss_zero()), "zero is zero");
+    check(!gauss_is_zero(gauss_one()), "one is not zero");
+
+    /* Addition */
+    a = gauss_make(1, 2);
+    b = gauss_make(3, -1);
+    c = gauss_add(a, b);
+    check(c.a == 4 &amp;&amp; c.b == 1, "add (1+2i)+(3-i) = 4+i");
+
+    /* Subtraction */
+    c = gauss_sub(a, b);
+    check(c.a == -2 &amp;&amp; c.b == 3, "sub (1+2i)-(3-i) = -2+3i");
+
+    /* Negation */
+    c = gauss_neg(a);
+    check(c.a == -1 &amp;&amp; c.b == -2, "neg -(1+2i) = -1-2i");
+
+    /* Multiplication: (1+2i)(3-i) = 3-i+6i-2i^2 = 3+5i+2 = 5+5i */
+    c = gauss_mul(a, b);
+    check(c.a == 5 &amp;&amp; c.b == 5, "mul (1+2i)(3-i) = 5+5i");
+
+    /* Multiplication: (2+3i)(2-3i) = 4+9 = 13 */
+    a = gauss_make(2, 3);
+    b = gauss_make(2, -3);
+    c = gauss_mul(a, b);
+    check(c.a == 13 &amp;&amp; c.b == 0, "mul (2+3i)(2-3i) = 13");
+
+    /* Multiplication by i: (3+4i)*i = -4+3i */
+    a = gauss_make(3, 4);
+    c = gauss_mul_i(a);
+    check(c.a == -4 &amp;&amp; c.b == 3, "mul_i (3+4i)*i = -4+3i");
+
+    /* Four rotations return to start */
+    a = gauss_make(2, 5);
+    c = gauss_mul_i(gauss_mul_i(gauss_mul_i(gauss_mul_i(a))));
+    check(gauss_eq(c, a), "i^4 = 1 (four rotations)");
+
+    /* Conjugation */
+    a = gauss_make(3, -7);
+    c = gauss_conj(a);
+    check(c.a == 3 &amp;&amp; c.b == 7, "conj(3-7i) = 3+7i");
+
+    /* Norm */
+    a = gauss_make(3, 4);
+    check(gauss_norm(a) == 25, "norm(3+4i) = 25");
+    a = gauss_make(1, 1);
+    check(gauss_norm(a) == 2, "norm(1+i) = 2");
+    check(gauss_norm(gauss_zero()) == 0, "norm(0) = 0");
+
+    /* Equality */
+    a = gauss_make(1, 2);
+    b = gauss_make(1, 2);
+    c = gauss_make(1, 3);
+    check(gauss_eq(a, b), "eq same values");
+    check(!gauss_eq(a, c), "neq different values");
+}
+
+/* ---- Value set tests ---- */
+
+static void test_value_set(void) {
+    Gauss_ValueSet vs;
+    int idx;
+
+    printf("--- Value Set ---\n");
+
+    gauss_vs_init(&amp;vs, 100);
+
+    /* Insert and find */
+    idx = gauss_vs_insert(&amp;vs, gauss_make(1, 2));
+    check(idx == 0, "first insert returns 0");
+    check(vs.count == 1, "count is 1");
+
+    idx = gauss_vs_insert(&amp;vs, gauss_make(3, 4));
+    check(idx == 1, "second insert returns 1");
+
+    /* Duplicate detection */
+    idx = gauss_vs_insert(&amp;vs, gauss_make(1, 2));
+    check(idx == 0, "duplicate returns existing index");
+    check(vs.count == 2, "count unchanged after dup");
+
+    /* Find */
+    check(gauss_vs_find(&amp;vs, gauss_make(1, 2)) == 0, "find existing");
+    check(gauss_vs_find(&amp;vs, gauss_make(99, 99)) == -1, "find missing");
+
+    gauss_vs_free(&amp;vs);
+}
+
+/* ---- Detector tests ---- */
+
+static void test_unit_orbits(void) {
+    /* Values: 1, i, -1, -i should be one orbit.
+     * 2, 2i, -2, -2i should be another orbit.
+     * 3 alone should be its own orbit.
+     */
+    Gauss_Z vals[9];
+    Gauss_Partition p;
+
+    printf("--- Unit Orbits ---\n");
+
+    vals[0] = gauss_make(1, 0);    /* 1 */
+    vals[1] = gauss_make(0, 1);    /* i */
+    vals[2] = gauss_make(-1, 0);   /* -1 */
+    vals[3] = gauss_make(0, -1);   /* -i */
+    vals[4] = gauss_make(2, 0);    /* 2 */
+    vals[5] = gauss_make(0, 2);    /* 2i */
+    vals[6] = gauss_make(-2, 0);   /* -2 */
+    vals[7] = gauss_make(0, -2);   /* -2i */
+    vals[8] = gauss_make(3, 0);    /* 3 */
+
+    p = gauss_detect_unit_orbits(vals, 9);
+    check(p.n_groups == 3, "unit orbits: 3 groups");
+
+    /* First group should have size 4 (1,i,-1,-i) */
+    check(p.group_id[0] == p.group_id[1], "1 and i same orbit");
+    check(p.group_id[0] == p.group_id[2], "1 and -1 same orbit");
+    check(p.group_id[0] == p.group_id[3], "1 and -i same orbit");
+
+    /* Second group should have size 4 (2,2i,-2,-2i) */
+    check(p.group_id[4] == p.group_id[5], "2 and 2i same orbit");
+    check(p.group_id[4] == p.group_id[6], "2 and -2 same orbit");
+    check(p.group_id[4] == p.group_id[7], "2 and -2i same orbit");
+
+    /* 3 should be in its own orbit */
+    check(p.group_id[8] != p.group_id[0], "3 not with 1");
+    check(p.group_id[8] != p.group_id[4], "3 not with 2");
+
+    /* related pairs: C(4,2) + C(4,2) + C(1,2) = 6+6+0 = 12 */
+    check(gauss_partition_related_pairs(&amp;p) == 12, "12 related pairs");
+
+    gauss_partition_free(&amp;p);
+}
+
+static void test_norm_classes(void) {
+    /* norm(1+i) = 2, norm(1-i) = 2 -&gt; same class
+     * norm(2+0i) = 4 -&gt; different class
+     * norm(1+0i) = 1 -&gt; different class
+     */
+    Gauss_Z vals[4];
+    Gauss_Partition p;
+
+    printf("--- Norm Classes ---\n");
+
+    vals[0] = gauss_make(1, 1);    /* norm 2 */
+    vals[1] = gauss_make(1, -1);   /* norm 2 */
+    vals[2] = gauss_make(2, 0);    /* norm 4 */
+    vals[3] = gauss_make(1, 0);    /* norm 1 */
+
+    p = gauss_detect_norm_classes(vals, 4);
+    check(p.n_groups == 3, "norm classes: 3 groups");
+    check(p.group_id[0] == p.group_id[1], "1+i and 1-i same norm");
+    check(p.group_id[0] != p.group_id[2], "1+i and 2 different norm");
+    check(p.group_id[2] != p.group_id[3], "2 and 1 different norm");
+
+    gauss_partition_free(&amp;p);
+}
+
+static void test_galois_orbits(void) {
+    /* conj(3+4i) = 3-4i, so they should be in the same orbit.
+     * 5+0i is real, conj = itself, so singleton orbit.
+     */
+    Gauss_Z vals[3];
+    Gauss_Partition p;
+
+    printf("--- Galois Orbits ---\n");
+
+    vals[0] = gauss_make(3, 4);
+    vals[1] = gauss_make(3, -4);
+    vals[2] = gauss_make(5, 0);
+
+    p = gauss_detect_galois_orbits(vals, 3);
+    check(p.n_groups == 2, "galois: 2 groups");
+    check(p.group_id[0] == p.group_id[1], "3+4i and 3-4i same Galois orbit");
+    check(p.group_id[0] != p.group_id[2], "5 is separate orbit");
+
+    gauss_partition_free(&amp;p);
+}
+
+static void test_axis_classes(void) {
+    Gauss_Z vals[5];
+    Gauss_Partition p;
+
+    printf("--- Axis Classes ---\n");
+
+    vals[0] = gauss_make(3, 0);    /* real */
+    vals[1] = gauss_make(-7, 0);   /* real */
+    vals[2] = gauss_make(0, 4);    /* imaginary */
+    vals[3] = gauss_make(0, -2);   /* imaginary */
+    vals[4] = gauss_make(1, 1);    /* off-axis */
+
+    p = gauss_detect_axis_classes(vals, 5);
+    check(p.n_groups == 3, "axis: 3 groups (real, imag, off-axis)");
+    check(p.group_id[0] == p.group_id[1], "3 and -7 same axis");
+    check(p.group_id[2] == p.group_id[3], "4i and -2i same axis");
+    check(p.group_id[0] != p.group_id[2], "real != imag");
+    check(p.group_id[4] != p.group_id[0], "off-axis != real");
+    check(p.group_id[4] != p.group_id[2], "off-axis != imag");
+
+    gauss_partition_free(&amp;p);
+}
+
+static void test_sign_patterns(void) {
+    Gauss_Z vals[4];
+    int d;
+
+    printf("--- Sign Patterns ---\n");
+
+    vals[0] = gauss_make(1, 1);    /* (+,+) */
+    vals[1] = gauss_make(-1, 1);   /* (-,+) */
+    vals[2] = gauss_make(1, -1);   /* (+,-) */
+    vals[3] = gauss_make(0, 1);    /* (0,+) */
+
+    d = gauss_sign_distance(vals[0], vals[1]);
+    check(d == 1, "sign dist (+,+) vs (-,+) = 1");
+
+    d = gauss_sign_distance(vals[0], vals[2]);
+    check(d == 1, "sign dist (+,+) vs (+,-) = 1");
+
+    d = gauss_sign_distance(vals[1], vals[2]);
+    check(d == 2, "sign dist (-,+) vs (+,-) = 2");
+
+    d = gauss_sign_distance(vals[0], vals[3]);
+    check(d == 1, "sign dist (+,+) vs (0,+) = 1");
+
+    check(gauss_count_sign_patterns(vals, 4) == 4, "4 distinct patterns");
+}
+
+static void test_products(void) {
+    Gauss_Z vals[3];
+    Gauss_ProductResult r;
+
+    printf("--- Products ---\n");
+
+    vals[0] = gauss_make(1, 0);    /* 1 */
+    vals[1] = gauss_make(0, 1);    /* i */
+    vals[2] = gauss_make(1, 1);    /* 1+i */
+
+    r = gauss_detect_products(vals, 3);
+
+    /* 1 * i = i (a=0: imag). 1 * (1+i) = 1+i (neither).
+     * i * (1+i) = -1+i (neither). So n_real=0, n_imag=1.
+     */
+    check(r.n_real == 0, "products: 0 real");
+    check(r.n_imag == 1, "products: 1 pure imaginary");
+
+    printf("  products: n_real=%d, n_imag=%d\n", r.n_real, r.n_imag);
+}
+
+static void test_divisibility(void) {
+    Gauss_Z vals[3];
+    Gauss_DivisResult r;
+
+    printf("--- Divisibility ---\n");
+
+    vals[0] = gauss_make(2, 0);    /* 2 on real axis */
+    vals[1] = gauss_make(6, 0);    /* 6 on real axis */
+    vals[2] = gauss_make(0, 3);    /* 3i on imag axis */
+
+    r = gauss_detect_divisibility(vals, 3);
+
+    /* 2|6 (same axis, 6%2=0), 6 does not divide 2.
+     * 2 and 3i: different axes, no same-axis relationship.
+     * 6 and 3i: different axes, no same-axis relationship.
+     */
+    check(r.n_same_axis == 1, "divisibility: 1 same-axis pair (2,6)");
+    check(r.n_divides == 1, "divisibility: 1 divisibility (2|6)");
+}
+
+static void test_full_analysis(void) {
+    /* A more interesting set: Gaussian primes and associates */
+    Gauss_Z vals[6];
+    Gauss_Analysis a;
+
+    printf("--- Full Analysis ---\n");
+
+    vals[0] = gauss_make(1, 1);    /* norm 2, prime */
+    vals[1] = gauss_make(1, -1);   /* norm 2, conjugate */
+    vals[2] = gauss_make(-1, 1);   /* norm 2, associate of 1-i */
+    vals[3] = gauss_make(2, 1);    /* norm 5, prime */
+    vals[4] = gauss_make(1, 2);    /* norm 5, associate */
+    vals[5] = gauss_make(3, 0);    /* norm 9, real */
+
+    a = gauss_analyze(vals, 6);
+
+    printf("\n");
+    gauss_print_analysis(&amp;a, vals);
+    printf("\n");
+
+    check(a.n_values == 6, "analysis: 6 values");
+    check(a.norm_classes.n_groups &gt;= 3, "at least 3 norm classes");
+
+    gauss_analysis_free(&amp;a);
+}
+
+static void test_partition_refinement(void) {
+    /* Unit orbits should refine norm classes
+     * (associates have the same norm)
+     */
+    Gauss_Z vals[6];
+    Gauss_Partition units, norms;
+
+    printf("--- Partition Refinement ---\n");
+
+    vals[0] = gauss_make(1, 0);
+    vals[1] = gauss_make(0, 1);
+    vals[2] = gauss_make(-1, 0);
+    vals[3] = gauss_make(2, 0);
+    vals[4] = gauss_make(0, 2);
+    vals[5] = gauss_make(3, 0);
+
+    units = gauss_detect_unit_orbits(vals, 6);
+    norms = gauss_detect_norm_classes(vals, 6);
+
+    check(gauss_partition_refines(&amp;units, &amp;norms),
+          "unit orbits refine norm classes");
+    check(!gauss_partition_refines(&amp;norms, &amp;units) ||
+          gauss_partition_equal(&amp;units, &amp;norms),
+          "norm classes do not strictly refine unit orbits (or they are equal)");
+
+    gauss_partition_free(&amp;units);
+    gauss_partition_free(&amp;norms);
+}
+
+static void test_neg_pairs(void) {
+    Gauss_Z vals[4];
+
+    printf("--- Neg Pairs ---\n");
+
+    vals[0] = gauss_make(1, 2);
+    vals[1] = gauss_make(-1, -2);  /* neg of vals[0] */
+    vals[2] = gauss_make(3, 0);
+    vals[3] = gauss_make(-3, 0);   /* neg of vals[2] */
+
+    check(gauss_count_neg_pairs(vals, 4) == 2, "2 negative pairs");
+}
+
+static void test_2adic(void) {
+    Gauss_Z vals[4];
+    Gauss_Partition p;
+
+    printf("--- 2-Adic Valuation ---\n");
+
+    /* norm(1+0i) = 1, v_2(1) = 0
+     * norm(1+i) = 2, v_2(2) = 1
+     * norm(2+0i) = 4, v_2(4) = 2
+     * norm(2+2i) = 8, v_2(8) = 3
+     */
+    vals[0] = gauss_make(1, 0);
+    vals[1] = gauss_make(1, 1);
+    vals[2] = gauss_make(2, 0);
+    vals[3] = gauss_make(2, 2);
+
+    p = gauss_detect_norm_2adic_classes(vals, 4);
+    check(p.n_groups == 4, "4 distinct v_2(norm) classes");
+
+    gauss_partition_free(&amp;p);
+}
+
+int main(void) {
+    printf("=== probatio_gauss ===\n\n");
+
+    test_arithmetic();
+    test_value_set();
+    test_unit_orbits();
+    test_norm_classes();
+    test_galois_orbits();
+    test_axis_classes();
+    test_sign_patterns();
+    test_products();
+    test_divisibility();
+    test_full_analysis();
+    test_partition_refinement();
+    test_neg_pairs();
+    test_2adic();
+
+    printf("\n=== Results: %d tests, %d passed, %d failed ===\n",
+           n_tests, n_pass, n_fail);
+
+    return n_fail &gt; 0 ? 1 : 0;
+}
+</code></pre>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/c.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</body>
+</html>

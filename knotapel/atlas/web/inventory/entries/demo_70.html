@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>inventory/entries/demo_70.md</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+    <link rel="stylesheet" href="../../style.css">
+</head>
+<body>
+    <nav><a href="../../index.html">← Back to Index</a></nav><hr>
+    <h2>Demo 70: Musica Nodorum</h2>
+<ul>
+<li><strong>Status</strong>: COMPLETE</li>
+<li><strong>File</strong>: <code><a href="../../demo_70_musica_nodorum/main.c.html">demo_70_musica_nodorum/main.c</a></code> (~812 lines)</li>
+<li><strong>Tests</strong>: 8/8 pass</li>
+<li><strong>Depends on</strong>: Demo 66 (24-cell), Demo 67 (13-direction S², Hopf decomposition)</li>
+<li><strong>Feeds into</strong>: Demo 71</li>
+</ul>
+<h3>Headline</h3>
+The ζ_8 algebra produces exactly 4 musical notes (C, Eb, E, F#) spanning consonance to tritone, and Yang-Baxter equivalent braids are not just topologically equivalent — they are literally the same melody.
+<h3>Key Results</h3>
+<ul>
+<li>4 eigenvalue angles of the binary octahedral group map to 4 notes: C (0°, unison), Eb (45°, minor 3rd), E (60°, major 3rd), F# (90°, tritone)</li>
+<li>Trace descends cleanly from 2.000 (C) to √2 (Eb) to 1.000 (E) to 0.000 (F#) — maximum consonance to maximum dissonance</li>
+<li>Braid words become playable melodies: each crossing yields the eigenvalue angle of the running quaternion product, mapped to a note</li>
+<li>Yang-Baxter relation σ₁σ₂σ₁ = σ₂σ₁σ₂ produces identical melodies step-by-step, not just at the final note — melody depends only on product length, not specific generators</li>
+<li>Music (eigenvalue/pitch) and space (eigenvector/position) are orthogonal: Pearson r = -0.0624 over 253 pairs</li>
+<li>Spatial sound mapping: latitude → MIDI pitch (C3 south to C5 north), longitude → stereo pan</li>
+<li>Dodecahedral and icosahedral Voronoi both give ZERO XOR6 solutions; only the data-intrinsic 13-direction eigenvector Voronoi gives 36 solutions</li>
+<li>Tritone-antipodal correspondence on dodecahedron: antipodal faces carry tritone pairs (C/F#, G/Db, D/Ab, A/Eb, E/Bb, B/F) — dissonance IS the antipodal map</li>
+<li>Garside element (s1 s2)³ melody: Eb E F# E Eb C — a complete rising-falling arch visiting all 4 knot notes</li>
+</ul>
+<h3>Theorems/Conjectures</h3>
+<ul>
+<li><strong>Conjugation-Invariance of Melody</strong> (confirmed): tr(q) = 2cos(θ) is conjugation-invariant, so the melody of a braid word depends only on the length of each partial product, not which generators are used</li>
+<li><strong>Hopf Orthogonality</strong> (confirmed): eigenvalue (pitch) and eigenvector (spatial direction) are independent dimensions of a unit quaternion; r = -0.06 empirically</li>
+<li><strong>Intrinsic Geometry Conjecture</strong> (confirmed): Platonic solids with the wrong symmetry group (icosahedral, order 120) cannot replicate results from the binary octahedral group (order 48); wrong symmetry → zero solutions</li>
+</ul>
+<h3>Data</h3>
+<ul>
+<li>Pearson r (pitch vs. spatial distance): -0.0624 over 253 pairs, 72 same-note/different-direction pairs</li>
+<li>XOR6 solutions: eigenvector Voronoi = 36, icosahedron (6 effective cells after antipodal collapse) = 0, dodecahedron (10 effective cells) = 0</li>
+<li>6 pairwise intervals from 4 notes: m2 (45→60°), M2 (60→90°), m3 (0→45°, 45→90°), M3 (0→60°), tritone (0→90°)</li>
+<li>Garside element (s1 s2)³: Eb4 E4 F#4 E4 Eb4 C4</li>
+<li>Longest braid (s1 s2⁻¹)⁵: Eb4 E3 F#4 E3 Eb4 C3 Eb4 E3 F#4 E3</li>
+</ul>
+<h3>Code Assets</h3>
+<ul>
+<li>Eigenvalue-to-interval mapping (quaternion trace → cents → note name)</li>
+<li>Braid word melody generator (running quaternion product, per-crossing note extraction)</li>
+<li>Spatial sound mapper (eigenvector → latitude/longitude → MIDI pitch + stereo pan)</li>
+<li>XOR6 checker against arbitrary Voronoi cell assignments</li>
+<li>Platonic solid vertex generators (icosahedron, dodecahedron) for comparative Voronoi testing</li>
+<li>ABC notation formatter for top braid melodies</li>
+</ul>
+<h3>Literature Touched</h3>
+<ul>
+<li>Garside normal form / fundamental braid element (Garside 1969)</li>
+<li>Binary octahedral group and its representation theory (McKay correspondence context)</li>
+<li>Yang-Baxter equation and braid group relations</li>
+<li>Circle of fifths / dodecahedral symmetry correspondence (music theory)</li>
+<li>Hopf fibration S³ → S² (Demo 67 foundational)</li>
+</ul>
+<h3>Open Questions</h3>
+<ul>
+<li>Do other binary polyhedral groups (tetrahedral order 24, icosahedral order 120) produce analogous note sets, and do they compute XOR for their respective NPN-class counts?</li>
+<li>Is the tritone-antipodal correspondence on the dodecahedron a coincidence of the circle-of-fifths assignment, or does it follow from some deeper symmetry argument?</li>
+<li>Can the Garside melody (Eb E F# E Eb C) be heard as a recognizable motif in any existing musical tradition, or is it genuinely novel?</li>
+<li>What happens to the melody structure under stabilization (adding a strand to a braid without changing the knot type)?</li>
+<li>Does the music-space orthogonality (r ≈ 0) hold for other quaternion algebras, or is it specific to the ζ_8 / binary octahedral case?</li>
+</ul>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/c.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</body>
+</html>

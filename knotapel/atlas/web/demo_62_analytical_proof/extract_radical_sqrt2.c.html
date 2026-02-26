@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>demo_62_analytical_proof/extract_radical_sqrt2.c</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+    <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+    <nav><a href="../index.html">← Back to Index</a></nav><hr>
+    <h1>demo_62_analytical_proof/extract_radical_sqrt2.c</h1><pre><code class="language-c">/*
+ * Extract radical basis vectors for TL_n at delta=sqrt(2).
+ * Modular arithmetic (mod 10^9+7), Tonelli-Shanks for sqrt(2).
+ * Outputs compact nonzero-entry format for CSS feasibility probe.
+ */
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;string.h&gt;
+
+#define MAX_N 8
+#define MAX_2N 16
+#define MAX_BASIS 1430
+#define MAX_SEGS 16
+#define MAX_LOOPS 20
+
+typedef struct { int match[MAX_2N]; } PlanarMatch;
+typedef struct { int points[MAX_2N]; int count; } Segment;
+
+typedef struct {
+    int n, dim, id_idx, gen_idx[MAX_N], n_gens;
+    PlanarMatch basis[MAX_BASIS];
+    int mt_result[MAX_BASIS][MAX_BASIS];
+    int mt_loops[MAX_BASIS][MAX_BASIS];
+} TLAlgebra;
+
+static long g_mod_p = 1000000007L;
+
+static long mod_reduce(long x) {
+    long r = x % g_mod_p;
+    return r &lt; 0 ? r + g_mod_p : r;
+}
+
+static long mod_inv(long a) {
+    long t = 0, newt = 1;
+    long r = g_mod_p, newr = mod_reduce(a);
+    while (newr != 0) {
+        long q = r / newr;
+        long tmp;
+        tmp = t - q * newt; t = newt; newt = tmp;
+        tmp = r - q * newr; r = newr; newr = tmp;
+    }
+    if (t &lt; 0) t += g_mod_p;
+    return t;
+}
+
+static long mod_pow(long base, long exp) {
+    long result = 1;
+    base = mod_reduce(base);
+    while (exp &gt; 0) {
+        if (exp &amp; 1) result = mod_reduce(result * base);
+        base = mod_reduce(base * base);
+        exp &gt;&gt;= 1;
+    }
+    return result;
+}
+
+/* Tonelli-Shanks: sqrt(n) mod p */
+static long mod_sqrt_ts(long n) {
+    long S, Q, z, M, c, t, R;
+    n = mod_reduce(n);
+    if (n == 0) return 0;
+    if (g_mod_p % 4 == 3)
+        return mod_pow(n, (g_mod_p + 1) / 4);
+    S = 0; Q = g_mod_p - 1;
+    while (Q % 2 == 0) { S++; Q /= 2; }
+    z = 2;
+    while (mod_pow(z, (g_mod_p - 1) / 2) != g_mod_p - 1) z++;
+    M = S;
+    c = mod_pow(z, Q);
+    t = mod_pow(n, Q);
+    R = mod_pow(n, (Q + 1) / 2);
+    while (t != 1) {
+        long i = 1, tmp = mod_reduce(t * t);
+        while (tmp != 1) { tmp = mod_reduce(tmp * tmp); i++; }
+        { long b = c; long j; for (j = 0; j &lt; M - i - 1; j++) b = mod_reduce(b * b);
+          R = mod_reduce(R * b);
+          c = mod_reduce(b * b);
+          t = mod_reduce(t * c);
+          M = i; }
+    }
+    return R;
+}
+
+/* --- Planar matching enumeration --- */
+static void build_boundary_order(int n, int *bp) {
+    int i;
+    for (i = 0; i &lt; n; i++) bp[i] = i;
+    for (i = 0; i &lt; n; i++) bp[n+i] = 2*n-1-i;
+}
+
+static void enum_segments(Segment *segs, int n_segs, int *mb,
+                          PlanarMatch *basis, int *nb, int n) {
+    int s, j, k, first_seg = -1;
+    Segment ns[MAX_SEGS]; int nn; int *pts; int cnt;
+    for (s = 0; s &lt; n_segs; s++) if (segs[s].count &gt; 0) { first_seg = s; break; }
+    if (first_seg == -1) {
+        if (*nb &lt; MAX_BASIS) { memcpy(basis[*nb].match, mb, (size_t)(2*n)*sizeof(int)); (*nb)++; }
+        return;
+    }
+    pts = segs[first_seg].points; cnt = segs[first_seg].count;
+    for (j = 1; j &lt; cnt; j += 2) {
+        mb[pts[0]] = pts[j]; mb[pts[j]] = pts[0];
+        nn = 0;
+        for (k = 0; k &lt; n_segs; k++) {
+            if (k == first_seg) {
+                if (j &gt; 1) { memcpy(ns[nn].points, &amp;pts[1], (size_t)(j-1)*sizeof(int)); ns[nn].count = j-1; nn++; }
+                if (cnt-j-1 &gt; 0) { memcpy(ns[nn].points, &amp;pts[j+1], (size_t)(cnt-j-1)*sizeof(int)); ns[nn].count = cnt-j-1; nn++; }
+            } else { ns[nn] = segs[k]; nn++; }
+        }
+        enum_segments(ns, nn, mb, basis, nb, n);
+    }
+}
+
+static int enumerate_basis(int n, PlanarMatch *basis) {
+    Segment segs[1]; int mb[MAX_2N]; int nb = 0;
+    build_boundary_order(n, segs[0].points);
+    segs[0].count = 2*n;
+    memset(mb, -1, sizeof(mb));
+    enum_segments(segs, 1, mb, basis, &amp;nb, n);
+    return nb;
+}
+
+static int compose_diagrams(int n, const PlanarMatch *d1,
+                             const PlanarMatch *d2,
+                             PlanarMatch *r, int *loops_out) {
+    int gv[MAX_N]; int i, loops = 0;
+    memset(r-&gt;match, -1, (size_t)(2*n)*sizeof(int));
+    memset(gv, 0, (size_t)n*sizeof(int));
+    for (i = 0; i &lt; 2*n; i++) {
+        int in1, cur;
+        if (r-&gt;match[i] &gt;= 0) continue;
+        if (i &lt; n) { in1=1; cur=i; } else { in1=0; cur=i; }
+        for (;;) {
+            int p;
+            if (in1) { p=d1-&gt;match[cur]; if (p&lt;n){r-&gt;match[i]=p;r-&gt;match[p]=i;break;} gv[p-n]=1;in1=0;cur=p-n; }
+            else { p=d2-&gt;match[cur]; if (p&gt;=n){r-&gt;match[i]=p;r-&gt;match[p]=i;break;} gv[p]=1;in1=1;cur=n+p; }
+        }
+    }
+    for (i = 0; i &lt; n; i++) {
+        int cur,p,q; if (gv[i]) continue; loops++; cur=i;
+        do { gv[cur]=1; p=d2-&gt;match[cur]; gv[p]=1; q=d1-&gt;match[n+p]; cur=q-n; } while (cur!=i);
+    }
+    *loops_out = loops;
+    return loops;
+}
+
+static int find_basis_index(const PlanarMatch *m, const PlanarMatch *b,
+                             int nb, int n) {
+    int i,j;
+    for (i=0;i&lt;nb;i++){
+        int eq=1;
+        for(j=0;j&lt;2*n;j++) if(m-&gt;match[j]!=b[i].match[j]){eq=0;break;}
+        if(eq) return i;
+    }
+    return -1;
+}
+
+static void init_tl(TLAlgebra *a, int n) {
+    PlanarMatch d; int g,i,j;
+    a-&gt;n=n; a-&gt;dim=enumerate_basis(n,a-&gt;basis); a-&gt;n_gens=n-1;
+    d=*(PlanarMatch*)memset(&amp;d,0,sizeof(d));
+    for(g=0;g&lt;n;g++){d.match[g]=n+g;d.match[n+g]=g;}
+    a-&gt;id_idx=find_basis_index(&amp;d,a-&gt;basis,a-&gt;dim,n);
+    for(g=0;g&lt;n-1;g++){
+        PlanarMatch gen; int k;
+        for(k=0;k&lt;n;k++){gen.match[k]=n+k;gen.match[n+k]=k;}
+        gen.match[g]=g+1;gen.match[g+1]=g;gen.match[n+g]=n+g+1;gen.match[n+g+1]=n+g;
+        a-&gt;gen_idx[g]=find_basis_index(&amp;gen,a-&gt;basis,a-&gt;dim,n);
+    }
+    for(i=0;i&lt;a-&gt;dim;i++) for(j=0;j&lt;a-&gt;dim;j++){
+        PlanarMatch r; int loops;
+        compose_diagrams(n,&amp;a-&gt;basis[i],&amp;a-&gt;basis[j],&amp;r,&amp;loops);
+        a-&gt;mt_result[i][j]=find_basis_index(&amp;r,a-&gt;basis,a-&gt;dim,n);
+        a-&gt;mt_loops[i][j]=loops;
+    }
+}
+
+/* --- Radical extraction at delta (mod p) --- */
+static void extract_and_print_delta(int n, long delta_val,
+                                      const char *delta_name) {
+    static TLAlgebra alg;
+    static long aug[MAX_BASIS][2*MAX_BASIS];
+    long dpow[MAX_LOOPS+1];
+    long fixpt_d[MAX_BASIS];
+    int i,j,k,rank,n_rad,max_loops;
+
+    init_tl(&amp;alg, n);
+    printf("=== TL_%d at delta=%s (dim=%d, p=%ld) ===\n",
+           n, delta_name, alg.dim, g_mod_p);
+
+    /* Precompute delta powers */
+    max_loops = 0;
+    for (i=0;i&lt;alg.dim;i++)
+        for(j=0;j&lt;alg.dim;j++)
+            if(alg.mt_loops[i][j]&gt;max_loops)
+                max_loops=alg.mt_loops[i][j];
+    dpow[0] = 1;
+    for(k=1;k&lt;=max_loops&amp;&amp;k&lt;=MAX_LOOPS;k++)
+        dpow[k] = mod_reduce(dpow[k-1]*delta_val);
+
+    /* Weighted fixed points */
+    for (i=0;i&lt;alg.dim;i++){
+        fixpt_d[i]=0;
+        for(k=0;k&lt;alg.dim;k++)
+            if(alg.mt_result[i][k]==k)
+                fixpt_d[i]=mod_reduce(fixpt_d[i]+dpow[alg.mt_loops[i][k]]);
+    }
+
+    /* Build [Gram | I] augmented matrix mod p */
+    for(i=0;i&lt;alg.dim;i++){
+        for(j=0;j&lt;alg.dim;j++){
+            int p=alg.mt_result[i][j];
+            aug[i][j]=mod_reduce(dpow[alg.mt_loops[i][j]]*fixpt_d[p]);
+        }
+        for(j=0;j&lt;alg.dim;j++)
+            aug[i][alg.dim+j]=(i==j)?1L:0L;
+    }
+
+    /* Row reduce left half */
+    rank=0;
+    for(k=0;k&lt;alg.dim;k++){
+        int pivot=-1;
+        for(i=rank;i&lt;alg.dim;i++) if(aug[i][k]!=0){pivot=i;break;}
+        if(pivot==-1) continue;
+        if(pivot!=rank)
+            for(j=0;j&lt;2*alg.dim;j++){
+                long t=aug[rank][j];aug[rank][j]=aug[pivot][j];aug[pivot][j]=t;
+            }
+        {
+            long inv=mod_inv(aug[rank][k]);
+            for(i=rank+1;i&lt;alg.dim;i++){
+                if(aug[i][k]!=0){
+                    long fac=mod_reduce(aug[i][k]*inv);
+                    for(j=k;j&lt;2*alg.dim;j++)
+                        aug[i][j]=mod_reduce(aug[i][j]-mod_reduce(fac*aug[rank][j]));
+                }
+            }
+        }
+        rank++;
+    }
+
+    n_rad = alg.dim - rank;
+    printf("Gram rank: %d\n", rank);
+    printf("Radical dimension: %d\n\n", n_rad);
+
+    /* Print radical basis (nonzero entries only, mod p values) */
+    printf("Radical basis vectors (mod p, nonzero entries idx:val):\n\n");
+    for(i=rank;i&lt;alg.dim;i++){
+        int nnz=0;
+        for(j=0;j&lt;alg.dim;j++) if(aug[i][alg.dim+j]!=0) nnz++;
+        printf("  rad[%d] (%d nonzero): ", i-rank, nnz);
+        for(j=0;j&lt;alg.dim;j++)
+            if(aug[i][alg.dim+j]!=0)
+                printf("%d:%ld ", j, aug[i][alg.dim+j]);
+        printf("\n");
+    }
+    printf("\n");
+}
+
+int main(void) {
+    long sqrt2_mod_p;
+    setbuf(stdout, NULL);
+
+    sqrt2_mod_p = mod_sqrt_ts(2);
+    printf("p = %ld, sqrt(2) mod p = %ld\n", g_mod_p, sqrt2_mod_p);
+    printf("Verify: %ld^2 mod p = %ld (should be 2)\n\n",
+           sqrt2_mod_p, mod_reduce(sqrt2_mod_p * sqrt2_mod_p));
+
+    extract_and_print_delta(4, sqrt2_mod_p, "sqrt(2)");
+    extract_and_print_delta(6, sqrt2_mod_p, "sqrt(2)");
+
+    return 0;
+}
+</code></pre>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/c.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</body>
+</html>

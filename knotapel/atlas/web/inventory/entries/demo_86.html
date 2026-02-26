@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>inventory/entries/demo_86.md</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+    <link rel="stylesheet" href="../../style.css">
+</head>
+<body>
+    <nav><a href="../../index.html">← Back to Index</a></nav><hr>
+    <h2>Demo 86: Direct b on Single P_{0,0} via Delta-Parameterized Forms</h2>
+<ul>
+<li><strong>Status</strong>: COMPLETE (NEGATIVE RESULT)</li>
+<li><strong>File</strong>: <code><a href="../../demo_86_b_direct/main.c.html">demo_86_b_direct/main.c</a></code> (~1787 lines)</li>
+<li><strong>Tests</strong>: 15/15 pass</li>
+<li><strong>Depends on</strong>: Demo 85 (TL algebra infrastructure, left ideal construction, b = -5/8 on regular representation at TL_4)</li>
+<li><strong>Feeds into</strong>: Open — the actual literature method for computing b at larger lattice sizes remains to be identified and implemented; dense polymer fusion calculation (narrative.md seed)</li>
+</ul>
+<h3>Headline</h3>
+The delta-parameterized Gram matrix approach universally diverges on a single projective cover P_{0,0} at every eigenvalue, every lattice size, and for both loop and trace forms. The multiplicity from the regular representation is structurally essential to the b computation, not just a scale factor. This is a novel negative finding — nobody in the literature has tried this specific approach.
+<h3>Key Results</h3>
+<ul>
+<li><strong>Universal divergence</strong>: the valuation condition p_tt = 2*p_Tt never holds on a single P_{0,0}. The delta-form b computation returns NaN (diverges) at every eigenvalue tested, for both loop form (predicting b = -5/8, Pearce-Rasmussen) and trace form (predicting b = -2, GRS).</li>
+<li><strong>Exhaustive eigenvalue scan</strong>: TL_4 tested at lambda = 0, +/-sqrt(2); TL_6 tested at lambda = 0, +/-1, +/-sqrt(3), +/-(sqrt(3)+1), +/-(sqrt(3)-1). All diverge with negative gap (p_tt &lt; 2*p_Tt).</li>
+<li><strong>TL_8 P_{0,0} is completely semisimple</strong>: no Jordan blocks at lambda=0 on the dim-42 ideal. The non-semisimple structure that enables b computation does not persist at this lattice size on P_{0,0} alone.</li>
+<li><strong>Full regular rep at TL_6 also diverges</strong>: the same d^{-2} gap appears in the full regular representation at TL_6. The TL_4 success (Demo 85) may be coincidental — cross-copy terms provide the right extra delta-power at TL_4 but fail at TL_6.</li>
+<li><strong>Generator independence confirmed</strong>: all 2-through-line generators produce identical ideals and identical divergence patterns.</li>
+<li><strong>Projective-cover-exclusive eigenvalues discovered</strong>: TL_6 P_{0,0} has eigenvalues +/-(sqrt(3)+/-1) that do not appear on the standard module W_0 — these are structurally intrinsic to the projective cover.</li>
+<li><strong>Gemini cross-model check partially wrong</strong>: Gemini 3 Pro confirmed TL_4 eigenvalues and ground state formula E_GS = -2cos(pi/n), but got TL_6 wrong (predicted standard module spectrum, missing projective-cover-exclusive eigenvalues).</li>
+<li><strong>Gemini literature claim falsified by Demo 85</strong>: Gemini claimed the standard method extracts b from Jordan cell coupling on standard modules. Demo 85 proved standard modules have no Jordan blocks at any tested size (n=4,6,8,10,12). Jordan blocks only exist on P_{0,0} (projective covers).</li>
+</ul>
+<h3>Theorems/Conjectures</h3>
+<ul>
+<li><strong>Delta-form divergence on single P_{0,0} (DEMONSTRATED)</strong>: the delta-parameterized Gram matrix approach universally diverges. This is a novel negative finding — the approach has not been tried in the literature.</li>
+<li><strong>Multiplicity essentiality (DEMONSTRATED)</strong>: the dim(V_0)^2 multiplicity from the regular representation is not a removable scale factor. It participates in the valuation balance required for the b ratio to converge.</li>
+<li><strong>P_{0,0} dimension pattern (OBSERVED)</strong>: dim(P_{0,0}) at TL_n = C_{n/2+1} (next Catalan number): TL_4 -&gt; 5 = C_3, TL_6 -&gt; 14 = C_4, TL_8 -&gt; 42 = C_5.</li>
+<li><strong>Pearce-Rasmussen method conjecture (OPEN)</strong>: the actual PR method likely works on P_{0,0} directly but extracts b from the Jordan cell coupling L_0|t&gt; = |T&gt; + b|T&gt; structure, NOT from delta-parameterized Gram matrices.</li>
+</ul>
+<h3>Data</h3>
+<ul>
+<li><strong>TL_4 P_{0,0}</strong>: dim=5, char poly x(x^2-2)^2, Jordan blocks at lambda=+/-sqrt(2) only</li>
+<li><strong>TL_6 P_{0,0}</strong>: dim=14, char poly x^2(u-1)(u-3)(u^2-8u+4)^2 where u=x^2, Jordan blocks at lambda = 0, +/-(sqrt(3)+1), +/-(sqrt(3)-1)</li>
+<li><strong>TL_8 P_{0,0}</strong>: dim=42, completely semisimple at lambda=0</li>
+<li><strong>Divergence table</strong>:</li>
+</ul>
+<table><thead><tr><th>Size</th><th>lambda</th><th>Form</th><th>p_Tt</th><th>p_tt</th><th>2*p_Tt</th><th>Gap</th></tr></thead><tbody><tr><td>TL_4</td><td>+/-sqrt(2)</td><td>loop</td><td>2</td><td>2</td><td>4</td><td>-2</td></tr><tr><td>TL_4</td><td>+/-sqrt(2)</td><td>trace</td><td>1</td><td>1</td><td>2</td><td>-1</td></tr><tr><td>TL_6</td><td>0</td><td>loop</td><td>3</td><td>4</td><td>6</td><td>-2</td></tr><tr><td>TL_6</td><td>0</td><td>trace</td><td>3</td><td>2</td><td>6</td><td>-4</td></tr><tr><td>TL_6</td><td>+/-(sqrt(3)+1)</td><td>loop</td><td>3</td><td>3</td><td>6</td><td>-3</td></tr><tr><td>TL_6</td><td>+/-(sqrt(3)+1)</td><td>trace</td><td>1</td><td>1</td><td>2</td><td>-1</td></tr><tr><td>TL_6</td><td>+/-(sqrt(3)-1)</td><td>loop</td><td>3</td><td>3</td><td>6</td><td>-3</td></tr><tr><td>TL_6</td><td>+/-(sqrt(3)-1)</td><td>trace</td><td>1</td><td>1</td><td>2</td><td>-1</td></tr></tbody></table>
+<ul>
+<li><strong>Formal coefficient ratios</strong> (divergent, for reference): TL_4 lambda=-sqrt(2) loop gives 1/2; TL_6 lambda=0 loop gives -5/18. Neither matches -5/8 or -2.</li>
+</ul>
+<h3>Code Assets</h3>
+<ul>
+<li><strong>TL algebra infrastructure</strong> (reused from Demo 85): <code>alg_init()</code>, <code>alg_enumerate_basis()</code>, <code>alg_compose()</code>, <code>alg_compute_mult_table()</code>, <code>alg_star()</code>, <code>alg_closure_loops()</code>, <code>alg_count_through()</code></li>
+<li><strong>Left ideal construction</strong> (reused from Demo 85): <code>left_ideal_closure()</code> — BFS closure under left multiplication at delta=0</li>
+<li><strong><code>build_restricted_hamiltonian()</code></strong>: constructs L_H = -(e_0 + ... + e_{n-2}) restricted to a left ideal subspace with invariance verification</li>
+<li><strong><code>compute_b_on_ideal()</code></strong>: delta-form b computation on integer Hamiltonian (lambda=0); finds Jordan partners via ker(L_H^2)\ker(L_H), computes loop power matrix, extracts leading delta-power coefficients</li>
+<li><strong><code>compute_b_shifted()</code></strong>: double-precision version for irrational eigenvalues (lambda != 0); same algorithm but with floating-point shifted operator M = L_sub - lambda*I</li>
+<li><strong><code>compute_loop_power()</code></strong>: computes total loop count for G_delta[i][j] using star (loop form) or direct (trace form) composition</li>
+<li><strong>Modular arithmetic suite</strong>: <code>mod_pos</code>, <code>mod_mul</code>, <code>mod_add</code>, <code>mod_sub</code>, <code>mod_pow</code>, <code>mod_inv</code> over prime 10^9+7; used for minimal polynomial and characteristic polynomial computation</li>
+<li><strong><code>min_poly_mod()</code></strong>: minimal polynomial via Krylov iteration mod p — used for Jordan block detection via square-freeness test</li>
+<li><strong><code>has_jordan_blocks()</code></strong>: detects Jordan blocks by checking gcd(mu, mu') degree &gt; 0</li>
+<li><strong><code>extract_null_space()</code></strong>: double-precision RREF null space extraction</li>
+<li><strong><code>gauss_rank()</code></strong>: Gaussian elimination rank computation for integer matrices</li>
+</ul>
+<h3>Literature Touched</h3>
+<ul>
+<li><strong>Pearce-Rasmussen</strong>: b = -5/8 value for the indecomposability parameter at delta=0 (critical dense polymers); the demo attempts to reproduce this via a different (ultimately unsuccessful) method</li>
+<li><strong>Graham-Read-Rasmussen (GRS)</strong>: b = -2 value from the algebraic trace form; the demo tests this form alongside the loop form, both diverge</li>
+<li><strong>Belletete et al.</strong>: tilting module classification referenced in earlier planning (the demo was originally conceived as a tilting module decomposition test, pivoted to direct b computation)</li>
+<li><strong>Gainutdinov et al. (2013)</strong>: dense polymer fusion calculation at p=2; Demo 86 seeds this as a future direction for algebraic description of DKC composition</li>
+</ul>
+<h3>Open Questions</h3>
+<ul>
+<li>How does the literature actually compute b at lattice sizes beyond TL_4? The delta-parameterized Gram matrix approach fails; the standard modules have no Jordan blocks; the actual Pearce-Rasmussen method remains unidentified.</li>
+<li>Is there a different bilinear form or representation choice that avoids the valuation divergence on single P_{0,0}?</li>
+<li>Is b = -5/8 fundamentally a small-lattice (TL_4) phenomenon, or does the literature have a scaling/extrapolation method that works at larger sizes?</li>
+<li>What is the structural reason for the universal d^{-2} gap? Is there a representation-theoretic explanation for why p_tt &lt; 2*p_Tt on a single copy?</li>
+<li>Why is TL_8 P_{0,0} completely semisimple when TL_4 and TL_6 have Jordan blocks? Is there a periodicity or parity pattern in the non-semisimple structure?</li>
+</ul>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/c.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</body>
+</html>

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>inventory/entries/demo_96.md</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+    <link rel="stylesheet" href="../../style.css">
+</head>
+<body>
+    <nav><a href="../../index.html">← Back to Index</a></nav><hr>
+    <h2>Demo 96: TL-Group Cross-Classification — 2D Synergy Landscape</h2>
+<ul>
+<li><strong>Status</strong>: COMPLETE (LANDMARK)</li>
+<li><strong>File</strong>: <code><a href="../../demo_96_tl_group_cross/main.c.html">demo_96_tl_group_cross/main.c</a></code> (~1022 lines)</li>
+<li><strong>Tests</strong>: 14 pass, 0 fail (Phases 1-4)</li>
+<li><strong>Depends on</strong>: Demo 84 (null/non-null split, 9/15 partition), Demo 95 (derived series, 12/8/3/1 partition, Z[sqrt2] quaternion arithmetic, QZ8 type), Demo 93 (circuit complexity hierarchy, 1wpi framework), Demo 88 (anti-correlation, body-diagonal directions)</li>
+<li><strong>Feeds into</strong>: Demo 97 (Cell B perfection analysis), catalog pruning for 2I (<a href="./demo_94.html">D94</a> follow-up), cross-derived synergy principle as general DKC design rule</li>
+</ul>
+<h3>Headline</h3>
+The <a href="./demo_84.html">D84</a> null/non-null split and the <a href="./demo_95.html">D95</a> derived series split are INDEPENDENT partitions of the z8 bracket values. Their 2D cross-product creates a 5-cell landscape (A through E) that fully explains which entries carry computational capacity, which are synergy enhancers, and which are noise. The optimal z8 catalog is A+B+C (21 entries), not ALL (24) — removing the 3 Q8-null entries IMPROVES capacity.
+<h3>Key Results</h3>
+<ul>
+<li><strong>Phase 1 — Cross-Tabulation (8 tests)</strong>: The 24 z8 bracket values partition into 5 cells: A = D0-null (6 entries, half-angle 90 deg), B = D0-nonnull (6 entries, 45 deg), C = <a href="./demo_01.html">D1</a>-nonnull (8 entries, 60 deg, 2T commutators), D = <a href="./demo_02.html">D2</a>-null (3 entries, 90 deg, Q8 deep), E = <a href="./demo_03.html">D3</a>-identity (1 entry, 0 deg). Cross-checks: null total (A+D) = 9, commutator total (C+D+E) = 12, non-commutator total (A+B) = 12, grand total = 24. All counts verified exact.</li>
+</ul>
+<ul>
+<li><strong>Phase 2 — Individual Cell Capacity (1 test)</strong>: Cell B achieves 100% XOR at EVERY N (3 through 6) with only 6 entries and 3 directions. Cell C achieves 100% at N=3,4 but drops to 42.86% at N=5 and 57.14% at N=6 (4 directions). Null cells A and D are completely dead individually (0% at all N). The rule: non-null is necessary AND sufficient for individual capacity; among non-null cells, 45 deg (B) outperforms 60 deg (C).</li>
+</ul>
+<ul>
+<li><strong>Phase 3 — Pairwise Synergy Matrix (2 tests)</strong>: B+C wins at EVERY N despite having fewer directions (7) than A+B (9) or A+C (10). B+C rates: 96.70% (N=3), 94.01% (N=4), 73.18% (N=5), 31.00% (N=6). A+D (both null, 90 deg) is worst pair: 0% at N=3,5,6 with only 26.19% at N=4. Dimension analysis shows crossing the null boundary matters more than crossing the derived boundary at every N.</li>
+</ul>
+<ul>
+<li><strong>Phase 4 — Triple Combinations (2 tests)</strong>: A+B+C (skip Q8/D) BEATS the full ALL(24) at EVERY N: 74.06% vs 71.94% (N=3), 77.51% vs 75.04% (N=4), 45.10% vs 40.76% (N=5), 12.98% vs 9.64% (N=6). The 3 Q8-deep-null entries are noise that actively degrades capacity. Missing cell impact: C (2T) is most important at N=3-5 (removing it loses 18-25%), B (D0-nonnull) is most important at N=6.</li>
+</ul>
+<h3>Theorems/Conjectures</h3>
+<ul>
+<li><strong>Two Independent Stratifications (CONFIRMED)</strong>: The bracket-null/non-null partition (9/15 from <a href="./demo_84.html">D84</a>) and the derived series partition (12/8/3/1 from <a href="./demo_95.html">D95</a>) cut ACROSS each other, creating a genuine 2D classification. Confirmed by character table analysis of 2O (8 conjugacy classes, Kirillov-Ostrik 2002). Independence at element level, unity at categorical level via ADE/E7 Dynkin diagram.</li>
+</ul>
+<ul>
+<li><strong>Non-null = Load-bearing (CONFIRMED)</strong>: Null cells carry zero individual XOR capacity. Non-null is necessary AND sufficient for solo capacity. This sharpens <a href="./demo_84.html">D84</a>'s "null indispensability" finding: Cell A (D0-null, outermost) enhances synergy when combined with non-null cells; Cell D (Q8-null, deep) is pure noise.</li>
+</ul>
+<ul>
+<li><strong>Cross-derived Synergy Principle (CONFIRMED)</strong>: Non-null entries from DIFFERENT derived levels (B from D0, C from <a href="./demo_01.html">D1</a>) produce maximum synergy. B+C dominates all 6 pairwise combinations at every N tested.</li>
+</ul>
+<ul>
+<li><strong>Catalog Pruning Principle (PROPOSED)</strong>: For any DKC group, prune bracket-null entries in deep derived subgroups. Quality &gt; quantity. Optimal z8 catalog is 21 entries (A+B+C), not 24 (ALL). Testable prediction: analogous pruning improves 2I capacity.</li>
+</ul>
+<ul>
+<li><strong>Prediction Scoreboard</strong>: Three pre-computation predictions tested. Barrington depth=capacity: WRONG (B beats C, A=D=0, depth hurts). Angular diversity outer&gt;inner: HALF RIGHT (B is best but A is also outer and dead). Dual-info both-dimensions: CLOSEST (B&gt;C&gt;&gt;A=D confirmed, but null/non-null binary distinction overpowers derived dimension).</li>
+</ul>
+<h3>Data</h3>
+<p><strong>Phase 1 — Cross-tabulation (5 cells):</strong></p>
+<table><thead><tr><th>Cell</th><th>Description</th><th>Count</th><th>Half-angle</th><th>Derived</th><th>Null?</th></tr></thead><tbody><tr><td>A</td><td>D0-null (outermost, bracket-null)</td><td>6</td><td>90 deg</td><td>D0</td><td>Yes</td></tr><tr><td>B</td><td>D0-nonnull (outermost, non-null)</td><td>6</td><td>45 deg</td><td>D0</td><td>No</td></tr><tr><td>C</td><td><a href="./demo_01.html">D1</a>-nonnull (2T commutators)</td><td>8</td><td>60 deg</td><td><a href="./demo_01.html">D1</a></td><td>No</td></tr><tr><td>D</td><td><a href="./demo_02.html">D2</a>-null (Q8 deep)</td><td>3</td><td>90 deg</td><td><a href="./demo_02.html">D2</a></td><td>Yes</td></tr><tr><td>E</td><td><a href="./demo_03.html">D3</a>-identity</td><td>1</td><td>0 deg</td><td><a href="./demo_03.html">D3</a></td><td>No</td></tr></tbody></table>
+<p>Cross-checks: Null total (A+D) = 9, COMM total (C+D+E) = 12, NONCOMM total (A+B) = 12, Grand total = 24.</p>
+<p><strong>Phase 2 — Individual cell XOR capacity:</strong></p>
+<table><thead><tr><th>Cell</th><th>Size</th><th>Dirs</th><th>N=3</th><th>N=4</th><th>N=5</th><th>N=6</th></tr></thead><tbody><tr><td>A (D0-null)</td><td>6</td><td>6</td><td>0/20 (0.00%)</td><td>0/15 (0.00%)</td><td>0/6 (0.00%)</td><td>0/1 (0.00%)</td></tr><tr><td>B (D0-nonnull)</td><td>6</td><td>3</td><td>20/20 (100.00%)</td><td>15/15 (100.00%)</td><td>6/6 (100.00%)</td><td>1/1 (100.00%)</td></tr><tr><td>C (<a href="./demo_01.html">D1</a>-nonnull)</td><td>8</td><td>4</td><td>56/56 (100.00%)</td><td>70/70 (100.00%)</td><td>24/56 (42.86%)</td><td>16/28 (57.14%)</td></tr><tr><td>D (<a href="./demo_02.html">D2</a>-null)</td><td>3</td><td>3</td><td>0/1 (0.00%)</td><td>n/a</td><td>n/a</td><td>n/a</td></tr><tr><td>E (<a href="./demo_03.html">D3</a>-identity)</td><td>1</td><td>0</td><td>n/a</td><td>n/a</td><td>n/a</td><td>n/a</td></tr></tbody></table>
+<p><strong>Phase 3 — Pairwise synergy XOR rates:</strong></p>
+<table><thead><tr><th>Pair</th><th>Size</th><th>Dirs</th><th>N=3</th><th>N=4</th><th>N=5</th><th>N=6</th></tr></thead><tbody><tr><td>A+B (outermost shell)</td><td>12</td><td>9</td><td>94/220 (42.73%)</td><td>255/495 (51.52%)</td><td>108/792 (13.64%)</td><td>52/924 (5.63%)</td></tr><tr><td>A+C (cross both dims)</td><td>14</td><td>10</td><td>168/364 (46.15%)</td><td>750/1001 (74.93%)</td><td>300/2002 (14.99%)</td><td>40/3003 (1.33%)</td></tr><tr><td>A+D (both null, 90-deg)</td><td>9</td><td>9</td><td>0/84 (0.00%)</td><td>33/126 (26.19%)</td><td>0/126 (0.00%)</td><td>0/84 (0.00%)</td></tr><tr><td>B+C (both nonnull, cross derived)</td><td>14</td><td>7</td><td>352/364 (96.70%)</td><td>941/1001 (94.01%)</td><td>1465/2002 (73.18%)</td><td>931/3003 (31.00%)</td></tr><tr><td>B+D (cross both dims)</td><td>9</td><td>3</td><td>20/84 (23.81%)</td><td>15/126 (11.90%)</td><td>6/126 (4.76%)</td><td>1/84 (1.19%)</td></tr><tr><td>C+D (comm subgroup)</td><td>11</td><td>7</td><td>80/165 (48.48%)</td><td>162/330 (49.09%)</td><td>96/462 (20.78%)</td><td>34/462 (7.36%)</td></tr></tbody></table>
+<p>Best pair at every N: B+C.</p>
+<p>Dimension analysis (average rates for cross-category pairs):</p>
+<table><thead><tr><th>N</th><th>CrossNull (A+B, C+D)</th><th>CrossDerived (A+C, B+D)</th></tr></thead><tbody><tr><td>3</td><td>45.61%</td><td>34.98%</td></tr><tr><td>4</td><td>50.30%</td><td>43.41%</td></tr><tr><td>5</td><td>17.21%</td><td>9.87%</td></tr><tr><td>6</td><td>6.49%</td><td>1.26%</td></tr></tbody></table>
+<p>CrossNull &gt; CrossDerived at every N: the null/non-null boundary matters more than the derived level boundary.</p>
+<p><strong>Phase 4 — Triple combinations vs ALL:</strong></p>
+<table><thead><tr><th>Subset</th><th>Size</th><th>Dirs</th><th>N=3</th><th>N=4</th><th>N=5</th><th>N=6</th></tr></thead><tbody><tr><td>ALL (A+B+C+D+E)</td><td>24</td><td>13</td><td>1456/2024 (71.94%)</td><td>7974/10626 (75.04%)</td><td>17325/42504 (40.76%)</td><td>12975/134596 (9.64%)</td></tr><tr><td>A+B+C (skip Q8)</td><td>21</td><td>13</td><td>985/1330 (74.06%)</td><td>4639/5985 (77.51%)</td><td>9178/20349 (45.10%)</td><td>7043/54264 (12.98%)</td></tr><tr><td>A+B+D (skip 2T)</td><td>16</td><td>9</td><td>288/560 (51.43%)</td><td>920/1820 (50.55%)</td><td>976/4368 (22.34%)</td><td>318/8008 (3.97%)</td></tr><tr><td>A+C+D (skip D0nn)</td><td>18</td><td>13</td><td>452/816 (55.39%)</td><td>2007/3060 (65.59%)</td><td>1977/8568 (23.07%)</td><td>614/18564 (3.31%)</td></tr><tr><td>B+C+D (skip D0null)</td><td>18</td><td>7</td><td>613/816 (75.12%)</td><td>2180/3060 (71.24%)</td><td>2744/8568 (32.03%)</td><td>1369/18564 (7.37%)</td></tr></tbody></table>
+<p>Missing cell impact (triple rate minus ALL rate):</p>
+<table><thead><tr><th>Missing</th><th>N=3</th><th>N=4</th><th>N=5</th><th>N=6</th></tr></thead><tbody><tr><td>D (Q8)</td><td>+2.12%</td><td>+2.47%</td><td>+4.34%</td><td>+3.34%</td></tr><tr><td>C (2T)</td><td>-20.51%</td><td>-24.49%</td><td>-18.42%</td><td>-5.67%</td></tr><tr><td>B (D0nn)</td><td>-16.54%</td><td>-9.45%</td><td>-17.69%</td><td>-6.33%</td></tr><tr><td>A (D0null)</td><td>+3.19%</td><td>-3.80%</td><td>-8.73%</td><td>-2.27%</td></tr></tbody></table>
+<p>Most important cell: C (2T) at N=3-5, B (D0-nonnull) at N=6.</p>
+<h3>Code Assets</h3>
+<ul>
+<li><strong><code>Zr2</code> (Z[sqrt2] ring arithmetic, from <a href="./demo_95.html">D95</a>)</strong>: Exact integer type representing a + b*sqrt(2). Operations: <code>zr2_make</code>, <code>zr2_add</code>, <code>zr2_sub</code>, <code>zr2_neg</code>, <code>zr2_mul</code>, <code>zr2_eq</code>, <code>zr2_div2</code>. Multiplication uses the identity sqrt(2)^2 = 2. Reused from <a href="./demo_95.html">D95</a> without modification.</li>
+<li><strong><code>QZ8</code> (quaternion over Z[sqrt2]/2, from <a href="./demo_95.html">D95</a>)</strong>: Four-component quaternion with Zr2 entries (representing (a + b*sqrt(2))/2 per component). Operations: <code>qz8_make</code>, <code>qz8_eq</code>, <code>qz8_neg</code>, <code>qz8_conj</code>, <code>qz8_mul</code>. Exact arithmetic, reused from <a href="./demo_95.html">D95</a>.</li>
+<li><strong><code>qz8_to_float()</code></strong>: Converts exact Z[sqrt2] quaternion to floating-point <code>Quat</code> for use with phase_cell framework.</li>
+<li><strong><code>build_z8()</code></strong>: BFS closure from 4 generators (two generator pairs + conjugates). Produces 24 bracket values (mod sign).</li>
+<li><strong><code>z8_commutator()</code> / <code>close_z8_subgroup()</code> / <code>compute_derived_series()</code></strong>: Derived series computation: generates commutator subgroups, closes under multiplication, assigns derived level to each element. Produces the D0/<a href="./demo_01.html">D1</a>/<a href="./demo_02.html">D2</a>/<a href="./demo_03.html">D3</a> partition (12/8/3/1).</li>
+<li><strong><code>compute_null_classification()</code></strong>: Tests if scalar component (Re part) of each quaternion is zero. Produces the null/non-null partition (9/15).</li>
+<li><strong><code>compute_cells()</code></strong>: Cross-product of derived level x null classification -&gt; 5-cell assignment (A through E). Core new contribution of <a href="./demo_96.html">D96</a>.</li>
+<li><strong><code>load_cells(cell_mask)</code></strong>: Flexible subset loader: given a 5-element bitmask, loads the union of selected cells into the global catalog. Enables arbitrary cell combination testing.</li>
+<li><strong><code>run_subset_capacity()</code> / <code>print_subset_result()</code></strong>: Runs exhaustive XOR capacity test at N=3,4,5,6 for the currently loaded catalog. k_sec sweep over {6, 12, 24}. Reports hit counts, totals, and percentages.</li>
+<li><strong><code>build_dirs()</code> / <code>vor_cell()</code> / <code>phase_cell()</code></strong>: Voronoi direction extraction and 1wpi phase-cell activation framework. Shared with <a href="./demo_93.html">D93</a>/<a href="./demo_94.html">D94</a>/<a href="./demo_95.html">D95</a>.</li>
+<li><strong><code>count_phase_ex()</code> / <code>next_combo()</code></strong>: Exhaustive combinatorial weight-tuple testing. Iterates all C(n,k) combinations.</li>
+</ul>
+<h3>Literature Touched</h3>
+<ul>
+<li><strong>Kirillov-Ostrik (2002) — character table of 2O</strong>: 8 conjugacy classes of the binary octahedral group. The two stratifications (bracket-null/non-null = TL radical lens, derived series = group-theoretic) connect to E7 Dynkin diagram through different pathways — representation-theoretic for TL, group-theoretic for derived series. Independent at element level, unified at categorical level.</li>
+<li><strong>Barrington (1989) — branching programs</strong>: <a href="./demo_96.html">D96</a> partially refutes naive depth=capacity interpretation. Cell B (shallowest non-null, D0) is the BEST individual performer, while deeper cells (D, <a href="./demo_02.html">D2</a>) are noise. Depth in the derived series HURTS capacity for null entries. The correct reading: non-solvability matters at the group level (<a href="./demo_94.html">D94</a>), but within a solvable group, derived depth is secondary to the null/non-null distinction.</li>
+<li><strong><a href="./demo_84.html">D84</a> null indispensability (reinterpreted)</strong>: The original finding that null entries are "indispensable" specifically refers to Cell A (D0-null, outermost). Cell D (Q8-null, deep) is not indispensable — it is noise. The null/non-null distinction is load-bearing only in combination with derived level.</li>
+<li><strong><a href="./demo_95.html">D95</a> COMM vs NONCOMM (reinterpreted)</strong>: The near-equal capacity of commutator vs non-commutator subgroups in isolation is explained by contamination from null cells in both partitions. The true signal is B+C (non-null x cross-derived synergy), which was masked when averaging over all entries in each partition.</li>
+</ul>
+<h3>Open Questions</h3>
+<ul>
+<li><strong>Cell B perfection mechanism</strong>: WHY does every combination of 6 Cell B entries compute XOR? What geometric/algebraic property of 3 mutually orthogonal directions at 45 deg half-angle makes this work? (Seeded as <a href="./demo_97.html">D97</a>, now completed.)</li>
+<li><strong>Catalog pruning for 2I</strong>: Does removing analogous "noise" entries (bracket-null in deep derived subgroups) from the binary icosahedral group 2I improve its capacity? If the pruning principle is universal across DKC groups, this is a general optimization rule.</li>
+<li><strong>Non-monotonicity of missing-cell impact</strong>: Cell A (D0-null) shows +3.19% at N=3 (removing it helps) but -8.73% at N=5 (removing it hurts). Why does the synergy-enhancer role of outermost null entries depend on arity?</li>
+<li><strong>BFS-as-braids dogfooding demo</strong>: Seeded from researcher manifold report during <a href="./demo_96.html">D96</a> session.</li>
+</ul>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/c.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</body>
+</html>

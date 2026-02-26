@@ -1,0 +1,1036 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>demo_20_braid_error/main.c</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+    <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+    <nav><a href="../index.html">← Back to Index</a></nav><hr>
+    <h1>demo_20_braid_error/main.c</h1><pre><code class="language-c">/*
+ * KNOTAPEL DEMO 20: Braid Error Landscape
+ * ========================================
+ *
+ * At delta=0 (8th root of unity), braid circuits compute exact Boolean logic.
+ * What happens as delta moves away from zero?
+ *
+ * Part A: Delta landscape — |delta| across a fine angular sweep
+ * Part B: Single-gate error curves — separation vs |delta|
+ * Part C: Cascade error — full adder fidelity vs |delta|
+ * Part D: Universal delta curve — parameterize by |delta|, overlay roots
+ * Part E: Phase transition detection — sharp or gradual?
+ *
+ * C89, zero dependencies beyond math.h.
+ */
+
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;string.h&gt;
+#include &lt;math.h&gt;
+
+#ifndef M_PI
+#define M_PI 3.14159265358979323846
+#endif
+
+/* ================================================================
+ * Complex arithmetic (from Demo 18/19)
+ * ================================================================ */
+
+typedef struct { double re, im; } Cx;
+
+static Cx cx_make(double re, double im) { Cx z; z.re = re; z.im = im; return z; }
+static Cx cx_zero(void) { return cx_make(0.0, 0.0); }
+static Cx cx_one(void)  { return cx_make(1.0, 0.0); }
+
+static Cx cx_add(Cx a, Cx b) { return cx_make(a.re + b.re, a.im + b.im); }
+static Cx cx_neg(Cx a) { return cx_make(-a.re, -a.im); }
+static Cx cx_mul(Cx a, Cx b) {
+    return cx_make(a.re * b.re - a.im * b.im,
+                   a.re * b.im + a.im * b.re);
+}
+static Cx cx_div(Cx a, Cx b) {
+    double d = b.re * b.re + b.im * b.im;
+    return cx_make((a.re * b.re + a.im * b.im) / d,
+                   (a.im * b.re - a.re * b.im) / d);
+}
+static double cx_abs(Cx a) { return sqrt(a.re * a.re + a.im * a.im); }
+static Cx cx_exp_i(double theta) { return cx_make(cos(theta), sin(theta)); }
+static Cx cx_pow_int(Cx a, int n) {
+    Cx r = cx_one();
+    Cx base;
+    int neg;
+    if (n == 0) return r;
+    neg = (n &lt; 0);
+    if (neg) n = -n;
+    base = a;
+    while (n &gt; 0) {
+        if (n &amp; 1) r = cx_mul(r, base);
+        base = cx_mul(base, base);
+        n &gt;&gt;= 1;
+    }
+    if (neg) r = cx_div(cx_one(), r);
+    return r;
+}
+
+/* ================================================================
+ * State-sum bracket oracle (from Demo 18/19)
+ * ================================================================ */
+
+#define MAX_WORD 64
+typedef struct { int word[MAX_WORD]; int len, n; } Braid;
+
+#define MAX_UF 4096
+static int uf_p[MAX_UF];
+static void uf_init(int n) { int i; for (i = 0; i &lt; n; i++) uf_p[i] = i; }
+static int uf_find(int x) {
+    while (uf_p[x] != x) { uf_p[x] = uf_p[uf_p[x]]; x = uf_p[x]; }
+    return x;
+}
+static void uf_union(int x, int y) {
+    x = uf_find(x); y = uf_find(y); if (x != y) uf_p[x] = y;
+}
+
+static int braid_loops(const Braid *b, unsigned s) {
+    int N = (b-&gt;len + 1) * b-&gt;n, l, p, i, loops, sgn, bit, cup;
+    uf_init(N);
+    for (l = 0; l &lt; b-&gt;len; l++) {
+        sgn = b-&gt;word[l] &gt; 0 ? 1 : -1;
+        i = (sgn &gt; 0 ? b-&gt;word[l] : -b-&gt;word[l]) - 1;
+        bit = (int)((s &gt;&gt; l) &amp; 1u);
+        cup = (sgn &gt; 0) ? (bit == 0) : (bit == 1);
+        if (cup) {
+            uf_union(l * b-&gt;n + i, l * b-&gt;n + i + 1);
+            uf_union((l + 1) * b-&gt;n + i, (l + 1) * b-&gt;n + i + 1);
+            for (p = 0; p &lt; b-&gt;n; p++)
+                if (p != i &amp;&amp; p != i + 1)
+                    uf_union(l * b-&gt;n + p, (l + 1) * b-&gt;n + p);
+        } else {
+            for (p = 0; p &lt; b-&gt;n; p++)
+                uf_union(l * b-&gt;n + p, (l + 1) * b-&gt;n + p);
+        }
+    }
+    for (p = 0; p &lt; b-&gt;n; p++)
+        uf_union(p, b-&gt;len * b-&gt;n + p);
+    loops = 0;
+    for (i = 0; i &lt; N; i++)
+        if (uf_find(i) == i) loops++;
+    return loops;
+}
+
+static Cx braid_bracket_at(const Braid *b, Cx A) {
+    unsigned s, ns;
+    int i, a_count, b_count, lp, j;
+    Cx result, delta, d_power, term, coeff;
+
+    delta = cx_neg(cx_add(cx_pow_int(A, 2), cx_pow_int(A, -2)));
+
+    result = cx_zero();
+    if (!b-&gt;len) {
+        result = cx_one();
+        for (i = 0; i &lt; b-&gt;n - 1; i++)
+            result = cx_mul(result, delta);
+        return result;
+    }
+
+    ns = 1u &lt;&lt; b-&gt;len;
+    for (s = 0; s &lt; ns; s++) {
+        a_count = 0; b_count = 0;
+        for (i = 0; i &lt; b-&gt;len; i++) {
+            if ((s &gt;&gt; (unsigned)i) &amp; 1u) b_count++;
+            else a_count++;
+        }
+        lp = braid_loops(b, s);
+
+        coeff = cx_pow_int(A, a_count - b_count);
+        d_power = cx_one();
+        for (j = 0; j &lt; lp - 1; j++)
+            d_power = cx_mul(d_power, delta);
+        term = cx_mul(coeff, d_power);
+        result = cx_add(result, term);
+    }
+    return result;
+}
+
+/* ================================================================
+ * Test infrastructure
+ * ================================================================ */
+
+static int n_pass = 0, n_fail = 0;
+
+static void check(const char *msg, int ok) {
+    if (ok) { printf("  PASS: %s\n", msg); n_pass++; }
+    else    { printf("  FAIL: %s\n", msg); n_fail++; }
+}
+
+/* ================================================================
+ * Gate evaluation helpers (from Demo 19)
+ * ================================================================ */
+
+static Braid make_gate_braid(int n_strands,
+                              const int *input_word, int input_len,
+                              const int *gate_word, int gate_len) {
+    Braid b;
+    int i;
+    b.n = n_strands;
+    b.len = input_len + gate_len;
+    for (i = 0; i &lt; input_len; i++)
+        b.word[i] = input_word[i];
+    for (i = 0; i &lt; gate_len; i++)
+        b.word[input_len + i] = gate_word[i];
+    return b;
+}
+
+static double gate_output(int n_strands,
+                          int input_bit, int input_gen,
+                          const int *gate_word, int gate_len,
+                          Cx A) {
+    Braid b;
+    int input_word[1];
+    if (input_bit == 0) {
+        b = make_gate_braid(n_strands, NULL, 0, gate_word, gate_len);
+    } else {
+        input_word[0] = input_gen;
+        b = make_gate_braid(n_strands, input_word, 1, gate_word, gate_len);
+    }
+    return cx_abs(braid_bracket_at(&amp;b, A));
+}
+
+static double gate_output_2bit(int n_strands,
+                               int bit_a, int gen_a,
+                               int bit_b, int gen_b,
+                               const int *gate_word, int gate_len,
+                               Cx A) {
+    Braid b;
+    int input_word[2];
+    int input_len = 0;
+    if (bit_a) { input_word[input_len++] = gen_a; }
+    if (bit_b) { input_word[input_len++] = gen_b; }
+    b = make_gate_braid(n_strands, input_word, input_len, gate_word, gate_len);
+    return cx_abs(braid_bracket_at(&amp;b, A));
+}
+
+/* Demo 18/19 known gates */
+static int NOT_WORD[] = {-1, -1, -1, -1, -1, -1};
+static int NOT_LEN = 6;
+static int NAND_WORD[] = {-1, -1, -1, 2, 2};
+static int NAND_LEN = 5;
+
+/* ================================================================
+ * Expression tree compiler (from Demo 19)
+ * ================================================================ */
+
+typedef enum { EXPR_VAR, EXPR_NOT, EXPR_NAND } ExprType;
+
+typedef struct Expr {
+    ExprType type;
+    int var_id;
+    struct Expr *left;
+    struct Expr *right;
+} Expr;
+
+#define EXPR_POOL_SIZE 1024
+static Expr expr_pool[EXPR_POOL_SIZE];
+static int expr_pool_idx = 0;
+
+static Expr *expr_alloc(void) {
+    Expr *e;
+    if (expr_pool_idx &gt;= EXPR_POOL_SIZE) {
+        fprintf(stderr, "Expression pool exhausted!\n");
+        exit(1);
+    }
+    e = &amp;expr_pool[expr_pool_idx++];
+    e-&gt;left = NULL;
+    e-&gt;right = NULL;
+    e-&gt;var_id = 0;
+    return e;
+}
+
+static void expr_pool_reset(void) { expr_pool_idx = 0; }
+
+static Expr *expr_var(int id) {
+    Expr *e = expr_alloc();
+    e-&gt;type = EXPR_VAR;
+    e-&gt;var_id = id;
+    return e;
+}
+
+static Expr *expr_not(Expr *child) {
+    Expr *e = expr_alloc();
+    e-&gt;type = EXPR_NOT;
+    e-&gt;left = child;
+    return e;
+}
+
+static Expr *expr_nand(Expr *a, Expr *b) {
+    Expr *e = expr_alloc();
+    e-&gt;type = EXPR_NAND;
+    e-&gt;left = a;
+    e-&gt;right = b;
+    return e;
+}
+
+static Expr *expr_and(Expr *a, Expr *b) {
+    return expr_not(expr_nand(a, b));
+}
+
+static Expr *expr_or(Expr *a, Expr *b) {
+    return expr_nand(expr_not(a), expr_not(b));
+}
+
+static Expr *expr_xor(Expr *a, Expr *b) {
+    Expr *nand_ab = expr_nand(a, b);
+    return expr_nand(expr_nand(a, nand_ab), expr_nand(b, nand_ab));
+}
+
+/* Gate thresholds — computed dynamically per angle */
+static double not_threshold;
+static double nand_threshold;
+static int gates_valid;
+
+static void compute_thresholds(Cx A) {
+    double o0 = gate_output(2, 0, 1, NOT_WORD, NOT_LEN, A);
+    double o1 = gate_output(2, 1, 1, NOT_WORD, NOT_LEN, A);
+    double o00 = gate_output_2bit(3, 0, 1, 0, 2, NAND_WORD, NAND_LEN, A);
+    double o01 = gate_output_2bit(3, 0, 1, 1, 2, NAND_WORD, NAND_LEN, A);
+    double o10 = gate_output_2bit(3, 1, 1, 0, 2, NAND_WORD, NAND_LEN, A);
+    double o11 = gate_output_2bit(3, 1, 1, 1, 2, NAND_WORD, NAND_LEN, A);
+    double min_high;
+
+    /* NOT: input=0 should be high, input=1 low */
+    not_threshold = (o0 + o1) / 2.0;
+
+    /* NAND: (0,0),(0,1),(1,0) high, (1,1) low */
+    min_high = o00;
+    if (o01 &lt; min_high) min_high = o01;
+    if (o10 &lt; min_high) min_high = o10;
+    nand_threshold = (min_high + o11) / 2.0;
+
+    gates_valid = (o0 &gt; o1 + 0.001) &amp;&amp; (min_high &gt; o11 + 0.001);
+}
+
+static int eval_expr_impl(const Expr *e, const int *vars, Cx A) {
+    switch (e-&gt;type) {
+    case EXPR_VAR:
+        return vars[e-&gt;var_id];
+    case EXPR_NOT: {
+        int input = eval_expr_impl(e-&gt;left, vars, A);
+        double amp = gate_output(2, input, 1, NOT_WORD, NOT_LEN, A);
+        return amp &gt; not_threshold ? 1 : 0;
+    }
+    case EXPR_NAND: {
+        int a = eval_expr_impl(e-&gt;left, vars, A);
+        int b = eval_expr_impl(e-&gt;right, vars, A);
+        double amp = gate_output_2bit(3, a, 1, b, 2,
+                                       NAND_WORD, NAND_LEN, A);
+        return amp &gt; nand_threshold ? 1 : 0;
+    }
+    }
+    return 0;
+}
+
+static int eval_expr(const Expr *e, const int *vars, Cx A) {
+    return eval_expr_impl(e, vars, A);
+}
+
+/* ================================================================
+ * Compute |delta| for a given angle
+ * ================================================================ */
+
+static double delta_abs_at(double theta) {
+    Cx A = cx_exp_i(theta);
+    Cx delta = cx_neg(cx_add(cx_pow_int(A, 2), cx_pow_int(A, -2)));
+    return cx_abs(delta);
+}
+
+/* ================================================================
+ * PART A: Delta Landscape
+ *
+ * Compute |delta| = |-(A^2 + A^{-2})| across a fine angular sweep.
+ * Locate zeros and near-zeros.
+ * ================================================================ */
+
+static void part_a_landscape(void) {
+    int i;
+    int n_steps = 360;
+    int n_zeros = 0;
+    double prev_delta = -1.0;
+    char msg[200];
+
+    printf("\n=== PART A: Delta Landscape ===\n");
+    printf("  Sweeping %d angles from 0 to 2*pi\n\n", n_steps);
+
+    printf("  Zeros/near-zeros of |delta| (&lt; 0.01):\n");
+
+    for (i = 0; i &lt; n_steps; i++) {
+        double theta = 2.0 * M_PI * (double)i / (double)n_steps;
+        double d = delta_abs_at(theta);
+
+        if (d &lt; 0.01) {
+            printf("    theta = %.4f*pi (%.4f rad), |delta| = %.6f\n",
+                   theta / M_PI, theta, d);
+            n_zeros++;
+        }
+        prev_delta = d;
+    }
+    (void)prev_delta;
+
+    printf("\n  Found %d near-zero angles out of %d\n", n_zeros, n_steps);
+
+    /* Analytical: delta = -(A^2 + A^{-2}) = -(2*cos(2*theta))
+     * So |delta| = |2*cos(2*theta)|
+     * Zeros at cos(2*theta) = 0, i.e. 2*theta = pi/2 + n*pi
+     * i.e. theta = pi/4, 3*pi/4, 5*pi/4, 7*pi/4
+     * These are the 8th roots of unity! */
+    printf("\n  ANALYTICAL: delta = -(A^2 + A^{-2}) = -2*cos(2*theta)\n");
+    printf("  |delta| = 2|cos(2*theta)|\n");
+    printf("  Zeros: theta = pi/4, 3pi/4, 5pi/4, 7pi/4\n");
+    printf("  These ARE the 8th roots of unity with NAND support!\n");
+
+    /* Verify analytical formula */
+    {
+        int ok = 1;
+        for (i = 0; i &lt; n_steps; i++) {
+            double theta = 2.0 * M_PI * (double)i / (double)n_steps;
+            double d_numerical = delta_abs_at(theta);
+            double d_analytical = 2.0 * fabs(cos(2.0 * theta));
+            if (fabs(d_numerical - d_analytical) &gt; 1e-10) {
+                ok = 0;
+                break;
+            }
+        }
+        sprintf(msg, "|delta| = 2|cos(2*theta)| formula verified (%d angles)",
+                n_steps);
+        check(msg, ok);
+    }
+
+    /* Key values at roots of unity */
+    printf("\n  |delta| at roots of unity from Demo 19:\n");
+    {
+        int roots[] = {4, 6, 8, 10, 12};
+        int n_roots = 5;
+        int ri, k;
+        for (ri = 0; ri &lt; n_roots; ri++) {
+            int N = roots[ri];
+            printf("    %dth roots: ", N);
+            for (k = 0; k &lt; N; k++) {
+                double theta = 2.0 * M_PI * (double)k / (double)N;
+                double d = delta_abs_at(theta);
+                if (k &gt; 0) printf(", ");
+                printf("%.3f", d);
+            }
+            printf("\n");
+        }
+    }
+}
+
+/* ================================================================
+ * PART B: Single-Gate Error Curves
+ *
+ * Sweep theta around 5*pi/4, measure NOT and NAND separation
+ * as a function of angular displacement and |delta|.
+ * ================================================================ */
+
+#define SWEEP_N 200
+
+typedef struct {
+    double theta;
+    double delta_abs;
+    double not_sep;
+    double nand_sep;
+    int not_correct;    /* all 2 truth table entries correct */
+    int nand_correct;   /* all 4 truth table entries correct */
+} SweepPoint;
+
+static SweepPoint sweep[SWEEP_N];
+
+static void part_b_single_gate(void) {
+    int i;
+    double center = 5.0 * M_PI / 4.0;
+    double range = M_PI / 2.0;  /* sweep +/- pi/4 around center */
+    int not_fail_idx = -1;
+    int nand_fail_idx = -1;
+    char msg[200];
+
+    printf("\n=== PART B: Single-Gate Error Curves ===\n");
+    printf("  Sweeping theta from %.4f to %.4f (center = 5*pi/4)\n",
+           (center - range) / M_PI, (center + range) / M_PI);
+
+    for (i = 0; i &lt; SWEEP_N; i++) {
+        double theta = (center - range)
+                       + 2.0 * range * (double)i / (double)(SWEEP_N - 1);
+        Cx A = cx_exp_i(theta);
+        double o0, o1, o00, o01, o10, o11, min_high;
+
+        sweep[i].theta = theta;
+        sweep[i].delta_abs = delta_abs_at(theta);
+
+        /* NOT gate */
+        o0 = gate_output(2, 0, 1, NOT_WORD, NOT_LEN, A);
+        o1 = gate_output(2, 1, 1, NOT_WORD, NOT_LEN, A);
+        sweep[i].not_sep = o0 - o1;
+        sweep[i].not_correct = (o0 &gt; o1) ? 1 : 0;
+
+        /* NAND gate */
+        o00 = gate_output_2bit(3, 0, 1, 0, 2, NAND_WORD, NAND_LEN, A);
+        o01 = gate_output_2bit(3, 0, 1, 1, 2, NAND_WORD, NAND_LEN, A);
+        o10 = gate_output_2bit(3, 1, 1, 0, 2, NAND_WORD, NAND_LEN, A);
+        o11 = gate_output_2bit(3, 1, 1, 1, 2, NAND_WORD, NAND_LEN, A);
+        min_high = o00;
+        if (o01 &lt; min_high) min_high = o01;
+        if (o10 &lt; min_high) min_high = o10;
+        sweep[i].nand_sep = min_high - o11;
+        sweep[i].nand_correct = (min_high &gt; o11) ? 1 : 0;
+    }
+
+    /* Print summary table (sample every 20th point) */
+    printf("\n  Sample points:\n");
+    printf("  %-8s %-8s %-10s %-10s %-5s %-5s\n",
+           "theta/pi", "|delta|", "NOT_sep", "NAND_sep", "NOT", "NAND");
+    printf("  %-8s %-8s %-10s %-10s %-5s %-5s\n",
+           "--------", "--------", "----------", "----------", "-----", "-----");
+
+    for (i = 0; i &lt; SWEEP_N; i += 10) {
+        printf("  %-8.4f %-8.4f %-10.4f %-10.4f %-5s %-5s\n",
+               sweep[i].theta / M_PI,
+               sweep[i].delta_abs,
+               sweep[i].not_sep,
+               sweep[i].nand_sep,
+               sweep[i].not_correct ? "OK" : "FAIL",
+               sweep[i].nand_correct ? "OK" : "FAIL");
+    }
+
+    /* Find first failure point from center */
+    {
+        int center_idx = SWEEP_N / 2;
+        /* Search outward from center */
+        for (i = center_idx; i &lt; SWEEP_N; i++) {
+            if (!sweep[i].not_correct &amp;&amp; not_fail_idx &lt; 0)
+                not_fail_idx = i;
+            if (!sweep[i].nand_correct &amp;&amp; nand_fail_idx &lt; 0)
+                nand_fail_idx = i;
+        }
+        for (i = center_idx; i &gt;= 0; i--) {
+            if (!sweep[i].not_correct &amp;&amp; not_fail_idx &lt; 0)
+                not_fail_idx = i;
+            if (!sweep[i].nand_correct &amp;&amp; nand_fail_idx &lt; 0)
+                nand_fail_idx = i;
+        }
+    }
+
+    printf("\n  Critical failure points:\n");
+    if (not_fail_idx &gt;= 0) {
+        printf("    NOT first fails at theta=%.4f*pi, |delta|=%.4f\n",
+               sweep[not_fail_idx].theta / M_PI,
+               sweep[not_fail_idx].delta_abs);
+    } else {
+        printf("    NOT: never fails in sweep range!\n");
+    }
+
+    if (nand_fail_idx &gt;= 0) {
+        printf("    NAND first fails at theta=%.4f*pi, |delta|=%.4f (delta_c)\n",
+               sweep[nand_fail_idx].theta / M_PI,
+               sweep[nand_fail_idx].delta_abs);
+        sprintf(msg, "P2: critical |delta_c| found for NAND (%.4f)",
+                sweep[nand_fail_idx].delta_abs);
+        check(msg, 1);
+    } else {
+        printf("    NAND: never fails in sweep range!\n");
+        check("P2: NAND robust across entire sweep", 1);
+    }
+
+    /* P1: Check smoothness — separation should change gradually */
+    {
+        int smooth = 1;
+        for (i = 1; i &lt; SWEEP_N; i++) {
+            double d_not = fabs(sweep[i].not_sep - sweep[i-1].not_sep);
+            double d_nand = fabs(sweep[i].nand_sep - sweep[i-1].nand_sep);
+            /* Jump &gt; 2.0 between adjacent points would be non-smooth */
+            if (d_not &gt; 2.0 || d_nand &gt; 2.0) {
+                smooth = 0;
+                break;
+            }
+        }
+        sprintf(msg, "P1: separation degrades smoothly (%s)",
+                smooth ? "confirmed" : "sharp jump detected");
+        check(msg, smooth);
+    }
+}
+
+/* ================================================================
+ * PART C: Cascade Error — Full Adder
+ *
+ * Run full adder at each angle in the sweep.
+ * Compare cascade failure to single-gate failure.
+ * ================================================================ */
+
+static void part_c_cascade(void) {
+    int si;
+    int adder_fail_idx = -1;
+    int adder_fail_delta_idx = -1;
+    double adder_fail_delta = -1.0;
+    int center_idx = SWEEP_N / 2;
+    char msg[200];
+
+    printf("\n=== PART C: Cascade Error (Full Adder) ===\n");
+
+    printf("\n  %-8s %-8s %-6s %-8s\n",
+           "theta/pi", "|delta|", "corr/8", "status");
+    printf("  %-8s %-8s %-6s %-8s\n",
+           "--------", "--------", "------", "--------");
+
+    for (si = 0; si &lt; SWEEP_N; si += 5) {
+        double theta = sweep[si].theta;
+        Cx A = cx_exp_i(theta);
+        int correct = 0;
+        int ii;
+
+        compute_thresholds(A);
+
+        for (ii = 0; ii &lt; 8; ii++) {
+            int a = (ii &gt;&gt; 2) &amp; 1;
+            int b = (ii &gt;&gt; 1) &amp; 1;
+            int cin = ii &amp; 1;
+            int expected_sum = a ^ b ^ cin;
+            int expected_carry = (a &amp; b) | (cin &amp; (a ^ b));
+            int sum_result, carry_result;
+            Expr *sum_expr, *carry_expr;
+            int vars[3];
+
+            vars[0] = a; vars[1] = b; vars[2] = cin;
+
+            expr_pool_reset();
+            sum_expr = expr_xor(expr_xor(expr_var(0), expr_var(1)),
+                                expr_var(2));
+            sum_result = eval_expr(sum_expr, vars, A);
+
+            expr_pool_reset();
+            carry_expr = expr_or(
+                expr_and(expr_var(0), expr_var(1)),
+                expr_and(expr_var(2),
+                         expr_xor(expr_var(0), expr_var(1))));
+            carry_result = eval_expr(carry_expr, vars, A);
+
+            if (sum_result == expected_sum &amp;&amp; carry_result == expected_carry)
+                correct++;
+        }
+
+        printf("  %-8.4f %-8.4f %-6d %-8s\n",
+               theta / M_PI, sweep[si].delta_abs,
+               correct, correct == 8 ? "OK" : "FAIL");
+
+        /* Track first failure from center */
+        if (correct &lt; 8 &amp;&amp; adder_fail_idx &lt; 0 &amp;&amp; si &gt;= center_idx) {
+            adder_fail_idx = si;
+            adder_fail_delta = sweep[si].delta_abs;
+        }
+    }
+
+    /* Also search backward from center */
+    if (adder_fail_idx &lt; 0) {
+        for (si = center_idx; si &gt;= 0; si -= 5) {
+            double theta = sweep[si].theta;
+            Cx A = cx_exp_i(theta);
+            int correct = 0;
+            int ii;
+
+            compute_thresholds(A);
+
+            for (ii = 0; ii &lt; 8; ii++) {
+                int a = (ii &gt;&gt; 2) &amp; 1;
+                int b = (ii &gt;&gt; 1) &amp; 1;
+                int cin = ii &amp; 1;
+                int expected_sum = a ^ b ^ cin;
+                int expected_carry = (a &amp; b) | (cin &amp; (a ^ b));
+                int sum_result, carry_result;
+                Expr *sum_expr, *carry_expr;
+                int vars[3];
+
+                vars[0] = a; vars[1] = b; vars[2] = cin;
+
+                expr_pool_reset();
+                sum_expr = expr_xor(expr_xor(expr_var(0), expr_var(1)),
+                                    expr_var(2));
+                sum_result = eval_expr(sum_expr, vars, A);
+
+                expr_pool_reset();
+                carry_expr = expr_or(
+                    expr_and(expr_var(0), expr_var(1)),
+                    expr_and(expr_var(2),
+                             expr_xor(expr_var(0), expr_var(1))));
+                carry_result = eval_expr(carry_expr, vars, A);
+
+                if (sum_result == expected_sum &amp;&amp;
+                    carry_result == expected_carry)
+                    correct++;
+            }
+
+            if (correct &lt; 8 &amp;&amp; adder_fail_idx &lt; 0) {
+                adder_fail_idx = si;
+                adder_fail_delta = sweep[si].delta_abs;
+            }
+        }
+    }
+
+    /* Find the NAND single-gate failure delta for comparison */
+    {
+        double nand_fail_delta = -1.0;
+        int i;
+        for (i = center_idx; i &lt; SWEEP_N; i++) {
+            if (!sweep[i].nand_correct) {
+                nand_fail_delta = sweep[i].delta_abs;
+                break;
+            }
+        }
+
+        printf("\n  Cascade vs single-gate failure:\n");
+        if (adder_fail_idx &gt;= 0) {
+            printf("    Full adder first fails at |delta| = %.4f\n",
+                   adder_fail_delta);
+        } else {
+            printf("    Full adder: never fails in sweep range\n");
+            adder_fail_delta = 999.0;
+        }
+        if (nand_fail_delta &gt;= 0) {
+            printf("    NAND single gate first fails at |delta| = %.4f\n",
+                   nand_fail_delta);
+        } else {
+            printf("    NAND: never fails in sweep range\n");
+            nand_fail_delta = 999.0;
+        }
+
+        /* P3: Does cascade amplify error? */
+        if (adder_fail_delta &lt; nand_fail_delta) {
+            sprintf(msg, "P3: cascade amplifies error (adder fails at |d|=%.3f &lt; NAND at |d|=%.3f)",
+                    adder_fail_delta, nand_fail_delta);
+            check(msg, 1);
+        } else {
+            sprintf(msg, "P3: cascade does NOT amplify (adder fails at |d|=%.3f &gt;= NAND at |d|=%.3f)",
+                    adder_fail_delta, nand_fail_delta);
+            check(msg, 1); /* informational — surprising but valid */
+        }
+        (void)adder_fail_delta_idx;
+    }
+}
+
+/* ================================================================
+ * PART D: Universal Delta Curve
+ *
+ * Parameterize by |delta| instead of theta.
+ * Overlay roots of unity from Demo 19 Part A.
+ * ================================================================ */
+
+static void part_d_universal(void) {
+    int i;
+    char msg[200];
+    int roots[] = {4, 6, 8, 10, 12};
+    int n_roots = 5;
+    int ri, k;
+    int hierarchy_correct = 1;
+
+    printf("\n=== PART D: Universal Delta Curve ===\n");
+    printf("  Parameterizing gate viability by |delta| alone\n\n");
+
+    /* Sort sweep by |delta| and show separation */
+    /* Instead of actual sort, just bin by |delta| ranges */
+    {
+        double bins[] = {0.0, 0.25, 0.5, 0.75, 1.0, 1.25, 1.5, 1.75, 2.0};
+        int n_bins = 8;
+        int bi;
+
+        printf("  %-12s %-8s %-8s %-8s %-8s\n",
+               "|delta| bin", "n_pts", "avg_NOT", "avg_NAND", "NAND_ok%");
+        printf("  %-12s %-8s %-8s %-8s %-8s\n",
+               "------------", "--------", "--------", "--------", "--------");
+
+        for (bi = 0; bi &lt; n_bins; bi++) {
+            double lo = bins[bi];
+            double hi = bins[bi + 1];
+            int count = 0;
+            double sum_not = 0.0, sum_nand = 0.0;
+            int nand_ok = 0;
+
+            for (i = 0; i &lt; SWEEP_N; i++) {
+                if (sweep[i].delta_abs &gt;= lo &amp;&amp; sweep[i].delta_abs &lt; hi) {
+                    sum_not += sweep[i].not_sep;
+                    sum_nand += sweep[i].nand_sep;
+                    if (sweep[i].nand_correct) nand_ok++;
+                    count++;
+                }
+            }
+
+            if (count &gt; 0) {
+                printf("  [%.2f,%.2f)    %-8d %-8.3f %-8.3f %-8.1f\n",
+                       lo, hi, count,
+                       sum_not / (double)count,
+                       sum_nand / (double)count,
+                       100.0 * (double)nand_ok / (double)count);
+            }
+        }
+    }
+
+    /* Overlay roots of unity */
+    printf("\n  Roots of unity on the universal curve:\n");
+    printf("  %-6s %-4s %-8s %-10s %-10s %-8s\n",
+           "N", "k", "|delta|", "NOT_sep", "NAND_sep", "univ?");
+    printf("  %-6s %-4s %-8s %-10s %-10s %-8s\n",
+           "------", "----", "--------", "----------", "----------", "--------");
+
+    for (ri = 0; ri &lt; n_roots; ri++) {
+        int N = roots[ri];
+        for (k = 0; k &lt; N; k++) {
+            double theta = 2.0 * M_PI * (double)k / (double)N;
+            double d = delta_abs_at(theta);
+            Cx A = cx_exp_i(theta);
+            double o0, o1, o00, o01, o10, o11, min_high;
+            double not_sep, nand_sep;
+            int is_universal;
+
+            o0 = gate_output(2, 0, 1, NOT_WORD, NOT_LEN, A);
+            o1 = gate_output(2, 1, 1, NOT_WORD, NOT_LEN, A);
+            not_sep = o0 - o1;
+
+            o00 = gate_output_2bit(3, 0, 1, 0, 2, NAND_WORD, NAND_LEN, A);
+            o01 = gate_output_2bit(3, 0, 1, 1, 2, NAND_WORD, NAND_LEN, A);
+            o10 = gate_output_2bit(3, 1, 1, 0, 2, NAND_WORD, NAND_LEN, A);
+            o11 = gate_output_2bit(3, 1, 1, 1, 2, NAND_WORD, NAND_LEN, A);
+            min_high = o00;
+            if (o01 &lt; min_high) min_high = o01;
+            if (o10 &lt; min_high) min_high = o10;
+            nand_sep = min_high - o11;
+
+            is_universal = (not_sep &gt; 0.001 &amp;&amp; nand_sep &gt; 0.001) ? 1 : 0;
+
+            /* Only print interesting ones */
+            if (not_sep &gt; 0.001 || nand_sep &gt; 0.001) {
+                printf("  %-6d %-4d %-8.4f %-10.4f %-10.4f %-8s\n",
+                       N, k, d, not_sep, nand_sep,
+                       is_universal ? "YES" : "no");
+            }
+        }
+    }
+
+    /* P4: Does |delta| predict viability? */
+    /* Check: all universal angles should have |delta| below some threshold,
+     * all non-universal should have |delta| above it */
+    {
+        double max_universal_delta = 0.0;
+        double min_nonuniversal_delta = 999.0;
+
+        for (ri = 0; ri &lt; n_roots; ri++) {
+            int N = roots[ri];
+            for (k = 0; k &lt; N; k++) {
+                double theta = 2.0 * M_PI * (double)k / (double)N;
+                double d = delta_abs_at(theta);
+                Cx A = cx_exp_i(theta);
+                double o0, o1, o00, o01, o10, o11, min_high;
+                double not_sep, nand_sep;
+                int is_universal;
+
+                o0 = gate_output(2, 0, 1, NOT_WORD, NOT_LEN, A);
+                o1 = gate_output(2, 1, 1, NOT_WORD, NOT_LEN, A);
+                not_sep = o0 - o1;
+
+                o00 = gate_output_2bit(3, 0, 1, 0, 2, NAND_WORD, NAND_LEN, A);
+                o01 = gate_output_2bit(3, 0, 1, 1, 2, NAND_WORD, NAND_LEN, A);
+                o10 = gate_output_2bit(3, 1, 1, 0, 2, NAND_WORD, NAND_LEN, A);
+                o11 = gate_output_2bit(3, 1, 1, 1, 2, NAND_WORD, NAND_LEN, A);
+                min_high = o00;
+                if (o01 &lt; min_high) min_high = o01;
+                if (o10 &lt; min_high) min_high = o10;
+                nand_sep = min_high - o11;
+
+                is_universal = (not_sep &gt; 0.001 &amp;&amp; nand_sep &gt; 0.001) ? 1 : 0;
+
+                if (is_universal &amp;&amp; d &gt; max_universal_delta)
+                    max_universal_delta = d;
+                if (!is_universal &amp;&amp; nand_sep &lt;= 0.001 &amp;&amp; not_sep &gt; 0.001
+                    &amp;&amp; d &lt; min_nonuniversal_delta)
+                    min_nonuniversal_delta = d;
+            }
+        }
+
+        printf("\n  Delta separation analysis:\n");
+        printf("    Max |delta| at universal angles: %.4f\n",
+               max_universal_delta);
+        printf("    Min |delta| at NOT-only angles: %.4f\n",
+               min_nonuniversal_delta);
+
+        if (max_universal_delta &lt; min_nonuniversal_delta) {
+            sprintf(msg, "P4: |delta| cleanly separates universal from non-universal (%.3f &lt; %.3f)",
+                    max_universal_delta, min_nonuniversal_delta);
+            check(msg, 1);
+            hierarchy_correct = 1;
+        } else {
+            sprintf(msg, "P4: |delta| does NOT cleanly separate (overlap at %.3f vs %.3f)",
+                    max_universal_delta, min_nonuniversal_delta);
+            check(msg, 0);
+            hierarchy_correct = 0;
+        }
+        (void)hierarchy_correct;
+    }
+}
+
+/* ================================================================
+ * PART E: Phase Transition Detection
+ *
+ * Look for sharp vs gradual transition between exact and noisy.
+ * Compute finite differences of separation w.r.t. |delta|.
+ * ================================================================ */
+
+static void part_e_transition(void) {
+    int i;
+    double max_deriv_not = 0.0, max_deriv_nand = 0.0;
+    double max_deriv_not_delta = 0.0, max_deriv_nand_delta = 0.0;
+    int center_idx = SWEEP_N / 2;
+    char msg[200];
+
+    /* Also compute: for each angle, how many of 12 basic truth-table
+     * entries (2 NOT + 4 NAND + 4 AND + 4 OR... actually just NOT+NAND)
+     * are correct? This gives a "fidelity score" */
+    int n_regions = 0;
+    int in_correct_region = 0;
+    int region_start = -1;
+
+    printf("\n=== PART E: Phase Transition Detection ===\n");
+
+    /* Compute derivatives of NAND separation w.r.t. index
+     * (which is monotonically related to |delta| near center) */
+    printf("\n  Derivative of NAND separation near center:\n");
+    printf("  %-8s %-8s %-10s %-10s\n",
+           "theta/pi", "|delta|", "NAND_sep", "d(sep)/di");
+    printf("  %-8s %-8s %-10s %-10s\n",
+           "--------", "--------", "----------", "----------");
+
+    for (i = center_idx - 15; i &lt;= center_idx + 15; i++) {
+        if (i &gt; 0 &amp;&amp; i &lt; SWEEP_N - 1) {
+            double deriv = (sweep[i+1].nand_sep - sweep[i-1].nand_sep) / 2.0;
+            double d_delta = fabs(sweep[i].delta_abs);
+
+            if (i &gt;= center_idx - 10 &amp;&amp; i &lt;= center_idx + 10) {
+                printf("  %-8.4f %-8.4f %-10.4f %-10.4f\n",
+                       sweep[i].theta / M_PI,
+                       sweep[i].delta_abs,
+                       sweep[i].nand_sep,
+                       deriv);
+            }
+
+            if (fabs(deriv) &gt; max_deriv_nand) {
+                max_deriv_nand = fabs(deriv);
+                max_deriv_nand_delta = d_delta;
+            }
+        }
+    }
+
+    /* Do the same for NOT */
+    for (i = 1; i &lt; SWEEP_N - 1; i++) {
+        double deriv = (sweep[i+1].not_sep - sweep[i-1].not_sep) / 2.0;
+        double d_delta = fabs(sweep[i].delta_abs);
+        if (fabs(deriv) &gt; max_deriv_not) {
+            max_deriv_not = fabs(deriv);
+            max_deriv_not_delta = d_delta;
+        }
+    }
+
+    printf("\n  Maximum rate of change:\n");
+    printf("    NOT:  max |d(sep)/di| = %.4f at |delta| = %.4f\n",
+           max_deriv_not, max_deriv_not_delta);
+    printf("    NAND: max |d(sep)/di| = %.4f at |delta| = %.4f\n",
+           max_deriv_nand, max_deriv_nand_delta);
+
+    /* P5: Is there a sharp transition? */
+    /* A phase transition would show a very large derivative concentrated
+     * at a specific |delta|. A gradual decline would show moderate
+     * derivatives spread across the range. */
+    {
+        /* Compare max derivative to average derivative */
+        double avg_deriv = 0.0;
+        int count = 0;
+        for (i = 1; i &lt; SWEEP_N - 1; i++) {
+            double deriv = fabs(
+                (sweep[i+1].nand_sep - sweep[i-1].nand_sep) / 2.0);
+            avg_deriv += deriv;
+            count++;
+        }
+        avg_deriv /= (double)count;
+
+        printf("\n  Transition analysis (NAND):\n");
+        printf("    Average |derivative|: %.4f\n", avg_deriv);
+        printf("    Maximum |derivative|: %.4f\n", max_deriv_nand);
+        printf("    Ratio (peak/avg): %.2f\n",
+               avg_deriv &gt; 0 ? max_deriv_nand / avg_deriv : 0.0);
+
+        if (avg_deriv &gt; 0 &amp;&amp; max_deriv_nand / avg_deriv &gt; 5.0) {
+            sprintf(msg, "P5: SHARP transition detected (ratio %.1f &gt; 5)",
+                    max_deriv_nand / avg_deriv);
+            check(msg, 1);
+        } else {
+            sprintf(msg, "P5: GRADUAL transition (ratio %.1f &lt;= 5)",
+                    avg_deriv &gt; 0 ? max_deriv_nand / avg_deriv : 0.0);
+            check(msg, 1); /* informational */
+        }
+    }
+
+    /* Count distinct "correct regions" — contiguous stretches where
+     * both NOT and NAND work */
+    for (i = 0; i &lt; SWEEP_N; i++) {
+        int both_ok = sweep[i].not_correct &amp;&amp; sweep[i].nand_correct;
+        if (both_ok &amp;&amp; !in_correct_region) {
+            in_correct_region = 1;
+            region_start = i;
+            n_regions++;
+        } else if (!both_ok &amp;&amp; in_correct_region) {
+            in_correct_region = 0;
+            printf("  Correct region %d: theta=[%.4f, %.4f]*pi, "
+                   "|delta|=[%.4f, %.4f]\n",
+                   n_regions,
+                   sweep[region_start].theta / M_PI,
+                   sweep[i-1].theta / M_PI,
+                   sweep[i-1].delta_abs,
+                   sweep[region_start].delta_abs);
+        }
+    }
+    if (in_correct_region) {
+        printf("  Correct region %d: theta=[%.4f, %.4f]*pi (extends to edge)\n",
+               n_regions,
+               sweep[region_start].theta / M_PI,
+               sweep[SWEEP_N-1].theta / M_PI);
+    }
+
+    printf("\n  Total correct regions in sweep: %d\n", n_regions);
+    sprintf(msg, "at least one correct region around 5*pi/4");
+    check(msg, n_regions &gt; 0);
+
+    (void)max_deriv_not_delta;
+}
+
+/* ================================================================
+ * MAIN
+ * ================================================================ */
+
+int main(void) {
+    setbuf(stdout, NULL);
+    printf("KNOTAPEL DEMO 20: Braid Error Landscape\n");
+    printf("========================================\n");
+
+    part_a_landscape();
+    part_b_single_gate();
+    part_c_cascade();
+    part_d_universal();
+    part_e_transition();
+
+    printf("\n========================================\n");
+    printf("Results: %d passed, %d failed\n", n_pass, n_fail);
+    printf("========================================\n");
+    return n_fail &gt; 0 ? 1 : 0;
+}
+</code></pre>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/c.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</body>
+</html>

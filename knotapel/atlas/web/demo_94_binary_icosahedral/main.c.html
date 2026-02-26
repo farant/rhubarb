@@ -1,0 +1,1302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>demo_94_binary_icosahedral/main.c</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+    <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+    <nav><a href="../index.html">← Back to Index</a></nav><hr>
+    <h1>demo_94_binary_icosahedral/main.c</h1><pre><code class="language-c">/*
+ * KNOTAPEL DEMO 94: Binary Icosahedral Group (2I, E8)
+ * ====================================================
+ *
+ * D93 showed: the circuit complexity hierarchy manifests in DKC as
+ * hit rate differences. AND/XOR ratio: 1 -&gt; 7 -&gt; 2762 -&gt; inf (N=3..8).
+ *
+ * Researcher found: the finite/infinite capacity boundary IS the
+ * solvable/non-solvable boundary from Barrington's theorem.
+ * - zeta_8: binary octahedral (2O, order 48, SOLVABLE) -&gt; ceiling
+ * - zeta_12: dense SU(2) subgroup (NON-SOLVABLE) -&gt; unbounded
+ * - 2I: binary icosahedral (order 120, NON-SOLVABLE) -&gt; the unique
+ *   non-solvable FINITE SU(2) subgroup
+ *
+ * The killer experiment: at SAME catalog size (24 entries), does 2I
+ * outperform 2O/zeta_8? If yes -&gt; solvability is the bottleneck.
+ *
+ * Phase 0: Z[sqrt5] / Q2I arithmetic + verification
+ * Phase 1: BFS closure of 2I, verify 120 elements, extract 60 values
+ * Phase 2: Size-controlled comparison (24 from zeta_8 vs 24 from 2I)
+ * Phase 3: Full 2I capacity (all 60 values)
+ *
+ * C89, zero dependencies beyond math.h.
+ */
+
+#include &lt;stdio.h&gt;
+#include &lt;string.h&gt;
+#include &lt;math.h&gt;
+
+#ifndef M_PI
+#define M_PI 3.14159265358979323846
+#endif
+
+/* ================================================================ */
+/* Test infrastructure                                              */
+/* ================================================================ */
+
+static int n_pass = 0, n_fail = 0;
+
+static void check(const char *titulis, int ok) {
+    if (ok) { printf("  PASS: %s\n", titulis); n_pass++; }
+    else    { printf("  FAIL: %s\n", titulis); n_fail++; }
+}
+
+/* ================================================================ */
+/* Part A: Z[sqrt5] arithmetic                                      */
+/* Value = (a + b*sqrt5). Integer coefficients.                     */
+/* ================================================================ */
+
+typedef struct { int a; int b; } Zr5;
+
+static Zr5 zr5_make(int a, int b) { Zr5 r; r.a = a; r.b = b; return r; }
+static Zr5 zr5_add(Zr5 x, Zr5 y) { Zr5 r; r.a = x.a+y.a; r.b = x.b+y.b; return r; }
+static Zr5 zr5_sub(Zr5 x, Zr5 y) { Zr5 r; r.a = x.a-y.a; r.b = x.b-y.b; return r; }
+static Zr5 zr5_neg(Zr5 x) { Zr5 r; r.a = -x.a; r.b = -x.b; return r; }
+
+static Zr5 zr5_mul(Zr5 x, Zr5 y) {
+    /* (a1+b1*sqrt5)(a2+b2*sqrt5) = (a1*a2+5*b1*b2) + (a1*b2+b1*a2)*sqrt5 */
+    Zr5 r;
+    r.a = x.a*y.a + 5*x.b*y.b;
+    r.b = x.a*y.b + x.b*y.a;
+    return r;
+}
+
+static int zr5_eq(Zr5 x, Zr5 y) { return x.a == y.a &amp;&amp; x.b == y.b; }
+
+/* ================================================================ */
+/* Part B: Q2I quaternion arithmetic over Z[sqrt5]/4                */
+/* Each component stored as Zr5, actual value = (a+b*sqrt5)/4       */
+/* ================================================================ */
+
+typedef struct { Zr5 a, b, c, d; } Q2I;
+
+static Q2I q2i_make(Zr5 a, Zr5 b, Zr5 c, Zr5 d) {
+    Q2I r; r.a = a; r.b = b; r.c = c; r.d = d; return r;
+}
+
+static int q2i_eq(const Q2I *p, const Q2I *q) {
+    return zr5_eq(p-&gt;a, q-&gt;a) &amp;&amp; zr5_eq(p-&gt;b, q-&gt;b) &amp;&amp;
+           zr5_eq(p-&gt;c, q-&gt;c) &amp;&amp; zr5_eq(p-&gt;d, q-&gt;d);
+}
+
+static Q2I q2i_neg(const Q2I *q) {
+    return q2i_make(zr5_neg(q-&gt;a), zr5_neg(q-&gt;b),
+                    zr5_neg(q-&gt;c), zr5_neg(q-&gt;d));
+}
+
+static Q2I q2i_conj(const Q2I *q) {
+    return q2i_make(q-&gt;a, zr5_neg(q-&gt;b), zr5_neg(q-&gt;c), zr5_neg(q-&gt;d));
+}
+
+static Zr5 zr5_div4(Zr5 x) {
+    Zr5 r;
+    r.a = x.a / 4;
+    r.b = x.b / 4;
+    return r;
+}
+
+static Q2I q2i_mul(const Q2I *p, const Q2I *q) {
+    /*
+     * Quaternion multiplication. Each component is Zr5/4.
+     * Product of two /4 values is /16. Sum of 4 products is /16.
+     * Divide by 4 to get /4 form (result must be exact for group elements).
+     */
+    Q2I r;
+    Zr5 t;
+
+    /* scalar: p.a*q.a - p.b*q.b - p.c*q.c - p.d*q.d */
+    t = zr5_mul(p-&gt;a, q-&gt;a);
+    t = zr5_sub(t, zr5_mul(p-&gt;b, q-&gt;b));
+    t = zr5_sub(t, zr5_mul(p-&gt;c, q-&gt;c));
+    t = zr5_sub(t, zr5_mul(p-&gt;d, q-&gt;d));
+    r.a = zr5_div4(t);
+
+    /* i: p.a*q.b + p.b*q.a + p.c*q.d - p.d*q.c */
+    t = zr5_mul(p-&gt;a, q-&gt;b);
+    t = zr5_add(t, zr5_mul(p-&gt;b, q-&gt;a));
+    t = zr5_add(t, zr5_mul(p-&gt;c, q-&gt;d));
+    t = zr5_sub(t, zr5_mul(p-&gt;d, q-&gt;c));
+    r.b = zr5_div4(t);
+
+    /* j: p.a*q.c - p.b*q.d + p.c*q.a + p.d*q.b */
+    t = zr5_mul(p-&gt;a, q-&gt;c);
+    t = zr5_sub(t, zr5_mul(p-&gt;b, q-&gt;d));
+    t = zr5_add(t, zr5_mul(p-&gt;c, q-&gt;a));
+    t = zr5_add(t, zr5_mul(p-&gt;d, q-&gt;b));
+    r.c = zr5_div4(t);
+
+    /* k: p.a*q.d + p.b*q.c - p.c*q.b + p.d*q.a */
+    t = zr5_mul(p-&gt;a, q-&gt;d);
+    t = zr5_add(t, zr5_mul(p-&gt;b, q-&gt;c));
+    t = zr5_sub(t, zr5_mul(p-&gt;c, q-&gt;b));
+    t = zr5_add(t, zr5_mul(p-&gt;d, q-&gt;a));
+    r.d = zr5_div4(t);
+
+    return r;
+}
+
+/* Verify norm = 1 (in /4 representation, norm^2 in /16) */
+static int q2i_is_unit(const Q2I *q) {
+    /* |q|^2 = (a^2+b^2+c^2+d^2)/16 should equal 1 */
+    /* So a^2+b^2+c^2+d^2 should equal (16,0) in Zr5 */
+    Zr5 n2 = zr5_mul(q-&gt;a, q-&gt;a);
+    n2 = zr5_add(n2, zr5_mul(q-&gt;b, q-&gt;b));
+    n2 = zr5_add(n2, zr5_mul(q-&gt;c, q-&gt;c));
+    n2 = zr5_add(n2, zr5_mul(q-&gt;d, q-&gt;d));
+    return n2.a == 16 &amp;&amp; n2.b == 0;
+}
+
+/* ================================================================ */
+/* Part C: 2I BFS closure                                           */
+/* ================================================================ */
+
+#define MAX_2I 128
+
+static Q2I g_2i[MAX_2I];
+static int g_2i_depth[MAX_2I];
+static int g_2i_size = 0;
+
+static int find_2i(const Q2I *q) {
+    int i;
+    Q2I nq = q2i_neg(q);
+    for (i = 0; i &lt; g_2i_size; i++) {
+        if (q2i_eq(q, &amp;g_2i[i]) || q2i_eq(&amp;nq, &amp;g_2i[i]))
+            return i;
+    }
+    return -1;
+}
+
+static void build_2i(int verbose) {
+    Q2I gens[4];
+    Q2I s, t, si, ti;
+    int prev, i, gi, rd;
+
+    /* s = (1+i+j+k)/2, in /4 form: (2,0,2,0,2,0,2,0) */
+    s = q2i_make(zr5_make(2,0), zr5_make(2,0),
+                 zr5_make(2,0), zr5_make(2,0));
+
+    /* s^-1 = conj(s) for unit quaternion */
+    si = q2i_conj(&amp;s);
+
+    /* t = (phi + phi^-1*i + j)/2
+     * phi = (1+sqrt5)/2, phi^-1 = (sqrt5-1)/2
+     * In /4 form: a=(1,1), b=(-1,1), c=(2,0), d=(0,0) */
+    t = q2i_make(zr5_make(1,1), zr5_make(-1,1),
+                 zr5_make(2,0), zr5_make(0,0));
+
+    /* t^-1 = conj(t) */
+    ti = q2i_conj(&amp;t);
+
+    gens[0] = s;
+    gens[1] = si;
+    gens[2] = t;
+    gens[3] = ti;
+
+    /* Seed with identity */
+    g_2i_size = 0;
+    g_2i[0] = q2i_make(zr5_make(4,0), zr5_make(0,0),
+                        zr5_make(0,0), zr5_make(0,0));
+    g_2i_depth[0] = 0;
+    g_2i_size = 1;
+
+    /* Add generators */
+    for (gi = 0; gi &lt; 4; gi++) {
+        if (find_2i(&amp;gens[gi]) &lt; 0 &amp;&amp; g_2i_size &lt; MAX_2I) {
+            g_2i_depth[g_2i_size] = 0;
+            g_2i[g_2i_size++] = gens[gi];
+        }
+    }
+    if (verbose)
+        printf("  Round 0: %d entries\n", g_2i_size);
+
+    rd = 1;
+    do {
+        prev = g_2i_size;
+        for (i = 0; i &lt; prev; i++) {
+            for (gi = 0; gi &lt; 4; gi++) {
+                Q2I prod = q2i_mul(&amp;g_2i[i], &amp;gens[gi]);
+                if (find_2i(&amp;prod) &lt; 0 &amp;&amp; g_2i_size &lt; MAX_2I) {
+                    g_2i_depth[g_2i_size] = rd;
+                    g_2i[g_2i_size++] = prod;
+                }
+            }
+        }
+        if (verbose &amp;&amp; g_2i_size &gt; prev)
+            printf("  Round %d: %d entries (+%d)\n",
+                   rd, g_2i_size, g_2i_size - prev);
+        rd++;
+    } while (g_2i_size &gt; prev &amp;&amp; rd &lt; 20);
+}
+
+/* ================================================================ */
+/* Part D: Float quaternion + activation (from D93)                 */
+/* ================================================================ */
+
+typedef struct { double a, b, c, d; } Quat;
+
+static Quat qmul(const Quat *p, const Quat *g) {
+    Quat r;
+    r.a = p-&gt;a*g-&gt;a - p-&gt;b*g-&gt;b - p-&gt;c*g-&gt;c - p-&gt;d*g-&gt;d;
+    r.b = p-&gt;a*g-&gt;b + p-&gt;b*g-&gt;a + p-&gt;c*g-&gt;d - p-&gt;d*g-&gt;c;
+    r.c = p-&gt;a*g-&gt;c - p-&gt;b*g-&gt;d + p-&gt;c*g-&gt;a + p-&gt;d*g-&gt;b;
+    r.d = p-&gt;a*g-&gt;d + p-&gt;b*g-&gt;c - p-&gt;c*g-&gt;b + p-&gt;d*g-&gt;a;
+    return r;
+}
+
+/* Float catalog (loaded from either 2I or zeta_8) */
+#define MAX_QCAT 4096
+#define MAX_DIR 2048
+#define MAX_ACT 65536
+
+static Quat g_cat[MAX_QCAT];
+static int g_cat_depth[MAX_QCAT];
+static int g_cat_size = 0;
+
+static double g_dir[MAX_DIR][3];
+static int g_nd = 0;
+
+static int cell_class0[MAX_ACT], cell_class1[MAX_ACT];
+static int touched_cells[MAX_ACT];
+
+static void build_dirs(int cat_size) {
+    int i, j;
+    g_nd = 0;
+    for (i = 0; i &lt; cat_size; i++) {
+        double qa = g_cat[i].a, qb = g_cat[i].b;
+        double qc = g_cat[i].c, qd = g_cat[i].d;
+        double nv, ax, ay, az;
+        int found = 0;
+        if (qa &lt; 0) { qa = -qa; qb = -qb; qc = -qc; qd = -qd; }
+        nv = sqrt(qb*qb + qc*qc + qd*qd);
+        if (nv &lt; 1e-12) continue;
+        ax = qb/nv; ay = qc/nv; az = qd/nv;
+        for (j = 0; j &lt; g_nd; j++) {
+            double d1 = fabs(g_dir[j][0]-ax) + fabs(g_dir[j][1]-ay) +
+                         fabs(g_dir[j][2]-az);
+            double d2 = fabs(g_dir[j][0]+ax) + fabs(g_dir[j][1]+ay) +
+                         fabs(g_dir[j][2]+az);
+            if (d1 &lt; 1e-8 || d2 &lt; 1e-8) { found = 1; break; }
+        }
+        if (!found &amp;&amp; g_nd &lt; MAX_DIR) {
+            g_dir[g_nd][0] = ax; g_dir[g_nd][1] = ay; g_dir[g_nd][2] = az;
+            g_nd++;
+        }
+    }
+}
+
+static int vor_cell(double ax, double ay, double az) {
+    int i, best = 0;
+    double bd = -2.0;
+    for (i = 0; i &lt; g_nd; i++) {
+        double dp = fabs(ax*g_dir[i][0] + ay*g_dir[i][1] + az*g_dir[i][2]);
+        if (dp &gt; bd) { bd = dp; best = i; }
+    }
+    return best;
+}
+
+static int phase_cell(double sa, double sb, double sc, double sd,
+                      int k_sec) {
+    double n2 = sa*sa + sb*sb + sc*sc + sd*sd;
+    double nm, qa, rv, half_ang, ang;
+    int sec, vor, n_vor;
+
+    n_vor = g_nd + 1;
+    if (n2 &lt; 1e-24) return (k_sec - 1) * n_vor + g_nd;
+
+    nm = sqrt(n2);
+    qa = sa / nm;
+    /* NO sign flip — phase-sensitive */
+    if (qa &gt; 1.0) qa = 1.0;
+    if (qa &lt; -1.0) qa = -1.0;
+
+    half_ang = acos(qa);
+    ang = 2.0 * half_ang * 180.0 / M_PI;
+    sec = (int)(ang * (double)k_sec / 360.0);
+    if (sec &gt;= k_sec) sec = k_sec - 1;
+    if (sec &lt; 0) sec = 0;
+
+    rv = sqrt(sb*sb + sc*sc + sd*sd);
+    if (rv / nm &lt; 1e-12) {
+        vor = g_nd;
+    } else {
+        vor = vor_cell(sb / rv, sc / rv, sd / rv);
+    }
+
+    return sec * n_vor + vor;
+}
+
+/* Q2I -&gt; float conversion */
+static Quat q2i_to_float(const Q2I *q) {
+    static const double SQRT5 = 2.2360679774997896964;
+    Quat r;
+    r.a = ((double)q-&gt;a.a + (double)q-&gt;a.b * SQRT5) / 4.0;
+    r.b = ((double)q-&gt;b.a + (double)q-&gt;b.b * SQRT5) / 4.0;
+    r.c = ((double)q-&gt;c.a + (double)q-&gt;c.b * SQRT5) / 4.0;
+    r.d = ((double)q-&gt;d.a + (double)q-&gt;d.b * SQRT5) / 4.0;
+    return r;
+}
+
+/* ================================================================ */
+/* Part E: SU(2) generators for zeta_8 comparison                   */
+/* ================================================================ */
+
+static Quat g_z8_gen[3];
+
+static void init_z8(void) {
+    double half = M_PI / 4.0;
+    double co = cos(half), si = sin(half);
+    g_z8_gen[1].a = co; g_z8_gen[1].b = si;
+    g_z8_gen[1].c = 0;  g_z8_gen[1].d = 0;
+    g_z8_gen[2].a = co; g_z8_gen[2].b = 0;
+    g_z8_gen[2].c = 0;  g_z8_gen[2].d = -si;
+}
+
+static int find_float(const Quat *q, int n) {
+    int i;
+    for (i = 0; i &lt; n; i++) {
+        if (fabs(g_cat[i].a - q-&gt;a) &lt; 1e-10 &amp;&amp;
+            fabs(g_cat[i].b - q-&gt;b) &lt; 1e-10 &amp;&amp;
+            fabs(g_cat[i].c - q-&gt;c) &lt; 1e-10 &amp;&amp;
+            fabs(g_cat[i].d - q-&gt;d) &lt; 1e-10)
+            return i;
+        if (fabs(g_cat[i].a + q-&gt;a) &lt; 1e-10 &amp;&amp;
+            fabs(g_cat[i].b + q-&gt;b) &lt; 1e-10 &amp;&amp;
+            fabs(g_cat[i].c + q-&gt;c) &lt; 1e-10 &amp;&amp;
+            fabs(g_cat[i].d + q-&gt;d) &lt; 1e-10)
+            return i;
+    }
+    return -1;
+}
+
+static void build_z8_catalog(void) {
+    Quat gens[4];
+    int prev, i, gi, rd;
+
+    g_cat_size = 0;
+    g_cat[0].a = 1; g_cat[0].b = 0; g_cat[0].c = 0; g_cat[0].d = 0;
+    g_cat_depth[0] = 0;
+    g_cat_size = 1;
+
+    gens[0] = g_z8_gen[1];
+    gens[1].a =  g_z8_gen[1].a; gens[1].b = -g_z8_gen[1].b;
+    gens[1].c = -g_z8_gen[1].c; gens[1].d = -g_z8_gen[1].d;
+    gens[2] = g_z8_gen[2];
+    gens[3].a =  g_z8_gen[2].a; gens[3].b = -g_z8_gen[2].b;
+    gens[3].c = -g_z8_gen[2].c; gens[3].d = -g_z8_gen[2].d;
+
+    for (gi = 0; gi &lt; 4; gi++) {
+        if (find_float(&amp;gens[gi], g_cat_size) &lt; 0 &amp;&amp;
+            g_cat_size &lt; MAX_QCAT) {
+            g_cat_depth[g_cat_size] = 0;
+            g_cat[g_cat_size++] = gens[gi];
+        }
+    }
+
+    rd = 1;
+    do {
+        prev = g_cat_size;
+        for (i = 0; i &lt; prev; i++) {
+            for (gi = 0; gi &lt; 4; gi++) {
+                Quat prod = qmul(&amp;g_cat[i], &amp;gens[gi]);
+                if (find_float(&amp;prod, g_cat_size) &lt; 0 &amp;&amp;
+                    g_cat_size &lt; MAX_QCAT) {
+                    g_cat_depth[g_cat_size] = rd;
+                    g_cat[g_cat_size++] = prod;
+                }
+            }
+        }
+        rd++;
+    } while (g_cat_size &gt; prev &amp;&amp; rd &lt; 20);
+}
+
+/* Saved catalogs for switching */
+static Quat saved_z8[64];
+static int saved_z8_depth[64];
+static int saved_z8_size;
+
+static Quat saved_2i[64];
+static int saved_2i_depth[64];
+static int saved_2i_size;
+
+static void save_z8(void) {
+    int i;
+    saved_z8_size = g_cat_size;
+    for (i = 0; i &lt; g_cat_size &amp;&amp; i &lt; 64; i++) {
+        saved_z8[i] = g_cat[i];
+        saved_z8_depth[i] = g_cat_depth[i];
+    }
+}
+
+/* ================================================================ */
+/* Part F: Truth tables + 1wpi testing (from D93)                   */
+/* ================================================================ */
+
+static int popcount(int x) {
+    int c = 0;
+    while (x) { c += x &amp; 1; x &gt;&gt;= 1; }
+    return c;
+}
+
+#define MAX_TT 256
+
+static void make_xor_tt(int *tt, int n) {
+    int mask;
+    for (mask = 0; mask &lt; (1 &lt;&lt; n); mask++)
+        tt[mask] = popcount(mask) &amp; 1;
+}
+
+static void make_and_tt(int *tt, int n) {
+    int mask, all = (1 &lt;&lt; n) - 1;
+    for (mask = 0; mask &lt; (1 &lt;&lt; n); mask++)
+        tt[mask] = (mask == all) ? 1 : 0;
+}
+
+static void make_maj_tt(int *tt, int n) {
+    int mask, thresh = n / 2;
+    for (mask = 0; mask &lt; (1 &lt;&lt; n); mask++)
+        tt[mask] = (popcount(mask) &gt; thresh) ? 1 : 0;
+}
+
+static int test_1wpi_phase(const int *indices, int n_weights, int k_sec,
+                           const int *truth_table) {
+    int n_masks, n_touched = 0;
+    int mask, i, result = 1;
+
+    n_masks = 1 &lt;&lt; n_weights;
+    if (n_weights &gt; 8) return 0;
+
+    for (mask = 0; mask &lt; n_masks; mask++) {
+        double sa = 0, sb = 0, sc = 0, sd = 0;
+        int cls, cell;
+
+        for (i = 0; i &lt; n_weights; i++) {
+            const Quat *q = &amp;g_cat[indices[i]];
+            double sign = ((mask &gt;&gt; i) &amp; 1) ? 1.0 : -1.0;
+            sa += sign * q-&gt;a; sb += sign * q-&gt;b;
+            sc += sign * q-&gt;c; sd += sign * q-&gt;d;
+        }
+
+        cell = phase_cell(sa, sb, sc, sd, k_sec);
+        cls = truth_table[mask];
+
+        if (cell_class0[cell] == 0 &amp;&amp; cell_class1[cell] == 0)
+            touched_cells[n_touched++] = cell;
+
+        if (cls == 0) {
+            cell_class0[cell]++;
+            if (cell_class1[cell] &gt; 0) { result = 0; goto done; }
+        } else {
+            cell_class1[cell]++;
+            if (cell_class0[cell] &gt; 0) { result = 0; goto done; }
+        }
+    }
+
+done:
+    for (i = 0; i &lt; n_touched; i++) {
+        cell_class0[touched_cells[i]] = 0;
+        cell_class1[touched_cells[i]] = 0;
+    }
+    return result;
+}
+
+/* Combination generator */
+static int next_combo(int *combo, int n, int bf) {
+    int i = n - 1;
+    while (i &gt;= 0) {
+        combo[i]++;
+        if (combo[i] &lt;= bf - n + i) {
+            int j;
+            for (j = i + 1; j &lt; n; j++)
+                combo[j] = combo[j-1] + 1;
+            return 1;
+        }
+        i--;
+    }
+    return 0;
+}
+
+static const int K_SHORT[] = {6, 12, 24};
+#define N_KSHORT 3
+
+static int count_phase_ex(int n_weights, int bf_limit,
+                          const int *truth_table) {
+    int count = 0;
+    int combo[8];
+    int i, ki;
+
+    if (bf_limit &gt; g_cat_size) bf_limit = g_cat_size;
+    if (n_weights &gt; 8 || bf_limit &lt; n_weights) return 0;
+
+    for (i = 0; i &lt; n_weights; i++) combo[i] = i;
+
+    do {
+        for (ki = 0; ki &lt; N_KSHORT; ki++) {
+            int nc = K_SHORT[ki] * (g_nd + 1);
+            if (nc &gt; MAX_ACT) continue;
+            if (test_1wpi_phase(combo, n_weights, K_SHORT[ki], truth_table)) {
+                count++;
+                break;
+            }
+        }
+    } while (next_combo(combo, n_weights, bf_limit));
+
+    return count;
+}
+
+static int sample_phase(int n_weights, int bf, int n_samples,
+                        const int *truth_table, unsigned long *rng) {
+    int count = 0;
+    int trial;
+
+    if (bf &lt; n_weights) return 0;
+
+    for (trial = 0; trial &lt; n_samples; trial++) {
+        int idx[8];
+        int ok, i, ki;
+
+        do {
+            ok = 1;
+            for (i = 0; i &lt; n_weights; i++) {
+                *rng = *rng * 6364136223846793005UL + 1442695040888963407UL;
+                idx[i] = (int)((*rng &gt;&gt; 33) % (unsigned long)bf);
+            }
+            for (i = 0; i &lt; n_weights &amp;&amp; ok; i++) {
+                int j;
+                for (j = i+1; j &lt; n_weights; j++) {
+                    if (idx[i] == idx[j]) { ok = 0; break; }
+                }
+            }
+        } while (!ok);
+
+        for (ki = 0; ki &lt; N_KSHORT; ki++) {
+            int nc = K_SHORT[ki] * (g_nd + 1);
+            if (nc &gt; MAX_ACT) continue;
+            if (test_1wpi_phase(idx, n_weights, K_SHORT[ki], truth_table)) {
+                count++;
+                break;
+            }
+        }
+    }
+    return count;
+}
+
+static long comb_nk(int n, int k) {
+    long r = 1;
+    int i;
+    if (k &gt; n - k) k = n - k;
+    for (i = 0; i &lt; k; i++) {
+        r = r * (long)(n - i) / (long)(i + 1);
+    }
+    return r;
+}
+
+/* ================================================================ */
+/* Phase 0: Z[sqrt5] + Q2I arithmetic verification                  */
+/* ================================================================ */
+
+static void phase0_arithmetic(void) {
+    Q2I s, t, s2, s3, s6, t_inv, tt_prod;
+    Q2I ident;
+
+    printf("\n=== Phase 0: Z[sqrt5] / Q2I Arithmetic ===\n\n");
+
+    /* Verify Z[sqrt5] basics */
+    {
+        Zr5 a = zr5_make(1, 1);  /* 1 + sqrt5 */
+        Zr5 b = zr5_make(1, -1); /* 1 - sqrt5 */
+        Zr5 ab = zr5_mul(a, b);  /* should be 1 - 5 = -4 */
+        check("(1+sqrt5)(1-sqrt5) = -4", ab.a == -4 &amp;&amp; ab.b == 0);
+
+        /* phi * phi^-1 = 1 */
+        /* phi = (1+sqrt5)/2, phi^-1 = (-1+sqrt5)/2 */
+        /* Product as Zr5 (before /4): (1,1)(-1,1) = (-1+5, 1-1) = (4,0) */
+        /* Actual: (4,0)/4 = 1 */
+        {
+            Zr5 phi_num = zr5_make(1,1);
+            Zr5 phi_inv = zr5_make(-1,1);
+            Zr5 prod = zr5_mul(phi_num, phi_inv);
+            check("phi*phi_inv numerator = (4,0)", prod.a == 4 &amp;&amp; prod.b == 0);
+        }
+    }
+
+    /* Build generators */
+    s = q2i_make(zr5_make(2,0), zr5_make(2,0),
+                 zr5_make(2,0), zr5_make(2,0));
+    t = q2i_make(zr5_make(1,1), zr5_make(-1,1),
+                 zr5_make(2,0), zr5_make(0,0));
+    ident = q2i_make(zr5_make(4,0), zr5_make(0,0),
+                     zr5_make(0,0), zr5_make(0,0));
+
+    check("s is unit quaternion", q2i_is_unit(&amp;s));
+    check("t is unit quaternion", q2i_is_unit(&amp;t));
+
+    /* s^2 = (-1/2, 1/2, 1/2, 1/2) =&gt; /4 form: (-2,0,2,0,2,0,2,0) */
+    s2 = q2i_mul(&amp;s, &amp;s);
+    check("s^2 scalar = -2", s2.a.a == -2 &amp;&amp; s2.a.b == 0);
+    check("s^2 is unit", q2i_is_unit(&amp;s2));
+
+    /* s^3 = -1 =&gt; /4 form: (-4,0,0,0,0,0,0,0) */
+    s3 = q2i_mul(&amp;s2, &amp;s);
+    {
+        Q2I neg_id = q2i_neg(&amp;ident);
+        check("s^3 = -1", q2i_eq(&amp;s3, &amp;neg_id));
+    }
+
+    /* s^6 = 1 */
+    s6 = q2i_mul(&amp;s3, &amp;s3);
+    check("s^6 = 1", q2i_eq(&amp;s6, &amp;ident));
+
+    /* t * t^-1 = 1 */
+    t_inv = q2i_conj(&amp;t);
+    tt_prod = q2i_mul(&amp;t, &amp;t_inv);
+    check("t * conj(t) = 1", q2i_eq(&amp;tt_prod, &amp;ident));
+
+    /* Verify float conversion */
+    {
+        Quat sf = q2i_to_float(&amp;s);
+        double err = fabs(sf.a - 0.5) + fabs(sf.b - 0.5) +
+                     fabs(sf.c - 0.5) + fabs(sf.d - 0.5);
+        check("s float = (0.5, 0.5, 0.5, 0.5)", err &lt; 1e-12);
+    }
+    {
+        Quat tf = q2i_to_float(&amp;t);
+        double phi = (1.0 + sqrt(5.0)) / 2.0;
+        double err = fabs(tf.a - phi/2.0) + fabs(tf.b - 1.0/(2.0*phi)) +
+                     fabs(tf.c - 0.5) + fabs(tf.d);
+        check("t float matches phi values", err &lt; 1e-12);
+    }
+}
+
+/* ================================================================ */
+/* Phase 1: Build 2I, verify structure                               */
+/* ================================================================ */
+
+static void phase1_build_2i(void) {
+    int i, n_unit = 0, max_d = 0;
+
+    printf("\n=== Phase 1: Build Binary Icosahedral Group ===\n\n");
+
+    build_2i(1);
+    printf("\n  |2I| = %d (expect 60, since we identify +/-q)\n", g_2i_size);
+    check("2I has 60 elements (mod sign)", g_2i_size == 60);
+
+    /* Verify all are unit quaternions */
+    for (i = 0; i &lt; g_2i_size; i++) {
+        if (q2i_is_unit(&amp;g_2i[i])) n_unit++;
+        if (g_2i_depth[i] &gt; max_d) max_d = g_2i_depth[i];
+    }
+    check("All 2I elements are unit quaternions", n_unit == g_2i_size);
+    printf("  Max BFS depth: %d\n", max_d);
+
+    /* Depth profile */
+    {
+        int d;
+        printf("  Depth profile:\n");
+        for (d = 0; d &lt;= max_d; d++) {
+            int cnt = 0;
+            for (i = 0; i &lt; g_2i_size; i++)
+                if (g_2i_depth[i] == d) cnt++;
+            if (cnt &gt; 0) printf("    d=%d: %d entries\n", d, cnt);
+        }
+    }
+
+    /* Convert to float and save */
+    saved_2i_size = g_2i_size;
+    for (i = 0; i &lt; g_2i_size; i++) {
+        saved_2i[i] = q2i_to_float(&amp;g_2i[i]);
+        saved_2i_depth[i] = g_2i_depth[i];
+    }
+
+    /* Verify closure: pick a few random products and check they're in group */
+    {
+        int trials = 0, found = 0;
+        unsigned long rng = 11111UL;
+        for (trials = 0; trials &lt; 100; trials++) {
+            int ia, ib;
+            Q2I prod;
+            rng = rng * 6364136223846793005UL + 1442695040888963407UL;
+            ia = (int)((rng &gt;&gt; 33) % (unsigned long)g_2i_size);
+            rng = rng * 6364136223846793005UL + 1442695040888963407UL;
+            ib = (int)((rng &gt;&gt; 33) % (unsigned long)g_2i_size);
+            prod = q2i_mul(&amp;g_2i[ia], &amp;g_2i[ib]);
+            if (find_2i(&amp;prod) &gt;= 0) found++;
+        }
+        printf("  Closure check: %d/100 random products found in group\n", found);
+        check("Group is closed (100/100 products found)", found == 100);
+    }
+
+    printf("\n");
+}
+
+/* ================================================================ */
+/* Phase 2: Size-controlled comparison (24 vs 24)                    */
+/* ================================================================ */
+
+static void load_catalog(const Quat *vals, const int *depths, int n) {
+    int i;
+    g_cat_size = n;
+    for (i = 0; i &lt; n; i++) {
+        g_cat[i] = vals[i];
+        g_cat_depth[i] = depths[i];
+    }
+}
+
+static void phase2_comparison(void) {
+    int xor_tt[MAX_TT], and_tt[MAX_TT], maj_tt[MAX_TT];
+    int n_list[] = {3, 4, 5, 6, 7, 8};
+    int ni;
+    int z8_xor[6], z8_and[6], z8_maj[6];
+    long z8_total[6];
+    int n_trials = 10;
+    int trial;
+    double i2_xor_sum[6], i2_and_sum[6], i2_maj_sum[6];
+
+    printf("\n=== Phase 2: Size-Controlled Comparison (24 vs 24) ===\n\n");
+    fflush(stdout);
+
+    /* Build zeta_8 catalog */
+    printf("  Building zeta_8 catalog...\n");
+    init_z8();
+    build_z8_catalog();
+    printf("  zeta_8: %d entries\n", g_cat_size);
+    check("zeta_8 has 24 entries", g_cat_size == 24);
+    save_z8();
+
+    /* Test zeta_8 at each N */
+    printf("\n  --- zeta_8 (24 entries, SOLVABLE) ---\n\n");
+    load_catalog(saved_z8, saved_z8_depth, saved_z8_size);
+    build_dirs(g_cat_size);
+
+    for (ni = 0; ni &lt; 6; ni++) {
+        int nw = n_list[ni];
+        int bf = g_cat_size;
+        long cn;
+        if (bf &lt; nw) { z8_xor[ni]=0; z8_and[ni]=0; z8_maj[ni]=0; z8_total[ni]=0; continue; }
+
+        make_xor_tt(xor_tt, nw);
+        make_and_tt(and_tt, nw);
+        make_maj_tt(maj_tt, nw);
+
+        cn = comb_nk(bf, nw);
+        if (cn &lt;= 200000) {
+            z8_total[ni] = cn;
+            z8_xor[ni] = count_phase_ex(nw, bf, xor_tt);
+            z8_and[ni] = count_phase_ex(nw, bf, and_tt);
+            z8_maj[ni] = count_phase_ex(nw, bf, maj_tt);
+        } else {
+            unsigned long rng2 = 77777UL + (unsigned long)nw;
+            int ns2 = 100000;
+            z8_total[ni] = (long)ns2;
+            z8_xor[ni] = sample_phase(nw, bf, ns2, xor_tt, &amp;rng2);
+            z8_and[ni] = sample_phase(nw, bf, ns2, and_tt, &amp;rng2);
+            z8_maj[ni] = sample_phase(nw, bf, ns2, maj_tt, &amp;rng2);
+        }
+
+        printf("    z8 N=%d: C=%ld xor=%d and=%d maj=%d\n",
+                nw, z8_total[ni], z8_xor[ni], z8_and[ni], z8_maj[ni]);
+        fflush(stdout);
+    }
+
+    printf("    N | %8s | %8s | %8s | %8s\n", "XOR", "AND", "MAJ", "Total");
+    printf("    --|----------|----------|----------|----------\n");
+    for (ni = 0; ni &lt; 6; ni++) {
+        if (z8_total[ni] == 0) {
+            printf("    %d |              (skipped)\n", n_list[ni]);
+        } else {
+            printf("    %d | %8d | %8d | %8d | %8ld\n",
+                   n_list[ni], z8_xor[ni], z8_and[ni], z8_maj[ni], z8_total[ni]);
+        }
+    }
+    printf("\n");
+
+    /* Test random 24-element subsets of 2I */
+    printf("  --- 2I random 24-subsets (%d trials, NON-SOLVABLE) ---\n\n", n_trials);
+
+    memset(i2_xor_sum, 0, sizeof(i2_xor_sum));
+    memset(i2_and_sum, 0, sizeof(i2_and_sum));
+    memset(i2_maj_sum, 0, sizeof(i2_maj_sum));
+
+    {
+        unsigned long rng = 42UL;
+        for (trial = 0; trial &lt; n_trials; trial++) {
+            /* Fisher-Yates shuffle to pick 24 from 60 */
+            int perm[64];
+            int i2_depths[64];
+            Quat i2_vals[64];
+            int i;
+
+            for (i = 0; i &lt; saved_2i_size; i++) perm[i] = i;
+            for (i = saved_2i_size - 1; i &gt; 0; i--) {
+                int j2, tmp;
+                rng = rng * 6364136223846793005UL + 1442695040888963407UL;
+                j2 = (int)((rng &gt;&gt; 33) % (unsigned long)(i + 1));
+                tmp = perm[i]; perm[i] = perm[j2]; perm[j2] = tmp;
+            }
+
+            for (i = 0; i &lt; 24; i++) {
+                i2_vals[i] = saved_2i[perm[i]];
+                i2_depths[i] = saved_2i_depth[perm[i]];
+            }
+
+            load_catalog(i2_vals, i2_depths, 24);
+            build_dirs(g_cat_size);
+
+            for (ni = 0; ni &lt; 6; ni++) {
+                int nw = n_list[ni];
+                int bf = g_cat_size;
+                long cn2;
+                if (bf &lt; nw) continue;
+
+                make_xor_tt(xor_tt, nw);
+                make_and_tt(and_tt, nw);
+                make_maj_tt(maj_tt, nw);
+
+                cn2 = comb_nk(bf, nw);
+                if (cn2 &lt;= 200000) {
+                    i2_xor_sum[ni] += (double)count_phase_ex(nw, bf, xor_tt);
+                    i2_and_sum[ni] += (double)count_phase_ex(nw, bf, and_tt);
+                    i2_maj_sum[ni] += (double)count_phase_ex(nw, bf, maj_tt);
+                } else {
+                    unsigned long rng3 = 99999UL + (unsigned long)(trial*7 + nw);
+                    int ns3 = 100000;
+                    i2_xor_sum[ni] += (double)sample_phase(nw, bf, ns3, xor_tt, &amp;rng3) *
+                                      ((double)cn2 / (double)ns3);
+                    i2_and_sum[ni] += (double)sample_phase(nw, bf, ns3, and_tt, &amp;rng3) *
+                                      ((double)cn2 / (double)ns3);
+                    i2_maj_sum[ni] += (double)sample_phase(nw, bf, ns3, maj_tt, &amp;rng3) *
+                                      ((double)cn2 / (double)ns3);
+                }
+            }
+
+            printf("    2I trial %d/%d done\n", trial+1, n_trials);
+            fflush(stdout);
+        }
+    }
+
+    printf("    N | z8_XOR | 2I_XOR | z8_AND | 2I_AND | z8_MAJ | 2I_MAJ | XOR win?\n");
+    printf("    --|--------|--------|--------|--------|--------|--------|--------\n");
+    for (ni = 0; ni &lt; 6; ni++) {
+        double mx = i2_xor_sum[ni] / (double)n_trials;
+        double ma = i2_and_sum[ni] / (double)n_trials;
+        double mm = i2_maj_sum[ni] / (double)n_trials;
+        const char *win;
+        if (z8_total[ni] == 0) continue;
+        if (mx &gt; (double)z8_xor[ni] * 1.05) win = "2I";
+        else if ((double)z8_xor[ni] &gt; mx * 1.05) win = "z8";
+        else win = "tie";
+        printf("    %d | %6d | %6.0f | %6d | %6.0f | %6d | %6.0f | %s\n",
+               n_list[ni], z8_xor[ni], mx, z8_and[ni], ma,
+               z8_maj[ni], mm, win);
+    }
+    printf("\n");
+
+    /* Key test: does 2I beat z8 for XOR at large N? */
+    {
+        int ni6 = 3; /* N=6 index */
+        double mx6 = i2_xor_sum[ni6] / (double)n_trials;
+        printf("  N=6 XOR: z8=%d  2I_mean=%.0f", z8_xor[ni6], mx6);
+        if (mx6 &gt; (double)z8_xor[ni6])
+            printf("  2I WINS by %.1f%%\n",
+                   100.0*(mx6 - (double)z8_xor[ni6])/(double)z8_xor[ni6]);
+        else
+            printf("  z8 wins\n");
+    }
+    {
+        int ni7 = 4; /* N=7 index */
+        double mx7 = i2_xor_sum[ni7] / (double)n_trials;
+        printf("  N=7 XOR: z8=%d  2I_mean=%.0f", z8_xor[ni7], mx7);
+        if (mx7 &gt; 0 &amp;&amp; z8_xor[ni7] == 0)
+            printf("  2I achieves what z8 CANNOT!\n");
+        else if (mx7 &gt; (double)z8_xor[ni7])
+            printf("  2I WINS\n");
+        else
+            printf("  tied/z8\n");
+    }
+    printf("\n");
+}
+
+/* ================================================================ */
+/* Phase 2b: Depth-matched comparison (first 24 from 2I by BFS)     */
+/* d0(5) + d1(8) + d2(11) = 24 — natural BFS cutoff                */
+/* ================================================================ */
+
+static void phase2b_depth_matched(void) {
+    int xor_tt[MAX_TT], and_tt[MAX_TT], maj_tt[MAX_TT];
+    int n_list[] = {3, 4, 5, 6, 7, 8};
+    int ni;
+    int w2b[6][3];
+    long t2b[6];
+    Quat dm_vals[24];
+    int dm_depths[24];
+    int i, cnt = 0;
+
+    printf("\n=== Phase 2b: Depth-Matched (first 24 from 2I by BFS) ===\n\n");
+    fflush(stdout);
+
+    /* Take first 24 entries from 2I in BFS depth order */
+    /* saved_2i is already in BFS order from build_2i */
+    for (i = 0; i &lt; saved_2i_size &amp;&amp; cnt &lt; 24; i++) {
+        dm_vals[cnt] = saved_2i[i];
+        dm_depths[cnt] = saved_2i_depth[i];
+        cnt++;
+    }
+    printf("  First 24 from 2I: d0=%d d1=%d d2=%d\n", 5, 8, 11);
+
+    load_catalog(dm_vals, dm_depths, 24);
+    build_dirs(g_cat_size);
+    printf("  Directions: %d, Cells (k=12): %d\n\n", g_nd, 12 * (g_nd + 1));
+    fflush(stdout);
+
+    for (ni = 0; ni &lt; 6; ni++) {
+        int nw = n_list[ni];
+        int bf = 24;
+        long cn;
+        if (bf &lt; nw) { w2b[ni][0]=w2b[ni][1]=w2b[ni][2]=0; t2b[ni]=0; continue; }
+
+        make_xor_tt(xor_tt, nw);
+        make_and_tt(and_tt, nw);
+        make_maj_tt(maj_tt, nw);
+
+        cn = comb_nk(bf, nw);
+        if (cn &lt;= 200000) {
+            t2b[ni] = cn;
+            w2b[ni][0] = count_phase_ex(nw, bf, xor_tt);
+            w2b[ni][1] = count_phase_ex(nw, bf, and_tt);
+            w2b[ni][2] = count_phase_ex(nw, bf, maj_tt);
+        } else {
+            unsigned long rng4 = 88888UL + (unsigned long)nw;
+            int ns4 = 100000;
+            t2b[ni] = (long)ns4;
+            w2b[ni][0] = sample_phase(nw, bf, ns4, xor_tt, &amp;rng4);
+            w2b[ni][1] = sample_phase(nw, bf, ns4, and_tt, &amp;rng4);
+            w2b[ni][2] = sample_phase(nw, bf, ns4, maj_tt, &amp;rng4);
+        }
+        printf("    N=%d: XOR=%d AND=%d MAJ=%d / %ld\n",
+               nw, w2b[ni][0], w2b[ni][1], w2b[ni][2], t2b[ni]);
+        fflush(stdout);
+    }
+
+    printf("\n  --- 24-vs-24 depth-matched comparison ---\n");
+    printf("    N | z8_XOR%%  | 2I24_XOR%% | ratio\n");
+    printf("    --|----------|-----------|------\n");
+    {
+        /* z8 XOR counts from Phase 2 (hardcoded from deterministic run) */
+        int z8x[] = {1480, 8010, 17201, 12983, 197, 1};
+        long z8t[] = {2024, 10626, 42504, 134596, 100000, 100000};
+        for (ni = 0; ni &lt; 6; ni++) {
+            double rz8, r2i;
+            if (t2b[ni] == 0 || z8t[ni] == 0) continue;
+            rz8 = 100.0 * (double)z8x[ni] / (double)z8t[ni];
+            r2i = 100.0 * (double)w2b[ni][0] / (double)t2b[ni];
+            printf("    %d | %7.2f%% | %8.2f%% | %5.2fx\n",
+                   n_list[ni], rz8, r2i,
+                   (rz8 &gt; 0.001) ? r2i / rz8 : 0.0);
+        }
+    }
+    printf("\n");
+
+    check("2I-24 XOR &gt; 0 at N=6", w2b[3][0] &gt; 0);
+}
+
+/* ================================================================ */
+/* Phase 3: Full 2I capacity (all 60 values)                         */
+/* ================================================================ */
+
+static void phase3_full_capacity(void) {
+    int xor_tt[MAX_TT], and_tt[MAX_TT], maj_tt[MAX_TT];
+    int n_list[] = {3, 4, 5, 6, 7, 8};
+    int ni;
+    int w[6][3]; /* XOR AND MAJ */
+    long totals[6];
+
+    printf("\n=== Phase 3: Full 2I Capacity (60 entries) ===\n\n");
+    fflush(stdout);
+
+    load_catalog(saved_2i, saved_2i_depth, saved_2i_size);
+    build_dirs(g_cat_size);
+    printf("  Catalog: %d entries, %d directions\n", g_cat_size, g_nd);
+    printf("  Cell space (k=12): %d cells\n\n", 12 * (g_nd + 1));
+
+    for (ni = 0; ni &lt; 6; ni++) {
+        int nw = n_list[ni];
+        int bf = g_cat_size;
+
+        make_xor_tt(xor_tt, nw);
+        make_and_tt(and_tt, nw);
+        make_maj_tt(maj_tt, nw);
+
+        if (bf &lt; nw) {
+            w[ni][0] = w[ni][1] = w[ni][2] = 0;
+            totals[ni] = 0;
+            continue;
+        }
+
+        totals[ni] = comb_nk(bf, nw);
+
+        if (totals[ni] &lt;= 200000) {
+            printf("    P3 N=%d bf=%d exact C=%ld\n", nw, bf, totals[ni]);
+            fflush(stdout);
+            w[ni][0] = count_phase_ex(nw, bf, xor_tt);
+            w[ni][1] = count_phase_ex(nw, bf, and_tt);
+            w[ni][2] = count_phase_ex(nw, bf, maj_tt);
+        } else {
+            unsigned long rng = 55555UL + (unsigned long)nw;
+            int ns = 200000;
+            printf("    P3 N=%d bf=%d samp %d (of C=%ld)\n", nw, bf, ns, totals[ni]);
+            fflush(stdout);
+            totals[ni] = (long)ns;
+            w[ni][0] = sample_phase(nw, bf, ns, xor_tt, &amp;rng);
+            w[ni][1] = sample_phase(nw, bf, ns, and_tt, &amp;rng);
+            w[ni][2] = sample_phase(nw, bf, ns, maj_tt, &amp;rng);
+        }
+    }
+
+    printf("    N | masks | %7s | %7s | %7s | %7s | AND/XOR\n",
+           "XOR", "AND", "MAJ", "denom");
+    printf("    --|-------|---------|---------|---------|---------|--------\n");
+    for (ni = 0; ni &lt; 6; ni++) {
+        int nw = n_list[ni];
+        if (totals[ni] == 0) {
+            printf("    %d | %5d |              (skipped)\n", nw, 1 &lt;&lt; nw);
+            continue;
+        }
+        printf("    %d | %5d | %7d | %7d | %7d | %7ld |",
+               nw, 1 &lt;&lt; nw, w[ni][0], w[ni][1], w[ni][2], totals[ni]);
+        if (w[ni][0] &gt; 0)
+            printf(" %6.2f", (double)w[ni][1] / (double)w[ni][0]);
+        else if (w[ni][1] &gt; 0)
+            printf("    inf");
+        else
+            printf("    ---");
+        printf("\n");
+    }
+    printf("\n");
+
+    /* Hit rates */
+    printf("  Hit rates:\n");
+    for (ni = 0; ni &lt; 6; ni++) {
+        if (totals[ni] == 0) continue;
+        printf("    N=%d: XOR=%.2f%% AND=%.2f%% MAJ=%.2f%%\n",
+               n_list[ni],
+               100.0 * (double)w[ni][0] / (double)totals[ni],
+               100.0 * (double)w[ni][1] / (double)totals[ni],
+               100.0 * (double)w[ni][2] / (double)totals[ni]);
+    }
+    printf("\n");
+
+    /* Compare with D93 zeta_12 at similar size (17 entries at depth 1) */
+    printf("  For comparison, D93 zeta_12 at depth 1 (17 entries):\n");
+    printf("    N=6: XOR=9.85%% AND=71.65%%\n");
+    printf("    N=7: XOR=0.02%% AND=56.81%%\n");
+    printf("    N=8: XOR=0.00%% AND=41.55%%\n");
+    printf("  2I has 60 entries (vs 17) — compare rates, not raw counts.\n\n");
+
+    check("XOR achievable at N=6 with full 2I", w[3][0] &gt; 0);
+    check("AND achievable at N=7 with full 2I", w[4][1] &gt; 0);
+}
+
+/* ================================================================ */
+/* Phase 4: Three-way comparison (z8 vs 2I vs zeta_12-truncated)    */
+/* ================================================================ */
+
+static void build_z12_truncated(int max_depth) {
+    Quat gens[4];
+    double half = M_PI / 6.0;
+    double co = cos(half), si = sin(half);
+    int prev, i, gi, rd;
+
+    g_cat_size = 0;
+    g_cat[0].a = 1; g_cat[0].b = 0; g_cat[0].c = 0; g_cat[0].d = 0;
+    g_cat_depth[0] = 0;
+    g_cat_size = 1;
+
+    gens[0].a = co; gens[0].b = si; gens[0].c = 0; gens[0].d = 0;
+    gens[1].a = co; gens[1].b = -si; gens[1].c = 0; gens[1].d = 0;
+    gens[2].a = co; gens[2].b = 0; gens[2].c = 0; gens[2].d = -si;
+    gens[3].a = co; gens[3].b = 0; gens[3].c = 0; gens[3].d = si;
+
+    for (gi = 0; gi &lt; 4; gi++) {
+        if (find_float(&amp;gens[gi], g_cat_size) &lt; 0 &amp;&amp;
+            g_cat_size &lt; MAX_QCAT) {
+            g_cat_depth[g_cat_size] = 0;
+            g_cat[g_cat_size++] = gens[gi];
+        }
+    }
+
+    rd = 1;
+    while (rd &lt;= max_depth) {
+        prev = g_cat_size;
+        for (i = 0; i &lt; prev; i++) {
+            for (gi = 0; gi &lt; 4; gi++) {
+                Quat prod = qmul(&amp;g_cat[i], &amp;gens[gi]);
+                if (find_float(&amp;prod, g_cat_size) &lt; 0 &amp;&amp;
+                    g_cat_size &lt; MAX_QCAT) {
+                    g_cat_depth[g_cat_size] = rd;
+                    g_cat[g_cat_size++] = prod;
+                }
+            }
+        }
+        if (g_cat_size == prev) break;
+        rd++;
+    }
+}
+
+static Quat saved_z12[128];
+static int saved_z12_depth[128];
+static int saved_z12_size;
+
+static void phase4_three_way(void) {
+    int xor_tt[MAX_TT], and_tt[MAX_TT], maj_tt[MAX_TT];
+    int n_list[] = {3, 4, 5, 6, 7, 8};
+    int ni;
+    int w12[6][3];
+    long t12[6];
+
+    printf("\n=== Phase 4: Three-Way Comparison ===\n\n");
+    fflush(stdout);
+
+    /* Build zeta_12 truncated to depth 2 */
+    build_z12_truncated(2);
+    saved_z12_size = g_cat_size;
+    printf("  zeta_12 depth&lt;=2: %d entries\n", saved_z12_size);
+    {
+        int i;
+        for (i = 0; i &lt; g_cat_size &amp;&amp; i &lt; 128; i++) {
+            saved_z12[i] = g_cat[i];
+            saved_z12_depth[i] = g_cat_depth[i];
+        }
+    }
+
+    /* Run capacity test on z12 truncated */
+    build_dirs(g_cat_size);
+    printf("  Directions: %d\n", g_nd);
+    printf("  Cell space (k=12): %d cells\n\n", 12 * (g_nd + 1));
+    fflush(stdout);
+
+    for (ni = 0; ni &lt; 6; ni++) {
+        int nw = n_list[ni];
+        int bf = g_cat_size;
+
+        make_xor_tt(xor_tt, nw);
+        make_and_tt(and_tt, nw);
+        make_maj_tt(maj_tt, nw);
+
+        if (bf &lt; nw) {
+            w12[ni][0] = w12[ni][1] = w12[ni][2] = 0;
+            t12[ni] = 0;
+            continue;
+        }
+
+        t12[ni] = comb_nk(bf, nw);
+        if (t12[ni] &lt;= 200000) {
+            printf("    P4 N=%d bf=%d exact C=%ld\n", nw, bf, t12[ni]);
+            fflush(stdout);
+            w12[ni][0] = count_phase_ex(nw, bf, xor_tt);
+            w12[ni][1] = count_phase_ex(nw, bf, and_tt);
+            w12[ni][2] = count_phase_ex(nw, bf, maj_tt);
+        } else {
+            unsigned long rng = 33333UL + (unsigned long)nw;
+            int ns = 200000;
+            printf("    P4 N=%d bf=%d samp %d (of C=%ld)\n", nw, bf, ns, t12[ni]);
+            fflush(stdout);
+            t12[ni] = (long)ns;
+            w12[ni][0] = sample_phase(nw, bf, ns, xor_tt, &amp;rng);
+            w12[ni][1] = sample_phase(nw, bf, ns, and_tt, &amp;rng);
+            w12[ni][2] = sample_phase(nw, bf, ns, maj_tt, &amp;rng);
+        }
+    }
+
+    printf("\n  zeta_12 truncated (%d entries) hit rates:\n", saved_z12_size);
+    for (ni = 0; ni &lt; 6; ni++) {
+        if (t12[ni] == 0) continue;
+        printf("    N=%d: XOR=%.2f%% AND=%.2f%% MAJ=%.2f%%\n",
+               n_list[ni],
+               100.0 * (double)w12[ni][0] / (double)t12[ni],
+               100.0 * (double)w12[ni][1] / (double)t12[ni],
+               100.0 * (double)w12[ni][2] / (double)t12[ni]);
+    }
+
+    /* Three-way XOR comparison */
+    printf("\n  === THREE-WAY XOR COMPARISON ===\n");
+    printf("    z8 (24, solvable)  |  2I (60, non-solv finite)  |  z12~(%d, non-solv trunc)\n",
+           saved_z12_size);
+    printf("    N | z8_XOR%%  | 2I_XOR%%  | z12_XOR%% | Winner\n");
+    printf("    --|----------|----------|----------|--------\n");
+    for (ni = 0; ni &lt; 6; ni++) {
+        if (t12[ni] == 0) continue;
+        printf("    %d |          |          | %7.2f%% |\n",
+               n_list[ni],
+               100.0 * (double)w12[ni][0] / (double)t12[ni]);
+    }
+    printf("  (See Phase 2 and Phase 3 tables for z8 and 2I rates)\n\n");
+
+    check("zeta_12 truncated catalog built", saved_z12_size &gt; 20);
+    check("XOR achievable at N=6 with z12 truncated", w12[3][0] &gt; 0);
+}
+
+/* ================================================================ */
+/* Main                                                             */
+/* ================================================================ */
+
+int main(void) {
+    printf("KNOTAPEL DEMO 94: Binary Icosahedral Group (2I, E8)\n");
+    printf("====================================================\n\n");
+    fflush(stdout);
+
+    /* Phase 0 */
+    fprintf(stderr, "DBG: starting phase0\n");
+    phase0_arithmetic();
+    fprintf(stderr, "DBG: phase0 done\n");
+
+    /* Phase 1 */
+    fprintf(stderr, "DBG: starting phase1\n");
+    phase1_build_2i();
+    fprintf(stderr, "DBG: phase1 done\n");
+
+    /* Phase 2 */
+    fprintf(stderr, "DBG: starting phase2\n");
+    phase2_comparison();
+    fprintf(stderr, "DBG: phase2 done\n");
+
+    /* Phase 2b */
+    fprintf(stderr, "DBG: starting phase2b\n");
+    phase2b_depth_matched();
+    fprintf(stderr, "DBG: phase2b done\n");
+
+    /* Phase 3 */
+    fprintf(stderr, "DBG: starting phase3\n");
+    phase3_full_capacity();
+    fprintf(stderr, "DBG: phase3 done\n");
+
+    /* Phase 4 */
+    fprintf(stderr, "DBG: starting phase4\n");
+    phase4_three_way();
+    fprintf(stderr, "DBG: phase4 done\n");
+
+    /* Summary */
+    printf("\n====================================================\n");
+    printf("Results: %d pass, %d fail\n", n_pass, n_fail);
+
+    return n_fail;
+}
+</code></pre>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/c.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</body>
+</html>

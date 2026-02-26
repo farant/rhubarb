@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>inventory/entries/demo_03.md</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+    <link rel="stylesheet" href="../../style.css">
+</head>
+<body>
+    <nav><a href="../../index.html">← Back to Index</a></nav><hr>
+    <h2>Demo 03: TL Module &amp; Braid Representation</h2>
+<ul>
+<li><strong>Status</strong>: COMPLETE</li>
+<li><strong>File</strong>: <code><a href="../../demo_03/main.c.html">demo_03/main.c</a></code> (~603 lines)</li>
+<li><strong>Tests</strong>: 8/8 pass (4 parts: TL relations, braid inverses, Yang-Baxter, full bracket)</li>
+<li><strong>Depends on</strong>: Demo 01 (Kauffman bracket state-sum oracle), Demo 02 (braid representation concepts)</li>
+<li><strong>Feeds into</strong>: Demo 04 (spin chain / tensor product representation)</li>
+</ul>
+<h3>Headline</h3>
+Constructs the correct TL_3 standard module W_1 and braid representation, verifying TL algebra relations, braid group inverses, Yang-Baxter equation, and full Kauffman bracket computation via both standard modules W_1 (dim 2) and W_3 (dim 1).
+<h3>Key Results</h3>
+<ul>
+<li>TL_3 standard module W_1 (1-defect, dim 2) with basis: e_a = (cap12, free3), e_b = (cap23, free1)</li>
+<li>U_1 = [[delta, 1], [0, 0]], U_2 = [[0, 0], [1, delta]] — satisfy U^2 = delta<em>U and U1</em>U2<em>U1 = U1, U2</em>U1*U2 = U2</li>
+<li>Braid representation: g_i = A<em>U_i + A^{-1}</em>I (NOT the Hecke algebra form — this is the Kauffman bracket form)</li>
+<li>Inverse: g_i^{-1} = A^{-1}<em>U_i + A</em>I — works because (A^2 + A^{-2} + delta) = 0</li>
+<li>W_3 (3-defect, dim 1): U_i acts as 0, so g_i = A^{-1} (scalar), g_i^{-1} = A (scalar)</li>
+<li>Full bracket formula: &lt;L&gt; = 1<em>tr_{W_1}(rho(b)) + (A^{-4} + A^4)</em>tr_{W_3}(rho(b))</li>
+<li>Verified against state-sum oracle for: figure-eight, trefoil, identity (3-component unlink), mirror trefoil, single crossing</li>
+</ul>
+<h3>Theorems/Conjectures</h3>
+<ul>
+<li>Extended commentary in header works through the algebra showing g_i = A<em>I + A^{-1}</em>U_i does NOT satisfy the Hecke relation g - g^{-1} = (A - A^{-1})*I, but IS invertible in the TL algebra</li>
+<li>Key identity: (A<em>U + A^{-1}</em>I)(A^{-1}<em>U + A</em>I) = I follows from delta + A^2 + A^{-2} = 0</li>
+<li>Lengthy addendum explores why W_0 doesn't exist for TL_3 (parity: n=3 odd, so defects must be odd: 1 or 3)</li>
+<li>Addendum attempts to find constant coefficients c_0, c_1 for Markov trace as weighted ordinary traces — discovers this doesn't work (Markov trace is more subtle)</li>
+</ul>
+<h3>Code Assets</h3>
+<ul>
+<li><strong>Laurent polynomial ring</strong> (<code>Poly</code>): zero, monomial, trim, add, multiply, equality, print — reused across later demos</li>
+<li><strong>2x2 matrix algebra</strong> (<code>Mat2</code>): identity, multiply, scale, add, trace, equality, print — over Laurent polynomials</li>
+<li><strong>4x4 matrix algebra</strong> (<code>Mat4</code>): zero, multiply, equality, tensor product — defined but tensor Yang-Baxter deferred to Demo 04</li>
+<li><strong>Union-find state-sum oracle</strong> (<code>braid_bracket</code>): enumerates all 2^n smoothings, counts loops via union-find — serves as ground-truth verifier</li>
+<li><strong>Braid struct</strong>: word array + length + strand count</li>
+</ul>
+<h3>Literature Touched</h3>
+<ul>
+<li>Temperley-Lieb algebra standard modules (W_k for TL_n)</li>
+<li>Kauffman bracket skein relation (A<em>&lt;0-smoothing&gt; + A^{-1}</em>&lt;1-smoothing&gt;)</li>
+<li>Jones/Kauffman braid representation vs Hecke algebra representation</li>
+<li>Quantum dimensions of TL modules</li>
+<li>Dimension formula: dim(W_k) = C(n, (n-k)/2) - C(n, (n-k)/2 - 1)</li>
+</ul>
+<h3>Open Questions</h3>
+<ul>
+<li>The addendum's attempt to express the Markov trace as a constant-coefficient weighted sum of ordinary module traces fails — the Markov trace requires a more sophisticated construction (possibly involving conditional expectations / Jones basic construction)</li>
+<li>4x4 tensor product Yang-Baxter verification explicitly deferred to Demo 04</li>
+</ul>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/c.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</body>
+</html>

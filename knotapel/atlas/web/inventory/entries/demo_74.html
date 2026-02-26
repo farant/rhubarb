@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>inventory/entries/demo_74.md</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+    <link rel="stylesheet" href="../../style.css">
+</head>
+<body>
+    <nav><a href="../../index.html">← Back to Index</a></nav><hr>
+    <h2>Demo 74: Computational Invariant of Braids</h2>
+<ul>
+<li><strong>Status</strong>: COMPLETE</li>
+<li><strong>File</strong>: <code><a href="../../demo_74_computational_invariant/main.c.html">demo_74_computational_invariant/main.c</a></code> (~1623 lines)</li>
+<li><strong>Tests</strong>: 20/20 pass</li>
+<li><strong>Depends on</strong>: Demo 66 (24 quaternions, Kauffman bracket at Z[ζ_8], 100 bracket values), Demo 67 (13 eigenvector directions, Voronoi cell assignment, 36 XOR6 solutions), Demo 70 (music space, r=-0.06 geometric/computational orthogonality), Demo 73 (82.8% automaton determinism, additive structure)</li>
+<li><strong>Feeds into</strong>: Future work on braid invariant theory from computational perspective</li>
+</ul>
+<h3>Headline</h3>
+The DKC Voronoi cell and the Kauffman bracket are incomparable braid invariants — neither subsumes the other — and their combination produces 119 equivalence classes (vs 100 bracket-alone and 14 cell-alone), with the cell separating 97.8% of bracket collisions at the braid level while the bracket separates 53.8% of cell collisions; the DKC computation exploits exactly this geometric information the bracket discards.
+<h3>Key Results</h3>
+<ul>
+<li><strong>97.8% bracket collision separation (Part A)</strong>: Of 58,078 braid pairs with the same bracket but different quaternion, 56,825 (97.8%) land in different Voronoi cells. The remaining 2.2% correspond to quaternion pairs sharing an eigenvector direction but differing in eigenvalue angle — the angle is what the cell discards.</li>
+<li><strong>Cell does not subsume bracket (Part B)</strong>: At the quaternion catalog level, 13 pairs share a Voronoi cell. Of these, 7 pairs have different bracket values. The cell is strictly coarser than the bracket in certain cases. Cell 0, 1, and 10 each contain 3 quaternions with up to 3 distinct bracket values; cells 2–5 (body-type, 60° angle) each have 2 quaternions with 1 bracket value.</li>
+<li><strong>119 combined classes (Part C)</strong>: Braid-level equivalence classes: cell alone gives 14, bracket alone gives 100, (bracket, cell) pair gives 119. The combination is 19% finer than bracket alone. 28 of 100 bracket values (28%) appear in braids across multiple cells; max distinct brackets per cell is 19 (cell is very coarse relative to bracket). The two invariants capture orthogonal information.</li>
+<li><strong>Computational significance (Part D)</strong>: For each winning triple, the cell labeling assigns binary parity to cells. 33 of 36 winners (92%) use their labeling to XOR6-separate at least some bracket collisions. The 3 exceptions are triples containing quaternions 18 and 22 (edge-type), where colliding cells happen to share a label. Total XOR6-separated collisions across all 36 winners: 186.</li>
+<li><strong>Information hierarchy (Part E)</strong>: Quaternion→Direction→Cell is a well-defined factoring chain. Direction and Cell are identical (Voronoi IS the direction catalog). The bracket does NOT factor through quaternion — different braids with the same quaternion can have different bracket values. The factoring: Braid→Quaternion→Cell (well-defined), Braid→Bracket (well-defined), Quaternion→Bracket (many-to-many, NOT well-defined).</li>
+<li><strong>Incomparability synthesis (Part F)</strong>: At the quaternion catalog level: bracket collisions (same bracket, different quaternion) = 30, of which 24 are separated by cell (80%); cell collisions (same cell, different quaternion) = 13, of which 7 are separated by bracket (54%). Neither invariant refines the other. 6 pairs are unseparated by either.</li>
+<li><strong>6 computational type vectors (Part G)</strong>: Each of the 36 winning triples assigns a binary parity label to each cell, giving a 36-bit type vector per cell. Among 14 cells, only 6 distinct type vectors exist. Types: 0={cell 0 / axis σ₁, 3 quats}, 1={cell 1 / axis σ₂, 3 quats}, 2={cells 2,3,4,5 / body 60° cells, 8 quats}, 3={cells 6,7,8,9,11,12 / edge cells, 6 quats}, 4={cell 10 / axis third, 3 quats}, 5={cell 13 / identity, 1 quat}. The DKC computation is invariant under permutation within each symmetry orbit.</li>
+<li><strong>Refinement chain (Part I)</strong>: Bracket→Type→Quaternion: 43 bracket groups (of 100 catalog values that appear in braids) → 61 type subgroups → 168 quaternion subgroups. Max types per bracket value: 4. Max quaternions per type within a bracket: 8.</li>
+</ul>
+<h3>Theorems/Conjectures</h3>
+<ul>
+<li><strong>Incomparability Theorem (PROVEN)</strong>: The Kauffman bracket (at A=-ζ_8) and the DKC Voronoi cell are incomparable braid invariants. The bracket is a trace/normalization operation; the cell is an eigenvector direction projection. These operations discard orthogonal information. Neither refines the other: cell separates bracket collisions (97.8% at braid level, 80% at qcat level), and bracket separates cell collisions (54% at qcat level).</li>
+<li><strong>Strict Combination Theorem (PROVEN)</strong>: The combined invariant (bracket, cell) is strictly finer than either alone: 119 &gt; 100 &gt; 14. The 19% improvement over bracket alone confirms genuinely new information in the cell.</li>
+<li><strong>6-Type Orbit Theorem (PROVEN)</strong>: The DKC computation on the 13-cell Voronoi partition uses only 6 distinct computational roles. These correspond to the 3 axis orbits (σ₁, σ₂, third axis), the 4 body cells, the 6 edge cells, and the identity cell. The binary octahedral symmetry group acts transitively within each type — the computation is invariant under intra-orbit permutation.</li>
+<li><strong>Bracket-Blind Computation (STATED)</strong>: The 36 XOR6 winning triples actively exploit information the bracket cannot see. 92% of them use their cell labeling to distinguish braid pairs that the bracket treats as equal. The DKC computation is accessing a fundamentally different projection of the braid group representation than the bracket provides.</li>
+</ul>
+<h3>Data</h3>
+<ul>
+<li>Correspondence records analyzed: 2,000 (1,124,250 pairs at braid level)</li>
+<li>Bracket collisions (braid level): 58,078 pairs with same bracket, different quaternion; 56,825 (97.8%) in different cells</li>
+<li>Cell collisions (braid level): 1,253 pairs with same bracket and same cell (the 2.2% unseparated)</li>
+<li>Quaternion catalog level: 30 bracket collisions (24/30 = 80% separated by cell); 13 cell collisions (7/13 = 54% separated by bracket)</li>
+<li>Equivalence classes: cell=14, quaternion=24, bracket=100, (bracket,cell)=119</li>
+<li>Combined improvement over bracket: +19 classes (+19%)</li>
+<li>Bracket values split across multiple cells: 28 of 100 (28%); max cells per bracket: 6</li>
+<li>Max distinct brackets per cell: 19 (cell is very coarse)</li>
+<li>Computational types: 6 distinct among 14 cells; 4 body cells interchangeable; 6 edge cells interchangeable</li>
+<li>XOR6-separating winners: 33/36 (92%); exceptions: triples with q18 and q22 (edge-type)</li>
+<li>Total XOR6-separated bracket collisions across all 36 winners: 186</li>
+<li>Refinement chain: 43→61→168 (bracket→type→quaternion subgroups from appearing braids)</li>
+<li>Unseparated pairs (same cell AND same bracket at qcat level): 6</li>
+</ul>
+<h3>Code Assets</h3>
+<ul>
+<li><strong>Full catalog builder with bracket computation</strong>: computes Kauffman bracket at A=-ζ_8 for every braid up to length 8 on 2 and 3 strands; stores quaternion, bracket, and per-braid correspondence records simultaneously</li>
+<li><strong>Z[ζ_8] exact arithmetic</strong>: <code>Cyc8</code> struct with <code>cyc8_mul()</code>, <code>cyc8_add()</code>, <code>cyc8_conj()</code>, <code>cyc8_pow_int()</code>, <code>cyc8_eq()</code>; coefficients remain exact integers throughout</li>
+<li><strong>Union-find loop counter for bracket</strong>: <code>braid_loops()</code> counts Temperley-Lieb loops for each state-sum assignment; union-find on (len+1)×n grid handles arbitrary braid words</li>
+<li><strong><code>find_winners()</code></strong>: finds all 36 XOR6 winning triples from the 24-element quaternion catalog; identical to Demo 67/73 logic but integrated with full catalog</li>
+<li><strong><code>compute_type_vectors()</code></strong>: for each of the 14 Voronoi cells, computes the 36-bit type vector encoding its parity label under each winning triple; <code>TypeVec</code> struct with <code>typevec_eq()</code> for comparison</li>
+<li><strong><code>braid_type_idx()</code></strong>: maps a cell index to its type vector index (0–5); key for the 6-type orbit analysis</li>
+<li><strong>Per-braid correspondence record</strong>: stores (quaternion, bracket, qcat_idx, bcat_idx, braid_word, word_len, n_strands) for up to 2,000 braids; used for all collision and separation analyses</li>
+<li><strong>Bracket collision separation analysis (Part A/F)</strong>: counts pairs by (same/diff bracket) × (same/diff cell) at both braid-level and catalog-level; cleanly separated into directed and reverse analyses</li>
+</ul>
+<h3>Literature Touched</h3>
+<ul>
+<li><strong>Kauffman (1987)</strong>: the bracket polynomial as a braid/knot invariant at variable A; the specific evaluation A=-ζ_8 is the connection point to the DKC quaternion structure (Demo 66 established this)</li>
+<li><strong>Jones polynomial (Jones 1985)</strong>: the bracket at A=q^{-1/4} specializes to the Jones polynomial; the 119-class combined invariant is a refinement that the Jones polynomial alone cannot achieve</li>
+<li><strong>Temperley-Lieb algebra</strong>: the union-find loop counting in <code>braid_loops()</code> implements the TL state-sum expansion of the bracket; the computation is exact over Z[ζ_8]</li>
+<li><strong>Braid group representations (Burau, Lawrence-Krammer)</strong>: the SU(2) representation used for DKC is distinct from Burau/LK; the incomparability result shows the SU(2) eigenvector direction extracts information neither representation captures algebraically</li>
+<li><strong>Turaev-Viro / TL non-semisimplicity</strong>: the bracket at ζ_8 is a root-of-unity evaluation where the TL category becomes non-semisimple; the fact that 119 classes exceed 100 suggests the cell is detecting some non-semisimple structure that the trace/bracket misses</li>
+<li><strong>Abramsky (2004) / topological quantum computation</strong>: the Voronoi cell as a classical readout of a topological quantity; the 6-type structure suggests the DKC computation sees the braid through a 6-element coarse-graining of the representation</li>
+</ul>
+<h3>Open Questions</h3>
+<ul>
+<li><strong>What are the 6 unseparated pairs?</strong>: At the qcat level, 6 pairs have the same cell AND the same bracket. These correspond to body-type cells (2–5) with 60° angles. Do these pairs represent genuinely equivalent braids under some stronger invariant, or is there a finer invariant that separates them?</li>
+<li><strong>Is 119 near-optimal?</strong>: With 24 quaternions and 13 cells, the theoretical maximum for (bracket, cell) pairs is min(24×13, number of braids) but in practice is bounded by the braid word space sampled. Is 119 close to the maximum achievable combined class count with this braid space?</li>
+<li><strong>[*,18,22] dead zone</strong>: Triples containing q18 and q22 (edge-type) separate zero bracket collisions. Is this a geometric accident (those cells happen to share labels) or is there a group-theoretic reason that edge-type triples cannot exploit bracket collisions?</li>
+<li><strong>Algebraic characterization of the 97.8%</strong>: The cell separates 97.8% of bracket collisions at the braid level. The unseparated 2.2% are pairs with the same eigenvector direction but different eigenvalue angle. Is there a closed-form expression for exactly which braid pairs are unseparated (i.e., which Z[ζ_8] elements share direction but differ in angle)?</li>
+<li><strong>Refinement chain completeness</strong>: The chain 43→61→168 uses only braids appearing in the length-1-to-8 catalog. The full braid group is infinite. Does the refinement ratio (bracket→type→quat) stabilize as longer braid words are included, or does it grow without bound?</li>
+<li><strong>Connection to knot invariant strength</strong>: The combined (bracket, cell) invariant defines a function on braids. When the braid closure is taken, does this descend to a knot invariant? If so, how does it compare to known invariants (Jones, HOMFLY, Khovanov) in distinguishing power?</li>
+</ul>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/c.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</body>
+</html>

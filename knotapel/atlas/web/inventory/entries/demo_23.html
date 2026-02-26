@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>inventory/entries/demo_23.md</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+    <link rel="stylesheet" href="../../style.css">
+</head>
+<body>
+    <nav><a href="../../index.html">← Back to Index</a></nav><hr>
+    <h2>Demo 23: Function Zoo</h2>
+<ul>
+<li><strong>Status</strong>: COMPLETE</li>
+<li><strong>File</strong>: <code><a href="../../demo_23_function_zoo/main.c.html">demo_23_function_zoo/main.c</a></code> (~771 lines)</li>
+<li><strong>Tests</strong>: 4 checks across 4 parts (A-D): exhaustive catalog, NPN classification, closure tuple analysis, extended search</li>
+<li><strong>Depends on</strong>: Demo 21 (bracket with closure support, Toffoli/Fredkin targets), Demo 18 (braid logic gates, 5pi/4 angle)</li>
+<li><strong>Feeds into</strong>: Later demos exploring which NPN classes topology can/cannot reach</li>
+</ul>
+<h3>Headline</h3>
+Exhaustive enumeration of which 3-input Boolean functions topology "prefers": catalogs all 4-strand braids of length 1-5 across 4 closure types, classifies by NPN equivalence, analyzes how closure choice multiplies function diversity, and searches for specific target functions (Toffoli, Fredkin).
+<h3>Key Results</h3>
+<ul>
+<li><strong>Exhaustive catalog</strong> (Part A): all 6^1 + 6^2 + 6^3 + 6^4 = 1554 braids of length 1-4, each evaluated with 4 closures (trace, plat_A, plat_B, plat_C) at A = e^{i*5pi/4}. Reports distinct non-trivial truth tables found out of 254 possible. Top 20 most common functions listed with hex, binary, count, name, NPN class.</li>
+<li><strong>NPN classification</strong> (Part B): maps all found truth tables to their NPN canonical form (minimum under negation of inputs + permutation + negation of output). Reports how many of the total 3-variable NPN classes are reached by topology.</li>
+<li><strong>Closure tuple analysis</strong> (Part C): each braid produces a 4-tuple of truth tables (one per closure). Finds that ~80%+ of braids are closure-dependent (different closures yield different functions). Counts braids with all 4 TTs distinct, and braids with permutation-related TT pairs. Per-closure function diversity reported.</li>
+<li><strong>Extended search</strong> (Part D): length-5 braids (6^5 = 7776 words). Reports new functions and new NPN classes not seen at lengths 1-4. Specifically tracks Toffoli C' (0x6A), Fredkin B' (0xAC), Fredkin C' (0xCA) hit counts.</li>
+</ul>
+<h3>Theorems/Conjectures</h3>
+<ul>
+<li>Topology has strong preferences: certain Boolean functions appear far more often than others in the braid→bracket→threshold pipeline</li>
+<li>Closure is a major degree of freedom — different closures of the same braid typically yield different Boolean functions (≥80% closure-dependent)</li>
+<li>Longer braids unlock new NPN classes, suggesting the function zoo grows with braid length</li>
+</ul>
+<h3>Data</h3>
+<ul>
+<li>3-input Boolean functions: 256 truth tables (0x00-0xFF), 254 non-trivial</li>
+<li>Generator alphabet: {σ₁, σ₁⁻¹, σ₂, σ₂⁻¹, σ₃, σ₃⁻¹} (6 generators for 4-strand braids)</li>
+<li>Braid lengths searched: 1-4 (Part A, 1554 braids) + 5 (Part D, 7776 braids)</li>
+<li>4 closure types: trace (strand i top↔bottom), plat_A ((0,1)(2,3)), plat_B ((0,2)(1,3)), plat_C ((0,3)(1,2))</li>
+<li>NPN classification: 96 transforms per truth table (6 perms × 8 input-neg masks × 2 output-neg)</li>
+<li>Up to 10,000 braid tuples stored for closure analysis</li>
+</ul>
+<h3>Code Assets</h3>
+<ul>
+<li><strong>NPN equivalence engine</strong>: <code>npn_transform()</code> applies permutation + input negation + output negation; <code>npn_init()</code> precomputes canonical form for all 256 truth tables; <code>are_perm_related()</code> checks input-permutation equivalence</li>
+<li><strong><code>compute_tt()</code></strong>: given a braid word + closure + angle, evaluates all 8 input combinations, sorts amplitudes, finds best-gap threshold, returns truth table (or -1 if no clean threshold)</li>
+<li><strong><code>decode_word()</code></strong>: converts integer code to braid word using generator map {1,-1,2,-2,3,-3}</li>
+<li><strong><code>fn_name()</code></strong>: lookup table mapping ~40 common truth tables to human-readable names (AND, OR, XOR, MUX, MAJ, Toffoli, etc.)</li>
+<li><strong><code>bracket_cl()</code></strong>: state-sum Kauffman bracket with closure support (trace, plat_A/B/C) — from Demo 21</li>
+<li><strong><code>braid_loops_cl()</code></strong>: union-find loop counter with 4 closure types</li>
+<li>Per-braid tuple storage for closure analysis (up to 10,000 braids × 4 closures)</li>
+</ul>
+<h3>Literature Touched</h3>
+<ul>
+<li>NPN equivalence classes for Boolean functions (standard combinatorics: 3-variable has a known number of classes)</li>
+<li>Toffoli gate and Fredkin gate as target reversible/classical universal functions</li>
+<li>Plat closure vs trace closure in knot theory</li>
+<li>Connection between braid topology and Boolean function reachability</li>
+</ul>
+<h3>Open Questions</h3>
+<ul>
+<li>Which NPN classes are topologically unreachable, and is there an algebraic reason?</li>
+<li>Does the function distribution stabilize at some braid length, or do new classes keep appearing?</li>
+<li>Is there a relationship between braid complexity (crossing number) and the "computational complexity" of the realized Boolean function?</li>
+<li>Can closure choice be understood as a form of input/output routing that systematically permutes the truth table?</li>
+</ul>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/c.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</body>
+</html>

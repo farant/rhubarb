@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>demo_108_parity_vocabulary/main.c</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+    <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+    <nav><a href="../index.html">← Back to Index</a></nav><hr>
+    <h1>demo_108_parity_vocabulary/main.c</h1><pre><code class="language-c">/*
+ * KNOTAPEL DEMO 108: Parity Vocabulary — Raqiya Graph Analysis
+ * =============================================================
+ *
+ * Three-way comparison of bracket value subsets:
+ *   - Parity (41): k=6 XOR3-capable values (from D50)
+ *   - Poison (31): k=15 XOR4-only values that can't extend to XOR5 (D64)
+ *   - Neutral: remaining values (neither parity nor poison)
+ *
+ * Core question: can graph structure distinguish parity-capable
+ * from poison values? The neutral set is the control.
+ *
+ * Registered predictions (scored after computation):
+ *   1. Parity has denser additive closure than poison
+ *   2. Product closure / axis: parity = P_3, poison = ?
+ *   3. Galois stabilizer predicts parity rate (32%-&gt;41%-&gt;47%)
+ *   4. Null hypothesis: subgraphs indistinguishable (FALSIFIED by 2-way)
+ *   5. Additive v2 density: parity &gt; poison (83% vs ?)
+ *   6. Poison has axis-0 isolation like parity, OR not (tests octant vs parity)
+ *
+ * C89, zero dependencies beyond stdio/stdlib/string/math.
+ */
+
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;string.h&gt;
+#include &lt;math.h&gt;
+
+#ifndef M_PI
+#define M_PI 3.14159265358979323846
+#endif
+
+#define RAQ_PRINT
+#define RAQ_COMPARE
+#include "../raqiya/raqiya.h"
+
+/* Suppress unused-function warnings from raqiya.h static functions */
+static void raq_suppress_unused(void) {
+    (void)raq_cyc8_zero; (void)raq_cyc8_one;
+    (void)raq_print_analysis; (void)raq_print_summary;
+}
+
+/* ================================================================
+ * Test infrastructure
+ * ================================================================ */
+
+static int n_pass = 0, n_fail = 0;
+
+static void check(const char *msg, int ok) {
+    if (ok) { printf("  PASS: %s\n", msg); n_pass++; }
+    else    { printf("  FAIL: %s\n", msg); n_fail++; }
+}
+
+/* ================================================================
+ * Complex double type (for sector classification only)
+ * ================================================================ */
+
+typedef struct { double re, im; } Cx;
+
+static Cx cx_make(double re, double im) {
+    Cx z; z.re = re; z.im = im; return z;
+}
+static Cx cx_add(Cx a, Cx b) {
+    return cx_make(a.re + b.re, a.im + b.im);
+}
+static double cx_abs(Cx a) {
+    return sqrt(a.re * a.re + a.im * a.im);
+}
+
+/* ================================================================
+ * Exact cyclotomic type Z[zeta_8] (local copy for catalog builder)
+ *
+ * Basis: {1, zeta_8, zeta_8^2, zeta_8^3} with zeta_8^4 = -1
+ * ================================================================ */
+
+typedef struct {
+    long a, b, c, d;
+} Cyc8;
+
+static Cyc8 cyc8_make(long a, long b, long c, long d) {
+    Cyc8 z; z.a = a; z.b = b; z.c = c; z.d = d; return z;
+}
+static Cyc8 cyc8_zero(void) { return cyc8_make(0, 0, 0, 0); }
+static Cyc8 cyc8_one(void)  { return cyc8_make(1, 0, 0, 0); }
+static Cyc8 cyc8_add(Cyc8 x, Cyc8 y) {
+    return cyc8_make(x.a + y.a, x.b + y.b, x.c + y.c, x.d + y.d);
+}
+static Cyc8 cyc8_mul(Cyc8 x, Cyc8 y) {
+    return cyc8_make(
+        x.a * y.a - x.b * y.d - x.c * y.c - x.d * y.b,
+        x.a * y.b + x.b * y.a - x.c * y.d - x.d * y.c,
+        x.a * y.c + x.b * y.b + x.c * y.a - x.d * y.d,
+        x.a * y.d + x.b * y.c + x.c * y.b + x.d * y.a
+    );
+}
+static int cyc8_eq(Cyc8 x, Cyc8 y) {
+    return x.a == y.a &amp;&amp; x.b == y.b &amp;&amp; x.c == y.c &amp;&amp; x.d == y.d;
+}
+static Cx cyc8_to_cx(Cyc8 z) {
+    double inv_sqrt2 = 1.0 / sqrt(2.0);
+    double re = (double)z.a + (double)z.b * inv_sqrt2
+              + (double)z.d * (-inv_sqrt2);
+    double im = (double)z.b * inv_sqrt2 + (double)z.c
+              + (double)z.d * inv_sqrt2;
+    return cx_make(re, im);
+}
+static Cyc8 cyc8_conj(Cyc8 z) {
+    return cyc8_make(z.a, -z.d, -z.c, -z.b);
+}
+static Cyc8 cyc8_pow_int(Cyc8 base, int n) {
+    Cyc8 r = cyc8_one();
+    if (n == 0) return r;
+    if (n &lt; 0) { n = -n; base = cyc8_conj(base); }
+    while (n &gt; 0) {
+        if (n &amp; 1) r = cyc8_mul(r, base);
+        base = cyc8_mul(base, base);
+        n &gt;&gt;= 1;
+    }
+    return r;
+}
+
+/* ================================================================
+ * Braid type + union-find loop counter (from D50)
+ * ================================================================ */
+
+#define MAX_WORD 64
+typedef struct { int word[MAX_WORD]; int len, n; } Braid;
+
+#define MAX_UF 4096
+static int uf_p[MAX_UF];
+static void uf_init(int n) {
+    int i; for (i = 0; i &lt; n; i++) uf_p[i] = i;
+}
+static int uf_find(int x) {
+    while (uf_p[x] != x) { uf_p[x] = uf_p[uf_p[x]]; x = uf_p[x]; }
+    return x;
+}
+static void uf_union(int x, int y) {
+    x = uf_find(x); y = uf_find(y); if (x != y) uf_p[x] = y;
+}
+
+static int braid_loops(const Braid *b, unsigned s) {
+    int N = (b-&gt;len + 1) * b-&gt;n, l, p, i, loops, sgn, bit, cup;
+    uf_init(N);
+    for (l = 0; l &lt; b-&gt;len; l++) {
+        sgn = b-&gt;word[l] &gt; 0 ? 1 : -1;
+        i = (sgn &gt; 0 ? b-&gt;word[l] : -b-&gt;word[l]) - 1;
+        bit = (int)((s &gt;&gt; l) &amp; 1u);
+        cup = (sgn &gt; 0) ? (bit == 0) : (bit == 1);
+        if (cup) {
+            uf_union(l * b-&gt;n + i, l * b-&gt;n + i + 1);
+            uf_union((l + 1) * b-&gt;n + i, (l + 1) * b-&gt;n + i + 1);
+            for (p = 0; p &lt; b-&gt;n; p++)
+                if (p != i &amp;&amp; p != i + 1)
+                    uf_union(l * b-&gt;n + p, (l + 1) * b-&gt;n + p);
+        } else {
+            for (p = 0; p &lt; b-&gt;n; p++)
+                uf_union(l * b-&gt;n + p, (l + 1) * b-&gt;n + p);
+        }
+    }
+    for (p = 0; p &lt; b-&gt;n; p++)
+        uf_union(p, b-&gt;len * b-&gt;n + p);
+    loops = 0;
+    for (i = 0; i &lt; N; i++)
+        if (uf_find(i) == i) loops++;
+    return loops;
+}
+
+/* ================================================================
+ * Bracket catalog builder (from D50)
+ * ================================================================ */
+
+#define MAX_DISTINCT 512
+
+static Cyc8 cat_exact[MAX_DISTINCT];
+static Cx   cat_cx[MAX_DISTINCT];
+static int  cat_size = 0;
+
+static int find_in(const Cyc8 *arr, int size, Cyc8 val) {
+    int i;
+    for (i = 0; i &lt; size; i++)
+        if (cyc8_eq(val, arr[i])) return i;
+    return -1;
+}
+
+static void build_catalog(void) {
+    Cyc8 A = cyc8_make(0, -1, 0, 0);  /* -zeta_8 */
+    int n, len;
+    Braid b;
+    int word_buf[MAX_WORD];
+
+    cat_size = 0;
+
+    for (n = 2; n &lt;= 3; n++) {
+        for (len = 1; len &lt;= 8 &amp;&amp; len &lt;= MAX_WORD; len++) {
+            int max_gen = n - 1;
+            int total_gens = 2 * max_gen;
+            unsigned long total, idx;
+            int i;
+
+            total = 1;
+            for (i = 0; i &lt; len; i++) {
+                total *= (unsigned long)total_gens;
+                if (total &gt; 100000) break;
+            }
+            if (total &gt; 100000) continue;
+
+            for (idx = 0; idx &lt; total; idx++) {
+                unsigned long tmp = idx;
+                Cyc8 bracket;
+                unsigned s, ns;
+                int a_count, b_count, lp;
+
+                for (i = 0; i &lt; len; i++) {
+                    int g = (int)(tmp % (unsigned long)total_gens);
+                    tmp /= (unsigned long)total_gens;
+                    if (g &lt; max_gen) word_buf[i] = g + 1;
+                    else             word_buf[i] = -(g - max_gen + 1);
+                }
+                b.n = n; b.len = len;
+                memcpy(b.word, word_buf, (size_t)len * sizeof(int));
+
+                bracket = cyc8_zero();
+                if (b.len &gt; 0) {
+                    ns = 1u &lt;&lt; b.len;
+                    for (s = 0; s &lt; ns; s++) {
+                        a_count = 0; b_count = 0;
+                        for (i = 0; i &lt; b.len; i++) {
+                            if ((s &gt;&gt; (unsigned)i) &amp; 1u) b_count++;
+                            else a_count++;
+                        }
+                        lp = braid_loops(&amp;b, s);
+                        if (lp == 1) {
+                            bracket = cyc8_add(bracket,
+                                cyc8_pow_int(A, a_count - b_count));
+                        }
+                    }
+                }
+
+                if (!cyc8_eq(bracket, cyc8_zero())
+                    &amp;&amp; find_in(cat_exact, cat_size, bracket) &lt; 0
+                    &amp;&amp; cat_size &lt; MAX_DISTINCT) {
+                    cat_exact[cat_size] = bracket;
+                    cat_cx[cat_size] = cyc8_to_cx(bracket);
+                    cat_size++;
+                }
+            }
+        }
+    }
+}
+
+/* ================================================================
+ * Sector classification (from D50)
+ * ================================================================ */
+
+static int sector_classify(Cx z, int k) {
+    double angle, sw;
+    int sec;
+    if (cx_abs(z) &lt; 1e-15) return 0;
+    angle = atan2(z.im, z.re);
+    if (angle &lt; 0.0) angle += 2.0 * M_PI;
+    sw = 2.0 * M_PI / (double)k;
+    sec = (int)(angle / sw);
+    if (sec &gt;= k) sec = k - 1;
+    return sec % 2;
+}
+
+/* ================================================================
+ * Parity detection (k=6 XOR3 search, from D50 simplified)
+ *
+ * For each triple (w1, w2, w3) from the catalog, check if the
+ * 8 weighted sums classify correctly as XOR3 under k=6 sectors.
+ * Mark catalog entries that participate in any parity solution.
+ * ================================================================ */
+
+static int parity_used[MAX_DISTINCT];  /* 1 if value in parity solution */
+static int n_parity_solutions = 0;
+
+static void find_parity_vocabulary(int k) {
+    int i1, i2, i3;
+    memset(parity_used, 0, sizeof(parity_used));
+    n_parity_solutions = 0;
+
+    for (i1 = 0; i1 &lt; cat_size; i1++) {
+        for (i2 = 0; i2 &lt; cat_size; i2++) {
+            for (i3 = 0; i3 &lt; cat_size; i3++) {
+                /* XOR3 truth table: odd parity = 1 */
+                int inp, all_ok = 1;
+                for (inp = 0; inp &lt; 8 &amp;&amp; all_ok; inp++) {
+                    int b0 = (inp &gt;&gt; 0) &amp; 1;
+                    int b1 = (inp &gt;&gt; 1) &amp; 1;
+                    int b2 = (inp &gt;&gt; 2) &amp; 1;
+                    int expected = b0 ^ b1 ^ b2;
+                    Cx sum = cx_make(0, 0);
+                    if (b0) sum = cx_add(sum, cat_cx[i1]);
+                    if (b1) sum = cx_add(sum, cat_cx[i2]);
+                    if (b2) sum = cx_add(sum, cat_cx[i3]);
+                    if (sector_classify(sum, k) != expected) all_ok = 0;
+                }
+                if (all_ok) {
+                    parity_used[i1] = 1;
+                    parity_used[i2] = 1;
+                    parity_used[i3] = 1;
+                    n_parity_solutions++;
+                }
+            }
+        }
+    }
+}
+
+/* ================================================================
+ * Convert local Cyc8 to Raqiya's Raq_Cyc8
+ * ================================================================ */
+
+static Raq_Cyc8 to_raq(Cyc8 z) {
+    return raq_cyc8_make(z.a, z.b, z.c, z.d);
+}
+
+/* ================================================================
+ * Poison values from D64 (k=15 orphan-only XOR4 catalog indices)
+ * Same build_catalog() ordering — verified against D64 output.
+ * ================================================================ */
+
+static const int poison_idx[] = {
+    3, 4, 9, 17, 18, 28, 30, 38, 42, 50, 52, 53, 55, 56,
+    57, 58, 60, 61, 63, 69, 71, 77, 82, 83, 86, 87, 90,
+    92, 94, 95, 96
+};
+#define N_POISON_IDX 31
+
+static int is_poison(int idx) {
+    int i;
+    for (i = 0; i &lt; N_POISON_IDX; i++)
+        if (poison_idx[i] == idx) return 1;
+    return 0;
+}
+
+/* ================================================================
+ * Octant computation (for sign/octant analysis)
+ * ================================================================ */
+
+static int compute_octant(Cx z) {
+    double angle = atan2(z.im, z.re);
+    int oct;
+    if (angle &lt; 0.0) angle += 2.0 * M_PI;
+    oct = (int)(angle / (M_PI / 4.0));
+    if (oct &gt; 7) oct = 7;
+    return oct;
+}
+
+/* ================================================================
+ * Main
+ * ================================================================ */
+
+int main(void) {
+    int i;
+    int n_parity = 0, n_poison = 0, n_neutral = 0;
+    Raq_Cyc8 parity_vals[MAX_DISTINCT];
+    Raq_Cyc8 poison_vals[MAX_DISTINCT];
+    Raq_Cyc8 neutral_vals[MAX_DISTINCT];
+    int n_overlap = 0;
+    char msg[256];
+
+    /* Per-axis and per-octant statistics */
+    int par_axis[4], poi_axis[4], neu_axis[4];
+    int par_oct[8], poi_oct[8], neu_oct[8];
+    int cat_oct[MAX_DISTINCT];
+
+    raq_suppress_unused();
+    (void)cx_abs;
+
+    printf("DEMO 108: Parity Vocabulary -- 3-Way Graph Analysis\n");
+    printf("====================================================\n");
+
+    /* Phase 1: Build catalog */
+    printf("\n=== Phase 1: Build Catalog ===\n");
+    build_catalog();
+    printf("  Standard catalog: %d distinct values\n", cat_size);
+
+    /* Compute octants for all catalog values */
+    for (i = 0; i &lt; cat_size; i++)
+        cat_oct[i] = compute_octant(cat_cx[i]);
+
+    /* Phase 2: Find parity vocabulary (k=6) */
+    printf("\n=== Phase 2: Find Parity Vocabulary (k=6 XOR3) ===\n");
+    find_parity_vocabulary(6);
+
+    printf("  Parity solutions: %d\n", n_parity_solutions);
+
+    /* Phase 3: Three-way classification */
+    printf("\n=== Phase 3: Three-Way Classification ===\n");
+
+    memset(par_axis, 0, sizeof(par_axis));
+    memset(poi_axis, 0, sizeof(poi_axis));
+    memset(neu_axis, 0, sizeof(neu_axis));
+    memset(par_oct, 0, sizeof(par_oct));
+    memset(poi_oct, 0, sizeof(poi_oct));
+    memset(neu_oct, 0, sizeof(neu_oct));
+
+    for (i = 0; i &lt; cat_size; i++) {
+        Raq_Cyc8 rv = to_raq(cat_exact[i]);
+        int ax = raq_cyc8_axis(rv);
+        int oc = cat_oct[i];
+
+        if (parity_used[i] &amp;&amp; is_poison(i)) {
+            /* Both parity and poison — classify as parity */
+            n_overlap++;
+            parity_vals[n_parity++] = rv;
+            if (ax &gt;= 0) par_axis[ax]++;
+            par_oct[oc]++;
+        } else if (parity_used[i]) {
+            parity_vals[n_parity++] = rv;
+            if (ax &gt;= 0) par_axis[ax]++;
+            par_oct[oc]++;
+        } else if (is_poison(i)) {
+            poison_vals[n_poison++] = rv;
+            if (ax &gt;= 0) poi_axis[ax]++;
+            poi_oct[oc]++;
+        } else {
+            neutral_vals[n_neutral++] = rv;
+            if (ax &gt;= 0) neu_axis[ax]++;
+            neu_oct[oc]++;
+        }
+    }
+
+    printf("  Parity:  %d values\n", n_parity);
+    printf("  Poison:  %d values (D64 k=15 orphan-only)\n", n_poison);
+    printf("  Neutral: %d values\n", n_neutral);
+    printf("  Overlap (parity AND poison): %d\n", n_overlap);
+    printf("  Total: %d\n", n_parity + n_poison + n_neutral);
+
+    sprintf(msg, "catalog = %d", cat_size);
+    check(msg, cat_size == 100);
+    sprintf(msg, "parity = %d (expected 41)", n_parity);
+    check(msg, n_parity == 41);
+    sprintf(msg, "3-way partition sums to catalog (%d+%d+%d=%d)",
+            n_parity, n_poison, n_neutral,
+            n_parity + n_poison + n_neutral);
+    check(msg, n_parity + n_poison + n_neutral == cat_size);
+
+    /* Axis and octant distribution */
+    printf("\n  Axis distribution:\n");
+    printf("         axis0  axis1  axis2  axis3\n");
+    printf("    par: %5d  %5d  %5d  %5d\n",
+           par_axis[0], par_axis[1], par_axis[2], par_axis[3]);
+    printf("    poi: %5d  %5d  %5d  %5d\n",
+           poi_axis[0], poi_axis[1], poi_axis[2], poi_axis[3]);
+    printf("    neu: %5d  %5d  %5d  %5d\n",
+           neu_axis[0], neu_axis[1], neu_axis[2], neu_axis[3]);
+
+    printf("\n  Octant distribution:\n");
+    printf("         oct0  oct1  oct2  oct3  oct4  oct5  oct6  oct7\n");
+    printf("    par:");
+    for (i = 0; i &lt; 8; i++) printf(" %4d", par_oct[i]);
+    printf("\n    poi:");
+    for (i = 0; i &lt; 8; i++) printf(" %4d", poi_oct[i]);
+    printf("\n    neu:");
+    for (i = 0; i &lt; 8; i++) printf(" %4d", neu_oct[i]);
+    printf("\n");
+
+    /* Galois stabilizer breakdown */
+    {
+        int par_stab[3] = {0,0,0}; /* [0]=stab4(ax0), [1]=stab2(ax2), [2]=stab1(ax1+3) */
+        int poi_stab[3] = {0,0,0};
+        int neu_stab[3] = {0,0,0};
+        int cat_stab[3] = {0,0,0};
+        for (i = 0; i &lt; cat_size; i++) {
+            Raq_Cyc8 rv = to_raq(cat_exact[i]);
+            int ax = raq_cyc8_axis(rv);
+            int s = (ax == 0) ? 0 : (ax == 2) ? 1 : 2;
+            cat_stab[s]++;
+            if (parity_used[i]) par_stab[s]++;
+            else if (is_poison(i)) poi_stab[s]++;
+            else neu_stab[s]++;
+        }
+        printf("\n  Galois stabilizer breakdown:\n");
+        printf("               stab4(ax0)  stab2(ax2)  stab1(ax1+3)\n");
+        printf("    catalog:   %5d       %5d       %5d\n",
+               cat_stab[0], cat_stab[1], cat_stab[2]);
+        printf("    parity:    %5d       %5d       %5d\n",
+               par_stab[0], par_stab[1], par_stab[2]);
+        printf("    poison:    %5d       %5d       %5d\n",
+               poi_stab[0], poi_stab[1], poi_stab[2]);
+        printf("    neutral:   %5d       %5d       %5d\n",
+               neu_stab[0], neu_stab[1], neu_stab[2]);
+        printf("    parity%%:  %5.1f%%      %5.1f%%      %5.1f%%\n",
+               cat_stab[0] &gt; 0 ? 100.0*par_stab[0]/cat_stab[0] : 0,
+               cat_stab[1] &gt; 0 ? 100.0*par_stab[1]/cat_stab[1] : 0,
+               cat_stab[2] &gt; 0 ? 100.0*par_stab[2]/cat_stab[2] : 0);
+        printf("    poison%%:  %5.1f%%      %5.1f%%      %5.1f%%\n",
+               cat_stab[0] &gt; 0 ? 100.0*poi_stab[0]/cat_stab[0] : 0,
+               cat_stab[1] &gt; 0 ? 100.0*poi_stab[1]/cat_stab[1] : 0,
+               cat_stab[2] &gt; 0 ? 100.0*poi_stab[2]/cat_stab[2] : 0);
+    }
+
+    /* Phase 4: Value listings (brief) */
+    printf("\n=== Phase 4: Value Listing ===\n");
+    printf("\n  Parity values (%d):\n", n_parity);
+    for (i = 0; i &lt; n_parity; i++) {
+        printf("    (%3ld,%3ld,%3ld,%3ld)  ax=%d\n",
+               parity_vals[i].a, parity_vals[i].b,
+               parity_vals[i].c, parity_vals[i].d,
+               raq_cyc8_axis(parity_vals[i]));
+    }
+    printf("\n  Poison values (%d):\n", n_poison);
+    for (i = 0; i &lt; n_poison; i++) {
+        printf("    (%3ld,%3ld,%3ld,%3ld)  ax=%d\n",
+               poison_vals[i].a, poison_vals[i].b,
+               poison_vals[i].c, poison_vals[i].d,
+               raq_cyc8_axis(poison_vals[i]));
+    }
+    printf("\n  Neutral values (%d):\n", n_neutral);
+    for (i = 0; i &lt; n_neutral; i++) {
+        printf("    (%3ld,%3ld,%3ld,%3ld)  ax=%d\n",
+               neutral_vals[i].a, neutral_vals[i].b,
+               neutral_vals[i].c, neutral_vals[i].d,
+               raq_cyc8_axis(neutral_vals[i]));
+    }
+
+    /* Phase 5: Primary comparison — Parity vs Poison */
+    printf("\n=== Phase 5: Comparison (parity vs poison) ===\n");
+    raq_print_comparison(parity_vals, n_parity,
+                          poison_vals, n_poison,
+                          "parity", "poison");
+
+    /* Phase 6: Control comparisons */
+    printf("\n=== Phase 6a: Comparison (parity vs neutral) ===\n");
+    raq_print_comparison(parity_vals, n_parity,
+                          neutral_vals, n_neutral,
+                          "parity", "neutrl");
+
+    printf("\n=== Phase 6b: Comparison (poison vs neutral) ===\n");
+    raq_print_comparison(poison_vals, n_poison,
+                          neutral_vals, n_neutral,
+                          "poison", "neutrl");
+
+    /* Phase 7: Graph sweeps (parity and poison only) */
+    printf("\n=== Phase 7a: Graph Sweep (parity) ===\n");
+    raq_graph_sweep_v(parity_vals, n_parity, stdout, RAQ_VERB_SUMMARY);
+
+    printf("\n=== Phase 7b: Graph Sweep (poison) ===\n");
+    raq_graph_sweep_v(poison_vals, n_poison, stdout, RAQ_VERB_SUMMARY);
+
+    /* Summary */
+    printf("\n=== Summary ===\n\n");
+    printf("  %d pass, %d fail\n", n_pass, n_fail);
+
+    return n_fail &gt; 0 ? 1 : 0;
+}
+</code></pre>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/c.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</body>
+</html>

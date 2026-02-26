@@ -1,0 +1,1155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>demo_49_neglecton_weights/main.c</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+    <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+    <nav><a href="../index.html">← Back to Index</a></nav><hr>
+    <h1>demo_49_neglecton_weights/main.c</h1><pre><code class="language-c">/*
+ * KNOTAPEL DEMO 49: Neglecton Weights
+ * ====================================
+ *
+ * Demo 48 proved parity (XNOR3) has ZERO solutions from exact
+ * Z[zeta_8] bracket weights. The wall is one Hamming bit thick
+ * but categorically impassable.
+ *
+ * Demo 49 tests the neglecton prediction: the radical of TL_4
+ * at delta=0 contains degrees of freedom killed by the standard
+ * bracket evaluation. These correspond to smoothing states with
+ * exactly 2 loops (which produce delta^1 = 0 terms).
+ *
+ * KEY INSIGHT: The derivative d(bracket)/d(epsilon) at delta=0
+ * extracts these contributions EXACTLY as Z[zeta_8] values:
+ *
+ *   neglecton(braid) = 4 * Sum_{states with loops=2} A^(a-b)
+ *
+ * This is exact Cyc8 arithmetic — no numerical perturbation.
+ * The factor of 4 = d(delta)/d(epsilon) at epsilon=0.
+ *
+ * Parts:
+ *   A: Dual catalog builder (standard + neglecton brackets)
+ *   B: NPN classification (from Demo 48)
+ *   C: Exhaustive search with extended catalog
+ *   D: Analysis + prediction checks
+ *
+ * C89, zero dependencies beyond math.h.
+ */
+
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;string.h&gt;
+#include &lt;math.h&gt;
+
+#ifndef M_PI
+#define M_PI 3.14159265358979323846
+#endif
+
+/* ================================================================
+ * Test infrastructure
+ * ================================================================ */
+
+static int n_pass = 0, n_fail = 0;
+
+static void check(const char *msg, int ok) {
+    if (ok) { printf("  PASS: %s\n", msg); n_pass++; }
+    else    { printf("  FAIL: %s\n", msg); n_fail++; }
+}
+
+/* ================================================================
+ * Complex double type
+ * ================================================================ */
+
+typedef struct { double re, im; } Cx;
+
+static Cx cx_make(double re, double im) {
+    Cx z; z.re = re; z.im = im; return z;
+}
+static Cx cx_zero(void) { return cx_make(0.0, 0.0); }
+static Cx cx_add(Cx a, Cx b) {
+    return cx_make(a.re + b.re, a.im + b.im);
+}
+static double cx_abs(Cx a) {
+    return sqrt(a.re * a.re + a.im * a.im);
+}
+
+/* ================================================================
+ * Exact cyclotomic type Z[zeta_8]
+ *
+ * Basis: {1, zeta_8, zeta_8^2, zeta_8^3} with zeta_8^4 = -1
+ * ================================================================ */
+
+typedef struct {
+    long a, b, c, d;  /* a + b*zeta_8 + c*zeta_8^2 + d*zeta_8^3 */
+} Cyc8;
+
+static Cyc8 cyc8_make(long a, long b, long c, long d) {
+    Cyc8 z; z.a = a; z.b = b; z.c = c; z.d = d; return z;
+}
+static Cyc8 cyc8_zero(void) { return cyc8_make(0, 0, 0, 0); }
+static Cyc8 cyc8_one(void)  { return cyc8_make(1, 0, 0, 0); }
+static Cyc8 cyc8_add(Cyc8 x, Cyc8 y) {
+    return cyc8_make(x.a + y.a, x.b + y.b, x.c + y.c, x.d + y.d);
+}
+static Cyc8 cyc8_mul(Cyc8 x, Cyc8 y) {
+    return cyc8_make(
+        x.a * y.a - x.b * y.d - x.c * y.c - x.d * y.b,
+        x.a * y.b + x.b * y.a - x.c * y.d - x.d * y.c,
+        x.a * y.c + x.b * y.b + x.c * y.a - x.d * y.d,
+        x.a * y.d + x.b * y.c + x.c * y.b + x.d * y.a
+    );
+}
+static Cyc8 cyc8_scale(Cyc8 x, long s) {
+    return cyc8_make(x.a * s, x.b * s, x.c * s, x.d * s);
+}
+static int cyc8_eq(Cyc8 x, Cyc8 y) {
+    return x.a == y.a &amp;&amp; x.b == y.b &amp;&amp; x.c == y.c &amp;&amp; x.d == y.d;
+}
+static Cx cyc8_to_cx(Cyc8 z) {
+    double inv_sqrt2 = 1.0 / sqrt(2.0);
+    double re = (double)z.a + (double)z.b * inv_sqrt2
+              + (double)z.d * (-inv_sqrt2);
+    double im = (double)z.b * inv_sqrt2 + (double)z.c
+              + (double)z.d * inv_sqrt2;
+    return cx_make(re, im);
+}
+static Cyc8 cyc8_conj(Cyc8 z) {
+    return cyc8_make(z.a, -z.d, -z.c, -z.b);
+}
+static Cyc8 cyc8_pow_int(Cyc8 base, int n) {
+    Cyc8 r = cyc8_one();
+    if (n == 0) return r;
+    if (n &lt; 0) { n = -n; base = cyc8_conj(base); }
+    while (n &gt; 0) {
+        if (n &amp; 1) r = cyc8_mul(r, base);
+        base = cyc8_mul(base, base);
+        n &gt;&gt;= 1;
+    }
+    return r;
+}
+
+/* ================================================================
+ * Braid type + union-find loop counter
+ * ================================================================ */
+
+#define MAX_WORD 64
+typedef struct { int word[MAX_WORD]; int len, n; } Braid;
+
+#define MAX_UF 4096
+static int uf_p[MAX_UF];
+static void uf_init(int n) {
+    int i; for (i = 0; i &lt; n; i++) uf_p[i] = i;
+}
+static int uf_find(int x) {
+    while (uf_p[x] != x) { uf_p[x] = uf_p[uf_p[x]]; x = uf_p[x]; }
+    return x;
+}
+static void uf_union(int x, int y) {
+    x = uf_find(x); y = uf_find(y); if (x != y) uf_p[x] = y;
+}
+
+static int braid_loops(const Braid *b, unsigned s) {
+    int N = (b-&gt;len + 1) * b-&gt;n, l, p, i, loops, sgn, bit, cup;
+    uf_init(N);
+    for (l = 0; l &lt; b-&gt;len; l++) {
+        sgn = b-&gt;word[l] &gt; 0 ? 1 : -1;
+        i = (sgn &gt; 0 ? b-&gt;word[l] : -b-&gt;word[l]) - 1;
+        bit = (int)((s &gt;&gt; l) &amp; 1u);
+        cup = (sgn &gt; 0) ? (bit == 0) : (bit == 1);
+        if (cup) {
+            uf_union(l * b-&gt;n + i, l * b-&gt;n + i + 1);
+            uf_union((l + 1) * b-&gt;n + i, (l + 1) * b-&gt;n + i + 1);
+            for (p = 0; p &lt; b-&gt;n; p++)
+                if (p != i &amp;&amp; p != i + 1)
+                    uf_union(l * b-&gt;n + p, (l + 1) * b-&gt;n + p);
+        } else {
+            for (p = 0; p &lt; b-&gt;n; p++)
+                uf_union(l * b-&gt;n + p, (l + 1) * b-&gt;n + p);
+        }
+    }
+    /* Trace closure */
+    for (p = 0; p &lt; b-&gt;n; p++)
+        uf_union(p, b-&gt;len * b-&gt;n + p);
+    loops = 0;
+    for (i = 0; i &lt; N; i++)
+        if (uf_find(i) == i) loops++;
+    return loops;
+}
+
+/* ================================================================
+ * PART A: Dual Bracket Evaluation + Catalog
+ *
+ * Standard bracket: sum over loops=1 states
+ * Neglecton bracket: 4 * sum over loops=2 states
+ *
+ * Both are exact Z[zeta_8] values.
+ * ================================================================ */
+
+typedef struct {
+    Cyc8 standard;
+    Cyc8 neglecton;
+} DualBracket;
+
+static DualBracket braid_bracket_dual(const Braid *b, Cyc8 A) {
+    DualBracket result;
+    unsigned s, ns;
+    int i, a_count, b_count, lp;
+
+    result.standard = cyc8_zero();
+    result.neglecton = cyc8_zero();
+
+    if (!b-&gt;len) {
+        /* Zero-crossing braid: delta^(n-1) = 0 for n &gt;= 2 */
+        return result;
+    }
+
+    ns = 1u &lt;&lt; b-&gt;len;
+    for (s = 0; s &lt; ns; s++) {
+        a_count = 0; b_count = 0;
+        for (i = 0; i &lt; b-&gt;len; i++) {
+            if ((s &gt;&gt; (unsigned)i) &amp; 1u) b_count++;
+            else a_count++;
+        }
+        lp = braid_loops(b, s);
+
+        if (lp == 1) {
+            result.standard = cyc8_add(result.standard,
+                cyc8_pow_int(A, a_count - b_count));
+        } else if (lp == 2) {
+            result.neglecton = cyc8_add(result.neglecton,
+                cyc8_pow_int(A, a_count - b_count));
+        }
+        /* lp &gt;= 3: skip (delta^2 or higher, vanishes to first order) */
+    }
+
+    /* Apply factor of 4 = d(delta)/d(epsilon) at epsilon=0 */
+    result.neglecton = cyc8_scale(result.neglecton, 4);
+
+    return result;
+}
+
+/* --- Separate catalogs for statistics --- */
+
+#define MAX_DISTINCT 512
+
+static Cyc8 cat_std_exact[MAX_DISTINCT];
+static Cx   cat_std_cx[MAX_DISTINCT];
+static int  cat_std_size = 0;
+
+static Cyc8 cat_neg_exact[MAX_DISTINCT];
+static Cx   cat_neg_cx[MAX_DISTINCT];
+static int  cat_neg_size = 0;
+
+static int find_in(const Cyc8 *arr, int size, Cyc8 val) {
+    int i;
+    for (i = 0; i &lt; size; i++)
+        if (cyc8_eq(val, arr[i])) return i;
+    return -1;
+}
+
+/* --- Combined catalog with source tags --- */
+
+#define SRC_STD  1
+#define SRC_NEG  2
+#define SRC_BOTH 3
+
+#define MAX_COMBINED 1024
+
+static Cyc8 cat_exact[MAX_COMBINED];
+static Cx   cat_cx[MAX_COMBINED];
+static int  cat_src[MAX_COMBINED];  /* SRC_STD, SRC_NEG, or SRC_BOTH */
+static int  cat_size = 0;
+
+static void build_dual_catalog(void) {
+    Cyc8 A = cyc8_make(0, -1, 0, 0);
+    int n, len;
+    Braid b;
+    int word_buf[MAX_WORD];
+    long total_braids = 0;
+    long n_zero_std = 0;
+    long n_nonzero_neg = 0;
+    long n_both_zero = 0;
+    long n_invisible = 0;  /* std=0 AND neg!=0 */
+
+    cat_std_size = 0;
+    cat_neg_size = 0;
+
+    for (n = 2; n &lt;= 3; n++) {
+        for (len = 1; len &lt;= 8 &amp;&amp; len &lt;= MAX_WORD; len++) {
+            int max_gen = n - 1;
+            int total_gens = 2 * max_gen;
+            unsigned long total, idx;
+            int i;
+
+            total = 1;
+            for (i = 0; i &lt; len; i++) {
+                total *= (unsigned long)total_gens;
+                if (total &gt; 100000) break;
+            }
+            if (total &gt; 100000) continue;
+
+            for (idx = 0; idx &lt; total; idx++) {
+                unsigned long tmp = idx;
+                DualBracket db;
+                int is_zero_std, is_zero_neg;
+
+                for (i = 0; i &lt; len; i++) {
+                    int g = (int)(tmp % (unsigned long)total_gens);
+                    tmp /= (unsigned long)total_gens;
+                    if (g &lt; max_gen) word_buf[i] = g + 1;
+                    else             word_buf[i] = -(g - max_gen + 1);
+                }
+                b.n = n; b.len = len;
+                memcpy(b.word, word_buf, (size_t)len * sizeof(int));
+
+                db = braid_bracket_dual(&amp;b, A);
+                total_braids++;
+
+                is_zero_std = cyc8_eq(db.standard, cyc8_zero());
+                is_zero_neg = cyc8_eq(db.neglecton, cyc8_zero());
+
+                if (is_zero_std) n_zero_std++;
+                if (!is_zero_neg) n_nonzero_neg++;
+                if (is_zero_std &amp;&amp; is_zero_neg) n_both_zero++;
+                if (is_zero_std &amp;&amp; !is_zero_neg) n_invisible++;
+
+                /* Standard catalog */
+                if (!is_zero_std
+                    &amp;&amp; find_in(cat_std_exact, cat_std_size,
+                               db.standard) &lt; 0
+                    &amp;&amp; cat_std_size &lt; MAX_DISTINCT) {
+                    cat_std_exact[cat_std_size] = db.standard;
+                    cat_std_cx[cat_std_size] =
+                        cyc8_to_cx(db.standard);
+                    cat_std_size++;
+                }
+
+                /* Neglecton catalog */
+                if (!is_zero_neg
+                    &amp;&amp; find_in(cat_neg_exact, cat_neg_size,
+                               db.neglecton) &lt; 0
+                    &amp;&amp; cat_neg_size &lt; MAX_DISTINCT) {
+                    cat_neg_exact[cat_neg_size] = db.neglecton;
+                    cat_neg_cx[cat_neg_size] =
+                        cyc8_to_cx(db.neglecton);
+                    cat_neg_size++;
+                }
+            }
+        }
+    }
+
+    printf("  Total braids enumerated: %ld\n", total_braids);
+    printf("  Standard bracket = 0: %ld (%.1f%%)\n",
+           n_zero_std,
+           100.0 * (double)n_zero_std / (double)total_braids);
+    printf("  Nonzero neglecton bracket: %ld (%.1f%%)\n",
+           n_nonzero_neg,
+           100.0 * (double)n_nonzero_neg / (double)total_braids);
+    printf("  Both zero: %ld (%.1f%%)\n",
+           n_both_zero,
+           100.0 * (double)n_both_zero / (double)total_braids);
+    printf("  Previously invisible (std=0, neg!=0): %ld\n",
+           n_invisible);
+    printf("\n  Standard catalog: %d distinct values\n",
+           cat_std_size);
+    printf("  Neglecton catalog: %d distinct values\n",
+           cat_neg_size);
+}
+
+static void build_combined_catalog(void) {
+    int i, idx;
+
+    cat_size = 0;
+
+    /* Add standard values */
+    for (i = 0; i &lt; cat_std_size; i++) {
+        if (cat_size &lt; MAX_COMBINED) {
+            cat_exact[cat_size] = cat_std_exact[i];
+            cat_cx[cat_size] = cat_std_cx[i];
+            cat_src[cat_size] = SRC_STD;
+            cat_size++;
+        }
+    }
+
+    /* Add neglecton values (merge if duplicate) */
+    for (i = 0; i &lt; cat_neg_size; i++) {
+        idx = find_in(cat_exact, cat_size, cat_neg_exact[i]);
+        if (idx &gt;= 0) {
+            /* Already in combined — mark as BOTH */
+            cat_src[idx] = SRC_BOTH;
+        } else if (cat_size &lt; MAX_COMBINED) {
+            cat_exact[cat_size] = cat_neg_exact[i];
+            cat_cx[cat_size] = cat_neg_cx[i];
+            cat_src[cat_size] = SRC_NEG;
+            cat_size++;
+        }
+    }
+
+    {
+        int n_std_only = 0, n_neg_only = 0, n_both = 0;
+        for (i = 0; i &lt; cat_size; i++) {
+            if (cat_src[i] == SRC_STD) n_std_only++;
+            else if (cat_src[i] == SRC_NEG) n_neg_only++;
+            else n_both++;
+        }
+        printf("  Combined catalog: %d values"
+               " (%d std-only, %d neg-only, %d both)\n",
+               cat_size, n_std_only, n_neg_only, n_both);
+    }
+}
+
+static void part_a_catalog(void) {
+    int i;
+    char msg[256];
+
+    printf("\n=== PART A: Dual Bracket Catalog ===\n");
+    printf("  A = e^{i*5pi/4}, delta = 0\n");
+    printf("  Standard: loops=1 states\n");
+    printf("  Neglecton: 4 * loops=2 states\n\n");
+
+    build_dual_catalog();
+
+    printf("\n  First 10 standard values:\n");
+    for (i = 0; i &lt; cat_std_size &amp;&amp; i &lt; 10; i++) {
+        Cx c = cat_std_cx[i];
+        printf("    %2d: (%2ld,%2ld,%2ld,%2ld)"
+               "  = %7.4f + %7.4fi  |z|=%.4f\n",
+               i, cat_std_exact[i].a, cat_std_exact[i].b,
+               cat_std_exact[i].c, cat_std_exact[i].d,
+               c.re, c.im, cx_abs(c));
+    }
+    if (cat_std_size &gt; 10)
+        printf("    ... (%d more)\n", cat_std_size - 10);
+
+    printf("\n  First 10 neglecton values:\n");
+    for (i = 0; i &lt; cat_neg_size &amp;&amp; i &lt; 10; i++) {
+        Cx c = cat_neg_cx[i];
+        printf("    %2d: (%2ld,%2ld,%2ld,%2ld)"
+               "  = %7.4f + %7.4fi  |z|=%.4f\n",
+               i, cat_neg_exact[i].a, cat_neg_exact[i].b,
+               cat_neg_exact[i].c, cat_neg_exact[i].d,
+               c.re, c.im, cx_abs(c));
+    }
+    if (cat_neg_size &gt; 10)
+        printf("    ... (%d more)\n", cat_neg_size - 10);
+
+    build_combined_catalog();
+
+    /* Angle analysis: are neglecton angles genuinely new? */
+    {
+        int n_new_angles = 0;
+        int n_same_angles = 0;
+        double angle_tol = 0.001; /* radians */
+
+        printf("\n  Angle analysis (neglecton-only vs standard):\n");
+        for (i = 0; i &lt; cat_size; i++) {
+            double neg_angle, min_delta;
+            int j, closest;
+            if (cat_src[i] != SRC_NEG) continue;
+
+            neg_angle = atan2(cat_cx[i].im, cat_cx[i].re);
+            min_delta = 999.0;
+            closest = -1;
+
+            for (j = 0; j &lt; cat_size; j++) {
+                double std_angle, da;
+                if (cat_src[j] != SRC_STD
+                    &amp;&amp; cat_src[j] != SRC_BOTH)
+                    continue;
+                std_angle = atan2(cat_cx[j].im, cat_cx[j].re);
+                da = fabs(neg_angle - std_angle);
+                if (da &gt; M_PI) da = 2.0 * M_PI - da;
+                if (da &lt; min_delta) {
+                    min_delta = da;
+                    closest = j;
+                }
+            }
+
+            if (min_delta &lt; angle_tol) {
+                n_same_angles++;
+            } else {
+                n_new_angles++;
+                if (n_new_angles &lt;= 5) {
+                    printf("    NEW angle: idx=%d"
+                           " (%ld,%ld,%ld,%ld)"
+                           " angle=%.4f rad"
+                           " (nearest std: %.4f,"
+                           " delta=%.4f)\n",
+                           i,
+                           cat_exact[i].a, cat_exact[i].b,
+                           cat_exact[i].c, cat_exact[i].d,
+                           neg_angle,
+                           closest &gt;= 0
+                             ? atan2(cat_cx[closest].im,
+                                     cat_cx[closest].re)
+                             : 0.0,
+                           min_delta);
+                }
+            }
+        }
+        printf("    Neglecton-only values: %d\n",
+               n_new_angles + n_same_angles);
+        printf("    Same angle as standard: %d\n", n_same_angles);
+        printf("    Genuinely new angles: %d\n", n_new_angles);
+    }
+
+    /* Checks */
+    sprintf(msg, "standard catalog reproduces Demo 48 (&gt;= 50 values,"
+            " got %d)", cat_std_size);
+    check(msg, cat_std_size &gt;= 50);
+
+    sprintf(msg, "neglecton catalog has values (got %d)",
+            cat_neg_size);
+    check(msg, cat_neg_size &gt; 0);
+
+    /* Verify zeta_8^8 = 1 */
+    {
+        Cyc8 z8 = cyc8_make(0, 1, 0, 0);
+        check("zeta_8^8 = 1",
+              cyc8_eq(cyc8_pow_int(z8, 8), cyc8_one()));
+    }
+
+    /* Suppress unused warnings */
+    (void)cx_zero;
+
+    /* Verify d(delta)/d(epsilon) = 4 numerically */
+    {
+        double eps = 0.0001;
+        double a_plus = 5.0 * M_PI / 4.0 + eps;
+        double a_minus = 5.0 * M_PI / 4.0 - eps;
+        double d_plus = -(2.0 * cos(2.0 * a_plus));
+        double d_minus = -(2.0 * cos(2.0 * a_minus));
+        double ddelta = (d_plus - d_minus) / (2.0 * eps);
+        sprintf(msg, "d(delta)/d(epsilon) = 4 (got %.6f)", ddelta);
+        check(msg, fabs(ddelta - 4.0) &lt; 0.01);
+    }
+}
+
+/* ================================================================
+ * PART B: NPN Classification (from Demo 48)
+ * ================================================================ */
+
+static const int perms3[6][3] = {
+    {0,1,2}, {0,2,1}, {1,0,2}, {1,2,0}, {2,0,1}, {2,1,0}
+};
+
+static int npn_transform(int tt, const int sigma[3],
+                         int neg_in, int neg_out) {
+    int result = 0, idx;
+    for (idx = 0; idx &lt; 8; idx++) {
+        int x[3], y[3], src, out;
+        x[0] = (idx &gt;&gt; 2) &amp; 1;
+        x[1] = (idx &gt;&gt; 1) &amp; 1;
+        x[2] = idx &amp; 1;
+        y[0] = x[sigma[0]] ^ ((neg_in &gt;&gt; 0) &amp; 1);
+        y[1] = x[sigma[1]] ^ ((neg_in &gt;&gt; 1) &amp; 1);
+        y[2] = x[sigma[2]] ^ ((neg_in &gt;&gt; 2) &amp; 1);
+        src = (y[0] &lt;&lt; 2) | (y[1] &lt;&lt; 1) | y[2];
+        out = (tt &gt;&gt; src) &amp; 1;
+        if (neg_out) out ^= 1;
+        result |= (out &lt;&lt; idx);
+    }
+    return result;
+}
+
+static int npn_canon[256];
+
+static void npn_init(void) {
+    int i, pi, ni, no;
+    for (i = 0; i &lt; 256; i++) {
+        int min_tt = i;
+        for (pi = 0; pi &lt; 6; pi++)
+            for (ni = 0; ni &lt; 8; ni++)
+                for (no = 0; no &lt; 2; no++) {
+                    int t = npn_transform(i, perms3[pi], ni, no);
+                    if (t &lt; min_tt) min_tt = t;
+                }
+        npn_canon[i] = min_tt;
+    }
+}
+
+static const char *fn_name(int tt) {
+    switch (tt) {
+    case 0x00: return "FALSE";
+    case 0xFF: return "TRUE";
+    case 0x01: return "AND3'";
+    case 0x03: return "AND2'";
+    case 0x06: return "~A(B^C)";
+    case 0x07: return "~A~(BC)";
+    case 0x0F: return "BUF";
+    case 0x16: return "EXACT1";
+    case 0x17: return "MAJ'";
+    case 0x18: return "ISOLATE";
+    case 0x19: return "3v-0x19";
+    case 0x1B: return "3v-0x1B";
+    case 0x1E: return "A^(B|C)";
+    case 0x3C: return "XOR2";
+    case 0x69: return "XNOR3";
+    default: return "???";
+    }
+}
+
+#define MAX_NPN 14
+typedef struct {
+    int canon_tt;
+    int orbit_size;
+    const char *titulis;
+} NPNClass;
+
+static NPNClass npn_classes[MAX_NPN];
+static int n_npn = 0;
+
+static void npn_build_classes(void) {
+    int seen[256];
+    int i, j;
+
+    memset(seen, 0, sizeof(seen));
+    n_npn = 0;
+
+    for (i = 1; i &lt; 255; i++) {
+        int c = npn_canon[i];
+        if (!seen[c]) {
+            seen[c] = 1;
+            npn_classes[n_npn].canon_tt = c;
+            npn_classes[n_npn].orbit_size = 0;
+            npn_classes[n_npn].titulis = fn_name(c);
+            n_npn++;
+        }
+    }
+
+    for (i = 1; i &lt; 255; i++) {
+        int c = npn_canon[i];
+        for (j = 0; j &lt; n_npn; j++) {
+            if (npn_classes[j].canon_tt == c) {
+                npn_classes[j].orbit_size++;
+                break;
+            }
+        }
+    }
+}
+
+static int npn_class_index(int tt) {
+    int c = npn_canon[tt], j;
+    for (j = 0; j &lt; n_npn; j++)
+        if (npn_classes[j].canon_tt == c) return j;
+    return -1;
+}
+
+static void part_b_classify(void) {
+    char msg[256];
+
+    printf("\n=== PART B: NPN Classification ===\n");
+
+    npn_init();
+    npn_build_classes();
+
+    printf("  Non-trivial NPN classes: %d\n", n_npn);
+
+    sprintf(msg, "NPN class count = 13 (got %d)", n_npn);
+    check(msg, n_npn == 13);
+
+    /* Suppress unused warning */
+    (void)npn_class_index;
+}
+
+/* ================================================================
+ * PART C: Exhaustive Search
+ *
+ * Search over combined catalog (standard + neglecton values).
+ * For each quartet (w1, w2, w3, b), compute 8-bit truth table
+ * via split-sigmoid. Track solutions by NPN class AND by
+ * weight source (standard-only, neglecton-only, mixed).
+ * ================================================================ */
+
+static double sigmoid(double x) { return 1.0 / (1.0 + exp(-x)); }
+
+static double split_sigmoid(Cx z) {
+    double sr = sigmoid(z.re);
+    double si = sigmoid(z.im);
+    return sr * (1.0 - si) + (1.0 - sr) * si;
+}
+
+/* Hamming distance to parity */
+static int popcount8(int x) {
+    int c = 0;
+    while (x) { c += x &amp; 1; x &gt;&gt;= 1; }
+    return c;
+}
+
+static int parity_dist_lut[256];
+
+static void init_parity_dist(void) {
+    int tt;
+    for (tt = 0; tt &lt; 256; tt++) {
+        int d1 = popcount8(tt ^ 0x69);
+        int d2 = popcount8(tt ^ 0x96);
+        parity_dist_lut[tt] = d1 &lt; d2 ? d1 : d2;
+    }
+}
+
+/* Solution counts by NPN class */
+static long tt_counts[256];
+
+/* Parity-specific tracking */
+static long parity_solutions = 0;
+static int  parity_min_dist = 8;
+static int  parity_min_tt = 0;
+
+/* Source classification for parity solutions */
+typedef struct { int w1, w2, w3, b; } Quartet;
+
+#define MAX_PARITY_EX 20
+static Quartet parity_examples[MAX_PARITY_EX];
+static int n_parity_ex = 0;
+
+/* Source statistics: how many solutions use neglecton weights */
+static long n_has_neg = 0;      /* &gt;= 1 weight is neglecton */
+static long n_all_neg = 0;      /* all 4 weights are neglecton */
+static long n_std_only = 0;     /* all 4 weights are standard */
+
+static int is_neg_src(int idx) {
+    return cat_src[idx] == SRC_NEG || cat_src[idx] == SRC_BOTH;
+}
+
+static void part_c_search(void) {
+    int i1, i2, i3, ib;
+    long total = 0;
+    long n4;
+    int report_every;
+    char msg[256];
+
+    n4 = (long)cat_size * (long)cat_size
+       * (long)cat_size * (long)cat_size;
+    report_every = cat_size / 10;
+    if (report_every &lt; 1) report_every = 1;
+
+    printf("\n=== PART C: Exhaustive Search ===\n");
+    printf("  Combined catalog: %d values\n", cat_size);
+    printf("  Quartets: %ld\n", n4);
+    printf("  Split-sigmoid threshold: 0.5\n\n");
+
+    memset(tt_counts, 0, sizeof(tt_counts));
+    init_parity_dist();
+    parity_solutions = 0;
+    parity_min_dist = 8;
+    n_has_neg = 0;
+    n_all_neg = 0;
+    n_std_only = 0;
+    n_parity_ex = 0;
+
+    for (i1 = 0; i1 &lt; cat_size; i1++) {
+        Cx w1 = cat_cx[i1];
+        int s1 = is_neg_src(i1);
+
+        if (i1 % report_every == 0)
+            printf("  ... %d%%\n", (i1 * 100) / cat_size);
+
+        for (i2 = 0; i2 &lt; cat_size; i2++) {
+            Cx w2 = cat_cx[i2];
+            Cx s12 = cx_add(w1, w2);
+            int s2 = is_neg_src(i2);
+
+            for (i3 = 0; i3 &lt; cat_size; i3++) {
+                Cx w3 = cat_cx[i3];
+                Cx s13 = cx_add(w1, w3);
+                Cx s23 = cx_add(w2, w3);
+                Cx s123 = cx_add(s12, w3);
+                int s3 = is_neg_src(i3);
+
+                for (ib = 0; ib &lt; cat_size; ib++) {
+                    Cx b = cat_cx[ib];
+                    int tt = 0;
+                    int sb = is_neg_src(ib);
+                    int any_neg, all_neg_q;
+                    double p;
+
+                    /* (0,0,0) */
+                    p = split_sigmoid(b);
+                    if (p &gt; 0.5) tt |= 1;
+                    /* (0,0,1) */
+                    p = split_sigmoid(cx_add(w3, b));
+                    if (p &gt; 0.5) tt |= 2;
+                    /* (0,1,0) */
+                    p = split_sigmoid(cx_add(w2, b));
+                    if (p &gt; 0.5) tt |= 4;
+                    /* (0,1,1) */
+                    p = split_sigmoid(cx_add(s23, b));
+                    if (p &gt; 0.5) tt |= 8;
+                    /* (1,0,0) */
+                    p = split_sigmoid(cx_add(w1, b));
+                    if (p &gt; 0.5) tt |= 16;
+                    /* (1,0,1) */
+                    p = split_sigmoid(cx_add(s13, b));
+                    if (p &gt; 0.5) tt |= 32;
+                    /* (1,1,0) */
+                    p = split_sigmoid(cx_add(s12, b));
+                    if (p &gt; 0.5) tt |= 64;
+                    /* (1,1,1) */
+                    p = split_sigmoid(cx_add(s123, b));
+                    if (p &gt; 0.5) tt |= 128;
+
+                    tt_counts[tt]++;
+                    total++;
+
+                    /* Source tracking */
+                    any_neg = s1 || s2 || s3 || sb;
+                    all_neg_q = s1 &amp;&amp; s2 &amp;&amp; s3 &amp;&amp; sb;
+
+                    if (any_neg) n_has_neg++;
+                    if (all_neg_q) n_all_neg++;
+                    if (!any_neg) n_std_only++;
+
+                    /* Parity tracking */
+                    if (npn_canon[tt] == 0x69) {
+                        parity_solutions++;
+                        if (n_parity_ex &lt; MAX_PARITY_EX) {
+                            parity_examples[n_parity_ex].w1 = i1;
+                            parity_examples[n_parity_ex].w2 = i2;
+                            parity_examples[n_parity_ex].w3 = i3;
+                            parity_examples[n_parity_ex].b = ib;
+                            n_parity_ex++;
+                        }
+                    }
+
+                    /* Hamming distance tracking */
+                    {
+                        int pd = parity_dist_lut[tt];
+                        if (pd &lt; parity_min_dist) {
+                            parity_min_dist = pd;
+                            parity_min_tt = tt;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    printf("  ... 100%%\n");
+    printf("  Search complete: %ld quartets\n\n", total);
+
+    sprintf(msg, "total quartets = %ld (expected %ld)",
+            total, n4);
+    check(msg, total == n4);
+
+    /* Source summary */
+    printf("  Source breakdown:\n");
+    printf("    Standard-only quartets: %ld (%.1f%%)\n",
+           n_std_only,
+           100.0 * (double)n_std_only / (double)total);
+    printf("    Has &gt;= 1 neglecton weight: %ld (%.1f%%)\n",
+           n_has_neg,
+           100.0 * (double)n_has_neg / (double)total);
+    printf("    All-neglecton quartets: %ld (%.1f%%)\n",
+           n_all_neg,
+           100.0 * (double)n_all_neg / (double)total);
+
+    /* Parity results — THE MONEY SHOT */
+    printf("\n  *** PARITY (XNOR3) RESULTS ***\n");
+    printf("  Solutions: %ld\n", parity_solutions);
+    if (parity_solutions &gt; 0) {
+        int i;
+        printf("  PARITY IS REACHABLE WITH NEGLECTON WEIGHTS!\n\n");
+        printf("  First %d examples:\n",
+               n_parity_ex &lt; 5 ? n_parity_ex : 5);
+        for (i = 0; i &lt; n_parity_ex &amp;&amp; i &lt; 5; i++) {
+            Quartet q = parity_examples[i];
+            printf("    #%d: w=(%d,%d,%d) b=%d"
+                   " src=(%s,%s,%s,%s)\n",
+                   i, q.w1, q.w2, q.w3, q.b,
+                   cat_src[q.w1] == SRC_STD ? "std" :
+                   (cat_src[q.w1] == SRC_NEG ? "NEG" : "BOTH"),
+                   cat_src[q.w2] == SRC_STD ? "std" :
+                   (cat_src[q.w2] == SRC_NEG ? "NEG" : "BOTH"),
+                   cat_src[q.w3] == SRC_STD ? "std" :
+                   (cat_src[q.w3] == SRC_NEG ? "NEG" : "BOTH"),
+                   cat_src[q.b] == SRC_STD ? "std" :
+                   (cat_src[q.b] == SRC_NEG ? "NEG" : "BOTH"));
+            printf("         w1=(%ld,%ld,%ld,%ld)"
+                   " w2=(%ld,%ld,%ld,%ld)\n",
+                   cat_exact[q.w1].a, cat_exact[q.w1].b,
+                   cat_exact[q.w1].c, cat_exact[q.w1].d,
+                   cat_exact[q.w2].a, cat_exact[q.w2].b,
+                   cat_exact[q.w2].c, cat_exact[q.w2].d);
+            printf("         w3=(%ld,%ld,%ld,%ld)"
+                   "  b=(%ld,%ld,%ld,%ld)\n",
+                   cat_exact[q.w3].a, cat_exact[q.w3].b,
+                   cat_exact[q.w3].c, cat_exact[q.w3].d,
+                   cat_exact[q.b].a, cat_exact[q.b].b,
+                   cat_exact[q.b].c, cat_exact[q.b].d);
+        }
+    } else {
+        printf("  Parity remains unreachable.\n");
+        printf("  Min Hamming distance to parity: %d (tt=0x%02X)\n",
+               parity_min_dist, parity_min_tt);
+    }
+}
+
+/* ================================================================
+ * PART D: Analysis + Prediction Checks
+ * ================================================================ */
+
+/* Spearman rank correlation */
+static void assign_ranks(const double *values, double *ranks, int n) {
+    int order[MAX_NPN];
+    int i, j;
+    for (i = 0; i &lt; n; i++) order[i] = i;
+    for (i = 0; i &lt; n - 1; i++)
+        for (j = i + 1; j &lt; n; j++)
+            if (values[order[j]] &lt; values[order[i]]) {
+                int tmp = order[i];
+                order[i] = order[j];
+                order[j] = tmp;
+            }
+    i = 0;
+    while (i &lt; n) {
+        int tie_start = i;
+        double sum_rank = 0.0;
+        while (i &lt; n &amp;&amp;
+               fabs(values[order[i]] - values[order[tie_start]])
+               &lt; 1e-10) {
+            sum_rank += (double)(i + 1);
+            i++;
+        }
+        {
+            double avg_rank = sum_rank / (double)(i - tie_start);
+            int kk;
+            for (kk = tie_start; kk &lt; i; kk++)
+                ranks[order[kk]] = avg_rank;
+        }
+    }
+}
+
+static double spearman_rho(const double *x, const double *y, int n) {
+    double rx[MAX_NPN], ry[MAX_NPN];
+    double d2 = 0.0;
+    int i;
+    if (n &lt; 3) return 0.0;
+    assign_ranks(x, rx, n);
+    assign_ranks(y, ry, n);
+    for (i = 0; i &lt; n; i++) {
+        double d = rx[i] - ry[i];
+        d2 += d * d;
+    }
+    return 1.0 - 6.0 * d2
+         / ((double)n * ((double)n * (double)n - 1.0));
+}
+
+/* Demo 45 reference data */
+typedef struct {
+    int canon_tt;
+    int topo_freq;
+    double rms;
+    int orbit;
+} Demo45Ref;
+
+static const Demo45Ref demo45_data[] = {
+    { 0x01, 405, 0.6011, 16 },
+    { 0x03, 290, 0.5400, 24 },
+    { 0x06,  30, 0.7781, 24 },
+    { 0x07,  73, 0.6294, 48 },
+    { 0x0F, 143, 0.5285,  6 },
+    { 0x16,   1, 0.8639, 16 },
+    { 0x17,  10, 0.6554,  8 },
+    { 0x18,   0, 0.7210,  8 },
+    { 0x19,  54, 0.6805, 48 },
+    { 0x1B,  26, 0.7390, 24 },
+    { 0x1E,   0, 0.7920, 24 },
+    { 0x3C,   0, 0.7880,  6 },
+    { 0x69,   0, 0.9963,  2 }
+};
+#define DEMO45_N 13
+
+static int demo45_lookup(int canon_tt) {
+    int i;
+    for (i = 0; i &lt; DEMO45_N; i++)
+        if (demo45_data[i].canon_tt == canon_tt) return i;
+    return -1;
+}
+
+static void part_d_analysis(void) {
+    int ci, tt;
+    long class_solutions[MAX_NPN];
+    double sol_d[MAX_NPN], topo_d[MAX_NPN], rms_d[MAX_NPN];
+    double rho_topo, rho_rms;
+    long total_non_const;
+    char msg[256];
+
+    printf("\n=== PART D: Analysis + Prediction Checks ===\n");
+
+    /* Aggregate per NPN class */
+    for (ci = 0; ci &lt; n_npn; ci++) {
+        int canon = npn_classes[ci].canon_tt;
+        class_solutions[ci] = 0;
+        for (tt = 0; tt &lt; 256; tt++)
+            if (npn_canon[tt] == canon)
+                class_solutions[ci] += tt_counts[tt];
+    }
+
+    /* Build arrays for correlation */
+    for (ci = 0; ci &lt; n_npn; ci++) {
+        int di = demo45_lookup(npn_classes[ci].canon_tt);
+        sol_d[ci] = (double)class_solutions[ci];
+        if (di &gt;= 0) {
+            topo_d[ci] = (double)demo45_data[di].topo_freq;
+            rms_d[ci] = demo45_data[di].rms;
+        } else {
+            topo_d[ci] = 0.0;
+            rms_d[ci] = 1.0;
+        }
+    }
+
+    rho_topo = spearman_rho(sol_d, topo_d, n_npn);
+    rho_rms = spearman_rho(sol_d, rms_d, n_npn);
+
+    printf("\n  Spearman correlations (n=%d):\n", n_npn);
+    printf("    solutions vs topo_freq:  rho = %+.4f\n", rho_topo);
+    printf("    solutions vs reverse_RMS: rho = %+.4f\n", rho_rms);
+
+    /* Master table */
+    total_non_const = 0;
+    for (ci = 0; ci &lt; n_npn; ci++)
+        total_non_const += class_solutions[ci];
+
+    printf("\n  Per-NPN-class solution counts:\n");
+    printf("  %4s  %-12s  %12s  %5s  %5s  %.3s\n",
+           "TT", "Name", "Solutions", "%",
+           "TFreq", "RMS");
+    printf("  ----  ----------  ----------"
+           "  -----  -----  -----\n");
+    for (ci = 0; ci &lt; n_npn; ci++) {
+        int di = demo45_lookup(npn_classes[ci].canon_tt);
+        double pct = total_non_const &gt; 0
+            ? 100.0 * (double)class_solutions[ci]
+              / (double)total_non_const
+            : 0.0;
+        printf("  0x%02X  %-12s  %12ld  %5.1f  %5d  %.3f\n",
+               npn_classes[ci].canon_tt,
+               npn_classes[ci].titulis
+                   ? npn_classes[ci].titulis : "???",
+               class_solutions[ci], pct,
+               di &gt;= 0 ? demo45_data[di].topo_freq : 0,
+               di &gt;= 0 ? demo45_data[di].rms : 0.0);
+    }
+
+    printf("\n  Constants: FALSE=%ld  TRUE=%ld\n",
+           tt_counts[0x00], tt_counts[0xFF]);
+
+    /* Per-class min Hamming distance to parity */
+    printf("\n  Per-class min Hamming distance to parity:\n");
+    printf("  %4s  %-12s  %7s  %12s\n",
+           "TT", "Name", "MinDist", "Solutions");
+    printf("  ----  ----------  -------  ----------\n");
+    for (ci = 0; ci &lt; n_npn; ci++) {
+        int canon = npn_classes[ci].canon_tt;
+        int min_d = 8;
+        for (tt = 0; tt &lt; 256; tt++) {
+            if (npn_canon[tt] == canon &amp;&amp; tt_counts[tt] &gt; 0) {
+                int d = parity_dist_lut[tt];
+                if (d &lt; min_d) min_d = d;
+            }
+        }
+        printf("  0x%02X  %-12s  %7d  %12ld\n",
+               canon,
+               npn_classes[ci].titulis
+                   ? npn_classes[ci].titulis : "???",
+               min_d, class_solutions[ci]);
+    }
+
+    /* === Prediction checks === */
+    printf("\n  Prediction checks:\n");
+
+    /* P1: Neglecton catalog is non-empty */
+    sprintf(msg, "P1: neglecton catalog non-empty (got %d values)",
+            cat_neg_size);
+    check(msg, cat_neg_size &gt; 0);
+
+    /* P2: Parity has solutions (THE BIG ONE) */
+    sprintf(msg, "P2: XNOR3 has solutions with extended catalog"
+            " (got %ld)", parity_solutions);
+    check(msg, parity_solutions &gt; 0);
+
+    /* P3: If parity solved, at least one weight is neglecton */
+    if (parity_solutions &gt; 0 &amp;&amp; n_parity_ex &gt; 0) {
+        Quartet q = parity_examples[0];
+        int any = is_neg_src(q.w1) || is_neg_src(q.w2)
+               || is_neg_src(q.w3) || is_neg_src(q.b);
+        sprintf(msg, "P3: parity solution uses neglecton weight");
+        check(msg, any);
+    } else {
+        sprintf(msg, "P3: (skipped — no parity solutions)");
+        check(msg, 0);
+    }
+
+    /* P4: Standard-only search still gives 0 parity
+     * (consistency with Demo 48) */
+    {
+        long std_only_parity = 0;
+        int i1, i2, i3, ib;
+
+        /* Count how many parity solutions had all-standard weights */
+        for (i1 = 0; i1 &lt; n_parity_ex; i1++) {
+            Quartet q = parity_examples[i1];
+            if (cat_src[q.w1] == SRC_STD
+                &amp;&amp; cat_src[q.w2] == SRC_STD
+                &amp;&amp; cat_src[q.w3] == SRC_STD
+                &amp;&amp; cat_src[q.b] == SRC_STD)
+                std_only_parity++;
+        }
+        /* Also check: were there any parity TT hits from
+         * all-standard-only subspace? This is approximate
+         * from examples. */
+        (void)i2; (void)i3; (void)ib;
+        sprintf(msg, "P4: no parity from standard-only weights"
+                " (first %d examples: %ld std-only)",
+                n_parity_ex, std_only_parity);
+        check(msg, std_only_parity == 0);
+    }
+
+    /* P5: Combined catalog &gt; standard catalog */
+    sprintf(msg, "P5: combined catalog (%d) &gt; standard catalog (%d)",
+            cat_size, cat_std_size);
+    check(msg, cat_size &gt; cat_std_size);
+
+    /* P6: Min Hamming distance to parity */
+    if (parity_solutions &gt; 0) {
+        sprintf(msg, "P6: parity min distance = 0 (solved!)");
+        check(msg, parity_min_dist == 0
+              || parity_solutions &gt; 0);
+    } else {
+        sprintf(msg, "P6: parity min distance (got %d)",
+                parity_min_dist);
+        check(msg, parity_min_dist &lt;= 1);
+    }
+}
+
+/* ================================================================
+ * MAIN
+ * ================================================================ */
+
+int main(void) {
+    setbuf(stdout, NULL);
+    printf("KNOTAPEL DEMO 49: Neglecton Weights\n");
+    printf("====================================\n");
+
+    part_a_catalog();
+    part_b_classify();
+    part_c_search();
+    part_d_analysis();
+
+    printf("\n====================================\n");
+    printf("Results: %d passed, %d failed\n", n_pass, n_fail);
+    printf("====================================\n");
+
+    return n_fail &gt; 0 ? 1 : 0;
+}
+</code></pre>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/c.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</body>
+</html>

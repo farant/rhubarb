@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>inventory/entries/demo_75.md</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+    <link rel="stylesheet" href="../../style.css">
+</head>
+<body>
+    <nav><a href="../../index.html">← Back to Index</a></nav><hr>
+    <h2>Demo 75: Binocular DKC (Multi-Output)</h2>
+<ul>
+<li><strong>Status</strong>: COMPLETE</li>
+<li><strong>File</strong>: <code><a href="../../demo_75_binocular_dkc/main.c.html">demo_75_binocular_dkc/main.c</a></code> (~1495 lines)</li>
+<li><strong>Tests</strong>: 23/23 pass</li>
+<li><strong>Depends on</strong>: Demo 66 (quaternionic DKC, 24-cell catalog), Demo 67 (13 directions, 36 XOR6 solutions), Demo 70 (music space, geometric vs computational independence), Demo 71 (spectral DKC, bandwidth l=6), Demo 72 (spherical design), Demo 73 (eigenvector automaton, additive compass without odometer), Demo 74 (computational invariant, bracket vs cell incomparability)</li>
+<li><strong>Feeds into</strong>: Demo 76 (scaling to 8 inputs), Demo 77 (activation zoo)</li>
+</ul>
+<h3>Headline</h3>
+A single braid evaluation yields two simultaneous output channels — eigenvalue angle and eigenvector cell — where the angle subsumes the cell entirely, giving 2.3× capacity over cell-only while the multiplicative product channel has maximum entropy but is completely blind to XOR6.
+<h3>Key Results</h3>
+<ul>
+<li><strong>Angle subsumes cell (Parts B-D)</strong>: The eigenvalue angle perfectly predicts parity for ALL 36 winning triples. Every angle value maps to exactly one parity bit. The cell channel is a coarsening of the angle channel; knowing the angle tells you the cell parity but not vice versa.</li>
+<li><strong>Seven eigenvalue angles</strong>: Sum quaternions from 36 winning triples produce exactly 7 distinct eigenvalue angles: 0°, 30°, 35.264° (tetrahedral), 45°, 60°, 65.905°, 90°. Three of these (30°, 35.264°, 65.905°) are non-canonical — they arise from vector addition breaking the 24-cell group structure.</li>
+<li><strong>Mutual information never zero</strong>: MI(angle; cell) ranges 0.14–1.0 bits, mean 0.7218 bits. 20/36 triples achieve MI = 1.0 (angle perfectly determines cell). No triple has independent channels.</li>
+<li><strong>Capacity (Part F)</strong>: Cell entropy = 1.000 bit, angle entropy = 2.004 bits, joint = 2.282 bits. Gain over cell-only: +1.282 bits (2.3×). Efficiency 76% of the 3.004-bit additive bound (24% lost to inter-channel MI).</li>
+<li><strong>Eight triple families (Part E)</strong>: 36 winning triples partition into exactly 8 groups based on their angle function, containing 3–8 triples each. The cell function is identical across all groups; the angle function distinguishes them.</li>
+<li><strong>√n magnitude quantization (Part G)</strong>: The additive sum magnitude |S| takes exactly 6 values: √0, √1, √2, √3, √4, √6. The value √5 is absent, reflecting the inner product structure of the 24-cell (pairwise inner products drawn from {-1, -½, 0, ½, 1}). H(|S|) = 1.839 bits. Magnitude does NOT reliably predict parity (only 16/36 triples at 44%).</li>
+<li><strong>Multiplicative channel blind to XOR6 (Part H)</strong>: The quaternion product M = Π w_i produces only 4 eigenvalue angles (the canonical set: 0°, 45°, 60°, 90°), uses all 13 Voronoi cells, has 4.241 bits total entropy — but 0/36 triples compute XOR6 from either channel. Multiplication preserves the 24-cell group structure; DKC requires breaking it.</li>
+<li><strong>Reconciliation with Demo 74</strong>: Demo 74 showed bracket and cell are incomparable at the individual-quaternion level; Demo 75 shows angle subsumes cell at the sum-quaternion level. These concern different mathematical objects (individual vs. summed quaternions).</li>
+</ul>
+<h3>Theorems/Conjectures</h3>
+<ul>
+<li><strong>Angle Subsumption (DEMONSTRATED)</strong>: For all 36 XOR6 winning triples, the eigenvalue angle of the sum quaternion perfectly predicts parity. The Voronoi cell assignment carries no information beyond what the angle already encodes at the computation level.</li>
+<li><strong>DKC Requires Group-Breaking (OBSERVED)</strong>: The 3 non-canonical angles (30°, 35.264°, 65.905°) arise only through quaternion addition, which breaks the 24-cell group closure. The multiplicative channel, which stays inside the group (only 4 canonical angles), has zero XOR6 solutions. Conjecture: computation requires the non-canonical angles that addition creates.</li>
+<li><strong>√n Quantization (PROVEN)</strong>: |S|² = Σ w_i · w_j where inner products are from {-1, -½, 0, ½, 1}, so integer sums can only reach {0, 1, 2, 3, 4, 6} — the perfect squares and non-square integers achievable from these half-integer building blocks. √5 is unreachable.</li>
+</ul>
+<h3>Data</h3>
+<ul>
+<li>Distinct eigenvalue angles: 7 (3 non-canonical: 30°, 35.264°, 65.905°)</li>
+<li>Angle entropy: 2.004 bits; cell entropy: 1.000 bit; joint: 2.282 bits</li>
+<li>Mean MI(angle; cell): 0.7218 bits; range: 0.14–1.0 bits; 20/36 triples achieve MI = 1.0</li>
+<li>Capacity gain over cell-only: +1.282 bits (2.3× improvement)</li>
+<li>|S| values: {0, 1, √2, √3, 2, √6}; |S| entropy: 1.839 bits</li>
+<li>Magnitude predicts parity: 16/36 triples (44%)</li>
+<li>Multiplicative channel: 4 eigenvalue angles, 13 Voronoi cells, 4.241 bits total entropy, 0/36 XOR6 solutions</li>
+<li>Triple families: 8 groups of 3–8 triples; group 0 is largest (8 triples)</li>
+<li>MI(additive cell; multiplicative cell): 0.5174 bits (moderate correlation)</li>
+</ul>
+<h3>Code Assets</h3>
+<ul>
+<li><strong>Quaternion arithmetic suite</strong>: add, multiply, conjugate, normalize, eigenvalue-angle extraction; reused across demos 75–77</li>
+<li><strong><code>eigenvalue_angle()</code></strong>: computes the rotation half-angle arccos(q.a) for a unit quaternion</li>
+<li><strong><code>mutual_information()</code></strong>: entropy-based MI computation for two discrete channels over 64 mask inputs</li>
+<li><strong><code>classify_magnitude()</code></strong>: bins |S| values into the 6 algebraic classes with tolerance; identifies √n pattern</li>
+<li><strong><code>triple_angle_function()</code></strong>: maps each of 64 input masks to an angle class for a given winning triple</li>
+<li><strong><code>product_channel_analysis()</code></strong>: computes quaternion product and extracts eigenvalue + eigenvector for the multiplicative channel</li>
+</ul>
+<h3>Literature Touched</h3>
+<ul>
+<li><strong>Aizenberg (2008)</strong>: MVN sector activation on S¹; Demo 75 shows the additive angle channel is the S¹ component of a product space, and angle subsumes the S² Voronoi cell</li>
+<li><strong>Demo 74 / this series</strong>: Bracket-vs-cell incomparability at catalog level vs. angle-subsumes-cell at sum level — two layers of the same structure</li>
+<li><strong>Nazer &amp; Gastpar (2011)</strong>: Compute-and-forward; additive combination of algebraic integers for computation is the structural parallel</li>
+</ul>
+<h3>Open Questions</h3>
+<ul>
+<li>Can the 8-family partition of winning triples be explained algebraically from the 24-cell geometry, or is it an empirical coincidence of DKC at ζ_8?</li>
+<li>Does the 2.3× capacity gain over cell-only hold for other roots of unity, or is it specific to ζ_8?</li>
+<li>Is there a combinatorial argument for why √5 is unreachable given the 24-cell inner product structure?</li>
+<li>Can the binocular channel be decoded jointly (not independently) to recover more than 2.282 bits — or does the 24% MI loss set a hard ceiling?</li>
+<li>What is the angle channel equivalent for 8-input DKC (sum of 4 quaternions)?</li>
+</ul>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/c.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</body>
+</html>

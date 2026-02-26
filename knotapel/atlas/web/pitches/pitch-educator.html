@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>pitches/pitch-educator.md</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+    <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+    <nav><a href="../index.html">← Back to Index</a></nav><hr>
+    <h1>Educator / Science Communicator Pitch: New Atlas Documents</h1>
+<p><em>2026-02-26</em></p>
+<p>---</p>
+<h2>The Problem</h2>
+<p>The knotapel atlas currently has two layers of depth: the briefing (~50 lines, fast onboarding) and the full synthesis documents (narrative.md alone exceeds 40,000 tokens). There is nothing in between. A reader who finishes the briefing and wants to understand <em>why</em> things work the way they do has to jump straight into a document that assumes familiarity with Temperley-Lieb algebras, cyclotomic integer rings, Kauffman brackets, NPN classification, and half a dozen other specialized concepts.</p>
+<p>The human running this project explicitly says: "human needs to understand all the code." The atlas serves not just as institutional memory for LLM context restarts but as a <em>teaching tool</em> for the human. Right now it teaches by immersion (read the 101-demo narrative). It does not teach by scaffolding (here is what you need to understand first, here is the simplest version of the key idea, here is where to go deeper).</p>
+<p>---</p>
+<h2>Pitch 1: Concept Dependency Map</h2>
+<p><strong>Name:</strong> <a href="../synthesis/prerequisites.html"><code>atlas/synthesis/prerequisites.md</code></a></p>
+<p><strong>What it contains:</strong></p>
+<p>A directed acyclic graph (rendered as indented text with arrows) showing which concepts depend on which other concepts. Not demo dependencies -- <em>concept</em> dependencies. For example:</p>
+<p><code></code>` State Sum (what a bracket IS)   -&gt; Cyclotomic Evaluation (plugging in roots of unity)     -&gt; Z[zeta_8] Exact Arithmetic (bracket values as 4-tuples of integers)       -&gt; Forward DKC (using those 4-tuples as neural network weights)</p>
+<p>Temperley-Lieb Algebra (the diagrams)   -&gt; Non-Semisimplicity (what happens when delta=0)     -&gt; The Radical (the "invisible" part of the algebra)       -&gt; Null States (bracket values that are zero but computationally essential)</p>
+<p>Activation Function (how you read out a Boolean answer)   -&gt; k-Sector MVN (slicing the complex plane into pie slices)     -&gt; The Parity Wall (why split-sigmoid cannot see parity)     -&gt; 11/13 Theorem (why half-plane activation misses exactly 2 functions)</p>
+<p>Braid Group (strands crossing over each other)   -&gt; SU(2) Representation (braids as quaternion multiplication)     -&gt; Hopf Fibration (splitting quaternions into direction + phase)       -&gt; S^2 Sweet Spot (computation lives on the sphere, not in full 4D)       -&gt; 13-Direction Structure (the specific directions that matter) <code></code>`</p>
+<p>Each node gets a one-sentence definition and a pointer to where it is introduced in the demo sequence. The whole document should be under 200 lines.</p>
+<p><strong>Why it matters:</strong></p>
+<p>Right now, if you encounter the phrase "null indispensability at zeta_8" in the briefing, you need to already know: what a bracket value is, what zeta_8 means, why some values are null, what "indispensability" means computationally, and why the group being finite matters. Those five prerequisite concepts are scattered across <a href="../synthesis/narrative.html">narrative.md</a> sections 1, 3, 7, 10, and 11. The dependency map tells you: "to understand null indispensability, first understand null states, which requires understanding non-semisimplicity, which requires understanding Temperley-Lieb algebras." You can then read exactly those sections in order instead of reading 40 pages hoping to find what you need.</p>
+<p>This is the single most impactful document for a cold-start scenario (new LLM context or human returning after a break). It turns the atlas from a library into a curriculum.</p>
+<p><strong>What gap it fills:</strong></p>
+<p>There is no document that answers "what do I need to understand before I can understand X?" The briefing gives results. The narrative gives the full story. The connections document gives cross-demo links. None of them answer the prerequisite question.</p>
+<p>---</p>
+<h2>Pitch 2: Glossary of Key Terms</h2>
+<p><strong>Name:</strong> <a href="../synthesis/glossary.html"><code>atlas/synthesis/glossary.md</code></a></p>
+<p><strong>What it contains:</strong></p>
+<p>An alphabetical glossary of approximately 40-60 terms that appear throughout the atlas, each with:</p>
+<p>1. A plain-language definition (one sentence, no jargon) 2. A precise definition (one sentence, technical) 3. The demo where it is first introduced or most clearly demonstrated 4. A cross-reference to related terms</p>
+<p>Example entries:</p>
+<p><code></code>` <h2>Axiality Theorem</h2> Plain: Bracket values at delta=0 only point in 8 directions in the complex plane. Precise: At A = e^{i*5pi/4}, all Kauffman bracket values lie on 8 equally-spaced   rays {k*pi/4 : k=0..7} in the complex plane, with magnitudes that are non-negative   integers. Introduced: <a href="../inventory/entries/demo_35.html">D35</a> See also: Z[zeta_8], Angular Structure</p>
+<h2>Forward DKC</h2>
+Plain: Using knot invariant values as neural network weights to compute Boolean
+  functions, without any training step.
+Precise: Given a catalog of Kauffman bracket values in Z[zeta_8], assign one value
+  per input bit, form the signed sum w = sum(+/-q_i), and classify via activation
+  function to produce a Boolean output. The weights are topologically determined,
+  not learned.
+Introduced: <a href="../inventory/entries/demo_29.html">D29</a>
+See also: Reverse DKC, Bracket Catalog, Activation Function
+<h2>Parity Wall</h2>
+Plain: The observation that certain activation functions cannot compute parity (XOR
+  of all inputs), no matter which weights you choose.
+Precise: Under split-sigmoid activation, zero solutions for parity exist among 100M+
+  exhaustive quartets of Z[zeta_8] bracket values. The wall is in the activation
+  geometry, not the weight lattice.
+Introduced: <a href="../inventory/entries/demo_48.html">D48</a>, resolved <a href="../inventory/entries/demo_50.html">D50</a>
+See also: k-Sector MVN, 11/13 Theorem, Parity-Lock Theorem
+<code></code>`
+<p><strong>Why it matters:</strong></p>
+<p>The briefing uses 30+ specialized terms (cyclotomic integer, NPN class, parity-lock theorem, Ext^1, complement-blindness, phase_cell, etc.) without defining them. The narrative defines them implicitly by telling the story of their discovery, but if you need a definition NOW -- mid-thought, mid-conversation -- there is no place to look it up quickly.</p>
+<p>A glossary is the lowest-overhead, highest-value reference document you can build. It costs very little to maintain (append new entries as demos are added) and it prevents the most common failure mode in LLM onboarding: using a term confidently but incorrectly because the context window contains the word but not its precise meaning.</p>
+<p><strong>What gap it fills:</strong></p>
+<p>No atlas document is organized for lookup by term. Everything is organized by story (narrative), by demo (demo-index), by theme (connections), or by lens (four-lenses). A glossary is organized by "I just encountered this word and I need to know what it means in 10 seconds."</p>
+<p>---</p>
+<h2>Pitch 3: The 10 Key Insights (Progressive Depth Version)</h2>
+<p><strong>Name:</strong> <a href="../synthesis/key-insights.html"><code>atlas/synthesis/key-insights.md</code></a></p>
+<p><strong>What it contains:</strong></p>
+<p>The 10 most important ideas from the entire 101-demo research program, each presented at three levels of depth:</p>
+<ul>
+<li><strong>Level 1 (one sentence):</strong> What a bright undergraduate could understand</li>
+<li><strong>Level 2 (one paragraph):</strong> What a graduate student in a related field could follow</li>
+<li><strong>Level 3 (one page):</strong> What a specialist would need to engage seriously</li>
+</ul>
+<p>The 10 insights (draft selection):</p>
+<p>1. <strong>Knot invariants can compute.</strong> The Kauffman bracket, evaluated at specific roots of unity, produces exact algebraic integers that work as neural network weights -- no training required.</p>
+<p>2. <strong>The weights are exact, not approximate.</strong> Everything is in the cyclotomic integer ring Z[zeta_8]. Four integers per weight. Zero floating-point error. Correctness is guaranteed by algebra, not by gradient convergence.</p>
+<p>3. <strong>Activation geometry determines what is computable.</strong> The same weight catalog computes 12/13 Boolean function classes under one activation, 13/13 under another, and is locked to parity-only under a third. The lattice is fixed; the lens chooses what you see.</p>
+<p>4. <strong>There is a hard wall, and we know exactly where it is.</strong> Under half-plane activation, exactly 2 of 13 Boolean function classes are unreachable. This is proven analytically (not just observed). The wall is geometric: a parallelogram gap on a circle.</p>
+<p>5. <strong>Depth is the fundamental resource.</strong> Computational capacity scales linearly with crossing depth (how many times the braid strands cross). More complex knots compute more. The logarithmic scaling law everyone measures first is just a corollary.</p>
+<p>6. <strong>The algebra is non-semisimple, and that is a feature.</strong> The "defective" part of the Temperley-Lieb algebra (the radical) produces bracket-null entries that are invisible to the scalar trace but essential for computation. Removing them destroys capacity.</p>
+<p>7. <strong>The computation is intrinsically curved.</strong> It lives on a sphere (S^2), not a plane. Flattening it to R^2 with Euclidean distance gives zero solutions. The Hopf fibration naturally splits the quaternion into a computational channel (the sphere) and an inert channel (the phase).</p>
+<p>8. <strong>Algebraic structure beats geometric optimization.</strong> The 13 directions on S^2 that the braid algebra produces have the worst possible geometric distribution (t=0 design). Improving the distribution by even a few degrees destroys the computation. The algebra knows something geometry does not.</p>
+<p>9. <strong>The encoding determines the function.</strong> The +/-q paired encoding is provably locked to parity (XOR/XNOR) -- AND, OR, majority are impossible regardless of activation. The 1-weight-per-input encoding accesses all 13 classes. What you compute is set by how you wire the inputs, not by the weights.</p>
+<p>10. <strong>Non-semisimple extensions are computationally load-bearing.</strong> In multi-strand DKC, modules with a radical (non-semisimple) reach XOR14. Simple modules (no radical) cap at XOR12. The "defect" is the resource.</p>
+<p><strong>Why it matters:</strong></p>
+<p>The briefing is a compressed reference. The narrative is a 101-chapter story. Neither is designed for someone who says: "I have 20 minutes. What are the most important things to understand?" The progressive depth structure means you can read 10 sentences and get the shape, or read 10 paragraphs and get the substance, or read 10 pages and get enough to engage technically. This is the document you hand to a collaborator, a reviewer, or yourself after three weeks away.</p>
+<p>It also serves a specific LLM onboarding function: the Level 1 sentences are compact enough to fit in a system prompt. If you need a new Claude context to understand the project in 500 tokens instead of reading the full briefing, the 10 Level-1 sentences are the answer.</p>
+<p><strong>What gap it fills:</strong></p>
+<p>No document is optimized for "teach me the most important things at the depth I choose." The briefing is fixed at one depth. The narrative is fixed at maximum depth. This document is the missing intermediate layer that makes the atlas a genuine progressive-disclosure system: briefing (50 lines) -&gt; key insights (10-100 lines) -&gt; narrative (800+ lines).</p>
+<p>---</p>
+<h2>Pitch 4: The "Wall Was X Not Y" Pattern Catalog</h2>
+<p><strong>Name:</strong> <code>atlas/synthesis/wall-patterns.md</code></p>
+<p><strong>What it contains:</strong></p>
+<p>A catalog of every instance where the project hit an apparent impossibility, diagnosed it, and resolved it by changing a specific component. The <a href="../synthesis/connections.html">connections.md</a> document already identifies this as a recurring structural pattern (Section 3: "The Wall Was X Not Y Pattern"). This document expands it into a standalone reference with a consistent format for each instance:</p>
+<p><code></code>` <h2>Wall #N: [descriptive name]</h2></p>
+<p><strong>Observed:</strong> [what looked impossible] <strong>Exhaustive confirmation:</strong> [how thoroughly zero-ness was verified] <strong>Diagnosis:</strong> [which specific component was responsible] <strong>Resolution:</strong> [what was changed] <strong>Mechanism:</strong> [why the change works] <strong>Demo chain:</strong> [the demo numbers] <strong>Lesson:</strong> [the generalizable principle] <code></code>`</p>
+<p>The known instances (at least 6):</p>
+<p>1. <a href="../inventory/entries/demo_48.html">D48</a>-&gt;<a href="../inventory/entries/demo_50.html">D50</a>: Parity under split-sigmoid (wall in activation, not lattice) 2. <a href="../inventory/entries/demo_76.html">D76</a>-&gt;<a href="../inventory/entries/demo_77.html">D77</a>: XOR8 under S^2-only (wall in activation, not root) 3. <a href="../inventory/entries/demo_78.html">D78</a>-&gt;<a href="../inventory/entries/demo_79.html">D79</a>: XOR10 at zeta_8 (wall in group finiteness, not architecture) 4. <a href="../inventory/entries/demo_98.html">D98</a>-&gt;<a href="../inventory/entries/demo_99.html">D99</a>: 3-strand trace readout (wall in readout, not algebra) 5. <a href="../inventory/entries/demo_64.html">D64</a>: Self-doubling impossibility (wall in geometric constraint, not vocabulary) 6. <a href="../inventory/entries/demo_72.html">D72</a>: Voronoi optimization catastrophe (wall in algebraic-vs-geometric mismatch)</p>
+<p>Plus several near-miss variants (<a href="../inventory/entries/demo_65.html">D65</a>'s Clifford staircase, <a href="../inventory/entries/demo_86.html">D86</a>'s negative result on single P_{0,0}).</p>
+<p><strong>Why it matters:</strong></p>
+<p>This is the most <em>pedagogically powerful</em> pattern in the entire project. It teaches a way of thinking: when you hit an apparent impossibility, do not conclude the thing is impossible. Instead, decompose the system into components and figure out which specific component is enforcing the wall. The resolution is almost always: change that one component, keep everything else fixed.</p>
+<p>For a learner, this pattern is more valuable than any individual result because it is a <em>transferable skill</em>. It applies to debugging, to research strategy, to system design. And in the specific context of DKC, understanding the wall-resolution pattern is the fastest way to understand why the project took the path it did. The sequence of walls and resolutions IS the narrative, compressed to its logical skeleton.</p>
+<p>For LLM onboarding specifically: an agent that has read this document will not prematurely conclude "this is impossible" when hitting a zero-result computation. It will instead ask "which component is enforcing this?" -- which is exactly the research methodology this project has developed over 101 demos.</p>
+<p><strong>What gap it fills:</strong></p>
+<p>The <a href="../synthesis/connections.html">connections.md</a> document identifies the pattern but only covers 3 instances in a few paragraphs. The narrative covers all instances but embedded in 40,000 tokens of other material. This document extracts the pattern, catalogs all instances, and makes the methodology explicit and repeatable. It is a research methodology document disguised as a catalog.</p>
+<p>---</p>
+<h2>Summary: The Four Documents as a Learning Architecture</h2>
+<table><thead><tr><th>Document</th><th>Function</th><th>Size</th><th>When to read</th></tr></thead><tbody><tr><td><code><a href="../synthesis/prerequisites.html">prerequisites.md</a></code></td><td>"What do I need to know first?"</td><td>~200 lines</td><td>Before diving into any specific topic</td></tr><tr><td><code><a href="../synthesis/glossary.html">glossary.md</a></code></td><td>"What does this word mean?"</td><td>~300 lines</td><td>During reading, on demand</td></tr><tr><td><code><a href="../synthesis/key-insights.html">key-insights.md</a></code></td><td>"What are the big ideas?"</td><td>~100-400 lines</td><td>After briefing, before narrative</td></tr><tr><td><code>wall-patterns.md</code></td><td>"How does this project think?"</td><td>~200 lines</td><td>After key insights, for methodology</td></tr></tbody></table>
+<p>Together with the existing documents, these create a five-layer progressive disclosure system:</p>
+<p><code></code>` <a href="../briefing.html">briefing.md</a>          (~50 lines)    "What is this?"   | <a href="../synthesis/key-insights.html">key-insights.md</a>      (~100 lines)   "What are the big ideas?"   | wall-patterns.md     (~200 lines)   "How does the research work?" <a href="../synthesis/prerequisites.html">prerequisites.md</a>     (~200 lines)   "What concepts depend on what?" <a href="../synthesis/glossary.html">glossary.md</a>          (~300 lines)   "What does X mean?"   | <a href="../synthesis/narrative.html">narrative.md</a>         (~800 lines)   "Tell me the whole story" <a href="../synthesis/connections.html">connections.md</a>       (~700 lines)   "How does everything connect?" <a href="../synthesis/four-lenses.html">four-lenses.md</a>                      "What does each framework say?"   | <a href="../inventory/demo-index.html">demo-index.md</a>                       "Give me every detail of every demo" <code></code>`</p>
+<p>A human returning after three weeks reads: briefing -&gt; key insights -&gt; prerequisites for the area they are working on -&gt; glossary as needed -&gt; relevant sections of narrative. An LLM cold-starting reads: briefing -&gt; key insights Level 1 -&gt; glossary entries for terms in the current task -&gt; relevant wall patterns if hitting a zero result.</p>
+<p>The total cost to produce these four documents is moderate (each is a synthesis/extraction task, not original research), and the maintenance cost is low (append to glossary and wall-patterns as new demos are added; key-insights is stable once written; prerequisites updates only when a genuinely new concept cluster emerges).</p>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/c.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</body>
+</html>

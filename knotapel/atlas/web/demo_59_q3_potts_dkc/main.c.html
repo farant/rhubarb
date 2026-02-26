@@ -1,0 +1,1515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>demo_59_q3_potts_dkc/main.c</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+    <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+    <nav><a href="../index.html">← Back to Index</a></nav><hr>
+    <h1>demo_59_q3_potts_dkc/main.c</h1><pre><code class="language-c">/*
+ * KNOTAPEL DEMO 59: Q=3 Potts DKC (ell=6, delta=sqrt(3))
+ * =========================================================
+ *
+ * Tests DKC at ell=6, where delta = sqrt(3), Q = delta^2 = 3.
+ * This is the 3-state Potts model at criticality.
+ * Bracket values live in Z[zeta_24] (rank 8 over Z).
+ *
+ * Third independent verification of the 11/13 Re&gt;0 wall
+ * (after ell=4 with Z[i] and ell=5 with Z[zeta_5]).
+ *
+ * Bracket variable: A = zeta_24^7, order 24.
+ * Loop value: delta = -A^2 - A^{-2} = sqrt(3).
+ * Cyclotomic polynomial: Phi_24(x) = x^8 - x^4 + 1.
+ * Reduction: zeta_24^8 = zeta_24^4 - 1.
+ *
+ * Delta powers: sqrt(3)^{2k} = 3^k, sqrt(3)^{2k+1} = 3^k * sqrt(3).
+ * In Cyc24: sqrt(3) = (0,0,2,0,0,0,-1,0).
+ *
+ * C89, zero dependencies beyond math.h.
+ */
+
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;string.h&gt;
+#include &lt;math.h&gt;
+
+#ifndef M_PI
+#define M_PI 3.14159265358979323846
+#endif
+
+#define ENCODE_MUL 0
+#define ENCODE_ADD 1
+
+/* ================================================================
+ * Test infrastructure
+ * ================================================================ */
+
+static int n_pass = 0, n_fail = 0;
+
+static void check(const char *msg, int ok) {
+    if (ok) { printf("  PASS: %s\n", msg); n_pass++; }
+    else    { printf("  FAIL: %s\n", msg); n_fail++; }
+}
+
+/* ================================================================
+ * Complex double type
+ * ================================================================ */
+
+typedef struct { double re, im; } Cx;
+
+static Cx cx_make(double re, double im) {
+    Cx z; z.re = re; z.im = im; return z;
+}
+static Cx cx_add(Cx a, Cx b) {
+    return cx_make(a.re + b.re, a.im + b.im);
+}
+static Cx cx_mul(Cx a, Cx b) {
+    return cx_make(a.re * b.re - a.im * b.im,
+                   a.re * b.im + a.im * b.re);
+}
+static double cx_abs(Cx a) {
+    return sqrt(a.re * a.re + a.im * a.im);
+}
+
+/* ================================================================
+ * Z[zeta_24] Arithmetic
+ *
+ * zeta = e^{2*pi*i/24}, order 24.
+ * Minimal polynomial: Phi_24(x) = x^8 - x^4 + 1.
+ * Reduction: zeta^8 = zeta^4 - 1.
+ * Basis: {1, zeta, zeta^2, ..., zeta^7}.
+ * Elements: c[0] + c[1]*zeta + ... + c[7]*zeta^7.
+ * ================================================================ */
+
+typedef struct { long c[8]; } Cyc24;
+
+static Cyc24 cyc24_zero(void) {
+    Cyc24 r;
+    memset(r.c, 0, sizeof(r.c));
+    return r;
+}
+
+static Cyc24 cyc24_one(void) {
+    Cyc24 r;
+    memset(r.c, 0, sizeof(r.c));
+    r.c[0] = 1;
+    return r;
+}
+
+static Cyc24 cyc24_add(Cyc24 a, Cyc24 b) {
+    Cyc24 r;
+    int i;
+    for (i = 0; i &lt; 8; i++) r.c[i] = a.c[i] + b.c[i];
+    return r;
+}
+
+static Cyc24 cyc24_neg(Cyc24 a) {
+    Cyc24 r;
+    int i;
+    for (i = 0; i &lt; 8; i++) r.c[i] = -a.c[i];
+    return r;
+}
+
+static Cyc24 cyc24_mul(Cyc24 a, Cyc24 b) {
+    Cyc24 r;
+    long temp[15]; /* degree 0..14 = (7+7) */
+    int i, j;
+    memset(temp, 0, sizeof(temp));
+    for (i = 0; i &lt; 8; i++) {
+        if (a.c[i] == 0) continue;
+        for (j = 0; j &lt; 8; j++) {
+            if (b.c[j] == 0) continue;
+            temp[i + j] += a.c[i] * b.c[j];
+        }
+    }
+    /* Reduce using zeta^8 = zeta^4 - 1, from top to bottom.
+     * For degree k &gt;= 8: zeta^k = zeta^{k-4} - zeta^{k-8}. */
+    for (i = 14; i &gt;= 8; i--) {
+        temp[i - 4] += temp[i];
+        temp[i - 8] -= temp[i];
+        temp[i] = 0;
+    }
+    for (i = 0; i &lt; 8; i++)
+        r.c[i] = temp[i];
+    return r;
+}
+
+static int cyc24_eq(Cyc24 a, Cyc24 b) {
+    int i;
+    for (i = 0; i &lt; 8; i++)
+        if (a.c[i] != b.c[i]) return 0;
+    return 1;
+}
+
+static int cyc24_is_zero(Cyc24 a) {
+    int i;
+    for (i = 0; i &lt; 8; i++)
+        if (a.c[i] != 0) return 0;
+    return 1;
+}
+
+static Cx cyc24_to_cx(Cyc24 a) {
+    Cx r = cx_make(0.0, 0.0);
+    int k;
+    for (k = 0; k &lt; 8; k++) {
+        if (a.c[k] != 0) {
+            double angle = (double)k * 2.0 * M_PI / 24.0;
+            r = cx_add(r, cx_make((double)a.c[k] * cos(angle),
+                                   (double)a.c[k] * sin(angle)));
+        }
+    }
+    return r;
+}
+
+static void cyc24_print(const char *label, Cyc24 a) {
+    Cx z = cyc24_to_cx(a);
+    printf("  %s = (%ld,%ld,%ld,%ld,%ld,%ld,%ld,%ld)"
+           "  [%.4f + %.4fi]\n",
+           label, a.c[0], a.c[1], a.c[2], a.c[3],
+           a.c[4], a.c[5], a.c[6], a.c[7], z.re, z.im);
+}
+
+/* ================================================================
+ * A powers: A = zeta_24^7, order 24.
+ *
+ * A^k = zeta_24^{7k mod 24}. Precomputed table below.
+ *
+ * A^0  = 1            = ( 1, 0, 0, 0, 0, 0, 0, 0)
+ * A^1  = zeta^7       = ( 0, 0, 0, 0, 0, 0, 0, 1)
+ * A^2  = -zeta^2      = ( 0, 0,-1, 0, 0, 0, 0, 0)
+ * A^3  = zeta-zeta^5  = ( 0, 1, 0, 0, 0,-1, 0, 0)
+ * A^4  = zeta^4       = ( 0, 0, 0, 0, 1, 0, 0, 0)
+ * A^5  = -zeta^3+z^7  = ( 0, 0, 0,-1, 0, 0, 0, 1)
+ * A^6  = -zeta^6      = ( 0, 0, 0, 0, 0, 0,-1, 0)
+ * A^7  = zeta         = ( 0, 1, 0, 0, 0, 0, 0, 0)
+ * A^8  = -1+zeta^4    = (-1, 0, 0, 0, 1, 0, 0, 0)
+ * A^9  = -zeta^3      = ( 0, 0, 0,-1, 0, 0, 0, 0)
+ * A^10 = zeta^2-z^6   = ( 0, 0, 1, 0, 0, 0,-1, 0)
+ * A^11 = zeta^5       = ( 0, 0, 0, 0, 0, 1, 0, 0)
+ * A^12 = -1           = (-1, 0, 0, 0, 0, 0, 0, 0)
+ * A^{12+k} = -A^k for k=1..11.
+ * ================================================================ */
+
+static Cyc24 A_table[24];
+
+static void init_a_table(void) {
+    int i;
+    long vals[24][8] = {
+        { 1,  0,  0,  0,  0,  0,  0,  0},  /* A^0  */
+        { 0,  0,  0,  0,  0,  0,  0,  1},  /* A^1  */
+        { 0,  0, -1,  0,  0,  0,  0,  0},  /* A^2  */
+        { 0,  1,  0,  0,  0, -1,  0,  0},  /* A^3  */
+        { 0,  0,  0,  0,  1,  0,  0,  0},  /* A^4  */
+        { 0,  0,  0, -1,  0,  0,  0,  1},  /* A^5  */
+        { 0,  0,  0,  0,  0,  0, -1,  0},  /* A^6  */
+        { 0,  1,  0,  0,  0,  0,  0,  0},  /* A^7  */
+        {-1,  0,  0,  0,  1,  0,  0,  0},  /* A^8  */
+        { 0,  0,  0, -1,  0,  0,  0,  0},  /* A^9  */
+        { 0,  0,  1,  0,  0,  0, -1,  0},  /* A^10 */
+        { 0,  0,  0,  0,  0,  1,  0,  0},  /* A^11 */
+        {-1,  0,  0,  0,  0,  0,  0,  0},  /* A^12 */
+        { 0,  0,  0,  0,  0,  0,  0, -1},  /* A^13 */
+        { 0,  0,  1,  0,  0,  0,  0,  0},  /* A^14 */
+        { 0, -1,  0,  0,  0,  1,  0,  0},  /* A^15 */
+        { 0,  0,  0,  0, -1,  0,  0,  0},  /* A^16 */
+        { 0,  0,  0,  1,  0,  0,  0, -1},  /* A^17 */
+        { 0,  0,  0,  0,  0,  0,  1,  0},  /* A^18 */
+        { 0, -1,  0,  0,  0,  0,  0,  0},  /* A^19 */
+        { 1,  0,  0,  0, -1,  0,  0,  0},  /* A^20 */
+        { 0,  0,  0,  1,  0,  0,  0,  0},  /* A^21 */
+        { 0,  0, -1,  0,  0,  0,  1,  0},  /* A^22 */
+        { 0,  0,  0,  0,  0, -1,  0,  0}   /* A^23 */
+    };
+    for (i = 0; i &lt; 24; i++) {
+        int j;
+        for (j = 0; j &lt; 8; j++)
+            A_table[i].c[j] = vals[i][j];
+    }
+}
+
+static Cyc24 cyc24_a_power(int power) {
+    int k = power % 24;
+    if (k &lt; 0) k += 24;
+    return A_table[k];
+}
+
+/* ================================================================
+ * Delta powers: delta = sqrt(3) = (0,0,2,0,0,0,-1,0) in Cyc24.
+ *
+ * delta^{2k}   = 3^k           -&gt; (3^k, 0, 0, 0, 0, 0, 0, 0)
+ * delta^{2k+1} = 3^k * sqrt(3) -&gt; (0, 0, 2*3^k, 0, 0, 0, -3^k, 0)
+ * ================================================================ */
+
+#define MAX_DELTA_POW 30
+
+static Cyc24 cyc24_delta_power(int k) {
+    Cyc24 r;
+    long three_pow;
+    int i;
+    memset(r.c, 0, sizeof(r.c));
+    if (k &lt; 0) {
+        printf("  ERROR: negative delta power %d\n", k);
+        return r;
+    }
+    if (k == 0) { r.c[0] = 1; return r; }
+    if (k &gt; MAX_DELTA_POW) {
+        printf("  ERROR: delta power %d exceeds max %d\n",
+               k, MAX_DELTA_POW);
+        return r;
+    }
+    three_pow = 1;
+    for (i = 0; i &lt; k / 2; i++) three_pow *= 3;
+    if (k % 2 == 0) {
+        r.c[0] = three_pow;
+    } else {
+        r.c[2] = 2 * three_pow;
+        r.c[6] = -three_pow;
+    }
+    return r;
+}
+
+/* ================================================================
+ * Planar Matching + Diagram Operations
+ * (Topology-independent; identical to Demos 55/57/58)
+ * ================================================================ */
+
+#define MAX_N 6
+#define MAX_2N (2 * MAX_N)
+
+typedef struct { int match[MAX_2N]; } PlanarMatch;
+
+static PlanarMatch make_identity_diagram(int n) {
+    PlanarMatch m;
+    int k;
+    for (k = 0; k &lt; n; k++) {
+        m.match[k] = n + k;
+        m.match[n + k] = k;
+    }
+    return m;
+}
+
+static PlanarMatch make_generator_diagram(int n, int gen) {
+    PlanarMatch m;
+    int k;
+    for (k = 0; k &lt; n; k++) {
+        m.match[k] = n + k;
+        m.match[n + k] = k;
+    }
+    m.match[gen] = gen + 1;
+    m.match[gen + 1] = gen;
+    m.match[n + gen] = n + gen + 1;
+    m.match[n + gen + 1] = n + gen;
+    return m;
+}
+
+static int compose_diagrams(int n, const PlanarMatch *d1,
+                            const PlanarMatch *d2, PlanarMatch *result) {
+    int glue_visited[MAX_N];
+    int i, loops;
+
+    memset(result-&gt;match, -1, (size_t)(2 * n) * sizeof(int));
+    memset(glue_visited, 0, (size_t)n * sizeof(int));
+    loops = 0;
+
+    for (i = 0; i &lt; 2 * n; i++) {
+        int start = i;
+        int in_d1, cur, partner;
+
+        if (result-&gt;match[i] &gt;= 0) continue;
+        if (i &lt; n) { in_d1 = 1; cur = i; }
+        else       { in_d1 = 0; cur = i; }
+
+        for (;;) {
+            if (in_d1) {
+                partner = d1-&gt;match[cur];
+                if (partner &lt; n) {
+                    result-&gt;match[start] = partner;
+                    result-&gt;match[partner] = start;
+                    break;
+                }
+                glue_visited[partner - n] = 1;
+                in_d1 = 0;
+                cur = partner - n;
+            } else {
+                partner = d2-&gt;match[cur];
+                if (partner &gt;= n) {
+                    result-&gt;match[start] = partner;
+                    result-&gt;match[partner] = start;
+                    break;
+                }
+                glue_visited[partner] = 1;
+                in_d1 = 1;
+                cur = n + partner;
+            }
+        }
+    }
+
+    for (i = 0; i &lt; n; i++) {
+        int cur2, p, q;
+        if (glue_visited[i]) continue;
+        loops++;
+        cur2 = i;
+        do {
+            glue_visited[cur2] = 1;
+            p = d2-&gt;match[cur2];
+            glue_visited[p] = 1;
+            q = d1-&gt;match[n + p];
+            cur2 = q - n;
+        } while (cur2 != i);
+    }
+
+    return loops;
+}
+
+static int trace_closure_loops(int n, const PlanarMatch *m) {
+    int visited[MAX_2N];
+    int i, cur, loops = 0;
+    memset(visited, 0, (size_t)(2 * n) * sizeof(int));
+    for (i = 0; i &lt; 2 * n; i++) {
+        if (visited[i]) continue;
+        loops++;
+        cur = i;
+        do {
+            visited[cur] = 1;
+            cur = m-&gt;match[cur];
+            visited[cur] = 1;
+            cur = (cur &lt; n) ? cur + n : cur - n;
+        } while (cur != i);
+    }
+    return loops;
+}
+
+/* ================================================================
+ * State-Sum Bracket at ell=6, delta=sqrt(3)
+ * ================================================================ */
+
+typedef struct {
+    int gen;
+    int sign;
+} BraidCrossing;
+
+static Cyc24 state_sum_bracket(int n, const BraidCrossing *word,
+                                int word_len) {
+    Cyc24 bracket = cyc24_zero();
+    int num_states, s;
+
+    if (word_len &gt; 20) return bracket;
+    num_states = 1 &lt;&lt; word_len;
+
+    for (s = 0; s &lt; num_states; s++) {
+        PlanarMatch current;
+        int total_glue_loops = 0;
+        int a_power = 0;
+        int j;
+
+        current = make_identity_diagram(n);
+
+        for (j = 0; j &lt; word_len; j++) {
+            PlanarMatch resolved, result;
+            int glue_loops, bit;
+
+            bit = (s &gt;&gt; j) &amp; 1;
+            if (bit == 0) {
+                resolved = make_identity_diagram(n);
+                a_power += word[j].sign;
+            } else {
+                resolved = make_generator_diagram(n, word[j].gen);
+                a_power -= word[j].sign;
+            }
+
+            glue_loops = compose_diagrams(n, &amp;current, &amp;resolved,
+                                           &amp;result);
+            total_glue_loops += glue_loops;
+            current = result;
+        }
+
+        {
+            int tl = trace_closure_loops(n, &amp;current);
+            int total = total_glue_loops + tl;
+            Cyc24 weight = cyc24_delta_power(total - 1);
+            Cyc24 contrib = cyc24_mul(weight,
+                                       cyc24_a_power(a_power));
+            bracket = cyc24_add(bracket, contrib);
+        }
+    }
+    return bracket;
+}
+
+static void decode_braid(int idx, int n_choices, int length,
+                          BraidCrossing *word) {
+    int i;
+    for (i = 0; i &lt; length; i++) {
+        int choice = idx % n_choices;
+        word[i].gen = choice / 2;
+        word[i].sign = (choice % 2 == 0) ? 1 : -1;
+        idx /= n_choices;
+    }
+}
+
+/* ================================================================
+ * Bracket Catalog
+ * ================================================================ */
+
+#define MAX_CATALOG 2048
+
+static Cyc24 cat_cyc[MAX_CATALOG];
+static Cx    cat_cx[MAX_CATALOG];
+static int   cat_size = 0;
+
+static int cat_find(Cyc24 val) {
+    int i;
+    for (i = 0; i &lt; cat_size; i++)
+        if (cyc24_eq(val, cat_cyc[i])) return i;
+    return -1;
+}
+
+static void build_catalog(void) {
+    int ci;
+    int configs_n[3]       = {2, 3, 4};
+    int configs_choices[3]  = {2, 4, 6};
+    int configs_maxlen[3]   = {10, 6, 6};
+
+    cat_size = 0;
+
+    for (ci = 0; ci &lt; 3; ci++) {
+        int n = configs_n[ci];
+        int n_choices = configs_choices[ci];
+        int max_len = configs_maxlen[ci];
+        int length;
+
+        for (length = 1; length &lt;= max_len; length++) {
+            int total = 1;
+            int idx, i;
+
+            for (i = 0; i &lt; length; i++) {
+                total *= n_choices;
+                if (total &gt; 100000) { total = -1; break; }
+            }
+            if (total &lt; 0) break;
+
+            printf("    n=%d len=%d: %d braids, catalog=%d...\r",
+                   n, length, total, cat_size);
+            fflush(stdout);
+
+            for (idx = 0; idx &lt; total; idx++) {
+                BraidCrossing word[20];
+                Cyc24 bracket;
+
+                decode_braid(idx, n_choices, length, word);
+                bracket = state_sum_bracket(n, word, length);
+
+                if (!cyc24_is_zero(bracket)
+                    &amp;&amp; cat_find(bracket) &lt; 0
+                    &amp;&amp; cat_size &lt; MAX_CATALOG) {
+                    cat_cyc[cat_size] = bracket;
+                    cat_cx[cat_size] = cyc24_to_cx(bracket);
+                    cat_size++;
+                }
+            }
+        }
+    }
+    printf("    %-60s\n", "done.");
+}
+
+/* ================================================================
+ * Activation Functions
+ * ================================================================ */
+
+static double sigmoid(double x) {
+    return 1.0 / (1.0 + exp(-x));
+}
+
+static int split_sigmoid_classify(Cx z) {
+    double sr = sigmoid(z.re);
+    double si = sigmoid(z.im);
+    double val = sr * (1.0 - si) + (1.0 - sr) * si;
+    return val &gt; 0.5 ? 1 : 0;
+}
+
+static int sector_classify(Cx z, int k) {
+    double angle, sector_width;
+    int sector;
+    if (cx_abs(z) &lt; 1e-15) return 0;
+    angle = atan2(z.im, z.re);
+    if (angle &lt; 0.0) angle += 2.0 * M_PI;
+    sector_width = 2.0 * M_PI / (double)k;
+    sector = (int)(angle / sector_width);
+    if (sector &gt;= k) sector = k - 1;
+    return sector % 2;
+}
+
+static int magnitude_classify(Cx z, double tau) {
+    return cx_abs(z) &gt; tau ? 1 : 0;
+}
+
+static int re_positive_classify(Cx z) {
+    return z.re &gt; 0.0 ? 1 : 0;
+}
+
+static int im_positive_classify(Cx z) {
+    return z.im &gt; 0.0 ? 1 : 0;
+}
+
+/* Wrappers: uniform int classify(Cx, int) signature */
+static int wrap_split_sigmoid(Cx z, int param) {
+    (void)param;
+    return split_sigmoid_classify(z);
+}
+
+static int wrap_sector(Cx z, int k) {
+    return sector_classify(z, k);
+}
+
+static int wrap_magnitude(Cx z, int tau_x10) {
+    return magnitude_classify(z, (double)tau_x10 / 10.0);
+}
+
+static int wrap_re_positive(Cx z, int param) {
+    (void)param;
+    return re_positive_classify(z);
+}
+
+static int wrap_im_positive(Cx z, int param) {
+    (void)param;
+    return im_positive_classify(z);
+}
+
+/* ================================================================
+ * 2-Input Boolean Function Names
+ * ================================================================ */
+
+static const char *fn2_name(int tt) {
+    switch (tt) {
+    case 0x0: return "FALSE";
+    case 0x1: return "AND";
+    case 0x2: return "A&gt;B";
+    case 0x3: return "PROJ_A";
+    case 0x4: return "B&gt;A";
+    case 0x5: return "PROJ_B";
+    case 0x6: return "XOR";
+    case 0x7: return "OR";
+    case 0x8: return "NOR";
+    case 0x9: return "XNOR";
+    case 0xA: return "NOT_B";
+    case 0xB: return "A&gt;=B";
+    case 0xC: return "NOT_A";
+    case 0xD: return "B&gt;=A";
+    case 0xE: return "NAND";
+    case 0xF: return "TRUE";
+    default:  return "???";
+    }
+}
+
+/* ================================================================
+ * NPN Classification for 3-Input Functions
+ * ================================================================ */
+
+static const int perms3[6][3] = {
+    {0,1,2}, {0,2,1}, {1,0,2}, {1,2,0}, {2,0,1}, {2,1,0}
+};
+
+static int npn_transform(int tt, const int sigma[3],
+                         int neg_in, int neg_out) {
+    int result = 0, idx;
+    for (idx = 0; idx &lt; 8; idx++) {
+        int x[3], y[3], src, out;
+        x[0] = (idx &gt;&gt; 2) &amp; 1;
+        x[1] = (idx &gt;&gt; 1) &amp; 1;
+        x[2] = idx &amp; 1;
+        y[0] = x[sigma[0]] ^ ((neg_in &gt;&gt; 0) &amp; 1);
+        y[1] = x[sigma[1]] ^ ((neg_in &gt;&gt; 1) &amp; 1);
+        y[2] = x[sigma[2]] ^ ((neg_in &gt;&gt; 2) &amp; 1);
+        src = (y[0] &lt;&lt; 2) | (y[1] &lt;&lt; 1) | y[2];
+        out = (tt &gt;&gt; src) &amp; 1;
+        if (neg_out) out ^= 1;
+        result |= (out &lt;&lt; idx);
+    }
+    return result;
+}
+
+static int npn_canon[256];
+
+static void npn_init(void) {
+    int i, pi, ni, no;
+    for (i = 0; i &lt; 256; i++) {
+        int min_tt = i;
+        for (pi = 0; pi &lt; 6; pi++)
+            for (ni = 0; ni &lt; 8; ni++)
+                for (no = 0; no &lt; 2; no++) {
+                    int t = npn_transform(i, perms3[pi], ni, no);
+                    if (t &lt; min_tt) min_tt = t;
+                }
+        npn_canon[i] = min_tt;
+    }
+}
+
+static const char *fn3_name(int tt) {
+    switch (tt) {
+    case 0x00: return "FALSE";
+    case 0xFF: return "TRUE";
+    case 0x01: return "AND3'";
+    case 0x03: return "AND2'";
+    case 0x06: return "~A(B^C)";
+    case 0x07: return "~A~(BC)";
+    case 0x0F: return "BUF";
+    case 0x16: return "EXACT1";
+    case 0x17: return "MAJ'";
+    case 0x18: return "ISOLATE";
+    case 0x19: return "3v-0x19";
+    case 0x1B: return "3v-0x1B";
+    case 0x1E: return "A^(B|C)";
+    case 0x3C: return "XOR2";
+    case 0x69: return "XNOR3";
+    default:   return "???";
+    }
+}
+
+#define MAX_NPN 14
+
+typedef struct {
+    int canon_tt;
+    int orbit_size;
+    const char *titulis;
+} NPNClass;
+
+static NPNClass npn_classes[MAX_NPN];
+static int n_npn = 0;
+
+static void npn_build_classes(void) {
+    int seen[256];
+    int i, j;
+
+    memset(seen, 0, sizeof(seen));
+    n_npn = 0;
+
+    for (i = 1; i &lt; 255; i++) {
+        int c = npn_canon[i];
+        if (!seen[c]) {
+            seen[c] = 1;
+            npn_classes[n_npn].canon_tt = c;
+            npn_classes[n_npn].orbit_size = 0;
+            npn_classes[n_npn].titulis = fn3_name(c);
+            n_npn++;
+        }
+    }
+
+    for (i = 1; i &lt; 255; i++) {
+        int c = npn_canon[i];
+        for (j = 0; j &lt; n_npn; j++) {
+            if (npn_classes[j].canon_tt == c) {
+                npn_classes[j].orbit_size++;
+                break;
+            }
+        }
+    }
+}
+
+/* ================================================================
+ * Activation Table
+ * ================================================================ */
+
+typedef struct {
+    const char *name;
+    int (*classify)(Cx, int);
+    int param;
+} Activation;
+
+#define N_ACT 8
+
+static Activation act_table[N_ACT] = {
+    {"Re&gt;0",        wrap_re_positive,   0},
+    {"Im&gt;0",        wrap_im_positive,   0},
+    {"Split-sig",   wrap_split_sigmoid, 0},
+    {"Sector k=2",  wrap_sector,        2},
+    {"Sector k=4",  wrap_sector,        4},
+    {"Sector k=6",  wrap_sector,        6},
+    {"Sector k=8",  wrap_sector,        8},
+    {"Mag tau=1",   wrap_magnitude,     10}
+};
+
+/* ================================================================
+ * Batch 3-Input Search
+ *
+ * Uses complex doubles for z-value computation (no exact arithmetic
+ * needed for activation functions). The Cyc24 coefficients are
+ * modest (3^k growth), so no overflow concerns in catalog.
+ *
+ * results[a][c] = solution count for activation a, NPN class c.
+ * ================================================================ */
+
+static void search_3input_batch(int encode_mode,
+                                 long results[N_ACT][MAX_NPN]) {
+    long tt_counts[N_ACT][256];
+    int a, i1, i2, i3, ci, tt;
+    Cx cx12;
+    int sz = cat_size;
+
+    memset(tt_counts, 0, sizeof(tt_counts));
+
+    printf("  Search space: %d^3 = %ld triples\n",
+           sz, (long)sz * (long)sz * (long)sz);
+
+    for (i1 = 0; i1 &lt; sz; i1++) {
+        for (i2 = 0; i2 &lt; sz; i2++) {
+            if (encode_mode == ENCODE_MUL)
+                cx12 = cx_mul(cat_cx[i1], cat_cx[i2]);
+            else
+                cx12 = cx_add(cat_cx[i1], cat_cx[i2]);
+
+            for (i3 = 0; i3 &lt; sz; i3++) {
+                Cx zvals[8];
+
+                if (encode_mode == ENCODE_MUL) {
+                    zvals[0] = cx_make(1.0, 0.0);
+                    zvals[1] = cat_cx[i3];
+                    zvals[2] = cat_cx[i2];
+                    zvals[3] = cx_mul(cat_cx[i2], cat_cx[i3]);
+                    zvals[4] = cat_cx[i1];
+                    zvals[5] = cx_mul(cat_cx[i1], cat_cx[i3]);
+                    zvals[6] = cx12;
+                    zvals[7] = cx_mul(cx12, cat_cx[i3]);
+                } else {
+                    zvals[0] = cx_make(0.0, 0.0);
+                    zvals[1] = cat_cx[i3];
+                    zvals[2] = cat_cx[i2];
+                    zvals[3] = cx_add(cat_cx[i2], cat_cx[i3]);
+                    zvals[4] = cat_cx[i1];
+                    zvals[5] = cx_add(cat_cx[i1], cat_cx[i3]);
+                    zvals[6] = cx12;
+                    zvals[7] = cx_add(cx12, cat_cx[i3]);
+                }
+
+                for (a = 0; a &lt; N_ACT; a++) {
+                    int bits = 0, b;
+                    for (b = 0; b &lt; 8; b++) {
+                        if (act_table[a].classify(zvals[b],
+                                                   act_table[a].param))
+                            bits |= (1 &lt;&lt; b);
+                    }
+                    tt_counts[a][bits]++;
+                }
+            }
+        }
+    }
+
+    /* Aggregate per NPN class */
+    for (a = 0; a &lt; N_ACT; a++) {
+        for (ci = 0; ci &lt; MAX_NPN; ci++)
+            results[a][ci] = 0;
+        for (tt = 1; tt &lt; 255; tt++) {
+            int canon = npn_canon[tt];
+            for (ci = 0; ci &lt; n_npn; ci++) {
+                if (npn_classes[ci].canon_tt == canon) {
+                    results[a][ci] += tt_counts[a][tt];
+                    break;
+                }
+            }
+        }
+    }
+}
+
+/* ================================================================
+ * PART A: Cyc24 Arithmetic Verification + Catalog
+ * ================================================================ */
+
+static void part_a_catalog(void) {
+    int i, n_with_neg;
+    int coord_used[8];
+    int nonzero_dist[9]; /* entries with 0..8 nonzero coefficients */
+    int even_only, odd_any;
+    long max_coeff;
+    char msg[256];
+
+    printf("\n=== PART A: Cyc24 Arithmetic + Catalog (ell=6) ===\n\n");
+
+    /* Verify zeta_24^24 = 1 */
+    {
+        Cyc24 z, zeta;
+        int k;
+        memset(zeta.c, 0, sizeof(zeta.c));
+        zeta.c[1] = 1;
+        z = zeta;
+        for (k = 1; k &lt; 24; k++)
+            z = cyc24_mul(z, zeta);
+        check("zeta_24^24 = 1", cyc24_eq(z, cyc24_one()));
+    }
+
+    /* Verify zeta_24^12 = -1 */
+    {
+        Cyc24 z, zeta, neg1;
+        int k;
+        memset(zeta.c, 0, sizeof(zeta.c));
+        zeta.c[1] = 1;
+        z = cyc24_one();
+        for (k = 0; k &lt; 12; k++)
+            z = cyc24_mul(z, zeta);
+        neg1 = cyc24_zero();
+        neg1.c[0] = -1;
+        check("zeta_24^12 = -1", cyc24_eq(z, neg1));
+    }
+
+    /* Verify A * A^{-1} = 1 */
+    {
+        Cyc24 prod = cyc24_mul(A_table[1], A_table[23]);
+        check("A * A^{-1} = 1", cyc24_eq(prod, cyc24_one()));
+    }
+
+    /* Verify A^24 = 1 */
+    {
+        Cyc24 acc = cyc24_one();
+        int k;
+        for (k = 0; k &lt; 24; k++)
+            acc = cyc24_mul(acc, A_table[1]);
+        check("A^24 = 1", cyc24_eq(acc, cyc24_one()));
+    }
+
+    /* Verify delta = -A^2 - A^{-2} */
+    {
+        Cyc24 delta = cyc24_neg(cyc24_add(A_table[2], A_table[22]));
+        Cyc24 sqrt3_exact = cyc24_zero();
+        sqrt3_exact.c[2] = 2;
+        sqrt3_exact.c[6] = -1;
+        check("delta = -A^2 - A^{-2} = (0,0,2,0,0,0,-1,0)",
+              cyc24_eq(delta, sqrt3_exact));
+        cyc24_print("delta (sqrt3)", delta);
+    }
+
+    /* Verify delta is real and = sqrt(3) numerically */
+    {
+        Cyc24 delta = cyc24_zero();
+        Cx dcx;
+        delta.c[2] = 2;
+        delta.c[6] = -1;
+        dcx = cyc24_to_cx(delta);
+        check("delta is real (Im &lt; 1e-10)",
+              fabs(dcx.im) &lt; 1e-10);
+        check("delta = sqrt(3) = 1.7320... numerically",
+              fabs(dcx.re - sqrt(3.0)) &lt; 1e-10);
+    }
+
+    /* Verify delta^2 = 3 */
+    {
+        Cyc24 delta = cyc24_zero();
+        Cyc24 delta2, three;
+        delta.c[2] = 2;
+        delta.c[6] = -1;
+        delta2 = cyc24_mul(delta, delta);
+        three = cyc24_zero();
+        three.c[0] = 3;
+        check("delta^2 = 3", cyc24_eq(delta2, three));
+    }
+
+    /* Verify delta^3: mul vs formula */
+    {
+        Cyc24 delta = cyc24_zero();
+        Cyc24 delta3_mul, delta3_formula;
+        delta.c[2] = 2;
+        delta.c[6] = -1;
+        delta3_mul = cyc24_mul(cyc24_mul(delta, delta), delta);
+        delta3_formula = cyc24_delta_power(3);
+        check("delta^3: mul == formula",
+              cyc24_eq(delta3_mul, delta3_formula));
+    }
+
+    /* Build catalog */
+    printf("\n  Building bracket catalog (ell=6, A=zeta_24^7, "
+           "delta=sqrt(3))...\n");
+    build_catalog();
+    printf("  Catalog size: %d distinct nonzero values\n\n", cat_size);
+
+    sprintf(msg, "catalog has &gt;= 20 values (got %d)", cat_size);
+    check(msg, cat_size &gt;= 20);
+
+    printf("  Note: ell=4 had 56, ell=5 had 116 values\n");
+    printf("  (Smaller catalog despite rank-8 ring is surprising)\n\n");
+
+    /* Axiality analysis: coefficient usage */
+    memset(coord_used, 0, sizeof(coord_used));
+    memset(nonzero_dist, 0, sizeof(nonzero_dist));
+    max_coeff = 0;
+
+    for (i = 0; i &lt; cat_size; i++) {
+        int nz = 0, k;
+        for (k = 0; k &lt; 8; k++) {
+            if (cat_cyc[i].c[k] != 0) {
+                coord_used[k] = 1;
+                nz++;
+            }
+            if (labs(cat_cyc[i].c[k]) &gt; max_coeff)
+                max_coeff = labs(cat_cyc[i].c[k]);
+        }
+        nonzero_dist[nz]++;
+    }
+
+    printf("  Axiality analysis:\n");
+    printf("    Basis coordinates used: %d%d%d%d%d%d%d%d\n",
+           coord_used[0], coord_used[1], coord_used[2],
+           coord_used[3], coord_used[4], coord_used[5],
+           coord_used[6], coord_used[7]);
+    printf("    (1=z^0, z=z^1, z2=z^2, ..., z7=z^7)\n");
+    printf("    Nonzero coefficient distribution:\n");
+    printf("      1-coeff (axial):    %d entries\n", nonzero_dist[1]);
+    printf("      2-coeff:            %d entries\n", nonzero_dist[2]);
+    printf("      3-coeff:            %d entries\n", nonzero_dist[3]);
+    printf("      4-coeff:            %d entries\n", nonzero_dist[4]);
+    printf("      5-coeff:            %d entries\n", nonzero_dist[5]);
+    printf("      6-coeff:            %d entries\n", nonzero_dist[6]);
+    printf("      7-coeff:            %d entries\n", nonzero_dist[7]);
+    printf("      8-coeff (general):  %d entries\n", nonzero_dist[8]);
+    printf("    Max |coefficient|: %ld\n", max_coeff);
+
+    /* Check sub-ring axiality */
+    even_only = 1;
+    odd_any = 0;
+    for (i = 0; i &lt; cat_size; i++) {
+        if (cat_cyc[i].c[1] != 0 || cat_cyc[i].c[3] != 0 ||
+            cat_cyc[i].c[5] != 0 || cat_cyc[i].c[7] != 0) {
+            even_only = 0;
+            odd_any = 1;
+            break;
+        }
+    }
+    (void)odd_any;
+
+    if (even_only) {
+        printf("    &gt;&gt;&gt; Z[zeta_12]-axial (rank 4): only even"
+               " coordinates used\n");
+    } else {
+        int total_used = 0;
+        for (i = 0; i &lt; 8; i++) total_used += coord_used[i];
+        printf("    &gt;&gt;&gt; %d/8 coordinates used", total_used);
+        if (total_used == 8)
+            printf(" (full Z[zeta_24], rank 8)");
+        else if (total_used &lt;= 4)
+            printf(" (possible sub-ring, rank &lt;= 4)");
+        printf("\n");
+    }
+
+    {
+        int total_used = 0;
+        for (i = 0; i &lt; 8; i++) total_used += coord_used[i];
+        sprintf(msg, "at least 2 basis coordinates used (got %d/8)",
+                total_used);
+        check(msg, total_used &gt;= 2);
+    }
+
+    /* Negation coverage */
+    n_with_neg = 0;
+    for (i = 0; i &lt; cat_size; i++) {
+        if (cat_find(cyc24_neg(cat_cyc[i])) &gt;= 0)
+            n_with_neg++;
+    }
+    printf("    Entries with negative in catalog: %d/%d\n",
+           n_with_neg, cat_size);
+
+    /* Print sample values */
+    printf("\n  Sample catalog values:\n");
+    for (i = 0; i &lt; cat_size &amp;&amp; i &lt; 8; i++)
+        cyc24_print("    v", cat_cyc[i]);
+
+    /* Suppress unused warnings */
+    (void)fn2_name;
+}
+
+/* ================================================================
+ * PART B: 2-Input Encoding Comparison (Re&gt;0)
+ * ================================================================ */
+
+static void part_b_2input(void) {
+    int mul_achieved[16], add_achieved[16];
+    int i1, i2, tt;
+    int n_mul, n_add, any_odd;
+    char msg[256];
+
+    printf("\n=== PART B: 2-Input Encoding Comparison ===\n\n");
+    printf("  Multiplicative: z(x1,x2) = w1^x1 * w2^x2\n");
+    printf("  Additive:       z(x1,x2) = x1*w1 + x2*w2\n");
+    printf("  Activation:     Re(z) &gt; 0\n\n");
+
+    memset(mul_achieved, 0, sizeof(mul_achieved));
+    memset(add_achieved, 0, sizeof(add_achieved));
+
+    for (i1 = 0; i1 &lt; cat_size; i1++) {
+        for (i2 = 0; i2 &lt; cat_size; i2++) {
+            /* Multiplicative */
+            {
+                Cx w12 = cx_mul(cat_cx[i1], cat_cx[i2]);
+                int bits = 0;
+                if (1.0 &gt; 0.0) bits |= 1;  /* Re(1) &gt; 0 always */
+                if (cat_cx[i2].re &gt; 0.0) bits |= 2;
+                if (cat_cx[i1].re &gt; 0.0) bits |= 4;
+                if (w12.re &gt; 0.0) bits |= 8;
+                mul_achieved[bits] = 1;
+            }
+            /* Additive */
+            {
+                Cx w12 = cx_add(cat_cx[i1], cat_cx[i2]);
+                int bits = 0;
+                /* bit 0: Re(0) = 0, not &gt; 0, always 0 */
+                if (cat_cx[i2].re &gt; 0.0) bits |= 2;
+                if (cat_cx[i1].re &gt; 0.0) bits |= 4;
+                if (w12.re &gt; 0.0) bits |= 8;
+                add_achieved[bits] = 1;
+            }
+        }
+    }
+
+    n_mul = 0;
+    n_add = 0;
+    printf("  TT   Name      Mult  Add\n");
+    printf("  ---- --------  ----  ---\n");
+    for (tt = 0; tt &lt; 16; tt++) {
+        printf("  0x%X  %-8s  %s    %s\n",
+               tt, fn2_name(tt),
+               mul_achieved[tt] ? " YES" : " ---",
+               add_achieved[tt] ? " YES" : " ---");
+        if (mul_achieved[tt]) n_mul++;
+        if (add_achieved[tt]) n_add++;
+    }
+    printf("\n  Achievable:     %d/16  %d/16\n\n", n_mul, n_add);
+
+    any_odd = 0;
+    for (tt = 0; tt &lt; 16; tt++)
+        if ((tt &amp; 1) &amp;&amp; add_achieved[tt]) any_odd = 1;
+    check("additive: all achieved TTs are even (bit 0 = 0)", !any_odd);
+
+    sprintf(msg, "2-input mult: &gt;= 8 achieved (got %d)", n_mul);
+    check(msg, n_mul &gt;= 8);
+}
+
+/* ================================================================
+ * PART C: 3-Input DKC Search (Both Encodings)
+ * ================================================================ */
+
+static long mul_results[N_ACT][MAX_NPN];
+static long add_results[N_ACT][MAX_NPN];
+
+static void part_c_3input(void) {
+    int a, ci;
+    char msg[256];
+
+    printf("\n=== PART C: 3-Input DKC Search ===\n\n");
+
+    npn_init();
+    npn_build_classes();
+
+    sprintf(msg, "NPN class count = 13 (got %d)", n_npn);
+    check(msg, n_npn == 13);
+
+    /* Multiplicative search */
+    printf("\n  --- Multiplicative encoding ---\n");
+    search_3input_batch(ENCODE_MUL, mul_results);
+
+    printf("\n  Reachability grid (multiplicative):\n\n");
+    printf("  %-4s %-12s", "TT", "Class");
+    for (a = 0; a &lt; N_ACT; a++)
+        printf("  %-6s", act_table[a].name);
+    printf("\n  ---- ----------");
+    for (a = 0; a &lt; N_ACT; a++)
+        printf("  ------");
+    printf("\n");
+
+    for (ci = 0; ci &lt; n_npn; ci++) {
+        int tt = npn_classes[ci].canon_tt;
+        printf("  0x%02X %-12s", tt,
+               npn_classes[ci].titulis ?
+               npn_classes[ci].titulis : "???");
+        for (a = 0; a &lt; N_ACT; a++)
+            printf("  %6s", mul_results[a][ci] &gt; 0 ? "Y" : "-");
+        if (tt == 0x1B || tt == 0x06)
+            printf("  &lt;&lt;&lt;");
+        printf("\n");
+    }
+
+    printf("  ---- ----------");
+    for (a = 0; a &lt; N_ACT; a++)
+        printf("  ------");
+    printf("\n  %-17s", "Reachable:");
+    for (a = 0; a &lt; N_ACT; a++) {
+        int count = 0;
+        for (ci = 0; ci &lt; n_npn; ci++)
+            if (mul_results[a][ci] &gt; 0) count++;
+        printf("  %2d/13 ", count);
+    }
+    printf("\n");
+
+    /* Additive search */
+    printf("\n  --- Additive encoding ---\n");
+    search_3input_batch(ENCODE_ADD, add_results);
+
+    printf("\n  Reachability grid (additive):\n\n");
+    printf("  %-4s %-12s", "TT", "Class");
+    for (a = 0; a &lt; N_ACT; a++)
+        printf("  %-6s", act_table[a].name);
+    printf("\n  ---- ----------");
+    for (a = 0; a &lt; N_ACT; a++)
+        printf("  ------");
+    printf("\n");
+
+    for (ci = 0; ci &lt; n_npn; ci++) {
+        int tt = npn_classes[ci].canon_tt;
+        printf("  0x%02X %-12s", tt,
+               npn_classes[ci].titulis ?
+               npn_classes[ci].titulis : "???");
+        for (a = 0; a &lt; N_ACT; a++)
+            printf("  %6s", add_results[a][ci] &gt; 0 ? "Y" : "-");
+        if (tt == 0x1B || tt == 0x06)
+            printf("  &lt;&lt;&lt;");
+        printf("\n");
+    }
+
+    printf("  ---- ----------");
+    for (a = 0; a &lt; N_ACT; a++)
+        printf("  ------");
+    printf("\n  %-17s", "Reachable:");
+    for (a = 0; a &lt; N_ACT; a++) {
+        int count = 0;
+        for (ci = 0; ci &lt; n_npn; ci++)
+            if (add_results[a][ci] &gt; 0) count++;
+        printf("  %2d/13 ", count);
+    }
+    printf("\n");
+}
+
+/* ================================================================
+ * PART D: Head-to-Head Comparison Table
+ * ================================================================ */
+
+static void part_d_comparison(void) {
+    int a, ci;
+
+    printf("\n=== PART D: Head-to-Head Comparison ===\n\n");
+
+    /* Re&gt;0 comparison */
+    printf("  --- Re(z) &gt; 0 ---\n\n");
+    printf("    %-4s %-12s  %10s  %10s  %s\n",
+           "TT", "Class", "Mult", "Add", "Status");
+    printf("    ---- ----------  ----------  ----------  ------\n");
+
+    for (ci = 0; ci &lt; n_npn; ci++) {
+        int tt = npn_classes[ci].canon_tt;
+        long m = mul_results[0][ci];
+        long ad = add_results[0][ci];
+        const char *status;
+
+        if (m &gt; 0 &amp;&amp; ad &gt; 0)       status = "BOTH";
+        else if (m &gt; 0 &amp;&amp; ad == 0)  status = "MULT-ONLY";
+        else if (m == 0 &amp;&amp; ad &gt; 0)  status = "ADD-ONLY";
+        else                        status = "NEITHER";
+
+        printf("    0x%02X %-12s  %10ld  %10ld  %s%s\n",
+               tt,
+               npn_classes[ci].titulis ?
+               npn_classes[ci].titulis : "???",
+               m, ad, status,
+               (tt == 0x1B || tt == 0x06) ? "  &lt;&lt;&lt;" : "");
+    }
+
+    /* Summary grid across all activations */
+    printf("\n  Summary: NPN classes reachable (out of 13)\n\n");
+    printf("    %-12s  %5s  %5s  %5s  %s\n",
+           "Activation", "Mult", "Add", "Union",
+           "Add-only classes");
+    printf("    ----------  -----  -----  -----  "
+           "-------------------\n");
+
+    for (a = 0; a &lt; N_ACT; a++) {
+        int n_mul_r = 0, n_add_r = 0, n_union = 0;
+        printf("    %-12s", act_table[a].name);
+
+        for (ci = 0; ci &lt; n_npn; ci++) {
+            if (mul_results[a][ci] &gt; 0) n_mul_r++;
+            if (add_results[a][ci] &gt; 0) n_add_r++;
+            if (mul_results[a][ci] &gt; 0 || add_results[a][ci] &gt; 0)
+                n_union++;
+        }
+
+        printf("  %2d/13  %2d/13  %2d/13  ",
+               n_mul_r, n_add_r, n_union);
+
+        {
+            int first = 1;
+            for (ci = 0; ci &lt; n_npn; ci++) {
+                if (add_results[a][ci] &gt; 0
+                    &amp;&amp; mul_results[a][ci] == 0) {
+                    if (!first) printf(",");
+                    printf("0x%02X", npn_classes[ci].canon_tt);
+                    first = 0;
+                }
+            }
+            if (first) printf("(none)");
+        }
+        printf("\n");
+    }
+}
+
+/* ================================================================
+ * PART E: Headline Results + Cross-ell Comparison
+ * ================================================================ */
+
+static void part_e_headline(void) {
+    int ci;
+    int l6_re_mul = 0, l6_re_add = 0;
+    int l6_im_mul = 0;
+    int l6_0x1b_re_mul = 0, l6_0x06_re_mul = 0;
+    int l6_0x1b_re_add = 0, l6_0x06_re_add = 0;
+    int l6_0x1b_im_mul = 0, l6_0x06_im_mul = 0;
+    char msg[256];
+
+    printf("\n=== PART E: Headline Results ===\n\n");
+
+    /* Count ell=6 reachability */
+    for (ci = 0; ci &lt; n_npn; ci++) {
+        int tt = npn_classes[ci].canon_tt;
+        if (mul_results[0][ci] &gt; 0) l6_re_mul++;
+        if (add_results[0][ci] &gt; 0) l6_re_add++;
+        if (mul_results[1][ci] &gt; 0) l6_im_mul++;
+        if (tt == 0x1B) {
+            if (mul_results[0][ci] &gt; 0) l6_0x1b_re_mul = 1;
+            if (add_results[0][ci] &gt; 0) l6_0x1b_re_add = 1;
+            if (mul_results[1][ci] &gt; 0) l6_0x1b_im_mul = 1;
+        }
+        if (tt == 0x06) {
+            if (mul_results[0][ci] &gt; 0) l6_0x06_re_mul = 1;
+            if (add_results[0][ci] &gt; 0) l6_0x06_re_add = 1;
+            if (mul_results[1][ci] &gt; 0) l6_0x06_im_mul = 1;
+        }
+    }
+
+    printf("  ============================================\n");
+    printf("  ||  THE HEADLINE: 0x1B/0x06 Re&gt;0 WALL    ||\n");
+    printf("  ||  Third independent verification        ||\n");
+    printf("  ============================================\n\n");
+
+    printf("  ell=4 (Z[i], rank 2):\n");
+    printf("    Re&gt;0 + mult: 11/13  (0x1B: NO,  0x06: NO)\n");
+    printf("    Im&gt;0 + mult: 12/13  (0x1B: NO,  0x06: YES)\n");
+    printf("    Catalog: 56 values\n\n");
+
+    printf("  ell=5 (Z[zeta_5], rank 4):\n");
+    printf("    Re&gt;0 + mult: 11/13  (0x1B: NO,  0x06: NO)\n");
+    printf("    Im&gt;0 + mult: 12/13  (0x1B: NO,  0x06: YES)\n");
+    printf("    Catalog: 116 values\n\n");
+
+    printf("  ell=6 (Z[zeta_24], rank 8):\n");
+    printf("    Re&gt;0 + mult: %2d/13  (0x1B: %s, 0x06: %s)\n",
+           l6_re_mul,
+           l6_0x1b_re_mul ? "YES" : "NO",
+           l6_0x06_re_mul ? "YES" : "NO");
+    printf("    Re&gt;0 + add:  %2d/13  (0x1B: %s, 0x06: %s)\n",
+           l6_re_add,
+           l6_0x1b_re_add ? "YES" : "NO",
+           l6_0x06_re_add ? "YES" : "NO");
+    printf("    Im&gt;0 + mult: %2d/13  (0x1B: %s, 0x06: %s)\n",
+           l6_im_mul,
+           l6_0x1b_im_mul ? "YES" : "NO",
+           l6_0x06_im_mul ? "YES" : "NO");
+    printf("    Catalog: %d values\n\n", cat_size);
+
+    if (l6_0x1b_re_mul || l6_0x06_re_mul) {
+        printf("  &gt;&gt;&gt; WALL BROKEN at ell=6!\n\n");
+    } else {
+        printf("  &gt;&gt;&gt; WALL HOLDS at ell=6. Third confirmation.\n\n");
+    }
+
+    /* Comparison assertions */
+    sprintf(msg, "ell=6 Re&gt;0+mult &gt;= 11 (got %d)", l6_re_mul);
+    check(msg, l6_re_mul &gt;= 11);
+
+    check("additive Re&gt;0 still limited (convexity)",
+          l6_re_add &lt;= 7);
+
+    /* Per-activation best achievability */
+    printf("  Best single-encoding achievability:\n\n");
+    {
+        int a;
+        for (a = 0; a &lt; N_ACT; a++) {
+            int best_m = 0, best_a_r = 0, un = 0;
+            for (ci = 0; ci &lt; n_npn; ci++) {
+                if (mul_results[a][ci] &gt; 0) best_m++;
+                if (add_results[a][ci] &gt; 0) best_a_r++;
+                if (mul_results[a][ci] &gt; 0
+                    || add_results[a][ci] &gt; 0) un++;
+            }
+            printf("    %-12s  mult=%2d  add=%2d  union=%2d",
+                   act_table[a].name, best_m, best_a_r, un);
+            if (un == 13) printf("  &lt;&lt;&lt; ALL 13");
+            printf("\n");
+        }
+    }
+}
+
+/* ================================================================
+ * PART F: Rotated Half-Plane Sweep (multiplicative only)
+ *
+ * sigma_theta(z) = [Re(e^{i*theta} * z) &gt; 0]
+ *                = [x*cos(theta) - y*sin(theta) &gt; 0]
+ *
+ * At z=1: sigma_theta(1) = [cos(theta) &gt; 0].
+ * So z=1 is INSIDE when theta in (-90, 90), ON BOUNDARY at +/-90.
+ *
+ * By NPN complement symmetry, theta and theta+180 give the same
+ * NPN class reachability (sigma_{theta+pi} = ~sigma_theta, and
+ * NPN classes include output negation).
+ *
+ * Key test: does the wall depend on half-plane orientation?
+ * theta=0 (Re&gt;0) gives 11/13. theta=90 (Im&lt;0, same NPN as Im&gt;0)
+ * should give 13/13 (matching Part C). What happens in between?
+ * ================================================================ */
+
+static void part_f_rotated_sweep(void) {
+    long tt_counts[24][256]; /* 24 angles x 256 truth tables */
+    double ct_arr[24], st_arr[24];
+    Cx cx12;
+    int theta_i, i1, i2, i3, ci, tt;
+    int sz;
+    int npn_counts[24]; /* NPN reachable per angle */
+
+    printf("\n=== PART F: Rotated Half-Plane Sweep ===\n\n");
+    printf("  sigma_theta(z) = [Re(e^{i*theta} * z) &gt; 0]\n");
+    printf("  z(0,0,0) = 1 is inside when cos(theta) &gt; 0\n\n");
+
+    /* Precompute trig */
+    for (theta_i = 0; theta_i &lt; 24; theta_i++) {
+        double theta = (double)theta_i * M_PI / 12.0;
+        ct_arr[theta_i] = cos(theta);
+        st_arr[theta_i] = sin(theta);
+    }
+
+    sz = cat_size;
+    memset(tt_counts, 0, sizeof(tt_counts));
+
+    printf("  Sweeping %d^3 = %ld triples x 24 angles...\n",
+           sz, (long)sz * (long)sz * (long)sz);
+
+    for (i1 = 0; i1 &lt; sz; i1++) {
+        for (i2 = 0; i2 &lt; sz; i2++) {
+            cx12 = cx_mul(cat_cx[i1], cat_cx[i2]);
+            for (i3 = 0; i3 &lt; sz; i3++) {
+                Cx zvals[8];
+                zvals[0] = cx_make(1.0, 0.0);
+                zvals[1] = cat_cx[i3];
+                zvals[2] = cat_cx[i2];
+                zvals[3] = cx_mul(cat_cx[i2], cat_cx[i3]);
+                zvals[4] = cat_cx[i1];
+                zvals[5] = cx_mul(cat_cx[i1], cat_cx[i3]);
+                zvals[6] = cx12;
+                zvals[7] = cx_mul(cx12, cat_cx[i3]);
+
+                for (theta_i = 0; theta_i &lt; 24; theta_i++) {
+                    int bits = 0;
+                    int b;
+                    for (b = 0; b &lt; 8; b++) {
+                        double proj = zvals[b].re * ct_arr[theta_i]
+                                    - zvals[b].im * st_arr[theta_i];
+                        if (proj &gt; 0.0)
+                            bits |= (1 &lt;&lt; b);
+                    }
+                    tt_counts[theta_i][bits]++;
+                }
+            }
+        }
+    }
+
+    /* Aggregate per NPN class and print */
+    printf("\n  theta  cos(th)  1-status  NPN/13  0x1B  0x06\n");
+    printf("  -----  -------  --------  ------  ----  ----\n");
+
+    for (theta_i = 0; theta_i &lt; 24; theta_i++) {
+        const char *status;
+        int npn_reached = 0;
+        int x1b_reached = 0, x06_reached = 0;
+
+        if (ct_arr[theta_i] &gt; 1e-10) status = "INSIDE";
+        else if (ct_arr[theta_i] &lt; -1e-10) status = "OUTSIDE";
+        else status = "BNDRY ";
+
+        for (ci = 0; ci &lt; n_npn; ci++) {
+            long total = 0;
+            for (tt = 1; tt &lt; 255; tt++) {
+                if (npn_canon[tt] == npn_classes[ci].canon_tt)
+                    total += tt_counts[theta_i][tt];
+            }
+            if (total &gt; 0) {
+                npn_reached++;
+                if (npn_classes[ci].canon_tt == 0x1B)
+                    x1b_reached = 1;
+                if (npn_classes[ci].canon_tt == 0x06)
+                    x06_reached = 1;
+            }
+        }
+
+        npn_counts[theta_i] = npn_reached;
+
+        printf("  %5.0f  %7.4f  %7s  %2d/13  %4s  %4s%s\n",
+               (double)theta_i * 15.0,
+               ct_arr[theta_i],
+               status,
+               npn_reached,
+               x1b_reached ? "YES" : "NO",
+               x06_reached ? "YES" : "NO",
+               npn_reached == 13 ? "  &lt;&lt;&lt;" : "");
+    }
+
+    /* Verify complement symmetry: theta and theta+180 same count */
+    {
+        int sym_ok = 1;
+        for (theta_i = 0; theta_i &lt; 12; theta_i++) {
+            if (npn_counts[theta_i] != npn_counts[theta_i + 12]) {
+                sym_ok = 0;
+                break;
+            }
+        }
+        check("complement symmetry: theta and theta+180 match",
+              sym_ok);
+    }
+
+    /* Check: theta=0 gives 11/13 (should match Part C Re&gt;0) */
+    {
+        char msg[128];
+        sprintf(msg, "theta=0 matches Re&gt;0 (%d/13)",
+                npn_counts[0]);
+        check(msg, npn_counts[0] == 11);
+    }
+}
+
+/* ================================================================
+ * MAIN
+ * ================================================================ */
+
+int main(void) {
+    setbuf(stdout, NULL);
+    printf("KNOTAPEL DEMO 59: Q=3 Potts DKC "
+           "(ell=6, delta=sqrt(3))\n");
+    printf("========================================"
+           "===================\n");
+
+    init_a_table();
+
+    part_a_catalog();
+    part_b_2input();
+    part_c_3input();
+    part_d_comparison();
+    part_e_headline();
+    part_f_rotated_sweep();
+
+    printf("\n========================================"
+           "===================\n");
+    printf("Results: %d passed, %d failed\n", n_pass, n_fail);
+    printf("========================================"
+           "===================\n");
+
+    return n_fail &gt; 0 ? 1 : 0;
+}
+</code></pre>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/c.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</body>
+</html>

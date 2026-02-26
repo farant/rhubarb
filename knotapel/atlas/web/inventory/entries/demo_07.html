@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>inventory/entries/demo_07.md</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+    <link rel="stylesheet" href="../../style.css">
+</head>
+<body>
+    <nav><a href="../../index.html">← Back to Index</a></nav><hr>
+    <h2>Demo 07: Braid Closure Bridge</h2>
+<ul>
+<li><strong>Status</strong>: COMPLETE</li>
+<li><strong>File</strong>: <code><a href="../../demo_07_braid_closure/main.c.html">demo_07_braid_closure/main.c</a></code> (~791 lines)</li>
+<li><strong>Tests</strong>: 25/25 pass (compiles clean with all strict flags including -Werror)</li>
+<li><strong>Depends on</strong>: Demo 01 (PD notation + state-sum bracket), Demo 02 (braid bracket via state-sum), Demos 02-06 (matrix pipeline context)</li>
+<li><strong>Feeds into</strong>: Demo 08 (reverse direction: PD -&gt; braid word via Vogel's algorithm)</li>
+</ul>
+<h3>Headline</h3>
+Bridges the two separate computation worlds (PD state-sum and braid word) by converting braid words to PD notation via closure, proving both representations compute identical Kauffman brackets.
+<h3>Key Results</h3>
+<ul>
+<li><code>braid_to_pd()</code> generates valid PD notation from braid words with correct arc counts for all test knots/links</li>
+<li><strong>Exact bracket match</strong>: PD state-sum bracket from generated PD == braid bracket for all 5 test cases (trefoil 2-strand, figure-eight, Hopf, trefoil 3-strand, unknot)</li>
+<li>Seifert circle count = braid strand count for all braid closures (theorem confirmed computationally)</li>
+<li>Seifert algorithm works universally on both braid-generated PD and Demo 01's hand-coded PD</li>
+<li>Link component count from PD matches braid permutation cycle structure</li>
+<li>Discovery: sigma_1 sigma_2 sigma_1 on 3 strands is a 2-component link (not a trefoil)</li>
+<li>Discovery: sigma sigma^{-1} closes to 2-component unlink</li>
+</ul>
+<h3>Theorems/Conjectures</h3>
+<ul>
+<li><strong>Confirmed</strong>: Braid closure PD bracket = braid state-sum bracket (the two worlds agree exactly)</li>
+<li><strong>Confirmed</strong>: Seifert circles from PD = strand count for braid closures</li>
+<li><strong>Confirmed</strong>: Link components from PD = permutation cycle count of braid word</li>
+<li><strong>Noted</strong>: PD chirality bug — "obvious" counter-clockwise labeling gives mirror bracket; fix is [NE, SE, SW, NW] for positive crossings</li>
+</ul>
+<h3>Code Assets</h3>
+<ul>
+<li><code>braid_to_pd()</code>: core bridge function — braid word to PD notation via closure. Tracks per-position crossing lists, assigns arc labels between consecutive crossings, builds PD with correct over/under conventions</li>
+<li><code>seifert_circles()</code>: Seifert resolution on PD notation. Sign-dependent pairing (positive → B-smoothing, negative → A-smoothing). Universal across PD conventions</li>
+<li><code>link_components()</code>: traces strands through crossings via (p+2)%4 exit rule. Counts topological components</li>
+<li><code>pd_bracket()</code>: Demo 01's state-sum bracket, included for cross-validation</li>
+<li><code>braid_bracket()</code> + <code>braid_loops()</code>: Demo 02's braid state-sum (union-find based), included for cross-validation</li>
+<li>Reusable <code>Poly</code> Laurent polynomial ring (standard copy from Demo 01)</li>
+<li>PD types (<code>Xing</code>, <code>Knot</code>) with sign tracking</li>
+</ul>
+<h3>Literature Touched</h3>
+<ul>
+<li>Braid closure (Alexander's theorem): every link is a closed braid</li>
+<li>Seifert circles and Seifert surfaces</li>
+<li>PD notation conventions (under/over strand labeling, chirality sensitivity)</li>
+<li>Link component counting from diagram data</li>
+<li>Vogel's algorithm (mentioned as Demo 08 direction)</li>
+</ul>
+<h3>Open Questions</h3>
+<ul>
+<li>Round-trip: can we go PD → braid word (Vogel's algorithm) and back? (Deferred to Demo 08)</li>
+<li>Strands uninvolved in any crossing are silently skipped in <code>braid_to_pd()</code> — is this correct for all cases?</li>
+</ul>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/c.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</body>
+</html>

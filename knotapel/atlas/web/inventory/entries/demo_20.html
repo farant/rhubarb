@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>inventory/entries/demo_20.md</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+    <link rel="stylesheet" href="../../style.css">
+</head>
+<body>
+    <nav><a href="../../index.html">← Back to Index</a></nav><hr>
+    <h2>Demo 20: Braid Error Landscape</h2>
+<ul>
+<li><strong>Status</strong>: COMPLETE</li>
+<li><strong>File</strong>: <code><a href="../../demo_20_braid_error/main.c.html">demo_20_braid_error/main.c</a></code> (~1017 lines)</li>
+<li><strong>Tests</strong>: ~7 pass (5 parts: A=1 formula verification, B=2 smoothness+critical delta, C=1 cascade comparison, D=1 delta separation, E=2 transition+region)</li>
+<li><strong>Depends on</strong>: Demo 18/19 (braid Boolean gates: NOT, NAND words; expression tree compiler; gate output evaluation)</li>
+<li><strong>Feeds into</strong>: Understanding robustness of braid-based computation; noise tolerance bounds for DKC circuits</li>
+</ul>
+<h3>Headline</h3>
+Maps the error landscape of braid-based Boolean logic as delta moves away from zero, discovering that |delta| = 2|cos(2*theta)| universally predicts gate viability, with smooth degradation and identifiable phase transition thresholds.
+<h3>Key Results</h3>
+<ul>
+<li><strong>Part A (Delta landscape)</strong>: Analytical formula |delta| = 2|cos(2*theta)| verified across 360 angles; zeros at theta = pi/4, 3pi/4, 5pi/4, 7pi/4 (8th roots of unity — exactly the angles with NAND support from Demo 19); |delta| values tabulated for 4th, 6th, 8th, 10th, 12th roots of unity</li>
+<li><strong>Part B (Single-gate error)</strong>: 200-point sweep +/- pi/4 around 5*pi/4 center; NOT separation and NAND separation tracked as functions of |delta|; critical |delta_c| found where NAND first fails; separation degrades smoothly (no jumps &gt; 2.0 between adjacent points)</li>
+<li><strong>Part C (Cascade error — full adder)</strong>: Full adder (sum + carry via XOR, AND, OR composed from NAND/NOT) evaluated at each sweep angle; 8/8 truth table entries checked; cascade failure compared to single-gate failure; determines whether cascade amplifies error or not</li>
+<li><strong>Part D (Universal delta curve)</strong>: Gates binned by |delta| ranges [0.0, 0.25), [0.25, 0.5), ..., [1.75, 2.0); average NOT/NAND separation and NAND correctness percentage per bin; roots of unity overlaid on universal curve; |delta| cleanly separates universal (NOT+NAND) from NOT-only angles</li>
+<li><strong>Part E (Phase transition)</strong>: Finite differences of NAND separation near center; peak-to-average derivative ratio determines sharp vs gradual transition; contiguous "correct regions" (both NOT and NAND work) identified and bounded by theta and |delta|</li>
+</ul>
+<h3>Theorems/Conjectures</h3>
+<ul>
+<li><strong>delta = -2<em>cos(2</em>theta)</strong>: exact analytical formula, |delta| = 2|cos(2*theta)|</li>
+<li>Delta-zero angles (8th roots of unity) are exactly where braid circuits compute exact Boolean logic</li>
+<li>|delta| is a <strong>universal predictor</strong> of gate viability — cleanly separates universal-computation angles from NOT-only angles across different roots of unity</li>
+<li>Separation degrades smoothly as |delta| increases (no sharp phase transition in the strict sense, but potentially concentrated derivative)</li>
+</ul>
+<h3>Data</h3>
+<ul>
+<li>360-angle delta landscape sweep (0 to 2*pi)</li>
+<li>200-point fine sweep centered at 5*pi/4, range +/- pi/4</li>
+<li>|delta| values at 4th, 6th, 8th, 10th, 12th roots of unity</li>
+<li>8 |delta| bins with average NOT/NAND separation and correctness percentages</li>
+<li>Full adder correctness (8 truth-table entries) at every 5th sweep point</li>
+<li>Derivative analysis: peak vs average |d(sep)/di| for NOT and NAND</li>
+</ul>
+<h3>Code Assets</h3>
+<ul>
+<li><code>delta_abs_at(theta)</code> — computes |delta| = |-(A^2 + A^{-2})| at given angle</li>
+<li><code>SweepPoint</code> struct: theta, delta_abs, not_sep, nand_sep, not_correct, nand_correct</li>
+<li><code>make_gate_braid()</code> — constructs braid from input word + gate word</li>
+<li><code>gate_output()</code> — 1-bit gate evaluation (amplitude of bracket)</li>
+<li><code>gate_output_2bit()</code> — 2-bit gate evaluation</li>
+<li><code>compute_thresholds()</code> — dynamic threshold computation (NOT and NAND) per angle</li>
+<li>Expression tree compiler: <code>Expr</code> pool allocator, <code>expr_var/not/nand/and/or/xor</code> constructors, <code>eval_expr</code> recursive evaluator — full adder built from expression trees</li>
+<li>NOT_WORD = {-1,-1,-1,-1,-1,-1} (len 6), NAND_WORD = {-1,-1,-1,2,2} (len 5)</li>
+</ul>
+<h3>Literature Touched</h3>
+<ul>
+<li>Error analysis of topological/braid-based computation</li>
+<li>Phase transitions in computational gate fidelity</li>
+<li>Robustness of topological quantum computation (analogy: delta=0 as topological protection)</li>
+<li>Universal vs non-universal gate sets parameterized by algebraic structure</li>
+</ul>
+<h3>Open Questions</h3>
+<ul>
+<li>What is the precise critical |delta_c| where NAND fails? Is it a root of a known polynomial?</li>
+<li>Does cascade error amplify linearly or exponentially with circuit depth?</li>
+<li>Can error correction schemes exploit the smooth degradation profile?</li>
+<li>Is there an analogue of fault-tolerance threshold for braid circuits away from delta=0?</li>
+</ul>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/c.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</body>
+</html>

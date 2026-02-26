@@ -1,0 +1,1733 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>demo_90_sum_angle_structure/main.c</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+    <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+    <nav><a href="../index.html">← Back to Index</a></nav><hr>
+    <h1>demo_90_sum_angle_structure/main.c</h1><pre><code class="language-c">/*
+ * KNOTAPEL DEMO 90: Sum-Angle Structure
+ * ======================================
+ *
+ * D89 established: the depth law holds but the mechanism is NOT pairwise
+ * coherence, direction coverage, cell diversity, Cayley density, sector
+ * diversity, angle coherence, or paired extension (as dominant pathway).
+ *
+ * D75 proved: computation REQUIRES non-canonical sum angles.
+ * D82 proved: deep-564 beats strided-564 despite fewer dirs/angles.
+ *
+ * Hypothesis: deep entries produce STRUCTURED sum-angle distributions
+ * (fewer distinct, algebraically coherent) while strided/random entries
+ * produce near-random sum-angle spray. The mechanism lives in the SUM
+ * angles, not individual entry properties.
+ *
+ * Phase 1: Pairwise sum-angle census (deep vs strided vs shallow)
+ * Phase 2: Sum-angle census by XOR level (winners)
+ * Phase 3: Entries-per-direction concentration
+ * Phase 4: Paired extension at higher XOR levels
+ *
+ * C89, zero dependencies beyond math.h.
+ */
+
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;string.h&gt;
+#include &lt;math.h&gt;
+
+#ifndef M_PI
+#define M_PI 3.14159265358979323846
+#endif
+
+/* ================================================================ */
+/* Test infrastructure                                              */
+/* ================================================================ */
+
+static int n_pass = 0, n_fail = 0;
+
+static void check(const char *titulis, int ok) {
+    if (ok) { printf("  PASS: %s\n", titulis); n_pass++; }
+    else    { printf("  FAIL: %s\n", titulis); n_fail++; }
+}
+
+/* ================================================================ */
+/* Quaternion                                                       */
+/* ================================================================ */
+
+typedef struct { double a, b, c, d; } Quat;
+
+static Quat qmul(const Quat *p, const Quat *g) {
+    Quat r;
+    r.a = p-&gt;a*g-&gt;a - p-&gt;b*g-&gt;b - p-&gt;c*g-&gt;c - p-&gt;d*g-&gt;d;
+    r.b = p-&gt;a*g-&gt;b + p-&gt;b*g-&gt;a + p-&gt;c*g-&gt;d - p-&gt;d*g-&gt;c;
+    r.c = p-&gt;a*g-&gt;c - p-&gt;b*g-&gt;d + p-&gt;c*g-&gt;a + p-&gt;d*g-&gt;b;
+    r.d = p-&gt;a*g-&gt;d + p-&gt;b*g-&gt;c - p-&gt;c*g-&gt;b + p-&gt;d*g-&gt;a;
+    return r;
+}
+
+/* ================================================================ */
+/* SU(2) generators + group closure with depth tracking             */
+/* ================================================================ */
+
+#define MAX_QCAT 4096
+#define MAX_DIR 2048
+#define MAX_ROUNDS 16
+
+static Quat g_cat[MAX_QCAT];
+static int g_cat_size = 0;
+static int g_depth[MAX_QCAT];
+static int n_rounds = 0;
+
+static int round_start[MAX_ROUNDS];
+static int round_count[MAX_ROUNDS];
+
+static Quat g_gen[3];
+
+static void init_su2(double half_angle) {
+    double co = cos(half_angle), si = sin(half_angle);
+    g_gen[1].a = co; g_gen[1].b = si; g_gen[1].c = 0; g_gen[1].d = 0;
+    g_gen[2].a = co; g_gen[2].b = 0;  g_gen[2].c = 0; g_gen[2].d = -si;
+}
+
+static int find_in_cat(const Quat *q, int n) {
+    int i;
+    for (i = 0; i &lt; n; i++) {
+        if (fabs(g_cat[i].a - q-&gt;a) &lt; 1e-10 &amp;&amp;
+            fabs(g_cat[i].b - q-&gt;b) &lt; 1e-10 &amp;&amp;
+            fabs(g_cat[i].c - q-&gt;c) &lt; 1e-10 &amp;&amp;
+            fabs(g_cat[i].d - q-&gt;d) &lt; 1e-10)
+            return i;
+        if (fabs(g_cat[i].a + q-&gt;a) &lt; 1e-10 &amp;&amp;
+            fabs(g_cat[i].b + q-&gt;b) &lt; 1e-10 &amp;&amp;
+            fabs(g_cat[i].c + q-&gt;c) &lt; 1e-10 &amp;&amp;
+            fabs(g_cat[i].d + q-&gt;d) &lt; 1e-10)
+            return i;
+    }
+    return -1;
+}
+
+static void build_closure(int verbose) {
+    Quat gens[4];
+    int prev, i, gi, rd;
+
+    g_cat_size = 0;
+    n_rounds = 0;
+    memset(round_start, 0, sizeof(round_start));
+    memset(round_count, 0, sizeof(round_count));
+
+    g_cat[0].a = 1; g_cat[0].b = 0; g_cat[0].c = 0; g_cat[0].d = 0;
+    g_depth[0] = 0;
+    g_cat_size = 1;
+
+    gens[0] = g_gen[1];
+    gens[1].a =  g_gen[1].a; gens[1].b = -g_gen[1].b;
+    gens[1].c = -g_gen[1].c; gens[1].d = -g_gen[1].d;
+    gens[2] = g_gen[2];
+    gens[3].a =  g_gen[2].a; gens[3].b = -g_gen[2].b;
+    gens[3].c = -g_gen[2].c; gens[3].d = -g_gen[2].d;
+
+    round_start[0] = 0;
+    for (gi = 0; gi &lt; 4; gi++) {
+        if (find_in_cat(&amp;gens[gi], g_cat_size) &lt; 0 &amp;&amp;
+            g_cat_size &lt; MAX_QCAT) {
+            g_depth[g_cat_size] = 0;
+            g_cat[g_cat_size++] = gens[gi];
+        }
+    }
+    round_count[0] = g_cat_size;
+    n_rounds = 1;
+    if (verbose) printf("  Round 0: %d entries\n", g_cat_size);
+
+    rd = 1;
+    do {
+        prev = g_cat_size;
+        round_start[rd] = prev;
+        for (i = 0; i &lt; prev; i++) {
+            for (gi = 0; gi &lt; 4; gi++) {
+                Quat prod = qmul(&amp;g_cat[i], &amp;gens[gi]);
+                if (find_in_cat(&amp;prod, g_cat_size) &lt; 0) {
+                    if (g_cat_size &lt; MAX_QCAT) {
+                        g_depth[g_cat_size] = rd;
+                        g_cat[g_cat_size++] = prod;
+                    }
+                }
+            }
+        }
+        round_count[rd] = g_cat_size - prev;
+        if (g_cat_size &gt; prev) {
+            if (verbose)
+                printf("  Round %d: %d entries (+%d)\n",
+                       rd, g_cat_size, g_cat_size - prev);
+            n_rounds++;
+        }
+        rd++;
+    } while (g_cat_size &gt; prev &amp;&amp; rd &lt; MAX_ROUNDS);
+}
+
+/* ================================================================ */
+/* Saved catalog for subset restoration                             */
+/* ================================================================ */
+
+static Quat saved_cat[MAX_QCAT];
+static int saved_depth[MAX_QCAT];
+static int saved_cat_size;
+
+static void save_catalog(void) {
+    int i;
+    saved_cat_size = g_cat_size;
+    for (i = 0; i &lt; g_cat_size; i++) {
+        saved_cat[i] = g_cat[i];
+        saved_depth[i] = g_depth[i];
+    }
+}
+
+static void restore_catalog(void) {
+    int i;
+    g_cat_size = saved_cat_size;
+    for (i = 0; i &lt; g_cat_size; i++) {
+        g_cat[i] = saved_cat[i];
+        g_depth[i] = saved_depth[i];
+    }
+}
+
+/* ================================================================ */
+/* Direction catalog                                                */
+/* ================================================================ */
+
+static double g_dir[MAX_DIR][3];
+static int g_nd = 0;
+
+static void build_dirs(int cat_size) {
+    int i, j;
+    g_nd = 0;
+    for (i = 0; i &lt; cat_size; i++) {
+        double qa = g_cat[i].a, qb = g_cat[i].b;
+        double qc = g_cat[i].c, qd = g_cat[i].d;
+        double nv, ax, ay, az;
+        int found = 0;
+        if (qa &lt; 0) { qa = -qa; qb = -qb; qc = -qc; qd = -qd; }
+        nv = sqrt(qb*qb + qc*qc + qd*qd);
+        if (nv &lt; 1e-12) continue;
+        ax = qb/nv; ay = qc/nv; az = qd/nv;
+        for (j = 0; j &lt; g_nd; j++) {
+            double d1 = fabs(g_dir[j][0]-ax) + fabs(g_dir[j][1]-ay) +
+                         fabs(g_dir[j][2]-az);
+            double d2 = fabs(g_dir[j][0]+ax) + fabs(g_dir[j][1]+ay) +
+                         fabs(g_dir[j][2]+az);
+            if (d1 &lt; 1e-8 || d2 &lt; 1e-8) { found = 1; break; }
+        }
+        if (!found &amp;&amp; g_nd &lt; MAX_DIR) {
+            g_dir[g_nd][0] = ax; g_dir[g_nd][1] = ay; g_dir[g_nd][2] = az;
+            g_nd++;
+        }
+    }
+}
+
+/* ================================================================ */
+/* Voronoi cell + combined cell + XOR test                          */
+/* ================================================================ */
+
+#define MAX_ACT 65536
+
+static int cell_even[MAX_ACT], cell_odd[MAX_ACT];
+static int touched_cells[MAX_ACT];
+
+static int vor_cell(double ax, double ay, double az) {
+    int i, best = 0;
+    double bd = -2.0;
+    for (i = 0; i &lt; g_nd; i++) {
+        double dp = fabs(ax*g_dir[i][0] + ay*g_dir[i][1] + az*g_dir[i][2]);
+        if (dp &gt; bd) { bd = dp; best = i; }
+    }
+    return best;
+}
+
+static int combined_cell(double sa, double sb, double sc, double sd,
+                         int k_sec) {
+    double n2 = sa*sa + sb*sb + sc*sc + sd*sd;
+    double nm, qa, nv, half_ang, ang;
+    int sec, vor, n_vor;
+
+    n_vor = g_nd + 1;
+    if (n2 &lt; 1e-24) return (k_sec - 1) * n_vor + g_nd;
+
+    nm = sqrt(n2);
+    qa = sa / nm;
+    if (qa &lt; 0) { qa = -qa; sb = -sb; sc = -sc; sd = -sd; }
+    if (qa &gt; 1.0) qa = 1.0;
+
+    half_ang = acos(qa);
+    ang = 2.0 * half_ang * 180.0 / M_PI;
+    sec = (int)(ang * (double)k_sec / 360.0);
+    if (sec &gt;= k_sec) sec = k_sec - 1;
+    if (sec &lt; 0) sec = 0;
+
+    nv = sqrt(sb*sb + sc*sc + sd*sd) / nm;
+    if (nv &lt; 1e-12) {
+        vor = g_nd;
+    } else {
+        double inv = nm * nv;
+        double ax2 = sb / inv, ay2 = sc / inv, az2 = sd / inv;
+        vor = vor_cell(ax2, ay2, az2);
+    }
+
+    return sec * n_vor + vor;
+}
+
+static int test_xor(const int *indices, int n_weights, int k_sec) {
+    int n_inputs = 2 * n_weights;
+    int n_vor, n_cells;
+    double wa[14], wb[14], wc[14], wd[14];
+    int n_touched = 0;
+    int mask, i, result = 1;
+    int n_masks;
+
+    n_masks = 1 &lt;&lt; n_inputs;
+    n_vor = g_nd + 1;
+    n_cells = k_sec * n_vor;
+
+    if (n_cells &gt; MAX_ACT || n_inputs &gt; 14) return 0;
+
+    for (i = 0; i &lt; n_weights; i++) {
+        const Quat *q = &amp;g_cat[indices[i]];
+        wa[2*i]   =  q-&gt;a; wb[2*i]   =  q-&gt;b;
+        wc[2*i]   =  q-&gt;c; wd[2*i]   =  q-&gt;d;
+        wa[2*i+1] = -q-&gt;a; wb[2*i+1] = -q-&gt;b;
+        wc[2*i+1] = -q-&gt;c; wd[2*i+1] = -q-&gt;d;
+    }
+
+    for (mask = 0; mask &lt; n_masks; mask++) {
+        double sa = 0, sb = 0, sc = 0, sd = 0;
+        int par = 0, cell;
+
+        for (i = 0; i &lt; n_inputs; i++) {
+            if (mask &amp; (1 &lt;&lt; i)) {
+                sa += wa[i]; sb += wb[i]; sc += wc[i]; sd += wd[i];
+                par ^= 1;
+            }
+        }
+
+        cell = combined_cell(sa, sb, sc, sd, k_sec);
+
+        if (cell_even[cell] == 0 &amp;&amp; cell_odd[cell] == 0)
+            touched_cells[n_touched++] = cell;
+
+        if (par == 0) {
+            cell_even[cell]++;
+            if (cell_odd[cell] &gt; 0) { result = 0; goto cleanup; }
+        } else {
+            cell_odd[cell]++;
+            if (cell_even[cell] &gt; 0) { result = 0; goto cleanup; }
+        }
+    }
+
+cleanup:
+    for (i = 0; i &lt; n_touched; i++) {
+        cell_even[touched_cells[i]] = 0;
+        cell_odd[touched_cells[i]] = 0;
+    }
+    return result;
+}
+
+/* ================================================================ */
+/* XOR counter with k-ladder                                        */
+/* ================================================================ */
+
+static const int K_LADDER[] = {1, 6, 8, 10, 12, 16, 20, 24};
+#define N_KLADDER 8
+
+/* count_xor6 available if needed for later phases */
+
+/* ================================================================ */
+/* Extract eigenvalue angle from (possibly non-unit) quaternion     */
+/* Returns full rotation angle in degrees [0, 360)                  */
+/* ================================================================ */
+
+static double extract_angle(const Quat *q) {
+    double qa = q-&gt;a;
+    double n2 = q-&gt;a*q-&gt;a + q-&gt;b*q-&gt;b + q-&gt;c*q-&gt;c + q-&gt;d*q-&gt;d;
+    double nm = sqrt(n2);
+    double half_ang;
+    if (nm &lt; 1e-12) return 0.0;
+    qa = qa / nm;
+    if (qa &lt; 0) qa = -qa;
+    if (qa &gt; 1.0) qa = 1.0;
+    half_ang = acos(qa);
+    return 2.0 * half_ang * 180.0 / M_PI;
+}
+
+/* ================================================================ */
+/* Simple LCG random number generator                               */
+/* ================================================================ */
+
+static unsigned long g_rng = 42UL;
+
+static double rng_uniform(void) {
+    g_rng = g_rng * 6364136223846793005UL + 1442695040888963407UL;
+    return (double)(g_rng &gt;&gt; 33) / (double)(1UL &lt;&lt; 31);
+}
+
+/* ================================================================ */
+/* Subset loading utilities                                         */
+/* ================================================================ */
+
+#define SUBSET_N 564
+
+/* Load shallow-N: first N entries from saved catalog */
+static void load_shallow(int n) {
+    int i;
+    if (n &gt; saved_cat_size) n = saved_cat_size;
+    for (i = 0; i &lt; n; i++) {
+        g_cat[i] = saved_cat[i];
+        g_depth[i] = saved_depth[i];
+    }
+    g_cat_size = n;
+}
+
+/* Load strided-N: every (total/N)th entry */
+static void load_strided(int n) {
+    int i;
+    if (n &gt; saved_cat_size) n = saved_cat_size;
+    for (i = 0; i &lt; n; i++) {
+        int ss = (int)((long)i * (long)saved_cat_size / (long)n);
+        g_cat[i] = saved_cat[ss];
+        g_depth[i] = saved_depth[ss];
+    }
+    g_cat_size = n;
+}
+
+/* Load deep-N: last N entries from saved catalog */
+static void load_deep(int n) {
+    int i, start;
+    if (n &gt; saved_cat_size) n = saved_cat_size;
+    start = saved_cat_size - n;
+    for (i = 0; i &lt; n; i++) {
+        g_cat[i] = saved_cat[start + i];
+        g_depth[i] = saved_depth[start + i];
+    }
+    g_cat_size = n;
+}
+
+/* Load random-N: random sample of N entries */
+static void load_random(int n) {
+    int indices[MAX_QCAT];
+    int i;
+    if (n &gt; saved_cat_size) n = saved_cat_size;
+    for (i = 0; i &lt; saved_cat_size; i++) indices[i] = i;
+    /* Fisher-Yates shuffle first n */
+    for (i = saved_cat_size - 1; i &gt; 0; i--) {
+        int j = (int)(rng_uniform() * (double)(i + 1));
+        if (j &gt; i) j = i;
+        { int tmp = indices[i]; indices[i] = indices[j]; indices[j] = tmp; }
+    }
+    for (i = 0; i &lt; n; i++) {
+        g_cat[i] = saved_cat[indices[i]];
+        g_depth[i] = saved_depth[indices[i]];
+    }
+    g_cat_size = n;
+}
+
+/* ================================================================ */
+/* Phase 1: Pairwise Sum-Angle Census                               */
+/* ================================================================ */
+
+#define MAX_SUM_ANGLES 200000
+static double g_sum_angles[MAX_SUM_ANGLES];
+
+#define MAX_DISTINCT 2048
+static double g_distinct[MAX_DISTINCT];
+
+/* Count distinct angles with tolerance */
+static int count_distinct(const double *angles, int n, double tol) {
+    int i, j, nd = 0;
+    for (i = 0; i &lt; n; i++) {
+        int found = 0;
+        for (j = 0; j &lt; nd; j++) {
+            if (fabs(g_distinct[j] - angles[i]) &lt; tol) {
+                found = 1;
+                break;
+            }
+        }
+        if (!found &amp;&amp; nd &lt; MAX_DISTINCT) {
+            g_distinct[nd++] = angles[i];
+        }
+    }
+    return nd;
+}
+
+/* Compute sum-angle stats for current g_cat subset */
+static void sum_angle_census(const char *label, int *out_n_distinct) {
+    int i, j, ns = 0;
+    int n_distinct;
+    double sa_min = 999.0, sa_max = -1.0, sa_mean = 0.0;
+    int hist[12];
+    int depth_min = 999, depth_max = -1;
+
+    memset(hist, 0, sizeof(hist));
+
+    /* Depth range */
+    for (i = 0; i &lt; g_cat_size; i++) {
+        if (g_depth[i] &lt; depth_min) depth_min = g_depth[i];
+        if (g_depth[i] &gt; depth_max) depth_max = g_depth[i];
+    }
+
+    /* Compute all pairwise sum angles */
+    for (i = 0; i &lt; g_cat_size &amp;&amp; ns &lt; MAX_SUM_ANGLES; i++) {
+        for (j = i + 1; j &lt; g_cat_size &amp;&amp; ns &lt; MAX_SUM_ANGLES; j++) {
+            Quat s;
+            double ang;
+            s.a = g_cat[i].a + g_cat[j].a;
+            s.b = g_cat[i].b + g_cat[j].b;
+            s.c = g_cat[i].c + g_cat[j].c;
+            s.d = g_cat[i].d + g_cat[j].d;
+            ang = extract_angle(&amp;s);
+            g_sum_angles[ns++] = ang;
+            sa_mean += ang;
+            if (ang &lt; sa_min) sa_min = ang;
+            if (ang &gt; sa_max) sa_max = ang;
+        }
+    }
+
+    if (ns &gt; 0) sa_mean /= (double)ns;
+
+    /* Histogram: 12 bins from 0 to 180 degrees */
+    for (i = 0; i &lt; ns; i++) {
+        int bin = (int)(g_sum_angles[i] * 12.0 / 180.0);
+        if (bin &gt;= 12) bin = 11;
+        if (bin &lt; 0) bin = 0;
+        hist[bin]++;
+    }
+
+    /* Count distinct */
+    n_distinct = count_distinct(g_sum_angles, ns, 0.01);
+    if (out_n_distinct) *out_n_distinct = n_distinct;
+
+    printf("  --- %s (N=%d, depths %d-%d) ---\n",
+           label, g_cat_size, depth_min, depth_max);
+    printf("  Pairs: %d, Distinct angles: %d\n", ns, n_distinct);
+    printf("  Min: %.2f  Max: %.2f  Mean: %.2f\n", sa_min, sa_max, sa_mean);
+    printf("  Histogram (15-degree bins, 0-180):\n");
+    printf("    ");
+    for (i = 0; i &lt; 12; i++) {
+        printf("[%3d-%3d]: %5d  ", i*15, (i+1)*15, hist[i]);
+        if (i == 5) printf("\n    ");
+    }
+    printf("\n\n");
+}
+
+/* Also compute individual entry angle census for comparison */
+static void entry_angle_census(const char *label) {
+    int i, n_distinct;
+    double angles[MAX_QCAT];
+    double a_min = 999.0, a_max = -1.0, a_mean = 0.0;
+
+    for (i = 0; i &lt; g_cat_size; i++) {
+        angles[i] = extract_angle(&amp;g_cat[i]);
+        a_mean += angles[i];
+        if (angles[i] &lt; a_min) a_min = angles[i];
+        if (angles[i] &gt; a_max) a_max = angles[i];
+    }
+    if (g_cat_size &gt; 0) a_mean /= (double)g_cat_size;
+
+    n_distinct = count_distinct(angles, g_cat_size, 0.01);
+
+    printf("  %s entry angles: %d entries, %d distinct, "
+           "min=%.1f max=%.1f mean=%.1f\n",
+           label, g_cat_size, n_distinct, a_min, a_max, a_mean);
+}
+
+static void phase1_pairwise_sum_census(void) {
+    int deep_dist, strided_dist, shallow_dist, random_dist;
+    int rand_trials = 5, t;
+    double rand_mean_dist = 0.0;
+
+    printf("\n=== Phase 1: Pairwise Sum-Angle Census (zeta_12) ===\n\n");
+
+    /* Deep-564 */
+    load_deep(SUBSET_N);
+    build_dirs(g_cat_size);
+    entry_angle_census("Deep-564");
+    sum_angle_census("Deep-564 pairwise sums", &amp;deep_dist);
+
+    /* Strided-564 */
+    load_strided(SUBSET_N);
+    build_dirs(g_cat_size);
+    entry_angle_census("Strided-564");
+    sum_angle_census("Strided-564 pairwise sums", &amp;strided_dist);
+
+    /* Shallow-564 */
+    load_shallow(SUBSET_N);
+    build_dirs(g_cat_size);
+    entry_angle_census("Shallow-564");
+    sum_angle_census("Shallow-564 pairwise sums", &amp;shallow_dist);
+
+    /* Random-564 (mean of several trials) */
+    for (t = 0; t &lt; rand_trials; t++) {
+        int rd;
+        load_random(SUBSET_N);
+        build_dirs(g_cat_size);
+        sum_angle_census(t == 0 ? "Random-564 (trial 1)" : "Random-564",
+                         &amp;rd);
+        rand_mean_dist += (double)rd;
+    }
+    rand_mean_dist /= (double)rand_trials;
+    random_dist = (int)(rand_mean_dist + 0.5);
+
+    printf("  === Summary ===\n");
+    printf("  Deep-564 distinct sum angles:    %d\n", deep_dist);
+    printf("  Strided-564 distinct sum angles: %d\n", strided_dist);
+    printf("  Shallow-564 distinct sum angles: %d\n", shallow_dist);
+    printf("  Random-564 distinct sum angles:  %d (mean of %d trials)\n",
+           random_dist, rand_trials);
+    printf("\n");
+
+    check("Phase 1: deep has fewer distinct sum angles than strided",
+          deep_dist &lt; strided_dist);
+    check("Phase 1: deep has fewer distinct sum angles than random",
+          deep_dist &lt; random_dist);
+    check("Phase 1: census computed", deep_dist &gt; 0);
+}
+
+/* ================================================================ */
+/* Phase 2: Sum-Angle Census by XOR Level                           */
+/* ================================================================ */
+
+#define MAX_WINNERS 200
+static int g_winners[MAX_WINNERS][7];
+static int g_n_winners;
+
+/* Find XOR winners at given weight count, store tuples */
+static void find_winners(int n_weights, int bf_limit) {
+    int indices[7];
+    int i0, i1, i2, i3, ki;
+
+    g_n_winners = 0;
+    if (bf_limit &gt; g_cat_size) bf_limit = g_cat_size;
+
+    if (n_weights == 3) {
+        for (i0 = 0; i0 &lt; bf_limit &amp;&amp; g_n_winners &lt; MAX_WINNERS; i0++)
+        for (i1 = i0+1; i1 &lt; bf_limit &amp;&amp; g_n_winners &lt; MAX_WINNERS; i1++)
+        for (i2 = i1+1; i2 &lt; bf_limit &amp;&amp; g_n_winners &lt; MAX_WINNERS; i2++) {
+            indices[0] = i0; indices[1] = i1; indices[2] = i2;
+            for (ki = 0; ki &lt; N_KLADDER; ki++) {
+                int nc = K_LADDER[ki] * (g_nd + 1);
+                if (nc &gt; MAX_ACT) continue;
+                if (test_xor(indices, 3, K_LADDER[ki])) {
+                    g_winners[g_n_winners][0] = i0;
+                    g_winners[g_n_winners][1] = i1;
+                    g_winners[g_n_winners][2] = i2;
+                    g_n_winners++;
+                    break;
+                }
+            }
+        }
+    } else if (n_weights == 4) {
+        for (i0 = 0; i0 &lt; bf_limit &amp;&amp; g_n_winners &lt; MAX_WINNERS; i0++)
+        for (i1 = i0+1; i1 &lt; bf_limit &amp;&amp; g_n_winners &lt; MAX_WINNERS; i1++)
+        for (i2 = i1+1; i2 &lt; bf_limit &amp;&amp; g_n_winners &lt; MAX_WINNERS; i2++)
+        for (i3 = i2+1; i3 &lt; bf_limit &amp;&amp; g_n_winners &lt; MAX_WINNERS; i3++) {
+            indices[0] = i0; indices[1] = i1;
+            indices[2] = i2; indices[3] = i3;
+            for (ki = 0; ki &lt; N_KLADDER; ki++) {
+                int nc = K_LADDER[ki] * (g_nd + 1);
+                if (nc &gt; MAX_ACT) continue;
+                if (test_xor(indices, 4, K_LADDER[ki])) {
+                    g_winners[g_n_winners][0] = i0;
+                    g_winners[g_n_winners][1] = i1;
+                    g_winners[g_n_winners][2] = i2;
+                    g_winners[g_n_winners][3] = i3;
+                    g_n_winners++;
+                    break;
+                }
+            }
+        }
+    }
+}
+
+static void phase2_winner_sum_angles(void) {
+    int wi, nw, p, q2, n_sum;
+    double win_angles[64];
+    int n_distinct_sum[MAX_WINNERS];
+    double mean_distinct;
+
+    printf("\n=== Phase 2: Sum-Angle Census by XOR Level (zeta_12) ===\n\n");
+
+    /* Use full catalog for maximum XOR coverage */
+    restore_catalog();
+    build_dirs(g_cat_size);
+
+    /* XOR6 winners (3 weights) */
+    printf("  --- XOR6 (3 weights, bf=30) ---\n");
+    find_winners(3, 30);
+    printf("  Found %d XOR6 winners\n", g_n_winners);
+
+    mean_distinct = 0.0;
+    for (wi = 0; wi &lt; g_n_winners &amp;&amp; wi &lt; 50; wi++) {
+        nw = 3;
+        n_sum = 0;
+        /* All pairwise sums within this winner */
+        for (p = 0; p &lt; nw; p++) {
+            for (q2 = p + 1; q2 &lt; nw; q2++) {
+                Quat s;
+                int idx_p = g_winners[wi][p];
+                int idx_q = g_winners[wi][q2];
+                s.a = g_cat[idx_p].a + g_cat[idx_q].a;
+                s.b = g_cat[idx_p].b + g_cat[idx_q].b;
+                s.c = g_cat[idx_p].c + g_cat[idx_q].c;
+                s.d = g_cat[idx_p].d + g_cat[idx_q].d;
+                win_angles[n_sum++] = extract_angle(&amp;s);
+            }
+        }
+        n_distinct_sum[wi] = count_distinct(win_angles, n_sum, 0.01);
+        mean_distinct += (double)n_distinct_sum[wi];
+
+        if (wi &lt; 5) {
+            printf("    Win#%d [%d,%d,%d]: %d pairwise sums, %d distinct angles (",
+                   wi, g_winners[wi][0], g_winners[wi][1], g_winners[wi][2],
+                   n_sum, n_distinct_sum[wi]);
+            for (p = 0; p &lt; n_sum; p++)
+                printf("%.1f%s", win_angles[p], p &lt; n_sum-1 ? "," : "");
+            printf(")\n");
+        }
+    }
+    {
+        int nw_show = g_n_winners &lt; 50 ? g_n_winners : 50;
+        if (nw_show &gt; 0)
+            printf("  Mean distinct pairwise sum angles per XOR6 winner: %.2f\n\n",
+                   mean_distinct / (double)nw_show);
+    }
+
+    /* XOR8 winners (4 weights) */
+    printf("  --- XOR8 (4 weights, bf=20) ---\n");
+    find_winners(4, 20);
+    printf("  Found %d XOR8 winners\n", g_n_winners);
+
+    mean_distinct = 0.0;
+    for (wi = 0; wi &lt; g_n_winners &amp;&amp; wi &lt; 50; wi++) {
+        nw = 4;
+        n_sum = 0;
+        for (p = 0; p &lt; nw; p++) {
+            for (q2 = p + 1; q2 &lt; nw; q2++) {
+                Quat s;
+                int idx_p = g_winners[wi][p];
+                int idx_q = g_winners[wi][q2];
+                s.a = g_cat[idx_p].a + g_cat[idx_q].a;
+                s.b = g_cat[idx_p].b + g_cat[idx_q].b;
+                s.c = g_cat[idx_p].c + g_cat[idx_q].c;
+                s.d = g_cat[idx_p].d + g_cat[idx_q].d;
+                win_angles[n_sum++] = extract_angle(&amp;s);
+            }
+        }
+        n_distinct_sum[wi] = count_distinct(win_angles, n_sum, 0.01);
+        mean_distinct += (double)n_distinct_sum[wi];
+
+        if (wi &lt; 5) {
+            printf("    Win#%d [%d,%d,%d,%d]: %d pairwise sums, %d distinct (",
+                   wi, g_winners[wi][0], g_winners[wi][1],
+                   g_winners[wi][2], g_winners[wi][3],
+                   n_sum, n_distinct_sum[wi]);
+            for (p = 0; p &lt; n_sum; p++)
+                printf("%.1f%s", win_angles[p], p &lt; n_sum-1 ? "," : "");
+            printf(")\n");
+        }
+    }
+    {
+        int nw_show = g_n_winners &lt; 50 ? g_n_winners : 50;
+        if (nw_show &gt; 0)
+            printf("  Mean distinct pairwise sum angles per XOR8 winner: %.2f\n\n",
+                   mean_distinct / (double)nw_show);
+    }
+
+    check("Phase 2: XOR6 winners found", g_n_winners &gt; 0);
+}
+
+/* ================================================================ */
+/* Phase 3: Entries-per-Direction Concentration                     */
+/* ================================================================ */
+
+static void phase3_direction_concentration(void) {
+    int d, max_depth;
+    int dir_count[MAX_DIR];
+
+    printf("\n=== Phase 3: Entries-per-Direction Concentration ===\n\n");
+
+    restore_catalog();
+
+    /* Find max depth */
+    max_depth = 0;
+    { int i; for (i = 0; i &lt; saved_cat_size; i++)
+        if (saved_depth[i] &gt; max_depth) max_depth = saved_depth[i]; }
+
+    /* Build full direction catalog */
+    build_dirs(g_cat_size);
+
+    printf("  Depth | Entries | Dirs | Entries/Dir | MaxPerDir\n");
+    printf("  ------|---------|------|-------------|----------\n");
+
+    for (d = 0; d &lt;= max_depth; d++) {
+        int i, n_entries = 0;
+        int n_dirs_used = 0;
+        int max_per = 0;
+        double mean_per;
+
+        memset(dir_count, 0, sizeof(dir_count));
+
+        /* Count entries at this depth and their directions */
+        for (i = 0; i &lt; saved_cat_size; i++) {
+            if (saved_depth[i] == d) {
+                double qa = saved_cat[i].a, qb = saved_cat[i].b;
+                double qc = saved_cat[i].c, qd = saved_cat[i].d;
+                double nv, ax, ay, az;
+                int vc;
+                n_entries++;
+
+                if (qa &lt; 0) { qa=-qa; qb=-qb; qc=-qc; qd=-qd; }
+                nv = sqrt(qb*qb + qc*qc + qd*qd);
+                if (nv &lt; 1e-12) continue;
+                ax = qb/nv; ay = qc/nv; az = qd/nv;
+                vc = vor_cell(ax, ay, az);
+                dir_count[vc]++;
+            }
+        }
+
+        for (i = 0; i &lt; g_nd; i++) {
+            if (dir_count[i] &gt; 0) n_dirs_used++;
+            if (dir_count[i] &gt; max_per) max_per = dir_count[i];
+        }
+
+        mean_per = n_dirs_used &gt; 0 ? (double)n_entries / (double)n_dirs_used
+                                    : 0.0;
+        printf("  %5d | %7d | %4d | %11.2f | %9d\n",
+               d, n_entries, n_dirs_used, mean_per, max_per);
+    }
+    printf("\n");
+
+    /* Cumulative version */
+    printf("  Cumulative:\n");
+    printf("  MaxD | Entries | Dirs | Entries/Dir | MaxPerDir\n");
+    printf("  -----|---------|------|-------------|----------\n");
+
+    for (d = 0; d &lt;= max_depth; d++) {
+        int i, n_entries = 0;
+        int n_dirs_used = 0;
+        int max_per = 0;
+        double mean_per;
+
+        memset(dir_count, 0, sizeof(dir_count));
+
+        for (i = 0; i &lt; saved_cat_size; i++) {
+            if (saved_depth[i] &lt;= d) {
+                double qa = saved_cat[i].a, qb = saved_cat[i].b;
+                double qc = saved_cat[i].c, qd = saved_cat[i].d;
+                double nv, ax, ay, az;
+                int vc;
+                n_entries++;
+
+                if (qa &lt; 0) { qa=-qa; qb=-qb; qc=-qc; qd=-qd; }
+                nv = sqrt(qb*qb + qc*qc + qd*qd);
+                if (nv &lt; 1e-12) continue;
+                ax = qb/nv; ay = qc/nv; az = qd/nv;
+                vc = vor_cell(ax, ay, az);
+                dir_count[vc]++;
+            }
+        }
+
+        for (i = 0; i &lt; g_nd; i++) {
+            if (dir_count[i] &gt; 0) n_dirs_used++;
+            if (dir_count[i] &gt; max_per) max_per = dir_count[i];
+        }
+
+        mean_per = n_dirs_used &gt; 0 ? (double)n_entries / (double)n_dirs_used
+                                    : 0.0;
+        printf("  %4d | %7d | %4d | %11.2f | %9d\n",
+               d, n_entries, n_dirs_used, mean_per, max_per);
+    }
+    printf("\n");
+
+    check("Phase 3: direction concentration computed", 1);
+}
+
+/* ================================================================ */
+/* Extract rotation axis from quaternion (unit vector)              */
+/* ================================================================ */
+
+static void extract_axis(const Quat *q, double *ax, double *ay, double *az) {
+    double qa = q-&gt;a, qb = q-&gt;b, qc = q-&gt;c, qd = q-&gt;d;
+    double nv;
+    if (qa &lt; 0) { qa = -qa; qb = -qb; qc = -qc; qd = -qd; }
+    nv = sqrt(qb*qb + qc*qc + qd*qd);
+    if (nv &lt; 1e-12) { *ax = 0; *ay = 0; *az = 1; return; }
+    *ax = qb/nv; *ay = qc/nv; *az = qd/nv;
+}
+
+static double axis_dot(const Quat *p, const Quat *q) {
+    double ax1, ay1, az1, ax2, ay2, az2;
+    extract_axis(p, &amp;ax1, &amp;ay1, &amp;az1);
+    extract_axis(q, &amp;ax2, &amp;ay2, &amp;az2);
+    return ax1*ax2 + ay1*ay2 + az1*az2;
+}
+
+/* ================================================================ */
+/* Phase 2b: Winning Tuple Anatomy (axis dot products)              */
+/* ================================================================ */
+
+static void phase2b_winning_anatomy(void) {
+    int bf, ai, aj, ak, al, ki;
+    int n_win = 0;
+    double win_antialign_sum = 0.0;  /* sum of min axis dots per winner */
+    double win_mean_dot_sum = 0.0;
+    double win_sum_ang_mean = 0.0;
+    int n_rand = 0;
+    double rand_antialign_sum = 0.0;
+    double rand_mean_dot_sum = 0.0;
+    double rand_sum_ang_mean = 0.0;
+    int rand_trials_done = 0;
+    int indices[4];
+
+    printf("\n=== Phase 2b: Winning Tuple Anatomy (axis cancellation) ===\n\n");
+
+    /* Load deep subset — use cumulative depth 4 (275 entries)
+       for tractable XOR8 search */
+    restore_catalog();
+    {
+        int i, n = 0;
+        for (i = 0; i &lt; saved_cat_size; i++) {
+            if (saved_depth[i] &lt;= 4) {
+                g_cat[n] = saved_cat[i];
+                g_depth[n] = saved_depth[i];
+                n++;
+            }
+        }
+        g_cat_size = n;
+    }
+    build_dirs(g_cat_size);
+
+    bf = 25;
+    if (bf &gt; g_cat_size) bf = g_cat_size;
+
+    printf("  Catalog: %d entries, %d dirs, bf=%d\n", g_cat_size, g_nd, bf);
+    printf("  Searching for XOR8 winners (4 weights)...\n\n");
+
+    /* Find XOR8 winners and compute anatomy */
+    for (ai = 0; ai &lt; bf; ai++)
+    for (aj = ai+1; aj &lt; bf; aj++)
+    for (ak = aj+1; ak &lt; bf; ak++)
+    for (al = ak+1; al &lt; bf; al++) {
+        indices[0] = ai; indices[1] = aj;
+        indices[2] = ak; indices[3] = al;
+        for (ki = 0; ki &lt; N_KLADDER; ki++) {
+            int nc = K_LADDER[ki] * (g_nd + 1);
+            if (nc &gt; MAX_ACT) continue;
+            if (test_xor(indices, 4, K_LADDER[ki])) {
+                /* Winner found — compute anatomy */
+                double dots[6], sum_angs[6];
+                double min_dot = 2.0, mean_dot = 0.0, mean_sa = 0.0;
+                int pi2, pj2, ns = 0;
+                int all[4];
+                all[0] = ai; all[1] = aj; all[2] = ak; all[3] = al;
+
+                for (pi2 = 0; pi2 &lt; 4; pi2++)
+                for (pj2 = pi2 + 1; pj2 &lt; 4; pj2++) {
+                    Quat s;
+                    dots[ns] = axis_dot(&amp;g_cat[all[pi2]], &amp;g_cat[all[pj2]]);
+                    s.a = g_cat[all[pi2]].a + g_cat[all[pj2]].a;
+                    s.b = g_cat[all[pi2]].b + g_cat[all[pj2]].b;
+                    s.c = g_cat[all[pi2]].c + g_cat[all[pj2]].c;
+                    s.d = g_cat[all[pi2]].d + g_cat[all[pj2]].d;
+                    sum_angs[ns] = extract_angle(&amp;s);
+                    if (dots[ns] &lt; min_dot) min_dot = dots[ns];
+                    mean_dot += dots[ns];
+                    mean_sa += sum_angs[ns];
+                    ns++;
+                }
+                mean_dot /= 6.0;
+                mean_sa /= 6.0;
+
+                win_antialign_sum += min_dot;
+                win_mean_dot_sum += mean_dot;
+                win_sum_ang_mean += mean_sa;
+                n_win++;
+
+                if (n_win &lt;= 5) {
+                    printf("  WIN#%d [%d,%d,%d,%d] k=%d\n",
+                           n_win, ai, aj, ak, al, K_LADDER[ki]);
+                    printf("    axis dots:  ");
+                    for (ns = 0; ns &lt; 6; ns++)
+                        printf("%.3f ", dots[ns]);
+                    printf("\n    sum angles: ");
+                    for (ns = 0; ns &lt; 6; ns++)
+                        printf("%.1f ", sum_angs[ns]);
+                    printf("\n    min_dot=%.3f mean_dot=%.3f mean_sum_ang=%.1f\n\n",
+                           min_dot, mean_dot, mean_sa);
+                }
+                break;
+            }
+        }
+    }
+
+    printf("  Total XOR8 winners: %d\n", n_win);
+    if (n_win &gt; 0) {
+        printf("  Winner mean(min_dot): %.4f\n",
+               win_antialign_sum / (double)n_win);
+        printf("  Winner mean(mean_dot): %.4f\n",
+               win_mean_dot_sum / (double)n_win);
+        printf("  Winner mean(sum_ang): %.1f\n\n",
+               win_sum_ang_mean / (double)n_win);
+    }
+
+    /* Random non-winning 4-tuples for comparison */
+    printf("  Computing random non-winner baseline (200 samples)...\n");
+    while (rand_trials_done &lt; 200) {
+        int ri[4], ok = 1;
+        double dots2[6], sum_angs2[6];
+        double min_dot2 = 2.0, mean_dot2 = 0.0, mean_sa2 = 0.0;
+        int pi2, pj2, ns2 = 0;
+
+        ri[0] = (int)(rng_uniform() * (double)bf);
+        ri[1] = (int)(rng_uniform() * (double)bf);
+        ri[2] = (int)(rng_uniform() * (double)bf);
+        ri[3] = (int)(rng_uniform() * (double)bf);
+        if (ri[0] &gt;= bf) ri[0] = bf-1;
+        if (ri[1] &gt;= bf) ri[1] = bf-1;
+        if (ri[2] &gt;= bf) ri[2] = bf-1;
+        if (ri[3] &gt;= bf) ri[3] = bf-1;
+
+        /* Ensure distinct */
+        if (ri[0]==ri[1]||ri[0]==ri[2]||ri[0]==ri[3]||
+            ri[1]==ri[2]||ri[1]==ri[3]||ri[2]==ri[3]) continue;
+
+        /* Sort */
+        { int tmp;
+          if (ri[0]&gt;ri[1]) {tmp=ri[0];ri[0]=ri[1];ri[1]=tmp;}
+          if (ri[2]&gt;ri[3]) {tmp=ri[2];ri[2]=ri[3];ri[3]=tmp;}
+          if (ri[0]&gt;ri[2]) {tmp=ri[0];ri[0]=ri[2];ri[2]=tmp;}
+          if (ri[1]&gt;ri[3]) {tmp=ri[1];ri[1]=ri[3];ri[3]=tmp;}
+          if (ri[1]&gt;ri[2]) {tmp=ri[1];ri[1]=ri[2];ri[2]=tmp;}
+        }
+
+        /* Check it's not a winner */
+        for (ki = 0; ki &lt; N_KLADDER; ki++) {
+            int nc = K_LADDER[ki] * (g_nd + 1);
+            if (nc &gt; MAX_ACT) continue;
+            if (test_xor(ri, 4, K_LADDER[ki])) { ok = 0; break; }
+        }
+        if (!ok) continue;
+
+        for (pi2 = 0; pi2 &lt; 4; pi2++)
+        for (pj2 = pi2 + 1; pj2 &lt; 4; pj2++) {
+            Quat s;
+            dots2[ns2] = axis_dot(&amp;g_cat[ri[pi2]], &amp;g_cat[ri[pj2]]);
+            s.a = g_cat[ri[pi2]].a + g_cat[ri[pj2]].a;
+            s.b = g_cat[ri[pi2]].b + g_cat[ri[pj2]].b;
+            s.c = g_cat[ri[pi2]].c + g_cat[ri[pj2]].c;
+            s.d = g_cat[ri[pi2]].d + g_cat[ri[pj2]].d;
+            sum_angs2[ns2] = extract_angle(&amp;s);
+            if (dots2[ns2] &lt; min_dot2) min_dot2 = dots2[ns2];
+            mean_dot2 += dots2[ns2];
+            mean_sa2 += sum_angs2[ns2];
+            ns2++;
+        }
+        mean_dot2 /= 6.0;
+        mean_sa2 /= 6.0;
+
+        rand_antialign_sum += min_dot2;
+        rand_mean_dot_sum += mean_dot2;
+        rand_sum_ang_mean += mean_sa2;
+        n_rand++;
+        rand_trials_done++;
+    }
+
+    printf("  Random non-winners: %d samples\n", n_rand);
+    if (n_rand &gt; 0) {
+        printf("  Non-winner mean(min_dot): %.4f\n",
+               rand_antialign_sum / (double)n_rand);
+        printf("  Non-winner mean(mean_dot): %.4f\n",
+               rand_mean_dot_sum / (double)n_rand);
+        printf("  Non-winner mean(sum_ang): %.1f\n\n",
+               rand_sum_ang_mean / (double)n_rand);
+    }
+
+    /* Comparison */
+    if (n_win &gt; 0 &amp;&amp; n_rand &gt; 0) {
+        double w_min = win_antialign_sum / (double)n_win;
+        double r_min = rand_antialign_sum / (double)n_rand;
+        double w_md = win_mean_dot_sum / (double)n_win;
+        double r_md = rand_mean_dot_sum / (double)n_rand;
+
+        printf("  === Comparison ===\n");
+        printf("  min_dot:  winners=%.4f  non-winners=%.4f  diff=%.4f\n",
+               w_min, r_min, w_min - r_min);
+        printf("  mean_dot: winners=%.4f  non-winners=%.4f  diff=%.4f\n",
+               w_md, r_md, w_md - r_md);
+        printf("  sum_ang:  winners=%.1f  non-winners=%.1f\n",
+               win_sum_ang_mean / (double)n_win,
+               rand_sum_ang_mean / (double)n_rand);
+        printf("\n");
+
+        check("Phase 2b: winners have more anti-aligned axes (lower min_dot)",
+              w_min &lt; r_min);
+    }
+
+    check("Phase 2b: XOR8 winners found in deep subset", n_win &gt; 0);
+}
+
+/* ================================================================ */
+/* Phase 2c: Cross-Depth Sum Angles                                 */
+/* ================================================================ */
+
+static void phase2c_cross_depth_sum_angles(void) {
+    int i, j, ns;
+    double cross_angles[50000];
+    double same_shallow[50000];
+    double same_deep[50000];
+    int n_cross = 0, n_shal = 0, n_deep2 = 0;
+    double cross_mean = 0, shal_mean = 0, deep_mean = 0;
+    int cross_distinct, shal_distinct, deep_distinct;
+
+    printf("\n=== Phase 2c: Cross-Depth Sum Angles ===\n\n");
+
+    restore_catalog();
+
+    /* Compute pairwise sum angles for:
+       a) shallow×shallow (both depth 0-1)
+       b) deep×deep (both depth 7-8)
+       c) shallow×deep (one from 0-1, one from 7-8) */
+
+    for (i = 0; i &lt; saved_cat_size; i++) {
+        for (j = i + 1; j &lt; saved_cat_size; j++) {
+            int di = saved_depth[i], dj = saved_depth[j];
+            int is_shal_i = (di &lt;= 1), is_shal_j = (dj &lt;= 1);
+            int is_deep_i = (di &gt;= 7), is_deep_j = (dj &gt;= 7);
+
+            if ((is_shal_i &amp;&amp; is_deep_j) || (is_deep_i &amp;&amp; is_shal_j)) {
+                if (n_cross &lt; 50000) {
+                    Quat s;
+                    s.a = saved_cat[i].a + saved_cat[j].a;
+                    s.b = saved_cat[i].b + saved_cat[j].b;
+                    s.c = saved_cat[i].c + saved_cat[j].c;
+                    s.d = saved_cat[i].d + saved_cat[j].d;
+                    cross_angles[n_cross] = extract_angle(&amp;s);
+                    cross_mean += cross_angles[n_cross];
+                    n_cross++;
+                }
+            } else if (is_shal_i &amp;&amp; is_shal_j) {
+                if (n_shal &lt; 50000) {
+                    Quat s;
+                    s.a = saved_cat[i].a + saved_cat[j].a;
+                    s.b = saved_cat[i].b + saved_cat[j].b;
+                    s.c = saved_cat[i].c + saved_cat[j].c;
+                    s.d = saved_cat[i].d + saved_cat[j].d;
+                    same_shallow[n_shal] = extract_angle(&amp;s);
+                    shal_mean += same_shallow[n_shal];
+                    n_shal++;
+                }
+            } else if (is_deep_i &amp;&amp; is_deep_j) {
+                if (n_deep2 &lt; 50000) {
+                    Quat s;
+                    s.a = saved_cat[i].a + saved_cat[j].a;
+                    s.b = saved_cat[i].b + saved_cat[j].b;
+                    s.c = saved_cat[i].c + saved_cat[j].c;
+                    s.d = saved_cat[i].d + saved_cat[j].d;
+                    same_deep[n_deep2] = extract_angle(&amp;s);
+                    deep_mean += same_deep[n_deep2];
+                    n_deep2++;
+                }
+            }
+        }
+    }
+
+    if (n_cross &gt; 0) cross_mean /= (double)n_cross;
+    if (n_shal &gt; 0) shal_mean /= (double)n_shal;
+    if (n_deep2 &gt; 0) deep_mean /= (double)n_deep2;
+
+    cross_distinct = count_distinct(cross_angles, n_cross &gt; 2048 ? 2048 : n_cross, 0.01);
+    shal_distinct = count_distinct(same_shallow, n_shal &gt; 2048 ? 2048 : n_shal, 0.01);
+    deep_distinct = count_distinct(same_deep, n_deep2 &gt; 2048 ? 2048 : n_deep2, 0.01);
+
+    printf("  Shallow x Shallow (d=0-1): %d pairs, mean=%.1f, %d distinct\n",
+           n_shal, shal_mean, shal_distinct);
+    printf("  Deep x Deep (d=7-8):       %d pairs, mean=%.1f, %d distinct\n",
+           n_deep2, deep_mean, deep_distinct);
+    printf("  Shallow x Deep:            %d pairs, mean=%.1f, %d distinct\n",
+           n_cross, cross_mean, cross_distinct);
+
+    /* Histogram for cross-depth */
+    {
+        int hist[12];
+        memset(hist, 0, sizeof(hist));
+        for (ns = 0; ns &lt; n_cross; ns++) {
+            int bin = (int)(cross_angles[ns] * 12.0 / 180.0);
+            if (bin &gt;= 12) bin = 11;
+            if (bin &lt; 0) bin = 0;
+            hist[bin]++;
+        }
+        printf("\n  Cross-depth histogram (15-degree bins):\n    ");
+        for (i = 0; i &lt; 12; i++) {
+            printf("[%3d-%3d]:%5d  ", i*15, (i+1)*15, hist[i]);
+            if (i == 5) printf("\n    ");
+        }
+        printf("\n");
+    }
+
+    printf("\n");
+    check("Phase 2c: cross-depth sum angles computed", n_cross &gt; 0);
+}
+
+/* ================================================================ */
+/* Phase 2d: Cross-Depth Angle Growth by Individual Depth           */
+/* ================================================================ */
+
+static void phase2d_cross_depth_by_level(void) {
+    int d, max_depth;
+    int gen_idx[20];
+    int n_gen = 0;
+
+    /* Collect depth-0 entries (generators) */
+    int i, j;
+    double all_gen_angles[200];
+    int n_all_gen = 0;
+
+    printf("\n=== Phase 2d: Cross-Depth Angle Growth by Level ===\n\n");
+
+    restore_catalog();
+
+    max_depth = 0;
+    for (i = 0; i &lt; saved_cat_size; i++) {
+        if (saved_depth[i] &gt; max_depth) max_depth = saved_depth[i];
+        if (saved_depth[i] == 0 &amp;&amp; n_gen &lt; 20)
+            gen_idx[n_gen++] = i;
+    }
+
+    printf("  Generators (depth 0): %d entries\n\n", n_gen);
+
+    /* First: gen×gen angles as baseline */
+    for (i = 0; i &lt; n_gen; i++) {
+        for (j = i + 1; j &lt; n_gen; j++) {
+            Quat s;
+            s.a = saved_cat[gen_idx[i]].a + saved_cat[gen_idx[j]].a;
+            s.b = saved_cat[gen_idx[i]].b + saved_cat[gen_idx[j]].b;
+            s.c = saved_cat[gen_idx[i]].c + saved_cat[gen_idx[j]].c;
+            s.d = saved_cat[gen_idx[i]].d + saved_cat[gen_idx[j]].d;
+            all_gen_angles[n_all_gen++] = extract_angle(&amp;s);
+        }
+    }
+    {
+        int gen_distinct = count_distinct(all_gen_angles, n_all_gen, 0.01);
+        printf("  Gen x Gen: %d pairs, %d distinct angles\n\n",
+               n_all_gen, gen_distinct);
+    }
+
+    printf("  Depth | Entries | Pairs | Distinct | Cumul_Distinct | New\n");
+    printf("  ------|---------|-------|----------|----------------|----\n");
+
+    /* Track cumulative distinct angles using a running set */
+    {
+        double cumul_set[MAX_DISTINCT];
+        int n_cumul_set = 0;
+        int prev_cumul_distinct = 0;
+
+        /* Seed cumulative set with gen×gen angles */
+        for (i = 0; i &lt; n_all_gen; i++) {
+            int found = 0;
+            for (j = 0; j &lt; n_cumul_set; j++) {
+                if (fabs(cumul_set[j] - all_gen_angles[i]) &lt; 0.01) {
+                    found = 1; break;
+                }
+            }
+            if (!found &amp;&amp; n_cumul_set &lt; MAX_DISTINCT)
+                cumul_set[n_cumul_set++] = all_gen_angles[i];
+        }
+        prev_cumul_distinct = n_cumul_set;
+
+        for (d = 1; d &lt;= max_depth; d++) {
+            int depth_idx[MAX_QCAT];
+            int n_depth = 0;
+            double depth_angles[MAX_QCAT];
+            int n_da = 0;
+            int depth_distinct, n_new;
+
+            /* Collect entries at this depth */
+            for (i = 0; i &lt; saved_cat_size; i++) {
+                if (saved_depth[i] == d)
+                    depth_idx[n_depth++] = i;
+            }
+
+            /* Cross-depth sums: gen × depth_d */
+            for (i = 0; i &lt; n_gen; i++) {
+                for (j = 0; j &lt; n_depth; j++) {
+                    Quat s;
+                    int gi = gen_idx[i], di2 = depth_idx[j];
+                    int found2 = 0;
+                    int k2;
+                    s.a = saved_cat[gi].a + saved_cat[di2].a;
+                    s.b = saved_cat[gi].b + saved_cat[di2].b;
+                    s.c = saved_cat[gi].c + saved_cat[di2].c;
+                    s.d = saved_cat[gi].d + saved_cat[di2].d;
+                    depth_angles[n_da] = extract_angle(&amp;s);
+
+                    /* Add to cumulative set if new */
+                    for (k2 = 0; k2 &lt; n_cumul_set; k2++) {
+                        if (fabs(cumul_set[k2] - depth_angles[n_da]) &lt; 0.01) {
+                            found2 = 1; break;
+                        }
+                    }
+                    if (!found2 &amp;&amp; n_cumul_set &lt; MAX_DISTINCT)
+                        cumul_set[n_cumul_set++] = depth_angles[n_da];
+                    n_da++;
+                }
+            }
+
+            depth_distinct = count_distinct(depth_angles, n_da, 0.01);
+            n_new = n_cumul_set - prev_cumul_distinct;
+
+            printf("  %5d | %7d | %5d | %8d | %14d | %3d\n",
+                   d, n_depth, n_da, depth_distinct,
+                   n_cumul_set, n_new);
+
+            prev_cumul_distinct = n_cumul_set;
+        }
+    }
+
+    /* Also: check overlap between gen×gen angles and cross-depth angles */
+    printf("\n  Overlap check: do gen×gen angles appear in cross-depth?\n");
+    {
+        double cross_d8[MAX_QCAT];
+        int n_cd8 = 0;
+        int overlap_count = 0;
+
+        /* Gen × depth-8 angles */
+        for (i = 0; i &lt; saved_cat_size; i++) {
+            if (saved_depth[i] == max_depth) {
+                for (j = 0; j &lt; n_gen; j++) {
+                    Quat s;
+                    s.a = saved_cat[i].a + saved_cat[gen_idx[j]].a;
+                    s.b = saved_cat[i].b + saved_cat[gen_idx[j]].b;
+                    s.c = saved_cat[i].c + saved_cat[gen_idx[j]].c;
+                    s.d = saved_cat[i].d + saved_cat[gen_idx[j]].d;
+                    if (n_cd8 &lt; MAX_QCAT)
+                        cross_d8[n_cd8++] = extract_angle(&amp;s);
+                }
+            }
+        }
+
+        /* Count gen×gen angles that appear in gen×d8 */
+        for (i = 0; i &lt; n_all_gen; i++) {
+            for (j = 0; j &lt; n_cd8; j++) {
+                if (fabs(all_gen_angles[i] - cross_d8[j]) &lt; 0.01) {
+                    overlap_count++;
+                    break;
+                }
+            }
+        }
+
+        {
+            int gen_d = count_distinct(all_gen_angles, n_all_gen, 0.01);
+            int cd8_d = count_distinct(cross_d8, n_cd8 &gt; MAX_DISTINCT ? MAX_DISTINCT : n_cd8, 0.01);
+            printf("  Gen×Gen distinct: %d\n", gen_d);
+            printf("  Gen×D%d distinct: %d\n", max_depth, cd8_d);
+            printf("  Gen×Gen angles also in Gen×D%d: %d/%d\n\n",
+                   max_depth, overlap_count, gen_d);
+        }
+    }
+
+    check("Phase 2d: cross-depth angle growth computed", 1);
+
+    /* Phase 2e: Low-angle tail growth */
+    printf("\n  --- Phase 2e: Low-Angle Tail (&lt;70 deg) Growth ---\n\n");
+    {
+        double useful_set[MAX_DISTINCT];
+        int n_useful_set = 0;
+        int prev_useful = 0;
+
+        /* Seed with gen×gen useful angles */
+        for (i = 0; i &lt; n_all_gen; i++) {
+            if (all_gen_angles[i] &lt; 70.0) {
+                int found = 0;
+                for (j = 0; j &lt; n_useful_set; j++) {
+                    if (fabs(useful_set[j] - all_gen_angles[i]) &lt; 0.01) {
+                        found = 1; break;
+                    }
+                }
+                if (!found &amp;&amp; n_useful_set &lt; MAX_DISTINCT)
+                    useful_set[n_useful_set++] = all_gen_angles[i];
+            }
+        }
+        prev_useful = n_useful_set;
+
+        printf("  Depth | Distinct&lt;70 | Cumul&lt;70 | New&lt;70 | "
+               "Tot_Distinct | Frac_Useful\n");
+        printf("  ------|-------------|----------|--------|"
+               "-------------|------------\n");
+        printf("  %5s | %11d | %8d | %6d | %11s | %11s\n",
+               "gen", n_useful_set, n_useful_set, n_useful_set,
+               "3", "-");
+
+        for (d = 1; d &lt;= max_depth; d++) {
+            int depth_idx2[MAX_QCAT];
+            int n_depth2 = 0;
+            int depth_useful = 0;
+            int depth_total = 0;
+            int n_new_useful;
+
+            for (i = 0; i &lt; saved_cat_size; i++) {
+                if (saved_depth[i] == d)
+                    depth_idx2[n_depth2++] = i;
+            }
+
+            for (i = 0; i &lt; n_gen; i++) {
+                for (j = 0; j &lt; n_depth2; j++) {
+                    Quat s;
+                    double ang;
+                    int gi2 = gen_idx[i], di2 = depth_idx2[j];
+                    int found2 = 0;
+                    int k2;
+                    s.a = saved_cat[gi2].a + saved_cat[di2].a;
+                    s.b = saved_cat[gi2].b + saved_cat[di2].b;
+                    s.c = saved_cat[gi2].c + saved_cat[di2].c;
+                    s.d = saved_cat[gi2].d + saved_cat[di2].d;
+                    ang = extract_angle(&amp;s);
+                    depth_total++;
+
+                    if (ang &lt; 70.0) {
+                        depth_useful++;
+                        for (k2 = 0; k2 &lt; n_useful_set; k2++) {
+                            if (fabs(useful_set[k2] - ang) &lt; 0.01) {
+                                found2 = 1; break;
+                            }
+                        }
+                        if (!found2 &amp;&amp; n_useful_set &lt; MAX_DISTINCT)
+                            useful_set[n_useful_set++] = ang;
+                    }
+                }
+            }
+
+            n_new_useful = n_useful_set - prev_useful;
+            {
+                /* Count per-depth useful distinct */
+                double pd_angles[MAX_QCAT];
+                int n_pd = 0;
+                int pd_distinct;
+
+                for (i = 0; i &lt; n_gen; i++) {
+                    for (j = 0; j &lt; n_depth2; j++) {
+                        Quat s;
+                        double ang;
+                        int gi2 = gen_idx[i], di2 = depth_idx2[j];
+                        s.a = saved_cat[gi2].a + saved_cat[di2].a;
+                        s.b = saved_cat[gi2].b + saved_cat[di2].b;
+                        s.c = saved_cat[gi2].c + saved_cat[di2].c;
+                        s.d = saved_cat[gi2].d + saved_cat[di2].d;
+                        ang = extract_angle(&amp;s);
+                        if (ang &lt; 70.0 &amp;&amp; n_pd &lt; MAX_QCAT)
+                            pd_angles[n_pd++] = ang;
+                    }
+                }
+                pd_distinct = count_distinct(pd_angles, n_pd, 0.01);
+
+                printf("  %5d | %11d | %8d | %6d | %11d | %10.1f%%\n",
+                       d, pd_distinct, n_useful_set, n_new_useful,
+                       depth_total,
+                       depth_total &gt; 0 ? 100.0 * (double)depth_useful / (double)depth_total : 0.0);
+            }
+            prev_useful = n_useful_set;
+        }
+    }
+    printf("\n");
+    check("Phase 2e: low-angle tail growth computed", 1);
+}
+
+/* ================================================================ */
+/* Phase 5: Spectral Decomposition by Depth                         */
+/* Spherical harmonic analysis of catalog point cloud on S²         */
+/* ================================================================ */
+
+#define LMAX 16
+#define NCOEFF ((LMAX+1)*(LMAX+1))   /* 289 coefficients */
+
+static double factorial(int n) {
+    double f = 1.0;
+    int i;
+    for (i = 2; i &lt;= n; i++) f *= (double)i;
+    return f;
+}
+
+/* Associated Legendre polynomial P_l^m(x), m &gt;= 0 */
+static double assoc_legendre(int l, int m, double x) {
+    double pmm = 1.0;
+    double pmm1, pll;
+    int i, ll;
+
+    if (m &gt; 0) {
+        double somx2 = sqrt(1.0 - x*x);
+        double fact = 1.0;
+        for (i = 1; i &lt;= m; i++) {
+            pmm *= -fact * somx2;
+            fact += 2.0;
+        }
+    }
+    if (l == m) return pmm;
+
+    pmm1 = x * (double)(2*m + 1) * pmm;
+    if (l == m + 1) return pmm1;
+
+    pll = 0.0;
+    for (ll = m + 2; ll &lt;= l; ll++) {
+        pll = (x * (double)(2*ll - 1) * pmm1 -
+               (double)(ll + m - 1) * pmm) / (double)(ll - m);
+        pmm = pmm1;
+        pmm1 = pll;
+    }
+    return pll;
+}
+
+/* Normalization factor for Y_lm */
+static double ylm_norm(int l, int m) {
+    int am = m &lt; 0 ? -m : m;
+    return sqrt((2.0*(double)l + 1.0) / (4.0 * M_PI) *
+                factorial(l - am) / factorial(l + am));
+}
+
+/* Real spherical harmonic Y_lm(theta, phi) */
+static double ylm_real(int l, int m, double theta, double phi) {
+    int am = m &lt; 0 ? -m : m;
+    double norm = ylm_norm(l, m);
+    double plm = assoc_legendre(l, am, cos(theta));
+    if (m &gt; 0)
+        return sqrt(2.0) * norm * plm * cos((double)m * phi);
+    else if (m &lt; 0)
+        return sqrt(2.0) * norm * plm * sin((double)am * phi);
+    else
+        return norm * plm;
+}
+
+/* Convert Cartesian axis to spherical (theta, phi) */
+static void cart_to_sph(double ax, double ay, double az,
+                        double *theta, double *phi) {
+    double r = sqrt(ax*ax + ay*ay + az*az);
+    if (r &lt; 1e-12) { *theta = 0; *phi = 0; return; }
+    *theta = acos(az / r);
+    *phi = atan2(ay, ax);
+    if (*phi &lt; 0) *phi += 2.0 * M_PI;
+}
+
+static void phase5_spectral_decomposition(void) {
+    int d, max_depth, l, m;
+    double power[LMAX + 1];
+
+    printf("\n=== Phase 5: Spectral Decomposition by Depth ===\n\n");
+
+    restore_catalog();
+
+    max_depth = 0;
+    { int i; for (i = 0; i &lt; saved_cat_size; i++)
+        if (saved_depth[i] &gt; max_depth) max_depth = saved_depth[i]; }
+
+    printf("  Computing Y_lm power spectrum of S2 point cloud per depth\n");
+    printf("  LMAX = %d (%d coefficients)\n\n", LMAX, NCOEFF);
+
+    /* Header */
+    printf("  Depth | N   | ");
+    for (l = 0; l &lt;= 8; l++) printf("  l=%-3d", l);
+    printf(" | BW_90%% | BW_99%%\n");
+    printf("  ------|-----|");
+    for (l = 0; l &lt;= 8; l++) printf("-------");
+    printf("-|--------|-------\n");
+
+    for (d = 0; d &lt;= max_depth; d++) {
+        /* Collect axes at this depth */
+        double axes_theta[MAX_QCAT], axes_phi[MAX_QCAT];
+        int n_pts = 0;
+        int i2;
+        double total_power = 0.0;
+        double cumul_power;
+        int bw90 = -1, bw99 = -1;
+
+        for (i2 = 0; i2 &lt; saved_cat_size; i2++) {
+            if (saved_depth[i2] == d) {
+                double qa = saved_cat[i2].a, qb = saved_cat[i2].b;
+                double qc = saved_cat[i2].c, qd = saved_cat[i2].d;
+                double nv, ax2, ay2, az2;
+                if (qa &lt; 0) { qa=-qa; qb=-qb; qc=-qc; qd=-qd; }
+                nv = sqrt(qb*qb + qc*qc + qd*qd);
+                if (nv &lt; 1e-12) continue;  /* skip identity */
+                ax2 = qb/nv; ay2 = qc/nv; az2 = qd/nv;
+                cart_to_sph(ax2, ay2, az2,
+                            &amp;axes_theta[n_pts], &amp;axes_phi[n_pts]);
+                n_pts++;
+            }
+        }
+
+        /* Compute f_lm = sum_i Y_lm(theta_i, phi_i) */
+        /* Then P(l) = sum_m f_lm^2 */
+        for (l = 0; l &lt;= LMAX; l++) {
+            power[l] = 0.0;
+            for (m = -l; m &lt;= l; m++) {
+                double flm = 0.0;
+                for (i2 = 0; i2 &lt; n_pts; i2++)
+                    flm += ylm_real(l, m, axes_theta[i2], axes_phi[i2]);
+                power[l] += flm * flm;
+            }
+            total_power += power[l];
+        }
+
+        /* Normalize power to percentage of total */
+        /* Find bandwidth at 90% and 99% */
+        cumul_power = 0.0;
+        for (l = 0; l &lt;= LMAX; l++) {
+            cumul_power += power[l];
+            if (bw90 &lt; 0 &amp;&amp; cumul_power &gt;= 0.90 * total_power)
+                bw90 = l;
+            if (bw99 &lt; 0 &amp;&amp; cumul_power &gt;= 0.99 * total_power)
+                bw99 = l;
+        }
+
+        /* Print row */
+        printf("  %5d | %3d | ", d, n_pts);
+        for (l = 0; l &lt;= 8; l++) {
+            if (total_power &gt; 0)
+                printf("%5.1f%% ", 100.0 * power[l] / total_power);
+            else
+                printf("    -  ");
+        }
+        printf("| %6d | %5d\n", bw90, bw99);
+    }
+
+    /* Also cumulative */
+    printf("\n  Cumulative:\n");
+    printf("  MaxD | N    | ");
+    for (l = 0; l &lt;= 8; l++) printf("  l=%-3d", l);
+    printf(" | BW_90%% | BW_99%%\n");
+    printf("  -----|------|");
+    for (l = 0; l &lt;= 8; l++) printf("-------");
+    printf("-|--------|-------\n");
+
+    for (d = 0; d &lt;= max_depth; d++) {
+        double axes_theta2[MAX_QCAT], axes_phi2[MAX_QCAT];
+        int n_pts2 = 0;
+        int i2;
+        double total_power2 = 0.0;
+        double cumul_power2;
+        int bw90_2 = -1, bw99_2 = -1;
+
+        for (i2 = 0; i2 &lt; saved_cat_size; i2++) {
+            if (saved_depth[i2] &lt;= d) {
+                double qa = saved_cat[i2].a, qb = saved_cat[i2].b;
+                double qc = saved_cat[i2].c, qd = saved_cat[i2].d;
+                double nv, ax2, ay2, az2;
+                if (qa &lt; 0) { qa=-qa; qb=-qb; qc=-qc; qd=-qd; }
+                nv = sqrt(qb*qb + qc*qc + qd*qd);
+                if (nv &lt; 1e-12) continue;
+                ax2 = qb/nv; ay2 = qc/nv; az2 = qd/nv;
+                cart_to_sph(ax2, ay2, az2,
+                            &amp;axes_theta2[n_pts2], &amp;axes_phi2[n_pts2]);
+                n_pts2++;
+            }
+        }
+
+        for (l = 0; l &lt;= LMAX; l++) {
+            power[l] = 0.0;
+            for (m = -l; m &lt;= l; m++) {
+                double flm = 0.0;
+                for (i2 = 0; i2 &lt; n_pts2; i2++)
+                    flm += ylm_real(l, m, axes_theta2[i2], axes_phi2[i2]);
+                power[l] += flm * flm;
+            }
+            total_power2 += power[l];
+        }
+
+        cumul_power2 = 0.0;
+        for (l = 0; l &lt;= LMAX; l++) {
+            cumul_power2 += power[l];
+            if (bw90_2 &lt; 0 &amp;&amp; cumul_power2 &gt;= 0.90 * total_power2)
+                bw90_2 = l;
+            if (bw99_2 &lt; 0 &amp;&amp; cumul_power2 &gt;= 0.99 * total_power2)
+                bw99_2 = l;
+        }
+
+        printf("  %4d | %4d | ", d, n_pts2);
+        for (l = 0; l &lt;= 8; l++) {
+            if (total_power2 &gt; 0)
+                printf("%5.1f%% ", 100.0 * power[l] / total_power2);
+            else
+                printf("    -  ");
+        }
+        printf("| %6d | %5d\n", bw90_2, bw99_2);
+    }
+
+    printf("\n");
+    check("Phase 5: spectral decomposition computed", 1);
+}
+
+/* ================================================================ */
+/* Main                                                             */
+/* ================================================================ */
+
+int main(void) {
+    printf("KNOTAPEL DEMO 90: Sum-Angle Structure\n");
+    printf("======================================\n\n");
+    fflush(stdout);
+
+    /* Build zeta_12 catalog */
+    printf("  Building zeta_12 catalog...\n");
+    fflush(stdout);
+    init_su2(M_PI / 6.0);
+    build_closure(1);
+    save_catalog();
+
+    printf("  %d entries, %d rounds\n\n", g_cat_size, n_rounds);
+    fflush(stdout);
+    check("zeta_12 catalog built", g_cat_size &gt; 3000);
+
+    /* Phase 1: Pairwise sum-angle census */
+    fprintf(stderr, "DBG: starting phase1\n");
+    phase1_pairwise_sum_census();
+    fprintf(stderr, "DBG: phase1 done\n");
+
+    /* Phase 2: Winner sum angles */
+    fprintf(stderr, "DBG: starting phase2\n");
+    phase2_winner_sum_angles();
+    fprintf(stderr, "DBG: phase2 done\n");
+
+    /* Phase 2b: Winning tuple anatomy */
+    fprintf(stderr, "DBG: starting phase2b\n");
+    phase2b_winning_anatomy();
+    fprintf(stderr, "DBG: phase2b done\n");
+
+    /* Phase 2c: Cross-depth sum angles */
+    fprintf(stderr, "DBG: starting phase2c\n");
+    phase2c_cross_depth_sum_angles();
+    fprintf(stderr, "DBG: phase2c done\n");
+
+    /* Phase 2d: Cross-depth angle growth by level */
+    fprintf(stderr, "DBG: starting phase2d\n");
+    phase2d_cross_depth_by_level();
+    fprintf(stderr, "DBG: phase2d done\n");
+
+    /* Phase 3: Direction concentration */
+    fprintf(stderr, "DBG: starting phase3\n");
+    phase3_direction_concentration();
+    fprintf(stderr, "DBG: phase3 done\n");
+
+    /* Phase 5: Spectral decomposition */
+    fprintf(stderr, "DBG: starting phase5\n");
+    phase5_spectral_decomposition();
+    fprintf(stderr, "DBG: phase5 done\n");
+
+    /* Summary */
+    printf("\n======================================\n");
+    printf("Results: %d pass, %d fail\n", n_pass, n_fail);
+
+    return n_fail;
+}
+</code></pre>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/c.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</body>
+</html>

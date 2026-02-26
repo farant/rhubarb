@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>inventory/entries/demo_64.md</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+    <link rel="stylesheet" href="../../style.css">
+</head>
+<body>
+    <nav><a href="../../index.html">← Back to Index</a></nav><hr>
+    <h2>Demo 64: Parity Matroid Recursion</h2>
+<ul>
+<li><strong>Status</strong>: COMPLETE</li>
+<li><strong>File</strong>: <code><a href="../../demo_64_parity_matroid_recursion/main.c.html">demo_64_parity_matroid_recursion/main.c</a></code> (~1745 lines)</li>
+<li><strong>Tests</strong>: 22/22 pass</li>
+<li><strong>Depends on</strong>: Demo 50 (four-tier NPN hierarchy, parity at k=6, 906 solutions), Demo 63 (angular anatomy, 5-input parity at k=15, parity ceiling n=5)</li>
+<li><strong>Feeds into</strong>: Demo 65 (Clifford staircase — Z[zeta_16] scaling, XOR6 at higher cyclotomic ring)</li>
+</ul>
+<h3>Headline</h3>
+The DKC parity hierarchy {XOR2, XOR3, XOR4, XOR5} is a funnel-shaped matroid minor chain with perfect downward deletion-contraction closure and collapsing upward extensibility, whose wall at n=6 is geometrically explained by the self-doubling impossibility in Z[zeta_8].
+<h3>Key Results</h3>
+<ul>
+<li><strong>Matroid deletion-contraction closure (100% downward)</strong>: Deleting any weight from an XOR_n solution always yields an XOR_{n-1} solution (100%, all levels n=5→4→3→2). Contracting any input to 1 always yields an XNOR_{n-1} solution (100%, all levels). The parity hierarchy is a legitimate matroid minor chain.</li>
+<li><strong>Funnel theorem (coverage collapses upward)</strong>: Upward extensibility degrades sharply — XOR3→XOR2: 99.3% (1459/1469), XOR4→XOR3: 39.2% (1503/3834), XOR5→XOR4: 19.2% (129/673), XOR6→XOR5: 0% (0/27). The n=6 wall casts a shadow all the way down: 80% of XOR4 weight sets are already dead ends.</li>
+<li><strong>Parent-child multiplicity (near-tree at wall, dense mesh away)</strong>: XOR5→XOR4: max 2 parents, mean 1.05 (near-tree). XOR4→XOR3: max 8 parents, mean 1.79. XOR3→XOR2: max 29 parents, mean 7.88. The 6 collisions in the XOR5→XOR4 deletion map account exactly for 27×5=135 instances → 129 distinct children + 6 collisions.</li>
+<li><strong>Vocabulary stratification (44 good values, 31 poison)</strong>: Of 83 class-1 catalog values at k=15, exactly 44 appear in XOR5 solutions and exactly the same 44 appear in extensible XOR4 solutions — strictly nested. 31 values are poison (appear only in orphan XOR4 solutions that cannot extend to XOR5). Poison values span octants {1,2,3,5,6,7} but not octant 4.</li>
+<li><strong>Wall anatomy (minimum Hamming distance 4, errors only at weight 2+)</strong>: 2,241 extension attempts (27 XOR5 sets × 83 values). Closest failures land at d=4 (38 cases). Zero errors at input weight 0 or weight 1 — the wall manifests only at the pairwise interaction level and above. A second wall layer exists: d≥7 cases with 0 broken pairs but weight-3+ errors (GHZ-type higher-order obstruction).</li>
+<li><strong>Self-doubling impossibility theorem</strong>: Self-extensions (w[5]=w[i]) always fail because 2·w[i] preserves the angle of w[i]; class-1 values (odd sector) doubled remain class-1 (odd sector), making the pair output for weight-2 input class-1 when it must be class-0. Accounts for 34/38 = 89.5% of all closest misses.</li>
+<li><strong>Exact arithmetic required</strong>: Floating-point accumulation produces 420 spurious failures at XOR5→XNOR4 from association-order artifacts near sector boundaries. Eliminated entirely by exact Z[zeta_8] integer arithmetic (Cyc8 representation).</li>
+</ul>
+<h3>Theorems/Conjectures</h3>
+<ul>
+<li><strong>Theorem (matroid minor chain)</strong>: {XOR2, XOR3, XOR4, XOR5} is deletion-contraction closed: deletion gives XOR_{n-1}, contraction gives XNOR_{n-1}. Verified exhaustively, all levels. PROVEN.</li>
+<li><strong>Theorem (self-doubling impossibility)</strong>: Adding a 6th weight equal to any existing weight always fails. Proof: scalar doubling preserves angle; class-1 doubled is class-1; class-1 output contradicts required class-0 for even-parity input weight. PROVEN.</li>
+<li><strong>Theorem (minimum wall distance d=4)</strong>: The closest any 6-weight candidate comes to satisfying XOR6 is 4 output errors (60/64 = 93.75% correct). No candidate achieves d=0,1,2,3. PROVEN (exhaustive).</li>
+<li><strong>Conjecture (funnel rate)</strong>: The coverage fractions 99.3% → 39.2% → 19.2% → 0% follow some algebraic or exponential decay law as a function of n. OPEN.</li>
+<li><strong>Conjecture (Clifford staircase)</strong>: XOR6 becomes achievable at Z[zeta_16] (next cyclotomic ring, fourth-level Clifford hierarchy), suggesting n-input parity climbs the Clifford hierarchy one rung per additional input. OPEN (target of Demo 65).</li>
+</ul>
+<h3>Data</h3>
+<ul>
+<li>Distinct unordered weight sets: XOR5=27, XOR4=673, XOR3=3834, XOR2=1469</li>
+<li>XOR5 ordered solutions: 3,020 (≈112 per set, close to 5!=120 confirming near-complete permutation symmetry)</li>
+<li>Upward coverage: XOR3→XOR2: 99.3%, XOR4→XOR3: 39.2%, XOR5→XOR4: 19.2%, XOR6→XOR5: 0%</li>
+<li>Orphan counts: 10 (XOR2), 2331 (XOR3), 544 (XOR4), 27 (XOR5)</li>
+<li>Extensible vocabulary: 44 values (good); poison vocabulary: 31 values; total class-1 at k=15: 83 - note: 75 total appear in all XOR4</li>
+<li>Poison octant coverage: {1,2,3,5,6,7} — octant 4 absent</li>
+<li>Wall Hamming distances: minimum d=4 (38 cases), 195 near-misses at d≤8, peak near d=15-16</li>
+<li>Error weight distribution (near-misses): weight-0: 0, weight-1: 0, weight-2: 237, weight-3: 370, weight-4: 446 (peak), weight-5: 172, weight-6: 23</li>
+<li>Self-doubling accounts for 34/38 = 89.5% of closest misses</li>
+<li>Second wall layer: d=7 (2 cases, 0 broken pairs), d=8 (16 cases, 0 broken pairs) — higher-order interaction failure</li>
+</ul>
+<h3>Code Assets</h3>
+<ul>
+<li><strong>Exact Cyc8 arithmetic</strong>: Z[zeta_8] integer representation eliminating floating-point association-order failures near sector boundaries; critical for correct deletion-contraction verification</li>
+<li><strong>Deletion map with collision tracking</strong>: exhaustive weight-set subtraction at each level, counting distinct children vs. total instances to identify collisions</li>
+<li><strong>Upward extension search</strong>: for each XOR_n weight set, tests all 83 class-1 catalog values as candidate 6th weight, records Hamming distance to XOR6 truth table</li>
+<li><strong>Vocabulary stratification analysis</strong>: separates catalog values into good (extensible), poison (orphan-only), and absent categories with octant annotations</li>
+<li><strong>Error-weight decomposition</strong>: for each failed extension, bins output errors by input Hamming weight to isolate interaction-level vs. single-weight failures</li>
+<li><strong>Self-doubling classifier</strong>: detects w[5]=w[i] cases and computes angle-preservation argument symbolically</li>
+</ul>
+<h3>Literature Touched</h3>
+<ul>
+<li>Aizenberg (2008): k-sector MVN activation — direct ancestor of sector/class framework used throughout</li>
+<li>Kauffman bracket / TL category theory: catalog values as quantum amplitudes (Z[zeta_8] = T-gate algebraic ring)</li>
+<li>Reiner (2004, arXiv:math/0402206): cyclotomic matroids mu_N — candidate framework for 44 good / 31 poison value split</li>
+<li>CKW inequality (Coffman-Kundu-Wootters): entanglement monogamy parallel — 10 pairwise sums simultaneously compatible, 15 cannot be</li>
+<li>Kochen-Specker theorem: contextuality parallel — wall as consistent-assignment obstruction for all C(6,2)=15 pair sums</li>
+<li>Clifford hierarchy (Gottesman-Chuang 1999): self-doubling maps to T→S gate descent; XOR6 ceiling interpreted as hierarchy level boundary</li>
+</ul>
+<h3>Open Questions</h3>
+<ul>
+<li>Does XOR6 become achievable at Z[zeta_16]? If so, the parity function literally climbs the Clifford hierarchy one rung per additional input (Demo 65 target).</li>
+<li>Can the triple-interaction constraints (weight-3+ errors at d≥7) be characterized explicitly, analogous to the self-doubling theorem for weight-2?</li>
+<li>Are the 27 XOR5 weight sets built primarily from antipodal pairs (w + (-w) = 0 always safe)? How much of the vocabulary structure depends on antipodal geometry?</li>
+<li>Is there a closed-form formula for upward coverage fraction as a function of n (exponential decay, algebraic, other)?</li>
+<li>What is the geometric explanation for the poison values avoiding octant 4 entirely?</li>
+<li>Are the 44 good values and 31 poison values related to the matroid structure of mu_8 (Reiner's cyclotomic matroid at 8th roots)?</li>
+</ul>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/c.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</body>
+</html>

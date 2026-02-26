@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>inventory/entries/demo_53.md</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+    <link rel="stylesheet" href="../../style.css">
+</head>
+<body>
+    <nav><a href="../../index.html">← Back to Index</a></nav><hr>
+    <h2>Demo 53: DKC at delta=1 — Bracket Catalog over Z[zeta_3]</h2>
+<ul>
+<li><strong>Status</strong>: COMPLETE</li>
+<li><strong>File</strong>: <code><a href="../../demo_53_dkc_d1/main.c.html">demo_53_dkc_d1/main.c</a></code> (~1474 lines)</li>
+<li><strong>Tests</strong>: ~40+ checks across 6 parts (A-F) + 4 experiments: Eisenstein arithmetic, planar matchings, TL generators at delta=1, braid generators, braid word evaluation, closure cross-validation, bracket catalog, axiality stress test, entanglement vanishing, compression ratios</li>
+<li><strong>Depends on</strong>: Demo 35 (delta=0 bracket catalog over Z[zeta_8], strict axiality), Demo 15 (delta-zero optimal angles)</li>
+<li><strong>Feeds into</strong>: Later demos comparing DKC behavior across different roots of unity</li>
+</ul>
+<h3>Headline</h3>
+Explores the Kauffman bracket at delta=1 (A = omega = e^{i*2pi/3}, cube root of unity), where values live in Z[omega] (Eisenstein integers) instead of Z[zeta_8], TL generators become idempotent (e_i^2 = e_i) instead of nilpotent, all smoothing states contribute (delta^L = 1), and two key delta=0 phenomena — strict axiality and entanglement vanishing — are tested for breakdown.
+<h3>Key Results</h3>
+<ul>
+<li><strong>Eisenstein arithmetic</strong> (Part A): verifies omega^3 = 1, omega^2 + omega + 1 = 0, conjugation (norm = a^2 - ab + b^2), A^n power cycling (mod 3), float cross-checks, axiality classification (multiples of 1, omega, or omega^2)</li>
+<li><strong>Planar matchings</strong> (Part B): enumerates Catalan-number basis sets (C_2=2, C_3=5, C_4=14, C_5=42), identical to Demo 35 (pure combinatorics, ring-independent)</li>
+<li><strong>TL generators at delta=1</strong> (Part C): e_i^2 = e_i (idempotent!) verified for n=2,3,4. Braid relations e_i<em>e_j</em>e_i = e_i (for |i-j|=1) verified. Far commutativity e_1<em>e_3 = e_3</em>e_1 verified. At delta=1, every column has exactly one 1 (nonzero count = dim)</li>
+<li><strong>Braid generators</strong> (Part D): sigma <em> sigma^{-1} = I verified for n=2,3. Braid relation s1</em>s2<em>s1 = s2</em>s1*s2 verified.</li>
+<li><strong>Braid word evaluation</strong> (Part E): s1^2 * s1^{-2} = I, trefoil (s1^3) nonzero</li>
+<li><strong>Closure cross-validation</strong> (Part F): matrix method vs state-sum method agree for Hopf link, trefoil, figure-eight, 4-strand s1<em>s2</em>s3, and 4-strand s1^2*s3^2. At delta=1 state-sum simplifies: every state contributes (delta^{L-1} = 1)</li>
+<li><strong>Experiment 1 — Bracket catalog</strong>: n=3 braids (lengths 1-8, 4 crossing choices) and n=4 braids (lengths 1-5, 6 crossing choices). Tracks distinct values, axiality breakdown (axial vs MIXED values)</li>
+<li><strong>Experiment 2 — Axiality stress test</strong>: tests all n=2 braids (lengths 1-10) and n=3 braids (lengths 1-8) for axiality. Expects axiality to BREAK at delta=1 (mixed values = not scalar multiples of {1, omega, omega^2})</li>
+<li><strong>Experiment 3 — Entanglement vanishing</strong>: non-interleaving braids (sigma_1 and sigma_3 only, in B_4, lengths 1-5). At delta=0 ALL such brackets are zero; at delta=1 expects NONZERO (entanglement vanishing breaks)</li>
+<li><strong>Experiment 4 — Compression ratios</strong>: n=3 braids lengths 1-6, counts distinct TL matrices vs total braids to measure how many-to-one the braid→matrix map is</li>
+</ul>
+<h3>Theorems/Conjectures</h3>
+<ul>
+<li><strong>Idempotency at delta=1</strong>: e_i^2 = delta <em> e_i = 1 </em> e_i = e_i. This is the defining algebraic difference from delta=0 (where e_i^2 = 0). All smoothing states survive, no loop-killing.</li>
+<li><strong>Axiality breakdown</strong>: at delta=0 (Z[zeta_8]), every bracket value lies on a single cyclotomic axis (strict axiality — Demo 35 result). At delta=1 (Z[omega]), mixed values (off-axis Eisenstein integers) are expected.</li>
+<li><strong>Entanglement vanishing breakdown</strong>: at delta=0, non-interleaving braids (using only far-apart generators) always produce bracket=0. At delta=1, delta^L = 1 means closed loops don't kill states, so non-interleaving braids can have nonzero bracket.</li>
+<li><strong>Ring comparison</strong>: Z[omega] is 2-dimensional (a + b*omega, a,b in Z) vs Z[zeta_8] which is 4-dimensional. Simpler ring, but different algebraic properties.</li>
+</ul>
+<h3>Data</h3>
+<ul>
+<li>A = omega = e^{i*2pi/3}, delta = 1, A has order 3</li>
+<li>Eisenstein integers Z[omega]: elements a + b*omega with a,b in Z</li>
+<li>n=2 axiality test: up to length 10 (2^10 = 1024 braids)</li>
+<li>n=3 axiality test: up to length 8 (4^8 = 65536 braids)</li>
+<li>n=3 catalog: lengths 1-8 (up to 65536 braids), up to 1000 distinct bracket values stored</li>
+<li>n=4 catalog: lengths 1-5 (up to 7776 braids)</li>
+<li>Entanglement: n=4 non-interleaving, lengths 1-5 (4^k braids each)</li>
+<li>Compression: n=3, lengths 1-6, up to 2000 distinct TL matrices</li>
+</ul>
+<h3>Code Assets</h3>
+<ul>
+<li><strong>Eisenstein integer arithmetic</strong>: <code>Eis</code> type (a + b*omega), <code>eis_add/sub/neg/mul/conj</code>, <code>eis_a_power</code> (A^n mod 3), <code>eis_is_axial</code> (test if value is scalar multiple of 1, omega, or omega^2), <code>eis_to_cx</code> (convert to floating-point complex)</li>
+<li><strong>Planar matching enumeration</strong>: <code>enumerate_basis()</code>, <code>compose_diagrams()</code> with closed-loop counting — reused from Demo 35, ring-independent</li>
+<li><strong>TL matrix algebra over Eisenstein integers</strong>: <code>TLMat</code> type (up to 42x42), <code>tlmat_zero/identity/add/scale_eis/mul/eq/is_zero/nonzero_count</code></li>
+<li><strong><code>build_generator_matrix_d1()</code></strong>: TL generator at delta=1 (every composition survives, coefficient always 1)</li>
+<li><strong><code>build_braid_generator_d1()</code></strong>: sigma_i = A<em>I + A^{-1}</em>e_i with A=omega</li>
+<li><strong><code>eval_braid_word()</code></strong>: multiplies sequence of braid generator matrices</li>
+<li><strong><code>compute_bracket_d1()</code></strong>: matrix-method trace closure (sum identity column, delta^{L-1}=1)</li>
+<li><strong><code>state_sum_bracket_d1()</code></strong>: direct state-sum over 2^n smoothing states (each contributes A^{a_power}, no delta suppression)</li>
+<li><strong><code>decode_braid()</code></strong>: integer-to-crossing-sequence decoder for exhaustive enumeration</li>
+</ul>
+<h3>Literature Touched</h3>
+<ul>
+<li>Eisenstein integers Z[omega] and their arithmetic properties</li>
+<li>Kauffman bracket at roots of unity (cube root vs 8th root)</li>
+<li>Temperley-Lieb algebra at delta=1: idempotent generators, semisimple regime</li>
+<li>Entanglement vanishing in the Kauffman bracket (connection to nilpotency at delta=0)</li>
+<li>Connected to the delta=0 vs delta!=0 dichotomy in topological quantum computation</li>
+</ul>
+<h3>Open Questions</h3>
+<ul>
+<li>How does the bracket catalog at delta=1 compare in size/structure to delta=0?</li>
+<li>What fraction of Eisenstein integer values are actually reachable by the bracket?</li>
+<li>Does the compression ratio stabilize, and how does it compare to delta=0?</li>
+<li>Is there a delta value between 0 and 1 where axiality gradually breaks, or is it a sharp transition?</li>
+<li>Can the idempotent TL algebra at delta=1 support any form of DKC (knot→computation correspondence)?</li>
+</ul>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/c.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</body>
+</html>

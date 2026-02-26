@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>inventory/entries/demo_46.md</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+    <link rel="stylesheet" href="../../style.css">
+</head>
+<body>
+    <nav><a href="../../index.html">← Back to Index</a></nav><hr>
+    <h2>Demo 46: Per-Neuron Gauge Correction</h2>
+<ul>
+<li><strong>Status</strong>: COMPLETE</li>
+<li><strong>File</strong>: <code><a href="../../demo_46_per_neuron_gauge/main.c.html">demo_46_per_neuron_gauge/main.c</a></code> (~1472 lines)</li>
+<li><strong>Tests</strong>: 6/10 checks pass (4 informative failures on predictions P2-P5), across 6 parts (A-F): NPN classification, complex network training, bracket catalog, decomposition with global + per-neuron gauge, ranking &amp; Spearman correlation, summary table &amp; angle structure</li>
+<li><strong>Depends on</strong>: Demo 45 (Complex Function Zoo — global gauge decomposition, Spearman rho = -0.82), Demo 27 (reverse DKC error decomposition), Demo 28 (unitary activation comparison)</li>
+<li><strong>Feeds into</strong>: Demo 47 (Parity Investigation — MVN activation to test lattice-aligned phases)</li>
+</ul>
+<h3>Headline</h3>
+Replaces Demo 45's single global U(1) gauge rotation with independent per-neuron rotations (3D sweep: one angle per hidden neuron), finding that per-neuron gauge improves RMS by 20% but amplitude-only decomposition (RMS 0.33) still dramatically beats per-neuron gauge (RMS 0.57) — proving that phase decoherence from split-sigmoid training, not gauge approximation, is the fundamental bottleneck.
+<h3>Key Results</h3>
+<ul>
+<li><strong>NPN classification</strong> (Part A): maps all 256 3-input truth tables to 14 NPN canonical forms (via permutation + input negation + output negation), selects 13 non-trivial classes for testing</li>
+<li><strong>Complex network training</strong> (Part B): CxNet3 architecture (3 complex hidden neurons, 12 complex weights), split-sigmoid activation, 10 trials per NPN class, SGD with lr=0.3, max 200k epochs</li>
+<li><strong>Bracket catalog</strong> (Part C): 64 distinct complex bracket values from 2-3 strand braids at A = e^{i*5pi/4}, same as Demo 45</li>
+<li><strong>Decomposition</strong> (Part D): for each converged network, three decomposition methods compared:</li>
+<li>Global gauge (1D sweep, 360 angles): avg RMS = 0.7164</li>
+<li>Per-neuron gauge (3D sweep, coarse 36^3 + refinement 11^3): avg RMS = 0.5723</li>
+<li>Amplitude-only (magnitude matching, ignore phases): avg RMS = 0.3283</li>
+<li>Random baseline: 0.8086</li>
+<li><strong>Ranking &amp; Spearman</strong> (Part E): correlation between topology frequency and decomposition quality — global rho = -0.8167, per-neuron rho = -0.7833 (slightly worse). Computed over 9 classes with nonzero topology frequency.</li>
+<li><strong>Summary &amp; angle structure</strong> (Part F): per-neuron angle spreads of 50-170 degrees between neurons for most classes; only 4/13 show clustering</li>
+</ul>
+<h3>Prediction Scorecard</h3>
+<table><thead><tr><th>#</th><th>Prediction</th><th>Result</th><th>Notes</th></tr></thead><tbody><tr><td>P1</td><td>pn_RMS &lt;= global_RMS for all 13</td><td>PASS</td><td>Trivially true (superset search space)</td></tr><tr><td>P2</td><td>Largest improvement for mid-tier (ranks 4-9)</td><td>FAIL</td><td>Bottom tier improved most (0.1938 avg)</td></tr><tr><td>P3</td><td>pn_RMS &lt; amp_RMS for top 6</td><td>FAIL</td><td>Amplitude-only wins for ALL classes</td></tr><tr><td>P4</td><td>Spearman rho improves (more negative)</td><td>FAIL</td><td>Slightly worse (-0.7833 vs -0.8167)</td></tr><tr><td>P5</td><td>Per-neuron angles show clustering</td><td>FAIL</td><td>Only 4/13 show structure; spreads 50-170 deg</td></tr></tbody></table>
+<h3>Theorems/Conjectures</h3>
+<ul>
+<li><strong>Phase decoherence thesis</strong>: split-sigmoid activation treats Re and Im independently, producing weights whose magnitudes align with bracket magnitudes but whose phases are essentially random relative to Z[zeta_8]. No post-training rotation can recover what training never encoded.</li>
+<li><strong>Classical vs quantum partition functions</strong>: split-sigmoid training accesses the Kauffman bracket as a classical/thermal partition function (magnitudes only), not a quantum one (requiring phase coherence). The Potts-model sector vs the Jones-polynomial sector.</li>
+<li><strong>Coding theory capacity</strong>: bracket codebook offers ~7.3 bits/symbol (4.3 magnitude + 3 phase). Split-sigmoid encodes ~4.3 bits (magnitudes only). Per-neuron gauge recovers ~0.5 bits of misaligned phase. ~1.5 bits of phase capacity unused.</li>
+<li><strong>Dimensionality mismatch</strong>: weight vector in C^12 ~ R^24; 12 magnitude coordinates carry signal, 12 phase coordinates carry noise. Gauge rotation couples magnitudes and phases, degrading both. Amplitude-only = dimensionality reduction to the informative subspace.</li>
+<li><strong>Fork in the road</strong>: Path A — accept phase decoherence, use amplitude-only matching; Path B — fix training with MVN/lattice-constrained optimization to access the quantum sector.</li>
+</ul>
+<h3>Data</h3>
+<ul>
+<li>13 NPN classes, 10 trials per class, CxNet3 architecture (3 hidden neurons, 12 complex weights)</li>
+<li>64 bracket catalog values (2-3 strands, lengths 1-8, at A = e^{i*5pi/4})</li>
+<li>3D gauge sweep: coarse 36x36x36 (46,656 combinations, 10-deg) + refinement 11x11x11 (1,331, 1-deg)</li>
+<li>Runtime: ~5 minutes (dominated by 3D gauge sweeps)</li>
+<li>Highlight: ~A(B^C) jumped from rank 9 to rank 3 (0.7781 -&gt; 0.4813, delta 0.2968) — pure inter-neuron gauge problem</li>
+<li>XNOR3 (parity): improved 0.9963 -&gt; 0.7654 but still far from lattice</li>
+</ul>
+<h3>Code Assets</h3>
+<ul>
+<li><strong>NPN equivalence engine</strong>: <code>npn_canonical()</code> computing minimum over 96 transforms (6 perms x 8 input-neg x 2 output-neg) per truth table, precomputed for all 256</li>
+<li><strong>CxNet3 forward/backward</strong>: 3-hidden-neuron complex network with split-sigmoid activation, full backpropagation</li>
+<li><strong>3D per-neuron gauge sweep</strong>: coarse-then-refine optimization over independent U(1) rotations per neuron</li>
+<li><strong>Three-way decomposition comparison</strong>: global gauge (1D), per-neuron gauge (3D), amplitude-only, all applied to same trained weights and catalog</li>
+<li><strong>Spearman rank correlation</strong>: computed over n=9 topology-reachable classes (excludes 4 classes with zero frequency)</li>
+<li><strong>LCG RNG</strong>: reproducible random initialization across all trials</li>
+<li>Reuses: complex arithmetic, braid state-sum bracket, union-find, bracket catalog builder</li>
+</ul>
+<h3>Literature Touched</h3>
+<ul>
+<li><strong>Hirose (2012)</strong>: per-neuron U(1) phase freedom in complex networks — theoretical curiosity quantified empirically here</li>
+<li><strong>GLVQ (NeurIPS 2025)</strong>: per-group learnable codebooks for real-valued LLM quantization (closest analog)</li>
+<li><strong>GPTQ = Babai's nearest-plane algorithm (ICLR 2026)</strong>: amplitude-only success consistent with Babai rounding in correct coordinate system</li>
+<li><strong>Aizenberg MVN activation</strong>: kth-root-of-unity output, natively respects cyclotomic lattice (candidate to fix phase decoherence)</li>
+<li><strong>Potts model vs Jones polynomial</strong>: same state-sum structure, different regimes (real temperature vs complex q)</li>
+<li><strong>Nazer-Gastpar lattice codes</strong>: channel capacity interpretation of bracket codebook</li>
+<li>Novelty: per-neuron U(1) gauge correction for complex weight decomposition onto cyclotomic lattice has no precedent</li>
+</ul>
+<h3>Open Questions</h3>
+<ul>
+<li>Does MVN activation (Demo 47) produce lattice-aligned phases, closing the gap with amplitude-only?</li>
+<li>Is amplitude-only decomposition sufficient for the compiler, or do phases become critical at 4+ inputs?</li>
+<li>Can the optimal per-neuron gauge be predicted analytically for lattice-aware architectures?</li>
+<li>Is there a deeper algebraic reason why magnitudes carry computational information but phases don't under split-sigmoid?</li>
+</ul>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/c.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</body>
+</html>

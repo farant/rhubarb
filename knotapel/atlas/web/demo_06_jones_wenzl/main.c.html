@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>demo_06_jones_wenzl/main.c</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+    <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+    <nav><a href="../index.html">← Back to Index</a></nav><hr>
+    <h1>demo_06_jones_wenzl/main.c</h1><pre><code class="language-c">/*
+ * KNOTAPEL DEMO 06: Jones-Wenzl Idempotents
+ * ==========================================
+ *
+ * Demo 03 found: bracket(b) = 1*tr_W1(rho(b)) + (A^{-4}+A^4)*tr_W3(rho(b))
+ * Demo 04 found: bracket(b) = tr_q(rho(b)) / [2]_q via quantum trace
+ *
+ * The quantum dimension weights looked like magic numbers. This demo shows
+ * they come from PROJECTORS: the Jones-Wenzl idempotents p_n.
+ *
+ * p_n projects V^{tensor n} onto the highest-spin irreducible component.
+ * Properties: p_n^2 = p_n, U_i * p_n = 0, tr_q(p_n) = [n+1]_q.
+ *
+ * IMPLEMENTATION TRICK: p_n has rational function entries (divisions by
+ * quantum integers). We avoid this by working with SCALED idempotents:
+ *   Q_n = D_n * p_n  (polynomial entries only)
+ *   Q_n^2 = D_n * Q_n  (scaled idempotency)
+ *   U_i * Q_n = 0       (annihilation still holds)
+ *   tr_q(Q_n) = D_n * [n+1]_q
+ *
+ * Key simplification: [2]_q / delta = -1, so the n=3 recursion
+ * Q_3 = [3]_q * iota(Q_2) - iota(Q_2) * U_2 * iota(Q_2)
+ * stays entirely polynomial.
+ *
+ * PLAN:
+ *   Part A: TL relations on V^{tensor 3} (8x8 U_1, U_2)
+ *   Part B: Scaled JW p_2 on V tensor V (4x4 Q_2)
+ *   Part C: Scaled JW p_3 on V^{tensor 3} (8x8 Q_3)
+ *   Part D: Markov trace decomposition via projectors
+ *
+ * C89, zero dependencies.
+ */
+
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;string.h&gt;
+
+/* ================================================================
+ * Laurent polynomial ring (from Demo 04)
+ * ================================================================ */
+#define MAX_TERMS 120
+
+typedef struct { int c[MAX_TERMS]; int lo, len; } Poly;
+
+static void p_zero(Poly *p) { memset(p, 0, sizeof(Poly)); }
+
+static void p_mono(Poly *p, int coeff, int exp) {
+    p_zero(p);
+    if (!coeff) return;
+    p-&gt;lo = exp; p-&gt;len = 1; p-&gt;c[0] = coeff;
+}
+
+static void p_trim(Poly *p) {
+    int a = 0, b;
+    if (!p-&gt;len) return;
+    while (a &lt; p-&gt;len &amp;&amp; !p-&gt;c[a]) a++;
+    if (a == p-&gt;len) { p_zero(p); return; }
+    b = p-&gt;len - 1;
+    while (b &gt; a &amp;&amp; !p-&gt;c[b]) b--;
+    if (a &gt; 0) memmove(p-&gt;c, p-&gt;c + a, (size_t)(b - a + 1) * sizeof(int));
+    p-&gt;lo += a; p-&gt;len = b - a + 1;
+}
+
+static void p_add(Poly *r, const Poly *a, const Poly *b) {
+    Poly t; int lo, hi, i;
+    if (!a-&gt;len) { *r = *b; return; }
+    if (!b-&gt;len) { *r = *a; return; }
+    lo = a-&gt;lo &lt; b-&gt;lo ? a-&gt;lo : b-&gt;lo;
+    hi = (a-&gt;lo + a-&gt;len - 1) &gt; (b-&gt;lo + b-&gt;len - 1)
+       ? (a-&gt;lo + a-&gt;len - 1) : (b-&gt;lo + b-&gt;len - 1);
+    p_zero(&amp;t); t.lo = lo; t.len = hi - lo + 1;
+    for (i = 0; i &lt; a-&gt;len; i++) t.c[(a-&gt;lo + i) - lo] += a-&gt;c[i];
+    for (i = 0; i &lt; b-&gt;len; i++) t.c[(b-&gt;lo + i) - lo] += b-&gt;c[i];
+    p_trim(&amp;t); *r = t;
+}
+
+static void p_neg(Poly *r, const Poly *a) {
+    int i;
+    *r = *a;
+    for (i = 0; i &lt; r-&gt;len; i++) r-&gt;c[i] = -r-&gt;c[i];
+}
+
+static void p_sub(Poly *r, const Poly *a, const Poly *b) {
+    Poly nb;
+    p_neg(&amp;nb, b);
+    p_add(r, a, &amp;nb);
+}
+
+static void p_mul(Poly *r, const Poly *a, const Poly *b) {
+    Poly t; int i, j;
+    if (!a-&gt;len || !b-&gt;len) { p_zero(r); return; }
+    p_zero(&amp;t); t.lo = a-&gt;lo + b-&gt;lo; t.len = a-&gt;len + b-&gt;len - 1;
+    for (i = 0; i &lt; a-&gt;len; i++)
+        for (j = 0; j &lt; b-&gt;len; j++)
+            t.c[i + j] += a-&gt;c[i] * b-&gt;c[j];
+    p_trim(&amp;t); *r = t;
+}
+
+static int p_eq(const Poly *a, const Poly *b) {
+    if (a-&gt;len != b-&gt;len) return 0;
+    if (!a-&gt;len) return 1;
+    if (a-&gt;lo != b-&gt;lo) return 0;
+    return memcmp(a-&gt;c, b-&gt;c, (size_t)a-&gt;len * sizeof(int)) == 0;
+}
+
+static int p_is_zero(const Poly *p) { return p-&gt;len == 0; }
+
+static void p_print(const Poly *p, const char *name) {
+    int i, e, first;
+    printf("%s = ", name);
+    if (!p-&gt;len) { printf("0\n"); return; }
+    first = 1;
+    for (i = 0; i &lt; p-&gt;len; i++) {
+        if (!p-&gt;c[i]) continue;
+        e = p-&gt;lo + i;
+        if (!first &amp;&amp; p-&gt;c[i] &gt; 0) printf(" + ");
+        if (!first &amp;&amp; p-&gt;c[i] &lt; 0) printf(" - ");
+        if (first &amp;&amp; p-&gt;c[i] &lt; 0) printf("-");
+        first = 0;
+        if (abs(p-&gt;c[i]) != 1 || e == 0) printf("%d", abs(p-&gt;c[i]));
+        if (e == 1) printf("A");
+        else if (e == -1) printf("A^-1");
+        else if (e) printf("A^%d", e);
+    }
+    printf("\n");
+}
+
+/* Polynomial division: r = a / b, with assertion that remainder is zero.
+ * Returns 1 if exact, 0 if not. */
+static int p_div_exact(Poly *r, const Poly *a, const Poly *b) {
+    Poly rem, t, mono;
+    int deg_r, lead_a, lead_b, q_coeff, q_exp;
+
+    if (!b-&gt;len) { printf("  ERROR: division by zero polynomial\n"); return 0; }
+    if (!a-&gt;len) { p_zero(r); return 1; }
+
+    rem = *a;
+    p_zero(r);
+
+    while (rem.len &gt; 0) {
+        /* Leading term of remainder / leading term of divisor */
+        lead_a = rem.c[rem.len - 1];
+        lead_b = b-&gt;c[b-&gt;len - 1];
+        if (lead_a % lead_b != 0) return 0; /* not exact */
+        q_coeff = lead_a / lead_b;
+        q_exp = (rem.lo + rem.len - 1) - (b-&gt;lo + b-&gt;len - 1);
+
+        /* Add term to quotient */
+        p_mono(&amp;mono, q_coeff, q_exp);
+        p_add(r, r, &amp;mono);
+
+        /* Subtract q_term * b from remainder */
+        p_mul(&amp;t, &amp;mono, b);
+        p_sub(&amp;rem, &amp;rem, &amp;t);
+        p_trim(&amp;rem);
+
+        /* Safety: degree should decrease */
+        deg_r = rem.len &gt; 0 ? (rem.lo + rem.len - 1) : -9999;
+        if (rem.len &gt; 0 &amp;&amp; deg_r &gt;= (a-&gt;lo + a-&gt;len - 1)) {
+            return 0; /* not converging */
+        }
+    }
+    return 1;
+}
+
+/* ================================================================
+ * NxN polynomial matrix (stack-allocated, N up to 8)
+ * ================================================================ */
+#define MAXN 8
+
+typedef struct { Poly m[MAXN][MAXN]; int n; } Mat;
+
+static void mat_zero(Mat *M, int n) {
+    int i, j;
+    M-&gt;n = n;
+    for (i = 0; i &lt; n; i++)
+        for (j = 0; j &lt; n; j++)
+            p_zero(&amp;M-&gt;m[i][j]);
+}
+
+static void mat_id(Mat *M, int n) {
+    int i, j;
+    M-&gt;n = n;
+    for (i = 0; i &lt; n; i++)
+        for (j = 0; j &lt; n; j++) {
+            if (i == j) p_mono(&amp;M-&gt;m[i][j], 1, 0);
+            else p_zero(&amp;M-&gt;m[i][j]);
+        }
+}
+
+static void mat_mul(Mat *R, const Mat *A, const Mat *B) {
+    Mat T; int i, j, k, n; Poly t;
+    n = A-&gt;n;
+    mat_zero(&amp;T, n);
+    for (i = 0; i &lt; n; i++)
+        for (j = 0; j &lt; n; j++)
+            for (k = 0; k &lt; n; k++) {
+                p_mul(&amp;t, &amp;A-&gt;m[i][k], &amp;B-&gt;m[k][j]);
+                p_add(&amp;T.m[i][j], &amp;T.m[i][j], &amp;t);
+            }
+    *R = T;
+}
+
+static void mat_scale(Mat *R, const Mat *M, const Poly *s) {
+    int i, j, n;
+    n = M-&gt;n; R-&gt;n = n;
+    for (i = 0; i &lt; n; i++)
+        for (j = 0; j &lt; n; j++)
+            p_mul(&amp;R-&gt;m[i][j], &amp;M-&gt;m[i][j], s);
+}
+
+static void mat_add(Mat *R, const Mat *A, const Mat *B) {
+    int i, j, n;
+    n = A-&gt;n; R-&gt;n = n;
+    for (i = 0; i &lt; n; i++)
+        for (j = 0; j &lt; n; j++)
+            p_add(&amp;R-&gt;m[i][j], &amp;A-&gt;m[i][j], &amp;B-&gt;m[i][j]);
+}
+
+static int mat_eq(const Mat *A, const Mat *B) {
+    int i, j;
+    if (A-&gt;n != B-&gt;n) return 0;
+    for (i = 0; i &lt; A-&gt;n; i++)
+        for (j = 0; j &lt; A-&gt;n; j++)
+            if (!p_eq(&amp;A-&gt;m[i][j], &amp;B-&gt;m[i][j])) return 0;
+    return 1;
+}
+
+static int mat_is_zero(const Mat *M) {
+    int i, j;
+    for (i = 0; i &lt; M-&gt;n; i++)
+        for (j = 0; j &lt; M-&gt;n; j++)
+            if (!p_is_zero(&amp;M-&gt;m[i][j])) return 0;
+    return 1;
+}
+
+/* Tensor product: C = A tensor B */
+static void mat_tensor(Mat *C, const Mat *A, const Mat *B) {
+    int i1, i2, j1, j2, n1, n2;
+    n1 = A-&gt;n; n2 = B-&gt;n;
+    C-&gt;n = n1 * n2;
+    for (i1 = 0; i1 &lt; n1; i1++)
+        for (i2 = 0; i2 &lt; n2; i2++)
+            for (j1 = 0; j1 &lt; n1; j1++)
+                for (j2 = 0; j2 &lt; n2; j2++)
+                    p_mul(&amp;C-&gt;m[i1*n2+i2][j1*n2+j2],
+                          &amp;A-&gt;m[i1][j1], &amp;B-&gt;m[i2][j2]);
+}
+
+/* Quantum trace: tr(diag_weights * M) = sum_i w[i] * M[i][i] */
+static void mat_qtrace(Poly *tr, const Mat *M, const Poly *w) {
+    int i; Poly t;
+    p_zero(tr);
+    for (i = 0; i &lt; M-&gt;n; i++) {
+        p_mul(&amp;t, &amp;w[i], &amp;M-&gt;m[i][i]);
+        p_add(tr, tr, &amp;t);
+    }
+}
+
+/* ================================================================
+ * State-sum oracle (from Demo 04)
+ * ================================================================ */
+#define MAX_UF 256
+static int uf_p[MAX_UF];
+static void uf_init(int n) { int i; for (i = 0; i &lt; n; i++) uf_p[i] = i; }
+static int uf_find(int x) {
+    while (uf_p[x] != x) { uf_p[x] = uf_p[uf_p[x]]; x = uf_p[x]; }
+    return x;
+}
+static void uf_union(int x, int y) {
+    x = uf_find(x); y = uf_find(y); if (x != y) uf_p[x] = y;
+}
+
+typedef struct { int word[20]; int len, n; } Braid;
+
+static int braid_loops(const Braid *b, unsigned s) {
+    int N = (b-&gt;len + 1) * b-&gt;n, l, p, i, loops, sgn, bit, cup;
+    uf_init(N);
+    for (l = 0; l &lt; b-&gt;len; l++) {
+        sgn = b-&gt;word[l] &gt; 0 ? 1 : -1;
+        i = (sgn &gt; 0 ? b-&gt;word[l] : -b-&gt;word[l]) - 1;
+        bit = (int)((s &gt;&gt; l) &amp; 1u);
+        cup = (sgn &gt; 0) ? (bit == 0) : (bit == 1);
+        if (cup) {
+            uf_union(l * b-&gt;n + i, l * b-&gt;n + i + 1);
+            uf_union((l + 1) * b-&gt;n + i, (l + 1) * b-&gt;n + i + 1);
+            for (p = 0; p &lt; b-&gt;n; p++)
+                if (p != i &amp;&amp; p != i + 1)
+                    uf_union(l * b-&gt;n + p, (l + 1) * b-&gt;n + p);
+        } else {
+            for (p = 0; p &lt; b-&gt;n; p++)
+                uf_union(l * b-&gt;n + p, (l + 1) * b-&gt;n + p);
+        }
+    }
+    for (p = 0; p &lt; b-&gt;n; p++)
+        uf_union(p, b-&gt;len * b-&gt;n + p);
+    loops = 0;
+    for (i = 0; i &lt; N; i++)
+        if (uf_find(i) == i) loops++;
+    return loops;
+}
+
+static void braid_bracket(Poly *r, const Braid *b) {
+    unsigned s, ns; int i, a, bc, lp, j;
+    Poly d, dp, t, c, t1, t2;
+    p_zero(r);
+    p_mono(&amp;t1, -1, 2); p_mono(&amp;t2, -1, -2); p_add(&amp;d, &amp;t1, &amp;t2);
+    if (!b-&gt;len) {
+        p_mono(r, 1, 0);
+        for (i = 0; i &lt; b-&gt;n - 1; i++) p_mul(r, r, &amp;d);
+        return;
+    }
+    ns = 1u &lt;&lt; b-&gt;len;
+    for (s = 0; s &lt; ns; s++) {
+        a = 0; bc = 0;
+        for (i = 0; i &lt; b-&gt;len; i++) {
+            if ((s &gt;&gt; i) &amp; 1u) bc++; else a++;
+        }
+        lp = braid_loops(b, s);
+        p_mono(&amp;t, 1, a - bc);
+        p_mono(&amp;dp, 1, 0);
+        for (j = 0; j &lt; lp - 1; j++) p_mul(&amp;dp, &amp;dp, &amp;d);
+        p_mul(&amp;c, &amp;t, &amp;dp);
+        p_add(r, r, &amp;c);
+    }
+    p_trim(r);
+}
+
+/* ================================================================
+ * Globals
+ * ================================================================ */
+static Poly DELTA;  /* -A^2 - A^{-2} */
+static Poly PA, PAinv;
+static Poly QD[5];  /* quantum dimensions [1]_q through [4]_q */
+
+static void init_globals(void) {
+    Poly t1, t2;
+    p_mono(&amp;t1, -1, 2); p_mono(&amp;t2, -1, -2); p_add(&amp;DELTA, &amp;t1, &amp;t2);
+    p_mono(&amp;PA, 1, 1);
+    p_mono(&amp;PAinv, 1, -1);
+
+    /* Quantum dimensions */
+    p_mono(&amp;QD[1], 1, 0);  /* [1]_q = 1 */
+    p_mono(&amp;t1, 1, 2); p_mono(&amp;t2, 1, -2); p_add(&amp;QD[2], &amp;t1, &amp;t2); /* [2]_q = A^2+A^{-2} */
+    /* [3]_q = [2]_q * [2]_q - [1]_q = A^4+1+A^{-4} */
+    p_mul(&amp;t1, &amp;QD[2], &amp;QD[2]);
+    p_sub(&amp;QD[3], &amp;t1, &amp;QD[1]);
+    /* [4]_q = [2]_q * [3]_q - [2]_q */
+    p_mul(&amp;t1, &amp;QD[2], &amp;QD[3]);
+    p_sub(&amp;QD[4], &amp;t1, &amp;QD[2]);
+}
+
+static int n_pass = 0, n_fail = 0;
+static void check(const char *msg, int ok) {
+    if (ok) { printf("  PASS: %s\n", msg); n_pass++; }
+    else    { printf("  FAIL: %s\n", msg); n_fail++; }
+}
+
+/* ================================================================
+ * Build U on V tensor V (4x4, same as Demo 04)
+ * ================================================================ */
+static Mat U_VV;  /* 4x4 TL generator */
+
+static void build_U(void) {
+    Poly neg_Ainv2, neg_A2;
+    p_mono(&amp;neg_Ainv2, -1, -2);
+    p_mono(&amp;neg_A2, -1, 2);
+    mat_zero(&amp;U_VV, 4);
+    U_VV.m[1][1] = neg_Ainv2;
+    p_mono(&amp;U_VV.m[1][2], 1, 0);
+    p_mono(&amp;U_VV.m[2][1], 1, 0);
+    U_VV.m[2][2] = neg_A2;
+}
+
+/* Build R and R^{-1} on V tensor V */
+static Mat R_VV, Rinv_VV;
+
+static void build_R(void) {
+    Mat I4, AU, AinvI, AinvU, AI;
+    mat_id(&amp;I4, 4);
+    mat_scale(&amp;AU, &amp;U_VV, &amp;PA);
+    mat_scale(&amp;AinvI, &amp;I4, &amp;PAinv);
+    mat_add(&amp;R_VV, &amp;AU, &amp;AinvI);
+    mat_scale(&amp;AinvU, &amp;U_VV, &amp;PAinv);
+    mat_scale(&amp;AI, &amp;I4, &amp;PA);
+    mat_add(&amp;Rinv_VV, &amp;AinvU, &amp;AI);
+}
+
+/* ================================================================
+ * Build TL generators on V^{tensor 3} (8x8)
+ * U1 = U tensor I_2, U2 = I_2 tensor U
+ * And braid generators R1, R2
+ * ================================================================ */
+static Mat U1_8, U2_8;  /* 8x8 TL generators */
+static Mat R1_8, R2_8, R1inv_8, R2inv_8;  /* 8x8 braid generators */
+
+static void build_8x8(void) {
+    Mat I2;
+    mat_id(&amp;I2, 2);
+    mat_tensor(&amp;U1_8, &amp;U_VV, &amp;I2);
+    mat_tensor(&amp;U2_8, &amp;I2, &amp;U_VV);
+    mat_tensor(&amp;R1_8, &amp;R_VV, &amp;I2);
+    mat_tensor(&amp;R2_8, &amp;I2, &amp;R_VV);
+    mat_tensor(&amp;R1inv_8, &amp;Rinv_VV, &amp;I2);
+    mat_tensor(&amp;R2inv_8, &amp;I2, &amp;Rinv_VV);
+}
+
+/* Build braid product on V^{tensor 3} */
+static void braid_product(Mat *result, const Braid *b) {
+    int i, j;
+    Mat *gen;
+    mat_id(result, 8);
+    for (i = 0; i &lt; b-&gt;len; i++) {
+        j = b-&gt;word[i];
+        if (j == 1) gen = &amp;R1_8;
+        else if (j == -1) gen = &amp;R1inv_8;
+        else if (j == 2) gen = &amp;R2_8;
+        else if (j == -2) gen = &amp;R2inv_8;
+        else { printf("  ERROR: bad generator %d\n", j); return; }
+        mat_mul(result, result, gen);
+    }
+}
+
+/* Build K^{tensor 3} diagonal weights for quantum trace */
+static Poly W8[8];
+
+static void build_weights(void) {
+    Poly k[2], t;
+    int a, b, c, idx;
+    p_mono(&amp;k[0], 1, 2);
+    p_mono(&amp;k[1], 1, -2);
+    for (a = 0; a &lt; 2; a++)
+        for (b = 0; b &lt; 2; b++)
+            for (c = 0; c &lt; 2; c++) {
+                idx = a * 4 + b * 2 + c;
+                p_mul(&amp;t, &amp;k[a], &amp;k[b]);
+                p_mul(&amp;W8[idx], &amp;t, &amp;k[c]);
+            }
+}
+
+/* ================================================================
+ * TESTS
+ * ================================================================ */
+
+static void test_part_a(void) {
+    Mat U1sq, dU1, U2sq, dU2;
+    Mat U1U2U1, U2U1U2, t;
+
+    printf("\n=== PART A: TL Relations on V^{tensor 3} ===\n");
+
+    /* U_i^2 = delta * U_i */
+    mat_mul(&amp;U1sq, &amp;U1_8, &amp;U1_8);
+    mat_scale(&amp;dU1, &amp;U1_8, &amp;DELTA);
+    check("U1^2 = delta * U1 (8x8)", mat_eq(&amp;U1sq, &amp;dU1));
+
+    mat_mul(&amp;U2sq, &amp;U2_8, &amp;U2_8);
+    mat_scale(&amp;dU2, &amp;U2_8, &amp;DELTA);
+    check("U2^2 = delta * U2 (8x8)", mat_eq(&amp;U2sq, &amp;dU2));
+
+    /* U1 * U2 * U1 = U1 */
+    mat_mul(&amp;t, &amp;U1_8, &amp;U2_8);
+    mat_mul(&amp;U1U2U1, &amp;t, &amp;U1_8);
+    check("U1*U2*U1 = U1 (TL relation)", mat_eq(&amp;U1U2U1, &amp;U1_8));
+
+    /* U2 * U1 * U2 = U2 */
+    mat_mul(&amp;t, &amp;U2_8, &amp;U1_8);
+    mat_mul(&amp;U2U1U2, &amp;t, &amp;U2_8);
+    check("U2*U1*U2 = U2 (TL relation)", mat_eq(&amp;U2U1U2, &amp;U2_8));
+}
+
+static void test_part_b(void) {
+    /*
+     * Scaled Jones-Wenzl p_2 on V tensor V (4x4):
+     *   Q_2 = delta * I_4 - U
+     *   D_2 = delta
+     *
+     * Properties:
+     *   Q_2^2 = delta * Q_2  (scaled idempotency)
+     *   U * Q_2 = 0          (annihilation)
+     *   tr_q(Q_2) = delta * [3]_q
+     */
+    Mat Q2, Q2sq, dQ2, UQ2;
+    Mat dI4;
+    Poly w4[4], tr, expected;
+    Poly k[2];
+    int a, b, idx;
+
+    printf("\n=== PART B: Scaled JW p_2 on V tensor V (4x4) ===\n");
+    printf("  Q_2 = delta*I - U, D_2 = delta\n\n");
+
+    /* Q_2 = delta * I_4 - U */
+    mat_id(&amp;dI4, 4);
+    mat_scale(&amp;dI4, &amp;dI4, &amp;DELTA);
+    mat_scale(&amp;Q2, &amp;U_VV, &amp;DELTA); /* temporary: use as -U = negate */
+    /* Actually: Q_2 = delta*I - U. Let's build it properly */
+    {
+        Mat negU;
+        int i, j;
+        negU.n = 4;
+        for (i = 0; i &lt; 4; i++)
+            for (j = 0; j &lt; 4; j++)
+                p_neg(&amp;negU.m[i][j], &amp;U_VV.m[i][j]);
+        mat_add(&amp;Q2, &amp;dI4, &amp;negU);
+    }
+
+    /* Q_2^2 = delta * Q_2 */
+    mat_mul(&amp;Q2sq, &amp;Q2, &amp;Q2);
+    mat_scale(&amp;dQ2, &amp;Q2, &amp;DELTA);
+    check("Q2^2 = delta * Q2 (scaled idempotency)", mat_eq(&amp;Q2sq, &amp;dQ2));
+
+    /* U * Q_2 = 0 */
+    mat_mul(&amp;UQ2, &amp;U_VV, &amp;Q2);
+    check("U * Q2 = 0 (annihilation)", mat_is_zero(&amp;UQ2));
+
+    /* tr_q(Q_2) = delta * [3]_q */
+    /* Build K^{tensor 2} weights */
+    p_mono(&amp;k[0], 1, 2);
+    p_mono(&amp;k[1], 1, -2);
+    for (a = 0; a &lt; 2; a++)
+        for (b = 0; b &lt; 2; b++) {
+            idx = a * 2 + b;
+            p_mul(&amp;w4[idx], &amp;k[a], &amp;k[b]);
+        }
+    mat_qtrace(&amp;tr, &amp;Q2, w4);
+    p_mul(&amp;expected, &amp;DELTA, &amp;QD[3]);
+    p_print(&amp;tr, "  tr_q(Q2)");
+    p_print(&amp;expected, "  delta*[3]_q");
+    check("tr_q(Q2) = delta * [3]_q", p_eq(&amp;tr, &amp;expected));
+}
+
+static Mat Q3_8;  /* global so Part D can use it */
+static Poly D3;   /* D_3 = delta * [3]_q */
+
+static void test_part_c(void) {
+    /*
+     * Scaled Jones-Wenzl p_3 on V^{tensor 3} (8x8):
+     *   iota(Q_2) = Q_2 tensor I_2 = delta*I_8 - U1
+     *   Q_3 = [3]_q * iota(Q_2) - iota(Q_2) * U2 * iota(Q_2)
+     *   D_3 = delta * [3]_q
+     *
+     * Derivation: p_3 = iota(p_2) - (delta/[3]_q) * iota(p_2)*U2*iota(p_2)
+     * With Q_n = D_n*p_n and D_3 = delta*[3]_q, the polynomial form becomes:
+     *   Q_3 = [3]_q * iota(Q_2) - iota(Q_2) * U2 * iota(Q_2)
+     */
+    Mat iotaQ2;  /* Q_2 tensor I_2 = delta*I_8 - U1 */
+    Mat iotaQ2_U2, iotaQ2_U2_iotaQ2, scaled, Q3sq, D3_Q3;
+    Mat U1Q3, U2Q3;
+    Poly tr, expected;
+    int i, j;
+
+    printf("\n=== PART C: Scaled JW p_3 on V^{tensor 3} (8x8) ===\n");
+    printf("  Q_3 = [3]_q * iota(Q_2) - iota(Q_2) * U2 * iota(Q_2)\n");
+    printf("  D_3 = delta * [3]_q\n\n");
+
+    /* D_3 = delta * [3]_q */
+    p_mul(&amp;D3, &amp;DELTA, &amp;QD[3]);
+    p_print(&amp;D3, "  D_3");
+
+    /* iota(Q_2) = delta*I_8 - U1 */
+    mat_id(&amp;iotaQ2, 8);
+    mat_scale(&amp;iotaQ2, &amp;iotaQ2, &amp;DELTA);
+    iotaQ2.n = 8;
+    for (i = 0; i &lt; 8; i++)
+        for (j = 0; j &lt; 8; j++) {
+            Poly neg;
+            p_neg(&amp;neg, &amp;U1_8.m[i][j]);
+            p_add(&amp;iotaQ2.m[i][j], &amp;iotaQ2.m[i][j], &amp;neg);
+        }
+
+    /* Q_3 = [3]_q * iota(Q_2) - iota(Q_2) * U2 * iota(Q_2)
+     *
+     * Derivation: c = delta/[3]_q (from U_2*p_3 = 0 requirement).
+     * Q_3 = D_3*p_3 = [3]_q*iota(Q_2) - delta^2*iota(Q_2)*U_2*iota(Q_2)/delta^2
+     *      = [3]_q*iota(Q_2) - iota(Q_2)*U_2*iota(Q_2)
+     */
+    mat_scale(&amp;scaled, &amp;iotaQ2, &amp;QD[3]);
+    mat_mul(&amp;iotaQ2_U2, &amp;iotaQ2, &amp;U2_8);
+    mat_mul(&amp;iotaQ2_U2_iotaQ2, &amp;iotaQ2_U2, &amp;iotaQ2);
+    /* Negate the second term */
+    {
+        int ii, jj;
+        for (ii = 0; ii &lt; 8; ii++)
+            for (jj = 0; jj &lt; 8; jj++)
+                p_neg(&amp;iotaQ2_U2_iotaQ2.m[ii][jj], &amp;iotaQ2_U2_iotaQ2.m[ii][jj]);
+    }
+    mat_add(&amp;Q3_8, &amp;scaled, &amp;iotaQ2_U2_iotaQ2);
+
+    /* Q_3^2 = D_3 * Q_3 (scaled idempotency) */
+    mat_mul(&amp;Q3sq, &amp;Q3_8, &amp;Q3_8);
+    mat_scale(&amp;D3_Q3, &amp;Q3_8, &amp;D3);
+    check("Q3^2 = D3 * Q3 (scaled idempotency)", mat_eq(&amp;Q3sq, &amp;D3_Q3));
+
+    /* U1 * Q_3 = 0 */
+    mat_mul(&amp;U1Q3, &amp;U1_8, &amp;Q3_8);
+    check("U1 * Q3 = 0 (annihilation)", mat_is_zero(&amp;U1Q3));
+
+    /* U2 * Q_3 = 0 */
+    mat_mul(&amp;U2Q3, &amp;U2_8, &amp;Q3_8);
+    check("U2 * Q3 = 0 (annihilation)", mat_is_zero(&amp;U2Q3));
+
+    /* tr_q(Q_3) = D_3 * [4]_q */
+    mat_qtrace(&amp;tr, &amp;Q3_8, W8);
+    p_mul(&amp;expected, &amp;D3, &amp;QD[4]);
+    p_print(&amp;tr, "  tr_q(Q3)");
+    p_print(&amp;expected, "  D3*[4]_q");
+    check("tr_q(Q3) = D3 * [4]_q", p_eq(&amp;tr, &amp;expected));
+}
+
+static void test_part_d(void) {
+    /*
+     * Markov trace decomposition via projectors.
+     *
+     * For 3 strands: V^{tensor 3} = V_{3/2} tensor W_3 + V_{1/2} tensor W_1
+     *
+     * p_3 projects onto V_{3/2} tensor W_3 (the highest-spin, all-through-lines module).
+     * (I - p_3) projects onto V_{1/2} tensor W_1.
+     *
+     * Using scaled Q_3 = D_3 * p_3:
+     *   tr_q(Q_3 * rho(beta)) / D_3 = [4]_q * tr_{W_3}(rho_3(beta))
+     *   tr_q((D_3*I - Q_3) * rho(beta)) / D_3 = [2]_q * tr_{W_1}(rho_1(beta))
+     *
+     * And: bracket = [tr_q(Q_3*rho) + tr_q((D_3*I - Q_3)*rho)] / (D_3 * [2]_q)
+     *              = tr_q(rho) / [2]_q  (since Q_3 + (D_3*I - Q_3) = D_3*I, everything cancels)
+     *
+     * But the INTERESTING test is that each COMPONENT separately gives the
+     * correct module trace with the correct quantum dimension weight.
+     *
+     * W_3 (1D, all through-lines): all U_i act as 0, so g_i = A^{-1}.
+     * For a braid with word [s_1, s_2, ...], tr_{W_3} = product of A^{-sgn(s_i)}.
+     *
+     * Test: tr_q(Q_3 * rho(beta)) should equal D_3 * [4]_q * (product of A^{-sgn(s_i)})
+     */
+    Braid braids[4];
+    const char *bnames[4];
+    int nbr, bi;
+    Mat rho, Q3_rho;
+    Poly tr_total, tr_w3, expected_w3, w3_trace;
+    Poly neg_delta;
+    Poly oracle, expected_total;
+
+    printf("\n=== PART D: Markov Trace Decomposition ===\n");
+    printf("  bracket = [W_3 component + W_1 component] / [2]_q\n");
+    printf("  W_3 component = tr_q(Q_3 * rho) / D_3 = [4]_q * tr_{W_3}\n\n");
+
+    /* Test braids */
+    nbr = 0;
+
+    /* Identity (3-unlink) */
+    braids[nbr].n = 3; braids[nbr].len = 0;
+    bnames[nbr] = "identity";
+    nbr++;
+
+    /* sigma_1 */
+    braids[nbr].n = 3; braids[nbr].len = 1;
+    braids[nbr].word[0] = 1;
+    bnames[nbr] = "sigma_1";
+    nbr++;
+
+    /* Trefoil: sigma_1 sigma_2 sigma_1 */
+    braids[nbr].n = 3; braids[nbr].len = 3;
+    braids[nbr].word[0] = 1; braids[nbr].word[1] = 2; braids[nbr].word[2] = 1;
+    bnames[nbr] = "trefoil";
+    nbr++;
+
+    /* Figure-eight: sigma_1 sigma_2^{-1} sigma_1 sigma_2^{-1} */
+    braids[nbr].n = 3; braids[nbr].len = 4;
+    braids[nbr].word[0] = 1; braids[nbr].word[1] = -2;
+    braids[nbr].word[2] = 1; braids[nbr].word[3] = -2;
+    bnames[nbr] = "figure-eight";
+    nbr++;
+
+    /* neg_delta = -delta = A^2 + A^{-2} = [2]_q */
+    p_neg(&amp;neg_delta, &amp;DELTA);
+
+    for (bi = 0; bi &lt; nbr; bi++) {
+        int ci;
+        char msg[120];
+
+        printf("  --- %s ---\n", bnames[bi]);
+
+        /* Compute rho(beta) */
+        braid_product(&amp;rho, &amp;braids[bi]);
+
+        /* tr_q(rho) = total quantum trace */
+        mat_qtrace(&amp;tr_total, &amp;rho, W8);
+
+        /* tr_q(Q_3 * rho) = W_3 component (scaled by D_3) */
+        mat_mul(&amp;Q3_rho, &amp;Q3_8, &amp;rho);
+        mat_qtrace(&amp;tr_w3, &amp;Q3_rho, W8);
+
+        /* Expected W_3 trace: on W_3 (all through-lines), g_i = A^{-1}*I (since U_i=0).
+         * So tr_{W_3}(rho(beta)) = product of A^{-sgn(word[i])}
+         * And expected: tr_q(Q_3 * rho) = D_3 * [4]_q * tr_{W_3} */
+        p_mono(&amp;w3_trace, 1, 0);
+        for (ci = 0; ci &lt; braids[bi].len; ci++) {
+            Poly factor;
+            p_mono(&amp;factor, 1, braids[bi].word[ci] &gt; 0 ? -1 : 1);
+            p_mul(&amp;w3_trace, &amp;w3_trace, &amp;factor);
+        }
+        {
+            Poly d3_q4;
+            p_mul(&amp;d3_q4, &amp;D3, &amp;QD[4]);
+            p_mul(&amp;expected_w3, &amp;d3_q4, &amp;w3_trace);
+        }
+
+        p_print(&amp;tr_w3, "    tr_q(Q3*rho)");
+        p_print(&amp;expected_w3, "    D3*[4]_q*trW3");
+        sprintf(msg, "%s: W_3 component matches", bnames[bi]);
+        check(msg, p_eq(&amp;tr_w3, &amp;expected_w3));
+
+        /* Also verify total: tr_q(rho) = -delta * oracle (from Demo 04) */
+        braid_bracket(&amp;oracle, &amp;braids[bi]);
+        p_mul(&amp;expected_total, &amp;neg_delta, &amp;oracle);
+        sprintf(msg, "%s: total tr_q = -delta * bracket", bnames[bi]);
+        check(msg, p_eq(&amp;tr_total, &amp;expected_total));
+
+        /* The W_1 component is tr_q(rho) - tr_q(Q_3*rho)/D_3, scaled by D_3:
+         * tr_q((D_3*I - Q_3)*rho) = D_3*tr_q(rho) - tr_q(Q_3*rho) */
+        {
+            Poly tr_w1_scaled, d3_tr_total;
+            Poly d3_q2, w1_module_trace;
+            p_mul(&amp;d3_tr_total, &amp;D3, &amp;tr_total);
+            p_sub(&amp;tr_w1_scaled, &amp;d3_tr_total, &amp;tr_w3);
+
+            /* Expected: D_3 * [2]_q * tr_{W_1}(rho_1(beta))
+             * From Demo 03: W_1 is 2D with matrices
+             *   g1 = A*U1_W1 + A^{-1}*I, g2 = A*U2_W1 + A^{-1}*I
+             * where U1_W1 = [[delta,1],[0,0]], U2_W1 = [[0,0],[1,delta]]
+             *
+             * For now, we verify indirectly: the sum of both components
+             * divided by D_3 should give tr_q(rho), and the bracket
+             * should be tr_q(rho) / [2]_q. So verify:
+             *   tr_w1_scaled + tr_w3 = D_3 * tr_q(rho)
+             */
+            {
+                Poly sum_check;
+                p_add(&amp;sum_check, &amp;tr_w1_scaled, &amp;tr_w3);
+                sprintf(msg, "%s: W_1 + W_3 = D3 * tr_q(rho)", bnames[bi]);
+                check(msg, p_eq(&amp;sum_check, &amp;d3_tr_total));
+            }
+
+            /* Final: verify bracket = tr_q(rho) / [2]_q
+             * i.e., [2]_q * bracket = tr_q(rho) = -delta * bracket
+             * Wait, [2]_q = -delta, so [2]_q * bracket = -delta*bracket = tr_q(rho).
+             * Already verified above. Let's verify the DECOMPOSED form instead:
+             *
+             * bracket = 1*tr_{W_1}(rho) + ([4]_q/[2]_q)*tr_{W_3}(rho)
+             *
+             * [4]_q/[2]_q = A^4 + A^{-4} (verified by Demo 05 recurrence)
+             *
+             * So: [2]_q * bracket = [2]_q*tr_{W_1} + [4]_q*tr_{W_3}
+             *                     = tr_q((D_3*I-Q_3)*rho)/D_3 + tr_q(Q_3*rho)/D_3
+             *                     = tr_q(rho)
+             *
+             * This is tautological. The non-trivial content is that each
+             * component SEPARATELY factors as qdim * module_trace.
+             * We verified the W_3 component above.
+             *
+             * For W_1, verify that tr_w1_scaled is divisible by D_3*[2]_q:
+             */
+            p_mul(&amp;d3_q2, &amp;D3, &amp;QD[2]);
+            if (p_div_exact(&amp;w1_module_trace, &amp;tr_w1_scaled, &amp;d3_q2)) {
+                p_print(&amp;w1_module_trace, "    tr_{W_1}(rho)");
+                sprintf(msg, "%s: W_1 component divisible by D3*[2]_q", bnames[bi]);
+                check(msg, 1);
+            } else {
+                sprintf(msg, "%s: W_1 component divisible by D3*[2]_q", bnames[bi]);
+                check(msg, 0);
+            }
+        }
+    }
+}
+
+
+int main(void) {
+    printf("KNOTAPEL DEMO 06: Jones-Wenzl Idempotents\n");
+    printf("==========================================\n");
+
+    init_globals();
+    p_print(&amp;DELTA, "delta");
+    p_print(&amp;QD[2], "[2]_q");
+    p_print(&amp;QD[3], "[3]_q");
+    p_print(&amp;QD[4], "[4]_q");
+
+    build_U();
+    build_R();
+    build_8x8();
+    build_weights();
+
+    test_part_a();
+    test_part_b();
+    test_part_c();
+    test_part_d();
+
+    printf("\n==========================================\n");
+    printf("Results: %d passed, %d failed\n", n_pass, n_fail);
+    printf("==========================================\n");
+    return n_fail &gt; 0 ? 1 : 0;
+}
+</code></pre>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/c.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</body>
+</html>

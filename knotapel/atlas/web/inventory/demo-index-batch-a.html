@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>inventory/demo-index-batch-a.md</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+    <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+    <nav><a href="../index.html">← Back to Index</a></nav><hr>
+    <h1>Knotapel Demo Index — Batch A (Demos 01–25)</h1>
+<p>Generated: 2026-02-19</p>
+<p>---</p>
+<h2>Demo 01: Kauffman Bracket</h2>
+<ul>
+<li><strong>Status</strong>: Complete</li>
+<li><strong>File</strong>: <code><a href="../demo_01_kauffman_bracket/main.c.html">demo_01_kauffman_bracket/main.c</a></code> (~497 lines)</li>
+<li><strong>Tests</strong>: 9/9 (polynomial arithmetic, trefoil, figure-eight, Hopf link, discrimination)</li>
+<li><strong>Dependencies</strong>: None (stdio, stdlib, string)</li>
+<li><strong>Headline</strong>: State-sum computation of the Kauffman bracket as a Laurent polynomial from PD notation.</li>
+<li><strong>Key Results</strong>:</li>
+<li>Laurent polynomial type (Poly) with add/sub/mul/shift operations</li>
+<li>PD (planar diagram) notation: 4 arc labels per crossing</li>
+<li>State-sum: iterate over 2^n resolutions, count loops via union-find</li>
+<li>bracket(trefoil) = -A^16 + A^12 + A^4</li>
+<li>bracket(figure-eight) = A^8 - A^4 + 1 - A^{-4} + A^{-8}</li>
+<li>bracket(Hopf) = -A^4 - A^{-4}</li>
+<li>Bracket discriminates trefoil from figure-eight</li>
+<li><strong>Theorems/Conjectures</strong>: State-sum formula for Kauffman bracket; bracket is invariant under R2, R3 (not R1)</li>
+<li><strong>Data</strong>: Hard-coded trefoil (3 crossings), figure-eight (4 crossings), Hopf link (2 crossings)</li>
+<li><strong>Code Assets</strong>: <code>Poly</code> (Laurent polynomial), <code>Knot</code> (PD notation), <code>state_sum_bracket()</code>, union-find</li>
+<li><strong>Literature Touched</strong>: Kauffman (1987), state-sum model</li>
+<li><strong>Open Questions</strong>: None</li>
+</ul>
+<p>---</p>
+<h2>Demo 02: Braid Words &amp; Markov Trace</h2>
+<ul>
+<li><strong>Status</strong>: Complete</li>
+<li><strong>File</strong>: <code><a href="../demo_02_braid_words/main.c.html">demo_02_braid_words/main.c</a></code> (~953 lines)</li>
+<li><strong>Tests</strong>: ~9 (braid bracket, Jones polynomial, Markov property)</li>
+<li><strong>Dependencies</strong>: None (stdio, stdlib, string, math)</li>
+<li><strong>Headline</strong>: Braid group representation and bracket/Jones computation from braid words via state-sum with union-find loop counting.</li>
+<li><strong>Key Results</strong>:</li>
+<li>Braid type with word array (generators sigma_i, negative = inverse)</li>
+<li>braid_bracket() via state-sum: resolution bits select A-smoothing or B-smoothing per crossing</li>
+<li>braid_jones() via writhe normalization: J(K) = (-A^3)^{-w} * bracket(K)</li>
+<li>Union-find loop counting for braid closures</li>
+<li>Writhe computation from braid word (positive = +1, negative = -1)</li>
+<li><strong>Theorems/Conjectures</strong>: Markov trace property; Jones polynomial from bracket via writhe normalization</li>
+<li><strong>Data</strong>: Trefoil, figure-eight, torus knots as braid words</li>
+<li><strong>Code Assets</strong>: <code>Braid</code>, <code>braid_bracket()</code>, <code>braid_jones()</code>, <code>braid_writhe()</code>, union-find</li>
+<li><strong>Literature Touched</strong>: Jones (1985), Alexander/Markov theorems</li>
+<li><strong>Open Questions</strong>: None</li>
+</ul>
+<p>---</p>
+<h2>Demo 03: TL Module &amp; Braid Representation</h2>
+<ul>
+<li><strong>Status</strong>: Complete (labeled v3)</li>
+<li><strong>File</strong>: <code><a href="../demo_03/main.c.html">demo_03/main.c</a></code> (~604 lines)</li>
+<li><strong>Tests</strong>: Multiple (TL algebra, module, braid rep, trace decomposition)</li>
+<li><strong>Dependencies</strong>: None</li>
+<li><strong>Headline</strong>: TL_3 standard module W_1, braid representation g_i = A<em>U_i + A^{-1}</em>I, trace decomposition.</li>
+<li><strong>Key Results</strong>:</li>
+<li>TL_3 generators U_i satisfying U_i^2 = delta * U_i</li>
+<li>Standard module W_1 (4x4 matrices)</li>
+<li>Braid representation: g_i = A<em>U_i + A^{-1}</em>I</li>
+<li><strong>Discovery</strong>: bracket = 1<em>tr_W1 + (A^{-4}+A^4)</em>tr_W3</li>
+<li>Trace decomposition into irreducible TL modules</li>
+<li><strong>Theorems/Conjectures</strong>: Bracket decomposes as weighted sum of traces over TL modules</li>
+<li><strong>Data</strong>: Fixed 4x4 matrices for TL_3 W_1 module</li>
+<li><strong>Code Assets</strong>: 4x4 matrix arithmetic (Poly entries), TL generator construction, trace</li>
+<li><strong>Literature Touched</strong>: Temperley-Lieb algebra, Jones (1983)</li>
+<li><strong>Open Questions</strong>: None</li>
+</ul>
+<p>---</p>
+<h2>Demo 04: Spin Chain (Tensor Product)</h2>
+<ul>
+<li><strong>Status</strong>: Complete</li>
+<li><strong>File</strong>: <code><a href="../demo_04_spin_chain/main.c.html">demo_04_spin_chain/main.c</a></code> (~587 lines)</li>
+<li><strong>Tests</strong>: Multiple (R-matrix, Yang-Baxter, quantum trace)</li>
+<li><strong>Dependencies</strong>: None</li>
+<li><strong>Headline</strong>: V^{tensor 3} = C^8 representation with R-matrix and quantum trace formula for the bracket.</li>
+<li><strong>Key Results</strong>:</li>
+<li>8x8 tensor product representation V^{⊗3}</li>
+<li>R-matrix: R = A<em>U + A^{-1}</em>I (4x4, embedded in 8x8)</li>
+<li>Yang-Baxter equation verified: R1<em>R2</em>R1 = R2<em>R1</em>R2</li>
+<li><strong>Quantum trace formula discovered</strong>: bracket(b) = (-1)^{n+1} <em> tr(K^{⊗n} </em> rho(b)) / [2]_q</li>
+<li>K = diag(A^2, A^{-2}), [2]_q = A^2 + A^{-2}</li>
+<li><strong>Theorems/Conjectures</strong>: Quantum trace formula for Kauffman bracket from spin chain</li>
+<li><strong>Data</strong>: Fixed 8x8 polynomial matrices</li>
+<li><strong>Code Assets</strong>: Polynomial matrix multiplication, tensor products, quantum trace</li>
+<li><strong>Literature Touched</strong>: Kauffman/Temperley-Lieb R-matrix, quantum groups</li>
+<li><strong>Open Questions</strong>: None</li>
+</ul>
+<p>---</p>
+<h2>Demo 05: Scaling the Spin Chain</h2>
+<ul>
+<li><strong>Status</strong>: Complete</li>
+<li><strong>File</strong>: <code><a href="../demo_05_scaling/main.c.html">demo_05_scaling/main.c</a></code> (~678 lines)</li>
+<li><strong>Tests</strong>: Multiple (n=2..5, sign factor, Yang-Baxter at each n)</li>
+<li><strong>Dependencies</strong>: None</li>
+<li><strong>Headline</strong>: Heap-allocated matrices scale quantum trace formula to n=2..5 strands (up to 32x32).</li>
+<li><strong>Key Results</strong>:</li>
+<li>Heap-allocated NxN polynomial matrices (no stack limit)</li>
+<li>Scales to n=5 (32x32 matrices, ~800KB per matrix)</li>
+<li><strong>Sign factor discovered</strong>: tr_q = (-1)^n <em> delta </em> oracle</li>
+<li>Verified quantum trace matches state-sum oracle at all n</li>
+<li>Memory: n=5 matrix = 32<em>32</em>808 bytes ≈ 800KB</li>
+<li><strong>Theorems/Conjectures</strong>: Sign factor formula for quantum trace</li>
+<li><strong>Data</strong>: Braids at n=2..5 strands</li>
+<li><strong>Code Assets</strong>: Heap polynomial matrices, tensor product scaling, <code>build_Ri()</code>, <code>build_Kn()</code></li>
+<li><strong>Literature Touched</strong>: Scaling limits of symbolic computation</li>
+<li><strong>Open Questions</strong>: Scaling beyond n=5 impractical with symbolic polynomials (motivates Demo 10)</li>
+</ul>
+<p>---</p>
+<h2>Demo 06: Jones-Wenzl Idempotents</h2>
+<ul>
+<li><strong>Status</strong>: Complete</li>
+<li><strong>File</strong>: <code><a href="../demo_06_jones_wenzl/main.c.html">demo_06_jones_wenzl/main.c</a></code> (~800 lines)</li>
+<li><strong>Tests</strong>: Multiple (idempotent property, Markov trace, decomposition)</li>
+<li><strong>Dependencies</strong>: None</li>
+<li><strong>Headline</strong>: Scaled Jones-Wenzl idempotents Q_2 (4x4) and Q_3 (8x8) with Markov trace decomposition.</li>
+<li><strong>Key Results</strong>:</li>
+<li>Jones-Wenzl projector p_n via recursive formula</li>
+<li>Scaled idempotents Q_2 (4x4), Q_3 (8x8) to avoid division</li>
+<li>Polynomial exact division for JW coefficients</li>
+<li>Markov trace decomposition verified</li>
+<li><strong>Theorems/Conjectures</strong>: Jones-Wenzl recursive formula; projector properties (p^2 = p, U_i*p = 0)</li>
+<li><strong>Data</strong>: Fixed matrices</li>
+<li><strong>Code Assets</strong>: JW idempotent construction, polynomial exact division</li>
+<li><strong>Literature Touched</strong>: Jones (1983), Wenzl (1987)</li>
+<li><strong>Open Questions</strong>: None</li>
+</ul>
+<p>---</p>
+<h2>Demo 07: Braid Closure Bridge</h2>
+<ul>
+<li><strong>Status</strong>: Complete</li>
+<li><strong>File</strong>: <code><a href="../demo_07_braid_closure/main.c.html">demo_07_braid_closure/main.c</a></code> (~791 lines)</li>
+<li><strong>Tests</strong>: Multiple (PD construction, Seifert circles, component counting)</li>
+<li><strong>Dependencies</strong>: None</li>
+<li><strong>Headline</strong>: braid_to_pd() conversion with Seifert circle computation, bridging braid and diagram worlds.</li>
+<li><strong>Key Results</strong>:</li>
+<li><code>braid_to_pd()</code>: converts braid word to PD notation via strand tracking</li>
+<li>Seifert circle computation from PD diagram</li>
+<li>Link component counting</li>
+<li>Verified: bracket(braid_to_pd(b)) = bracket_from_braid(b)</li>
+<li><strong>Theorems/Conjectures</strong>: Alexander's theorem (every link is a closed braid)</li>
+<li><strong>Data</strong>: Multiple test braids</li>
+<li><strong>Code Assets</strong>: <code>braid_to_pd()</code>, Seifert circle finder, strand tracking</li>
+<li><strong>Literature Touched</strong>: Alexander (1923), Seifert (1934)</li>
+<li><strong>Open Questions</strong>: None</li>
+</ul>
+<p>---</p>
+<h2>Demo 08: Vogel's Algorithm</h2>
+<ul>
+<li><strong>Status</strong>: Complete</li>
+<li><strong>File</strong>: <code><a href="../demo_08_vogel/main.c.html">demo_08_vogel/main.c</a></code> (~887 lines)</li>
+<li><strong>Tests</strong>: Multiple (round-trip verification, Seifert membership)</li>
+<li><strong>Dependencies</strong>: None</li>
+<li><strong>Headline</strong>: pd_to_braid() compiler via Vogel's algorithm; round-trip verification with Demo 07's braid_to_pd().</li>
+<li><strong>Key Results</strong>:</li>
+<li><code>pd_to_braid()</code>: compiles PD notation into braid word</li>
+<li>Union-find for Seifert circle membership</li>
+<li>Round-trip verified: pd_to_braid(braid_to_pd(b)) produces equivalent bracket</li>
+<li>Handles both positive and negative crossings</li>
+<li><strong>Theorems/Conjectures</strong>: Vogel's algorithm correctness</li>
+<li><strong>Data</strong>: Multiple test knots/links</li>
+<li><strong>Code Assets</strong>: <code>pd_to_braid()</code>, Seifert membership via union-find</li>
+<li><strong>Literature Touched</strong>: Vogel (1990)</li>
+<li><strong>Open Questions</strong>: None</li>
+</ul>
+<p>---</p>
+<h2>Demo 09: Reidemeister Move Invariance</h2>
+<ul>
+<li><strong>Status</strong>: Complete</li>
+<li><strong>File</strong>: <code><a href="../demo_09_reidemeister/main.c.html">demo_09_reidemeister/main.c</a></code> (~717 lines)</li>
+<li><strong>Tests</strong>: 30 (R1, R2, R3 moves; bracket, writhe, Jones polynomial)</li>
+<li><strong>Dependencies</strong>: None</li>
+<li><strong>Headline</strong>: Systematic verification of Reidemeister move invariance for bracket, writhe, and Jones polynomial.</li>
+<li><strong>Key Results</strong>:</li>
+<li>R1: bracket changes by (-A^3)^{±1}, writhe changes by ±1, Jones invariant</li>
+<li>R2: bracket, writhe, Jones all invariant</li>
+<li>R3: bracket, writhe, Jones all invariant</li>
+<li>30 tests across 5 parts (A-E)</li>
+<li>Jones polynomial confirmed as true knot invariant (invariant under all 3 moves)</li>
+<li><strong>Theorems/Conjectures</strong>: Jones polynomial is a knot invariant (R1+R2+R3 invariance)</li>
+<li><strong>Data</strong>: Knots before/after each Reidemeister move</li>
+<li><strong>Code Assets</strong>: R1/R2/R3 move generators, invariance test framework</li>
+<li><strong>Literature Touched</strong>: Reidemeister (1927), Jones (1985)</li>
+<li><strong>Open Questions</strong>: None</li>
+</ul>
+<p>---</p>
+<h2>Demo 10: Numerical Evaluation Engine</h2>
+<ul>
+<li><strong>Status</strong>: Complete</li>
+<li><strong>File</strong>: <code><a href="../demo_10_numerical/main.c.html">demo_10_numerical/main.c</a></code> (~955 lines)</li>
+<li><strong>Tests</strong>: ~30+ (complex arithmetic, R-matrix, Yang-Baxter, bracket oracle, scaling n=2..8, multi-angle)</li>
+<li><strong>Dependencies</strong>: math.h</li>
+<li><strong>Headline</strong>: Replace symbolic polynomials with numerical complex evaluation; 50-100x memory reduction enables scaling to n=8+.</li>
+<li><strong>Key Results</strong>:</li>
+<li>C89-compatible complex arithmetic library (Cx type)</li>
+<li>Numerical R-matrix and quantum trace at fixed A = e^{iθ}</li>
+<li>Each Poly (808 bytes) becomes one Cx (16 bytes) — 50x reduction</li>
+<li>Validated against state-sum oracle at multiple angles</li>
+<li>Scales to n=8 (256x256 matrices) easily</li>
+<li>Yang-Baxter verified numerically at each n</li>
+<li>Part F: 2 sample points suffice to distinguish 6 test knots</li>
+<li><strong>Theorems/Conjectures</strong>: Numerical bracket matches symbolic bracket at all tested angles</li>
+<li><strong>Data</strong>: 6 knots (unknot through granny), 8 sample angles, scaling n=2..8</li>
+<li><strong>Code Assets</strong>: <code>Cx</code> (complex type), <code>CMat</code> (heap NxN complex matrix), <code>build_R4()</code>, <code>build_Ri()</code>, <code>build_Kn()</code>, <code>numerical_bracket()</code>, <code>braid_bracket_at()</code></li>
+<li><strong>Literature Touched</strong>: Bridge from symbolic to numerical evaluation</li>
+<li><strong>Open Questions</strong>: How many sample points needed for larger knot tables? (→ Demo 11)</li>
+</ul>
+<p>---</p>
+<h2>Demo 11: Waveform Signatures</h2>
+<ul>
+<li><strong>Status</strong>: Complete</li>
+<li><strong>File</strong>: <code><a href="../demo_11_waveform/main.c.html">demo_11_waveform/main.c</a></code> (~648 lines)</li>
+<li><strong>Tests</strong>: ~15 (symmetry, chiral amplitude identity, greedy angles, cross-validation)</li>
+<li><strong>Dependencies</strong>: math.h</li>
+<li><strong>Headline</strong>: Sweep θ from 0 to 2π; chiral pairs share amplitude waveforms; greedy optimal angle selection.</li>
+<li><strong>Key Results</strong>:</li>
+<li>10 knots, 256-sample waveforms f(θ) = bracket(e^{iθ})</li>
+<li><strong>Chiral pair amplitude identity</strong>: |bracket_trefoil(θ)| = |bracket_mirror(θ)| (verified exactly)</li>
+<li>Amphichiral figure-eight: amplitude symmetric about θ=0</li>
+<li>Phase relation: bracket_mirror(e^{iθ}) = bracket(e^{-iθ})</li>
+<li>Greedy optimal angle: θ ≈ 1.805π separates all 10 knots (min pairwise distance 0.907)</li>
+<li>ASCII waveform visualization</li>
+<li><strong>Theorems/Conjectures</strong>: Chiral pairs have identical amplitude; phase carries chirality information</li>
+<li><strong>Data</strong>: 10 knots (unknot through single-crossing), 256 waveform samples each</li>
+<li><strong>Code Assets</strong>: <code>compute_waveforms()</code>, <code>greedy_angles()</code>, <code>pairwise_separation()</code>, ASCII visualization</li>
+<li><strong>Literature Touched</strong>: Chiral knot theory, amplitude vs phase</li>
+<li><strong>Open Questions</strong>: How aggressively can we quantize? (→ Demo 12)</li>
+</ul>
+<p>---</p>
+<h2>Demo 12: Quantization</h2>
+<ul>
+<li><strong>Status</strong>: Complete</li>
+<li><strong>File</strong>: <code><a href="../demo_12_quantization/main.c.html">demo_12_quantization/main.c</a></code> (~779 lines)</li>
+<li><strong>Tests</strong>: ~8 (bit-depth sweep, Pareto optimum, classifier, invariance)</li>
+<li><strong>Dependencies</strong>: math.h</li>
+<li><strong>Headline</strong>: Bit-depth sweep and component analysis; amplitude-only fails (granny/square collision); Pareto optimum found.</li>
+<li><strong>Key Results</strong>:</li>
+<li>Bit-depth sweep: 16→1 bits per component</li>
+<li>Minimum bits for 100% at 1 angle: found via fine sweep</li>
+<li><strong>Amplitude-only fails</strong>: granny/square have identical |bracket| (predicted from Demo 11)</li>
+<li>Phase-only also insufficient alone</li>
+<li>Precision × width tradeoff matrix (1-8 bits × 1-8 angles)</li>
+<li>Pareto optimum: minimal total bits per knot for full classification</li>
+<li>Nearest-neighbor classifier with quantized weights</li>
+<li>Invariance test: alternate braid words correctly classified</li>
+<li><strong>Theorems/Conjectures</strong>: Phase carries topology that amplitude cannot; Pareto-optimal quantization exists</li>
+<li><strong>Data</strong>: 10 knots, 8 greedy angles, bit-depth 1-16</li>
+<li><strong>Code Assets</strong>: <code>quantize()</code>, <code>cx_quantize()</code>, <code>cx_ternary()</code>, <code>cx_sign()</code>, <code>classify_braid()</code>, tradeoff matrix</li>
+<li><strong>Literature Touched</strong>: BitNet (1.58-bit weights parallel), quantization theory</li>
+<li><strong>Open Questions</strong>: Does Pareto frontier hold at 28+ knots? (→ Demo 13)</li>
+</ul>
+<p>---</p>
+<h2>Demo 13: DKC Test</h2>
+<ul>
+<li><strong>Status</strong>: Complete</li>
+<li><strong>File</strong>: <code><a href="../demo_13_dkc_test/main.c.html">demo_13_dkc_test/main.c</a></code> (~948 lines)</li>
+<li><strong>Tests</strong>: ~6 (separation, multi-angle, Pareto, DKC validation, baseline, scaling law)</li>
+<li><strong>Dependencies</strong>: math.h</li>
+<li><strong>Headline</strong>: 28 candidate braids deduplicated to ~23 unique knots; DKC thesis validated: algebraic weights generalize without training.</li>
+<li><strong>Key Results</strong>:</li>
+<li>28 candidate 3-strand braids: torus knots T(2,3)..T(2,13) + mirrors, figure-eight, connected sums, misc</li>
+<li>Deduplication via bracket at 2 reference angles → ~23 unique knots</li>
+<li>Multi-angle separation: number of angles needed for full separation</li>
+<li>Precision × width tradeoff at scale</li>
+<li><strong>DKC validation</strong>: 70/30 train/test split, 100% self-classification on training set</li>
+<li>Alt-braid invariance confirmed (s2.s1.s2 → trefoil)</li>
+<li>Random baseline comparison (100 trials)</li>
+<li>Scaling law: min_sep decreases with knot count (&lt; 0.907 at 23 knots)</li>
+<li><strong>Theorems/Conjectures</strong>: DKC thesis: compiled algebraic weights generalize without training because they encode topology</li>
+<li><strong>Data</strong>: ~28 braids, ~23 unique knot types, 8 greedy angles</li>
+<li><strong>Code Assets</strong>: <code>add_torus_2n()</code>, <code>add_connected_sum()</code>, <code>dedup_knots()</code>, <code>select_greedy_angles()</code>, <code>classify_against_table()</code>, LCG RNG</li>
+<li><strong>Literature Touched</strong>: DKC (original thesis)</li>
+<li><strong>Open Questions</strong>: What invariant structure underlies zeros? (→ Demo 14)</li>
+</ul>
+<p>---</p>
+<h2>Demo 14: Zero Structure</h2>
+<ul>
+<li><strong>Status</strong>: Complete</li>
+<li><strong>File</strong>: <code><a href="../demo_14_zero_structure/main.c.html">demo_14_zero_structure/main.c</a></code> (~830 lines)</li>
+<li><strong>Tests</strong>: ~6 (zero count pattern, figure-eight, chiral reflection, factorization, classification)</li>
+<li><strong>Dependencies</strong>: math.h</li>
+<li><strong>Headline</strong>: Bracket zeros as knot invariant; bisection root-finding; bracket = δ^k * g factorization; braid ≠ diagram connected sum.</li>
+<li><strong>Key Results</strong>:</li>
+<li>High-resolution zero finding via bisection (1024 samples)</li>
+<li>Torus knot zero counts from {0, 4, 8} only — NOT monotonic with crossing number</li>
+<li>Figure-eight: 0 zeros (amphichiral, min amplitude well above 0)</li>
+<li>Chiral pairs have reflected zero positions (θ ↔ 2π-θ)</li>
+<li>Delta zeros at π/4, 3π/4, 5π/4, 7π/4 (= -2cos(2θ) = 0)</li>
+<li><strong>Connected sum factorization</strong>: bracket(K1#K2) = bracket(K1)*bracket(K2)/δ does NOT hold for braid-encoded sums</li>
+<li>Zero count separates ~40-60% of pairs; count + positions improves further</li>
+<li>Clear gap between zero and non-zero knots</li>
+<li><strong>Theorems/Conjectures</strong>: bracket = δ^k * g factorization; braid concatenation ≠ diagram connected sum</li>
+<li><strong>Data</strong>: ~23 knots with crossing numbers, zero counts, zero positions</li>
+<li><strong>Code Assets</strong>: <code>bracket_amp()</code>, <code>bisect_zero()</code>, zero position arrays, chiral reflection test</li>
+<li><strong>Literature Touched</strong>: Bracket zero structure, connected sum formula</li>
+<li><strong>Open Questions</strong>: Which angles optimize g? (→ Demo 15)</li>
+</ul>
+<p>---</p>
+<h2>Demo 15: Angle Optimization — WRT Convergence</h2>
+<ul>
+<li><strong>Status</strong>: Complete</li>
+<li><strong>File</strong>: <code><a href="../demo_15_angle_optimization/main.c.html">demo_15_angle_optimization/main.c</a></code> (~883 lines)</li>
+<li><strong>Tests</strong>: ~7 (WRT convergence, single-angle, reduced bracket, multi-angle, survey)</li>
+<li><strong>Dependencies</strong>: math.h</li>
+<li><strong>Headline</strong>: Greedy-optimal angle (1.805π) is 1.5% from WRT level r=3 angle; reduced bracket g outperforms raw bracket.</li>
+<li><strong>Key Results</strong>:</li>
+<li>WRT angle for level r: θ = 2π - π/(2r)</li>
+<li>Closest WRT to greedy: r=3 at 11π/6 = 1.833π, distance 1.5% of π</li>
+<li>Greedy outperforms all WRT angles on min_dist (as expected: greedy is min_dist-optimal)</li>
+<li><strong>Reduced bracket g outperforms raw bracket</strong>: tighter dynamic range, better separation</li>
+<li>Delta exponent k computed from zero count at δ-zero positions</li>
+<li>g = bracket / δ^k never vanishes on unit circle (for k &gt; 0 knots)</li>
+<li>128-angle survey: top-5 raw and g angles identified</li>
+<li>3 WRT angles on g separate all pairs</li>
+<li><strong>Theorems/Conjectures</strong>: Algebraically special (WRT) angles ≈ informationally optimal angles; g outperforms raw bracket</li>
+<li><strong>Data</strong>: ~21 knots (deduped), WRT levels r=3..12, 128-angle survey</li>
+<li><strong>Code Assets</strong>: <code>delta_exponent()</code>, <code>reduced_bracket_at()</code>, <code>wrt_angle()</code>, <code>SepMetrics</code>, <code>measure_separation()</code></li>
+<li><strong>Literature Touched</strong>: Witten-Reshetikhin-Turaev invariant, Chern-Simons theory</li>
+<li><strong>Open Questions</strong>: What IS g? (→ Demo 16)</li>
+</ul>
+<p>---</p>
+<h2>Demo 16: Reduced Bracket Characterization</h2>
+<ul>
+<li><strong>Status</strong>: Complete</li>
+<li><strong>File</strong>: <code><a href="../demo_16_reduced_bracket/main.c.html">demo_16_reduced_bracket/main.c</a></code> (~974 lines)</li>
+<li><strong>Tests</strong>: ~8 (waveform, peak, Pareto, factorization, minimal angles, amplitude stats)</li>
+<li><strong>Dependencies</strong>: math.h, string.h</li>
+<li><strong>Headline</strong>: g characterization: broad peak at ~1.266π; Pareto frontier; connected sum non-factorization confirmed; 6 bits at 1 angle for full 210/210 classification.</li>
+<li><strong>Key Results</strong>:</li>
+<li>g waveform has ≤ raw zeros (removes δ-zeros for k&gt;0 knots)</li>
+<li>g peak at ~1.266π: broad plateau (width &gt; 0.05π at half-max)</li>
+<li>g peak min_dist &gt; raw peak min_dist (4.3x improvement at best angle)</li>
+<li><strong>Pareto frontier</strong>: g reaches full classification in fewer bits than raw bracket</li>
+<li><strong>Connected sum non-factorization confirmed</strong>: g(K1#K2) ≠ g(K1)*g(K2) for braid-encoded sums</li>
+<li>Greedy min_dist selection: g achieves higher min_dist than raw at each round</li>
+<li>Family amplitude statistics: torus ≈ mirror (chirality), composites differ from primes</li>
+<li><strong>6 bits at 1 angle for full 210/210 classification</strong> (baseline for Demo 17)</li>
+<li><strong>Theorems/Conjectures</strong>: g is smoother, more informative than raw bracket; peak is plateau not spike</li>
+<li><strong>Data</strong>: ~21 knots, 256-sample waveforms (raw + g), composite tracking</li>
+<li><strong>Code Assets</strong>: <code>CompositeInfo</code>, <code>dedup_map[]</code>, <code>min_dist_from_vals()</code>, family classification</li>
+<li><strong>Literature Touched</strong>: Reduced bracket theory</li>
+<li><strong>Open Questions</strong>: Can hierarchy beat flatness? (→ Demo 17)</li>
+</ul>
+<p>---</p>
+<h2>Demo 17: Multi-Layer DKC</h2>
+<ul>
+<li><strong>Status</strong>: Complete</li>
+<li><strong>File</strong>: <code><a href="../demo_17_multilayer_dkc/main.c.html">demo_17_multilayer_dkc/main.c</a></code> (~1467 lines)</li>
+<li><strong>Tests</strong>: ~5 (flat baseline, Arf split, hierarchical tree, gradient descent, Pareto comparison)</li>
+<li><strong>Dependencies</strong>: math.h, string.h</li>
+<li><strong>Headline</strong>: Hierarchical DKC: Arf split (k value as Layer 1), greedy binary tree, gradient descent comparison; all methods classified within 10 bits.</li>
+<li><strong>Key Results</strong>:</li>
+<li><strong>Part A</strong>: Flat g baseline — greedy 4 angles, Pareto at 1/2/4 angles</li>
+<li><strong>Part B</strong>: Arf split — k=0 vs k&gt;0 groups; cross-group pairs separated FREE by 1 Arf bit; per-group optimal angles</li>
+<li><strong>Part C</strong>: Greedy hierarchical binary tree — find angle+threshold that maximally bisects; recurse; tree structure alone separates many pairs</li>
+<li><strong>Part D</strong>: Gradient descent comparison — 50 random starts, 100 iterations each, simulated annealing; analytical matches or beats GD</li>
+<li><strong>Part E</strong>: Bit budget Pareto — flat-1A, flat-2A, Arf split, tree on same axes; all achieve full classification</li>
+<li>Craven et al. (2025): neural networks CANNOT learn Arf invariant; DKC uses it for free analytically</li>
+<li><strong>Theorems/Conjectures</strong>: Arf invariant as free analytical Layer 1; hierarchy saves bits at low budgets; analytical ≥ gradient descent</li>
+<li><strong>Data</strong>: ~21 knots (deduped), 256-sample survey, quantization 1-10 bits</li>
+<li><strong>Code Assets</strong>: <code>TreeNode</code>, <code>find_best_bisection()</code>, <code>build_tree()</code>, <code>QuantVal</code>, <code>quantize()</code>, <code>count_separated_pairs()</code>, gradient descent hill-climber</li>
+<li><strong>Literature Touched</strong>: Craven et al. (2025), Arf invariant, hierarchical classification</li>
+<li><strong>Open Questions</strong>: Can braids compute logic? (→ Demo 18)</li>
+</ul>
+<p>---</p>
+<h2>Demo 18: Braid Logic Gates</h2>
+<ul>
+<li><strong>Status</strong>: Complete</li>
+<li><strong>File</strong>: <code><a href="../demo_18_braid_logic/main.c.html">demo_18_braid_logic/main.c</a></code> (~1037 lines)</li>
+<li><strong>Tests</strong>: ~20+ (NOT search, NAND search, composition, XOR search, characterization)</li>
+<li><strong>Dependencies</strong>: math.h</li>
+<li><strong>Headline</strong>: Can braids compute classical logic? Exhaustive search finds NOT (2-strand) and NAND (3-strand) gates — universal gate set.</li>
+<li><strong>Key Results</strong>:</li>
+<li><strong>Part A</strong>: NOT gate search — 2 strands, up to 6 crossings; found NOT at length 6: [-1,-1,-1,-1,-1,-1]</li>
+<li><strong>Part B</strong>: NAND gate search — 3 strands, up to 6 crossings; found NAND at length 5: [-1,-1,-1,2,2]</li>
+<li><strong>Part C</strong>: Gate composition — NOT(NAND(x,y)) = AND; verified all 4 input combos</li>
+<li><strong>Part D</strong>: XOR gate search — hardest (non-threshold); searched exhaustively</li>
+<li><strong>Part E</strong>: Characterization — separation margins, angle sensitivity analysis</li>
+<li>Input encoding: identity=0, sigma_i=1; output: |bracket| thresholded at delta=0</li>
+<li>At A = e^{i5π/4} (8th root of unity), delta = 0 → exact Boolean logic</li>
+<li><strong>NOT + NAND = universal gate set</strong> for classical computation</li>
+<li><strong>Theorems/Conjectures</strong>: Braid closures at 8th root of unity compute exact Boolean functions; NOT+NAND is universal</li>
+<li><strong>Data</strong>: Exhaustive search: 2^L (2-strand) and 4^L (3-strand) gate templates, L=1..6</li>
+<li><strong>Code Assets</strong>: <code>GateResult</code>, <code>search_gates()</code>, <code>eval_gate()</code>, gate composition framework</li>
+<li><strong>Literature Touched</strong>: Topological quantum computation, Freedman-Kitaev-Wang</li>
+<li><strong>Open Questions</strong>: Can we compile arbitrary Boolean expressions? (→ Demo 19)</li>
+</ul>
+<p>---</p>
+<h2>Demo 19: Braid Circuit Compiler</h2>
+<ul>
+<li><strong>Status</strong>: Complete</li>
+<li><strong>File</strong>: <code><a href="../demo_19_braid_compiler/main.c.html">demo_19_braid_compiler/main.c</a></code> (~1016 lines)</li>
+<li><strong>Tests</strong>: ~15+ (gate catalog, universal set, expression compiler, full adder, efficiency)</li>
+<li><strong>Dependencies</strong>: math.h</li>
+<li><strong>Headline</strong>: Boolean expression compiler using braid gates; root-of-unity gate catalog; full adder verification at A = e^{i5π/4}.</li>
+<li><strong>Key Results</strong>:</li>
+<li><strong>Part A</strong>: Root-of-unity gate catalog — 4th, 6th, 8th, 10th, 12th roots</li>
+<li><strong>Part B</strong>: Single-angle universal set at 5π/4 (A = e^{i5π/4}, delta=0)</li>
+<li><strong>Part C</strong>: Boolean expression compiler — recursive eval from expression tree</li>
+<li>AND(x,y) = NOT(NAND(x,y))</li>
+<li>OR(x,y) = NAND(NOT(x), NOT(y))</li>
+<li>XOR(x,y) = NAND(NAND(x, NAND(x,y)), NAND(y, NAND(x,y)))</li>
+<li><strong>Part D</strong>: Full adder — sum = XOR(XOR(a,b),cin), carry = OR(AND(a,b), AND(cin,XOR(a,b))); all 8 combos verified</li>
+<li><strong>Part E</strong>: Efficiency analysis — gate count, depth, evaluation time</li>
+<li>Expression tree with pool allocator (Expr type, MAX_POOL=1024)</li>
+<li>Known gates: NOT_WORD = [-1,-1,-1,-1,-1,-1] (len 6), NAND_WORD = [-1,-1,-1,2,2] (len 5)</li>
+<li><strong>Theorems/Conjectures</strong>: Any Boolean function compilable from braid NOT+NAND; 8th root of unity is algebraic sweet spot</li>
+<li><strong>Data</strong>: Full adder truth table (8 rows), gate catalog at 5 root-of-unity orders</li>
+<li><strong>Code Assets</strong>: <code>Expr</code> (expression tree), <code>ExprPool</code>, <code>eval_expr()</code>, <code>make_and/or/xor()</code>, <code>NOT_WORD[]</code>, <code>NAND_WORD[]</code></li>
+<li><strong>Literature Touched</strong>: Convergence of topology and computation</li>
+<li><strong>Open Questions</strong>: How does error behave away from delta=0? (→ Demo 20)</li>
+</ul>
+<p>---</p>
+<h2>Demo 20: Braid Error Landscape</h2>
+<ul>
+<li><strong>Status</strong>: Complete</li>
+<li><strong>File</strong>: <code><a href="../demo_20_braid_error/main.c.html">demo_20_braid_error/main.c</a></code> (~1016 lines)</li>
+<li><strong>Tests</strong>: ~15+ (delta landscape, single-gate error, cascade error, universal delta curve, phase transition)</li>
+<li><strong>Dependencies</strong>: math.h</li>
+<li><strong>Headline</strong>: |δ| = 2|cos(2θ)|; zeros at 8th roots of unity; sharp phase transition from universal to non-universal angles.</li>
+<li><strong>Key Results</strong>:</li>
+<li><strong>Part A</strong>: Delta landscape — |δ| = 2|cos(2θ)|, analytically verified across 360 angles</li>
+<li>Delta zeros at θ = π/4, 3π/4, 5π/4, 7π/4 (8th roots of unity)</li>
+<li><strong>Part B</strong>: Single-gate error curves — NOT/NAND separation vs |δ|</li>
+<li><strong>Part C</strong>: Cascade error — full adder fidelity vs |δ|; fidelity drops sharply away from δ=0</li>
+<li><strong>Part D</strong>: Universal delta curve — parameterize all gates by |δ|, overlay on single plot</li>
+<li><strong>Part E</strong>: Phase transition detection — threshold |δ| value where classification fails</li>
+<li>|δ| cleanly separates universal from non-universal angles</li>
+<li><strong>Theorems/Conjectures</strong>: |δ| is the single control parameter for braid computation quality; sharp phase transition at critical |δ|</li>
+<li><strong>Data</strong>: 360 angle sweep, full adder at varying |δ|</li>
+<li><strong>Code Assets</strong>: Delta formula verification, error curve computation, fidelity metrics</li>
+<li><strong>Literature Touched</strong>: Error analysis in topological computation</li>
+<li><strong>Open Questions</strong>: Can we do reversible computation? (→ Demo 21)</li>
+</ul>
+<p>---</p>
+<h2>Demo 21: Reversible Gates</h2>
+<ul>
+<li><strong>Status</strong>: Complete</li>
+<li><strong>File</strong>: <code><a href="../demo_21_reversible_gates/main.c.html">demo_21_reversible_gates/main.c</a></code> (~857 lines)</li>
+<li><strong>Tests</strong>: ~15+ (Toffoli, Fredkin, multi-readout, double-gate identity, efficiency)</li>
+<li><strong>Dependencies</strong>: math.h</li>
+<li><strong>Headline</strong>: Toffoli and Fredkin gates compiled from NAND/NOT expressions; multi-readout: different closures on same braid yield different Boolean functions.</li>
+<li><strong>Key Results</strong>:</li>
+<li><strong>Part A</strong>: Toffoli gate — (A,B,C) → (A, B, C XOR (A AND B)); all 8 inputs verified</li>
+<li><strong>Part B</strong>: Fredkin gate — conditional swap via MUX: emux(sel,a,b) = NAND(NAND(sel,a), NAND(NOT(sel),b))</li>
+<li><strong>Part C</strong>: Multi-readout — 4-strand braids with 4 closure types (trace, plat_a, plat_b, plat_c)</li>
+<li>CL_TRACE: standard trace closure</li>
+<li>CL_PLAT_A: pairs 01|23</li>
+<li>CL_PLAT_B: pairs 02|13</li>
+<li>CL_PLAT_C: pairs 03|12</li>
+<li>Different closures yield different Boolean functions from same braid</li>
+<li><strong>Part D</strong>: Double-Toffoli = identity, double-Fredkin = identity (reversibility verified)</li>
+<li><strong>Part E</strong>: Efficiency — Toffoli &lt; 132 crossings (compare Bonesteel et al.)</li>
+<li><strong>Theorems/Conjectures</strong>: Braid-bracket supports reversible computation; closure type = readout basis</li>
+<li><strong>Data</strong>: 8-row truth tables for Toffoli/Fredkin, multi-readout catalog</li>
+<li><strong>Code Assets</strong>: Closure type enum (CL_TRACE/PLAT_A/B/C), <code>eval_3bit_gate()</code>, MUX expression builder</li>
+<li><strong>Literature Touched</strong>: Bonesteel et al. (Toffoli gate complexity), reversible computation</li>
+<li><strong>Open Questions</strong>: What are the minimum braid complexities? (→ Demo 22)</li>
+</ul>
+<p>---</p>
+<h2>Demo 22: Minimum Braid Complexity</h2>
+<ul>
+<li><strong>Status</strong>: Complete</li>
+<li><strong>File</strong>: <code><a href="../demo_22_braid_optimizer/main.c.html">demo_22_braid_optimizer/main.c</a></code> (~975 lines)</li>
+<li><strong>Tests</strong>: ~15+ (exhaustive search, TL_3 oracle, atlas, parity barrier, extended search)</li>
+<li><strong>Dependencies</strong>: math.h</li>
+<li><strong>Headline</strong>: "Atomic weights" for topological computation: minimum braid word length per truth table; TL_3 nilpotent oracle at δ=0.</li>
+<li><strong>Key Results</strong>:</li>
+<li><strong>Part A</strong>: Exhaustive min-length search — 4 strands, lengths 1-5, all 4 closure types</li>
+<li><strong>Part B</strong>: TL_3 nilpotent oracle — 5x5 matrices at δ=0; e_i^2 = 0 (nilpotent!); basis {1, e1, e2, e1<em>e2, e2</em>e1}</li>
+<li>Matrix equality implies bracket equality: 0 cross-validation errors</li>
+<li>Distinct TL_3 matrices grow slower than 4^k (nilpotent compression)</li>
+<li><strong>Part C</strong>: Atlas — minimum braid word length for each of 256 truth tables</li>
+<li>Named function lookup table (fn_name) covering ~40 Boolean functions</li>
+<li>NAND expression cost comparison</li>
+<li><strong>Parity barrier</strong>: XOR-containing functions (0x96, 0x69) never found</li>
+<li><strong>Part D</strong>: Extended targeted search at length 6 (trace closure only)</li>
+<li><strong>Theorems/Conjectures</strong>: TL_3 at δ=0 is nilpotent (dim 5); parity barrier for braid computation</li>
+<li><strong>Data</strong>: Atlas of 256 truth tables with min lengths, TL_3 matrix catalog</li>
+<li><strong>Code Assets</strong>: TL_3 5x5 matrix representation, named function table, atlas construction, NAND cost comparison</li>
+<li><strong>Literature Touched</strong>: Temperley-Lieb nilpotency, Boolean function complexity</li>
+<li><strong>Open Questions</strong>: Which Boolean functions does topology prefer? (→ Demo 23)</li>
+</ul>
+<p>---</p>
+<h2>Demo 23: Function Zoo</h2>
+<ul>
+<li><strong>Status</strong>: Complete</li>
+<li><strong>File</strong>: <code><a href="../demo_23_function_zoo/main.c.html">demo_23_function_zoo/main.c</a></code> (~770 lines)</li>
+<li><strong>Tests</strong>: ~10+ (exhaustive catalog, NPN classification, closure tuples, extended search)</li>
+<li><strong>Dependencies</strong>: math.h</li>
+<li><strong>Headline</strong>: Exhaustive catalog of braid-computable Boolean functions; NPN equivalence classification; &gt;80% of braids are closure-dependent.</li>
+<li><strong>Key Results</strong>:</li>
+<li><strong>Part A</strong>: Exhaustive catalog — all braids len 1-4, all 4 closures</li>
+<li><strong>Part B</strong>: NPN equivalence — 6 perms × 8 input-neg masks × 2 output-neg = 96 transforms per class</li>
+<li>13 NPN equivalence classes for 3-input Boolean functions</li>
+<li><strong>Part C</strong>: Closure tuple structure — per-braid tuple of 4 truth tables (one per closure)</li>
+<li>&gt;80% of braids are closure-dependent (different closures → different functions)</li>
+<li><strong>Part D</strong>: Extended search at length 5 discovers new functions and NPN classes</li>
+<li>Named function table covering ~40 named Boolean functions</li>
+<li>Top 20 most common functions</li>
+<li><strong>Theorems/Conjectures</strong>: Closure type is a genuine computational resource; most braids compute different functions under different closures</li>
+<li><strong>Data</strong>: All braids len 1-5, 4 closure types, 256 possible truth tables, 13 NPN classes</li>
+<li><strong>Code Assets</strong>: NPN transform enumeration, closure tuple storage, frequency analysis</li>
+<li><strong>Literature Touched</strong>: NPN equivalence classes, Boolean function taxonomy</li>
+<li><strong>Open Questions</strong>: How do rational tangles relate? (→ Demo 24)</li>
+</ul>
+<p>---</p>
+<h2>Demo 24: Rational Tangle Arithmetic</h2>
+<ul>
+<li><strong>Status</strong>: Complete</li>
+<li><strong>File</strong>: <code><a href="../demo_24_rational_tangles/main.c.html">demo_24_rational_tangles/main.c</a></code> (~889 lines)</li>
+<li><strong>Tests</strong>: ~15+ (integer tangles, twist, rotation, continued fractions, angle sweep, Fibonacci)</li>
+<li><strong>Dependencies</strong>: math.h</li>
+<li><strong>Headline</strong>: Conway's rational tangle operations (Twist, Rotate) in TL_2 representation; continued fraction assembly; |D(n)| = n at δ=0.</li>
+<li><strong>Key Results</strong>:</li>
+<li>TL_2 representation: TL2 struct {Cx alpha, Cx beta}</li>
+<li>tl2_twist_pos/neg: r → r+1 or r-1</li>
+<li>tl2_rotate: r → -1/r</li>
+<li>Numerator closure: N(T) = alpha + beta*delta</li>
+<li>Denominator closure: D(T) = alpha*delta + beta</li>
+<li><strong>Integer tangles at δ=0</strong>: alpha_n = A^n, beta_n = n*A^{n-2}, |D(n)| = n</li>
+<li>Twist is multiplicative on alpha</li>
+<li><strong>Continued fraction assembly</strong>: inside-out construction from CF digits</li>
+<li>|D|/|N| tracks rational p/q</li>
+<li>Angle sweep for best Pearson correlation</li>
+<li>Fibonacci tangles: F(n)/F(n-1) → golden ratio</li>
+<li>State-sum cross-verification at multiple angles</li>
+<li><strong>Theorems/Conjectures</strong>: Conway rational tangle theorem via TL_2; |D(n)| = n is exact at δ=0</li>
+<li><strong>Data</strong>: Integer tangles n=0..10, continued fractions for various rationals, Fibonacci sequence</li>
+<li><strong>Code Assets</strong>: <code>TL2</code> struct, <code>tl2_twist_pos/neg()</code>, <code>tl2_rotate()</code>, <code>tl2_num_closure()</code>, <code>tl2_den_closure()</code>, CF assembly</li>
+<li><strong>Literature Touched</strong>: Conway (1970), rational tangle theory</li>
+<li><strong>Open Questions</strong>: What does the full closure-measurement space look like? (→ Demo 25)</li>
+</ul>
+<p>---</p>
+<h2>Demo 25: Closure Measurement Matrices</h2>
+<ul>
+<li><strong>Status</strong>: Complete</li>
+<li><strong>File</strong>: <code><a href="../demo_25_closure_measurement/main.c.html">demo_25_closure_measurement/main.c</a></code> (~907 lines)</li>
+<li><strong>Tests</strong>: ~10+ (measurement matrices, SVD, constraint analysis, Hamming weight, parity barrier)</li>
+<li><strong>Dependencies</strong>: math.h</li>
+<li><strong>Headline</strong>: "Closure = measurement basis" made precise; 4×8 amplitude matrices per braid; all braids rank 4; parity barrier confirmed.</li>
+<li><strong>Key Results</strong>:</li>
+<li>MeasMatrix: 4×8 amplitude matrix M[closure][input] + thresholded truth tables</li>
+<li>1554 braids cataloged (lengths 1-4, 4 strands)</li>
+<li><strong>Part B</strong>: SVD via Jacobi eigenvalue algorithm (4×4 and 8×8 symmetric matrices)</li>
+<li><strong>All 1554 braids have rank 4</strong> — 4 closures are always linearly independent (full rank)</li>
+<li><strong>Part C</strong>: Constraint analysis + complementarity</li>
+<li>Mutual information between closure pairs via hash-based quadruple counting</li>
+<li>Hard constraints: tiny fraction of 2^32 possible quadruples are achievable</li>
+<li><strong>Part D</strong>: Hamming weight structure + parity test</li>
+<li>ANOVA F-ratio for Hamming weight dependence</li>
+<li>Monotonicity analysis</li>
+<li><strong>Parity barrier confirmed</strong>: 0x96 (XOR) and 0x69 (XNOR) never found in any closure</li>
+<li><strong>Part E</strong>: Closure subspace dimensions — 8×8 covariance, Jacobi eigenvalues</li>
+<li><strong>Theorems/Conjectures</strong>: Closure measurement matrices are always full rank (4 closures = 4 independent measurements); parity functions unreachable at δ=0 with 4-strand braids</li>
+<li><strong>Data</strong>: 1554 braids, 4×8 matrices each, SVD spectra, quadruple frequency counts</li>
+<li><strong>Code Assets</strong>: <code>MeasMatrix</code>, Jacobi eigenvalue solver (4×4 and 8×8), hash-based counting, ANOVA F-ratio, <code>compute_mutual_info()</code></li>
+<li><strong>Literature Touched</strong>: Measurement theory, parity barrier in topological computation</li>
+<li><strong>Open Questions</strong>: Can parity be reached with more sectors (k&gt;4)? (→ Demo 50 answers YES at k=6)</li>
+</ul>
+<p>---</p>
+<h2>Summary Statistics</h2>
+<table><thead><tr><th>Metric</th><th>Value</th></tr></thead><tbody><tr><td>Demos in batch</td><td>25</td></tr><tr><td>Total lines of C</td><td>~21,300</td></tr><tr><td>Total tests (approx)</td><td>300+</td></tr><tr><td>External dependencies</td><td>math.h only (all demos)</td></tr><tr><td>Shared infrastructure</td><td>Cx (complex), Braid, union-find, state-sum bracket</td></tr><tr><td>Major transitions</td><td>Symbolic→Numerical (Demo 10), Classification→Computation (Demo 18), Flat→Hierarchical (Demo 17)</td></tr></tbody></table>
+<h3>Arc Structure</h3>
+<p><strong>Phase 1 (Demos 01-09): Symbolic Foundations</strong> <ul> <li>Laurent polynomials → braid words → TL algebra → spin chain → scaling → Jones-Wenzl → braid↔PD bridge → Reidemeister invariance</li> </ul>
+<p><strong>Phase 2 (Demos 10-17): Numerical DKC</strong> <ul> <li>Numerical engine → waveforms → quantization → DKC test → zero structure → angle optimization → reduced bracket → multi-layer hierarchy</li> </ul>
+<p><strong>Phase 3 (Demos 18-25): Topological Computation</strong> <ul> <li>Braid logic gates → circuit compiler → error landscape → reversible gates → minimum complexity → function zoo → rational tangles → closure measurements</li> </ul>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/c.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</body>
+</html>

@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>inventory/entries/demo_60.md</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+    <link rel="stylesheet" href="../../style.css">
+</head>
+<body>
+    <nav><a href="../../index.html">← Back to Index</a></nav><hr>
+    <h2>Demo 60: ell=7 Cubic Wall</h2>
+<ul>
+<li><strong>Status</strong>: COMPLETE</li>
+<li><strong>File</strong>: <code><a href="../../demo_60_cubic_wall/main.c.html">demo_60_cubic_wall/main.c</a></code> (~1012 lines)</li>
+<li><strong>Tests</strong>: 15/15 pass</li>
+<li><strong>Depends on</strong>: Demo 35 (planar matching enumeration, diagram composition), Demo 51 (radical anatomy at delta=0), Demo 52 (Chebyshev generalization, radical anatomy at multiple delta values including ell=3..6)</li>
+<li><strong>Feeds into</strong>: Demo 61 (angular proof of 11/13 theorem), Demo 62+; extends radical dimension formulas into cubic number fields; confirms universality of radical filtration structure beyond quadratic cases</li>
+</ul>
+<h3>Headline</h3>
+First test of Temperley-Lieb radical anatomy at a cubic number field: at ell=7 (delta=2cos(pi/7), root of x^3-x^2-2x+1=0), all dimension formulas from Demos 51-52 extend universally — semisimple for n&lt;7, radical appears at n=7 with dim=11=2*7-3, grows to dim=39=7^2-7-3 at n=8, rad^2 is always 1-dimensional, nilpotency is uniformly 3, and the Fibonacci rank sum F(6)=8 holds exactly.
+<h3>Key Results</h3>
+<ul>
+<li><strong>Cubic number field arithmetic</strong>: delta=2cos(pi/7) satisfies x^3-x^2-2x+1=0, the first non-quadratic case in the Chebyshev parameter hierarchy. Computation done via F_p[x]/(f(x)) polynomial arithmetic over finite fields.</li>
+<li><strong>Prime selection</strong>: Two independent primes found where the cubic splits — p1=1000000007 (delta mod p1 = 420063799) and p2=1000000009 (delta mod p2 = 913264519). Cubic roots verified at both primes.</li>
+<li><strong>Semisimplicity boundary confirmed at n=ell</strong>: TL_n is semisimple (rank=dim, rad=0) for n=2,3,4,5,6 (all n &lt; ell=7). Non-trivial radical appears exactly at n=7.</li>
+<li><strong>Radical dimension formula verified</strong>:</li>
+<li>n=7: rad=11 matches predicted 2<em>ell-3 = 2</em>7-3 = 11</li>
+<li>n=8: rad=39 matches predicted ell^2-ell-3 = 49-7-3 = 39</li>
+<li><strong>rad^2 is 1-dimensional</strong> at both n=7 and n=8, consistent with all previous ell values</li>
+<li><strong>Nilpotency is uniformly 3</strong>: rad^3=0 at both n=7 and n=8 (rad^2 is nonzero, rad^3 is zero)</li>
+<li><strong>Fibonacci rank test passes</strong>: The 1-dimensional rad^2 generator decomposes by through-strand sectors into bilinear matrices whose total rank sums to F(6)=8 (the 6th Fibonacci number). Sector decomposition: sector 1 (rank 3), sector 3 (rank 4), sector 5 (rank 1), sector 7 (rank 0). Sum = 3+4+1+0 = 8.</li>
+<li><strong>Cross-validation</strong>: Both primes agree on all ranks and radical dimensions for every n=2..8 — confirms results are characteristic-independent (i.e., genuine properties of TL_n(delta), not artifacts of the chosen prime)</li>
+</ul>
+<h3>Theorems/Conjectures</h3>
+<ul>
+<li><strong>Radical dimension formula rad(TL_ell) = 2*ell-3</strong>: CONFIRMED at ell=7 (first cubic case), extending from ell=3,4,5,6 (quadratic cases) — UNIVERSAL across number field degree</li>
+<li><strong>Radical dimension formula rad(TL_{ell+1}) = ell^2-ell-3</strong>: CONFIRMED at ell=7 (rad(TL_8) = 39 = 49-7-3)</li>
+<li><strong>rad^2 = 1-dimensional</strong>: CONFIRMED at ell=7 for both n=7 and n=8 — the radical squares down to a single generator regardless of ell or number field degree</li>
+<li><strong>Nilpotency = 3</strong>: CONFIRMED at ell=7 for both n=7 and n=8 (rad^2 != 0, rad^3 = 0)</li>
+<li><strong>Fibonacci rank = F(ell-1)</strong>: CONFIRMED — bilinear rank across through-strand sectors sums to F(6)=8</li>
+<li><strong>Semisimplicity boundary at n=ell</strong>: CONFIRMED — TL_n(delta) is semisimple iff n &lt; ell, non-semisimple iff n &gt;= ell, independent of whether delta generates a quadratic or cubic field</li>
+<li><strong>Universality conjecture</strong>: All radical structure formulas (dimension, rad^2, nilpotency, Fibonacci rank) appear to hold for ALL ell values regardless of the degree of the number field Q(delta)/Q — STRENGTHENED (now tested at cubic)</li>
+</ul>
+<h3>Data</h3>
+<ul>
+<li>Minimal polynomial: x^3 - x^2 - 2x + 1 = 0 (irreducible over Q, cubic)</li>
+<li>Reduction rules in F_p[x]/(f): x^3 = x^2 + 2x - 1, x^4 = 3x^2 + x - 1</li>
+<li>Primes: p1 = 1000000007, p2 = 1000000009</li>
+<li>Delta mod p1 = 420063799, delta mod p2 = 913264519</li>
+</ul>
+<table><thead><tr><th>n</th><th>dim (C_n)</th><th>rank</th><th>rad</th><th>rad^2</th><th>nilp</th><th>cross-val</th></tr></thead><tbody><tr><td>2</td><td>2</td><td>2</td><td>0</td><td>-1</td><td>-1</td><td>OK</td></tr><tr><td>3</td><td>5</td><td>5</td><td>0</td><td>-1</td><td>-1</td><td>OK</td></tr><tr><td>4</td><td>14</td><td>14</td><td>0</td><td>-1</td><td>-1</td><td>OK</td></tr><tr><td>5</td><td>42</td><td>42</td><td>0</td><td>-1</td><td>-1</td><td>OK</td></tr><tr><td>6</td><td>132</td><td>132</td><td>0</td><td>-1</td><td>-1</td><td>OK</td></tr><tr><td>7</td><td>429</td><td>418</td><td>11</td><td>1</td><td>3</td><td>OK</td></tr><tr><td>8</td><td>1430</td><td>1391</td><td>39</td><td>1</td><td>3</td><td>OK</td></tr></tbody></table>
+<ul>
+<li>Fibonacci rank sector decomposition at n=7:</li>
+</ul>
+<table><thead><tr><th>Sector</th><th>Elements</th><th>Matrix size</th><th>Rank</th></tr></thead><tbody><tr><td>1</td><td>196</td><td>14 x 14</td><td>3</td></tr><tr><td>3</td><td>196</td><td>14 x 14</td><td>4</td></tr><tr><td>5</td><td>36</td><td>6 x 6</td><td>1</td></tr><tr><td>7</td><td>1</td><td>1 x 1</td><td>0</td></tr><tr><td><strong>Total</strong></td><td></td><td></td><td><strong>8 = F(6)</strong></td></tr></tbody></table>
+<h3>Code Assets</h3>
+<ul>
+<li><strong>Polynomial arithmetic over F_p mod f(x)</strong>: <code>poly_mul()</code>, <code>poly_pow()</code> (repeated squaring), <code>pdeg()</code>, <code>pmod()</code>, <code>pgcd()</code> — complete cubic extension field arithmetic in F_p[x]/(x^3-x^2-2x+1)</li>
+<li><strong>Cantor-Zassenhaus cubic root finder</strong>: <code>find_cubic_root()</code> — finds a root of the cubic mod p using x^p mod f(x) followed by polynomial GCD and, if f splits completely, Cantor-Zassenhaus randomized factoring</li>
+<li><strong><code>find_good_prime(start, root_out)</code></strong>: Searches for primes where the cubic splits, returning both the prime and a verified root</li>
+<li><strong>TLAlgebra struct and <code>init_tl()</code></strong>: Full Temperley-Lieb algebra construction (basis enumeration, identity/generator identification, multiplication table with loop counts) — reusable up to n=8 (C_8=1430)</li>
+<li><strong><code>analyze()</code></strong>: Complete radical anatomy pipeline — delta power precomputation, weighted fixed-point trace form, augmented Gram matrix, Gaussian elimination for rank, radical basis extraction, rad^2 computation via product echelon, rad^3 computation, nilpotency determination</li>
+<li><strong>Radical filtration</strong>: rad^2 and rad^3 computed via explicit product of radical basis vectors with echelon deduplication; reports nilpotency index</li>
+<li><strong>Fibonacci rank test</strong>: <code>fibonacci_rank_test()</code> — decomposes rad^2 generator by through-strand count into sector bilinear matrices, computes rank of each sector, sums to verify F(ell-1) prediction</li>
+<li><strong><code>count_through_strands()</code></strong>: Counts top-to-bottom matched strands in a planar matching diagram</li>
+<li><strong><code>matrix_rank_modp()</code></strong>: Generic Gaussian elimination rank computation on flat matrices mod p</li>
+<li><strong>Planar matching enumerator</strong>: <code>enumerate_basis()</code>, <code>enum_segments()</code>, <code>build_boundary_order()</code> — segment-based recursive algorithm (from Demo 35/51/52)</li>
+<li><strong>Diagram composition</strong>: <code>compose_diagrams()</code> with loop counting, <code>find_basis_index()</code> for lookup</li>
+</ul>
+<h3>Literature Touched</h3>
+<ul>
+<li>Temperley-Lieb algebra TL_n(delta) at roots of unity (delta = 2cos(pi/ell))</li>
+<li>Cubic number fields: Q(2cos(pi/7)) is a totally real cubic extension of Q with Galois group Z/3Z</li>
+<li>Minimal polynomial x^3-x^2-2x+1 for 2cos(pi/7) — well-known in algebraic number theory</li>
+<li>Non-semisimple representation theory: radical filtration, nilpotency index, Loewy length</li>
+<li>Goodman-Wenzl: TL at roots of unity is non-semisimple for n &gt;= ell</li>
+<li>Fibonacci numbers in TL algebra: sector decomposition and bilinear rank</li>
+<li>Cantor-Zassenhaus algorithm for polynomial factoring over finite fields</li>
+<li>Modular arithmetic approach to exact algebraic number computation (avoiding floating point)</li>
+<li>Chebyshev parametrization of the semisimplicity boundary</li>
+</ul>
+<h3>Open Questions</h3>
+<ul>
+<li>Do the formulas rad(TL_ell)=2*ell-3 and rad(TL_{ell+1})=ell^2-ell-3 extend to ell=8,9,...? Is there a closed-form for rad(TL_n) at general n &gt;= ell?</li>
+<li>Is rad^2 always exactly 1-dimensional for all ell, or does this break at some higher ell?</li>
+<li>Is nilpotency=3 universal for all ell &gt;= 3, or could higher ell produce deeper radical filtrations?</li>
+<li>Does the Fibonacci rank = F(ell-1) pattern continue? What is the representation-theoretic explanation for this Fibonacci structure?</li>
+<li>What happens at ell values where Q(2cos(pi/ell)) has even higher degree (e.g., ell=11, degree 5)? Does the number field degree ever affect the radical structure?</li>
+<li>Can the sector-by-sector rank decomposition (3+4+1+0=8 at ell=7) be predicted from a formula involving ell and the sector index?</li>
+<li>Is there a uniform proof of the radical dimension formulas that works across all number field degrees, or does each degree require separate verification?</li>
+</ul>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/c.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</body>
+</html>

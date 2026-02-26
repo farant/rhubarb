@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>inventory/entries/demo_04.md</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+    <link rel="stylesheet" href="../../style.css">
+</head>
+<body>
+    <nav><a href="../../index.html">← Back to Index</a></nav><hr>
+    <h2>Demo 04: Spin Chain</h2>
+<ul>
+<li><strong>Status</strong>: COMPLETE</li>
+<li><strong>File</strong>: <code><a href="../../demo_04_spin_chain/main.c.html">demo_04_spin_chain/main.c</a></code> (~587 lines)</li>
+<li><strong>Tests</strong>: 12/12 pass (4 parts: A=2, B=1, C=4, D=5)</li>
+<li><strong>Depends on</strong>: Demo 03 (Laurent polynomial ring, state-sum oracle, Kauffman bracket)</li>
+<li><strong>Feeds into</strong>: Any demo needing tensor product R-matrix representation or Yang-Baxter verification</li>
+</ul>
+<h3>Headline</h3>
+Computes the Kauffman bracket via the tensor product (spin chain) representation using quantum trace, unifying Demo 03's separate standard-module traces into a single 8D computation.
+<h3>Key Results</h3>
+<ul>
+<li>TL generator U on V tensor V (4x4) satisfies U^2 = delta*U and tr(U) = delta</li>
+<li>R-matrix R = A<em>U + A^{-1}</em>I satisfies R*R^{-1} = I</li>
+<li>Yang-Baxter equation R1<em>R2</em>R1 = R2<em>R1</em>R2 verified in 8D (and for inverses)</li>
+<li><strong>Quantum trace formula discovered</strong>: bracket(beta) = tr_q(rho(beta)) / (A^2 + A^{-2}), where tr_q = tr(K^{tensor 3} * M) with K = diag(A^2, A^{-2})</li>
+<li>Tested on 5 braids: identity (3-unlink), trefoil, figure-eight, mirror trefoil, single crossing — all match state-sum oracle</li>
+</ul>
+<h3>Theorems/Conjectures</h3>
+<ul>
+<li>Schur-Weyl duality decomposition: V^{tensor 3} = V_{3/2} tensor W_3 + V_{1/2} tensor W_1 (dim 4x1 + dim 2x2 = 8)</li>
+<li>Quantum trace with K = diag(q, q^{-1}) weights each component by its quantum dimension: qdim(V_{1/2}) = [2]<em>q = -delta, qdim(V</em>{3/2}) = [4]_q = A^6+A^2+A^{-2}+A^{-6}</li>
+<li>Dividing by -delta recovers exactly Demo 03's formula: bracket = 1<em>tr_{W_1} + (A^{-4}+A^4)</em>tr_{W_3}</li>
+</ul>
+<h3>Code Assets</h3>
+<ul>
+<li><code>Poly</code> Laurent polynomial ring (reused from Demo 03, MAX_TERMS=120)</li>
+<li><code>Mat</code> NxN polynomial matrix (up to 8x8) with: zero, identity, multiply, scale, add, trace, equality, tensor product, quantum trace, print</li>
+<li><code>mat_tensor()</code> — general Kronecker product of polynomial matrices</li>
+<li><code>mat_qtrace()</code> — quantum trace with diagonal weights</li>
+<li><code>braid_product()</code> — maps braid word to matrix product in 8D representation</li>
+<li>State-sum oracle (union-find based, reused from Demo 03)</li>
+</ul>
+<h3>Literature Touched</h3>
+<ul>
+<li>Kauffman bracket via R-matrix / quantum group approach</li>
+<li>Schur-Weyl duality for U_q(sl_2)</li>
+<li>Yang-Baxter equation</li>
+<li>Quantum trace (Reshetikhin-Turaev style)</li>
+</ul>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/c.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</body>
+</html>

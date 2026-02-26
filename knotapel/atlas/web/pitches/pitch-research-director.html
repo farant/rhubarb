@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>pitches/pitch-research-director.md</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+    <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+    <nav><a href="../index.html">← Back to Index</a></nav><hr>
+    <h1>Research Director Pitch: Atlas Structural Improvements</h1>
+<strong>Date:</strong> 2026-02-26
+<p>Four proposals for new atlas documents, each targeting a specific gap in the research team's ability to recover context, avoid duplicate work, and navigate 109 demos worth of accumulated knowledge.</p>
+<p>---</p>
+<h2>Proposal 1: <code><a href="../synthesis/dead-ends.html">synthesis/dead-ends.md</a></code> -- The Negative Results Registry</h2>
+<h3>What it would contain</h3>
+A structured catalog of every approach that was tried and failed, organized by the research question it was attacking. For each dead end:
+<ul>
+<li><strong>What was tried</strong> (1-2 sentences)</li>
+<li><strong>Why it failed</strong> (the specific mechanism -- not just "didn't work")</li>
+<li><strong>What it taught us</strong> (the positive knowledge extracted from the failure)</li>
+<li><strong>Demo reference</strong> (where the work lives)</li>
+<li><strong>Do not re-attempt unless</strong> (the specific condition that would change the conclusion)</li>
+</ul>
+<p>Example entries drawn from existing work: <ul> <li>Neglecton weight expansion for parity (<a href="../inventory/entries/demo_49.html">D49</a>): adds magnitudes, no new angles. Closed at all perturbation orders. Do not re-attempt unless a non-real scaling factor is found.</li> <li>Single P_{0,0} divergence for b parameter (<a href="../inventory/entries/demo_86.html">D86</a>): multiplicity from regular rep is structurally essential, not a scale factor. Do not re-attempt unless a different bilinear form avoids the valuation balance requirement.</li> <li>Spin chain approach for b (<a href="../inventory/entries/demo_85.html">D85</a>): wrong sector (standard module is fully diagonalizable). Do not re-attempt unless targeting a different parameter than b.</li> <li>Multiplicative braid product for XOR6 (<a href="../inventory/entries/demo_73.html">D73</a>): complement map sends M to M^{-1} sharing eigenvector cell, making parity invisible. Structurally incapable.</li> <li>Triskelion generalization k=2n (<a href="../inventory/entries/demo_63.html">D63</a>): falsified at n=5 (requires k=15, not k=10). True law is k=2M-1.</li> </ul>
+<h3>Why it matters</h3>
+This is the single highest-ROI document for preventing duplicate work across context resets. The explorer's log records dead ends in chronological order buried inside running narrative. A new LLM session has no efficient way to discover "we already tried X and here's why it can't work." The cost of re-attempting a dead end is not just wasted compute time -- it is wasted human attention, which is the scarcest resource in this project. The "do not re-attempt unless" field is critical: it turns a negative result into a conditional gate rather than a permanent wall, which is how the research actually works (the wall was in activation, not the lattice; the wall was in encoding, not the catalog).
+<h3>What gap it fills</h3>
+Currently, negative results are scattered across: demo findings.md files, the explorer's log (chronological, hundreds of pages), the narrative (which emphasizes the positive arc), and <a href="../planning/research-questions.html">research-questions.md</a> (which marks things ANSWERED but not WHY). No single document lets a new session ask "has this approach been tried?"
+<h3>Location</h3>
+<a href="../synthesis/dead-ends.html"><code>atlas/synthesis/dead-ends.md</code></a>
+<p>---</p>
+<h2>Proposal 2: <code>briefing-500.md</code> -- The Medium-Depth Onboarding Document</h2>
+<h3>What it would contain</h3>
+A ~500-line document that sits between <a href="../briefing.html">briefing.md</a> (~50 lines, "what is DKC and what have we proved") and the full synthesis documents (~thousands of lines combined). Structured as a guided tour with five sections:
+<p>1. <strong>The Story in 5 Acts</strong> (~100 lines): Foundation/Gate/DKC/Wall/Scaling/Multi-strand, each with 3-5 key results and the one sentence that captures the dramatic turn. Not the full <a href="../synthesis/narrative.html">narrative.md</a> -- the plot summary.</p>
+<p>2. <strong>The Architecture of the Research</strong> (~80 lines): The four lenses explained in 2-3 sentences each, with a cross-reference table showing which demos sit in which lenses. The five pillars in one sentence each. The "discrete algebraic reservoir computer" framing as the unifying thesis.</p>
+<p>3. <strong>Current State Machine</strong> (~80 lines): What is proven (with proof references), what is demonstrated (with confidence levels), what is conjectured (with the strongest evidence), what is falsified (with the demo that killed it). This is the snapshot a new session needs to know what claims can be made safely.</p>
+<p>4. <strong>The Decision Log</strong> (~120 lines): The 15-20 most consequential design decisions and why they were made. Examples: Why delta=0? Why A = e^{i*5pi/4} specifically? Why +/-q encoding for parity? Why MVN activation? Why the 1wpi encoding for non-parity? Why Sec x Vor product activation? Why multi-strand (not just finer roots)? Each decision is 3-5 lines: the choice, the alternatives considered, the evidence that decided it.</p>
+<p>5. <strong>The Open Frontier</strong> (~120 lines): The 8-10 most important open questions, each with: what we know, what we don't, what the next experiment would be, and what the answer would change. This is <a href="../planning/next-priorities.html">next-priorities.md</a> compressed to its decision-relevant core, cutting the detailed effort estimates and publication framing.</p>
+<h3>Why it matters</h3>
+The <a href="../briefing.html">briefing.md</a> is excellent for "what is this project" but insufficient for "what should I do next" or "why was this decision made." The full synthesis docs are excellent for deep understanding but take 30+ minutes to read and require judgment about what matters. The 500-line document is the "I have 10 minutes and need to be productive" tier. It is specifically optimized for the LLM context-recovery use case: dense enough to prime the attention heads with the right conceptual frame, structured enough to be skimmable, and decision-oriented rather than narrative-oriented.
+<p>The decision log section is the most novel component. Currently, the reasoning behind fundamental design choices is embedded in demo findings files from months ago. A new session that asks "why don't we use zeta_12 instead of zeta_8?" has to reconstruct the answer from scattered evidence. The decision log makes these answers O(1) lookup.</p>
+<h3>What gap it fills</h3>
+The current atlas has two onboarding depths: 50 lines (briefing.md) and 2000+ lines (full synthesis). There is no intermediate tier. This creates a binary: either the new session is underinformed (reads only briefing) or over-invested (reads everything before doing anything). The 500-line tier is the sweet spot for "orient then act."
+<h3>Location</h3>
+<code>atlas/briefing-500.md</code>
+<p>---</p>
+<h2>Proposal 3: <code>inventory/question-status.md</code> -- The Cross-Referenced Question Tracker</h2>
+<h3>What it would contain</h3>
+A flat table mapping every numbered research question (from research-questions.md) to its current status, with one-line resolution summaries and forward pointers. Format:
+<p><code></code>` <table><thead><tr><th>ID</th><th>Question (short)</th><th>Status</th><th>Resolution / Next Step</th><th>Demo(s)</th></tr></thead><tbody><tr><td>Q1.1</td><td>Convexity thesis formal proof</td><td>OPEN</td><td>Ingredients in <a href="../inventory/entries/demo_57.html">D57</a>,<a href="../inventory/entries/demo_62.html">D62</a>; needs write</td><td><a href="../inventory/entries/demo_57.html">D57</a>,<a href="../inventory/entries/demo_62.html">D62</a></td></tr><tr><td>Q1.2</td><td>Triskelion k=2n</td><td>FALSIFIED</td><td>k=2M-1 is true law</td><td><a href="../inventory/entries/demo_63.html">D63</a></td></tr><tr><td>Q1.12</td><td>Z[zeta_16] parity ceiling</td><td>ANSWERED</td><td>Ceiling unchanged at n=5, gap widens</td><td><a href="../inventory/entries/demo_65.html">D65</a></td></tr><tr><td>Q2.3</td><td>ell=7 predictions</td><td>CONFIRMED</td><td>All predictions match</td><td><a href="../inventory/entries/demo_60.html">D60</a></td></tr><tr><td>Q5.4</td><td>Framing = computation?</td><td>CONFIRMED</td><td>+2 XOR levels per writhe unit</td><td><a href="../inventory/entries/demo_83.html">D83</a></td></tr></tbody></table> <code></code>`</p>
+<p>Plus a summary dashboard at the top: <ul> <li>Total questions: N</li> <li>Open: X | Answered: Y | Falsified: Z | Superseded: W</li> <li>Questions answered since last defrag: [list]</li> <li>Highest-priority open questions: [top 5 with links]</li> </ul>
+<h3>Why it matters</h3>
+The <a href="../planning/research-questions.html">research-questions.md</a> file is currently 150+ lines of richly detailed question descriptions, many with inline status updates (strikethrough text, bold ANSWERED annotations). It is optimized for writing and thinking, not for scanning. A new session that needs to know "which questions are still open in the activation geometry section" has to read the entire section and parse the inline markup. The flat table is the queryable index. It is the difference between a library and a card catalog.
+<p>The forward pointers ("next step" column) are critical for the planning loop: they connect the question inventory directly to the priority system without requiring the reader to cross-reference <a href="../planning/research-questions.html">research-questions.md</a> against <a href="../planning/next-priorities.html">next-priorities.md</a> manually.</p>
+<h3>What gap it fills</h3>
+<a href="../planning/research-questions.html">research-questions.md</a> is a living document that accumulates questions and annotates them in place. <a href="../planning/next-priorities.html">next-priorities.md</a> is a prioritized action list. Neither provides a scannable status dashboard. The question-status table is the bridge: it tells you the state of every question at a glance, and points you to the right place to go deeper.
+<h3>Location</h3>
+<code>atlas/inventory/question-status.md</code>
+<p>---</p>
+<h2>Proposal 4: <code><a href="../synthesis/arc-summaries.html">synthesis/arc-summaries.md</a></code> -- The Research Arc Index</h2>
+<h3>What it would contain</h3>
+A document that groups demos into their natural research arcs (not chronological order, not per-demo entries) and summarizes each arc as a self-contained unit. Each arc gets:
+<ul>
+<li><strong>Arc name and span</strong> (e.g., "The Wall Arc: <a href="../inventory/entries/demo_45.html">D45</a>-<a href="../inventory/entries/demo_50.html">D50</a>, <a href="../inventory/entries/demo_61.html">D61</a>-<a href="../inventory/entries/demo_65.html">D65</a>")</li>
+<li><strong>The question it attacked</strong> (1 sentence)</li>
+<li><strong>The answer it found</strong> (1 sentence)</li>
+<li><strong>The journey</strong> (3-5 bullets: what was tried, what failed, what worked, what surprised)</li>
+<li><strong>Key artifacts</strong> (the specific results, theorems, or tools this arc produced)</li>
+<li><strong>What it unlocked</strong> (which later arcs depend on this one)</li>
+<li><strong>Open threads</strong> (what this arc left unresolved)</li>
+</ul>
+<p>Proposed arcs (17 total, based on reading the narrative and connections documents):</p>
+<p>1. Foundation (<a href="../inventory/entries/demo_01.html">D01</a>-<a href="../inventory/entries/demo_09.html">D09</a>): Building the bracket computation pipeline 2. Classification (<a href="../inventory/entries/demo_10.html">D10</a>-<a href="../inventory/entries/demo_17.html">D17</a>): Numerical pivot, waveform signatures, WRT angles 3. Gate (<a href="../inventory/entries/demo_18.html">D18</a>-<a href="../inventory/entries/demo_25.html">D25</a>): Braids as computers, parity shadow first appears 4. Reverse DKC (<a href="../inventory/entries/demo_26.html">D26</a>-<a href="../inventory/entries/demo_28.html">D28</a>): Can trained weights decompose into bracket values? 5. Forward DKC (<a href="../inventory/entries/demo_29.html">D29</a>, <a href="../inventory/entries/demo_45.html">D45</a>-<a href="../inventory/entries/demo_48.html">D48</a>): The discovery, the wall, the 100M quartet search 6. Activation Breakthrough (<a href="../inventory/entries/demo_49.html">D49</a>-<a href="../inventory/entries/demo_50.html">D50</a>): Neglecton dead end, MVN solution 7. Radical Anatomy (<a href="../inventory/entries/demo_51.html">D51</a>-<a href="../inventory/entries/demo_52.html">D52</a>, <a href="../inventory/entries/demo_60.html">D60</a>): TL algebra structure, sandwich theorem, cross-ell universality 8. Cross-ell Survey (<a href="../inventory/entries/demo_53.html">D53</a>-<a href="../inventory/entries/demo_59.html">D59</a>): Ring independence, axiality, the 11/13 theorem 9. Analytical Wall (<a href="../inventory/entries/demo_61.html">D61</a>-<a href="../inventory/entries/demo_65.html">D65</a>): Proving the wall, matroid recursion, parity ceiling n=5 10. Quaternionic/Spherical (<a href="../inventory/entries/demo_66.html">D66</a>-<a href="../inventory/entries/demo_71.html">D71</a>): 24-cell, S^2, Hopf, Voronoi, spectral DKC, 13=13 11. Characterization (<a href="../inventory/entries/demo_72.html">D72</a>-<a href="../inventory/entries/demo_75.html">D75</a>): Anti-correlation, eigenvector automaton, incomparability, binocular 12. Scaling (<a href="../inventory/entries/demo_76.html">D76</a>-<a href="../inventory/entries/demo_82.html">D82</a>): XOR8, activation zoo, zeta_12, group finiteness, depth law 13. Framing/Null (<a href="../inventory/entries/demo_83.html">D83</a>-<a href="../inventory/entries/demo_84.html">D84</a>): Jones normalization cost, null indispensability, LCFT 14. Mechanistic (<a href="../inventory/entries/demo_85.html">D85</a>-<a href="../inventory/entries/demo_92.html">D92</a>): Indecomposability b, regime transition, depth law mechanism, parity-lock 15. Circuit Complexity (<a href="../inventory/entries/demo_93.html">D93</a>-<a href="../inventory/entries/demo_94.html">D94</a>): Complement-blindness, AND/XOR hierarchy, 2I, Barrington 16. Catalog Optimization (<a href="../inventory/entries/demo_95.html">D95</a>-<a href="../inventory/entries/demo_97.html">D97</a>): Derived series, 2D landscape, Cell B perfection 17. Multi-strand (<a href="../inventory/entries/demo_98.html">D98</a>-<a href="../inventory/entries/demo_101.html">D101</a>): 3-strand, 4-strand, 5-strand, Ext^1 thesis, sl_d growth</p>
+<h3>Why it matters</h3>
+The <a href="../inventory/demo-index.html">demo-index.md</a> has 101 entries. The <a href="../synthesis/narrative.html">narrative.md</a> tells the full story linearly. The <a href="../synthesis/connections.html">connections.md</a> maps cross-demo themes. None of these is optimized for the question: "I need to understand the activation geometry story -- which demos do I read and in what order?" The arc summaries document is the table of contents for the research, organized by intellectual unit rather than by demo number or by chronological accident.
+<p>This is especially important for the explorer role, which thinks at the arc level rather than the demo level. It is also the natural unit for paper planning: each paper roughly corresponds to 1-3 arcs, and the arc summary makes the paper's scope immediately visible.</p>
+<p>The "what it unlocked" field creates a dependency graph between arcs (not just between demos), which is the right level of abstraction for research planning. The "open threads" field is a distributed version of the negative results registry (Proposal 1), localized to each arc.</p>
+<h3>What gap it fills</h3>
+The current atlas organizes knowledge by type (theorems in one file, data in another, narrative in another) or by individual demo (demo-index). Neither organizes by research arc, which is the natural unit of scientific understanding. When a new session asks "bring me up to speed on the multi-strand work," there is no single document that answers this at the right level of detail -- not as detailed as reading <a href="../inventory/entries/demo_98.html">D98</a>-<a href="../inventory/entries/demo_101.html">D101</a>'s individual findings, not as compressed as the briefing's one-line summary.
+<h3>Location</h3>
+<a href="../synthesis/arc-summaries.html"><code>atlas/synthesis/arc-summaries.md</code></a>
+<p>---</p>
+<h2>Implementation Notes</h2>
+<p><strong>Priority order:</strong> I would build these in the order 1, 4, 2, 3.</p>
+<p>Rationale: <ul> <li><code><a href="../synthesis/dead-ends.html">dead-ends.md</a></code> (1) has the highest immediate ROI for preventing wasted work. It can be built by scanning demo findings files for negative/falsified results -- a focused extraction task.</li> <li><code><a href="../synthesis/arc-summaries.html">arc-summaries.md</a></code> (4) provides the organizational backbone that makes the 500-line briefing (2) easier to write well. Build the index first, then write the summary.</li> <li><code>briefing-500.md</code> (2) depends on having the arc structure clear and the dead ends cataloged. It is a synthesis of syntheses.</li> <li><code>question-status.md</code> (3) is pure extraction from <a href="../planning/research-questions.html">research-questions.md</a> -- mechanical but lower urgency since <a href="../planning/research-questions.html">research-questions.md</a> is functional if verbose.</li> </ul>
+<p><strong>Maintenance cost:</strong> All four documents should be updated during the defrag process. Proposals 1, 3, and 4 are largely extractive (can be built by agents reading existing files). Proposal 2 requires editorial judgment (what to include at the 500-line tier) and should be reviewed conversationally like the Phase 3 synthesis docs.</p>
+<p><strong>Integration with <a href="../PROCESS.html">PROCESS.md</a>:</strong> If adopted, Phase 2 gains two new agents (dead-ends extraction, question-status extraction). Phase 3 gains one (arc-summaries). Phase 5 is extended to produce briefing-500.md alongside <a href="../briefing.html">briefing.md</a>. Alternatively, Proposals 1 and 3 could be folded into existing Phase 2 agents as additional outputs.</p>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/c.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</body>
+</html>

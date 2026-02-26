@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>inventory/entries/demo_10.md</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+    <link rel="stylesheet" href="../../style.css">
+</head>
+<body>
+    <nav><a href="../../index.html">← Back to Index</a></nav><hr>
+    <h2>Demo 10: Numerical Evaluation Engine</h2>
+<ul>
+<li><strong>Status</strong>: COMPLETE</li>
+<li><strong>File</strong>: <code><a href="../../demo_10_numerical/main.c.html">demo_10_numerical/main.c</a></code> (~956 lines)</li>
+<li><strong>Tests</strong>: ~50+ pass (6 parts: A=6 complex arith, B=5 Yang-Baxter/inverses, C=5 oracle match, D=scaling n=2..8 YB+far-comm+oracle, E=10 multi-angle, F=sample-point classification)</li>
+<li><strong>Depends on</strong>: Demo 04 (quantum trace formula, R-matrix), Demo 05 (symbolic bracket sign convention)</li>
+<li><strong>Feeds into</strong>: All higher demos needing numerical knot evaluation at scale (DKC pipeline, classification experiments)</li>
+</ul>
+<h3>Headline</h3>
+Replaces symbolic Laurent polynomials with numerical complex evaluation (A = e^{i*theta}), enabling 50-100x memory reduction and scaling from n=5 (32x32) to n=8 (256x256) and beyond, validated against state-sum oracle at multiple angles.
+<h3>Key Results</h3>
+<ul>
+<li>Complex arithmetic library validated: unit circle, powers, A^10 = 1 for A = e^{i*pi/5}</li>
+<li>Numerical R-matrix (4x4) and Yang-Baxter (8x8) verified at tolerance 1e-9</li>
+<li>5 braids (identity, trefoil, figure-eight, mirror trefoil, single crossing) match state-sum oracle numerically for n=3</li>
+<li><strong>Scaling validated n=2 through n=8</strong>: Yang-Baxter, far commutativity, and oracle match at each dimension (up to 256x256)</li>
+<li>Multi-angle validation: trefoil and figure-eight match oracle at 5 different angles (pi/5, pi/7, pi/10, pi/3, 0.7)</li>
+<li><strong>Classification experiment</strong>: determines minimum number of sample evaluation points on unit circle to distinguish a 6-knot test set (unknot, trefoil, mirror trefoil, figure-eight, torus(2,5), granny knot)</li>
+</ul>
+<h3>Data</h3>
+<ul>
+<li>6-knot test set: unknot, trefoil, mirror trefoil, figure-eight, torus(2,5), granny knot</li>
+<li>8 sample angles: pi/5, pi/7, pi/10, pi/3, 0.7, 1.1, 2.0, pi/13</li>
+<li>Bracket vectors printed for first 3 angles per knot</li>
+<li>Memory: Poly (~808 bytes) replaced by Cx (16 bytes) — 50x reduction per matrix entry</li>
+</ul>
+<h3>Code Assets</h3>
+<ul>
+<li><code>Cx</code> complex number type with full arithmetic: make, zero, one, real, add, sub, mul, div, neg, abs, abs2, exp_i, pow_int (binary exponentiation), near (approx equality), print</li>
+<li><code>CMat</code> heap-allocated NxN complex matrix: alloc, free, zero, id, mul, scale, add, qtrace, tensor, eq_approx</li>
+<li><code>CMAT(m,i,j)</code> macro for row-major access</li>
+<li><code>build_R4()</code> — numerical 4x4 R-matrix and inverse for given A</li>
+<li><code>build_Ri()</code> — general n-strand generator I^{x(i-1)} x R x I^{x(n-i-1)} via tensor products</li>
+<li><code>build_Kn()</code> — K^{xn} diagonal weights for quantum trace at arbitrary n</li>
+<li><code>braid_product_n()</code> — braid word to matrix product at arbitrary dimension</li>
+<li><code>numerical_bracket()</code> — full pipeline: braid -&gt; matrix product -&gt; quantum trace -&gt; bracket with sign correction (-1)^{n+1}</li>
+<li><code>braid_bracket_at()</code> — state-sum oracle evaluated at specific complex A (for validation)</li>
+<li>Pattern: heap-allocated matrices with explicit free (scales to large n)</li>
+</ul>
+<h3>Literature Touched</h3>
+<ul>
+<li>Numerical evaluation of Kauffman bracket / Jones polynomial</li>
+<li>Quantum trace formula evaluated on unit circle</li>
+<li>Sample-point knot classification (bridge to DKC — Discrete Knotted Computation)</li>
+<li>Yang-Baxter equation and far commutativity as numerical consistency checks</li>
+</ul>
+<h3>Open Questions</h3>
+<ul>
+<li>How many sample points suffice for larger knot tables? (experiment seeded here, extended in later demos)</li>
+<li>Numerical stability at very large n (n=10+)?</li>
+<li>Which angles are optimal for discrimination?</li>
+</ul>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/c.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</body>
+</html>

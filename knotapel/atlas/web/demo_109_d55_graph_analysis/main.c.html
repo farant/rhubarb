@@ -1,0 +1,1227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>demo_109_d55_graph_analysis/main.c</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+    <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+    <nav><a href="../index.html">← Back to Index</a></nav><hr>
+    <h1>demo_109_d55_graph_analysis/main.c</h1><pre><code class="language-c">/*
+ * KNOTAPEL DEMO 109: Graph Analysis of D55 Parity Vocabulary
+ * ============================================================
+ *
+ * D108 showed graph structure distinguishes parity from poison at
+ * delta=0 (Z[zeta_8]). This demo asks: does delta=sqrt(2) (Z[zeta_16])
+ * have intrinsically richer graph structure, explaining why the
+ * simplest activation (Re&gt;0) gives 9,334 parity solutions?
+ *
+ * Values are Z[i]-axial: each = (a+bi) * zeta_16^axis, axis in {0,1,2,3}.
+ *
+ * Predictions (registered before computation):
+ * 1. Product closure density &gt; 50% (vs D108's 21%)
+ * 2. Product closure axis quotient near-complete K_4 (vs D108's P_3)
+ * 3. Same-axis additive closure &gt; D108's 9%
+ * 4. Richer norm structure from 2D Gaussian lattice
+ * 5. Counter: if product closure sparse, dual-channel theory fails
+ *
+ * C89, zero dependencies beyond math.h.
+ */
+
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;string.h&gt;
+#include &lt;math.h&gt;
+
+#ifndef M_PI
+#define M_PI 3.14159265358979323846
+#endif
+
+/* ================================================================
+ * Test infrastructure
+ * ================================================================ */
+
+static int n_pass = 0, n_fail = 0;
+
+static void check(const char *msg, int ok) {
+    if (ok) { printf("  PASS: %s\n", msg); n_pass++; }
+    else    { printf("  FAIL: %s\n", msg); n_fail++; }
+}
+
+/* ================================================================
+ * Complex double type
+ * ================================================================ */
+
+typedef struct { double re, im; } Cx;
+
+static Cx cx_make(double re, double im) {
+    Cx z; z.re = re; z.im = im; return z;
+}
+
+static Cx cx_add(Cx a, Cx b) {
+    return cx_make(a.re + b.re, a.im + b.im);
+}
+
+/* ================================================================
+ * Z[zeta_16] Arithmetic (from D55)
+ *
+ * zeta = e^{i*pi/8}, zeta^8 = -1.
+ * Elements: c[0] + c[1]*z + ... + c[7]*z^7
+ * ================================================================ */
+
+typedef struct { long c[8]; } Cyc16;
+
+static Cyc16 cyc16_zero(void) {
+    Cyc16 r;
+    memset(r.c, 0, sizeof(r.c));
+    return r;
+}
+
+static Cyc16 cyc16_one(void) {
+    Cyc16 r = cyc16_zero();
+    r.c[0] = 1;
+    return r;
+}
+
+static Cyc16 cyc16_zeta_power(int k) {
+    Cyc16 r = cyc16_zero();
+    k = k % 16;
+    if (k &lt; 0) k += 16;
+    if (k &lt; 8) { r.c[k] = 1; }
+    else       { r.c[k - 8] = -1; }
+    return r;
+}
+
+static Cyc16 cyc16_add(Cyc16 a, Cyc16 b) {
+    Cyc16 r;
+    int i;
+    for (i = 0; i &lt; 8; i++) r.c[i] = a.c[i] + b.c[i];
+    return r;
+}
+
+static Cyc16 cyc16_neg(Cyc16 a) {
+    Cyc16 r;
+    int i;
+    for (i = 0; i &lt; 8; i++) r.c[i] = -a.c[i];
+    return r;
+}
+
+static Cyc16 cyc16_mul(Cyc16 a, Cyc16 b) {
+    Cyc16 r;
+    int i, j;
+    memset(r.c, 0, sizeof(r.c));
+    for (i = 0; i &lt; 8; i++) {
+        if (a.c[i] == 0) continue;
+        for (j = 0; j &lt; 8; j++) {
+            if (b.c[j] == 0) continue;
+            if (i + j &lt; 8)
+                r.c[i + j] += a.c[i] * b.c[j];
+            else
+                r.c[i + j - 8] -= a.c[i] * b.c[j];
+        }
+    }
+    return r;
+}
+
+static int cyc16_eq(Cyc16 a, Cyc16 b) {
+    int i;
+    for (i = 0; i &lt; 8; i++)
+        if (a.c[i] != b.c[i]) return 0;
+    return 1;
+}
+
+static int cyc16_is_zero(Cyc16 a) {
+    int i;
+    for (i = 0; i &lt; 8; i++)
+        if (a.c[i] != 0) return 0;
+    return 1;
+}
+
+static Cx cyc16_to_cx(Cyc16 a) {
+    Cx r = cx_make(0.0, 0.0);
+    int k;
+    for (k = 0; k &lt; 8; k++) {
+        if (a.c[k] != 0) {
+            double angle = (double)k * M_PI / 8.0;
+            r = cx_add(r, cx_make((double)a.c[k] * cos(angle),
+                                   (double)a.c[k] * sin(angle)));
+        }
+    }
+    return r;
+}
+
+static Cyc16 cyc16_a_power(int power) {
+    int zp = (5 * power) % 16;
+    if (zp &lt; 0) zp += 16;
+    return cyc16_zeta_power(zp);
+}
+
+static Cyc16 cyc16_delta_power(int k) {
+    Cyc16 r = cyc16_zero();
+    long two_pow;
+    int m, i;
+    if (k == 0) { r.c[0] = 1; return r; }
+    if (k &lt; 0) return r;
+    m = k / 2;
+    two_pow = 1;
+    for (i = 0; i &lt; m; i++) two_pow *= 2;
+    if (k % 2 == 0) { r.c[0] = two_pow; }
+    else             { r.c[2] = two_pow; r.c[6] = -two_pow; }
+    return r;
+}
+
+/* ================================================================
+ * Planar Matching + Diagram Operations (from D55)
+ * ================================================================ */
+
+#define MAX_N 6
+#define MAX_2N (2 * MAX_N)
+
+typedef struct { int match[MAX_2N]; } PlanarMatch;
+
+static PlanarMatch make_identity_diagram(int n) {
+    PlanarMatch m;
+    int k;
+    for (k = 0; k &lt; n; k++) {
+        m.match[k] = n + k;
+        m.match[n + k] = k;
+    }
+    return m;
+}
+
+static PlanarMatch make_generator_diagram(int n, int gen) {
+    PlanarMatch m;
+    int k;
+    for (k = 0; k &lt; n; k++) {
+        m.match[k] = n + k;
+        m.match[n + k] = k;
+    }
+    m.match[gen] = gen + 1;
+    m.match[gen + 1] = gen;
+    m.match[n + gen] = n + gen + 1;
+    m.match[n + gen + 1] = n + gen;
+    return m;
+}
+
+static int compose_diagrams(int n, const PlanarMatch *d1,
+                            const PlanarMatch *d2, PlanarMatch *result) {
+    int glue_visited[MAX_N];
+    int i, loops;
+    memset(result-&gt;match, -1, (size_t)(2 * n) * sizeof(int));
+    memset(glue_visited, 0, (size_t)n * sizeof(int));
+    loops = 0;
+    for (i = 0; i &lt; 2 * n; i++) {
+        int start = i;
+        int in_d1, cur, partner;
+        if (result-&gt;match[i] &gt;= 0) continue;
+        if (i &lt; n) { in_d1 = 1; cur = i; }
+        else       { in_d1 = 0; cur = i; }
+        for (;;) {
+            if (in_d1) {
+                partner = d1-&gt;match[cur];
+                if (partner &lt; n) {
+                    result-&gt;match[start] = partner;
+                    result-&gt;match[partner] = start;
+                    break;
+                }
+                glue_visited[partner - n] = 1;
+                in_d1 = 0;
+                cur = partner - n;
+            } else {
+                partner = d2-&gt;match[cur];
+                if (partner &gt;= n) {
+                    result-&gt;match[start] = partner;
+                    result-&gt;match[partner] = start;
+                    break;
+                }
+                glue_visited[partner] = 1;
+                in_d1 = 1;
+                cur = n + partner;
+            }
+        }
+    }
+    for (i = 0; i &lt; n; i++) {
+        int cur2, p, q;
+        if (glue_visited[i]) continue;
+        loops++;
+        cur2 = i;
+        do {
+            glue_visited[cur2] = 1;
+            p = d2-&gt;match[cur2];
+            glue_visited[p] = 1;
+            q = d1-&gt;match[n + p];
+            cur2 = q - n;
+        } while (cur2 != i);
+    }
+    return loops;
+}
+
+static int trace_closure_loops(int n, const PlanarMatch *m) {
+    int visited[MAX_2N];
+    int i, cur, loops = 0;
+    memset(visited, 0, (size_t)(2 * n) * sizeof(int));
+    for (i = 0; i &lt; 2 * n; i++) {
+        if (visited[i]) continue;
+        loops++;
+        cur = i;
+        do {
+            visited[cur] = 1;
+            cur = m-&gt;match[cur];
+            visited[cur] = 1;
+            cur = (cur &lt; n) ? cur + n : cur - n;
+        } while (cur != i);
+    }
+    return loops;
+}
+
+/* ================================================================
+ * State-Sum Bracket (from D55)
+ * ================================================================ */
+
+typedef struct { int gen; int sign; } BraidCrossing;
+
+static Cyc16 state_sum_bracket(int n, const BraidCrossing *word,
+                                int word_len) {
+    Cyc16 bracket = cyc16_zero();
+    int num_states, s;
+    if (word_len &gt; 20) return bracket;
+    num_states = 1 &lt;&lt; word_len;
+    for (s = 0; s &lt; num_states; s++) {
+        PlanarMatch current;
+        int total_glue_loops = 0, a_power = 0, j;
+        current = make_identity_diagram(n);
+        for (j = 0; j &lt; word_len; j++) {
+            PlanarMatch resolved, result;
+            int glue_loops, bit;
+            bit = (s &gt;&gt; j) &amp; 1;
+            if (bit == 0) {
+                resolved = make_identity_diagram(n);
+                a_power += word[j].sign;
+            } else {
+                resolved = make_generator_diagram(n, word[j].gen);
+                a_power -= word[j].sign;
+            }
+            glue_loops = compose_diagrams(n, &amp;current, &amp;resolved, &amp;result);
+            total_glue_loops += glue_loops;
+            current = result;
+        }
+        {
+            int tl = trace_closure_loops(n, &amp;current);
+            int total = total_glue_loops + tl;
+            Cyc16 weight = cyc16_delta_power(total - 1);
+            Cyc16 contrib = cyc16_mul(weight, cyc16_a_power(a_power));
+            bracket = cyc16_add(bracket, contrib);
+        }
+    }
+    return bracket;
+}
+
+static void decode_braid(int idx, int n_choices, int length,
+                          BraidCrossing *word) {
+    int i;
+    for (i = 0; i &lt; length; i++) {
+        int choice = idx % n_choices;
+        word[i].gen = choice / 2;
+        word[i].sign = (choice % 2 == 0) ? 1 : -1;
+        idx /= n_choices;
+    }
+}
+
+/* ================================================================
+ * Catalog (from D55)
+ * ================================================================ */
+
+#define MAX_CATALOG 512
+
+static Cyc16 cat_cyc[MAX_CATALOG];
+static Cx    cat_cx[MAX_CATALOG];
+static int   cat_size = 0;
+
+static int cat_find(Cyc16 val) {
+    int i;
+    for (i = 0; i &lt; cat_size; i++)
+        if (cyc16_eq(val, cat_cyc[i])) return i;
+    return -1;
+}
+
+static void build_catalog(void) {
+    int ci;
+    int configs_n[3]       = {2, 3, 4};
+    int configs_choices[3]  = {2, 4, 6};
+    int configs_maxlen[3]   = {10, 6, 6};
+    cat_size = 0;
+    for (ci = 0; ci &lt; 3; ci++) {
+        int n = configs_n[ci];
+        int n_choices = configs_choices[ci];
+        int max_len = configs_maxlen[ci];
+        int length;
+        for (length = 1; length &lt;= max_len; length++) {
+            int total = 1, idx, i;
+            for (i = 0; i &lt; length; i++) {
+                total *= n_choices;
+                if (total &gt; 100000) { total = -1; break; }
+            }
+            if (total &lt; 0) break;
+            for (idx = 0; idx &lt; total; idx++) {
+                BraidCrossing word[20];
+                Cyc16 bracket;
+                decode_braid(idx, n_choices, length, word);
+                bracket = state_sum_bracket(n, word, length);
+                if (!cyc16_is_zero(bracket)
+                    &amp;&amp; cat_find(bracket) &lt; 0
+                    &amp;&amp; cat_size &lt; MAX_CATALOG) {
+                    cat_cyc[cat_size] = bracket;
+                    cat_cx[cat_size] = cyc16_to_cx(bracket);
+                    cat_size++;
+                }
+            }
+        }
+    }
+}
+
+/* ================================================================
+ * NPN Classification (from D55)
+ * ================================================================ */
+
+static const int perms3[6][3] = {
+    {0,1,2}, {0,2,1}, {1,0,2}, {1,2,0}, {2,0,1}, {2,1,0}
+};
+
+static int npn_transform(int tt, const int sigma[3],
+                         int neg_in, int neg_out) {
+    int result = 0, idx;
+    for (idx = 0; idx &lt; 8; idx++) {
+        int x[3], y[3], src, out;
+        x[0] = (idx &gt;&gt; 2) &amp; 1;
+        x[1] = (idx &gt;&gt; 1) &amp; 1;
+        x[2] = idx &amp; 1;
+        y[0] = x[sigma[0]] ^ ((neg_in &gt;&gt; 0) &amp; 1);
+        y[1] = x[sigma[1]] ^ ((neg_in &gt;&gt; 1) &amp; 1);
+        y[2] = x[sigma[2]] ^ ((neg_in &gt;&gt; 2) &amp; 1);
+        src = (y[0] &lt;&lt; 2) | (y[1] &lt;&lt; 1) | y[2];
+        out = (tt &gt;&gt; src) &amp; 1;
+        if (neg_out) out ^= 1;
+        result |= (out &lt;&lt; idx);
+    }
+    return result;
+}
+
+static int npn_canon[256];
+
+static void npn_init(void) {
+    int i, pi, ni, no;
+    for (i = 0; i &lt; 256; i++) {
+        int min_tt = i;
+        for (pi = 0; pi &lt; 6; pi++)
+            for (ni = 0; ni &lt; 8; ni++)
+                for (no = 0; no &lt; 2; no++) {
+                    int t = npn_transform(i, perms3[pi], ni, no);
+                    if (t &lt; min_tt) min_tt = t;
+                }
+        npn_canon[i] = min_tt;
+    }
+}
+
+/* ================================================================
+ * Z[i] + Axis Representation
+ *
+ * Each Z[i]-axial Cyc16 value = (a + bi) * zeta_16^axis
+ * where axis in {0,1,2,3} (canonical form).
+ *
+ * Cyc16 pair (k, k+4) maps to axis k:
+ *   a = c[k], b = c[k+4]
+ * ================================================================ */
+
+typedef struct {
+    long a, b;
+    int axis;
+} ZiAxis;
+
+static ZiAxis cat_zi[MAX_CATALOG];
+
+static void extract_all_zi(void) {
+    int i, k;
+    for (i = 0; i &lt; cat_size; i++) {
+        cat_zi[i].a = 0;
+        cat_zi[i].b = 0;
+        cat_zi[i].axis = 0;
+        for (k = 0; k &lt; 4; k++) {
+            if (cat_cyc[i].c[k] != 0 || cat_cyc[i].c[k + 4] != 0) {
+                cat_zi[i].a = cat_cyc[i].c[k];
+                cat_zi[i].b = cat_cyc[i].c[k + 4];
+                cat_zi[i].axis = k;
+                break;
+            }
+        }
+    }
+}
+
+/* Product: (a1+b1i)*z^k1 * (a2+b2i)*z^k2 */
+static ZiAxis zi_mul(ZiAxis x, ZiAxis y) {
+    ZiAxis r;
+    long ga, gb, tmp;
+    int raw;
+    ga = x.a * y.a - x.b * y.b;
+    gb = x.a * y.b + x.b * y.a;
+    raw = x.axis + y.axis;
+    if (raw &gt;= 4) {
+        tmp = ga;
+        ga = -gb;
+        gb = tmp;
+        raw -= 4;
+    }
+    r.a = ga; r.b = gb; r.axis = raw;
+    return r;
+}
+
+static Cyc16 zi_to_cyc16(ZiAxis z) {
+    Cyc16 r = cyc16_zero();
+    r.c[z.axis] = z.a;
+    r.c[z.axis + 4] = z.b;
+    return r;
+}
+
+static long zi_norm(ZiAxis z) {
+    return z.a * z.a + z.b * z.b;
+}
+
+static int v2_val(long n) {
+    int v = 0;
+    if (n &lt;= 0) { if (n == 0) return 99; n = -n; }
+    while (n % 2 == 0) { v++; n /= 2; }
+    return v;
+}
+
+/* Galois: sigma_m on (a+bi, axis).
+ * m in {1,3,5,7,9,11,13,15}.
+ * sigma_m(i) = i if m%4==1, -i if m%4==3.
+ * New zeta power = m*axis mod 16, then canonicalize. */
+static ZiAxis zi_galois(ZiAxis z, int m) {
+    ZiAxis r;
+    long ga, gb;
+    int p, phase;
+    ga = z.a;
+    gb = (m % 4 == 3) ? -z.b : z.b;
+    p = (m * z.axis) % 16;
+    r.axis = p % 4;
+    phase = p / 4;
+    switch (phase) {
+    case 0: r.a = ga;  r.b = gb;  break;
+    case 1: r.a = -gb; r.b = ga;  break;
+    case 2: r.a = -ga; r.b = -gb; break;
+    case 3: r.a = gb;  r.b = -ga; break;
+    default: r.a = ga; r.b = gb;  break;
+    }
+    return r;
+}
+
+/* Gaussian divisibility: does d divide n in Z[i]? Same axis required. */
+static int zi_divides(ZiAxis d, ZiAxis n_val) {
+    long nd, re_num, im_num;
+    if (d.axis != n_val.axis) return 0;
+    nd = d.a * d.a + d.b * d.b;
+    if (nd == 0) return 0;
+    re_num = n_val.a * d.a + n_val.b * d.b;
+    im_num = n_val.b * d.a - n_val.a * d.b;
+    return (re_num % nd == 0) &amp;&amp; (im_num % nd == 0);
+}
+
+/* ================================================================
+ * Union-Find
+ * ================================================================ */
+
+static int uf_p[MAX_CATALOG];
+
+static void uf_init(int n) {
+    int i;
+    for (i = 0; i &lt; n; i++) uf_p[i] = i;
+}
+
+static int uf_find(int x) {
+    while (uf_p[x] != x) x = uf_p[x];
+    return x;
+}
+
+static void uf_union(int x, int y) {
+    uf_p[uf_find(x)] = uf_find(y);
+}
+
+/* ================================================================
+ * Parity Vocabulary Extraction
+ * ================================================================ */
+
+static int cat_parity[MAX_CATALOG];
+
+static long extract_parity_re_positive(void) {
+    int i1, i2, i3;
+    long n_solutions = 0;
+    memset(cat_parity, 0, sizeof(cat_parity));
+
+    for (i1 = 0; i1 &lt; cat_size; i1++) {
+        for (i2 = 0; i2 &lt; cat_size; i2++) {
+            Cyc16 w12 = cyc16_mul(cat_cyc[i1], cat_cyc[i2]);
+            Cx cx12 = cyc16_to_cx(w12);
+            for (i3 = 0; i3 &lt; cat_size; i3++) {
+                Cyc16 w23 = cyc16_mul(cat_cyc[i2], cat_cyc[i3]);
+                Cyc16 w13 = cyc16_mul(cat_cyc[i1], cat_cyc[i3]);
+                Cyc16 w123 = cyc16_mul(w12, cat_cyc[i3]);
+                int bits = 1; /* bit 0: Re(1)=1 &gt; 0 always */
+                if (cat_cx[i3].re &gt; 0.0)          bits |= 2;
+                if (cat_cx[i2].re &gt; 0.0)          bits |= 4;
+                if (cyc16_to_cx(w23).re &gt; 0.0)    bits |= 8;
+                if (cat_cx[i1].re &gt; 0.0)          bits |= 16;
+                if (cyc16_to_cx(w13).re &gt; 0.0)    bits |= 32;
+                if (cx12.re &gt; 0.0)                bits |= 64;
+                if (cyc16_to_cx(w123).re &gt; 0.0)   bits |= 128;
+
+                if (npn_canon[bits] == 0x69) {
+                    cat_parity[i1] = 1;
+                    cat_parity[i2] = 1;
+                    cat_parity[i3] = 1;
+                    n_solutions++;
+                }
+            }
+        }
+    }
+    return n_solutions;
+}
+
+/* ================================================================
+ * Graph Analysis for a Subset
+ *
+ * Computes: product closure, additive closure (same-axis),
+ * divisibility, negation, norm classes, v2 classes, Galois orbits,
+ * product closure axis quotient.
+ * ================================================================ */
+
+typedef struct {
+    int n;
+    int idx[MAX_CATALOG];
+
+    /* product closure */
+    int prod_edges;
+    double prod_density;
+    int prod_components;
+    int prod_isolated;
+    int axis_quot[4][4]; /* axis quotient adjacency */
+    int axis_connected;  /* how many of 4 axes are in one component */
+
+    /* same-axis additive closure */
+    int add_edges;
+    double add_density;
+
+    /* divisibility */
+    int div_edges;
+
+    /* negation */
+    int neg_pairs;
+
+    /* difference closure */
+    int diff_edges;
+
+    /* additive v2 quotient */
+    int v2_quot_edges;   /* how many v2-class pairs connected by addition */
+    int v2_quot_max;     /* how many v2-class pairs total */
+    int v2_vals[16];     /* actual v2 values present */
+
+    /* classification counts */
+    int norm_classes;
+    int v2_classes;
+    int galois_orbits;
+    int axis_dist[4];
+} SetAnalysis;
+
+static void analyze_set(SetAnalysis *sa, const int *in_set) {
+    int i, j, k;
+    int n = sa-&gt;n;
+    int max_e;
+    long norms[MAX_CATALOG];
+    int v2s[MAX_CATALOG];
+    int galois_ms[] = {1, 3, 5, 7, 9, 11, 13, 15};
+
+    /* axis distribution */
+    memset(sa-&gt;axis_dist, 0, sizeof(sa-&gt;axis_dist));
+    for (i = 0; i &lt; n; i++)
+        sa-&gt;axis_dist[cat_zi[sa-&gt;idx[i]].axis]++;
+
+    /* product closure */
+    sa-&gt;prod_edges = 0;
+    memset(sa-&gt;axis_quot, 0, sizeof(sa-&gt;axis_quot));
+    uf_init(n);
+    for (i = 0; i &lt; n; i++) {
+        for (j = i + 1; j &lt; n; j++) {
+            ZiAxis prod = zi_mul(cat_zi[sa-&gt;idx[i]], cat_zi[sa-&gt;idx[j]]);
+            Cyc16 pc = zi_to_cyc16(prod);
+            int found = cat_find(pc);
+            if (found &gt;= 0 &amp;&amp; in_set[found]) {
+                sa-&gt;prod_edges++;
+                uf_union(i, j);
+                sa-&gt;axis_quot[cat_zi[sa-&gt;idx[i]].axis]
+                             [cat_zi[sa-&gt;idx[j]].axis] = 1;
+                sa-&gt;axis_quot[cat_zi[sa-&gt;idx[j]].axis]
+                             [cat_zi[sa-&gt;idx[i]].axis] = 1;
+            }
+        }
+    }
+    max_e = n * (n - 1) / 2;
+    sa-&gt;prod_density = max_e &gt; 0
+        ? 100.0 * (double)sa-&gt;prod_edges / (double)max_e : 0.0;
+    sa-&gt;prod_components = 0;
+    sa-&gt;prod_isolated = 0;
+    for (i = 0; i &lt; n; i++) {
+        if (uf_find(i) == i) {
+            int has_neighbor = 0;
+            sa-&gt;prod_components++;
+            for (j = 0; j &lt; n &amp;&amp; !has_neighbor; j++)
+                if (j != i &amp;&amp; uf_find(j) == uf_find(i)) has_neighbor = 1;
+            if (!has_neighbor) sa-&gt;prod_isolated++;
+        }
+    }
+    /* axis connectivity: union-find on 4 axes via axis_quot */
+    {
+        int ax_uf[4];
+        int a, b;
+        for (a = 0; a &lt; 4; a++) ax_uf[a] = a;
+        for (a = 0; a &lt; 4; a++)
+            for (b = a + 1; b &lt; 4; b++)
+                if (sa-&gt;axis_quot[a][b]) {
+                    int ra = a, rb = b;
+                    while (ax_uf[ra] != ra) ra = ax_uf[ra];
+                    while (ax_uf[rb] != rb) rb = ax_uf[rb];
+                    ax_uf[ra] = rb;
+                }
+        sa-&gt;axis_connected = 0;
+        for (a = 0; a &lt; 4; a++) {
+            int r = a;
+            while (ax_uf[r] != r) r = ax_uf[r];
+            if (r == a) sa-&gt;axis_connected++;
+        }
+        /* invert: 4 - components = connected count? No.
+         * axis_connected = number of COMPONENTS in the axis quotient.
+         * 1 = all connected, 4 = all disconnected */
+    }
+
+    /* same-axis additive closure */
+    sa-&gt;add_edges = 0;
+    for (i = 0; i &lt; n; i++) {
+        for (j = i + 1; j &lt; n; j++) {
+            int ii = sa-&gt;idx[i], jj = sa-&gt;idx[j];
+            if (cat_zi[ii].axis == cat_zi[jj].axis) {
+                Cyc16 sum_cyc;
+                int found;
+                ZiAxis sum_zi;
+                sum_zi.a = cat_zi[ii].a + cat_zi[jj].a;
+                sum_zi.b = cat_zi[ii].b + cat_zi[jj].b;
+                sum_zi.axis = cat_zi[ii].axis;
+                sum_cyc = zi_to_cyc16(sum_zi);
+                found = cat_find(sum_cyc);
+                if (found &gt;= 0 &amp;&amp; in_set[found])
+                    sa-&gt;add_edges++;
+            }
+        }
+    }
+    {
+        int same_axis_pairs = 0;
+        for (i = 0; i &lt; n; i++)
+            for (j = i + 1; j &lt; n; j++)
+                if (cat_zi[sa-&gt;idx[i]].axis == cat_zi[sa-&gt;idx[j]].axis)
+                    same_axis_pairs++;
+        sa-&gt;add_density = same_axis_pairs &gt; 0
+            ? 100.0 * (double)sa-&gt;add_edges / (double)same_axis_pairs : 0.0;
+    }
+
+    /* divisibility (same-axis, directed: d divides n) */
+    sa-&gt;div_edges = 0;
+    for (i = 0; i &lt; n; i++) {
+        for (j = 0; j &lt; n; j++) {
+            if (i == j) continue;
+            if (zi_divides(cat_zi[sa-&gt;idx[i]], cat_zi[sa-&gt;idx[j]]))
+                sa-&gt;div_edges++;
+        }
+    }
+
+    /* negation pairs */
+    sa-&gt;neg_pairs = 0;
+    for (i = 0; i &lt; n; i++) {
+        int ii = sa-&gt;idx[i];
+        Cyc16 neg = cyc16_neg(cat_cyc[ii]);
+        int found = cat_find(neg);
+        if (found &gt;= 0 &amp;&amp; in_set[found] &amp;&amp; found &gt; ii)
+            sa-&gt;neg_pairs++;
+    }
+
+    /* norm classes */
+    for (i = 0; i &lt; n; i++)
+        norms[i] = zi_norm(cat_zi[sa-&gt;idx[i]]);
+    sa-&gt;norm_classes = 0;
+    for (i = 0; i &lt; n; i++) {
+        int dup = 0;
+        for (j = 0; j &lt; i; j++)
+            if (norms[j] == norms[i]) { dup = 1; break; }
+        if (!dup) sa-&gt;norm_classes++;
+    }
+
+    /* v2 classes */
+    for (i = 0; i &lt; n; i++)
+        v2s[i] = v2_val(norms[i]);
+    sa-&gt;v2_classes = 0;
+    for (i = 0; i &lt; n; i++) {
+        int dup = 0;
+        for (j = 0; j &lt; i; j++)
+            if (v2s[j] == v2s[i]) { dup = 1; break; }
+        if (!dup) sa-&gt;v2_classes++;
+    }
+
+    /* difference closure: a - b in set (undirected, either direction) */
+    sa-&gt;diff_edges = 0;
+    for (i = 0; i &lt; n; i++) {
+        for (j = i + 1; j &lt; n; j++) {
+            int ii = sa-&gt;idx[i], jj = sa-&gt;idx[j];
+            if (cat_zi[ii].axis == cat_zi[jj].axis) {
+                ZiAxis diff;
+                Cyc16 dc;
+                int found, hit = 0;
+                /* check a - b */
+                diff.a = cat_zi[ii].a - cat_zi[jj].a;
+                diff.b = cat_zi[ii].b - cat_zi[jj].b;
+                diff.axis = cat_zi[ii].axis;
+                dc = zi_to_cyc16(diff);
+                found = cat_find(dc);
+                if (found &gt;= 0 &amp;&amp; in_set[found]) hit = 1;
+                /* check b - a */
+                if (!hit) {
+                    diff.a = cat_zi[jj].a - cat_zi[ii].a;
+                    diff.b = cat_zi[jj].b - cat_zi[ii].b;
+                    dc = zi_to_cyc16(diff);
+                    found = cat_find(dc);
+                    if (found &gt;= 0 &amp;&amp; in_set[found]) hit = 1;
+                }
+                if (hit) sa-&gt;diff_edges++;
+            }
+        }
+    }
+
+    /* additive v2 quotient: which v2-class pairs connect through addition? */
+    {
+        int v2_present[16];
+        int nv2 = 0, ci, cj;
+        int v2_adj[16][16];
+        memset(v2_present, -1, sizeof(v2_present));
+        memset(v2_adj, 0, sizeof(v2_adj));
+        memset(sa-&gt;v2_vals, 0, sizeof(sa-&gt;v2_vals));
+        for (i = 0; i &lt; n; i++) {
+            int v = v2s[i];
+            if (v2_present[v] &lt; 0) {
+                v2_present[v] = nv2;
+                sa-&gt;v2_vals[nv2] = v;
+                nv2++;
+            }
+        }
+        /* for each additive pair, mark v2 class connection */
+        for (i = 0; i &lt; n; i++) {
+            for (j = i + 1; j &lt; n; j++) {
+                int ii2 = sa-&gt;idx[i], jj2 = sa-&gt;idx[j];
+                if (cat_zi[ii2].axis == cat_zi[jj2].axis) {
+                    ZiAxis s;
+                    Cyc16 sc;
+                    int found;
+                    s.a = cat_zi[ii2].a + cat_zi[jj2].a;
+                    s.b = cat_zi[ii2].b + cat_zi[jj2].b;
+                    s.axis = cat_zi[ii2].axis;
+                    sc = zi_to_cyc16(s);
+                    found = cat_find(sc);
+                    if (found &gt;= 0 &amp;&amp; in_set[found]) {
+                        ci = v2_present[v2s[i]];
+                        cj = v2_present[v2s[j]];
+                        if (ci != cj) {
+                            v2_adj[ci][cj] = 1;
+                            v2_adj[cj][ci] = 1;
+                        }
+                    }
+                }
+            }
+        }
+        sa-&gt;v2_quot_edges = 0;
+        sa-&gt;v2_quot_max = nv2 * (nv2 - 1) / 2;
+        for (ci = 0; ci &lt; nv2; ci++)
+            for (cj = ci + 1; cj &lt; nv2; cj++)
+                if (v2_adj[ci][cj]) sa-&gt;v2_quot_edges++;
+    }
+
+    /* Galois orbits: union-find on subset indices */
+    uf_init(n);
+    for (i = 0; i &lt; n; i++) {
+        for (k = 0; k &lt; 8; k++) {
+            ZiAxis img = zi_galois(cat_zi[sa-&gt;idx[i]], galois_ms[k]);
+            Cyc16 img_cyc = zi_to_cyc16(img);
+            int found = cat_find(img_cyc);
+            if (found &gt;= 0 &amp;&amp; in_set[found]) {
+                /* find index of 'found' in our subset */
+                int m;
+                for (m = 0; m &lt; n; m++)
+                    if (sa-&gt;idx[m] == found) { uf_union(i, m); break; }
+            }
+        }
+    }
+    sa-&gt;galois_orbits = 0;
+    for (i = 0; i &lt; n; i++)
+        if (uf_find(i) == i) sa-&gt;galois_orbits++;
+}
+
+static void print_edge_table(const SetAnalysis *sa) {
+    int max_e, same_ax_e, same_norm_e, same_v2_e, i, j;
+    max_e = sa-&gt;n * (sa-&gt;n - 1) / 2;
+
+    /* Compute same_axis edges */
+    same_ax_e = 0;
+    for (i = 0; i &lt; 4; i++)
+        same_ax_e += sa-&gt;axis_dist[i] * (sa-&gt;axis_dist[i] - 1) / 2;
+
+    /* Compute same_norm and same_v2 edges */
+    same_norm_e = 0;
+    same_v2_e = 0;
+    for (i = 0; i &lt; sa-&gt;n; i++) {
+        for (j = i + 1; j &lt; sa-&gt;n; j++) {
+            if (zi_norm(cat_zi[sa-&gt;idx[i]]) == zi_norm(cat_zi[sa-&gt;idx[j]]))
+                same_norm_e++;
+            if (v2_val(zi_norm(cat_zi[sa-&gt;idx[i]]))
+                == v2_val(zi_norm(cat_zi[sa-&gt;idx[j]])))
+                same_v2_e++;
+        }
+    }
+
+    printf("    %-24s %3dv %4de %3d comp (+%d iso)  %.1f%%\n",
+           "product_closure", sa-&gt;n, sa-&gt;prod_edges,
+           sa-&gt;prod_components, sa-&gt;prod_isolated, sa-&gt;prod_density);
+    printf("    %-24s %3dv %4de %3d comp  %.1f%%\n",
+           "same_axis", sa-&gt;n, same_ax_e, 4,
+           max_e &gt; 0 ? 100.0 * (double)same_ax_e / (double)max_e : 0.0);
+    {
+        /* additive closure component count via union-find */
+        int add_comp = 0, add_iso = 0;
+        uf_init(sa-&gt;n);
+        for (i = 0; i &lt; sa-&gt;n; i++)
+            for (j = i + 1; j &lt; sa-&gt;n; j++)
+                if (cat_zi[sa-&gt;idx[i]].axis == cat_zi[sa-&gt;idx[j]].axis) {
+                    ZiAxis s;
+                    Cyc16 sc;
+                    int f, m;
+                    s.a = cat_zi[sa-&gt;idx[i]].a + cat_zi[sa-&gt;idx[j]].a;
+                    s.b = cat_zi[sa-&gt;idx[i]].b + cat_zi[sa-&gt;idx[j]].b;
+                    s.axis = cat_zi[sa-&gt;idx[i]].axis;
+                    sc = zi_to_cyc16(s);
+                    f = cat_find(sc);
+                    if (f &gt;= 0) {
+                        for (m = 0; m &lt; sa-&gt;n; m++)
+                            if (sa-&gt;idx[m] == f) { uf_union(i, m); break; }
+                    }
+                }
+        for (i = 0; i &lt; sa-&gt;n; i++)
+            if (uf_find(i) == i) {
+                int has = 0;
+                add_comp++;
+                for (j = 0; j &lt; sa-&gt;n &amp;&amp; !has; j++)
+                    if (j != i &amp;&amp; uf_find(j) == uf_find(i)) has = 1;
+                if (!has) add_iso++;
+            }
+        printf("    %-24s %3dv %4de %3d comp (+%d iso)  %.1f%%\n",
+               "additive_closure", sa-&gt;n, sa-&gt;add_edges,
+               add_comp, add_iso, sa-&gt;add_density);
+    }
+    printf("    %-24s %3dv %4de %3d comp  %.1f%%\n",
+           "difference_closure", sa-&gt;n, sa-&gt;diff_edges, 4,
+           max_e &gt; 0 ? 100.0 * (double)sa-&gt;diff_edges / (double)max_e : 0.0);
+    printf("    %-24s %3dv %4de %3d comp  %.1f%%\n",
+           "same_norm", sa-&gt;n, same_norm_e, sa-&gt;norm_classes,
+           max_e &gt; 0 ? 100.0 * (double)same_norm_e / (double)max_e : 0.0);
+    printf("    %-24s %3dv %4de %3d comp  %.1f%%\n",
+           "same_v2", sa-&gt;n, same_v2_e, sa-&gt;v2_classes,
+           max_e &gt; 0 ? 100.0 * (double)same_v2_e / (double)max_e : 0.0);
+    printf("    %-24s %3dv %4de %3d comp (+%d iso)  %.1f%%\n",
+           "negation", sa-&gt;n, sa-&gt;neg_pairs,
+           sa-&gt;n - sa-&gt;neg_pairs, sa-&gt;n - 2 * sa-&gt;neg_pairs,
+           max_e &gt; 0 ? 100.0 * (double)sa-&gt;neg_pairs / (double)max_e : 0.0);
+    printf("    %-24s %3dv %4de %3d comp  %.1f%%\n",
+           "divisibility", sa-&gt;n, sa-&gt;div_edges / 2, 4,
+           max_e &gt; 0 ? 100.0 * (double)(sa-&gt;div_edges / 2)
+               / (double)max_e : 0.0);
+}
+
+/* ================================================================
+ * Suppress unused warnings
+ * ================================================================ */
+
+static void suppress_unused(void) {
+    (void)cyc16_one;
+    (void)cx_add;
+    (void)cyc16_neg;
+}
+
+/* ================================================================
+ * MAIN
+ * ================================================================ */
+
+int main(void) {
+    int i, n_par, n_non, n_zi;
+    long n_solutions;
+    SetAnalysis par_sa, non_sa;
+    int in_par[MAX_CATALOG], in_non[MAX_CATALOG];
+    char msg[256];
+
+    setbuf(stdout, NULL);
+    suppress_unused();
+
+    printf("KNOTAPEL DEMO 109: D55 Value Set Graph Analysis"
+           " (delta=sqrt(2))\n");
+    printf("============================================="
+           "======================\n");
+
+    /* Phase 1: Build catalog */
+    printf("\n=== Phase 1: Build Catalog ===\n");
+    build_catalog();
+    printf("  Catalog: %d distinct values\n", cat_size);
+
+    sprintf(msg, "catalog = 56 (matches D55, got %d)", cat_size);
+    check(msg, cat_size == 56);
+
+    /* Extract Z[i]+axis */
+    extract_all_zi();
+    n_zi = 0;
+    for (i = 0; i &lt; cat_size; i++) {
+        /* Verify axiality: only one pair active */
+        int k, pairs = 0;
+        for (k = 0; k &lt; 4; k++)
+            if (cat_cyc[i].c[k] != 0 || cat_cyc[i].c[k + 4] != 0)
+                pairs++;
+        if (pairs &lt;= 1) n_zi++;
+    }
+    sprintf(msg, "all Z[i]-axial (%d/%d)", n_zi, cat_size);
+    check(msg, n_zi == cat_size);
+
+    {
+        int ax[4] = {0, 0, 0, 0};
+        for (i = 0; i &lt; cat_size; i++) ax[cat_zi[i].axis]++;
+        printf("  Axis distribution: ax0=%d ax1=%d ax2=%d ax3=%d\n",
+               ax[0], ax[1], ax[2], ax[3]);
+    }
+
+    /* Phase 2: Parity vocabulary */
+    npn_init();
+
+    n_solutions = extract_parity_re_positive();
+
+    n_par = 0; n_non = 0;
+    memset(in_par, 0, sizeof(in_par));
+    memset(in_non, 0, sizeof(in_non));
+    par_sa.n = 0; non_sa.n = 0;
+
+    for (i = 0; i &lt; cat_size; i++) {
+        if (cat_parity[i]) {
+            in_par[i] = 1;
+            par_sa.idx[par_sa.n++] = i;
+            n_par++;
+        } else {
+            in_non[i] = 1;
+            non_sa.idx[non_sa.n++] = i;
+            n_non++;
+        }
+    }
+    /* Phase 2 output */
+    printf("\n=== Phase 2: Find Parity Vocabulary (Re&gt;0 XNOR3) ===\n");
+    printf("  Parity solutions (XNOR3 at Re&gt;0): %ld\n", n_solutions);
+    sprintf(msg, "parity solutions = 9334 (expected)");
+    check(msg, n_solutions == 9334L);
+    printf("  Parity vocabulary: %d / %d values\n", n_par, cat_size);
+    printf("  Non-parity: %d values\n", n_non);
+    sprintf(msg, "vocabulary partition covers catalog (%d+%d=%d)",
+            n_par, n_non, cat_size);
+    check(msg, n_par + n_non == cat_size);
+
+    analyze_set(&amp;par_sa, in_par);
+    analyze_set(&amp;non_sa, in_non);
+
+    printf("\n=== Phase 3: Value Listing ===\n");
+    printf("  Axis distribution:\n");
+    printf("  %8s %4s %4s %4s %4s\n", "", "ax0", "ax1", "ax2", "ax3");
+    printf("  %8s %4d %4d %4d %4d\n", "par:",
+           par_sa.axis_dist[0], par_sa.axis_dist[1],
+           par_sa.axis_dist[2], par_sa.axis_dist[3]);
+    printf("  %8s %4d %4d %4d %4d\n", "non:",
+           non_sa.axis_dist[0], non_sa.axis_dist[1],
+           non_sa.axis_dist[2], non_sa.axis_dist[3]);
+    printf("  Distinct norms: parity=%d, non-parity=%d\n",
+           par_sa.norm_classes, non_sa.norm_classes);
+    printf("  Distinct v2 classes: parity=%d, non-parity=%d\n",
+           par_sa.v2_classes, non_sa.v2_classes);
+    printf("  Galois orbits: parity=%d, non-parity=%d\n",
+           par_sa.galois_orbits, non_sa.galois_orbits);
+    printf("\n  Parity values (%d):\n", par_sa.n);
+    for (i = 0; i &lt; par_sa.n; i++) {
+        int ii = par_sa.idx[i];
+        printf("    [%2d] (%3ld + %3ldi) * z16^%d  |g|^2=%ld\n",
+               ii, cat_zi[ii].a, cat_zi[ii].b, cat_zi[ii].axis,
+               zi_norm(cat_zi[ii]));
+    }
+    printf("\n  Non-parity values (%d):\n", non_sa.n);
+    for (i = 0; i &lt; non_sa.n; i++) {
+        int ii = non_sa.idx[i];
+        printf("    [%2d] (%3ld + %3ldi) * z16^%d  |g|^2=%ld\n",
+               ii, cat_zi[ii].a, cat_zi[ii].b, cat_zi[ii].axis,
+               zi_norm(cat_zi[ii]));
+    }
+
+    printf("\n=== Phase 4: Edge Analysis (Parity) ===\n");
+    print_edge_table(&amp;par_sa);
+    printf("\n    Product closure axis connectivity:\n");
+    {
+        int a, b;
+        printf("      from\\to");
+        for (b = 0; b &lt; 4; b++) printf("  ax%d", b);
+        printf("\n");
+        for (a = 0; a &lt; 4; a++) {
+            printf("        ax%d:", a);
+            for (b = 0; b &lt; 4; b++) {
+                if (a == b) printf("    X");
+                else if (par_sa.axis_quot[a][b]) printf("    X");
+                else printf("    .");
+            }
+            printf("  \n");
+        }
+        {
+            int pe2 = 0;
+            for (a = 0; a &lt; 4; a++)
+                for (b = a + 1; b &lt; 4; b++)
+                    if (par_sa.axis_quot[a][b]) pe2++;
+            printf("      Axis edges: %d / 10 (%.0f%%)\n", pe2 + 4,
+                   100.0 * (double)(pe2 + 4) / 10.0);
+        }
+    }
+    printf("\n    Additive v2 quotient: %d classes, %d/%d edges (%.0f%%)\n",
+           par_sa.v2_classes, par_sa.v2_quot_edges, par_sa.v2_quot_max,
+           par_sa.v2_quot_max &gt; 0
+               ? 100.0 * (double)par_sa.v2_quot_edges
+                   / (double)par_sa.v2_quot_max
+               : 0.0);
+    {
+        int vi;
+        printf("      v2 values: ");
+        for (vi = 0; vi &lt; par_sa.v2_classes; vi++)
+            printf("%d ", par_sa.v2_vals[vi]);
+        printf("\n");
+    }
+
+    printf("\n=== Phase 5: Edge Analysis (Non-Parity) ===\n");
+    print_edge_table(&amp;non_sa);
+    printf("\n    Product closure axis connectivity:\n");
+    {
+        int a, b;
+        printf("      from\\to");
+        for (b = 0; b &lt; 4; b++) printf("  ax%d", b);
+        printf("\n");
+        for (a = 0; a &lt; 4; a++) {
+            printf("        ax%d:", a);
+            for (b = 0; b &lt; 4; b++) {
+                if (a == b) printf("    X");
+                else if (non_sa.axis_quot[a][b]) printf("    X");
+                else printf("    .");
+            }
+            printf("  \n");
+        }
+        {
+            int ne2 = 0;
+            for (a = 0; a &lt; 4; a++)
+                for (b = a + 1; b &lt; 4; b++)
+                    if (non_sa.axis_quot[a][b]) ne2++;
+            printf("      Axis edges: %d / 10 (%.0f%%)\n", ne2 + 4,
+                   100.0 * (double)(ne2 + 4) / 10.0);
+        }
+    }
+    printf("\n    Additive v2 quotient: %d classes, %d/%d edges (%.0f%%)\n",
+           non_sa.v2_classes, non_sa.v2_quot_edges, non_sa.v2_quot_max,
+           non_sa.v2_quot_max &gt; 0
+               ? 100.0 * (double)non_sa.v2_quot_edges
+                   / (double)non_sa.v2_quot_max
+               : 0.0);
+    {
+        int vi;
+        printf("      v2 values: ");
+        for (vi = 0; vi &lt; non_sa.v2_classes; vi++)
+            printf("%d ", non_sa.v2_vals[vi]);
+        printf("\n");
+    }
+
+    /* Verification: dual-channel minimum (the real test) */
+    sprintf(msg, "product closure non-zero (dual-channel: %d edges)",
+            par_sa.prod_edges);
+    check(msg, par_sa.prod_edges &gt; 0);
+
+    printf("\n=== Phase 6: Comparison with D108 ===\n");
+    printf("  (D108: delta=0, Z[zeta_8], additive encoding)\n");
+    printf("  (D109: delta=sqrt(2), Z[zeta_16], multiplicative encoding)\n");
+    printf("\n");
+    printf("  %-28s %10s %10s\n", "Metric", "D108-par", "D109-par");
+    printf("  %-28s %10s %10s\n",
+           "------------------------", "----------", "----------");
+    printf("  %-28s %10d %10d\n", "Catalog size", 100, cat_size);
+    printf("  %-28s %10d %10d\n", "Parity vocabulary", 41, par_sa.n);
+    printf("  %-28s %10d %10d\n", "Non-parity", 59, non_sa.n);
+    printf("  %-28s %10d %10d\n", "Parity solutions", 906, 9334);
+    printf("  %-28s %10s %10s\n", "Simplest act. w/parity", "k=6", "Re&gt;0");
+    printf("  %-28s %10s %10s\n", "Algebra", "Z[zeta_8]", "Z[zeta_16]");
+    printf("  %-28s %10s %10s\n", "Encoding", "additive", "multiplicat");
+    printf("\n");
+    printf("  %-28s %10s %10s %10s %10s\n",
+           "", "D108-par", "D109-par", "D108-poi", "D109-non");
+    printf("  %-28s %10s %10s %10s %10s\n",
+           "------------------------",
+           "----------", "----------", "----------", "----------");
+    {
+        char d109p[32], d109n[32];
+        int pe = 0, ne = 0, a, b;
+        sprintf(d109p, "%.1f%%", par_sa.prod_density);
+        sprintf(d109n, "%.1f%%", non_sa.prod_density);
+        printf("  %-28s %10s %10s %10s %10s\n",
+               "product_closure den", "21%", d109p, "0%", d109n);
+        for (a = 0; a &lt; 4; a++)
+            for (b = a + 1; b &lt; 4; b++) {
+                if (par_sa.axis_quot[a][b]) pe++;
+                if (non_sa.axis_quot[a][b]) ne++;
+            }
+        sprintf(d109p, "K_4(%d/6)", pe);
+        sprintf(d109n, "K_4(%d/6)", ne);
+        printf("  %-28s %10s %10s %10s %10s\n",
+               "product axis quotient", "P_3", d109p, "empty", d109n);
+        sprintf(d109p, "%d/%d(%.0f%%)",
+                par_sa.v2_quot_edges, par_sa.v2_quot_max,
+                par_sa.v2_quot_max &gt; 0
+                    ? 100.0 * (double)par_sa.v2_quot_edges
+                        / (double)par_sa.v2_quot_max : 0.0);
+        sprintf(d109n, "%d/%d(%.0f%%)",
+                non_sa.v2_quot_edges, non_sa.v2_quot_max,
+                non_sa.v2_quot_max &gt; 0
+                    ? 100.0 * (double)non_sa.v2_quot_edges
+                        / (double)non_sa.v2_quot_max : 0.0);
+        printf("  %-28s %10s %10s %10s %10s\n",
+               "add v2 quotient", "83%", d109p, "K_2", d109n);
+    }
+
+    /* Summary */
+    printf("\n============================================="
+           "======================\n");
+    printf("Results: %d passed, %d failed\n", n_pass, n_fail);
+    printf("============================================="
+           "======================\n");
+
+    return n_fail &gt; 0 ? 1 : 0;
+}
+</code></pre>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/c.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</body>
+</html>

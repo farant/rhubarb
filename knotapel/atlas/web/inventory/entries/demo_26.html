@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>inventory/entries/demo_26.md</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+    <link rel="stylesheet" href="../../style.css">
+</head>
+<body>
+    <nav><a href="../../index.html">← Back to Index</a></nav><hr>
+    <h2>Demo 26: Reverse DKC</h2>
+<ul>
+<li><strong>Status</strong>: COMPLETE</li>
+<li><strong>File</strong>: <code><a href="../../demo_26_reverse_dkc/main.c.html">demo_26_reverse_dkc/main.c</a></code> (~1311 lines)</li>
+<li><strong>Tests</strong>: 8/8 pass (inline check() assertions)</li>
+<li><strong>Depends on</strong>: Demo 13 (forward DKC greedy angle), Demo 19 (bracket oracle, braid gates, XOR circuit), Demo 24 (bracket amplitude integer structure)</li>
+<li><strong>Feeds into</strong>: Demo 27+ (DKC research arc continues), Demo 45-50 (deeper DKC investigations)</li>
+</ul>
+<h3>Headline</h3>
+Tests whether trained neural network weights can be reverse-decomposed into Kauffman bracket amplitudes, probing the reverse direction of the DKC (Deep Knot Correspondence) thesis.
+<h3>Key Results</h3>
+<ul>
+<li>Weight-level decomposition partially succeeds: some trained XOR weights land near bracket amplitudes, but the signal is weak because at delta=0, bracket amplitudes ARE integers — so any real number is at most 0.5 away from a catalog entry</li>
+<li>Random baseline comparison included: trained weights only modestly outperform random weights in decomposition quality</li>
+<li>Function-level equivalence trivially holds: both braid XOR circuit and trained NN compute XOR correctly, but by completely different mechanisms (bracket thresholds vs sigmoid cascades)</li>
+<li>Angle sweep (Part F) tests whether delta=0 (8th root of unity) is optimal for decomposition — checks P2 prediction</li>
+<li>Syndrome analysis (Part G) classifies residual structure as UNIFORM/STRUCTURED/RANDOM across seeds</li>
+<li>4-4-1 scaling test on 2-bit adder carry shows decomposition quality at larger network scale (25 params)</li>
+</ul>
+<h3>Theorems/Conjectures</h3>
+<ul>
+<li><strong>P1</strong>: Weight decomposition partially succeeds — CONFIRMED (some close matches, but confounded by integer amplitude structure)</li>
+<li><strong>P2</strong>: Best-matching angle near 8th root (delta~0) — TESTED via angle sweep across 8 angles</li>
+<li><strong>P3</strong>: Harder tasks need higher-strand braids — TESTED (4-4-1 adder vs 2-2-1 XOR comparison)</li>
+<li><strong>P4</strong>: Decomposition error correlates with generalization gap — NOT directly tested (both tasks fully converge)</li>
+<li><strong>P5</strong>: Function-level equivalence even when weight-level fails — CONFIRMED trivially (both compute XOR)</li>
+<li><strong>P6</strong>: Residuals may show rational tangle structure — TESTED via syndrome analysis (residual patterns characterized)</li>
+</ul>
+<h3>Data</h3>
+<ul>
+<li>10 random seeds for XOR training, &gt;=3 converge (20000 epochs, lr=2.0, sigmoid activation)</li>
+<li>Bracket catalog: all 2-strand braids length 1-8 (510 total) + 3-strand braids length 1-6 (5460 total), yielding &gt;10 distinct amplitudes</li>
+<li>Critical observation: at delta=0, bracket amplitudes are consecutive integers (consistent with Demo 24)</li>
+<li>8 angles tested in sweep: 5pi/4, pi/4, pi/3, pi/2, 2pi/5, pi/6, 1.805pi, 0.75pi</li>
+<li>2-bit adder carry: 16 patterns, 4-4-1 network, 25 parameters, 50000 epochs</li>
+</ul>
+<h3>Code Assets</h3>
+<ul>
+<li>Complete backprop implementation for 2-2-1 and 4-4-1 sigmoid networks (pure C89, no dependencies)</li>
+<li>Bracket amplitude catalog builder with deduplication and binary search</li>
+<li>Weight-to-bracket decomposition with RMS error and random baseline comparison</li>
+<li>Braid XOR circuit evaluation reused from Demo 19</li>
+<li>Reproducible LCG random number generator</li>
+<li>Syndrome classifier for residual analysis (uniform/structured/random)</li>
+<li>Complex arithmetic library (reused from Demo 19)</li>
+</ul>
+<h3>Literature Touched</h3>
+<ul>
+<li>Kauffman bracket polynomial (state-sum model)</li>
+<li>Neural network / knot theory correspondence (DKC thesis — project-internal)</li>
+</ul>
+<h3>Open Questions</h3>
+<ul>
+<li>Is the integer structure of bracket amplitudes at delta=0 a fundamental obstruction to weight-level decomposition, or a feature that should be exploited differently?</li>
+<li>Would a different decomposition strategy (e.g., weight ratios, weight products) show stronger bracket correspondence than absolute values?</li>
+<li>The function-level match is trivial — is there a deeper functional correspondence beyond "both compute XOR"?</li>
+<li>Does the syndrome analysis reveal any consistent pattern across seeds that could point to a topological invariant?</li>
+</ul>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/c.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</body>
+</html>
