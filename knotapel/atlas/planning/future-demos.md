@@ -1,9 +1,9 @@
 # DKC Future Demos Backlog
 
-Consolidated 2026-02-20. Updated 2026-02-21 with D64-D71 results and D72-D77 proposals. Updated 2026-02-21 with D72-D82 results and Arc 6 + new proposals. Updated 2026-02-21 with D83-D84 results, Arc 7 renumbering, and new proposals from D83-D84 open questions + explorer's log seeds. Updated 2026-02-24 with D85-D92 results, Arc 8/9 completion, new proposals from D85-D92 open questions, and vision-alignment Paths H/I/J. Updated 2026-02-24 with D95-D101 results (multi-strand DKC arc), new proposals from D95-D101 open questions.
+Consolidated 2026-02-20. Updated 2026-02-21 with D64-D71 results and D72-D77 proposals. Updated 2026-02-21 with D72-D82 results and Arc 6 + new proposals. Updated 2026-02-21 with D83-D84 results, Arc 7 renumbering, and new proposals from D83-D84 open questions + explorer's log seeds. Updated 2026-02-24 with D85-D92 results, Arc 8/9 completion, new proposals from D85-D92 open questions, and vision-alignment Paths H/I/J. Updated 2026-02-24 with D95-D101 results (multi-strand DKC arc), new proposals from D95-D101 open questions. Updated 2026-02-26 with D102-D109 results (multi-strand scaling/diagnostics arc + topological entropy + Raqiya graph analysis), new proposals from D102-D109 open questions.
 
-89 demos completed (D01-D29, D35, D38-D39, D45-D101). D95-D101 added 2026-02-24.
-13 prior proposals remain from future-demos/. 5 new demos added from synthesis open questions. 6 new proposals added from D64-D71 open questions. 7 new proposals added from D72-D82 open questions (2 now SUPERSEDED by actual D83-D84). 8 new proposals added from D83-D84 open questions and explorer's log seeds. 8 of those proposals completed as actual D85-D92; 6 new proposals added from D85-D92 open questions and vision-alignment Paths H/I/J. D93-D94 completed; 1 new proposal (D95 RKHS kernel rank) added from D93-D94 open questions. D95-D101 completed (multi-strand DKC arc: commutator depth, cross-classification, Cell B perfection, 3-strand readout bottleneck, Delta_1 LANDMARK, 4-strand W_{4,2}, 5-strand sl_d functor thesis). 6 new proposals added from D95-D101 open questions.
+97 demos completed (D01-D29, D35, D38-D39, D45-D109). D102-D109 added 2026-02-26.
+13 prior proposals remain from future-demos/. 5 new demos added from synthesis open questions. 6 new proposals added from D64-D71 open questions. 7 new proposals added from D72-D82 open questions (2 now SUPERSEDED by actual D83-D84). 8 new proposals added from D83-D84 open questions and explorer's log seeds. 8 of those proposals completed as actual D85-D92; 6 new proposals added from D85-D92 open questions and vision-alignment Paths H/I/J. D93-D94 completed; 1 new proposal (D95 RKHS kernel rank) added from D93-D94 open questions. D95-D101 completed (multi-strand DKC arc: commutator depth, cross-classification, Cell B perfection, 3-strand readout bottleneck, Delta_1 LANDMARK, 4-strand W_{4,2}, 5-strand sl_d functor thesis). 6 new proposals added from D95-D101 open questions. D102-D109 completed (multi-strand scaling arc: 6-strand radical A/B test, dimension scaling, coarseness sweep, 8-strand k-regime; relational computation arc: topological entropy, algebraic graph density, parity vocabulary, encoding-dependent dual-channel). 12 new proposals added from D102-D109 open questions.
 
 ---
 
@@ -467,22 +467,68 @@ The multi-strand arc opened a major new research direction. D95-D96 completed th
 
 ---
 
+## Arc 11b: Multi-Strand Scaling/Diagnostics and Raqiya Graph Analysis (D102-D109)
+
+The D102-D105 arc characterized multi-strand DKC scaling, decisively refuting radical-as-resource (D102), establishing BFS growth as a braid group invariant (D103), discovering the Atkinson sweet spot and branching decomposition (D104), and scaling to 8-strand while refuting "XOR dies at N>=7" (D105). The D106-D109 arc shifted to predicting computational capability: topological entropy is orthogonal (D106), axis-alignment is a provable theorem (D107), graph structure predicts parity (D108), and the dual-channel polarity inverts with encoding (D109). All eight are DONE.
+
+### D102 -- 6-Strand Radical A/B Test -- DONE
+- **Completed as demo_102_6strand_ab/**. 84 pass, 2 structural fails.
+- Barrington-Radical Principle: radical carries abelian writhe character, provably useless for parity. Simple W_{6,0} beats non-simple W_{6,4} at every XOR level. sl_5 growth rate (~5x) confirmed as 4th data point.
+- See atlas/inventory/entries/demo_102.md for full results.
+
+### D103 -- Pure Dimension Scaling Test -- DONE
+- **Completed as demo_103_dimension_scaling/**. 76 pass, 2 structural fails.
+- BFS growth is a braid group invariant: W_{6,0} (dim=5) and W_{6,2} (dim=9) produce IDENTICAL BFS trees. Higher dimension hurts XOR via curse of dimensionality in sign-hash. B@sub7 beats A@full.
+- See atlas/inventory/entries/demo_103.md for full results.
+
+### D104 -- Activation Coarseness Sweep -- DONE
+- **Completed as demo_104_coarseness_sweep/**. 35/35 pass.
+- Atkinson sweet spot at ~120 of 324 components. Cross-block branching interaction is the computational signal. Sign-rank EXPANSION (244->292). k is the real lever, not hash architecture.
+- See atlas/inventory/entries/demo_104.md for full results.
+
+### D105 -- 8-Strand k-Regime Test -- DONE
+- **Completed as demo_105_8strand_k_regime/**. 96/96 pass.
+- D93's "XOR dies at N>=7" REFUTED as k-regime artifact. W_{8,0} XOR8=22266 at k=4096. Macrame principle: branching regime transition at n=8. Rank saturation confound discovered.
+- See atlas/inventory/entries/demo_105.md for full results.
+
+### D106 -- Topological Entropy -- DONE
+- **Completed as demo_106_topological_entropy/**. 20/20 pass.
+- Pre-registered prediction FALSIFIED: topological entropy is completely orthogonal to DKC computation. TL visibility filter explains why: properties erased by TL quotient (entropy) are invisible to DKC.
+- See atlas/inventory/entries/demo_106.md for full results.
+
+### D107 -- Algebraic Graph Density -- DONE
+- **Completed as demo_107_algebraic_graph/**. 42/42 pass.
+- Z/4Z Axis-Alignment Theorem PROVEN with constructive nesting-parity phase formula. Five novel results: nesting parity Z/2Z grading, major index bipartite invariant, q-Catalan identity, orthogonality theorem, 2-adic neutrality.
+- See atlas/inventory/entries/demo_107.md for full results.
+
+### D108 -- Parity Vocabulary Graph Analysis -- DONE
+- **Completed as demo_108_parity_vocabulary/**. 3/3 pass.
+- Dual-Channel Theorem: parity requires BOTH product closure (phase coherence) AND v_2 connectivity (magnitude diversity). Amy bridge to quantum circuit synthesis. Partition coincidence as incapacity signature.
+- See atlas/inventory/entries/demo_108.md for full results.
+
+### D109 -- D55 Value Set Graph Analysis -- DONE
+- **Completed as demo_109_d55_graph_analysis/**. 5/5 pass.
+- Encoding-Dependent Dual-Channel Theorem: product closure polarity INVERTS between additive (D108) and multiplicative (D109) encodings. At delta=sqrt(2), parity and non-parity are structurally identical on 7/8 edge types. Raqiya diagnoses impoverishment, not health.
+- See atlas/inventory/entries/demo_109.md for full results.
+
+---
+
 ## Arc 12: New Proposals from D95-D101 Open Questions
 
-### 6-Strand W_{6,4} Decisive Test
-- W_{6,4} (n=6, even, non-semisimple) should have ~5x BFS growth (sl_5 thesis). If it also has 6+ super-hubs and XOR14 > 0, this confirms non-semisimplicity is the key variable for hub count and deep XOR capacity. If it matches D101's pattern (few hubs, XOR14=0), the explanation is dimensional/structural rather than semisimplicity. This is the decisive test between the two explanations for D101's falsified hub-count prediction.
-- Dependencies: D100 (done), D101 (done)
-- Priority: **HIGH** -- resolves the simple vs non-semisimple question definitively; sl_5 growth rate prediction testable
+### 6-Strand W_{6,4} Decisive Test -- PARTIALLY RESOLVED by D102
+- D102 tested W_{6,4} head-to-head against W_{6,0}: sl_5 growth (~5x) CONFIRMED. But W_{6,4} has ZERO XOR10 winners (no super-hubs testable) and simple W_{6,0} WINS at every XOR level. The radical carries abelian writhe character (Barrington-Radical Principle). The question is now RESOLVED: non-semisimplicity provides only modest (+8%) mixing-row advantage at XOR6, not deep capacity. The remaining question from D101's falsified hub-count prediction is now understood: hubs are absent because 6-strand has flat frequency distributions, not because of semisimplicity.
+- Dependencies: D100 (done), D101 (done), D102 (done)
+- Priority: ~~**HIGH**~~ **RESOLVED** by D102
 
 ### Radical Content XOR Correlation Study
 - D100 showed radical content is CONSTANT across all depths (mean=2) and does NOT distinguish XOR winners from non-winners (14 vs 14). But hub commutators have zero radical content -- they annihilate the radical direction. Is this a general theorem (commutators of braid matrices on W_{n,k} always annihilate the radical) or specific to these hub entries? Systematic test: compute radical content of commutators across all entry pairs, not just hubs.
 - Dependencies: D100 (done)
 - Priority: **MEDIUM** -- if general, establishes radical-annihilating commutators as a structural theorem for non-semisimple TL modules
 
-### Activation Zoo for Multi-Strand DKC
-- The 2x2_hash, 3x3_hash, and 4x4_hash activations used in D99-D101 are crude sign-pattern hashes. Can Sec x Vor be adapted for Cyc8 matrix entries? Can activation functions respect the module structure (projecting onto radical vs semisimple components separately)? D99 showed the activation hierarchy (2x2_hash >> 4ent_hash >> quat_hash >> trace_oct); the gap between sign-hash and a principled activation may be large. What activation recovers XOR14 on W_{5,3}?
-- Dependencies: D99 (done), D100 (done), D101 (done)
-- Priority: **MEDIUM** -- the activation is likely the bottleneck explaining D101's XOR14=0 (D100 achieves XOR14=70 on a smaller matrix with non-semisimple structure)
+### Activation Zoo for Multi-Strand DKC -- PARTIALLY ADDRESSED by D103-D105
+- D103-D105 systematically investigated sign-hash activation design: D104 discovered the Atkinson sweet spot (~120 optimal components), branching cross-block decomposition, and sign-rank expansion. D105 found the macrame principle (branching regime transition at n=8). These provide principled design tools for multi-strand activation. However, the core question remains: can a principled activation (analogous to Sec x Vor k-ladder for quaternions) recover XOR14 on W_{5,3}? The branching decomposition from D104 provides a concrete framework for this. Also: k (cell count) is the real lever, not hash architecture (D104 Phase 7).
+- Dependencies: D99 (done), D100 (done), D101 (done), D103-D105 (done, activation theory)
+- Priority: **MEDIUM** -- D104's cross-block recipe and D105's macrame principle provide concrete starting points; the remaining gap is designing activations that respect module structure beyond sign-hash
 
 ### Fibonacci Direct Test at q=exp(2pi*i/5)
 - Test DKC capacity directly at the Fibonacci parameter q = exp(2*pi*i/5) on the Delta_1 module. The Fibonacci parameter yields [2]_q = phi^{-1} ~ 0.618 (non-vanishing quantum dimension). At this parameter, does the 2x2 Delta_1 module give different computational characteristics than at q = zeta_8 (where delta=0, quantum dimension vanishes)? If non-vanishing quantum dimension avoids the Jordan block structure, this directly tests whether non-semisimplicity (Ext^1) is essential for the high-XOR algebraic regime.
@@ -501,17 +547,88 @@ The multi-strand arc opened a major new research direction. D95-D96 completed th
 
 ---
 
+## Arc 13: New Proposals from D102-D109 Open Questions
+
+### Fibonacci Max-Abs Radical Constraint
+- D102 showed W_{6,4} max coefficient magnitude follows strict Fibonacci (1,1,2,3,5,8,13) through depth 6, while W_{6,0} breaks at d=6 (16 instead of 13). Does the radical act as a constraint that keeps coefficients on the Fibonacci sequence? If so, this is another manifestation of the radical carrying structured (abelian) information. Test at W_{8,2} and other non-simple modules.
+- Dependencies: D102 (done)
+- Priority: **LOW** -- interesting structural characterization; follows from the writhe character constraining coefficient growth
+
+### Universal BFS Tree Conjecture Verification
+- D102 and D103 together show all THREE n=6 modules (W_{6,0}, W_{6,2}, W_{6,4}) produce identical BFS trees. Does this hold for ALL simple TL_n modules at delta=0 for every n? Testing at n=8 (D105 has W_{8,0} and W_{8,2}) and at n=10 would strengthen the "BFS growth is a braid group invariant" from a demonstrated pattern to a near-certain conjecture.
+- Dependencies: D102 (done), D103 (done), D105 (done)
+- Priority: **LOW** -- structural result; practical implication is that module choice affects readout only, not the reservoir
+
+### Macrame Principle Crossover Location
+- D104 showed cross-block branching dominates at n=6 (asymmetric blocks dim 5+4). D105 showed within-block dominates at n=8 (symmetric blocks dim 14+14). Where is the exact crossover? W_{6,4} or W_{10,2} could bracket it. The crossover likely depends on block complexity: simple blocks need connections (edges), complex blocks are self-sufficient (nodes).
+- Dependencies: D104 (done), D105 (done)
+- Priority: **MEDIUM** -- gives a design rule for multi-strand activation: when to use cross-block vs within-block components
+
+### W_{8,2} Rank Saturation and Head-to-Head
+- D105 showed W_{8,2} rank was severely under-sampled (34.9% at 16384 entries, still growing). Sign expansion at 1.83x and climbing. Head-to-head W_{8,0} vs W_{8,2} XOR comparison at matched k and oversampling has NOT been performed. Need ~130K entries for comparable oversampling. Would settle whether dim-28 algebraic information provides advantage at sufficient activation resolution.
+- Dependencies: D105 (done)
+- Priority: **MEDIUM** -- unresolved empirical question from D105; requires larger BFS cap or smarter sampling
+
+### Sign-Rank Expansion Theory
+- D104 showed sign quantization EXPANDS effective rank (W_{6,2}: raw 244 -> sign 292, gain of 48 independent directions). D105 showed W_{8,2} expansion at 1.83x and still growing. What determines whether sign quantization expands or preserves rank? Is it related to module dimension, non-semisimplicity, or Z-linear dependencies being "nearly independent" in sign space? A theory would enable principled activation engineering.
+- Dependencies: D104 (done), D105 (done)
+- Priority: **MEDIUM** -- would provide a foundational principle for multi-strand activation design
+
+### TL Visibility Filter Completeness
+- D106 proved topological entropy is invisible to DKC because the TL quotient erases it (e_i^2=0 kills expanding eigenvalues). Is the TL visibility filter the COMPLETE characterization of what DKC can "see"? Specifically: is the TL quotient (writhe-visible, entropy-invisible) the EXACT boundary, or are there other properties invisible to the TL quotient that we haven't tested?
+- Dependencies: D106 (done), D83 (done, writhe visible)
+- Priority: **LOW** -- would strengthen the theoretical foundation but requires identifying candidate properties to test
+
+### TL Visibility at Delta != 0
+- D106's TL visibility filter is sharp at delta=0 where e_i^2=0. At delta!=0, e_i^2=delta*e_i != 0, meaning the TL quotient is less destructive. Do dynamical properties (entropy, spectral radius) become visible to DKC at delta!=0? Would test at delta=sqrt(2) using the W_{4,2} dual-representation infrastructure from D106.
+- Dependencies: D106 (done), D109 (done, delta=sqrt(2) infrastructure)
+- Priority: **MEDIUM** -- if entropy correlates with DKC at delta!=0, the TL visibility filter becomes a delta-dependent design parameter
+
+### Value Set Convergence at Depth > 8
+- D107 found 186 distinct Z[zeta_8] values from 32768-entry catalog, with 72 new values at depth 8 (still growing fast). Does the value set converge? Need deeper catalogs beyond the 32768 cap. Relates to whether the parity/poison vocabulary partition is complete or whether new deep values could change the classification.
+- Dependencies: D107 (done)
+- Priority: **LOW** -- characterization question; increasing the BFS cap is straightforward
+
+### Major Index Theorem for General W_{n,j}
+- D107 verified maj mod 2 = bipartite coloring at W_{4,2} (3/3) and W_{6,2} (9/9, uniquely winning among 4 candidates). Proof for general n,j is open. Need verification at W_{8,2}, W_{6,4}, W_{10,2} for more evidence. The major index invariant appears to be a genuinely novel algebraic invariant of TL link states (confirmed by researcher as NOT a consequence of known KLR grading).
+- Dependencies: D107 (done)
+- Priority: **MEDIUM** -- novel algebraic result; verification at more modules is low-cost, proof would be high publication value (conjecture-graph Rank 8: C41)
+
+### 2-Adic Neutrality Formal Proof
+- D107 observed geometric decay in v_2 distribution (95->48->24->11->7, approx halving per level). Five candidate proof frameworks identified (Kummer carry-counting, nilpotent TL, Goodman-Wenzl, unipotent, Stirling). Need to select one and formalize.
+- Dependencies: D107 (done)
+- Priority: **LOW** -- interesting number-theoretic connection but not on the critical path
+
+### Additive Encoding at Delta=sqrt(2)
+- D109 showed product closure polarity inverts between additive (D108) and multiplicative (D109) encodings. The cleanest confirmation of encoding-dependence would be: hold delta=sqrt(2) constant and switch to additive encoding. If D108-style discrimination (parity = HIGH product closure) returns, encoding-dependence is confirmed by a single controlled experiment.
+- Dependencies: D108 (done), D109 (done)
+- Priority: **HIGH** -- single controlled experiment confirms the encoding-dependent dual-channel theorem; low implementation cost (reuse D109 catalog, change encoding)
+
+### Quantitative Product-Closure Threshold
+- D108 showed parity requires product closure > 0 (17 edges vs 0 for poison). D109 showed parity has lower product closure than non-parity at delta=sqrt(2) (14.8% vs 46.6%). At what product closure density does the additive-to-multiplicative transition occur? Is there a sharp threshold or gradual crossover? Would test by interpolating between the two encoding regimes.
+- Dependencies: D108 (done), D109 (done)
+- Priority: **MEDIUM** -- would make the dual-channel theorem quantitatively predictive, not just qualitatively discriminative
+
+### Raqiya Z[zeta_16] Extension
+- D109 used ad-hoc Z[zeta_16] graph analysis. If more delta!=0 investigation is planned, building full Raqiya support for Z[zeta_16] (8-component cyclotomic ring, Gaussian axial decomposition) would enable systematic algebraic diagnostics at all evaluation levels. The ZiAxis decomposition from D109 provides the starting architecture.
+- Dependencies: D109 (done), Raqiya library (operational)
+- Priority: **LOW** -- infrastructure investment; only worthwhile if delta!=0 investigation continues
+
+---
+
 ## Priority Summary
 
 ### HIGH (do these first -- direct publication impact or architecturally consequential)
-1. **RKHS Kernel Rank Test (D95)** — NEW from D94. Compute DKC kernel K(m,m') = quaternion inner product of sums for 2I vs z8. If rank(K_2I)/rank(K_z8) > 120/24, non-solvability contributes above raw catalog size. One number confirms or refutes the "discrete algebraic reservoir computer" interpretation. Single demo, extremely high leverage — validates the five-pillar synthesis.
+1. **RKHS Kernel Rank Test (D95)** — from D94. Compute DKC kernel K(m,m') = quaternion inner product of sums for 2I vs z8. If rank(K_2I)/rank(K_z8) > 120/24, non-solvability contributes above raw catalog size. One number confirms or refutes the "discrete algebraic reservoir computer" interpretation. Single demo, extremely high leverage — validates the five-pillar synthesis.
 2. **1wpi Encoding Depth Law** (Path H). THE most consequential open question from D92: does the non-parity encoding scale? **D93 context:** D93 confirms all 13 NPN classes under phase_cell at N=3, and demonstrates circuit complexity hierarchy under 1wpi. Depth-law test under 1wpi/phase_cell is the next step.
-3. **Balanced Exponentials Analytical Proof** (Path I). Next formal proof candidate after parity-lock theorem.
+3. **Balanced Exponentials Analytical Proof** (Path I). Next formal proof candidate after parity-lock theorem. Conjecture-graph Rank 2 (C23).
 4. **Framing Loss at Other Roots** (zeta_16, zeta_24). Confirms or refines +2 universality from D83.
 5. **zeta_32 Finiteness Test**. Single test, extremely low cost, high payoff.
 6. **D65 (remaining)** -- Sandwich Theorem: algebra isomorphism and nilpotency=3 still needed for Paper 3.
-7. **Higher k_sec with 2I** — NEW from D94. Does k_sec=24 push the N=8 XOR cliff further for 2I? The 384-cell space (k=12, 31 directions) may not fully exploit 2I's angular richness (9 half-angles). Quick test, high information content.
-8. **6-Strand W_{6,4} Decisive Test** — NEW from D101. Resolves simple vs non-semisimple question: does non-semisimplicity restore hub count and XOR14? sl_5 growth rate prediction testable.
+7. **Higher k_sec with 2I** — from D94. Does k_sec=24 push the N=8 XOR cliff further for 2I? The 384-cell space (k=12, 31 directions) may not fully exploit 2I's angular richness (9 half-angles). Quick test, high information content.
+8. ~~**6-Strand W_{6,4} Decisive Test**~~ — **RESOLVED by D102**. Barrington-Radical Principle: simple wins, radical is abelian writhe character. See Arc 12.
+9. **Additive Encoding at Delta=sqrt(2)** — NEW from D109. Single controlled experiment confirms encoding-dependent dual-channel theorem. Holds delta constant, changes encoding. Low cost, high payoff — directly validates the polarity inversion discovered in D108-D109.
+10. **Amy Bridge Formalization** — Conjecture-graph Rank 5 (C51). Map DKC dual-channel (D108) onto T-gate/Hadamard decomposition in Amy-Glaudell-Ross 2023. D108-D109 provide the empirical foundation; formalization would connect DKC to quantum circuit synthesis resource theory.
 
 ### MEDIUM (do next -- strengthen claims or open new connections)
 6. **Null Dispensability Transition Location** (Path J). Locates the regime boundary for compilation design rules.
@@ -530,11 +647,17 @@ The multi-strand arc opened a major new research direction. D95-D96 completed th
 19. **zeta_10 Depth Analysis**. Tests universality of scaling constant.
 20. **D44** -- Path Integral / Ising. Physics interpretation.
 21. **D36** -- Long Braid Scaling. Practical ceiling validation.
-22. **Radical Content XOR Correlation Study** — NEW from D100. Are radical-annihilating commutators a general theorem for non-semisimple TL modules?
-23. **Activation Zoo for Multi-Strand DKC** — NEW from D99-D101. What activation recovers XOR14 on W_{5,3}? Can Sec x Vor adapt to Cyc8 matrix entries?
-24. **Fibonacci Direct Test at q=exp(2pi*i/5)** — NEW from D99/D94. Does non-vanishing quantum dimension avoid Jordan blocks?
-25. **Artificial Perfect Cell Construction** — NEW from D97. Orthonormal-frame recipe for constructing optimal catalogs from first principles.
-26. **Non-Semisimple TQFT DKC Formalization** — NEW from D99-D101. Functor from non-semisimple TQFT category to DKC computation.
+22. **Radical Content XOR Correlation Study** — from D100. Are radical-annihilating commutators a general theorem for non-semisimple TL modules?
+23. **Activation Zoo for Multi-Strand DKC** — from D99-D101, partially addressed by D103-D105. See Arc 12 updated entry.
+24. **Fibonacci Direct Test at q=exp(2pi*i/5)** — from D99/D94. Does non-vanishing quantum dimension avoid Jordan blocks?
+25. **Artificial Perfect Cell Construction** — from D97. Orthonormal-frame recipe for constructing optimal catalogs from first principles.
+26. **Non-Semisimple TQFT DKC Formalization** — from D99-D101. Functor from non-semisimple TQFT category to DKC computation.
+27. **Macrame Principle Crossover Location** — NEW from D104-D105. Where between block dim 5 and dim 14 does branching interaction regime transition? W_{10,2} could bracket it.
+28. **W_{8,2} Rank Saturation and Head-to-Head** — NEW from D105. Unresolved empirical question: does dim-28 provide advantage at sufficient activation resolution? Needs ~130K entries.
+29. **Sign-Rank Expansion Theory** — NEW from D104-D105. What determines whether sign quantization expands rank? Would enable principled activation engineering.
+30. **Major Index Theorem for General W_{n,j}** — NEW from D107. Novel algebraic invariant; verification at W_{8,2}, W_{6,4} is low-cost. Proof is high publication value (conjecture-graph Rank 8).
+31. **TL Visibility at Delta != 0** — NEW from D106. Do dynamical properties become visible to DKC when e_i^2 != 0? Test at delta=sqrt(2).
+32. **Quantitative Product-Closure Threshold** — NEW from D108-D109. Makes dual-channel theorem quantitatively predictive by identifying the transition density.
 
 ### RKHS Kernel Rank Test (D95) — NEW (D94)
 - Compute the DKC kernel matrix K(m,m') = quaternion inner product of signed sums for 2I (60 entries) vs z8 (24 entries). Rank of kernel matrix predicts reservoir separation capacity. If rank(K_2I)/rank(K_z8) > 120/24 = 5, then non-solvability contributes above raw catalog size — confirming the "discrete algebraic reservoir computer" interpretation from D94.
@@ -563,21 +686,27 @@ The multi-strand arc opened a major new research direction. D95-D96 completed th
 - Priority: **MEDIUM** -- strengthens the solvability bottleneck claim for publication
 
 ### LOW (backlog -- valid but not urgent)
-22. **zeta_10 Null Fraction**. Characterization + transition location data.
-23. **Writhe Distribution of 24-Cell Vertices**. Structural characterization.
-24. **Depth-3 -> 100% Null Generalization**. Small scope.
-25. **RC Exactification with Null-State Geometry**. Speculative.
-26. **D37** -- Diakoptics
-27. **D40** -- Impedance Tensor
-28. **D41** -- Axis Elimination
-29. **D30** -- Taxonomy-to-Braid Compiler
-30. **D31** -- Execution-as-Traversal
-31. **D32** -- Two-Thread Coordinates
-32. **D33** -- Full Pipeline
-33. **D34** -- Torus Knots
-34. **D43** -- Landauer Verification
+33. **zeta_10 Null Fraction**. Characterization + transition location data.
+34. **Writhe Distribution of 24-Cell Vertices**. Structural characterization.
+35. **Depth-3 -> 100% Null Generalization**. Small scope.
+36. **RC Exactification with Null-State Geometry**. Speculative.
+37. **D37** -- Diakoptics
+38. **D40** -- Impedance Tensor
+39. **D41** -- Axis Elimination
+40. **D30** -- Taxonomy-to-Braid Compiler
+41. **D31** -- Execution-as-Traversal
+42. **D32** -- Two-Thread Coordinates
+43. **D33** -- Full Pipeline
+44. **D34** -- Torus Knots
+45. **D43** -- Landauer Verification
+46. **Fibonacci Max-Abs Radical Constraint** — NEW from D102. Does the radical constrain coefficient growth to Fibonacci?
+47. **Universal BFS Tree Conjecture Verification** — NEW from D102-D103. Test at n=8, n=10.
+48. **TL Visibility Filter Completeness** — NEW from D106. Is the TL quotient the exact boundary of what DKC can see?
+49. **Value Set Convergence at Depth > 8** — NEW from D107. Do the 186 values converge?
+50. **2-Adic Neutrality Formal Proof** — NEW from D107. Five proof frameworks identified; select and formalize.
+51. **Raqiya Z[zeta_16] Extension** — NEW from D109. Full Raqiya support for 8-component cyclotomic ring. Only if delta!=0 investigation continues.
 
-### COMPLETED (D64-D92)
+### COMPLETED (D64-D109)
 - ~~**D64** -- Parity Matroid Recursion.~~ **DONE** (demo_64_parity_matroid_recursion/)
 - ~~**D65** -- Clifford Hierarchy Staircase.~~ **DONE** (demo_65_clifford_staircase/)
 - ~~**D66** -- Quaternionic DKC -- First Contact.~~ **DONE** (demo_66_quaternionic_dkc/)
@@ -616,6 +745,14 @@ The multi-strand arc opened a major new research direction. D95-D96 completed th
 - ~~**D99** -- 3-Strand Delta_1 Block Decomposition.~~ **DONE** (demo_99_column_readout/) -- LANDMARK: first-ever 3-strand XOR at ALL levels (XOR6=500K, XOR14=60), Ext^1 catalytic preparation thesis, Fibonacci growth, two-regime hypothesis (combinatorial XOR6-8 vs algebraic XOR10-14), star-graph topology, Casimir inversion, XOR16=0 ceiling
 - ~~**D100** -- 4-Strand DKC on W_{4,2}.~~ **DONE** (demo_100_4strand_dkc/) -- RESULT: infinite catalog (3x3 over Z[zeta_8]), ~3.1x BFS growth, 6 super-hubs, constant radical content, Casimir-XOR correlation (1.36x-1.86x), all hub commutators traceless with zero radical content, hub pairing by Cyc8 component
 - ~~**D101** -- 5-Strand DKC Scaling on W_{5,3}.~~ **DONE** (demo_101_5strand_dkc/) -- RESULT: sl_d growth rate CONFIRMED (~4x for sl_4), hub count FALSIFIED (3 not 12), Casimir inversion in simple modules, XOR14=0 (simple module ceiling), simple vs non-semisimple is computationally load-bearing
+- ~~**D102** -- 6-Strand Radical A/B Test.~~ **DONE** (demo_102_6strand_ab/) -- RESULT: Barrington-Radical Principle (radical carries abelian writhe character, provably useless for parity), simple W_{6,0} wins at every XOR level, sl_5 growth (~5x) confirmed as 4th data point, writhe character theorem proven computationally for all 32768 entries
+- ~~**D103** -- Pure Dimension Scaling Test.~~ **DONE** (demo_103_dimension_scaling/) -- RESULT: BFS growth is a braid group invariant (identical trees for dim-5 and dim-9 n=6 modules), higher dimension HURTS XOR via curse of dimensionality in sign-hash, B@sub7 beats A@full (activation geometry matters)
+- ~~**D104** -- Activation Coarseness Sweep.~~ **DONE** (demo_104_coarseness_sweep/) -- RESULT: Atkinson sweet spot (~120 of 324 components), cross-block branching = computational signal, sign-rank EXPANSION (244->292), k is the real lever not hash architecture, W_{6,0} wins at every k in the sweep
+- ~~**D105** -- 8-Strand k-Regime Test.~~ **DONE** (demo_105_8strand_k_regime/) -- RESULT: "XOR dies at N>=7" REFUTED (k-regime artifact), W_{8,0} XOR8=22266 at k=4096, macrame principle regime transition (within-block > cross-block at n=8), rank saturation confound in all prior cross-module comparisons
+- ~~**D106** -- Topological Entropy.~~ **DONE** (demo_106_topological_entropy/) -- RESULT: pre-registered prediction FALSIFIED, entropy completely orthogonal to DKC, TL visibility filter (writhe visible, entropy invisible), Caruso genericity confirmed, Fibonacci pseudo-Anosov at depth 2
+- ~~**D107** -- Algebraic Graph Density.~~ **DONE** (demo_107_algebraic_graph/) -- RESULT: Z/4Z Axis-Alignment Theorem PROVEN with constructive nesting-parity phase formula, 5 novel results (nesting parity grading, major index invariant, q-Catalan identity, orthogonality theorem, 2-adic neutrality), Raqiya library created
+- ~~**D108** -- Parity Vocabulary Graph Analysis.~~ **DONE** (demo_108_parity_vocabulary/) -- RESULT: Dual-Channel Theorem (product closure + v_2 connectivity predict parity capability), Amy bridge to quantum circuit synthesis, partition coincidence as incapacity signature, 4/6 predictions confirmed
+- ~~**D109** -- D55 Value Set Graph Analysis.~~ **DONE** (demo_109_d55_graph_analysis/) -- RESULT: Encoding-Dependent Dual-Channel Theorem (product closure polarity INVERTS between additive and multiplicative encoding), 7/8 edge types identical between parity and non-parity at delta=sqrt(2), Raqiya diagnoses impoverishment not health
 
 ---
 
@@ -670,3 +807,24 @@ These emerged from synthesis but don't have a clear single-demo scope yet:
 - **Encoding optimality** (NEW from D92): is the +/-q encoding provably optimal for parity among all 2-bit-per-weight encodings?
 - **Phase-sensitive activation** (NEW from D92): the sign-flip symmetry (combined_cell(S) = combined_cell(-S)) is a second parity-lock mechanism. Can a phase-sensitive activation that distinguishes S from -S break the parity lock while preserving depth-law structure?
 - **MAJ conflict count (19/27)** (NEW from D92): MAJ has the most class conflicts of any tested function. Is this related to MAJ's computational complexity (MAJ is TC^0-complete)?
+- **Why does W_{6,0} break Fibonacci at d=6?** (NEW from D102): W_{6,4} max_abs follows strict Fibonacci (13) but W_{6,0} reaches 16 at d=6. Does the radical constraint keep coefficients on Fibonacci? Another manifestation of abelian writhe structure?
+- **Mixing row scaling** (NEW from D102): B_full (2370) > B_quotient (2195) at XOR6, an 8% boost. Is this boost consistent across strand counts, and does it scale? The mixing row encodes quotient-to-radical leakage.
+- **Why does B@sub7 beat A@full?** (NEW from D103): B@sub7 (196 sign components from dim-9) achieves XOR6=2538, beating A@full (100 from dim-5) at 2449. The 7x7 subblock of the 9x9 representation contains algebraic information that the 5x5 does not have. What IS this information?
+- **Strided sampling decorrelation** (NEW from D103): B@stride3 (~108 components, every 3rd entry) gets XOR8=767, beating both B@full (557) and approaching A@full (850). Is there an optimal stride or sampling pattern?
+- **Information concentration in early components** (NEW from D104): Sequential first-100 (2360) beats random mean (2266) with high spread (262). Which specific components carry the most signal? Can a component importance ranking identify algebraically meaningful dimensions?
+- **Atkinson peak k-dependence** (NEW from D104): At k=128, optimal is 120 comp. Does the peak shift to more components at higher k? Sign-rank of 292 suggests more could be exploited.
+- **Branching advantage vs k regime** (NEW from D104): Cross-block advantage dramatic at k=128 (XOR8: 952 vs 557) but disappears by k=4096. Is there a k threshold formula relating module dimension, rank, and crossover point?
+- **W_{8,2} true saturated rank** (NEW from D105): At 16384 entries / 3136 cols = 5.2x oversampling, W_{8,2} is at 34.9% raw rank. Would need ~130K entries for comparable oversampling. What is the true saturated rank fraction?
+- **Does sign expansion ratio vs module structure follow a law?** (NEW from D105): W_{8,2} shows 1.83x at 16384 entries (still growing). W_{6,2} shows 1.20x. W_{8,0} shows 1.08x. What controls expansion?
+- **Does the entropy null extend to higher strand counts?** (NEW from D106): D106 uses W_{4,2} (4-strand). Expected yes since TL visibility filter argument is representation-independent, but untested.
+- **Can entropy predict anything about catalog properties?** (NEW from D106): Total null for Boolean function computation. But could entropy correlate with hub frequency, co-occurrence topology, or Raqiya graph structure?
+- **Does the 186-value set close?** (NEW from D107): 72 new values at depth 8 (still growing fast). Need deeper catalogs (>32768).
+- **zeta_12 axis-alignment prediction** (NEW from D107, registered before computation): At delta=sqrt(3) != 0, expect mostly axis-aligned but with occasional mixing proportional to |delta|.
+- **q-ballot evaluations at other roots** (NEW from D107): Does q-Catalan have clean evaluation at roots beyond q=-1?
+- **Dual-channel prediction for XOR6** (NEW from D108): Can dual-channel analysis predict which custom sector labelings at k>=24 achieve XOR6? Extends D65.
+- **Z[i] product closure at delta=sqrt(2)** (NEW from D108): Does the Z[i] lattice have intrinsically better product closure than Z[zeta_8]? Would explain D55's 9334-solution explosion.
+- **Parity-lock as dual-channel constraint** (NEW from D108): Is D92's parity-lock precisely the statement that +-q encoding constrains to exactly one dual-channel configuration?
+- **Non-monotonic solution count prediction** (NEW from D108): Does dual-channel structure predict 906@k=6 > 756@k=7 > 96@k=8?
+- **50% vocabulary as structural constant** (NEW from D109): Is the 28/28 = 50% split at delta=sqrt(2) an artifact of Re>0 activation, or does every activation give exactly 50%? If universal, reflects a deeper algebraic automorphism.
+- **Angular discriminator for Z[zeta_16] parity** (NEW from D109): What distinguishes 28 parity from 28 non-parity if not algebraic structure? Is it purely angular position relative to Re>0?
+- **j=0 liveness implies structural universality** (NEW from D109): At delta=0, j=0 dead implies impoverished algebra. At delta!=0, j=0 alive implies structural universality. Is this a general principle?

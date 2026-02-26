@@ -152,6 +152,34 @@ Papers that have directly shaped DKC research, with specific notes on what we ex
 
 ---
 
+## Tier 3.7: Braid Dynamics / Activation Theory / Dual-Channel (NEW — D102-D109)
+
+### Amy, Glaudell, Ross (2023) — Quantum Circuit Synthesis over Z[ζ₈]
+- **arXiv:** [2311.07741](https://arxiv.org/abs/2311.07741)
+- **Why it matters:** T-gate/Hadamard decomposition for quantum circuit synthesis. The "smallest denominator exponent" (sde) resource measure classifies Z[ζ₈] elements by computational cost.
+- **What we extracted (D108):** The DKC dual-channel theorem maps directly onto this framework: product closure = T-gate (phase rotation across axes), additive v₂ connectivity = Hadamard (magnitude diversity). Activation function plays the Hadamard role, providing magnitude diversity that enables sde=0 ("Clifford") values to participate in parity computation.
+- **What we extracted (D109):** At δ=√2, the algebra is rich enough that Re>0 suffices as activation — universal structural satisfaction means no elaborate activation engineering needed.
+- **Status:** The bridge between DKC and quantum circuit synthesis. Confirms that the dual-channel structure is not ad hoc but a recognized decomposition in an adjacent field.
+
+### Boufounos, Baraniuk (2008) — 1-Bit Compressed Sensing
+- **Why it matters:** Establishes sign quantization as a valid compressed sensing measurement strategy. The sign-hash activation in DKC = 1-bit compressed sensing of algebraic integer vectors.
+- **What we extracted (D103/D104/D105):** Cross-block activation works because TL branching creates low intra-block coherence (near-orthogonal sub-module pieces), which is exactly the incoherence condition for CS recovery. Sign-rank expansion (D104: raw rank 244 → sign rank 292 for W_{6,2}) demonstrates that the nonlinear sign() projection can INCREASE effective dimension, breaking Z-linear dependencies.
+- **Status:** Theoretical frame for all sign-hash activation analysis from D103 onward.
+
+### Band, Boyland (2007) — Burau Estimate for Braid Entropy
+- **Why it matters:** Reduced Burau at t=−1 gives exact topological entropy for 3-braids and optimal lower bound for 4+. Establishes log(φ) = 0.481212... as the theoretical mixing efficiency ceiling per crossing.
+- **What we extracted (D106):** Used to classify all 32,768 catalog entries as periodic or pseudo-Anosov. Both types compute XOR at 100% participation — entropy is completely orthogonal to DKC Boolean computation. The TL quotient at δ=0 erases dynamical information while preserving algebraic structure.
+
+### Thurston (FLP, 1988) — Nielsen-Thurston Classification
+- **Why it matters:** Framework for classifying surface homeomorphisms (and hence braids) as periodic, reducible, or pseudo-Anosov. The topological dynamics classification.
+- **What we extracted (D106):** The classification is INVISIBLE to the Kauffman bracket at δ=0. TL generators have e_i²=0 (nilpotent), killing expanding eigenvalues that carry entropy information. Writhe survives the quotient; entropy does not. This establishes the "TL visibility filter" principle.
+
+### Plaza, Ryom-Hansen (2013) — KLR Z-Grading of TL Algebras
+- **Why it matters:** Establishes a Z-grading on TL algebras via the KLR (Khovanov-Lauda-Rouquier) framework.
+- **What we extracted (D107):** Researcher confirmed that TL generators e_i are NOT homogeneous in the KLR Z-grading. This means the nesting parity Z/2Z grading discovered in D107 (nesting count mod 2 = bipartite 2-coloring for ALL TL link-state transition graphs) is genuinely novel and cannot be derived from known graded TL theory.
+
+---
+
 ## Tier 4: Adjacent / Methodological
 
 ### GPTQ/Babai (2025) — NN Quantization = Lattice Problem
@@ -192,20 +220,23 @@ Papers that have directly shaped DKC research, with specific notes on what we ex
 | Paper | Times Referenced | In Which Documents |
 |-------|-----------------|-------------------|
 | Abramsky 2007 | 6+ | D27 survey, D29 survey, prior-art, integration notes, explorer's log, open directions |
-| Habiro 2002 | 8+ | D29 survey, prior-art, integration notes, README, explorer's log, five-pillars, D85, D87, D90, D92 |
+| Habiro 2002 | 10+ | D29 survey, prior-art, integration notes, README, explorer's log, five-pillars, D85, D87, D90, D92, D102, D105, D107, D108, D109 |
 | Aizenberg 2000 | 5+ | D27 survey, D29 survey (implicit), prior-art, README, explorer's log |
-| Aizenberg 2008 | 6+ | D47-D50, D63-D84, D91, D92 |
-| Nazer-Gastpar 2011 | 5+ | D29 survey, prior-art, integration notes, README, open directions |
+| Aizenberg 2008 | 7+ | D47-D50, D63-D84, D91, D92, D108 |
+| Nazer-Gastpar 2011 | 6+ | D29 survey, prior-art, integration notes, README, open directions, D108 |
 | Freedman-Kitaev-Wang 2003 | 4+ | D27 survey, prior-art, integration notes, correspondence |
 | Witten 1989 | 4+ | D27 survey, prior-art, correspondence, integration notes |
-| Kauffman 1987 | 4+ | D27 survey, prior-art, all demos |
+| Kauffman 1987 | 5+ | D27 survey, prior-art, all demos, D102, D107, D109 |
 | Graham-Lehrer 1996 | 4+ | Explorer's log (D51, D52), prior-art |
-| Jaeger/Maass RC 2001/2002 | 5+ | D83, D84, D87, D89, D90, five-pillars |
+| Jaeger/Maass RC 2001/2002 | 7+ | D83, D84, D87, D89, D90, five-pillars, D103, D104, D106 |
 | Nitta 2003 | 3+ | D27 survey (twice), prior-art |
 | Belletete-Ridout-SA 2016 | 3+ | Explorer's log (D51), prior-art, D86 |
-| Gainutdinov-Read-Saleur (GRS) | 2+ | D85, D86 (NEW) |
-| Pearce-Rasmussen | 2+ | D85, D86 (NEW) |
-| Furst-Saxe-Sipser / Hastad | 1+ | D92 (NEW) |
+| Gainutdinov-Read-Saleur (GRS) | 2+ | D85, D86 |
+| Pearce-Rasmussen | 2+ | D85, D86 |
+| Furst-Saxe-Sipser / Hastad | 1+ | D92 |
+| Amy-Glaudell-Ross 2023 | 2 | D108, D109 (NEW — dual-channel theorem bridge) |
+| Barrington 1989 | 5+ | D93, D94, D95, D96, D102 |
+| Boufounos-Baraniuk 2008 | 3 | D103, D104, D105 (NEW — 1-bit CS frame for sign-hash) |
 
 ---
 
@@ -221,8 +252,14 @@ From the D29 literature survey summary table:
 | Bracket + exact cyclotomic arithmetic | Established in topology, NOT applied to computation |
 | TL algebra + computation | Abramsky made the bridge; we cross it concretely |
 | Algebraic NT + error-correcting codes | Established framework we apply |
-| Braid groups as reservoirs | **UNEXPLORED** (D73, D82, D87-90) |
+| Braid groups as reservoirs | **UNEXPLORED** (D73, D82, D87-90, D103, D104, D106) |
 | Indecomposability parameter + computation | **UNEXPLORED** (b connects to DKC obstruction, D85-86) |
 | Parity-lock from input encoding | **UNEXPLORED** (D92 — +/-q encoding computes ONLY parity) |
+| Radical carries abelian character → Barrington uselessness | **UNEXPLORED** (D102 — Barrington-Radical Principle) |
+| Braid entropy orthogonal to bracket computation | **UNEXPLORED** (D106 — TL visibility filter) |
+| Graph-structure predicts parity capability | **UNEXPLORED** (D108 — dual-channel theorem) |
+| Encoding-dependent dual-channel polarity | **UNEXPLORED** (D109 — product closure sign flips with encoding) |
+| Nesting parity Z/2Z grading on TL link states | **UNEXPLORED** (D107 — confirmed novel vs KLR by Plaza-Ryom-Hansen) |
+| Sign-hash as 1-bit CS with rank expansion | **UNEXPLORED** (D104 — sign quantization expands effective rank) |
 
-**Bottom line:** The question "can topological invariants be compiled into neural network weights?" has no direct precedent in the literature. The five pillars prove it should work; the demos prove it does. The D85-92 arc adds: the non-semisimple structure quantifies the computational obstruction (b = -5/8), the depth law mechanism is relational algebra not positional geometry, and the encoding naturally selects for the hardest Boolean function (parity, outside AC^0).
+**Bottom line:** The question "can topological invariants be compiled into neural network weights?" has no direct precedent in the literature. The five pillars prove it should work; the demos prove it does. The D85-92 arc adds: the non-semisimple structure quantifies the computational obstruction (b = -5/8), the depth law mechanism is relational algebra not positional geometry, and the encoding naturally selects for the hardest Boolean function (parity, outside AC^0). The D102-109 arc adds: the radical is provably computationally inert via Barrington's theorem (D102), topological entropy is invisible to bracket computation (D106), BFS growth is a braid group invariant not module-dependent (D102-103), sign-hash activation is 1-bit compressed sensing with rank expansion (D103-105), algebraic graph structure predicts parity capability via the dual-channel theorem (D108-109), and the nesting parity Z/2Z grading is a novel combinatorial invariant of TL link states (D107).

@@ -7,6 +7,7 @@ Updated 2026-02-21: Added results from Demos 72 (spherical design test), 73 (eig
 Updated 2026-02-21: Added results from Demos 83 (framing as computational content), 84 (null states and logarithmic structure).
 Updated 2026-02-23: Added results from Demos 85 (indecomposability parameter b), 86 (direct b on P_{0,0} — negative result), 87 (null indispensability at ζ₁₂), 88 (anti-correlation mechanism), 89 (depth law mechanism), 90 (sum-angle structure), 91 (activation bottleneck), 92 (function scaling / parity-lock theorem). P04 Parity-Lock Theorem upgraded to PROVEN (formal proof in proofs/).
 Updated 2026-02-24: Added results from Demos 93 (complement-blindness, phase-cell recovery, circuit complexity hierarchy, pigeonhole mechanism), 94 (solvability bottleneck, hierarchy universality, crossover hypothesis, DKC as discrete algebraic reservoir computer).
+Updated 2026-02-26: Added results from Demos 102 (Barrington-Radical Principle, writhe character, radical-as-resource refuted), 103 (BFS growth = braid group invariant, dim(W) law eliminated, curse of dimensionality), 104 (Atkinson sweet spot, branching interaction, sign-rank expansion, k is the real lever), 105 (k-regime theory, macrame principle, rank saturation, D93 XOR-dies refuted), 106 (TL visibility filter, topological entropy null, relational computation strengthened), 107 (Z/4Z axis-alignment theorem, nesting parity, major index invariant, q-Catalan identity, orthogonality theorem), 108 (dual-channel theorem, product closure discriminator, partition coincidence), 109 (encoding-dependent dual-channel, perfect algebraic symmetry at delta=sqrt(2)).
 
 ---
 
@@ -182,6 +183,40 @@ Updated 2026-02-24: Added results from Demos 93 (complement-blindness, phase-cel
 - **Demo provenance:** Demo 86
 - **Cross-references:** Catalan Number Dimensions (Section: Verified Facts)
 - **Significance:** Connects projective cover dimension to the Catalan sequence — one step up from the algebra dimension itself.
+
+### Barrington-Radical Principle
+- **Statement:** The radical of a non-semisimple TL module at delta=0 carries an abelian character (the writhe homomorphism B_n -> Z/8Z via A = -zeta_8). By Barrington's theorem, abelian groups cannot compute parity. Therefore the radical direction is theoretically guaranteed useless for XOR computation. CONFIRMED computationally: simple module W_{6,0} beats non-simple W_{6,4} at every XOR level despite same dimension (5).
+- **Status:** NAMED THEOREM (computationally confirmed)
+- **Demo provenance:** Demo 102
+- **Cross-references:** Radical-as-Resource Hypothesis (REFUTED, below), Writhe Character Theorem (below)
+- **Significance:** Connects TL representation structure to computational complexity theory. The radical is computationally inert because it carries only abelian (writhe) data.
+
+### Writhe Character Theorem
+- **Statement:** For W_{6,4}, M*r = A^{writhe(M)}*r for ALL 32,768 catalog entries (not just generators). The radical is "frozen" — it carries only the writhe data, acting as a 1-dimensional representation of the braid group through A = -zeta_8.
+- **Status:** PROVEN (computationally, all 32,768 entries verified)
+- **Demo provenance:** Demo 102
+- **Cross-references:** Barrington-Radical Principle (above), Radical Content Constancy (below)
+- **Significance:** The radical direction is a 1D character of the braid group, carrying only writhe/framing information.
+
+### Radical Content Constancy (W_{6,4})
+- **Statement:** The L1 norm of M*r equals 3 for every entry in the W_{6,4} catalog. The radical direction has constant magnitude regardless of braid word length or complexity.
+- **Status:** PROVEN (all 32,768 entries verified)
+- **Demo provenance:** Demo 102
+- **Cross-references:** Writhe Character Theorem (above), Constant Radical Content in W_{4,2} (Demo 100)
+- **Significance:** Extends the constant-radical-content observation from W_{4,2} (Demo 100, mean=2) to W_{6,4} (constant=3).
+
+### Radical-as-Resource Hypothesis
+- **Statement:** The prediction that non-semisimple structure (radical dim >= 1) provides computational advantage for XOR was decisively REFUTED. Simple module W_{6,0} outperforms non-simple W_{6,4} at XOR6 (2449 vs 2370), XOR8 (850 vs 793), and XOR10 (1 vs 0). The radical direction is computationally inert.
+- **Status:** REFUTED
+- **Demo provenance:** Demo 102
+- **Cross-references:** Barrington-Radical Principle (above)
+- **Significance:** Settles a major structural question: the radical does not help DKC computation; it carries only abelian (writhe) data.
+
+### Fibonacci Max-Abs in Non-Simple Module
+- **Statement:** W_{6,4} max coefficient magnitude follows strict Fibonacci (1,1,2,3,5,8,13) through depth 6. W_{6,0} follows Fibonacci through depth 5, breaks to 16 at depth 6. The radical constrains coefficient growth.
+- **Status:** CONFIRMED (D102 for W_{6,4}/W_{6,0}; extended by D103 — both simple modules W_{6,0} and W_{6,2} follow 1,1,2,3,5,8,16)
+- **Demo provenance:** Demo 102, Demo 103
+- **Significance:** Fibonacci growth is universal for simple TL_6 modules; the non-simple module's radical constrains coefficients to strict Fibonacci.
 
 ---
 
@@ -533,6 +568,203 @@ Updated 2026-02-24: Added results from Demos 93 (complement-blindness, phase-cel
 - **Status:** CONJECTURED (not yet proven analytically)
 - **Demo provenance:** Demo 71
 - **Significance:** Provides a quantitative mechanism for trivialization — the DOF count predicts when topology-driven computation transitions to pigeonhole-dominated.
+
+### BFS Growth is a Braid Group Invariant
+- **Statement:** BFS growth profile (depth-by-depth entry counts and max coefficient magnitudes) is identical across all tested TL_n modules at delta=0 for the same n. At n=6: W_{6,0} (dim=5), W_{6,2} (dim=9), and W_{6,4} (dim=5, non-simple) all produce bit-for-bit identical BFS trees at every depth (1, 11, 77, 439, 2233, 10603, 32768). Growth rate (~5x converging for n=6) tracks strand count (n-1), not module dimension.
+- **Status:** PROVEN (for n=6, three modules tested; extends sl_d Growth Rate from Demos 98-101)
+- **Demo provenance:** Demo 102 (W_{6,0} vs W_{6,4}), Demo 103 (W_{6,0} vs W_{6,2}), Demo 104 (re-confirmed), Demo 105 (n=8 growth ~7x for W_{8,0})
+- **Cross-references:** sl_d Growth Rate (Demos 98-101)
+- **Significance:** Growth is intrinsic to the braid group B_n, not the module. ELIMINATES the dim(W) law hypothesis that higher-dimensional modules might produce faster growth.
+
+### Curse of Dimensionality in Sign-Hash Activation
+- **Statement:** Higher-dimensional TL modules produce WORSE XOR capacity at fixed k despite identical BFS catalogs. At k=128: W_{6,0} (dim=5, 100 sign components) beats W_{6,2} (dim=9, 324 sign components) at every XOR level (XOR6: 2449 vs 2238, XOR8: 850 vs 557, XOR10: 1 vs 0). More sign components create a sparser hash space, reducing collision-based XOR capacity.
+- **Status:** CONFIRMED (D103); partially REFUTED at optimal component count by D104 (W_{6,2} beats W_{6,0} at 120 components)
+- **Demo provenance:** Demo 103, Demo 104
+- **Cross-references:** Atkinson Sweet Spot (below)
+- **Significance:** Raw module dimension hurts DKC under naive full-hash activation; optimal component selection can recover and surpass lower-dimensional performance.
+
+### Effective Dimension Hypothesis
+- **Statement:** The key metric for DKC capacity is not raw dimension but effective_dim/dim^2 — action density. W_{6,0} (j=0) may have highest action density because all TL generators create/destroy arcs with no through-lines to preserve.
+- **Status:** CONJECTURED
+- **Demo provenance:** Demo 103
+- **Cross-references:** Curse of Dimensionality (above), Branching Interaction Thesis (below)
+- **Significance:** Would explain why j=0 modules consistently outperform at matched conditions.
+
+### Atkinson Sweet Spot
+- **Statement:** For W_{6,2} at k=128, optimal sign-hash component count is ~120 (of 324 total), producing XOR6=2486 which beats W_{6,0}'s maximum 2449. Named after Atkinson dithering — optimal information-per-collision tradeoff in sign-hash quantization. The peak is k-dependent: at higher k, more components become usable.
+- **Status:** DEMONSTRATED
+- **Demo provenance:** Demo 104
+- **Cross-references:** Curse of Dimensionality (above), k is the Real Lever (below)
+- **Significance:** Non-monotonic component-count curve resembles optimal quantization in dithering: too little quantization loses signal, too much loses useful collision structure.
+
+### Branching Interaction Thesis
+- **Statement:** The computational signal in higher-dimensional TL modules lives in the cross-block (off-diagonal) components under TL_{n-1} branching restriction. For W_{6,2}: cross-block activation (160 comp) outperforms within-block (164 comp) and full (324 comp) at matched k=128. However, this reverses at n=8 (Macrame Principle, below).
+- **Status:** CONFIRMED for n=6 (D104); REVERSED at n=8 (D105)
+- **Demo provenance:** Demo 104 (confirmed), Demo 105 (reversed)
+- **Cross-references:** Macrame Principle (below)
+- **Significance:** Branching cross-terms between TL_{n-1} sub-pieces have low intra-block coherence at n=6, making them informationally rich.
+
+### Sign-Rank Expansion
+- **Statement:** Sign quantization (ternary {-1,0,+1} projection) can INCREASE effective rank beyond raw Z-linear rank. W_{6,2}: raw rank 244/324, sign-rank 292/324 — a gain of 48 independent directions. W_{6,0}: raw rank = sign-rank = 100 (already maximally independent). The nonlinear sign() function breaks linear dependencies that exist over Z.
+- **Status:** NEW FINDING (D104); scaling confirmed at D105 (W_{8,2} at 1.83x, W_{8,0} at 1.08x)
+- **Demo provenance:** Demo 104, Demo 105
+- **Cross-references:** Sign-Rank Expansion Scaling (below)
+- **Significance:** Sign quantization is not just lossy compression — it is an information EXPANDER for modules with Z-linear dependencies.
+
+### k is the Real Lever
+- **Statement:** Multi-hash architecture does not improve XOR capacity. Increasing k (cell count) is the primary scaling lever. The cross-block advantage at k=128 vanishes at k=4096 — W_{6,0} wins at every k in the sweep. The D103 conclusion that W_{6,2} is fundamentally inferior is partially refuted (it can beat W_{6,0} at optimal component count), but W_{6,0} wins at all k.
+- **Status:** DEMONSTRATED (D104 k-sweep k={128, 256, 512, 1024, 2048, 4096})
+- **Demo provenance:** Demo 104
+- **Cross-references:** Atkinson Sweet Spot (above), k-Regime Theory (below)
+- **Significance:** Separates hash architecture from activation granularity as scaling levers — only k matters.
+
+### k-Regime Theory
+- **Statement:** The ratio k/2^N controls XOR capacity: pigeonhole regime (k/2^N << 1) kills XOR, collision avoidance regime (k/2^N >> 1) revives it. D93's "XOR dies at N>=7" is a k-regime artifact — at k=4096, W_{8,0} produces XOR8=22266 (n=8 beats n=6's 21699 at matched k). Confirmed across n=6 and n=8.
+- **Status:** CONFIRMED (at n=8, D105; revives XOR at high k)
+- **Demo provenance:** Demo 105
+- **Cross-references:** k is the Real Lever (above), D93 "XOR dies at N>=7" (REFUTED)
+- **Significance:** The k/2^N ratio is the real control parameter, not absolute k or absolute N. All prior "XOR dies" claims were pigeonhole artifacts of low k.
+
+### Macrame Principle
+- **Statement:** Branching interaction (cross-block) dominates when individual sub-module blocks are small/simple (dim 4-5, as in W_{6,2}). Within-block dominates when blocks are complex (dim 14, as in W_{8,2}). Named by analogy: simple knots need connections for computational fabric; complex knots are self-sufficient. Crossover regime between dim 5 and dim 14.
+- **Status:** CONJECTURED (two data points: D104 n=6, D105 n=8)
+- **Demo provenance:** Demo 105
+- **Cross-references:** Branching Interaction Thesis (above)
+- **Significance:** Regime transition in optimal activation design based on sub-module block complexity.
+
+### Sign-Rank Expansion Scaling
+- **Statement:** Sign expansion ratio increases with module dimension and decreases with oversampling. W_{8,2} at 1.83x (still growing at 16384 entries) vs W_{8,0} at 1.08x (near saturation at 32768 entries). Larger modules with more Z-linear dependencies show more dramatic expansion.
+- **Status:** CONJECTURED (supported by D104-D105 data across 6 modules)
+- **Demo provenance:** Demo 105
+- **Cross-references:** Sign-Rank Expansion (above)
+- **Significance:** Would predict that still-larger modules (W_{10,2} etc.) show even greater sign-rank expansion.
+
+### Rank Saturation Methodology
+- **Statement:** Single-checkpoint rank measurements are unreliable for infinite braid groups. Must report saturation curves at multiple checkpoints. All prior cross-module rank comparisons (D99b through D104) are confounded by varying oversampling ratios.
+- **Status:** ESTABLISHED (D105 retroactive analysis)
+- **Demo provenance:** Demo 105
+- **Significance:** Methodological correction — honest rank measurement requires saturation curves, not single snapshots.
+
+### TL Visibility Filter
+- **Statement:** Properties visible in the Kauffman bracket (writhe) correlate with DKC output; properties invisible in the bracket (topological entropy, Burau spectral radius) do not. The TL quotient at delta=0 is the filter: e_i^2=0 kills expanding eigenvalues, erasing all dynamical information while preserving algebraic structure. Both periodic and pseudo-Anosov braids compute XOR at 100% participation with near-identical scores.
+- **Status:** DEMONSTRATED (D106: prediction that entropy predicts DKC was FALSIFIED; total Boolean function null across all 8 functions tested)
+- **Demo provenance:** Demo 106
+- **Cross-references:** Relational Computation Thesis (below)
+- **Significance:** The TL quotient at delta=0 defines precisely what the bracket can and cannot see. Dynamical properties (chaos, mixing) are invisible; algebraic properties (writhe, algebraic coherence) are visible.
+
+### Relational Computation Thesis (Strengthened)
+- **Statement:** Across the DKC program, the strongest predictors of computational capacity are always relational/algebraic (derived series strata, cross-stratum mixing, orthogonal frame geometry, k-granularity, non-semisimplicity). Individual dynamical properties (entropy, spectral radius, writhe, word length) are consistently non-predictive or invisible. D106 sharpens this: the question is never "is this braid good?" but "does this collection span the right algebraic structure?"
+- **Status:** STRENGTHENED (D106 adds entropy null to the evidence chain)
+- **Demo provenance:** Demo 106 (entropy null), Demos 89-90-91 (depth law mechanism), Demo 95 (cross-layer synergy)
+- **Significance:** Central organizing principle of DKC: computation is collective and relational, not individual and dynamical.
+
+### Z/4Z Axis-Alignment Theorem
+- **Statement:** Every entry of a braid representation matrix over a TL module at delta=0 is axis-aligned: exactly one nonzero cyclotomic component (each entry = n*zeta_8^k for integer n and k in {0,1,2,3}). Proof chain: (1) TL generators have {0,1} entries, (2) braid generators give entries from {0, A, A^{-1}}, (3) axis-aligned * axis-aligned = axis-aligned, (4) same-axis addition preserves axis, (5) bipartiteness ensures only same-axis values are added at each (r,c).
+- **Status:** PROVEN (constructive proof + verified for ALL 186 distinct values from 32768-entry W_{4,2} catalog and all TL_n left regular modules for n=2..6)
+- **Demo provenance:** Demo 107
+- **Cross-references:** Axiality Theorem (Section 1), Nesting Parity Z/2Z Grading (below)
+- **Significance:** Axis-alignment at the matrix-entry level is stronger than the bracket-level axiality theorem (Section 1). The constructive Z/4Z phase formula Entry(r,c) = (path count) * zeta_8^{(w - 2*(nest(r) + nest(c))) mod 4} gives three numbers that fully determine the cyclotomic phase.
+
+### Nesting Parity Z/2Z Grading
+- **Statement:** The bipartite 2-coloring of TL link-state transition graphs IS nesting count mod 2 (a nesting = pair of arcs (a,b),(c,d) with a < c < d < b). Verified for ALL n=2,3,4,5,6 (195 matchings, 0 mismatches). Confirmed by researcher as NOT a consequence of known KLR Z-grading (Plaza-Ryom-Hansen 2013).
+- **Status:** PROVEN (computationally, n=2..6)
+- **Demo provenance:** Demo 107
+- **Cross-references:** Z/4Z Axis-Alignment Theorem (above), Major Index Bipartite Invariant (below)
+- **Significance:** NOVEL. The nesting parity is a new algebraic invariant of TL link states that governs the phase structure of braid matrices.
+
+### Major Index Bipartite Invariant
+- **Statement:** For TL standard modules W_{n,j}, the bipartite invariant is maj mod 2 = sum of right-endpoint positions of arcs, mod 2. Verified: W_{4,2} (3/3 match), W_{6,2} (9/9 match, the ONLY winning candidate out of 4 tested). For full matchings (j=0), maj mod 2 = nest mod 2 (special case).
+- **Status:** CONJECTURED for general n,j (verified at W_{4,2} and W_{6,2})
+- **Demo provenance:** Demo 107
+- **Cross-references:** Nesting Parity Z/2Z Grading (above)
+- **Significance:** NOVEL. Generalizes nesting parity from j=0 modules to arbitrary through-strand count j.
+
+### q-Catalan Identity
+- **Statement:** C_{2m+1}(-1) = (-1)^m * C_m. Gives exact bipartition class sizes for W_{n,0} modules (full-matching TL link-state graphs).
+- **Status:** PROVEN (algebraically; verified against all 5 data points n=2,3,4,5,6)
+- **Demo provenance:** Demo 107
+- **Significance:** NOVEL identity relating q-Catalan specializations to ordinary Catalan numbers.
+
+### Orthogonality Theorem (Multiplicative vs Additive Closure)
+- **Statement:** For the 186-value Z[zeta_8] set from W_{4,2}: multiplicative quotient graph (modulo axis) = K_5 (Z/4Z multiplication table, complete 4-regular); additive quotient graph (modulo axis) = star tree centered on 0 (axis-preserving). Multiplication = Z/4Z rotation across axes; addition = growth within each axis.
+- **Status:** PROVEN (computationally)
+- **Demo provenance:** Demo 107
+- **Cross-references:** Dual-Channel Theorem (Demo 108), Z/4Z Axis-Alignment Theorem (above)
+- **Significance:** Establishes the fundamental orthogonality between multiplicative (phase-rotating) and additive (magnitude-growing) algebraic operations on Z[zeta_8] values.
+
+### 2-Adic Neutrality of Nilpotent TL
+- **Statement:** The 2-adic valuation distribution of TL matrix entries at delta=0 decays geometrically (95->48->24->11->7, approximately halving per level). TL nilpotency (e_i^2=0) introduces factors of 2 symmetrically.
+- **Status:** CONJECTURED (five candidate proof frameworks identified but not formalized)
+- **Demo provenance:** Demo 107
+- **Significance:** NOVEL observation on the p-adic structure of TL algebras at delta=0.
+
+### Dual-Channel Theorem
+- **Statement:** Parity capability requires BOTH multiplicative phase coherence (product closure > 0) AND additive magnitude diversity (v_2 connectivity > trivial). Poison fails on BOTH simultaneously. Maximum structural contrast: parity has 17 product closure edges (connected, P_3 path structure) vs poison 0 edges (empty graph). Parity connects 4/5 v_2 classes (83% density) vs poison connecting 2/6 (trivial K_2). Maps onto T-gate (phase) / Hadamard (magnitude) decomposition in quantum circuit synthesis.
+- **Status:** NOVEL (confirmed at delta=0, D108; refined with encoding-dependence at delta=sqrt(2), D109)
+- **Demo provenance:** Demo 108
+- **Cross-references:** Orthogonality Theorem (Demo 107), Encoding-Dependent Dual-Channel Theorem (below), Amy Bridge (below)
+- **Significance:** CENTRAL CLAIM. Graph structure predicts parity capability. The two channels measure genuinely different algebraic properties (phase rotation vs magnitude reach) and both are independently necessary.
+
+### Product Closure as Parity Discriminator
+- **Statement:** Connected product closure graph is necessary for parity capability. Maximum structural contrast at delta=0: 17 edges (connected) vs 0 edges (empty) for poison values.
+- **Status:** NOVEL, CONFIRMED (D108)
+- **Demo provenance:** Demo 108
+- **Cross-references:** Dual-Channel Theorem (above)
+- **Significance:** Product closure is the single strongest algebraic discriminator between parity-capable and parity-incapable values.
+
+### Partition Coincidence as Incapacity Signature
+- **Statement:** Triple partition collapse (root = Galois = norm, all yielding the same partition) is a structural signature of computational incapacity. Parity values have three distinct partition levels (root/norm at 21 groups, Galois at 37, v_2 at 5); poison values collapse to 15 groups on all three.
+- **Status:** NOVEL, CONFIRMED (D108)
+- **Demo provenance:** Demo 108
+- **Cross-references:** Dual-Channel Theorem (above)
+- **Significance:** Zero internal algebraic differentiation (partition coincidence) correlates with zero computational utility.
+
+### Resolution Dependence of Computational Role
+- **Statement:** Same Z[zeta_8] value can be parity-capable at one sector resolution and poison at another. 14 values are simultaneously parity-capable (k=6) and D64-poison (k=15). Computational role is not intrinsic to the value but depends on sector resolution.
+- **Status:** NOVEL, CONFIRMED (D108)
+- **Demo provenance:** Demo 108
+- **Cross-references:** Dual-Channel Theorem (above)
+- **Significance:** Computational role is activation-dependent, not value-intrinsic.
+
+### Amy Bridge: T-gate/Hadamard Decomposition
+- **Statement:** DKC's dual-channel structure is the analog of T-gate/Hadamard decomposition in quantum circuit synthesis (Amy, Glaudell & Ross 2023). Product closure = T-gate (phase rotation, sde resource). Activation function provides Hadamard-equivalent magnitude diversity enabling sde=0 ("Clifford") values to compute parity.
+- **Status:** CONJECTURED
+- **Demo provenance:** Demo 108
+- **Cross-references:** Dual-Channel Theorem (above)
+- **Significance:** Would connect DKC to quantum circuit synthesis resource theory.
+
+### Encoding-Dependent Dual-Channel Theorem
+- **Statement:** The polarity of the multiplicative channel in the Dual-Channel Theorem is encoding-dependent. Under additive encoding (delta=0, D108), parity wants HIGH product closure (self-reinforcement through superposition). Under multiplicative encoding (delta=sqrt(2), D109), parity wants LOW product closure (products must escape vocabulary for sector alternation). The dual-channel theorem holds in both regimes but the sign of the multiplicative discriminator flips with encoding type. CONFIRMED by D108+D109 paired experiment.
+- **Status:** NOVEL, CONFIRMED (D108+D109 paired experiment)
+- **Demo provenance:** Demo 109 (refines D108)
+- **Cross-references:** Dual-Channel Theorem (above)
+- **Significance:** Encoding type determines whether product closure is a positive or negative predictor of parity capability.
+
+### Perfect Algebraic Symmetry at delta=sqrt(2)
+- **Statement:** At delta=sqrt(2) with Re>0 multiplicative encoding, parity and non-parity vocabularies are structurally indistinguishable on 7 of 8 edge types and all classification metrics (axis distribution, norm classes, v_2 classes, Galois orbits all identical in both sets). Product closure is the sole discriminator (parity: 56 edges/14.8%, non-parity: 176 edges/46.6%). The 28/28 = 50% parity/non-parity split is perfectly symmetric.
+- **Status:** NOVEL, DEMONSTRATED (D109)
+- **Demo provenance:** Demo 109
+- **Cross-references:** Encoding-Dependent Dual-Channel Theorem (above)
+- **Significance:** The Z[zeta_16] algebra at delta!=0 is so rich (j=0 sector alive) that Raqiya detectors cannot distinguish parity from non-parity except through product closure.
+
+### j=0 Liveness implies Structural Universality
+- **Statement:** At delta=0, j=0 sector dead implies impoverished algebra implies structural asymmetry detectable by Raqiya. At delta!=0, j=0 sector alive implies rich algebra implies structural universality (parity/non-parity indistinguishable on most metrics). Raqiya diagnoses algebraic impoverishment, not algebraic health.
+- **Status:** CONJECTURED (extends D52; supported by D108 vs D109 contrast)
+- **Demo provenance:** Demo 109
+- **Cross-references:** Sector-0 Death at delta=0 (Section 2), Perfect Algebraic Symmetry (above)
+- **Significance:** Would explain why Raqiya is maximally discriminating at delta=0 and minimally discriminating at delta!=0.
+
+### Re Bias as Activation Signature
+- **Statement:** At delta=sqrt(2) with Re>0 multiplicative encoding, parity values have Re<=0 bias (26/28 with a<=0), non-parity have Re>=0 bias (24/28 with a>=0). The Re>0 activation selects values whose products must cross from negative to positive real half-plane (self-escape behavior), correlating with low product closure.
+- **Status:** NOVEL, DEMONSTRATED (D109)
+- **Demo provenance:** Demo 109
+- **Significance:** The activation function creates a selection pressure that is visible in the Gaussian real-part distribution.
+
+### Caruso Genericity
+- **Statement:** Pseudo-Anosov braids become generic at higher word lengths, crossing from minority to majority at depth 5 (50.6%) and reaching 77.2% at depth 8. Consistent with Caruso (2013) genericity theorem.
+- **Status:** CONFIRMED (D106 depth-by-depth pA fraction data)
+- **Demo provenance:** Demo 106
+- **Significance:** Empirical confirmation of a known theoretical result, in the specific context of 4-strand braids.
 
 ---
 
@@ -1488,3 +1720,23 @@ Jones polynomial (writhe-normalized bracket) is invariant under all three Reidem
 108. Casimir-XOR Inversion in Simple Modules — **NEW FINDING**: Casimir-XOR correlation INVERTS at higher XOR levels in simple module W_{5,3}; XOR6 ratio 1.17× and XOR8 ratio 1.51× (winners higher, matching D100), but XOR10 ratio 0.89× and XOR12 ratio 0.54× (winners LOWER); in simple modules, hardest XOR computations select for near-scalar (low Casimir) entries; opposite of D100's non-semisimple pattern where all ratios >1 (Demo 101)
 109. Simple vs Non-Semisimple Computational Difference — **DEMONSTRATED**: W_{5,3} (simple, 4×4) has broader shallow capacity (MORE XOR6-8 than D100) but strictly less deep capacity (XOR14=0 vs 70 in D100); the radical extension in W_{4,2} is computationally load-bearing at the XOR14 boundary, not decorative; simple modules compute differently, not just "minus the radical" (Demo 101)
 110. Traceless Hub Commutators Universality — **CONFIRMED** across 4-strand and 5-strand: all hub commutators are traceless in both D100 (6 hub pairs) and D101 (3 hub pairs); D101 goes further — all 3 hub commutators are the ZERO MATRIX (hubs mutually commute), living in a commutative subalgebra of Mat_4(Z[zeta_8]) (Demos 100, 101)
+111. Barrington-Radical Principle — **NAMED THEOREM**: radical of non-semisimple TL module carries abelian writhe character; by Barrington's theorem, abelian groups can't compute parity; radical is provably useless for XOR; simple module W_{6,0} beats non-simple W_{6,4} at every XOR level (Demo 102)
+112. Writhe Character Theorem — **PROVEN** computationally: M*r = A^{writhe(M)}*r for ALL 32,768 W_{6,4} catalog entries; radical is 1D braid character carrying only writhe/framing (Demo 102)
+113. BFS Growth is a Braid Group Invariant — **PROVEN** for n=6: three modules (W_{6,0}, W_{6,2}, W_{6,4}) produce identical BFS trees; growth rate tracks strand count n-1, not module dimension; eliminates dim(W) law hypothesis (Demos 102, 103)
+114. Curse of Dimensionality in Sign-Hash — **CONFIRMED**: higher-dimensional modules produce worse XOR at fixed k due to sparser hash space; W_{6,0}(dim 5) beats W_{6,2}(dim 9) at every XOR level at k=128; partially recoverable via optimal component selection (Demos 103, 104)
+115. Atkinson Sweet Spot — **DEMONSTRATED**: non-monotonic component-count curve with peak at ~120 of 324 components for W_{6,2}, beating W_{6,0}'s 2449 at XOR6=2486; optimal information-per-collision tradeoff in sign-hash quantization (Demo 104)
+116. Branching Interaction Thesis — **CONFIRMED** at n=6, **REVERSED** at n=8: cross-block (off-diagonal) components dominate for small sub-module blocks (dim 4-5), within-block dominates for complex blocks (dim 14); regime transition = Macrame Principle (Demos 104, 105)
+117. Sign-Rank Expansion — **NEW FINDING**: sign quantization (ternary projection) INCREASES effective rank beyond raw Z-linear rank; W_{6,2}: raw 244, sign 292 (+48); W_{8,2}: expansion 1.83x and growing; the nonlinear sign() function breaks linear dependencies (Demos 104, 105)
+118. k-Regime Theory — **CONFIRMED** at n=8: k/2^N ratio controls XOR capacity; D93's "XOR dies at N>=7" REFUTED as pigeonhole artifact; W_{8,0} at k=4096 produces XOR8=22266, beating n=6 (Demo 105)
+119. Macrame Principle — **CONJECTURED**: branching interaction dominates for simple sub-module blocks (dim 4-5); within-block dominates for complex blocks (dim 14); crossover regime between dim 5 and dim 14 (Demo 105)
+120. TL Visibility Filter — **DEMONSTRATED**: topological entropy (Thurston-Nielsen) is completely orthogonal to DKC; both periodic and pseudo-Anosov braids compute XOR at 100% participation; TL quotient at delta=0 erases dynamical info while preserving algebraic structure (Demo 106)
+121. Z/4Z Axis-Alignment Theorem — **PROVEN**: every braid matrix entry over TL module at delta=0 is axis-aligned; constructive phase formula Entry(r,c) = (path count) * zeta_8^{(w - 2*(nest(r) + nest(c))) mod 4} (Demo 107)
+122. Nesting Parity Z/2Z Grading — **PROVEN** computationally (n=2..6, 195 matchings, 0 mismatches): bipartite 2-coloring = nesting count mod 2; NOT a consequence of known KLR Z-grading (Demo 107)
+123. Major Index Bipartite Invariant — **CONJECTURED** for general n,j: for TL standard modules W_{n,j}, maj mod 2 = BFS bipartite coloring; verified at W_{4,2}(3/3) and W_{6,2}(9/9); generalizes nesting parity (Demo 107)
+124. q-Catalan Identity — **PROVEN** algebraically: C_{2m+1}(-1) = (-1)^m * C_m; gives exact bipartition class sizes for TL full-matching link-state graphs (Demo 107)
+125. Orthogonality Theorem (mult vs add closure) — **PROVEN** computationally: multiplicative quotient graph = K_5 (Z/4Z), additive quotient graph = star tree; multiplication rotates axes, addition preserves axes (Demo 107)
+126. Dual-Channel Theorem — **NOVEL**: parity requires BOTH multiplicative phase coherence (product closure > 0) AND additive magnitude diversity (v_2 connectivity > trivial); maximum contrast: parity 17 edges (connected) vs poison 0 edges (empty); maps onto T-gate/Hadamard decomposition (Demo 108)
+127. Encoding-Dependent Dual-Channel Theorem — **NOVEL**: dual-channel polarity flips with encoding type; additive encoding wants HIGH product closure, multiplicative encoding wants LOW; confirmed by D108+D109 paired experiment (Demos 108, 109)
+128. Perfect Algebraic Symmetry at delta=sqrt(2) — **NOVEL**: parity and non-parity vocabularies structurally identical on 7/8 edge types; product closure is the sole discriminator (14.8% vs 46.6%); Z[zeta_16] algebra too rich for Raqiya to distinguish except through products (Demo 109)
+129. Partition Coincidence as Incapacity Signature — **NOVEL**: triple partition collapse (root=Galois=norm) is a structural signature of computational incapacity; parity has three distinct levels, poison collapses to one (Demo 108)
+130. Resolution Dependence of Computational Role — **NOVEL**: same Z[zeta_8] value can be parity-capable at k=6 and poison at k=15; 14 values have dual classification; computational role is activation-dependent, not value-intrinsic (Demo 108)

@@ -2,7 +2,7 @@
 
 ## What Is This
 
-Discrete Knotted Computation (DKC) compiles topological invariants -- Kauffman bracket values evaluated at roots of unity -- into neural network weights that compute Boolean functions without training. At A = e^{i*5pi/4}, delta = 0, and every bracket value is a cyclotomic integer in Z[zeta_8] with exact arithmetic (zero floating-point error, ever). Over 101 demos we proved: forward DKC works (D29), all 13 NPN Boolean classes are computable (D45-50), the parity wall is in activation geometry not the weight lattice (D48-50, D61-62), capacity scales linearly with braid crossing depth (D82), the +/-q encoding is structurally locked to parity (D92, formally proven), the circuit complexity hierarchy manifests as AND/XOR ratio 1→2762→∞ (D93, LANDMARK), solvability is the capacity bottleneck (D94, Barrington confirmed), the optimal z8 catalog is 21 entries not 24 (D96, LANDMARK), Cell B perfection is geometric inevitability from orthogonal frames (D97), and multi-strand DKC works -- first-ever 3-strand XOR via irreducible Delta_1 module, XOR14=60 (D99, LANDMARK). Non-semisimple extensions are computationally load-bearing: D100's W_{4,2} (radical) achieves XOR14=70 while D101's W_{5,3} (simple) caps at XOR12. The sl_d functor thesis (BFS growth ~d*x/round) is confirmed at d=2,3,4. Five published pillars are CONNECTED through DKC as a "discrete algebraic reservoir computer."
+Discrete Knotted Computation (DKC) compiles topological invariants -- Kauffman bracket values evaluated at roots of unity -- into neural network weights that compute Boolean functions without training. At A = e^{i*5pi/4}, delta = 0, and every bracket value is a cyclotomic integer in Z[zeta_8] with exact arithmetic (zero floating-point error, ever). Over 109 demos we proved: forward DKC works (D29), all 13 NPN Boolean classes are computable (D45-50), the parity wall is in activation geometry not the weight lattice (D48-50, D61-62), capacity scales linearly with braid crossing depth (D82), the +/-q encoding is structurally locked to parity (D92, formally proven), the circuit complexity hierarchy manifests as AND/XOR ratio 1->2762->inf (D93, LANDMARK), solvability is the capacity bottleneck (D94, Barrington confirmed), the optimal z8 catalog is 21 entries not 24 (D96, LANDMARK), Cell B perfection is geometric inevitability from orthogonal frames (D97), and multi-strand DKC works -- first-ever 3-strand XOR via irreducible Delta_1 module, XOR14=60 (D99, LANDMARK). The radical-as-resource hypothesis was REFUTED: the radical carries only abelian writhe data (Barrington-Radical Principle, D102). BFS growth is a braid group invariant tracking strand count, not module dimension (D103). The Atkinson sweet spot shows 3-strand beats 4-strand at matched catalog (D104). "XOR dies at N>=7" was REFUTED as a k-regime artifact (D105, macrame principle). Topological entropy is completely orthogonal to DKC -- computation is algebraic/relational, not dynamical (D106). Universal axis-alignment PROVEN with constructive Z/4Z phase formula, plus nesting parity Z/2Z grading and q-Catalan identity (D107). The Dual-Channel Theorem establishes that parity requires BOTH phase coherence AND magnitude diversity, with encoding-dependent polarity inversion (D108-D109). Five published pillars are CONNECTED through DKC as a "discrete algebraic reservoir computer."
 
 ## Key Results
 
@@ -18,31 +18,38 @@ Discrete Knotted Computation (DKC) compiles topological invariants -- Kauffman b
 | 8 | Depth law mechanism: axis cancellation + cross-depth algebraic constraint; relational, not positional | D89-91 | DEMONSTRATED |
 | 9 | Parity-lock theorem: +/-q encoding structurally locked to XOR/XNOR; AND/OR/MAJ impossible | D92 | **PROVEN (P04)** |
 | 10 | Framing = +2 XOR levels: Jones normalization destroys exactly 2 levels at every root tested | D83 | DEMONSTRATED |
-| 11 | Complement-blindness theorem: combined_cell maps m↔~m to same cell; phase_cell recovers all 13 NPN | D93 | **PROVED** |
-| 12 | Circuit complexity hierarchy: AND/XOR ratio 1.01→2762→∞ (N=3→8); pigeonhole kills XOR at N≥7 | D93 | DEMONSTRATED |
-| 13 | Solvability bottleneck: non-solvable 2I beats solvable z8 at matched size (advantage 1.07x→1.67x) | D94 | CONFIRMED |
+| 11 | Complement-blindness theorem: combined_cell maps m<->~m to same cell; phase_cell recovers all 13 NPN | D93 | **PROVED** |
+| 12 | Circuit complexity hierarchy: AND/XOR ratio 1.01->2762->inf (N=3->8); pigeonhole kills XOR at N>=7 | D93 | DEMONSTRATED |
+| 13 | Solvability bottleneck: non-solvable 2I beats solvable z8 at matched size (advantage 1.07x->1.67x) | D94 | CONFIRMED |
 | 14 | Optimal z8 = A+B+C (21 entries): removing 3 Q8-null entries IMPROVES capacity | D96 | DEMONSTRATED |
-| 15 | Cell B perfection: 3 orthogonal directions at 45° = 100% XOR at all N; 50° robustness plateau | D97 | DEMONSTRATED |
+| 15 | Cell B perfection: 3 orthogonal directions at 45 deg = 100% XOR at all N; 50 deg robustness plateau | D97 | DEMONSTRATED |
 | 16 | First 3-strand XOR: Delta_1 irreducible module over Z[zeta_8], XOR14=60, XOR16=0 ceiling | D99 | **LANDMARK** |
-| 17 | Ext^1 thesis: non-semisimple extensions are computationally load-bearing (D100 XOR14=70 vs D101 XOR14=0) | D99-101 | DEMONSTRATED |
-| 18 | sl_d growth rate: BFS ~d*x per round confirmed at d=2,3,4 (three data points) | D99-101 | CONFIRMED |
+| 17 | Barrington-Radical Principle: radical carries abelian writhe character, provably useless for parity | D102 | **PROVEN** |
+| 18 | BFS growth is braid group invariant: ~(n-1)x/round, independent of module dimension (4 data points) | D99-103 | CONFIRMED |
+| 19 | "XOR dies at N>=7" REFUTED: k-regime artifact; W_{8,0} XOR8=22266 at k=4096; macrame principle | D105 | **REFUTED** |
+| 20 | Topological entropy null: computation is algebraic/relational; TL visibility filter explains why | D106 | DEMONSTRATED |
+| 21 | Z/4Z Axis-Alignment Theorem: constructive proof + nesting parity Z/2Z grading (NOVEL) | D107 | **PROVEN** |
+| 22 | Dual-Channel Theorem: parity requires phase coherence + magnitude diversity; polarity encoding-dependent | D108-109 | DEMONSTRATED |
 
 ## Current Frontier
 
-- **Multi-strand DKC works (D98-D101):** 3-strand Delta_1 achieves XOR14=60. 4-strand W_{4,2} (non-semisimple) achieves XOR14=70. 5-strand W_{5,3} (simple) caps at XOR12. Non-semisimple extensions are computationally load-bearing — the radical is not decorative.
-- **Catalog optimization (D95-D97):** Derived series and null/non-null are INDEPENDENT partitions. Optimal z8 = 21 entries (removing 3 Q8-null). Cell B perfection is geometric (orthogonal frames). First principled catalog pruning.
-- **Key open question:** Does the sl_d functor thesis (BFS growth ~d*x/round) continue at d=5 (W_{6,4})? This is the decisive test for multi-strand scaling.
-- **Next experiments:** (1) 6-strand W_{6,4} — is growth ~5x? Does non-semisimplicity matter? (2) RKHS kernel rank — rank(K_2I) vs rank(K_z8). (3) Ext^1 formalization — prove non-semisimple is strictly more powerful.
-- **Paper pipeline:** Paper 7 (mechanistic arc D85-D92), Paper 8 (circuit complexity D93-D94), Paper 9 (multi-strand arc D98-D101). Papers 1-6 at various stages.
+- **Raqiya diagnostics arc complete (D106-D109):** Topological entropy is orthogonal to DKC (TL visibility filter). Axis-alignment proven universally. Dual-channel theorem predicts parity capability from algebraic graph structure, with encoding-dependent polarity inversion at delta=sqrt(2).
+- **Multi-strand framework settled (D102-D105):** Radical carries only abelian writhe (Barrington-Radical Principle). BFS growth is a braid group invariant. Atkinson sweet spot at ~120 components for dim-9. k/2^N ratio controls XOR viability (k-regime theory). Macrame principle: branching interaction reverses between dim 5+4 (cross-block) and dim 14+14 (within-block).
+- **Key open questions:** (1) Does the dual-channel polarity inversion follow a general encoding rule? Additive encoding at delta=sqrt(2) is the single controlled test. (2) Amy Bridge: does the dual-channel map onto T-gate/Hadamard decomposition in quantum circuit synthesis? (3) RKHS kernel rank: does rank(K_2I)/rank(K_z8) > 120/24, validating the reservoir computing interpretation?
+- **Next experiments:** (1) Additive encoding at delta=sqrt(2) -- confirms polarity inversion (SMALL). (2) RKHS kernel rank test -- one number validates five-pillar synthesis (SMALL). (3) Amy Bridge formalization -- connects DKC to QCS resource theory (MEDIUM). (4) Major index theorem at W_{8,2} -- novel algebraic invariant (SMALL).
+- **Paper pipeline:** Papers 1-6 at various stages. Paper 7 (mechanistic arc D85-D92), Paper 8 (circuit complexity D93-D94), Paper 9 (multi-strand arc D95-D105), Paper 10 (Raqiya/diagnostics arc D106-D109, NEW).
 
 ## Deeper Reading
 
 All paths relative to `knotapel/`:
 
-- **Full narrative:** `atlas/synthesis/narrative.md` -- the story from D01 to D101
+- **Full narrative:** `atlas/synthesis/narrative.md` -- the story from D01 to D109
+- **Key insights (10 levels):** `atlas/synthesis/key-insights.md` -- progressive depth from one sentence to one paragraph per idea
+- **Arc summaries:** `atlas/synthesis/arc-summaries.md` -- 20 research arcs with question/answer/journey/artifacts
 - **Key results & proofs:** `atlas/inventory/theorems.md` | `atlas/inventory/proofs-index.md`
-- **Demo index:** `atlas/inventory/demo-index.md` -- all 101 demos with one-line summaries
-- **What's next:** `atlas/planning/next-priorities.md` -- tiered priority list with critical paths
+- **Demo index:** `atlas/inventory/demo-index.md` -- all 109 demos with one-line summaries
+- **What's next:** `atlas/planning/next-priorities.md` -- tiered priority list with critical paths and conjecture-graph rankings
+- **Prerequisites & glossary:** `atlas/synthesis/prerequisites.md` | `atlas/synthesis/glossary.md`
 - **Cross-demo patterns:** `atlas/synthesis/connections.md` | `atlas/synthesis/four-lenses.md`
 - **Novelty claims:** `atlas/synthesis/novelty.md`
 - **Open questions & vision:** `atlas/planning/research-questions.md` | `atlas/planning/vision.md`

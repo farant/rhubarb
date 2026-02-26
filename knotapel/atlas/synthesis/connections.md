@@ -1,6 +1,6 @@
 # Cross-Demo Connections
 
-How 101 demos feed into each other, what recurs, and where threads unexpectedly converge.
+How 109 demos feed into each other, what recurs, and where threads unexpectedly converge.
 
 ---
 
@@ -391,6 +391,70 @@ bottleneck. D92 closes the arc by showing that the +/-q encoding is structurally
 parity-locked — only XOR/XNOR are computable, AND/OR/MAJ/THRESHOLD = 0 winners at all
 depths. The depth law is parity-specific.
 
+### Matrix Braid DKC Arc (D98-D109)
+Higher-strand scaling, BFS invariants, activation anatomy, and graph-theoretic
+parity prediction:
+
+```
+D98 (3-strand trace readout bottleneck)
+ |
+ v
+D99 (Delta_1 module, XOR14, non-split extension)
+ |
+ v
+D100 (W_{4,2}, 4-strand, non-semisimple) ----> D101 (W_{5,3}, 5-strand, simple)
+ |                                                |
+ v                                                v
+D102 (6-strand A/B: W_{6,0} vs W_{6,4}, Barrington-Radical Principle)
+ |
+ v
+D103 (W_{6,0} vs W_{6,2}: BFS growth is braid group invariant)
+ |
+ v
+D104 (activation coarseness sweep, branching decomposition, sign-rank expansion)
+ |
+ v
+D105 (8-strand W_{8,0}/W_{8,2}: k-regime refutes D93, macrame principle)
+ |
+ v
+D106 (topological entropy null -- capacity is relational, not dynamical)
+ |
+ v
+D107 (algebraic graph density, Z/4Z axis-alignment theorem, nesting parity)
+ |
+ v
+D108 (parity vocabulary graph, dual-channel theorem)
+ |
+ v
+D109 (D55 graph analysis, encoding-dependent dual-channel)
+```
+
+D102 is the pivot: the Barrington-Radical Principle (radical carries an abelian writhe
+character, provably useless for parity by Barrington's theorem) decisively refutes
+radical-as-resource and establishes that simple modules outperform non-simple at matched
+dimension. D103 settles the growth law: BFS tree is a braid group invariant, identical
+across all simple modules of the same strand count regardless of dimension (confirmed
+for all three n=6 modules). D104 anatomizes the activation as a compressed sensing
+readout: sign-rank expansion (sign quantization breaks linear dependencies, expanding
+effective dimension), the Atkinson sweet spot (optimal component count for hash collision
+tradeoff), and branching decomposition (cross-block interaction IS the computational
+signal at n=6). D105 extends to n=8, refuting D93's "XOR dies at N>=7" as a k-regime
+artifact and discovering the macrame principle (branching interaction reverses from
+cross-block to within-block as sub-module complexity increases).
+
+D106 opens a new thread: topological entropy (Thurston-Nielsen classification) is
+completely orthogonal to DKC Boolean computation, falsifying the prediction that
+pseudo-Anosov braids compute better. The TL visibility filter explains why: writhe
+survives the TL quotient (correlates with DKC), entropy does not (erased by e_i^2=0).
+
+D107-D109 form a trilogy: D107 proves universal axis-alignment of braid matrices at
+delta=0 via a constructive Z/4Z phase formula, discovers nesting parity as a novel Z/2Z
+grading, and introduces the major index bipartite invariant. D108 shows graph structure
+predicts parity capability (dual-channel theorem: parity requires both multiplicative
+phase coherence and additive magnitude diversity). D109 tests this at delta=sqrt(2) and
+discovers the encoding-dependent dual-channel theorem: under multiplicative encoding,
+parity wants LOW product closure (inverted from D108's additive encoding result).
+
 ---
 
 ## 2. Code Reuse Patterns
@@ -402,9 +466,16 @@ Four code assets appear in 30+ demos and constitute a de facto standard library:
 | Asset | Introduced | Used in | Role |
 |-------|-----------|---------|------|
 | Complex arithmetic (`Cx`) | D10 | 35 demos | Numerical workhorse |
-| Union-find loop counter | D02 | 37 demos | State-sum backbone |
-| NPN classification | D23 | 13 demos | Boolean function taxonomy |
-| Braid word decoder | D22 | 13 demos | Exhaustive enumeration |
+| Union-find loop counter | D02 | 40+ demos | State-sum backbone |
+| NPN classification | D23 | 15 demos | Boolean function taxonomy |
+| Braid word decoder | D22 | 15 demos | Exhaustive enumeration |
+
+Two newer assets are emerging as cross-demo standards:
+
+| Asset | Introduced | Used in | Role |
+|-------|-----------|---------|------|
+| Raqiya (Z[zeta_8] analysis) | D107 | D107, D108, D109 | Algebraic graph analysis |
+| MatN (variable-dim matrix) | D103 | D103, D104, D105 | Variable-dimension TL representations |
 
 ### Ring Tower
 
@@ -415,11 +486,11 @@ Z (integers) -- D01-D09
   |
   Cx (floats) -- D10-D28
   |
-  Z[zeta_8] -- D29, D35, D48-D50
+  Z[zeta_8] -- D29, D35, D48-D50, D100-D108
   |
   Z[omega] -- D53
   |
-  Z[zeta_16] -- D54-D57, D65, D69
+  Z[zeta_16] -- D54-D57, D65, D69, D109
   |
   Z[zeta_5] -- D58
   |
@@ -627,6 +698,10 @@ wall is located in a specific component and bypassed by changing that component:
    activations. Wall was in **group finiteness** (binary octahedral group closes at 24
    elements), not the architecture. Resolution: ζ₁₂ (infinite group), 124 solutions.
 
+4. **D93→D105**: D93's "XOR dies at N>=7" appeared to be a fundamental DKC capacity limit.
+   Wall was in the **k-regime** (k=128 at N=8 gives k/2^N=0.5, deep pigeonhole), not
+   strand count or algebra. Resolution: k=4096 at n=8 gives XOR8=22266, beating n=6.
+
 The pattern teaches: before concluding a function is unreachable, locate the specific
 component enforcing the wall. The topology/algebra is almost never the ultimate bottleneck.
 
@@ -776,6 +851,105 @@ catalog entry per input bit, giving each weight independent combinatorial freedo
 encoding constrains each weight to contribute ±q or 0, creating per-weight pair
 cancellations (sign-flip symmetry: combined_cell(S) = combined_cell(-S)) that funnel all
 computational power into parity — the single Boolean function outside AC⁰.
+
+### BFS Growth as Braid Group Invariant
+
+D102-D103 establish that BFS catalog growth is a property of the braid group B_n, not of
+the TL module chosen. All three tested n=6 modules (W_{6,0} dim=5, W_{6,2} dim=9,
+W_{6,4} dim=5 non-simple) produce BIT-FOR-BIT identical BFS depth profiles: 1, 11, 77,
+439, 2233, 10603, 32768. Max coefficient magnitudes are also identical across simple
+modules. Growth rate converges toward (n-1)x per round, confirming the sl_d functor thesis
+from D101:
+
+| n (strands) | Demo | Generators | Growth rate | Predicted |
+|-------------|------|------------|-------------|-----------|
+| 3 | D98 | 4 | ~2.2x | 2 (sl_2) |
+| 4 | D100 | 6 | ~3.1x | 3 (sl_3) |
+| 5 | D101 | 8 | ~4.0x | 4 (sl_4) |
+| 6 | D102-103 | 10 | ~5.0x | 5 (sl_5) |
+| 8 | D105 | 14 | ~5.1x | 7 (sl_7) |
+
+The implication is profound: the "reservoir" (BFS catalog) is invariant across modules.
+Only the "readout" (activation function = sign hash of matrix entries) changes. This
+cleanly separates reservoir dynamics from readout design, exactly as the reservoir
+computing framework predicts.
+
+### Sign-Rank Expansion and Compressed Sensing
+
+D104 discovers that sign quantization (ternary {-1,0,+1} projection) can INCREASE
+effective dimension: W_{6,2} has raw rank 244/324 (75.3%) but sign-rank 292/324 (90.1%)
+— a gain of 48 independent dimensions. The nonlinear sign() function breaks linear
+dependencies that exist over Z. D105 extends this: W_{8,2} at 16384 entries shows
+sign-rank 2003 vs raw 1096, expansion factor 1.83x and still growing.
+
+This connects to 1-bit compressed sensing (Boufounos-Baraniuk 2008): sign-hash activation
+is a 1-bit quantization of algebraic integer components. The cross-block activation works
+because branching cross-terms have low intra-block coherence (near-orthogonal TL_5
+pieces), satisfying the incoherence condition for CS recovery. The sign-rank table across
+all modules:
+
+| Module | dim | Raw % | Sign % | Expansion |
+|--------|-----|-------|--------|-----------|
+| Delta_1 | 2 | 100% | 100% | 1.00x |
+| W_{4,2} | 3 | 77.8% | 88.9% | 1.14x |
+| W_{5,3} | 4 | 96.9% | 100% | 1.03x |
+| W_{6,0} | 5 | 100% | 100% | 1.00x |
+| W_{6,2} | 9 | 75.3% | 90.1% | 1.20x |
+| W_{8,0} | 14 | 90.6% | 97.8% | 1.08x |
+| W_{8,2} | 28 | 34.9% | 63.9% | 1.83x |
+
+The pattern: expansion is greatest for high-dimensional modules with redundancy (many
+Z-linear dependencies to break), and smallest for low-dimensional modules that are already
+maximally independent.
+
+### Relational vs Individual: Computation is Collective
+
+D106 crystallizes a theme running through the project: DKC capacity is determined by
+relational/algebraic properties of the catalog, never by individual/dynamical properties
+of single entries. The evidence is cumulative:
+
+- **D106**: topological entropy (an individual dynamical property) is completely orthogonal
+  to DKC Boolean computation — both periodic and pseudo-Anosov braids compute XOR at 100%
+  participation. The TL visibility filter erases all dynamical information.
+- **D90**: spectral inversion — S² bandwidth DECREASES with depth while computation
+  IMPROVES. Individual entry positions become less informative; relational structure
+  (cross-depth composition) is what matters.
+- **D95**: COMM-only and NON-COMM-only each perform similarly in isolation; the synergy
+  emerges only from their combination.
+- **D107-D108**: graph-theoretic parity prediction works precisely because it measures
+  relational properties (product closure, additive v_2 connectivity) rather than single-
+  value properties.
+
+The TL visibility filter from D106 provides the mechanism: properties that survive the
+TL quotient at delta=0 (writhe, algebraic phase) correlate with DKC output; properties
+that do not survive (entropy, spectral radius) are invisible. The quotient is the filter
+that separates relational from individual structure.
+
+### Graph-Theoretic Parity Prediction (The D107-D109 Trilogy)
+
+D107-D109 form a trilogy establishing that algebraic graph structure predicts parity
+capability:
+
+**D107** (Algebraic Graph Density) builds the analytical foundation: every entry of a
+braid representation matrix at delta=0 is axis-aligned (exactly one nonzero Z[zeta_8]
+component), proved via a constructive Z/4Z phase formula. The nesting parity Z/2Z
+grading, major index bipartite invariant, and q-Catalan identity are novel mathematical
+results. DKC at delta=0 reduces to integer path counting plus a three-variable phase
+formula: effective computation is Z × Z/4Z per matrix entry.
+
+**D108** (Parity Vocabulary) shows graph structure PREDICTS parity capability. Maximum
+structural contrast: parity has 17 product closure edges (connected P_3), poison has
+ZERO (empty graph). The dual-channel theorem: parity requires BOTH multiplicative phase
+coherence (product closure > 0) AND additive magnitude diversity (v_2 connectivity >
+trivial). Maps onto T-gate/Hadamard decomposition in quantum circuit synthesis.
+
+**D109** (Encoding Dependence) tests the dual-channel theorem at delta=sqrt(2) and
+discovers the encoding-dependent refinement: at delta=sqrt(2) with multiplicative encoding,
+parity and non-parity are structurally indistinguishable on 7/8 edge types. Product closure
+is the sole discriminator — but its polarity is INVERTED (parity wants LOW product closure,
+opposite of D108). The sign flips with encoding type. When algebra is rich (j=0 sector
+alive, D52), the simplest activation (Re>0) suffices because no structural deficits need
+compensating.
 
 ---
 
@@ -1534,6 +1708,86 @@ the constraint because parity is constant on all 3^k equivalence classes. Sign-f
 all computational power on parity — the single function outside AC⁰. The 1wpi encoding from
 D48/D50, which assigns independent catalog entries per input, escapes this lock entirely.
 
+### D102: The Barrington-Radical Principle
+
+Threads converging:
+- D94 Barrington solvability bottleneck (non-solvable 2I beats solvable z8)
+- D100 W_{4,2} radical anatomy (constant radical content, writhe character on generators)
+- D101 simple module comparison (sl_d functor thesis, BFS growth rate prediction)
+- D51-D52 TL non-semisimplicity theory (radical anatomy, sandwich theorem)
+
+Result: Head-to-head A/B test of W_{6,0} (simple, dim=5) vs W_{6,4} (non-simple, dim=5,
+radical dim=1) on 6-strand braids at delta=0. The radical carries an abelian writhe character
+(B_6 → Z/8Z), proven for ALL 32,768 catalog entries. By Barrington's theorem, abelian groups
+cannot compute parity. The simple module wins at every XOR level (2449 vs 2370 at XOR6, 1 vs
+0 at XOR10). The Barrington-Radical Principle is the first theoretical result connecting TL
+representation structure directly to computational complexity theory — not just measuring
+capacity empirically but proving incapacity from first principles.
+
+### D103-D104: BFS Invariance and Activation Anatomy
+
+Threads converging:
+- D102 identical BFS trees across W_{6,0} and W_{6,4}
+- D101 sl_d functor thesis (growth rate = n-1)
+- 1-bit compressed sensing (Boufounos-Baraniuk 2008)
+- Reservoir computing readout/reservoir decomposition (Jaeger 2001)
+
+Result: D103 adds W_{6,2} (dim=9) and finds IDENTICAL BFS to W_{6,0} (dim=5): same depth
+profile, same max coefficient magnitudes. Growth is a braid group property. But dim-9
+has WORSE XOR at matched activation — the curse of dimensionality in sign-hash. D104
+anatomizes this: the Atkinson sweet spot (120 of 324 components), sign-rank expansion
+(244→292), and the branching interaction thesis (cross-block > within-block). k is the
+real lever, not hash architecture. Together these demos establish that the BFS catalog is
+the braid-group-invariant reservoir; all variation in capacity comes from readout design.
+
+### D105: k-Regime Theory and the Macrame Principle
+
+Threads converging:
+- D93 "XOR dies at N>=7" (refuted)
+- D104 branching decomposition (cross-block vs within-block)
+- D104 sign-rank expansion (scaling with module dimension)
+- D82 depth law (crossing depth as capacity governor)
+
+Result: 8-strand braids on W_{8,0} (dim=14) and W_{8,2} (dim=28) revive XOR8 at high k,
+refuting D93's strand-count wall as a k-regime artifact (k/2^N is the control parameter).
+Branching interaction reverses: within-block > cross-block (opposite of D104), establishing
+the macrame principle. Rank saturation analysis invalidates all prior single-checkpoint rank
+comparisons. The methodological lesson (saturation curves required) is as important as the
+computational results.
+
+### D106-D108: From Entropy Null to Parity Prediction
+
+Threads converging:
+- D83 writhe correlation (TL-visible property correlates with DKC)
+- D90 relational computation thesis (spectral inversion, cross-depth constraints)
+- D95 synergy universality (capacity is collective, not individual)
+- D50 k-sector parity (906 solutions, 41 parity values)
+- D64 poison vocabulary (31 values, octant structure)
+- D107 Raqiya toolkit (13 edge types, graph analysis)
+
+Result: D106 falsifies topological entropy as a predictor (clean null across ALL Boolean
+functions), establishing the TL visibility filter. D107 proves universal axis-alignment
+and introduces the Z/4Z phase formula + nesting parity + major index bipartite invariant.
+D108 shows graph structure predicts parity capability: maximum contrast on product closure
+(connected vs empty) and additive v_2 connectivity (83% vs trivial K_2). The dual-channel
+theorem is the synthesis: parity requires both multiplicative phase coherence and additive
+magnitude diversity, mapping onto Amy's T-gate/Hadamard decomposition.
+
+### D109: Encoding-Dependent Dual-Channel
+
+Threads converging:
+- D108 dual-channel theorem (product closure + v_2 connectivity)
+- D55 bracket catalog at delta=sqrt(2) (9334 parity solutions, Z[zeta_16])
+- D52 j=0 sector liveness (delta≠0 enriches algebra)
+- D107 Raqiya toolkit (reused for Z[i]-axial Z[zeta_16] analysis)
+
+Result: At delta=sqrt(2), Raqiya CANNOT discriminate parity from non-parity: 7/8 edge
+types identical, perfect 28/28 symmetry. Product closure is the sole discriminator with
+INVERTED polarity (parity=low, non-parity=high — opposite of D108). The encoding-dependent
+dual-channel theorem: additive encoding wants high product closure (self-reinforcement),
+multiplicative encoding wants low (vocabulary escape for sector alternation). When algebra
+is rich, the simplest activation suffices. Raqiya diagnoses impoverishment, not health.
+
 ---
 
 ## Summary: The Project's Logic
@@ -1670,6 +1924,44 @@ provides specifically the structure parity needs at the computational boundary. 
 pillar synthesis (Abramsky + Habiro + Aizenberg + Nazer-Gastpar + Reservoir Computing) is
 completed with a precise, testable mapping to discrete algebraic reservoir computers.
 
+D102-D109 form the matrix braid DKC arc, scaling from 4 to 8 strands and introducing
+algebraic graph-theoretic parity prediction.
+
+D102 is the pivot: the Barrington-Radical Principle — the radical of W_{6,4} carries an
+abelian writhe character (B_6 → Z/8Z), provably useless for parity by Barrington's theorem
+— refutes radical-as-resource and establishes that simple modules outperform non-simple at
+matched dimension. D103 settles the growth law: BFS catalog depth profiles are identical
+across all three n=6 modules (dim 5, dim 5 non-simple, dim 9), confirming that the BFS tree
+is a braid group invariant. The reservoir computing interpretation becomes precise: the
+reservoir is invariant; only the readout varies.
+
+D104 anatomizes the activation as a compressed sensing readout. Sign-rank expansion (sign
+quantization breaks 48 linear dependencies in W_{6,2}, expanding effective rank from 244 to
+292), the Atkinson sweet spot (optimal component count ~120 at k=128), and branching
+decomposition (cross-block interaction IS the signal at n=6 but NOT at n=8) provide a
+detailed understanding of what the sign-hash activation extracts from the matrix
+representation. D105 extends to 8 strands, refuting D93's "XOR dies at N>=7" as a k-regime
+artifact (k/2^N is the real parameter) and discovering the macrame principle (branching
+interaction reverses from cross-block to within-block as sub-module blocks become complex).
+
+D106 opens the graph-theoretic prediction arc: topological entropy is completely orthogonal
+to DKC Boolean computation (falsified prediction, clean null across ALL 8 functions tested).
+The TL visibility filter explains why: writhe survives the quotient (correlates with DKC),
+entropy does not (e_i^2=0 kills it). Computation is collective and algebraic, not individual
+and dynamical.
+
+D107-D109 form a trilogy establishing graph-theoretic parity prediction. D107 proves the
+Z/4Z axis-alignment theorem (every braid matrix entry at delta=0 is axis-aligned, with a
+constructive phase formula based on nesting parity), discovers the major index bipartite
+invariant, and proves a novel q-Catalan identity. D108 shows graph structure predicts parity
+capability: maximum structural contrast between parity and poison vocabularies on product
+closure (connected P_3 vs empty graph) and additive v_2 connectivity (83% vs trivial K_2),
+establishing the dual-channel theorem (parity requires both multiplicative phase coherence
+and additive magnitude diversity). D109 tests this at delta=sqrt(2) and finds the polarity
+INVERTS under multiplicative encoding: parity wants low product closure (vocabulary escape),
+non-parity wants high (vocabulary self-reinforcement). The encoding-dependent dual-channel
+theorem unifies D108 and D109.
+
 ### D93↔D92: Parallel Parity Locks — Encoding vs Activation (D93↔D92)
 
 D92 proved the parity-lock theorem: the +/-q encoding creates 3^k equivalence classes,
@@ -1745,20 +2037,22 @@ phase_cell) is the bottleneck, and the group merely modulates how much capacity 
 to overcome that bottleneck. The circuit complexity hierarchy is not an abstract classification
 for DKC — it is a measurable, quantitative prediction about hit-rate divergence.
 
-### D93-D94 Complete the "Wall Was X Not Y" Pattern (D93↔D50↔D77↔D79)
+### D93-D105 Complete the "Wall Was X Not Y" Pattern (D93↔D50↔D77↔D79↔D105)
 
-The fifth instance: D93's combined_cell activation kills non-complement-invariant functions
-under 1wpi. Phase_cell (no sign flip) recovers all 13 NPN classes. The wall was in the
-activation's normalization convention, not the encoding or lattice. The full pattern:
+The pattern now has seven instances. D93's combined_cell activation kills non-complement-
+invariant functions under 1wpi. Phase_cell recovers all 13 NPN classes. D105 refutes
+D93's "XOR dies at N>=7" as a k-regime artifact. The full pattern:
 1. D48→D50: wall in split-sigmoid activation, not Z[zeta_8] lattice
 2. D76→D77: wall in S²-only activation, not ζ₈ root of unity
 3. D78→D79: wall in group finiteness, not DKC architecture
 4. D92: wall in +/-q encoding, not the activation (parity lock)
 5. D93: wall in combined_cell normalization, not 1wpi encoding (complement blindness)
+6. D98→D99: wall in trace readout / reducible representation, not multi-strand algebra
+7. D93→D105: wall in k-regime (k/2^N ratio), not strand count or algebra
 
 Each instance deepens understanding of the modular architecture: encoding, activation,
-group structure, and normalization convention are independent design variables, each with
-its own constraint set.
+group structure, normalization convention, readout channel, and k-regime are independent
+design variables, each with its own constraint set.
 
 ### D94 Quantum Dimension Table Extends D80 (D94↔D80↔D58)
 
@@ -1872,18 +2166,19 @@ The causal chain is now established across four demos:
 4. Cross-depth composition with extension-prepared entries produces high-XOR capacity
 5. Without extension, the chain breaks at step 2 and deep capacity vanishes (D101 control)
 
-### D93-D101 Complete the "Wall Was X Not Y" Pattern (Extension)
+### D93-D109 Complete the "Wall Was X Not Y" Pattern (Extension)
 
-The wall-identification pattern now has a sixth instance: D98's trace readout gives ZERO
+The wall-identification pattern now has SEVEN instances: D98's trace readout gives ZERO
 XOR despite the 3-strand algebra being infinite and rich. D99's Delta_1 module + sign-hash
-activation recovers 500K+ XOR6 solutions. The wall was in the representation/readout, not
-the algebra:
+activation recovers 500K+ XOR6 solutions. D105 refutes D93's "XOR dies at N>=7" by
+showing the wall was in the k-regime, not the strand count:
 1. D48→D50: wall in split-sigmoid activation, not Z[zeta_8] lattice
 2. D76→D77: wall in S²-only activation, not ζ₈ root of unity
 3. D78→D79: wall in group finiteness, not DKC architecture
 4. D92: wall in +/-q encoding, not the activation (parity lock)
 5. D93: wall in combined_cell normalization, not 1wpi encoding
 6. D98→D99: wall in trace readout / reducible representation, not multi-strand algebra
+7. D93→D105: wall in k-regime (k/2^N ratio), not strand count or algebra
 
 ### Traceless Hub Commutator Universal Pattern (D99↔D100↔D101)
 
@@ -1895,3 +2190,117 @@ commutators are the ZERO matrix (hubs mutually commute). The pattern strengthens
 demos: from traceless (D99) to traceless + radical-annihilating (D100) to zero (D101).
 Whether this is a theorem (commutators of hub-type entries on TL standard modules are
 always traceless) or specific to these examples remains open.
+
+### Barrington's Theorem Made Concrete in Topology (D94↔D102)
+
+D94 first connected Barrington's theorem to DKC by showing the solvability bottleneck
+computationally: non-solvable 2I outperforms solvable z8 at matched catalog size. D102
+makes this structural: the radical of W_{6,4} carries an abelian writhe character
+(B_6 → Z/8Z via A = -zeta_8), computationally proven for ALL 32,768 catalog entries.
+By Barrington's theorem, abelian groups cannot compute parity. Therefore the radical
+direction is theoretically guaranteed useless for XOR — and empirically, the simple
+module W_{6,0} wins at every XOR level. This is the first time a specific TL-algebraic
+structure has been identified as provably useless by appeal to classical complexity
+theory, rather than empirical refutation alone.
+
+### BFS Growth Independence Across Three n=6 Modules (D102↔D103)
+
+D102 showed W_{6,0} and W_{6,4} have identical BFS depth profiles. D103 adds W_{6,2}
+(dim=9, nearly double the dimension): STILL identical at every depth. The BFS catalog
+is a braid group property. The matrices can be 5×5 or 9×9, simple or non-simple, 0
+or 4 through-lines — the BFS tree is the same. This is the reservoir computing
+interpretation made precise: the reservoir (braid group orbit) is invariant; only the
+readout (sign hash of which matrix representation) varies.
+
+### Fibonacci Max-Abs Pattern and Radical Constraint (D102↔D103)
+
+Both simple n=6 modules follow max coefficient magnitude 1,1,2,3,5,8,16 through depth
+6. The non-simple W_{6,4} follows strict Fibonacci (1,1,2,3,5,8,13) at depth 6 instead
+of breaking to 16. The radical appears to constrain coefficient growth to strict Fibonacci
+— another manifestation of the radical carrying structured (abelian) information. The
+abelian writhe character from the Barrington-Radical Principle literally constrains the
+radical row to A^writhe, preventing the "wild" growth seen in simple modules.
+
+### Branching Interaction Reversal: The Macrame Principle (D104↔D105)
+
+D104 showed that at n=6, the computational signal lives in the cross-block (off-diagonal)
+components under TL_{n-1} branching restriction: W_{6,2} cross-block (160 comp) beats
+within-block (164 comp) at k=128. D105 tested this at n=8 (symmetric 14+14 branching)
+and found the OPPOSITE: within-block dominates (XOR6=2940 vs cross-block=532).
+
+The regime transition is the "macrame principle": simple sub-module blocks (dim 4-5) need
+connections between them for computational fabric, like simple knots needing macrame
+cord. Complex sub-module blocks (dim 14) are self-sufficient, like complex knots that
+hold structure without external connections. The crossover lies between dim 5 and dim 14.
+
+### k-Regime Rescues D93's "Dead" Functions (D93↔D105)
+
+D93 concluded "XOR dies at N>=7" based on experiments at k=128. D105 showed this was a
+k-regime artifact: at k=4096 with n=8, XOR8=22266 (actually BEATING n=6's 21699 at
+matched k). The ratio k/2^N is the real control parameter:
+- k=128, N=8: k/2^N = 0.5 (pigeonhole regime — too few cells for 256 masks)
+- k=4096, N=8: k/2^N = 16 (collision avoidance regime — XOR fully alive)
+
+This is the fourth instance of the "wall was X not Y" pattern in the activation/k-regime
+family: the apparent strand-count wall was entirely in the activation granularity.
+
+### Topological Entropy Null Extends the TL Visibility Filter (D106↔D83)
+
+D83 established that writhe (which survives the TL quotient) correlates with DKC output.
+D106 is the negative control: topological entropy (which does NOT survive the TL quotient,
+because e_i^2=0 kills expanding eigenvalues) is completely orthogonal to DKC computation.
+Both periodic and pseudo-Anosov braids compute XOR at 100% participation with near-identical
+scores. The TL quotient at delta=0 is the visibility filter: properties that pass through it
+(writhe, algebraic phase) are DKC-relevant; properties killed by it (entropy, Burau spectral
+radius) are DKC-invisible. D106 thus confirms D83 from the complementary direction.
+
+### Axis-Alignment Theorem: Universal Structure at Delta=0 (D107↔D35)
+
+D35 established the axiality theorem: bracket values have single nonzero Cyc8 component.
+D107 elevates this from observation to theorem with a constructive proof: the Z/4Z phase
+formula Entry(r,c) = (path count) * zeta_8^{(w - 2*(nest(r) + nest(c))) mod 4} gives the
+phase exactly. Three numbers — writhe, nesting count of source state, nesting count of
+target state — fully determine which cyclotomic axis a matrix entry lies on. This reduces
+DKC at delta=0 from cyclotomic arithmetic to integer arithmetic plus a phase lookup,
+explaining why the computation is so tractable despite living in Z[zeta_8].
+
+### Dual-Channel Theorem and the Amy Bridge (D108↔D65↔D50)
+
+D108's dual-channel theorem — parity needs both multiplicative phase coherence AND additive
+magnitude diversity — connects to quantum circuit synthesis through the Amy-Glaudell-Ross
+(2023) framework. The activation function provides the Hadamard-equivalent magnitude
+diversity that enables sde=0 ("Clifford") values to compute parity. D65's generalized XOR6
+at k=24 is reframed: k=24 provides sufficient "Hadamard resource" to complement the phase
+coherence of the Z[zeta_8] lattice. D50's k=6 breakthrough is the minimal dual-channel
+configuration.
+
+### Product Closure Polarity Inversion (D108↔D109)
+
+D108 (delta=0, additive encoding) found parity wants HIGH product closure (21% density,
+connected P_3) while poison wants ZERO. D109 (delta=sqrt(2), multiplicative encoding) found
+the opposite: parity wants LOW product closure (14.8%) while non-parity wants HIGH (46.6%).
+The sign flip is encoding-dependent: under additive encoding, products that stay within the
+vocabulary reinforce superposition; under multiplicative encoding, products must ESCAPE the
+vocabulary for sector alternation. The dual-channel theorem holds in both regimes but the
+polarity of the multiplicative channel reverses.
+
+### Perfect Algebraic Symmetry at Delta≠0 (D109↔D52)
+
+D109's 7/8 edge-type identity between parity and non-parity at delta=sqrt(2) connects to
+D52's observation that j=0 sector liveness at delta≠0 enriches the algebra. When j=0 is
+alive, the algebra is so rich that both parity and non-parity vocabularies satisfy all
+structural prerequisites (K_4 quotient, non-trivial v_2 connectivity, adequate additive
+closure). Raqiya diagnoses algebraic impoverishment (D108, delta=0), not algebraic health
+(D109, delta≠0). The diagnostic power of graph analysis is strongest exactly where the
+algebra is most degenerate.
+
+### Rank Saturation Confound Retroactively Affects All Prior Comparisons (D105)
+
+D105's rank saturation analysis revealed that ALL prior cross-module rank comparisons
+(D99b through D104) were confounded by varying oversampling ratios. The rank of W_{8,2}
+at 512 entries was only 6.9% (severely under-sampled), but the coincidental 34.9% match
+between W_{8,0} and W_{8,2} at initial checkpoints could have been mistaken for a
+structural similarity. The methodological lesson: single-checkpoint rank measurements are
+unreliable for infinite braid groups. Saturation curves at multiple checkpoints are now
+required — a methodological advancement that retrospectively invalidates some D103-D104
+rank claims as lower bounds rather than structural truths.

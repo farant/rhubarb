@@ -1,6 +1,6 @@
 # Code Assets Catalog
 
-Reusable code patterns across 101 knotapel demos. Updated 2026-02-24 (added Demos 95-101).
+Reusable code patterns across 109 knotapel demos. Updated 2026-02-26 (added Demos 102-109).
 
 ---
 
@@ -43,7 +43,7 @@ Reusable code patterns across 101 knotapel demos. Updated 2026-02-24 (added Demo
 
 - **What it does**: Exact integer arithmetic in the 8th cyclotomic ring — basis {1, zeta_8, zeta_8^2, zeta_8^3} with zeta_8^4 = -1. The natural home for bracket values at delta=0 (A = e^{i*5pi/4}).
 - **Introduced in**: Demo 29
-- **Reused in**: Demos 35, 48, 49, 50, 63, 64, 74 (union-find loop counter for bracket in full catalog builder)
+- **Reused in**: Demos 35, 48, 49, 50, 63, 64, 74, 100, 101, 102, 103, 104, 105, 106, 107, 108
 - **Key types/functions**:
   - `Cyc8` struct: 4 `long` coefficients `(a, b, c, d)`
   - `cyc8_make()`, `cyc8_zero()`, `cyc8_one()` — constructors
@@ -77,7 +77,7 @@ Reusable code patterns across 101 knotapel demos. Updated 2026-02-24 (added Demo
 
 - **What it does**: Exact 8-dimensional cyclotomic integer arithmetic for bracket evaluation at ell=4 (delta=sqrt(2), Ising anyons).
 - **Introduced in**: Demo 54
-- **Reused in**: Demos 55, 56, 57, 65
+- **Reused in**: Demos 55, 56, 57, 65, 109
 - **Key types/functions**:
   - `Cyc16` struct: 8 `long` coefficients, basis {1, zeta_16, ..., zeta_16^7}, zeta^8 = -1
   - `cyc16_zero()`, `cyc16_one()`, `cyc16_make()`, `cyc16_zeta_power()` — constructors
@@ -173,7 +173,7 @@ Reusable code patterns across 101 knotapel demos. Updated 2026-02-24 (added Demo
 
 - **What it does**: Path-compressed union-find for counting connected components (loops) in resolved knot/braid diagrams. The most-reused utility across all demos.
 - **Introduced in**: Demo 02
-- **Reused in**: Demos 03, 04, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 45, 46, 47, 48, 49, 50, 53, 54, 55, 56, 57, 58, 59, 64, 65, 66, 67, 68, 69, 70, 71, 74 (bracket loop counting in full catalog builder)
+- **Reused in**: Demos 03, 04, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 45, 46, 47, 48, 49, 50, 53, 54, 55, 56, 57, 58, 59, 64, 65, 66, 67, 68, 69, 70, 71, 74 (bracket loop counting in full catalog builder), 108 (parity detection in bracket catalog), 109 (state-sum bracket loop counting)
 - **Key types/functions**:
   - `uf_parent[]` — global or local parent array
   - `uf_init(n)`, `uf_find(x)`, `uf_union(x, y)` — standard union-find with path compression
@@ -265,7 +265,7 @@ Reusable code patterns across 101 knotapel demos. Updated 2026-02-24 (added Demo
 
 - **What it does**: Computes exact Kauffman bracket in Z[zeta_8] arithmetic, exploiting delta=0 simplification where only single-loop smoothing states survive.
 - **Introduced in**: Demo 29
-- **Reused in**: Demos 35, 48, 49, 50
+- **Reused in**: Demos 35, 48, 49, 50, 108 (bracket catalog builder)
 - **Key types/functions**:
   - `braid_bracket_exact(word, len, n)` — exact state-sum in Cyc8 at A = -zeta_8; skips all multi-loop states
 - **Approximate size**: ~50 lines
@@ -298,7 +298,7 @@ Reusable code patterns across 101 knotapel demos. Updated 2026-02-24 (added Demo
 
 - **What it does**: Converts integer indices to braid crossing sequences for exhaustive enumeration of all braids up to a given length.
 - **Introduced in**: Demo 22
-- **Reused in**: Demos 23, 25, 35, 48, 49, 50, 53, 54, 55, 56, 57, 58, 59, 64, 65, 66, 67, 68, 69, 70, 71, 74 (catalog builder)
+- **Reused in**: Demos 23, 25, 35, 48, 49, 50, 53, 54, 55, 56, 57, 58, 59, 64, 65, 66, 67, 68, 69, 70, 71, 74 (catalog builder), 108 (bracket catalog for parity detection), 109 (state-sum bracket enumeration)
 - **Key types/functions**:
   - `decode_word(code, len, word)` — maps integer to braid word using generator map
   - `decode_word3()` — 3-strand variant (4 generators: {1,-1,2,-2})
@@ -329,7 +329,7 @@ Reusable code patterns across 101 knotapel demos. Updated 2026-02-24 (added Demo
 
 - **What it does**: Recursively enumerates non-crossing perfect matchings (planar diagrams) on 2n boundary points — the basis for Temperley-Lieb algebra representations.
 - **Introduced in**: Demo 35
-- **Reused in**: Demos 38, 39, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60
+- **Reused in**: Demos 38, 39, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 107 (non-crossing matching enumerator for bipartiteness verification)
 - **Key types/functions**:
   - `PlanarMatch` struct: array of pairs, each matching endpoint a with endpoint b
   - `enumerate_basis(n, basis, count)` — segment-based recursive algorithm
@@ -485,7 +485,7 @@ Reusable code patterns across 101 knotapel demos. Updated 2026-02-24 (added Demo
 
 - **What it does**: Computes rank of trace form Gram matrix to determine radical dimension — the core tool for semisimplicity detection.
 - **Introduced in**: Demo 51
-- **Reused in**: Demos 38, 39, 52, 60
+- **Reused in**: Demos 38, 39, 52, 60, 102 (stacked TL generator radical dim computation), 103 (variable-dim radical dim), 104 (streaming catalog rank computation)
 - **Key types/functions**:
   - Gram matrix construction from multiplication table + trace form fixed points
   - `compute_fixpt()` — precomputes sum of delta^loops over elements p such that result(p,k)=k, enabling efficient Gram matrix construction (Demo 39, 60)
@@ -567,7 +567,7 @@ Reusable code patterns across 101 knotapel demos. Updated 2026-02-24 (added Demo
 
 - **What it does**: Classifies all 256 3-input Boolean truth tables into 14 NPN equivalence classes (13 non-trivial + constant) via exhaustive application of input permutation, input negation, and output negation.
 - **Introduced in**: Demo 23
-- **Reused in**: Demos 45, 46, 47, 48, 49, 50, 55, 56, 57, 58, 59, 61, 62, 64, 65, 66, 67, 68, 69, 70, 71, 75, 76, 77, 78, 79, 80, 81, 82
+- **Reused in**: Demos 45, 46, 47, 48, 49, 50, 55, 56, 57, 58, 59, 61, 62, 64, 65, 66, 67, 68, 69, 70, 71, 75, 76, 77, 78, 79, 80, 81, 82, 109
 - **Key types/functions**:
   - `npn_canon[256]` — precomputed canonical form for all truth tables
   - `npn_init()` — computes canonical forms via 96 transforms (6 perms x 8 input-neg x 2 output-neg)
@@ -683,7 +683,7 @@ Reusable code patterns across 101 knotapel demos. Updated 2026-02-24 (added Demo
 
 - **What it does**: Enumerates braids and builds catalog of distinct exact Z[zeta_8] bracket values with paired float representations.
 - **Introduced in**: Demo 29
-- **Reused in**: Demos 48, 49, 50
+- **Reused in**: Demos 48, 49, 50, 108 (bracket catalog builder for parity vocabulary analysis)
 - **Key types/functions**:
   - `CatalogEntry` struct: exact Cyc8 value + float Cx value + source braid info
   - `build_exact_catalog(max_strands, max_len)` — enumerates up to 100,000 braids per configuration
@@ -695,7 +695,7 @@ Reusable code patterns across 101 knotapel demos. Updated 2026-02-24 (added Demo
 
 - **What it does**: Exhaustive search over bracket catalog quartets/triples to find exact weight configurations that compute Boolean functions without training.
 - **Introduced in**: Demo 29 (XOR triples)
-- **Extended in**: Demo 48 (all 13 NPN classes, 100M quartets), Demo 50 (k-sector activation), Demo 64 (matroid deletion-contraction), Demo 65 (generalized binary labeling), Demo 66 (quaternionic S³), Demo 67 (multi-coordinate-system), Demo 68 (stereographic), Demo 69 (multi-root comparison), Demo 75 (multi-channel angle+cell search over 36 winning triples), Demo 76 (exhaustive C(24,4) quadruple search with conflict counting), Demo 77 (14-activation comparative search for XOR8), Demo 78 (recursive XOR10 from XOR8 parents), Demo 79 (multi-root recursive ladder at ζ₁₂), Demo 81 (snapshot-based XOR capacity scaling), Demo 82 (subset-based capacity measurement)
+- **Extended in**: Demo 48 (all 13 NPN classes, 100M quartets), Demo 50 (k-sector activation), Demo 64 (matroid deletion-contraction), Demo 65 (generalized binary labeling), Demo 66 (quaternionic S³), Demo 67 (multi-coordinate-system), Demo 68 (stereographic), Demo 69 (multi-root comparison), Demo 75 (multi-channel angle+cell search over 36 winning triples), Demo 76 (exhaustive C(24,4) quadruple search with conflict counting), Demo 77 (14-activation comparative search for XOR8), Demo 78 (recursive XOR10 from XOR8 parents), Demo 79 (multi-root recursive ladder at ζ₁₂), Demo 81 (snapshot-based XOR capacity scaling), Demo 82 (subset-based capacity measurement), Demo 108 (parity vocabulary with k=6 XOR3 search)
 - **Key types/functions**:
   - Quartet search: O(n^4) with precomputed partial sums (s12 outside w3 loop)
   - `test_xor_triple(w1, w2, b)` — split-sigmoid XOR verification
@@ -1527,7 +1527,7 @@ Reusable code patterns across 101 knotapel demos. Updated 2026-02-24 (added Demo
 
 - **What it does**: Recursive enumeration of non-crossing perfect matchings on n boundary points (the link states of the standard module W_{n,0}) with TL generator action at delta=0 and Hamiltonian construction H = -(e_0 + ... + e_{n-2}).
 - **Introduced in**: Demo 85 (standalone implementation independent of Section 3.1)
-- **Reused in**: (Demo 85 only — used for the standard-module diagonalizability proof)
+- **Reused in**: Demo 85 (standard-module diagonalizability proof), Demo 105 (j=0 programmatic TL generators for W_{8,0})
 - **Key types/functions**:
   - `LinkState` struct: `pair[MAX_SITES]` — pairing array for n/2 non-crossing arcs
   - `enumerate_link_states(n, basis)` — recursive generator; dimensions match C_{n/2}: W_4=2, W_6=5, W_8=14, W_10=42, W_12=132
@@ -2365,14 +2365,17 @@ Reusable code patterns across 101 knotapel demos. Updated 2026-02-24 (added Demo
 
 ### 28.4 Casimir C_d Formula (Generalized)
 
-- **What it does**: Generalized Casimir discriminant C_d(M) = d*tr(M^2) - (tr M)^2 where d = module dimension. Uniform formula across D99/D100/D101.
+- **What it does**: Generalized Casimir discriminant C_d(M) = d*tr(M^2) - (tr M)^2 where d = module dimension. Uniform formula across D99/D100/D101, extended through D102-D103.
 - **Introduced in**: Demo 99 (as C2), generalized in Demo 100 (C3) and Demo 101 (C4)
+- **Reused in**: Demo 102 (C5 for dim-5 modules W_{6,0} and W_{6,4}), Demo 103 (C5 and C9 for dim-5 and dim-9 modules), Demo 104 (via MatN Casimir)
 - **Key types/functions**:
   - D99: C(S) = (a-d)^2 + 4bc (2x2 form)
   - D100: C3(M) = 3*tr(M^2) - (tr M)^2
   - D101: C4(M) = 4*tr(M^2) - (tr M)^2
+  - D102: C5(M) = 5*tr(M^2) - (tr M)^2
+  - D103: C9(M) = 9*tr(M^2) - (tr M)^2
   - All computations exact in Z[zeta_8], L1 norm for magnitude comparison
-- **Notes**: Casimir-XOR correlation is POSITIVE in non-semisimple modules (D99/D100) but INVERTS in simple modules (D101) at high XOR levels. The coefficient tracks module dimension: d=2,3,4 for TL_3/TL_4/TL_5.
+- **Notes**: Casimir-XOR correlation is POSITIVE in non-semisimple modules (D99/D100) but INVERTS in simple modules (D101) at high XOR levels. The coefficient tracks module dimension: d=2,3,4,5,9 for TL_3/TL_4/TL_5/TL_6. D102 extends to d=5 (XOR6 Casimir-by-level: winners=68, control=59, ratio=1.15x). D103 shows mean |C9| for dim-9 module is 2.6x that of dim-5 module (123 vs 48).
 
 ---
 
@@ -2465,13 +2468,23 @@ Demos 66-71 establish the foundation; Demos 72-84 extend it into a full capacity
 31. Two independent partitions (null/non-null x derived level) create 5-cell landscape; optimal catalog is 21 entries not 24 — pruning Q8-null noise improves capacity (D96).
 32. Cell B perfection is geometric inevitability from orthogonal frame, not algebraic fine-tuning; 50-degree robust plateau (25-75 degrees); octahedral optimality on S^2 (D97).
 
-**Multi-strand matrix DKC (D98-D101):**
+**Multi-strand matrix DKC (D98-D105):**
 33. 3-strand TL_3 5x5 representation: infinite group, 2048 entries, but trace readout catastrophically lossy (ZERO XOR6). Column-4 is lossless (100% diversity). Readout, not algebra, is the bottleneck (D98).
 34. LANDMARK: 3-strand Delta_1 (2x2 irreducible module) achieves first-ever 3-strand XOR at ALL levels through XOR14. 2x2_hash activation (16-component sign-pattern). Infinite group via Jordan block (Fibonacci growth). Ext^1 catalytic preparation thesis. Two-regime discovery: combinatorial (XOR6-8) vs algebraic (XOR10-14). Super-hub star-graph topology (D99).
 35. 4-strand W_{4,2} (3x3, non-semisimple): ~3.1x BFS growth, XOR14=70, 6 super-hubs in 3 Cyc8-component pairs, constant radical content, Casimir-XOR positive correlation. All hub commutators traceless with zero radical content (D100).
 36. 5-strand W_{5,3} (4x4, SIMPLE): ~4x BFS growth (confirms sl_d functor thesis across 3 data points), only 3 hubs (not predicted 12, hub-count prediction falsified), XOR14=0 (simple module ceiling), Casimir-XOR correlation INVERTS at high XOR levels. Non-semisimplicity is computationally load-bearing (D101).
+37. 6-strand A/B test: W_{6,0} (dim=5, simple) vs W_{6,4} (dim=5, non-simple, radical dim=1). IDENTICAL BFS trees (32768 entries at every depth). Radical carries abelian writhe character — provably useless for parity by Barrington's theorem. Simple module WINS at every XOR level. Barrington-Radical Principle established (D102).
+38. 6-strand dimension scaling: W_{6,0} (dim=5) vs W_{6,2} (dim=9), both simple. BFS growth identical (~5x, braid group invariant). Higher dimension HURTS XOR via curse of dimensionality in sign-hash. But W_{6,2} subset-hash B@sub7 (196 components) beats W_{6,0} — activation geometry matters. Variable-dimension MatN introduced (D103).
+39. Activation coarseness sweep: W_{6,2} XOR deficit is a HASH problem — optimal 120/324 components beats W_{6,0} (Atkinson sweet spot). Cross-block > within-block (branching interaction IS the signal). Sign-rank EXPANDS beyond raw rank (244→292). k is the real lever, not hash architecture (D104).
+40. 8-strand k-regime: D93's "XOR dies at N>=7" REFUTED as k-regime artifact. W_{8,0} (dim=14) and W_{8,2} (dim=28) both simple. Branching interaction REVERSES at n=8 (within-block > cross-block = macrame principle). Rank saturation confound discovered — all prior rank comparisons corrected (D105).
 
-Key progression: D65 S^1 k=24 → D66 S^3 25 cells → D67 S^2 14 cells → D68 R^2 visualization only → D72-73 algebraic structure analysis → D74 incomparability theorem → D75-77 binocular + product activation → D78-79 wall confirmation + ζ₁₂ breakthrough → D80 ADE survey → D81-82 scaling laws → D83 framing as resource → D84 null-state anatomy → D85-86 TL representation theory (b = -5/8 + universal divergence on P_{0,0}) → D87-88 null dispensability + anti-correlation → D89-91 depth law mechanism (axis cancellation + parity wall) → D92 parity-lock theorem → D93 complement-blindness + phase_cell recovery + circuit complexity hierarchy → D94 solvability bottleneck (2I vs z8, Barrington confirmed) → D95-97 commutator structure + cross-classification + Cell B perfection → D98 3-strand readout bottleneck → D99 Delta_1 LANDMARK (first 3-strand XOR, Ext^1 thesis) → D100 4-strand non-semisimple DKC → D101 5-strand simple module (sl_d functor, Casimir inversion).
+**Topological entropy and graph analysis (D106-D109):**
+41. Topological entropy is ORTHOGONAL to DKC computation — 100% participation for both periodic and pseudo-Anosov braids. TL visibility filter: writhe survives quotient, entropy does not. Relational computation thesis strengthened (D106).
+42. Universal axis-alignment of braid matrices at delta=0 is a PROVABLE THEOREM with constructive Z/4Z phase formula. Nesting parity Z/2Z grading (novel, not KLR). Major index bipartite invariant. q-Catalan identity. Raqiya library established (D107).
+43. Graph structure PREDICTS parity capability: Dual-Channel Theorem — parity needs product closure AND v_2 connectivity, poison fails on both. Maximum structural contrast. T-gate/Hadamard decomposition analogy (D108).
+44. Encoding-dependent dual-channel: at delta=sqrt(2), 7/8 edge types identical between parity and non-parity. Product closure is sole discriminator with INVERTED polarity (parity wants LOW). j=0 liveness implies structural universality (D109).
+
+Key progression: D65 S^1 k=24 → D66 S^3 25 cells → D67 S^2 14 cells → D68 R^2 visualization only → D72-73 algebraic structure analysis → D74 incomparability theorem → D75-77 binocular + product activation → D78-79 wall confirmation + ζ₁₂ breakthrough → D80 ADE survey → D81-82 scaling laws → D83 framing as resource → D84 null-state anatomy → D85-86 TL representation theory (b = -5/8 + universal divergence on P_{0,0}) → D87-88 null dispensability + anti-correlation → D89-91 depth law mechanism (axis cancellation + parity wall) → D92 parity-lock theorem → D93 complement-blindness + phase_cell recovery + circuit complexity hierarchy → D94 solvability bottleneck (2I vs z8, Barrington confirmed) → D95-97 commutator structure + cross-classification + Cell B perfection → D98 3-strand readout bottleneck → D99 Delta_1 LANDMARK (first 3-strand XOR, Ext^1 thesis) → D100 4-strand non-semisimple DKC → D101 5-strand simple module (sl_d functor, Casimir inversion) → D102 6-strand radical A/B test (Barrington-Radical Principle, writhe character on radical) → D103 dimension scaling (BFS growth is braid group invariant, curse of dimensionality) → D104 activation coarseness sweep (Atkinson sweet spot, sign-rank expansion, branching interaction thesis) → D105 8-strand k-regime (D93 "XOR dies at N>=7" REFUTED, macrame principle, rank saturation methodology) → D106 topological entropy null (TL visibility filter, relational computation thesis) → D107 algebraic graph density (axis-alignment theorem, nesting parity grading, Raqiya library, q-Catalan identity) → D108 parity vocabulary (Dual-Channel Theorem, product closure discriminator) → D109 encoding-dependent dual-channel (product closure inversion at delta=sqrt(2), 7/8 structural symmetry).
 
 ### Catalog Size Summary
 | Ring | Delta | Catalog | Distinct Values |
@@ -2504,3 +2517,448 @@ Key progression: D65 S^1 k=24 → D66 S^3 25 cells → D67 S^2 14 cells → D68 
 | XOR14 (predicted) | ~38,000 | ~11 | — | — | depth ~8 |
 
 Scaling law: max_xor ≈ 0.62 × log₂(catalog_size) + 4.6 (logarithmic) ≡ depth + 6 (linear, since catalog grows as ~2^depth).
+
+### Multi-Strand Matrix DKC Scaling (Demos 102-105)
+
+| n (strands) | Demo | Module | dim | Generators | BFS growth | XOR capacity notes |
+|-------------|------|--------|-----|------------|------------|-------------------|
+| 3 | D98/D99 | Delta_1 | 2 | 4 | ~2.2x | XOR14=60 (non-semisimple) |
+| 4 | D100 | W_{4,2} | 3 | 6 | ~3.1x | XOR14=70 (non-semisimple) |
+| 5 | D101 | W_{5,3} | 4 | 8 | ~4.0x | XOR14=0 (simple, ceiling) |
+| 6 | D102 | W_{6,0} | 5 | 10 | ~5.0x | XOR10=1 (simple) |
+| 6 | D102 | W_{6,4} | 5 | 10 | ~5.0x | XOR10=0 (non-simple, radical=1) |
+| 6 | D103 | W_{6,2} | 9 | 10 | ~5.0x | XOR10=0 (simple, curse of dim) |
+| 8 | D105 | W_{8,0} | 14 | 14 | ~7x | XOR8=22266 at k=4096 |
+| 8 | D105 | W_{8,2} | 28 | 14 | — | Within-block > cross-block |
+
+Confirmed: BFS growth rate = n-1 (sl_{n-1} thesis). Growth is a braid group invariant, not a module property.
+
+### Rank Saturation Summary (Demo 105 retroactive, all modules)
+
+| Module | dim | cols | catalog | raw | raw% | sign | sign% | expansion |
+|--------|-----|------|---------|-----|------|------|-------|-----------|
+| Delta_1 | 2 | 16 | 32768 | 16 | 100% | 16 | 100% | 1.00x |
+| W_{4,2} | 3 | 36 | 32768 | 28 | 77.8% | 32 | 88.9% | 1.14x |
+| W_{5,3} | 4 | 64 | 32768 | 62 | 96.9% | 64 | 100% | 1.03x |
+| W_{6,0} | 5 | 100 | 32768 | 100 | 100% | 100 | 100% | 1.00x |
+| W_{6,2} | 9 | 324 | — | 244 | 75.3% | 292 | 90.1% | 1.20x |
+| W_{8,0} | 14 | 784 | 32768 | 710 | 90.6% | 767 | 97.8% | 1.08x |
+| W_{8,2} | 28 | 3136 | 16384 | 1096 | 34.9% | 2003 | 63.9% | 1.83x |
+
+---
+
+## 29. 6-Strand Radical A/B Test Infrastructure (Demo 102)
+
+### 29.1 5x5 Matrix over Cyc8 (`Mat5`)
+
+- **What it does**: 5-dimensional matrix type for W_{6,0} (simple) and W_{6,4} (non-simple, radical dim=1) representations of TL_6 at delta=0. Full ring operations in exact Z[zeta_8] arithmetic.
+- **Introduced in**: Demo 102
+- **Reused in**: (Demo 102 only — superseded by variable-dimension `MatN` in Demo 103)
+- **Key types/functions**:
+  - `Mat5` struct: 25 Cyc8 entries = 100 long integers
+  - `mat5_zero()`, `mat5_identity()`, `mat5_mul()`, `mat5_eq()`, `mat5_add()`, `mat5_sub()`, `mat5_neg()`, `mat5_scale()` — ring operations
+  - `mat5_max_abs()`, `mat5_print()` — analysis/output
+  - `mat5_trace()`, `mat5_tr_sq()` — trace and trace-of-square for Casimir
+  - `mat5_casimir(m)` — C5(M) = 5*tr(M^2) - (tr M)^2 (generalized Casimir with d=5)
+  - `mat5_frob_l1()`, `mat5_nonzero_count()` — Frobenius L1 norm and sparsity analysis
+- **Approximate size**: ~250 lines
+- **Notes**: Follows the per-dimension matrix pattern established in D99 (Mat2), D100 (Mat3), D101 (Mat4). Superseded by the variable-dimension MatN in D103-D105 which handles any dim up to 9.
+
+### 29.2 Dual Module TL_6 Generator Construction
+
+- **What it does**: Two separate TL_6 generator constructors for W_{6,0} (all-arc module, simple) and W_{6,4} (4-through-line module, non-simple), enabling head-to-head A/B comparison on the same braid group.
+- **Introduced in**: Demo 102
+- **Reused in**: Demo 103 (W_{6,0} half reused), Demo 104 (both W_{6,0} and W_{6,2} reused)
+- **Key types/functions**:
+  - `build_tl_a()` — W_{6,0}: 5 half-diagrams with 0 through-lines, 5 TL generators, 15/125 nonzero entries
+  - `build_tl_b()` — W_{6,4}: 5 half-diagrams with 4 through-lines + 1 arc, 5 TL generators, 8/125 nonzero entries
+  - Verification: e_i^2=0, Jones-Wenzl relations, far commutativity, braid relations, Hecke relations for both
+- **Approximate size**: ~150 lines
+
+### 29.3 Radical Analysis Functions
+
+- **What it does**: Measures radical content, radical scalar, mixing row, and quotient block properties for non-semisimple W_{6,4} module, isolating the radical's computational contribution.
+- **Introduced in**: Demo 102
+- **Reused in**: (Demo 102 only — the radical direction is module-specific)
+- **Key types/functions**:
+  - `compute_Mr(m)` — M*r = col0 - col2 + col4 for radical vector r=(1,0,-1,0,1)
+  - `radical_content(m)` — L1 norm of M*r (constant = 3 for all 32768 entries)
+  - `radical_scalar(m)` — scalar s where M*r = s*r (= A^{writhe})
+  - `mixing_row_l1(m)` — L1 norm of row 4, columns 0-3 (quotient-to-radical leakage)
+  - `quotient_block_l1(m)` — L1 of the 4x4 quotient block Q
+  - `mat5_activate_quot(m, k)` — quotient-only activation using 64 components from 4x4 block Q with sign corrections
+- **Approximate size**: ~100 lines
+- **Notes**: Key finding: M*r = A^{writhe}*r for ALL 32768 catalog entries (Barrington-Radical Principle). The radical carries only the writhe homomorphism and is computationally inert for XOR.
+
+### 29.4 Writhe Character Verification (`cyc8_A_pow`)
+
+- **What it does**: Returns A^n for A = -zeta_8 using mod-8 lookup table. Used to verify the writhe character on the radical direction for every catalog entry.
+- **Introduced in**: Demo 102
+- **Reused in**: (Demo 102 only)
+- **Key types/functions**:
+  - `cyc8_A_pow(n)` — precomputed A^k for k=0..7, n mod 8 lookup; handles negative writhe via mod arithmetic
+- **Approximate size**: ~20 lines
+- **Notes**: Enables the exhaustive writhe character verification: M*r = A^{writhe}*r tested for 32768/32768 entries (100%).
+
+### 29.5 Function-Pointer Activation with XOR Search
+
+- **What it does**: Variant of brute-force XOR search that takes a function pointer for activation, enabling testing different activation functions (full vs quotient) on the same catalog without code duplication.
+- **Introduced in**: Demo 102
+- **Reused in**: Demo 103 (switchable activation variants), Demo 104 (function-pointer activation switching)
+- **Key types/functions**:
+  - `count_xor_bf_fn(activate_fn)` — XOR search with pluggable activation function
+  - Used to compare full 100-component activation vs quotient-only 64-component activation on W_{6,4}
+- **Approximate size**: ~40 lines
+
+### 29.6 Saved-Catalog Cross-Module Comparison
+
+- **What it does**: Module A results saved in `g_save_*` arrays for later comparison after Module B catalog replaces global `g_cat`. Enables A-vs-B analysis when only one catalog can be live at a time.
+- **Introduced in**: Demo 102
+- **Reused in**: Demo 103, Demo 104 (same save/restore pattern for A-vs-B comparison)
+- **Key types/functions**:
+  - `g_save_*` arrays — deep sub-catalog save/restore for cross-module XOR comparison
+- **Approximate size**: ~40 lines
+- **Notes**: Pattern used throughout the multi-strand DKC arc. Extended in D103/D104 for subset-hash activation ablation studies.
+
+---
+
+## 30. Variable-Dimension Matrix and Activation Architecture (Demos 103-104)
+
+### 30.1 Variable-Dimension MatN Type
+
+- **What it does**: Generic NxN matrix type (MAX_DIM=9) with runtime dimension `g_dim` controlling active size. Enables the same codebase to handle both 5x5 and 9x9 matrices (and potentially any dim up to 9) without code duplication.
+- **Introduced in**: Demo 103
+- **Reused in**: Demo 104 (with configurable-coarseness activation extensions), Demo 105 (extended to MAX_DIM=28 for W_{8,2})
+- **Key types/functions**:
+  - `MatN` struct: MAX_DIM x MAX_DIM array of Cyc8 entries
+  - `matN_zero()`, `matN_identity()` — constructors
+  - `matN_mul()`, `matN_mul_to()` — multiplication (standard and pointer-based hot-path variant)
+  - `matN_eq()`, `matN_add()`, `matN_sub()`, `matN_neg()`, `matN_scale()` — ring operations
+  - `matN_add_inplace()`, `matN_sub_inplace()` — in-place variants for performance
+  - `matN_max_abs()`, `matN_trace()`, `matN_tr_sq()`, `matN_casimir()` — analysis
+  - `matN_frob_l1()`, `matN_nonzero_count()` — sparsity metrics
+  - Runtime dimension via global `g_dim` — all operations respect `g_dim` x `g_dim` active region
+- **Approximate size**: ~300 lines
+- **Notes**: This is the generalization of the per-dimension Mat2/Mat3/Mat4/Mat5 types from D99-D102. The runtime-dimension approach eliminates the need for separate matrix types per module dimension. Key design decision: MAX_DIM is compile-time (for stack allocation), but `g_dim` is runtime (for loop bounds).
+
+### 30.2 Switchable Activation Function Pointer
+
+- **What it does**: Function pointer mechanism with multiple activation variants, enabling systematic activation ablation studies without code duplication.
+- **Introduced in**: Demo 103
+- **Reused in**: Demo 104 (extended with `matN_activate_n`, `matN_activate_rand`, `matN_activate_multi`), Demo 105 (cross-block/within-block activation)
+- **Key types/functions**:
+  - `g_activate` function pointer + `activate_fn` typedef — runtime activation switching
+  - `matN_activate()` — full sign-hash activation (all `g_dim*g_dim*4` ternary components)
+  - `matN_activate_sub()` — subblock activation (first NxN block of larger matrix)
+  - `matN_activate_stride()` — strided activation (every K-th component)
+- **Approximate size**: ~80 lines
+- **Notes**: The activation function is the readout layer in the reservoir computing framework. Being able to swap it at runtime enables controlled experiments isolating the activation's contribution to XOR capacity.
+
+### 30.3 Configurable-Coarseness Sign-Hash Activation
+
+- **What it does**: Sign-hash activation with configurable number of components, enabling the component-count sweep that is the core experiment of Demo 104.
+- **Introduced in**: Demo 104
+- **Reused in**: Demo 105 (partial sign-hash activation `matN_activate_partial`)
+- **Key types/functions**:
+  - `matN_activate_n(m, k_param, num_comp)` — hashes first `num_comp` of `g_dim*g_dim*4` ternary sign components using base-3 polynomial hash mod k_param
+  - `matN_activate_rand(m, k_param)` — random-subset activation using index array `g_rand_idx[]`; hashes components at arbitrary positions
+  - `matN_activate_multi(m, k_param)` — multi-hash activation using two independent index arrays, producing 2D cell ID = hash1 * k + hash2
+- **Approximate size**: ~100 lines
+- **Notes**: The non-monotonic component-count curve for W_{6,2} (peaking at 120 of 324 components) led to the "Atkinson sweet spot" naming. The random-subset variant showed high variance (spread=262), indicating information is concentrated in specific components.
+
+### 30.4 Streaming Catalog Rank Computation
+
+- **What it does**: Streaming Gaussian elimination over Z to compute rank of catalog as row vectors, processing entries one at a time to avoid allocating the full catalog x components matrix. GCD normalization prevents integer overflow.
+- **Introduced in**: Demo 104
+- **Reused in**: Demo 105 (rank computation with saturation checkpoints)
+- **Key types/functions**:
+  - `compute_catalog_rank(n_entries)` — streaming Gaussian elimination on raw Cyc8 coefficient vectors (dim*dim*4 components per entry); returns rank
+  - `compute_sign_rank(n_entries)` — same streaming elimination but on ternary sign-projected vectors ({-1,0,+1}); reveals effective dimension after nonlinear quantization
+  - GCD normalization: normalizes pivot rows by GCD of components to prevent overflow
+- **Approximate size**: ~120 lines
+- **Notes**: Key finding: sign quantization can EXPAND effective rank (W_{6,2}: raw 244, sign 292 — gain of 48). Sign-rank expansion ratio increases with module dimension (W_{8,2} at 1.83x). This tool established the rank saturation methodology: single-checkpoint measurements are unreliable, must report saturation curves.
+
+### 30.5 Fisher-Yates Shuffle with Deterministic PRNG
+
+- **What it does**: Xorshift PRNG with Fisher-Yates partial shuffle for reproducible random subset selection.
+- **Introduced in**: Demo 104
+- **Reused in**: Demo 105 (reusable PRNG infrastructure)
+- **Key types/functions**:
+  - `rng_next()` — xorshift PRNG
+  - `shuffle_first_n(arr, total, n)` — Fisher-Yates partial shuffle selecting first n elements
+- **Approximate size**: ~30 lines
+- **Notes**: Used in Demo 104 for random-100 component selection experiments (5 trials, mean XOR6=2266, spread=262).
+
+---
+
+## 31. 8-Strand DKC Infrastructure (Demo 105)
+
+### 31.1 j=2 Link State Enumerator
+
+- **What it does**: Enumerates non-crossing perfect matchings with 2 through-strands on n=8 boundary points, producing 28 states split into two blocks (W_{7,1} with 14 states and W_{7,3} with 14 states). First implementation of j>0 link states in knotapel.
+- **Introduced in**: Demo 105
+- **Reused in**: (Demo 105 only — but pattern generalizable to other j values)
+- **Key types/functions**:
+  - `enumerate_ls_j2()` — segment-based recursive enumeration with Cartesian products of left/mid/right matchings; through-strand positions tracked and re-sorted
+  - Produces 28 states split into two blocks: 14 states where through[1]=7, 14 states where through[1]<7
+- **Approximate size**: ~150 lines
+- **Notes**: The symmetric 14+14 branching (unlike W_{6,2}'s asymmetric 5+4) enables the "macrame principle" discovery: within-block > cross-block when blocks are individually complex.
+
+### 31.2 5-Case TL Generator Action for j=2
+
+- **What it does**: Handles all cases of TL generator e_i acting on a link state with 2 through-strands, implementing the complete action table.
+- **Introduced in**: Demo 105
+- **Reused in**: (Demo 105 only)
+- **Key types/functions**:
+  - `apply_ei_j2(i, in_state, out_state)` — 5 cases: (1) both arc-paired to each other -> loop/killed; (2) both arc-paired to others -> redirect; (3) i through, i+1 arc-paired -> swap; (4) i arc-paired, i+1 through -> swap; (5) both through -> loop/killed
+  - Through-strand positions updated and re-sorted after each action
+- **Approximate size**: ~100 lines
+
+### 31.3 Cross-Block / Within-Block Activation
+
+- **What it does**: Activation functions that hash only off-diagonal or only diagonal blocks of a matrix under TL_{n-1} branching restriction, enabling branching decomposition analysis.
+- **Introduced in**: Demo 105 (adapting D104's branching decomposition concept to symmetric blocks)
+- **Reused in**: (Demo 105 only)
+- **Key types/functions**:
+  - `matN_activate_cross(m, k)` — hashes only off-diagonal blocks (rows < BLOCK_SIZE, cols >= BLOCK_SIZE and vice versa)
+  - `matN_activate_within(m, k)` — hashes only diagonal blocks
+- **Approximate size**: ~60 lines
+- **Notes**: Key finding reversal from D104: at n=8 with symmetric 14+14 blocks, within-block (XOR6=2940) > cross-block (XOR6=532). This is the "macrame principle" — complex blocks are self-sufficient; simple blocks need connections.
+
+### 31.4 Rank Computation with Saturation Checkpoints
+
+- **What it does**: Streaming Gaussian elimination that reports rank at specified entry-count checkpoints, essential for honest rank measurement on infinite groups.
+- **Introduced in**: Demo 105
+- **Reused in**: (Demo 105 only — but the methodology is established as required practice)
+- **Key types/functions**:
+  - `compute_rank_with_checkpoints(checkpoints, n_checkpoints)` — streaming GE with GCD normalization, reporting rank at each checkpoint entry count
+  - Checkpoint series: {128, 256, 512, 1024, 2048, 4096, 8192, 16384, 32768}
+- **Approximate size**: ~80 lines
+- **Notes**: Established the rank saturation methodology: all prior single-checkpoint rank comparisons (D99b-D104) were confounded by varying oversampling ratios. Must report saturation curves.
+
+### 31.5 Retroactive Rank Framework
+
+- **What it does**: Generic tridiagonal TL generator builder + BFS + rank computation, parameterized by (dim, n_tl), enabling fair cross-module rank comparison with identical infrastructure.
+- **Introduced in**: Demo 105 (`rank_retroactive.c`)
+- **Reused in**: (Demo 105 only — used to correct all prior rank measurements)
+- **Key types/functions**:
+  - Parameterized TL generator builder for arbitrary dim and n_tl
+  - BFS closure + streaming rank computation at multiple checkpoints
+  - Unified output format for cross-module comparison table
+- **Approximate size**: ~500 lines (`rank_retroactive.c`)
+
+---
+
+## 32. Topological Entropy Infrastructure (Demo 106)
+
+### 32.1 Dual BFS with Parallel Representations
+
+- **What it does**: Maintains both TL (3x3 Cyc8) and reduced Burau (3x3 integer) matrices simultaneously during BFS, with shared parent/generator backtracking. Novel pattern for correlating algebraic and dynamical properties of the same braid words.
+- **Introduced in**: Demo 106
+- **Reused in**: (Demo 106 only — the dual-representation BFS pattern is reusable)
+- **Key types/functions**:
+  - Parallel BFS: each catalog entry stores both a Mat3 (TL representation) and an iMat3 (Burau representation)
+  - Shared parent/generator tracking for backtracking to reconstruct braid words
+  - Single hash-based deduplication on the TL representation (Burau piggybacks)
+- **Approximate size**: ~150 lines
+- **Notes**: The key architectural insight is that the same braid word can be simultaneously evaluated in two different representations during a single BFS pass. This avoids the need for a second pass to compute the Burau representation after the TL catalog is built.
+
+### 32.2 Reduced Burau Representation at t=-1 for B_4 (`iMat3`)
+
+- **What it does**: 3x3 integer matrix type for the reduced Burau representation at t=-1, operating in SL(3,Z). Provides the topological entropy classification via characteristic polynomial analysis.
+- **Introduced in**: Demo 106
+- **Reused in**: (Demo 106 only)
+- **Key types/functions**:
+  - `iMat3` struct: 9 integer entries
+  - `imat3_zero()`, `imat3_identity()`, `imat3_mul()`, `imat3_eq()` — matrix operations
+  - `imat3_det()` — integer determinant (always 1 for braids, SL(3,Z))
+  - `imat3_char_poly()` — characteristic polynomial coefficients (c0, c1, c2) where p(x) = x^3 + c2*x^2 + c1*x - 1
+- **Approximate size**: ~100 lines
+- **Notes**: Separate type from Cyc8-based Mat3 to maintain pure integer arithmetic for exact entropy classification. The characteristic polynomial is computed without floating point; only the spectral radius (for entropy quantification) uses bisection.
+
+### 32.3 Exact Integer Entropy Classification
+
+- **What it does**: Classifies braids as periodic or pseudo-Anosov using purely integer arithmetic on the Burau characteristic polynomial, avoiding all floating point for the classification itself.
+- **Introduced in**: Demo 106
+- **Reused in**: (Demo 106 only)
+- **Key types/functions**:
+  - Classification logic: p(x) = x^3 + c2*x^2 + c1*x - 1 with det=1. If p(1) = c2+c1 != 0, always pseudo-Anosov. If p(1) = 0, check quadratic factor |1-tr(M)| > 2
+  - `spectral_radius_bisection(c2, c1)` — 100-iteration bisection for entropy-per-crossing quantification (only used for analysis, not classification)
+- **Approximate size**: ~60 lines
+- **Notes**: All 8 depth-2 pseudo-Anosov entries share characteristic polynomial x^3 - 4x^2 + 4x - 1 with spectral radius phi^2 = 2.618..., giving entropy per crossing = log(phi) = 0.481212... (theoretical optimum per Band & Boyland 2007).
+
+### 32.4 Boolean Function Sweep with +/- Encoding
+
+- **What it does**: Tests entropy correlation against 8 Boolean functions simultaneously (AND3, OR3, XOR3, MAJ3, NAND3, NOR3, AND2, XOR2) using signed-addition 3-weight encoding.
+- **Introduced in**: Demo 106
+- **Reused in**: (Demo 106 only — but the multi-function sweep pattern is reusable)
+- **Key types/functions**:
+  - 3 weights -> 8 input patterns via signed addition; 8 truth tables tested per entry
+  - Per-function periodic vs pseudo-Anosov rate comparison with gap reporting
+- **Approximate size**: ~60 lines
+- **Notes**: Maximum gap between periodic and pseudo-Anosov rates: 3.7pp (XOR2), well within noise. The null result is total across all 8 functions.
+
+---
+
+## 33. Raqiya Algebraic Analysis Library (Demo 107)
+
+### 33.1 Raqiya Library (`raqiya/raqiya.h`)
+
+- **What it does**: Single-header stb-style C89 library for Z[zeta_8] algebraic analysis. Provides exact cyclotomic arithmetic and relationship detectors that reveal algebraic structure of value sets, with graph analysis layer.
+- **Introduced in**: Demo 107
+- **Reused in**: Demo 108 (comparison mode for parity/poison vocabulary analysis, enhancements: edge density, graph diameter, degree histogram, difference closure, negation pairing), Demo 109 (adapted for Z[zeta_16] via Z[i]+axis decomposition)
+- **Key types/functions**:
+  - `Raq_Cyc8` — element of Z[zeta_8], basis {1, zeta, zeta^2, zeta^3}, zeta^4=-1
+  - `Raq_ValueSet` — hash-based distinct value collector with insert/lookup
+  - `Raq_Partition` — group assignment result (group_id[], group_sizes[], n_groups)
+  - `Raq_PairHist` — pairwise distance histogram (bins[0..4])
+  - `Raq_Analysis` — full analysis result (all 6+ detectors)
+  - 9 relationship detectors: root-of-unity orbits, sign distances, sum/diff zeros, norm-squared classes, product structure, Galois orbits, axis agreement, divisibility, 2-adic valuation
+  - Graph analysis layer: 13 edge generators, quotient graph computation, restricted graph analysis
+  - `raq_analyze()` — full analysis pipeline
+  - `raq_print_analysis()` — formatted output
+  - `raq_print_comparison()` — side-by-side edge density, diameter, components, bipartiteness, quotient graphs for two value sets (added D108)
+  - `raq_graph_sweep_v()` — full graph analysis with verbosity control (added D108)
+  - 208 unit tests in `probatio_raqiya.c`
+- **Approximate size**: ~2000 lines (single header)
+- **Notes**: The core analysis tool for the D107-D109 arc. Each detector partitions the value set differently, and the relationships between partitions reveal algebraic structure. The graph layer builds edge sets from pairwise relationships and computes graph-theoretic properties (components, diameter, quotients).
+
+### 33.2 Nesting Counter
+
+- **What it does**: Counts arc nestings in non-crossing matchings. A nesting = pair of arcs (a,b),(c,d) with a < c < d < b. Used to prove nesting parity = Z/2Z bipartite grading.
+- **Introduced in**: Demo 107
+- **Reused in**: (Demo 107 only)
+- **Key types/functions**:
+  - `count_nestings(match, n)` — counts nesting pairs for non-crossing matchings in boundary order
+- **Approximate size**: ~20 lines
+- **Notes**: Verified for ALL 195 matchings at n=2..6 with 0 mismatches: nesting count mod 2 equals the bipartite 2-coloring of TL link-state transition graphs. Confirmed as NOT a consequence of known KLR Z-grading (genuinely novel theorem).
+
+### 33.3 Bipartiteness Checker
+
+- **What it does**: Generic BFS 2-coloring for adjacency matrices, used to verify bipartiteness of TL link-state transition graphs.
+- **Introduced in**: Demo 107
+- **Reused in**: (Demo 107 only)
+- **Key types/functions**:
+  - BFS 2-coloring for adjacency matrices up to 16x16 (BP_CHECK_MAX)
+  - Returns bipartite flag + partition sizes
+- **Approximate size**: ~40 lines
+- **Notes**: Verified bipartite for TL_n left regular (n=2..6, all connected) and 6 standard modules (W_{3,1}, W_{4,2}, W_{5,3}, W_{6,0}, W_{6,2}, W_{6,4}).
+
+### 33.4 TL Planar Stacking Action
+
+- **What it does**: Independent computation of TL generator action on link states from first principles (cup stacking mechanics), used to cross-validate generator matrices from D103.
+- **Introduced in**: Demo 107
+- **Reused in**: (Demo 107 only)
+- **Key types/functions**:
+  - TL planar stacking: 4-case action (both arc-paired -> redirect, one through -> swap, both through -> killed, creates loop -> killed)
+  - Verified: 0/45 mismatches with D103's 9x9 W_{6,2} generator matrices
+- **Approximate size**: ~80 lines
+
+---
+
+## 34. Parity Vocabulary Graph Analysis (Demo 108)
+
+### 34.1 3-Way Classification Framework
+
+- **What it does**: Builds bracket catalog, runs parity detection (k=6 XOR3), classifies values into parity/poison/neutral, then runs Raqiya comparison on all three pairs. Reusable pattern for any "vocabulary vs anti-vocabulary vs control" graph analysis.
+- **Introduced in**: Demo 108
+- **Reused in**: (Demo 108 only — but the 3-way pattern is reusable for any binary classification with Raqiya)
+- **Key types/functions**:
+  - Catalog builder: 100 distinct Z[zeta_8] bracket values from TL_3 (2-3 strands, word length 1-8)
+  - Parity detection: k=6 XOR3 search producing 906 solutions (from D50)
+  - 3-way classification: 41 parity / 17 poison-only / 42 neutral
+  - Poison index table: hardcoded 31 D64 poison catalog indices for fast lookup
+  - 14-value parity/poison overlap resolution (parity takes priority)
+- **Approximate size**: ~150 lines
+- **Notes**: The 3-way classification produces the Dual-Channel Theorem: parity wants HIGH product closure AND v_2 connectivity; poison fails on BOTH. Maximum structural contrast: product closure 17 edges (connected P_3) vs 0 edges (empty graph).
+
+### 34.2 Raqiya Comparison Mode
+
+- **What it does**: Side-by-side comparison of Raqiya graph analysis across two value sets, computing edge density, diameter, components, bipartiteness, and quotient graphs for all edge types.
+- **Introduced in**: Demo 108 (added to raqiya.h)
+- **Reused in**: Demo 109 (parity vs non-parity comparison at delta=sqrt(2))
+- **Key types/functions**:
+  - `raq_print_comparison()` — side-by-side edge density and topology for two value sets across all edge types
+  - `raq_graph_sweep_v()` — full graph analysis with verbosity control for compact output
+  - Enhancements added for D108: edge density (permille), graph diameter (BFS all-pairs), degree histogram, difference closure edge generator, negation pairing edge generator
+- **Approximate size**: ~100 lines (additions to raqiya.h)
+
+---
+
+## 35. Encoding-Dependent Dual-Channel Analysis (Demo 109)
+
+### 35.1 Z[i]+Axis Decomposition (`ZiAxis`)
+
+- **What it does**: Represents Z[i]-axial Z[zeta_16] values as (a+bi, axis), enabling algebraic operations at the Gaussian integer level with tracked cyclotomic axis. Reusable pattern for any Z[i]-axial cyclotomic analysis.
+- **Introduced in**: Demo 109
+- **Reused in**: (Demo 109 only — but reusable for any delta!=0 analysis where values are Z[i]-axial)
+- **Key types/functions**:
+  - `ZiAxis` struct: Gaussian integer (a, b) + axis (0-3) representing (a+bi)*zeta_16^axis
+  - `zi_mul(x, y)` — Gaussian multiplication with axis tracking (axes add mod 4)
+  - `zi_to_cyc16(x)` — convert back to full Cyc16 representation
+  - `zi_norm(x)` — Gaussian norm a^2 + b^2
+  - `zi_galois(x, m)` — Galois action sigma_m for m in {1,3,5,7,9,11,13,15}
+  - `zi_divides(x, y)` — Gaussian divisibility test
+- **Approximate size**: ~80 lines
+- **Notes**: Exploits the universal Z[i]-axiality of bracket values at delta=sqrt(2) (confirmed: all 56 values are Z[i]-axial). Reduces 8-dimensional Cyc16 analysis to 2-dimensional Gaussian integer analysis plus axis tracking.
+
+### 35.2 8-Edge-Type Graph Analysis (`SetAnalysis`)
+
+- **What it does**: Computes 8 different edge types (product closure, same-axis, additive closure, difference closure, divisibility, negation, norm classes, v_2 classes) for a value set, with component counting, isolated vertex detection, and axis quotient adjacency matrix.
+- **Introduced in**: Demo 109
+- **Reused in**: (Demo 109 only — but the pattern is reusable for any cyclotomic value set)
+- **Key types/functions**:
+  - `SetAnalysis` struct: stores all 8 edge counts, component counts, isolated vertices, axis distribution, norm/v_2/Galois class counts, axis quotient adjacency
+  - `analyze_set(values, n, result)` — computes all 8 edge types in a single pass over pairwise combinations
+  - `print_edge_table(a, b)` — formatted side-by-side comparison of two SetAnalysis results
+  - Union-find for component counting (reused across product, additive, and Galois analyses)
+- **Approximate size**: ~200 lines
+- **Notes**: The 8 edge types are: (1) product closure, (2) same-axis, (3) additive closure, (4) difference closure, (5) divisibility, (6) negation, (7) same-norm, (8) same-v_2. The key result: 7/8 edge types are identical between parity and non-parity at delta=sqrt(2); only product closure discriminates, and its polarity is inverted from D108.
+
+### 35.3 State-Sum Kauffman Bracket for Z[zeta_16]
+
+- **What it does**: Full state-sum bracket computation in Z[zeta_16] arithmetic with planar matching composition, braid word decoding, and loop counting for arbitrary braid words at delta=sqrt(2).
+- **Introduced in**: Demo 109 (adapted from D54/D55 pattern)
+- **Reused in**: (Demo 109 only)
+- **Key types/functions**:
+  - State-sum bracket with Cyc16 delta power weighting (delta=sqrt(2): delta^{L-1} computed via `cyc16_delta_power`)
+  - Braid word decoding for systematic enumeration
+  - Loop counting via union-find
+- **Approximate size**: ~100 lines
+- **Notes**: Produces 56 distinct Z[zeta_16] values matching D55, all confirmed Z[i]-axial. The 9,334 parity solutions (XNOR3 at Re>0 activation) also match D55.
+
+---
+
+### Multi-Strand Matrix DKC Architecture (Demos 102-105)
+
+Demos 102-105 follow a consistent pattern extending the multi-strand DKC framework:
+1. Construct TL_n generators as integer matrices on the standard module W_{n,j}
+2. Build braid generators via sigma_i = A*I + A^{-1}*e_i in Z[zeta_8]
+3. BFS catalog with FNV hash dedup, cap at 32768 entries
+4. Sign-hash activation (ternary {-1,0,+1} per Cyc8 component, base-3 polynomial hash)
+5. XOR search with k-parameter sweep
+6. Verify: e_i^2=0, Jones-Wenzl relations, far commutativity, braid relations, Hecke relations
+
+Key architectural transitions across the arc:
+- **D102**: Fixed Mat5 type (dim=5 only), two separate module constructors for A/B comparison
+- **D103**: Variable MatN type (runtime g_dim), switchable activation function pointer, subset-hash activation variants
+- **D104**: Configurable-coarseness activation (variable component count), streaming rank computation, multi-hash tests
+- **D105**: Extended to 8-strand (dim=14, dim=28), j=2 link state enumeration, rank saturation methodology
+
+### Raqiya-Based Graph Analysis Arc (Demos 107-109)
+
+Demos 107-109 follow a consistent pattern for algebraic graph analysis:
+1. Build bracket catalog at specific evaluation level (delta=0 or delta=sqrt(2))
+2. Collect distinct algebraic values (Z[zeta_8] or Z[zeta_16])
+3. Classify values into parity-capable and non-parity vocabularies
+4. Run Raqiya graph analysis (or custom 8-edge-type analysis) on each vocabulary
+5. Compare graph structure between vocabularies to identify discriminators
+
+Key progression:
+- **D107**: Establishes Raqiya toolkit, discovers universal axis-alignment theorem, nesting parity Z/2Z grading, major index bipartite invariant, q-Catalan identity
+- **D108**: Raqiya comparison mode reveals Dual-Channel Theorem — parity needs BOTH product closure AND v_2 connectivity; poison fails on BOTH
+- **D109**: Encoding-dependent refinement — at delta=sqrt(2) with multiplicative encoding, product closure polarity INVERTS (parity wants LOW, non-parity has HIGH); 7/8 edge types identical, breaking the discriminator count from D108's multiple to D109's sole product closure
+
+### Topological Entropy Null Result (Demo 106)
+
+Demo 106 establishes that topological entropy (Thurston-Nielsen classification) is completely orthogonal to DKC Boolean computation. The TL visibility filter explains why: writhe survives the TL quotient (correlates with DKC output per D83), entropy does NOT (e_i^2=0 kills expanding eigenvalues). The dual BFS with parallel TL+Burau representations is the architectural pattern enabling this analysis.

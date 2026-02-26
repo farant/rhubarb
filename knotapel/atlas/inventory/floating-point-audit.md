@@ -1,6 +1,6 @@
 # Floating-Point Usage Audit
 
-Last updated: 2026-02-24 (89 demos, D01-D101)
+Last updated: 2026-02-26 (97 demos, D01-D109)
 
 ## Purpose
 
@@ -111,17 +111,25 @@ DKC's core thesis is exact arithmetic in Z[zeta_8] — zero floating-point error
 | 99 | EXACT-CORE | Delta_1 2x2 standard module over exact Z[zeta_8]. Mat2 multiplication, BFS catalog, commutators, Casimir discriminant — all exact integer. FP at activation boundary: 2x2_hash uses sign patterns of integer components (no trig/sqrt), but cyc8_to_cplx for some validation paths. 2-strand comparison uses FP Quat. Core 3-strand computation is fully exact through Casimir analysis |
 | 100 | EXACT-CORE | W_{4,2} 3x3 matrices over exact Z[zeta_8]. Mat3 operations, TL generator construction, BFS, radical analysis, Casimir C3, hub commutators — all exact integer. mat3_activate uses sign patterns of 36 integer components (3-valued hash, no FP). FP only for percentage display in statistics. All algebraic computation including activation is exact |
 | 101 | EXACT-CORE | W_{5,3} 4x4 matrices over exact Z[zeta_8]. Mat4 operations, TL generator construction, BFS, Casimir C4, hub commutators — all exact integer. mat4_activate uses sign patterns of 64 integer components (3-valued hash, no FP). FP only for percentage display and growth-rate ratios. Most exact demo in the multi-strand series: even activation is integer-only |
+| 102 | DISPLAY-ONLY | W_{6,0} vs W_{6,4} radical A/B test. 5x5 matrices over exact Z[zeta_8]. Sign-pattern activation (mat5_activate, mat5_activate_quot). FP only for printf ratios (%.2f) and percentages (%.1f%%) |
+| 103 | DISPLAY-ONLY | W_{6,0} (dim=5) vs W_{6,2} (dim=9) dimension scaling. MatN over exact Z[zeta_8]. FP only for printf display of ratios and percentages |
+| 104 | DISPLAY-ONLY | Activation coarseness sweep reusing D103 catalogs. Integer Gaussian elimination for rank/sign-rank. FP only for printf percentage display |
+| 105 | DISPLAY-ONLY | W_{8,0} (dim=14) and W_{8,2} (dim=28) k-regime test. MatN over exact Z[zeta_8]. All 5 source files (main.c, phase_b.c, rank_retroactive.c, rank_saturation.c, rank_saturation_j0.c) have FP only in printf percentages |
+| 106 | MIXED (exact-core+stat) | Topological entropy of XOR-computing braids. Exact Z[zeta_8] TL for bracket/XOR + exact integer 3x3 Burau matrices. FP for spectral_radius (sqrt/fabs eigenvalue estimation), log for entropy per crossing, statistical percentages |
+| 107 | DISPLAY-ONLY | Algebraic graph density using Raqiya library. Exact Z[zeta_8] raqiya analysis (root orbits, norm classes, Galois orbits). FP only for printf percentages |
+| 108 | MIXED (exact-core+geom) | Parity vocabulary 3-way graph (parity/poison/neutral). Exact Z[zeta_8] bracket + exact raqiya graph analysis. FP for sector_classify (atan2/sqrt via Cx type) at parity partition boundary + percentage displays |
+| 109 | MIXED (exact-core+geom) | D55 parity vocabulary graph analysis at delta=sqrt(2). Exact Z[zeta_16] bracket + exact Z[i]-axis graph algebra (product closure, divisibility, Galois orbits). FP for cyc16_to_cx (cos/sin) and Re>0 activation boundary + percentage displays |
 
 ## Summary by Category
 
 | Category | Count | Demos |
 |----------|-------|-------|
 | INTEGER | 12 | 01-09, 39, 60, 61 |
-| DISPLAY-ONLY | 1 | 38 |
+| DISPLAY-ONLY | 6 | 38, 102, 103, 104, 105, 107 |
 | VALIDATION | 8 | 29, 35, 51, 52, 53, 54, 72, 85 |
 | EXACT-CORE | 24 | 10, 11, 13-19, 21, 23, 24, 45-47, 50, 86, 94, 95, 96, 98, 99, 100, 101 |
 | GEOMETRIC | 13 | 62, 63, 65, 67-69, 71, 73, 75, 77-79, 81 |
-| MIXED | 31 | 12, 20, 22, 25-28, 48-49, 55-59, 64, 66, 70, 74, 76, 80, 82-84, 87-93, 97 |
+| MIXED | 34 | 12, 20, 22, 25-28, 48-49, 55-59, 64, 66, 70, 74, 76, 80, 82-84, 87-93, 97, 106, 108, 109 |
 
 ## Three Regimes
 
@@ -137,7 +145,7 @@ Everything computational is complex doubles. The bracket itself is computed as `
 D29 introduces exact Z[zeta_8] integer arithmetic. From here, the *values* (bracket weights) are exact. But FP persists at two boundaries:
 
 - **Activation boundary (D45-D65)**: The activation function (split-sigmoid, sector_classify via atan2, magnitude threshold) converts exact cyclotomic values into Boolean outputs. The classification step is inherently FP even though the inputs are exact.
-- **Geometric boundary (D62-D93)**: S2 geometry, quaternion rotations, spherical harmonics. The *where* (eigenvector directions on S2) is continuous geometry, even though the *what* (bracket values) is exact algebra. D81-D93 extend this boundary with quaternion group closure, depth-stratified analysis, sum-angle structure, activation resolution sweeps, multi-function scaling, and the complement-blindness/phase-cell recovery analysis — all built on the same FP geometric engine. D94 introduces a notable refinement: the group algebra (Z[sqrt5] quaternion multiplication, BFS closure, norm checking) is fully exact integer arithmetic; FP appears only at the q2i_to_float() readout boundary where exact group elements are converted to the FP activation framework. D95-96 continue this pattern with Z[sqrt2]/QZ8 for z8 group operations (exact through derived series and cell classification, FP only at readout). D97's angle sweep is the one exception: the parametric half-angle exploration is inherently FP because it scans a continuous parameter space. D98-D101 mark a significant evolution: the multi-strand matrix representations (TL_3 through TL_5) operate entirely in exact Z[zeta_8] matrix arithmetic, and crucially, the sign-pattern activations (2x2_hash, 3x3_hash, 4x4_hash) classify integer components directly without any trig or FP conversion — making D100 and D101 the most fully exact demos in the project, with FP reduced to only display-level percentages.
+- **Geometric boundary (D62-D93)**: S2 geometry, quaternion rotations, spherical harmonics. The *where* (eigenvector directions on S2) is continuous geometry, even though the *what* (bracket values) is exact algebra. D81-D93 extend this boundary with quaternion group closure, depth-stratified analysis, sum-angle structure, activation resolution sweeps, multi-function scaling, and the complement-blindness/phase-cell recovery analysis — all built on the same FP geometric engine. D94 introduces a notable refinement: the group algebra (Z[sqrt5] quaternion multiplication, BFS closure, norm checking) is fully exact integer arithmetic; FP appears only at the q2i_to_float() readout boundary where exact group elements are converted to the FP activation framework. D95-96 continue this pattern with Z[sqrt2]/QZ8 for z8 group operations (exact through derived series and cell classification, FP only at readout). D97's angle sweep is the one exception: the parametric half-angle exploration is inherently FP because it scans a continuous parameter space. D98-D101 mark a significant evolution: the multi-strand matrix representations (TL_3 through TL_5) operate entirely in exact Z[zeta_8] matrix arithmetic, and crucially, the sign-pattern activations (2x2_hash, 3x3_hash, 4x4_hash) classify integer components directly without any trig or FP conversion — making D100 and D101 the most fully exact demos in the project, with FP reduced to only display-level percentages. D102-D105 continue this trend with 6-strand and 8-strand representations (5x5 through 28x28 matrices) all operating in exact Z[zeta_8] with sign-pattern activation — FP appears only in printf formatting for display ratios and percentages (DISPLAY-ONLY). D107 applies the same pattern through raqiya's exact algebraic graph analysis. D106 is an exception: its topological entropy computation requires FP spectral radius estimation (sqrt/fabs/log on the Burau representation's characteristic polynomial), making it MIXED despite exact TL/XOR algebra. D108-D109 return to the activation boundary theme from D45-D65: exact cyclotomic bracket values partitioned by FP geometric classification (atan2 sector in D108, Re>0 via cos/sin in D109), with the new element being raqiya's exact graph analysis layered on top of the FP-partitioned sets.
 
 ## Exactification Opportunities
 

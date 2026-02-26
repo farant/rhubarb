@@ -23,6 +23,8 @@ atlas/
     data-tables.md              <- key numerical tables
     code-assets.md              <- reusable code patterns across demos
     floating-point-audit.md     <- FP usage classification per demo
+    algebraic-structures.md     <- every algebraic object (groups, rings, algebras, polytopes) with invariants
+    conjecture-graph.md         <- directed graph of open conjectures with implication edges
 
   synthesis/                    <- "what does it mean"
     narrative.md                <- the research story arc
@@ -30,6 +32,12 @@ atlas/
     connections.md              <- cross-demo themes, how things feed each other
     novelty.md                  <- what's known vs novel vs in between
     vision-alignment.md         <- how current work relates to long-term vision
+    dead-ends.md                <- negative results registry + "wall was X not Y" pattern catalog
+    arc-summaries.md            <- research arcs as self-contained units (question/answer/journey/artifacts)
+    obstructions.md             <- partial order of impossibility results by mechanism type
+    prerequisites.md            <- concept dependency DAG ("what must I understand before X?")
+    glossary.md                 <- 40-60 key terms, plain + precise definitions, cross-references
+    key-insights.md             <- 10 most important ideas at progressive depth (1 sentence / 1 paragraph)
 
   research/                     <- external sources
     literature-index.md         <- all papers, one-line each, tagged
@@ -102,13 +110,22 @@ Why worker pool, not fixed batches: Agent context windows cannot handle 10+ demo
 ### Phase 2: Data Consolidation (parallelizable)
 
 **Input**: demo-index.md from Phase 1 + original demo files as needed.
-**Output**: Four files, one per agent.
+**Output**: Multiple files, one per agent. Existing agents (A-E) plus new extraction agents (F-I).
+
+#### Existing Agents (A-E)
 
 - Agent A -> `inventory/theorems.md`: Extract all theorems/conjectures from demo-index entries, organize by topic, track status.
 - Agent B -> `inventory/data-tables.md`: Extract all key numerical tables (axiality hierarchy, radical dimensions, DKC landscape matrix, catalog sizes, compression ratios, etc.)
 - Agent C -> `research/literature-index.md` + `research/five-pillars.md` + `research/key-sources.md`: Consolidate all literature references across demos, deduplicate, tag.
 - Agent D -> `inventory/code-assets.md`: Catalog reusable code patterns with which demo introduced them and which demos reuse them.
 - Agent E -> `inventory/floating-point-audit.md`: For each new/modified demo, read main.c and classify its floating-point usage (INTEGER, DISPLAY-ONLY, VALIDATION, EXACT-CORE, GEOMETRIC, STATISTICAL, or MIXED). Update the audit table, summary counts, and regime descriptions. This tracks the boundary between exact and FP computation across the codebase.
+
+#### New Agents (F-I)
+
+- Agent F -> `synthesis/dead-ends.md`: Extract all negative results and "wall was X not Y" resolution patterns from demo findings, explorer's log, and demo-index entries. For each dead end: what was tried, why it failed (specific mechanism), what it taught us, demo reference, and critically: "do not re-attempt unless [specific condition]". For each wall pattern: what looked impossible, diagnosis of which component enforced it, what was changed, the mechanism, and the generalizable lesson. Organize by research question attacked. This is the highest-ROI document for preventing duplicate work across context resets.
+- Agent G -> `synthesis/glossary.md`: Extract 40-60 key terms that appear across the atlas. Each entry gets: plain-language definition (one sentence, no jargon), precise definition (one sentence, technical), demo where first introduced, cross-references to related terms. Alphabetical order. Append-only maintenance — new terms added each defrag. Sourced from briefing.md, narrative.md, theorems.md, and demo-index entries.
+- Agent H -> `inventory/algebraic-structures.md`: Catalog every algebraic object encountered across demos — groups (binary octahedral, binary icosahedral, braid groups), rings (Z[i], Z[omega], Z[zeta_8], Z[zeta_12], Z[zeta_16]), algebras (TL_l at each l), polytopes (24-cell), modules (standard, projective, Delta_1, W_{n,k}). For each: classification data, key invariants (dimension, order, generators), which demos use it, and cross-references. Consolidates scattered references (e.g., the binary octahedral group is discussed across 9+ demos with no single entry).
+- Agent I -> `inventory/conjecture-graph.md`: Build a directed graph of all open conjectures and proven theorems with implication edges (if we prove X, what follows?). Identify equivalence classes, critical paths, and high-leverage proof targets. Source from theorems.md and research-questions.md. Include upgrade paths: what proof technique would likely work for each open conjecture. The extraction part (listing nodes and edges) is Phase 2; the strategic analysis (which to prove next) feeds into Phase 4 planning.
 
 **IMPORTANT — Assign tasks explicitly per agent.** Do NOT use a shared task list that agents can self-assign from. In the initial run, one agent finished its own task and then grabbed another agent's task, producing duplicate files that had to be manually merged. Set explicit ownership before launching.
 
@@ -117,13 +134,22 @@ Why worker pool, not fixed batches: Agent context windows cannot handle 10+ demo
 **Input**: All inventory and research files from Phases 1-2.
 **Output**: synthesis/ directory files.
 
-Effective workflow: spawn 4-5 agents in parallel to draft initial versions (they do the heavy reading of inventory material), then review each draft conversationally with the human. The agents handle extraction; the human handles judgment. Expect minor edits, not rewrites — if the inventory phase was thorough, the synthesis drafts are usually solid.
+Effective workflow: spawn 8-9 agents in parallel to draft initial versions (they do the heavy reading of inventory material), then review each draft conversationally with the human. The agents handle extraction; the human handles judgment. Expect minor edits, not rewrites — if the inventory phase was thorough, the synthesis drafts are usually solid.
+
+#### Existing Synthesis Documents
 
 - `narrative.md`: The research story arc, organized by conceptual progression not chronology
 - `four-lenses.md`: Current state of each lens (rep theory, coding, QM, approx theory)
 - `connections.md`: Cross-demo themes and how things feed each other
 - `novelty.md`: What's known in the literature, what's novel, what's in between
 - `vision-alignment.md`: How current work relates to the long-term vision (`planning/vision.md`). This bridges synthesis (backward-looking) and planning (forward-looking). Reads the other four synthesis docs + the vision doc and assesses: progress toward vision, new opportunities, course corrections, shortest paths to vision milestones, and recommended next investigations.
+
+#### New Synthesis Documents
+
+- `arc-summaries.md`: Group demos into their natural research arcs (17+ arcs) and summarize each as a self-contained unit. Per arc: the question it attacked, the answer it found, the journey (3-5 bullets: what was tried, what failed, what worked, what surprised), key artifacts produced, what it unlocked (which later arcs depend on it), and open threads. This is the backbone document — organized by intellectual unit rather than demo number or chronology. Build this BEFORE key-insights and obstructions, as both reference it. Important for the explorer role (thinks at arc level) and for paper planning (each paper ~ 1-3 arcs).
+- `obstructions.md`: A partial order of all impossibility results organized by mechanism type (convexity, pigeonhole, valuation failure, group-finiteness, encoding lock, etc.). For each obstruction: precise statement, mechanism, scope (which parameters it applies to), known bypass routes, and which walls survive if you change parameter X. The research has at least three independent obstruction families; this document makes that structure explicit. Reads from dead-ends.md (Phase 2) + theorems.md + demo-index entries.
+- `prerequisites.md`: A directed acyclic graph of concept dependencies (not demo dependencies). Each node is a concept (e.g., "State Sum", "Non-Semisimplicity", "k-Sector MVN") with a one-sentence definition and a pointer to where it's introduced. The graph shows "to understand X, first understand Y." ~200 lines. The single most impactful document for cold-start onboarding — turns the atlas from a library into a curriculum.
+- `key-insights.md`: The 10 most important ideas from the research program, each at two levels of depth: Level 1 (one sentence, suitable for a system prompt) and Level 2 (one paragraph, suitable for a graduate student). Level 3 (one page, specialist depth) is a stretch goal for future defrags. The Level 1 sentences are the ultra-compressed version of the project — 10 sentences that capture the shape of everything. Sits between briefing.md and narrative.md in the progressive disclosure stack.
 
 ### Phase 4: Planning (sequential)
 
@@ -196,3 +222,4 @@ The "modified existing demo" case is the one the old process missed — if someo
 | 2026-02-24 | `1050d75` | +D85-D92 (8 new demos), +P04 | Largest defrag. Three arcs: indecomposability (D85: b=-5/8 exact at TL₄, D86: single P₀₀ diverges — negative result), null regime (D87: nulls dispensable at ζ₁₂, D88: anti-correlation mechanism, two-role directions, k-ladder resilience), depth law mechanism (D89: 8 hypotheses 5 killed, axis cancellation + cross-depth constraint, D90: sum-angle structure, D91: activation bottleneck test, D92: parity-lock theorem PROVEN as P04). Phase 1: 2 batches of 4 agents. Phase 2: first attempt failed (API socket errors), re-run successful with 5 parallel agents. Phases 3-5: fully parallel. 80 demos, 113 literature refs. Paper 7 proposed (mechanistic arc). |
 | 2026-02-24 | `3119351` | +D93-D94, P04 extended | Incremental defrag. D93 LANDMARK: complement-blindness theorem (PROVED), phase_cell recovery, circuit complexity hierarchy (AND/XOR 1→2762→∞), pigeonhole mechanism. D94: binary icosahedral 2I (E₈), solvability bottleneck confirmed (Barrington), five-pillar synthesis COMPLETE, discrete algebraic reservoir computer framing. P04 extended with complement-blindness. Phase 1: 2 parallel agents. Phases 2-5: 5 parallel agents (solo, no team). 82 demos, 120 literature refs. Paper 8 proposed. |
 | 2026-02-24 | `3119351` | +D95-D101 (7 new demos) | Two arcs: commutator/synergy (D95: derived series cross-layer synergy, D96 LANDMARK: 5-cell 2D landscape optimal z8=21, D97: Cell B perfection = orthogonal geometry) and multi-strand (D98: 3-strand trace readout ZERO, D99 LANDMARK: Delta_1 first 3-strand XOR XOR14=60, D100: 4-strand W_{4,2} non-semisimple XOR14=70, D101: 5-strand W_{5,3} simple XOR14=0 + sl_d growth confirmed). Phase 1: 2 batches (4+3 agents). Phase 2-5: 6 parallel agents (solo). 89 demos, 122 literature refs. 110 theorems. Papers 8-9 proposed. |
+| 2026-02-26 | `3d87961` | +D102-D109 (8 new demos) | Largest structural defrag. Two arcs: multi-strand framework (D102: Barrington-Radical Principle PROVEN, radical-as-resource refuted; D103: BFS growth = braid group invariant; D104: Atkinson sweet spot LANDMARK, cross-block signal; D105: "XOR dies at N>=7" refuted, macrame principle) and Raqiya diagnostics (D106: topological entropy null; D107: Z/4Z axis-alignment PROVEN, nesting parity Z/2Z NOVEL, q-Catalan NOVEL; D108: dual-channel theorem; D109: encoding-dependent polarity inversion). 8 new atlas documents added to process: dead-ends.md, glossary.md, algebraic-structures.md, conjecture-graph.md (Phase 2); arc-summaries.md, obstructions.md, prerequisites.md, key-insights.md (Phase 3). Writers' room brainstorm (5 role-based agents: pure math, computational math, research director, programmer, educator) produced 18 proposals, 8 selected. Phase 1: 2 batches of 4. Phase 2: 5+4 agents. Phase 3: 9 parallel agents. Phase 4: 2 batches of 2. Phase 5: 1 agent. 97 demos cataloged, 130+ theorems, 10 papers in pipeline. |

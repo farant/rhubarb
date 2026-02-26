@@ -14,6 +14,8 @@ All numerical tables extracted from the demo index and explorer's log. Exact num
 
 *Updated 2026-02-24: Added Demos 93–94 (1wpi function scaling/complement-blindness/pigeonhole, binary icosahedral group/solvability bottleneck).*
 
+*Updated 2026-02-26: Added Demos 102–109 (6-strand radical A/B test, dimension scaling, activation coarseness sweep, 8-strand k-regime, topological entropy, algebraic graph density, parity vocabulary, D55 graph analysis).*
+
 ---
 
 ## 1. Axiality Hierarchy Table
@@ -834,8 +836,16 @@ Result: CSS approach fails. Radical is self-orthogonal under Gram form (tautolog
 | 90 | Axis cancellation + cross-depth constraint = depth law mechanism. | Spectral inversion: bandwidth DOWN while computation UP. |
 | 91 | Activation NOT the bottleneck. Parity is the wall. | Depth gap invariant across all resolutions k=2 to k=48. |
 | 92 | Parity-Lock Theorem. +/-q encoding computes only XOR/XNOR. | AND/OR/MAJ structurally impossible; 3^k equivalence classes. |
+| 102 | Barrington-Radical Principle. Radical carries abelian writhe character. | Simple module beats non-simple at every XOR level. Radical provably useless for parity. |
+| 103 | BFS growth is braid group invariant, not module dimension. | dim-5 and dim-9 identical BFS trees; higher dim HURTS XOR (curse of dimensionality). |
+| 104 | Atkinson sweet spot at 120 comp. Cross-block IS the signal. | k (cell count) is the real lever, not hash architecture. Sign-rank expansion discovered. |
+| 105 | 8-strand revives XOR8 at high k. D93 "XOR dies at N>=7" REFUTED. | Macrame principle: branching interaction reverses at n=8 (within-block > cross-block). |
+| 106 | Topological entropy orthogonal to DKC. Prediction falsified. | TL quotient erases all dynamical information; computation is collective/algebraic. |
+| 107 | Z/4Z Axis-Alignment Theorem proven. Nesting parity novel. | Constructive phase formula, major index bipartite invariant, q-Catalan identity. |
+| 108 | Graph structure predicts parity: Dual-Channel Theorem. | Product closure + additive v_2 connectivity = necessary conditions for parity. |
+| 109 | Encoding-dependent dual-channel: product closure polarity inverts. | 7/8 edge types identical between parity and non-parity at delta=sqrt(2). |
 
-**Provenance:** Explorer's Log landmark table + Demos 38-39, 55-71, 82-92.
+**Provenance:** Explorer's Log landmark table + Demos 38-39, 55-71, 82-92, 102-109.
 
 ---
 
@@ -3272,8 +3282,10 @@ Commutators annihilate the radical direction. Co-occurrence: 121 edges, 19/30 en
 | 3 | D98 | TL_3 | 5x5 | 4 | ~2.2x | 2 (sl_2) |
 | 4 | D100 | W_{4,2} | 3x3 | 6 | ~3.1x | 3 (sl_3) |
 | 5 | D101 | W_{5,3} | 4x4 | 8 | ~4.0x | 4 (sl_4) |
+| 6 | D102 | W_{6,0} | 5x5 | 10 | ~5.0x | 5 (sl_5) |
+| 8 | D105 | W_{8,0} | 14x14 | 14 | ~7.0x | 7 (sl_7) |
 
-Growth rate CONFIRMED across 3 data points: tracks n-1 cleanly.
+Growth rate CONFIRMED across 5 data points (n=3,4,5,6,8): tracks n-1 cleanly. BFS growth is a braid group invariant (D102: W_{6,0}=W_{6,4}=W_{6,2} identical; D103 confirms).
 
 **Provenance:** Demo 101, Phase 2 + D98/D100 comparison.
 
@@ -3463,7 +3475,566 @@ Co-occurrence: 247 edges, 30/30 entries participate. NOT a star topology.
 | 99 | 24+/24+ | COMPLETE (LANDMARK) |
 | 100 | 36/36 | COMPLETE (RESULT) |
 | 101 | 44/44 | COMPLETE (RESULT) |
+| 102 | 84/84 (2 structural FAILs) | COMPLETE (RESULT) |
+| 103 | 76/76 (2 structural FAILs) | COMPLETE |
+| 104 | 35/35 | COMPLETE (RESULT) |
+| 105 | 96/96 (46 Phase A + 50 Phase B) | COMPLETE |
+| 106 | 20/20 | COMPLETE (RESULT) |
+| 107 | 42/42 | COMPLETE (RESULT) |
+| 108 | 3/3 | COMPLETE (RESULT) |
+| 109 | 5/5 | COMPLETE (RESULT) |
 
 **Provenance:** Demo index, all entries.
 
-*Generated 2026-02-20 from demo-index.md (2845 lines) and explorers-log.md (1273 lines). Updated with Demos 38, 39, 60. Updated 2026-02-21 with Demos 64–71. Updated 2026-02-21 with Demos 72–82. Updated 2026-02-21 with Demos 83–84. Updated 2026-02-23 with Demos 85–92. Updated 2026-02-24 with Demos 93–94. Updated 2026-02-24 with Demos 95–101.*
+---
+
+## 64. 6-Strand Radical A/B Test — Demo 102
+
+### Module Structures (TL_6 at delta=0, both dim=5)
+
+| Module | dim | Through-lines | Radical dim | Radical vector | Generator nonzero |
+|--------|-----|---------------|-------------|----------------|-------------------|
+| W_{6,0} | 5 | 0 (all arcs) | 0 (simple) | N/A | 15/125 |
+| W_{6,4} | 5 | 4 | 1 | r=(1,0,-1,0,1) | 8/125 |
+
+### BFS Catalog (both modules, cap 32768)
+
+| Depth | New entries | Cumulative | Growth ratio |
+|-------|------------|------------|--------------|
+| 0 | 1 | 1 | -- |
+| 1 | 10 | 11 | 10.00 |
+| 2 | 66 | 77 | 6.60 |
+| 3 | 362 | 439 | 5.48 |
+| 4 | 1794 | 2233 | 4.96 |
+| 5 | 8370 | 10603 | 4.67 |
+| 6 | 22165 | 32768 | 2.65* |
+
+*Truncated by cap.
+
+### Max Coefficient Magnitude by Depth
+
+| Depth | W_{6,0} | W_{6,4} |
+|-------|---------|---------|
+| 0 | 1 | 1 |
+| 1 | 1 | 1 |
+| 2 | 2 | 2 |
+| 3 | 3 | 3 |
+| 4 | 5 | 5 |
+| 5 | 8 | 8 |
+| 6 | 16 | 13 |
+
+Both Fibonacci through d=5. B stays Fibonacci (13) at d=6, A breaks (16).
+
+### XOR Capacity Comparison (deep bf=30, k=128)
+
+| XOR level | A (W_{6,0}) | B (W_{6,4}) full | B quotient-only |
+|-----------|-------------|------------------|-----------------|
+| XOR6 | 2449 | 2370 | 2195 |
+| XOR8 | 850 | 793 | -- |
+| XOR10 | 1 | 0 | 0 |
+| XOR12 | 0 | 0 | -- |
+
+### Casimir and Radical Statistics
+
+- Mean |C5| (bf=30): A=48, B=23
+- XOR6 Casimir-by-level: winners=68, control=59, ratio=1.15x
+- Mixing row L1 (W_{6,4}): min=0, max=26, mean=2, zero=7628/32768 (23.3%)
+- By depth: d0-d3 mean=0, d4-d5 mean=1, d6 mean=3
+- Radical content: constant = 3 for all 32,768 W_{6,4} entries
+- Writhe character verification: 32,768/32,768 entries match M*r = A^{writhe}*r (100%)
+
+### 13 Pre-Registered Predictions
+
+| Prediction | Result |
+|------------|--------|
+| P1 (W_{6,4} rad dim=1) | CONFIRMED |
+| P2 (writhe character on generators) | CONFIRMED |
+| P3 (W_{6,0} sparser) | KNOWN FALSE (A=15 > B=8) |
+| P4 (W_{6,0} rad dim=0) | CONFIRMED |
+| P5 (growth ~5x both) | CONFIRMED |
+| P6 (frozen radical all entries) | CONFIRMED (LANDMARK) |
+| P7 (radical_content constant) | CONFIRMED |
+| P8 (W_{6,4} outperforms >=2 XOR) | REFUTED (simple wins everywhere) |
+| P9-P13 | 5 untestable (B has 0 XOR10 winners) |
+
+Score: 7/13 confirmed, 1 major refutation (P8), 5 untestable.
+
+**Provenance:** Demo 102.
+
+---
+
+## 65. Pure Dimension Scaling Test — Demo 103
+
+### BFS Depth Profile (identical for W_{6,0} dim=5 and W_{6,2} dim=9)
+
+| Depth | New entries | Cumulative | Growth ratio | Max magnitude |
+|-------|------------|------------|--------------|---------------|
+| 0 | 1 | 1 | -- | 1 |
+| 1 | 10 | 11 | 10.00 | 1 |
+| 2 | 66 | 77 | 6.60 | 2 |
+| 3 | 362 | 439 | 5.48 | 3 |
+| 4 | 1794 | 2233 | 4.96 | 5 |
+| 5 | 8370 | 10603 | 4.67 | 8 |
+| 6 | 22165 | 32768* | 2.65* | 16 |
+
+*Truncated by 32768 cap.
+
+### XOR Capacity Comparison (k=128, deep bf=30)
+
+| XOR level | A (W_{6,0}, dim=5) | B (W_{6,2}, dim=9) |
+|-----------|-------------------|-------------------|
+| XOR6 | 2449 | 2238 |
+| XOR8 | 850 | 557 |
+| XOR10 | 1 | 0 |
+| XOR12 | 0 | 0 |
+
+### Subset-Hash Activation Comparison (k=128, deep bf=30)
+
+| Activation | Components | XOR6 | XOR8 | XOR10 | XOR12 |
+|------------|-----------|------|------|-------|-------|
+| A full | 100 | 2449 | 850 | 1 | 0 |
+| B full | 324 | 2238 | 557 | 0 | 0 |
+| B sub5 | 100 | 2238 | 701 | 1 | 0 |
+| B stride3 | ~108 | 2087 | 767 | 3 | 0 |
+| B sub7 | 196 | 2538 | 998 | 1 | 0 |
+
+### Hub Frequency Distributions (XOR6 winners)
+
+| Module | Total winners | Freq values observed | Super-hubs (>33%) |
+|--------|--------------|---------------------|-------------------|
+| A (W_{6,0}) | 2449 | 181, 191, 198 | 0 |
+| B (W_{6,2}) | 2238 | 173, 186 | 0 |
+
+**Provenance:** Demo 103.
+
+---
+
+## 66. Activation Coarseness Sweep — Demo 104
+
+### Rank Comparison
+
+| Module | Raw Rank | Sign Rank | Total Cols | Raw % | Sign % |
+|--------|----------|-----------|------------|-------|--------|
+| W_{6,0} (dim=5) | 100 | 100 | 100 | 100.0% | 100.0% |
+| W_{6,2} (dim=9) | 244 | 292 | 324 | 75.3% | 90.1% |
+
+### Component Sweep (k=128)
+
+W_{6,0} (dim=5, max=100 comp):
+
+| comp | XOR6 |
+|------|------|
+| 10 | 234 |
+| 20 | 1166 |
+| 25 | 1457 |
+| 40 | 1678 |
+| 50 | 2372 |
+| 60 | 2353 |
+| 75 | 2318 |
+| 80 | 2370 |
+| 100 | 2449 |
+
+W_{6,2} (dim=9, max=324 comp):
+
+| comp | XOR6 |
+|------|------|
+| 10 | 254 |
+| 20 | 817 |
+| 25 | 1186 |
+| 40 | 1703 |
+| 50 | 1704 |
+| 60 | 1885 |
+| 75 | 2164 |
+| 80 | 2101 |
+| 100 | 2360 |
+| **120** | **2486** |
+| 140 | 2375 |
+| 150 | 2300 |
+| 175 | 2195 |
+| 200 | 2265 |
+| 250 | 2190 |
+| 300 | 2412 |
+| 324 | 2238 |
+
+Atkinson peak at 120 components for W_{6,2}: beats W_{6,0}'s maximum 2449.
+
+### Random-100 Variants (W_{6,2})
+
+| Trial | XOR6 |
+|-------|------|
+| Sequential first-100 | 2360 |
+| Random trial 1 | 2318 |
+| Random trial 2 | 2195 |
+| Random trial 3 | 2347 |
+| Random trial 4 | 2367 |
+| Random trial 5 | 2105 |
+| Mean | 2266 |
+| Spread (max-min) | 262 |
+
+### Branching Decomposition
+
+| Activation | comp | XOR6 | XOR8 |
+|------------|------|------|------|
+| A full | 100 | 2449 | (ref) |
+| B full | 324 | 2238 | 557 |
+| B sub6 | 144 | 2415 | 720 |
+| B cross-block | 160 | 2412 | 952 |
+| B within-block | 164 | 2235 | - |
+
+### Multi-Hash Summary (k=64x64=4096)
+
+| Test | comp | XOR6 | XOR8 |
+|------|------|------|------|
+| Ref: cross 1-hash | 160 | 3635 | 19994 |
+| T1: row split | 180+144 | 3852 | 22005 |
+| T2: cross-dir split | 80+80 | 3534 | 17939 |
+| T3: cross+diag | 160+64 | 3806 | 21525 |
+
+### k-Sweep
+
+W_{6,2} cross-block (160 comp):
+
+| k | XOR6 | XOR8 |
+|------|------|------|
+| 128 | 2412 | 952 |
+| 256 | 2978 | 3985 |
+| 512 | 3369 | 9510 |
+| 1024 | 3511 | 14503 |
+| 2048 | 3566 | 17549 |
+| 4096 | 3635 | 19994 |
+
+W_{6,0} full (100 comp):
+
+| k | XOR6 | XOR8 |
+|------|------|------|
+| 128 | 2449 | 850 |
+| 256 | 3128 | 3894 |
+| 512 | 3508 | 9414 |
+| 1024 | 3730 | 15173 |
+| 2048 | 3807 | 19059 |
+| 4096 | 3866 | 21699 |
+
+W_{6,0} wins at every k value in the sweep.
+
+**Provenance:** Demo 104.
+
+---
+
+## 67. 8-Strand k-Regime Test — Demo 105
+
+### W_{8,0} BFS Catalog (cap 32768, 14 generators)
+
+| Round | Cumulative | New | max_abs |
+|-------|-----------|-----|---------|
+| 0 | 1 | 1 | 1 |
+| 1 | 15 | 14 | 1 |
+| 2 | 137 | 122 | 2 |
+| 3 | 987 | 850 | 3 |
+| 4 | 6189 | 5202 | 5 |
+| 5 | 32768 | 26579 | 8 |
+
+### W_{8,0} k-Sweep (bf=30)
+
+| k | XOR6 | XOR8 | k/2^8 |
+|------|------|-------|-------|
+| 128 | 2898 | 5824 | 0.5 |
+| 256 | 3345 | 10413 | 1.0 |
+| 512 | 3529 | 15982 | 2.0 |
+| 1024 | 3663 | 19403 | 4.0 |
+| 2048 | 3705 | 21332 | 8.0 |
+| 4096 | 3721 | 22266 | 16.0 |
+
+### W_{8,0} Rank Saturation (784 cols, 32768 catalog entries)
+
+| Entries | Raw rank | Raw% | Sign rank | Sign% |
+|---------|----------|------|-----------|-------|
+| 128 | 81 | 10.3% | 91 | 11.6% |
+| 256 | 139 | 17.7% | 186 | 23.7% |
+| 512 | 211 | 26.9% | 310 | 39.5% |
+| 1024 | 274 | 34.9% | 425 | 54.2% |
+| 2048 | 416 | 53.1% | 651 | 83.0% |
+| 4096 | 498 | 63.5% | 686 | 87.5% |
+| 8192 | 614 | 78.3% | 729 | 93.0% |
+| 16384 | 684 | 87.2% | 757 | 96.6% |
+| 32768 | 710 | 90.6% | 767 | 97.8% |
+
+### W_{8,2} Rank Saturation (3136 cols, 16384 catalog entries)
+
+| Entries | Raw rank | Raw% | Sign rank | Sign% |
+|---------|----------|------|-----------|-------|
+| 128 | 90 | 2.9% | 128 | 4.1% |
+| 256 | 180 | 5.7% | 256 | 8.2% |
+| 512 | 310 | 9.9% | 443 | 14.1% |
+| 1024 | 499 | 15.9% | 783 | 25.0% |
+| 2048 | 902 | 28.8% | — | — |
+| 4096 | 1178 | 37.6% | — | — |
+| 8192 | 1702 | 54.3% | — | — |
+| 16384 | 2003 | 63.9% | — | — |
+
+Final sign-rank at 16384 = 2003 (63.9%), expansion 1.83x.
+
+### W_{8,2} Branching Decomposition (k=128, bf=30)
+
+| Activation | Components | XOR6 | XOR8 |
+|------------|-----------|------|------|
+| Full | 3136 | 2898 | 5664 |
+| Cross-block | 1568 | 532 | 733 |
+| Within-block | 1568 | 2940 | 4743 |
+
+Within-block > cross-block: OPPOSITE of D104's W_{6,2}.
+
+### Corrected Retroactive Rank Table (All Modules, at Catalog Saturation)
+
+| Module | dim | cols | catalog | raw | raw% | sign | sign% | exp |
+|--------|-----|------|---------|-----|------|------|-------|-----|
+| Delta_1 | 2 | 16 | 32768 | 16 | 100% | 16 | 100% | 1.00x |
+| W_{4,2} | 3 | 36 | 32768 | 28 | 77.8% | 32 | 88.9% | 1.14x |
+| W_{5,3} | 4 | 64 | 32768 | 62 | 96.9% | 64 | 100% | 1.03x |
+| W_{6,0} | 5 | 100 | 32768 | 100 | 100% | 100 | 100% | 1.00x |
+| W_{6,2} | 9 | 324 | — | 244 | 75.3% | 292 | 90.1% | 1.20x |
+| W_{8,0} | 14 | 784 | 32768 | 710 | 90.6% | 767 | 97.8% | 1.08x |
+| W_{8,2} | 28 | 3136 | 16384 | 1096 | 34.9% | 2003 | 63.9% | 1.83x |
+
+**Provenance:** Demo 105.
+
+---
+
+## 68. Topological Entropy — Demo 106
+
+### Contingency Table (k=128, first 128 entries of W_{4,2} catalog)
+
+| Class         | Total | XOR>0 | XOR=0 | Rate  | Mean Score |
+|---------------|-------|-------|-------|-------|------------|
+| Identity      | 1     | 1     | 0     | 100%  | 4574       |
+| Periodic      | 88    | 88    | 0     | 100%  | 3969       |
+| Pseudo-Anosov | 39    | 39    | 0     | 100%  | 3857       |
+
+### Boolean Function Sweep (periodic rate vs pA rate, k=128)
+
+| Function | Periodic | pA    | Gap    |
+|----------|----------|-------|--------|
+| AND3     | 92.0%    | 92.9% | +0.9pp |
+| OR3      | 95.1%    | 93.4% | -1.7pp |
+| XOR3     | 86.9%    | 86.0% | -0.9pp |
+| MAJ3     | 86.3%    | 87.5% | +1.2pp |
+| NAND3    | 92.0%    | 92.9% | +0.9pp |
+| NOR3     | 95.1%    | 93.4% | -1.7pp |
+| AND2     | 88.4%    | 87.9% | -0.5pp |
+| XOR2     | 90.8%    | 87.1% | -3.7pp |
+
+Maximum gap: 3.7pp (XOR2), well within noise. Total Boolean function null.
+
+### Pseudo-Anosov Fraction by Depth
+
+| Depth | Total  | Periodic | pA     | pA%   |
+|-------|--------|----------|--------|-------|
+| 0     | 1      | 0        | 0      | --    |
+| 1     | 6      | 6        | 0      | 0.0%  |
+| 2     | 26     | 18       | 8      | 30.8% |
+| 3     | 98     | 66       | 32     | 32.7% |
+| 4     | 338    | 192      | 146    | 43.2% |
+| 5     | 1110   | 548      | 562    | 50.6% |
+| 6     | 3444   | 1210     | 2234   | 64.9% |
+| 7     | 10390  | 2974     | 7416   | 71.4% |
+| 8     | 17355  | 3952     | 13403  | 77.2% |
+
+Crossover at depth 5 (50.6%). Fibonacci pA characteristic polynomial: x^3 - 4x^2 + 4x - 1, spectral radius phi^2 = 2.618..., entropy/crossing = log(phi) = 0.481212... (theoretical optimum per Band & Boyland 2007).
+
+**Provenance:** Demo 106.
+
+---
+
+## 69. Algebraic Graph Density — Demo 107
+
+### Distinct Value Growth by Depth (W_{4,2} catalog, 32768 entries)
+
+| Depth | Entries | Cumul Distinct | New |
+|-------|---------|----------------|-----|
+| 0     | 1       | 2              | +2  |
+| 1     | 6       | 4              | +2  |
+| 2     | 26      | 7              | +3  |
+| 3     | 98      | 13             | +6  |
+| 4     | 338     | 23             | +10 |
+| 5     | 1110    | 41             | +18 |
+| 6     | 3444    | 68             | +27 |
+| 7     | 10390   | 114            | +46 |
+| 8     | 17355   | 186            | +72 |
+
+186 values decomposed by axis: a-axis (zeta^0) range [-19,+34] (53 values), b-axis (zeta^1) range [-21,+15] (36 values), c-axis (zeta^2) range [-30,+30] (60 values), d-axis (zeta^3) range [-15,+21] (36 values), plus 1 zero.
+
+### Bipartiteness Verification
+
+| Module | Dim | Bipartite | Connected | Partition |
+|--------|-----|-----------|-----------|-----------|
+| TL_2   | 2   | YES       | YES       | 1+1       |
+| TL_3   | 5   | YES       | YES       | 3+2       |
+| TL_4   | 14  | YES       | YES       | 7+7       |
+| TL_5   | 42  | YES       | YES       | 21+21     |
+| TL_6   | 132 | YES       | YES       | 66+66     |
+| W_{3,1}| 2   | YES       | --        | 1+1       |
+| W_{4,2}| 3   | YES       | --        | 2+1       |
+| W_{5,3}| 4   | YES       | --        | 2+2       |
+| W_{6,0}| 5   | YES       | --        | 3+2       |
+| W_{6,2}| 9   | YES       | --        | 5+4       |
+| W_{6,4}| 5   | YES       | --        | 3+2       |
+
+### W_{6,2} Bipartite Invariant Candidates
+
+| Invariant | Match |
+|-----------|-------|
+| maj mod 2 | 9/9 MATCH |
+| nest mod 2 | 7/9 FAIL |
+| tsl mod 2 | 6/9 FAIL |
+| lae mod 2 | 5/9 FAIL |
+
+Major index is the ONLY working invariant.
+
+### 2-Adic Valuation Distribution (186 values)
+
+| v_2 level | Cumulative count |
+|-----------|-----------------|
+| v_2=0 | 95 |
+| v_2=1 | 48 |
+| v_2=2 | 24 |
+| v_2=3 | 11 |
+| v_2>=4 | 7 |
+
+Geometric decay ~0.5x per level.
+
+### Axis Distribution (complete depths 0-7)
+
+Even (a+c) = 41, odd (b+d) = 72. Odd dominates at unbiased depths; even dominance in full catalog is truncation artifact.
+
+### Orbit Structure (full 186 values)
+
+35 root-of-unity orbits = 35 norm classes (identical for axis-aligned values), 105 Galois orbits (finer partition). Divisibility density: 14.2%.
+
+### Galois Asymmetry
+
+sigma_5 fixes ALL 126 even-axis values; sigma_3 fixes 66; sigma_7 fixes 54. All Galois edge sets are 1-regular (perfect matchings on non-fixed points). b-axis isomorphic to d-axis across all 13 edge types.
+
+**Provenance:** Demo 107.
+
+---
+
+## 70. Parity Vocabulary — Demo 108
+
+### 3-Way Classification (100 standard Z[zeta_8] bracket catalog)
+
+41 parity / 17 poison-only / 42 neutral. 14-value parity/poison overlap.
+
+### Axis Distribution
+
+| Group | Axis 0 | Axis 1 | Axis 2 | Axis 3 |
+|-------|--------|--------|--------|--------|
+| Parity (41) | 9 | 10 | 14 | 8 |
+| Poison (17) | 0 | 2 | 9 | 6 |
+| Neutral (42) | 19 | 7 | 11 | 5 |
+
+### Octant Distribution
+
+| Group | oct0 | oct1 | oct2 | oct3 | oct4 | oct5 | oct6 | oct7 |
+|-------|------|------|------|------|------|------|------|------|
+| Parity | 0 | 0 | 14 | 0 | 9 | 10 | 0 | 8 |
+| Poison | 0 | 2 | 2 | 6 | 0 | 0 | 7 | 0 |
+| Neutral | 17 | 6 | 1 | 5 | 2 | 1 | 10 | 0 |
+
+Parity octants = {2,4,5,7}, poison octants = {1,2,3,6} — nearly complementary tiling.
+
+### Galois Stabilizer Gradient
+
+| Stabilizer | Catalog | Parity | Parity % | Poison | Poison % |
+|------------|---------|--------|----------|--------|----------|
+| stab=4 (axis 0) | 28 | 9 | 32.1% | 0 | 0.0% |
+| stab=2 (axis 2) | 34 | 14 | 41.2% | 9 | 26.5% |
+| stab=1 (axes 1,3) | 38 | 18 | 47.4% | 8 | 21.1% |
+
+Lower Galois symmetry correlates with higher parity capability.
+
+### Key Edge Comparisons (Parity vs Poison)
+
+| Edge type | Parity edges | Parity density | Poison edges | Poison density |
+|-----------|-------------|---------------|-------------|---------------|
+| product_closure | 17 | 21% | 0 | -- |
+| additive_closure | 49 | 10% | 3 | 30% |
+| add. closure / v_2 | 5/6 (83%) | -- | 1 (K_2) | -- |
+| difference_closure | 110 | 13% | 6 | 21% |
+| negation | 0 | -- | 2 | 33% |
+| galois_s7 | 0 | -- | 4 | 33% |
+
+### Partition Hierarchy
+
+| Set | Root groups | Galois groups | Norm groups | v_2 groups | Coincidence |
+|-----|-----------|-------------|------------|-----------|-------------|
+| Parity (41) | 21 | 37 | 21 | 5 | Three distinct levels |
+| Poison (17) | 15 | 15 | 15 | -- | Triple collapse (all same) |
+
+**Provenance:** Demo 108.
+
+---
+
+## 71. D55 Value Set Graph Analysis — Demo 109
+
+### Catalog and Vocabulary Comparison (D108 vs D109)
+
+| Metric | D108 (delta=0) | D109 (delta=sqrt(2)) |
+|---|---|---|
+| Catalog size | 100 | 56 |
+| Parity vocabulary | 41 (41%) | 28 (50%) |
+| Non-parity | 59 (59%) | 28 (50%) |
+| Parity solutions | 906 | 9,334 |
+| Simplest activation | k=6 sectors | Re>0 |
+| Algebra | Z[zeta_8] | Z[zeta_16] |
+| Encoding | additive | multiplicative |
+
+### Edge Analysis — Parity (28 values) vs Non-Parity (28 values)
+
+| Edge type | Parity | Non-parity |
+|---|---|---|
+| product_closure | 56e, 14.8%, 6 comp (+4 iso) | 176e, 46.6%, 1 comp (+0 iso) |
+| same_axis | 86e, 22.8% | 86e, 22.8% |
+| additive_closure | 20e, 23.3%, 8 comp (+4 iso) | 20e, 23.3%, 8 comp (+4 iso) |
+| difference_closure | 52e, 13.8% | 52e, 13.8% |
+| same_norm | 90e, 23.8%, 4 classes | 90e, 23.8%, 4 classes |
+| same_v2 | 90e, 23.8%, 4 classes | 90e, 23.8%, 4 classes |
+| negation | 0 pairs | 0 pairs |
+| divisibility | 50e, 13.2% | 50e, 13.2% |
+
+7 of 8 edge types identical. Product closure is the sole discriminator.
+
+### Quotient Structure (identical for both sets)
+
+| Metric | Parity | Non-parity |
+|---|---|---|
+| Axis distribution | (8, 6, 8, 6) | (8, 6, 8, 6) |
+| Norm classes | 4 | 4 |
+| v2 classes | 4 | 4 |
+| Galois orbits | 15 | 15 |
+| Product axis quotient | K_4 (6/6) | K_4 (6/6) |
+| Additive v2 quotient | 3/6 (50%) | 3/6 (50%) |
+
+### Cross-Demo Product Closure Comparison
+
+| | D108-parity | D109-parity | D108-poison | D109-non-parity |
+|---|---|---|---|---|
+| Product closure | 17e (21%) | 56e (14.8%) | 0e | 176e (46.6%) |
+| Product axis quotient | P_3 (3/6) | K_4 (6/6) | empty (0/3) | K_4 (6/6) |
+| Additive v2 quotient | 83% (5/6) | 50% (3/6) | K_2 (1 edge) | 50% (3/6) |
+
+Product closure inversion: at delta=0 (additive encoding), parity=HIGH; at delta=sqrt(2) (multiplicative encoding), parity=LOW.
+
+### Prediction Scorecard (5 predictions)
+
+| # | Prediction | Result | Verdict |
+|---|---|---|---|
+| 1 | Product density > 50% | 14.8% | FALSIFIED (revealed encoding-dependence) |
+| 2 | Product axis quotient near K_4 | K_4 (6/6, 100%) | CONFIRMED |
+| 3 | Same-axis additive density > D108's 9% | 23.3% | CONFIRMED |
+| 4 | More norm classes than D108's 21 | 4 (fewer) | FALSIFIED |
+| 5 | Counter: if product sparse, dual-channel falsified | 56 edges, counter triggered | COUNTER TRIGGERED |
+
+**Provenance:** Demo 109.
+
+---
+
+*Generated 2026-02-20 from demo-index.md (2845 lines) and explorers-log.md (1273 lines). Updated with Demos 38, 39, 60. Updated 2026-02-21 with Demos 64–71. Updated 2026-02-21 with Demos 72–82. Updated 2026-02-21 with Demos 83–84. Updated 2026-02-23 with Demos 85–92. Updated 2026-02-24 with Demos 93–94. Updated 2026-02-24 with Demos 95–101. Updated 2026-02-26 with Demos 102–109.*

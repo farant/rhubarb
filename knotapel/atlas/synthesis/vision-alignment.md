@@ -1,7 +1,7 @@
 # Vision Alignment: Current Research → Long-Term Direction
 
-How the completed work (101 demos) positions us relative to the hybrid LLM vision
-described in `planning/vision.md`. Generated 2026-02-20, updated 2026-02-24.
+How the completed work (109 demos) positions us relative to the hybrid LLM vision
+described in `planning/vision.md`. Generated 2026-02-20, updated 2026-02-26.
 
 ---
 
@@ -11,7 +11,7 @@ The hybrid LLM vision requires: taxonomy → braids → DKC → compiled weights
 coexist with trained weights in a model that can dynamically update its factual
 knowledge.
 
-**What the 101 demos established:**
+**What the 109 demos established:**
 
 | Vision Component | Status | Key Evidence |
 |-----------------|--------|--------------|
@@ -38,30 +38,44 @@ knowledge.
 | Catalog optimization / pruning | PROVEN | Derived series cross-classification; A+B+C (21 entries) beats ALL (24); Q8-null = noise (D95-D97) |
 | Multi-strand DKC | NEW CAPABILITY | 3-strand XOR14=60 (D99 LANDMARK), 4-strand XOR14=70 (D100), 5-strand XOR12=512 (D101) |
 | Non-semisimple extension = resource | PROVEN | W_{4,2} XOR14=70 (radical); W_{5,3} XOR14=0 (simple) — Ext^1 is load-bearing (D99-D101) |
-| sl_d functor growth rate | CONFIRMED | BFS growth ~(n-1)x: 2x (3-strand), 3.1x (4-strand), 4x (5-strand) (D98-D101) |
+| sl_d functor growth rate | CONFIRMED | BFS growth ~(n-1)x: 2x (3-strand), 3.1x (4-strand), 4x (5-strand), **5x (6-strand, D102-D103)** (D98-D105) |
+| Radical-as-resource hypothesis | REFUTED | Simple module beats non-simple at matched dim; radical carries abelian writhe character, provably useless for parity by Barrington (D102) |
+| BFS growth is braid group invariant | PROVEN | All modules of same strand count produce identical BFS trees — growth tracks B_n, not module (D102, D103) |
+| Sign-hash activation theory | CHARACTERIZED | Curse of dimensionality in sign-hash; Atkinson sweet spot; cross-block branching decomposition; k is the real lever (D103, D104) |
+| Multi-strand scaling to n=8 | DEMONSTRATED | W_{8,0} (dim=14), W_{8,2} (dim=28); XOR8=22266 at k=4096; macrame principle regime transition (D105) |
+| Topological entropy orthogonality | PROVEN | Entropy classification totally orthogonal to DKC computation; TL visibility filter explains why (D106) |
+| Axis-alignment theorem | PROVEN | Z/4Z phase formula: every TL braid matrix entry is axis-aligned at delta=0; constructive nesting-parity proof (D107) |
+| Graph-structure predicts parity | DEMONSTRATED | Dual-channel theorem: product closure + v_2 connectivity discriminate parity/poison vocabularies (D108) |
+| Amy bridge to quantum circuits | CONJECTURED | DKC dual-channel maps onto T-gate/Hadamard decomposition in quantum circuit synthesis (D108) |
+| Encoding-dependent dual-channel | PROVEN | Product closure polarity inverts between additive (D108) and multiplicative (D109) encodings (D108-D109) |
+| Raqiya as reusable analysis tool | OPERATIONAL | Single-header C89 library for Z[zeta_8] algebraic analysis, deployed across D107-D109, 208+ unit tests |
 | Taxonomy → braid encoding | NOT STARTED | The critical missing link |
 | Multi-layer complex composition | NOT TESTED | Only bit-level cascade (D19) exists |
 | Integration with trained weights | NOT STARTED | Architecture question, unexplored |
 | Dynamic recompilation | NOT TESTED | Should be fast given finite catalog, unverified |
 
 **Assessment:** The "knots → logic" half of the pipeline is now extremely well
-characterized, mechanistically understood, AND generalized to multi-strand braid
-representations. The D85-92 arc shifted the research from "what can DKC do?" to
-"why does it work and what are its structural limits?" The D95-97 arc resolved
-the catalog optimization question through derived-series cross-classification,
-proving that optimal pruning (A+B+C = 21 entries) beats the full 24-entry catalog.
-The D98-101 arc opened a new dimension entirely: multi-strand DKC on matrix
-representations of TL algebras. D99 achieved the first 3-strand XOR computation
-(LANDMARK), D100 demonstrated 4-strand DKC with non-semisimple W_{4,2}, and D101
-tested 5-strand DKC on simple W_{5,3} — establishing that non-semisimple
-extension structure (Ext^1) is computationally load-bearing (XOR14=70 vs XOR14=0).
-The BFS growth rate tracks n-1 across three data points, confirming the sl_d
-functor thesis for growth but falsifying hub-count predictions. The parity-lock
-theorem (D92) and the encoding design question remain the primary theoretical
-gaps for non-parity functions. The "taxonomy → knots" half remains the primary
-practical gap. Multi-strand DKC opens a new design axis: choosing the strand
-count and module type as architectural parameters alongside encoding, activation,
-catalog, and root of unity.
+characterized, mechanistically understood, generalized to multi-strand braid
+representations up to n=8, AND equipped with algebraic diagnostic tools (Raqiya)
+that can predict computational capability from graph structure. The D85-92 arc
+shifted the research from "what can DKC do?" to "why does it work and what are
+its structural limits?" The D95-97 arc resolved the catalog optimization question
+through derived-series cross-classification. The D98-101 arc opened multi-strand
+DKC on matrix representations of TL algebras. The D102-109 arc represents a
+maturation phase: scaling multi-strand DKC to n=8 (D105), decisively refuting
+the radical-as-resource hypothesis (D102), establishing the activation/sign-hash
+as the critical interface (D103-D104), proving topological entropy is orthogonal
+to computation (D106), proving axis-alignment as a theorem with constructive
+phase formula (D107), and building the Raqiya toolkit into a reusable algebraic
+diagnostic that predicts parity capability from graph structure (D108-D109). The
+D102-109 arc also produced the Barrington bridge — the first connection between
+DKC and classical computational complexity theory — and the Amy bridge to quantum
+circuit synthesis. The parity-lock theorem (D92) and the encoding design question
+remain the primary theoretical gaps for non-parity functions. The "taxonomy →
+knots" half remains the primary practical gap. The encoding-dependent dual-channel
+theorem (D108-D109) is the first result that characterizes what makes a value
+vocabulary computationally capable, moving from "search and find" to
+"predict and verify."
 
 ---
 
@@ -294,6 +308,173 @@ For the hybrid LLM vision this arc has four major implications:
    activations (analogous to the Sec x Vor k-ladder for quaternions) could
    dramatically improve multi-strand DKC performance. This is the multi-strand
    analog of the D50 activation wall.
+
+---
+
+## Progress Toward Vision (D102-109 Additions)
+
+### The multi-strand maturation arc (D102-105) answers "how does multi-strand DKC scale and what controls its capacity?"
+
+The D102-105 arc takes the multi-strand capability established by D98-101 and
+systematically characterizes its scaling behavior, activation theory, and the
+role of module structure. It produces four major structural results and one
+decisive refutation.
+
+- **D102**: Head-to-head A/B test of W_{6,0} (simple, dim=5) vs W_{6,4}
+  (non-simple, dim=5, radical dim=1) on the 6-strand braid group. The radical
+  carries an abelian writhe character (M*r = A^{writhe}*r for ALL 32,768 catalog
+  entries), which by Barrington's theorem is provably useless for parity/XOR
+  computation. The simple module WINS at every XOR level. This is the
+  **Barrington-Radical Principle** — the first connection between DKC and
+  classical computational complexity theory. It does NOT contradict the D100-D101
+  finding that non-semisimplicity is load-bearing; rather, it sharpens the claim:
+  the radical is computationally inert (abelian writhe), but the quotient
+  structure of non-semisimple modules can still provide advantage through the
+  mixing row (8% boost at XOR6). The growth rate at n=6 is ~5x, extending the
+  sl_d functor thesis to a fourth data point.
+
+- **D103**: Pure dimension scaling test — W_{6,0} (dim=5) vs W_{6,2} (dim=9),
+  both simple. BFS growth profiles are PERFECTLY IDENTICAL at every depth: growth
+  is a braid group invariant (B_6 property), not a module dimension property.
+  Higher dimension HURTS XOR at every level due to curse of dimensionality in the
+  sign-hash activation. However, the subset-hash experiment (Phase 7) reveals that
+  the deficit is partly an activation artifact: B@sub7 (196 components from dim-9)
+  beats A@full (100 components from dim-5). This establishes that activation
+  geometry — WHICH components are hashed, not just how many — is a critical design
+  parameter. Also connects to 1-bit compressed sensing (Boufounos-Baraniuk 2008).
+
+- **D104**: Systematic activation coarseness sweep on W_{6,0} vs W_{6,2}. The
+  dim-9 module's XOR deficit is a HASH problem, not an algebra problem: at
+  optimal component count (120 of 324), W_{6,2} beats W_{6,0}. The key findings:
+  (a) the Atkinson sweet spot — non-monotonic component-count curve peaking at
+  ~120, (b) sign-rank EXPANSION — sign quantization breaks 48 linear
+  dependencies, creating new independent directions (raw rank 244 → sign-rank
+  292), (c) branching cross-block components carry the computational signal (off-
+  diagonal beats diagonal), (d) k (cell count) is the real lever, not hash
+  architecture — multi-hash does NOT beat single-hash, and the cross-block
+  advantage at k=128 vanishes at k=4096 where W_{6,0} wins at every k.
+
+- **D105**: Scaling to 8-strand braid groups. W_{8,0} (dim=14) and W_{8,2}
+  (dim=28) demonstrate that D93's "XOR dies at N>=7" was a k-regime artifact —
+  at k=4096, W_{8,0} produces XOR8=22266 (beating n=6's 21699). The k/2^N ratio
+  is the real control parameter. The **macrame principle** regime transition:
+  branching interaction reverses at n=8 (within-block > cross-block), opposite to
+  D104's n=6 result, because complex blocks (dim=14) are self-sufficient while
+  simple blocks (dim=5) need connections. Rank saturation analysis reveals all
+  prior cross-module rank comparisons were confounded by under-sampling. W_{8,0}
+  sign-rank reaches 97.8% at saturation; W_{8,2} sign expansion is 1.83x and
+  still growing.
+
+For the hybrid LLM vision this arc has five major implications:
+
+1. **The Barrington bridge connects DKC to computational complexity theory.**
+   The radical's abelian character is provably useless for parity by Barrington's
+   theorem (1989). This is the first time DKC has been grounded in classical CS
+   theory — providing external validation that DKC's computational structure is
+   not an artifact but reflects genuine complexity-theoretic constraints.
+
+2. **Activation design is now the primary engineering challenge for multi-strand
+   DKC.** D103-D104 establish that the same algebraic catalog can produce
+   dramatically different XOR capacities depending on which components are hashed
+   and how. The Atkinson sweet spot, branching decomposition, and sign-rank
+   expansion are concrete tools for principled activation engineering.
+
+3. **Multi-strand DKC scales to n=8.** The "XOR dies at N>=7" claim (D93) is
+   refuted as a k-regime artifact. At sufficient k, 8-strand DKC achieves XOR8
+   comparable to or exceeding 6-strand, confirming that the activation resolution
+   (not the strand count) is the scaling bottleneck.
+
+4. **BFS growth is a braid group invariant.** All modules of the same strand
+   count produce identical BFS catalogs (proven for all three n=6 modules:
+   W_{6,0}, W_{6,2}, W_{6,4}). This means the catalog is a property of B_n, not
+   of the chosen module. Module choice affects readout (activation), not the
+   reservoir.
+
+5. **Rank saturation is methodologically essential.** D105's retroactive analysis
+   shows that single-checkpoint rank measurements are unreliable for infinite
+   braid groups. All prior cross-module rank comparisons (D99-D104) are confounded
+   to varying degrees. Future multi-strand work must report saturation curves.
+
+### The relational computation arc (D106-109) answers "what predicts computational capability?"
+
+The D106-109 arc shifts from measuring DKC capacity (how many XOR solutions?) to
+predicting it (what algebraic structure distinguishes capable from incapable value
+sets?). This is the most theory-forward arc since D85-92.
+
+- **D106**: Topological entropy (Thurston-Nielsen classification) is completely
+  orthogonal to DKC Boolean computation — both periodic and pseudo-Anosov braids
+  compute XOR at 100% participation with near-identical scores. This is a clean
+  negative result explained by the TL visibility filter: properties that survive
+  the TL quotient (writhe) correlate with DKC output; properties killed by the
+  quotient (entropy, Burau spectral radius) do not. The result strengthens the
+  relational computation thesis: individual dynamical properties are consistently
+  non-predictive; only relational/algebraic properties matter.
+
+- **D107**: The most theorem-rich demo in the program. Universal axis-alignment
+  of braid matrices at delta=0 is proved (not just observed) with a constructive
+  Z/4Z phase formula based on nesting parity. Five novel results: nesting parity
+  = Z/2Z grading (confirmed NOT a consequence of known KLR grading), major index
+  bipartite invariant, q-Catalan identity C_{2m+1}(-1) = (-1)^m * C_m,
+  orthogonality theorem (product quotient = K_5 = Z/4Z rotation, additive
+  quotient = star tree), and 2-adic neutrality of nilpotent TL. The DKC
+  implication: computation at delta=0 reduces to integer path counting + a
+  three-variable phase formula — effective computation is Z x Z/4Z per matrix
+  entry.
+
+- **D108**: Graph structure PREDICTS parity capability. The 41-value parity
+  vocabulary and 17-value poison vocabulary show maximum structural contrast on
+  product closure (connected P_3 vs empty graph) and near-maximum contrast on
+  additive v_2 connectivity (83% vs trivial K_2). This is the **Dual-Channel
+  Theorem**: parity requires BOTH multiplicative phase coherence (product closure
+  > 0) AND additive magnitude diversity (v_2 connectivity > trivial). Poison
+  fails on BOTH. The theorem maps onto T-gate/Hadamard decomposition in quantum
+  circuit synthesis (Amy, Glaudell & Ross 2023) — the **Amy bridge**. Partition
+  coincidence (root = Galois = norm) is identified as a structural signature of
+  computational incapability.
+
+- **D109**: At delta=sqrt(2) with multiplicative encoding, Raqiya graph analysis
+  CANNOT discriminate parity from non-parity: 7 of 8 edge types are identical
+  between the two vocabularies. Product closure is the sole discriminator — and
+  its polarity is INVERTED from D108: parity has LOW product closure (14.8%) vs
+  non-parity (46.6%). This establishes the **Encoding-Dependent Dual-Channel
+  Theorem**: under additive encoding, parity wants HIGH product closure (self-
+  reinforcement through superposition); under multiplicative encoding, parity
+  wants LOW product closure (products must escape vocabulary for sector
+  alternation). The rich algebra at delta=sqrt(2) (j=0 sector alive, all
+  structural prerequisites satisfied) means Re>0 activation suffices — Raqiya
+  diagnoses algebraic impoverishment, not algebraic health.
+
+For the hybrid LLM vision this arc has four major implications:
+
+1. **Predictive capability analysis is now possible.** D108-D109 establish that
+   algebraic graph structure (product closure, v_2 connectivity, partition
+   hierarchy) can predict which value vocabularies support parity computation.
+   This moves from brute-force search ("try all triples") to structural
+   prediction ("analyze the value set, predict capability"). For the compilation
+   pipeline, this means a candidate catalog can be evaluated BEFORE the expensive
+   exhaustive XOR search.
+
+2. **The Amy bridge connects DKC to quantum circuit synthesis.** The dual-channel
+   theorem's mapping onto T-gate/Hadamard decomposition means DKC's algebraic
+   structure is not an isolated construction but connects to the mature theory of
+   exact synthesis over Z[zeta_8] (Amy 2023). This provides both theoretical
+   validation and practical tools: the sde (smallest denominator exponent)
+   resource measure from quantum synthesis may be directly applicable to DKC
+   catalog optimization.
+
+3. **Raqiya is a lasting reusable tool.** The single-header C89 library for
+   Z[zeta_8] algebraic analysis — with 9+ relationship detectors, graph analysis
+   layer, quotient graph computation, and 208+ unit tests — embodies the vision
+   of building tools that last. It was deployed across D107-D109 with zero
+   regression and continues to grow. This is the kind of library infrastructure
+   the long-term vision requires: exact, tested, reusable.
+
+4. **The TL visibility filter is a selection principle for the compilation
+   pipeline.** D106 proves that only properties surviving the TL quotient matter
+   for DKC computation. For catalog engineering this is a concrete filter: any
+   property killed by e_i^2=0 (entropy, spectral radius, Burau dynamics) is
+   irrelevant. Only writhe-like (abelian character) and algebraic-structure
+   properties (axis alignment, product closure, nesting parity) survive.
 
 ---
 
@@ -552,6 +733,76 @@ For the hybrid LLM vision this means compiled DKC weights can be not just scalar
 (quaternions from 2-strand braids) but MATRICES (from multi-strand braids) — a
 richer representation space with additional architectural parameters.
 
+### The Barrington bridge grounds DKC in computational complexity (D102)
+The radical's abelian writhe character connects DKC to Barrington's theorem (1989):
+abelian groups cannot compute parity. This is the first external validation from
+classical CS theory. For the hybrid LLM vision, the Barrington bridge means DKC's
+computational capacity claims are not self-referential — they connect to the NC^1 /
+AC^0 hierarchy that governs all circuit computation. The non-abelian structure of
+the quotient (not the radical) is where parity lives, exactly as Barrington
+predicts.
+
+### BFS catalogs are module-independent reservoirs (D102-D103)
+All three n=6 modules (W_{6,0}, W_{6,2}, W_{6,4}) produce bit-for-bit identical
+BFS trees at every depth. The catalog is a B_n property — the reservoir is fixed
+once you choose the strand count. Module choice and activation design control the
+readout. For the hybrid LLM vision, this cleanly separates "what braids exist?"
+(a braid group question, answerable once) from "how do you read them?" (a design
+question, optimizable). The reservoir computing frame from D94 gains concrete
+support.
+
+### Sign-rank expansion as a computational resource (D104)
+Sign quantization (ternary {-1,0,+1} projection) can INCREASE effective rank
+(W_{6,2}: raw 244 → sign 292, a gain of 48 independent dimensions). The nonlinear
+sign() function breaks Z-linear dependencies. For the hybrid LLM vision, this
+means the activation layer does not merely discard information — it can create
+new independent dimensions. The practical implication: activation design for multi-
+strand DKC should exploit sign-rank expansion, not just minimize information loss.
+
+### The k-regime resolves the multi-strand scaling story (D105)
+The ratio k/2^N is the universal control parameter for XOR capacity. At k=4096,
+8-strand DKC (n=8, dim=14) achieves XOR8=22266, beating 6-strand's 21699. The
+"XOR dies at N>=7" (D93) was a low-k artifact. For the vision this means multi-
+strand DKC can scale arbitrarily with activation resolution — there is no strand-
+count ceiling analogous to the zeta_8 input-count ceiling. The bottleneck is always
+the activation (k), never the algebra.
+
+### Axis-alignment simplifies the compiled weight format (D107)
+The Z/4Z axis-alignment theorem proves that every TL braid matrix entry at delta=0
+is axis-aligned: a single integer times a single power of zeta_8. DKC computation
+reduces to integer path counting + a three-variable phase formula. For hardware
+implementation of compiled DKC weights, this means each matrix entry is just (int,
+phase in Z/4Z) — dramatically simpler than generic Z[zeta_8] arithmetic. Combined
+with D107's constructive nesting-parity formula, the phase is itself computable
+from combinatorial data (writhe + nesting counts).
+
+### Graph-structure prediction enables fast catalog screening (D108-D109)
+The dual-channel theorem provides algebraic criteria for predicting parity
+capability BEFORE running the expensive exhaustive search. Product closure > 0 and
+v_2 connectivity > trivial are necessary conditions. Partition coincidence (triple
+collapse) is a sufficient condition for incapability. For the compilation pipeline
+this means candidate catalogs can be quickly screened: compute the Raqiya graph
+analysis (O(n^2) in value count), check the dual-channel criteria, and only proceed
+to exhaustive search if the structural prerequisites are met.
+
+### The Amy bridge opens quantum compilation as a resource (D108)
+The mapping between DKC's dual-channel structure and T-gate/Hadamard decomposition
+in quantum circuit synthesis (Amy, Glaudell & Ross 2023) means DKC can potentially
+import tools and results from the mature exact synthesis literature over Z[zeta_8].
+The sde (smallest denominator exponent) is a resource measure for quantum circuits;
+its DKC analog might provide a principled complexity measure for compiled weights.
+For the vision, this validates that DKC is not isolated — it connects to an active
+research community with decades of optimization results.
+
+### Encoding-dependent polarity inversion reveals a design principle (D108-D109)
+The same algebraic structure (product closure) has OPPOSITE computational
+implications under additive vs multiplicative encoding. Under additive encoding,
+high product closure enables parity (self-reinforcement). Under multiplicative
+encoding, low product closure enables parity (escape). For the compilation pipeline,
+this means the encoding choice determines not just WHICH functions are computable
+(D92) but HOW the algebra is leveraged — the same catalog engineering principles
+reverse sign when the encoding changes.
+
 ### Non-semisimple extension is computationally load-bearing (D99-D101)
 The D100 vs D101 comparison establishes that the Ext^1 non-split extension (the
 radical in W_{4,2}) is not algebraic decoration but a computational resource.
@@ -677,6 +928,72 @@ all levels. The readout mechanism — how you extract a scalar from a matrix —
 critical for multi-strand DKC. The successful approach (D99-D101) uses sign-pattern
 hashing of all matrix components, treating the full matrix as the activation input.
 This is the multi-strand analog of the "wall was in the activation" pattern.
+
+### The radical is NOT a computational resource — it is a writhe recorder (D102)
+The D100-D101 finding that non-semisimplicity is load-bearing suggested that the
+radical (the non-semisimple part) might be the source of the advantage. D102
+REFUTES this: the radical carries only the abelian writhe character (M*r =
+A^{writhe}*r for all 32768 entries), which by Barrington's theorem cannot compute
+parity. The simple module W_{6,0} beats the non-simple W_{6,4} at every XOR level.
+The course correction: non-semisimplicity helps at n=4 (D100) through the Loewy
+structure (length 3) and the mixing row, NOT through the radical direction itself.
+The mixing row provides an 8% boost at XOR6 — real but modest, and regime-dependent
+(disappears at higher XOR levels). The refined thesis: non-semisimple modules can
+provide advantage through quotient-radical INTERACTION (mixing row), not through
+the radical as an independent computational channel.
+
+### Higher module dimension hurts — activation design matters more (D103-D104)
+The intuition that higher-dimensional modules (more matrix components = more
+information) would produce better XOR capacity is WRONG at face value. W_{6,2}
+(dim=9, 324 components) is strictly worse than W_{6,0} (dim=5, 100 components) at
+matched k. The curse of dimensionality in sign-hash activation dominates. However,
+this is a hash problem, not an algebra problem: at optimal component count (120
+of 324), W_{6,2} beats W_{6,0}. The course correction: raw module dimension is
+not a useful design parameter. Effective dimension (rank/total, sign-rank
+expansion, cross-block structure) is what matters. Activation design for multi-
+strand DKC must be principled (branching decomposition, Atkinson sweet spot), not
+naive (hash all components).
+
+### "XOR dies at N>=7" was a k-regime artifact (D105)
+D93's conclusion that XOR disappears for N>=7 inputs was based on k=128 (84 cells).
+D105 shows this was entirely a pigeonhole artifact: at k=4096, W_{8,0} achieves
+XOR8=22266. The ratio k/2^N is the real control parameter. At k=128 for N=8,
+k/2^N=0.5 (deep pigeonhole); at k=4096, k/2^N=16. The course correction: all
+prior "XOR dies at large N" claims must be re-evaluated with the k-regime in mind.
+The true capacity scaling is k-limited, not strand-limited.
+
+### Rank comparisons across modules are confounded by under-sampling (D105)
+D105's rank saturation analysis reveals that all prior cross-module rank
+comparisons (D99-D104) are confounded by varying oversampling ratios. W_{8,2}
+at 512 entries was 6.9% rank utilization — severely under-sampled. The "34.9%
+match" between W_{8,0} and W_{8,2} at initial checkpoints was coincidental.
+The course correction: future multi-strand work must report rank saturation
+curves, not single-checkpoint measurements. The retroactive rank table (D105)
+provides corrected values for all prior modules.
+
+### Topological entropy is irrelevant to DKC — individual braid properties are non-predictive (D106)
+The intuitively plausible prediction that pseudo-Anosov braids (chaotic dynamics)
+would be better at computation than periodic braids (simple dynamics) is
+COMPLETELY wrong. Both compute XOR at 100% participation with near-identical
+scores. The TL visibility filter explains why: the TL quotient at delta=0 erases
+all dynamical information (e_i^2=0 kills expanding eigenvalues). This is a course
+correction for the entire approach to understanding DKC: individual braid
+properties (entropy, spectral radius, word length, writhe) are consistently
+non-predictive. Only RELATIONAL/ALGEBRAIC properties of value sets predict
+computational capacity. This reinforces the D89-D90 finding that the depth law
+mechanism is relational, not positional.
+
+### Raqiya discriminates impoverishment, not health (D109)
+The D108 dual-channel theorem appeared to provide universal structural criteria
+for parity capability. D109 shows the criteria are encoding-dependent AND that
+at delta=sqrt(2) (rich algebra, j=0 alive), Raqiya CANNOT discriminate parity
+from non-parity on 7 of 8 edge types. Product closure is the sole discriminator
+and its polarity inverts. The course correction: Raqiya is a diagnostic for
+algebraic impoverishment (delta=0, sparse algebra) not algebraic health
+(delta!=0, rich algebra). When both vocabularies satisfy all structural
+prerequisites, Raqiya has nothing to distinguish. The dual-channel theorem is
+real but its practical utility is regime-dependent — most useful in the sparse
+(zeta_8, delta=0) regime where the compilation pipeline currently operates.
 
 ### Hub-count scaling does not follow simple combinatorial formula (D101)
 The prediction from D100's 6 hubs was that 5-strand would show 12 hubs (= 2*C(4,2)).
@@ -853,6 +1170,50 @@ activation for matrix DKC (exploiting matrix structure: eigenvalues, singular
 values, radical projection, Casimir) could dramatically improve multi-strand
 capacity. This is the multi-strand analog of Path D50.
 
+### Path O: Dual-channel prediction for custom sector labelings (1 demo) — NEW from D108
+```
+Current state -> Raqiya analysis of candidate value sets at k>=24 -> predict which achieve XOR6
+```
+D108 established the dual-channel theorem: product closure + v_2 connectivity
+predict parity capability. D65 showed generalized XOR6 appears at k=24 with
+non-standard labeling. Can the dual-channel analysis predict WHICH custom sector
+labelings at k>=24 achieve XOR6? If so, this would be the first predictive use
+of Raqiya for activation design — moving from retroactive analysis to prospective
+engineering.
+
+### Path P: Additive encoding at delta=sqrt(2) (1 demo) — NEW from D109
+```
+Current state -> D57-style additive encoding at delta=sqrt(2) -> Raqiya graph analysis
+```
+D109's encoding-dependent polarity inversion is established by comparing D108
+(additive, delta=0) with D109 (multiplicative, delta=sqrt(2)). The cleanest
+confirmation would hold delta constant (sqrt(2)) and vary encoding. If additive
+encoding at delta=sqrt(2) restores D108-style structural discrimination (high
+product closure → parity), the encoding-dependence is confirmed and the
+delta-dependence is ruled out. This is a single-demo experiment with high
+theoretical payoff.
+
+### Path Q: Macrame principle crossover characterization (1 demo) — NEW from D105
+```
+Current state -> W_{6,4} or W_{10,2} branching decomposition -> locate crossover between cross-block and within-block regimes
+```
+D104 (n=6, asymmetric blocks dim 5+4): cross-block wins. D105 (n=8, symmetric
+blocks dim 14+14): within-block wins. The crossover lies between block dim 5 and
+dim 14. Finding the exact crossover would give a concrete design rule for
+activation engineering: at what block dimension should multi-strand activation
+switch from cross-block to within-block hashing?
+
+### Path R: Raqiya-guided catalog screening for new roots (1 demo) — NEW from D108
+```
+Current state -> Build catalog at zeta_12 or 2I -> Raqiya graph analysis -> predict parity boundary -> verify
+```
+The dual-channel theorem was demonstrated at delta=0 (zeta_8) and delta=sqrt(2)
+(zeta_16). Can Raqiya predict the parity boundary at other roots? At zeta_12
+(infinite group, 4096 entries), running Raqiya on the full value set and then
+predicting which subset supports parity would test whether graph-based prediction
+generalizes beyond the zeta_8 regime. If it works, Raqiya becomes a universal
+catalog screening tool.
+
 ### Path M: 6-strand W_{6,4} — decisive simple vs non-semisimple test (1 demo) — NEW from D100-D101
 ```
 Current state -> W_{6,4} (5x5 non-semisimple, TL_6 at delta=0) -> XOR14 capacity test
@@ -922,27 +1283,47 @@ entries is not positional quality but relational quality (axis anti-alignment,
 cross-depth vocabulary constraint). This makes the generation problem more
 precisely stated, though not necessarily easier.
 
-**The multi-strand arc (D98-D101) opens a parallel research front.** Multi-strand
-DKC is not a replacement for 2-strand DKC but a generalization: it adds strand
-count and module type as design parameters. The immediate priorities are:
-- **Path M** (W_{6,4} test) — the single most informative experiment, resolving
-  whether non-semisimplicity is universally load-bearing or dimension-dependent.
-- **Path L** (activation design) — the crude sign-pattern hashes are almost
-  certainly not optimal; better activations could shift the capacity frontier.
-- **Path N** (XOR16 on Delta_1) — determines whether the XOR16 ceiling is
-  structural or activation-limited, with major implications for multi-strand
-  capacity scaling.
+**The multi-strand arc (D98-D105) is now mature.** D102-D105 resolved most of the
+open questions from D98-D101: the radical is inert (D102), dimension scaling is
+understood (D103), activation theory is principled (D104), n=8 works (D105), and
+the k-regime is the real scaling control (D105). The immediate priorities shift:
+- **Path L** (activation design) — now informed by Atkinson sweet spot, branching
+  decomposition, sign-rank expansion, and k-regime theory. The crude sign-pattern
+  hashes can be systematically improved using D103-D105 tools.
+- **Path Q** (macrame crossover) — locating the exact crossover between cross-
+  block and within-block regimes would give a concrete activation design rule.
+- **Path N** (XOR16 on Delta_1) — still determines whether the XOR16 ceiling is
+  structural or activation-limited.
+- **Path M** (W_{6,4} test) — partially answered by D102 (W_{6,4} loses at
+  matched dim=5), but the Loewy-length question at higher dim remains open.
 
-The catalog pruning results (D95-D97) are immediately actionable: any future
+**The relational computation arc (D106-D109) opens a predictive research front.**
+This is the most promising new direction for the compilation pipeline:
+- **Path O** (dual-channel prediction for custom labelings) — the first
+  predictive use of Raqiya for prospective activation design.
+- **Path R** (Raqiya-guided catalog screening) — tests whether structural
+  prediction generalizes beyond zeta_8.
+- **Path P** (additive encoding at delta=sqrt(2)) — the cleanest test of the
+  encoding-dependent dual-channel theorem.
+
+The catalog pruning results (D95-D97) remain immediately actionable: any future
 demo using the z8 catalog should use A+B+C (21 entries) rather than the full 24.
-This is a retroactive improvement applicable to all prior z8-based work.
+
+**The Raqiya library is the first concrete piece of lasting infrastructure.**
+The vision emphasizes building tools that last (CLAUDE.md: "programs are like
+machines that do not normally experience entropy"). Raqiya — a single-header C89
+library for Z[zeta_8] algebraic analysis with 208+ unit tests, exact integer
+arithmetic, 9+ relationship detectors, and graph analysis — embodies this
+principle. It was deployed across three demos (D107-D109) with zero regression,
+growing by adding new detectors rather than modifying existing ones. This is the
+kind of library that the long-term monorepo vision requires.
 
 ---
 
 ## The "Wall Was in the Activation" Pattern — A Structural Insight
 
-Across the full D50-D101 arc, the same pattern has appeared three times for
-activation, a fourth time for encoding, and a fifth time for readout:
+Across the full D50-D105 arc, the same pattern has appeared five times for
+activation, a sixth time for encoding, and a seventh time for readout:
 
 | Demo | Apparent Wall | True Cause | Resolution |
 |------|--------------|------------|------------|
@@ -951,6 +1332,8 @@ activation, a fourth time for encoding, and a fifth time for readout:
 | D77 | XOR8 = 0 at zeta_8 | S^2-only activation | S^1xS^2 product activation |
 | D92 | Only XOR/XNOR computable | +/-q encoding, not DKC itself | 1wpi encoding (D48/D50) |
 | D98-D99 | 3-strand XOR = 0 | Trace readout (5.1% retention) | Sign-pattern hash on Delta_1 2x2 |
+| D103-D104 | Higher dim module = worse XOR | Sign-hash curse of dimensionality | Atkinson sweet spot (120 of 324 comp) |
+| D105 | XOR dies at N>=7 | Low-k pigeonhole (k/2^N < 1) | k=4096 (k/2^N = 16): XOR8=22266 |
 
 The pattern generalizes: when a DKC computation appears impossible, suspect the
 interface layer first — activation, convention, encoding, or readout. The algebraic core
@@ -958,7 +1341,9 @@ interface layer first — activation, convention, encoding, or readout. The alge
 than any single interface reveals. D92 extends this pattern from the activation
 layer to the encoding layer: the +/-q encoding was the wall, not DKC itself.
 D98-D99 extend it further to the readout layer: the trace was the wall for
-multi-strand DKC, not the 3-strand algebra.
+multi-strand DKC, not the 3-strand algebra. D103-D105 add two more instances:
+the dimension wall (dim-9 module appearing worse) was in the naive all-component
+hash, and the strand-count wall (N>=7 appearing dead) was in the k-regime.
 
 This has a direct implication for the hybrid LLM vision: the interface design
 between compiled DKC weights and the broader neural network will face similar
@@ -969,8 +1354,10 @@ mechanism, not to abandon the underlying algebra.
 
 ## Revised Overall Outlook for the Long-Term Vision
 
-After D95-101 the picture adds multi-strand generalization and catalog
-optimization to the mechanistic depth established by D85-92:
+After D102-109 the picture adds multi-strand maturation (scaling, activation
+theory, Barrington bridge), relational computation diagnostics (Raqiya, dual-
+channel theorem), and connections to both classical complexity theory and quantum
+circuit synthesis to the already-solid algebraic foundation:
 
 **What we now know that we didn't before D95:**
 1. The indecomposability parameter b = -5/8 is extractable from first principles,
@@ -1001,6 +1388,36 @@ optimization to the mechanistic depth established by D85-92:
 12. The "wall was in X not Y" pattern has a 5th instance: 3-strand trace readout
     was the bottleneck, not the algebra — sign-pattern hash on Delta_1 unlocks
     XOR (D98-D99).
+13. The radical carries an abelian writhe character, provably useless for parity
+    by Barrington's theorem — the Barrington-Radical Principle connects DKC to
+    classical computational complexity theory (D102).
+14. BFS growth is a braid group invariant — all modules of the same strand count
+    produce identical BFS trees. Module choice controls readout, not reservoir
+    (D102, D103).
+15. Sign-hash activation has a non-monotonic optimal component count (Atkinson
+    sweet spot) and sign quantization can EXPAND effective rank by breaking
+    Z-linear dependencies (D104).
+16. Branching cross-block carries the computational signal at n=6 (D104) but
+    within-block dominates at n=8 (D105) — the macrame principle regime
+    transition at block dim ~5-14 (D104-D105).
+17. k/2^N is the universal control parameter for multi-strand XOR capacity;
+    "XOR dies at N>=7" was a low-k artifact; 8-strand DKC achieves XOR8=22266
+    at k=4096 (D105).
+18. Topological entropy is completely orthogonal to DKC computation — the TL
+    visibility filter kills all dynamical information at delta=0 (D106).
+19. Axis-alignment at delta=0 is a provable theorem (not empirical) with
+    constructive Z/4Z phase formula: entry(r,c) = count * zeta_8^{(w - 2*(nest(r)
+    + nest(c))) mod 4}. DKC reduces to Z x Z/4Z per matrix entry (D107).
+20. Graph structure predicts parity capability: the dual-channel theorem requires
+    product closure > 0 AND v_2 connectivity > trivial; partition coincidence
+    signatures incapability (D108).
+21. DKC's dual-channel maps onto T-gate/Hadamard decomposition in quantum circuit
+    synthesis — the Amy bridge (D108).
+22. Dual-channel polarity is encoding-dependent: additive encoding wants HIGH
+    product closure for parity, multiplicative wants LOW. Raqiya discriminates
+    algebraic impoverishment, not algebraic health (D108-D109).
+23. Raqiya is operational as a reusable C89 analysis tool with 208+ unit tests,
+    deployed across D107-D109 with zero regression (D107-D109).
 
 **What this changes about the vision:**
 - The encoding is the first design decision. It determines which Boolean functions
@@ -1028,12 +1445,37 @@ optimization to the mechanistic depth established by D85-92:
   compiled neuron use 2-strand (scalar, well-understood, proven activations) vs
   multi-strand (matrix, higher-dimensional, crude activations but potentially
   higher capacity)?
-- **Non-semisimplicity is the universal computational resource.** This was
-  suspected since D84 and quantified by D85-D86. D99-D101 confirm it in the
-  multi-strand context: the Ext^1 extension in Delta_1 and W_{4,2} provides
-  computational capacity that the simple W_{5,3} lacks at the XOR14 boundary.
-  A practical hybrid LLM should use non-semisimple modules (even-strand TL
-  algebras at delta=0) for maximum capacity.
+- **Non-semisimplicity is a nuanced resource — the radical itself is inert.**
+  D84-D86 and D99-D101 established that non-semisimplicity is load-bearing.
+  D102 sharpens this: the radical direction carries only the abelian writhe
+  character, provably useless for parity by Barrington. The advantage comes from
+  the quotient-radical INTERACTION (mixing row), not the radical as independent
+  channel. A practical hybrid LLM should use non-semisimple modules for the
+  mixing-row advantage (D100, D102), but not expect the radical to compute
+  anything on its own.
+- **The compilation pipeline can now include a structural screening step.**
+  D108-D109's dual-channel theorem means candidate catalogs can be evaluated
+  for parity capability using Raqiya graph analysis BEFORE the expensive
+  exhaustive search. This is a concrete speedup: O(n^2) graph analysis vs
+  O(catalog^{n+1}) exhaustive search. For the compilation pipeline, this means
+  "compile a fact" could include a fast screening pass followed by targeted
+  search in the predicted-capable space.
+- **DKC connects to two external theoretical communities.** The Barrington bridge
+  (D102) connects to computational complexity (NC^1, AC^0, Barrington's theorem).
+  The Amy bridge (D108) connects to quantum circuit synthesis (exact synthesis
+  over Z[zeta_8], T-gate/Hadamard decomposition). These are not just theoretical
+  decoration — they provide external validation and importable tools. The program
+  is no longer isolated.
+- **Activation design for multi-strand DKC is now principled.** D103-D104
+  establish concrete tools: Atkinson sweet spot (optimal component count), sign-
+  rank expansion (nonlinear rank gain), branching decomposition (cross-block vs
+  within-block), k-regime theory (k/2^N as universal control). These replace the
+  crude "hash all components" approach of D99-D101.
+- **The axis-alignment theorem simplifies the compiled weight format.** Every TL
+  braid matrix entry at delta=0 is (integer, phase in Z/4Z). Combined with the
+  nesting-parity phase formula, the phase is combinatorially computable. For
+  hardware this means compiled DKC weights are integer + 2-bit phase tag per
+  matrix entry — the simplest possible exact format.
 
 **What remains unknown:**
 - The taxonomy -> braid encoding (Gap 1) — the single most important unknown.
@@ -1051,34 +1493,68 @@ optimization to the mechanistic depth established by D85-92:
   (Gap 12) — determines whether multi-strand DKC has higher capacity ceilings
   than 2-strand.
 - Whether W_{6,4} (6-strand, non-semisimple) achieves XOR14>0 (Gap 13) — the
-  decisive test for universal non-semisimple load-bearing.
+  decisive test for universal non-semisimple load-bearing. D102 partially
+  addresses this: W_{6,4} LOSES to W_{6,0} at every XOR level, but the test
+  was at matched dimension (both dim=5). The question of Loewy-length-3+
+  non-semisimplicity at higher dimension remains open.
 - How hub structure scales with strand count and module type (Gap 14) — the
   simple combinatorial prediction (2*C(n-1,2)) was falsified at n=5.
 - Whether multi-strand DKC has a depth law analogous to 2-strand's
   max_xor ~ depth+6 (Gap 15) — preliminary evidence from D99-D101 suggests
   deep entries are needed for high XOR, but the law is not yet characterized.
+- Where the macrame principle crossover lies (Gap 16) — cross-block wins at
+  block dim 5 (D104), within-block wins at block dim 14 (D105). The exact
+  crossover would give a concrete design rule for activation engineering.
+- Whether the dual-channel theorem generalizes to infinite-group catalogs
+  (Gap 17) — D108 demonstrated at zeta_8 (finite, 100 values); untested at
+  zeta_12 (infinite, 4096+ values) or 2I (finite, 120 values).
+- Whether Raqiya can predict parity capability at other roots of unity (Gap 18)
+  — demonstrated at delta=0 (zeta_8) and delta=sqrt(2) (zeta_16). Each regime
+  has different discrimination properties.
+- The quantitative product-closure threshold for parity (Gap 19) — D108 shows
+  parity needs product closure > 0 (qualitative). What is the minimum density
+  needed? Is there a sharp threshold or gradual crossover?
+- Whether additive encoding at delta=sqrt(2) restores D108-style discrimination
+  (Gap 20) — the cleanest test of encoding-dependence vs delta-dependence.
 
 **Confidence level:** The algebraic foundation is extremely solid, mechanistically
-understood, and now generalized to multi-strand representations. The knot theory ->
-Boolean logic half of the pipeline is essentially proven for parity functions under
-the +/-q encoding AND extended to matrix braid representations (D99-D101). The
-multi-strand generalization opens a significant new design space while confirming
-the centrality of non-semisimplicity as the computational resource. The remaining
-unknowns are: (1) the taxonomy -> knots mapping, (2) the 1wpi encoding's scaling
-behavior, (3) the integration layer, (4) optimal multi-strand activation design,
-and (5) whether the non-semisimple advantage is universal across strand counts.
-The first remains the bottleneck for the vision. The second is the most urgent
-theoretical question (identified by D92). The fourth and fifth are the most
-urgent multi-strand questions (identified by D98-D101). The third is an
-engineering challenge that can wait until the first two are resolved. The catalog
-optimization problem is now SOLVED for z8 (D95-D97): use A+B+C, not ALL.
+understood, generalized to multi-strand representations up to n=8, grounded in
+computational complexity theory (Barrington bridge), connected to quantum circuit
+synthesis (Amy bridge), and equipped with predictive diagnostic tools (Raqiya +
+dual-channel theorem). The knot theory -> Boolean logic half of the pipeline is
+essentially proven for parity functions under the +/-q encoding, extended to
+matrix braid representations (D99-D105), and now supplemented with structural
+prediction capability (D108-D109). The D102-109 arc resolves several open
+questions from D98-D101 (radical role, dimension scaling, activation theory,
+k-regime) and opens the new research axis of structural prediction — moving from
+"search and find" to "predict and verify." The remaining unknowns are: (1) the
+taxonomy -> knots mapping (still the bottleneck), (2) the 1wpi encoding's
+scaling behavior (still the most urgent theoretical question from D92), (3) the
+integration layer, (4) principled multi-strand activation design (now informed
+by Atkinson sweet spot, sign-rank expansion, branching decomposition, and
+k-regime theory from D103-D105), (5) whether dual-channel prediction generalizes
+to other regimes (D108-D109 establish the method; generality is open), and
+(6) the macrame principle crossover (D104-D105 bracket it but don't locate it).
+The catalog optimization problem remains SOLVED for z8 (D95-D97): use A+B+C.
+The activation design problem for multi-strand DKC is now principled (D103-D105)
+rather than ad hoc (D99-D101). The structural prediction capability (Raqiya +
+dual-channel) is the most significant new tool for the compilation pipeline.
 
 ---
 
-*Generated 2026-02-20, updated 2026-02-24. Reads: narrative.md, novelty.md,
+*Generated 2026-02-20, updated 2026-02-26. Reads: narrative.md, novelty.md,
 connections.md, four-lenses.md, planning/vision.md, inventory/demo-index.md
-(via entries for D19, D29, D39G-J, D48, D50, D61-101). D95-D101 additions cover
+(via entries for D19, D29, D39G-J, D48, D50, D61-109). D95-D101 additions cover
 the commutator/synergy arc (D95-D97: derived series, cross-classification,
 catalog pruning, Cell B perfection) and the multi-strand arc (D98-D101: trace
 bottleneck, Delta_1 LANDMARK, W_{4,2} non-semisimple, W_{5,3} simple, Ext^1
-load-bearing, sl_d growth rate, Casimir inversion, traceless hub universality).*
+load-bearing, sl_d growth rate, Casimir inversion, traceless hub universality).
+D102-D109 additions cover the multi-strand maturation arc (D102-D105: Barrington-
+Radical Principle, BFS growth invariance, sign-hash activation theory, Atkinson
+sweet spot, sign-rank expansion, branching decomposition, macrame principle,
+k-regime theory, 8-strand scaling to XOR8=22266) and the relational computation
+arc (D106-D109: topological entropy null, TL visibility filter, axis-alignment
+theorem, nesting parity Z/2Z grading, major index bipartite invariant, q-Catalan
+identity, orthogonality theorem, dual-channel theorem, Amy bridge to quantum
+circuit synthesis, encoding-dependent polarity inversion, Raqiya as reusable
+diagnostic tool).*

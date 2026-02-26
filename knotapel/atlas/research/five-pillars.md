@@ -6,6 +6,8 @@ The DKC thesis lives at an unoccupied intersection of five established fields. N
 
 *Updated 2026-02-23: Demos 85-92 added. D85-86 connect to Pillar 3 (TL non-semisimplicity deepened via indecomposability parameter). D87-88-90 refine Pillar 5 (null dispensability regime transition, relational-not-positional mechanism). D89-91 confirm balanced exponentials (supply/demand linearity). D92 adds circuit complexity connection (AC^0 parity lower bounds).*
 
+*Updated 2026-02-26: Demos 102-109 added. D102 connects Pillar 3 to Barrington's theorem (radical carries abelian character, provably useless for parity). D103-105 deepen Pillar 5 (BFS growth is braid group invariant, sign-hash = 1-bit compressed sensing, macrame principle for branching interaction). D106 strengthens Pillar 5 via negative: topological entropy is orthogonal to DKC computation (TL visibility filter). D108-109 add dual-channel theorem connecting Pillar 2 (lattice product closure) and Pillar 4 (activation/magnitude diversity) with quantum circuit synthesis bridge (Amy-Glaudell-Ross 2023).*
+
 ---
 
 ## Pillar 1: Habiro (2002) — Bracket Values Are Cyclotomic Integers
@@ -22,7 +24,7 @@ The DKC thesis lives at an unoccupied intersection of five established fields. N
 
 **Strengthened by:** Costello-Francis-Gwilliam (2026, arXiv:2602.12412) proving Witten = RT, which means the bracket values are not just algebraic integers but rigorously quantum field theory transition amplitudes.
 
-**Which demos use it:** D29 (forward DKC, exact Z[ζ₈] arithmetic), D35 (TL matrices over Z[ζ₈]), D48 (exhaustive 100M quartet search with exact arithmetic), D49 (neglecton weights in Z[ζ₈]), D50 (parity reachability with Z[ζ₈] catalog), D53 (Z[ω] at ℓ=3), D54 (Z[ζ₁₆] at ℓ=4), D58 (Z[ζ₅] at ℓ=5), D59 (Z[ζ₂₄] at ℓ=6), D85 (delta-parameterized b extraction uses Z[ζ₈] infrastructure), D87 (zeta_8 vs zeta_12 null fraction), D90 (algebraic substrate for cross-depth constraints), D92 (weight catalog for parity-lock analysis)
+**Which demos use it:** D29 (forward DKC, exact Z[ζ₈] arithmetic), D35 (TL matrices over Z[ζ₈]), D48 (exhaustive 100M quartet search with exact arithmetic), D49 (neglecton weights in Z[ζ₈]), D50 (parity reachability with Z[ζ₈] catalog), D53 (Z[ω] at ℓ=3), D54 (Z[ζ₁₆] at ℓ=4), D58 (Z[ζ₅] at ℓ=5), D59 (Z[ζ₂₄] at ℓ=6), D85 (delta-parameterized b extraction uses Z[ζ₈] infrastructure), D87 (zeta_8 vs zeta_12 null fraction), D90 (algebraic substrate for cross-depth constraints), D92 (weight catalog for parity-lock analysis), D102 (6-strand exact Z[ζ₈] matrix representation), D105 (8-strand exact Z[ζ₈] matrices), D107 (186 distinct Z[ζ₈] values, axis-alignment theorem), D108 (parity vocabulary graph analysis on Z[ζ₈] catalog), D109 (Z[ζ₁₆] at δ=√2)
 
 ---
 
@@ -62,7 +64,11 @@ The DKC thesis lives at an unoccupied intersection of five established fields. N
 
 **Demos 85-86 deepen the non-semisimple structure:** The indecomposability parameter b = -5/8 (Pearce-Rasmussen) computed via delta-parameterized forms on the TL_4 regular representation. This connects to the LCFT structure constants that govern how TL modules compose — the non-semisimplicity that Abramsky's framework predicts but does not explicitly compute. The b parameter quantifies the "computational obstruction" in the TL radical: it measures the coupling between head and socle of projective indecomposable modules, which is the algebraic mechanism behind DKC's parity wall (D47-50).
 
-**Which demos use it:** D27 (reverse DKC conceptual framework), D29 (forward DKC), D35 (TL matrices as computational engine), D47-50 (TL non-semisimplicity as parity barrier), D51-52 (radical anatomy — the algebraic obstruction theory), D85-86 (indecomposability parameter — quantifying the non-semisimple coupling)
+**Demos 102 deepens the non-semisimple structure further:** The Barrington-Radical Principle — the radical of W_{6,4} carries an abelian character (the writhe homomorphism B_n → Z/8Z), and by Barrington's theorem abelian groups cannot compute parity. This PROVES that the radical direction is computationally inert for XOR, closing the loop from D47's hypothesis (non-semisimplicity limits computation) through D85's quantification (b = -5/8) to D102's proof (radical ≡ abelian ≡ useless by Barrington).
+
+**Demo 107 provides the algebraic fine structure:** Universal axis-alignment at δ=0 is a provable theorem: every braid matrix entry is n·ζ₈^k (single axis). The Z/4Z phase formula reduces DKC at δ=0 to integer path counting + three-variable phase lookup. The nesting parity Z/2Z grading is novel (confirmed vs Plaza-Ryom-Hansen 2013 KLR grading).
+
+**Which demos use it:** D27 (reverse DKC conceptual framework), D29 (forward DKC), D35 (TL matrices as computational engine), D47-50 (TL non-semisimplicity as parity barrier), D51-52 (radical anatomy — the algebraic obstruction theory), D85-86 (indecomposability parameter — quantifying the non-semisimple coupling), D102 (Barrington-Radical Principle — abelian radical provably useless), D107 (Z/4Z axis-alignment theorem, nesting parity Z/2Z grading)
 
 **The formal chain:**
 1. Abramsky: TL diagrams = computation
@@ -94,7 +100,11 @@ The DKC thesis lives at an unoccupied intersection of five established fields. N
 
 **Demo 92 parity-lock:** The +/-q input encoding concentrates all computational power on parity — the single Boolean function outside AC^0 (Furst-Saxe-Sipser 1984, Hastad 1987). Under the 1-weight-per-input encoding (D48/D50), all 13 NPN classes including parity are achievable. The encoding-dependence of function accessibility is a refinement of Aizenberg's general MVN theory: the activation architecture (Aizenberg) determines what functions ARE computable in principle; the encoding determines which subset is ACCESSIBLE from a given weight catalog.
 
-**Which demos use it:** D45 (NPN classification with complex neurons), D47 (MVN activation comparison, topology-frequency correlation reversal), D48 (parity wall under split-sigmoid), D49 (neglecton weights — lattice contains parity weights), D50 (k-sector MVN resolves parity at k=6), D91 (activation not the bottleneck — k_sec invariance), D92 (encoding-dependent function selection)
+**Demo 108 dual-channel theorem:** Graph structure PREDICTS parity capability. Product closure (multiplicative phase coherence) and additive v₂ connectivity (magnitude diversity) are both independently necessary for parity. This maps onto the T-gate/Hadamard decomposition of Amy-Glaudell-Ross (2023) for quantum circuit synthesis over Z[ζ₈]. The activation function plays the Hadamard role: providing magnitude diversity that enables "Clifford-level" values to participate in parity computation.
+
+**Demo 109 encoding dependence:** At δ=√2 (Z[ζ₁₆]), parity and non-parity vocabularies are structurally identical on 7/8 edge types. Product closure is the sole discriminator, but with INVERTED polarity from D108: parity wants LOW product closure under multiplicative encoding (products must escape vocabulary for sector alternation). The dual-channel theorem holds in both regimes but the sign of the multiplicative channel is encoding-sensitive.
+
+**Which demos use it:** D45 (NPN classification with complex neurons), D47 (MVN activation comparison, topology-frequency correlation reversal), D48 (parity wall under split-sigmoid), D49 (neglecton weights — lattice contains parity weights), D50 (k-sector MVN resolves parity at k=6), D91 (activation not the bottleneck — k_sec invariance), D92 (encoding-dependent function selection), D108 (dual-channel theorem — graph structure predicts parity), D109 (encoding-dependent polarity inversion at δ=√2)
 
 ---
 
@@ -114,6 +124,14 @@ The DKC thesis lives at an unoccupied intersection of five established fields. N
 - **D73 (Eigenvector Automaton) IS reservoir dynamics.** Crossing-by-crossing quaternion multiplication tracks Voronoi cell transitions. The 82.8% universal determinism IS the echo state property — the reservoir state is mostly determined by recent input, with 17.2% sensitivity to deeper history.
 - **D82 (Crossing Depth) IS a reservoir memory capacity result.** max_xor ≈ depth+6 says computational power scales linearly with the number of dynamical steps through the reservoir. This is exactly what RC theory predicts: more time steps = richer transient dynamics = more computational separation between input classes.
 - **D82's "algebraic coherence beats vocabulary"** is a reservoir quality result. Deep entries (many generator multiplications = many reservoir steps) with shared intermediate products outperform diverse entries (many distinct directions) with no shared structure. In RC terms: a reservoir with coherent internal dynamics computes more than a reservoir with maximal state diversity.
+
+**Demos 102-106 extend the RC connection:**
+
+- **D102 (Barrington-Radical Principle):** The radical direction carries an abelian character (writhe), which by Barrington's theorem is provably useless for parity. This is an algebraic reservoir quality result: the radical is a "frozen" 1-dimensional sub-reservoir that only tracks framing data. The simple module W_{6,0} outperforms the non-simple W_{6,4} at every XOR level because its entire 5-dimensional state space participates in computation, while W_{6,4} wastes one dimension on the frozen radical.
+- **D103 (BFS Growth Invariant):** BFS catalog growth is identical across all modules of the same braid group B_n (W_{6,0}, W_{6,2}, W_{6,4} all produce the same depth profile). Growth rate ≈ (n-1)x converges to the sl_{n-1} functor thesis. In RC terms: the reservoir dynamics are determined by the input group (B_n), not the output representation. The readout (activation function) is fully separable from the reservoir.
+- **D104 (Sign-Hash = 1-Bit CS):** Sign-hash activation is 1-bit compressed sensing (Boufounos-Baraniuk 2008). Cross-block activation outperforms within-block at n=6 because branching cross-terms have low intra-block coherence (the CS incoherence condition). Sign quantization can EXPAND effective rank (244→292 for W_{6,2}). The Atkinson sweet spot (~120 of 324 components) is the optimal information-per-collision tradeoff. But k (cell count) is the real scaling lever, not hash architecture.
+- **D105 (Macrame Principle):** Branching interaction REVERSES at n=8: within-block dominates (dim-14 blocks are self-sufficient). Regime transition between dim-5 (cross-block wins) and dim-14 (within-block wins). The D93 "XOR dies at N≥7" is REFUTED as a k-regime artifact: at k=4096, n=8 beats n=6.
+- **D106 (Topological Entropy Null):** STRONGEST negative result for the RC analogy. Topological entropy (Thurston-Nielsen classification) is completely orthogonal to DKC computation. Both periodic and pseudo-Anosov braids compute XOR at 100% participation. The TL quotient at δ=0 erases dynamical information (e_i²=0 kills expanding eigenvalues) while preserving algebraic structure (writhe). DKC computation is collective/algebraic, not individual/dynamical — sharpening the relational computation thesis.
 
 **Demos 87-88-89-90 refine the RC connection:**
 
@@ -135,7 +153,7 @@ The DKC thesis lives at an unoccupied intersection of five established fields. N
 
 Without the RC pillar, the other four treat braid evaluation as a black box: input a braid, get a bracket value. The RC pillar opens the box: the SEQUENTIAL PROCESSING of crossings is itself a computation, and the depth/length of the braid word directly determines computational capacity. D82's linear depth law (max_xor ≈ depth+6) is the RC memory capacity theorem applied to the braid reservoir. D89-91 confirm the mechanism: balanced exponentials (vocabulary ~2x/depth vs parity 4x/weight) with axis cancellation as the geometric realization of the separation property.
 
-**Which demos use it:** D73 (eigenvector automaton — reservoir cell transitions), D76-78 (capacity ceilings — finite reservoir limits), D79 (infinite reservoir breaks ceiling), D81 (logarithmic scaling — reservoir capacity law), D82 (depth law — reservoir memory capacity, algebraic coherence as reservoir quality), D87 (null dispensability — regime transition in reservoir state importance), D88 (anti-correlation — RC no-free-lunch in DKC geometry), D89 (depth law mechanism — RC separation property surviving 5 elimination tests), D90 (relational-not-positional — the cleanest RC alignment)
+**Which demos use it:** D73 (eigenvector automaton — reservoir cell transitions), D76-78 (capacity ceilings — finite reservoir limits), D79 (infinite reservoir breaks ceiling), D81 (logarithmic scaling — reservoir capacity law), D82 (depth law — reservoir memory capacity, algebraic coherence as reservoir quality), D87 (null dispensability — regime transition in reservoir state importance), D88 (anti-correlation — RC no-free-lunch in DKC geometry), D89 (depth law mechanism — RC separation property surviving 5 elimination tests), D90 (relational-not-positional — the cleanest RC alignment), D102 (radical = frozen abelian sub-reservoir), D103 (BFS growth = reservoir dynamics invariant), D104 (sign-hash = 1-bit CS readout with rank expansion), D105 (macrame principle — branching interaction regime transition), D106 (entropy null — dynamical classification invisible to bracket reservoir)
 
 **The structural identity (exact, not analogical):**
 
@@ -235,5 +253,14 @@ This is the five-pillar chain. Each step is individually grounded in established
 | RC / null dispensability | — | Regime transition confirmed (zeta_8 vs zeta_12) | D87 |
 | RC / relational mechanism | — | Spectral inversion + axis cancellation | D90 |
 | RC / balanced exponentials | — | Activation invariance confirms supply/demand ratio | D91 |
+| Abramsky / Barrington radical | Proven (D102) | Radical = abelian writhe character; simple module wins at all XOR levels | D102 |
+| RC / BFS growth invariant | — | Identical BFS trees across all n=6 modules (5x5, 9x9) | D102, D103 |
+| RC / sign-hash = 1-bit CS | Established (Boufounos-Baraniuk 2008) | Sign-rank expansion 244→292; Atkinson sweet spot at 120/324 | D104 |
+| RC / macrame principle | — | Cross-block wins at dim 5; within-block wins at dim 14 | D104, D105 |
+| RC / entropy null | — | 100% XOR participation for both periodic and pA braids | D106 |
+| Aizenberg / dual-channel | — | Product closure + v₂ connectivity predict parity capability | D108 |
+| Aizenberg / encoding dependence | — | Product closure polarity inverts between additive and multiplicative encoding | D108, D109 |
 | **Combined (forward DKC)** | **Novel thesis** | **65,536+ XOR triples, 906 parity solutions, XOR12 at ζ₁₂** | **D29, D50, D79** |
 | **Parity-lock theorem** | **Proved (D92)** | **AND/OR/MAJ = 0 winners; XOR/XNOR only under +/-q** | **D92** |
+| **Barrington-Radical Principle** | **Proved (D102)** | **Radical abelian → Barrington → useless for parity** | **D102** |
+| **Dual-channel theorem** | **Novel (D108-D109)** | **Graph structure predicts parity; encoding flips polarity** | **D108, D109** |
