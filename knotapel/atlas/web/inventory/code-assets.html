@@ -13,14 +13,14 @@
 <body>
     <nav><a href="../index.html">← Back to Index</a></nav><hr>
     <h1>Code Assets Catalog</h1>
-<p>Reusable code patterns across 109 knotapel demos. Updated 2026-02-26 (added Demos 102-109).</p>
+<p>Reusable code patterns across 109 knotapel demos. Updated 2026-02-26 (added <a href="./entries/demo_102.html">Demos 102</a>-<a href="./entries/demo_109.html">109</a>).</p>
 <p>---</p>
 <h2>1. Polynomial / Ring Arithmetic</h2>
 <h3>1.1 Laurent Polynomial Ring (Poly)</h3>
 <ul>
-<li><strong>What it does</strong>: Integer-coefficient Laurent polynomials (negative and positive exponents) with full ring operations — the symbolic backbone of Demos 01-09.</li>
+<li><strong>What it does</strong>: Integer-coefficient Laurent polynomials (negative and positive exponents) with full ring operations — the symbolic backbone of <a href="./entries/demo_01.html">Demos 01</a>-<a href="./entries/demo_09.html">09</a>.</li>
 <li><strong>Introduced in</strong>: <a href="./entries/demo_01.html">Demo 01</a></li>
-<li><strong>Reused in</strong>: Demos 02, 03, 04, 05, 06, 07, 08, 09</li>
+<li><strong>Reused in</strong>: <a href="./entries/demo_02.html">Demos 02</a>, 03, 04, 05, 06, 07, 08, 09</li>
 <li><strong>Key types/functions</strong>:</li>
 <li><code>Poly</code> struct: <code>lo</code> (lowest exponent) + <code>coeffs[]</code> array, <code>MAX_TERMS=64</code> (120 in <a href="./entries/demo_04.html">Demo 04</a>+)</li>
 <li><code>p_zero()</code>, <code>p_mono(coeff, exp)</code>, <code>p_trim()</code> — constructors</li>
@@ -34,7 +34,7 @@
 <ul>
 <li><strong>What it does</strong>: Double-precision complex number type with full arithmetic, unit-circle evaluation, and approximate equality — the numerical workhorse for all demos from 10 onward.</li>
 <li><strong>Introduced in</strong>: <a href="./entries/demo_10.html">Demo 10</a></li>
-<li><strong>Reused in</strong>: Demos 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 35, 45, 46, 47, 48, 49, 50, 53, 54, 55, 56, 57, 58, 59, 61, 62, 64, 65, 66, 67, 68, 69, 70, 71, 85</li>
+<li><strong>Reused in</strong>: <a href="./entries/demo_11.html">Demos 11</a>, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 35, 45, 46, 47, 48, 49, 50, 53, 54, 55, 56, 57, 58, 59, 61, 62, 64, 65, 66, 67, 68, 69, 70, 71, 85</li>
 <li><strong>Key types/functions</strong>:</li>
 <li><code>Cx</code> struct: <code>re</code>, <code>im</code> doubles</li>
 <li><code>cx_make()</code>, <code>cx_zero()</code>, <code>cx_one()</code>, <code>cx_real()</code> — constructors</li>
@@ -53,7 +53,7 @@
 <ul>
 <li><strong>What it does</strong>: Exact integer arithmetic in the 8th cyclotomic ring — basis {1, zeta_8, zeta_8^2, zeta_8^3} with zeta_8^4 = -1. The natural home for bracket values at delta=0 (A = e^{i*5pi/4}).</li>
 <li><strong>Introduced in</strong>: <a href="./entries/demo_29.html">Demo 29</a></li>
-<li><strong>Reused in</strong>: Demos 35, 48, 49, 50, 63, 64, 74, 100, 101, 102, 103, 104, 105, 106, 107, 108</li>
+<li><strong>Reused in</strong>: <a href="./entries/demo_35.html">Demos 35</a>, 48, 49, 50, 63, 64, 74, 100, 101, 102, 103, 104, 105, 106, 107, 108</li>
 <li><strong>Key types/functions</strong>:</li>
 <li><code>Cyc8</code> struct: 4 <code>long</code> coefficients <code>(a, b, c, d)</code></li>
 <li><code>cyc8_make()</code>, <code>cyc8_zero()</code>, <code>cyc8_one()</code> — constructors</li>
@@ -87,7 +87,7 @@
 <ul>
 <li><strong>What it does</strong>: Exact 8-dimensional cyclotomic integer arithmetic for bracket evaluation at ell=4 (delta=sqrt(2), Ising anyons).</li>
 <li><strong>Introduced in</strong>: <a href="./entries/demo_54.html">Demo 54</a></li>
-<li><strong>Reused in</strong>: Demos 55, 56, 57, 65, 109</li>
+<li><strong>Reused in</strong>: <a href="./entries/demo_55.html">Demos 55</a>, 56, 57, 65, 109</li>
 <li><strong>Key types/functions</strong>:</li>
 <li><code>Cyc16</code> struct: 8 <code>long</code> coefficients, basis {1, zeta_16, ..., zeta_16^7}, zeta^8 = -1</li>
 <li><code>cyc16_zero()</code>, <code>cyc16_one()</code>, <code>cyc16_make()</code>, <code>cyc16_zeta_power()</code> — constructors</li>
@@ -166,7 +166,7 @@
 <ul>
 <li><strong>What it does</strong>: Represents knots via planar diagram (PD) notation and computes Kauffman brackets by brute-force state-sum over all 2^n crossing resolutions using symbolic Laurent polynomials.</li>
 <li><strong>Introduced in</strong>: <a href="./entries/demo_01.html">Demo 01</a></li>
-<li><strong>Reused in</strong>: Demos 02, 07, 08, 09</li>
+<li><strong>Reused in</strong>: <a href="./entries/demo_02.html">Demos 02</a>, 07, 08, 09</li>
 <li><strong>Key types/functions</strong>:</li>
 <li><code>Knot</code> struct: array of <code>Xing</code> (crossing) structs with arc labels and signs, MAX_X=16</li>
 <li><code>Xing</code> struct: 4 arc labels + crossing sign</li>
@@ -181,7 +181,7 @@
 <ul>
 <li><strong>What it does</strong>: Path-compressed union-find for counting connected components (loops) in resolved knot/braid diagrams. The most-reused utility across all demos.</li>
 <li><strong>Introduced in</strong>: <a href="./entries/demo_02.html">Demo 02</a></li>
-<li><strong>Reused in</strong>: Demos 03, 04, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 45, 46, 47, 48, 49, 50, 53, 54, 55, 56, 57, 58, 59, 64, 65, 66, 67, 68, 69, 70, 71, 74 (bracket loop counting in full catalog builder), 108 (parity detection in bracket catalog), 109 (state-sum bracket loop counting)</li>
+<li><strong>Reused in</strong>: <a href="./entries/demo_03.html">Demos 03</a>, 04, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 45, 46, 47, 48, 49, 50, 53, 54, 55, 56, 57, 58, 59, 64, 65, 66, 67, 68, 69, 70, 71, 74 (bracket loop counting in full catalog builder), 108 (parity detection in bracket catalog), 109 (state-sum bracket loop counting)</li>
 <li><strong>Key types/functions</strong>:</li>
 <li><code>uf_parent[]</code> — global or local parent array</li>
 <li><code>uf_init(n)</code>, <code>uf_find(x)</code>, <code>uf_union(x, y)</code> — standard union-find with path compression</li>
@@ -206,7 +206,7 @@
 <ul>
 <li><strong>What it does</strong>: Converts braid words to PD notation via strand closure, enabling cross-validation between the two computation worlds.</li>
 <li><strong>Introduced in</strong>: <a href="./entries/demo_07.html">Demo 07</a></li>
-<li><strong>Reused in</strong>: Demos 08, 09</li>
+<li><strong>Reused in</strong>: <a href="./entries/demo_08.html">Demos 08</a>, 09</li>
 <li><strong>Key types/functions</strong>:</li>
 <li><code>braid_to_pd(braid)</code> — core bridge: tracks per-position crossing lists, assigns arc labels, builds PD with correct over/under conventions</li>
 <li><code>seifert_circles(knot)</code> — Seifert resolution on PD notation (sign-dependent pairing)</li>
@@ -244,7 +244,7 @@
 <ul>
 <li><strong>What it does</strong>: Computes Kauffman bracket via tensor product R-matrix representation and quantum trace — the scalable alternative to state-sum for large strand counts.</li>
 <li><strong>Introduced in</strong>: <a href="./entries/demo_10.html">Demo 10</a></li>
-<li><strong>Reused in</strong>: Demos 11-17 (via numerical_bracket), indirectly by all later demos using the unit-circle evaluation pattern</li>
+<li><strong>Reused in</strong>: <a href="./entries/demo_11.html">Demos 11</a>-<a href="./entries/demo_17.html">17</a> (via numerical_bracket), indirectly by all later demos using the unit-circle evaluation pattern</li>
 <li><strong>Key types/functions</strong>:</li>
 <li><code>CMat</code> struct: heap-allocated NxN complex matrix</li>
 <li><code>CMAT(m, i, j)</code> macro for row-major access</li>
@@ -261,7 +261,7 @@
 <ul>
 <li><strong>What it does</strong>: Extends the state-sum bracket to support 4 different closure types (trace, plat_A, plat_B, plat_C), enabling multi-readout experiments from a single braid.</li>
 <li><strong>Introduced in</strong>: <a href="./entries/demo_21.html">Demo 21</a></li>
-<li><strong>Reused in</strong>: Demos 22, 23, 25</li>
+<li><strong>Reused in</strong>: <a href="./entries/demo_22.html">Demos 22</a>, 23, 25</li>
 <li><strong>Key types/functions</strong>:</li>
 <li><code>Closure</code> enum: <code>CL_TRACE</code>, <code>CL_PLAT_A</code> (01|23), <code>CL_PLAT_B</code> (02|13), <code>CL_PLAT_C</code> (03|12)</li>
 <li><code>bracket_cl(word, len, n, A, closure)</code> — state-sum bracket with configurable closure</li>
@@ -273,7 +273,7 @@
 <ul>
 <li><strong>What it does</strong>: Computes exact Kauffman bracket in Z[zeta_8] arithmetic, exploiting delta=0 simplification where only single-loop smoothing states survive.</li>
 <li><strong>Introduced in</strong>: <a href="./entries/demo_29.html">Demo 29</a></li>
-<li><strong>Reused in</strong>: Demos 35, 48, 49, 50, 108 (bracket catalog builder)</li>
+<li><strong>Reused in</strong>: <a href="./entries/demo_35.html">Demos 35</a>, 48, 49, 50, 108 (bracket catalog builder)</li>
 <li><strong>Key types/functions</strong>:</li>
 <li><code>braid_bracket_exact(word, len, n)</code> — exact state-sum in Cyc8 at A = -zeta_8; skips all multi-loop states</li>
 <li><strong>Approximate size</strong>: ~50 lines</li>
@@ -306,7 +306,7 @@
 <ul>
 <li><strong>What it does</strong>: Converts integer indices to braid crossing sequences for exhaustive enumeration of all braids up to a given length.</li>
 <li><strong>Introduced in</strong>: <a href="./entries/demo_22.html">Demo 22</a></li>
-<li><strong>Reused in</strong>: Demos 23, 25, 35, 48, 49, 50, 53, 54, 55, 56, 57, 58, 59, 64, 65, 66, 67, 68, 69, 70, 71, 74 (catalog builder), 108 (bracket catalog for parity detection), 109 (state-sum bracket enumeration)</li>
+<li><strong>Reused in</strong>: <a href="./entries/demo_23.html">Demos 23</a>, 25, 35, 48, 49, 50, 53, 54, 55, 56, 57, 58, 59, 64, 65, 66, 67, 68, 69, 70, 71, 74 (catalog builder), 108 (bracket catalog for parity detection), 109 (state-sum bracket enumeration)</li>
 <li><strong>Key types/functions</strong>:</li>
 <li><code>decode_word(code, len, word)</code> — maps integer to braid word using generator map</li>
 <li><code>decode_word3()</code> — 3-strand variant (4 generators: {1,-1,2,-2})</li>
@@ -320,7 +320,7 @@
 <ul>
 <li><strong>What it does</strong>: Constructs collections of knots (torus knots, connected sums, mirrors) for classification experiments with deduplication.</li>
 <li><strong>Introduced in</strong>: <a href="./entries/demo_13.html">Demo 13</a></li>
-<li><strong>Reused in</strong>: Demos 14, 15, 16, 17</li>
+<li><strong>Reused in</strong>: <a href="./entries/demo_14.html">Demos 14</a>, 15, 16, 17</li>
 <li><strong>Key types/functions</strong>:</li>
 <li><code>add_torus_2n(table, n, sign)</code> — generates T(2,n) torus knot braid word</li>
 <li><code>add_connected_sum(table, k1, k2)</code> — concatenates braid words for connected sum</li>
@@ -335,7 +335,7 @@
 <ul>
 <li><strong>What it does</strong>: Recursively enumerates non-crossing perfect matchings (planar diagrams) on 2n boundary points — the basis for Temperley-Lieb algebra representations.</li>
 <li><strong>Introduced in</strong>: <a href="./entries/demo_35.html">Demo 35</a></li>
-<li><strong>Reused in</strong>: Demos 38, 39, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 107 (non-crossing matching enumerator for bipartiteness verification)</li>
+<li><strong>Reused in</strong>: <a href="./entries/demo_38.html">Demos 38</a>, 39, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 107 (non-crossing matching enumerator for bipartiteness verification)</li>
 <li><strong>Key types/functions</strong>:</li>
 <li><code>PlanarMatch</code> struct: array of pairs, each matching endpoint a with endpoint b</li>
 <li><code>enumerate_basis(n, basis, count)</code> — segment-based recursive algorithm</li>
@@ -348,7 +348,7 @@
 <ul>
 <li><strong>What it does</strong>: Stacks two TL diagrams vertically, connects matching endpoints at the glue, and counts closed loops formed at the junction.</li>
 <li><strong>Introduced in</strong>: <a href="./entries/demo_35.html">Demo 35</a></li>
-<li><strong>Reused in</strong>: Demos 38, 39, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60</li>
+<li><strong>Reused in</strong>: <a href="./entries/demo_38.html">Demos 38</a>, 39, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60</li>
 <li><strong>Key types/functions</strong>:</li>
 <li><code>compose_diagrams(d1, d2, n, result, loops)</code> — composes two PlanarMatch diagrams, returns resulting diagram + loop count</li>
 <li><code>find_basis_index()</code> — lookup composed result in enumerated basis</li>
@@ -359,7 +359,7 @@
 <ul>
 <li><strong>What it does</strong>: Matrix algebra over TL_n basis elements with coefficients in various cyclotomic rings.</li>
 <li><strong>Introduced in</strong>: <a href="./entries/demo_35.html">Demo 35</a> (Cyc8)</li>
-<li><strong>Reused in</strong>: Demos 51 (integer), 52 (mod-p), 53 (Eis), 54 (Cyc16), 55, 58 (Cyc5), 59 (Cyc24)</li>
+<li><strong>Reused in</strong>: <a href="./entries/demo_51.html">Demos 51</a> (integer), 52 (mod-p), 53 (Eis), 54 (Cyc16), 55, 58 (Cyc5), 59 (Cyc24)</li>
 <li><strong>Key types/functions</strong>:</li>
 <li><code>TLMatrix</code> / <code>TLMat</code> type: up to C_n x C_n matrix over the coefficient ring</li>
 <li><code>tlmat_zero()</code>, <code>tlmat_identity()</code> — constructors</li>
@@ -372,7 +372,7 @@
 <ul>
 <li><strong>What it does</strong>: Constructs TL generator matrices e_i and braid generator matrices sigma_i = A<em>I + A^{-1}</em>e_i in the planar matching basis.</li>
 <li><strong>Introduced in</strong>: <a href="./entries/demo_35.html">Demo 35</a></li>
-<li><strong>Reused in</strong>: Demos 51, 52, 53, 54, 55, 58, 59</li>
+<li><strong>Reused in</strong>: <a href="./entries/demo_51.html">Demos 51</a>, 52, 53, 54, 55, 58, 59</li>
 <li><strong>Key types/functions</strong>:</li>
 <li><code>build_generator_matrix(basis, dim, i, n, delta)</code> — constructs e_i via diagram composition</li>
 <li><code>build_braid_generator(basis, dim, i, n, A)</code> — sigma_i = A<em>I + A^{-1}</em>e_i</li>
@@ -384,7 +384,7 @@
 <ul>
 <li><strong>What it does</strong>: Extracts the Kauffman bracket from a TL matrix representation via the trace closure operation.</li>
 <li><strong>Introduced in</strong>: <a href="./entries/demo_35.html">Demo 35</a></li>
-<li><strong>Reused in</strong>: Demos 51, 52, 53, 54, 55, 58, 59</li>
+<li><strong>Reused in</strong>: <a href="./entries/demo_51.html">Demos 51</a>, 52, 53, 54, 55, 58, 59</li>
 <li><strong>Key types/functions</strong>:</li>
 <li><code>compute_bracket_trace(matrix, basis, dim, n, delta)</code> — sums identity column with delta^{trace_loops-1} weights</li>
 <li><code>trace_closure_loops(diagram, n)</code> — counts loops in trace closure of a planar matching diagram</li>
@@ -408,7 +408,7 @@
 <ul>
 <li><strong>What it does</strong>: Matrix algebra over Laurent polynomials for symbolic tensor product, quantum trace, and Yang-Baxter verification.</li>
 <li><strong>Introduced in</strong>: <a href="./entries/demo_03.html">Demo 03</a> (Mat2 2x2), <a href="./entries/demo_03.html">Demo 03</a> (Mat4 4x4), <a href="./entries/demo_04.html">Demo 04</a> (Mat NxN up to 8x8)</li>
-<li><strong>Reused in</strong>: Demos 04, 05, 06</li>
+<li><strong>Reused in</strong>: <a href="./entries/demo_04.html">Demos 04</a>, 05, 06</li>
 <li><strong>Key types/functions</strong>:</li>
 <li><code>Mat2</code> (2x2): identity, multiply, scale, add, trace, equality, print</li>
 <li><code>Mat4</code> (4x4): zero, multiply, equality, tensor product</li>
@@ -476,7 +476,7 @@
 <ul>
 <li><strong>What it does</strong>: Prime-field arithmetic needed for exact computation at algebraic delta values.</li>
 <li><strong>Introduced in</strong>: <a href="./entries/demo_52.html">Demo 52</a></li>
-<li><strong>Reused in</strong>: Demos 38, 39, 60, 85, 86</li>
+<li><strong>Reused in</strong>: <a href="./entries/demo_38.html">Demos 38</a>, 39, 60, 85, 86</li>
 <li><strong>Key types/functions</strong>:</li>
 <li><code>mod_reduce(x, p)</code> — reduction to [0, p)</li>
 <li><code>mod_inv(x, p)</code> — modular inverse via extended Euclidean algorithm</li>
@@ -489,7 +489,7 @@
 <ul>
 <li><strong>What it does</strong>: Computes rank of trace form Gram matrix to determine radical dimension — the core tool for semisimplicity detection.</li>
 <li><strong>Introduced in</strong>: <a href="./entries/demo_51.html">Demo 51</a></li>
-<li><strong>Reused in</strong>: Demos 38, 39, 52, 60, 102 (stacked TL generator radical dim computation), 103 (variable-dim radical dim), 104 (streaming catalog rank computation)</li>
+<li><strong>Reused in</strong>: <a href="./entries/demo_38.html">Demos 38</a>, 39, 52, 60, 102 (stacked TL generator radical dim computation), 103 (variable-dim radical dim), 104 (streaming catalog rank computation)</li>
 <li><strong>Key types/functions</strong>:</li>
 <li>Gram matrix construction from multiplication table + trace form fixed points</li>
 <li><code>compute_fixpt()</code> — precomputes sum of delta^loops over elements p such that result(p,k)=k, enabling efficient Gram matrix construction (<a href="./entries/demo_39.html">Demo 39</a>, 60)</li>
@@ -569,7 +569,7 @@
 <ul>
 <li><strong>What it does</strong>: Classifies all 256 3-input Boolean truth tables into 14 NPN equivalence classes (13 non-trivial + constant) via exhaustive application of input permutation, input negation, and output negation.</li>
 <li><strong>Introduced in</strong>: <a href="./entries/demo_23.html">Demo 23</a></li>
-<li><strong>Reused in</strong>: Demos 45, 46, 47, 48, 49, 50, 55, 56, 57, 58, 59, 61, 62, 64, 65, 66, 67, 68, 69, 70, 71, 75, 76, 77, 78, 79, 80, 81, 82, 109</li>
+<li><strong>Reused in</strong>: <a href="./entries/demo_45.html">Demos 45</a>, 46, 47, 48, 49, 50, 55, 56, 57, 58, 59, 61, 62, 64, 65, 66, 67, 68, 69, 70, 71, 75, 76, 77, 78, 79, 80, 81, 82, 109</li>
 <li><strong>Key types/functions</strong>:</li>
 <li><code>npn_canon[256]</code> — precomputed canonical form for all truth tables</li>
 <li><code>npn_init()</code> — computes canonical forms via 96 transforms (6 perms x 8 input-neg x 2 output-neg)</li>
@@ -585,7 +585,7 @@
 <ul>
 <li><strong>What it does</strong>: Compiles arbitrary Boolean expressions into braid-bracket evaluation trees, with derived gates (AND, OR, XOR) from the {NOT, NAND} universal set.</li>
 <li><strong>Introduced in</strong>: <a href="./entries/demo_19.html">Demo 19</a></li>
-<li><strong>Reused in</strong>: Demos 20, 21</li>
+<li><strong>Reused in</strong>: <a href="./entries/demo_20.html">Demos 20</a>, 21</li>
 <li><strong>Key types/functions</strong>:</li>
 <li><code>Expr</code> type: tagged union with <code>EXPR_VAR</code>, <code>EXPR_NOT</code>, <code>EXPR_NAND</code> nodes</li>
 <li>Arena-based expression pool (<code>EXPR_POOL_SIZE=1024</code>, <code>expr_pool_reset()</code>)</li>
@@ -600,7 +600,7 @@
 <ul>
 <li><strong>What it does</strong>: Searches for and evaluates specific braid words that compute classical logic gates via bracket amplitude thresholding.</li>
 <li><strong>Introduced in</strong>: <a href="./entries/demo_18.html">Demo 18</a></li>
-<li><strong>Reused in</strong>: Demos 19, 20, 21, 22</li>
+<li><strong>Reused in</strong>: <a href="./entries/demo_19.html">Demos 19</a>, 20, 21, 22</li>
 <li><strong>Key types/functions</strong>:</li>
 <li><code>GateResult</code> struct: gate word, strand count, length, best separation, optimal angle, threshold, found flag</li>
 <li><code>gate_output(word, len, n, input_bit, A)</code> — 1-bit gate: prepends input sub-braid, evaluates bracket amplitude</li>
@@ -629,7 +629,7 @@
 <ul>
 <li><strong>What it does</strong>: 3-input complex network with 3 hidden neurons for training all 13 NPN classes of Boolean functions.</li>
 <li><strong>Introduced in</strong>: <a href="./entries/demo_45.html">Demo 45</a></li>
-<li><strong>Reused in</strong>: Demos 46, 47</li>
+<li><strong>Reused in</strong>: <a href="./entries/demo_46.html">Demos 46</a>, 47</li>
 <li><strong>Key types/functions</strong>:</li>
 <li><code>CxNet3</code> struct: wh[3][3] complex hidden weights, bh[3] complex biases, vo[6] real output weights, bo real bias (31 real parameters)</li>
 <li><code>cxnet3_init()</code>, <code>cxnet3_forward()</code>, <code>cxnet3_train()</code> — initialization, forward pass with split-sigmoid, backprop</li>
@@ -672,7 +672,7 @@
 <ul>
 <li><strong>What it does</strong>: Enumerates braids across multiple strand counts and lengths, storing distinct complex bracket values as a codebook for DKC experiments.</li>
 <li><strong>Introduced in</strong>: <a href="./entries/demo_26.html">Demo 26</a></li>
-<li><strong>Reused in</strong>: Demos 27, 28, 45, 46, 47</li>
+<li><strong>Reused in</strong>: <a href="./entries/demo_27.html">Demos 27</a>, 28, 45, 46, 47</li>
 <li><strong>Key types/functions</strong>:</li>
 <li><code>CxCatalogEntry</code> struct: braid word + full complex bracket + amplitude + phase</li>
 <li><code>build_complex_catalog(max_strands, max_len, A)</code> — enumerates braids, stores values with |bracket| &gt; 0.5</li>
@@ -685,7 +685,7 @@
 <ul>
 <li><strong>What it does</strong>: Enumerates braids and builds catalog of distinct exact Z[zeta_8] bracket values with paired float representations.</li>
 <li><strong>Introduced in</strong>: <a href="./entries/demo_29.html">Demo 29</a></li>
-<li><strong>Reused in</strong>: Demos 48, 49, 50, 108 (bracket catalog builder for parity vocabulary analysis)</li>
+<li><strong>Reused in</strong>: <a href="./entries/demo_48.html">Demos 48</a>, 49, 50, 108 (bracket catalog builder for parity vocabulary analysis)</li>
 <li><strong>Key types/functions</strong>:</li>
 <li><code>CatalogEntry</code> struct: exact Cyc8 value + float Cx value + source braid info</li>
 <li><code>build_exact_catalog(max_strands, max_len)</code> — enumerates up to 100,000 braids per configuration</li>
@@ -711,7 +711,7 @@
 <ul>
 <li><strong>What it does</strong>: Unified search engine testing multiple activation functions simultaneously with both multiplicative (z = w1^x1 <em> w2^x2 </em> w3^x3) and additive (z = x1<em>w1 + x2</em>w2 + x3*w3) encodings.</li>
 <li><strong>Introduced in</strong>: <a href="./entries/demo_55.html">Demo 55</a></li>
-<li><strong>Reused in</strong>: Demos 57, 58, 59</li>
+<li><strong>Reused in</strong>: <a href="./entries/demo_57.html">Demos 57</a>, 58, 59</li>
 <li><strong>Key types/functions</strong>:</li>
 <li><code>search_3input_batch(catalog, encode_mode, activations)</code> — runs ALL activations in single pass through catalog triples</li>
 <li><code>search_2input(catalog, encode_mode, activations)</code> — 2-input variant</li>
@@ -725,7 +725,7 @@
 <ul>
 <li><strong>What it does</strong>: Evaluates a braid word with closure and input encoding, determines optimal amplitude threshold, and returns an 8-bit truth table.</li>
 <li><strong>Introduced in</strong>: <a href="./entries/demo_22.html">Demo 22</a></li>
-<li><strong>Reused in</strong>: Demos 23, 25</li>
+<li><strong>Reused in</strong>: <a href="./entries/demo_23.html">Demos 23</a>, 25</li>
 <li><strong>Key types/functions</strong>:</li>
 <li><code>compute_tt(word, len, n, closure, A)</code> — evaluates all 8 input combinations, sorts amplitudes, finds largest-gap threshold, returns truth table (or -1 if no clean threshold)</li>
 <li><strong>Approximate size</strong>: ~50 lines</li>
@@ -735,7 +735,7 @@
 <ul>
 <li><strong>What it does</strong>: Finds the optimal global phase rotation that minimizes RMS distance from trained network weights to nearest bracket catalog entries.</li>
 <li><strong>Introduced in</strong>: <a href="./entries/demo_27.html">Demo 27</a></li>
-<li><strong>Reused in</strong>: Demos 28, 45, 46</li>
+<li><strong>Reused in</strong>: <a href="./entries/demo_28.html">Demos 28</a>, 45, 46</li>
 <li><strong>Key types/functions</strong>:</li>
 <li>360-angle sweep: rotates all weights by e^{i*theta}, computes RMS to nearest catalog entry</li>
 <li><code>find_best_gauge(weights, catalog)</code> — returns best angle and RMS</li>
@@ -774,7 +774,7 @@
 <ul>
 <li><strong>What it does</strong>: Computes Spearman rank correlation coefficient with tie handling for comparing ordinal rankings (e.g., topology frequency vs decomposition quality).</li>
 <li><strong>Introduced in</strong>: <a href="./entries/demo_45.html">Demo 45</a></li>
-<li><strong>Reused in</strong>: Demos 46, 47, 48, 49</li>
+<li><strong>Reused in</strong>: <a href="./entries/demo_46.html">Demos 46</a>, 47, 48, 49</li>
 <li><strong>Key types/functions</strong>:</li>
 <li><code>spearman_rho(x, y, n)</code> — Spearman rank correlation</li>
 <li><code>assign_ranks(values, ranks, n)</code> — ranking with average tie-breaking</li>
@@ -867,7 +867,7 @@
 <ul>
 <li><strong>What it does</strong>: Lifts the Kauffman bracket from S^1 (complex trace) to S^3 (unit quaternion) via an SU(2) braid representation, generates the 24-cell polytope from braid enumeration, and searches for XOR6 solutions using quaternionic Voronoi activation.</li>
 <li><strong>Introduced in</strong>: <a href="./entries/demo_66.html">Demo 66</a></li>
-<li><strong>Reused in</strong>: Demos 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82 (24-cell catalog and quaternion arithmetic used throughout the extended arc)</li>
+<li><strong>Reused in</strong>: <a href="./entries/demo_67.html">Demos 67</a>, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82 (24-cell catalog and quaternion arithmetic used throughout the extended arc)</li>
 <li><strong>Key types/functions</strong>:</li>
 <li><code>quat_mul(p, q)</code>: quaternion multiplication (4-component real vector)</li>
 <li><code>quat_norm(q)</code>: quaternion normalization to unit sphere S^3</li>
@@ -884,7 +884,7 @@
 <ul>
 <li><strong>What it does</strong>: Decomposes SU(2) quaternions into eigenvector direction (S^2) and eigenvalue angle, then systematically compares all natural coordinate systems (Hopf, Cayley-Klein, eigenvalue k-sector, custom S^2 Voronoi) as DKC activations.</li>
 <li><strong>Introduced in</strong>: <a href="./entries/demo_67.html">Demo 67</a></li>
-<li><strong>Reused in</strong>: Demos 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82 (13-direction S^2 Voronoi and eigenvector extraction are the canonical activation throughout <a href="./entries/demo_68.html">D68</a>-<a href="./entries/demo_82.html">D82</a>)</li>
+<li><strong>Reused in</strong>: <a href="./entries/demo_68.html">Demos 68</a>, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82 (13-direction S^2 Voronoi and eigenvector extraction are the canonical activation throughout <a href="./entries/demo_68.html">D68</a>-<a href="./entries/demo_82.html">D82</a>)</li>
 <li><strong>Key types/functions</strong>:</li>
 <li><code>eigenvector_extract(q, dir_out, theta_out)</code>: decomposes SU(2) quaternion into eigenvector direction (mod +-) and eigenvalue angle theta = arccos(a)</li>
 <li>Custom Voronoi on S^2: assigns quaternion to nearest of 13 data-derived directions (3 axis + 6 edge-midpoint + 4 body-diagonal); handles identity/zero as degenerate cell 0</li>
@@ -962,7 +962,7 @@
 <ul>
 <li><strong>What it does</strong>: Linear Congruential Generator for reproducible random experiments across all DKC and neural network demos.</li>
 <li><strong>Introduced in</strong>: <a href="./entries/demo_13.html">Demo 13</a></li>
-<li><strong>Reused in</strong>: Demos 26, 27, 28, 45, 46, 47, 48, 49, 50, 72 (perturbation trials for spherical optimizer), 88 (simulated annealing), 89 (random subset baselines), 90 (random subset loading), 92 (Monte Carlo census)</li>
+<li><strong>Reused in</strong>: <a href="./entries/demo_26.html">Demos 26</a>, 27, 28, 45, 46, 47, 48, 49, 50, 72 (perturbation trials for spherical optimizer), 88 (simulated annealing), 89 (random subset baselines), 90 (random subset loading), 92 (Monte Carlo census)</li>
 <li><strong>Key types/functions</strong>:</li>
 <li><code>rng_seed(s)</code> — set seed</li>
 <li><code>rng_uniform()</code> — uniform [0, 1) double</li>
@@ -974,7 +974,7 @@
 <ul>
 <li><strong>What it does</strong>: Uniform quantize-dequantize for encoding bracket values at reduced bit depths.</li>
 <li><strong>Introduced in</strong>: <a href="./entries/demo_12.html">Demo 12</a></li>
-<li><strong>Reused in</strong>: Demos 13, 16, 17</li>
+<li><strong>Reused in</strong>: <a href="./entries/demo_13.html">Demos 13</a>, 16, 17</li>
 <li><strong>Key types/functions</strong>:</li>
 <li><code>quantize(x, lo, hi, bits)</code> — scalar uniform quantization</li>
 <li><code>cx_quantize(z, lo, hi, bits)</code> — independent Re/Im quantization</li>
@@ -988,7 +988,7 @@
 <ul>
 <li><strong>What it does</strong>: Iteratively selects evaluation angles that maximize minimum pairwise bracket distance across all knot pairs.</li>
 <li><strong>Introduced in</strong>: <a href="./entries/demo_11.html">Demo 11</a></li>
-<li><strong>Reused in</strong>: Demos 12, 13, 15, 16, 17</li>
+<li><strong>Reused in</strong>: <a href="./entries/demo_12.html">Demos 12</a>, 13, 15, 16, 17</li>
 <li><strong>Key types/functions</strong>:</li>
 <li><code>select_greedy_angles()</code> / <code>greedy_angles()</code> — max-min-distance greedy selection from 256-sample waveforms</li>
 <li><code>count_separated_pairs()</code> — multi-angle pairwise distance check</li>
@@ -1012,7 +1012,7 @@
 <ul>
 <li><strong>What it does</strong>: Determines how many factors of delta = -(A^2 + A^{-2}) divide the bracket polynomial.</li>
 <li><strong>Introduced in</strong>: <a href="./entries/demo_15.html">Demo 15</a></li>
-<li><strong>Reused in</strong>: Demos 16, 17</li>
+<li><strong>Reused in</strong>: <a href="./entries/demo_16.html">Demos 16</a>, 17</li>
 <li><strong>Key types/functions</strong>:</li>
 <li><code>delta_exponent(braid, A)</code> — evaluates bracket at 4 delta-zero angles (pi/4, 3pi/4, 5pi/4, 7pi/4) + perturbation test</li>
 <li><code>reduced_bracket_at(braid, A)</code> — g(A) = bracket(A) / delta^k with zero-avoidance fallback</li>
@@ -1050,7 +1050,7 @@
 <ul>
 <li><strong>What it does</strong>: Computes minimum pairwise distance, mean distance, and separation counts for knot classification evaluation.</li>
 <li><strong>Introduced in</strong>: <a href="./entries/demo_11.html">Demo 11</a></li>
-<li><strong>Reused in</strong>: Demos 12, 13, 14, 15, 16, 17</li>
+<li><strong>Reused in</strong>: <a href="./entries/demo_12.html">Demos 12</a>, 13, 14, 15, 16, 17</li>
 <li><strong>Key types/functions</strong>:</li>
 <li><code>pairwise_separation()</code> — best angle, hardest pair, full matrix</li>
 <li><code>min_dist_from_vals()</code> — minimum pairwise distance from value arrays</li>
@@ -1207,11 +1207,11 @@
 </ul>
 <p>---</p>
 <h2>10. Multi-Channel DKC and Activation Architecture</h2>
-<h3>10.1 Quaternion Arithmetic Suite (Demos 75–82)</h3>
+<h3>10.1 Quaternion Arithmetic Suite (<a href="./entries/demo_75.html">Demos 75</a>–<a href="./entries/demo_82.html">82</a>)</h3>
 <ul>
 <li><strong>What it does</strong>: Full quaternion arithmetic — add, multiply, conjugate, normalize, eigenvalue-angle extraction — shared across the extended DKC arc from <a href="./entries/demo_75.html">Demo 75</a> onward. Includes the core binocular channel decomposition.</li>
 <li><strong>Introduced in</strong>: <a href="./entries/demo_66.html">Demo 66</a> (core); extended with angle/magnitude analysis in <a href="./entries/demo_75.html">Demo 75</a></li>
-<li><strong>Reused in</strong>: Demos 75, 76, 77, 78, 79, 80, 81, 82</li>
+<li><strong>Reused in</strong>: <a href="./entries/demo_75.html">Demos 75</a>, 76, 77, 78, 79, 80, 81, 82</li>
 <li><strong>Key types/functions</strong>:</li>
 <li><code>eigenvalue_angle(q)</code>: computes rotation half-angle arccos(q.a) for a unit quaternion (S¹ component)</li>
 <li><code>classify_magnitude(s)</code>: bins |S| into algebraic classes {√0, √1, √2, √3, √4, √6}; identifies the √n pattern</li>
@@ -1239,7 +1239,7 @@
 <ul>
 <li><strong>What it does</strong>: Pre-computes all 2^N quaternion sums for a given N-tuple once, then tests multiple k-sector values cheaply by sweeping k without recomputing sums. The combined activation maps each sum to (sector, Voronoi-cell) pair. Used as the standard XOR tester for all <a href="./entries/demo_78.html">D78</a>-<a href="./entries/demo_92.html">D92</a> capacity searches.</li>
 <li><strong>Introduced in</strong>: <a href="./entries/demo_78.html">Demo 78</a> (as <code>test_combined</code>)</li>
-<li><strong>Reused in</strong>: Demos 79, 80, 81, 82, 83 (via <code>find_capacity</code>), 84 (via <code>find_capacity</code> + <code>count_xor6_at_k</code>), 87, 88, 89, 90, 91, 92 (standard activation infrastructure throughout the depth-law and function-scaling arcs)</li>
+<li><strong>Reused in</strong>: <a href="./entries/demo_79.html">Demos 79</a>, 80, 81, 82, 83 (via <code>find_capacity</code>), 84 (via <code>find_capacity</code> + <code>count_xor6_at_k</code>), 87, 88, 89, 90, 91, 92 (standard activation infrastructure throughout the depth-law and function-scaling arcs)</li>
 <li><strong>Key types/functions</strong>:</li>
 <li><code>test_combined(indices, n_idx, k_sec, acc_out)</code>: generic XOR tester; pre-computes all 2^N sums, caches angle and cell, sweeps k values cheaply</li>
 <li><code>combined_cell(q, k_sec, n_dir)</code>: maps a quaternion sum to a (sector × n_dir + voronoi_cell) index; the inner function used in capacity surveys</li>
@@ -1280,7 +1280,7 @@
 <ul>
 <li><strong>What it does</strong>: Starting from a set of generators (and their inverses and the identity), iteratively multiplies all current group elements by all generators until no new elements appear or a size cap is hit. Returns 1 if the group is finite (closed below cap), 0 if it hit the cap (infinite).</li>
 <li><strong>Introduced in</strong>: <a href="./entries/demo_80.html">Demo 80</a></li>
-<li><strong>Reused in</strong>: <a href="./entries/demo_81.html">Demo 81</a> (as <code>init_su2_generators</code> + BFS closure with snapshot tracking), <a href="./entries/demo_82.html">Demo 82</a> (closure with depth tracking), <a href="./entries/demo_83.html">Demo 83</a> (writhe tracking added alongside depth), <a href="./entries/demo_84.html">Demo 84</a> (writhe tracking + cross-root loop), Demos 87, 88, 89, 90, 91, 92 (standard BFS closure with depth tracking — core infrastructure for all <a href="./entries/demo_87.html">D87</a>-<a href="./entries/demo_92.html">D92</a> experiments)</li>
+<li><strong>Reused in</strong>: <a href="./entries/demo_81.html">Demo 81</a> (as <code>init_su2_generators</code> + BFS closure with snapshot tracking), <a href="./entries/demo_82.html">Demo 82</a> (closure with depth tracking), <a href="./entries/demo_83.html">Demo 83</a> (writhe tracking added alongside depth), <a href="./entries/demo_84.html">Demo 84</a> (writhe tracking + cross-root loop), <a href="./entries/demo_87.html">Demos 87</a>, 88, 89, 90, 91, 92 (standard BFS closure with depth tracking — core infrastructure for all <a href="./entries/demo_87.html">D87</a>-<a href="./entries/demo_92.html">D92</a> experiments)</li>
 <li><strong>Key types/functions</strong>:</li>
 <li><code>build_closure(generators, n_gen, catalog_out, max_size, rounds_out)</code>: generic closure; quaternion multiplication with deduplication by tolerance comparison</li>
 <li>Closure round tracking: records which round each element was born in (gives depth/crossing-depth interpretation)</li>
@@ -1316,7 +1316,7 @@
 <ul>
 <li><strong>What it does</strong>: Initializes the two SU(2) braid generators σ₁ and σ₂ for an arbitrary cyclotomic root ζ_N, enabling catalog construction for any root without code changes.</li>
 <li><strong>Introduced in</strong>: <a href="./entries/demo_79.html">Demo 79</a> (as <code>init_su2_generators(half_angle)</code>)</li>
-<li><strong>Reused in</strong>: Demos 80, 81, 82</li>
+<li><strong>Reused in</strong>: <a href="./entries/demo_80.html">Demos 80</a>, 81, 82</li>
 <li><strong>Key types/functions</strong>:</li>
 <li><code>init_su2_generators(half_angle)</code>: sets σ₁ = rotation by 2<em>half_angle around x-axis, σ₂ = rotation by 2</em>half_angle around z-axis</li>
 <li>Inverse generator computation: quaternion conjugation</li>
@@ -1328,7 +1328,7 @@
 <ul>
 <li><strong>What it does</strong>: Saves the full current quaternion catalog (quaternions + depth arrays + metadata) to a static backup, then restores it; enables repeated subset experiments with different roots or subsets without rebuilding the full closure.</li>
 <li><strong>Introduced in</strong>: <a href="./entries/demo_79.html">Demo 79</a></li>
-<li><strong>Reused in</strong>: Demos 80, 81, 82, 83 (extended to also save writhe array), 84 (same extension; also enables bracket→Jones→bracket switching), 87 (null-removal experiments), 88 (perturbation experiments), 89 (depth-stratified experiments), 90 (subset loading for comparative tests), 91 (depth-cutoff experiments), 92 (depth-sweep experiments)</li>
+<li><strong>Reused in</strong>: <a href="./entries/demo_80.html">Demos 80</a>, 81, 82, 83 (extended to also save writhe array), 84 (same extension; also enables bracket→Jones→bracket switching), 87 (null-removal experiments), 88 (perturbation experiments), 89 (depth-stratified experiments), 90 (subset loading for comparative tests), 91 (depth-cutoff experiments), 92 (depth-sweep experiments)</li>
 <li><strong>Key types/functions</strong>:</li>
 <li><code>save_catalog()</code>: copies <code>g_cat[]</code>, <code>g_cat_size</code>, <code>g_depth[]</code>, <code>g_nd</code>, <code>g_na</code> to static backup arrays; extended in <a href="./entries/demo_83.html">D83</a>-<a href="./entries/demo_84.html">84</a> to also save <code>g_writhe[]</code></li>
 <li><code>restore_catalog()</code>: restores from backup; resets derived quantities (directions, angles)</li>
@@ -1341,7 +1341,7 @@
 <ul>
 <li><strong>What it does</strong>: Generic recursive extension from level-(N-2) XOR winners to level-N XOR winners by appending one new catalog entry to each existing winner and testing with <code>test_combined</code>. Replaces per-level search functions with a single parameterized routine.</li>
 <li><strong>Introduced in</strong>: <a href="./entries/demo_79.html">Demo 79</a></li>
-<li><strong>Reused in</strong>: Demos 81, 82, 87 (capacity pipeline for null-removal experiments), 89 (depth-stratified capacity measurement), 90 (winner search for axis cancellation analysis)</li>
+<li><strong>Reused in</strong>: <a href="./entries/demo_81.html">Demos 81</a>, 82, 87 (capacity pipeline for null-removal experiments), 89 (depth-stratified capacity measurement), 90 (winner search for axis cancellation analysis)</li>
 <li><strong>Key types/functions</strong>:</li>
 <li><code>find_recursive(level)</code>: searches all (winner at level-1, new_entry) combinations; deduplicates via sorted-tuple comparison</li>
 <li>Sorted tuple insertion: maintains sorted index arrays when extending N-tuples without full re-sort</li>
@@ -1354,7 +1354,7 @@
 <ul>
 <li><strong>What it does</strong>: Augments group closure with per-element birth-round tracking (depth), then provides three reusable subset construction strategies — shallow (first N entries), strided (every K-th entry), deep (last N entries from deepest round) — for capacity comparison experiments.</li>
 <li><strong>Introduced in</strong>: <a href="./entries/demo_82.html">Demo 82</a></li>
-<li><strong>Reused in</strong>: <a href="./entries/demo_83.html">Demo 83</a> (<code>find_capacity()</code> reused unchanged — called three times: bracket, Jones, ζ₈ control), <a href="./entries/demo_84.html">Demo 84</a> (<code>find_capacity()</code> reused; also called on null-only and non-null-only subsets via <code>load_subset</code>), Demos 89, 90 (<code>load_single_depth</code>, <code>load_cumulative</code>, <code>load_deep</code>, <code>load_shallow</code>, <code>load_strided</code>, <code>load_random</code> for depth-stratified experiments), Demos 91, 92 (<code>load_up_to_depth</code> for depth-sweep experiments)</li>
+<li><strong>Reused in</strong>: <a href="./entries/demo_83.html">Demo 83</a> (<code>find_capacity()</code> reused unchanged — called three times: bracket, Jones, ζ₈ control), <a href="./entries/demo_84.html">Demo 84</a> (<code>find_capacity()</code> reused; also called on null-only and non-null-only subsets via <code>load_subset</code>), <a href="./entries/demo_89.html">Demos 89</a>, 90 (<code>load_single_depth</code>, <code>load_cumulative</code>, <code>load_deep</code>, <code>load_shallow</code>, <code>load_strided</code>, <code>load_random</code> for depth-stratified experiments), <a href="./entries/demo_91.html">Demos 91</a>, 92 (<code>load_up_to_depth</code> for depth-sweep experiments)</li>
 <li><strong>Key types/functions</strong>:</li>
 <li><code>g_depth[]</code> array: assigned the current closure round index at element birth; identity + generators get depth 0</li>
 <li>Shallow subset: copy first N entries from <code>g_cat[]</code> by natural closure order</li>
@@ -1440,7 +1440,7 @@
 <ul>
 <li><strong>What it does</strong>: Classifies each catalog entry as bracket-null (|Re(q)| &lt; 1e-10) or non-null; builds two index arrays that partition the catalog; these arrays are reused throughout all subsequent subset experiments.</li>
 <li><strong>Introduced in</strong>: <a href="./entries/demo_84.html">Demo 84</a></li>
-<li><strong>Reused in</strong>: Demos 87 (null dispensability at zeta_12), 88 (perturbation sensitivity by null/non-null type)</li>
+<li><strong>Reused in</strong>: <a href="./entries/demo_87.html">Demos 87</a> (null dispensability at zeta_12), 88 (perturbation sensitivity by null/non-null type)</li>
 <li><strong>Key types/functions</strong>:</li>
 <li><code>classify_null(cat_size)</code>: single pass over catalog; fills <code>is_null[]</code> boolean array; returns null count</li>
 <li><code>null_idx[]</code> / <code>nonnull_idx[]</code>: index arrays built once after <code>classify_null</code>; reused for <code>load_subset</code> calls in Parts C–F</li>
@@ -1487,7 +1487,7 @@
 <li><strong>Notes</strong>: ζ₈ (finite, 24 elements) caps at XOR8. ζ₁₂ (infinite, doubling per round) has no observed ceiling through XOR12. The linear depth law (max_xor ≈ depth + 6) is the mechanistic explanation: finite groups have bounded depth (ζ₈ max depth 3), infinite groups grow without bound.</li>
 </ul>
 <p>---</p>
-<h2>13. TL Algebra Full Infrastructure (Demos 85-86)</h2>
+<h2>13. TL Algebra Full Infrastructure (<a href="./entries/demo_85.html">Demos 85</a>-<a href="./entries/demo_86.html">86</a>)</h2>
 <h3>13.1 Full TL Algebra Infrastructure (AlgDiagram)</h3>
 <ul>
 <li><strong>What it does</strong>: Complete TL_n algebra representation using explicit planar matching diagrams (as opposed to the standard-module link states of Section 3.1). Enumerates the full Catalan-number-dimensional basis, builds the complete multiplication table with loop counts, implements the star anti-involution, closure loop counting, and through-line sector analysis — everything needed for representation-theoretic computations on the regular representation.</li>
@@ -1759,7 +1759,7 @@
 <li><strong>Notes</strong>: At zeta_8: 6 null-only (cube edge midpoints), 3 shared (coordinate axes), 4 non-null-only (body diagonals). The three types form the three orbits of the octahedral symmetry group acting on RP².</li>
 </ul>
 <p>---</p>
-<h2>17. Depth Law Mechanism (Demos 89-91)</h2>
+<h2>17. Depth Law Mechanism (<a href="./entries/demo_89.html">Demos 89</a>-<a href="./entries/demo_91.html">91</a>)</h2>
 <h3>17.1 Depth-Stratified Subset Loaders</h3>
 <ul>
 <li><strong>What it does</strong>: A family of subset-loading functions that extract specific depth slices or depth-filtered subsets from the saved catalog, enabling controlled experiments that isolate depth as a variable.</li>
@@ -2088,7 +2088,7 @@
 <ul>
 <li><strong>What it does</strong>: Exact integer type representing a + b*sqrt(2) in the ring Z[sqrt2]. The natural coefficient ring for the binary octahedral group's quaternions.</li>
 <li><strong>Introduced in</strong>: <a href="./entries/demo_95.html">Demo 95</a></li>
-<li><strong>Reused in</strong>: Demos 96, 97</li>
+<li><strong>Reused in</strong>: <a href="./entries/demo_96.html">Demos 96</a>, 97</li>
 <li><strong>Key types/functions</strong>:</li>
 <li><code>Zr2</code> struct: two <code>long</code> components (a, b) representing a + b*sqrt(2)</li>
 <li><code>zr2_make()</code>, <code>zr2_add()</code>, <code>zr2_sub()</code>, <code>zr2_neg()</code>, <code>zr2_mul()</code>, <code>zr2_eq()</code>, <code>zr2_div2()</code></li>
@@ -2100,7 +2100,7 @@
 <ul>
 <li><strong>What it does</strong>: Four-component quaternion with Zr2 entries, representing elements of the binary octahedral group (order 48, 24 bracket values mod sign).</li>
 <li><strong>Introduced in</strong>: <a href="./entries/demo_95.html">Demo 95</a></li>
-<li><strong>Reused in</strong>: Demos 96, 97</li>
+<li><strong>Reused in</strong>: <a href="./entries/demo_96.html">Demos 96</a>, 97</li>
 <li><strong>Key types/functions</strong>:</li>
 <li><code>QZ8</code> struct: four Zr2 components (a, b, c, d) each representing (a + b*sqrt(2))/2</li>
 <li><code>qz8_make()</code>, <code>qz8_eq()</code>, <code>qz8_neg()</code>, <code>qz8_conj()</code>, <code>qz8_mul()</code></li>
@@ -2112,7 +2112,7 @@
 <ul>
 <li><strong>What it does</strong>: BFS closure of the binary octahedral group from generators, with mod-sign identification and depth tracking.</li>
 <li><strong>Introduced in</strong>: <a href="./entries/demo_95.html">Demo 95</a></li>
-<li><strong>Reused in</strong>: Demos 96, 97</li>
+<li><strong>Reused in</strong>: <a href="./entries/demo_96.html">Demos 96</a>, 97</li>
 <li><strong>Key types/functions</strong>:</li>
 <li><code>build_z8(verbose)</code> — BFS from 4 generators: (sqrt2/2)(1+i), (sqrt2/2)(1-k), plus conjugates</li>
 <li>Stores 24 bracket values in global array with depth per entry</li>
@@ -2123,7 +2123,7 @@
 <ul>
 <li><strong>What it does</strong>: Iteratively computes the commutator subgroup and derived series of a finite group, partitioning elements by algebraic depth.</li>
 <li><strong>Introduced in</strong>: <a href="./entries/demo_95.html">Demo 95</a></li>
-<li><strong>Reused in</strong>: Demos 96, 97</li>
+<li><strong>Reused in</strong>: <a href="./entries/demo_96.html">Demos 96</a>, 97</li>
 <li><strong>Key types/functions</strong>:</li>
 <li><code>z8_commutator(a, b)</code> / <code>i2_commutator(a, b)</code> — compute [a,b] = a<em>b</em>a^{-1}*b^{-1}</li>
 <li><code>close_z8_subgroup(in_set)</code> — closes subset under multiplication and inverse</li>
@@ -2221,7 +2221,7 @@
 <ul>
 <li><strong>What it does</strong>: Computes C(S) = (a-d)^2 + 4<em>b</em>c for summed Mat2 matrices. Exact computation in Z[zeta_8]. Distinguishes Jordan blocks (C=0) from diagonalizable matrices.</li>
 <li><strong>Introduced in</strong>: <a href="./entries/demo_99.html">Demo 99</a></li>
-<li><strong>Reused in</strong>: Demos 100, 101 (generalized to C_d formula)</li>
+<li><strong>Reused in</strong>: <a href="./entries/demo_100.html">Demos 100</a>, 101 (generalized to C_d formula)</li>
 <li><strong>Key types/functions</strong>:</li>
 <li><code>mat2_casimir()</code> — returns Cyc8 value, L1 norm for magnitude comparison</li>
 <li>Two-regime discovery: XOR6-8 winners have LOWER |C| (inverted), XOR10-14 winners have 4.4x HIGHER |C|</li>
@@ -2351,7 +2351,7 @@ Each demo is a standalone <code><a href="../demo_78_recursive_scaling/main.c.htm
 <li>The "library" is the accumulated pattern knowledge, not shared object files</li>
 </ul>
 <h3>Ring-Parametric Architecture</h3>
-Demos 53-59 follow a consistent pattern:
+<a href="./entries/demo_53.html">Demos 53</a>-<a href="./entries/demo_59.html">59</a> follow a consistent pattern:
 1. Implement cyclotomic ring arithmetic (Cyc_n type)
 2. Reuse identical planar matching / diagram composition code
 3. Instantiate TL matrix algebra over the new ring
@@ -2359,7 +2359,7 @@ Demos 53-59 follow a consistent pattern:
 5. Build catalog and run DKC Boolean function search
 <p>The topology code (planar matchings, diagram composition, trace closure) is completely ring-independent.</p>
 <h3>Radical Anatomy Pipeline</h3>
-Demos 38, 39, 51, 52, 60 follow a consistent pattern for analyzing TL algebra structure:
+<a href="./entries/demo_38.html">Demos 38</a>, 39, 51, 52, 60 follow a consistent pattern for analyzing TL algebra structure:
 1. Enumerate planar matching basis (Section 3.1)
 2. Build multiplication table with loop counts
 3. Construct Gram matrix of trace form (fixpoint-based or delta-weighted)
@@ -2371,14 +2371,14 @@ Demos 38, 39, 51, 52, 60 follow a consistent pattern for analyzing TL algebra st
 Every new computation method is cross-validated against prior oracles:
 <ul>
 <li>Symbolic bracket (<a href="./entries/demo_01.html">Demo 01</a>) validates braid bracket (<a href="./entries/demo_02.html">Demo 02</a>)</li>
-<li>Braid bracket validates matrix method (Demos 03-06)</li>
+<li>Braid bracket validates matrix method (<a href="./entries/demo_03.html">Demos 03</a>-<a href="./entries/demo_06.html">06</a>)</li>
 <li>Matrix method validates numerical engine (<a href="./entries/demo_10.html">Demo 10</a>)</li>
-<li>State-sum validates TL matrix method (Demos 35, 53-59)</li>
+<li>State-sum validates TL matrix method (<a href="./entries/demo_35.html">Demos 35</a>, 53-59)</li>
 <li>Exact Cyc8 validates float Cx (<a href="./entries/demo_29.html">Demo 29</a>)</li>
 <li>Two-prime cross-validation for cubic field results (<a href="./entries/demo_60.html">Demo 60</a>)</li>
 </ul>
-<h3>Quaternionic / S^2 Arc Architecture (Demos 66-92)</h3>
-<p>Demos 66-71 establish the foundation; Demos 72-84 extend it into a full capacity theory; Demos 85-86 establish TL algebra representation theory; Demos 87-92 investigate mechanism and limits:</p>
+<h3>Quaternionic / S^2 Arc Architecture (<a href="./entries/demo_66.html">Demos 66</a>-<a href="./entries/demo_92.html">92</a>)</h3>
+<p><a href="./entries/demo_66.html">Demos 66</a>-<a href="./entries/demo_71.html">71</a> establish the foundation; <a href="./entries/demo_72.html">Demos 72</a>-<a href="./entries/demo_84.html">84</a> extend it into a full capacity theory; <a href="./entries/demo_85.html">Demos 85</a>-<a href="./entries/demo_86.html">86</a> establish TL algebra representation theory; <a href="./entries/demo_87.html">Demos 87</a>-<a href="./entries/demo_92.html">92</a> investigate mechanism and limits:</p>
 <p><strong>Foundation arc (<a href="./entries/demo_66.html">D66</a>-<a href="./entries/demo_71.html">D71</a>):</strong> 1. Generate the SU(2) braid representation (<a href="./entries/demo_66.html">D66</a>) — produces exactly 24 quaternions (24-cell / binary octahedral group) 2. Decompose quaternions into eigenvector direction (S^2) and eigenvalue angle (<a href="./entries/demo_67.html">D67</a>) — identifies 13 data-intrinsic directions 3. Build the custom 13-direction Voronoi on S^2 — canonical activation (36 XOR6 solutions at 14 cells) 4. Verify computation lives on S^2, not S^1 fiber (Hopf phase inert, <a href="./entries/demo_67.html">D67</a>) and not R^2 Euclidean (<a href="./entries/demo_68.html">D68</a>) 5. Confirm direction nesting across cyclotomic roots — zeta_8 is the computational sweet spot (<a href="./entries/demo_69.html">D69</a>) 6. Analyze spectral structure: l=6 bandwidth threshold = 13=13 theorem (<a href="./entries/demo_71.html">D71</a>)</p>
 <p><strong>Extension arc (<a href="./entries/demo_72.html">D72</a>-<a href="./entries/demo_84.html">D84</a>):</strong> 7. Prove the 13 directions are geometrically worst (t=0 design) yet algebraically optimal (<a href="./entries/demo_72.html">D72</a>); confirm anti-correlation between sampling quality and computational quality 8. Characterize DKC as a near-finite-automaton: 82.8% universal determinism, additive not multiplicative (<a href="./entries/demo_73.html">D73</a>) 9. Prove Kauffman bracket and Voronoi cell are incomparable invariants; identify 6 computational orbit types (<a href="./entries/demo_74.html">D74</a>) 10. Discover binocular channel: angle subsumes cell (2.3× capacity), 8 triple families, √n magnitude quantization (<a href="./entries/demo_75.html">D75</a>) 11. Establish ζ₈ S²-capacity ceiling at XOR8; characterize algebraic structure breakdown (<a href="./entries/demo_76.html">D76</a>) 12. Break the ceiling with S¹×S² product activation: XOR8 solvable at ζ₈ (<a href="./entries/demo_77.html">D77</a>); recursive paired-quaternion structure identified 13. Confirm ζ₈ XOR hierarchy terminates at 8 via exhaustive C(24,5) search; non-monotonicity from π/4 incommensurability (<a href="./entries/demo_78.html">D78</a>) 14. Break the ζ₈ wall entirely with ζ₁₂: XOR10=124 winners, XOR12=50+ winners; finite vs infinite group identified as key variable (<a href="./entries/demo_79.html">D79</a>) 15. Survey all SU(2) subgroups: only ζ₄ and ζ₈ are finite; ADE classification; quantum dimension vanishes at ζ₈ (<a href="./entries/demo_80.html">D80</a>) 16. Fit logarithmic capacity scaling law for ζ₁₂: max_xor ≈ 0.62 × log₂(catalog) + 4.6 (<a href="./entries/demo_81.html">D81</a>) 17. Unify as linear depth law: max_xor ≈ depth + 6; crossing depth = knot crossing depth; algebraic coherence beats vocabulary (<a href="./entries/demo_82.html">D82</a>) 18. Prove Jones normalization costs exactly 2 XOR levels at all tested roots; writhe and depth are independent additive resources; framing is not a bookkeeping artifact — it is one discrete computational unit (<a href="./entries/demo_83.html">D83</a>) 19. Prove bracket-null entries (Re(q)=0) are indispensable: they hold 6 S² directions unavailable to non-null entries; removing them drops capacity from XOR8 to XOR6, below the random-subset baseline; connect to LCFT Jordan-cell structure and Reservoir Computing null-state hypothesis (<a href="./entries/demo_84.html">D84</a>)</p>
 <p><strong>Representation theory branch (<a href="./entries/demo_85.html">D85</a>-<a href="./entries/demo_86.html">D86</a>):</strong> 20. Full TL algebra infrastructure: diagram basis, multiplication table, star anti-involution, left ideal closure, projective cover construction. Compute b = -5/8 exactly at TL_4 via leading-coefficient extraction from delta-parameterized Gram matrix (<a href="./entries/demo_85.html">D85</a>). Falsify Gemini's claim about standard-module Jordan blocks. 21. Attempt direct b computation on single P_{0,0} — UNIVERSAL DIVERGENCE at all eigenvalues, all lattice sizes, both forms. Multiplicity from the regular representation is structurally essential, not a scale factor (<a href="./entries/demo_86.html">D86</a>). Novel negative result.</p>
@@ -2391,12 +2391,12 @@ Every new computation method is cross-validated against prior oracles:
 <p>Key progression: <a href="./entries/demo_65.html">D65</a> S^1 k=24 → <a href="./entries/demo_66.html">D66</a> S^3 25 cells → <a href="./entries/demo_67.html">D67</a> S^2 14 cells → <a href="./entries/demo_68.html">D68</a> R^2 visualization only → <a href="./entries/demo_72.html">D72</a>-<a href="./entries/demo_73.html">73</a> algebraic structure analysis → <a href="./entries/demo_74.html">D74</a> incomparability theorem → <a href="./entries/demo_75.html">D75</a>-<a href="./entries/demo_77.html">77</a> binocular + product activation → <a href="./entries/demo_78.html">D78</a>-<a href="./entries/demo_79.html">79</a> wall confirmation + ζ₁₂ breakthrough → <a href="./entries/demo_80.html">D80</a> ADE survey → <a href="./entries/demo_81.html">D81</a>-<a href="./entries/demo_82.html">82</a> scaling laws → <a href="./entries/demo_83.html">D83</a> framing as resource → <a href="./entries/demo_84.html">D84</a> null-state anatomy → <a href="./entries/demo_85.html">D85</a>-<a href="./entries/demo_86.html">86</a> TL representation theory (b = -5/8 + universal divergence on P_{0,0}) → <a href="./entries/demo_87.html">D87</a>-<a href="./entries/demo_88.html">88</a> null dispensability + anti-correlation → <a href="./entries/demo_89.html">D89</a>-<a href="./entries/demo_91.html">91</a> depth law mechanism (axis cancellation + parity wall) → <a href="./entries/demo_92.html">D92</a> parity-lock theorem → <a href="./entries/demo_93.html">D93</a> complement-blindness + phase_cell recovery + circuit complexity hierarchy → <a href="./entries/demo_94.html">D94</a> solvability bottleneck (2I vs z8, Barrington confirmed) → <a href="./entries/demo_95.html">D95</a>-<a href="./entries/demo_97.html">97</a> commutator structure + cross-classification + Cell B perfection → <a href="./entries/demo_98.html">D98</a> 3-strand readout bottleneck → <a href="./entries/demo_99.html">D99</a> Delta_1 LANDMARK (first 3-strand XOR, Ext^1 thesis) → <a href="./entries/demo_100.html">D100</a> 4-strand non-semisimple DKC → <a href="./entries/demo_101.html">D101</a> 5-strand simple module (sl_d functor, Casimir inversion) → <a href="./entries/demo_102.html">D102</a> 6-strand radical A/B test (Barrington-Radical Principle, writhe character on radical) → <a href="./entries/demo_103.html">D103</a> dimension scaling (BFS growth is braid group invariant, curse of dimensionality) → <a href="./entries/demo_104.html">D104</a> activation coarseness sweep (Atkinson sweet spot, sign-rank expansion, branching interaction thesis) → <a href="./entries/demo_105.html">D105</a> 8-strand k-regime (<a href="./entries/demo_93.html">D93</a> "XOR dies at N&gt;=7" REFUTED, macrame principle, rank saturation methodology) → <a href="./entries/demo_106.html">D106</a> topological entropy null (TL visibility filter, relational computation thesis) → <a href="./entries/demo_107.html">D107</a> algebraic graph density (axis-alignment theorem, nesting parity grading, Raqiya library, q-Catalan identity) → <a href="./entries/demo_108.html">D108</a> parity vocabulary (Dual-Channel Theorem, product closure discriminator) → <a href="./entries/demo_109.html">D109</a> encoding-dependent dual-channel (product closure inversion at delta=sqrt(2), 7/8 structural symmetry).</p>
 <h3>Catalog Size Summary</h3>
 <table><thead><tr><th>Ring</th><th>Delta</th><th>Catalog</th><th>Distinct Values</th></tr></thead><tbody><tr><td>Z[zeta_8]</td><td>0</td><td>2-3 strand, len 1-8</td><td>~100</td></tr><tr><td>Z[omega]</td><td>1</td><td>2-4 strand, len 1-8</td><td>varies</td></tr><tr><td>Z[zeta_16]</td><td>sqrt(2)</td><td>2-4 strand, len 1-6</td><td>~56</td></tr><tr><td>Z[zeta_5]</td><td>phi</td><td>2-4 strand, len 1-6</td><td>&gt;56</td></tr><tr><td>Z[zeta_24]</td><td>sqrt(3)</td><td>2-4 strand, len 1-10</td><td>varies</td></tr></tbody></table>
-<h3>SU(2) / Quaternionic Catalog Summary (Demos 66-84, 94)</h3>
+<h3>SU(2) / Quaternionic Catalog Summary (<a href="./entries/demo_66.html">Demos 66</a>-<a href="./entries/demo_84.html">84</a>, 94)</h3>
 <table><thead><tr><th>Root</th><th>Quaternions</th><th>Directions on S^2</th><th>XOR6 at natural Voronoi</th><th>XOR8 (product activation)</th><th>XOR10</th><th>XOR12</th><th>Jones cap (bracket −2)</th></tr></thead><tbody><tr><td>zeta_4</td><td>4</td><td>2</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td></tr><tr><td>zeta_6</td><td>infinite (&gt;4096)</td><td>512 (saturated)</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td></tr><tr><td>zeta_8</td><td>24 (9 null)</td><td>13</td><td>36 (14 cells)</td><td>6 (Sec8×Vor, 112 cells)</td><td>0 (wall)</td><td>0 (wall)</td><td>XOR6 (<a href="./entries/demo_83.html">D83</a>)</td></tr><tr><td>zeta_10</td><td>infinite (&gt;4096)</td><td>512 (saturated, 71 angles)</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td></tr><tr><td>zeta_12</td><td>infinite (&gt;4096, 121 null)</td><td>512 (saturated)</td><td>1024+</td><td>1024+</td><td>124</td><td>50+</td><td>XOR10 (<a href="./entries/demo_83.html">D83</a>)</td></tr><tr><td>2I</td><td>60 (mod sign)</td><td>31</td><td>74.8% (384 cells)</td><td>—</td><td>—</td><td>—</td><td>—</td></tr><tr><td>zeta_16</td><td>7,952</td><td>3,457</td><td>499,367 (90.6%)</td><td>—</td><td>—</td><td>—</td><td>—</td></tr><tr><td>zeta_32</td><td>32,768+</td><td>4,096+</td><td>493,654 (89.6%)</td><td>—</td><td>—</td><td>—</td><td>—</td></tr></tbody></table>
-<h3>DKC XOR Capacity Scaling (ζ₁₂, Demos 81-82)</h3>
+<h3>DKC XOR Capacity Scaling (ζ₁₂, <a href="./entries/demo_81.html">Demos 81</a>-<a href="./entries/demo_82.html">82</a>)</h3>
 <table><thead><tr><th>XOR Level</th><th>Catalog Size</th><th>Closure Round</th><th>Directions</th><th>Half-Angles</th><th>Linear Depth</th></tr></thead><tbody><tr><td>XOR6</td><td>~5</td><td>0</td><td>2</td><td>2</td><td>depth 0</td></tr><tr><td>XOR8</td><td>~51</td><td>2</td><td>22</td><td>6</td><td>depth 2</td></tr><tr><td>XOR10</td><td>~275</td><td>4</td><td>114</td><td>12</td><td>depth 4</td></tr><tr><td>XOR12</td><td>~1140</td><td>6</td><td>507</td><td>21</td><td>depth 6</td></tr><tr><td>XOR14 (predicted)</td><td>~38,000</td><td>~11</td><td>—</td><td>—</td><td>depth ~8</td></tr></tbody></table>
 <p>Scaling law: max_xor ≈ 0.62 × log₂(catalog_size) + 4.6 (logarithmic) ≡ depth + 6 (linear, since catalog grows as ~2^depth).</p>
-<h3>Multi-Strand Matrix DKC Scaling (Demos 102-105)</h3>
+<h3>Multi-Strand Matrix DKC Scaling (<a href="./entries/demo_102.html">Demos 102</a>-<a href="./entries/demo_105.html">105</a>)</h3>
 <table><thead><tr><th>n (strands)</th><th>Demo</th><th>Module</th><th>dim</th><th>Generators</th><th>BFS growth</th><th>XOR capacity notes</th></tr></thead><tbody><tr><td>3</td><td><a href="./entries/demo_98.html">D98</a>/<a href="./entries/demo_99.html">D99</a></td><td>Delta_1</td><td>2</td><td>4</td><td>~2.2x</td><td>XOR14=60 (non-semisimple)</td></tr><tr><td>4</td><td><a href="./entries/demo_100.html">D100</a></td><td>W_{4,2}</td><td>3</td><td>6</td><td>~3.1x</td><td>XOR14=70 (non-semisimple)</td></tr><tr><td>5</td><td><a href="./entries/demo_101.html">D101</a></td><td>W_{5,3}</td><td>4</td><td>8</td><td>~4.0x</td><td>XOR14=0 (simple, ceiling)</td></tr><tr><td>6</td><td><a href="./entries/demo_102.html">D102</a></td><td>W_{6,0}</td><td>5</td><td>10</td><td>~5.0x</td><td>XOR10=1 (simple)</td></tr><tr><td>6</td><td><a href="./entries/demo_102.html">D102</a></td><td>W_{6,4}</td><td>5</td><td>10</td><td>~5.0x</td><td>XOR10=0 (non-simple, radical=1)</td></tr><tr><td>6</td><td><a href="./entries/demo_103.html">D103</a></td><td>W_{6,2}</td><td>9</td><td>10</td><td>~5.0x</td><td>XOR10=0 (simple, curse of dim)</td></tr><tr><td>8</td><td><a href="./entries/demo_105.html">D105</a></td><td>W_{8,0}</td><td>14</td><td>14</td><td>~7x</td><td>XOR8=22266 at k=4096</td></tr><tr><td>8</td><td><a href="./entries/demo_105.html">D105</a></td><td>W_{8,2}</td><td>28</td><td>14</td><td>—</td><td>Within-block &gt; cross-block</td></tr></tbody></table>
 <p>Confirmed: BFS growth rate = n-1 (sl_{n-1} thesis). Growth is a braid group invariant, not a module property.</p>
 <h3>Rank Saturation Summary (<a href="./entries/demo_105.html">Demo 105</a> retroactive, all modules)</h3>
@@ -2475,7 +2475,7 @@ Every new computation method is cross-validated against prior oracles:
 <li><strong>Notes</strong>: Pattern used throughout the multi-strand DKC arc. Extended in <a href="./entries/demo_103.html">D103</a>/<a href="./entries/demo_104.html">D104</a> for subset-hash activation ablation studies.</li>
 </ul>
 <p>---</p>
-<h2>30. Variable-Dimension Matrix and Activation Architecture (Demos 103-104)</h2>
+<h2>30. Variable-Dimension Matrix and Activation Architecture (<a href="./entries/demo_103.html">Demos 103</a>-<a href="./entries/demo_104.html">104</a>)</h2>
 <h3>30.1 Variable-Dimension MatN Type</h3>
 <ul>
 <li><strong>What it does</strong>: Generic NxN matrix type (MAX_DIM=9) with runtime dimension <code>g_dim</code> controlling active size. Enables the same codebase to handle both 5x5 and 9x9 matrices (and potentially any dim up to 9) without code duplication.</li>
@@ -2770,11 +2770,11 @@ Every new computation method is cross-validated against prior oracles:
 <li><strong>Notes</strong>: Produces 56 distinct Z[zeta_16] values matching <a href="./entries/demo_55.html">D55</a>, all confirmed Z[i]-axial. The 9,334 parity solutions (XNOR3 at Re&gt;0 activation) also match <a href="./entries/demo_55.html">D55</a>.</li>
 </ul>
 <p>---</p>
-<h3>Multi-Strand Matrix DKC Architecture (Demos 102-105)</h3>
-<p>Demos 102-105 follow a consistent pattern extending the multi-strand DKC framework: 1. Construct TL_n generators as integer matrices on the standard module W_{n,j} 2. Build braid generators via sigma_i = A<em>I + A^{-1}</em>e_i in Z[zeta_8] 3. BFS catalog with FNV hash dedup, cap at 32768 entries 4. Sign-hash activation (ternary {-1,0,+1} per Cyc8 component, base-3 polynomial hash) 5. XOR search with k-parameter sweep 6. Verify: e_i^2=0, Jones-Wenzl relations, far commutativity, braid relations, Hecke relations</p>
+<h3>Multi-Strand Matrix DKC Architecture (<a href="./entries/demo_102.html">Demos 102</a>-<a href="./entries/demo_105.html">105</a>)</h3>
+<p><a href="./entries/demo_102.html">Demos 102</a>-<a href="./entries/demo_105.html">105</a> follow a consistent pattern extending the multi-strand DKC framework: 1. Construct TL_n generators as integer matrices on the standard module W_{n,j} 2. Build braid generators via sigma_i = A<em>I + A^{-1}</em>e_i in Z[zeta_8] 3. BFS catalog with FNV hash dedup, cap at 32768 entries 4. Sign-hash activation (ternary {-1,0,+1} per Cyc8 component, base-3 polynomial hash) 5. XOR search with k-parameter sweep 6. Verify: e_i^2=0, Jones-Wenzl relations, far commutativity, braid relations, Hecke relations</p>
 <p>Key architectural transitions across the arc: <ul> <li><strong><a href="./entries/demo_102.html">D102</a></strong>: Fixed Mat5 type (dim=5 only), two separate module constructors for A/B comparison</li> <li><strong><a href="./entries/demo_103.html">D103</a></strong>: Variable MatN type (runtime g_dim), switchable activation function pointer, subset-hash activation variants</li> <li><strong><a href="./entries/demo_104.html">D104</a></strong>: Configurable-coarseness activation (variable component count), streaming rank computation, multi-hash tests</li> <li><strong><a href="./entries/demo_105.html">D105</a></strong>: Extended to 8-strand (dim=14, dim=28), j=2 link state enumeration, rank saturation methodology</li> </ul>
-<h3>Raqiya-Based Graph Analysis Arc (Demos 107-109)</h3>
-<p>Demos 107-109 follow a consistent pattern for algebraic graph analysis: 1. Build bracket catalog at specific evaluation level (delta=0 or delta=sqrt(2)) 2. Collect distinct algebraic values (Z[zeta_8] or Z[zeta_16]) 3. Classify values into parity-capable and non-parity vocabularies 4. Run Raqiya graph analysis (or custom 8-edge-type analysis) on each vocabulary 5. Compare graph structure between vocabularies to identify discriminators</p>
+<h3>Raqiya-Based Graph Analysis Arc (<a href="./entries/demo_107.html">Demos 107</a>-<a href="./entries/demo_109.html">109</a>)</h3>
+<p><a href="./entries/demo_107.html">Demos 107</a>-<a href="./entries/demo_109.html">109</a> follow a consistent pattern for algebraic graph analysis: 1. Build bracket catalog at specific evaluation level (delta=0 or delta=sqrt(2)) 2. Collect distinct algebraic values (Z[zeta_8] or Z[zeta_16]) 3. Classify values into parity-capable and non-parity vocabularies 4. Run Raqiya graph analysis (or custom 8-edge-type analysis) on each vocabulary 5. Compare graph structure between vocabularies to identify discriminators</p>
 <p>Key progression: <ul> <li><strong><a href="./entries/demo_107.html">D107</a></strong>: Establishes Raqiya toolkit, discovers universal axis-alignment theorem, nesting parity Z/2Z grading, major index bipartite invariant, q-Catalan identity</li> <li><strong><a href="./entries/demo_108.html">D108</a></strong>: Raqiya comparison mode reveals Dual-Channel Theorem — parity needs BOTH product closure AND v_2 connectivity; poison fails on BOTH</li> <li><strong><a href="./entries/demo_109.html">D109</a></strong>: Encoding-dependent refinement — at delta=sqrt(2) with multiplicative encoding, product closure polarity INVERTS (parity wants LOW, non-parity has HIGH); 7/8 edge types identical, breaking the discriminator count from <a href="./entries/demo_108.html">D108</a>'s multiple to <a href="./entries/demo_109.html">D109</a>'s sole product closure</li> </ul>
 <h3>Topological Entropy Null Result (<a href="./entries/demo_106.html">Demo 106</a>)</h3>
 <p><a href="./entries/demo_106.html">Demo 106</a> establishes that topological entropy (Thurston-Nielsen classification) is completely orthogonal to DKC Boolean computation. The TL visibility filter explains why: writhe survives the TL quotient (correlates with DKC output per <a href="./entries/demo_83.html">D83</a>), entropy does NOT (e_i^2=0 kills expanding eigenvalues). The dual BFS with parallel TL+Burau representations is the architectural pattern enabling this analysis.</p>

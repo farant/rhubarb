@@ -37,7 +37,7 @@ Everything computational is complex doubles. The bracket itself is computed as <
 <h2>Exactification Opportunities</h2>
 <p>Three levels of difficulty for eliminating remaining FP:</p>
 <h3>Easy: Remove VALIDATION FP</h3>
-Demos 29, 35, 51-54, 72, 85 use FP only to cross-check exact results. The FP could be removed entirely without affecting any result. The Gaussian elimination in <a href="./entries/demo_51.html">D51</a>-<a href="./entries/demo_52.html">52</a> and <a href="./entries/demo_85.html">D85</a> could use exact rational arithmetic (integer num/denom pairs).
+<a href="./entries/demo_29.html">Demos 29</a>, 35, 51-54, 72, 85 use FP only to cross-check exact results. The FP could be removed entirely without affecting any result. The Gaussian elimination in <a href="./entries/demo_51.html">D51</a>-<a href="./entries/demo_52.html">52</a> and <a href="./entries/demo_85.html">D85</a> could use exact rational arithmetic (integer num/denom pairs).
 <h3>Medium: Exact sector classification</h3>
 The activation functions in <a href="./entries/demo_45.html">D45</a>-<a href="./entries/demo_65.html">D65</a> use atan2 to determine which angular sector a cyclotomic integer falls in. But for Z[zeta_8] values, the sector boundaries at multiples of pi/4 align with the ring structure. You can determine which octant a cyclotomic integer (a + b<em>zeta_8 + c</em>zeta_8^2 + d*zeta_8^3) falls in purely from the integer coefficients — no trig needed. This would make the entire DKC pipeline from bracket to Boolean output fully exact.
 <h3>Hard: Exact S2 geometry</h3>

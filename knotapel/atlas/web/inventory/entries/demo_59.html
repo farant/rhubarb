@@ -17,7 +17,7 @@
 <li><strong>Status</strong>: COMPLETE</li>
 <li><strong>File</strong>: <code><a href="../../demo_59_q3_potts_dkc/main.c.html">demo_59_q3_potts_dkc/main.c</a></code> (~1496 lines)</li>
 <li><strong>Tests</strong>: ~15+ pass (Part A: zeta_24^24=1, zeta_24^12=-1, A*A^{-1}=1, A^24=1, delta=-A^2-A^{-2}, delta real and =sqrt(3), delta^2=3, delta^3 mul==formula, catalog &gt;=20 values, &gt;=2 basis coords used; Part B: additive even-only check, 2-input mult &gt;=8; Part C: NPN=13; Part E: Re&gt;0+mult &gt;=11, additive Re&gt;0 limited; Part F: complement symmetry, theta=0 matches Re&gt;0)</li>
-<li><strong>Depends on</strong>: <a href="./demo_55.html">Demo 55</a>/57/58 (planar matching + diagram operations, prior ell values), <a href="./demo_54.html">Demo 54</a> (DKC at ell=4, Z[zeta_16], 11/13 Re&gt;0 wall), <a href="./demo_56.html">Demo 56</a> (DKC at ell=5, Z[zeta_5]), Demos 48-50 (DKC at ell=∞/delta=0)</li>
+<li><strong>Depends on</strong>: <a href="./demo_55.html">Demo 55</a>/57/58 (planar matching + diagram operations, prior ell values), <a href="./demo_54.html">Demo 54</a> (DKC at ell=4, Z[zeta_16], 11/13 Re&gt;0 wall), <a href="./demo_56.html">Demo 56</a> (DKC at ell=5, Z[zeta_5]), <a href="./demo_48.html">Demos 48</a>-<a href="./demo_50.html">50</a> (DKC at ell=∞/delta=0)</li>
 <li><strong>Feeds into</strong>: cross-ell comparison of the 11/13 Re&gt;0 wall; confirms wall is universal across evaluation levels; rotated half-plane sweep reveals orientation-dependent reachability</li>
 </ul>
 <h3>Headline</h3>
@@ -61,7 +61,7 @@ Third independent verification of the 11/13 Re&gt;0 wall: at ell=6 (Q=3 Potts mo
 <li><code>Cyc24</code> type: exact Z[zeta_24] cyclotomic arithmetic (8-component, Phi_24 reduction zeta^8=zeta^4-1); <code>cyc24_zero/one/add/neg/mul/eq/is_zero/to_cx/print</code></li>
 <li><code>A_table[24]</code>: precomputed A^k values for k=0..23; <code>cyc24_a_power()</code> with mod-24 lookup</li>
 <li><code>cyc24_delta_power()</code>: exact delta^k using delta^2=3 (even→3^m integer, odd→3^m*sqrt(3))</li>
-<li><code>PlanarMatch</code> / diagram operations: <code>make_identity_diagram()</code>, <code>make_generator_diagram()</code>, <code>compose_diagrams()</code>, <code>trace_closure_loops()</code> — shared topology-independent code from Demos 55/57/58</li>
+<li><code>PlanarMatch</code> / diagram operations: <code>make_identity_diagram()</code>, <code>make_generator_diagram()</code>, <code>compose_diagrams()</code>, <code>trace_closure_loops()</code> — shared topology-independent code from <a href="./demo_55.html">Demos 55</a>/57/58</li>
 <li><code>BraidCrossing</code> + <code>state_sum_bracket()</code>: state-sum bracket at ell=6 with Cyc24 weights</li>
 <li><code>decode_braid()</code>: integer index → crossing sequence</li>
 <li><code>build_catalog()</code>: enumerates 2-4 strand braids, stores distinct nonzero Cyc24 values + precomputed Cx doubles</li>
@@ -69,7 +69,7 @@ Third independent verification of the 11/13 Re&gt;0 wall: at ell=6 (Q=3 Potts mo
 <li><code>split_sigmoid_classify()</code>: smooth XOR of Re/Im sigmoids at threshold 0.5</li>
 <li><code>sector_classify()</code>: k-sector angular classification (sector mod 2)</li>
 <li><code>magnitude_classify()</code>: |z| &gt; tau threshold</li>
-<li>NPN classification: <code>npn_transform()</code>, <code>npn_init()</code>, <code>npn_build_classes()</code>, <code>npn_canon[256]</code> — same as Demos 48-50</li>
+<li>NPN classification: <code>npn_transform()</code>, <code>npn_init()</code>, <code>npn_build_classes()</code>, <code>npn_canon[256]</code> — same as <a href="./demo_48.html">Demos 48</a>-<a href="./demo_50.html">50</a></li>
 <li><code>search_3input_batch()</code>: batch search over catalog^3 triples with both multiplicative and additive encoding, all 8 activations simultaneously; aggregates per NPN class</li>
 <li><code>fn2_name()</code> / <code>fn3_name()</code>: truth table → human-readable function names (16 2-input, 15 3-input named functions)</li>
 <li>Part F rotated sweep: 24-angle sigma_theta with precomputed cos/sin, multiplicative encoding, complement symmetry verification</li>

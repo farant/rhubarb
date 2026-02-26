@@ -315,7 +315,7 @@ Constructs scaled Jones-Wenzl idempotents p_2 (4x4) and p_3 (8x8) over Laurent p
 <li><strong>Status</strong>: COMPLETE</li>
 <li><strong>File</strong>: <code><a href="../demo_07_braid_closure/main.c.html">demo_07_braid_closure/main.c</a></code> (~791 lines)</li>
 <li><strong>Tests</strong>: 25/25 pass (compiles clean with all strict flags including -Werror)</li>
-<li><strong>Depends on</strong>: <a href="./entries/demo_01.html">Demo 01</a> (PD notation + state-sum bracket), <a href="./entries/demo_02.html">Demo 02</a> (braid bracket via state-sum), Demos 02-06 (matrix pipeline context)</li>
+<li><strong>Depends on</strong>: <a href="./entries/demo_01.html">Demo 01</a> (PD notation + state-sum bracket), <a href="./entries/demo_02.html">Demo 02</a> (braid bracket via state-sum), <a href="./entries/demo_02.html">Demos 02</a>-<a href="./entries/demo_06.html">06</a> (matrix pipeline context)</li>
 <li><strong>Feeds into</strong>: <a href="./entries/demo_08.html">Demo 08</a> (reverse direction: PD -&gt; braid word via Vogel's algorithm)</li>
 </ul>
 <h3>Headline</h3>
@@ -1124,7 +1124,7 @@ Maps the error landscape of braid-based Boolean logic as delta moves away from z
 <li><strong>Status</strong>: COMPLETE</li>
 <li><strong>File</strong>: <code><a href="../demo_21_reversible_gates/main.c.html">demo_21_reversible_gates/main.c</a></code> (~858 lines)</li>
 <li><strong>Tests</strong>: 6/6 pass (expected)</li>
-<li><strong>Depends on</strong>: Demos 18-20 (complex arithmetic, state-sum bracket, expression tree compiler with NOT/NAND gates), <a href="./entries/demo_10.html">Demo 10</a>-<a href="./entries/demo_13.html">13</a> (braid bracket oracle)</li>
+<li><strong>Depends on</strong>: <a href="./entries/demo_18.html">Demos 18</a>-<a href="./entries/demo_20.html">20</a> (complex arithmetic, state-sum bracket, expression tree compiler with NOT/NAND gates), <a href="./entries/demo_10.html">Demo 10</a>-<a href="./entries/demo_13.html">13</a> (braid bracket oracle)</li>
 <li><strong>Feeds into</strong>: Further reversible/quantum circuit exploration; multi-readout closure technique potentially novel</li>
 </ul>
 <h3>Headline</h3>
@@ -2242,7 +2242,7 @@ Tests the neglecton prediction — radical elements of TL_4 at delta=0 extracted
 <li><code>build_combined_catalog()</code>: merges standard + neglecton catalogs with source tags (SRC_STD, SRC_NEG, SRC_BOTH)</li>
 <li>Angle analysis: checks whether neglecton-only values introduce genuinely new angles vs existing standard catalog</li>
 <li><code>npn_transform()</code>, <code>npn_init()</code>, <code>npn_build_classes()</code>: NPN classification from <a href="./entries/demo_48.html">Demo 48</a></li>
-<li><code>split_sigmoid()</code>: smooth XOR of real/imaginary sigmoid outputs (same as Demos 48, 50)</li>
+<li><code>split_sigmoid()</code>: smooth XOR of real/imaginary sigmoid outputs (same as <a href="./entries/demo_48.html">Demos 48</a>, 50)</li>
 <li><code>parity_dist_lut[]</code>: Hamming distance to parity (0x69/0x96) lookup table</li>
 <li><code>Quartet</code> struct + <code>parity_examples[]</code>: tracks weight indices for parity solutions with source classification</li>
 <li><code>spearman_rho()</code> with <code>assign_ranks()</code>: rank correlation with tie handling</li>
@@ -2568,7 +2568,7 @@ Explores the Kauffman bracket at delta=1 (A = omega = e^{i*2pi/3}, cube root of 
 <li><strong>Status</strong>: COMPLETE</li>
 <li><strong>File</strong>: <code><a href="../demo_54_dkc_l4/main.c.html">demo_54_dkc_l4/main.c</a></code> (~1857 lines)</li>
 <li><strong>Tests</strong>: ~40+ pass (Part A: 20 Z[zeta_16] arithmetic sanity checks; Part B: 5 Catalan number checks + identity presence; Part C: ~10 TL relation checks at n=2,3,4 including e_i^2=delta<em>e_i, e_i</em>e_j*e_i=e_i, far commutativity; Part D: ~5 braid generator inverse/relation checks; Part E: braid word evaluation checks; Part F: ~6 cross-validation checks matrix vs state-sum for Hopf, trefoil, figure-eight, 4-strand braids)</li>
-<li><strong>Depends on</strong>: <a href="./entries/demo_53.html">Demo 53</a> (TL at ell=3/delta=1, planar matching enumeration), <a href="./entries/demo_35.html">Demo 35</a> (original TL matrix framework), Demos 48-50 (DKC at delta=0, parity wall context)</li>
+<li><strong>Depends on</strong>: <a href="./entries/demo_53.html">Demo 53</a> (TL at ell=3/delta=1, planar matching enumeration), <a href="./entries/demo_35.html">Demo 35</a> (original TL matrix framework), <a href="./entries/demo_48.html">Demos 48</a>-<a href="./entries/demo_50.html">50</a> (DKC at delta=0, parity wall context)</li>
 <li><strong>Feeds into</strong>: DKC analysis at non-zero delta; tests whether delta=0 phenomena (axiality, entanglement vanishing, compression) generalize or are regime-specific</li>
 </ul>
 <h3>Headline</h3>
@@ -2656,7 +2656,7 @@ Two-source hypothesis test: constructs exact Z[zeta_16] cyclotomic arithmetic (8
 <li><strong>Feeds into</strong>: Understanding Boolean computability at non-zero delta; multiplicative vs additive DKC encoding comparison; ell-parameterized DKC theory</li>
 </ul>
 <h3>Headline</h3>
-Searches for Boolean functions computable by DKC neurons at ell=4 (delta=sqrt(2)) using multiplicative encoding (z = w1^x1 <em> w2^x2 </em> w3^x3) across five activation function families, comparing the achievable function landscape to delta=0 results from Demos 48-50.
+Searches for Boolean functions computable by DKC neurons at ell=4 (delta=sqrt(2)) using multiplicative encoding (z = w1^x1 <em> w2^x2 </em> w3^x3) across five activation function families, comparing the achievable function landscape to delta=0 results from <a href="./entries/demo_48.html">Demos 48</a>-<a href="./entries/demo_50.html">50</a>.
 <h3>Key Results</h3>
 <ul>
 <li><strong>Part A (Catalog)</strong>: State-sum bracket catalog built at delta=sqrt(2) using Z[zeta_16] exact arithmetic (A = zeta_16^5); enumerates n=2 (len 1-10), n=3 (len 1-6), n=4 (len 1-6); all values confirmed 100% Z[i]-axial; algebraic identities verified (A * A^{-1} = 1, delta^2 = 2)</li>
@@ -2668,7 +2668,7 @@ Searches for Boolean functions computable by DKC neurons at ell=4 (delta=sqrt(2)
 <ul>
 <li><strong>Multiplicative encoding</strong>: z(x) = w1^x1 <em> w2^x2 </em> ... * wn^xn (product of weights raised to binary input powers) is a natural encoding for delta != 0 because bracket values at non-zero delta have multiplicative structure (delta^k scaling)</li>
 <li><strong>Z[i]-axiality at delta=sqrt(2)</strong>: Every bracket value equals (a+bi) * zeta_16^c for some Gaussian integer a+bi and power c — confirmed by <a href="./entries/demo_54.html">Demo 54</a>, verified here in catalog construction</li>
-<li><strong>Encoding comparison caveat</strong>: Delta=0 (Demos 48-50) used additive encoding (z = sum wi*xi); delta=sqrt(2) uses multiplicative encoding — not directly comparable, but structural parallels in reachability hierarchy are informative</li>
+<li><strong>Encoding comparison caveat</strong>: Delta=0 (<a href="./entries/demo_48.html">Demos 48</a>-<a href="./entries/demo_50.html">50</a>) used additive encoding (z = sum wi*xi); delta=sqrt(2) uses multiplicative encoding — not directly comparable, but structural parallels in reachability hierarchy are informative</li>
 <li><strong>Bit 0 is fixed</strong>: Under multiplicative encoding, (0,...,0) → z = 1 always, so bit 0 of the truth table is determined by the activation function's classification of z=1 (not a free parameter)</li>
 </ul>
 <h3>Data</h3>
@@ -2932,7 +2932,7 @@ Tests DKC at the Fibonacci anyon level ell=5 where delta=phi=(1+sqrt(5))/2 (gold
 <li><strong>Status</strong>: COMPLETE</li>
 <li><strong>File</strong>: <code><a href="../demo_59_q3_potts_dkc/main.c.html">demo_59_q3_potts_dkc/main.c</a></code> (~1496 lines)</li>
 <li><strong>Tests</strong>: ~15+ pass (Part A: zeta_24^24=1, zeta_24^12=-1, A*A^{-1}=1, A^24=1, delta=-A^2-A^{-2}, delta real and =sqrt(3), delta^2=3, delta^3 mul==formula, catalog &gt;=20 values, &gt;=2 basis coords used; Part B: additive even-only check, 2-input mult &gt;=8; Part C: NPN=13; Part E: Re&gt;0+mult &gt;=11, additive Re&gt;0 limited; Part F: complement symmetry, theta=0 matches Re&gt;0)</li>
-<li><strong>Depends on</strong>: <a href="./entries/demo_55.html">Demo 55</a>/57/58 (planar matching + diagram operations, prior ell values), <a href="./entries/demo_54.html">Demo 54</a> (DKC at ell=4, Z[zeta_16], 11/13 Re&gt;0 wall), <a href="./entries/demo_56.html">Demo 56</a> (DKC at ell=5, Z[zeta_5]), Demos 48-50 (DKC at ell=∞/delta=0)</li>
+<li><strong>Depends on</strong>: <a href="./entries/demo_55.html">Demo 55</a>/57/58 (planar matching + diagram operations, prior ell values), <a href="./entries/demo_54.html">Demo 54</a> (DKC at ell=4, Z[zeta_16], 11/13 Re&gt;0 wall), <a href="./entries/demo_56.html">Demo 56</a> (DKC at ell=5, Z[zeta_5]), <a href="./entries/demo_48.html">Demos 48</a>-<a href="./entries/demo_50.html">50</a> (DKC at ell=∞/delta=0)</li>
 <li><strong>Feeds into</strong>: cross-ell comparison of the 11/13 Re&gt;0 wall; confirms wall is universal across evaluation levels; rotated half-plane sweep reveals orientation-dependent reachability</li>
 </ul>
 <h3>Headline</h3>
@@ -2976,7 +2976,7 @@ Third independent verification of the 11/13 Re&gt;0 wall: at ell=6 (Q=3 Potts mo
 <li><code>Cyc24</code> type: exact Z[zeta_24] cyclotomic arithmetic (8-component, Phi_24 reduction zeta^8=zeta^4-1); <code>cyc24_zero/one/add/neg/mul/eq/is_zero/to_cx/print</code></li>
 <li><code>A_table[24]</code>: precomputed A^k values for k=0..23; <code>cyc24_a_power()</code> with mod-24 lookup</li>
 <li><code>cyc24_delta_power()</code>: exact delta^k using delta^2=3 (even→3^m integer, odd→3^m*sqrt(3))</li>
-<li><code>PlanarMatch</code> / diagram operations: <code>make_identity_diagram()</code>, <code>make_generator_diagram()</code>, <code>compose_diagrams()</code>, <code>trace_closure_loops()</code> — shared topology-independent code from Demos 55/57/58</li>
+<li><code>PlanarMatch</code> / diagram operations: <code>make_identity_diagram()</code>, <code>make_generator_diagram()</code>, <code>compose_diagrams()</code>, <code>trace_closure_loops()</code> — shared topology-independent code from <a href="./entries/demo_55.html">Demos 55</a>/57/58</li>
 <li><code>BraidCrossing</code> + <code>state_sum_bracket()</code>: state-sum bracket at ell=6 with Cyc24 weights</li>
 <li><code>decode_braid()</code>: integer index → crossing sequence</li>
 <li><code>build_catalog()</code>: enumerates 2-4 strand braids, stores distinct nonzero Cyc24 values + precomputed Cx doubles</li>
@@ -2984,7 +2984,7 @@ Third independent verification of the 11/13 Re&gt;0 wall: at ell=6 (Q=3 Potts mo
 <li><code>split_sigmoid_classify()</code>: smooth XOR of Re/Im sigmoids at threshold 0.5</li>
 <li><code>sector_classify()</code>: k-sector angular classification (sector mod 2)</li>
 <li><code>magnitude_classify()</code>: |z| &gt; tau threshold</li>
-<li>NPN classification: <code>npn_transform()</code>, <code>npn_init()</code>, <code>npn_build_classes()</code>, <code>npn_canon[256]</code> — same as Demos 48-50</li>
+<li>NPN classification: <code>npn_transform()</code>, <code>npn_init()</code>, <code>npn_build_classes()</code>, <code>npn_canon[256]</code> — same as <a href="./entries/demo_48.html">Demos 48</a>-<a href="./entries/demo_50.html">50</a></li>
 <li><code>search_3input_batch()</code>: batch search over catalog^3 triples with both multiplicative and additive encoding, all 8 activations simultaneously; aggregates per NPN class</li>
 <li><code>fn2_name()</code> / <code>fn3_name()</code>: truth table → human-readable function names (16 2-input, 15 3-input named functions)</li>
 <li>Part F rotated sweep: 24-angle sigma_theta with precomputed cos/sin, multiplicative encoding, complement symmetry verification</li>
@@ -3468,7 +3468,7 @@ Lifting the Kauffman bracket from S¹ (complex trace) to S³ (full unit quaterni
 <li>Coxeter (1940s): 24-cell as unique self-dual regular 4-polytope; F4 symmetry group.</li>
 <li>Conway &amp; Sloane (SPLAG): binary octahedral group as 48-element group of unit quaternions.</li>
 <li>Aizenberg (2008): k-sector MVN activation; parent of DKC sector count framework.</li>
-<li>Demos 29, 50, 63, 65: Z[ζ₈] bracket catalog, four-tier NPN hierarchy, sector-octant geometry, S¹ complex XOR results.</li>
+<li><a href="./entries/demo_29.html">Demos 29</a>, 50, 63, 65: Z[ζ₈] bracket catalog, four-tier NPN hierarchy, sector-octant geometry, S¹ complex XOR results.</li>
 </ul>
 <h3>Open Questions</h3>
 <ul>
@@ -4313,7 +4313,7 @@ XOR10 = 0 winners at ζ₈, confirmed by both recursive search (120 candidates) 
 <ul>
 <li><strong>ADE classification of finite SU(2) subgroups</strong>: ζ₈ maps to binary octahedral (E₇, order 48). The finiteness observation connects to the complete ADE classification surveyed in <a href="./entries/demo_80.html">Demo 80</a>.</li>
 <li><strong>Kuperberg #P-hardness</strong>: his result applies at non-lattice roots of unity; our finite groups (ζ₄, ζ₈) are lattice roots where computation is tractable. The infinite-group roots correspond to the #P-hard regime.</li>
-<li><strong>Habiro (2002) / Z[ζ₈] bracket</strong>: the 24-element ζ₈ group is the algebraic substrate underlying the bracket computations from Demos 26–29. The finiteness of this group explains the capacity ceiling observed in the forward DKC arc.</li>
+<li><strong>Habiro (2002) / Z[ζ₈] bracket</strong>: the 24-element ζ₈ group is the algebraic substrate underlying the bracket computations from <a href="./entries/demo_26.html">Demos 26</a>–<a href="./entries/demo_29.html">29</a>. The finiteness of this group explains the capacity ceiling observed in the forward DKC arc.</li>
 <li><strong>Nazer &amp; Gastpar (2011)</strong>: infinite group → unbounded combinatorial space → potentially unlimited compute-and-forward capacity.</li>
 </ul>
 <h3>Open Questions</h3>
@@ -4380,7 +4380,7 @@ Only ζ₄ and ζ₈ generate finite SU(2) subgroups under the standard two-gene
 <li><strong>Kuperberg (1994, 1996) #P-hardness of Jones polynomial</strong>: hardness applies at non-lattice roots of unity; the lattice roots ζ₄ and ζ₈ where [2]_q ∈ {-2, 0} are exactly our finite cases and the tractable computational regime.</li>
 <li><strong>Witten-Reshetikhin-Turaev TQFT</strong>: the finite subgroups of SU(2) are the building blocks of WRT invariants; the ADE classification connects to the Dynkin diagram structure of the relevant quantum groups.</li>
 <li><strong>Fibonacci anyons / topological quantum computation</strong>: ζ₁₀ (angle π/5, golden ratio) is the relevant parameter for Fibonacci anyons and universal quantum computation via braiding. Our finding that ζ₁₀ generates an infinite group is consistent with its use in quantum computation: the infinite group provides universal coverage of SU(2).</li>
-<li><strong>Habiro (2002)</strong>: the Z[ζ₈] bracket from the DKC arc lives at the ζ₈ = E₇ point; the finiteness of this group is the algebraic foundation of the finite capacity ceiling demonstrated in Demos 76–78.</li>
+<li><strong>Habiro (2002)</strong>: the Z[ζ₈] bracket from the DKC arc lives at the ζ₈ = E₇ point; the finiteness of this group is the algebraic foundation of the finite capacity ceiling demonstrated in <a href="./entries/demo_76.html">Demos 76</a>–<a href="./entries/demo_78.html">78</a>.</li>
 </ul>
 <h3>Open Questions</h3>
 <ul>
@@ -4660,7 +4660,7 @@ Bracket-null entries (Re(q)=0, Kauffman trace vanishes) are not computational de
 <h3>Literature Touched</h3>
 <ul>
 <li><strong>Gurarie (1993) / Flohr (1996) / Gaberdiel &amp; Kausch (1996)</strong>: Logarithmic CFT — null states paired with logarithmic partners via Jordan-cell L₀ action. The null entries here (Re(q)=0, trace=0) are the DKC analog of LCFT null states; their logarithmic partners carry the computational content through the Jordan-cell coupling.</li>
-<li><strong>Habiro (2002) / Z[ζ₈] bracket</strong>: the 24-element ζ₈ catalog is the algebraic substrate established in Demos 26–29; <a href="./entries/demo_84.html">Demo 84</a> shows that 9/24 of those entries are bracket-null, revealing previously invisible structure within this established catalog.</li>
+<li><strong>Habiro (2002) / Z[ζ₈] bracket</strong>: the 24-element ζ₈ catalog is the algebraic substrate established in <a href="./entries/demo_26.html">Demos 26</a>–<a href="./entries/demo_29.html">29</a>; <a href="./entries/demo_84.html">Demo 84</a> shows that 9/24 of those entries are bracket-null, revealing previously invisible structure within this established catalog.</li>
 <li><strong>Aizenberg (2008)</strong>: k-sector MVN activation; the k_sec sweep in Part C.4 decomposes S¹ (angular) vs S² (directional) contributions to XOR capacity, extending the sector framework to a null/non-null anatomy.</li>
 <li><strong>Jaeger, Vertigan &amp; Welsh (1990) / Kuperberg (2015)</strong>: #P-hardness of Jones polynomial; null states correspond to the algebraically simplest (zero-trace) representations, yet their geometric contribution is essential — hardness lives in the interplay of null and non-null structure.</li>
 <li><strong>Reservoir Computing (Jaeger 2001, Maass et al. 2002)</strong>: echo state networks / liquid state machines; the null-state separation-property argument directly parallels the RC requirement that reservoir null states maintain the high-dimensional manifold enabling linear readout.</li>
