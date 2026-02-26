@@ -12,13 +12,13 @@
 </head>
 <body>
     <nav><a href="../../index.html">← Back to Index</a></nav><hr>
-    <h2>Demo 103: Pure Dimension Scaling Test -- W_{6,0} vs W_{6,2}</h2>
+    <h2><a href="./demo_103.html">Demo 103</a>: Pure Dimension Scaling Test -- W_{6,0} vs W_{6,2}</h2>
 <ul>
 <li><strong>Status</strong>: COMPLETE</li>
 <li><strong>File</strong>: <code><a href="../../demo_103_dimension_scaling/main.c.html">demo_103_dimension_scaling/main.c</a></code> (~1663 lines)</li>
 <li><strong>Tests</strong>: 76 pass, 2 fail (Phases 0-7; the 2 failures are intentional diagnostic checks -- 0 super-hubs found at the &gt;33% threshold for both modules)</li>
-<li><strong>Depends on</strong>: Demo 100 (4-strand DKC on W_{4,2}, hub anatomy methodology, Casimir-XOR framework), Demo 101 (5-strand DKC on W_{5,3}, sl_d functor thesis, growth rate prediction), Demo 102 (W_{6,0} vs W_{6,4} radical A/B test, writhe character, identical BFS trees across n=6 modules)</li>
-<li><strong>Feeds into</strong>: Demo 104 (activation coarseness sweep, reuses <a href="./demo_103.html">D103</a> catalogs), Demo 105+ (higher-strand scaling, effective dimension hypothesis)</li>
+<li><strong>Depends on</strong>: <a href="./demo_100.html">Demo 100</a> (4-strand DKC on W_{4,2}, hub anatomy methodology, Casimir-XOR framework), <a href="./demo_101.html">Demo 101</a> (5-strand DKC on W_{5,3}, sl_d functor thesis, growth rate prediction), <a href="./demo_102.html">Demo 102</a> (W_{6,0} vs W_{6,4} radical A/B test, writhe character, identical BFS trees across n=6 modules)</li>
+<li><strong>Feeds into</strong>: <a href="./demo_104.html">Demo 104</a> (activation coarseness sweep, reuses <a href="./demo_103.html">D103</a> catalogs), <a href="./demo_105.html">Demo 105</a>+ (higher-strand scaling, effective dimension hypothesis)</li>
 </ul>
 <h3>Headline</h3>
 BFS growth rate is a braid group invariant, not a module dimension invariant: W_{6,0} (dim=5) and W_{6,2} (dim=9) produce IDENTICAL BFS trees at every depth (same entry counts, same max coefficient magnitudes), but the higher-dimensional module has WORSE XOR capacity at every level due to curse of dimensionality in the sign-hash activation, a finding confirmed by the subset-hash activation test in Phase 7.

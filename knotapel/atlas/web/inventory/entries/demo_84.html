@@ -12,12 +12,12 @@
 </head>
 <body>
     <nav><a href="../../index.html">← Back to Index</a></nav><hr>
-    <h2>Demo 84: Null States and Logarithmic Structure</h2>
+    <h2><a href="./demo_84.html">Demo 84</a>: Null States and Logarithmic Structure</h2>
 <ul>
 <li><strong>Status</strong>: COMPLETE</li>
 <li><strong>File</strong>: <code><a href="../../demo_84_null_states/main.c.html">demo_84_null_states/main.c</a></code> (~1330 lines)</li>
 <li><strong>Tests</strong>: 17/17 pass</li>
-<li><strong>Depends on</strong>: Demo 66 (24-cell geometry, 24-entry ζ₈ catalog), Demo 79 (ζ₁₂ capacity, infinite group), Demo 82 (crossing depth law, algebraic coherence)</li>
+<li><strong>Depends on</strong>: <a href="./demo_66.html">Demo 66</a> (24-cell geometry, 24-entry ζ₈ catalog), <a href="./demo_79.html">Demo 79</a> (ζ₁₂ capacity, infinite group), <a href="./demo_82.html">Demo 82</a> (crossing depth law, algebraic coherence)</li>
 <li><strong>Feeds into</strong>: Reservoir Computing pillar (Pillar 5), future exactification work, null-state geometry as design principle for weight selection</li>
 </ul>
 <h3>Headline</h3>
@@ -43,7 +43,7 @@ Bracket-null entries (Re(q)=0, Kauffman trace vanishes) are not computational de
 </ul>
 <h3>Connection to Reservoir Computing (Pillar 5)</h3>
 <p>Reservoir Computing (RC) uses a high-dimensional fixed dynamical system (the reservoir) to project inputs into a space where linear readout can separate otherwise inseparable patterns. The critical requirement is that the reservoir maintains a rich, high-dimensional manifold — the "separation property." Null states in an RC reservoir are states that produce zero output under the readout (analogous to Re(q)=0, trace=0). The standard assumption is that null reservoir states are wasted capacity.</p>
-<p>Demo 84 directly refutes this for the quaternionic DKC setting:</p>
+<p><a href="./demo_84.html">Demo 84</a> directly refutes this for the quaternionic DKC setting:</p>
 <p>1. The 9 null entries maintain 6 directions (cube-edge-midpoints) that are absent from non-null entries. In RC terms: null reservoir states hold the manifold open in directions that active states do not cover. 2. Removing nulls drops XOR capacity by one full level, even though the remaining 15 entries have more information per entry (non-zero Re(q)). In RC terms: removing null states collapses the reservoir manifold in specific directions, destroying the separation property for higher-order parity functions. 3. The k_sec=1 result shows that null-only states provide more directional separation than non-null-only states. In RC terms: null states provide better geometric coverage of the output space even though they produce zero scalar readout.</p>
 <p>The LCFT connection deepens this: the logarithmic partners of null states carry the actual computational content via Jordan cells. In a Jordan-cell representation, the null state and its partner form a 2×2 block with 1 on the superdiagonal. The null state alone is computationally invisible (Re=0), but the partner cannot be defined without the null state (the Jordan cell requires both). Removing the null state removes the partner's anchor — the capacity collapses.</p>
 <h3>Connection to LCFT (Logarithmic Conformal Field Theory)</h3>
@@ -75,7 +75,7 @@ Bracket-null entries (Re(q)=0, Kauffman trace vanishes) are not computational de
 <li><strong><code>classify_null(cat_size)</code></strong>: classifies each catalog entry as null (|Re(q)| &lt; 1e-10) or non-null; fills <code>is_null[]</code> array; returns null count</li>
 <li><strong><code>null_idx[]</code> / <code>nonnull_idx[]</code> arrays</strong>: index arrays for partition into null and non-null subsets, built once after <code>classify_null</code>; reused throughout Parts C–F</li>
 <li><strong><code>load_subset(indices, count)</code></strong>: loads an arbitrary subset of the saved catalog into <code>g_cat[]</code> for capacity measurement; enables non-null-only and null-only experiments without separate catalog arrays</li>
-<li><strong><code>save_catalog()</code> / <code>restore_catalog()</code></strong>: snapshot/restore pattern from Demo 82, extended here with <code>g_writhe[]</code> tracking alongside depth</li>
+<li><strong><code>save_catalog()</code> / <code>restore_catalog()</code></strong>: snapshot/restore pattern from <a href="./demo_82.html">Demo 82</a>, extended here with <code>g_writhe[]</code> tracking alongside depth</li>
 <li><strong><code>find_capacity(cat_size, CapResult *r)</code></strong>: unified capacity driver (builds dirs, counts angles, runs XOR6 brute force + recursive extension chain); returns <code>CapResult</code> struct with dirs, angles, xor6, xor8, xor10, xor12, max_xor</li>
 <li><strong><code>count_xor6_at_k(bf_limit, k_sec)</code></strong>: XOR6 count at a fixed k_sec without winner storage; used for the k_sec sweep in Part C.4</li>
 <li><strong><code>random_subset(subset, subset_size, total_size)</code></strong>: Fisher-Yates partial shuffle producing a random size-N subset of [0, total_size); used for 100-trial random-control experiment in Part C.3</li>
@@ -86,18 +86,18 @@ Bracket-null entries (Re(q)=0, Kauffman trace vanishes) are not computational de
 <h3>Literature Touched</h3>
 <ul>
 <li><strong>Gurarie (1993) / Flohr (1996) / Gaberdiel &amp; Kausch (1996)</strong>: Logarithmic CFT — null states paired with logarithmic partners via Jordan-cell L₀ action. The null entries here (Re(q)=0, trace=0) are the DKC analog of LCFT null states; their logarithmic partners carry the computational content through the Jordan-cell coupling.</li>
-<li><strong>Habiro (2002) / Z[ζ₈] bracket</strong>: the 24-element ζ₈ catalog is the algebraic substrate established in Demos 26–29; Demo 84 shows that 9/24 of those entries are bracket-null, revealing previously invisible structure within this established catalog.</li>
+<li><strong>Habiro (2002) / Z[ζ₈] bracket</strong>: the 24-element ζ₈ catalog is the algebraic substrate established in Demos 26–29; <a href="./demo_84.html">Demo 84</a> shows that 9/24 of those entries are bracket-null, revealing previously invisible structure within this established catalog.</li>
 <li><strong>Aizenberg (2008)</strong>: k-sector MVN activation; the k_sec sweep in Part C.4 decomposes S¹ (angular) vs S² (directional) contributions to XOR capacity, extending the sector framework to a null/non-null anatomy.</li>
 <li><strong>Jaeger, Vertigan &amp; Welsh (1990) / Kuperberg (2015)</strong>: #P-hardness of Jones polynomial; null states correspond to the algebraically simplest (zero-trace) representations, yet their geometric contribution is essential — hardness lives in the interplay of null and non-null structure.</li>
 <li><strong>Reservoir Computing (Jaeger 2001, Maass et al. 2002)</strong>: echo state networks / liquid state machines; the null-state separation-property argument directly parallels the RC requirement that reservoir null states maintain the high-dimensional manifold enabling linear readout.</li>
 </ul>
 <h3>Open Questions</h3>
 <ul>
-<li><strong>Are there null entries in the ζ₁₂ catalog that are similarly indispensable?</strong> At 3% null fraction (121/4096), the null entries are a small minority, but Part F shows 29 null-only directions — are any of those directions essential for the XOR12 solutions found in Demo 79?</li>
+<li><strong>Are there null entries in the ζ₁₂ catalog that are similarly indispensable?</strong> At 3% null fraction (121/4096), the null entries are a small minority, but Part F shows 29 null-only directions — are any of those directions essential for the XOR12 solutions found in <a href="./demo_79.html">Demo 79</a>?</li>
 <li><strong>Can the LCFT Jordan-cell structure be made explicit?</strong> The 3 shared directions (coordinate axes) appear in both null and non-null entries. Do these pairs (null entry on axis X, non-null entry on axis X) form a literal Jordan-cell pair in some representation of the braid group algebra?</li>
-<li><strong>What is the null entry count for ζ₁₀ (Fibonacci anyons)?</strong> ζ₁₀ was identified as infinite in Demo 80 with 71 distinct half-angles at 4096 entries. The null fraction and directional role of null entries at ζ₁₀ has not been measured.</li>
+<li><strong>What is the null entry count for ζ₁₀ (Fibonacci anyons)?</strong> ζ₁₀ was identified as infinite in <a href="./demo_80.html">Demo 80</a> with 71 distinct half-angles at 4096 entries. The null fraction and directional role of null entries at ζ₁₀ has not been measured.</li>
 <li><strong>Does the depth=3 → 100% null result generalize?</strong> In ζ₈, every depth-3 entry is bracket-null. Is this a general theorem — does the maximum-depth stratum of any finite SU(2) subgroup consist entirely of null entries?</li>
-<li><strong>Null entries and knot complexity</strong>: Demo 82 established that crossing depth governs XOR capacity. Bracket-null entries are maximally deep (depth-3 in ζ₈). Does the connection between nullness, depth, and LCFT have a direct knot-theoretic interpretation — e.g., do depth-d null entries correspond to specific knot types whose Jones polynomial vanishes at δ=0?</li>
+<li><strong>Null entries and knot complexity</strong>: <a href="./demo_82.html">Demo 82</a> established that crossing depth governs XOR capacity. Bracket-null entries are maximally deep (depth-3 in ζ₈). Does the connection between nullness, depth, and LCFT have a direct knot-theoretic interpretation — e.g., do depth-d null entries correspond to specific knot types whose Jones polynomial vanishes at δ=0?</li>
 <li><strong>RC exactification</strong>: The RC null-state hypothesis now has a precise DKC analog. Can the quaternionic DKC framework be used to design reservoir weight matrices where null-state geometry is explicitly controlled, yielding provably optimal XOR capacity per parameter?</li>
 </ul>
 

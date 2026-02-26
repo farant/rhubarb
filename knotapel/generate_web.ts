@@ -192,15 +192,23 @@ function mdToHtml(md: string, currentRelPath: string, allFiles: string[]): strin
     return '<a href="' + relLink + '">' + text + '</a>';
   };
   const demoRegex = /\bD(\d+)(?:([-\u2013])(D?)(\d+))?\b/g;
+  const demoLongRegex = /\bDemo\s+(\d+)(?:([-\u2013])(\d+))?\b/g;
   const linkParts = html.split(/(<a\s[^>]*>.*?<\/a>)/g);
   html = linkParts.map(part => {
     if (part.startsWith("<a ")) return part;
-    return part.replace(demoRegex, (_, n1, sep, dPre, n2) => {
-      if (n2 && sep) {
-        return demoLinkFn(n1, "D" + n1) + sep + demoLinkFn(n2, (dPre || "") + n2);
-      }
-      return demoLinkFn(n1, "D" + n1);
-    });
+    return part
+      .replace(demoLongRegex, (_, n1, sep, n2) => {
+        if (n2 && sep) {
+          return demoLinkFn(n1, "Demo " + n1) + sep + demoLinkFn(n2, n2);
+        }
+        return demoLinkFn(n1, "Demo " + n1);
+      })
+      .replace(demoRegex, (_, n1, sep, dPre, n2) => {
+        if (n2 && sep) {
+          return demoLinkFn(n1, "D" + n1) + sep + demoLinkFn(n2, (dPre || "") + n2);
+        }
+        return demoLinkFn(n1, "D" + n1);
+      });
   }).join("");
 
   return html;

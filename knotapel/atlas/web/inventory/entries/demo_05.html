@@ -12,12 +12,12 @@
 </head>
 <body>
     <nav><a href="../../index.html">← Back to Index</a></nav><hr>
-    <h2>Demo 05: Scaling the Spin Chain</h2>
+    <h2><a href="./demo_05.html">Demo 05</a>: Scaling the Spin Chain</h2>
 <ul>
 <li><strong>Status</strong>: COMPLETE</li>
 <li><strong>File</strong>: <code><a href="../../demo_05_scaling/main.c.html">demo_05_scaling/main.c</a></code> (~678 lines)</li>
 <li><strong>Tests</strong>: ~30 pass (6 quantum dimension, Yang-Baxter per n, far commutativity, R*Rinv=I per generator, quantum trace per braid per n)</li>
-<li><strong>Depends on</strong>: Demo 03 (Yang-Baxter / R-matrix), Demo 04 (quantum trace formula for n=3)</li>
+<li><strong>Depends on</strong>: <a href="./demo_03.html">Demo 03</a> (Yang-Baxter / R-matrix), <a href="./demo_04.html">Demo 04</a> (quantum trace formula for n=3)</li>
 <li><strong>Feeds into</strong>: later demos needing multi-strand braid representations; establishes that the trace formula is universal across strand counts</li>
 </ul>
 <h3>Headline</h3>
@@ -29,7 +29,7 @@ The quantum trace formula <code>tr_q = (-1)^n <em> delta </em> bracket</code> ge
 <li>Yang-Baxter relation R_i R_{i+1} R_i = R_{i+1} R_i R_{i+1} holds at every scale (4x4 through 32x32)</li>
 <li>Far commutativity R_i R_j = R_j R_i for |i-j| &gt;= 2 verified (first testable at n=4)</li>
 <li>R_i * R_i^{-1} = I for all generators at all scales</li>
-<li><strong>Key discovery</strong>: sign depends on strand count — <code>tr_q = (-1)^n <em> delta </em> oracle</code> — even n gives +delta, odd n gives -delta (Demo 04 only saw odd case)</li>
+<li><strong>Key discovery</strong>: sign depends on strand count — <code>tr_q = (-1)^n <em> delta </em> oracle</code> — even n gives +delta, odd n gives -delta (<a href="./demo_04.html">Demo 04</a> only saw odd case)</li>
 </ul>
 <h3>Theorems/Conjectures</h3>
 <ul>
@@ -40,7 +40,7 @@ The quantum trace formula <code>tr_q = (-1)^n <em> delta </em> bracket</code> ge
 <h3>Data</h3>
 <ul>
 <li>n=2: 4x4 matrices, 1 generator</li>
-<li>n=3: 8x8 matrices, 2 generators (reproduces Demo 04)</li>
+<li>n=3: 8x8 matrices, 2 generators (reproduces <a href="./demo_04.html">Demo 04</a>)</li>
 <li>n=4: 16x16 matrices, 3 generators (first far commutativity test)</li>
 <li>n=5: 32x32 matrices, 4 generators (1024 Poly entries per matrix, ~800KB each)</li>
 <li>[1]_q = 1, [2]_q = A^2 + A^{-2}, [3]_q = A^4 + 1 + A^{-4}, etc.</li>
@@ -53,7 +53,7 @@ The quantum trace formula <code>tr_q = (-1)^n <em> delta </em> bracket</code> ge
 <li><code>build_Kn(w, n)</code>: builds K^{xn} diagonal weights for quantum trace at any n</li>
 <li><code>braid_product_n()</code>: evaluates braid word as matrix product in 2^n x 2^n space</li>
 <li><code>mat_qtrace()</code>: quantum trace with diagonal weights</li>
-<li>State-sum oracle (<code>braid_bracket</code>, <code>braid_loops</code> via union-find) carried forward from Demo 03/04</li>
+<li>State-sum oracle (<code>braid_bracket</code>, <code>braid_loops</code> via union-find) carried forward from <a href="./demo_03.html">Demo 03</a>/04</li>
 <li><code>MAT(m, i, j)</code> macro for row-major access into heap-allocated polynomial matrices</li>
 </ul>
 <h3>Literature Touched</h3>

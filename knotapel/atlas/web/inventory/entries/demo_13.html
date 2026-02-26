@@ -12,12 +12,12 @@
 </head>
 <body>
     <nav><a href="../../index.html">← Back to Index</a></nav><hr>
-    <h2>Demo 13: DKC Test</h2>
+    <h2><a href="./demo_13.html">Demo 13</a>: DKC Test</h2>
 <ul>
 <li><strong>Status</strong>: COMPLETE</li>
 <li><strong>File</strong>: <code><a href="../../demo_13_dkc_test/main.c.html">demo_13_dkc_test/main.c</a></code> (~949 lines)</li>
 <li><strong>Tests</strong>: ~8+ pass (6 parts: A=separation, B=multi-angle, C=Pareto, D=train/test+self-class+alt-trefoil, E=baseline, F=scaling)</li>
-<li><strong>Depends on</strong>: Demo 10 (numerical evaluation engine), Demo 11/12 (greedy angle selection, quantization, Pareto frontier)</li>
+<li><strong>Depends on</strong>: <a href="./demo_10.html">Demo 10</a> (numerical evaluation engine), <a href="./demo_11.html">Demo 11</a>/12 (greedy angle selection, quantization, Pareto frontier)</li>
 <li><strong>Feeds into</strong>: Later DKC demos (scaling to larger knot tables, forward DKC)</li>
 </ul>
 <h3>Headline</h3>
@@ -28,10 +28,10 @@ Scales DKC (Deterministic Knowledge Compilation) from 10 knots to ~28 candidate 
 <li>Deduplication via bracket evaluation at 2 reference angles removes equivalent braids</li>
 <li>Greedy angle selection from 256-sample waveforms, up to 8 angles</li>
 <li><strong>Multi-angle separation</strong>: determines minimum angles for 100% pairwise separation at scale</li>
-<li><strong>Precision x Width Pareto frontier</strong>: bits-per-component vs number of angles grid; finds minimum total bits per knot for full separation (compared to Demo 12's 8 bits for 10 knots)</li>
+<li><strong>Precision x Width Pareto frontier</strong>: bits-per-component vs number of angles grid; finds minimum total bits per knot for full separation (compared to <a href="./demo_12.html">Demo 12</a>'s 8 bits for 10 knots)</li>
 <li><strong>Train/test DKC validation</strong>: 70/30 split, training self-classification must be 100%, test knots correctly differentiated from training set, invariance test (alt trefoil s2.s1.s2 matches canonical s1.s2.s1)</li>
 <li><strong>Random baseline</strong>: 100 LCG trials confirm DKC achieves 100% separation while random signatures don't guarantee it</li>
-<li><strong>Scaling law</strong>: min pairwise separation decreases with knot count (below Demo 12's 0.907 for 10 knots); extrapolation suggests 1/sqrt(N) decay, predicting quantization limits</li>
+<li><strong>Scaling law</strong>: min pairwise separation decreases with knot count (below <a href="./demo_12.html">Demo 12</a>'s 0.907 for 10 knots); extrapolation suggests 1/sqrt(N) decay, predicting quantization limits</li>
 </ul>
 <h3>Data</h3>
 <ul>

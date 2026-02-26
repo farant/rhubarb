@@ -21,7 +21,7 @@ The <strong>radical dimension formula</strong> (rad(TL_ℓ) = 2ℓ−3) is now f
 <strong>Additionally proven:</strong> Markov RT truncation (<code>proofs/markov-rt-truncation.md</code>) and next-level radical formula (<code>proofs/next-level-radical-formula.md</code>). These strengthen Paper 3.
 <strong>Remaining:</strong> The full sandwich theorem (rad^2(TL_{2k}(0)) ≅ TL_{2k-1}(0) as algebras) is a stronger claim than the dimension formula. The proof proves dimensions match; the algebra isomorphism still needs formal proof. Also: nilpotency=3 and Fibonacci rank remain computationally verified, not proven.
 <strong>Conjecture-graph priority:</strong> Rank 1 (C3). Unlocks C6, C7, C5, C9 downstream.
-<h3>~~1.2 4-input parity: test the triskelion generalization~~ — DONE (Demo 63)</h3>
+<h3>~~1.2 4-input parity: test the triskelion generalization~~ — DONE (<a href="../inventory/entries/demo_63.html">Demo 63</a>)</h3>
 4-input parity reachable at k=8 (96 solutions, tetraskelion). 5-input parity at k=15 (3020 solutions, pentaskelion). <strong>Parity ceiling for Z[zeta_8] is n=5.</strong> Triskelion generalization (k=2n) <strong>FALSIFIED</strong> — n=5 requires k=15, not k=10. True scaling: k=2M-1 where M is ray count. Oriented matroid classification: alternating OM type required for parity. Two types of impossibility: constraint wall (n=6,7) vs pigeonhole (n&gt;=8).
 <h3>1.3 Analytical proof of the 13=13 bandwidth bound</h3>
 <strong>What:</strong> Prove analytically that the minimum bandwidth for a binary Voronoi partition separating N points on S² in general position is l = ⌈(N−1)/2⌉. For XOR6 DKC, N=13 (eigenvector directions) giving l=6. <a href="../inventory/entries/demo_71.html">D71</a> verified this computationally with a sharp phase transition (0% recovery at l≤5, 100% at l=6) and 80.7% average power in mode l=6 across all 36 solutions.
@@ -66,7 +66,7 @@ The <strong>radical dimension formula</strong> (rad(TL_ℓ) = 2ℓ−3) is now f
 <strong>What:</strong> Prove analytically that the (-A³)^{-w} Jones phase factor costs exactly 2 XOR levels through angular vocabulary reduction. The mechanism is identified (<a href="../inventory/entries/demo_83.html">D83</a>); what remains is counting angle-class orbits.
 <strong>Effort:</strong> MEDIUM.
 <strong>Unblocks:</strong> Elevates framing result from empirical to proven. High publication value.
-<h3>~~1.11 ζ₁₂ null indispensability~~ — DONE (Demo 87)</h3>
+<h3>~~1.11 ζ₁₂ null indispensability~~ — DONE (<a href="../inventory/entries/demo_87.html">Demo 87</a>)</h3>
 <a href="../inventory/entries/demo_87.html">D87</a> demonstrated that null indispensability is regime-dependent. At ζ₁₂ (infinite group, 4096 entries), removing all 121 bracket-null entries preserves full XOR6/8/10/12 capacity.
 <h3>1.12-NEW 1wpi encoding depth law test — <strong>HIGH PRIORITY (from <a href="../inventory/entries/demo_92.html">D92</a>)</strong></h3>
 <strong>What:</strong> <a href="../inventory/entries/demo_92.html">D92</a> proves the +/-q encoding is parity-locked. The 1wpi encoding (<a href="../inventory/entries/demo_48.html">D48</a>/<a href="../inventory/entries/demo_50.html">D50</a>) computes all 13 NPN classes but has never been tested for depth-law behavior. Does max_and or max_maj scale linearly with crossing depth under 1wpi encoding?
@@ -143,7 +143,7 @@ The <strong>radical dimension formula</strong> (rad(TL_ℓ) = 2ℓ−3) is now f
 <strong>Unblocks:</strong> Principled activation design rule for multi-strand DKC.
 <p>---</p>
 <h2>Tier 2: Do Soon</h2>
-<h3>~~2.1 ell=7 verification~~ — DONE (Demo 60)</h3>
+<h3>~~2.1 ell=7 verification~~ — DONE (<a href="../inventory/entries/demo_60.html">Demo 60</a>)</h3>
 All predictions confirmed. Paper 3 strengthened.
 <h3>2.2 Axiality: determine if it follows from known Galois theory</h3>
 <strong>What:</strong> Consult the cyclotomic Galois theory literature to determine whether the axiality theorem at delta=0 is a trivial consequence of Gal(Q(zeta_8)/Q).
@@ -165,7 +165,7 @@ All predictions confirmed. Paper 3 strengthened.
 <strong><a href="../inventory/entries/demo_92.html">D92</a> context:</strong> Multi-layer composition is especially important because <a href="../inventory/entries/demo_92.html">D92</a> shows the +/-q encoding limits single-layer to parity. Multi-layer with 1wpi encoding could be the path to arbitrary Boolean functions with depth-law scaling.
 <strong>Effort:</strong> MEDIUM (2 demos).
 <strong>Unblocks:</strong> Determines whether DKC's limits are single-layer phenomena or fundamental.
-<h3>~~2.6 Z[zeta_16] scaling~~ — DONE (Demo 65)</h3>
+<h3>~~2.6 Z[zeta_16] scaling~~ — DONE (<a href="../inventory/entries/demo_65.html">Demo 65</a>)</h3>
 <h3>2.7 Exact Cyc8 arithmetic for generalized activation check — still open</h3>
 <strong>What:</strong> Rewrite <a href="../inventory/entries/demo_65.html">D65</a>'s generalized XOR6 check with exact Cyc8 arithmetic (no atan2) to formally eliminate boundary ambiguity.
 <strong>Effort:</strong> SMALL.
@@ -255,7 +255,7 @@ All predictions confirmed. Paper 3 strengthened.
 <h2>Tier 3: Someday</h2>
 <h3>3.1 Abramsky depth: Geometry of Interaction interpretation</h3>
 <strong>Effort:</strong> LARGE.
-<h3>~~3.2 5-input parity and beyond~~ — DONE (Demo 63)</h3>
+<h3>~~3.2 5-input parity and beyond~~ — DONE (<a href="../inventory/entries/demo_63.html">Demo 63</a>)</h3>
 <h3>3.3 Physical interpretation via Costello-Francis-Gwilliam</h3>
 <strong><a href="../inventory/entries/demo_83.html">D83</a> update:</strong> Framing result adds a new angle — the "framing anomaly" that TQFT discards is exactly where DKC's +2 capacity lives.
 <strong>Effort:</strong> LARGE.

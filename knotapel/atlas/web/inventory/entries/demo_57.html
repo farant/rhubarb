@@ -12,19 +12,19 @@
 </head>
 <body>
     <nav><a href="../../index.html">← Back to Index</a></nav><hr>
-    <h2>Demo 57: Additive Encoding DKC</h2>
+    <h2><a href="./demo_57.html">Demo 57</a>: Additive Encoding DKC</h2>
 <ul>
 <li><strong>Status</strong>: COMPLETE</li>
 <li><strong>File</strong>: <code><a href="../../demo_57_additive_dkc/main.c.html">demo_57_additive_dkc/main.c</a></code> (~1140 lines)</li>
 <li><strong>Tests</strong>: ~8 checks across 5 parts (A-E): catalog verification, 2-input encoding comparison, 3-input additive NPN search, head-to-head multiplicative vs additive, union analysis</li>
-<li><strong>Depends on</strong>: Demo 56 (five-lens analysis predicting additive encoding dissolves 0x1B/0x06 wall), Demo 55 (ell=4 bracket catalog at delta=sqrt(2))</li>
+<li><strong>Depends on</strong>: <a href="./demo_56.html">Demo 56</a> (five-lens analysis predicting additive encoding dissolves 0x1B/0x06 wall), <a href="./demo_55.html">Demo 55</a> (ell=4 bracket catalog at delta=sqrt(2))</li>
 <li><strong>Feeds into</strong>: Further encoding/activation investigation in DKC program</li>
 </ul>
 <h3>Headline</h3>
-Tests Demo 56's prediction that additive encoding (z = x1<em>w1 + x2</em>w2 + x3*w3) should dissolve the 0x1B and 0x06 wall that exists with multiplicative encoding + half-plane (Re&gt;0) activation. <strong>Key discovery: the prediction was wrong</strong> — the wall is about ACTIVATION CONVEXITY, not encoding geometry. Additive is actually WORSE (5/13 vs mult's 11/13 with Re&gt;0) because additive sums preserve convexity of half-planes, while multiplicative products can rotate out of half-planes (anti-convex). Non-convex activations (split-sigmoid, sector) work with either encoding.
+Tests <a href="./demo_56.html">Demo 56</a>'s prediction that additive encoding (z = x1<em>w1 + x2</em>w2 + x3*w3) should dissolve the 0x1B and 0x06 wall that exists with multiplicative encoding + half-plane (Re&gt;0) activation. <strong>Key discovery: the prediction was wrong</strong> — the wall is about ACTIVATION CONVEXITY, not encoding geometry. Additive is actually WORSE (5/13 vs mult's 11/13 with Re&gt;0) because additive sums preserve convexity of half-planes, while multiplicative products can rotate out of half-planes (anti-convex). Non-convex activations (split-sigmoid, sector) work with either encoding.
 <h3>Key Results</h3>
 <ul>
-<li><strong>Catalog</strong> (Part A): builds same ell=4 (delta=sqrt(2)) bracket catalog as Demo 55 using Z[zeta_16] exact arithmetic. All values are Z[i]-axial. Verifies A*A^{-1}=1, delta^2=2.</li>
+<li><strong>Catalog</strong> (Part A): builds same ell=4 (delta=sqrt(2)) bracket catalog as <a href="./demo_55.html">Demo 55</a> using Z[zeta_16] exact arithmetic. All values are Z[i]-axial. Verifies A*A^{-1}=1, delta^2=2.</li>
 <li><strong>2-input comparison</strong> (Part B): with Re&gt;0 activation, multiplicative achieves &gt;=8/16 truth tables while additive is constrained by z(0,0)=0 forcing bit 0=0 (all achieved TTs are even)</li>
 <li><strong>3-input additive NPN search</strong> (Part C): exhaustive catalog^3 triples across 8 activations. With Re&gt;0, 0x1B and 0x06 remain UNREACHABLE — wall holds. Additive reaches only ~5/13 NPN classes with Re&gt;0.</li>
 <li><strong>Head-to-head</strong> (Part D): for each of 8 activations, compares multiplicative vs additive reachability. With Re&gt;0: additive is a strict subset of multiplicative (0 add-only classes). With non-convex activations (split-sigmoid, sector): both encodings reach all 13.</li>
@@ -40,7 +40,7 @@ Tests Demo 56's prediction that additive encoding (z = x1<em>w1 + x2</em>w2 + x3
 </ul>
 <h3>Data</h3>
 <ul>
-<li>Same bracket catalog as Demo 55 (ell=4, delta=sqrt(2), Z[zeta_16] exact arithmetic)</li>
+<li>Same bracket catalog as <a href="./demo_55.html">Demo 55</a> (ell=4, delta=sqrt(2), Z[zeta_16] exact arithmetic)</li>
 <li>Catalog built from n=2 (lengths 1-10), n=3 (lengths 1-6), n=4 (lengths 1-6) braids, capped at 512 values</li>
 <li>8 activations: Re&gt;0, Im&gt;0, split-sigmoid, sector k=2/4/6/8, magnitude tau=1</li>
 <li>2-input: catalog^2 pairs, 16 possible truth tables</li>

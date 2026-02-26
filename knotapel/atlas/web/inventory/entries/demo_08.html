@@ -12,12 +12,12 @@
 </head>
 <body>
     <nav><a href="../../index.html">← Back to Index</a></nav><hr>
-    <h2>Demo 08: Vogel's Algorithm (PD -&gt; Braid Word)</h2>
+    <h2><a href="./demo_08.html">Demo 08</a>: Vogel's Algorithm (PD -&gt; Braid Word)</h2>
 <ul>
 <li><strong>Status</strong>: COMPLETE</li>
 <li><strong>File</strong>: <code><a href="../../demo_08_vogel/main.c.html">demo_08_vogel/main.c</a></code> (~887 lines)</li>
 <li><strong>Tests</strong>: 47/47 pass</li>
-<li><strong>Depends on</strong>: Demo 07 (braid -&gt; PD direction), Demo 01 (PD bracket oracle, knot PD codes)</li>
+<li><strong>Depends on</strong>: <a href="./demo_07.html">Demo 07</a> (braid -&gt; PD direction), <a href="./demo_01.html">Demo 01</a> (PD bracket oracle, knot PD codes)</li>
 <li><strong>Feeds into</strong>: completes the PD &lt;-&gt; braid round-trip; any later demo needing to convert arbitrary PD notation into braid words</li>
 </ul>
 <h3>Headline</h3>
@@ -50,7 +50,7 @@ Compiler from PD notation to braid word via Seifert circle decomposition — com
 <li><code>trace_circles()</code>: traces each Seifert circle through crossings to get cyclic crossing order</li>
 <li><code>find_braid_order()</code>: brute-force cut-point search + Kahn's topological sort for consistent braid word ordering; skips same-generator constraints (they commute)</li>
 <li><code>pd_to_braid()</code>: full 7-step PD -&gt; braid compiler (Seifert membership -&gt; crossing-circle map -&gt; Seifert graph path check -&gt; circle ordering -&gt; crossing trace -&gt; braid ordering -&gt; emit generators)</li>
-<li><code>braid_to_pd()</code>: carried from Demo 07 for round-trip tests</li>
+<li><code>braid_to_pd()</code>: carried from <a href="./demo_07.html">Demo 07</a> for round-trip tests</li>
 <li>Path-graph check: all vertices degree &lt;= 2, exactly 2 leaves</li>
 <li>Returns error codes: -1 (not a path graph), -2 (no valid ordering found)</li>
 </ul>

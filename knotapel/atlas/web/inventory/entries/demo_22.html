@@ -12,12 +12,12 @@
 </head>
 <body>
     <nav><a href="../../index.html">← Back to Index</a></nav><hr>
-    <h2>Demo 22: Minimum Braid Complexity</h2>
+    <h2><a href="./demo_22.html">Demo 22</a>: Minimum Braid Complexity</h2>
 <ul>
 <li><strong>Status</strong>: COMPLETE</li>
 <li><strong>File</strong>: <code><a href="../../demo_22_braid_optimizer/main.c.html">demo_22_braid_optimizer/main.c</a></code> (~976 lines)</li>
 <li><strong>Tests</strong>: ~6 pass (P1: &gt;=80 functions found, P2: TL_3 braid relation, P3: cross-validation, P4: nilpotent compression, P5: braid &lt; NAND cost, P6: extended search)</li>
-<li><strong>Depends on</strong>: Demo 21 (reversible gates, closure types), Demo 23 (function zoo, truth table computation)</li>
+<li><strong>Depends on</strong>: <a href="./demo_21.html">Demo 21</a> (reversible gates, closure types), <a href="./demo_23.html">Demo 23</a> (function zoo, truth table computation)</li>
 <li><strong>Feeds into</strong>: establishes "atomic weights" for topological computation; periodic table of braid-computable functions</li>
 </ul>
 <h3>Headline</h3>
@@ -53,7 +53,7 @@ Exhaustive search for minimum-length braid words computing each Boolean function
 <li><code>decode_word4()</code> / <code>decode_word3()</code>: enumerates braid words from integer codes (base-6 for 4-strand, base-4 for 3-strand)</li>
 <li><code>fn_name()</code>: lookup table mapping truth table integers to named Boolean functions (~38 entries)</li>
 <li><code>tt_has_parity()</code>: classifies whether a truth table involves XOR/parity</li>
-<li><code>nand_cost()</code>: NAND tree expression cost for named functions (from Demo 21 analysis)</li>
+<li><code>nand_cost()</code>: NAND tree expression cost for named functions (from <a href="./demo_21.html">Demo 21</a> analysis)</li>
 <li><code>Mat5</code> type: 5x5 complex matrix for TL_3 representation with <code>mat5_zero/id/scale/add/mul/eq</code></li>
 <li><code>tl3_init()</code>: builds TL_3 generator matrices (e1, e2) and sigma matrices at given A</li>
 <li><code>tl3_braid_matrix()</code>: evaluates braid word as TL_3 matrix product</li>

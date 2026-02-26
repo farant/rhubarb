@@ -12,20 +12,20 @@
 </head>
 <body>
     <nav><a href="../../index.html">← Back to Index</a></nav><hr>
-    <h2>Demo 16: Reduced Bracket Characterization — What IS g?</h2>
+    <h2><a href="./demo_16.html">Demo 16</a>: Reduced Bracket Characterization — What IS g?</h2>
 <ul>
 <li><strong>Status</strong>: COMPLETE</li>
 <li><strong>File</strong>: <code><a href="../../demo_16_reduced_bracket/main.c.html">demo_16_reduced_bracket/main.c</a></code> (~975 lines)</li>
 <li><strong>Tests</strong>: 8 checks across 6 parts (A-F): waveform, peak localization, Pareto frontier, connected-sum factorization, minimal angle set, amplitude statistics</li>
-<li><strong>Depends on</strong>: Demo 14 (bracket = delta^k * g factorization), Demo 15 (g optimal angles, 4.3x classification improvement)</li>
-<li><strong>Feeds into</strong>: Demo 17 (multilayer DKC), later demos using g as the primary classification signal</li>
+<li><strong>Depends on</strong>: <a href="./demo_14.html">Demo 14</a> (bracket = delta^k * g factorization), <a href="./demo_15.html">Demo 15</a> (g optimal angles, 4.3x classification improvement)</li>
+<li><strong>Feeds into</strong>: <a href="./demo_17.html">Demo 17</a> (multilayer DKC), later demos using g as the primary classification signal</li>
 </ul>
 <h3>Headline</h3>
 Deep characterization of the reduced bracket g(K,A) = bracket(K,A) / delta^k(A): waveform analysis, peak localization showing a broad plateau near 1.266*pi, Pareto frontier proving g needs fewer bits than raw bracket, connected-sum factorization test (fails — structural issue), greedy angle selection showing g achieves higher min_dist, and amplitude statistics by knot family.
 <h3>Key Results</h3>
 <ul>
 <li><strong>Waveform</strong> (Part A): g has fewer zeros than raw bracket (removes delta zeros for k&gt;0 knots), but is NOT smoother — dividing by delta near its zeros amplifies roughness. 256-sample characterization with smoothness/range/zero metrics per knot.</li>
-<li><strong>Peak localization</strong> (Part B): g peak at ~1.266<em>pi is a broad plateau (half-max width &gt; 0.05</em>pi, not a spike). g peak min_dist &gt; raw peak min_dist — confirms Demo 15's finding with fine-grained 256-sample scan over [1.0<em>pi, 1.5</em>pi].</li>
+<li><strong>Peak localization</strong> (Part B): g peak at ~1.266<em>pi is a broad plateau (half-max width &gt; 0.05</em>pi, not a spike). g peak min_dist &gt; raw peak min_dist — confirms <a href="./demo_15.html">Demo 15</a>'s finding with fine-grained 256-sample scan over [1.0<em>pi, 1.5</em>pi].</li>
 <li><strong>Pareto frontier</strong> (Part C): bit-depth sweep 2-16 bits. g reaches full classification in fewer or equal bits than raw bracket at optimal angles. Uniform quantization with fixed amplitude range ±50.</li>
 <li><strong>Connected-sum factorization</strong> (Part D): g(K1#K2) vs g(K1)*g(K2) tested at 8 angles for 8 composites. <strong>Finding: g does NOT factorize</strong> — braid-encoded connected sum != standard connected sum. The delta removal doesn't fix this; the issue is structural.</li>
 <li><strong>Minimal angle set</strong> (Part E): greedy max-min-dist selection at 128-sample resolution. g achieves higher min_dist than raw at 1 angle. Both stop when diminishing returns (&lt;1% improvement).</li>
@@ -52,7 +52,7 @@ Deep characterization of the reduced bracket g(K,A) = bracket(K,A) / delta^k(A):
 <li><strong><code>min_dist_from_vals()</code></strong>: minimum pairwise distance across all knot pairs from precomputed values</li>
 <li><strong><code>dedup_knots()</code></strong>: removes duplicate braids by comparing bracket values at 2 reference angles, maintains composite index remapping</li>
 <li><strong><code>add_connected_sum()</code></strong>: builds composite braid by concatenating words, tracks component indices in CompositeInfo struct</li>
-<li><strong>Greedy angle selection</strong>: precompute-all-then-sweep approach with accumulated distance² per pair — more efficient than Demo 12's per-round recomputation</li>
+<li><strong>Greedy angle selection</strong>: precompute-all-then-sweep approach with accumulated distance² per pair — more efficient than <a href="./demo_12.html">Demo 12</a>'s per-round recomputation</li>
 <li>Reuses: complex arithmetic, braid state-sum oracle, union-find</li>
 </ul>
 <h3>Literature Touched</h3>

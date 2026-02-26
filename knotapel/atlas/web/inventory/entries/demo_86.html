@@ -12,12 +12,12 @@
 </head>
 <body>
     <nav><a href="../../index.html">← Back to Index</a></nav><hr>
-    <h2>Demo 86: Direct b on Single P_{0,0} via Delta-Parameterized Forms</h2>
+    <h2><a href="./demo_86.html">Demo 86</a>: Direct b on Single P_{0,0} via Delta-Parameterized Forms</h2>
 <ul>
 <li><strong>Status</strong>: COMPLETE (NEGATIVE RESULT)</li>
 <li><strong>File</strong>: <code><a href="../../demo_86_b_direct/main.c.html">demo_86_b_direct/main.c</a></code> (~1787 lines)</li>
 <li><strong>Tests</strong>: 15/15 pass</li>
-<li><strong>Depends on</strong>: Demo 85 (TL algebra infrastructure, left ideal construction, b = -5/8 on regular representation at TL_4)</li>
+<li><strong>Depends on</strong>: <a href="./demo_85.html">Demo 85</a> (TL algebra infrastructure, left ideal construction, b = -5/8 on regular representation at TL_4)</li>
 <li><strong>Feeds into</strong>: Open — the actual literature method for computing b at larger lattice sizes remains to be identified and implemented; dense polymer fusion calculation (narrative.md seed)</li>
 </ul>
 <h3>Headline</h3>
@@ -27,11 +27,11 @@ The delta-parameterized Gram matrix approach universally diverges on a single pr
 <li><strong>Universal divergence</strong>: the valuation condition p_tt = 2*p_Tt never holds on a single P_{0,0}. The delta-form b computation returns NaN (diverges) at every eigenvalue tested, for both loop form (predicting b = -5/8, Pearce-Rasmussen) and trace form (predicting b = -2, GRS).</li>
 <li><strong>Exhaustive eigenvalue scan</strong>: TL_4 tested at lambda = 0, +/-sqrt(2); TL_6 tested at lambda = 0, +/-1, +/-sqrt(3), +/-(sqrt(3)+1), +/-(sqrt(3)-1). All diverge with negative gap (p_tt &lt; 2*p_Tt).</li>
 <li><strong>TL_8 P_{0,0} is completely semisimple</strong>: no Jordan blocks at lambda=0 on the dim-42 ideal. The non-semisimple structure that enables b computation does not persist at this lattice size on P_{0,0} alone.</li>
-<li><strong>Full regular rep at TL_6 also diverges</strong>: the same d^{-2} gap appears in the full regular representation at TL_6. The TL_4 success (Demo 85) may be coincidental — cross-copy terms provide the right extra delta-power at TL_4 but fail at TL_6.</li>
+<li><strong>Full regular rep at TL_6 also diverges</strong>: the same d^{-2} gap appears in the full regular representation at TL_6. The TL_4 success (<a href="./demo_85.html">Demo 85</a>) may be coincidental — cross-copy terms provide the right extra delta-power at TL_4 but fail at TL_6.</li>
 <li><strong>Generator independence confirmed</strong>: all 2-through-line generators produce identical ideals and identical divergence patterns.</li>
 <li><strong>Projective-cover-exclusive eigenvalues discovered</strong>: TL_6 P_{0,0} has eigenvalues +/-(sqrt(3)+/-1) that do not appear on the standard module W_0 — these are structurally intrinsic to the projective cover.</li>
 <li><strong>Gemini cross-model check partially wrong</strong>: Gemini 3 Pro confirmed TL_4 eigenvalues and ground state formula E_GS = -2cos(pi/n), but got TL_6 wrong (predicted standard module spectrum, missing projective-cover-exclusive eigenvalues).</li>
-<li><strong>Gemini literature claim falsified by Demo 85</strong>: Gemini claimed the standard method extracts b from Jordan cell coupling on standard modules. Demo 85 proved standard modules have no Jordan blocks at any tested size (n=4,6,8,10,12). Jordan blocks only exist on P_{0,0} (projective covers).</li>
+<li><strong>Gemini literature claim falsified by <a href="./demo_85.html">Demo 85</a></strong>: Gemini claimed the standard method extracts b from Jordan cell coupling on standard modules. <a href="./demo_85.html">Demo 85</a> proved standard modules have no Jordan blocks at any tested size (n=4,6,8,10,12). Jordan blocks only exist on P_{0,0} (projective covers).</li>
 </ul>
 <h3>Theorems/Conjectures</h3>
 <ul>
@@ -53,8 +53,8 @@ The delta-parameterized Gram matrix approach universally diverges on a single pr
 </ul>
 <h3>Code Assets</h3>
 <ul>
-<li><strong>TL algebra infrastructure</strong> (reused from Demo 85): <code>alg_init()</code>, <code>alg_enumerate_basis()</code>, <code>alg_compose()</code>, <code>alg_compute_mult_table()</code>, <code>alg_star()</code>, <code>alg_closure_loops()</code>, <code>alg_count_through()</code></li>
-<li><strong>Left ideal construction</strong> (reused from Demo 85): <code>left_ideal_closure()</code> — BFS closure under left multiplication at delta=0</li>
+<li><strong>TL algebra infrastructure</strong> (reused from <a href="./demo_85.html">Demo 85</a>): <code>alg_init()</code>, <code>alg_enumerate_basis()</code>, <code>alg_compose()</code>, <code>alg_compute_mult_table()</code>, <code>alg_star()</code>, <code>alg_closure_loops()</code>, <code>alg_count_through()</code></li>
+<li><strong>Left ideal construction</strong> (reused from <a href="./demo_85.html">Demo 85</a>): <code>left_ideal_closure()</code> — BFS closure under left multiplication at delta=0</li>
 <li><strong><code>build_restricted_hamiltonian()</code></strong>: constructs L_H = -(e_0 + ... + e_{n-2}) restricted to a left ideal subspace with invariance verification</li>
 <li><strong><code>compute_b_on_ideal()</code></strong>: delta-form b computation on integer Hamiltonian (lambda=0); finds Jordan partners via ker(L_H^2)\ker(L_H), computes loop power matrix, extracts leading delta-power coefficients</li>
 <li><strong><code>compute_b_shifted()</code></strong>: double-precision version for irrational eigenvalues (lambda != 0); same algorithm but with floating-point shifted operator M = L_sub - lambda*I</li>
@@ -70,7 +70,7 @@ The delta-parameterized Gram matrix approach universally diverges on a single pr
 <li><strong>Pearce-Rasmussen</strong>: b = -5/8 value for the indecomposability parameter at delta=0 (critical dense polymers); the demo attempts to reproduce this via a different (ultimately unsuccessful) method</li>
 <li><strong>Graham-Read-Rasmussen (GRS)</strong>: b = -2 value from the algebraic trace form; the demo tests this form alongside the loop form, both diverge</li>
 <li><strong>Belletete et al.</strong>: tilting module classification referenced in earlier planning (the demo was originally conceived as a tilting module decomposition test, pivoted to direct b computation)</li>
-<li><strong>Gainutdinov et al. (2013)</strong>: dense polymer fusion calculation at p=2; Demo 86 seeds this as a future direction for algebraic description of DKC composition</li>
+<li><strong>Gainutdinov et al. (2013)</strong>: dense polymer fusion calculation at p=2; <a href="./demo_86.html">Demo 86</a> seeds this as a future direction for algebraic description of DKC composition</li>
 </ul>
 <h3>Open Questions</h3>
 <ul>

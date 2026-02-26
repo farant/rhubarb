@@ -12,16 +12,16 @@
 </head>
 <body>
     <nav><a href="../../index.html">← Back to Index</a></nav><hr>
-    <h2>Demo 06: Jones-Wenzl Idempotents</h2>
+    <h2><a href="./demo_06.html">Demo 06</a>: Jones-Wenzl Idempotents</h2>
 <ul>
 <li><strong>Status</strong>: COMPLETE</li>
 <li><strong>File</strong>: <code><a href="../../demo_06_jones_wenzl/main.c.html">demo_06_jones_wenzl/main.c</a></code> (~800 lines)</li>
 <li><strong>Tests</strong>: 19/19 pass (4 parts: A=4, B=3, C=4, D=4x2 braids = 8 minimum, varies)</li>
-<li><strong>Depends on</strong>: Demo 03 (TL standard modules, bracket formula), Demo 04 (tensor product R-matrix, quantum trace)</li>
+<li><strong>Depends on</strong>: <a href="./demo_03.html">Demo 03</a> (TL standard modules, bracket formula), <a href="./demo_04.html">Demo 04</a> (tensor product R-matrix, quantum trace)</li>
 <li><strong>Feeds into</strong>: Any demo needing projectors onto irreducible components; Markov trace decomposition</li>
 </ul>
 <h3>Headline</h3>
-Constructs scaled Jones-Wenzl idempotents p_2 (4x4) and p_3 (8x8) over Laurent polynomials, proving they are the projectors that explain Demo 03/04's quantum dimension weights via Schur-Weyl decomposition.
+Constructs scaled Jones-Wenzl idempotents p_2 (4x4) and p_3 (8x8) over Laurent polynomials, proving they are the projectors that explain <a href="./demo_03.html">Demo 03</a>/04's quantum dimension weights via Schur-Weyl decomposition.
 <h3>Key Results</h3>
 <ul>
 <li>TL relations verified on V^{tensor 3} (8x8): U_i^2 = delta<em>U_i, U_1</em>U_2<em>U_1 = U_1, U_2</em>U_1*U_2 = U_2</li>
@@ -40,7 +40,7 @@ Constructs scaled Jones-Wenzl idempotents p_2 (4x4) and p_3 (8x8) over Laurent p
 </ul>
 <h3>Code Assets</h3>
 <ul>
-<li><code>Poly</code> Laurent polynomial ring with <code>p_neg</code>, <code>p_sub</code>, <code>p_div_exact</code> (exact polynomial division with remainder check) — extensions beyond Demo 04</li>
+<li><code>Poly</code> Laurent polynomial ring with <code>p_neg</code>, <code>p_sub</code>, <code>p_div_exact</code> (exact polynomial division with remainder check) — extensions beyond <a href="./demo_04.html">Demo 04</a></li>
 <li><code>Mat</code> polynomial matrix library (same MAXN=8 infrastructure) with <code>mat_is_zero</code></li>
 <li>Quantum dimension computation via Chebyshev recurrence ([n+1]_q = [2]_q*[n]_q - [n-1]_q)</li>
 <li><code>braid_product()</code> mapping braid words to 8x8 matrix products</li>

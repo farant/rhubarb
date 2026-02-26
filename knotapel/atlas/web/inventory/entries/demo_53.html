@@ -12,12 +12,12 @@
 </head>
 <body>
     <nav><a href="../../index.html">← Back to Index</a></nav><hr>
-    <h2>Demo 53: DKC at delta=1 — Bracket Catalog over Z[zeta_3]</h2>
+    <h2><a href="./demo_53.html">Demo 53</a>: DKC at delta=1 — Bracket Catalog over Z[zeta_3]</h2>
 <ul>
 <li><strong>Status</strong>: COMPLETE</li>
 <li><strong>File</strong>: <code><a href="../../demo_53_dkc_d1/main.c.html">demo_53_dkc_d1/main.c</a></code> (~1474 lines)</li>
 <li><strong>Tests</strong>: ~40+ checks across 6 parts (A-F) + 4 experiments: Eisenstein arithmetic, planar matchings, TL generators at delta=1, braid generators, braid word evaluation, closure cross-validation, bracket catalog, axiality stress test, entanglement vanishing, compression ratios</li>
-<li><strong>Depends on</strong>: Demo 35 (delta=0 bracket catalog over Z[zeta_8], strict axiality), Demo 15 (delta-zero optimal angles)</li>
+<li><strong>Depends on</strong>: <a href="./demo_35.html">Demo 35</a> (delta=0 bracket catalog over Z[zeta_8], strict axiality), <a href="./demo_15.html">Demo 15</a> (delta-zero optimal angles)</li>
 <li><strong>Feeds into</strong>: Later demos comparing DKC behavior across different roots of unity</li>
 </ul>
 <h3>Headline</h3>
@@ -25,7 +25,7 @@ Explores the Kauffman bracket at delta=1 (A = omega = e^{i*2pi/3}, cube root of 
 <h3>Key Results</h3>
 <ul>
 <li><strong>Eisenstein arithmetic</strong> (Part A): verifies omega^3 = 1, omega^2 + omega + 1 = 0, conjugation (norm = a^2 - ab + b^2), A^n power cycling (mod 3), float cross-checks, axiality classification (multiples of 1, omega, or omega^2)</li>
-<li><strong>Planar matchings</strong> (Part B): enumerates Catalan-number basis sets (C_2=2, C_3=5, C_4=14, C_5=42), identical to Demo 35 (pure combinatorics, ring-independent)</li>
+<li><strong>Planar matchings</strong> (Part B): enumerates Catalan-number basis sets (C_2=2, C_3=5, C_4=14, C_5=42), identical to <a href="./demo_35.html">Demo 35</a> (pure combinatorics, ring-independent)</li>
 <li><strong>TL generators at delta=1</strong> (Part C): e_i^2 = e_i (idempotent!) verified for n=2,3,4. Braid relations e_i<em>e_j</em>e_i = e_i (for |i-j|=1) verified. Far commutativity e_1<em>e_3 = e_3</em>e_1 verified. At delta=1, every column has exactly one 1 (nonzero count = dim)</li>
 <li><strong>Braid generators</strong> (Part D): sigma <em> sigma^{-1} = I verified for n=2,3. Braid relation s1</em>s2<em>s1 = s2</em>s1*s2 verified.</li>
 <li><strong>Braid word evaluation</strong> (Part E): s1^2 * s1^{-2} = I, trefoil (s1^3) nonzero</li>
@@ -38,7 +38,7 @@ Explores the Kauffman bracket at delta=1 (A = omega = e^{i*2pi/3}, cube root of 
 <h3>Theorems/Conjectures</h3>
 <ul>
 <li><strong>Idempotency at delta=1</strong>: e_i^2 = delta <em> e_i = 1 </em> e_i = e_i. This is the defining algebraic difference from delta=0 (where e_i^2 = 0). All smoothing states survive, no loop-killing.</li>
-<li><strong>Axiality breakdown</strong>: at delta=0 (Z[zeta_8]), every bracket value lies on a single cyclotomic axis (strict axiality — Demo 35 result). At delta=1 (Z[omega]), mixed values (off-axis Eisenstein integers) are expected.</li>
+<li><strong>Axiality breakdown</strong>: at delta=0 (Z[zeta_8]), every bracket value lies on a single cyclotomic axis (strict axiality — <a href="./demo_35.html">Demo 35</a> result). At delta=1 (Z[omega]), mixed values (off-axis Eisenstein integers) are expected.</li>
 <li><strong>Entanglement vanishing breakdown</strong>: at delta=0, non-interleaving braids (using only far-apart generators) always produce bracket=0. At delta=1, delta^L = 1 means closed loops don't kill states, so non-interleaving braids can have nonzero bracket.</li>
 <li><strong>Ring comparison</strong>: Z[omega] is 2-dimensional (a + b*omega, a,b in Z) vs Z[zeta_8] which is 4-dimensional. Simpler ring, but different algebraic properties.</li>
 </ul>
@@ -56,7 +56,7 @@ Explores the Kauffman bracket at delta=1 (A = omega = e^{i*2pi/3}, cube root of 
 <h3>Code Assets</h3>
 <ul>
 <li><strong>Eisenstein integer arithmetic</strong>: <code>Eis</code> type (a + b*omega), <code>eis_add/sub/neg/mul/conj</code>, <code>eis_a_power</code> (A^n mod 3), <code>eis_is_axial</code> (test if value is scalar multiple of 1, omega, or omega^2), <code>eis_to_cx</code> (convert to floating-point complex)</li>
-<li><strong>Planar matching enumeration</strong>: <code>enumerate_basis()</code>, <code>compose_diagrams()</code> with closed-loop counting — reused from Demo 35, ring-independent</li>
+<li><strong>Planar matching enumeration</strong>: <code>enumerate_basis()</code>, <code>compose_diagrams()</code> with closed-loop counting — reused from <a href="./demo_35.html">Demo 35</a>, ring-independent</li>
 <li><strong>TL matrix algebra over Eisenstein integers</strong>: <code>TLMat</code> type (up to 42x42), <code>tlmat_zero/identity/add/scale_eis/mul/eq/is_zero/nonzero_count</code></li>
 <li><strong><code>build_generator_matrix_d1()</code></strong>: TL generator at delta=1 (every composition survives, coefficient always 1)</li>
 <li><strong><code>build_braid_generator_d1()</code></strong>: sigma_i = A<em>I + A^{-1}</em>e_i with A=omega</li>

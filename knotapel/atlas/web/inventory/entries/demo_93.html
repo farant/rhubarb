@@ -12,13 +12,13 @@
 </head>
 <body>
     <nav><a href="../../index.html">← Back to Index</a></nav><hr>
-    <h2>Demo 93: Function Scaling — 1-Weight-Per-Input Encoding</h2>
+    <h2><a href="./demo_93.html">Demo 93</a>: Function Scaling — 1-Weight-Per-Input Encoding</h2>
 <ul>
 <li><strong>Status</strong>: COMPLETE (LANDMARK)</li>
 <li><strong>File</strong>: <code><a href="../../demo_93_function_scaling_1wpi/main.c.html">demo_93_function_scaling_1wpi/main.c</a></code> (~1636 lines)</li>
 <li><strong>Tests</strong>: 37/37 pass (Phases 1-8)</li>
-<li><strong>Depends on</strong>: Demo 92 (parity-lock theorem, +/-q encoding is XOR-only), Demo 82-91 (depth-law arc, combined_cell activation framework), Demo 48/50 (forward DKC, 1wpi encoding computes all 13 NPN classes with split-sigmoid/MVN), Demo 80 (finite/infinite boundary)</li>
-<li><strong>Feeds into</strong>: Demo 94 (binary icosahedral group, solvability as capacity bottleneck), Demo 95 (RKHS kernel computation), activation zoo research, encoding design theory, depth law under phase_cell</li>
+<li><strong>Depends on</strong>: <a href="./demo_92.html">Demo 92</a> (parity-lock theorem, +/-q encoding is XOR-only), <a href="./demo_82.html">Demo 82</a>-<a href="./demo_91.html">91</a> (depth-law arc, combined_cell activation framework), <a href="./demo_48.html">Demo 48</a>/50 (forward DKC, 1wpi encoding computes all 13 NPN classes with split-sigmoid/MVN), <a href="./demo_80.html">Demo 80</a> (finite/infinite boundary)</li>
+<li><strong>Feeds into</strong>: <a href="./demo_94.html">Demo 94</a> (binary icosahedral group, solvability as capacity bottleneck), <a href="./demo_95.html">Demo 95</a> (RKHS kernel computation), activation zoo research, encoding design theory, depth law under phase_cell</li>
 </ul>
 <h3>Headline</h3>
 The 1-weight-per-input encoding under combined_cell is complement-blind (only complement-invariant functions achievable); removing the sign flip (phase_cell) recovers all 13 NPN classes, and a circuit complexity hierarchy emerges as hit-rate divergence: AND/XOR ratio explodes from 1.01 to infinity as N grows from 3 to 8.

@@ -12,13 +12,13 @@
 </head>
 <body>
     <nav><a href="../../index.html">← Back to Index</a></nav><hr>
-    <h2>Demo 64: Parity Matroid Recursion</h2>
+    <h2><a href="./demo_64.html">Demo 64</a>: Parity Matroid Recursion</h2>
 <ul>
 <li><strong>Status</strong>: COMPLETE</li>
 <li><strong>File</strong>: <code><a href="../../demo_64_parity_matroid_recursion/main.c.html">demo_64_parity_matroid_recursion/main.c</a></code> (~1745 lines)</li>
 <li><strong>Tests</strong>: 22/22 pass</li>
-<li><strong>Depends on</strong>: Demo 50 (four-tier NPN hierarchy, parity at k=6, 906 solutions), Demo 63 (angular anatomy, 5-input parity at k=15, parity ceiling n=5)</li>
-<li><strong>Feeds into</strong>: Demo 65 (Clifford staircase — Z[zeta_16] scaling, XOR6 at higher cyclotomic ring)</li>
+<li><strong>Depends on</strong>: <a href="./demo_50.html">Demo 50</a> (four-tier NPN hierarchy, parity at k=6, 906 solutions), <a href="./demo_63.html">Demo 63</a> (angular anatomy, 5-input parity at k=15, parity ceiling n=5)</li>
+<li><strong>Feeds into</strong>: <a href="./demo_65.html">Demo 65</a> (Clifford staircase — Z[zeta_16] scaling, XOR6 at higher cyclotomic ring)</li>
 </ul>
 <h3>Headline</h3>
 The DKC parity hierarchy {XOR2, XOR3, XOR4, XOR5} is a funnel-shaped matroid minor chain with perfect downward deletion-contraction closure and collapsing upward extensibility, whose wall at n=6 is geometrically explained by the self-doubling impossibility in Z[zeta_8].
@@ -38,7 +38,7 @@ The DKC parity hierarchy {XOR2, XOR3, XOR4, XOR5} is a funnel-shaped matroid min
 <li><strong>Theorem (self-doubling impossibility)</strong>: Adding a 6th weight equal to any existing weight always fails. Proof: scalar doubling preserves angle; class-1 doubled is class-1; class-1 output contradicts required class-0 for even-parity input weight. PROVEN.</li>
 <li><strong>Theorem (minimum wall distance d=4)</strong>: The closest any 6-weight candidate comes to satisfying XOR6 is 4 output errors (60/64 = 93.75% correct). No candidate achieves d=0,1,2,3. PROVEN (exhaustive).</li>
 <li><strong>Conjecture (funnel rate)</strong>: The coverage fractions 99.3% → 39.2% → 19.2% → 0% follow some algebraic or exponential decay law as a function of n. OPEN.</li>
-<li><strong>Conjecture (Clifford staircase)</strong>: XOR6 becomes achievable at Z[zeta_16] (next cyclotomic ring, fourth-level Clifford hierarchy), suggesting n-input parity climbs the Clifford hierarchy one rung per additional input. OPEN (target of Demo 65).</li>
+<li><strong>Conjecture (Clifford staircase)</strong>: XOR6 becomes achievable at Z[zeta_16] (next cyclotomic ring, fourth-level Clifford hierarchy), suggesting n-input parity climbs the Clifford hierarchy one rung per additional input. OPEN (target of <a href="./demo_65.html">Demo 65</a>).</li>
 </ul>
 <h3>Data</h3>
 <ul>
@@ -73,7 +73,7 @@ The DKC parity hierarchy {XOR2, XOR3, XOR4, XOR5} is a funnel-shaped matroid min
 </ul>
 <h3>Open Questions</h3>
 <ul>
-<li>Does XOR6 become achievable at Z[zeta_16]? If so, the parity function literally climbs the Clifford hierarchy one rung per additional input (Demo 65 target).</li>
+<li>Does XOR6 become achievable at Z[zeta_16]? If so, the parity function literally climbs the Clifford hierarchy one rung per additional input (<a href="./demo_65.html">Demo 65</a> target).</li>
 <li>Can the triple-interaction constraints (weight-3+ errors at d≥7) be characterized explicitly, analogous to the self-doubling theorem for weight-2?</li>
 <li>Are the 27 XOR5 weight sets built primarily from antipodal pairs (w + (-w) = 0 always safe)? How much of the vocabulary structure depends on antipodal geometry?</li>
 <li>Is there a closed-form formula for upward coverage fraction as a function of n (exponential decay, algebraic, other)?</li>

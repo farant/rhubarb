@@ -12,12 +12,12 @@
 </head>
 <body>
     <nav><a href="../../index.html">← Back to Index</a></nav><hr>
-    <h2>Demo 74: Computational Invariant of Braids</h2>
+    <h2><a href="./demo_74.html">Demo 74</a>: Computational Invariant of Braids</h2>
 <ul>
 <li><strong>Status</strong>: COMPLETE</li>
 <li><strong>File</strong>: <code><a href="../../demo_74_computational_invariant/main.c.html">demo_74_computational_invariant/main.c</a></code> (~1623 lines)</li>
 <li><strong>Tests</strong>: 20/20 pass</li>
-<li><strong>Depends on</strong>: Demo 66 (24 quaternions, Kauffman bracket at Z[ζ_8], 100 bracket values), Demo 67 (13 eigenvector directions, Voronoi cell assignment, 36 XOR6 solutions), Demo 70 (music space, r=-0.06 geometric/computational orthogonality), Demo 73 (82.8% automaton determinism, additive structure)</li>
+<li><strong>Depends on</strong>: <a href="./demo_66.html">Demo 66</a> (24 quaternions, Kauffman bracket at Z[ζ_8], 100 bracket values), <a href="./demo_67.html">Demo 67</a> (13 eigenvector directions, Voronoi cell assignment, 36 XOR6 solutions), <a href="./demo_70.html">Demo 70</a> (music space, r=-0.06 geometric/computational orthogonality), <a href="./demo_73.html">Demo 73</a> (82.8% automaton determinism, additive structure)</li>
 <li><strong>Feeds into</strong>: Future work on braid invariant theory from computational perspective</li>
 </ul>
 <h3>Headline</h3>
@@ -61,7 +61,7 @@ The DKC Voronoi cell and the Kauffman bracket are incomparable braid invariants 
 <li><strong>Full catalog builder with bracket computation</strong>: computes Kauffman bracket at A=-ζ_8 for every braid up to length 8 on 2 and 3 strands; stores quaternion, bracket, and per-braid correspondence records simultaneously</li>
 <li><strong>Z[ζ_8] exact arithmetic</strong>: <code>Cyc8</code> struct with <code>cyc8_mul()</code>, <code>cyc8_add()</code>, <code>cyc8_conj()</code>, <code>cyc8_pow_int()</code>, <code>cyc8_eq()</code>; coefficients remain exact integers throughout</li>
 <li><strong>Union-find loop counter for bracket</strong>: <code>braid_loops()</code> counts Temperley-Lieb loops for each state-sum assignment; union-find on (len+1)×n grid handles arbitrary braid words</li>
-<li><strong><code>find_winners()</code></strong>: finds all 36 XOR6 winning triples from the 24-element quaternion catalog; identical to Demo 67/73 logic but integrated with full catalog</li>
+<li><strong><code>find_winners()</code></strong>: finds all 36 XOR6 winning triples from the 24-element quaternion catalog; identical to <a href="./demo_67.html">Demo 67</a>/73 logic but integrated with full catalog</li>
 <li><strong><code>compute_type_vectors()</code></strong>: for each of the 14 Voronoi cells, computes the 36-bit type vector encoding its parity label under each winning triple; <code>TypeVec</code> struct with <code>typevec_eq()</code> for comparison</li>
 <li><strong><code>braid_type_idx()</code></strong>: maps a cell index to its type vector index (0–5); key for the 6-type orbit analysis</li>
 <li><strong>Per-braid correspondence record</strong>: stores (quaternion, bracket, qcat_idx, bcat_idx, braid_word, word_len, n_strands) for up to 2,000 braids; used for all collision and separation analyses</li>
@@ -69,7 +69,7 @@ The DKC Voronoi cell and the Kauffman bracket are incomparable braid invariants 
 </ul>
 <h3>Literature Touched</h3>
 <ul>
-<li><strong>Kauffman (1987)</strong>: the bracket polynomial as a braid/knot invariant at variable A; the specific evaluation A=-ζ_8 is the connection point to the DKC quaternion structure (Demo 66 established this)</li>
+<li><strong>Kauffman (1987)</strong>: the bracket polynomial as a braid/knot invariant at variable A; the specific evaluation A=-ζ_8 is the connection point to the DKC quaternion structure (<a href="./demo_66.html">Demo 66</a> established this)</li>
 <li><strong>Jones polynomial (Jones 1985)</strong>: the bracket at A=q^{-1/4} specializes to the Jones polynomial; the 119-class combined invariant is a refinement that the Jones polynomial alone cannot achieve</li>
 <li><strong>Temperley-Lieb algebra</strong>: the union-find loop counting in <code>braid_loops()</code> implements the TL state-sum expansion of the bracket; the computation is exact over Z[ζ_8]</li>
 <li><strong>Braid group representations (Burau, Lawrence-Krammer)</strong>: the SU(2) representation used for DKC is distinct from Burau/LK; the incomparability result shows the SU(2) eigenvector direction extracts information neither representation captures algebraically</li>

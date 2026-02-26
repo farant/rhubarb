@@ -12,12 +12,12 @@
 </head>
 <body>
     <nav><a href="../../index.html">← Back to Index</a></nav><hr>
-    <h2>Demo 80: Group Finiteness Survey</h2>
+    <h2><a href="./demo_80.html">Demo 80</a>: Group Finiteness Survey</h2>
 <ul>
 <li><strong>Status</strong>: COMPLETE</li>
 <li><strong>File</strong>: <code><a href="../../demo_80_group_finiteness/main.c.html">demo_80_group_finiteness/main.c</a></code> (~467 lines)</li>
 <li><strong>Tests</strong>: 11/11 pass</li>
-<li><strong>Depends on</strong>: Demo 79 (finite vs infinite group hypothesis), Demo 78 (ζ₈ wall at XOR10), Demo 66 (binary octahedral group = 24 elements)</li>
+<li><strong>Depends on</strong>: <a href="./demo_79.html">Demo 79</a> (finite vs infinite group hypothesis), <a href="./demo_78.html">Demo 78</a> (ζ₈ wall at XOR10), <a href="./demo_66.html">Demo 66</a> (binary octahedral group = 24 elements)</li>
 <li><strong>Feeds into</strong>: Future demos selecting which ζ_N to use for extended XOR capacity; ADE/quantum group connections</li>
 </ul>
 <h3>Headline</h3>
@@ -61,7 +61,7 @@ Only ζ₄ and ζ₈ generate finite SU(2) subgroups under the standard two-gene
 <li><strong><code>analyze_direction_distribution()</code></strong>: for infinite groups, reports S² octant coverage and angle gap statistics to characterize density structure</li>
 <li><strong><code>RootResult</code> struct</strong>: compact storage for per-root survey results (N, angle, finite flag, size, rounds, dirs, angles, ADE string); enables summary table across all roots</li>
 <li><strong><code>count_angles()</code> with bubble sort</strong>: collects distinct half-angles with 0.1° tolerance, sorts ascending; pattern for angle census reusable in any catalog analysis</li>
-<li><strong>Closure vs brute-word-enumeration tradeoff</strong>: Demo 80 uses true group closure (multiply existing elements by generators) rather than Demo 78's enumerate-all-words approach; closure is exact and efficient for finite groups, and correctly identifies infinite groups by hitting the cap</li>
+<li><strong>Closure vs brute-word-enumeration tradeoff</strong>: <a href="./demo_80.html">Demo 80</a> uses true group closure (multiply existing elements by generators) rather than <a href="./demo_78.html">Demo 78</a>'s enumerate-all-words approach; closure is exact and efficient for finite groups, and correctly identifies infinite groups by hitting the cap</li>
 </ul>
 <h3>Literature Touched</h3>
 <ul>
@@ -75,7 +75,7 @@ Only ζ₄ and ζ₈ generate finite SU(2) subgroups under the standard two-gene
 <ul>
 <li><strong>Is ζ₃₂ (θ = π/16) finite?</strong>: The power-of-two conjecture predicts yes. A single additional test_root(32) call would confirm or refute.</li>
 <li><strong>Why do perpendicular π/3 rotations not close?</strong>: The geometric argument (hexagonal symmetry vs octahedral symmetry) explains the result intuitively but a rigorous algebraic proof of why exactly π/2 and π/4 are special has not been given.</li>
-<li><strong>Do all infinite groups give unbounded XOR capacity?</strong>: Demo 79 confirmed ζ₁₂ (infinite) breaks the ζ₈ wall. But do all infinite groups provide unbounded capacity, or do some infinite groups have structural limitations that impose their own ceilings?</li>
+<li><strong>Do all infinite groups give unbounded XOR capacity?</strong>: <a href="./demo_79.html">Demo 79</a> confirmed ζ₁₂ (infinite) breaks the ζ₈ wall. But do all infinite groups provide unbounded capacity, or do some infinite groups have structural limitations that impose their own ceilings?</li>
 <li><strong>Which infinite group is computationally optimal?</strong>: ζ₁₀ has the most half-angles at 4096 entries (71) of all surveyed roots. Does more angular diversity directly translate to easier XOR computation and lower minimum k values?</li>
 <li><strong>E₆ and E₈ reachability</strong>: Binary tetrahedral (order 24, E₆) and binary icosahedral (order 120, E₈) are not reached by the two-perpendicular-axes generator construction. Is there a different natural generator construction that reaches them?</li>
 </ul>

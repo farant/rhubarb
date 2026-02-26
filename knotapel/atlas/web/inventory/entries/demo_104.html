@@ -12,13 +12,13 @@
 </head>
 <body>
     <nav><a href="../../index.html">← Back to Index</a></nav><hr>
-    <h2>Demo 104: Activation Coarseness Sweep — Sign-Hash Component Tuning for W_{6,0} vs W_{6,2}</h2>
+    <h2><a href="./demo_104.html">Demo 104</a>: Activation Coarseness Sweep — Sign-Hash Component Tuning for W_{6,0} vs W_{6,2}</h2>
 <ul>
 <li><strong>Status</strong>: COMPLETE (RESULT)</li>
 <li><strong>File</strong>: <code><a href="../../demo_104_coarseness_sweep/main.c.html">demo_104_coarseness_sweep/main.c</a></code> (~1798 lines)</li>
 <li><strong>Tests</strong>: 35/35 pass (Phases 0-8)</li>
-<li><strong>Depends on</strong>: Demo 103 (W_{6,2} vs W_{6,0} dimension scaling test, catalogs and generator code reused), Demo 101 (5-strand DKC on W_{5,3}, sign-hash activation pattern), Demo 93 (1wpi XOR framework)</li>
-<li><strong>Feeds into</strong>: Demo 105 (W_{8,2} branching generalization, 8-strand k-regime test), future cross-block activation design for higher-strand modules</li>
+<li><strong>Depends on</strong>: <a href="./demo_103.html">Demo 103</a> (W_{6,2} vs W_{6,0} dimension scaling test, catalogs and generator code reused), <a href="./demo_101.html">Demo 101</a> (5-strand DKC on W_{5,3}, sign-hash activation pattern), <a href="./demo_93.html">Demo 93</a> (1wpi XOR framework)</li>
+<li><strong>Feeds into</strong>: <a href="./demo_105.html">Demo 105</a> (W_{8,2} branching generalization, 8-strand k-regime test), future cross-block activation design for higher-strand modules</li>
 </ul>
 <h3>Headline</h3>
 The dim-9 W_{6,2} module's XOR deficit versus dim-5 W_{6,0} (observed in <a href="./demo_103.html">D103</a>) is a HASH problem, not an algebra problem: at optimal component count (120 of 324), W_{6,2} beats W_{6,0} (XOR6=2486 vs 2449), and the computational signal lives in the cross-block (off-diagonal branching interaction) components, not the within-block (diagonal) components -- but a k-sweep reveals this cross-block advantage is regime-dependent (low-k pigeonhole only), with W_{6,0} winning at every k value.

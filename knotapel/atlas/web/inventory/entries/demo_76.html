@@ -12,13 +12,13 @@
 </head>
 <body>
     <nav><a href="../../index.html">← Back to Index</a></nav><hr>
-    <h2>Demo 76: Scaling DKC to 8 Inputs</h2>
+    <h2><a href="./demo_76.html">Demo 76</a>: Scaling DKC to 8 Inputs</h2>
 <ul>
 <li><strong>Status</strong>: COMPLETE</li>
 <li><strong>File</strong>: <code><a href="../../demo_76_scaling_8input/main.c.html">demo_76_scaling_8input/main.c</a></code> (~959 lines)</li>
 <li><strong>Tests</strong>: 10/10 pass</li>
-<li><strong>Depends on</strong>: Demo 50 (parity at k=6 sectors, all 13 NPN classes), Demo 66 (quaternionic DKC, 24-cell catalog), Demo 67 (13 directions, 36 XOR6 solutions), Demo 69 (Clifford staircase, ζ_16 trivialization), Demo 71 (spectral DKC, bandwidth l=6), Demo 74 (computational invariant, 6 types), Demo 75 (binocular DKC, √n magnitudes)</li>
-<li><strong>Feeds into</strong>: Demo 77 (activation zoo — corrects this demo's conclusion)</li>
+<li><strong>Depends on</strong>: <a href="./demo_50.html">Demo 50</a> (parity at k=6 sectors, all 13 NPN classes), <a href="./demo_66.html">Demo 66</a> (quaternionic DKC, 24-cell catalog), <a href="./demo_67.html">Demo 67</a> (13 directions, 36 XOR6 solutions), <a href="./demo_69.html">Demo 69</a> (Clifford staircase, ζ_16 trivialization), <a href="./demo_71.html">Demo 71</a> (spectral DKC, bandwidth l=6), <a href="./demo_74.html">Demo 74</a> (computational invariant, 6 types), <a href="./demo_75.html">Demo 75</a> (binocular DKC, √n magnitudes)</li>
+<li><strong>Feeds into</strong>: <a href="./demo_77.html">Demo 77</a> (activation zoo — corrects this demo's conclusion)</li>
 </ul>
 <h3>Headline</h3>
 XOR8 has zero solutions at ζ_8 under S² Voronoi activation: the 14-cell partition lacks the resolution to separate 256 masks, and the algebraic structure of 4-term sums breaks down from 7 discrete angles to 86 near-continuous angles.
@@ -29,15 +29,15 @@ XOR8 has zero solutions at ζ_8 under S² Voronoi activation: the 14-cell partit
 <li><strong>Conflict distribution (Part B)</strong>: Minimum conflict cells for any quadruple is 2 (achieved by 11 quadruples, 0.1%). Most quadruples (93%) have 5 or more conflict cells. Even the best 2-conflict quadruple achieves only 50.0% accuracy — the conflicting cells each contain balanced even/odd masks.</li>
 <li><strong>Direction concentration (Part C)</strong>: Best quadruple [0,1,2,3] sends 81.3% of 256 masks to a single cell. 4-term sums cluster more tightly than 3-term sums, reducing directional diversity vs. 6-input winners which spread across 8–10 cells.</li>
 <li><strong>Algebraic structure breakdown (Parts D-E)</strong>: 3-term sums give 7 discrete eigenvalue angles (algebraic, clean). 4-term sums give 86 eigenvalue angles (near-continuous, values like 7.861°, 9.736°). The √n magnitude quantization also collapses: 6 values for 3-term sums vs. 28 values for 4-term sums including non-algebraic values like 0.4142, 0.7654.</li>
-<li><strong>Scaling path (Part E)</strong>: From Demo 69, ζ_16 has 3,457 directions. At ζ_16, 256 masks / 3,458 cells ≈ 0.07 masks per cell — trivially easy. The open question is whether a root of unity with ~56 directions provides the non-trivial sweet spot for 8-input DKC.</li>
-<li><strong>Bandwidth constraint</strong>: Demo 71 showed XOR6 requires spherical harmonic bandwidth l=6 with 2l+1=13 directions. XOR8 would need higher bandwidth and more directions. The required bandwidth constrains which roots of unity can support which input sizes.</li>
+<li><strong>Scaling path (Part E)</strong>: From <a href="./demo_69.html">Demo 69</a>, ζ_16 has 3,457 directions. At ζ_16, 256 masks / 3,458 cells ≈ 0.07 masks per cell — trivially easy. The open question is whether a root of unity with ~56 directions provides the non-trivial sweet spot for 8-input DKC.</li>
+<li><strong>Bandwidth constraint</strong>: <a href="./demo_71.html">Demo 71</a> showed XOR6 requires spherical harmonic bandwidth l=6 with 2l+1=13 directions. XOR8 would need higher bandwidth and more directions. The required bandwidth constrains which roots of unity can support which input sizes.</li>
 </ul>
 <h3>Theorems/Conjectures</h3>
 <ul>
 <li><strong>ζ_8 S²-capacity limit (DEMONSTRATED)</strong>: The 14-cell Voronoi partition of S² at ζ_8 is a hard geometric ceiling for 6-input computation. Exhaustive search over all C(24,4)=10,626 quadruples confirms 0 solutions.</li>
 <li><strong>Algebraic discreteness requires 3-term sums (OBSERVED)</strong>: The 7-angle quantization is specific to 3-term sums from the 24-cell. At 4-term sums the algebraic constraints weaken and angles explore most of the rotation space (86 values). CONJECTURED: k-term sums produce O(k²) distinct angles, with discrete structure only at k=3 for this lattice.</li>
 <li><strong>Sweet-spot formula (CONJECTURED)</strong>: The non-trivial DKC sweet spot occurs when masks/cells ≈ 4.6. For n inputs (2^n masks) this requires cells ≈ 2^n / 4.6. For n=8: cells ≈ 56. Is there a root of unity with ~56 eigenvector directions?</li>
-<li><strong>NOTE — CORRECTED BY DEMO 77</strong>: The conclusion that "ζ_8 is a 6-input structure" is activation-specific. With S¹ × S² product activation (112 cells), XOR8 IS solvable at ζ_8. Demo 76's failure is a failure of S²-only activation, not of the root of unity.</li>
+<li><strong>NOTE — CORRECTED BY DEMO 77</strong>: The conclusion that "ζ_8 is a 6-input structure" is activation-specific. With S¹ × S² product activation (112 cells), XOR8 IS solvable at ζ_8. <a href="./demo_76.html">Demo 76</a>'s failure is a failure of S²-only activation, not of the root of unity.</li>
 </ul>
 <h3>Data</h3>
 <ul>
@@ -50,7 +50,7 @@ XOR8 has zero solutions at ζ_8 under S² Voronoi activation: the 14-cell partit
 <li>4-term sum eigenvalue angles: 86 (near-continuous)</li>
 <li>3-term sum |S| values: 6 (√{0,1,2,3,4,6})</li>
 <li>4-term sum |S| values: 28 (including non-algebraic like 0.4142, 0.7654)</li>
-<li>ζ_16 direction count: 3,457 (from Demo 69); masks/cell at ζ_16 for XOR8: ~0.07</li>
+<li>ζ_16 direction count: 3,457 (from <a href="./demo_69.html">Demo 69</a>); masks/cell at ζ_16 for XOR8: ~0.07</li>
 </ul>
 <h3>Code Assets</h3>
 <ul>
@@ -62,8 +62,8 @@ XOR8 has zero solutions at ζ_8 under S² Voronoi activation: the 14-cell partit
 </ul>
 <h3>Literature Touched</h3>
 <ul>
-<li><strong>Demo 69 (Clifford Staircase)</strong>: ζ_8 ⊂ ζ_16 nesting and trivialization rates; the scaling path requires higher roots</li>
-<li><strong>Demo 71 (Spectral DKC)</strong>: Bandwidth l=6 requires 2l+1=13 directions; XOR8 bandwidth would require more directions and constrains feasible roots</li>
+<li><strong><a href="./demo_69.html">Demo 69</a> (Clifford Staircase)</strong>: ζ_8 ⊂ ζ_16 nesting and trivialization rates; the scaling path requires higher roots</li>
+<li><strong><a href="./demo_71.html">Demo 71</a> (Spectral DKC)</strong>: Bandwidth l=6 requires 2l+1=13 directions; XOR8 bandwidth would require more directions and constrains feasible roots</li>
 <li><strong>Pigeonhole / information-theoretic capacity</strong>: The 256/14 masks-per-cell argument is an elementary counting bound that establishes the hard geometric limit</li>
 </ul>
 <h3>Open Questions</h3>
@@ -72,7 +72,7 @@ XOR8 has zero solutions at ζ_8 under S² Voronoi activation: the 14-cell partit
 <li>Does the masks-per-cell ≈ 4.6 sweet spot hold across different input sizes and roots of unity, or is it a coincidence of ζ_8 at 6 inputs?</li>
 <li>Can the algebraic structure breakdown (7 → 86 angles) be explained as a function of the number of summands relative to the lattice symmetry group?</li>
 <li>What is the minimum root of unity that supports XOR8 without trivializing (as ζ_16 trivializes XOR6)?</li>
-<li>(Now answered by Demo 77): The S² wall was activation-specific. Does the same correction apply to XOR10, XOR12 — are those also solvable at ζ_8 with sufficiently fine product activation?</li>
+<li>(Now answered by <a href="./demo_77.html">Demo 77</a>): The S² wall was activation-specific. Does the same correction apply to XOR10, XOR12 — are those also solvable at ζ_8 with sufficiently fine product activation?</li>
 </ul>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>

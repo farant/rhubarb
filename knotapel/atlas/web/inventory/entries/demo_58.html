@@ -12,12 +12,12 @@
 </head>
 <body>
     <nav><a href="../../index.html">← Back to Index</a></nav><hr>
-    <h2>Demo 58: Fibonacci Anyon DKC (ell=5, delta=phi)</h2>
+    <h2><a href="./demo_58.html">Demo 58</a>: Fibonacci Anyon DKC (ell=5, delta=phi)</h2>
 <ul>
 <li><strong>Status</strong>: COMPLETE</li>
 <li><strong>File</strong>: <code><a href="../../demo_58_fibonacci_dkc/main.c.html">demo_58_fibonacci_dkc/main.c</a></code> (~1284 lines)</li>
 <li><strong>Tests</strong>: ~12 tests (Cyc5 arithmetic verification, catalog size, axiality, 2-input encoding, NPN class count, Re&gt;0 reachability comparison, additive convexity bound)</li>
-<li><strong>Depends on</strong>: Demo 57 (ell=4 Z[i] DKC baseline, 0x1B/0x06 Re&gt;0 wall discovery), Demo 50 (parity reachability at k=6 sectors), Demo 29 (forward DKC, exact cyclotomic arithmetic pattern), Demo 48 (forward DKC zoo, activation comparison)</li>
+<li><strong>Depends on</strong>: <a href="./demo_57.html">Demo 57</a> (ell=4 Z[i] DKC baseline, 0x1B/0x06 Re&gt;0 wall discovery), <a href="./demo_50.html">Demo 50</a> (parity reachability at k=6 sectors), <a href="./demo_29.html">Demo 29</a> (forward DKC, exact cyclotomic arithmetic pattern), <a href="./demo_48.html">Demo 48</a> (forward DKC zoo, activation comparison)</li>
 <li><strong>Feeds into</strong>: Further level comparison (ell=3, ell=6, ell=7), understanding whether Re&gt;0 wall is ring-rank or activation-structural, Fibonacci anyon universality implications</li>
 </ul>
 <h3>Headline</h3>
@@ -64,7 +64,7 @@ Tests DKC at the Fibonacci anyon level ell=5 where delta=phi=(1+sqrt(5))/2 (gold
 <li><strong><code>A_table[10]</code></strong>: precomputed powers A^0 through A^9 as Cyc5 elements; <code>cyc5_a_power(int)</code> with mod-10 wraparound (handles negative powers)</li>
 <li><strong><code>cyc5_delta_power(int k)</code></strong>: delta^k via Fibonacci: phi^k = (F(k-1), 0, -F(k), -F(k)); precomputed Fibonacci table to MAX_DELTA_POW=30</li>
 <li><strong><code>state_sum_bracket()</code></strong>: full state-sum bracket at ell=5 — iterates 2^{word_len} states, composes planar diagrams, counts loops (glue + trace closure), weights by delta^{loops-1} * A^{a_power}; returns Cyc5 exact value</li>
-<li><strong>Planar matching infrastructure</strong>: <code>PlanarMatch</code> struct, <code>make_identity_diagram()</code>, <code>make_generator_diagram()</code>, <code>compose_diagrams()</code> (with loop counting), <code>trace_closure_loops()</code> — identical to Demo 55/57</li>
+<li><strong>Planar matching infrastructure</strong>: <code>PlanarMatch</code> struct, <code>make_identity_diagram()</code>, <code>make_generator_diagram()</code>, <code>compose_diagrams()</code> (with loop counting), <code>trace_closure_loops()</code> — identical to <a href="./demo_55.html">Demo 55</a>/57</li>
 <li><strong><code>build_catalog()</code></strong>: enumerates braids across 3 strand counts (n=2,3,4) at multiple lengths, deduplicates exact Cyc5 bracket values, stores both exact and float representations</li>
 <li><strong>5 activation classifiers</strong>: <code>re_positive_classify()</code>, <code>im_positive_classify()</code>, <code>split_sigmoid_classify()</code>, <code>sector_classify(z, k)</code> (angular sectors), <code>magnitude_classify(z, tau)</code> — unified via <code>int (*classify)(Cx, int)</code> function pointer table</li>
 <li><strong><code>search_3input_batch()</code></strong>: exhaustive catalog^3 triple search for both multiplicative and additive encoding; classifies 8 inputs per triple across all 8 activations simultaneously; aggregates by NPN class</li>
@@ -89,7 +89,7 @@ Tests DKC at the Fibonacci anyon level ell=5 where delta=phi=(1+sqrt(5))/2 (gold
 <li>Can Fibonacci growth in delta power coefficients cause integer overflow issues at longer braid lengths?</li>
 <li>What is the optimal level ell for maximizing Boolean function reachability across all activations?</li>
 <li>Does the Fibonacci fusion rule (tau x tau = 1 + tau) have a direct combinatorial reflection in which truth tables are achievable?</li>
-<li>How does the ell=5 reachability compare with sector k=6 (which achieved all 13 at ell=4 in Demo 50)?</li>
+<li>How does the ell=5 reachability compare with sector k=6 (which achieved all 13 at ell=4 in <a href="./demo_50.html">Demo 50</a>)?</li>
 </ul>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>

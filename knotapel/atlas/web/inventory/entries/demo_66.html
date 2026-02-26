@@ -12,13 +12,13 @@
 </head>
 <body>
     <nav><a href="../../index.html">← Back to Index</a></nav><hr>
-    <h2>Demo 66: Quaternionic DKC — First Contact</h2>
+    <h2><a href="./demo_66.html">Demo 66</a>: Quaternionic DKC — First Contact</h2>
 <ul>
 <li><strong>Status</strong>: COMPLETE</li>
 <li><strong>File</strong>: <code><a href="../../demo_66_quaternionic_dkc/main.c.html">demo_66_quaternionic_dkc/main.c</a></code> (~2004 lines)</li>
 <li><strong>Tests</strong>: 30/30 pass</li>
-<li><strong>Depends on</strong>: Demo 29 (Z[zeta_8] exact arithmetic, bracket catalog), Demo 50 (four-tier NPN hierarchy, parity at k=6, 906 solutions), Demo 63 (angular anatomy, sector-octant mapping), Demo 65 (complex S¹ XOR results, antipodal constraint)</li>
-<li><strong>Feeds into</strong>: Demo 67, Demo 68, Demo 69, Demo 70, Demo 71</li>
+<li><strong>Depends on</strong>: <a href="./demo_29.html">Demo 29</a> (Z[zeta_8] exact arithmetic, bracket catalog), <a href="./demo_50.html">Demo 50</a> (four-tier NPN hierarchy, parity at k=6, 906 solutions), <a href="./demo_63.html">Demo 63</a> (angular anatomy, sector-octant mapping), <a href="./demo_65.html">Demo 65</a> (complex S¹ XOR results, antipodal constraint)</li>
+<li><strong>Feeds into</strong>: <a href="./demo_67.html">Demo 67</a>, <a href="./demo_68.html">Demo 68</a>, <a href="./demo_69.html">Demo 69</a>, <a href="./demo_70.html">Demo 70</a>, <a href="./demo_71.html">Demo 71</a></li>
 </ul>
 <h3>Headline</h3>
 Lifting the Kauffman bracket from S¹ (complex trace) to S³ (full unit quaternion) reveals the 24-cell polytope as the natural computational geometry for DKC, and its 25-cell Voronoi partition finds more XOR6 solutions than a 64-cell geographic grid.
@@ -28,7 +28,7 @@ Lifting the Kauffman bracket from S¹ (complex trace) to S³ (full unit quaterni
 <li><strong>Part D — Bracket ≠ trace</strong>: The bracket and quaternion are complementary projections of the full braid group representation. Average Re(bracket)/trace ratio is −0.0799 (no clean constant); the bracket includes Markov trace normalization and writhe correction not present in the raw quaternion.</li>
 <li><strong>Part E — Antipodal-only XOR6</strong>: Full search over all C(24,6) = 475,020 six-tuples finds zero solutions at any grid resolution (3×3 through 8×8). Restricting to antipodal pairs (3 pairs of (q, −q)) yields 3 solutions at 6×6 and 34 solutions at 8×8. The antipodal constraint is absolute, reflecting the SU(2) → SO(3) double cover.</li>
 <li><strong>Part G — Anatomy of winning tuples</strong>: At 6×6, 2 of 3 winners are mixed (edge + body, non-orthogonal); 1 is all-edge and mutually orthogonal (forming a coordinate frame in R⁴). At 8×8, 15/34 winners are mutually orthogonal (44%), and body-type (±½,±½,±½,±½) vertices dominate (16/34 all-body vs. 0 all-axis and 5 all-edge).</li>
-<li><strong>Part H — 24-cell Voronoi activation</strong>: Assigning each subset sum to its nearest 24-cell vertex (25 Voronoi cells: 24 vertices + 1 zero cell) yields 35 solutions — more than the 64-cell geographic grid's 34. The complex S¹ minimum of k=24 sectors (Demo 65) matches the 24-cell vertex count: complex k=24 is a projection of the 24-cell.</li>
+<li><strong>Part H — 24-cell Voronoi activation</strong>: Assigning each subset sum to its nearest 24-cell vertex (25 Voronoi cells: 24 vertices + 1 zero cell) yields 35 solutions — more than the 64-cell geographic grid's 34. The complex S¹ minimum of k=24 sectors (<a href="./demo_65.html">Demo 65</a>) matches the 24-cell vertex count: complex k=24 is a projection of the 24-cell.</li>
 <li><strong>Parts I, L — Universal 7/7/11 structure</strong>: Every one of the 35 Voronoi XOR6 solutions has exactly 7 cells labeled 0, 7 cells labeled 1, and 11 cells unused. The zero cell is always labeled 0. This is a geometric constraint: 3 antipodal pairs define 3 great circles on S³ and the 64 subset sums touch only 14 of 25 Voronoi cells.</li>
 <li><strong>Part J — Complementary hash functions</strong>: Bracket and quaternion as hash functions over 124,750 braid pairs: 16,047 (12.86%) agree on both; 450 (0.36%) share bracket but differ in quaternion; 8,424 (6.75%) share quaternion but differ in bracket; 99,829 (80.03%) differ on both. The quaternion resolves 450 bracket collisions; the bracket resolves 8,424 quaternion collisions.</li>
 <li><strong>Part K — F4 symmetry, 6 orbits</strong>: The full two-sided symmetry group of the 24-cell has 576 elements (F4 Coxeter rotation subgroup). Under this symmetry, 35 solutions decompose into 6 orbits (sizes 12, 7, 5, 5, 4, 2) forming two families: edge-dominant (orbits 1, 2, 5 — 22 solutions, edge cells → label 1) and body-dominant (orbits 3, 4, 6 — 13 solutions, axis/body cells → label 1).</li>
@@ -41,7 +41,7 @@ Lifting the Kauffman bracket from S¹ (complex trace) to S³ (full unit quaterni
 <li><strong>Theorem (universal 7/7/11 structure)</strong>: Every Voronoi XOR6 solution activates exactly 7 cells with label 0, 7 with label 1, and leaves 11 unused. PROVEN (all 35 verified).</li>
 <li><strong>Theorem (F4 decomposes to 6 orbits)</strong>: Under the 576-element F4 rotation subgroup, the 35 winning tuples fall into exactly 6 orbits in two complementary families. PROVEN.</li>
 <li><strong>Conjecture (orbit count formula)</strong>: The orbit count 6 = 1+2+3 may reflect the partition structure of 6 (XOR arity); XOR_n on the 24-cell may always yield n*(n-1)/2 orbits. CONJECTURED.</li>
-<li><strong>Conjecture (complex k=24 as projection)</strong>: The minimum of k=24 sectors for S¹ XOR6 (Demo 65) is a projection of the 24-cell's 24 vertices onto S¹ via the trace. CONJECTURED.</li>
+<li><strong>Conjecture (complex k=24 as projection)</strong>: The minimum of k=24 sectors for S¹ XOR6 (<a href="./demo_65.html">Demo 65</a>) is a projection of the 24-cell's 24 vertices onto S¹ via the trace. CONJECTURED.</li>
 </ul>
 <h3>Data</h3>
 <ul>
@@ -78,7 +78,7 @@ Lifting the Kauffman bracket from S¹ (complex trace) to S³ (full unit quaterni
 <ul>
 <li>Why exactly 6 orbits? Does XOR_n on the 24-cell always yield n*(n-1)/2 orbits by partition structure?</li>
 <li>Does the edge-dominant / body-dominant split (22/13) exchange under the self-duality of the 24-cell (vertices ↔ face centers)?</li>
-<li>What happens to XOR7 with 24-cell Voronoi activation? Demo 65 required k=91 sectors on S¹; does the 4D geometry accommodate XOR7 within 25 cells?</li>
+<li>What happens to XOR7 with 24-cell Voronoi activation? <a href="./demo_65.html">Demo 65</a> required k=91 sectors on S¹; does the 4D geometry accommodate XOR7 within 25 cells?</li>
 <li>Do the higher binary polyhedral groups (binary tetrahedral: 24, binary icosahedral: 120, corresponding to 120-cell) change the computational landscape?</li>
 <li>Do the 35 Voronoi solutions sit exactly on cell boundaries (zero margin) as in the S¹ case, or does 4D geometry provide genuine separation?</li>
 </ul>

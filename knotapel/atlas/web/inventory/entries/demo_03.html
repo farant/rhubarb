@@ -12,13 +12,13 @@
 </head>
 <body>
     <nav><a href="../../index.html">← Back to Index</a></nav><hr>
-    <h2>Demo 03: TL Module &amp; Braid Representation</h2>
+    <h2><a href="./demo_03.html">Demo 03</a>: TL Module &amp; Braid Representation</h2>
 <ul>
 <li><strong>Status</strong>: COMPLETE</li>
 <li><strong>File</strong>: <code><a href="../../demo_03/main.c.html">demo_03/main.c</a></code> (~603 lines)</li>
 <li><strong>Tests</strong>: 8/8 pass (4 parts: TL relations, braid inverses, Yang-Baxter, full bracket)</li>
-<li><strong>Depends on</strong>: Demo 01 (Kauffman bracket state-sum oracle), Demo 02 (braid representation concepts)</li>
-<li><strong>Feeds into</strong>: Demo 04 (spin chain / tensor product representation)</li>
+<li><strong>Depends on</strong>: <a href="./demo_01.html">Demo 01</a> (Kauffman bracket state-sum oracle), <a href="./demo_02.html">Demo 02</a> (braid representation concepts)</li>
+<li><strong>Feeds into</strong>: <a href="./demo_04.html">Demo 04</a> (spin chain / tensor product representation)</li>
 </ul>
 <h3>Headline</h3>
 Constructs the correct TL_3 standard module W_1 and braid representation, verifying TL algebra relations, braid group inverses, Yang-Baxter equation, and full Kauffman bracket computation via both standard modules W_1 (dim 2) and W_3 (dim 1).
@@ -43,7 +43,7 @@ Constructs the correct TL_3 standard module W_1 and braid representation, verify
 <ul>
 <li><strong>Laurent polynomial ring</strong> (<code>Poly</code>): zero, monomial, trim, add, multiply, equality, print — reused across later demos</li>
 <li><strong>2x2 matrix algebra</strong> (<code>Mat2</code>): identity, multiply, scale, add, trace, equality, print — over Laurent polynomials</li>
-<li><strong>4x4 matrix algebra</strong> (<code>Mat4</code>): zero, multiply, equality, tensor product — defined but tensor Yang-Baxter deferred to Demo 04</li>
+<li><strong>4x4 matrix algebra</strong> (<code>Mat4</code>): zero, multiply, equality, tensor product — defined but tensor Yang-Baxter deferred to <a href="./demo_04.html">Demo 04</a></li>
 <li><strong>Union-find state-sum oracle</strong> (<code>braid_bracket</code>): enumerates all 2^n smoothings, counts loops via union-find — serves as ground-truth verifier</li>
 <li><strong>Braid struct</strong>: word array + length + strand count</li>
 </ul>
@@ -58,7 +58,7 @@ Constructs the correct TL_3 standard module W_1 and braid representation, verify
 <h3>Open Questions</h3>
 <ul>
 <li>The addendum's attempt to express the Markov trace as a constant-coefficient weighted sum of ordinary module traces fails — the Markov trace requires a more sophisticated construction (possibly involving conditional expectations / Jones basic construction)</li>
-<li>4x4 tensor product Yang-Baxter verification explicitly deferred to Demo 04</li>
+<li>4x4 tensor product Yang-Baxter verification explicitly deferred to <a href="./demo_04.html">Demo 04</a></li>
 </ul>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>

@@ -12,13 +12,13 @@
 </head>
 <body>
     <nav><a href="../../index.html">← Back to Index</a></nav><hr>
-    <h2>Demo 47: Parity Investigation</h2>
+    <h2><a href="./demo_47.html">Demo 47</a>: Parity Investigation</h2>
 <ul>
 <li><strong>Status</strong>: COMPLETE</li>
 <li><strong>File</strong>: <code><a href="../../demo_47_parity_investigation/main.c.html">demo_47_parity_investigation/main.c</a></code> (~1641 lines)</li>
 <li><strong>Tests</strong>: ~12 tests; prediction scorecard 3/6 pass (P1, P2, P4 pass; P3, P5, P6 fail — failures are informative)</li>
-<li><strong>Depends on</strong>: Demo 46 (per-neuron gauge correction, NPN classification, split-sigmoid baseline), Demo 29 (exact Z[zeta_8] catalog), Demo 45/46 (topology-frequency correlation)</li>
-<li><strong>Feeds into</strong>: Demo 48 (forward DKC zoo, hybrid decomposition), Demo 50 (parity reachability at k=6 sectors)</li>
+<li><strong>Depends on</strong>: <a href="./demo_46.html">Demo 46</a> (per-neuron gauge correction, NPN classification, split-sigmoid baseline), <a href="./demo_29.html">Demo 29</a> (exact Z[zeta_8] catalog), <a href="./demo_45.html">Demo 45</a>/46 (topology-frequency correlation)</li>
+<li><strong>Feeds into</strong>: <a href="./demo_48.html">Demo 48</a> (forward DKC zoo, hybrid decomposition), <a href="./demo_50.html">Demo 50</a> (parity reachability at k=6 sectors)</li>
 </ul>
 <h3>Headline</h3>
 MVN activation dramatically improves bracket decomposition for parity (pn-RMS 0.41 vs 0.77), but NOT by phase alignment to lattice — instead by creating phase coherence within each neuron's weight subspace; the topology-frequency correlation reverses sign under MVN, revealing that different activations access different sectors of the bracket algebra.
@@ -61,7 +61,7 @@ MVN activation dramatically improves bracket decomposition for parity (pn-RMS 0.
 <li><strong>Per-neuron gauge generalized</strong>: <code>pn_gauge_3d()</code> for nh=3 (36^3 grid + refinement), <code>pn_gauge_coord()</code> for nh&gt;3 (coordinate descent, 72 steps/axis, 3 iterations)</li>
 <li><strong><code>compute_phase_error()</code></strong>: average angular distance to nearest pi/4 multiple</li>
 <li><strong><code>spearman_rho()</code></strong>: Spearman rank correlation with tie handling</li>
-<li>Bracket catalog builder, global gauge sweep, amplitude-only RMS — all reusable from Demo 46</li>
+<li>Bracket catalog builder, global gauge sweep, amplitude-only RMS — all reusable from <a href="./demo_46.html">Demo 46</a></li>
 </ul>
 <h3>Literature Touched</h3>
 <ul>

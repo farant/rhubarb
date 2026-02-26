@@ -12,19 +12,19 @@
 </head>
 <body>
     <nav><a href="../../index.html">← Back to Index</a></nav><hr>
-    <h2>Demo 68: Stereographic DKC — Knot Computation in the Plane</h2>
+    <h2><a href="./demo_68.html">Demo 68</a>: Stereographic DKC — Knot Computation in the Plane</h2>
 <ul>
 <li><strong>Status</strong>: COMPLETE</li>
 <li><strong>File</strong>: <code><a href="../../demo_68_stereographic_dkc/main.c.html">demo_68_stereographic_dkc/main.c</a></code> (~1171 lines)</li>
 <li><strong>Tests</strong>: 9/9 pass</li>
-<li><strong>Depends on</strong>: Demo 67 (13-direction S² Voronoi, 36 solutions, eigenvector decomposition)</li>
-<li><strong>Feeds into</strong>: Demo 69, Demo 70, Demo 71</li>
+<li><strong>Depends on</strong>: <a href="./demo_67.html">Demo 67</a> (13-direction S² Voronoi, 36 solutions, eigenvector decomposition)</li>
+<li><strong>Feeds into</strong>: <a href="./demo_69.html">Demo 69</a>, <a href="./demo_70.html">Demo 70</a>, <a href="./demo_71.html">Demo 71</a></li>
 </ul>
 <h3>Headline</h3>
 Stereographic projection of the eigenvector S² onto R² preserves all 36 DKC solutions exactly when using the S² great-circle metric, but gives zero solutions with Euclidean distance, proving the computation is intrinsically curved and cannot be flattened — the plane is a window, not a workspace.
 <h3>Key Results</h3>
 <ul>
-<li><strong>S² Voronoi preserved under projection (Part C)</strong>: Using the S² great-circle metric (dot product) for Voronoi cell assignment in R² gives 36 solutions at 14 cells — identical to Demo 67. All 36 winners show 7 zero / 7 one cell labeling, exact match.</li>
+<li><strong>S² Voronoi preserved under projection (Part C)</strong>: Using the S² great-circle metric (dot product) for Voronoi cell assignment in R² gives 36 solutions at 14 cells — identical to <a href="./demo_67.html">Demo 67</a>. All 36 winners show 7 zero / 7 one cell labeling, exact match.</li>
 <li><strong>Euclidean metric gives zero solutions (Part C)</strong>: Switching to R² Euclidean distance for nearest-neighbor assignment collapses solutions to zero. Area distortion from stereographic projection (up to 16.5×) breaks cell boundaries; large cells near the projection pole consume neighbors that belong to smaller cells. The computation is intrinsically curved.</li>
 <li><strong>ASCII visualization: DKC as a drawable picture (Part D)</strong>: Each of the 36 winning solutions renders as a 65×33 ASCII image. Regions of 0s and 1s form contiguous visible domains; <code>+</code> marks Voronoi boundaries; <code>*</code> marks the 6 weight positions; <code>0–9, A–C</code> labels the 13 Voronoi centers. The decision boundary is a visible curve in the plane.</li>
 <li><strong>Perceptron formulation (Part E)</strong>: Architecture is 6 bits → 2 neurons (linear combination of projected weight coordinates) → Voronoi activation (S² metric) → 1 bit. The 6×2 weight matrix comes from stereographic projections of weight quaternion eigenvector directions, not gradient descent.</li>
@@ -44,7 +44,7 @@ Stereographic projection of the eigenvector S² onto R² preserves all 36 DKC so
 <li>Tests: 9/9 pass (Parts A–F)</li>
 <li>Round-trip projection precision: ~1e-15</li>
 <li>Bounding box: x∈[−2.41, 1.37], y∈[−1.00, 2.41]; spread dx=3.78, dy=3.41</li>
-<li>S² Voronoi in R² (S² metric): 36 solutions, 14 cells — exact match to Demo 67</li>
+<li>S² Voronoi in R² (S² metric): 36 solutions, 14 cells — exact match to <a href="./demo_67.html">Demo 67</a></li>
 <li>R² Euclidean Voronoi: 0 solutions</li>
 <li>Area distortion: largest cell 4.33 (17%), smallest cell 0.26 (1%), ratio 16.5×</li>
 <li>ASCII visualization: 65×33 per solution, 36 images total</li>
@@ -71,7 +71,7 @@ Stereographic projection of the eigenvector S² onto R² preserves all 36 DKC so
 <ul>
 <li><strong>Gradient descent to these weights?</strong> The perceptron weight matrices are derived from knot theory. Can gradient descent find them from random init, and if so, does it rediscover the S² structure implicitly?</li>
 <li><strong>Other conformal maps?</strong> Stereographic projection is one conformal map S² → R²; Mercator and others exist. Do different conformal charts give better or worse ASCII visualization of the decision boundary?</li>
-<li><strong>XOR7 picture?</strong> Demo 65 showed XOR7 needs k=127 on S¹. If S² reduces XOR6 to 14 cells, what does the stereographic picture of XOR7 on S² look like — and how many cells?</li>
+<li><strong>XOR7 picture?</strong> <a href="./demo_65.html">Demo 65</a> showed XOR7 needs k=127 on S¹. If S² reduces XOR6 to 14 cells, what does the stereographic picture of XOR7 on S² look like — and how many cells?</li>
 <li><strong>Minimal bounding box tiling?</strong> The 8×8 planar grid wastes cells on empty corners. A tighter irregular planar partition covering only the convex hull of the 13 projected centers might approach the 14-cell Voronoi count. How close can it get?</li>
 <li><strong>Three-neuron perceptron?</strong> The current formulation uses 2 hidden neurons (x, y coordinates). Adding a third (e.g., radius from origin) might enable purely Euclidean nearest-neighbor in R³, recovering the S² metric implicitly. Does this work?</li>
 </ul>

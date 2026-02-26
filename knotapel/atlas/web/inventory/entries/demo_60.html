@@ -12,13 +12,13 @@
 </head>
 <body>
     <nav><a href="../../index.html">← Back to Index</a></nav><hr>
-    <h2>Demo 60: ell=7 Cubic Wall</h2>
+    <h2><a href="./demo_60.html">Demo 60</a>: ell=7 Cubic Wall</h2>
 <ul>
 <li><strong>Status</strong>: COMPLETE</li>
 <li><strong>File</strong>: <code><a href="../../demo_60_cubic_wall/main.c.html">demo_60_cubic_wall/main.c</a></code> (~1012 lines)</li>
 <li><strong>Tests</strong>: 15/15 pass</li>
-<li><strong>Depends on</strong>: Demo 35 (planar matching enumeration, diagram composition), Demo 51 (radical anatomy at delta=0), Demo 52 (Chebyshev generalization, radical anatomy at multiple delta values including ell=3..6)</li>
-<li><strong>Feeds into</strong>: Demo 61 (angular proof of 11/13 theorem), Demo 62+; extends radical dimension formulas into cubic number fields; confirms universality of radical filtration structure beyond quadratic cases</li>
+<li><strong>Depends on</strong>: <a href="./demo_35.html">Demo 35</a> (planar matching enumeration, diagram composition), <a href="./demo_51.html">Demo 51</a> (radical anatomy at delta=0), <a href="./demo_52.html">Demo 52</a> (Chebyshev generalization, radical anatomy at multiple delta values including ell=3..6)</li>
+<li><strong>Feeds into</strong>: <a href="./demo_61.html">Demo 61</a> (angular proof of 11/13 theorem), <a href="./demo_62.html">Demo 62</a>+; extends radical dimension formulas into cubic number fields; confirms universality of radical filtration structure beyond quadratic cases</li>
 </ul>
 <h3>Headline</h3>
 First test of Temperley-Lieb radical anatomy at a cubic number field: at ell=7 (delta=2cos(pi/7), root of x^3-x^2-2x+1=0), all dimension formulas from Demos 51-52 extend universally — semisimple for n&lt;7, radical appears at n=7 with dim=11=2*7-3, grows to dim=39=7^2-7-3 at n=8, rad^2 is always 1-dimensional, nilpotency is uniformly 3, and the Fibonacci rank sum F(6)=8 holds exactly.
@@ -68,7 +68,7 @@ First test of Temperley-Lieb radical anatomy at a cubic number field: at ell=7 (
 <li><strong>Fibonacci rank test</strong>: <code>fibonacci_rank_test()</code> — decomposes rad^2 generator by through-strand count into sector bilinear matrices, computes rank of each sector, sums to verify F(ell-1) prediction</li>
 <li><strong><code>count_through_strands()</code></strong>: Counts top-to-bottom matched strands in a planar matching diagram</li>
 <li><strong><code>matrix_rank_modp()</code></strong>: Generic Gaussian elimination rank computation on flat matrices mod p</li>
-<li><strong>Planar matching enumerator</strong>: <code>enumerate_basis()</code>, <code>enum_segments()</code>, <code>build_boundary_order()</code> — segment-based recursive algorithm (from Demo 35/51/52)</li>
+<li><strong>Planar matching enumerator</strong>: <code>enumerate_basis()</code>, <code>enum_segments()</code>, <code>build_boundary_order()</code> — segment-based recursive algorithm (from <a href="./demo_35.html">Demo 35</a>/51/52)</li>
 <li><strong>Diagram composition</strong>: <code>compose_diagrams()</code> with loop counting, <code>find_basis_index()</code> for lookup</li>
 </ul>
 <h3>Literature Touched</h3>

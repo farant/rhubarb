@@ -12,21 +12,21 @@
 </head>
 <body>
     <nav><a href="../../index.html">← Back to Index</a></nav><hr>
-    <h2>Demo 46: Per-Neuron Gauge Correction</h2>
+    <h2><a href="./demo_46.html">Demo 46</a>: Per-Neuron Gauge Correction</h2>
 <ul>
 <li><strong>Status</strong>: COMPLETE</li>
 <li><strong>File</strong>: <code><a href="../../demo_46_per_neuron_gauge/main.c.html">demo_46_per_neuron_gauge/main.c</a></code> (~1472 lines)</li>
 <li><strong>Tests</strong>: 6/10 checks pass (4 informative failures on predictions P2-P5), across 6 parts (A-F): NPN classification, complex network training, bracket catalog, decomposition with global + per-neuron gauge, ranking &amp; Spearman correlation, summary table &amp; angle structure</li>
-<li><strong>Depends on</strong>: Demo 45 (Complex Function Zoo — global gauge decomposition, Spearman rho = -0.82), Demo 27 (reverse DKC error decomposition), Demo 28 (unitary activation comparison)</li>
-<li><strong>Feeds into</strong>: Demo 47 (Parity Investigation — MVN activation to test lattice-aligned phases)</li>
+<li><strong>Depends on</strong>: <a href="./demo_45.html">Demo 45</a> (Complex Function Zoo — global gauge decomposition, Spearman rho = -0.82), <a href="./demo_27.html">Demo 27</a> (reverse DKC error decomposition), <a href="./demo_28.html">Demo 28</a> (unitary activation comparison)</li>
+<li><strong>Feeds into</strong>: <a href="./demo_47.html">Demo 47</a> (Parity Investigation — MVN activation to test lattice-aligned phases)</li>
 </ul>
 <h3>Headline</h3>
-Replaces Demo 45's single global U(1) gauge rotation with independent per-neuron rotations (3D sweep: one angle per hidden neuron), finding that per-neuron gauge improves RMS by 20% but amplitude-only decomposition (RMS 0.33) still dramatically beats per-neuron gauge (RMS 0.57) — proving that phase decoherence from split-sigmoid training, not gauge approximation, is the fundamental bottleneck.
+Replaces <a href="./demo_45.html">Demo 45</a>'s single global U(1) gauge rotation with independent per-neuron rotations (3D sweep: one angle per hidden neuron), finding that per-neuron gauge improves RMS by 20% but amplitude-only decomposition (RMS 0.33) still dramatically beats per-neuron gauge (RMS 0.57) — proving that phase decoherence from split-sigmoid training, not gauge approximation, is the fundamental bottleneck.
 <h3>Key Results</h3>
 <ul>
 <li><strong>NPN classification</strong> (Part A): maps all 256 3-input truth tables to 14 NPN canonical forms (via permutation + input negation + output negation), selects 13 non-trivial classes for testing</li>
 <li><strong>Complex network training</strong> (Part B): CxNet3 architecture (3 complex hidden neurons, 12 complex weights), split-sigmoid activation, 10 trials per NPN class, SGD with lr=0.3, max 200k epochs</li>
-<li><strong>Bracket catalog</strong> (Part C): 64 distinct complex bracket values from 2-3 strand braids at A = e^{i*5pi/4}, same as Demo 45</li>
+<li><strong>Bracket catalog</strong> (Part C): 64 distinct complex bracket values from 2-3 strand braids at A = e^{i*5pi/4}, same as <a href="./demo_45.html">Demo 45</a></li>
 <li><strong>Decomposition</strong> (Part D): for each converged network, three decomposition methods compared:</li>
 <li>Global gauge (1D sweep, 360 angles): avg RMS = 0.7164</li>
 <li>Per-neuron gauge (3D sweep, coarse 36^3 + refinement 11^3): avg RMS = 0.5723</li>
@@ -76,7 +76,7 @@ Replaces Demo 45's single global U(1) gauge rotation with independent per-neuron
 </ul>
 <h3>Open Questions</h3>
 <ul>
-<li>Does MVN activation (Demo 47) produce lattice-aligned phases, closing the gap with amplitude-only?</li>
+<li>Does MVN activation (<a href="./demo_47.html">Demo 47</a>) produce lattice-aligned phases, closing the gap with amplitude-only?</li>
 <li>Is amplitude-only decomposition sufficient for the compiler, or do phases become critical at 4+ inputs?</li>
 <li>Can the optimal per-neuron gauge be predicted analytically for lattice-aware architectures?</li>
 <li>Is there a deeper algebraic reason why magnitudes carry computational information but phases don't under split-sigmoid?</li>

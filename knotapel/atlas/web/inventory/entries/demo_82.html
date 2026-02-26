@@ -12,19 +12,19 @@
 </head>
 <body>
     <nav><a href="../../index.html">← Back to Index</a></nav><hr>
-    <h2>Demo 82: Crossing Depth and Computational Role</h2>
+    <h2><a href="./demo_82.html">Demo 82</a>: Crossing Depth and Computational Role</h2>
 <ul>
 <li><strong>Status</strong>: COMPLETE</li>
 <li><strong>File</strong>: <code><a href="../../demo_82_crossing_depth/main.c.html">demo_82_crossing_depth/main.c</a></code> (~930 lines)</li>
 <li><strong>Tests</strong>: 17/17 pass</li>
-<li><strong>Depends on</strong>: Demo 66 (quaternionic DKC, 24-cell geometry), Demo 79 (ζ₁₂ capacity, XOR12 reachable), Demo 81 (logarithmic scaling law, 0.62 XOR per doubling)</li>
+<li><strong>Depends on</strong>: <a href="./demo_66.html">Demo 66</a> (quaternionic DKC, 24-cell geometry), <a href="./demo_79.html">Demo 79</a> (ζ₁₂ capacity, XOR12 reachable), <a href="./demo_81.html">Demo 81</a> (logarithmic scaling law, 0.62 XOR per doubling)</li>
 <li><strong>Feeds into</strong>: Future work on direct deep-entry generation, optimal subset selection for XOR computation, connection between crossing number and computational capacity</li>
 </ul>
 <h3>Headline</h3>
 Quaternion "depth" (birth round in group closure = number of generator multiplications = crossing depth in knot-theory sense) is the fundamental variable governing XOR capacity: max_xor ≈ depth + 6, deep entries are 2× more efficient than shallow ones, and algebraic coherence beats raw vocabulary.
 <h3>Key Results</h3>
 <ul>
-<li><strong>Linear depth law</strong>: max_xor ≈ depth + 6. Each unit of crossing depth adds a fixed increment to computational capacity. The logarithmic law from Demo 81 was an artifact of exponential catalog growth per round — taking log of an exponential gives a linear function.</li>
+<li><strong>Linear depth law</strong>: max_xor ≈ depth + 6. Each unit of crossing depth adds a fixed increment to computational capacity. The logarithmic law from <a href="./demo_81.html">Demo 81</a> was an artifact of exponential catalog growth per round — taking log of an exponential gives a linear function.</li>
 <li><strong>Deep entries 2× more efficient</strong>: 564 pure depth-8 entries reach XOR12 with 19 winners; the full mixed catalog needs ~1140 entries to first reach XOR12 (round 6). Deep subset is half the size.</li>
 <li><strong>Algebraic coherence beats vocabulary</strong>: Strided 564 has maximum spatial coverage (512 dirs, 43 angles — matching the full 4096-entry catalog) yet only reaches XOR10. Deep 564 has fewer directions (476) and fewer angles (19) but reaches XOR12. More vocabulary loses to less vocabulary with more depth.</li>
 <li><strong>Two-component winner architecture</strong>: every XOR winner = shallow core + deep extensions. Depth-0 entries (generators + identity) appear in every winner at every XOR level. Mean entry depth rises monotonically: 0.52 (XOR6) → 0.63 (XOR8) → 1.00 (XOR10) → 1.98 (XOR12).</li>
@@ -34,7 +34,7 @@ Quaternion "depth" (birth round in group closure = number of generator multiplic
 </ul>
 <h3>Theorems/Conjectures</h3>
 <ul>
-<li><strong>Linear Depth Law (DEMONSTRATED)</strong>: max_xor ≈ depth + 6 across all measured transition points (depth 0→XOR6, depth 2→XOR8, depth 4→XOR10, depth 6→XOR12). The Demo 81 logarithmic law is a corollary: catalog grows as ~2^depth, so log₂(catalog) ≈ depth, giving max_xor ≈ 0.62 × log₂(catalog) + const.</li>
+<li><strong>Linear Depth Law (DEMONSTRATED)</strong>: max_xor ≈ depth + 6 across all measured transition points (depth 0→XOR6, depth 2→XOR8, depth 4→XOR10, depth 6→XOR12). The <a href="./demo_81.html">Demo 81</a> logarithmic law is a corollary: catalog grows as ~2^depth, so log₂(catalog) ≈ depth, giving max_xor ≈ 0.62 × log₂(catalog) + const.</li>
 <li><strong>Algebraic Coherence Dominance (DEMONSTRATED)</strong>: vocabulary (direction count + angle count) is necessary but not sufficient for XOR capacity. Strided 564 achieves the maximum possible vocabulary yet cannot reach XOR12; Deep 564 with strictly less vocabulary does reach XOR12. The determining factor is the shared algebraic structure of deep entries — every depth-8 entry is a product of 8 generators, creating common intermediate factors.</li>
 <li><strong>Depth IS Crossing Depth (INTERPRETATION)</strong>: Each closure round = one generator multiplication = one crossing in the braid/knot sense. A depth-d quaternion encodes d crossings of the associated knot diagram. The linear capacity law says computational power scales linearly with knot crossing complexity. Consistent with Kuperberg's #P-hardness: the hardness is in generating deep entries (exponential cost), not in their algebraic structure itself (linear gain).</li>
 <li><strong>Direction Explosion / Angle Refinement Phase Transition (OBSERVED)</strong>: There is a clean phase boundary at depth 6–7. Below: new directions dominate, catalog explores S². Above: directions saturate, angle refinement dominates. The XOR10→XOR12 transition is driven by angle refinement, not new directions.</li>

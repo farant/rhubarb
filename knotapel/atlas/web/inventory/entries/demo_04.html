@@ -12,16 +12,16 @@
 </head>
 <body>
     <nav><a href="../../index.html">← Back to Index</a></nav><hr>
-    <h2>Demo 04: Spin Chain</h2>
+    <h2><a href="./demo_04.html">Demo 04</a>: Spin Chain</h2>
 <ul>
 <li><strong>Status</strong>: COMPLETE</li>
 <li><strong>File</strong>: <code><a href="../../demo_04_spin_chain/main.c.html">demo_04_spin_chain/main.c</a></code> (~587 lines)</li>
 <li><strong>Tests</strong>: 12/12 pass (4 parts: A=2, B=1, C=4, D=5)</li>
-<li><strong>Depends on</strong>: Demo 03 (Laurent polynomial ring, state-sum oracle, Kauffman bracket)</li>
+<li><strong>Depends on</strong>: <a href="./demo_03.html">Demo 03</a> (Laurent polynomial ring, state-sum oracle, Kauffman bracket)</li>
 <li><strong>Feeds into</strong>: Any demo needing tensor product R-matrix representation or Yang-Baxter verification</li>
 </ul>
 <h3>Headline</h3>
-Computes the Kauffman bracket via the tensor product (spin chain) representation using quantum trace, unifying Demo 03's separate standard-module traces into a single 8D computation.
+Computes the Kauffman bracket via the tensor product (spin chain) representation using quantum trace, unifying <a href="./demo_03.html">Demo 03</a>'s separate standard-module traces into a single 8D computation.
 <h3>Key Results</h3>
 <ul>
 <li>TL generator U on V tensor V (4x4) satisfies U^2 = delta*U and tr(U) = delta</li>
@@ -34,16 +34,16 @@ Computes the Kauffman bracket via the tensor product (spin chain) representation
 <ul>
 <li>Schur-Weyl duality decomposition: V^{tensor 3} = V_{3/2} tensor W_3 + V_{1/2} tensor W_1 (dim 4x1 + dim 2x2 = 8)</li>
 <li>Quantum trace with K = diag(q, q^{-1}) weights each component by its quantum dimension: qdim(V_{1/2}) = [2]<em>q = -delta, qdim(V</em>{3/2}) = [4]_q = A^6+A^2+A^{-2}+A^{-6}</li>
-<li>Dividing by -delta recovers exactly Demo 03's formula: bracket = 1<em>tr_{W_1} + (A^{-4}+A^4)</em>tr_{W_3}</li>
+<li>Dividing by -delta recovers exactly <a href="./demo_03.html">Demo 03</a>'s formula: bracket = 1<em>tr_{W_1} + (A^{-4}+A^4)</em>tr_{W_3}</li>
 </ul>
 <h3>Code Assets</h3>
 <ul>
-<li><code>Poly</code> Laurent polynomial ring (reused from Demo 03, MAX_TERMS=120)</li>
+<li><code>Poly</code> Laurent polynomial ring (reused from <a href="./demo_03.html">Demo 03</a>, MAX_TERMS=120)</li>
 <li><code>Mat</code> NxN polynomial matrix (up to 8x8) with: zero, identity, multiply, scale, add, trace, equality, tensor product, quantum trace, print</li>
 <li><code>mat_tensor()</code> — general Kronecker product of polynomial matrices</li>
 <li><code>mat_qtrace()</code> — quantum trace with diagonal weights</li>
 <li><code>braid_product()</code> — maps braid word to matrix product in 8D representation</li>
-<li>State-sum oracle (union-find based, reused from Demo 03)</li>
+<li>State-sum oracle (union-find based, reused from <a href="./demo_03.html">Demo 03</a>)</li>
 </ul>
 <h3>Literature Touched</h3>
 <ul>

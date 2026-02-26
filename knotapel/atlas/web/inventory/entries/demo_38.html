@@ -12,13 +12,13 @@
 </head>
 <body>
     <nav><a href="../../index.html">← Back to Index</a></nav><hr>
-    <h2>Demo 38: Dimension Reduction at delta=0</h2>
+    <h2><a href="./demo_38.html">Demo 38</a>: Dimension Reduction at delta=0</h2>
 <ul>
 <li><strong>Status</strong>: COMPLETE</li>
 <li><strong>File</strong>: <code><a href="../../demo_38_dimension_reduction/main.c.html">demo_38_dimension_reduction/main.c</a></code> (~781 lines)</li>
 <li><strong>Tests</strong>: 13/13 pass</li>
-<li><strong>Depends on</strong>: Demo 35 (TL_n matrix representations, planar matching enumeration, diagram composition), Demo 60 (TL infrastructure reuse noted in code)</li>
-<li><strong>Feeds into</strong>: Demo 45-50 (DKC research arc — reduced representations cut matrix operation costs ~64x for even n, directly relevant to forward DKC weight search at scale)</li>
+<li><strong>Depends on</strong>: <a href="./demo_35.html">Demo 35</a> (TL_n matrix representations, planar matching enumeration, diagram composition), <a href="./demo_60.html">Demo 60</a> (TL infrastructure reuse noted in code)</li>
+<li><strong>Feeds into</strong>: <a href="./demo_45.html">Demo 45</a>-<a href="./demo_50.html">50</a> (DKC research arc — reduced representations cut matrix operation costs ~64x for even n, directly relevant to forward DKC weight search at scale)</li>
 </ul>
 <h3>Headline</h3>
 At delta=0, the Gram matrix of the Temperley-Lieb trace form has rank exactly C_{n-1} at even n (and full rank C_n at odd n), proving the bracket factors through a quotient TL_n(0)/rad isomorphic to TL_{n-1}(0) — yielding asymptotic ~4x dimension reduction and ~64x speedup for O(dim^3) matrix operations.

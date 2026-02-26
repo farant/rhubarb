@@ -12,13 +12,13 @@
 </head>
 <body>
     <nav><a href="../../index.html">← Back to Index</a></nav><hr>
-    <h2>Demo 85: Indecomposability Parameter b for TL_n at delta=0</h2>
+    <h2><a href="./demo_85.html">Demo 85</a>: Indecomposability Parameter b for TL_n at delta=0</h2>
 <ul>
 <li><strong>Status</strong>: COMPLETE</li>
 <li><strong>File</strong>: <code><a href="../../demo_85_indecomposability/main.c.html">demo_85_indecomposability/main.c</a></code> (~6861 lines)</li>
 <li><strong>Tests</strong>: 58/58 pass</li>
-<li><strong>Depends on</strong>: Demo 51 (TL algebra infrastructure, Gram matrix, radical basis), Demo 35 (integer TL generators at delta=0)</li>
-<li><strong>Feeds into</strong>: Demo 86 (direct b on single P_{0,0} -- negative result, divergence), Demo 87+ (non-semisimplicity thesis, logarithmic CFT structure constants)</li>
+<li><strong>Depends on</strong>: <a href="./demo_51.html">Demo 51</a> (TL algebra infrastructure, Gram matrix, radical basis), <a href="./demo_35.html">Demo 35</a> (integer TL generators at delta=0)</li>
+<li><strong>Feeds into</strong>: <a href="./demo_86.html">Demo 86</a> (direct b on single P_{0,0} -- negative result, divergence), <a href="./demo_87.html">Demo 87</a>+ (non-semisimplicity thesis, logarithmic CFT structure constants)</li>
 </ul>
 <h3>Headline</h3>
 The indecomposability parameter b = -5/8 (Pearce-Rasmussen) is computed exactly from first principles at TL_4 using leading-coefficient extraction from the delta-parameterized Markov trace on the full regular representation. The literature "controversy" between b = -2 (GRS) and b = -5/8 (PR) dissolves: b_delta = -5/2 on the regular rep divides by dim(0-TL sector) = 4 to give b_PR = -5/8 exactly to 12 decimal places.
@@ -85,20 +85,20 @@ The indecomposability parameter b = -5/8 (Pearce-Rasmussen) is computed exactly 
 </ul>
 <h3>Literature Touched</h3>
 <ul>
-<li><strong>Gainutdinov-Read-Saleur (GRS)</strong>: quantum group / algebraic definition of b, projective cover approach. Demo 85 shows this gives different normalization (b = -2 under GRS conventions) but the same underlying structure.</li>
-<li><strong>Pearce-Rasmussen (PR)</strong>: finite-size lattice scaling approach giving b = -5/8. Demo 85 confirms this is the per-cell physical value.</li>
-<li><strong>Symplectic fermion continuum theory at c=-2</strong>: b = -2 predicted (GRS convention). Demo 85 shows the exact relationship: b_GRS convention differs from b_PR convention by normalization factor.</li>
-<li><strong>Gemini 3 Pro literature claims (FALSIFIED)</strong>: Gemini claimed b is extracted from off-diagonal Jordan cell coupling in standard modules. Demo 85 proved standard modules are fully diagonalizable at all tested sizes -- Jordan blocks only exist on projective covers.</li>
+<li><strong>Gainutdinov-Read-Saleur (GRS)</strong>: quantum group / algebraic definition of b, projective cover approach. <a href="./demo_85.html">Demo 85</a> shows this gives different normalization (b = -2 under GRS conventions) but the same underlying structure.</li>
+<li><strong>Pearce-Rasmussen (PR)</strong>: finite-size lattice scaling approach giving b = -5/8. <a href="./demo_85.html">Demo 85</a> confirms this is the per-cell physical value.</li>
+<li><strong>Symplectic fermion continuum theory at c=-2</strong>: b = -2 predicted (GRS convention). <a href="./demo_85.html">Demo 85</a> shows the exact relationship: b_GRS convention differs from b_PR convention by normalization factor.</li>
+<li><strong>Gemini 3 Pro literature claims (FALSIFIED)</strong>: Gemini claimed b is extracted from off-diagonal Jordan cell coupling in standard modules. <a href="./demo_85.html">Demo 85</a> proved standard modules are fully diagonalizable at all tested sizes -- Jordan blocks only exist on projective covers.</li>
 <li><strong>Faddeev-LeVerrier algorithm</strong>: used for characteristic polynomial computation in both modular and complex arithmetic.</li>
 <li><strong>Krylov iteration</strong>: used for minimal polynomial computation (definitive Jordan block test).</li>
 </ul>
 <h3>Open Questions</h3>
 <ul>
 <li><strong>Why does the valuation condition fail at TL_6?</strong> The structural reason for p_tt = 4, p_Tt = 3 (gap = -2) at TL_6 is understood (cross-copy interference from 25-fold multiplicity), but is there a modified extraction that works for larger sizes?</li>
-<li><strong>Can b = -5/8 be confirmed at TL_6 or TL_8?</strong> The regular-representation approach diverges. The standard module has no Jordan blocks. The single P_{0,0} also diverges (Demo 86). What is the correct finite-lattice method beyond TL_4?</li>
+<li><strong>Can b = -5/8 be confirmed at TL_6 or TL_8?</strong> The regular-representation approach diverges. The standard module has no Jordan blocks. The single P_{0,0} also diverges (<a href="./demo_86.html">Demo 86</a>). What is the correct finite-lattice method beyond TL_4?</li>
 <li><strong>How does the literature (PR) actually compute b at larger lattice sizes?</strong> The method likely uses transfer matrix + finite-size scaling, not the diagram-algebraic approach tested here. Identifying and implementing their exact method remains open.</li>
 <li><strong>Does the spin chain approach give b = -2 at larger sizes?</strong> Phase 4 computes b on (C^2)^{tensor n} at q=i. Results at n=4,6,8 should be compared with the algebraic approach. The conformal (transpose) bilinear form may give different normalization.</li>
-<li><strong>What is the relationship between b and the DKC computational capacity?</strong> The k_sec=1 synergy value (36) from Demo 84 was hypothesized to encode b. This connection remains unexplored.</li>
+<li><strong>What is the relationship between b and the DKC computational capacity?</strong> The k_sec=1 synergy value (36) from <a href="./demo_84.html">Demo 84</a> was hypothesized to encode b. This connection remains unexplored.</li>
 </ul>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>

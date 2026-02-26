@@ -12,13 +12,13 @@
 </head>
 <body>
     <nav><a href="../../index.html">← Back to Index</a></nav><hr>
-    <h2>Demo 51: Radical Anatomy of TL_n at delta=0</h2>
+    <h2><a href="./demo_51.html">Demo 51</a>: Radical Anatomy of TL_n at delta=0</h2>
 <ul>
 <li><strong>Status</strong>: COMPLETE</li>
 <li><strong>File</strong>: <code><a href="../../demo_51_radical_anatomy/main.c.html">demo_51_radical_anatomy/main.c</a></code> (~1166 lines)</li>
 <li><strong>Tests</strong>: ~35+ pass (7 values of n x 5+ tests each: identity, nilpotent, adjacent, commutativity, radical dim, idempotent sum, Peirce blocks, Catalan trace, radical filtration)</li>
-<li><strong>Depends on</strong>: Demo 35 (planar matching enumeration, diagram composition), Demo 47 conjecture (TL non-semisimplicity at roots of unity as algebraic obstruction)</li>
-<li><strong>Feeds into</strong>: Demo 52+ (connecting radical structure to DKC parity barrier, computational implications of non-semisimplicity)</li>
+<li><strong>Depends on</strong>: <a href="./demo_35.html">Demo 35</a> (planar matching enumeration, diagram composition), <a href="./demo_47.html">Demo 47</a> conjecture (TL non-semisimplicity at roots of unity as algebraic obstruction)</li>
+<li><strong>Feeds into</strong>: <a href="./demo_52.html">Demo 52</a>+ (connecting radical structure to DKC parity barrier, computational implications of non-semisimplicity)</li>
 </ul>
 <h3>Headline</h3>
 Computes the full radical structure of the Temperley-Lieb algebra TL_n(delta=0) for n=2 through 8 using exact integer arithmetic on planar matching diagrams: enumerates basis, builds multiplication tables, determines radical dimension via trace form Gram matrix, extracts radical filtration (rad, rad^2, ...), finds orthogonal idempotent decompositions, and computes Peirce block dimensions.
@@ -41,7 +41,7 @@ Computes the full radical structure of the Temperley-Lieb algebra TL_n(delta=0) 
 <li><strong>TL_2(delta=0) = dual numbers k[eps]/(eps^2)</strong>: CONFIRMED — radical dim = 1, nilpotency index 2</li>
 <li><strong>Catalan trace property</strong>: CONFIRMED — all nonzero fixed-point counts (trace values) are Catalan numbers</li>
 <li><strong>Peirce decomposition completeness</strong>: CONFIRMED — block dimensions sum to algebra dimension for all tested n</li>
-<li><strong>TL non-semisimplicity at delta=0</strong>: CONFIRMED for n &gt;= 4 — radical dimension grows, supporting the hypothesis from Demo 47 that TL non-semisimplicity is the algebraic obstruction for parity</li>
+<li><strong>TL non-semisimplicity at delta=0</strong>: CONFIRMED for n &gt;= 4 — radical dimension grows, supporting the hypothesis from <a href="./demo_47.html">Demo 47</a> that TL non-semisimplicity is the algebraic obstruction for parity</li>
 </ul>
 <h3>Data</h3>
 <ul>
@@ -59,8 +59,8 @@ Computes the full radical structure of the Temperley-Lieb algebra TL_n(delta=0) 
 <ul>
 <li><strong><code>TLAlgebra</code> struct</strong>: complete bundled TL algebra data — basis (PlanarMatch array), identity/generator indices, multiplication table</li>
 <li><strong><code>init_tl_algebra()</code></strong>: full initialization: enumerate basis, find identity/generators, compute multiplication table</li>
-<li><strong><code>enumerate_basis()</code></strong>: recursive planar matching enumeration via segment decomposition (from Demo 35)</li>
-<li><strong><code>compose_diagrams()</code></strong>: planar diagram composition with loop counting (from Demo 35)</li>
+<li><strong><code>enumerate_basis()</code></strong>: recursive planar matching enumeration via segment decomposition (from <a href="./demo_35.html">Demo 35</a>)</li>
+<li><strong><code>compose_diagrams()</code></strong>: planar diagram composition with loop counting (from <a href="./demo_35.html">Demo 35</a>)</li>
 <li><strong><code>AlgElem</code> type</strong>: integer-coefficient algebra elements with add/sub/mul/is_zero/eq/is_idempotent operations</li>
 <li><strong><code>alg_mul()</code></strong>: algebra multiplication via precomputed multiplication table — products that generate loops map to -1 (zero at delta=0)</li>
 <li><strong><code>compute_radical_dim()</code></strong>: trace form Gram matrix construction + Gaussian elimination for rank; radical dim = dim - rank</li>
@@ -80,13 +80,13 @@ Computes the full radical structure of the Temperley-Lieb algebra TL_n(delta=0) 
 <li>Cartan's criterion: radical = null space of trace form (in characteristic 0)</li>
 <li>Peirce decomposition via orthogonal idempotents</li>
 <li>Wedderburn-Artin theory: semisimple = direct sum of matrix algebras</li>
-<li>Connection to Demo 47 hypothesis: TL non-semisimplicity as parity barrier</li>
+<li>Connection to <a href="./demo_47.html">Demo 47</a> hypothesis: TL non-semisimplicity as parity barrier</li>
 </ul>
 <h3>Open Questions</h3>
 <ul>
 <li>What is the exact radical dimension sequence for n=2,3,4,5,6,7,8? (TL_3 semisimple is anomalous — is there a pattern?)</li>
 <li>What is the Wedderburn-Artin structure of TL_3(delta=0)? (It's semisimple, so it must be a direct sum of matrix algebras — which ones?)</li>
-<li>Does the radical filtration length (nilpotency index) correlate with the parity barrier strength from Demo 47?</li>
+<li>Does the radical filtration length (nilpotency index) correlate with the parity barrier strength from <a href="./demo_47.html">Demo 47</a>?</li>
 <li>Can the Peirce block structure explain which Boolean functions are bracket-compatible vs bracket-resistant?</li>
 <li>Is the Catalan trace property (all nonzero trace values are Catalan numbers) a known result or novel?</li>
 <li>How does the radical structure change when moving from delta=0 to nearby values?</li>

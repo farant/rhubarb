@@ -12,12 +12,12 @@
 </head>
 <body>
     <nav><a href="../../index.html">← Back to Index</a></nav><hr>
-    <h2>Demo 62: Analytical Proof — Why 0x06 and 0x1B Are Unreachable</h2>
+    <h2><a href="./demo_62.html">Demo 62</a>: Analytical Proof — Why 0x06 and 0x1B Are Unreachable</h2>
 <ul>
 <li><strong>Status</strong>: COMPLETE</li>
 <li><strong>File</strong>: <code><a href="../../demo_62_analytical_proof/main.c.html">demo_62_analytical_proof/main.c</a></code> (~600 lines)</li>
 <li><strong>Tests</strong>: 7 checks: 0x1B never achieved numerically, 0x1B absent in exhaustive N=120, 0x06 never achieved numerically, 0x06 absent in exhaustive N=120, 0x06 orbit = 24, 0x1B orbit = 24, total unreachable = 48</li>
-<li><strong>Depends on</strong>: Demo 61 (computational proof that exactly 11/13 NPN classes reachable by half-plane activations on multiplicative encodings)</li>
+<li><strong>Depends on</strong>: <a href="./demo_61.html">Demo 61</a> (computational proof that exactly 11/13 NPN classes reachable by half-plane activations on multiplicative encodings)</li>
 <li><strong>Feeds into</strong>: Closes the half-plane wall investigation definitively; theoretical foundation for DKC activation design</li>
 </ul>
 <h3>Headline</h3>
@@ -60,7 +60,7 @@ Provides two independent analytical proofs that exactly 0x06 (~A(B^C)) and 0x1B 
 <li><strong><code>truth_table()</code></strong>: computes 8-bit truth table from three angles and a threshold angle</li>
 <li><strong><code>in_semi()</code></strong>: semicircle membership test (angle in [theta, theta+pi) mod 2pi)</li>
 <li><strong><code>wrap()</code></strong>: angle normalization to [0, 2pi)</li>
-<li><strong>NPN canonicalization</strong>: standard 96-transform minimum (reused from Demo 61)</li>
+<li><strong>NPN canonicalization</strong>: standard 96-transform minimum (reused from <a href="./demo_61.html">Demo 61</a>)</li>
 </ul>
 <h3>Literature Touched</h3>
 <ul>

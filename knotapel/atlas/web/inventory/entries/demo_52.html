@@ -12,19 +12,19 @@
 </head>
 <body>
     <nav><a href="../../index.html">← Back to Index</a></nav><hr>
-    <h2>Demo 52: Chebyshev Generalization — Radical Anatomy at delta=1</h2>
+    <h2><a href="./demo_52.html">Demo 52</a>: Chebyshev Generalization — Radical Anatomy at delta=1</h2>
 <ul>
 <li><strong>Status</strong>: COMPLETE</li>
 <li><strong>File</strong>: <code><a href="../../demo_52_chebyshev/main.c.html">demo_52_chebyshev/main.c</a></code> (~1954 lines)</li>
 <li><strong>Tests</strong>: ~30+ pass (inline check() assertions across Parts 0-4)</li>
-<li><strong>Depends on</strong>: Demo 35 (TL_n matrices, planar matching enumeration, diagram composition), Demo 51 (radical anatomy at delta=0)</li>
+<li><strong>Depends on</strong>: <a href="./demo_35.html">Demo 35</a> (TL_n matrices, planar matching enumeration, diagram composition), <a href="./demo_51.html">Demo 51</a> (radical anatomy at delta=0)</li>
 <li><strong>Feeds into</strong>: Future demos on general-delta DKC, non-semisimplicity landscape mapping</li>
 </ul>
 <h3>Headline</h3>
 Computes the radical structure of TL_n at four delta values (0, 1, sqrt(2), phi=golden ratio, sqrt(3)) for n=2..8, revealing how semisimplicity varies across the Chebyshev parameter space via exact modular arithmetic.
 <h3>Key Results</h3>
 <ul>
-<li><strong>Delta=0 cross-checks</strong>: Reproduces Demo 51 radical dimensions for n=2..5</li>
+<li><strong>Delta=0 cross-checks</strong>: Reproduces <a href="./demo_51.html">Demo 51</a> radical dimensions for n=2..5</li>
 <li><strong>Delta=1 (ell=3, percolation)</strong>: Generators are IDEMPOTENT (e_i^2 = e_i), loops contribute factor 1 (no killing). Full analysis for n=2..8 including:</li>
 <li>TL relation verification (identity, idempotent, adjacent, far commutativity)</li>
 <li>Gram matrix via trace form, radical dimension via Gaussian elimination</li>
@@ -59,7 +59,7 @@ Computes the radical structure of TL_n at four delta values (0, 1, sqrt(2), phi=
 <h3>Code Assets</h3>
 <ul>
 <li><strong>TLAlgebra struct</strong>: Bundled algebra data (basis, identity, generators, multiplication table with loop counts) for any n up to 8</li>
-<li><strong>Planar matching enumerator</strong>: Segment-based recursive algorithm (from Demo 35/51), supports up to C_8=1430</li>
+<li><strong>Planar matching enumerator</strong>: Segment-based recursive algorithm (from <a href="./demo_35.html">Demo 35</a>/51), supports up to C_8=1430</li>
 <li><strong>Diagram composition</strong>: Returns result + loop count, stored in multiplication table</li>
 <li><strong>AlgElem integer arithmetic</strong>: Zero, basis element, add, sub, multiply (delta=1), multiply (mod p), zero test, equality, idempotent test, print</li>
 <li><strong>Gram matrix / radical dimension</strong>: Via trace form fixed points + Gaussian elimination (both float and mod-p)</li>
@@ -86,9 +86,9 @@ Computes the radical structure of TL_n at four delta values (0, 1, sqrt(2), phi=
 <li>What is the exact semisimplicity/non-semisimplicity pattern as a function of (n, delta)?</li>
 <li>Do the radical filtration dimensions follow a predictable formula across ell values?</li>
 <li>How does the Peirce block structure at delta=1 relate to the representation theory (which irreducibles appear, with what multiplicity)?</li>
-<li>Can the rad^2 generator elements be connected to neglecton-type objects from Demo 49?</li>
+<li>Can the rad^2 generator elements be connected to neglecton-type objects from <a href="./demo_49.html">Demo 49</a>?</li>
 <li>Does the Loewy length reach the predicted maximum 2*ell-1 = 5 at delta=1 for sufficiently large n?</li>
-<li>How do the general-delta radical dimensions connect to DKC computability boundaries from Demo 48?</li>
+<li>How do the general-delta radical dimensions connect to DKC computability boundaries from <a href="./demo_48.html">Demo 48</a>?</li>
 </ul>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>

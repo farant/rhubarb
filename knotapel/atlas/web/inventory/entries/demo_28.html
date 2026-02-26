@@ -12,12 +12,12 @@
 </head>
 <body>
     <nav><a href="../../index.html">← Back to Index</a></nav><hr>
-    <h2>Demo 28: Unitary Activation</h2>
+    <h2><a href="./demo_28.html">Demo 28</a>: Unitary Activation</h2>
 <ul>
 <li><strong>Status</strong>: COMPLETE</li>
 <li><strong>File</strong>: <code><a href="../../demo_28_unitary_activation/main.c.html">demo_28_unitary_activation/main.c</a></code> (~958 lines)</li>
 <li><strong>Tests</strong>: ~12-15 checks across 6 parts (A-F): train all activations, bracket catalog, gauge comparison, weight analysis, lattice projection, summary</li>
-<li><strong>Depends on</strong>: Demo 27 (reverse DKC error decomposition: Born-rule vs split-sigmoid), Demo 26 (real 2-2-1 baseline)</li>
+<li><strong>Depends on</strong>: <a href="./demo_27.html">Demo 27</a> (reverse DKC error decomposition: Born-rule vs split-sigmoid), <a href="./demo_26.html">Demo 26</a> (real 2-2-1 baseline)</li>
 <li><strong>Feeds into</strong>: Later demos exploring DKC with phase-preserving activations</li>
 </ul>
 <h3>Headline</h3>
@@ -27,7 +27,7 @@ Compares 4 complex activation functions (split-sigmoid, modReLU, cardioid, phase
 <li><strong>Training</strong> (Part A): 20 trials per activation, lr=0.5, max 100k epochs on XOR. Reports convergence rates. Phase-only expected &lt;50% convergence (discards amplitude information).</li>
 <li><strong>Bracket catalog</strong> (Part B): builds complex bracket catalog at A = e^{i*5pi/4} (delta=0), strands 2-3, lengths 1-8, filtering |bracket| &gt; 0.5. Up to 8192 entries.</li>
 <li><strong>Gauge comparison</strong> (Part C): for each activation's best network, sweeps 360 rotation angles to minimize RMS distance from weights to nearest catalog brackets. Key predictions:</li>
-<li>P1: modReLU gauge-corrected RMS &lt; 0.15 (vs 0.3494 for split-sigmoid from Demo 27)</li>
+<li>P1: modReLU gauge-corrected RMS &lt; 0.15 (vs 0.3494 for split-sigmoid from <a href="./demo_27.html">Demo 27</a>)</li>
 <li>P2: Cardioid RMS in [0.15, 0.35]</li>
 <li>P5: Gauge angles near 7pi/4 (315 deg) for all activations</li>
 <li><strong>Weight phase/amplitude decomposition</strong> (Part D): separates per-weight error into phase error (radians) and amplitude error. P6: modReLU phase error &lt; split-sigmoid (because modReLU preserves phase exactly).</li>
@@ -36,7 +36,7 @@ Compares 4 complex activation functions (split-sigmoid, modReLU, cardioid, phase
 </ul>
 <h3>Theorems/Conjectures</h3>
 <ul>
-<li><strong>Core thesis</strong>: modReLU(z) = ReLU(|z|+b) * z/|z| is U(1)-equivariant — preserves phase exactly, eliminating the dominant error source (b) from Demo 27</li>
+<li><strong>Core thesis</strong>: modReLU(z) = ReLU(|z|+b) * z/|z| is U(1)-equivariant — preserves phase exactly, eliminating the dominant error source (b) from <a href="./demo_27.html">Demo 27</a></li>
 <li>Two independent error sources in reverse DKC: (a) Born-rule collapse C→R≥0 (phase loss at readout), (b) split-sigmoid activation distortion (phase noise). Source (b) is DOMINANT.</li>
 <li>modReLU should land trained weights closer to bracket values because phase is preserved through the hidden layer, only amplitude is adjusted</li>
 <li>Cardioid activation (direction-dependent scaling) should be intermediate — not equivariant but still phase-aware</li>
@@ -46,7 +46,7 @@ Compares 4 complex activation functions (split-sigmoid, modReLU, cardioid, phase
 <li>4 activations: split-sigmoid (identity + sigmoid readout), modReLU (U(1)-equivariant), cardioid (direction-dependent), phase-only (unit circle normalization)</li>
 <li>20 trials per activation, each with independent random init (LCG RNG for reproducibility)</li>
 <li>Architecture: z = w1<em>x1 + w2</em>x2 + b → activation → sigmoid(re) + i*sigmoid(im) → smooth XOR readout</li>
-<li>Reference baselines: Demo 27 split-sigmoid RMS=0.3494, Demo 26 real 2-2-1 amp RMS=0.2641</li>
+<li>Reference baselines: <a href="./demo_27.html">Demo 27</a> split-sigmoid RMS=0.3494, <a href="./demo_26.html">Demo 26</a> real 2-2-1 amp RMS=0.2641</li>
 </ul>
 <h3>Code Assets</h3>
 <ul>
@@ -69,7 +69,7 @@ Compares 4 complex activation functions (split-sigmoid, modReLU, cardioid, phase
 </ul>
 <h3>Open Questions</h3>
 <ul>
-<li>Does modReLU's advantage hold for functions beyond XOR (e.g., 3-input functions from Demo 23)?</li>
+<li>Does modReLU's advantage hold for functions beyond XOR (e.g., 3-input functions from <a href="./demo_23.html">Demo 23</a>)?</li>
 <li>What is the minimum catalog density needed for reliable lattice projection?</li>
 <li>Can the gauge angle be predicted analytically rather than swept numerically?</li>
 <li>Is there an activation that eliminates BOTH error sources (Born-rule + phase distortion) simultaneously?</li>

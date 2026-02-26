@@ -12,35 +12,35 @@
 </head>
 <body>
     <nav><a href="../../index.html">← Back to Index</a></nav><hr>
-    <h2>Demo 77: Activation Zoo for 8-Input DKC</h2>
+    <h2><a href="./demo_77.html">Demo 77</a>: Activation Zoo for 8-Input DKC</h2>
 <ul>
 <li><strong>Status</strong>: COMPLETE</li>
 <li><strong>File</strong>: <code><a href="../../demo_77_activation_zoo/main.c.html">demo_77_activation_zoo/main.c</a></code> (~1012 lines)</li>
 <li><strong>Tests</strong>: 14/14 pass</li>
-<li><strong>Depends on</strong>: Demo 50 (parity at k=6, all 13 NPN classes), Demo 66 (quaternionic DKC, 24-cell), Demo 67 (13 directions, 36 XOR6 solutions), Demo 74 (computational invariant, bracket vs cell incomparability), Demo 75 (binocular DKC, angle subsumes cell for sums), Demo 76 (XOR8 = 0 solutions under S² Voronoi)</li>
-<li><strong>Feeds into</strong>: Demo 78 (recursive scaling), Demo 79 (ζ_12 capacity)</li>
+<li><strong>Depends on</strong>: <a href="./demo_50.html">Demo 50</a> (parity at k=6, all 13 NPN classes), <a href="./demo_66.html">Demo 66</a> (quaternionic DKC, 24-cell), <a href="./demo_67.html">Demo 67</a> (13 directions, 36 XOR6 solutions), <a href="./demo_74.html">Demo 74</a> (computational invariant, bracket vs cell incomparability), <a href="./demo_75.html">Demo 75</a> (binocular DKC, angle subsumes cell for sums), <a href="./demo_76.html">Demo 76</a> (XOR8 = 0 solutions under S² Voronoi)</li>
+<li><strong>Feeds into</strong>: <a href="./demo_78.html">Demo 78</a> (recursive scaling), <a href="./demo_79.html">Demo 79</a> (ζ_12 capacity)</li>
 </ul>
 <h3>Headline</h3>
-XOR8 IS computable at ζ_8 with the combined Sec(8) × Voronoi activation (112 cells, 6 winning quadruples): the wall in Demo 76 was the activation function, not the root of unity — the same discovery pattern as Demo 50 where parity was blocked by split-sigmoid, not the lattice.
+XOR8 IS computable at ζ_8 with the combined Sec(8) × Voronoi activation (112 cells, 6 winning quadruples): the wall in <a href="./demo_76.html">Demo 76</a> was the activation function, not the root of unity — the same discovery pattern as <a href="./demo_50.html">Demo 50</a> where parity was blocked by split-sigmoid, not the lattice.
 <h3>Key Results</h3>
 <ul>
 <li><strong>XOR8 solved (Part D/F)</strong>: Sec(8) × Voronoi activation (S¹ × S²) yields 6 winning quadruples out of 10,626. All 6 achieve 100% accuracy on all 256 input masks.</li>
 <li><strong>Phase transition (Parts D/E)</strong>: Accuracy climbs monotonically: S² Voronoi (50%) → Sec(8) at 85.2% → Polar 14×6 at 99.2% → Sec(8)×Vor at 100%. The phase transition from 0 to 6 winners occurs between 84 cells (k=6, 0 winners, 96.9%) and 112 cells (k=8, 6 winners, 100%). Critical threshold approximately 100 cells.</li>
-<li><strong>Neither channel alone suffices</strong>: Sector activation alone (S¹, even at k=16 with 16 cells): 0 winners, max 96.9%. S² Voronoi alone (14 cells): 0 winners, 50.0%. Both channels are required — this is computationally necessary given Demo 74's incomparability result.</li>
+<li><strong>Neither channel alone suffices</strong>: Sector activation alone (S¹, even at k=16 with 16 cells): 0 winners, max 96.9%. S² Voronoi alone (14 cells): 0 winners, 50.0%. Both channels are required — this is computationally necessary given <a href="./demo_74.html">Demo 74</a>'s incomparability result.</li>
 <li><strong>Paired quaternion structure (Part F)</strong>: Every winning quadruple contains exactly one pair of quaternions sharing the same eigenvector direction but differing in eigenvalue angle. Removing either element of the pair leaves an XOR6-winning triple. All 6 winners contribute exactly 2 XOR6 subsets each; 12 of the 24 embedded triples (50%) are XOR6 winners.</li>
 <li><strong>Eigenvalue angles in winners</strong>: The 6 winning quadruples use only 2 distinct eigenvalue half-angles: 45° and 90° (the two canonical octahedral angles). The non-canonical angles (30°, 35.264°, 65.905°) that appear in additive sums are NOT present in the individual catalog entries forming winning quadruples.</li>
 <li><strong>Geometry of winners</strong>: 15 of 24 catalog quaternions participate across the 6 winners. Three dominant Voronoi cells (0, 1, 10) each appear in 6 of 24 winner slots — axis-aligned and edge-diagonal directions form the structural skeleton.</li>
-<li><strong>Polar activation near-miss (Part B)</strong>: Polar 14×6 (S² direction × magnitude bins, 84 cells) reaches 99.2% — one misclassified pair from perfection. The magnitude channel ("odometer" from Demo 75) adds genuine power over direction alone (50% → 99.2%) but the missing information is in the angle channel, not magnitude.</li>
+<li><strong>Polar activation near-miss (Part B)</strong>: Polar 14×6 (S² direction × magnitude bins, 84 cells) reaches 99.2% — one misclassified pair from perfection. The magnitude channel ("odometer" from <a href="./demo_75.html">Demo 75</a>) adds genuine power over direction alone (50% → 99.2%) but the missing information is in the angle channel, not magnitude.</li>
 <li><strong>S³ Voronoi worse than expected (Part C)</strong>: 24-cell Voronoi on S³ (24 cells) achieves only 90.2% — worse than Sec(16) at 96.9% despite more cells. The S³ partition mixes angle and direction information non-optimally; the factored S¹ × S² decomposition is superior to the unfactored S³ approach.</li>
-<li><strong>Corrects Demo 76</strong>: Demo 76's conclusion "ζ_8 is a 6-input structure" is activation-specific. ζ_8 with S¹ × S² activation supports at least 8 inputs.</li>
+<li><strong>Corrects <a href="./demo_76.html">Demo 76</a></strong>: <a href="./demo_76.html">Demo 76</a>'s conclusion "ζ_8 is a 6-input structure" is activation-specific. ζ_8 with S¹ × S² activation supports at least 8 inputs.</li>
 </ul>
 <h3>Theorems/Conjectures</h3>
 <ul>
 <li><strong>Activation Determines Capacity (DEMONSTRATED)</strong>: The root of unity alone does not fix computational capacity. The activation function (how you read the quaternion) determines what functions the computation can express. Same ζ_8, same 24-cell — 0 XOR8 solutions with S² activation, 6 solutions with S¹ × S² activation.</li>
-<li><strong>Incomparability Implies Product Necessity (DEMONSTRATED)</strong>: Demo 74 proved bracket (eigenvalue) and cell (eigenvector) are incomparable invariants. Demo 77 confirms this incomparability is computationally necessary: neither channel alone can compute XOR8, but their product can. The incomparability is not just structural — it reflects independent computational information.</li>
+<li><strong>Incomparability Implies Product Necessity (DEMONSTRATED)</strong>: <a href="./demo_74.html">Demo 74</a> proved bracket (eigenvalue) and cell (eigenvector) are incomparable invariants. <a href="./demo_77.html">Demo 77</a> confirms this incomparability is computationally necessary: neither channel alone can compute XOR8, but their product can. The incomparability is not just structural — it reflects independent computational information.</li>
 <li><strong>Paired Quaternion Structure (OBSERVED)</strong>: Every XOR8 winner is an XOR6 winner plus a "paired partner" sharing the same eigenvector direction but different eigenvalue angle. CONJECTURED: XOR(n) winners at ζ_8 are built by extending XOR(n-2) winners with paired quaternion partners, giving a recursive structure connecting input sizes.</li>
 <li><strong>Critical Cell Count ~100 (OBSERVED)</strong>: The phase transition from 0 to non-zero winners occurs between 84 and 112 cells. CONJECTURED: the critical threshold is related to the masks-per-cell dropping below 256/100 ≈ 2.56, with the exact threshold depending on the parity structure of the partition.</li>
-<li><strong>S¹ × S² Activation as Quaternionic MVN (ESTABLISHED)</strong>: The combined activation is the quaternionic generalization of Aizenberg's MVN: instead of reading the argument of a complex number (S¹ only), read both eigenvalue angle (S¹) and eigenvector direction (S²) of the quaternion (S¹ × S²). Demo 77 provides the first proof that this generalization unlocks computation not achievable by S¹ or S² alone.</li>
+<li><strong>S¹ × S² Activation as Quaternionic MVN (ESTABLISHED)</strong>: The combined activation is the quaternionic generalization of Aizenberg's MVN: instead of reading the argument of a complex number (S¹ only), read both eigenvalue angle (S¹) and eigenvector direction (S²) of the quaternion (S¹ × S²). <a href="./demo_77.html">Demo 77</a> provides the first proof that this generalization unlocks computation not achievable by S¹ or S² alone.</li>
 </ul>
 <h3>Data</h3>
 <ul>
@@ -66,12 +66,12 @@ XOR8 IS computable at ζ_8 with the combined Sec(8) × Voronoi activation (112 c
 </ul>
 <h3>Literature Touched</h3>
 <ul>
-<li><strong>Aizenberg (2008, 2011)</strong>: MVN sector activation on S¹; Demo 77 demonstrates that the S¹ component alone (even at k=16) cannot compute XOR8, while the quaternionic S¹ × S² product can. The S¹ → S¹ × S² generalization from C to H is the central contribution.</li>
-<li><strong>Demo 50</strong>: The parity wall at split-sigmoid, broken at k=6 sectors. Demo 77 is the same story one level up: XOR8 wall at S²-only activation, broken at S¹ × S² combined activation.</li>
-<li><strong>Demo 74 (Computational Invariant)</strong>: Incomparability of bracket vs. cell invariants at catalog level; Demo 77 proves this incomparability is computationally load-bearing.</li>
+<li><strong>Aizenberg (2008, 2011)</strong>: MVN sector activation on S¹; <a href="./demo_77.html">Demo 77</a> demonstrates that the S¹ component alone (even at k=16) cannot compute XOR8, while the quaternionic S¹ × S² product can. The S¹ → S¹ × S² generalization from C to H is the central contribution.</li>
+<li><strong><a href="./demo_50.html">Demo 50</a></strong>: The parity wall at split-sigmoid, broken at k=6 sectors. <a href="./demo_77.html">Demo 77</a> is the same story one level up: XOR8 wall at S²-only activation, broken at S¹ × S² combined activation.</li>
+<li><strong><a href="./demo_74.html">Demo 74</a> (Computational Invariant)</strong>: Incomparability of bracket vs. cell invariants at catalog level; <a href="./demo_77.html">Demo 77</a> proves this incomparability is computationally load-bearing.</li>
 <li><strong>Nazer &amp; Gastpar (2011)</strong>: Compute-and-forward; the product activation reads both "channels" of the algebraic integer ring, analogous to reading both amplitude and phase in lattice coding.</li>
 <li><strong>Abramsky / TL categorical quantum mechanics</strong>: The non-semisimplicity of the Temperley-Lieb algebra at roots of unity is where the extra computational power lives; the product activation exposes both the S¹ (eigenvalue) and S² (eigenvector) faces of this structure.</li>
-<li><strong>Habiro (2002) / cyclotomic invariants</strong>: Z[ζ_8] is richer than any single projection reveals; Demo 77 demonstrates empirically that the algebraic structure of ζ_8 supports at least 8-input computation.</li>
+<li><strong>Habiro (2002) / cyclotomic invariants</strong>: Z[ζ_8] is richer than any single projection reveals; <a href="./demo_77.html">Demo 77</a> demonstrates empirically that the algebraic structure of ζ_8 supports at least 8-input computation.</li>
 <li><strong>literature-survey.md</strong>: comprehensive novelty analysis in the demo folder; DKC fills a gap between knot theory, algebraic number theory, spherical geometry, lattice codes, and complex-valued neural networks that no existing paper occupies.</li>
 </ul>
 <h3>Open Questions</h3>

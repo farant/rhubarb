@@ -12,12 +12,12 @@
 </head>
 <body>
     <nav><a href="../../index.html">← Back to Index</a></nav><hr>
-    <h2>Demo 23: Function Zoo</h2>
+    <h2><a href="./demo_23.html">Demo 23</a>: Function Zoo</h2>
 <ul>
 <li><strong>Status</strong>: COMPLETE</li>
 <li><strong>File</strong>: <code><a href="../../demo_23_function_zoo/main.c.html">demo_23_function_zoo/main.c</a></code> (~771 lines)</li>
 <li><strong>Tests</strong>: 4 checks across 4 parts (A-D): exhaustive catalog, NPN classification, closure tuple analysis, extended search</li>
-<li><strong>Depends on</strong>: Demo 21 (bracket with closure support, Toffoli/Fredkin targets), Demo 18 (braid logic gates, 5pi/4 angle)</li>
+<li><strong>Depends on</strong>: <a href="./demo_21.html">Demo 21</a> (bracket with closure support, Toffoli/Fredkin targets), <a href="./demo_18.html">Demo 18</a> (braid logic gates, 5pi/4 angle)</li>
 <li><strong>Feeds into</strong>: Later demos exploring which NPN classes topology can/cannot reach</li>
 </ul>
 <h3>Headline</h3>
@@ -50,7 +50,7 @@ Exhaustive enumeration of which 3-input Boolean functions topology "prefers": ca
 <li><strong><code>compute_tt()</code></strong>: given a braid word + closure + angle, evaluates all 8 input combinations, sorts amplitudes, finds best-gap threshold, returns truth table (or -1 if no clean threshold)</li>
 <li><strong><code>decode_word()</code></strong>: converts integer code to braid word using generator map {1,-1,2,-2,3,-3}</li>
 <li><strong><code>fn_name()</code></strong>: lookup table mapping ~40 common truth tables to human-readable names (AND, OR, XOR, MUX, MAJ, Toffoli, etc.)</li>
-<li><strong><code>bracket_cl()</code></strong>: state-sum Kauffman bracket with closure support (trace, plat_A/B/C) — from Demo 21</li>
+<li><strong><code>bracket_cl()</code></strong>: state-sum Kauffman bracket with closure support (trace, plat_A/B/C) — from <a href="./demo_21.html">Demo 21</a></li>
 <li><strong><code>braid_loops_cl()</code></strong>: union-find loop counter with 4 closure types</li>
 <li>Per-braid tuple storage for closure analysis (up to 10,000 braids × 4 closures)</li>
 </ul>

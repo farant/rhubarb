@@ -12,13 +12,13 @@
 </head>
 <body>
     <nav><a href="../../index.html">← Back to Index</a></nav><hr>
-    <h2>Demo 75: Binocular DKC (Multi-Output)</h2>
+    <h2><a href="./demo_75.html">Demo 75</a>: Binocular DKC (Multi-Output)</h2>
 <ul>
 <li><strong>Status</strong>: COMPLETE</li>
 <li><strong>File</strong>: <code><a href="../../demo_75_binocular_dkc/main.c.html">demo_75_binocular_dkc/main.c</a></code> (~1495 lines)</li>
 <li><strong>Tests</strong>: 23/23 pass</li>
-<li><strong>Depends on</strong>: Demo 66 (quaternionic DKC, 24-cell catalog), Demo 67 (13 directions, 36 XOR6 solutions), Demo 70 (music space, geometric vs computational independence), Demo 71 (spectral DKC, bandwidth l=6), Demo 72 (spherical design), Demo 73 (eigenvector automaton, additive compass without odometer), Demo 74 (computational invariant, bracket vs cell incomparability)</li>
-<li><strong>Feeds into</strong>: Demo 76 (scaling to 8 inputs), Demo 77 (activation zoo)</li>
+<li><strong>Depends on</strong>: <a href="./demo_66.html">Demo 66</a> (quaternionic DKC, 24-cell catalog), <a href="./demo_67.html">Demo 67</a> (13 directions, 36 XOR6 solutions), <a href="./demo_70.html">Demo 70</a> (music space, geometric vs computational independence), <a href="./demo_71.html">Demo 71</a> (spectral DKC, bandwidth l=6), <a href="./demo_72.html">Demo 72</a> (spherical design), <a href="./demo_73.html">Demo 73</a> (eigenvector automaton, additive compass without odometer), <a href="./demo_74.html">Demo 74</a> (computational invariant, bracket vs cell incomparability)</li>
+<li><strong>Feeds into</strong>: <a href="./demo_76.html">Demo 76</a> (scaling to 8 inputs), <a href="./demo_77.html">Demo 77</a> (activation zoo)</li>
 </ul>
 <h3>Headline</h3>
 A single braid evaluation yields two simultaneous output channels — eigenvalue angle and eigenvector cell — where the angle subsumes the cell entirely, giving 2.3× capacity over cell-only while the multiplicative product channel has maximum entropy but is completely blind to XOR6.
@@ -31,7 +31,7 @@ A single braid evaluation yields two simultaneous output channels — eigenvalue
 <li><strong>Eight triple families (Part E)</strong>: 36 winning triples partition into exactly 8 groups based on their angle function, containing 3–8 triples each. The cell function is identical across all groups; the angle function distinguishes them.</li>
 <li><strong>√n magnitude quantization (Part G)</strong>: The additive sum magnitude |S| takes exactly 6 values: √0, √1, √2, √3, √4, √6. The value √5 is absent, reflecting the inner product structure of the 24-cell (pairwise inner products drawn from {-1, -½, 0, ½, 1}). H(|S|) = 1.839 bits. Magnitude does NOT reliably predict parity (only 16/36 triples at 44%).</li>
 <li><strong>Multiplicative channel blind to XOR6 (Part H)</strong>: The quaternion product M = Π w_i produces only 4 eigenvalue angles (the canonical set: 0°, 45°, 60°, 90°), uses all 13 Voronoi cells, has 4.241 bits total entropy — but 0/36 triples compute XOR6 from either channel. Multiplication preserves the 24-cell group structure; DKC requires breaking it.</li>
-<li><strong>Reconciliation with Demo 74</strong>: Demo 74 showed bracket and cell are incomparable at the individual-quaternion level; Demo 75 shows angle subsumes cell at the sum-quaternion level. These concern different mathematical objects (individual vs. summed quaternions).</li>
+<li><strong>Reconciliation with <a href="./demo_74.html">Demo 74</a></strong>: <a href="./demo_74.html">Demo 74</a> showed bracket and cell are incomparable at the individual-quaternion level; <a href="./demo_75.html">Demo 75</a> shows angle subsumes cell at the sum-quaternion level. These concern different mathematical objects (individual vs. summed quaternions).</li>
 </ul>
 <h3>Theorems/Conjectures</h3>
 <ul>
@@ -62,8 +62,8 @@ A single braid evaluation yields two simultaneous output channels — eigenvalue
 </ul>
 <h3>Literature Touched</h3>
 <ul>
-<li><strong>Aizenberg (2008)</strong>: MVN sector activation on S¹; Demo 75 shows the additive angle channel is the S¹ component of a product space, and angle subsumes the S² Voronoi cell</li>
-<li><strong>Demo 74 / this series</strong>: Bracket-vs-cell incomparability at catalog level vs. angle-subsumes-cell at sum level — two layers of the same structure</li>
+<li><strong>Aizenberg (2008)</strong>: MVN sector activation on S¹; <a href="./demo_75.html">Demo 75</a> shows the additive angle channel is the S¹ component of a product space, and angle subsumes the S² Voronoi cell</li>
+<li><strong><a href="./demo_74.html">Demo 74</a> / this series</strong>: Bracket-vs-cell incomparability at catalog level vs. angle-subsumes-cell at sum level — two layers of the same structure</li>
 <li><strong>Nazer &amp; Gastpar (2011)</strong>: Compute-and-forward; additive combination of algebraic integers for computation is the structural parallel</li>
 </ul>
 <h3>Open Questions</h3>

@@ -12,13 +12,13 @@
 </head>
 <body>
     <nav><a href="../../index.html">← Back to Index</a></nav><hr>
-    <h2>Demo 69: Clifford Staircase on S² — Multi-Root Eigenvector Comparison</h2>
+    <h2><a href="./demo_69.html">Demo 69</a>: Clifford Staircase on S² — Multi-Root Eigenvector Comparison</h2>
 <ul>
 <li><strong>Status</strong>: COMPLETE</li>
 <li><strong>File</strong>: <code><a href="../../demo_69_clifford_staircase/main.c.html">demo_69_clifford_staircase/main.c</a></code> (~787 lines)</li>
 <li><strong>Tests</strong>: 9/9 pass</li>
-<li><strong>Depends on</strong>: Demo 66 (quaternionic bracket catalog), Demo 67 (13-direction S² Voronoi)</li>
-<li><strong>Feeds into</strong>: Demo 70, Demo 71</li>
+<li><strong>Depends on</strong>: <a href="./demo_66.html">Demo 66</a> (quaternionic bracket catalog), <a href="./demo_67.html">Demo 67</a> (13-direction S² Voronoi)</li>
+<li><strong>Feeds into</strong>: <a href="./demo_70.html">Demo 70</a>, <a href="./demo_71.html">Demo 71</a></li>
 </ul>
 <h3>Headline</h3>
 Comparing SU(2) eigenvector geometry across ζ<em>8, ζ_16, and ζ_32 proves a universal Direction Nesting Theorem (ζ_N ⊂ ζ</em>{2N} exactly on S²) and reveals that ζ_8 is the computational sweet spot: the coarsest root that produces structured directions, preserved exactly at every finer root, while finer roots trivialize XOR6 through pigeonhole saturation.
@@ -69,8 +69,8 @@ Comparing SU(2) eigenvector geometry across ζ<em>8, ζ_16, and ζ_32 proves a u
 <ul>
 <li><strong>Trivialization threshold</strong>: Where exactly does XOR6 transition from topology-driven (36 solutions at 14 cells) to pigeonhole-dominated (~90% at 3,458 cells)? Likely 50–500 cells but not yet located precisely.</li>
 <li><strong>ζ_32 full confirmation</strong>: With uncapped enumeration, do all 13 ζ_8 directions appear in ζ_32 at exactly 0° drift? The algebraic argument says yes; computational confirmation requires deeper catalog.</li>
-<li><strong>XOR6 solutions at intermediate resolutions</strong>: Is the solution count monotonically increasing with cell count, or does it have a non-monotonic peak analogous to Demo 50's k=6 result?</li>
-<li><strong>Optimal root for fixed compute budget</strong>: Given a cap on enumeration depth, which root maximizes XOR6 solutions at fixed cell count? Demo 69 shows ζ_16 &gt; ζ_32 at 16 cells, but the full curve is unmapped.</li>
+<li><strong>XOR6 solutions at intermediate resolutions</strong>: Is the solution count monotonically increasing with cell count, or does it have a non-monotonic peak analogous to <a href="./demo_50.html">Demo 50</a>'s k=6 result?</li>
+<li><strong>Optimal root for fixed compute budget</strong>: Given a cap on enumeration depth, which root maximizes XOR6 solutions at fixed cell count? <a href="./demo_69.html">Demo 69</a> shows ζ_16 &gt; ζ_32 at 16 cells, but the full curve is unmapped.</li>
 <li><strong>Nesting across non-power-of-2 roots</strong>: The algebraic argument requires ζ<em>N = (ζ</em>{2N})^2. Does any form of nesting hold for e.g. ζ_8 ⊂ ζ_24 (ζ_8 = (ζ_24)^3)?</li>
 </ul>
 

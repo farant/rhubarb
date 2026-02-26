@@ -12,12 +12,12 @@
 </head>
 <body>
     <nav><a href="../../index.html">← Back to Index</a></nav><hr>
-    <h2>Demo 56: Potts-TL Dictionary</h2>
+    <h2><a href="./demo_56.html">Demo 56</a>: Potts-TL Dictionary</h2>
 <ul>
 <li><strong>Status</strong>: COMPLETE</li>
 <li><strong>File</strong>: <code><a href="../../demo_56_potts_tl/main.c.html">demo_56_potts_tl/main.c</a></code> (~1137 lines)</li>
 <li><strong>Tests</strong>: ~15 pass (inline check() assertions across Parts A-G)</li>
-<li><strong>Depends on</strong>: Demo 54 (bracket axiality, Z[i]-axial structure), Demo 55 (Z[zeta_16] arithmetic, sector activation), Demo 53 (Q=1 percolation — referenced as trivial)</li>
+<li><strong>Depends on</strong>: <a href="./demo_54.html">Demo 54</a> (bracket axiality, Z[i]-axial structure), <a href="./demo_55.html">Demo 55</a> (Z[zeta_16] arithmetic, sector activation), <a href="./demo_53.html">Demo 53</a> (Q=1 percolation — referenced as trivial)</li>
 <li><strong>Feeds into</strong>: Future demos on Q=3 Potts model, multi-Q DKC landscape, transfer matrix methods</li>
 </ul>
 <h3>Headline</h3>
@@ -50,19 +50,19 @@ Establishes the Potts-TL dictionary connecting Kauffman bracket to Potts model p
 <li>Critical coupling: v=sqrt(2)=zeta_16^2-zeta_16^6 (verified v^2=2)</li>
 <li>Critical temperature: K_c = ln(1+sqrt(2)) = 0.8814...</li>
 <li>FK partition function catalog: ~9 distinct nonzero values at Q=2 bracket coupling</li>
-<li>NPN classes: 13 non-trivial 3-input classes (standard from Demo 48)</li>
+<li>NPN classes: 13 non-trivial 3-input classes (standard from <a href="./demo_48.html">Demo 48</a>)</li>
 <li>Activations tested: Re&gt;0, split-sigmoid, sector k=2,4,6</li>
 </ul>
 <h3>Code Assets</h3>
 <ul>
-<li><strong>Z[zeta_16] arithmetic (Cyc16)</strong>: 8-component cyclotomic ring with zeta^8=-1 — zero, one, zeta_power, add, neg, mul, eq, is_zero, to_cx, print (reused from Demo 55)</li>
+<li><strong>Z[zeta_16] arithmetic (Cyc16)</strong>: 8-component cyclotomic ring with zeta^8=-1 — zero, one, zeta_power, add, neg, mul, eq, is_zero, to_cx, print (reused from <a href="./demo_55.html">Demo 55</a>)</li>
 <li><strong>cyc16_is_real()</strong>: Tests if Z[zeta_16] element has zero imaginary part (odd components = 0)</li>
 <li><strong>cyc16_is_zeta8_valued()</strong>: Tests if element lives in Z[zeta_8] subring (even-indexed components only)</li>
 <li><strong>LatticeStrip builder</strong>: build_strip(w,h) constructs rectangular grid with horizontal + vertical edges</li>
 <li><strong>Union-Find</strong>: Path-halving uf_find/uf_union for connected component counting</li>
 <li><strong>FK partition function</strong>: fk_partition() — full 2^|E| subset enumeration with precomputed v^k, Q^k power arrays</li>
 <li><strong>Ising spin sum</strong>: ising_spin_sum() — direct 2^|V| configuration sum for integer-coupling cross-validation</li>
-<li><strong>NPN classifier</strong>: 96-transform canonicalization, orbit sizes, 13 class identification (from Demo 48)</li>
+<li><strong>NPN classifier</strong>: 96-transform canonicalization, orbit sizes, 13 class identification (from <a href="./demo_48.html">Demo 48</a>)</li>
 <li><strong>FK DKC search</strong>: Multiplicative encoding z=w1^x1<em>w2^x2</em>..., truth table extraction, per-NPN-class aggregation</li>
 <li><strong>Multiple activation wrappers</strong>: Re&gt;0, split-sigmoid, sector(k) — unified classify(Cx, int) interface</li>
 </ul>
@@ -83,7 +83,7 @@ Establishes the Potts-TL dictionary connecting Kauffman bracket to Potts model p
 <li>What happens at Q=3 (3-state Potts, ell=6)? Is the FK catalog even richer (6D? 8D?)?</li>
 <li>Is the axiality breaking (2D→4D) a fundamental feature of the Q^{k(A)} weighting, or an artifact of small lattice sizes?</li>
 <li>Can transfer matrix methods replace the exponential 2^|E| enumeration to reach larger lattices?</li>
-<li>Does the FK/Potts viewpoint give any new leverage on the parity wall from Demo 48?</li>
+<li>Does the FK/Potts viewpoint give any new leverage on the parity wall from <a href="./demo_48.html">Demo 48</a>?</li>
 </ul>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>

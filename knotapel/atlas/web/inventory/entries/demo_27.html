@@ -12,21 +12,21 @@
 </head>
 <body>
     <nav><a href="../../index.html">← Back to Index</a></nav><hr>
-    <h2>Demo 27: Complex-Valued Reverse DKC</h2>
+    <h2><a href="./demo_27.html">Demo 27</a>: Complex-Valued Reverse DKC</h2>
 <ul>
 <li><strong>Status</strong>: COMPLETE</li>
 <li><strong>File</strong>: <code><a href="../../demo_27_complex_reverse_dkc/main.c.html">demo_27_complex_reverse_dkc/main.c</a></code> (~1049 lines)</li>
-<li><strong>Tests</strong>: ~7 pass (P1: complex neuron solves XOR, P2: bracket values are cyclotomic, P3: complex catalog has more distinct values than amplitude-only, P4: gauge-corrected complex RMS &lt; 0.1, P5: complex RMS better than amplitude RMS, P6: complex matching reduces degeneracy, P7: complex (6 params) beats real (9 params), P8: complex RMS improves on Demo 26 reference)</li>
-<li><strong>Depends on</strong>: Demo 26 (real-valued reverse DKC, amplitude-only matching, RMS=0.2641 reference), Demo 10 (unit-circle bracket evaluation, complex arithmetic)</li>
+<li><strong>Tests</strong>: ~7 pass (P1: complex neuron solves XOR, P2: bracket values are cyclotomic, P3: complex catalog has more distinct values than amplitude-only, P4: gauge-corrected complex RMS &lt; 0.1, P5: complex RMS better than amplitude RMS, P6: complex matching reduces degeneracy, P7: complex (6 params) beats real (9 params), P8: complex RMS improves on <a href="./demo_26.html">Demo 26</a> reference)</li>
+<li><strong>Depends on</strong>: <a href="./demo_26.html">Demo 26</a> (real-valued reverse DKC, amplitude-only matching, RMS=0.2641 reference), <a href="./demo_10.html">Demo 10</a> (unit-circle bracket evaluation, complex arithmetic)</li>
 <li><strong>Feeds into</strong>: establishes that complex bracket VALUES (not just amplitudes) match trained NN weights; cyclotomic Z[zeta_8] structure; U(1) gauge symmetry in weight-bracket correspondence</li>
 </ul>
 <h3>Headline</h3>
-Complex-valued neural network (single complex neuron with split-sigmoid) solves XOR with 6 real parameters where real networks need 9, and gauge-corrected complex bracket matching outperforms Demo 26's amplitude-only decomposition — proving phase carries computational information discarded by the Born-rule projection.
+Complex-valued neural network (single complex neuron with split-sigmoid) solves XOR with 6 real parameters where real networks need 9, and gauge-corrected complex bracket matching outperforms <a href="./demo_26.html">Demo 26</a>'s amplitude-only decomposition — proving phase carries computational information discarded by the Born-rule projection.
 <h3>Key Results</h3>
 <ul>
 <li><strong>Part A</strong>: Single complex neuron (Nitta architecture) with split-sigmoid solves XOR; convergence rate tracked across 20 trials; 6 real parameters (w1, w2, b each complex) vs 9 for real 2-2-1 network</li>
 <li><strong>Part B</strong>: Complex bracket catalog at A = e^{i<em>5</em>pi/4} (delta=0); distinct complex values exceed distinct amplitudes (constellation expansion); majority of values near Z[zeta_8] or Z[i] cyclotomic lattice; degeneracy reduction from amplitude to complex measured</li>
-<li><strong>Part C</strong>: Complex decomposition with U(1) gauge correction — 360-angle sweep finds optimal rotation aligning weights to bracket values; gauge-corrected RMS &lt; 0.1 (beats Demo 26's 0.2641)</li>
+<li><strong>Part C</strong>: Complex decomposition with U(1) gauge correction — 360-angle sweep finds optimal rotation aligning weights to bracket values; gauge-corrected RMS &lt; 0.1 (beats <a href="./demo_26.html">Demo 26</a>'s 0.2641)</li>
 <li><strong>Part D</strong>: Phase distribution across 8 sectors (45-degree bins matching 8th roots of unity); phase-writhe correlation for first 20 braids; phases are structured (non-uniform)</li>
 <li><strong>Part E</strong>: Degeneracy test — complex matching dramatically reduces ambiguity vs amplitude-only (fewer braids match each weight within tolerance)</li>
 <li><strong>Part F</strong>: Head-to-head: complex neuron (6 params, gauge-corrected) beats real 2-2-1 (9 params, amplitude-only) on bracket decomposition RMS</li>
@@ -39,7 +39,7 @@ Complex-valued neural network (single complex neuron with split-sigmoid) solves 
 <li>CONFIRMED: U(1) gauge symmetry — global phase rotation of all weights preserves network function; optimal gauge angle aligns weights to bracket lattice</li>
 <li>CONFIRMED: Complex matching reduces degeneracy vs amplitude-only (phase information discriminates between braids sharing the same amplitude)</li>
 <li>CONFIRMED: Complex (6 params) outperforms real (9 params) on bracket decomposition — fewer parameters, better RMS</li>
-<li>KEY INSIGHT: Demo 26's amplitude-only matching is a Born-rule projection (C -&gt; R&gt;=0) that discards phase; phase carries computational information</li>
+<li>KEY INSIGHT: <a href="./demo_26.html">Demo 26</a>'s amplitude-only matching is a Born-rule projection (C -&gt; R&gt;=0) that discards phase; phase carries computational information</li>
 </ul>
 <h3>Data</h3>
 <ul>
@@ -52,7 +52,7 @@ Complex-valued neural network (single complex neuron with split-sigmoid) solves 
 <li>U(1) gauge sweep: 360 angles, best angle and RMS reported</li>
 <li>Degeneracy: tolerance 0.5 for matching radius</li>
 <li>Real 2-2-1 reference: 9 parameters, amplitude-only RMS</li>
-<li>Demo 26 reference: RMS = 0.2641</li>
+<li><a href="./demo_26.html">Demo 26</a> reference: RMS = 0.2641</li>
 </ul>
 <h3>Code Assets</h3>
 <ul>
@@ -76,7 +76,7 @@ Complex-valued neural network (single complex neuron with split-sigmoid) solves 
 <li>Born rule projection: |&lt;b&gt;(A)|^2 discards phase information</li>
 <li>U(1) gauge symmetry in neural networks: global phase rotation invariance</li>
 <li>Freedman-Kitaev-Wang: topological quantum computation (complex amplitudes fundamental)</li>
-<li>Demo 26 established amplitude-only baseline (RMS=0.2641)</li>
+<li><a href="./demo_26.html">Demo 26</a> established amplitude-only baseline (RMS=0.2641)</li>
 </ul>
 <h3>Open Questions</h3>
 <ul>

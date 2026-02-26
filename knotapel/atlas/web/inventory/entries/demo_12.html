@@ -12,12 +12,12 @@
 </head>
 <body>
     <nav><a href="../../index.html">← Back to Index</a></nav><hr>
-    <h2>Demo 12: Quantization</h2>
+    <h2><a href="./demo_12.html">Demo 12</a>: Quantization</h2>
 <ul>
 <li><strong>Status</strong>: COMPLETE</li>
 <li><strong>File</strong>: <code><a href="../../demo_12_quantization/main.c.html">demo_12_quantization/main.c</a></code> (~780 lines)</li>
 <li><strong>Tests</strong>: 6 parts (A-F): reference signatures, bit-depth sweep, component analysis, precision x width matrix, weight table, nearest-neighbor classifier</li>
-<li><strong>Depends on</strong>: Demo 10 (numerical bracket evaluation), Demo 11 (waveform / greedy angle selection)</li>
+<li><strong>Depends on</strong>: <a href="./demo_10.html">Demo 10</a> (numerical bracket evaluation), <a href="./demo_11.html">Demo 11</a> (waveform / greedy angle selection)</li>
 <li><strong>Feeds into</strong>: Later demos exploring DKC and classification with quantized representations</li>
 </ul>
 <h3>Headline</h3>
@@ -25,7 +25,7 @@ Investigates how aggressively Kauffman bracket complex weights can be quantized 
 <h3>Key Results</h3>
 <ul>
 <li><strong>Bit-depth sweep</strong> (Part B): scans 16/12/8/6/4/3/2/1 bits per component at a single optimal angle, then binary searches for minimum bits achieving 100% pair separation</li>
-<li><strong>Component analysis</strong> (Part C): amplitude-only FAILS (granny/square have identical |bracket| — predicted from Demo 11), phase-only also insufficient alone, sign-only (quadrant / 1-bit) and ternary ({-1,0,+1} / 1.58-bit) tested</li>
+<li><strong>Component analysis</strong> (Part C): amplitude-only FAILS (granny/square have identical |bracket| — predicted from <a href="./demo_11.html">Demo 11</a>), phase-only also insufficient alone, sign-only (quadrant / 1-bit) and ternary ({-1,0,+1} / 1.58-bit) tested</li>
 <li><strong>Precision x width matrix</strong> (Part D): explores {1,2,3,4,8} bits x {1,2,3,4,8} angles, finds Pareto optimum (minimum total bits per knot for 100% classification)</li>
 <li><strong>Compiled weight table</strong> (Part E): prints full-precision and quantized weight vectors, reports total model size in bits/bytes</li>
 <li><strong>Nearest-neighbor classifier</strong> (Part F): self-classification of all 10 knots at full precision, plus invariance tests with alternate braid representations (alt trefoil s2<em>s1</em>s2, alt figure-eight s2^{-1}<em>s1</em>s2^{-1}*s1)</li>
@@ -49,13 +49,13 @@ Investigates how aggressively Kauffman bracket complex weights can be quantized 
 <li><strong><code>cx_sign()</code></strong>: pure quadrant / 1-bit per component sign extraction</li>
 <li><strong><code>test_quantized_separation()</code></strong>: tests whether B-bit quantization at M angles separates all knot pairs — core of the sweep</li>
 <li><strong><code>classify_braid()</code></strong>: nearest-neighbor classifier in quantized weight space — computes bracket at greedy angles, quantizes, finds closest reference</li>
-<li><strong><code>select_greedy_angles()</code></strong>: greedy max-min angle selection from Demo 11 (reused)</li>
+<li><strong><code>select_greedy_angles()</code></strong>: greedy max-min angle selection from <a href="./demo_11.html">Demo 11</a> (reused)</li>
 <li>Reuses: complex arithmetic, braid state-sum bracket, union-find loop counter</li>
 </ul>
 <h3>Literature Touched</h3>
 <ul>
 <li>BitNet / extreme quantization in neural networks ({-1, 0, +1} weights)</li>
-<li>Knot classification via bracket evaluation at specific angles (waveform approach from Demo 11)</li>
+<li>Knot classification via bracket evaluation at specific angles (waveform approach from <a href="./demo_11.html">Demo 11</a>)</li>
 <li>Connected sum structure: bracket of granny vs square</li>
 </ul>
 <h3>Open Questions</h3>

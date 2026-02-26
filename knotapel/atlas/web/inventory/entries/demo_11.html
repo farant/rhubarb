@@ -12,13 +12,13 @@
 </head>
 <body>
     <nav><a href="../../index.html">← Back to Index</a></nav><hr>
-    <h2>Demo 11: Waveform Signatures</h2>
+    <h2><a href="./demo_11.html">Demo 11</a>: Waveform Signatures</h2>
 <ul>
 <li><strong>Status</strong>: COMPLETE</li>
 <li><strong>File</strong>: <code><a href="../../demo_11_waveform/main.c.html">demo_11_waveform/main.c</a></code> (~649 lines)</li>
 <li><strong>Tests</strong>: ~16 pass (symmetry checks, greedy angle separation, cross-validation)</li>
-<li><strong>Depends on</strong>: Demo 10 (unit-circle bracket evaluation, complex arithmetic, state-sum oracle)</li>
-<li><strong>Feeds into</strong>: Demo 12 (selected optimal angles for classification)</li>
+<li><strong>Depends on</strong>: <a href="./demo_10.html">Demo 10</a> (unit-circle bracket evaluation, complex arithmetic, state-sum oracle)</li>
+<li><strong>Feeds into</strong>: <a href="./demo_12.html">Demo 12</a> (selected optimal angles for classification)</li>
 </ul>
 <h3>Headline</h3>
 Sweeps the Kauffman bracket around the full unit circle (256 samples, 10 knots) to produce waveform signatures, proving chiral pairs share amplitude and greedy angle selection separates all knots.
@@ -44,7 +44,7 @@ Sweeps the Kauffman bracket around the full unit circle (256 samples, 10 knots) 
 <li>256 samples per knot over theta in [0, 2*pi)</li>
 <li>Waveform statistics table: min/max amplitude, ratio, zero count per knot</li>
 <li>Pairwise separation matrix at optimal angle</li>
-<li>Greedy-selected angle set for Demo 12</li>
+<li>Greedy-selected angle set for <a href="./demo_12.html">Demo 12</a></li>
 </ul>
 <h3>Code Assets</h3>
 <ul>
@@ -56,7 +56,7 @@ Sweeps the Kauffman bracket around the full unit circle (256 samples, 10 knots) 
 <li><code>pairwise_separation()</code>: finds best single angle (max-min separation), hardest pair, prints separation matrix</li>
 <li><code>greedy_angles()</code>: iterative greedy selection of optimal angles maximizing worst-case pairwise distance; terminates when all pairs separated above threshold</li>
 <li><code>ascii_waveforms()</code>: ASCII art visualization of amplitude waveforms (60-column, 5 intensity bands)</li>
-<li><code>cross_validate()</code>: confirms consistency with Demo 10's direct evaluation</li>
+<li><code>cross_validate()</code>: confirms consistency with <a href="./demo_10.html">Demo 10</a>'s direct evaluation</li>
 <li>Complex arithmetic library: <code>cx_make</code>, <code>cx_add</code>, <code>cx_sub</code>, <code>cx_mul</code>, <code>cx_div</code>, <code>cx_abs</code>, <code>cx_exp_i</code>, <code>cx_pow_int</code>, <code>cx_near</code></li>
 </ul>
 <h3>Literature Touched</h3>

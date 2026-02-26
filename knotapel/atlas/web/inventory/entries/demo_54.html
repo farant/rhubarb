@@ -12,12 +12,12 @@
 </head>
 <body>
     <nav><a href="../../index.html">← Back to Index</a></nav><hr>
-    <h2>Demo 54: DKC at ell=4 (delta=sqrt(2)) — Bracket over Z[zeta_16]</h2>
+    <h2><a href="./demo_54.html">Demo 54</a>: DKC at ell=4 (delta=sqrt(2)) — Bracket over Z[zeta_16]</h2>
 <ul>
 <li><strong>Status</strong>: COMPLETE</li>
 <li><strong>File</strong>: <code><a href="../../demo_54_dkc_l4/main.c.html">demo_54_dkc_l4/main.c</a></code> (~1857 lines)</li>
 <li><strong>Tests</strong>: ~40+ pass (Part A: 20 Z[zeta_16] arithmetic sanity checks; Part B: 5 Catalan number checks + identity presence; Part C: ~10 TL relation checks at n=2,3,4 including e_i^2=delta<em>e_i, e_i</em>e_j*e_i=e_i, far commutativity; Part D: ~5 braid generator inverse/relation checks; Part E: braid word evaluation checks; Part F: ~6 cross-validation checks matrix vs state-sum for Hopf, trefoil, figure-eight, 4-strand braids)</li>
-<li><strong>Depends on</strong>: Demo 53 (TL at ell=3/delta=1, planar matching enumeration), Demo 35 (original TL matrix framework), Demos 48-50 (DKC at delta=0, parity wall context)</li>
+<li><strong>Depends on</strong>: <a href="./demo_53.html">Demo 53</a> (TL at ell=3/delta=1, planar matching enumeration), <a href="./demo_35.html">Demo 35</a> (original TL matrix framework), Demos 48-50 (DKC at delta=0, parity wall context)</li>
 <li><strong>Feeds into</strong>: DKC analysis at non-zero delta; tests whether delta=0 phenomena (axiality, entanglement vanishing, compression) generalize or are regime-specific</li>
 </ul>
 <h3>Headline</h3>
@@ -63,7 +63,7 @@ Two-source hypothesis test: constructs exact Z[zeta_16] cyclotomic arithmetic (8
 <li><code>cyc16_delta_power()</code>: exact delta^k using delta^2=2 (even powers→integer, odd powers→integer*delta)</li>
 <li><code>cyc16_is_axial()</code> / <code>cyc16_is_zi_axial()</code>: strict axiality (at most 1 nonzero component) and Z[i]-axiality (at most one pair (k,k+4) active)</li>
 <li><code>cyc16_zi_decompose()</code>: factors Z[i]-axial value as (a+bi)*zeta^c</li>
-<li><code>PlanarMatch</code> / <code>enumerate_basis()</code>: planar matching enumeration (from Demo 35/53), boundary order, segment-based recursive enumeration</li>
+<li><code>PlanarMatch</code> / <code>enumerate_basis()</code>: planar matching enumeration (from <a href="./demo_35.html">Demo 35</a>/53), boundary order, segment-based recursive enumeration</li>
 <li><code>compose_diagrams()</code>: diagram composition with closed loop counting</li>
 <li><code>TLMat</code> type: matrices over Z[zeta_16] up to 42×42; <code>tlmat_zero/identity/add/scale/mul/eq/nonzero_count/print</code></li>
 <li><code>build_generator_matrix()</code>: TL generator e_i as matrix via diagram composition with delta^loops weight</li>

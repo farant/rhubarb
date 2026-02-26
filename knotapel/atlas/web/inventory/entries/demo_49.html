@@ -12,29 +12,29 @@
 </head>
 <body>
     <nav><a href="../../index.html">← Back to Index</a></nav><hr>
-    <h2>Demo 49: Neglecton Weights</h2>
+    <h2><a href="./demo_49.html">Demo 49</a>: Neglecton Weights</h2>
 <ul>
 <li><strong>Status</strong>: COMPLETE</li>
 <li><strong>File</strong>: <code><a href="../../demo_49_neglecton_weights/main.c.html">demo_49_neglecton_weights/main.c</a></code> (~1136 lines)</li>
 <li><strong>Tests</strong>: ~10 pass (P1: standard catalog &gt;= 50 values, P2: neglecton catalog non-empty, P3: zeta_8^8 = 1, P4: d(delta)/d(epsilon) = 4, P5: NPN class count = 13, P6: total quartets match expected, P7: neglecton catalog non-empty, P8: XNOR3 has solutions [EXPECTED FAIL], P9: parity solution uses neglecton weight [EXPECTED FAIL], P10: no parity from standard-only weights, P11: combined &gt; standard catalog, P12: parity min distance)</li>
-<li><strong>Depends on</strong>: Demo 48 (forward DKC zoo, 100M quartets, XNOR3 zero solutions with standard catalog), Demo 47 (parity investigation, MVN architecture), Demo 45 (NPN classification reference data, topological frequency/RMS)</li>
-<li><strong>Feeds into</strong>: Demo 50 (activation function zoo, k-sector MVN search); closes the perturbation approach entirely; reframes parity wall as activation geometry obstruction</li>
+<li><strong>Depends on</strong>: <a href="./demo_48.html">Demo 48</a> (forward DKC zoo, 100M quartets, XNOR3 zero solutions with standard catalog), <a href="./demo_47.html">Demo 47</a> (parity investigation, MVN architecture), <a href="./demo_45.html">Demo 45</a> (NPN classification reference data, topological frequency/RMS)</li>
+<li><strong>Feeds into</strong>: <a href="./demo_50.html">Demo 50</a> (activation function zoo, k-sector MVN search); closes the perturbation approach entirely; reframes parity wall as activation geometry obstruction</li>
 </ul>
 <h3>Headline</h3>
 Tests the neglecton prediction — radical elements of TL_4 at delta=0 extracted via first-order bracket perturbation yield 148 new exact Z[zeta_8] values from 15,242 previously invisible braids, but all 116 genuinely new values share angles with existing standard values. Parity remains unreachable across 2.18 billion quartets. The perturbation approach is closed at all orders: the wall is in the activation geometry (split-sigmoid/half-plane), not the weight space.
 <h3>Key Results</h3>
 <ul>
 <li><strong>Part A</strong>: Dual bracket evaluation separates standard (loops=1) and neglecton (loops=2) contributions; neglecton bracket = 4 * Sum_{states with loops=2} A^(a-b), exact Cyc8 arithmetic; d(delta)/d(epsilon) = 4 verified numerically; 87,890 braids enumerated (2-3 strand, length 1-8); 15,242 previously invisible braids (std=0, neg!=0); standard catalog: 100 values, neglecton catalog: 148 values, combined: 216 values (68 std-only, 116 neg-only, 32 both)</li>
-<li><strong>Part B</strong>: NPN classification reproduces 13 non-trivial classes from Demo 48</li>
-<li><strong>Part C</strong>: Exhaustive search of 216^4 = 2,176,782,336 quartets with split-sigmoid activation; parity (XNOR3) has ZERO solutions; ranking of all 13 NPN classes identical to Demo 48; EXACT1 (Hamming distance 1 from parity) is last reachable class; all 12 non-parity classes grow proportionally (~21× with 21.8× larger search space)</li>
-<li><strong>Part D</strong>: Spearman correlations (solutions vs topo_freq: rho=+0.7582, solutions vs reverse_RMS: rho=-0.7802), slightly lower than Demo 48 consistent with neglecton dilution; per-class min Hamming distance to parity preserved from Demo 48</li>
+<li><strong>Part B</strong>: NPN classification reproduces 13 non-trivial classes from <a href="./demo_48.html">Demo 48</a></li>
+<li><strong>Part C</strong>: Exhaustive search of 216^4 = 2,176,782,336 quartets with split-sigmoid activation; parity (XNOR3) has ZERO solutions; ranking of all 13 NPN classes identical to <a href="./demo_48.html">Demo 48</a>; EXACT1 (Hamming distance 1 from parity) is last reachable class; all 12 non-parity classes grow proportionally (~21× with 21.8× larger search space)</li>
+<li><strong>Part D</strong>: Spearman correlations (solutions vs topo_freq: rho=+0.7582, solutions vs reverse_RMS: rho=-0.7802), slightly lower than <a href="./demo_48.html">Demo 48</a> consistent with neglecton dilution; per-class min Hamming distance to parity preserved from <a href="./demo_48.html">Demo 48</a></li>
 </ul>
 <h3>Theorems/Conjectures</h3>
 <ul>
 <li>CONFIRMED: Neglecton bracket produces exact Z[zeta_8] values from loops=2 smoothing states, with scale factor 4 = d(delta)/d(epsilon)</li>
 <li>CONFIRMED: 116 neglecton-only values introduce ZERO genuinely new angles — all are scalar multiples of existing standard values at the same angular positions</li>
 <li>CONFIRMED: Parity (XNOR3) unreachable with extended 216-value catalog (zero solutions from 2.18B quartets)</li>
-<li>CONFIRMED: Standard-only subspace produces zero parity solutions (consistency with Demo 48)</li>
+<li>CONFIRMED: Standard-only subspace produces zero parity solutions (consistency with <a href="./demo_48.html">Demo 48</a>)</li>
 <li>PROVEN (analytically): k=2 half-plane classifier CANNOT compute 3-input parity with ANY complex weights (complex Minsky-Papert: y1&gt;d, y2&gt;d implies y1+y2&gt;2d&gt;d, contradicting pair requirement)</li>
 <li>CONFIRMED: Aizenberg's parity construction weights (zeta_8, i, -1) are IN Z[zeta_8] — the lattice DOES contain parity-capable weights</li>
 <li>CLOSED: Perturbation approach at all orders — higher-order terms (loops=3,4,...) also produce A^(a-b) sums scaled by real factors, preserving same angular structure</li>
@@ -49,7 +49,7 @@ Tests the neglecton prediction — radical elements of TL_4 at delta=0 extracted
 <li>Genuinely new angles from neglecton: 0 out of 116 (all match existing standard angles)</li>
 <li>Search: 216^4 = 2,176,782,336 quartets; source breakdown: 1.0% std-only, 99.0% has&gt;=1 neglecton, 22.0% all-neglecton</li>
 <li>XNOR3 solutions: 0; min Hamming distance to parity: 1 (EXACT1, tt=0x16)</li>
-<li>Demo 48 comparison: all classes grow ~21× proportionally; EXACT1 grows 12.8× (below average, consistent with boundary position); XNOR3 remains exactly 0</li>
+<li><a href="./demo_48.html">Demo 48</a> comparison: all classes grow ~21× proportionally; EXACT1 grows 12.8× (below average, consistent with boundary position); XNOR3 remains exactly 0</li>
 <li>Spearman rho (solutions vs topo_freq): +0.7582; (solutions vs reverse_RMS): -0.7802</li>
 <li>Aizenberg parity weights: w1=zeta_8=(0,1,0,0), w2=i=(0,0,1,0), w3=-1=(-1,0,0,0) — all in standard catalog</li>
 </ul>
@@ -61,12 +61,12 @@ Tests the neglecton prediction — radical elements of TL_4 at delta=0 extracted
 <li><code>build_dual_catalog()</code>: enumerates 2-3 strand braids up to length 8, builds separate standard and neglecton catalogs of distinct Cyc8 values, tracks invisibility statistics</li>
 <li><code>build_combined_catalog()</code>: merges standard + neglecton catalogs with source tags (SRC_STD, SRC_NEG, SRC_BOTH)</li>
 <li>Angle analysis: checks whether neglecton-only values introduce genuinely new angles vs existing standard catalog</li>
-<li><code>npn_transform()</code>, <code>npn_init()</code>, <code>npn_build_classes()</code>: NPN classification from Demo 48</li>
+<li><code>npn_transform()</code>, <code>npn_init()</code>, <code>npn_build_classes()</code>: NPN classification from <a href="./demo_48.html">Demo 48</a></li>
 <li><code>split_sigmoid()</code>: smooth XOR of real/imaginary sigmoid outputs (same as Demos 48, 50)</li>
 <li><code>parity_dist_lut[]</code>: Hamming distance to parity (0x69/0x96) lookup table</li>
 <li><code>Quartet</code> struct + <code>parity_examples[]</code>: tracks weight indices for parity solutions with source classification</li>
 <li><code>spearman_rho()</code> with <code>assign_ranks()</code>: rank correlation with tie handling</li>
-<li><code>Demo45Ref</code> table: 13-entry reference data (canon_tt, topo_freq, rms, orbit) from Demo 45</li>
+<li><code>Demo45Ref</code> table: 13-entry reference data (canon_tt, topo_freq, rms, orbit) from <a href="./demo_45.html">Demo 45</a></li>
 </ul>
 <h3>Literature Touched</h3>
 <ul>
@@ -74,13 +74,13 @@ Tests the neglecton prediction — radical elements of TL_4 at delta=0 extracted
 <li>Cyclotomic integers Z[zeta_8]: exact arithmetic, angular structure of integer-coefficient sums of 8th roots</li>
 <li>Aizenberg (2007, 2011): multi-valued neuron (MVN) computes parity with k=2^n sectors; weights (zeta_8, i, -1) for 3 inputs</li>
 <li>Minsky-Papert (complex analog): k=2 half-plane cannot linearly separate 3-input parity in C</li>
-<li>Born-rule projection: bracket amplitude discards phase (Demo 27 connection)</li>
+<li>Born-rule projection: bracket amplitude discards phase (<a href="./demo_27.html">Demo 27</a> connection)</li>
 <li>First-order perturbation theory: d(bracket)/d(epsilon) extracts radical contributions exactly</li>
 </ul>
 <h3>Open Questions</h3>
 <ul>
 <li>Does the angular obstruction have a clean algebraic characterization (e.g., in terms of cyclotomic field automorphisms)?</li>
-<li>What is the minimum sector count k* where parity first becomes computable with Z[zeta_8] weights? (Predicted: k=8, but could be lower — Demo 50 answers this)</li>
+<li>What is the minimum sector count k* where parity first becomes computable with Z[zeta_8] weights? (Predicted: k=8, but could be lower — <a href="./demo_50.html">Demo 50</a> answers this)</li>
 <li>Can the per-NPN-class minimum sector count be predicted from the truth table's algebraic properties?</li>
 <li>Does the 4× magnitude scaling of neglecton values have deeper algebraic meaning beyond d(delta)/d(epsilon)?</li>
 <li>Is there a second-order perturbation (loops=3 contribution) that would break the angular structure? (Predicted: no, since A^(a-b) sums with real scaling preserve angles at all orders)</li>

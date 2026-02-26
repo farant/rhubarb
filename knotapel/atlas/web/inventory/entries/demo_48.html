@@ -12,13 +12,13 @@
 </head>
 <body>
     <nav><a href="../../index.html">← Back to Index</a></nav><hr>
-    <h2>Demo 48: Forward DKC Zoo</h2>
+    <h2><a href="./demo_48.html">Demo 48</a>: Forward DKC Zoo</h2>
 <ul>
 <li><strong>Status</strong>: COMPLETE</li>
 <li><strong>File</strong>: <code><a href="../../demo_48_forward_dkc_zoo/main.c.html">demo_48_forward_dkc_zoo/main.c</a></code> (~1078 lines)</li>
 <li><strong>Tests</strong>: 14/14 pass, 7/7 predictions confirmed</li>
-<li><strong>Depends on</strong>: Demo 29 (forward DKC for XOR, Cyc8 arithmetic, bracket catalog), Demo 45 (complex function zoo, topology frequency, reverse RMS data), Demo 47 (parity investigation, NPN classification, MVN activation findings)</li>
-<li><strong>Feeds into</strong>: Demo 39 (symmetry decomposition — algebraic explanation of parity wall), Demo 49 (neglecton weights), Demo 50 (parity reachability at higher k)</li>
+<li><strong>Depends on</strong>: <a href="./demo_29.html">Demo 29</a> (forward DKC for XOR, Cyc8 arithmetic, bracket catalog), <a href="./demo_45.html">Demo 45</a> (complex function zoo, topology frequency, reverse RMS data), <a href="./demo_47.html">Demo 47</a> (parity investigation, NPN classification, MVN activation findings)</li>
+<li><strong>Feeds into</strong>: <a href="./demo_39.html">Demo 39</a> (symmetry decomposition — algebraic explanation of parity wall), <a href="./demo_49.html">Demo 49</a> (neglecton weights), <a href="./demo_50.html">Demo 50</a> (parity reachability at higher k)</li>
 </ul>
 <h3>Headline</h3>
 Exhaustive search of 100 million exact Z[zeta_8] bracket quartets proves XNOR3 (parity) is the ONLY 3-input Boolean function with zero valid forward DKC constructions — the wall is razor-thin (1 Hamming bit from EXACT1) yet categorically impassable.
@@ -26,7 +26,7 @@ Exhaustive search of 100 million exact Z[zeta_8] bracket quartets proves XNOR3 (
 <ul>
 <li><strong>Parity wall CONFIRMED</strong>: XNOR3 has exactly 0 solutions out of 100,000,000 quartets; all other 12 NPN classes have solutions (127K to 25M)</li>
 <li><strong>Four-tier hierarchy</strong>: AND-type (&gt;10M) &gt; intermediate (1-4M) &gt; boundary (127K-371K) &gt; unreachable (0)</li>
-<li><strong>Triple correlation</strong>: Forward solution count correlates with Demo 45 topology frequency (rho = +0.78), anti-correlates with reverse RMS (rho = -0.79), weakly correlates with orbit size (rho = +0.47)</li>
+<li><strong>Triple correlation</strong>: Forward solution count correlates with <a href="./demo_45.html">Demo 45</a> topology frequency (rho = +0.78), anti-correlates with reverse RMS (rho = -0.79), weakly correlates with orbit size (rho = +0.47)</li>
 <li><strong>Wall thickness = 1 Hamming bit</strong>: EXACT1 (tt=0x16) is distance 1 from parity and has 127K solutions — the algebra gets within one bit flip but cannot cross</li>
 <li><strong>XOR2 vs XNOR3</strong>: 2-input XOR has 1.6M solutions; 3-input parity has 0 — the 2→3 barrier is absolute</li>
 <li><strong>Constants</strong>: 22% of quartets produce constant functions (FALSE=17.3M, TRUE=4.7M) — large-magnitude bracket values saturate sigmoid</li>
@@ -37,8 +37,8 @@ Exhaustive search of 100 million exact Z[zeta_8] bracket quartets proves XNOR3 (
 <ul>
 <li><strong>Parity unreachability (split-sigmoid, Z[zeta_8])</strong>: A single complex neuron with split-sigmoid activation and weights drawn from the Z[zeta_8] bracket catalog CANNOT compute 3-input parity — PROVEN (exhaustive, 100M quartets)</li>
 <li><strong>Bracket self-consistency</strong>: Forward construction, forward enumeration, and reverse decomposition produce the same preference ordering over Boolean functions — CONFIRMED (rho = +0.78, -0.79)</li>
-<li><strong>Non-semisimplicity explanation</strong>: The parity wall is the Clifford boundary — bracket evaluation factors through TL/radical (semisimple quotient), killing exactly the degrees of freedom needed for parity — CONJECTURED (algebraic proof deferred to Demo 39)</li>
-<li><strong>Neglecton prediction</strong>: TL_4 radical elements (neglecton weights) should enable parity computation — CONJECTURED (tested in Demo 49)</li>
+<li><strong>Non-semisimplicity explanation</strong>: The parity wall is the Clifford boundary — bracket evaluation factors through TL/radical (semisimple quotient), killing exactly the degrees of freedom needed for parity — CONJECTURED (algebraic proof deferred to <a href="./demo_39.html">Demo 39</a>)</li>
+<li><strong>Neglecton prediction</strong>: TL_4 radical elements (neglecton weights) should enable parity computation — CONJECTURED (tested in <a href="./demo_49.html">Demo 49</a>)</li>
 <li><strong>Distance-solution anti-correlation</strong>: Functions closer to parity in Hamming distance have fewer solutions — CONFIRMED empirically</li>
 </ul>
 <h3>Data</h3>
@@ -62,7 +62,7 @@ Exhaustive search of 100 million exact Z[zeta_8] bracket quartets proves XNOR3 (
 <li>Constants: FALSE=17,299,057, TRUE=4,749,681 (22.0% total)</li>
 <li>Spearman correlations: rho(sol,topo)=+0.7830, rho(sol,RMS)=-0.7912, rho(sol,orbit)=+0.4698</li>
 <li>Parity wall min Hamming distance: 1 (EXACT1 → XNOR3)</li>
-<li>Demo 45 reference data hardcoded for cross-correlation</li>
+<li><a href="./demo_45.html">Demo 45</a> reference data hardcoded for cross-correlation</li>
 </ul>
 <h3>Code Assets</h3>
 <ul>
@@ -73,7 +73,7 @@ Exhaustive search of 100 million exact Z[zeta_8] bracket quartets proves XNOR3 (
 <li><strong>Split-sigmoid activation</strong>: h = sig(Re) + i<em>sig(Im), p = h_r</em>(1-h_i) + (1-h_r)*h_i</li>
 <li><strong>Exhaustive quartet search</strong>: O(n^4) with precomputed partial sums (s12 outside w3 loop), example quartet storage per class</li>
 <li><strong>Parity distance tracker</strong>: Hamming distance LUT to 0x69/0x96, global minimum tracking</li>
-<li><strong>Spearman rank correlation</strong>: handles ties, reused from Demo 47</li>
+<li><strong>Spearman rank correlation</strong>: handles ties, reused from <a href="./demo_47.html">Demo 47</a></li>
 <li><strong>Master comparison table</strong>: solution count vs topology frequency vs reverse RMS vs orbit size</li>
 </ul>
 <h3>Literature Touched</h3>
@@ -87,8 +87,8 @@ Exhaustive search of 100 million exact Z[zeta_8] bracket quartets proves XNOR3 (
 </ul>
 <h3>Open Questions</h3>
 <ul>
-<li>Can Demo 39's TL_4 block decomposition explicitly identify which blocks are "dead" at delta=0 and show they correspond to parity?</li>
-<li>Do neglecton (radical) elements as weights enable parity? (→ Demo 49)</li>
+<li>Can <a href="./demo_39.html">Demo 39</a>'s TL_4 block decomposition explicitly identify which blocks are "dead" at delta=0 and show they correspond to parity?</li>
+<li>Do neglecton (radical) elements as weights enable parity? (→ <a href="./demo_49.html">Demo 49</a>)</li>
 <li>Is the four-tier structure (&gt;10M / 1-4M / &lt;500K / 0) invariant under catalog size scaling?</li>
 <li>Why does EXACT1 (distance 1 from parity) survive as reachable — what algebraic property distinguishes it from the one extra bit flip needed for parity?</li>
 <li>Does the unit-magnitude observation mean that a smaller catalog restricted to |z| ≈ 1 would preserve all non-constant computational classes?</li>

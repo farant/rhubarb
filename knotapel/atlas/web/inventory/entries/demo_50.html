@@ -12,16 +12,16 @@
 </head>
 <body>
     <nav><a href="../../index.html">← Back to Index</a></nav><hr>
-    <h2>Demo 50: Activation Function Zoo</h2>
+    <h2><a href="./demo_50.html">Demo 50</a>: Activation Function Zoo</h2>
 <ul>
 <li><strong>Status</strong>: COMPLETE</li>
 <li><strong>File</strong>: <code><a href="../../demo_50_activation_zoo/main.c.html">demo_50_activation_zoo/main.c</a></code> (~1094 lines)</li>
 <li><strong>Tests</strong>: ~6 checks (4 parts: A=1 k=2 impossibility, B=2 k=2 confirm + k=8 parity, C=3 parity-min-k + Aizenberg catalog + Aizenberg parity, D=0 analysis only); 4/6 pass, 2 informative failures (Aizenberg weights not in catalog, Aizenberg computes wrong function under j mod 2)</li>
-<li><strong>Depends on</strong>: Demo 48 (forward DKC zoo, 100M quartets, XNOR3 zero solutions), Demo 49 (neglecton weights add no new angles)</li>
+<li><strong>Depends on</strong>: <a href="./demo_48.html">Demo 48</a> (forward DKC zoo, 100M quartets, XNOR3 zero solutions), <a href="./demo_49.html">Demo 49</a> (neglecton weights add no new angles)</li>
 <li><strong>Feeds into</strong>: Understanding that the DKC parity wall is in the activation function, not the lattice; non-semisimplicity reinterpretation; future multi-input parity investigations</li>
 </ul>
 <h3>Headline</h3>
-Proves the DKC parity wall was in the activation function, not the weight lattice: replacing split-sigmoid with k-sector MVN classification makes parity reachable at k=6 with 906 solutions from the same 100-value Z[zeta_8] bracket catalog that Demo 48 exhaustively searched, revealing a four-tier hierarchy of activation complexity across all 13 NPN classes.
+Proves the DKC parity wall was in the activation function, not the weight lattice: replacing split-sigmoid with k-sector MVN classification makes parity reachable at k=6 with 906 solutions from the same 100-value Z[zeta_8] bracket catalog that <a href="./demo_48.html">Demo 48</a> exhaustively searched, revealing a four-tier hierarchy of activation complexity across all 13 NPN classes.
 <h3>Key Results</h3>
 <ul>
 <li><strong>Part A (k=2 impossibility)</strong>: Exhaustive search of 100^3 = 1M triples confirms zero parity solutions under half-plane classification; computational verification of the complex Minsky-Papert theorem</li>

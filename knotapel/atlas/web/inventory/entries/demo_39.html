@@ -12,13 +12,13 @@
 </head>
 <body>
     <nav><a href="../../index.html">← Back to Index</a></nav><hr>
-    <h2>Demo 39: Symmetry Decomposition of TL_n</h2>
+    <h2><a href="./demo_39.html">Demo 39</a>: Symmetry Decomposition of TL_n</h2>
 <ul>
 <li><strong>Status</strong>: COMPLETE</li>
 <li><strong>File</strong>: <code><a href="../../demo_39_symmetry_decomposition/main.c.html">demo_39_symmetry_decomposition/main.c</a></code> (~1483 lines)</li>
 <li><strong>Tests</strong>: 49+ tests pass</li>
-<li><strong>Depends on</strong>: Demo 35 (planar matching enumeration, diagram composition), Demo 38 (dimension reduction infrastructure), Demo 51 (radical anatomy at delta=0), Demo 52 (Chebyshev multi-delta radical structure), Demo 48 (forward DKC zoo — conjectured non-semisimplicity explanation deferred here)</li>
-<li><strong>Feeds into</strong>: Algebraic explanation of DKC parity wall (Demo 48 conjecture), understanding of sector-level Gram degeneracies for future multi-delta DKC analysis, Demo 63 (angular anatomy, RT truncation connection), proofs/markov-rt-truncation.md, proofs/next-level-radical-formula.md</li>
+<li><strong>Depends on</strong>: <a href="./demo_35.html">Demo 35</a> (planar matching enumeration, diagram composition), <a href="./demo_38.html">Demo 38</a> (dimension reduction infrastructure), <a href="./demo_51.html">Demo 51</a> (radical anatomy at delta=0), <a href="./demo_52.html">Demo 52</a> (Chebyshev multi-delta radical structure), <a href="./demo_48.html">Demo 48</a> (forward DKC zoo — conjectured non-semisimplicity explanation deferred here)</li>
+<li><strong>Feeds into</strong>: Algebraic explanation of DKC parity wall (<a href="./demo_48.html">Demo 48</a> conjecture), understanding of sector-level Gram degeneracies for future multi-delta DKC analysis, <a href="./demo_63.html">Demo 63</a> (angular anatomy, RT truncation connection), proofs/markov-rt-truncation.md, proofs/next-level-radical-formula.md</li>
 </ul>
 <h3>Headline</h3>
 Decomposes Temperley-Lieb algebras TL_n (n=2..8) by through-strand count into cellular sectors, verifying sector sizes equal d(n,j)^2, computing per-sector Gram ranks at multiple delta values, proving cell filtration monotonicity, demonstrating that even semisimple algebras are NOT block-diagonal in the standard basis, and mapping the semisimplicity boundary at n=ell where Graham-Lehrer theory predicts first failure. Parts G-J extend to three distinct Gram forms at the n=ell boundary (fixpt, Markov, cell module), prove the Markov RT truncation theorem (Markov trace kills j &gt;= ell-1, preserves j &lt;= ell-2), verify the next-level radical formula rad(TL_{ell+1}) = ell^2-ell-3, and establish the second-degeneracy corank = ell+1.
@@ -50,7 +50,7 @@ Decomposes Temperley-Lieb algebras TL_n (n=2..8) by through-strand count into ce
 <li><strong>Markov RT truncation theorem</strong>: Markov trace at q=e^{i*pi/ell} kills simple modules L_j with j &gt;= ell-1, preserves j &lt;= ell-2. Markov excess = sum (dim L_j)^2 for j &gt;= ell-1. Markov rank = sum (dim L_j)^2 for j &lt;= ell-2 — PROVEN (formal proof in proofs/markov-rt-truncation.md, verified 31/31 tests across n=ell..n=ell+3)</li>
 <li><strong>Second-degeneracy corank = ell+1</strong>: At n=ell+2, the second degeneracy of V_{ell-2} has corank ell+1 — VERIFIED (ell=3..6)</li>
 <li><strong>(ell+m-1)^2+1 excess conjecture</strong>: REFUTED at m=3 (three killed blocks appear, formula only held for m=1,2 where two blocks exist)</li>
-<li><strong>Non-semisimplicity conjecture for parity wall</strong>: The parity wall from Demo 48 corresponds to radical structure killing degrees of freedom — PARTIALLY ADDRESSED (radical dimensions computed, explicit sector-level identification deferred)</li>
+<li><strong>Non-semisimplicity conjecture for parity wall</strong>: The parity wall from <a href="./demo_48.html">Demo 48</a> corresponds to radical structure killing degrees of freedom — PARTIALLY ADDRESSED (radical dimensions computed, explicit sector-level identification deferred)</li>
 </ul>
 <h3>Data</h3>
 <ul>
@@ -108,7 +108,7 @@ Decomposes Temperley-Lieb algebras TL_n (n=2..8) by through-strand count into ce
 <li><strong>Multi-level radical computation</strong>: radical computed at n=ell through n=ell+3 for each ell=2..7, verifying RT truncation formula at all levels</li>
 <li><strong>Modular arithmetic suite</strong>: <code>mod_reduce</code>, <code>mod_inv</code> (extended Euclidean), <code>mod_pow</code> (binary exponentiation), <code>mod_sqrt</code> (Tonelli-Shanks with QR check) — all mod p=1000002361</li>
 <li><strong>Cubic root finder for ell=7</strong>: Cantor-Zassenhaus style algorithm using polynomial arithmetic mod x^3 - x^2 - 2x + 1 (minimal polynomial of 2cos(pi/7)) over F_p; <code>Poly3</code> type, <code>p3_mul</code>, <code>p3_pow</code>, <code>find_l7_root</code></li>
-<li><strong>Full TL infrastructure reuse</strong>: planar matching enumeration, boundary ordering, segment-based recursive generation, diagram composition with loop counting, multiplication table construction (from Demo 38/60)</li>
+<li><strong>Full TL infrastructure reuse</strong>: planar matching enumeration, boundary ordering, segment-based recursive generation, diagram composition with loop counting, multiplication table construction (from <a href="./demo_38.html">Demo 38</a>/60)</li>
 <li><strong>Forward elimination rank</strong>: <code>compute_rank()</code> via Gaussian elimination mod p, destructive in-place</li>
 </ul>
 <h3>Literature Touched</h3>

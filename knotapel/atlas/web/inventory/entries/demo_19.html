@@ -12,13 +12,13 @@
 </head>
 <body>
     <nav><a href="../../index.html">← Back to Index</a></nav><hr>
-    <h2>Demo 19: Braid Circuit Compiler</h2>
+    <h2><a href="./demo_19.html">Demo 19</a>: Braid Circuit Compiler</h2>
 <ul>
 <li><strong>Status</strong>: COMPLETE</li>
 <li><strong>File</strong>: <code><a href="../../demo_19_braid_compiler/main.c.html">demo_19_braid_compiler/main.c</a></code> (~1017 lines)</li>
 <li><strong>Tests</strong>: ~15 checks across 5 parts (A-E): root-of-unity catalog, universal gate set, boolean compiler, full adder, efficiency analysis</li>
-<li><strong>Depends on</strong>: Demo 18 (braid logic gates: NOT and NAND discovery), Demo 15 (delta-zero optimal angles)</li>
-<li><strong>Feeds into</strong>: Demo 20 (braid error analysis)</li>
+<li><strong>Depends on</strong>: <a href="./demo_18.html">Demo 18</a> (braid logic gates: NOT and NAND discovery), <a href="./demo_15.html">Demo 15</a> (delta-zero optimal angles)</li>
+<li><strong>Feeds into</strong>: <a href="./demo_20.html">Demo 20</a> (braid error analysis)</li>
 </ul>
 <h3>Headline</h3>
 Builds a complete boolean expression compiler that evaluates arbitrary logic circuits via recursive Kauffman bracket thresholding of braid gates, demonstrating a universal {NOT, NAND} gate set at the 8th root of unity (A = e^{i*5pi/4}) and compiling a full 1-bit adder that passes all 8 input combinations.
@@ -32,7 +32,7 @@ Builds a complete boolean expression compiler that evaluates arbitrary logic cir
 </ul>
 <h3>Theorems/Conjectures</h3>
 <ul>
-<li><strong>Convergence thesis</strong>: the 8th root of unity (5pi/4) is where three phenomena align: Demo 15's classification angles, Demo 18's magic gate angles, and cyclotomic integer bracket values</li>
+<li><strong>Convergence thesis</strong>: the 8th root of unity (5pi/4) is where three phenomena align: <a href="./demo_15.html">Demo 15</a>'s classification angles, <a href="./demo_18.html">Demo 18</a>'s magic gate angles, and cyclotomic integer bracket values</li>
 <li>Gate composition preserves correctness through cascade thresholding (each gate produces a classical bit that feeds as braid input to the next gate)</li>
 <li>Gate count scales linearly with expression depth (verified with NOT chains of depth 1,2,4,8)</li>
 </ul>

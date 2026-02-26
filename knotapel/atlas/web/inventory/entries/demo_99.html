@@ -12,14 +12,14 @@
 </head>
 <body>
     <nav><a href="../../index.html">← Back to Index</a></nav><hr>
-    <h2>Demo 99: 3-Strand Delta_1 Block Decomposition — LANDMARK</h2>
+    <h2><a href="./demo_99.html">Demo 99</a>: 3-Strand Delta_1 Block Decomposition — LANDMARK</h2>
 <ul>
 <li><strong>Status</strong>: COMPLETE (LANDMARK)</li>
 <li><strong>Designation</strong>: Demo 99b (labeled 99b in source and explorer's log; supersedes earlier <a href="./demo_99.html">D99</a> column-readout attempt)</li>
 <li><strong>File</strong>: <code><a href="../../demo_99_column_readout/main.c.html">demo_99_column_readout/main.c</a></code> (~2678 lines)</li>
 <li><strong>Tests</strong>: 24+ pass, 0 fail (Phases 0-11, plus sub-phases 7b/7c/7d)</li>
-<li><strong>Depends on</strong>: Demo 51 (TL_3 semisimplicity at delta=0), Demo 98 (5x5 trace readout gives ZERO XOR), Demo 99 original (5oct_hash on 5x5 gives 3100 XOR6), Demo 82 (depth law max_xor ~ depth+6), Demo 97 (orthogonal directions = perfection)</li>
-<li><strong>Feeds into</strong>: Demo 99c (algebraic classification, Cell B analog), Demo 100 (4-strand W_{4,2} DKC), Demo 101 (dimensionally-matched activation)</li>
+<li><strong>Depends on</strong>: <a href="./demo_51.html">Demo 51</a> (TL_3 semisimplicity at delta=0), <a href="./demo_98.html">Demo 98</a> (5x5 trace readout gives ZERO XOR), <a href="./demo_99.html">Demo 99</a> original (5oct_hash on 5x5 gives 3100 XOR6), <a href="./demo_82.html">Demo 82</a> (depth law max_xor ~ depth+6), <a href="./demo_97.html">Demo 97</a> (orthogonal directions = perfection)</li>
+<li><strong>Feeds into</strong>: Demo 99c (algebraic classification, Cell B analog), <a href="./demo_100.html">Demo 100</a> (4-strand W_{4,2} DKC), <a href="./demo_101.html">Demo 101</a> (dimensionally-matched activation)</li>
 </ul>
 <h3>Headline</h3>
 First-ever 3-strand XOR computation at ALL levels: XOR6=500,261, XOR8=48,143, XOR10=485, XOR12=16, XOR14=60 (best across activations). The key was building the irreducible 2x2 standard module Delta_1 directly over Z[zeta_8] instead of using the reducible 5x5 representation, combined with a 16-component sign-pattern activation (2x2_hash). The braid group image is INFINITE (Jordan block structure, sigma_1 has infinite order), with entry magnitudes growing by exact Fibonacci ratios. XOR counts saturate by ~4096 catalog entries. XOR14 requires deep entries (d&gt;=6); shallow entries give definitively ZERO. XOR16 is ZERO (genuine ceiling for this representation).
@@ -139,7 +139,7 @@ First-ever 3-strand XOR computation at ALL levels: XOR6=500,261, XOR8=48,143, XO
 </ul>
 <h3>Literature Touched</h3>
 <ul>
-<li><strong>Temperley-Lieb algebra standard modules (Graham-Lehrer)</strong>: TL_3(delta=0) decomposes as V = Delta_3(1) + Delta_1(2) + Delta_1(2) via Wedderburn-Artin. Delta_1 is the 2-dimensional standard module on half-diagram basis {h_0, h_2}. At delta=0, TL_3 is semisimple (n=3 odd, Demo 51 confirms), but the braid group image is infinite.</li>
+<li><strong>Temperley-Lieb algebra standard modules (Graham-Lehrer)</strong>: TL_3(delta=0) decomposes as V = Delta_3(1) + Delta_1(2) + Delta_1(2) via Wedderburn-Artin. Delta_1 is the 2-dimensional standard module on half-diagram basis {h_0, h_2}. At delta=0, TL_3 is semisimple (n=3 odd, <a href="./demo_51.html">Demo 51</a> confirms), but the braid group image is infinite.</li>
 <li><strong>Ext^1 and non-semisimple representation theory</strong>: Delta_1 is an indecomposable but reducible module of the restricted quantum group u_q(sl_2) at ell=2 (q = e^{i*pi/4} = zeta_8). Extension class Ext^1(L(0), L(1)) is non-zero. Jordan block proves the extension does not split.</li>
 <li><strong>Non-semisimple TQFT (Voss-Kim-Bhatt, Nature Comms 2025)</strong>: Alpha-anyon anchor (quantum trace zero) + sigma-anyon qubits + semisimple readout. Structural identification with <a href="./demo_99.html">D99</a> findings: non-semisimplicity as catalytic preparation, computation in semisimple layer.</li>
 <li><strong>Reservoir Computing (Maass et al. 2002, Gonon &amp; Ortega 2020)</strong>: Casimir = separation property. 4.4x winner/control gap = first quantitative measure of algebraic reservoir quality. DKC maps precisely to a discrete algebraic reservoir computer.</li>

@@ -12,20 +12,20 @@
 </head>
 <body>
     <nav><a href="../../index.html">← Back to Index</a></nav><hr>
-    <h2>Demo 72: Spherical Design Test — Are the 13 Directions Optimal?</h2>
+    <h2><a href="./demo_72.html">Demo 72</a>: Spherical Design Test — Are the 13 Directions Optimal?</h2>
 <ul>
 <li><strong>Status</strong>: COMPLETE</li>
 <li><strong>File</strong>: <code><a href="../../demo_72_spherical_design/main.c.html">demo_72_spherical_design/main.c</a></code> (~971 lines)</li>
 <li><strong>Tests</strong>: 8/8 pass</li>
-<li><strong>Depends on</strong>: Demo 67 (13 eigenvector directions on S², 36 XOR6 solutions), Demo 71 (DKC bandwidth l=6, DOF argument)</li>
-<li><strong>Feeds into</strong>: Demo 73 (automaton structure), Demo 74 (computational invariant)</li>
+<li><strong>Depends on</strong>: <a href="./demo_67.html">Demo 67</a> (13 eigenvector directions on S², 36 XOR6 solutions), <a href="./demo_71.html">Demo 71</a> (DKC bandwidth l=6, DOF argument)</li>
+<li><strong>Feeds into</strong>: <a href="./demo_73.html">Demo 73</a> (automaton structure), <a href="./demo_74.html">Demo 74</a> (computational invariant)</li>
 </ul>
 <h3>Headline</h3>
 The 13 eigenvector directions are NOT a spherical t-design (t=0, directed) — the worst possible for sampling — yet stochastic optimization confirms that better geometric distribution gives fewer XOR6 solutions (36 vs 4), establishing an anti-correlation between sampling quality and computational quality.
 <h3>Key Results</h3>
 <ul>
 <li><strong>t=0 directed (Part A)</strong>: The 13 directions fail the t-design property at l=1 (centroid off-origin, |S_{1,m}|=2.43). Exactly l=2 passes at machine precision (|S_{2,m}|=5.11e-16). Fails at all subsequent levels through l=8+.</li>
-<li><strong>Bandwidth gap (Part B)</strong>: DKC operates at bandwidth l=6 (Demo 71) but the directions achieve t=0. The gap of 6 modes is entirely filled by compressed sensing and the DOF argument — classical sampling theory does not apply.</li>
+<li><strong>Bandwidth gap (Part B)</strong>: DKC operates at bandwidth l=6 (<a href="./demo_71.html">Demo 71</a>) but the directions achieve t=0. The gap of 6 modes is entirely filled by compressed sensing and the DOF argument — classical sampling theory does not apply.</li>
 <li><strong>Even/odd mode asymmetry (Part C)</strong>: Directed even-mode t-design is t_even=2 (l=2 passes); directed odd-mode is t_odd=0. Undirected (26 points, both +dir and -dir) achieves t=3 because antipodal symmetry kills all odd modes automatically. First genuine failure for DKC-relevant even modes is l=4 (|S_{4,m}|=0.576).</li>
 <li><strong>S³ design (Part D)</strong>: The full 48-element binary octahedral group on S³ achieves t=1. Odd degrees are exactly zero by symmetry; even degrees fail. The 24-cell vertices (binary tetrahedral subgroup) form a 5-design; the additional 24 elements break the property at degree 2.</li>
 <li><strong>Delsarte bounds (Part E)</strong>: With 13 points, t-designs up to t=7 are theoretically possible (Delsarte minimum for t=7 is 10 points). The actual achievement (t=0) is the worst possible given that the points trivially satisfy no integration condition.</li>

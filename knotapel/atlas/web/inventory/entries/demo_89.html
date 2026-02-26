@@ -12,16 +12,16 @@
 </head>
 <body>
     <nav><a href="../../index.html">← Back to Index</a></nav><hr>
-    <h2>Demo 89: Depth Law Mechanism</h2>
+    <h2><a href="./demo_89.html">Demo 89</a>: Depth Law Mechanism</h2>
 <ul>
 <li><strong>Status</strong>: PRELIMINARY</li>
 <li><strong>File</strong>: <code><a href="../../demo_89_depth_law_mechanism/main.c.html">demo_89_depth_law_mechanism/main.c</a></code> (~1964 lines)</li>
 <li><strong>Tests</strong>: 14/14 pass (12 phase completions + catalog built + direction coverage; Phase 5 intra&gt;inter coherence FAIL is expected negative result, Phase 8 deep&gt;strided Cayley FAIL is expected negative result)</li>
-<li><strong>Depends on</strong>: Demo 82 (depth law: max_xor ~ depth + 6, algebraic coherence), Demo 84 (null states, direction geometry), Demo 66 (24-cell geometry, zeta_8 catalog), Demo 79 (zeta_12 capacity, infinite group), Demo 77 (paired extension at zeta_8)</li>
-<li><strong>Feeds into</strong>: Demo 90 (sum-angle structure, axis cancellation mechanism), Demo 91 (activation bottleneck), future representation-theoretic analysis of "algebraic coherence"</li>
+<li><strong>Depends on</strong>: <a href="./demo_82.html">Demo 82</a> (depth law: max_xor ~ depth + 6, algebraic coherence), <a href="./demo_84.html">Demo 84</a> (null states, direction geometry), <a href="./demo_66.html">Demo 66</a> (24-cell geometry, zeta_8 catalog), <a href="./demo_79.html">Demo 79</a> (zeta_12 capacity, infinite group), <a href="./demo_77.html">Demo 77</a> (paired extension at zeta_8)</li>
+<li><strong>Feeds into</strong>: <a href="./demo_90.html">Demo 90</a> (sum-angle structure, axis cancellation mechanism), <a href="./demo_91.html">Demo 91</a> (activation bottleneck), future representation-theoretic analysis of "algebraic coherence"</li>
 </ul>
 <h3>Headline</h3>
-Systematic investigation of WHY the depth law holds, testing 8 mechanistic hypotheses across 11 computational phases — killing pairwise coherence, direction coverage, Cayley density, sector diversity, and angle coherence as explanations, while confirming paired extension as a real but minority pathway (6-20% at zeta_12 vs 100% at zeta_8) and identifying "algebraic coherence" as the remaining open question attacked in Demo 90.
+Systematic investigation of WHY the depth law holds, testing 8 mechanistic hypotheses across 11 computational phases — killing pairwise coherence, direction coverage, Cayley density, sector diversity, and angle coherence as explanations, while confirming paired extension as a real but minority pathway (6-20% at zeta_12 vs 100% at zeta_8) and identifying "algebraic coherence" as the remaining open question attacked in <a href="./demo_90.html">Demo 90</a>.
 <h3>Key Results</h3>
 <ul>
 <li><strong>Phase 1 — Depth decomposition (zeta_12)</strong>: Single-depth XOR6 capacity grows with depth (d=0: 8 winners, d=8: 2011 winners at bf=24). Direction count grows exponentially across depth shells: 2-&gt;6-&gt;22-&gt;46-&gt;114-&gt;239-&gt;507-&gt;975-&gt;2043. Cumulative XOR6 capacity saturates around 1903.</li>
@@ -82,16 +82,16 @@ Systematic investigation of WHY the depth law holds, testing 8 mechanistic hypot
 </ul>
 <h3>Literature Touched</h3>
 <ul>
-<li><strong>Demo 82 depth law</strong>: max_xor ~ depth + 6 (linear). Demo 89 investigates the mechanism.</li>
-<li><strong>Demo 77 paired extension</strong>: 100% paired extension at zeta_8 (24 entries, 13 dirs). Demo 89 Phase 11 shows this drops to 6-20% at zeta_12 (275 entries, 114 dirs) — the mechanism shifts from shadow pairing to direction diversity as vocabulary grows.</li>
-<li><strong>Tahmasebi &amp; Jegelka (NeurIPS 2023)</strong>: Group invariance implies dimension reduction. SU(2)/U(1) = S2. Consistent with DKC's independent discovery (Demo 67) that S2 directional structure matters.</li>
-<li><strong>Lauda et al. (2025, Nature Comms)</strong>: Neglecton anyons for universal QC. External validation of Demo 84's null-indispensability findings.</li>
+<li><strong><a href="./demo_82.html">Demo 82</a> depth law</strong>: max_xor ~ depth + 6 (linear). <a href="./demo_89.html">Demo 89</a> investigates the mechanism.</li>
+<li><strong><a href="./demo_77.html">Demo 77</a> paired extension</strong>: 100% paired extension at zeta_8 (24 entries, 13 dirs). <a href="./demo_89.html">Demo 89</a> Phase 11 shows this drops to 6-20% at zeta_12 (275 entries, 114 dirs) — the mechanism shifts from shadow pairing to direction diversity as vocabulary grows.</li>
+<li><strong>Tahmasebi &amp; Jegelka (NeurIPS 2023)</strong>: Group invariance implies dimension reduction. SU(2)/U(1) = S2. Consistent with DKC's independent discovery (<a href="./demo_67.html">Demo 67</a>) that S2 directional structure matters.</li>
+<li><strong>Lauda et al. (2025, Nature Comms)</strong>: Neglecton anyons for universal QC. External validation of <a href="./demo_84.html">Demo 84</a>'s null-indispensability findings.</li>
 <li><strong>Reservoir Computing (Jaeger 2001, Maass et al. 2002)</strong>: Echo state networks / liquid state machines. The depth law's "algebraic coherence" parallels the reservoir separation property — deep entries maintain richer computational manifold.</li>
 <li><strong>Casimir operator theory</strong>: Casimir balance hypothesis (catalog doubling vs linear eigenvalue gap) suggested as possible explanation for ~1 new representation per depth round.</li>
 </ul>
 <h3>Open Questions</h3>
 <ul>
-<li><strong>What is "algebraic coherence" precisely?</strong> Deep tuples are more likely to satisfy parity than random tuples at matched catalog size. Demo 89 eliminated 5 candidate mechanisms but did not identify the actual one. Attacked in Demo 90 (sum-angle structure, axis cancellation).</li>
+<li><strong>What is "algebraic coherence" precisely?</strong> Deep tuples are more likely to satisfy parity than random tuples at matched catalog size. <a href="./demo_89.html">Demo 89</a> eliminated 5 candidate mechanisms but did not identify the actual one. Attacked in <a href="./demo_90.html">Demo 90</a> (sum-angle structure, axis cancellation).</li>
 <li><strong>Why is the slope exactly 1?</strong> One XOR level per ~2 depth rounds. The combinatorial-algebraic balance conjecture proposes exponential catalog growth cancels exponential parity difficulty, but the precise coefficient is unexplained.</li>
 <li><strong>Does the +6 intercept connect to the 13=13 theorem's l=6 bandwidth?</strong> Phase 4 ruled out direction coverage timing. The connection, if any, remains open.</li>
 <li><strong>At what depth does XOR14 (7 weights) first appear?</strong> Extrapolated from depth law but not directly verified.</li>

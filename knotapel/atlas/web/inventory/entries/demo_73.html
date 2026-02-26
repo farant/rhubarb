@@ -12,13 +12,13 @@
 </head>
 <body>
     <nav><a href="../../index.html">← Back to Index</a></nav><hr>
-    <h2>Demo 73: Eigenvector Automaton — Can DKC Be a Finite Automaton?</h2>
+    <h2><a href="./demo_73.html">Demo 73</a>: Eigenvector Automaton — Can DKC Be a Finite Automaton?</h2>
 <ul>
 <li><strong>Status</strong>: COMPLETE</li>
 <li><strong>File</strong>: <code><a href="../../demo_73_eigenvector_automaton/main.c.html">demo_73_eigenvector_automaton/main.c</a></code> (~1042 lines)</li>
 <li><strong>Tests</strong>: 7/7 pass</li>
-<li><strong>Depends on</strong>: Demo 67 (13-direction S² Voronoi, 36 XOR6 solutions), Demo 71 (bandwidth l=6, DOF argument), Demo 72 (spherical design test, algebraic structure)</li>
-<li><strong>Feeds into</strong>: Demo 74 (computational invariant, bracket vs cell comparison)</li>
+<li><strong>Depends on</strong>: <a href="./demo_67.html">Demo 67</a> (13-direction S² Voronoi, 36 XOR6 solutions), <a href="./demo_71.html">Demo 71</a> (bandwidth l=6, DOF argument), <a href="./demo_72.html">Demo 72</a> (spherical design test, algebraic structure)</li>
+<li><strong>Feeds into</strong>: <a href="./demo_74.html">Demo 74</a> (computational invariant, bracket vs cell comparison)</li>
 </ul>
 <h3>Headline</h3>
 DKC is fundamentally additive (weight vector sum, not braid matrix product), and the 13-cell Voronoi partition is almost but not quite a finite automaton state space: 82.8% of cell transitions are deterministic — a structural constant identical across all 36 winning triples — with non-determinism arising entirely from discarded magnitude information.
@@ -73,8 +73,8 @@ DKC is fundamentally additive (weight vector sum, not braid matrix product), and
 <ul>
 <li><strong>Exact 27-state automaton</strong>: The signed 27-cell partition reaches 87.1% determinism, not 100%. Is there a different 27-partition of S² that achieves 100% determinism? Or does 100% require tracking more than direction (i.e., some magnitude information)?</li>
 <li><strong>What encodes the missing 17%?</strong>: The non-determinism comes from magnitude loss. Is there a natural algebraic quantity — perhaps the norm of the partial sum modulo the weight lattice — that, when added to the cell as state, achieves 100% determinism with a finite state count?</li>
-<li><strong>Automaton for other Boolean functions</strong>: XOR6 at ζ_8 gives 82.8% universal determinism. Does XOR5 at ζ_8 (Demo 50) have a different universal determinism constant? Is the constant always a ratio of integers (48/58 = 24/29)?</li>
-<li><strong>Relationship to the 13=13 theorem</strong>: The 13 cells and the 13 directions are the same partition. The DOF theorem (Demo 71) explains why 13 directions suffice for XOR6. Does the 82.8% automaton constant have an analogous DOF interpretation?</li>
+<li><strong>Automaton for other Boolean functions</strong>: XOR6 at ζ_8 gives 82.8% universal determinism. Does XOR5 at ζ_8 (<a href="./demo_50.html">Demo 50</a>) have a different universal determinism constant? Is the constant always a ratio of integers (48/58 = 24/29)?</li>
+<li><strong>Relationship to the 13=13 theorem</strong>: The 13 cells and the 13 directions are the same partition. The DOF theorem (<a href="./demo_71.html">Demo 71</a>) explains why 13 directions suffice for XOR6. Does the 82.8% automaton constant have an analogous DOF interpretation?</li>
 <li><strong>Cellular automaton generalization</strong>: The additive DKC trajectory on cells (with non-determinism) resembles a probabilistic cellular automaton on a 13-cell state space. Is there a stochastic matrix formulation that exactly captures the 82.8% determinism?</li>
 </ul>
 

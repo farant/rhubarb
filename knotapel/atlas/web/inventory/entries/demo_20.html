@@ -12,19 +12,19 @@
 </head>
 <body>
     <nav><a href="../../index.html">← Back to Index</a></nav><hr>
-    <h2>Demo 20: Braid Error Landscape</h2>
+    <h2><a href="./demo_20.html">Demo 20</a>: Braid Error Landscape</h2>
 <ul>
 <li><strong>Status</strong>: COMPLETE</li>
 <li><strong>File</strong>: <code><a href="../../demo_20_braid_error/main.c.html">demo_20_braid_error/main.c</a></code> (~1017 lines)</li>
 <li><strong>Tests</strong>: ~7 pass (5 parts: A=1 formula verification, B=2 smoothness+critical delta, C=1 cascade comparison, D=1 delta separation, E=2 transition+region)</li>
-<li><strong>Depends on</strong>: Demo 18/19 (braid Boolean gates: NOT, NAND words; expression tree compiler; gate output evaluation)</li>
+<li><strong>Depends on</strong>: <a href="./demo_18.html">Demo 18</a>/19 (braid Boolean gates: NOT, NAND words; expression tree compiler; gate output evaluation)</li>
 <li><strong>Feeds into</strong>: Understanding robustness of braid-based computation; noise tolerance bounds for DKC circuits</li>
 </ul>
 <h3>Headline</h3>
 Maps the error landscape of braid-based Boolean logic as delta moves away from zero, discovering that |delta| = 2|cos(2*theta)| universally predicts gate viability, with smooth degradation and identifiable phase transition thresholds.
 <h3>Key Results</h3>
 <ul>
-<li><strong>Part A (Delta landscape)</strong>: Analytical formula |delta| = 2|cos(2*theta)| verified across 360 angles; zeros at theta = pi/4, 3pi/4, 5pi/4, 7pi/4 (8th roots of unity — exactly the angles with NAND support from Demo 19); |delta| values tabulated for 4th, 6th, 8th, 10th, 12th roots of unity</li>
+<li><strong>Part A (Delta landscape)</strong>: Analytical formula |delta| = 2|cos(2*theta)| verified across 360 angles; zeros at theta = pi/4, 3pi/4, 5pi/4, 7pi/4 (8th roots of unity — exactly the angles with NAND support from <a href="./demo_19.html">Demo 19</a>); |delta| values tabulated for 4th, 6th, 8th, 10th, 12th roots of unity</li>
 <li><strong>Part B (Single-gate error)</strong>: 200-point sweep +/- pi/4 around 5*pi/4 center; NOT separation and NAND separation tracked as functions of |delta|; critical |delta_c| found where NAND first fails; separation degrades smoothly (no jumps &gt; 2.0 between adjacent points)</li>
 <li><strong>Part C (Cascade error — full adder)</strong>: Full adder (sum + carry via XOR, AND, OR composed from NAND/NOT) evaluated at each sweep angle; 8/8 truth table entries checked; cascade failure compared to single-gate failure; determines whether cascade amplifies error or not</li>
 <li><strong>Part D (Universal delta curve)</strong>: Gates binned by |delta| ranges [0.0, 0.25), [0.25, 0.5), ..., [1.75, 2.0); average NOT/NAND separation and NAND correctness percentage per bin; roots of unity overlaid on universal curve; |delta| cleanly separates universal (NOT+NAND) from NOT-only angles</li>

@@ -12,16 +12,16 @@
 </head>
 <body>
     <nav><a href="../../index.html">← Back to Index</a></nav><hr>
-    <h2>Demo 45: Complex Function Zoo</h2>
+    <h2><a href="./demo_45.html">Demo 45</a>: Complex Function Zoo</h2>
 <ul>
 <li><strong>Status</strong>: COMPLETE</li>
 <li><strong>File</strong>: <code><a href="../../demo_45_complex_function_zoo/main.c.html">demo_45_complex_function_zoo/main.c</a></code> (~1387 lines)</li>
 <li><strong>Tests</strong>: ~11 checks (6 parts: A=1 NPN reach, B=1 convergence, C=1 catalog size, D=1 beat-random, E=7 predictions P1-P7); 9/11 pass, 2 informative failures (P3 braid length, P5 phase richness reversed)</li>
-<li><strong>Depends on</strong>: Demo 23 (function zoo, NPN classification, forward braid→truth-table enumeration), Demo 27 (complex reverse DKC, gauge-corrected decomposition)</li>
-<li><strong>Feeds into</strong>: Demo 46 (per-neuron gauge), Demo 47 (MVN activation for parity), Demo 48 (4-input zoo), Demo 49 (expanded catalog), Demo 50 (multi-layer DKC)</li>
+<li><strong>Depends on</strong>: <a href="./demo_23.html">Demo 23</a> (function zoo, NPN classification, forward braid→truth-table enumeration), <a href="./demo_27.html">Demo 27</a> (complex reverse DKC, gauge-corrected decomposition)</li>
+<li><strong>Feeds into</strong>: <a href="./demo_46.html">Demo 46</a> (per-neuron gauge), <a href="./demo_47.html">Demo 47</a> (MVN activation for parity), <a href="./demo_48.html">Demo 48</a> (4-input zoo), <a href="./demo_49.html">Demo 49</a> (expanded catalog), <a href="./demo_50.html">Demo 50</a> (multi-layer DKC)</li>
 </ul>
 <h3>Headline</h3>
-Extends reverse DKC decomposition from XOR (Demo 27) to all 13 non-trivial NPN equivalence classes of 3-input Boolean functions, discovering that topology frequency (forward map) and decomposition quality (reverse map) are near-perfectly anti-correlated (Spearman rho = -0.8167), proving the bracket algebra has intrinsic computational structure measurable from either direction.
+Extends reverse DKC decomposition from XOR (<a href="./demo_27.html">Demo 27</a>) to all 13 non-trivial NPN equivalence classes of 3-input Boolean functions, discovering that topology frequency (forward map) and decomposition quality (reverse map) are near-perfectly anti-correlated (Spearman rho = -0.8167), proving the bracket algebra has intrinsic computational structure measurable from either direction.
 <h3>Key Results</h3>
 <ul>
 <li><strong>Part A (NPN classification)</strong>: Enumerates all non-trivial NPN classes (13 of 256 truth tables modulo permutation/negation); forward topology frequency computed from 4-strand braids length 1-3 across 4 closures at A = e^{i5pi/4}</li>
@@ -59,7 +59,7 @@ Extends reverse DKC decomposition from XOR (Demo 27) to all 13 non-trivial NPN e
 <li><code>build_complex_catalog()</code> — enumerate braids up to given strand count and length, store bracket values with amplitude &gt; 0.5</li>
 <li><code>find_nearest_cx()</code> — nearest-neighbor search in complex bracket catalog</li>
 <li><code>spearman_rho()</code>, <code>assign_ranks()</code> — Spearman rank correlation with tie averaging</li>
-<li><code>compute_tt()</code> — truth table from braid word + closure via amplitude thresholding (from Demo 23)</li>
+<li><code>compute_tt()</code> — truth table from braid word + closure via amplitude thresholding (from <a href="./demo_23.html">Demo 23</a>)</li>
 <li><code>bracket_cl()</code> — state-sum bracket with selectable closure type (trace, plat_a/b/c)</li>
 <li><code>braid_loops_cl()</code> — union-find loop counting with 4 closure types</li>
 <li><code>fn_name()</code> — human-readable name lookup for canonical truth tables</li>

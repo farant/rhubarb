@@ -12,13 +12,13 @@
 </head>
 <body>
     <nav><a href="../../index.html">← Back to Index</a></nav><hr>
-    <h2>Demo 92: Function Scaling — The Parity-Lock Theorem</h2>
+    <h2><a href="./demo_92.html">Demo 92</a>: Function Scaling — The Parity-Lock Theorem</h2>
 <ul>
 <li><strong>Status</strong>: COMPLETE</li>
 <li><strong>File</strong>: <code><a href="../../demo_92_function_scaling/main.c.html">demo_92_function_scaling/main.c</a></code> (~1399 lines)</li>
 <li><strong>Tests</strong>: 13/16 pass (3 informative fails — AND/OR/MAJ are impossible under the encoding, so tests expecting them to be achievable correctly fail; these confirm the theorem rather than indicating bugs)</li>
-<li><strong>Depends on</strong>: Demo 82 (crossing depth law, algebraic coherence), Demo 89 (depth law mechanism, max_xor ~ depth+6), Demo 91 (activation bottleneck, combined_cell framework), Demo 48/50 (forward DKC, NPN class zoo — the 1wpi encoding contrast)</li>
-<li><strong>Feeds into</strong>: Demo 93 (complement-blindness theorem under 1wpi encoding), encoding design (targeting specific Boolean functions), activation symmetry-breaking research (phase-sensitive activations)</li>
+<li><strong>Depends on</strong>: <a href="./demo_82.html">Demo 82</a> (crossing depth law, algebraic coherence), <a href="./demo_89.html">Demo 89</a> (depth law mechanism, max_xor ~ depth+6), <a href="./demo_91.html">Demo 91</a> (activation bottleneck, combined_cell framework), <a href="./demo_48.html">Demo 48</a>/50 (forward DKC, NPN class zoo — the 1wpi encoding contrast)</li>
+<li><strong>Feeds into</strong>: <a href="./demo_93.html">Demo 93</a> (complement-blindness theorem under 1wpi encoding), encoding design (targeting specific Boolean functions), activation symmetry-breaking research (phase-sensitive activations)</li>
 </ul>
 <h3>Headline</h3>
 The +/-q input encoding is structurally parity-locked — only XOR/XNOR are computable. AND/OR/MAJ/THRESHOLD = 0 winners at ALL depths.
@@ -70,10 +70,10 @@ The +/-q input encoding is structurally parity-locked — only XOR/XNOR are comp
 <h3>Literature Touched</h3>
 <ul>
 <li><strong>Circuit complexity (AC^0)</strong>: Parity is the canonical function outside AC^0 — it cannot be computed by constant-depth polynomial-size circuits of AND/OR/NOT gates. The +/-q encoding naturally selects for the hardest Boolean function, concentrating computational power on parity. Furst-Saxe-Sipser (1984) / Hastad (1987) parity-not-in-AC^0 result is the theoretical backdrop.</li>
-<li><strong>Habiro (2002) / Z[zeta_8] bracket</strong>: the algebraic substrate underlying the weight catalog; Demo 92 reveals that the encoding structure on top of this substrate is parity-selective.</li>
-<li><strong>Aizenberg (2008) / MVN neurons</strong>: the k-sector activation framework (k_sec parameter in combined_cell). Demo 92's Phase 1d and 1e decompose the activation into angular sectors (S^1) and Voronoi cells (S^2).</li>
-<li><strong><a href="./demo_48.html">D48</a>/<a href="./demo_50.html">D50</a> (forward DKC NPN classes)</strong>: the critical contrast — 1-weight-per-input encoding with split-sigmoid/MVN activation computes all 13 NPN classes including parity. The +/-q encoding's parity lock is encoding-specific, not a fundamental limit of the DKC framework. This contrast motivated Demo 93.</li>
-<li><strong><a href="./demo_89.html">D89</a>-<a href="./demo_91.html">D91</a> (depth law)</strong>: max_xor ~ depth+6 describes the capacity curve for the +/-q encoding's ONLY achievable function family (parity). Demo 92 reinterprets the depth law as parity-specific, not function-general.</li>
+<li><strong>Habiro (2002) / Z[zeta_8] bracket</strong>: the algebraic substrate underlying the weight catalog; <a href="./demo_92.html">Demo 92</a> reveals that the encoding structure on top of this substrate is parity-selective.</li>
+<li><strong>Aizenberg (2008) / MVN neurons</strong>: the k-sector activation framework (k_sec parameter in combined_cell). <a href="./demo_92.html">Demo 92</a>'s Phase 1d and 1e decompose the activation into angular sectors (S^1) and Voronoi cells (S^2).</li>
+<li><strong><a href="./demo_48.html">D48</a>/<a href="./demo_50.html">D50</a> (forward DKC NPN classes)</strong>: the critical contrast — 1-weight-per-input encoding with split-sigmoid/MVN activation computes all 13 NPN classes including parity. The +/-q encoding's parity lock is encoding-specific, not a fundamental limit of the DKC framework. This contrast motivated <a href="./demo_93.html">Demo 93</a>.</li>
+<li><strong><a href="./demo_89.html">D89</a>-<a href="./demo_91.html">D91</a> (depth law)</strong>: max_xor ~ depth+6 describes the capacity curve for the +/-q encoding's ONLY achievable function family (parity). <a href="./demo_92.html">Demo 92</a> reinterprets the depth law as parity-specific, not function-general.</li>
 </ul>
 <h3>Open Questions</h3>
 <ul>

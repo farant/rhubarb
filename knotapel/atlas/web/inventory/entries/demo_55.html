@@ -12,12 +12,12 @@
 </head>
 <body>
     <nav><a href="../../index.html">← Back to Index</a></nav><hr>
-    <h2>Demo 55: DKC Boolean Search at ell=4 (delta=sqrt(2))</h2>
+    <h2><a href="./demo_55.html">Demo 55</a>: DKC Boolean Search at ell=4 (delta=sqrt(2))</h2>
 <ul>
 <li><strong>Status</strong>: COMPLETE</li>
 <li><strong>File</strong>: <code><a href="../../demo_55_dkc_boolean/main.c.html">demo_55_dkc_boolean/main.c</a></code> (~1062 lines)</li>
 <li><strong>Tests</strong>: ~7 checks (4 parts: A=4 catalog verification + Z[i]-axial + algebra identities, B=1 XOR achievable, C=1 NPN count, D=1 parity achievable)</li>
-<li><strong>Depends on</strong>: Demo 54 (bracket catalog at delta=sqrt(2), Z[i]-axial structure), Demo 48/50 (delta=0 baseline: forward DKC zoo, activation zoo)</li>
+<li><strong>Depends on</strong>: <a href="./demo_54.html">Demo 54</a> (bracket catalog at delta=sqrt(2), Z[i]-axial structure), <a href="./demo_48.html">Demo 48</a>/50 (delta=0 baseline: forward DKC zoo, activation zoo)</li>
 <li><strong>Feeds into</strong>: Understanding Boolean computability at non-zero delta; multiplicative vs additive DKC encoding comparison; ell-parameterized DKC theory</li>
 </ul>
 <h3>Headline</h3>
@@ -32,7 +32,7 @@ Searches for Boolean functions computable by DKC neurons at ell=4 (delta=sqrt(2)
 <h3>Theorems/Conjectures</h3>
 <ul>
 <li><strong>Multiplicative encoding</strong>: z(x) = w1^x1 <em> w2^x2 </em> ... * wn^xn (product of weights raised to binary input powers) is a natural encoding for delta != 0 because bracket values at non-zero delta have multiplicative structure (delta^k scaling)</li>
-<li><strong>Z[i]-axiality at delta=sqrt(2)</strong>: Every bracket value equals (a+bi) * zeta_16^c for some Gaussian integer a+bi and power c — confirmed by Demo 54, verified here in catalog construction</li>
+<li><strong>Z[i]-axiality at delta=sqrt(2)</strong>: Every bracket value equals (a+bi) * zeta_16^c for some Gaussian integer a+bi and power c — confirmed by <a href="./demo_54.html">Demo 54</a>, verified here in catalog construction</li>
 <li><strong>Encoding comparison caveat</strong>: Delta=0 (Demos 48-50) used additive encoding (z = sum wi*xi); delta=sqrt(2) uses multiplicative encoding — not directly comparable, but structural parallels in reachability hierarchy are informative</li>
 <li><strong>Bit 0 is fixed</strong>: Under multiplicative encoding, (0,...,0) → z = 1 always, so bit 0 of the truth table is determined by the activation function's classification of z=1 (not a free parameter)</li>
 </ul>
@@ -59,7 +59,7 @@ Searches for Boolean functions computable by DKC neurons at ell=4 (delta=sqrt(2)
 <li><code>split_sigmoid_classify()</code> — XOR-like activation: sigma(Re)<em>(1-sigma(Im)) + (1-sigma(Re))</em>sigma(Im) &gt; 0.5</li>
 <li><code>sector_classify()</code>, <code>magnitude_classify()</code>, <code>re_positive_classify()</code>, <code>im_positive_classify()</code> — multiple activation functions with uniform interface</li>
 <li><code>search_2input()</code>, <code>search_3input()</code> — exhaustive search with multiplicative encoding, per-activation truth table counting</li>
-<li>NPN classification machinery (from Demo 48/50): <code>npn_init()</code>, <code>npn_transform()</code>, <code>npn_build_classes()</code></li>
+<li>NPN classification machinery (from <a href="./demo_48.html">Demo 48</a>/50): <code>npn_init()</code>, <code>npn_transform()</code>, <code>npn_build_classes()</code></li>
 </ul>
 <h3>Literature Touched</h3>
 <ul>
@@ -76,7 +76,7 @@ Searches for Boolean functions computable by DKC neurons at ell=4 (delta=sqrt(2)
 <li>Does multiplicative encoding have inherent advantages for certain function classes (e.g., AND-like functions where product structure is natural)?</li>
 <li>At what ell values does parity first become achievable under multiplicative encoding?</li>
 <li>Can additive encoding be used at delta=sqrt(2), and if so, how does reachability change?</li>
-<li>Does the four-tier hierarchy from Demo 50 (k=2/3/4/6) persist under multiplicative encoding, or does the tier structure shift?</li>
+<li>Does the four-tier hierarchy from <a href="./demo_50.html">Demo 50</a> (k=2/3/4/6) persist under multiplicative encoding, or does the tier structure shift?</li>
 </ul>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>

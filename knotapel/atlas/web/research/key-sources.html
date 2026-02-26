@@ -44,7 +44,7 @@
 <ul>
 <li><strong>Springer:</strong> <a href="https://link.springer.com/book/10.1007/978-1-4757-3115-6">book</a></li>
 <li><strong>Why it matters:</strong> The neural network architecture. MVN = roots-of-unity activation → arbitrary Boolean functions.</li>
-<li><strong>What we use:</strong> k-sector activation function. Demo 50 result (all 13 NPN at k=6) is direct application.</li>
+<li><strong>What we use:</strong> k-sector activation function. <a href="../inventory/entries/demo_50.html">Demo 50</a> result (all 13 NPN at k=6) is direct application.</li>
 <li><strong>Key insight we extracted:</strong> Aizenberg prescribes root-of-unity structure by design. We show it emerges from topology. The convergence of prescribed and emergent structure is the core DKC result.</li>
 </ul>
 <p>---</p>
@@ -54,13 +54,13 @@
 <li><strong>Link:</strong> <a href="http://homepages.math.uic.edu/~kauffman/Bracket.pdf">Kauffman's page</a></li>
 <li><strong>Why it matters:</strong> The mathematical object we compute. State-sum over all 2^k smoothings.</li>
 <li><strong>What we use:</strong> The exact formula: ⟨K⟩ = Σ_s A^{σ(s)} · δ^{|s|-1}. At δ=0, only single-loop states survive.</li>
-<li><strong>Implementation:</strong> <code>braid_bracket_at()</code> in every DKC demo from Demo 01 onward.</li>
+<li><strong>Implementation:</strong> <code>braid_bracket_at()</code> in every DKC demo from <a href="../inventory/entries/demo_01.html">Demo 01</a> onward.</li>
 </ul>
 <h3>Freedman, Kitaev, Larsen, Wang (2003) — Topological QC</h3>
 <ul>
 <li><strong>arXiv:</strong> <a href="https://arxiv.org/abs/quant-ph/0101025">quant-ph/0101025</a></li>
 <li><strong>Why it matters:</strong> BQP-completeness of Jones polynomial at roots of unity. Establishes that what we compute is quantum-hard in general.</li>
-<li><strong>Key nuance:</strong> At ℓ=5 (δ=φ, Fibonacci anyons), braid representations are DENSE in PSU(2) → TQC universality. But Demo 58 showed this DOESN'T help DKC — density in PSU(2) doesn't translate to angular diversity in scalar bracket output.</li>
+<li><strong>Key nuance:</strong> At ℓ=5 (δ=φ, Fibonacci anyons), braid representations are DENSE in PSU(2) → TQC universality. But <a href="../inventory/entries/demo_58.html">Demo 58</a> showed this DOESN'T help DKC — density in PSU(2) doesn't translate to angular diversity in scalar bracket output.</li>
 </ul>
 <h3>Costello, Francis, Gwilliam (2026) — Witten = RT Proven</h3>
 <ul>
@@ -82,8 +82,8 @@
 <ul>
 <li><strong>Springer:</strong> <a href="https://link.springer.com/article/10.1007/s00500-007-0204-9">article</a></li>
 <li><strong>Why it matters:</strong> Proves a single Universal Binary Neuron with 2n sectors solves n-input parity. Crucially, the weight construction (w₁=ζ₈, w₂=i, w₃=−1) for 3-input parity uses values IN the Z[ζ₈] bracket catalog.</li>
-<li><strong>What we extracted:</strong> This paper reframes the Demo 48 parity wall from "lattice limitation" to "activation limitation" — the lattice contains parity-capable weights; split-sigmoid just can't read them.</li>
-<li><strong>Status:</strong> Key result for understanding the Demo 48→50 arc. Extended by <a href="../inventory/entries/demo_91.html">D91</a> (activation not the bottleneck for depth law) and <a href="../inventory/entries/demo_92.html">D92</a> (encoding determines function accessibility).</li>
+<li><strong>What we extracted:</strong> This paper reframes the <a href="../inventory/entries/demo_48.html">Demo 48</a> parity wall from "lattice limitation" to "activation limitation" — the lattice contains parity-capable weights; split-sigmoid just can't read them.</li>
+<li><strong>Status:</strong> Key result for understanding the <a href="../inventory/entries/demo_48.html">Demo 48</a>→50 arc. Extended by <a href="../inventory/entries/demo_91.html">D91</a> (activation not the bottleneck for depth law) and <a href="../inventory/entries/demo_92.html">D92</a> (encoding determines function accessibility).</li>
 </ul>
 <p>---</p>
 <h2>Tier 2.5: Indecomposability / LCFT Structure (NEW — <a href="../inventory/entries/demo_85.html">D85</a>-<a href="../inventory/entries/demo_86.html">86</a>)</h2>
@@ -96,7 +96,7 @@
 </ul>
 <h3>Pearce, Rasmussen — Lattice b = -5/8</h3>
 <ul>
-<li><strong>Why it matters:</strong> The finite-size lattice scaling computation of b for critical dense polymers (c = -2, p = 2). This is the physical/lattice value that Demo 85 confirms from first principles.</li>
+<li><strong>Why it matters:</strong> The finite-size lattice scaling computation of b for critical dense polymers (c = -2, p = 2). This is the physical/lattice value that <a href="../inventory/entries/demo_85.html">Demo 85</a> confirms from first principles.</li>
 <li><strong>What we extracted (<a href="../inventory/entries/demo_85.html">D85</a>):</strong> b_PR = -5/8 confirmed at TL_4 to 12 decimal places via leading-coefficient extraction from delta-parameterized Gram matrix. Valuation condition p_tt = 2*p_Tt holds at TL_4 but fails at TL_6.</li>
 <li><strong>What we extracted (<a href="../inventory/entries/demo_86.html">D86</a>):</strong> The method diverges on a single P_{0,0} — a novel negative finding. The actual PR lattice method likely uses transfer matrices + finite-size scaling, not diagram algebra.</li>
 <li><strong>Open direction:</strong> Identifying and implementing the actual PR method for sizes beyond TL_4.</li>
@@ -111,8 +111,8 @@
 <h3>Goodman, Wenzl (1993) — TL at Roots of Unity</h3>
 <ul>
 <li><strong>Link:</strong> <a href="https://projecteuclid.org/journals/pacific-journal-of-mathematics/volume-161/issue-2/The-Temperley-Lieb-algebra-at-roots-of-unity/pjm/1102623233.full">Project Euclid</a></li>
-<li><strong>Why it matters:</strong> Proves TL is non-semisimple at roots of unity, identifying the radical structure that Demo 51 computes exactly.</li>
-<li><strong>What we extracted:</strong> This non-semisimplicity is the algebraic obstruction that limits which Boolean functions the bracket can compute (Demo 47's hypothesis, Demo 48's confirmation).</li>
+<li><strong>Why it matters:</strong> Proves TL is non-semisimple at roots of unity, identifying the radical structure that <a href="../inventory/entries/demo_51.html">Demo 51</a> computes exactly.</li>
+<li><strong>What we extracted:</strong> This non-semisimplicity is the algebraic obstruction that limits which Boolean functions the bracket can compute (<a href="../inventory/entries/demo_47.html">Demo 47</a>'s hypothesis, <a href="../inventory/entries/demo_48.html">Demo 48</a>'s confirmation).</li>
 </ul>
 <h3>Graham, Lehrer (1996) — Cellular Algebras</h3>
 <ul>
@@ -227,7 +227,7 @@
 <ul>
 <li><strong>Link:</strong> <a href="https://www.nature.com/articles/s41467-025-61342-8">Nature Comms</a></li>
 <li><strong>Why it matters:</strong> Extending to non-semisimple TQFTs introduces "neglectons" — radical elements that rescue universality for Ising anyons (limited to Clifford gates otherwise).</li>
-<li><strong>What we extracted:</strong> Demo 49 tested whether neglecton weights enable parity — they add 148 new Z[ζ₈] values but no new angles. The wall is in the activation, not the lattice. <a href="../inventory/entries/demo_89.html">D89</a> references Lauda et al. (2025) as external validation of Demo 84's null-indispensability findings.</li>
+<li><strong>What we extracted:</strong> <a href="../inventory/entries/demo_49.html">Demo 49</a> tested whether neglecton weights enable parity — they add 148 new Z[ζ₈] values but no new angles. The wall is in the activation, not the lattice. <a href="../inventory/entries/demo_89.html">D89</a> references Lauda et al. (2025) as external validation of <a href="../inventory/entries/demo_84.html">Demo 84</a>'s null-indispensability findings.</li>
 </ul>
 <h3>Costello, Francis, Gwilliam (2026) — Witten = RT Proven</h3>
 <ul>

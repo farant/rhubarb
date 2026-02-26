@@ -12,20 +12,20 @@
 </head>
 <body>
     <nav><a href="../../index.html">← Back to Index</a></nav><hr>
-    <h2>Demo 78: Recursive Scaling + Phase Diagram</h2>
+    <h2><a href="./demo_78.html">Demo 78</a>: Recursive Scaling + Phase Diagram</h2>
 <ul>
 <li><strong>Status</strong>: COMPLETE</li>
 <li><strong>File</strong>: <code><a href="../../demo_78_recursive_scaling/main.c.html">demo_78_recursive_scaling/main.c</a></code> (~1052 lines)</li>
 <li><strong>Tests</strong>: 9/9 pass</li>
-<li><strong>Depends on</strong>: Demo 66 (24-quaternion catalog, 24-cell geometry), Demo 67 (13 directions, 36 XOR6 solutions), Demo 77 (XOR8 = 6 solutions via Sec8×Vor activation, shadow structure)</li>
-<li><strong>Feeds into</strong>: Demo 79 (zeta_12 capacity, breaking the wall), Demo 80 (group finiteness survey)</li>
+<li><strong>Depends on</strong>: <a href="./demo_66.html">Demo 66</a> (24-quaternion catalog, 24-cell geometry), <a href="./demo_67.html">Demo 67</a> (13 directions, 36 XOR6 solutions), <a href="./demo_77.html">Demo 77</a> (XOR8 = 6 solutions via Sec8×Vor activation, shadow structure)</li>
+<li><strong>Feeds into</strong>: <a href="./demo_79.html">Demo 79</a> (zeta_12 capacity, breaking the wall), <a href="./demo_80.html">Demo 80</a> (group finiteness survey)</li>
 </ul>
 <h3>Headline</h3>
-XOR10 = 0 winners at ζ₈, confirmed by both recursive search (120 candidates) and exhaustive brute-force (all 42,504 quintuples); the ζ₈ XOR hierarchy terminates at 8 inputs, with non-monotonic accuracy in sector count echoing Demo 50's pi/4 incommensurability.
+XOR10 = 0 winners at ζ₈, confirmed by both recursive search (120 candidates) and exhaustive brute-force (all 42,504 quintuples); the ζ₈ XOR hierarchy terminates at 8 inputs, with non-monotonic accuracy in sector count echoing <a href="./demo_50.html">Demo 50</a>'s pi/4 incommensurability.
 <h3>Key Results</h3>
 <ul>
 <li><strong>XOR10 = 0 (exhaustive)</strong>: All C(24,5) = 42,504 quintuples tested at k=8, 10, 12, 16. Zero winners at any sector count. Best accuracy 98.4% (1008/1024 masks) at k=10 and k=16.</li>
-<li><strong>Non-monotonicity</strong>: k=12 accuracy (96.9%) is worse than k=10 (98.4%). The pi/4 lattice incommensurability creates destructive interference at certain k values, mirroring Demo 50's finding (906 solutions at k=6 &gt; 756 at k=7 &gt; 96 at k=8).</li>
+<li><strong>Non-monotonicity</strong>: k=12 accuracy (96.9%) is worse than k=10 (98.4%). The pi/4 lattice incommensurability creates destructive interference at certain k values, mirroring <a href="./demo_50.html">Demo 50</a>'s finding (906 solutions at k=6 &gt; 756 at k=7 &gt; 96 at k=8).</li>
 <li><strong>XOR12 skipped</strong>: No XOR10 parents to extend, so recursive XOR12 search was vacuously skipped.</li>
 <li><strong>Recursive structure confirmed (Part E)</strong>: All 6 XOR8 winners contain exactly 2 XOR6 sub-triples (100% verified). Each shadow entry shares its Voronoi cell with at least one parent member (12/12 = 100%). All shadows have eigenvalue half-angle = 45 degrees. Shadow pairs are {0,1}, {4,5}, {19,21} — each pair shares direction and half-angle, differs only in sign/orientation.</li>
 <li><strong>Phase diagram</strong>: XOR6 (14 cells, 36 winners, Voronoi) → XOR8 (112 cells, 6 winners, Sec8×Vor) → XOR10 (WALL, 0 winners). Capacity/masks ratios: XOR6 = 4.6, XOR8 = 2.3.</li>
@@ -60,7 +60,7 @@ XOR10 = 0 winners at ζ₈, confirmed by both recursive search (120 candidates) 
 <ul>
 <li><strong>Aizenberg (2008)</strong>: Combined Sec(k)×Voronoi activation generalizes the k-sector MVN; the wall at XOR10 sets a concrete capacity limit for the ζ₈ instantiation</li>
 <li><strong>Nazer &amp; Gastpar (2011)</strong>: The information-theoretic framing of catalog exhaustion — fixed algebraic structure provides fixed diversity, determining the compute-and-forward capacity ceiling</li>
-<li><strong>Demo 50 connection</strong>: Non-monotonicity in sector count previously observed (906@k=6 &gt; 756@k=7 &gt; 96@k=8 for XOR4 parity); the pi/4 incommensurability pattern is confirmed as a recurring structural feature</li>
+<li><strong><a href="./demo_50.html">Demo 50</a> connection</strong>: Non-monotonicity in sector count previously observed (906@k=6 &gt; 756@k=7 &gt; 96@k=8 for XOR4 parity); the pi/4 incommensurability pattern is confirmed as a recurring structural feature</li>
 </ul>
 <h3>Open Questions</h3>
 <ul>

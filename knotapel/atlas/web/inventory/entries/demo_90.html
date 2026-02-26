@@ -12,13 +12,13 @@
 </head>
 <body>
     <nav><a href="../../index.html">← Back to Index</a></nav><hr>
-    <h2>Demo 90: Sum-Angle Structure — Why Deep Entries Compose Better</h2>
+    <h2><a href="./demo_90.html">Demo 90</a>: Sum-Angle Structure — Why Deep Entries Compose Better</h2>
 <ul>
 <li><strong>Status</strong>: COMPLETE</li>
 <li><strong>File</strong>: <code><a href="../../demo_90_sum_angle_structure/main.c.html">demo_90_sum_angle_structure/main.c</a></code> (~1713 lines)</li>
 <li><strong>Tests</strong>: 10/12 pass (2 informative fails: Phase 1 count hypothesis — all subsets produce 2048+ distinct sum angles, so deep vs strided/random distinct-count comparisons fail because count is not the discriminating feature)</li>
-<li><strong>Depends on</strong>: Demo 89 (depth law mechanism elimination — narrowed to "algebraic coherence"), Demo 82 (crossing depth law, deep-564 vs strided-564), Demo 75 (computation requires non-canonical sum angles), Demo 79 (zeta_12 capacity, infinite group)</li>
-<li><strong>Feeds into</strong>: Demo 91 (activation bottleneck test — tests whether linear depth law is activation artifact or parity wall), <a href="./demo_89.html">D89</a>-<a href="./demo_90.html">D90</a>-<a href="./demo_91.html">D91</a> arc summary (depth law explained)</li>
+<li><strong>Depends on</strong>: <a href="./demo_89.html">Demo 89</a> (depth law mechanism elimination — narrowed to "algebraic coherence"), <a href="./demo_82.html">Demo 82</a> (crossing depth law, deep-564 vs strided-564), <a href="./demo_75.html">Demo 75</a> (computation requires non-canonical sum angles), <a href="./demo_79.html">Demo 79</a> (zeta_12 capacity, infinite group)</li>
+<li><strong>Feeds into</strong>: <a href="./demo_91.html">Demo 91</a> (activation bottleneck test — tests whether linear depth law is activation artifact or parity wall), <a href="./demo_89.html">D89</a>-<a href="./demo_90.html">D90</a>-<a href="./demo_91.html">D91</a> arc summary (depth law explained)</li>
 </ul>
 <h3>Headline</h3>
 The depth law mechanism is <strong>axis cancellation</strong> (anti-aligned rotation axes producing low sum angles) combined with <strong>cross-depth algebraic constraints</strong> (BFS ancestry creating limited sum-angle vocabularies between related entries), and the computational advantage is <strong>relational, not positional</strong> — the S² point cloud bandwidth actually DECREASES with depth (spectral inversion), ruling out all positional/bandwidth explanations.
@@ -79,8 +79,8 @@ The depth law mechanism is <strong>axis cancellation</strong> (anti-aligned rota
 </ul>
 <h3>Literature Touched</h3>
 <ul>
-<li><strong>Altschuler &amp; Parrilo (2023)</strong>: Spherical point configurations and polynomial energy — the hypothesis that S² point cloud quality (spherical harmonic bandwidth) drives computational capacity. Demo 90 INVERTS this: bandwidth decreases with depth while computation increases. The AP framework may still apply via kernel rank analysis of the activation matrix rather than the point cloud geometry.</li>
-<li><strong>Habiro (2002) / Z[ζ₈] bracket</strong>: The algebraic substrate; Demo 90 reveals that BFS ancestry within the group algebra creates cross-depth algebraic constraints (73 distinct angles from 50K gen × deep pairs) that are the concrete manifestation of algebraic coherence.</li>
+<li><strong>Altschuler &amp; Parrilo (2023)</strong>: Spherical point configurations and polynomial energy — the hypothesis that S² point cloud quality (spherical harmonic bandwidth) drives computational capacity. <a href="./demo_90.html">Demo 90</a> INVERTS this: bandwidth decreases with depth while computation increases. The AP framework may still apply via kernel rank analysis of the activation matrix rather than the point cloud geometry.</li>
+<li><strong>Habiro (2002) / Z[ζ₈] bracket</strong>: The algebraic substrate; <a href="./demo_90.html">Demo 90</a> reveals that BFS ancestry within the group algebra creates cross-depth algebraic constraints (73 distinct angles from 50K gen × deep pairs) that are the concrete manifestation of algebraic coherence.</li>
 <li><strong>Reservoir Computing (Jaeger 2001, Maass et al. 2002)</strong>: The relational-not-positional finding connects to RC theory — reservoir quality is about the separation property (how inputs map to distinguishable states), not about where reservoir states sit in space. The axis cancellation mechanism is the DKC analog of reservoir separation.</li>
 <li><strong>BFS closure and Cayley graphs</strong>: The depth-tracking BFS closure is a walk on the Cayley graph of the SU(2) subgroup. The cross-depth algebraic constraint (gen × deep = constrained vocabulary) reflects the algebraic structure of Cayley graph neighborhoods.</li>
 </ul>

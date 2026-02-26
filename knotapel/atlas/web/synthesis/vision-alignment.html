@@ -45,7 +45,7 @@
 <li><strong><a href="../inventory/entries/demo_86.html">D86</a></strong>: The delta-parameterized Gram matrix approach universally DIVERGES on a single projective cover P_{0,0} at every eigenvalue and lattice size. The multiplicity from the regular representation is structurally essential, not just a scale factor. This is a novel negative finding — nobody in the literature has tried this specific approach. It establishes that b is a collective property of the full TL algebra, not extractable from a single indecomposable module.</li>
 </ul>
 <ul>
-<li><strong><a href="../inventory/entries/demo_87.html">D87</a></strong>: Null indispensability is regime-dependent. At zeta_8 (finite group), removing bracket-null entries destroys XOR8 capacity (Demo 84). At zeta_12 (infinite group, 4096 entries), removing all 121 nulls preserves full XOR6/8/10/12 capacity. The transition mechanism is direction density: when non-null directions are dense enough on S^2, losing null-only directions cannot constrain combinatorial search. Null fraction dilutes: zeta_4 = 75%, zeta_8 = 37.5%, zeta_12 = 3.0%.</li>
+<li><strong><a href="../inventory/entries/demo_87.html">D87</a></strong>: Null indispensability is regime-dependent. At zeta_8 (finite group), removing bracket-null entries destroys XOR8 capacity (<a href="../inventory/entries/demo_84.html">Demo 84</a>). At zeta_12 (infinite group, 4096 entries), removing all 121 nulls preserves full XOR6/8/10/12 capacity. The transition mechanism is direction density: when non-null directions are dense enough on S^2, losing null-only directions cannot constrain combinatorial search. Null fraction dilutes: zeta_4 = 75%, zeta_8 = 37.5%, zeta_12 = 3.0%.</li>
 </ul>
 <ul>
 <li><strong><a href="../inventory/entries/demo_88.html">D88</a></strong>: The anti-correlation mechanism is explained. The 13 zeta_8 directions form a cuboctahedron with three computational roles: 4 non-null body diagonals are rigid computational anchors (perturbation-sensitive), 6 null-only edge midpoints are flexible topological scaffolding (movable with only 2.8% XOR loss), 3 shared coordinate axes are intermediate. The k-ladder activation provides 14x better perturbation resilience than Voronoi-only (6.4% vs 89% loss under the same design-improving gradient).</li>
@@ -156,7 +156,7 @@ This means each compiled weight is effectively a single integer x a phase
 direction. For hardware implementation, this is a massive simplification:
 8 possible directions x integer magnitude = a very compact representation.
 <h3>Cross-l universality suggests robustness</h3>
-The 11/13 wall holds across five different cyclotomic rings (l=2-6), and Demo 60
+The 11/13 wall holds across five different cyclotomic rings (l=2-6), and <a href="../inventory/entries/demo_60.html">Demo 60</a>
 confirmed all radical structure formulas at l=7 (first cubic number field). This
 ring-independence — now tested across quadratic AND cubic extensions — means the
 compiled-weight approach isn't fragile. Good for engineering.
@@ -166,7 +166,7 @@ how much "deductive capacity" each evaluation level provides. Higher l = more
 capacity but more complex ring. This could inform choosing the right l for
 a given taxonomy size.
 <h3>The parity ceiling establishes finite capacity per neuron</h3>
-Demo 63 proves Z[zeta_8] parity tops out at n=5 inputs for the S^2 activation.
+<a href="../inventory/entries/demo_63.html">Demo 63</a> proves Z[zeta_8] parity tops out at n=5 inputs for the S^2 activation.
 <a href="../inventory/entries/demo_77.html">D77</a> extends this to n=8 with S^1xS^2 activation. <a href="../inventory/entries/demo_78.html">D78</a> confirms zeta_8 walls at n=8
 regardless of activation. For the hybrid LLM vision, compiled DKC neurons using
 zeta_8 handle up to 8-input Boolean functions; larger operations must be compositional.
@@ -495,7 +495,7 @@ anchored at zeta_8 for 6-input work — not because finer rings are wrong, but b
 at their natural resolution they lose all discriminative structure. For higher
 input sizes requiring infinite groups (zeta_12, zeta_10), the analogous trivialization
 threshold is yet to be determined.
-<h3>Demo 76's "zeta_8 is a 6-input structure" was wrong — activation-specific (<a href="../inventory/entries/demo_77.html">D77</a>)</h3>
+<h3><a href="../inventory/entries/demo_76.html">Demo 76</a>'s "zeta_8 is a 6-input structure" was wrong — activation-specific (<a href="../inventory/entries/demo_77.html">D77</a>)</h3>
 <a href="../inventory/entries/demo_76.html">D76</a> concluded XOR8 = 0 at zeta_8. <a href="../inventory/entries/demo_77.html">D77</a> corrects this: with S^1xS^2 combined activation
 (112 cells), XOR8 IS solvable at zeta_8 (6 winners). The zeta_8 wall is at n=8, not n=6.
 This is the third instance of the "wall was in the activation/interface, not the
@@ -662,7 +662,7 @@ gap and strengthens the program's credibility independently.
 <code></code>`
 Current state -&gt; XOR7 weight search with S^2 activation -&gt; bandwidth measurement
 <code></code>`
-Demo 65 showed XOR7 requires k=127 sectors on S^1. The DOF formula predicts the
+<a href="../inventory/entries/demo_65.html">Demo 65</a> showed XOR7 requires k=127 sectors on S^1. The DOF formula predicts the
 S^2 bandwidth for XOR7 is approximately l=ceil((M-1)/2) where M is the XOR7
 eigenvector direction count (unknown). If S^2 again reduces the sector requirement
 dramatically, this validates the spectral framework as the right language for
