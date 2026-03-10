@@ -6202,4 +6202,163 @@ Comprehensive activation × parity survey across 20+ demos:
 6. Raqiya Z[ζ₁₆] extension: worth building if more δ≠0 analysis needed
 
 ---
+
+## Demo 110: Construction Words for Knots — Majority Classification Theorem
+
+**Date:** 2026-03-10
+**Status:** IN PROGRESS. 57 pass / 3 fail (fails are correctly-negative tests). Multiple LANDMARK results.
+
+### Motivation
+
+Fran's paper "Every Knot Admits a Construction Word" (2026): a knot is encoded as a binary decision sequence. Starting from a base triangle, each step intersects 3 spheres centered at previously constructed points, producing 2 candidate vertices (target and mirror). The binary sequence of choices = the construction word. Mirror formula P' = 2M - P preserves rationality by induction.
+
+**Key question:** What fraction of 2^n alternatives preserve knot type? Decoherence ratio conjecture: 2/2^c where c = crossing number.
+
+### Phase 1: Rational Arithmetic + Knot Invariants
+
+- Exact rational arithmetic (Q), no floating point ever
+- Mirror formula verified: preserves distances to all 3 centers
+- Generic (2,3,5) projection for crossing detection
+- Knot determinant via Alexander matrix at t=-1 with Bareiss algorithm
+- Arc labeling rewrite: ArcBreak struct handles multiple under-crossings per edge
+- Verified: trefoil det=3, figure-eight det=5, unknots det=1
+
+### Phase 2: Decoherence Ratio
+
+| Knot | Strategy | Ratio | Matches 2/2^c? |
+|------|----------|-------|-----------------|
+| Trefoil (c=3) | Forward-chained (0,1,3),(1,3,4) | 2/8 | **Yes** |
+| Trefoil (c=3) | All-base | 1/8 | No (chirality: only 1 chirality) |
+| Figure-eight (c=4) | All-base | **64/512** (=2/2^4) | **Yes** |
+| Figure-eight (c=4) | Forward-chained | 44/512 | No |
+| Figure-eight (c=4) | Sliding-window | 46/512 | No |
+
+- **Center strategy matters.** For trefoil, 39/40 combos give only 1/8; unique winning combo (0,1,3),(1,3,4) gives 2/8
+- **All-base works perfectly for amphichiral knots** (figure-eight). Clean {384:64:64} distribution
+- **Chirality split:** 32 left-trefoils + 32 right-trefoils among the 64 det=3 alternatives. Perfect by writhe sign
+- **The "2" in 2/2^c IS chirality.** Amphichiral knots get both copies from all-base; chiral knots get only one
+
+### Phase 3: Bitmask Coding Analysis — LANDMARK
+
+Treated 2^9 = 512 alternatives as elements of F_2^9. Analyzed algebraic structure of knot-type subsets.
+
+**Key findings:**
+1. **Complement symmetry:** Left-trefoils and right-trefoils are EXACT bitwise complements (32/32 match)
+2. **Not a linear code:** F XOR F leaks to unknots. L XOR L → F ∪ U, never L or R
+3. **Fixed bits discovered:** bit 2 always 1 for L, always 0 for R. bit 7 always 0 for L, always 1 for R
+4. **Figure-eights have perfect 50% frequency on EVERY bit** — maximum F_2 symmetry
+5. **L is NOT a coset of a linear code** — structure is richer than linear algebra
+
+### Phase 4: Complete Classification Theorem — LANDMARK
+
+**The 9 bits partition into 3 functional roles:**
+- **Structural bits** {2, 4, 7}: determine knot family
+- **Entangled bits** {0, 1, 5}: constrained by structural bits via majority
+- **Free bits** {3, 6, 8}: topologically invisible, don't affect knot type
+
+**The 4-Check Classifier (verified PERFECT on all 512, 0 false positives, 0 false negatives):**
+
+1. b2 = b4? No → unknot
+2. b7 = majority(b0, b1, b5)? No → unknot
+3. b7 = b2 → figure-eight
+4. b7 ≠ b2 → trefoil (left if b2=1, right if b2=0)
+
+| Knot type | s = (b2,b4,b7) | Constraint on (b0,b1,b5) | Count |
+|-----------|----------------|--------------------------|-------|
+| Figure-eight | (0,0,0) | popcount ≤ 1 | 32 |
+| Figure-eight | (1,1,1) | popcount ≥ 2 | 32 |
+| Left-trefoil | (1,1,0) | popcount ≤ 1 | 32 |
+| Right-trefoil | (0,0,1) | popcount ≥ 2 | 32 |
+| Unknot | other | any | 384 |
+
+**Why majority and not linear:** The majority function is the simplest non-linear Boolean function (threshold function). This explains why the knot-type sets can't be linear codes over F_2. Knot type is governed by a threshold, not parity.
+
+### Phase 5: Generalization — The Structure is Intrinsic
+
+Tested cyclic rotations of the figure-eight polygon (same knot, different vertex labeling, different base triangle):
+
+| Rotation | Base verts | Counts (F/L/R) | Majority rule? | Partition |
+|----------|-----------|-----------------|----------------|-----------|
+| 0 (original) | 0,1,2 | 64/32/32 | **YES** | S={2,4,7} E={0,1,5} F={3,6,8} |
+| 2 | 2,3,4 | 24/24/72 | NO (asymmetric counts) | — |
+| 4 | 4,5,6 | 64/32/32 | **YES** | S={1,4,6} E={3,7,8} F={0,2,5} |
+| 6 | 6,7,8 | 64/32/32 | **YES** | S={2,4,7} E={0,1,5} F={3,6,8} |
+
+**The majority rule structure generalizes across rotations.** Different base triangles find different bit partitions but the SAME algebraic structure: 3 structural (with paired+switch roles) + 3 entangled (majority) + 3 free. The specific bits depend on vertex labeling; the STRUCTURE is intrinsic to the knot.
+
+Rotation by 6 gives identical partition (figure-eight has period-2 symmetry). Rotation by 2 breaks the pattern (asymmetric counts suggest this base position doesn't straddle a knot symmetry).
+
+### Geometric Interpretation
+
+Crossings involve edges {0,2,4,7,8,9,10}:
+- **Structural steps {2,4,7}** → vertices {5,7,10}: ALL adjacent to crossings
+- **Free steps {3,6,8}** → vertices {6,9,11}: away from crossings
+- **Entangled steps {0,1,5}** → vertices {3,4,8}: intermediate positions
+
+The structural bits correspond to construction steps that build vertices AT the crossings. The free bits build vertices on straight segments between crossings. The entangled bits build vertices that are geometrically between crossings but collectively influence the topology through majority voting.
+
+### Novelty
+
+Per researcher survey: nobody has studied the algebraic structure of binary construction word sets that produce a given knot type. The {structural, entangled, free} partition with majority classification, the complement chirality theorem, and the generalization across rotations are all genuinely novel.
+
+### Phase 6: Cinquefoil Test — Amphichiral Specificity Theorem
+
+**Date:** 2026-03-10
+
+Tested whether the majority classification structure generalizes beyond the amphichiral figure-eight to the chiral cinquefoil (5₁, c=5, det=5, T(2,5) torus knot).
+
+**N=11 cinquefoil (8 steps, 256 alternatives):**
+- 5 crossings, det=5, writhe=-5. Correct baseline.
+- All-base decoherence: 8 different det values (1,3,5,7,9,13,15,17) vs 4 for figure-eight
+- det=5 breakdown: 32 cinquefoils (21L, 11R) + 2 figure-eights
+- Chirality asymmetric: 21/11 (not 16/16)
+- 32 = 2^5 = 2^c was initially suggestive but see below
+
+**N=12 cinquefoil (9 steps for 3+3+3, 512 alternatives, ALL 12 rotations tested):**
+
+| Rotation | L | R | Total | Fig8 | Det values | Symmetric? |
+|----------|---|---|-------|------|-----------|------------|
+| 0 | 53 | 3 | 56 | 4 | 9 | No |
+| 1 | 14 | 7 | 21 | 2 | 6 | No |
+| 2 | 14 | 7 | 21 | 6 | 9 | No |
+| 3 | 40 | 0 | 40 | 0 | 10 | No |
+| 4 | 46 | 1 | 47 | 1 | 7 | No |
+| 5 | 22 | 16 | 38 | 0 | 3 | No |
+| 6 | 14 | 1 | 15 | 2 | 5 | No |
+| 7 | 24 | 23 | 47 | 9 | 10 | Nearly |
+| 8 | 34 | 17 | 51 | 7 | 10 | No |
+| 9 | 20 | 19 | 39 | 3 | 7 | Nearly |
+| 10 | 29 | 13 | 42 | 6 | 9 | No |
+| 11 | 24 | 0 | 24 | 0 | 3 | No |
+
+**Key results:**
+1. **NO rotation gives symmetric chirality.** Closest: rot 7 (24/23), rot 9 (20/19).
+2. **Complement map L↔R fails for ALL 12 rotations.** Fundamental difference from figure-eight.
+3. **NO majority rule partition found for ANY rotation.** Zero out of 12.
+4. **Cinquefoil counts not powers of 2** — the N=11 result of 32=2^5 was coincidental.
+
+**The Amphichiral Specificity Theorem:**
+
+The majority classification structure is specific to amphichiral knots under all-base construction. The mechanism:
+- All-base construction reflects each vertex across a FIXED plane (base triangle)
+- For amphichiral knots, the all-mirror alternative (complement = 111...1) gives the SAME knot type (amphichiral = self-mirror)
+- This creates complement symmetry: L-trefoil ↔ R-trefoil under bit flip
+- The majority structure exploits this symmetry to partition bits into functional roles
+- For chiral knots, the all-mirror gives the OPPOSITE chirality — a different knot
+- This breaks complement symmetry at the knot-type level, preventing the clean partition
+
+**Implication:** The all-base strategy is the "right" choice for amphichiral knots because it respects their self-mirror symmetry. For chiral knots, a different center strategy might work — one that respects rotational symmetry rather than reflective symmetry. This is a future research direction.
+
+### Updated Open Questions
+
+1. ~~Does the {3+3+3, majority} structure hold for other knots?~~ **ANSWERED: amphichiral-specific**
+2. Does the partition depend on crossing number? Test on 6₃ (next amphichiral, c=6, det=13)
+3. For what base positions does the clean structure emerge? (must straddle a knot symmetry)
+4. Can the rule be derived analytically from the mirror formula + crossing geometry?
+5. Does this connect to the Kauffman bracket / Jones polynomial from earlier demos?
+6. The majority function appears in social choice theory and neural networks — deeper connection?
+7. For chiral knots: what center strategy respects rotational symmetry? Potential "chiral classifier"
+8. Is the decoherence ratio 2/2^c only meaningful with the "right" center strategy per knot symmetry class?
+
+---
 *End of Explorer's Log*
