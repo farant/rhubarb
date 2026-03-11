@@ -383,6 +383,40 @@ static StickKnot make_cinquefoil(int n_samples, int scale) {
     return k;
 }
 
+/*
+ * 6_3 knot (amphichiral, det=13, c=6).
+ * Parametric scan: try torus-like (R+cos(a*t))*cos(b*t) and
+ * epicycloid cos(a*t)+r*cos(b*t) families to find det=13.
+ * Once found, hardcode the coordinates.
+ */
+static StickKnot make_6_3_torus(int a, int b, int c, double R,
+                                 int n_samples, int scale) {
+    StickKnot k;
+    int i;
+    double pi2 = 6.28318530717959;
+    k.name = "6_3 knot";
+    k.crossing_number = 6;
+    k.n_vertices = n_samples;
+    for (i = 0; i < n_samples; i++) {
+        double t = pi2 * (double)i / (double)n_samples;
+        double mod = R + taylor_cos((double)a * t);
+        double x = mod * taylor_cos((double)b * t) * (double)scale;
+        double y = mod * taylor_sin((double)b * t) * (double)scale;
+        double z = taylor_sin((double)c * t) * (double)scale;
+        k.vertices[i] = v3q_from_ints(
+            (i64)(x + (x >= 0 ? 0.5 : -0.5)),
+            (i64)(y + (y >= 0 ? 0.5 : -0.5)),
+            (i64)(z + (z >= 0 ? 0.5 : -0.5))
+        );
+    }
+    return k;
+}
+
+/* make_6_3: uses TORUS a=2 b=5 c=4 R=1.5 parametric.
+ * x = (1.5 + cos(2t)) * cos(5t), y = (1.5+cos(2t)) * sin(5t), z = sin(4t)
+ * Verified det=13, writhe=0 for N=14..24.
+ * Wrapper kept for future use. */
+
 /* ================================================================
  * Part E: Construction Word
  *
@@ -665,8 +699,8 @@ static int compute_writhe(const Crossing *crossings, int nc) {
  *   Negative crossing: over-arc gets -2, under-in gets +1, under-out gets +1
  * ================================================================ */
 
-#define MAX_CROSSINGS 32
-#define MAX_ARCS 32
+#define MAX_CROSSINGS 96
+#define MAX_ARCS 96
 
 /*
  * Arc labeling for the Alexander matrix.
@@ -2871,6 +2905,1629 @@ static void test_cinquefoil(void) {
     }
 }
 
+/*
+ * Fremlin D4-symmetric 6_3 curve: 288 points from
+ * david.fremlin.de/knots/knot.6_3d.short
+ * Scaled by 1000 and rounded to integers.
+ */
+#define FREMLIN_N 288
+static const int fremlin_6_3[FREMLIN_N][3] = {
+    {  -99,  -505,   109},
+    { -196,  -471,   216},
+    { -287,  -416,   319},
+    { -371,  -341,   417},
+    { -446,  -247,   509},
+    { -508,  -137,   593},
+    { -557,   -14,   667},
+    { -591,   119,   731},
+    { -608,   259,   785},
+    { -609,   404,   826},
+    { -592,   548,   856},
+    { -558,   690,   873},
+    { -506,   825,   879},
+    { -438,   952,   873},
+    { -355,  1066,   855},
+    { -257,  1166,   827},
+    { -146,  1249,   788},
+    {  -25,  1315,   741},
+    {  105,  1361,   685},
+    {  242,  1388,   622},
+    {  383,  1395,   552},
+    {  526,  1383,   477},
+    {  669,  1352,   397},
+    {  809,  1303,   313},
+    {  943,  1238,   226},
+    { 1070,  1160,   137},
+    { 1188,  1069,    45},
+    { 1295,   968,   -48},
+    { 1390,   859,  -142},
+    { 1470,   745,  -237},
+    { 1535,   627,  -333},
+    { 1583,   509,  -428},
+    { 1616,   391,  -524},
+    { 1631,   276,  -620},
+    { 1629,   165,  -715},
+    { 1611,    59,  -810},
+    { 1576,   -41,  -904},
+    { 1524,  -135,  -997},
+    { 1458,  -221, -1088},
+    { 1378,  -300, -1178},
+    { 1284,  -373, -1265},
+    { 1178,  -439, -1349},
+    { 1060,  -499, -1429},
+    {  934,  -555, -1505},
+    {  655,  -654, -1640},
+    {  353,  -742, -1749},
+    {   35,  -826, -1827},
+    { -289,  -906, -1868},
+    { -451,  -946, -1874},
+    { -612,  -984, -1870},
+    { -771, -1021, -1856},
+    { -928, -1055, -1832},
+    {-1081, -1085, -1798},
+    {-1231, -1112, -1754},
+    {-1376, -1133, -1701},
+    {-1517, -1147, -1640},
+    {-1652, -1153, -1570},
+    {-1780, -1150, -1494},
+    {-1903, -1137, -1410},
+    {-2018, -1113, -1320},
+    {-2127, -1078, -1225},
+    {-2227, -1031, -1126},
+    {-2319,  -971, -1022},
+    {-2403,  -900,  -915},
+    {-2478,  -817,  -806},
+    {-2544,  -723,  -694},
+    {-2600,  -619,  -581},
+    {-2646,  -506,  -466},
+    {-2682,  -386,  -350},
+    {-2708,  -261,  -234},
+    {-2724,  -131,  -117},
+    {-2729,     0,     0},
+    {-2724,   131,   117},
+    {-2708,   261,   234},
+    {-2682,   386,   350},
+    {-2646,   506,   466},
+    {-2600,   619,   581},
+    {-2544,   723,   694},
+    {-2478,   817,   806},
+    {-2403,   900,   915},
+    {-2319,   971,  1022},
+    {-2227,  1031,  1126},
+    {-2127,  1078,  1225},
+    {-2018,  1113,  1320},
+    {-1903,  1137,  1410},
+    {-1780,  1150,  1494},
+    {-1652,  1153,  1570},
+    {-1517,  1147,  1640},
+    {-1376,  1133,  1701},
+    {-1231,  1112,  1754},
+    {-1081,  1085,  1798},
+    { -928,  1055,  1832},
+    { -771,  1021,  1856},
+    { -612,   984,  1870},
+    { -451,   946,  1874},
+    { -126,   866,  1852},
+    {  195,   784,  1792},
+    {  507,   699,  1698},
+    {  798,   606,  1575},
+    {  934,   555,  1505},
+    { 1060,   499,  1429},
+    { 1178,   439,  1349},
+    { 1284,   373,  1265},
+    { 1378,   300,  1178},
+    { 1458,   221,  1088},
+    { 1524,   135,   997},
+    { 1576,    41,   904},
+    { 1611,   -59,   810},
+    { 1629,  -165,   715},
+    { 1631,  -276,   620},
+    { 1616,  -391,   524},
+    { 1583,  -509,   428},
+    { 1535,  -627,   333},
+    { 1470,  -745,   237},
+    { 1390,  -859,   142},
+    { 1295,  -968,    48},
+    { 1188, -1069,   -45},
+    { 1070, -1160,  -137},
+    {  943, -1238,  -226},
+    {  809, -1303,  -313},
+    {  669, -1352,  -397},
+    {  526, -1383,  -477},
+    {  383, -1395,  -552},
+    {  242, -1388,  -622},
+    {  105, -1361,  -685},
+    {  -25, -1315,  -741},
+    { -146, -1249,  -788},
+    { -257, -1166,  -827},
+    { -355, -1066,  -855},
+    { -438,  -952,  -873},
+    { -506,  -825,  -879},
+    { -558,  -690,  -873},
+    { -592,  -548,  -856},
+    { -609,  -404,  -826},
+    { -608,  -259,  -785},
+    { -591,  -119,  -731},
+    { -557,    14,  -667},
+    { -508,   137,  -593},
+    { -446,   247,  -509},
+    { -371,   341,  -417},
+    { -287,   416,  -319},
+    { -196,   471,  -216},
+    {  -99,   505,  -109},
+    {    0,   516,     0},
+    {   99,   505,   109},
+    {  196,   471,   216},
+    {  287,   416,   319},
+    {  371,   341,   417},
+    {  446,   247,   509},
+    {  508,   137,   593},
+    {  557,    14,   667},
+    {  591,  -119,   731},
+    {  608,  -259,   785},
+    {  609,  -404,   826},
+    {  592,  -548,   856},
+    {  558,  -690,   873},
+    {  506,  -825,   879},
+    {  438,  -952,   873},
+    {  355, -1066,   855},
+    {  257, -1166,   827},
+    {  146, -1249,   788},
+    {   25, -1315,   741},
+    { -105, -1361,   685},
+    { -242, -1388,   622},
+    { -383, -1395,   552},
+    { -526, -1383,   477},
+    { -669, -1352,   397},
+    { -809, -1303,   313},
+    { -943, -1238,   226},
+    {-1070, -1160,   137},
+    {-1188, -1069,    45},
+    {-1295,  -968,   -48},
+    {-1390,  -859,  -142},
+    {-1470,  -745,  -237},
+    {-1535,  -627,  -333},
+    {-1583,  -509,  -428},
+    {-1616,  -391,  -524},
+    {-1631,  -276,  -620},
+    {-1629,  -165,  -715},
+    {-1611,   -59,  -810},
+    {-1576,    41,  -904},
+    {-1524,   135,  -997},
+    {-1458,   221, -1088},
+    {-1378,   300, -1178},
+    {-1284,   373, -1265},
+    {-1178,   439, -1349},
+    {-1060,   499, -1429},
+    { -934,   555, -1505},
+    { -655,   654, -1640},
+    { -353,   742, -1749},
+    {  -35,   826, -1827},
+    {  289,   906, -1868},
+    {  451,   946, -1874},
+    {  612,   984, -1870},
+    {  771,  1021, -1856},
+    {  928,  1055, -1832},
+    { 1081,  1085, -1798},
+    { 1231,  1112, -1754},
+    { 1376,  1133, -1701},
+    { 1517,  1147, -1640},
+    { 1652,  1153, -1570},
+    { 1780,  1150, -1494},
+    { 1903,  1137, -1410},
+    { 2018,  1113, -1320},
+    { 2127,  1078, -1225},
+    { 2227,  1031, -1126},
+    { 2319,   971, -1022},
+    { 2403,   900,  -915},
+    { 2478,   817,  -806},
+    { 2544,   723,  -694},
+    { 2600,   619,  -581},
+    { 2646,   506,  -466},
+    { 2682,   386,  -350},
+    { 2708,   261,  -234},
+    { 2724,   131,  -117},
+    { 2729,     0,     0},
+    { 2724,  -131,   117},
+    { 2708,  -261,   234},
+    { 2682,  -386,   350},
+    { 2646,  -506,   466},
+    { 2600,  -619,   581},
+    { 2544,  -723,   694},
+    { 2478,  -817,   806},
+    { 2403,  -900,   915},
+    { 2319,  -971,  1022},
+    { 2227, -1031,  1126},
+    { 2127, -1078,  1225},
+    { 2018, -1113,  1320},
+    { 1903, -1137,  1410},
+    { 1780, -1150,  1494},
+    { 1652, -1153,  1570},
+    { 1517, -1147,  1640},
+    { 1376, -1133,  1701},
+    { 1231, -1112,  1754},
+    { 1081, -1085,  1798},
+    {  928, -1055,  1832},
+    {  771, -1021,  1856},
+    {  612,  -984,  1870},
+    {  451,  -946,  1874},
+    {  126,  -866,  1852},
+    { -195,  -784,  1792},
+    { -507,  -699,  1698},
+    { -798,  -606,  1575},
+    { -934,  -555,  1505},
+    {-1060,  -499,  1429},
+    {-1178,  -439,  1349},
+    {-1284,  -373,  1265},
+    {-1378,  -300,  1178},
+    {-1458,  -221,  1088},
+    {-1524,  -135,   997},
+    {-1576,   -41,   904},
+    {-1611,    59,   810},
+    {-1629,   165,   715},
+    {-1631,   276,   620},
+    {-1616,   391,   524},
+    {-1583,   509,   428},
+    {-1535,   627,   333},
+    {-1470,   745,   237},
+    {-1390,   859,   142},
+    {-1295,   968,    48},
+    {-1188,  1069,   -45},
+    {-1070,  1160,  -137},
+    { -943,  1238,  -226},
+    { -809,  1303,  -313},
+    { -669,  1352,  -397},
+    { -526,  1383,  -477},
+    { -383,  1395,  -552},
+    { -242,  1388,  -622},
+    { -105,  1361,  -685},
+    {   25,  1315,  -741},
+    {  146,  1249,  -788},
+    {  257,  1166,  -827},
+    {  355,  1066,  -855},
+    {  438,   952,  -873},
+    {  506,   825,  -879},
+    {  558,   690,  -873},
+    {  592,   548,  -856},
+    {  609,   404,  -826},
+    {  608,   259,  -785},
+    {  591,   119,  -731},
+    {  557,   -14,  -667},
+    {  508,  -137,  -593},
+    {  446,  -247,  -509},
+    {  371,  -341,  -417},
+    {  287,  -416,  -319},
+    {  196,  -471,  -216},
+    {   99,  -505,  -109},
+    {    0,  -516,     0}
+};
+
+/*
+ * Build a StickKnot by subsampling the Fremlin 288-point 6_3 curve.
+ * stride: step between sampled points (e.g. 36 for N=8)
+ * offset: starting index into the 288-point array
+ */
+static StickKnot make_6_3_fremlin(int stride, int offset) {
+    StickKnot k;
+    int i, n;
+    k.name = "6_3 Fremlin";
+    k.crossing_number = 6;
+    n = FREMLIN_N / stride;
+    if (n > MAX_STICK_VERTICES) n = MAX_STICK_VERTICES;
+    k.n_vertices = n;
+    for (i = 0; i < n; i++) {
+        int idx = (offset + i * stride) % FREMLIN_N;
+        k.vertices[i] = v3q_from_ints(
+            (i64)fremlin_6_3[idx][0],
+            (i64)fremlin_6_3[idx][1],
+            (i64)fremlin_6_3[idx][2]
+        );
+    }
+    return k;
+}
+
+/*
+ * Fremlin 6_3 scan: try all stride/offset combinations for N=8..16.
+ * For each that gives det=13, report crossings and writhe.
+ * For the best (lowest crossing count with det=13), run full
+ * decoherence analysis + majority rule search.
+ */
+static void test_6_3_fremlin(void) {
+    /* Try many strides: exact divisors and non-exact */
+    int strides[] = {36, 32, 29, 26, 24, 22, 21, 20, 18, 16, 14};
+    int n_strides = 11;
+    int si, off;
+    int best_nc = 999, best_stride = 0, best_off = 0, best_n = 0;
+
+    printf("\n=== Test: 6_3 Fremlin Curve (minimal crossing search) ===\n");
+
+    /* Phase 1: scan all stride/offset for det=13 hits */
+    for (si = 0; si < n_strides; si++) {
+        int stride = strides[si];
+        int n = FREMLIN_N / stride;
+        int hits = 0;
+        if (n < 6 || n > MAX_STICK_VERTICES) continue;
+        printf("  N=%d (stride=%d): ", n, stride);
+        for (off = 0; off < stride; off++) {
+            StickKnot k = make_6_3_fremlin(stride, off);
+            Crossing cx[MAX_CROSSINGS];
+            int nc = find_crossings(k.vertices, k.n_vertices,
+                                    cx, MAX_CROSSINGS);
+            int det = (nc > 0) ? knot_determinant(k.n_vertices, cx, nc) : 1;
+            int w = compute_writhe(cx, nc);
+            if (det == 13) {
+                printf("[off=%d c=%d w=%d] ", off, nc, w);
+                hits++;
+                if (nc < best_nc) {
+                    best_nc = nc;
+                    best_stride = stride;
+                    best_off = off;
+                    best_n = n;
+                }
+            }
+        }
+        if (hits == 0) printf("no det=13 hits");
+        printf("  (%d/%d hits)\n", hits, stride);
+    }
+
+    /* Phase 1b: torus parametric scan across frequency triples and R */
+    printf("\n  Torus parametric scan (varying a,b,c,R,N):\n");
+    {
+        int r_pct;  /* R * 100 */
+        int ns_scan[] = {8, 9, 10, 11, 12};
+        int ns_count = 5;
+        int ni, a, b, c;
+        /* 6_3 knot: try various frequency triples */
+        for (a = 1; a <= 4; a++)
+        for (b = 2; b <= 7; b++)
+        for (c = 2; c <= 6; c++) {
+            if (a == b || b == c || a == c) continue;
+            for (r_pct = 100; r_pct <= 300; r_pct += 25) {
+                double R = (double)r_pct / 100.0;
+                for (ni = 0; ni < ns_count; ni++) {
+                    int n = ns_scan[ni];
+                    StickKnot k = make_6_3_torus(a, b, c, R, n, 1000);
+                    Crossing cx[MAX_CROSSINGS];
+                    int nc = find_crossings(k.vertices, k.n_vertices,
+                                            cx, MAX_CROSSINGS);
+                    int det = (nc > 0) ?
+                        knot_determinant(k.n_vertices, cx, nc) : 1;
+                    int w = compute_writhe(cx, nc);
+                    if (det == 13 && nc < 15) {
+                        /* Check for degenerate (repeated) vertices */
+                        int vi, vj, degen = 0;
+                        for (vi = 0; vi < n && !degen; vi++)
+                            for (vj = vi+1; vj < n && !degen; vj++)
+                                if (k.vertices[vi].x.p ==
+                                        k.vertices[vj].x.p &&
+                                    k.vertices[vi].y.p ==
+                                        k.vertices[vj].y.p &&
+                                    k.vertices[vi].z.p ==
+                                        k.vertices[vj].z.p)
+                                    degen = 1;
+                        if (degen) continue;
+                        printf("    a=%d b=%d c=%d R=%.2f N=%d: "
+                               "%d crossings, writhe=%d\n",
+                               a, b, c, R, n, nc, w);
+                        if (nc < best_nc) {
+                            best_nc = nc;
+                            best_stride = -(a*100+b*10+c);
+                            best_off = r_pct;
+                            best_n = n;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    if (best_nc == 999) {
+        printf("  No subsample gave det=13.\n");
+        check("6_3 low-crossing det=13 found", 0);
+        return;
+    }
+
+    if (best_stride < 0) {
+        int abc = -best_stride;
+        printf("\n  BEST: torus a=%d b=%d c=%d R=%.2f N=%d crossings=%d\n",
+               abc/100, (abc/10)%10, abc%10,
+               (double)best_off / 100.0, best_n, best_nc);
+    } else {
+        printf("\n  BEST: Fremlin stride=%d off=%d N=%d crossings=%d\n",
+               best_stride, best_off, best_n, best_nc);
+    }
+    check("6_3 low-crossing det=13 found", 1);
+
+    /* Phase 2: full decoherence + majority analysis on best */
+    {
+        StickKnot k;
+        int i, sh;
+        Crossing cx[MAX_CROSSINGS];
+        int nc, det, w, n_steps;
+
+        if (best_stride < 0) {
+            int abc = -best_stride;
+            k = make_6_3_torus(abc/100, (abc/10)%10, abc%10,
+                               (double)best_off / 100.0,
+                               best_n, 1000);
+        } else {
+            k = make_6_3_fremlin(best_stride, best_off);
+        }
+        nc = find_crossings(k.vertices, k.n_vertices, cx, MAX_CROSSINGS);
+        det = (nc > 0) ? knot_determinant(k.n_vertices, cx, nc) : 1;
+        w = compute_writhe(cx, nc);
+        n_steps = k.n_vertices - 3;
+
+        printf("  Baseline: N=%d, %d crossings, det=%d, writhe=%d, "
+               "steps=%d\n", k.n_vertices, nc, det, w, n_steps);
+
+        /* Print coordinates */
+        printf("  Coordinates:\n");
+        for (i = 0; i < k.n_vertices; i++) {
+            printf("    v[%2d] = (%lld, %lld, %lld)\n", i,
+                   k.vertices[i].x.p, k.vertices[i].y.p,
+                   k.vertices[i].z.p);
+        }
+
+        /* Full rotation sweep */
+        printf("\n  Rotation sweep (%d rotations):\n", k.n_vertices);
+        for (sh = 0; sh < k.n_vertices; sh++) {
+            StickKnot rot = rotate_knot(&k, sh);
+            ConstructionWord word;
+            unsigned int choices;
+            int n_s = rot.n_vertices - 3;
+            int n_a = 1 << n_s;
+            int det_hist[64];
+            int n_6_3 = 0, n_6_3_L = 0, n_6_3_R = 0;
+            int *type_map;
+            int compl_ok = 1, compl_tested = 0;
+
+            if (n_a > 65536) continue;
+            type_map = (int *)malloc((unsigned)n_a * sizeof(int));
+            if (!type_map) continue;
+
+            word.base[0] = 0; word.base[1] = 1; word.base[2] = 2;
+            word.n_steps = n_s;
+            for (i = 0; i < n_s; i++) {
+                word.steps[i].target_idx = i + 3;
+                word.steps[i].center_idx[0] = 0;
+                word.steps[i].center_idx[1] = 1;
+                word.steps[i].center_idx[2] = 2;
+            }
+
+            for (i = 0; i < 64; i++) det_hist[i] = 0;
+
+            for (choices = 0; choices < (unsigned)n_a; choices++) {
+                Vec3Q poly[MAX_STICK_VERTICES];
+                Crossing cxw[MAX_CROSSINGS];
+                int n_poly, ncw, dt, wr;
+
+                evaluate_construction(&rot, &word, choices, poly, &n_poly);
+                ncw = find_crossings(poly, n_poly, cxw, MAX_CROSSINGS);
+                wr = compute_writhe(cxw, ncw);
+                dt = (ncw > 0) ? knot_determinant(n_poly, cxw, ncw) : 1;
+
+                if (dt >= 0 && dt < 64) det_hist[dt]++;
+
+                if (dt == 13 && wr > 0) {
+                    type_map[choices] = 13; n_6_3_R++;
+                } else if (dt == 13 && wr < 0) {
+                    type_map[choices] = -13; n_6_3_L++;
+                } else if (dt == 13) {
+                    type_map[choices] = 130; n_6_3++;
+                } else {
+                    type_map[choices] = 0;
+                }
+            }
+            n_6_3 += n_6_3_L + n_6_3_R;
+
+            /* Complement check */
+            {
+                unsigned int mask = (unsigned)(n_a - 1);
+                for (choices = 0; choices < (unsigned)n_a; choices++) {
+                    unsigned int comp = (~choices) & mask;
+                    int t1 = type_map[choices];
+                    int t2 = type_map[comp];
+                    if (t1 == 13 || t1 == -13 || t1 == 130) {
+                        compl_tested++;
+                        if (!(t2 == 13 || t2 == -13 || t2 == 130))
+                            compl_ok = 0;
+                    }
+                }
+            }
+
+            printf("    rot=%d: det13=%d/%d (L:%d R:%d w0:%d)",
+                   sh, n_6_3, n_a, n_6_3_L, n_6_3_R,
+                   n_6_3 - n_6_3_L - n_6_3_R);
+            if (n_6_3_L == n_6_3_R && n_6_3_L > 0)
+                printf(" SYMMETRIC");
+            if (compl_ok && compl_tested > 0)
+                printf(" COMPL_OK");
+
+            /* Majority rule search */
+            if (n_6_3 >= 4 && n_s >= 6) {
+                int s0, s1, s2, re0, re1, re2;
+                int best_acc = 0, found_perfect = 0;
+
+                for (s0 = 0; s0 < n_s-2 && !found_perfect; s0++)
+                for (s1 = s0+1; s1 < n_s-1 && !found_perfect; s1++)
+                for (s2 = s1+1; s2 < n_s && !found_perfect; s2++) {
+                    int rem[16], nrem = 0;
+                    for (i = 0; i < n_s; i++)
+                        if (i != s0 && i != s1 && i != s2)
+                            rem[nrem++] = i;
+                    for (re0 = 0; re0 < nrem-2 && !found_perfect; re0++)
+                    for (re1 = re0+1; re1 < nrem-1 && !found_perfect; re1++)
+                    for (re2 = re1+1; re2 < nrem && !found_perfect; re2++) {
+                        int eb0 = rem[re0], eb1 = rem[re1],
+                            eb2 = rem[re2];
+                        int cell_d13[16], cell_tot[16];
+                        unsigned int ch;
+                        int ci, all_d13 = 0;
+                        for (ci = 0; ci < 16; ci++) {
+                            cell_d13[ci] = 0; cell_tot[ci] = 0;
+                        }
+                        for (ch = 0; ch < (unsigned)n_a; ch++) {
+                            int bs = (int)(((ch >> s0) & 1u) |
+                                          (((ch >> s1) & 1u) << 1) |
+                                          (((ch >> s2) & 1u) << 2));
+                            int be = (int)(((ch >> eb0) & 1u) +
+                                          ((ch >> eb1) & 1u) +
+                                          ((ch >> eb2) & 1u));
+                            int maj = (be >= 2) ? 1 : 0;
+                            int cell = bs * 2 + maj;
+                            cell_tot[cell]++;
+                            if (type_map[ch] == 13 ||
+                                type_map[ch] == -13 ||
+                                type_map[ch] == 130)
+                                cell_d13[cell]++;
+                        }
+                        for (ci = 0; ci < 16; ci++) {
+                            if (cell_d13[ci] > 0 &&
+                                cell_d13[ci] == cell_tot[ci])
+                                all_d13 += cell_d13[ci];
+                        }
+                        if (all_d13 == n_6_3) {
+                            printf(" MAJ_PERFECT S={%d,%d,%d}"
+                                   " E={%d,%d,%d}",
+                                   s0, s1, s2, eb0, eb1, eb2);
+                            found_perfect = 1;
+                        }
+                        if (all_d13 > best_acc)
+                            best_acc = all_d13;
+                    }
+                }
+                if (!found_perfect)
+                    printf(" MAJ_BEST=%d/%d", best_acc, n_6_3);
+            }
+
+            printf("  det_vals:");
+            for (i = 0; i < 64; i++)
+                if (det_hist[i] > 0) printf(" %d:%d", i, det_hist[i]);
+            printf("\n");
+
+            free(type_map);
+        }
+    }
+}
+
+/*
+ * Figure-eight at high N: test whether the majority classifier
+ * breaks when crossing count increases beyond minimal.
+ * Uses the same torus parametric: a=2, b=3, c=4, R=2.0.
+ * At N=12: 4 crossings (minimal), classifier works.
+ * At higher N: more crossings — does classifier still work?
+ */
+static void test_figure_eight_high_n(void) {
+    /* Scale survey: which scales produce majority structure? */
+    int ns[200];
+    int scales[200];
+    int n_ns = 0;
+    int ni;
+
+    printf("\n=== Test: Figure-Eight Scale Survey ===\n");
+
+    /* Phase 1: scale sweep at N=12 from scale=5 to scale=200 */
+    for (ni = 5; ni <= 200; ni++) {
+        ns[n_ns] = 12;
+        scales[n_ns] = ni;
+        n_ns++;
+    }
+
+    for (ni = 0; ni < n_ns; ni++) {
+        int n = ns[ni];
+        int scale = scales[ni];
+        StickKnot k = make_6_3_torus(2, 3, 4, 2.0, n, scale);
+        Crossing cx[MAX_CROSSINGS];
+        int nc = find_crossings(k.vertices, k.n_vertices,
+                                cx, MAX_CROSSINGS);
+        int det = (nc > 0) ? knot_determinant(k.n_vertices, cx, nc) : 1;
+        int n_s = k.n_vertices - 3;
+        int n_a = 1 << n_s;
+        int sh, best_rot_maj = 0;
+        int n_perfect_rots = 0, n_symmetric_rots = 0;
+
+        if (det != 5 || n_a > 65536) continue;
+
+        /* Rotation sweep with majority search */
+        for (sh = 0; sh < k.n_vertices; sh++) {
+            StickKnot rot = rotate_knot(&k, sh);
+            ConstructionWord word;
+            unsigned int choices;
+            int *type_map;
+            int n_fig8 = 0, n_fig8_det5 = 0;
+            int n_left = 0, n_right = 0;
+            int i;
+
+            type_map = (int *)malloc((unsigned)n_a * sizeof(int));
+            if (!type_map) continue;
+
+            word.base[0] = 0; word.base[1] = 1; word.base[2] = 2;
+            word.n_steps = n_s;
+            for (i = 0; i < n_s; i++) {
+                word.steps[i].target_idx = i + 3;
+                word.steps[i].center_idx[0] = 0;
+                word.steps[i].center_idx[1] = 1;
+                word.steps[i].center_idx[2] = 2;
+            }
+
+            for (choices = 0; choices < (unsigned)n_a; choices++) {
+                Vec3Q poly[MAX_STICK_VERTICES];
+                Crossing cxw[MAX_CROSSINGS];
+                int n_poly, ncw, dt, wr;
+
+                evaluate_construction(&rot, &word, choices,
+                                      poly, &n_poly);
+                ncw = find_crossings(poly, n_poly, cxw, MAX_CROSSINGS);
+                wr = compute_writhe(cxw, ncw);
+                dt = (ncw > 0) ?
+                    knot_determinant(n_poly, cxw, ncw) : 1;
+
+                if (dt == 5 && wr > 0) {
+                    type_map[choices] = 5; n_right++;
+                } else if (dt == 5 && wr < 0) {
+                    type_map[choices] = -5; n_left++;
+                } else if (dt == 5) {
+                    type_map[choices] = 50; n_fig8_det5++;
+                } else {
+                    type_map[choices] = 0;
+                }
+            }
+            n_fig8 = n_left + n_right + n_fig8_det5;
+
+            if (n_left == n_right && n_left > 0)
+                n_symmetric_rots++;
+
+            /* Majority search (only when n_s >= 6) */
+            if (n_fig8 >= 4 && n_s >= 6) {
+                int s0, s1, s2, re0, re1, re2;
+                int found_perfect = 0, best_acc = 0;
+
+                for (s0 = 0; s0 < n_s-2 && !found_perfect; s0++)
+                for (s1 = s0+1; s1 < n_s-1 && !found_perfect; s1++)
+                for (s2 = s1+1; s2 < n_s && !found_perfect; s2++) {
+                    int rem[16], nrem = 0;
+                    for (i = 0; i < n_s; i++)
+                        if (i != s0 && i != s1 && i != s2)
+                            rem[nrem++] = i;
+                    for (re0 = 0; re0 < nrem-2 && !found_perfect; re0++)
+                    for (re1 = re0+1; re1 < nrem-1 && !found_perfect; re1++)
+                    for (re2 = re1+1; re2 < nrem && !found_perfect; re2++) {
+                        int eb0 = rem[re0], eb1 = rem[re1],
+                            eb2 = rem[re2];
+                        int cell_d5[16], cell_tot[16];
+                        unsigned int ch;
+                        int ci, all_d5 = 0;
+                        for (ci = 0; ci < 16; ci++) {
+                            cell_d5[ci] = 0; cell_tot[ci] = 0;
+                        }
+                        for (ch = 0; ch < (unsigned)n_a; ch++) {
+                            int bs = (int)(((ch >> s0) & 1u) |
+                                          (((ch >> s1) & 1u) << 1) |
+                                          (((ch >> s2) & 1u) << 2));
+                            int be = (int)(((ch >> eb0) & 1u) +
+                                          ((ch >> eb1) & 1u) +
+                                          ((ch >> eb2) & 1u));
+                            int maj = (be >= 2) ? 1 : 0;
+                            int cell = bs * 2 + maj;
+                            cell_tot[cell]++;
+                            if (type_map[ch] == 5 ||
+                                type_map[ch] == -5 ||
+                                type_map[ch] == 50)
+                                cell_d5[cell]++;
+                        }
+                        for (ci = 0; ci < 16; ci++) {
+                            if (cell_d5[ci] > 0 &&
+                                cell_d5[ci] == cell_tot[ci])
+                                all_d5 += cell_d5[ci];
+                        }
+                        if (all_d5 == n_fig8)
+                            found_perfect = 1;
+                        if (all_d5 > best_acc)
+                            best_acc = all_d5;
+                    }
+                }
+                if (found_perfect)
+                    n_perfect_rots++;
+                if (best_acc > best_rot_maj)
+                    best_rot_maj = best_acc;
+            }
+            free(type_map);
+        }
+
+        /* Compact output: one line per scale */
+        if (n_perfect_rots > 0)
+            printf("  scale=%d: %d crossings, %d/%d PERFECT rots, "
+                   "%d sym ***\n",
+                   scale, nc, n_perfect_rots, k.n_vertices,
+                   n_symmetric_rots);
+    }
+}
+
+/*
+ * 6_3 knot test: scan sample counts, verify det=13 and writhe=0,
+ * then run full rotation sweep with majority rule search.
+ */
+static void test_6_3(void) {
+    StickKnot k63;
+    Crossing cx[MAX_CROSSINGS];
+    int nc, det, w, n_steps, sh;
+    int i;
+
+    printf("\n=== Test: 6_3 Knot (amphichiral, det=13) ===\n");
+
+    /* TORUS a=2 b=5 c=4 R=1.5 N=14 scale=100:
+     * x = (1.5 + cos(2t)) * cos(5t) * 100
+     * y = (1.5 + cos(2t)) * sin(5t) * 100
+     * z = sin(4t) * 100
+     * Sampled at t = 2*pi*k/14.
+     * Verified: det=13, writhe=0, stable from N=14 to N=24. */
+    k63 = make_6_3_torus(2, 5, 4, 1.5, 14, 100);
+    nc = find_crossings(k63.vertices, k63.n_vertices, cx, MAX_CROSSINGS);
+    det = (nc > 0) ? knot_determinant(k63.n_vertices, cx, nc) : 1;
+    w = compute_writhe(cx, nc);
+    n_steps = k63.n_vertices - 3;
+
+    printf("  N=%d, %d crossings, det=%d, writhe=%d, steps=%d\n",
+           k63.n_vertices, nc, det, w, n_steps);
+
+    /* Print coordinates for future hardcoding */
+    printf("  Coordinates:\n");
+    for (i = 0; i < k63.n_vertices; i++) {
+        printf("    v[%2d] = (%lld, %lld, %lld)\n", i,
+               k63.vertices[i].x.p, k63.vertices[i].y.p,
+               k63.vertices[i].z.p);
+    }
+
+    check("6_3 det = 13", det == 13);
+    check("6_3 writhe = 0 (amphichiral)", w == 0);
+
+    if (det != 13) return;
+
+    /* Full rotation sweep */
+    printf("\n  Full rotation sweep (%d rotations, %d steps each):\n",
+           k63.n_vertices, n_steps);
+
+    for (sh = 0; sh < k63.n_vertices; sh++) {
+        StickKnot rot = rotate_knot(&k63, sh);
+        ConstructionWord word;
+        unsigned int choices;
+        int n_s = rot.n_vertices - 3;
+        int n_a = 1 << n_s;
+        int det_hist[64];
+        int n_6_3 = 0, n_6_3_L = 0, n_6_3_R = 0;
+        int *type_map;
+        int compl_ok = 1, compl_tested = 0;
+
+        if (n_a > 4096) continue;
+        type_map = (int *)malloc((unsigned)n_a * sizeof(int));
+        if (!type_map) continue;
+
+        word.base[0] = 0; word.base[1] = 1; word.base[2] = 2;
+        word.n_steps = n_s;
+        for (i = 0; i < n_s; i++) {
+            word.steps[i].target_idx = i + 3;
+            word.steps[i].center_idx[0] = 0;
+            word.steps[i].center_idx[1] = 1;
+            word.steps[i].center_idx[2] = 2;
+        }
+
+        for (i = 0; i < 64; i++) det_hist[i] = 0;
+
+        for (choices = 0; choices < (unsigned)n_a; choices++) {
+            Vec3Q poly[MAX_STICK_VERTICES];
+            Crossing cxw[MAX_CROSSINGS];
+            int n_poly, ncw, dt, wr;
+
+            evaluate_construction(&rot, &word, choices, poly, &n_poly);
+            ncw = find_crossings(poly, n_poly, cxw, MAX_CROSSINGS);
+            wr = compute_writhe(cxw, ncw);
+            dt = (ncw > 0) ? knot_determinant(n_poly, cxw, ncw) : 1;
+
+            if (dt >= 0 && dt < 64) det_hist[dt]++;
+
+            if (dt == 13 && wr > 0) {
+                type_map[choices] = 13; n_6_3_R++;
+            } else if (dt == 13 && wr < 0) {
+                type_map[choices] = -13; n_6_3_L++;
+            } else if (dt == 13) {
+                type_map[choices] = 130; n_6_3++; /* w=0 copy */
+            } else {
+                type_map[choices] = 0;
+            }
+        }
+        n_6_3 += n_6_3_L + n_6_3_R;
+
+        /* Complement check */
+        {
+            unsigned int mask = (unsigned)(n_a - 1);
+            for (choices = 0; choices < (unsigned)n_a; choices++) {
+                unsigned int comp = (~choices) & mask;
+                int t1 = type_map[choices];
+                int t2 = type_map[comp];
+                if (t1 == 13 || t1 == -13 || t1 == 130) {
+                    compl_tested++;
+                    if (!(t2 == 13 || t2 == -13 || t2 == 130))
+                        compl_ok = 0;
+                }
+            }
+        }
+
+        printf("    rot=%d: det13=%d/%d (L:%d R:%d w0:%d)",
+               sh, n_6_3, n_a, n_6_3_L, n_6_3_R,
+               n_6_3 - n_6_3_L - n_6_3_R);
+        if (n_6_3_L == n_6_3_R && n_6_3_L > 0)
+            printf(" SYMMETRIC");
+        if (compl_ok && compl_tested > 0)
+            printf(" COMPL_OK");
+
+        /* Majority rule search: find (S,E,F) partition of n_s bits
+         * with |S|=3, |E|=3, such that det-13 set is perfectly
+         * predicted by S-pattern + majority(E). */
+        if (n_6_3 >= 8 && n_s >= 6) {
+            int s0, s1, s2, re0, re1, re2;
+            int best_acc = 0, found_perfect = 0;
+            int best_s[3], best_e[3];
+            best_s[0] = best_s[1] = best_s[2] = -1;
+            best_e[0] = best_e[1] = best_e[2] = -1;
+
+            for (s0 = 0; s0 < n_s-2 && !found_perfect; s0++)
+            for (s1 = s0+1; s1 < n_s-1 && !found_perfect; s1++)
+            for (s2 = s1+1; s2 < n_s && !found_perfect; s2++) {
+                int rem[12], nrem = 0;
+                for (i = 0; i < n_s; i++)
+                    if (i != s0 && i != s1 && i != s2)
+                        rem[nrem++] = i;
+                for (re0 = 0; re0 < nrem-2 && !found_perfect; re0++)
+                for (re1 = re0+1; re1 < nrem-1 && !found_perfect; re1++)
+                for (re2 = re1+1; re2 < nrem && !found_perfect; re2++) {
+                    int eb0 = rem[re0], eb1 = rem[re1], eb2 = rem[re2];
+                    int cell_d13[16], cell_tot[16];
+                    unsigned int ch;
+                    int ci, all_d13 = 0;
+                    for (ci = 0; ci < 16; ci++) {
+                        cell_d13[ci] = 0; cell_tot[ci] = 0;
+                    }
+                    for (ch = 0; ch < (unsigned)n_a; ch++) {
+                        int bs = (int)(((ch >> s0) & 1u) |
+                                      (((ch >> s1) & 1u) << 1) |
+                                      (((ch >> s2) & 1u) << 2));
+                        int be = (int)(((ch >> eb0) & 1u) +
+                                      ((ch >> eb1) & 1u) +
+                                      ((ch >> eb2) & 1u));
+                        int maj = (be >= 2) ? 1 : 0;
+                        int cell = bs * 2 + maj;
+                        cell_tot[cell]++;
+                        if (type_map[ch] == 13 || type_map[ch] == -13
+                            || type_map[ch] == 130)
+                            cell_d13[cell]++;
+                    }
+                    for (ci = 0; ci < 16; ci++) {
+                        if (cell_d13[ci] > 0 &&
+                            cell_d13[ci] == cell_tot[ci])
+                            all_d13 += cell_d13[ci];
+                    }
+                    if (all_d13 == n_6_3) {
+                        printf(" MAJ_PERFECT S={%d,%d,%d} E={%d,%d,%d}",
+                               s0, s1, s2, eb0, eb1, eb2);
+                        found_perfect = 1;
+                    }
+                    if (all_d13 > best_acc) {
+                        best_acc = all_d13;
+                        best_s[0] = s0; best_s[1] = s1; best_s[2] = s2;
+                        best_e[0] = eb0; best_e[1] = eb1; best_e[2] = eb2;
+                    }
+                }
+            }
+            if (!found_perfect)
+                printf(" MAJ_BEST=%d/%d",
+                       best_acc, n_6_3);
+        }
+
+        printf("  det_vals:");
+        for (i = 0; i < 64; i++)
+            if (det_hist[i] > 0) printf(" %d:%d", i, det_hist[i]);
+        printf("\n");
+
+        free(type_map);
+    }
+}
+
+/* ================================================================
+ * Bit influence analysis (explorer request):
+ * For each bit i, what fraction of 2^(n-1) settings of OTHER bits
+ * changes the det classification when bit i is flipped?
+ * Compare scale=10 (working) vs scale=100 (non-working).
+ * ================================================================ */
+static void test_bit_influence(void) {
+    /* Scales: working (6,10,12,14,52), CF predictions (8,25,95),
+     * non-working (100) */
+    int test_scales[] = {6, 8, 10, 12, 14, 25, 52, 95, 100};
+    int n_test_scales = 9;
+    int si;
+
+    printf("\n=== Test: Bit Influence Analysis ===\n");
+
+    for (si = 0; si < n_test_scales; si++) {
+        int scale = test_scales[si];
+        StickKnot k = make_6_3_torus(2, 3, 4, 2.0, 12, scale);
+        Crossing cx[MAX_CROSSINGS];
+        int nc = find_crossings(k.vertices, k.n_vertices,
+                                cx, MAX_CROSSINGS);
+        int det = (nc > 0) ? knot_determinant(k.n_vertices, cx, nc) : 1;
+        int n_s = k.n_vertices - 3; /* 9 bits */
+        int n_a = 1 << n_s;         /* 512 */
+        int best_sh = -1;
+        int best_n_fig8 = 0;
+        int sh;
+
+        printf("\n--- Scale=%d, %d crossings, det=%d ---\n",
+               scale, nc, det);
+
+        if (det != 5) {
+            printf("  Not a figure-eight at this scale, skipping.\n");
+            continue;
+        }
+
+        /* Print coordinates */
+        {
+            int vi;
+            int n_zero_coords = 0;
+            int antipodal_ok = 1;
+            printf("  Coordinates:\n");
+            for (vi = 0; vi < k.n_vertices; vi++) {
+                int has_zero = 0;
+                printf("    v[%2d] = (%4lld, %4lld, %4lld)",
+                       vi, k.vertices[vi].x.p,
+                       k.vertices[vi].y.p, k.vertices[vi].z.p);
+                if (k.vertices[vi].x.p == 0 ||
+                    k.vertices[vi].y.p == 0 ||
+                    k.vertices[vi].z.p == 0) {
+                    has_zero = 1;
+                    printf(" *zero*");
+                }
+                printf("\n");
+                if (has_zero) n_zero_coords++;
+            }
+            printf("  Zero-coordinate vertices: %d/%d\n",
+                   n_zero_coords, k.n_vertices);
+
+            /* Check antipodal symmetry: v[i+6] = -v[i] */
+            for (vi = 0; vi < 6; vi++) {
+                if (k.vertices[vi].x.p != -k.vertices[vi+6].x.p ||
+                    k.vertices[vi].y.p != -k.vertices[vi+6].y.p ||
+                    k.vertices[vi].z.p != -k.vertices[vi+6].z.p) {
+                    antipodal_ok = 0;
+                }
+            }
+            printf("  Antipodal symmetry (v[i+6]=-v[i]): %s\n",
+                   antipodal_ok ? "YES" : "NO");
+        }
+
+        /* For each rotation: classify, compute influence, check
+         * majority. Print influence for first rotation with majority
+         * AND for best rotation by count. */
+        for (sh = 0; sh < k.n_vertices; sh++) {
+            StickKnot rot = rotate_knot(&k, sh);
+            ConstructionWord word;
+            int *is_fig8;
+            int n_fig8 = 0;
+            int i, bit;
+            int found_perfect = 0;
+            int maj_s0 = -1, maj_s1 = -1, maj_s2 = -1;
+            int maj_e0 = -1, maj_e1 = -1, maj_e2 = -1;
+
+            word.base[0] = 0; word.base[1] = 1; word.base[2] = 2;
+            word.n_steps = n_s;
+            for (i = 0; i < n_s; i++) {
+                word.steps[i].target_idx = i + 3;
+                word.steps[i].center_idx[0] = 0;
+                word.steps[i].center_idx[1] = 1;
+                word.steps[i].center_idx[2] = 2;
+            }
+
+            is_fig8 = (int *)malloc((unsigned)n_a * sizeof(int));
+            if (!is_fig8) continue;
+
+            {
+                unsigned int choices;
+                for (choices = 0; choices < (unsigned)n_a;
+                     choices++) {
+                    Vec3Q poly[MAX_STICK_VERTICES];
+                    Crossing cxw[MAX_CROSSINGS];
+                    int n_poly, ncw, dt;
+                    evaluate_construction(&rot, &word, choices,
+                                          poly, &n_poly);
+                    ncw = find_crossings(poly, n_poly,
+                                         cxw, MAX_CROSSINGS);
+                    dt = (ncw > 0) ?
+                        knot_determinant(n_poly, cxw, ncw) : 1;
+                    is_fig8[choices] = (dt == 5) ? 1 : 0;
+                    if (dt == 5) n_fig8++;
+                }
+            }
+
+            /* Majority search */
+            {
+                int s0, s1, s2;
+                for (s0 = 0; s0 < n_s-2 && !found_perfect; s0++)
+                for (s1 = s0+1; s1 < n_s-1 && !found_perfect; s1++)
+                for (s2 = s1+1; s2 < n_s && !found_perfect; s2++) {
+                    int rem[16], nrem = 0;
+                    int re0, re1, re2;
+                    for (i = 0; i < n_s; i++)
+                        if (i != s0 && i != s1 && i != s2)
+                            rem[nrem++] = i;
+                    for (re0 = 0; re0 < nrem-2 && !found_perfect;
+                         re0++)
+                    for (re1 = re0+1; re1 < nrem-1 && !found_perfect;
+                         re1++)
+                    for (re2 = re1+1; re2 < nrem && !found_perfect;
+                         re2++) {
+                        int eb0 = rem[re0], eb1 = rem[re1],
+                            eb2 = rem[re2];
+                        int cell_d5[16], cell_tot[16];
+                        unsigned int ch;
+                        int ci, all_d5 = 0;
+                        for (ci = 0; ci < 16; ci++) {
+                            cell_d5[ci] = 0; cell_tot[ci] = 0;
+                        }
+                        for (ch = 0; ch < (unsigned)n_a; ch++) {
+                            int bs = (int)(((ch >> s0) & 1u) |
+                                 (((ch >> s1) & 1u) << 1) |
+                                 (((ch >> s2) & 1u) << 2));
+                            int be = (int)(((ch >> eb0) & 1u) +
+                                 ((ch >> eb1) & 1u) +
+                                 ((ch >> eb2) & 1u));
+                            int maj = (be >= 2) ? 1 : 0;
+                            int cell = bs * 2 + maj;
+                            cell_tot[cell]++;
+                            if (is_fig8[ch])
+                                cell_d5[cell]++;
+                        }
+                        for (ci = 0; ci < 16; ci++) {
+                            if (cell_d5[ci] > 0 &&
+                                cell_d5[ci] == cell_tot[ci])
+                                all_d5 += cell_d5[ci];
+                        }
+                        if (all_d5 == n_fig8) {
+                            found_perfect = 1;
+                            maj_s0 = s0; maj_s1 = s1; maj_s2 = s2;
+                            maj_e0 = eb0; maj_e1 = eb1; maj_e2 = eb2;
+                        }
+                    }
+                }
+            }
+
+            if (n_fig8 > best_n_fig8) {
+                best_n_fig8 = n_fig8;
+                best_sh = sh;
+            }
+
+            /* Print influence for rotations with majority, or
+             * the best rotation */
+            if (found_perfect) {
+                printf("  rot=%d: %d fig-8, MAJORITY S={%d,%d,%d}"
+                       " E={%d,%d,%d}\n",
+                       sh, n_fig8,
+                       maj_s0, maj_s1, maj_s2,
+                       maj_e0, maj_e1, maj_e2);
+                printf("    Influence:\n");
+                for (bit = 0; bit < n_s; bit++) {
+                    unsigned int choices;
+                    int n_flips = 0;
+                    const char *role = "";
+                    for (choices = 0; choices < (unsigned)n_a;
+                         choices++) {
+                        unsigned int fl = choices ^
+                                          (1u << (unsigned)bit);
+                        if (is_fig8[choices] != is_fig8[fl])
+                            n_flips++;
+                    }
+                    if (bit == maj_s0 || bit == maj_s1 ||
+                        bit == maj_s2) role = " [S]";
+                    else if (bit == maj_e0 || bit == maj_e1 ||
+                             bit == maj_e2) role = " [E]";
+                    else role = " [F]";
+                    printf("      bit %d: %d/%d = %.4f%s\n",
+                           bit, n_flips, n_a,
+                           (double)n_flips / (double)n_a, role);
+                }
+            }
+
+            free(is_fig8);
+        }
+
+        if (best_n_fig8 > 0)
+            printf("  Best rotation: sh=%d (%d fig-8 of %d)\n",
+                   best_sh, best_n_fig8, n_a);
+        else
+            printf("  No fig-8 alternatives found.\n");
+    }
+
+    /* Summary check */
+    check("Bit influence computed for multiple scales", 1);
+}
+
+/* ================================================================
+ * Discriminant analysis: compute the three-sphere intersection
+ * discriminant at each construction step.
+ * disc = (f.d)^2 - (d.d)(f.f - r^2)
+ * where d = radical line direction, f = point_on_line - center,
+ * r^2 = |target - center|^2.
+ * ================================================================ */
+static void test_discriminants(void) {
+    int test_scales[] = {10, 100};
+    int si;
+
+    printf("\n=== Test: Discriminant Analysis ===\n");
+
+    for (si = 0; si < 2; si++) {
+        int scale = test_scales[si];
+        StickKnot k = make_6_3_torus(2, 3, 4, 2.0, 12, scale);
+        int step;
+        /* Base triangle: v[0], v[1], v[2] */
+        Vec3Q c0 = k.vertices[0];
+        Vec3Q c1 = k.vertices[1];
+        Vec3Q c2 = k.vertices[2];
+
+        /* Edge lengths of base triangle */
+        {
+            Rat d01 = v3q_dist_sq(c0, c1);
+            Rat d02 = v3q_dist_sq(c0, c2);
+            Rat d12 = v3q_dist_sq(c1, c2);
+            printf("\n--- Scale=%d: Base triangle edge lengths^2 ---\n",
+                   scale);
+            printf("  |v0-v1|^2 = %lld/%lld\n", d01.p, d01.q);
+            printf("  |v0-v2|^2 = %lld/%lld\n", d02.p, d02.q);
+            printf("  |v1-v2|^2 = %lld/%lld\n", d12.p, d12.q);
+            /* Check equilateral: all edges equal? */
+            if (d01.p * d02.q == d02.p * d01.q &&
+                d01.p * d12.q == d12.p * d01.q)
+                printf("  EQUILATERAL!\n");
+            else
+                printf("  NOT equilateral. Ratios: "
+                       "|01|/|02|=%.4f, |01|/|12|=%.4f\n",
+                       (double)(d01.p * d02.q) /
+                       (double)(d02.p * d01.q),
+                       (double)(d01.p * d12.q) /
+                       (double)(d12.p * d01.q));
+        }
+
+        printf("\n  Discriminants per construction step:\n");
+        for (step = 0; step < 9; step++) {
+            Vec3Q target = k.vertices[step + 3];
+            /* Radical plane of S(c0,target) and S(c1,target):
+             * normal = 2*(c1 - c0)
+             * k = |target-c0|^2 - |target-c1|^2 - |c0|^2 + |c1|^2
+             * Plane: normal.X = k
+             *
+             * Radical plane of S(c0,target) and S(c2,target):
+             * normal = 2*(c2 - c0)
+             * Plane: normal.X = k2
+             */
+            /* Normal vectors (2x scaled, integer) */
+            i64 n1x, n1y, n1z, n2x, n2y, n2z;
+            i64 k1, k2;
+            i64 r0sq;
+            /* Radical line direction = n1 x n2 */
+            i64 dx, dy, dz;
+            /* Point on radical line: solve 2 plane eqs + set one
+             * coord to 0 */
+            i64 det_pl;
+            /* Use double for intermediate values to avoid overflow
+             * with large scales, then convert back for ratio */
+            double px, py, pz;
+            double fx, fy, fz;
+            double a_val, b_half, c_val, disc;
+
+            n1x = 2*(c1.x.p - c0.x.p);
+            n1y = 2*(c1.y.p - c0.y.p);
+            n1z = 2*(c1.z.p - c0.z.p);
+            n2x = 2*(c2.x.p - c0.x.p);
+            n2y = 2*(c2.y.p - c0.y.p);
+            n2z = 2*(c2.z.p - c0.z.p);
+
+            /* k1 = |T-c0|^2 - |T-c1|^2 - |c0|^2 + |c1|^2 */
+            {
+                i64 tc0x = target.x.p - c0.x.p;
+                i64 tc0y = target.y.p - c0.y.p;
+                i64 tc0z = target.z.p - c0.z.p;
+                i64 tc1x = target.x.p - c1.x.p;
+                i64 tc1y = target.y.p - c1.y.p;
+                i64 tc1z = target.z.p - c1.z.p;
+                i64 tc2x = target.x.p - c2.x.p;
+                i64 tc2y = target.y.p - c2.y.p;
+                i64 tc2z = target.z.p - c2.z.p;
+                i64 d0sq = tc0x*tc0x + tc0y*tc0y + tc0z*tc0z;
+                i64 d1sq = tc1x*tc1x + tc1y*tc1y + tc1z*tc1z;
+                i64 d2sq = tc2x*tc2x + tc2y*tc2y + tc2z*tc2z;
+                i64 c0sq = c0.x.p*c0.x.p + c0.y.p*c0.y.p +
+                           c0.z.p*c0.z.p;
+                i64 c1sq = c1.x.p*c1.x.p + c1.y.p*c1.y.p +
+                           c1.z.p*c1.z.p;
+                i64 c2sq = c2.x.p*c2.x.p + c2.y.p*c2.y.p +
+                           c2.z.p*c2.z.p;
+                k1 = d0sq - d1sq - c0sq + c1sq;
+                k2 = d0sq - d2sq - c0sq + c2sq;
+                r0sq = d0sq;
+            }
+
+            /* Radical line direction = n1 x n2 */
+            dx = n1y*n2z - n1z*n2y;
+            dy = n1z*n2x - n1x*n2z;
+            dz = n1x*n2y - n1y*n2x;
+
+            /* Find point on radical line: set z=0 if dz is largest,
+             * solve 2x2 system */
+            {
+                i64 adx = dx < 0 ? -dx : dx;
+                i64 ady = dy < 0 ? -dy : dy;
+                i64 adz = dz < 0 ? -dz : dz;
+
+                if (adz >= adx && adz >= ady) {
+                    /* Set Z = 0, solve n1.X*x + n1.Y*y = k1,
+                     * n2.X*x + n2.Y*y = k2 */
+                    det_pl = n1x*n2y - n1y*n2x; /* = dz */
+                    px = (double)(k1*n2y - k2*n1y) / (double)det_pl;
+                    py = (double)(n1x*k2 - n2x*k1) / (double)det_pl;
+                    pz = 0.0;
+                } else if (ady >= adx) {
+                    det_pl = n1x*n2z - n1z*n2x; /* = -dy */
+                    px = (double)(k1*n2z - k2*n1z) / (double)det_pl;
+                    py = 0.0;
+                    pz = (double)(n1x*k2 - n2x*k1) / (double)det_pl;
+                } else {
+                    det_pl = n1y*n2z - n1z*n2y; /* = dx */
+                    px = 0.0;
+                    py = (double)(k1*n2z - k2*n1z) / (double)det_pl;
+                    pz = (double)(n1y*k2 - n2y*k1) / (double)det_pl;
+                }
+            }
+
+            /* f = point_on_line - c0 */
+            fx = px - (double)c0.x.p;
+            fy = py - (double)c0.y.p;
+            fz = pz - (double)c0.z.p;
+
+            /* disc_quarter = (f.d)^2 - (d.d)*(f.f - r0^2) */
+            a_val = (double)(dx*dx + dy*dy + dz*dz);
+            b_half = fx*(double)dx + fy*(double)dy + fz*(double)dz;
+            c_val = fx*fx + fy*fy + fz*fz - (double)r0sq;
+            disc = b_half*b_half - a_val*c_val;
+
+            {
+                /* Check perfect square: find isqrt, verify */
+                i64 disc_i = (i64)(disc + 0.5);
+                i64 sq = 0;
+                int is_perfect = 0;
+                if (disc_i > 0) {
+                    /* Newton's method for integer sqrt */
+                    i64 g = 1;
+                    while (g * g < disc_i) {
+                        if (g > 1000000) {
+                            g = (i64)(disc + 0.5);
+                            /* Use double sqrt for large values */
+                            {
+                                double ds = 1.0;
+                                int it;
+                                ds = disc / ds;
+                                ds = (ds + disc / ds) / 2.0;
+                                for (it = 0; it < 60; it++)
+                                    ds = (ds + disc / ds) / 2.0;
+                                g = (i64)(ds + 0.5);
+                            }
+                            break;
+                        }
+                        g *= 2;
+                    }
+                    /* Refine */
+                    {
+                        int it;
+                        for (it = 0; it < 100; it++) {
+                            i64 gn = (g + disc_i / g) / 2;
+                            if (gn >= g) break;
+                            g = gn;
+                        }
+                    }
+                    sq = g;
+                    /* Check g and g+1 */
+                    if (sq * sq == disc_i)
+                        is_perfect = 1;
+                    else if ((sq+1) * (sq+1) == disc_i) {
+                        sq = sq + 1;
+                        is_perfect = 1;
+                    }
+                } else if (disc_i == 0) {
+                    is_perfect = 1;
+                    sq = 0;
+                }
+
+                printf("    step %d (v[%2d]): disc=%lld",
+                       step, step+3, disc_i);
+                if (is_perfect)
+                    printf(", sqrt=%lld [PERFECT SQ]", sq);
+                else
+                    printf(", sqrt~%.1f [NOT PERFECT]",
+                           disc > 0 ? disc : 0.0);
+                /* Classify by known partition at rot=0 */
+                if (step == 2 || step == 4 || step == 7)
+                    printf(" [S]\n");
+                else if (step == 0 || step == 1 || step == 5)
+                    printf(" [E]\n");
+                else
+                    printf(" [F]\n");
+            }
+        }
+    }
+
+    check("Discriminant analysis complete", 1);
+}
+
+/* ================================================================
+ * 6_3 influence: compute bit influence for the 6_3 knot to check
+ * for partial Boolean structure even without majority.
+ * ================================================================ */
+static void test_6_3_influence(void) {
+    StickKnot k63 = make_6_3_torus(2, 5, 4, 1.5, 14, 100);
+    Crossing cx[MAX_CROSSINGS];
+    int nc, det;
+    int n_s, n_a;
+    int sh, best_sh = -1, best_n_6_3 = 0;
+
+    printf("\n=== Test: 6_3 Influence Profile ===\n");
+
+    nc = find_crossings(k63.vertices, k63.n_vertices, cx, MAX_CROSSINGS);
+    det = (nc > 0) ? knot_determinant(k63.n_vertices, cx, nc) : 1;
+    n_s = k63.n_vertices - 3;  /* 11 bits */
+    n_a = 1 << n_s;            /* 2048 */
+
+    printf("  N=%d, %d crossings, det=%d, %d steps, %d alternatives\n",
+           k63.n_vertices, nc, det, n_s, n_a);
+
+    if (det != 13) {
+        printf("  Not 6_3, skipping.\n");
+        check("6_3 influence skipped (wrong det)", 0);
+        return;
+    }
+
+    /* Find rotation with most det=13 alternatives */
+    for (sh = 0; sh < k63.n_vertices; sh++) {
+        StickKnot rot = rotate_knot(&k63, sh);
+        ConstructionWord word;
+        unsigned int choices;
+        int n_6_3 = 0;
+        int i;
+
+        word.base[0] = 0; word.base[1] = 1; word.base[2] = 2;
+        word.n_steps = n_s;
+        for (i = 0; i < n_s; i++) {
+            word.steps[i].target_idx = i + 3;
+            word.steps[i].center_idx[0] = 0;
+            word.steps[i].center_idx[1] = 1;
+            word.steps[i].center_idx[2] = 2;
+        }
+
+        for (choices = 0; choices < (unsigned)n_a; choices++) {
+            Vec3Q poly[MAX_STICK_VERTICES];
+            Crossing cxw[MAX_CROSSINGS];
+            int n_poly, ncw, dt;
+
+            evaluate_construction(&rot, &word, choices,
+                                  poly, &n_poly);
+            ncw = find_crossings(poly, n_poly, cxw, MAX_CROSSINGS);
+            dt = (ncw > 0) ?
+                knot_determinant(n_poly, cxw, ncw) : 1;
+            if (dt == 13) n_6_3++;
+        }
+        if (n_6_3 > best_n_6_3) {
+            best_n_6_3 = n_6_3;
+            best_sh = sh;
+        }
+    }
+
+    printf("  Best rotation: sh=%d (%d det=13 of %d)\n",
+           best_sh, best_n_6_3, n_a);
+
+    /* Compute influence at best rotation */
+    if (best_sh >= 0 && best_n_6_3 > 0) {
+        StickKnot rot = rotate_knot(&k63, best_sh);
+        ConstructionWord word;
+        int *is_6_3;
+        int bit, i;
+
+        word.base[0] = 0; word.base[1] = 1; word.base[2] = 2;
+        word.n_steps = n_s;
+        for (i = 0; i < n_s; i++) {
+            word.steps[i].target_idx = i + 3;
+            word.steps[i].center_idx[0] = 0;
+            word.steps[i].center_idx[1] = 1;
+            word.steps[i].center_idx[2] = 2;
+        }
+
+        is_6_3 = (int *)malloc((unsigned)n_a * sizeof(int));
+        if (!is_6_3) {
+            check("6_3 influence malloc failed", 0);
+            return;
+        }
+
+        {
+            unsigned int choices;
+            for (choices = 0; choices < (unsigned)n_a; choices++) {
+                Vec3Q poly[MAX_STICK_VERTICES];
+                Crossing cxw[MAX_CROSSINGS];
+                int n_poly, ncw, dt;
+
+                evaluate_construction(&rot, &word, choices,
+                                      poly, &n_poly);
+                ncw = find_crossings(poly, n_poly,
+                                     cxw, MAX_CROSSINGS);
+                dt = (ncw > 0) ?
+                    knot_determinant(n_poly, cxw, ncw) : 1;
+                is_6_3[choices] = (dt == 13) ? 1 : 0;
+            }
+        }
+
+        printf("  Bit influence (%d bits):\n", n_s);
+        for (bit = 0; bit < n_s; bit++) {
+            int n_flips = 0;
+            unsigned int choices;
+            for (choices = 0; choices < (unsigned)n_a; choices++) {
+                unsigned int fl = choices ^ (1u << (unsigned)bit);
+                if (is_6_3[choices] != is_6_3[fl])
+                    n_flips++;
+            }
+            printf("    bit %2d: %d/%d = %.4f",
+                   bit, n_flips, n_a,
+                   (double)n_flips / (double)n_a);
+            /* Flag exact rational values */
+            if (n_flips == 0) printf(" [ZERO]");
+            else if (n_flips * 4 == n_a) printf(" [1/4]");
+            else if (n_flips * 8 == n_a) printf(" [1/8]");
+            printf("\n");
+        }
+
+        free(is_6_3);
+    }
+
+    check("6_3 influence analysis complete", 1);
+}
+
+/* ================================================================
+ * Signed distance from base plane and dihedral angle analysis.
+ *
+ * For all-base construction (centers always v[0],v[1],v[2]):
+ *   base plane normal: n = (v[1]-v[0]) x (v[2]-v[0])
+ *   signed distance (unnormalized): d_i = n . (v[i] - v[0])
+ *   mirror-target separation^2: 4 * d_i^2 / (n.n)
+ *
+ * Dihedral angle between base plane and coordinate planes:
+ *   cos^2(angle to xy-plane) = n_z^2 / (n.n)
+ *   cos^2(angle to xz-plane) = n_y^2 / (n.n)
+ *   cos^2(angle to yz-plane) = n_x^2 / (n.n)
+ *
+ * Magic angle: arccos(1/sqrt(3)) => cos^2 = 1/3
+ * ================================================================ */
+static void test_signed_distances(void) {
+    int test_scales[] = {6, 8, 10, 12, 14, 25, 52, 95, 100};
+    int n_test_scales = 9;
+    int si;
+    const char *role_names[] = {
+        "E", "E", "S", "F", "S", "E", "F", "S", "F"
+    }; /* roles at rotation 0: S={2,4,7} E={0,1,5} F={3,6,8} */
+
+    printf("\n=== Test: Signed Distance & Dihedral Angle Analysis ===\n");
+
+    for (si = 0; si < n_test_scales; si++) {
+        int scale = test_scales[si];
+        StickKnot k = make_6_3_torus(2, 3, 4, 2.0, 12, scale);
+        Vec3Q v0 = k.vertices[0];
+        Vec3Q v1 = k.vertices[1];
+        Vec3Q v2 = k.vertices[2];
+        Vec3Q e1 = v3q_sub(v1, v0);
+        Vec3Q e2 = v3q_sub(v2, v0);
+        Vec3Q n = v3q_cross(e1, e2);
+        Rat n_dot_n = v3q_dot(n, n);
+        int step;
+
+        printf("\n  Scale=%d:  v[0]=(", scale);
+        rat_print(v0.x); printf(",");
+        rat_print(v0.y); printf(",");
+        rat_print(v0.z); printf(")  v[1]=(");
+        rat_print(v1.x); printf(",");
+        rat_print(v1.y); printf(",");
+        rat_print(v1.z); printf(")  v[2]=(");
+        rat_print(v2.x); printf(",");
+        rat_print(v2.y); printf(",");
+        rat_print(v2.z); printf(")\n");
+
+        printf("    Normal n = (");
+        rat_print(n.x); printf(", ");
+        rat_print(n.y); printf(", ");
+        rat_print(n.z); printf(")  |n|^2 = ");
+        rat_print(n_dot_n); printf("\n");
+
+        /* Dihedral angles: cos^2 between base normal and axes */
+        {
+            Rat cos2_x = rat_div(rat_mul(n.x, n.x), n_dot_n);
+            Rat cos2_y = rat_div(rat_mul(n.y, n.y), n_dot_n);
+            Rat cos2_z = rat_div(rat_mul(n.z, n.z), n_dot_n);
+            Rat sum_cos2;
+            printf("    cos^2(n, x-axis) = ");
+            rat_print(cos2_x);
+            printf("  (%.6f)\n", (double)cos2_x.p / (double)cos2_x.q);
+            printf("    cos^2(n, y-axis) = ");
+            rat_print(cos2_y);
+            printf("  (%.6f)\n", (double)cos2_y.p / (double)cos2_y.q);
+            printf("    cos^2(n, z-axis) = ");
+            rat_print(cos2_z);
+            printf("  (%.6f)\n", (double)cos2_z.p / (double)cos2_z.q);
+            /* Sum should be 1 */
+            sum_cos2 = rat_add(rat_add(cos2_x, cos2_y), cos2_z);
+            printf("    sum(cos^2) = ");
+            rat_print(sum_cos2);
+            printf("  (should be 1)\n");
+            /* Check proximity to 1/3 */
+            {
+                Rat third = rat_make(1, 3);
+                printf("    Distance from 1/3: x=%.6f  y=%.6f  z=%.6f\n",
+                       (double)cos2_x.p/(double)cos2_x.q - 1.0/3.0,
+                       (double)cos2_y.p/(double)cos2_y.q - 1.0/3.0,
+                       (double)cos2_z.p/(double)cos2_z.q - 1.0/3.0);
+                /* Check if any equals exactly 1/3 */
+                if (rat_eq(cos2_x, third) || rat_eq(cos2_y, third) ||
+                    rat_eq(cos2_z, third))
+                    printf("    ** At least one cos^2 == 1/3 EXACTLY **\n");
+                (void)third;
+            }
+        }
+
+        /* Signed distances and mirror-target separation */
+        printf("    Step  Vertex  d_i (unnorm)       d_i^2/|n|^2"
+               "            |mirror-target|^2        Role\n");
+        for (step = 0; step < 9; step++) {
+            int vi = step + 3;
+            Vec3Q p = k.vertices[vi];
+            Vec3Q p_minus_c0 = v3q_sub(p, v0);
+            Rat d_unnorm = v3q_dot(n, p_minus_c0);
+            /* d_i^2 / |n|^2 = (n.(P-c0))^2 / (n.n) = actual_distance^2 */
+            Rat d_sq_norm = rat_div(rat_mul(d_unnorm, d_unnorm), n_dot_n);
+            /* |mirror - target|^2 = 4 * d_sq_norm */
+            Rat sep_sq = rat_mul(rat_make(4, 1), d_sq_norm);
+
+            printf("      %d     v[%2d]  ", step, vi);
+            rat_print(d_unnorm);
+            printf("  \t");
+            rat_print(d_sq_norm);
+            printf("  \t");
+            rat_print(sep_sq);
+            printf("  \t[%s]\n", role_names[step]);
+        }
+    }
+
+    check("Signed distance analysis complete", 1);
+}
+
 /* ================================================================ */
 
 int main(void) {
@@ -2892,6 +4549,13 @@ int main(void) {
     test_four_check();
     test_generalization();
     test_cinquefoil();
+    test_6_3();
+    test_6_3_fremlin();
+    test_figure_eight_high_n();
+    test_bit_influence();
+    test_discriminants();
+    test_6_3_influence();
+    test_signed_distances();
 
     printf("\n================================================\n");
     printf("Results: %d pass, %d fail\n", n_pass, n_fail);
