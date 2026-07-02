@@ -266,9 +266,14 @@ own right, tiered by harvest cost:
   directory (78/78 green at adoption, Phase 2). At Phase 5 the same corpus
   becomes the tree-level roundtrip bar.
 - **Tier 2 — behavior suites, inputs harvested + assertions rewritten:**
-  v1 praeparator (124 assertions — already committed in the compatibility
-  bar per the brainstorm) and v1 syntaxis (234 assertions — harvest the C
-  snippets at Phase 4, re-assert against silva genera).
+  v1 praeparator (124 assertions) — **CLOSED BY COVERAGE** (audit
+  2026-07-02, phase-log "Audit" section): every semantic domain maps to a
+  more thorough silva suite (conditionales→regiones, if_expressions→
+  conditio, #/##→pasta+compat, expansion→generatio+compat, includes→
+  praebere semantics); Phase 7 integration owes a spot-check pass over
+  the v1 file for input strings the mapping may have missed. v1 syntaxis
+  (234 assertions — harvest the C snippets at Phase 4, re-assert against
+  silva genera).
 - **Tier 3 — post-1.0 milestone acceptance bars:** v1 quaestio (100
   assertions; the only selector-engine corpus in existence — note v1 uses
   ENGLISH tags, silva uses Latin, so carrying needs a tag-mapping pass),

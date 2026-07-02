@@ -130,6 +130,29 @@ s32 principale (vacuum)
         token = _ad(exitus, II);
         CREDO_CHORDA_AEQUALIS_LITERIS (token->valor, "x");
         CREDO_AEQUALIS_I32 ((i32)_ad(exitus, III)->genus, (i32)SILVA_LEX_SEMICOLON);
+
+        /* ORDO-SENSITIVITAS (debitum Chunk C): operanda multi-lexematum.
+         * MT(a b, c d) -> a b##c d -> a bc d: lexemata circumdantia
+         * involvuntur ex_expansione, lexema pasta transmittitur - ordo
+         * emissionis et provenientia AMBO probantur */
+        exitus = _expandere_fontem(piscina,
+            "#define MT(x, y) x ## y\nn = MT(a b, c d);");
+        /* n = a bc d ; EOF */
+        token = _ad(exitus, II);
+        CREDO_CHORDA_AEQUALIS_LITERIS (token->valor, "a");
+        CREDO_AEQUALIS_I32 ((i32)token->origo.genus, (i32)SILVA_ORIGO_EXPANSIO);
+        token = _ad(exitus, III);
+        CREDO_CHORDA_AEQUALIS_LITERIS (token->valor, "bc");
+        CREDO_AEQUALIS_I32 ((i32)token->origo.genus, (i32)SILVA_ORIGO_PASTA);
+        CREDO_CHORDA_AEQUALIS_LITERIS (
+            token->origo.datum.pasta.sinister->valor, "b");
+        CREDO_CHORDA_AEQUALIS_LITERIS (
+            token->origo.datum.pasta.dexter->valor, "c");
+        token = _ad(exitus, IV);
+        CREDO_CHORDA_AEQUALIS_LITERIS (token->valor, "d");
+        CREDO_AEQUALIS_I32 ((i32)token->origo.genus, (i32)SILVA_ORIGO_EXPANSIO);
+        CREDO_AEQUALIS_I32 ((i32)_ad(exitus, V)->genus,
+            (i32)SILVA_LEX_SEMICOLON);
     }
 
 

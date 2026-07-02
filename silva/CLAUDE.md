@@ -41,9 +41,23 @@ Before compaction: append a phase-log addendum with anything in-flight.
 When narrowing scope: log it in the phase-log with the deferred use case
 NAMED and the path back preserved (see VISIO last pin).
 
-Build/test: `./silva/compile_probationes.sh [filter]`. Conventions: root
-CLAUDE.md + the conventions recorded in phase-log complexities (i32 is
-UNSIGNED, never `nomen` as identifier, chorda not null-terminated, etc.).
+**At every PHASE boundary (not chunk): re-read the WHOLE phase-log and
+audit it** — every complexity either resolved or parked WITH A NAMED
+LANDING SPOT (a phase that owns it). The tail-read catches state; only
+the full re-read catches drift between documents (the 2026-07-02 audit
+found four such drifts — sketch-vs-spec, entry-vs-follow-through — and
+zero code bugs; that is the class this practice exists for). Phase-log
+sections are APPENDED, never inserted (chronology is the re-entry
+reader's map).
+
+Build/test: `./silva/compile_probationes.sh [filter]`. Tables:
+`./silva/generare.sh` regenerates fontes/silva_tabulae_*.{h,c} from
+grammatica/*.stml — run it after ANY grammar edit (probatio_silva_tabulae
+breaks loudly if you forget; generated files are committed). Dev-time
+mains live in instrumenta/principalia/ (outside the test link glob).
+Conventions: root CLAUDE.md + the conventions recorded in phase-log
+complexities (i32 is UNSIGNED — s32/s64 for anything signed; never
+`nomen` as identifier; chorda not null-terminated, etc.).
 
 ## VISIO — what silva is FOR
 
