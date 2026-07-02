@@ -864,7 +864,9 @@ _includendum_processare (
     }
 
     /* Inclusionem memorare (graphum dependentiarum - "discens").
-     * NB: campi ANTE recursionem scribendi - xar crescens loco movetur. */
+     * NB: monstratores elementorum Xar stabiles sunt trans additiones
+     * (segmenta fixa, sine reallocatio - vide xar.c); ordo
+     * scribendi-ante-recursionem est claritas, non necessitas. */
     inclusio = (SilvaInclusio*)xar_addere(exp->inclusiones);
     si (inclusio == NIHIL)
     {

@@ -3,7 +3,7 @@
 # silva/generare.sh - Tabulas generare et coquere (dev-time)
 #
 # Usage:
-#   ./generare.sh                 # sceletum (default)
+#   ./generare.sh                 # OMNES grammaticae commissae
 #   ./generare.sh <grammatica.stml> <PRAEFIXUM> <basis_exitus>
 #
 # Compiles the generator (instrumenta + principalia/generator.c) and
@@ -19,9 +19,6 @@ mkdir -p "$BUILD_DIR"
 
 # Viae relativae ad silva/ - commentum GENERATUM viam stabilem fert
 cd "$SILVA_DIR"
-GRAMMATICA="${1:-grammatica/sceletum.stml}"
-PRAEFIXUM="${2:-SILVA_SCELETUM}"
-BASIS="${3:-fontes/silva_tabulae_sceleti}"
 
 declare -a GCC_FLAGS=(
     "-std=c89" "-pedantic" "-Wall" "-Wextra" "-Werror"
@@ -65,4 +62,13 @@ clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" \
     "$SILVA_DIR/instrumenta/principalia/generator.c" $obj_files \
     -o "$BUILD_DIR/generator" || exit 1
 
-"$BUILD_DIR/generator" "$GRAMMATICA" "$PRAEFIXUM" "$BASIS"
+if [ $# -ge 1 ]; then
+    "$BUILD_DIR/generator" "${1}" "${2:?PRAEFIXUM deest}" "${3:?BASIS deest}"
+else
+    # Sine argumentis: OMNES grammaticae commissae regenerantur
+    # (post QUAMLIBET mutationem grammaticae - silva/CLAUDE.md)
+    "$BUILD_DIR/generator" grammatica/sceletum.stml \
+        SILVA_SCELETUM fontes/silva_tabulae_sceleti || exit 1
+    "$BUILD_DIR/generator" grammatica/sceletum_imparilis.stml \
+        SILVA_IMPARILIS fontes/silva_tabulae_imparilis || exit 1
+fi

@@ -950,3 +950,586 @@ complexities had all been addressed. Full re-read of this log; findings:
 Verdict: nothing rotting. Two commitments were drifting toward "later"
 that the spec said were "now" (fuzzing, the pasta test) — both closed.
 Three parked items had no owner — all three now do.
+
+
+## Phase 4 — GLR runtime
+
+### INTENTIO (2026-07-02)
+
+**What**: fontes/silva_glr.{h,c} — the parse engine per spec-v2 §3.1:
+lapifex_glr's skeleton (GSS + path enumeration + worklist) + arbor2's
+control refinements (two-pass per token, reducenda drain, shift-frontier
+merge) + tagged SilvaValor + ported merge with REAL structural equality
++ accept-reconciliation + oracle + post-accept passes. Proves: S21/S26/
+S27 and the §9 contracts under fire — the fork cell baked in state 7
+finally fires at runtime.
+
+**Sources read end-to-end before this entry** (per protocol):
+lapifex_glr.c (716 lines, whole), arbor2_glr.c merge machinery
+(_nodi_aequales :1094, _mergere_compatibiles :1185, accept ladder
+:7604-7665, reducenda drain :7514-7690), spec-v2 §3.1/§8.2/§9,
+silva_tabulae.h contract + generated sceletum pair + silva_nodus.h.
+
+**Design decisions carried in from the reads:**
+1. **Runtime is table-agnostic**: silva_glr takes SilvaTabulaCocta* +
+   a constructor callback matching silva_sceletum_construere's
+   signature. One dispatch, called from both passes (§9.4).
+2. **SilvaValor replaces s64** at the six mechanical sites (via.valori,
+   node valor, path temp, callback signature, shift value, fructus);
+   the ONE decision site is the merge, where value comparison becomes
+   structural equality + resolution policy.
+3. **Fusion policy — arbor2's, with the lapifex hazard named**: lapifex
+   fuses during the reduce pass and dedups worklist (node, production)
+   pairs; a fusion that adds a predecessor to an ALREADY-PROCESSED node
+   is blocked by the dedup from re-enumerating the new path — a
+   missed-re-reduction hazard (classic Tomita re-reduction problem).
+   arbor2 never fuses in-reduce (fresh GSS node per reduction path, all
+   drain through reducenda) and packs ONCE per token at the shift
+   frontier (_mergere_compatibiles). Silva adopts arbor2's policy
+   (§3.1 already chose it); cost = transient duplicate frontier nodes,
+   bounded for the skeleton; Tomita reduction-time packing stays the
+   documented escalation path.
+4. **Structural equality upgrade**: arbor2's _nodi_aequales is shallow
+   + one TERNARIUS special case. Silva's uniform node model makes REAL
+   structural equality generic: recursive walk over genus + loci tagged
+   values; TOKEN slots compare by POINTER identity (identical parses of
+   the same stream share token pointers; value equality would wrongly
+   merge distinct source positions). No per-genus cases.
+5. **Accept ladder ported minus grammar hacks**: multiple accepts →
+   structurally equal = pick first; different = resolutor then AMBIGUUS.
+   arbor2's nested-TERNARIUS preference does NOT port (grammar-specific
+   patch; the maximalist answer is AMBIGUUS retention). arbor2's
+   IDENTIFICATOR-only filter (incomplete parse) generalizes if needed;
+   the sceletum grammar should not produce incomplete accepts.
+6. **Merge never decides semantics alone — resolutor callback**: at the
+   decision site (merge + accept ladder), a caller-supplied resolutor
+   (given both values + the oraculum) returns A/B/unknown. Known →
+   prune to winner, NO AMBIGUUS node (C's typedef "ambiguity" is symbol
+   table, not grammar — a known answer collapses the fork). Unknown →
+   AMBIGUUS node (registry genus: interpretationes lista + canonica
+   INDEX) + registration in the fructus's ambigui list with the
+   discriminating identifier. Runtime stays grammar-agnostic; the
+   sceletum resolutor is hand-written for M1 (generator emission of
+   resolutor scaffolding is post-M1, named path back).
+7. **Post-accept passes (S26/S27)**: constructions stay pure; after
+   accept, per top-level slice: (a) pater fixup walk — canonical spine
+   only; off-spine AMBIGUUS interpretations keep pater NIHIL; (b)
+   oracle registration (M1: API-fed only — the sceletum grammar has no
+   typedef keyword; grammar-driven registration lands with the C89
+   grammar, named). Re-canonicalization API: oraculum injection → walk
+   registered ambigui → flip canonica IN PLACE + re-run LOCAL pater
+   fixup — no reparse (§8.2).
+8. **EOF↔$ adaptator seam confirmed in the baked tables**: EOF is a
+   real shifted terminal (augmented production transposes it); ACCIPERE
+   fires on $ = -1. Adaptator maps the stream's EOF token → terminal
+   index by genus; past-end → -1.
+9. **Load-time validation**: GOTO completeness pass (missing GOTO =
+   infinite loop, not clean failure — arbor2 worklog:284,1938), RHS
+   length vs cap, RECUPERARE actions fail loud until implemented.
+   Caps (max frons, pop depth) are struct fields, not #defines —
+   conscious revisit of arbor2's MAX_GSS_PATHS=64/MAX_POP_DEPTH=16.
+
+**Chunks:**
+- **A — Tables + adaptator + GSS core (unambiguous path).** Lookup over
+  baked slices, load validation, adaptator, GSS with SilvaValor,
+  two-pass + reducenda drain, constructor callback, single accept,
+  error report (positio/terminalis/status). Tests: `int x ;`,
+  `x + 1 ;`, statement lists, clean parse errors.
+- **B — Fork + structural equality + frontier merge + accept ladder.**
+  silva_nodus_aequales, _mergere_compatibiles port, AMBIGUUS creation,
+  fork/fusion/max-frons stats. Tests: `foo * bar ;` → exactly ONE
+  AMBIGUUS, localized at sententia level (not root), both
+  interpretations verified through generated accessors, deterministic
+  canonica; unambiguous inputs → zero AMBIGUUS.
+- **C — Oraculum + resolutor + post-accept.** SilvaOraculum (typedef
+  names), resolutor at merge/accept, pater fixup, ambigui registry,
+  re-canonicalization API. Tests: known typedef → no AMBIGUUS; unknown
+  → AMBIGUUS → inject → canonica flips in place (same node pointers),
+  pater NIHIL during construction / correct after fixup / NIHIL
+  off-spine.
+- **D — Driver + recovery + robustness + mensura.** silva_parsare
+  (lexare→directivas→expandere_reliqua→adaptator→GLR→post-accept),
+  boundary-resync recovery (discard to ;/} → ERROR node with skipped
+  tokens, resume), incolumitas extended through the FULL pipeline to
+  trees, mensura gains parse timing + max-frons, v1 syntaxis input
+  harvest (audit landing spot): skeleton-expressible inputs become
+  fixtures now, the rest recorded for the C89-grammar milestone.
+
+**Explicitly NOT Phase 4** (named, with owners): emission (Phase 5);
+CONDITIONALIS region nodes threading into parse trees (Phase 7 §11.2);
+per-declaration slicing driver (enters with the C89 grammar — the core
+API takes token slices so the path is open); cost-driven RECUPERARE
+recovery (post-substrate, §8.2 — table format already carries pretium).
+
+**Exit criteria**: suite green including new probationes (glr,
+ambiguitas, oraculum, driver/recovery); the fork case end-to-end
+(parse → localized AMBIGUUS → inject typedef → re-canonicalize in
+place, verified by pointer identity); fuzz through the full pipeline
+never crashes; parse timings visible in mensura.
+
+
+## Correctio — Xar pointer stability (2026-07-02)
+
+The Phase 2 Chunk D complexity entry "Xar growth invalidates held slot
+pointers across recursion" is FALSE — Fran asked whether it came from
+reading xar.c or from assumption; verification against xar.c shows it
+was assumption (imported realloc-style dynamic-array intuition; the
+entry's own "would corrupt silently" reveals it was never observed).
+
+The truth: Xar is a SEGMENTED array — "Tabula crescens sine
+reallocatio" is the first line of xar.c. Growth allocates a fresh
+segment into a fixed pointer table inside the struct; existing elements
+NEVER move; no realloc/memmove/free exists in the file. Element
+pointers from xar_obtinere/xar_addere are stable across any number of
+appends — that stability IS the design.
+
+What actually disturbs held pointers: xar_removere_cum_ultimo
+(swap-remove copies last element over the removed slot), xar_mutare /
+xar_invertere / xar_ordinare (move bytes between slots), and
+xar_vacare / xar_truncare (slot logically dead, reused by later
+appends). Appends: safe.
+
+Corrected in all three places the lore propagated: this log (this
+entry), silva_expandere.c:866 comment (the write-before-recursion
+order there is clarity, not necessity), memory file. Relevance to
+Phase 4: GSS predecessor Xars are appended during reduction recursion
+— pointer stability across appends can be relied on; no index-based
+defensive contortions needed.
+
+Meta-lesson (same class as the phase-boundary audit): claims about a
+library's semantics recorded in a complexity entry must come from its
+SOURCE, not from what such a library usually does. When a recorded
+rule constrains how code gets written, verify it once against the
+implementation before it hardens into convention.
+
+### Chunk A — COMPLETE (2026-07-02)
+
+probatio_silva_glr 71/71 first run (suite 18/18). The baked sceletum
+tables drive real parses: fontes/silva_glr.{h,c} — table-agnostic
+engine (SilvaTabulaCocta* + constructor callback), GSS with SilvaValor,
+FIFO reducenda drain, per-state-slice action/goto lookup, load-time
+validation (bounds, slice sortedness, goto-for-every-reducible-LHS —
+the arbor2 "missing GOTO = infinite loop" class caught at creare),
+adaptator (genus→terminal; past-end → $ = -1; unknown genus → -2 clean
+error). Engine is reentrant: frontier lives in parsare locals; the
+struct holds only tabula/constructor/piscina/stats. Two-piscina API
+shape baked in now (GSS in engine piscina, trees in caller-passed
+piscina_arborum) per §3.1 — same piscina twice works fine. The accept
+node's shifted EOF token is preserved in fructus.lexema_finis (its
+trivia is file-tail bytes Phase 5 must emit). Tests: empty stream
+(epsilon list), declaratio, monstrator, precedence structure via
+tables (x + 1 * 2), parentheses, multi-statement lists, three clean
+errors (positio+terminale), post-error reentrancy, S27 pater NIHIL.
+
+**Complexity — list-append purity vs forks (RESHAPES CHUNK B):**
+- discovered-while: tracing `foo * bar ;` through the baked tables to
+  design the drain order.
+- consists-in: the generated lista-appendere (P1) MUTATES its incoming
+  lista (xar_addere into the shared Xar) and returns it. A fork that
+  crosses a list-append shares the pre-fork lista via the common GSS
+  predecessor: BOTH arms would append (flat double-append; the two
+  state-1 results are then pointer-equal and would falsely fuse). S26
+  purity is violated in spirit by the generated append. arbor2 never
+  hit this: its GLR grammar had NO in-grammar list — the per-declaration
+  slicing DRIVER built lists outside the parser, so ambiguity
+  reconverged only at the accept ladder. The sceletum deliberately put
+  the list in-grammar; §3.1's "shift-frontier packing only" is therefore
+  INSUFFICIENT FOR CORRECTNESS here, not merely a memory trade-off: the
+  fork must collapse into ONE AMBIGUUS value BEFORE the list-append
+  reduction consumes it.
+- consequences: Chunk B needs reduction-time packing of reduce-created
+  nodes (same state, same wave), in addition to the shift-frontier
+  merge. The FIFO drain (Chunk A, already in) makes waves
+  breadth-first: for the sceletum fork both sententia-level nodes
+  (state 2) are created in the same wave BEFORE either drains — arm A
+  reduces P4→P2, arm B P9→P3, equal depth 2 (verified by table trace) —
+  so same-wave packing suffices. LIMITATION: unequal-depth
+  reconvergence would find the earlier node already drained, its value
+  already consumed downstream BY VALUE COPY (SilvaValor is copied into
+  loci/listae; mutation-in-place does not propagate — unlike SPPF
+  pointer-packing, where late alternatives ride the shared pointer).
+- handled-by: Chunk A ships the wave-aligned FIFO drain. Chunk B
+  implements same-wave packing + a FAIL-LOUD guard for the
+  already-drained case (diagnostic naming the state), with the upgrade
+  options recorded: SPPF-style in-place node metamorphosis (clone old
+  content as interpretation[0], rewrite the allocation as AMBIGUUS —
+  pointer identity propagates) or Farshi re-reduction. Decide if/when
+  the C89 grammar produces a real unequal-depth case (typedef
+  ambiguity is statement-local; none expected in M1).
+
+### Simulation ⑤ + interview — plan revision between Chunks A and B (2026-07-02)
+
+Fran asked whether the metamorphosis/Farshi escalation could be
+pretend-implemented to see if its downsides dissolve. Simulation ⑤
+(project-specs/silva-simulatio-5.md) + 8-question interview
+(silva-simulatio-5-interview.md) → resolutions in spec-v2 §12. Net:
+**metamorphosis (transmutatio) moves from evidence-gated escalation into
+Chunk B proper.** The three downsides dissolved under concrete design:
+S32 breach → build-through-checked-constructors then ONE struct copy
+(no check bypassed); retroactivity → ordering rule (structural equality
+only at pack-time-per-key + post-drain frontier merge; transmutation
+window = one drain); testing → one committed variant grammar with an
+extra unit production (unequal-depth arms).
+
+Revised Phase 4 sequence (supersedes the INTENTIO chunk list):
+- **A½ — length-view lists** (correctness floor): SilvaValor LISTA arm
+  becomes {Xar*, mensura}; copy-on-divergence append helper; commit
+  normalization owed to the Chunk C walk. Chorda-pattern for values.
+- **B — merge machinery**: structural equality + frontier merge +
+  same-wave packing + transmutatio + index reducendorum keyed
+  (status, basis) + fabrica ambigui callbacks + counters AS FRUCTUS
+  FIELDS (fusiones/transmutationes/eventa_marginis_novi) +
+  accessing-symbol-uniqueness validation + variant grammar probatio.
+- **C — commit walk (SIMPLIFIED)**: pater fixup + list normalization +
+  oracle resolution with COLLAPSE+JOURNAL (clean winner in tree,
+  resolution event recorded in fructus) + re-canonicalization API.
+  Resolutor-at-merge deleted from the plan; drains are semantics-free.
+- **D — unchanged** (driver, recovery, incolumitas through pipeline,
+  mensura, v1 syntaxis harvest).
+
+New contracts (spec-v2 §12.2, one-liner in silva/CLAUDE.md VISIO):
+node contents always via ponere; identity re-bindable until commit;
+structural genera generator-REQUIRED. Evidence-gated (named, unbuilt):
+action-filter pruning hook (known-typedef 2× fork cost, mensura-gated);
+identity-handle refactor (if eventa_marginis_novi fire on real code).
+
+### Chunk A½ — COMPLETE (2026-07-02): length-view lists
+
+Suite 18/18 (probatio_silva_constructio 58/58 with the new
+prospectus-listarum section, 14 assertions). The list value contract is
+now speculation-safe per spec-v2 §12.1:
+
+- **SilvaListaProspectus** {Xar* xar, i32 mensura} replaces the bare
+  Xar* in the SilvaValor LISTA arm — the chorda pattern for value
+  arrays. Nobody reads xar_numerus on a list value anymore; the view's
+  mensura is the truth (silva_valor_lista_numerus / _obtinere are the
+  only sanctioned readers, obtinere bounds-checks against the VIEW).
+- **silva_valor_lista_appendere** — the pure append, ONE
+  implementation: view at the repositorium's live end → in-place O(1)
+  (common case); repositorium already written past my view (another
+  fork appended) → copy my prefix to a fresh Xar (copy-on-divergence;
+  the Xar's own count is a free version counter). Returns a NEW view;
+  foreign views are never disturbed. silva_nodus_appendere rebinds the
+  slot through it (nodes under construction are single-owner).
+- **Emitter (silva_coquere)**: both list emission shapes
+  (lista-initium, lista-appendere) now emit calls to the pure helper —
+  generated construere no longer touches Xar internals at all.
+  Regenerated committed tables; drift guard green.
+- **Tests**: fast-path pointer identity (same xar, mensura grows, base
+  view unmoved), genuine divergence (two forks appending from one base
+  view → distinct repositoria, shared prefix by pointer, distinct
+  tails), view bounds (NIHIL beyond mensura even when the repositorium
+  is longer), non-lista inputs → nihil/zephyrum/NIHIL.
+
+Owed onward (named): commit normalization (exact-length copy iff view
+!= repositorium count) rides the Chunk C commit walk; probationes and
+engine code MUST use the view readers (recorded in silva_nodus.h — the
+"numquam xar_numerus in repositorio" rule).
+
+The double-append corruption from the Chunk A complexity is now
+unrepresentable: each fork's P1 gets its own view; shared prefixes are
+structural, tails private, by construction.
+
+### Chunk B — INTENTIO (2026-07-02)
+
+Merge machinery per spec-v2 §12: the fork finally packs. Pieces, in
+build order:
+1. **Generator**: structural genera (ambiguus/error/conditionalis)
+   REQUIRED in genera-extra (generation error if absent); coquere emits
+   `silva_PREFIX_ambiguum_fabricare(piscina, interpretationes,
+   canonica)` — the ONE fabrica callback (engine-side bookkeeping
+   replaces ambiguo_addere: the engine tracks its own packed entries'
+   interpretationes views, rebuilds via fabrica, struct-copies).
+2. **Variant grammar** grammatica/sceletum_imparilis.stml (committed,
+   drift-guarded): sceletum + `mandatum` unit rule on the expression
+   arm → reconvergence depths 2 vs 3 → guaranteed same-wave miss →
+   transmutatio exercised.
+3. **Engine**: _valores_aequales (generic recursion: NODUS genus+loci,
+   TOKEN pointer identity, LISTA mensura+elements via views, INDEX);
+   index reducendorum keyed (status, basis) with exhaustus/est_ambiguum
+   flags + engine-held interpretationes view; reduce dispatch: miss →
+   create+register; hit undrained → equal ? fusio : valor-rebind wrap
+   (no identity trick needed pre-drain); hit drained → equal ? fusio :
+   TRANSMUTATIO (clone shares old loci array — original's loci pointer
+   is replaced, so plain struct copy suffices; fabrica node struct-
+   copied onto the stable allocation); drained non-NODUS target →
+   cannot transmute → separate arm + counter (graceful). Frontier
+   merge: state-keyed predecessor union (silva shift values are the
+   SAME token pointer, so frontier value-wrap never occurs — unlike
+   arbor2, whose shift nodes carried leaf AST values). Accept ladder:
+   dedup equal predecessor values, wrap genuinely different roots via
+   fabrica (defensively implemented; both grammars resolve pre-EOF, so
+   multi-accept stays untestable here — noted). Accessing-symbol
+   uniqueness in validare (needs scratch → validare gains Piscina*
+   param; API is one day old, cheap to amend).
+4. **Counters as product** (fructus fields): fusiones, transmutationes,
+   eventa_marginis_novi, frons_maxima.
+5. **probatio_silva_ambiguitas.c**: sceletum `foo * bar;` → ONE
+   localized AMBIGUUS (lista NOT ambiguous), 2 interpretationes both
+   accessor-verified, canonica 0, fusiones>0, transmutationes==0;
+   imparilis same input → SAME tree shape but transmutationes==1 (the
+   stored element pointer now shows genus ambiguus = the identity
+   proof); multi-statement localization; unambiguous inputs → zero
+   counters, zero AMBIGUUS.
+
+Known-untested paths (named): three-arm ambiguo-append (no 3-way
+ambiguity in either grammar — first C89 grammar case owns it);
+multi-accept ladder (unreachable in both grammars).
+
+### Chunk B — COMPLETE (2026-07-02)
+
+probatio_silva_ambiguitas 60/60 first run; suite 19/19, 912
+assertions. **The state-7 fork cell fires and packs**: `foo * bar;`
+parses to ONE localized AMBIGUUS statement (root list ordinary, both
+interpretations accessor-verified, canonica 0) — and on the imparilis
+grammar the same input exercises TRANSMUTATIO (transmutationes == 1;
+the list element pointer stored by the append now SHOWS genus
+ambiguus — the identity proof is the assertion itself).
+
+What landed:
+- **Generator**: structural genera REQUIRED (generation error +
+  ambiguus shape check: interpretationes:lista-* + canonica:index);
+  coquere emits silva_PREFIX_ambiguum_fabricare reading the layout
+  from the registry (loci by NAME, not fixed position).
+- **grammatica/sceletum_imparilis.stml** committed + generated tables
+  (20 symbols, 19 productions, 28 states, SAME 1 preserved conflict);
+  generare.sh with no args now regenerates ALL committed grammars.
+- **Engine** (silva_glr.c): _valores_aequales / _nodi_aequales
+  (generic recursion; TOKEN by pointer identity; LISTA via views with
+  same-repositorium fast path); index reducendorum (per-drain, keyed
+  status+basis, entries by value in Xar — stable pointers); reduce
+  dispatch: miss → create+register (same-status-other-basis counted
+  eventa_marginis_novi); hit+equal → fusio (duplicate derivation
+  discarded); hit+undrained → _compingere (GSS valor rebind, no
+  identity needed); hit+drained+NODUS → _transmutare
+  (clone-shares-old-loci + fabrica through checked constructors + ONE
+  struct copy onto the stable allocation); hit+drained+non-NODUS →
+  separate arm + transmutationes_negatae (graceful, shadowed entry).
+  Frontier merge = predecessor union only (silva shift values are the
+  same token pointer — validated accessing-symbol uniqueness makes
+  value comparison unnecessary there). Accept ladder: collect all
+  predecessor roots, dedup structurally, wrap genuine divergence via
+  fabrica (defensive — unreachable in both grammars, noted).
+- **Validation**: accessing-symbol uniqueness assertion (per state,
+  incoming shift+goto symbols must agree — simulatio ⑤ C3, theory
+  property checked from the baked rows); validare gains Piscina*.
+- **Counters as product**: fusiones, transmutationes,
+  transmutationes_negatae, eventa_marginis_novi, frons_maxima in
+  SilvaGLRFructus; zero on unambiguous inputs (asserted).
+
+Complexities: NONE new — the simulation ⑤ design survived contact
+intact (first-compile clean under full -Werror except signature-
+migration errors the diagnostics enumerated). The ordering rule is
+embodied structurally: structural equality runs only at pack-per-key
+and accept dedup; frontier merge never reads values; the
+transmutation window is the per-drain index lifetime.
+
+Untested paths carried (named, from INTENTIO): three-arm
+ambiguo-append (first 3-way-ambiguous grammar owns it); multi-accept
+root AMBIGUUS wrap (unreachable in both grammars); C89-grammar
+transmutation shapes (the variant grammar is the regression net until
+then).
+
+### Chunk C — INTENTIO (2026-07-02)
+
+The commit walk (spec-v2 §12, simplified by interview ⑤): ALL
+semantics consolidate here; drains stay semantics-free. New module
+fontes/silva_commissio.{h,c} (oraculum inside — split later if it
+grows; interface survives a split).
+
+- **SilvaOraculum**: typedef-name table (tabula_dispersa_chorda);
+  typum_addere duplicates the key into its piscina (token valor is a
+  VIEW into source — the fons->via lifetime lesson applied). Binary
+  for M1 (novit/ignotum); three-valued oracle (known-NOT-a-type) is
+  named for the C89 grammar.
+- **SilvaResolutor** (callback, grammar-specific, hand-written for M1
+  per interview): given an AMBIGUUS node + oraculum, fills
+  {victor index | -1, discriminating token}. Engine/walk stay
+  grammar-agnostic; the walk finds the ambiguus FORM (genus index +
+  interpretationes/canonica loci) from the baked registrum BY NAME.
+- **silva_committere(piscina, radix, registrum, oraculum, resolutor,
+  contextus) → SilvaCommissio{radix, ambigui, resolutiones}**, one
+  recursive pass:
+  (a) pater fixup — child->pater set on descent; at surviving
+  AMBIGUUS: internals of ALL interpretations threaded (queries descend
+  alternatives), interpretation ROOTS marked by spine: canonical
+  pater=ambiguum, others NIHIL; canonical walked LAST so on any shared
+  subtree the spine parent wins (named limitation: pater on genuinely
+  shared subtrees is single-owner by walk order — C89-grammar
+  revisit).
+  (b) A½ list normalization — view != repositorium count → exact-
+  length copy, slot rebound (the commit walk is the sanctioned
+  mutation point).
+  (c) oracle resolution COLLAPSE+JOURNAL — resolutor knows → winner
+  struct-copied ONTO the ambiguus allocation (identity discipline —
+  observers' pointers stay valid), resolution event journaled {sedes,
+  victor, genus, discriminans token (its origo = queryable position)},
+  then walked as a normal node. Winner non-NODUS → fail loud, keep
+  wrapper (root-lista interpretations unreachable in M1, named).
+- **silva_recanonicare(commissio, oraculum, resolutor, contextus)**:
+  post-commit learning does NOT collapse (trees immutable after commit
+  except this sanctioned op — CLAUDE.md pin): canonica INDEX flipped
+  in place + LOCAL pater re-thread (old spine root → NIHIL, new →
+  ambiguum), event journaled. Returns count flipped.
+- **probatio_silva_commissio.c**: pater chains (incl. both
+  interpretations' internals + spine roots); hand-built diverged view
+  normalized; collapse pointer-identity (the pre-commit ambiguus
+  allocation shows DECLARATIO genus post-commit); journal content
+  (discriminans "foo"); survive-then-recanonicare (flip 0→1 via test
+  resolutor, pater re-threaded both directions); imparilis
+  transmutation + collapse composition; no-oracle commit keeps
+  AMBIGUUS with canonica 0.
+
+Exit: suite green; the full §12 story runs end-to-end: parse → fork →
+pack/transmute → commit → collapse-or-survive → inject → recanonicare
+IN PLACE.
+
+### Chunk C — COMPLETE (2026-07-02)
+
+probatio_silva_commissio 60/60 (suite 20/20, 972 assertions; one
+signedness fix, otherwise first-run). **The full §12 story runs
+end-to-end**: parse → fork → pack/transmute → committere →
+collapse-or-survive → inject → recanonicare IN PLACE.
+
+What landed — fontes/silva_commissio.{h,c}:
+- **SilvaOraculum** (typedef table; keys chorda_transcribere-copied
+  into its piscina — the fons->via lifetime lesson applied
+  proactively). Binary novit/ignotum; three-valued oracle named for
+  the C89 grammar.
+- **silva_committere** — ONE recursive walk, grammar-agnostic (ambigui
+  form read from the baked registrum BY NAME): pater fixup (S27
+  discharged), A½ list normalization (views → exact length; the
+  hand-built diverged-view case verified), and COLLAPSE+JOURNAL:
+  resolutor-known AMBIGUUS nodes get the winner struct-copied ONTO the
+  wrapper allocation (identity: the pre-commit pointer shows
+  DECLARATIO genus post-commit — asserted), resolution event journaled
+  with the discriminating TOKEN (its origo = the queryable position).
+- **Spine semantics**: internals of ALL interpretations threaded
+  (queries descend alternatives); interpretation ROOTS carry spine
+  membership (canonical pater=ambiguum, others NIHIL); canonical
+  walked LAST (shared-subtree insurance, named limitation).
+- **silva_recanonicare** — the sanctioned post-commit op: canonica
+  INDEX versa in place, spine re-threaded BOTH directions (asserted),
+  RECANONICATA event journaled, count returned; no-op when victor ==
+  canonica (real resolutor after injection: 0 flips because the
+  declaratio arm was already canonical — asserted); idempotent.
+- **Resolutors hand-written in the probatio per interview** (sceletum
+  + imparilis + a fictitious expression-preferring one to force a real
+  flip); the walk never learns grammar semantics.
+- **Composition proof**: imparilis foo*bar — the SAME allocation is
+  rebound TWICE (transmutatio in the drain, then collapse at commit)
+  and pointer identity holds through the whole story.
+
+Complexity (small): **`registrum` is a latina macro (register!)** —
+same trap class as `nomen`. Parameter renamed `tabularium`; recorded
+here as the second entry in the forbidden-identifier list.
+
+Phase 4 remaining: Chunk D (driver silva_parsare, boundary-resync
+recovery → ERROR nodes, incolumitas through the full pipeline, mensura
+parse timings, v1 syntaxis input harvest).
+
+### Chunk D — INTENTIO (2026-07-02)
+
+The driver + the robustness net; Phase 4 exit.
+
+- **fontes/silva_parsare.{h,c}**: SilvaGrammatica bundle {tabula,
+  tabularium, constructor, fabrica} (generated-surface handle; future
+  emission of SILVA_PREFIX_GRAMMATICA named); silva_parsare(piscina,
+  titulus, fons, mensura, grammatica, oraculum, resolutor, contextus)
+  = the WHOLE pipeline (expansio creare → fons_addere → lexare →
+  directivas → expandere_reliqua → slicing GLR → committere);
+  silva_lexemata_parsare = the token-stream entry (forma silva_lexare,
+  EOF ultimo).
+- **THE DRIVER IS THE SLICING LOOP** (spec-v2 §3.1's plan of record —
+  arriving EARLY because boundary-resync recovery wants it; supersedes
+  the Phase-4-INTENTIO note that deferred slicing to the C89 grammar).
+  Boundary finder for the skeleton: SEMICOLON at paren-depth 0
+  (braces/function-definition cases belong to the C89 finder, named).
+  Each segment + the stream's EOF token parses independently: success
+  → its statements join the assembled root; failure → ERROR node
+  (genus from the registrum BY NAME) holding the segment's tokens —
+  per-item recovery for free, GSS bounded per statement. EVERY input
+  yields a complete committed tree (§8.2's bar).
+- **SilvaParsura** result: commissio (radix/ambigui/resolutiones),
+  lexemata (expanded stream), expansio (journal/strata queryable),
+  numerus_errorum/segmentorum, aggregated counters (sums; frons_maxima
+  = max).
+- **Incolumitas**: third stage — the FULL pipeline (silva_parsare) on
+  every fuzz specimen; assert tree-always (successus + commissio),
+  never crash. Unknown-genus tokens now degrade to ERROR nodes instead
+  of parse errors.
+- **Mensura**: the 78-file real-C89 corpus through the driver —
+  timing (parse ms/KB) + error-node counts + max frons. The sceletum
+  can't PARSE real C; the corpus becomes a RECOVERY soak (assert
+  completion, count honestly).
+- **v1 syntaxis harvest DONE at extraction level**:
+  probationes/fixa/syntaxis_v1_corpus.txt (125 unique inputs,
+  C-literal escapes verbatim, provenance header). Consumer = the C89
+  grammar milestone; the M1 probatio runs the corpus through RECOVERY
+  (robustness bar, not correctness bar).
+
+Exit criteria: suite green; driver probatio (pipeline incl. a macro
+through the preprocessor, mid-stream recovery, all-garbage input,
+empty input, oracle collapse through the driver, corpus recovery
+soak); incolumitas 400/400 through the full pipeline; mensura reports
+parse timings. Phase 4 RELATIO follows.
+
+### Chunk D — COMPLETE (2026-07-02); PHASE 4 COMPLETE
+
+probatio_silva_parsare 43/43 first run; suite 21/21, 1015 assertions.
+
+What landed:
+- **fontes/silva_parsare.{h,c}** — SilvaGrammatica bundle +
+  silva_parsare (fistula tota: expansio → lexemata → circuitus secans
+  → GLR → commissio) + silva_lexemata_parsare (ingressus lexematum).
+  THE DRIVER IS THE SLICING LOOP (§3.1's plan of record, arrived early
+  because recovery wanted it — supersedes the Phase-4 INTENTIO
+  deferral, as flagged in the Chunk D INTENTIO). Boundary finder:
+  SEMICOLON at paren-depth 0 (C89 finder named). Failed segments
+  become ERROR nodes (genus + loci from the registrum BY NAME, locus
+  count included) holding the skipped tokens — nothing silently
+  dropped. EVERY input yields a complete committed tree.
+- **Preprocessor proven in the fistula**: #define T int / T x; parses
+  to typus-PRIMITIVUS "int" — the macro ran through point-in-time
+  expansion into the tree.
+- **Incolumitas through the FULL pipeline**: 400/400 deterministic
+  specimens (raw bytes + C-shaped) → lex-fidelity AND driver-to-tree,
+  never crash. Unknown-genus tokens now degrade to ERROR nodes.
+- **Mensura parse stage**: fistula integra 0.299 ms/KB over the
+  78-file corpus; 797 ERROR nodes (the corpus is real C89 — the
+  sceletum survives it by RECOVERY, honestly counted); frons max 2.
+- **v1 syntaxis harvest**: probationes/fixa/syntaxis_v1_corpus.txt —
+  125 unique inputs extracted verbatim (C escapes preserved,
+  provenance header) so the corpus outlives v1's freeze-then-delete.
+  Consumer = the C89 grammar milestone. The M1 probatio runs all 125
+  through recovery: 125/125 trees, 125 with ERROR nodes (honest).
+
+### RELATIO (2026-07-02) — PHASE 4 COMPLETE
+
+All chunks green: A (engine, 71), A½ (length-view lists), B (packing +
+transmutatio, 60), C (commissio, 60), D (driver + recovery, 43).
+Suite 21/21, 1015 assertions. S21/S26/S27 and the §9/§12 contracts
+now hold UNDER FIRE: the baked fork cell fires, packs at the smallest
+node, transmutes when arms arrive late (identity held through
+transmutatio→collapse on one allocation), commits with pater/
+normalization/collapse+journal, re-canonicalizes in place, and the
+driver turns ANY byte sequence into a complete committed tree with
+per-statement recovery.
+
+Mid-phase the process itself leveled up: simulation ⑤ (first
+mid-phase simulation, run against SHIPPED code) reversed the
+escalation plan with evidence — metamorphosis went from "distant,
+gated" to "Chunk B, now" — and its design survived implementation
+with ZERO new complexities. The Xar pointer-stability lore was found
+FALSE by Fran's question and corrected everywhere (Correctio entry).
+latina-macro identifier traps now number two (nomen, registrum).
+
+Carried to Phase 5 (scribere): emission from committed trees (layout
+tables + trivia single-owner + EOF lexema_finis trivia); layer-N
+emission spacing decision (parked since Phase 2). Carried to Phase 7:
+caps + cancellation, Prosser exactness, latina definition SET
+(SilvaContextus), CONDITIONALIS threading into trees, v1 praeparator
+spot-check. Named untested paths: three-arm ambiguo-append,
+multi-accept root wrap (first 3-way/multi-accept grammar owns them).
+Next: Phase 5 — Scribere (byte-exact roundtrip emitter; cursor.c
+byte-identical).

@@ -17,9 +17,22 @@
 #include "silva_token.h"
 #include "silva_lexema.h"
 #include "silva_expandere.h"
+#include "silva_nodus.h"
+#include "silva_tabulae.h"
+#include "silva_tabulae_sceleti.h"
+#include "silva_glr.h"
+#include "silva_commissio.h"
+#include "silva_parsare.h"
 #include "credo.h"
 #include <stdio.h>
 #include <string.h>
+
+hic_manens constans SilvaGrammatica GRAMMATICA_SCELETI = {
+    &SILVA_SCELETUM_TABULA,
+    &SILVA_SCELETUM_REGISTRUM,
+    silva_sceletum_construere,
+    silva_sceletum_ambiguum_fabricare
+};
 
 #define ITERATIONES 200
 #define MENSURA_MAXIMA 512
@@ -105,6 +118,20 @@ _specimen (constans i8* buffo, i32 mensura)
         reliqua = silva_expansio_directivas_processare(exp, lexemata, NIHIL);
         expansa = silva_expansio_expandere_reliqua(exp, reliqua, NIHIL);
         (vacuum)expansa;
+    }
+
+    /* fistula TOTA (Chunk D): gubernator arborem completam ex
+     * QUOLIBET inputo reddit (recuperatio) - numquam fragor */
+    {
+        SilvaParsura* parsura;
+
+        parsura = silva_parsare(piscina, "fuzz.c",
+            (constans character*)buffo, mensura, &GRAMMATICA_SCELETI,
+            NIHIL, NIHIL, NIHIL);
+        si (parsura == NIHIL || !parsura->successus)
+        {
+            fidelis = FALSUM;  /* arbor deesse non debet */
+        }
     }
 
     piscina_destruere(piscina);

@@ -58,4 +58,12 @@ SilvaValor silva_sceletum_construere (
     s32                  productio,
     constans SilvaValor* valores);
 
+/* Fabrica ambigui: involucrum AMBIGUUS pro motore
+ * GLR (interpretationes = lista valorum, canonica = index
+ * spinae canonicae) */
+SilvaValor silva_sceletum_ambiguum_fabricare (
+    Piscina*   piscina,
+    SilvaValor interpretationes,
+    s32        canonica);
+
 #endif /* SILVA_TABULAE_SCELETI_H */

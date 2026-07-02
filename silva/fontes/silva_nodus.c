@@ -43,7 +43,8 @@ silva_valor_lista (Xar* lista)
     SilvaValor v;
 
     v.genus = SILVA_VALOR_LISTA;
-    v.datum.lista = lista;
+    v.datum.lista.xar = lista;
+    v.datum.lista.mensura = xar_numerus(lista);
     redde v;
 }
 
@@ -62,6 +63,86 @@ silva_valor_lista_nova (Piscina* piscina)
 {
     redde silva_valor_lista(
         xar_creare(piscina, magnitudo(SilvaValor)));
+}
+
+SilvaValor
+silva_valor_lista_appendere (
+    Piscina*   piscina,
+    SilvaValor lista,
+    SilvaValor elementum)
+{
+    Xar*        xar;
+    SilvaValor* slot;
+
+    si (lista.genus != SILVA_VALOR_LISTA || lista.datum.lista.xar == NIHIL)
+    {
+        redde silva_valor_nihil();
+    }
+    xar = lista.datum.lista.xar;
+
+    si (xar_numerus(xar) != lista.datum.lista.mensura)
+    {
+        /* Divergentia: furca alia ultra prospectum meum scripsit.
+         * Praefixum meum in repositorium recens copiatur - prospectus
+         * eius intactus manet (numerus repositorii = numerator
+         * versionum gratuitus). */
+        Xar* recens = xar_creare(piscina, (i32)magnitudo(SilvaValor));
+        i32  i;
+
+        si (recens == NIHIL)
+        {
+            redde silva_valor_nihil();
+        }
+        per (i = ZEPHYRUM; i < lista.datum.lista.mensura; i++)
+        {
+            SilvaValor* fons = (SilvaValor*)xar_obtinere(xar, i);
+            SilvaValor* dest = (SilvaValor*)xar_addere(recens);
+
+            si (fons == NIHIL || dest == NIHIL)
+            {
+                redde silva_valor_nihil();
+            }
+            *dest = *fons;
+        }
+        xar = recens;
+    }
+
+    slot = (SilvaValor*)xar_addere(xar);
+    si (slot == NIHIL)
+    {
+        redde silva_valor_nihil();
+    }
+    *slot = elementum;
+
+    {
+        SilvaValor novus;
+
+        novus.genus = SILVA_VALOR_LISTA;
+        novus.datum.lista.xar = xar;
+        novus.datum.lista.mensura = lista.datum.lista.mensura + I;
+        redde novus;
+    }
+}
+
+i32
+silva_valor_lista_numerus (SilvaValor lista)
+{
+    si (lista.genus != SILVA_VALOR_LISTA)
+    {
+        redde ZEPHYRUM;
+    }
+    redde lista.datum.lista.mensura;
+}
+
+SilvaValor*
+silva_valor_lista_obtinere (SilvaValor lista, i32 index)
+{
+    si (lista.genus != SILVA_VALOR_LISTA || lista.datum.lista.xar == NIHIL
+        || index >= lista.datum.lista.mensura)
+    {
+        redde NIHIL;
+    }
+    redde (SilvaValor*)xar_obtinere(lista.datum.lista.xar, index);
 }
 
 
@@ -168,7 +249,7 @@ silva_nodus_appendere (
     SilvaValor        valor,
     SilvaLocusSpecies species)
 {
-    SilvaValor* elementum;
+    SilvaValor novus;
 
     si (nodus == NIHIL || locus >= nodus->numerus_locorum)
     {
@@ -191,12 +272,15 @@ silva_nodus_appendere (
     {
         redde FALSUM;
     }
-    elementum = (SilvaValor*)xar_addere(nodus->loci[locus].datum.lista);
-    si (elementum == NIHIL)
+    /* Appendere purum + religatio loci (nodus sub constructione
+     * dominus unicus locorum suorum est) */
+    novus = silva_valor_lista_appendere(piscina, nodus->loci[locus],
+        valor);
+    si (novus.genus != SILVA_VALOR_LISTA)
     {
         redde FALSUM;
     }
-    *elementum = valor;
+    nodus->loci[locus] = novus;
     redde VERUM;
 }
 
@@ -228,14 +312,15 @@ silva_nodus_liberi (
             }
         }
         alioquin si (v->genus == SILVA_VALOR_LISTA
-            && v->datum.lista != NIHIL)
+            && v->datum.lista.xar != NIHIL)
         {
             i32 j;
 
-            per (j = ZEPHYRUM; j < xar_numerus(v->datum.lista); j++)
+            /* Mensura prospectus, non numerus repositorii (A½) */
+            per (j = ZEPHYRUM; j < v->datum.lista.mensura; j++)
             {
                 SilvaValor* e = (SilvaValor*)xar_obtinere(
-                    v->datum.lista, j);
+                    v->datum.lista.xar, j);
 
                 si (e != NIHIL && e->genus == SILVA_VALOR_NODUS
                     && e->datum.nodus != NIHIL)

@@ -14,6 +14,12 @@
 #include "silva_token.h"
 #include "silva_lexema.h"
 #include "silva_expandere.h"
+#include "silva_nodus.h"
+#include "silva_tabulae.h"
+#include "silva_tabulae_sceleti.h"
+#include "silva_glr.h"
+#include "silva_commissio.h"
+#include "silva_parsare.h"
 #include "credo.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -22,6 +28,13 @@
 #include <dirent.h>  /* probatio solum - macOS/POSIX */
 
 #define VIA_MAXIMA 1024
+
+hic_manens constans SilvaGrammatica GRAMMATICA_SCELETI = {
+    &SILVA_SCELETUM_TABULA,
+    &SILVA_SCELETUM_REGISTRUM,
+    silva_sceletum_construere,
+    silva_sceletum_ambiguum_fabricare
+};
 
 interior i8*
 _plagulam_legere (Piscina* piscina, constans character* via, i32* mensura_out)
@@ -99,8 +112,11 @@ s32 principale (vacuum)
     duplex summa_octetorum;
     duplex summa_lexare_ms;
     duplex summa_expandere_ms;
+    duplex summa_parsare_ms;
     duplex summa_apex_octetorum;
     duplex apex_maximus;
+    i32 summa_errorum;
+    i32 frons_maxima;
 
     piscina = piscina_generare_dynamicum("probatio_silva_mensura", 262144);
     si (!piscina)
@@ -124,8 +140,11 @@ s32 principale (vacuum)
     summa_octetorum = 0.0;
     summa_lexare_ms = 0.0;
     summa_expandere_ms = 0.0;
+    summa_parsare_ms = 0.0;
     summa_apex_octetorum = 0.0;
     apex_maximus = 0.0;
+    summa_errorum = ZEPHYRUM;
+    frons_maxima = ZEPHYRUM;
 
     corpus = opendir(via_corporis);
     si (corpus == NIHIL)
@@ -147,8 +166,10 @@ s32 principale (vacuum)
         clock_t t0;
         clock_t t1;
         clock_t t2;
+        clock_t t3;
         duplex lexare_ms;
         duplex expandere_ms;
+        duplex parsare_ms;
         duplex apex;
 
         si (!_est_c_vel_h(introitus->d_name))
@@ -187,14 +208,37 @@ s32 principale (vacuum)
         }
         t2 = clock();
 
+        /* Fistula tota per gubernatorem (lexare+expandere ITERUM
+         * interius - mensura fistulae integrae, non additiva). Corpus
+         * = C89 verum: sceletum recuperatione superat (soak nodorum
+         * ERROR in scala) */
+        {
+            SilvaParsura* parsura;
+
+            parsura = silva_parsare(piscina_plagulae,
+                introitus->d_name, (constans character*)fons, mensura,
+                &GRAMMATICA_SCELETI, NIHIL, NIHIL, NIHIL);
+            si (parsura != NIHIL && parsura->successus)
+            {
+                summa_errorum += parsura->numerus_errorum;
+                si (parsura->frons_maxima > frons_maxima)
+                {
+                    frons_maxima = parsura->frons_maxima;
+                }
+            }
+        }
+        t3 = clock();
+
         lexare_ms = (duplex)(t1 - t0) * 1000.0 / (duplex)CLOCKS_PER_SEC;
         expandere_ms = (duplex)(t2 - t1) * 1000.0 / (duplex)CLOCKS_PER_SEC;
+        parsare_ms = (duplex)(t3 - t2) * 1000.0 / (duplex)CLOCKS_PER_SEC;
         apex = (duplex)piscina_summa_apex_usus(piscina_plagulae);
 
         numerus++;
         summa_octetorum += (duplex)mensura;
         summa_lexare_ms += lexare_ms;
         summa_expandere_ms += expandere_ms;
+        summa_parsare_ms += parsare_ms;
         summa_apex_octetorum += apex;
         si (apex > apex_maximus)
         {
@@ -203,8 +247,9 @@ s32 principale (vacuum)
 
         si (verbosa)
         {
-            imprimere("  %-36s %7d B  lex %7.3f ms  exp %7.3f ms  apex %9.0f B\n",
-                introitus->d_name, mensura, lexare_ms, expandere_ms, apex);
+            imprimere("  %-36s %7d B  lex %7.3f ms  exp %7.3f ms  pars %7.3f ms  apex %9.0f B\n",
+                introitus->d_name, mensura, lexare_ms, expandere_ms,
+                parsare_ms, apex);
         }
 
         piscina_destruere(piscina_plagulae);
@@ -220,6 +265,13 @@ s32 principale (vacuum)
         summa_expandere_ms,
         summa_octetorum > 0.0
             ? summa_expandere_ms / (summa_octetorum / 1024.0) : 0.0);
+    imprimere("  parsare:  %8.2f ms totalis (%.4f ms/KB) - fistula "
+        "integra, recuperatio\n",
+        summa_parsare_ms,
+        summa_octetorum > 0.0
+            ? summa_parsare_ms / (summa_octetorum / 1024.0) : 0.0);
+    imprimere("  recuperatio: %d nodi ERROR trans corpus, frons max %d\n",
+        (int)summa_errorum, (int)frons_maxima);
     imprimere("  apex:     %8.0f B medius, %.0f B maximus\n",
         numerus > ZEPHYRUM ? summa_apex_octetorum / (duplex)numerus : 0.0,
         apex_maximus);

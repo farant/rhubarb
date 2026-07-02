@@ -381,6 +381,18 @@ silva_gen_coquere (
         "    s32                  productio,\n"
         "    constans SilvaValor* valores);\n");
 
+    /* Fabrica ambigui (spec-v2 par 12): motor GLR valores furcarum
+     * divergentium involvit sine registro cognito */
+    fprintf(pl, "\n/* Fabrica ambigui: involucrum AMBIGUUS pro motore\n"
+        " * GLR (interpretationes = lista valorum, canonica = index\n"
+        " * spinae canonicae) */\n"
+        "SilvaValor ");
+    _minusculas_literis(pl, praefixum);
+    fprintf(pl, "_ambiguum_fabricare (\n"
+        "    Piscina*   piscina,\n"
+        "    SilvaValor interpretationes,\n"
+        "    s32        canonica);\n");
+
     fprintf(pl, "\n#endif /* %s */\n", custos);
     fclose(pl);
 
@@ -763,11 +775,9 @@ silva_gen_coquere (
                         (SilvaGenLocusMappa*)xar_obtinere(prod->loci, k);
 
                     si (mappa == NIHIL || mappa->titulus == NIHIL) perge;
-                    fprintf(pl, "        {\n"
-                        "            SilvaValor* e = (SilvaValor*)"
-                        "xar_addere(lista.datum.lista);\n"
-                        "            si (e != NIHIL) { *e = valores[%d]; }\n"
-                        "        }\n", (int)k);
+                    fprintf(pl, "        lista = "
+                        "silva_valor_lista_appendere(piscina, lista, "
+                        "valores[%d]);\n", (int)k);
                 }
                 fprintf(pl, "        redde lista;\n    }\n");
             }
@@ -796,6 +806,9 @@ silva_gen_coquere (
                     redde FALSUM;
                 }
 
+                /* Appendere PURUM (A½): prospectus furcarum aliarum
+                 * numquam laeduntur - copia-in-divergentia in
+                 * silva_valor_lista_appendere */
                 fprintf(pl, "    {\n"
                     "        SilvaValor lista = valores[%d];\n"
                     "        si (lista.genus != SILVA_VALOR_LISTA)\n"
@@ -812,11 +825,9 @@ silva_gen_coquere (
                     {
                         perge;
                     }
-                    fprintf(pl, "        {\n"
-                        "            SilvaValor* e = (SilvaValor*)"
-                        "xar_addere(lista.datum.lista);\n"
-                        "            si (e != NIHIL) { *e = valores[%d]; }\n"
-                        "        }\n", (int)k);
+                    fprintf(pl, "        lista = "
+                        "silva_valor_lista_appendere(piscina, lista, "
+                        "valores[%d]);\n", (int)k);
                 }
                 fprintf(pl, "        redde lista;\n    }\n");
             }
@@ -892,6 +903,95 @@ silva_gen_coquere (
             "        redde silva_valor_nihil();\n"
             "    }\n"
             "}\n");
+    }
+
+    /* Fabrica ambigui: forma ex registro lecta (loci per nomen, non
+     * positione fixa) - generator formam iam validavit */
+    {
+        SilvaGenGenusDef* ambiguum_def = NIHIL;
+        s32 locus_interp = -I;
+        s32 locus_canonica = -I;
+        s32 species_interp = II;
+        i32 k;
+
+        per (i = ZEPHYRUM; i < xar_numerus(genera); i++)
+        {
+            SilvaGenGenusDef* def =
+                (SilvaGenGenusDef*)xar_obtinere(genera, i);
+
+            si (def != NIHIL && def->titulus != NIHIL
+                && chorda_aequalis_literis(*def->titulus, "ambiguus"))
+            {
+                ambiguum_def = def;
+                frange;
+            }
+        }
+        si (ambiguum_def == NIHIL)
+        {
+            fprintf(stderr,
+                "silva_coquere: genus 'ambiguus' abest (validatio "
+                "generatoris praeterita?)\n");
+            fclose(pl);
+            redde FALSUM;
+        }
+        per (k = ZEPHYRUM; k < xar_numerus(ambiguum_def->loci); k++)
+        {
+            SilvaGenLocusDef* locus = (SilvaGenLocusDef*)xar_obtinere(
+                ambiguum_def->loci, k);
+
+            si (locus == NIHIL || locus->titulus == NIHIL) perge;
+            si (chorda_aequalis_literis(*locus->titulus,
+                    "interpretationes"))
+            {
+                locus_interp = (s32)k;
+                species_interp = locus->species;
+            }
+            si (chorda_aequalis_literis(*locus->titulus, "canonica"))
+            {
+                locus_canonica = (s32)k;
+            }
+        }
+        si (locus_interp < ZEPHYRUM || locus_canonica < ZEPHYRUM)
+        {
+            fprintf(stderr, "silva_coquere: forma ambigui manca\n");
+            fclose(pl);
+            redde FALSUM;
+        }
+
+        fprintf(pl, "\n/* ==================================================\n"
+            " * Fabrica ambigui (spec-v2 par 12)\n"
+            " * ================================================== */\n\n"
+            "SilvaValor\n");
+        _minusculas_literis(pl, praefixum);
+        fprintf(pl, "_ambiguum_fabricare (\n"
+            "    Piscina*   piscina,\n"
+            "    SilvaValor interpretationes,\n"
+            "    s32        canonica)\n"
+            "{\n"
+            "    SilvaNodus* nodus = silva_nodus_creare(piscina,\n"
+            "        (s32)%s_GENUS_", praefixum);
+        _maiusculas(pl, ambiguum_def->titulus);
+        fprintf(pl, ", %d);\n"
+            "    si (nodus == NIHIL)\n"
+            "    {\n"
+            "        redde silva_valor_nihil();\n"
+            "    }\n"
+            "    si (!silva_nodus_ponere(nodus, %d, interpretationes, "
+            "%s))\n"
+            "    {\n"
+            "        redde silva_valor_nihil();\n"
+            "    }\n"
+            "    si (!silva_nodus_ponere(nodus, %d, "
+            "silva_valor_index(canonica),\n"
+            "            SILVA_LOCUS_INDEX))\n"
+            "    {\n"
+            "        redde silva_valor_nihil();\n"
+            "    }\n"
+            "    redde silva_valor_nodus(nodus);\n"
+            "}\n",
+            (int)xar_numerus(ambiguum_def->loci),
+            (int)locus_interp, _species_titulus(species_interp),
+            (int)locus_canonica);
     }
 
     fclose(pl);

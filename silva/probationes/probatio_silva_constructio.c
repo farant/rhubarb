@@ -371,15 +371,90 @@ s32 principale (vacuum)
 
             lista = silva_sceletum_construere(piscina, prod_initium, NIHIL);
             CREDO_AEQUALIS_I32 ((i32)lista.genus, (i32)SILVA_VALOR_LISTA);
-            CREDO_AEQUALIS_I32 (xar_numerus(lista.datum.lista), ZEPHYRUM);
+            CREDO_AEQUALIS_I32 (silva_valor_lista_numerus(lista), ZEPHYRUM);
 
             valores[0] = lista;
             valores[I] = v_sententia;
             lista = silva_sceletum_construere(piscina,
                 _prod_per_id("sententiae-appendere"), valores);
             CREDO_AEQUALIS_I32 ((i32)lista.genus, (i32)SILVA_VALOR_LISTA);
-            CREDO_AEQUALIS_I32 (xar_numerus(lista.datum.lista), I);
+            CREDO_AEQUALIS_I32 (silva_valor_lista_numerus(lista), I);
         }
+    }
+
+
+    /* ========================================================
+     * PROBARE: prospectus listarum (A½) - appendere purum,
+     * copia-in-divergentia, immunitas prospectuum alienorum
+     * ======================================================== */
+
+    {
+        SilvaValor basis;
+        SilvaValor furca_a;
+        SilvaValor furca_b;
+        SilvaValor elem_i;
+        SilvaValor elem_ii;
+        SilvaValor elem_iii;
+
+        imprimere("\n--- Probans prospectus listarum (A-dimidium) ---\n");
+
+        elem_i = silva_valor_token(tok_foo);
+        elem_ii = silva_valor_token(tok_bar);
+        elem_iii = silva_valor_token(tok_semi);
+
+        /* Via velox: prospectus ad finem vivum -> idem repositorium */
+        basis = silva_valor_lista_nova(piscina);
+        basis = silva_valor_lista_appendere(piscina, basis, elem_i);
+        CREDO_AEQUALIS_I32 (silva_valor_lista_numerus(basis), I);
+        {
+            SilvaValor porro = silva_valor_lista_appendere(piscina,
+                basis, elem_ii);
+
+            /* In loco: idem xar, mensura crescit */
+            CREDO_AEQUALIS_PTR (porro.datum.lista.xar,
+                basis.datum.lista.xar);
+            CREDO_AEQUALIS_I32 (silva_valor_lista_numerus(porro), II);
+            /* Prospectus basis IMMOTUS (mensura sua) */
+            CREDO_AEQUALIS_I32 (silva_valor_lista_numerus(basis), I);
+
+            /* DIVERGENTIA: furca altera ex EODEM prospectu basis
+             * appendit - repositorium iam ultra basis scriptum est,
+             * ergo copia recens (numerus repositorii = numerator
+             * versionum) */
+            furca_a = porro;
+            furca_b = silva_valor_lista_appendere(piscina, basis,
+                elem_iii);
+            CREDO_INAEQUALITAS_PTR (furca_b.datum.lista.xar,
+                basis.datum.lista.xar);
+            CREDO_AEQUALIS_I32 (silva_valor_lista_numerus(furca_b), II);
+
+            /* Ambae furcae praefixum commune, caudas proprias vident */
+            CREDO_AEQUALIS_PTR (
+                silva_valor_lista_obtinere(furca_a, ZEPHYRUM)->datum.token,
+                silva_valor_lista_obtinere(furca_b, ZEPHYRUM)->datum.token);
+            CREDO_AEQUALIS_PTR (
+                silva_valor_lista_obtinere(furca_a, I)->datum.token,
+                tok_bar);
+            CREDO_AEQUALIS_PTR (
+                silva_valor_lista_obtinere(furca_b, I)->datum.token,
+                tok_semi);
+        }
+
+        /* Fines prospectus: extra mensuram -> NIHIL (etiam si
+         * repositorium longius est) */
+        CREDO_NIHIL (silva_valor_lista_obtinere(basis, I));
+        CREDO_NIHIL (silva_valor_lista_obtinere(basis, C));
+
+        /* Inputa mala: non-lista -> nihil-valor / zephyrum / NIHIL */
+        {
+            SilvaValor malum = silva_valor_lista_appendere(piscina,
+                elem_i, elem_ii);
+
+            CREDO_AEQUALIS_I32 ((i32)malum.genus,
+                (i32)SILVA_VALOR_NIHIL);
+        }
+        CREDO_AEQUALIS_I32 (silva_valor_lista_numerus(elem_i), ZEPHYRUM);
+        CREDO_NIHIL (silva_valor_lista_obtinere(elem_i, ZEPHYRUM));
     }
 
 

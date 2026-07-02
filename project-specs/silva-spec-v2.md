@@ -631,3 +631,85 @@ generated tables + construction, the genuine fork case (`foo * bar`, unknown
 re-canonicalize on typedef injection), post-accept pater fixup, cursor.c
 roundtrip, through the amalgamator, compiled standalone, with the crash-freedom
 fuzz harness attached from day one.
+
+## 12. Simulation ⑤ + interview resolutions (2026-07-02) — mid-Phase-4
+
+*Simulation ⑤ (SPPF-style metamorphosis + same-wave packing —
+silva-simulatio-5.md, interview in silva-simulatio-5-interview.md). Run
+between Phase 4 Chunks A and B, after the Chunk A complexity "list-append
+purity vs forks" and the escalation-map analysis. Where this conflicts with
+§3.1's packing point, this wins.*
+
+### 12.1 Packing architecture (decided)
+
+- **Length-view lists (Chunk A½)**: the SilvaValor LISTA arm becomes a view
+  `{Xar*, mensura}`; append = in-place when the view is at the Xar's live end,
+  copy-on-divergence otherwise (the Xar's own count is a free version
+  counter); commit normalization (exact-length copy iff shared) rides the
+  post-accept walk. Chorda-pattern for value arrays. THE correctness floor:
+  no fork topology can corrupt a list; segmentation-disagreement forks (which
+  no packing can localize) degrade to coarse-but-correct AMBIGUUS.
+- **Same-wave packing + transmutatio (Chunk B, together)**: per-drain index
+  of reduce-created GSS nodes keyed (status, basis). Dispatch: hit+undrained
+  → pack; hit+drained → **transmutatio** (in-place identity re-bind: clone
+  content + build AMBIGUUS through the NORMAL checked constructors, then one
+  struct copy onto the old allocation — no S32 check bypassed); same status
+  different basis → new-edge event (eventa_marginis_novi), counted, arms stay
+  separate (graceful ladder). Three-arm case: already-AMBIGUUS target →
+  ambiguo_addere.
+- **Ordering rule (closes the retroactivity hazard)**: structural equality is
+  consulted ONLY (a) at pack time on the two candidates at one key, (b) at
+  the post-drain frontier merge. Cross-key structural fusion inside drains is
+  banned. The transmutation window is exactly one drain (per-drain index
+  lifetime), so frontier-merge fusions are permanently safe.
+- **Semantics-free drains**: packing always wraps AMBIGUUS (pure structure).
+  ALL semantics (oracle resolution) consolidate into the commit walk
+  (Chunk C). Resolutor-at-merge is deleted from the plan. Accepted cost:
+  known-typedef statements fork and build both interpretations (~2× bounded,
+  conflict to statement end) — mensura-gated action-filter pruning hook is
+  the named mitigation, off/unbuilt by default.
+- **Collapse + journal**: when the commit walk resolves an AMBIGUUS via the
+  oracle, the tree gets the clean winner (no wrapper) and the fructus records
+  a resolution event (position, discriminating identifier, winner) —
+  queryable like the expander journal. Losing interpretations of REAL
+  (unresolved) ambiguity stay in AMBIGUUS nodes as before.
+
+### 12.2 Contracts (new/amended)
+
+- **Node identity contract**: node CONTENTS are always constructed through
+  the checked silva_nodus_ponere path (S32); node IDENTITY may be re-bound by
+  the engine (transmutatio) until commit; after commit, nodes are fully
+  immutable (except the sanctioned re-canonicalization API). Recorded in
+  silva/CLAUDE.md (orientation root) + here.
+- **Structural genera are REQUIRED**: the generator errors if a grammar's
+  genera-extra lacks ambiguus/error/conditionalis — the engine may assume the
+  fabrica ambigui exists; no degraded no-packing mode exists.
+- **Accessing-symbol uniqueness** is a load-time table assertion (extend
+  silva_glr_tabulam_validare): every state entered by exactly one symbol.
+  Guards the (status, basis) index against shift/goto state collisions.
+- **Counters are product, not debug**: fusiones, transmutationes,
+  eventa_marginis_novi, frons_maxima become SilvaGLRFructus fields. Full
+  positioned event journal = named post-M1 upgrade.
+- **Naming**: transmutatio family — _transmutare, fabrica ambigui
+  (ambiguum_creare/ambiguo_addere), index reducendorum,
+  eventa_marginis_novi.
+
+### 12.3 Test obligations
+
+- Variant grammar **committed** in grammatica/ (unequal-depth arms: one extra
+  unit production on the expression side → reconvergence at depths 2 vs 3 →
+  guaranteed same-wave miss → transmutatio fires). Generated tables
+  committed + drift-guarded like sceletum.
+- Probationes: transmutatio fire (pointer-identity assertion: the list
+  element pointer BECOMES the AMBIGUUS), three staggered arms, duplicate-arm
+  frontier cleanup, counter values, accessing-symbol validation on both
+  grammars, A½ copy-on-divergence + commit normalization.
+
+### 12.4 Evidence-gated items (named, unbuilt)
+
+- Action-filter pruning hook (lexer-feedback style) — gated on mensura
+  showing the always-fork 2× compounds on the real corpus.
+- Identity-handle refactor of the merge layer — gated on
+  eventa_marginis_novi firing meaningfully on real grammars (the Farshi-class
+  case; bolting Farshi re-reduction onto by-value trees is rejected — it
+  recreates the stale-value problem one level up).

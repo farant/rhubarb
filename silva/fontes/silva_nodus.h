@@ -53,13 +53,25 @@ nomen enumeratio {
 
 nomen structura SilvaValor SilvaValor;
 
+/* Prospectus listae (A½, spec-v2 par 12.1): valor listae est PROSPECTUS
+ * {repositorium, mensura} - forma chordae pro valoribus. Repositorium
+ * append-only; prospectus mensuram SUAM fert, ergo furca quae ultra
+ * prospectum meum scripsit me non laedit (appendere purum infra:
+ * in-loco si prospectus ad finem vivum stat, alioquin copia-in-
+ * divergentia). Numquam xar_numerus in repositorio lege - mensuram
+ * prospectus semper adhibe (silva_valor_lista_numerus/obtinere). */
+nomen structura {
+    Xar* xar;       /* repositorium commune (append-only in usu) */
+    i32  mensura;   /* quot elementa HUIC prospectui pertinent */
+} SilvaListaProspectus;
+
 structura SilvaValor {
     SilvaValorGenus genus;
     unio {
-        SilvaNodus* nodus;
-        SilvaToken* token;
-        Xar*        lista;
-        s32         index;
+        SilvaNodus*          nodus;
+        SilvaToken*          token;
+        SilvaListaProspectus lista;
+        s32                  index;
     } datum;
 };
 
@@ -83,11 +95,30 @@ structura SilvaNodus {
 SilvaValor silva_valor_nihil (vacuum);
 SilvaValor silva_valor_nodus (SilvaNodus* nodus);
 SilvaValor silva_valor_token (SilvaToken* token);
-SilvaValor silva_valor_lista (Xar* lista);
 SilvaValor silva_valor_index (s32 index);
 
-/* Lista nova vacua (Xar de SilvaValor) */
+/* Prospectus super Xar existentem (mensura = numerus currens) */
+SilvaValor silva_valor_lista (Xar* lista);
+
+/* Lista nova vacua (Xar de SilvaValor, prospectus 0) */
 SilvaValor silva_valor_lista_nova (Piscina* piscina);
+
+/* Appendere PURUM (A½): prospectus alieni numquam laeduntur. Si
+ * prospectus ad finem vivum repositorii stat, in loco appendit (O(1),
+ * casus communis); alioquin furca divergens praefixum suum in
+ * repositorium recens copiat. Prospectum NOVUM reddit (mensura + 1);
+ * nihil-valorem in errore aut inputo non-lista. */
+SilvaValor
+silva_valor_lista_appendere (
+    Piscina*   piscina,
+    SilvaValor lista,
+    SilvaValor elementum);
+
+/* Numerus elementorum PROSPECTUS (0 si non lista) */
+i32 silva_valor_lista_numerus (SilvaValor lista);
+
+/* Elementum intra prospectum (NIHIL extra mensuram prospectus) */
+SilvaValor* silva_valor_lista_obtinere (SilvaValor lista, i32 index);
 
 
 /* ==================================================

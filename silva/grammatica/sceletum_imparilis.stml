@@ -1,0 +1,107 @@
+<grammatica>
+  <!-- Grammatica IMPARILIS (Phase 4 Chunk B, spec-v2 par 12.3):
+       sceletum + regula unitatis "mandatum" in brachio expressionis.
+
+       Brachia furcae typedef ad "sententia" profunditate IMPARI
+       reconveniunt: declaratio via P(declaratio)->P(sententia) = 2
+       undae; expressio via P(sententia-expr)->P(mandatum)->
+       P(sententia) = 3 undae. Compactio eiusdem-undae ergo DEERRAT
+       deliberate - haec grammatica sola viam transmutationis
+       (identitatis religandae) exercet. Grammatica probationis
+       COMMISSA (interview ⑤ Q2): rete regressionis permanens. -->
+
+  <terminalia>
+    <terminalis titulus="IDENTIFICATOR" genus="SILVA_LEX_IDENTIFICATOR"/>
+    <terminalis titulus="INTEGER"       genus="SILVA_LEX_INTEGER"/>
+    <terminalis titulus="INT"           genus="SILVA_LEX_INT"/>
+    <terminalis titulus="STAR"          genus="SILVA_LEX_STAR"/>
+    <terminalis titulus="PLUS"          genus="SILVA_LEX_PLUS"/>
+    <terminalis titulus="SEMICOLON"     genus="SILVA_LEX_SEMICOLON"/>
+    <terminalis titulus="PAREN_APERTA"  genus="SILVA_LEX_PAREN_APERTA"/>
+    <terminalis titulus="PAREN_CLAUSA"  genus="SILVA_LEX_PAREN_CLAUSA"/>
+    <terminalis titulus="EOF"           genus="SILVA_LEX_EOF"/>
+  </terminalia>
+
+  <regulae>
+    <regula titulus="sententiae">
+      <productio modus="lista-initium"></productio>
+      <productio id="sententiae-appendere" modus="lista-appendere">
+        sententiae@lista+ sententia@elementum
+      </productio>
+    </regula>
+
+    <regula titulus="sententia">
+      <productio>declaratio</productio>
+      <productio>mandatum</productio>
+    </regula>
+
+    <!-- Gradus unitatis additus: brachium expressionis profundius -->
+    <regula titulus="mandatum">
+      <productio>sententia-expressionis</productio>
+    </regula>
+
+    <regula titulus="declaratio">
+      <productio genus="declaratio" id="declaratio-simplex">
+        typus@typus declarator@declarator SEMICOLON@tok_terminator
+      </productio>
+    </regula>
+
+    <regula titulus="typus">
+      <productio genus="typus-primitivus" id="typus-int">
+        INT@tok_verbum
+      </productio>
+      <productio genus="typus-nominatus" id="typus-nomen">
+        IDENTIFICATOR@tok_titulus
+      </productio>
+    </regula>
+
+    <regula titulus="declarator">
+      <productio genus="declarator-titulus" id="declarator-nomen">
+        IDENTIFICATOR@tok_titulus
+      </productio>
+      <productio genus="declarator-monstrator" id="declarator-stella">
+        STAR@tok_stella declarator@internum
+      </productio>
+    </regula>
+
+    <regula titulus="sententia-expressionis">
+      <productio genus="sententia-expressionis" id="sententia-expr">
+        expressio@expressio SEMICOLON@tok_terminator
+      </productio>
+    </regula>
+
+    <regula titulus="expressio">
+      <productio genus="binarium" id="expressio-plus">
+        expressio@sinister PLUS@tok_operator terminus@dexter
+      </productio>
+      <productio>terminus</productio>
+    </regula>
+
+    <regula titulus="terminus">
+      <productio genus="binarium" id="terminus-star">
+        terminus@sinister STAR@tok_operator factor@dexter
+      </productio>
+      <productio>factor</productio>
+    </regula>
+
+    <regula titulus="factor">
+      <productio genus="folium-identificator" id="factor-identificator">
+        IDENTIFICATOR@tok_valor
+      </productio>
+      <productio genus="folium-integer" id="factor-integer">
+        INTEGER@tok_valor
+      </productio>
+      <productio genus="parenthesis" id="factor-parenthesis">
+        PAREN_APERTA@tok_apertum expressio@internum PAREN_CLAUSA@tok_clausum
+      </productio>
+    </regula>
+  </regulae>
+
+  <genera-extra>
+    <genus titulus="error"         slots="tokens:lista-token"/>
+    <genus titulus="ambiguus"      slots="interpretationes:lista-nodus canonica:index"/>
+    <genus titulus="conditionalis" slots="rami:lista-nodus"/>
+  </genera-extra>
+
+  <initium>sententiae</initium>
+</grammatica>

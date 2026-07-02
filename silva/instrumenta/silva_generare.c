@@ -883,6 +883,85 @@ silva_gen_registrum_computare(
         }
     }
 
+    /* Genera structuralia REQUISITA (spec-v2 par 12.2): motor GLR
+     * fabricam ambigui praesumit; recuperatio ERROR, regiones
+     * CONDITIONALIS. Absentia = error generationis - modus degradatus
+     * sine compactione NON existit (quirk-limatus per constructionem
+     * vetitus). */
+    {
+        hic_manens constans character* NECESSARIA[III] = {
+            "ambiguus", "error", "conditionalis"
+        };
+        SilvaGenGenusDef* ambiguum_def = NIHIL;
+        i32 n;
+
+        per (n = ZEPHYRUM; n < III; n++)
+        {
+            SilvaGenGenusDef* inventum = NIHIL;
+            i32 j;
+
+            per (j = ZEPHYRUM; j < (i32)xar_numerus(genera); j++)
+            {
+                SilvaGenGenusDef* d =
+                    (SilvaGenGenusDef*)xar_obtinere(genera, j);
+
+                si (d != NIHIL && d->ex_extra && d->titulus != NIHIL
+                    && chorda_aequalis_literis(*d->titulus, NECESSARIA[n]))
+                {
+                    inventum = d;
+                    frange;
+                }
+            }
+            si (inventum == NIHIL)
+            {
+                fprintf(stderr, "silva_gen: genus structurale '%s' in "
+                    "genera-extra REQUIRITUR (spec-v2 par 12.2)\n",
+                    NECESSARIA[n]);
+                redde NIHIL;
+            }
+            si (n == ZEPHYRUM)
+            {
+                ambiguum_def = inventum;
+            }
+        }
+
+        /* Forma ambigui: interpretationes (lista-*) + canonica (index)
+         * - fabrica generata et recanonicalizatio (Chunk C) his
+         * nominibus pendent */
+        {
+            b32 interp = FALSUM;
+            b32 canon = FALSUM;
+            i32 k;
+
+            per (k = ZEPHYRUM; k < (i32)xar_numerus(ambiguum_def->loci);
+                 k++)
+            {
+                SilvaGenLocusDef* locus = (SilvaGenLocusDef*)xar_obtinere(
+                    ambiguum_def->loci, k);
+
+                si (locus == NIHIL || locus->titulus == NIHIL) perge;
+                si (chorda_aequalis_literis(*locus->titulus,
+                        "interpretationes")
+                    && locus->species >= II && locus->species <= IV)
+                {
+                    interp = VERUM;
+                }
+                si (chorda_aequalis_literis(*locus->titulus, "canonica")
+                    && locus->species == V)
+                {
+                    canon = VERUM;
+                }
+            }
+            si (!interp || !canon)
+            {
+                fprintf(stderr, "silva_gen: genus 'ambiguus' loci "
+                    "'interpretationes:lista-*' et 'canonica:index' "
+                    "requirit\n");
+                redde NIHIL;
+            }
+        }
+    }
+
     redde genera;
 }
 

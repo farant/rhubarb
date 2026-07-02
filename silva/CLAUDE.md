@@ -57,7 +57,11 @@ breaks loudly if you forget; generated files are committed). Dev-time
 mains live in instrumenta/principalia/ (outside the test link glob).
 Conventions: root CLAUDE.md + the conventions recorded in phase-log
 complexities (i32 is UNSIGNED — s32/s64 for anything signed; never
-`nomen` as identifier; chorda not null-terminated, etc.).
+`nomen` OR `registrum` as identifiers — both are latina macros
+(typedef/register); use titulus/tabularium; chorda not
+null-terminated; Xar element pointers ARE stable across appends —
+segmented, sine reallocatio — only swap-remove/sort/truncate disturb
+them, see the 2026-07-02 Correctio).
 
 ## VISIO — what silva is FOR
 
@@ -116,6 +120,12 @@ protects it. Smoothing a "quirk" means visibly deleting a feature — don't.
 - **The amalgamation IS the deliverable.** silva.h is vanilla C89 — the host
   must never see latina's defines (si/per/character stay internal).
   Prefix-renamed vendored libs (silva_piscina_*...), zero host collisions.
+- **Node identity contract (simulation ⑤).** Node CONTENTS are always
+  constructed through the checked ponere path (S32); node IDENTITY may be
+  re-bound by the engine (transmutatio) until commit; after commit, trees are
+  immutable except the sanctioned re-canonicalization API. Structural genera
+  (ambiguus/error/conditionalis) are generator-REQUIRED — the engine's
+  fabrica ambigui always exists; there is no degraded no-packing mode.
 - **Why maximalism is law.** All three predecessors died from early
   data-model decisions that foreclosed features — s64-only reduction values,
   the Lexema*/Token* split that let provenance die at the parser boundary,
@@ -143,10 +153,14 @@ protects it. Smoothing a "quirk" means visibly deleting a feature — don't.
   APIs are expensive to refactor, implementations cheap). Walking skeleton
   before module polish — integration walls are found under load, not by
   finishing modules in isolation (lapifex M3 is the cautionary tale).
-- **Simulate before building.** Pretend-implementations surface interaction
-  bugs no per-feature review finds. Complexities are recorded in the
-  four-part schema (discovered-while / consists-in / consequences /
-  handled-by) and survive as files.
+- **Simulate before building — and mid-phase, against shipped code.**
+  Pretend-implementations surface interaction bugs no per-feature review
+  finds. Complexities are recorded in the four-part schema
+  (discovered-while / consists-in / consequences / handled-by) and survive
+  as files. Simulatio ⑤ proved the technique works mid-phase against real
+  code: it REVERSED an escalation decision with evidence, and its design
+  shipped with zero new complexities. When a design tradeoff is contested,
+  simulate it before debating it.
 - **Raw transcripts precede specs.** Brainstorm Q&A is preserved verbatim
   before any spec is written — decisions keep their reasoning attached.
 - **Latin in the code** — identifiers, comments, messages, and the query
