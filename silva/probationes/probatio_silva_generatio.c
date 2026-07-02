@@ -20,7 +20,7 @@ _expandere_fontem (Piscina* piscina, constans character* fons, Xar** strata_out)
     exp = silva_expansio_creare(piscina);
     silva_fons_addere(exp, "probatio.c", FALSUM);
     lexemata = silva_lexare(piscina, fons, (i32)strlen(fons), ZEPHYRUM);
-    reliqua = silva_expansio_definitiones_colligere(exp, lexemata, NIHIL);
+    reliqua = silva_expansio_directivas_processare(exp, lexemata, NIHIL);
     redde silva_expansio_expandere(exp, reliqua, strata_out);
 }
 

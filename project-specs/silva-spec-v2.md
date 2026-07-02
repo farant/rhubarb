@@ -253,6 +253,35 @@ validates the renamer on the real sources and compiles the result standalone.
 | Amalgamator | — | **New** (C89 tool; simulation ④) |
 | Test harness | compile_tests.sh + credo | **Mirror** (drop Cocoa/Security links) |
 
+### 4.1 Test-suite harvest plan + freeze-then-delete refinement (2026-07-02)
+
+The engines above are carried or mined; the TEST SUITES are assets in their
+own right, tiered by harvest cost:
+
+- **Tier 1 — probationes/fixa/roundtrip/ (78 files, shared v1+v2 corpus).**
+  API-independent byte-fidelity fixtures; each file is a fossilized bug
+  (arrow_debug*, test_gap_*, comment_expr_* series) or a real-source snapshot
+  (latina.h, piscina.h, cursor.c, base64.c, utf8.c). ADOPTED by silva already:
+  probatio_silva_fidelitas runs emittere(lexare(x)) == x over the whole
+  directory (78/78 green at adoption, Phase 2). At Phase 5 the same corpus
+  becomes the tree-level roundtrip bar.
+- **Tier 2 — behavior suites, inputs harvested + assertions rewritten:**
+  v1 praeparator (124 assertions — already committed in the compatibility
+  bar per the brainstorm) and v1 syntaxis (234 assertions — harvest the C
+  snippets at Phase 4, re-assert against silva genera).
+- **Tier 3 — post-1.0 milestone acceptance bars:** v1 quaestio (100
+  assertions; the only selector-engine corpus in existence — note v1 uses
+  ENGLISH tags, silva uses Latin, so carrying needs a tag-mapping pass),
+  v1 formator (103, formatter milestone), v1 typus + index (type resolver /
+  project index milestones).
+
+**Freeze-then-delete refinement:** the original rule (delete all three
+generations at substrate parity) would delete the Tier 3 suites BEFORE the
+post-substrate milestones they are the acceptance bars for. Refined rule:
+engines may be deleted at substrate parity, but each v1 downstream SUITE is
+deleted only after its bar has been harvested into silva/ at its milestone.
+A deleted test suite is a test suite nobody ports.
+
 ## 5. Sharpened simulation briefs (M0)
 
 ① **Token contract + expander vertical.** Includes: the unified Token layout, the

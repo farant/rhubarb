@@ -156,6 +156,8 @@ nomen enumeratio {
 nomen structura {
     chorda* via;              /* via plagulae interned; titulus syntheticus pro API */
     b32     est_syntheticus;  /* VERUM: textus ex API, non plagula vera */
+    b32     est_custos;       /* plagula custodita (#ifndef X / #define X / #endif) */
+    chorda* custos_titulus;   /* titulus macro custodis; NIHIL si non custodita */
 } SilvaFons;
 
 

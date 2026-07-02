@@ -13,3 +13,4 @@
 -Wno-long-long
 -Wno-overlength-strings
 -Isilva/fontes
+-Isilva/instrumenta

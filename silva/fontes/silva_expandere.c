@@ -1,8 +1,12 @@
-/* silva_expandere.c - Expansor silvae: Chunk A
- * Acta + directivae + definitiones macro.
+/* silva_expandere.c - Expansor silvae
+ * Chunk A: acta + directivae + definitiones macro.
+ * Chunk B: generationes expansionis (caecationes).
+ * Chunk C: # et ## in substitutione.
+ * Chunk D: includenda + regiones conditionales + custodes.
  */
 
 #include "silva_expandere.h"
+#include "silva_conditio.h"
 #include "silva_lexema.h"
 #include "chorda_aedificator.h"
 #include <string.h>
@@ -62,6 +66,13 @@ silva_expansio_creare (Piscina* piscina)
     exp->fontes = xar_creare(piscina, magnitudo(SilvaFons));
     exp->macros = tabula_dispersa_creare_chorda(piscina, LXIV);
     exp->acta = xar_creare(piscina, magnitudo(SilvaEventum));
+    exp->rami = xar_creare(piscina, magnitudo(SilvaRamus*));
+    exp->regiones = xar_creare(piscina, magnitudo(SilvaRegio*));
+    exp->includenda = tabula_dispersa_creare_chorda(piscina, XVI);
+    exp->inclusiones = xar_creare(piscina, magnitudo(SilvaInclusio));
+    exp->profunditas_includendi = ZEPHYRUM;
+    exp->fons_api = -I;
+    exp->tabula_activa = NIHIL;
     redde exp;
 }
 
@@ -74,11 +85,23 @@ silva_fons_addere (
     SilvaFons* locus;
     chorda* via_fixa;
     chorda temp;
-    unio { constans character* c; i8* m; } u;
+    i8* datum_novum;
+    i32 mensura;
 
-    u.c = via;
-    temp.datum = u.m;
-    temp.mensura = (i32)strlen(via);
+    /* via in piscinam duplicatur - vocans chordam suam liberare potest */
+    mensura = (i32)strlen(via);
+    datum_novum = (i8*)piscina_allocare(exp->piscina,
+        (memoriae_index)(mensura > ZEPHYRUM ? mensura : I));
+    si (datum_novum == NIHIL)
+    {
+        redde -I;
+    }
+    si (mensura > ZEPHYRUM)
+    {
+        memcpy(datum_novum, via, (memoriae_index)mensura);
+    }
+    temp.datum = datum_novum;
+    temp.mensura = mensura;
     via_fixa = _chorda_figere(exp->piscina, temp);
 
     locus = (SilvaFons*)xar_addere(exp->fontes);
@@ -88,6 +111,8 @@ silva_fons_addere (
     }
     locus->via = via_fixa;
     locus->est_syntheticus = est_syntheticus;
+    locus->est_custos = FALSUM;
+    locus->custos_titulus = NIHIL;
     redde (s32)(xar_numerus(exp->fontes) - I);
 }
 
@@ -103,7 +128,9 @@ _eventum_scribere (
     s32               fons_index,
     i32               linea,
     chorda*           titulus,
-    SilvaMacroDef*    def)
+    SilvaMacroDef*    def,
+    i32               conditio_id,
+    s32               positus)
 {
     SilvaEventum* locus;
 
@@ -117,7 +144,8 @@ _eventum_scribere (
     locus->linea = linea;
     locus->titulus = titulus;
     locus->def = def;
-    locus->conditio_id = ZEPHYRUM;
+    locus->conditio_id = conditio_id;
+    locus->positus = positus;
 }
 
 TabulaDispersa*
@@ -165,8 +193,11 @@ silva_expansio_quaerere (
     chorda         titulus)
 {
     vacuum* valor;
+    TabulaDispersa* tabula;
 
-    si (tabula_dispersa_invenire(exp->macros, titulus, &valor))
+    /* expansio positionalis tabulam temporalem substituit */
+    tabula = (exp->tabula_activa != NIHIL) ? exp->tabula_activa : exp->macros;
+    si (tabula_dispersa_invenire(tabula, titulus, &valor))
     {
         redde (SilvaMacroDef*)valor;
     }
@@ -175,8 +206,25 @@ silva_expansio_quaerere (
 
 
 /* ==================================================
- * Processio directivarum
+ * Processio directivarum (Chunk A + D)
  * ================================================== */
+
+#define SILVA_INCLUDENDI_MAXIMI XXXII
+
+/* Genus directivae (internum) */
+nomen enumeratio {
+    SILVA_DIR_NULLA = 0,   /* # solum (directiva vacua) */
+    SILVA_DIR_DEFINE,
+    SILVA_DIR_UNDEF,
+    SILVA_DIR_INCLUDE,
+    SILVA_DIR_IF,
+    SILVA_DIR_IFDEF,
+    SILVA_DIR_IFNDEF,
+    SILVA_DIR_ELIF,
+    SILVA_DIR_ELSE,
+    SILVA_DIR_ENDIF,
+    SILVA_DIR_IGNOTA       /* alia (line/pragma/error/...) */
+} SilvaDirectivaGenus;
 
 /* Estne lexema verum initium directivae? (# ad initium lineae LOGICAE) */
 interior b32
@@ -186,16 +234,173 @@ _est_initium_directivae (SilvaToken* token)
         ? VERUM : FALSUM;
 }
 
-/* Parsare definitionem: lexemata[i] est CANCELLUM; linea logica currit
- * usque ad finem (exclusive). Reddit VERUM si define/undef recognita. */
-interior b32
-_directivam_processare (
+/* Finis lineae logicae incipientis ad i (exclusive) */
+interior i32
+_lineam_finire (Xar* lexemata, i32 i, i32 n)
+{
+    i32 i_finis;
+    SilvaToken* t;
+
+    i_finis = i + I;
+    dum (i_finis < n)
+    {
+        t = *(SilvaToken**)xar_obtinere(lexemata, i_finis);
+        si (t->initium_lineae || t->genus == SILVA_LEX_EOF)
+        {
+            frange;
+        }
+        i_finis++;
+    }
+    redde i_finis;
+}
+
+interior vacuum
+_lexema_addere (Xar* xar, SilvaToken* token)
+{
+    SilvaToken** locus;
+
+    locus = (SilvaToken**)xar_addere(xar);
+    si (locus != NIHIL)
+    {
+        *locus = token;
+    }
+}
+
+/* Lamina: exemplar lexematum [a, b) */
+interior Xar*
+_lamina_capere (SilvaExpansio* exp, Xar* lexemata, i32 a, i32 b)
+{
+    Xar* lamina;
+    i32 j;
+
+    lamina = xar_creare(exp->piscina, magnitudo(SilvaToken*));
+    per (j = a; j < b; j++)
+    {
+        _lexema_addere(lamina, *(SilvaToken**)xar_obtinere(lexemata, j));
+    }
+    redde lamina;
+}
+
+/* Lineam directivae in directivae_out capere (si petitum) */
+interior vacuum
+_directivam_capere (
     SilvaExpansio* exp,
+    Xar*           directivae,
     Xar*           lexemata,
-    i32            i_cancellum,
-    i32            i_finis)
+    i32            a,
+    i32            b)
+{
+    Xar** locus;
+
+    si (directivae == NIHIL)
+    {
+        redde;
+    }
+    locus = (Xar**)xar_addere(directivae);
+    si (locus != NIHIL)
+    {
+        *locus = _lamina_capere(exp, lexemata, a, b);
+    }
+}
+
+interior b32
+_chordae_aequales (chorda a, chorda b)
+{
+    si (a.mensura != b.mensura)
+    {
+        redde FALSUM;
+    }
+    si (a.mensura == ZEPHYRUM)
+    {
+        redde VERUM;
+    }
+    redde (memcmp(a.datum, b.datum, (memoriae_index)a.mensura) == ZEPHYRUM)
+        ? VERUM : FALSUM;
+}
+
+/* Potestne lexema nomen esse in directiva? (verba clausa quoque) */
+interior b32
+_est_nomen_directivae (SilvaToken* token)
+{
+    si (token->genus == SILVA_LEX_IDENTIFICATOR)
+    {
+        redde VERUM;
+    }
+    si (token->genus >= SILVA_LEX_AUTO && token->genus <= SILVA_LEX_WHILE)
+    {
+        redde VERUM;
+    }
+    redde FALSUM;
+}
+
+/* Classificare directivam ad i_cancellum. NB: #if et #else verba
+ * clausa lexantur (genus IF/ELSE), cetera identificatores. */
+interior SilvaDirectivaGenus
+_directivae_genus (Xar* lexemata, i32 i_cancellum, i32 i_finis)
 {
     SilvaToken* verbum;
+
+    si (i_cancellum + I >= i_finis)
+    {
+        redde SILVA_DIR_NULLA;
+    }
+    verbum = *(SilvaToken**)xar_obtinere(lexemata, i_cancellum + I);
+    si (verbum->genus == SILVA_LEX_IF)
+    {
+        redde SILVA_DIR_IF;
+    }
+    si (verbum->genus == SILVA_LEX_ELSE)
+    {
+        redde SILVA_DIR_ELSE;
+    }
+    si (verbum->genus != SILVA_LEX_IDENTIFICATOR)
+    {
+        redde SILVA_DIR_IGNOTA;
+    }
+    si (_chorda_est_literis(verbum->valor, "define"))
+    {
+        redde SILVA_DIR_DEFINE;
+    }
+    si (_chorda_est_literis(verbum->valor, "undef"))
+    {
+        redde SILVA_DIR_UNDEF;
+    }
+    si (_chorda_est_literis(verbum->valor, "include"))
+    {
+        redde SILVA_DIR_INCLUDE;
+    }
+    si (_chorda_est_literis(verbum->valor, "ifdef"))
+    {
+        redde SILVA_DIR_IFDEF;
+    }
+    si (_chorda_est_literis(verbum->valor, "ifndef"))
+    {
+        redde SILVA_DIR_IFNDEF;
+    }
+    si (_chorda_est_literis(verbum->valor, "elif"))
+    {
+        redde SILVA_DIR_ELIF;
+    }
+    si (_chorda_est_literis(verbum->valor, "endif"))
+    {
+        redde SILVA_DIR_ENDIF;
+    }
+    redde SILVA_DIR_IGNOTA;
+}
+
+/* Processare define/undef: lexemata[i_cancellum] est CANCELLUM.
+ * Reddit VERUM si processata. conditio_id = ramus continens (0 = nullus).
+ * positus = longitudo reliquorum in consumptione (status ad punctum). */
+interior b32
+_definitionem_processare (
+    SilvaExpansio*      exp,
+    Xar*                lexemata,
+    i32                 i_cancellum,
+    i32                 i_finis,
+    SilvaDirectivaGenus genus_dir,
+    i32                 conditio_id,
+    s32                 positus)
+{
     SilvaToken* titulus_tok;
     SilvaMacroDef* def;
     chorda* titulus;
@@ -206,28 +411,20 @@ _directivam_processare (
     {
         redde FALSUM;
     }
-    verbum = *(SilvaToken**)xar_obtinere(lexemata, i_cancellum + I);
     titulus_tok = *(SilvaToken**)xar_obtinere(lexemata, i_cancellum + II);
-    si (titulus_tok->genus != SILVA_LEX_IDENTIFICATOR
-        && titulus_tok->genus < SILVA_LEX_AUTO)
+    si (!_est_nomen_directivae(titulus_tok))
     {
-        redde FALSUM;  /* titulus debet esse identificator (vel verbum clausum) */
+        redde FALSUM;
     }
 
-    si (verbum->genus == SILVA_LEX_IDENTIFICATOR
-        && _chorda_est_literis(verbum->valor, "undef"))
+    si (genus_dir == SILVA_DIR_UNDEF)
     {
         titulus = _chorda_figere(exp->piscina, titulus_tok->valor);
         tabula_dispersa_delere(exp->macros, titulus_tok->valor);
         _eventum_scribere(exp, SILVA_EVENTUM_DELETIO,
-            titulus_tok->fons_index, titulus_tok->linea, titulus, NIHIL);
+            titulus_tok->fons_index, titulus_tok->linea, titulus, NIHIL,
+            conditio_id, positus);
         redde VERUM;
-    }
-
-    si (!(verbum->genus == SILVA_LEX_IDENTIFICATOR
-        && _chorda_est_literis(verbum->valor, "define")))
-    {
-        redde FALSUM;  /* alia directiva (include/if/...): Chunk D */
     }
 
     def = (SilvaMacroDef*)piscina_allocare(exp->piscina,
@@ -281,7 +478,17 @@ _directivam_processare (
                 }
                 alioquin si (t->genus == SILVA_LEX_ELLIPSIS)
                 {
+                    /* variadica: parametrum "__VA_ARGS__" appenditur ut
+                     * ultimum - cauda argumentorum ei ligatur */
+                    chorda** locus;
+
                     def->est_variadica = VERUM;
+                    locus = (chorda**)xar_addere(def->parametra);
+                    si (locus != NIHIL)
+                    {
+                        *locus = _chorda_figere(exp->piscina,
+                            chorda_ex_literis("__VA_ARGS__", exp->piscina));
+                    }
                 }
                 /* COMMA transitur */
                 i++;
@@ -292,35 +499,704 @@ _directivam_processare (
     /* Corpus: reliqua lineae logicae */
     per (; i < i_finis; i++)
     {
-        SilvaToken** locus;
-
-        locus = (SilvaToken**)xar_addere(def->corpus);
-        si (locus != NIHIL)
-        {
-            *locus = *(SilvaToken**)xar_obtinere(lexemata, i);
-        }
+        _lexema_addere(def->corpus, *(SilvaToken**)xar_obtinere(lexemata, i));
     }
 
     tabula_dispersa_inserere(exp->macros, *titulus, (vacuum*)def);
     _eventum_scribere(exp, SILVA_EVENTUM_DEFINITIO,
-        def->fons_index, def->linea_def, titulus, def);
+        def->fons_index, def->linea_def, titulus, def, conditio_id, positus);
     redde VERUM;
 }
 
+/* Praedeclarationes (recursio mutua: fluxus <-> regiones <-> includenda) */
+interior vacuum
+_fluxum_processare (SilvaExpansio* exp, Xar* lexemata, i32 i_initium,
+    i32 i_finis, i32 conditio_id, SilvaRegio* pater, b32 servare_eof,
+    Xar* reliqua, Xar* directivae);
+interior vacuum
+_plagulam_processare (SilvaExpansio* exp, Xar* lexemata, b32 servare_eof,
+    Xar* reliqua, Xar* directivae);
+
+/* ==================================================
+ * Chunk D - Regiones conditionales
+ * ================================================== */
+
+interior SilvaRegio*
+_regionem_creare (SilvaExpansio* exp, SilvaToken* cancellum, SilvaRegio* pater)
+{
+    SilvaRegio* regio;
+
+    regio = (SilvaRegio*)piscina_allocare(exp->piscina,
+        (memoriae_index)magnitudo(SilvaRegio));
+    si (regio == NIHIL)
+    {
+        redde NIHIL;
+    }
+    regio->fons_index = cancellum->fons_index;
+    regio->linea = cancellum->linea;
+    regio->rami = xar_creare(exp->piscina, magnitudo(SilvaRamus*));
+    regio->pater = pater;
+    regio->filiae = xar_creare(exp->piscina, magnitudo(SilvaRegio*));
+    regio->est_imperfecta = FALSUM;
+
+    si (pater != NIHIL)
+    {
+        SilvaRegio** locus;
+
+        locus = (SilvaRegio**)xar_addere(pater->filiae);
+        si (locus != NIHIL)
+        {
+            *locus = regio;
+        }
+    }
+    alioquin
+    {
+        SilvaRegio** locus;
+
+        locus = (SilvaRegio**)xar_addere(exp->regiones);
+        si (locus != NIHIL)
+        {
+            *locus = regio;
+        }
+    }
+    redde regio;
+}
+
+/* Processare regionem: lexemata[i] est CANCELLUM #if/#ifdef/#ifndef.
+ * Consumit usque ad #endif parem (vel finem fluxus). Reddit indicem
+ * post regionem. Via defalta: primus ramus verus sumitur - lexemata
+ * eius normaliter processantur; ceteri laminas crudas retinent. */
+interior i32
+_regionem_processare (
+    SilvaExpansio* exp,
+    Xar*           lexemata,
+    i32            i,
+    i32            i_finis,
+    SilvaRegio*    pater,
+    Xar*           reliqua,
+    Xar*           directivae)
+{
+    SilvaRegio* regio;
+    b32 sumptum_iam;
+    i32 i_currens;
+
+    regio = _regionem_creare(exp,
+        *(SilvaToken**)xar_obtinere(lexemata, i), pater);
+    si (regio == NIHIL)
+    {
+        redde i_finis;
+    }
+    sumptum_iam = FALSUM;
+    i_currens = i;
+
+    dum (i_currens < i_finis)
+    {
+        SilvaRamus* ramus;
+        SilvaRamus** locus_rami;
+        SilvaDirectivaGenus genus_dir;
+        i32 i_linea_finis;
+        i32 i_corpus;
+        i32 i_scan;
+        i32 profunditas;
+
+        i_linea_finis = _lineam_finire(lexemata, i_currens, i_finis);
+        genus_dir = _directivae_genus(lexemata, i_currens, i_linea_finis);
+        _directivam_capere(exp, directivae, lexemata, i_currens, i_linea_finis);
+
+        /* Ramum creare */
+        ramus = (SilvaRamus*)piscina_allocare(exp->piscina,
+            (memoriae_index)magnitudo(SilvaRamus));
+        si (ramus == NIHIL)
+        {
+            redde i_finis;
+        }
+        memset(ramus, ZEPHYRUM, magnitudo(SilvaRamus));
+        commutatio (genus_dir)
+        {
+            casus SILVA_DIR_IF:     ramus->genus = SILVA_RAMUS_IF;     frange;
+            casus SILVA_DIR_IFDEF:  ramus->genus = SILVA_RAMUS_IFDEF;  frange;
+            casus SILVA_DIR_IFNDEF: ramus->genus = SILVA_RAMUS_IFNDEF; frange;
+            casus SILVA_DIR_ELIF:   ramus->genus = SILVA_RAMUS_ELIF;   frange;
+            ordinarius:             ramus->genus = SILVA_RAMUS_ELSE;   frange;
+        }
+        ramus->conditio_id = (i32)(xar_numerus(exp->rami) + I);
+        locus_rami = (SilvaRamus**)xar_addere(exp->rami);
+        si (locus_rami != NIHIL)
+        {
+            *locus_rami = ramus;
+        }
+        ramus->directiva = _lamina_capere(exp, lexemata, i_currens,
+            i_linea_finis);
+        ramus->regio = regio;
+        si (ramus->genus != SILVA_RAMUS_ELSE)
+        {
+            ramus->expressio = _lamina_capere(exp, lexemata,
+                i_currens + II, i_linea_finis);
+        }
+
+        /* #if 0 idioma: litteralis falsa */
+        si ((ramus->genus == SILVA_RAMUS_IF
+                || ramus->genus == SILVA_RAMUS_ELIF)
+            && ramus->expressio != NIHIL
+            && xar_numerus(ramus->expressio) == I)
+        {
+            SilvaToken* solum;
+
+            solum = *(SilvaToken**)xar_obtinere(ramus->expressio, ZEPHYRUM);
+            si (solum->genus == SILVA_LEX_INTEGER
+                && _chorda_est_literis(solum->valor, "0"))
+            {
+                ramus->est_numquam = VERUM;
+            }
+        }
+
+        /* Evaluatio (via defalta) - rami post sumptum NON evaluantur */
+        si (!sumptum_iam)
+        {
+            si (ramus->genus == SILVA_RAMUS_ELSE)
+            {
+                ramus->valor = I;
+                ramus->est_evaluatum = VERUM;
+            }
+            alioquin si (ramus->genus == SILVA_RAMUS_IFDEF
+                || ramus->genus == SILVA_RAMUS_IFNDEF)
+            {
+                si (ramus->expressio != NIHIL
+                    && xar_numerus(ramus->expressio) > ZEPHYRUM)
+                {
+                    SilvaToken* operandum;
+
+                    operandum = *(SilvaToken**)xar_obtinere(
+                        ramus->expressio, ZEPHYRUM);
+                    si (_est_nomen_directivae(operandum))
+                    {
+                        b32 definitum;
+
+                        definitum = silva_conditio_est_definitum(exp,
+                            operandum->valor);
+                        si (ramus->genus == SILVA_RAMUS_IFNDEF)
+                        {
+                            definitum = definitum ? FALSUM : VERUM;
+                        }
+                        ramus->valor = definitum ? I : ZEPHYRUM;
+                        ramus->est_evaluatum = VERUM;
+                    }
+                }
+                /* operandum absens/malformatum: falsum, non evaluatum */
+            }
+            alioquin
+            {
+                b32 successus;
+
+                successus = FALSUM;
+                ramus->valor = silva_conditio_evaluare(exp,
+                    ramus->expressio, &successus);
+                ramus->est_evaluatum = successus;
+                si (!successus)
+                {
+                    ramus->valor = ZEPHYRUM;  /* robustitas: falsum */
+                }
+            }
+            ramus->est_sumptum = (ramus->valor != ZEPHYRUM) ? VERUM : FALSUM;
+        }
+
+        locus_rami = (SilvaRamus**)xar_addere(regio->rami);
+        si (locus_rami != NIHIL)
+        {
+            *locus_rami = ramus;
+        }
+
+        /* Corpus rami: usque ad ELIF/ELSE/ENDIF parem (profunditas 0) */
+        i_corpus = i_linea_finis;
+        i_scan = i_corpus;
+        profunditas = ZEPHYRUM;
+        dum (i_scan < i_finis)
+        {
+            SilvaToken* t;
+
+            t = *(SilvaToken**)xar_obtinere(lexemata, i_scan);
+            si (_est_initium_directivae(t))
+            {
+                SilvaDirectivaGenus g;
+                i32 lf;
+
+                lf = _lineam_finire(lexemata, i_scan, i_finis);
+                g = _directivae_genus(lexemata, i_scan, lf);
+                si (g == SILVA_DIR_IF || g == SILVA_DIR_IFDEF
+                    || g == SILVA_DIR_IFNDEF)
+                {
+                    profunditas++;
+                }
+                alioquin si (g == SILVA_DIR_ENDIF)
+                {
+                    si (profunditas == ZEPHYRUM)
+                    {
+                        frange;
+                    }
+                    profunditas--;
+                }
+                alioquin si ((g == SILVA_DIR_ELIF || g == SILVA_DIR_ELSE)
+                    && profunditas == ZEPHYRUM)
+                {
+                    frange;
+                }
+                i_scan = lf;
+            }
+            alioquin
+            {
+                i_scan++;
+            }
+        }
+
+        si (ramus->est_sumptum)
+        {
+            sumptum_iam = VERUM;
+            _fluxum_processare(exp, lexemata, i_corpus, i_scan,
+                ramus->conditio_id, regio, VERUM, reliqua, directivae);
+        }
+        alioquin
+        {
+            ramus->lexemata_cruda = _lamina_capere(exp, lexemata,
+                i_corpus, i_scan);
+        }
+
+        si (i_scan >= i_finis)
+        {
+            regio->est_imperfecta = VERUM;  /* EOF ante #endif */
+            redde i_finis;
+        }
+
+        /* i_scan stat ad ELIF/ELSE/ENDIF */
+        {
+            SilvaDirectivaGenus g;
+            i32 lf;
+
+            lf = _lineam_finire(lexemata, i_scan, i_finis);
+            g = _directivae_genus(lexemata, i_scan, lf);
+            si (g == SILVA_DIR_ENDIF)
+            {
+                _directivam_capere(exp, directivae, lexemata, i_scan, lf);
+                redde lf;
+            }
+            i_currens = i_scan;  /* ramus proximus (elif/else) */
+        }
+    }
+
+    regio->est_imperfecta = VERUM;
+    redde i_finis;
+}
+
+/* ==================================================
+ * Chunk D - Includenda
+ * ================================================== */
+
+/* Processare #include: viam extrahere, inclusionem memorare,
+ * contentum praebitum recursive processare (reliqua hic inserta) */
+interior vacuum
+_includendum_processare (
+    SilvaExpansio* exp,
+    Xar*           lexemata,
+    i32            i_cancellum,
+    i32            i_finis,
+    Xar*           reliqua,
+    Xar*           directivae)
+{
+    SilvaToken* cancellum;
+    SilvaInclusio* inclusio;
+    SilvaIncludendum* incl;
+    SilvaFons* fons;
+    chorda via;
+    b32 habet_viam;
+    vacuum* valor;
+    i32 i_op;
+
+    cancellum = *(SilvaToken**)xar_obtinere(lexemata, i_cancellum);
+    habet_viam = FALSUM;
+    via.datum = NIHIL;
+    via.mensura = ZEPHYRUM;
+    i_op = i_cancellum + II;
+
+    si (i_op < i_finis)
+    {
+        SilvaToken* t;
+
+        t = *(SilvaToken**)xar_obtinere(lexemata, i_op);
+        si (t->genus == SILVA_LEX_STRING_LIT && t->valor.mensura >= II)
+        {
+            /* "via" - termini remoti */
+            via.datum = t->valor.datum + I;
+            via.mensura = t->valor.mensura - II;
+            habet_viam = VERUM;
+        }
+        alioquin si (t->genus == SILVA_LEX_MINOR)
+        {
+            /* <via> - valores concatenati usque ad '>' */
+            ChordaAedificator* aed;
+            b32 clausa;
+            i32 j;
+
+            aed = chorda_aedificator_creare(exp->piscina, XXXII);
+            clausa = FALSUM;
+            per (j = i_op + I; j < i_finis; j++)
+            {
+                SilvaToken* u;
+
+                u = *(SilvaToken**)xar_obtinere(lexemata, j);
+                si (u->genus == SILVA_LEX_MAIOR)
+                {
+                    clausa = VERUM;
+                    frange;
+                }
+                chorda_aedificator_appendere_chorda(aed, u->valor);
+            }
+            si (clausa)
+            {
+                via = chorda_aedificator_finire(aed);
+                habet_viam = VERUM;
+            }
+        }
+        /* forma per macro expansa: differtur (vide phase-log Chunk D) */
+    }
+
+    si (!habet_viam)
+    {
+        redde;  /* malformata: linea capta, nihil insertum */
+    }
+
+    /* Inclusionem memorare (graphum dependentiarum - "discens").
+     * NB: campi ANTE recursionem scribendi - xar crescens loco movetur. */
+    inclusio = (SilvaInclusio*)xar_addere(exp->inclusiones);
+    si (inclusio == NIHIL)
+    {
+        redde;
+    }
+    inclusio->fons_ex = cancellum->fons_index;
+    inclusio->via = _chorda_figere(exp->piscina, via);
+    inclusio->fons_ad = -I;
+    inclusio->est_praetermissa = FALSUM;
+
+    si (!tabula_dispersa_invenire(exp->includenda, via, &valor))
+    {
+        redde;  /* ignotum: via memorata, processio pergit */
+    }
+    incl = (SilvaIncludendum*)valor;
+    inclusio->fons_ad = incl->fons_index;
+
+    /* Custos definitus -> plagula praetermittitur (interior iam nota) */
+    fons = (SilvaFons*)xar_obtinere(exp->fontes, (i32)incl->fons_index);
+    si (fons->est_custos && fons->custos_titulus != NIHIL
+        && silva_conditio_est_definitum(exp, *fons->custos_titulus))
+    {
+        inclusio->est_praetermissa = VERUM;
+        redde;
+    }
+
+    si (exp->profunditas_includendi >= SILVA_INCLUDENDI_MAXIMI)
+    {
+        inclusio->est_praetermissa = VERUM;  /* profunditas nimia */
+        redde;
+    }
+
+    exp->profunditas_includendi++;
+    _plagulam_processare(exp, incl->lexemata, FALSUM, reliqua, directivae);
+    exp->profunditas_includendi--;
+}
+
+s32
+silva_includendum_praebere (
+    SilvaExpansio*      exp,
+    constans character* via,
+    constans character* textus,
+    i32                 mensura)
+{
+    SilvaIncludendum* incl;
+    SilvaFons* fons;
+    s32 fons_index;
+
+    fons_index = silva_fons_addere(exp, via, FALSUM);
+    si (fons_index < ZEPHYRUM)
+    {
+        redde -I;
+    }
+    incl = (SilvaIncludendum*)piscina_allocare(exp->piscina,
+        (memoriae_index)magnitudo(SilvaIncludendum));
+    si (incl == NIHIL)
+    {
+        redde -I;
+    }
+    incl->fons_index = fons_index;
+    incl->lexemata = silva_lexare(exp->piscina, textus, mensura, fons_index);
+
+    fons = (SilvaFons*)xar_obtinere(exp->fontes, (i32)fons_index);
+    tabula_dispersa_inserere(exp->includenda, *fons->via, (vacuum*)incl);
+    redde fons_index;
+}
+
+/* ==================================================
+ * Chunk D - Custodes (est_custos)
+ *
+ * Forma stricta: primum lexema plagulae est '#' de '#ifndef X';
+ * linea logica proxima est '#define X'; #endif par nihil nisi
+ * EOF sequitur. Detecta: NULLA regio - interior incondicionaliter
+ * processatur (a linea #define), custos in SilvaFons memoratur.
+ * ================================================== */
+
+interior b32
+_custodem_detegere (
+    Xar*         lexemata,
+    i32*         i_corpus_out,   /* initium lineae #define */
+    i32*         i_endif_out,    /* initium lineae #endif */
+    i32*         i_post_out,     /* post lineam #endif */
+    SilvaToken** operandum_out)
+{
+    SilvaToken* tok;
+    SilvaToken* operandum;
+    SilvaToken* def_operandum;
+    i32 n;
+    i32 lf0;
+    i32 lf1;
+    i32 i;
+    i32 profunditas;
+
+    n = xar_numerus(lexemata);
+    si (n == ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    tok = *(SilvaToken**)xar_obtinere(lexemata, ZEPHYRUM);
+    si (!_est_initium_directivae(tok))
+    {
+        redde FALSUM;
+    }
+    lf0 = _lineam_finire(lexemata, ZEPHYRUM, n);
+    si (_directivae_genus(lexemata, ZEPHYRUM, lf0) != SILVA_DIR_IFNDEF)
+    {
+        redde FALSUM;
+    }
+    si (II >= lf0)
+    {
+        redde FALSUM;
+    }
+    operandum = *(SilvaToken**)xar_obtinere(lexemata, II);
+    si (!_est_nomen_directivae(operandum))
+    {
+        redde FALSUM;
+    }
+
+    /* linea proxima: #define X (idem X) */
+    si (lf0 >= n)
+    {
+        redde FALSUM;
+    }
+    tok = *(SilvaToken**)xar_obtinere(lexemata, lf0);
+    si (!_est_initium_directivae(tok))
+    {
+        redde FALSUM;
+    }
+    lf1 = _lineam_finire(lexemata, lf0, n);
+    si (_directivae_genus(lexemata, lf0, lf1) != SILVA_DIR_DEFINE)
+    {
+        redde FALSUM;
+    }
+    si (lf0 + II >= lf1)
+    {
+        redde FALSUM;
+    }
+    def_operandum = *(SilvaToken**)xar_obtinere(lexemata, lf0 + II);
+    si (!_chordae_aequales(def_operandum->valor, operandum->valor))
+    {
+        redde FALSUM;
+    }
+
+    /* #endif par quaerere; post eum nihil nisi EOF */
+    i = lf1;
+    profunditas = ZEPHYRUM;
+    dum (i < n)
+    {
+        tok = *(SilvaToken**)xar_obtinere(lexemata, i);
+        si (_est_initium_directivae(tok))
+        {
+            SilvaDirectivaGenus g;
+            i32 lf;
+
+            lf = _lineam_finire(lexemata, i, n);
+            g = _directivae_genus(lexemata, i, lf);
+            si (g == SILVA_DIR_IF || g == SILVA_DIR_IFDEF
+                || g == SILVA_DIR_IFNDEF)
+            {
+                profunditas++;
+            }
+            alioquin si (g == SILVA_DIR_ENDIF)
+            {
+                si (profunditas == ZEPHYRUM)
+                {
+                    i32 j;
+
+                    per (j = lf; j < n; j++)
+                    {
+                        SilvaToken* u;
+
+                        u = *(SilvaToken**)xar_obtinere(lexemata, j);
+                        si (u->genus != SILVA_LEX_EOF)
+                        {
+                            redde FALSUM;  /* contentum post #endif */
+                        }
+                    }
+                    *i_corpus_out = lf0;
+                    *i_endif_out = i;
+                    *i_post_out = lf;
+                    *operandum_out = operandum;
+                    redde VERUM;
+                }
+                profunditas--;
+            }
+            i = lf;
+        }
+        alioquin
+        {
+            i++;
+        }
+    }
+    redde FALSUM;
+}
+
+/* ==================================================
+ * Ambulator fluxus + introitus publicus
+ * ================================================== */
+
+interior vacuum
+_fluxum_processare (
+    SilvaExpansio* exp,
+    Xar*           lexemata,
+    i32            i_initium,
+    i32            i_finis,
+    i32            conditio_id,
+    SilvaRegio*    pater,
+    b32            servare_eof,
+    Xar*           reliqua,
+    Xar*           directivae)
+{
+    SilvaToken* token;
+    i32 i;
+
+    i = i_initium;
+    dum (i < i_finis)
+    {
+        token = *(SilvaToken**)xar_obtinere(lexemata, i);
+
+        si (_est_initium_directivae(token))
+        {
+            SilvaDirectivaGenus genus_dir;
+            i32 i_linea_finis;
+
+            i_linea_finis = _lineam_finire(lexemata, i, i_finis);
+            genus_dir = _directivae_genus(lexemata, i, i_linea_finis);
+
+            si (genus_dir == SILVA_DIR_DEFINE || genus_dir == SILVA_DIR_UNDEF)
+            {
+                si (_definitionem_processare(exp, lexemata, i, i_linea_finis,
+                        genus_dir, conditio_id,
+                        (s32)xar_numerus(reliqua)))
+                {
+                    _directivam_capere(exp, directivae, lexemata, i,
+                        i_linea_finis);
+                    i = i_linea_finis;
+                    perge;
+                }
+                /* malformata: cadit ad reliqua */
+            }
+            alioquin si (genus_dir == SILVA_DIR_INCLUDE)
+            {
+                _directivam_capere(exp, directivae, lexemata, i,
+                    i_linea_finis);
+                _includendum_processare(exp, lexemata, i, i_linea_finis,
+                    reliqua, directivae);
+                i = i_linea_finis;
+                perge;
+            }
+            alioquin si (genus_dir == SILVA_DIR_IF
+                || genus_dir == SILVA_DIR_IFDEF
+                || genus_dir == SILVA_DIR_IFNDEF)
+            {
+                i = _regionem_processare(exp, lexemata, i, i_finis,
+                    pater, reliqua, directivae);
+                perge;
+            }
+            /* ELIF/ELSE/ENDIF sine regione, NULLA, IGNOTA:
+             * transeunt ad reliqua (byte-conservativum) */
+        }
+
+        si (token->genus != SILVA_LEX_EOF || servare_eof)
+        {
+            _lexema_addere(reliqua, token);
+        }
+        i++;
+    }
+}
+
+interior vacuum
+_plagulam_processare (
+    SilvaExpansio* exp,
+    Xar*           lexemata,
+    b32            servare_eof,
+    Xar*           reliqua,
+    Xar*           directivae)
+{
+    SilvaToken* operandum;
+    i32 i_corpus;
+    i32 i_endif;
+    i32 i_post;
+    i32 n;
+
+    n = xar_numerus(lexemata);
+    operandum = NIHIL;
+
+    si (_custodem_detegere(lexemata, &i_corpus, &i_endif, &i_post, &operandum))
+    {
+        s32 fi;
+
+        fi = operandum->fons_index;
+        si (fi >= ZEPHYRUM)
+        {
+            SilvaFons* fons;
+
+            fons = (SilvaFons*)xar_obtinere(exp->fontes, (i32)fi);
+            fons->est_custos = VERUM;
+            fons->custos_titulus = _chorda_figere(exp->piscina,
+                operandum->valor);
+        }
+
+        /* custos iam definitus (rarum: iniectio ante processionem) */
+        si (silva_conditio_est_definitum(exp, operandum->valor))
+        {
+            _fluxum_processare(exp, lexemata, i_post, n, ZEPHYRUM, NIHIL,
+                servare_eof, reliqua, directivae);
+            redde;
+        }
+
+        /* transparentia custodis: nulla regio; tres directivae captae;
+         * interior (a linea #define) incondicionaliter processatur */
+        _directivam_capere(exp, directivae, lexemata, ZEPHYRUM, i_corpus);
+        _fluxum_processare(exp, lexemata, i_corpus, i_endif, ZEPHYRUM, NIHIL,
+            servare_eof, reliqua, directivae);
+        _directivam_capere(exp, directivae, lexemata, i_endif, i_post);
+        _fluxum_processare(exp, lexemata, i_post, n, ZEPHYRUM, NIHIL,
+            servare_eof, reliqua, directivae);
+        redde;
+    }
+
+    _fluxum_processare(exp, lexemata, ZEPHYRUM, n, ZEPHYRUM, NIHIL,
+        servare_eof, reliqua, directivae);
+}
+
 Xar*
-silva_expansio_definitiones_colligere (
+silva_expansio_directivas_processare (
     SilvaExpansio* exp,
     Xar*           lexemata,
     Xar**          directivae_out)
 {
     Xar* reliqua;
     Xar* directivae;
-    SilvaToken* token;
-    SilvaToken** locus;
-    i32 i;
-    i32 j;
-    i32 n;
-    i32 i_finis;
 
     reliqua = xar_creare(exp->piscina, magnitudo(SilvaToken*));
     directivae = NIHIL;
@@ -329,70 +1205,198 @@ silva_expansio_definitiones_colligere (
         directivae = xar_creare(exp->piscina, magnitudo(Xar*));
         *directivae_out = directivae;
     }
+    _plagulam_processare(exp, lexemata, VERUM, reliqua, directivae);
+    redde reliqua;
+}
 
-    n = xar_numerus(lexemata);
-    i = ZEPHYRUM;
-    dum (i < n)
+
+/* ==================================================
+ * Iniectio macro per API
+ * ================================================== */
+
+interior s32
+_fons_api_obtinere (SilvaExpansio* exp)
+{
+    si (exp->fons_api < ZEPHYRUM)
     {
-        token = *(SilvaToken**)xar_obtinere(lexemata, i);
+        exp->fons_api = silva_fons_addere(exp, "<api>", VERUM);
+    }
+    redde exp->fons_api;
+}
 
-        si (_est_initium_directivae(token))
-        {
-            /* Extensio lineae logicae: usque ad proximum initium_lineae
-             * (vel EOF vel finem) */
-            i_finis = i + I;
-            dum (i_finis < n)
-            {
-                SilvaToken* t;
+/* Lexare corpus in piscinam (textus duplicatur - lexemata visus in
+ * eum tenent); EOF remotum. Lexemata sunt FONTIS synthetici:
+ * provenientia per catenas normales fluit. */
+interior Xar*
+_corpus_api_lexare (SilvaExpansio* exp, constans character* textus)
+{
+    Xar* lexemata;
+    Xar* corpus;
+    i8* fixum;
+    i32 mensura;
+    i32 i;
+    i32 n;
 
-                t = *(SilvaToken**)xar_obtinere(lexemata, i_finis);
-                si (t->initium_lineae || t->genus == SILVA_LEX_EOF)
-                {
-                    frange;
-                }
-                i_finis++;
-            }
-
-            si (_directivam_processare(exp, lexemata, i, i_finis))
-            {
-                /* directiva consumpta: lexemata eius servare si petitum */
-                si (directivae != NIHIL)
-                {
-                    Xar* linea_directivae;
-                    Xar** locus_lineae;
-
-                    linea_directivae = xar_creare(exp->piscina,
-                        magnitudo(SilvaToken*));
-                    per (j = i; j < i_finis; j++)
-                    {
-                        locus = (SilvaToken**)xar_addere(linea_directivae);
-                        si (locus != NIHIL)
-                        {
-                            *locus = *(SilvaToken**)xar_obtinere(lexemata, j);
-                        }
-                    }
-                    locus_lineae = (Xar**)xar_addere(directivae);
-                    si (locus_lineae != NIHIL)
-                    {
-                        *locus_lineae = linea_directivae;
-                    }
-                }
-                i = i_finis;
-                perge;
-            }
-            /* non recognita: transit ad reliqua (Chunk D directivas
-             * alias tractabit) */
-        }
-
-        locus = (SilvaToken**)xar_addere(reliqua);
-        si (locus != NIHIL)
-        {
-            *locus = token;
-        }
-        i++;
+    mensura = (i32)strlen(textus);
+    fixum = (i8*)piscina_allocare(exp->piscina,
+        (memoriae_index)(mensura > ZEPHYRUM ? mensura : I));
+    si (fixum == NIHIL)
+    {
+        redde NIHIL;
+    }
+    si (mensura > ZEPHYRUM)
+    {
+        memcpy(fixum, textus, (memoriae_index)mensura);
     }
 
-    redde reliqua;
+    lexemata = silva_lexare(exp->piscina, (constans character*)fixum,
+        mensura, _fons_api_obtinere(exp));
+    corpus = xar_creare(exp->piscina, magnitudo(SilvaToken*));
+    n = xar_numerus(lexemata);
+    per (i = ZEPHYRUM; i < n; i++)
+    {
+        SilvaToken* t;
+
+        t = *(SilvaToken**)xar_obtinere(lexemata, i);
+        si (t->genus != SILVA_LEX_EOF)
+        {
+            _lexema_addere(corpus, t);
+        }
+    }
+    redde corpus;
+}
+
+interior SilvaMacroDef*
+_def_api_creare (
+    SilvaExpansio*      exp,
+    constans character* titulus,
+    constans character* corpus)
+{
+    SilvaMacroDef* def;
+
+    def = (SilvaMacroDef*)piscina_allocare(exp->piscina,
+        (memoriae_index)magnitudo(SilvaMacroDef));
+    si (def == NIHIL)
+    {
+        redde NIHIL;
+    }
+    memset(def, ZEPHYRUM, magnitudo(SilvaMacroDef));
+    def->titulus = _chorda_figere(exp->piscina,
+        chorda_ex_literis(titulus, exp->piscina));
+    def->corpus = _corpus_api_lexare(exp, corpus);
+    def->fons_index = _fons_api_obtinere(exp);
+    def->linea_def = ZEPHYRUM;
+    def->ex_api = VERUM;
+    si (def->titulus == NIHIL || def->corpus == NIHIL)
+    {
+        redde NIHIL;
+    }
+    redde def;
+}
+
+interior vacuum
+_def_api_registrare (SilvaExpansio* exp, SilvaMacroDef* def)
+{
+    tabula_dispersa_inserere(exp->macros, *def->titulus, (vacuum*)def);
+    _eventum_scribere(exp, SILVA_EVENTUM_DEFINITIO, def->fons_index,
+        ZEPHYRUM, def->titulus, def, ZEPHYRUM, ZEPHYRUM);
+}
+
+b32
+silva_macro_addere (
+    SilvaExpansio*      exp,
+    constans character* titulus,
+    constans character* corpus)
+{
+    SilvaMacroDef* def;
+
+    def = _def_api_creare(exp, titulus, corpus);
+    si (def == NIHIL)
+    {
+        redde FALSUM;
+    }
+    _def_api_registrare(exp, def);
+    redde VERUM;
+}
+
+b32
+silva_macro_functio_addere (
+    SilvaExpansio*       exp,
+    constans character*  titulus,
+    constans character** parametra,
+    constans character*  corpus)
+{
+    SilvaMacroDef* def;
+    i32 i;
+
+    def = _def_api_creare(exp, titulus, corpus);
+    si (def == NIHIL)
+    {
+        redde FALSUM;
+    }
+    def->est_functio = VERUM;
+    def->parametra = xar_creare(exp->piscina, magnitudo(chorda*));
+
+    per (i = ZEPHYRUM; parametra != NIHIL && parametra[i] != NIHIL; i++)
+    {
+        chorda** locus;
+        constans character* titulus_parametri;
+
+        titulus_parametri = parametra[i];
+        si (strcmp(titulus_parametri, "...") == ZEPHYRUM)
+        {
+            def->est_variadica = VERUM;
+            titulus_parametri = "__VA_ARGS__";
+        }
+        locus = (chorda**)xar_addere(def->parametra);
+        si (locus != NIHIL)
+        {
+            *locus = _chorda_figere(exp->piscina,
+                chorda_ex_literis(titulus_parametri, exp->piscina));
+        }
+    }
+
+    _def_api_registrare(exp, def);
+    redde VERUM;
+}
+
+
+/* ==================================================
+ * Prospectus macro - oraculum GLR
+ * ================================================== */
+
+b32
+silva_expansio_prospectare (
+    SilvaExpansio*   exp,
+    chorda           titulus,
+    SilvaProspectus* prospectus_out)
+{
+    SilvaMacroDef* def;
+
+    def = silva_expansio_quaerere(exp, titulus);
+    si (def == NIHIL)
+    {
+        redde FALSUM;
+    }
+
+    prospectus_out->genus = SILVA_LEX_EOF;
+    prospectus_out->est_vacuum = VERUM;
+    prospectus_out->est_recursivum = FALSUM;
+
+    si (def->corpus != NIHIL && xar_numerus(def->corpus) > ZEPHYRUM)
+    {
+        SilvaToken* primum;
+
+        primum = *(SilvaToken**)xar_obtinere(def->corpus, ZEPHYRUM);
+        prospectus_out->genus = primum->genus;
+        prospectus_out->est_vacuum = FALSUM;
+        si (_est_nomen_directivae(primum)
+            && silva_expansio_quaerere(exp, primum->valor) != NIHIL)
+        {
+            prospectus_out->est_recursivum = VERUM;
+        }
+    }
+    redde VERUM;
 }
 
 
@@ -477,32 +1481,24 @@ _parametrum_quaerere (SilvaMacroDef* def, SilvaToken* token)
     redde -I;
 }
 
-interior vacuum
-_lexema_addere (Xar* xar, SilvaToken* token)
-{
-    SilvaToken** locus;
-
-    locus = (SilvaToken**)xar_addere(xar);
-    si (locus != NIHIL)
-    {
-        *locus = token;
-    }
-}
-
 /* Prae-declaratio (recursio: argumenta plene expanduntur) */
 interior Xar*
 _expandere_plene (SilvaExpansio* exp, Xar* lexemata);
 
 /* Colligere argumenta invocationis. lexemata[i_paren] est '('.
  * Reddit Xar de Xar* (unum per argumentum) vel NIHIL si non
- * terminata (robustitas: invocatio abicitur, nomen manet). 
- * *i_post_out = index post ')' clausam. */
+ * terminata (robustitas: invocatio abicitur, nomen manet).
+ * *i_post_out = index post ')' clausam.
+ * scissiones_maximae: numerus scissionum comma permissarum (-1 =
+ * sine fine). Pro variadicis: cauda post parametra nominata manet
+ * UNUM argumentum cum lexematibus comma VERIS suis. */
 interior Xar*
 _argumenta_colligere (
     SilvaExpansio* exp,
     Xar*           lexemata,
     i32            i_paren,
-    i32*           i_post_out)
+    i32*           i_post_out,
+    s32            scissiones_maximae)
 {
     Xar* argumenta;
     Xar* currens;
@@ -510,10 +1506,12 @@ _argumenta_colligere (
     i32 i;
     i32 n;
     i32 profunditas;
+    s32 scissiones_factae;
 
     argumenta = xar_creare(exp->piscina, magnitudo(Xar*));
     currens = xar_creare(exp->piscina, magnitudo(SilvaToken*));
     profunditas = I;
+    scissiones_factae = ZEPHYRUM;
     n = xar_numerus(lexemata);
 
     per (i = i_paren + I; i < n; i++)
@@ -543,7 +1541,9 @@ _argumenta_colligere (
                 redde argumenta;
             }
         }
-        alioquin si (t->genus == SILVA_LEX_COMMA && profunditas == I)
+        alioquin si (t->genus == SILVA_LEX_COMMA && profunditas == I
+            && (scissiones_maximae < ZEPHYRUM
+                || scissiones_factae < scissiones_maximae))
         {
             Xar** locus;
 
@@ -553,6 +1553,7 @@ _argumenta_colligere (
                 *locus = currens;
             }
             currens = xar_creare(exp->piscina, magnitudo(SilvaToken*));
+            scissiones_factae++;
             perge;
         }
         _lexema_addere(currens, t);
@@ -897,17 +1898,27 @@ _substituere (
     }
 }
 
-Xar*
-silva_expansio_generatio (
-    SilvaExpansio* exp,
-    Xar*           lexemata,
-    b32*           mutatum_out)
+/* Nucleus generationis. tabula (si non NIHIL) = tabula operans
+ * positionalis, activata per ambulationem (quaerere eam videt, etiam
+ * in expansione argumentorum nidificata); positus_localis = positiones
+ * eventorum in FLUXU HOC, remappatae in situ ad positiones exitus
+ * (generatio proxima eas legit). Ambo NIHIL = semantica tabulae vivae. */
+interior Xar*
+_generatio_interna (
+    SilvaExpansio*  exp,
+    Xar*            lexemata,
+    b32*            mutatum_out,
+    TabulaDispersa* tabula,
+    s32*            positus_localis)
 {
     Xar* exitus;
     SilvaToken* token;
     SilvaMacroDef* def;
+    TabulaDispersa* tabula_prior;
     i32 i;
     i32 n;
+    i32 cursor;
+    i32 n_acta;
     b32 mutatum;
 
     exitus = xar_creare(exp->piscina, magnitudo(SilvaToken*));
@@ -915,8 +1926,38 @@ silva_expansio_generatio (
     n = xar_numerus(lexemata);
     i = ZEPHYRUM;
 
+    tabula_prior = exp->tabula_activa;
+    si (tabula != NIHIL)
+    {
+        exp->tabula_activa = tabula;
+    }
+    cursor = ZEPHYRUM;
+    n_acta = xar_numerus(exp->acta);
+
     dum (i < n)
     {
+        /* eventa ante lexema i applicare (status ad punctum) */
+        si (positus_localis != NIHIL && tabula != NIHIL)
+        {
+            dum (cursor < n_acta && positus_localis[cursor] <= (s32)i)
+            {
+                SilvaEventum* eventum;
+
+                eventum = (SilvaEventum*)xar_obtinere(exp->acta, cursor);
+                si (eventum->genus == SILVA_EVENTUM_DEFINITIO)
+                {
+                    tabula_dispersa_inserere(tabula, *eventum->titulus,
+                        (vacuum*)eventum->def);
+                }
+                alioquin
+                {
+                    tabula_dispersa_delere(tabula, *eventum->titulus);
+                }
+                positus_localis[cursor] = (s32)xar_numerus(exitus);
+                cursor++;
+            }
+        }
+
         token = *(SilvaToken**)xar_obtinere(lexemata, i);
 
         si (_est_nomen_potentiale(token))
@@ -942,10 +1983,20 @@ silva_expansio_generatio (
                     {
                         Xar* argumenta;
                         i32 i_post;
+                        s32 scissiones;
+
+                        /* variadica: scissiones = parametra nominata
+                         * (cauda manet unum argumentum __VA_ARGS__) */
+                        scissiones = -I;
+                        si (def->est_variadica)
+                        {
+                            scissiones =
+                                (s32)xar_numerus(def->parametra) - I;
+                        }
 
                         i_post = i;
                         argumenta = _argumenta_colligere(exp, lexemata,
-                            i + I, &i_post);
+                            i + I, &i_post, scissiones);
                         si (argumenta != NIHIL)
                         {
                             Xar* expansa;
@@ -990,11 +2041,31 @@ silva_expansio_generatio (
         i++;
     }
 
+    /* eventa post finem fluxus: remappare ad finem exitus */
+    si (positus_localis != NIHIL)
+    {
+        dum (cursor < n_acta)
+        {
+            positus_localis[cursor] = (s32)xar_numerus(exitus);
+            cursor++;
+        }
+    }
+    exp->tabula_activa = tabula_prior;
+
     si (mutatum_out != NIHIL)
     {
         *mutatum_out = mutatum;
     }
     redde exitus;
+}
+
+Xar*
+silva_expansio_generatio (
+    SilvaExpansio* exp,
+    Xar*           lexemata,
+    b32*           mutatum_out)
+{
+    redde _generatio_interna(exp, lexemata, mutatum_out, NIHIL, NIHIL);
 }
 
 /* Cap generationum: assertio contra regressum caecationum, non
@@ -1052,4 +2123,72 @@ interior Xar*
 _expandere_plene (SilvaExpansio* exp, Xar* lexemata)
 {
     redde silva_expansio_expandere(exp, lexemata, NIHIL);
+}
+
+Xar*
+silva_expansio_expandere_reliqua (
+    SilvaExpansio* exp,
+    Xar*           reliqua,
+    Xar**          strata_out)
+{
+    Xar* currens;
+    Xar* strata;
+    s32* positus_localis;
+    b32 mutatum;
+    i32 generationes;
+    i32 n_acta;
+    i32 k;
+
+    strata = NIHIL;
+    si (strata_out != NIHIL)
+    {
+        strata = xar_creare(exp->piscina, magnitudo(Xar*));
+        *strata_out = strata;
+    }
+
+    /* positiones locales eventorum: remappantur per generationem */
+    n_acta = xar_numerus(exp->acta);
+    positus_localis = (s32*)piscina_allocare(exp->piscina,
+        (memoriae_index)(magnitudo(s32)
+            * (n_acta > ZEPHYRUM ? (memoriae_index)n_acta : I)));
+    si (positus_localis == NIHIL)
+    {
+        redde reliqua;
+    }
+    per (k = ZEPHYRUM; k < n_acta; k++)
+    {
+        positus_localis[k] =
+            ((SilvaEventum*)xar_obtinere(exp->acta, k))->positus;
+    }
+
+    currens = reliqua;
+    generationes = ZEPHYRUM;
+    dum (generationes < SILVA_GENERATIONES_MAXIMAE)
+    {
+        TabulaDispersa* tabula;
+        Xar* exitus;
+
+        mutatum = FALSUM;
+        tabula = tabula_dispersa_creare_chorda(exp->piscina, LXIV);
+        exitus = _generatio_interna(exp, currens, &mutatum, tabula,
+            positus_localis);
+        si (!mutatum)
+        {
+            frange;
+        }
+        currens = exitus;
+        si (strata != NIHIL)
+        {
+            Xar** locus;
+
+            locus = (Xar**)xar_addere(strata);
+            si (locus != NIHIL)
+            {
+                *locus = currens;
+            }
+        }
+        generationes++;
+    }
+
+    redde currens;
 }

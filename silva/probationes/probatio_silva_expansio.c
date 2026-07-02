@@ -20,7 +20,7 @@ _praeparare (Piscina* piscina, constans character* fons, Xar** reliqua_out,
     exp = silva_expansio_creare(piscina);
     silva_fons_addere(exp, "probatio.c", FALSUM);
     lexemata = silva_lexare(piscina, fons, (i32)strlen(fons), ZEPHYRUM);
-    *reliqua_out = silva_expansio_definitiones_colligere(exp, lexemata,
+    *reliqua_out = silva_expansio_directivas_processare(exp, lexemata,
         directivae_out);
     redde exp;
 }
@@ -104,13 +104,13 @@ s32 principale (vacuum)
         CREDO_FALSUM (def->est_functio);
         CREDO_AEQUALIS_I32 (xar_numerus(def->corpus), III);  /* ( x ) */
 
-        /* variadica (C99) signata */
+        /* variadica (C99) signata; "..." parametrum __VA_ARGS__ appendit */
         exp = _praeparare(piscina, "#define V(a, ...) a", &reliqua, NIHIL);
         def = silva_expansio_quaerere(exp, _ch("V"));
         CREDO_NON_NIHIL (def);
         CREDO_VERUM (def->est_functio);
         CREDO_VERUM (def->est_variadica);
-        CREDO_AEQUALIS_I32 (xar_numerus(def->parametra), I);
+        CREDO_AEQUALIS_I32 (xar_numerus(def->parametra), II);
     }
 
 

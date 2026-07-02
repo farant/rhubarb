@@ -37,11 +37,13 @@ declare -a GCC_FLAGS=(
 declare -a INCLUDE_FLAGS=(
     "-I$RADIX_DIR/include"
     "-I$SILVA_DIR/fontes"
+    "-I$SILVA_DIR/instrumenta"
     "-I$SILVA_DIR/probationes"
 )
 
 # Rhubarb lib sources silva depends on during development (vendoring happens
-# only at amalgamation). credo is the test framework.
+# only at amalgamation). credo is the test framework. stml is used ONLY by
+# instrumenta/ (the generator, dev-time — never amalgamated).
 declare -a RADIX_FONTES=(
     "piscina"
     "chorda"
@@ -50,6 +52,8 @@ declare -a RADIX_FONTES=(
     "tabula_dispersa"
     "friatio"
     "internamentum"
+    "selectio"
+    "stml"
     "credo"
 )
 
@@ -74,9 +78,9 @@ for f in "${RADIX_FONTES[@]}"; do
     obj_files="$obj_files $obj"
 done
 
-# ---- 2. compile silva's own sources (fontes/*.c), if any ----
+# ---- 2. compile silva's own sources (fontes/*.c + instrumenta/*.c) ----
 shopt -s nullglob
-for src in "$SILVA_DIR"/fontes/*.c; do
+for src in "$SILVA_DIR"/fontes/*.c "$SILVA_DIR"/instrumenta/*.c; do
     base="$(basename "$src" .c)"
     obj="$BUILD_DIR/$base.o"
     if [ ! -f "$obj" ] || [ "$src" -nt "$obj" ] || [ -n "$(newest_header "$obj")" ]; then
@@ -104,7 +108,7 @@ for test_file in "$SILVA_DIR"/probationes/probatio_*.c; do
         failed_names="$failed_names $name"
         continue
     fi
-    if "$bin"; then
+    if RHUBARB_RADIX="$RADIX_DIR" "$bin"; then
         passed=$((passed + 1))
     else
         failed_names="$failed_names $name"
