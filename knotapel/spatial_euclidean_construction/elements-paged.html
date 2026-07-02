@@ -1,0 +1,1285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Elementa Constructionis Spatialis — Paged View</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: Georgia, 'Times New Roman', serif;
+    line-height: 1.7;
+    color: #222;
+    background: #8b8378;
+    overflow: hidden;
+    height: 100vh;
+    width: 100vw;
+  }
+
+  /* ── spread container ── */
+  #spread {
+    display: flex;
+    width: 100vw;
+    height: 100vh;
+    padding: 24px 32px 60px;
+    gap: 6px;
+    align-items: stretch;
+  }
+
+  /* ── each page ── */
+  .page {
+    flex: 1;
+    background: #faf8f4;
+    border-radius: 2px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 1px 8px rgba(0,0,0,0.25);
+    position: relative;
+  }
+  .page-left {
+    border-right: 1px solid #ccc;
+    border-radius: 2px 0 0 2px;
+  }
+  .page-right {
+    border-radius: 0 2px 2px 0;
+  }
+
+  /* ── spine shadow ── */
+  .page-left::after {
+    content: '';
+    position: absolute;
+    top: 0; right: 0;
+    width: 20px; height: 100%;
+    background: linear-gradient(to left, rgba(0,0,0,0.06), transparent);
+    pointer-events: none;
+  }
+  .page-right::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 20px; height: 100%;
+    background: linear-gradient(to right, rgba(0,0,0,0.06), transparent);
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  /* ── page header ── */
+  .page-header {
+    padding: 12px 28px 8px;
+    font-size: 0.78em;
+    color: #888;
+    font-variant: small-caps;
+    letter-spacing: 0.06em;
+    border-bottom: 1px solid #e0ddd8;
+    display: flex;
+    justify-content: space-between;
+    flex-shrink: 0;
+  }
+
+  /* ── page content area ── */
+  .page-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px 32px 16px;
+    position: relative;
+  }
+
+  /* ── page footer ── */
+  .page-footer {
+    padding: 6px 28px 10px;
+    font-size: 0.75em;
+    color: #aaa;
+    border-top: 1px solid #e0ddd8;
+    text-align: center;
+    flex-shrink: 0;
+  }
+
+  /* ── left page: book content styles ── */
+  .page-body h2 {
+    font-size: 1.35em;
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 4px;
+    margin: 0 0 0.8em 0;
+  }
+  .page-body h3 {
+    font-size: 1.1em;
+    margin: 1.2em 0 0.6em;
+    color: #444;
+  }
+  .page-body h3:first-child {
+    margin-top: 0;
+  }
+  .page-body p {
+    margin: 0.6em 0;
+  }
+
+  .definition, .postulate, .proposition, .theorem, .corollary, .scholium, .note-block {
+    margin: 1em 0;
+    padding: 0.7em 0.9em;
+    border-left: 3px solid #888;
+    background: #f5f3ef;
+    font-size: 0.95em;
+  }
+  .definition { border-left-color: #4a7c59; }
+  .postulate { border-left-color: #8b4513; }
+  .proposition { border-left-color: #2e5090; }
+  .theorem { border-left-color: #b22222; }
+  .corollary { border-left-color: #6a5acd; }
+  .scholium { border-left-color: #cc8800; background: #f8f4eb; }
+  .note-block { border-left-color: #999; background: #f0eeea; font-size: 0.9em; }
+
+  .label {
+    font-weight: bold;
+    font-variant: small-caps;
+    margin-bottom: 0.3em;
+  }
+  .definition .label { color: #4a7c59; }
+  .postulate .label { color: #8b4513; }
+  .proposition .label { color: #2e5090; }
+  .theorem .label { color: #b22222; }
+  .corollary .label { color: #6a5acd; }
+  .scholium .label { color: #cc8800; }
+  .note-block .label { color: #666; }
+
+  .formula {
+    margin: 0.6em 0;
+    padding: 0.5em 0.8em;
+    background: #eee;
+    font-family: 'Courier New', monospace;
+    font-size: 0.9em;
+    overflow-x: auto;
+  }
+  code {
+    font-family: 'Courier New', monospace;
+    background: #eee;
+    padding: 1px 4px;
+    font-size: 0.88em;
+  }
+  table {
+    border-collapse: collapse;
+    margin: 0.8em 0;
+    font-size: 0.9em;
+    width: 100%;
+  }
+  th, td {
+    border: 1px solid #ccc;
+    padding: 5px 10px;
+    text-align: left;
+  }
+  th { background: #eee; }
+
+  ol, ul {
+    margin: 0.4em 0;
+    padding-left: 1.5em;
+  }
+  li { margin: 0.2em 0; }
+
+  .qed {
+    text-align: right;
+    font-size: 1.2em;
+    margin-top: 0.5em;
+  }
+
+  /* ── right page: accordion (for page-q elements) ── */
+  .pq-section {
+    border-bottom: 1px solid #e0ddd8;
+  }
+  .pq-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 4px;
+    cursor: pointer;
+    font-size: 0.92em;
+    color: #444;
+    user-select: none;
+    transition: background 0.15s;
+  }
+  .pq-header:hover {
+    background: #f0eeea;
+  }
+  .pq-chevron {
+    font-size: 0.7em;
+    color: #999;
+    transition: transform 0.2s;
+    flex-shrink: 0;
+    width: 1em;
+    text-align: center;
+  }
+  .pq-section.open .pq-chevron {
+    transform: rotate(90deg);
+  }
+  .pq-body {
+    display: none;
+    padding: 0 4px 12px 24px;
+    font-size: 0.88em;
+    line-height: 1.6;
+    color: #555;
+  }
+  .pq-section.open .pq-body {
+    display: block;
+  }
+  .pq-body p {
+    margin: 0.4em 0;
+  }
+  .pq-type {
+    font-size: 0.75em;
+    font-variant: small-caps;
+    letter-spacing: 0.04em;
+    padding: 1px 6px;
+    border-radius: 3px;
+    flex-shrink: 0;
+  }
+  .pq-comprehension { background: #e8f0e8; color: #4a7c59; }
+  .pq-connection { background: #e8ecf4; color: #2e5090; }
+  .pq-challenge { background: #f4e8e8; color: #b22222; }
+  .pq-intuition { background: #f4f0e8; color: #cc8800; }
+
+  /* ── navigation controls ── */
+  #nav-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 48px;
+    background: #3a3632;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    z-index: 100;
+    box-shadow: 0 -2px 8px rgba(0,0,0,0.2);
+  }
+  #nav-bar button {
+    background: #5a5550;
+    border: none;
+    color: #ddd;
+    padding: 6px 16px;
+    font-family: Georgia, serif;
+    font-size: 0.85em;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  #nav-bar button:hover { background: #6a6560; }
+  #nav-bar button:disabled { opacity: 0.3; cursor: default; }
+  #nav-bar button.active { background: #2e5090; color: #fff; }
+  #nav-bar .page-info {
+    color: #aaa;
+    font-size: 0.82em;
+    font-family: Georgia, serif;
+    min-width: 100px;
+    text-align: center;
+  }
+  #nav-bar select {
+    background: #5a5550;
+    border: 1px solid #6a6560;
+    color: #ddd;
+    padding: 4px 8px;
+    font-family: Georgia, serif;
+    font-size: 0.82em;
+    border-radius: 3px;
+    cursor: pointer;
+  }
+
+  /* construction diagrams */
+  construction-diagram { display: block; margin: 0.8em auto; }
+  svg { display: block; margin: 0.8em auto; }
+
+  /* hide source content */
+  book-page, euclidean-layout { display: none; }
+
+  /* ── placed block styling ── */
+  [place] {
+    padding: 12px;
+  }
+
+  /* ── title page ── */
+  .title-block {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+  .title-block h1 {
+    font-size: 1.8em;
+    letter-spacing: 0.04em;
+    margin-bottom: 0.3em;
+    border: none;
+  }
+  .title-block .subtitle {
+    font-style: italic;
+    color: #666;
+    font-size: 1em;
+  }
+  .toc-block {
+    font-size: 0.88em;
+  }
+  .toc-block ul {
+    list-style: none;
+    padding: 0;
+  }
+  .toc-block li {
+    padding: 2px 0;
+    break-inside: avoid;
+  }
+  .toc-block a {
+    color: #2e5090;
+    text-decoration: none;
+    cursor: pointer;
+  }
+  .toc-block a:hover { text-decoration: underline; }
+</style>
+</head>
+<body>
+<script src="construction-diagram.js"></script>
+<script src="euclidean-layout.js"></script>
+
+<!-- ══════════════════════════════════════════════════════════════════════
+     EUCLIDEAN LAYOUTS — compass-and-straightedge constructions for placement
+     ══════════════════════════════════════════════════════════════════════ -->
+
+<euclidean-layout id="halves">
+  <!-- page edges -->
+  <straightedge-line id="top"    from="TL" to="TR"></straightedge-line>
+  <straightedge-line id="bottom" from="BL" to="BR"></straightedge-line>
+  <straightedge-line id="left"   from="TL" to="BL"></straightedge-line>
+  <straightedge-line id="right"  from="TR" to="BR"></straightedge-line>
+
+  <!-- diagonals → center -->
+  <straightedge-line id="d1" from="TL" to="BR"></straightedge-line>
+  <straightedge-line id="d2" from="TR" to="BL"></straightedge-line>
+
+  <!-- vertical bisector: perpendicular bisector of top edge -->
+  <compass-circle id="ct1" center="TL" through="TR"></compass-circle>
+  <compass-circle id="ct2" center="TR" through="TL"></compass-circle>
+  <straightedge-line id="vmid" from="ct1~ct2.a" to="ct1~ct2.b"></straightedge-line>
+
+  <!-- horizontal bisector: perpendicular bisector of left edge -->
+  <compass-circle id="cl1" center="TL" through="BL"></compass-circle>
+  <compass-circle id="cl2" center="BL" through="TL"></compass-circle>
+  <straightedge-line id="hmid" from="cl1~cl2.a" to="cl1~cl2.b"></straightedge-line>
+
+  <!-- readable aliases -->
+  <page-point name="center"  at="d1~d2"></page-point>
+  <page-point name="top-mid" at="vmid~top"></page-point>
+  <page-point name="bot-mid" at="vmid~bottom"></page-point>
+  <page-point name="mid-left"  at="hmid~left"></page-point>
+  <page-point name="mid-right" at="hmid~right"></page-point>
+</euclidean-layout>
+
+<!-- Van de Graaf canon: classical book page proportions via compass-and-straightedge.
+     Text block = 2/3 × 2/3 of page, margins 1/9 and 2/9.
+     txt-tl = (2w/9, h/9), txt-br = (8w/9, 7h/9). -->
+
+<euclidean-layout id="canon">
+
+  <!-- ═══ Phase 1: Diagonals & midpoints ═══ -->
+  <straightedge-line id="d1" from="TL" to="BR"></straightedge-line>
+  <straightedge-line id="d2" from="TR" to="BL"></straightedge-line>
+
+  <compass-circle id="ct1" center="TL" through="TR"></compass-circle>
+  <compass-circle id="ct2" center="TR" through="TL"></compass-circle>
+  <straightedge-line id="vmid" from="ct1~ct2.a" to="ct1~ct2.b"></straightedge-line>
+
+  <compass-circle id="cl1" center="TL" through="BL"></compass-circle>
+  <compass-circle id="cl2" center="BL" through="TL"></compass-circle>
+  <straightedge-line id="hmid" from="cl1~cl2.a" to="cl1~cl2.b"></straightedge-line>
+
+  <page-point name="top-mid"   at="vmid~edge-top"></page-point>
+  <page-point name="bot-mid"   at="vmid~edge-bottom"></page-point>
+  <page-point name="mid-left"  at="hmid~edge-left"></page-point>
+  <page-point name="mid-right" at="hmid~edge-right"></page-point>
+
+  <!-- ═══ Phase 2: Thirds via diagonal-midpoint intersections ═══ -->
+  <straightedge-line id="aux-bl-tm" from="BL" to="top-mid"></straightedge-line>
+  <straightedge-line id="aux-br-tm" from="BR" to="top-mid"></straightedge-line>
+  <straightedge-line id="aux-tl-bm" from="TL" to="bot-mid"></straightedge-line>
+  <straightedge-line id="aux-tr-bm" from="TR" to="bot-mid"></straightedge-line>
+
+  <page-point name="third-nw" at="d1~aux-bl-tm"></page-point>
+  <page-point name="third-ne" at="d2~aux-br-tm"></page-point>
+  <page-point name="third-sw" at="d2~aux-tl-bm"></page-point>
+  <page-point name="third-se" at="d1~aux-tr-bm"></page-point>
+
+  <straightedge-line id="h3"  from="third-nw" to="third-ne"></straightedge-line>
+  <straightedge-line id="v3l" from="third-nw" to="third-sw"></straightedge-line>
+  <straightedge-line id="v3r" from="third-ne" to="third-se"></straightedge-line>
+
+  <!-- ═══ Phase 3: Edge thirds & top-sixth bisection ═══ -->
+  <page-point name="top-third"     at="v3l~edge-top"></page-point>
+  <page-point name="left-third"    at="h3~edge-left"></page-point>
+  <page-point name="top-two-third" at="v3r~edge-top"></page-point>
+  <page-point name="right-third"   at="h3~edge-right"></page-point>
+
+  <compass-circle id="c6a" center="TL" through="top-third"></compass-circle>
+  <compass-circle id="c6b" center="top-third" through="TL"></compass-circle>
+  <straightedge-line id="bisect6" from="c6a~c6b.a" to="c6a~c6b.b"></straightedge-line>
+  <page-point name="top-sixth" at="bisect6~edge-top"></page-point>
+
+  <!-- ═══ Phase 4: Ninth point (left-third → top-sixth meets d1) ═══ -->
+  <straightedge-line id="aux-ninth" from="left-third" to="top-sixth"></straightedge-line>
+  <page-point name="ninth" at="d1~aux-ninth"></page-point>
+
+  <!-- ═══ Phase 5: Circle at ninth through TL → 2/9 edge marks ═══ -->
+  <compass-circle id="cn" center="ninth" through="TL"></compass-circle>
+  <page-point name="top-two-ninth" at="cn~edge-top.b"></page-point>
+
+  <!-- ═══ Phase 6: Anti-ninth (mirror construction from right) ═══ -->
+  <compass-circle id="c6c" center="top-two-third" through="TR"></compass-circle>
+  <compass-circle id="c6d" center="TR" through="top-two-third"></compass-circle>
+  <straightedge-line id="bisect6r" from="c6c~c6d.a" to="c6c~c6d.b"></straightedge-line>
+  <page-point name="top-five-sixth" at="bisect6r~edge-top"></page-point>
+
+  <straightedge-line id="aux-anti-ninth" from="right-third" to="top-five-sixth"></straightedge-line>
+  <page-point name="anti-ninth" at="d2~aux-anti-ninth"></page-point>
+
+  <!-- ═══ Phase 7: Text block top edge ═══ -->
+  <straightedge-line id="h-ninth" from="ninth" to="anti-ninth"></straightedge-line>
+  <straightedge-line id="spread" from="TL" to="mid-right"></straightedge-line>
+  <page-point name="txt-tl" at="spread~h-ninth"></page-point>
+  <page-point name="txt-tr" at="d2~h-ninth"></page-point>
+
+  <!-- ═══ Phase 8: Text block bottom corners ═══ -->
+  <straightedge-line id="aux-lt-se" from="left-third" to="third-se"></straightedge-line>
+  <page-point name="txt-br" at="aux-lt-se~aux-br-tm"></page-point>
+
+  <straightedge-line id="v-txt-l" from="top-two-ninth" to="txt-tl"></straightedge-line>
+  <straightedge-line id="v-txt-r" from="txt-tr" to="txt-br"></straightedge-line>
+  <page-point name="txt-bl" at="d2~v-txt-l"></page-point>
+
+  <!-- ═══ Phase 9: Title / content split at h/3 ═══ -->
+  <page-point name="toc-tl"   at="v-txt-l~h3"></page-point>
+  <page-point name="title-br" at="v-txt-r~h3"></page-point>
+
+  <!-- ═══ Phase 10: Column bisection ═══ -->
+  <compass-circle id="ccol1" center="txt-tl" through="txt-tr"></compass-circle>
+  <compass-circle id="ccol2" center="txt-tr" through="txt-tl"></compass-circle>
+  <straightedge-line id="col-mid" from="ccol1~ccol2.a" to="ccol1~ccol2.b"></straightedge-line>
+
+  <straightedge-line id="h-bot-txt" from="txt-bl" to="txt-br"></straightedge-line>
+  <page-point name="col-top" at="col-mid~h-ninth"></page-point>
+  <page-point name="col-bot" at="col-mid~h-bot-txt"></page-point>
+  <page-point name="col-h3"  at="col-mid~h3"></page-point>
+
+</euclidean-layout>
+
+
+<!-- ══════════════════════════════════════════════════════════════════════
+     LAYOUT SHELL
+     ══════════════════════════════════════════════════════════════════════ -->
+<div id="spread">
+  <div class="page page-left" id="page-left">
+    <div class="page-header">
+      <span id="left-header-title"></span>
+      <span id="left-header-book"></span>
+    </div>
+    <div class="page-body" id="left-body"></div>
+    <div class="page-footer" id="left-footer"></div>
+  </div>
+  <div class="page page-right" id="page-right">
+    <div class="page-header">
+      <span id="right-header-label"></span>
+      <span id="right-header-title"></span>
+    </div>
+    <div class="page-body" id="right-body"></div>
+    <div class="page-footer" id="right-footer"></div>
+  </div>
+</div>
+
+<div id="nav-bar">
+  <button id="btn-prev">&larr; Prev</button>
+  <select id="book-select"></select>
+  <span class="page-info" id="page-info"></span>
+  <button id="btn-next">Next &rarr;</button>
+  <button id="btn-grid" title="Toggle construction grid">&#9653; Grid</button>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════════════════════
+     CONTENT
+     ══════════════════════════════════════════════════════════════════════ -->
+
+<!-- ── TITLE PAGE ── -->
+
+<book-page title="Title Page" book="Elementa Constructionis Spatialis" layout="canon">
+
+<div class="title-block" place="txt-tl title-br">
+  <h1>Elementa Constructionis<br>Spatialis</h1>
+  <p class="subtitle">Elements of Spatial Construction</p>
+  <p class="subtitle">Compass and Straightedge in Three Dimensions</p>
+</div>
+
+<div class="toc-block" place="toc-tl col-bot">
+  <strong>Contents</strong>
+  <ul>
+    <li>I. Definitions &amp; Postulates</li>
+    <li>II. Rational Constructions</li>
+    <li>III. Spherical Constructions</li>
+    <li>IV. Arithmetic of Constructions</li>
+    <li>V. Perpendicular &amp; Angular</li>
+    <li>VI. Reflections &amp; Isometries</li>
+    <li>VII. Regular Polyhedra</li>
+    <li>VIII. Volumes &amp; Cross Product</li>
+    <li>IX. Centers of the Tetrahedron</li>
+    <li>X. Transformations</li>
+    <li>XI. Projections &amp; Shadows</li>
+    <li>XII. Barycentric Coordinates</li>
+  </ul>
+</div>
+
+<div class="toc-block" place="col-h3 txt-br">
+  <ul>
+    <li>XIII. Inversion in a Sphere</li>
+    <li>XIV. Stereographic Projection</li>
+    <li>XV. Power of a Point</li>
+    <li>XVI. Poles and Polars</li>
+    <li>XVII. Cross-Ratio &amp; Harmonic</li>
+    <li>XVIII. Pencils of Spheres</li>
+    <li>XIX. Inversive Distance</li>
+    <li>XX. Conformal Property</li>
+    <li>XXI. Descartes Circle Theorem</li>
+    <li>XXII. Soddy Spheres</li>
+    <li>XXIII. Apollonian Gasket</li>
+  </ul>
+</div>
+
+<facing-page>
+  <p style="margin-top:40%;text-align:center;color:#999;font-style:italic;">
+    A 23-book treatise developing three-dimensional compass-and-straightedge
+    construction from four points to the Apollonian gasket.
+  </p>
+  <p style="text-align:center;color:#bbb;font-size:0.85em;margin-top:2em;">
+    Toggle <strong>Grid</strong> to see the Euclidean construction<br>
+    that determines this page&rsquo;s layout.
+  </p>
+</facing-page>
+
+</book-page>
+
+
+<!-- ── BOOK I ── -->
+
+<book-page title="Definitions I.1–I.4" book="Book I: Definitions &amp; Postulates" layout="halves">
+
+<h3>Definitions</h3>
+
+<div class="definition">
+  <div class="label">Definition I.1 &mdash; Point</div>
+  A <em>point</em> is an ordered triple of real numbers (x, y, z) specifying a
+  position in three-dimensional Euclidean space.
+</div>
+
+<div class="definition">
+  <div class="label">Definition I.2 &mdash; Line</div>
+  A <em>line</em> is the unique straight path extending infinitely in both
+  directions through two distinct points P and Q. We write it as
+  <strong>L(P, Q)</strong>. Parametrically:
+  <div class="formula">L(t) = P + t(Q &minus; P),&emsp;t &isin; &reals;</div>
+</div>
+
+<div class="definition">
+  <div class="label">Definition I.3 &mdash; Plane</div>
+  A <em>plane</em> is the unique flat surface containing three non-collinear
+  points P, Q, R. We write it as <strong>&Pi;(P, Q, R)</strong>. Its normal
+  vector is:
+  <div class="formula">n = (Q &minus; P) &times; (R &minus; P)</div>
+  and the plane equation is:
+  <div class="formula">n &middot; (X &minus; P) = 0</div>
+</div>
+
+<div class="definition">
+  <div class="label">Definition I.4 &mdash; Sphere</div>
+  A <em>sphere</em> is the set of all points equidistant from a center point C,
+  where the radius equals the distance from C to a given point P. We write it as
+  <strong>S(C, P)</strong>.
+  <div class="formula">|X &minus; C|&sup2; = |P &minus; C|&sup2;</div>
+</div>
+
+<facing-page>
+  <page-q type="comprehension" q="What are the four primitive objects in this system?">
+    Points, lines, planes, and spheres. Points are the atomic objects (ordered triples).
+    Lines, planes, and spheres are constructed from points via the three postulates.
+    Circles also exist but only as theoretical intermediates (Definition I.5).
+  </page-q>
+  <page-q type="intuition" q="Why is the parametric form L(t) = P + t(Q-P) useful?">
+    It turns a geometric object (a line) into an algebraic one: plug in a value of t,
+    get a point. This makes intersections computable — substitute into another equation
+    and solve for t. The rational theory T_Q depends on this: line-plane intersection
+    is just solving a linear equation in t.
+  </page-q>
+  <page-q type="connection" q="How does the sphere definition differ from the 2D circle definition?">
+    In 2D, the compass draws a circle (a 1D curve). In 3D, S(C,P) gives a sphere (a 2D surface).
+    This is why sphere-sphere intersection yields a circle (1D) and not discrete points —
+    you need a third object to cut down to 0D (points). The whole intersection catalog
+    follows from this dimension arithmetic.
+  </page-q>
+</facing-page>
+
+</book-page>
+
+
+<book-page title="Definitions I.5–I.8" book="Book I: Definitions &amp; Postulates" layout="halves">
+
+<div class="definition">
+  <div class="label">Definition I.5 &mdash; Circle in Space</div>
+  A <em>circle</em> in three-dimensional space is the intersection of a sphere
+  and a plane. It is characterized by a center point, a radius, and the plane
+  in which it lies. A circle is not constructible by our postulates; it exists
+  only as the intersection of a sphere and a plane, and is never an input to
+  further constructions &mdash; only a theoretical intermediate.
+</div>
+
+<div class="definition">
+  <div class="label">Definition I.6 &mdash; General Position</div>
+  Points are in <em>general position</em> if no three are collinear and no
+  four are coplanar. Equivalently, every subset of the points spans the
+  maximum possible dimension.
+</div>
+
+<div class="definition">
+  <div class="label">Definition I.7 &mdash; Power of a Point</div>
+  The <em>power</em> of a point X with respect to a sphere S(C, P) with
+  radius r is the quantity:
+  <div class="formula">pow(X, S) = |X &minus; C|&sup2; &minus; r&sup2;</div>
+  Points on the sphere have power 0. Points outside the sphere have positive
+  power; points inside have negative power.
+</div>
+
+<div class="definition">
+  <div class="label">Definition I.8 &mdash; Constructible Point</div>
+  A point is <em>constructible</em> from an initial set of points if it can be
+  obtained by a finite sequence of:
+  <ol>
+    <li>Constructing lines, planes, or spheres from known points</li>
+    <li>Intersecting constructed objects to obtain new points</li>
+  </ol>
+  A point is <em>rationally constructible</em> if it can be obtained using only
+  lines and planes (no spheres).
+</div>
+
+<facing-page>
+  <page-q type="comprehension" q="Why can't circles be used as inputs to further constructions?">
+    Our three postulates take only points as inputs: L(P,Q) needs two points,
+    &Pi;(P,Q,R) needs three, S(C,P) needs two. A circle is a continuous curve,
+    not a point, so it can't feed into any postulate. We can only extract
+    points from circles by intersecting with another object.
+  </page-q>
+  <page-q type="intuition" q="Why is the power of a point introduced before any constructions?">
+    Power is the algebraic quantity that governs when spheres cooperate to produce
+    intersection points. The radical plane (Book III) is exactly the locus where
+    two spheres have equal power. This drives the Bootstrap — the first moment
+    where new points appear.
+  </page-q>
+  <page-q type="connection" q="How does the 'rational vs constructible' distinction preview the two theories?">
+    Definition I.8 sets up the T_Q / T_E split that Definition I.10 formalizes.
+    Rationally constructible = T_Q (lines + planes). Constructible = T_E
+    (lines + planes + spheres). The difference is whether square roots can appear.
+  </page-q>
+</facing-page>
+
+</book-page>
+
+
+<book-page title="Postulates" book="Book I: Definitions &amp; Postulates" layout="halves">
+
+<h3>Postulates</h3>
+
+<div class="postulate">
+  <div class="label">Postulate I &mdash; The Line</div>
+  Given any two distinct points P and Q, we can construct the line L(P, Q)
+  through them.
+</div>
+
+<div class="postulate">
+  <div class="label">Postulate II &mdash; The Plane</div>
+  Given any three non-collinear points P, Q, R, we can construct the plane
+  &Pi;(P, Q, R) containing them.
+</div>
+
+<div class="postulate">
+  <div class="label">Postulate III &mdash; The Sphere</div>
+  Given any two distinct points C and P, we can construct the sphere S(C, P)
+  centered at C passing through P.
+</div>
+
+<div class="note-block">
+  <div class="label">Note</div>
+  These three postulates are the 3D analogues of Euclid's first and third
+  postulates. The straightedge gives us Postulates I and II; the compass gives
+  us Postulate III. Postulate II has no 2D analogue &mdash; it is
+  genuinely new in three dimensions.
+</div>
+
+<facing-page>
+  <page-q type="comprehension" q="Which postulate has no 2D analogue, and why?">
+    Postulate II (the Plane). In 2D, two points already determine the unique line
+    in the ambient space. In 3D, three points determine a plane, which is a genuinely
+    new kind of object with no 2D counterpart.
+  </page-q>
+  <page-q type="challenge" q="What if we dropped Postulate III entirely?">
+    This gives T_Q, the rational theory. Theorem II.4 (Tetrahedron Inertness) shows
+    the initial four points produce nothing new under lines and planes alone. The
+    theory is closed and trivial. Spheres are what break inertness.
+  </page-q>
+  <page-q type="connection" q="Compare these postulates to Euclid's original five postulates.">
+    Euclid's 1st: draw a line between two points &rarr; our Postulate I.
+    Euclid's 3rd: draw a circle with center and radius &rarr; our Postulate III
+    (sphere replaces circle). Euclid's 2nd (extend a line) and 4th/5th (right angles,
+    parallel postulate) have no direct analogues here.
+  </page-q>
+</facing-page>
+
+</book-page>
+
+
+<book-page title="The Initial Configuration" book="Book I: Definitions &amp; Postulates" layout="halves">
+
+<h3>The Initial Configuration</h3>
+
+<p>Every construction must begin somewhere. We require an initial set of points
+that is <em>non-degenerate</em> &mdash; in 3D, this means at least four points
+in general position (Definition I.6), so that we can span all three
+dimensions.</p>
+
+<div class="definition">
+  <div class="label">Definition I.9 &mdash; The Standard Initial Configuration</div>
+  Our standard starting points are:
+  <div class="formula">
+O = (0, 0, 0)&emsp;&emsp;A = (1, 0, 0)&emsp;&emsp;B = (0, 1, 0)&emsp;&emsp;C = (0, 0, 1)
+  </div>
+  These four points are in general position and all have rational coordinates.
+  They form a tetrahedron with one vertex at the origin and the other three at
+  unit distance along each axis.
+
+  <construction-diagram view="30,22" scale="160" width="380" height="280">
+    <c-point name="O" at="0,0,0" />
+    <c-point name="A" at="1,0,0" color="#b22222" />
+    <c-point name="B" at="0,1,0" color="#2e5090" />
+    <c-point name="C" at="0,0,1" color="#4a7c59" />
+    <c-line from="O" to="A" color="#b22222" />
+    <c-line from="O" to="B" color="#2e5090" />
+    <c-line from="O" to="C" color="#4a7c59" />
+    <c-line from="A" to="B" color="#888" />
+    <c-line from="A" to="C" color="#888" />
+    <c-line from="B" to="C" color="#888" />
+    <c-plane through="A,B,C" color="#666" opacity="0.06" />
+  </construction-diagram>
+</div>
+
+<div class="note-block">
+  <div class="label">Note</div>
+  The choice of initial configuration affects what is constructible. The standard
+  configuration establishes the unit length and the three coordinate axes. Any
+  other set of four rational points in general position would yield an equivalent
+  theory (up to affine transformation), but this choice is convenient for
+  computation.
+</div>
+
+<facing-page>
+  <page-q type="comprehension" q="Why place the initial points at the origin and along the axes?">
+    Convenience. Any four rational points in general position give an equivalent theory
+    (up to affine transformation). But O=(0,0,0), A=(1,0,0), B=(0,1,0), C=(0,0,1)
+    establish the unit length and align with the coordinate system, making formulas cleaner.
+  </page-q>
+  <page-q type="connection" q="The face plane through A, B, C has equation x+y+z=1. Why does it keep appearing?">
+    This is one of the central recurring objects of the treatise. It accumulates 6+
+    equivalent characterizations across the books: as the face opposite the origin,
+    as a radical plane, as a barycentric reference plane, and more. It is the most
+    natural non-coordinate plane in the setup.
+  </page-q>
+  <page-q type="challenge" q="Could we start with 5 points instead of 4?">
+    Yes, and we'd have more raw material. But 4 is the minimal non-degenerate set in 3D.
+    More points don't change the theory — even with exactly 4, T_E is rich enough
+    to construct everything in the constructible field.
+  </page-q>
+</facing-page>
+
+</book-page>
+
+
+<book-page title="The Intersection Catalog" book="Book I: Definitions &amp; Postulates" layout="halves">
+
+<h3>The Intersection Catalog</h3>
+
+<p>The following table enumerates all possible intersections of our constructed
+objects, what they produce, and whether they remain within the rational
+numbers.</p>
+
+<table>
+<tr>
+  <th>Object 1</th><th>Object 2</th><th>Object 3</th><th>Result</th><th>Field</th>
+</tr>
+<tr><td>Line</td><td>Plane</td><td>&mdash;</td><td>0 or 1 point</td><td>&rationals;</td></tr>
+<tr><td>Plane</td><td>Plane</td><td>&mdash;</td><td>&empty; or line</td><td>&rationals;</td></tr>
+<tr><td>Line</td><td>Line</td><td>&mdash;</td><td>0 or 1 point</td><td>&rationals;</td></tr>
+<tr><td>Line</td><td>Sphere</td><td>&mdash;</td><td>0, 1, or 2 points</td><td>&rationals;(&radic;)</td></tr>
+<tr><td>Plane</td><td>Sphere</td><td>&mdash;</td><td>circle (not usable)</td><td>&mdash;</td></tr>
+<tr><td>Sphere</td><td>Sphere</td><td>&mdash;</td><td>circle (not usable)</td><td>&mdash;</td></tr>
+<tr><td>Sphere</td><td>Sphere</td><td>Plane</td><td>0, 1, or 2 points</td><td>&rationals;(&radic;)</td></tr>
+<tr><td>Sphere</td><td>Sphere</td><td>Sphere</td><td>0, 1, or 2 points</td><td>&rationals;(&radic;)</td></tr>
+</table>
+
+<div class="scholium">
+  <div class="label">Scholium</div>
+  Only sphere intersections can leave &rationals;. Lines and planes alone never
+  produce irrationals. This is the algebraic foundation for distinguishing
+  T<sub>Q</sub> from T<sub>E</sub>.
+</div>
+
+<facing-page>
+  <page-q type="comprehension" q="Why does Plane &cap; Sphere produce a circle rather than usable points?">
+    A plane slicing through a sphere gives a circle (a continuous curve), not discrete
+    points. Our postulates take points as inputs. To extract points from a circle,
+    intersect it with another object — which is why three-object intersections appear.
+  </page-q>
+  <page-q type="intuition" q="What does &rationals;(&radic;) mean geometrically?">
+    The resulting coordinates may involve square roots of rationals. Geometrically,
+    this comes from solving quadratic equations (sphere equations are degree 2).
+    Each sphere intersection can introduce at most one new square root, building
+    the tower of quadratic extensions that characterizes T_E.
+  </page-q>
+</facing-page>
+
+</book-page>
+
+
+<book-page title="The Two Theories" book="Book I: Definitions &amp; Postulates" layout="halves">
+
+<h3>The Two Theories</h3>
+
+<div class="definition">
+  <div class="label">Definition I.10 &mdash; The Two Theories</div>
+  <p><strong>T<sub>Q</sub></strong> (The Rational Theory): Only Postulates I and II
+  are used. All intersections remain in &rationals;. The constructible field is
+  &rationals; itself.</p>
+  <p><strong>T<sub>E</sub></strong> (The Euclidean Theory): All three postulates are
+  used. The constructible field is a tower of quadratic extensions over
+  &rationals;.</p>
+</div>
+
+<div class="theorem">
+  <div class="label">Theorem (Preview) &mdash; Tetrahedron Inertness</div>
+  In T<sub>Q</sub>, the initial four points produce only themselves &mdash;
+  no new points are constructible using lines and planes alone. The
+  tetrahedron is <em>inert</em> under T<sub>Q</sub>.
+  <p><em>Proof: See Book II, Theorem 4.</em></p>
+</div>
+
+<div class="theorem">
+  <div class="label">Theorem (Preview) &mdash; The Bootstrap</div>
+  In T<sub>E</sub>, the initial four points plus spheres produce 12 new points
+  in the first generation, for a total of 16. This breaks the inertness of
+  T<sub>Q</sub>.
+  <p><em>Proof: See Book III, Proposition 4.</em></p>
+</div>
+
+<facing-page>
+  <page-q type="comprehension" q="State the key difference between T_Q and T_E in one sentence.">
+    T_Q uses only lines and planes and produces no new points from the initial
+    tetrahedron; T_E adds spheres and can construct any point whose coordinates
+    lie in a tower of quadratic extensions over &rationals;.
+  </page-q>
+  <page-q type="challenge" q="The Bootstrap says 4 &rarr; 16 in one generation. Why exactly 12 new points?">
+    Each pair of original points gives two spheres: S(P,Q) and S(Q,P). Triples of
+    spheres can intersect in discrete points. The exact count of 12 comes from the
+    geometry of the initial configuration. Full proof is in Book III, Proposition 4.
+  </page-q>
+  <page-q type="connection" q="How does this compare to 2D compass-and-straightedge?">
+    In 2D, two points + circles immediately produce new points. In 3D, lines and
+    planes alone produce nothing new (inertness). The sphere is needed to break the
+    higher-dimensional lock. This is the central surprise of the 3D theory.
+  </page-q>
+</facing-page>
+
+</book-page>
+
+
+<!-- ── BOOK II ── -->
+
+<book-page title="Proposition II.1 &mdash; Line &cap; Plane" book="Book II: Rational Constructions" layout="halves">
+
+<h3>Proposition 1: Line &cap; Plane</h3>
+
+<div class="proposition">
+  <div class="label">Proposition II.1 &mdash; Line &cap; Plane</div>
+  <p>Given a line L(P, Q) and a plane &Pi; with normal <strong>n</strong>
+  passing through point R, the intersection point (if it exists) is:</p>
+  <div class="formula">X = P + t(Q &minus; P),&emsp;where t = n &middot; (R &minus; P) / n &middot; (Q &minus; P)</div>
+  <p>The intersection exists iff n &middot; (Q &minus; P) &ne; 0 (i.e., the line is
+  not parallel to the plane).</p>
+  <p><em>Proof.</em> Substitute L(t) into the plane equation n &middot; (X &minus; R) = 0
+  and solve for t. The result is a rational function of the input
+  coordinates, so the intersection point has rational coordinates whenever
+  the inputs do.</p>
+  <div class="qed">&marker;</div>
+</div>
+
+<facing-page>
+  <page-q type="comprehension" q="Why is the intersection formula a rational function of the inputs?">
+    The line is parametric (linear in t) and the plane equation is linear.
+    Substituting gives a linear equation in t, which solves to t = (rational expression).
+    No square roots appear because we never solve a quadratic.
+  </page-q>
+  <page-q type="intuition" q="What happens geometrically when n &middot; (Q-P) = 0?">
+    The line direction Q-P is perpendicular to the plane normal n, so the line is
+    parallel to the plane. If the line also lies in the plane, every point is an
+    intersection. Otherwise there is none.
+  </page-q>
+</facing-page>
+
+</book-page>
+
+
+<book-page title="Proposition II.2 &mdash; Plane &cap; Plane" book="Book II: Rational Constructions" layout="halves">
+
+<h3>Proposition 2: Plane &cap; Plane</h3>
+
+<div class="proposition">
+  <div class="label">Proposition II.2 &mdash; Plane &cap; Plane</div>
+  <p>Two non-parallel planes &Pi;<sub>1</sub> and &Pi;<sub>2</sub> intersect in a
+  line. The direction of this line is:</p>
+  <div class="formula">d = n<sub>1</sub> &times; n<sub>2</sub></div>
+  <p>A point on the line is found by solving a 2&times;3 linear system (the two
+  plane equations). All coordinates remain rational.</p>
+  <div class="qed">&marker;</div>
+</div>
+
+<facing-page>
+  <page-q type="comprehension" q="Why is the direction given by the cross product n1 &times; n2?">
+    The intersection line must lie in both planes, so it must be perpendicular
+    to both normals. The cross product gives precisely the vector perpendicular
+    to both. If normals are parallel, the cross product is zero.
+  </page-q>
+</facing-page>
+
+</book-page>
+
+
+<book-page title="Proposition II.3 &mdash; Line &cap; Line" book="Book II: Rational Constructions" layout="halves">
+
+<h3>Proposition 3: Line &cap; Line</h3>
+
+<div class="proposition">
+  <div class="label">Proposition II.3 &mdash; Line &cap; Line</div>
+  <p>Two coplanar, non-parallel lines L(P<sub>1</sub>, Q<sub>1</sub>) and
+  L(P<sub>2</sub>, Q<sub>2</sub>) intersect in exactly one point, found by
+  solving:</p>
+  <div class="formula">P<sub>1</sub> + s(Q<sub>1</sub> &minus; P<sub>1</sub>) = P<sub>2</sub> + t(Q<sub>2</sub> &minus; P<sub>2</sub>)</div>
+  <p>In 3D, two generic lines are <em>skew</em> (non-intersecting, non-parallel).
+  Intersection occurs iff the lines are coplanar, which can be tested by the
+  scalar triple product condition.</p>
+  <div class="qed">&marker;</div>
+</div>
+
+<facing-page>
+  <page-q type="connection" q="Why is the 'skew lines' phenomenon unique to 3D?">
+    In 2D, two lines either intersect or are parallel — they share the same plane
+    (the entire 2D space). In 3D, lines can lie in different planes, failing to
+    intersect without being parallel. The scalar triple product detects coplanarity.
+  </page-q>
+</facing-page>
+
+</book-page>
+
+
+<book-page title="Theorem II.4 &mdash; Tetrahedron Inertness" book="Book II: Rational Constructions" layout="halves">
+
+<h3>Theorem 4: Tetrahedron Inertness</h3>
+
+<div class="theorem">
+  <div class="label">Theorem II.4 &mdash; Tetrahedron Inertness</div>
+  <p>The four initial points O, A, B, C in general position produce no new
+  points under T<sub>Q</sub> (lines and planes only).</p>
+
+  <p><em>Proof.</em> From four points we can construct:</p>
+  <ul>
+    <li><strong>Lines:</strong> C(4,2) = 6 lines</li>
+    <li><strong>Planes:</strong> C(4,3) = 4 planes</li>
+  </ul>
+
+  <p>We check all possible intersections:</p>
+  <ul>
+    <li><strong>Line &cap; Plane:</strong> Each line either lies in a plane (giving
+    no new point) or intersects it at one of the original four points.</li>
+    <li><strong>Plane &cap; Plane:</strong> Each pair of planes intersects in a line
+    already in our set (a line through two of the original points).</li>
+    <li><strong>Line &cap; Line:</strong> Each pair of coplanar lines intersects
+    at one of the original four points.</li>
+  </ul>
+
+  <p>Every intersection reproduces an existing point. The set {O, A, B, C}
+  is closed under T<sub>Q</sub>-construction.</p>
+  <div class="qed">&marker;</div>
+</div>
+
+<div class="scholium">
+  <div class="label">Scholium &mdash; Why Inertness Matters</div>
+  This result is shocking from the perspective of classical 2D geometry, where
+  two points immediately generate a rich structure. In 3D with rational
+  constructions alone, four points produce <em>nothing new</em>. This is
+  the fundamental obstruction that motivates T<sub>E</sub> and the use of
+  spheres.
+</div>
+
+<facing-page>
+  <page-q type="comprehension" q="Walk through the counting: why exactly 6 lines and 4 planes?">
+    Lines: choose 2 from 4 points = C(4,2) = 6. Planes: choose 3 from 4 = C(4,3) = 4.
+    These are ALL distinct lines and planes constructible from just 4 points.
+  </page-q>
+  <page-q type="intuition" q="Why is inertness 'shocking' from a 2D perspective?">
+    In 2D, start with 2 points. Draw circles centered at each through the other.
+    They intersect in 2 new points. The constructible set grows rapidly.
+    In 3D with lines and planes only, the growth is zero. The geometry is locked.
+  </page-q>
+  <page-q type="challenge" q="Does inertness hold for ANY four points in general position?">
+    Yes. The proof is purely combinatorial — it counts lines and planes and checks
+    all intersections. The specific coordinates don't matter; only the general
+    position hypothesis (no degeneracies) is used.
+  </page-q>
+</facing-page>
+
+</book-page>
+
+
+<!-- ══════════════════════════════════════════════════════════════════════
+     PAGINATOR
+     ══════════════════════════════════════════════════════════════════════ -->
+<script>
+(function() {
+  "use strict";
+
+  var allPages = [];
+  var currentPage = 0;
+  var currentEngine = null;
+  var overlayVisible = false;
+  var overlaySVG = null;
+
+  function init() {
+    var els = document.querySelectorAll("book-page");
+    for (var i = 0; i < els.length; i++) {
+      var bp = els[i];
+      var facing = bp.querySelector("facing-page");
+
+      /* left content = everything except <facing-page> */
+      var leftClone = bp.cloneNode(true);
+      var facingInClone = leftClone.querySelector("facing-page");
+      if (facingInClone) facingInClone.parentNode.removeChild(facingInClone);
+
+      allPages.push({
+        title:     bp.getAttribute("title") || "",
+        book:      bp.getAttribute("book") || "",
+        layoutId:  bp.getAttribute("layout") || null,
+        leftHTML:  leftClone.innerHTML,
+        rightHTML: facing ? buildFacingContent(facing) : null
+      });
+    }
+
+    buildBookSelector();
+    renderPage(0);
+    bindNav();
+  }
+
+  /* ── turn <facing-page> contents into rendered HTML ── */
+  function buildFacingContent(facing) {
+    var parts = [];
+    var children = facing.childNodes;
+    for (var i = 0; i < children.length; i++) {
+      var node = children[i];
+      if (node.nodeName && node.nodeName.toLowerCase() === "page-q") {
+        parts.push(buildPageQ(node));
+      } else if (node.nodeType === 1) {
+        parts.push(node.outerHTML);
+      }
+    }
+    return parts.join("");
+  }
+
+  function buildPageQ(el) {
+    var type = el.getAttribute("type") || "comprehension";
+    var q = el.getAttribute("q") || "";
+    var body = el.innerHTML.trim();
+    return '<div class="pq-section">' +
+      '<div class="pq-header" onclick="togglePQ(this.parentNode)">' +
+        '<span class="pq-chevron">&#9654;</span>' +
+        '<span class="pq-type pq-' + type + '">' + type + '</span>' +
+        '<span>' + q + '</span>' +
+      '</div>' +
+      '<div class="pq-body"><p>' + body + '</p></div>' +
+    '</div>';
+  }
+
+  /* ── render ── */
+  function renderPage(idx) {
+    if (idx < 0 || idx >= allPages.length) return;
+    currentPage = idx;
+
+    var pg = allPages[idx];
+    var leftBody  = document.getElementById("left-body");
+    var rightBody = document.getElementById("right-body");
+
+    /* clear any overlay */
+    removeOverlay();
+
+    /* left page */
+    leftBody.innerHTML = pg.leftHTML;
+    document.getElementById("left-header-title").textContent = pg.title;
+    document.getElementById("left-header-book").textContent = pg.book;
+    document.getElementById("left-footer").textContent = (idx + 1);
+
+    /* right page */
+    if (pg.rightHTML) {
+      rightBody.innerHTML = pg.rightHTML;
+      document.getElementById("right-header-label").textContent = "";
+      document.getElementById("right-header-title").textContent = pg.title;
+    } else {
+      rightBody.innerHTML =
+        '<div style="padding:20px;color:#999;font-style:italic;">' +
+        "Facing page content is being prepared.</div>";
+      document.getElementById("right-header-label").textContent = "";
+      document.getElementById("right-header-title").textContent = "";
+    }
+    document.getElementById("right-footer").textContent = (idx + 1);
+
+    /* nav state */
+    document.getElementById("page-info").textContent =
+      "Page " + (idx + 1) + " of " + allPages.length;
+    document.getElementById("btn-prev").disabled = (idx === 0);
+    document.getElementById("btn-next").disabled = (idx === allPages.length - 1);
+    document.getElementById("book-select").value = pg.book;
+
+    /* scroll to top */
+    leftBody.scrollTop = 0;
+    rightBody.scrollTop = 0;
+
+    /* ── euclidean layout ── */
+    currentEngine = null;
+    var gridBtn = document.getElementById("btn-grid");
+
+    if (pg.layoutId) {
+      gridBtn.disabled = false;
+      /* wrap content in a construction container so SVG and placed
+         elements share the same coordinate origin (no padding offset) */
+      var wrap = document.createElement("div");
+      wrap.id = "construction-wrap";
+      wrap.style.cssText = "position:relative;width:100%;height:100%;padding:0;margin:0;";
+      while (leftBody.firstChild) wrap.appendChild(leftBody.firstChild);
+      leftBody.appendChild(wrap);
+      leftBody.style.padding = "0";
+
+      /* defer to let browser compute dimensions */
+      requestAnimationFrame(function() {
+        var layoutEl = document.getElementById(pg.layoutId);
+        if (!layoutEl) return;
+        var w = wrap.clientWidth;
+        var h = wrap.clientHeight;
+        currentEngine = new EuclideanLayout.Engine(layoutEl, w, h);
+        EuclideanLayout.applyPlacement(wrap, currentEngine);
+
+        /* restore overlay if it was on */
+        if (overlayVisible) showOverlay();
+      });
+    } else {
+      gridBtn.disabled = true;
+      leftBody.style.padding = "";  /* restore default padding */
+    }
+  }
+
+  /* ── overlay toggle ── */
+  function showOverlay() {
+    var wrap = document.getElementById("construction-wrap");
+    if (!wrap) return;
+    var pg = allPages[currentPage];
+    if (!pg || !pg.layoutId) return;
+    var layoutEl = document.getElementById(pg.layoutId);
+    if (!layoutEl) return;
+    /* (re)build engine from current DOM so we don't depend on closure timing */
+    currentEngine = new EuclideanLayout.Engine(layoutEl, wrap.clientWidth, wrap.clientHeight);
+    overlaySVG = EuclideanLayout.createOverlay(currentEngine);
+    wrap.appendChild(overlaySVG);
+    EuclideanLayout.bindHover(wrap, overlaySVG);
+    overlayVisible = true;
+    document.getElementById("btn-grid").classList.add("active");
+  }
+
+  function removeOverlay() {
+    if (overlaySVG && overlaySVG.parentNode) {
+      overlaySVG.parentNode.removeChild(overlaySVG);
+    }
+    overlaySVG = null;
+  }
+
+  function toggleOverlay() {
+    if (overlayVisible) {
+      removeOverlay();
+      overlayVisible = false;
+      document.getElementById("btn-grid").classList.remove("active");
+    } else {
+      showOverlay();
+    }
+  }
+
+  /* ── book selector ── */
+  function buildBookSelector() {
+    var sel = document.getElementById("book-select");
+    var seen = {};
+    for (var i = 0; i < allPages.length; i++) {
+      var bk = allPages[i].book;
+      if (!seen[bk]) {
+        seen[bk] = true;
+        var opt = document.createElement("option");
+        opt.value = bk;
+        opt.textContent = bk;
+        sel.appendChild(opt);
+      }
+    }
+  }
+
+  /* ── navigation ── */
+  function bindNav() {
+    document.getElementById("btn-next").addEventListener("click", function() {
+      if (currentPage < allPages.length - 1) renderPage(currentPage + 1);
+    });
+    document.getElementById("btn-prev").addEventListener("click", function() {
+      if (currentPage > 0) renderPage(currentPage - 1);
+    });
+    document.getElementById("book-select").addEventListener("change", function() {
+      var bk = this.value;
+      for (var i = 0; i < allPages.length; i++) {
+        if (allPages[i].book === bk) { renderPage(i); return; }
+      }
+    });
+    document.getElementById("btn-grid").addEventListener("click", toggleOverlay);
+
+    document.addEventListener("keydown", function(e) {
+      if (e.key === "ArrowRight" || e.key === "ArrowDown") {
+        e.preventDefault();
+        if (currentPage < allPages.length - 1) renderPage(currentPage + 1);
+      } else if (e.key === "ArrowLeft" || e.key === "ArrowUp") {
+        e.preventDefault();
+        if (currentPage > 0) renderPage(currentPage - 1);
+      } else if (e.key === "g") {
+        toggleOverlay();
+      }
+    });
+  }
+
+  /* ── accordion toggle (global) ── */
+  window.togglePQ = function(el) {
+    el.classList.toggle("open");
+  };
+
+  /* ── go ── */
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", init);
+  } else {
+    init();
+  }
+
+})();
+</script>
+
+</body>
+</html>

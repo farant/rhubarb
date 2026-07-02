@@ -1471,6 +1471,106 @@ SA-SB:
 
 ---
 
+## Apollonian Gasket (Book XXIII)
+
+### Descartes Recursion (Theorem XXIII.1)
+```
+Given Descartes quadruple (k1, k2, k3, k4) with (sum k)^2 = 2(sum k^2),
+the other circle tangent to (k1, k2, k3):
+
+  k' = 2*(k1 + k2 + k3) - k4
+
+From Vieta's formulas: k4 + k' = 2*(k1 + k2 + k3).
+
+From (-1, 2, 3, 6):
+  Replace -1: k' = 2*(2+3+6) - (-1) = 23
+  Replace  2: k' = 2*(-1+3+6) - 2   = 14
+  Replace  3: k' = 2*(-1+2+6) - 3   = 11
+  Replace  6: k' = 2*(-1+2+3) - 6   = 2
+```
+**Field**: Z (integer curvatures propagate)
+
+### Complex Descartes for Centers (Theorem XXIII.2)
+```
+w = k * center  (curvature-weighted center, complex)
+
+Complex Descartes relation:
+  (w1 + w2 + w3 + w4)^2 = 2*(w1^2 + w2^2 + w3^2 + w4^2)
+
+Center recursion:
+  w' = 2*(w1 + w2 + w3) - w4
+  center = w' / k'
+
+Verification for root quadruple (-1, 2, 3, 6):
+  sum W = (54, 28)
+  (sum W)^2   = 2132 + 3024i
+  2*sum(Wi^2) = 2132 + 3024i  ✓
+```
+
+### W-Coordinates (Prop XXIII.3)
+```
+W = 10 * k * center  (integer for the (-1,2,3,6) gasket)
+
+Base configuration:
+  k=-1: center (3/10, -2/5)   W = (-3, 4)
+  k=2:  center (0, 0)         W = (0, 0)
+  k=3:  center (5/6, 0)       W = (25, 0)
+  k=6:  center (8/15, 2/5)    W = (32, 24)
+
+Recursion (all integer):
+  k' = 2*(ka + kb + kc) - k_old
+  W' = 2*(Wa + Wb + Wc) - W_old
+
+Recovery: center = W / (10*k)
+```
+**Field**: Z (entire computation in integers)
+
+### Integer Tangency Check (Prop XXIII.4)
+```
+Two circles (ki, Wi) and (kj, Wj) are tangent iff:
+
+  (kj*Wi_x - ki*Wj_x)^2 + (kj*Wi_y - ki*Wj_y)^2 = 100*(ki + kj)^2
+
+Equivalent to d^2 = 1 (Book XIX) but purely integer.
+No GCD reduction, no rational arithmetic needed.
+```
+
+### Gasket Statistics (Demo 023)
+```
+Depth  Circles  Max k   Cumulative
+  0        4       6          4
+  1        4      23          8
+  2       12      62         20
+  3       36     179         56
+  4      108     522        164
+
+Total: 164 circles, 98 distinct curvatures.
+Descartes verified: 161/161 quadruples.
+Tangency verified: 966/966 pairs.
+```
+
+### Curvature Residues mod 6
+```
+Positive curvatures in the (-1, 2, 3, 6) gasket:
+  Always: k ≡ 0, 2, 3, or 5 (mod 6)
+  Never:  k ≡ 1 or 4 (mod 6)
+
+Equivalently: k is never 1 (mod 3).
+
+Verified through depth 4 (98 distinct curvatures, max k = 522).
+```
+
+### First Generation Centers (Demo 023)
+```
+Circle  k    W=(Wx,Wy)     center              r
+ [4]    23   (117, 44)     (117/230, 22/115)   1/23
+ [5]    14   (108, 56)     (27/35, 2/5)        1/14
+ [6]    11   (33, 56)      (3/10, 28/55)       1/11
+ [7]    2    (12, -16)     (3/5, -4/5)          1/2
+```
+
+---
+
 ## Initial Configuration
 ```
 O = (0, 0, 0)
