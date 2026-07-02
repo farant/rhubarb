@@ -13,6 +13,11 @@ rhubarb/
 ├── include/         105 header files (.h)
 ├── lib/             114 implementation files (.c, .m)
 ├── probationes/     87 test modules (probatio_*.c)
+├── silva/           C89 parser subproject, 4th generation (self-contained:
+│                    fontes/ + probationes/ + compile_probationes.sh;
+│                    START AT silva/phase-log.md; design record in
+│                    project-specs/silva-spec*.md; ships as single-file
+│                    silva.c eventually - supersedes arbor/arbor2/lapifex)
 ├── tools/           13 utility executables
 ├── bin/             compiled binaries
 ├── build/           build artifacts

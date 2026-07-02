@@ -12,3 +12,4 @@
 -Wwrite-strings
 -Wno-long-long
 -Wno-overlength-strings
+-Isilva/fontes
