@@ -301,6 +301,20 @@ Complexity:
   through, everything else wraps). Works, but it is order-sensitive — noted
   for the Chunk D review pass.
 
+### Addendum (2026-07-02, surfaced during pre-compaction review)
+
+- **Layer-N emission spacing is undecided (silent Chunk B decision, now
+  explicit)** — discovered-while: Fran asked what I'm worried about;
+  consists-in: silva_token_ex_expansione zeroes spatia_ante/post, so expanded
+  tokens carry no trivia — layer-0 roundtrip is unaffected (the oracle
+  passes), but rendering an EXPANDED layer as text has undefined spacing;
+  consequences: none for the skeleton, but scribere (Phase 5) and layer-view
+  queries will need a policy; the def-site trivia IS reachable
+  (origo.datum.expansio.corpus->spatia_*) so nothing is foreclosed — merely
+  undecided; handled-by: recorded here; decide when scribere exists (options:
+  synthesize single spaces, borrow def-site trivia, or make layer emission a
+  formatter concern).
+
 ### RELATIO — pending (Chunk D: includes, regions, guards, conditio, two-track)
 
 ---
