@@ -16,8 +16,15 @@ rhubarb/
 ├── silva/           C89 parser subproject, 4th generation (self-contained:
 │                    fontes/ + probationes/ + compile_probationes.sh;
 │                    START AT silva/phase-log.md; design record in
-│                    project-specs/silva-spec*.md; ships as single-file
-│                    silva.c eventually - supersedes arbor/arbor2/lapifex)
+│                    project-specs/silva-spec*.md; M1 CLOSED - deliverable
+│                    is silva/amalgama/{silva.c,silva.h} - supersedes
+│                    arbor/arbor2/lapifex)
+├── tessera/         ANSI-terminal TUI library, anti-ncurses (xterm-only,
+│                    zero terminfo; self-contained: fontes/ + probationes/
+│                    + compile_probationes.sh; START AT tessera/phase-log.md;
+│                    design record in project-specs/tessera-*.md;
+│                    deliverable = tessera/amalgama/{tessera.c,tessera.h};
+│                    demo: ./tessera/spectaculum.sh; powers saltuarius)
 ├── tools/           13 utility executables
 ├── bin/             compiled binaries
 ├── build/           build artifacts

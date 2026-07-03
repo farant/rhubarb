@@ -69,7 +69,11 @@ never run headless in the harness), each with its own .sh runner.
   (atexit + fatal signals, async-signal-safe pre-built escape
   string) is the ONE sanctioned static in a context-struct library.
 - **Public API names ≤ 31 chars** (C89 significance — silva S47).
-- Latin in the code; English fine in meta-documents. `nomen` and
-  `registrum` are latina macros — never identifiers (titulus/
-  tabularium instead). i32 is UNSIGNED — s32 for anything carrying
-  -1 (the codebase's most reliable slip; three occurrences in silva).
+- Latin in the code; English fine in meta-documents. `nomen`,
+  `registrum`, `magnitudo`, and `exire` are latina macros (typedef/
+  register/sizeof/exit) — never identifiers (titulus/tabularium/
+  fenestra/egredi instead; the third AND fourth fired HERE — and
+  exire had silently macro-renamed a struct FIELD in every modular
+  TU; only the amalgam exposed it). i32 is UNSIGNED — s32 for anything
+  carrying -1 (the codebase's most reliable slip; three occurrences
+  in silva).
