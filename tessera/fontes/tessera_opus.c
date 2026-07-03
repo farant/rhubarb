@@ -458,6 +458,27 @@ tessera_lineam_pingere (TesseraOpus* opus, s32 x, s32 y,
 }
 
 vacuum
+tessera_replere (TesseraOpus* opus, s32 x, s32 y, s32 latitudo,
+    s32 altitudo, i32 signum, TesseraStilus stilus)
+{
+    s32 dx;
+    s32 dy;
+
+    si (opus == NIHIL)
+    {
+        redde;
+    }
+    per (dy = ZEPHYRUM; dy < altitudo; dy++)
+    {
+        per (dx = ZEPHYRUM; dx < latitudo; dx++)
+        {
+            tessera_cellulam_ponere(opus, x + dx, y + dy, signum,
+                stilus);
+        }
+    }
+}
+
+vacuum
 tessera_cursorem_ponere (TesseraOpus* opus, s32 x, s32 y)
 {
     si (opus == NIHIL)

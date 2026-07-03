@@ -35,9 +35,11 @@ interior constans character* constans EXCLUDENDA_PISCINAE[] = {
     "piscina_generare_certae_magnitudinis", "piscina_notare",
     "piscina_potesne_allocare", "piscina_reficere",
     "piscina_reliqua_antequam_cresca_alvei",
-    "piscina_summa_apex_usus", "piscina_summa_inutilis_allocatus",
-    "piscina_summa_usus", "piscina_vacare", "_catena_alveus_vacare",
+    "piscina_summa_inutilis_allocatus",
+    "piscina_vacare", "_catena_alveus_vacare",
     NIHIL
+    /* additiones I: summa_usus + summa_apex_usus resurrectae
+     * (telemetria publica silva.h) - in NON_STATICA quoque */
 };
 
 interior constans character* constans EXCLUDENDA_CHORDAE[] = {
@@ -190,6 +192,7 @@ interior constans character* constans CADENDA_DEFINITIO[] = {
 /* Functiones vendicatae quae PUBLICAE manent (extern, in silva.h) */
 interior constans character* constans NON_STATICA[] = {
     "piscina_generare_dynamicum", "piscina_destruere",
+    "piscina_summa_usus", "piscina_summa_apex_usus",
     "xar_numerus", "xar_obtinere", NIHIL
 };
 

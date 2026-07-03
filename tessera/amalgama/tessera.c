@@ -230,6 +230,9 @@ void tessera_quadrum_pingere(TesseraOpus* opus, int x, int y,
 void tessera_lineam_pingere(TesseraOpus* opus, int x, int y,
     int longitudo, int verticalis, TesseraLineaGenus genus,
     TesseraStilus stilus);
+void tessera_replere(TesseraOpus* opus, int x, int y,
+    int latitudo, int altitudo, unsigned int signum,
+    TesseraStilus stilus);
 void tessera_cursorem_ponere(TesseraOpus* opus, int x, int y);
 int tessera_praesentare(TesseraOpus* opus);
 int tessera_magnitudinem_renovare(TesseraOpus* opus);
@@ -1171,6 +1174,13 @@ vacuum tessera_quadrum_pingere (TesseraOpus* opus, s32 x, s32 y,
 vacuum tessera_lineam_pingere (TesseraOpus* opus, s32 x, s32 y,
     s32 longitudo, b32 verticalis, TesseraLineaGenus genus,
     TesseraStilus stilus);
+
+/* Rectangulum replere (signum uniforme + stilus; fines tacite) -
+ * 1.1: signatura a primo hospite vero confirmata (saltuarius
+ * Phase A: vectis selectionis = replere alt I; interior tabellae
+ * = casus rectanguli, Phase C) */
+vacuum tessera_replere (TesseraOpus* opus, s32 x, s32 y,
+    s32 latitudo, s32 altitudo, i32 signum, TesseraStilus stilus);
 
 vacuum tessera_cursorem_ponere (TesseraOpus* opus, s32 x, s32 y);
 
@@ -3511,6 +3521,27 @@ tessera_lineam_pingere (TesseraOpus* opus, s32 x, s32 y,
     {
         tessera_cellulam_ponere(opus, verticalis ? x : (x + k),
             verticalis ? (y + k) : y, signum, stilus);
+    }
+}
+
+vacuum
+tessera_replere (TesseraOpus* opus, s32 x, s32 y, s32 latitudo,
+    s32 altitudo, i32 signum, TesseraStilus stilus)
+{
+    s32 dx;
+    s32 dy;
+
+    si (opus == NIHIL)
+    {
+        redde;
+    }
+    per (dy = ZEPHYRUM; dy < altitudo; dy++)
+    {
+        per (dx = ZEPHYRUM; dx < latitudo; dx++)
+        {
+            tessera_cellulam_ponere(opus, x + dx, y + dy, signum,
+                stilus);
+        }
     }
 }
 

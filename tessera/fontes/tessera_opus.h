@@ -93,6 +93,13 @@ vacuum tessera_lineam_pingere (TesseraOpus* opus, s32 x, s32 y,
     s32 longitudo, b32 verticalis, TesseraLineaGenus genus,
     TesseraStilus stilus);
 
+/* Rectangulum replere (signum uniforme + stilus; fines tacite) -
+ * 1.1: signatura a primo hospite vero confirmata (saltuarius
+ * Phase A: vectis selectionis = replere alt I; interior tabellae
+ * = casus rectanguli, Phase C) */
+vacuum tessera_replere (TesseraOpus* opus, s32 x, s32 y,
+    s32 latitudo, s32 altitudo, i32 signum, TesseraStilus stilus);
+
 vacuum tessera_cursorem_ponere (TesseraOpus* opus, s32 x, s32 y);
 
 /* Differentia + emissio (una scriptio per pontem); FALSUM in

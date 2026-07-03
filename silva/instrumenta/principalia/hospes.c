@@ -149,6 +149,137 @@ int main(void)
         }
     }
 
+    /* --- ADDITIONES I: every new silva.h declaration is CALLED -
+     * the ONLY gate that can catch a declaration/definition type
+     * mismatch (C links without mangling; the standalone compile
+     * never sees silva.h). STANDING RULE: every function silva.h
+     * gains, gets a call here in the same change. --- */
+    {
+        const char* FONS = "si x; /* c */ redde";
+        unsigned int mensura = (unsigned int)strlen(FONS);
+        SilvaXar* lexemata;
+        SilvaXar* cruda;
+        SilvaToken* primum = NULL;
+
+        /* lexare: 5 lexemata vera (si x ; redde EOF) */
+        summa++;
+        lexemata = silva_lexare(piscina, FONS, mensura, 0);
+        if (lexemata != NULL && silva_xar_numerus(lexemata) == 5)
+        {
+            primum = *(SilvaToken**)silva_xar_obtinere(lexemata, 0);
+            if (primum->genus == SILVA_LEX_IDENTIFICATOR
+                && primum->valor.mensura == 2
+                && primum->linea == 1)
+            {
+                fideles++;
+            }
+            else
+            {
+                fprintf(stderr, "hospes: INFIDELIS: lexare genus\n");
+            }
+        }
+        else
+        {
+            fprintf(stderr, "hospes: INFIDELIS: lexare numerus\n");
+        }
+
+        /* cruda: trivia (commentum, spatia) IN fluxu */
+        summa++;
+        cruda = silva_lexare_cruda(piscina, FONS, mensura, 0);
+        if (cruda != NULL && lexemata != NULL
+            && silva_xar_numerus(cruda)
+                > silva_xar_numerus(lexemata))
+        {
+            fideles++;
+        }
+        else
+        {
+            fprintf(stderr, "hospes: INFIDELIS: cruda trivia\n");
+        }
+
+        /* auxilia catenae originis in lexemate fontis */
+        summa++;
+        if (primum != NULL
+            && silva_token_radix(primum) == primum
+            && silva_token_profunditas(primum) == 0
+            && silva_token_est_fons(primum))
+        {
+            fideles++;
+        }
+        else
+        {
+            fprintf(stderr, "hospes: INFIDELIS: auxilia catenae\n");
+        }
+
+        /* tituli generum */
+        summa++;
+        if (primum != NULL
+            && silva_lexema_genus_nomen(primum->genus) != NULL
+            && primum->origo.genus == SILVA_ORIGO_FONS
+            && silva_origo_genus_nomen(primum->origo.genus) != NULL)
+        {
+            fideles++;
+        }
+        else
+        {
+            fprintf(stderr, "hospes: INFIDELIS: tituli generum\n");
+        }
+    }
+
+    /* liberi nodales in arbore parsata */
+    {
+        const char* FONS = "int x; int y;";
+        SilvaParsura* parsura;
+
+        summa++;
+        parsura = silva_parsare(piscina, "hospes.c", FONS,
+            (unsigned int)strlen(FONS), &GRAMMATICA_SCELETI, NULL,
+            NULL, NULL);
+        if (parsura != NULL && parsura->successus
+            && parsura->commissio != NULL
+            && silva_valor_lista_numerus(
+                   parsura->commissio->radix) >= 1)
+        {
+            SilvaValor* elementum = silva_valor_lista_obtinere(
+                parsura->commissio->radix, 0);
+
+            /* segmentum sceleti: liberi nodales vacui esse possunt
+             * (loci = lexemata) - vocatio ipsa est custos typorum;
+             * xar validum sufficit */
+            if (elementum != NULL
+                && elementum->genus == SILVA_VALOR_NODUS
+                && silva_nodus_liberi(piscina,
+                       elementum->datum.nodus) != NULL)
+            {
+                fideles++;
+            }
+            else
+            {
+                fprintf(stderr, "hospes: INFIDELIS: liberi\n");
+            }
+        }
+        else
+        {
+            fprintf(stderr, "hospes: INFIDELIS: liberi parsura\n");
+        }
+    }
+
+    /* telemetria arenae */
+    {
+        size_t usus = silva_piscina_summa_usus(piscina);
+        size_t apex = silva_piscina_summa_apex_usus(piscina);
+
+        summa++;
+        if (usus > 0 && apex >= usus)
+        {
+            fideles++;
+        }
+        else
+        {
+            fprintf(stderr, "hospes: INFIDELIS: telemetria\n");
+        }
+    }
+
     printf("hospes: %d/%d fideles (pollutio nulla)\n", fideles, summa);
     silva_piscina_destruere(piscina);
     return (fideles == summa) ? 0 : 1;

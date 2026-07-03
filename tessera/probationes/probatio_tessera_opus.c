@@ -243,6 +243,42 @@ s32 principale (vacuum)
     }
 
     /* ========================================================
+     * PROBARE: replere (1.1) - rectangulum uniforme; praecisio
+     * taciturna trans fines
+     * ======================================================== */
+    {
+        TesseraStilus inversus;
+
+        imprimere("\n--- Probans replere ---\n");
+
+        inversus = tessera_stilus(TESSERA_COLOR_NATIVUS,
+            TESSERA_COLOR_NATIVUS, TESSERA_ORNAMENTUM_INVERSUM);
+        tessera_purgare(opus, _nativus());
+        tessera_replere(opus, I, ZEPHYRUM, II, II, (i32)'#',
+            inversus);
+        CREDO_AEQUALIS_I32 (
+            tessera_cellulam_legere(opus, I, ZEPHYRUM).signum,
+            (i32)'#');
+        CREDO_AEQUALIS_I32 (
+            tessera_cellulam_legere(opus, II, I).signum, (i32)'#');
+        CREDO_VERUM (
+            tessera_cellulam_legere(opus, II, I).ornamenta
+            & TESSERA_ORNAMENTUM_INVERSUM);
+        /* extra rectangulum intactum */
+        CREDO_AEQUALIS_I32 (
+            tessera_cellulam_legere(opus, ZEPHYRUM, ZEPHYRUM).signum,
+            ZEPHYRUM);
+        CREDO_AEQUALIS_I32 (
+            tessera_cellulam_legere(opus, III, ZEPHYRUM).signum,
+            ZEPHYRUM);
+        /* trans fines (cratis VIIIxIII): tacite praecisum */
+        tessera_replere(opus, VI, I, X, X, (i32)'@', _nativus());
+        CREDO_AEQUALIS_I32 (
+            tessera_cellulam_legere(opus, VII, II).signum,
+            (i32)'@');
+    }
+
+    /* ========================================================
      * PROBARE: renovatio magnitudinis - amplitudo nova, pictura
      * plena sequitur
      * ======================================================== */

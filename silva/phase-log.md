@@ -2797,3 +2797,98 @@ surprised by its own tooling):
   amalgamation exposed it. A latina-collision check on hand-written
   vanilla headers (the probatio_silva_amalgama pattern) is the
   named guard class.
+
+## SILVA ADDITIONES I — INTENTIO (2026-07-03)
+
+**The first post-M1 reopening, and the widen-first plan paying
+out**: saltuarius (the first true silva.h consumer) generated an
+8-item API-pressure ledger at spec time
+(project-specs/saltuarius-spec-v2.md §2). This package ships the
+declaration-tier items — #1 public lexing, #7 convenience
+helpers, #8 arena telemetry — and unblocks saltuarius Phase B
+(layer-0 coloring). Engine-tier items (#2 fons_via, #3 strata
+retention, #4/5/6 vistas) are ADDITIONES II, explicitly not here.
+
+**Simulation VIII findings (4-for-4 on sims reducing work)**:
+(a) all eight #1/#7 functions are ALREADY extern in the shipped
+amalgam — zero manifest edits for them; (b) NO GATE type-checks a
+silva.h declaration (standalone compiles without silva.h; C links
+without mangling) — a wrong-typed declaration ships silently and
+corrupts in the first host; the ONLY guard is a host call;
+(c) lexed tokens ALIAS the source text ("fons NON copiatur") —
+the iterator-titulus bug class, must be documented AT the
+declaration; (d) the renderer wants silva_lexare_cruda (raw
+interleaved stream: comments/whitespace as items), hit-testing
+wants silva_lexare (real lexemata, origo attached) — both ship;
+(e) the pollution guard lexes silva.h ITSELF — new declarations
+are latina-checked automatically.
+
+**Scope** (decisions: cruda yes / hospes-rule / both telemetry):
+1. **silva.h +10 declarations** (vanilla, ≤31 chars, param names
+   checked against latina defines): silva_lexare +
+   silva_lexare_cruda (with the LIFETIME CONTRACT in the doc
+   comment: tokens alias fons; fons_index 0 licet for standalone
+   use), silva_token_radix / _profunditas / _est_fons,
+   silva_nodus_liberi, silva_lexema_genus_nomen,
+   silva_origo_genus_nomen, silva_piscina_summa_usus,
+   silva_piscina_summa_apex_usus (memoriae_index → size_t).
+2. **Manifest**: EXCLUDENDA_PISCINAE −2 (both summa accessors —
+   ONE shared array covers header+corpus rows), NON_STATICA +2.
+   Renames automatic via piscina_→silva_piscina_.
+3. **Hospes +~25 lines calling ALL TEN** — the type-drift guard.
+   **NEW STANDING RULE: every function silva.h gains must be
+   CALLED by hospes in the same change.** Named debt: 27 of the
+   pre-existing 34 declarations lack hospes calls — backfill
+   opportunistically, not here.
+
+**Gates**: amalgamare.sh full (standalone full-severity, hospes,
+nm-intersectio 0 — silva.c legitimately CHANGES; byte-identity
+was the refactor's gate, not this one's), silva suite 26/26
+(pollution guard auto-adapts), tessera + saltuarius suites as
+cross-project sanity.
+
+**Exit criteria**: all gates green; hospes exercises all ten new
+functions with content assertions (lexare on a tiny fons: token
+count + a genus + a valor; cruda: trivia present in-stream;
+telemetry: usus > 0, apex >= usus); spec-v2 §2 ledger marked
+(#1/#7/#8 SHIPPED); memory updated; saltuarius Phase B unblocked.
+
+### SILVA ADDITIONES I — RELATIO (2026-07-03): SHIPPED
+
+**Ledger items #1, #7, #8 are public.** silva.h +10 declarations
+(lexare, lexare_cruda with the tokens-alias-fons lifetime contract
+in the doc comment, token_radix/profunditas/est_fons,
+nodus_liberi, lexema/origo_genus_nomen, piscina_summa_usus/
+apex_usus), manifest −2/+2 (telemetry resurrection), hospes 8/8 →
+14/14 with content assertions on every new function. All gates
+green (standalone full-severity, hospes, nm-intersectio 0); silva
+26/26, saltuarius 6/6, tessera 5/5. ~1 hour, as the simulation
+estimated. **Saltuarius Phase B is unblocked.**
+
+**Simulation VIII correction (recorded for honesty and for the
+next maintainer's peace of mind)**: the sim claimed NO gate
+type-checks silva.h declarations. WRONG — and the error was
+instructive: the amalgam embeds silva.h VERBATIM as its caput, so
+the standalone compile checks every declaration against every
+definition in the same TU. It proved itself immediately: six
+conflicting-type errors on the first regeneration caught (a) the
+i32-unsigned slip IN REVERSE (declared profunditas as int; i32 is
+unsigned — the codebase's most reliable slip now bites in both
+directions) and (b) missing const on both telemetry params
+(definitions take constans SilvaPiscina*). The embedded-caput
+design is a self-checking contract — the same property that made
+tessera's macro redefinitions self-guarding.
+
+**The hospes rule survives anyway, re-founded**: the type gate is
+free, but hospes calls check RUNTIME behavior (lexare really
+returns 5 lexemata; trivia really interleave in cruda; apex >=
+usus) and serve as the canonical usage examples for each
+declaration. The standing rule stands: new silva.h function =
+hospes call, same change. (Named debt unchanged: 27 pre-existing
+declarations lack calls.)
+
+One design nuance surfaced writing the hospes liberi check: a
+sceleton segment's loci are LEXEMATA, so silva_nodus_liberi
+legitimately returns an EMPTY xar at M1 — the call type-checks
+and the xar is valid; child-bearing trees arrive with M2's
+grammar. Noted so nobody mistakes empty-liberi for a bug.

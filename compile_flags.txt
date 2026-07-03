@@ -16,3 +16,5 @@
 -Isilva/instrumenta
 -Isilva/amalgama
 -Itessera/fontes
+-Itessera/amalgama
+-Isaltuarius/fontes

@@ -207,6 +207,9 @@ void tessera_quadrum_pingere(TesseraOpus* opus, int x, int y,
 void tessera_lineam_pingere(TesseraOpus* opus, int x, int y,
     int longitudo, int verticalis, TesseraLineaGenus genus,
     TesseraStilus stilus);
+void tessera_replere(TesseraOpus* opus, int x, int y,
+    int latitudo, int altitudo, unsigned int signum,
+    TesseraStilus stilus);
 void tessera_cursorem_ponere(TesseraOpus* opus, int x, int y);
 int tessera_praesentare(TesseraOpus* opus);
 int tessera_magnitudinem_renovare(TesseraOpus* opus);

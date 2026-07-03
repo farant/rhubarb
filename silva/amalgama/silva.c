@@ -69,6 +69,11 @@ SilvaPiscina* silva_piscina_generare_dynamicum(const char* titulus,
     size_t mensura_alvei_initia);
 void silva_piscina_destruere(SilvaPiscina* piscina);
 
+/* Telemetria arenae (additiones I): octeti in usu + apex usus -
+ * hospites longaevi (saltuarius LRU) mensurare possunt */
+size_t silva_piscina_summa_usus(const SilvaPiscina* piscina);
+size_t silva_piscina_summa_apex_usus(const SilvaPiscina* piscina);
+
 unsigned int silva_xar_numerus(const SilvaXar* xar);
 void* silva_xar_obtinere(const SilvaXar* xar, unsigned int index);
 
@@ -239,6 +244,35 @@ struct SilvaToken {
 };
 
 /* ==================================================
+ * Lexatio + auxilia lexematum (additiones I)
+ * ================================================== */
+
+/* Lexare fontem: SilvaXar de SilvaToken* (EOF ultimo), trivia
+ * (commenta, spatia) tokenis attachata in spatia_ante/spatia_post.
+ * CONTRACTUS VITAE: FONS NON COPIATUR - valores lexematum in
+ * textum fontis spectant, ergo textus vivere debet quamdiu
+ * lexemata vivunt (arena eadem consulto). fons_index tokenis
+ * inscribitur; 0 licet pro usu solitario. */
+SilvaXar* silva_lexare(SilvaPiscina* piscina, const char* fons,
+    unsigned int mensura, int fons_index);
+
+/* Fluxus crudus: lexemata vera ET trivia INTERPOSITA, ordine
+ * fontis - pro pictoribus (omnis octetus classificatus in
+ * ordine). Idem contractus vitae. */
+SilvaXar* silva_lexare_cruda(SilvaPiscina* piscina,
+    const char* fons, unsigned int mensura, int fons_index);
+
+/* Catena originis: radix (maiorum FONS/API), profunditas
+ * (generatio expansionis; 0 = fons), estne stratum 0 */
+SilvaToken* silva_token_radix(SilvaToken* token);
+unsigned int silva_token_profunditas(SilvaToken* token);
+int silva_token_est_fons(SilvaToken* token);
+
+/* Tituli generum (tabellae originis, debugging) */
+const char* silva_lexema_genus_nomen(SilvaLexemaGenus genus);
+const char* silva_origo_genus_nomen(SilvaOrigoGenus genus);
+
+/* ==================================================
  * Nodus + valor signatus (codex ut basis datorum)
  * ================================================== */
 
@@ -289,6 +323,11 @@ struct SilvaNodus {
 unsigned int silva_valor_lista_numerus(SilvaValor lista);
 SilvaValor* silva_valor_lista_obtinere(SilvaValor lista,
     unsigned int index);
+
+/* Liberi nodales (NODUS loci + elementa NODUS listarum, ordine
+ * locorum): SilvaXar de SilvaNodus* (additiones I) */
+SilvaXar* silva_nodus_liberi(SilvaPiscina* piscina,
+    const SilvaNodus* nodus);
 
 /* ==================================================
  * Tabulae coctae (generatae - contractus stabilis)
@@ -1050,6 +1089,19 @@ silva_piscina_allocare_ordinatum (
 						 SilvaPiscina* piscina,
 		memoriae_index  mensura,
 		memoriae_index  ordinatio);
+
+
+/* ===============================================
+ * Quaestio
+ * =============================================== */
+
+memoriae_index
+silva_piscina_summa_usus (
+		constans SilvaPiscina* piscina);
+
+memoriae_index
+silva_piscina_summa_apex_usus (
+		constans SilvaPiscina* piscina);
 
 #endif
 
@@ -3098,6 +3150,34 @@ silva_piscina_allocare_ordinatum (
     memoriae_index  ordinatio)
 {
     redde _allocare_interna(piscina, mensura, ordinatio, VERUM);
+}
+
+/* ===========================================================
+ * QUAESTIO
+ * =========================================================== */
+
+memoriae_index
+silva_piscina_summa_usus (
+        constans SilvaPiscina* piscina)
+{
+    constans Alveus* b;
+     memoriae_index  summa;
+
+    si (!piscina) redde ZEPHYRUM;
+
+    summa = ZEPHYRUM;
+    per (b = piscina->primus; b; b = b->sequens)
+    {
+        summa += b->offset;
+    }
+    redde summa;
+}
+
+memoriae_index
+silva_piscina_summa_apex_usus (
+        constans SilvaPiscina* piscina)
+{
+    redde piscina ? piscina->maximus_usus : ZEPHYRUM;
 }
 
 

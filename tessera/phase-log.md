@@ -527,3 +527,17 @@ vanilla C89 host compiles against tessera.h alone. **Saltuarius can
 start.** Named deferrals unchanged (spec-v2 §6): wcwidth, scroll
 regions (fructus-gated), exposed-fd loop, kitty, drag, widgets =
 second library.
+
+## TESSERA 1.1 (2026-07-03) — tessera_replere
+
+First post-1.0 addition, exactly by the book: saltuarius Phase A
+(the first true amalgam host) confirmed the signature through real
+usage (selection bar = altitudo-1 fill; origo popup interior =
+the rect case, Phase C). tessera_replere(opus, x, y, lat, alt,
+signum, stilus) — uniform fill, silent grid clipping. Added to
+fontes (opus.{h,c}) + probatio_tessera_opus (replere section:
+fill, style, outside-intact, cross-bounds clip) + hand-written
+amalgama/tessera.h. Amalgam regenerated; ALL GATES green
+(standalone full-severity, hospes 7/7, nm-intersectio 0); suite
+5/5; saltuarius adopted it, suite 6/6. The eskil loop: caller
+designs, library gains, both prove.
