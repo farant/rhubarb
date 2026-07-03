@@ -381,7 +381,7 @@ typedef struct SilvaResolutioResponsum {
 } SilvaResolutioResponsum;
 
 typedef void (*SilvaResolutor)(const SilvaNodus* ambiguum,
-    const SilvaOraculum* oraculum, void* contextus,
+    const SilvaOraculum* oraculum, void* datum_resolutoris,
     SilvaResolutioResponsum* responsum);
 
 typedef enum {
@@ -408,7 +408,7 @@ typedef struct SilvaCommissio {
 
 unsigned int silva_recanonicare(SilvaCommissio* commissio,
     const SilvaOraculum* oraculum, SilvaResolutor resolutor,
-    void* contextus);
+    void* datum_resolutoris);
 
 /* ==================================================
  * Praeprocessor (expansio) - contextus praeparabilis
@@ -425,6 +425,57 @@ int silva_macro_addere(SilvaExpansio* exp, const char* titulus,
     const char* corpus);
 int silva_macro_functio_addere(SilvaExpansio* exp,
     const char* titulus, const char** parametra, const char* corpus);
+
+/* ==================================================
+ * Contextus hospitis (Phase 7) - receptum diu vivens:
+ * fines (limina dura; 0 = infinitum; sub finibus arbor
+ * completa manet et octetim exacte reconstruitur),
+ * intermissio (pergere - monotona sit: semel falsum,
+ * semper falsum), lexica (definitiones ante fontem -
+ * latina compilata via silva_contextus_latinam_addere),
+ * praebenda (includenda)
+ * ================================================== */
+
+typedef struct SilvaFines {
+    unsigned int lexemata;                /* fluxus expansus max */
+    unsigned int generationes;
+    unsigned int profunditas_includendi;
+    unsigned int profunditas_regionum;
+    unsigned int frons;                   /* frons GSS max */
+} SilvaFines;
+
+typedef int (*SilvaPergereFunctio)(void* datum);
+
+typedef struct SilvaContextusPlagula {
+    const char*  via;
+    const char*  textus;
+    unsigned int mensura;
+} SilvaContextusPlagula;
+
+typedef struct SilvaContextus SilvaContextus;
+
+struct SilvaContextus {
+    SilvaPiscina*       piscina;
+    SilvaFines          fines;
+    SilvaPergereFunctio pergere;          /* NULL = numquam rogare */
+    void*               pergere_datum;
+    unsigned int        passus_pergendi;  /* intervallum lexematum */
+    SilvaXar*           lexica;           /* SilvaContextusPlagula */
+    SilvaXar*           praebenda;        /* SilvaContextusPlagula */
+};
+
+SilvaContextus* silva_contextus_creare(SilvaPiscina* piscina);
+int silva_contextus_lexicon_addere(SilvaContextus* contextus,
+    const char* via, const char* textus, unsigned int mensura);
+int silva_contextus_latinam_addere(SilvaContextus* contextus);
+int silva_contextus_praebere(SilvaContextus* contextus,
+    const char* via, const char* textus, unsigned int mensura);
+void silva_contextus_pergere_ponere(SilvaContextus* contextus,
+    SilvaPergereFunctio pergere, void* datum, unsigned int passus);
+
+/* Textus latina.h compilatus (GENERATUM ex include/latina.h) */
+extern const char         silva_latina_textus[];
+extern const unsigned int silva_latina_mensura;
 
 /* ==================================================
  * Gubernator (fistula tota) + fructus
@@ -452,25 +503,39 @@ typedef struct SilvaParsura {
     unsigned int    transmutationes_negatae;
     unsigned int    eventa_marginis_novi;
     unsigned int    frons_maxima;
+    int             est_intermissa;   /* pergere falsum; arbor tamen
+                                       * completa (cauda = ERROR) */
+    int             expansio_decisa;  /* expansio trunca (limen) */
+    int             fines_tactae;     /* quilibet limen tactus */
+    unsigned int    segmenta_ultra_limen;
+    unsigned int    regiones_textae;  /* regiones in arborem textae */
+    unsigned int    regiones_omissae; /* degradatae (limes transgressus) */
 } SilvaParsura;
 
 SilvaParsura* silva_parsare(SilvaPiscina* piscina,
     const char* titulus_fontis, const char* fons,
     unsigned int mensura, const SilvaGrammatica* grammatica,
     const SilvaOraculum* oraculum, SilvaResolutor resolutor,
-    void* contextus);
+    void* datum_resolutoris);
 
 SilvaParsura* silva_parsare_cum_expansione(SilvaPiscina* piscina,
     SilvaExpansio* expansio, const char* titulus_fontis,
     const char* fons, unsigned int mensura,
     const SilvaGrammatica* grammatica,
     const SilvaOraculum* oraculum, SilvaResolutor resolutor,
-    void* contextus);
+    void* datum_resolutoris);
+
+SilvaParsura* silva_parsare_cum_contextu(SilvaPiscina* piscina,
+    const SilvaContextus* contextus, const char* titulus_fontis,
+    const char* fons, unsigned int mensura,
+    const SilvaGrammatica* grammatica,
+    const SilvaOraculum* oraculum, SilvaResolutor resolutor,
+    void* datum_resolutoris);
 
 SilvaParsura* silva_lexemata_parsare(SilvaPiscina* piscina,
     const SilvaXar* lexemata, const SilvaGrammatica* grammatica,
     const SilvaOraculum* oraculum, SilvaResolutor resolutor,
-    void* contextus);
+    void* datum_resolutoris);
 
 /* ==================================================
  * Scriptura (emissio octetim exacta)

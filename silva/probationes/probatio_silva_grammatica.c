@@ -178,7 +178,7 @@ s32 principale (vacuum)
     /* 17 productiones + augmentata = XVIII */
     CREDO_AEQUALIS_I32 (xar_numerus(g->productiones), XVIII);
     /* genera structuralia */
-    CREDO_AEQUALIS_I32 (xar_numerus(g->genera_extra), III);
+    CREDO_AEQUALIS_I32 (xar_numerus(g->genera_extra), V);
 
     /* ambae lectiones IDENTIFICATORIS adsunt */
     CREDO_VERUM (_productio_per_id(g, "typus-nomen") >= ZEPHYRUM);

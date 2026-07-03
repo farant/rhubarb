@@ -551,6 +551,22 @@ s32 principale (vacuum)
             "#define F(x) x\nF(1) + F(2);"));
         CREDO_VERUM (_fidelis(piscina,
             "#define PAR(x) (x)\nPAR((1 + 2));"));
+
+        /* Limes CHORDA (stringificatio - Phase 7 Chunk C: corpus
+         * solarii deferral coegit, vectis maximalista): radix per
+         * primus + extentum per continentiam. Corpus solo #x,
+         * #x medio corporis (forma CHECK solarii), argumentum
+         * multi-lexematis, argumentum vacuum. */
+        CREDO_VERUM (_fidelis(piscina,
+            "#define STR(x) #x\nSTR(abc);"));
+        CREDO_VERUM (_fidelis(piscina,
+            "#define STR(x) #x\nSTR(a + b);"));
+        CREDO_VERUM (_fidelis(piscina,
+            "#define CH(c) probe(#c, 1)\nCH(x + y);"));
+        CREDO_VERUM (_fidelis(piscina,
+            "#define STR(x) #x\nSTR();"));
+        CREDO_VERUM (_fidelis(piscina,
+            "#define STR(x) 1 + #x + 2\nSTR(m);"));
     }
 
 

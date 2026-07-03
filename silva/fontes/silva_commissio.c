@@ -83,7 +83,7 @@ nomen structura {
     SilvaCommissio*         commissio;
     constans SilvaOraculum* oraculum;
     SilvaResolutor          resolutor;
-    vacuum*                 contextus;
+    vacuum*                 datum_resolutoris;
 } SilvaAmbulatio;
 
 interior SilvaValor _valorem_committere (SilvaAmbulatio* ambulatio,
@@ -152,7 +152,7 @@ _ambiguum_committere (SilvaAmbulatio* ambulatio, SilvaNodus* nodus)
         responsum.victor = -I;
         responsum.discriminans = NIHIL;
         ambulatio->resolutor(nodus, ambulatio->oraculum,
-            ambulatio->contextus, &responsum);
+            ambulatio->datum_resolutoris, &responsum);
         si (responsum.victor >= ZEPHYRUM)
         {
             SilvaValor* victor_valor = silva_valor_lista_obtinere(
@@ -294,7 +294,7 @@ silva_committere (
     constans SilvaRegistrumCoctum* tabularium,
     constans SilvaOraculum*        oraculum,
     SilvaResolutor                 resolutor,
-    vacuum*                        contextus)
+    vacuum*                        datum_resolutoris)
 {
     SilvaCommissio* commissio;
     SilvaAmbulatio  ambulatio;
@@ -364,7 +364,7 @@ silva_committere (
     ambulatio.commissio = commissio;
     ambulatio.oraculum = oraculum;
     ambulatio.resolutor = resolutor;
-    ambulatio.contextus = contextus;
+    ambulatio.datum_resolutoris = datum_resolutoris;
 
     commissio->radix = _valorem_committere(&ambulatio, radix, NIHIL);
     redde commissio;
@@ -375,7 +375,7 @@ silva_recanonicare (
     SilvaCommissio*         commissio,
     constans SilvaOraculum* oraculum,
     SilvaResolutor          resolutor,
-    vacuum*                 contextus)
+    vacuum*                 datum_resolutoris)
 {
     i32 versi = ZEPHYRUM;
     i32 i;
@@ -403,7 +403,7 @@ silva_recanonicare (
 
         responsum.victor = -I;
         responsum.discriminans = NIHIL;
-        resolutor(nodus, oraculum, contextus, &responsum);
+        resolutor(nodus, oraculum, datum_resolutoris, &responsum);
         si (responsum.victor < ZEPHYRUM)
         {
             perge;  /* adhuc ignotum */

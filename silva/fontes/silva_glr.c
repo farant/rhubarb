@@ -1088,6 +1088,10 @@ silva_glr_creare (
     glr->constructor = constructor;
     glr->fabrica = fabrica;
     glr->piscina = piscina;
+    glr->limen_frontis = SILVA_GLR_LIMEN_FRONTIS_DEFALTUM;
+    glr->pergere = NIHIL;
+    glr->pergere_datum = NIHIL;
+    glr->passus_pergendi = SILVA_GLR_PASSUS_PERGENDI_DEFALTUM;
     _statisticas_purgare(glr);
     redde glr;
 }
@@ -1117,6 +1121,8 @@ silva_glr_parsare (
     fructus.positio = ZEPHYRUM;
     fructus.terminalis = ZEPHYRUM;
     fructus.status = ZEPHYRUM;
+    fructus.est_ultra_limen = FALSUM;
+    fructus.est_intermissus = FALSUM;
 
     si (glr == NIHIL || lexemata == NIHIL || piscina_arborum == NIHIL)
     {
@@ -1150,6 +1156,20 @@ silva_glr_parsare (
         SilvaGLRPassus passus;
         i32 fi;
         i32 cursor;
+
+        /* Intermissio (Phase 7): interrogatio determinata per passum
+         * lexematum; FALSUM = fractura munda (gubernator recuperat) */
+        si (glr->pergere != NIHIL
+            && (glr->passus_pergendi <= I
+                || (positio % glr->passus_pergendi) == ZEPHYRUM)
+            && !glr->pergere(glr->pergere_datum))
+        {
+            fructus.est_error = VERUM;
+            fructus.est_intermissus = VERUM;
+            fructus.positio = (s32)positio;
+            _statisticas_copiare(glr, &fructus);
+            redde fructus;
+        }
 
         /* Prospectus: lexema currens aut $ ultra fluxum */
         passus.terminale = SILVA_GLR_PROSPECTUS_FINIS;
@@ -1333,6 +1353,19 @@ silva_glr_parsare (
         si (xar_numerus(passus.frons_nova) > glr->frons_maxima)
         {
             glr->frons_maxima = xar_numerus(passus.frons_nova);
+        }
+
+        /* Limen frontis (Phase 7): fractura munda pro fluxu infesto -
+         * gubernator segmentum in nodum ERROR vertit (totalitas) */
+        si (glr->limen_frontis > ZEPHYRUM
+            && xar_numerus(passus.frons_nova) > glr->limen_frontis)
+        {
+            fructus.est_error = VERUM;
+            fructus.est_ultra_limen = VERUM;
+            fructus.positio = (s32)positio;
+            fructus.terminalis = passus.terminale;
+            _statisticas_copiare(glr, &fructus);
+            redde fructus;
         }
 
         frons = passus.frons_nova;

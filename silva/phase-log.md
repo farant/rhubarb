@@ -2209,3 +2209,556 @@ explicitly rather than rediscover:
   emitter already walks CONDITIONALIS rami (lista-nodus) the day
   they exist; arm-directive lines will need token slots on ramus
   nodes (Phase 7 genera-extra design item).
+
+
+## Audit — phase boundary sweep before Phase 7 (2026-07-03)
+
+Full phase-log re-read per protocol (the practice that found four
+drifts at the Phase 4 boundary). Findings this time: every parked
+item has a named owner; three drifts/notes and one API seam:
+
+1. **CONDITIONALIS threading carries a citation drift.** Phase 4/5
+   entries attribute it to "§11.2", but §11.2/§6's M1 definition
+   never requires in-tree threading — it requires the two-arm #ifdef
+   through the EXPANDER path (done, Phase 2). The obligation is real
+   (spec §8.1.4 "layers are trees: region nodes inline" + the
+   one-owner pin above), but its Phase-7 placement is a phase-log
+   decision, not a spec checklist item. Kept in Phase 7 deliberately
+   (see INTENTIO decision 4) at minimal scope; recorded so the
+   "§11.2 says so" justification doesn't harden.
+2. **Prosser's landing spot renamed itself**: the pre-Phase-4 audit
+   said "external corpus (Lua/zlib)"; the external corpus became
+   solarium (ring 1.5, Fran 2026-07-02). Same disposition, real name.
+3. **Integration target CHANGED (2026-07-02, tessera decision)**:
+   "solarium-side compile of the amalgam" is REPLACED as the
+   real-host proof by saltuarius (the silva explorer TUI on the
+   tessera library — project-specs/tessera-spec.md), which consumes
+   amalgama/silva.h only. Solarium remains as CORPUS (ring 1.5).
+   Phase 6's "Named onward" entry predates this change.
+4. **contextus naming seam (source-verified)**: the resolutor's
+   closure parameter is named `contextus` across silva_parsare.h /
+   silva_commissio.h — it will collide with SilvaContextus the day
+   the object exists. The API is one phase old; rename it in Phase 7
+   Chunk A before the collision is real.
+
+**§11.2 checklist status**: every item green with a pointer — tiny
+annotated grammar (P3), expander with guard file + two-arm #ifdef
+(P2), unified tokens (P1), tables + construction (P3), the fork case
+end-to-end incl. re-canonicalization (P4), pater fixup (P4), cursor.c
+roundtrip (P5), through the amalgamator + standalone compile (P6),
+crash-freedom fuzz attached (P2.5→P5). Remaining before the M1
+RELATIO: exactly the Phase-7-owned debts.
+
+**Corpus evidence gathered at the boundary** (grep census over
+../solarium): 148 .c/.h files; **ZERO ## paste usage anywhere** — the
+pasta boundary deferral will NOT be forced by this corpus;
+function-like macro definitions present in ~46 files (extents already
+built, Phase 5 C5); dense local-include graph (praebere at scale, or
+learning mode — roundtrip holds either way); stringify usage unknown
+(the Chunk C survey reports exactly).
+
+
+## Phase 7 — Skeleton integration (M1 closure)
+
+### INTENTIO (2026-07-03)
+
+**What**: close M1. The owed debts (caps + cancellation, SilvaContextus
++ latina definition SET, CONDITIONALIS threading, Prosser disposition,
+v1 praeparator spot-check) + solarium as corpus, then the M1 RELATIO
+and the widen-first decision. Proves: the substrate is hostile-input
+safe, host-configurable, and holds against a real foreign codebase.
+
+**Protocol reads done**: full phase-log audit (above), spec-v2 §6 +
+§8.2 + §10 + §11.2, silva/CLAUDE.md, source verification
+(silva_parsare.h contextus params, silva_expandere.h cap inventory,
+solarium grep census).
+
+**Design decisions:**
+
+1. **SilvaContextus = the long-lived host object** (spec §8.2 caps +
+   cancel; §10.2.5 presets later): {caps struct, cancellation
+   callback + stride, definition-set loading}. It RIDES
+   silva_parsare_cum_expansione — the seam Phase 5 built for it —
+   via a new entry silva_parsare_cum_contextu (or contextus param
+   added to cum_expansione; decide at the API sketch). M1 scope:
+   caps + cancellation + definition sets. Named config presets =
+   config-query milestone (named). The resolutor's vacuum* closure
+   parameter is RENAMED (datum_resolutoris) across the API to free
+   the name — one phase old, cheap now, expensive after M2.
+2. **Caps degrade EXPANSION, never totality.** On token-volume cap,
+   the remaining reliqua flows through UNEXPANDED (raw layer-0
+   tokens, diagnostic recorded) — every capped parse still yields a
+   complete committed tree and byte-exact roundtrip; the fuzz oracle
+   holds UNDER caps (adversarial fixtures: exponential expansion
+   #define A B B... chain, deep region nesting). Cap set: total
+   expanded tokens, GSS frontier, region nesting depth, include
+   depth (exists, 32), expansion generations (assertion → cap).
+   Cancellation: deterministic count-based checkpoints (no timers)
+   in the three unbounded loops — expansion fixpoint, GLR drain,
+   slicing loop; cancelled → partial results + successus FALSUM +
+   causa, terminal state honest.
+3. **latina definition SET = compiled-in, literally.** The
+   amalgamator already reads latina.h; it additionally emits its
+   text as data (silva_latina_textus, ~4 KB static string) and a
+   contextus API praeberes it (the cursor.c closure path, now one
+   call). Modular builds read the same header from disk. This
+   honors the interview's "compiled-in defaults" answer without a
+   second source of truth — the emitted data IS the vendored header.
+   (Reviewable: if embedding-as-data feels wrong, the fallback is
+   caller-passes-text; the API shape is identical.)
+4. **CONDITIONALIS threading — minimal scope, simulation ⑦ first.**
+   Genera-extra design: conditionalis node (rami:lista-nodus) +
+   ramus node (directive-line token slots, contentum). Taken ramus
+   holds parsed content; untaken rami hold their lexemata_cruda as
+   token payloads (the ERROR-node pattern — bytes in the tree,
+   structure later). One-owner migration in scribere_fontem:
+   threaded regions leave the reinserenda queue (arm bytes emit from
+   the tree; assert no double-emission). Untaken-arm SUB-PARSING
+   stays at the config-query milestone (the pinned fidelity
+   requirement above governs it when it lands). THE HAZARD sim ⑦
+   must trace before any code: regions are layer-0 offset-based,
+   the tree is built from the EXPANDED stream via the slicing
+   driver — regions that straddle statement boundaries, sit inside
+   a statement, or interleave with macro expansion are the cases
+   that decide whether threading happens at the slicing layer, the
+   commit walk, or a post-commit pass.
+5. **Solarium enters as corpus via a SURVEY first, probatio second.**
+   instrumenta/principalia/lustrum.c (the census tool): every
+   solarium .c/.h through parse→emit==input with praebere'd local
+   closure where resolvable; reports per-file fidelity, fracture
+   causes, ERROR-node counts, timings. THEN probatio_silva_solarium
+   pins the honest assertable number. Solarium is NOT vendored
+   (lives next door, evolves — recorded decision): the probatio
+   SKIPS green-with-a-loud-note when ../solarium is absent.
+   If the survey surfaces stringify-in-use → implement the CHORDA
+   boundary rather than shrink the bar (maximalist default, the
+   Phase 5 function-like precedent). ## is already ruled out by
+   the boundary census.
+6. **Prosser disposition by evidence**: revisit HS_call∩HS_rparen
+   against the solarium survey; if no real-world case surfaces,
+   document as a PERMANENT conservative simplification (header note
+   in silva_expandere.h + a phase-log close), not a dangling debt.
+7. **v1 praeparator spot-check**: read the v1 suite file for input
+   STRINGS the Phase-4-audit coverage mapping missed; harvest
+   anything found into fixtures; close the item either way.
+8. **Amalgam discipline applies all phase**: new public API
+   (SilvaContextus family) → extend hand-written silva.h; new
+   vendored consumption → delete excludenda entries; amalgamare.sh
+   after every fontes edit.
+
+**Chunks:**
+- **A — SilvaContextus + caps + cancellation.** The object, the
+  renamed resolutor param, cap enforcement with graceful raw-flow
+  degradation, cancellation checkpoints, latina SET loading, the
+  cursor.c closure test rewritten through the contextus path,
+  adversarial cap fixtures (exponential expansion, deep nesting,
+  capped-parse roundtrip assertions). silva.h extended;
+  probatio_silva_contextus.
+- **B — CONDITIONALIS threading.** Simulation ⑦ (region→tree
+  mapping traced through real structs; file in project-specs/ if it
+  earns one), then: genera-extra shapes in both grammars +
+  regenerate, threading at the layer sim ⑦ selects, scribere
+  one-owner migration, fixtures (two-arm, nested, straddling,
+  est_imperfecta, region-inside-statement), fuzz + corpus + closure
+  oracles stay green (the migration must not move a single byte).
+- **C — solarium corpus + closure sweep.** lustrum survey + report;
+  probatio_silva_solarium (honest number pinned); Prosser
+  disposition; v1 praeparator spot-check; mensura at solarium scale;
+  stringify decision iff the survey forces it.
+
+**Exit criteria**: suite green incl. new probationes; capped/cancelled
+parses still roundtrip byte-exact; cursor.c closure passes through
+the contextus path; CONDITIONALIS nodes in committed trees with
+one-owner emission (zero byte drift across the migration); solarium
+fidelity number pinned honestly; Prosser + praeparator dispositioned
+in writing; amalgam regenerated with silva.h extended; Phase 7
+RELATIO; then **M1 RELATIO as its own entry** — §11.2 walked
+item-by-item with pointers, and the widen-first decision (grammar
+coverage vs expander directive coverage vs query surface) made with
+its first real customer input: saltuarius v0 wants the preprocessor/
+layer story (DONE) + file navigation now, tree views at M2, selector
+queries at the query milestone.
+
+**Explicitly NOT Phase 7** (named, with owners): untaken-arm
+sub-parsing + transforms-across-arms fidelity + named config presets
++ wildcard configuration queries (config-query milestone); stderr
+diagnostics hook (post-M1 API nicety); C89 grammar + boundary-finder
+upgrade + three-valued oracle + 3-way ambiguity paths (M2);
+formatter/style profiles (§8.3), STML serialization (1.0), layer-N
+view emission (query milestone); solarium-BUILD compile (replaced by
+saltuarius as real-host proof — tessera project, 2026-07-02
+decision); saltuarius itself (after tessera exists).
+
+### Chunk A — COMPLETE (2026-07-03): SilvaContextus + fines + intermissio
+
+Suite 24/24, 1,310 assertions (probatio_silva_contextus 81, FIRST
+RUN). Amalgam regenerated + all gates green (standalone full
+severity, hospes 8/8, nm-intersectio 0, double-run IDEMPOTENT);
+silva.c now 434 KB (latina datum + contextus aboard).
+
+What landed:
+- **fontes/silva_contextus.{h,c}** — the long-lived host object:
+  SilvaFines {lexemata, generationes, profunditas_includendi,
+  profunditas_regionum, frons} (0 = unlimited; generous defaults
+  ALWAYS on — tree-sitter posture, Fran-approved), SilvaPergereFunctio
+  (documented MONOTONE: once false, always false), lexica + praebenda
+  as copied SilvaContextusPlagula recipes. Contextus is a RECIPE:
+  each parse creates a fresh expansio and applies it
+  (_contextum_applicare in the driver — contextus.c stays a dumb
+  config holder; lower layers never see the type, they get raw
+  fields copied down).
+- **Naming: definition set = LEXICON** (silva_contextus_
+  lexicon_addere — "definitiones_addere" was 35 chars, over the S47
+  ≤31 bar; a lexicon is exactly what latina.h is). Lexicon events get
+  positus CLAMPED to 0 after processing (they were relative to the
+  lexicon's own reliqua stream; clamping makes them active from
+  main-stream position 0 regardless of stray non-directive content).
+- **Caps degrade expansion, never totality** (the INTENTIO principle,
+  now proven by assertion): volume/generation caps checked at
+  generation boundaries (_generationem_licere — one helper, both
+  fixpoint loops); capped stream flows on UNEXPANSED; parse + emit
+  proceed; roundtrip stays byte-exact under EVERY cap (asserted per
+  cap in the probatio). Region depth: _regionem_processare got a
+  depth-counter wrapper (all return paths covered) + est_ultra_modum
+  regions where NO arm evaluates — whole region retained cruda,
+  recursion stops. **This closed a REAL pre-existing hole: a
+  2000-deep #if nest recursed 2000 frames before (stack overflow on
+  hostile input); now capped at 64, byte-exact, asserted.** Include
+  depth: constant 32 → configurable field, same behavior. GLR:
+  limen_frontis (default 4096) → est_ultra_limen = clean segment
+  error → ERROR node (totality); counted in
+  parsura->segmenta_ultra_limen.
+- **Cancellation**: checkpoints in the three unbounded loops —
+  expansion fixpoint (per generation), GLR drain (per passus_pergendi
+  tokens, default 1024), slicing loop (per segment). On cancel the
+  driver folds the ENTIRE remaining tail into ONE ERROR node and
+  stops — tree still complete, roundtrip still exact (asserted).
+  DIVERGENCE from INTENTIO wording, deliberate: SilvaParsura.successus
+  stays VERUM under cancellation (the tree IS complete);
+  est_intermissa carries the truth. GLR-fructus-level est_error is
+  where "failure" lives, per contract.
+- **latina compiled-in, literally**: amalgamator step 0 emits
+  fontes/silva_latina_datum.{h,c} (byte array — C89's 509-char string
+  literal limit forbids one literal) from include/latina.h on every
+  amalgamare.sh run; the file is a fontes citizen (modular builds +
+  amalgam both compile it); silva_contextus_latinam_addere praeberes
+  it as a lexicon. Probatio asserts the compiled array ==
+  include/latina.h ON DISK (drift guard both directions). Provenance:
+  si→if chains land in fons "latina.h" as real def-site tokens.
+- **Rename executed**: resolutor closure param contextus →
+  datum_resolutoris across commissio/parsare (fontes + silva.h);
+  the SilvaContextus name is now free and taken.
+- **New parsura product fields**: est_intermissa, expansio_decisa,
+  fines_tactae, segmenta_ultra_limen (+ mirrored in silva.h with the
+  four new type defs, contextus API, latina externs,
+  silva_parsare_cum_contextu; CADENDA_TYPEDEF += 4, CADENDA_DEFINITIO
+  += SilvaContextus).
+- **cursor.c closure THROUGH the contextus path** (M1 bar, new
+  route): latina via the COMPILED lexicon (not praebere), cursor.h/
+  color.h via contextus praebenda; `#include "latina.h"` stays an
+  unknown include (line captured + reinserted) while the macros are
+  already active from position 0 — byte-exact, quaerere("si")
+  non-vacuous. The Phase 5 praebere-path test remains alongside
+  (both routes pinned).
+
+Complexities: none structural — the INTENTIO design survived first
+contact (81 assertions first run; the only mid-writing corrections
+were two hand-counted string lengths swapped for strlen before ever
+compiling). Note for M2: expansion volume is checked at generation
+BOUNDARIES — a single generation can still amplify up to
+stream × max-body-length before the check fires; acceptable
+(deterministic, bounded by source shape), documented here.
+
+Next: Chunk B — CONDITIONALIS threading, simulation ⑦ first
+(region→tree mapping through the real structs; the
+straddling/statement-interior cases decide the threading layer).
+
+### Simulation ⑦ — COMPLETE (2026-07-03): CONDITIONALIS threading
+
+project-specs/silva-simulatio-7.md — pretend-implementation against
+shipped code, every claim line-referenced. Mid-phase simulation now
+3-for-3 at reducing work. Headline: **threading is a PRE-COMMIT
+DRIVER PASS** (none of the INTENTIO's three guessed layers) — the
+driver already owns the radix between slicing and committere (the
+ERROR-node precedent); the commissio walk is generic over loci
+(silva_commissio.c:130) so pater/normalization come free; the
+emitter's fons filters make threading FONS-UNIFORM with zero special
+casing (included-file regions thread identically). **Zero engine
+changes** — expander +~15 lines, driver pass ~150-200, scribere ~30.
+
+The straddling hazard DISSOLVES into detection + degrade: alignment
+= every radix element overlapping a region falls fully inside the
+taken arm's body (layer-0 extents via the Phase 5 _radix_probata
+machinery); intra-statement/straddling/multi-fons/pasta-opaque/
+tail-ERROR cases simply fail detection and the region stays
+slice-owned (today's proven behavior IS the fallback). Threading is
+opt-in per region.
+
+Register C1-C8; decisions (Fran, all recommendations): **β ownership
+inversion** (regions own their structural directive lines ALWAYS;
+capture calls removed; directivae = non-region directives only —
+one-owner extended to lines, no filtering ever); **genus split**
+ramus-sumptus/ramus-omissus (selector tags free; est_numquam
+journal-side, named); **conditio_id:index locus** on both ramus
+genera (tree↔journal↔regions join pinned now); **counters**
+regiones_textae/regiones_omissae on SilvaParsura (solarium
+degradation rate in Chunk C = config-query design input).
+Node shapes: conditionalis {rami:lista-nodus, finis:lista-token};
+ramus-sumptus {directiva:lista-token, contentum:lista-nodus,
+conditio_id:index}; ramus-omissus {directiva:lista-token,
+cruda:lista-token, conditio_id:index}. Layout order == byte order
+throughout — the generic emitter needs zero new cases.
+
+### Chunk B — COMPLETE (2026-07-03): CONDITIONALIS threading
+
+Suite 25/25, 1,390 assertions (probatio_silva_conditionalis 74,
+FIRST RUN). Amalgam 458 KB, all gates green. **Conditional regions
+are now TREE CITIZENS** — and the standing oracles (corpus 78, fuzz
+400, syntaxis 125, both cursor closures) rode through the entire
+migration byte-exact: zero drift, as the sim demanded.
+
+What landed, exactly per simulation ⑦'s fixed scope:
+- **Expander (~15 lines as estimated)**: SilvaRamus gains
+  corpus_initium/corpus_finis (exclusive end = next directive's
+  offset; imperfecta = open 0x7FFFFFFF); SilvaRegio gains
+  directiva_finis (the #endif line, stored at the ENDIF exit) +
+  est_texta. **β executed**: the two _directivam_capere calls in the
+  region walker are GONE — regions own their structural lines;
+  directivae_out = non-region directives only (guard-file lines
+  stay captured — guard files have no region). The unthreaded-region
+  fallback: _regiones_colligere in scribere now collects rami
+  directiva + directiva_finis + cruda from the region tree (texta
+  regions skipped, filiae always visited — a degraded inner region
+  inside a threaded outer keeps its reinserenda ownership and the
+  offset-flush machinery interleaves it correctly during tree
+  emission).
+- **Generator**: NECESSARIA extended to 5 (ramus-sumptus/-omissus
+  REQUIRED, spec §12.2 contract); shape validation rewritten
+  data-driven (10 FormaExigenda rows replace the one-off ambiguus
+  block); both grammars' genera-extra extended + regenerated (same
+  states, same 1 preserved conflict — genera-extra don't touch
+  productions).
+- **The weaving pass (driver, pre-commit — sim ⑦ C4)**: _texere +
+  _regiones_texere (region tree depth-first, filiae first) +
+  _regionem_texere. Detection: per-element layer-0 extents
+  (_extentum_valoris — EXPANSIO chains walked to invocation radix;
+  PASTA/CHORDA → opaque; mixed fontes → opaque; opaque intersecting
+  = conservative degrade), full-containment test against the taken
+  arm's corpus bounds, straddle = degrade (regiones_omissae++).
+  Rebuild: grouped elements → contentum, conditionalis inserted at
+  first-grouped ordinal (or first-after-region same-fons position,
+  or end), foreign-fons elements stay siblings. Forms found in the
+  registrum BY NAME (commissio pattern). Commissio then walks the
+  woven nodes generically — pater fixup verified by assertion
+  (ramus->pater == conditionalis).
+- **probatio_silva_conditionalis (74)**: basic two-arm (structure +
+  conditio_id joins + one-owner: directivae count 0 for pure-region
+  input), #else-taken via #if 0, empty taken arm, nesting (inner
+  conditionalis as outer contentum element), intra-statement +
+  straddle degradations (counters asserted), defines-only region
+  (zero grouped; #define line stays in directivae and reinserts
+  INSIDE the conditionalis span byte-exactly), imperfecta (finis
+  empty), include-inside-arm (foreign elements outside contentum;
+  BOTH fontes reconstruct byte-exact — sim ⑦ C7 fons-uniformity in
+  the flesh), three-arm elif (omissus/sumptus/omissus).
+- **Deliberate test revisions** (logged per β decision):
+  probatio_silva_regiones C7 case now asserts lines on the region
+  (ramus->directiva + directiva_finis) and directivae == 0;
+  probatio_silva_contextus region-cap case now asserts the woven
+  radix (1 conditionalis element, textae 3) — the cap and the
+  threading compose.
+
+Complexities: none structural — sim ⑦'s design survived contact
+(the only mid-writing corrections were the recurring i32-unsigned
+sentinel trap in new struct fields, caught by -Werror before any
+run). Named onward: est_numquam as queryable genus (journal-side
+for now); untaken-arm sub-parsing at taken-arm fidelity
+(config-query milestone, pinned requirement governs);
+extent-computation is per-region O(n·m) (recompute per region —
+mensura watches; solarium in Chunk C is the scale test).
+
+Next: Chunk C — lustrum survey over solarium, probatio_silva_
+solarium (honest number pinned; skip-green if ../solarium absent),
+Prosser disposition, v1 praeparator spot-check, mensura at scale.
+
+### Chunk C — COMPLETE (2026-07-03): solarium corpus + closure sweep
+
+Suite 26/26, 1,404 assertions (+probatio_silva_solarium). Amalgam
+regenerated, gates green.
+
+**THE HEADLINE: 148/148 solarium files roundtrip byte-exact through
+the full pipeline** — 2.3 MB of real plain-C89 (zero latina, the
+first genuinely foreign corpus), largest file 836 KB (main.c), with
+the header closure praebere'd through a SINGLE reusable
+SilvaContextus (the Chunk A object's first real consumer). 1.35
+ms/KB whole-pipeline; zero caps tripped; 41,011 ERROR nodes across
+44,676 segments = the recovery soak counted honestly (the sceletum
+grammar doesn't pretend to understand C89 — bytes survive anyway).
+
+- **instrumenta/principalia/lustrum.c + silva/lustrum.sh** — the
+  census tool (a lustrum is a Roman census): per-file fidelity with
+  first-divergence diagnostics, ERROR/segment/region/inclusion
+  counters, timings, and the PROSSER SCAN (unbalanced-paren
+  function-like macro bodies = the precondition for the
+  HS_call∩HS_rparen divergence class).
+- **The stringify deferral FIRED and was IMPLEMENTED, not shrunk**
+  (the INTENTIO pre-decided it): 11 files infideles on first run,
+  all one cause — solarium's CHECK macros use #c stringification.
+  The CHORDA boundary landed: _radix_probata chases
+  origo.datum.stringificatio.primus (the RAW operand token, which
+  lies INSIDE the invocation extent), and extent lookup falls back
+  to CONTAINMENT (_extentum_continens — CHORDA radices are argument
+  tokens, not name tokens, so pointer-keyed lookup misses). The
+  weave's extent walk got the same hop (stringify statements no
+  longer opaque). Second run: 148/148. In-suite fixtures added to
+  probatio_silva_scribere (5: solo-#x body, multi-token arg,
+  CHECK-shaped mid-body, empty arg, #x between body tokens). Pasta
+  (##) remains the LAST fail-loud boundary deferral — zero uses in
+  solarium, still owned by the first corpus that forces it.
+- **PROSSER DISPOSITION CLOSED — permanent conservative
+  simplification**: the lustrum scan found ZERO unbalanced-paren
+  function-like macros in 2.3 MB of real code; the divergence class
+  is unreachable in this corpus. Documented permanently in
+  silva_expandere.h (with evidence citation); the pre-Phase-4
+  audit's orphan is retired.
+- **Real-world threading rate measured** (config-query milestone
+  design input, sim ⑦ C8): 56 regiones textae / 9 omissae — 86% of
+  real conditional regions align with statement boundaries and
+  thread; the 9 degradations are intra-statement/straddling shapes
+  (the sub-parse machinery's future justification, now with a
+  number).
+- **v1 praeparator spot-check CLOSED** (the Phase-4 audit's last
+  open disposition): 35 input strings reviewed; harvest = indented
+  directives (`  #ifdef` — v1 tested, silva never had), #endif
+  without trailing newline at EOF, `#if !defined(X)` — all three
+  now fixtures in probatio_silva_conditionalis (messis v1 section),
+  all green. Everything else maps to existing coverage.
+- **probatio_silva_solarium** — the corpus bar IN THE SUITE: all
+  files byte-exact (RATIO asserted — fideles == numerus — not raw
+  counts, since the corpus evolves), textae > 0. Solarium absent →
+  loud note + green (not vendored, lives next door — recorded
+  decision honored).
+
+Complexities: none new — the one surprise (stringify-in-use) was a
+pre-decided branch, and its fix used two existing mechanisms
+(origo chase + extent table) with ~45 new lines.
+
+### RELATIO (2026-07-03) — PHASE 7 COMPLETE
+
+All three chunks green: A (SilvaContextus + fines + intermissio,
+81), B (CONDITIONALIS threading, 74), C (solarium corpus + closure
+sweep). Suite 26/26, 1,404 assertions (1,229 at phase start).
+Amalgam 458+ KB, all gates, every regeneration idempotent.
+
+**The owed debts are all paid, each with its receipt:**
+- Caps + cancellation (§8.2): five configurable fines, generous
+  defaults always on, degrading EXPANSION never TOTALITY — roundtrip
+  asserted under every cap; a real stack-overflow hole (unbounded
+  region recursion) found and closed on the way.
+- SilvaContextus + latina SET: the long-lived host recipe; latina
+  compiled-in literally (amalgamator-emitted data, drift-guarded
+  against disk); the resolutor's `contextus` name freed by rename
+  BEFORE the collision existed.
+- CONDITIONALIS threading: regions are tree citizens (86% thread
+  rate on real code), one-owner extended to directive lines (β),
+  conditio_id join pinned, zero engine changes, zero byte drift.
+- Prosser exactness: DISPOSITIONED as permanent conservative
+  simplification, with corpus evidence (zero unbalanced-paren
+  macros in 2.3 MB).
+- v1 praeparator spot-check: CLOSED with three harvested fixtures
+  (indented directives the notable catch).
+- Solarium as corpus: 148/148 byte-exact IN THE SUITE — and it
+  forced (and received) the stringify boundary, per the maximalist
+  default. Pasta (##) is now the only fail-loud boundary left,
+  still unforced by any real corpus.
+
+Process notes: simulation ⑦ ran mid-phase and reduced the work for
+the third consecutive time (zero engine changes was ITS finding);
+the i32-unsigned sentinel trap fired for the third time (new struct
+fields carrying -1 — it is now the codebase's most reliable slip);
+the contextus object found its first real consumer (lustrum +
+solarium probatio) within one phase of being built.
+
+M1 remaining: the M1 RELATIO itself (§11.2 walked item-by-item)
+and the widen-first decision — which now has a customer
+(saltuarius: preprocessor/layer story DONE and proven at corpus
+scale; tree views want M2's C89 grammar; selector queries want the
+query milestone).
+
+
+## M1 — WALKING SKELETON: RELATIO (2026-07-03)
+
+**M1 IS CLOSED.** Seven phases (0-7), four mid-course simulations
+(④ pre-M1 counted separately; ⑤⑥⑦ mid-phase, 3-for-3 at reducing
+work), 26 probationes, 1,404 assertions, and a verification-gated
+deliverable a real host consumes. The spec-v2 §6/§11.2 obligations,
+item by item with receipts:
+
+- **Tiny annotated grammar (declarations + expressions, ambiguity
+  present)** — grammatica/sceletum.stml, frozen annotation v0,
+  EXACTLY one preserved conflict = the designed typedef fork
+  (Phase 3; probatio_silva_grammatica pins it by production id).
+- **Fresh expander core; one est_custos guard file + one two-arm
+  #ifdef end-to-end** — Phase 2 (probatio_silva_regiones); grown
+  since into two-track regions, point-in-time expansion (the
+  carried-suite catch), guards, includes, #/##, variadic, caps.
+- **Unified tokens end-to-end** — SilvaToken with embedded tagged
+  origo everywhere from lexer to emitter (Phase 1; the Lexema/Token
+  split that killed provenance in lapifex is structurally
+  unrepresentable).
+- **Generated tables + construction** — baked Latin-commented
+  committed artifacts, registrum + accessors + constructor +
+  fabrica, drift-guarded (Phase 3; probatio_silva_tabulae).
+- **The genuine fork case** — `foo * bar` with unknown foo:
+  localized AMBIGUUS with canonical spine, byte-exact roundtrip,
+  re-canonicalize IN PLACE on typedef injection, identity held
+  through transmutatio→collapse on one allocation (Phases 4-5;
+  probationes ambiguitas/commissio/scribere).
+- **Post-accept pater fixup** — the commissio walk (Phase 4 Chunk C;
+  S27 discharged, spine semantics pinned).
+- **cursor.c roundtrip byte-identical** — through the FULL pipeline
+  with latina genuinely expanding, via TWO routes: praebere (Phase
+  5) and the compiled-in lexicon (Phase 7 Chunk A).
+- **Through the amalgamator, compiled standalone** — silva/amalgama/
+  {silva.c, silva.h}, full flag set, zero suppressions, hospes
+  host-pollution + equivalence, nm-intersection 0, idempotent
+  regeneration (Phase 6).
+- **Crash-freedom fuzz harness attached** — 400 deterministic
+  specimens through the whole pipeline INCLUDING byte-exact
+  re-emission, running in the suite since Phase 2.5-era audit
+  (probatio_silva_incolumitas).
+- **Beyond the checklist, accumulated en route**: recovery totality
+  (any bytes → complete committed tree → identical bytes), the
+  malformed-roundtrip permanent oracle, conditional regions as tree
+  citizens (86% real-world thread rate), hostile-input caps with
+  graceful degradation, host cancellation, a long-lived contextus
+  recipe object, the stringify boundary, and a 148/148 byte-exact
+  foreign corpus IN THE SUITE.
+
+**What M1 deliberately does not claim**: the sceletum grammar does
+not understand C89 (41k ERROR nodes over solarium is recovery, not
+comprehension — the honest counter says so); untaken arms carry
+bytes, not structure; pasta (##) boundary emission stays fail-loud
+(no corpus forces it); selectors/queries/formatter/STML are their
+own milestones.
+
+**Why this one lived where three died** (the record should say it
+plainly): every load-bearing contract was simulated before it was
+built, every narrowing was written down with a named owner, every
+generation's tests were carried, and the phase-boundary audits
+caught drift while it was still cheap. The maximalist data model —
+provenance never optional, all arms retained, values tagged,
+structural genera required — is what made Phases 5-7 additive
+instead of archaeological.
+
+**WIDEN-FIRST DECISION (Fran, 2026-07-03): tessera → saltuarius
+v0.** Silva rests at M1 while its real customer gets built: the
+tessera TUI library (project-specs/tessera-spec.md, interview
+done), then saltuarius v0 on the preprocessor/layer story that is
+already corpus-proven (miller columns + origo chains + layers +
+regions). Real usage generates API pressure BEFORE M2 freezes more
+surface — the same reasoning that made saltuarius the host proof.
+M2 (C89 grammar; the 125-input syntaxis corpus waits as its
+acceptance bar) begins when saltuarius demands tree views.
+Re-entry: tessera-spec v2 (agent codebase exploration) is the
+named next act on that track.

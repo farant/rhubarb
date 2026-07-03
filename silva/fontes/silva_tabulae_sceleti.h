@@ -25,7 +25,9 @@ enumeratio {
     SILVA_SCELETUM_GENUS_PARENTHESIS = 9,
     SILVA_SCELETUM_GENUS_ERROR = 10,
     SILVA_SCELETUM_GENUS_AMBIGUUS = 11,
-    SILVA_SCELETUM_GENUS_CONDITIONALIS = 12
+    SILVA_SCELETUM_GENUS_CONDITIONALIS = 12,
+    SILVA_SCELETUM_GENUS_RAMUS_SUMPTUS = 13,
+    SILVA_SCELETUM_GENUS_RAMUS_OMISSUS = 14
 };
 
 SilvaValor silva_sceletum_declaratio_typus (constans SilvaNodus* nodus);
@@ -50,6 +52,13 @@ SilvaValor silva_sceletum_error_tokens (constans SilvaNodus* nodus);
 SilvaValor silva_sceletum_ambiguus_interpretationes (constans SilvaNodus* nodus);
 SilvaValor silva_sceletum_ambiguus_canonica (constans SilvaNodus* nodus);
 SilvaValor silva_sceletum_conditionalis_rami (constans SilvaNodus* nodus);
+SilvaValor silva_sceletum_conditionalis_finis (constans SilvaNodus* nodus);
+SilvaValor silva_sceletum_ramus_sumptus_directiva (constans SilvaNodus* nodus);
+SilvaValor silva_sceletum_ramus_sumptus_contentum (constans SilvaNodus* nodus);
+SilvaValor silva_sceletum_ramus_sumptus_conditio_id (constans SilvaNodus* nodus);
+SilvaValor silva_sceletum_ramus_omissus_directiva (constans SilvaNodus* nodus);
+SilvaValor silva_sceletum_ramus_omissus_cruda (constans SilvaNodus* nodus);
+SilvaValor silva_sceletum_ramus_omissus_conditio_id (constans SilvaNodus* nodus);
 
 /* Constructio ex reductione GLR: PURA (S26) - allocat
  * et implet solum; pater post-acceptum (S27) */

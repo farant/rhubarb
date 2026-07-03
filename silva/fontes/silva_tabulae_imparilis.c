@@ -314,6 +314,15 @@ hic_manens constans SilvaTabLocus SILVA_IMPARILIS_LOCI[] = {
     { "canonica", SILVA_LOCUS_INDEX },
     /* conditionalis */
     { "rami", SILVA_LOCUS_LISTA_NODUS },
+    { "finis", SILVA_LOCUS_LISTA_TOKEN },
+    /* ramus-sumptus */
+    { "directiva", SILVA_LOCUS_LISTA_TOKEN },
+    { "contentum", SILVA_LOCUS_LISTA_NODUS },
+    { "conditio_id", SILVA_LOCUS_INDEX },
+    /* ramus-omissus */
+    { "directiva", SILVA_LOCUS_LISTA_TOKEN },
+    { "cruda", SILVA_LOCUS_LISTA_TOKEN },
+    { "conditio_id", SILVA_LOCUS_INDEX },
     { NIHIL, -1 }   /* terminator */
 };
 
@@ -330,13 +339,15 @@ hic_manens constans SilvaTabGenus SILVA_IMPARILIS_GENERA[] = {
     /* [ 9] */ { "parenthesis", 15, 3 },
     /* [10] */ { "error", 18, 1 },
     /* [11] */ { "ambiguus", 19, 2 },
-    /* [12] */ { "conditionalis", 21, 1 },
+    /* [12] */ { "conditionalis", 21, 2 },
+    /* [13] */ { "ramus-sumptus", 23, 3 },
+    /* [14] */ { "ramus-omissus", 26, 3 },
     { NIHIL, 0, 0 }   /* terminator */
 };
 
 constans SilvaRegistrumCoctum SILVA_IMPARILIS_REGISTRUM = {
-    SILVA_IMPARILIS_GENERA, 13,
-    SILVA_IMPARILIS_LOCI, 22
+    SILVA_IMPARILIS_GENERA, 15,
+    SILVA_IMPARILIS_LOCI, 29
 };
 
 /* ==================================================
@@ -583,6 +594,83 @@ silva_imparilis_conditionalis_rami (constans SilvaNodus* nodus)
         redde silva_valor_nihil();
     }
     redde nodus->loci[0];
+}
+
+SilvaValor
+silva_imparilis_conditionalis_finis (constans SilvaNodus* nodus)
+{
+    si (nodus == NIHIL || nodus->genus != (s32)SILVA_IMPARILIS_GENUS_CONDITIONALIS
+        || 1 >= nodus->numerus_locorum)
+    {
+        redde silva_valor_nihil();
+    }
+    redde nodus->loci[1];
+}
+
+SilvaValor
+silva_imparilis_ramus_sumptus_directiva (constans SilvaNodus* nodus)
+{
+    si (nodus == NIHIL || nodus->genus != (s32)SILVA_IMPARILIS_GENUS_RAMUS_SUMPTUS
+        || 0 >= nodus->numerus_locorum)
+    {
+        redde silva_valor_nihil();
+    }
+    redde nodus->loci[0];
+}
+
+SilvaValor
+silva_imparilis_ramus_sumptus_contentum (constans SilvaNodus* nodus)
+{
+    si (nodus == NIHIL || nodus->genus != (s32)SILVA_IMPARILIS_GENUS_RAMUS_SUMPTUS
+        || 1 >= nodus->numerus_locorum)
+    {
+        redde silva_valor_nihil();
+    }
+    redde nodus->loci[1];
+}
+
+SilvaValor
+silva_imparilis_ramus_sumptus_conditio_id (constans SilvaNodus* nodus)
+{
+    si (nodus == NIHIL || nodus->genus != (s32)SILVA_IMPARILIS_GENUS_RAMUS_SUMPTUS
+        || 2 >= nodus->numerus_locorum)
+    {
+        redde silva_valor_nihil();
+    }
+    redde nodus->loci[2];
+}
+
+SilvaValor
+silva_imparilis_ramus_omissus_directiva (constans SilvaNodus* nodus)
+{
+    si (nodus == NIHIL || nodus->genus != (s32)SILVA_IMPARILIS_GENUS_RAMUS_OMISSUS
+        || 0 >= nodus->numerus_locorum)
+    {
+        redde silva_valor_nihil();
+    }
+    redde nodus->loci[0];
+}
+
+SilvaValor
+silva_imparilis_ramus_omissus_cruda (constans SilvaNodus* nodus)
+{
+    si (nodus == NIHIL || nodus->genus != (s32)SILVA_IMPARILIS_GENUS_RAMUS_OMISSUS
+        || 1 >= nodus->numerus_locorum)
+    {
+        redde silva_valor_nihil();
+    }
+    redde nodus->loci[1];
+}
+
+SilvaValor
+silva_imparilis_ramus_omissus_conditio_id (constans SilvaNodus* nodus)
+{
+    si (nodus == NIHIL || nodus->genus != (s32)SILVA_IMPARILIS_GENUS_RAMUS_OMISSUS
+        || 2 >= nodus->numerus_locorum)
+    {
+        redde silva_valor_nihil();
+    }
+    redde nodus->loci[2];
 }
 
 /* ==================================================

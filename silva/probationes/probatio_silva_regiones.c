@@ -341,8 +341,15 @@ s32 principale (vacuum)
             CREDO_NON_NIHIL (ramus->lexemata_cruda);
             CREDO_MAIOR_I32 (xar_numerus(ramus->lexemata_cruda),
                 ZEPHYRUM);
-            /* lineae #ifndef + #endif captae (interior in lamina) */
-            CREDO_AEQUALIS_I32 (xar_numerus(directivae_c7), II);
+            /* β (sim ⑦ C2): lineae structurales regioni IPSI - ramus
+             * lineam #ifndef fert, regio lineam #endif; NIHIL in
+             * fluxu directivarum (dominus unus etiam pro lineis) */
+            CREDO_AEQUALIS_I32 (xar_numerus(directivae_c7), ZEPHYRUM);
+            CREDO_NON_NIHIL (ramus->directiva);
+            CREDO_MAIOR_I32 (xar_numerus(ramus->directiva), ZEPHYRUM);
+            CREDO_NON_NIHIL (regio->directiva_finis);
+            CREDO_MAIOR_I32 (xar_numerus(regio->directiva_finis),
+                ZEPHYRUM);
             /* definitio interior numquam registrata (semantica cpp:
              * interior praetermissus definitionem non currit) -
              * CUSTOS_PRAE ipsum ex API manet */

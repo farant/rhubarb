@@ -901,13 +901,14 @@ silva_gen_registrum_computare(
      * sine compactione NON existit (quirk-limatus per constructionem
      * vetitus). */
     {
-        hic_manens constans character* NECESSARIA[III] = {
-            "ambiguus", "error", "conditionalis"
+        hic_manens constans character* NECESSARIA[V] = {
+            "ambiguus", "error", "conditionalis",
+            "ramus-sumptus", "ramus-omissus"
         };
-        SilvaGenGenusDef* ambiguum_def = NIHIL;
+        SilvaGenGenusDef* defs[V];
         i32 n;
 
-        per (n = ZEPHYRUM; n < III; n++)
+        per (n = ZEPHYRUM; n < V; n++)
         {
             SilvaGenGenusDef* inventum = NIHIL;
             i32 j;
@@ -931,45 +932,65 @@ silva_gen_registrum_computare(
                     NECESSARIA[n]);
                 redde NIHIL;
             }
-            si (n == ZEPHYRUM)
-            {
-                ambiguum_def = inventum;
-            }
+            defs[n] = inventum;
         }
 
-        /* Forma ambigui: interpretationes (lista-*) + canonica (index)
-         * - fabrica generata et recanonicalizatio (Chunk C) his
-         * nominibus pendent */
+        /* Formae generum structuralium (fabrica ambigui, Chunk C
+         * recanonicalizatio, textura conditionalium Phase 7 - omnes
+         * his nominibus/speciebus pendent). Species: II lista-nodus,
+         * III lista-token, IV lista-mixta, V index. */
         {
-            b32 interp = FALSUM;
-            b32 canon = FALSUM;
-            i32 k;
+            nomen structura {
+                i32                 def_index;
+                constans character* titulus;
+                i32                 species_min;
+                i32                 species_max;
+            } FormaExigenda;
+            hic_manens constans FormaExigenda FORMAE[X] = {
+                { ZEPHYRUM, "interpretationes", II,  IV  },
+                { ZEPHYRUM, "canonica",         V,   V   },
+                { II,       "rami",             II,  II  },
+                { II,       "finis",            III, III },
+                { III,      "directiva",        III, III },
+                { III,      "contentum",        II,  II  },
+                { III,      "conditio_id",      V,   V   },
+                { IV,       "directiva",        III, III },
+                { IV,       "cruda",            III, III },
+                { IV,       "conditio_id",      V,   V   }
+            };
+            i32 f;
 
-            per (k = ZEPHYRUM; k < (i32)xar_numerus(ambiguum_def->loci);
-                 k++)
+            per (f = ZEPHYRUM; f < X; f++)
             {
-                SilvaGenLocusDef* locus = (SilvaGenLocusDef*)xar_obtinere(
-                    ambiguum_def->loci, k);
+                constans FormaExigenda* forma = &FORMAE[f];
+                SilvaGenGenusDef* def = defs[forma->def_index];
+                b32 inventum = FALSUM;
+                i32 k;
 
-                si (locus == NIHIL || locus->titulus == NIHIL) perge;
-                si (chorda_aequalis_literis(*locus->titulus,
-                        "interpretationes")
-                    && locus->species >= II && locus->species <= IV)
+                per (k = ZEPHYRUM; k < (i32)xar_numerus(def->loci); k++)
                 {
-                    interp = VERUM;
+                    SilvaGenLocusDef* locus =
+                        (SilvaGenLocusDef*)xar_obtinere(def->loci, k);
+
+                    si (locus == NIHIL || locus->titulus == NIHIL) perge;
+                    si (chorda_aequalis_literis(*locus->titulus,
+                            forma->titulus)
+                        && (i32)locus->species >= forma->species_min
+                        && (i32)locus->species <= forma->species_max)
+                    {
+                        inventum = VERUM;
+                        frange;
+                    }
                 }
-                si (chorda_aequalis_literis(*locus->titulus, "canonica")
-                    && locus->species == V)
+                si (!inventum)
                 {
-                    canon = VERUM;
+                    fprintf(stderr, "silva_gen: genus structurale '%s' "
+                        "locum '%s' (species %d..%d) requirit\n",
+                        NECESSARIA[forma->def_index], forma->titulus,
+                        (int)forma->species_min,
+                        (int)forma->species_max);
+                    redde NIHIL;
                 }
-            }
-            si (!interp || !canon)
-            {
-                fprintf(stderr, "silva_gen: genus 'ambiguus' loci "
-                    "'interpretationes:lista-*' et 'canonica:index' "
-                    "requirit\n");
-                redde NIHIL;
             }
         }
     }

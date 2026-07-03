@@ -84,6 +84,15 @@ nomen structura {
     SilvaGLRFabricaAmbigui     fabrica;
     Piscina*                   piscina;    /* GSS + apparatus */
 
+    /* Fines (Phase 7 Chunk A - par 8.2). 0 = infinitum. Frons ultra
+     * limen = fractura munda segmenti (gubernator nodum ERROR facit -
+     * totalitas tenet). Intermissio: pergere FALSUM = desiste;
+     * passus_pergendi = intervallum lexematum inter interrogationes. */
+    i32       limen_frontis;
+    b32     (*pergere)(vacuum* datum);   /* NIHIL = numquam rogare */
+    vacuum*   pergere_datum;
+    i32       passus_pergendi;
+
     /* Statisticae parsurae novissimae (etiam in fructum copiatae -
      * numeratores sunt PRODUCTUM, non depuratio: spec-v2 par 12.2) */
     i32 frons_maxima;
@@ -94,6 +103,10 @@ nomen structura {
     i32 transmutationes_negatae; /* exhaustum non-NODUS - brachium separatum */
     i32 eventa_marginis_novi;    /* idem status, basis alia (classis Farshi) */
 } SilvaGLR;
+
+/* Defaltae finium motoris (tree-sitter habitus - semper activae) */
+#define SILVA_GLR_LIMEN_FRONTIS_DEFALTUM  4096
+#define SILVA_GLR_PASSUS_PERGENDI_DEFALTUM 1024
 
 
 /* ==================================================
@@ -118,6 +131,8 @@ nomen structura {
     s32          positio;            /* index lexematis ubi fractum */
     s32          terminalis;         /* prospectus (aut IGNOTUM) */
     s32          status;             /* status primus frontis tunc */
+    b32          est_ultra_limen;    /* frons limen excessit (Phase 7) */
+    b32          est_intermissus;    /* pergere FALSUM reddidit */
 } SilvaGLRFructus;
 
 

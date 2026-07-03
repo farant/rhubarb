@@ -75,6 +75,16 @@ silva_expansio_creare (Piscina* piscina)
     exp->profunditas_includendi = ZEPHYRUM;
     exp->fons_api = -I;
     exp->tabula_activa = NIHIL;
+    exp->limen_lexematum = SILVA_LIMEN_LEXEMATUM_DEFALTUM;
+    exp->limen_generationum = SILVA_LIMEN_GENERATIONUM_DEFALTUM;
+    exp->limen_includendi = SILVA_LIMEN_INCLUDENDI_DEFALTUM;
+    exp->limen_regionum = SILVA_LIMEN_REGIONUM_DEFALTUM;
+    exp->pergere = NIHIL;
+    exp->pergere_datum = NIHIL;
+    exp->expansio_decisa = FALSUM;
+    exp->est_intermissa = FALSUM;
+    exp->fines_tactae = FALSUM;
+    exp->profunditas_regionum = ZEPHYRUM;
     redde exp;
 }
 
@@ -209,9 +219,8 @@ silva_expansio_quaerere (
 
 /* ==================================================
  * Processio directivarum (Chunk A + D)
+ * (Limen includendi: exp->limen_includendi, Phase 7)
  * ================================================== */
-
-#define SILVA_INCLUDENDI_MAXIMI XXXII
 
 /* Genus directivae (internum) */
 nomen enumeratio {
@@ -540,6 +549,9 @@ _regionem_creare (SilvaExpansio* exp, SilvaToken* cancellum, SilvaRegio* pater)
     regio->pater = pater;
     regio->filiae = xar_creare(exp->piscina, magnitudo(SilvaRegio*));
     regio->est_imperfecta = FALSUM;
+    regio->est_ultra_modum = FALSUM;
+    regio->directiva_finis = NIHIL;
+    regio->est_texta = FALSUM;
 
     si (pater != NIHIL)
     {
@@ -567,9 +579,13 @@ _regionem_creare (SilvaExpansio* exp, SilvaToken* cancellum, SilvaRegio* pater)
 /* Processare regionem: lexemata[i] est CANCELLUM #if/#ifdef/#ifndef.
  * Consumit usque ad #endif parem (vel finem fluxus). Reddit indicem
  * post regionem. Via defalta: primus ramus verus sumitur - lexemata
- * eius normaliter processantur; ceteri laminas crudas retinent. */
+ * eius normaliter processantur; ceteri laminas crudas retinent.
+ * Profunditas ultra limen (Phase 7): regio est_ultra_modum - NULLUS
+ * ramus evaluatur, omnes crudi, recursio cessat (fluxus infestus
+ * acervum numquam perfodit); octeti in crudis supersunt, ergo
+ * reconstructio tenet. */
 interior i32
-_regionem_processare (
+_regionem_processare_interna (
     SilvaExpansio* exp,
     Xar*           lexemata,
     i32            i,
@@ -588,6 +604,12 @@ _regionem_processare (
     {
         redde i_finis;
     }
+    si (exp->limen_regionum > ZEPHYRUM
+        && exp->profunditas_regionum > exp->limen_regionum)
+    {
+        regio->est_ultra_modum = VERUM;
+        exp->fines_tactae = VERUM;
+    }
     sumptum_iam = FALSUM;
     i_currens = i;
 
@@ -603,7 +625,9 @@ _regionem_processare (
 
         i_linea_finis = _lineam_finire(lexemata, i_currens, i_finis);
         genus_dir = _directivae_genus(lexemata, i_currens, i_linea_finis);
-        _directivam_capere(exp, directivae, lexemata, i_currens, i_linea_finis);
+        /* β (sim ⑦ C2): linea structuralis NON capitur - regio eam
+         * possidet (ramus->directiva infra); scriptura lineas regionum
+         * non textarum ex arbore regionum colligit */
 
         /* Ramum creare */
         ramus = (SilvaRamus*)piscina_allocare(exp->piscina,
@@ -652,8 +676,9 @@ _regionem_processare (
             }
         }
 
-        /* Evaluatio (via defalta) - rami post sumptum NON evaluantur */
-        si (!sumptum_iam)
+        /* Evaluatio (via defalta) - rami post sumptum NON evaluantur;
+         * regio ultra modum: nullus umquam (omnes crudi) */
+        si (!sumptum_iam && !regio->est_ultra_modum)
         {
             si (ramus->genus == SILVA_RAMUS_ELSE)
             {
@@ -750,6 +775,32 @@ _regionem_processare (
             }
         }
 
+        /* Fines corporis in offsetibus (sim ⑦ C1 - textura eos contra
+         * extenta sententiarum comparat). Finis EXCLUSIVUS = offset
+         * directivae proximae; imperfecta = apertum */
+        si (i_corpus < i_scan)
+        {
+            SilvaToken* primum_corporis =
+                *(SilvaToken**)xar_obtinere(lexemata, i_corpus);
+
+            ramus->corpus_initium = primum_corporis->byte_offset;
+        }
+        alioquin
+        {
+            ramus->corpus_initium = -I;
+        }
+        si (i_scan < i_finis)
+        {
+            SilvaToken* post_corpus =
+                *(SilvaToken**)xar_obtinere(lexemata, i_scan);
+
+            ramus->corpus_finis = post_corpus->byte_offset;
+        }
+        alioquin
+        {
+            ramus->corpus_finis = 0x7FFFFFFF;  /* imperfecta: apertum */
+        }
+
         si (ramus->est_sumptum)
         {
             sumptum_iam = VERUM;
@@ -777,7 +828,9 @@ _regionem_processare (
             g = _directivae_genus(lexemata, i_scan, lf);
             si (g == SILVA_DIR_ENDIF)
             {
-                _directivam_capere(exp, directivae, lexemata, i_scan, lf);
+                /* β: linea #endif regioni ipsa (sim ⑦ C1/C2) */
+                regio->directiva_finis = _lamina_capere(exp, lexemata,
+                    i_scan, lf);
                 redde lf;
             }
             i_currens = i_scan;  /* ramus proximus (elif/else) */
@@ -786,6 +839,26 @@ _regionem_processare (
 
     regio->est_imperfecta = VERUM;
     redde i_finis;
+}
+
+/* Involucrum numeratoris profunditatis (omnes viae reditus tectae) */
+interior i32
+_regionem_processare (
+    SilvaExpansio* exp,
+    Xar*           lexemata,
+    i32            i,
+    i32            i_finis,
+    SilvaRegio*    pater,
+    Xar*           reliqua,
+    Xar*           directivae)
+{
+    i32 fructus;
+
+    exp->profunditas_regionum++;
+    fructus = _regionem_processare_interna(exp, lexemata, i, i_finis,
+        pater, reliqua, directivae);
+    exp->profunditas_regionum--;
+    redde fructus;
 }
 
 /* ==================================================
@@ -895,9 +968,11 @@ _includendum_processare (
         redde;
     }
 
-    si (exp->profunditas_includendi >= SILVA_INCLUDENDI_MAXIMI)
+    si (exp->limen_includendi > ZEPHYRUM
+        && exp->profunditas_includendi >= exp->limen_includendi)
     {
         inclusio->est_praetermissa = VERUM;  /* profunditas nimia */
+        exp->fines_tactae = VERUM;
         redde;
     }
 
@@ -2095,9 +2170,39 @@ silva_expansio_generatio (
     redde _generatio_interna(exp, lexemata, mutatum_out, NIHIL, NIHIL);
 }
 
-/* Cap generationum: assertio contra regressum caecationum, non
- * semantica (caecationes terminant; C generationes = defectus) */
-#define SILVA_GENERATIONES_MAXIMAE C
+/* Limina circuituum fixorum (Phase 7): ante quamque generationem
+ * inspiciuntur - volumen (limen_lexematum), numerus generationum
+ * (limen_generationum, olim assertio), intermissio (pergere).
+ * Limine tacto expansio CESSAT sed fluxus manet - lexemata reliqua
+ * inexpansa fluunt (degradatio, non amputatio). Reddit VERUM si
+ * pergendum. */
+interior b32
+_generationem_licere (
+    SilvaExpansio* exp,
+    Xar*           currens,
+    i32            generationes)
+{
+    si (exp->pergere != NIHIL && !exp->pergere(exp->pergere_datum))
+    {
+        exp->est_intermissa = VERUM;
+        redde FALSUM;
+    }
+    si (exp->limen_generationum > ZEPHYRUM
+        && generationes >= exp->limen_generationum)
+    {
+        exp->expansio_decisa = VERUM;
+        exp->fines_tactae = VERUM;
+        redde FALSUM;
+    }
+    si (exp->limen_lexematum > ZEPHYRUM
+        && (i32)xar_numerus(currens) > exp->limen_lexematum)
+    {
+        exp->expansio_decisa = VERUM;
+        exp->fines_tactae = VERUM;
+        redde FALSUM;
+    }
+    redde VERUM;
+}
 
 Xar*
 silva_expansio_expandere (
@@ -2119,7 +2224,7 @@ silva_expansio_expandere (
 
     currens = lexemata;
     generationes = ZEPHYRUM;
-    dum (generationes < SILVA_GENERATIONES_MAXIMAE)
+    dum (_generationem_licere(exp, currens, generationes))
     {
         Xar* exitus;
 
@@ -2190,7 +2295,7 @@ silva_expansio_expandere_reliqua (
 
     currens = reliqua;
     generationes = ZEPHYRUM;
-    dum (generationes < SILVA_GENERATIONES_MAXIMAE)
+    dum (_generationem_licere(exp, currens, generationes))
     {
         TabulaDispersa* tabula;
         Xar* exitus;

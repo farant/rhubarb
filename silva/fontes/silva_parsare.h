@@ -25,6 +25,7 @@
 #include "silva_glr.h"
 #include "silva_expandere.h"
 #include "silva_commissio.h"
+#include "silva_contextus.h"
 
 /* ==================================================
  * Ligamen grammaticae (superficies generata una)
@@ -69,6 +70,21 @@ nomen structura {
     i32 transmutationes_negatae;
     i32 eventa_marginis_novi;
     i32 frons_maxima;
+
+    /* Fines + intermissio (Phase 7 Chunk A). Sub finibus/intermissione
+     * arbor COMPLETA manet (cauda in nodum ERROR - nihil amittitur,
+     * reconstructio byte-exacta tenet); successus VERUM cum vexillis
+     * his veritatem dicentibus. */
+    b32 est_intermissa;        /* pergere FALSUM reddidit */
+    b32 expansio_decisa;       /* expansio trunca (limen tactum) */
+    b32 fines_tactae;          /* quilibet limen tactus */
+    i32 segmenta_ultra_limen;  /* segmenta fronte ultra limen fracta */
+
+    /* Textura conditionalium (Phase 7 Chunk B): regiones in arborem
+     * textae vs degradatae (limes sententiae transgressus, fontes
+     * mixti, elementum opacum - lamina reinserenda possessa manet) */
+    i32 regiones_textae;
+    i32 regiones_omissae;
 } SilvaParsura;
 
 
@@ -87,7 +103,7 @@ silva_parsare (
     constans SilvaGrammatica* grammatica,
     constans SilvaOraculum*   oraculum,
     SilvaResolutor            resolutor,
-    vacuum*                   contextus);
+    vacuum*                   datum_resolutoris);
 
 /* Fistula tota cum expansione PRAEPARATA a vocatore: includenda iam
  * praebita (silva_includendum_praebere), macros iam iniecta
@@ -103,7 +119,23 @@ silva_parsare_cum_expansione (
     constans SilvaGrammatica* grammatica,
     constans SilvaOraculum*   oraculum,
     SilvaResolutor            resolutor,
-    vacuum*                   contextus);
+    vacuum*                   datum_resolutoris);
+
+/* Fistula tota cum CONTEXTU hospitis (Phase 7): receptum contextus
+ * expansioni recenti applicatur (fines, pergere, lexica ante fontem
+ * processata - latina hac via, praebenda), deinde fistula normalis.
+ * Contextus diu vivit et inter parsuras reusabilis est. */
+SilvaParsura*
+silva_parsare_cum_contextu (
+    Piscina*                  piscina,
+    constans SilvaContextus*  contextus,
+    constans character*       titulus_fontis,
+    constans character*       fons,
+    i32                       mensura,
+    constans SilvaGrammatica* grammatica,
+    constans SilvaOraculum*   oraculum,
+    SilvaResolutor            resolutor,
+    vacuum*                   datum_resolutoris);
 
 /* Ingressus lexematum (forma silva_lexare: Xar de SilvaToken*, EOF
  * ultimo) - pro fluxibus iam expansis aut probationibus. */
@@ -114,6 +146,6 @@ silva_lexemata_parsare (
     constans SilvaGrammatica* grammatica,
     constans SilvaOraculum*   oraculum,
     SilvaResolutor            resolutor,
-    vacuum*                   contextus);
+    vacuum*                   datum_resolutoris);
 
 #endif /* SILVA_PARSARE_H */

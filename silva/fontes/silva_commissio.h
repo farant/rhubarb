@@ -70,7 +70,7 @@ nomen structura {
 nomen vacuum (*SilvaResolutor) (
     constans SilvaNodus*    ambiguum,
     constans SilvaOraculum* oraculum,
-    vacuum*                 contextus,
+    vacuum*                 datum_resolutoris,
     SilvaResolutioResponsum* responsum);
 
 
@@ -118,7 +118,7 @@ silva_committere (
     constans SilvaRegistrumCoctum* tabularium,
     constans SilvaOraculum*        oraculum,
     SilvaResolutor                 resolutor,
-    vacuum*                        contextus);
+    vacuum*                        datum_resolutoris);
 
 /* Scientia sera: ambigua superstitia iterum resolvere. Canonica in
  * loco vertitur + spina localiter retexta; involucrum MANET (arbor
@@ -129,6 +129,6 @@ silva_recanonicare (
     SilvaCommissio*         commissio,
     constans SilvaOraculum* oraculum,
     SilvaResolutor          resolutor,
-    vacuum*                 contextus);
+    vacuum*                 datum_resolutoris);
 
 #endif /* SILVA_COMMISSIO_H */

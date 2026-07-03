@@ -177,7 +177,7 @@ s32 principale (vacuum)
         genera = silva_gen_registrum_computare(g);
         CREDO_NON_NIHIL (genera);
         /* 10 genera grammaticae + 3 extra */
-        CREDO_AEQUALIS_I32 (xar_numerus(genera), XIII);
+        CREDO_AEQUALIS_I32 (xar_numerus(genera), XV);
 
         /* binarium: loci unificati trans expressio-plus/terminus-star = 3 */
         {
@@ -237,7 +237,7 @@ s32 principale (vacuum)
 
         imprimere("\n--- Probans registrum coctum ---\n");
 
-        CREDO_AEQUALIS_I32 (SILVA_SCELETUM_REGISTRUM.numerus_generum, XIII);
+        CREDO_AEQUALIS_I32 (SILVA_SCELETUM_REGISTRUM.numerus_generum, XV);
 
         binarium_idx = -I;
         per (i = ZEPHYRUM; i < SILVA_SCELETUM_REGISTRUM.numerus_generum; i++)

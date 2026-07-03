@@ -103,11 +103,18 @@
     </regula>
   </regulae>
 
-  <!-- Genera structuralia: unum registrum cum grammatica (S30) -->
+  <!-- Genera structuralia: unum registrum cum grammatica (S30).
+       Textura conditionalium (Phase 7, sim ⑦): conditionalis fert
+       ramos + lineam #endif; ramus-sumptus contentum PARSATUM,
+       ramus-omissus laminam crudam; conditio_id = clavis iuncturae
+       arbor-diarium-regiones. Ordo locorum == ordo octetorum
+       (emissor genericus). -->
   <genera-extra>
     <genus titulus="error"         slots="tokens:lista-token"/>
     <genus titulus="ambiguus"      slots="interpretationes:lista-nodus canonica:index"/>
-    <genus titulus="conditionalis" slots="rami:lista-nodus"/>
+    <genus titulus="conditionalis" slots="rami:lista-nodus finis:lista-token"/>
+    <genus titulus="ramus-sumptus" slots="directiva:lista-token contentum:lista-nodus conditio_id:index"/>
+    <genus titulus="ramus-omissus" slots="directiva:lista-token cruda:lista-token conditio_id:index"/>
   </genera-extra>
 
   <initium>sententiae</initium>

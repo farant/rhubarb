@@ -394,7 +394,7 @@ typedef struct SilvaResolutioResponsum {
 } SilvaResolutioResponsum;
 
 typedef void (*SilvaResolutor)(const SilvaNodus* ambiguum,
-    const SilvaOraculum* oraculum, void* contextus,
+    const SilvaOraculum* oraculum, void* datum_resolutoris,
     SilvaResolutioResponsum* responsum);
 
 typedef enum {
@@ -421,7 +421,7 @@ typedef struct SilvaCommissio {
 
 unsigned int silva_recanonicare(SilvaCommissio* commissio,
     const SilvaOraculum* oraculum, SilvaResolutor resolutor,
-    void* contextus);
+    void* datum_resolutoris);
 
 /* ==================================================
  * Praeprocessor (expansio) - contextus praeparabilis
@@ -438,6 +438,57 @@ int silva_macro_addere(SilvaExpansio* exp, const char* titulus,
     const char* corpus);
 int silva_macro_functio_addere(SilvaExpansio* exp,
     const char* titulus, const char** parametra, const char* corpus);
+
+/* ==================================================
+ * Contextus hospitis (Phase 7) - receptum diu vivens:
+ * fines (limina dura; 0 = infinitum; sub finibus arbor
+ * completa manet et octetim exacte reconstruitur),
+ * intermissio (pergere - monotona sit: semel falsum,
+ * semper falsum), lexica (definitiones ante fontem -
+ * latina compilata via silva_contextus_latinam_addere),
+ * praebenda (includenda)
+ * ================================================== */
+
+typedef struct SilvaFines {
+    unsigned int lexemata;                /* fluxus expansus max */
+    unsigned int generationes;
+    unsigned int profunditas_includendi;
+    unsigned int profunditas_regionum;
+    unsigned int frons;                   /* frons GSS max */
+} SilvaFines;
+
+typedef int (*SilvaPergereFunctio)(void* datum);
+
+typedef struct SilvaContextusPlagula {
+    const char*  via;
+    const char*  textus;
+    unsigned int mensura;
+} SilvaContextusPlagula;
+
+typedef struct SilvaContextus SilvaContextus;
+
+struct SilvaContextus {
+    SilvaPiscina*       piscina;
+    SilvaFines          fines;
+    SilvaPergereFunctio pergere;          /* NULL = numquam rogare */
+    void*               pergere_datum;
+    unsigned int        passus_pergendi;  /* intervallum lexematum */
+    SilvaXar*           lexica;           /* SilvaContextusPlagula */
+    SilvaXar*           praebenda;        /* SilvaContextusPlagula */
+};
+
+SilvaContextus* silva_contextus_creare(SilvaPiscina* piscina);
+int silva_contextus_lexicon_addere(SilvaContextus* contextus,
+    const char* via, const char* textus, unsigned int mensura);
+int silva_contextus_latinam_addere(SilvaContextus* contextus);
+int silva_contextus_praebere(SilvaContextus* contextus,
+    const char* via, const char* textus, unsigned int mensura);
+void silva_contextus_pergere_ponere(SilvaContextus* contextus,
+    SilvaPergereFunctio pergere, void* datum, unsigned int passus);
+
+/* Textus latina.h compilatus (GENERATUM ex include/latina.h) */
+extern const char         silva_latina_textus[];
+extern const unsigned int silva_latina_mensura;
 
 /* ==================================================
  * Gubernator (fistula tota) + fructus
@@ -465,25 +516,39 @@ typedef struct SilvaParsura {
     unsigned int    transmutationes_negatae;
     unsigned int    eventa_marginis_novi;
     unsigned int    frons_maxima;
+    int             est_intermissa;   /* pergere falsum; arbor tamen
+                                       * completa (cauda = ERROR) */
+    int             expansio_decisa;  /* expansio trunca (limen) */
+    int             fines_tactae;     /* quilibet limen tactus */
+    unsigned int    segmenta_ultra_limen;
+    unsigned int    regiones_textae;  /* regiones in arborem textae */
+    unsigned int    regiones_omissae; /* degradatae (limes transgressus) */
 } SilvaParsura;
 
 SilvaParsura* silva_parsare(SilvaPiscina* piscina,
     const char* titulus_fontis, const char* fons,
     unsigned int mensura, const SilvaGrammatica* grammatica,
     const SilvaOraculum* oraculum, SilvaResolutor resolutor,
-    void* contextus);
+    void* datum_resolutoris);
 
 SilvaParsura* silva_parsare_cum_expansione(SilvaPiscina* piscina,
     SilvaExpansio* expansio, const char* titulus_fontis,
     const char* fons, unsigned int mensura,
     const SilvaGrammatica* grammatica,
     const SilvaOraculum* oraculum, SilvaResolutor resolutor,
-    void* contextus);
+    void* datum_resolutoris);
+
+SilvaParsura* silva_parsare_cum_contextu(SilvaPiscina* piscina,
+    const SilvaContextus* contextus, const char* titulus_fontis,
+    const char* fons, unsigned int mensura,
+    const SilvaGrammatica* grammatica,
+    const SilvaOraculum* oraculum, SilvaResolutor resolutor,
+    void* datum_resolutoris);
 
 SilvaParsura* silva_lexemata_parsare(SilvaPiscina* piscina,
     const SilvaXar* lexemata, const SilvaGrammatica* grammatica,
     const SilvaOraculum* oraculum, SilvaResolutor resolutor,
-    void* contextus);
+    void* datum_resolutoris);
 
 /* ==================================================
  * Scriptura (emissio octetim exacta)
@@ -1785,6 +1850,11 @@ nomen structura {
     b32         est_numquam;    /* #if 0 idioma (litteralis falsa) */
     SilvaXar*        lexemata_cruda; /* ramus non sumptus: lamina cruda; NIHIL si sumptus */
     SilvaRegio* regio;          /* regio continens */
+    s32         corpus_initium; /* offset primi lexematis corporis
+                                 * (post lineam directivae); -1 si
+                                 * corpus vacuum (sim ⑦ C1) */
+    s32         corpus_finis;   /* offset post ultimum lexema corporis;
+                                 * -1 si vacuum */
 } SilvaRamus;
 
 structura SilvaRegio {
@@ -1794,6 +1864,18 @@ structura SilvaRegio {
     SilvaRegio* pater;          /* regio amplectens; NIHIL si suprema */
     SilvaXar*        filiae;         /* Xar de SilvaRegio* (in ramis sumptis) */
     b32         est_imperfecta; /* EOF ante #endif */
+    b32         est_ultra_modum; /* profunditas ultra limen (Phase 7):
+                                  * NULLUS ramus evaluatur - omnes crudi
+                                  * (degradatio determinata; recursio
+                                  * cessat, octeti supersunt) */
+    SilvaXar*        directiva_finis; /* lexemata lineae #endif; NIHIL si
+                                  * imperfecta (sim ⑦ C1). REGIO lineas
+                                  * structurales suas POSSIDET (β, sim ⑦
+                                  * C2): #if/#elif/#else/#endif numquam
+                                  * in directivae_out intrant */
+    b32         est_texta;       /* in arborem texta (Phase 7 Chunk B):
+                                  * lineae + cruda ex ARBORE emittuntur,
+                                  * non ex reinserendis (dominus unus) */
 };
 
 
@@ -1842,7 +1924,36 @@ structura SilvaExpansio {
     s32             fons_api;   /* fons syntheticus "<api>"; -1 = nondum */
     SilvaTabulaDispersa* tabula_activa; /* tabula temporalis expansionis
                                     * positionalis; NIHIL = tabula viva */
+
+    /* ==== Fines (Phase 7 Chunk A - par 8.2). 0 = infinitum. ====
+     * Fines expansionem DEGRADANT, numquam totalitatem: limine tacto
+     * lexemata reliqua INEXPANSA fluunt (FONS - se ipsa emittunt),
+     * ergo arbor completa et reconstructio byte-exacta etiam sub
+     * finibus tenent. Defaltae generosae in creare positae. */
+    i32 limen_lexematum;     /* fluxus expansus maximus (per generationem) */
+    i32 limen_generationum;  /* generationes expansionis maximae */
+    i32 limen_includendi;    /* profunditas includendi maxima */
+    i32 limen_regionum;      /* profunditas regionum maxima */
+
+    /* Intermissio (SilvaContextus eam ponit; forma cruda ne stratum
+     * inferius contextum noscat): FALSUM redditum = intermitte. */
+    b32     (*pergere)(vacuum* datum);   /* NIHIL = numquam rogare */
+    vacuum*   pergere_datum;
+
+    /* Status finium (productum, non depuratio) */
+    b32 expansio_decisa;      /* expansio trunca (limen lexematum aut
+                               * generationum tactum) */
+    b32 est_intermissa;       /* pergere FALSUM reddidit */
+    b32 fines_tactae;         /* quilibet limen tactus */
+    i32 profunditas_regionum; /* numerator vivus (transiens) */
 };
+
+/* Defaltae finium (tree-sitter habitus: fines generosae SEMPER
+ * activae; hospes eas tollere potest - 0 = infinitum) */
+#define SILVA_LIMEN_LEXEMATUM_DEFALTUM    1048576
+#define SILVA_LIMEN_GENERATIONUM_DEFALTUM C
+#define SILVA_LIMEN_INCLUDENDI_DEFALTUM   XXXII
+#define SILVA_LIMEN_REGIONUM_DEFALTUM     LXIV
 
 SilvaExpansio*
 silva_expansio_creare (
@@ -1952,6 +2063,13 @@ silva_expansio_macros_ad_lineam (
  * argumenta PLENE prae-expansa intra gradum, substitutio,
  * caecatio extensa (Prosser); RESCAN = generatio proxima.
  * Terminatio per caecationes (finis semanticus, non cap).
+ *
+ * SIMPLIFICATIO PROSSER PERMANENS (disposita Phase 7 Chunk C):
+ * caecatio argumentorum HS_call fertur, non HS_call∩HS_rparen
+ * exacta. Classis divergentiae parenthesibus IMPARIBUS in
+ * corporibus macrorum functio-similium eget; lustrum solarii
+ * (2.3MB C89 veri, 2026-07-03) NULLAM invenit - super-caecatio
+ * classis exoticae accepta, evidentia memorata (phase-log).
  * ================================================== */
 
 /* Una generatio: fluxus novus; *mutatum_out VERUM si quid expansum */
@@ -2169,7 +2287,9 @@ enumeratio {
     SILVA_SCELETUM_GENUS_PARENTHESIS = 9,
     SILVA_SCELETUM_GENUS_ERROR = 10,
     SILVA_SCELETUM_GENUS_AMBIGUUS = 11,
-    SILVA_SCELETUM_GENUS_CONDITIONALIS = 12
+    SILVA_SCELETUM_GENUS_CONDITIONALIS = 12,
+    SILVA_SCELETUM_GENUS_RAMUS_SUMPTUS = 13,
+    SILVA_SCELETUM_GENUS_RAMUS_OMISSUS = 14
 };
 
 SilvaValor silva_sceletum_declaratio_typus (constans SilvaNodus* nodus);
@@ -2194,6 +2314,13 @@ SilvaValor silva_sceletum_error_tokens (constans SilvaNodus* nodus);
 SilvaValor silva_sceletum_ambiguus_interpretationes (constans SilvaNodus* nodus);
 SilvaValor silva_sceletum_ambiguus_canonica (constans SilvaNodus* nodus);
 SilvaValor silva_sceletum_conditionalis_rami (constans SilvaNodus* nodus);
+SilvaValor silva_sceletum_conditionalis_finis (constans SilvaNodus* nodus);
+SilvaValor silva_sceletum_ramus_sumptus_directiva (constans SilvaNodus* nodus);
+SilvaValor silva_sceletum_ramus_sumptus_contentum (constans SilvaNodus* nodus);
+SilvaValor silva_sceletum_ramus_sumptus_conditio_id (constans SilvaNodus* nodus);
+SilvaValor silva_sceletum_ramus_omissus_directiva (constans SilvaNodus* nodus);
+SilvaValor silva_sceletum_ramus_omissus_cruda (constans SilvaNodus* nodus);
+SilvaValor silva_sceletum_ramus_omissus_conditio_id (constans SilvaNodus* nodus);
 
 /* Constructio ex reductione GLR: PURA (S26) - allocat
  * et implet solum; pater post-acceptum (S27) */
@@ -2273,6 +2400,15 @@ nomen structura {
     SilvaGLRFabricaAmbigui     fabrica;
     SilvaPiscina*                   piscina;    /* GSS + apparatus */
 
+    /* Fines (Phase 7 Chunk A - par 8.2). 0 = infinitum. Frons ultra
+     * limen = fractura munda segmenti (gubernator nodum ERROR facit -
+     * totalitas tenet). Intermissio: pergere FALSUM = desiste;
+     * passus_pergendi = intervallum lexematum inter interrogationes. */
+    i32       limen_frontis;
+    b32     (*pergere)(vacuum* datum);   /* NIHIL = numquam rogare */
+    vacuum*   pergere_datum;
+    i32       passus_pergendi;
+
     /* Statisticae parsurae novissimae (etiam in fructum copiatae -
      * numeratores sunt PRODUCTUM, non depuratio: spec-v2 par 12.2) */
     i32 frons_maxima;
@@ -2283,6 +2419,10 @@ nomen structura {
     i32 transmutationes_negatae; /* exhaustum non-NODUS - brachium separatum */
     i32 eventa_marginis_novi;    /* idem status, basis alia (classis Farshi) */
 } SilvaGLR;
+
+/* Defaltae finium motoris (tree-sitter habitus - semper activae) */
+#define SILVA_GLR_LIMEN_FRONTIS_DEFALTUM  4096
+#define SILVA_GLR_PASSUS_PERGENDI_DEFALTUM 1024
 
 
 /* ==================================================
@@ -2307,6 +2447,8 @@ nomen structura {
     s32          positio;            /* index lexematis ubi fractum */
     s32          terminalis;         /* prospectus (aut IGNOTUM) */
     s32          status;             /* status primus frontis tunc */
+    b32          est_ultra_limen;    /* frons limen excessit (Phase 7) */
+    b32          est_intermissus;    /* pergere FALSUM reddidit */
 } SilvaGLRFructus;
 
 
@@ -2408,7 +2550,7 @@ silva_committere (
     constans SilvaRegistrumCoctum* tabularium,
     constans SilvaOraculum*        oraculum,
     SilvaResolutor                 resolutor,
-    vacuum*                        contextus);
+    vacuum*                        datum_resolutoris);
 
 /* Scientia sera: ambigua superstitia iterum resolvere. Canonica in
  * loco vertitur + spina localiter retexta; involucrum MANET (arbor
@@ -2419,9 +2561,88 @@ silva_recanonicare (
     SilvaCommissio*         commissio,
     constans SilvaOraculum* oraculum,
     SilvaResolutor          resolutor,
-    vacuum*                 contextus);
+    vacuum*                 datum_resolutoris);
 
 #endif /* SILVA_COMMISSIO_H */
+
+/* ================= ex silva/fontes/silva_contextus.h ================= */
+/* silva_contextus.h - Contextus hospitis (Phase 7 Chunk A)
+ *
+ * Obiectum diu vivens et reusabile hospitis (spec-v2 par 8.2): fines
+ * (limina dura configurabilia), intermissio (pergere - interrogatio
+ * determinata, nulla horologia), lexica (plagulae definitionum ante
+ * fontem principalem processatae - latina.h hac via "compiled-in"),
+ * praebenda (contentum includendum). RECEPTUM est, non status:
+ * quaeque parsura expansionem recentem creat et receptum applicat
+ * (silva_parsare_cum_contextu).
+ *
+ * Praeposita configurationum nominata ("macos", "c89-nudum" -
+ * par 10.2.5) = petra miliaria config-query, NOMINATA.
+ *
+ * Strata inferiora (expansor, motor GLR) contextum numquam noscunt -
+ * gubernator campos crudos deorsum copiat (velamen: silva speculum
+ * nescit, expansor contextum nescit).
+ */
+
+#ifndef SILVA_CONTEXTUS_H
+#define SILVA_CONTEXTUS_H
+
+SilvaContextus*
+silva_contextus_creare (
+    SilvaPiscina* piscina);
+
+/* Lexicon: plagula definitionum (e.g. latina.h) ante fontem
+ * principalem processata. Definitiones eius a positione 0 fontis
+ * valent; provenientia ad plagulam lexici ducit (fons verus). */
+b32
+silva_contextus_lexicon_addere (
+    SilvaContextus*     contextus,
+    constans character* via,
+    constans character* textus,
+    i32                 mensura);
+
+/* Lexicon latinum compilatum (silva_latina_datum - GENERATUM ex
+ * include/latina.h per amalgatorem; fons veritatis unus) */
+b32
+silva_contextus_latinam_addere (
+    SilvaContextus* contextus);
+
+/* Contentum includendum (via #include resolvendum) */
+b32
+silva_contextus_praebere (
+    SilvaContextus*     contextus,
+    constans character* via,
+    constans character* textus,
+    i32                 mensura);
+
+/* passus <= 1 = quovis lexemate (GLR); expansio per generationem
+ * interrogat, gubernator per segmentum - passus ibi non attinet */
+vacuum
+silva_contextus_pergere_ponere (
+    SilvaContextus*     contextus,
+    SilvaPergereFunctio pergere,
+    vacuum*             datum,
+    i32                 passus);
+
+#endif /* SILVA_CONTEXTUS_H */
+
+/* ================= ex silva/fontes/silva_latina_datum.h ================= */
+/* silva_latina_datum.h - Textus latina.h ut datum (Phase 7 Chunk A)
+ *
+ * GENERATUM ex include/latina.h per amalgamatorem - NE MANU MUTES
+ * (regeneratur per silva/amalgamare.sh). Copia compilata definitionum
+ * latinarum: silva_contextus_latinam_addere eam praebet - "compiled-in
+ * defaults" interview ad litteram, sine fonte veritatis secundo (datum
+ * IPSA plagula vendicata est).
+ */
+
+#ifndef SILVA_LATINA_DATUM_H
+#define SILVA_LATINA_DATUM_H
+
+externus constans character silva_latina_textus[];
+externus constans i32       silva_latina_mensura;
+
+#endif /* SILVA_LATINA_DATUM_H */
 
 /* ================= ex silva/fontes/silva_parsare.h ================= */
 /* silva_parsare.h - Gubernator parsurae (Phase 4 Chunk D)
@@ -2458,7 +2679,7 @@ silva_parsare (
     constans SilvaGrammatica* grammatica,
     constans SilvaOraculum*   oraculum,
     SilvaResolutor            resolutor,
-    vacuum*                   contextus);
+    vacuum*                   datum_resolutoris);
 
 /* Fistula tota cum expansione PRAEPARATA a vocatore: includenda iam
  * praebita (silva_includendum_praebere), macros iam iniecta
@@ -2474,7 +2695,23 @@ silva_parsare_cum_expansione (
     constans SilvaGrammatica* grammatica,
     constans SilvaOraculum*   oraculum,
     SilvaResolutor            resolutor,
-    vacuum*                   contextus);
+    vacuum*                   datum_resolutoris);
+
+/* Fistula tota cum CONTEXTU hospitis (Phase 7): receptum contextus
+ * expansioni recenti applicatur (fines, pergere, lexica ante fontem
+ * processata - latina hac via, praebenda), deinde fistula normalis.
+ * Contextus diu vivit et inter parsuras reusabilis est. */
+SilvaParsura*
+silva_parsare_cum_contextu (
+    SilvaPiscina*                  piscina,
+    constans SilvaContextus*  contextus,
+    constans character*       titulus_fontis,
+    constans character*       fons,
+    i32                       mensura,
+    constans SilvaGrammatica* grammatica,
+    constans SilvaOraculum*   oraculum,
+    SilvaResolutor            resolutor,
+    vacuum*                   datum_resolutoris);
 
 /* Ingressus lexematum (forma silva_lexare: Xar de SilvaToken*, EOF
  * ultimo) - pro fluxibus iam expansis aut probationibus. */
@@ -2485,7 +2722,7 @@ silva_lexemata_parsare (
     constans SilvaGrammatica* grammatica,
     constans SilvaOraculum*   oraculum,
     SilvaResolutor            resolutor,
-    vacuum*                   contextus);
+    vacuum*                   datum_resolutoris);
 
 #endif /* SILVA_PARSARE_H */
 
@@ -5641,6 +5878,16 @@ silva_expansio_creare (SilvaPiscina* piscina)
     exp->profunditas_includendi = ZEPHYRUM;
     exp->fons_api = -I;
     exp->tabula_activa = NIHIL;
+    exp->limen_lexematum = SILVA_LIMEN_LEXEMATUM_DEFALTUM;
+    exp->limen_generationum = SILVA_LIMEN_GENERATIONUM_DEFALTUM;
+    exp->limen_includendi = SILVA_LIMEN_INCLUDENDI_DEFALTUM;
+    exp->limen_regionum = SILVA_LIMEN_REGIONUM_DEFALTUM;
+    exp->pergere = NIHIL;
+    exp->pergere_datum = NIHIL;
+    exp->expansio_decisa = FALSUM;
+    exp->est_intermissa = FALSUM;
+    exp->fines_tactae = FALSUM;
+    exp->profunditas_regionum = ZEPHYRUM;
     redde exp;
 }
 
@@ -5775,9 +6022,8 @@ silva_expansio_quaerere (
 
 /* ==================================================
  * Processio directivarum (Chunk A + D)
+ * (Limen includendi: exp->limen_includendi, Phase 7)
  * ================================================== */
-
-#define SILVA_INCLUDENDI_MAXIMI XXXII
 
 /* Genus directivae (internum) */
 nomen enumeratio {
@@ -6106,6 +6352,9 @@ _regionem_creare (SilvaExpansio* exp, SilvaToken* cancellum, SilvaRegio* pater)
     regio->pater = pater;
     regio->filiae = silva_xar_creare(exp->piscina, magnitudo(SilvaRegio*));
     regio->est_imperfecta = FALSUM;
+    regio->est_ultra_modum = FALSUM;
+    regio->directiva_finis = NIHIL;
+    regio->est_texta = FALSUM;
 
     si (pater != NIHIL)
     {
@@ -6133,9 +6382,13 @@ _regionem_creare (SilvaExpansio* exp, SilvaToken* cancellum, SilvaRegio* pater)
 /* Processare regionem: lexemata[i] est CANCELLUM #if/#ifdef/#ifndef.
  * Consumit usque ad #endif parem (vel finem fluxus). Reddit indicem
  * post regionem. Via defalta: primus ramus verus sumitur - lexemata
- * eius normaliter processantur; ceteri laminas crudas retinent. */
+ * eius normaliter processantur; ceteri laminas crudas retinent.
+ * Profunditas ultra limen (Phase 7): regio est_ultra_modum - NULLUS
+ * ramus evaluatur, omnes crudi, recursio cessat (fluxus infestus
+ * acervum numquam perfodit); octeti in crudis supersunt, ergo
+ * reconstructio tenet. */
 interior i32
-_regionem_processare (
+_regionem_processare_interna (
     SilvaExpansio* exp,
     SilvaXar*           lexemata,
     i32            i,
@@ -6154,6 +6407,12 @@ _regionem_processare (
     {
         redde i_finis;
     }
+    si (exp->limen_regionum > ZEPHYRUM
+        && exp->profunditas_regionum > exp->limen_regionum)
+    {
+        regio->est_ultra_modum = VERUM;
+        exp->fines_tactae = VERUM;
+    }
     sumptum_iam = FALSUM;
     i_currens = i;
 
@@ -6169,7 +6428,9 @@ _regionem_processare (
 
         i_linea_finis = _lineam_finire(lexemata, i_currens, i_finis);
         genus_dir = _directivae_genus(lexemata, i_currens, i_linea_finis);
-        _directivam_capere(exp, directivae, lexemata, i_currens, i_linea_finis);
+        /* β (sim ⑦ C2): linea structuralis NON capitur - regio eam
+         * possidet (ramus->directiva infra); scriptura lineas regionum
+         * non textarum ex arbore regionum colligit */
 
         /* Ramum creare */
         ramus = (SilvaRamus*)silva_piscina_allocare(exp->piscina,
@@ -6218,8 +6479,9 @@ _regionem_processare (
             }
         }
 
-        /* Evaluatio (via defalta) - rami post sumptum NON evaluantur */
-        si (!sumptum_iam)
+        /* Evaluatio (via defalta) - rami post sumptum NON evaluantur;
+         * regio ultra modum: nullus umquam (omnes crudi) */
+        si (!sumptum_iam && !regio->est_ultra_modum)
         {
             si (ramus->genus == SILVA_RAMUS_ELSE)
             {
@@ -6316,6 +6578,32 @@ _regionem_processare (
             }
         }
 
+        /* Fines corporis in offsetibus (sim ⑦ C1 - textura eos contra
+         * extenta sententiarum comparat). Finis EXCLUSIVUS = offset
+         * directivae proximae; imperfecta = apertum */
+        si (i_corpus < i_scan)
+        {
+            SilvaToken* primum_corporis =
+                *(SilvaToken**)silva_xar_obtinere(lexemata, i_corpus);
+
+            ramus->corpus_initium = primum_corporis->byte_offset;
+        }
+        alioquin
+        {
+            ramus->corpus_initium = -I;
+        }
+        si (i_scan < i_finis)
+        {
+            SilvaToken* post_corpus =
+                *(SilvaToken**)silva_xar_obtinere(lexemata, i_scan);
+
+            ramus->corpus_finis = post_corpus->byte_offset;
+        }
+        alioquin
+        {
+            ramus->corpus_finis = 0x7FFFFFFF;  /* imperfecta: apertum */
+        }
+
         si (ramus->est_sumptum)
         {
             sumptum_iam = VERUM;
@@ -6343,7 +6631,9 @@ _regionem_processare (
             g = _directivae_genus(lexemata, i_scan, lf);
             si (g == SILVA_DIR_ENDIF)
             {
-                _directivam_capere(exp, directivae, lexemata, i_scan, lf);
+                /* β: linea #endif regioni ipsa (sim ⑦ C1/C2) */
+                regio->directiva_finis = _lamina_capere(exp, lexemata,
+                    i_scan, lf);
                 redde lf;
             }
             i_currens = i_scan;  /* ramus proximus (elif/else) */
@@ -6352,6 +6642,26 @@ _regionem_processare (
 
     regio->est_imperfecta = VERUM;
     redde i_finis;
+}
+
+/* Involucrum numeratoris profunditatis (omnes viae reditus tectae) */
+interior i32
+_regionem_processare (
+    SilvaExpansio* exp,
+    SilvaXar*           lexemata,
+    i32            i,
+    i32            i_finis,
+    SilvaRegio*    pater,
+    SilvaXar*           reliqua,
+    SilvaXar*           directivae)
+{
+    i32 fructus;
+
+    exp->profunditas_regionum++;
+    fructus = _regionem_processare_interna(exp, lexemata, i, i_finis,
+        pater, reliqua, directivae);
+    exp->profunditas_regionum--;
+    redde fructus;
 }
 
 /* ==================================================
@@ -6461,9 +6771,11 @@ _includendum_processare (
         redde;
     }
 
-    si (exp->profunditas_includendi >= SILVA_INCLUDENDI_MAXIMI)
+    si (exp->limen_includendi > ZEPHYRUM
+        && exp->profunditas_includendi >= exp->limen_includendi)
     {
         inclusio->est_praetermissa = VERUM;  /* profunditas nimia */
+        exp->fines_tactae = VERUM;
         redde;
     }
 
@@ -7661,9 +7973,39 @@ silva_expansio_generatio (
     redde _generatio_interna(exp, lexemata, mutatum_out, NIHIL, NIHIL);
 }
 
-/* Cap generationum: assertio contra regressum caecationum, non
- * semantica (caecationes terminant; C generationes = defectus) */
-#define SILVA_GENERATIONES_MAXIMAE C
+/* Limina circuituum fixorum (Phase 7): ante quamque generationem
+ * inspiciuntur - volumen (limen_lexematum), numerus generationum
+ * (limen_generationum, olim assertio), intermissio (pergere).
+ * Limine tacto expansio CESSAT sed fluxus manet - lexemata reliqua
+ * inexpansa fluunt (degradatio, non amputatio). Reddit VERUM si
+ * pergendum. */
+interior b32
+_generationem_licere (
+    SilvaExpansio* exp,
+    SilvaXar*           currens,
+    i32            generationes)
+{
+    si (exp->pergere != NIHIL && !exp->pergere(exp->pergere_datum))
+    {
+        exp->est_intermissa = VERUM;
+        redde FALSUM;
+    }
+    si (exp->limen_generationum > ZEPHYRUM
+        && generationes >= exp->limen_generationum)
+    {
+        exp->expansio_decisa = VERUM;
+        exp->fines_tactae = VERUM;
+        redde FALSUM;
+    }
+    si (exp->limen_lexematum > ZEPHYRUM
+        && (i32)silva_xar_numerus(currens) > exp->limen_lexematum)
+    {
+        exp->expansio_decisa = VERUM;
+        exp->fines_tactae = VERUM;
+        redde FALSUM;
+    }
+    redde VERUM;
+}
 
 SilvaXar*
 silva_expansio_expandere (
@@ -7685,7 +8027,7 @@ silva_expansio_expandere (
 
     currens = lexemata;
     generationes = ZEPHYRUM;
-    dum (generationes < SILVA_GENERATIONES_MAXIMAE)
+    dum (_generationem_licere(exp, currens, generationes))
     {
         SilvaXar* exitus;
 
@@ -7756,7 +8098,7 @@ silva_expansio_expandere_reliqua (
 
     currens = reliqua;
     generationes = ZEPHYRUM;
-    dum (generationes < SILVA_GENERATIONES_MAXIMAE)
+    dum (_generationem_licere(exp, currens, generationes))
     {
         SilvaTabulaDispersa* tabula;
         SilvaXar* exitus;
@@ -9179,6 +9521,15 @@ hic_manens constans SilvaTabLocus SILVA_SCELETUM_LOCI[] = {
     { "canonica", SILVA_LOCUS_INDEX },
     /* conditionalis */
     { "rami", SILVA_LOCUS_LISTA_NODUS },
+    { "finis", SILVA_LOCUS_LISTA_TOKEN },
+    /* ramus-sumptus */
+    { "directiva", SILVA_LOCUS_LISTA_TOKEN },
+    { "contentum", SILVA_LOCUS_LISTA_NODUS },
+    { "conditio_id", SILVA_LOCUS_INDEX },
+    /* ramus-omissus */
+    { "directiva", SILVA_LOCUS_LISTA_TOKEN },
+    { "cruda", SILVA_LOCUS_LISTA_TOKEN },
+    { "conditio_id", SILVA_LOCUS_INDEX },
     { NIHIL, -1 }   /* terminator */
 };
 
@@ -9195,13 +9546,15 @@ hic_manens constans SilvaTabGenus SILVA_SCELETUM_GENERA[] = {
     /* [ 9] */ { "parenthesis", 15, 3 },
     /* [10] */ { "error", 18, 1 },
     /* [11] */ { "ambiguus", 19, 2 },
-    /* [12] */ { "conditionalis", 21, 1 },
+    /* [12] */ { "conditionalis", 21, 2 },
+    /* [13] */ { "ramus-sumptus", 23, 3 },
+    /* [14] */ { "ramus-omissus", 26, 3 },
     { NIHIL, 0, 0 }   /* terminator */
 };
 
 constans SilvaRegistrumCoctum SILVA_SCELETUM_REGISTRUM = {
-    SILVA_SCELETUM_GENERA, 13,
-    SILVA_SCELETUM_LOCI, 22
+    SILVA_SCELETUM_GENERA, 15,
+    SILVA_SCELETUM_LOCI, 29
 };
 
 /* ==================================================
@@ -9448,6 +9801,83 @@ silva_sceletum_conditionalis_rami (constans SilvaNodus* nodus)
         redde silva_valor_nihil();
     }
     redde nodus->loci[0];
+}
+
+SilvaValor
+silva_sceletum_conditionalis_finis (constans SilvaNodus* nodus)
+{
+    si (nodus == NIHIL || nodus->genus != (s32)SILVA_SCELETUM_GENUS_CONDITIONALIS
+        || 1 >= nodus->numerus_locorum)
+    {
+        redde silva_valor_nihil();
+    }
+    redde nodus->loci[1];
+}
+
+SilvaValor
+silva_sceletum_ramus_sumptus_directiva (constans SilvaNodus* nodus)
+{
+    si (nodus == NIHIL || nodus->genus != (s32)SILVA_SCELETUM_GENUS_RAMUS_SUMPTUS
+        || 0 >= nodus->numerus_locorum)
+    {
+        redde silva_valor_nihil();
+    }
+    redde nodus->loci[0];
+}
+
+SilvaValor
+silva_sceletum_ramus_sumptus_contentum (constans SilvaNodus* nodus)
+{
+    si (nodus == NIHIL || nodus->genus != (s32)SILVA_SCELETUM_GENUS_RAMUS_SUMPTUS
+        || 1 >= nodus->numerus_locorum)
+    {
+        redde silva_valor_nihil();
+    }
+    redde nodus->loci[1];
+}
+
+SilvaValor
+silva_sceletum_ramus_sumptus_conditio_id (constans SilvaNodus* nodus)
+{
+    si (nodus == NIHIL || nodus->genus != (s32)SILVA_SCELETUM_GENUS_RAMUS_SUMPTUS
+        || 2 >= nodus->numerus_locorum)
+    {
+        redde silva_valor_nihil();
+    }
+    redde nodus->loci[2];
+}
+
+SilvaValor
+silva_sceletum_ramus_omissus_directiva (constans SilvaNodus* nodus)
+{
+    si (nodus == NIHIL || nodus->genus != (s32)SILVA_SCELETUM_GENUS_RAMUS_OMISSUS
+        || 0 >= nodus->numerus_locorum)
+    {
+        redde silva_valor_nihil();
+    }
+    redde nodus->loci[0];
+}
+
+SilvaValor
+silva_sceletum_ramus_omissus_cruda (constans SilvaNodus* nodus)
+{
+    si (nodus == NIHIL || nodus->genus != (s32)SILVA_SCELETUM_GENUS_RAMUS_OMISSUS
+        || 1 >= nodus->numerus_locorum)
+    {
+        redde silva_valor_nihil();
+    }
+    redde nodus->loci[1];
+}
+
+SilvaValor
+silva_sceletum_ramus_omissus_conditio_id (constans SilvaNodus* nodus)
+{
+    si (nodus == NIHIL || nodus->genus != (s32)SILVA_SCELETUM_GENUS_RAMUS_OMISSUS
+        || 2 >= nodus->numerus_locorum)
+    {
+        redde silva_valor_nihil();
+    }
+    redde nodus->loci[2];
 }
 
 /* ==================================================
@@ -10787,6 +11217,10 @@ silva_glr_creare (
     glr->constructor = constructor;
     glr->fabrica = fabrica;
     glr->piscina = piscina;
+    glr->limen_frontis = SILVA_GLR_LIMEN_FRONTIS_DEFALTUM;
+    glr->pergere = NIHIL;
+    glr->pergere_datum = NIHIL;
+    glr->passus_pergendi = SILVA_GLR_PASSUS_PERGENDI_DEFALTUM;
     _statisticas_purgare(glr);
     redde glr;
 }
@@ -10816,6 +11250,8 @@ silva_glr_parsare (
     fructus.positio = ZEPHYRUM;
     fructus.terminalis = ZEPHYRUM;
     fructus.status = ZEPHYRUM;
+    fructus.est_ultra_limen = FALSUM;
+    fructus.est_intermissus = FALSUM;
 
     si (glr == NIHIL || lexemata == NIHIL || silva_piscina_arborum == NIHIL)
     {
@@ -10849,6 +11285,20 @@ silva_glr_parsare (
         SilvaGLRPassus passus;
         i32 fi;
         i32 cursor;
+
+        /* Intermissio (Phase 7): interrogatio determinata per passum
+         * lexematum; FALSUM = fractura munda (gubernator recuperat) */
+        si (glr->pergere != NIHIL
+            && (glr->passus_pergendi <= I
+                || (positio % glr->passus_pergendi) == ZEPHYRUM)
+            && !glr->pergere(glr->pergere_datum))
+        {
+            fructus.est_error = VERUM;
+            fructus.est_intermissus = VERUM;
+            fructus.positio = (s32)positio;
+            _statisticas_copiare(glr, &fructus);
+            redde fructus;
+        }
 
         /* Prospectus: lexema currens aut $ ultra fluxum */
         passus.terminale = SILVA_GLR_PROSPECTUS_FINIS;
@@ -11034,6 +11484,19 @@ silva_glr_parsare (
             glr->frons_maxima = silva_xar_numerus(passus.frons_nova);
         }
 
+        /* Limen frontis (Phase 7): fractura munda pro fluxu infesto -
+         * gubernator segmentum in nodum ERROR vertit (totalitas) */
+        si (glr->limen_frontis > ZEPHYRUM
+            && silva_xar_numerus(passus.frons_nova) > glr->limen_frontis)
+        {
+            fructus.est_error = VERUM;
+            fructus.est_ultra_limen = VERUM;
+            fructus.positio = (s32)positio;
+            fructus.terminalis = passus.terminale;
+            _statisticas_copiare(glr, &fructus);
+            redde fructus;
+        }
+
         frons = passus.frons_nova;
         positio++;
     }
@@ -11120,7 +11583,7 @@ nomen structura {
     SilvaCommissio*         commissio;
     constans SilvaOraculum* oraculum;
     SilvaResolutor          resolutor;
-    vacuum*                 contextus;
+    vacuum*                 datum_resolutoris;
 } SilvaAmbulatio;
 
 interior SilvaValor _valorem_committere (SilvaAmbulatio* ambulatio,
@@ -11189,7 +11652,7 @@ _ambiguum_committere (SilvaAmbulatio* ambulatio, SilvaNodus* nodus)
         responsum.victor = -I;
         responsum.discriminans = NIHIL;
         ambulatio->resolutor(nodus, ambulatio->oraculum,
-            ambulatio->contextus, &responsum);
+            ambulatio->datum_resolutoris, &responsum);
         si (responsum.victor >= ZEPHYRUM)
         {
             SilvaValor* victor_valor = silva_valor_lista_obtinere(
@@ -11331,7 +11794,7 @@ silva_committere (
     constans SilvaRegistrumCoctum* tabularium,
     constans SilvaOraculum*        oraculum,
     SilvaResolutor                 resolutor,
-    vacuum*                        contextus)
+    vacuum*                        datum_resolutoris)
 {
     SilvaCommissio* commissio;
     SilvaAmbulatio  ambulatio;
@@ -11401,7 +11864,7 @@ silva_committere (
     ambulatio.commissio = commissio;
     ambulatio.oraculum = oraculum;
     ambulatio.resolutor = resolutor;
-    ambulatio.contextus = contextus;
+    ambulatio.datum_resolutoris = datum_resolutoris;
 
     commissio->radix = _valorem_committere(&ambulatio, radix, NIHIL);
     redde commissio;
@@ -11412,7 +11875,7 @@ silva_recanonicare (
     SilvaCommissio*         commissio,
     constans SilvaOraculum* oraculum,
     SilvaResolutor          resolutor,
-    vacuum*                 contextus)
+    vacuum*                 datum_resolutoris)
 {
     i32 versi = ZEPHYRUM;
     i32 i;
@@ -11440,7 +11903,7 @@ silva_recanonicare (
 
         responsum.victor = -I;
         responsum.discriminans = NIHIL;
-        resolutor(nodus, oraculum, contextus, &responsum);
+        resolutor(nodus, oraculum, datum_resolutoris, &responsum);
         si (responsum.victor < ZEPHYRUM)
         {
             perge;  /* adhuc ignotum */
@@ -11495,6 +11958,884 @@ silva_recanonicare (
     }
     redde versi;
 }
+
+/* ================= ex silva/fontes/silva_contextus.c ================= */
+
+/* Copia cstring in piscinam (contextus vocatorem supervivit -
+ * lectio vitae fons->via) */
+interior constans character*
+_literis_figere (SilvaPiscina* piscina, constans character* fons)
+{
+    memoriae_index mensura;
+    character* novum;
+
+    si (fons == NIHIL)
+    {
+        redde NIHIL;
+    }
+    mensura = strlen(fons) + I;
+    novum = (character*)silva_piscina_allocare(piscina, mensura);
+    si (novum == NIHIL)
+    {
+        redde NIHIL;
+    }
+    memcpy(novum, fons, mensura);
+    redde novum;
+}
+
+interior b32
+_plagulam_addere (
+    SilvaContextus*     contextus,
+    SilvaXar*                quo,
+    constans character* via,
+    constans character* textus,
+    i32                 mensura)
+{
+    SilvaContextusPlagula* locus;
+    constans character* via_fixa;
+    character* textus_fixus;
+
+    si (contextus == NIHIL || quo == NIHIL || via == NIHIL
+        || textus == NIHIL)
+    {
+        redde FALSUM;
+    }
+    via_fixa = _literis_figere(contextus->piscina, via);
+    si (via_fixa == NIHIL)
+    {
+        redde FALSUM;
+    }
+    textus_fixus = (character*)silva_piscina_allocare(contextus->piscina,
+        (memoriae_index)(mensura > ZEPHYRUM ? mensura : I));
+    si (textus_fixus == NIHIL)
+    {
+        redde FALSUM;
+    }
+    si (mensura > ZEPHYRUM)
+    {
+        memcpy(textus_fixus, textus, (memoriae_index)mensura);
+    }
+
+    locus = (SilvaContextusPlagula*)silva_xar_addere(quo);
+    si (locus == NIHIL)
+    {
+        redde FALSUM;
+    }
+    locus->via = via_fixa;
+    locus->textus = textus_fixus;
+    locus->mensura = mensura;
+    redde VERUM;
+}
+
+SilvaContextus*
+silva_contextus_creare (SilvaPiscina* piscina)
+{
+    SilvaContextus* contextus;
+
+    si (piscina == NIHIL)
+    {
+        redde NIHIL;
+    }
+    contextus = (SilvaContextus*)silva_piscina_allocare(piscina,
+        (memoriae_index)magnitudo(SilvaContextus));
+    si (contextus == NIHIL)
+    {
+        redde NIHIL;
+    }
+    contextus->piscina = piscina;
+    contextus->fines.lexemata = SILVA_LIMEN_LEXEMATUM_DEFALTUM;
+    contextus->fines.generationes = SILVA_LIMEN_GENERATIONUM_DEFALTUM;
+    contextus->fines.profunditas_includendi =
+        SILVA_LIMEN_INCLUDENDI_DEFALTUM;
+    contextus->fines.profunditas_regionum =
+        SILVA_LIMEN_REGIONUM_DEFALTUM;
+    contextus->fines.frons = SILVA_GLR_LIMEN_FRONTIS_DEFALTUM;
+    contextus->pergere = NIHIL;
+    contextus->pergere_datum = NIHIL;
+    contextus->passus_pergendi = SILVA_GLR_PASSUS_PERGENDI_DEFALTUM;
+    contextus->lexica = silva_xar_creare(piscina,
+        magnitudo(SilvaContextusPlagula));
+    contextus->praebenda = silva_xar_creare(piscina,
+        magnitudo(SilvaContextusPlagula));
+    si (contextus->lexica == NIHIL || contextus->praebenda == NIHIL)
+    {
+        redde NIHIL;
+    }
+    redde contextus;
+}
+
+b32
+silva_contextus_lexicon_addere (
+    SilvaContextus*     contextus,
+    constans character* via,
+    constans character* textus,
+    i32                 mensura)
+{
+    si (contextus == NIHIL)
+    {
+        redde FALSUM;
+    }
+    redde _plagulam_addere(contextus, contextus->lexica, via, textus,
+        mensura);
+}
+
+b32
+silva_contextus_latinam_addere (SilvaContextus* contextus)
+{
+    redde silva_contextus_lexicon_addere(contextus, "latina.h",
+        silva_latina_textus, silva_latina_mensura);
+}
+
+b32
+silva_contextus_praebere (
+    SilvaContextus*     contextus,
+    constans character* via,
+    constans character* textus,
+    i32                 mensura)
+{
+    si (contextus == NIHIL)
+    {
+        redde FALSUM;
+    }
+    redde _plagulam_addere(contextus, contextus->praebenda, via,
+        textus, mensura);
+}
+
+vacuum
+silva_contextus_pergere_ponere (
+    SilvaContextus*     contextus,
+    SilvaPergereFunctio pergere,
+    vacuum*             datum,
+    i32                 passus)
+{
+    si (contextus == NIHIL)
+    {
+        redde;
+    }
+    contextus->pergere = pergere;
+    contextus->pergere_datum = datum;
+    contextus->passus_pergendi = passus;
+}
+
+/* ================= ex silva/fontes/silva_latina_datum.c ================= */
+
+constans character silva_latina_textus[] = {
+    35, 105, 102, 110, 100, 101, 102, 32, 76, 65, 84, 73,
+    78, 65, 95, 72, 10, 35, 100, 101, 102, 105, 110, 101,
+    32, 76, 65, 84, 73, 78, 65, 95, 72, 10, 10, 35,
+    105, 110, 99, 108, 117, 100, 101, 32, 60, 115, 116, 100,
+    100, 101, 102, 46, 104, 62, 10, 10, 35, 100, 101, 102,
+    105, 110, 101, 32, 99, 104, 97, 114, 97, 99, 116, 101,
+    114, 32, 9, 99, 104, 97, 114, 10, 35, 100, 101, 102,
+    105, 110, 101, 32, 98, 114, 101, 118, 105, 115, 32, 9,
+    9, 9, 115, 104, 111, 114, 116, 10, 35, 100, 101, 102,
+    105, 110, 101, 32, 105, 110, 116, 101, 103, 101, 114, 32,
+    9, 9, 105, 110, 116, 10, 35, 100, 101, 102, 105, 110,
+    101, 32, 108, 111, 110, 103, 117, 115, 9, 9, 9, 108,
+    111, 110, 103, 10, 35, 100, 101, 102, 105, 110, 101, 32,
+    102, 108, 117, 105, 116, 97, 110, 115, 9, 9, 102, 108,
+    111, 97, 116, 10, 35, 100, 101, 102, 105, 110, 101, 32,
+    100, 117, 112, 108, 101, 120, 9, 9, 9, 100, 111, 117,
+    98, 108, 101, 10, 10, 35, 100, 101, 102, 105, 110, 101,
+    32, 118, 97, 99, 117, 117, 109, 9, 9, 9, 118, 111,
+    105, 100, 10, 35, 100, 101, 102, 105, 110, 101, 32, 115,
+    105, 103, 110, 97, 116, 117, 115, 32, 9, 9, 115, 105,
+    103, 110, 101, 100, 10, 35, 100, 101, 102, 105, 110, 101,
+    32, 105, 110, 115, 105, 103, 110, 97, 116, 117, 115, 32,
+    32, 117, 110, 115, 105, 103, 110, 101, 100, 10, 35, 100,
+    101, 102, 105, 110, 101, 32, 99, 111, 110, 115, 116, 97,
+    110, 115, 9, 9, 99, 111, 110, 115, 116, 10, 35, 100,
+    101, 102, 105, 110, 101, 32, 118, 111, 108, 97, 116, 105,
+    108, 105, 115, 9, 9, 118, 111, 108, 97, 116, 105, 108,
+    101, 10, 35, 100, 101, 102, 105, 110, 101, 32, 115, 112,
+    111, 110, 116, 101, 9, 9, 9, 97, 117, 116, 111, 10,
+    35, 100, 101, 102, 105, 110, 101, 32, 114, 101, 103, 105,
+    115, 116, 114, 117, 109, 32, 9, 114, 101, 103, 105, 115,
+    116, 101, 114, 10, 35, 100, 101, 102, 105, 110, 101, 32,
+    115, 116, 97, 116, 105, 99, 117, 115, 32, 9, 9, 115,
+    116, 97, 116, 105, 99, 10, 35, 100, 101, 102, 105, 110,
+    101, 9, 101, 120, 116, 101, 114, 110, 117, 115, 32, 9,
+    9, 101, 120, 116, 101, 114, 110, 10, 10, 35, 100, 101,
+    102, 105, 110, 101, 32, 115, 105, 9, 9, 9, 9, 9,
+    105, 102, 10, 35, 100, 101, 102, 105, 110, 101, 32, 97,
+    108, 105, 111, 113, 117, 105, 110, 9, 9, 101, 108, 115,
+    101, 10, 35, 100, 101, 102, 105, 110, 101, 32, 99, 111,
+    109, 109, 117, 116, 97, 116, 105, 111, 9, 115, 119, 105,
+    116, 99, 104, 10, 35, 100, 101, 102, 105, 110, 101, 32,
+    99, 97, 115, 117, 115, 9, 9, 9, 9, 99, 97, 115,
+    101, 10, 35, 100, 101, 102, 105, 110, 101, 32, 111, 114,
+    100, 105, 110, 97, 114, 105, 117, 115, 9, 100, 101, 102,
+    97, 117, 108, 116, 10, 35, 100, 101, 102, 105, 110, 101,
+    32, 112, 101, 114, 9, 9, 9, 9, 9, 102, 111, 114,
+    10, 35, 100, 101, 102, 105, 110, 101, 32, 100, 117, 109,
+    32, 9, 9, 9, 9, 119, 104, 105, 108, 101, 10, 35,
+    100, 101, 102, 105, 110, 101, 32, 102, 97, 99, 32, 9,
+    9, 9, 9, 100, 111, 10, 35, 100, 101, 102, 105, 110,
+    101, 32, 102, 114, 97, 110, 103, 101, 32, 9, 9, 9,
+    98, 114, 101, 97, 107, 10, 35, 100, 101, 102, 105, 110,
+    101, 32, 112, 101, 114, 103, 101, 32, 9, 9, 9, 99,
+    111, 110, 116, 105, 110, 117, 101, 10, 35, 100, 101, 102,
+    105, 110, 101, 32, 115, 97, 108, 116, 97, 9, 9, 9,
+    9, 103, 111, 116, 111, 10, 35, 100, 101, 102, 105, 110,
+    101, 32, 114, 101, 100, 100, 101, 9, 9, 9, 9, 114,
+    101, 116, 117, 114, 110, 10, 10, 35, 100, 101, 102, 105,
+    110, 101, 32, 115, 116, 114, 117, 99, 116, 117, 114, 97,
+    9, 9, 115, 116, 114, 117, 99, 116, 10, 35, 100, 101,
+    102, 105, 110, 101, 32, 117, 110, 105, 111, 32, 9, 9,
+    9, 9, 117, 110, 105, 111, 110, 9, 10, 35, 100, 101,
+    102, 105, 110, 101, 32, 101, 110, 117, 109, 101, 114, 97,
+    116, 105, 111, 32, 9, 101, 110, 117, 109, 10, 35, 100,
+    101, 102, 105, 110, 101, 32, 110, 111, 109, 101, 110, 32,
+    9, 9, 9, 116, 121, 112, 101, 100, 101, 102, 10, 10,
+    35, 100, 101, 102, 105, 110, 101, 32, 109, 97, 103, 110,
+    105, 116, 117, 100, 111, 32, 9, 115, 105, 122, 101, 111,
+    102, 10, 10, 35, 100, 101, 102, 105, 110, 101, 32, 112,
+    114, 105, 110, 99, 105, 112, 97, 108, 101, 32, 9, 109,
+    97, 105, 110, 10, 10, 35, 100, 101, 102, 105, 110, 101,
+    32, 78, 73, 72, 73, 76, 9, 9, 9, 9, 78, 85,
+    76, 76, 10, 35, 100, 101, 102, 105, 110, 101, 32, 86,
+    69, 82, 85, 77, 32, 9, 9, 9, 49, 10, 35, 100,
+    101, 102, 105, 110, 101, 32, 70, 65, 76, 83, 85, 77,
+    32, 9, 9, 9, 48, 10, 10, 35, 100, 101, 102, 105,
+    110, 101, 32, 90, 69, 80, 72, 89, 82, 85, 77, 32,
+    32, 32, 32, 48, 10, 35, 100, 101, 102, 105, 110, 101,
+    32, 73, 32, 9, 9, 9, 9, 9, 49, 10, 35, 100,
+    101, 102, 105, 110, 101, 32, 73, 73, 9, 9, 9, 9,
+    9, 50, 10, 35, 100, 101, 102, 105, 110, 101, 32, 73,
+    73, 73, 9, 9, 9, 9, 9, 51, 10, 35, 100, 101,
+    102, 105, 110, 101, 32, 73, 86, 9, 9, 9, 9, 9,
+    52, 10, 35, 100, 101, 102, 105, 110, 101, 32, 86, 9,
+    9, 9, 9, 9, 9, 53, 10, 35, 100, 101, 102, 105,
+    110, 101, 32, 86, 73, 9, 9, 9, 9, 9, 54, 10,
+    35, 100, 101, 102, 105, 110, 101, 32, 86, 73, 73, 9,
+    9, 9, 9, 9, 55, 10, 35, 100, 101, 102, 105, 110,
+    101, 32, 86, 73, 73, 73, 9, 9, 9, 9, 56, 10,
+    35, 100, 101, 102, 105, 110, 101, 32, 73, 88, 9, 9,
+    9, 9, 9, 57, 10, 35, 100, 101, 102, 105, 110, 101,
+    32, 88, 9, 9, 9, 9, 9, 9, 49, 48, 10, 35,
+    100, 101, 102, 105, 110, 101, 32, 88, 73, 9, 9, 9,
+    9, 9, 49, 49, 10, 35, 100, 101, 102, 105, 110, 101,
+    32, 88, 73, 73, 9, 9, 9, 9, 9, 49, 50, 10,
+    35, 100, 101, 102, 105, 110, 101, 32, 88, 73, 73, 73,
+    9, 9, 9, 9, 49, 51, 10, 35, 100, 101, 102, 105,
+    110, 101, 32, 88, 73, 86, 9, 9, 9, 9, 9, 49,
+    52, 10, 35, 100, 101, 102, 105, 110, 101, 32, 88, 86,
+    9, 9, 9, 9, 9, 49, 53, 10, 35, 100, 101, 102,
+    105, 110, 101, 32, 88, 86, 73, 9, 9, 9, 9, 9,
+    49, 54, 10, 35, 100, 101, 102, 105, 110, 101, 32, 88,
+    86, 73, 73, 9, 9, 9, 9, 49, 55, 10, 35, 100,
+    101, 102, 105, 110, 101, 32, 88, 86, 73, 73, 73, 9,
+    9, 9, 9, 49, 56, 10, 35, 100, 101, 102, 105, 110,
+    101, 32, 88, 73, 88, 9, 9, 9, 9, 9, 49, 57,
+    10, 35, 100, 101, 102, 105, 110, 101, 32, 88, 88, 9,
+    9, 9, 9, 9, 50, 48, 10, 35, 100, 101, 102, 105,
+    110, 101, 32, 88, 88, 73, 9, 9, 9, 9, 9, 50,
+    49, 10, 35, 100, 101, 102, 105, 110, 101, 32, 88, 88,
+    73, 73, 9, 9, 9, 9, 50, 50, 10, 35, 100, 101,
+    102, 105, 110, 101, 32, 88, 88, 73, 73, 73, 9, 9,
+    9, 9, 50, 51, 10, 35, 100, 101, 102, 105, 110, 101,
+    32, 88, 88, 73, 86, 9, 9, 9, 9, 50, 52, 10,
+    35, 100, 101, 102, 105, 110, 101, 32, 88, 88, 86, 9,
+    9, 9, 9, 9, 50, 53, 10, 35, 100, 101, 102, 105,
+    110, 101, 32, 88, 88, 86, 73, 9, 9, 9, 9, 50,
+    54, 10, 35, 100, 101, 102, 105, 110, 101, 32, 88, 88,
+    86, 73, 73, 9, 9, 9, 9, 50, 55, 10, 35, 100,
+    101, 102, 105, 110, 101, 32, 88, 88, 86, 73, 73, 73,
+    9, 9, 9, 50, 56, 10, 35, 100, 101, 102, 105, 110,
+    101, 32, 88, 88, 73, 88, 9, 9, 9, 9, 50, 57,
+    10, 35, 100, 101, 102, 105, 110, 101, 32, 88, 88, 88,
+    9, 9, 9, 9, 9, 51, 48, 10, 35, 100, 101, 102,
+    105, 110, 101, 32, 88, 88, 88, 73, 9, 9, 9, 9,
+    51, 49, 10, 35, 100, 101, 102, 105, 110, 101, 32, 88,
+    88, 88, 73, 73, 9, 9, 9, 9, 51, 50, 10, 35,
+    100, 101, 102, 105, 110, 101, 32, 88, 88, 88, 73, 73,
+    73, 9, 9, 9, 51, 51, 10, 35, 100, 101, 102, 105,
+    110, 101, 32, 88, 88, 88, 73, 86, 9, 9, 9, 9,
+    51, 52, 10, 35, 100, 101, 102, 105, 110, 101, 32, 88,
+    88, 88, 86, 9, 9, 9, 9, 51, 53, 10, 35, 100,
+    101, 102, 105, 110, 101, 32, 88, 88, 88, 86, 73, 9,
+    9, 9, 9, 51, 54, 10, 35, 100, 101, 102, 105, 110,
+    101, 32, 88, 88, 88, 86, 73, 73, 9, 9, 9, 51,
+    55, 10, 35, 100, 101, 102, 105, 110, 101, 32, 88, 88,
+    88, 86, 73, 73, 73, 9, 9, 9, 51, 56, 10, 35,
+    100, 101, 102, 105, 110, 101, 32, 88, 88, 88, 73, 88,
+    9, 9, 9, 9, 51, 57, 10, 35, 100, 101, 102, 105,
+    110, 101, 32, 88, 76, 9, 9, 9, 9, 9, 52, 48,
+    10, 35, 100, 101, 102, 105, 110, 101, 32, 88, 76, 73,
+    9, 9, 9, 9, 9, 52, 49, 10, 35, 100, 101, 102,
+    105, 110, 101, 32, 88, 76, 73, 73, 9, 9, 9, 9,
+    52, 50, 10, 35, 100, 101, 102, 105, 110, 101, 32, 88,
+    76, 73, 73, 73, 9, 9, 9, 9, 52, 51, 10, 35,
+    100, 101, 102, 105, 110, 101, 32, 88, 76, 73, 86, 9,
+    9, 9, 9, 52, 52, 10, 35, 100, 101, 102, 105, 110,
+    101, 32, 88, 76, 86, 9, 9, 9, 9, 9, 52, 53,
+    10, 35, 100, 101, 102, 105, 110, 101, 32, 88, 76, 86,
+    73, 9, 9, 9, 9, 52, 54, 10, 35, 100, 101, 102,
+    105, 110, 101, 32, 88, 76, 86, 73, 73, 9, 9, 9,
+    9, 52, 55, 10, 35, 100, 101, 102, 105, 110, 101, 32,
+    88, 76, 86, 73, 73, 73, 9, 9, 9, 52, 56, 10,
+    35, 100, 101, 102, 105, 110, 101, 32, 88, 76, 73, 88,
+    9, 9, 9, 9, 52, 57, 10, 35, 100, 101, 102, 105,
+    110, 101, 32, 76, 9, 9, 9, 9, 9, 9, 53, 48,
+    10, 35, 100, 101, 102, 105, 110, 101, 32, 76, 73, 9,
+    9, 9, 9, 9, 53, 49, 10, 35, 100, 101, 102, 105,
+    110, 101, 32, 76, 73, 73, 9, 9, 9, 9, 9, 53,
+    50, 10, 35, 100, 101, 102, 105, 110, 101, 32, 76, 73,
+    73, 73, 9, 9, 9, 9, 53, 51, 10, 35, 100, 101,
+    102, 105, 110, 101, 32, 76, 73, 86, 9, 9, 9, 9,
+    9, 53, 52, 10, 35, 100, 101, 102, 105, 110, 101, 32,
+    76, 86, 9, 9, 9, 9, 9, 53, 53, 10, 35, 100,
+    101, 102, 105, 110, 101, 32, 76, 86, 73, 9, 9, 9,
+    9, 9, 53, 54, 10, 35, 100, 101, 102, 105, 110, 101,
+    32, 76, 86, 73, 73, 9, 9, 9, 9, 53, 55, 10,
+    35, 100, 101, 102, 105, 110, 101, 32, 76, 86, 73, 73,
+    73, 9, 9, 9, 9, 53, 56, 10, 35, 100, 101, 102,
+    105, 110, 101, 32, 76, 73, 88, 9, 9, 9, 9, 9,
+    53, 57, 10, 35, 100, 101, 102, 105, 110, 101, 32, 76,
+    88, 9, 9, 9, 9, 9, 54, 48, 10, 35, 100, 101,
+    102, 105, 110, 101, 32, 76, 88, 73, 9, 9, 9, 9,
+    9, 54, 49, 10, 35, 100, 101, 102, 105, 110, 101, 32,
+    76, 88, 73, 73, 9, 9, 9, 9, 54, 50, 10, 35,
+    100, 101, 102, 105, 110, 101, 32, 76, 88, 73, 73, 73,
+    9, 9, 9, 9, 54, 51, 10, 35, 100, 101, 102, 105,
+    110, 101, 32, 76, 88, 73, 86, 9, 9, 9, 9, 54,
+    52, 10, 35, 100, 101, 102, 105, 110, 101, 32, 76, 88,
+    86, 9, 9, 9, 9, 32, 32, 54, 53, 10, 35, 100,
+    101, 102, 105, 110, 101, 32, 76, 88, 86, 73, 9, 9,
+    9, 9, 54, 54, 10, 35, 100, 101, 102, 105, 110, 101,
+    32, 76, 88, 86, 73, 73, 9, 9, 9, 9, 54, 55,
+    10, 35, 100, 101, 102, 105, 110, 101, 32, 76, 88, 86,
+    73, 73, 73, 9, 9, 9, 54, 56, 10, 35, 100, 101,
+    102, 105, 110, 101, 32, 76, 88, 73, 88, 9, 9, 9,
+    9, 54, 57, 10, 35, 100, 101, 102, 105, 110, 101, 32,
+    76, 88, 88, 9, 9, 9, 9, 9, 55, 48, 10, 35,
+    100, 101, 102, 105, 110, 101, 32, 76, 88, 88, 73, 9,
+    9, 9, 9, 55, 49, 10, 35, 100, 101, 102, 105, 110,
+    101, 32, 76, 88, 88, 73, 73, 9, 9, 9, 9, 55,
+    50, 10, 35, 100, 101, 102, 105, 110, 101, 32, 76, 88,
+    88, 73, 73, 73, 9, 9, 9, 55, 51, 10, 35, 100,
+    101, 102, 105, 110, 101, 32, 76, 88, 88, 73, 86, 9,
+    9, 9, 9, 55, 52, 10, 35, 100, 101, 102, 105, 110,
+    101, 32, 76, 88, 88, 86, 9, 9, 9, 9, 55, 53,
+    10, 35, 100, 101, 102, 105, 110, 101, 32, 76, 88, 88,
+    86, 73, 9, 9, 9, 32, 32, 55, 54, 10, 35, 100,
+    101, 102, 105, 110, 101, 32, 76, 88, 88, 86, 73, 73,
+    9, 9, 9, 55, 55, 10, 35, 100, 101, 102, 105, 110,
+    101, 32, 76, 88, 88, 86, 73, 73, 73, 9, 9, 9,
+    55, 56, 10, 35, 100, 101, 102, 105, 110, 101, 32, 76,
+    88, 88, 73, 88, 9, 9, 9, 9, 55, 57, 10, 35,
+    100, 101, 102, 105, 110, 101, 32, 76, 88, 88, 88, 9,
+    9, 9, 9, 56, 48, 10, 35, 100, 101, 102, 105, 110,
+    101, 32, 76, 88, 88, 88, 73, 9, 9, 9, 9, 56,
+    49, 10, 35, 100, 101, 102, 105, 110, 101, 32, 76, 88,
+    88, 88, 73, 73, 9, 9, 9, 56, 50, 10, 35, 100,
+    101, 102, 105, 110, 101, 32, 76, 88, 88, 88, 73, 73,
+    73, 9, 9, 9, 56, 51, 10, 35, 100, 101, 102, 105,
+    110, 101, 32, 76, 88, 88, 88, 73, 86, 9, 9, 9,
+    56, 52, 10, 35, 100, 101, 102, 105, 110, 101, 32, 76,
+    88, 88, 88, 86, 9, 9, 9, 9, 56, 53, 10, 35,
+    100, 101, 102, 105, 110, 101, 32, 76, 88, 88, 88, 86,
+    73, 9, 9, 9, 56, 54, 10, 35, 100, 101, 102, 105,
+    110, 101, 32, 76, 88, 88, 88, 86, 73, 73, 9, 9,
+    9, 56, 55, 10, 35, 100, 101, 102, 105, 110, 101, 32,
+    76, 88, 88, 88, 86, 73, 73, 73, 9, 9, 56, 56,
+    10, 35, 100, 101, 102, 105, 110, 101, 32, 76, 88, 88,
+    88, 73, 88, 9, 9, 9, 56, 57, 10, 35, 100, 101,
+    102, 105, 110, 101, 32, 88, 67, 9, 9, 9, 9, 9,
+    57, 48, 10, 35, 100, 101, 102, 105, 110, 101, 32, 88,
+    67, 73, 9, 9, 9, 9, 9, 57, 49, 10, 35, 100,
+    101, 102, 105, 110, 101, 32, 88, 67, 73, 73, 9, 9,
+    9, 9, 57, 50, 10, 35, 100, 101, 102, 105, 110, 101,
+    32, 88, 67, 73, 73, 73, 9, 9, 9, 9, 57, 51,
+    10, 35, 100, 101, 102, 105, 110, 101, 32, 88, 67, 73,
+    86, 9, 9, 9, 9, 57, 52, 10, 35, 100, 101, 102,
+    105, 110, 101, 32, 88, 67, 86, 9, 9, 9, 9, 9,
+    57, 53, 10, 35, 100, 101, 102, 105, 110, 101, 32, 88,
+    67, 86, 73, 9, 9, 9, 9, 57, 54, 10, 35, 100,
+    101, 102, 105, 110, 101, 32, 88, 67, 86, 73, 73, 9,
+    9, 9, 9, 57, 55, 10, 35, 100, 101, 102, 105, 110,
+    101, 32, 88, 67, 86, 73, 73, 73, 9, 9, 9, 57,
+    56, 10, 35, 100, 101, 102, 105, 110, 101, 32, 88, 67,
+    73, 88, 9, 9, 9, 9, 57, 57, 10, 35, 100, 101,
+    102, 105, 110, 101, 32, 67, 9, 9, 9, 9, 9, 9,
+    49, 48, 48, 10, 35, 100, 101, 102, 105, 110, 101, 32,
+    67, 73, 32, 9, 9, 9, 9, 9, 49, 48, 49, 10,
+    35, 100, 101, 102, 105, 110, 101, 32, 67, 73, 73, 32,
+    9, 9, 9, 9, 49, 48, 50, 10, 35, 100, 101, 102,
+    105, 110, 101, 32, 67, 73, 73, 73, 9, 9, 9, 9,
+    49, 48, 51, 10, 35, 100, 101, 102, 105, 110, 101, 32,
+    67, 73, 86, 9, 9, 9, 9, 9, 49, 48, 52, 10,
+    35, 100, 101, 102, 105, 110, 101, 32, 67, 86, 9, 9,
+    9, 9, 9, 49, 48, 53, 10, 35, 100, 101, 102, 105,
+    110, 101, 32, 67, 86, 73, 9, 9, 9, 9, 9, 49,
+    48, 54, 10, 35, 100, 101, 102, 105, 110, 101, 32, 67,
+    86, 73, 73, 9, 9, 9, 9, 49, 48, 55, 10, 35,
+    100, 101, 102, 105, 110, 101, 32, 67, 86, 73, 73, 73,
+    9, 9, 9, 9, 49, 48, 56, 10, 35, 100, 101, 102,
+    105, 110, 101, 32, 67, 73, 88, 9, 9, 9, 9, 9,
+    49, 48, 57, 10, 35, 100, 101, 102, 105, 110, 101, 32,
+    67, 88, 9, 9, 9, 9, 9, 49, 49, 48, 10, 35,
+    100, 101, 102, 105, 110, 101, 32, 67, 88, 73, 9, 9,
+    9, 9, 9, 49, 49, 49, 10, 35, 100, 101, 102, 105,
+    110, 101, 32, 67, 88, 73, 73, 9, 9, 9, 9, 49,
+    49, 50, 10, 35, 100, 101, 102, 105, 110, 101, 32, 67,
+    88, 73, 73, 73, 9, 9, 9, 9, 49, 49, 51, 10,
+    35, 100, 101, 102, 105, 110, 101, 32, 67, 88, 73, 86,
+    9, 9, 9, 9, 49, 49, 52, 10, 35, 100, 101, 102,
+    105, 110, 101, 32, 67, 88, 86, 9, 9, 9, 9, 9,
+    49, 49, 53, 10, 35, 100, 101, 102, 105, 110, 101, 32,
+    67, 88, 86, 73, 9, 9, 9, 9, 49, 49, 54, 10,
+    35, 100, 101, 102, 105, 110, 101, 32, 67, 88, 86, 73,
+    73, 9, 9, 9, 9, 49, 49, 55, 10, 35, 100, 101,
+    102, 105, 110, 101, 32, 67, 88, 86, 73, 73, 73, 9,
+    9, 9, 49, 49, 56, 10, 35, 100, 101, 102, 105, 110,
+    101, 32, 67, 88, 73, 88, 9, 9, 9, 9, 49, 49,
+    57, 10, 35, 100, 101, 102, 105, 110, 101, 32, 67, 88,
+    88, 32, 9, 9, 9, 9, 49, 50, 48, 10, 35, 100,
+    101, 102, 105, 110, 101, 32, 67, 88, 88, 73, 9, 9,
+    9, 9, 49, 50, 49, 10, 35, 100, 101, 102, 105, 110,
+    101, 32, 67, 88, 88, 73, 73, 32, 9, 9, 9, 49,
+    50, 50, 10, 35, 100, 101, 102, 105, 110, 101, 32, 67,
+    88, 88, 73, 73, 73, 9, 9, 9, 49, 50, 51, 10,
+    35, 100, 101, 102, 105, 110, 101, 32, 67, 88, 88, 73,
+    86, 32, 9, 9, 9, 49, 50, 52, 10, 35, 100, 101,
+    102, 105, 110, 101, 32, 67, 88, 88, 86, 32, 9, 9,
+    9, 9, 49, 50, 53, 10, 35, 100, 101, 102, 105, 110,
+    101, 32, 67, 88, 88, 86, 73, 32, 9, 9, 9, 49,
+    50, 54, 10, 35, 100, 101, 102, 105, 110, 101, 32, 67,
+    88, 88, 86, 73, 73, 32, 9, 9, 9, 49, 50, 55,
+    10, 35, 100, 101, 102, 105, 110, 101, 32, 67, 88, 88,
+    86, 73, 73, 73, 32, 9, 9, 49, 50, 56, 10, 35,
+    100, 101, 102, 105, 110, 101, 32, 67, 88, 88, 73, 88,
+    32, 9, 9, 9, 49, 50, 57, 10, 35, 100, 101, 102,
+    105, 110, 101, 32, 67, 88, 88, 88, 32, 9, 9, 9,
+    9, 49, 51, 48, 10, 35, 100, 101, 102, 105, 110, 101,
+    32, 67, 88, 88, 88, 73, 32, 9, 9, 9, 49, 51,
+    49, 10, 35, 100, 101, 102, 105, 110, 101, 32, 67, 88,
+    88, 88, 73, 73, 32, 9, 9, 9, 49, 51, 50, 10,
+    35, 100, 101, 102, 105, 110, 101, 32, 67, 88, 88, 88,
+    73, 73, 73, 9, 9, 9, 49, 51, 51, 10, 35, 100,
+    101, 102, 105, 110, 101, 32, 67, 88, 88, 88, 73, 86,
+    32, 9, 9, 9, 49, 51, 52, 10, 35, 100, 101, 102,
+    105, 110, 101, 32, 67, 88, 88, 88, 86, 32, 9, 9,
+    9, 49, 51, 53, 10, 35, 100, 101, 102, 105, 110, 101,
+    32, 67, 88, 88, 88, 86, 73, 32, 9, 9, 9, 49,
+    51, 54, 10, 35, 100, 101, 102, 105, 110, 101, 32, 67,
+    88, 88, 88, 86, 73, 73, 32, 9, 9, 49, 51, 55,
+    10, 35, 100, 101, 102, 105, 110, 101, 32, 67, 88, 88,
+    88, 86, 73, 73, 73, 32, 9, 9, 49, 51, 56, 10,
+    35, 100, 101, 102, 105, 110, 101, 32, 67, 88, 88, 88,
+    73, 88, 32, 9, 9, 9, 49, 51, 57, 10, 35, 100,
+    101, 102, 105, 110, 101, 32, 67, 88, 76, 32, 9, 9,
+    9, 9, 49, 52, 48, 10, 35, 100, 101, 102, 105, 110,
+    101, 32, 67, 88, 76, 73, 32, 9, 9, 9, 9, 49,
+    52, 49, 10, 35, 100, 101, 102, 105, 110, 101, 32, 67,
+    88, 76, 73, 73, 32, 9, 9, 9, 49, 52, 50, 10,
+    35, 100, 101, 102, 105, 110, 101, 32, 67, 88, 76, 73,
+    73, 73, 9, 9, 9, 49, 52, 51, 10, 35, 100, 101,
+    102, 105, 110, 101, 32, 67, 88, 76, 73, 86, 32, 9,
+    9, 9, 49, 52, 52, 10, 35, 100, 101, 102, 105, 110,
+    101, 32, 67, 88, 76, 86, 32, 9, 9, 9, 9, 49,
+    52, 53, 10, 35, 100, 101, 102, 105, 110, 101, 32, 67,
+    88, 76, 86, 73, 32, 9, 9, 9, 49, 52, 54, 10,
+    35, 100, 101, 102, 105, 110, 101, 32, 67, 88, 76, 86,
+    73, 73, 32, 9, 9, 9, 49, 52, 55, 10, 35, 100,
+    101, 102, 105, 110, 101, 32, 67, 88, 76, 86, 73, 73,
+    73, 32, 9, 9, 49, 52, 56, 10, 35, 100, 101, 102,
+    105, 110, 101, 32, 67, 88, 76, 73, 88, 32, 9, 9,
+    9, 49, 52, 57, 10, 35, 100, 101, 102, 105, 110, 101,
+    32, 67, 76, 9, 9, 9, 9, 9, 49, 53, 48, 10,
+    35, 100, 101, 102, 105, 110, 101, 32, 67, 76, 73, 32,
+    9, 9, 9, 9, 49, 53, 49, 10, 35, 100, 101, 102,
+    105, 110, 101, 32, 67, 76, 73, 73, 32, 9, 9, 9,
+    9, 49, 53, 50, 10, 35, 100, 101, 102, 105, 110, 101,
+    32, 67, 76, 73, 73, 73, 32, 9, 9, 9, 49, 53,
+    51, 10, 35, 100, 101, 102, 105, 110, 101, 32, 67, 76,
+    73, 86, 32, 9, 9, 9, 9, 49, 53, 52, 10, 35,
+    100, 101, 102, 105, 110, 101, 32, 67, 76, 86, 32, 9,
+    9, 9, 9, 49, 53, 53, 10, 35, 100, 101, 102, 105,
+    110, 101, 32, 67, 76, 86, 73, 32, 9, 9, 9, 9,
+    49, 53, 54, 10, 35, 100, 101, 102, 105, 110, 101, 32,
+    67, 76, 86, 73, 73, 32, 9, 9, 9, 49, 53, 55,
+    10, 35, 100, 101, 102, 105, 110, 101, 32, 67, 76, 86,
+    73, 73, 73, 32, 9, 9, 9, 49, 53, 56, 10, 35,
+    100, 101, 102, 105, 110, 101, 32, 67, 76, 73, 88, 32,
+    9, 9, 9, 9, 49, 53, 57, 10, 35, 100, 101, 102,
+    105, 110, 101, 32, 67, 76, 88, 9, 9, 9, 9, 9,
+    49, 54, 48, 10, 35, 100, 101, 102, 105, 110, 101, 32,
+    67, 76, 88, 73, 9, 9, 9, 9, 49, 54, 49, 10,
+    35, 100, 101, 102, 105, 110, 101, 32, 67, 76, 88, 73,
+    73, 9, 9, 9, 9, 49, 54, 50, 10, 35, 100, 101,
+    102, 105, 110, 101, 32, 67, 76, 88, 73, 73, 73, 9,
+    9, 9, 49, 54, 51, 10, 35, 100, 101, 102, 105, 110,
+    101, 32, 67, 76, 88, 73, 86, 9, 9, 9, 9, 49,
+    54, 52, 10, 35, 100, 101, 102, 105, 110, 101, 32, 67,
+    76, 88, 86, 9, 9, 9, 9, 49, 54, 53, 10, 35,
+    100, 101, 102, 105, 110, 101, 32, 67, 76, 88, 86, 73,
+    9, 9, 9, 9, 49, 54, 54, 10, 35, 100, 101, 102,
+    105, 110, 101, 32, 67, 76, 88, 86, 73, 73, 9, 9,
+    9, 49, 54, 55, 10, 35, 100, 101, 102, 105, 110, 101,
+    32, 67, 76, 88, 86, 73, 73, 73, 9, 9, 9, 49,
+    54, 56, 10, 35, 100, 101, 102, 105, 110, 101, 32, 67,
+    76, 88, 73, 88, 9, 9, 9, 9, 49, 54, 57, 10,
+    35, 100, 101, 102, 105, 110, 101, 32, 67, 76, 88, 88,
+    9, 9, 9, 9, 49, 55, 48, 10, 35, 100, 101, 102,
+    105, 110, 101, 32, 67, 76, 88, 88, 73, 9, 9, 9,
+    9, 49, 55, 49, 10, 35, 100, 101, 102, 105, 110, 101,
+    32, 67, 76, 88, 88, 73, 73, 9, 9, 9, 49, 55,
+    50, 10, 35, 100, 101, 102, 105, 110, 101, 32, 67, 76,
+    88, 88, 73, 73, 73, 9, 9, 9, 49, 55, 51, 10,
+    35, 100, 101, 102, 105, 110, 101, 32, 67, 76, 88, 88,
+    73, 86, 9, 9, 9, 49, 55, 52, 10, 35, 100, 101,
+    102, 105, 110, 101, 32, 67, 76, 88, 88, 86, 9, 9,
+    9, 9, 49, 55, 53, 10, 35, 100, 101, 102, 105, 110,
+    101, 32, 67, 76, 88, 88, 86, 73, 9, 9, 9, 49,
+    55, 54, 10, 35, 100, 101, 102, 105, 110, 101, 32, 67,
+    76, 88, 88, 86, 73, 73, 9, 9, 9, 49, 55, 55,
+    10, 35, 100, 101, 102, 105, 110, 101, 32, 67, 76, 88,
+    88, 86, 73, 73, 73, 9, 9, 49, 55, 56, 10, 35,
+    100, 101, 102, 105, 110, 101, 32, 67, 76, 88, 88, 73,
+    88, 9, 9, 9, 49, 55, 57, 10, 35, 100, 101, 102,
+    105, 110, 101, 32, 67, 76, 88, 88, 88, 9, 9, 9,
+    9, 49, 56, 48, 10, 35, 100, 101, 102, 105, 110, 101,
+    32, 67, 76, 88, 88, 88, 73, 9, 9, 9, 49, 56,
+    49, 10, 35, 100, 101, 102, 105, 110, 101, 32, 67, 76,
+    88, 88, 88, 73, 73, 9, 9, 9, 49, 56, 50, 10,
+    35, 100, 101, 102, 105, 110, 101, 32, 67, 76, 88, 88,
+    88, 73, 73, 73, 9, 9, 49, 56, 51, 10, 35, 100,
+    101, 102, 105, 110, 101, 32, 67, 76, 88, 88, 88, 73,
+    86, 9, 9, 9, 49, 56, 52, 10, 35, 100, 101, 102,
+    105, 110, 101, 32, 67, 76, 88, 88, 88, 86, 9, 9,
+    9, 49, 56, 53, 10, 35, 100, 101, 102, 105, 110, 101,
+    32, 67, 76, 88, 88, 88, 86, 73, 9, 9, 9, 49,
+    56, 54, 10, 35, 100, 101, 102, 105, 110, 101, 32, 67,
+    76, 88, 88, 88, 86, 73, 73, 9, 9, 49, 56, 55,
+    10, 35, 100, 101, 102, 105, 110, 101, 32, 67, 76, 88,
+    88, 88, 86, 73, 73, 73, 9, 9, 49, 56, 56, 10,
+    35, 100, 101, 102, 105, 110, 101, 32, 67, 76, 88, 88,
+    88, 73, 88, 9, 9, 9, 49, 56, 57, 10, 35, 100,
+    101, 102, 105, 110, 101, 32, 67, 88, 67, 9, 9, 9,
+    9, 9, 49, 57, 48, 10, 35, 100, 101, 102, 105, 110,
+    101, 32, 67, 88, 67, 73, 32, 9, 9, 9, 9, 49,
+    57, 49, 10, 35, 100, 101, 102, 105, 110, 101, 32, 67,
+    88, 67, 73, 73, 32, 9, 9, 9, 49, 57, 50, 10,
+    35, 100, 101, 102, 105, 110, 101, 32, 67, 88, 67, 73,
+    73, 73, 9, 9, 9, 49, 57, 51, 10, 35, 100, 101,
+    102, 105, 110, 101, 32, 67, 88, 67, 73, 86, 9, 9,
+    9, 9, 49, 57, 52, 10, 35, 100, 101, 102, 105, 110,
+    101, 32, 67, 88, 67, 86, 9, 9, 9, 9, 49, 57,
+    53, 10, 35, 100, 101, 102, 105, 110, 101, 32, 67, 88,
+    67, 86, 73, 9, 9, 9, 9, 49, 57, 54, 10, 35,
+    100, 101, 102, 105, 110, 101, 32, 67, 88, 67, 86, 73,
+    73, 9, 9, 9, 49, 57, 55, 10, 35, 100, 101, 102,
+    105, 110, 101, 32, 67, 88, 67, 86, 73, 73, 73, 9,
+    9, 9, 49, 57, 56, 10, 35, 100, 101, 102, 105, 110,
+    101, 32, 67, 88, 67, 73, 88, 9, 9, 9, 9, 49,
+    57, 57, 10, 35, 100, 101, 102, 105, 110, 101, 32, 67,
+    67, 9, 9, 9, 9, 9, 50, 48, 48, 10, 35, 100,
+    101, 102, 105, 110, 101, 32, 67, 67, 73, 9, 9, 9,
+    9, 9, 50, 48, 49, 10, 35, 100, 101, 102, 105, 110,
+    101, 32, 67, 67, 73, 73, 9, 9, 9, 9, 50, 48,
+    50, 10, 35, 100, 101, 102, 105, 110, 101, 32, 67, 67,
+    73, 73, 73, 9, 9, 9, 9, 50, 48, 51, 10, 35,
+    100, 101, 102, 105, 110, 101, 32, 67, 67, 73, 86, 9,
+    9, 9, 9, 50, 48, 52, 10, 35, 100, 101, 102, 105,
+    110, 101, 32, 67, 67, 86, 9, 9, 9, 9, 9, 50,
+    48, 53, 10, 35, 100, 101, 102, 105, 110, 101, 32, 67,
+    67, 86, 73, 9, 9, 9, 9, 50, 48, 54, 10, 35,
+    100, 101, 102, 105, 110, 101, 32, 67, 67, 86, 73, 73,
+    9, 9, 9, 9, 50, 48, 55, 10, 35, 100, 101, 102,
+    105, 110, 101, 32, 67, 67, 86, 73, 73, 73, 9, 9,
+    9, 50, 48, 56, 10, 35, 100, 101, 102, 105, 110, 101,
+    32, 67, 67, 73, 88, 9, 9, 9, 9, 50, 48, 57,
+    10, 35, 100, 101, 102, 105, 110, 101, 32, 67, 67, 88,
+    9, 9, 9, 9, 9, 50, 49, 48, 10, 35, 100, 101,
+    102, 105, 110, 101, 32, 67, 67, 88, 73, 9, 9, 9,
+    9, 50, 49, 49, 10, 35, 100, 101, 102, 105, 110, 101,
+    32, 67, 67, 88, 73, 73, 9, 9, 9, 9, 50, 49,
+    50, 10, 35, 100, 101, 102, 105, 110, 101, 32, 67, 67,
+    88, 73, 73, 73, 9, 9, 9, 50, 49, 51, 10, 35,
+    100, 101, 102, 105, 110, 101, 32, 67, 67, 88, 73, 86,
+    9, 9, 9, 32, 32, 50, 49, 52, 10, 35, 100, 101,
+    102, 105, 110, 101, 32, 67, 67, 88, 88, 9, 9, 9,
+    9, 50, 50, 48, 10, 35, 100, 101, 102, 105, 110, 101,
+    32, 67, 67, 88, 88, 88, 9, 9, 9, 9, 50, 51,
+    48, 10, 35, 100, 101, 102, 105, 110, 101, 32, 67, 67,
+    88, 88, 88, 73, 9, 9, 9, 50, 51, 49, 10, 35,
+    100, 101, 102, 105, 110, 101, 32, 67, 67, 88, 88, 88,
+    73, 73, 9, 9, 9, 50, 51, 50, 10, 35, 100, 101,
+    102, 105, 110, 101, 32, 67, 67, 88, 88, 88, 73, 73,
+    73, 9, 9, 50, 51, 51, 10, 35, 100, 101, 102, 105,
+    110, 101, 32, 67, 67, 88, 88, 88, 73, 86, 9, 9,
+    9, 50, 51, 52, 10, 35, 100, 101, 102, 105, 110, 101,
+    32, 67, 67, 88, 88, 88, 86, 9, 9, 9, 50, 51,
+    53, 10, 35, 100, 101, 102, 105, 110, 101, 32, 67, 67,
+    88, 88, 88, 86, 73, 9, 9, 9, 50, 51, 54, 10,
+    35, 100, 101, 102, 105, 110, 101, 32, 67, 67, 88, 88,
+    88, 86, 73, 73, 9, 9, 50, 51, 55, 10, 35, 100,
+    101, 102, 105, 110, 101, 32, 67, 67, 88, 88, 88, 86,
+    73, 73, 73, 9, 9, 50, 51, 56, 10, 35, 100, 101,
+    102, 105, 110, 101, 32, 67, 67, 88, 88, 88, 73, 88,
+    9, 9, 9, 50, 51, 57, 10, 35, 100, 101, 102, 105,
+    110, 101, 32, 67, 67, 88, 76, 9, 9, 9, 9, 50,
+    52, 48, 10, 35, 100, 101, 102, 105, 110, 101, 32, 67,
+    67, 88, 76, 73, 9, 9, 9, 9, 50, 52, 49, 10,
+    35, 100, 101, 102, 105, 110, 101, 32, 67, 67, 88, 76,
+    73, 73, 9, 9, 9, 50, 52, 50, 10, 35, 100, 101,
+    102, 105, 110, 101, 32, 67, 67, 76, 9, 9, 9, 9,
+    9, 50, 53, 48, 10, 35, 100, 101, 102, 105, 110, 101,
+    32, 67, 67, 76, 73, 32, 9, 9, 9, 9, 50, 53,
+    49, 10, 35, 100, 101, 102, 105, 110, 101, 32, 67, 67,
+    76, 73, 73, 32, 9, 9, 9, 50, 53, 50, 10, 35,
+    100, 101, 102, 105, 110, 101, 32, 67, 67, 76, 73, 73,
+    73, 32, 9, 9, 9, 50, 53, 51, 10, 35, 100, 101,
+    102, 105, 110, 101, 32, 67, 67, 76, 73, 86, 32, 9,
+    9, 9, 50, 53, 52, 10, 35, 100, 101, 102, 105, 110,
+    101, 32, 67, 67, 76, 86, 32, 9, 9, 9, 9, 50,
+    53, 53, 10, 35, 100, 101, 102, 105, 110, 101, 32, 67,
+    67, 76, 86, 73, 32, 9, 9, 9, 50, 53, 54, 10,
+    35, 100, 101, 102, 105, 110, 101, 32, 67, 67, 76, 88,
+    9, 9, 9, 9, 50, 54, 48, 10, 35, 100, 101, 102,
+    105, 110, 101, 32, 67, 67, 76, 88, 88, 9, 9, 9,
+    9, 50, 55, 48, 10, 35, 100, 101, 102, 105, 110, 101,
+    32, 67, 67, 76, 88, 88, 88, 9, 9, 9, 50, 56,
+    48, 10, 35, 100, 101, 102, 105, 110, 101, 32, 67, 67,
+    76, 88, 88, 88, 73, 86, 9, 9, 50, 56, 52, 10,
+    35, 100, 101, 102, 105, 110, 101, 32, 67, 67, 76, 88,
+    88, 88, 86, 9, 9, 32, 32, 50, 56, 53, 10, 35,
+    100, 101, 102, 105, 110, 101, 32, 67, 67, 88, 67, 9,
+    9, 9, 9, 50, 57, 48, 10, 35, 100, 101, 102, 105,
+    110, 101, 32, 67, 67, 67, 9, 9, 9, 9, 32, 32,
+    51, 48, 48, 10, 35, 100, 101, 102, 105, 110, 101, 32,
+    67, 67, 67, 73, 9, 9, 9, 9, 51, 48, 49, 10,
+    35, 100, 101, 102, 105, 110, 101, 32, 67, 67, 67, 73,
+    73, 9, 9, 9, 9, 51, 48, 50, 10, 35, 100, 101,
+    102, 105, 110, 101, 32, 67, 67, 67, 73, 73, 73, 9,
+    9, 9, 51, 48, 51, 10, 35, 100, 101, 102, 105, 110,
+    101, 32, 67, 67, 67, 73, 86, 9, 9, 9, 9, 51,
+    48, 52, 10, 35, 100, 101, 102, 105, 110, 101, 32, 67,
+    67, 67, 86, 9, 9, 9, 9, 51, 48, 53, 10, 35,
+    100, 101, 102, 105, 110, 101, 32, 67, 67, 67, 86, 73,
+    9, 9, 9, 9, 51, 48, 54, 10, 35, 100, 101, 102,
+    105, 110, 101, 32, 67, 67, 67, 86, 73, 73, 9, 9,
+    9, 51, 48, 55, 10, 35, 100, 101, 102, 105, 110, 101,
+    32, 67, 67, 67, 86, 73, 73, 73, 9, 9, 9, 51,
+    48, 56, 10, 35, 100, 101, 102, 105, 110, 101, 32, 67,
+    67, 67, 88, 9, 9, 9, 9, 51, 49, 48, 10, 35,
+    100, 101, 102, 105, 110, 101, 32, 67, 67, 67, 88, 88,
+    9, 9, 9, 9, 51, 50, 48, 10, 35, 100, 101, 102,
+    105, 110, 101, 32, 67, 67, 67, 88, 88, 88, 9, 9,
+    9, 51, 51, 48, 10, 35, 100, 101, 102, 105, 110, 101,
+    32, 67, 67, 67, 88, 76, 9, 9, 9, 9, 51, 52,
+    48, 10, 35, 100, 101, 102, 105, 110, 101, 32, 67, 67,
+    67, 76, 88, 32, 9, 9, 9, 51, 54, 48, 10, 35,
+    100, 101, 102, 105, 110, 101, 32, 67, 68, 9, 9, 9,
+    9, 9, 52, 48, 48, 10, 35, 100, 101, 102, 105, 110,
+    101, 32, 67, 68, 73, 9, 9, 9, 9, 9, 52, 48,
+    49, 10, 35, 100, 101, 102, 105, 110, 101, 32, 67, 68,
+    73, 73, 9, 9, 9, 9, 52, 48, 50, 10, 35, 100,
+    101, 102, 105, 110, 101, 32, 67, 68, 73, 73, 73, 9,
+    9, 9, 9, 52, 48, 51, 10, 35, 100, 101, 102, 105,
+    110, 101, 32, 67, 68, 73, 86, 9, 9, 9, 9, 52,
+    48, 52, 10, 35, 100, 101, 102, 105, 110, 101, 32, 67,
+    68, 86, 9, 9, 9, 9, 9, 52, 48, 53, 10, 35,
+    100, 101, 102, 105, 110, 101, 32, 67, 68, 86, 73, 9,
+    9, 9, 9, 52, 48, 54, 10, 35, 100, 101, 102, 105,
+    110, 101, 32, 67, 68, 86, 73, 73, 9, 9, 9, 9,
+    52, 48, 55, 10, 35, 100, 101, 102, 105, 110, 101, 32,
+    67, 68, 86, 73, 73, 73, 9, 9, 9, 52, 48, 56,
+    10, 35, 100, 101, 102, 105, 110, 101, 32, 67, 68, 73,
+    88, 9, 9, 9, 9, 52, 48, 57, 10, 35, 100, 101,
+    102, 105, 110, 101, 32, 67, 68, 88, 9, 9, 9, 9,
+    9, 52, 49, 48, 10, 35, 100, 101, 102, 105, 110, 101,
+    32, 67, 68, 88, 73, 9, 9, 9, 9, 52, 49, 49,
+    10, 35, 100, 101, 102, 105, 110, 101, 32, 67, 68, 88,
+    73, 73, 9, 9, 9, 9, 52, 49, 50, 10, 35, 100,
+    101, 102, 105, 110, 101, 32, 67, 68, 88, 73, 73, 73,
+    9, 9, 9, 52, 49, 51, 10, 35, 100, 101, 102, 105,
+    110, 101, 32, 67, 68, 88, 73, 86, 9, 9, 9, 9,
+    52, 49, 52, 10, 35, 100, 101, 102, 105, 110, 101, 32,
+    67, 68, 88, 86, 9, 9, 9, 9, 52, 49, 53, 10,
+    35, 100, 101, 102, 105, 110, 101, 32, 67, 68, 88, 86,
+    73, 9, 9, 9, 9, 52, 49, 54, 10, 35, 100, 101,
+    102, 105, 110, 101, 32, 67, 68, 88, 86, 73, 73, 9,
+    9, 9, 52, 49, 55, 10, 35, 100, 101, 102, 105, 110,
+    101, 32, 67, 68, 88, 86, 73, 73, 73, 9, 9, 9,
+    52, 49, 56, 10, 35, 100, 101, 102, 105, 110, 101, 32,
+    67, 68, 88, 73, 88, 9, 9, 9, 9, 52, 49, 57,
+    10, 35, 100, 101, 102, 105, 110, 101, 32, 67, 68, 88,
+    88, 32, 9, 9, 9, 9, 52, 50, 48, 10, 35, 100,
+    101, 102, 105, 110, 101, 32, 67, 68, 88, 88, 73, 9,
+    9, 9, 9, 52, 50, 49, 10, 35, 100, 101, 102, 105,
+    110, 101, 32, 67, 68, 88, 88, 73, 73, 9, 9, 9,
+    52, 50, 50, 10, 35, 100, 101, 102, 105, 110, 101, 32,
+    67, 68, 88, 88, 73, 73, 73, 9, 9, 9, 52, 50,
+    51, 10, 35, 100, 101, 102, 105, 110, 101, 32, 67, 68,
+    88, 88, 73, 86, 9, 9, 9, 52, 50, 52, 10, 35,
+    100, 101, 102, 105, 110, 101, 32, 67, 68, 88, 88, 86,
+    9, 9, 9, 9, 52, 50, 53, 10, 35, 100, 101, 102,
+    105, 110, 101, 32, 67, 68, 88, 88, 86, 73, 32, 9,
+    9, 9, 52, 50, 54, 10, 35, 100, 101, 102, 105, 110,
+    101, 32, 67, 68, 88, 88, 86, 73, 73, 9, 9, 9,
+    52, 50, 55, 10, 35, 100, 101, 102, 105, 110, 101, 32,
+    67, 68, 88, 88, 86, 73, 73, 73, 9, 9, 52, 50,
+    56, 10, 35, 100, 101, 102, 105, 110, 101, 32, 67, 68,
+    88, 88, 73, 88, 9, 9, 9, 52, 50, 57, 10, 35,
+    100, 101, 102, 105, 110, 101, 32, 67, 68, 88, 88, 88,
+    32, 9, 9, 9, 52, 51, 48, 10, 35, 100, 101, 102,
+    105, 110, 101, 32, 67, 68, 88, 76, 32, 9, 9, 9,
+    9, 52, 52, 48, 10, 35, 100, 101, 102, 105, 110, 101,
+    32, 67, 68, 76, 32, 9, 9, 9, 9, 52, 53, 48,
+    10, 35, 100, 101, 102, 105, 110, 101, 32, 67, 68, 76,
+    73, 32, 9, 9, 9, 9, 52, 53, 49, 10, 35, 100,
+    101, 102, 105, 110, 101, 32, 67, 68, 76, 73, 73, 32,
+    9, 9, 9, 52, 53, 50, 10, 35, 100, 101, 102, 105,
+    110, 101, 32, 67, 68, 76, 73, 73, 73, 32, 9, 9,
+    9, 52, 53, 51, 10, 35, 100, 101, 102, 105, 110, 101,
+    32, 67, 68, 76, 73, 86, 32, 9, 9, 9, 52, 53,
+    52, 10, 35, 100, 101, 102, 105, 110, 101, 32, 67, 68,
+    76, 86, 32, 9, 9, 9, 9, 52, 53, 53, 10, 35,
+    100, 101, 102, 105, 110, 101, 32, 67, 68, 76, 86, 73,
+    32, 9, 9, 9, 52, 53, 54, 10, 35, 100, 101, 102,
+    105, 110, 101, 32, 67, 68, 76, 86, 73, 73, 9, 9,
+    9, 52, 53, 55, 10, 35, 100, 101, 102, 105, 110, 101,
+    32, 67, 68, 76, 86, 73, 73, 73, 9, 9, 9, 52,
+    53, 56, 10, 35, 100, 101, 102, 105, 110, 101, 32, 67,
+    68, 76, 73, 88, 9, 9, 9, 9, 52, 53, 57, 10,
+    35, 100, 101, 102, 105, 110, 101, 32, 67, 68, 76, 88,
+    32, 9, 9, 9, 9, 52, 54, 48, 10, 35, 100, 101,
+    102, 105, 110, 101, 32, 67, 68, 76, 88, 88, 9, 9,
+    9, 9, 52, 55, 48, 10, 35, 100, 101, 102, 105, 110,
+    101, 32, 67, 68, 76, 88, 88, 88, 9, 9, 9, 52,
+    56, 48, 10, 35, 100, 101, 102, 105, 110, 101, 32, 68,
+    9, 9, 9, 9, 9, 9, 53, 48, 48, 10, 35, 100,
+    101, 102, 105, 110, 101, 32, 68, 73, 9, 9, 9, 9,
+    9, 53, 48, 49, 10, 35, 100, 101, 102, 105, 110, 101,
+    32, 68, 73, 73, 9, 9, 9, 9, 9, 53, 48, 50,
+    10, 35, 100, 101, 102, 105, 110, 101, 32, 68, 73, 73,
+    73, 9, 9, 9, 9, 53, 48, 51, 10, 35, 100, 101,
+    102, 105, 110, 101, 32, 68, 73, 86, 9, 9, 9, 9,
+    9, 53, 48, 52, 10, 35, 100, 101, 102, 105, 110, 101,
+    32, 68, 86, 9, 9, 9, 9, 9, 53, 48, 53, 10,
+    35, 100, 101, 102, 105, 110, 101, 32, 68, 86, 73, 9,
+    9, 9, 9, 9, 53, 48, 54, 10, 35, 100, 101, 102,
+    105, 110, 101, 32, 68, 86, 73, 73, 9, 9, 9, 9,
+    53, 48, 55, 10, 35, 100, 101, 102, 105, 110, 101, 32,
+    68, 86, 73, 73, 73, 9, 9, 9, 9, 53, 48, 56,
+    10, 35, 100, 101, 102, 105, 110, 101, 32, 68, 73, 88,
+    9, 9, 9, 9, 9, 53, 48, 57, 10, 35, 100, 101,
+    102, 105, 110, 101, 32, 68, 88, 32, 9, 9, 9, 9,
+    9, 53, 49, 48, 10, 35, 100, 101, 102, 105, 110, 101,
+    32, 68, 88, 73, 32, 9, 9, 9, 9, 53, 49, 49,
+    10, 35, 100, 101, 102, 105, 110, 101, 32, 68, 88, 73,
+    73, 32, 9, 9, 9, 9, 53, 49, 50, 10, 35, 100,
+    101, 102, 105, 110, 101, 32, 68, 76, 88, 86, 73, 73,
+    73, 9, 9, 9, 53, 54, 56, 10, 35, 100, 101, 102,
+    105, 110, 101, 32, 68, 76, 88, 88, 86, 9, 9, 9,
+    9, 53, 55, 53, 10, 35, 100, 101, 102, 105, 110, 101,
+    32, 68, 67, 9, 9, 9, 9, 9, 54, 48, 48, 10,
+    35, 100, 101, 102, 105, 110, 101, 32, 68, 67, 88, 88,
+    88, 73, 88, 9, 9, 9, 54, 51, 57, 10, 35, 100,
+    101, 102, 105, 110, 101, 32, 68, 67, 67, 9, 9, 9,
+    9, 9, 55, 48, 48, 10, 35, 100, 101, 102, 105, 110,
+    101, 32, 68, 67, 67, 76, 9, 9, 9, 9, 55, 53,
+    48, 10, 35, 100, 101, 102, 105, 110, 101, 32, 68, 67,
+    67, 67, 9, 9, 9, 9, 56, 48, 48, 10, 35, 100,
+    101, 102, 105, 110, 101, 32, 68, 67, 67, 67, 76, 73,
+    73, 73, 9, 9, 56, 53, 51, 10, 35, 100, 101, 102,
+    105, 110, 101, 32, 67, 77, 9, 9, 9, 9, 9, 57,
+    48, 48, 10, 35, 100, 101, 102, 105, 110, 101, 32, 67,
+    77, 76, 88, 88, 73, 88, 9, 9, 32, 32, 57, 55,
+    57, 10, 35, 100, 101, 102, 105, 110, 101, 32, 77, 9,
+    9, 9, 9, 9, 9, 49, 48, 48, 48, 10, 35, 100,
+    101, 102, 105, 110, 101, 32, 77, 68, 67, 67, 76, 88,
+    88, 86, 73, 9, 9, 49, 55, 55, 54, 10, 35, 100,
+    101, 102, 105, 110, 101, 32, 77, 67, 77, 9, 9, 9,
+    9, 9, 49, 57, 48, 48, 10, 35, 100, 101, 102, 105,
+    110, 101, 32, 77, 67, 77, 88, 32, 9, 9, 9, 32,
+    32, 49, 57, 49, 48, 10, 35, 100, 101, 102, 105, 110,
+    101, 32, 77, 67, 77, 88, 67, 73, 88, 9, 9, 9,
+    49, 57, 57, 57, 10, 35, 100, 101, 102, 105, 110, 101,
+    32, 77, 77, 9, 9, 9, 9, 9, 50, 48, 48, 48,
+    10, 35, 100, 101, 102, 105, 110, 101, 32, 77, 77, 73,
+    86, 9, 9, 9, 9, 50, 48, 48, 52, 10, 35, 100,
+    101, 102, 105, 110, 101, 32, 77, 77, 88, 88, 9, 9,
+    9, 9, 50, 48, 50, 48, 10, 35, 100, 101, 102, 105,
+    110, 101, 32, 77, 77, 88, 88, 73, 9, 9, 9, 9,
+    50, 48, 50, 49, 10, 35, 100, 101, 102, 105, 110, 101,
+    32, 77, 77, 88, 88, 73, 73, 9, 9, 9, 50, 48,
+    50, 50, 10, 35, 100, 101, 102, 105, 110, 101, 32, 77,
+    77, 88, 88, 73, 73, 73, 9, 9, 9, 50, 48, 50,
+    51, 10, 35, 100, 101, 102, 105, 110, 101, 32, 77, 77,
+    88, 88, 73, 86, 9, 9, 9, 50, 48, 50, 52, 10,
+    35, 100, 101, 102, 105, 110, 101, 32, 77, 77, 88, 88,
+    86, 9, 9, 9, 9, 50, 48, 50, 53, 10, 35, 100,
+    101, 102, 105, 110, 101, 32, 77, 77, 67, 9, 9, 9,
+    9, 9, 50, 49, 48, 48, 10, 35, 100, 101, 102, 105,
+    110, 101, 32, 77, 77, 77, 9, 9, 9, 9, 9, 51,
+    48, 48, 48, 10, 35, 100, 101, 102, 105, 110, 101, 32,
+    77, 77, 77, 77, 9, 9, 9, 9, 52, 48, 48, 48,
+    10, 35, 100, 101, 102, 105, 110, 101, 32, 77, 77, 77,
+    77, 88, 67, 86, 73, 9, 9, 52, 48, 57, 54, 10,
+    35, 100, 101, 102, 105, 110, 101, 32, 67, 67, 67, 76,
+    88, 86, 9, 9, 9, 51, 54, 53, 10, 35, 100, 101,
+    102, 105, 110, 101, 32, 67, 67, 67, 76, 88, 86, 73,
+    9, 9, 9, 51, 54, 54, 10, 10, 35, 100, 101, 102,
+    105, 110, 101, 32, 105, 109, 112, 114, 105, 109, 101, 114,
+    101, 32, 9, 112, 114, 105, 110, 116, 102, 10, 35, 100,
+    101, 102, 105, 110, 101, 32, 108, 105, 98, 101, 114, 97,
+    114, 101, 32, 9, 9, 102, 114, 101, 101, 10, 35, 100,
+    101, 102, 105, 110, 101, 32, 109, 101, 109, 111, 114, 105,
+    97, 101, 95, 97, 108, 108, 111, 99, 97, 114, 101, 9,
+    109, 97, 108, 108, 111, 99, 10, 35, 100, 101, 102, 105,
+    110, 101, 32, 101, 120, 105, 114, 101, 9, 9, 9, 9,
+    101, 120, 105, 116, 10, 10, 35, 100, 101, 102, 105, 110,
+    101, 32, 105, 110, 116, 101, 114, 105, 111, 114, 32, 9,
+    9, 115, 116, 97, 116, 105, 99, 32, 10, 35, 100, 101,
+    102, 105, 110, 101, 32, 104, 105, 99, 95, 109, 97, 110,
+    101, 110, 115, 32, 9, 115, 116, 97, 116, 105, 99, 10,
+    35, 100, 101, 102, 105, 110, 101, 32, 117, 110, 105, 118,
+    101, 114, 115, 97, 108, 105, 115, 32, 115, 116, 97, 116,
+    105, 99, 10, 10, 35, 100, 101, 102, 105, 110, 101, 32,
+    70, 73, 76, 69, 32, 70, 73, 76, 85, 77, 10, 10,
+    110, 111, 109, 101, 110, 32, 105, 110, 115, 105, 103, 110,
+    97, 116, 117, 115, 32, 99, 104, 97, 114, 97, 99, 116,
+    101, 114, 9, 105, 56, 59, 10, 110, 111, 109, 101, 110,
+    32, 105, 110, 115, 105, 103, 110, 97, 116, 117, 115, 32,
+    98, 114, 101, 118, 105, 115, 32, 9, 9, 105, 49, 54,
+    59, 10, 110, 111, 109, 101, 110, 32, 105, 110, 115, 105,
+    103, 110, 97, 116, 117, 115, 32, 105, 110, 116, 101, 103,
+    101, 114, 32, 32, 32, 9, 105, 51, 50, 59, 10, 110,
+    111, 109, 101, 110, 32, 105, 110, 115, 105, 103, 110, 97,
+    116, 117, 115, 32, 108, 111, 110, 103, 117, 115, 32, 108,
+    111, 110, 103, 117, 115, 9, 105, 54, 52, 59, 10, 10,
+    110, 111, 109, 101, 110, 32, 115, 105, 103, 110, 97, 116,
+    117, 115, 32, 99, 104, 97, 114, 97, 99, 116, 101, 114,
+    32, 32, 32, 32, 115, 56, 59, 10, 110, 111, 109, 101,
+    110, 32, 115, 105, 103, 110, 97, 116, 117, 115, 32, 98,
+    114, 101, 118, 105, 115, 32, 32, 32, 9, 32, 9, 115,
+    49, 54, 59, 10, 110, 111, 109, 101, 110, 32, 115, 105,
+    103, 110, 97, 116, 117, 115, 32, 105, 110, 116, 101, 103,
+    101, 114, 32, 32, 32, 32, 32, 9, 115, 51, 50, 59,
+    10, 110, 111, 109, 101, 110, 32, 115, 105, 103, 110, 97,
+    116, 117, 115, 32, 108, 111, 110, 103, 117, 115, 32, 108,
+    111, 110, 103, 117, 115, 9, 115, 54, 52, 59, 10, 10,
+    110, 111, 109, 101, 110, 32, 102, 108, 117, 105, 116, 97,
+    110, 115, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32,
+    9, 9, 102, 51, 50, 59, 10, 110, 111, 109, 101, 110,
+    32, 100, 117, 112, 108, 101, 120, 32, 32, 32, 32, 32,
+    32, 32, 32, 32, 9, 9, 9, 9, 102, 54, 52, 59,
+    10, 10, 110, 111, 109, 101, 110, 32, 105, 110, 116, 101,
+    103, 101, 114, 32, 32, 32, 32, 32, 32, 32, 32, 32,
+    32, 32, 32, 9, 9, 98, 51, 50, 59, 10, 10, 110,
+    111, 109, 101, 110, 32, 115, 105, 122, 101, 95, 116, 32,
+    9, 9, 9, 9, 9, 9, 9, 9, 109, 101, 109, 111,
+    114, 105, 97, 101, 95, 105, 110, 100, 101, 120, 59, 10,
+    10, 35, 101, 110, 100, 105, 102, 32, 47, 42, 32, 76,
+    65, 84, 73, 78, 65, 95, 72, 32, 42, 47, 10, 10
+};
+
+constans i32 silva_latina_mensura = 8556;
 
 /* ================= ex silva/fontes/silva_parsare.c ================= */
 
@@ -11571,14 +12912,28 @@ _nodum_erroris_facere (
     redde silva_valor_nodus(nodus);
 }
 
-SilvaParsura*
-silva_lexemata_parsare (
+/* Textura conditionalium (infra definita - ante commissionem) */
+interior SilvaValor
+_texere (
+    SilvaPiscina*                       piscina,
+    SilvaValor                     radix,
+    SilvaExpansio*                 expansio,
+    constans SilvaRegistrumCoctum* tabularium,
+    SilvaParsura*                  parsura);
+
+/* Nucleus circuitus secantis; contextus NIHIL licet (fines motoris
+ * defaltae tunc solae valent); expansio (si praesens) texturam
+ * conditionalium ante commissionem permittit */
+interior SilvaParsura*
+_lexemata_parsare_interna (
     SilvaPiscina*                  piscina,
     constans SilvaXar*             lexemata,
     constans SilvaGrammatica* grammatica,
     constans SilvaOraculum*   oraculum,
     SilvaResolutor            resolutor,
-    vacuum*                   contextus)
+    vacuum*                   datum_resolutoris,
+    SilvaExpansio*            expansio,
+    constans SilvaContextus*  contextus)
 {
     SilvaParsura* parsura;
     SilvaGLR*     glr;
@@ -11608,6 +12963,13 @@ silva_lexemata_parsare (
     {
         redde NIHIL;
     }
+    si (contextus != NIHIL)
+    {
+        glr->limen_frontis = contextus->fines.frons;
+        glr->pergere = contextus->pergere;
+        glr->pergere_datum = contextus->pergere_datum;
+        glr->passus_pergendi = contextus->passus_pergendi;
+    }
 
     parsura = (SilvaParsura*)silva_piscina_allocare(piscina,
         (memoriae_index)magnitudo(SilvaParsura));
@@ -11629,6 +12991,12 @@ silva_lexemata_parsare (
     parsura->transmutationes_negatae = ZEPHYRUM;
     parsura->eventa_marginis_novi = ZEPHYRUM;
     parsura->frons_maxima = ZEPHYRUM;
+    parsura->est_intermissa = FALSUM;
+    parsura->expansio_decisa = FALSUM;
+    parsura->fines_tactae = FALSUM;
+    parsura->segmenta_ultra_limen = ZEPHYRUM;
+    parsura->regiones_textae = ZEPHYRUM;
+    parsura->regiones_omissae = ZEPHYRUM;
 
     numerus = silva_xar_numerus(lexemata);
 
@@ -11691,10 +13059,43 @@ silva_lexemata_parsare (
         si (est_finis_segmenti)
         {
             i32 finis = est_eof ? i : (i + I);
-            SilvaXar* segmentum = silva_xar_creare(piscina,
-                (i32)magnitudo(SilvaToken*));
+            SilvaXar* segmentum;
             i32 k;
             SilvaGLRFructus fructus;
+
+            /* Intermissio (Phase 7): ante segmentum interrogamus;
+             * cauda TOTA [initium..EOF) nodus ERROR unus fit - arbor
+             * completa manet, reconstructio byte-exacta tenet */
+            si (!parsura->est_intermissa
+                && contextus != NIHIL && contextus->pergere != NIHIL
+                && !contextus->pergere(contextus->pergere_datum))
+            {
+                parsura->est_intermissa = VERUM;
+            }
+            si (parsura->est_intermissa)
+            {
+                i32 finis_caudae = (lexema_eof != NIHIL)
+                    ? (numerus - I) : numerus;
+
+                si (finis_caudae > initium)
+                {
+                    SilvaValor nodus_caudae = _nodum_erroris_facere(
+                        piscina, lexemata, initium, finis_caudae,
+                        genus_erroris, locus_lexematum,
+                        numerus_locorum_erroris);
+
+                    si (nodus_caudae.genus == SILVA_VALOR_NODUS)
+                    {
+                        radix = silva_valor_lista_appendere(piscina,
+                            radix, nodus_caudae);
+                        parsura->numerus_errorum++;
+                    }
+                }
+                frange;
+            }
+
+            segmentum = silva_xar_creare(piscina,
+                (i32)magnitudo(SilvaToken*));
 
             per (k = initium; k < finis; k++)
             {
@@ -11730,6 +13131,17 @@ silva_lexemata_parsare (
             si (fructus.frons_maxima > parsura->frons_maxima)
             {
                 parsura->frons_maxima = fructus.frons_maxima;
+            }
+            si (fructus.est_ultra_limen)
+            {
+                parsura->segmenta_ultra_limen++;
+                parsura->fines_tactae = VERUM;
+            }
+            si (fructus.est_intermissus)
+            {
+                /* Segmentum hoc nodus ERROR fit (via ordinaria infra);
+                 * cauda in limite proximo (unus nodus) */
+                parsura->est_intermissa = VERUM;
             }
 
             si (fructus.successus
@@ -11775,24 +13187,583 @@ silva_lexemata_parsare (
         i++;
     }
 
+    /* Textura conditionalium (Phase 7 Chunk B) - ANTE commissionem
+     * (pater fixup nodos novos ambulatione generica tegit) */
+    si (expansio != NIHIL)
+    {
+        radix = _texere(piscina, radix, expansio,
+            grammatica->tabularium, parsura);
+    }
+
     /* Commissio: pater + normalizatio + resolutio (collapse+diarium) */
     parsura->commissio = silva_committere(piscina, radix,
-        grammatica->tabularium, oraculum, resolutor, contextus);
+        grammatica->tabularium, oraculum, resolutor, datum_resolutoris);
     parsura->successus = (parsura->commissio != NIHIL) ? VERUM : FALSUM;
     redde parsura;
 }
 
 SilvaParsura*
-silva_parsare_cum_expansione (
+silva_lexemata_parsare (
+    SilvaPiscina*                  piscina,
+    constans SilvaXar*             lexemata,
+    constans SilvaGrammatica* grammatica,
+    constans SilvaOraculum*   oraculum,
+    SilvaResolutor            resolutor,
+    vacuum*                   datum_resolutoris)
+{
+    redde _lexemata_parsare_interna(piscina, lexemata, grammatica,
+        oraculum, resolutor, datum_resolutoris, NIHIL, NIHIL);
+}
+
+/* ==================================================
+ * Textura conditionalium (Phase 7 Chunk B, simulatio ⑦)
+ *
+ * Passus gubernatoris ANTE commissionem: regiones conditionales in
+ * arborem texuntur ubi limites regionis cum limitibus sententiarum
+ * congruunt (detectio per extenta strati 0); aliter regio degradat
+ * (laminis reinserendis possessa manet - mos hodiernus IPSE est via
+ * regressus). Textura est opt-in per regionem; numeratores
+ * regiones_textae/omissae rationem produnt.
+ *
+ * Formae nodorum (genera-extra, generator eas IMPONIT):
+ *   conditionalis {rami:lista-nodus, finis:lista-token}
+ *   ramus-sumptus {directiva, contentum:lista-nodus, conditio_id}
+ *   ramus-omissus {directiva, cruda:lista-token, conditio_id}
+ * Ordo locorum == ordo octetorum - emissor genericus nihil novi
+ * requirit.
+ * ================================================== */
+
+/* Extentum strati 0 valoris: fons + [initium, finis) super lexemata
+ * radicum. fons -1 = nondum visum; -2 = opacum (catena pasta/chorda
+ * aut fontes mixti) - degradatio conservativa. */
+nomen structura {
+    s32 fons;
+    s32 initium;
+    s32 finis;
+} TexExtentum;
+
+interior vacuum
+_extentum_valoris (SilvaValor valor, TexExtentum* extentum)
+{
+    commutatio (valor.genus)
+    {
+        casus SILVA_VALOR_TOKEN:
+        {
+            SilvaToken* t = valor.datum.token;
+
+            dum (t != NIHIL
+                && (t->origo.genus == SILVA_ORIGO_EXPANSIO
+                    || t->origo.genus == SILVA_ORIGO_CHORDA))
+            {
+                t = (t->origo.genus == SILVA_ORIGO_EXPANSIO)
+                    ? t->origo.datum.expansio.invocatio
+                    : t->origo.datum.stringificatio.primus;
+            }
+            si (t == NIHIL || t->origo.genus != SILVA_ORIGO_FONS)
+            {
+                extentum->fons = -II;  /* opacum */
+                redde;
+            }
+            si (extentum->fons == -II)
+            {
+                redde;
+            }
+            si (extentum->fons == -I)
+            {
+                extentum->fons = t->fons_index;
+                extentum->initium = t->byte_offset;
+                extentum->finis = t->byte_offset + (s32)t->longitudo;
+            }
+            alioquin si (extentum->fons != t->fons_index)
+            {
+                extentum->fons = -II;  /* fontes mixti */
+            }
+            alioquin
+            {
+                si (t->byte_offset < extentum->initium)
+                {
+                    extentum->initium = t->byte_offset;
+                }
+                si (t->byte_offset + (s32)t->longitudo > extentum->finis)
+                {
+                    extentum->finis = t->byte_offset + (s32)t->longitudo;
+                }
+            }
+            frange;
+        }
+        casus SILVA_VALOR_NODUS:
+        {
+            constans SilvaNodus* nodus = valor.datum.nodus;
+            i32 k;
+
+            per (k = ZEPHYRUM; k < nodus->numerus_locorum; k++)
+            {
+                _extentum_valoris(nodus->loci[k], extentum);
+                si (extentum->fons == -II)
+                {
+                    redde;
+                }
+            }
+            frange;
+        }
+        casus SILVA_VALOR_LISTA:
+        {
+            i32 n = silva_valor_lista_numerus(valor);
+            i32 k;
+
+            per (k = ZEPHYRUM; k < n; k++)
+            {
+                SilvaValor* elem = silva_valor_lista_obtinere(valor, k);
+
+                si (elem != NIHIL)
+                {
+                    _extentum_valoris(*elem, extentum);
+                    si (extentum->fons == -II)
+                    {
+                        redde;
+                    }
+                }
+            }
+            frange;
+        }
+        ordinarius:
+            frange;  /* INDEX/NIHIL: sine positione */
+    }
+}
+
+/* Formae generum texturae ex registro PER NOMEN (mos commissionis) */
+nomen structura {
+    s32 genus;
+    i32 numerus_locorum;
+    s32 locus_a;
+    s32 locus_b;
+    s32 locus_c;
+} TexForma;
+
+interior b32
+_formam_texturae_invenire (
+    constans SilvaRegistrumCoctum* tabularium,
+    constans character*            titulus_generis,
+    constans character*            titulus_a,
+    constans character*            titulus_b,
+    constans character*            titulus_c,
+    TexForma*                      forma)
+{
+    i32 i;
+
+    forma->genus = -I;
+    forma->locus_a = -I;
+    forma->locus_b = -I;
+    forma->locus_c = -I;
+    per (i = ZEPHYRUM; i < tabularium->numerus_generum; i++)
+    {
+        constans SilvaTabGenus* genus = &tabularium->genera[i];
+        i32 k;
+
+        si (genus->titulus == NIHIL
+            || strcmp(genus->titulus, titulus_generis) != ZEPHYRUM)
+        {
+            perge;
+        }
+        forma->genus = (s32)i;
+        forma->numerus_locorum = genus->loci_numerus;
+        per (k = ZEPHYRUM; k < genus->loci_numerus; k++)
+        {
+            constans SilvaTabLocus* locus =
+                &tabularium->loci[genus->loci_offset + k];
+
+            si (locus->titulus == NIHIL) perge;
+            si (strcmp(locus->titulus, titulus_a) == ZEPHYRUM)
+            {
+                forma->locus_a = (s32)k;
+            }
+            alioquin si (titulus_b != NIHIL
+                && strcmp(locus->titulus, titulus_b) == ZEPHYRUM)
+            {
+                forma->locus_b = (s32)k;
+            }
+            alioquin si (titulus_c != NIHIL
+                && strcmp(locus->titulus, titulus_c) == ZEPHYRUM)
+            {
+                forma->locus_c = (s32)k;
+            }
+        }
+        redde (forma->locus_a >= ZEPHYRUM
+            && (titulus_b == NIHIL || forma->locus_b >= ZEPHYRUM)
+            && (titulus_c == NIHIL || forma->locus_c >= ZEPHYRUM))
+            ? VERUM : FALSUM;
+    }
+    redde FALSUM;
+}
+
+/* Status passus texturae */
+nomen structura {
+    SilvaPiscina*                       piscina;
+    constans SilvaRegistrumCoctum* tabularium;
+    SilvaParsura*                  parsura;
+    SilvaValor                     radix;    /* lista currens */
+    TexForma                       conditionalis; /* a=rami b=finis */
+    TexForma                       sumptus;  /* a=directiva b=contentum c=conditio_id */
+    TexForma                       omissus;  /* a=directiva b=cruda c=conditio_id */
+} TexturaStatus;
+
+/* Lexemata laminae in locum listae-token appendere */
+interior vacuum
+_laminam_in_locum (SilvaPiscina* piscina, SilvaNodus* nodus, i32 locus,
+    SilvaXar* lamina)
+{
+    i32 k;
+
+    si (lamina == NIHIL)
+    {
+        redde;
+    }
+    per (k = ZEPHYRUM; k < silva_xar_numerus(lamina); k++)
+    {
+        SilvaToken** ref = (SilvaToken**)silva_xar_obtinere(
+            lamina, k);
+
+        si (ref != NIHIL && *ref != NIHIL)
+        {
+            silva_nodus_appendere(piscina, nodus, locus,
+                silva_valor_token(*ref), SILVA_LOCUS_LISTA_TOKEN);
+        }
+    }
+}
+
+/* Regionem unam texere temptare (filiae IAM visitatae - profundum
+ * primum). Detectio: quodque elementum radicis regioni intersecans
+ * PLENE intra corpus rami sumpti iacere debet; elementum opacum
+ * intersectionis incertae = degradatio conservativa. */
+interior vacuum
+_regionem_texere (TexturaStatus* st, SilvaRegio* regio)
+{
+    SilvaRamus* ramus_sumptus = NIHIL;
+    s32 regio_initium;
+    s32 regio_finis;
+    i32 numerus_elementorum;
+    s32 primum_congregatum = -I;
+    s32 primum_post = -I;
+    b32 degradata = FALSUM;
+    b32* congreganda;
+    i32 e;
+
+    si (regio->rami == NIHIL || silva_xar_numerus(regio->rami) == ZEPHYRUM)
+    {
+        st->parsura->regiones_omissae++;
+        redde;
+    }
+
+    /* Fines regionis in offsetibus */
+    {
+        SilvaRamus* primus = *(SilvaRamus**)silva_xar_obtinere(regio->rami,
+            ZEPHYRUM);
+        SilvaToken* t;
+
+        si (primus->directiva == NIHIL
+            || silva_xar_numerus(primus->directiva) == ZEPHYRUM)
+        {
+            st->parsura->regiones_omissae++;
+            redde;
+        }
+        t = *(SilvaToken**)silva_xar_obtinere(primus->directiva, ZEPHYRUM);
+        regio_initium = t->byte_offset;
+    }
+    si (regio->directiva_finis != NIHIL
+        && silva_xar_numerus(regio->directiva_finis) > ZEPHYRUM)
+    {
+        SilvaToken* ultimum = *(SilvaToken**)silva_xar_obtinere(
+            regio->directiva_finis,
+            (i32)(silva_xar_numerus(regio->directiva_finis) - I));
+
+        regio_finis = ultimum->byte_offset + (s32)ultimum->longitudo;
+    }
+    alioquin
+    {
+        regio_finis = 0x7FFFFFFF;  /* imperfecta: apertum ad EOF */
+    }
+
+    /* Ramus sumptus (si quis) */
+    {
+        i32 r;
+
+        per (r = ZEPHYRUM; r < silva_xar_numerus(regio->rami); r++)
+        {
+            SilvaRamus* ramus = *(SilvaRamus**)silva_xar_obtinere(
+                regio->rami, r);
+
+            si (ramus != NIHIL && ramus->est_sumptum)
+            {
+                ramus_sumptus = ramus;
+                frange;
+            }
+        }
+    }
+
+    /* Elementa classificare */
+    numerus_elementorum = silva_valor_lista_numerus(st->radix);
+    congreganda = (b32*)silva_piscina_allocare(st->piscina,
+        (memoriae_index)(magnitudo(b32)
+            * (numerus_elementorum > ZEPHYRUM
+                ? (memoriae_index)numerus_elementorum : I)));
+    si (congreganda == NIHIL)
+    {
+        st->parsura->regiones_omissae++;
+        redde;
+    }
+    per (e = ZEPHYRUM; e < numerus_elementorum; e++)
+    {
+        SilvaValor* elem = silva_valor_lista_obtinere(st->radix, e);
+        TexExtentum extentum;
+
+        congreganda[e] = FALSUM;
+        si (elem == NIHIL || elem->genus != SILVA_VALOR_NODUS)
+        {
+            perge;
+        }
+        extentum.fons = -I;
+        extentum.initium = ZEPHYRUM;
+        extentum.finis = ZEPHYRUM;
+        _extentum_valoris(*elem, &extentum);
+        si (extentum.fons == -II)
+        {
+            /* opacum: positio incerta - degradatio conservativa */
+            degradata = VERUM;
+            frange;
+        }
+        si (extentum.fons == -I || extentum.fons != regio->fons_index)
+        {
+            perge;  /* plagula alia aut sine positione */
+        }
+        si (extentum.finis <= regio_initium)
+        {
+            perge;  /* ante regionem */
+        }
+        si (extentum.initium >= regio_finis)
+        {
+            si (primum_post == -I)
+            {
+                primum_post = (s32)e;
+            }
+            perge;  /* post regionem */
+        }
+        /* intersecat: plene intra corpus rami sumpti aut degradatio */
+        si (ramus_sumptus != NIHIL
+            && ramus_sumptus->corpus_initium >= ZEPHYRUM
+            && extentum.initium >= ramus_sumptus->corpus_initium
+            && extentum.finis <= ramus_sumptus->corpus_finis)
+        {
+            congreganda[e] = VERUM;
+            si (primum_congregatum == -I)
+            {
+                primum_congregatum = (s32)e;
+            }
+        }
+        alioquin
+        {
+            degradata = VERUM;  /* limes transgressus */
+            frange;
+        }
+    }
+    si (degradata)
+    {
+        st->parsura->regiones_omissae++;
+        redde;
+    }
+
+    /* Nodum conditionalis aedificare */
+    {
+        SilvaNodus* nodus_conditionalis;
+        i32 r;
+
+        nodus_conditionalis = silva_nodus_creare(st->piscina,
+            st->conditionalis.genus,
+            st->conditionalis.numerus_locorum);
+        si (nodus_conditionalis == NIHIL)
+        {
+            st->parsura->regiones_omissae++;
+            redde;
+        }
+        per (r = ZEPHYRUM; r < silva_xar_numerus(regio->rami); r++)
+        {
+            SilvaRamus* ramus = *(SilvaRamus**)silva_xar_obtinere(
+                regio->rami, r);
+            constans TexForma* forma;
+            SilvaNodus* nodus_rami;
+
+            si (ramus == NIHIL) perge;
+            forma = ramus->est_sumptum ? &st->sumptus : &st->omissus;
+            nodus_rami = silva_nodus_creare(st->piscina, forma->genus,
+                forma->numerus_locorum);
+            si (nodus_rami == NIHIL)
+            {
+                st->parsura->regiones_omissae++;
+                redde;
+            }
+            _laminam_in_locum(st->piscina, nodus_rami, (i32)forma->locus_a,
+                ramus->directiva);
+            si (ramus->est_sumptum)
+            {
+                per (e = ZEPHYRUM; e < numerus_elementorum; e++)
+                {
+                    si (congreganda[e])
+                    {
+                        SilvaValor* elem = silva_valor_lista_obtinere(
+                            st->radix, e);
+
+                        si (elem != NIHIL)
+                        {
+                            silva_nodus_appendere(st->piscina,
+                                nodus_rami, (i32)forma->locus_b, *elem,
+                                SILVA_LOCUS_LISTA_NODUS);
+                        }
+                    }
+                }
+            }
+            alioquin
+            {
+                _laminam_in_locum(st->piscina, nodus_rami,
+                    (i32)forma->locus_b, ramus->lexemata_cruda);
+            }
+            silva_nodus_ponere(nodus_rami, (i32)forma->locus_c,
+                silva_valor_index((s32)ramus->conditio_id),
+                SILVA_LOCUS_INDEX);
+            silva_nodus_appendere(st->piscina, nodus_conditionalis,
+                (i32)st->conditionalis.locus_a,
+                silva_valor_nodus(nodus_rami),
+                SILVA_LOCUS_LISTA_NODUS);
+        }
+        _laminam_in_locum(st->piscina, nodus_conditionalis,
+            (i32)st->conditionalis.locus_b, regio->directiva_finis);
+
+        /* Listam radicis retexere: congregata sublata, conditionalis
+         * in positione ordinali primi congregati (aut ante primum
+         * elementum eiusdem fontis post regionem; aut in fine) */
+        {
+            SilvaValor lista_nova = silva_valor_lista_nova(st->piscina);
+            i32 positio_insertionis;
+            b32 insertum = FALSUM;
+
+            si (primum_congregatum >= ZEPHYRUM)
+            {
+                positio_insertionis = (i32)primum_congregatum;
+            }
+            alioquin si (primum_post >= ZEPHYRUM)
+            {
+                positio_insertionis = (i32)primum_post;
+            }
+            alioquin
+            {
+                positio_insertionis = numerus_elementorum;
+            }
+            per (e = ZEPHYRUM; e < numerus_elementorum; e++)
+            {
+                SilvaValor* elem;
+
+                si (e == positio_insertionis)
+                {
+                    lista_nova = silva_valor_lista_appendere(
+                        st->piscina, lista_nova,
+                        silva_valor_nodus(nodus_conditionalis));
+                    insertum = VERUM;
+                }
+                si (congreganda[e])
+                {
+                    perge;  /* in contentum migravit */
+                }
+                elem = silva_valor_lista_obtinere(st->radix, e);
+                si (elem != NIHIL)
+                {
+                    lista_nova = silva_valor_lista_appendere(
+                        st->piscina, lista_nova, *elem);
+                }
+            }
+            si (!insertum)
+            {
+                lista_nova = silva_valor_lista_appendere(st->piscina,
+                    lista_nova,
+                    silva_valor_nodus(nodus_conditionalis));
+            }
+            st->radix = lista_nova;
+        }
+    }
+
+    regio->est_texta = VERUM;
+    st->parsura->regiones_textae++;
+}
+
+/* Arbor regionum profundum primum (filiae ante patrem - conditionalis
+ * interior elementum extenti gerens fit quod textura exterior
+ * congregat) */
+interior vacuum
+_regiones_texere (TexturaStatus* st, SilvaXar* regiones)
+{
+    i32 i;
+
+    si (regiones == NIHIL)
+    {
+        redde;
+    }
+    per (i = ZEPHYRUM; i < silva_xar_numerus(regiones); i++)
+    {
+        SilvaRegio* regio = *(SilvaRegio**)silva_xar_obtinere(regiones, i);
+
+        si (regio == NIHIL) perge;
+        _regiones_texere(st, regio->filiae);
+        _regionem_texere(st, regio);
+    }
+}
+
+/* Ingressus passus: radix nova (aut eadem) redditur */
+interior SilvaValor
+_texere (
+    SilvaPiscina*                       piscina,
+    SilvaValor                     radix,
+    SilvaExpansio*                 expansio,
+    constans SilvaRegistrumCoctum* tabularium,
+    SilvaParsura*                  parsura)
+{
+    TexturaStatus st;
+
+    si (expansio == NIHIL || expansio->regiones == NIHIL
+        || silva_xar_numerus(expansio->regiones) == ZEPHYRUM)
+    {
+        redde radix;
+    }
+    si (!_formam_texturae_invenire(tabularium, "conditionalis",
+            "rami", "finis", NIHIL, &st.conditionalis)
+        || !_formam_texturae_invenire(tabularium, "ramus-sumptus",
+            "directiva", "contentum", "conditio_id", &st.sumptus)
+        || !_formam_texturae_invenire(tabularium, "ramus-omissus",
+            "directiva", "cruda", "conditio_id", &st.omissus))
+    {
+        /* generator formas imponit - hic defensivum solum */
+        fprintf(stderr,
+            "silva_parsare: formae texturae in registro absunt\n");
+        redde radix;
+    }
+    st.piscina = piscina;
+    st.tabularium = tabularium;
+    st.parsura = parsura;
+    st.radix = radix;
+    _regiones_texere(&st, expansio->regiones);
+    redde st.radix;
+}
+
+/* Fistula tota: praeprocessor + circuitus secans; contextus NIHIL
+ * licet (via cum_expansione) */
+interior SilvaParsura*
+_fistula_interna (
     SilvaPiscina*                  piscina,
     SilvaExpansio*            expansio,
+    constans SilvaContextus*  contextus,
     constans character*       titulus_fontis,
     constans character*       fons,
     i32                       mensura,
     constans SilvaGrammatica* grammatica,
     constans SilvaOraculum*   oraculum,
     SilvaResolutor            resolutor,
-    vacuum*                   contextus)
+    vacuum*                   datum_resolutoris)
 {
     s32            fons_index;
     SilvaXar*           lexemata;
@@ -11819,16 +13790,164 @@ silva_parsare_cum_expansione (
     expansa = silva_expansio_expandere_reliqua(expansio, reliqua,
         NIHIL);
 
-    parsura = silva_lexemata_parsare(piscina, expansa, grammatica,
-        oraculum, resolutor, contextus);
+    parsura = _lexemata_parsare_interna(piscina, expansa, grammatica,
+        oraculum, resolutor, datum_resolutoris, expansio, contextus);
     si (parsura != NIHIL)
     {
         parsura->lexemata = expansa;
         parsura->expansio = expansio;
         parsura->directivae = directivae;
         parsura->fons_princeps = fons_index;
+
+        /* Vexilla expansionis in fructum (fines/intermissio in
+         * praeprocessore tactae) */
+        si (expansio->expansio_decisa)
+        {
+            parsura->expansio_decisa = VERUM;
+            parsura->fines_tactae = VERUM;
+        }
+        si (expansio->fines_tactae)
+        {
+            parsura->fines_tactae = VERUM;
+        }
+        si (expansio->est_intermissa)
+        {
+            parsura->est_intermissa = VERUM;
+        }
     }
     redde parsura;
+}
+
+SilvaParsura*
+silva_parsare_cum_expansione (
+    SilvaPiscina*                  piscina,
+    SilvaExpansio*            expansio,
+    constans character*       titulus_fontis,
+    constans character*       fons,
+    i32                       mensura,
+    constans SilvaGrammatica* grammatica,
+    constans SilvaOraculum*   oraculum,
+    SilvaResolutor            resolutor,
+    vacuum*                   datum_resolutoris)
+{
+    redde _fistula_interna(piscina, expansio, NIHIL, titulus_fontis,
+        fons, mensura, grammatica, oraculum, resolutor,
+        datum_resolutoris);
+}
+
+/* Receptum contextus expansioni recenti applicare: fines + pergere
+ * deorsum copiantur (strata inferiora contextum nesciunt), praebenda
+ * praebentur, lexica processantur (definitiones eorum a positione 0
+ * fontis principalis valent - positus eventorum novorum in zephyrum
+ * fingitur). */
+interior b32
+_contextum_applicare (
+    SilvaPiscina*                 piscina,
+    SilvaExpansio*           expansio,
+    constans SilvaContextus* contextus)
+{
+    i32 k;
+
+    expansio->limen_lexematum = contextus->fines.lexemata;
+    expansio->limen_generationum = contextus->fines.generationes;
+    expansio->limen_includendi =
+        contextus->fines.profunditas_includendi;
+    expansio->limen_regionum = contextus->fines.profunditas_regionum;
+    expansio->pergere = contextus->pergere;
+    expansio->pergere_datum = contextus->pergere_datum;
+
+    per (k = ZEPHYRUM; k < silva_xar_numerus(contextus->praebenda); k++)
+    {
+        constans SilvaContextusPlagula* plagula =
+            (constans SilvaContextusPlagula*)silva_xar_obtinere(
+                contextus->praebenda, k);
+
+        si (plagula == NIHIL
+            || silva_includendum_praebere(expansio, plagula->via,
+                   plagula->textus, plagula->mensura) < ZEPHYRUM)
+        {
+            redde FALSUM;
+        }
+    }
+
+    per (k = ZEPHYRUM; k < silva_xar_numerus(contextus->lexica); k++)
+    {
+        constans SilvaContextusPlagula* plagula =
+            (constans SilvaContextusPlagula*)silva_xar_obtinere(
+                contextus->lexica, k);
+        s32  fons_index;
+        SilvaXar* lexemata;
+        i32  acta_ante;
+        i32  e;
+
+        si (plagula == NIHIL)
+        {
+            redde FALSUM;
+        }
+        acta_ante = silva_xar_numerus(expansio->acta);
+        fons_index = silva_fons_addere(expansio, plagula->via, FALSUM);
+        si (fons_index < ZEPHYRUM)
+        {
+            redde FALSUM;
+        }
+        lexemata = silva_lexare(piscina, plagula->textus,
+            plagula->mensura, fons_index);
+        si (lexemata == NIHIL)
+        {
+            redde FALSUM;
+        }
+        /* Reliqua lexici abiciuntur (lexicon = directivae; contentum
+         * praeter eas nusquam fluit - documentatum) */
+        silva_expansio_directivas_processare(expansio, lexemata,
+            NIHIL);
+
+        /* Positus in zephyrum: eventa lexici a positione 0 fluxus
+         * PRINCIPALIS valent (positus eorum ad fluxum lexici
+         * pertinebat) */
+        per (e = acta_ante; e < silva_xar_numerus(expansio->acta); e++)
+        {
+            SilvaEventum* eventum =
+                (SilvaEventum*)silva_xar_obtinere(expansio->acta, e);
+
+            si (eventum != NIHIL)
+            {
+                eventum->positus = ZEPHYRUM;
+            }
+        }
+    }
+    redde VERUM;
+}
+
+SilvaParsura*
+silva_parsare_cum_contextu (
+    SilvaPiscina*                  piscina,
+    constans SilvaContextus*  contextus,
+    constans character*       titulus_fontis,
+    constans character*       fons,
+    i32                       mensura,
+    constans SilvaGrammatica* grammatica,
+    constans SilvaOraculum*   oraculum,
+    SilvaResolutor            resolutor,
+    vacuum*                   datum_resolutoris)
+{
+    SilvaExpansio* expansio;
+
+    si (piscina == NIHIL || contextus == NIHIL)
+    {
+        redde NIHIL;
+    }
+    expansio = silva_expansio_creare(piscina);
+    si (expansio == NIHIL)
+    {
+        redde NIHIL;
+    }
+    si (!_contextum_applicare(piscina, expansio, contextus))
+    {
+        redde NIHIL;
+    }
+    redde _fistula_interna(piscina, expansio, contextus,
+        titulus_fontis, fons, mensura, grammatica, oraculum, resolutor,
+        datum_resolutoris);
 }
 
 SilvaParsura*
@@ -11840,7 +13959,7 @@ silva_parsare (
     constans SilvaGrammatica* grammatica,
     constans SilvaOraculum*   oraculum,
     SilvaResolutor            resolutor,
-    vacuum*                   contextus)
+    vacuum*                   datum_resolutoris)
 {
     SilvaExpansio* expansio;
 
@@ -11855,7 +13974,7 @@ silva_parsare (
     }
     redde silva_parsare_cum_expansione(piscina, expansio,
         titulus_fontis, fons, mensura, grammatica, oraculum, resolutor,
-        contextus);
+        datum_resolutoris);
 }
 
 /* ================= ex silva/fontes/silva_scribere.c ================= */
@@ -11979,12 +14098,62 @@ _radix_probata (SilvaToken* token, b32* impurum_out)
             casus SILVA_ORIGO_EXPANSIO:
                 token = token->origo.datum.expansio.invocatio;
                 frange;
+            casus SILVA_ORIGO_CHORDA:
+                /* stringificatio (#x): primus = lexema primum
+                 * argumenti CRUDI (use-site) - intra extentum
+                 * invocationis iacet; quaestio continentiae infra
+                 * extentum invenit (Chunk C - corpus solarii
+                 * deferral coegit, vectis maximalista) */
+                token = token->origo.datum.stringificatio.primus;
+                frange;
             ordinarius:
                 *impurum_out = VERUM;
                 redde token;
         }
     }
     *impurum_out = VERUM;
+    redde NIHIL;
+}
+
+/* Extentum cuius lamina offset radicis CONTINET (pro lexematibus
+ * CHORDA: radix = lexema argumenti INTRA invocationem, non lexema
+ * nominis - quaestio per identitatem fallit, continentia invenit).
+ * Scansio linearis - numeri parvi. */
+interior SilvaXar*
+_extentum_continens (constans SilvaExpansio* expansio,
+    constans SilvaToken* radix)
+{
+    i32 k;
+
+    si (expansio == NIHIL || expansio->extenta == NIHIL)
+    {
+        redde NIHIL;
+    }
+    per (k = ZEPHYRUM; k < silva_xar_numerus(expansio->extenta); k++)
+    {
+        SilvaExtentumInvocationis* extentum =
+            (SilvaExtentumInvocationis*)silva_xar_obtinere(
+                expansio->extenta, k);
+        SilvaToken* primum;
+        SilvaToken* ultimum;
+
+        si (extentum == NIHIL || extentum->lamina == NIHIL
+            || silva_xar_numerus(extentum->lamina) == ZEPHYRUM)
+        {
+            perge;
+        }
+        primum = *(SilvaToken**)silva_xar_obtinere(extentum->lamina,
+            ZEPHYRUM);
+        ultimum = *(SilvaToken**)silva_xar_obtinere(extentum->lamina,
+            (i32)(silva_xar_numerus(extentum->lamina) - I));
+        si (primum->fons_index == radix->fons_index
+            && radix->byte_offset >= primum->byte_offset
+            && radix->byte_offset
+                < ultimum->byte_offset + (s32)ultimum->longitudo)
+        {
+            redde extentum->lamina;
+        }
+    }
     redde NIHIL;
 }
 
@@ -12112,6 +14281,12 @@ _lexema_scribere (SilvaScriptor* st, SilvaToken* token)
     {
         SilvaXar* extentum = _extentum_quaerere(st->expansio, radix);
 
+        si (extentum == NIHIL)
+        {
+            /* radix intra invocationem (lexema argumenti - via
+             * CHORDA/stringificatio): extentum per continentiam */
+            extentum = _extentum_continens(st->expansio, radix);
+        }
         si (extentum != NIHIL && silva_xar_numerus(extentum) > ZEPHYRUM)
         {
             /* invocatio functio-similis: [nomen..')'] lexematim -
@@ -12289,7 +14464,11 @@ _reinserendum_addere (SilvaScriptor* st, SilvaPiscina* piscina, SilvaXar* lamina
     }
 }
 
-/* Laminae ramorum non sumptorum, arbor regionum recursive */
+/* Arbor regionum recursive: regiones NON textae lineas structurales
+ * suas (rami directiva + directiva_finis - β, sim ⑦ C2) et laminas
+ * crudas reinserendis dant; regiones TEXTAE omnia ex ARBORE emittunt
+ * (dominus unus) - sed filiae semper visitantur (regio degradata
+ * intra textam sua adhuc possidet reinserendis). */
 interior vacuum
 _regiones_colligere (SilvaScriptor* st, SilvaPiscina* piscina, SilvaXar* regiones)
 {
@@ -12305,19 +14484,28 @@ _regiones_colligere (SilvaScriptor* st, SilvaPiscina* piscina, SilvaXar* regione
         i32 j;
 
         si (regio == NIHIL) perge;
-        si (regio->rami != NIHIL)
+        si (!regio->est_texta && regio->rami != NIHIL)
         {
             per (j = ZEPHYRUM; j < silva_xar_numerus(regio->rami); j++)
             {
                 SilvaRamus* ramus = *(SilvaRamus**)silva_xar_obtinere(
                     regio->rami, j);
 
-                si (ramus != NIHIL && ramus->lexemata_cruda != NIHIL)
+                si (ramus == NIHIL) perge;
+                si (ramus->directiva != NIHIL)
+                {
+                    _reinserendum_addere(st, piscina, ramus->directiva);
+                }
+                si (ramus->lexemata_cruda != NIHIL)
                 {
                     _reinserendum_addere(st, piscina,
                         ramus->lexemata_cruda);
                 }
             }
+        }
+        si (!regio->est_texta && regio->directiva_finis != NIHIL)
+        {
+            _reinserendum_addere(st, piscina, regio->directiva_finis);
         }
         _regiones_colligere(st, piscina, regio->filiae);
     }

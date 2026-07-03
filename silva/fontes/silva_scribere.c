@@ -141,12 +141,62 @@ _radix_probata (SilvaToken* token, b32* impurum_out)
             casus SILVA_ORIGO_EXPANSIO:
                 token = token->origo.datum.expansio.invocatio;
                 frange;
+            casus SILVA_ORIGO_CHORDA:
+                /* stringificatio (#x): primus = lexema primum
+                 * argumenti CRUDI (use-site) - intra extentum
+                 * invocationis iacet; quaestio continentiae infra
+                 * extentum invenit (Chunk C - corpus solarii
+                 * deferral coegit, vectis maximalista) */
+                token = token->origo.datum.stringificatio.primus;
+                frange;
             ordinarius:
                 *impurum_out = VERUM;
                 redde token;
         }
     }
     *impurum_out = VERUM;
+    redde NIHIL;
+}
+
+/* Extentum cuius lamina offset radicis CONTINET (pro lexematibus
+ * CHORDA: radix = lexema argumenti INTRA invocationem, non lexema
+ * nominis - quaestio per identitatem fallit, continentia invenit).
+ * Scansio linearis - numeri parvi. */
+interior Xar*
+_extentum_continens (constans SilvaExpansio* expansio,
+    constans SilvaToken* radix)
+{
+    i32 k;
+
+    si (expansio == NIHIL || expansio->extenta == NIHIL)
+    {
+        redde NIHIL;
+    }
+    per (k = ZEPHYRUM; k < xar_numerus(expansio->extenta); k++)
+    {
+        SilvaExtentumInvocationis* extentum =
+            (SilvaExtentumInvocationis*)xar_obtinere(
+                expansio->extenta, k);
+        SilvaToken* primum;
+        SilvaToken* ultimum;
+
+        si (extentum == NIHIL || extentum->lamina == NIHIL
+            || xar_numerus(extentum->lamina) == ZEPHYRUM)
+        {
+            perge;
+        }
+        primum = *(SilvaToken**)xar_obtinere(extentum->lamina,
+            ZEPHYRUM);
+        ultimum = *(SilvaToken**)xar_obtinere(extentum->lamina,
+            (i32)(xar_numerus(extentum->lamina) - I));
+        si (primum->fons_index == radix->fons_index
+            && radix->byte_offset >= primum->byte_offset
+            && radix->byte_offset
+                < ultimum->byte_offset + (s32)ultimum->longitudo)
+        {
+            redde extentum->lamina;
+        }
+    }
     redde NIHIL;
 }
 
@@ -274,6 +324,12 @@ _lexema_scribere (SilvaScriptor* st, SilvaToken* token)
     {
         Xar* extentum = _extentum_quaerere(st->expansio, radix);
 
+        si (extentum == NIHIL)
+        {
+            /* radix intra invocationem (lexema argumenti - via
+             * CHORDA/stringificatio): extentum per continentiam */
+            extentum = _extentum_continens(st->expansio, radix);
+        }
         si (extentum != NIHIL && xar_numerus(extentum) > ZEPHYRUM)
         {
             /* invocatio functio-similis: [nomen..')'] lexematim -
@@ -451,7 +507,11 @@ _reinserendum_addere (SilvaScriptor* st, Piscina* piscina, Xar* lamina)
     }
 }
 
-/* Laminae ramorum non sumptorum, arbor regionum recursive */
+/* Arbor regionum recursive: regiones NON textae lineas structurales
+ * suas (rami directiva + directiva_finis - β, sim ⑦ C2) et laminas
+ * crudas reinserendis dant; regiones TEXTAE omnia ex ARBORE emittunt
+ * (dominus unus) - sed filiae semper visitantur (regio degradata
+ * intra textam sua adhuc possidet reinserendis). */
 interior vacuum
 _regiones_colligere (SilvaScriptor* st, Piscina* piscina, Xar* regiones)
 {
@@ -467,19 +527,28 @@ _regiones_colligere (SilvaScriptor* st, Piscina* piscina, Xar* regiones)
         i32 j;
 
         si (regio == NIHIL) perge;
-        si (regio->rami != NIHIL)
+        si (!regio->est_texta && regio->rami != NIHIL)
         {
             per (j = ZEPHYRUM; j < xar_numerus(regio->rami); j++)
             {
                 SilvaRamus* ramus = *(SilvaRamus**)xar_obtinere(
                     regio->rami, j);
 
-                si (ramus != NIHIL && ramus->lexemata_cruda != NIHIL)
+                si (ramus == NIHIL) perge;
+                si (ramus->directiva != NIHIL)
+                {
+                    _reinserendum_addere(st, piscina, ramus->directiva);
+                }
+                si (ramus->lexemata_cruda != NIHIL)
                 {
                     _reinserendum_addere(st, piscina,
                         ramus->lexemata_cruda);
                 }
             }
+        }
+        si (!regio->est_texta && regio->directiva_finis != NIHIL)
+        {
+            _reinserendum_addere(st, piscina, regio->directiva_finis);
         }
         _regiones_colligere(st, piscina, regio->filiae);
     }

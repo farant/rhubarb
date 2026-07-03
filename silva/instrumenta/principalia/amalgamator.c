@@ -165,6 +165,8 @@ interior constans AmalgamaPlagula CAPITA_SILVAE[] = {
     { "silva/fontes/silva_tabulae_sceleti.h", NIHIL, NIHIL, FALSUM, FALSUM },
     { "silva/fontes/silva_glr.h",             NIHIL, NIHIL, FALSUM, FALSUM },
     { "silva/fontes/silva_commissio.h",       NIHIL, NIHIL, FALSUM, FALSUM },
+    { "silva/fontes/silva_contextus.h",       NIHIL, NIHIL, FALSUM, FALSUM },
+    { "silva/fontes/silva_latina_datum.h",    NIHIL, NIHIL, FALSUM, FALSUM },
     { "silva/fontes/silva_parsare.h",         NIHIL, NIHIL, FALSUM, FALSUM },
     { "silva/fontes/silva_scribere.h",        NIHIL, NIHIL, FALSUM, FALSUM }
 };
@@ -178,6 +180,8 @@ interior constans AmalgamaPlagula CORPORA_SILVAE[] = {
     { "silva/fontes/silva_tabulae_sceleti.c", NIHIL, NIHIL, VERUM, FALSUM },
     { "silva/fontes/silva_glr.c",             NIHIL, NIHIL, VERUM, FALSUM },
     { "silva/fontes/silva_commissio.c",       NIHIL, NIHIL, VERUM, FALSUM },
+    { "silva/fontes/silva_contextus.c",       NIHIL, NIHIL, VERUM, FALSUM },
+    { "silva/fontes/silva_latina_datum.c",    NIHIL, NIHIL, VERUM, FALSUM },
     { "silva/fontes/silva_parsare.c",         NIHIL, NIHIL, VERUM, FALSUM },
     { "silva/fontes/silva_scribere.c",        NIHIL, NIHIL, VERUM, FALSUM }
 };
@@ -199,7 +203,8 @@ interior constans character* constans CADENDA_TYPEDEF[] = {
     "SilvaResolutioResponsum", "SilvaResolutor",
     "SilvaResolutioGenus", "SilvaResolutioEventum", "SilvaCommissio",
     "SilvaExpansio", "SilvaGrammatica", "SilvaParsura",
-    "SilvaScriptura", NIHIL
+    "SilvaScriptura", "SilvaFines", "SilvaPergereFunctio",
+    "SilvaContextusPlagula", "SilvaContextus", NIHIL
 };
 
 /* Definitiones tag quas silva.h PLENE possidet (definitio structurae
@@ -207,7 +212,8 @@ interior constans character* constans CADENDA_TYPEDEF[] = {
  * eas solum praenuntiat - definitiones internae manent (interna eas
  * dereferunt). */
 interior constans character* constans CADENDA_DEFINITIO[] = {
-    "SilvaToken", "SilvaValor", "SilvaNodus", "SilvaCaecatio", NIHIL
+    "SilvaToken", "SilvaValor", "SilvaNodus", "SilvaCaecatio",
+    "SilvaContextus", NIHIL
 };
 
 /* Functiones vendicatae quae PUBLICAE manent (extern, in silva.h) */
@@ -876,6 +882,87 @@ _plagulam_processare (Amalgamator* am, constans AmalgamaPlagula* pl)
 }
 
 /* ==================================================
+ * Datum latinum (Phase 7 Chunk A): fontes/silva_latina_datum.{h,c}
+ * ex include/latina.h emittuntur - lexicon compilatum
+ * (silva_contextus_latinam_addere). Series octetorum, non littera
+ * chordae (limes 509 characterum C89). Fons veritatis unus: plagula
+ * eadem quae verbatim vendicatur.
+ * ================================================== */
+
+interior b32
+_latina_datum_emittere (
+    constans character* radix,
+    constans i8*        textus,
+    i32                 mensura)
+{
+    character via[VIA_MAXIMA];
+    FILE* pl;
+    i32 k;
+
+    sprintf(via, "%s/silva/fontes/silva_latina_datum.h", radix);
+    pl = fopen(via, "wb");
+    si (pl == NIHIL)
+    {
+        fprintf(stderr, "amalgamator: %s non apertum\n", via);
+        redde FALSUM;
+    }
+    fprintf(pl,
+        "/* silva_latina_datum.h - Textus latina.h ut datum (Phase 7 Chunk A)\n"
+        " *\n"
+        " * GENERATUM ex include/latina.h per amalgamatorem - NE MANU MUTES\n"
+        " * (regeneratur per silva/amalgamare.sh). Copia compilata definitionum\n"
+        " * latinarum: silva_contextus_latinam_addere eam praebet - \"compiled-in\n"
+        " * defaults\" interview ad litteram, sine fonte veritatis secundo (datum\n"
+        " * IPSA plagula vendicata est).\n"
+        " */\n"
+        "\n"
+        "#ifndef SILVA_LATINA_DATUM_H\n"
+        "#define SILVA_LATINA_DATUM_H\n"
+        "\n"
+        "#include \"latina.h\"\n"
+        "\n"
+        "externus constans character silva_latina_textus[];\n"
+        "externus constans i32       silva_latina_mensura;\n"
+        "\n"
+        "#endif /* SILVA_LATINA_DATUM_H */\n");
+    fclose(pl);
+
+    sprintf(via, "%s/silva/fontes/silva_latina_datum.c", radix);
+    pl = fopen(via, "wb");
+    si (pl == NIHIL)
+    {
+        fprintf(stderr, "amalgamator: %s non apertum\n", via);
+        redde FALSUM;
+    }
+    fprintf(pl,
+        "/* silva_latina_datum.c - GENERATUM ex include/latina.h - "
+        "NE MANU MUTES */\n"
+        "\n"
+        "#include \"silva_latina_datum.h\"\n"
+        "\n"
+        "constans character silva_latina_textus[] = {\n");
+    per (k = ZEPHYRUM; k < mensura; k += XII)
+    {
+        i32 finis = (k + XII < mensura) ? (k + XII) : mensura;
+        i32 j;
+
+        fprintf(pl, "    ");
+        per (j = k; j < finis; j++)
+        {
+            fprintf(pl, (j == k) ? "%d" : ", %d", (int)textus[j]);
+        }
+        fprintf(pl, (finis < mensura) ? ",\n" : "\n");
+    }
+    fprintf(pl,
+        "};\n"
+        "\n"
+        "constans i32 silva_latina_mensura = %d;\n", (int)mensura);
+    fclose(pl);
+    redde VERUM;
+}
+
+
+/* ==================================================
  * Principale
  * ================================================== */
 
@@ -916,6 +1003,14 @@ s32 principale (s32 argc, character** argv)
     si (latina == NIHIL)
     {
         fprintf(stderr, "amalgamator: latina.h non lecta\n");
+        piscina_destruere(piscina);
+        redde I;
+    }
+
+    /* Passus 0: datum latinum in fontes/ emittere (ANTE processionem
+     * plagularum - manifesta silva_latina_datum.{h,c} legunt) */
+    si (!_latina_datum_emittere(am.radix, latina, mensura_latinae))
+    {
         piscina_destruere(piscina);
         redde I;
     }

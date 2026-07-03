@@ -104,6 +104,11 @@ nomen structura {
     b32         est_numquam;    /* #if 0 idioma (litteralis falsa) */
     Xar*        lexemata_cruda; /* ramus non sumptus: lamina cruda; NIHIL si sumptus */
     SilvaRegio* regio;          /* regio continens */
+    s32         corpus_initium; /* offset primi lexematis corporis
+                                 * (post lineam directivae); -1 si
+                                 * corpus vacuum (sim ⑦ C1) */
+    s32         corpus_finis;   /* offset post ultimum lexema corporis;
+                                 * -1 si vacuum */
 } SilvaRamus;
 
 structura SilvaRegio {
@@ -113,6 +118,18 @@ structura SilvaRegio {
     SilvaRegio* pater;          /* regio amplectens; NIHIL si suprema */
     Xar*        filiae;         /* Xar de SilvaRegio* (in ramis sumptis) */
     b32         est_imperfecta; /* EOF ante #endif */
+    b32         est_ultra_modum; /* profunditas ultra limen (Phase 7):
+                                  * NULLUS ramus evaluatur - omnes crudi
+                                  * (degradatio determinata; recursio
+                                  * cessat, octeti supersunt) */
+    Xar*        directiva_finis; /* lexemata lineae #endif; NIHIL si
+                                  * imperfecta (sim ⑦ C1). REGIO lineas
+                                  * structurales suas POSSIDET (β, sim ⑦
+                                  * C2): #if/#elif/#else/#endif numquam
+                                  * in directivae_out intrant */
+    b32         est_texta;       /* in arborem texta (Phase 7 Chunk B):
+                                  * lineae + cruda ex ARBORE emittuntur,
+                                  * non ex reinserendis (dominus unus) */
 };
 
 
@@ -168,7 +185,36 @@ structura SilvaExpansio {
     s32             fons_api;   /* fons syntheticus "<api>"; -1 = nondum */
     TabulaDispersa* tabula_activa; /* tabula temporalis expansionis
                                     * positionalis; NIHIL = tabula viva */
+
+    /* ==== Fines (Phase 7 Chunk A - par 8.2). 0 = infinitum. ====
+     * Fines expansionem DEGRADANT, numquam totalitatem: limine tacto
+     * lexemata reliqua INEXPANSA fluunt (FONS - se ipsa emittunt),
+     * ergo arbor completa et reconstructio byte-exacta etiam sub
+     * finibus tenent. Defaltae generosae in creare positae. */
+    i32 limen_lexematum;     /* fluxus expansus maximus (per generationem) */
+    i32 limen_generationum;  /* generationes expansionis maximae */
+    i32 limen_includendi;    /* profunditas includendi maxima */
+    i32 limen_regionum;      /* profunditas regionum maxima */
+
+    /* Intermissio (SilvaContextus eam ponit; forma cruda ne stratum
+     * inferius contextum noscat): FALSUM redditum = intermitte. */
+    b32     (*pergere)(vacuum* datum);   /* NIHIL = numquam rogare */
+    vacuum*   pergere_datum;
+
+    /* Status finium (productum, non depuratio) */
+    b32 expansio_decisa;      /* expansio trunca (limen lexematum aut
+                               * generationum tactum) */
+    b32 est_intermissa;       /* pergere FALSUM reddidit */
+    b32 fines_tactae;         /* quilibet limen tactus */
+    i32 profunditas_regionum; /* numerator vivus (transiens) */
 };
+
+/* Defaltae finium (tree-sitter habitus: fines generosae SEMPER
+ * activae; hospes eas tollere potest - 0 = infinitum) */
+#define SILVA_LIMEN_LEXEMATUM_DEFALTUM    1048576
+#define SILVA_LIMEN_GENERATIONUM_DEFALTUM C
+#define SILVA_LIMEN_INCLUDENDI_DEFALTUM   XXXII
+#define SILVA_LIMEN_REGIONUM_DEFALTUM     LXIV
 
 SilvaExpansio*
 silva_expansio_creare (
@@ -278,6 +324,13 @@ silva_expansio_macros_ad_lineam (
  * argumenta PLENE prae-expansa intra gradum, substitutio,
  * caecatio extensa (Prosser); RESCAN = generatio proxima.
  * Terminatio per caecationes (finis semanticus, non cap).
+ *
+ * SIMPLIFICATIO PROSSER PERMANENS (disposita Phase 7 Chunk C):
+ * caecatio argumentorum HS_call fertur, non HS_call∩HS_rparen
+ * exacta. Classis divergentiae parenthesibus IMPARIBUS in
+ * corporibus macrorum functio-similium eget; lustrum solarii
+ * (2.3MB C89 veri, 2026-07-03) NULLAM invenit - super-caecatio
+ * classis exoticae accepta, evidentia memorata (phase-log).
  * ================================================== */
 
 /* Una generatio: fluxus novus; *mutatum_out VERUM si quid expansum */

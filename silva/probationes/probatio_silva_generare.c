@@ -447,7 +447,9 @@ s32 principale (vacuum)
             "<genera-extra>"
             "<genus titulus=\"error\" slots=\"tokens:lista-token\"/>"
             "<genus titulus=\"ambiguus\" slots=\"interpretationes:lista-nodus canonica:index\"/>"
-            "<genus titulus=\"conditionalis\" slots=\"rami:lista-nodus\"/>"
+            "<genus titulus=\"conditionalis\" slots=\"rami:lista-nodus finis:lista-token\"/>"
+            "<genus titulus=\"ramus-sumptus\" slots=\"directiva:lista-token contentum:lista-nodus conditio_id:index\"/>"
+            "<genus titulus=\"ramus-omissus\" slots=\"directiva:lista-token cruda:lista-token conditio_id:index\"/>"
             "</genera-extra>"
             "<initium>r</initium></grammatica>");
         CREDO_NON_NIHIL (g);
@@ -468,7 +470,9 @@ s32 principale (vacuum)
             "<genera-extra>"
             "<genus titulus=\"error\" slots=\"tokens:lista-token\"/>"
             "<genus titulus=\"ambiguus\" slots=\"interpretationes:lista-nodus canonica:index\"/>"
-            "<genus titulus=\"conditionalis\" slots=\"rami:lista-nodus\"/>"
+            "<genus titulus=\"conditionalis\" slots=\"rami:lista-nodus finis:lista-token\"/>"
+            "<genus titulus=\"ramus-sumptus\" slots=\"directiva:lista-token contentum:lista-nodus conditio_id:index\"/>"
+            "<genus titulus=\"ramus-omissus\" slots=\"directiva:lista-token cruda:lista-token conditio_id:index\"/>"
             "</genera-extra>"
             "<initium>r</initium></grammatica>");
         CREDO_NON_NIHIL (g);
