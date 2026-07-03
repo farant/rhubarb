@@ -14,3 +14,4 @@
 -Wno-overlength-strings
 -Isilva/fontes
 -Isilva/instrumenta
+-Isilva/amalgama

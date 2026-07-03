@@ -53,8 +53,16 @@ reader's map).
 Build/test: `./silva/compile_probationes.sh [filter]`. Tables:
 `./silva/generare.sh` regenerates fontes/silva_tabulae_*.{h,c} from
 grammatica/*.stml — run it after ANY grammar edit (probatio_silva_tabulae
-breaks loudly if you forget; generated files are committed). Dev-time
-mains live in instrumenta/principalia/ (outside the test link glob).
+breaks loudly if you forget; generated files are committed). Amalgam:
+`./silva/amalgamare.sh` regenerates the COMMITTED deliverable
+silva/amalgama/silva.c and runs its verification gates (standalone
+full-severity compile, hospes host-pollution + equivalence,
+nm-intersection 0) — run it after ANY fontes edit; the suite does NOT
+catch a stale amalgam (silva.h is hand-written; new public API =
+extend it; new use of an excluded vendored function = delete its
+excludenda entry in the amalgamator manifest, the compile clamat).
+Dev-time mains live in instrumenta/principalia/ (outside the test
+link glob).
 Conventions: root CLAUDE.md + the conventions recorded in phase-log
 complexities (i32 is UNSIGNED — s32/s64 for anything signed; never
 `nomen` OR `registrum` as identifiers — both are latina macros
