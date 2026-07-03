@@ -1533,3 +1533,679 @@ spot-check. Named untested paths: three-arm ambiguo-append,
 multi-accept root wrap (first 3-way/multi-accept grammar owns them).
 Next: Phase 5 — Scribere (byte-exact roundtrip emitter; cursor.c
 byte-identical).
+
+### Phase 5 pre-INTENTIO notes (2026-07-02, protocol reads done early)
+
+The Phase 5 protocol reads were done ahead of the INTENTIO (full
+phase-log audit clean; spec §3.4/§6/§8.3; the v1 trivia graveyard in
+arbor_syntaxis.worklog.md end-to-end; arbor2_scribere.c end-to-end).
+Findings and Fran-stated requirements to fold into the INTENTIO:
+
+1. **The expansion boundary is Phase 5's genuinely new design work.**
+   arbor2/v1 only ever roundtripped by NOT expanding (PRESERVARE/HYBRID
+   + synthetic-trivia hand-patches — the ugliest graveyard section).
+   Silva parses the EXPANDED stream; cursor.c (the M1 bar) is saturated
+   with latina macros. Emission must: (a) at EXPANSIO-origo tokens,
+   emit the layer-0 INVOCATION (origo invocatio = FONS token with real
+   trivia) exactly once per invocation instance; (b) re-insert
+   directive LINES from the journal/regions (they never enter the
+   tree; journal positus records where they stood). Object-like macros
+   (all of latina) are the required case; function-like invocation
+   extents (parens/commas absent from the expanded stream) are likely
+   a named deferral. Candidate for a mini-simulation ⑥ before coding.
+2. **Malformed content roundtrips (Fran, explicit).** ERROR nodes hold
+   skipped tokens, so this is reachable — and the incolumitas fuzz
+   assertion upgrades to the full-pipeline property: any bytes →
+   parse → emit == original bytes. That oracle will stress directive
+   re-insertion on garbage (half-open regions, stray #) relentlessly.
+3. **Transformation fidelity (Fran, explicit): untouched subtrees
+   byte-for-byte; touched seams minimally disrupted.** Two rules:
+   (a) emission is a PURE STRUCTURAL WALK, never position-dependent —
+   no byte_offset ordering, no neighbor reads (arbor2 compared
+   linea/columna at emission; a moved subtree would emit wrongly);
+   moved/cloned subtrees then emit their bytes wherever they land, and
+   single-owner trivia localizes any disruption to the replaced node.
+   (b) The missing-trivia policy is ONE decision, not three: inserted
+   nodes, expanded tokens (the parked layer-N spacing item), and
+   formatter output are the same problem — per §8.3, comments are
+   content (always preserved), whitespace is style (default profile
+   where absent, stored trivia always wins where present).
+4. **Generic emission needs a slot-order guarantee.** The emitter is
+   one generic loci walk (killing arbor2's 1,100-line hand switch),
+   but slot layouts unify ACROSS productions of a genus — the
+   generator must validate that all productions of a genus map slots
+   in consistent RHS order (or nodes carry production id, which "code
+   is a database" would welcome anyway).
+5. **Mined from arbor2_scribere.c**: AMBIGUUS must emit the CANONICA
+   (arbor2 emitted interpretation[0]); ERROR emission must be total
+   (arbor2 SKIPPED error nodes — silent byte loss); unknown genus
+   fails loud (§3.4); EOF lexema_finis tail trivia is owed by the
+   emitter (Chunk A note).
+
+
+## Phase 5 — Scribere
+
+### INTENTIO (2026-07-02)
+
+**What**: fontes/silva_scribere.{h,c} — the byte-exact roundtrip
+emitter, closing the token→tree→bytes chain. The M1 §6 bar: cursor.c
+byte-identical through the FULL pipeline (latina macros expanding and
+all). Plus the supporting work: generator slot-order validation, the
+driver capturing directive lines, and the property-net upgrades
+(incolumitas/fidelitas/mensura).
+
+**Protocol reads done before this entry** (pre-INTENTIO notes above,
+plus): silva_token.h, silva_expandere.h, silva_nodus.h,
+silva_tabulae.h registrum types, the driver's preprocessor call site.
+Two discoveries from those reads reshaped the plan:
+- **directivas_processare ALREADY retains directive lines** via its
+  directivae_out parameter (Xar of Xar de SilvaToken*, one logical
+  line per entry) — the driver just passes NIHIL today
+  (silva_parsare.c:323). Directive re-insertion has its data source;
+  no expander surgery needed.
+- **PASTA origo carries NO invocatio** (sinister/dexter operands
+  only), so a ## token's radix can land in the DEFINING file, not the
+  use site. Pasta joins the named fail-loud deferrals below.
+
+**Design decisions (carried in from the reads):**
+
+1. **Two emission entries, two contracts.**
+   - `silva_scribere_nodum` — subtree emission, PURE STRUCTURAL WALK:
+     loci in layout order; TOKEN → per-token emit (reuse the
+     scissurae-aware primitive from silva_lexema — the fidelity
+     property already proves it); NODUS → recurse; LISTA → view
+     elements in order; INDEX/NIHIL → skip. NEVER position-dependent
+     (no byte_offset ordering, no neighbor reads — arbor2's
+     linea/columna comparison is the named anti-pattern). This is
+     what makes untouched subtrees byte-exact under transformation.
+   - `silva_scribere_fontem` — file-level layer-0 reconstruction of
+     ONE fons: tree + directivae + EOF lexema_finis tail trivia.
+     Position-MERGE of directive lines is legitimate HERE ONLY
+     (directives are layer-0 stream artifacts, not tree residents
+     until CONDITIONALIS threading, Phase 7 — named).
+2. **Genus-agnostic walk; three structural exceptions read from the
+   registrum BY NAME** (the commissio pattern): AMBIGUUS → emit the
+   CANONICA interpretation only; ERROR → emit the held token list
+   (totality — recovery bytes survive); unknown genus or unexpected
+   valor tag → FAIL LOUD (successus FALSUM + sedes), never skip.
+3. **Expansion boundary rule (the genuinely new work).** A tree token
+   with origo != FONS is not emitted as itself; the layer-0
+   INVOCATION is emitted instead, ONCE per invocation instance
+   (dedup: consecutive corpus tokens of one instance share the same
+   invocatio pointer). Object-like macros — all of latina, all
+   cursor.c needs — are the required case. NAMED fail-loud
+   deferrals: function-like invocation extents (the invocation's
+   parens/args are absent from the expanded stream; detectable via
+   SilvaMacroDef est_functio), PASTA (no invocatio — see above),
+   CHORDA/stringificatio. Candidate mechanism if the corpus forces
+   function-like: the expander records invocation-extent (invocatio
+   token → last consumed layer-0 token) in a side table on
+   SilvaExpansio at expansion time — cheap, non-invasive to the
+   immutable origo. Simulation decides.
+4. **Include boundaries**: tokens whose radix fons_index != the
+   target fons are skipped (their bytes belong to the included
+   file's own reconstruction); the #include directive line is
+   emitted in their place. Guard-skipped re-includes
+   (est_praetermissa) emit their line only. Unknown includes
+   (learning mode) — simulation traces whether the line lands in
+   directivae_out.
+5. **Simulation ⑥ opens Chunk B** (CULTURA: mid-phase, against
+   shipped code). Paper-trace cursor.c + a nested-include fixture +
+   fuzz shapes (est_imperfecta regions, stray CANCELLUM) through the
+   real structs. Must trace: multi-token-body invocation dedup,
+   include skip + line re-insertion, unknown-include path,
+   guard-file re-include, EOF tail trivia placement, whether
+   function-like extents are cheap enough to just build.
+6. **Slot-order validation (generator).** Generic emission is
+   correct only if every production of a genus maps slots in layout
+   order — add generation-time validation: mapped locus indices in
+   RHS order must be strictly increasing, per production; violation
+   = generation error naming the production id. Path back if a real
+   grammar needs divergent orders: production id on nodes ("code is
+   a database" welcomes it anyway) — named, unbuilt.
+7. **Missing-trivia policy — ONE decision** (closes the parked
+   Phase 2 layer-N spacing item). Stored trivia always wins. In the
+   roundtrip emitter, absent trivia emits NOTHING — the boundary
+   rule means roundtrip never legitimately meets a zero-trivia
+   token, so the fidelity oracle exposes any hole loudly. The
+   style-default-whitespace hook (for transformation-inserted nodes
+   and formatter output, §8.3) lands with the formatter milestone;
+   layer-N VIEW emission (render an expanded layer as text) is a
+   query-milestone feature riding the same hook. Owners named.
+8. **Output**: chorda_aedificator (not arbor2's byte-at-a-time Xar).
+   Fructus SilvaScriptura {successus, chorda, sedes/diagnostic on
+   failure}.
+
+**Chunks:**
+- **A — generic tree emitter + slot-order validation.** nodum +
+  fontem for directive-free/macro-free inputs; generator validation
+  + regenerate both grammars; ERROR/AMBIGUUS/EOF handling; probatio:
+  graveyard micro-shapes (empty list, multi-line, irregular
+  whitespace, tabs), ERROR segments, `foo * bar;` emits byte-exact
+  BOTH pre- and post-collapse (collapse must not change bytes),
+  imparilis transmutation case; the 125-input syntaxis corpus
+  through parse→emit==input (ERROR-heavy — proves totality).
+- **B — layer-0 reconstruction.** Simulation ⑥ first (file in
+  project-specs/ if it earns one; complexities in the schema). Then:
+  driver captures directivae (SilvaParsura grows the field);
+  boundary rule + dedup; include skip/insert; fail-loud deferral
+  detection; **cursor.c byte-identical with latina.h praebere'd**
+  (the M1 bar); latina.h reconstructs as its own fons; the 78-file
+  corpus through parse→emit==input (no praebere: mostly-FONS +
+  directive re-insertion + self-defined object macros; if any file
+  self-defines-and-uses a function-like macro, implement extents
+  rather than shrink the bar — maximalist default).
+- **C — the property net + mensura.** Incolumitas stage 4: all 400
+  fuzz specimens through parse→emit==input — the malformed-content
+  roundtrip requirement becomes the system's strongest standing
+  oracle; fidelitas probatio upgraded from lex→emit to
+  parse→emit over the corpus; mensura gains emission timing.
+
+**Exit criteria**: suite green; cursor.c byte-identical via the full
+pipeline; corpus 78/78 and syntaxis 125/125 tree-fidelity; fuzz
+400/400 tree-fidelity; slot-order validation active; deferrals and
+policy owners logged; RELATIO written.
+
+**Explicitly NOT Phase 5** (named, with owners): STML serialization
+(silva_stml — own module, 1.0 scope); formatter + style profiles
+(§8.3, post-substrate); layer-N view emission (query milestone);
+CONDITIONALIS-in-tree emission (Phase 7 threading); function-like/
+pasta/stringificatio boundaries IF the corpus doesn't force them
+(first grammar/corpus that does owns them — fail-loud until then).
+
+### Chunk A — COMPLETE (2026-07-02)
+
+probatio_silva_scribere 64/64 (63 on first run — one TEST slip, not
+a code bug: recanonicare requires a non-NIHIL oraculum, matching the
+commissio probatio's usage). Suite 22/22, 1,084 assertions.
+**The headline: the full syntaxis v1 corpus (125 inputs) roundtrips
+through parse→emit BYTE-EXACT on the first run** — and since the
+sceletum can't parse most real C89, that fidelity flows through
+ERROR nodes: recovery totality (nothing dropped, ever) is now a
+proven property, not a design intention. Fran's malformed-content
+requirement has its first standing evidence.
+
+What landed:
+- **silva_lexema_emittere_in** — the per-token emission primitive
+  (trivia ante + valor with scissurae reinserted + trivia post)
+  extracted from the stream emitter; ONE fidelity implementation
+  shared by lexer oracle and tree emitter.
+- **fontes/silva_scribere.{h,c}** — SilvaScriptura fructus
+  {successus, textus, causa, sedes}; the generic walk (loci in
+  layout order, tagged dispatch; LISTA via views); AMBIGUUS emits
+  the CANONICA interpretation only (form read from the registrum BY
+  NAME, commissio pattern); ERROR needs NO special case (its single
+  lista-token locus emits via the generic walk — totality gratis);
+  unknown genus / corrupt ambiguus form / out-of-range canonica =
+  fractura CLARA. Chunk A conservatism: origo != FONS or foreign
+  fons_index = fractura naming Chunk B ("limes expansionis") — the
+  probatio pins `#define T int\nT x;` as a LOUD failure today, to be
+  flipped into a fidelity assertion when Chunk B lands.
+- **Three entries**: scribere_valorem / scribere_nodum (pure
+  structural walk — the transformation contract) /
+  scribere_fontem(parsura, tabularium, fons_index) (adds EOF
+  lexema_finis tail trivia; Chunk B adds directivae).
+- **Generator, two validations** (both regenerated grammars pass):
+  S19 extended to NON-terminals (unmapped non-terminal in a
+  genus/modus production = error — emission totality; previously
+  only terminals were checked, so a subtree's bytes could silently
+  vanish); slot-order validation (per production, mapped locus
+  indices in RHS order must be monotone non-decreasing in the
+  genus layout — the guarantee that makes ONE generic emitter
+  correct for every genus; divergent-order and consistent-order
+  grammars both pinned in probatio_silva_generare, now 57).
+- **Fixed in passing**: latent NULL-deref in the generator's S19
+  error path (printed prod->id unconditionally; modus productions
+  may lack id) — error message now guards id and names the symbol
+  kind.
+- **Byte-identity across resolution proven**: `foo * bar;` emits
+  identical bytes pre-collapse, post-collapse (oracle in driver),
+  AND after a recanonicare flip 0→1 — interpretations share tokens,
+  so emission is independent of the canonical choice; the probatio
+  asserts it rather than assumes it.
+- **Subtree emission documents the attachment rule**: second
+  statement of `int x;\nint y;\n` emits `int y;\n` — the first
+  `\n` is the previous `;`'s trailing trivia (deepest-node-ending
+  ownership), its own trailing `\n` rides along. Moved-subtree
+  fidelity behaves exactly as §3.4 predicts.
+
+Complexities: none structural — the INTENTIO design survived
+first contact. Next: Chunk B (simulation ⑥ first: expansion
+boundary + directive re-insertion; cursor.c is the bar).
+
+### Simulation ⑥ — COMPLETE (2026-07-02): layer-0 reconstruction
+
+project-specs/silva-simulatio-6.md — pretend-implementation of the
+Chunk B reconstruction path, every claim verified against source
+(line-referenced). Headline: **the design survives; two mechanics
+turned out already built** (directive capture is total, guard lines
+included — "tres directivae captae"; untaken arms already persist as
+lexemata_cruda). Eight complexities in the register (C1-C8), the
+load-bearing ones: C1 one-directivae-stream-for-all-fontes (filter by
+fons_index); C2 untaken arms = third byte source (reinserenda queue);
+C3 attachment rules make the byte partition EXACT (nothing to build —
+the trivia invariant does the work); C4 boundary arm = radix +
+consecutive-run dedup by pointer; C6 included files' EOF dropped but
+retrievable from includenda (latina.h tail bytes). Two decisions for
+Fran: C5 function-like extents (~30 lines, nothing forces them —
+recommend build now) and C7 guard-predefined-custos hole (recommend
+defer + loud fracture). Estimated Chunk B: ~120 lines scribere, ~10
+driver, ~30 expander if extents approved.
+
+**Decisions (Fran, same day): C5 = BUILD NOW. C7 = FIX — via the
+untaken-arm model** (Fran's "out of scope but never lost" instinct):
+predefined-custos guard files route through the NORMAL region walker
+instead of guard transparency — #ifndef evaluates false, interior
+becomes an honest lexemata_cruda arm, lines captured normally.
+~3-line fix, zero new scribere code, semantically queryable. Chunk B
+scope is now fixed: driver capture + boundary arm (radix/dedup/chain
+check) + reinserenda queue + included-EOF lookup + extents + C7 fix
++ fixtures (flip Chunk A's fail-loud test, preprocessor_test shape,
+cursor.c closure bar, latina.h fons, fuzz shapes, corpus).
+
+### Chunk B — COMPLETE (2026-07-02): layer-0 reconstruction
+
+Suite 22/22, 1,140 assertions (probatio_silva_scribere now 110).
+**THE M1 §6 BAR PASSES: cursor.c reconstructs byte-identical through
+the full pipeline with latina.h praebere'd** — the probatio verifies
+the bar is not vacuous (silva_expansio_quaerere("si") non-NIHIL: the
+keyword macros really expanded, and the boundary rule really walked
+them back). cursor.h and latina.h ALSO reconstruct byte-exact as
+their own fontes (latina.h = pure directives + EOF-tail from
+includenda, sim ⑥ C6 confirmed in the flesh).
+
+What landed (per sim ⑥, all eight complexities embodied):
+- **Expander**: SilvaExtentumInvocationis + exp->extenta — layer-0
+  function-like invocation slices [nomen..')'] recorded in the
+  generation walker (C5, Fran: build now); the C7 fix (predefined
+  custos → normal region walker, interior = honest untaken arm —
+  ~3 lines as predicted) with its behavior pinned in
+  probatio_silva_regiones (region shape + 2 captured lines + interior
+  cruda + cpp semantics: interior #define never registers).
+- **Driver**: silva_parsare_cum_expansione (caller-prepared expansio:
+  praebere + macro injection — the SilvaContextus seam, Phase 7 rides
+  it); silva_parsare = thin wrapper; SilvaParsura gains directivae
+  (capture switched on) and fons_princeps.
+- **Scribere boundary arm** (_lexema_scribere): radix via the
+  invocation chain with purity check (PASTA/CHORDA/API → fractura
+  clara, named deferrals); dedup by EMITTED-RANGE (fons_ultimus +
+  emissum_usque) — covers multi-token bodies split across slots,
+  adjacent same-macro invocations, and arg-derived tokens inside
+  extents, all without pointer-set state; extent emission is
+  per-token WITH reinserenda flush (directive-inside-arguments stays
+  byte-exact even in fuzz shapes); expansio NIHIL (subtree entries
+  without context) → fractura clara.
+- **Reinserenda queue** (fontem): directive lines (fons-filtered —
+  sim ⑥ C1) + untaken-arm cruda from the region tree recursively
+  (C2), xar_ordinare by offset, flushed before each layer-0 unit;
+  EOF for included fontes fetched from includenda (C6).
+- **Probatio**: Chunk A's fail-loud test FLIPPED to fidelity
+  (`#define T int\nT x;` roundtrips; subtree without context still
+  fractures, with context emits "T x;"); object-like (6 shapes incl.
+  multi-generation + #undef point-in-time), function-like extents
+  (5 incl. macro-in-arg and double invocation), regions/directives
+  (9 incl. imperfecta, orphan #endif, #pragma passthrough, unknown
+  include, the preprocessor_test composite), multi-fons includes
+  (guard file reconstructs, re-include praetermissa keeps both
+  lines), cursor.c closure.
+
+Complexity (one, found by the failing tests on first run):
+- **fons princeps is NOT fons 0 under praebere** — discovered-while:
+  first run of the include fixtures (including-file reconstruction
+  compared modulus.h's bytes against the main file's); consists-in:
+  silva_includendum_praebere calls fons_addere, so praebere'd files
+  claim indices BEFORE the main file — every consumer assuming
+  "main = 0" breaks the moment a context is prepared; consequences:
+  reconstruction targeted the wrong fons silently (test caught it —
+  the bytes were another file's); handled-by: SilvaParsura gains
+  fons_princeps (driver records it; -1 for lexemata entry); tests
+  and future consumers use it instead of 0. API lesson: indices
+  that "start at zero for the obvious thing" stop being obvious the
+  moment preparation precedes creation.
+
+Remaining Phase 5: Chunk C — the property net (incolumitas stage 4:
+fuzz parse→emit==input 400/400; fidelitas upgraded from lex→emit to
+tree-emit over the 78-file corpus; mensura emission timings).
+
+### Chunk C — COMPLETE (2026-07-02): the property net
+
+First run green across the board. Suite 22/22, 1,218 assertions.
+- **Fidelitas**: the corpus now runs BOTH oracles per file —
+  emittere(lexare(x))==x AND scribere(parsare(x))==x. 78/78 on both.
+  The tree oracle runs the WHOLE pipeline: self-defined macros
+  expand (boundary rule live), unknown includes stay learning-mode
+  (lines captured + reinserted), recovery ERROR nodes carry real
+  C89. Pre-corpus checked: no ## or # stringify anywhere in the 78
+  files, so the named deferrals cannot trip it.
+- **Incolumitas stage 4 — the strongest standing oracle**: all 400
+  deterministic fuzz specimens (raw bytes incl. NUL + C-shaped)
+  now assert scribere(parsare(x)) == x. 400/400. Fran's
+  malformed-content-roundtrips requirement is a permanent assertion,
+  not a design intention. (Fixed seed = the specimens never change;
+  a seed change that produces a pasta-triggering specimen would
+  fail LOUDLY and force the deferral decision then.)
+- **Mensura**: scribere 0.0335 ms/KB over the corpus — emission is
+  ~8× cheaper than parsing (0.26 ms/KB); arbores fideles 78/78
+  reported alongside. Cost curve visible from day one, as CULTURA
+  demands.
+
+### RELATIO (2026-07-02) — PHASE 5 COMPLETE
+
+All chunks green: A (generic emitter + slot-order validation),
+A-addendum (per-token primitive shared with the lexer oracle),
+B (layer-0 reconstruction — THE M1 §6 BAR: cursor.c byte-identical
+with latina expanding; latina.h/cursor.h as own fontes), C (property
+net). Suite 22/22, 1,218 assertions (1,015 at phase start). The
+token→tree→bytes chain is CLOSED: every input — real C89, fuzz
+garbage, macro-heavy latina code, multi-file include closures —
+parses to a committed tree and returns byte-identical.
+
+Standing oracles after this phase: corpus 78/78 (both lex + tree),
+fuzz 400/400 (tree), syntaxis corpus 125/125, cursor.c closure.
+Emission is a pure structural walk (transformation contract held:
+moved subtrees emit their own bytes; position consulted only at the
+file-level reinserenda merge).
+
+Phase-5-owned parked items, all closed: layer-N emission spacing
+(ONE missing-trivia policy: stored trivia wins; absent emits nothing
+in the roundtrip emitter; style-default hook owned by the formatter
+milestone), EOF lexema_finis tail trivia (emitted; included fontes
+via includenda), list normalization interplay (rode commissio,
+Chunk A of Phase 4).
+
+Named deferrals with owners (unchanged or new): pasta/chorda/
+stringificatio boundaries (fail-loud detection SHIPPED; first
+corpus/grammar that forces them owns them); CONDITIONALIS-in-tree
+emission (Phase 7 threading; ownership rule pinned — an arm's bytes
+have ONE owner, slice or tree); layer-N view emission (query
+milestone, rides the missing-trivia hook); formatter + style
+profiles (§8.3, post-substrate); STML serialization (1.0);
+transforms-across-arms fidelity requirement (config-query milestone,
+pinned 2026-07-02).
+
+Process note: simulation ⑥ (mid-phase, against shipped code) again
+REDUCED the work — two mechanics were already built, the C7 "hole"
+became a 3-line fix through Fran's untaken-arm framing, and the
+implementation landed with ONE new complexity (fons_princeps),
+caught by tests on first run. Mid-phase simulation is now 2-for-2.
+
+Next: Phase 6 — Amalgamator (sim ④ decided the design; the manifest
+now includes the Phase 4/5 modules: silva_glr, silva_commissio,
+silva_parsare, silva_scribere + generated tables). Protocol: INTENTIO
+first; re-read spec-v2 §3.5/§11.1 and the sim ④ artifacts.
+
+
+## Phase 6 — Amalgamator
+
+### INTENTIO (2026-07-02)
+
+**What**: the deliverable mechanism — silva/amalgama/silva.c +
+silva.h (SQLite style: develop modular, ship generated), produced by
+a dev-time tool in instrumenta/ per sim ④'s PROVEN design (S41-S47,
+spec-v2 §11.1). Proves: the §11.1 deliverable as specified, with the
+Phase 4/5 modules aboard (the part sim ④ never saw).
+
+**Protocol reads done**: spec-v2 §3.5 + §11.1, sim ④ file + interview
+(the compiled artifacts lived in a dead session scratchpad; the
+DECISIONS survive in the files), actual fontes dependency inventory.
+
+**Discoveries from the inventory (manifest updates vs sim ④):**
+- **internamentum is OUT of the vendored set** — no fontes file uses
+  it (generator/instrumenta only). Vendored: latina + piscina +
+  chorda + chorda_aedificator + friatio (3 fns, via tabula_dispersa)
+  + tabula_dispersa + xar. Sim ④'s 7-lib compile included it;
+  today's runtime needs 6 + latina.
+- **stdio is a RUNTIME dependency** (fail-loud fprintf(stderr) in
+  glr/commissio/nodus/parsare) — already in sim ④'s hoisted system
+  set (ctype/stdio/stdlib/string); noted that a diagnostics hook
+  (replacing stderr) is a post-M1 API nicety, NOT M1.
+- **NOT amalgamated**: silva_tabulae_imparilis (test grammar —
+  probationes only), instrumenta/ (dev-time firewall), credo.
+
+**Design decisions:**
+1. **silva.h is HAND-WRITTEN vanilla C89, transparent structs.**
+   Generation via the expander is foreclosed for now by the layer-N
+   spacing gap (expanded tokens carry no trivia — the emitted header
+   would be glued mush; the formatter milestone owns that). Drift is
+   SELF-CORRECTING: silva.h's struct definitions are the ONLY ones
+   in the amalgam TU (internal silva_*.h headers are NOT re-emitted;
+   bodies compile against silva.h's types + latina's keyword macros)
+   — a wrong field type/name fails the amalgam compile under
+   -Werror. Transparent (not opaque+accessors) because code-is-a-
+   database wants field access and the single-header property makes
+   layout drift impossible between host and library. Public API
+   names ≤ 31 chars (S47).
+2. **Assembly order** (S43): [system includes] [silva.h verbatim]
+   [latina.h] [renamed vendored decls] [vendored bodies] [silva
+   bodies]. Include guards pass through verbatim (S46).
+3. **Renamer**: token-aware, built on SILVA'S OWN LEXER (instrumenta
+   links fontes — the bootstrap sim ④'s prototype anticipated).
+   Exact-identifier match, skip comments/strings; longest-prefix
+   function map (piscina_* → silva_piscina_* ...) + exact type map
+   (Piscina → SilvaPiscina ...). silva_* names already prefixed —
+   untouched. Vendored functions get static injection (hic_manens)
+   on BOTH prototype and definition (S44); excluded functions
+   (friatio beyond the 3) dropped entirely, prototypes included.
+4. **Tool shape**: instrumenta/silva_amalgamare.{h,c} + principalia
+   main + silva/amalgamare.sh (mirrors generare.sh). Manifest =
+   explicit arrays in the tool (two orders, exclusions — the
+   manifest IS code, reviewed like code). Output committed (like
+   generated tables); drift guard = regenerate-and-diff in the
+   script.
+5. **Verification lives in the script** (compile steps): standalone
+   full-flag compile of silva.c; generated host-pollution test (host
+   declares si/per/character/nomen, includes silva.h, compiles
+   clean); nm-intersection vs rhubarb's own .o files (zero shared
+   externals beyond intended); duplicate-static detection in the
+   tool itself (S41, enforced not assumed). The probatio
+   (probatio_silva_amalgama) does harness-level checks: artifacts
+   exist, silva.h contains no latina tokens, equivalence smoke
+   (a fixture parsed by an amalgam-linked runner == modular result —
+   exact mechanism decided in Chunk C).
+
+**Chunks:**
+- **A — assembler + renamer, vendored set only.** Replicates sim ④
+  against TODAY'S six libs with the real tool (not a script):
+  manifest arrays, two orders, exclusions, static injection, rename;
+  standalone compile green. Exit: amalgama of the vendored substrate
+  compiles under the full flag set.
+- **B — silva modules + silva.h.** Hand-write silva.h (public API:
+  token/nodus/valor/oraculum/resolutor/parsare family/cum_expansione/
+  scribere/recanonicare/praebere/macro_addere + sceletum generated
+  surface); silva bodies join the manifest; internal headers
+  excluded; full silva.c standalone compile. Exit: the deliverable
+  pair exists and compiles.
+- **C — the verification net.** Host-pollution generated test;
+  nm-intersection; equivalence smoke; drift guard wiring;
+  amalgamare.sh + committed artifacts; probatio green in the suite.
+
+**Exit criteria**: suite green incl. probatio_silva_amalgama;
+silva/amalgama/{silva.c,silva.h} committed artifacts; all script
+verifications pass; RELATIO written.
+
+**Explicitly NOT Phase 6** (named): solarium-side compile (Phase 7 —
+the real host); diagnostics hook for stderr (post-M1); silva.h
+GENERATION from internal headers (formatter milestone unlocks it);
+C89-grammar tables in the manifest (M2 swaps sceletum out).
+
+### Chunk A — COMPLETE (2026-07-02): assembler + renamer, vendored set
+
+First run green end-to-end: the tool compiled, ran, and its output
+compiled standalone under the full flag set. Suite untouched (22/22).
+
+What landed:
+- **instrumenta/principalia/amalgamator.c** (~700 lines, single file
+  — deliberately OUTSIDE the instrumenta/*.c globs: both build
+  scripts link every instrumenta object, and the amalgamator needs
+  fontes symbols the generator build doesn't provide). Manifest as
+  code: header order + body order (S42) + per-file keep-lists (S44,
+  friatio → 3 functions). Tokenizes with SILVA'S OWN LEXER (the
+  bootstrap moment — silva_lexare + the per-token walk).
+- **The unit scanner**: top-level declaration units by paren/brace
+  depth (';' at depth 0, or the matching '}' of a function
+  definition); classifies typedef/function/data; extracts the title
+  (ident before '(' / before '='/'[' / last before ';'); detects
+  already-static (STATIC genus or interior/hic_manens/staticus/
+  universalis).
+- **Transformations**: project includes dropped; system includes
+  hoisted + deduped (4: stdlib/string/stdio/ctype); latina.h
+  VERBATIM (S43); guards verbatim (S46); token-aware rename (exact
+  type map + longest-prefix function map — 440 hits); static
+  injection on non-static function units (264); keep-list exclusion
+  (zero sha1/sha256/crc32 residue incl. their hic_manens tables);
+  duplicate-DEFINITION detection across corpora (S41, enforced —
+  header prototypes exempt by est_corpus/est_definitio flags).
+- **silva/amalgamare.sh**: builds tool, generates
+  silva/amalgama/silva.c (committed artifact, 164 KB), verification
+  compile standalone.
+- **Measured result: ZERO external defined symbols in the object** —
+  the entire vendored substrate is internal linkage. Sim ④ measured
+  155 externals pre-treatment; the target "export surface = public
+  API only" is now trivially exceeded (no API yet — Chunk B adds it).
+
+STAGE MARKER (explicit obligation): the verification compile carries
+-Wno-unused-function — with no consumer in the file yet, every
+static is unused by construction. Chunk B/C REMOVE the suppression
+once silva bodies consume the libs, growing keep-lists to cover
+whatever remains genuinely unused (S44's "zero unused" end state).
+
+Design notes caught in my own review before compiling (would have
+been -Werror/-Wcast-qual failures + one behavior bug): double
+trivia-ante emission in the unrenamed path; const-dropping cast in
+the duplicate registry; the duplicate check flagging legitimate
+header-prototype/body-definition pairs (fixed via est_corpus +
+est_definitio gating).
+
+Next: Chunk B — silva modules join the manifest + hand-written
+vanilla silva.h; then C — host-pollution test, nm-intersection,
+equivalence smoke, drift guard, probatio.
+
+### Chunk B — COMPLETE (2026-07-02): THE DELIVERABLE EXISTS
+
+silva/amalgama/{silva.c (472 KB), silva.h} — the full substrate in
+one file, compiling standalone under the full flag set. Export
+surface: 91 external symbols, EVERY one silva_/SILVA_-prefixed
+(zero host-collision surface); everything vendored is internal
+linkage. Suite 22/22 throughout.
+
+The design that made it work (the C89 single-definition analysis):
+- **Only typedef units can conflict in one TU** — duplicate
+  compatible function declarations and identical macro
+  redefinitions are LEGAL. So silva.h owns the ~40 host-facing
+  types (hand-translated vanilla: i8→unsigned char, i32→unsigned
+  int, s32→int, b32→int, chorda→SilvaChorda...), and the
+  amalgamator drops exactly those typedef units from internal
+  header emission (CADENDA list). Tag-DEFINITIONS are dropped only
+  where silva.h fully owns the struct (SilvaToken/SilvaValor/
+  SilvaNodus/SilvaCaecatio); forward-only types (SilvaOraculum,
+  SilvaExpansio — source-TAGGED for this, a 2-line fontes refactor)
+  keep their internal definitions.
+- **Drift is self-correcting**: silva.h's definitions are the only
+  ones in the TU; internals compile against them under -Werror —
+  the hand translation was verified by the amalgam compiling on
+  the FIRST attempt after collision fixes. One non-verifiable
+  constant (SilvaXar.segmenta[64] vs XAR_MAXIMUS_SEGMENTORUM)
+  guarded by an emitted C89 negative-array static assert.
+- **Scanner upgrades**: tag-def titles (structura X {...}; → X),
+  function-pointer typedef titles ((*IDENT)), est_vendicata gating
+  (static injection + rename only for vendored; silva API stays
+  extern), NON_STATICA (piscina generare/destruere + xar
+  numerus/obtinere stay public — hosts need them).
+
+**S41 catch (the detector's first real prey)**: three cross-module
+static helper collisions in silva's OWN bodies — _chordae_aequales
+(token.c vs expandere.c), _est_nomen_potentiale and _chorda_figere
+(expandere.c vs conditio.c) — invisible in modular builds, duplicate
+definitions in one TU. Sim ④ measured zero among vendored libs but
+never saw silva's bodies. Fixed by natural-Latin renames in the
+less-central file (_chordae_pares; _est_nomen_conditionis;
+_chordam_figere_conditionis); suite green.
+
+Remaining: Chunk C — host-pollution generated test, scripted
+nm-intersection, equivalence smoke (amalgam-linked runner == modular
+result), drift-guard wiring (regenerate-and-diff), probatio, and the
+-Wno-unused-function removal via keep-list tightening (S44 end
+state).
+
+### Chunk C — COMPLETE (2026-07-02): the verification net
+
+Suite 23/23, 1,229 assertions (probatio_silva_amalgama 11).
+
+- **S44 END STATE REACHED**: the -Wno-unused-function stage marker
+  is GONE. The exclusion fixpoint converged in four
+  compiler-harvested rounds (93 → 11 → 7 → 2 → 0): ~110 unused
+  vendored functions named in per-file excludenda lists, statics
+  orphaned by drops included. friatio ships exactly ONE function
+  (fnv1a — djb2 and fnv1a_literis died with the dropped
+  tabula_*_literis chain). silva.c: 371 KB, compiles standalone
+  under the FULL flag set, zero suppressions.
+- **hospes.c — the first true host** (instrumenta/principalia/,
+  vanilla C89, includes ONLY silva.h): declares and USES variables
+  named si/per/character/nomen/structura/redde/dum/vacuum (S43
+  pollution proof — one leaked define and it doesn't build), then
+  runs 8 equivalence fixtures through the amalgam — object-like +
+  function-like expansion, regions, garbage recovery, praebere'd
+  include via the public API. 8/8 fideles, byte-exact. Compiled and
+  RUN by amalgamare.sh on every regeneration.
+- **nm-intersection scripted**: amalgam externals ∩ rhubarb's own
+  objects = 0, enforced in amalgamare.sh (sim ④'s measurement is
+  now a permanent gate).
+- **probatio_silva_amalgama** (in the ordinary suite): the REAL
+  pollution check — lexes latina.h, harvests its 388 #define names,
+  lexes silva.h, asserts ZERO identifiers match (comments exempt as
+  trivia — Latin prose stays welcome); silva.c artifact properties
+  (XAR drift assert present, zero surviving project includes,
+  statics present, sizes sane).
+
+### RELATIO (2026-07-02) — PHASE 6 COMPLETE
+
+**The deliverable mechanism is REAL and GUARDED.** silva/amalgama/
+{silva.c 371 KB, silva.h} — committed artifacts, regenerated by
+amalgamare.sh which enforces on every run: standalone full-severity
+compile, host-pollution + 8-fixture equivalence via hospes, zero
+nm-intersection. The suite guards the artifacts' properties
+independently (23/23, 1,229).
+
+Sim ④'s design survived intact, extended by three things it never
+saw: the CADENDA type-ownership rule (only typedefs conflict in one
+TU — silva.h owns host-facing types, internal headers keep the
+rest), silva's own modules in the manifest (S41 caught three real
+cross-module static collisions), and the exclusion fixpoint at full
+scale (four rounds, compiler-harvested).
+
+Named onward: solarium-side compile of the amalgam = Phase 7 (the
+real host next door); stderr diagnostics hook (post-M1); generated
+per-genus accessors + genus enum in the public surface (M2 with the
+C89 grammar — the sceletum's generated surface stays internal
+except tables + constructor + fabrica); silva.h GENERATION from
+internal headers (formatter milestone). M2 note: new silva code
+consuming a vendored function currently excluded = delete its
+excludenda entry (the compile clamat).
+
+M1 remaining: Phase 7 — skeleton integration (§11.2 checklist,
+owned debts: caps+cancellation, Prosser exactness, latina SET via
+SilvaContextus, CONDITIONALIS threading, v1 praeparator spot-check,
+solarium corpus dimension). Then the M1 RELATIO and the
+widen-first decision.
+
+### Requirement pinned — transforms across conditional arms (2026-07-02)
+
+Fran, thinking about selector queries/replacements: they must apply
+across ALL blocks, including arms mutually exclusive in any compiled
+binary. This is the wildcard-conditional VISIO pin, but the TRANSFORM
+half adds a requirement the config-query milestone should inherit
+explicitly rather than rediscover:
+
+- Untaken-arm parsing (deferred: config-query milestone / Phase 7
+  CONDITIONALIS threading) must produce trees at the SAME fidelity
+  standard as the taken arm — full trivia, re-emittable,
+  transformable — because once a transform touches an arm, its
+  lexemata_cruda slice is STALE and emission must come from the
+  arm's tree.
+- Ownership rule for the migration: an arm's bytes have exactly ONE
+  owner at any time — reinserenda slice (unparsed, Phase 5 interim)
+  or tree (threaded, Phase 7+) — never both. Chunk B's reinserenda
+  design is the interim owner and forecloses nothing: the generic
+  emitter already walks CONDITIONALIS rami (lista-nodus) the day
+  they exist; arm-directive lines will need token slots on ramus
+  nodes (Phase 7 genera-extra design item).

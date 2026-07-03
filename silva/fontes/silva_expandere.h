@@ -134,11 +134,25 @@ nomen structura {
 } SilvaInclusio;
 
 
+/* Extentum invocationis functio-similis STRATI 0 (Phase 5 Chunk B,
+ * simulatio ⑥ C5): lamina [nomen .. ')'] fluxus quo invocatio
+ * collecta est - octeti invocationis cum triviis argumentorum.
+ * Memoratur solum cum lexema nominis origo FONS fert (stratum 0):
+ * reconstructio fontis hos octetos emittit ubi arbor lexemata
+ * expansa fert. */
+nomen structura {
+    SilvaToken* invocatio;   /* lexema nominis (origo FONS) */
+    Xar*        lamina;      /* Xar de SilvaToken* - [nomen, post ')') */
+} SilvaExtentumInvocationis;
+
+
 /* ==================================================
  * Contextus expansionis
  * ================================================== */
 
-nomen structura {
+nomen structura SilvaExpansio SilvaExpansio;
+
+structura SilvaExpansio {
     Piscina*        piscina;
     Xar*            fontes;     /* Xar de SilvaFons (per valorem) */
     TabulaDispersa* macros;     /* status vivus - via defalta */
@@ -147,11 +161,14 @@ nomen structura {
     Xar*            regiones;   /* Xar de SilvaRegio* - regiones supremae */
     TabulaDispersa* includenda; /* via (chorda) -> SilvaIncludendum* */
     Xar*            inclusiones; /* Xar de SilvaInclusio (per valorem) */
+    Xar*            extenta;    /* Xar de SilvaExtentumInvocationis
+                                 * (per valorem) - invocationes
+                                 * functio-similes strati 0 */
     i32             profunditas_includendi;
     s32             fons_api;   /* fons syntheticus "<api>"; -1 = nondum */
     TabulaDispersa* tabula_activa; /* tabula temporalis expansionis
                                     * positionalis; NIHIL = tabula viva */
-} SilvaExpansio;
+};
 
 SilvaExpansio*
 silva_expansio_creare (

@@ -19,6 +19,7 @@
 #include "latina.h"
 #include "piscina.h"
 #include "chorda.h"
+#include "chorda_aedificator.h"
 #include "xar.h"
 #include "silva_token.h"
 
@@ -55,5 +56,14 @@ chorda
 silva_lexemata_emittere (
     Piscina* piscina,
     Xar*     lexemata);
+
+/* Primitivum emissionis lexematis UNIUS in aedificatorem datum:
+ * trivia ante + valor (scissurae reinsertae) + trivia post.
+ * Commune fluxui supra et emissori arborum (silva_scribere,
+ * Phase 5) - una implementatio fidelitatis, non duae. */
+vacuum
+silva_lexema_emittere_in (
+    ChordaAedificator* aed,
+    SilvaToken*        token);
 
 #endif /* SILVA_LEXEMA_H */

@@ -24,7 +24,7 @@ _token_novum (Piscina* piscina)
 }
 
 interior b32
-_chordae_aequales (chorda a, chorda b)
+_chordae_pares (chorda a, chorda b)
 {
     si (a.mensura != b.mensura)
     {
@@ -304,7 +304,7 @@ silva_caecatio_continet (
     dum (caecatio != NIHIL)
     {
         si (caecatio->titulus != NIHIL
-            && _chordae_aequales(*caecatio->titulus, titulus))
+            && _chordae_pares(*caecatio->titulus, titulus))
         {
             redde VERUM;
         }

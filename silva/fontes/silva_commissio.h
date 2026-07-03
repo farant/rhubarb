@@ -38,10 +38,12 @@
  * C89 nominatum)
  * ================================================== */
 
-nomen structura {
+nomen structura SilvaOraculum SilvaOraculum;
+
+structura SilvaOraculum {
     Piscina*        piscina;
     TabulaDispersa* typi;      /* clavis chorda (copiata) -> VERUM */
-} SilvaOraculum;
+};
 
 SilvaOraculum* silva_oraculum_creare (Piscina* piscina);
 

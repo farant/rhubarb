@@ -1,10 +1,16 @@
 /* probatio_silva_fidelitas.c - Fidelitas octetorum trans corpus laminarum
  *
- * Currit oraculum emittere(lexare(x)) == x super OMNES laminas in
- * probationes/fixa/roundtrip/ - corpus commune generationum priorum
- * (78+ plagulae; quaeque cicatrix defectus arbor v1/v2 aut fons verus
- * rhubarb: latina.h, piscina.h, cursor.c, base64.c, utf8.c ...).
- * Lexator silvae has probationes TRES phases ante scribere accipit.
+ * DUO oracula super OMNES laminas in probationes/fixa/roundtrip/
+ * (corpus commune generationum priorum - 78+ plagulae; quaeque
+ * cicatrix defectus arbor v1/v2 aut fons verus rhubarb):
+ *   1. emittere(lexare(x)) == x        (lexator, Phase 1)
+ *   2. scribere(parsare(x)) == x       (ARBOR, Phase 5 Chunk C)
+ * Oraculum arboris fistulam TOTAM currit: praeprocessor (macros
+ * quas plagula ipsa definit expanduntur - limes expansionis!),
+ * recuperatio (C89 verum sceleto maiore parte nodi ERROR fiunt),
+ * reinserenda (lineae directivae, rami non sumpti), reconstructio
+ * strati 0. Includenda ignota manent (modus discens) - lineae
+ * earum captae et reinsertae.
  *
  * Radix repositorii per RHUBARB_RADIX (compile_probationes.sh eam
  * praebet); defaltum ".." pro cursu manuali ex silva/.
@@ -15,6 +21,14 @@
 #include "xar.h"
 #include "silva_token.h"
 #include "silva_lexema.h"
+#include "silva_nodus.h"
+#include "silva_tabulae.h"
+#include "silva_tabulae_sceleti.h"
+#include "silva_glr.h"
+#include "silva_expandere.h"
+#include "silva_commissio.h"
+#include "silva_parsare.h"
+#include "silva_scribere.h"
 #include "credo.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -22,6 +36,13 @@
 #include <dirent.h>  /* probatio solum - macOS/POSIX */
 
 #define VIA_MAXIMA 1024
+
+hic_manens constans SilvaGrammatica GRAMMATICA_SCELETI = {
+    &SILVA_SCELETUM_TABULA,
+    &SILVA_SCELETUM_REGISTRUM,
+    silva_sceletum_construere,
+    silva_sceletum_ambiguum_fabricare
+};
 
 /* Legere plagulam totam; reddit NIHIL in defectu */
 interior i8*
@@ -68,41 +89,65 @@ _plagulam_legere (Piscina* piscina, constans character* via, i32* mensura_out)
     redde buffer;
 }
 
-/* Probare fidelitatem unius plagulae: emittere(lexare(x)) == x */
-interior b32
-_fidelitatem_probare (constans character* via)
+/* Probare fidelitatem unius plagulae per DUO oracula */
+interior vacuum
+_fidelitatem_probare (constans character* via, b32* lex_out,
+    b32* arbor_out)
 {
     Piscina* piscina;
     i8* fons;
     Xar* lexemata;
     chorda emissa;
     i32 mensura;
-    b32 fidelis;
 
-    piscina = piscina_generare_dynamicum("fidelitas_plagulae", 8388608);
+    *lex_out = FALSUM;
+    *arbor_out = FALSUM;
+
+    piscina = piscina_generare_dynamicum("fidelitas_plagulae", 16777216);
     si (piscina == NIHIL)
     {
-        redde FALSUM;
+        redde;
     }
 
     fons = _plagulam_legere(piscina, via, &mensura);
     si (fons == NIHIL)
     {
         piscina_destruere(piscina);
-        redde FALSUM;
+        redde;
     }
 
+    /* Oraculum 1: lexator */
     lexemata = silva_lexare(piscina, (constans character*)fons, mensura,
         ZEPHYRUM);
     emissa = silva_lexemata_emittere(piscina, lexemata);
-
-    fidelis = (emissa.mensura == mensura
+    *lex_out = (emissa.mensura == mensura
         && (mensura == ZEPHYRUM
             || memcmp(emissa.datum, fons, (memoriae_index)mensura)
                 == ZEPHYRUM)) ? VERUM : FALSUM;
 
+    /* Oraculum 2: arbor - fistula tota + reconstructio strati 0 */
+    {
+        SilvaParsura* parsura;
+
+        parsura = silva_parsare(piscina, via,
+            (constans character*)fons, mensura, &GRAMMATICA_SCELETI,
+            NIHIL, NIHIL, NIHIL);
+        si (parsura != NIHIL && parsura->successus)
+        {
+            SilvaScriptura scriptura;
+
+            scriptura = silva_scribere_fontem(piscina, parsura,
+                &SILVA_SCELETUM_REGISTRUM, parsura->fons_princeps);
+            *arbor_out = (scriptura.successus
+                && scriptura.textus.mensura == mensura
+                && (mensura == ZEPHYRUM
+                    || memcmp(scriptura.textus.datum, fons,
+                           (memoriae_index)mensura) == ZEPHYRUM))
+                ? VERUM : FALSUM;
+        }
+    }
+
     piscina_destruere(piscina);
-    redde fidelis;
 }
 
 interior b32
@@ -134,6 +179,7 @@ s32 principale (vacuum)
     structura dirent* introitus;
     i32 numerus;
     i32 fideles;
+    i32 fideles_arboris;
 
     piscina = piscina_generare_dynamicum("probatio_silva_fidelitas", 262144);
     si (!piscina)
@@ -155,6 +201,7 @@ s32 principale (vacuum)
 
     numerus = ZEPHYRUM;
     fideles = ZEPHYRUM;
+    fideles_arboris = ZEPHYRUM;
     corpus = opendir(via_corporis);
     si (corpus == NIHIL)
     {
@@ -166,7 +213,8 @@ s32 principale (vacuum)
 
     dum ((introitus = readdir(corpus)) != NIHIL)
     {
-        b32 fidelis;
+        b32 fidelis_lex;
+        b32 fidelis_arboris;
 
         si (!_est_c_vel_h(introitus->d_name))
         {
@@ -174,21 +222,29 @@ s32 principale (vacuum)
         }
         sprintf(via_plagulae, "%s/%s", via_corporis, introitus->d_name);
 
-        fidelis = _fidelitatem_probare(via_plagulae);
+        _fidelitatem_probare(via_plagulae, &fidelis_lex,
+            &fidelis_arboris);
         numerus++;
-        si (fidelis)
+        si (fidelis_lex)
         {
             fideles++;
         }
-        alioquin
+        si (fidelis_arboris)
         {
-            imprimere("  INFIDELIS: %s\n", introitus->d_name);
+            fideles_arboris++;
         }
-        CREDO_VERUM (fidelis);
+        si (!fidelis_lex || !fidelis_arboris)
+        {
+            imprimere("  INFIDELIS%s: %s\n",
+                fidelis_lex ? " (arbor)" : "", introitus->d_name);
+        }
+        CREDO_VERUM (fidelis_lex);
+        CREDO_VERUM (fidelis_arboris);
     }
     closedir(corpus);
 
-    imprimere("  plagulae: %d, fideles: %d\n", numerus, fideles);
+    imprimere("  plagulae: %d, fideles (lex): %d, fideles (arbor): %d\n",
+        numerus, fideles, fideles_arboris);
 
     /* corpus integrum inventum (LXXVIII cum scriptum; crescere licet) */
     CREDO_VERUM (numerus >= LXXVIII);

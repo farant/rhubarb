@@ -405,6 +405,74 @@ s32 principale (vacuum)
             "<regula titulus=\"r\">"
             "<productio manu=\"construere_r\">r A</productio></regula>"
             "</regulae><initium>r</initium></grammatica>"));
+
+        /* NON-terminale sine @loco in productione cum genere =
+         * error (Phase 5: totalitas emissionis - subarbor non
+         * mappata octetos perderet) */
+        CREDO_NIHIL (silva_gen_grammaticam_legere(piscina, intern,
+            "<grammatica><terminalia>"
+            "<terminalis titulus=\"A\" genus=\"GA\"/>"
+            "<terminalis titulus=\"EOF\" genus=\"GE\"/>"
+            "</terminalia><regulae>"
+            "<regula titulus=\"r\">"
+            "<productio genus=\"g\" id=\"x\">r A@t</productio></regula>"
+            "</regulae><initium>r</initium></grammatica>"));
+    }
+
+
+    /* ========================================================
+     * PROBARE: validatio ordinis locorum (Phase 5, scribere)
+     * Emissio generica ordinem layout sequitur - productiones
+     * eiusdem generis ordine consentire debent.
+     * ======================================================== */
+
+    {
+        SilvaGenGrammatica* g;
+
+        imprimere("\n--- Probans ordinem locorum ---\n");
+
+        /* Ordo divergens: p1 mappat x y, p2 mappat y x - error
+         * in registro computando */
+        g = silva_gen_grammaticam_legere(piscina, intern,
+            "<grammatica><terminalia>"
+            "<terminalis titulus=\"A\" genus=\"GA\"/>"
+            "<terminalis titulus=\"B\" genus=\"GB\"/>"
+            "<terminalis titulus=\"EOF\" genus=\"GE\"/>"
+            "</terminalia><regulae>"
+            "<regula titulus=\"r\">"
+            "<productio genus=\"g\" id=\"p1\">A@x B@y</productio>"
+            "<productio genus=\"g\" id=\"p2\">B@y A@x</productio>"
+            "</regula>"
+            "</regulae>"
+            "<genera-extra>"
+            "<genus titulus=\"error\" slots=\"tokens:lista-token\"/>"
+            "<genus titulus=\"ambiguus\" slots=\"interpretationes:lista-nodus canonica:index\"/>"
+            "<genus titulus=\"conditionalis\" slots=\"rami:lista-nodus\"/>"
+            "</genera-extra>"
+            "<initium>r</initium></grammatica>");
+        CREDO_NON_NIHIL (g);
+        CREDO_NIHIL (silva_gen_registrum_computare(g));
+
+        /* Ordo consentiens: idem sed p2 quoque x y - acceptum */
+        g = silva_gen_grammaticam_legere(piscina, intern,
+            "<grammatica><terminalia>"
+            "<terminalis titulus=\"A\" genus=\"GA\"/>"
+            "<terminalis titulus=\"B\" genus=\"GB\"/>"
+            "<terminalis titulus=\"EOF\" genus=\"GE\"/>"
+            "</terminalia><regulae>"
+            "<regula titulus=\"r\">"
+            "<productio genus=\"g\" id=\"p1\">A@x B@y</productio>"
+            "<productio genus=\"g\" id=\"p2\">A@x B@y B@y2</productio>"
+            "</regula>"
+            "</regulae>"
+            "<genera-extra>"
+            "<genus titulus=\"error\" slots=\"tokens:lista-token\"/>"
+            "<genus titulus=\"ambiguus\" slots=\"interpretationes:lista-nodus canonica:index\"/>"
+            "<genus titulus=\"conditionalis\" slots=\"rami:lista-nodus\"/>"
+            "</genera-extra>"
+            "<initium>r</initium></grammatica>");
+        CREDO_NON_NIHIL (g);
+        CREDO_NON_NIHIL (silva_gen_registrum_computare(g));
     }
 
 

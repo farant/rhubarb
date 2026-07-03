@@ -6,6 +6,12 @@
  * (fidelitas octetorum in QUOLIBET input) et per directivas + expansio
  * positionalis (numquam fragor, tempus terminatum per caps).
  *
+ * Phase 5 Chunk C - ORACULUM FORTISSIMUM: quaeque species etiam per
+ * scribere(parsare(x)) == x currit. Contentum malformatum quodlibet
+ * arborem completam reddit ET arbor octetos originales reddit -
+ * postulatum Fran ("even malformed content should roundtrip") ut
+ * assertio permanens. Semen fixum: species eaedem in aeternum.
+ *
  * Circuitus A: octeti mere fortuiti (0..255, NUL inclusi).
  * Circuitus B: characteres C-formes (directivae, quotes, laminae) -
  * praeprocessor profundius exercetur.
@@ -23,6 +29,7 @@
 #include "silva_glr.h"
 #include "silva_commissio.h"
 #include "silva_parsare.h"
+#include "silva_scribere.h"
 #include "credo.h"
 #include <stdio.h>
 #include <string.h>
@@ -121,7 +128,9 @@ _specimen (constans i8* buffo, i32 mensura)
     }
 
     /* fistula TOTA (Chunk D): gubernator arborem completam ex
-     * QUOLIBET inputo reddit (recuperatio) - numquam fragor */
+     * QUOLIBET inputo reddit (recuperatio) - numquam fragor.
+     * Phase 5 Chunk C: ET arbor octetos ORIGINALES reddit -
+     * scribere(parsare(x)) == x pro quolibet x. */
     {
         SilvaParsura* parsura;
 
@@ -131,6 +140,21 @@ _specimen (constans i8* buffo, i32 mensura)
         si (parsura == NIHIL || !parsura->successus)
         {
             fidelis = FALSUM;  /* arbor deesse non debet */
+        }
+        alioquin
+        {
+            SilvaScriptura scriptura;
+
+            scriptura = silva_scribere_fontem(piscina, parsura,
+                &SILVA_SCELETUM_REGISTRUM, parsura->fons_princeps);
+            si (!scriptura.successus
+                || scriptura.textus.mensura != mensura
+                || (mensura > ZEPHYRUM
+                    && memcmp(scriptura.textus.datum, buffo,
+                           (memoriae_index)mensura) != ZEPHYRUM))
+            {
+                fidelis = FALSUM;  /* octeti perditi aut mutati */
+            }
         }
     }
 

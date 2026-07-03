@@ -51,6 +51,15 @@ nomen structura {
     Xar*            lexemata;        /* fluxus expansus (queribilis) */
     SilvaExpansio*  expansio;        /* strata/diarium; NIHIL in
                                       * ingressu lexematum */
+    Xar*            directivae;      /* Xar de Xar de SilvaToken* -
+                                      * lineae directivae consumptae
+                                      * (reconstructio fontis, Phase
+                                      * 5); NIHIL in ingressu
+                                      * lexematum */
+    s32             fons_princeps;   /* index fontis principalis (cum
+                                      * praebere fontes priores indices
+                                      * capiunt!); -1 in ingressu
+                                      * lexematum */
     i32             numerus_errorum;     /* nodi ERROR in arbore */
     i32             numerus_segmentorum;
 
@@ -72,6 +81,22 @@ nomen structura {
 SilvaParsura*
 silva_parsare (
     Piscina*                  piscina,
+    constans character*       titulus_fontis,
+    constans character*       fons,
+    i32                       mensura,
+    constans SilvaGrammatica* grammatica,
+    constans SilvaOraculum*   oraculum,
+    SilvaResolutor            resolutor,
+    vacuum*                   contextus);
+
+/* Fistula tota cum expansione PRAEPARATA a vocatore: includenda iam
+ * praebita (silva_includendum_praebere), macros iam iniecta
+ * (silva_macro_addere). Haec est sutura contextus (SilvaContextus
+ * Phase 7 eam equitabit); silva_parsare = involucrum tenue huius. */
+SilvaParsura*
+silva_parsare_cum_expansione (
+    Piscina*                  piscina,
+    SilvaExpansio*            expansio,
     constans character*       titulus_fontis,
     constans character*       fons,
     i32                       mensura,

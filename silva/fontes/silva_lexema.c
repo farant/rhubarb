@@ -1080,6 +1080,20 @@ _emittere_valorem (ChordaAedificator* aed, SilvaToken* token)
         _subchorda(token->valor, prius, token->valor.mensura));
 }
 
+vacuum
+silva_lexema_emittere_in (
+    ChordaAedificator* aed,
+    SilvaToken*        token)
+{
+    si (aed == NIHIL || token == NIHIL)
+    {
+        redde;
+    }
+    _emittere_trivia(aed, token->spatia_ante);
+    _emittere_valorem(aed, token);
+    _emittere_trivia(aed, token->spatia_post);
+}
+
 chorda
 silva_lexemata_emittere (
     Piscina* piscina,
@@ -1093,9 +1107,7 @@ silva_lexemata_emittere (
     per (i = ZEPHYRUM; i < xar_numerus(lexemata); i++)
     {
         token = *(SilvaToken**)xar_obtinere(lexemata, i);
-        _emittere_trivia(aed, token->spatia_ante);
-        _emittere_valorem(aed, token);
-        _emittere_trivia(aed, token->spatia_post);
+        silva_lexema_emittere_in(aed, token);
     }
     redde chorda_aedificator_finire(aed);
 }

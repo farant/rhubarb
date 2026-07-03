@@ -127,6 +127,8 @@ silva_lexemata_parsare (
     parsura->lexema_finis = NIHIL;
     parsura->lexemata = NIHIL;
     parsura->expansio = NIHIL;
+    parsura->directivae = NIHIL;
+    parsura->fons_princeps = -I;
     parsura->numerus_errorum = ZEPHYRUM;
     parsura->numerus_segmentorum = ZEPHYRUM;
     parsura->fusiones = ZEPHYRUM;
@@ -288,6 +290,55 @@ silva_lexemata_parsare (
 }
 
 SilvaParsura*
+silva_parsare_cum_expansione (
+    Piscina*                  piscina,
+    SilvaExpansio*            expansio,
+    constans character*       titulus_fontis,
+    constans character*       fons,
+    i32                       mensura,
+    constans SilvaGrammatica* grammatica,
+    constans SilvaOraculum*   oraculum,
+    SilvaResolutor            resolutor,
+    vacuum*                   contextus)
+{
+    s32            fons_index;
+    Xar*           lexemata;
+    Xar*           reliqua;
+    Xar*           expansa;
+    Xar*           directivae;
+    SilvaParsura*  parsura;
+
+    si (piscina == NIHIL || expansio == NIHIL || fons == NIHIL
+        || grammatica == NIHIL)
+    {
+        redde NIHIL;
+    }
+
+    /* Fistula praeprocessoris: lexare -> directivae (lineae captae -
+     * reconstructio fontis, Phase 5) -> expansio positionalis
+     * (point-in-time - Phase 2.5) */
+    fons_index = silva_fons_addere(expansio,
+        (titulus_fontis != NIHIL) ? titulus_fontis : "<fons>", FALSUM);
+    lexemata = silva_lexare(piscina, fons, mensura, fons_index);
+    directivae = NIHIL;
+    reliqua = silva_expansio_directivas_processare(expansio, lexemata,
+        &directivae);
+    expansa = silva_expansio_expandere_reliqua(expansio, reliqua,
+        NIHIL);
+
+    parsura = silva_lexemata_parsare(piscina, expansa, grammatica,
+        oraculum, resolutor, contextus);
+    si (parsura != NIHIL)
+    {
+        parsura->lexemata = expansa;
+        parsura->expansio = expansio;
+        parsura->directivae = directivae;
+        parsura->fons_princeps = fons_index;
+    }
+    redde parsura;
+}
+
+SilvaParsura*
 silva_parsare (
     Piscina*                  piscina,
     constans character*       titulus_fontis,
@@ -299,38 +350,17 @@ silva_parsare (
     vacuum*                   contextus)
 {
     SilvaExpansio* expansio;
-    s32            fons_index;
-    Xar*           lexemata;
-    Xar*           reliqua;
-    Xar*           expansa;
-    SilvaParsura*  parsura;
 
-    si (piscina == NIHIL || fons == NIHIL || grammatica == NIHIL)
+    si (piscina == NIHIL)
     {
         redde NIHIL;
     }
-
-    /* Fistula praeprocessoris: lexare -> directivae -> expansio
-     * positionalis (point-in-time - Phase 2.5) */
     expansio = silva_expansio_creare(piscina);
     si (expansio == NIHIL)
     {
         redde NIHIL;
     }
-    fons_index = silva_fons_addere(expansio,
-        (titulus_fontis != NIHIL) ? titulus_fontis : "<fons>", FALSUM);
-    lexemata = silva_lexare(piscina, fons, mensura, fons_index);
-    reliqua = silva_expansio_directivas_processare(expansio, lexemata,
-        NIHIL);
-    expansa = silva_expansio_expandere_reliqua(expansio, reliqua,
-        NIHIL);
-
-    parsura = silva_lexemata_parsare(piscina, expansa, grammatica,
-        oraculum, resolutor, contextus);
-    si (parsura != NIHIL)
-    {
-        parsura->lexemata = expansa;
-        parsura->expansio = expansio;
-    }
-    redde parsura;
+    redde silva_parsare_cum_expansione(piscina, expansio,
+        titulus_fontis, fons, mensura, grammatica, oraculum, resolutor,
+        contextus);
 }

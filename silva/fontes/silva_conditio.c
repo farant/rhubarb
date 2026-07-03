@@ -71,7 +71,7 @@ _progredi (SilvaConditioEval* eval)
 
 /* Potestne lexema nomen macro esse? (praeprocessor verba clausa non novit) */
 interior b32
-_est_nomen_potentiale (SilvaToken* token)
+_est_nomen_conditionis (SilvaToken* token)
 {
     si (token->genus == SILVA_LEX_IDENTIFICATOR)
     {
@@ -567,7 +567,7 @@ _evaluare_primarium (SilvaConditioEval* eval)
     }
 
     /* Identificator reliquus post expansionem = 0 (C89) */
-    si (_est_nomen_potentiale(tok))
+    si (_est_nomen_conditionis(tok))
     {
         _progredi(eval);
         redde ZEPHYRUM;
@@ -599,7 +599,7 @@ _integer_syntheticum (SilvaExpansio* exp, b32 valor, chorda* nomen_macro)
 }
 
 interior chorda*
-_chorda_figere (Piscina* piscina, chorda c)
+_chordam_figere_conditionis (Piscina* piscina, chorda c)
 {
     chorda* fixa;
 
@@ -647,7 +647,7 @@ _defined_substituere (SilvaExpansio* exp, Xar* lexemata)
                 redde NIHIL;  /* malformata */
             }
             operandum = *(SilvaToken**)xar_obtinere(lexemata, i);
-            si (!_est_nomen_potentiale(operandum))
+            si (!_est_nomen_conditionis(operandum))
             {
                 redde NIHIL;
             }
@@ -667,7 +667,7 @@ _defined_substituere (SilvaExpansio* exp, Xar* lexemata)
             si (locus != NIHIL)
             {
                 *locus = _integer_syntheticum(exp, est_def,
-                    _chorda_figere(exp->piscina, operandum->valor));
+                    _chordam_figere_conditionis(exp->piscina, operandum->valor));
             }
             perge;
         }

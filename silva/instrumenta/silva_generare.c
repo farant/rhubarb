@@ -498,9 +498,12 @@ silva_gen_grammaticam_legere(
                 redde NIHIL;
             }
 
-            /* S19: in productione cum genere VEL modo, OMNE terminale
-             * locum habeat (invariatum trivia unius-domini; in listis
-             * separatores mappati in listam interponuntur) */
+            /* S19: in productione cum genere VEL modo, OMNE symbolum
+             * locum habeat - terminalia pro invariato triviorum
+             * unius-domini, non-terminalia pro TOTALITATE emissionis
+             * (Phase 5: symbolum non mappatum = octeti subarboris
+             * silenter perditi in scriptura). In listis separatores
+             * mappati in listam interponuntur. */
             si (prod->genus != NIHIL || prod->modus != NIHIL)
             {
                 per (k = ZEPHYRUM; k < num_dex; k++)
@@ -512,18 +515,27 @@ silva_gen_grammaticam_legere(
                     si (!sym_idx) perge;
                     sym = (SilvaGenSymbolum*)xar_obtinere(
                         grammatica->symbola, (i32)*sym_idx);
-                    si (!sym || !sym->est_terminale) perge;
+                    si (!sym) perge;
 
                     mappa = (SilvaGenLocusMappa*)xar_obtinere(prod->loci, k);
                     si (!mappa || mappa->titulus == NIHIL)
                     {
                         fprintf(stderr,
-                            "silva_gen: productio '%.*s': terminale '%.*s' "
-                            "sine @loco (dominus triviorum deest)\n",
-                            (int)prod->id->mensura,
-                            (constans character*)prod->id->datum,
+                            "silva_gen: productio P%d%s%.*s%s: %s '%.*s' "
+                            "sine @loco (%s)\n",
+                            (int)prod->index,
+                            prod->id != NIHIL ? " '" : "",
+                            prod->id != NIHIL ? (int)prod->id->mensura : 0,
+                            prod->id != NIHIL
+                                ? (constans character*)prod->id->datum : "",
+                            prod->id != NIHIL ? "'" : "",
+                            sym->est_terminale
+                                ? "terminale" : "symbolum",
                             (int)sym->titulus->mensura,
-                            (constans character*)sym->titulus->datum);
+                            (constans character*)sym->titulus->datum,
+                            sym->est_terminale
+                                ? "dominus triviorum deest"
+                                : "totalitas emissionis frangeretur");
                         redde NIHIL;
                     }
                 }
@@ -959,6 +971,80 @@ silva_gen_registrum_computare(
                     "requirit\n");
                 redde NIHIL;
             }
+        }
+    }
+
+    /* Validatio ordinis locorum (Phase 5, scribere): emissio generica
+     * locos ordine layout ambulat, ergo QUAEQUE productio generis
+     * locos suos ordine layout mappare debet - series indicum in
+     * ordine dextri monotone non-decrescens (repetitio licita:
+     * @locus+ accumulans). Ordo divergens = error generationis.
+     * Via reversa nominata (INTENTIO Phase 5): index productionis
+     * in nodis, si grammatica vera ordines divergentes petat. */
+    per (p = ZEPHYRUM; p < (i32)xar_numerus(grammatica->productiones); p++)
+    {
+        SilvaGenProductio* prod = (SilvaGenProductio*)xar_obtinere(
+            grammatica->productiones, p);
+        SilvaGenGenusDef* def = NIHIL;
+        i32 j;
+        i32 k;
+        s32 prior;
+
+        si (prod == NIHIL || prod->genus == NIHIL) perge;
+
+        per (j = ZEPHYRUM; j < (i32)xar_numerus(genera); j++)
+        {
+            SilvaGenGenusDef* d = (SilvaGenGenusDef*)xar_obtinere(genera, j);
+
+            si (d != NIHIL && _chordae_pares(d->titulus, prod->genus))
+            {
+                def = d;
+                frange;
+            }
+        }
+        si (def == NIHIL) perge;  /* non accidit - unitum supra */
+
+        prior = -I;
+        per (k = ZEPHYRUM; k < (i32)xar_numerus(prod->dextrum); k++)
+        {
+            SilvaGenLocusMappa* mappa = (SilvaGenLocusMappa*)xar_obtinere(
+                prod->loci, k);
+            s32 index_loci = -I;
+            i32 m;
+
+            si (mappa == NIHIL || mappa->titulus == NIHIL) perge;
+
+            per (m = ZEPHYRUM; m < (i32)xar_numerus(def->loci); m++)
+            {
+                SilvaGenLocusDef* locus = (SilvaGenLocusDef*)xar_obtinere(
+                    def->loci, m);
+
+                si (locus != NIHIL
+                    && _chordae_pares(locus->titulus, mappa->titulus))
+                {
+                    index_loci = (s32)m;
+                    frange;
+                }
+            }
+            si (index_loci < ZEPHYRUM) perge;  /* non accidit */
+
+            si (index_loci < prior)
+            {
+                fprintf(stderr,
+                    "silva_gen: productio '%.*s': locus '%.*s' ordinem "
+                    "layout generis '%.*s' violat (emissio generica "
+                    "ordinem dextri sequitur - loci omnium productionum "
+                    "eiusdem generis ordine consentire debent)\n",
+                    prod->id != NIHIL ? (int)prod->id->mensura : 0,
+                    prod->id != NIHIL
+                        ? (constans character*)prod->id->datum : "",
+                    (int)mappa->titulus->mensura,
+                    (constans character*)mappa->titulus->datum,
+                    (int)prod->genus->mensura,
+                    (constans character*)prod->genus->datum);
+                redde NIHIL;
+            }
+            prior = index_loci;
         }
     }
 

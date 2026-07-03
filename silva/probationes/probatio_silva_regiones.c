@@ -308,6 +308,53 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_I32 (xar_numerus(exp->regiones), I);
         CREDO_AEQUALIS_I32 (xar_numerus(reliqua), VII);
 
+        /* custos IAM definitus ante processionem (sim ⑥ C7, decisio
+         * Fran): NON transparentia - ambulator normalis, #ifndef
+         * falsum, interior ramus non sumptus (extra rationem sed
+         * numquam perditus), lineae captae */
+        {
+            Xar* lexemata_c7;
+            Xar* directivae_c7;
+            SilvaRegio* regio;
+            SilvaRamus* ramus;
+
+            exp = silva_expansio_creare(piscina);
+            silva_fons_addere(exp, "probatio.c", FALSUM);
+            CREDO_VERUM (silva_macro_addere(exp, "CUSTOS_PRAE", "1"));
+            lexemata_c7 = silva_lexare(piscina,
+                "#ifndef CUSTOS_PRAE\n#define CUSTOS_PRAE\n"
+                "int g;\n#endif\n",
+                (i32)strlen("#ifndef CUSTOS_PRAE\n#define CUSTOS_PRAE\n"
+                "int g;\n#endif\n"), ZEPHYRUM);
+            directivae_c7 = NIHIL;
+            reliqua = silva_expansio_directivas_processare(exp,
+                lexemata_c7, &directivae_c7);
+
+            /* interior NON processatus: reliqua = EOF solum; regio
+             * una cum ramo non sumpto, lamina cruda interiorem fert */
+            CREDO_AEQUALIS_I32 (xar_numerus(reliqua), I);
+            CREDO_AEQUALIS_I32 (xar_numerus(exp->regiones), I);
+            regio = *(SilvaRegio**)xar_obtinere(exp->regiones, ZEPHYRUM);
+            CREDO_AEQUALIS_I32 (xar_numerus(regio->rami), I);
+            ramus = *(SilvaRamus**)xar_obtinere(regio->rami, ZEPHYRUM);
+            CREDO_FALSUM (ramus->est_sumptum);
+            CREDO_NON_NIHIL (ramus->lexemata_cruda);
+            CREDO_MAIOR_I32 (xar_numerus(ramus->lexemata_cruda),
+                ZEPHYRUM);
+            /* lineae #ifndef + #endif captae (interior in lamina) */
+            CREDO_AEQUALIS_I32 (xar_numerus(directivae_c7), II);
+            /* definitio interior numquam registrata (semantica cpp:
+             * interior praetermissus definitionem non currit) -
+             * CUSTOS_PRAE ipsum ex API manet */
+            {
+                SilvaMacroDef* def = silva_expansio_quaerere(exp,
+                    _ch("CUSTOS_PRAE"));
+
+                CREDO_NON_NIHIL (def);
+                CREDO_VERUM (def->ex_api);
+            }
+        }
+
         /* includere bis: interior semel, secunda praetermissa */
         {
             SilvaInclusio* inclusio;

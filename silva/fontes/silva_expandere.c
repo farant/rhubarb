@@ -70,6 +70,8 @@ silva_expansio_creare (Piscina* piscina)
     exp->regiones = xar_creare(piscina, magnitudo(SilvaRegio*));
     exp->includenda = tabula_dispersa_creare_chorda(piscina, XVI);
     exp->inclusiones = xar_creare(piscina, magnitudo(SilvaInclusio));
+    exp->extenta = xar_creare(piscina,
+        magnitudo(SilvaExtentumInvocationis));
     exp->profunditas_includendi = ZEPHYRUM;
     exp->fons_api = -I;
     exp->tabula_activa = NIHIL;
@@ -1168,10 +1170,15 @@ _plagulam_processare (
                 operandum->valor);
         }
 
-        /* custos iam definitus (rarum: iniectio ante processionem) */
+        /* custos iam definitus (rarum: iniectio ante processionem).
+         * NON transparentia: per ambulatorem NORMALEM - #ifndef falsum
+         * evaluat, interior ramus NON sumptus fit (lexemata_cruda -
+         * "extra rationem sed numquam perditum", sim ⑥ C7), lineae
+         * directivae normaliter captae. Reconstructio fontis viam
+         * ordinariam reinserendorum equitat. */
         si (silva_conditio_est_definitum(exp, operandum->valor))
         {
-            _fluxum_processare(exp, lexemata, i_post, n, ZEPHYRUM, NIHIL,
+            _fluxum_processare(exp, lexemata, ZEPHYRUM, n, ZEPHYRUM, NIHIL,
                 servare_eof, reliqua, directivae);
             redde;
         }
@@ -2006,6 +2013,24 @@ _generatio_interna (
                             Xar** locus;
                             i32 j;
                             i32 m;
+
+                            /* Extentum strati 0 memorare (Phase 5,
+                             * sim ⑥ C5): reconstructio fontis octetos
+                             * invocationis [nomen..')'] petit - solum
+                             * cum nomen ipsum lexema FONTIS est */
+                            si (token->origo.genus == SILVA_ORIGO_FONS)
+                            {
+                                SilvaExtentumInvocationis* ext;
+
+                                ext = (SilvaExtentumInvocationis*)
+                                    xar_addere(exp->extenta);
+                                si (ext != NIHIL)
+                                {
+                                    ext->invocatio = token;
+                                    ext->lamina = _lamina_capere(exp,
+                                        lexemata, i, i_post);
+                                }
+                            }
 
                             /* argumenta PLENE prae-expandere (S13) */
                             expansa = xar_creare(exp->piscina, magnitudo(Xar*));
