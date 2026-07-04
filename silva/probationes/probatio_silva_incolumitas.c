@@ -39,14 +39,16 @@ hic_manens constans SilvaGrammatica GRAMMATICA_SCELETI = {
     &SILVA_SCELETUM_TABULA,
     &SILVA_SCELETUM_REGISTRUM,
     silva_sceletum_construere,
-    silva_sceletum_ambiguum_fabricare
+    silva_sceletum_ambiguum_fabricare,
+    NIHIL
 };
 
 hic_manens constans SilvaGrammatica GRAMMATICA_C89 = {
     &SILVA_C89_TABULA,
     &SILVA_C89_REGISTRUM,
     silva_c89_construere,
-    silva_c89_ambiguum_fabricare
+    silva_c89_ambiguum_fabricare,
+    NIHIL
 };
 
 /* Ambae grammaticae per omnia specimina (M2a Chunk C: c89 eundem

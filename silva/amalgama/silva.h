@@ -414,6 +414,15 @@ int silva_oraculum_typum_addere_literis(SilvaOraculum* oraculum,
 int silva_oraculum_typum_novit(const SilvaOraculum* oraculum,
     SilvaChorda titulus);
 
+/* Oraculum POSITIONALE (M2b): typus a SITU declarationis visibilis
+ * (byte_offset lexematis nominis; 0 = praeoneratus, ubique
+ * visibilis - addere sine situ = situs 0). typedef POST usum
+ * ambiguitatem priorem non solvit. Situs primus servatur. */
+int silva_oraculum_typum_addere_situ(SilvaOraculum* oraculum,
+    SilvaChorda titulus, int situs);
+int silva_oraculum_situs_typi(const SilvaOraculum* oraculum,
+    SilvaChorda titulus, int* situs_out);
+
 typedef struct SilvaResolutioResponsum {
     int         victor;        /* index interpretationis; -1 ignotum */
     SilvaToken* discriminans;  /* NULL licet */
@@ -520,11 +529,18 @@ extern const unsigned int silva_latina_mensura;
  * Gubernator (fistula tota) + fructus
  * ================================================== */
 
+/* Uncus praecommissionis (M2b): gubernator eum (si non-NULL)
+ * ante commissionem vocat, radice nondum commissa (pater absens -
+ * lectio sola); datum = datum_resolutoris. Sedes registrationis
+ * typorum c89. */
+typedef void (*SilvaPraecommissio)(SilvaValor radix, void* datum);
+
 typedef struct SilvaGrammatica {
     const SilvaTabulaCocta*     tabula;
     const SilvaRegistrumCoctum* tabularium;
     SilvaGLRConstructor         constructor;
     SilvaGLRFabricaAmbigui      fabrica;
+    SilvaPraecommissio          praecommissio;  /* NULL licet */
 } SilvaGrammatica;
 
 typedef struct SilvaParsura {
@@ -689,5 +705,54 @@ SilvaValor silva_c89_construere(SilvaPiscina* piscina,
     int productio, const SilvaValor* valores);
 SilvaValor silva_c89_ambiguum_fabricare(SilvaPiscina* piscina,
     SilvaValor interpretationes, int canonica);
+
+/* ==================================================
+ * Anima semantica c89 (M2b, simulatio X): saltatio oraculi.
+ * silva_c89_parsare = vocatio una (registratio typedef per
+ * uncum praecommissionis + resolutor verus ad commissionem +
+ * politica spinae canonicae post). oraculum NULL licet (vacuum
+ * intus); oraculum datum typos plagulae ACCIPIT.
+ * ================================================== */
+
+extern const SilvaGrammatica SILVA_C89_GRAMMATICA;
+
+SilvaParsura* silva_c89_parsare(SilvaPiscina* piscina,
+    const char* via, const char* fons, unsigned int mensura,
+    SilvaOraculum* oraculum);
+
+/* Resolutor verus (filtrum combinationis X10 + oraculum
+ * positionale X3 + retentio ignotorum) - pro machinatione
+ * propria (silva_parsare/silva_recanonicare directis) */
+void silva_c89_resolutor(const SilvaNodus* ambiguum,
+    const SilvaOraculum* oraculum, void* datum,
+    SilvaResolutioResponsum* responsum);
+
+/* Registratio typorum radice (etiam intra ramos sumptos;
+ * elementa ambigua praetermissa) */
+void silva_c89_typos_registrare(SilvaValor radix,
+    SilvaOraculum* oraculum);
+
+/* Lexema tituli declaratoris (catena persecuta; NULL si
+ * abstractus) - ambulator vistae declarationum */
+SilvaToken* silva_c89_declaratoris_titulus(
+    const SilvaNodus* declarator);
+
+/* Politica canonicae super superstites; numerum versorum reddit */
+unsigned int silva_c89_politicam_imponere(SilvaCommissio* commissio,
+    SilvaOraculum* oraculum);
+
+/* Vista declarationum: ordines TOC (unus per declaratorem; nudae
+ * per tag; rami sumpti visitantur; ambigua per spinam canonicam) */
+typedef struct SilvaDeclaratioVista {
+    const char* genus;    /* titulus generis (kebab, e registro) */
+    SilvaChorda titulus;  /* nomen; mensura 0 = anonymum */
+    int         linea;
+    int         situs;    /* byte_offset */
+} SilvaDeclaratioVista;
+
+unsigned int silva_c89_declarationes_numerus(
+    const SilvaParsura* parsura);
+int silva_c89_declaratio_vista(const SilvaParsura* parsura,
+    unsigned int index, SilvaDeclaratioVista* vista);
 
 #endif /* SILVA_H */

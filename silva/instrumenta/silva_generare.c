@@ -689,22 +689,50 @@ silva_gen_grammaticam_legere(
 
 /* Estne non-terminale lista-valens? (aliqua productio eius modus fert) */
 hic_manens b32
-_est_lista_valens(SilvaGenGrammatica* g, s32 sym_idx)
+_est_lista_valens_ad(SilvaGenGrammatica* g, s32 sym_idx, i32 profunditas)
 {
     i32 i;
+
+    si (profunditas > XXXII) redde FALSUM;  /* custodia cyclorum */
 
     per (i = ZEPHYRUM; i < (i32)xar_numerus(g->productiones); i++)
     {
         SilvaGenProductio* prod = (SilvaGenProductio*)xar_obtinere(
             g->productiones, i);
 
-        si (prod != NIHIL && prod->sinistrum == sym_idx
-            && prod->modus != NIHIL)
+        si (prod == NIHIL || prod->sinistrum != sym_idx) perge;
+        si (prod->modus != NIHIL)
         {
             redde VERUM;
         }
+        /* TRANSITIVUM (M2b): transitus unius symboli valorem
+         * intactum fert - si symbolum eius lista-valens est,
+         * hoc quoque est (specificatores-decl -> sd-*: lista
+         * per duos transitus fluit; sine hoc species NODUS
+         * falso computabatur -> S32 in tempore currendi) */
+        si (prod->genus == NIHIL && prod->manu == NIHIL
+            && (i32)xar_numerus(prod->dextrum) == I)
+        {
+            s32* sym = (s32*)xar_obtinere(prod->dextrum, ZEPHYRUM);
+            SilvaGenSymbolum* s = (sym != NIHIL)
+                ? (SilvaGenSymbolum*)xar_obtinere(g->symbola,
+                      (i32)*sym)
+                : NIHIL;
+
+            si (s != NIHIL && !s->est_terminale
+                && _est_lista_valens_ad(g, *sym, profunditas + I))
+            {
+                redde VERUM;
+            }
+        }
     }
     redde FALSUM;
+}
+
+hic_manens b32
+_est_lista_valens(SilvaGenGrammatica* g, s32 sym_idx)
+{
+    redde _est_lista_valens_ad(g, sym_idx, ZEPHYRUM);
 }
 
 hic_manens b32

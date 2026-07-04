@@ -345,11 +345,10 @@ s32 principale (vacuum)
             CREDO_AEQUALIS_S32 (cocta89->initium_index,
                 g89->initium_index);
 
-            /* M2a Chunk B: familia furcarum typedef = DUAE cellae
-             * (typus-nominatus vs primarium-identificator, in
-             * prospectibus STAR/PAREN_CLAUSA - probatio_silva_c89
-             * cellas ipsas per paria id figit) */
-            CREDO_AEQUALIS_S32 (cocta89->numerus_conflictuum, II);
+            /* M2b Chunk A: tres familiae typedef-actae = NOVEM
+             * cellae (probatio_silva_c89 familias ipsas per paria
+             * id exhaustive figit) */
+            CREDO_AEQUALIS_S32 (cocta89->numerus_conflictuum, XIV);
         }
     }
 

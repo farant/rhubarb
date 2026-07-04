@@ -35,14 +35,16 @@ hic_manens constans SilvaGrammatica GRAMMATICA_SCELETI = {
     &SILVA_SCELETUM_TABULA,
     &SILVA_SCELETUM_REGISTRUM,
     silva_sceletum_construere,
-    silva_sceletum_ambiguum_fabricare
+    silva_sceletum_ambiguum_fabricare,
+    NIHIL
 };
 
 hic_manens constans SilvaGrammatica GRAMMATICA_C89 = {
     &SILVA_C89_TABULA,
     &SILVA_C89_REGISTRUM,
     silva_c89_construere,
-    silva_c89_ambiguum_fabricare
+    silva_c89_ambiguum_fabricare,
+    NIHIL
 };
 
 interior i8*
@@ -377,6 +379,11 @@ s32 principale (vacuum)
         (int)summa_errorum_c89, (int)frons_maxima_c89,
         (int)fideles_arboris_c89, (int)numerus);
     CREDO_AEQUALIS_I32 (fideles_arboris_c89, numerus);
+    /* CUSTOS EXPLOSIONIS FURCARUM (M2b Chunk D): tectum fixum -
+     * observatum 2 trans corpus totum; tectum generosum VIII.
+     * Fractura = furcae inflatae, remedium nominatum = uncus
+     * filtri actionum (Phase 4, evidentia-portatus) */
+    CREDO_VERUM (frons_maxima_c89 <= VIII);
     imprimere("  apex:     %8.0f B medius, %.0f B maximus\n",
         numerus > ZEPHYRUM ? summa_apex_octetorum / (duplex)numerus : 0.0,
         apex_maximus);

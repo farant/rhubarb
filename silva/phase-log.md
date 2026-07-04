@@ -3561,3 +3561,432 @@ struct/union/enum + campus bitfields; owns: canonical-policy
 shipping location, watchdog ceilings from the Chunk C
 baselines, syntaxis-corpus comprehension riser, TYPI/
 DECLARATIONES saltuarius vista per the loop map).
+
+---
+
+## M2b — DECLARATIONES + TYPI: INTENTIO (2026-07-04)
+
+**What M2b proves**: the M1 fork case was the GENERAL mechanism,
+not a demo — the oracle dance at scale. Typedef declarations
+register at segment commit and feed subsequent segments;
+within-segment unknowns stay localized AMBIGUUS (both readings
+retained — the wildcard-query pin WANTS them); the watchdog
+counters get measured ceilings. This is the largest and
+riskiest M2 chunk: ~45 rules + the first grammar-SPECIFIC
+hand-written module + a driver API addition.
+
+**Inherited by name from M2a**: canonical-policy shipping
+location; watchdog ceilings (baseline frons_maxima 2);
+syntaxis-corpus comprehension riser (baseline 0);
+TYPI/DECLARATIONES vista (the loop map — the vista IS M2b's
+API-pressure test); const/volatile qualifiers; nested-packing
+observation (watchdog evidence); M1-era three-valued-oracle
+paths.
+
+**Verified going in**: the segment slicer counts PAREN depth
+ONLY (silva_parsare.c:209-222) — `struct S { int x; int y; };`
+would slice MID-BODY today. Brace depth-counting is a named
+driver change (Chunk B). Existing suites unaffected (sceletum
+inputs braceless; corpus assertions pin fidelity/ratios, not
+segment counts — byte-exactness holds under any slicing).
+
+**Chunks**:
+
+- **0 — SIMULATIO X (the oracle dance, pretend-implemented
+  against shipped code).** The culture rule: simulate contested
+  designs before building; sim ledger 5-for-5. Contested here:
+  (a) the driver hook — registration must run BETWEEN segments
+  (segment N's typedefs shape segment N+1's parse), before
+  commit (pater unset; genus+slots readable — verify); proposed
+  shape: an optional per-segment callback on the parse API
+  (grammar-agnostic driver, c89-specific hook), exact signature
+  from the sim. (b) AMBIGUOUS-typedef registration policy:
+  `typedef foo bar;` with foo unknown — the DECLARATION itself
+  packs; register `bar` anyway (it names a type under EVERY
+  interpretation that is a declaration) or hold? What when the
+  canonical reading is the expression one? (c) the policy-
+  resolutor interplay (collapse-at-commit vs flip-only
+  recanonicare vs registration — three passes, one owner).
+  Deliverable: sim register + decisions, interview if needed.
+- **A — declaratio core (~20 rules).** Order-free
+  specificatores: ONE flat lista rule over specifier atoms
+  (storage classes TYPEDEF/EXTERN/STATIC/AUTO/REGISTER,
+  qualifiers CONST/VOLATILE, typus atoms) — validity (one
+  storage class max, etc.) is the LINT layer's job, never the
+  grammar's (arbor2 specifiers_ordine lesson: hand-ordered
+  categories = combinatorial explosion). Declarator recursion:
+  monstrator (w/ qualificatores lista), titulus, aciei
+  (mensura?), functionis (parametra — ANSI only, K&R = M2c),
+  parenthesized (int (*f)(void) — the function-pointer
+  adversarial fixture from spec §7), abstract forms extended to
+  match. declaratores = separated lista of init-declarators
+  (= initiator, expression form; congeries = Chunk B).
+  elementum grows declaratio — THE SCELETUM FORK ARRIVES AT
+  STATEMENT LEVEL (`foo * bar;`), plus the specifier fork
+  (`foo bar;` — both typedef-name-able). Census RE-ENUMERATED
+  exhaustively — the family grows; every new cell named or the
+  chunk stops.
+- **B — aggregates (~15 rules).** structura/unio (tok_titulus?,
+  membra; membrum = specificatores + declaratores + terminator;
+  campus bitfields per vocabulary), enumeratio (enumeratores,
+  valor? = ternarius-tier const expr), congeries (nested, in
+  initiator position), species-typi extended (structura/unio/
+  enumeratio atoms — `(struct S*)p` casts). DRIVER: brace
+  depth-counting in the slicer (verified need, above).
+  Annotation-friction watch: struct members, enumerator lists,
+  initializer nesting are the sketch's NAMED candidates —
+  first friction revises the FORMAT consciously, never
+  per-rule hacks.
+- **C — the oracle dance.** New hand-written module (the first
+  grammar-specific one; name at review — proposal
+  fontes/silva_c89_oraculum.{h,c}): the REAL resolutor
+  (replacing probatio hand copies), the segment-commit
+  registration walk (typedef detection = TYPEDEF token in
+  specificatores, per the M2.0 semantic-mark decision), the
+  canonical-policy pass (expression-canonical for surviving
+  ambigui — the M2a mechanism, now shipped). Driver hook from
+  Simulatio X. Fixtures: typedef-feeds-next-segment
+  (`typedef int foo; foo x;` → BOTH clean), unknown stays
+  AMBIGUUS, ambiguous-typedef per sim policy, redefinition/
+  shadowing = whatever C89 scoping demands DEFERRED BY NAME
+  (block scope = M2c compound statements; M2b oracle is
+  file-scope flat).
+- **D — the bars.** Carried lapifex decl suite
+  (probationes/probatio_lapifex_c89_decl.c — inventory at chunk
+  start) re-asserted against DECISUS genera; syntaxis-corpus
+  comprehension riser RE-PINNED (baseline 0 → observe; the
+  corpus is wall-to-wall declarations, so this is M2b's
+  headline number); mensura corpus re-baselined + WATCHDOG
+  CEILINGS pinned (frons_maxima / fusiones asserted under
+  measured bounds over solarium + roundtrip corpus — the
+  fork-explosion risk retired with numbers, or escalated with
+  numbers); SilvaDeclaratioVista in silva.h (genus + titulus +
+  extent + linea, mirrors the additiones-II vista pattern) +
+  hospes calls same-change; every fixture roundtrips; RELATIO
+  + full-log audit.
+- **E (conditional, per the loop rule) — saltuarius TYPI/
+  DECLARATIONES TOC section.** silva.h now carries BOTH
+  bundles, so saltuarius CAN drive the vista without switching
+  its main parse. Lands in-phase ONLY if it is the best
+  instrument for the D-chunk manual bar (Tab on a real header
+  listing its declarations = the bar); otherwise named to the
+  saltuarius backlog. Decide at D, with Fran.
+
+**Vocabulary addenda needing Fran's eye (genera-c89.md is
+DECISUS; two small gaps found at INTENTIO time)**:
+1. Parenthesized declarator `(*f)` — no genus named. PROPOSAL:
+   reuse `parenthesis` (identical loci shape {tok_apertum,
+   internum, tok_clausum}; S20 unification across expression
+   and declarator use; "find parenthesized things" queries
+   uniformly). Alternative: declarator-clausus.
+2. Specifier atoms in the specificatores lista: bare TOKENS
+   for storage classes/qualifiers (interleaved with typus
+   NODES, lista-mixta) — no wrapper nodes. Queries scan
+   tokens; consistent with tok_verba precedent.
+
+**Manual bar**: `./silva/arbor.sh -f` on a real rhubarb header
+shows correct declaration trees; the typedef dance visible
+(same file, names resolving as the segments advance).
+
+**Named risks**: fork explosion on typedef-dense real headers
+(THE M2b risk — watchdog ceilings are the discharge, measured
+not guessed; the Phase-4 action-filter pruning hook is the
+named evidence-gated remedy); annotation-format friction
+(three named candidates); the declarator recursion's grammar
+conflicts beyond the known family (any unnamed cell = stop);
+nested-packing inflation under declaration forks (M2a
+observation — watch the ambigui counts).
+
+**Exit criteria**: suite green; census = enumerated family
+(re-pinned); oracle dance proven across segments; watchdog
+ceilings asserted; comprehension riser pinned at its new
+number; vista + hospes; carried decl bar green; roundtrip
+everything; RELATIO + audit.
+
+### SIMULATIO X — COMPLETE (2026-07-04); register:
+### project-specs/silva-simulatio-10.md
+
+Sim ledger 6-for-6. Reversed the INTENTIO's central mechanism
+(no GLR-time oracle exists → per-segment registration
+unnecessary; ONE pre-commit hook suffices — X1); found the
+positional-visibility hole (flat oracle wrongly resolves
+typedef-after-use — the oracle must carry declaration offsets —
+X3); decided ambiguous-typedef policy (conservative-exclusive —
+X4); the registration walk IS the vista walk (X5); scoring
+resolutor design (X6); wrapper owns the three-pass sequence and
+ANSWERS the canonical-policy shipping question (X8). Post-sim
+verify caught the register's own error: -Wextra fails 4-of-5
+bundle initializers → all bundle sites gain explicit NIHIL
+(compiler enumerates them). Fran approved all four
+recommendations (bundle hook / positional oracle / exclusive /
+silva_c89_oraculum). POST-SIM ADDENDUM (found at Chunk A): X10 —
+the resolutor needs a COMBINATION-VALIDITY filter (C89
+type-specifier combination rules: int+nominatus impossible,
+two nominatus impossible) to kill semantically-impossible
+readings deterministically before oracle scoring; without it
+every `int f(foo);` keeps a phantom "declarator (foo) of type
+int-f" reading forever. Chunk C owns it.
+
+### M2b Chunk A — declaratio core: COMPLETE (2026-07-04)
+
+**Suite 27/27 (probatio_silva_c89: 556 assertions); amalgam
+gates + hospes 20/20; saltuarius/tessera green.** Grammar: +8
+terminals (storage classes, qualifiers, ELLIPSIS) / +55
+productions (154 total, 238 states): declaratio (specificatores
+ordine libero + declaratores separata + initiatores expressione),
+the FULL declarator recursion (monstrator cum qualificatoribus,
+titulus, aciei ± mensura, functionis cum parametris + ELLIPSIS,
+parenthesis REUSED for (*f) per the vocabulary addendum),
+abstract declarators extended (aciei/functionis genera reused,
+internum absent), species-typi upgraded to true spec-qual lists
+(qualifiers in casts work), elementum grew declaratio — THE
+SCELETUM FORK NOW LIVES AT STATEMENT LEVEL.
+
+**Design that paid**: the TWO-STATE specifier lista (after a
+primitive-run atom, another primitive-run cannot follow) makes
+maximal-run grouping GRAMMATICAL — `unsigned long` = one
+typus-primitivus (verba II) with ZERO conflicts and zero forks;
+a qualifier splits runs (`unsigned const long` = three atoms,
+vocabulary note recorded). declaratio-NUDA deferred to Chunk B
+BY NAME — its absence keeps `int x;` and `unsigned foo x;`
+runtime-unambiguous (the phantom all-specifier readings need
+nuda to complete, and die in GLR without it).
+
+**Census: NINE cells, THREE named families, exhaustively
+pinned** (any unknown cell = loud failure): F1 ×4 =
+typus-nominatus vs primarium-identificator (the M2a family
+widened to declaration/parameter contexts); F2 ×3 =
+typus-nominatus vs declarator-titulus (the ISO parameter rule
+as a GLR fork); F3 ×2 = shift(IDENT-as-next-specifier) vs
+reduce(specificatores-decl complete) — the specifier/declarator
+boundary. Runtime behavior: plain declarations (incl. `static
+const foo x;`, function pointers, arrays) parse CLEAN with zero
+ambigui; `foo * bar;` = the designed statement fork (declaratio
+vs sententia-expressionis, both retained); `f(a)[3];` = genuine
+C double-reading, retained; `int f(foo);` = genuine double-
+reading pending the X10 filter.
+
+**COMPLEXITY (generator)** — discovered-while: first suite run
+segfaulted after an S32 refusal ("signum valoris LISTA speciei
+TOKEN non congruit"). consists-in: _est_lista_valens checked
+DIRECT modus productions only — specificatores-decl reaches its
+lista-ness through two pass-through hops (specificatores-decl →
+sd-* → modus), so the registrum computed species NODUS for a
+lista-carrying slot; construere's S32 check refused the store
+and the GLR branch DIED SILENTLY (construere-nihil = dead
+branch). consequences: worse than the crash — pre-fix trees
+showed FALSE-CLEAN ambiguity counts (`int f(foo)` reported
+ambigui 0 because the second legitimate reading's construction
+was being killed); the S32 runtime check is what surfaced it —
+the debug-assert design from spec §9.4 earning its keep.
+handled-by: _est_lista_valens made TRANSITIVE through 1-symbol
+pass-through productions (depth-capped against cycles); fix
+regenerated all tables (sceletum/imparilis byte-identical);
+the resurrected reading is now PINNED as a fixture with the
+full story in its comment.
+
+**The headline numbers**: syntaxis-corpus comprehension
+0 → 69/125 lines clean (pinned; Chunk B aggregates + M2c
+functions own the rest); solarium-corpus ERROR nodes 761 → 436;
+**frons_maxima STILL 2** over the whole corpus — the fork-
+explosion risk is so far a no-show even at declaration width
+(ceilings formally pinned at Chunk D); parse 0.91 ms/KB
+(bigger tables, still fast); 78/78 byte-exact through trees.
+
+NEXT: Chunk B — aggregates (structura/unio + membrum/campus,
+enumeratio, congeries, declaratio-nuda arrives WITH the
+combination-validity context, species-typi struct atoms,
+slicer brace-depth).
+
+### M2b Chunk B — aggregata: COMPLETE (2026-07-04)
+
+**Suite 27/27 (probatio_silva_c89: 635 assertions); amalgam +
+hospes 20/20; saltuarius/tessera green.** Grammar: +5 terminals
+(STRUCT/UNION/ENUM/BRACE ×2) / +43 productions (197 total, 305
+states): structura/unio/enumeratio (P1 latina-keyword genera;
+plena/anonyma/nominata forms), membrum (spec-qual specifiers —
+the SAME sq lists as casts, zero duplication), campus bitfields
+(± declarator), enumeratores (± valor), congeries (nested;
+C89 trailing comma absorbed INTO the elementa lista as an
+interleaved token — no extra locus, byte order preserved,
+slot-order friction avoided). species-typi gets tags for free
+via the shared atom rule ((struct S*)p, sizeof(enum E)).
+DRIVER: the slicer counts BRACE depth (verified need — struct
+bodies were being sliced mid-body).
+
+**Design that paid — declaratio-nuda WITHOUT the ambiguity
+plague**: ISO's constraint "a declaration without declarators
+must declare a tag" made STRUCTURAL: the specifier-list
+automaton grew a third state (post-tag), and nuda accepts ONLY
+tag-final lists. `int x;` stays fork-free BY CONSTRUCTION (the
+phantom [int, nominatus(x)] reading cannot complete), while
+`struct S { int x; };` parses clean. Named divergence: `struct
+S {...} const;` (tag then qualifier, nuda) is legal-C89 but
+ERROR here — real-world frequency ~0, revisit on corpus
+evidence.
+
+**Census: 14 cells, same THREE families** (re-pinned
+exhaustively): F1 ×4 and F2 ×3 unchanged; F3 (specifier/
+declarator boundary) widened 2→7 (three list states × two list
+flavors — the sq-flavor cells are the MEMBRUM boundary,
+"struct S { foo bar; }").
+
+**Honest finding — the named bitfield forks**: `unsigned a:3;`
+inside a struct is genuinely ambiguous ([T]+campus(a) vs
+[T, nominatus(a)]+anonymous-campus) — reading 2 is combination-
+invalid, X10's Chunk-C kill; the fixture retains the wrapper
+honestly and asserts the named-campus reading present. The
+anonymous form `int : 2;` is unique. (Fixture initially
+segfaulted by navigating as if unambiguous — lldb + the
+stderr-vs-stdout lesson; no engine issue.)
+
+**The numbers**: syntaxis comprehension 69 → **87/125**;
+roundtrip-corpus ERROR nodes 436 → **62** (real headers ARE
+declarations; brace-slicing + aggregates ate the rest);
+frons_maxima STILL 2; 78/78 byte-exact; parse 0.82 ms/KB.
+
+NEXT: Chunk C — the oracle dance (silva_c89_oraculum module:
+Simulatio X design — bundle praecommissio hook + positional
+oracle + X6 scoring resolutor + X10 combination filter + policy
+pass + wrapper; bundle initializers gain explicit NIHIL).
+
+### M2b Chunk C — saltatio oraculi: COMPLETE (2026-07-04)
+
+**THE ORACLE DANCE WORKS, FIRST RUN. Suite 27/27
+(probatio_silva_c89: 661 assertions — the entire dance block
+green on its first execution); amalgam + hospes 21/21;
+saltuarius/tessera green.** The Simulatio X design shipped
+intact:
+
+- **Driver** (X1/X2): SilvaGrammatica grew the optional
+  praecommissio member (~6-line driver change, called between
+  weave and commit on the uncommitted radix); all 14 bundle
+  initializer sites gained explicit NIHIL — the compiler
+  enumerated every one, exactly as the sim's post-verify
+  predicted (including one the script missed in hospes, caught
+  by the amalgam gate).
+- **Positional oracle** (X3): oraculum entries carry the
+  declaring token's byte_offset (the hash-table value slot,
+  previously a dummy pointer); silva_oraculum_typum_addere_situ
+  + situs_typi; preloaded types = situs 0; first situs wins on
+  redeclaration. PINNED: `foo * bar; typedef int foo;` stays
+  honestly ambiguous — typedef-after-use resolves nothing.
+- **The module** (fontes/silva_c89_oraculum.{h,c}, the first
+  grammar-specific hand-written code): declaratoris_titulus
+  (the X5 walker — monstrator/aciei/functionis/parenthesis/
+  campus chase, shared with the future vista), typos_registrare
+  (typedef detection = TYPEDEF token per the M2.0 semantic
+  mark; descends taken conditional arms; skips AMBIGUUS
+  elements per X4), the REAL resolutor (X6+X10: combination
+  filter hard-kills impossible readings [nominatus+type,
+  tag+primitivus, tag+tag; multi-primitivus stays legal for
+  qualifier-split runs] → sole survivor wins → else unique
+  type-positive-at-position wins → else retention), the policy
+  pass (unique pure-expression reading → canonical; same-kind
+  ambigua keep engine order, documented), and silva_c89_parsare
+  — ONE call owning the whole sequence.
+- **Proven in fixtures**: the dance (`typedef int foo; foo *
+  bar;` → zero ambigui, one resolution); X3 retention; X10
+  hard-kills WITHOUT any oracle (int f(foo) → functionis;
+  named bitfields collapse clean); policy through the wrapper
+  ((foo)(x) retained, vocatio-canonical); dance through
+  conditional arms; ERROR-segment invisibility (X9);
+  multi-declarator registration; and `typedef int f; f(a)[3];`
+  collapsing to a DECLARATION (array a of three f — C is
+  wonderful).
+- **arbor.c** switched to the wrapper — the manual bar:
+  `typedef int foo; foo * bar; (foo)(x);` prints THREE clean
+  trees, zero ambigui.
+- **silva.h**: praecommissio mirror + positional-oracle API +
+  the c89 semantic section (SILVA_C89_GRAMMATICA,
+  silva_c89_parsare, resolutor, typos_registrare,
+  declaratoris_titulus, politicam_imponere); manifest grew the
+  module; hospes exercises the dance + situs semantics + the
+  walker THROUGH THE AMALGAM.
+
+Small frictions (all compile-caught, none silent): typedef
+redefinition of SilvaPraecommissio in the amalgam TU → CADENDA
+entry (silva.h owns it); i32-is-UNSIGNED mistranslated as int
+in one silva.h decl (the standing latina-type-map lesson);
+-Wcast-qual on a hospes string literal; a statement-before-
+declaration C89 slip from a scripted edit.
+
+NEXT: Chunk D — the bars (carried lapifex decl suite;
+comprehension riser re-pinned WITH the dance — corpus lines
+through silva_c89_parsare; watchdog ceilings pinned;
+SilvaDeclaratioVista in silva.h + hospes; roundtrip; M2b
+RELATIO + audit; Chunk E saltuarius decision with Fran).
+
+### M2b Chunk D — the bars: COMPLETE (2026-07-04)
+
+**Suite 27/27 (probatio_silva_c89: 826 assertions); hospes
+22/22; saltuarius/tessera green.** Carried lapifex DECL bar: all
+30 inputs re-asserted against DECISUS genera through the
+CONSUMER path (silva_c89_parsare — dance active), every one
+clean and unambiguous ("2+3" gains its terminator per the M2a
+convention; "unsigned long long" parses — combination legality
+is lint's). Syntaxis harness switched to the wrapper
+(comprehension stays 87/125 — single-line inputs don't need
+cross-segment typedefs; the remainder is M2c functions/
+statements + gcc extensions). **WATCHDOG CEILING PINNED**:
+frons_maxima <= VIII asserted over the corpus (observed: 2,
+unchanged since M2a — the fork-explosion risk is formally
+retired at declaration scale; remedy stays named if the
+solarium sweep at M2d ever disagrees). **SilvaDeclaratioVista
+SHIPPED** (module + silva.h + CADENDA + hospes): one row per
+declarator, nuda rows titled by tag, taken arms visited,
+ambigua walked through the CANONICAL spine — the fixture's
+money shot: `foo * bar;` appears as a REAL "bar" row because
+the dance collapsed it to a declaration first. The X5
+prediction held: the vista walk is the registration walk's
+sibling, built on the same declaratoris_titulus chase.
+
+## M2b — DECLARATIONES + TYPI: RELATIO (2026-07-04) — COMPLETE
+
+**Every INTENTIO exit criterion met**: census re-pinned (14
+cells, 3 named families, exhaustive scan); oracle dance proven
+across segments (in-fixture, in-hospes, in-arbor); watchdog
+ceiling asserted; comprehension riser 0 → 69 → 87/125 pinned at
+each step; vista + hospes same-change; carried bar green;
+every fixture byte-exact through trees. The corpus headline:
+**roundtrip-corpus ERROR nodes 761 → 62** across M2b; frontier
+never left 2.
+
+**FULL PHASE-LOG AUDIT (M2b boundary)**: all Simulatio X items
+shipped or fixture-pinned (X1-X10 — the ledger's first 10-for-10
+sim); all four M2a handoffs discharged (policy→wrapper,
+ceilings→pinned, riser→pinned, vista→shipped); Chunk narrowings
+all named with owners (nuda tag-final divergence — corpus
+evidence owns reopening; X4's unreachable-fixture note;
+qualifier-split runs in the vocabulary doc). Block-scope oracle
+EXPLICITLY deferred to M2c/M2d (file-scope flat, named in
+Chunk C). M1-era parks unchanged (pasta fail-loud; accessors
+on-pull; sceletum manifest swap-out = M2d). The M2a
+nested-packing observation: watchdog numbers show NO inflation
+at declaration scale — stays a named observation, next
+checkpoint = M2d solarium sweep. Zero unowned complexities.
+
+**Two generator bugs found and killed this milestone** (both
+would have corrupted every future grammar silently): multi-line
+production atom loss (M2a) and non-transitive lista-valens
+species (M2b — the one that silently killed GLR branches and
+faked clean ambiguity counts). The S32 runtime check and the
+census discipline caught what nothing else would have.
+
+**OPEN FOR FRAN — Chunk E (the loop rule)**: the
+TYPI/DECLARATIONES saltuarius TOC section. The vista API is
+shipped and hospes-proven; silva.h carries both grammar
+bundles, so saltuarius can drive it without switching its main
+parse. Per the map this lands in-phase only if it is the best
+instrument for a manual bar — M2b's bars are all discharged
+without it, so the honest options are: (a) build it NOW as a
+v0.1 feature (small: fourth TOC section calling the vista),
+(b) name it to the saltuarius backlog and let M2c's FUNCTIONES
+section (the original pull) bring both sections at once.
+
+NEXT (after Fran's Chunk E call): **M2c INTENTIO — sententiae
++ functiones** (~30 rules: compound blocks, control flow with
+grouped-switch mechanics and dangling-else policy, GOTO/labels,
+function DEFINITIONS incl. K&R, the ()-before-{ boundary
+fixtures; owns block-scope oracle question, comprehension
+riser, FUNCTIONES TOC).

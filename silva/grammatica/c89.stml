@@ -46,7 +46,7 @@
     <terminalis titulus="CHARACTER_LIT"  genus="SILVA_LEX_CHARACTER_LIT"/>
     <terminalis titulus="STRING_LIT"     genus="SILVA_LEX_STRING_LIT"/>
 
-    <!-- Verba typorum primitivorum + magnitudo (Chunk B) -->
+    <!-- Verba typorum primitivorum + magnitudo (M2a Chunk B) -->
     <terminalis titulus="VOID"           genus="SILVA_LEX_VOID"/>
     <terminalis titulus="CHAR"           genus="SILVA_LEX_CHAR"/>
     <terminalis titulus="SHORT"          genus="SILVA_LEX_SHORT"/>
@@ -57,6 +57,23 @@
     <terminalis titulus="SIGNED"         genus="SILVA_LEX_SIGNED"/>
     <terminalis titulus="UNSIGNED"       genus="SILVA_LEX_UNSIGNED"/>
     <terminalis titulus="SIZEOF"         genus="SILVA_LEX_SIZEOF"/>
+
+    <!-- Classes repositionis + qualificatores (M2b Chunk A) -->
+    <terminalis titulus="TYPEDEF"        genus="SILVA_LEX_TYPEDEF"/>
+    <terminalis titulus="EXTERN"         genus="SILVA_LEX_EXTERN"/>
+    <terminalis titulus="STATIC"         genus="SILVA_LEX_STATIC"/>
+    <terminalis titulus="AUTO"           genus="SILVA_LEX_AUTO"/>
+    <terminalis titulus="REGISTER"       genus="SILVA_LEX_REGISTER"/>
+    <terminalis titulus="CONST"          genus="SILVA_LEX_CONST"/>
+    <terminalis titulus="VOLATILE"       genus="SILVA_LEX_VOLATILE"/>
+    <terminalis titulus="ELLIPSIS"       genus="SILVA_LEX_ELLIPSIS"/>
+
+    <!-- Aggregata (M2b Chunk B) -->
+    <terminalis titulus="STRUCT"         genus="SILVA_LEX_STRUCT"/>
+    <terminalis titulus="UNION"          genus="SILVA_LEX_UNION"/>
+    <terminalis titulus="ENUM"           genus="SILVA_LEX_ENUM"/>
+    <terminalis titulus="BRACE_APERTA"   genus="SILVA_LEX_BRACE_APERTA"/>
+    <terminalis titulus="BRACE_CLAUSA"   genus="SILVA_LEX_BRACE_CLAUSA"/>
 
     <!-- Operatores binarii/unarii -->
     <terminalis titulus="PLUS"           genus="SILVA_LEX_PLUS"/>
@@ -120,9 +137,345 @@
       </productio>
     </regula>
 
-    <!-- M2b: + declaratio; M2c: + sententiae ceterae -->
+    <!-- M2c: + sententiae ceterae -->
     <regula titulus="elementum">
       <productio>sententia-expressionis</productio>
+      <productio>declaratio</productio>
+    </regula>
+
+    <!-- ==== declaratio (M2b Chunk A): specificatores ordine
+         libero + declaratores. FURCA SCELETI hic advenit:
+         "foo * bar;" declaratio-vel-expressio. NB declaratio
+         NUDA (sine declaratoribus, "int;") Chunk B cum
+         aggregatis differtur - eius absentia "int x;" sine
+         ambiguitate servat (lectio [int, nominatus(x)] sine
+         declaratore grammatice non existit) ==== -->
+    <regula titulus="declaratio">
+      <productio genus="declaratio" id="declaratio-plena">
+        specificatores-decl@specificatores declaratores@declaratores
+        SEMICOLON@tok_terminator
+      </productio>
+      <productio genus="declaratio" id="declaratio-nuda">
+        sd-post-tag@specificatores SEMICOLON@tok_terminator
+      </productio>
+    </regula>
+
+    <!-- Atoma specificatorum: qualificatores/classes = LEXEMATA
+         nuda in lista (decisio M2b), typi = nodi. Genus-ida
+         typus-nominatus/typus-primitivus HIC vivunt (census
+         M2a per ea figitur). -->
+    <regula titulus="atomum-non-primitivum">
+      <productio genus="typus-nominatus" id="typus-nominatus">
+        IDENTIFICATOR@tok_titulus
+      </productio>
+      <productio>CONST</productio>
+      <productio>VOLATILE</productio>
+    </regula>
+
+    <regula titulus="atomum-decl-non-primitivum">
+      <productio>atomum-non-primitivum</productio>
+      <productio>TYPEDEF</productio>
+      <productio>EXTERN</productio>
+      <productio>STATIC</productio>
+      <productio>AUTO</productio>
+      <productio>REGISTER</productio>
+    </regula>
+
+    <!-- Lista specificatorum declarationis, TRISTATUALIS: post
+         atomum primitivum (typus-primitivus, cursus verborum
+         maximalis) atomum primitivum alterum sequi NON potest -
+         cupiditas cursus per constructionem, sine conflictu.
+         Status tertius (post-tag) declarationem NUDAM sinit:
+         ISO poscit ut declaratio sine declaratoribus tag declaret
+         ("int;" vetitum, "struct S {...};" licitum) - forma
+         structuralis: nuda solum ex statu tag-finali. Divergentia
+         nominata: "struct S {...} const;" (tag dein qualificator,
+         nuda) C89 licitum sed HIC ERROR - frequentia mundi veri
+         ~0, revisio si corpus postulat. Valor per omnes vias =
+         UNA lista. -->
+    <regula titulus="specificatores-decl">
+      <productio>sd-post-primitivum</productio>
+      <productio>sd-post-aliud</productio>
+      <productio>sd-post-tag</productio>
+    </regula>
+
+    <regula titulus="sd-post-primitivum">
+      <productio id="sd-pp-primum" modus="lista-initium">
+        typus-primitivus-atomum@elementum
+      </productio>
+      <productio id="sd-pp-ex-alio" modus="lista-appendere">
+        sd-post-aliud@lista+ typus-primitivus-atomum@elementum
+      </productio>
+      <productio id="sd-pp-ex-tag" modus="lista-appendere">
+        sd-post-tag@lista+ typus-primitivus-atomum@elementum
+      </productio>
+    </regula>
+
+    <regula titulus="sd-post-aliud">
+      <productio id="sd-pa-primum" modus="lista-initium">
+        atomum-decl-non-primitivum@elementum
+      </productio>
+      <productio id="sd-pa-ex-primitivo" modus="lista-appendere">
+        sd-post-primitivum@lista+ atomum-decl-non-primitivum@elementum
+      </productio>
+      <productio id="sd-pa-ex-alio" modus="lista-appendere">
+        sd-post-aliud@lista+ atomum-decl-non-primitivum@elementum
+      </productio>
+      <productio id="sd-pa-ex-tag" modus="lista-appendere">
+        sd-post-tag@lista+ atomum-decl-non-primitivum@elementum
+      </productio>
+    </regula>
+
+    <regula titulus="sd-post-tag">
+      <productio id="sd-pt-primum" modus="lista-initium">
+        atomum-tag@elementum
+      </productio>
+      <productio id="sd-pt-ex-primitivo" modus="lista-appendere">
+        sd-post-primitivum@lista+ atomum-tag@elementum
+      </productio>
+      <productio id="sd-pt-ex-alio" modus="lista-appendere">
+        sd-post-aliud@lista+ atomum-tag@elementum
+      </productio>
+      <productio id="sd-pt-ex-tag" modus="lista-appendere">
+        sd-post-tag@lista+ atomum-tag@elementum
+      </productio>
+    </regula>
+
+    <regula titulus="atomum-tag">
+      <productio>species-structurae</productio>
+      <productio>species-unionis</productio>
+      <productio>species-enumerationis</productio>
+    </regula>
+
+    <regula titulus="typus-primitivus-atomum">
+      <productio genus="typus-primitivus" id="typus-primitivus">
+        verba-primitiva@tok_verba
+      </productio>
+    </regula>
+
+    <!-- Declaratores: lista separata de declaratoribus initiatis -->
+    <regula titulus="declaratores">
+      <productio id="declaratores-primum" modus="lista-initium">
+        declarator-initiatus@elementum
+      </productio>
+      <productio id="declaratores-appendere" modus="lista-appendere">
+        declaratores@lista+ COMMA@signum declarator-initiatus@elementum
+      </productio>
+    </regula>
+
+    <regula titulus="declarator-initiatus">
+      <productio genus="declarator-initiatus" id="declarator-initiatus">
+        declarator@declarator ASSIGNATIO@tok_operator
+        initiator@initiator
+      </productio>
+      <productio>declarator</productio>
+    </regula>
+
+    <!-- initiator: expressio aut congeries (etiam nidificata) -->
+    <regula titulus="initiator">
+      <productio>assignatio</productio>
+      <productio genus="congeries" id="congeries">
+        BRACE_APERTA@tok_aperta congeries-elementa@elementa
+        BRACE_CLAUSA@tok_clausa
+      </productio>
+    </regula>
+
+    <!-- Virgula caudae C89 licita ({1, 2,}) = lexema ultimum in
+         lista ipsa (nullus locus additicius - ordo octetorum) -->
+    <regula titulus="congeries-elementa">
+      <productio id="congeries-primum" modus="lista-initium">
+        initiator@elementum
+      </productio>
+      <productio id="congeries-appendere" modus="lista-appendere">
+        congeries-elementa@lista+ COMMA@signum initiator@elementum
+      </productio>
+      <productio id="congeries-cauda" modus="lista-appendere">
+        congeries-elementa@lista+ COMMA@signum
+      </productio>
+    </regula>
+
+    <!-- ==== aggregata (M2b Chunk B): structura/unio/enumeratio -
+         verba latina ut genera (P1). membra = lista membrorum
+         (vacua licita - liberalitas; C89 unum poscit, lint
+         iudicat) ==== -->
+    <regula titulus="species-structurae">
+      <productio genus="structura" id="structura-plena">
+        STRUCT@tok_verbum IDENTIFICATOR@tok_titulus
+        BRACE_APERTA@tok_aperta membra@membra BRACE_CLAUSA@tok_clausa
+      </productio>
+      <productio genus="structura" id="structura-anonyma">
+        STRUCT@tok_verbum BRACE_APERTA@tok_aperta membra@membra
+        BRACE_CLAUSA@tok_clausa
+      </productio>
+      <productio genus="structura" id="structura-nominata">
+        STRUCT@tok_verbum IDENTIFICATOR@tok_titulus
+      </productio>
+    </regula>
+
+    <regula titulus="species-unionis">
+      <productio genus="unio" id="unio-plena">
+        UNION@tok_verbum IDENTIFICATOR@tok_titulus
+        BRACE_APERTA@tok_aperta membra@membra BRACE_CLAUSA@tok_clausa
+      </productio>
+      <productio genus="unio" id="unio-anonyma">
+        UNION@tok_verbum BRACE_APERTA@tok_aperta membra@membra
+        BRACE_CLAUSA@tok_clausa
+      </productio>
+      <productio genus="unio" id="unio-nominata">
+        UNION@tok_verbum IDENTIFICATOR@tok_titulus
+      </productio>
+    </regula>
+
+    <regula titulus="membra">
+      <productio modus="lista-initium"></productio>
+      <productio id="membra-appendere" modus="lista-appendere">
+        membra@lista+ membrum@elementum
+      </productio>
+    </regula>
+
+    <!-- membrum: specificatores SINE classibus repositionis
+         (lista spec-qual, ISO 3.5.2.1) + declaratores membri
+         (campus = declarator bitorum, vocabularium) -->
+    <regula titulus="membrum">
+      <productio genus="membrum" id="membrum">
+        specificatores@specificatores
+        membra-declaratores@declaratores SEMICOLON@tok_terminator
+      </productio>
+    </regula>
+
+    <regula titulus="membra-declaratores">
+      <productio id="membra-decl-primum" modus="lista-initium">
+        membrum-declarator@elementum
+      </productio>
+      <productio id="membra-decl-appendere" modus="lista-appendere">
+        membra-declaratores@lista+ COMMA@signum
+        membrum-declarator@elementum
+      </productio>
+    </regula>
+
+    <regula titulus="membrum-declarator">
+      <productio>declarator</productio>
+      <productio genus="campus" id="campus">
+        declarator@declarator COLON@tok_colon ternarius@latitudo
+      </productio>
+      <productio genus="campus" id="campus-sine-declaratore">
+        COLON@tok_colon ternarius@latitudo
+      </productio>
+    </regula>
+
+    <regula titulus="species-enumerationis">
+      <productio genus="enumeratio" id="enumeratio-plena">
+        ENUM@tok_verbum IDENTIFICATOR@tok_titulus
+        BRACE_APERTA@tok_aperta enumeratores@enumeratores
+        BRACE_CLAUSA@tok_clausa
+      </productio>
+      <productio genus="enumeratio" id="enumeratio-anonyma">
+        ENUM@tok_verbum BRACE_APERTA@tok_aperta
+        enumeratores@enumeratores BRACE_CLAUSA@tok_clausa
+      </productio>
+      <productio genus="enumeratio" id="enumeratio-nominata">
+        ENUM@tok_verbum IDENTIFICATOR@tok_titulus
+      </productio>
+    </regula>
+
+    <regula titulus="enumeratores">
+      <productio id="enumeratores-primum" modus="lista-initium">
+        enumerator-unus@elementum
+      </productio>
+      <productio id="enumeratores-appendere" modus="lista-appendere">
+        enumeratores@lista+ COMMA@signum enumerator-unus@elementum
+      </productio>
+    </regula>
+
+    <regula titulus="enumerator-unus">
+      <productio genus="enumerator" id="enumerator">
+        IDENTIFICATOR@tok_titulus
+      </productio>
+      <productio genus="enumerator" id="enumerator-valoratus">
+        IDENTIFICATOR@tok_titulus ASSIGNATIO@tok_operator
+        ternarius@valor
+      </productio>
+    </regula>
+
+    <!-- ==== declarator (ISO 3.5.4): monstrator* directus.
+         Qualificatores in catena monstratoris (char *const p) ==== -->
+    <regula titulus="declarator">
+      <productio genus="declarator-monstrator" id="declarator-monstrator">
+        STAR@tok_stella qualificatores@qualificatores
+        declarator@internum
+      </productio>
+      <productio>declarator-directus</productio>
+    </regula>
+
+    <regula titulus="qualificatores">
+      <productio modus="lista-initium"></productio>
+      <productio id="qualificatores-const" modus="lista-appendere">
+        qualificatores@lista+ CONST@elementum
+      </productio>
+      <productio id="qualificatores-volatile" modus="lista-appendere">
+        qualificatores@lista+ VOLATILE@elementum
+      </productio>
+    </regula>
+
+    <!-- parenthesis REUSATUR pro declaratore incluso (*f) -
+         forma locorum identica, quaestiones uniformes (decisio
+         M2b Chunk A, vocabularium addendum) -->
+    <regula titulus="declarator-directus">
+      <productio genus="declarator-titulus" id="declarator-titulus">
+        IDENTIFICATOR@tok_titulus
+      </productio>
+      <productio genus="parenthesis" id="declarator-parenthesis">
+        PAREN_APERTA@tok_apertum declarator@internum
+        PAREN_CLAUSA@tok_clausum
+      </productio>
+      <productio genus="declarator-aciei" id="declarator-aciei">
+        declarator-directus@internum QUADRA_APERTA@tok_apertum
+        mensura-aciei@mensura QUADRA_CLAUSA@tok_clausum
+      </productio>
+      <productio genus="declarator-aciei" id="declarator-aciei-vacua">
+        declarator-directus@internum QUADRA_APERTA@tok_apertum
+        QUADRA_CLAUSA@tok_clausum
+      </productio>
+      <productio genus="declarator-functionis" id="declarator-functionis">
+        declarator-directus@internum PAREN_APERTA@tok_apertum
+        parametra@parametra PAREN_CLAUSA@tok_clausum
+      </productio>
+    </regula>
+
+    <regula titulus="mensura-aciei">
+      <productio>ternarius</productio>
+    </regula>
+
+    <!-- Parametra: lista separata; ELLIPSIS lexema intersertum
+         (K&R = M2c) -->
+    <regula titulus="parametra">
+      <productio modus="lista-initium"></productio>
+      <productio>parametra-plena</productio>
+    </regula>
+
+    <regula titulus="parametra-plena">
+      <productio id="parametra-primum" modus="lista-initium">
+        parametrum@elementum
+      </productio>
+      <productio id="parametra-appendere" modus="lista-appendere">
+        parametra-plena@lista+ COMMA@signum parametrum@elementum
+      </productio>
+      <productio id="parametra-ellipsis" modus="lista-appendere">
+        parametra-plena@lista+ COMMA@signum ELLIPSIS@elementum
+      </productio>
+    </regula>
+
+    <regula titulus="parametrum">
+      <productio genus="parametrum" id="parametrum-nudum">
+        specificatores-decl@specificatores
+      </productio>
+      <productio genus="parametrum" id="parametrum-declaratum">
+        specificatores-decl@specificatores declarator@declarator
+      </productio>
+      <productio genus="parametrum" id="parametrum-abstractum">
+        specificatores-decl@specificatores
+        declarator-abstractus@declarator
+      </productio>
     </regula>
 
     <regula titulus="sententia-expressionis">
@@ -340,8 +693,9 @@
     </regula>
 
     <!-- ==== species-typi: nomen typi sine nomine declarato
-         (in conversione et magnitudine). specificatores = lista
-         (M2b eam aperit ordine libero + qualificatoribus);
+         (in conversione, magnitudine, parametris). specificatores
+         = lista specificator-qualificator (M2b: bistatualis ut
+         supra, qualificatores licent - (const char*)x);
          declarator absens = NIHIL ==== -->
     <regula titulus="species-typi">
       <productio genus="species-typi" id="species-typi-plena">
@@ -353,22 +707,56 @@
     </regula>
 
     <regula titulus="specificatores">
-      <productio id="specificatores-primum" modus="lista-initium">
-        typus@elementum
+      <productio>sq-post-primitivum</productio>
+      <productio>sq-post-aliud</productio>
+      <productio>sq-post-tag</productio>
+    </regula>
+
+    <regula titulus="sq-post-primitivum">
+      <productio id="sq-pp-primum" modus="lista-initium">
+        typus-primitivus-atomum@elementum
+      </productio>
+      <productio id="sq-pp-ex-alio" modus="lista-appendere">
+        sq-post-aliud@lista+ typus-primitivus-atomum@elementum
+      </productio>
+      <productio id="sq-pp-ex-tag" modus="lista-appendere">
+        sq-post-tag@lista+ typus-primitivus-atomum@elementum
       </productio>
     </regula>
 
-    <regula titulus="typus">
-      <productio genus="typus-primitivus" id="typus-primitivus">
-        verba-primitiva@tok_verba
+    <regula titulus="sq-post-aliud">
+      <productio id="sq-pa-primum" modus="lista-initium">
+        atomum-non-primitivum@elementum
       </productio>
-      <productio genus="typus-nominatus" id="typus-nominatus">
-        IDENTIFICATOR@tok_titulus
+      <productio id="sq-pa-ex-primitivo" modus="lista-appendere">
+        sq-post-primitivum@lista+ atomum-non-primitivum@elementum
+      </productio>
+      <productio id="sq-pa-ex-alio" modus="lista-appendere">
+        sq-post-aliud@lista+ atomum-non-primitivum@elementum
+      </productio>
+      <productio id="sq-pa-ex-tag" modus="lista-appendere">
+        sq-post-tag@lista+ atomum-non-primitivum@elementum
       </productio>
     </regula>
 
-    <!-- unsigned long int = UNUM typus-primitivus, tok_verba
-         lista trium lexematum (vocabularium) -->
+    <regula titulus="sq-post-tag">
+      <productio id="sq-pt-primum" modus="lista-initium">
+        atomum-tag@elementum
+      </productio>
+      <productio id="sq-pt-ex-primitivo" modus="lista-appendere">
+        sq-post-primitivum@lista+ atomum-tag@elementum
+      </productio>
+      <productio id="sq-pt-ex-alio" modus="lista-appendere">
+        sq-post-aliud@lista+ atomum-tag@elementum
+      </productio>
+      <productio id="sq-pt-ex-tag" modus="lista-appendere">
+        sq-post-tag@lista+ atomum-tag@elementum
+      </productio>
+    </regula>
+
+    <!-- cursus verborum primitivorum maximalis = UNUM
+         typus-primitivus (vocabularium; bistatualitas listarum
+         cupiditatem sine conflictu dat) -->
     <regula titulus="verbum-primitivum">
       <productio>VOID</productio>
       <productio>CHAR</productio>
@@ -390,14 +778,48 @@
       </productio>
     </regula>
 
-    <!-- catena stellarum abstracta: (int*), (char**).
-         Ordinatae et functiones M2b -->
+    <!-- ==== declarator abstractus (ISO 3.5.6), plenus:
+         stellae (genus declarator-abstractus, ut M2a) +
+         ordinatae/functiones abstractae (genera aciei/functionis
+         REUSATA, internum absens = NIHIL) + parenthesis ==== -->
     <regula titulus="declarator-abstractus">
       <productio genus="declarator-abstractus" id="declarator-abstractus-stella">
-        STAR@tok_stella
+        STAR@tok_stella qualificatores@qualificatores
       </productio>
       <productio genus="declarator-abstractus" id="declarator-abstractus-catena">
-        STAR@tok_stella declarator-abstractus@internum
+        STAR@tok_stella qualificatores@qualificatores
+        declarator-abstractus@internum
+      </productio>
+      <productio>abstractus-directus</productio>
+    </regula>
+
+    <regula titulus="abstractus-directus">
+      <productio genus="parenthesis" id="abstractus-parenthesis">
+        PAREN_APERTA@tok_apertum declarator-abstractus@internum
+        PAREN_CLAUSA@tok_clausum
+      </productio>
+      <productio genus="declarator-aciei" id="abstractus-aciei">
+        abstractus-directus@internum QUADRA_APERTA@tok_apertum
+        mensura-aciei@mensura QUADRA_CLAUSA@tok_clausum
+      </productio>
+      <productio genus="declarator-aciei" id="abstractus-aciei-sine">
+        QUADRA_APERTA@tok_apertum mensura-aciei@mensura
+        QUADRA_CLAUSA@tok_clausum
+      </productio>
+      <productio genus="declarator-aciei" id="abstractus-aciei-vacua">
+        abstractus-directus@internum QUADRA_APERTA@tok_apertum
+        QUADRA_CLAUSA@tok_clausum
+      </productio>
+      <productio genus="declarator-aciei" id="abstractus-aciei-nuda">
+        QUADRA_APERTA@tok_apertum QUADRA_CLAUSA@tok_clausum
+      </productio>
+      <productio genus="declarator-functionis" id="abstractus-functionis">
+        abstractus-directus@internum PAREN_APERTA@tok_apertum
+        parametra@parametra PAREN_CLAUSA@tok_clausum
+      </productio>
+      <productio genus="declarator-functionis" id="abstractus-functionis-sine">
+        PAREN_APERTA@tok_apertum parametra@parametra
+        PAREN_CLAUSA@tok_clausum
       </productio>
     </regula>
 

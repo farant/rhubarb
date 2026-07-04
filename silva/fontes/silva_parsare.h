@@ -31,11 +31,20 @@
  * Ligamen grammaticae (superficies generata una)
  * ================================================== */
 
+/* Uncus praecommissionis (M2b, simulatio X): gubernator eum (si
+ * non-NIHIL) inter texturam et commissionem vocat, radice NONDUM
+ * commissa (pater absens - ambulatio genus+loci SOLUM legit).
+ * Sedes registrationis typorum grammaticae c89: oraculum
+ * mutabile per datum clauditur (parametrum gubernatoris constans
+ * manet). */
+nomen vacuum (*SilvaPraecommissio)(SilvaValor radix, vacuum* datum);
+
 nomen structura {
     constans SilvaTabulaCocta*     tabula;
     constans SilvaRegistrumCoctum* tabularium;
     SilvaGLRConstructor            constructor;
     SilvaGLRFabricaAmbigui         fabrica;
+    SilvaPraecommissio             praecommissio;  /* NIHIL licet */
 } SilvaGrammatica;
 
 

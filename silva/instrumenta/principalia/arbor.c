@@ -21,15 +21,9 @@
 #include "silva_expandere.h"
 #include "silva_commissio.h"
 #include "silva_parsare.h"
+#include "silva_c89_oraculum.h"
 #include <stdio.h>
 #include <string.h>
-
-hic_manens constans SilvaGrammatica GRAMMATICA_C89 = {
-    &SILVA_C89_TABULA,
-    &SILVA_C89_REGISTRUM,
-    silva_c89_construere,
-    silva_c89_ambiguum_fabricare
-};
 
 interior character*
 _plagulam_legere (Piscina* piscina, constans character* via)
@@ -177,8 +171,10 @@ s32 principale (integer argc, character** argv)
         fons = argv[I];
     }
 
-    parsura = silva_parsare(piscina, "arbor.c", fons,
-        (i32)strlen(fons), &GRAMMATICA_C89, NIHIL, NIHIL, NIHIL);
+    /* saltatio oraculi plena (M2b): typedefs plagulae ipsius
+     * registrantur et solvunt - barra manualis */
+    parsura = silva_c89_parsare(piscina, "arbor.c", fons,
+        (i32)strlen(fons), NIHIL);
     si (parsura == NIHIL || !parsura->successus)
     {
         fprintf(stderr, "arbor: parsatio fracta\n");

@@ -206,11 +206,16 @@ _lexemata_parsare_interna (
             est_eof = VERUM;
             est_finis_segmenti = (i > initium) ? VERUM : FALSUM;
         }
-        alioquin si (lexema->genus == SILVA_LEX_PAREN_APERTA)
+        alioquin si (lexema->genus == SILVA_LEX_PAREN_APERTA
+            || lexema->genus == SILVA_LEX_BRACE_APERTA)
         {
+            /* Uncus quoque numeratur (M2b): "struct S { int x; };"
+             * UNUM segmentum est - semicola intra corpora aggregata
+             * limites non sunt */
             profunditas++;
         }
-        alioquin si (lexema->genus == SILVA_LEX_PAREN_CLAUSA)
+        alioquin si (lexema->genus == SILVA_LEX_PAREN_CLAUSA
+            || lexema->genus == SILVA_LEX_BRACE_CLAUSA)
         {
             si (profunditas > ZEPHYRUM)
             {
@@ -360,6 +365,14 @@ _lexemata_parsare_interna (
     {
         radix = _texere(piscina, radix, expansio,
             grammatica->tabularium, parsura);
+    }
+
+    /* Uncus praecommissionis (M2b): registratio typorum et alia
+     * grammaticae-propria ANTE resolutionem - radix nondum
+     * commissa (lectio sola) */
+    si (grammatica->praecommissio != NIHIL)
+    {
+        grammatica->praecommissio(radix, datum_resolutoris);
     }
 
     /* Commissio: pater + normalizatio + resolutio (collapse+diarium) */

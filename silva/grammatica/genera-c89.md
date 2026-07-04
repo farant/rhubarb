@@ -158,6 +158,21 @@ Notes:
   the codebase (xar is the dynamic array; C arrays are a
   different thing and deserve a different word). Alternatives:
   series, ordinata.
+- **ADDENDA M2b Chunk A (approved 2026-07-04)**: (1) the
+  parenthesized declarator `(*f)` REUSES genus `parenthesis`
+  (identical loci; "find parenthesized things" queries
+  uniformly across expressions and declarators). (2) Storage
+  classes and qualifiers ride the specificatores lista as bare
+  TOKENS interleaved with typus nodes. (3) typus-primitivus =
+  one MAXIMAL RUN of primitive keywords (`unsigned long` = one
+  node, verba II) — but a qualifier SPLITS runs: `unsigned
+  const long` = [typus-primitivus(unsigned), CONST,
+  typus-primitivus(long)]. The run-grouping is grammatical
+  (two-state specifier lists), so it can never see through
+  interleaved tokens. (4) Abstract array/function declarators
+  reuse declarator-aciei / declarator-functionis with internum
+  absent; declarator-abstractus itself remains the star-chain
+  genus, per the DECISUS table.
 - **congeries** for the braced initializer: an aggregate/heap —
   and braced initializers initialize AGGREGATES. Colorful but
   precise. Alternatives: lista-initialis, initiatio-composita.

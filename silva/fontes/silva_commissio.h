@@ -54,6 +54,20 @@ b32 silva_oraculum_typum_addere (SilvaOraculum* oraculum,
 b32 silva_oraculum_typum_addere_literis (SilvaOraculum* oraculum,
     constans character* titulus);
 
+/* Oraculum POSITIONALE (M2b, sim X X3): typus a SITU declarationis
+ * visibilis (byte_offset lexematis nominis; 0 = praeoneratus,
+ * ubique visibilis - addere sine situ = situs 0). Resolutor typum
+ * "notum ad situm" habet solum si situs_typi <= situs ambigui -
+ * typedef POST usum ambiguitatem priorem non solvit (ordo
+ * visibilitatis C89). Situs PRIMUS servatur in redeclaratione
+ * (legalitas = lamina lint). */
+b32 silva_oraculum_typum_addere_situ (SilvaOraculum* oraculum,
+    chorda titulus, s32 situs);
+
+/* VERUM + *situs_out si notus; FALSUM si ignotus */
+b32 silva_oraculum_situs_typi (constans SilvaOraculum* oraculum,
+    chorda titulus, s32* situs_out);
+
 b32 silva_oraculum_typum_novit (constans SilvaOraculum* oraculum,
     chorda titulus);
 

@@ -35,17 +35,66 @@ silva_oraculum_creare (Piscina* piscina)
 b32
 silva_oraculum_typum_addere (SilvaOraculum* oraculum, chorda titulus)
 {
+    /* Sine situ = "visibile ab initio" (situs 0) - typi praeonerati
+     * (API, latina) ubique valent */
+    redde silva_oraculum_typum_addere_situ(oraculum, titulus,
+        ZEPHYRUM);
+}
+
+b32
+silva_oraculum_typum_addere_situ (
+    SilvaOraculum* oraculum,
+    chorda         titulus,
+    s32            situs)
+{
     chorda copia;
+    s32*   sedes;
+    s32    prior;
 
     si (oraculum == NIHIL)
     {
         redde FALSUM;
     }
+    /* Situs PRIMUS servatur (visibilitas a declaratione prima;
+     * legalitas redeclarationis = res laminae lint, M2b sim X) */
+    si (silva_oraculum_situs_typi(oraculum, titulus, &prior)
+        && prior <= situs)
+    {
+        redde VERUM;
+    }
+    sedes = (s32*)piscina_allocare(oraculum->piscina,
+        (memoriae_index)magnitudo(s32));
+    si (sedes == NIHIL)
+    {
+        redde FALSUM;
+    }
+    *sedes = situs;
     /* Copia in piscinam oraculi: valores lexematum prospectus in
      * fontem sunt - fons post oraculum mori potest */
     copia = chorda_transcribere(titulus, oraculum->piscina);
     redde tabula_dispersa_inserere(oraculum->typi, copia,
-        (vacuum*)oraculum);
+        (vacuum*)sedes);
+}
+
+b32
+silva_oraculum_situs_typi (
+    constans SilvaOraculum* oraculum,
+    chorda                  titulus,
+    s32*                    situs_out)
+{
+    vacuum* valor = NIHIL;
+
+    si (oraculum == NIHIL || situs_out == NIHIL)
+    {
+        redde FALSUM;
+    }
+    si (!tabula_dispersa_invenire(oraculum->typi, titulus, &valor)
+        || valor == NIHIL)
+    {
+        redde FALSUM;
+    }
+    *situs_out = *(s32*)valor;
+    redde VERUM;
 }
 
 b32

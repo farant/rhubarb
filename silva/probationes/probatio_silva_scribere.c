@@ -35,14 +35,16 @@ hic_manens constans SilvaGrammatica GRAMMATICA_SCELETI = {
     &SILVA_SCELETUM_TABULA,
     &SILVA_SCELETUM_REGISTRUM,
     silva_sceletum_construere,
-    silva_sceletum_ambiguum_fabricare
+    silva_sceletum_ambiguum_fabricare,
+    NIHIL
 };
 
 hic_manens constans SilvaGrammatica GRAMMATICA_IMPARILIS = {
     &SILVA_IMPARILIS_TABULA,
     &SILVA_IMPARILIS_REGISTRUM,
     silva_imparilis_construere,
-    silva_imparilis_ambiguum_fabricare
+    silva_imparilis_ambiguum_fabricare,
+    NIHIL
 };
 
 interior SilvaParsura*

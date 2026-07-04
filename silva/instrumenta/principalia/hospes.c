@@ -35,7 +35,8 @@ static const SilvaGrammatica GRAMMATICA_SCELETI = {
     &SILVA_SCELETUM_TABULA,
     &SILVA_SCELETUM_REGISTRUM,
     silva_sceletum_construere,
-    silva_sceletum_ambiguum_fabricare
+    silva_sceletum_ambiguum_fabricare,
+    NULL
 };
 
 static int
@@ -391,7 +392,8 @@ int main(void)
             &SILVA_C89_TABULA,
             &SILVA_C89_REGISTRUM,
             silva_c89_construere,
-            silva_c89_ambiguum_fabricare
+            silva_c89_ambiguum_fabricare,
+            NULL
         };
         const char* fons_c89 = "(foo)(x);";
         SilvaParsura* parsura;
@@ -423,6 +425,101 @@ int main(void)
         else
         {
             fprintf(stderr, "hospes: INFIDELIS: c89 furca\n");
+        }
+    }
+
+    /* saltatio oraculi c89 (M2b): vocatio una per amalgama -
+     * custos declarationum novarum silva.h (situ, ambulator,
+     * involucrum) */
+    {
+        const char* fons_c89b = "typedef int foo; foo * bar;";
+        SilvaOraculum* oraculum = silva_oraculum_creare(piscina);
+        SilvaParsura* parsura;
+        int bene = 0;
+
+        summa++;
+        parsura = (oraculum != NULL)
+            ? silva_c89_parsare(piscina, "hospes_c89.c", fons_c89b,
+                  (unsigned int)strlen(fons_c89b), oraculum)
+            : NULL;
+        if (parsura != NULL && parsura->successus
+            && parsura->numerus_errorum == 0
+            && silva_xar_numerus(parsura->commissio->ambigui) == 0)
+        {
+            static unsigned char foo_litterae[] = { 'f', 'o', 'o' };
+            SilvaChorda quaesitum;
+            int situs = -1;
+
+            quaesitum.mensura = 3;
+            quaesitum.datum = foo_litterae;
+            /* typus didicitur positionaliter; situs primus servatur */
+            if (silva_oraculum_situs_typi(oraculum, quaesitum, &situs)
+                && situs > 0
+                && silva_oraculum_typum_addere_situ(oraculum,
+                       quaesitum, 9999)
+                && silva_oraculum_situs_typi(oraculum, quaesitum,
+                       &situs)
+                && situs > 0 && situs < 9999)
+            {
+                /* ambulator declaratoris: elementum[1] declaratio,
+                 * declaratores (locus [1]) -> primus nodus ->
+                 * titulus "bar" */
+                SilvaValor* e = silva_valor_lista_obtinere(
+                    parsura->commissio->radix, 1);
+
+                if (e != NULL && e->genus == SILVA_VALOR_NODUS
+                    && e->datum.nodus->numerus_locorum >= 2)
+                {
+                    SilvaValor decll = e->datum.nodus->loci[1];
+                    SilvaValor* d = silva_valor_lista_obtinere(
+                        decll, 0);
+                    SilvaToken* titulus = (d != NULL
+                            && d->genus == SILVA_VALOR_NODUS)
+                        ? silva_c89_declaratoris_titulus(
+                              d->datum.nodus)
+                        : NULL;
+
+                    if (titulus != NULL
+                        && titulus->valor.mensura == 3
+                        && memcmp(titulus->valor.datum, "bar", 3)
+                            == 0)
+                    {
+                        bene = 1;
+                    }
+                }
+            }
+        }
+        if (bene)
+        {
+            fideles++;
+        }
+        else
+        {
+            fprintf(stderr, "hospes: INFIDELIS: saltatio c89\n");
+        }
+
+        /* vista declarationum per amalgama */
+        summa++;
+        if (parsura != NULL
+            && silva_c89_declarationes_numerus(parsura) == 2)
+        {
+            SilvaDeclaratioVista vista;
+
+            if (silva_c89_declaratio_vista(parsura, 1, &vista)
+                && vista.titulus.mensura == 3
+                && memcmp(vista.titulus.datum, "bar", 3) == 0
+                && vista.genus != NULL)
+            {
+                fideles++;
+            }
+            else
+            {
+                fprintf(stderr, "hospes: INFIDELIS: vista ordo\n");
+            }
+        }
+        else
+        {
+            fprintf(stderr, "hospes: INFIDELIS: vista numerus\n");
         }
     }
 

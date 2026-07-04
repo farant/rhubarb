@@ -1,0 +1,819 @@
+/* silva_c89_oraculum.c - anima semantica grammaticae c89
+ * (vide caput; consilium = simulatio X + addendum X10) */
+
+#include "silva_c89_oraculum.h"
+#include "xar.h"
+
+/* ==================================================
+ * Ambulator declaratoris (X5)
+ * ================================================== */
+
+SilvaToken*
+silva_c89_declaratoris_titulus (constans SilvaNodus* declarator)
+{
+    constans SilvaNodus* nodus = declarator;
+    i32 custodia = ZEPHYRUM;
+
+    dum (nodus != NIHIL && custodia < XXXII)
+    {
+        SilvaValor internum;
+
+        custodia++;
+        commutatio (nodus->genus)
+        {
+        casus (s32)SILVA_C89_GENUS_DECLARATOR_TITULUS:
+        {
+            SilvaValor titulus =
+                silva_c89_declarator_titulus_tok_titulus(nodus);
+
+            redde (titulus.genus == SILVA_VALOR_TOKEN)
+                ? titulus.datum.token : NIHIL;
+        }
+        casus (s32)SILVA_C89_GENUS_DECLARATOR_INITIATUS:
+            internum =
+                silva_c89_declarator_initiatus_declarator(nodus);
+            frange;
+        casus (s32)SILVA_C89_GENUS_DECLARATOR_MONSTRATOR:
+            internum =
+                silva_c89_declarator_monstrator_internum(nodus);
+            frange;
+        casus (s32)SILVA_C89_GENUS_DECLARATOR_ACIEI:
+            internum = silva_c89_declarator_aciei_internum(nodus);
+            frange;
+        casus (s32)SILVA_C89_GENUS_DECLARATOR_FUNCTIONIS:
+            internum =
+                silva_c89_declarator_functionis_internum(nodus);
+            frange;
+        casus (s32)SILVA_C89_GENUS_PARENTHESIS:
+            internum = silva_c89_parenthesis_internum(nodus);
+            frange;
+        casus (s32)SILVA_C89_GENUS_CAMPUS:
+            internum = silva_c89_campus_declarator(nodus);
+            frange;
+        ordinarius:
+            redde NIHIL;
+        }
+        nodus = (internum.genus == SILVA_VALOR_NODUS)
+            ? internum.datum.nodus : NIHIL;
+    }
+    redde NIHIL;
+}
+
+/* ==================================================
+ * Registratio (X1/X2/X4)
+ * ================================================== */
+
+/* Lexema TYPEDEF nudum in lista specificatorum? (nota semantica
+ * M2.0 - typedef genus proprium NON habet) */
+hic_manens b32
+_habet_typedef (SilvaValor specificatores)
+{
+    i32 i;
+
+    per (i = ZEPHYRUM;
+         i < silva_valor_lista_numerus(specificatores); i++)
+    {
+        SilvaValor* elem =
+            silva_valor_lista_obtinere(specificatores, i);
+
+        si (elem != NIHIL && elem->genus == SILVA_VALOR_TOKEN
+            && elem->datum.token != NIHIL
+            && elem->datum.token->genus == SILVA_LEX_TYPEDEF)
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
+hic_manens vacuum
+_declarationem_registrare (
+    constans SilvaNodus* declaratio,
+    SilvaOraculum*       oraculum)
+{
+    SilvaValor declaratores;
+    i32 i;
+
+    si (!_habet_typedef(
+            silva_c89_declaratio_specificatores(declaratio)))
+    {
+        redde;
+    }
+    declaratores = silva_c89_declaratio_declaratores(declaratio);
+    per (i = ZEPHYRUM;
+         i < silva_valor_lista_numerus(declaratores); i++)
+    {
+        SilvaValor* elem =
+            silva_valor_lista_obtinere(declaratores, i);
+        SilvaToken* titulus;
+
+        si (elem == NIHIL || elem->genus != SILVA_VALOR_NODUS)
+        {
+            perge;  /* signa COMMA interserta */
+        }
+        titulus = silva_c89_declaratoris_titulus(elem->datum.nodus);
+        si (titulus != NIHIL && titulus->byte_offset >= ZEPHYRUM)
+        {
+            silva_oraculum_typum_addere_situ(oraculum,
+                titulus->valor, titulus->byte_offset);
+        }
+    }
+}
+
+hic_manens vacuum
+_valorem_registrare (
+    SilvaValor     valor,
+    SilvaOraculum* oraculum,
+    i32            profunditas)
+{
+    si (profunditas > XXXII) redde;
+
+    si (valor.genus == SILVA_VALOR_LISTA)
+    {
+        i32 i;
+
+        per (i = ZEPHYRUM;
+             i < silva_valor_lista_numerus(valor); i++)
+        {
+            SilvaValor* elem = silva_valor_lista_obtinere(valor, i);
+
+            si (elem != NIHIL)
+            {
+                _valorem_registrare(*elem, oraculum,
+                    profunditas + I);
+            }
+        }
+        redde;
+    }
+    si (valor.genus != SILVA_VALOR_NODUS
+        || valor.datum.nodus == NIHIL)
+    {
+        redde;
+    }
+
+    commutatio (valor.datum.nodus->genus)
+    {
+    casus (s32)SILVA_C89_GENUS_DECLARATIO:
+        _declarationem_registrare(valor.datum.nodus, oraculum);
+        frange;
+    casus (s32)SILVA_C89_GENUS_CONDITIONALIS:
+        _valorem_registrare(
+            silva_c89_conditionalis_rami(valor.datum.nodus),
+            oraculum, profunditas + I);
+        frange;
+    casus (s32)SILVA_C89_GENUS_RAMUS_SUMPTUS:
+        _valorem_registrare(
+            silva_c89_ramus_sumptus_contentum(valor.datum.nodus),
+            oraculum, profunditas + I);
+        frange;
+    ordinarius:
+        /* AMBIGUUS praetermittitur (X4 exclusivum); sententiae
+         * et ERROR typos non ferunt */
+        frange;
+    }
+}
+
+vacuum
+silva_c89_typos_registrare (
+    SilvaValor     radix,
+    SilvaOraculum* oraculum)
+{
+    si (oraculum == NIHIL) redde;
+    _valorem_registrare(radix, oraculum, ZEPHYRUM);
+}
+
+vacuum
+silva_c89_praecommissio (SilvaValor radix, vacuum* datum)
+{
+    silva_c89_typos_registrare(radix, (SilvaOraculum*)datum);
+}
+
+/* ==================================================
+ * Resolutor (X6 + X10)
+ * ================================================== */
+
+/* Examen lectionis unius */
+nomen structura {
+    b32 invalidum;        /* combinatio impossibilis (X10) */
+    b32 nominatus_adest;
+    b32 ignotus_adest;    /* nominatus non notus ad situm */
+    b32 species_adest;    /* nodus specificatores ferens (politica) */
+} ExamenLectionis;
+
+hic_manens vacuum _nodum_examinare (constans SilvaNodus* nodus,
+    constans SilvaOraculum* oraculum, s32 situs_ambigui,
+    ExamenLectionis* examen, i32 profunditas);
+
+/* Lista specificatorum: numerare atoma typorum + combinationem
+ * probare + nominatos contra oraculum (positionaliter, X3) */
+hic_manens vacuum
+_specificatores_examinare (
+    SilvaValor              specificatores,
+    constans SilvaOraculum* oraculum,
+    s32                     situs_ambigui,
+    ExamenLectionis*        examen,
+    i32                     profunditas)
+{
+    i32 primitivi = ZEPHYRUM;
+    i32 nominati = ZEPHYRUM;
+    i32 tags = ZEPHYRUM;
+    i32 i;
+
+    (vacuum)profunditas;
+    per (i = ZEPHYRUM;
+         i < silva_valor_lista_numerus(specificatores); i++)
+    {
+        SilvaValor* elem =
+            silva_valor_lista_obtinere(specificatores, i);
+        SilvaNodus* nodus;
+
+        si (elem == NIHIL || elem->genus != SILVA_VALOR_NODUS)
+        {
+            perge;  /* lexemata (qualificatores/classes) */
+        }
+        nodus = elem->datum.nodus;
+        commutatio (nodus->genus)
+        {
+        casus (s32)SILVA_C89_GENUS_TYPUS_PRIMITIVUS:
+            primitivi++;
+            frange;
+        casus (s32)SILVA_C89_GENUS_TYPUS_NOMINATUS:
+        {
+            SilvaValor titulus =
+                silva_c89_typus_nominatus_tok_titulus(nodus);
+
+            nominati++;
+            examen->nominatus_adest = VERUM;
+            si (titulus.genus == SILVA_VALOR_TOKEN)
+            {
+                s32 situs;
+
+                si (!silva_oraculum_situs_typi(oraculum,
+                        titulus.datum.token->valor, &situs)
+                    || situs > situs_ambigui)
+                {
+                    examen->ignotus_adest = VERUM;
+                }
+            }
+            frange;
+        }
+        casus (s32)SILVA_C89_GENUS_STRUCTURA:
+        casus (s32)SILVA_C89_GENUS_UNIO:
+        casus (s32)SILVA_C89_GENUS_ENUMERATIO:
+            /* membra interiora descensione generica loci
+             * visitantur (elementa listae nodi sunt) - descensio
+             * explicita HIC duplicaret (exponentialiter in
+             * nidificatione) */
+            tags++;
+            frange;
+        ordinarius:
+            frange;
+        }
+    }
+
+    /* X10: nominatus cum quolibet alio typo, tag cum primitivo,
+     * tag cum tag = impossibile (C89 3.5.2 combinationes);
+     * primitivi plures LICENT (cursus qualificatoribus scissi) */
+    si (nominati + tags > I
+        || ((nominati + tags) >= I && primitivi >= I))
+    {
+        examen->invalidum = VERUM;
+    }
+}
+
+hic_manens vacuum
+_nodum_examinare (
+    constans SilvaNodus*    nodus,
+    constans SilvaOraculum* oraculum,
+    s32                     situs_ambigui,
+    ExamenLectionis*        examen,
+    i32                     profunditas)
+{
+    SilvaValor specificatores;
+    b32 habet_species = FALSUM;
+    i32 i;
+
+    si (nodus == NIHIL || profunditas > LXIV) redde;
+
+    commutatio (nodus->genus)
+    {
+    casus (s32)SILVA_C89_GENUS_DECLARATIO:
+        specificatores = silva_c89_declaratio_specificatores(nodus);
+        habet_species = VERUM;
+        frange;
+    casus (s32)SILVA_C89_GENUS_MEMBRUM:
+        specificatores = silva_c89_membrum_specificatores(nodus);
+        habet_species = VERUM;
+        frange;
+    casus (s32)SILVA_C89_GENUS_SPECIES_TYPI:
+        specificatores =
+            silva_c89_species_typi_specificatores(nodus);
+        habet_species = VERUM;
+        frange;
+    casus (s32)SILVA_C89_GENUS_PARAMETRUM:
+        specificatores = silva_c89_parametrum_specificatores(nodus);
+        habet_species = VERUM;
+        frange;
+    ordinarius:
+        frange;
+    }
+    si (habet_species)
+    {
+        examen->species_adest = VERUM;
+        _specificatores_examinare(specificatores, oraculum,
+            situs_ambigui, examen, profunditas);
+    }
+
+    /* descensio generica per locos (tags intra specificatores
+     * iam separatim descensi - iteratio innocua, examen
+     * idempotens praeter numerationem listae SUAE, quae per
+     * locum semel visitatur) */
+    per (i = ZEPHYRUM; i < nodus->numerus_locorum; i++)
+    {
+        constans SilvaValor* valor = &nodus->loci[i];
+
+        si (valor->genus == SILVA_VALOR_NODUS)
+        {
+            _nodum_examinare(valor->datum.nodus, oraculum,
+                situs_ambigui, examen, profunditas + I);
+        }
+        alioquin si (valor->genus == SILVA_VALOR_LISTA)
+        {
+            i32 k;
+
+            per (k = ZEPHYRUM;
+                 k < silva_valor_lista_numerus(*valor); k++)
+            {
+                SilvaValor* elem =
+                    silva_valor_lista_obtinere(*valor, k);
+
+                si (elem != NIHIL
+                    && elem->genus == SILVA_VALOR_NODUS)
+                {
+                    _nodum_examinare(elem->datum.nodus, oraculum,
+                        situs_ambigui, examen, profunditas + I);
+                }
+            }
+        }
+    }
+}
+
+/* Situs primi lexematis subarboris (byte_offset >= 0) */
+hic_manens s32
+_situs_primi (constans SilvaNodus* nodus, i32 profunditas)
+{
+    i32 i;
+
+    si (nodus == NIHIL || profunditas > LXIV) redde -I;
+
+    per (i = ZEPHYRUM; i < nodus->numerus_locorum; i++)
+    {
+        constans SilvaValor* valor = &nodus->loci[i];
+
+        si (valor->genus == SILVA_VALOR_TOKEN
+            && valor->datum.token != NIHIL
+            && valor->datum.token->byte_offset >= ZEPHYRUM)
+        {
+            redde valor->datum.token->byte_offset;
+        }
+        si (valor->genus == SILVA_VALOR_NODUS)
+        {
+            s32 situs = _situs_primi(valor->datum.nodus,
+                profunditas + I);
+
+            si (situs >= ZEPHYRUM) redde situs;
+        }
+        si (valor->genus == SILVA_VALOR_LISTA)
+        {
+            i32 k;
+
+            per (k = ZEPHYRUM;
+                 k < silva_valor_lista_numerus(*valor); k++)
+            {
+                SilvaValor* elem =
+                    silva_valor_lista_obtinere(*valor, k);
+                s32 situs = -I;
+
+                si (elem == NIHIL) perge;
+                si (elem->genus == SILVA_VALOR_TOKEN
+                    && elem->datum.token != NIHIL
+                    && elem->datum.token->byte_offset >= ZEPHYRUM)
+                {
+                    situs = elem->datum.token->byte_offset;
+                }
+                alioquin si (elem->genus == SILVA_VALOR_NODUS)
+                {
+                    situs = _situs_primi(elem->datum.nodus,
+                        profunditas + I);
+                }
+                si (situs >= ZEPHYRUM) redde situs;
+            }
+        }
+    }
+    redde -I;
+}
+
+#define LECTIONES_MAXIMAE XVI
+
+vacuum
+silva_c89_resolutor (
+    constans SilvaNodus*     ambiguum,
+    constans SilvaOraculum*  oraculum,
+    vacuum*                  datum,
+    SilvaResolutioResponsum* responsum)
+{
+    SilvaValor interpretationes =
+        silva_c89_ambiguus_interpretationes(ambiguum);
+    ExamenLectionis examina[LECTIONES_MAXIMAE];
+    i32 numerus = silva_valor_lista_numerus(interpretationes);
+    s32 situs_ambigui;
+    i32 superstites = ZEPHYRUM;
+    s32 superstes_ultimus = -I;
+    i32 typo_positivae = ZEPHYRUM;
+    s32 typo_positiva_ultima = -I;
+    i32 i;
+
+    (vacuum)datum;
+    si (numerus > LECTIONES_MAXIMAE) redde;  /* numquam visum */
+
+    /* situs furcae = lexema primum interpretationis primae
+     * (span communis omnium lectionum) */
+    {
+        SilvaValor* prima =
+            silva_valor_lista_obtinere(interpretationes, ZEPHYRUM);
+
+        si (prima == NIHIL || prima->genus != SILVA_VALOR_NODUS)
+        {
+            redde;
+        }
+        situs_ambigui = _situs_primi(prima->datum.nodus, ZEPHYRUM);
+        si (situs_ambigui < ZEPHYRUM) redde;
+    }
+
+    per (i = ZEPHYRUM; i < numerus; i++)
+    {
+        SilvaValor* elem =
+            silva_valor_lista_obtinere(interpretationes, i);
+
+        examina[i].invalidum = FALSUM;
+        examina[i].nominatus_adest = FALSUM;
+        examina[i].ignotus_adest = FALSUM;
+        examina[i].species_adest = FALSUM;
+        si (elem == NIHIL || elem->genus != SILVA_VALOR_NODUS)
+        {
+            examina[i].invalidum = VERUM;
+            perge;
+        }
+        _nodum_examinare(elem->datum.nodus, oraculum, situs_ambigui,
+            &examina[i], ZEPHYRUM);
+
+        si (!examina[i].invalidum)
+        {
+            superstites++;
+            superstes_ultimus = (s32)i;
+            si (examina[i].nominatus_adest
+                && !examina[i].ignotus_adest)
+            {
+                typo_positivae++;
+                typo_positiva_ultima = (s32)i;
+            }
+        }
+    }
+
+    /* (b) superstes unicus: ceterae combinatione impossibiles */
+    si (superstites == I)
+    {
+        responsum->victor = superstes_ultimus;
+        redde;
+    }
+    /* (c) lectio typo-positiva unica (X3: noti AD SITUM) */
+    si (superstites > I && typo_positivae == I)
+    {
+        responsum->victor = typo_positiva_ultima;
+        redde;
+    }
+    /* (d) nullum responsum - retentio */
+}
+
+/* ==================================================
+ * Vista declarationum (Chunk D)
+ * ================================================== */
+
+hic_manens constans character*
+_genus_titulus (s32 genus)
+{
+    si (genus < ZEPHYRUM
+        || genus >= (s32)SILVA_C89_REGISTRUM.numerus_generum)
+    {
+        redde "";
+    }
+    redde SILVA_C89_REGISTRUM.genera[genus].titulus;
+}
+
+/* Ordinem implere ex lexemate tituli (aut ex nodo primo) */
+hic_manens vacuum
+_vistam_implere (
+    SilvaDeclaratioVista* vista,
+    constans SilvaNodus*  nodus_ordinis,
+    SilvaToken*           titulus)
+{
+    vista->genus = _genus_titulus(nodus_ordinis->genus);
+    si (titulus != NIHIL)
+    {
+        vista->titulus = titulus->valor;
+        vista->linea = (s32)titulus->linea;
+        vista->situs = titulus->byte_offset;
+    }
+    alioquin
+    {
+        vista->titulus.mensura = ZEPHYRUM;
+        vista->titulus.datum = NIHIL;
+        vista->linea = -I;
+        vista->situs = _situs_primi(nodus_ordinis, ZEPHYRUM);
+    }
+}
+
+/* Tag primum in specificatoribus (structura/unio/enumeratio) */
+hic_manens constans SilvaNodus*
+_tag_specificatorum (SilvaValor specificatores)
+{
+    i32 i;
+
+    per (i = ZEPHYRUM;
+         i < silva_valor_lista_numerus(specificatores); i++)
+    {
+        SilvaValor* elem =
+            silva_valor_lista_obtinere(specificatores, i);
+
+        si (elem == NIHIL || elem->genus != SILVA_VALOR_NODUS)
+        {
+            perge;
+        }
+        commutatio (elem->datum.nodus->genus)
+        {
+        casus (s32)SILVA_C89_GENUS_STRUCTURA:
+        casus (s32)SILVA_C89_GENUS_UNIO:
+        casus (s32)SILVA_C89_GENUS_ENUMERATIO:
+            redde elem->datum.nodus;
+        ordinarius:
+            frange;
+        }
+    }
+    redde NIHIL;
+}
+
+/* Ambulatio vistarum: numerat ordines; si quaesitum >= 0 et
+ * attingitur, vistam implet et VERUM reddit */
+hic_manens b32
+_vistas_ambulare (
+    SilvaValor            valor,
+    i32*                  numerator,
+    s32                   quaesitum,
+    SilvaDeclaratioVista* vista,
+    i32                   profunditas)
+{
+    si (profunditas > XXXII) redde FALSUM;
+
+    si (valor.genus == SILVA_VALOR_LISTA)
+    {
+        i32 i;
+
+        per (i = ZEPHYRUM;
+             i < silva_valor_lista_numerus(valor); i++)
+        {
+            SilvaValor* elem = silva_valor_lista_obtinere(valor, i);
+
+            si (elem != NIHIL
+                && _vistas_ambulare(*elem, numerator, quaesitum,
+                       vista, profunditas + I))
+            {
+                redde VERUM;
+            }
+        }
+        redde FALSUM;
+    }
+    si (valor.genus != SILVA_VALOR_NODUS
+        || valor.datum.nodus == NIHIL)
+    {
+        redde FALSUM;
+    }
+
+    commutatio (valor.datum.nodus->genus)
+    {
+    casus (s32)SILVA_C89_GENUS_DECLARATIO:
+    {
+        constans SilvaNodus* declaratio = valor.datum.nodus;
+        SilvaValor declaratores =
+            silva_c89_declaratio_declaratores(declaratio);
+        i32 numerus_decl =
+            silva_valor_lista_numerus(declaratores);
+
+        si (numerus_decl == ZEPHYRUM)
+        {
+            /* nuda: ordo unus, tag = titulus */
+            constans SilvaNodus* tag = _tag_specificatorum(
+                silva_c89_declaratio_specificatores(declaratio));
+
+            si (tag != NIHIL)
+            {
+                si ((s32)*numerator == quaesitum && vista != NIHIL)
+                {
+                    SilvaValor tok;
+
+                    commutatio (tag->genus)
+                    {
+                    casus (s32)SILVA_C89_GENUS_STRUCTURA:
+                        tok = silva_c89_structura_tok_titulus(tag);
+                        frange;
+                    casus (s32)SILVA_C89_GENUS_UNIO:
+                        tok = silva_c89_unio_tok_titulus(tag);
+                        frange;
+                    ordinarius:
+                        tok = silva_c89_enumeratio_tok_titulus(tag);
+                        frange;
+                    }
+                    _vistam_implere(vista, tag,
+                        (tok.genus == SILVA_VALOR_TOKEN)
+                            ? tok.datum.token : NIHIL);
+                    redde VERUM;
+                }
+                (*numerator)++;
+            }
+            redde FALSUM;
+        }
+        {
+            i32 i;
+
+            per (i = ZEPHYRUM; i < numerus_decl; i++)
+            {
+                SilvaValor* elem =
+                    silva_valor_lista_obtinere(declaratores, i);
+
+                si (elem == NIHIL
+                    || elem->genus != SILVA_VALOR_NODUS)
+                {
+                    perge;  /* signa COMMA */
+                }
+                si ((s32)*numerator == quaesitum && vista != NIHIL)
+                {
+                    _vistam_implere(vista, elem->datum.nodus,
+                        silva_c89_declaratoris_titulus(
+                            elem->datum.nodus));
+                    redde VERUM;
+                }
+                (*numerator)++;
+            }
+        }
+        redde FALSUM;
+    }
+    casus (s32)SILVA_C89_GENUS_CONDITIONALIS:
+        redde _vistas_ambulare(
+            silva_c89_conditionalis_rami(valor.datum.nodus),
+            numerator, quaesitum, vista, profunditas + I);
+    casus (s32)SILVA_C89_GENUS_RAMUS_SUMPTUS:
+        redde _vistas_ambulare(
+            silva_c89_ramus_sumptus_contentum(valor.datum.nodus),
+            numerator, quaesitum, vista, profunditas + I);
+    casus (s32)SILVA_C89_GENUS_AMBIGUUS:
+    {
+        /* lectio canonica sola (spina) */
+        SilvaValor interps = silva_c89_ambiguus_interpretationes(
+            valor.datum.nodus);
+        SilvaValor canonica = silva_c89_ambiguus_canonica(
+            valor.datum.nodus);
+        SilvaValor* electa;
+
+        si (canonica.genus != SILVA_VALOR_INDEX) redde FALSUM;
+        electa = silva_valor_lista_obtinere(interps,
+            (i32)canonica.datum.index);
+        si (electa == NIHIL) redde FALSUM;
+        redde _vistas_ambulare(*electa, numerator, quaesitum,
+            vista, profunditas + I);
+    }
+    ordinarius:
+        redde FALSUM;
+    }
+}
+
+i32
+silva_c89_declarationes_numerus (constans SilvaParsura* parsura)
+{
+    i32 numerator = ZEPHYRUM;
+
+    si (parsura == NIHIL || parsura->commissio == NIHIL)
+    {
+        redde ZEPHYRUM;
+    }
+    _vistas_ambulare(parsura->commissio->radix, &numerator, -I,
+        NIHIL, ZEPHYRUM);
+    redde numerator;
+}
+
+b32
+silva_c89_declaratio_vista (
+    constans SilvaParsura* parsura,
+    i32                    index,
+    SilvaDeclaratioVista*  vista)
+{
+    i32 numerator = ZEPHYRUM;
+
+    si (parsura == NIHIL || parsura->commissio == NIHIL
+        || vista == NIHIL)
+    {
+        redde FALSUM;
+    }
+    redde _vistas_ambulare(parsura->commissio->radix, &numerator,
+        (s32)index, vista, ZEPHYRUM);
+}
+
+/* ==================================================
+ * Politica spinae canonicae (X8) + involucrum
+ * ================================================== */
+
+hic_manens vacuum
+_politica_expressionis (
+    constans SilvaNodus*     ambiguum,
+    constans SilvaOraculum*  oraculum,
+    vacuum*                  datum,
+    SilvaResolutioResponsum* responsum)
+{
+    SilvaValor interpretationes =
+        silva_c89_ambiguus_interpretationes(ambiguum);
+    i32 sine_specie = ZEPHYRUM;
+    s32 ultima = -I;
+    i32 i;
+
+    (vacuum)oraculum;
+    (vacuum)datum;
+    per (i = ZEPHYRUM;
+         i < silva_valor_lista_numerus(interpretationes); i++)
+    {
+        SilvaValor* elem =
+            silva_valor_lista_obtinere(interpretationes, i);
+        ExamenLectionis examen;
+
+        examen.invalidum = FALSUM;
+        examen.nominatus_adest = FALSUM;
+        examen.ignotus_adest = FALSUM;
+        examen.species_adest = FALSUM;
+        si (elem == NIHIL || elem->genus != SILVA_VALOR_NODUS)
+        {
+            perge;
+        }
+        _nodum_examinare(elem->datum.nodus, NIHIL, ZEPHYRUM,
+            &examen, ZEPHYRUM);
+        si (!examen.species_adest)
+        {
+            sine_specie++;
+            ultima = (s32)i;
+        }
+    }
+    /* lectio PURE expressionis unica -> canonica; ambigua
+     * eiusdem generis ordinem motoris retinent */
+    si (sine_specie == I)
+    {
+        responsum->victor = ultima;
+    }
+}
+
+i32
+silva_c89_politicam_imponere (
+    SilvaCommissio* commissio,
+    SilvaOraculum*  oraculum)
+{
+    redde (i32)silva_recanonicare(commissio, oraculum,
+        _politica_expressionis, NIHIL);
+}
+
+constans SilvaGrammatica SILVA_C89_GRAMMATICA = {
+    &SILVA_C89_TABULA,
+    &SILVA_C89_REGISTRUM,
+    silva_c89_construere,
+    silva_c89_ambiguum_fabricare,
+    silva_c89_praecommissio
+};
+
+SilvaParsura*
+silva_c89_parsare (
+    Piscina*            piscina,
+    constans character* via,
+    constans character* fons,
+    i32                 mensura,
+    SilvaOraculum*      oraculum)
+{
+    SilvaParsura* parsura;
+
+    si (oraculum == NIHIL)
+    {
+        oraculum = silva_oraculum_creare(piscina);
+        si (oraculum == NIHIL) redde NIHIL;
+    }
+    parsura = silva_parsare(piscina, via, fons, mensura,
+        &SILVA_C89_GRAMMATICA, oraculum, silva_c89_resolutor,
+        (vacuum*)oraculum);
+    si (parsura != NIHIL && parsura->commissio != NIHIL)
+    {
+        silva_c89_politicam_imponere(parsura->commissio, oraculum);
+    }
+    redde parsura;
+}
