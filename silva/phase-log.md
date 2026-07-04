@@ -3990,3 +3990,77 @@ grouped-switch mechanics and dangling-else policy, GOTO/labels,
 function DEFINITIONS incl. K&R, the ()-before-{ boundary
 fixtures; owns block-scope oracle question, comprehension
 riser, FUNCTIONES TOC).
+
+### Addendum praecompactionis (2026-07-04)
+
+**CHUNK E DECIDED (Fran, by motion)**: proceed straight to M2c —
+the saltuarius TOC integration lands ONCE at M2c, delivering
+TYPI/DECLARATIONES + FUNCTIONES together (option b of the M2b
+RELATIO). The (a) path stays open at zero cost: the vista API is
+shipped and `./silva/arbor.sh -d <via>` demos it from the
+terminal today (the -d vista mode was added POST-COMMIT while
+answering "what would the rows look like" — silva.h on itself:
+116 rows, 0 errores; a .c file shows only prototypes/globals
+until M2c). ONE UNCOMMITTED FILE: instrumenta/principalia/
+arbor.c (+arbor.sh unchanged) — the -d flag; commit with M2c or
+alone.
+
+**Re-entry for M2c (post-compaction, follow silva/CLAUDE.md
+PROTOCOLLUM)**: read this log's M2b sections + the M2 sketch
+(M2c paragraph) + spec-v2 §7 (boundary-finder risk). The M2c
+INTENTIO is NOT yet written — it is the next act. Known scope:
+statements (corpus w/ decl-before-stmt, si/alioquin w/
+dangling-else DECLARED preference [generator preference
+mechanism NOT built yet — M2c owns building it or forking the
+conflict per policy], dum/fac-dum/per+per-clausula/passus,
+commutatio w/ GROUPED casus per the M2.0 sign-off [mechanics
+owed], titulatum/salta/frange/perge/redde, sententia-vacua) +
+function definitions (ANSI + K&R; translation-unit; the
+()-before-{ segment-boundary heuristic in the DRIVER — function
+definitions have NO trailing semicolon, the slicer must end
+segments at body-brace-close; adversarial fixtures named in
+spec §7) + block-scope oracle question (file-scope-flat today —
+decide or defer BY NAME) + carried bars probatio_lapifex_c89_
+sent.c/_func.c + full v1 syntaxis harvest (87→toward 125) +
+FUNCTIONES vista/TOC (row per definitio-functionis; then the
+saltuarius structura pane grows BOTH sections). Corpus ERROR 62
+→ expect near-0. Census will grow — enumerate exhaustively as
+always; dangling-else is the named newcomer.
+
+**Artes implementationis (M2a/M2b learnings not yet written
+anywhere else — for the M2c sessions):**
+
+1. **DESIGN HINT for the owed grouped-casus mechanics**: the
+   problem ("the case group's statement list must not swallow
+   the next casus/ordinarius label") is the SAME CLASS as the
+   tristate specifier lista — a by-construction CFG state-split
+   (the group's statement tier simply excludes case-labeled
+   forms, so FOLLOW does the exclusion and no conflict/pruning
+   is needed). M2b proved the technique twice (greedy primitive
+   runs; tag-final nuda). Reach for it FIRST at M2c before
+   inventing preference machinery for this one — the DECLARED-
+   preference mechanism is still needed for dangling-else, but
+   grouped-casus likely needs none.
+2. **Missing-fork diagnostic rule**: if a fork you EXPECT does
+   not appear (ambigui lower than designed), suspect
+   CONSTRUCTION failure before grammar — a construere that
+   returns nihil kills its GLR branch silently and understates
+   ambiguity (the lista-valens bug's signature). First check:
+   stderr for the S32 refusal line; second: the python
+   baked-table walk.
+3. **The python baked-table walk** (scratchpad technique, used
+   twice to decisive effect): simulate shift/reduce directly
+   against the generated silva_tabulae_c89.c arrays for a token
+   sequence — it cleanly separates "tables wrong" from "engine
+   wrong" from "build stale". Rebuild it freely; ~40 lines.
+   Sibling: bison on an equivalent grammar as an independent
+   LALR oracle (settled the 85-conflict question in minutes).
+4. **Fixture lengths: ALWAYS strlen, never hand-counted
+   literals** — Roman-numeral length constants bit twice
+   (truncated input = confusing downstream failures, not
+   loud ones).
+5. **Scripted bulk edits on C89**: compile IMMEDIATELY after
+   (two slips this milestone: a statement inserted before
+   declarations; placeholder scaffolding left in a block).
+   The wall catches everything, but only if run before the
+   next edit buries it.

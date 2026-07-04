@@ -2,6 +2,7 @@
  *
  * Usus: arbor '<fons>'        e.g. arbor '2+3*4;'
  *       arbor -f <via>        plagulam legere
+ *       arbor -d <via>        vistam declarationum imprimere
  *
  * Parsat fontem grammatica c89 et arborem generum imprimit,
  * ambulatione generica per registrum coctum (nomina generum et
@@ -157,7 +158,8 @@ s32 principale (integer argc, character** argv)
         redde I;
     }
 
-    si (argc >= III && strcmp(argv[I], "-f") == ZEPHYRUM)
+    si (argc >= III && (strcmp(argv[I], "-f") == ZEPHYRUM
+        || strcmp(argv[I], "-d") == ZEPHYRUM))
     {
         fons = _plagulam_legere(piscina, argv[II]);
         si (fons == NIHIL)
@@ -186,6 +188,28 @@ s32 principale (integer argc, character** argv)
         (int)parsura->numerus_errorum,
         (int)parsura->fusiones,
         (int)xar_numerus(parsura->commissio->ambigui));
+
+    /* -d: vista declarationum (ordines TOC) pro arbore integra */
+    si (argc >= III && strcmp(argv[I], "-d") == ZEPHYRUM)
+    {
+        i32 n = (i32)silva_c89_declarationes_numerus(parsura);
+        i32 k;
+
+        imprimere("declarationes: %d\n", (int)n);
+        per (k = ZEPHYRUM; k < n; k++)
+        {
+            SilvaDeclaratioVista vista;
+
+            si (silva_c89_declaratio_vista(parsura, k, &vista))
+            {
+                imprimere("  %5d  %-24s %.*s\n", (int)vista.linea,
+                    vista.genus, (int)vista.titulus.mensura,
+                    (constans character*)vista.titulus.datum);
+            }
+        }
+        piscina_destruere(piscina);
+        redde ZEPHYRUM;
+    }
 
     numerus = silva_valor_lista_numerus(parsura->commissio->radix);
     per (i = ZEPHYRUM; i < numerus; i++)
