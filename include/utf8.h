@@ -78,4 +78,15 @@ constans i8* utf8_proxima_runa(constans i8* ptr, constans i8* finis);
  */
 constans i8* utf8_prior_runa(constans i8* ptr, constans i8* initium);
 
+/*
+ * utf8_codere - Codere unam runam in sequentiam UTF-8
+ *   (par decodere; buffer IV bytes minimum capere debet)
+ *
+ * @runa: Codepoint (0..0x10FFFF, surrogata D800-DFFF exclusa)
+ * @buffer: Quo bytes scribuntur (1-4)
+ *
+ * Redde: Numerus bytes scriptorum; 0 si runa invalida
+ */
+s32 utf8_codere(s32 runa, i8* buffer);
+
 #endif /* UTF8_H */

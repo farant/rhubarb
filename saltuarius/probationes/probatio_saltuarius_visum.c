@@ -286,6 +286,39 @@ s32 principale (vacuum)
                 & TESSERA_ORNAMENTUM_INVERSUM);
         }
 
+        /* ----------------------------------------------------
+         * linea fructus (D3): praesentare semel ut numeri
+         * vivant, deinde tabula telemetriae in linea status
+         * ---------------------------------------------------- */
+        imprimere("\n--- Probans lineam fructus ---\n");
+
+        (vacuum)tessera_praesentare(opus);
+        saltuarius_visum_pingere(liber, res, opus);
+        saltuarius_visum_fructus(liber, III, opus);
+        CREDO_VERUM (saltuarius_proba_quaerere(opus, VII,
+            "libri 3/8") >= ZEPHYRUM);
+        CREDO_VERUM (saltuarius_proba_quaerere(opus, VII,
+            "arena ") >= ZEPHYRUM);
+        CREDO_VERUM (saltuarius_proba_quaerere(opus, VII,
+            "q 1") >= ZEPHYRUM);
+
+        /* liber merus: arena "-" */
+        {
+            SaltuariusLiber* merus = saltuarius_liber_aperire(
+                piscina, nexus,
+                chorda_ex_literis("notae.md", piscina),
+                chorda_ex_literis("textus\n", piscina));
+
+            CREDO_NON_NIHIL (merus);
+            saltuarius_visum_pingere(merus, res, opus);
+            saltuarius_visum_fructus(merus, ZEPHYRUM, opus);
+            CREDO_VERUM (saltuarius_proba_quaerere(opus, VII,
+                "arena -") >= ZEPHYRUM);
+            CREDO_VERUM (saltuarius_proba_quaerere(opus, VII,
+                "libri 0/8") >= ZEPHYRUM);
+            saltuarius_liber_destruere(merus);
+        }
+
         saltuarius_liber_destruere(liber);
     }
 

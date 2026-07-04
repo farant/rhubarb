@@ -273,3 +273,37 @@ utf8_prior_runa(constans i8* ptr, constans i8* initium)
 
     redde p;
 }
+
+s32
+utf8_codere(s32 runa, i8* buffer)
+{
+    si (buffer == NIHIL || runa < 0
+        || (runa >= 0xD800 && runa <= 0xDFFF)
+        || runa > 0x10FFFF)
+    {
+        redde 0;
+    }
+    si (runa < 0x80)
+    {
+        buffer[0] = (i8)runa;
+        redde 1;
+    }
+    si (runa < 0x800)
+    {
+        buffer[0] = (i8)(0xC0 | (runa >> 6));
+        buffer[1] = (i8)(0x80 | (runa & 0x3F));
+        redde 2;
+    }
+    si (runa < 0x10000)
+    {
+        buffer[0] = (i8)(0xE0 | (runa >> 12));
+        buffer[1] = (i8)(0x80 | ((runa >> 6) & 0x3F));
+        buffer[2] = (i8)(0x80 | (runa & 0x3F));
+        redde 3;
+    }
+    buffer[0] = (i8)(0xF0 | (runa >> 18));
+    buffer[1] = (i8)(0x80 | ((runa >> 12) & 0x3F));
+    buffer[2] = (i8)(0x80 | ((runa >> 6) & 0x3F));
+    buffer[3] = (i8)(0x80 | (runa & 0x3F));
+    redde 4;
+}

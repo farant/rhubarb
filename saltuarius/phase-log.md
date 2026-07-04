@@ -803,3 +803,311 @@ memory close-out.
 comfortably; money shot reproducible on demand; TOC + '/' work;
 suites green; degradation badges proven. "I actually use it" is
 the bar. v0 SHIPS.
+
+### Chunk D1 — structura (TOC sidebar): INTENTIO (2026-07-03)
+
+**Goal**: Tab in fons mode opens a STRUCTURA pane — the file's
+table of contents built from the additiones-II vistas — j/k
+navigates, Enter jumps, Tab/q closes. The designed M2 pressure
+point goes live: the day the TOC wants FUNCTIONS listed is the
+day M2 (C89 grammar) gets its pull.
+
+**Shape** (mirrors origo exactly — proven pattern):
+- NEW saltuarius_structura.{h,c}: view-model with its OWN
+  reficere'd arena (creare/aedificare/claudere/movere/saltus).
+  Rows built fresh at each open by walking the vistas off
+  liber->parsura->expansio — no per-liber caching (rebuild is
+  O(vistae), macro_vista O(acta) per call → O(acta²) worst case,
+  trivial at TOC scale; caching deferred NAMED to v0.1 if a
+  giant file ever makes open laggy).
+- Row model: three sections with grey non-jumpable header rows —
+  INCLUSIONES (via text + "(non resoluta)" when fons_ad -1 +
+  "(praetermissa)" badge), DEFINITIONES (macro name +
+  "(functio)" badge, journal semantics AS-IS: redefinitions
+  appear twice, #undef erases nothing — the journal is the
+  product), REGIONES (#if/#ifdef/#ifndef/#elif/#else genus +
+  linea + sumptum/NUMQUAM/omissum badge).
+- **SCOPE DECISION**: rows filtered to the PRINCIPAL file
+  (inclusio fons_ex == parsura->fons_princeps; macro/ramus
+  fons_index == fons_princeps — NB fons_princeps != 0 post
+  praebere, already learned). Rationale: it is the TOC of THIS
+  file; latina.h alone would otherwise drown every list with
+  ~50 macro rows. The filter also auto-excludes latina.h's own
+  `#include <stddef.h>` journal entry. DEFERRED NAMED: a
+  project-wide/all-fontes view (scope toggle) → v0.1.
+- Unbounded row count: selectio + volumen scroll in the
+  view-model (origo capped at 16; a TOC cannot).
+- Jumps: macro/ramus rows → same-file linea (vista linea is
+  UNSIGNED — s32 casts at the boundary). Inclusio rows → land at
+  LINE 1 of the TARGET file (the vista carries no include-site
+  linea; jumping INTO the header is the ranger-native semantics
+  anyway) through the SAME resolution as origo: fons_resolvere,
+  absolute-path fallback, bibliotheca/librum_via. main's
+  _saltum_facere refactors into a shared _ad_locum_ire(app, via,
+  linea) that both origo and structura saltus call.
+- Render: saltuarius_visum_structura in visum.c (tabella
+  precedent — all painting stays in one file; deviation from the
+  phase-INTENTIO's "render in structura module" sketch, for
+  consistency). Overlay pane anchored RIGHT, full content
+  height, tessera_replere opaque interior + border, INVERSUM
+  selection, grey headers/badges. No metra reflow — the text
+  pane underneath is untouched (z-order = paint order, as
+  tabella proved).
+- Claves: TESSERA_CLAVIS_TABULA → SALT_ACTIO_STRUCTURA (fons
+  mode). Ctrl+I aliases to Tab by xterm nature — that is the
+  SANCTIONED side of the forbidden-bindings pin (we bind TABULA,
+  never Ctrl+I separately). Micro-mode dispatch in main:
+  origo popup and structura pane MUTUALLY EXCLUSIVE (opening one
+  closes the other); dispatch order origo → structura → fons.
+- Refusals: textus merus / no parsura / zero rows → "(structura
+  nihil habet)" nuntius, pane never opens broken (every-file-
+  opens pin).
+
+**Probationes** (probatio_saltuarius_structura.c + growth):
+fixture with praebenda latina.h + own `#include <stddef.h>` +
+object & function macros + #if 0 / #ifdef arms; assert: section
+structure, principal-file filter (latina.h's stddef row ABSENT,
+own stddef row PRESENT as non-resoluta — the honest-unresolved
+golden from the phase INTENTIO), functio badge, ramus badges,
+journal duplicate visible, saltus targets (macro linea; inclusio
+via resolvable). Cell goldens: pane over scene, title, INVERSUM
+selection moving, grey header. Claves: Tab case. Scroll clamp
+probatio for a long macro list.
+
+### Chunk D1 — structura: CODE COMPLETE (2026-07-03); MANUAL BAR
+### PENDING
+
+Shipped: saltuarius_structura.{h,c} (view-model, origo pattern:
+own reficere'd arena, rebuild-per-open, one-pass vista walk with
+fons_princeps filter, selectio starts on first saltabile row,
+volumen scroll for unbounded row counts), saltuarius_visum_
+structura (right-anchored overlay, replere interior + rounded
+border, " STRUCTURA " title, grey CRASSUM section headers,
+indented rows, INVERSUM selection), claves TESSERA_CLAVIS_TABULA
+→ SALT_ACTIO_STRUCTURA (fons mode only; Ctrl+I aliases in — the
+sanctioned side of the forbidden-bindings pin), main micro-mode
+_iussum_indicis (dispatch origo → index → fons enforces mutual
+exclusion by construction; q from fons closes both), and the
+planned refactor: _saltum_facere → shared _ad_locum_ire(via,
+linea) with thin origo/index callers (INCLUSIO jumps INTO the
+header at line 1; DEFINITIO/REGIO jump same-file).
+
+Suite 12/12 (structura probatio: 55 asserts — filter both ways,
+badges, journal duplicate V×2, saltus targets, scroll clamp,
+merus refusal, cell goldens incl. INVERSUM movement). App links
+clean under the full wall.
+
+COMPLEXITY — `structura` IS A LATINA MACRO (SIXTH firing).
+- DISCOVERED WHILE: naming the view-model's parameters in the
+  module literally named saltuarius_structura.
+- CONSISTS IN: latina.h defines `structura` = struct; the
+  module's own noun is unusable as an identifier. Type name
+  SaltuariusStructura and function prefixes are fine (different
+  tokens); the bare word is poison.
+- CONSEQUENCES: every param/local/field named `structura`
+  expands to a keyword → syntax soup. clangd caught it PRE-
+  compile this time (progress: firing #5 needed the compiler,
+  #4 needed the amalgam).
+- HANDLED BY: variables/fields named `index` (proper Latin for
+  a book's TOC — the better name anyway); forbidden lists in
+  all three CLAUDE.md files updated with the GENERAL rule:
+  every word #defined in latina.h is reserved — check latina.h
+  before coining any identifier.
+
+COMPLEXITY — ramus vista linea is the REGION's line, not the
+arm's.
+- DISCOVERED WHILE: probatio asserted #else row at :11, got :9.
+- CONSISTS IN: silva_ramus_vista faithfully reports
+  regio->linea — the OPENING directive's line, shared by every
+  arm of the group. The per-arm truth lives in corpus_initium/
+  corpus_finis (byte extents of the arm BODY), already public.
+- CONSEQUENCES: naive TOC rows for all arms of a conditional
+  would jump to the same line.
+- HANDLED BY: byte→line conversion in saltuarius against the
+  liber's own lineae table (public data — NOT an amalgam
+  fall-short, no silva change needed); row displays AND jumps
+  to the arm-body line (#else → the `int c;` line — where a
+  jump wants to land anyway); empty arm (corpus -1) falls back
+  to the region line. Golden pins :12 (else body) and :14
+  (empty-arm fallback). Named nicety if it ever itches: vistas
+  could carry the arm's own directive line (additiones-III
+  class, no pressure yet).
+
+MANUAL BAR (D1 slice): ./saltuarius/saltuarius.sh → open a real
+source (silva/fontes/silva_parsare.c is rich) → Tab: pane with
+INCLUSIONES/DEFINITIONES/REGIONES → j/k scrolls a long list →
+Enter on an include LANDS IN THE HEADER → Tab again on a macro
+row lands on its #define → q closes pane, q again to columns →
+Tab on a .md politely refuses. The FUNCTIONES itch (M2 pressure
+point) is now live — note whether you feel it.
+
+**D1 MANUAL BAR PASSED (2026-07-03, Fran: "the manual bar
+implementation looks great"). D1 CLOSED.** The FUNCTIONES-itch
+observation stays live through the D3 daily-driver bar.
+
+### Chunk D2 — quaestio ('/' search): INTENTIO (2026-07-03)
+
+**Goal**: '/' in fons mode opens the app's FIRST TEXT-INPUT
+micro-mode — literal, non-regex, incremental search over the
+DISPLAYED stratum (search what you see — interview fiat). Enter
+commits, Esc cancels (cursor restored), n/N repeat with
+wraparound + "(finis)" nuntius.
+
+**Shape**:
+- NEW saltuarius_quaestio.{h,c}: view-model with FIXED buffers
+  (256 bytes query + 256 committed — no arena needed; queries
+  are short by nature). State: activa, litterae/mensura (query
+  in flight), commissum (survives close — n/N's memory),
+  origin snapshot (cursor offset + linea/columna + volumina —
+  Esc restores ALL of it), nihil_inventum (echo badge).
+- INPUT MODE IS DIFFERENT: while activa, main bypasses
+  saltuarius_claves_tradere entirely and feeds the raw
+  TesseraEventum to saltuarius_quaestio_tradere — printable
+  runes append (encoded to UTF-8 bytes), RETRORSUM deletes one
+  RUNE (walk back a whole codepoint, not a byte), REDITUS
+  commits, FUGA cancels. claves stays pure command-translation;
+  the probationes hand-construct events as ever. Paste arrives
+  as a rune burst — acceptable, named (bracketed markers are
+  swallowed by tessera).
+- Incremental semantics (vim wrapscan model): the ORIGIN offset
+  is snapshotted at '/' — every keystroke re-searches from the
+  ORIGIN (not the moving cursor, else typing leapfrogs), match
+  inclusive at origin, wrapping to the top if needed; cursor
+  moves to the match (cursor_ad_offset — the C2 rune/byte
+  machinery reused); no match → cursor sits back at origin +
+  " (nihil)" in the echo.
+- n/N: strictly-after / strictly-before current cursor offset,
+  byte-literal (memcmp scan — O(n·m) per keystroke is trivial
+  at buffer scale), wraparound sets a volvit flag → main
+  nuntiates "(finis)". Empty committed query → "(quaestio
+  vacua)".
+- Echo line: saltuarius_visum_quaestio overlay painted LAST —
+  replere the status row, draw "/query" + optional "(nihil)".
+  The right-side status yields while typing (deliberate,
+  simple; B2's right-side-priority rule applies to the NORMAL
+  status line, not the input echo).
+- claves: '/' → SALT_ACTIO_QUAESTIO, 'n'/'N' →
+  SALT_ACTIO_PROXIMUM/PRIUS (all fons-mode only). Dispatch:
+  quaestio-activa checked FIRST (origo/index are necessarily
+  closed — '/' only reachable from _iussum_fontis).
+- Search domain: saltuarius_liber_stratum_activum(liber)->textus
+  — the DISPLAYED text, so a search in stratum 1 finds what the
+  expansion shows, not what the file says. That is the feature.
+
+**Probationes** (probatio_saltuarius_quaestio.c — scripted
+keystroke sessions): type-search-land (incremental narrows),
+backspace re-widens (and removes a whole UTF-8 rune, not a
+byte), Enter commits + n/N walk matches + wraparound flag, Esc
+restores cursor AND volumina, no-match keeps origin + flags
+nihil, search-what-you-see on stratum 1 (query matching expanded
+text only), echo-line cell golden ("/int" visible on status
+row). Claves growth: '/', 'n', 'N' fons-only cases.
+
+### Chunk D2 — quaestio: CODE COMPLETE (2026-07-03); MANUAL BAR
+### PENDING
+
+Shipped exactly as the INTENTIO drew it: saltuarius_quaestio.
+{h,c} (fixed 256-byte buffers, origin snapshot with volumina,
+vim-wrapscan incremental from ORIGIN, n/N strictly-after/before
+with volvit flag), raw-event bypass in principale (input mode
+skips claves entirely — the dispatch guarantee holds: '/' only
+reachable from _iussum_fontis, so origo/index are closed),
+saltuarius_visum_quaestio echo overlay painted last, claves
+'/'/'n'/'N' fons-only, nuntii "(finis)"/"(nihil inventum)"/
+"(quaestio vacua)".
+
+MONOREPO GROWTH (not a complexity — the system working): the
+utf8 lib had decode/walk but NO ENCODER; text input needs
+rune→bytes. utf8_codere added to lib/utf8.c + include/utf8.h
+(surrogates/range rejected, 1-4 byte forms), probatio_utf8
+grew a codere section incl. codere→decodere roundtrip; root
+suite green. First text input in the monorepo pulled the
+library forward — quaestio consumes it for append, and
+utf8_prior_runa (already there) does rune-whole backspace.
+
+Suite 13/13 (quaestio probatio: 49 asserts FIRST RUN — the
+incremental-narrowing fixture is self-documenting: 'i' lands in
+"#defIne" at offset 4, 'in' holds, 'int' jumps to the real
+declaration; search-what-you-see proven both directions on
+stratum 1 vs 0 with "2)+(2"). App links clean. Zero new
+complexities — D1's landmine list and the C2 cursor machinery
+(cursor_ad_offset) carried the whole chunk.
+
+MANUAL BAR (D2 slice, fold into D3's daily-driver bar or eyeball
+now): / then type — watch the cursor chase the narrowing match;
+Backspace widens; Enter, then n n n to a "(finis)" wrap; N back;
+Esc from a garbage query — cursor snaps home; L to stratum 1,
+'/' an expansion-only string — found there, "(nihil)" on
+stratum 0.
+
+NEXT: D3 — F2 fructus line + LRU observation + deferral
+disposition + THE DAILY-DRIVER BAR → v0 RELATIO → v0 SHIPS.
+
+### Chunk D3 — fructus + dispositio: INTENTIO (2026-07-03)
+
+- **F2 fructus line**: SALT_ACTIO_FRUCTUS (TESSERA_CLAVIS_FUNCTIO
+  numerus 2, fons mode), toggles res->fructus_visibilis; overlay
+  saltuarius_visum_fructus takes the WHOLE status row (debug
+  view; quaestio echo precedent) with: praesentationes, cellulae
+  mutatae (cumulativae — tessera zeroes only at aperire), octeti,
+  ms MEDIUM (tempus/praesentationes, tenths), silva arena
+  summa/apex in MB tenths (the additiones-I telemetry earning its
+  keep; "-" for merus), libri N/8 (THE LRU instrument — the
+  observation happens live on the daily-driver bar).
+- **Click-outside closes popups**: CLICUS → claudere in both
+  micro-modes (deferral LANDED — 6 lines).
+- **Deferral disposition** (the rest): colored previews = NOT
+  instant (threads nexus/classis into colorless Phase A columnae
+  + limes preview arena) → v0.1 FIRST ITEM if the daily-driver
+  bar itches; ctrl-o jump history → v0.1; vim f-motion in fons →
+  v0.1; dotfile toggle → v0.1; incremental type-jump → v0.1.
+- Probationes: F2 claves case; fructus-line cell golden (praesentare
+  once on memoria pons to populate counters, assert "libri"/"arena"
+  visible). Click-close is main-level (not link-visible headlessly)
+  — manual bar covers it, named.
+
+### Chunk D3 — fructus + dispositio: CODE COMPLETE (2026-07-03);
+### THE DAILY-DRIVER BAR REMAINS
+
+Shipped: F2 → SALT_ACTIO_FRUCTUS (FUNCTIO numerus 2, fons only;
+F3 pinned inert) toggling res->fructus_visibilis;
+saltuarius_visum_fructus full-row telemetry overlay; CLICUS
+closes both popups (deferral LANDED). Suite 13/13; app links.
+
+COMPLEXITY (small, caught by golden): the fructus line first
+led with tessera counters — on the 40-col fixture terminal the
+"libri N/8" tail CLIPPED. The B2 lesson re-fired in new clothes:
+on narrow terminals the MOST DIAGNOSTIC fields must survive.
+Reordered: libri N/8 (LRU instrument) → arena summa/apex MB →
+q/ms/mut/oct (tessera counters, sacrificial tail). Golden now
+pins "libri 3/8" and "arena" visible at 40 cols.
+
+DEFERRAL DISPOSITION (each with its named home):
+- Click-outside closes popups → LANDED (D3).
+- Colored previews → v0.1 FIRST CANDIDATE, contingent on the
+  daily-driver feel-test. NOT instant: threads nexus/classis
+  into colorless Phase A columnae + limes preview arena. The
+  lexing itself IS cheap (additiones I proved it); it's the
+  plumbing that costs.
+- ctrl-o jump history → v0.1 (needs a jump stack; pairs with
+  origo/TOC jumps naturally).
+- vim f-motion in fons mode → v0.1 (claves already carries
+  f-pending; only the fons-side cursor hop is missing).
+- dotfile toggle → v0.1 (tabularium filter flag).
+- Incremental type-jump in columns → v0.1 (tabularium prefix
+  match; interacts with f-motion design).
+
+WHAT REMAINS FOR v0 (the only unchecked exit criteria):
+1. THE DAILY-DRIVER BAR (interview Q20 verbatim): Fran browses,
+   reads, jumps, and searches through a REAL work session.
+   "I actually use it" is the bar.
+2. LRU OBSERVATION during that session: F2 on, open 10+ heavy
+   files (silva/tessera fontes are the heavy ones), watch libri
+   hold at 8/8 and arena numbers stay per-file sane (84-242MB
+   ceiling per parse arena was the measured range). Tune N only
+   if the bar demands.
+3. The FUNCTIONES-itch note (M2 pressure point) from living in
+   the Tab pane.
+Then: v0 RELATIO + phase-log audit (phase-boundary rule: re-read
+the WHOLE log, every complexity resolved-or-parked) + spec-v2
+marked SHIPPED + memory close-out. SALTUARIUS v0 SHIPS.

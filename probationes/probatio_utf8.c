@@ -435,6 +435,57 @@ s32 principale(vacuum)
 
 
     /* ==================================================
+     * utf8_codere - par decodere (circuitus integer)
+     * ================================================== */
+    {
+        i8 buffer[4];
+        constans i8* ptr;
+
+        imprimere("\n--- Probans codere ---\n");
+
+        /* 1 byte: ASCII */
+        CREDO_AEQUALIS_S32(utf8_codere('A', buffer), 1);
+        CREDO_AEQUALIS_S32((s32)buffer[0], (s32)'A');
+
+        /* 2 bytes: pi 0x3C0 -> CF 80 */
+        CREDO_AEQUALIS_S32(utf8_codere(0x3C0, buffer), 2);
+        CREDO_AEQUALIS_S32((s32)buffer[0], 0xCF);
+        CREDO_AEQUALIS_S32((s32)buffer[1], 0x80);
+
+        /* 3 bytes: quota sinistra 0x201C -> E2 80 9C */
+        CREDO_AEQUALIS_S32(utf8_codere(0x201C, buffer), 3);
+        CREDO_AEQUALIS_S32((s32)buffer[0], 0xE2);
+        CREDO_AEQUALIS_S32((s32)buffer[1], 0x80);
+        CREDO_AEQUALIS_S32((s32)buffer[2], 0x9C);
+
+        /* 4 bytes: 0x1F600 */
+        CREDO_AEQUALIS_S32(utf8_codere(0x1F600, buffer), 4);
+        CREDO_AEQUALIS_S32((s32)buffer[0], 0xF0);
+
+        /* circuitus: codere -> decodere idem reddit */
+        (vacuum)utf8_codere(0x2192, buffer);   /* sagitta -> */
+        ptr = buffer;
+        CREDO_AEQUALIS_S32(utf8_decodere(&ptr, buffer + 4), 0x2192);
+
+        /* invalida: surrogata, ultra, negativa */
+        CREDO_AEQUALIS_S32(utf8_codere(0xD800, buffer), 0);
+        CREDO_AEQUALIS_S32(utf8_codere(0xDFFF, buffer), 0);
+        CREDO_AEQUALIS_S32(utf8_codere(0x110000, buffer), 0);
+        CREDO_AEQUALIS_S32(utf8_codere(-1, buffer), 0);
+        CREDO_AEQUALIS_S32(utf8_codere('A', NIHIL), 0);
+
+        /* limites formarum */
+        CREDO_AEQUALIS_S32(utf8_codere(0x7F, buffer), 1);
+        CREDO_AEQUALIS_S32(utf8_codere(0x80, buffer), 2);
+        CREDO_AEQUALIS_S32(utf8_codere(0x7FF, buffer), 2);
+        CREDO_AEQUALIS_S32(utf8_codere(0x800, buffer), 3);
+        CREDO_AEQUALIS_S32(utf8_codere(0xFFFF, buffer), 3);
+        CREDO_AEQUALIS_S32(utf8_codere(0x10000, buffer), 4);
+        CREDO_AEQUALIS_S32(utf8_codere(0x10FFFF, buffer), 4);
+    }
+
+
+    /* ==================================================
      * Compendium
      * ================================================== */
 

@@ -39,7 +39,14 @@ nomen enumeratio {
     SALT_ACTIO_SINISTRA,        /* h in fonte: cursor */
     SALT_ACTIO_DEXTRA,          /* l in fonte: cursor */
     SALT_ACTIO_STRATUM,         /* L (Phase C) */
-    SALT_ACTIO_ORIGO            /* o (Phase C) */
+    SALT_ACTIO_ORIGO,           /* o (Phase C) */
+    SALT_ACTIO_STRUCTURA,       /* Tab (Phase D) - NB Ctrl+I ad
+                                 * Tab aliatur (xterm); TABULA
+                                 * ligamus, numquam Ctrl+I ipsum */
+    SALT_ACTIO_QUAESTIO,        /* / (D2) */
+    SALT_ACTIO_PROXIMUM,        /* n (D2) */
+    SALT_ACTIO_PRIUS,           /* N (D2) */
+    SALT_ACTIO_FRUCTUS          /* F2 (D3): linea telemetriae */
 } SaltuariusActio;
 
 nomen structura {

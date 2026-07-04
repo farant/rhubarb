@@ -84,6 +84,17 @@ _clavem_tradere (SaltuariusClaves* claves, SaltuariusModus modus,
                 ? SALT_ACTIO_DEXTRA : SALT_ACTIO_INTRARE);
         casus TESSERA_CLAVIS_REDITUS:
             redde _iussum_simplex(iussum, SALT_ACTIO_INTRARE);
+        casus TESSERA_CLAVIS_TABULA: si (in_fonte)
+        {
+            redde _iussum_simplex(iussum, SALT_ACTIO_STRUCTURA);
+        }
+        frange;
+        casus TESSERA_CLAVIS_FUNCTIO: si (in_fonte
+            && ev->numerus == II)
+        {
+            redde _iussum_simplex(iussum, SALT_ACTIO_FRUCTUS);
+        }
+        frange;
         ordinarius:
             frange;
     }
@@ -105,6 +116,21 @@ _clavem_tradere (SaltuariusClaves* claves, SaltuariusModus modus,
         casus 'o': si (in_fonte)
         {
             redde _iussum_simplex(iussum, SALT_ACTIO_ORIGO);
+        }
+        frange;
+        casus '/': si (in_fonte)
+        {
+            redde _iussum_simplex(iussum, SALT_ACTIO_QUAESTIO);
+        }
+        frange;
+        casus 'n': si (in_fonte)
+        {
+            redde _iussum_simplex(iussum, SALT_ACTIO_PROXIMUM);
+        }
+        frange;
+        casus 'N': si (in_fonte)
+        {
+            redde _iussum_simplex(iussum, SALT_ACTIO_PRIUS);
         }
         frange;
         casus 'q': redde _iussum_simplex(iussum, SALT_ACTIO_FINIRE);

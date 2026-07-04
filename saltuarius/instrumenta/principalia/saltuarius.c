@@ -20,6 +20,8 @@
 #include "saltuarius_visum.h"
 #include "saltuarius_bibliotheca.h"
 #include "saltuarius_origo.h"
+#include "saltuarius_structura.h"
+#include "saltuarius_quaestio.h"
 #include "filum.h"
 #include <stdio.h>
 #include <string.h>
@@ -52,6 +54,9 @@ nomen structura {
     SaltuariusBibliotheca   bibliotheca;
     SaltuariusLiber*        liber;      /* apertus in MODUS_FONS */
     SaltuariusOrigo*        origo;
+    SaltuariusStructura*    index;      /* TOC; NB "structura" =
+                                         * macro (struct)! */
+    SaltuariusQuaestio      quaestio;   /* '/' (D2) */
     TesseraOpus*            opus;
 } SaltuariusApp;
 
@@ -120,37 +125,30 @@ _silvam_seminare (SaltuariusApp* app, SaltuariusLimes* limes,
     }
 }
 
-/* Saltus originis: gradus selectus -> plagula + linea */
+/* Ad locum ire: via + linea -> plagula aperta, stratum 0, cursor.
+ * COMMUNIS origini et indici structurae (D1: unus saltus, duo
+ * vocatores). */
 interior vacuum
-_saltum_facere (SaltuariusApp* app)
+_ad_locum_ire (SaltuariusApp* app, chorda via, i32 linea)
 {
-    constans SaltuariusGradus* gradus =
-        saltuarius_origo_saltus(app->origo);
     chorda via_meta;
 
-    si (gradus == NIHIL)
-    {
-        redde;
-    }
-    saltuarius_origo_claudere(app->origo);
-
     /* eadem plagula? */
-    si (chorda_aequalis(gradus->via, app->liber->via))
+    si (chorda_aequalis(via, app->liber->via))
     {
         saltuarius_liber_stratum_ponere(app->liber, ZEPHYRUM);
-        app->liber->cursor_linea = (s32)gradus->linea - I;
+        app->liber->cursor_linea = (s32)linea - I;
         app->liber->cursor_columna = ZEPHYRUM;
         saltuarius_liber_movere(app->liber, ZEPHYRUM);
         redde;
     }
     /* resolutio: titulus praebendi -> absoluta; aut via absoluta */
-    via_meta = saltuarius_nexus_fons_resolvere(app->nexus,
-        gradus->via);
+    via_meta = saltuarius_nexus_fons_resolvere(app->nexus, via);
     si (via_meta.mensura == ZEPHYRUM
-        && gradus->via.mensura > ZEPHYRUM
-        && gradus->via.datum[ZEPHYRUM] == '/')
+        && via.mensura > ZEPHYRUM
+        && via.datum[ZEPHYRUM] == '/')
     {
-        via_meta = gradus->via;
+        via_meta = via;
     }
     si (via_meta.mensura == ZEPHYRUM)
     {
@@ -179,9 +177,51 @@ _saltum_facere (SaltuariusApp* app)
         }
         app->liber = liber;
         saltuarius_liber_stratum_ponere(liber, ZEPHYRUM);
-        liber->cursor_linea = (s32)gradus->linea - I;
+        liber->cursor_linea = (s32)linea - I;
         liber->cursor_columna = ZEPHYRUM;
         saltuarius_liber_movere(liber, ZEPHYRUM);
+    }
+}
+
+/* Saltus originis: gradus selectus -> plagula + linea */
+interior vacuum
+_saltum_facere (SaltuariusApp* app)
+{
+    constans SaltuariusGradus* gradus =
+        saltuarius_origo_saltus(app->origo);
+
+    si (gradus == NIHIL)
+    {
+        redde;
+    }
+    saltuarius_origo_claudere(app->origo);
+    _ad_locum_ire(app, gradus->via, gradus->linea);
+}
+
+/* Saltus indicis structurae: inclusio -> IN plagulam (linea I);
+ * definitio/regio -> linea plagulae currentis */
+interior vacuum
+_saltum_indicis (SaltuariusApp* app)
+{
+    constans SaltuariusOrdo* ordo =
+        saltuarius_structura_saltus(app->index);
+
+    si (ordo == NIHIL)
+    {
+        redde;
+    }
+    saltuarius_structura_claudere(app->index);
+    commutatio (ordo->genus)
+    {
+        casus SALT_ORDO_INCLUSIO:
+            _ad_locum_ire(app, ordo->via, I);
+            frange;
+        casus SALT_ORDO_DEFINITIO:
+        casus SALT_ORDO_REGIO:
+            _ad_locum_ire(app, app->liber->via, ordo->linea);
+            frange;
+        ordinarius:
+            frange;
     }
 }
 
@@ -427,7 +467,53 @@ _iussum_tabellae (SaltuariusApp* app,
             frange;
         casus SALT_ACTIO_FINIRE:
         casus SALT_ACTIO_ORIGO:
+        casus SALT_ACTIO_CLICUS:   /* clicus extra = claudere (D3) */
             saltuarius_origo_claudere(app->origo);
+            frange;
+        ordinarius:
+            frange;
+    }
+}
+
+/* Iussa dum index structurae apertus (micro-modus alter; cum
+ * tabella originis MUTUO EXCLUSIVUS - dispensatio ordinem
+ * praestat: origo -> index -> fons) */
+interior vacuum
+_iussum_indicis (SaltuariusApp* app,
+    constans SaltuariusIussum* iussum)
+{
+    commutatio (iussum->genus)
+    {
+        casus SALT_ACTIO_SURSUM:
+        casus SALT_ACTIO_ROTA_SURSUM:
+            saltuarius_structura_movere(app->index, -I);
+            frange;
+        casus SALT_ACTIO_DEORSUM:
+        casus SALT_ACTIO_ROTA_DEORSUM:
+            saltuarius_structura_movere(app->index, I);
+            frange;
+        casus SALT_ACTIO_PAGINA_SURSUM:
+        casus SALT_ACTIO_PAGINA_DEORSUM:
+        {
+            s32 dimidium = ((s32)tessera_altitudo(app->opus) - III)
+                / II;
+
+            si (dimidium < I)
+            {
+                dimidium = I;
+            }
+            saltuarius_structura_movere(app->index,
+                (iussum->genus == SALT_ACTIO_PAGINA_SURSUM)
+                    ? -dimidium : dimidium);
+            frange;
+        }
+        casus SALT_ACTIO_INTRARE:
+            _saltum_indicis(app);
+            frange;
+        casus SALT_ACTIO_FINIRE:
+        casus SALT_ACTIO_STRUCTURA:
+        casus SALT_ACTIO_CLICUS:   /* clicus extra = claudere (D3) */
+            saltuarius_structura_claudere(app->index);
             frange;
         ordinarius:
             frange;
@@ -503,12 +589,54 @@ _iussum_fontis (SaltuariusApp* app,
                     "(origo nihil narrat)", NUNTIUS_QUADRA);
             }
             frange;
+        casus SALT_ACTIO_STRUCTURA:
+            si (!saltuarius_structura_aedificare(app->index,
+                app->liber))
+            {
+                saltuarius_res_nuntiare(app->res,
+                    "(structura nihil habet)", NUNTIUS_QUADRA);
+            }
+            frange;
+        casus SALT_ACTIO_QUAESTIO:
+            saltuarius_quaestio_aperire(&app->quaestio,
+                app->liber);
+            frange;
+        casus SALT_ACTIO_PROXIMUM:
+        casus SALT_ACTIO_PRIUS:
+        {
+            b32 volvit;
+
+            si (app->quaestio.commissum_mensura == ZEPHYRUM)
+            {
+                saltuarius_res_nuntiare(app->res,
+                    "(quaestio vacua)", NUNTIUS_QUADRA);
+            }
+            alioquin si (!saltuarius_quaestio_proximum(
+                &app->quaestio, app->liber,
+                (iussum->genus == SALT_ACTIO_PROXIMUM) ? I : -I,
+                &volvit))
+            {
+                saltuarius_res_nuntiare(app->res,
+                    "(nihil inventum)", NUNTIUS_QUADRA);
+            }
+            alioquin si (volvit)
+            {
+                saltuarius_res_nuntiare(app->res, "(finis)",
+                    NUNTIUS_QUADRA);
+            }
+            frange;
+        }
+        casus SALT_ACTIO_FRUCTUS:
+            app->res->fructus_visibilis =
+                !app->res->fructus_visibilis;
+            frange;
         casus SALT_ACTIO_CLICUS:
             _clicum_fontis(app, iussum->x, iussum->y);
             frange;
         casus SALT_ACTIO_FINIRE:
             /* redire ad columnas (liber in cache manet) */
             saltuarius_origo_claudere(app->origo);
+            saltuarius_structura_claudere(app->index);
             app->res->modus = SALT_MODUS_COLUMNAE;
             saltuarius_limes_praevisum(app->limes, app->res,
                 app->columnae);
@@ -555,9 +683,11 @@ s32 principale (s32 argc, character** argv)
         tab_currens, tab_praevisus);
     saltuarius_bibliotheca_parare(&app.bibliotheca);
     app.origo = saltuarius_origo_creare(app.piscina);
+    app.index = saltuarius_structura_creare(app.piscina);
+    saltuarius_quaestio_parare(&app.quaestio);
     si (app.res == NIHIL || app.columnae == NIHIL
         || app.nexus == NIHIL || app.limes == NIHIL
-        || app.origo == NIHIL)
+        || app.origo == NIHIL || app.index == NIHIL)
     {
         fprintf(stderr, "saltuarius: initium fractum\n");
         redde I;
@@ -604,6 +734,19 @@ s32 principale (s32 argc, character** argv)
             {
                 saltuarius_visum_tabella(app.origo, app.opus);
             }
+            si (app.index->apertum)
+            {
+                saltuarius_visum_structura(app.index, app.opus);
+            }
+            si (app.res->fructus_visibilis)
+            {
+                saltuarius_visum_fructus(app.liber,
+                    app.bibliotheca.numerus, app.opus);
+            }
+            si (app.quaestio.activa)
+            {
+                saltuarius_visum_quaestio(&app.quaestio, app.opus);
+            }
         }
         alioquin
         {
@@ -623,13 +766,27 @@ s32 principale (s32 argc, character** argv)
                 frange;
         }
 
-        si (saltuarius_claves_tradere(&claves, app.res->modus, &ev,
-            &iussum))
+        /* modus initus: eventa CRUDA ad quaestionem (claves
+         * praeteritae - '/' solum ex _iussum_fontis attingitur,
+         * ergo origo/index necessario clausi) */
+        si (app.res->modus == SALT_MODUS_FONS
+            && app.liber != NIHIL && app.quaestio.activa)
+        {
+            (vacuum)saltuarius_quaestio_tradere(&app.quaestio,
+                app.liber, &ev);
+        }
+        alioquin si (saltuarius_claves_tradere(&claves,
+            app.res->modus, &ev, &iussum))
         {
             si (app.res->modus == SALT_MODUS_FONS
                 && app.liber != NIHIL && app.origo->apertum)
             {
                 _iussum_tabellae(&app, &iussum);
+            }
+            alioquin si (app.res->modus == SALT_MODUS_FONS
+                && app.liber != NIHIL && app.index->apertum)
+            {
+                _iussum_indicis(&app, &iussum);
             }
             alioquin si (app.res->modus == SALT_MODUS_FONS
                 && app.liber != NIHIL)

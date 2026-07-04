@@ -65,8 +65,10 @@ Dev-time mains live in instrumenta/principalia/ (outside the test
 link glob).
 Conventions: root CLAUDE.md + the conventions recorded in phase-log
 complexities (i32 is UNSIGNED — s32/s64 for anything signed; never
-`nomen`, `registrum`, `magnitudo`, or `exire` as identifiers — all
-are latina macros (typedef/register/sizeof/exit; exire silently
+`nomen`, `registrum`, `magnitudo`, `exire`, or `structura` as
+identifiers — all are latina macros (typedef/register/sizeof/exit/
+struct; general rule after six firings: EVERY word #defined in
+latina.h is reserved, check it before coining; exire silently
 renamed a struct FIELD in modular TUs — tessera Phase C); use titulus/tabularium; chorda not
 null-terminated; Xar element pointers ARE stable across appends —
 segmented, sine reallocatio — only swap-remove/sort/truncate disturb

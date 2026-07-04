@@ -72,8 +72,12 @@ a compaction summary alone.
   async machinery.
 - **Public API names ≤ 31 chars** (C89 significance).
 - Latin in the code; English fine in meta-documents. `nomen`,
-  `registrum`, `magnitudo`, and `exire` are latina macros
-  (typedef/register/sizeof/exit) — never identifiers, INCLUDING
-  struct field names (exire silently renamed a field in every
-  modular TU; only amalgamation exposed it). i32 is UNSIGNED —
-  s32 for anything carrying -1.
+  `registrum`, `magnitudo`, `exire`, and `structura` are latina
+  macros (typedef/register/sizeof/exit/struct) — never
+  identifiers, INCLUDING struct field names (exire silently
+  renamed a field in every modular TU; `structura` fired SIXTH,
+  in the module literally named saltuarius_structura — variables
+  there are `index`). The general rule after six firings: EVERY
+  word #defined in latina.h is reserved; check latina.h before
+  coining any identifier. i32 is UNSIGNED — s32 for anything
+  carrying -1.

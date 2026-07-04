@@ -2,6 +2,7 @@
 
 #include "saltuarius_visum.h"
 #include "saltuarius_penicillus.h"
+#include "saltuarius_bibliotheca.h"
 #include "utf8.h"
 
 /* Paleta (INTENTIO Phase B; explicita, temperabilis) */
@@ -281,4 +282,203 @@ saltuarius_visum_tabella (constans SaltuariusOrigo* origo,
             gradus->titulus.datum, gradus->titulus.mensura,
             (i32)(lat_tabellae - IV), stilus);
     }
+}
+
+vacuum
+saltuarius_visum_structura (SaltuariusStructura* index,
+    TesseraOpus* opus)
+{
+    TesseraStilus nativus = tessera_stilus_nativus();
+    i32 latitudo = tessera_latitudo(opus);
+    i32 altitudo = tessera_altitudo(opus);
+    s32 lat_tabulae = XXXVIII;
+    s32 alt_tabulae;
+    s32 interius;
+    s32 x;
+    s32 k;
+
+    si (!index->apertum || index->numerus == ZEPHYRUM)
+    {
+        redde;
+    }
+    si (lat_tabulae > (s32)latitudo - IV)
+    {
+        lat_tabulae = (s32)latitudo - IV;
+    }
+    alt_tabulae = (s32)altitudo - I;   /* linea status relicta */
+    si (lat_tabulae < XVI || alt_tabulae < III)
+    {
+        redde;   /* terminal nimis angustum */
+    }
+    interius = alt_tabulae - II;
+    x = (s32)latitudo - lat_tabulae;
+    saltuarius_structura_aptare(index, interius);
+
+    /* interior opacum, margo, titulus (ordo z = ordo picturae) */
+    tessera_replere(opus, x, ZEPHYRUM, lat_tabulae, alt_tabulae,
+        (i32)' ', nativus);
+    tessera_quadrum_pingere(opus, x, ZEPHYRUM, lat_tabulae,
+        alt_tabulae, TESSERA_LINEA_ROTUNDATA, nativus);
+    saltuarius_pen_literis(opus, x + II, ZEPHYRUM, " STRUCTURA ",
+        XI, tessera_stilus(0x00FFCC66, TESSERA_COLOR_NATIVUS,
+            TESSERA_ORNAMENTUM_CRASSUM));
+
+    per (k = ZEPHYRUM; k < interius; k++)
+    {
+        s32 quo = index->volumen + k;
+        constans SaltuariusOrdo* ordo;
+        TesseraStilus stilus = nativus;
+
+        si (quo >= (s32)index->numerus)
+        {
+            frange;
+        }
+        ordo = &index->ordines[quo];
+        si (quo == index->selectio)
+        {
+            stilus.ornamenta |= TESSERA_ORNAMENTUM_INVERSUM;
+            tessera_replere(opus, x + I, I + k, lat_tabulae - II,
+                I, (i32)' ', stilus);
+        }
+        alioquin si (ordo->genus == SALT_ORDO_TITULUS)
+        {
+            stilus = tessera_stilus(0x00808080,
+                TESSERA_COLOR_NATIVUS, TESSERA_ORNAMENTUM_CRASSUM);
+        }
+        alioquin si (!ordo->saltabile)
+        {
+            stilus = tessera_stilus(0x00808080,
+                TESSERA_COLOR_NATIVUS, ZEPHYRUM);
+        }
+        (vacuum)saltuarius_pen_textum(opus,
+            x + ((ordo->genus == SALT_ORDO_TITULUS) ? II : IV),
+            I + k, ordo->titulus.datum, ordo->titulus.mensura,
+            (i32)(lat_tabulae - VI), stilus);
+    }
+}
+
+vacuum
+saltuarius_visum_quaestio (constans SaltuariusQuaestio* quaestio,
+    TesseraOpus* opus)
+{
+    TesseraStilus nativus = tessera_stilus_nativus();
+    i32 latitudo = tessera_latitudo(opus);
+    s32 status_y = (s32)tessera_altitudo(opus) - I;
+    i32 positae;
+
+    si (!quaestio->activa)
+    {
+        redde;
+    }
+    tessera_replere(opus, ZEPHYRUM, status_y, (s32)latitudo, I,
+        (i32)' ', nativus);
+    tessera_cellulam_ponere(opus, ZEPHYRUM, status_y, (i32)'/',
+        nativus);
+    positae = saltuarius_pen_textum(opus, I, status_y,
+        quaestio->litterae, quaestio->mensura, latitudo - I,
+        nativus);
+    si (quaestio->nihil_inventum)
+    {
+        saltuarius_pen_literis(opus, I + (s32)positae, status_y,
+            " (nihil)", VIII, tessera_stilus(0x00808080,
+                TESSERA_COLOR_NATIVUS, ZEPHYRUM));
+    }
+}
+
+/* Decem-partes ponere: valor_decies = valor * 10 -> "d.t";
+ * reddit latitudinem scriptam */
+interior i32
+_pen_decem (TesseraOpus* opus, s32 x, s32 y, s32 valor_decies,
+    TesseraStilus stilus)
+{
+    i32 lat = saltuarius_pen_numerum(opus, x, y,
+        valor_decies / X, stilus);
+
+    tessera_cellulam_ponere(opus, x + (s32)lat, y, (i32)'.',
+        stilus);
+    lat++;
+    lat += saltuarius_pen_numerum(opus, x + (s32)lat, y,
+        (valor_decies < ZEPHYRUM ? -valor_decies : valor_decies)
+            % X, stilus);
+    redde lat;
+}
+
+vacuum
+saltuarius_visum_fructus (constans SaltuariusLiber* liber,
+    i32 libri_numerus, TesseraOpus* opus)
+{
+    TesseraStilus stilus = tessera_stilus(0x00FFCC66,
+        TESSERA_COLOR_NATIVUS, ZEPHYRUM);
+    i32 latitudo = tessera_latitudo(opus);
+    s32 status_y = (s32)tessera_altitudo(opus) - I;
+    constans TesseraFructus* fructus = &opus->fructus;
+    s32 x = ZEPHYRUM;
+
+    tessera_replere(opus, ZEPHYRUM, status_y, (s32)latitudo, I,
+        (i32)' ', tessera_stilus_nativus());
+
+    /* diagnostica gravissima PRIMA (lectio B2: terminal angustum
+     * caudam praecidit - numeratores tesserae sacrificabiles) */
+    saltuarius_pen_literis(opus, x, status_y, "libri ", VI,
+        stilus);
+    x += VI;
+    x += (s32)saltuarius_pen_numerum(opus, x, status_y,
+        (s32)libri_numerus, stilus);
+    tessera_cellulam_ponere(opus, x, status_y, (i32)'/', stilus);
+    x += I;
+    x += (s32)saltuarius_pen_numerum(opus, x, status_y,
+        SALT_LIBRI_MAXIMI, stilus);
+    saltuarius_pen_literis(opus, x, status_y, "  arena ", VIII,
+        stilus);
+    x += VIII;
+    si (liber->arena_silvae != NIHIL)
+    {
+        memoriae_index summa = silva_piscina_summa_usus(
+            liber->arena_silvae);
+        memoriae_index apex = silva_piscina_summa_apex_usus(
+            liber->arena_silvae);
+
+        x += (s32)_pen_decem(opus, x, status_y,
+            (s32)((summa * X) >> XX), stilus);
+        saltuarius_pen_literis(opus, x, status_y, "M ", II,
+            stilus);
+        x += II;
+        x += (s32)_pen_decem(opus, x, status_y,
+            (s32)((apex * X) >> XX), stilus);
+        saltuarius_pen_literis(opus, x, status_y, "M", I, stilus);
+        x += I;
+    }
+    alioquin
+    {
+        tessera_cellulam_ponere(opus, x, status_y, (i32)'-',
+            stilus);
+        x += I;
+    }
+    saltuarius_pen_literis(opus, x, status_y, "  q ", IV, stilus);
+    x += IV;
+    x += (s32)saltuarius_pen_numerum(opus, x, status_y,
+        (s32)fructus->praesentationes, stilus);
+    saltuarius_pen_literis(opus, x, status_y, "  ms ", V, stilus);
+    x += V;
+    {
+        s32 ms_decies = ZEPHYRUM;
+
+        si (fructus->praesentationes > ZEPHYRUM)
+        {
+            ms_decies = (s32)(fructus->tempus_praesentandi_ms
+                * 10.0 / (duplex)fructus->praesentationes);
+        }
+        x += (s32)_pen_decem(opus, x, status_y, ms_decies,
+            stilus);
+    }
+    saltuarius_pen_literis(opus, x, status_y, "  mut ", VI,
+        stilus);
+    x += VI;
+    x += (s32)saltuarius_pen_numerum(opus, x, status_y,
+        (s32)fructus->cellulae_mutatae, stilus);
+    saltuarius_pen_literis(opus, x, status_y, "  oct ", VI,
+        stilus);
+    x += VI;
+    (vacuum)saltuarius_pen_numerum(opus, x, status_y,
+        (s32)fructus->octeti_emissi, stilus);
 }

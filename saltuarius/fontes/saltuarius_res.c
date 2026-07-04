@@ -23,6 +23,7 @@ saltuarius_res_creare (Piscina* piscina, constans character* radix)
     res->nuntius.mensura = ZEPHYRUM;
     res->nuntius.datum = NIHIL;
     res->nuntius_aetas = ZEPHYRUM;
+    res->fructus_visibilis = FALSUM;
     redde res;
 }
 

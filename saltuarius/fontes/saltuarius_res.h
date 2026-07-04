@@ -25,6 +25,7 @@ nomen structura {
     b32             currens;      /* ansa eventuum viva */
     chorda          nuntius;      /* nuntius transitorius */
     s32             nuntius_aetas; /* quadra reliqua; 0 = nullus */
+    b32             fructus_visibilis; /* F2: linea telemetriae */
 } SaltuariusRes;
 
 /* Creare statum; via_currens incipit ad radicem */

@@ -288,11 +288,58 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_I32 ((i32)iussum.genus,
             (i32)SALT_ACTIO_ORIGO);
 
-        /* in columnis L/o nihil */
+        /* Tab in fonte: index structurae (D1); NB Ctrl+I ad Tab
+         * aliatur - TABULAM ligamus, hoc probamus */
+        ev = _ev_clavis(TESSERA_CLAVIS_TABULA);
+        CREDO_VERUM (saltuarius_claves_tradere(&claves,
+            SALT_MODUS_FONS, &ev, &iussum));
+        CREDO_AEQUALIS_I32 ((i32)iussum.genus,
+            (i32)SALT_ACTIO_STRUCTURA);
+
+        /* '/' + n/N in fonte: quaestio (D2) */
+        ev = _ev_runa((s32)'/');
+        CREDO_VERUM (saltuarius_claves_tradere(&claves,
+            SALT_MODUS_FONS, &ev, &iussum));
+        CREDO_AEQUALIS_I32 ((i32)iussum.genus,
+            (i32)SALT_ACTIO_QUAESTIO);
+        ev = _ev_runa((s32)'n');
+        CREDO_VERUM (saltuarius_claves_tradere(&claves,
+            SALT_MODUS_FONS, &ev, &iussum));
+        CREDO_AEQUALIS_I32 ((i32)iussum.genus,
+            (i32)SALT_ACTIO_PROXIMUM);
+        ev = _ev_runa((s32)'N');
+        CREDO_VERUM (saltuarius_claves_tradere(&claves,
+            SALT_MODUS_FONS, &ev, &iussum));
+        CREDO_AEQUALIS_I32 ((i32)iussum.genus,
+            (i32)SALT_ACTIO_PRIUS);
+
+        /* F2 in fonte: linea fructus (D3); F3 nihil */
+        memset(&ev, ZEPHYRUM, magnitudo(ev));
+        ev.genus = TESSERA_EVENTUM_CLAVIS;
+        ev.clavis = TESSERA_CLAVIS_FUNCTIO;
+        ev.numerus = II;
+        CREDO_VERUM (saltuarius_claves_tradere(&claves,
+            SALT_MODUS_FONS, &ev, &iussum));
+        CREDO_AEQUALIS_I32 ((i32)iussum.genus,
+            (i32)SALT_ACTIO_FRUCTUS);
+        ev.numerus = III;
+        CREDO_FALSUM (saltuarius_claves_tradere(&claves,
+            SALT_MODUS_FONS, &ev, &iussum));
+
+        /* in columnis L/o/Tab/'/'/n nihil */
         ev = _ev_runa((s32)'L');
         CREDO_FALSUM (saltuarius_claves_tradere(&claves,
             SALT_MODUS_COLUMNAE, &ev, &iussum));
         ev = _ev_runa((s32)'o');
+        CREDO_FALSUM (saltuarius_claves_tradere(&claves,
+            SALT_MODUS_COLUMNAE, &ev, &iussum));
+        ev = _ev_clavis(TESSERA_CLAVIS_TABULA);
+        CREDO_FALSUM (saltuarius_claves_tradere(&claves,
+            SALT_MODUS_COLUMNAE, &ev, &iussum));
+        ev = _ev_runa((s32)'/');
+        CREDO_FALSUM (saltuarius_claves_tradere(&claves,
+            SALT_MODUS_COLUMNAE, &ev, &iussum));
+        ev = _ev_runa((s32)'n');
         CREDO_FALSUM (saltuarius_claves_tradere(&claves,
             SALT_MODUS_COLUMNAE, &ev, &iussum));
 
