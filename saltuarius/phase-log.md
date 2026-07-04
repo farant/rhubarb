@@ -1111,3 +1111,63 @@ WHAT REMAINS FOR v0 (the only unchecked exit criteria):
 Then: v0 RELATIO + phase-log audit (phase-boundary rule: re-read
 the WHOLE log, every complexity resolved-or-parked) + spec-v2
 marked SHIPPED + memory close-out. SALTUARIUS v0 SHIPS.
+
+## RELATIO — SALTUARIUS v0 SHIPS (2026-07-03)
+
+**The daily-driver bar PASSED** (Fran, after real use of D2+D3:
+"that seemed to be working great"; on '/' specifically: "the
+search is working just as intended"). Interview Q20's criteria,
+checked verbatim: browse rhubarb comfortably ✓ (Phase A bar);
+money shot reproducible on demand ✓ (Phase C bar); TOC + '/'
+work ✓ (D1+D2 bars); suites green ✓ (saltuarius 13/13, silva
+26/26, tessera 5/5, root utf8 green after the codere growth);
+degradation badges proven ✓ (merus/binarium/magnum refusals +
+parse-degrade redundancy, all probatio-pinned). "I actually use
+it" — he did. **v0 SHIPS.** spec-v2 marked SHIPPED.
+
+**The whole-phase-log audit** (phase-boundary rule, executed
+2026-07-03): every complexity from Phase 0 through D3 is
+resolved-with-pin — iterator aliasing (deep copy + the one
+disk probatio), sanitization-in-the-primitive, chorda_sectio
+half-open, status right-side priority (fired B2, RE-fired D3,
+both golden-pinned), h/l modus split, nomen 5th + structura 6th
+latina firings (general rule now in all three CLAUDE.mds),
+stddef.h-by-via, stale-colors-after-L (atomic stratum triple),
+glued keywords (SAFE-JOIN), ramus-vista-linea-is-region-line
+(byte→line conversion). Two items get HONEST PARKS rather than
+silent passes:
+- **Preview caching**: Phase A parked it "for Phase B"; B never
+  built it because measurement said preview reads are instant at
+  rhubarb file sizes. Parked INDEFINITELY with a trigger: revisit
+  only if a slow filesystem (network mount) ever appears.
+- **Formal LRU eviction sweep**: the instrument (F2 line) shipped
+  and the bar session surfaced no memory pressure; the formal
+  10-heavy-file observation was not separately performed. Parked
+  ON-PRESSURE: the F2 line makes it a 2-minute check the day
+  memory ever feels wrong; N=8 stands until then.
+
+**The v0.1 backlog** (each named at its deferral): colored
+previews (FIRST candidate — feel-test outcome from the bar:
+no complaint registered, so it waits for an itch), ctrl-o jump
+history, vim f-motion in fons mode, dotfile toggle, incremental
+prefix type-jump, tab-stop expansion (waits for the editor
+story). Silva-side niceties banked: invocation-trivia inheritance
+(byte-faithful materialization), per-arm directive linea on the
+ramus vista (both additiones-III class, on-itch).
+
+**The M2 pressure point FIRED as designed**: living with the TOC
+pane, Fran called the switch — "work on extending c89 support."
+The FUNCTIONES section is the first thing M2's grammar will feed
+back into saltuarius (D1's structura module needs only a fourth
+section walking declaration vistas when silva grows them).
+
+What saltuarius proved beyond itself, for the record: both
+amalgams hold as contracts under a real host (the §2 ledger went
+8/8 from pressure findings to shipped API); the tessera golden
+discipline scales to an application; the INTENTIO/RELATIO +
+manual-bar cadence caught every render bug the goldens missed
+and pinned each one after; and the monorepo grows by pull —
+tessera_replere, utf8_codere, and silva's entire additiones
+I+II exist because this app asked.
+
+**Custos silvae vigilat. Next: silva M2 — the C89 grammar.**

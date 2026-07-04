@@ -1,5 +1,11 @@
 # Saltuarius — Spec v2 (codebase-grounded)
 
+**STATUS: v0 SHIPPED (2026-07-03).** All phases (0/A/B/C/D)
+closed, all manual bars passed including the daily-driver bar
+(interview Q20), suites 13/13, §2 API-pressure ledger fully
+shipped in silva. The build record and the v0.1 backlog live in
+saltuarius/phase-log.md (v0 RELATIO at the tail).
+
 *Supersedes saltuarius-spec.md (v1) as implementation truth; v1
 remains the intent record, saltuarius-interview.md the decision
 record. This version is grounded in three agent explorations
