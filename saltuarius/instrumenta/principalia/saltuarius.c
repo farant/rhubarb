@@ -218,6 +218,10 @@ _saltum_indicis (SaltuariusApp* app)
             frange;
         casus SALT_ORDO_DEFINITIO:
         casus SALT_ORDO_REGIO:
+        casus SALT_ORDO_FUNCTIO:
+        casus SALT_ORDO_PROTOTYPUM:
+        casus SALT_ORDO_TYPUS:
+        casus SALT_ORDO_DECLARATIO:
             _ad_locum_ire(app, app->liber->via, ordo->linea);
             frange;
         ordinarius:

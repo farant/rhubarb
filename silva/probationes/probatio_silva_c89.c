@@ -2029,6 +2029,18 @@ s32 principale (vacuum)
         CREDO_VERUM (strcmp(vista.genus,
             "definitio-functionis") == ZEPHYRUM);
         CREDO_CHORDA_AEQUALIS_LITERIS (vista.titulus, "f");
+        CREDO_FALSUM (vista.est_typedef);
+
+        /* est_typedef (M2c D - sectio TYPI): ordo T typedef est,
+         * ordo g non est */
+        CREDO_VERUM (silva_c89_declaratio_vista(parsura, ZEPHYRUM,
+            &vista));
+        CREDO_CHORDA_AEQUALIS_LITERIS (vista.titulus, "T");
+        CREDO_VERUM (vista.est_typedef);
+        CREDO_VERUM (silva_c89_declaratio_vista(parsura, II,
+            &vista));
+        CREDO_CHORDA_AEQUALIS_LITERIS (vista.titulus, "g");
+        CREDO_FALSUM (vista.est_typedef);
 
         /* subscriptio: specificatores + declarator, sine corpore
          * (trivia praecedentia manent - octeti fontis) */
@@ -2078,6 +2090,24 @@ s32 principale (vacuum)
             CREDO_VERUM (subscriptio.successus);
             CREDO_CHORDA_AEQUALIS_LITERIS (subscriptio.textus,
                 "f(a) ");
+        }
+
+        /* trivia praecedentia TONSA (vexillum commenti ante
+         * definitionem prorsum adhaeret - textus ordinis purus
+         * manet; inventum probatione manuali Fran in
+         * silva_scribere.c) */
+        parsura = silva_c89_parsare(piscina, "probatio.c",
+            "/* ==== vexillum ==== */\nint f(void) { return 0; }",
+            (i32)strlen("/* ==== vexillum ==== */\n"
+                "int f(void) { return 0; }"), NIHIL);
+        {
+            SilvaScriptura subscriptio =
+                silva_c89_functionis_subscriptio(piscina, parsura,
+                    ZEPHYRUM);
+
+            CREDO_VERUM (subscriptio.successus);
+            CREDO_CHORDA_AEQUALIS_LITERIS (subscriptio.textus,
+                "int f(void) ");
         }
     }
 

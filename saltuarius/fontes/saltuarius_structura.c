@@ -4,6 +4,7 @@
 #include "saltuarius_structura.h"
 #include "silva.h"
 #include "chorda_aedificator.h"
+#include <string.h>
 
 SaltuariusStructura*
 saltuarius_structura_creare (Piscina* persistens)
@@ -158,6 +159,9 @@ saltuarius_structura_aedificare (SaltuariusStructura* index,
     i32 n_mac;
     i32 n_ram;
     chorda vacua;
+    SilvaPiscina* arena_c89;
+    SilvaParsura* parsura_c89;
+    i32           n_decl;
 
     piscina_reficere(index->arena, index->nota);
     index->ordines = NIHIL;
@@ -179,16 +183,43 @@ saltuarius_structura_aedificare (SaltuariusStructura* index,
     n_mac = silva_macros_numerus(exp);
     n_ram = silva_rami_numerus(exp);
 
+    /* Parsura c89 TEMPORARIA (M2c Chunk D): sectiones FUNCTIONES/
+     * TYPI/DECLARATIONES ex vista declarationum. Ordines textum in
+     * arenam indicis COPIANT (_titulum), ergo arena parsurae post
+     * aedificationem tota perit - nulla memoria manens, nulla
+     * commercia cum LRU. Fractura parsurae = sectiones absentes,
+     * tabula cetera vivit (omnis plagula semper aperitur). */
+    arena_c89 = silva_piscina_generare_dynamicum("salt_c89",
+        4194304);
+    parsura_c89 = NIHIL;
+    n_decl = ZEPHYRUM;
+    si (arena_c89 != NIHIL && liber->textus.mensura > ZEPHYRUM)
+    {
+        parsura_c89 = silva_c89_parsare(arena_c89, "liber.c",
+            (constans character*)liber->textus.datum,
+            liber->textus.mensura, NIHIL);
+        si (parsura_c89 != NIHIL)
+        {
+            n_decl = (i32)silva_c89_declarationes_numerus(
+                parsura_c89);
+        }
+    }
+
     /* summa maxima allocata (filtrum minus implet - arena refecta,
      * dispendium innocuum) */
     index->ordines = (SaltuariusOrdo*)piscina_allocare_ordinatum(
         index->arena,
-        (memoriae_index)(III + n_inc + n_mac + n_ram)
+        (memoriae_index)(VIII + n_inc + n_mac + n_ram + n_decl)
             * (memoriae_index)magnitudo(SaltuariusOrdo), IV);
     si (index->ordines == NIHIL)
     {
+        si (arena_c89 != NIHIL)
+        {
+            silva_piscina_destruere(arena_c89);
+        }
         redde FALSUM;
     }
+
 
     /* INCLUSIONES (fons_ex == princeps: inclusa AB hac plagula) */
     {
@@ -302,6 +333,191 @@ saltuarius_structura_aedificare (SaltuariusStructura* index,
                     VERUM, vacua, linea_bracchii);
             }
         }
+    }
+
+    /* FUNCTIONES (subscriptio octetim ex arbore; refugium =
+     * titulus) */
+    si (n_decl > ZEPHYRUM)
+    {
+        b32 prima = VERUM;
+        i32 k;
+
+        per (k = ZEPHYRUM; k < n_decl; k++)
+        {
+            SilvaDeclaratioVista vista;
+            chorda medium;
+
+            si (!silva_c89_declaratio_vista(parsura_c89, (i32)k,
+                    &vista)
+                || vista.genus == NIHIL
+                || strcmp(vista.genus, "definitio-functionis")
+                    != ZEPHYRUM)
+            {
+                perge;
+            }
+            si (prima)
+            {
+                _caput_sectionis(index, "FUNCTIONES");
+                prima = FALSUM;
+            }
+            {
+                SilvaScriptura subscriptio =
+                    silva_c89_functionis_subscriptio(arena_c89,
+                        parsura_c89, (i32)k);
+
+                si (subscriptio.successus
+                    && subscriptio.textus.mensura > ZEPHYRUM)
+                {
+                    medium = _ex_silva(&subscriptio.textus);
+                }
+                alioquin
+                {
+                    medium = _ex_silva(&vista.titulus);
+                }
+            }
+            {
+                i32 linea_tuta = ZEPHYRUM;
+
+                si (vista.linea > ZEPHYRUM)
+                {
+                    linea_tuta = (i32)vista.linea;
+                }
+
+                _ordinem_addere(index, SALT_ORDO_FUNCTIO,
+                    _titulum(index, "", medium, "", linea_tuta),
+                    (linea_tuta > ZEPHYRUM) ? VERUM : FALSUM,
+                    vacua, linea_tuta);
+            }
+        }
+    }
+
+    /* PROTOTYPA (declaratores functionum sine corpore - vista
+     * genus "declarator-functionis"; typedef excluditur - TYPI) */
+    si (n_decl > ZEPHYRUM)
+    {
+        b32 prima = VERUM;
+        i32 k;
+
+        per (k = ZEPHYRUM; k < n_decl; k++)
+        {
+            SilvaDeclaratioVista vista;
+
+            si (!silva_c89_declaratio_vista(parsura_c89, (i32)k,
+                    &vista)
+                || vista.est_typedef
+                || vista.genus == NIHIL
+                || strcmp(vista.genus, "declarator-functionis")
+                    != ZEPHYRUM)
+            {
+                perge;
+            }
+            si (prima)
+            {
+                _caput_sectionis(index, "PROTOTYPA");
+                prima = FALSUM;
+            }
+            {
+                i32 linea_tuta = ZEPHYRUM;
+
+                si (vista.linea > ZEPHYRUM)
+                {
+                    linea_tuta = (i32)vista.linea;
+                }
+                _ordinem_addere(index, SALT_ORDO_PROTOTYPUM,
+                    _titulum(index, "", _ex_silva(&vista.titulus),
+                        "()", linea_tuta),
+                    (linea_tuta > ZEPHYRUM) ? VERUM : FALSUM,
+                    vacua, linea_tuta);
+            }
+        }
+    }
+
+    /* TYPI (typedef - vista est_typedef) */
+    si (n_decl > ZEPHYRUM)
+    {
+        b32 prima = VERUM;
+        i32 k;
+
+        per (k = ZEPHYRUM; k < n_decl; k++)
+        {
+            SilvaDeclaratioVista vista;
+
+            si (!silva_c89_declaratio_vista(parsura_c89, (i32)k,
+                    &vista)
+                || !vista.est_typedef)
+            {
+                perge;
+            }
+            si (prima)
+            {
+                _caput_sectionis(index, "TYPI");
+                prima = FALSUM;
+            }
+            {
+                i32 linea_tuta = ZEPHYRUM;
+
+                si (vista.linea > ZEPHYRUM)
+                {
+                    linea_tuta = (i32)vista.linea;
+                }
+
+                _ordinem_addere(index, SALT_ORDO_TYPUS,
+                    _titulum(index, "", _ex_silva(&vista.titulus),
+                        "", linea_tuta),
+                    (linea_tuta > ZEPHYRUM) ? VERUM : FALSUM,
+                    vacua, linea_tuta);
+            }
+        }
+    }
+
+    /* DECLARATIONES (cetera: nec functio nec typedef) */
+    si (n_decl > ZEPHYRUM)
+    {
+        b32 prima = VERUM;
+        i32 k;
+
+        per (k = ZEPHYRUM; k < n_decl; k++)
+        {
+            SilvaDeclaratioVista vista;
+
+            si (!silva_c89_declaratio_vista(parsura_c89, (i32)k,
+                    &vista)
+                || vista.est_typedef
+                || vista.genus == NIHIL
+                || strcmp(vista.genus, "definitio-functionis")
+                    == ZEPHYRUM
+                || strcmp(vista.genus, "declarator-functionis")
+                    == ZEPHYRUM)
+            {
+                perge;
+            }
+            si (prima)
+            {
+                _caput_sectionis(index, "DECLARATIONES");
+                prima = FALSUM;
+            }
+            {
+                i32 linea_tuta = ZEPHYRUM;
+
+                si (vista.linea > ZEPHYRUM)
+                {
+                    linea_tuta = (i32)vista.linea;
+                }
+
+                _ordinem_addere(index, SALT_ORDO_DECLARATIO,
+                    _titulum(index, "", _ex_silva(&vista.titulus),
+                        "", linea_tuta),
+                    (linea_tuta > ZEPHYRUM) ? VERUM : FALSUM,
+                    vacua, linea_tuta);
+            }
+        }
+    }
+
+    /* arena c89 perit - textus ordinis iam in arena indicis */
+    si (arena_c89 != NIHIL)
+    {
+        silva_piscina_destruere(arena_c89);
+        parsura_c89 = NIHIL;
     }
 
     si (index->numerus == ZEPHYRUM)

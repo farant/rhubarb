@@ -103,7 +103,11 @@ s32 principale (vacuum)
         "#ifdef VACUUS\n"              /* linea 14: bracchium
                                         * VACUUM (corpus -1) */
         "#endif\n"
-        "G(2);\n";
+        "G(2);\n"                      /* linea 16 */
+        "typedef int T;\n"             /* linea 17: TYPI */
+        "int quadratum(int x) { return x * x; }\n"
+                                       /* linea 18: FUNCTIONES */
+        "int duplum(int x);\n";        /* linea 19: PROTOTYPA */
 
     piscina = piscina_generare_dynamicum("probatio_salt_index",
         16777216);
@@ -207,6 +211,66 @@ s32 principale (vacuum)
         }
         /* bracchium vacuum: refugium = linea regionis (14) */
         CREDO_VERUM (_ordo_cum(index, ":14") >= ZEPHYRUM);
+
+        /* sectiones c89 (M2c Chunk D): FUNCTIONES / TYPI /
+         * DECLARATIONES post sectiones praeprocessoris */
+        CREDO_VERUM (_ordo_cum(index, "FUNCTIONES") >= ZEPHYRUM);
+        CREDO_VERUM (_ordo_cum(index, "FUNCTIONES")
+            > _ordo_cum(index, "REGIONES"));
+        CREDO_VERUM (_ordo_cum(index, "TYPI") >= ZEPHYRUM);
+        CREDO_VERUM (_ordo_cum(index, "DECLARATIONES")
+            >= ZEPHYRUM);
+
+        /* FUNCTIO: subscriptio octetim ("int quadratum(int x)")
+         * + linea; saltabilis */
+        {
+            s32 quadratum = _ordo_cum(index, "quadratum");
+
+            CREDO_VERUM (quadratum >= ZEPHYRUM);
+            CREDO_AEQUALIS_I32 (
+                (i32)index->ordines[quadratum].genus,
+                (i32)SALT_ORDO_FUNCTIO);
+            CREDO_VERUM (index->ordines[quadratum].saltabile);
+            CREDO_AEQUALIS_I32 (
+                index->ordines[quadratum].linea, XVIII);
+            CREDO_VERUM (_continet(
+                index->ordines[quadratum].titulus,
+                "int quadratum(int x)"));
+        }
+
+        /* TYPUS: typedef T linea XVII */
+        {
+            s32 t = _ordo_cum(index, "T  :17");
+
+            CREDO_VERUM (t >= ZEPHYRUM);
+            CREDO_AEQUALIS_I32 ((i32)index->ordines[t].genus,
+                (i32)SALT_ORDO_TYPUS);
+        }
+
+        /* PROTOTYPUM: duplum() linea XIX - sectio propria (Fran
+         * 2026-07-04), NON inter declarationes */
+        {
+            s32 d = _ordo_cum(index, "duplum()");
+
+            CREDO_VERUM (_ordo_cum(index, "PROTOTYPA")
+                >= ZEPHYRUM);
+            CREDO_VERUM (d >= ZEPHYRUM);
+            CREDO_AEQUALIS_I32 ((i32)index->ordines[d].genus,
+                (i32)SALT_ORDO_PROTOTYPUM);
+            CREDO_AEQUALIS_I32 (index->ordines[d].linea, XIX);
+            CREDO_VERUM (index->ordines[d].saltabile);
+        }
+
+        /* DECLARATIO: "int c;" ex bracchio SUMPTO (#else) linea
+         * XII; bracchia non sumpta ABSUNT (a linea 7 numquam) */
+        {
+            s32 c = _ordo_cum(index, "c  :12");
+
+            CREDO_VERUM (c >= ZEPHYRUM);
+            CREDO_AEQUALIS_I32 ((i32)index->ordines[c].genus,
+                (i32)SALT_ORDO_DECLARATIO);
+        }
+        CREDO_AEQUALIS_S32 (_ordo_cum(index, "a  :7"), -I);
     }
 
     /* ========================================================

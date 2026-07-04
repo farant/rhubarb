@@ -188,8 +188,10 @@ Notes:
   universally readable. K&R identifier-list params: the separate
   declarations ride in definitio-functionis's declarationes-kr
   lista.
-- **AMENDMENT PROPOSED (2026-07-04, M2c Chunk B — awaiting
-  Fran)**: K&R identifiers ride as ordinary parametrum readings
+- **AMENDMENT APPROVED (2026-07-04, Fran, via the
+  information-loss discussion — param names are a PURE FUNCTION
+  of the tree, nothing lost; see decisiones 14)**: K&R
+  identifiers ride as ordinary parametrum readings
   (typus-nominatus / declarator-titulus — the same GLR fork as
   prototypes, resolved or honestly retained by the oracle), NOT
   as folium-identificator as this note originally said. Reason: a
@@ -354,3 +356,12 @@ All nine agenda questions resolved with Fran:
     typedef uses stay AMBIGUUS-retained (never resolved wrong).
     Evidence gate: count block-local typedefs over solarium +
     rhubarb at the M2d sweep; landing spot M2d or lint.
+14. **K&R params ride prototype machinery** (approved 2026-07-04,
+    via the information-loss discussion) — no folium-identificator
+    production (it would fork every single-ident param everywhere,
+    including prototypes where identifier lists are ILLEGAL);
+    param names are a pure function of the tree (definition +
+    bare-ident param → name, per ISO constraints); the false
+    "int f = two specifiers" reading is combination-invalid and
+    X10 kills it (ISO 6.9.1 justifies, X10 executes) — K&R
+    definitions parse to ZERO ambigui. Path back: additive.

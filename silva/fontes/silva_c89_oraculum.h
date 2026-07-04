@@ -102,6 +102,8 @@ nomen structura {
                                    * anonymum/abstractum */
     s32                 linea;    /* lexematis nominis (aut primi) */
     s32                 situs;    /* byte_offset eiusdem */
+    b32                 est_typedef; /* TYPEDEF in specificatoribus
+                                   * (M2c D - sectio TYPI TOC) */
 } SilvaDeclaratioVista;
 
 /* Numerus ordinum vistae per radicem parsurae */

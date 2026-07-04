@@ -4488,3 +4488,228 @@ TYPI/DECLARATIONES + FUNCTIONES sections via the vista + the
 manual bar: Tab on a silva module lists functions, Enter lands
 on the definition) + M2c RELATIO + FULL phase-log audit (phase
 boundary).
+
+### M2c Chunk D — saltuarius TOC: COMPLETE (2026-07-04)
+
+**Saltuarius 13/13; silva 27/27 (probatio_silva_c89: 1,395
+assertions); tessera 5/5; amalgam + hospes 23/23.** The Chunk E
+promise delivered: structura's pane grew THREE sections at once —
+FUNCTIONES / TYPI / DECLARATIONES — appended after the
+preprocessor sections (INCLUSIONES first preserved; section-ORDER
+preference = Fran's taste call, named).
+
+**API-pressure finding, fixed silva-side through the gates** (the
+VISIO rule working as written): the TYPI section needs
+typedef-ness, which the vista did not carry —
+SilvaDeclaratioVista grew **est_typedef** (filled from
+_habet_typedef on the row's declaratio; definitio rows FALSUM),
+silva.h + fixture + amalgam same-change.
+
+**The integration design**: a TEMPORARY c89 parse per
+Tab-opening (silva_piscina arena, destroyed after building —
+_titulum copies row text into the index arena, so NOTHING
+persists; no LRU interaction; parse failure = sections absent,
+table lives — the every-file-opens pin). FUNCTIONES rows carry
+the SUBSCRIPTIO text (byte-exact signature from the tree) with
+line numbers; TYPI = est_typedef rows; DECLARATIONES = the rest.
+Rows from TAKEN conditional arms only (the vista walk) — the
+fixture asserts `int c;` from a taken #else appears at its line
+and the untaken `int a;` does not. Jump wiring: the three new
+ordo genera join the DEFINITIO/REGIO linea-jump path.
+
+**The manual bar** (the original pull, October's TOC pressure
+point): Tab on a C89 file lists every function with its
+signature and line; Enter lands on the definition.
+Suite-proven on the fixture (quadratum row: SALT_ORDO_FUNCTIO,
+"int quadratum(int x)", :18, saltabile); the interactive form is
+Fran's to savor via ./saltuarius/saltuarius.sh. NB latina
+modules show only macro-free functions until expander include
+resolution (M2d, named at Chunk B).
+
+## M2c — SENTENTIAE + FUNCTIONES: RELATIO (2026-07-04) — COMPLETE
+
+**Every INTENTIO exit criterion met**: suite green everywhere
+(silva 27/27 with 1,395 c89 assertions, saltuarius 13/13,
+tessera 5/5, hospes 23/23); census re-pinned exhaustively at
+every step (14 → 16 → 52 pairs / 44 cells in SIX named families
++ the praelata category, ignotae 0 throughout); boundary-finder
+adversarial fixtures green; carried sent (30) + func (20) bars
+green through the consumer path; **v1 syntaxis harvest COMPLETE:
+comprehension 87 → 123/125** with the remainder NAMED (2
+gcc-extension lines, evidence-gated); corpus ERROR 62 → 42 with
+the honest-granularity story; frons 2 → 3 (first movement,
+ceiling VIII holds); FUNCTIONES vista + subscriptio + hospes;
+saltuarius TOC manual bar; every fixture roundtrips (110).
+
+**What M2c built**: the statement tier (15 genera), the
+`<praelatio>` declared-preference mechanism (dangling-else
+resolved in tables, cell pinned by identity), the one-lista
+corpus (DECISUS amended — the fork stays per-element and the
+oracle machinery needed ZERO changes to reach inside bodies),
+definitio-functionis in four forms (ANSI/K&R × explicit/implicit
+int), the statement-aware + ()-before-{ boundary-finder with K&R
+lookahead, K&R-to-zero-ambigui via one X10 case label (ISO 6.9.1
+justifies, existing machinery executes — decisiones 14),
+SilvaDeclaratioVista rows for functions + est_typedef +
+silva_c89_functionis_subscriptio (scribere-from-subtree), and
+the saltuarius TOC (three sections, temp-parse design).
+
+**FULL PHASE-LOG AUDIT (M2c boundary)**: every M2c-owned item
+discharged — grouped-casus mechanics (state-split, ZERO cells),
+dangling-else preference (praelatio SHIPPED), K&R params
+(decisiones 14), ()-{ boundary + adversarial fixtures (Chunk B),
+block scope (DEFERRED BY NAME, decisiones 13, M2d evidence
+gate), comprehension riser (deliberate at every step, remainder
+named), v1 syntaxis harvest (complete; the 234-assertion figure
+of the sketch was superseded by the corpus-line form pinned at
+M2b). The M2a breadcrumb instrument: never demanded by a bar —
+NOT built; stays a saltuarius v0.1 candidate BY NAME. Parks
+carried forward, each with an owner: latina-corpus expander
+integration + include resolution (M2d solarium sweep — the 42
+corpus ERRORs are its work order); Duff's device = ERROR
+(grouped-casus price, M2d sweep evidence); gcc extensions
+(evidence gate); sceletum manifest swap-out (M2d); ambient
+error badge (M2d); nuda tag-final + struct-const divergences
+(corpus evidence, unchanged); TOC section order (Fran's taste);
+K&R-lookahead false-suspicion coarseness + fac-pendentia
+merge case (benign BY CONSTRUCTION — wrong trees impossible,
+documented in the slicer comments). Zero unowned complexities.
+
+**Process notes for the M2d sessions**: the stale-object hazard
+class gained its second member (generated-header enum
+renumbering — newest_header now guards BOTH build scripts; the
+class rule is in the Chunk B complexity); the harness-decoder
+bug shows acceptance corpora need their DECODERS pinned by
+fixture too (a corpus line that never reaches the parser is a
+silent comprehension lie); and three separate times this
+milestone, the honest-number instinct (ambigui 2? ERROR 8?
+riser +0?) turned a suspicious metric into a real finding —
+census discipline is not bookkeeping, it is the debugger.
+
+NEXT: **M2d — the acceptance wall** (per the M2 sketch):
+solarium 148/148 held + parse-the-monorepo sweep WITH expander
+include resolution (latina files fully parse; corpus ERROR
+42 → the real number), tier-1 roundtrip corpus byte-exact
+through real trees (78/78 already holds), carried lapifex
+integration bar, sceletum→c89 manifest swap-out for saltuarius's
+MAIN parse, the ambient error badge ("silva: N errores"),
+block-scope + Duff evidence counts, and the comprehension metric
+goes AMBIENT. M2d INTENTIO not yet written — next act.
+
+### Addendum post-RELATIO M2c (2026-07-04) — probatio manualis
+### Fran in silva_scribere.c
+
+Three observations, one root + one real bug (fixed):
+
+**1. BUG (fixed): banner comments as row titles.** Trivia
+attaches TRAILING, but a comment with no preceding parse-stream
+token (after a directive, at segment start) attaches FORWARD to
+the next token — so the subscriptio of a function preceded by a
+"/* ==== */" banner began with the banner, and _titulum's
+40-char window showed only that. FIX: subscriptio now TRIMS
+leading whitespace + comments (it is ROW text, not roundtrip
+text — documented in the function). Fixture pinned; suites +
+amalgam green.
+
+**2. Structs shown as FUNCTIONES — the unexpanded-latina
+misparse, named.** `nomen structura { s32 offset; } X;` with
+latina UNRESOLVED parses — grammatically correctly! — as a
+function definition: specifiers [typus-nominatus(nomen)],
+declarator titulus(**structura**), corpus { declarations },
+plus a stray statement `X;`. Garbage in, consistent tree out.
+EXPANDED, the same text is `typedef struct {...} X;` → a TYPI
+row "X", which IS where struct definitions belong (typedef'd →
+TYPI via est_typedef; tag-only `struct S {...};` → nuda row in
+DECLARATIONES). So yes — structs are supposed to appear, in
+their sections, once the TOC parse can expand latina.
+
+**3. Missing functions — same root.** Latina bodies (si/redde/
+per unexpanded) are not C89; those definitions are ERROR
+segments → no rows. The two PROTOTYPES at lines 57-58 correctly
+appear as declarator-functionis rows (DECLARATIONES section).
+All of #2/#3 = the M2d work order already named (expander +
+include resolution for the TOC parse; the saltuarius liber parse
+ALREADY resolves includes via nexus — M2d should let the c89
+TOC parse ride that same expanded stream instead of re-lexing
+raw bytes — noted as the natural M2d design).
+
+OPEN (Fran's taste): should PROTOTYPES join the FUNCTIONES
+section (headers would then list their API there — IDE-outline
+convention) or stay in DECLARATIONES (definitions-only purity)?
+One strcmp either way.
+
+### Addendum: PROTOTYPA sectio (2026-07-04, Fran)
+
+Fourth c89 section shipped same-day: PROTOTYPA = vista rows with
+genus declarator-functionis, non-typedef (typedef'd function
+pointers stay TYPI). Headers now list their API under its own
+heading. NB named imprecision: function-POINTER variables without
+initiators (`int (*fp)(void);`) also land here — the vista
+carries genus only; distinguishing needs tree access (candidate
+est_prototypum vista field if it ever annoys). DECLARATIONES
+excludes them. Fixture: duplum() :19. Saltuarius 13/13, silva
+27/27.
+
+## M2d — THE ACCEPTANCE WALL: INTENTIO (2026-07-04)
+
+The honest counter flips meaning: M1 recorded ERROR nodes as
+RECOVERY; M2d drives them toward zero as COMPREHENSION, over the
+real monorepo, with the expander finally feeding the c89 grammar.
+After M2d, M2 closes.
+
+**Grounding**: silva_parsare_cum_contextu EXISTS (generic driver,
+Phase 7) — the c89 wrapper needs only its mirror.
+saltuarius_nexus.c holds the 4 sceletum references (the main-parse
+swap site). The M2c corpus ERROR number (42) is entirely
+unexpanded-latina bodies — the work order.
+
+**Chunks**:
+- **A — expander-fed c89 parsing.**
+  silva_c89_parsare_cum_contextu (mirror of the plain wrapper:
+  contextus + oraculum + dance + policy); mensura corpus runs
+  WITH a latina.h-bearing contextus → corpus ERROR 42 → the real
+  number, PINNED with remainder named; saltuarius TOC parse
+  passes the nexus contextus → latina files fully populate all
+  four c89 sections (the silva_scribere.c test Fran ran becomes
+  the manual bar: structs in TYPI, functions in FUNCTIONES,
+  banner-free titles).
+- **B — saltuarius main-parse swap (decisiones 9 due date).**
+  GRAMMATICA_SCELETI → c89 in nexus/liber; the whole saltuarius
+  suite is the gate (source view, layers, origo chains must not
+  notice); perf/memory measured against the 84-242MB LRU
+  reality (c89 tables are 15x sceletum's states — watch arena
+  peaks in F2). THEN sceletum retirement from the AMALGAM
+  manifest (generator-fixture role stays in-repo; hospes
+  sceletum fork block updates; the deliverable shrinks —
+  amalgam gates decide).
+- **C — the monorepo sweep + evidence counts.** Parse every
+  rhubarb .c/.h through the full pipeline with include
+  resolution; ERROR-node census recorded in mensura history
+  (the headline metric); solarium 148/148 held; carried lapifex
+  integration bar through the consumer path. EVIDENCE COUNTS
+  with dispositions logged: block-scope typedefs (decisiones 13
+  gate), Duff's device occurrences (grouped-casus price),
+  struct-tag-const + nuda divergences, gcc-extension demand.
+- **D — the ambient badge + M2 CLOSE.** Saltuarius status/F2
+  gains "silva: N errores" per file — the acceptance test runs
+  continuously in daily driving, incomprehension gets NOTICED
+  not audited. M2d RELATIO + full-log audit + **M2 milestone
+  close-out** (M2.0→M2d retrospective; post-M2 map: quaestio
+  selectors / formator / typus+index with their frozen v1 bars
+  per spec-v2 §4.1).
+
+**Named risks**: the main-parse swap is the widest blast radius
+of the milestone (everything saltuarius renders sits downstream)
+— the suite + manual daily-driving are the gates, revert is
+cheap (one bundle swap); include-resolution parity between TOC
+parse and liber parse (same nexus contextus = same answers, by
+construction); solarium byte-exactness under c89 trees; amalgam
+size/perf after sceletum retirement; sweep wall-clock (2.1
+ms/KB × monorepo — measure first, parallelize never).
+
+**Exit criteria**: suites green everywhere; corpus ERROR pinned
+at its real number, remainder NAMED; monorepo sweep numbers in
+mensura history; all four evidence counts logged with
+dispositions; badge shipping; sceletum out of the amalgam;
+carried integration bar green; M2d RELATIO + full-log audit +
+M2 close.

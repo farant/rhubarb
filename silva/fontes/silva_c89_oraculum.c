@@ -529,6 +529,7 @@ _vistam_implere (
     SilvaToken*           titulus)
 {
     vista->genus = _genus_titulus(nodus_ordinis->genus);
+    vista->est_typedef = FALSUM;
     si (titulus != NIHIL)
     {
         vista->titulus = titulus->valor;
@@ -647,6 +648,9 @@ _vistas_ambulare (
                     _vistam_implere(vista, tag,
                         (tok.genus == SILVA_VALOR_TOKEN)
                             ? tok.datum.token : NIHIL);
+                    vista->est_typedef = _habet_typedef(
+                        silva_c89_declaratio_specificatores(
+                            declaratio));
                     si (nodus_out != NIHIL) *nodus_out = declaratio;
                     redde VERUM;
                 }
@@ -672,6 +676,9 @@ _vistas_ambulare (
                     _vistam_implere(vista, elem->datum.nodus,
                         silva_c89_declaratoris_titulus(
                             elem->datum.nodus));
+                    vista->est_typedef = _habet_typedef(
+                        silva_c89_declaratio_specificatores(
+                            declaratio));
                     si (nodus_out != NIHIL)
                     {
                         *nodus_out = declaratio;
@@ -855,6 +862,47 @@ silva_c89_functionis_subscriptio (
         fructus.successus = VERUM;
         fructus.causa = NIHIL;
         fructus.sedes = NIHIL;
+    }
+
+    /* Trivia PRAECEDENTIA tondere (albispatia + commenta) -
+     * subscriptio textus ORDINIS est, non textus roundtrip;
+     * lexema primum trivia praecedentia ferre potest (post
+     * directivam / initio segmenti commenta PRORSUM adhaerent -
+     * inventum M2c: vexillum "/ * ==== * /" titulos ordinum
+     * implebat) */
+    {
+        i32 a = ZEPHYRUM;
+
+        dum (a < fructus.textus.mensura)
+        {
+            i8 c = fructus.textus.datum[a];
+
+            si (c == ' ' || c == '\t' || c == '\n' || c == '\r')
+            {
+                a++;
+                perge;
+            }
+            si (c == '/' && a + I < fructus.textus.mensura
+                && fructus.textus.datum[a + I] == '*')
+            {
+                i32 b = a + II;
+
+                dum (b + I < fructus.textus.mensura
+                    && !(fructus.textus.datum[b] == '*'
+                         && fructus.textus.datum[b + I] == '/'))
+                {
+                    b++;
+                }
+                si (b + I < fructus.textus.mensura)
+                {
+                    a = b + II;
+                    perge;
+                }
+            }
+            frange;
+        }
+        fructus.textus.datum += a;
+        fructus.textus.mensura -= a;
     }
     redde fructus;
 }

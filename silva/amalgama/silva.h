@@ -761,6 +761,7 @@ typedef struct SilvaDeclaratioVista {
     SilvaChorda titulus;  /* nomen; mensura 0 = anonymum */
     int         linea;
     int         situs;    /* byte_offset */
+    int est_typedef;          /* TYPEDEF in specificatoribus */
 } SilvaDeclaratioVista;
 
 unsigned int silva_c89_declarationes_numerus(

@@ -29,7 +29,15 @@ nomen enumeratio {
     SALT_ORDO_TITULUS = 0,   /* caput sectionis - non saltabile */
     SALT_ORDO_INCLUSIO,      /* saltus: IN plagulam inclusam */
     SALT_ORDO_DEFINITIO,     /* saltus: linea plagulae currentis */
-    SALT_ORDO_REGIO          /* saltus: linea plagulae currentis */
+    SALT_ORDO_REGIO,         /* saltus: linea plagulae currentis */
+    SALT_ORDO_FUNCTIO,       /* M2c D: definitio functionis (c89) */
+    SALT_ORDO_PROTOTYPUM,    /* M2c D+: declarator functionis
+                              * sine corpore (prototypum; NB
+                              * variabiles monstratorum functionum
+                              * sine initiatore hic quoque cadunt -
+                              * vista genus solum fert) */
+    SALT_ORDO_TYPUS,         /* M2c D: typedef (c89) */
+    SALT_ORDO_DECLARATIO     /* M2c D: declaratio cetera (c89) */
 } SaltuariusOrdoGenus;
 
 nomen structura {
