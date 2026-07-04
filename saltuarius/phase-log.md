@@ -748,3 +748,58 @@ fons mode.
 Next: Phase D — the polish (TOC sidebar from the vistas, '/'
 search, fructus debug line, LRU tuning) → v0 daily-driver bar
 (interview Q20) → saltuarius v0 SHIPS.
+
+## PHASE D — THE POLISH: INTENTIO (2026-07-03)
+
+**Goal**: the interview-Q20 DAILY-DRIVER BAR, then v0 SHIPS.
+Everything here is a known quantity — no research risk, all
+prerequisites shipped (vistas from additiones II, telemetry from
+additiones I, micro-mode pattern from Phase C).
+
+**Scope**:
+1. **TOC sidebar** (fons mode; the designed M2 pressure point):
+   a STRUCTURA pane listing includenda (inclusio vistas — look up
+   BY VIA, contextus adds entries like stddef.h; unresolved shown
+   honestly with fons_ad -1), macros (macro vistas, journal
+   semantics), regiones (ramus vistas: genus + sumptum/numquam
+   badge + linea). Tab cycles focus textus ↔ structura; j/k in
+   the sidebar; Enter JUMPS — includes resolve through the SAME
+   praebenda-map machinery as origo jumps (file switch via
+   bibliotheca); macros/regiones jump to their linea in the
+   current file. New module saltuarius_structura.{h,c}
+   (view-model + render; vista walks at build time, cached per
+   liber entry into the sidebar's own reficere'd arena).
+2. **'/' search** (spec module saltuarius_quaestio): literal
+   non-regex incremental search over the DISPLAYED stratum's text
+   (search what you see — interview fiat), as an input MICRO-MODE
+   like the origo popup (echo line at status row, every keystroke
+   re-searches from cursor, Enter commits, Esc cancels, n/N
+   repeat forward/back with wraparound + "(finis)" nuntius). The
+   app's first text-input: paste arrives as rune bursts
+   (bracketed markers swallowed by tessera) — acceptable, named.
+3. **F2 fructus/telemetry line**: toggle swaps the status line's
+   left side for: tessera fructus (cellulae mutatae, octeti,
+   tempus ms) + silva arena bytes (silva_piscina_summa_usus/apex
+   on the current liber's arena — additiones I telemetry earning
+   its keep) + cache occupancy (bibliotheca numerus/N).
+4. **LRU observation**: with real parses, open 10+ heavy roots,
+   confirm eviction keeps the ceiling (the Phase C exit criterion
+   that carried); tune N only if the bar demands it.
+5. **Deferral DISPOSITION** (decide, not necessarily do): colored
+   previews (lexing is cheap now — FEEL-TEST on the manual bar,
+   adopt if instant), popup close-on-click-outside, jump history
+   ctrl-o, vim f-motion in fons, dotfile toggle, incremental
+   type-jump. Each either lands in D3, or gets a NAMED v0.1 home.
+
+**Chunks**: D1 structura (vistas → view-model + render + jumps +
+goldens incl. the stddef.h-unresolved row). D2 quaestio ('/' +
+n/N + echo line + goldens with scripted keystroke sessions). D3
+fructus line + LRU observation + deferral disposition + THE
+DAILY-DRIVER BAR (Fran browses + reads + jumps + searches through
+a real work session) → v0 RELATIO → spec-v2 marked SHIPPED →
+memory close-out.
+
+**Exit criteria** (= interview Q20 verbatim): browse rhubarb
+comfortably; money shot reproducible on demand; TOC + '/' work;
+suites green; degradation badges proven. "I actually use it" is
+the bar. v0 SHIPS.
