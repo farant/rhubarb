@@ -29,13 +29,29 @@ nomen enumeratio {
     SALT_CLASSIS_CHORDA,      /* string + character lit */
     SALT_CLASSIS_NUMERUS,
     SALT_CLASSIS_DIRECTIVA,   /* # + verbum directivae */
-    SALT_CLASSIS_IGNOTUM      /* OCTETUS_IGNOTUS */
+    SALT_CLASSIS_IGNOTUM,     /* OCTETUS_IGNOTUS */
+    SALT_CLASSIS_OMISSUM      /* ramus non sumptus (Phase C):
+                               * fuscum uniforme - color syntacticus
+                               * CONSULTO obrutus (planum = iners) */
 } SaltuariusClassis;
+
+/* Caput praelectum (limes discum legit; nexus INIECTA accipit -
+ * sutura probationum tenet etiam hic) */
+nomen structura {
+    chorda titulus;       /* titulus praebendi (basename; NB "nomen"
+                           * = macro typedef - quintum fulmen!) */
+    chorda textus;        /* octeti (vita = vita nexus!) */
+    chorda via_absoluta;  /* pro resolutione saltuum */
+} SaltuariusCaput;
 
 nomen structura {
     Piscina*        piscina;   /* persistens */
     TabulaDispersa* latina;    /* nomina ex silva_latina_textus */
     i32             numerus_latinorum;
+    /* Phase C: fistula parsandi */
+    SilvaPiscina*   arena_ctx; /* arena contextus (longaeva) */
+    SilvaContextus* ctx;       /* NIHIL ante silvam_parare */
+    TabulaDispersa* viae;      /* titulus praebendi -> chorda* absoluta */
 } SaltuariusNexus;
 
 /* Creare nexum: index latinorum aedificatur lexando
@@ -61,5 +77,29 @@ saltuarius_nexus_est_fons_c (chorda via);
 vacuum
 saltuarius_nexus_classificare (constans SaltuariusNexus* nexus,
     SilvaPiscina* arena_silvae, chorda textus, i8* classis_out);
+
+/* Fistulam parsandi parare: contextus + latina + praebenda ex
+ * capitibus INIECTIS (limes discum ambulat). Reddit numerum
+ * praebitorum, -1 si fractum. Basename collisio: primus vincit. */
+s32
+saltuarius_nexus_silvam_parare (SaltuariusNexus* nexus,
+    constans SaltuariusCaput* capita, i32 numerus);
+
+/* Parsare textum cum contextu (arena_libri possidet parsuram);
+ * NIHIL si fistula non parata aut parse fractum */
+SilvaParsura*
+saltuarius_nexus_parsare (SaltuariusNexus* nexus,
+    SilvaPiscina* arena_libri, constans character* titulus,
+    chorda textus);
+
+/* Titulus praebendi -> via absoluta (chorda vacua si ignotum) */
+chorda
+saltuarius_nexus_fons_resolvere (constans SaltuariusNexus* nexus,
+    chorda titulus);
+
+/* Classis lexematis unius (pro materializatione stratorum) */
+i8
+saltuarius_nexus_classis (constans SaltuariusNexus* nexus,
+    constans SilvaToken* token);
 
 #endif /* SALTUARIUS_NEXUS_H */

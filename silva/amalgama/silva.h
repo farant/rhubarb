@@ -549,6 +549,13 @@ typedef struct SilvaParsura {
     unsigned int    segmenta_ultra_limen;
     unsigned int    regiones_textae;  /* regiones in arborem textae */
     unsigned int    regiones_omissae; /* degradatae (limes transgressus) */
+    SilvaXar*       strata;           /* per-generation streams (Xar of
+                                       * SilvaXar* of SilvaToken*), one per
+                                       * MUTATING expansion generation;
+                                       * NULL if nothing ever expanded.
+                                       * strata[last] ALIASES lexemata.
+                                       * Layer view = [as-written] +
+                                       * strata[] (additiones II) */
 } SilvaParsura;
 
 SilvaParsura* silva_parsare(SilvaPiscina* piscina,
@@ -575,6 +582,62 @@ SilvaParsura* silva_lexemata_parsare(SilvaPiscina* piscina,
     const SilvaXar* lexemata, const SilvaGrammatica* grammatica,
     const SilvaOraculum* oraculum, SilvaResolutor resolutor,
     void* datum_resolutoris);
+
+/* ==================================================
+ * Expansio: reading windows (additiones II) - SilvaExpansio stays
+ * OPAQUE; these slim vistas are the cathedral-time contract
+ * (internal shapes remain free). Ramus index = conditio_id - 1
+ * (flat table). Extents are BYTE offsets into the fons text.
+ * ================================================== */
+
+typedef enum {
+    SILVA_RAMUS_IF = 0,
+    SILVA_RAMUS_IFDEF,
+    SILVA_RAMUS_IFNDEF,
+    SILVA_RAMUS_ELIF,
+    SILVA_RAMUS_ELSE
+} SilvaRamusGenus;
+
+typedef struct {
+    const SilvaChorda* via;
+    int                fons_ex;
+    int                fons_ad;           /* -1 = unresolved */
+    int                est_praetermissa;
+} SilvaInclusioVista;
+
+typedef struct {
+    SilvaRamusGenus    genus;
+    int                est_sumptum;
+    int                est_numquam;       /* #if 0 idiom */
+    int                corpus_initium;    /* BYTES in fons; -1 empty */
+    int                corpus_finis;      /* exclusive; -1 empty */
+    int                fons_index;
+    unsigned int       linea;
+} SilvaRamusVista;
+
+typedef struct {
+    const SilvaChorda* titulus;
+    int                est_functio;
+    int                fons_index;
+    unsigned int       linea;
+} SilvaMacroVista;
+
+unsigned int silva_fontes_numerus(const SilvaExpansio* exp);
+/* NULL if out of range; synthetic fontes return their title */
+const SilvaChorda* silva_fons_via(const SilvaExpansio* exp,
+    int fons_index);
+unsigned int silva_inclusiones_numerus(const SilvaExpansio* exp);
+int silva_inclusio_vista(const SilvaExpansio* exp,
+    unsigned int index, SilvaInclusioVista* vista_out);
+unsigned int silva_rami_numerus(const SilvaExpansio* exp);
+int silva_ramus_vista(const SilvaExpansio* exp,
+    unsigned int index, SilvaRamusVista* vista_out);
+/* Definitions AS RECORDED (the journal is the product: #undef does
+ * not erase history); O(acta) per call */
+unsigned int silva_macros_numerus(const SilvaExpansio* exp);
+int silva_macro_vista(const SilvaExpansio* exp,
+    unsigned int index, SilvaMacroVista* vista_out);
+
 
 /* ==================================================
  * Scriptura (emissio octetim exacta)

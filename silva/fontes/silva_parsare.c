@@ -163,6 +163,7 @@ _lexemata_parsare_interna (
     parsura->segmenta_ultra_limen = ZEPHYRUM;
     parsura->regiones_textae = ZEPHYRUM;
     parsura->regiones_omissae = ZEPHYRUM;
+    parsura->strata = NIHIL;
 
     numerus = xar_numerus(lexemata);
 
@@ -935,6 +936,7 @@ _fistula_interna (
     Xar*           lexemata;
     Xar*           reliqua;
     Xar*           expansa;
+    Xar*           strata;
     Xar*           directivae;
     SilvaParsura*  parsura;
 
@@ -953,14 +955,16 @@ _fistula_interna (
     directivae = NIHIL;
     reliqua = silva_expansio_directivas_processare(expansio, lexemata,
         &directivae);
+    strata = NIHIL;
     expansa = silva_expansio_expandere_reliqua(expansio, reliqua,
-        NIHIL);
+        &strata);
 
     parsura = _lexemata_parsare_interna(piscina, expansa, grammatica,
         oraculum, resolutor, datum_resolutoris, expansio, contextus);
     si (parsura != NIHIL)
     {
         parsura->lexemata = expansa;
+        parsura->strata = strata;
         parsura->expansio = expansio;
         parsura->directivae = directivae;
         parsura->fons_princeps = fons_index;

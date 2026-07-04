@@ -177,7 +177,9 @@ interior constans character* constans CADENDA_TYPEDEF[] = {
     "SilvaResolutioGenus", "SilvaResolutioEventum", "SilvaCommissio",
     "SilvaExpansio", "SilvaGrammatica", "SilvaParsura",
     "SilvaScriptura", "SilvaFines", "SilvaPergereFunctio",
-    "SilvaContextusPlagula", "SilvaContextus", NIHIL
+    "SilvaContextusPlagula", "SilvaContextus", "SilvaRamusGenus", "SilvaInclusioVista",
+    "SilvaRamusVista", "SilvaMacroVista",
+    NIHIL
 };
 
 /* Definitiones tag quas silva.h PLENE possidet (definitio structurae

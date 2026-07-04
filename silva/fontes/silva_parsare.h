@@ -85,6 +85,11 @@ nomen structura {
      * mixti, elementum opacum - lamina reinserenda possessa manet) */
     i32 regiones_textae;
     i32 regiones_omissae;
+    Xar* strata;         /* Xar de Xar* - fluxus per generationem
+                          * MUTANTEM (additiones II; GRATIS - arenae
+                          * iam solvuntur, gubernator modo tenet).
+                          * NIHIL si fluxus numquam mutatus.
+                          * strata[ultimum] == lexemata (alias!) */
 } SilvaParsura;
 
 

@@ -363,4 +363,67 @@ silva_expansio_expandere_reliqua (
     Xar*           reliqua,
     Xar**          strata_out);
 
+
+/* ==================================================
+ * Fenestrae lectionis (additiones II) - vistae angustae pro
+ * hospitibus amalgamatis: SilvaExpansio trans limitem opaca manet;
+ * hae structurae contractum cathedralem angustum dant (formae
+ * internae liberae manent). Index ramorum = conditio_id - 1
+ * (tabula plana exp->rami).
+ * ================================================== */
+
+nomen structura {
+    constans chorda* via;
+    s32              fons_ex;
+    s32              fons_ad;           /* -1 = ignotus */
+    b32              est_praetermissa;
+} SilvaInclusioVista;
+
+nomen structura {
+    SilvaRamusGenus  genus;
+    b32              est_sumptum;
+    b32              est_numquam;
+    s32              corpus_initium;    /* OCTETI in fonte; -1 vacuum */
+    s32              corpus_finis;      /* exclusivus; -1 vacuum */
+    s32              fons_index;
+    i32              linea;
+} SilvaRamusVista;
+
+nomen structura {
+    constans chorda* titulus;
+    b32              est_functio;
+    s32              fons_index;
+    i32              linea;
+} SilvaMacroVista;
+
+i32
+silva_fontes_numerus (constans SilvaExpansio* exp);
+
+/* Via fontis; NIHIL si extra fines (synthetici titulos reddunt) */
+constans chorda*
+silva_fons_via (constans SilvaExpansio* exp, s32 fons_index);
+
+i32
+silva_inclusiones_numerus (constans SilvaExpansio* exp);
+
+b32
+silva_inclusio_vista (constans SilvaExpansio* exp, i32 index,
+    SilvaInclusioVista* vista_out);
+
+i32
+silva_rami_numerus (constans SilvaExpansio* exp);
+
+b32
+silva_ramus_vista (constans SilvaExpansio* exp, i32 index,
+    SilvaRamusVista* vista_out);
+
+/* Definitiones UT ACTAE (acta = fructus: #undef historiam non
+ * delet); O(acta) per vocatum - satis ad mensuram v1 */
+i32
+silva_macros_numerus (constans SilvaExpansio* exp);
+
+b32
+silva_macro_vista (constans SilvaExpansio* exp, i32 index,
+    SilvaMacroVista* vista_out);
+
 #endif /* SILVA_EXPANDERE_H */

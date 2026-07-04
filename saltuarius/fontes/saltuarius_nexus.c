@@ -1,6 +1,10 @@
 /* saltuarius_nexus.c - Implementatio pontis silvae */
 
 #include "saltuarius_nexus.h"
+#include <string.h>
+
+interior SaltuariusClassis _classis_generis (
+    constans SaltuariusNexus* nexus, constans SilvaToken* t);
 
 interior chorda
 _chorda_ex_silva (constans SilvaChorda* s)
@@ -27,6 +31,9 @@ saltuarius_nexus_creare (Piscina* persistens)
     nexus->piscina = persistens;
     nexus->latina = tabula_dispersa_creare_chorda(persistens, DXII);
     nexus->numerus_latinorum = ZEPHYRUM;
+    nexus->arena_ctx = NIHIL;
+    nexus->ctx = NIHIL;
+    nexus->viae = tabula_dispersa_creare_chorda(persistens, CCLVI);
     si (nexus->latina == NIHIL)
     {
         redde NIHIL;
@@ -116,6 +123,13 @@ saltuarius_nexus_est_fons_c (chorda via)
 }
 
 /* Classis pro genere lexematis (contextus directivae extra) */
+i8
+saltuarius_nexus_classis (constans SaltuariusNexus* nexus,
+    constans SilvaToken* t)
+{
+    redde (i8)_classis_generis(nexus, t);
+}
+
 interior SaltuariusClassis
 _classis_generis (constans SaltuariusNexus* nexus,
     constans SilvaToken* t)
@@ -219,4 +233,115 @@ saltuarius_nexus_classificare (constans SaltuariusNexus* nexus,
             }
         }
     }
+}
+
+/* ==================================================
+ * Fistula parsandi (Phase C)
+ * ================================================== */
+
+interior constans SilvaGrammatica GRAMMATICA_SCELETI = {
+    &SILVA_SCELETUM_TABULA,
+    &SILVA_SCELETUM_REGISTRUM,
+    silva_sceletum_construere,
+    silva_sceletum_ambiguum_fabricare
+};
+
+interior constans character*
+_literis (Piscina* piscina, chorda textus)
+{
+    character* buffer;
+
+    buffer = (character*)piscina_allocare(piscina,
+        (memoriae_index)textus.mensura + I);
+    si (buffer == NIHIL)
+    {
+        redde "";
+    }
+    memcpy(buffer, textus.datum, (memoriae_index)textus.mensura);
+    buffer[textus.mensura] = '\0';
+    redde buffer;
+}
+
+s32
+saltuarius_nexus_silvam_parare (SaltuariusNexus* nexus,
+    constans SaltuariusCaput* capita, i32 numerus)
+{
+    s32 praebita = ZEPHYRUM;
+    i32 k;
+
+    si (nexus->ctx == NIHIL)
+    {
+        nexus->arena_ctx = silva_piscina_generare_dynamicum(
+            "salt_nexus_ctx", 8388608);
+        si (nexus->arena_ctx == NIHIL)
+        {
+            redde -I;
+        }
+        nexus->ctx = silva_contextus_creare(nexus->arena_ctx);
+        si (nexus->ctx == NIHIL)
+        {
+            redde -I;
+        }
+        (vacuum)silva_contextus_latinam_addere(nexus->ctx);
+    }
+    per (k = ZEPHYRUM; k < numerus; k++)
+    {
+        constans SaltuariusCaput* caput = &capita[k];
+
+        /* collisio basename: primus vincit */
+        si (tabula_dispersa_continet(nexus->viae, caput->titulus))
+        {
+            perge;
+        }
+        si (silva_contextus_praebere(nexus->ctx,
+                _literis(nexus->piscina, caput->titulus),
+                (constans character*)caput->textus.datum,
+                caput->textus.mensura) >= ZEPHYRUM)
+        {
+            chorda* via = (chorda*)piscina_allocare(nexus->piscina,
+                (memoriae_index)magnitudo(chorda));
+
+            si (via != NIHIL)
+            {
+                *via = chorda_transcribere(caput->via_absoluta,
+                    nexus->piscina);
+                (vacuum)tabula_dispersa_inserere(nexus->viae,
+                    chorda_transcribere(caput->titulus,
+                        nexus->piscina), (vacuum*)via);
+            }
+            praebita++;
+        }
+    }
+    redde praebita;
+}
+
+SilvaParsura*
+saltuarius_nexus_parsare (SaltuariusNexus* nexus,
+    SilvaPiscina* arena_libri, constans character* titulus,
+    chorda textus)
+{
+    si (nexus->ctx == NIHIL || textus.mensura == ZEPHYRUM)
+    {
+        redde NIHIL;
+    }
+    redde silva_parsare_cum_contextu(arena_libri, nexus->ctx,
+        titulus, (constans character*)textus.datum, textus.mensura,
+        &GRAMMATICA_SCELETI, NIHIL, NIHIL, NIHIL);
+}
+
+chorda
+saltuarius_nexus_fons_resolvere (constans SaltuariusNexus* nexus,
+    chorda titulus)
+{
+    vacuum* valor = NIHIL;
+    chorda vacua;
+
+    si (tabula_dispersa_invenire(nexus->viae, titulus, &valor)
+        && valor != NIHIL)
+    {
+        redde *(chorda*)valor;
+    }
+    vacua.mensura = ZEPHYRUM;
+    vacua.datum = NIHIL;
+    redde vacua;
 }

@@ -264,6 +264,125 @@ int main(void)
         }
     }
 
+    /* --- ADDITIONES II: strata + fenestrae lectionis --- */
+    {
+        SilvaExpansio* exp = silva_expansio_creare(piscina);
+        const char* FONS =
+            "#define GEMINARE(x) ((x)+(x))\n"
+            "#if 0\nint a;\n#else\nint b;\n#endif\n"
+            "GEMINARE(2);\n";
+        SilvaParsura* parsura = NULL;
+
+        if (exp != NULL)
+        {
+            parsura = silva_parsare_cum_expansione(piscina, exp,
+                "additiones.c", FONS, (unsigned int)strlen(FONS),
+                &GRAMMATICA_SCELETI, NULL, NULL, NULL);
+        }
+
+        /* strata: GEMINARE mutat -> saltem unum stratum;
+         * strata[ultimum] ALIASES lexemata */
+        summa++;
+        if (parsura != NULL && parsura->strata != NULL
+            && silva_xar_numerus(parsura->strata) >= 1
+            && *(SilvaXar**)silva_xar_obtinere(parsura->strata,
+                   silva_xar_numerus(parsura->strata) - 1)
+               == parsura->lexemata)
+        {
+            fideles++;
+        }
+        else
+        {
+            fprintf(stderr, "hospes: INFIDELIS: strata\n");
+        }
+
+        /* fontes: princeps habet viam; extra fines -> NULL */
+        summa++;
+        if (parsura != NULL
+            && silva_fontes_numerus(exp) >= 1
+            && silva_fons_via(exp, parsura->fons_princeps) != NULL
+            && silva_fons_via(exp, 9999) == NULL)
+        {
+            fideles++;
+        }
+        else
+        {
+            fprintf(stderr, "hospes: INFIDELIS: fons_via\n");
+        }
+
+        /* rami: #if 0 / #else -> II rami; primus numquam nec
+         * sumptus, secundus sumptus; extenta OCTETI >= 0 */
+        summa++;
+        if (parsura != NULL && silva_rami_numerus(exp) == 2)
+        {
+            SilvaRamusVista primus;
+            SilvaRamusVista secundus;
+
+            if (silva_ramus_vista(exp, 0, &primus)
+                && silva_ramus_vista(exp, 1, &secundus)
+                && primus.genus == SILVA_RAMUS_IF
+                && !primus.est_sumptum && primus.est_numquam
+                && secundus.genus == SILVA_RAMUS_ELSE
+                && secundus.est_sumptum
+                && secundus.corpus_initium >= 0
+                && secundus.corpus_finis > secundus.corpus_initium)
+            {
+                fideles++;
+            }
+            else
+            {
+                fprintf(stderr, "hospes: INFIDELIS: rami vista\n");
+            }
+        }
+        else
+        {
+            fprintf(stderr, "hospes: INFIDELIS: rami numerus\n");
+        }
+
+        /* macros: GEMINARE definitio functionis */
+        summa++;
+        if (parsura != NULL && silva_macros_numerus(exp) == 1)
+        {
+            SilvaMacroVista vista;
+
+            if (silva_macro_vista(exp, 0, &vista)
+                && vista.est_functio
+                && vista.titulus != NULL
+                && vista.titulus->mensura == 8
+                && memcmp(vista.titulus->datum, "GEMINARE", 8) == 0)
+            {
+                fideles++;
+            }
+            else
+            {
+                fprintf(stderr, "hospes: INFIDELIS: macro vista\n");
+            }
+        }
+        else
+        {
+            fprintf(stderr,
+                "hospes: INFIDELIS: macros numerus\n");
+        }
+
+        /* inclusio vista: fixum multi-fons supra iam parsavit; hic
+         * exp NOSTRUM inclusiones nullas habet */
+        summa++;
+        {
+            SilvaInclusioVista vista;
+
+            if (silva_inclusiones_numerus(exp) == 0
+                && !silva_inclusio_vista(exp, 0, &vista))
+            {
+                fideles++;
+            }
+            else
+            {
+                fprintf(stderr,
+                    "hospes: INFIDELIS: inclusiones\n");
+            }
+        }
+    }
+
     /* telemetria arenae */
     {
         size_t usus = silva_piscina_summa_usus(piscina);

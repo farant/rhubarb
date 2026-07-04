@@ -499,3 +499,252 @@ RETENTION — the ledger's only engine work, #4/5/6 slim vistas;
 arm-extent stream pinning during design). Then **Phase C — the
 magic**: layers, origo popup, Enter-to-jump. The o key stops
 teasing.
+
+## PHASE C — THE MAGIC: INTENTIO (2026-07-03)
+
+**Goal**: THE MONEY SHOT. Layer flips across the retained strata
+with token-identity cursor tracking; the origo popup with
+Enter-to-jump (cross-file); omitted conditional arms dimmed grey.
+All silva.h prerequisites shipped (additiones I+II; ledger closed).
+
+**Design keystone #1: a stratum is a (textus, lineae, classis)
+triple.** Phase B's entire render path works unchanged on ANY
+stratum — the visum never learns about tokens. Stratum 0 = the
+Phase B fields (as-written). Stratum k>0 = MATERIALIZED from
+parsura->strata[k-1]: serialize the token stream (spatia_ante
+trivia bytes + valor bytes per token), building classis directly
+from token genus during the walk (no re-lex), plus the POSITION
+MAP: per-token {token*, byte_initium, byte_finis} in stream order
+(binary-searchable by byte; scannable by token identity).
+Materialization is LAZY (first visit) and cached in the liber
+arena. A macro-dense stream with no newline trivia renders as one
+long line — accepted (h-scroll exists; named).
+
+**Design keystone #2: the origo popup is direction-aware.**
+- On stratum N>0: cursor token → walk the transparent SilvaOrigo
+  chain DOWN (datum.expansio.corpus = definition site,
+  .invocatio = use site, nomen_macro) to the FONS radix. Rows:
+  "stratum N: <valor>" / "← expansio MACRO (via:linea)" per step /
+  "scriptum: via:linea". via from silva_fons_via.
+- On stratum 0: cursor byte → FORWARD search: scan the final
+  stream (parsura->lexemata) for the first token whose chain's
+  invocatio byte-range covers the cursor → "what this becomes" +
+  its chain. O(stream) per keypress — fine.
+- Every row with a resolvable location is a JUMP TARGET (Enter):
+  same-file → cursor+aptare; cross-file → nexus resolves the fons
+  via (praebere-name → absolute path map, recorded during
+  seeding) → bibliotheca/limes open → switch liber. Synthetic or
+  unresolvable fons → nuntius "(fons syntheticus)". Jump history
+  stays DEFERRED (named, v0.1 with ctrl-o).
+
+**Design keystone #3: dimming is a classis overwrite.** New class
+SALT_CLASSIS_OMISSUM (grey 0x707070 per §10.3 — uniform, overrides
+syntax color BY DESIGN: flat = inert). After classis builds: for
+each ramus vista with !est_sumptum AND fons_index ==
+fons_princeps, overwrite classis[corpus_initium..corpus_finis).
+Byte extents make this three lines. Stratum 0 only (omitted arms
+do not exist in expanded streams — nothing to dim).
+
+**Cursor tracking across flips** (interview Q6): cursor byte in
+stratum A → token via A's position map (nearest on trivia) →
+RADIX via silva_token_radix → in stratum B: radix byte_offset IS
+the position (B=0) or first token in B's map sharing that radix
+(B>0); fallback = nearest line proportion. This is the
+origo-API-stress feature, on purpose.
+
+**The parse enters the nexus** (spec §4 recipe, finally):
+contextus creare + latinam_addere + praebenda pre-seeding (walk
+-I dirs from compile_flags.txt — parsed by main, radix-relative —
+filum-read each .h, praebere; record praebere-name → absolute
+path for jump resolution). liber_aperire gains the parse (cum
+contextu) alongside the UNTOUCHED Phase B lex path — coloring
+works even when the parse degrades (badge "silva: intermissa",
+layer/origo keys no-op politely; DELIBERATE redundancy). Parse
+cost 44-150ms → "silva legit..." nuntius drawn+presented BEFORE
+the parse. LRU N=8 now carries real weight (84-242MB/root).
+
+**Keys/UI**: L = stratum cycle (status: "stratum N/M"); o and
+Enter open the origo popup; popup is an input MICRO-MODE (main
+routes SURSUM/DEORSUM/INTRARE/FINIRE to it while open; q/o/Esc
+close); popup rendered with tessera_replere interior (its rect
+case, as promised at 1.1); wheel/click keep working under it
+(close-on-click-outside = deferred nicety).
+
+**Modules**: nexus grows (contextus/praebenda/via-map);
+liber grows (parsura, strata materialization, position maps,
+stratum_currens, OMISSUM overlay); NEW saltuarius_origo.{h,c}
+(chain build → gradus rows + jump targets; popup state);
+visum grows (stratum indicator, popup render); limes gains
+librum_aperire_via (extracted core; existing fn wraps); main
+wires the micro-mode + cross-file jump.
+
+**Chunks**: C1 parse+strata (nexus recipe, liber materialization,
+maps, OMISSUM; pure probationes incl. "G(1); → 1+1" stratum text
+and dim bytes). C2 origo module + cursor tracking (pure; chain
+rows pinned on a fixture: macro name, def via:linea, invocatio).
+C3 visum popup + claves/main wiring + cross-file jump + goldens
+(scripted full chain: open → flip → o → navigate → Enter → jump
+lands) + THE MANUAL BAR: silva_parsare.c, cursor on a TEXERE
+invocation, o, chain visible, Enter, land in the macro
+definition. The thing no other tool on earth does.
+
+**Exit criteria**: manual bar passed on real rhubarb sources;
+suites green (goldens script the full chain headless); degradation
+proven (parse-refused file keeps Phase B behavior + badge);
+memory ceiling observed under LRU with real parses; RELATIO.
+
+### Chunk C1 — parse + strata: DONE (2026-07-03)
+
+nexus grew the parse pipeline: silvam_parare (contextus +
+latinam_addere + praebenda from INJECTED capita — the disk walk
+stays in limes, the injection seam holds even here; basename
+collision = first wins; praebere-name → absolute-path map for C2
+jumps), nexus_parsare (cum contextu, sceleton grammatica),
+fons_resolvere, and the public classis-per-token helper (Phase B
+classifier refactored onto it). liber grew the stratum model:
+strata_visus[] of (textus, lineae, classis, positiones) triples —
+[0] shares the Phase B fields; k>0 LAZILY materialized from
+parsura->strata[k-1] (two-pass serialization: trivia-ante + valor
++ trivia-post per token, single-owner so nothing doubles; classis
+from token genus during the walk; position map for C2); ALL
+cursor/line accessors now read the ACTIVE stratum (line index
+builder extracted and shared). OMISSUM overlay: non-taken rami of
+the root fons painted grey via the BYTE extents — three lines, as
+the sim promised.
+
+Suite 10/10; silva 26/26. Probationes pin: "G(2);" materializes
+to "((2)+(2))" in stratum 1 TEXT; "int a;" (the #if 0 arm) is
+OMISSUM in stratum 0 and ABSENT from stratum 1; stratum clamping;
+merus degradation (1 stratum, ponere clamps to 0).
+
+Complexities:
+- **THE NOMEN LANDMINE, FIFTH FIRING**: named a struct field
+  `nomen` (SaltuariusCaput) and a param the same — chorda typedef;
+  — caught at compile, renamed titulus. The forbidden list works;
+  the reflex still needs training.
+- Contextus parses record latina.h's own #include <stddef.h> as an
+  UNRESOLVED inclusio (fons_ad -1) — correct "discens" journal
+  behavior; probationes (and the Phase D TOC) must expect
+  contextus-origin entries and look includes up BY VIA, not index.
+
+NEXT: C2 — origo module (chain build, direction-aware) + cursor
+identity tracking across flips (pure probationes).
+
+### Chunk C2 — origo + vestigium identitatis: DONE (2026-07-03)
+
+fontes/saltuarius_origo.{h,c}: the direction-aware chain builder.
+DEORSUM (stratum N>0): position-map hit → walk the transparent
+SilvaOrigo chain (EXPANSIO: nomen_macro + corpus def-site
+via:linea via silva_fons_via, jumpable; PASTA/CHORDA/API: labeled,
+walk continues through sinister/primus; FONS: "scriptum
+via:linea", jumpable). PRORSUM (stratum 0): scan the final stream
+for the first non-FONS token whose FONS-side ancestry covers the
+cursor byte → "fit <valor>" + its chain. Rows built into a
+reficere'd private arena (memoria frenata); navigation clamps;
+saltus returns the selected gradus only when saltabile.
+
+liber gained cursor↔offset conversion and
+saltuarius_liber_stratum_transferre — the interview-Q6 feature:
+0→k finds the first target token whose ancestry covers the cursor
+byte; k→0 jumps to the radix byte; k→m matches shared radix
+identity; proportional-line fallback. All through the PUBLIC
+silva.h chain (radix helper + transparent origo union) — the
+origo API stress-test the design intended.
+
+Suite 11/11, probatio origo 29/29 FIRST RUN. The probatio output
+already prints the money shot as text:
+  [0] lexema  +
+  [1] <- expansio G  probe.c:1
+  [2] scriptum    probe.c:2
+The + token knows its whole story. C3 puts this in a popup.
+
+NEXT: C3 — visum popup render (tessera_replere interior) +
+stratum indicator + claves/main micro-mode wiring + cross-file
+jump (limes librum_aperire_via) + goldens + THE MANUAL BAR.
+
+### Chunk C3 — wiring: CODE COMPLETE (2026-07-03); MANUAL BAR
+### PENDING — THE MONEY SHOT
+
+limes: capita_legere (walks -I dirs, reads .h into the PERSISTENT
+arena — praebenda live as long as the contextus; missing dirs =
+silent degrade) + librum_via (via-based open for cross-file
+jumps, gates shared). main: _silvam_seminare (compile_flags.txt
+parsed radix-relative → capita → nexus; no file = parse without
+praebenda), the origo MICRO-MODE (popup open routes
+SURSUM/DEORSUM/INTRARE/FINIRE; L cycles strata via
+stratum_transferre — identity tracking live; o/Enter builds the
+chain or nuntiates "(origo nihil narrat)"), _saltum_facere
+(same-file → stratum 0 + linea; cross-file → fons_resolvere or
+absolute → bibliotheca/librum_via → liber switch), "silva
+legit..." painted BEFORE the parse hitch. visum: dynamic "stratum
+N/M" indicator + saltuarius_visum_tabella (tessera_replere
+interior — THE RECT CASE promised at 1.1 — rounded border, ORIGO
+title, grey non-jumpable rows, INVERSUM selection).
+
+Suite 11/11 (visum goldens grew the C3 section: stratum 0/1 →
+flip → 1/1 with "((2)+(2))" visible in cells; tabella over the
+scene with "lexema"/"expansio G" rows; selection INVERSUM moving
+with navigation). Cross-project: silva 26/26, tessera 5/5.
+
+REMAINING FOR PHASE C CLOSE — THE MANUAL BAR:
+./saltuarius/saltuarius.sh, then silva/fontes/silva_parsare.c:
+(1) L — the whole buffer becomes the NEXT LAYER (expansions
+unfold, cursor follows the token); L again cycles; (2) cursor on
+a macro use (TEXERE, XAR_*, any latina word is prettier still) →
+o → THE CHAIN; (3) j/k in the popup, Enter on a definition row →
+LAND IN THE HEADER (cross-file through the praebenda map);
+(4) #if arms: omitted = grey in stratum 0, GONE in stratum 1;
+(5) q closes popup, q again back to columns; (6) a .md: L and o
+politely refuse. Then RELATIO and the phase closes.
+
+## RELATIO — PHASE C COMPLETE (2026-07-03): THE MAGIC
+
+**THE MONEY SHOT WORKS ON REAL SOURCES.** Manual bar PASSED:
+layer flips across real strata with the cursor following token
+identity, the origo popup showing full provenance chains, Enter
+landing in the defining header cross-file, omitted arms grey in
+stratum 0 and gone above it. Cursor on a token; see where it came
+from; press Enter; BE THERE. The thing no other tool shows,
+running in a C89 TUI over two amalgams.
+
+Suite 11/11 headless; silva 26/26; tessera 5/5. All three chunks
+landed same-day (C1 parse+strata, C2 origo+tracking, C3 wiring).
+
+**The manual bar earned its keep twice** — two real bugs the
+goldens had not pinned, both caught by Fran's eyes, both now
+pinned forever:
+- WHAT: stale colors after L. CAUSE: renderer took TEXT from the
+  active stratum but CLASSIS+LINEAE from stratum 0's legacy
+  fields — new text, old colors. FIX: the (textus, lineae,
+  classis) triple is now read atomically from
+  stratum_activum; golden asserts stratum-1 COLORS (nativus '(' ,
+  NUMERUS '2'), not just text.
+- WHAT: "constPiscina", "typedefstructchorda" in stratum 1.
+  CAUSE: expansion-produced tokens do not inherit the replaced
+  token's trivia — inter-token whitespace died with the latina
+  invocations. FIX: SAFE-JOIN in the materializer (adjacent
+  identifier-ish tokens or repeated operator chars get one
+  space); golden pins "const int" present and "constint"
+  impossible.
+Lesson recorded: a MATERIALIZED VIEW is only as honest as its
+join rules — token streams are not text until whitespace
+provenance is accounted for. (Silva-side note: invocation-trivia
+inheritance could someday make materialization byte-faithful for
+unexpanded spans — NAMED as a possible additiones III item, not
+needed for the viewer.)
+
+What Phase C proved: the stratum-triple keystone held (Phase B's
+renderer needed only the atomic-read fix to display any layer);
+the direction-aware origo design held (both directions shipped
+without revision); identity tracking exercised the public origo
+API exactly as the interview intended; the praebenda map turned
+fons_index into real jumpable paths.
+
+Named deferrals to Phase D: '/' search + TOC (as planned), popup
+close-on-click-outside, jump history (ctrl-o), vim f-motion in
+fons mode.
+
+**PHASE C CLOSED. Saltuarius does the thing it was born for.**
+Next: Phase D — the polish (TOC sidebar from the vistas, '/'
+search, fructus debug line, LRU tuning) → v0 daily-driver bar
+(interview Q20) → saltuarius v0 SHIPS.

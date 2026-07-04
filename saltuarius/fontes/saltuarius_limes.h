@@ -22,6 +22,7 @@
 #include "saltuarius_tabularium.h"
 #include "saltuarius_columnae.h"
 #include "saltuarius_liber.h"
+#include "saltuarius_nexus.h"
 
 /* Praevisus plagularum maximus (introitus maior -> "(filum
  * magnum)" sine lectione) */
@@ -77,7 +78,22 @@ saltuarius_limes_praevisum (SaltuariusLimes* limes,
  * in arenas proprias). */
 SaltuariusLiber*
 saltuarius_limes_librum_aperire (SaltuariusLimes* limes,
-    Piscina* persistens, constans SaltuariusNexus* nexus,
+    Piscina* persistens, SaltuariusNexus* nexus,
     constans SaltuariusRes* res, constans character** causa_out);
+
+/* Capita (.h) ex viis -I legere pro praebendis nexus. Octeti in
+ * arenam PERSISTENTEM leguntur (vita praebendorum = vita ctx!).
+ * Non recursivum (viae -I planae sunt). Reddit numerum. */
+i32
+saltuarius_limes_capita_legere (SaltuariusLimes* limes,
+    Piscina* persistens, constans chorda* viae, i32 numerus_viarum,
+    SaltuariusCaput** capita_out);
+
+/* Librum aperire per viam absolutam (saltus trans plagulas C3) -
+ * custodiae eaedem; mensura per filum quaesita */
+SaltuariusLiber*
+saltuarius_limes_librum_via (SaltuariusLimes* limes,
+    Piscina* persistens, SaltuariusNexus* nexus, chorda via,
+    constans character** causa_out);
 
 #endif /* SALTUARIUS_LIMES_H */

@@ -2324,3 +2324,139 @@ silva_expansio_expandere_reliqua (
 
     redde currens;
 }
+
+/* ==================================================
+ * Fenestrae lectionis (additiones II)
+ * ================================================== */
+
+i32
+silva_fontes_numerus (constans SilvaExpansio* exp)
+{
+    redde xar_numerus(exp->fontes);
+}
+
+constans chorda*
+silva_fons_via (constans SilvaExpansio* exp, s32 fons_index)
+{
+    constans SilvaFons* fons;
+
+    si (fons_index < ZEPHYRUM
+        || fons_index >= (s32)xar_numerus(exp->fontes))
+    {
+        redde NIHIL;
+    }
+    fons = (constans SilvaFons*)xar_obtinere(exp->fontes,
+        (i32)fons_index);
+    redde fons->via;
+}
+
+i32
+silva_inclusiones_numerus (constans SilvaExpansio* exp)
+{
+    redde xar_numerus(exp->inclusiones);
+}
+
+b32
+silva_inclusio_vista (constans SilvaExpansio* exp, i32 index,
+    SilvaInclusioVista* vista_out)
+{
+    constans SilvaInclusio* inclusio;
+
+    si (index >= xar_numerus(exp->inclusiones))
+    {
+        redde FALSUM;
+    }
+    inclusio = (constans SilvaInclusio*)xar_obtinere(
+        exp->inclusiones, index);
+    vista_out->via = inclusio->via;
+    vista_out->fons_ex = inclusio->fons_ex;
+    vista_out->fons_ad = inclusio->fons_ad;
+    vista_out->est_praetermissa = inclusio->est_praetermissa;
+    redde VERUM;
+}
+
+i32
+silva_rami_numerus (constans SilvaExpansio* exp)
+{
+    redde xar_numerus(exp->rami);
+}
+
+b32
+silva_ramus_vista (constans SilvaExpansio* exp, i32 index,
+    SilvaRamusVista* vista_out)
+{
+    constans SilvaRamus* ramus;
+
+    si (index >= xar_numerus(exp->rami))
+    {
+        redde FALSUM;
+    }
+    ramus = *(SilvaRamus* constans*)xar_obtinere(exp->rami, index);
+    vista_out->genus = ramus->genus;
+    vista_out->est_sumptum = ramus->est_sumptum;
+    vista_out->est_numquam = ramus->est_numquam;
+    vista_out->corpus_initium = ramus->corpus_initium;
+    vista_out->corpus_finis = ramus->corpus_finis;
+    si (ramus->regio != NIHIL)
+    {
+        vista_out->fons_index = ramus->regio->fons_index;
+        vista_out->linea = ramus->regio->linea;
+    }
+    alioquin
+    {
+        vista_out->fons_index = -I;
+        vista_out->linea = ZEPHYRUM;
+    }
+    redde VERUM;
+}
+
+i32
+silva_macros_numerus (constans SilvaExpansio* exp)
+{
+    i32 n = xar_numerus(exp->acta);
+    i32 numerus = ZEPHYRUM;
+    i32 k;
+
+    per (k = ZEPHYRUM; k < n; k++)
+    {
+        constans SilvaEventum* eventum =
+            (constans SilvaEventum*)xar_obtinere(exp->acta, k);
+
+        si (eventum->genus == SILVA_EVENTUM_DEFINITIO)
+        {
+            numerus++;
+        }
+    }
+    redde numerus;
+}
+
+b32
+silva_macro_vista (constans SilvaExpansio* exp, i32 index,
+    SilvaMacroVista* vista_out)
+{
+    i32 n = xar_numerus(exp->acta);
+    i32 visae = ZEPHYRUM;
+    i32 k;
+
+    per (k = ZEPHYRUM; k < n; k++)
+    {
+        constans SilvaEventum* eventum =
+            (constans SilvaEventum*)xar_obtinere(exp->acta, k);
+
+        si (eventum->genus != SILVA_EVENTUM_DEFINITIO)
+        {
+            perge;
+        }
+        si (visae == index)
+        {
+            vista_out->titulus = eventum->titulus;
+            vista_out->est_functio = (eventum->def != NIHIL)
+                ? eventum->def->est_functio : FALSUM;
+            vista_out->fons_index = eventum->fons_index;
+            vista_out->linea = eventum->linea;
+            redde VERUM;
+        }
+        visae++;
+    }
+    redde FALSUM;
+}

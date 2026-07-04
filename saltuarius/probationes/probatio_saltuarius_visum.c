@@ -11,8 +11,10 @@
 #include "chorda.h"
 #include "credo.h"
 #include "saltuarius_visum.h"
+#include "saltuarius_origo.h"
 #include "saltuarius_proba.h"
 #include <stdio.h>
+#include <string.h>
 
 s32 principale (vacuum)
 {
@@ -175,6 +177,114 @@ s32 principale (vacuum)
             ZEPHYRUM).color_litterae, (i32)TESSERA_COLOR_NATIVUS);
         CREDO_VERUM (saltuarius_proba_quaerere(opus, VII,
             "textus merus") > ZEPHYRUM);
+
+        saltuarius_liber_destruere(liber);
+    }
+
+    /* ========================================================
+     * PROBARE: strata + tabella originis (C3)
+     * ======================================================== */
+    {
+        SaltuariusLiber* liber;
+        SaltuariusOrigo* origo;
+
+        imprimere("\n--- Probans strata et tabellam ---\n");
+
+        CREDO_AEQUALIS_S32 (
+            saltuarius_nexus_silvam_parare(nexus, NIHIL, ZEPHYRUM),
+            ZEPHYRUM);
+        liber = saltuarius_liber_aperire(piscina, nexus,
+            chorda_ex_literis("strata.c", piscina),
+            chorda_ex_literis(
+                "#define G(x) ((x)+(x))\nG(2);\n", piscina));
+        CREDO_NON_NIHIL (liber);
+        CREDO_AEQUALIS_I32 ((i32)liber->numerus_stratorum, II);
+
+        /* indicator: stratum 0/1 */
+        saltuarius_visum_pingere(liber, res, opus);
+        CREDO_VERUM (saltuarius_proba_quaerere(opus, VII,
+            "stratum 0/1") > ZEPHYRUM);
+
+        /* flip -> stratum 1/1; textus expansus in pictura */
+        saltuarius_liber_stratum_transferre(liber, nexus, I);
+        saltuarius_visum_pingere(liber, res, opus);
+        CREDO_VERUM (saltuarius_proba_quaerere(opus, VII,
+            "stratum 1/1") > ZEPHYRUM);
+        {
+            b32 inventum = FALSUM;
+            s32 y_inventa = ZEPHYRUM;
+            s32 x_inventa = ZEPHYRUM;
+            s32 y;
+
+            per (y = ZEPHYRUM; y < VII; y++)
+            {
+                s32 x = saltuarius_proba_quaerere(opus, y,
+                    "((2)+(2))");
+
+                si (x >= ZEPHYRUM)
+                {
+                    inventum = VERUM;
+                    y_inventa = y;
+                    x_inventa = x;
+                }
+            }
+            CREDO_VERUM (inventum);
+            /* COLORES strati I, non strati 0 (morsus manualis:
+             * classis prior trahebatur): '(' planum nativum,
+             * '2' NUMERUS - non DIRECTIVA strati 0! */
+            CREDO_AEQUALIS_I32 (PROBA_CELLA(opus, x_inventa,
+                y_inventa).color_litterae,
+                (i32)TESSERA_COLOR_NATIVUS);
+            CREDO_AEQUALIS_I32 (PROBA_CELLA(opus, x_inventa + II,
+                y_inventa).color_litterae, 0x00B5CEA8);
+        }
+
+        /* tabella: cursor in '+' -> catena super scaenam */
+        origo = saltuarius_origo_creare(piscina);
+        CREDO_NON_NIHIL (origo);
+        {
+            constans SaltuariusStratum* stratum =
+                saltuarius_liber_stratum(liber, nexus);
+            constans character* textus_literis = chorda_ut_cstr(
+                stratum->textus, piscina);
+            constans character* plus_situs = strstr(textus_literis,
+                "+");
+
+            CREDO_NON_NIHIL ((constans vacuum*)plus_situs);
+            saltuarius_liber_cursor_ad_offset(liber,
+                (s32)(plus_situs - textus_literis));
+        }
+        CREDO_VERUM (saltuarius_origo_aedificare(origo, liber,
+            nexus));
+        saltuarius_visum_pingere(liber, res, opus);
+        saltuarius_visum_tabella(origo, opus);
+
+        /* margo rotundatus + titulus + ordines */
+        CREDO_VERUM (saltuarius_proba_quaerere(opus, II, "ORIGO")
+            > ZEPHYRUM);
+        CREDO_VERUM (saltuarius_proba_quaerere(opus, III,
+            "lexema") >= ZEPHYRUM);
+        CREDO_VERUM (saltuarius_proba_quaerere(opus, IV,
+            "expansio G") >= ZEPHYRUM);
+        /* selectio 0 INVERSUM */
+        {
+            s32 x_lex = saltuarius_proba_quaerere(opus, III,
+                "lexema");
+
+            CREDO_VERUM (PROBA_CELLA(opus, x_lex, III).ornamenta
+                & TESSERA_ORNAMENTUM_INVERSUM);
+        }
+        /* navigatio: selectio I non INVERSUM ante, INVERSUM post */
+        saltuarius_origo_movere(origo, I);
+        saltuarius_visum_pingere(liber, res, opus);
+        saltuarius_visum_tabella(origo, opus);
+        {
+            s32 x_exp = saltuarius_proba_quaerere(opus, IV,
+                "expansio G");
+
+            CREDO_VERUM (PROBA_CELLA(opus, x_exp, IV).ornamenta
+                & TESSERA_ORNAMENTUM_INVERSUM);
+        }
 
         saltuarius_liber_destruere(liber);
     }

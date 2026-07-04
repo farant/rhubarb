@@ -2892,3 +2892,90 @@ sceleton segment's loci are LEXEMATA, so silva_nodus_liberi
 legitimately returns an EMPTY xar at M1 — the call type-checks
 and the xar is valid; child-bearing trees arrive with M2's
 grammar. Noted so nobody mistakes empty-liberi for a bug.
+
+## SILVA ADDITIONES II — INTENTIO (2026-07-03)
+
+**The Phase C unblock package**: ledger items #2-#6
+(saltuarius-spec-v2 §2). Shaped by Simulatio IX, whose findings
+dissolved every open decision:
+(a) STRATA RETENTION IS FREE — generation Xars are arena-allocated
+unconditionally (silva_expandere.c:2311, exitus in exp->piscina);
+strata_out merely records pointers the gubernator currently drops.
+The measured parse cost already includes every generation →
+retention is ALWAYS-ON (VISIO: layers are the product) at zero
+marginal cost. Engine change = parsare.c:956 NIHIL→&strata +
+parsura->strata field. NB strata[ultimum] ALIASES
+parsura->lexemata (layer-numbering note for hosts).
+(b) exp->rami is ALREADY FLAT (conditio_id = index+1) — the ramus
+vista is index-addressed reads; the REGION TREE stays internal.
+(c) Extents are BYTE OFFSETS (corpus_initium =
+primum_corporis->byte_offset, expandere.c:786) — the ledger's
+arm-extent caveat resolves to the best case (hosts dim by byte
+range; no token walking).
+(d) SilvaParsura is transparent — the strata field must mirror in
+silva.h and the embedded-caput gate TYPE-CHECKS the mirror free
+(Simulatio VIII's discovery, now working for us).
+
+**Scope**:
+1. **#3 strata**: SilvaParsura += `SilvaXar* strata` (internal +
+   silva.h mirror, same position); gubernator passes &strata;
+   NIHIL when the stream never mutated (document).
+2. **#2 fontes**: silva_fontes_numerus(exp) +
+   silva_fons_via(exp, fons_index) → const SilvaChorda* (NIHIL si
+   extra fines; interned via, synthetic fontes return their
+   titulus).
+3. **#4 inclusiones**: SilvaInclusioVista {via, fons_ex, fons_ad,
+   est_praetermissa} + numerus/vista pair (by-value xar walk).
+4. **#5 rami**: SilvaRamusVista {genus, est_sumptum, est_numquam,
+   corpus_initium, corpus_finis, fons_index, linea} +
+   numerus/vista pair over the FLAT exp->rami (index =
+   conditio_id - 1; fons_index/linea from ramus->regio).
+5. **#6 macros**: SilvaMacroVista {titulus, est_functio,
+   fons_index, linea} + numerus/vista pair filtering exp->acta
+   DEFINITIO events (journal semantics: definitions AS OCCURRED,
+   #undef does not erase history — the journal is the product;
+   O(acta) per call accepted at v1 scale, documented).
+6. **hospes calls for ALL new functions** (standing rule; the
+   multi-fons fixture grows #define/#if arms so strata and every
+   vista have non-trivial content to assert).
+
+**Gates**: amalgamare.sh full; silva/tessera/saltuarius suites;
+spec-v2 ledger marked SHIPPED; memory updated. Exit: Phase C (the
+magic) unblocked.
+
+### SILVA ADDITIONES II — RELATIO (2026-07-03): SHIPPED
+
+**Ledger #2-#6 public; PHASE C UNBLOCKED.** Exactly as Simulatio
+IX shaped it:
+- **#3 strata**: parsura->strata retained (gubernator NIHIL →
+  &strata; field appended internal + silva.h mirror — the
+  embedded-caput gate type-checked the mirror as designed). FREE
+  as the sim proved; always-on; hospes asserts strata[ultimum] ==
+  parsura->lexemata THROUGH THE PUBLIC API (the aliasing is now a
+  pinned contract, not an accident).
+- **#2 fontes**: silva_fontes_numerus + silva_fons_via (bounds →
+  NIHIL).
+- **#4/#5/#6 vistas**: SilvaInclusioVista / SilvaRamusVista
+  (over the FLAT exp->rami; byte-offset extents; fons_index/linea
+  via ->regio) / SilvaMacroVista (acta DEFINITIO filter, journal
+  semantics — #undef erases nothing). Types owned by silva.h,
+  internal typedefs CADENDA-dropped; SilvaRamusGenus enum went
+  public alongside.
+- **hospes 14/14 → 19/19** (standing rule): strata + aliasing,
+  fons_via incl. out-of-range, rami vista on the #if 0/#else
+  fixture (numquam + sumptum + byte extents ordered), GEMINARE
+  macro vista (functio, titulus bytes), empty-inclusiones
+  behavior. All content assertions, all green first run after one
+  regeneration.
+
+Gates: amalgamare full (standalone/hospes/nm), silva 26/26,
+saltuarius 10/10, tessera 5/5. silva.c 469,923 octeti.
+
+Zero complexities — the first additiones package with NO
+first-regeneration type errors (Simulatio IX read the shapes with
+its own eyes instead of trusting reports; the lesson from VIII's
+i32-slip compounding).
+
+**Next: saltuarius Phase C — the magic** (layer flips with
+token-identity cursor, origo popup, Enter-to-jump; all silva.h
+prerequisites now exist).

@@ -562,6 +562,13 @@ typedef struct SilvaParsura {
     unsigned int    segmenta_ultra_limen;
     unsigned int    regiones_textae;  /* regiones in arborem textae */
     unsigned int    regiones_omissae; /* degradatae (limes transgressus) */
+    SilvaXar*       strata;           /* per-generation streams (Xar of
+                                       * SilvaXar* of SilvaToken*), one per
+                                       * MUTATING expansion generation;
+                                       * NULL if nothing ever expanded.
+                                       * strata[last] ALIASES lexemata.
+                                       * Layer view = [as-written] +
+                                       * strata[] (additiones II) */
 } SilvaParsura;
 
 SilvaParsura* silva_parsare(SilvaPiscina* piscina,
@@ -588,6 +595,62 @@ SilvaParsura* silva_lexemata_parsare(SilvaPiscina* piscina,
     const SilvaXar* lexemata, const SilvaGrammatica* grammatica,
     const SilvaOraculum* oraculum, SilvaResolutor resolutor,
     void* datum_resolutoris);
+
+/* ==================================================
+ * Expansio: reading windows (additiones II) - SilvaExpansio stays
+ * OPAQUE; these slim vistas are the cathedral-time contract
+ * (internal shapes remain free). Ramus index = conditio_id - 1
+ * (flat table). Extents are BYTE offsets into the fons text.
+ * ================================================== */
+
+typedef enum {
+    SILVA_RAMUS_IF = 0,
+    SILVA_RAMUS_IFDEF,
+    SILVA_RAMUS_IFNDEF,
+    SILVA_RAMUS_ELIF,
+    SILVA_RAMUS_ELSE
+} SilvaRamusGenus;
+
+typedef struct {
+    const SilvaChorda* via;
+    int                fons_ex;
+    int                fons_ad;           /* -1 = unresolved */
+    int                est_praetermissa;
+} SilvaInclusioVista;
+
+typedef struct {
+    SilvaRamusGenus    genus;
+    int                est_sumptum;
+    int                est_numquam;       /* #if 0 idiom */
+    int                corpus_initium;    /* BYTES in fons; -1 empty */
+    int                corpus_finis;      /* exclusive; -1 empty */
+    int                fons_index;
+    unsigned int       linea;
+} SilvaRamusVista;
+
+typedef struct {
+    const SilvaChorda* titulus;
+    int                est_functio;
+    int                fons_index;
+    unsigned int       linea;
+} SilvaMacroVista;
+
+unsigned int silva_fontes_numerus(const SilvaExpansio* exp);
+/* NULL if out of range; synthetic fontes return their title */
+const SilvaChorda* silva_fons_via(const SilvaExpansio* exp,
+    int fons_index);
+unsigned int silva_inclusiones_numerus(const SilvaExpansio* exp);
+int silva_inclusio_vista(const SilvaExpansio* exp,
+    unsigned int index, SilvaInclusioVista* vista_out);
+unsigned int silva_rami_numerus(const SilvaExpansio* exp);
+int silva_ramus_vista(const SilvaExpansio* exp,
+    unsigned int index, SilvaRamusVista* vista_out);
+/* Definitions AS RECORDED (the journal is the product: #undef does
+ * not erase history); O(acta) per call */
+unsigned int silva_macros_numerus(const SilvaExpansio* exp);
+int silva_macro_vista(const SilvaExpansio* exp,
+    unsigned int index, SilvaMacroVista* vista_out);
+
 
 /* ==================================================
  * Scriptura (emissio octetim exacta)
@@ -1883,14 +1946,6 @@ nomen structura {
 
 nomen structura SilvaRegio SilvaRegio;
 
-nomen enumeratio {
-    SILVA_RAMUS_IF = 0,   /* #if    (verba ipsa C sunt) */
-    SILVA_RAMUS_IFDEF,    /* #ifdef */
-    SILVA_RAMUS_IFNDEF,   /* #ifndef */
-    SILVA_RAMUS_ELIF,     /* #elif */
-    SILVA_RAMUS_ELSE      /* #else */
-} SilvaRamusGenus;
-
 nomen structura {
     SilvaRamusGenus genus;
     i32         conditio_id;    /* index+1 in exp->rami; 0 numquam */
@@ -2153,6 +2208,36 @@ silva_expansio_expandere_reliqua (
     SilvaExpansio* exp,
     SilvaXar*           reliqua,
     SilvaXar**          strata_out);
+
+i32
+silva_fontes_numerus (constans SilvaExpansio* exp);
+
+/* Via fontis; NIHIL si extra fines (synthetici titulos reddunt) */
+constans SilvaChorda*
+silva_fons_via (constans SilvaExpansio* exp, s32 fons_index);
+
+i32
+silva_inclusiones_numerus (constans SilvaExpansio* exp);
+
+b32
+silva_inclusio_vista (constans SilvaExpansio* exp, i32 index,
+    SilvaInclusioVista* vista_out);
+
+i32
+silva_rami_numerus (constans SilvaExpansio* exp);
+
+b32
+silva_ramus_vista (constans SilvaExpansio* exp, i32 index,
+    SilvaRamusVista* vista_out);
+
+/* Definitiones UT ACTAE (acta = fructus: #undef historiam non
+ * delet); O(acta) per vocatum - satis ad mensuram v1 */
+i32
+silva_macros_numerus (constans SilvaExpansio* exp);
+
+b32
+silva_macro_vista (constans SilvaExpansio* exp, i32 index,
+    SilvaMacroVista* vista_out);
 
 #endif /* SILVA_EXPANDERE_H */
 
@@ -8208,6 +8293,142 @@ silva_expansio_expandere_reliqua (
     redde currens;
 }
 
+/* ==================================================
+ * Fenestrae lectionis (additiones II)
+ * ================================================== */
+
+i32
+silva_fontes_numerus (constans SilvaExpansio* exp)
+{
+    redde silva_xar_numerus(exp->fontes);
+}
+
+constans SilvaChorda*
+silva_fons_via (constans SilvaExpansio* exp, s32 fons_index)
+{
+    constans SilvaFons* fons;
+
+    si (fons_index < ZEPHYRUM
+        || fons_index >= (s32)silva_xar_numerus(exp->fontes))
+    {
+        redde NIHIL;
+    }
+    fons = (constans SilvaFons*)silva_xar_obtinere(exp->fontes,
+        (i32)fons_index);
+    redde fons->via;
+}
+
+i32
+silva_inclusiones_numerus (constans SilvaExpansio* exp)
+{
+    redde silva_xar_numerus(exp->inclusiones);
+}
+
+b32
+silva_inclusio_vista (constans SilvaExpansio* exp, i32 index,
+    SilvaInclusioVista* vista_out)
+{
+    constans SilvaInclusio* inclusio;
+
+    si (index >= silva_xar_numerus(exp->inclusiones))
+    {
+        redde FALSUM;
+    }
+    inclusio = (constans SilvaInclusio*)silva_xar_obtinere(
+        exp->inclusiones, index);
+    vista_out->via = inclusio->via;
+    vista_out->fons_ex = inclusio->fons_ex;
+    vista_out->fons_ad = inclusio->fons_ad;
+    vista_out->est_praetermissa = inclusio->est_praetermissa;
+    redde VERUM;
+}
+
+i32
+silva_rami_numerus (constans SilvaExpansio* exp)
+{
+    redde silva_xar_numerus(exp->rami);
+}
+
+b32
+silva_ramus_vista (constans SilvaExpansio* exp, i32 index,
+    SilvaRamusVista* vista_out)
+{
+    constans SilvaRamus* ramus;
+
+    si (index >= silva_xar_numerus(exp->rami))
+    {
+        redde FALSUM;
+    }
+    ramus = *(SilvaRamus* constans*)silva_xar_obtinere(exp->rami, index);
+    vista_out->genus = ramus->genus;
+    vista_out->est_sumptum = ramus->est_sumptum;
+    vista_out->est_numquam = ramus->est_numquam;
+    vista_out->corpus_initium = ramus->corpus_initium;
+    vista_out->corpus_finis = ramus->corpus_finis;
+    si (ramus->regio != NIHIL)
+    {
+        vista_out->fons_index = ramus->regio->fons_index;
+        vista_out->linea = ramus->regio->linea;
+    }
+    alioquin
+    {
+        vista_out->fons_index = -I;
+        vista_out->linea = ZEPHYRUM;
+    }
+    redde VERUM;
+}
+
+i32
+silva_macros_numerus (constans SilvaExpansio* exp)
+{
+    i32 n = silva_xar_numerus(exp->acta);
+    i32 numerus = ZEPHYRUM;
+    i32 k;
+
+    per (k = ZEPHYRUM; k < n; k++)
+    {
+        constans SilvaEventum* eventum =
+            (constans SilvaEventum*)silva_xar_obtinere(exp->acta, k);
+
+        si (eventum->genus == SILVA_EVENTUM_DEFINITIO)
+        {
+            numerus++;
+        }
+    }
+    redde numerus;
+}
+
+b32
+silva_macro_vista (constans SilvaExpansio* exp, i32 index,
+    SilvaMacroVista* vista_out)
+{
+    i32 n = silva_xar_numerus(exp->acta);
+    i32 visae = ZEPHYRUM;
+    i32 k;
+
+    per (k = ZEPHYRUM; k < n; k++)
+    {
+        constans SilvaEventum* eventum =
+            (constans SilvaEventum*)silva_xar_obtinere(exp->acta, k);
+
+        si (eventum->genus != SILVA_EVENTUM_DEFINITIO)
+        {
+            perge;
+        }
+        si (visae == index)
+        {
+            vista_out->titulus = eventum->titulus;
+            vista_out->est_functio = (eventum->def != NIHIL)
+                ? eventum->def->est_functio : FALSUM;
+            vista_out->fons_index = eventum->fons_index;
+            vista_out->linea = eventum->linea;
+            redde VERUM;
+        }
+        visae++;
+    }
+    redde FALSUM;
+}
+
 /* ================= ex silva/fontes/silva_conditio.c ================= */
 
 /* ==================================================
@@ -13077,6 +13298,7 @@ _lexemata_parsare_interna (
     parsura->segmenta_ultra_limen = ZEPHYRUM;
     parsura->regiones_textae = ZEPHYRUM;
     parsura->regiones_omissae = ZEPHYRUM;
+    parsura->strata = NIHIL;
 
     numerus = silva_xar_numerus(lexemata);
 
@@ -13849,6 +14071,7 @@ _fistula_interna (
     SilvaXar*           lexemata;
     SilvaXar*           reliqua;
     SilvaXar*           expansa;
+    SilvaXar*           strata;
     SilvaXar*           directivae;
     SilvaParsura*  parsura;
 
@@ -13867,14 +14090,16 @@ _fistula_interna (
     directivae = NIHIL;
     reliqua = silva_expansio_directivas_processare(expansio, lexemata,
         &directivae);
+    strata = NIHIL;
     expansa = silva_expansio_expandere_reliqua(expansio, reliqua,
-        NIHIL);
+        &strata);
 
     parsura = _lexemata_parsare_interna(piscina, expansa, grammatica,
         oraculum, resolutor, datum_resolutoris, expansio, contextus);
     si (parsura != NIHIL)
     {
         parsura->lexemata = expansa;
+        parsura->strata = strata;
         parsura->expansio = expansio;
         parsura->directivae = directivae;
         parsura->fons_princeps = fons_index;

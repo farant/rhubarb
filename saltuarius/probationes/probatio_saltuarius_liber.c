@@ -11,6 +11,7 @@
 #include "credo.h"
 #include "saltuarius_liber.h"
 #include <stdio.h>
+#include <string.h>
 
 s32 principale (vacuum)
 {
@@ -146,6 +147,147 @@ s32 principale (vacuum)
         saltuarius_liber_aptare(liber, II, V);
         CREDO_AEQUALIS_S32 (liber->volumen_x, ZEPHYRUM);
 
+        saltuarius_liber_destruere(liber);
+    }
+
+    /* ========================================================
+     * PROBARE: strata (C1) - parse, materializatio, OMISSUM
+     * ======================================================== */
+    {
+        SaltuariusLiber* liber;
+        constans character* FONS =
+            "#define G(x) ((x)+(x))\n"
+            "#if 0\nint a;\n#else\nint b;\n#endif\n"
+            "G(2);\n";
+        constans SaltuariusStratum* stratum;
+
+        imprimere("\n--- Probans strata ---\n");
+
+        /* fistula sine praebendis (fixum sine #include) */
+        CREDO_AEQUALIS_S32 (
+            saltuarius_nexus_silvam_parare(nexus, NIHIL, ZEPHYRUM),
+            ZEPHYRUM);
+
+        liber = saltuarius_liber_aperire(piscina, nexus,
+            chorda_ex_literis("probe.c", piscina),
+            chorda_ex_literis(FONS, piscina));
+        CREDO_NON_NIHIL (liber);
+        CREDO_NON_NIHIL (liber->parsura);
+        CREDO_AEQUALIS_I32 ((i32)liber->numerus_stratorum, II);
+
+        /* OMISSUM: "int a;" fuscum, "int b;" non */
+        {
+            constans character* a = strstr(FONS, "int a;");
+            constans character* b = strstr(FONS, "int b;");
+
+            CREDO_AEQUALIS_I32 (
+                (i32)liber->classis[(s32)(a - FONS)],
+                (i32)SALT_CLASSIS_OMISSUM);
+            CREDO_AEQUALIS_I32 (
+                (i32)liber->classis[(s32)(b - FONS)],
+                (i32)SALT_CLASSIS_VERBUM);
+        }
+
+        /* stratum 1: materializatum, "((2)+(2))" in textu */
+        saltuarius_liber_stratum_ponere(liber, I);
+        CREDO_AEQUALIS_S32 (liber->stratum_currens, I);
+        stratum = saltuarius_liber_stratum(liber, nexus);
+        CREDO_VERUM (stratum->parata);
+        CREDO_MAIOR_I32 (stratum->textus.mensura, ZEPHYRUM);
+        {
+            constans character* textus_literis = chorda_ut_cstr(
+                stratum->textus, piscina);
+
+            CREDO_VERUM (strstr(textus_literis, "((2)+(2))")
+                != NIHIL);
+            /* rami omissi in strato expanso absunt */
+            CREDO_AEQUALIS_PTR (
+                (constans vacuum*)strstr(textus_literis, "int a;"),
+                (constans vacuum*)NIHIL);
+        }
+        CREDO_MAIOR_I32 ((i32)stratum->numerus_positionum,
+            ZEPHYRUM);
+        CREDO_VERUM (stratum->positiones[ZEPHYRUM].finis
+            > stratum->positiones[ZEPHYRUM].initium);
+
+        /* accessores stratum activum legunt */
+        CREDO_MAIOR_I32 ((i32)stratum->numerus_linearum, ZEPHYRUM);
+        saltuarius_liber_ultimum(liber);
+        CREDO_AEQUALIS_S32 (liber->cursor_linea,
+            (s32)stratum->numerus_linearum - I);
+
+        /* retro ad stratum 0: linea prima ut scripta */
+        saltuarius_liber_stratum_ponere(liber, ZEPHYRUM);
+        saltuarius_liber_primum(liber);
+        CREDO_CHORDA_AEQUALIS_LITERIS (
+            saltuarius_liber_linea(liber, ZEPHYRUM),
+            "#define G(x) ((x)+(x))");
+
+        /* clausura strati */
+        saltuarius_liber_stratum_ponere(liber, C);
+        CREDO_AEQUALIS_S32 (liber->stratum_currens, I);
+        saltuarius_liber_stratum_ponere(liber, -V);
+        CREDO_AEQUALIS_S32 (liber->stratum_currens, ZEPHYRUM);
+
+        saltuarius_liber_destruere(liber);
+    }
+
+    /* ========================================================
+     * PROBARE: iunctio tuta - trivia expansione perdita spatium
+     * unum recipiunt (constPiscina numquam!)
+     * ======================================================== */
+    {
+        SaltuariusLiber* liber;
+        constans SaltuariusStratum* stratum;
+
+        imprimere("\n--- Probans iunctionem tutam ---\n");
+
+        liber = saltuarius_liber_aperire(piscina, nexus,
+            chorda_ex_literis("iunctio.c", piscina),
+            chorda_ex_literis(
+                "#define VACUUM void\n#define CONSTANS const\n"
+                "CONSTANS int x;\nVACUUM f(VACUUM);\n", piscina));
+        CREDO_NON_NIHIL (liber);
+        CREDO_NON_NIHIL (liber->parsura);
+        saltuarius_liber_stratum_ponere(liber, I);
+        stratum = saltuarius_liber_stratum(liber, nexus);
+        CREDO_VERUM (stratum->parata);
+        {
+            constans character* textus_literis = chorda_ut_cstr(
+                stratum->textus, piscina);
+
+            CREDO_VERUM (strstr(textus_literis, "const int")
+                != NIHIL);
+            CREDO_VERUM (strstr(textus_literis, "void f(void)")
+                != NIHIL);
+            CREDO_AEQUALIS_PTR (
+                (constans vacuum*)strstr(textus_literis,
+                    "constint"),
+                (constans vacuum*)NIHIL);
+            CREDO_AEQUALIS_PTR (
+                (constans vacuum*)strstr(textus_literis, "voidf"),
+                (constans vacuum*)NIHIL);
+        }
+        saltuarius_liber_destruere(liber);
+    }
+
+    /* ========================================================
+     * PROBARE: degradatio - merus liber stratum unicum
+     * ======================================================== */
+    {
+        SaltuariusLiber* liber;
+
+        imprimere("\n--- Probans degradationem stratorum ---\n");
+
+        liber = saltuarius_liber_aperire(piscina, nexus,
+            chorda_ex_literis("notae.md", piscina),
+            chorda_ex_literis("verba\n", piscina));
+        CREDO_NON_NIHIL (liber);
+        CREDO_AEQUALIS_PTR ((constans vacuum*)liber->parsura,
+            (constans vacuum*)NIHIL);
+        CREDO_AEQUALIS_I32 ((i32)liber->numerus_stratorum, I);
+        saltuarius_liber_stratum_ponere(liber, III);
+        CREDO_AEQUALIS_S32 (liber->stratum_currens, ZEPHYRUM);
         saltuarius_liber_destruere(liber);
     }
 

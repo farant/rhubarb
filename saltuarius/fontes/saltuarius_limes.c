@@ -283,7 +283,7 @@ saltuarius_limes_praevisum (SaltuariusLimes* limes,
 
 SaltuariusLiber*
 saltuarius_limes_librum_aperire (SaltuariusLimes* limes,
-    Piscina* persistens, constans SaltuariusNexus* nexus,
+    Piscina* persistens, SaltuariusNexus* nexus,
     constans SaltuariusRes* res, constans character** causa_out)
 {
     constans DirectoriumIntroitus* selectum;
@@ -339,4 +339,123 @@ saltuarius_limes_librum_aperire (SaltuariusLimes* limes,
         *causa_out = "(apertura fracta)";
     }
     redde liber;
+}
+
+i32
+saltuarius_limes_capita_legere (SaltuariusLimes* limes,
+    Piscina* persistens, constans chorda* viae, i32 numerus_viarum,
+    SaltuariusCaput** capita_out)
+{
+    SaltuariusCaput* capita;
+    i32 numerus = ZEPHYRUM;
+    i32 v;
+
+    (vacuum)limes;
+    capita = (SaltuariusCaput*)piscina_allocare_ordinatum(
+        persistens, (memoriae_index)DXII
+            * (memoriae_index)magnitudo(SaltuariusCaput), IV);
+    *capita_out = capita;
+    si (capita == NIHIL)
+    {
+        redde ZEPHYRUM;
+    }
+    per (v = ZEPHYRUM; v < numerus_viarum; v++)
+    {
+        DirectoriumIterator* iter = directorium_iterator_aperire(
+            _literis(persistens, viae[v]), persistens);
+        DirectoriumIntroitus* intr;
+
+        si (iter == NIHIL)
+        {
+            perge;   /* via -I absens: degradatio tacita */
+        }
+        dum ((intr = directorium_iterator_proximum(iter)) != NIHIL
+            && numerus < DXII)
+        {
+            chorda titulus;
+
+            si (intr->genus != INTROITUS_FILUM
+                || intr->titulus.mensura < III
+                || intr->titulus.datum[intr->titulus.mensura - II]
+                    != '.'
+                || intr->titulus.datum[intr->titulus.mensura - I]
+                    != 'h')
+            {
+                perge;
+            }
+            titulus = chorda_transcribere(intr->titulus,
+                persistens);
+            {
+                chorda partes[II];
+                chorda via_plena;
+                chorda textus;
+
+                partes[ZEPHYRUM] = viae[v];
+                partes[I] = titulus;
+                via_plena = via_iungere(partes, II, persistens);
+                textus = filum_legere_totum(
+                    _literis(persistens, via_plena), persistens);
+                si (textus.mensura == ZEPHYRUM)
+                {
+                    perge;
+                }
+                capita[numerus].titulus = titulus;
+                capita[numerus].textus = textus;
+                capita[numerus].via_absoluta = via_plena;
+                numerus++;
+            }
+        }
+        directorium_iterator_claudere(iter);
+    }
+    redde numerus;
+}
+
+SaltuariusLiber*
+saltuarius_limes_librum_via (SaltuariusLimes* limes,
+    Piscina* persistens, SaltuariusNexus* nexus, chorda via,
+    constans character** causa_out)
+{
+    constans character* via_literis;
+    memoriae_index mensura;
+    chorda textus;
+
+    *causa_out = "";
+    piscina_reficere(limes->praevisus, limes->nota_praevisus);
+    via_literis = _literis(limes->praevisus, via);
+    mensura = filum_mensura(via_literis);
+    si (mensura > (memoriae_index)SALT_PRAEVISUS_MAXIMUS)
+    {
+        *causa_out = "(filum magnum)";
+        redde NIHIL;
+    }
+    textus = filum_legere_totum(via_literis, limes->praevisus);
+    si (textus.mensura == ZEPHYRUM && mensura > ZEPHYRUM)
+    {
+        *causa_out = "(non legibile)";
+        redde NIHIL;
+    }
+    {
+        i32 speculandi = (textus.mensura < DXII)
+            ? textus.mensura : DXII;
+        i32 k;
+
+        per (k = ZEPHYRUM; k < speculandi; k++)
+        {
+            si (textus.datum[k] == ZEPHYRUM)
+            {
+                *causa_out = "(filum binarium)";
+                redde NIHIL;
+            }
+        }
+    }
+    {
+        SaltuariusLiber* liber = saltuarius_liber_aperire(
+            persistens, nexus, via, textus);
+
+        si (liber == NIHIL)
+        {
+            *causa_out = "(apertura fracta)";
+        }
+        redde liber;
+    }
 }

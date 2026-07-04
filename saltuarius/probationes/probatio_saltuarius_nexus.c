@@ -145,6 +145,88 @@ s32 principale (vacuum)
         silva_piscina_destruere(arena);
     }
 
+    /* ========================================================
+     * PROBARE: fistula parsandi (C1) - praebenda iniecta, parse,
+     * strata, inclusio, resolutio
+     * ======================================================== */
+    {
+        SaltuariusCaput capita[I];
+        SilvaPiscina* arena;
+        SilvaParsura* parsura;
+
+        imprimere("\n--- Probans fistulam parsandi ---\n");
+
+        capita[ZEPHYRUM].titulus = chorda_ex_literis("geminare.h",
+            piscina);
+        capita[ZEPHYRUM].textus = chorda_ex_literis(
+            "#define G(x) ((x)+(x))\n", piscina);
+        capita[ZEPHYRUM].via_absoluta = chorda_ex_literis(
+            "/abs/geminare.h", piscina);
+        CREDO_AEQUALIS_S32 (
+            saltuarius_nexus_silvam_parare(nexus, capita, I), I);
+
+        /* resolutio */
+        CREDO_CHORDA_AEQUALIS_LITERIS (
+            saltuarius_nexus_fons_resolvere(nexus,
+                chorda_ex_literis("geminare.h", piscina)),
+            "/abs/geminare.h");
+        CREDO_AEQUALIS_I32 (
+            saltuarius_nexus_fons_resolvere(nexus,
+                chorda_ex_literis("ignotum.h", piscina)).mensura,
+            ZEPHYRUM);
+
+        /* parse: inclusio resoluta + strata retenta */
+        arena = silva_piscina_generare_dynamicum("probatio_parse",
+            4194304);
+        CREDO_NON_NIHIL (arena);
+        parsura = saltuarius_nexus_parsare(nexus, arena, "probe.c",
+            chorda_ex_literis(
+                "#include \"geminare.h\"\nG(2);\n", piscina));
+        CREDO_NON_NIHIL (parsura);
+        si (parsura != NIHIL)
+        {
+            SilvaInclusioVista vista;
+
+            CREDO_VERUM (parsura->successus);
+            CREDO_NON_NIHIL (parsura->strata);
+            si (parsura->strata != NIHIL)
+            {
+                CREDO_MAIOR_I32 (
+                    (i32)silva_xar_numerus(parsura->strata),
+                    ZEPHYRUM);
+            }
+            /* inclusiones: geminare.h QUAERITUR per viam (contextus
+             * proprias addere potest - imprimimus quae sint) */
+            {
+                i32 n_inc = (i32)silva_inclusiones_numerus(
+                    parsura->expansio);
+                b32 inventa = FALSUM;
+                i32 j;
+
+                per (j = ZEPHYRUM; j < n_inc; j++)
+                {
+                    si (silva_inclusio_vista(parsura->expansio,
+                        j, &vista) && vista.via != NIHIL)
+                    {
+                        imprimere("  inclusio[%d]: %.*s fons_ad=%d\n",
+                            (int)j, (int)vista.via->mensura,
+                            (constans character*)vista.via->datum,
+                            (int)vista.fons_ad);
+                        si (vista.via->mensura == X
+                            && memcmp(vista.via->datum,
+                                "geminare.h", X) == ZEPHYRUM
+                            && vista.fons_ad >= ZEPHYRUM)
+                        {
+                            inventa = VERUM;
+                        }
+                    }
+                }
+                CREDO_VERUM (inventa);
+            }
+        }
+        silva_piscina_destruere(arena);
+    }
+
     credo_imprimere_compendium();
     praeteritus = credo_omnia_praeterierunt();
     piscina_destruere(piscina);

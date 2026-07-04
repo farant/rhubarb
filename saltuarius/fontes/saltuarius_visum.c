@@ -92,7 +92,8 @@ saltuarius_visum_metiri (constans SaltuariusLiber* liber,
     i32 latitudo, i32 altitudo, SaltuariusVisumMetra* metra)
 {
     metra->cunula_lat = (s32)saltuarius_pen_digiti(
-        (s32)liber->numerus_linearum);
+        (s32)saltuarius_liber_stratum_activum(liber)
+            ->numerus_linearum);
     metra->textus_x = metra->cunula_lat + I;
     metra->textus_lat = (s32)latitudo - metra->textus_x;
     si (metra->textus_lat < I)
@@ -121,28 +122,37 @@ saltuarius_visum_pingere (SaltuariusLiber* liber,
     saltuarius_liber_aptare(liber, (i32)metra.contentum_alt,
         (i32)metra.textus_lat);
 
-    per (k = ZEPHYRUM; k < metra.contentum_alt; k++)
+    /* TRIPLUM STRATI ACTIVI - textus ET classis ET lineae eiusdem
+     * strati (morsus manualis: classis strati 0 in textu strati I
+     * colores priores trahebat) */
     {
-        s32 index = liber->volumen_y + k;
-        chorda linea;
+        constans SaltuariusStratum* visus =
+            saltuarius_liber_stratum_activum(liber);
 
-        si (index >= (s32)liber->numerus_linearum)
+        per (k = ZEPHYRUM; k < metra.contentum_alt; k++)
         {
-            frange;
-        }
-        /* cunula: numerus 1-basatus, dextro-ordinatus */
-        {
-            s32 numerus = index + I;
-            i32 digiti = saltuarius_pen_digiti(numerus);
+            s32 index = liber->volumen_y + k;
+            chorda linea;
 
-            (vacuum)saltuarius_pen_numerum(opus,
-                metra.cunula_lat - (s32)digiti, k, numerus,
-                cunulae);
+            si (!visus->parata
+                || index >= (s32)visus->numerus_linearum)
+            {
+                frange;
+            }
+            /* cunula: numerus 1-basatus, dextro-ordinatus */
+            {
+                s32 numerus = index + I;
+                i32 digiti = saltuarius_pen_digiti(numerus);
+
+                (vacuum)saltuarius_pen_numerum(opus,
+                    metra.cunula_lat - (s32)digiti, k, numerus,
+                    cunulae);
+            }
+            linea = saltuarius_liber_linea(liber, index);
+            _lineam_ponere(opus, metra.textus_x, k, linea,
+                visus->lineae[index].offset, visus->classis,
+                liber->volumen_x, (i32)metra.textus_lat);
         }
-        linea = saltuarius_liber_linea(liber, index);
-        _lineam_ponere(opus, metra.textus_x, k, linea,
-            liber->lineae[index].offset, liber->classis,
-            liber->volumen_x, (i32)metra.textus_lat);
     }
 
     /* cursor verus terminalis (aptare visibilitatem praestat) */
@@ -158,6 +168,7 @@ saltuarius_visum_pingere (SaltuariusLiber* liber,
         i32 lat_pittacii = ZEPHYRUM;
         i32 lat_numeri;
         i32 lat_dextrae;
+        i32 lat_strati;
         s32 x;
 
         dum (pittacium[lat_pittacii] != '\0')
@@ -166,7 +177,12 @@ saltuarius_visum_pingere (SaltuariusLiber* liber,
         }
         lat_numeri = saltuarius_pen_digiti(liber->cursor_linea + I)
             + I + saltuarius_pen_digiti(liber->cursor_columna + I);
-        lat_dextrae = lat_numeri + II + IX + II + lat_pittacii;
+        lat_strati = VIII
+            + saltuarius_pen_digiti(liber->stratum_currens) + I
+            + saltuarius_pen_digiti(
+                (s32)liber->numerus_stratorum - I);
+        lat_dextrae = lat_numeri + II + lat_strati + II
+            + lat_pittacii;
         x = (s32)latitudo - (s32)lat_dextrae;
 
         si (x > II)
@@ -190,11 +206,79 @@ saltuarius_visum_pingere (SaltuariusLiber* liber,
                 x + (s32)scripti + I, status_y,
                 liber->cursor_columna + I, nativus);
             x += (s32)lat_numeri + II;
-            saltuarius_pen_literis(opus, x, status_y, "stratum 0",
-                IX, cunulae);
-            x += IX + II;
+            saltuarius_pen_literis(opus, x, status_y, "stratum ",
+                VIII, cunulae);
+            x += VIII;
+            x += (s32)saltuarius_pen_numerum(opus, x, status_y,
+                liber->stratum_currens, cunulae);
+            tessera_cellulam_ponere(opus, x, status_y, (i32)'/',
+                cunulae);
+            x += I;
+            x += (s32)saltuarius_pen_numerum(opus, x, status_y,
+                (s32)liber->numerus_stratorum - I, cunulae);
+            x += II;
             saltuarius_pen_literis(opus, x, status_y, pittacium,
                 lat_pittacii, cunulae);
         }
+    }
+}
+
+vacuum
+saltuarius_visum_tabella (constans SaltuariusOrigo* origo,
+    TesseraOpus* opus)
+{
+    TesseraStilus nativus = tessera_stilus_nativus();
+    i32 latitudo = tessera_latitudo(opus);
+    s32 lat_tabellae;
+    s32 alt_tabellae;
+    s32 x;
+    s32 y = II;
+    s32 k;
+
+    si (!origo->apertum || origo->numerus == ZEPHYRUM)
+    {
+        redde;
+    }
+    lat_tabellae = (s32)latitudo - IV;
+    si (lat_tabellae > LX)
+    {
+        lat_tabellae = LX;
+    }
+    si (lat_tabellae < X)
+    {
+        redde;   /* terminal nimis angustum */
+    }
+    alt_tabellae = (s32)origo->numerus + II;
+    x = ((s32)latitudo - lat_tabellae) / II;
+
+    /* interior opacum PRIMO (tessera_replere - casus rectanguli),
+     * deinde margo, deinde ordines */
+    tessera_replere(opus, x, y, lat_tabellae, alt_tabellae,
+        (i32)' ', nativus);
+    tessera_quadrum_pingere(opus, x, y, lat_tabellae, alt_tabellae,
+        TESSERA_LINEA_ROTUNDATA, nativus);
+    saltuarius_pen_literis(opus, x + II, y, " ORIGO ", VII,
+        tessera_stilus(0x00FFCC66, TESSERA_COLOR_NATIVUS,
+            TESSERA_ORNAMENTUM_CRASSUM));
+
+    per (k = ZEPHYRUM; k < (s32)origo->numerus; k++)
+    {
+        constans SaltuariusGradus* gradus = &origo->gradus[k];
+        TesseraStilus stilus = nativus;
+
+        si (k == origo->selectio)
+        {
+            stilus.ornamenta |= TESSERA_ORNAMENTUM_INVERSUM;
+            tessera_replere(opus, x + I, y + I + k,
+                lat_tabellae - II, I, (i32)' ', stilus);
+        }
+        alioquin si (!gradus->saltabile)
+        {
+            stilus = tessera_stilus(0x00808080,
+                TESSERA_COLOR_NATIVUS, ZEPHYRUM);
+        }
+        (vacuum)saltuarius_pen_textum(opus, x + II, y + I + k,
+            gradus->titulus.datum, gradus->titulus.mensura,
+            (i32)(lat_tabellae - IV), stilus);
     }
 }

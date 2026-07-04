@@ -78,11 +78,11 @@ silva.h (additive; all M1 gates re-run).
 | # | Addition | Kind | Blocks |
 |---|----------|------|--------|
 | 1 | `SilvaXar* silva_lexare(SilvaPiscina*, const char* fons, unsigned int mensura, int fons_index)` **SHIPPED (additiones I, + silva_lexare_cruda)** | declaration-only | **Phase B entirely** (layer-0 token stream for coloring) |
-| 2 | `const SilvaChorda* silva_fons_via(const SilvaExpansio*, int fons_index)` | small accessor into opaque struct | **Phase C money shot** (every location the popup names; Enter-to-jump) |
-| 3 | Strata retention: `SilvaXar* strata` on SilvaParsura (Xar of per-generation token streams; machinery exists — silva_expansio_expandere_reliqua already emits them, gubernator discards) | **ENGINE WORK** (the only one) | Phase C layer flips beyond 0↔final |
-| 4 | Include enumeration: `SilvaInclusioVista {via, fons_ex, fons_ad, est_praetermissa}` + `silva_inclusiones_numerus` / `silva_inclusio_vista` | slim-view accessors | TOC includenda; unknown-header discovery loop |
-| 5 | Region/arm enumeration: `SilvaRamusVista {genus, est_sumptum, est_numquam, corpus_initium, corpus_finis}` + numerus/vista fns (index-addressed; do NOT publish recursive SilvaRegio/SilvaRamus) | slim-view accessors | dimmed omitted arms; TOC regiones |
-| 6 | Macro-def enumeration: `SilvaMacroVista {titulus, est_functio, fons_index, linea}` + numerus/vista fns over exp->acta | slim-view accessors | TOC macros |
+| 2 | `const SilvaChorda* silva_fons_via(const SilvaExpansio*, int fons_index)` **SHIPPED (additiones II, + fontes_numerus)** | small accessor into opaque struct | **Phase C money shot** (every location the popup names; Enter-to-jump) |
+| 3 | Strata retention: `SilvaXar* strata` on SilvaParsura **SHIPPED (additiones II — FREE: arenas already paid; always-on; strata[last] aliases lexemata)** | ~~ENGINE WORK~~ two lines | Phase C layer flips beyond 0↔final |
+| 4 | Include enumeration: `SilvaInclusioVista` + numerus/vista **SHIPPED (additiones II)** | slim-view accessors | TOC includenda; unknown-header discovery loop |
+| 5 | Region/arm enumeration: `SilvaRamusVista` + numerus/vista over the FLAT exp->rami; extents are BYTE offsets **SHIPPED (additiones II)** | slim-view accessors | dimmed omitted arms; TOC regiones |
+| 6 | Macro-def enumeration: `SilvaMacroVista` + numerus/vista (journal semantics) **SHIPPED (additiones II)** | slim-view accessors | TOC macros |
 | 7 | Helpers: `silva_token_radix` / `_profunditas` / `_est_fons`, `silva_nodus_liberi`, genus-name fns **SHIPPED (additiones I)** | declaration-only | convenience (DIY-able over transparent structs) |
 | 8 | Arena telemetry: a public peak/usage accessor on SilvaPiscina **SHIPPED (additiones I: summa_usus + summa_apex_usus)** | declaration-only (piscina fns exist) | debug status metrics only |
 
