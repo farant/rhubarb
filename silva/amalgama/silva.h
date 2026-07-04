@@ -685,17 +685,9 @@ SilvaScriptura silva_scribere_fontem(SilvaPiscina* piscina,
     const SilvaParsura* parsura,
     const SilvaRegistrumCoctum* tabularium, int fons_index);
 
-/* ==================================================
- * Grammatica sceleti (M1) - superficies generata stabilis
- * ================================================== */
-
-extern const SilvaTabulaCocta     SILVA_SCELETUM_TABULA;
-extern const SilvaRegistrumCoctum SILVA_SCELETUM_REGISTRUM;
-
-SilvaValor silva_sceletum_construere(SilvaPiscina* piscina,
-    int productio, const SilvaValor* valores);
-SilvaValor silva_sceletum_ambiguum_fabricare(SilvaPiscina* piscina,
-    SilvaValor interpretationes, int canonica);
+/* (superficies sceleti retracta M2d Chunk B: grammatica c89 est
+ * grammatica UNA amalgamae; sceletum in fontes/ manet ut fixum
+ * generatoris) */
 
 /* ==================================================
  * Grammatica C89 (M2, crescens per M2a..M2d) - expressiones

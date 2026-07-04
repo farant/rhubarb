@@ -31,13 +31,9 @@ static int redde = 5;
 static int dum = 6;
 static int vacuum = 7;
 
-static const SilvaGrammatica GRAMMATICA_SCELETI = {
-    &SILVA_SCELETUM_TABULA,
-    &SILVA_SCELETUM_REGISTRUM,
-    silva_sceletum_construere,
-    silva_sceletum_ambiguum_fabricare,
-    NULL
-};
+/* (GRAMMATICA_SCELETI retired M2d Chunk B - the c89 grammar is
+ * the amalgam's single grammar; sceletum stays in-repo as the
+ * generator fixture only) */
 
 static int
 fidelis(SilvaPiscina* piscina, const char* fons)
@@ -47,13 +43,13 @@ fidelis(SilvaPiscina* piscina, const char* fons)
     unsigned int mensura = (unsigned int)strlen(fons);
 
     parsura = silva_parsare(piscina, "hospes.c", fons, mensura,
-        &GRAMMATICA_SCELETI, NULL, NULL, NULL);
+        &SILVA_C89_GRAMMATICA, NULL, NULL, NULL);
     if (parsura == NULL || !parsura->successus)
     {
         return 0;
     }
     scriptura = silva_scribere_fontem(piscina, parsura,
-        &SILVA_SCELETUM_REGISTRUM, parsura->fons_princeps);
+        &SILVA_C89_REGISTRUM, parsura->fons_princeps);
     if (!scriptura.successus || scriptura.textus.mensura != mensura)
     {
         return 0;
@@ -133,11 +129,11 @@ int main(void)
         {
             parsura = silva_parsare_cum_expansione(piscina, exp,
                 "hospes.c", FONS, (unsigned int)strlen(FONS),
-                &GRAMMATICA_SCELETI, NULL, NULL, NULL);
+                &SILVA_C89_GRAMMATICA, NULL, NULL, NULL);
             if (parsura != NULL && parsura->successus)
             {
                 scriptura = silva_scribere_fontem(piscina, parsura,
-                    &SILVA_SCELETUM_REGISTRUM, parsura->fons_princeps);
+                    &SILVA_C89_REGISTRUM, parsura->fons_princeps);
                 if (scriptura.successus
                     && scriptura.textus.mensura
                         == (unsigned int)strlen(FONS)
@@ -234,7 +230,7 @@ int main(void)
 
         summa++;
         parsura = silva_parsare(piscina, "hospes.c", FONS,
-            (unsigned int)strlen(FONS), &GRAMMATICA_SCELETI, NULL,
+            (unsigned int)strlen(FONS), &SILVA_C89_GRAMMATICA, NULL,
             NULL, NULL);
         if (parsura != NULL && parsura->successus
             && parsura->commissio != NULL
@@ -278,7 +274,7 @@ int main(void)
         {
             parsura = silva_parsare_cum_expansione(piscina, exp,
                 "additiones.c", FONS, (unsigned int)strlen(FONS),
-                &GRAMMATICA_SCELETI, NULL, NULL, NULL);
+                &SILVA_C89_GRAMMATICA, NULL, NULL, NULL);
         }
 
         /* strata: GEMINARE mutat -> saltem unum stratum;

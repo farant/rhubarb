@@ -4780,3 +4780,107 @@ Fran's LAYER idea (per-stratum TOC riding the L-flip machinery —
 "the TOC of layer 3") is NAMED to the saltuarius backlog: strata
 are always-on, so the pieces exist; it is a view question, not a
 parser question.
+
+### M2d Chunk B — permutatio parsurae principalis: COMPLETE
+### (2026-07-04)
+
+**Silva 27/27; saltuarius 13/13 (app compiles under the wall);
+tessera 5/5; amalgam + hospes 24/24. Decisiones 9 discharged.**
+
+**The swap was ONE call site**: saltuarius_nexus's librum-parsare
+now calls silva_c89_parsare_cum_contextu — the main parse gets
+the full oracle dance, not just the grammar. The entire
+saltuarius suite passed on the FIRST run after the swap: the
+downstream surfaces (lexeme classing, origo chains, strata,
+conditional regions) proved genuinely grammar-independent, as
+designed.
+
+**The swap's dividend, taken immediately**: the TOC's second
+parse is GONE. structura_aedificare reads the vista straight
+from liber->parsura (now c89 + contextus); Tab costs a walk, not
+a parse. The nexus parameter added this morning was reverted —
+the signature is (index, liber) again; a small SilvaPiscina
+exists per-aedificatio only for subscriptio text (then dies).
+The fons_princeps filter and all fixtures held unchanged.
+
+**Sceletum OUT of the amalgam** (the M1-era park, discharged):
+manifest dropped silva_tabulae_sceleti.{h,c}; silva.h dropped
+the four sceletum declarations; hospes's fidelis() and
+cum_expansione block run the c89 grammar (strictly stronger —
+the recovery fixture "@ $ garbage" and the fork fixture "foo *
+bar;" ride c89 recovery/retention now). Sceletum REMAINS in
+fontes/ + grammatica/ as the generator fixture and the modular
+suite's regression anchor — only the DELIVERABLE shed it.
+Amalgam 1.47 MB → 1.52 MB (Chunk A+B additions net of sceletum
+removal — honest number, tables dominate).
+
+**Fran's manual check (named)**: daily-drive arena peaks via F2 —
+the c89 tables are ~15x sceletum's states; the LRU was sized
+against 84-242 MB per-root peaks. The suite proves correctness;
+only real driving proves the memory envelope.
+
+NEXT: Chunk C — the monorepo sweep + evidence counts (block-scope
+typedefs, Duff's device, struct-const/nuda divergences, gcc
+demand) + solarium 148/148 + carried integration bar.
+
+### M2d Chunk C — percursus repositorii: IN PROGRESS (2026-07-04)
+### — pre-compaction state
+
+**THE HEADLINE: 31 ERROR nodes in 10 files across the ENTIRE
+monorepo (721 files, 18.3 MB), totalitas TENET, 720/721
+byte-exact.** From M1's 41,000. Instrument: silva/percursus.sh
+(instrumenta/principalia/percursus.c — recursive sweep, latina
+contextus, evidence counters, per-file apex tracking).
+
+**FINDINGS (all named, some open)**:
+1. **Arena pathology (OPEN investigation)**: dense
+   data/generated-table files inflate the parse arena
+   catastrophically — biblia_dr.c (5.8MB) → 49 GB apex,
+   arbor2_glr_tabula.c (1.5MB) → 22.7 GB (~8-15,000x; normal
+   code ~30x). First full sweep died SIGKILL/OOM. Sweep now has
+   a 4MB ceiling with NAMED skips (capsula_libri.c,
+   biblia_dr.c; -omnia disables). INVESTIGATE with lustrum
+   subsystem telemetry — suspect per-element cost in giant
+   initializer listas (GLR stack? valores copies? nodes).
+2. **INFIDELIS (OPEN)**: lib/arbor2_glr_tabula.c is the ONE
+   roundtrip failure in the repo — same file as the 22.7GB apex;
+   suspect the pathology degrades something. Investigate after
+   (or with) #1.
+3. **Lexicon-latina collision (SOLVED for the sweep, REAL
+   design item)**: unconditional latina lexicon corrupts
+   English-C — knotapel's "double co = cos(x), si = sin(x);"
+   → si becomes IF → errors. Textual "latina.h" detection FAILS
+   (inclusion is transitive via piscina.h). Sweep heuristic:
+   knotapel → contextus nudus, cetera → latina. TRUE FIX named
+   for Chunk D consideration: include-driven expansion
+   (praebere + real resolution) instead of unconditional
+   lexicon; ALSO applies to saltuarius browsing knotapel files!
+4. **The 10 error files**: 2×hospes.c (silva+tessera — the
+   latina-canary variables "static int si = 1;" ARE the
+   collision class, self-inflicted by design, would be clean
+   nudo); raqiya scrutinium probationes (5 errors — likely the
+   scrutinium.h Duffiana class, INSPECT); lib/fasti.c (4),
+   entitas.c, probatio_actor/nuntium/entitas (1-2 each,
+   INSPECT — nuntium:26 showed casus-in-errore = possible real
+   Duffiana or collision).
+5. **Evidence counts (dispositions PENDING full
+   classification)**: typedef-in-corpore 10 (real sites exist —
+   incl. knotapel demo_98:1071 + our own fixtures; decisiones 13
+   gate has its number, disposition owed); Duffiana 6 (sites in
+   scrutinium.h + probatio_nuntium — inspect whether real Duff
+   or collision-induced); gcc-in-errore 0 (divergence FREE).
+6. Perf: 1.9 ms/KB across the repo; solarium 148/148 = the
+   existing probatio_silva_solarium, green in every suite run.
+
+**REMAINING for Chunk C**:
+- carried lapifex EXPANDERE bar: the VectisExp block designed
+  (17 composite inputs w/ lexicon-injection cases via
+  silva_contextus_lexicon_addere(ctx,via,textus,mensura)) but
+  the EDIT WAS REJECTED (stale read) — NOT YET APPLIED to
+  probatio_silva_c89.c; re-apply before the syntaxis-corpus
+  block, then suite.
+- error-file inspections (#4) + evidence dispositions (#5).
+- the two OPEN investigations (#1 arena pathology, #2
+  INFIDELIS) — possibly their own chunk-let; lustrum is the
+  tool.
+- percursus.c + percursus.sh are NEW UNCOMMITTED files.

@@ -154,7 +154,7 @@ s32 principale (vacuum)
 
         imprimere("\n--- Probans aedificationem ---\n");
 
-        CREDO_VERUM (saltuarius_structura_aedificare(index, liber, nexus));
+        CREDO_VERUM (saltuarius_structura_aedificare(index, liber));
         CREDO_VERUM (index->apertum);
         per (k = ZEPHYRUM; k < (s32)index->numerus; k++)
         {
@@ -371,7 +371,7 @@ s32 principale (vacuum)
             chorda_ex_literis("# titulus\ntextus.\n", piscina));
         CREDO_NON_NIHIL (merus);
         CREDO_FALSUM (saltuarius_structura_aedificare(index,
-            merus, nexus));
+            merus));
         CREDO_FALSUM (index->apertum);
     }
 
@@ -395,7 +395,7 @@ s32 principale (vacuum)
         CREDO_NON_NIHIL (res);
 
         CREDO_VERUM (saltuarius_structura_aedificare(index,
-            liber, nexus));
+            liber));
         saltuarius_visum_pingere(liber, res, opus);
         saltuarius_visum_structura(index, opus);
 

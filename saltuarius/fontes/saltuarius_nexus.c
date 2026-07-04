@@ -239,13 +239,9 @@ saltuarius_nexus_classificare (constans SaltuariusNexus* nexus,
  * Fistula parsandi (Phase C)
  * ================================================== */
 
-interior constans SilvaGrammatica GRAMMATICA_SCELETI = {
-    &SILVA_SCELETUM_TABULA,
-    &SILVA_SCELETUM_REGISTRUM,
-    silva_sceletum_construere,
-    silva_sceletum_ambiguum_fabricare,
-    NIHIL
-};
+/* (fasciculus GRAMMATICA_SCELETI sublatus M2d Chunk B - parsura
+ * principalis nunc grammatica c89 cum saltatione oraculi per viam
+ * consumptoris; decisiones 9 dies solutionis) */
 
 interior constans character*
 _literis (Piscina* piscina, chorda textus)
@@ -325,9 +321,9 @@ saltuarius_nexus_parsare (SaltuariusNexus* nexus,
     {
         redde NIHIL;
     }
-    redde silva_parsare_cum_contextu(arena_libri, nexus->ctx,
-        titulus, (constans character*)textus.datum, textus.mensura,
-        &GRAMMATICA_SCELETI, NIHIL, NIHIL, NIHIL);
+    redde silva_c89_parsare_cum_contextu(arena_libri, nexus->ctx,
+        titulus, (constans character*)textus.datum,
+        textus.mensura, NIHIL);
 }
 
 chorda

@@ -151,8 +151,7 @@ _rami_verbum (SilvaRamusGenus genus)
 
 b32
 saltuarius_structura_aedificare (SaltuariusStructura* index,
-    constans SaltuariusLiber* liber,
-    constans SaltuariusNexus* nexus)
+    constans SaltuariusLiber* liber)
 {
     constans SilvaExpansio* exp;
     s32 princeps;
@@ -184,39 +183,17 @@ saltuarius_structura_aedificare (SaltuariusStructura* index,
     n_mac = silva_macros_numerus(exp);
     n_ram = silva_rami_numerus(exp);
 
-    /* Parsura c89 TEMPORARIA (M2c Chunk D): sectiones FUNCTIONES/
-     * TYPI/DECLARATIONES ex vista declarationum. Ordines textum in
-     * arenam indicis COPIANT (_titulum), ergo arena parsurae post
-     * aedificationem tota perit - nulla memoria manens, nulla
-     * commercia cum LRU. Fractura parsurae = sectiones absentes,
-     * tabula cetera vivit (omnis plagula semper aperitur). */
-    arena_c89 = silva_piscina_generare_dynamicum("salt_c89",
-        4194304);
-    parsura_c89 = NIHIL;
-    n_decl = ZEPHYRUM;
-    si (arena_c89 != NIHIL && liber->textus.mensura > ZEPHYRUM)
-    {
-        /* contextus nexus (latina + praebita) si adest - fontes
-         * latini expanduntur et sectiones VERAE fiunt (M2d A) */
-        si (nexus != NIHIL && nexus->ctx != NIHIL)
-        {
-            parsura_c89 = silva_c89_parsare_cum_contextu(
-                arena_c89, nexus->ctx, "liber.c",
-                (constans character*)liber->textus.datum,
-                liber->textus.mensura, NIHIL);
-        }
-        alioquin
-        {
-            parsura_c89 = silva_c89_parsare(arena_c89, "liber.c",
-                (constans character*)liber->textus.datum,
-                liber->textus.mensura, NIHIL);
-        }
-        si (parsura_c89 != NIHIL)
-        {
-            n_decl = (i32)silva_c89_declarationes_numerus(
-                parsura_c89);
-        }
-    }
+    /* M2d Chunk B: parsura PRINCIPALIS libri iam c89 est (nexus
+     * grammatica c89 cum saltatione parsat) - sectiones ex EA
+     * leguntur, parsura secunda SUBLATA (dividendum permutationis:
+     * Tab gratuitum). Arena parva SOLUM pro textu subscriptionum
+     * (_titulum in arenam indicis copiat, deinde perit). */
+    parsura_c89 = liber->parsura;
+    n_decl = (i32)silva_c89_declarationes_numerus(parsura_c89);
+    arena_c89 = (n_decl > ZEPHYRUM)
+        ? silva_piscina_generare_dynamicum("salt_subscriptio",
+              262144)
+        : NIHIL;
 
     /* summa maxima allocata (filtrum minus implet - arena refecta,
      * dispendium innocuum) */
