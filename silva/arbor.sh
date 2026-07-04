@@ -28,11 +28,19 @@ declare -a RADIX_FONTES=(
     "friatio" "internamentum"
 )
 
+# Obiecta VETUSTA capitibus novis = valores enum generum
+# renumerati SILENTER falsi (inventum M2c Chunk B: resolutor
+# genus PARAMETRUM non agnovit - .o vetustum, valores vetusti).
+# Idem mechanismus ac compile_probationes.sh.
+newest_header () {
+    find "$RADIX_DIR/include" "$SILVA_DIR/fontes" -name '*.h' -newer "$1" 2>/dev/null | head -1
+}
+
 obj_files=""
 for f in "${RADIX_FONTES[@]}"; do
     src="$RADIX_DIR/lib/$f.c"
     obj="$BUILD_DIR/$f.o"
-    if [ ! -f "$obj" ] || [ "$src" -nt "$obj" ]; then
+    if [ ! -f "$obj" ] || [ "$src" -nt "$obj" ] || [ -n "$(newest_header "$obj")" ]; then
         echo "  [dep] $f.c" >&2
         clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" -c "$src" -o "$obj" || exit 1
     fi
@@ -42,7 +50,7 @@ done
 for src in "$SILVA_DIR"/fontes/*.c; do
     base="$(basename "$src" .c)"
     obj="$BUILD_DIR/fons_$base.o"
-    if [ ! -f "$obj" ] || [ "$src" -nt "$obj" ]; then
+    if [ ! -f "$obj" ] || [ "$src" -nt "$obj" ] || [ -n "$(newest_header "$obj")" ]; then
         echo "  [silva] $base.c" >&2
         clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" -c "$src" -o "$obj" || exit 1
     fi

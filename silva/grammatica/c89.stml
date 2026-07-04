@@ -75,6 +75,20 @@
     <terminalis titulus="BRACE_APERTA"   genus="SILVA_LEX_BRACE_APERTA"/>
     <terminalis titulus="BRACE_CLAUSA"   genus="SILVA_LEX_BRACE_CLAUSA"/>
 
+    <!-- Sententiae (M2c Chunk A) -->
+    <terminalis titulus="IF"             genus="SILVA_LEX_IF"/>
+    <terminalis titulus="ELSE"           genus="SILVA_LEX_ELSE"/>
+    <terminalis titulus="WHILE"          genus="SILVA_LEX_WHILE"/>
+    <terminalis titulus="DO"             genus="SILVA_LEX_DO"/>
+    <terminalis titulus="FOR"            genus="SILVA_LEX_FOR"/>
+    <terminalis titulus="SWITCH"         genus="SILVA_LEX_SWITCH"/>
+    <terminalis titulus="CASE"           genus="SILVA_LEX_CASE"/>
+    <terminalis titulus="DEFAULT"        genus="SILVA_LEX_DEFAULT"/>
+    <terminalis titulus="GOTO"           genus="SILVA_LEX_GOTO"/>
+    <terminalis titulus="BREAK"          genus="SILVA_LEX_BREAK"/>
+    <terminalis titulus="CONTINUE"       genus="SILVA_LEX_CONTINUE"/>
+    <terminalis titulus="RETURN"         genus="SILVA_LEX_RETURN"/>
+
     <!-- Operatores binarii/unarii -->
     <terminalis titulus="PLUS"           genus="SILVA_LEX_PLUS"/>
     <terminalis titulus="MINUS"          genus="SILVA_LEX_MINUS"/>
@@ -126,6 +140,15 @@
     <terminalis titulus="EOF"            genus="SILVA_LEX_EOF"/>
   </terminalia>
 
+  <!-- Praelationes (M2c; genera-c89.md decisiones 12): "alioquin
+       pendens" - ELSE intimo ligat per ISO 3.6.4.1, REGULA
+       LINGUAE, ergo resolutio determinata in tabulis RECTA est
+       (furca lectionem quam C ipse vetat retineret). Cellae
+       praelatae = categoria census figenda. -->
+  <praelationes>
+    <praelatio terminalis="ELSE" actio="transponere"/>
+  </praelationes>
+
   <regulae>
     <!-- Radix segmenti: lista elementorum (truncus materialis fit
          apud gubernatorem cum arbores plenae adveniant; nomen
@@ -137,10 +160,283 @@
       </productio>
     </regula>
 
-    <!-- M2c: + sententiae ceterae -->
+    <!-- M2c Chunk A: gradus sententiarum plenus (M2c B:
+         + definitio-functionis). Liberalitas: sententiae in
+         summo gradu licitae (norma tree-sitter; conformitas =
+         lint) -->
     <regula titulus="elementum">
-      <productio>sententia-expressionis</productio>
+      <productio>sententia</productio>
       <productio>declaratio</productio>
+      <productio>definitio-functionis</productio>
+    </regula>
+
+    <!-- ==== definitio functionis (M2c Chunk B): ANSI + K&R +
+         int implicitum (C89 "f() { }" sine specificatoribus
+         legalis). declarationes-kr NON vacua - forma ANSI casum
+         vacuum tegit (ambiguitas listae vacuae numquam nascitur).
+         Parametra identificatorum K&R ("f(a, b)") ut parametra
+         typi-nominati equitant - lectio eadem ac prototypi;
+         praesentia listae kr definitionem K&R signat. -->
+    <regula titulus="definitio-functionis">
+      <!-- productio plenissima PRIMA - layout generis ordinem
+           locorum omnium statuit (regula emissionis genericae) -->
+      <productio genus="definitio-functionis" id="definitio-kr">
+        specificatores-decl@specificatores declarator@declarator
+        declarationes-kr@declarationes-kr corpus@corpus
+      </productio>
+      <productio genus="definitio-functionis" id="definitio-ansi">
+        specificatores-decl@specificatores declarator@declarator
+        corpus@corpus
+      </productio>
+      <productio genus="definitio-functionis"
+                 id="definitio-kr-implicita">
+        declarator@declarator declarationes-kr@declarationes-kr
+        corpus@corpus
+      </productio>
+      <productio genus="definitio-functionis"
+                 id="definitio-ansi-implicita">
+        declarator@declarator corpus@corpus
+      </productio>
+    </regula>
+
+    <regula titulus="declarationes-kr">
+      <productio id="declarationes-kr-prima" modus="lista-initium">
+        declaratio@elementum
+      </productio>
+      <productio id="declarationes-kr-appendere" modus="lista-appendere">
+        declarationes-kr@lista+ declaratio@elementum
+      </productio>
+    </regula>
+
+    <!-- ==== sententiae (M2c Chunk A): genera = verba latina
+         (P1, DECISUS par. 4). corpus = UNA lista elementorum
+         (DECISUS EMENDATUM 2026-07-04, decisiones 11): fabricatio
+         corporis fabricationi segmenti respondet, furca
+         declaratio-vel-expressio PER ELEMENTUM manet et
+         machinatio oraculi INVARIATA operatur. Ordo
+         declarationes-ante-sententias C89 = quaestio lint. ==== -->
+    <regula titulus="sententia">
+      <productio>sententia-expressionis</productio>
+      <productio>sententia-vacua</productio>
+      <productio>corpus</productio>
+      <productio>si</productio>
+      <productio>dum</productio>
+      <productio>fac-dum</productio>
+      <productio>per</productio>
+      <productio>commutatio</productio>
+      <productio>titulatum</productio>
+      <productio>salta</productio>
+      <productio>frange</productio>
+      <productio>perge</productio>
+      <productio>redde</productio>
+    </regula>
+
+    <regula titulus="sententia-vacua">
+      <productio genus="sententia-vacua" id="sententia-vacua">
+        SEMICOLON@tok_terminator
+      </productio>
+    </regula>
+
+    <!-- corpus: lista elementorum EADEM regula ac radix segmenti
+         - isomorphismus litteralis (emendatio DECISUS) -->
+    <regula titulus="corpus">
+      <productio genus="corpus" id="corpus">
+        BRACE_APERTA@tok_aperta elementa@elementa
+        BRACE_CLAUSA@tok_clausa
+      </productio>
+    </regula>
+
+    <!-- si: UNUM genus pro si et si-alioquin (P2 - factura
+         grammaticae in arborem numquam manat; alioquin vacuum =
+         NIHIL). Cella "alioquin pendens" (transponere ELSE vs
+         reducere si-sine-alioquin) per praelationem solvitur -
+         ELSE intimo ligat, REGULA LINGUAE (ISO 3.6.4.1), ergo
+         resolutio determinata in tabulis RECTA est. -->
+    <regula titulus="si">
+      <productio genus="si" id="si-sine-alioquin">
+        IF@tok_verbum PAREN_APERTA@tok_apertum expressio@conditio
+        PAREN_CLAUSA@tok_clausum sententia@consequens
+      </productio>
+      <productio genus="si" id="si-cum-alioquin">
+        IF@tok_verbum PAREN_APERTA@tok_apertum expressio@conditio
+        PAREN_CLAUSA@tok_clausum sententia@consequens
+        ELSE@tok_alioquin sententia@alioquin
+      </productio>
+    </regula>
+
+    <regula titulus="dum">
+      <productio genus="dum" id="dum">
+        WHILE@tok_verbum PAREN_APERTA@tok_apertum expressio@conditio
+        PAREN_CLAUSA@tok_clausum sententia@corpus
+      </productio>
+    </regula>
+
+    <regula titulus="fac-dum">
+      <productio genus="fac-dum" id="fac-dum">
+        DO@tok_fac sententia@corpus WHILE@tok_dum
+        PAREN_APERTA@tok_apertum expressio@conditio
+        PAREN_CLAUSA@tok_clausum SEMICOLON@tok_terminator
+      </productio>
+    </regula>
+
+    <!-- per-clausula: nodus verus (DECISUS) - initium/conditio/
+         passus omnia optionalia, expressio PLENA (virgula in
+         clausulis legalis: "i = 0, j = 1"). Octo formae
+         explicitae - loci absentes = NIHIL. -->
+    <regula titulus="per">
+      <productio genus="per" id="per">
+        FOR@tok_verbum PAREN_APERTA@tok_apertum
+        per-clausula@clausula PAREN_CLAUSA@tok_clausum
+        sententia@corpus
+      </productio>
+    </regula>
+
+    <regula titulus="per-clausula">
+      <productio genus="per-clausula" id="per-clausula-icp">
+        expressio@initium SEMICOLON@tok_terminator_i
+        expressio@conditio SEMICOLON@tok_terminator_ii
+        expressio@passus
+      </productio>
+      <productio genus="per-clausula" id="per-clausula-ic">
+        expressio@initium SEMICOLON@tok_terminator_i
+        expressio@conditio SEMICOLON@tok_terminator_ii
+      </productio>
+      <productio genus="per-clausula" id="per-clausula-ip">
+        expressio@initium SEMICOLON@tok_terminator_i
+        SEMICOLON@tok_terminator_ii expressio@passus
+      </productio>
+      <productio genus="per-clausula" id="per-clausula-cp">
+        SEMICOLON@tok_terminator_i expressio@conditio
+        SEMICOLON@tok_terminator_ii expressio@passus
+      </productio>
+      <productio genus="per-clausula" id="per-clausula-i">
+        expressio@initium SEMICOLON@tok_terminator_i
+        SEMICOLON@tok_terminator_ii
+      </productio>
+      <productio genus="per-clausula" id="per-clausula-c">
+        SEMICOLON@tok_terminator_i expressio@conditio
+        SEMICOLON@tok_terminator_ii
+      </productio>
+      <productio genus="per-clausula" id="per-clausula-p">
+        SEMICOLON@tok_terminator_i SEMICOLON@tok_terminator_ii
+        expressio@passus
+      </productio>
+      <productio genus="per-clausula" id="per-clausula-vacua">
+        SEMICOLON@tok_terminator_i SEMICOLON@tok_terminator_ii
+      </productio>
+    </regula>
+
+    <!-- commutatio: corpus AGGREGATUM (DECISUS decisiones 10) -
+         casus/ordinarius sententias sequentes POSSIDENT usque ad
+         titulum proximum. Machinatio = scissio statuum trans
+         regulas (ars tristata M2b): ec-ante (praefatio sine
+         gregibus) / ec-post (greges coeperunt) - elementum
+         vagum post gregem TEXTUALITER impossibile est, ergo
+         ambiguitas grex-vel-vagum numquam nascitur. AMBAE
+         regulae in UNAM listam appendunt (locus elementa,
+         genus corpus - P2). NB: tituli casus intra sententias
+         nidificatas (machina Duffii) forma aggregata capi NON
+         potest - segmentum ERROR fit; angustatio nominata,
+         porta evidentiae = percursus solarii M2d. -->
+    <regula titulus="commutatio">
+      <productio genus="commutatio" id="commutatio">
+        SWITCH@tok_verbum PAREN_APERTA@tok_apertum
+        expressio@discrimen PAREN_CLAUSA@tok_clausum
+        corpus-commutationis@corpus
+      </productio>
+    </regula>
+
+    <regula titulus="corpus-commutationis">
+      <productio genus="corpus" id="corpus-comm-sine-gregibus">
+        BRACE_APERTA@tok_aperta ec-ante@elementa
+        BRACE_CLAUSA@tok_clausa
+      </productio>
+      <productio genus="corpus" id="corpus-comm-cum-gregibus">
+        BRACE_APERTA@tok_aperta ec-post@elementa
+        BRACE_CLAUSA@tok_clausa
+      </productio>
+    </regula>
+
+    <regula titulus="ec-ante">
+      <productio modus="lista-initium"></productio>
+      <productio id="ec-ante-appendere" modus="lista-appendere">
+        ec-ante@lista+ elementum@elementum
+      </productio>
+    </regula>
+
+    <regula titulus="ec-post">
+      <productio id="ec-primus-grex" modus="lista-appendere">
+        ec-ante@lista+ grex@elementum
+      </productio>
+      <productio id="ec-post-appendere" modus="lista-appendere">
+        ec-post@lista+ grex@elementum
+      </productio>
+    </regula>
+
+    <regula titulus="grex">
+      <productio>casus</productio>
+      <productio>ordinarius</productio>
+    </regula>
+
+    <!-- casus/ordinarius: sententiae lista elementa admittit
+         (liberalitas: declarationes intra gregem C89 illegales,
+         lint iudicat). valor = ternarius (expressio-constans
+         ISO 3.4). Grex clauditur per FOLLOW: elementum a CASE/
+         DEFAULT incipere non potest. -->
+    <regula titulus="casus">
+      <productio genus="casus" id="casus">
+        CASE@tok_verbum ternarius@valor COLON@tok_colon
+        sententiae-casus@sententiae
+      </productio>
+    </regula>
+
+    <regula titulus="ordinarius">
+      <productio genus="ordinarius" id="ordinarius">
+        DEFAULT@tok_verbum COLON@tok_colon
+        sententiae-casus@sententiae
+      </productio>
+    </regula>
+
+    <regula titulus="sententiae-casus">
+      <productio modus="lista-initium"></productio>
+      <productio id="sententiae-casus-appendere" modus="lista-appendere">
+        sententiae-casus@lista+ elementum@elementum
+      </productio>
+    </regula>
+
+    <regula titulus="titulatum">
+      <productio genus="titulatum" id="titulatum">
+        IDENTIFICATOR@tok_titulus COLON@tok_colon
+        sententia@sententia
+      </productio>
+    </regula>
+
+    <regula titulus="salta">
+      <productio genus="salta" id="salta">
+        GOTO@tok_verbum IDENTIFICATOR@tok_destinatio
+        SEMICOLON@tok_terminator
+      </productio>
+    </regula>
+
+    <regula titulus="frange">
+      <productio genus="frange" id="frange">
+        BREAK@tok_verbum SEMICOLON@tok_terminator
+      </productio>
+    </regula>
+
+    <regula titulus="perge">
+      <productio genus="perge" id="perge">
+        CONTINUE@tok_verbum SEMICOLON@tok_terminator
+      </productio>
+    </regula>
+
+    <regula titulus="redde">
+      <productio genus="redde" id="redde-cum-valore">
+        RETURN@tok_verbum expressio@valor SEMICOLON@tok_terminator
+      </productio>
+      <productio genus="redde" id="redde-sine-valore">
+        RETURN@tok_verbum SEMICOLON@tok_terminator
+      </productio>
     </regula>
 
     <!-- ==== declaratio (M2b Chunk A): specificatores ordine
@@ -384,6 +680,12 @@
       </productio>
       <productio id="enumeratores-appendere" modus="lista-appendere">
         enumeratores@lista+ COMMA@signum enumerator-unus@elementum
+      </productio>
+      <!-- virgula caudalis: C99-ismus (C89 illegalis!) - norma
+           robustitatis eam ut arborem capit, lint iudicat
+           (exemplar congeries-cauda; corpus v1 eam fert) -->
+      <productio id="enumeratores-cauda" modus="lista-appendere">
+        enumeratores@lista+ COMMA@signum
       </productio>
     </regula>
 

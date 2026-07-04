@@ -320,6 +320,18 @@ silva_gen_coquere (
         "externus constans SilvaRegistrumCoctum %s_REGISTRUM;\n\n",
         basis, via_grammaticae, custos, custos, praefixum, praefixum);
 
+    /* Cellae praelatae (solum si adsunt - grammaticae sine
+     * praelationibus plagulas identicas retinent) */
+    si (tabula->numerus_praelatarum > ZEPHYRUM)
+    {
+        fprintf(pl,
+            "/* Cellae praelatae (<praelatio>) - categoria census */\n"
+            "#define %s_NUMERUS_PRAELATARUM %d\n"
+            "externus constans SilvaTabPraelata %s_PRAELATAE[%d];\n\n",
+            praefixum, (int)tabula->numerus_praelatarum,
+            praefixum, (int)tabula->numerus_praelatarum);
+    }
+
     /* Enumeratio generum */
     fprintf(pl, "/* Genera nodorum (registrum unum: grammatica + extra) */\n"
         "enumeratio {\n");
@@ -622,6 +634,46 @@ silva_gen_coquere (
         (int)grammatica->initium_index,
         (int)productio_augmentata,
         (int)tabula->numerus_conflictuum);
+
+    /* --- Cellae praelatae (solum si adsunt) --- */
+    si (tabula->numerus_praelatarum > ZEPHYRUM)
+    {
+        i32 c_i;
+
+        fprintf(pl, "\n/* ==================================================\n"
+            " * Cellae praelatae (<praelatio>) - categoria census\n"
+            " * ================================================== */\n\n"
+            "constans SilvaTabPraelata %s_PRAELATAE[%d] = {\n",
+            praefixum, (int)tabula->numerus_praelatarum);
+        per (c_i = ZEPHYRUM; c_i < tabula->numerus_praelatarum; c_i++)
+        {
+            SilvaGenCellaPraelata* cella = (SilvaGenCellaPraelata*)
+                xar_obtinere(tabula->cellae_praelatae, c_i);
+            SilvaGenSymbolum* sym;
+            SilvaGenProductio* prod;
+
+            si (!cella) perge;
+            sym = (SilvaGenSymbolum*)xar_obtinere(
+                grammatica->symbola, (i32)cella->terminalis);
+            prod = (SilvaGenProductio*)xar_obtinere(
+                grammatica->productiones, (i32)cella->productio_remota);
+
+            /* actio_retenta symbolice: sola transponere nota
+             * (lectio grammaticae id imponit) */
+            fprintf(pl,
+                "    { %d, %d, SILVA_TAB_ACTIO_TRANSPONERE, %d }%s"
+                "  /* st%d x ",
+                (int)cella->status, (int)cella->terminalis,
+                (int)cella->productio_remota,
+                (c_i < tabula->numerus_praelatarum - I) ? "," : "",
+                (int)cella->status);
+            si (sym) _ch(pl, sym->titulus);
+            fprintf(pl, ": transpositio retenta, reductio [");
+            si (prod && prod->id) _ch(pl, prod->id);
+            fprintf(pl, "] remota */\n");
+        }
+        fprintf(pl, "};\n");
+    }
 
     /* --- Registrum generum (layouts, S21) --- */
     {

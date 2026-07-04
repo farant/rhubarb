@@ -44,6 +44,7 @@
 #include "silva_token.h"
 #include "silva_nodus.h"
 #include "silva_parsare.h"
+#include "silva_scribere.h"
 #include "silva_tabulae_c89.h"
 
 /* Ligamen plenum grammaticae c89 CUM unco registrationis - hoc
@@ -113,6 +114,16 @@ silva_c89_declaratio_vista (
     constans SilvaParsura* parsura,
     i32                    index,
     SilvaDeclaratioVista*  vista);
+
+/* Subscriptio functionis (M2c Chunk C): specificatores +
+ * declarator octetim ex arbore (sine corpore, sine
+ * declarationibus-kr) - textus ordinis TOC. Ordo vistae ad
+ * indicem definitio-functionis sit; aliter fractura clara. */
+SilvaScriptura
+silva_c89_functionis_subscriptio (
+    Piscina*               piscina,
+    constans SilvaParsura* parsura,
+    i32                    index);
 
 /* Vocatio una: parsare + registrare + resolvere + politica.
  * oraculum NIHIL licet (vacuum intus creatur); oraculum datum

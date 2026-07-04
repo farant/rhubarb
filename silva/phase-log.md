@@ -4064,3 +4064,427 @@ anywhere else — for the M2c sessions):**
    declarations; placeholder scaffolding left in a block).
    The wall catches everything, but only if run before the
    next edit buries it.
+
+## M2c — SENTENTIAE + FUNCTIONES: INTENTIO (2026-07-04)
+
+The last real grammar chunk; after M2c, M2d is the acceptance
+wall. Two halves: the statement tier (genera-c89.md §4, all
+DECISUS) and function definitions (ANSI + K&R), plus the driver's
+boundary-finder upgrade, the generator's first declared-preference
+mechanism, and the saltuarius TOC integration promised at Chunk E.
+
+**Grounding (verified this session)**: all 12 statement keywords
+already exist as lexeme genera in the carried lexer (SILVA_LEX_IF/
+ELSE/WHILE/DO/FOR/SWITCH/CASE/DEFAULT/GOTO/BREAK/CONTINUE/RETURN)
+— the grammar adds 12 terminals, zero lexer work. c89.stml's
+elementum rule carries its own "M2c: + sententiae ceterae"
+comment. Carried bars on disk: probatio_lapifex_c89_sent.c (30
+inputs), _func.c (20 inputs). Slicer = depth-0 SEMICOLON with
+PAREN+BRACE depth (M2b).
+
+**Grammar scope (~30 rules, 12 terminals)**: sententia tier =
+corpus, sententia-vacua, si (ONE genus, alioquin locus NIHIL when
+absent), dum, fac-dum, per + per-clausula (real node; initium/
+conditio/passus all optional, two interleaved terminator tokens),
+commutatio + casus/ordinarius (GROUPED per M2.0), titulatum,
+salta/frange/perge/redde; sententia-expressionis already exists.
+definitio-functionis = specificatores, declarator,
+declarationes-kr (lista), corpus. elementum grows sententia +
+definitio-functionis (top-level statements stay lenient —
+tree-sitter bar; conformance is lint's).
+
+**Design positions going in**:
+
+1. **Grouped casus by state-split, NOT preference** (Artes #1):
+   casus/ordinarius are not sententiae — they live only in the
+   switch-body rule's lista, so a group's sententiae lista ends at
+   the next label by FOLLOW alone. The switch-body rule is
+   grammar-internal factoring emitting genus **corpus** (P2:
+   factoring never leaks). Fall-through = empty sententiae lista.
+   `case` outside switch = ERROR (lenient). C89 allows
+   declarations before the first label inside a switch body —
+   the switch-corpus keeps the declaration tier.
+
+2. **Dangling-else = the declared-preference mechanism, built
+   this phase.** Innermost-binding is a LANGUAGE rule, not a
+   style choice — forking would retain a reading C89 itself
+   forbids, so deterministic table-time resolution is CORRECT
+   here (contrast every previous conflict, where both readings
+   are real C). Grammar element proposal: `<praelatio>` naming
+   the terminal and the kept action; the generator resolves ONLY
+   matching cells and — census discipline extended — **praelata
+   cells become a pinned census category**: enumerated and
+   asserted like conflict cells, so declared resolutions can
+   never silently multiply. Generator change → sceletum/imparilis
+   byte-identical gate as always.
+
+3. **The boundary-finder** (driver; spec §7's named risk).
+   Function definitions have no trailing `;`. Per-segment state
+   machine: depth-0 PAREN_CLAUSA sets post-clausa; depth-0
+   ASSIGNATIO clears it (initializers: `int x = g(1) + 2;` stays
+   semicolon-terminated). Depth-0 BRACE_APERTA while post-clausa
+   → brace-terminated segment, ends AT matching close (inclusive,
+   no terminator). K&R (`int f(a) int a; { }` — depth-0 `;`
+   BEFORE the body brace): at a depth-0 `;` in post-clausa with
+   tokens intervening since `)`, don't finalize — remember the
+   candidate, scan forward through declaration-plausible tokens;
+   `{` reached → K&R confirmed, extend to brace close; EOF or
+   implausible token → CUT at the remembered candidate (fallback
+   preserves `dum (x) y;` and prototypes, where `;` directly
+   follows `)`). Adversarial fixtures (spec §7): function
+   pointers, prototype-then-definition, K&R multi-param, `struct
+   S { int x; } f(void) { }` (struct brace not post-clausa;
+   function brace is), old-style implicit-int `f(a) int a; { }`.
+
+4. **Block-scope oracle: DEFER BY NAME (proposal).** Registration
+   walk stays top-level (file-scope declarations incl. taken
+   arms). Block-local typedefs are NOT registered; their uses
+   stay honestly AMBIGUUS-retained (nothing resolves WRONG — the
+   failure modes of a flat scope [leak past the body] are
+   avoided by not registering at all). Named divergence:
+   block-scope typedef comprehension; evidence gate = count
+   block-local typedefs over solarium + rhubarb at the M2d
+   sweep; landing spot = M2d or the lint layer.
+
+**OPEN QUESTION #1 — the corpus shape (DECISUS amendment
+candidate, Fran's call).** The DECISUS table gives corpus TWO
+listas (declarationes, sententiae), "mirrors the standard's
+grammar." Grounding analysis says this shape has a structural
+consequence at block level: `{ foo * bar; baz(); }` forks into
+readings that live in DIFFERENT listas (declarationes=[decl] vs
+sententiae=[expr, …]) — the GLR stacks cannot re-merge until the
+whole corpus reduces, so the AMBIGUUS wrapper lands on the
+ENTIRE BLOCK, and the M2b resolutor (which examines DECLARATIO
+readings element-wise) sees only corpus-vs-corpus and retains.
+Every real function body with a typedef'd local would stay a
+block-level ambiguus — the comprehension riser dies. Two exits:
+(a) **AMEND the DECISUS**: corpus carries ONE lista (elementa,
+mirroring the segment level exactly); the fork stays
+PER-ELEMENT, the ambiguus wraps one element, the entire
+X-machinery works UNCHANGED; decl-before-stmt ordering becomes a
+lint query; "declarations of this block" stays a trivial
+genus-filtered vista/query. The standard's two-lista factoring
+leaking into tree shape is precisely what P2 warns about.
+RECOMMENDED. (b) keep two listas and grow the resolutor to
+descend corpus ambigua element-wise — more machinery, same
+information, tree shape bought at resolver complexity. If
+contested → Sim XI before Chunk A (CULTURA rule).
+
+**Chunks**:
+- **A — sententiae.** Statement tier complete minus
+  definitio-functionis; grouped commutatio; titulatum;
+  `<praelatio>` mechanism + dangling-else resolved; corpus shape
+  per Fran's call implemented; census re-pinned EXHAUSTIVELY
+  (named newcomers expected: block-item F1 widening, titulatum
+  IDENT-vs-expression cells, praelata category; any unnamed cell
+  = stop); carried sent bar (30) through the consumer path;
+  fixtures roundtrip; interim syntaxis riser pin.
+- **B — definitio-functionis + boundary-finder.** ANSI + K&R
+  grammar; slicer state machine + the adversarial fixture set;
+  carried func bar (20); block-scope decision RECORDED;
+  registration-walk confirmation fixture (top-level only);
+  roundtrip-corpus ERROR 62 → expect near-0 (pin the number);
+  mensura re-baseline; frons ceiling <=VIII re-asserted.
+- **C — vista FUNCTIONES + the harvest.** Vista rows for
+  definitio-functionis (titulus via the X5 declaratoris_titulus
+  chase, reused; signature text exercises scribere-from-subtree
+  per the sketch); silva.h + hospes same-change; **full v1
+  syntaxis harvest completes** (125 inputs / 234 assertions
+  re-asserted against DECISUS genera); comprehension riser FINAL
+  pin (gcc-extension remainder counted and named).
+- **D — saltuarius TOC (the original pull) + RELATIO.** Structura
+  pane grows TYPI/DECLARATIONES + FUNCTIONES sections (the Chunk
+  E promise: both at once, vista-driven, silva.h carries both
+  bundles); saltuarius suite green; M2c RELATIO + FULL phase-log
+  audit (phase boundary).
+
+**Manual bar**: Tab in saltuarius on silva/fontes/silva_parsare.c
+lists every function; Enter lands on the definition. Terminal
+sibling: ./silva/arbor.sh -f on a real .c prints clean function
+trees; -d shows the function rows.
+
+**Vocabulary addenda needing Fran** (beyond open question #1):
+the preference element name — proposal `<praelatio>` (that which
+is preferred/carried before); alternatives praeferentia, electio.
+
+**Named risks**: block-item fork packing (open question #1 IS the
+mitigation decision); boundary-finder K&R lookahead (adversarial
+fixtures = the discharge; the fallback-to-candidate semantics
+must be pinned, not assumed); praelatio generator change
+regressing existing tables (byte-identical gate); titulatum
+census newcomers; annotation v0 vs per-clausula's optional-heavy
+shape (first friction = revise the FORMAT consciously, per the
+standing rule); nested-packing inflation at statement depth (the
+M2a observation's next checkpoint — watchdog numbers).
+
+**Exit criteria**: suite green; census re-pinned exhaustively
+incl. the praelata category; boundary-finder adversarial fixtures
+green; carried sent + func bars green; v1 syntaxis harvest
+complete; comprehension pinned near-125 with remainder named;
+corpus ERROR near-0 pinned; frons ceiling re-asserted;
+FUNCTIONES vista + hospes; saltuarius manual bar demonstrated;
+every fixture roundtrips; RELATIO + full-log audit.
+
+**INTENTIO RESOLUTIONS (2026-07-04, Fran, previews compared)**:
+open question #1 → **ONE LISTA** (DECISUS amended — genera-c89.md
+§4 AMENDED note + decisiones 11; per-element forks, oracle
+machinery unchanged, decl-before-stmt = lint); preference element
+= **`<praelatio>`** (decisiones 12); block scope = **DEFER BY
+NAME** (decisiones 13). No Sim XI needed — the amendment removes
+the contested design. Chunk A is unblocked.
+
+### M2c Chunk A — sententiae: COMPLETE (2026-07-04)
+
+**Suite 27/27 (probatio_silva_c89: 1,159 assertions); amalgam
+gates + hospes 22/22; saltuarius 13/13 / tessera 5/5.** Grammar:
++12 terminals (statement keywords — zero lexer work, all genera
+carried) / +47 productions (244 total, 397 states): the full
+statement tier per DECISUS §4 (si ONE genus, dum, fac-dum, per +
+per-clausula as a real node in 8 explicit optional-forms,
+commutatio GROUPED, titulatum, salta/frange/perge/redde,
+sententia-vacua), corpus as ONE lista REUSING the root elementa
+rule — the isomorphism is literal, and `{ foo * bar; baz(); }`
+proves the amendment: AMBIGUUS wraps ONE element, the neighbor
+stays clean, the corpus stays clean.
+
+**Census 14 → 16 conflict + 1 praelata, exhaustively re-pinned**:
+F1 widened 4→6 (same production pair, statement-context
+lookaheads), F2 ×3 and F3 ×7 unchanged, ignotae 0. TWO predicted
+newcomer families never materialized, both in the good direction:
+grouped-switch = ZERO cells (the ec-ante/ec-post cross-rule
+state-split — Artes #1 confirmed exactly; the split also handles
+the subtler stray-statement-vs-group ambiguity, which is textually
+impossible after the first label and now grammatically impossible
+too) and titulatum = ZERO cells (precise lookaheads: COLON cannot
+follow a complete statement-position expression, so `x:` never
+conflicts with expression-`x`).
+
+**`<praelatio>` SHIPPED** (the declared-preference mechanism,
+first of its kind): grammar element (terminalis + actio, only
+transponere known, unknown = clamat), generator resolution pass
+BETWEEN table-build and conflict-detection (cell must carry BOTH
+shift and reduce; lone actions untouched), SilvaTabPraelata
+emission CONDITIONAL on praelationes existing — **sceletum/
+imparilis outputs verified byte-identical** — silva.h type +
+extern + CADENDA (the SilvaPraecommissio precedent), and the
+praelata census category pinned in BOTH suites by IDENTITY
+(terminal name + removed-production id, never state numbers).
+The one cell: ELSE, reduction si-sine-alioquin removed. Fixture:
+`if (a) if (b) x; else y;` → else binds INNERMOST, numerus
+ambiguorum ZERO — resolved in the tables, not by fork.
+
+**COMPLEXITY (driver — statement continuation)**:
+discovered-while: the dangling-else fixture failed with
+numerus_errorum 1 — arbor showed `else y;` orphaned as its own
+ERROR segment. consists-in: the slicer ends segments at depth-0
+SEMICOLON, but statements CONTINUE past semicolons (else-arm
+after an unbraced consequens; the while-tail of fac-dum); the
+INTENTIO had scoped the whole boundary-finder to Chunk B
+(functions), but statements needed slicer-awareness in Chunk A.
+consequences: every unbraced if/else and do-while split into
+tree + ERROR fragment; five fixture assertions caught it within
+minutes of writing. handled-by: CONTINUATION RULE in the slicer —
+a depth-0 `;` is not a boundary when the next token is ELSE, or
+WHILE with a pending-fac counter (counter handles nesting:
+`do do x; while (a); while (b);` slices correctly); false
+suppression (stray else) yields a COARSER ERROR segment, never a
+wrong tree. This was the first movement of the M2c
+boundary-finder; the ()-before-{ heuristic for function
+definitions remains Chunk B's, as planned.
+
+**Carried sent bar: 30/30** through the consumer path
+(silva_c89_parsare), every input clean and unambiguous against
+DECISUS genera — including the dangling-else input and the
+grouped switch.
+
+**Riser finding (deliberate zero)**: syntaxis comprehension
+STAYS 87/125 — inspection shows every statement line in the v1
+corpus is wrapped in `void f(void) { ... }` (function
+definitions, plus ~5 gcc-extension lines). The entire statement
+harvest arrives WITH Chunk B's function definitions; statements
+themselves are proven by the sent bar + fixtures instead. Pin
+comment updated with the finding.
+
+**Numbers**: roundtrip fixtures 74 → 98 (all byte-exact,
+including comment-riddled and whitespace-warped statements);
+corpus ERROR nodes 62 unchanged (they ARE the function
+definitions); **frons_maxima STILL 2**; parse 1.72 ms/KB (up
+from 0.82 — tables 305→397 states; measured history, complete
+first).
+
+**Eighth latina firing**: `commutatio` (= switch) as a fixture
+VARIABLE name — the P1 statement genera are ALL macros; safe as
+STML tags, forbidden as C identifiers. Variable renamed
+selectio. (The P1 decision's safety argument held: only the
+hand-written C hit it, never the generated code.)
+
+NEXT: Chunk B — definitio-functionis (ANSI + K&R) + the
+()-before-{ boundary-finder + adversarial fixtures + carried
+func bar (20) + block-scope decision recorded + THE RISER
+HARVEST (87 → expect ~120; corpus ERROR 62 → near-0).
+
+### M2c Chunk B — definitio functionis + limes segmentorum:
+### COMPLETE (2026-07-04)
+
+**Suite 27/27 (probatio_silva_c89: 1,369 assertions); amalgam
+gates + hospes 22/22; saltuarius 13/13 / tessera 5/5.** Grammar:
++8 productions (252 total, 412 states): definitio-functionis in
+FOUR forms (ANSI, K&R, implicit-int ± K&R — C89's `f(a) int a;
+{ }` parses), declarationes-kr as a NON-empty lista (the ANSI
+production covers empty — the empty-lista ambiguity never
+exists), enumeratores grew the C99 trailing-comma production
+(robustness bar; corpus demanded it; lint's to flag). Generator
+lesson: the FULLEST production must come FIRST in a genus (locus
+layout order is established by first occurrence).
+
+**Census 16 → 52 pairs / 44 cells, SIX families, exhaustively
+re-pinned**: the K&R price is FOLLOW smear — after `)` a
+K&R declaration can follow, so every specifier keyword entered
+the reduce-lookahead of declarator states. F2 (tn vs dt)
+3 → 23 cells; newcomers F4 (tn/dt/pi triple, 4 cells), F5
+(dt vs pi, 1), F6 (shift vs qualificatores-reduce, 3). SAME
+underlying ambiguity (the ISO param rule), more columns.
+Runtime: the dance ABSORBS it — `int add(int a, int b) { }`
+collapses to zero ambigui via X10 (the [int, nominatus(a)]
+param reading is combination-invalid). K&R with named types
+(`int f(a) int a; { }`) retains ONE ambiguus honestly — the
+GENUINE ISO ambiguity (param name vs typedef name), the
+wildcard pin wants it retained.
+
+**COMPLEXITY (build hygiene — the stale-object class,
+SECOND member)**: discovered-while: `int add(int a, int b)`
+showed ambigui 2 with the required kill not firing; a debug
+print made it work — the print forced recompilation.
+consists-in: generated-header regeneration RENUMBERS the genus
+enum; arbor.sh rebuilt objects only when their own .c changed,
+so silva_c89_oraculum.o compared `nodus->genus` against STALE
+enum values — silently wrong dispatch, no compile error, no
+crash. consequences: any grammar edit invalidates EVERY .o
+compiled against the old generated header; the M2a "always
+relink" fix covered links, not header deps;
+compile_probationes.sh already had the newest_header guard
+(the suite was never wrong) — only arbor.sh lacked it.
+handled-by: newest_header ported to arbor.sh; lesson appended
+to the stale-binary complexity family. RULE: any script that
+caches .o files MUST rebuild on newer headers — generated
+headers make this existential, not cosmetic.
+
+**The boundary-finder (driver)**: per-segment state machine —
+post_clausa (depth-0 `)`; EXTINGUISHED by any non-K&R-plausible
+token, so `int x = (a) + b;` never false-triggers),
+modus_corporis (depth-0 `{` while post_clausa → segment ends at
+matching `}`, no terminator), K&R lookahead (depth-0 `;` in
+post_clausa with intervening tokens → scan through
+declaration-plausible material; `{` confirms, else cut at the
+candidate), `}`-boundary continuation checks (ELSE and
+WHILE-with-fac-pendency — Chunk A's rules extended to braced
+bodies; `do { } while (a);` consumes its pendency at the `}` so
+it can't leak into a following `dum`). DESIGN PROPERTY, now
+proven in fixtures: every false suspicion merges segments —
+COARSER RECOVERY, never a wrong tree (multi-element segments
+are legal). Adversarial set green: function pointers,
+prototype-then-definition, K&R multi-param, struct-returning
+definitions, initializers with parens, implicit-int K&R.
+
+**The dance reaches into bodies** (fixture): `typedef int T;
+void f(void) { T x; x = 1; }` — the block-level fork inside
+corpus resolves via the SAME per-element machinery (the
+one-lista amendment paying again); block-local typedefs are NOT
+registered (decisiones 13) and a file-scope forking use after
+the body stays honestly AMBIGUUS (`T * x;` — note `T x;` would
+not fork at all: no expression reading exists).
+
+**Carried func bar: 20/20** through the consumer path, including
+multi-segment typedef dances, chained typedefs, and the
+preloaded-oracle pair (size_t/ptrdiff_t at situs 0). Roundtrip
+fixtures 98 → 110, all byte-exact.
+
+**THE RISER: 87 → 123/125** — three movements: +30 (definitions
++ their statements, one stroke), +5 (HARNESS DECODER BUG: the
+corpus's multi-literal lines — `"pars\n" "pars"` — were
+truncated at the first closing quote since the harness was
+born; artifact, not comprehension; decoder now concatenates
+adjacent literals and decodes \n\t), +1 (enum trailing comma).
+REMAINDER = 2, NAMED: the two __attribute__/__extension__ gcc
+lines; evidence gate = a real corpus ever demanding them
+(rhubarb sources do not).
+
+**Corpus ERROR 62 → 42, with the honest story**: mid-chunk
+grammar-only measured 8 — that number was mega-segment
+COARSENESS (EOF-terminated segments swallowing unparseable
+functions AND good declarations into few ERROR nodes), not
+comprehension. The boundary-finder restored per-function
+granularity: the 42 are UNEXPANDED-LATINA function bodies
+(`si (x) { }` = call-expression + block, no `;` — not C89
+without macro expansion; these files only truly parse with
+latina.h resolved through the expander = the M2d solarium
+sweep's territory, include resolution and all). Good
+declarations BETWEEN those functions now parse instead of being
+swallowed. Fideles 78/78 unchanged throughout. frons_maxima 2 →
+3 — first movement ever, ceiling VIII holds. Parse 2.09 ms/KB
+(tables 397 → 412 states; measured history).
+
+**Amalgam friction**: helper name `_lexema_proximum` collided
+with silva_lexema.c's static of the same name in the amalgam TU
+→ renamed `_lexema_sequens` (the amalgamator's
+duplicate-definition gate caught it — working as designed).
+
+**Vocabulary AMENDMENT PROPOSED (genera-c89.md §3, awaiting
+Fran)**: K&R identifier params ride as ordinary parametrum
+readings (prototype machinery + oracle), NOT folium-identificator
+as the original note said — a dedicated production would fork
+every single-identifier parameter everywhere, permanent
+pollution for a naming nicety. Non-empty declarationes-kr marks
+K&R-ness; path back is additive.
+
+NEXT: Chunk C — vista FUNCTIONES (rows for definitio-functionis
+via the declaratoris_titulus chase; signature text exercises
+scribere-from-subtree) + silva.h + hospes; then Chunk D
+saltuarius TOC (TYPI/DECLARATIONES + FUNCTIONES, the original
+pull) + M2c RELATIO + full-log audit.
+
+### M2c Chunk C — vista FUNCTIONES + subscriptio: COMPLETE
+### (2026-07-04)
+
+**Suite 27/27 (probatio_silva_c89: 1,388 assertions); amalgam +
+hospes 23/23; saltuarius 13/13 / tessera 5/5.**
+
+**K&R resolution — cheaper than designed**: the plan was a
+pater-walk policy rule; the tree showed the false K&R reading is
+`[int, typus-nominatus(f)]`-shaped — COMBINATION-INVALID, X10's
+textbook case — but _nodum_examinare's genus switch predates
+definitio-functionis. ONE case label (examine the definitio's
+specificatores) and both K&R forms collapse to zero ambigui
+through the EXISTING kill. ISO 6.9.1 (identifier-list params ARE
+names) is the semantic justification; X10 is the mechanism; no
+new machinery. Chunk B's "honest retention" fixture upgraded to
+assert the collapse + kr-lista navigation.
+
+**Vista FUNCTIONES**: _vistas_ambulare gained the
+definitio-functionis case — one row per definition, titulus via
+the X5 declaratoris_titulus chase on the declarator locus (works
+through parenthesized and K&R declarators). The walk also gained
+a nodus_out parameter (threaded through all recursion sites) so
+row-index → node is answerable internally.
+
+**silva_c89_functionis_subscriptio** (new public API, silva.h +
+hospes same-change): specificatores + declarator emitted
+byte-exactly from the tree via silva_scribere_valorem (the M2
+sketch's scribere-from-subtree exercise), skipping corpus and
+declarationes-kr; implicit-int forms emit declarator alone.
+LEARNED: trivia attaches TRAILING in this codebase — signatures
+come out left-clean with one trailing space, the ideal TOC-row
+shape ("static int *f(int a, char b) ").
+
+**Demo (arbor -d on real files)**: hospes.c → 11 rows, 0 errors —
+`fidelis` and `main` as definitio-functionis rows with line
+numbers (Enter targets); the latina-canary declarations as
+initiatus rows. Latina modules (silva_c89_oraculum.c) show only
+their macro-free functions — the expander-integration story,
+named at Chunk B, unchanged (M2d).
+
+NEXT: Chunk D — saltuarius TOC integration (structura pane grows
+TYPI/DECLARATIONES + FUNCTIONES sections via the vista + the
+manual bar: Tab on a silva module lists functions, Enter lands
+on the definition) + M2c RELATIO + FULL phase-log audit (phase
+boundary).

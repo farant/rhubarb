@@ -523,6 +523,46 @@ int main(void)
         }
     }
 
+    /* vista FUNCTIONES + subscriptio per amalgama (M2c C) */
+    {
+        static const char fons_func[] =
+            "int quaestum(int a) { return a; }";
+        SilvaParsura* parsura = silva_c89_parsare(piscina,
+            "hospes_func.c", fons_func,
+            (unsigned int)(sizeof(fons_func) - 1), NULL);
+
+        summa++;
+        if (parsura != NULL
+            && silva_c89_declarationes_numerus(parsura) == 1)
+        {
+            SilvaDeclaratioVista vista;
+            SilvaScriptura subscriptio;
+
+            subscriptio = silva_c89_functionis_subscriptio(
+                piscina, parsura, 0);
+            if (silva_c89_declaratio_vista(parsura, 0, &vista)
+                && vista.titulus.mensura == 8
+                && memcmp(vista.titulus.datum, "quaestum", 8) == 0
+                && subscriptio.successus
+                && subscriptio.textus.mensura == 20
+                && memcmp(subscriptio.textus.datum,
+                       "int quaestum(int a) ", 20) == 0)
+            {
+                fideles++;
+            }
+            else
+            {
+                fprintf(stderr,
+                    "hospes: INFIDELIS: functionis ordo\n");
+            }
+        }
+        else
+        {
+            fprintf(stderr,
+                "hospes: INFIDELIS: functionis numerus\n");
+        }
+    }
+
     /* telemetria arenae */
     {
         size_t usus = silva_piscina_summa_usus(piscina);

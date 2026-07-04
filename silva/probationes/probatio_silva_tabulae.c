@@ -345,10 +345,15 @@ s32 principale (vacuum)
             CREDO_AEQUALIS_S32 (cocta89->initium_index,
                 g89->initium_index);
 
-            /* M2b Chunk A: tres familiae typedef-actae = NOVEM
-             * cellae (probatio_silva_c89 familias ipsas per paria
-             * id exhaustive figit) */
-            CREDO_AEQUALIS_S32 (cocta89->numerus_conflictuum, XIV);
+            /* M2c Chunk A: XIV -> XVI; Chunk B: XVI -> LII paria
+             * (litura K&R prospectuum - probatio_silva_c89
+             * familias VI per paria id exhaustive figit). Custos
+             * praelatarum: generatio recens quoque UNAM cellam
+             * praelatam ferat (alioquin pendens). */
+            CREDO_AEQUALIS_S32 (cocta89->numerus_conflictuum, LII);
+            CREDO_AEQUALIS_I32 (recens89->numerus_praelatarum, I);
+            CREDO_AEQUALIS_I32 ((i32)SILVA_C89_NUMERUS_PRAELATARUM,
+                recens89->numerus_praelatarum);
         }
     }
 

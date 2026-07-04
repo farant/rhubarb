@@ -70,6 +70,17 @@ nomen structura {
     constans character* id;          /* id stabile; NIHIL = pass-through/augmentata */
 } SilvaTabProductio;
 
+/* Cella praelata (<praelatio>, M2c): conflictus in tabulis
+ * DECLARATE resolutus - actio retenta sola manet, reiecta
+ * memoratur. Categoria census: cellae praelatae numerantur et
+ * figuntur sicut cellae conflictuum (numquam tacite crescunt). */
+nomen structura {
+    s32 status;             /* status cellae */
+    s32 terminalis;         /* index symboli terminalis */
+    s32 actio_retenta;      /* SilvaTabActioGenus retentum */
+    s32 productio_remota;   /* index productionis remotae */
+} SilvaTabPraelata;
+
 
 /* ==================================================
  * Registrum generum coctum (layouts nodorum, S21/S20)

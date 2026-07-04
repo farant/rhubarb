@@ -359,6 +359,15 @@ typedef struct SilvaTabProductio {
     const char*  id;
 } SilvaTabProductio;
 
+/* Cella praelata (<praelatio>): conflictus in tabulis DECLARATE
+ * resolutus - categoria census (M2c) */
+typedef struct SilvaTabPraelata {
+    int status;             /* status cellae */
+    int terminalis;         /* index symboli terminalis */
+    int actio_retenta;      /* SilvaTabActioGenus retentum */
+    int productio_remota;   /* index productionis remotae */
+} SilvaTabPraelata;
+
 typedef struct SilvaTabLocus {
     const char* titulus;
     int         species;       /* SilvaLocusSpecies */
@@ -701,6 +710,10 @@ SilvaValor silva_sceletum_ambiguum_fabricare(SilvaPiscina* piscina,
 extern const SilvaTabulaCocta     SILVA_C89_TABULA;
 extern const SilvaRegistrumCoctum SILVA_C89_REGISTRUM;
 
+/* Cellae praelatae grammaticae c89 (census: superficies
+ * interrogabilis - codex est basis datorum) */
+extern const SilvaTabPraelata     SILVA_C89_PRAELATAE[];
+
 SilvaValor silva_c89_construere(SilvaPiscina* piscina,
     int productio, const SilvaValor* valores);
 SilvaValor silva_c89_ambiguum_fabricare(SilvaPiscina* piscina,
@@ -754,5 +767,12 @@ unsigned int silva_c89_declarationes_numerus(
     const SilvaParsura* parsura);
 int silva_c89_declaratio_vista(const SilvaParsura* parsura,
     unsigned int index, SilvaDeclaratioVista* vista);
+
+/* Subscriptio functionis (M2c): specificatores + declarator
+ * octetim ex arbore (sine corpore) - textus ordinis TOC.
+ * Ordo vistae ad indicem definitio-functionis sit. */
+SilvaScriptura silva_c89_functionis_subscriptio(
+    SilvaPiscina* piscina, const SilvaParsura* parsura,
+    unsigned int index);
 
 #endif /* SILVA_H */

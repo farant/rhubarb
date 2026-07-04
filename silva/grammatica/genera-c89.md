@@ -185,10 +185,22 @@ Notes:
   typus-nominatus. species = the appearance/form of a type
   without a declared name. Alternative: designatio-typi.
 - **parametrum**: Greek loan, but standard scientific Latin and
-  universally readable. K&R identifier-list params: the
-  identifiers ride in parametra as folium-identificator; the
-  separate declarations ride in definitio-functionis's
-  declarationes-kr lista.
+  universally readable. K&R identifier-list params: the separate
+  declarations ride in definitio-functionis's declarationes-kr
+  lista.
+- **AMENDMENT PROPOSED (2026-07-04, M2c Chunk B — awaiting
+  Fran)**: K&R identifiers ride as ordinary parametrum readings
+  (typus-nominatus / declarator-titulus — the same GLR fork as
+  prototypes, resolved or honestly retained by the oracle), NOT
+  as folium-identificator as this note originally said. Reason: a
+  dedicated folium-identificator production in parametra would
+  add a THIRD reading to every single-identifier parameter
+  everywhere (prototypes included) — permanent fork pollution for
+  a naming nicety. The presence of a non-empty declarationes-kr
+  lista is what marks a definition as K&R; a vista/query-level
+  interpretation can present params-as-names wherever the kr
+  lista names them. Path back: the production is additive if the
+  query surface ever demands the distinct genus.
 - **typedef gets NO distinct genus** (proposal): a typedef is a
   declaratio whose specificatores contain TYPEDEF — grammar
   reality. The oracle detects it at segment commit from the
@@ -205,7 +217,7 @@ Notes:
 
 | construct | prior name | genus | loci |
 |---|---|---|---|
-| compound block | corpus | **corpus** | tok_aperta, declarationes (lista), sententiae (lista), tok_clausa |
+| compound block | corpus | **corpus** | tok_aperta, elementa (lista), tok_clausa *(amended 2026-07-04, see note)* |
 | expression stmt | sententia-expressionis *(pinned)* | **sententia-expressionis** | expressio, tok_terminator |
 | empty stmt `;` | sententia_vacua | **sententia-vacua** | tok_terminator |
 | if / if-else | si | **si** | tok_verbum, tok_apertum, conditio, tok_clausum, consequens, tok_alioquin?, alioquin? |
@@ -246,8 +258,19 @@ Notes:
   (keeping the group list from swallowing the next label) are an
   M2c INTENTIO item. titulatum (goto labels) stays ISO-shaped —
   grouping is switch-specific.
-- C89 declarations-before-statements: corpus carries TWO listae
-  (declarationes, sententiae) — mirrors the standard's grammar.
+- **AMENDED (2026-07-04, Fran, M2c INTENTIO)**: corpus carries
+  ONE lista (elementa, mixing declaratio | sententia — mirrors
+  the segment level exactly). The original two-lista shape
+  (declarationes, sententiae — "mirrors the standard's grammar")
+  put the declaration-vs-expression fork readings in DIFFERENT
+  listas, so GLR stacks could not re-merge until the whole
+  corpus reduced: the AMBIGUUS wrapper would cover the entire
+  block and the element-wise resolutor would go blind. One lista
+  keeps forks per-element and the oracle machinery unchanged —
+  the standard's factoring leaking into tree shape is exactly
+  what P2 forbids. C89's declarations-before-statements ordering
+  becomes a LINT query; "this block's declarations" = genus
+  filter over elementa.
 
 ---
 
@@ -314,3 +337,20 @@ All nine agenda questions resolved with Fran:
    generator's fixture; saltuarius switches grammars at M2d.
 10. **Switch bodies GROUPED** (explicit sign-off 2026-07-04,
     preview compared) — see §4 note.
+11. **corpus = ONE lista** (explicit sign-off 2026-07-04, M2c
+    INTENTIO, preview compared) — DECISUS amendment; see §4
+    AMENDED note. Path back if wrong: additive (a two-lista
+    vista/query view is derivable from elementa; the grammar
+    shape itself is what the amendment fixes).
+12. **`<praelatio>`** (explicit sign-off 2026-07-04) — the
+    grammar element declaring a table-time preference resolution
+    for a named terminal/action pair; first use = dangling-else
+    (ELSE binds innermost — a language rule, so deterministic
+    resolution is CORRECT). Census discipline extends: cellae
+    praelatae are a pinned census category, enumerated like
+    conflict cells.
+13. **Block-scope typedefs DEFERRED BY NAME** (explicit sign-off
+    2026-07-04) — registration stays file-scope; block-local
+    typedef uses stay AMBIGUUS-retained (never resolved wrong).
+    Evidence gate: count block-local typedefs over solarium +
+    rhubarb at the M2d sweep; landing spot M2d or lint.

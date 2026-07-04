@@ -89,6 +89,17 @@ nomen structura {
 } SilvaGenGenusDef;
 
 /* ================================================
+ * Praelatio (<praelatio terminalis="ELSE"
+ * actio="transponere"/>) - resolutio declarata cellae
+ * conflictus in tabulis (M2c; genera-c89.md decisiones 12)
+ * ================================================ */
+
+nomen structura {
+    s32  terminalis;   /* index symboli terminalis */
+    s32  actio;        /* SilvaGenActioGenus retinendum (s32) */
+} SilvaGenPraelatio;
+
+/* ================================================
  * Grammatica - Collectio plena
  * ================================================ */
 
@@ -96,6 +107,7 @@ nomen structura {
     Xar*                     symbola;           /* Xar de SilvaGenSymbolum */
     Xar*                     productiones;      /* Xar de SilvaGenProductio */
     Xar*                     genera_extra;      /* Xar de SilvaGenGenusExtra */
+    Xar*                     praelationes;      /* Xar de SilvaGenPraelatio */
     s32                      initium_index;     /* Index symboli initialis */
     i32                      numerus_terminalium;
     i32                      numerus_non_terminalium;
@@ -283,12 +295,23 @@ nomen structura {
     b32   habet_conflictum;
 } SilvaGenStatusTabula;
 
+/* Cella praelata: conflictus declarate resolutus (memoria pro
+ * emissione + censu) */
+nomen structura {
+    s32  status;
+    s32  terminalis;
+    s32  actio_retenta;      /* SilvaGenActioGenus (s32) */
+    s32  productio_remota;   /* index productionis remotae */
+} SilvaGenCellaPraelata;
+
 /* Tabula completa ACTION/GOTO */
 nomen structura {
     Xar*                status_tabulae;   /* Xar de SilvaGenStatusTabula */
     SilvaGenGrammatica*  grammatica;
     SilvaGenCollectio*   collectio;
     s32                 numerus_conflictuum;
+    Xar*                cellae_praelatae; /* Xar de SilvaGenCellaPraelata */
+    i32                 numerus_praelatarum;
 } SilvaGenTabula;
 
 /* Construere tabulam ACTION/GOTO ex collectione canonica

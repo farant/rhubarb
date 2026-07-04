@@ -3,6 +3,7 @@
 
 #include "silva_c89_oraculum.h"
 #include "xar.h"
+#include <string.h>
 
 /* ==================================================
  * Ambulator declaratoris (X5)
@@ -314,6 +315,16 @@ _nodum_examinare (
         specificatores = silva_c89_parametrum_specificatores(nodus);
         habet_species = VERUM;
         frange;
+    casus (s32)SILVA_C89_GENUS_DEFINITIO_FUNCTIONIS:
+        /* M2c Chunk C: lectio K&R falsa ("int f" ut specificatores
+         * bini, declarator parenthesi) combinatione invalida est -
+         * X10 eam necat et lectio VERA K&R sola superstes fit
+         * (ISO 6.9.1: identificatores listae nomina SUNT - regula
+         * linguae, resolutio determinata recta) */
+        specificatores =
+            silva_c89_definitio_functionis_specificatores(nodus);
+        habet_species = VERUM;
+        frange;
     ordinarius:
         frange;
     }
@@ -570,6 +581,7 @@ _vistas_ambulare (
     i32*                  numerator,
     s32                   quaesitum,
     SilvaDeclaratioVista* vista,
+    constans SilvaNodus** nodus_out,
     i32                   profunditas)
 {
     si (profunditas > XXXII) redde FALSUM;
@@ -585,7 +597,7 @@ _vistas_ambulare (
 
             si (elem != NIHIL
                 && _vistas_ambulare(*elem, numerator, quaesitum,
-                       vista, profunditas + I))
+                       vista, nodus_out, profunditas + I))
             {
                 redde VERUM;
             }
@@ -635,6 +647,7 @@ _vistas_ambulare (
                     _vistam_implere(vista, tag,
                         (tok.genus == SILVA_VALOR_TOKEN)
                             ? tok.datum.token : NIHIL);
+                    si (nodus_out != NIHIL) *nodus_out = declaratio;
                     redde VERUM;
                 }
                 (*numerator)++;
@@ -659,6 +672,10 @@ _vistas_ambulare (
                     _vistam_implere(vista, elem->datum.nodus,
                         silva_c89_declaratoris_titulus(
                             elem->datum.nodus));
+                    si (nodus_out != NIHIL)
+                    {
+                        *nodus_out = declaratio;
+                    }
                     redde VERUM;
                 }
                 (*numerator)++;
@@ -666,14 +683,37 @@ _vistas_ambulare (
         }
         redde FALSUM;
     }
+    casus (s32)SILVA_C89_GENUS_DEFINITIO_FUNCTIONIS:
+    {
+        /* FUNCTIONES (M2c Chunk C): ordo unus per definitionem,
+         * titulus per catenam declaratoris (X5) */
+        constans SilvaNodus* definitio = valor.datum.nodus;
+
+        si ((s32)*numerator == quaesitum && vista != NIHIL)
+        {
+            SilvaValor declarator =
+                silva_c89_definitio_functionis_declarator(
+                    definitio);
+
+            _vistam_implere(vista, definitio,
+                (declarator.genus == SILVA_VALOR_NODUS)
+                    ? silva_c89_declaratoris_titulus(
+                          declarator.datum.nodus)
+                    : NIHIL);
+            si (nodus_out != NIHIL) *nodus_out = definitio;
+            redde VERUM;
+        }
+        (*numerator)++;
+        redde FALSUM;
+    }
     casus (s32)SILVA_C89_GENUS_CONDITIONALIS:
         redde _vistas_ambulare(
             silva_c89_conditionalis_rami(valor.datum.nodus),
-            numerator, quaesitum, vista, profunditas + I);
+            numerator, quaesitum, vista, nodus_out, profunditas + I);
     casus (s32)SILVA_C89_GENUS_RAMUS_SUMPTUS:
         redde _vistas_ambulare(
             silva_c89_ramus_sumptus_contentum(valor.datum.nodus),
-            numerator, quaesitum, vista, profunditas + I);
+            numerator, quaesitum, vista, nodus_out, profunditas + I);
     casus (s32)SILVA_C89_GENUS_AMBIGUUS:
     {
         /* lectio canonica sola (spina) */
@@ -688,7 +728,7 @@ _vistas_ambulare (
             (i32)canonica.datum.index);
         si (electa == NIHIL) redde FALSUM;
         redde _vistas_ambulare(*electa, numerator, quaesitum,
-            vista, profunditas + I);
+            vista, nodus_out, profunditas + I);
     }
     ordinarius:
         redde FALSUM;
@@ -705,7 +745,7 @@ silva_c89_declarationes_numerus (constans SilvaParsura* parsura)
         redde ZEPHYRUM;
     }
     _vistas_ambulare(parsura->commissio->radix, &numerator, -I,
-        NIHIL, ZEPHYRUM);
+        NIHIL, NIHIL, ZEPHYRUM);
     redde numerator;
 }
 
@@ -723,7 +763,100 @@ silva_c89_declaratio_vista (
         redde FALSUM;
     }
     redde _vistas_ambulare(parsura->commissio->radix, &numerator,
-        (s32)index, vista, ZEPHYRUM);
+        (s32)index, vista, NIHIL, ZEPHYRUM);
+}
+
+SilvaScriptura
+silva_c89_functionis_subscriptio (
+    Piscina*               piscina,
+    constans SilvaParsura* parsura,
+    i32                    index)
+{
+    SilvaScriptura fructus;
+    SilvaDeclaratioVista vista;
+    constans SilvaNodus* nodus = NIHIL;
+    i32 numerator = ZEPHYRUM;
+
+    fructus.successus = FALSUM;
+    fructus.textus.mensura = ZEPHYRUM;
+    fructus.textus.datum = NIHIL;
+    fructus.causa = "ordo non inventus";
+    fructus.sedes = NIHIL;
+
+    si (piscina == NIHIL || parsura == NIHIL
+        || parsura->commissio == NIHIL)
+    {
+        redde fructus;
+    }
+    si (!_vistas_ambulare(parsura->commissio->radix, &numerator,
+            (s32)index, &vista, &nodus, ZEPHYRUM)
+        || nodus == NIHIL)
+    {
+        redde fructus;
+    }
+    si (nodus->genus != (s32)SILVA_C89_GENUS_DEFINITIO_FUNCTIONIS)
+    {
+        fructus.causa = "ordo non functionis";
+        fructus.sedes = nodus;
+        redde fructus;
+    }
+
+    /* specificatores (absunt in forma int-implicita) + declarator,
+     * SINE corpore et declarationibus-kr - subscriptio octetim ex
+     * arbore (trivia intacta, spatia fontis manent) */
+    {
+        SilvaScriptura pars_spec;
+        SilvaScriptura pars_decl;
+        SilvaValor specificatores =
+            silva_c89_definitio_functionis_specificatores(nodus);
+        SilvaValor declarator =
+            silva_c89_definitio_functionis_declarator(nodus);
+        b32 habet_spec =
+            (specificatores.genus == SILVA_VALOR_LISTA
+             && silva_valor_lista_numerus(specificatores)
+                > ZEPHYRUM);
+
+        pars_spec.successus = VERUM;
+        pars_spec.textus.mensura = ZEPHYRUM;
+        pars_spec.textus.datum = NIHIL;
+        si (habet_spec)
+        {
+            pars_spec = silva_scribere_valorem(piscina,
+                specificatores, &SILVA_C89_REGISTRUM,
+                parsura->expansio);
+            si (!pars_spec.successus) redde pars_spec;
+        }
+        pars_decl = silva_scribere_valorem(piscina, declarator,
+            &SILVA_C89_REGISTRUM, parsura->expansio);
+        si (!pars_decl.successus) redde pars_decl;
+
+        fructus.textus.mensura = pars_spec.textus.mensura
+            + pars_decl.textus.mensura;
+        fructus.textus.datum = (i8*)piscina_allocare(piscina,
+            (memoriae_index)(fructus.textus.mensura > ZEPHYRUM
+                ? fructus.textus.mensura : (i32)I));
+        si (fructus.textus.datum == NIHIL)
+        {
+            fructus.textus.mensura = ZEPHYRUM;
+            fructus.causa = "piscina exhausta";
+            redde fructus;
+        }
+        si (pars_spec.textus.mensura > ZEPHYRUM)
+        {
+            memcpy(fructus.textus.datum, pars_spec.textus.datum,
+                (size_t)pars_spec.textus.mensura);
+        }
+        si (pars_decl.textus.mensura > ZEPHYRUM)
+        {
+            memcpy(fructus.textus.datum + pars_spec.textus.mensura,
+                pars_decl.textus.datum,
+                (size_t)pars_decl.textus.mensura);
+        }
+        fructus.successus = VERUM;
+        fructus.causa = NIHIL;
+        fructus.sedes = NIHIL;
+    }
+    redde fructus;
 }
 
 /* ==================================================

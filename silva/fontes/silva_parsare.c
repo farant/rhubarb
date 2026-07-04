@@ -46,6 +46,66 @@ _formam_erroris_invenire (
     redde FALSUM;
 }
 
+/* Lexema in declaratione K&R plausibile (inter ")" et "{"
+ * definitionis veteris: "int f(a) int a; { }"). Coniunctum
+ * LAXUM - suspicio falsa segmentum crassius facit (elementa
+ * plura, arbores rectae), numquam arborem falsam. */
+hic_manens b32
+_kr_plausibile (SilvaLexemaGenus genus)
+{
+    commutatio (genus)
+    {
+    casus SILVA_LEX_IDENTIFICATOR:
+    casus SILVA_LEX_INTEGER:
+    casus SILVA_LEX_STAR:
+    casus SILVA_LEX_COMMA:
+    casus SILVA_LEX_SEMICOLON:
+    casus SILVA_LEX_QUADRA_APERTA:
+    casus SILVA_LEX_QUADRA_CLAUSA:
+    casus SILVA_LEX_PAREN_APERTA:
+    casus SILVA_LEX_PAREN_CLAUSA:
+    casus SILVA_LEX_VOID:
+    casus SILVA_LEX_CHAR:
+    casus SILVA_LEX_SHORT:
+    casus SILVA_LEX_INT:
+    casus SILVA_LEX_LONG:
+    casus SILVA_LEX_FLOAT_KW:
+    casus SILVA_LEX_DOUBLE:
+    casus SILVA_LEX_SIGNED:
+    casus SILVA_LEX_UNSIGNED:
+    casus SILVA_LEX_CONST:
+    casus SILVA_LEX_VOLATILE:
+    casus SILVA_LEX_STRUCT:
+    casus SILVA_LEX_UNION:
+    casus SILVA_LEX_ENUM:
+    casus SILVA_LEX_REGISTER:
+    casus SILVA_LEX_AUTO:
+    casus SILVA_LEX_STATIC:
+    casus SILVA_LEX_EXTERN:
+        redde VERUM;
+    ordinarius:
+        redde FALSUM;
+    }
+}
+
+/* Lexema proximum non-NIHIL post indicem i (NIHIL si nullum) */
+hic_manens SilvaToken*
+_lexema_sequens (constans Xar* lexemata, i32 i, i32 numerus)
+{
+    i32 k;
+
+    per (k = i + I; k < numerus; k++)
+    {
+        SilvaToken** ref = (SilvaToken**)xar_obtinere(lexemata, k);
+
+        si (ref != NIHIL && *ref != NIHIL)
+        {
+            redde *ref;
+        }
+    }
+    redde NIHIL;
+}
+
 /* Nodus ERROR ex lexematibus segmenti [initium, finis) */
 interior SilvaValor
 _nodum_erroris_facere (
@@ -185,10 +245,27 @@ _lexemata_parsare_interna (
 
     /* CIRCUITUS SECANS: segmentum = lexemata usque ad SEMICOLON in
      * profunditate 0 (inclusum); quodque + EOF independenter
-     * parsatur. Fractura -> nodus ERROR (recuperatio per-rem). */
+     * parsatur. Fractura -> nodus ERROR (recuperatio per-rem).
+     *
+     * CONTINUATIO SENTENTIARUM (M2c Chunk A): semicolon in
+     * profunditate 0 limes NON est si lexema proximum sententiam
+     * CURRENTEM continuat, non novam incipit:
+     *   - ELSE: bracchium alioquin ("if (a) x; else y;")
+     *   - WHILE cum fac pendente: cauda fac-dum
+     *     ("do x; while (y);"; numerator nidificationem tractat -
+     *     "do do x; while (a); while (b);" recte)
+     * Suppressio falsa (else vagum) segmentum longius ERROR facit
+     * - ambitus recuperationis crassior, numquam falsa arbor. */
     initium = ZEPHYRUM;
     profunditas = ZEPHYRUM;
     i = ZEPHYRUM;
+    {
+        i32 fac_pendentia = ZEPHYRUM;
+        b32 post_clausa = FALSUM;       /* ")" in prof. 0 visum */
+        i32 intervallum_post = ZEPHYRUM; /* lexemata post ")" */
+        b32 modus_corporis = FALSUM;    /* "{" post ")" - segmentum
+                                         * unco clauditur, non ";" */
+
     dum (i < numerus)
     {
         SilvaToken** ref = (SilvaToken**)xar_obtinere(lexemata, i);
@@ -206,26 +283,156 @@ _lexemata_parsare_interna (
             est_eof = VERUM;
             est_finis_segmenti = (i > initium) ? VERUM : FALSUM;
         }
-        alioquin si (lexema->genus == SILVA_LEX_PAREN_APERTA
-            || lexema->genus == SILVA_LEX_BRACE_APERTA)
+        alioquin si (lexema->genus == SILVA_LEX_PAREN_APERTA)
         {
-            /* Uncus quoque numeratur (M2b): "struct S { int x; };"
-             * UNUM segmentum est - semicola intra corpora aggregata
-             * limites non sunt */
             profunditas++;
         }
-        alioquin si (lexema->genus == SILVA_LEX_PAREN_CLAUSA
-            || lexema->genus == SILVA_LEX_BRACE_CLAUSA)
+        alioquin si (lexema->genus == SILVA_LEX_BRACE_APERTA)
+        {
+            /* Uncus quoque numeratur (M2b): "struct S { int x; };"
+             * UNUM segmentum est. Uncus post ")" in prof. 0 =
+             * corpus definitionis/sententiae (M2c Chunk B) -
+             * segmentum ad uncum clausum finietur, non ad ";"
+             * (definitiones functionum terminatorem NON habent) */
+            si (profunditas == ZEPHYRUM && post_clausa)
+            {
+                modus_corporis = VERUM;
+            }
+            profunditas++;
+        }
+        alioquin si (lexema->genus == SILVA_LEX_PAREN_CLAUSA)
         {
             si (profunditas > ZEPHYRUM)
             {
                 profunditas--;
             }
+            si (profunditas == ZEPHYRUM)
+            {
+                post_clausa = VERUM;
+                intervallum_post = ZEPHYRUM;
+            }
+        }
+        alioquin si (lexema->genus == SILVA_LEX_BRACE_CLAUSA)
+        {
+            si (profunditas > ZEPHYRUM)
+            {
+                profunditas--;
+            }
+            si (profunditas == ZEPHYRUM)
+            {
+                SilvaToken* proximum =
+                    _lexema_sequens(lexemata, i, numerus);
+
+                post_clausa = FALSUM;
+                si (modus_corporis)
+                {
+                    /* corpus clausum = limes, nisi sententia
+                     * continuatur (alioquin / cauda fac-dum) */
+                    si (proximum != NIHIL
+                        && proximum->genus == SILVA_LEX_ELSE)
+                    {
+                        /* continuatio */
+                    }
+                    alioquin si (proximum != NIHIL
+                        && proximum->genus == SILVA_LEX_WHILE
+                        && fac_pendentia > ZEPHYRUM)
+                    {
+                        fac_pendentia--;
+                    }
+                    alioquin
+                    {
+                        est_finis_segmenti = VERUM;
+                    }
+                }
+                alioquin si (proximum != NIHIL
+                    && proximum->genus == SILVA_LEX_WHILE
+                    && fac_pendentia > ZEPHYRUM)
+                {
+                    /* "do { } while" - cauda post corpus uncatum
+                     * sine modo corporis; pendentia consumitur ne
+                     * in sententiam sequentem effluat */
+                    fac_pendentia--;
+                }
+            }
+        }
+        alioquin si (lexema->genus == SILVA_LEX_DO
+            && profunditas == ZEPHYRUM)
+        {
+            fac_pendentia++;
         }
         alioquin si (lexema->genus == SILVA_LEX_SEMICOLON
             && profunditas == ZEPHYRUM)
         {
-            est_finis_segmenti = VERUM;
+            SilvaToken* proximum =
+                _lexema_sequens(lexemata, i, numerus);
+
+            si (proximum != NIHIL
+                && proximum->genus == SILVA_LEX_ELSE)
+            {
+                /* continuatio - non limes */
+            }
+            alioquin si (proximum != NIHIL
+                && proximum->genus == SILVA_LEX_WHILE
+                && fac_pendentia > ZEPHYRUM)
+            {
+                /* cauda fac-dum - non limes */
+                fac_pendentia--;
+            }
+            alioquin si (post_clausa && intervallum_post > ZEPHYRUM)
+            {
+                /* FORTASSE K&R ("int f(a) int a; { }"): ";" post
+                 * ")" cum lexematibus interiacentibus. Percurrere
+                 * per material declarationis: "{" ante lexema
+                 * implausibile = K&R confirmatum, segmentum
+                 * pergit; aliter limes ad candidatum HUNC.
+                 * Suspicio falsa segmentum crassius facit
+                 * (elementa plura, arbores rectae) - numquam
+                 * arborem falsam. */
+                b32 confirmatum = FALSUM;
+                i32 j;
+
+                per (j = i + I; j < numerus; j++)
+                {
+                    SilvaToken** ref_j =
+                        (SilvaToken**)xar_obtinere(lexemata, j);
+                    SilvaToken* tok = (ref_j != NIHIL)
+                        ? *ref_j : NIHIL;
+
+                    si (tok == NIHIL) perge;
+                    si (tok->genus == SILVA_LEX_BRACE_APERTA)
+                    {
+                        confirmatum = VERUM;
+                        frange;
+                    }
+                    si (!_kr_plausibile(tok->genus)) frange;
+                }
+                si (!confirmatum)
+                {
+                    est_finis_segmenti = VERUM;
+                }
+                /* confirmatum: non limes - corpus "{" mox modum
+                 * corporis ponet (post_clausa adhuc VERUM) */
+            }
+            alioquin
+            {
+                est_finis_segmenti = VERUM;
+            }
+        }
+        alioquin si (profunditas == ZEPHYRUM && post_clausa)
+        {
+            /* Lexema aliud in prof. 0 post ")": material
+             * declarationis K&R intervallum auget; lexema
+             * implausibile (operator, litera, ASSIGNATIO...)
+             * clausam exstinguit - ")" ille declarator functionis
+             * esse non potest ("int x = (a) + b;") */
+            si (_kr_plausibile(lexema->genus))
+            {
+                intervallum_post++;
+            }
+            alioquin
+            {
+                post_clausa = FALSUM;
+            }
         }
 
         si (est_finis_segmenti)
@@ -350,6 +557,12 @@ _lexemata_parsare_interna (
                 }
             }
             initium = est_eof ? i : (i + I);
+
+            /* status secantis per segmentum - purgare */
+            fac_pendentia = ZEPHYRUM;
+            post_clausa = FALSUM;
+            intervallum_post = ZEPHYRUM;
+            modus_corporis = FALSUM;
         }
 
         si (est_eof)
@@ -358,6 +571,7 @@ _lexemata_parsare_interna (
         }
         i++;
     }
+    }  /* status secantis */
 
     /* Textura conditionalium (Phase 7 Chunk B) - ANTE commissionem
      * (pater fixup nodos novos ambulatione generica tegit) */

@@ -218,6 +218,8 @@ silva_gen_grammaticam_legere(
     grammatica->productiones = xar_creare(piscina, (i32)magnitudo(SilvaGenProductio));
     grammatica->genera_extra = xar_creare(piscina,
         (i32)magnitudo(SilvaGenGenusExtra));
+    grammatica->praelationes = xar_creare(piscina,
+        (i32)magnitudo(SilvaGenPraelatio));
     grammatica->initium_index = -I;
     grammatica->numerus_terminalium = ZEPHYRUM;
     grammatica->numerus_non_terminalium = ZEPHYRUM;
@@ -277,6 +279,71 @@ silva_gen_grammaticam_legere(
                 (vacuum*)(s64)idx);
 
             grammatica->numerus_terminalium++;
+        }
+    }
+
+    /* ----------------------------------------
+     * Pars I.b: Legere praelationes (optionale) - resolutio
+     * DECLARATA cellae conflictus in tabulis (M2c; genera-c89.md
+     * decisiones 12). Sola actio nota: transponere. Terminalis
+     * ignotus aut actio ignota = error clamans.
+     * ---------------------------------------- */
+    {
+        StmlNodus* praelationes_nodus =
+            stml_invenire_liberum(radix, "praelationes");
+
+        si (praelationes_nodus != NIHIL)
+        {
+            Xar* praelationes_nodi = stml_invenire_omnes_liberos(
+                praelationes_nodus, "praelatio", piscina);
+
+            si (praelationes_nodi)
+            {
+                per (i = ZEPHYRUM;
+                     i < (i32)xar_numerus(praelationes_nodi); i++)
+                {
+                    StmlNodus** nodus_ptr = (StmlNodus**)xar_obtinere(
+                        praelationes_nodi, (i32)i);
+                    chorda*            term;
+                    chorda*            actio;
+                    s32                idx;
+                    SilvaGenPraelatio* nova;
+
+                    si (!nodus_ptr || !*nodus_ptr) perge;
+
+                    term = stml_attributum_capere(*nodus_ptr, "terminalis");
+                    actio = stml_attributum_capere(*nodus_ptr, "actio");
+
+                    si (!term || !actio)
+                    {
+                        fprintf(stderr, "silva_gen: <praelatio> sine "
+                            "terminali aut actione\n");
+                        redde NIHIL;
+                    }
+                    idx = symbolum_invenire(tabula_symbolorum, term);
+                    si (idx < ZEPHYRUM)
+                    {
+                        fprintf(stderr, "silva_gen: praelatio: terminalis "
+                            "'%.*s' ignotus\n",
+                            (int)term->mensura,
+                            (constans character*)term->datum);
+                        redde NIHIL;
+                    }
+                    si (!chorda_aequalis_literis(*actio, "transponere"))
+                    {
+                        fprintf(stderr, "silva_gen: praelatio: actio "
+                            "'%.*s' ignota (sola: transponere)\n",
+                            (int)actio->mensura,
+                            (constans character*)actio->datum);
+                        redde NIHIL;
+                    }
+
+                    nova = (SilvaGenPraelatio*)xar_addere(
+                        grammatica->praelationes);
+                    nova->terminalis = idx;
+                    nova->actio = (s32)SILVA_GEN_ACTIO_TRANSPONERE;
+                }
+            }
         }
     }
 
@@ -2893,6 +2960,104 @@ actio_iam_existit(
     redde FALSUM;
 }
 
+/* Auxiliaris: praelationes applicare (M2c) - ANTE detectionem
+ * conflictuum. Cella (status x terminalis praelatus) quae ET
+ * transpositionem ET reductionem fert: reductiones removentur,
+ * transpositio sola manet, cella in cellas praelatas memoratur
+ * (categoria census - figitur sicut cellae conflictuum).
+ * Cella sine transpositione NON tangitur (praelatio actionem
+ * NOMINATAM retinet, non caecam). */
+hic_manens vacuum
+praelationes_applicare(
+    SilvaGenTabula* tabula)
+{
+    SilvaGenGrammatica* grammatica = tabula->grammatica;
+    Piscina*            piscina = grammatica->piscina;
+    i32                 num_status;
+    i32                 num_praelationum;
+    i32                 p;
+    i32                 s;
+
+    tabula->cellae_praelatae = xar_creare(piscina,
+        (i32)magnitudo(SilvaGenCellaPraelata));
+    tabula->numerus_praelatarum = ZEPHYRUM;
+
+    num_praelationum = (i32)xar_numerus(grammatica->praelationes);
+    si (num_praelationum == ZEPHYRUM) redde;
+
+    num_status = (i32)xar_numerus(tabula->status_tabulae);
+
+    per (p = ZEPHYRUM; p < num_praelationum; p++)
+    {
+        SilvaGenPraelatio* prael = (SilvaGenPraelatio*)xar_obtinere(
+            grammatica->praelationes, p);
+
+        si (!prael) perge;
+
+        per (s = ZEPHYRUM; s < num_status; s++)
+        {
+            SilvaGenStatusTabula* st = (SilvaGenStatusTabula*)
+                xar_obtinere(tabula->status_tabulae, s);
+            b32 habet_trans = FALSUM;
+            b32 habet_red = FALSUM;
+            i32 num_actiones;
+            i32 i;
+
+            si (!st) perge;
+            num_actiones = (i32)xar_numerus(st->actiones);
+
+            per (i = ZEPHYRUM; i < num_actiones; i++)
+            {
+                SilvaGenActioIntroitus* ai = (SilvaGenActioIntroitus*)
+                    xar_obtinere(st->actiones, i);
+
+                si (!ai || ai->terminalis != prael->terminalis) perge;
+                si (ai->actio == SILVA_GEN_ACTIO_TRANSPONERE)
+                {
+                    habet_trans = VERUM;
+                }
+                alioquin si (ai->actio == SILVA_GEN_ACTIO_REDUCERE)
+                {
+                    habet_red = VERUM;
+                }
+            }
+            si (!habet_trans || !habet_red) perge;
+
+            /* Cella conflictus in terminali praelato: reducere
+             * novam listam actionum sine reductionibus eius */
+            {
+                Xar* novae = xar_creare(piscina,
+                    (i32)magnitudo(SilvaGenActioIntroitus));
+
+                per (i = ZEPHYRUM; i < num_actiones; i++)
+                {
+                    SilvaGenActioIntroitus* ai =
+                        (SilvaGenActioIntroitus*)xar_obtinere(
+                            st->actiones, i);
+
+                    si (!ai) perge;
+                    si (ai->terminalis == prael->terminalis
+                        && ai->actio == SILVA_GEN_ACTIO_REDUCERE)
+                    {
+                        SilvaGenCellaPraelata* cella =
+                            (SilvaGenCellaPraelata*)xar_addere(
+                                tabula->cellae_praelatae);
+
+                        cella->status = (s32)s;
+                        cella->terminalis = prael->terminalis;
+                        cella->actio_retenta = prael->actio;
+                        cella->productio_remota = ai->valor;
+                        tabula->numerus_praelatarum++;
+                        perge;  /* remota - non copiatur */
+                    }
+                    *(SilvaGenActioIntroitus*)xar_addere(novae) = *ai;
+                }
+                st->actiones = novae;
+            }
+        }
+    }
+}
+
 /* Auxiliaris: detegere conflictus in tabula */
 hic_manens vacuum
 conflictus_detegere(
@@ -3094,6 +3259,10 @@ silva_gen_tabulam_construere(
             }
         }
     }
+
+    /* Passus 2.b: Praelationes applicare (resolutio declarata -
+     * ANTE detectionem: cellae praelatae conflictus non sunt) */
+    praelationes_applicare(tabula);
 
     /* Passus 3: Detegere conflictus */
     conflictus_detegere(tabula);

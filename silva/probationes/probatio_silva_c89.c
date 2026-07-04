@@ -269,9 +269,13 @@ s32 principale (vacuum)
         s32 prod_dt = -I;
         s32 sym_sd = -I;
         s32 sym_sq = -I;
+        s32 sym_qual = -I;
         i32 f1 = ZEPHYRUM;
         i32 f2 = ZEPHYRUM;
         i32 f3 = ZEPHYRUM;
+        i32 f4 = ZEPHYRUM;
+        i32 f5 = ZEPHYRUM;
+        i32 f6 = ZEPHYRUM;
         i32 ignotae = ZEPHYRUM;
         i32 s;
         i32 i;
@@ -279,7 +283,26 @@ s32 principale (vacuum)
 
         imprimere("\n--- Probans censum conflictuum (familiae) ---\n");
 
-        CREDO_AEQUALIS_S32 (tabula->numerus_conflictuum, XIV);
+        /* M2c Chunk A: XIV -> XVI (F1 +2, latitudo sententiarum;
+         * alioquin pendens praelata - categoria sua infra; greges
+         * et titulatum cellas NULLAS genuerunt).
+         *
+         * M2c Chunk B: XVI -> LII PARIA (44 cellae - cellae
+         * ternis actionibus paria terna numerant). Fons: FOLLOW
+         * declaratorum definitionibus K&R pollutum - post ")"
+         * declarationes-kr sequi possunt, ergo omnes verba
+         * specificatorum in prospectus reductionum declaratoris
+         * intrant. EADEM ambiguitas subiacens (regula parametri
+         * ISO), columnae plures:
+         *   F2 (tn vs dt)          3 -> 23 cellae (litura K&R)
+         *   F4 (tn vs dt vs pi)     4 cellae ternae - F1+F2 uno
+         *   F5 (dt vs pi)           1 cella (QUADRA)
+         *   F6 (trans vs qualificatores-reductio) 3 cellae -
+         *      limes qualificatorum monstratoris, eadem litura
+         * Tempus currendi: saltatio X10 lecturas invalidas
+         * necat - "int add(int a, int b) { }" ambigui ZEPHYRUM
+         * (fixtura infra). */
+        CREDO_AEQUALIS_S32 (tabula->numerus_conflictuum, LII);
 
         per (i = ZEPHYRUM; i < tabula->numerus_productionum; i++)
         {
@@ -313,10 +336,15 @@ s32 principale (vacuum)
             {
                 sym_sq = (s32)i;
             }
+            si (strcmp(tabula->symbola[i].titulus,
+                    "qualificatores") == ZEPHYRUM)
+            {
+                sym_qual = (s32)i;
+            }
         }
         CREDO_VERUM (prod_tn >= ZEPHYRUM && prod_pi >= ZEPHYRUM);
         CREDO_VERUM (prod_dt >= ZEPHYRUM && sym_sd >= ZEPHYRUM);
-        CREDO_VERUM (sym_sq >= ZEPHYRUM);
+        CREDO_VERUM (sym_sq >= ZEPHYRUM && sym_qual >= ZEPHYRUM);
 
         per (s = ZEPHYRUM; s < tabula->numerus_statuum; s++)
         {
@@ -332,6 +360,7 @@ s32 principale (vacuum)
                 b32 dt_adest = FALSUM;
                 b32 transpositio_adest = FALSUM;
                 b32 sd_reducitur = FALSUM;
+                b32 qual_reducitur = FALSUM;
 
                 per (j = initium; j < i; j++)
                 {
@@ -371,6 +400,11 @@ s32 principale (vacuum)
                         {
                             sd_reducitur = VERUM;
                         }
+                        si (tabula->productiones[actio->valor].sinistrum
+                                == sym_qual)
+                        {
+                            qual_reducitur = VERUM;
+                        }
                     }
                 }
                 si (pares < II) perge;
@@ -388,16 +422,54 @@ s32 principale (vacuum)
                 {
                     f3++;
                 }
+                alioquin si (pares == III && tn_adest && dt_adest
+                    && pi_adest)
+                {
+                    f4++;
+                }
+                alioquin si (pares == II && dt_adest && pi_adest)
+                {
+                    f5++;
+                }
+                alioquin si (pares == II && transpositio_adest
+                    && qual_reducitur)
+                {
+                    f6++;
+                }
                 alioquin
                 {
                     ignotae++;
                 }
             }
         }
-        CREDO_AEQUALIS_I32 (f1, IV);
-        CREDO_AEQUALIS_I32 (f2, III);
+        CREDO_AEQUALIS_I32 (f1, VI);
+        CREDO_AEQUALIS_I32 (f2, XXIII);
         CREDO_AEQUALIS_I32 (f3, VII);
+        CREDO_AEQUALIS_I32 (f4, IV);
+        CREDO_AEQUALIS_I32 (f5, I);
+        CREDO_AEQUALIS_I32 (f6, III);
         CREDO_AEQUALIS_I32 (ignotae, ZEPHYRUM);
+
+        /* CATEGORIA PRAELATA (M2c): cellae declarate resolutae
+         * figuntur sicut cellae conflictuum - numerus ET
+         * identitas (per titulum terminalis + id productionis,
+         * non per numerum status - status cum grammatica
+         * moventur). Una sola: alioquin pendens. */
+        CREDO_AEQUALIS_I32 ((i32)SILVA_C89_NUMERUS_PRAELATARUM, I);
+        {
+            constans SilvaTabPraelata* cella = &SILVA_C89_PRAELATAE[0];
+
+            CREDO_AEQUALIS_S32 (cella->actio_retenta,
+                (s32)SILVA_TAB_ACTIO_TRANSPONERE);
+            CREDO_VERUM (strcmp(
+                tabula->symbola[cella->terminalis].titulus,
+                "ELSE") == ZEPHYRUM);
+            CREDO_VERUM (tabula->productiones[cella->productio_remota]
+                .id != NIHIL);
+            CREDO_VERUM (strcmp(
+                tabula->productiones[cella->productio_remota].id,
+                "si-sine-alioquin") == ZEPHYRUM);
+        }
     }
 
 
@@ -696,7 +768,9 @@ s32 principale (vacuum)
         imprimere("\n--- Probans honestatem (sententiae M2c) ---\n");
 
         /* M2b: "int x;" IAM declaratio est (ascensus honestus);
-         * sententiae regiminis (si/dum/per) adhuc ERROR - M2c */
+         * M2c Chunk A: sententiae regiminis IAM arbores sunt -
+         * laqueus praemonitorius M2b hic ASCENDIT in probationem
+         * positivam */
         parsura = _parsare(piscina, "int x;");
         CREDO_VERUM (parsura->successus);
         CREDO_AEQUALIS_I32 (parsura->numerus_errorum, ZEPHYRUM);
@@ -705,7 +779,9 @@ s32 principale (vacuum)
 
         parsura = _parsare(piscina, "if (x) y;");
         CREDO_VERUM (parsura->successus);
-        CREDO_MAIOR_I32 (parsura->numerus_errorum, ZEPHYRUM);
+        CREDO_AEQUALIS_I32 (parsura->numerus_errorum, ZEPHYRUM);
+        CREDO_AEQUALIS_S32 (_sententia_prima(parsura)->genus,
+            (s32)SILVA_C89_GENUS_SI);
 
         /* sententiae plures */
         parsura = _parsare(piscina, "a; b;");
@@ -1681,6 +1757,444 @@ s32 principale (vacuum)
 
 
     /* ========================================================
+     * PROBARE: vectis lapifex SENT portata (M2c Chunk A) - omnes
+     * 30 inputus probationis probatio_lapifex_c89_sent.c contra
+     * genera silvae DECISA, per VIAM CONSUMPTORIS
+     * (silva_c89_parsare). Omnes puri et sine ambiguis.
+     * ======================================================== */
+
+    {
+        nomen structura {
+            constans character* fons;
+            s32                 genus;
+        } VectisSent;
+        hic_manens constans VectisSent VECTIS[] = {
+            { "x = 5;",
+                (s32)SILVA_C89_GENUS_SENTENTIA_EXPRESSIONIS },
+            { ";", (s32)SILVA_C89_GENUS_SENTENTIA_VACUA },
+            { "{ }", (s32)SILVA_C89_GENUS_CORPUS },
+            { "{ x = 1; }", (s32)SILVA_C89_GENUS_CORPUS },
+            { "{ x = 1; y = 2; z = 3; }",
+                (s32)SILVA_C89_GENUS_CORPUS },
+            { "{ int x; x = 1; }", (s32)SILVA_C89_GENUS_CORPUS },
+            { "break;", (s32)SILVA_C89_GENUS_FRANGE },
+            { "continue;", (s32)SILVA_C89_GENUS_PERGE },
+            { "goto end;", (s32)SILVA_C89_GENUS_SALTA },
+            { "return;", (s32)SILVA_C89_GENUS_REDDE },
+            { "return x + 1;", (s32)SILVA_C89_GENUS_REDDE },
+            { "if (x) y = 1;", (s32)SILVA_C89_GENUS_SI },
+            { "if (x) y = 1; else y = 2;",
+                (s32)SILVA_C89_GENUS_SI },
+            { "if (a) if (b) x = 1; else y = 2;",
+                (s32)SILVA_C89_GENUS_SI },
+            { "while (x) x = x - 1;", (s32)SILVA_C89_GENUS_DUM },
+            { "do x = x + 1; while (x < 10);",
+                (s32)SILVA_C89_GENUS_FAC_DUM },
+            { "for (i = 0; i < 10; i = i + 1) x = x + 1;",
+                (s32)SILVA_C89_GENUS_PER },
+            { "for (;;) x = 1;", (s32)SILVA_C89_GENUS_PER },
+            { "for (i = 0;;) x = 1;", (s32)SILVA_C89_GENUS_PER },
+            { "for (;i < 10;) x = 1;", (s32)SILVA_C89_GENUS_PER },
+            { "switch (x) { case 1: y = 1; break; "
+              "default: y = 0; break; }",
+                (s32)SILVA_C89_GENUS_COMMUTATIO },
+            { "label: x = 1;", (s32)SILVA_C89_GENUS_TITULATUM },
+            { "if (x) { while (y) { if (z) break; "
+              "else continue; } }",
+                (s32)SILVA_C89_GENUS_SI },
+            { "for (i = 0; i < 5; i = i + 1) { x = x + i; }",
+                (s32)SILVA_C89_GENUS_PER },
+            { "{ int x = 1; int y = 2; if (x < y) return x; "
+              "else return y; }",
+                (s32)SILVA_C89_GENUS_CORPUS },
+            { "2 + 3;",
+                (s32)SILVA_C89_GENUS_SENTENTIA_EXPRESSIONIS },
+            { "for (;; i = i + 1) x = 1;",
+                (s32)SILVA_C89_GENUS_PER },
+            { "do { x = x + 1; y = y - 1; } while (x < y);",
+                (s32)SILVA_C89_GENUS_FAC_DUM },
+            { "while (1) { break; }", (s32)SILVA_C89_GENUS_DUM },
+            { "if (x) { y = 1; } else { y = 2; }",
+                (s32)SILVA_C89_GENUS_SI }
+        };
+        i32 numerus = (i32)(magnitudo(VECTIS)
+            / magnitudo(VECTIS[ZEPHYRUM]));
+        i32 i;
+
+        imprimere("\n--- Probans vectem lapifex sent (%d) ---\n",
+            (int)numerus);
+
+        per (i = ZEPHYRUM; i < numerus; i++)
+        {
+            SilvaParsura* parsura = silva_c89_parsare(piscina,
+                "probatio.c", VECTIS[i].fons,
+                (i32)strlen(VECTIS[i].fons), NIHIL);
+            SilvaNodus* radix_nodus;
+
+            CREDO_VERUM (parsura->successus);
+            CREDO_AEQUALIS_I32 (parsura->numerus_errorum, ZEPHYRUM);
+            CREDO_AEQUALIS_I32 (xar_numerus(
+                parsura->commissio->ambigui), ZEPHYRUM);
+            radix_nodus = _sententia_prima(parsura);
+            CREDO_NON_NIHIL (radix_nodus);
+            si (radix_nodus != NIHIL)
+            {
+                CREDO_AEQUALIS_S32 (radix_nodus->genus,
+                    VECTIS[i].genus);
+            }
+        }
+    }
+
+
+    /* ========================================================
+     * PROBARE: definitio functionis (M2c Chunk B) - ANSI + K&R,
+     * genus + loci + limites segmentorum (secans "()-ante-{")
+     * ======================================================== */
+
+    {
+        SilvaParsura* parsura;
+        SilvaNodus*   definitio;
+
+        imprimere("\n--- Probans definitiones functionum ---\n");
+
+        /* ANSI: loci plena, declarationes-kr ABSENS */
+        parsura = _parsare(piscina, "int f(void) { return 0; }");
+        CREDO_VERUM (parsura->successus);
+        CREDO_AEQUALIS_I32 (parsura->numerus_errorum, ZEPHYRUM);
+        definitio = _sententia_prima(parsura);
+        CREDO_AEQUALIS_S32 (definitio->genus,
+            (s32)SILVA_C89_GENUS_DEFINITIO_FUNCTIONIS);
+        CREDO_NON_NIHIL (_nodus_valoris(
+            silva_c89_definitio_functionis_declarator(definitio)));
+        CREDO_NON_NIHIL (_nodus_valoris(
+            silva_c89_definitio_functionis_corpus(definitio)));
+        CREDO_AEQUALIS_I32 (silva_valor_lista_numerus(
+            silva_c89_definitio_functionis_declarationes_kr(
+                definitio)), ZEPHYRUM);
+
+        /* K&R: declarationes-kr praesens (II), ambigui ZEPHYRUM
+         * (M2c Chunk C: lectio falsa ["int f" specificatores
+         * bini] combinatione invalida - X10 necat; ISO 6.9.1
+         * regulam confirmat: identificatores listae nomina sunt) */
+        {
+            SilvaParsura* parsura_kr = silva_c89_parsare(piscina,
+                "probatio.c", "int f(a, b) int a; char b; { return a; }",
+                (i32)strlen("int f(a, b) int a; char b; { return a; }"),
+                NIHIL);
+            SilvaNodus* definitio_kr;
+
+            CREDO_VERUM (parsura_kr->successus);
+            CREDO_AEQUALIS_I32 (parsura_kr->numerus_errorum, ZEPHYRUM);
+            CREDO_AEQUALIS_I32 (parsura_kr->numerus_segmentorum, I);
+            CREDO_AEQUALIS_I32 ((i32)xar_numerus(
+                parsura_kr->commissio->ambigui), ZEPHYRUM);
+            definitio_kr = _sententia_prima(parsura_kr);
+            CREDO_AEQUALIS_S32 (definitio_kr->genus,
+                (s32)SILVA_C89_GENUS_DEFINITIO_FUNCTIONIS);
+            CREDO_AEQUALIS_I32 (silva_valor_lista_numerus(
+                silva_c89_definitio_functionis_declarationes_kr(
+                    definitio_kr)), II);
+        }
+
+        /* K&R int implicito: sine specificatoribus, purum */
+        parsura = _parsare(piscina, "f(a, b) int a; char b; { }");
+        CREDO_VERUM (parsura->successus);
+        CREDO_AEQUALIS_I32 (parsura->numerus_errorum, ZEPHYRUM);
+        CREDO_AEQUALIS_I32 ((i32)xar_numerus(
+            parsura->commissio->ambigui), ZEPHYRUM);
+        definitio = _sententia_prima(parsura);
+        CREDO_AEQUALIS_S32 (definitio->genus,
+            (s32)SILVA_C89_GENUS_DEFINITIO_FUNCTIONIS);
+        CREDO_AEQUALIS_I32 (silva_valor_lista_numerus(
+            silva_c89_definitio_functionis_declarationes_kr(
+                definitio)), II);
+
+        /* Limites segmentorum (secans M2c B): definitio unco
+         * clauditur - definitiones binae = segmenta bina */
+        parsura = _parsare(piscina, "int f(void) { } int g(void) { }");
+        CREDO_AEQUALIS_I32 (parsura->numerus_segmentorum, II);
+        CREDO_AEQUALIS_I32 (silva_valor_lista_numerus(
+            parsura->commissio->radix), II);
+
+        /* prototypum ";" statim post ")" = limes (non K&R) */
+        parsura = _parsare(piscina, "int f(void); int f(void) { }");
+        CREDO_AEQUALIS_I32 (parsura->numerus_segmentorum, II);
+        CREDO_AEQUALIS_S32 (_sententia_prima(parsura)->genus,
+            (s32)SILVA_C89_GENUS_DECLARATIO);
+        CREDO_AEQUALIS_S32 (_elementum(parsura->commissio->radix,
+            I)->genus, (s32)SILVA_C89_GENUS_DEFINITIO_FUNCTIONIS);
+
+        /* structura reddita: uncus structurae NON post ")" -
+         * modus corporis recte ad uncum SECUNDUM */
+        parsura = _parsare(piscina, "struct S { int x; } f(void) { }");
+        CREDO_AEQUALIS_I32 (parsura->numerus_segmentorum, I);
+        CREDO_AEQUALIS_I32 (parsura->numerus_errorum, ZEPHYRUM);
+        CREDO_AEQUALIS_S32 (_sententia_prima(parsura)->genus,
+            (s32)SILVA_C89_GENUS_DEFINITIO_FUNCTIONIS);
+
+        /* monstrator functionis initiatus: ASSIGNATIO clausam
+         * exstinguit - "= &g" numquam corpus */
+        parsura = _parsare(piscina, "int (*fp)(void) = &g; int y;");
+        CREDO_AEQUALIS_I32 (parsura->numerus_segmentorum, II);
+        CREDO_AEQUALIS_I32 (parsura->numerus_errorum, ZEPHYRUM);
+
+        /* cauda fac-dum post corpus uncatum: pendentia consumpta
+         * ne in dum sequentem effluat */
+        parsura = _parsare(piscina,
+            "do { x; } while (a); while (b) y;");
+        CREDO_AEQUALIS_I32 (parsura->numerus_segmentorum, II);
+        CREDO_AEQUALIS_I32 (parsura->numerus_errorum, ZEPHYRUM);
+        CREDO_AEQUALIS_S32 (_sententia_prima(parsura)->genus,
+            (s32)SILVA_C89_GENUS_FAC_DUM);
+        CREDO_AEQUALIS_S32 (_elementum(parsura->commissio->radix,
+            I)->genus, (s32)SILVA_C89_GENUS_DUM);
+    }
+
+
+    /* ========================================================
+     * PROBARE: saltatio in corpus (Chunk B) - typedef gradus
+     * plagulae in corpore functionis resolvit (furca
+     * per-elementum intra corpus + oraculum positionale);
+     * typedef INTRA corpus NON registratur (differentia
+     * nominata, decisiones 13)
+     * ======================================================== */
+
+    {
+        SilvaParsura* parsura;
+        SilvaNodus*   definitio;
+        SilvaNodus*   corpus;
+        SilvaValor    elementa;
+
+        imprimere("\n--- Probans saltationem in corpus ---\n");
+
+        /* typedef gradus plagulae -> usus in corpore RESOLVITUR
+         * (ambiguus nidificatus intra corpus, oraculum novit) */
+        parsura = silva_c89_parsare(piscina, "probatio.c",
+            "typedef int T; void f(void) { T x; x = 1; }",
+            (i32)strlen("typedef int T; void f(void) { T x; x = 1; }"),
+            NIHIL);
+        CREDO_VERUM (parsura->successus);
+        CREDO_AEQUALIS_I32 (parsura->numerus_errorum, ZEPHYRUM);
+        CREDO_AEQUALIS_I32 ((i32)xar_numerus(
+            parsura->commissio->ambigui), ZEPHYRUM);
+        definitio = _elementum(parsura->commissio->radix, I);
+        CREDO_AEQUALIS_S32 (definitio->genus,
+            (s32)SILVA_C89_GENUS_DEFINITIO_FUNCTIONIS);
+        corpus = _nodus_valoris(
+            silva_c89_definitio_functionis_corpus(definitio));
+        elementa = silva_c89_corpus_elementa(corpus);
+        CREDO_AEQUALIS_S32 (_elementum(elementa, ZEPHYRUM)->genus,
+            (s32)SILVA_C89_GENUS_DECLARATIO);
+
+        /* typedef INTRA corpus: NON registratur (visus manet
+         * planus gradu plagulae - decisiones 13); usus furcans
+         * posterior ("T * x;" - declaratio-vel-expressio)
+         * AMBIGUUS honeste manet. NB "T x;" non furcaret -
+         * lectio expressionis grammatice non existit! */
+        parsura = silva_c89_parsare(piscina, "probatio.c",
+            "void f(void) { typedef int T; } T * x;",
+            (i32)strlen("void f(void) { typedef int T; } T * x;"),
+            NIHIL);
+        CREDO_VERUM (parsura->successus);
+        CREDO_AEQUALIS_S32 (_elementum(parsura->commissio->radix,
+            I)->genus, (s32)SILVA_C89_GENUS_AMBIGUUS);
+    }
+
+
+    /* ========================================================
+     * PROBARE: vista FUNCTIONES + subscriptio (M2c Chunk C) -
+     * ordines definitionum in vista declarationum; textus
+     * subscriptionis octetim ex arbore (scribere e subarbore)
+     * ======================================================== */
+
+    {
+        SilvaParsura* parsura;
+        SilvaDeclaratioVista vista;
+
+        imprimere("\n--- Probans vistam FUNCTIONES ---\n");
+
+        parsura = silva_c89_parsare(piscina, "probatio.c",
+            "typedef int T; static int *f(int a, char b) "
+            "{ return 0; } int g;",
+            (i32)strlen("typedef int T; static int *f(int a, char b) "
+            "{ return 0; } int g;"), NIHIL);
+        CREDO_VERUM (parsura->successus);
+        CREDO_AEQUALIS_I32 (parsura->numerus_errorum, ZEPHYRUM);
+
+        /* tres ordines: T (declaratio), f (definitio), g */
+        CREDO_AEQUALIS_I32 (
+            silva_c89_declarationes_numerus(parsura), III);
+
+        CREDO_VERUM (silva_c89_declaratio_vista(parsura, I, &vista));
+        CREDO_VERUM (strcmp(vista.genus,
+            "definitio-functionis") == ZEPHYRUM);
+        CREDO_CHORDA_AEQUALIS_LITERIS (vista.titulus, "f");
+
+        /* subscriptio: specificatores + declarator, sine corpore
+         * (trivia praecedentia manent - octeti fontis) */
+        {
+            SilvaScriptura subscriptio =
+                silva_c89_functionis_subscriptio(piscina, parsura, I);
+
+            CREDO_VERUM (subscriptio.successus);
+            /* trivia SEQUENTIA lexematibus adhaerent - textus
+             * sinistrorsum purus, spatium unum caudale (ante
+             * corpus) - forma optima ordinis TOC */
+            CREDO_CHORDA_AEQUALIS_LITERIS (subscriptio.textus,
+                "static int *f(int a, char b) ");
+        }
+
+        /* ordo non functionis: fractura clara */
+        {
+            SilvaScriptura subscriptio =
+                silva_c89_functionis_subscriptio(piscina, parsura,
+                    ZEPHYRUM);
+
+            CREDO_VERUM (!subscriptio.successus);
+            CREDO_NON_NIHIL (subscriptio.causa);
+        }
+
+        /* K&R: titulus per catenam declaratoris post collapsum */
+        parsura = silva_c89_parsare(piscina, "probatio.c",
+            "int f(a) int a; { return a; }",
+            (i32)strlen("int f(a) int a; { return a; }"), NIHIL);
+        CREDO_AEQUALIS_I32 (
+            silva_c89_declarationes_numerus(parsura), I);
+        CREDO_VERUM (silva_c89_declaratio_vista(parsura, ZEPHYRUM,
+            &vista));
+        CREDO_VERUM (strcmp(vista.genus,
+            "definitio-functionis") == ZEPHYRUM);
+        CREDO_CHORDA_AEQUALIS_LITERIS (vista.titulus, "f");
+
+        /* forma int-implicita: subscriptio = declarator solus */
+        parsura = silva_c89_parsare(piscina, "probatio.c",
+            "f(a) int a; { }",
+            (i32)strlen("f(a) int a; { }"), NIHIL);
+        {
+            SilvaScriptura subscriptio =
+                silva_c89_functionis_subscriptio(piscina, parsura,
+                    ZEPHYRUM);
+
+            CREDO_VERUM (subscriptio.successus);
+            CREDO_CHORDA_AEQUALIS_LITERIS (subscriptio.textus,
+                "f(a) ");
+        }
+    }
+
+
+    /* ========================================================
+     * PROBARE: vectis lapifex FUNC portata (M2c Chunk B) - omnes
+     * 20 inputus probationis probatio_lapifex_c89_func.c contra
+     * genera silvae, per VIAM CONSUMPTORIS. Multi-elementa:
+     * numerus elementorum + genus primi asseruntur.
+     * ======================================================== */
+
+    {
+        nomen structura {
+            constans character* fons;
+            i32                 elementa;
+            s32                 genus_primi;
+        } VectisFunc;
+        hic_manens constans VectisFunc VECTIS[] = {
+            { "int f(void) { return 0; }", I,
+                (s32)SILVA_C89_GENUS_DEFINITIO_FUNCTIONIS },
+            { "int add(int a, int b) { return a + b; }", I,
+                (s32)SILVA_C89_GENUS_DEFINITIO_FUNCTIONIS },
+            { "void noop(void) { }", I,
+                (s32)SILVA_C89_GENUS_DEFINITIO_FUNCTIONIS },
+            { "int *get_ptr(void) { return 0; }", I,
+                (s32)SILVA_C89_GENUS_DEFINITIO_FUNCTIONIS },
+            { "int factorial(int n) { if (n <= 1) return 1; "
+              "return n; }", I,
+                (s32)SILVA_C89_GENUS_DEFINITIO_FUNCTIONIS },
+            { "int x; int y;", II,
+                (s32)SILVA_C89_GENUS_DECLARATIO },
+            { "int f(void) { return 0; } "
+              "int main(void) { return f(); }", II,
+                (s32)SILVA_C89_GENUS_DEFINITIO_FUNCTIONIS },
+            { "int a; int b; int c;", III,
+                (s32)SILVA_C89_GENUS_DECLARATIO },
+            { "int x; void f(void) { }", II,
+                (s32)SILVA_C89_GENUS_DECLARATIO },
+            { "typedef int my_int; my_int x;", II,
+                (s32)SILVA_C89_GENUS_DECLARATIO },
+            { "typedef unsigned long size_t; size_t n;", II,
+                (s32)SILVA_C89_GENUS_DECLARATIO },
+            { "typedef struct Foo { int x; } Foo_t; Foo_t f;", II,
+                (s32)SILVA_C89_GENUS_DECLARATIO },
+            { "typedef int i32; "
+              "i32 add(i32 a, i32 b) { return a + b; }", II,
+                (s32)SILVA_C89_GENUS_DECLARATIO },
+            { "typedef int i32;\n"
+              "i32 add(i32 a, i32 b) { return a + b; }\n"
+              "i32 main(void) { i32 x; x = add(1, 2); return x; }",
+                III, (s32)SILVA_C89_GENUS_DECLARATIO },
+            { "typedef int base_t; typedef base_t derived_t; "
+              "derived_t v;", III,
+                (s32)SILVA_C89_GENUS_DECLARATIO },
+            { "static int helper(void) { return 0; }", I,
+                (s32)SILVA_C89_GENUS_DEFINITIO_FUNCTIONIS },
+            { "void setup(void) { int x; x = 0; }", I,
+                (s32)SILVA_C89_GENUS_DEFINITIO_FUNCTIONIS },
+            { "int x;", I, (s32)SILVA_C89_GENUS_DECLARATIO },
+            { "unsigned long f(void) { return 0; }", I,
+                (s32)SILVA_C89_GENUS_DEFINITIO_FUNCTIONIS },
+            { "int f(void) { } int g; int h(void) { } int i;", IV,
+                (s32)SILVA_C89_GENUS_DEFINITIO_FUNCTIONIS }
+        };
+        i32 numerus = (i32)(magnitudo(VECTIS)
+            / magnitudo(VECTIS[ZEPHYRUM]));
+        i32 i;
+
+        imprimere("\n--- Probans vectem lapifex func (%d) ---\n",
+            (int)numerus);
+
+        per (i = ZEPHYRUM; i < numerus; i++)
+        {
+            SilvaParsura* parsura = silva_c89_parsare(piscina,
+                "probatio.c", VECTIS[i].fons,
+                (i32)strlen(VECTIS[i].fons), NIHIL);
+            SilvaNodus* primus;
+
+            CREDO_VERUM (parsura->successus);
+            CREDO_AEQUALIS_I32 (parsura->numerus_errorum, ZEPHYRUM);
+            CREDO_AEQUALIS_I32 (xar_numerus(
+                parsura->commissio->ambigui), ZEPHYRUM);
+            CREDO_AEQUALIS_I32 (silva_valor_lista_numerus(
+                parsura->commissio->radix), VECTIS[i].elementa);
+            primus = _sententia_prima(parsura);
+            CREDO_NON_NIHIL (primus);
+            si (primus != NIHIL)
+            {
+                CREDO_AEQUALIS_S32 (primus->genus,
+                    VECTIS[i].genus_primi);
+            }
+        }
+
+        /* praeoneratio oraculi (vectis XX): typi externi ante
+         * parsuram praeonerati (situs 0) resolvunt sine typedef
+         * in fonte */
+        {
+            SilvaOraculum* oraculum = silva_oraculum_creare(piscina);
+            SilvaParsura* parsura;
+
+            silva_oraculum_typum_addere_literis(oraculum, "size_t");
+            silva_oraculum_typum_addere_literis(oraculum, "ptrdiff_t");
+            parsura = silva_c89_parsare(piscina, "probatio.c",
+                "size_t n; ptrdiff_t d;",
+                (i32)strlen("size_t n; ptrdiff_t d;"), oraculum);
+            CREDO_VERUM (parsura->successus);
+            CREDO_AEQUALIS_I32 (xar_numerus(
+                parsura->commissio->ambigui), ZEPHYRUM);
+            CREDO_AEQUALIS_S32 (_sententia_prima(parsura)->genus,
+                (s32)SILVA_C89_GENUS_DECLARATIO);
+            CREDO_AEQUALIS_S32 (_elementum(parsura->commissio->radix,
+                I)->genus, (s32)SILVA_C89_GENUS_DECLARATIO);
+        }
+    }
+
+
+    /* ========================================================
      * PROBARE: corpus syntaxis v1 (Chunk C). INVENTUM: corpus
      * paene totum DECLARATIONES est (expressiones intra
      * initiatores vivunt) - "dimidium expressionum" INTENTIONIS
@@ -1730,24 +2244,56 @@ s32 principale (vacuum)
                 }
                 lineae++;
 
-                /* decodificare literam C: cita exteriora cadunt,
-                 * \" et \\ solvuntur (corpus = "paste-ready") */
+                /* decodificare literam C: cita exteriora cadunt;
+                 * \" \\ \n \t solvuntur; literae ADIACENTES
+                 * ("pars\n" "pars") CONCATENANTUR (forma corporis
+                 * "paste-ready" - decodificator vetus ad citum
+                 * primum frangebat et lineas multi-literas
+                 * TRUNCABAT; inventum M2c Chunk B) */
                 per (k = I; k < (i32)m; k++)
                 {
-                    si (linea[k] == '\\'
-                        && (linea[k + I] == '"' || linea[k + I] == '\\'))
+                    si (linea[k] == '\\' && k + I < (i32)m)
                     {
-                        decodata[d++] = linea[k + I];
-                        k++;
-                    }
-                    alioquin si (linea[k] == '"')
-                    {
-                        frange;  /* cita clausurae */
-                    }
-                    alioquin
-                    {
+                        si (linea[k + I] == '"'
+                            || linea[k + I] == '\\')
+                        {
+                            decodata[d++] = linea[k + I];
+                            k++;
+                            perge;
+                        }
+                        si (linea[k + I] == 'n')
+                        {
+                            decodata[d++] = '\n';
+                            k++;
+                            perge;
+                        }
+                        si (linea[k + I] == 't')
+                        {
+                            decodata[d++] = '\t';
+                            k++;
+                            perge;
+                        }
                         decodata[d++] = linea[k];
+                        perge;
                     }
+                    si (linea[k] == '"')
+                    {
+                        /* clausura - litera adiacens sequitur? */
+                        i32 p = k + I;
+
+                        dum (p < (i32)m && (linea[p] == ' '
+                            || linea[p] == '\t'))
+                        {
+                            p++;
+                        }
+                        si (p < (i32)m && linea[p] == '"')
+                        {
+                            k = p;  /* resumere post citum aperiens */
+                            perge;
+                        }
+                        frange;  /* cita clausurae vera */
+                    }
+                    decodata[d++] = linea[k];
                 }
 
                 piscina_lineae = piscina_generare_dynamicum(
@@ -1777,11 +2323,305 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_I32 (arbores, lineae);  /* totalitas */
         /* ASCENSUS COMPREHENSIONIS (metrum M2d in miniatura):
          * M2a = 0 -> M2b A = 69 (declarationes) -> B = 87 (aggregata
-         * + sectio uncorum).
-         * Reliquum = aggregata (Chunk B), functiones/sententiae
-         * (M2c), extensiones gcc (numquam). Mutatio deliberata,
-         * numquam tacita. */
-        CREDO_AEQUALIS_I32 (sine_erroribus, LXXXVII);
+         * + sectio uncorum) -> M2c A = 87 (lineae sententiarum
+         * omnes intra definitiones involutae) -> M2c B = 123
+         * (MESSIS: definitiones + sententiae earum = 30 lineae;
+         * decodificator harnessis correctus = 5 [lineae
+         * multi-literae truncabantur - artefactum, non
+         * comprehensio]; virgula caudalis enumeratorum = 1
+         * [C99-ismus, norma robustitatis]).
+         * RELIQUUM II = "__attribute__((packed)) int x;" et
+         * "__extension__ __attribute__((unused)) int y;" -
+         * extensiones gcc, NOMINATAE, porta evidentiae = si
+         * corpus verum eas umquam poscit (fontes rhubarb eas
+         * non habent). Mutatio deliberata, numquam tacita. */
+        CREDO_AEQUALIS_I32 (sine_erroribus, CXXIII);
+    }
+
+
+    /* ========================================================
+     * PROBARE: sententiae (M2c Chunk A) - genera regiminis
+     * ======================================================== */
+
+    {
+        SilvaParsura* parsura;
+        SilvaNodus*   sententia;
+
+        imprimere("\n--- Probans sententias (genera regiminis) ---\n");
+
+        /* dum */
+        parsura = _parsare(piscina, "while (x) y;");
+        CREDO_VERUM (parsura->successus);
+        CREDO_AEQUALIS_I32 (parsura->numerus_errorum, ZEPHYRUM);
+        sententia = _sententia_prima(parsura);
+        CREDO_AEQUALIS_S32 (sententia->genus, (s32)SILVA_C89_GENUS_DUM);
+        CREDO_AEQUALIS_S32 (_nodus_valoris(
+            silva_c89_dum_corpus(sententia))->genus,
+            (s32)SILVA_C89_GENUS_SENTENTIA_EXPRESSIONIS);
+
+        /* fac-dum */
+        parsura = _parsare(piscina, "do x; while (y);");
+        CREDO_VERUM (parsura->successus);
+        CREDO_AEQUALIS_I32 (parsura->numerus_errorum, ZEPHYRUM);
+        sententia = _sententia_prima(parsura);
+        CREDO_AEQUALIS_S32 (sententia->genus,
+            (s32)SILVA_C89_GENUS_FAC_DUM);
+
+        /* per - clausula plena (nodus verus, tria loci) */
+        parsura = _parsare(piscina, "for (i = 0; i < n; i++) f(i);");
+        CREDO_VERUM (parsura->successus);
+        CREDO_AEQUALIS_I32 (parsura->numerus_errorum, ZEPHYRUM);
+        sententia = _sententia_prima(parsura);
+        CREDO_AEQUALIS_S32 (sententia->genus, (s32)SILVA_C89_GENUS_PER);
+        {
+            SilvaNodus* clausula = _nodus_valoris(
+                silva_c89_per_clausula(sententia));
+
+            CREDO_NON_NIHIL (clausula);
+            CREDO_AEQUALIS_S32 (clausula->genus,
+                (s32)SILVA_C89_GENUS_PER_CLAUSULA);
+            CREDO_NON_NIHIL (_nodus_valoris(
+                silva_c89_per_clausula_initium(clausula)));
+            CREDO_NON_NIHIL (_nodus_valoris(
+                silva_c89_per_clausula_conditio(clausula)));
+            CREDO_NON_NIHIL (_nodus_valoris(
+                silva_c89_per_clausula_passus(clausula)));
+        }
+
+        /* per - clausula vacua: loci absentes = NIHIL */
+        parsura = _parsare(piscina, "for (;;) x;");
+        CREDO_VERUM (parsura->successus);
+        CREDO_AEQUALIS_I32 (parsura->numerus_errorum, ZEPHYRUM);
+        sententia = _sententia_prima(parsura);
+        {
+            SilvaNodus* clausula = _nodus_valoris(
+                silva_c89_per_clausula(sententia));
+
+            CREDO_NON_NIHIL (clausula);
+            CREDO_NIHIL (_nodus_valoris(
+                silva_c89_per_clausula_initium(clausula)));
+            CREDO_NIHIL (_nodus_valoris(
+                silva_c89_per_clausula_conditio(clausula)));
+            CREDO_NIHIL (_nodus_valoris(
+                silva_c89_per_clausula_passus(clausula)));
+        }
+
+        /* redde cum valore et sine */
+        parsura = _parsare(piscina, "return x + 1;");
+        sententia = _sententia_prima(parsura);
+        CREDO_AEQUALIS_S32 (sententia->genus, (s32)SILVA_C89_GENUS_REDDE);
+        CREDO_NON_NIHIL (_nodus_valoris(silva_c89_redde_valor(sententia)));
+
+        parsura = _parsare(piscina, "return;");
+        sententia = _sententia_prima(parsura);
+        CREDO_AEQUALIS_S32 (sententia->genus, (s32)SILVA_C89_GENUS_REDDE);
+        CREDO_NIHIL (_nodus_valoris(silva_c89_redde_valor(sententia)));
+
+        /* salta / frange / perge / vacua */
+        parsura = _parsare(piscina, "goto finis;");
+        CREDO_AEQUALIS_S32 (_sententia_prima(parsura)->genus,
+            (s32)SILVA_C89_GENUS_SALTA);
+        parsura = _parsare(piscina, "break;");
+        CREDO_AEQUALIS_S32 (_sententia_prima(parsura)->genus,
+            (s32)SILVA_C89_GENUS_FRANGE);
+        parsura = _parsare(piscina, "continue;");
+        CREDO_AEQUALIS_S32 (_sententia_prima(parsura)->genus,
+            (s32)SILVA_C89_GENUS_PERGE);
+        parsura = _parsare(piscina, ";");
+        CREDO_AEQUALIS_S32 (_sententia_prima(parsura)->genus,
+            (s32)SILVA_C89_GENUS_SENTENTIA_VACUA);
+
+        /* titulatum: deterministicum (prospectus praecisi - cella
+         * COLON numquam nata est, vide censum) */
+        parsura = _parsare(piscina, "iterum: x = 1;");
+        CREDO_VERUM (parsura->successus);
+        CREDO_AEQUALIS_I32 (parsura->numerus_errorum, ZEPHYRUM);
+        CREDO_AEQUALIS_I32 ((i32)xar_numerus(
+            parsura->commissio->ambigui), ZEPHYRUM);
+        sententia = _sententia_prima(parsura);
+        CREDO_AEQUALIS_S32 (sententia->genus,
+            (s32)SILVA_C89_GENUS_TITULATUM);
+        CREDO_AEQUALIS_S32 (_nodus_valoris(
+            silva_c89_titulatum_sententia(sententia))->genus,
+            (s32)SILVA_C89_GENUS_SENTENTIA_EXPRESSIONIS);
+    }
+
+
+    /* ========================================================
+     * PROBARE: corpus = UNA lista (emendatio DECISUS 2026-07-04)
+     * - declaratio et sententia VICINAE in elementis; furca
+     * declaratio-vel-expressio PER ELEMENTUM involvitur, numquam
+     * corpus totum
+     * ======================================================== */
+
+    {
+        SilvaParsura* parsura;
+        SilvaNodus*   corpus;
+        SilvaValor    elementa;
+
+        imprimere("\n--- Probans corpus (lista una, furca per elementum) ---\n");
+
+        /* isomorphismus: declaratio + sententia vicinae */
+        parsura = _parsare(piscina, "{ int x; f(); }");
+        CREDO_VERUM (parsura->successus);
+        CREDO_AEQUALIS_I32 (parsura->numerus_errorum, ZEPHYRUM);
+        corpus = _sententia_prima(parsura);
+        CREDO_AEQUALIS_S32 (corpus->genus, (s32)SILVA_C89_GENUS_CORPUS);
+        elementa = silva_c89_corpus_elementa(corpus);
+        CREDO_AEQUALIS_I32 (silva_valor_lista_numerus(elementa), II);
+        CREDO_AEQUALIS_S32 (_elementum(elementa, ZEPHYRUM)->genus,
+            (s32)SILVA_C89_GENUS_DECLARATIO);
+        CREDO_AEQUALIS_S32 (_elementum(elementa, I)->genus,
+            (s32)SILVA_C89_GENUS_SENTENTIA_EXPRESSIONIS);
+
+        /* corpus vacuum */
+        parsura = _parsare(piscina, "{ }");
+        corpus = _sententia_prima(parsura);
+        CREDO_AEQUALIS_S32 (corpus->genus, (s32)SILVA_C89_GENUS_CORPUS);
+        CREDO_AEQUALIS_I32 (silva_valor_lista_numerus(
+            silva_c89_corpus_elementa(corpus)), ZEPHYRUM);
+
+        /* THE MONEY SHOT (intentio M2c, quaestio aperta I): furca
+         * "foo * bar;" intra corpus UNUM elementum involvit -
+         * vicinus purus manet, corpus ipsum purum manet. Sub
+         * forma bi-listarum reiecta involucrum corpus TOTUM
+         * cepisset et resolutor caecus fuisset. */
+        parsura = _parsare(piscina, "{ foo * bar; baz(); }");
+        CREDO_VERUM (parsura->successus);
+        CREDO_AEQUALIS_I32 (parsura->numerus_errorum, ZEPHYRUM);
+        corpus = _sententia_prima(parsura);
+        CREDO_AEQUALIS_S32 (corpus->genus, (s32)SILVA_C89_GENUS_CORPUS);
+        elementa = silva_c89_corpus_elementa(corpus);
+        CREDO_AEQUALIS_I32 (silva_valor_lista_numerus(elementa), II);
+        CREDO_AEQUALIS_S32 (_elementum(elementa, ZEPHYRUM)->genus,
+            (s32)SILVA_C89_GENUS_AMBIGUUS);
+        CREDO_AEQUALIS_S32 (_elementum(elementa, I)->genus,
+            (s32)SILVA_C89_GENUS_SENTENTIA_EXPRESSIONIS);
+    }
+
+
+    /* ========================================================
+     * PROBARE: alioquin pendens (praelatio) - ELSE intimo ligat,
+     * ZEPHYRUM ambigui (resolutio in TABULIS, non per furcam)
+     * ======================================================== */
+
+    {
+        SilvaParsura* parsura;
+        SilvaNodus*   si_externum;
+        SilvaNodus*   si_internum;
+
+        imprimere("\n--- Probans alioquin pendens (praelatio) ---\n");
+
+        parsura = _parsare(piscina, "if (a) if (b) x; else y;");
+        CREDO_VERUM (parsura->successus);
+        CREDO_AEQUALIS_I32 (parsura->numerus_errorum, ZEPHYRUM);
+        CREDO_AEQUALIS_I32 ((i32)xar_numerus(
+            parsura->commissio->ambigui), ZEPHYRUM);
+
+        si_externum = _sententia_prima(parsura);
+        CREDO_AEQUALIS_S32 (si_externum->genus, (s32)SILVA_C89_GENUS_SI);
+        /* externum: alioquin ABSENS */
+        CREDO_NIHIL (_nodus_valoris(
+            silva_c89_si_alioquin(si_externum)));
+        /* internum: alioquin ADEST (intimo ligat - ISO 3.6.4.1) */
+        si_internum = _nodus_valoris(
+            silva_c89_si_consequens(si_externum));
+        CREDO_NON_NIHIL (si_internum);
+        CREDO_AEQUALIS_S32 (si_internum->genus, (s32)SILVA_C89_GENUS_SI);
+        CREDO_NON_NIHIL (_nodus_valoris(
+            silva_c89_si_alioquin(si_internum)));
+
+        /* forma simplex adhuc integra */
+        parsura = _parsare(piscina, "if (a) x; else y;");
+        si_externum = _sententia_prima(parsura);
+        CREDO_AEQUALIS_S32 (si_externum->genus, (s32)SILVA_C89_GENUS_SI);
+        CREDO_NON_NIHIL (_nodus_valoris(
+            silva_c89_si_alioquin(si_externum)));
+        parsura = _parsare(piscina, "if (a) x;");
+        CREDO_NIHIL (_nodus_valoris(
+            silva_c89_si_alioquin(_sententia_prima(parsura))));
+    }
+
+
+    /* ========================================================
+     * PROBARE: commutatio gregata (decisiones 10) - casus/
+     * ordinarius sententias possident; praefatio vaga ante
+     * gregem primum; per-currentia = lista vacua
+     * ======================================================== */
+
+    {
+        SilvaParsura* parsura;
+        SilvaNodus*   selectio;
+        SilvaNodus*   corpus;
+        SilvaValor    elementa;
+
+        imprimere("\n--- Probans commutationem gregatam ---\n");
+
+        parsura = _parsare(piscina,
+            "switch (x) { case 1: a; b; case 2: default: c; }");
+        CREDO_VERUM (parsura->successus);
+        CREDO_AEQUALIS_I32 (parsura->numerus_errorum, ZEPHYRUM);
+        selectio = _sententia_prima(parsura);
+        CREDO_AEQUALIS_S32 (selectio->genus,
+            (s32)SILVA_C89_GENUS_COMMUTATIO);
+        corpus = _nodus_valoris(silva_c89_commutatio_corpus(selectio));
+        CREDO_NON_NIHIL (corpus);
+        CREDO_AEQUALIS_S32 (corpus->genus, (s32)SILVA_C89_GENUS_CORPUS);
+        elementa = silva_c89_corpus_elementa(corpus);
+        CREDO_AEQUALIS_I32 (silva_valor_lista_numerus(elementa), III);
+        {
+            SilvaNodus* grex_i = _elementum(elementa, ZEPHYRUM);
+            SilvaNodus* grex_ii = _elementum(elementa, I);
+            SilvaNodus* grex_iii = _elementum(elementa, II);
+
+            CREDO_AEQUALIS_S32 (grex_i->genus,
+                (s32)SILVA_C89_GENUS_CASUS);
+            CREDO_AEQUALIS_I32 (silva_valor_lista_numerus(
+                silva_c89_casus_sententiae(grex_i)), II);
+
+            /* per-currentia: "case 2:" statim sequente ordinario -
+             * lista vacua, grex tamen verus */
+            CREDO_AEQUALIS_S32 (grex_ii->genus,
+                (s32)SILVA_C89_GENUS_CASUS);
+            CREDO_AEQUALIS_I32 (silva_valor_lista_numerus(
+                silva_c89_casus_sententiae(grex_ii)), ZEPHYRUM);
+
+            CREDO_AEQUALIS_S32 (grex_iii->genus,
+                (s32)SILVA_C89_GENUS_ORDINARIUS);
+            CREDO_AEQUALIS_I32 (silva_valor_lista_numerus(
+                silva_c89_ordinarius_sententiae(grex_iii)), I);
+        }
+
+        /* praefatio vaga (declaratio + sententia ante gregem
+         * primum - scissio ec-ante/ec-post, cellae NULLAE) */
+        parsura = _parsare(piscina,
+            "switch (x) { int y; f(); case 1: a; }");
+        CREDO_VERUM (parsura->successus);
+        CREDO_AEQUALIS_I32 (parsura->numerus_errorum, ZEPHYRUM);
+        corpus = _nodus_valoris(silva_c89_commutatio_corpus(
+            _sententia_prima(parsura)));
+        elementa = silva_c89_corpus_elementa(corpus);
+        CREDO_AEQUALIS_I32 (silva_valor_lista_numerus(elementa), III);
+        CREDO_AEQUALIS_S32 (_elementum(elementa, ZEPHYRUM)->genus,
+            (s32)SILVA_C89_GENUS_DECLARATIO);
+        CREDO_AEQUALIS_S32 (_elementum(elementa, I)->genus,
+            (s32)SILVA_C89_GENUS_SENTENTIA_EXPRESSIONIS);
+        CREDO_AEQUALIS_S32 (_elementum(elementa, II)->genus,
+            (s32)SILVA_C89_GENUS_CASUS);
+
+        /* commutatio vacua */
+        parsura = _parsare(piscina, "switch (x) { }");
+        CREDO_VERUM (parsura->successus);
+        corpus = _nodus_valoris(silva_c89_commutatio_corpus(
+            _sententia_prima(parsura)));
+        CREDO_AEQUALIS_I32 (silva_valor_lista_numerus(
+            silva_c89_corpus_elementa(corpus)), ZEPHYRUM);
+
+        /* commutatio intra gregem (nidificata) */
+        parsura = _parsare(piscina,
+            "switch (x) { case 1: switch (y) { case 2: a; } b; }");
+        CREDO_VERUM (parsura->successus);
+        CREDO_AEQUALIS_I32 (parsura->numerus_errorum, ZEPHYRUM);
     }
 
 
@@ -1833,7 +2673,42 @@ s32 principale (vacuum)
             "(struct S*)p;",
             "sizeof(enum E);",
             "typedef struct S { int x; } S_t;",
-            "struct A { struct B { int x; } b; } a;"
+            "struct A { struct B { int x; } b; } a;",
+            /* sententiae (M2c Chunk A) */
+            "if (a) x;",
+            "if (a) x; else y;",
+            "if (a) if (b) x; else y;",
+            "while (x) y;",
+            "do x; while (y);",
+            "for (i = 0; i < n; i++) f(i);",
+            "for (;;) x;",
+            "for (i = 0, j = n; ; j--) ;",
+            "{ int x; f(); }",
+            "{ }",
+            "{ foo * bar; baz(); }",
+            "switch (x) { case 1: a; b; case 2: default: c; }",
+            "switch (x) { int y; f(); case 1: a; }",
+            "switch (x) { }",
+            "iterum: x = 1;",
+            "goto finis;",
+            "break;", "continue;", "return;", "return x + 1;",
+            "if (a) { x; } else { y; }",
+            "while (x) { if (y) break; else continue; }",
+            "  if  ( a )  x ;  else  y ;",
+            "/* ante */ while (x) /* medium */ y; /* post */",
+            /* definitiones functionum (M2c Chunk B) */
+            "int f(void) { return 0; }",
+            "int add(int a, int b) { return a + b; }",
+            "int f(a, b) int a; char b; { return a; }",
+            "f(a) int a; { }",
+            "struct S { int x; } f(void) { return s; }",
+            "int f(void) { } int g(void) { }",
+            "int f(void); int f(void) { }",
+            "int (*fp)(void) = &g;",
+            "static void f(void) { do { x--; } while (x); }",
+            "int main(void) { int x; x = 1; return x; }",
+            "enum Flags { F1 = 1, F2 = 2, };",
+            "void f(void) /* corpus */ { }  /* cauda */"
         };
         i32 i;
         i32 numerus = (i32)(magnitudo(FIXTURAE)
