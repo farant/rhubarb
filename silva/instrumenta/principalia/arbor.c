@@ -175,8 +175,18 @@ s32 principale (integer argc, character** argv)
 
     /* saltatio oraculi plena (M2b): typedefs plagulae ipsius
      * registrantur et solvunt - barra manualis */
-    parsura = silva_c89_parsare(piscina, "arbor.c", fons,
-        (i32)strlen(fons), NIHIL);
+    /* contextus latinus (M2d A): arbor idem videt ac saltuarius -
+     * fontes latini expanduntur */
+    {
+        SilvaContextus* ctx = silva_contextus_creare(piscina);
+
+        si (ctx != NIHIL)
+        {
+            (vacuum)silva_contextus_latinam_addere(ctx);
+        }
+        parsura = silva_c89_parsare_cum_contextu(piscina, ctx,
+            "arbor.c", fons, (i32)strlen(fons), NIHIL);
+    }
     si (parsura == NIHIL || !parsura->successus)
     {
         fprintf(stderr, "arbor: parsatio fracta\n");

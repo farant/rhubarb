@@ -746,6 +746,13 @@ SilvaParsura* silva_c89_parsare(SilvaPiscina* piscina,
     const char* via, const char* fons, unsigned int mensura,
     SilvaOraculum* oraculum);
 
+/* Eadem cum contextu hospitis (lexica latina, includenda
+ * praebita) - grammatica c89 expansione pascitur (M2d) */
+SilvaParsura* silva_c89_parsare_cum_contextu(
+    SilvaPiscina* piscina, const SilvaContextus* contextus,
+    const char* via, const char* fons, unsigned int mensura,
+    SilvaOraculum* oraculum);
+
 /* Resolutor verus (filtrum combinationis X10 + oraculum
  * positionale X3 + retentio ignotorum) - pro machinatione
  * propria (silva_parsare/silva_recanonicare directis) */
@@ -775,6 +782,8 @@ typedef struct SilvaDeclaratioVista {
     int         linea;
     int         situs;    /* byte_offset */
     int est_typedef;          /* TYPEDEF in specificatoribus */
+    int fons_index;           /* plagula lexematis tituli; -1 si
+                               * abest (filtrum fons_princeps) */
 } SilvaDeclaratioVista;
 
 unsigned int silva_c89_declarationes_numerus(
@@ -3440,6 +3449,19 @@ silva_c89_parsare (
     constans character* fons,
     i32                 mensura,
     SilvaOraculum*      oraculum);
+
+/* Eadem sed cum CONTEXTU hospitis (M2d Chunk A): lexica
+ * (latina!), includenda praebita, fines - grammatica c89 tandem
+ * expansione pascitur. Contextus diu vivit, inter parsuras
+ * reusabilis. */
+SilvaParsura*
+silva_c89_parsare_cum_contextu (
+    SilvaPiscina*                 piscina,
+    constans SilvaContextus* contextus,
+    constans character*      via,
+    constans character*      fons,
+    i32                      mensura,
+    SilvaOraculum*           oraculum);
 
 #endif /* SILVA_C89_ORACULUM_H */
 
@@ -6705,7 +6727,10 @@ nomen enumeratio {
     SILVA_DIR_ELIF,
     SILVA_DIR_ELSE,
     SILVA_DIR_ENDIF,
-    SILVA_DIR_IGNOTA       /* alia (line/pragma/error/...) */
+    SILVA_DIR_PRAGMA,      /* #pragma - vera directiva C89 (6.8.6),
+                            * semantice iners: capta, consumpta,
+                            * numquam in fluxum parsurae (M2d A) */
+    SILVA_DIR_IGNOTA       /* alia (line/error/...) */
 } SilvaDirectivaGenus;
 
 /* Estne lexema verum initium directivae? (# ad initium lineae LOGICAE) */
@@ -6866,6 +6891,10 @@ _directivae_genus (SilvaXar* lexemata, i32 i_cancellum, i32 i_finis)
     si (_chorda_est_literis(verbum->valor, "endif"))
     {
         redde SILVA_DIR_ENDIF;
+    }
+    si (_chorda_est_literis(verbum->valor, "pragma"))
+    {
+        redde SILVA_DIR_PRAGMA;
     }
     redde SILVA_DIR_IGNOTA;
 }
@@ -7670,6 +7699,16 @@ _fluxum_processare (
             {
                 i = _regionem_processare(exp, lexemata, i, i_finis,
                     pater, reliqua, directivae);
+                perge;
+            }
+            alioquin si (genus_dir == SILVA_DIR_PRAGMA)
+            {
+                /* #pragma: capta ut linea directivae (scribere
+                 * eam reficit), numquam in fluxum parsurae -
+                 * "#pragma once" segmenta non iam frangit */
+                _directivam_capere(exp, directivae, lexemata, i,
+                    i_linea_finis);
+                i = i_linea_finis;
                 perge;
             }
             /* ELIF/ELSE/ENDIF sine regione, NULLA, IGNOTA:
@@ -33354,6 +33393,7 @@ _vistam_implere (
         vista->titulus = titulus->valor;
         vista->linea = (s32)titulus->linea;
         vista->situs = titulus->byte_offset;
+        vista->fons_index = titulus->fons_index;
     }
     alioquin
     {
@@ -33361,6 +33401,7 @@ _vistam_implere (
         vista->titulus.datum = NIHIL;
         vista->linea = -I;
         vista->situs = _situs_primi(nodus_ordinis, ZEPHYRUM);
+        vista->fons_index = -I;
     }
 }
 
@@ -33811,6 +33852,32 @@ silva_c89_parsare (
     parsura = silva_parsare(piscina, via, fons, mensura,
         &SILVA_C89_GRAMMATICA, oraculum, silva_c89_resolutor,
         (vacuum*)oraculum);
+    si (parsura != NIHIL && parsura->commissio != NIHIL)
+    {
+        silva_c89_politicam_imponere(parsura->commissio, oraculum);
+    }
+    redde parsura;
+}
+
+SilvaParsura*
+silva_c89_parsare_cum_contextu (
+    SilvaPiscina*                 piscina,
+    constans SilvaContextus* contextus,
+    constans character*      via,
+    constans character*      fons,
+    i32                      mensura,
+    SilvaOraculum*           oraculum)
+{
+    SilvaParsura* parsura;
+
+    si (oraculum == NIHIL)
+    {
+        oraculum = silva_oraculum_creare(piscina);
+        si (oraculum == NIHIL) redde NIHIL;
+    }
+    parsura = silva_parsare_cum_contextu(piscina, contextus, via,
+        fons, mensura, &SILVA_C89_GRAMMATICA, oraculum,
+        silva_c89_resolutor, (vacuum*)oraculum);
     si (parsura != NIHIL && parsura->commissio != NIHIL)
     {
         silva_c89_politicam_imponere(parsura->commissio, oraculum);

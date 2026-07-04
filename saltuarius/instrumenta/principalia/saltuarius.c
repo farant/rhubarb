@@ -595,7 +595,7 @@ _iussum_fontis (SaltuariusApp* app,
             frange;
         casus SALT_ACTIO_STRUCTURA:
             si (!saltuarius_structura_aedificare(app->index,
-                app->liber))
+                app->liber, app->nexus))
             {
                 saltuarius_res_nuntiare(app->res,
                     "(structura nihil habet)", NUNTIUS_QUADRA);

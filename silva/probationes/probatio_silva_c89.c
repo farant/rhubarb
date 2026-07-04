@@ -2092,6 +2092,39 @@ s32 principale (vacuum)
                 "f(a) ");
         }
 
+        /* fons_index (M2d A+): ordo ex plagula inclusa fert
+         * indicem SUUM, ordo plagulae principis fert
+         * fons_princeps - filtrum TOC hoc distinguit */
+        {
+            SilvaContextus* ctx = silva_contextus_creare(piscina);
+            SilvaParsura* parsura_ctx;
+
+            CREDO_NON_NIHIL (ctx);
+            CREDO_VERUM (silva_contextus_praebere(ctx, "amicus.h",
+                "int ex_amico(void);\n",
+                (i32)strlen("int ex_amico(void);\n")) >= ZEPHYRUM);
+            parsura_ctx = silva_c89_parsare_cum_contextu(piscina,
+                ctx, "probatio.c",
+                "#include \"amicus.h\"\nint meus(void) { return 0; }",
+                (i32)strlen("#include \"amicus.h\"\n"
+                    "int meus(void) { return 0; }"), NIHIL);
+            CREDO_VERUM (parsura_ctx->successus);
+            CREDO_AEQUALIS_I32 (
+                silva_c89_declarationes_numerus(parsura_ctx), II);
+            /* ordo 0 = ex_amico (ex amicus.h), ordo 1 = meus */
+            CREDO_VERUM (silva_c89_declaratio_vista(parsura_ctx,
+                ZEPHYRUM, &vista));
+            CREDO_CHORDA_AEQUALIS_LITERIS (vista.titulus,
+                "ex_amico");
+            CREDO_VERUM (vista.fons_index
+                != parsura_ctx->fons_princeps);
+            CREDO_VERUM (silva_c89_declaratio_vista(parsura_ctx, I,
+                &vista));
+            CREDO_CHORDA_AEQUALIS_LITERIS (vista.titulus, "meus");
+            CREDO_AEQUALIS_S32 (vista.fons_index,
+                parsura_ctx->fons_princeps);
+        }
+
         /* trivia praecedentia TONSA (vexillum commenti ante
          * definitionem prorsum adhaeret - textus ordinis purus
          * manet; inventum probatione manuali Fran in

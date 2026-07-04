@@ -69,10 +69,13 @@ saltuarius_structura_creare (Piscina* persistens);
 
 /* Indicem aedificare ex parsura libri. VERUM si ordines nati
  * (tabula aperienda); FALSUM si nihil narrabile (merus / sine
- * parsura / vacuum). Selectio in primum ordinem saltabilem. */
+ * parsura / vacuum). Selectio in primum ordinem saltabilem.
+ * nexus: contextus eius (latina + praebita) parsuram c89
+ * sectionum pascit (M2d A); NIHIL licet - parsura cruda tunc. */
 b32
 saltuarius_structura_aedificare (SaltuariusStructura* index,
-    constans SaltuariusLiber* liber);
+    constans SaltuariusLiber* liber,
+    constans SaltuariusNexus* nexus);
 
 vacuum
 saltuarius_structura_claudere (SaltuariusStructura* index);

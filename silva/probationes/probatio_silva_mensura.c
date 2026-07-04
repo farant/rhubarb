@@ -21,6 +21,8 @@
 #include "silva_glr.h"
 #include "silva_commissio.h"
 #include "silva_parsare.h"
+#include "silva_contextus.h"
+#include "silva_c89_oraculum.h"
 #include "silva_scribere.h"
 #include "credo.h"
 #include <stdio.h>
@@ -39,13 +41,9 @@ hic_manens constans SilvaGrammatica GRAMMATICA_SCELETI = {
     NIHIL
 };
 
-hic_manens constans SilvaGrammatica GRAMMATICA_C89 = {
-    &SILVA_C89_TABULA,
-    &SILVA_C89_REGISTRUM,
-    silva_c89_construere,
-    silva_c89_ambiguum_fabricare,
-    NIHIL
-};
+/* (fasciculus localis GRAMMATICA_C89 sublatus M2d A - via
+ * consumptoris silva_c89_parsare_cum_contextu fasciculum
+ * SILVA_C89_GRAMMATICA cum unco fert) */
 
 interior i8*
 _plagulam_legere (Piscina* piscina, constans character* via, i32* mensura_out)
@@ -130,6 +128,7 @@ s32 principale (vacuum)
     i32 summa_errorum;
     i32 frons_maxima;
     i32 fideles_arboris;
+    SilvaContextus* ctx_latinus;
     duplex summa_parsare_c89_ms;
     i32 summa_errorum_c89;
     i32 frons_maxima_c89;
@@ -168,6 +167,17 @@ s32 principale (vacuum)
     summa_errorum_c89 = ZEPHYRUM;
     frons_maxima_c89 = ZEPHYRUM;
     fideles_arboris_c89 = ZEPHYRUM;
+
+    /* Contextus latinus communis (M2d Chunk A): lexicon latina
+     * ante quamque plagulam - grammatica c89 tandem expansione
+     * pascitur. Diu vivit, inter parsuras reusatur. */
+    {
+        ctx_latinus = silva_contextus_creare(piscina);
+        si (ctx_latinus != NIHIL)
+        {
+            (vacuum)silva_contextus_latinam_addere(ctx_latinus);
+        }
+    }
 
     corpus = opendir(via_corporis);
     si (corpus == NIHIL)
@@ -286,9 +296,9 @@ s32 principale (vacuum)
             si (piscina_c89 != NIHIL)
             {
                 c0 = clock();
-                parsura = silva_parsare(piscina_c89,
-                    introitus->d_name, (constans character*)fons,
-                    mensura, &GRAMMATICA_C89, NIHIL, NIHIL, NIHIL);
+                parsura = silva_c89_parsare_cum_contextu(
+                    piscina_c89, ctx_latinus, introitus->d_name,
+                    (constans character*)fons, mensura, NIHIL);
                 c1 = clock();
                 summa_parsare_c89_ms += (duplex)(c1 - c0) * 1000.0
                     / (duplex)CLOCKS_PER_SEC;
@@ -298,6 +308,13 @@ s32 principale (vacuum)
 
                     summa_errorum_c89 +=
                         (i32)parsura->numerus_errorum;
+                    si (verbosa && parsura->numerus_errorum
+                        > ZEPHYRUM)
+                    {
+                        imprimere("  [c89 errores %d] %s\n",
+                            (int)parsura->numerus_errorum,
+                            introitus->d_name);
+                    }
                     si ((i32)parsura->frons_maxima > frons_maxima_c89)
                     {
                         frons_maxima_c89 = (i32)parsura->frons_maxima;
@@ -384,6 +401,13 @@ s32 principale (vacuum)
      * Fractura = furcae inflatae, remedium nominatum = uncus
      * filtri actionum (Phase 4, evidentia-portatus) */
     CREDO_VERUM (frons_maxima_c89 <= VIII);
+    /* MURUS ACCEPTIONIS (M2d Chunk A): corpus totum sine nodis
+     * ERROR per contextum latinum (arcus M2 completus: M1 = 41k
+     * nodi RECUPERATIONIS -> M2b 62 -> M2c 42 [corpora latina
+     * inexpansa] -> M2d 0 [expansio pascit grammaticam]; #pragma
+     * directiva vera facta eodem ictu). Fractura = regressio
+     * comprehensionis - numerus verus, numquam laxandus. */
+    CREDO_AEQUALIS_I32 (summa_errorum_c89, ZEPHYRUM);
     imprimere("  apex:     %8.0f B medius, %.0f B maximus\n",
         numerus > ZEPHYRUM ? summa_apex_octetorum / (duplex)numerus : 0.0,
         apex_maximus);

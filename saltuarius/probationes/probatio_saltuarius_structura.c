@@ -107,7 +107,13 @@ s32 principale (vacuum)
         "typedef int T;\n"             /* linea 17: TYPI */
         "int quadratum(int x) { return x * x; }\n"
                                        /* linea 18: FUNCTIONES */
-        "int duplum(int x);\n";        /* linea 19: PROTOTYPA */
+        "int duplum(int x);\n"         /* linea 19: PROTOTYPA */
+        "nomen structura { int n; } Probandum;\n";
+                                       /* linea 20: LATINA! sine
+                                        * contextu = falsa functio
+                                        * "structura"; cum contextu
+                                        * nexus = typedef struct ->
+                                        * TYPI (M2d A) */
 
     piscina = piscina_generare_dynamicum("probatio_salt_index",
         16777216);
@@ -125,7 +131,8 @@ s32 principale (vacuum)
         capita[ZEPHYRUM].titulus = chorda_ex_literis("amicus.h",
             piscina);
         capita[ZEPHYRUM].textus = chorda_ex_literis(
-            "#include <absens.h>\n#define CELATUM 1\n", piscina);
+            "#include <absens.h>\n#define CELATUM 1\n"
+            "int ex_amico(void);\n", piscina);
         capita[ZEPHYRUM].via_absoluta = chorda_ex_literis(
             "/abs/amicus.h", piscina);
         CREDO_AEQUALIS_S32 (
@@ -147,7 +154,7 @@ s32 principale (vacuum)
 
         imprimere("\n--- Probans aedificationem ---\n");
 
-        CREDO_VERUM (saltuarius_structura_aedificare(index, liber));
+        CREDO_VERUM (saltuarius_structura_aedificare(index, liber, nexus));
         CREDO_VERUM (index->apertum);
         per (k = ZEPHYRUM; k < (s32)index->numerus; k++)
         {
@@ -180,9 +187,13 @@ s32 principale (vacuum)
                 "(non resoluta)"));
         }
 
-        /* FILTRUM: quae amicus.h includit/definit ABSUNT */
+        /* FILTRUM: quae amicus.h includit/definit ABSUNT -
+         * etiam PROTOTYPA eius (filtrum fons_princeps sectionum
+         * c89, M2d A+: quaestio Fran "omnis plagula omnes
+         * functiones inclusas monstraret?") */
         CREDO_AEQUALIS_S32 (_ordo_cum(index, "absens.h"), -I);
         CREDO_AEQUALIS_S32 (_ordo_cum(index, "CELATUM"), -I);
+        CREDO_AEQUALIS_S32 (_ordo_cum(index, "ex_amico"), -I);
 
         /* definitiones: G functio cum linea; V BIS (diarium) */
         {
@@ -246,6 +257,21 @@ s32 principale (vacuum)
             CREDO_AEQUALIS_I32 ((i32)index->ordines[t].genus,
                 (i32)SALT_ORDO_TYPUS);
         }
+
+        /* LATINA per contextum nexus (M2d A): "nomen structura
+         * { } Probandum;" expanditur -> typedef -> TYPI. Sine
+         * contextu haec linea functio falsa "structura" esset
+         * (probatio manualis Fran in silva_scribere.c). */
+        {
+            s32 p = _ordo_cum(index, "Probandum");
+
+            CREDO_VERUM (p >= ZEPHYRUM);
+            CREDO_AEQUALIS_I32 ((i32)index->ordines[p].genus,
+                (i32)SALT_ORDO_TYPUS);
+            CREDO_AEQUALIS_I32 (index->ordines[p].linea, XX);
+        }
+        CREDO_AEQUALIS_I32 (_ordines_cum(index,
+            "nomen structura"), ZEPHYRUM);
 
         /* PROTOTYPUM: duplum() linea XIX - sectio propria (Fran
          * 2026-07-04), NON inter declarationes */
@@ -345,7 +371,7 @@ s32 principale (vacuum)
             chorda_ex_literis("# titulus\ntextus.\n", piscina));
         CREDO_NON_NIHIL (merus);
         CREDO_FALSUM (saltuarius_structura_aedificare(index,
-            merus));
+            merus, nexus));
         CREDO_FALSUM (index->apertum);
     }
 
@@ -369,7 +395,7 @@ s32 principale (vacuum)
         CREDO_NON_NIHIL (res);
 
         CREDO_VERUM (saltuarius_structura_aedificare(index,
-            liber));
+            liber, nexus));
         saltuarius_visum_pingere(liber, res, opus);
         saltuarius_visum_structura(index, opus);
 

@@ -104,6 +104,12 @@ nomen structura {
     s32                 situs;    /* byte_offset eiusdem */
     b32                 est_typedef; /* TYPEDEF in specificatoribus
                                    * (M2c D - sectio TYPI TOC) */
+    s32                 fons_index;  /* plagula lexematis tituli
+                                   * (M2d A+: filtrum
+                                   * fons_princeps - ordines
+                                   * plagularum inclusarum
+                                   * celantur); -1 si titulus
+                                   * abest */
 } SilvaDeclaratioVista;
 
 /* Numerus ordinum vistae per radicem parsurae */
@@ -137,5 +143,18 @@ silva_c89_parsare (
     constans character* fons,
     i32                 mensura,
     SilvaOraculum*      oraculum);
+
+/* Eadem sed cum CONTEXTU hospitis (M2d Chunk A): lexica
+ * (latina!), includenda praebita, fines - grammatica c89 tandem
+ * expansione pascitur. Contextus diu vivit, inter parsuras
+ * reusabilis. */
+SilvaParsura*
+silva_c89_parsare_cum_contextu (
+    Piscina*                 piscina,
+    constans SilvaContextus* contextus,
+    constans character*      via,
+    constans character*      fons,
+    i32                      mensura,
+    SilvaOraculum*           oraculum);
 
 #endif /* SILVA_C89_ORACULUM_H */

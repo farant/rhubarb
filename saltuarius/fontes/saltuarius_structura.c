@@ -151,7 +151,8 @@ _rami_verbum (SilvaRamusGenus genus)
 
 b32
 saltuarius_structura_aedificare (SaltuariusStructura* index,
-    constans SaltuariusLiber* liber)
+    constans SaltuariusLiber* liber,
+    constans SaltuariusNexus* nexus)
 {
     constans SilvaExpansio* exp;
     s32 princeps;
@@ -195,9 +196,21 @@ saltuarius_structura_aedificare (SaltuariusStructura* index,
     n_decl = ZEPHYRUM;
     si (arena_c89 != NIHIL && liber->textus.mensura > ZEPHYRUM)
     {
-        parsura_c89 = silva_c89_parsare(arena_c89, "liber.c",
-            (constans character*)liber->textus.datum,
-            liber->textus.mensura, NIHIL);
+        /* contextus nexus (latina + praebita) si adest - fontes
+         * latini expanduntur et sectiones VERAE fiunt (M2d A) */
+        si (nexus != NIHIL && nexus->ctx != NIHIL)
+        {
+            parsura_c89 = silva_c89_parsare_cum_contextu(
+                arena_c89, nexus->ctx, "liber.c",
+                (constans character*)liber->textus.datum,
+                liber->textus.mensura, NIHIL);
+        }
+        alioquin
+        {
+            parsura_c89 = silva_c89_parsare(arena_c89, "liber.c",
+                (constans character*)liber->textus.datum,
+                liber->textus.mensura, NIHIL);
+        }
         si (parsura_c89 != NIHIL)
         {
             n_decl = (i32)silva_c89_declarationes_numerus(
@@ -349,11 +362,14 @@ saltuarius_structura_aedificare (SaltuariusStructura* index,
 
             si (!silva_c89_declaratio_vista(parsura_c89, (i32)k,
                     &vista)
+                || vista.fons_index != parsura_c89->fons_princeps
                 || vista.genus == NIHIL
                 || strcmp(vista.genus, "definitio-functionis")
                     != ZEPHYRUM)
             {
-                perge;
+                perge;  /* filtrum fons_princeps: ordines
+                         * plagularum inclusarum celantur (M2d A+,
+                         * exemplar sectionum praeprocessoris) */
             }
             si (prima)
             {
@@ -404,6 +420,7 @@ saltuarius_structura_aedificare (SaltuariusStructura* index,
 
             si (!silva_c89_declaratio_vista(parsura_c89, (i32)k,
                     &vista)
+                || vista.fons_index != parsura_c89->fons_princeps
                 || vista.est_typedef
                 || vista.genus == NIHIL
                 || strcmp(vista.genus, "declarator-functionis")
@@ -444,6 +461,7 @@ saltuarius_structura_aedificare (SaltuariusStructura* index,
 
             si (!silva_c89_declaratio_vista(parsura_c89, (i32)k,
                     &vista)
+                || vista.fons_index != parsura_c89->fons_princeps
                 || !vista.est_typedef)
             {
                 perge;
@@ -482,6 +500,7 @@ saltuarius_structura_aedificare (SaltuariusStructura* index,
 
             si (!silva_c89_declaratio_vista(parsura_c89, (i32)k,
                     &vista)
+                || vista.fons_index != parsura_c89->fons_princeps
                 || vista.est_typedef
                 || vista.genus == NIHIL
                 || strcmp(vista.genus, "definitio-functionis")

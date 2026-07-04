@@ -563,6 +563,49 @@ int main(void)
         }
     }
 
+    /* c89 cum contextu latino per amalgama (M2d A): fons latinus
+     * expanditur, definitio functionis vera fit */
+    {
+        static const char fons_lat[] =
+            "interior int quaesitum_lat(int a) { redde a + 1; }";
+        SilvaContextus* ctx = silva_contextus_creare(piscina);
+        SilvaParsura* parsura = NULL;
+
+        summa++;
+        if (ctx != NULL && silva_contextus_latinam_addere(ctx))
+        {
+            parsura = silva_c89_parsare_cum_contextu(piscina, ctx,
+                "hospes_lat.c", fons_lat,
+                (unsigned int)(sizeof(fons_lat) - 1), NULL);
+        }
+        if (parsura != NULL && parsura->numerus_errorum == 0
+            && silva_c89_declarationes_numerus(parsura) == 1)
+        {
+            SilvaDeclaratioVista vista;
+
+            if (silva_c89_declaratio_vista(parsura, 0, &vista)
+                && vista.titulus.mensura == 13
+                && memcmp(vista.titulus.datum, "quaesitum_lat",
+                       13) == 0
+                && vista.genus != NULL
+                && strcmp(vista.genus, "definitio-functionis")
+                    == 0)
+            {
+                fideles++;
+            }
+            else
+            {
+                fprintf(stderr,
+                    "hospes: INFIDELIS: c89 latina ordo\n");
+            }
+        }
+        else
+        {
+            fprintf(stderr,
+                "hospes: INFIDELIS: c89 latina parsura\n");
+        }
+    }
+
     /* telemetria arenae */
     {
         size_t usus = silva_piscina_summa_usus(piscina);

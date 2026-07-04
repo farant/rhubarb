@@ -234,7 +234,10 @@ nomen enumeratio {
     SILVA_DIR_ELIF,
     SILVA_DIR_ELSE,
     SILVA_DIR_ENDIF,
-    SILVA_DIR_IGNOTA       /* alia (line/pragma/error/...) */
+    SILVA_DIR_PRAGMA,      /* #pragma - vera directiva C89 (6.8.6),
+                            * semantice iners: capta, consumpta,
+                            * numquam in fluxum parsurae (M2d A) */
+    SILVA_DIR_IGNOTA       /* alia (line/error/...) */
 } SilvaDirectivaGenus;
 
 /* Estne lexema verum initium directivae? (# ad initium lineae LOGICAE) */
@@ -395,6 +398,10 @@ _directivae_genus (Xar* lexemata, i32 i_cancellum, i32 i_finis)
     si (_chorda_est_literis(verbum->valor, "endif"))
     {
         redde SILVA_DIR_ENDIF;
+    }
+    si (_chorda_est_literis(verbum->valor, "pragma"))
+    {
+        redde SILVA_DIR_PRAGMA;
     }
     redde SILVA_DIR_IGNOTA;
 }
@@ -1199,6 +1206,16 @@ _fluxum_processare (
             {
                 i = _regionem_processare(exp, lexemata, i, i_finis,
                     pater, reliqua, directivae);
+                perge;
+            }
+            alioquin si (genus_dir == SILVA_DIR_PRAGMA)
+            {
+                /* #pragma: capta ut linea directivae (scribere
+                 * eam reficit), numquam in fluxum parsurae -
+                 * "#pragma once" segmenta non iam frangit */
+                _directivam_capere(exp, directivae, lexemata, i,
+                    i_linea_finis);
+                i = i_linea_finis;
                 perge;
             }
             /* ELIF/ELSE/ENDIF sine regione, NULLA, IGNOTA:

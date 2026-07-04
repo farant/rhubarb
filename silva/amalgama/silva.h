@@ -733,6 +733,13 @@ SilvaParsura* silva_c89_parsare(SilvaPiscina* piscina,
     const char* via, const char* fons, unsigned int mensura,
     SilvaOraculum* oraculum);
 
+/* Eadem cum contextu hospitis (lexica latina, includenda
+ * praebita) - grammatica c89 expansione pascitur (M2d) */
+SilvaParsura* silva_c89_parsare_cum_contextu(
+    SilvaPiscina* piscina, const SilvaContextus* contextus,
+    const char* via, const char* fons, unsigned int mensura,
+    SilvaOraculum* oraculum);
+
 /* Resolutor verus (filtrum combinationis X10 + oraculum
  * positionale X3 + retentio ignotorum) - pro machinatione
  * propria (silva_parsare/silva_recanonicare directis) */
@@ -762,6 +769,8 @@ typedef struct SilvaDeclaratioVista {
     int         linea;
     int         situs;    /* byte_offset */
     int est_typedef;          /* TYPEDEF in specificatoribus */
+    int fons_index;           /* plagula lexematis tituli; -1 si
+                               * abest (filtrum fons_princeps) */
 } SilvaDeclaratioVista;
 
 unsigned int silva_c89_declarationes_numerus(

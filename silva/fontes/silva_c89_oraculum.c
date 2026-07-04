@@ -535,6 +535,7 @@ _vistam_implere (
         vista->titulus = titulus->valor;
         vista->linea = (s32)titulus->linea;
         vista->situs = titulus->byte_offset;
+        vista->fons_index = titulus->fons_index;
     }
     alioquin
     {
@@ -542,6 +543,7 @@ _vistam_implere (
         vista->titulus.datum = NIHIL;
         vista->linea = -I;
         vista->situs = _situs_primi(nodus_ordinis, ZEPHYRUM);
+        vista->fons_index = -I;
     }
 }
 
@@ -992,6 +994,32 @@ silva_c89_parsare (
     parsura = silva_parsare(piscina, via, fons, mensura,
         &SILVA_C89_GRAMMATICA, oraculum, silva_c89_resolutor,
         (vacuum*)oraculum);
+    si (parsura != NIHIL && parsura->commissio != NIHIL)
+    {
+        silva_c89_politicam_imponere(parsura->commissio, oraculum);
+    }
+    redde parsura;
+}
+
+SilvaParsura*
+silva_c89_parsare_cum_contextu (
+    Piscina*                 piscina,
+    constans SilvaContextus* contextus,
+    constans character*      via,
+    constans character*      fons,
+    i32                      mensura,
+    SilvaOraculum*           oraculum)
+{
+    SilvaParsura* parsura;
+
+    si (oraculum == NIHIL)
+    {
+        oraculum = silva_oraculum_creare(piscina);
+        si (oraculum == NIHIL) redde NIHIL;
+    }
+    parsura = silva_parsare_cum_contextu(piscina, contextus, via,
+        fons, mensura, &SILVA_C89_GRAMMATICA, oraculum,
+        silva_c89_resolutor, (vacuum*)oraculum);
     si (parsura != NIHIL && parsura->commissio != NIHIL)
     {
         silva_c89_politicam_imponere(parsura->commissio, oraculum);

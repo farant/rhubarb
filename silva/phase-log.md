@@ -4713,3 +4713,70 @@ mensura history; all four evidence counts logged with
 dispositions; badge shipping; sceletum out of the amalgam;
 carried integration bar green; M2d RELATIO + full-log audit +
 M2 close.
+
+### M2d Chunk A — expansione pascitur: COMPLETE (2026-07-04)
+
+**Silva 27/27; saltuarius 13/13 (app compiles under the full
+wall); tessera 5/5; amalgam + hospes 24/24.**
+
+**THE HEADLINE: corpus ERROR 42 → 0, PINNED.** The M2 arc
+completes its number: M1 recorded 41k ERROR nodes as recovery →
+M2b 62 → M2c 42 (all unexpanded latina) → **M2d 0** — every one
+of the 78 real rhubarb files parses completely through the
+expanded c89 grammar, 78/78 byte-exact THROUGH the expansion,
+frons still 3. The zero is a CREDO assert now (murus acceptionis
+— regression screams). Parse 4.04 ms/KB with expansion included
+in the c89 timing.
+
+**Shipped**: silva_c89_parsare_cum_contextu (mirror wrapper —
+contextus + dance + policy; silva.h + hospes latina-source proof
+"interior int quaesitum_lat(int a) { redde a + 1; }" → real
+definitio row through the amalgam); mensura corpus on a shared
+latina contextus (+ verbosa per-file error diagnostic, kept);
+**#pragma became a true directive** (SILVA_DIR_PRAGMA:
+classified, captured as a directive line for scribere, consumed
+from the parse stream — it was the LAST corpus error, gluing
+"#pragma once" into the next declaration; legal C89 6.8.6,
+semantically inert); saltuarius structura_aedificare gained the
+nexus (TOC parse rides nexus->ctx with plain-parse fallback;
+fixture: "nomen structura { int n; } Probandum;" → TYPI row :20,
+misparse text asserted ABSENT); arbor rides a latina contextus
+too (dev-tool parity — the terminal demo of the whole fix).
+
+**The demo number**: silva_scribere.c, the file Fran manually
+tested — 19 errors / 3 phantom rows → **0 errors / 24 true rows**
+(17 definitiones, 2 prototypa, typedefs, globals), every function
+with its Enter-jump line.
+
+NEXT: Chunk B — the main-parse swap (GRAMMATICA_SCELETI → c89 in
+nexus/liber; saltuarius suite = the gate; then sceletum OUT of
+the amalgam manifest, hospes fork block updated, generator-fixture
+role stays in-repo).
+
+### Addendum Chunk A+ (2026-07-04) — filtrum fons_princeps
+### sectionum c89 (quaestio Fran)
+
+Fran asked: once the TOC parse chases includes, won't every file
+show every included function? YES — and the leak was LIVE (the
+app seeds praebenda from compile_flags.txt). The pieces already
+existed: tokens carry fons_index (provenance), and the
+preprocessor sections have filtered by fons_princeps since D1.
+SHIPPED: SilvaDeclaratioVista grew **fons_index** (the TITLE
+token's file; -1 when anonymous), silva.h mirror, and all four
+c89 sections filter rows to fons_princeps. Fixtures both sides:
+silva (ex_amico row from a praebere'd header carries a foreign
+fons_index; meus carries fons_princeps) and saltuarius (amicus.h
+gained a prototype — asserted ABSENT from the TOC, joining
+CELATUM).
+
+The MACRO-EXPANSION requirement holds by construction: a
+function's NAME token is textually in the current file even when
+its body expands macros — the name's provenance decides, the
+body is free. NAMED EDGE: functions whose NAMES are
+macro-generated (X-macro patterns) follow the name token's
+provenance, which may point into the macro definition — the
+origo-chain machinery can refine this when real code demands it.
+Fran's LAYER idea (per-stratum TOC riding the L-flip machinery —
+"the TOC of layer 3") is NAMED to the saltuarius backlog: strata
+are always-on, so the pieces exist; it is a view question, not a
+parser question.
