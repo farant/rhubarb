@@ -17,6 +17,7 @@
 #include "silva_nodus.h"
 #include "silva_tabulae.h"
 #include "silva_tabulae_sceleti.h"
+#include "silva_tabulae_c89.h"
 #include "silva_glr.h"
 #include "silva_commissio.h"
 #include "silva_parsare.h"
@@ -35,6 +36,13 @@ hic_manens constans SilvaGrammatica GRAMMATICA_SCELETI = {
     &SILVA_SCELETUM_REGISTRUM,
     silva_sceletum_construere,
     silva_sceletum_ambiguum_fabricare
+};
+
+hic_manens constans SilvaGrammatica GRAMMATICA_C89 = {
+    &SILVA_C89_TABULA,
+    &SILVA_C89_REGISTRUM,
+    silva_c89_construere,
+    silva_c89_ambiguum_fabricare
 };
 
 interior i8*
@@ -120,6 +128,10 @@ s32 principale (vacuum)
     i32 summa_errorum;
     i32 frons_maxima;
     i32 fideles_arboris;
+    duplex summa_parsare_c89_ms;
+    i32 summa_errorum_c89;
+    i32 frons_maxima_c89;
+    i32 fideles_arboris_c89;
 
     piscina = piscina_generare_dynamicum("probatio_silva_mensura", 262144);
     si (!piscina)
@@ -150,6 +162,10 @@ s32 principale (vacuum)
     summa_errorum = ZEPHYRUM;
     frons_maxima = ZEPHYRUM;
     fideles_arboris = ZEPHYRUM;
+    summa_parsare_c89_ms = 0.0;
+    summa_errorum_c89 = ZEPHYRUM;
+    frons_maxima_c89 = ZEPHYRUM;
+    fideles_arboris_c89 = ZEPHYRUM;
 
     corpus = opendir(via_corporis);
     si (corpus == NIHIL)
@@ -253,6 +269,54 @@ s32 principale (vacuum)
             }
         }
 
+        /* Grammatica c89 (M2a Chunk C): custodia explosionis
+         * furcarum incipit HIC memorare - frons max + tempus
+         * trans corpus verum (comparanda cum sceleto supra;
+         * fines mensi M2b figentur) */
+        {
+            Piscina* piscina_c89;
+            SilvaParsura* parsura;
+            clock_t c0;
+            clock_t c1;
+
+            piscina_c89 = piscina_generare_dynamicum(
+                "mensura_c89", 8388608);
+            si (piscina_c89 != NIHIL)
+            {
+                c0 = clock();
+                parsura = silva_parsare(piscina_c89,
+                    introitus->d_name, (constans character*)fons,
+                    mensura, &GRAMMATICA_C89, NIHIL, NIHIL, NIHIL);
+                c1 = clock();
+                summa_parsare_c89_ms += (duplex)(c1 - c0) * 1000.0
+                    / (duplex)CLOCKS_PER_SEC;
+                si (parsura != NIHIL && parsura->successus)
+                {
+                    SilvaScriptura scriptura;
+
+                    summa_errorum_c89 +=
+                        (i32)parsura->numerus_errorum;
+                    si ((i32)parsura->frons_maxima > frons_maxima_c89)
+                    {
+                        frons_maxima_c89 = (i32)parsura->frons_maxima;
+                    }
+                    scriptura = silva_scribere_fontem(piscina_c89,
+                        parsura, &SILVA_C89_REGISTRUM,
+                        parsura->fons_princeps);
+                    si (scriptura.successus
+                        && scriptura.textus.mensura == mensura
+                        && (mensura == ZEPHYRUM
+                            || memcmp(scriptura.textus.datum, fons,
+                                   (memoriae_index)mensura)
+                                == ZEPHYRUM))
+                    {
+                        fideles_arboris_c89++;
+                    }
+                }
+                piscina_destruere(piscina_c89);
+            }
+        }
+
         lexare_ms = (duplex)(t1 - t0) * 1000.0 / (duplex)CLOCKS_PER_SEC;
         expandere_ms = (duplex)(t2 - t1) * 1000.0 / (duplex)CLOCKS_PER_SEC;
         parsare_ms = (duplex)(t3 - t2) * 1000.0 / (duplex)CLOCKS_PER_SEC;
@@ -305,6 +369,14 @@ s32 principale (vacuum)
         "arbores fideles %d/%d\n",
         (int)summa_errorum, (int)frons_maxima, (int)fideles_arboris,
         (int)numerus);
+    imprimere("  c89:      %8.2f ms parsare (%.4f ms/KB); %d nodi "
+        "ERROR, frons max %d; fideles %d/%d\n",
+        summa_parsare_c89_ms,
+        summa_octetorum > 0.0
+            ? summa_parsare_c89_ms / (summa_octetorum / 1024.0) : 0.0,
+        (int)summa_errorum_c89, (int)frons_maxima_c89,
+        (int)fideles_arboris_c89, (int)numerus);
+    CREDO_AEQUALIS_I32 (fideles_arboris_c89, numerus);
     imprimere("  apex:     %8.0f B medius, %.0f B maximus\n",
         numerus > ZEPHYRUM ? summa_apex_octetorum / (duplex)numerus : 0.0,
         apex_maximus);

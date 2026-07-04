@@ -56,6 +56,52 @@ symbolum_invenire(
     redde -I;
 }
 
+/* Normare albispatia: copia textus in qua \n \r \t fiunt spatia.
+ * Sine hoc, productiones multilineares atomos amittunt TACITE:
+ * stml_textus_internus lineam novam servat, chorda_fissio solum
+ * per ' ' dividit, ergo "gamma@c\nDELTA@d" UNUS atomus fit -
+ * symbolum DELTA e grammatica evanescit et locus corrumpitur
+ * (inventum 2026-07-04: 85 conflictus spurii in c89.stml). */
+hic_manens chorda
+_albispatia_normare(
+    Piscina* piscina,
+    chorda   textus)
+{
+    chorda copia;
+    i32 i;
+
+    copia.mensura = textus.mensura;
+    copia.datum = (i8*)piscina_allocare(piscina,
+        (memoriae_index)(textus.mensura > ZEPHYRUM
+            ? textus.mensura : (i32)I));
+    per (i = ZEPHYRUM; i < textus.mensura; i++)
+    {
+        i8 c = textus.datum[i];
+        copia.datum[i] = (c == '\n' || c == '\r' || c == '\t')
+            ? (i8)' ' : c;
+    }
+    redde copia;
+}
+
+/* Verificare atomum sanum: titulus et locus solum characteres
+ * identificatorum ferunt ([A-Za-z0-9_-]). Locus cum '@' vel
+ * albispatio interno = textus corruptus - clama, numquam tace. */
+hic_manens b32
+_atomi_pars_sana(
+    chorda pars)
+{
+    i32 i;
+
+    per (i = ZEPHYRUM; i < pars.mensura; i++)
+    {
+        i8 c = pars.datum[i];
+        b32 sanus = (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z')
+            || (c >= '0' && c <= '9') || c == '_' || c == '-';
+        si (!sanus) redde FALSUM;
+    }
+    redde VERUM;
+}
+
 /* Scindere atomum productionis "symbolum@locus+" in partes.
  * titulus_out: nomen symboli; locus_out: nomen loci (mensura 0 = nullus);
  * appendere_out: VERUM si @locus+ (lista accumulans). */
@@ -324,8 +370,10 @@ silva_gen_grammaticam_legere(
 
                 si (!prod_ptr || !*prod_ptr) perge;
 
-                /* Obtinere textum internum: "expr@sinister PLUS@tok term@dexter" */
+                /* Obtinere textum internum: "expr@sinister PLUS@tok term@dexter"
+                 * (albispatia normata - productiones multilineares licitae) */
                 textus = stml_textus_internus(*prod_ptr, piscina);
+                textus = _albispatia_normare(piscina, textus);
                 textus = chorda_praecidere(textus);
 
                 /* Creare productionem (textus vacuus = EPSILON deliberata -
@@ -364,6 +412,18 @@ silva_gen_grammaticam_legere(
 
                     atomum_scindere(pars_praecisa, &sym_titulus,
                         &locus_titulus, &locus_appendere);
+
+                    si (!_atomi_pars_sana(sym_titulus)
+                        || !_atomi_pars_sana(locus_titulus))
+                    {
+                        fprintf(stderr,
+                            "silva_gen: atomum corruptum '%.*s' in "
+                            "productione (character invalidus in "
+                            "symbolo vel loco)\n",
+                            (int)pars_praecisa.mensura,
+                            (constans character*)pars_praecisa.datum);
+                        redde NIHIL;
+                    }
 
                     /* Invenire symbolum in tabula */
                     sym_idx = symbolum_invenire(

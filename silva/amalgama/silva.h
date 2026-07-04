@@ -672,4 +672,22 @@ SilvaValor silva_sceletum_construere(SilvaPiscina* piscina,
 SilvaValor silva_sceletum_ambiguum_fabricare(SilvaPiscina* piscina,
     SilvaValor interpretationes, int canonica);
 
+/* ==================================================
+ * Grammatica C89 (M2, crescens per M2a..M2d) - expressiones
+ * integrae cum familia furcarum typedef (localiter AMBIGUUS,
+ * spina canonica; oraculum ad commissionem aut per
+ * silva_recanonicare vertit). Nomina generum et locorum:
+ * silva/grammatica/genera-c89.md (DECISUS) - genera per titulum
+ * kebab-case in SILVA_C89_REGISTRUM ("conversio",
+ * "folium-chorda", "magnitudo-typi"...).
+ * ================================================== */
+
+extern const SilvaTabulaCocta     SILVA_C89_TABULA;
+extern const SilvaRegistrumCoctum SILVA_C89_REGISTRUM;
+
+SilvaValor silva_c89_construere(SilvaPiscina* piscina,
+    int productio, const SilvaValor* valores);
+SilvaValor silva_c89_ambiguum_fabricare(SilvaPiscina* piscina,
+    SilvaValor interpretationes, int canonica);
+
 #endif /* SILVA_H */

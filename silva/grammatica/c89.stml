@@ -1,0 +1,493 @@
+<grammatica>
+  <!-- Grammatica C89 (M2) - crescit per phases M2a..M2d.
+       Vocabularium generum: grammatica/genera-c89.md (DECISUS
+       2026-07-04) - tags kebab-case sunt superficies quaestionum
+       solarii et ordines TOC saltuarii, nomina millennii.
+
+       M2a Chunk B: typus intrat - species-typi minima (verba
+       primitiva multiplicia, typus-nominatus, catena stellarum
+       abstracta), conversio, magnitudo-expressionis/-typi.
+       FAMILIA FURCARUM typedef adest: (t)(x) conversio-vel-
+       vocatio, (t)+x -x *x &x conversio-vel-binarium,
+       magnitudo(t) typi-vel-expressionis. Omnes in UNA cella
+       reducere/reducere vivunt (typus-nominatus vs folium-
+       identificator post IDENTIFICATOR intra parenthesim);
+       census EXACTE fixus in probatione per paria id
+       productionum. Qualificatores (const/volatile) M2b cum
+       specificatoribus ordinis liberi - angustatio nominata.
+
+       Scala (ab infima ad summam praecedentiam):
+         expressio (virgula) -> assignatio (11 operatores,
+         dextro-associativa, sinistrum = gradus unarii per ISO) ->
+         ternarius -> disiunctio (||) -> coniunctio (&&) ->
+         vel-bitorum (|) -> aut-bitorum (^) -> et-bitorum (&) ->
+         aequalitas -> comparatio -> translatio -> additivum ->
+         multiplicativum -> unarium -> postfixum -> primarium
+
+       NB vel/aut: Latine vel = disiunctio inclusiva (|),
+       aut = disiunctio exclusiva (^) - lingua ipsa operatores
+       distinguit.
+
+       NB Chunk B: gradus conversionis inter multiplicativum et
+       unarium inseretur; operandum operatorum unariorum
+       (& * + - ~ !) tunc conversio fiet (ISO 3.3.3), operandum
+       incrementi/decrementi manet unarium.
+
+       Forma annotationum v0 (spec-v2 par. 9.3): symbolum@locus,
+       @locus+ = appendere in listam; genus/id in productionibus
+       nodorum; modus pro listis; omne terminale possessum
+       (invariatum trivia unius-domini). -->
+
+  <terminalia>
+    <!-- Folia -->
+    <terminalis titulus="IDENTIFICATOR"  genus="SILVA_LEX_IDENTIFICATOR"/>
+    <terminalis titulus="INTEGER"        genus="SILVA_LEX_INTEGER"/>
+    <terminalis titulus="FLOAT"          genus="SILVA_LEX_FLOAT"/>
+    <terminalis titulus="CHARACTER_LIT"  genus="SILVA_LEX_CHARACTER_LIT"/>
+    <terminalis titulus="STRING_LIT"     genus="SILVA_LEX_STRING_LIT"/>
+
+    <!-- Verba typorum primitivorum + magnitudo (Chunk B) -->
+    <terminalis titulus="VOID"           genus="SILVA_LEX_VOID"/>
+    <terminalis titulus="CHAR"           genus="SILVA_LEX_CHAR"/>
+    <terminalis titulus="SHORT"          genus="SILVA_LEX_SHORT"/>
+    <terminalis titulus="INT"            genus="SILVA_LEX_INT"/>
+    <terminalis titulus="LONG"           genus="SILVA_LEX_LONG"/>
+    <terminalis titulus="FLOAT_KW"       genus="SILVA_LEX_FLOAT_KW"/>
+    <terminalis titulus="DOUBLE"         genus="SILVA_LEX_DOUBLE"/>
+    <terminalis titulus="SIGNED"         genus="SILVA_LEX_SIGNED"/>
+    <terminalis titulus="UNSIGNED"       genus="SILVA_LEX_UNSIGNED"/>
+    <terminalis titulus="SIZEOF"         genus="SILVA_LEX_SIZEOF"/>
+
+    <!-- Operatores binarii/unarii -->
+    <terminalis titulus="PLUS"           genus="SILVA_LEX_PLUS"/>
+    <terminalis titulus="MINUS"          genus="SILVA_LEX_MINUS"/>
+    <terminalis titulus="STAR"           genus="SILVA_LEX_STAR"/>
+    <terminalis titulus="SOLIDUS"        genus="SILVA_LEX_SOLIDUS"/>
+    <terminalis titulus="PERCENTUM"      genus="SILVA_LEX_PERCENTUM"/>
+    <terminalis titulus="AMPERSAND"      genus="SILVA_LEX_AMPERSAND"/>
+    <terminalis titulus="BARRA"          genus="SILVA_LEX_BARRA"/>
+    <terminalis titulus="CARET"          genus="SILVA_LEX_CARET"/>
+    <terminalis titulus="TILDE"          genus="SILVA_LEX_TILDE"/>
+    <terminalis titulus="EXCLAMATIO"     genus="SILVA_LEX_EXCLAMATIO"/>
+    <terminalis titulus="ET_ET"          genus="SILVA_LEX_ET_ET"/>
+    <terminalis titulus="VEL_VEL"        genus="SILVA_LEX_VEL_VEL"/>
+    <terminalis titulus="AEQUALIS_AEQUALIS" genus="SILVA_LEX_AEQUALIS_AEQUALIS"/>
+    <terminalis titulus="NON_AEQUALIS"   genus="SILVA_LEX_NON_AEQUALIS"/>
+    <terminalis titulus="MINOR"          genus="SILVA_LEX_MINOR"/>
+    <terminalis titulus="MAIOR"          genus="SILVA_LEX_MAIOR"/>
+    <terminalis titulus="MINOR_AEQUALIS" genus="SILVA_LEX_MINOR_AEQUALIS"/>
+    <terminalis titulus="MAIOR_AEQUALIS" genus="SILVA_LEX_MAIOR_AEQUALIS"/>
+    <terminalis titulus="SINISTRORSUM"   genus="SILVA_LEX_SINISTRORSUM"/>
+    <terminalis titulus="DEXTRORSUM"     genus="SILVA_LEX_DEXTRORSUM"/>
+
+    <!-- Operatores assignationis (11) -->
+    <terminalis titulus="ASSIGNATIO"     genus="SILVA_LEX_ASSIGNATIO"/>
+    <terminalis titulus="PLUS_ASSIGNATIO" genus="SILVA_LEX_PLUS_ASSIGNATIO"/>
+    <terminalis titulus="MINUS_ASSIGNATIO" genus="SILVA_LEX_MINUS_ASSIGNATIO"/>
+    <terminalis titulus="STAR_ASSIGNATIO" genus="SILVA_LEX_STAR_ASSIGNATIO"/>
+    <terminalis titulus="SOLIDUS_ASSIGNATIO" genus="SILVA_LEX_SOLIDUS_ASSIGNATIO"/>
+    <terminalis titulus="PERCENTUM_ASSIGNATIO" genus="SILVA_LEX_PERCENTUM_ASSIGNATIO"/>
+    <terminalis titulus="AMPERSAND_ASSIGNATIO" genus="SILVA_LEX_AMPERSAND_ASSIGNATIO"/>
+    <terminalis titulus="BARRA_ASSIGNATIO" genus="SILVA_LEX_BARRA_ASSIGNATIO"/>
+    <terminalis titulus="CARET_ASSIGNATIO" genus="SILVA_LEX_CARET_ASSIGNATIO"/>
+    <terminalis titulus="SINISTRORSUM_ASSIGNATIO" genus="SILVA_LEX_SINISTRORSUM_ASSIGNATIO"/>
+    <terminalis titulus="DEXTRORSUM_ASSIGNATIO" genus="SILVA_LEX_DEXTRORSUM_ASSIGNATIO"/>
+
+    <!-- Crementa, accessus, interpunctio -->
+    <terminalis titulus="INCREMENTUM"    genus="SILVA_LEX_INCREMENTUM"/>
+    <terminalis titulus="DECREMENTUM"    genus="SILVA_LEX_DECREMENTUM"/>
+    <terminalis titulus="PUNCTUM"        genus="SILVA_LEX_PUNCTUM"/>
+    <terminalis titulus="SAGITTA"        genus="SILVA_LEX_SAGITTA"/>
+    <terminalis titulus="QUAESTIO"       genus="SILVA_LEX_QUAESTIO"/>
+    <terminalis titulus="COLON"          genus="SILVA_LEX_COLON"/>
+    <terminalis titulus="COMMA"          genus="SILVA_LEX_COMMA"/>
+    <terminalis titulus="SEMICOLON"      genus="SILVA_LEX_SEMICOLON"/>
+    <terminalis titulus="PAREN_APERTA"   genus="SILVA_LEX_PAREN_APERTA"/>
+    <terminalis titulus="PAREN_CLAUSA"   genus="SILVA_LEX_PAREN_CLAUSA"/>
+    <terminalis titulus="QUADRA_APERTA"  genus="SILVA_LEX_QUADRA_APERTA"/>
+    <terminalis titulus="QUADRA_CLAUSA"  genus="SILVA_LEX_QUADRA_CLAUSA"/>
+    <terminalis titulus="EOF"            genus="SILVA_LEX_EOF"/>
+  </terminalia>
+
+  <regulae>
+    <!-- Radix segmenti: lista elementorum (truncus materialis fit
+         apud gubernatorem cum arbores plenae adveniant; nomen
+         locorum "elementa" iam trunci vocabulario congruit) -->
+    <regula titulus="elementa">
+      <productio modus="lista-initium"></productio>
+      <productio id="elementa-appendere" modus="lista-appendere">
+        elementa@lista+ elementum@elementum
+      </productio>
+    </regula>
+
+    <!-- M2b: + declaratio; M2c: + sententiae ceterae -->
+    <regula titulus="elementum">
+      <productio>sententia-expressionis</productio>
+    </regula>
+
+    <regula titulus="sententia-expressionis">
+      <productio genus="sententia-expressionis" id="sententia-expr">
+        expressio@expressio SEMICOLON@tok_terminator
+      </productio>
+    </regula>
+
+    <!-- ==== expressio: gradus virgulae (a, b) ==== -->
+    <regula titulus="expressio">
+      <productio genus="virgula" id="virgula-series">
+        expressio@sinister COMMA@tok_operator assignatio@dexter
+      </productio>
+      <productio>assignatio</productio>
+    </regula>
+
+    <!-- ==== assignatio: 11 operatores, dextro-associativa;
+         sinistrum = unarium per ISO 3.3.16 (a+b=c grammatice
+         mortuum) ==== -->
+    <regula titulus="assignatio">
+      <productio genus="assignatio" id="assignatio-simplex">
+        unarium@sinister ASSIGNATIO@tok_operator assignatio@dexter
+      </productio>
+      <productio genus="assignatio" id="assignatio-plus">
+        unarium@sinister PLUS_ASSIGNATIO@tok_operator assignatio@dexter
+      </productio>
+      <productio genus="assignatio" id="assignatio-minus">
+        unarium@sinister MINUS_ASSIGNATIO@tok_operator assignatio@dexter
+      </productio>
+      <productio genus="assignatio" id="assignatio-stella">
+        unarium@sinister STAR_ASSIGNATIO@tok_operator assignatio@dexter
+      </productio>
+      <productio genus="assignatio" id="assignatio-solidus">
+        unarium@sinister SOLIDUS_ASSIGNATIO@tok_operator assignatio@dexter
+      </productio>
+      <productio genus="assignatio" id="assignatio-percentum">
+        unarium@sinister PERCENTUM_ASSIGNATIO@tok_operator assignatio@dexter
+      </productio>
+      <productio genus="assignatio" id="assignatio-ampersand">
+        unarium@sinister AMPERSAND_ASSIGNATIO@tok_operator assignatio@dexter
+      </productio>
+      <productio genus="assignatio" id="assignatio-barra">
+        unarium@sinister BARRA_ASSIGNATIO@tok_operator assignatio@dexter
+      </productio>
+      <productio genus="assignatio" id="assignatio-caret">
+        unarium@sinister CARET_ASSIGNATIO@tok_operator assignatio@dexter
+      </productio>
+      <productio genus="assignatio" id="assignatio-sinistrorsum">
+        unarium@sinister SINISTRORSUM_ASSIGNATIO@tok_operator assignatio@dexter
+      </productio>
+      <productio genus="assignatio" id="assignatio-dextrorsum">
+        unarium@sinister DEXTRORSUM_ASSIGNATIO@tok_operator assignatio@dexter
+      </productio>
+      <productio>ternarius</productio>
+    </regula>
+
+    <!-- ==== ternarius: c ? a : b (medium = expressio plena,
+         dextrum = ternarius: ISO 3.3.15) ==== -->
+    <regula titulus="ternarius">
+      <productio genus="ternarius" id="ternarius-conditio">
+        disiunctio@conditio QUAESTIO@tok_quaestio expressio@verum
+        COLON@tok_colon ternarius@falsum
+      </productio>
+      <productio>disiunctio</productio>
+    </regula>
+
+    <!-- ==== gradus binarii: UNUM genus binarium (P3) -
+         identitas operatoris in lexemate tok_operator ==== -->
+    <regula titulus="disiunctio">
+      <productio genus="binarium" id="binarium-disiunctio">
+        disiunctio@sinister VEL_VEL@tok_operator coniunctio@dexter
+      </productio>
+      <productio>coniunctio</productio>
+    </regula>
+
+    <regula titulus="coniunctio">
+      <productio genus="binarium" id="binarium-coniunctio">
+        coniunctio@sinister ET_ET@tok_operator vel-bitorum@dexter
+      </productio>
+      <productio>vel-bitorum</productio>
+    </regula>
+
+    <regula titulus="vel-bitorum">
+      <productio genus="binarium" id="binarium-vel">
+        vel-bitorum@sinister BARRA@tok_operator aut-bitorum@dexter
+      </productio>
+      <productio>aut-bitorum</productio>
+    </regula>
+
+    <regula titulus="aut-bitorum">
+      <productio genus="binarium" id="binarium-aut">
+        aut-bitorum@sinister CARET@tok_operator et-bitorum@dexter
+      </productio>
+      <productio>et-bitorum</productio>
+    </regula>
+
+    <regula titulus="et-bitorum">
+      <productio genus="binarium" id="binarium-et">
+        et-bitorum@sinister AMPERSAND@tok_operator aequalitas@dexter
+      </productio>
+      <productio>aequalitas</productio>
+    </regula>
+
+    <regula titulus="aequalitas">
+      <productio genus="binarium" id="binarium-aequalis">
+        aequalitas@sinister AEQUALIS_AEQUALIS@tok_operator comparatio@dexter
+      </productio>
+      <productio genus="binarium" id="binarium-non-aequalis">
+        aequalitas@sinister NON_AEQUALIS@tok_operator comparatio@dexter
+      </productio>
+      <productio>comparatio</productio>
+    </regula>
+
+    <regula titulus="comparatio">
+      <productio genus="binarium" id="binarium-minor">
+        comparatio@sinister MINOR@tok_operator translatio@dexter
+      </productio>
+      <productio genus="binarium" id="binarium-maior">
+        comparatio@sinister MAIOR@tok_operator translatio@dexter
+      </productio>
+      <productio genus="binarium" id="binarium-minor-aequalis">
+        comparatio@sinister MINOR_AEQUALIS@tok_operator translatio@dexter
+      </productio>
+      <productio genus="binarium" id="binarium-maior-aequalis">
+        comparatio@sinister MAIOR_AEQUALIS@tok_operator translatio@dexter
+      </productio>
+      <productio>translatio</productio>
+    </regula>
+
+    <regula titulus="translatio">
+      <productio genus="binarium" id="binarium-sinistrorsum">
+        translatio@sinister SINISTRORSUM@tok_operator additivum@dexter
+      </productio>
+      <productio genus="binarium" id="binarium-dextrorsum">
+        translatio@sinister DEXTRORSUM@tok_operator additivum@dexter
+      </productio>
+      <productio>additivum</productio>
+    </regula>
+
+    <regula titulus="additivum">
+      <productio genus="binarium" id="binarium-plus">
+        additivum@sinister PLUS@tok_operator multiplicativum@dexter
+      </productio>
+      <productio genus="binarium" id="binarium-minus">
+        additivum@sinister MINUS@tok_operator multiplicativum@dexter
+      </productio>
+      <productio>multiplicativum</productio>
+    </regula>
+
+    <!-- Gradus conversionis inter multiplicativum et unarium
+         (ISO 3.3.4-3.3.5) -->
+    <regula titulus="multiplicativum">
+      <productio genus="binarium" id="binarium-stella">
+        multiplicativum@sinister STAR@tok_operator conversio@dexter
+      </productio>
+      <productio genus="binarium" id="binarium-solidus">
+        multiplicativum@sinister SOLIDUS@tok_operator conversio@dexter
+      </productio>
+      <productio genus="binarium" id="binarium-percentum">
+        multiplicativum@sinister PERCENTUM@tok_operator conversio@dexter
+      </productio>
+      <productio>conversio</productio>
+    </regula>
+
+    <!-- ==== conversio: (species-typi) conversio.
+         Cum typus nominatus est, furca typedef vivit: (foo)(x)
+         conversio-vel-vocatio - AMBIGUUS localis, spina canonica
+         = lectio expressionis, oraculum vertit ad commissionem ==== -->
+    <regula titulus="conversio">
+      <productio genus="conversio" id="conversio-typus">
+        PAREN_APERTA@tok_apertum species-typi@typus
+        PAREN_CLAUSA@tok_clausum conversio@internum
+      </productio>
+      <productio>unarium</productio>
+    </regula>
+
+    <!-- ==== unarium: praefixa omnia UNUM genus (vocabularium);
+         operandum & * + - ~ ! est conversio (ISO 3.3.3),
+         crementa unarium manent; magnitudo hic vivit (duo genera
+         ex vocabulario - interpretationes furcae quaestionibus
+         separatim visibiles) ==== -->
+    <regula titulus="unarium">
+      <productio genus="unarium" id="unarium-incrementum">
+        INCREMENTUM@tok_operator unarium@internum
+      </productio>
+      <productio genus="unarium" id="unarium-decrementum">
+        DECREMENTUM@tok_operator unarium@internum
+      </productio>
+      <productio genus="unarium" id="unarium-ampersand">
+        AMPERSAND@tok_operator conversio@internum
+      </productio>
+      <productio genus="unarium" id="unarium-stella">
+        STAR@tok_operator conversio@internum
+      </productio>
+      <productio genus="unarium" id="unarium-plus">
+        PLUS@tok_operator conversio@internum
+      </productio>
+      <productio genus="unarium" id="unarium-minus">
+        MINUS@tok_operator conversio@internum
+      </productio>
+      <productio genus="unarium" id="unarium-tilde">
+        TILDE@tok_operator conversio@internum
+      </productio>
+      <productio genus="unarium" id="unarium-exclamatio">
+        EXCLAMATIO@tok_operator conversio@internum
+      </productio>
+      <productio genus="magnitudo-expressionis" id="magnitudo-expressionis">
+        SIZEOF@tok_verbum unarium@internum
+      </productio>
+      <productio genus="magnitudo-typi" id="magnitudo-typi">
+        SIZEOF@tok_verbum PAREN_APERTA@tok_apertum
+        species-typi@typus PAREN_CLAUSA@tok_clausum
+      </productio>
+      <productio>postfixum</productio>
+    </regula>
+
+    <!-- ==== species-typi: nomen typi sine nomine declarato
+         (in conversione et magnitudine). specificatores = lista
+         (M2b eam aperit ordine libero + qualificatoribus);
+         declarator absens = NIHIL ==== -->
+    <regula titulus="species-typi">
+      <productio genus="species-typi" id="species-typi-plena">
+        specificatores@specificatores declarator-abstractus@declarator
+      </productio>
+      <productio genus="species-typi" id="species-typi-nuda">
+        specificatores@specificatores
+      </productio>
+    </regula>
+
+    <regula titulus="specificatores">
+      <productio id="specificatores-primum" modus="lista-initium">
+        typus@elementum
+      </productio>
+    </regula>
+
+    <regula titulus="typus">
+      <productio genus="typus-primitivus" id="typus-primitivus">
+        verba-primitiva@tok_verba
+      </productio>
+      <productio genus="typus-nominatus" id="typus-nominatus">
+        IDENTIFICATOR@tok_titulus
+      </productio>
+    </regula>
+
+    <!-- unsigned long int = UNUM typus-primitivus, tok_verba
+         lista trium lexematum (vocabularium) -->
+    <regula titulus="verbum-primitivum">
+      <productio>VOID</productio>
+      <productio>CHAR</productio>
+      <productio>SHORT</productio>
+      <productio>INT</productio>
+      <productio>LONG</productio>
+      <productio>FLOAT_KW</productio>
+      <productio>DOUBLE</productio>
+      <productio>SIGNED</productio>
+      <productio>UNSIGNED</productio>
+    </regula>
+
+    <regula titulus="verba-primitiva">
+      <productio id="verba-primitiva-primum" modus="lista-initium">
+        verbum-primitivum@elementum
+      </productio>
+      <productio id="verba-primitiva-appendere" modus="lista-appendere">
+        verba-primitiva@lista+ verbum-primitivum@elementum
+      </productio>
+    </regula>
+
+    <!-- catena stellarum abstracta: (int*), (char**).
+         Ordinatae et functiones M2b -->
+    <regula titulus="declarator-abstractus">
+      <productio genus="declarator-abstractus" id="declarator-abstractus-stella">
+        STAR@tok_stella
+      </productio>
+      <productio genus="declarator-abstractus" id="declarator-abstractus-catena">
+        STAR@tok_stella declarator-abstractus@internum
+      </productio>
+    </regula>
+
+    <!-- ==== postfixum: subscriptio, vocatio, accessus,
+         postcrementum ==== -->
+    <regula titulus="postfixum">
+      <productio genus="subscriptio" id="subscriptio-index">
+        postfixum@basis QUADRA_APERTA@tok_apertum expressio@index
+        QUADRA_CLAUSA@tok_clausum
+      </productio>
+      <productio genus="vocatio" id="vocatio-argumenta">
+        postfixum@functio PAREN_APERTA@tok_apertum argumenta@argumenta
+        PAREN_CLAUSA@tok_clausum
+      </productio>
+      <productio genus="accessus" id="accessus-punctum">
+        postfixum@basis PUNCTUM@tok_operator IDENTIFICATOR@tok_titulus
+      </productio>
+      <productio genus="accessus" id="accessus-sagitta">
+        postfixum@basis SAGITTA@tok_operator IDENTIFICATOR@tok_titulus
+      </productio>
+      <productio genus="postcrementum" id="postcrementum-incrementum">
+        postfixum@internum INCREMENTUM@tok_operator
+      </productio>
+      <productio genus="postcrementum" id="postcrementum-decrementum">
+        postfixum@internum DECREMENTUM@tok_operator
+      </productio>
+      <productio>primarium</productio>
+    </regula>
+
+    <!-- Argumenta: lista separata - signa COMMA in lista ipsa
+         interserta (ordo locorum == ordo octetorum) -->
+    <regula titulus="argumenta">
+      <productio modus="lista-initium"></productio>
+      <productio>argumenta-plena</productio>
+    </regula>
+
+    <regula titulus="argumenta-plena">
+      <productio id="argumenta-primum" modus="lista-initium">
+        assignatio@elementum
+      </productio>
+      <productio id="argumenta-appendere" modus="lista-appendere">
+        argumenta-plena@lista+ COMMA@signum assignatio@elementum
+      </productio>
+    </regula>
+
+    <!-- Chordae adiacentes: "a" "b" = UNUM folium-chorda,
+         tok_valor = lista lexematum (concatenatio translationis
+         phasis 6 ISO; decisio M2a ex vocabulario) -->
+    <regula titulus="chordae">
+      <productio id="chordae-prima" modus="lista-initium">
+        STRING_LIT@elementum
+      </productio>
+      <productio id="chordae-appendere" modus="lista-appendere">
+        chordae@lista+ STRING_LIT@elementum
+      </productio>
+    </regula>
+
+    <!-- ==== primarium: folia + parenthesis ==== -->
+    <regula titulus="primarium">
+      <productio genus="folium-identificator" id="primarium-identificator">
+        IDENTIFICATOR@tok_valor
+      </productio>
+      <productio genus="folium-integer" id="primarium-integer">
+        INTEGER@tok_valor
+      </productio>
+      <productio genus="folium-fluitans" id="primarium-fluitans">
+        FLOAT@tok_valor
+      </productio>
+      <productio genus="folium-character" id="primarium-character">
+        CHARACTER_LIT@tok_valor
+      </productio>
+      <productio genus="folium-chorda" id="primarium-chorda">
+        chordae@tok_valor
+      </productio>
+      <productio genus="parenthesis" id="primarium-parenthesis">
+        PAREN_APERTA@tok_apertum expressio@internum PAREN_CLAUSA@tok_clausum
+      </productio>
+    </regula>
+  </regulae>
+
+  <!-- Genera structuralia: e sceletum verbatim (registrum
+       NECESSARIA generatoris = haec quinque; superset-regula
+       M2.0 verificata) -->
+  <genera-extra>
+    <genus titulus="error"         slots="tokens:lista-token"/>
+    <genus titulus="ambiguus"      slots="interpretationes:lista-nodus canonica:index"/>
+    <genus titulus="conditionalis" slots="rami:lista-nodus finis:lista-token"/>
+    <genus titulus="ramus-sumptus" slots="directiva:lista-token contentum:lista-nodus conditio_id:index"/>
+    <genus titulus="ramus-omissus" slots="directiva:lista-token cruda:lista-token conditio_id:index"/>
+  </genera-extra>
+
+  <initium>elementa</initium>
+</grammatica>

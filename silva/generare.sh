@@ -49,6 +49,9 @@ done
 
 for src in "$SILVA_DIR"/instrumenta/*.c; do
     base="$(basename "$src" .c)"
+    # silva_amalgama (mechanismus amalgamatoris) fontes postulat -
+    # generator eo non utitur; amalgamare.sh id compilat
+    if [ "$base" = "silva_amalgama" ]; then continue; fi
     obj="$BUILD_DIR/$base.o"
     if [ ! -f "$obj" ] || [ "$src" -nt "$obj" ]; then
         echo "  [silva] $base.c"
@@ -71,4 +74,6 @@ else
         SILVA_SCELETUM fontes/silva_tabulae_sceleti || exit 1
     "$BUILD_DIR/generator" grammatica/sceletum_imparilis.stml \
         SILVA_IMPARILIS fontes/silva_tabulae_imparilis || exit 1
+    "$BUILD_DIR/generator" grammatica/c89.stml \
+        SILVA_C89 fontes/silva_tabulae_c89 || exit 1
 fi

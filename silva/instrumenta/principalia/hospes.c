@@ -383,6 +383,49 @@ int main(void)
         }
     }
 
+    /* grammatica c89 (M2a): furca typedef per amalgama - lectiones
+     * ambae retentae, octeti exacti. Custos declarationum silva.h
+     * (regula hospitis: omnis functio nova vocatur eodem mutatu). */
+    {
+        static const SilvaGrammatica GRAMMATICA_C89 = {
+            &SILVA_C89_TABULA,
+            &SILVA_C89_REGISTRUM,
+            silva_c89_construere,
+            silva_c89_ambiguum_fabricare
+        };
+        const char* fons_c89 = "(foo)(x);";
+        SilvaParsura* parsura;
+
+        summa++;
+        parsura = silva_parsare(piscina, "hospes_c89.c", fons_c89,
+            (unsigned int)strlen(fons_c89), &GRAMMATICA_C89,
+            NULL, NULL, NULL);
+        if (parsura != NULL && parsura->successus
+            && parsura->numerus_errorum == 0
+            && silva_xar_numerus(parsura->commissio->ambigui) == 1)
+        {
+            SilvaScriptura scriptura = silva_scribere_fontem(piscina,
+                parsura, &SILVA_C89_REGISTRUM, parsura->fons_princeps);
+
+            if (scriptura.successus
+                && scriptura.textus.mensura
+                    == (unsigned int)strlen(fons_c89)
+                && memcmp(scriptura.textus.datum, fons_c89,
+                       strlen(fons_c89)) == 0)
+            {
+                fideles++;
+            }
+            else
+            {
+                fprintf(stderr, "hospes: INFIDELIS: c89 octeti\n");
+            }
+        }
+        else
+        {
+            fprintf(stderr, "hospes: INFIDELIS: c89 furca\n");
+        }
+    }
+
     /* telemetria arenae */
     {
         size_t usus = silva_piscina_summa_usus(piscina);

@@ -26,6 +26,7 @@
 #include "silva_nodus.h"
 #include "silva_tabulae.h"
 #include "silva_tabulae_sceleti.h"
+#include "silva_tabulae_c89.h"
 #include "silva_glr.h"
 #include "silva_commissio.h"
 #include "silva_parsare.h"
@@ -39,6 +40,25 @@ hic_manens constans SilvaGrammatica GRAMMATICA_SCELETI = {
     &SILVA_SCELETUM_REGISTRUM,
     silva_sceletum_construere,
     silva_sceletum_ambiguum_fabricare
+};
+
+hic_manens constans SilvaGrammatica GRAMMATICA_C89 = {
+    &SILVA_C89_TABULA,
+    &SILVA_C89_REGISTRUM,
+    silva_c89_construere,
+    silva_c89_ambiguum_fabricare
+};
+
+/* Ambae grammaticae per omnia specimina (M2a Chunk C: c89 eundem
+ * vectem incolumitatis fert quem sceletum) */
+nomen structura {
+    constans SilvaGrammatica*      grammatica;
+    constans SilvaRegistrumCoctum* tabularium;
+} GrammaticaProbanda;
+
+hic_manens constans GrammaticaProbanda GRAMMATICAE[] = {
+    { &GRAMMATICA_SCELETI, &SILVA_SCELETUM_REGISTRUM },
+    { &GRAMMATICA_C89,     &SILVA_C89_REGISTRUM }
 };
 
 #define ITERATIONES 200
@@ -130,30 +150,38 @@ _specimen (constans i8* buffo, i32 mensura)
     /* fistula TOTA (Chunk D): gubernator arborem completam ex
      * QUOLIBET inputo reddit (recuperatio) - numquam fragor.
      * Phase 5 Chunk C: ET arbor octetos ORIGINALES reddit -
-     * scribere(parsare(x)) == x pro quolibet x. */
+     * scribere(parsare(x)) == x pro quolibet x. M2a Chunk C:
+     * per AMBAS grammaticas (sceletum + c89). */
     {
-        SilvaParsura* parsura;
+        i32 g;
+        i32 numerus_grammaticarum = (i32)(magnitudo(GRAMMATICAE)
+            / magnitudo(GRAMMATICAE[ZEPHYRUM]));
 
-        parsura = silva_parsare(piscina, "fuzz.c",
-            (constans character*)buffo, mensura, &GRAMMATICA_SCELETI,
-            NIHIL, NIHIL, NIHIL);
-        si (parsura == NIHIL || !parsura->successus)
+        per (g = ZEPHYRUM; g < numerus_grammaticarum; g++)
         {
-            fidelis = FALSUM;  /* arbor deesse non debet */
-        }
-        alioquin
-        {
-            SilvaScriptura scriptura;
+            SilvaParsura* parsura;
 
-            scriptura = silva_scribere_fontem(piscina, parsura,
-                &SILVA_SCELETUM_REGISTRUM, parsura->fons_princeps);
-            si (!scriptura.successus
-                || scriptura.textus.mensura != mensura
-                || (mensura > ZEPHYRUM
-                    && memcmp(scriptura.textus.datum, buffo,
-                           (memoriae_index)mensura) != ZEPHYRUM))
+            parsura = silva_parsare(piscina, "fuzz.c",
+                (constans character*)buffo, mensura,
+                GRAMMATICAE[g].grammatica, NIHIL, NIHIL, NIHIL);
+            si (parsura == NIHIL || !parsura->successus)
             {
-                fidelis = FALSUM;  /* octeti perditi aut mutati */
+                fidelis = FALSUM;  /* arbor deesse non debet */
+            }
+            alioquin
+            {
+                SilvaScriptura scriptura;
+
+                scriptura = silva_scribere_fontem(piscina, parsura,
+                    GRAMMATICAE[g].tabularium, parsura->fons_princeps);
+                si (!scriptura.successus
+                    || scriptura.textus.mensura != mensura
+                    || (mensura > ZEPHYRUM
+                        && memcmp(scriptura.textus.datum, buffo,
+                               (memoriae_index)mensura) != ZEPHYRUM))
+                {
+                    fidelis = FALSUM;  /* octeti perditi aut mutati */
+                }
             }
         }
     }

@@ -338,12 +338,65 @@ s32 principale (vacuum)
 
 
     /* ========================================================
+     * PROBARE: productio multilinearis (2026-07-04)
+     * Linea nova intra textum productionis atomos NON amittit.
+     * Classis inventa per c89.stml: stml_textus_internus '\n'
+     * servat, fissio per ' ' solum dividit -> "gamma@c\nDELTA@d"
+     * UNUS atomus fiebat, symbolum DELTA TACITE evanescebat
+     * (85 conflictus spurii). Nunc: albispatia normantur ante
+     * fissionem + atomi corrupti clamant.
+     * ======================================================== */
+
+    {
+        SilvaGenGrammatica* g;
+        SilvaGenProductio* prod;
+        SilvaGenLocusMappa* mappa;
+
+        imprimere("\n--- Probans productionem multilinearem ---\n");
+
+        g = silva_gen_grammaticam_legere(piscina, intern,
+            "<grammatica><terminalia>"
+            "<terminalis titulus=\"A\" genus=\"GA\"/>"
+            "<terminalis titulus=\"B\" genus=\"GB\"/>"
+            "<terminalis titulus=\"C\" genus=\"GC\"/>"
+            "<terminalis titulus=\"EOF\" genus=\"GE\"/>"
+            "</terminalia><regulae>"
+            "<regula titulus=\"r\">"
+            "<productio genus=\"g\" id=\"r-multilinearis\">\n"
+            "    A@primus B@secundus\n"
+            "    C@tertius\n"
+            "</productio>"
+            "</regula>"
+            "</regulae><initium>r</initium></grammatica>");
+        CREDO_NON_NIHIL (g);
+
+        prod = (SilvaGenProductio*)xar_obtinere(g->productiones,
+            ZEPHYRUM);
+        CREDO_AEQUALIS_I32 (xar_numerus(prod->dextrum), III);
+        mappa = (SilvaGenLocusMappa*)xar_obtinere(prod->loci, II);
+        CREDO_VERUM (_chorda_est(mappa->titulus, "tertius"));
+    }
+
+
+    /* ========================================================
      * PROBARE: validatio (generator est schema - R4/S19/S31)
      * Omnes casus mali: legere reddit NIHIL, nullus fragor.
      * ======================================================== */
 
     {
         imprimere("\n--- Probans validationem ---\n");
+
+        /* atomum corruptum: '@' intra nomen loci (classis
+         * multilinearis ante normationem) -> clamat */
+        CREDO_NIHIL (silva_gen_grammaticam_legere(piscina, intern,
+            "<grammatica><terminalia>"
+            "<terminalis titulus=\"A\" genus=\"GA\"/>"
+            "<terminalis titulus=\"EOF\" genus=\"GE\"/>"
+            "</terminalia><regulae>"
+            "<regula titulus=\"r\">"
+            "<productio genus=\"g\" id=\"r-corruptum\">"
+            "A@primus@secundus</productio></regula>"
+            "</regulae><initium>r</initium></grammatica>"));
 
         /* multi-symbola sine genere */
         CREDO_NIHIL (silva_gen_grammaticam_legere(piscina, intern,

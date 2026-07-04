@@ -13,6 +13,7 @@
 #include "silva_generare.h"
 #include "silva_tabulae.h"
 #include "silva_tabulae_sceleti.h"
+#include "silva_tabulae_c89.h"
 #include "credo.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -301,6 +302,55 @@ s32 principale (vacuum)
 
         /* pretium: actiones normales pretium 0 ferunt */
         CREDO_AEQUALIS_I32 (cocta->actiones[ZEPHYRUM].pretium, ZEPHYRUM);
+    }
+
+
+    /* ========================================================
+     * PROBARE: custos torporis c89 - numeri cocti == recentes
+     * (grammatica c89.stml mutata sine generare.sh -> frangit;
+     * census conflictuum M2a Chunk A == 0 hic quoque fixus)
+     * ======================================================== */
+
+    {
+        SilvaGenGrammatica* g89;
+        SilvaGenTabula* recens89;
+        constans SilvaTabulaCocta* cocta89 = &SILVA_C89_TABULA;
+
+        imprimere("\n--- Probans custodem torporis c89 ---\n");
+
+        sprintf(via, "%s/silva/grammatica/c89.stml", radix);
+        fons = _plagulam_legere(piscina, via);
+        g89 = (fons != NIHIL)
+            ? silva_gen_grammaticam_legere(piscina, intern, fons)
+            : NIHIL;
+        CREDO_NON_NIHIL (g89);
+        si (g89 != NIHIL)
+        {
+            silva_gen_first_computare(g89);
+            silva_gen_follow_computare(g89);
+            recens89 = silva_gen_tabulam_construere(
+                silva_gen_collectio_lalr_construere(g89));
+            CREDO_NON_NIHIL (recens89);
+
+            CREDO_AEQUALIS_I32 (cocta89->numerus_symbolorum,
+                xar_numerus(g89->symbola));
+            CREDO_AEQUALIS_I32 (cocta89->numerus_terminalium,
+                g89->numerus_terminalium);
+            CREDO_AEQUALIS_I32 (cocta89->numerus_productionum,
+                xar_numerus(g89->productiones));
+            CREDO_AEQUALIS_I32 (cocta89->numerus_statuum,
+                xar_numerus(recens89->status_tabulae));
+            CREDO_AEQUALIS_S32 (cocta89->numerus_conflictuum,
+                recens89->numerus_conflictuum);
+            CREDO_AEQUALIS_S32 (cocta89->initium_index,
+                g89->initium_index);
+
+            /* M2a Chunk B: familia furcarum typedef = DUAE cellae
+             * (typus-nominatus vs primarium-identificator, in
+             * prospectibus STAR/PAREN_CLAUSA - probatio_silva_c89
+             * cellas ipsas per paria id figit) */
+            CREDO_AEQUALIS_S32 (cocta89->numerus_conflictuum, II);
+        }
     }
 
 

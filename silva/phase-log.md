@@ -3137,3 +3137,427 @@ bounds it: ~115 rules is finite and charted).
 
 NEXT: M2.0 INTENTIO — the naming session (vocabulary doc +
 grammar-file decision), with Fran at the table.
+
+---
+
+## M2.0 — NOMINA: INTENTIO (2026-07-03)
+
+**The thousand-year decision, taken first.** Node genus tags
+become the quaestio selector surface, solarium's query language,
+and saltuarius's TOC rows — user-visible names that outlive every
+implementation (genus identity in the engine is a registry index;
+the STRING TAG from the grammar file is the canonical name).
+Eskil's api-first rule applies to this vocabulary more than to
+any C signature. Nothing is proven in this phase; everything is
+named. Method (Fran signed off 2026-07-03): DRAFT-THEN-CORRECT —
+Claude drafts candidates with reasoning and query-surface
+consequences; Fran corrects (his Latin, his query language); each
+name is tested by reading it aloud as a TOC row / selector.
+
+**Inventory basis (extracted 2026-07-03)**:
+- lapifex_c89_grammatica.c: 54 rule entries (52 unique names —
+  the file holds TWO grammar strings, expression + statement/
+  declaration, four rules shared), 207 productions. The
+  structural map.
+- arbor2 node genera: 51 ARBOR2_NODUS_* values — the semantic
+  inventory of what a C89 tree needs. Both prior inventories are
+  MIXED-LANGUAGE (pointer, struct_member, initializer,
+  TRANSLATION_UNIT, PARENTHESIZED, INITIALIZOR) — the naming debt
+  M2.0 pays down once, permanently.
+- sceletum.stml PRECEDENT (kept where it holds): kebab-case genus
+  tags; tok_ prefix for terminal loci; semantic child-locus names
+  (sinister/dexter/internum); genus unification across
+  productions (binarium); folium- prefix for literal leaves;
+  structural genera in <genera-extra>.
+- **SILVA_LEX_* is ALREADY COMPLETE** (95 genera shipped public
+  in silva.h) — the sketch's "terminal set completion" collapses
+  to mechanical <terminalis> mapping, ZERO naming decisions.
+  Discovery that shrinks the phase.
+
+**Deliverable**: silva/grammatica/genera-c89.md — the vocabulary
+document, organized by tier (radix / expressiones /
+declarationes / sententiae / structuralia + locus conventions),
+every C89 construct owning exactly one genus tag, alternatives
+and reasoning recorded so the decisions keep their why (raw-
+transcripts-precede-specs culture applied to names).
+
+**Named questions going in (the session agenda)**:
+1. POLICY: latina-macro words as genus tags (si, redde, frange,
+   structura, magnitudo...). Tags are STML strings and generated
+   identifiers are always silva_-prefixed, so macro expansion
+   cannot fire (macros expand whole tokens only) — proposal: the
+   latina keyword IS the genus tag for keyword constructs (source
+   reads `redde x;`, tree reads genus `redde`). One policy
+   decision, not per-name. Hand-written code keeps the six-firing
+   prohibition unchanged.
+2. Granularity forks with selector consequences: assignatio own
+   genus vs binarium-with-operator; one binarium vs per-operator
+   genera; folium- prefix retention; typedef as distinct genus vs
+   same-declaratio + semantic marking.
+3. The barbarism budget: parametrum (Greek loan) or not; what
+   replaces arbor2's INITIALIZOR; the array word; the tree-root
+   name (truncus? radix per STML precedent? unitas-translationis
+   for standard fidelity?).
+4. Grammar-file strategy (sketch proposal, needs sign-off):
+   grammatica/c89.stml FRESH with its own baked symbols;
+   sceletum.stml FROZEN as generator fixture; saltuarius switches
+   grammars at M2d.
+
+**Exit criteria**: genera-c89.md reviewed and corrected by Fran;
+every construct named; locus conventions pinned; grammar-file
+decision recorded; RELATIO with any narrowings named. No code,
+no gates — the deliverable is the vocabulary.
+
+### M2.0 — NOMINA: RELATIO (2026-07-04) — COMPLETE
+
+**silva/grammatica/genera-c89.md is DECISUS** — the pinned
+vocabulary. ~55 genus tags across five tiers + locus conventions,
+every name carrying its reasoning and rejected alternatives.
+Draft-then-correct worked as designed: Fran approved the draft
+wholesale ("those all look great"), then three questions that
+recommendations couldn't cover got explicit sign-off via
+question tool (all three landed on the recommendation):
+
+1. **typedef = semantic mark, no distinct genus.** Grammar stays
+   uniform; oracle detects TYPEDEF at commit; query surface gets
+   a pseudo/header-field. Named path back: genus split is
+   ADDITIVE if ever needed.
+2. **c89.stml FRESH**; sceletum.stml FROZEN as generator
+   fixture; saltuarius switches at M2d. (The sketch proposal,
+   now decided.)
+3. **Switch bodies GROUPED** — casus/ordinarius own their
+   sententiae lista (tree-sitter shape, ISO shape rejected with
+   previews compared). Consequences recorded in the doc:
+   fall-through = empty first group; grammar mechanics =
+   M2c INTENTIO item; titulatum stays ISO-shaped.
+
+**Decisions of note beyond the map**: P1 (latina keywords ARE
+genus tags — safe because tags are STML strings and generated
+identifiers are silva_-prefixed; the hand-code prohibition
+unchanged); P3 (one binarium, operator in token — vocabulary
+stays ~55 not ~90); truncus/acies/congeries/campus/passus/
+discrimen/virgula/accessus-vs-membrum all approved; arbor2's
+INITIALIZOR retired; species-typi avoids the nomen landmine
+entirely.
+
+**Deferred, with owners**: folium-chorda adjacent-literal
+concatenation shape (M2a, when the annotation meets it);
+grouped-casus grammar mechanics (M2c); genera-extra slot-shape
+verification against the M1 skeleton registry (M2/c89.stml
+authoring time — c89 registry must be a SUPERSET).
+
+Zero complexities — no code was written. NEXT: M2a INTENTIO
+(expressiones, ~40 rules; first fixture set + the cast-vs-call
+and sizeof fork policies).
+
+---
+
+## M2a — EXPRESSIONES: INTENTIO (2026-07-04)
+
+**What M2a proves**: annotation v0 + the AMBIGUUS machinery at
+real-grammar width. The sceletum exercised one designed fork in
+17 productions; M2a authors ~40 rules with a whole FAMILY of
+typedef-driven forks and the full C89 precedence ladder, all in
+the DECISUS vocabulary (grammatica/genera-c89.md — authoring is
+translation now, not naming).
+
+**Grammar file**: grammatica/c89.stml, FRESH (M2.0 decision) —
+ONE file growing across M2a→M2d; truncus's elementa alternatives
+widen per phase (M2a: sententia-expressionis only). Baked as
+fontes/silva_tabulae_c89.{h,c} + silva_c89_construere ("c89"
+untranslated, like offset). genera-extra carried from sceletum
+VERBATIM + verified against the generator's NECESSARIA registry
+(the M2.0 deferral, discharged in Chunk A). sceletum.stml
+untouched, frozen.
+
+**Pinned policies (named forks — never first-parse-wins)**:
+- **Fork family** (all typedef-driven, all fork + localized
+  AMBIGUUS): cast-vs-call `(t)(x)`; cast-vs-binary `(t)+x`,
+  `(t)-x`, `(t)*x`, `(t)&x` (the four unary/binary-shared
+  operators; `(t)~x`/`(t)!x` are unambiguous casts);
+  sizeof-fork `magnitudo(t)` → magnitudo-typi vs
+  magnitudo-expressionis (distinct genera BY M2.0 DESIGN so
+  AMBIGUUS interpretations are queryable apart). Only
+  typus-nominatus forks — typus-primitivus keywords can't be
+  expressions.
+- **Canonical-spine default, pinned project-wide**: the
+  EXPRESSION (identifier) reading is canonical when the oracle
+  doesn't know the name; oracle registration flips to the type
+  reading via recanonicare at commit. Rationale: unregistered
+  names degrade gracefully as expressions, and the oracle only
+  ever LEARNS types. (M2b declaratio forks inherit this
+  default.)
+- **ISO grammar shapes**: assignment LHS restricted to the
+  unary tier (kills `a+b=c` at grammar level, right-assoc);
+  ternary middle = full expression, right side = conditional
+  tier; argumenta = separated lista at assignment tier (no
+  virgula ambiguity in calls, by construction).
+
+**Chunks**:
+- **A — scala praecedentiae** (the unambiguous ladder, ~25
+  rules): truncus + sententia-expressionis carrier; virgula →
+  assignatio → ternarius → binarium (10 tiers, ONE genus per
+  P3) → unarium → postcrementum / vocatio / subscriptio /
+  accessus → folia + parenthesis. folium-chorda adjacent-literal
+  decision lands here: proposed shape = hidden modus-lista rule
+  collecting STRING_LIT tokens → folium-chorda genus production
+  with lista-token slot (machinery believed sufficient — shift
+  TOKEN values append into lista; if annotation v0 can't express
+  it, that's the FORMAT-revision trigger, consciously, per the
+  standing rule). Baked tables committed; **conflict count
+  pinned at ZERO** (surgical-ambiguity discipline: every
+  conflict named or none). Dev tree-printer
+  instrumenta/principalia/arbor.c (parse arg/stdin → indented
+  genus/locus dump) — the M2a manual bar's eyes; the saltuarius
+  breadcrumb stays UNBUILT unless Chunk B inspection demands it
+  (per-phase map: M2a has no TOC presence).
+- **B — typus intrat** (casts + sizeof, the fork family):
+  species-typi MINIMAL (multi-token typus-primitivus,
+  typus-nominatus, pointer-chain-only declarator-abstractus —
+  arrays/function pointers are M2b); conversio;
+  magnitudo-expressionis + magnitudo-typi. **Conflict census
+  pinned EXACTLY by production-id pairs** (sceletum precedent:
+  pin by id, not state number). Fixtures prove BOTH readings of
+  `(t)(x)` and `magnitudo(t)` + hand resolutor (probatio-side,
+  as in Phase 4) proves the recanonicare flip in BOTH
+  directions.
+- **C — bars**: carried lapifex expression suite
+  (probationes/probatio_lapifex_c89_expr.c: 25 PROBARE / 32
+  inputs, "x" through "a||b&&c|d^e&f==g<h<<i+j*k" and
+  "*p++ + sizeof(int*)") re-asserted against silva genera;
+  v1 syntaxis corpus EXPRESSION half harvested (non-ERROR trees
+  + genus spot-checks); incolumitas fuzz extended through the
+  c89 grammar; mensura baselines (parse ms/KB + frons_maxima
+  over the fixture corpus — the fork-explosion watch starts
+  recording HERE, ceilings set at M2b); silva.h public surface
+  for the c89 grammar (accessor analog to the sceletum bundle)
+  + hospes call SAME-CHANGE; full amalgam gates.
+
+**Standing discipline applies**: every grammar edit →
+generare.sh → amalgamare.sh; roundtrip byte-exact THROUGH THE
+TREE for every fixture (the ruthless oracle rides from Chunk A);
+new public API → silva.h + hospes.
+
+**Named risks**: frontier growth on operator-dense parenthesized
+chains — measured not guessed; the Phase-4 evidence-gated
+action-filter hook is the named remedy if numbers demand it.
+Annotation-friction candidate #1 = folium-chorda token-lista.
+Any UNNAMED conflict appearing in the census = stop and
+disposition it, never suppress.
+
+**Exit criteria**: suite green; Chunk A census == 0 and Chunk B
+census == the named family, both pinned in probationes; both
+fork fixtures prove both readings + oracle flip; 32 carried
+inputs green against silva genera; syntaxis expression inputs
+produce real trees; every fixture roundtrips; mensura recorded;
+amalgam gates green; M2a RELATIO + **the full phase-log audit
+owed from M2.0** (doc-only phase, deferred by note).
+
+### M2a Chunk A — scala praecedentiae: COMPLETE (2026-07-04)
+
+**Suite 27/27 (+probatio_silva_c89, 190 assertions first run);
+census 0 PINNED twice** (probatio_silva_c89 + a new c89
+staleness guard in probatio_silva_tabulae); tessera 5/5,
+saltuarius 13/13; amalgam byte-identical (c89 tables enter the
+manifest at Chunk C together with their silva.h surface).
+
+Shipped: **grammatica/c89.stml** (49 terminals / 77 productions
+/ 129 states; the full ladder expressio→primarium in the DECISUS
+vocabulary; rule-name bonus: vel-bitorum (|) / aut-bitorum (^) —
+classical vel=inclusive, aut=exclusive, the language itself
+distinguishes the operators); baked fontes/silva_tabulae_c89
+committed; generare.sh grew the c89 line. **folium-chorda
+decision landed with ZERO format changes**: hidden modus-lista
+rule collects adjacent STRING_LITs → one folium-chorda, tok_valor
+= lista-token (fixture pins "a" "b" → one node, lista of 2,
+byte-exact roundtrip with interior trivia). Separated-list
+interleave pinned: f(a,b) argumenta = [folium, COMMA-token,
+folium]. All 31 fixtures roundtrip byte-exact THROUGH THE TREE
+incl. the ERROR segment ("int x;" — M2a honesty), comments, and
+multi-statement inputs. Dev printer instrumenta/principalia/
+arbor.c + silva/arbor.sh (generic registrum walk — no grammar
+knowledge in the printer; the M2a manual bar's eyes).
+
+**COMPLEXITY (the big one)** — discovered-while: first c89
+generation reported 85 preserved conflicts where the INTENTIO
+pinned zero. consists-in: silva_gen production-text reading
+tokenized on ' ' ONLY while stml_textus_internus preserves '\n'
+— a two-line production fused the last atom of line 1 with the
+first atom of line 2 ("expressio@verum\nCOLON@tok_colon" = ONE
+atom), so the symbol after the break VANISHED SILENTLY and the
+locus name was corrupted; ternarius lost its COLON, subscriptio/
+vocatio lost their closers; the mangled grammar was genuinely
+ambiguous (85 real conflicts of a wrong grammar, not spurious
+lookaheads — the LALR machinery was NEVER at fault; bison on the
+identical ladder: 0 conflicts, the independent oracle that
+localized the bug to our reader). consequences: every multi-line
+production in ANY grammar silently loses structure; sceletum
+never fired it (all productions single-line); lapifex likely
+carried the same class invisibly — under GLR, wrong-grammar
+forks die on the next token, so tests pass and only wasted work
+remains (spurious-conflict class = performance bug wearing a
+correctness bug's clothes). handled-by: (1) _albispatia_normare
+— production text whitespace-normalized (copy, not in-place;
+stml text may be doc-owned) before fissio; (2) _atomi_pars_sana
+— symbol/locus atoms restricted to [A-Za-z0-9_-], anything else
+CLAMAT (generator-is-schema R4: this class can never be silent
+again); (3) two regression pins in probatio_silva_generare
+(multi-line production parses 3 symbols; '@' inside locus =
+legere NIHIL).
+
+Minor: generare.sh had rotted since the amalgamator-mechanism
+refactor (silva_amalgama.o in the instrumenta glob needs fontes
+symbols the generator link never provided) — skip-line added;
+first table regeneration since the refactor confirmed sceletum/
+imparilis tables byte-identical.
+
+Debug artifact worth keeping in mind: scratchpad lalr_vestigium.c
+(items+lookaheads dumper per state; state-dump mode at arg
+1000+N) — rebuild it if a conflict census ever surprises again.
+
+NEXT: Chunk B — typus intrat (species-typi minimal, conversio,
+magnitudo ×2, the named fork family, census re-pinned to the
+enumerated set, both-readings fixtures + recanonicare flips).
+
+### M2a Chunk B — typus intrat: COMPLETE (2026-07-04)
+
+**Suite 27/27 (probatio_silva_c89 now 304 assertions); amalgam
+gates green; saltuarius 13/13, tessera 5/5. THE FORK FAMILY
+LIVES**: grammar +10 terminals (9 primitive keywords + SIZEOF) /
++22 productions (99 total, 157 states) — conversio tier spliced
+between multiplicativum and unarium (unary-op operands became
+conversio per ISO 3.3.3; crementa stay unarium); species-typi
+{specificatores lista, declarator?}; typus-primitivus (multi-
+keyword tok_verba lista — "unsigned long" is ONE node);
+typus-nominatus; declarator-abstractus star-chains; magnitudo-
+expressionis + magnitudo-typi (two genera BY M2.0 DESIGN — fork
+interpretations queryable apart).
+
+**Census: EXACTLY the named family, pinned exhaustively** — the
+predicted shape held: the ENTIRE typedef fork family (cast-vs-
+call, cast-vs-binary ±*&, sizeof-typus-vs-expressionis) lives in
+ONE r/r point: typus-nominatus vs primarium-identificator after
+IDENTIFICATOR inside parens, lookaheads STAR + PAREN_CLAUSA = 2
+cells. probatio scans EVERY cell of the baked table: any third
+cell or different production pair = loud failure. Fixtures prove
+both readings ((foo)(x) → AMBIGUUS{vocatio, conversio};
+(foo)+x/-x/*x/&x ambiguous; (foo)~x/!x unambiguous conversio —
+GLR prunes the dead expression reading; sizeof(foo*) unambiguous
+magnitudo-typi), oracle collapse in-pipeline ((foo)(x) + oracle
+→ CONVERSIO, resolutiones 1), and recanonicare flips BOTH
+directions with the wrapper intact.
+
+**COMPLEXITY — canonical spine: engine order is NOT policy.**
+discovered-while: pinning "expression reading canonical" per the
+INTENTIO — held free for (foo)(x) (vocatio canonical) but
+sizeof(foo) natively lands TYPE-canonical (drain order differs
+per fork shape; it's an accident, not a rule). consists-in: the
+fabrica orders interpretations by GSS drain arrival; nothing
+semantic. consequences: any consumer reading canonica without
+policy enforcement gets arbitrary (per-shape-stable) readings.
+handled-by: the sanctioned mechanism exists and is DEMONSTRATED
+in-probatio — post-commit silva_recanonicare with a policy
+resolutor (victor = the non-type reading) flips canonica while
+keeping both interpretations alive (no collapse, wrapper stays).
+SHIPPING LOCATION for the policy call = **M2b INTENTIO item**
+(the driver/oracle integration owns "who calls it when") —
+named landing spot, not an assumption. Note: recanonicare
+requires a non-NIHIL oraculum even when the resolutor ignores
+it (empty oraculum suffices).
+
+**Minor complexity**: arbor.sh linked its binary only when
+arbor.c changed — regenerated TABLE OBJECTS never triggered a
+relink, so arbor silently ran Chunk A tables ((int)x "errored";
+30 minutes of engine-suspicion for a build-script bug; the
+python table-walk simulation exonerated tables AND engine before
+the stale link was found). Fix: always relink. Lesson recorded:
+dev-tool scripts must relink on ANY object change — cheap
+insurance against debugging phantoms.
+
+**Named narrowing**: const/volatile qualifiers excluded from
+Chunk B species-typi — (const char*)x is ERROR until **M2b**,
+which owns order-free specifier lists (arbor2 specifiers_ordine
+lesson) and extends specificatores properly. Path back: the
+specificatores locus is ALREADY a lista.
+
+NEXT: Chunk C — the bars (lapifex expression suite 25/32
+re-asserted against silva genera; v1 syntaxis expression half;
+incolumitas + mensura incl. frontier-width baselines; silva.h
+public surface for GRAMMATICA_C89 + hospes call + amalgam
+manifest entry; M2a RELATIO + the owed full-log audit).
+
+---
+
+## M2a — EXPRESSIONES: RELATIO (2026-07-04) — PHASE COMPLETE
+
+**Suite 27/27 (probatio_silva_c89: 469 assertions); amalgam
+gates green incl. hospes 20/20 (c89 IN the deliverable —
+silva.c 838,827 octeti); saltuarius 13/13, tessera 5/5. Every
+exit criterion of the INTENTIO discharged or honestly
+re-dispositioned:**
+
+- **Census**: Chunk A == 0, Chunk B == the named family (2 r/r
+  cells, typus-nominatus × primarium-identificator, STAR +
+  PAREN_CLAUSA), pinned by EXHAUSTIVE cell scan + the tabulae
+  staleness guard.
+- **Fork fixtures**: both readings proven for (foo)(x) and
+  magnitudo(foo); oracle collapse in-pipeline; recanonicare
+  flips BOTH directions, wrapper intact.
+- **Carried bar**: all 32 lapifex expression inputs re-asserted
+  against DECISUS genera (root genus + zero errors + zero
+  ambigui each).
+- **Syntaxis corpus DISCOVERY**: the "expression half" is
+  EMPTY — the corpus is declarations wall-to-wall (expressions
+  live inside initializers). M2a's expression bar is carried
+  entirely by the lapifex suite; the corpus block now decodes
+  the quoted lines properly (\" \\), asserts totality 125/125,
+  and pins comprehension at its honest baseline ZERO — the
+  counter M2b/M2c must raise deliberately (M2d's metric in
+  miniature, running early).
+- **Fuzz**: incolumitas runs every specimen through BOTH
+  grammars (400 × 2), byte-exact roundtrip under recovery.
+- **Mensura baselines (fork-explosion watch, first data)**:
+  c89 over the 78-file real-C corpus: 0.5513 ms/KB parse,
+  **frons_maxima 2** (no explosion), 761 ERROR nodes (sceletum:
+  797 — c89 already comprehends 36 more segments), fideles
+  78/78 byte-exact through trees (asserted).
+- **Public surface**: silva.h + SILVA_C89_TABULA/REGISTRUM +
+  construere/fabricare; manifest grew both table files; hospes
+  exercises the fork THROUGH THE AMALGAM (type-drift guard).
+
+**FULL PHASE-LOG AUDIT (owed from M2.0, executed)**: all
+complexities resolved or parked WITH NAMED LANDING SPOTS. Two
+M1-era dispositions REVISED (drift caught, the class this
+practice exists for):
+1. Phase-6 note said "M2 swaps sceletum out of the manifest" —
+   M2a ADDED c89 alongside instead (sceletum's public surface
+   still has consumers). The swap-out decision moves to **M2d**
+   (when saltuarius switches grammars; sceletum stays the
+   generator fixture regardless — whether it keeps SHIPPING is
+   the M2d call).
+2. "Generated per-genus accessors + genus enum in the public
+   surface (M2)" — M2a shipped the BUNDLE surface only; genus
+   names are already publicly reachable via REGISTRUM titulus
+   strings (kebab-case tags). Full accessor/enum exposure stays
+   parked **on-pull** (saltuarius M2d FUNCTIONES or solarium —
+   whoever asks first).
+Also verified: M2.0 deferrals all landed (folium-chorda decided
+Chunk A — genera-c89.md note updated to DECIDED; genera-extra
+superset carried verbatim + generation-enforced; grouped-casus
+→ M2c on record); canonical-policy shipping → M2b INTENTIO;
+nested-packing observation → M2b watchdog evidence; qualifiers
+→ M2b. Vendored-exclusion note N/A (no new consumption). Zero
+unowned complexities.
+
+**M2a's proof, delivered**: annotation v0 + AMBIGUUS machinery
+at real-grammar width — 99 productions, one designed fork
+family, all of C89's expression grammar parsing byte-exact
+through real trees with named, queryable genera.
+
+NEXT: **M2b INTENTIO — declarationes + typi** (~45 rules: the
+oracle dance at scale, order-free specifiers + qualifiers,
+declarator recursion incl. function pointers, initializers,
+struct/union/enum + campus bitfields; owns: canonical-policy
+shipping location, watchdog ceilings from the Chunk C
+baselines, syntaxis-corpus comprehension riser, TYPI/
+DECLARATIONES saltuarius vista per the loop map).
