@@ -2979,3 +2979,161 @@ i32-slip compounding).
 **Next: saltuarius Phase C — the magic** (layer flips with
 token-identity cursor, origo popup, Enter-to-jump; all silva.h
 prerequisites now exist).
+
+---
+
+## M2 — GRAMMATICA C89: phase sketch (plan of record, revisable)
+## (2026-07-03)
+
+**The pull fired as designed.** M1's close set the condition —
+"M2 begins when saltuarius demands tree views" — and it was met
+2026-07-03: saltuarius v0 SHIPPED (daily-driver bar passed), and
+Fran, living with the Tab TOC pane, called the switch: "work on
+extending c89 support." The first tree view M2 feeds back is the
+TOC's FUNCTIONES section.
+
+**What M2 stands on (all shipped, all gated)**: the full
+preprocessor substrate (conditionals as tree citizens, strata,
+origo), the generator pipeline (annotated stml → conflict-
+preserving LALR → baked Latin-commented tables → generated
+construction), the GLR runtime (tagged values, localized AMBIGUUS
+with canonical spine, accept-reconciliation, post-accept oracle
+registration, re-canonicalization IN PLACE), scribere byte-exact
+emission, segments with recovery totality, and the amalgam gates.
+**The engine risk is spent. M2 is grammar AUTHORING**: ~115
+annotated rules where every terminal carries a named locus
+(trivia single-owner enforced at generation) and every node genus
+is a permanent name.
+
+**The territory map**: lib/lapifex_c89_grammatica.c — 4,565
+lines, 108 rules, the previous generation's complete C89 grammar
+(phases 1-6b). Not reusable (no annotations, no trivia loci,
+first-parse-wins ambiguity); as a MAP it removes all exploration:
+every precedence tier, rule ordering, and conflict is already
+charted once. Translation-and-upgrade, not discovery.
+
+**Phases**:
+
+- **M2.0 — NOMINA (the thousand-year decision, FIRST).** The
+  full Latin vocabulary: node genera (kebab-case tags — these
+  become the quaestio selector surface and solarium's query
+  language FOREVER; Eskil's api-first rule applies to this
+  vocabulary more than to any C signature) + locus names per
+  production + the terminal set completion. Deliverable: a
+  genera-c89 vocabulary document, REVIEWED WITH FRAN (his Latin,
+  his query language), before any rule is authored. Also decided
+  here: c89 grammar file strategy (proposal: grammatica/c89.stml
+  FRESH with its own baked SILVA_C89_* symbols; sceletum.stml
+  stays FROZEN as the generator's test fixture; saltuarius
+  switches grammars when M2d lands — revisable). Proves: nothing;
+  names everything.
+- **M2a — Expressiones (~40 rules).** The precedence ladder
+  comma → 11 assignments → ?: → logical/bitwise tiers →
+  equality/relational/shifts → additive/multiplicative → cast →
+  unary (both sizeof forms) → postfix (call/index/./->/++/--) →
+  primary. Named forks arrive: cast-vs-call `(t)(x)`,
+  sizeof(typus) vs sizeof expressio — each gets an EXPLICIT
+  policy (fork + AMBIGUUS or declared preference), never
+  first-parse-wins. Bars: lapifex expression suite semantics
+  (25 tests/120 assertions, carried); the expression half of the
+  v1 syntaxis harvest; byte-exact roundtrip of every fixture
+  THROUGH THE TREE. Proves: annotation v0 + AMBIGUUS machinery
+  at real-grammar width.
+- **M2b — Declarationes + typi (~45 rules).** Order-free
+  declaration specifiers (arbor2's specifiers_ordine lesson),
+  init-declarator lists, the declarator recursion (pointers with
+  qualifiers, arrays, params, FUNCTION POINTERS — spec §7's named
+  adversarial-fixture risk), abstract declarators, brace-nested
+  initializers, struct/union/enum with bitfields (arbor2 phase
+  3.5 lesson). THE ORACLE DANCE AT SCALE: typedef declarations
+  register at segment commit and feed subsequent segments;
+  within-segment unknowns stay localized AMBIGUUS (both readings
+  retained — the wildcard-query pin WANTS them); frons_maxima /
+  fusiones counters become the fork-explosion watchdog with
+  measured ceilings. Proves: the M1 fork case was the general
+  mechanism, not a demo.
+- **M2c — Sententiae + functiones (~30 rules).** Compound blocks
+  (C89 declarations-before-statements), si/alioquin with the
+  dangling-else conflict resolved by DECLARED preference in the
+  conflict-preserving tables, loops, switch, goto/labels; then
+  function definitions — ANSI *and K&R parameter style* — and
+  translation-unit-as-list, at which point the segment boundary
+  heuristic ()-before-{, spec §7) faces its adversarial fixtures.
+  Full v1 syntaxis harvest completes here (125 inputs / 234
+  assertions re-asserted against silva genera). Proves: whole
+  real files acquire structure.
+- **M2d — The acceptance wall.** The honest counter flips
+  meaning: M1 recorded 41k ERROR nodes over solarium as
+  RECOVERY; M2d drives that number toward zero as COMPREHENSION
+  (the headline metric, tracked in the harness like parse
+  time/arena bytes). Tier-1 roundtrip corpus (78 files) byte-
+  exact through real trees; solarium 148/148 held; a
+  parse-the-monorepo sweep; carried lapifex integration bar
+  green; **saltuarius grows the FUNCTIONES section** (structura's
+  fourth section walking declaration vistas — the API-pressure
+  loop closes where it started). Post-M2d: quaestio selectors /
+  formator / typus+index stay their own milestones with their
+  frozen v1 bars (100/103/… assertions), per §4.1
+  freeze-then-delete.
+
+**SALTUARIUS IN THE LOOP (Fran, 2026-07-03).** The widen-first
+loop runs CONTINUOUSLY through M2, not batched at the end — and
+with a reframe: during M2, saltuarius integrations are
+INSTRUMENTS for the manual bars first, features second (the F2
+precedent: built as the LRU instrument, kept as a feature). The
+delivery mechanism is the proven VISTA pattern (slim by-value
+structs, additiones-II class): each tree tier that saltuarius can
+see ships its vista same-phase, and the vista IS that phase's
+API-pressure test. Governing rule: an integration lands IN-PHASE
+only when it is the best instrument for that phase's manual bar;
+anything merely nice goes to the saltuarius v0.1 backlog BY NAME.
+
+Per-phase map:
+- M2.0: no code — but the naming session TESTS each genus name by
+  reading it as a TOC row / breadcrumb segment aloud (the names
+  will be USER-VISIBLE in saltuarius, not just query syntax).
+- M2a: no TOC presence (nobody navigates to the third
+  multiplicative expression). OPTIONAL instrument: the node
+  BREADCRUMB (cursor token → genus chain in the status line) for
+  eyeballing precedence on real files — build only if the M2a
+  bar wants eyes; otherwise it arrives free at M2c when
+  pater-walks exist for functions anyway.
+- M2b: TOC sections TYPI / DECLARATIONES via a declaration vista
+  (genus, titulus, extent, linea — mirrors inclusio/ramus/macro).
+  Structura grows its fourth section; the vista is M2b's
+  pressure test.
+- M2c: **FUNCTIONES — the original pull.** The M2c manual bar IS
+  "Tab on silva_parsare.c lists every function, Enter lands on
+  the definition." Signature text in rows quietly exercises
+  scribere-from-subtree.
+- M2d: the comprehension metric goes AMBIENT — status badge
+  and/or F2 line gain the per-file ERROR-node count ("silva: N
+  errores"), so ordinary daily-driver use continuously runs the
+  acceptance test; incomprehension gets noticed, not audited.
+
+Saltuarius NON-GOALS (defended boundary): statement-level
+browsing (noise, not navigation); expression trees as UI; any
+AST-inspector pane — structural visualization at that depth is
+SOLARIUM's reason to exist; saltuarius stays at warden
+granularity (files, declarations, provenance).
+
+**Standing discipline** (unchanged, restated for the M2 sessions):
+every grammar edit → ./silva/generare.sh (probatio_silva_tabulae
+clamat on stale tables) → ./silva/amalgamare.sh (the suite does
+NOT catch a stale amalgam); new public API → hand-extend silva.h
++ hospes call same-change; simulate contested designs before
+building (the sim ledger is 5-for-5); phase-boundary full-log
+audits; complexities in the four-part schema; every narrowing
+named with its landing spot.
+
+**Named risks going in** (spec §7 + graveyard): fork explosion on
+typedef-dense real headers (watchdog counters + measured
+ceilings, M2b); boundary-finder vs function-pointer declarators
+and K&R (adversarial fixtures, M2c); annotation lock-in — v0
+format meets constructs it never saw (struct members, enumerator
+lists, initializer nesting; first friction = revise the FORMAT
+consciously, not per-rule hacks); the coverage mountain (the map
+bounds it: ~115 rules is finite and charted).
+
+NEXT: M2.0 INTENTIO — the naming session (vocabulary doc +
+grammar-file decision), with Fran at the table.
