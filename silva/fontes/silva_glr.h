@@ -84,6 +84,12 @@ nomen structura {
     SilvaGLRFabricaAmbigui     fabrica;
     Piscina*                   piscina;    /* GSS + apparatus */
 
+    /* Effimera per-reductionem REUSA (census 2026-07-04: xar recens
+     * per reductionem = LXXXIV centesimae apicis arenae; una viva
+     * simul - contenta per COPIAM VALORIS in constructiones fluunt,
+     * numquam retenta). Vacatur in _vias_enumerare, segmenta manent. */
+    Xar*                       viae_effimerae;
+
     /* Fines (Phase 7 Chunk A - par 8.2). 0 = infinitum. Frons ultra
      * limen = fractura munda segmenti (gubernator nodum ERROR facit -
      * totalitas tenet). Intermissio: pergere FALSUM = desiste;

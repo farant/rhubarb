@@ -3,7 +3,10 @@
 #include <string.h>
 #include <stdio.h>
 
-#define PISCINA_DEBUG FALSUM /* Muta ad VERUM pro imprimere debugging */
+#ifndef PISCINA_DEBUG
+#define PISCINA_DEBUG FALSUM /* Muta ad VERUM pro imprimere debugging,
+                              * vel -DPISCINA_DEBUG=1 in linea compilandi */
+#endif
 
 /* ===========================================================
  * Structura Alvei - allocatio singularis

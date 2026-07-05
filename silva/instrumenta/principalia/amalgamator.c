@@ -94,7 +94,7 @@ interior constans character* constans EXCLUDENDA_TABULAE[] = {
 
 interior constans character* constans EXCLUDENDA_XARIS[] = {
     "xar_addere_multos", "xar_capacitas", "xar_continet",
-    "xar_copiare_ad_tabulam", "xar_creare_cum_magnitudine",
+    "xar_copiare_ad_tabulam",
     "xar_destruere", "xar_invenire", "xar_invertere",
     "xar_iterator_finis", "xar_iterator_initium",
     "xar_iterator_proximum", "xar_obtinere_s", "xar_ponere",

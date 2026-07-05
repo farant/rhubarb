@@ -1646,6 +1646,15 @@ silva_xar_creare(
 		SilvaPiscina* piscina,
 		 		i32  magnitudo_elementi);
 
+/* Xar Creare Cum Magnitudine
+ * "Creare cum magnitudine prima specifica"
+ */
+static SilvaXar*
+silva_xar_creare_cum_magnitudine(
+		SilvaPiscina* piscina,
+        i32  magnitudo_elementi,
+        i32  magnitudo_primi);
+
 /* Xar Creare Cum Vexillis
  * "Creare cum omnibus optionibus"
  */
@@ -2836,6 +2845,12 @@ nomen structura {
     SilvaGLRFabricaAmbigui     fabrica;
     SilvaPiscina*                   piscina;    /* GSS + apparatus */
 
+    /* Effimera per-reductionem REUSA (census 2026-07-04: xar recens
+     * per reductionem = LXXXIV centesimae apicis arenae; una viva
+     * simul - contenta per COPIAM VALORIS in constructiones fluunt,
+     * numquam retenta). Vacatur in _vias_enumerare, segmenta manent. */
+    SilvaXar*                       viae_effimerae;
+
     /* Fines (Phase 7 Chunk A - par 8.2). 0 = infinitum. Frons ultra
      * limen = fractura munda segmenti (gubernator nodum ERROR facit -
      * totalitas tenet). Intermissio: pergere FALSUM = desiste;
@@ -3382,7 +3397,10 @@ silva_c89_parsare_cum_contextu (
 
 /* ================= ex lib/piscina.c ================= */
 
-#define PISCINA_DEBUG FALSUM /* Muta ad VERUM pro imprimere debugging */
+#ifndef PISCINA_DEBUG
+#define PISCINA_DEBUG FALSUM /* Muta ad VERUM pro imprimere debugging,
+                              * vel -DPISCINA_DEBUG=1 in linea compilandi */
+#endif
 
 /* ===========================================================
  * Structura Alvei - allocatio singularis
@@ -4573,6 +4591,19 @@ silva_xar_creare(
 	redde silva_xar_creare_cum_vexillis(piscina,
 	                               magnitudo_elementi,
 	                               XAR_PRIMUS_SEGMENTUM,
+	                               XAR_VEXILLUM_ORDINARIUS);
+}
+
+/* Xar Creare Cum Magnitudine */
+static SilvaXar*
+silva_xar_creare_cum_magnitudine(
+    SilvaPiscina* piscina,
+        i32  magnitudo_elementi,
+        i32  magnitudo_primi)
+{
+	redde silva_xar_creare_cum_vexillis(piscina,
+	                               magnitudo_elementi,
+	                               magnitudo_primi,
 	                               XAR_VEXILLUM_ORDINARIUS);
 }
 
@@ -27398,11 +27429,10 @@ _vias_enumerare (
     SilvaXar*       viae;
     SilvaValor partiales[SILVA_GLR_DEXTRUM_MAXIMUM];
 
-    viae = silva_xar_creare(glr->piscina, (i32)magnitudo(SilvaGSSVia));
-    si (viae == NIHIL)
-    {
-        redde NIHIL;
-    }
+    /* Effimera reusa - non recens: vide notam in SilvaGLR (una viva
+     * simul; contenta ante reditum plene scripta, ergo vacatio tuta) */
+    viae = glr->viae_effimerae;
+    silva_xar_vacare(viae);
 
     si (gradus == ZEPHYRUM)
     {
@@ -28077,6 +28107,13 @@ silva_glr_creare (
     glr->constructor = constructor;
     glr->fabrica = fabrica;
     glr->piscina = piscina;
+    /* Segmentum primum = I: reductio fere omnis viam UNAM habet */
+    glr->viae_effimerae = silva_xar_creare_cum_magnitudine(piscina,
+        (i32)magnitudo(SilvaGSSVia), I);
+    si (glr->viae_effimerae == NIHIL)
+    {
+        redde NIHIL;
+    }
     glr->limen_frontis = SILVA_GLR_LIMEN_FRONTIS_DEFALTUM;
     glr->pergere = NIHIL;
     glr->pergere_datum = NIHIL;

@@ -4884,3 +4884,99 @@ contextus, evidence counters, per-file apex tracking).
   INFIDELIS) — possibly their own chunk-let; lustrum is the
   tool.
 - percursus.c + percursus.sh are NEW UNCOMMITTED files.
+
+### Addendum Chunk C — experimentum scalae arenae (2026-07-04)
+
+Synthetic initializers ("int t[] = {1, 1, ...};"): 10KB → 852 MB
+apex, 100KB → 8.5 GB apex — ratio EXACTLY 10x = **LINEAR, no
+quadratic bug; the constant is ~86,000x per source byte (~258 KB
+of arena PER ELEMENT)**. Time flat at ~12.5 ms/KB. 1MB run OOMs
+(would need ~85 GB). Short numeric elements are WORSE than
+biblia's long strings (8,000x) — element density drives it.
+
+CONSEQUENCES: (a) hypothesis "trivia xar overhead" (~1 KB/token)
+CANNOT account for 258 KB/element — something allocates orders
+of magnitude more per element (GLR-layer per-reduction
+allocation? per-node lista pre-allocation? piscina ladder?);
+(b) FIRST RULE OUT: does piscina_summa_apex_usus count USED
+bytes or total ALVEI capacity incl. the doubling ladder?
+(over-count would shrink but not excuse the number);
+(c) the CENSUS INSTRUMENT (per-subsystem allocation counters on
+the parsura) is now REQUIRED, not optional — next act of the
+investigation. Interning/hash-consing REJECTED as the fix
+direction (nodes/tokens are position-full BY PIN — the win is
+derivability, e.g. trivia as spans, IF the census indicts
+representation rather than machinery).
+
+### Addendum Chunk C — census arenae + sanatio: PATHOLOGIA
+### RESOLUTA (2026-07-04)
+
+**THE VERDICT: the census indicted MACHINERY, not
+representation — and the machinery is fixed. Synthetic apex
+88.8 MB → 14.1 MB (6.3x); biblia_dr.c 49.2 GB → 6.7 GB (7.4x);
+the full-repo sweep runs CEILINGLESS for the first time: 723/723
+plagulae (both named skips readmitted), totalitas TENET, the
+same 31 ERROR nodes, 722/723 byte-exact, 1.37 ms/KB.** Trees are
+byte-identical through both fixes — this was pure engine waste.
+
+**Act (b) first — the counter is honest**: piscina maximus_usus
+sums per-alveus OFFSETS (bytes handed out), not capacities. No
+ladder over-count; 258 KB/element was real demand. (The 49 GB
+apex vs 4.5 GB RSS gap = macOS compressing the mostly-zeroed
+abandoned scratch; xar memsets its segments, so pages ARE
+touched. The demand was real, the OS merciful.)
+
+**The census-lite instrument**: PISCINA_DEBUG in lib/piscina.c
+is now #ifndef-guarded (-DPISCINA_DEBUG=1 from the compile
+line — one permanent lib improvement); a scratchpad build of
+percursus + an awk histogram over the per-allocation stream.
+One run on a 1 KB synthetic initializer fingerprinted the
+culprit instantly: **5,959 allocations of exactly 12,416 bytes
+= 84% of the apex** — the viae xar FIRST SEGMENTS (16 x
+sizeof(SilvaGSSVia) = 16 x 776). _vias_enumerare created a
+fresh Xar of SilvaGSSVia PER REDUCTION; a literal "1" climbs
+~18 precedence-chain reductions, each costing 12,416 + 576
+(header) abandoned bytes = the 258 KB/element constant, closed
+exactly. SilvaNodus is 24 bytes — the TREE was ~1% of the arena.
+
+**Fix 1 — right-size**: viae xar first segment I (one via —
+reductions are almost always unambiguous), doubling only under
+real forks. 88.8 → 23.4 MB.
+
+**Fix 2 — reuse (lifetime-audited)**: glr->viae_effimerae, one
+persistent xar on the engine, xar_vacare'd at the top of
+_vias_enumerare (segments stay allocated — high-water reuse,
+same pattern as acceptati). AUDIT: constructor consumes
+valores[i] BY VALUE (generated code: nodus_ponere/lista_appendere
+copies, never &valores[i]); via->basis copied out as a GSS
+pointer; _nodum_processare is driven by two flat loops (frons +
+reducenda FIFO — reductions QUEUE, never recurse), and multiple
+REDUCERE actions in one conflict cell run sequentially — exactly
+ONE viae live at a time. _vias_recursio fully writes
+valores[0..gradus-1] + basis on every path it later reads, so
+vacare-without-rezero is safe. 23.4 → 14.1 MB.
+
+**Amalgamator note**: xar_creare_cum_magnitudine came OFF the
+excludenda list (first silva use) — the compile clamavit exactly
+as the protocol promises.
+
+**Gates**: silva 27/27, amalgamare VERIFICATUM (hospes 24/24),
+saltuarius 13/13, tessera 5/5. lib/ sweep errors unchanged
+(fasti 4, entitas 1); INFIDELIS arbor2_glr_tabula.c PERSISTS
+post-fix (investigation #2 stays open — pathology-degradation
+hypothesis weakened now that the pathology is gone; inspect the
+diff directly).
+
+**NAMED next tiers (not approved, in descending locality)**:
+(1) praedecessores xar per GSS node = 704 B (576 header + 128
+first segment) for typically ONE predecessor — an inline first
+slot + lazy overflow xar would cut ~35% of the remaining apex;
+(2) per-step passus xars (index/reducenda/frons_nova) could
+reuse via vacare, but frons_nova BECOMES the next frons —
+needs a double-buffer, more surgery; (3) lib-wide: the Xar
+header is 576 B because segmenta[64] is inline — 12,172 headers
+= half the remaining synthetic apex; a smaller initial table
+would pay across ALL of rhubarb (API-stable, blast radius =
+every consumer). Dense-data files still cost (capsula_libri.c
+12.8 MB claims 64 GB apex / 7 GB RSS, completes) — tier 1-3 is
+where that falls next.

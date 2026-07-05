@@ -409,11 +409,10 @@ _vias_enumerare (
     Xar*       viae;
     SilvaValor partiales[SILVA_GLR_DEXTRUM_MAXIMUM];
 
-    viae = xar_creare(glr->piscina, (i32)magnitudo(SilvaGSSVia));
-    si (viae == NIHIL)
-    {
-        redde NIHIL;
-    }
+    /* Effimera reusa - non recens: vide notam in SilvaGLR (una viva
+     * simul; contenta ante reditum plene scripta, ergo vacatio tuta) */
+    viae = glr->viae_effimerae;
+    xar_vacare(viae);
 
     si (gradus == ZEPHYRUM)
     {
@@ -1088,6 +1087,13 @@ silva_glr_creare (
     glr->constructor = constructor;
     glr->fabrica = fabrica;
     glr->piscina = piscina;
+    /* Segmentum primum = I: reductio fere omnis viam UNAM habet */
+    glr->viae_effimerae = xar_creare_cum_magnitudine(piscina,
+        (i32)magnitudo(SilvaGSSVia), I);
+    si (glr->viae_effimerae == NIHIL)
+    {
+        redde NIHIL;
+    }
     glr->limen_frontis = SILVA_GLR_LIMEN_FRONTIS_DEFALTUM;
     glr->pergere = NIHIL;
     glr->pergere_datum = NIHIL;
