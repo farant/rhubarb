@@ -1689,6 +1689,7 @@ s32 principale (vacuum)
         } VectisDecl;
         hic_manens constans VectisDecl VECTIS[] = {
             { "int x;", (s32)SILVA_C89_GENUS_DECLARATIO },
+            { "long x = 12LL;", (s32)SILVA_C89_GENUS_DECLARATIO },
             { "char c;", (s32)SILVA_C89_GENUS_DECLARATIO },
             { "void *p;", (s32)SILVA_C89_GENUS_DECLARATIO },
             { "int x = 42;", (s32)SILVA_C89_GENUS_DECLARATIO },
@@ -2253,6 +2254,141 @@ s32 principale (vacuum)
                 (s32)SILVA_C89_GENUS_DECLARATIO);
             CREDO_AEQUALIS_S32 (_elementum(parsura->commissio->radix,
                 I)->genus, (s32)SILVA_C89_GENUS_DECLARATIO);
+        }
+    }
+
+
+    /* ========================================================
+     * PROBARE: vectis lapifex EXPANDERE portata (M2d Chunk C) -
+     * fistula expansionis integra per VIAM CONSUMPTORIS
+     * (silva_c89_parsare_cum_contextu): macra in fonte, lexica
+     * iniecta (silva_contextus_lexicon_addere), latina
+     * (silva_contextus_latinam_addere), typedef per lexicon ad
+     * oraculum. Directivae elementa radicis NON creant (empirice
+     * probatum) - numerus elementorum + genus primi DECISA.
+     * Omnes puri: errores 0, ambigui 0.
+     * ======================================================== */
+
+    {
+        nomen structura {
+            constans character* fons;
+            constans character* lexicon;  /* NIHIL = sine iniecto */
+            b32                 cum_latina;
+            i32                 elementa;
+            s32                 genus_primi;
+        } VectisExp;
+        hic_manens constans VectisExp VECTIS[] = {
+            /* fons purus per contextum (sine macris) */
+            { "int x;\n", NIHIL, FALSUM, 1,
+                (s32)SILVA_C89_GENUS_DECLARATIO },
+            /* macrum obiecti in fonte */
+            { "#define N 5\nint t[N];\n", NIHIL, FALSUM, 1,
+                (s32)SILVA_C89_GENUS_DECLARATIO },
+            /* macrum functionis in fonte */
+            { "#define SQ(x) ((x)*(x))\nint y = SQ(3);\n",
+                NIHIL, FALSUM, 1,
+                (s32)SILVA_C89_GENUS_DECLARATIO },
+            /* macrum functionis intra corpus definitionis */
+            { "#define SQ(x) ((x)*(x))\n"
+              "int f(void) { return SQ(2); }\n",
+                NIHIL, FALSUM, 1,
+                (s32)SILVA_C89_GENUS_DEFINITIO_FUNCTIONIS },
+            /* macra nidificata */
+            { "#define A B\n#define B 7\nint z = A;\n",
+                NIHIL, FALSUM, 1,
+                (s32)SILVA_C89_GENUS_DECLARATIO },
+            /* macrum multi-elementorum (duo declarationes) */
+            { "#define DECL int a; int b;\nDECL\n",
+                NIHIL, FALSUM, 2,
+                (s32)SILVA_C89_GENUS_DECLARATIO },
+            /* stringificatio (limes M1 - via parsationis) */
+            { "#define STR(x) #x\n"
+              "const char *s = STR(salve);\n",
+                NIHIL, FALSUM, 1,
+                (s32)SILVA_C89_GENUS_DECLARATIO },
+            /* latina: definitio functionis cum si/redde */
+            { "integer f(vacuum) { si (1) redde 0; redde 1; }\n",
+                NIHIL, VERUM, 1,
+                (s32)SILVA_C89_GENUS_DEFINITIO_FUNCTIONIS },
+            /* latina: interior = static */
+            { "interior int g(vacuum) { redde 1; }\n",
+                NIHIL, VERUM, 1,
+                (s32)SILVA_C89_GENUS_DEFINITIO_FUNCTIONIS },
+            /* latina: nomen structura = typedef struct */
+            { "nomen structura { int n; } Probandum;\n",
+                NIHIL, VERUM, 1,
+                (s32)SILVA_C89_GENUS_DECLARATIO },
+            /* latina: typedef + usus (oraculum trans elementa) */
+            { "nomen int Numerus;\nNumerus n;\n",
+                NIHIL, VERUM, 2,
+                (s32)SILVA_C89_GENUS_DECLARATIO },
+            /* latina: structura nominata */
+            { "structura Punctum { int x; int y; };\n",
+                NIHIL, VERUM, 1,
+                (s32)SILVA_C89_GENUS_DECLARATIO },
+            /* latina: sententiae per/dum/frange in corpore */
+            { "vacuum h(vacuum) { per (;;) frange; }\n",
+                NIHIL, VERUM, 1,
+                (s32)SILVA_C89_GENUS_DEFINITIO_FUNCTIONIS },
+            /* lexicon iniectum: macrum typi */
+            { "MEUS_TYPUS x;\n", "#define MEUS_TYPUS int\n",
+                FALSUM, 1, (s32)SILVA_C89_GENUS_DECLARATIO },
+            /* lexicon iniectum: typedef ad oraculum */
+            { "Meus m;\n", "typedef int Meus;\n",
+                FALSUM, 1, (s32)SILVA_C89_GENUS_DECLARATIO },
+            /* lexicon iniectum + macrum fontis compositum */
+            { "#define QUINQUE 5\nMeus t[QUINQUE];\n",
+                "typedef int Meus;\n",
+                FALSUM, 1, (s32)SILVA_C89_GENUS_DECLARATIO },
+            /* lexicon + latina simul */
+            { "interior Meus quaesitum(vacuum) { redde 0; }\n",
+                "typedef int Meus;\n",
+                VERUM, 1,
+                (s32)SILVA_C89_GENUS_DEFINITIO_FUNCTIONIS }
+        };
+        i32 numerus = (i32)(magnitudo(VECTIS)
+            / magnitudo(VECTIS[ZEPHYRUM]));
+        i32 i;
+
+        imprimere("\n--- Probans vectem lapifex expandere (%d) ---\n",
+            (int)numerus);
+
+        per (i = ZEPHYRUM; i < numerus; i++)
+        {
+            SilvaContextus* ctx = silva_contextus_creare(piscina);
+            SilvaParsura*   parsura;
+            SilvaNodus*     primus;
+
+            CREDO_NON_NIHIL (ctx);
+            si (VECTIS[i].cum_latina)
+            {
+                CREDO_VERUM (silva_contextus_latinam_addere(ctx));
+            }
+            si (VECTIS[i].lexicon != NIHIL)
+            {
+                CREDO_VERUM (silva_contextus_lexicon_addere(ctx,
+                    "iniectum.h", VECTIS[i].lexicon,
+                    (i32)strlen(VECTIS[i].lexicon)));
+            }
+            parsura = silva_c89_parsare_cum_contextu(piscina, ctx,
+                "probatio.c", VECTIS[i].fons,
+                (i32)strlen(VECTIS[i].fons), NIHIL);
+            CREDO_NON_NIHIL (parsura);
+            si (parsura == NIHIL) perge;
+            CREDO_VERUM (parsura->successus);
+            CREDO_AEQUALIS_I32 (parsura->numerus_errorum, ZEPHYRUM);
+            CREDO_AEQUALIS_I32 (xar_numerus(
+                parsura->commissio->ambigui), ZEPHYRUM);
+            CREDO_AEQUALIS_I32 (
+                parsura->commissio->radix.datum.lista.mensura,
+                VECTIS[i].elementa);
+            primus = _elementum(parsura->commissio->radix, ZEPHYRUM);
+            CREDO_NON_NIHIL (primus);
+            si (primus != NIHIL)
+            {
+                CREDO_AEQUALIS_S32 (primus->genus,
+                    VECTIS[i].genus_primi);
+            }
         }
     }
 

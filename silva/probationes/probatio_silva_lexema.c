@@ -296,6 +296,24 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_I32 ((i32)_ad(lexemata, II)->genus, (i32)SILVA_LEX_INTEGER);
         CREDO_AEQUALIS_I32 (_ad(lexemata, II)->valor.mensura, III);
 
+        /* Cursus suffixorum avidus (M2d Chunk D): LL/ULL/llu UNUM
+         * lexema - scissura vetus "12L"+"L" errores 8 in 5 plagulis
+         * repositorii fecit (fasti, entitas, probationes 3) */
+        lexemata = _lexare(piscina, "12LL 0x1FULL 42ull 7LLU");
+        CREDO_AEQUALIS_I32 ((i32)_ad(lexemata, 0)->genus, (i32)SILVA_LEX_INTEGER);
+        CREDO_AEQUALIS_I32 (_ad(lexemata, 0)->valor.mensura, IV);
+        CREDO_AEQUALIS_I32 ((i32)_ad(lexemata, I)->genus, (i32)SILVA_LEX_INTEGER);
+        CREDO_AEQUALIS_I32 (_ad(lexemata, I)->valor.mensura, VII);
+        CREDO_AEQUALIS_I32 ((i32)_ad(lexemata, II)->genus, (i32)SILVA_LEX_INTEGER);
+        CREDO_AEQUALIS_I32 (_ad(lexemata, II)->valor.mensura, V);
+        CREDO_AEQUALIS_I32 ((i32)_ad(lexemata, III)->genus, (i32)SILVA_LEX_INTEGER);
+        CREDO_AEQUALIS_I32 (_ad(lexemata, III)->valor.mensura, IV);
+
+        /* fluitans suffixum singulare manet (C89) */
+        lexemata = _lexare(piscina, "1.5f");
+        CREDO_AEQUALIS_I32 ((i32)_ad(lexemata, 0)->genus, (i32)SILVA_LEX_FLOAT);
+        CREDO_AEQUALIS_I32 (_ad(lexemata, 0)->valor.mensura, IV);
+
         lexemata = _lexare(piscina, "...");
         CREDO_AEQUALIS_I32 ((i32)_ad(lexemata, 0)->genus, (i32)SILVA_LEX_ELLIPSIS);
 

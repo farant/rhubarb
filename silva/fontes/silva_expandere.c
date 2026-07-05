@@ -961,7 +961,30 @@ _includendum_processare (
 
     si (!tabula_dispersa_invenire(exp->includenda, via, &valor))
     {
-        redde;  /* ignotum: via memorata, processio pergit */
+        /* Recidiva ad BASENAME (M2d Chunk D): praebenda sub
+         * basename seditur (saltuarius, percursus - primus
+         * vincit), sed fontes veri "../include/utf8.h" scribunt -
+         * quaestio exacta fallebat et catena TOTA (latina.h
+         * transitive!) irresoluta manebat. Exacta prior, basename
+         * secunda; ambae fallunt -> transitus conservativus idem. */
+        chorda basis = via;
+        i32 j;
+
+        per (j = via.mensura; j > I; j--)
+        {
+            si (via.datum[j - I] == '/')
+            {
+                basis.datum = via.datum + j;
+                basis.mensura = via.mensura - j;
+                frange;
+            }
+        }
+        si (basis.mensura == via.mensura
+            || !tabula_dispersa_invenire(exp->includenda, basis,
+                   &valor))
+        {
+            redde;  /* ignotum: via memorata, processio pergit */
+        }
     }
     incl = (SilvaIncludendum*)valor;
     inclusio->fons_ad = incl->fons_index;

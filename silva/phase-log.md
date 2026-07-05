@@ -4980,3 +4980,395 @@ would pay across ALL of rhubarb (API-stable, blast radius =
 every consumer). Dense-data files still cost (capsula_libri.c
 12.8 MB claims 64 GB apex / 7 GB RSS, completes) — tier 1-3 is
 where that falls next.
+
+### Addendum Chunk C — INFIDELIS dispositum + vectis expandere
+### applicata (2026-07-04)
+
+**INVESTIGATION #2 CLOSED: the INFIDELIS was never a bug.**
+arbor2_glr_tabula.c is the ONE repo file whose macros use ##
+(STATUS_##n##_ACTIONES) and get expanded — scribere hits the M1
+pasta fail-loud ("origo pasta/chorda/api - stratum 0 non
+recuperabile, deferral nominatum") EXACTLY as designed. Parse is
+clean (0 errors); only reconstruction declines. The
+pathology-coincidence hypothesis is dead (big generated file
+just also uses ##). Diagnosed with a scratchpad first-divergence
+driver (infidelis.c — parse, scribere, print first divergent
+byte ± context; revealed scriptura.successus FALSUM, not byte
+divergence — candidate for instrumenta/ promotion). Pasta demand
+in-repo = 1 legacy generated file; the deferral STANDS.
+
+**Instrument honesty patch**: percursus now distinguishes
+[SCRIPTURA FRACTA: causa] from [INFIDELIS octetim] — the
+conflated label is what cost a full investigation slot on a
+known deferral. Sweep now self-explains.
+
+**Carried lapifex EXPANDERE bar APPLIED (the stale-read edit,
+re-derived fresh)**: VectisExp block in probatio_silva_c89.c
+before the syntaxis-corpus block — 17 composite inputs through
+the CONSUMER path (silva_c89_parsare_cum_contextu): in-source
+macros (object/function/nested/multi-element/stringify), latina
+via latinam_addere (definitio, interior, nomen structura,
+typedef+usus across elementa, per/frange bodies), injected
+lexica via lexicon_addere (macro type, typedef-to-oracle,
+composed with source macros and latina). Element counts pinned
+empirically FIRST (scratchpad probe): directives create NO root
+elementa; the two-declaration macro yields 2. All 17 pure
+(errores 0, ambigui 0). Suite: probatio_silva_c89 1,395 → 1,554
+asserts, green FIRST run; full suite 27/27.
+
+**Chunk C remaining**: error-file inspections (current 31 nodes
+/ 10 plagulae list) + evidence dispositions (typedef-in-corpore
+10, Duffiana 6, gcc 0). Then Chunk D.
+
+### Chunk C — inspectiones errorum + dispositiones evidentiae:
+### COMPLETE (2026-07-04)
+
+**Instrument promoted**: infidelis.c lives in
+instrumenta/principalia + silva/infidelis.sh — per-file
+diagnostic: ERROR nodes with lines + token fragments, then
+fidelity (first byte divergence with two-sided context, or the
+scriptura fractura CAUSA). Grew out of the arbor2 investigation;
+used for every inspection below.
+
+**THE COMPLETE ERROR CENSUS — 31 nodes / 10 plagulae = THREE
+classes, every error named:**
+
+1. **hospes.c x2 = 18 nodes — latina-collision canaries, BY
+   DESIGN.** infidelis renders it self-documenting: "static int
+   if = 1;" — the host-pollution canary variables (si, per,
+   character, nomen, structura, redde, dum, vacuum) become
+   keywords under the sweep's unconditional latina lexicon.
+   These files never include latina.h; include-driven expansion
+   (the named Chunk D item) makes them clean automatically.
+2. **raqiya probationes x3 = 5 nodes — unexpanded SCR_WRAP_*
+   invocations.** scrutinium.h is included but percursus
+   resolves no includes; file-scope function-like macro
+   invocations parse as nothing. SAME fix class: include-driven
+   expansion. (scrutinium.h itself: CLEAN — the pre-compact "14
+   errors" memory was from the broken textual-heuristic run.)
+3. **LL/ULL suffix x5 files = 8 nodes — C99-ism, NEW evidence
+   class.** The lexer is correctly C89: "12LL" lexes "12L" + "L"
+   — and the latina lexicon then expands the orphan L to Roman
+   numeral 50 ("int x = 12L 50;"). Repo demand: EXACTLY the 5
+   error files (fasti 4, entitas 1, probatio_actor/nuntium/
+   entitas 3), compiled with -Wno-long-long since birth.
+   DECISION OWED (Fran): accept LL/ULL in the number lexer
+   (robustness pin: any bytes -> tree; lint substrate later tags
+   it C99) = 31 -> 23 errors, vs. hold C89 purity at the lexer.
+
+**Dispositions:**
+- typedef-in-corpore: 11 sites (5 = our own suite's Vectis
+  blocks in main, 1 silva_generare, 5 knotapel) — ALL absorbed
+  by the oracle dance, ZERO errors attributable. Decisiones 13
+  deferral STANDS comfortably.
+- Duffiana: 6 -> REAL DEMAND 0. All six casus markers sat
+  inside probatio_nuntium's LL-broken main; no Duff's device
+  exists in the monorepo. The grouped-switch decision costs
+  NOTHING.
+- gcc-in-errore: 0. Free.
+- PROVENANCE ARTIFACT (noted, minor): percursus markers print
+  expanded tokens' definition-side linea — "casus :26" =
+  latina.h:26, "nomen :39" = latina.h:39. Markers could print
+  fons; named, not fixed.
+
+**Chunk C is now CLOSED except the two carried decisions into
+Chunk D: (a) include-driven expansion (kills 23 of 31 errors +
+retires the knotapel directory heuristic + fixes saltuarius-on-
+knotapel), (b) the LL/ULL lexer question (kills the other 8).**
+Roundtrip held through every inspected file (FIDELIS even with
+errors — recovery byte-conservative, as pinned).
+
+### M2d Chunk D — INTENTIO (2026-07-04)
+
+The close-out chunk. Four items, in order:
+
+**D1 — LL/ULL in the number lexer (APPROVED by Fran).** The
+suffix run after digits lexes as ONE token (pp-number is greedy
+in real C; the constraint is conversion-time, not lex-time —
+our lex-level split was the only C89-purism in the pipeline
+stricter than the standard's own layering). Robustness pin:
+any bytes -> tree; the lint substrate later tags C99-isms by
+QUERY. Lexer suite pins the new suffixes; expected: the 5
+LL-class files (8 nodes) go clean.
+
+**D2 — include-driven expansion in percursus (retires the
+knotapel heuristic).** The machinery exists (contextus
+praebenda; saltuarius seeds it from compile_flags since A+;
+roundtrip through foreign-fons tokens is D1-of-M2d machinery,
+proven). percursus praebet include/ + the file's own directory;
+files that transitively include latina.h get latina, files that
+don't (hospes canaries! knotapel! raqiya) get their REAL
+lexica — scrutinium.h's SCR_WRAP expands, canaries stay
+identifiers. Expected: hospes 18 + raqiya 5 go clean; heuristic
+_vult_latinam DELETED; sweep perf measured (include chasing per
+file — watch ms/KB).
+
+**D3 — the ambient badge.** Saltuarius status/F2 gains
+"silva: N errores" for the focused file — the acceptance test
+runs continuously in daily driving; incomprehension gets
+NOTICED, not audited.
+
+**D4 — M2d RELATIO + FULL-log audit + M2 CLOSE.** The phase
+boundary ritual: whole-log re-read, every complexity resolved
+or parked with a named landing spot; M2.0 -> M2d retrospective;
+post-M2 map (quaestio selectors / formator / typus+index with
+frozen v1 bars, spec-v2 par 4.1).
+
+**Exit criteria**: monorepo sweep 723/723 at ZERO errors with
+no heuristic and no ceiling; suites + amalgam + consumers green;
+badge shipping; RELATIO + audit + M2 CLOSE written.
+
+### M2d Chunk D — D1+D2+D3 SHIPPED (2026-07-04)
+
+**THE HEADLINE: monorepo 724/724 plagulae, inclusio VERA (no
+lexicon heuristic, no size ceiling), errores 31 -> 1 — and the
+one survivor is NAMED.** Duffiana 0. All gates green (silva
+27/27, amalgamare VERIFICATUM + hospes 24/24, saltuarius 13/13,
+tessera 5/5).
+
+**D1 — suffixus avidus.** The integer-suffix branch in
+silva_lexema.c consumes the whole [uUlL] run: pp-number is
+greedy in real C, the constraint is conversion-time — the old
+split was the only place the pipeline was STRICTER than the
+standard's own layering. Lexer pins (12LL/0x1FULL/42ull/7LLU +
+float f singular), VectisDecl integration pin. The 5 LL files
+went clean immediately.
+
+**D2 — inclusio vera in percursus.** Pre-pass praebet every
+repo .h under its BASENAME (dedup primus-vincit, saltuarius
+exemplar; 167 capita, 5 collisions = fixture copies LOSING,
+correctly). Heuristic _vult_latinam + ctx_nudus DELETED. Two
+finds on the way:
+- Praebenda must root at the REPO (cwd), not the sweep radix —
+  silva/fontes files include include/latina.h (16 capita -> 602
+  phantom errors until fixed).
+- **Basename-recidiva in the EXPANDER** (silva_expandere.c
+  _includendum_processare): real sources write
+  "../include/utf8.h"; exact praebenda lookup missed and the
+  WHOLE chain (latina.h transitively!) stayed unresolved — 30
+  new honest errors across 7 relative-include files. Fix: exact
+  lookup first, basename retry second, both-miss = conservative
+  pass-through unchanged. This also upgrades saltuarius (same
+  praebenda-by-basename model) for free.
+Cost of truth: sweep 1.37 -> 3.92 ms/KB (include chains
+re-expanded per file). RSS 7.3 GB peak, no ceiling needed.
+
+**D3 — insigne ambiens.** Saltuarius main status line shows
+"err N" (alarm color) ONLY when liber->parsura carries errors —
+clean files show nothing, incomprehension gets NOTICED. F2
+telemetry line always carries "err N" between arena and q.
+Goldens untouched (fixtures parse clean, badge absent — by
+design). Named for Fran's daily driving: the badge is the
+continuous acceptance test.
+
+**The ONE remaining error**: book_assets/capsula_libri.c
+(12.8MB generated embed blob) — one clean ERROR fracture whose
+raw capture starts at capsula.h's enum; chain and content
+bisect CLEAN at 780KB (mini-repro with the full include chain
+parses); scale probe at 12.8MB pending. Roundtrip FIDELIS even
+with the error. Disposition: generated-blob scale class, named;
+exact trigger = open question for the lustrum/census toolbox,
+not an M2 blocker. arbor2_glr_tabula.c reports SCRIPTURA
+FRACTA (pasta deferral) — dispositioned Chunk C, not an error.
+
+**Named for saltuarius v0.1 (not done here)**: nexus still
+seeds latinam_addere unconditionally (saltuarius_nexus.c:282) —
+correct for latina daily driving, wrong for knotapel browsing;
+the include-driven model percursus now demonstrates is the fix
+shape, and the basename-recidiva already helps its praebenda.
+
+NEXT: D4 — M2d RELATIO + FULL-log audit + M2 CLOSE.
+
+### Addendum Chunk D — ZEPHYRUM (2026-07-04)
+
+**THE M2 NUMBER: 724/724 plagulae, 0 nodi ERROR in toto
+monorepositorio.** Totalitas TENET, 723/724 octetim fideles
+(the one exception = arbor2_glr_tabula.c's pasta deferral,
+correctly labeled SCRIPTURA FRACTA, not an error), inclusio
+vera, no heuristic, no ceilings, 3.86 ms/KB, RSS 6.8 GB.
+M1 recorded 41,000 ERROR nodes. M2 closes at ZERO.
+
+**The last error's disposition (capsula_libri.c)**: the
+synthetic scale probe reproduced it exactly (content-innocent);
+the trigger is SILVA_LIMEN_LEXEMATUM_DEFALTUM = 1,048,576 — the
+expanded-stream ceiling, a DESIGNED graceful degradation
+(fines_tactae -> expansion decides -> latina unexpanded ->
+one clean fracture, roundtrip FIDELIS throughout). It was
+firing SILENTLY — against the house rule. Fixed in the
+instruments, not the engine: percursus prints [fines tactae]
+per file + a summary count (degradatio picta, non silens), and
+-omnia now lifts ctx->fines.lexemata too (it already promised
+"sine tecto - cave!"); infidelis gained the same report +
+-omnia. The 1M default STAYS for editors (saltuarius) — it is
+the protective envelope, now visible when it fires.
+
+REMAINING: D4 only — M2d RELATIO + FULL-log audit + M2 CLOSE.
+
+## M2d — THE ACCEPTANCE WALL: RELATIO (2026-07-04) — COMPLETE
+
+**Every INTENTIO exit criterion met, and the wall's number is
+ZERO.** The monorepo sweep: 724/724 plagulae, totalitas TENET,
+0 ERROR nodes, 723/724 octetim fideles (the 1 = the pasta
+deferral, correctly labeled), inclusio vera (no lexicon
+heuristic), no size ceiling, no expansion ceiling, 3.86 ms/KB.
+Suites: silva 27/27 (probatio_silva_c89 1,554), saltuarius
+13/13, tessera 5/5, amalgam VERIFICATUM (hospes 24/24). All
+four evidence counts logged with dispositions; badge shipping;
+sceletum out of the amalgam; carried integration bar green.
+
+**The chunks, walked**:
+- **A — expander-fed c89**: silva_c89_parsare_cum_contextu;
+  #pragma became a true directive (the last corpus error);
+  corpus ERROR 42 → 0 PINNED (murus acceptionis CREDO);
+  saltuarius TOC rides nexus->ctx. **A+**: fons_princeps filter
+  on all four c89 TOC sections (Fran's include-flood question —
+  the leak was live).
+- **B — the main-parse swap**: ONE call site; the saltuarius
+  suite passed FIRST run (downstream truly grammar-independent);
+  TOC second parse DELETED; sceletum OUT of the deliverable
+  (generator-fixture role stays).
+- **C — percursus + the census arc**: 723-file sweep instrument;
+  arena pathology RESOLVED (census-lite fingerprinted 84% of
+  apex = per-reduction viae scratch; two fixes, 6-7x, trees
+  byte-identical; biblia_dr 49.2 GB → 6.7 GB); INFIDELIS closed
+  as the pasta deferral (instrument now distinguishes SCRIPTURA
+  FRACTA from octetim divergence); infidelis.c promoted to
+  instrumenta; carried EXPANDERE bar applied (17 composite
+  inputs, first-run green); the complete error census — every
+  one of 31 errors named into 3 classes with dispositions.
+- **D — the close**: LL/ULL greedy suffix run (the lexer was
+  the only layer STRICTER than C's own; Fran-approved);
+  inclusio vera in percursus (praebenda by basename from repo
+  root; heuristic deleted) + **basename-recidiva in the
+  expander** (relative-path include writings broke whole chains;
+  exact-first, basename-second, conservative on both-miss —
+  saltuarius upgraded free); the ambient badge (err N in the
+  status line ONLY when nonzero + always in F2); the 1M
+  expanded-stream ceiling made LOUD ([fines tactae]) and
+  liftable (-omnia), default kept as the editor envelope.
+
+**Dispositions of record**: typedef-in-corpore 11 sites, all
+oracle-absorbed — decisiones 13 deferral STANDS. Duffiana real
+demand 0 — the grouped-switch price is nothing. gcc-in-errore
+0. struct-tag-const + nuda divergences: zero errors monorepo-
+wide = no in-repo demand, divergences stand on evidence. Pasta:
+in-repo demand = 1 legacy generated file; the M1 fail-loud
+deferral stands, now with its cause printed by every instrument.
+
+## M2 — FULL-LOG AUDIT (2026-07-04, the phase-boundary ritual)
+
+Whole log re-read (5,205 lines, Phase 0 → M2d). Every
+complexity traced to a resolution or a park with a named
+landing spot. The catches (the class this practice exists for):
+
+1. **"Config-query milestone" vs the post-M2 map — unreconciled
+   names.** A dozen parks land on "the config-query milestone"
+   (untaken-arm sub-parsing at taken-arm fidelity, structural
+   scan of untaken arms, config-aware journal replay, lazy
+   false-arm includes, named config presets, wildcard
+   configuration queries, transforms-across-arms fidelity,
+   macro-expanded #include operands) — but the post-M2 map
+   (spec-v2 §4.1) names only quaestio / formator / typus+index.
+   RESOLUTION: config-query is hereby recorded as a NAMED
+   MILESTONE in the post-M2 map (position flexible — likely
+   quaestio-adjacent, since wildcard queries are its face);
+   its park inventory is the list above. FRAN DECIDES its
+   sequencing when post-M2 planning starts.
+2. **STML serialization was an orphan.** "silva_stml — own
+   module, 1.0 scope" (Phase 5/7 NOT-lists) and the VISIO
+   oracle code→STML→load→emit==code never entered the post-M2
+   map. RESOLUTION: named into the map alongside the §4.1
+   milestones — it is 1.0 scope by spec; FRAN DECIDES where it
+   lands in the sequence.
+3. **The stderr diagnostics hook was an orphan** ("post-M1 API
+   nicety", Phase 6 — never mentioned since). RESOLUTION:
+   parked ON-PULL — the first embedded host that cannot
+   tolerate fprintf(stderr) owns it (solarium integration is
+   the likely demander).
+4. **Pater on genuinely shared subtrees** (Phase 4 Chunk C
+   named limitation: single-owner by walk order, "C89-grammar
+   revisit") was never explicitly revisited. Evidence: no M2
+   fixture or corpus run ever surfaced a pater anomaly; the
+   canonical-walked-LAST insurance held silently. RESOLUTION:
+   re-parked with a real gate — the first QUERY consumer that
+   walks pater across interpretations (quaestio milestone)
+   owns the revisit.
+5. **est_numquam as queryable genus** (Phase 7, "journal-side
+   for now") lacked an owner. RESOLUTION: quaestio milestone
+   (it is a selector-tag question).
+6. **The v1 syntaxis suite is now deletable** per the
+   freeze-then-delete rule (its bar was harvested: corpus file
+   + 123/125 comprehension pin at M2c). Nobody noticed the
+   rule fire. FRAN'S CEREMONY — quaestio/formator/typus/index
+   v1 suites remain frozen, their milestones unbuilt.
+7. **Honest status on two never-exercised engine paths**
+   (Phase 4, defensively implemented): 3-way runtime AMBIGUUS
+   retention (F4 triple cells EXIST in the c89 tables; a
+   three-interpretation wrapper was never fixture-pinned) and
+   the multi-accept root wrap (still unreachable in every
+   shipped grammar). Both keep their defensive code and their
+   gates; a fixture pinning F4 three-way retention is a cheap
+   M3-era addition, named.
+8. **Hospes backfill debt restated** (ADDITIONES I): the
+   pre-existing silva.h declarations without hospes calls are
+   still owed opportunistically; every NEW declaration since
+   has obeyed the standing rule.
+
+Healthy parks confirmed without action (each with its gate):
+action-filter pruning hook (frons never left 2-3; mensura
+gates); identity-handle refactor (eventa_marginis_novi never
+fired hot); OCTETUS run-coalescing (mensura never asked);
+Prosser simplification (permanent, evidence-cited); nuda
+tag-final + struct-const divergences (zero-error sweep =
+evidence); K&R false-suspicion coarseness (benign by
+construction); accessor/enum public exposure (on-pull);
+M2d-era parks as recorded in their entries (arena tiers 1-3,
+saltuarius include-driven nexus, per-stratum TOC,
+est_prototypum, marker provenance fons, X-macro origo
+refinement, TOC section order). Zero unowned complexities.
+
+## M2 — GRAMMATICA C89: CLOSE (2026-07-04)
+
+**M2 IS CLOSED.** One day of sessions (2026-07-03 sketch →
+2026-07-04 close), five phases (M2.0 NOMINA → M2a expressiones
+→ M2b declarationes → M2c sententiae+functiones → M2d the
+acceptance wall), two INTENTIO-reversing simulations (X, plus
+the M2c one-lista amendment that removed a sim's need), and
+the arc of the honest counter:
+
+**ERROR nodes over the real corpus: 41,011 (M1, recovery) →
+761 (M2a) → 62 (M2b) → 42 (M2c) → 0 (M2d, comprehension) —
+and 0 over the ENTIRE 724-file monorepo with real include
+resolution.** Comprehension 0 → 123/125 (remainder: 2
+gcc-extension lines, evidence-gated). frons_maxima 2 → 3
+against a ceiling of VIII — the fork-explosion risk died of
+measurement. Byte-exact fidelity: 723/724 (the 1 = pasta,
+labeled), through every fix, every sweep, every fuzz specimen.
+
+**What M2 leaves standing**: ~55 permanent genus names
+(DECISUS, the thousand-year vocabulary); a 252-production
+grammar whose every conflict cell is named into 6 families +
+1 praelata, pinned exhaustively; the oracle dance (positional,
+X10-filtered, policy-passed) reaching inside function bodies;
+a boundary-finder whose false suspicions are provably coarser-
+never-wrong; the saltuarius TOC (4 sections) + subscriptio +
+ambient badge as the continuously-running acceptance test; and
+the deliverable amalgam carrying c89 ONLY (sceletum retired to
+generator fixture).
+
+**Two generator bugs killed** (multi-line atom loss; non-
+transitive lista-valens) — both would have silently corrupted
+every future grammar. **Two instruments born** (percursus,
+infidelis) and one census technique (-DPISCINA_DEBUG histogram)
+that resolved a 49 GB arena pathology in an afternoon. **The
+stale-object hazard class** got its guard into every build
+script.
+
+**POST-M2 MAP (amended by this audit)**: quaestio selectors /
+formator / typus+index (frozen v1 bars, spec-v2 §4.1) + the
+CONFIG-QUERY milestone (park inventory above) + STML
+serialization (1.0 scope, placement = Fran's call). Sequencing
+decision belongs to the next planning session, with Fran, on
+pull — the same rule that timed M2 correctly.
+
+Ad numeros. Deus vult.

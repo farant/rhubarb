@@ -651,23 +651,16 @@ _legere_numerum (SilvaLexator* lex)
     }
     alioquin
     {
-        si (c == 'u' || c == 'U')
+        /* Cursus suffixorum TOTUS unum lexema (M2d Chunk D):
+         * pp-numerus C veri avidus est - "12LL" UNUM lexema
+         * praeprocessus, vinculum ad CONVERSIONEM pertinet, non
+         * ad lexationem. Scissura vetus "12L"+"L" sola strictior
+         * norma ipsa erat (et lexicon L in 50 expandebat!).
+         * LL/ULL C99: substratum lint per quaestionem notabit. */
+        dum (c == 'u' || c == 'U' || c == 'l' || c == 'L')
         {
             _sumere(lex, &s);
             c = _aspicere_eff(lex, ZEPHYRUM);
-            si (c == 'l' || c == 'L')
-            {
-                _sumere(lex, &s);
-            }
-        }
-        alioquin si (c == 'l' || c == 'L')
-        {
-            _sumere(lex, &s);
-            c = _aspicere_eff(lex, ZEPHYRUM);
-            si (c == 'u' || c == 'U')
-            {
-                _sumere(lex, &s);
-            }
         }
     }
 

@@ -170,8 +170,20 @@ saltuarius_visum_pingere (SaltuariusLiber* liber,
         i32 lat_numeri;
         i32 lat_dextrae;
         i32 lat_strati;
+        i32 lat_erroris = ZEPHYRUM;
+        s32 errores_libri = ZEPHYRUM;
         s32 x;
 
+        /* Insigne ambiens (M2d Chunk D): errores silvae SOLUM cum
+         * adsunt - plagula pura nihil monstrat, incomprehensio
+         * NOTATUR, non auditur */
+        si (liber->parsura != NIHIL
+            && liber->parsura->numerus_errorum > ZEPHYRUM)
+        {
+            errores_libri = (s32)liber->parsura->numerus_errorum;
+            lat_erroris = IV
+                + saltuarius_pen_digiti(errores_libri) + II;
+        }
         dum (pittacium[lat_pittacii] != '\0')
         {
             lat_pittacii++;
@@ -182,8 +194,8 @@ saltuarius_visum_pingere (SaltuariusLiber* liber,
             + saltuarius_pen_digiti(liber->stratum_currens) + I
             + saltuarius_pen_digiti(
                 (s32)liber->numerus_stratorum - I);
-        lat_dextrae = lat_numeri + II + lat_strati + II
-            + lat_pittacii;
+        lat_dextrae = lat_erroris + lat_numeri + II + lat_strati
+            + II + lat_pittacii;
         x = (s32)latitudo - (s32)lat_dextrae;
 
         si (x > II)
@@ -199,6 +211,18 @@ saltuarius_visum_pingere (SaltuariusLiber* liber,
         {
             i32 scripti;
 
+            si (lat_erroris > ZEPHYRUM)
+            {
+                TesseraStilus vitium = tessera_stilus(0x00FF6666,
+                    TESSERA_COLOR_NATIVUS, ZEPHYRUM);
+
+                saltuarius_pen_literis(opus, x, status_y, "err ",
+                    IV, vitium);
+                x += IV;
+                x += (s32)saltuarius_pen_numerum(opus, x, status_y,
+                    errores_libri, vitium);
+                x += II;
+            }
             scripti = saltuarius_pen_numerum(opus, x, status_y,
                 liber->cursor_linea + I, nativus);
             tessera_cellulam_ponere(opus, x + (s32)scripti,
@@ -454,6 +478,13 @@ saltuarius_visum_fructus (constans SaltuariusLiber* liber,
             stilus);
         x += I;
     }
+    saltuarius_pen_literis(opus, x, status_y, "  err ", VI,
+        stilus);
+    x += VI;
+    x += (s32)saltuarius_pen_numerum(opus, x, status_y,
+        liber->parsura != NIHIL
+            ? (s32)liber->parsura->numerus_errorum : ZEPHYRUM,
+        stilus);
     saltuarius_pen_literis(opus, x, status_y, "  q ", IV, stilus);
     x += IV;
     x += (s32)saltuarius_pen_numerum(opus, x, status_y,

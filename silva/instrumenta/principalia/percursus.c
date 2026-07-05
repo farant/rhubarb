@@ -17,6 +17,8 @@
 #include "latina.h"
 #include "piscina.h"
 #include "xar.h"
+#include "chorda.h"
+#include "tabula_dispersa.h"
 #include "silva_token.h"
 #include "silva_nodus.h"
 #include "silva_contextus.h"
@@ -45,7 +47,11 @@ hic_manens duplex summa_octetorum = 0.0;
 hic_manens duplex summa_ms = 0.0;
 hic_manens duplex apex_maximus = 0.0;
 hic_manens character plagula_apicis[1024];
-hic_manens constans SilvaContextus* ctx_nudus = NIHIL;
+hic_manens i32 capita_praebita = ZEPHYRUM;
+hic_manens i32 capita_collisiones = ZEPHYRUM;
+hic_manens i32 fines_tactae_plagulae = ZEPHYRUM;
+
+hic_manens b32 _praetermittendum (constans character* titulus);
 
 /* typedef intra corpus definitionis (ambulatio generica: nodi
  * definitio-functionis -> subarbor corporis -> declarationes cum
@@ -209,17 +215,106 @@ _errores_inspicere (SilvaValor valor, constans character* via,
     }
 }
 
-/* INVENTUM M2d C: lexicon latinum INCONDICIONALE plagulas
- * non-latinas corrumpit (knotapel: "double co = cos(x), si =
- * sin(x);" - si -> if!). Heuristica structurae repositorii:
- * knotapel = C anglicum -> contextus nudus; cetera = idioma
- * latinum -> lexicon. (Quaesitio textualis "latina.h" fallit -
- * inclusio plerumque TRANSITIVA per piscina.h est.) Solutio
- * vera = expansio per inclusionem veram, nominata Chunk D. */
-hic_manens b32
-_vult_latinam (constans character* via)
+/* EXPANSIO PER INCLUSIONEM VERAM (M2d Chunk D): praepassus omne
+ * caput (.h) repositorii sub BASENAME praebet; quaeque plagula
+ * suam catenam inclusionum VERAM sequitur (transitive, custodes
+ * honorati) - plagulae latina.h includentes latinam accipiunt,
+ * ceterae (hospes canariae! knotapel! raqiya) lexica SUA VERA.
+ * Heuristica directorii "knotapel -> nudus" RETIRATA: expansio
+ * nunc idem videt quod clang - error superstes = divergentia
+ * vera. Collisio basename: primus vincit (exemplar saltuarii). */
+hic_manens vacuum
+_caput_praebere (SilvaContextus* ctx, Piscina* piscina,
+    TabulaDispersa* visa, constans character* via,
+    constans character* titulus)
 {
-    redde (strstr(via, "knotapel") == NIHIL) ? VERUM : FALSUM;
+    FILE* pl;
+    long mensura_l;
+    i32 mensura;
+    character* textus;
+    chorda clavis;
+
+    clavis = chorda_ex_literis(titulus, piscina);
+    si (tabula_dispersa_continet(visa, clavis))
+    {
+        capita_collisiones++;
+        si (verbosa)
+        {
+            imprimere("  [collisio capitis] %s\n", via);
+        }
+        redde;
+    }
+
+    pl = fopen(via, "rb");
+    si (pl == NIHIL) redde;
+    fseek(pl, 0L, SEEK_END);
+    mensura_l = ftell(pl);
+    fseek(pl, 0L, SEEK_SET);
+    si (mensura_l < 0L)
+    {
+        fclose(pl);
+        redde;
+    }
+    mensura = (i32)mensura_l;
+
+    /* textus in piscina contextus vivit - lexemata praebiti in
+     * octetos fontis monstrant, vita = vita contextus */
+    textus = (character*)piscina_allocare(piscina,
+        (memoriae_index)(mensura > ZEPHYRUM ? mensura : I));
+    si (textus == NIHIL || (mensura > ZEPHYRUM
+        && fread(textus, I, (memoriae_index)mensura, pl)
+            != (memoriae_index)mensura))
+    {
+        fclose(pl);
+        redde;
+    }
+    fclose(pl);
+
+    si (silva_contextus_praebere(ctx, titulus, textus, mensura))
+    {
+        (vacuum)tabula_dispersa_inserere(visa, clavis, NIHIL);
+        capita_praebita++;
+    }
+}
+
+hic_manens vacuum
+_capita_praeparare (SilvaContextus* ctx, Piscina* piscina,
+    TabulaDispersa* visa, constans character* via)
+{
+    DIR* dir = opendir(via);
+    structura dirent* introitus;
+
+    si (dir == NIHIL) redde;
+    dum ((introitus = readdir(dir)) != NIHIL)
+    {
+        character via_plena[1024];
+        memoriae_index m;
+
+        si (introitus->d_name[ZEPHYRUM] == '.') perge;
+        si (_praetermittendum(introitus->d_name)) perge;
+        si (strlen(via) + strlen(introitus->d_name) + II
+            >= magnitudo(via_plena))
+        {
+            perge;
+        }
+        sprintf(via_plena, "%s/%s", via, introitus->d_name);
+
+        si (introitus->d_type == DT_DIR)
+        {
+            _capita_praeparare(ctx, piscina, visa, via_plena);
+        }
+        alioquin
+        {
+            m = strlen(introitus->d_name);
+            si (m >= III && introitus->d_name[m - II] == '.'
+                && introitus->d_name[m - I] == 'h')
+            {
+                _caput_praebere(ctx, piscina, visa, via_plena,
+                    introitus->d_name);
+            }
+        }
+    }
+    closedir(dir);
 }
 
 hic_manens vacuum
@@ -282,8 +377,7 @@ _plagulam_percurrere (constans SilvaContextus* ctx,
     summa_octetorum += (duplex)mensura;
 
     c0 = clock();
-    parsura = silva_c89_parsare_cum_contextu(piscina,
-        _vult_latinam(via) ? ctx : ctx_nudus, via,
+    parsura = silva_c89_parsare_cum_contextu(piscina, ctx, via,
         (constans character*)fons, mensura, NIHIL);
     c1 = clock();
     summa_ms += (duplex)(c1 - c0) * 1000.0
@@ -294,6 +388,13 @@ _plagulam_percurrere (constans SilvaContextus* ctx,
         SilvaScriptura scriptura;
 
         arbores++;
+        /* degradatio picta, non silens (praetermissio ALTA voce):
+         * fines_tactae = limen aliquod tactum, expansio decisa */
+        si (parsura->fines_tactae)
+        {
+            fines_tactae_plagulae++;
+            imprimere("[fines tactae] %s\n", via);
+        }
         si (parsura->numerus_errorum > ZEPHYRUM)
         {
             plagulae_cum_erroribus++;
@@ -316,9 +417,18 @@ _plagulam_percurrere (constans SilvaContextus* ctx,
         {
             fideles++;
         }
+        alioquin si (!scriptura.successus)
+        {
+            /* Fractura CLARA (deferral nominatum, e.g. pasta) -
+             * non divergentia octetim; discrimen refert (M2d C:
+             * arbor2_glr_tabula.c "INFIDELIS" investigationem
+             * integram consumpsit quae vere deferral notum erat) */
+            imprimere("[SCRIPTURA FRACTA: %s] %s\n",
+                scriptura.causa ? scriptura.causa : "?", via);
+        }
         alioquin
         {
-            imprimere("[INFIDELIS] %s\n", via);
+            imprimere("[INFIDELIS octetim] %s\n", via);
         }
     }
     alioquin
@@ -434,14 +544,43 @@ s32 principale (integer argc, character** argv)
         fprintf(stderr, "percursus: contextus deest\n");
         redde I;
     }
-    (vacuum)silva_contextus_latinam_addere(ctx);
-    ctx_nudus = silva_contextus_creare(piscina_ctx);
+    si (mensura_maxima == ZEPHYRUM)
+    {
+        /* -omnia = sine tecto, ETIAM fluxus expansus (defaltum
+         * 1M lexemata expansionem in plagulis giganteis decidit -
+         * capsula_libri 3.7M lexemata, inventum Chunk D) */
+        ctx->fines.lexemata = ZEPHYRUM;
+    }
     plagula_apicis[ZEPHYRUM] = '\0';
+
+    /* Praepassus: omne caput repositorii praebere - expansio per
+     * inclusionem VERAM (nullum lexicon incondicionale) */
+    {
+        TabulaDispersa* visa = tabula_dispersa_creare_chorda(
+            piscina_ctx, DXII);
+
+        si (visa == NIHIL)
+        {
+            fprintf(stderr, "percursus: tabula deest\n");
+            redde I;
+        }
+        /* SEMPER a radice repositorii (cwd), non a radice
+         * percursus: plagulae sub radix capita EXTRA radicem
+         * includunt (silva/fontes -> include/latina.h) */
+        _capita_praeparare(ctx, piscina_ctx, visa, ".");
+    }
 
     _directorium_percurrere(ctx, radix);
 
-    imprimere("\n=== PERCURSUS REPOSITORII (c89 + contextus"
-        " latinus) ===\n");
+    imprimere("\n=== PERCURSUS REPOSITORII (c89 + inclusio"
+        " vera) ===\n");
+    imprimere("capita:    %d praebita", (int)capita_praebita);
+    si (capita_collisiones > ZEPHYRUM)
+    {
+        imprimere("  [%d collisiones basename - primus vicit]",
+            (int)capita_collisiones);
+    }
+    imprimere("\n");
     imprimere("plagulae:  %d (%.1f MB)", (int)plagulae,
         summa_octetorum / 1048576.0);
     si (praetermissae > ZEPHYRUM)
@@ -457,6 +596,11 @@ s32 principale (integer argc, character** argv)
         (fideles == plagulae) ? "" : "  <- INSPICE");
     imprimere("errores:   %d nodi in %d plagulis\n",
         (int)summa_errorum, (int)plagulae_cum_erroribus);
+    si (fines_tactae_plagulae > ZEPHYRUM)
+    {
+        imprimere("fines:     %d plagulae limen tactae\n",
+            (int)fines_tactae_plagulae);
+    }
     imprimere("tempus:    %.0f ms (%.2f ms/KB)\n", summa_ms,
         summa_octetorum > 0.0
             ? summa_ms / (summa_octetorum / 1024.0) : 0.0);

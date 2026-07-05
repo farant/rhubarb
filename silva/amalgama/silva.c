@@ -5987,23 +5987,16 @@ _legere_numerum (SilvaLexator* lex)
     }
     alioquin
     {
-        si (c == 'u' || c == 'U')
+        /* Cursus suffixorum TOTUS unum lexema (M2d Chunk D):
+         * pp-numerus C veri avidus est - "12LL" UNUM lexema
+         * praeprocessus, vinculum ad CONVERSIONEM pertinet, non
+         * ad lexationem. Scissura vetus "12L"+"L" sola strictior
+         * norma ipsa erat (et lexicon L in 50 expandebat!).
+         * LL/ULL C99: substratum lint per quaestionem notabit. */
+        dum (c == 'u' || c == 'U' || c == 'l' || c == 'L')
         {
             _sumere(lex, &s);
             c = _aspicere_eff(lex, ZEPHYRUM);
-            si (c == 'l' || c == 'L')
-            {
-                _sumere(lex, &s);
-            }
-        }
-        alioquin si (c == 'l' || c == 'L')
-        {
-            _sumere(lex, &s);
-            c = _aspicere_eff(lex, ZEPHYRUM);
-            si (c == 'u' || c == 'U')
-            {
-                _sumere(lex, &s);
-            }
         }
     }
 
@@ -7400,7 +7393,30 @@ _includendum_processare (
 
     si (!silva_tabula_dispersa_invenire(exp->includenda, via, &valor))
     {
-        redde;  /* ignotum: via memorata, processio pergit */
+        /* Recidiva ad BASENAME (M2d Chunk D): praebenda sub
+         * basename seditur (saltuarius, percursus - primus
+         * vincit), sed fontes veri "../include/utf8.h" scribunt -
+         * quaestio exacta fallebat et catena TOTA (latina.h
+         * transitive!) irresoluta manebat. Exacta prior, basename
+         * secunda; ambae fallunt -> transitus conservativus idem. */
+        SilvaChorda basis = via;
+        i32 j;
+
+        per (j = via.mensura; j > I; j--)
+        {
+            si (via.datum[j - I] == '/')
+            {
+                basis.datum = via.datum + j;
+                basis.mensura = via.mensura - j;
+                frange;
+            }
+        }
+        si (basis.mensura == via.mensura
+            || !silva_tabula_dispersa_invenire(exp->includenda, basis,
+                   &valor))
+        {
+            redde;  /* ignotum: via memorata, processio pergit */
+        }
     }
     incl = (SilvaIncludendum*)valor;
     inclusio->fons_ad = incl->fons_index;
