@@ -5372,3 +5372,57 @@ decision belongs to the next planning session, with Fran, on
 pull — the same rule that timed M2 correctly.
 
 Ad numeros. Deus vult.
+
+## Addendum post-M2 — RECENSIO POSITIONIS (2026-07-04)
+
+Fresh-eyes positioning review with Fran (full reasoning preserved:
+project-specs/silva-positio.md — the from-scratch description, the
+landscape triangle [clang/tree-sitter/srcML — silva occupies the
+unoccupied center: compiler-correct trees AND document-exact
+surface], the Roslyn-for-C framing, honest gaps). Seven roadmap
+items fell out — rough edges where a strength is 90% built. Each
+now NAMED with a disposition:
+
+**No-pull-needed tier (trust / pin-drift / foreclosure — do at the
+next silva reopening, before or alongside any milestone):**
+1. **Diagnostica ex tabulis** — expected-terminal sets surfaced on
+   ERROR nodes (the failure state's action row already enumerates
+   them; baked data, currently unread) → infidelis + badge gain
+   "why". Small; ADDITIONES-class package.
+7. **Incrementality foreclosure CHECK** — one page of analysis on
+   absolute byte offsets vs segment-level reparse, BEFORE more
+   consumers pin position semantics. Analysis only; the
+   predecessors' death-class demands the path back be verified in
+   writing.
+3. **Comment model ownership (AUDIT REPAIR)** — the 2026-07-04
+   full-log audit MISSED that the comments-as-queryable pin
+   (CLAUDE.md's "WATCH THIS ONE") has no landing spot in the
+   post-M2 map; consumer smoothing already began (subscriptio
+   trims comments by hand). HEREBY ADDED to the post-M2 map as
+   quaestio-adjacent scope ("commenta" — attachment heuristics,
+   own-line/end-of-line/freestanding, doc-comment patterns).
+
+**On-opportunity tier (cheap, named, grab when adjacent):**
+2. **Politica minimalis triviorum synthesizatorum** — a default
+   spacing policy (space between tokens, newline after ;/}),
+   deliberately NOT the formatter: unblocks layer-N text views,
+   node-inserting transforms, generated-code emission, silva.h
+   generation — four parked items behind one small policy. The
+   formatter milestone keeps ownership of doing it WELL.
+5. **Signa normae in lexatione** — populate the token
+   standard-tag AS constructs are recognized (LL/ULL = the first
+   customer; the M2d D1 promise pre-paid), so lint's first query
+   works on day one.
+6. **Graphum inclusionum** — percursus flag dumping the
+   monorepo include graph from the already-collected inclusiones
+   records. Cheapest instrument available.
+4. **Fuzzatio industrialis** — libFuzzer/AFL harness on the
+   amalgam (single .c + binary oracle = ideal target); occasional
+   overnight runs; failures harvested as fixtures. Instrument,
+   not suite (the suite keeps its deterministic 400).
+
+**POST-M2 MAP, as now amended**: quaestio selectors / formator /
+typus+index / config-query / STML serialization / **commenta
+(quaestio-adjacent)** — plus the seven positioning items above
+(three no-pull, four on-opportunity). Sequencing stays Fran's, on
+pull, at the next planning session.
