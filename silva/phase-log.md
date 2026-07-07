@@ -5575,3 +5575,101 @@ never register their typedefs — latinam_addere consumers) rides
 the saltuarius include-driven-nexus item; stream-order situs as
 a public coordinate (option b) stays named for typus/index if
 scope-aware tables ever want it — likely mooted by this design.
+
+## QUAESTIO — the selector surface: DESIGN DECISUS + milestone
+## sketch (2026-07-06)
+
+**The pull fired**: Fran chose quaestio design for the remaining
+high-judgment hours. Method = M2.0 NOMINA (draft-then-correct).
+**project-specs/silva-quaestio-design.md is the DECISUS** — the
+selector surface's permanent names, decided with Fran (all four
+questions on the recommendation):
+
+1. Pseudos speak LATIN (:vocat/:definit/:utitur/:reddit/:habet/
+   :non/:primus/:ultimus + silva-axis :ambiguum/:lectiones/
+   :sumptus/:omissus; norma family :c89/:c99/:extensio gated on
+   standard-tag population — recensio #5 is now PULLED by a real
+   consumer).
+2. Attributes = LOCUS NAMES VERBATIM ([tok_titulus="main"]) — the
+   annotation format's slot vocabulary IS the attribute surface.
+3. Ambigua: CANONICAL default; :lectiones opt-in widens;
+   :ambiguum matches wrappers. Conditional arms: taken arms
+   matched structurally (wildcard pin); untaken = config-query
+   milestone BY NAME.
+4. Scope: SELECTORS ONLY — transform DSL is the follow-on that
+   targets them; formator rides transforms.
+
+**Grounding done**: v1 arbor_quaestio read (model carried:
+compiled query, chains, {nodus,capturae}, = ^= $= *=, custom
+pseudos; four catalogued bugs DESIGNED OUT: mid-chain captures
+kept, results deduped by subject, attribute paths through the
+registrum tables, custom pseudos functional); the 100-assertion
+v1 bar = acceptance, inputs TRANSLATED to DECISUS genera at
+harvest (lapifex-bar precedent); unknown tag = LOUD compile
+fractura (v1 matched silently — deliberate behavior change,
+recorded). Engine is GRAMMAR-AGNOSTIC (compilare takes the
+registrum; works on sceletum and c89 alike). children()/uniform
+loci make v1's hand-built _iterare_liberos free.
+
+**Chunk sketch (INTENTIO to be written at implementation start,
+per protocol)**: QA parser+compilare+congruit+exsequi (genus,
+space/>) → QB attributes+captures-fixed+siblings+dedup → QC
+pseudos (structural, silva-axis, semantic, custom) → QD the
+harvested bar + new-axis fixtures + silva.h + hospes + amalgam;
+saltuarius ':quaestio mode' = v0.1 candidate BY NAME (in-phase
+only if best instrument). Norma pseudos in-scope iff standard-tag
+population lands cheaply (else named).
+
+## QUAESTIO QA — parser + compilare + exsequi core: INTENTIO
+## (2026-07-07)
+
+Scope (per the milestone sketch + DECISUS doc): the selector
+IR + tokenizer/parser for the QA subset (genus tags, `*`,
+descendant space, child `>`, union comma), compilare against a
+REGISTRUM (grammar-agnostic — the module includes NO c89
+headers; unknown tag = NIHIL + causa out-param, the loud-
+fracture DECISUS), congruit (full-chain test via pater —
+committed trees documented as the contract), exsequi (top-down
+enumerate, each node tested once as SUBJECT = rightmost
+compound; ancestors matched right-to-left via pater with
+recursive retry on descendant hops; AMBIGUUS descends CANONICA
+only — form pre-resolved from the registrum at compilare, the
+commissio pattern; results = Xar of SilvaQuaestioResultatum in
+caller piscina). IR carries the QB/QC part kinds now (attributum/
+pseudo/captura enum members exist unparsed) — API-first, the
+extension points are in the shapes from day one.
+
+Exit: probatio_silva_quaestio green (tags, *, both combinators,
+union, unknown-tag fracture, congruit, error-genus matchability,
+ambiguus-canonical descent fixture); suite green. silva.h +
+manifest + hospes = QA-closing act (standing rule) — if the
+session ends first, they are THE NEXT ACT by name.
+
+### QUAESTIO QA — RELATIO (2026-07-07): core SHIPPED
+
+**Suite 28/28 (+probatio_silva_quaestio, 38 asserts FIRST full
+run).** fontes/silva_quaestio.{h,c} (~560 lines): selector IR
+(partes/gradus/catenae — QB/QC part kinds present in the shapes,
+unparsed), hand lexer/parser for the QA surface (tags, *, spatium,
+>, virgula), compilare registrum-driven with causa out-param
+(unknown tag / malformed = NIHIL + causa — six fracture shapes
+pinned), congruit (right-to-left chain via pater; descendant hops
+retry recursively so "a b c" cannot miss high-ancestor matches),
+exsequi (top-down enumerate, each node tested once as subject —
+duplicates structurally impossible; results in caller piscina).
+AMBIGUUS descends CANONICA only (form pre-resolved at compilare,
+commissio pattern) — pinned: "Ignotus * x;" matches binarium/
+sententia-expressionis, NOT declaratio, and the wrapper itself
+matches tag "ambiguus". ERROR nodes match tag "error". The module
+includes NO c89 header (grammar-agnostic by construction); the
+probatio drives it through silva_c89_parsare.
+
+The i32-unsigned slip fired on its own author in the probatio
+(sign-conversion wall caught it — the codebase's most reliable
+trap keeps its record).
+
+**NEXT (named, the QA-closing act)**: manifest + silva.h + hospes
+for compilare/exsequi/congruit + the result struct (standing
+rule); then QB (attributa [locus op "valor"], capturae $nomen
+with all-hops binding, fratres +/~) → QC (pseudo-classes) → QD
+(the translated v1 bar).
