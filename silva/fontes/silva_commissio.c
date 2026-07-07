@@ -29,7 +29,79 @@ silva_oraculum_creare (Piscina* piscina)
     {
         redde NIHIL;
     }
+    oraculum->responsa = NIHIL;  /* pigre creatum */
     redde oraculum;
+}
+
+/* ==================================================
+ * Verdicta praecomputata (sanatio oraculi 2026-07-06)
+ * ================================================== */
+
+nomen structura {
+    constans SilvaNodus* sedes;
+    s32                  victor;
+} OraculumResponsum;
+
+vacuum
+silva_oraculum_responsa_vacare (SilvaOraculum* oraculum)
+{
+    si (oraculum == NIHIL) redde;
+    si (oraculum->responsa == NIHIL)
+    {
+        oraculum->responsa = xar_creare(oraculum->piscina,
+            (i32)magnitudo(OraculumResponsum));
+        redde;
+    }
+    xar_vacare(oraculum->responsa);
+}
+
+b32
+silva_oraculum_responsum_ponere (
+    SilvaOraculum*       oraculum,
+    constans SilvaNodus* sedes,
+    s32                  victor)
+{
+    OraculumResponsum* slot;
+
+    si (oraculum == NIHIL || sedes == NIHIL) redde FALSUM;
+    si (oraculum->responsa == NIHIL)
+    {
+        silva_oraculum_responsa_vacare(oraculum);
+        si (oraculum->responsa == NIHIL) redde FALSUM;
+    }
+    slot = (OraculumResponsum*)xar_addere(oraculum->responsa);
+    si (slot == NIHIL) redde FALSUM;
+    slot->sedes = sedes;
+    slot->victor = victor;
+    redde VERUM;
+}
+
+b32
+silva_oraculum_responsum_quaerere (
+    constans SilvaOraculum* oraculum,
+    constans SilvaNodus*    sedes,
+    s32*                    victor_out)
+{
+    i32 i;
+
+    si (oraculum == NIHIL || oraculum->responsa == NIHIL
+        || sedes == NIHIL)
+    {
+        redde FALSUM;
+    }
+    per (i = ZEPHYRUM; i < xar_numerus(oraculum->responsa); i++)
+    {
+        constans OraculumResponsum* r =
+            (constans OraculumResponsum*)xar_obtinere(
+                oraculum->responsa, i);
+
+        si (r != NIHIL && r->sedes == sedes)
+        {
+            si (victor_out != NIHIL) *victor_out = r->victor;
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
 }
 
 b32

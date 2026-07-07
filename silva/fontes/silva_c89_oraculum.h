@@ -5,13 +5,18 @@
  * Primus modulus grammaticae-proprius manu scriptus. Quattuor
  * partes, unus possessor sequentiae:
  *
- *   1. REGISTRATIO (X1/X2/X4/X5): uncus praecommissionis ambulat
- *      radicem NONDUM commissam, declarationes typedef detegit
- *      (lexema TYPEDEF in specificatoribus - nota semantica
- *      M2.0), nomina declaratorum in oraculum POSITIONALE
- *      inscribit (situs = byte_offset lexematis nominis).
- *      Elementa AMBIGUA praetermittuntur (politica exclusiva
- *      X4); rami sumpti conditionalium visitantur.
+ *   1. AMBULATIO INTERTEXTA (X1/X2/X4/X5 + sanatio 2026-07-06):
+ *      uncus praecommissionis ambulat radicem NONDUM commissam
+ *      ordine fluxus, declarationes typedef detegit (lexema
+ *      TYPEDEF in specificatoribus - nota semantica M2.0) et
+ *      registrat SIMUL ac ambigua examinat - typus visibilis =
+ *      iam registratus cum ambiguum attingitur (semantica puncti
+ *      declarationis ISO; comparatio situm trans fontes falsa
+ *      erat, silva-incrementalitas.md par V). Verdicta in
+ *      oraculo stipantur; resolutor ea legit. Elementa AMBIGUA
+ *      registratione praetermittuntur (X4) sed examinantur;
+ *      corpora sine registratione (decisiones 13); rami sumpti
+ *      visitantur.
  *
  *   2. RESOLUTOR (X6 + X10): per interpretationes -
  *      (a) FILTRUM COMBINATIONIS (X10, necatio dura): lectio
@@ -20,7 +25,7 @@
  *          tag + tag) NUMQUAM vera esse potest - cadit.
  *      (b) superstes UNICUS -> victor (ceterae impossibiles).
  *      (c) aliter: lectio typo-positiva UNICA (nominatus adest,
- *          omnes noti AD SITUM - X3) -> victor.
+ *          omnes oraculo NUNC noti - X3 per ordinem) -> victor.
  *      (d) aliter: nullum responsum - AMBIGUUS retinetur (pin
  *          quaestionum joculatoriarum).
  *

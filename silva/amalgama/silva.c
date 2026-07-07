@@ -2976,6 +2976,14 @@ silva_glr_terminale_ex_genere (
 structura SilvaOraculum {
     SilvaPiscina*        piscina;
     SilvaTabulaDispersa* typi;      /* clavis chorda (copiata) -> VERUM */
+    SilvaXar*            responsa;  /* verdicta praecomputata ambulationis
+                                * praecommissionis (sanatio oraculi
+                                * 2026-07-06): {sedes, victor} per
+                                * AMBIGUUS, victor -1 = retentio
+                                * DECISA (non "numquam visitatum");
+                                * pigre creatum, vacatum per
+                                * ambulationem (monstratores nodorum
+                                * inter parsuras collidere possunt) */
 };
 
 SilvaOraculum* silva_oraculum_creare (SilvaPiscina* piscina);
@@ -2987,13 +2995,14 @@ b32 silva_oraculum_typum_addere (SilvaOraculum* oraculum,
 b32 silva_oraculum_typum_addere_literis (SilvaOraculum* oraculum,
     constans character* titulus);
 
-/* Oraculum POSITIONALE (M2b, sim X X3): typus a SITU declarationis
- * visibilis (byte_offset lexematis nominis; 0 = praeoneratus,
- * ubique visibilis - addere sine situ = situs 0). Resolutor typum
- * "notum ad situm" habet solum si situs_typi <= situs ambigui -
- * typedef POST usum ambiguitatem priorem non solvit (ordo
- * visibilitatis C89). Situs PRIMUS servatur in redeclaratione
- * (legalitas = lamina lint). */
+/* Situs declarationis (M2b, sim X): byte_offset lexematis nominis
+ * (0 = praeoneratus), datum SERVATUM sed a resolutore c89 NON iam
+ * comparatum - sanatio 2026-07-06: visibilitas per ORDINEM
+ * ambulationis intertextae (situs trans fontes regulae diversae
+ * sunt; comparatio falsa erat). Typedef POST usum ambiguitatem
+ * priorem non solvit - nunc quia nondum registratus, non per
+ * situm. Situs PRIMUS servatur in redeclaratione (legalitas =
+ * lamina lint). */
 b32 silva_oraculum_typum_addere_situ (SilvaOraculum* oraculum,
     SilvaChorda titulus, s32 situs);
 
@@ -3003,6 +3012,19 @@ b32 silva_oraculum_situs_typi (constans SilvaOraculum* oraculum,
 
 b32 silva_oraculum_typum_novit (constans SilvaOraculum* oraculum,
     SilvaChorda titulus);
+
+/* Verdicta praecomputata (sanatio oraculi 2026-07-06): ambulatio
+ * praecommissionis grammaticae verdictum per AMBIGUUS stipat
+ * (visibilitas per ORDINEM ambulationis - typus visibilis si iam
+ * registratus cum ambiguum attingitur; comparatio situm trans
+ * fontes FALSA erat, vide silva-incrementalitas.md par V);
+ * resolutor verdictum legit. victor -1 = retentio decisa. */
+vacuum silva_oraculum_responsa_vacare (SilvaOraculum* oraculum);
+b32 silva_oraculum_responsum_ponere (SilvaOraculum* oraculum,
+    constans SilvaNodus* sedes, s32 victor);
+b32 silva_oraculum_responsum_quaerere (
+    constans SilvaOraculum* oraculum,
+    constans SilvaNodus* sedes, s32* victor_out);
 
 /* Ambulatio commissionis. Oraculum/resolutor NIHIL licent (tunc
  * nulla resolutio - pater + normalizatio solae). NIHIL reddit si
@@ -3276,13 +3298,18 @@ silva_scribere_fontem (
  * Primus modulus grammaticae-proprius manu scriptus. Quattuor
  * partes, unus possessor sequentiae:
  *
- *   1. REGISTRATIO (X1/X2/X4/X5): uncus praecommissionis ambulat
- *      radicem NONDUM commissam, declarationes typedef detegit
- *      (lexema TYPEDEF in specificatoribus - nota semantica
- *      M2.0), nomina declaratorum in oraculum POSITIONALE
- *      inscribit (situs = byte_offset lexematis nominis).
- *      Elementa AMBIGUA praetermittuntur (politica exclusiva
- *      X4); rami sumpti conditionalium visitantur.
+ *   1. AMBULATIO INTERTEXTA (X1/X2/X4/X5 + sanatio 2026-07-06):
+ *      uncus praecommissionis ambulat radicem NONDUM commissam
+ *      ordine fluxus, declarationes typedef detegit (lexema
+ *      TYPEDEF in specificatoribus - nota semantica M2.0) et
+ *      registrat SIMUL ac ambigua examinat - typus visibilis =
+ *      iam registratus cum ambiguum attingitur (semantica puncti
+ *      declarationis ISO; comparatio situm trans fontes falsa
+ *      erat, silva-incrementalitas.md par V). Verdicta in
+ *      oraculo stipantur; resolutor ea legit. Elementa AMBIGUA
+ *      registratione praetermittuntur (X4) sed examinantur;
+ *      corpora sine registratione (decisiones 13); rami sumpti
+ *      visitantur.
  *
  *   2. RESOLUTOR (X6 + X10): per interpretationes -
  *      (a) FILTRUM COMBINATIONIS (X10, necatio dura): lectio
@@ -3291,7 +3318,7 @@ silva_scribere_fontem (
  *          tag + tag) NUMQUAM vera esse potest - cadit.
  *      (b) superstes UNICUS -> victor (ceterae impossibiles).
  *      (c) aliter: lectio typo-positiva UNICA (nominatus adest,
- *          omnes noti AD SITUM - X3) -> victor.
+ *          omnes oraculo NUNC noti - X3 per ordinem) -> victor.
  *      (d) aliter: nullum responsum - AMBIGUUS retinetur (pin
  *          quaestionum joculatoriarum).
  *
@@ -28442,7 +28469,79 @@ silva_oraculum_creare (SilvaPiscina* piscina)
     {
         redde NIHIL;
     }
+    oraculum->responsa = NIHIL;  /* pigre creatum */
     redde oraculum;
+}
+
+/* ==================================================
+ * Verdicta praecomputata (sanatio oraculi 2026-07-06)
+ * ================================================== */
+
+nomen structura {
+    constans SilvaNodus* sedes;
+    s32                  victor;
+} OraculumResponsum;
+
+vacuum
+silva_oraculum_responsa_vacare (SilvaOraculum* oraculum)
+{
+    si (oraculum == NIHIL) redde;
+    si (oraculum->responsa == NIHIL)
+    {
+        oraculum->responsa = silva_xar_creare(oraculum->piscina,
+            (i32)magnitudo(OraculumResponsum));
+        redde;
+    }
+    silva_xar_vacare(oraculum->responsa);
+}
+
+b32
+silva_oraculum_responsum_ponere (
+    SilvaOraculum*       oraculum,
+    constans SilvaNodus* sedes,
+    s32                  victor)
+{
+    OraculumResponsum* slot;
+
+    si (oraculum == NIHIL || sedes == NIHIL) redde FALSUM;
+    si (oraculum->responsa == NIHIL)
+    {
+        silva_oraculum_responsa_vacare(oraculum);
+        si (oraculum->responsa == NIHIL) redde FALSUM;
+    }
+    slot = (OraculumResponsum*)silva_xar_addere(oraculum->responsa);
+    si (slot == NIHIL) redde FALSUM;
+    slot->sedes = sedes;
+    slot->victor = victor;
+    redde VERUM;
+}
+
+b32
+silva_oraculum_responsum_quaerere (
+    constans SilvaOraculum* oraculum,
+    constans SilvaNodus*    sedes,
+    s32*                    victor_out)
+{
+    i32 i;
+
+    si (oraculum == NIHIL || oraculum->responsa == NIHIL
+        || sedes == NIHIL)
+    {
+        redde FALSUM;
+    }
+    per (i = ZEPHYRUM; i < silva_xar_numerus(oraculum->responsa); i++)
+    {
+        constans OraculumResponsum* r =
+            (constans OraculumResponsum*)silva_xar_obtinere(
+                oraculum->responsa, i);
+
+        si (r != NIHIL && r->sedes == sedes)
+        {
+            si (victor_out != NIHIL) *victor_out = r->victor;
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
 }
 
 b32
@@ -32085,10 +32184,122 @@ silva_c89_typos_registrare (
     _valorem_registrare(radix, oraculum, ZEPHYRUM);
 }
 
+/* ==================================================
+ * Ambulatio praecommissionis INTERTEXTA (sanatio 2026-07-06):
+ * registratio et examinatio in UNA ambulatione ordine fluxus.
+ * Typus visibilis = iam registratus cum ambiguum attingitur
+ * (semantica puncti declarationis ISO; coordinata positionis
+ * NULLA - comparatio situm trans fontes falsa erat, 2,382
+ * lectiones falso retentae; silva-incrementalitas.md par V).
+ * sine_registratione: intra corpora (decisiones 13 - typedef
+ * localis non registratur) et intra lectiones ambiguorum (X4
+ * exclusivum); examinatio tamen UBIQUE (ordo locorum = ordo
+ * fontis, validatio ordinis locorum id spondet).
+ * ================================================== */
+
+hic_manens vacuum _percurrere (SilvaValor valor,
+    SilvaOraculum* oraculum, b32 sine_registratione,
+    i32 profunditas);
+hic_manens vacuum _ambiguum_examinare (constans SilvaNodus* ambiguum,
+    constans SilvaOraculum* oraculum,
+    SilvaResolutioResponsum* responsum);
+
+hic_manens vacuum
+_ambiguum_stipare (
+    constans SilvaNodus* ambiguum,
+    SilvaOraculum*       oraculum)
+{
+    SilvaResolutioResponsum responsum;
+
+    responsum.victor = -I;
+    responsum.discriminans = NIHIL;
+    _ambiguum_examinare(ambiguum, oraculum, &responsum);
+    (vacuum)silva_oraculum_responsum_ponere(oraculum, ambiguum,
+        responsum.victor);
+}
+
+hic_manens vacuum
+_percurrere (
+    SilvaValor     valor,
+    SilvaOraculum* oraculum,
+    b32            sine_registratione,
+    i32            profunditas)
+{
+    constans SilvaNodus* nodus;
+    i32 i;
+
+    si (profunditas > LXIV) redde;
+
+    si (valor.genus == SILVA_VALOR_LISTA)
+    {
+        per (i = ZEPHYRUM;
+             i < silva_valor_lista_numerus(valor); i++)
+        {
+            SilvaValor* elem = silva_valor_lista_obtinere(valor, i);
+
+            si (elem != NIHIL)
+            {
+                _percurrere(*elem, oraculum, sine_registratione,
+                    profunditas + I);
+            }
+        }
+        redde;
+    }
+    si (valor.genus != SILVA_VALOR_NODUS
+        || valor.datum.nodus == NIHIL)
+    {
+        redde;
+    }
+    nodus = valor.datum.nodus;
+
+    commutatio (nodus->genus)
+    {
+    casus (s32)SILVA_C89_GENUS_AMBIGUUS:
+        _ambiguum_stipare(nodus, oraculum);
+        /* descende in lectiones: ambigua nidificata verdicta
+         * quoque accipiunt (eodem statu oraculi - eadem positio
+         * fluxus); registratio intus suppressa (X4) */
+        _percurrere(silva_c89_ambiguus_interpretationes(nodus),
+            oraculum, VERUM, profunditas + I);
+        redde;
+    casus (s32)SILVA_C89_GENUS_DECLARATIO:
+        si (!sine_registratione)
+        {
+            _declarationem_registrare(nodus, oraculum);
+        }
+        frange;  /* loci infra descenduntur (ambigua initiatorum) */
+    casus (s32)SILVA_C89_GENUS_DEFINITIO_FUNCTIONIS:
+    casus (s32)SILVA_C89_GENUS_CORPUS:
+        sine_registratione = VERUM;  /* decisiones 13 */
+        frange;
+    casus (s32)SILVA_C89_GENUS_RAMUS_OMISSUS:
+        redde;  /* cruda - lexemata sola */
+    ordinarius:
+        frange;
+    }
+
+    /* descensio generica per locos, ordine fontis */
+    per (i = ZEPHYRUM; i < nodus->numerus_locorum; i++)
+    {
+        constans SilvaValor* locus = &nodus->loci[i];
+
+        si (locus->genus == SILVA_VALOR_NODUS
+            || locus->genus == SILVA_VALOR_LISTA)
+        {
+            _percurrere(*locus, oraculum, sine_registratione,
+                profunditas + I);
+        }
+    }
+}
+
 vacuum
 silva_c89_praecommissio (SilvaValor radix, vacuum* datum)
 {
-    silva_c89_typos_registrare(radix, (SilvaOraculum*)datum);
+    SilvaOraculum* oraculum = (SilvaOraculum*)datum;
+
+    si (oraculum == NIHIL) redde;
+    silva_oraculum_responsa_vacare(oraculum);
+    _percurrere(radix, oraculum, FALSUM, ZEPHYRUM);
 }
 
 /* ==================================================
@@ -32099,21 +32310,24 @@ silva_c89_praecommissio (SilvaValor radix, vacuum* datum)
 nomen structura {
     b32 invalidum;        /* combinatio impossibilis (X10) */
     b32 nominatus_adest;
-    b32 ignotus_adest;    /* nominatus non notus ad situm */
+    b32 ignotus_adest;    /* nominatus oraculo NUNC ignotus */
     b32 species_adest;    /* nodus specificatores ferens (politica) */
 } ExamenLectionis;
 
 hic_manens vacuum _nodum_examinare (constans SilvaNodus* nodus,
-    constans SilvaOraculum* oraculum, s32 situs_ambigui,
+    constans SilvaOraculum* oraculum,
     ExamenLectionis* examen, i32 profunditas);
 
 /* Lista specificatorum: numerare atoma typorum + combinationem
- * probare + nominatos contra oraculum (positionaliter, X3) */
+ * probare + nominatos contra oraculum. SANATIO 2026-07-06:
+ * visibilitas per ORDINEM ambulationis, non per situm — quaestio
+ * est "novit NUNC?" (contenta oraculi in momento ambulationis
+ * IPSA sunt copia visibilis; comparatio situm trans fontes falsa
+ * erat — silva-incrementalitas.md par V). */
 hic_manens vacuum
 _specificatores_examinare (
     SilvaValor              specificatores,
     constans SilvaOraculum* oraculum,
-    s32                     situs_ambigui,
     ExamenLectionis*        examen,
     i32                     profunditas)
 {
@@ -32147,16 +32361,11 @@ _specificatores_examinare (
 
             nominati++;
             examen->nominatus_adest = VERUM;
-            si (titulus.genus == SILVA_VALOR_TOKEN)
+            si (titulus.genus == SILVA_VALOR_TOKEN
+                && !silva_oraculum_typum_novit(oraculum,
+                       titulus.datum.token->valor))
             {
-                s32 situs;
-
-                si (!silva_oraculum_situs_typi(oraculum,
-                        titulus.datum.token->valor, &situs)
-                    || situs > situs_ambigui)
-                {
-                    examen->ignotus_adest = VERUM;
-                }
+                examen->ignotus_adest = VERUM;
             }
             frange;
         }
@@ -32188,7 +32397,6 @@ hic_manens vacuum
 _nodum_examinare (
     constans SilvaNodus*    nodus,
     constans SilvaOraculum* oraculum,
-    s32                     situs_ambigui,
     ExamenLectionis*        examen,
     i32                     profunditas)
 {
@@ -32234,7 +32442,7 @@ _nodum_examinare (
     {
         examen->species_adest = VERUM;
         _specificatores_examinare(specificatores, oraculum,
-            situs_ambigui, examen, profunditas);
+            examen, profunditas);
     }
 
     /* descensio generica per locos (tags intra specificatores
@@ -32248,7 +32456,7 @@ _nodum_examinare (
         si (valor->genus == SILVA_VALOR_NODUS)
         {
             _nodum_examinare(valor->datum.nodus, oraculum,
-                situs_ambigui, examen, profunditas + I);
+                examen, profunditas + I);
         }
         alioquin si (valor->genus == SILVA_VALOR_LISTA)
         {
@@ -32264,7 +32472,7 @@ _nodum_examinare (
                     && elem->genus == SILVA_VALOR_NODUS)
                 {
                     _nodum_examinare(elem->datum.nodus, oraculum,
-                        situs_ambigui, examen, profunditas + I);
+                        examen, profunditas + I);
                 }
             }
         }
@@ -32328,40 +32536,27 @@ _situs_primi (constans SilvaNodus* nodus, i32 profunditas)
 
 #define LECTIONES_MAXIMAE XVI
 
-vacuum
-silva_c89_resolutor (
+/* Examinatio ambigui sine positione: filtrum X10 + scala
+ * superstitis unici / typo-positivae unicae. Vocata ab
+ * ambulatione intertexta (verdicta stipanda) atque a recidiva
+ * resolutoris (vocator directus sine ambulatione). */
+hic_manens vacuum
+_ambiguum_examinare (
     constans SilvaNodus*     ambiguum,
     constans SilvaOraculum*  oraculum,
-    vacuum*                  datum,
     SilvaResolutioResponsum* responsum)
 {
     SilvaValor interpretationes =
         silva_c89_ambiguus_interpretationes(ambiguum);
     ExamenLectionis examina[LECTIONES_MAXIMAE];
     i32 numerus = silva_valor_lista_numerus(interpretationes);
-    s32 situs_ambigui;
     i32 superstites = ZEPHYRUM;
     s32 superstes_ultimus = -I;
     i32 typo_positivae = ZEPHYRUM;
     s32 typo_positiva_ultima = -I;
     i32 i;
 
-    (vacuum)datum;
     si (numerus > LECTIONES_MAXIMAE) redde;  /* numquam visum */
-
-    /* situs furcae = lexema primum interpretationis primae
-     * (span communis omnium lectionum) */
-    {
-        SilvaValor* prima =
-            silva_valor_lista_obtinere(interpretationes, ZEPHYRUM);
-
-        si (prima == NIHIL || prima->genus != SILVA_VALOR_NODUS)
-        {
-            redde;
-        }
-        situs_ambigui = _situs_primi(prima->datum.nodus, ZEPHYRUM);
-        si (situs_ambigui < ZEPHYRUM) redde;
-    }
 
     per (i = ZEPHYRUM; i < numerus; i++)
     {
@@ -32377,7 +32572,7 @@ silva_c89_resolutor (
             examina[i].invalidum = VERUM;
             perge;
         }
-        _nodum_examinare(elem->datum.nodus, oraculum, situs_ambigui,
+        _nodum_examinare(elem->datum.nodus, oraculum,
             &examina[i], ZEPHYRUM);
 
         si (!examina[i].invalidum)
@@ -32399,13 +32594,40 @@ silva_c89_resolutor (
         responsum->victor = superstes_ultimus;
         redde;
     }
-    /* (c) lectio typo-positiva unica (X3: noti AD SITUM) */
+    /* (c) lectio typo-positiva unica (typi NUNC noti - ordo
+     * ambulationis pro X3) */
     si (superstites > I && typo_positivae == I)
     {
         responsum->victor = typo_positiva_ultima;
         redde;
     }
     /* (d) nullum responsum - retentio */
+}
+
+vacuum
+silva_c89_resolutor (
+    constans SilvaNodus*     ambiguum,
+    constans SilvaOraculum*  oraculum,
+    vacuum*                  datum,
+    SilvaResolutioResponsum* responsum)
+{
+    s32 victor;
+
+    (vacuum)datum;
+    si (silva_oraculum_responsum_quaerere(oraculum, ambiguum,
+            &victor))
+    {
+        /* verdictum praecomputatum ambulationis; victor -1 =
+         * retentio DECISA */
+        si (victor >= ZEPHYRUM)
+        {
+            responsum->victor = victor;
+        }
+        redde;
+    }
+    /* recidiva: vocator directus sine ambulatione praecommissionis
+     * (omnes typi noti visibiles - positio nulla) */
+    _ambiguum_examinare(ambiguum, oraculum, responsum);
 }
 
 /* ==================================================
@@ -32845,7 +33067,7 @@ _politica_expressionis (
         {
             perge;
         }
-        _nodum_examinare(elem->datum.nodus, NIHIL, ZEPHYRUM,
+        _nodum_examinare(elem->datum.nodus, NIHIL,
             &examen, ZEPHYRUM);
         si (!examen.species_adest)
         {

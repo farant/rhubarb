@@ -50,6 +50,8 @@ hic_manens character plagula_apicis[1024];
 hic_manens i32 capita_praebita = ZEPHYRUM;
 hic_manens i32 capita_collisiones = ZEPHYRUM;
 hic_manens i32 fines_tactae_plagulae = ZEPHYRUM;
+hic_manens i32 summa_ambiguorum = ZEPHYRUM;
+hic_manens i32 plagulae_cum_ambiguis = ZEPHYRUM;
 
 hic_manens b32 _praetermittendum (constans character* titulus);
 
@@ -406,6 +408,16 @@ _plagulam_percurrere (constans SilvaContextus* ctx,
         }
         _typedefs_numerare(parsura->commissio->radix, FALSUM, via,
             ZEPHYRUM);
+        {
+            i32 amb = xar_numerus(parsura->commissio->ambigui);
+
+            si (amb > ZEPHYRUM)
+            {
+                summa_ambiguorum += amb;
+                plagulae_cum_ambiguis++;
+                imprimere("[ambigui %d] %s\n", (int)amb, via);
+            }
+        }
 
         scriptura = silva_scribere_fontem(piscina, parsura,
             &SILVA_C89_REGISTRUM, parsura->fons_princeps);
@@ -596,6 +608,8 @@ s32 principale (integer argc, character** argv)
         (fideles == plagulae) ? "" : "  <- INSPICE");
     imprimere("errores:   %d nodi in %d plagulis\n",
         (int)summa_errorum, (int)plagulae_cum_erroribus);
+    imprimere("ambigui:   %d retenti in %d plagulis\n",
+        (int)summa_ambiguorum, (int)plagulae_cum_ambiguis);
     si (fines_tactae_plagulae > ZEPHYRUM)
     {
         imprimere("fines:     %d plagulae limen tactae\n",

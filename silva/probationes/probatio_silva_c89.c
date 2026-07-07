@@ -2394,6 +2394,84 @@ s32 principale (vacuum)
 
 
     /* ========================================================
+     * PROBARE: sanatio oraculi (2026-07-06) - visibilitas per
+     * ORDINEM, non per situm. Typedef SERO in capite suo (post
+     * commentarium longum: offset in capite > offset usus in
+     * fonte principali) solvere DEBET - comparatio situm trans
+     * fontes 2,382 lectiones falso retinebat (probatio empirica,
+     * silva-incrementalitas.md par V). Et inclusio POST usum
+     * honeste retinetur (ordo ambulationis = semantica puncti
+     * declarationis ISO).
+     * ======================================================== */
+
+    {
+        constans character* caput_tardum =
+            "/* commentarium longum longum longum longum longum"
+            " longum longum longum longum longum longum longum"
+            " longum longum longum longum longum longum */\n"
+            "typedef int Tardus;\n";
+
+        imprimere("\n--- Probans sanationem oraculi ---\n");
+
+        /* typedef sero in capite -> solvitur (ambigui 0) */
+        {
+            SilvaContextus* ctx = silva_contextus_creare(piscina);
+            constans character* fons =
+                "#include \"tarde.h\"\nTardus * t;\n";
+            SilvaParsura* parsura;
+            SilvaNodus* primus;
+
+            CREDO_NON_NIHIL (ctx);
+            CREDO_VERUM (silva_contextus_praebere(ctx, "tarde.h",
+                caput_tardum, (i32)strlen(caput_tardum)));
+            parsura = silva_c89_parsare_cum_contextu(piscina, ctx,
+                "probatio.c", fons, (i32)strlen(fons), NIHIL);
+            CREDO_NON_NIHIL (parsura);
+            CREDO_VERUM (parsura->successus);
+            CREDO_AEQUALIS_I32 (parsura->numerus_errorum, ZEPHYRUM);
+            CREDO_AEQUALIS_I32 (xar_numerus(
+                parsura->commissio->ambigui), ZEPHYRUM);
+            primus = _elementum(parsura->commissio->radix,
+                ZEPHYRUM);
+            CREDO_NON_NIHIL (primus);
+            si (primus != NIHIL)
+            {
+                CREDO_AEQUALIS_S32 (primus->genus,
+                    (s32)SILVA_C89_GENUS_DECLARATIO);
+            }
+        }
+
+        /* inclusio POST usum -> retentio honesta (ambigui I) */
+        {
+            SilvaContextus* ctx = silva_contextus_creare(piscina);
+            constans character* fons =
+                "Tardus * t;\n#include \"tarde.h\"\n";
+            SilvaParsura* parsura;
+            SilvaNodus* primus;
+
+            CREDO_NON_NIHIL (ctx);
+            CREDO_VERUM (silva_contextus_praebere(ctx, "tarde.h",
+                caput_tardum, (i32)strlen(caput_tardum)));
+            parsura = silva_c89_parsare_cum_contextu(piscina, ctx,
+                "probatio.c", fons, (i32)strlen(fons), NIHIL);
+            CREDO_NON_NIHIL (parsura);
+            CREDO_VERUM (parsura->successus);
+            CREDO_AEQUALIS_I32 (parsura->numerus_errorum, ZEPHYRUM);
+            CREDO_AEQUALIS_I32 (xar_numerus(
+                parsura->commissio->ambigui), I);
+            primus = _elementum(parsura->commissio->radix,
+                ZEPHYRUM);
+            CREDO_NON_NIHIL (primus);
+            si (primus != NIHIL)
+            {
+                CREDO_AEQUALIS_S32 (primus->genus,
+                    (s32)SILVA_C89_GENUS_AMBIGUUS);
+            }
+        }
+    }
+
+
+    /* ========================================================
      * PROBARE: corpus syntaxis v1 (Chunk C). INVENTUM: corpus
      * paene totum DECLARATIONES est (expressiones intra
      * initiatores vivunt) - "dimidium expressionum" INTENTIONIS

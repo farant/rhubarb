@@ -5426,3 +5426,152 @@ typus+index / config-query / STML serialization / **commenta
 (quaestio-adjacent)** — plus the seven positioning items above
 (three no-pull, four on-opportunity). Sequencing stays Fran's, on
 pull, at the next planning session.
+
+## Addendum — INCREMENTALITAS: the foreclosure check EXECUTED
+## (2026-07-06) — and it caught a real bug
+
+Recensio item #7 discharged: project-specs/silva-incrementalitas.md
+is the page of record. VERDICT: **nothing forecloses segment-level
+incrementality.** The position-consumer census (verified against
+source) shows every offset comparison is intra-parse; offsets under
+an edit are a mechanical O(tokens) rebase, NOT the constraint. The
+REAL constraints, ranked: (1) arena lifetime granularity — one
+piscina per parse; keeping old segments' trees across reparses
+wants per-segment or generational arenas; nothing forecloses this
+but any arena refactor must consult it FIRST; (2) whole-file
+artifacts (strata/regions/directivae) — regenerable, bookkeeping;
+(3) token-pointer identity mixes generations under splicing —
+noted. The journal + positional oracle already ARE the
+invalidation predicate (macro state + typedef set at a segment
+boundary). Invariants to preserve are listed in the doc.
+
+**THE FINDING (the census earning its keep): the positional oracle
+is FONS-BLIND — a real, live comprehension bug.** situs (typedef
+byte_offset) and situs_ambigui (use byte_offset) are per-fons
+rulers compared as one: an included typedef sitting LATE in its
+header (offset > the use's main-file offset) is judged "declared
+after use" → the fork is wrongly RETAINED, expression-canonical —
+no error, no badge, no TOC row; invisible to the zero-error wall
+BY CONSTRUCTION. Probe: identical include, typedef at pad.h
+offset ~0 resolves, after a 3KB comment it doesn't.
+
+**Census** (percursus grew an ambigui counter — permanent product
+number, "counters are product"): baseline 17,607 retained ambigui
+in 497 plagulae; positional check experimentally disabled → 15,225
+in 407. **Delta = 2,382 wrongly-retained readings in ~90 files**
+(upper bound for the class). Remainder = honest retention (genuine
+C ambiguity + unknowable system-header typedefs). Experiment
+REVERTED; suite green; the counter change is the only oraculum-
+adjacent code kept... (counter lives in percursus only).
+
+**Second finding, same family**: lexicon-path files (latinam_addere)
+never register their typedefs AT ALL — lexica feed the macro table;
+their non-directive content is not parsed. Include-driven contexts
+are unaffected (latina.h parses when truly included), but
+saltuarius's latinam_addere-only nexus never learns i8/s32 as
+typedefs. Reinforces the named v0.1 include-driven-nexus item.
+
+**FIX OPTIONS (decision owed to Fran, recorded in the doc)**:
+(a) cross-fons ⇒ visible — small, fixes the 2,382, ADDITIONES-class,
+pairs naturally with the table-diagnostics package; (b) stream-order
+situs — principled, correct for every shape, natural at typus/index.
+Recommendation: (a) now, (b) at the milestone.
+
+## ORACULUM SANATIO — visibilitas per ORDINEM, non per situm:
+## INTENTIO (2026-07-06)
+
+The fons-blind fix, done as the C-semantic redesign (option c of
+silva-incrementalitas.md §V — Fran approved): **the positional
+coordinate dissolves entirely.** Registration currently runs
+AHEAD of resolution, so a byte-offset comparison simulates "was
+it declared yet?" — per-fons rulers, 2,382 wrongly-retained
+readings. The fix: ONE pre-commit walk in stream order that
+INTERLEAVES — registers typedefs as encountered, and when it
+meets an AMBIGUUS examines it AGAINST THE ORACLE'S CURRENT
+CONTENTS (which at that moment ARE the visible set) and stashes
+the verdict. Declaration-point visibility, ISO's own semantics,
+with LESS machinery than today.
+
+**Design (source-verified)**:
+- SilvaOraculum grows `Xar* responsa` ({sedes, victor} incl.
+  victor -1 — "walked and retained" is distinct from "never
+  walked"); vacare at walk start (oraculum reuse across parses =
+  node-pointer collision hazard otherwise); ponere/quaerere pair
+  in silva_commissio (linear scan; ambigua per file are dozens).
+  Struct is silva.h-OPAQUE — no public surface changes.
+- silva_c89_praecommissio → the interleaved walk: generic loci
+  descent (slot order = stream order, the slot-order validation's
+  dividend); DECLARATIO registers unless sine_registratione;
+  DEFINITIO_FUNCTIONIS/CORPUS descend with sine_registratione
+  VERUM (decisiones 13 unchanged); AMBIGUUS → examine-now +
+  stash, then descend ALL interpretations sine_registratione
+  (X4 unchanged; nested ambigua get verdicts too);
+  ramus-omissus naturally skipped (cruda = tokens).
+- silva_c89_resolutor = stash lookup; miss → position-free
+  examination (direct-caller fallback; no in-tree path misses).
+- The X10 filter, sole-survivor, unique-type-positive ladder:
+  UNCHANGED — only the visibility predicate moves from
+  `situs <= situs_ambigui` to walk order. situs stays recorded
+  (public API compat; data, no longer consulted).
+- silva_c89_typos_registrare keeps its old registration-only
+  behavior (public API).
+
+**Expected**: X3 fixture (typedef-after-use retention) passes BY
+ORDER; the fons-blind class (2,382) collapses; include-after-use
+correctly stays retained. New fixtures: praebere'd late-in-header
+typedef resolves (the probe becomes a pin); include-after-use
+honesty pin. Gates: suite + amalgam + saltuarius + tessera + the
+census sweep (acceptance number ~15,225).
+
+### ORACULUM SANATIO — RELATIO (2026-07-06): SHIPPED
+
+**Suite 27/27 (probatio_silva_c89: 1,578 asserts — sanatio
+fixtures added); amalgam VERIFICATUM (hospes 24/24); saltuarius
+13/13; tessera 5/5. THE ACCEPTANCE NUMBER: monorepo retained
+ambigui 17,607 → 15,229 (2,378 wrongly-retained readings FIXED),
+errores still 0, fidelity unchanged.**
+
+**The detail that proves the design**: the blunt experiment
+(visibility check disabled) predicted 15,225; the real fix lands
+at 15,229. The four-reading difference IS the X3 honesty the
+experiment trampled — same-fons typedef-after-use shapes that
+brute visibility wrongly resolved and the order-walk correctly
+retains. The fix is strictly more honest than the measurement
+instrument.
+
+**What shipped**: the positional coordinate DISSOLVED —
+- SilvaOraculum += responsa (verdicta praecomputata; {sedes,
+  victor}, victor -1 = retention DECIDED, distinct from
+  never-walked; vacare per walk — node pointers can collide
+  across parses on arena reuse); ponere/quaerere in commissio.
+  silva.h untouched (opaque type).
+- silva_c89_praecommissio = the INTERLEAVED walk (_percurrere):
+  generic loci descent in source order; DECLARATIO registers
+  unless sine_registratione; DEFINITIO_FUNCTIONIS/CORPUS set
+  sine_registratione (decisiones 13 intact); AMBIGUUS →
+  examine-NOW against current oracle contents + stash verdict,
+  then descend all interpretations sine_registratione (X4
+  intact; nested ambigua get verdicts at the same stream
+  position); ramus-omissus skipped (cruda).
+- _specificatores_examinare: "notum ad situm" → typum_novit
+  (the oracle's current contents ARE the visible set).
+- silva_c89_resolutor = stash lookup; miss → position-free
+  examination (direct-caller fallback; no in-tree path misses).
+- situs stays RECORDED (public API compat, useful data) but is
+  no longer consulted; header docs amended in both modules.
+- Fixtures: late-in-header typedef via praebere RESOLVES
+  (ambigui 0, DECLARATIO — the probe became a pin);
+  include-after-use RETAINED (ambigui I — the honesty pin);
+  X3 same-fons fixture passes unchanged (semantics preserved,
+  mechanism now order).
+
+**The whole suite passed FIRST RUN after the redesign** — the
+X3/X4/X10/dance semantics carried through the mechanism swap
+untouched, which is what "the ladder is unchanged, only the
+visibility predicate moved" was supposed to mean, and did.
+
+Named remainder (unchanged): the LEXICON-path finding (lexica
+never register their typedefs — latinam_addere consumers) rides
+the saltuarius include-driven-nexus item; stream-order situs as
+a public coordinate (option b) stays named for typus/index if
+scope-aware tables ever want it — likely mooted by this design.
