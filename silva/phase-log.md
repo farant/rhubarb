@@ -6188,4 +6188,120 @@ before they evaporate:
   list (binary-oracle claim, M0a/M0b conflation, 724->730).
 - Re-entry: silva/CLAUDE.md -> this phase-log tail (M0a RELATIO +
   AUDITUS) -> silva-semantica-design.md -> the semantica worklog.
+
+## M0b — INTENTIO (2026-07-08): typatio expressionum + conversiones
+
+Consilium: silva-semantica-design.md DECISUS 2/3 + the M0b engine
+hints (addendum supra) + **officina-simulatio-2.md** (simulation
+2026-07-08 against the shipped M0a module: grammar-loci inventory +
+node census + closure-mechanics grounding; Fran approved ALL SIX
+recommendations as written). Officina critical path: demissio's
+input contract freezes here.
+
+**DECISUS (Fran 2026-07-08, via simulatio-2):**
+1. **Annotation = per-node pair {typus naturalis, typus conversus}**,
+   both TypusC89* — naturalis = the expression's own synthesized
+   type, UNdecayed (arrays stay arrays, function designators stay
+   functions); conversus = the context-applied conversion target
+   (UAC operand conversion / array-function decay / assignment RHS /
+   argument / return), NIHIL if none. THE FROZEN CONTRACT demissio
+   reads (Eskil moment). Public rows: silva_c89_typus_expressionis +
+   silva_c89_conversio_expressionis, both _canonicum-aware,
+   NIHIL-safe. sizeof-operand: NO decay (sizeof(arr) right by
+   construction). Compound assignment annotates the implied binary
+   op's conversions on both operands.
+2. **Typing is CANONICAL-RELATIVE; authoritative analysis runs
+   POST-closure.** sem₁ cannot be skipped (closure feeds on its
+   symbols via oraculum_augere) → percursus -semantica goes
+   TWO-PASS: sem₁ feeds closure (annotations discarded) →
+   recanonicare → sem₂ authoritative (reported, queried). Contract
+   stated in silva.h: "analyze after your last recanonicare."
+   Typing ALWAYS-ON in analysare (complete-first; cost invisible
+   per census; if measurement later disagrees, a skip-flag for the
+   feeder pass is the named path back). Probatio pins a flip
+   fixture (sem₁ type ≠ sem₂ type across a closure flip).
+3. **Table: pointer-keyed tabula_dispersa via the GENERIC
+   constructor** (include/tabula_dispersa.h:66; custom friatio/
+   comparatio over 8 pointer bytes stored in the entry; chorda
+   clavis points at them). EAGER, uniform — the eager-vs-lazy fork
+   was REFUTED BY MEASUREMENT (census: worst file arbor2_glr_tabula
+   ≈3.7 MB annotations riding a 3.18 GB parse arena; expr nodes ≈
+   57-59% of all nodes handwritten, ~80% generated).
+4. **UAC adopts C99 integer conversion ranks for the long long
+   extension** (C89 doesn't rank what it doesn't have; the choice
+   is ours and demissio freezes it). LP64 corners pinned by
+   fixture: unsigned int + long → long; unsigned long + long long
+   → unsigned long long. Certified by auspex (5).
+5. **AUSPEX** (haruspex's bird-watching sibling,
+   instrumenta/principalia/auspex.c + auspex.sh): the integer UAC
+   table exhaustively clang-certified via CONSTANT-expression
+   asserts — result size (sizeof in array bound) + result
+   signedness ((expr)*0-1 > 0 in array bound); -fsyntax-only =
+   verdict. Known gap recorded: double vs long double identical on
+   Darwin (both 8) — indistinguishable, harmless.
+6. **Congeries types flow DOWN (simulatio-2 find):** annotated with
+   its CONTEXT type (from the declarator); elements typed where
+   correspondence is direct (fully-braced); brace-elision shapes
+   get a NAMED diagnostic which IS the corpus measurement (expected
+   ≈0 — generated tables fully braced); full elision walk PARKED →
+   M1 demissio (static-data materialization owns the same engine).
+7. **lvalue bit OMITTED from v1 annotations** (demissio derives
+   lvalue-ness structurally; assignment-lvalue legality = lint).
+   Named park, on-pull.
+
+**CHUNKS + BARS:**
+- **A — table + descent + primaries.** Pointer-keyed table; walk
+  descends the 13 expression loci (si/dum/fac-dum conditio,
+  per-clausula initium/conditio/passus, commutatio discrimen, casus
+  valor, redde valor, sententia-expressionis, declarator-initiatus
+  initiator, enumerator valor, campus latitudo, declarator-aciei
+  mensura) with scopes LIVE; primaries: folium-identificator
+  resolution (symbolum genus → typus; unknown callee → implicit
+  extern-int REGISTERED per C89 6.3.2.2; unknown else → poison +
+  diagnosticum), literal suffix typing (10u/10L/1.5f...),
+  folium-chorda → char[N] over the fragment LIST via _fuga_decodere
+  (\x/\NNN unpark REQUIRED here; shared with folium-character
+  aestimator; L"..." = named-park diagnostic), parenthesis, unarium
+  (INCL. prefix ++/-- — no praecrementum genus), postcrementum.
+  Bar: probatio fixtures + corpus sweep "N expressionum typatae,
+  0 ruinae".
+- **B — UAC + operators + auspex.** Promotions + C99-rank ladder;
+  binarium (12 tiers, one genus); ternarius incl. pointer
+  composites (void*+T*, null-pointer-constant+T*); assignatio (11
+  ops, one genus; compound implied-op); virgula; pointer arithmetic
+  (T*±int → T*; T*−T* → long per systema ptrdiff_t). Bar: auspex
+  0 dissentientes + LP64 corner fixtures.
+- **C — postfix + unparks.** vocatio (functio/monstrator-ad-
+  functionem → reditus; prototyped arg conversions annotated;
+  variadic-extra + unprototyped → default argument promotions;
+  vocatio.argumenta is LISTA_MIXTA — skip comma TOKENS);
+  subscriptio; accessus (one genus, . vs -> per tok_operator;
+  member = bare TOKEN chorda-compared over membra; basis
+  qualificatores MERGE onto member type; incomplete tag = poison);
+  magnitudo-expressionis UNPARK (three-way recursion
+  aestimator↔forma↔typatio; operand UNdecayed); congeries context
+  typing per DECISUS 6. Bar: per-file expression-coverage %
+  printed by percursus.
+- **D — pipeline + publica + close.** Two-pass closure in percursus
+  (2); silva.h rows + hospes calls (standing rule); coverage
+  counters in the summary line; officina-spec-v2 §XII.8 stale-refs
+  refresh (binary-oracle claim, M0a/M0b conflation, 724→730);
+  M0b RELATIO + FULL phase-log audit (milestone boundary rule).
+  Bar: corpus "every expression node typed or carrying a named
+  diagnostic" + the coverage number; amalgamare VERIFICATUM.
+
+**PARKS NAMED (landing spots):** full brace elision (M1 demissio);
+wide strings L"" (on-pull; corpus none); lvalue annotation
+(on-pull; demissio derives); auspex double-vs-long-double blindness
+(recorded; Darwin-harmless); K&R expression typing rides the
+existing K&R park.
+
+**UNPARKS EXECUTED IN M0b:** magnitudo-expressionis (C), initiator
+typing per DECISUS 6 (C), \x/\NNN escapes (A).
+
+Pleasant fact recorded (simulatio-2): implicit extern-int
+SELF-HEALS the POSIX residue for typing — close(fd) → int, legal
+C89, no diagnostic; M0a residue category (b) costs M0b nothing.
+
+**NEXT (named): Chunk A.**
   NEVER implement from a compaction summary alone.
