@@ -33,3 +33,25 @@ Notes that don't belong in the header comment:
 - Probatio landmine that bit: hand-counted fixture lengths. Use
   strlen. (The trailing NUL parsed as OCTETUS_IGNOTUS -> ERROR node
   — which is silva behaving exactly as designed.)
+
+## 2026-07-08 — Chunk B ships (scopus + ambulatio integra)
+
+- **B bar AMENDED honestly**: INTENTIO said "diagnostics 0" over the
+  corpus; the sweep gives 818 in 524 files — ALL of class "typus
+  nominatus ignotus" (probe-verified on filum.c/piscina.c): plain
+  `size_t n;` declarations commit as DECLARATIO with an
+  oracle-unknown type name (only cast/sizeof positions fork into
+  ambigui — census). This is PRECISELY the systema gap; Chunk C's
+  bar inherits "semantica diagnostica -> ~0". Amendment named here
+  and in the phase-log.
+- Corpus sweep: 729 files, zero crashes, 234,427 symbola,
+  semantica cost invisible (~108s total vs ~112s baseline run).
+- Scope model: params scope (prof 1) + body corpus scope (prof 2)
+  nested — redeclaring a param in the body block is legal-shadowing
+  by this model (lint's call, not ours).
+- Same-scope redeclaration: same genus = lenient overwrite
+  (tentative definitions); different genus = diagnostic + overwrite.
+- Labels namespace: not implemented (nothing consumes it; lint owns
+  goto/label legality) — park named.
+- Block-scope struct tag redefinition now CORRECT via scoped tag
+  tables (Chunk A's flat-table limitation closed).

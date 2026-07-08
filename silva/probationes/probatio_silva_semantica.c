@@ -16,6 +16,18 @@
 #include <stdio.h>
 #include <string.h>
 
+interior chorda
+_ch (constans character* literis)
+{
+    chorda c;
+    unio { constans character* c; i8* m; } u;
+
+    u.c = literis;
+    c.datum = u.m;
+    c.mensura = (i32)strlen(literis);
+    redde c;
+}
+
 interior constans SilvaNodus*
 _nodus (constans SilvaParsura* parsura, i32 index)
 {
@@ -318,20 +330,17 @@ s32 principale (vacuum)
         CREDO_NON_NIHIL (parsura);
         CREDO_AEQUALIS_I32 (parsura->numerus_errorum, ZEPHYRUM);
 
-        /* enum: constantes 0, 5, 6 */
+        /* enum: constantes 0, 5, 6 - in spatio ORDINARIO (symbola) */
         CREDO_AEQUALIS_I32 ((i32)silva_c89_declarationem_tractare(
             sem, _nodus(parsura, 0)), ZEPHYRUM);
         {
-            chorda titulus;
-            unio { constans character* c; i8* m; } u;
-            vacuum* sedes = NIHIL;
+            SemanticaSymbolum* symbolum = silva_c89_symbolum_invenire(
+                sem, _ch("CAERULEUS"));
 
-            u.c = "CAERULEUS";
-            titulus.datum = u.m;
-            titulus.mensura = IX;
-            CREDO_VERUM (tabula_dispersa_invenire(sem->constantes,
-                titulus, &sedes));
-            CREDO_AEQUALIS_S64 (*(s64*)sedes, (s64)VI);
+            CREDO_NON_NIHIL (symbolum);
+            CREDO_AEQUALIS_S32 (symbolum->genus,
+                (s32)SYMBOLUM_CONSTANS);
+            CREDO_AEQUALIS_S64 (symbolum->valor, (s64)VI);
         }
 
         /* int a[CAERULEUS - 4] = acies[2] */
@@ -413,6 +422,130 @@ s32 principale (vacuum)
         t = _typus_declarationis(sem, _nodus(parsura, I), NIHIL);
         CREDO_AEQUALIS_PTR (t,
             silva_c89_typus_primitivum(sem, PRIMITIVUM_INTEGER));
+    }
+
+    /* ========================================================
+     * PROBARE (Chunk B): analysis integra - scopi, symbola,
+     * conditionalis, definitio functionis, umbratio
+     * ======================================================== */
+    {
+        SilvaParsura* parsura;
+        SilvaSemantica* sem;
+
+        imprimere("\n--- Probans analysin integram ---\n");
+
+        parsura = _parsare(piscina,
+            "typedef int T;\n"
+            "int g;\n"
+            "#if 1\n"
+            "int in_sumpto;\n"
+            "#else\n"
+            "int in_omisso;\n"
+            "#endif\n"
+            "static int quadratum(int x)\n"
+            "{\n"
+            "    int y;\n"
+            "    { char y; }\n"
+            "    return x;\n"
+            "}\n");
+        CREDO_NON_NIHIL (parsura);
+        CREDO_AEQUALIS_I32 (parsura->numerus_errorum, ZEPHYRUM);
+
+        sem = silva_c89_semantica_analysare(piscina, parsura);
+        CREDO_NON_NIHIL (sem);
+        CREDO_AEQUALIS_I32 (xar_numerus(sem->diagnostica), ZEPHYRUM);
+
+        /* symbola fili (post analysem scopus currens = summus) */
+        {
+            SemanticaSymbolum* symbolum;
+
+            symbolum = silva_c89_symbolum_invenire(sem, _ch("T"));
+            CREDO_NON_NIHIL (symbolum);
+            CREDO_AEQUALIS_S32 (symbolum->genus,
+                (s32)SYMBOLUM_TYPEDEF);
+            CREDO_AEQUALIS_PTR (symbolum->typus,
+                silva_c89_typus_primitivum(sem, PRIMITIVUM_INTEGER));
+
+            symbolum = silva_c89_symbolum_invenire(sem, _ch("g"));
+            CREDO_NON_NIHIL (symbolum);
+            CREDO_AEQUALIS_S32 (symbolum->genus,
+                (s32)SYMBOLUM_VARIABILE);
+            CREDO_AEQUALIS_I32 ((i32)symbolum->profunditas,
+                ZEPHYRUM);
+
+            /* ramus sumptus visitatur; omissus (cruda) NON */
+            CREDO_NON_NIHIL (silva_c89_symbolum_invenire(sem,
+                _ch("in_sumpto")));
+            CREDO_NIHIL (silva_c89_symbolum_invenire(sem,
+                _ch("in_omisso")));
+
+            symbolum = silva_c89_symbolum_invenire(sem,
+                _ch("quadratum"));
+            CREDO_NON_NIHIL (symbolum);
+            CREDO_AEQUALIS_S32 (symbolum->genus,
+                (s32)SYMBOLUM_FUNCTIO);
+            CREDO_VERUM ((symbolum->repositio & REPOSITIO_STATICA)
+                != ZEPHYRUM);
+            CREDO_AEQUALIS_S32 (symbolum->typus->genus,
+                (s32)TYPUS_C89_FUNCTIO);
+            CREDO_AEQUALIS_I32 ((i32)symbolum->typus
+                ->datum.functio.numerus_parametrorum, I);
+        }
+
+        /* index: parametrum x (prof I), y bis (int prof II,
+         * char prof III) - umbratio per scopos nidificatos */
+        {
+            i32 i;
+            i32 numerus_y = ZEPHYRUM;
+            b32 x_parametrum = FALSUM;
+            b32 y_char_profundius = FALSUM;
+
+            per (i = ZEPHYRUM; i < xar_numerus(sem->symbola); i++)
+            {
+                SemanticaSymbolum* symbolum =
+                    *(SemanticaSymbolum**)xar_obtinere(sem->symbola,
+                        i);
+
+                si (symbolum->titulus.mensura == I
+                    && symbolum->titulus.datum[ZEPHYRUM] == 'y')
+                {
+                    numerus_y++;
+                    si (symbolum->typus == silva_c89_typus_primitivum(
+                            sem, PRIMITIVUM_CHARACTER)
+                        && symbolum->profunditas >= III)
+                    {
+                        y_char_profundius = VERUM;
+                    }
+                }
+                si (symbolum->titulus.mensura == I
+                    && symbolum->titulus.datum[ZEPHYRUM] == 'x'
+                    && symbolum->genus == (s32)SYMBOLUM_PARAMETRUM)
+                {
+                    x_parametrum = VERUM;
+                }
+            }
+            CREDO_AEQUALIS_I32 ((i32)numerus_y, II);
+            CREDO_VERUM (x_parametrum);
+            CREDO_VERUM (y_char_profundius);
+        }
+    }
+
+    /* ========================================================
+     * PROBARE (Chunk B): conflictus generis eodem scopo
+     * ======================================================== */
+    {
+        SilvaParsura* parsura;
+        SilvaSemantica* sem;
+
+        imprimere("\n--- Probans conflictum generis ---\n");
+
+        parsura = _parsare(piscina,
+            "enum E2 { K };\n"
+            "int K;\n");
+        CREDO_NON_NIHIL (parsura);
+        sem = silva_c89_semantica_analysare(piscina, parsura);
+        CREDO_NON_NIHIL (sem);
+        CREDO_VERUM (xar_numerus(sem->diagnostica) > ZEPHYRUM);
     }
 
     credo_imprimere_compendium();

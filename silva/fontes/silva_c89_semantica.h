@@ -38,6 +38,7 @@
 #include "tabula_dispersa.h"
 #include "silva_token.h"
 #include "silva_nodus.h"
+#include "silva_parsare.h"
 
 /* ==================================================
  * Genera typorum
@@ -138,7 +139,46 @@ structura TypusC89 {
 };
 
 /* ==================================================
- * Semantica (contextus communis typus/forma/aestimator)
+ * Symbola + scopi (Chunk B): spatia nominum C89 - ordinaria
+ * (variabiles, functiones, typedefs, CONSTANTES enumerorum - unum
+ * spatium!), tags (structura/unio/enumeratio - unum spatium tag),
+ * membra (in TypusC89 ipso), tituli saltuum (lint, non hic)
+ * ================================================== */
+
+nomen enumeratio {
+    SYMBOLUM_VARIABILE = 0,
+    SYMBOLUM_FUNCTIO,
+    SYMBOLUM_TYPEDEF,
+    SYMBOLUM_CONSTANS,     /* enumeratoris (valor impletum) */
+    SYMBOLUM_PARAMETRUM
+} SemanticaSymbolumGenus;
+
+#define REPOSITIO_STATICA   1
+#define REPOSITIO_EXTERNA   2
+#define REPOSITIO_AUTOMATA  4
+#define REPOSITIO_REGISTRI  8
+
+nomen structura {
+    s32                  genus;        /* SemanticaSymbolumGenus */
+    chorda               titulus;      /* copia in piscinam */
+    TypusC89*            typus;
+    s64                  valor;        /* CONSTANS solum */
+    i32                  repositio;    /* REPOSITIO_* vexilla */
+    i32                  profunditas;  /* 0 = scopus fili */
+    constans SilvaNodus* declarans;
+    SilvaToken*          lexema;       /* nomen; NIHIL licet */
+} SemanticaSymbolum;
+
+nomen structura SemanticaScopus SemanticaScopus;
+structura SemanticaScopus {
+    SemanticaScopus* pater;       /* NIHIL in summo */
+    TabulaDispersa*  ordinaria;   /* titulus -> SemanticaSymbolum* */
+    TabulaDispersa*  tags;        /* titulus -> TypusC89* */
+    i32              profunditas;
+};
+
+/* ==================================================
+ * Semantica (contextus communis typus/forma/aestimator/scopus)
  * ================================================== */
 
 nomen structura {
@@ -157,10 +197,14 @@ nomen structura {
      * primum, optima post; percursus mensurabit) */
     Xar* derivati;              /* TypusC89* */
 
-    /* tabulae nominum PLANAE (Chunk A; scopus B substituet) */
-    TabulaDispersa* nomina_typorum;   /* typedef titulus -> TypusC89* */
-    TabulaDispersa* tags;             /* tag titulus -> TypusC89* */
-    TabulaDispersa* constantes;       /* enum const titulus -> s64* */
+    /* scopi (Chunk B - regula sanationis: registra-ante-usum in
+     * AMBULATIONE UNA ordine fontis) */
+    SemanticaScopus* scopus_summus;    /* fili (profunditas 0) */
+    SemanticaScopus* scopus_currens;
+
+    /* index: OMNIA symbola creata (cum profunditate) - fons
+     * indicis proiecti (Chunk D superficiem dat) */
+    Xar* symbola;               /* SemanticaSymbolum* */
 
     Xar* diagnostica;           /* SemanticaDiagnosticum (valore) */
 } SilvaSemantica;
@@ -218,10 +262,30 @@ TypusC89* silva_c89_typus_ex_specie (SilvaSemantica* sem,
 i32 silva_c89_declarationem_tractare (SilvaSemantica* sem,
     constans SilvaNodus* declaratio);
 
-/* Registratio plana (Chunk A) */
+/* Registratio typedef in scopum CURRENTEM (B: scopus-conscia) */
 b32 silva_c89_typedef_registrare (SilvaSemantica* sem,
     chorda titulus, TypusC89* typus);
 TypusC89* silva_c89_typedef_invenire (SilvaSemantica* sem,
+    chorda titulus);
+
+/* ==================================================
+ * Ambulatio integra (Chunk B): analysis totius fili
+ * ================================================== */
+
+/* Ambulatio ordine fontis super radicem commissam: declarationes +
+ * definitiones functionum (parametra + corpora, scopi nidificati),
+ * conditionalis per ramos SUMPTOS (omissi = cruda, praetermissi -
+ * DECISUS 6), AMBIGUUS per canonicam (cave: canonica furcarum
+ * decl/expr est lectio EXPRESSIONIS), ERROR praetermissus.
+ * declarationes-kr = parca nominata (diagnosticum). Symbola omnia
+ * in sem->symbola accumulantur (index). Numquam ruit - venenum +
+ * diagnostica (regula tree-sitter). */
+SilvaSemantica* silva_c89_semantica_analysare (Piscina* piscina,
+    constans SilvaParsura* parsura);
+
+/* Quaestio symboli a scopo currenti foras (post analysem = scopus
+ * fili). NIHIL si absens. */
+SemanticaSymbolum* silva_c89_symbolum_invenire (SilvaSemantica* sem,
     chorda titulus);
 
 /* ==================================================

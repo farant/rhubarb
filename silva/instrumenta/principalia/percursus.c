@@ -26,6 +26,7 @@
 #include "silva_scribere.h"
 #include "silva_c89_oraculum.h"
 #include "silva_tabulae_c89.h"
+#include "silva_c89_semantica.h"
 #include <stdio.h>
 #include <string.h>
 #include <time.h>
@@ -52,6 +53,12 @@ hic_manens i32 capita_collisiones = ZEPHYRUM;
 hic_manens i32 fines_tactae_plagulae = ZEPHYRUM;
 hic_manens i32 summa_ambiguorum = ZEPHYRUM;
 hic_manens i32 plagulae_cum_ambiguis = ZEPHYRUM;
+
+/* -semantica (M0a Chunk B; DEFALTUM DEMPTUM - basis pristina) */
+hic_manens b32 cum_semantica = FALSUM;
+hic_manens i32 summa_symbolorum = ZEPHYRUM;
+hic_manens i32 summa_diagnosticorum = ZEPHYRUM;
+hic_manens i32 plagulae_cum_diagnosticis = ZEPHYRUM;
 
 hic_manens b32 _praetermittendum (constans character* titulus);
 
@@ -418,6 +425,29 @@ _plagulam_percurrere (constans SilvaContextus* ctx,
                 imprimere("[ambigui %d] %s\n", (int)amb, via);
             }
         }
+        si (cum_semantica)
+        {
+            SilvaSemantica* sem = silva_c89_semantica_analysare(
+                piscina, parsura);
+
+            si (sem != NIHIL)
+            {
+                i32 diag = xar_numerus(sem->diagnostica);
+
+                summa_symbolorum += (i32)xar_numerus(sem->symbola);
+                si (diag > ZEPHYRUM)
+                {
+                    summa_diagnosticorum += diag;
+                    plagulae_cum_diagnosticis++;
+                    imprimere("[semantica diagnostica %d] %s\n",
+                        (int)diag, via);
+                }
+            }
+            alioquin
+            {
+                imprimere("[SEMANTICA FRACTA] %s\n", via);
+            }
+        }
 
         scriptura = silva_scribere_fontem(piscina, parsura,
             &SILVA_C89_REGISTRUM, parsura->fons_princeps);
@@ -537,6 +567,10 @@ s32 principale (integer argc, character** argv)
         {
             mensura_maxima = ZEPHYRUM;  /* sine tecto - cave! */
         }
+        alioquin si (strcmp(argv[k], "-semantica") == ZEPHYRUM)
+        {
+            cum_semantica = VERUM;
+        }
         alioquin
         {
             radix = argv[k];
@@ -610,6 +644,13 @@ s32 principale (integer argc, character** argv)
         (int)summa_errorum, (int)plagulae_cum_erroribus);
     imprimere("ambigui:   %d retenti in %d plagulis\n",
         (int)summa_ambiguorum, (int)plagulae_cum_ambiguis);
+    si (cum_semantica)
+    {
+        imprimere("semantica: %d symbola; %d diagnostica in %d"
+            " plagulis\n",
+            (int)summa_symbolorum, (int)summa_diagnosticorum,
+            (int)plagulae_cum_diagnosticis);
+    }
     si (fines_tactae_plagulae > ZEPHYRUM)
     {
         imprimere("fines:     %d plagulae limen tactae\n",

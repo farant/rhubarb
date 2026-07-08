@@ -5941,3 +5941,48 @@ redefinition (Chunk B closes). Gates: amalgamare VERIFICATUM 27/27
 (scope stack, four namespaces, source-order register-before-use,
 conditionalis recursion, percursus -semantica flag, corpus sweep
 bar: every file analyzed, diagnostics 0).
+
+### M0a CHUNK B — RELATIO (2026-07-08): scopus + ambulatio integra SHIPPED
+
+**Suite 29/29 (probatio_silva_semantica 112 asserts, first-compile
+green). THE SWEEP: 729 files, ZERO crashes, 234,427 symbola built,
+semantica cost invisible (~108s with vs ~112s baseline without —
+rides free on the parse).**
+
+- Scopus stack: ordinaria (vars/functiones/typedefs/CONSTANTES
+  enumerorum — one namespace) + tags per scope, profunditas
+  tracked; flat Chunk-A tables replaced (typedef/tag/constant
+  lookups now scope-walks; A's flat-tag-redefinition limitation
+  CLOSED). Symbols carry genus/typus/valor/repositio/profunditas/
+  declarans/lexema and accumulate in sem->symbola (the index seed).
+- The walk: source-order register-before-use single pass;
+  DEFINITIO_FUNCTIONIS (params via _functionis_intima — innermost
+  functionis layer; param adjustments; params scope + body scope
+  nested); statement recursion (si/dum/fac-dum/per/commutatio/
+  casus/ordinarius/titulatum/corpus); CONDITIONALIS descends
+  SUMPTUS contentum, skips OMISSUS (pinned: in_omisso absent);
+  AMBIGUUS via canonica; ERROR skipped. K&R = named-park
+  diagnostic. Same-scope genus-conflict diagnostic (pinned).
+- Shadowing pinned: y at prof 2 (int) and prof 3 (char);
+  x as PARAMETRUM prof 1; static repositio on quadratum.
+- percursus -semantica flag (DEFAULT OFF — baseline pristine;
+  flags-off sweep numbers unchanged): per-file [semantica
+  diagnostica N] + summary line.
+
+**BAR AMENDMENT (named):** INTENTIO's "diagnostics 0" was
+pre-systema optimism. Sweep: 818 diagnostica in 524 plagulis —
+probe-verified ALL of class "typus nominatus ignotus" (plain
+`size_t n;` declarations commit as declarations; only cast/sizeof
+positions fork — census). This is THE systema gap by construction;
+Chunk C's bar inherits "semantica diagnostica → ~0" alongside the
+ambigui collapse. B's bar as met: every file analyzed, zero
+crashes, diagnostics CLASSIFIED and owned by a named next chunk.
+
+Gates: amalgamare VERIFICATUM 27/27. Worklog: params/body scope
+model, lenient same-genus redecl, labels park.
+
+**NEXT (named): Chunk C — systema + oraculum trivalens + closure**
+(systema_c89.h authorship, oracle preload + parse-once-harvest,
+trivalent upgrade + non-type resolver rule, recanonicare closure;
+bar: ambigui 15,261 → named-park residue AND semantica diagnostica
+→ ~0).
