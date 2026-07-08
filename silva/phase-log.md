@@ -5673,3 +5673,126 @@ for compilare/exsequi/congruit + the result struct (standing
 rule); then QB (attributa [locus op "valor"], capturae $nomen
 with all-hops binding, fratres +/~) → QC (pseudo-classes) → QD
 (the translated v1 bar).
+
+## OFFICINA PRE-M1 + QUAESTIO CLAUSURA QA — INTENTIO (2026-07-08)
+
+Context: officina specs sealed (project-specs/officina-brainstorm.md +
+officina-spec-v2.md — the compiler/VM/debugger toolchain, silva-fed;
+medulla/machinula/vindex). The two named pre-M1 tasks land HERE
+(silva-side). Folded in: the QA-closing act (quaestio manifest +
+silva.h + hospes — the named next act) because it touches the same
+three files; leaving its standing-rule debt open while editing them
+would be false economy.
+
+Scope, three chunks:
+
+1. QUAESTIO CLAUSURA (the QA-closing act): silva_quaestio.h refactored
+   to named-tag SilvaQuaestio (opaque in silva.h — SilvaOraculum
+   precedent; SilvaQuaestioResultatum stays transparent, silva.h owns
+   it); amalgamator manifest += silva_quaestio.{h,c}; CADENDA_TYPEDEF
+   += SilvaQuaestio, SilvaQuaestioResultatum; silva.h quaestio section
+   (compilare/exsequi/congruit); hospes REAL calls with content asserts
+   (parse fixture -> compilare -> exsequi count -> congruit yes/no ->
+   unknown-tag fracture with causa).
+
+2. SUPERFICIES PUBLICA GENERATA (officina pre-M1 task 1, spec-v2 §II
+   decision 1 DECISUS): coquere emits the c89 public region — genus
+   enum + all accessor prototypes in VANILLA spelling (const, enum) —
+   SPLICED between markers into amalgama/silva.h and into hospes.c
+   (typed fn-ptr table). Internal generated enum gains a shared guard
+   (SILVA_C89_GENERA_CUSTOS) so in the amalgam the internal copy
+   no-ops after silva.h's copy; duplicate prototypes are legal C89 and
+   expand identically. TWO PROCESS REFINEMENTS RECORDED: (a) the
+   silva.h "MANU SCRIPTUM" pin gains ONE generated marked region — the
+   pin's PURPOSE (vanilla C89, zero latina leakage, hospes-enforced)
+   is unchanged, and drift becomes structurally impossible because the
+   same generator writes both copies (hand-maintained duplication of
+   58 enum constants would be silent-catastrophe drift: stale silva.h
+   copy wins in the amalgam via the guard); (b) the hospes standing
+   rule, for the GENERATED accessor family only, is discharged by a
+   typed function-pointer table (assignment enforces exact prototype
+   match at compile time = the decl/def-mismatch class the rule
+   exists for; reference forces link resolution) — hand-written
+   functions keep real calls with content assertions. Generator run:
+   generare.sh passes the two splice paths for the c89 grammar only.
+
+3. EXPANDER PRAEDEFINITA (officina pre-M1 task 2). Audit result:
+   # stringificatio and ## pasta ARE implemented (Chunk C,
+   _stringificare); __FILE__/__LINE__ are ABSENT — they pass through
+   as plain identifiers. Parse-fine (that is why the corpus is green),
+   execution-LIE (credo's CREDO_* macros bake __FILE__/__LINE__ into
+   every assertion; officina's corpus bar would report wrong
+   positions). Implement as predefined object-macros at lookup:
+   __FILE__ -> STRING_LIT of the ROOT token's fons via (silva_token
+   _radix = invocation site), __LINE__ -> INTEGER of root token's
+   linea (correct C89 invocation-line semantics via provenance — the
+   origo chain pays again), __STDC__ -> 1. __DATE__/__TIME__ DEFERRED
+   BY NAME: determinism (officina time-travel/replay wants no wall
+   clock inside expansion); land when pulled, likely as fixed-value
+   contextus option. Byte-exact emission unaffected (scriptura emits
+   from fons text); expanded strata become TRUTHFUL.
+
+Exit: suite green; amalgamare VERIFICATUM; percursus 724/724 zero
+errors preserved; generare.sh idempotent (regenerated tables byte-
+identical modulo the new guard + splice regions).
+
+### OFFICINA PRE-M1 + QUAESTIO CLAUSURA — RELATIO (2026-07-08): ALL SHIPPED
+
+**Chunk 1 — QUAESTIO CLAUSURA QA.** silva_quaestio.h: SilvaQuaestio
+refactored to named-tag (SilvaOraculum pattern); manifest +=
+silva_quaestio.{h,c}; CADENDA_TYPEDEF += SilvaQuaestio,
+SilvaQuaestioResultatum; silva.h quaestio section (opaque handle +
+transparent result + three prototypes, vanilla); hospes: real calls
+with content asserts (parse fixture, definitio-functionis count,
+corpus>declaratio count, congruit yes/no, unknown-tag fractura with
+causa). Suite 38/38 unchanged; the QA standing-rule debt is CLOSED.
+
+**Chunk 2 — SUPERFICIES PUBLICA GENERATA.** coquere: internal enum
+now guarded (%PRAEFIXUM%_GENERA_CUSTOS, uniform all grammars);
+NEW silva_gen_splicere_publica (piscina, grammatica, praefixum,
+via_capitis, via_hospitis) - emits the c89 public region VANILLA
+(guarded enum + 176 accessor prototypes with const spelling) spliced
+between ">>>"/"<<<" markers in amalgama/silva.h, and the
+ACCESSORES[176] table into hospes.c; markers absent = loud FALSUM.
+generator.c: optional argv 4/5; generare.sh passes them for c89 only.
+IDEMPOTENS verified (second run byte-identical). NOTE: INTENTIO
+refinement (b) - typed-table-instead-of-calls - was NOT needed:
+generated accessors are genus-checked and NULL-safe (NULL ->
+SILVA_VALOR_NIHIL), so hospes CALLS all 176 with NULL and asserts the
+nihil valor - the standing rule holds LITERALLY. Refinement (a)
+stands as recorded: silva.h carries one generated marked region;
+the MANU SCRIPTUM pin's purpose (vanilla, zero latina) is untouched
+and hospes still enforces it.
+
+**Chunk 3 — EXPANDER PRAEDEFINITA.** silva_token.{h,c}: NEW
+constructor silva_token_ex_praedefinito (genus-parametrized synthetic
+literal; ORIGO_CHORDA with primus = invocation token - radix/
+profunditas walk it). silva_expandere.c: _praedefinitum_substituere
+in _generatio_interna after user-table miss (tabula usoris VINCIT);
+all three names are exactly VIII chars starting "__" - cheap reject.
+__LINE__ = radix->linea (invocation-line semantics inside macro
+bodies via the origo chain - provenance pays again), __FILE__ =
+silva_fons_via(radix->fons_index) quoted+escaped, __STDC__ = 1.
+Conditio (#if) covered FREE: silva_conditio.c:734 calls
+silva_expansio_expandere. __DATE__/__TIME__ deferred by name
+(determinism; INTENTIO). KNOWN LIMIT recorded: defined(__FILE__) in
+#if still evaluates false (defined inspects the user table only);
+corpus audit found zero uses; landing spot = officina M0 if ever
+pulled. Tests: +16 asserts in probatio_silva_generatio (54 total,
+first-run green): direct lines, macro-body invocation line, __FILE__
+literal, __STDC__, user-redefinition-wins, and the ADFIRMA
+credo-shape (#x + __FILE__ + __LINE__ together - the officina corpus
+bar's exact pattern).
+
+**Gates.** Suite 28/28; amalgamare VERIFICATUM (hospes 27/27,
+standalone plena severitas, nm-intersectio 0); percursus: 725
+plagulae (corpus +1 since census), ERRORES 0 (wall holds), 724/725
+octetim - the one is ./lib/arbor2_glr_tabula.c, the PRE-EXISTING
+named pasta deferral (verified by name); ambigui 15,243. Every
+credo-using file now truly expands __FILE__/__LINE__ and remains
+byte-exact (emission from stratum 0 as designed).
+
+**Officina pre-M1: BOTH named tasks DONE.** The compiler's next act
+by name: M0 semantica INTENTIO (silva-side typus+index - scoped
+symbol tables, types, layout, clang sizeof/offsetof oracle;
+officina-spec-v2.md §VI is the grounded plan).

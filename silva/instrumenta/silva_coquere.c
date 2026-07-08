@@ -1,6 +1,7 @@
 /* silva_coquere.c - Coctio tabularum in fontem C */
 
 #include "silva_coquere.h"
+#include "piscina.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -332,9 +333,13 @@ silva_gen_coquere (
             praefixum, (int)tabula->numerus_praelatarum);
     }
 
-    /* Enumeratio generum */
+    /* Enumeratio generum (custos communis: superficies publica
+     * generata - silva.h - eadem genera prius definire potest;
+     * tunc copia haec in amalgamato cadit) */
     fprintf(pl, "/* Genera nodorum (registrum unum: grammatica + extra) */\n"
-        "enumeratio {\n");
+        "#ifndef %s_GENERA_CUSTOS\n"
+        "#define %s_GENERA_CUSTOS\n"
+        "enumeratio {\n", praefixum, praefixum);
     per (i = ZEPHYRUM; i < xar_numerus(genera); i++)
     {
         SilvaGenGenusDef* def = (SilvaGenGenusDef*)xar_obtinere(genera, i);
@@ -344,7 +349,7 @@ silva_gen_coquere (
         fprintf(pl, " = %d%s\n", (int)i,
             (i < xar_numerus(genera) - I) ? "," : "");
     }
-    fprintf(pl, "};\n\n");
+    fprintf(pl, "};\n#endif /* %s_GENERA_CUSTOS */\n\n", praefixum);
 
     /* Prototypa manu (effugia) */
     per (i = ZEPHYRUM; i < num_productionum; i++)
@@ -1048,4 +1053,263 @@ silva_gen_coquere (
 
     fclose(pl);
     redde VERUM;
+}
+
+/* ==================================================
+ * Superficies publica generata (officina pre-M1, 2026-07-08):
+ * enum generum + prototypa accessorum VANILLA (enum/const) inter
+ * signa ">>>"/"<<<" in plagulas manu scriptas splicantur
+ * (amalgama/silva.h + hospes.c). Idem generator AMBAS copias
+ * scribit - deriva structuraliter impossibilis (copia manu
+ * retenta staret et per custodem GENERA_CUSTOS in amalgamato
+ * vinceret - catastropha tacita).
+ * ================================================== */
+
+interior character*
+_plagulam_totam_legere (
+    Piscina*            piscina,
+    constans character* via,
+    memoriae_index*     mensura_out)
+{
+    FILE* pl;
+    character* buffer;
+    signatus longus mensura;
+
+    pl = fopen(via, "rb");
+    si (pl == NIHIL)
+    {
+        redde NIHIL;
+    }
+    si (fseek(pl, 0L, SEEK_END) != ZEPHYRUM)
+    {
+        fclose(pl);
+        redde NIHIL;
+    }
+    mensura = ftell(pl);
+    si (mensura < 0L)
+    {
+        fclose(pl);
+        redde NIHIL;
+    }
+    rewind(pl);
+    buffer = (character*)piscina_allocare(piscina,
+        (memoriae_index)(mensura + 1L));
+    si (buffer == NIHIL)
+    {
+        fclose(pl);
+        redde NIHIL;
+    }
+    si (mensura > 0L
+        && fread(buffer, I, (memoriae_index)mensura, pl)
+            != (memoriae_index)mensura)
+    {
+        fclose(pl);
+        redde NIHIL;
+    }
+    fclose(pl);
+    buffer[mensura] = '\0';
+    *mensura_out = (memoriae_index)mensura;
+    redde buffer;
+}
+
+/* Enum generum + prototypa accessorum, VANILLA (pro silva.h) */
+interior vacuum
+_publica_emittere (
+    FILE*               pl,
+    Xar*                genera,
+    constans character* praefixum)
+{
+    i32 i;
+
+    fprintf(pl, "/* Genera nodorum (GENERATA - constantes"
+        " compilationis; custos\n"
+        " * communis: copia interna in amalgamato cadit) */\n"
+        "#ifndef %s_GENERA_CUSTOS\n"
+        "#define %s_GENERA_CUSTOS\n"
+        "enum {\n", praefixum, praefixum);
+    per (i = ZEPHYRUM; i < xar_numerus(genera); i++)
+    {
+        SilvaGenGenusDef* def =
+            (SilvaGenGenusDef*)xar_obtinere(genera, i);
+
+        fprintf(pl, "    %s_GENUS_", praefixum);
+        _maiusculas(pl, def->titulus);
+        fprintf(pl, " = %d%s\n", (int)i,
+            (i < xar_numerus(genera) - I) ? "," : "");
+    }
+    fprintf(pl, "};\n#endif /* %s_GENERA_CUSTOS */\n\n", praefixum);
+
+    fprintf(pl, "/* Accessores locorum (GENERATI - unus per locum;"
+        " nodus NULL aut\n"
+        " * generis alieni -> valor generis SILVA_VALOR_NIHIL) */\n");
+    per (i = ZEPHYRUM; i < xar_numerus(genera); i++)
+    {
+        SilvaGenGenusDef* def =
+            (SilvaGenGenusDef*)xar_obtinere(genera, i);
+        i32 k;
+
+        per (k = ZEPHYRUM; k < xar_numerus(def->loci); k++)
+        {
+            SilvaGenLocusDef* locus =
+                (SilvaGenLocusDef*)xar_obtinere(def->loci, k);
+
+            fprintf(pl, "SilvaValor ");
+            _minusculas_literis(pl, praefixum);
+            fprintf(pl, "_");
+            _serpentes(pl, def->titulus);
+            fprintf(pl, "_");
+            _serpentes(pl, locus->titulus);
+            fprintf(pl, "(const SilvaNodus* nodus);\n");
+        }
+    }
+}
+
+/* Tabula hospitis: omnes accessores VOCANTUR (regula hospitis) */
+interior vacuum
+_hospitem_emittere (
+    FILE*               pl,
+    Xar*                genera,
+    constans character* praefixum)
+{
+    i32 i;
+    i32 summa_locorum = ZEPHYRUM;
+    i32 n = ZEPHYRUM;
+
+    per (i = ZEPHYRUM; i < xar_numerus(genera); i++)
+    {
+        SilvaGenGenusDef* def =
+            (SilvaGenGenusDef*)xar_obtinere(genera, i);
+
+        summa_locorum += xar_numerus(def->loci);
+    }
+    fprintf(pl, "        static const SilvaHospitisAccessor"
+        " ACCESSORES[%d] = {\n", (int)summa_locorum);
+    per (i = ZEPHYRUM; i < xar_numerus(genera); i++)
+    {
+        SilvaGenGenusDef* def =
+            (SilvaGenGenusDef*)xar_obtinere(genera, i);
+        i32 k;
+
+        per (k = ZEPHYRUM; k < xar_numerus(def->loci); k++)
+        {
+            SilvaGenLocusDef* locus =
+                (SilvaGenLocusDef*)xar_obtinere(def->loci, k);
+
+            fprintf(pl, "            ");
+            _minusculas_literis(pl, praefixum);
+            fprintf(pl, "_");
+            _serpentes(pl, def->titulus);
+            fprintf(pl, "_");
+            _serpentes(pl, locus->titulus);
+            n++;
+            fprintf(pl, "%s\n",
+                (n < summa_locorum) ? "," : "");
+        }
+    }
+    fprintf(pl, "        };\n");
+}
+
+interior b32
+_splicare (
+    Piscina*            piscina,
+    Xar*                genera,
+    constans character* praefixum,
+    constans character* via,
+    b32                 est_hospes)
+{
+    character signum_initii[160];
+    character signum_finis[160];
+    character* buffer;
+    memoriae_index mensura = ZEPHYRUM;
+    character* p_initium;
+    character* p_finis;
+    memoriae_index praefixi_finis;
+    memoriae_index suffixi_initium;
+    FILE* pl;
+
+    sprintf(signum_initii, "/* >>> GENERATUM (silva_coquere):"
+        " superficies publica %s >>> */", praefixum);
+    sprintf(signum_finis, "/* <<< GENERATUM (silva_coquere):"
+        " finis superficiei publicae %s <<< */", praefixum);
+
+    buffer = _plagulam_totam_legere(piscina, via, &mensura);
+    si (buffer == NIHIL)
+    {
+        fprintf(stderr, "coquere: plagula non lecta: %s\n", via);
+        redde FALSUM;
+    }
+    p_initium = strstr(buffer, signum_initii);
+    p_finis = (p_initium != NIHIL)
+        ? strstr(p_initium + I, signum_finis) : NIHIL;
+    si (p_initium == NIHIL || p_finis == NIHIL)
+    {
+        fprintf(stderr, "coquere: signa splicis desunt: %s\n", via);
+        redde FALSUM;
+    }
+    /* praefixum finit post lineam signi initii */
+    {
+        character* nl = strchr(p_initium, '\n');
+
+        si (nl == NIHIL)
+        {
+            fprintf(stderr, "coquere: signum sine linea: %s\n", via);
+            redde FALSUM;
+        }
+        praefixi_finis = (memoriae_index)(nl - buffer) + I;
+    }
+    /* suffixum incipit ab initio lineae signi finis
+     * (indentatio signi in suffixo manet) */
+    {
+        character* l = p_finis;
+
+        dum (l > buffer && *(l - I) != '\n')
+        {
+            l--;
+        }
+        suffixi_initium = (memoriae_index)(l - buffer);
+    }
+    pl = fopen(via, "wb");
+    si (pl == NIHIL)
+    {
+        fprintf(stderr, "coquere: plagula non scripta: %s\n", via);
+        redde FALSUM;
+    }
+    fwrite(buffer, I, praefixi_finis, pl);
+    si (est_hospes)
+    {
+        _hospitem_emittere(pl, genera, praefixum);
+    }
+    alioquin
+    {
+        _publica_emittere(pl, genera, praefixum);
+    }
+    fwrite(buffer + suffixi_initium, I, mensura - suffixi_initium, pl);
+    fclose(pl);
+    redde VERUM;
+}
+
+b32
+silva_gen_splicere_publica (
+    Piscina*            piscina,
+    SilvaGenGrammatica* grammatica,
+    constans character* praefixum,
+    constans character* via_capitis,
+    constans character* via_hospitis)
+{
+    Xar* genera;
+
+    si (piscina == NIHIL || grammatica == NIHIL)
+    {
+        redde FALSUM;
+    }
+    genera = silva_gen_registrum_computare(grammatica);
+    si (genera == NIHIL)
+    {
+        redde FALSUM;
+    }
+    si (!_splicare(piscina, genera, praefixum, via_capitis, FALSUM))
+    {
+        redde FALSUM;
+    }
+    redde _splicare(piscina, genera, praefixum, via_hospitis, VERUM);
 }

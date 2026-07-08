@@ -75,5 +75,6 @@ else
     "$BUILD_DIR/generator" grammatica/sceletum_imparilis.stml \
         SILVA_IMPARILIS fontes/silva_tabulae_imparilis || exit 1
     "$BUILD_DIR/generator" grammatica/c89.stml \
-        SILVA_C89 fontes/silva_tabulae_c89 || exit 1
+        SILVA_C89 fontes/silva_tabulae_c89 \
+        amalgama/silva.h instrumenta/principalia/hospes.c || exit 1
 fi

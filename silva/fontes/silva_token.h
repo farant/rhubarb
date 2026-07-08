@@ -293,6 +293,18 @@ silva_token_ex_stringificatione (
     SilvaToken* primus,
     chorda*     nomen_macro);
 
+/* Lexema praedefinitum (__FILE__/__LINE__/__STDC__) - littera
+ * synthetica generis dati; origo CHORDA (primus = lexema
+ * invocationis: radix/profunditas per eam ambulant, ergo linea
+ * radicis = linea invocationis - semantica C89) */
+SilvaToken*
+silva_token_ex_praedefinito (
+    Piscina*         piscina,
+    SilvaLexemaGenus genus,
+    chorda           valor,
+    SilvaToken*      invocatio,
+    chorda*          nomen_macro);
+
 /* Lexema ex definitione API iniecta (fons syntheticus) */
 SilvaToken*
 silva_token_ex_api (

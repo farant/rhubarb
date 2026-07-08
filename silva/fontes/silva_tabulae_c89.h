@@ -16,6 +16,8 @@ externus constans SilvaRegistrumCoctum SILVA_C89_REGISTRUM;
 externus constans SilvaTabPraelata SILVA_C89_PRAELATAE[1];
 
 /* Genera nodorum (registrum unum: grammatica + extra) */
+#ifndef SILVA_C89_GENERA_CUSTOS
+#define SILVA_C89_GENERA_CUSTOS
 enumeratio {
     SILVA_C89_GENUS_DEFINITIO_FUNCTIONIS = 0,
     SILVA_C89_GENUS_SENTENTIA_VACUA = 1,
@@ -76,6 +78,7 @@ enumeratio {
     SILVA_C89_GENUS_RAMUS_SUMPTUS = 56,
     SILVA_C89_GENUS_RAMUS_OMISSUS = 57
 };
+#endif /* SILVA_C89_GENERA_CUSTOS */
 
 SilvaValor silva_c89_definitio_functionis_specificatores (constans SilvaNodus* nodus);
 SilvaValor silva_c89_definitio_functionis_declarator (constans SilvaNodus* nodus);

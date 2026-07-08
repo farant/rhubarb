@@ -70,10 +70,11 @@ s32 principale (integer argc, character** argv)
     SilvaGenCollectio* collectio;
     SilvaGenTabula* tabula;
 
-    si (argc != IV)
+    si (argc != IV && argc != VI)
     {
         fprintf(stderr,
-            "usus: generator <grammatica.stml> <PRAEFIXUM> <basis_exitus>\n");
+            "usus: generator <grammatica.stml> <PRAEFIXUM> <basis_exitus>"
+            " [<caput_publicum> <hospes>]\n");
         redde I;
     }
 
@@ -123,6 +124,16 @@ s32 principale (integer argc, character** argv)
     si (!silva_gen_coquere(grammatica, tabula, argv[II], argv[III], argv[I]))
     {
         fprintf(stderr, "generator: coctio defecit\n");
+        redde I;
+    }
+
+    /* Superficies publica (officina pre-M1): splicis in silva.h +
+     * hospes.c - solum si viae datae (grammatica c89 sola) */
+    si (argc == VI
+        && !silva_gen_splicere_publica(piscina, grammatica, argv[II],
+               argv[IV], argv[V]))
+    {
+        fprintf(stderr, "generator: splicis publicae defecit\n");
         redde I;
     }
 

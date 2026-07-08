@@ -68,14 +68,18 @@ nomen structura {
     Xar*                    partes;     /* SilvaQuaestioPars (valore) */
 } SilvaQuaestioGradus;
 
-nomen structura {
+/* Titulo signata (non anonyma): silva.h eam OPACAM praenuntiat
+ * (exemplar SilvaOraculum) - amalgamator lineam nomen-unitatis
+ * demittit (CADENDA), definitio interna manet */
+nomen structura SilvaQuaestio SilvaQuaestio;
+structura SilvaQuaestio {
     constans SilvaRegistrumCoctum* tabularium;
     Xar*                           catenae; /* Xar* graduum (unio) */
     /* forma ambigui (exemplar commissionis - descensus canonicus) */
     s32 genus_ambigui;
     i32 locus_interpretationum;
     i32 locus_canonicae;
-} SilvaQuaestio;
+};
 
 /* ==================================================
  * Fructus

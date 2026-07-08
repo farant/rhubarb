@@ -706,6 +706,255 @@ extern const SilvaRegistrumCoctum SILVA_C89_REGISTRUM;
  * interrogabilis - codex est basis datorum) */
 extern const SilvaTabPraelata     SILVA_C89_PRAELATAE[];
 
+/* Regio GENERATA (silva/generare.sh eam scribit - inter signa NE
+ * MANU EDITES; cetera capitis manu scripta manent) */
+/* >>> GENERATUM (silva_coquere): superficies publica SILVA_C89 >>> */
+/* Genera nodorum (GENERATA - constantes compilationis; custos
+ * communis: copia interna in amalgamato cadit) */
+#ifndef SILVA_C89_GENERA_CUSTOS
+#define SILVA_C89_GENERA_CUSTOS
+enum {
+    SILVA_C89_GENUS_DEFINITIO_FUNCTIONIS = 0,
+    SILVA_C89_GENUS_SENTENTIA_VACUA = 1,
+    SILVA_C89_GENUS_CORPUS = 2,
+    SILVA_C89_GENUS_SI = 3,
+    SILVA_C89_GENUS_DUM = 4,
+    SILVA_C89_GENUS_FAC_DUM = 5,
+    SILVA_C89_GENUS_PER = 6,
+    SILVA_C89_GENUS_PER_CLAUSULA = 7,
+    SILVA_C89_GENUS_COMMUTATIO = 8,
+    SILVA_C89_GENUS_CASUS = 9,
+    SILVA_C89_GENUS_ORDINARIUS = 10,
+    SILVA_C89_GENUS_TITULATUM = 11,
+    SILVA_C89_GENUS_SALTA = 12,
+    SILVA_C89_GENUS_FRANGE = 13,
+    SILVA_C89_GENUS_PERGE = 14,
+    SILVA_C89_GENUS_REDDE = 15,
+    SILVA_C89_GENUS_DECLARATIO = 16,
+    SILVA_C89_GENUS_TYPUS_NOMINATUS = 17,
+    SILVA_C89_GENUS_TYPUS_PRIMITIVUS = 18,
+    SILVA_C89_GENUS_DECLARATOR_INITIATUS = 19,
+    SILVA_C89_GENUS_CONGERIES = 20,
+    SILVA_C89_GENUS_STRUCTURA = 21,
+    SILVA_C89_GENUS_UNIO = 22,
+    SILVA_C89_GENUS_MEMBRUM = 23,
+    SILVA_C89_GENUS_CAMPUS = 24,
+    SILVA_C89_GENUS_ENUMERATIO = 25,
+    SILVA_C89_GENUS_ENUMERATOR = 26,
+    SILVA_C89_GENUS_DECLARATOR_MONSTRATOR = 27,
+    SILVA_C89_GENUS_DECLARATOR_TITULUS = 28,
+    SILVA_C89_GENUS_PARENTHESIS = 29,
+    SILVA_C89_GENUS_DECLARATOR_ACIEI = 30,
+    SILVA_C89_GENUS_DECLARATOR_FUNCTIONIS = 31,
+    SILVA_C89_GENUS_PARAMETRUM = 32,
+    SILVA_C89_GENUS_SENTENTIA_EXPRESSIONIS = 33,
+    SILVA_C89_GENUS_VIRGULA = 34,
+    SILVA_C89_GENUS_ASSIGNATIO = 35,
+    SILVA_C89_GENUS_TERNARIUS = 36,
+    SILVA_C89_GENUS_BINARIUM = 37,
+    SILVA_C89_GENUS_CONVERSIO = 38,
+    SILVA_C89_GENUS_UNARIUM = 39,
+    SILVA_C89_GENUS_MAGNITUDO_EXPRESSIONIS = 40,
+    SILVA_C89_GENUS_MAGNITUDO_TYPI = 41,
+    SILVA_C89_GENUS_SPECIES_TYPI = 42,
+    SILVA_C89_GENUS_DECLARATOR_ABSTRACTUS = 43,
+    SILVA_C89_GENUS_SUBSCRIPTIO = 44,
+    SILVA_C89_GENUS_VOCATIO = 45,
+    SILVA_C89_GENUS_ACCESSUS = 46,
+    SILVA_C89_GENUS_POSTCREMENTUM = 47,
+    SILVA_C89_GENUS_FOLIUM_IDENTIFICATOR = 48,
+    SILVA_C89_GENUS_FOLIUM_INTEGER = 49,
+    SILVA_C89_GENUS_FOLIUM_FLUITANS = 50,
+    SILVA_C89_GENUS_FOLIUM_CHARACTER = 51,
+    SILVA_C89_GENUS_FOLIUM_CHORDA = 52,
+    SILVA_C89_GENUS_ERROR = 53,
+    SILVA_C89_GENUS_AMBIGUUS = 54,
+    SILVA_C89_GENUS_CONDITIONALIS = 55,
+    SILVA_C89_GENUS_RAMUS_SUMPTUS = 56,
+    SILVA_C89_GENUS_RAMUS_OMISSUS = 57
+};
+#endif /* SILVA_C89_GENERA_CUSTOS */
+
+/* Accessores locorum (GENERATI - unus per locum; nodus NULL aut
+ * generis alieni -> valor generis SILVA_VALOR_NIHIL) */
+SilvaValor silva_c89_definitio_functionis_specificatores(const SilvaNodus* nodus);
+SilvaValor silva_c89_definitio_functionis_declarator(const SilvaNodus* nodus);
+SilvaValor silva_c89_definitio_functionis_declarationes_kr(const SilvaNodus* nodus);
+SilvaValor silva_c89_definitio_functionis_corpus(const SilvaNodus* nodus);
+SilvaValor silva_c89_sententia_vacua_tok_terminator(const SilvaNodus* nodus);
+SilvaValor silva_c89_corpus_tok_aperta(const SilvaNodus* nodus);
+SilvaValor silva_c89_corpus_elementa(const SilvaNodus* nodus);
+SilvaValor silva_c89_corpus_tok_clausa(const SilvaNodus* nodus);
+SilvaValor silva_c89_si_tok_verbum(const SilvaNodus* nodus);
+SilvaValor silva_c89_si_tok_apertum(const SilvaNodus* nodus);
+SilvaValor silva_c89_si_conditio(const SilvaNodus* nodus);
+SilvaValor silva_c89_si_tok_clausum(const SilvaNodus* nodus);
+SilvaValor silva_c89_si_consequens(const SilvaNodus* nodus);
+SilvaValor silva_c89_si_tok_alioquin(const SilvaNodus* nodus);
+SilvaValor silva_c89_si_alioquin(const SilvaNodus* nodus);
+SilvaValor silva_c89_dum_tok_verbum(const SilvaNodus* nodus);
+SilvaValor silva_c89_dum_tok_apertum(const SilvaNodus* nodus);
+SilvaValor silva_c89_dum_conditio(const SilvaNodus* nodus);
+SilvaValor silva_c89_dum_tok_clausum(const SilvaNodus* nodus);
+SilvaValor silva_c89_dum_corpus(const SilvaNodus* nodus);
+SilvaValor silva_c89_fac_dum_tok_fac(const SilvaNodus* nodus);
+SilvaValor silva_c89_fac_dum_corpus(const SilvaNodus* nodus);
+SilvaValor silva_c89_fac_dum_tok_dum(const SilvaNodus* nodus);
+SilvaValor silva_c89_fac_dum_tok_apertum(const SilvaNodus* nodus);
+SilvaValor silva_c89_fac_dum_conditio(const SilvaNodus* nodus);
+SilvaValor silva_c89_fac_dum_tok_clausum(const SilvaNodus* nodus);
+SilvaValor silva_c89_fac_dum_tok_terminator(const SilvaNodus* nodus);
+SilvaValor silva_c89_per_tok_verbum(const SilvaNodus* nodus);
+SilvaValor silva_c89_per_tok_apertum(const SilvaNodus* nodus);
+SilvaValor silva_c89_per_clausula(const SilvaNodus* nodus);
+SilvaValor silva_c89_per_tok_clausum(const SilvaNodus* nodus);
+SilvaValor silva_c89_per_corpus(const SilvaNodus* nodus);
+SilvaValor silva_c89_per_clausula_initium(const SilvaNodus* nodus);
+SilvaValor silva_c89_per_clausula_tok_terminator_i(const SilvaNodus* nodus);
+SilvaValor silva_c89_per_clausula_conditio(const SilvaNodus* nodus);
+SilvaValor silva_c89_per_clausula_tok_terminator_ii(const SilvaNodus* nodus);
+SilvaValor silva_c89_per_clausula_passus(const SilvaNodus* nodus);
+SilvaValor silva_c89_commutatio_tok_verbum(const SilvaNodus* nodus);
+SilvaValor silva_c89_commutatio_tok_apertum(const SilvaNodus* nodus);
+SilvaValor silva_c89_commutatio_discrimen(const SilvaNodus* nodus);
+SilvaValor silva_c89_commutatio_tok_clausum(const SilvaNodus* nodus);
+SilvaValor silva_c89_commutatio_corpus(const SilvaNodus* nodus);
+SilvaValor silva_c89_casus_tok_verbum(const SilvaNodus* nodus);
+SilvaValor silva_c89_casus_valor(const SilvaNodus* nodus);
+SilvaValor silva_c89_casus_tok_colon(const SilvaNodus* nodus);
+SilvaValor silva_c89_casus_sententiae(const SilvaNodus* nodus);
+SilvaValor silva_c89_ordinarius_tok_verbum(const SilvaNodus* nodus);
+SilvaValor silva_c89_ordinarius_tok_colon(const SilvaNodus* nodus);
+SilvaValor silva_c89_ordinarius_sententiae(const SilvaNodus* nodus);
+SilvaValor silva_c89_titulatum_tok_titulus(const SilvaNodus* nodus);
+SilvaValor silva_c89_titulatum_tok_colon(const SilvaNodus* nodus);
+SilvaValor silva_c89_titulatum_sententia(const SilvaNodus* nodus);
+SilvaValor silva_c89_salta_tok_verbum(const SilvaNodus* nodus);
+SilvaValor silva_c89_salta_tok_destinatio(const SilvaNodus* nodus);
+SilvaValor silva_c89_salta_tok_terminator(const SilvaNodus* nodus);
+SilvaValor silva_c89_frange_tok_verbum(const SilvaNodus* nodus);
+SilvaValor silva_c89_frange_tok_terminator(const SilvaNodus* nodus);
+SilvaValor silva_c89_perge_tok_verbum(const SilvaNodus* nodus);
+SilvaValor silva_c89_perge_tok_terminator(const SilvaNodus* nodus);
+SilvaValor silva_c89_redde_tok_verbum(const SilvaNodus* nodus);
+SilvaValor silva_c89_redde_valor(const SilvaNodus* nodus);
+SilvaValor silva_c89_redde_tok_terminator(const SilvaNodus* nodus);
+SilvaValor silva_c89_declaratio_specificatores(const SilvaNodus* nodus);
+SilvaValor silva_c89_declaratio_declaratores(const SilvaNodus* nodus);
+SilvaValor silva_c89_declaratio_tok_terminator(const SilvaNodus* nodus);
+SilvaValor silva_c89_typus_nominatus_tok_titulus(const SilvaNodus* nodus);
+SilvaValor silva_c89_typus_primitivus_tok_verba(const SilvaNodus* nodus);
+SilvaValor silva_c89_declarator_initiatus_declarator(const SilvaNodus* nodus);
+SilvaValor silva_c89_declarator_initiatus_tok_operator(const SilvaNodus* nodus);
+SilvaValor silva_c89_declarator_initiatus_initiator(const SilvaNodus* nodus);
+SilvaValor silva_c89_congeries_tok_aperta(const SilvaNodus* nodus);
+SilvaValor silva_c89_congeries_elementa(const SilvaNodus* nodus);
+SilvaValor silva_c89_congeries_tok_clausa(const SilvaNodus* nodus);
+SilvaValor silva_c89_structura_tok_verbum(const SilvaNodus* nodus);
+SilvaValor silva_c89_structura_tok_titulus(const SilvaNodus* nodus);
+SilvaValor silva_c89_structura_tok_aperta(const SilvaNodus* nodus);
+SilvaValor silva_c89_structura_membra(const SilvaNodus* nodus);
+SilvaValor silva_c89_structura_tok_clausa(const SilvaNodus* nodus);
+SilvaValor silva_c89_unio_tok_verbum(const SilvaNodus* nodus);
+SilvaValor silva_c89_unio_tok_titulus(const SilvaNodus* nodus);
+SilvaValor silva_c89_unio_tok_aperta(const SilvaNodus* nodus);
+SilvaValor silva_c89_unio_membra(const SilvaNodus* nodus);
+SilvaValor silva_c89_unio_tok_clausa(const SilvaNodus* nodus);
+SilvaValor silva_c89_membrum_specificatores(const SilvaNodus* nodus);
+SilvaValor silva_c89_membrum_declaratores(const SilvaNodus* nodus);
+SilvaValor silva_c89_membrum_tok_terminator(const SilvaNodus* nodus);
+SilvaValor silva_c89_campus_declarator(const SilvaNodus* nodus);
+SilvaValor silva_c89_campus_tok_colon(const SilvaNodus* nodus);
+SilvaValor silva_c89_campus_latitudo(const SilvaNodus* nodus);
+SilvaValor silva_c89_enumeratio_tok_verbum(const SilvaNodus* nodus);
+SilvaValor silva_c89_enumeratio_tok_titulus(const SilvaNodus* nodus);
+SilvaValor silva_c89_enumeratio_tok_aperta(const SilvaNodus* nodus);
+SilvaValor silva_c89_enumeratio_enumeratores(const SilvaNodus* nodus);
+SilvaValor silva_c89_enumeratio_tok_clausa(const SilvaNodus* nodus);
+SilvaValor silva_c89_enumerator_tok_titulus(const SilvaNodus* nodus);
+SilvaValor silva_c89_enumerator_tok_operator(const SilvaNodus* nodus);
+SilvaValor silva_c89_enumerator_valor(const SilvaNodus* nodus);
+SilvaValor silva_c89_declarator_monstrator_tok_stella(const SilvaNodus* nodus);
+SilvaValor silva_c89_declarator_monstrator_qualificatores(const SilvaNodus* nodus);
+SilvaValor silva_c89_declarator_monstrator_internum(const SilvaNodus* nodus);
+SilvaValor silva_c89_declarator_titulus_tok_titulus(const SilvaNodus* nodus);
+SilvaValor silva_c89_parenthesis_tok_apertum(const SilvaNodus* nodus);
+SilvaValor silva_c89_parenthesis_internum(const SilvaNodus* nodus);
+SilvaValor silva_c89_parenthesis_tok_clausum(const SilvaNodus* nodus);
+SilvaValor silva_c89_declarator_aciei_internum(const SilvaNodus* nodus);
+SilvaValor silva_c89_declarator_aciei_tok_apertum(const SilvaNodus* nodus);
+SilvaValor silva_c89_declarator_aciei_mensura(const SilvaNodus* nodus);
+SilvaValor silva_c89_declarator_aciei_tok_clausum(const SilvaNodus* nodus);
+SilvaValor silva_c89_declarator_functionis_internum(const SilvaNodus* nodus);
+SilvaValor silva_c89_declarator_functionis_tok_apertum(const SilvaNodus* nodus);
+SilvaValor silva_c89_declarator_functionis_parametra(const SilvaNodus* nodus);
+SilvaValor silva_c89_declarator_functionis_tok_clausum(const SilvaNodus* nodus);
+SilvaValor silva_c89_parametrum_specificatores(const SilvaNodus* nodus);
+SilvaValor silva_c89_parametrum_declarator(const SilvaNodus* nodus);
+SilvaValor silva_c89_sententia_expressionis_expressio(const SilvaNodus* nodus);
+SilvaValor silva_c89_sententia_expressionis_tok_terminator(const SilvaNodus* nodus);
+SilvaValor silva_c89_virgula_sinister(const SilvaNodus* nodus);
+SilvaValor silva_c89_virgula_tok_operator(const SilvaNodus* nodus);
+SilvaValor silva_c89_virgula_dexter(const SilvaNodus* nodus);
+SilvaValor silva_c89_assignatio_sinister(const SilvaNodus* nodus);
+SilvaValor silva_c89_assignatio_tok_operator(const SilvaNodus* nodus);
+SilvaValor silva_c89_assignatio_dexter(const SilvaNodus* nodus);
+SilvaValor silva_c89_ternarius_conditio(const SilvaNodus* nodus);
+SilvaValor silva_c89_ternarius_tok_quaestio(const SilvaNodus* nodus);
+SilvaValor silva_c89_ternarius_verum(const SilvaNodus* nodus);
+SilvaValor silva_c89_ternarius_tok_colon(const SilvaNodus* nodus);
+SilvaValor silva_c89_ternarius_falsum(const SilvaNodus* nodus);
+SilvaValor silva_c89_binarium_sinister(const SilvaNodus* nodus);
+SilvaValor silva_c89_binarium_tok_operator(const SilvaNodus* nodus);
+SilvaValor silva_c89_binarium_dexter(const SilvaNodus* nodus);
+SilvaValor silva_c89_conversio_tok_apertum(const SilvaNodus* nodus);
+SilvaValor silva_c89_conversio_typus(const SilvaNodus* nodus);
+SilvaValor silva_c89_conversio_tok_clausum(const SilvaNodus* nodus);
+SilvaValor silva_c89_conversio_internum(const SilvaNodus* nodus);
+SilvaValor silva_c89_unarium_tok_operator(const SilvaNodus* nodus);
+SilvaValor silva_c89_unarium_internum(const SilvaNodus* nodus);
+SilvaValor silva_c89_magnitudo_expressionis_tok_verbum(const SilvaNodus* nodus);
+SilvaValor silva_c89_magnitudo_expressionis_internum(const SilvaNodus* nodus);
+SilvaValor silva_c89_magnitudo_typi_tok_verbum(const SilvaNodus* nodus);
+SilvaValor silva_c89_magnitudo_typi_tok_apertum(const SilvaNodus* nodus);
+SilvaValor silva_c89_magnitudo_typi_typus(const SilvaNodus* nodus);
+SilvaValor silva_c89_magnitudo_typi_tok_clausum(const SilvaNodus* nodus);
+SilvaValor silva_c89_species_typi_specificatores(const SilvaNodus* nodus);
+SilvaValor silva_c89_species_typi_declarator(const SilvaNodus* nodus);
+SilvaValor silva_c89_declarator_abstractus_tok_stella(const SilvaNodus* nodus);
+SilvaValor silva_c89_declarator_abstractus_qualificatores(const SilvaNodus* nodus);
+SilvaValor silva_c89_declarator_abstractus_internum(const SilvaNodus* nodus);
+SilvaValor silva_c89_subscriptio_basis(const SilvaNodus* nodus);
+SilvaValor silva_c89_subscriptio_tok_apertum(const SilvaNodus* nodus);
+SilvaValor silva_c89_subscriptio_index(const SilvaNodus* nodus);
+SilvaValor silva_c89_subscriptio_tok_clausum(const SilvaNodus* nodus);
+SilvaValor silva_c89_vocatio_functio(const SilvaNodus* nodus);
+SilvaValor silva_c89_vocatio_tok_apertum(const SilvaNodus* nodus);
+SilvaValor silva_c89_vocatio_argumenta(const SilvaNodus* nodus);
+SilvaValor silva_c89_vocatio_tok_clausum(const SilvaNodus* nodus);
+SilvaValor silva_c89_accessus_basis(const SilvaNodus* nodus);
+SilvaValor silva_c89_accessus_tok_operator(const SilvaNodus* nodus);
+SilvaValor silva_c89_accessus_tok_titulus(const SilvaNodus* nodus);
+SilvaValor silva_c89_postcrementum_internum(const SilvaNodus* nodus);
+SilvaValor silva_c89_postcrementum_tok_operator(const SilvaNodus* nodus);
+SilvaValor silva_c89_folium_identificator_tok_valor(const SilvaNodus* nodus);
+SilvaValor silva_c89_folium_integer_tok_valor(const SilvaNodus* nodus);
+SilvaValor silva_c89_folium_fluitans_tok_valor(const SilvaNodus* nodus);
+SilvaValor silva_c89_folium_character_tok_valor(const SilvaNodus* nodus);
+SilvaValor silva_c89_folium_chorda_tok_valor(const SilvaNodus* nodus);
+SilvaValor silva_c89_error_tokens(const SilvaNodus* nodus);
+SilvaValor silva_c89_ambiguus_interpretationes(const SilvaNodus* nodus);
+SilvaValor silva_c89_ambiguus_canonica(const SilvaNodus* nodus);
+SilvaValor silva_c89_conditionalis_rami(const SilvaNodus* nodus);
+SilvaValor silva_c89_conditionalis_finis(const SilvaNodus* nodus);
+SilvaValor silva_c89_ramus_sumptus_directiva(const SilvaNodus* nodus);
+SilvaValor silva_c89_ramus_sumptus_contentum(const SilvaNodus* nodus);
+SilvaValor silva_c89_ramus_sumptus_conditio_id(const SilvaNodus* nodus);
+SilvaValor silva_c89_ramus_omissus_directiva(const SilvaNodus* nodus);
+SilvaValor silva_c89_ramus_omissus_cruda(const SilvaNodus* nodus);
+SilvaValor silva_c89_ramus_omissus_conditio_id(const SilvaNodus* nodus);
+/* <<< GENERATUM (silva_coquere): finis superficiei publicae SILVA_C89 <<< */
+
 SilvaValor silva_c89_construere(SilvaPiscina* piscina,
     int productio, const SilvaValor* valores);
 SilvaValor silva_c89_ambiguum_fabricare(SilvaPiscina* piscina,
@@ -776,5 +1025,39 @@ int silva_c89_declaratio_vista(const SilvaParsura* parsura,
 SilvaScriptura silva_c89_functionis_subscriptio(
     SilvaPiscina* piscina, const SilvaParsura* parsura,
     unsigned int index);
+
+/* ==================================================
+ * Quaestio (QA): selectores CSS-similes super arbores commissas
+ * (consilium: project-specs/silva-quaestio-design.md, DECISUS).
+ * Tags = tituli generum registri (kebab); combinatores spatium
+ * (descendens) et > (filius); unio virgula; * universalis. Tag
+ * ignotum aut selector malformatus = NULL + causa (fractura
+ * CLARA). Ambigua: descensus per lectionem canonicam solam;
+ * involucrum ipsum congruibile (tag "ambiguus"); nodi ERROR
+ * congruibiles (tag "error"). Arbores COMMISSAE exspectantur
+ * (pater fixus).
+ * ================================================== */
+
+typedef struct SilvaQuaestio SilvaQuaestio;  /* compilata (opaca) */
+
+typedef struct SilvaQuaestioResultatum {
+    const SilvaNodus* nodus;   /* subiectum congruens */
+} SilvaQuaestioResultatum;
+
+/* Selector -> quaestio compilata (reusabilis trans arbores).
+ * NULL + *causa_out (litterae staticae; NULL licet) si malformatus
+ * aut tag ignotum. */
+SilvaQuaestio* silva_quaestio_compilare(SilvaPiscina* piscina,
+    const SilvaRegistrumCoctum* tabularium, const char* selector,
+    const char** causa_out);
+
+/* Omnes nodi congruentes sub radice (commissio->radix directa).
+ * SilvaXar de SilvaQuaestioResultatum (valore) in piscinam. */
+SilvaXar* silva_quaestio_exsequi(const SilvaQuaestio* quaestio,
+    SilvaValor radix, SilvaPiscina* piscina);
+
+/* Nodusne unus catenae alicui congruit (maiores per patrem)? */
+int silva_quaestio_congruit(const SilvaQuaestio* quaestio,
+    const SilvaNodus* nodus);
 
 #endif /* SILVA_H */

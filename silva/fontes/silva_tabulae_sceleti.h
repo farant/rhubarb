@@ -12,6 +12,8 @@ externus constans SilvaTabulaCocta SILVA_SCELETUM_TABULA;
 externus constans SilvaRegistrumCoctum SILVA_SCELETUM_REGISTRUM;
 
 /* Genera nodorum (registrum unum: grammatica + extra) */
+#ifndef SILVA_SCELETUM_GENERA_CUSTOS
+#define SILVA_SCELETUM_GENERA_CUSTOS
 enumeratio {
     SILVA_SCELETUM_GENUS_DECLARATIO = 0,
     SILVA_SCELETUM_GENUS_TYPUS_PRIMITIVUS = 1,
@@ -29,6 +31,7 @@ enumeratio {
     SILVA_SCELETUM_GENUS_RAMUS_SUMPTUS = 13,
     SILVA_SCELETUM_GENUS_RAMUS_OMISSUS = 14
 };
+#endif /* SILVA_SCELETUM_GENERA_CUSTOS */
 
 SilvaValor silva_sceletum_declaratio_typus (constans SilvaNodus* nodus);
 SilvaValor silva_sceletum_declaratio_declarator (constans SilvaNodus* nodus);

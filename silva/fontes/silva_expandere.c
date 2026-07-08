@@ -9,6 +9,7 @@
 #include "silva_conditio.h"
 #include "silva_lexema.h"
 #include "chorda_aedificator.h"
+#include <stdio.h>
 #include <string.h>
 
 /* ==================================================
@@ -2022,6 +2023,140 @@ _substituere (
     }
 }
 
+/* ==================================================
+ * Macros praedefinita (officina pre-M1, 2026-07-08): __FILE__,
+ * __LINE__, __STDC__ - semantica C89 per catenam originis (radix =
+ * situs invocationis, ergo __LINE__ intra corpus macro lineam
+ * INVOCATIONIS reddit). Tabula usoris vincit (quaerere prius
+ * temptatur); __DATE__/__TIME__ CONSULTO absunt (determinismus -
+ * vide phase-log). Nota: "defined(__FILE__)" in #if adhuc FALSUM
+ * est (tabulam solam inspicit) - limes notatus.
+ * ================================================== */
+
+interior b32
+_valor_aequat (constans SilvaToken* token, constans character* litterae)
+{
+    memoriae_index m = strlen(litterae);
+
+    si ((memoriae_index)token->valor.mensura != m)
+    {
+        redde FALSUM;
+    }
+    redde (memcmp(token->valor.datum, litterae, m) == ZEPHYRUM)
+        ? VERUM : FALSUM;
+}
+
+/* Chorda in piscinam figere (valor lexematis vivere debet) */
+interior chorda
+_chordam_figere (SilvaExpansio* exp, constans character* litterae)
+{
+    memoriae_index m = strlen(litterae);
+    chorda c;
+    i8* datum;
+
+    datum = (i8*)piscina_allocare(exp->piscina,
+        (m > ZEPHYRUM) ? m : (memoriae_index)I);
+    c.mensura = ZEPHYRUM;
+    c.datum = datum;
+    si (datum == NIHIL)
+    {
+        redde c;
+    }
+    si (m > ZEPHYRUM)
+    {
+        memcpy(datum, litterae, m);
+    }
+    c.mensura = (i32)m;
+    redde c;
+}
+
+interior chorda*
+_titulum_figere (SilvaExpansio* exp, constans character* litterae)
+{
+    chorda* c;
+
+    c = (chorda*)piscina_allocare(exp->piscina,
+        (memoriae_index)magnitudo(chorda));
+    si (c == NIHIL)
+    {
+        redde NIHIL;
+    }
+    *c = _chordam_figere(exp, litterae);
+    redde c;
+}
+
+/* Substituere praedefinitum si token id est; VERUM = emissum */
+interior b32
+_praedefinitum_substituere (
+    SilvaExpansio* exp,
+    SilvaToken*    token,
+    Xar*           exitus)
+{
+    SilvaToken* radix;
+    SilvaToken* novum;
+
+    radix = silva_token_radix(token);
+    si (radix == NIHIL)
+    {
+        radix = token;
+    }
+
+    si (_valor_aequat(token, "__LINE__"))
+    {
+        character buffer[XVI];
+
+        sprintf(buffer, "%u", radix->linea);
+        novum = silva_token_ex_praedefinito(exp->piscina,
+            SILVA_LEX_INTEGER, _chordam_figere(exp, buffer), token,
+            _titulum_figere(exp, "__LINE__"));
+    }
+    alioquin si (_valor_aequat(token, "__STDC__"))
+    {
+        novum = silva_token_ex_praedefinito(exp->piscina,
+            SILVA_LEX_INTEGER, _chordam_figere(exp, "1"), token,
+            _titulum_figere(exp, "__STDC__"));
+    }
+    alioquin si (_valor_aequat(token, "__FILE__"))
+    {
+        constans chorda* via;
+        ChordaAedificator* aed;
+        i32 j;
+
+        via = silva_fons_via(exp, radix->fons_index);
+        si (via == NIHIL)
+        {
+            redde FALSUM;   /* fons ignotus: identificator manet */
+        }
+        aed = chorda_aedificator_creare(exp->piscina, LXIV);
+        chorda_aedificator_appendere_character(aed, '"');
+        per (j = ZEPHYRUM; j < via->mensura; j++)
+        {
+            character c = (character)via->datum[j];
+
+            si (c == '"' || c == '\\')
+            {
+                chorda_aedificator_appendere_character(aed, '\\');
+            }
+            chorda_aedificator_appendere_character(aed, c);
+        }
+        chorda_aedificator_appendere_character(aed, '"');
+        novum = silva_token_ex_praedefinito(exp->piscina,
+            SILVA_LEX_STRING_LIT, chorda_aedificator_finire(aed),
+            token, _titulum_figere(exp, "__FILE__"));
+    }
+    alioquin
+    {
+        redde FALSUM;
+    }
+
+    si (novum == NIHIL)
+    {
+        redde FALSUM;
+    }
+    _lexema_addere(exitus, novum);
+    redde VERUM;
+}
+
 /* Nucleus generationis. tabula (si non NIHIL) = tabula operans
  * positionalis, activata per ambulationem (quaerere eam videt, etiam
  * in expansione argumentorum nidificata); positus_localis = positiones
@@ -2176,6 +2311,20 @@ _generatio_interna (
                         /* imperfecta: nomen manet, cadit infra */
                     }
                 }
+            }
+
+            /* praedefinita (__FILE__/__LINE__/__STDC__) - solum si
+             * nullum macro usoris (tabula vincit); omnia VIII
+             * litterarum, "__" praefixa */
+            si (def == NIHIL
+                && token->valor.mensura == VIII
+                && token->valor.datum[ZEPHYRUM] == '_'
+                && token->valor.datum[I] == '_'
+                && _praedefinitum_substituere(exp, token, exitus))
+            {
+                mutatum = VERUM;
+                i++;
+                perge;
             }
         }
 

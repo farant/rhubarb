@@ -142,7 +142,8 @@ interior constans AmalgamaPlagula CAPITA_SILVAE[] = {
     { "silva/fontes/silva_latina_datum.h",    NIHIL, NIHIL, FALSUM, FALSUM },
     { "silva/fontes/silva_parsare.h",         NIHIL, NIHIL, FALSUM, FALSUM },
     { "silva/fontes/silva_scribere.h",        NIHIL, NIHIL, FALSUM, FALSUM },
-    { "silva/fontes/silva_c89_oraculum.h",    NIHIL, NIHIL, FALSUM, FALSUM }
+    { "silva/fontes/silva_c89_oraculum.h",    NIHIL, NIHIL, FALSUM, FALSUM },
+    { "silva/fontes/silva_quaestio.h",        NIHIL, NIHIL, FALSUM, FALSUM }
 };
 
 interior constans AmalgamaPlagula CORPORA_SILVAE[] = {
@@ -158,7 +159,8 @@ interior constans AmalgamaPlagula CORPORA_SILVAE[] = {
     { "silva/fontes/silva_latina_datum.c",    NIHIL, NIHIL, VERUM, FALSUM },
     { "silva/fontes/silva_parsare.c",         NIHIL, NIHIL, VERUM, FALSUM },
     { "silva/fontes/silva_scribere.c",        NIHIL, NIHIL, VERUM, FALSUM },
-    { "silva/fontes/silva_c89_oraculum.c",    NIHIL, NIHIL, VERUM, FALSUM }
+    { "silva/fontes/silva_c89_oraculum.c",    NIHIL, NIHIL, VERUM, FALSUM },
+    { "silva/fontes/silva_quaestio.c",        NIHIL, NIHIL, VERUM, FALSUM }
 };
 
 /* CADENDA: tituli typorum quos silva.h POSSIDET - unitates typedef
@@ -183,6 +185,7 @@ interior constans character* constans CADENDA_TYPEDEF[] = {
     "SilvaScriptura", "SilvaFines", "SilvaPergereFunctio",
     "SilvaContextusPlagula", "SilvaContextus", "SilvaRamusGenus", "SilvaInclusioVista",
     "SilvaRamusVista", "SilvaMacroVista",
+    "SilvaQuaestio", "SilvaQuaestioResultatum",
     NIHIL
 };
 

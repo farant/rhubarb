@@ -29,4 +29,18 @@ silva_gen_coquere (
     constans character* basis_via,
     constans character* via_grammaticae);
 
+/* Superficies publica generata (officina pre-M1): enum generum +
+ * prototypa accessorum VANILLA inter signa ">>>"/"<<<" in plagulas
+ * manu scriptas splicare (via_capitis = silva.h: enum custodito +
+ * prototypa; via_hospitis = hospes.c: tabula ACCESSORES typis
+ * imposita). Signa desunt = FALSUM (clamat). Idem generator ambas
+ * copias scribit - deriva structuraliter impossibilis. */
+b32
+silva_gen_splicere_publica (
+    Piscina*            piscina,
+    SilvaGenGrammatica* grammatica,
+    constans character* praefixum,
+    constans character* via_capitis,
+    constans character* via_hospitis);
+
 #endif /* SILVA_COQUERE_H */

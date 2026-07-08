@@ -208,6 +208,76 @@ s32 principale (vacuum)
     }
 
 
+    /* ========================================================
+     * PROBARE: macros praedefinita (__FILE__/__LINE__/__STDC__)
+     * ======================================================== */
+
+    {
+        Xar* exitus;
+        SilvaToken* token;
+
+        imprimere("\n--- Probans praedefinita ---\n");
+
+        /* __LINE__ directum: linea 1 et linea 2 */
+        exitus = _expandere_fontem(piscina, "__LINE__;\n__LINE__;",
+            NIHIL);
+        CREDO_AEQUALIS_I32 (xar_numerus(exitus), V);
+        token = _ad(exitus, 0);
+        CREDO_AEQUALIS_I32 ((i32)token->genus, (i32)SILVA_LEX_INTEGER);
+        CREDO_CHORDA_AEQUALIS_LITERIS (token->valor, "1");
+        token = _ad(exitus, II);
+        CREDO_CHORDA_AEQUALIS_LITERIS (token->valor, "2");
+        /* provenientia: origo CHORDA, radix = identificator fontis,
+         * profunditas I - stratum expansum VERUM dicit */
+        CREDO_AEQUALIS_I32 ((i32)token->origo.genus,
+            (i32)SILVA_ORIGO_CHORDA);
+        CREDO_CHORDA_AEQUALIS_LITERIS (
+            silva_token_radix(token)->valor, "__LINE__");
+        CREDO_AEQUALIS_I32 (silva_token_profunditas(token), I);
+
+        /* __LINE__ intra corpus macro: linea INVOCATIONIS (C89 -
+         * radix catenae originis) */
+        exitus = _expandere_fontem(piscina,
+            "#define UBI() __LINE__\n\nUBI();", NIHIL);
+        token = _ad(exitus, 0);
+        CREDO_AEQUALIS_I32 ((i32)token->genus, (i32)SILVA_LEX_INTEGER);
+        CREDO_CHORDA_AEQUALIS_LITERIS (token->valor, "3");
+
+        /* __FILE__: littera chordae cum via fontis */
+        exitus = _expandere_fontem(piscina, "__FILE__;", NIHIL);
+        token = _ad(exitus, 0);
+        CREDO_AEQUALIS_I32 ((i32)token->genus,
+            (i32)SILVA_LEX_STRING_LIT);
+        CREDO_CHORDA_AEQUALIS_LITERIS (token->valor,
+            "\"probatio.c\"");
+
+        /* __STDC__: 1 */
+        exitus = _expandere_fontem(piscina, "__STDC__;", NIHIL);
+        token = _ad(exitus, 0);
+        CREDO_AEQUALIS_I32 ((i32)token->genus, (i32)SILVA_LEX_INTEGER);
+        CREDO_CHORDA_AEQUALIS_LITERIS (token->valor, "1");
+
+        /* tabula usoris vincit (redefinitio - UB C89, sed politica
+         * nostra: numquam praedefinitum super macro usoris) */
+        exitus = _expandere_fontem(piscina,
+            "#define __LINE__ 99\n__LINE__;", NIHIL);
+        token = _ad(exitus, 0);
+        CREDO_CHORDA_AEQUALIS_LITERIS (token->valor, "99");
+
+        /* CREDO-simile: # + __FILE__ + __LINE__ simul (exemplar
+         * credo.h - corpus barrae officinae) */
+        exitus = _expandere_fontem(piscina,
+            "#define ADFIRMA(x) notare(#x, __FILE__, __LINE__)\n"
+            "ADFIRMA(a > 0);", NIHIL);
+        CREDO_AEQUALIS_I32 (xar_numerus(exitus), X);
+        CREDO_CHORDA_AEQUALIS_LITERIS (_ad(exitus, II)->valor,
+            "\"a > 0\"");
+        CREDO_CHORDA_AEQUALIS_LITERIS (_ad(exitus, IV)->valor,
+            "\"probatio.c\"");
+        CREDO_CHORDA_AEQUALIS_LITERIS (_ad(exitus, VI)->valor, "2");
+    }
+
+
     credo_imprimere_compendium();
     praeteritus = credo_omnia_praeterierunt();
 

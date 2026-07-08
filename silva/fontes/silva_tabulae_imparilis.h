@@ -12,6 +12,8 @@ externus constans SilvaTabulaCocta SILVA_IMPARILIS_TABULA;
 externus constans SilvaRegistrumCoctum SILVA_IMPARILIS_REGISTRUM;
 
 /* Genera nodorum (registrum unum: grammatica + extra) */
+#ifndef SILVA_IMPARILIS_GENERA_CUSTOS
+#define SILVA_IMPARILIS_GENERA_CUSTOS
 enumeratio {
     SILVA_IMPARILIS_GENUS_DECLARATIO = 0,
     SILVA_IMPARILIS_GENUS_TYPUS_PRIMITIVUS = 1,
@@ -29,6 +31,7 @@ enumeratio {
     SILVA_IMPARILIS_GENUS_RAMUS_SUMPTUS = 13,
     SILVA_IMPARILIS_GENUS_RAMUS_OMISSUS = 14
 };
+#endif /* SILVA_IMPARILIS_GENERA_CUSTOS */
 
 SilvaValor silva_imparilis_declaratio_typus (constans SilvaNodus* nodus);
 SilvaValor silva_imparilis_declaratio_declarator (constans SilvaNodus* nodus);

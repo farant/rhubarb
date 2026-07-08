@@ -179,6 +179,39 @@ silva_token_ex_stringificatione (
 }
 
 SilvaToken*
+silva_token_ex_praedefinito (
+    Piscina*         piscina,
+    SilvaLexemaGenus genus,
+    chorda           valor,
+    SilvaToken*      invocatio,
+    chorda*          nomen_macro)
+{
+    SilvaToken* token;
+
+    token = _token_novum(piscina);
+    si (token == NIHIL)
+    {
+        redde NIHIL;
+    }
+
+    token->genus     = genus;
+    token->valor     = valor;
+    token->longitudo = valor.mensura;
+    si (invocatio != NIHIL)
+    {
+        token->linea      = invocatio->linea;
+        token->columna    = invocatio->columna;
+        token->fons_index = invocatio->fons_index;
+    }
+
+    token->origo.genus                            = SILVA_ORIGO_CHORDA;
+    token->origo.datum.stringificatio.primus      = invocatio;
+    token->origo.datum.stringificatio.nomen_macro = nomen_macro;
+
+    redde token;
+}
+
+SilvaToken*
 silva_token_ex_api (
     Piscina*         piscina,
     SilvaLexemaGenus genus,
