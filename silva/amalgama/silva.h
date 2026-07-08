@@ -1060,4 +1060,180 @@ SilvaXar* silva_quaestio_exsequi(const SilvaQuaestio* quaestio,
 int silva_quaestio_congruit(const SilvaQuaestio* quaestio,
     const SilvaNodus* nodus);
 
+/* ==================================================
+ * Semantica C89 (M0a): typi + scopi + forma + index — tabulae
+ * parallelae super arbores commissas (consilium:
+ * project-specs/silva-semantica-design.md DECISUS). Ansa typi =
+ * monstrator UNUS: derivati internantur (aequalitas monstratorum
+ * EST identitas), tags nominales. Forma arm64 LP64 Apple
+ * (long double = 8; long long = extensio recepta — s64!),
+ * VERIFICATA contra clang per haruspicem (4,801 assertiones).
+ * Diagnostica venenata: TYPUS_C89_ERROR absorbet sine cascata.
+ * ================================================== */
+
+typedef enum {
+    TYPUS_C89_PRIMITIVUS = 0,
+    TYPUS_C89_MONSTRATOR,
+    TYPUS_C89_ACIES,
+    TYPUS_C89_FUNCTIO,
+    TYPUS_C89_STRUCTURA,
+    TYPUS_C89_UNIO,
+    TYPUS_C89_ENUMERATUS,
+    TYPUS_C89_QUALIFICATUS,
+    TYPUS_C89_ERROR
+} TypusC89Genus;
+
+typedef enum {
+    PRIMITIVUM_VACUUM = 0,
+    PRIMITIVUM_CHARACTER,
+    PRIMITIVUM_CHARACTER_SIGNATUM,
+    PRIMITIVUM_CHARACTER_INSIGNATUM,
+    PRIMITIVUM_BREVIS,
+    PRIMITIVUM_BREVIS_INSIGNATUM,
+    PRIMITIVUM_INTEGER,
+    PRIMITIVUM_INTEGER_INSIGNATUM,
+    PRIMITIVUM_LONGUS,
+    PRIMITIVUM_LONGUS_INSIGNATUM,
+    PRIMITIVUM_LONGUS_LONGUS,
+    PRIMITIVUM_LONGUS_LONGUS_INSIGNATUM,
+    PRIMITIVUM_FLUITANS,
+    PRIMITIVUM_DUPLEX,
+    PRIMITIVUM_DUPLEX_LONGUS,
+    PRIMITIVUM_NUMERUS
+} TypusC89Primitivum;
+
+#define QUALIS_CONSTANS   1
+#define QUALIS_VOLATILIS  2
+
+typedef struct TypusC89 TypusC89;
+
+typedef struct {
+    SilvaChorda  titulus;      /* copia; mensura 0 = anonymum */
+    TypusC89*    typus;
+    unsigned int offset;       /* octeti; a forma computatus */
+    int          est_campus;   /* bitfield (forma tag parcata) */
+} TypusC89Membrum;
+
+struct TypusC89 {
+    int genus;                 /* TypusC89Genus */
+    int ex_systemate;          /* provenientia (haruspex) */
+
+    int forma_computata;
+    int in_computatione;
+    unsigned int magnitudo_octetorum;
+    unsigned int ordinatio;
+
+    union {
+        int primitivum;        /* TypusC89Primitivum */
+        struct {
+            TypusC89* internum;
+        } monstrator;
+        struct {
+            TypusC89* elementum;
+            int       numerus;      /* -1 = incompleta */
+        } acies;
+        struct {
+            TypusC89*    reditus;
+            TypusC89**   parametra;
+            unsigned int numerus_parametrorum;
+            int          est_variadica;
+            int          est_prototypata;
+        } functio;
+        struct {
+            SilvaChorda       titulus;
+            int               completa;
+            TypusC89Membrum*  membra;
+            unsigned int      numerus_membrorum;
+            const SilvaNodus* declarans;
+            int               habet_campos;
+        } tag;
+        struct {
+            SilvaChorda       titulus;
+            int               completa;
+            const SilvaNodus* declarans;
+        } enumeratus;
+        struct {
+            TypusC89*    internum;
+            unsigned int quales;
+        } qualificatus;
+    } datum;
+};
+
+typedef enum {
+    SYMBOLUM_VARIABILE = 0,
+    SYMBOLUM_FUNCTIO,
+    SYMBOLUM_TYPEDEF,
+    SYMBOLUM_CONSTANS,
+    SYMBOLUM_PARAMETRUM
+} SemanticaSymbolumGenus;
+
+#define REPOSITIO_STATICA   1
+#define REPOSITIO_EXTERNA   2
+#define REPOSITIO_AUTOMATA  4
+#define REPOSITIO_REGISTRI  8
+
+typedef struct {
+    int               genus;        /* SemanticaSymbolumGenus */
+    SilvaChorda       titulus;
+    TypusC89*         typus;
+    long long         valor;        /* CONSTANS solum */
+    unsigned int      repositio;
+    unsigned int      profunditas;  /* 0 = scopus fili */
+    int               ex_systemate;
+    const SilvaNodus* declarans;
+    SilvaToken*       lexema;
+} SemanticaSymbolum;
+
+typedef struct {
+    const SilvaNodus* nodus;
+    const char*       causa;
+} SemanticaDiagnosticum;
+
+typedef struct SilvaSemantica SilvaSemantica;   /* opaca */
+
+/* Analysis totius fili super arborem commissam (ordine fontis,
+ * registra-ante-usum; rami sumpti; canonica ambiguorum; K&R
+ * parca). Numquam ruit. */
+SilvaSemantica* silva_c89_semantica_analysare(SilvaPiscina* piscina,
+    const SilvaParsura* parsura);
+
+/* Ut supra, symbola systematis prius harvestata (systema =
+ * parsura systema_c89.h; NULL licet = simplex) */
+SilvaSemantica* silva_c89_semantica_analysare_cum_systemate(
+    SilvaPiscina* piscina, const SilvaParsura* parsura,
+    const SilvaParsura* systema);
+
+/* Symbola in oraculum fundere (typedef -> typi; cetera ->
+ * NON-typi, oraculum trivalens) - praeoneratio et clausura */
+unsigned int silva_c89_semantica_oraculum_augere(
+    const SilvaSemantica* sem, SilvaOraculum* oraculum);
+
+/* Quot ambigua retenta adhuc INDECISA (voca
+ * silva_oraculum_responsa_vacare ante pro statu recenti) */
+unsigned int silva_c89_ambigua_indecisa_numerare(
+    const SilvaCommissio* commissio, const SilvaOraculum* oraculum);
+
+/* Quaestio symboli (a scopo fili post analysem) */
+SemanticaSymbolum* silva_c89_symbolum_invenire(SilvaSemantica* sem,
+    SilvaChorda titulus);
+
+/* Index: omnia symbola creata (cum profunditate) - saltuarius
+ * saltus typorum = consumptor primus nominatus */
+unsigned int silva_c89_symbola_numerus(const SilvaSemantica* sem);
+const SemanticaSymbolum* silva_c89_symbolum_per_indicem(
+    const SilvaSemantica* sem, unsigned int index);
+
+unsigned int silva_c89_diagnostica_numerus(
+    const SilvaSemantica* sem);
+const SemanticaDiagnosticum* silva_c89_diagnosticum_per_indicem(
+    const SilvaSemantica* sem, unsigned int index);
+
+/* Forma pigra: VERUM si magnitudo/ordinatio (et offsets) validae */
+int silva_c89_formam_computare(SilvaSemantica* sem,
+    TypusC89* typus);
+
+/* Singuli primitivi (aequalitas monstratorum = identitas) */
+TypusC89* silva_c89_typus_primitivum(SilvaSemantica* sem,
+    int primitivum);
+
 #endif /* SILVA_H */

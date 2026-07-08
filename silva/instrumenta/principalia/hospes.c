@@ -880,6 +880,75 @@ int main(void)
         }
     }
 
+    /* semantica M0a (publica Chunk D): analysis, index, typi,
+     * forma, oraculum trivalens + clausura - custos declarationum
+     * silva.h (regula hospitis: omnis functio nova vocatur) */
+    {
+        static const char fons_sem[] =
+            "typedef int Aetas;\n"
+            "enum Color { RUBER, VIRIDIS = 5 };\n"
+            "static int foo(int a) { return a; }\n"
+            "(foo)(x);\n";
+        SilvaOraculum* oraculum = silva_oraculum_creare(piscina);
+        SilvaParsura* parsura = silva_c89_parsare(piscina,
+            "hospes_sem.c", fons_sem,
+            (unsigned int)(sizeof(fons_sem) - 1), oraculum);
+        SilvaSemantica* sem = NULL;
+        int bene_sem = 0;
+
+        summa++;
+        if (parsura != NULL)
+        {
+            sem = silva_c89_semantica_analysare_cum_systemate(
+                piscina, parsura, NULL);
+        }
+        if (sem != NULL
+            && silva_c89_semantica_analysare(piscina, parsura)
+                != NULL)
+        {
+            static unsigned char aetas_litterae[] =
+                { 'A', 'e', 't', 'a', 's' };
+            SilvaChorda quaesitum;
+            SemanticaSymbolum* symbolum;
+
+            quaesitum.mensura = 5;
+            quaesitum.datum = aetas_litterae;
+            symbolum = silva_c89_symbolum_invenire(sem, quaesitum);
+            if (symbolum != NULL
+                && symbolum->genus == (int)SYMBOLUM_TYPEDEF
+                && symbolum->typus == silva_c89_typus_primitivum(
+                       sem, (int)PRIMITIVUM_INTEGER)
+                && silva_c89_formam_computare(sem, symbolum->typus)
+                && symbolum->typus->magnitudo_octetorum == 4
+                && symbolum->typus->ordinatio == 4
+                && silva_c89_symbola_numerus(sem) >= 4
+                && silva_c89_symbolum_per_indicem(sem, 0) != NULL
+                && silva_c89_diagnostica_numerus(sem) == 0
+                && silva_c89_diagnosticum_per_indicem(sem, 0)
+                    == NULL)
+            {
+                /* clausura: (foo)(x) furca; foo notum non-typus
+                 * post augere -> nihil indecisum */
+                (void)silva_c89_semantica_oraculum_augere(sem,
+                    oraculum);
+                if (parsura->commissio != NULL
+                    && silva_c89_ambigua_indecisa_numerare(
+                           parsura->commissio, oraculum) == 0)
+                {
+                    bene_sem = 1;
+                }
+            }
+        }
+        if (bene_sem)
+        {
+            fideles++;
+        }
+        else
+        {
+            fprintf(stderr, "hospes: INFIDELIS: semantica\n");
+        }
+    }
+
     /* telemetria arenae */
     {
         size_t usus = silva_piscina_summa_usus(piscina);

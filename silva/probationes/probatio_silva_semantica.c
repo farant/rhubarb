@@ -800,6 +800,41 @@ s32 principale (vacuum)
             parsura->commissio, oraculum), I);
     }
 
+    /* ========================================================
+     * PROBARE (M0a clausura): typedef scopi CORPORIS (decisiones
+     * 13) - oraculum praecommissionis eum non registrat (retentio
+     * ad commissionem), semantica scopis eum NOVIT -> clausura
+     * DECIDIT (promissum consilii §II confirmatum numero)
+     * ======================================================== */
+    {
+        constans character* fons_v =
+            "void f(void)\n"
+            "{\n"
+            "    typedef int T;\n"
+            "    T x;\n"
+            "    (T)(x);\n"
+            "}\n";
+        SilvaOraculum* oraculum = silva_oraculum_creare(piscina);
+        SilvaParsura* parsura = silva_c89_parsare(piscina,
+            "probatio.c", fons_v, (i32)strlen(fons_v), oraculum);
+        SilvaSemantica* sem;
+
+        imprimere("\n--- Probans typedef corporis (dec. 13) ---\n");
+
+        CREDO_NON_NIHIL (parsura);
+        CREDO_AEQUALIS_I32 (parsura->numerus_errorum, ZEPHYRUM);
+        /* retentum ad commissionem (oraculum T nescit - dec. 13) */
+        CREDO_VERUM (xar_numerus(parsura->commissio->ambigui)
+            >= I);
+        sem = silva_c89_semantica_analysare(piscina, parsura);
+        CREDO_NON_NIHIL (sem);
+        (vacuum)silva_c89_semantica_oraculum_augere(sem, oraculum);
+        silva_oraculum_responsa_vacare(oraculum);
+        /* clausura decidit: typedef scopi corporis TYPUS notus */
+        CREDO_AEQUALIS_I32 (silva_c89_ambigua_indecisa_numerare(
+            parsura->commissio, oraculum), ZEPHYRUM);
+    }
+
     credo_imprimere_compendium();
     praeteritus = credo_omnia_praeterierunt();
     piscina_destruere(piscina);

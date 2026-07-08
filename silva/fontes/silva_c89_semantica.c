@@ -1842,6 +1842,49 @@ silva_c89_semantica_oraculum_augere (
 }
 
 i32
+silva_c89_symbola_numerus (constans SilvaSemantica* sem)
+{
+    si (sem == NIHIL)
+    {
+        redde ZEPHYRUM;
+    }
+    redde (i32)xar_numerus(sem->symbola);
+}
+
+constans SemanticaSymbolum*
+silva_c89_symbolum_per_indicem (constans SilvaSemantica* sem,
+    i32 index)
+{
+    si (sem == NIHIL || index >= xar_numerus(sem->symbola))
+    {
+        redde NIHIL;
+    }
+    redde *(SemanticaSymbolum**)xar_obtinere(sem->symbola, index);
+}
+
+i32
+silva_c89_diagnostica_numerus (constans SilvaSemantica* sem)
+{
+    si (sem == NIHIL)
+    {
+        redde ZEPHYRUM;
+    }
+    redde (i32)xar_numerus(sem->diagnostica);
+}
+
+constans SemanticaDiagnosticum*
+silva_c89_diagnosticum_per_indicem (constans SilvaSemantica* sem,
+    i32 index)
+{
+    si (sem == NIHIL || index >= xar_numerus(sem->diagnostica))
+    {
+        redde NIHIL;
+    }
+    redde (constans SemanticaDiagnosticum*)xar_obtinere(
+        sem->diagnostica, index);
+}
+
+i32
 silva_c89_ambigua_indecisa_numerare (
     constans SilvaCommissio* commissio,
     constans SilvaOraculum*  oraculum)

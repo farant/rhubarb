@@ -6054,3 +6054,96 @@ haruspex + index + publica** (the oracle instrument over the type
 inventory w/ provenance partition; index API, saltuarius first
 consumer; silva.h rows + hospes + manifest; M0a RELATIO + FULL
 phase-log audit at close).
+
+### M0a CHUNK D — RELATIO (2026-07-08): haruspex + index + publica SHIPPED
+
+**HARUSPEX VERDICT: 177 TU, 4,801 assertiones temporis compilationis,
+0 dissentientes** — clang consentit omni sizeof, ordinationi, offset
+membrorum, valori enumeratoris quos semantica computavit (include/,
+lib/, silva/tessera/saltuarius fontes). Design: quaeque TU plagulam
+ORIGINALEM includit (inclusio textualis etiam pro .c) + assertiones
+appensae; clang -fsyntax-only = iudicium; typi in .c definiti in-TU
+verificati; ordinatio per dolum { char c; T t; }. Partitio
+provenientiae tenuit (0 typi corporis systema per valorem
+amplectuntur; systema ipsum numquam clang-compilatur — exclusum).
+Praetermissa 34 = functiones/incompleta (iuste sine forma).
+Instrumentum: instrumenta/principalia/haruspex.c + haruspex.sh
+(TUs in build/exta/ — quid aliud?).
+
+**Index publicus**: symbola_numerus / symbolum_per_indicem /
+diagnostica_numerus / diagnosticum_per_indicem super sem->symbola
+(234k+ symbola per corpus). Saltuarius saltus typorum = consumptor
+primus nominatus (nexus = tractus v0.1 saltuarii).
+
+**Publica**: manifest += silva_c89_semantica.{h,c}; CADENDA
+(TypusC89 definitio plena in silva.h; SilvaSemantica opaca;
+SemanticaScopus interna); silva.h sectio M0a (vanilla — i32 =
+unsigned int EXACTE aut TU amalgamae declarationes pugnantes
+videt); hospes: OMNES XI functiones novae VOCATAE cum assertionibus
+contenti (clausura per superficiem publicam!). VERIFICATUM primo
+conatu, hospes 28/28. Suite 29/29 (probatio 146 assertiones).
+
+## M0a — RELATIO MILLIARII + AUDITUS PLENUS (2026-07-08)
+
+**M0a CLAUSUM.** Semantica C89: typi + scopi + forma + systema +
+oraculum trivalens + clausura + haruspex + index + publica. Barrae:
+729/730 plagulae analysatae (0 ruinae); formae contra clang
+verificatae (4,801/0); ambigui 15,261 → 411 residuum classificatum
+(97.3%); diagnostica 818 → 110 classificata; suite 29/29;
+VERIFICATUM. Officina M0a-dependentia soluta; M0b (typatio
+expressionum + conversiones) = milliarium proximum officinae
+criticum; saltuarius saltus typorum nunc DISPONIBILIS.
+
+**AUDITUS PLENUS (regula limitis phasis; agente perlecto toto
+phase-log, verificatum hic):**
+
+CONFIRMATUM NUMERO (P2/D5 — hiatus load-bearing auditus): typedef
+scopi corporis (decisiones 13): oraculum praecommissionis eos NON
+registrat (retentio ad commissionem — intactum), semantica scopis
+eos NOVIT → clausura DECIDIT. Fixum pineatum in probatio (retentum
+>= I ad commissionem → indecisa 0 post augere). Promissum consilii
+§II impletum, non silenter.
+
+TABULA PARCARUM (sublata e worklog/consilio in phase-log — actio
+auditus):
+- initiatores non probantur → M0b
+- magnitudo-expressionis in aestimatore → M0b
+- K&R typatio plena → on-pull (corpus eam continere non potest)
+- haruspex scopi corporis → replicatio-sub-tag-synthetico (via
+  reditus nominata)
+- parca resolutoris CATENARUM (restatuta cum magnitudine VERA —
+  actio auditus D3): NON "34 instantiae" sed delineare 34 +
+  familia scrutinii ~85 + elementa/pinacotheca/nuntium/cetera
+  (categoria maior residui 411); repro minimale pineatum
+  ("catenae nidificatae"); sedes: inspectio resolutoris post-M0a
+  (resolutio coniuncta catenarum aut fixpunctum intus-primum)
+- supplementum systema_posix → on-pull (officina Wave-1b/3)
+- SPATIUM NOMINUM TITULORUM SALTUUM (sublatum e worklog solo —
+  actio auditus D4): III spatia impleta, quartum (tituli) lint
+  possidet; INTENTIO "quattuor spatia" sic amendata nominateque
+- persistentia indicis (sublata e consilio solo — actio auditus
+  A16) → donec consumptor frigidus existat
+- vita semanticae/invalidatio → M4 + incrementalitas
+- lector est_syntheticus → in necessitate vera
+- fuga \x/\NNN in aestimatore → on-pull (nulla sedes prior — nunc
+  nominata: M0b cum typatione expressionum)
+- collisiones basename praebendorum (5) → res percursus (harness),
+  non semanticae
+- __DATE__/__TIME__ → contextus valore-fixo cum trahetur
+- defined(__FILE__) in #if → expander, si umquam trahetur
+- RESOLUTUM-MENSURA (actio auditus A10): internamentum lineare —
+  Chunk B et C ambo "cost invisible"; clausum, non portatum
+- RESOLUTUM: tabula plana tag (Chunk A) → scopi B
+
+NOTAE PRO OFFICINA (cross-refs vetustae, actio auditus 6 — in
+officina-spec-v2 §XII annotatae): §VI "oraculum binarium" nunc
+falsum (trivalens M0a); conflatio M0/M0a+M0b; "diagnosed not
+resolved" vendit minoris (97.3% resolutum); "724 plagulae" → 730.
+
+DERIVAE RELIQUAE (LOW, notatae non actae): baselines ambiguorum
+inter documenta eiusdem diei (crescentia corporis); "prope-zephyrum"
+= 2.7% intra caveat consilii.
+
+**M0a numeris finalibus: 5 chunks (pre-M1 + A/B/C/D trans dies
+duos), probatio 146 assertiones, hospes 28/28, haruspex 4,801/0,
+corpus 730 plagularum 0 ruinis, residuum 411 omne classificatum.**

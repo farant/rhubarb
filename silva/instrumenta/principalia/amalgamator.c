@@ -143,6 +143,7 @@ interior constans AmalgamaPlagula CAPITA_SILVAE[] = {
     { "silva/fontes/silva_parsare.h",         NIHIL, NIHIL, FALSUM, FALSUM },
     { "silva/fontes/silva_scribere.h",        NIHIL, NIHIL, FALSUM, FALSUM },
     { "silva/fontes/silva_c89_oraculum.h",    NIHIL, NIHIL, FALSUM, FALSUM },
+    { "silva/fontes/silva_c89_semantica.h",   NIHIL, NIHIL, FALSUM, FALSUM },
     { "silva/fontes/silva_quaestio.h",        NIHIL, NIHIL, FALSUM, FALSUM }
 };
 
@@ -160,6 +161,7 @@ interior constans AmalgamaPlagula CORPORA_SILVAE[] = {
     { "silva/fontes/silva_parsare.c",         NIHIL, NIHIL, VERUM, FALSUM },
     { "silva/fontes/silva_scribere.c",        NIHIL, NIHIL, VERUM, FALSUM },
     { "silva/fontes/silva_c89_oraculum.c",    NIHIL, NIHIL, VERUM, FALSUM },
+    { "silva/fontes/silva_c89_semantica.c",   NIHIL, NIHIL, VERUM, FALSUM },
     { "silva/fontes/silva_quaestio.c",        NIHIL, NIHIL, VERUM, FALSUM }
 };
 
@@ -186,6 +188,9 @@ interior constans character* constans CADENDA_TYPEDEF[] = {
     "SilvaContextusPlagula", "SilvaContextus", "SilvaRamusGenus", "SilvaInclusioVista",
     "SilvaRamusVista", "SilvaMacroVista",
     "SilvaQuaestio", "SilvaQuaestioResultatum",
+    "TypusC89Genus", "TypusC89Primitivum", "TypusC89",
+    "TypusC89Membrum", "SemanticaSymbolumGenus", "SemanticaSymbolum",
+    "SemanticaDiagnosticum", "SilvaSemantica",
     NIHIL
 };
 
@@ -195,7 +200,7 @@ interior constans character* constans CADENDA_TYPEDEF[] = {
  * dereferunt). */
 interior constans character* constans CADENDA_DEFINITIO[] = {
     "SilvaToken", "SilvaValor", "SilvaNodus", "SilvaCaecatio",
-    "SilvaContextus", NIHIL
+    "SilvaContextus", "TypusC89", NIHIL
 };
 
 /* Functiones vendicatae quae PUBLICAE manent (extern, in silva.h) */

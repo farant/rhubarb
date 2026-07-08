@@ -100,3 +100,33 @@ Notes that don't belong in the header comment:
   edits — a fix "didn't work" because it was never in the binary.
   When probing with hand-linked binaries after fontes edits: rm the
   relevant silva/build objects first, or rebuild via BOTH scripts.
+
+## 2026-07-08 — Chunk D ships (haruspex + index + publica)
+
+- **HARUSPEX VERDICT: 177 TU, 4,801 assertiones, 0 dissentientes.**
+  clang consents to every sizeof/alignment/offsetof/enum-value
+  semantica computed across include/, lib/, silva/tessera/
+  saltuarius fontes. Design: each TU #includes the ORIGINAL file
+  (textual inclusion works for .c too!) + appended compile-time
+  asserts; clang -fsyntax-only = the verdict; .c-internal static
+  types verified in-TU. Alignment asserted via the classic
+  { char c; T t; } offsetof trick (C89 has no alignof).
+- Provenance partition holds: systema types skipped by transitive
+  by-value dependency check (corpus fact: 0 types embed systema
+  types by value — praetermissa_systemate 0 in the full run, 1
+  only when haruspex accidentally swept systema itself, now
+  excluded: systema is silva-parsed, never clang-compiled).
+- 34 praetermissa = function/incomplete typedefs (legitimately
+  formless). Enum CONSTANT VALUES asserted too — the aestimator is
+  clang-verified, not just the layout.
+- TU naming traps found live: binary-vs-directory name collision
+  (build/haruspex -> exta/ — the entrails, naturally); quoted
+  #include resolves TU-relative (-I repo root); TU files must end
+  .c regardless of source extension.
+- Publica: manifest + CADENDA (TypusC89 full-def owned by silva.h;
+  SilvaSemantica opaque, SemanticaScopus fully internal) + silva.h
+  M0a section (vanilla; i32=unsigned int EXACTLY or the amalgam TU
+  sees conflicting declarations) + hospes semantica block: all 11
+  new public functions CALLED with content asserts incl. the
+  closure fixture through the public API. VERIFICATUM first try,
+  hospes 28/28.

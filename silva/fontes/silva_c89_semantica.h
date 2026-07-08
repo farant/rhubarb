@@ -190,7 +190,11 @@ nomen structura {
     constans character*  causa;   /* litterae staticae */
 } SemanticaDiagnosticum;
 
-nomen structura {
+/* Titulo signata: silva.h eam OPACAM praenuntiat (exemplar
+ * SilvaOraculum) - interna (scopi, derivati) post amalgamam
+ * celantur; hospites per functiones quaerunt */
+nomen structura SilvaSemantica SilvaSemantica;
+structura SilvaSemantica {
     Piscina* piscina;
 
     /* singuli */
@@ -213,7 +217,7 @@ nomen structura {
     Xar* diagnostica;           /* SemanticaDiagnosticum (valore) */
 
     b32 in_systemate;           /* vexillum ambulationis (provenientia) */
-} SilvaSemantica;
+};
 
 SilvaSemantica* silva_c89_semantica_creare (Piscina* piscina);
 
@@ -325,6 +329,21 @@ i32 silva_c89_semantica_oraculum_augere (
 i32 silva_c89_ambigua_indecisa_numerare (
     constans SilvaCommissio* commissio,
     constans SilvaOraculum*  oraculum);
+
+/* ==================================================
+ * Index (Chunk D): superficies quaestionis symbolorum - primus
+ * consumptor nominatus = saltuarius (saltus typorum, v0.1);
+ * secundus = demissio officinae. In memoria; persistentia parcata
+ * donec consumptor frigidus existat (DECISUS 8).
+ * ================================================== */
+
+i32 silva_c89_symbola_numerus (constans SilvaSemantica* sem);
+constans SemanticaSymbolum* silva_c89_symbolum_per_indicem (
+    constans SilvaSemantica* sem, i32 index);
+
+i32 silva_c89_diagnostica_numerus (constans SilvaSemantica* sem);
+constans SemanticaDiagnosticum* silva_c89_diagnosticum_per_indicem (
+    constans SilvaSemantica* sem, i32 index);
 
 /* ==================================================
  * Forma (pigra; arm64 LP64 Apple)

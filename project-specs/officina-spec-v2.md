@@ -330,6 +330,15 @@ officina/
    grammar-aware fuzzing + fuzz-to-time-travel, fault injection,
    typed-heap snapshot testing, headless GUI by world-substitution).
    Later project; pure consumer of M0–M3; no milestone changes.
+8. STALE CROSS-REFS after M0a shipped (2026-07-08, from the M0a
+   full-log audit — fix at the next officina pass): §VI's "the
+   oracle is a binary typedef-name set" is now false (trivalent
+   since M0a); §VI item 4 conflates M0a/M0b (expression typing =
+   M0b per silva-semantica-design.md, the authority); §VI's
+   "survivors get diagnosed" undersells (97.3% RESOLVED via
+   trivalent closure); "724 files" → corpus now 730. M0a itself:
+   CLOSED — see silva/phase-log.md M0a RELATIO (haruspex 4,801/0,
+   index API live, residuum 411 classified).
 3. Indicium name (carried — floated: indicium).
 4. Medulla op vocabulary DECISUS (at M1 design).
 5. REPL semantics (at M4).
