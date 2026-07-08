@@ -5796,3 +5796,97 @@ byte-exact (emission from stratum 0 as designed).
 by name: M0 semantica INTENTIO (silva-side typus+index - scoped
 symbol tables, types, layout, clang sizeof/offsetof oracle;
 officina-spec-v2.md §VI is the grounded plan).
+
+## M0a SEMANTICA — INTENTIO (2026-07-08)
+
+The spec is project-specs/silva-semantica-design.md (DECISUS §I: all
+eleven interview answers; V2 grounding §§VII-XI: ambigui census,
+empirically-settled systema wiring, typing-walk contract; §XI all
+three sign-offs APPROVED by Fran 2026-07-08). This INTENTIO is the
+build plan; the design doc is the why. Officina context:
+officina-spec-v2.md §VI — M0a is the compiler's first dependency AND
+silva's own typus+index milestone.
+
+SCOPE (M0a): scoped symbol tables + real types + host-faithful
+layout + haruspex (clang layout oracle) + project index + the
+ambiguity closure with TRIVALENT oracle + systema. M0b (expression
+typing + conversions) is separate and follows.
+
+CHUNKS:
+
+**A — typus + forma fundamenta.** TypusC89 representation: interned
+derived types (monstrator/acies/functio/qualificatus wrappers -
+single-pointer handles, pointer equality), nominal tag types
+(identity per declaration site), canonical primitive table (14
+multisets; char/signed char/unsigned char THREE types). Declarator-
+chain construction (internum unwind; abstract = bottoms at NIHIL;
+parenthesis transparent). Integer constant-expression evaluator
+(aestimator) sharing one context with forma (lazy layout, arm64
+LP64, mutual recursion by design). Module boundaries may fold
+typus/forma into one TU if the shared context demands - the API
+names are the contract, not the TU count. Bar: interview-pinned
+fixtures green (qualifier-through-typedef = int* const, the three
+chars, incomplete-tag completion, self-referential struct, enum
+constant into ordinary namespace, array-size consteval, poison-type
+non-cascade).
+
+**B — scopus + the declaration walk.** Scope stack, four namespaces
+(ordinaria incl. enum constants + typedefs; tags with completion
+pointers; membra; labels). Whole-file source-order walk (the sanatio
+invariant: register-before-use in ONE pass, never compare
+byte_offset across fontes; recurse conditionalis/ramus-sumptus
+contentum, skip ramus-omissus + ERROR; AMBIGUUS descends canonica -
+and canonical is the EXPRESSION reading by policy, never assume
+declaration). Contract facts honored per design §IX (tok_aperta
+def-vs-ref discriminator; declaratio-nuda zero declaratores;
+implicit-int NIHIL specificatores; K&R park). Poison diagnostics
+table. Percursus -semantica flag (DEFAULT OFF; baseline 15,243
+stays pristine). Bar: corpus sweep - every file analyzed,
+diagnostics 0, symbol/type totals reported.
+
+**C — systema + oraculum trivalens + closure.** Author
+fontes/systema_c89.h (the FULL ISO C89 library surface, hand-written
+committed text fixture; plain .h, NO datum until machinula M2 needs
+embedding). Oracle preload (typedefs via
+silva_oraculum_typum_addere_literis-style table - the proven
+channel; lexica channel PROVEN INERT for typedefs, design §VIII).
+Channel B: parse systema once per SilvaSemantica session, harvest
+declarations into semantica tables (user parses stay pristine -
+systema is its own queryable layer). TRIVALENT oracle upgrade:
+SilvaOraculum learns NON-types (non_typum_addere + trivalent query);
+resolutor gains the kill-declaration-reading rule for known
+non-types; non-type harvest from the declaration walk (registration
+locus - precommit interleaved walk vs post-commit closure - is an
+implementation decision inside the chunk; the bar only measures the
+end state). Closure via silva_recanonicare (datum = semantica
+tables; SilvaResolutor interface UNCHANGED). Bar: ambigui 15,243 ->
+the named-park residue (nested-cast class ~2% + genuinely
+ambiguous), measured by percursus/census_ambigui before/after;
+every residual classified.
+
+**D — haruspex + index + publica.** Haruspex instrument
+(instrumenta/principalia/haruspex.c + haruspex.sh): walks the type
+inventory -> ONE generated TU of compile-time asserts (sizeof +
+offsetof per DIRECT member; C89 has no anonymous members, nesting
+composes), partitioned by PROVENANCE (repo types = clang truth;
+systema types = opacity contract only). Compile IS the verdict.
+Project index API (in-memory; saltuarius type-jump = first named
+consumer, wiring is saltuarius v0.1's pull). Public surface:
+silva.h rows + hospes calls (standing rule) + amalgam manifest +
+VERIFICATUM. M0a RELATIO + FULL phase-log audit (phase boundary).
+
+PARKS (named, landing spots): initializer type-CHECKING -> M0b;
+nested-cast resolver class (~2%, 34 instances) -> post-M0a resolver
+look; K&R full typing -> on-pull (corpus cannot contain it);
+block-scope haruspex coverage -> replicate-under-synthesized-tag
+path back if a block-scope layout bug ever appears; semantica
+lifetime/invalidation -> M4 + incrementalitas journal;
+est_syntheticus reader -> when hiding synthetic decls becomes real.
+
+RISKS WATCHED: arena scale on the corpus sweep (percursus apex
+3.4GB precedent - per-file piscina destroyed per file); the
+canonical-is-expression trap; lista-prospectus discipline
+(silva_valor_lista_* ONLY); walk-order visibility.
+
+Exit: chunks A-D bars + suite green + amalgamare VERIFICATUM +
+percursus baseline unchanged with flags off.
