@@ -3,6 +3,7 @@
 
 #include "silva_c89_semantica.h"
 #include "silva_tabulae_c89.h"
+#include "silva_c89_oraculum.h"
 #include <string.h>
 
 /* ==================================================
@@ -181,6 +182,7 @@ _symbolum_registrare (SilvaSemantica* sem, s32 genus,
     symbolum->valor = valor;
     symbolum->repositio = repositio;
     symbolum->profunditas = sem->scopus_currens->profunditas;
+    symbolum->ex_systemate = sem->in_systemate;
     symbolum->declarans = declarans;
     symbolum->lexema = lexema;
     (vacuum)tabula_dispersa_inserere(sem->scopus_currens->ordinaria,
@@ -214,6 +216,7 @@ _typum_allocare (SilvaSemantica* sem, s32 genus)
     }
     memset(t, ZEPHYRUM, magnitudo(TypusC89));
     t->genus = genus;
+    t->ex_systemate = sem->in_systemate;
     redde t;
 }
 
@@ -1772,6 +1775,15 @@ SilvaSemantica*
 silva_c89_semantica_analysare (Piscina* piscina,
     constans SilvaParsura* parsura)
 {
+    redde silva_c89_semantica_analysare_cum_systemate(piscina,
+        parsura, NIHIL);
+}
+
+SilvaSemantica*
+silva_c89_semantica_analysare_cum_systemate (Piscina* piscina,
+    constans SilvaParsura* parsura,
+    constans SilvaParsura* systema)
+{
     SilvaSemantica* sem;
 
     si (piscina == NIHIL || parsura == NIHIL
@@ -1784,8 +1796,82 @@ silva_c89_semantica_analysare (Piscina* piscina,
     {
         redde NIHIL;
     }
+    si (systema != NIHIL && systema->commissio != NIHIL)
+    {
+        sem->in_systemate = VERUM;
+        _listam_ambulare(sem, systema->commissio->radix);
+        sem->in_systemate = FALSUM;
+    }
     _listam_ambulare(sem, parsura->commissio->radix);
     redde sem;
+}
+
+i32
+silva_c89_semantica_oraculum_augere (
+    constans SilvaSemantica* sem, SilvaOraculum* oraculum)
+{
+    i32 i;
+    i32 numerus = ZEPHYRUM;
+
+    si (sem == NIHIL || oraculum == NIHIL)
+    {
+        redde ZEPHYRUM;
+    }
+    per (i = ZEPHYRUM; i < xar_numerus(sem->symbola); i++)
+    {
+        SemanticaSymbolum* symbolum =
+            *(SemanticaSymbolum**)xar_obtinere(sem->symbola, i);
+        b32 bene;
+
+        si (symbolum->genus == (s32)SYMBOLUM_TYPEDEF)
+        {
+            bene = silva_oraculum_typum_addere(oraculum,
+                symbolum->titulus);
+        }
+        alioquin
+        {
+            bene = silva_oraculum_non_typum_addere(oraculum,
+                symbolum->titulus);
+        }
+        si (bene)
+        {
+            numerus++;
+        }
+    }
+    redde numerus;
+}
+
+i32
+silva_c89_ambigua_indecisa_numerare (
+    constans SilvaCommissio* commissio,
+    constans SilvaOraculum*  oraculum)
+{
+    i32 i;
+    i32 indecisa = ZEPHYRUM;
+
+    si (commissio == NIHIL || oraculum == NIHIL)
+    {
+        redde ZEPHYRUM;
+    }
+    per (i = ZEPHYRUM; i < xar_numerus(commissio->ambigui); i++)
+    {
+        SilvaNodus** slot =
+            (SilvaNodus**)xar_obtinere(commissio->ambigui, i);
+        SilvaResolutioResponsum responsum;
+
+        si (slot == NIHIL || *slot == NIHIL)
+        {
+            perge;
+        }
+        responsum.victor = -I;
+        responsum.discriminans = NIHIL;
+        silva_c89_resolutor(*slot, oraculum, NIHIL, &responsum);
+        si (responsum.victor < ZEPHYRUM)
+        {
+            indecisa++;
+        }
+    }
+    redde indecisa;
 }
 
 /* ==================================================

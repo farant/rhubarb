@@ -29,8 +29,68 @@ silva_oraculum_creare (Piscina* piscina)
     {
         redde NIHIL;
     }
+    oraculum->non_typi = tabula_dispersa_creare_chorda(piscina,
+        XVI);
+    si (oraculum->non_typi == NIHIL)
+    {
+        redde NIHIL;
+    }
     oraculum->responsa = NIHIL;  /* pigre creatum */
     redde oraculum;
+}
+
+/* ==================================================
+ * Non-typi (oraculum trivalens - M0a Chunk C)
+ * ================================================== */
+
+b32
+silva_oraculum_non_typum_addere (
+    SilvaOraculum* oraculum,
+    chorda         titulus)
+{
+    chorda copia;
+
+    si (oraculum == NIHIL || titulus.mensura == ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    si (tabula_dispersa_continet(oraculum->non_typi, titulus))
+    {
+        redde VERUM;
+    }
+    copia = chorda_transcribere(titulus, oraculum->piscina);
+    redde tabula_dispersa_inserere(oraculum->non_typi, copia,
+        (vacuum*)oraculum);
+}
+
+b32
+silva_oraculum_non_typum_addere_literis (
+    SilvaOraculum*      oraculum,
+    constans character* titulus)
+{
+    chorda c;
+    unio { constans character* c; i8* m; } u;
+
+    si (oraculum == NIHIL || titulus == NIHIL)
+    {
+        redde FALSUM;
+    }
+    u.c = titulus;
+    c.datum = u.m;
+    c.mensura = (i32)strlen(titulus);
+    redde silva_oraculum_non_typum_addere(oraculum, c);
+}
+
+b32
+silva_oraculum_non_typum_novit (
+    constans SilvaOraculum* oraculum,
+    chorda                  titulus)
+{
+    si (oraculum == NIHIL)
+    {
+        redde FALSUM;
+    }
+    redde tabula_dispersa_continet(oraculum->non_typi, titulus);
 }
 
 /* ==================================================

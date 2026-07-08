@@ -5986,3 +5986,71 @@ model, lenient same-genus redecl, labels park.
 trivalent upgrade + non-type resolver rule, recanonicare closure;
 bar: ambigui 15,261 → named-park residue AND semantica diagnostica
 → ~0).
+
+### M0a CHUNK C — RELATIO (2026-07-08): systema + oraculum trivalens + clausura SHIPPED
+
+**THE DEMO NUMBERS (the census's promise, kept):**
+- ambigui at commit: 15,261 → 3,401 (-78%; preload + trivalent
+  precommit registration collapse most forks before retention)
+- post-closure: 1,939 versae + 1,051 confirmationes; residuum
+  **411 indecisa = 2.7%** of the original mass (97.3% resolved)
+- semantica diagnostica: 818 → 110 in 26 plagulis (-87%)
+- walls unmoved: errores 0, totalitas TENET, 729/730 octetim (the
+  named pasta deferral), tempus ~111s (semantica+clausura cost
+  invisible), suite 29/29, amalgamare VERIFICATUM 27/27.
+
+**Shipped:**
+- fontes/systema_c89.h — the officina PLATFORM FILE: full ISO C89
+  library surface (~145 prototypes, all core types, key macros),
+  vanilla C89, parses with ZERO errors and ZERO ambigui (type
+  ordering deliberate); provenance-marked harvest (ex_systemate on
+  types and symbols) for the haruspex partition.
+- Oraculum TRIVALENS (silva_commissio): non_typi table +
+  non_typum_addere[_literis]/novit; resolver kill-rule (a reading
+  requiring a known NON-type as a type = impossible, same force as
+  X10); precommit walk now registers non-typedef declarators AND
+  function-definition names as non-types (same interleaved walk,
+  same visibility semantics).
+- Channel B plumbing: analysare_cum_systemate (systema harvested
+  into scope 0 before the user walk; user parses stay pristine) +
+  oraculum_augere (semantica symbols → oracle: typedefs as types,
+  everything else as non-types — serves BOTH preload and closure)
+  + ambigua_indecisa_numerare (decisum != versum: recanonicare
+  counts flips only — the closure metric is undecided-count).
+- percursus -semantica full pipeline: systema parsed once
+  (long-lived ctx piscina), per-file preloaded oracle → parse →
+  cum-systemate analysis → augere → responsa_vacare →
+  recanonicare + residuum; summary "clausura: N versae; M indecisa".
+- census_ambigui upgraded to full-pipeline residue mode (prints
+  ONLY indecisa discriminants) — the classification instrument.
+
+**Residuum CLASSIFIED (bar clause met):** (a) nested cast/paren
+chains + GLR fork-as-reading packing — the named resolver park,
+now sharply characterized with a minimal repro pinned in the
+probatio (delineare 34, scrutinium family ~85...); (b) POSIX names
+(reactor/tcp/dirent/termios) — systema is ISO by DECISUS, a
+systema_posix supplement is named on-pull; (c) diagnostics-only:
+~55 roundtrip fixtures with DELIBERATELY unknown types + ~15
+praebenda basename-collision victims (harness item). Full table in
+silva_c89_semantica.worklog.md.
+
+**Found+fixed during classification — the CONTAGION bug:** the
+trivalent kill leaked through nested ambigui (outer readings
+absorbed non_typus from inner ALTERNATIVES → both killed → wrongful
+retention). Fix: AMBIGUUS special-case in _nodum_examinare —
+nominatus/ignotus merge as ANY (old semantics preserved),
+non_typus merges only if ALL inner readings carry it. Probatio
+pins the repro (2 of 3 forks rescued; the third = deep-chain park).
+
+**Lesson recorded (worklog + memory-worthy): the stale-object
+trap.** Two build systems write DIFFERENT object names into
+silva/build (suite: <n>.o; percursus: fons_<n>.o). Hand-linked
+probes silently used pre-fix objects — "the fix didn't work"
+because it was never in the binary. Purge both flavors after
+fontes edits when hand-linking.
+
+Probatio: 143 asserts (was 112). **NEXT (named): Chunk D —
+haruspex + index + publica** (the oracle instrument over the type
+inventory w/ provenance partition; index API, saltuarius first
+consumer; silva.h rows + hospes + manifest; M0a RELATIO + FULL
+phase-log audit at close).

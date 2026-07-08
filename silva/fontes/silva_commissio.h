@@ -43,6 +43,11 @@ nomen structura SilvaOraculum SilvaOraculum;
 structura SilvaOraculum {
     Piscina*        piscina;
     TabulaDispersa* typi;      /* clavis chorda (copiata) -> VERUM */
+    TabulaDispersa* non_typi;  /* TRIVALENS (M0a C): nomina quae
+                                * NON-typi noti sunt (functiones,
+                                * variabiles, acies) - lectio quae
+                                * nomen tale ut typum postulat
+                                * IMPOSSIBILIS est (occiditur) */
     Xar*            responsa;  /* verdicta praecomputata ambulationis
                                 * praecommissionis (sanatio oraculi
                                 * 2026-07-06): {sedes, victor} per
@@ -79,6 +84,18 @@ b32 silva_oraculum_situs_typi (constans SilvaOraculum* oraculum,
 
 b32 silva_oraculum_typum_novit (constans SilvaOraculum* oraculum,
     chorda titulus);
+
+/* Oraculum TRIVALENS (M0a Chunk C, censu ductum: ~84% ambiguorum
+ * retentorum in nominibus NON-typorum repositorii discriminant -
+ * silva-semantica-design.md par VII). Nomen ut typus ET ut non-typus
+ * notum (umbratio trans scopos, tabula plana): typus vincit
+ * (conservativum - retentio ut ante). */
+b32 silva_oraculum_non_typum_addere (SilvaOraculum* oraculum,
+    chorda titulus);
+b32 silva_oraculum_non_typum_addere_literis (SilvaOraculum* oraculum,
+    constans character* titulus);
+b32 silva_oraculum_non_typum_novit (
+    constans SilvaOraculum* oraculum, chorda titulus);
 
 /* Verdicta praecomputata (sanatio oraculi 2026-07-06): ambulatio
  * praecommissionis grammaticae verdictum per AMBIGUUS stipat

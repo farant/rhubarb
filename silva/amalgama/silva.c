@@ -3274,6 +3274,11 @@ silva_glr_terminale_ex_genere (
 structura SilvaOraculum {
     SilvaPiscina*        piscina;
     SilvaTabulaDispersa* typi;      /* clavis chorda (copiata) -> VERUM */
+    SilvaTabulaDispersa* non_typi;  /* TRIVALENS (M0a C): nomina quae
+                                * NON-typi noti sunt (functiones,
+                                * variabiles, acies) - lectio quae
+                                * nomen tale ut typum postulat
+                                * IMPOSSIBILIS est (occiditur) */
     SilvaXar*            responsa;  /* verdicta praecomputata ambulationis
                                 * praecommissionis (sanatio oraculi
                                 * 2026-07-06): {sedes, victor} per
@@ -3310,6 +3315,18 @@ b32 silva_oraculum_situs_typi (constans SilvaOraculum* oraculum,
 
 b32 silva_oraculum_typum_novit (constans SilvaOraculum* oraculum,
     SilvaChorda titulus);
+
+/* Oraculum TRIVALENS (M0a Chunk C, censu ductum: ~84% ambiguorum
+ * retentorum in nominibus NON-typorum repositorii discriminant -
+ * silva-semantica-design.md par VII). Nomen ut typus ET ut non-typus
+ * notum (umbratio trans scopos, tabula plana): typus vincit
+ * (conservativum - retentio ut ante). */
+b32 silva_oraculum_non_typum_addere (SilvaOraculum* oraculum,
+    SilvaChorda titulus);
+b32 silva_oraculum_non_typum_addere_literis (SilvaOraculum* oraculum,
+    constans character* titulus);
+b32 silva_oraculum_non_typum_novit (
+    constans SilvaOraculum* oraculum, SilvaChorda titulus);
 
 /* Verdicta praecomputata (sanatio oraculi 2026-07-06): ambulatio
  * praecommissionis grammaticae verdictum per AMBIGUUS stipat
@@ -29052,8 +29069,68 @@ silva_oraculum_creare (SilvaPiscina* piscina)
     {
         redde NIHIL;
     }
+    oraculum->non_typi = silva_tabula_dispersa_creare_chorda(piscina,
+        XVI);
+    si (oraculum->non_typi == NIHIL)
+    {
+        redde NIHIL;
+    }
     oraculum->responsa = NIHIL;  /* pigre creatum */
     redde oraculum;
+}
+
+/* ==================================================
+ * Non-typi (oraculum trivalens - M0a Chunk C)
+ * ================================================== */
+
+b32
+silva_oraculum_non_typum_addere (
+    SilvaOraculum* oraculum,
+    SilvaChorda         titulus)
+{
+    SilvaChorda copia;
+
+    si (oraculum == NIHIL || titulus.mensura == ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    si (silva_tabula_dispersa_continet(oraculum->non_typi, titulus))
+    {
+        redde VERUM;
+    }
+    copia = silva_chorda_transcribere(titulus, oraculum->piscina);
+    redde silva_tabula_dispersa_inserere(oraculum->non_typi, copia,
+        (vacuum*)oraculum);
+}
+
+b32
+silva_oraculum_non_typum_addere_literis (
+    SilvaOraculum*      oraculum,
+    constans character* titulus)
+{
+    SilvaChorda c;
+    unio { constans character* c; i8* m; } u;
+
+    si (oraculum == NIHIL || titulus == NIHIL)
+    {
+        redde FALSUM;
+    }
+    u.c = titulus;
+    c.datum = u.m;
+    c.mensura = (i32)strlen(titulus);
+    redde silva_oraculum_non_typum_addere(oraculum, c);
+}
+
+b32
+silva_oraculum_non_typum_novit (
+    constans SilvaOraculum* oraculum,
+    SilvaChorda                  titulus)
+{
+    si (oraculum == NIHIL)
+    {
+        redde FALSUM;
+    }
+    redde silva_tabula_dispersa_continet(oraculum->non_typi, titulus);
 }
 
 /* ==================================================
@@ -32677,13 +32754,10 @@ _declarationem_registrare (
     SilvaOraculum*       oraculum)
 {
     SilvaValor declaratores;
+    b32 est_typedef = _habet_typedef(
+        silva_c89_declaratio_specificatores(declaratio));
     i32 i;
 
-    si (!_habet_typedef(
-            silva_c89_declaratio_specificatores(declaratio)))
-    {
-        redde;
-    }
     declaratores = silva_c89_declaratio_declaratores(declaratio);
     per (i = ZEPHYRUM;
          i < silva_valor_lista_numerus(declaratores); i++)
@@ -32697,10 +32771,22 @@ _declarationem_registrare (
             perge;  /* signa COMMA interserta */
         }
         titulus = silva_c89_declaratoris_titulus(elem->datum.nodus);
-        si (titulus != NIHIL && titulus->byte_offset >= ZEPHYRUM)
+        si (titulus == NIHIL || titulus->byte_offset < ZEPHYRUM)
+        {
+            perge;
+        }
+        si (est_typedef)
         {
             silva_oraculum_typum_addere_situ(oraculum,
                 titulus->valor, titulus->byte_offset);
+        }
+        alioquin
+        {
+            /* trivalens (M0a C): declaratores non-typedef = nomina
+             * NON-typorum nota (variabiles/functiones/acies) -
+             * lectiones sizeof-typi/conversionis eorum occiduntur */
+            (vacuum)silva_oraculum_non_typum_addere(oraculum,
+                titulus->valor);
         }
     }
 }
@@ -32852,6 +32938,27 @@ _percurrere (
         }
         frange;  /* loci infra descenduntur (ambigua initiatorum) */
     casus (s32)SILVA_C89_GENUS_DEFINITIO_FUNCTIONIS:
+        si (!sine_registratione)
+        {
+            /* nomen functionis = non-typus notus (trivalens) */
+            SilvaValor decl_v =
+                silva_c89_definitio_functionis_declarator(nodus);
+
+            si (decl_v.genus == SILVA_VALOR_NODUS)
+            {
+                SilvaToken* titulus = silva_c89_declaratoris_titulus(
+                    decl_v.datum.nodus);
+
+                si (titulus != NIHIL
+                    && titulus->byte_offset >= ZEPHYRUM)
+                {
+                    (vacuum)silva_oraculum_non_typum_addere(
+                        oraculum, titulus->valor);
+                }
+            }
+        }
+        sine_registratione = VERUM;  /* decisiones 13 */
+        frange;
     casus (s32)SILVA_C89_GENUS_CORPUS:
         sine_registratione = VERUM;  /* decisiones 13 */
         frange;
@@ -32894,6 +33001,8 @@ nomen structura {
     b32 invalidum;        /* combinatio impossibilis (X10) */
     b32 nominatus_adest;
     b32 ignotus_adest;    /* nominatus oraculo NUNC ignotus */
+    b32 non_typus_adest;  /* nominatus NON-TYPUS notus (trivalens):
+                           * lectio impossibilis - occiditur */
     b32 species_adest;    /* nodus specificatores ferens (politica) */
 } ExamenLectionis;
 
@@ -32949,6 +33058,13 @@ _specificatores_examinare (
                        titulus.datum.token->valor))
             {
                 examen->ignotus_adest = VERUM;
+                /* trivalens: NON-typus notus (nec typus - umbratio
+                 * typum vincere sinit) = lectio impossibilis */
+                si (silva_oraculum_non_typum_novit(oraculum,
+                        titulus.datum.token->valor))
+                {
+                    examen->non_typus_adest = VERUM;
+                }
             }
             frange;
         }
@@ -32991,6 +33107,59 @@ _nodum_examinare (
 
     commutatio (nodus->genus)
     {
+    casus (s32)SILVA_C89_GENUS_AMBIGUUS:
+    {
+        /* Furca nidificata: vexilla nominatus/ignotus fluunt ut
+         * ante (QUAELIBET lectio); non_typus fluit SOLUM si OMNES
+         * lectiones interiores eum ferunt (aliter lectio exterior
+         * ob alternativam interiorem NON electam occideretur -
+         * contagio falsa, inventa Chunk C per "values") */
+        SilvaValor interp =
+            silva_c89_ambiguus_interpretationes(nodus);
+        i32 m = silva_valor_lista_numerus(interp);
+        i32 k;
+        b32 omnes_non_typi = (m > ZEPHYRUM) ? VERUM : FALSUM;
+
+        per (k = ZEPHYRUM; k < m; k++)
+        {
+            SilvaValor* elem = silva_valor_lista_obtinere(interp, k);
+            ExamenLectionis sub;
+
+            sub.invalidum = FALSUM;
+            sub.nominatus_adest = FALSUM;
+            sub.ignotus_adest = FALSUM;
+            sub.non_typus_adest = FALSUM;
+            sub.species_adest = FALSUM;
+            si (elem == NIHIL || elem->genus != SILVA_VALOR_NODUS)
+            {
+                omnes_non_typi = FALSUM;
+                perge;
+            }
+            _nodum_examinare(elem->datum.nodus, oraculum, &sub,
+                profunditas + I);
+            si (sub.nominatus_adest)
+            {
+                examen->nominatus_adest = VERUM;
+            }
+            si (sub.ignotus_adest)
+            {
+                examen->ignotus_adest = VERUM;
+            }
+            si (sub.species_adest)
+            {
+                examen->species_adest = VERUM;
+            }
+            si (!sub.non_typus_adest)
+            {
+                omnes_non_typi = FALSUM;
+            }
+        }
+        si (omnes_non_typi)
+        {
+            examen->non_typus_adest = VERUM;
+        }
+        redde;
+    }
     casus (s32)SILVA_C89_GENUS_DECLARATIO:
         specificatores = silva_c89_declaratio_specificatores(nodus);
         habet_species = VERUM;
@@ -33149,6 +33318,7 @@ _ambiguum_examinare (
         examina[i].invalidum = FALSUM;
         examina[i].nominatus_adest = FALSUM;
         examina[i].ignotus_adest = FALSUM;
+        examina[i].non_typus_adest = FALSUM;
         examina[i].species_adest = FALSUM;
         si (elem == NIHIL || elem->genus != SILVA_VALOR_NODUS)
         {
@@ -33157,6 +33327,13 @@ _ambiguum_examinare (
         }
         _nodum_examinare(elem->datum.nodus, oraculum,
             &examina[i], ZEPHYRUM);
+
+        /* trivalens: lectio quae non-typum notum ut typum postulat
+         * OCCIDITUR (eadem vi ac combinatio impossibilis X10) */
+        si (examina[i].non_typus_adest)
+        {
+            examina[i].invalidum = VERUM;
+        }
 
         si (!examina[i].invalidum)
         {

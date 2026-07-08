@@ -18,6 +18,7 @@
 #include "silva_parsare.h"
 #include "silva_commissio.h"
 #include "silva_c89_oraculum.h"
+#include "silva_c89_semantica.h"
 #include "silva_tabulae_c89.h"
 #include <stdio.h>
 #include <string.h>
@@ -188,6 +189,9 @@ int principale (int argc, char** argv)
     i32 mensura;
     i32 amb;
     i32 i;
+    SilvaOraculum* oraculum;
+    SilvaParsura* systema_parsura = NIHIL;
+    SilvaSemantica* systema_semantica = NIHIL;
 
     si (argc < II)
     {
@@ -227,15 +231,62 @@ int principale (int argc, char** argv)
         si (visa != NIHIL) _capita_praeparare(ctx, piscina_ctx, visa, ".");
     }
 
+    /* fistula plena (Chunk C): systema + praeoneratio + clausura -
+     * residuum SOLUM imprimitur (indecisa post clausuram) */
+    {
+        FILE* pl_sys = fopen("silva/fontes/systema_c89.h", "rb");
+        long m_sys;
+        character* f_sys;
+        SilvaParsura* p_sys;
+
+        si (pl_sys == NIHIL)
+        {
+            fprintf(stderr, "systema deest (curre ex radice)\n");
+            redde I;
+        }
+        fseek(pl_sys, 0L, SEEK_END);
+        m_sys = ftell(pl_sys);
+        fseek(pl_sys, 0L, SEEK_SET);
+        f_sys = (character*)piscina_allocare(piscina_ctx,
+            (memoriae_index)(m_sys + 1L));
+        si (fread(f_sys, I, (memoriae_index)m_sys, pl_sys)
+            != (memoriae_index)m_sys)
+        {
+            fclose(pl_sys); redde I;
+        }
+        fclose(pl_sys);
+        p_sys = silva_c89_parsare(piscina_ctx, "systema_c89.h",
+            f_sys, (i32)m_sys, NIHIL);
+        si (p_sys == NIHIL) redde I;
+        systema_semantica = silva_c89_semantica_analysare(
+            piscina_ctx, p_sys);
+        systema_parsura = p_sys;
+    }
+    oraculum = silva_oraculum_creare(piscina);
+    (vacuum)silva_c89_semantica_oraculum_augere(systema_semantica,
+        oraculum);
+
     parsura = silva_c89_parsare_cum_contextu(piscina, ctx, via,
-        (constans character*)fons, mensura, NIHIL);
+        (constans character*)fons, mensura, oraculum);
     si (parsura == NIHIL || !parsura->successus)
     {
         imprimere("SINE ARBORE\n"); redde I;
     }
+    {
+        SilvaSemantica* sem =
+            silva_c89_semantica_analysare_cum_systemate(piscina,
+                parsura, systema_parsura);
+
+        si (sem != NIHIL)
+        {
+            (vacuum)silva_c89_semantica_oraculum_augere(sem,
+                oraculum);
+        }
+        silva_oraculum_responsa_vacare(oraculum);
+    }
     amb = xar_numerus(parsura->commissio->ambigui);
-    imprimere("# %s : %d capita praebita, %d ambigui\n",
-        via, (int)capita_praebita, (int)amb);
+    imprimere("# %s : %d capita praebita, %d retenta, residuum"
+        " sequitur\n", via, (int)capita_praebita, (int)amb);
 
     per (i = ZEPHYRUM; i < amb; i++)
     {
@@ -246,6 +297,17 @@ int principale (int argc, char** argv)
 
         si (pp == NIHIL || *pp == NIHIL) perge;
         nodus = *pp;
+        {
+            SilvaResolutioResponsum responsum;
+
+            responsum.victor = -I;
+            responsum.discriminans = NIHIL;
+            silva_c89_resolutor(nodus, oraculum, NIHIL, &responsum);
+            si (responsum.victor >= ZEPHYRUM)
+            {
+                perge;   /* decisum - non residuum */
+            }
+        }
         disc = _discriminans_invenire(nodus, ZEPHYRUM, VERUM);
         si (disc == NIHIL)
         {

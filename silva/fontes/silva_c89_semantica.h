@@ -39,6 +39,7 @@
 #include "silva_token.h"
 #include "silva_nodus.h"
 #include "silva_parsare.h"
+#include "silva_commissio.h"
 
 /* ==================================================
  * Genera typorum
@@ -95,6 +96,8 @@ nomen structura {
 
 structura TypusC89 {
     s32 genus;              /* TypusC89Genus */
+    b32 ex_systemate;       /* provenientia (haruspex: de typis
+                             * systematis solum opacitas asseritur) */
 
     /* forma pigra */
     b32 forma_computata;
@@ -165,6 +168,7 @@ nomen structura {
     s64                  valor;        /* CONSTANS solum */
     i32                  repositio;    /* REPOSITIO_* vexilla */
     i32                  profunditas;  /* 0 = scopus fili */
+    b32                  ex_systemate; /* provenientia */
     constans SilvaNodus* declarans;
     SilvaToken*          lexema;       /* nomen; NIHIL licet */
 } SemanticaSymbolum;
@@ -207,6 +211,8 @@ nomen structura {
     Xar* symbola;               /* SemanticaSymbolum* */
 
     Xar* diagnostica;           /* SemanticaDiagnosticum (valore) */
+
+    b32 in_systemate;           /* vexillum ambulationis (provenientia) */
 } SilvaSemantica;
 
 SilvaSemantica* silva_c89_semantica_creare (Piscina* piscina);
@@ -287,6 +293,38 @@ SilvaSemantica* silva_c89_semantica_analysare (Piscina* piscina,
  * fili). NIHIL si absens. */
 SemanticaSymbolum* silva_c89_symbolum_invenire (SilvaSemantica* sem,
     chorda titulus);
+
+/* ==================================================
+ * Systema (Chunk C): canalis B - arbor systematis SEMEL parsata
+ * (silva/fontes/systema_c89.h), symbola eius in scopum summum
+ * harvestata (ex_systemate signata) ANTE ambulationem usoris;
+ * parsurae usoris intactae manent (stratum proprium quaerbile).
+ * ================================================== */
+
+/* Ut analysare, sed symbola systematis prius harvestat (systema
+ * NIHIL licet = analysare simplex). Arbor systematis piscinam
+ * SUAM habere potest - vivat quamdiu sem vivit. */
+SilvaSemantica* silva_c89_semantica_analysare_cum_systemate (
+    Piscina* piscina, constans SilvaParsura* parsura,
+    constans SilvaParsura* systema);
+
+/* Symbola semanticae in oraculum fundere: TYPEDEF -> typi noti,
+ * cetera -> NON-typi noti (trivalens). Duplex usus: praeoneratio
+ * (sem systematis -> oraculum per plagulam) et clausura (sem
+ * plagulae -> oraculum ante silva_recanonicare - vide percursum).
+ * Numerum nominum fusorum reddit. */
+i32 silva_c89_semantica_oraculum_augere (
+    constans SilvaSemantica* sem, SilvaOraculum* oraculum);
+
+/* Residuum clausurae: quot ambigua retenta ADHUC INDECISA sint
+ * (resolutor victorem non dat) sub oraculo dato. NB: responsa
+ * stipata leguntur - voca silva_oraculum_responsa_vacare ante, si
+ * status RECENS oraculi quaeritur. "Decisum" != "versum":
+ * resolutio quae canonicae iam congruit nihil vertit sed decisa
+ * est (recanonicare solum versiones numerat). */
+i32 silva_c89_ambigua_indecisa_numerare (
+    constans SilvaCommissio* commissio,
+    constans SilvaOraculum*  oraculum);
 
 /* ==================================================
  * Forma (pigra; arm64 LP64 Apple)

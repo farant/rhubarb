@@ -55,3 +55,48 @@ Notes that don't belong in the header comment:
   goto/label legality) — park named.
 - Block-scope struct tag redefinition now CORRECT via scoped tag
   tables (Chunk A's flat-table limitation closed).
+
+## 2026-07-08 — Chunk C ships (systema + oraculum trivalens + clausura)
+
+- **THE NUMBERS**: ambigui at commit 15,261 -> 3,401 (preload +
+  trivalent precommit registration); post-closure residuum 411
+  indecisa = 2.7% of the original mass (97.3% resolved). Semantica
+  diagnostica 818 -> 110 in 26 files.
+- **Residuum classified** (the bar's clause):
+  (a) nested cast/paren CHAINS incl. GLR fork-as-reading packing —
+      delineare.c 34 (s32 — known type!), scrutinium family ~85
+      (values/i/magnitudo — known non-types!), elementa,
+      pinacotheca_visus, nuntium... The already-named nested-cast
+      resolver park, now BETTER CHARACTERIZED: per-fork examination
+      defeats itself on packed fork-chains where forks appear AS
+      readings of other forks. Minimal repro = the probatio's
+      "catenae nidificatae" fixture (SCR_ELEM macro shape from
+      scrutinium.h). Landing spot: post-M0a resolver look (chain-
+      aware joint resolution, or resolve-inner-first fixpoint).
+  (b) POSIX names (close, socket, ioctl, readdir families) —
+      reactor 18, tcp_posix 11, iter_directoria, tessera_pons.
+      Systema is ISO C89 by DECISUS; a systema_posix.h supplement
+      is a named on-pull item (officina Wave-1b/3 timing).
+  (c) diagnostics-only classes: ~55 roundtrip FIXTURE files with
+      DELIBERATELY unknown types (test_two_unknown_ret.c...);
+      ~15 praebenda basename-collision victims (silva_coquere's
+      SilvaGen* — percursus 5-collision first-wins limitation, a
+      harness item, not semantica).
+- **Contagion bug found+fixed during classification**: the trivalent
+  kill leaked through NESTED ambigui (outer reading absorbed
+  non_typus from an inner ALTERNATIVE it doesn't choose -> both
+  outer readings killed -> wrongful retention). Fix: _nodum_examinare
+  special-cases AMBIGUUS - nominatus/ignotus still merge as ANY
+  (old semantics), non_typus merges only if ALL inner readings carry
+  it (fork wholly impossible). Proven by the minimal repro: 2 of 3
+  forks rescued; the third is the deep-chain park.
+- **decisum != versum**: recanonicare counts FLIPS only; resolutions
+  agreeing with the canonical guess don't flip. The closure metric
+  is silva_c89_ambigua_indecisa_numerare (sweep: 1,939 flips + 1,051
+  confirmations + 411 indecisa of 3,401).
+- **Stale-object trap, TWICE**: two build systems write different
+  object names into silva/build (suite: <nomen>.o; percursus.sh:
+  fons_<nomen>.o). Probes linked fons_* objects that predated fontes
+  edits — a fix "didn't work" because it was never in the binary.
+  When probing with hand-linked binaries after fontes edits: rm the
+  relevant silva/build objects first, or rebuild via BOTH scripts.

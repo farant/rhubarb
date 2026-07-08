@@ -14,6 +14,7 @@
 #include "silva_c89_semantica.h"
 #include "credo.h"
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 interior chorda
@@ -546,6 +547,257 @@ s32 principale (vacuum)
         sem = silva_c89_semantica_analysare(piscina, parsura);
         CREDO_NON_NIHIL (sem);
         CREDO_VERUM (xar_numerus(sem->diagnostica) > ZEPHYRUM);
+    }
+
+    /* ========================================================
+     * PROBARE (Chunk C): oraculum trivalens - lectiones nominum
+     * NON-typorum occiduntur (collapsus ad commissionem)
+     * ======================================================== */
+    {
+        SilvaOraculum* oraculum;
+        SilvaParsura* parsura;
+        constans character* fons_v;
+
+        imprimere("\n--- Probans oraculum trivalens ---\n");
+
+        /* praeoneratum: foo non-typus -> (foo)(x) collapsus */
+        oraculum = silva_oraculum_creare(piscina);
+        CREDO_VERUM (silva_oraculum_non_typum_addere_literis(
+            oraculum, "foo"));
+        CREDO_VERUM (silva_oraculum_non_typum_novit(oraculum,
+            _ch("foo")));
+        fons_v = "(foo)(x);\n";
+        parsura = silva_c89_parsare(piscina, "probatio.c", fons_v,
+            (i32)strlen(fons_v), oraculum);
+        CREDO_NON_NIHIL (parsura);
+        CREDO_AEQUALIS_I32 (xar_numerus(
+            parsura->commissio->ambigui), ZEPHYRUM);
+
+        /* registratio praecommissionis IPSIUS PLAGULAE: acies
+         * REGULAE declarata -> sizeof(REGULAE) collapsus (THE
+         * mechanismus 84% - census par VII) */
+        fons_v = "int REGULAE[10];\nint n = sizeof(REGULAE);\n";
+        parsura = silva_c89_parsare(piscina, "probatio.c", fons_v,
+            (i32)strlen(fons_v), NIHIL);
+        CREDO_NON_NIHIL (parsura);
+        CREDO_AEQUALIS_I32 (parsura->numerus_errorum, ZEPHYRUM);
+        CREDO_AEQUALIS_I32 (xar_numerus(
+            parsura->commissio->ambigui), ZEPHYRUM);
+
+        /* nomen vere ignotum: retentio manet (honesta) */
+        fons_v = "int n = sizeof(IGNOTUM_X);\n";
+        parsura = silva_c89_parsare(piscina, "probatio.c", fons_v,
+            (i32)strlen(fons_v), NIHIL);
+        CREDO_NON_NIHIL (parsura);
+        CREDO_AEQUALIS_I32 (xar_numerus(
+            parsura->commissio->ambigui), I);
+    }
+
+    /* ========================================================
+     * PROBARE (Chunk C): systema - parsura, harvest, praeoneratio,
+     * analysis cum systemate (diagnostica -> 0), clausura
+     * ======================================================== */
+    {
+        constans character* radix_env;
+        character via[1024];
+        FILE* pl;
+        character* fons_sys = NIHIL;
+        long mensura_sys = 0L;
+        SilvaParsura* parsura_sys = NIHIL;
+        SilvaSemantica* sem_sys = NIHIL;
+
+        imprimere("\n--- Probans systema ---\n");
+
+        radix_env = getenv("RHUBARB_RADIX");
+        si (radix_env == NIHIL)
+        {
+            radix_env = "..";
+        }
+        sprintf(via, "%s/silva/fontes/systema_c89.h", radix_env);
+        pl = fopen(via, "rb");
+        CREDO_NON_NIHIL (pl);
+        si (pl != NIHIL)
+        {
+            fseek(pl, 0L, SEEK_END);
+            mensura_sys = ftell(pl);
+            fseek(pl, 0L, SEEK_SET);
+            fons_sys = (character*)piscina_allocare(piscina,
+                (memoriae_index)(mensura_sys + 1L));
+            si (fread(fons_sys, I, (memoriae_index)mensura_sys, pl)
+                != (memoriae_index)mensura_sys)
+            {
+                fons_sys = NIHIL;
+            }
+            fclose(pl);
+        }
+        CREDO_NON_NIHIL (fons_sys);
+
+        /* systema parsatur MUNDE: 0 errores, 0 ambigui (ordo
+         * typorum consulto) */
+        parsura_sys = silva_c89_parsare(piscina, "systema_c89.h",
+            fons_sys, (i32)mensura_sys, NIHIL);
+        CREDO_NON_NIHIL (parsura_sys);
+        CREDO_AEQUALIS_I32 (parsura_sys->numerus_errorum, ZEPHYRUM);
+        CREDO_AEQUALIS_I32 (xar_numerus(
+            parsura_sys->commissio->ambigui), ZEPHYRUM);
+
+        /* harvest: size_t TYPEDEF, malloc FUNCTIO, ex_systemate */
+        sem_sys = silva_c89_semantica_analysare(piscina, parsura_sys);
+        CREDO_NON_NIHIL (sem_sys);
+        CREDO_AEQUALIS_I32 (xar_numerus(sem_sys->diagnostica),
+            ZEPHYRUM);
+        {
+            SemanticaSymbolum* symbolum;
+
+            symbolum = silva_c89_symbolum_invenire(sem_sys,
+                _ch("size_t"));
+            CREDO_NON_NIHIL (symbolum);
+            CREDO_AEQUALIS_S32 (symbolum->genus,
+                (s32)SYMBOLUM_TYPEDEF);
+            CREDO_AEQUALIS_PTR (symbolum->typus,
+                silva_c89_typus_primitivum(sem_sys,
+                    PRIMITIVUM_LONGUS_INSIGNATUM));
+
+            symbolum = silva_c89_symbolum_invenire(sem_sys,
+                _ch("malloc"));
+            CREDO_NON_NIHIL (symbolum);
+            CREDO_AEQUALIS_S32 (symbolum->genus,
+                (s32)SYMBOLUM_FUNCTIO);
+        }
+
+        /* praeoneratio per augere: (size_t)(x) collapsus */
+        {
+            SilvaOraculum* oraculum = silva_oraculum_creare(piscina);
+            SilvaParsura* parsura;
+            constans character* fons_v = "(size_t)(x);\n";
+
+            CREDO_VERUM (silva_c89_semantica_oraculum_augere(
+                sem_sys, oraculum) > (i32)C);
+            parsura = silva_c89_parsare(piscina, "probatio.c",
+                fons_v, (i32)strlen(fons_v), oraculum);
+            CREDO_NON_NIHIL (parsura);
+            CREDO_AEQUALIS_I32 (xar_numerus(
+                parsura->commissio->ambigui), ZEPHYRUM);
+        }
+
+        /* analysis cum systemate: size_t/FILE noti -> diagnostica 0,
+         * typus per systema resolutus. NB: FILE* f est furca classica
+         * (foo * bar) - parsura ORACULO PRAEONERATO indiget (canalis
+         * praeonerationis!); size_t n superstes unicus etiam sine */
+        {
+            constans character* fons_v = "size_t n;\nFILE* f;\n";
+            SilvaOraculum* oraculum = silva_oraculum_creare(piscina);
+            SilvaParsura* parsura;
+            SilvaSemantica* sem;
+            SemanticaSymbolum* symbolum;
+
+            (vacuum)silva_c89_semantica_oraculum_augere(sem_sys,
+                oraculum);
+            parsura = silva_c89_parsare(piscina, "probatio.c",
+                fons_v, (i32)strlen(fons_v), oraculum);
+            CREDO_NON_NIHIL (parsura);
+            CREDO_AEQUALIS_I32 (xar_numerus(
+                parsura->commissio->ambigui), ZEPHYRUM);
+            sem = silva_c89_semantica_analysare_cum_systemate(
+                piscina, parsura, parsura_sys);
+            CREDO_NON_NIHIL (sem);
+            CREDO_AEQUALIS_I32 (xar_numerus(sem->diagnostica),
+                ZEPHYRUM);
+            symbolum = silva_c89_symbolum_invenire(sem, _ch("n"));
+            CREDO_NON_NIHIL (symbolum);
+            si (symbolum != NIHIL)
+            {
+                CREDO_FALSUM (symbolum->ex_systemate);
+                CREDO_AEQUALIS_PTR (symbolum->typus,
+                    silva_c89_typus_primitivum(sem,
+                        PRIMITIVUM_LONGUS_INSIGNATUM));
+            }
+            symbolum = silva_c89_symbolum_invenire(sem, _ch("f"));
+            CREDO_NON_NIHIL (symbolum);
+            si (symbolum != NIHIL)
+            {
+                CREDO_AEQUALIS_S32 (symbolum->typus->genus,
+                    (s32)TYPUS_C89_MONSTRATOR);
+            }
+        }
+
+        /* clausura: non-typus localis (corpus - praecommissio eum
+         * non registrat) -> retentum ad commissionem, versum per
+         * recanonicare cum oraculo aucto */
+        {
+            constans character* fons_v =
+                "void f(void)\n"
+                "{\n"
+                "    int localis[4];\n"
+                "    int n = sizeof(localis);\n"
+                "}\n";
+            SilvaOraculum* oraculum = silva_oraculum_creare(piscina);
+            SilvaParsura* parsura = silva_c89_parsare(piscina,
+                "probatio.c", fons_v, (i32)strlen(fons_v), oraculum);
+            SilvaSemantica* sem;
+
+            CREDO_NON_NIHIL (parsura);
+            CREDO_AEQUALIS_I32 (xar_numerus(
+                parsura->commissio->ambigui), I);
+            sem = silva_c89_semantica_analysare(piscina, parsura);
+            CREDO_NON_NIHIL (sem);
+            /* ante clausuram: indecisum (localis in corpore -
+             * praecommissio eum non registrat) */
+            CREDO_AEQUALIS_I32 (silva_c89_ambigua_indecisa_numerare(
+                parsura->commissio, oraculum), I);
+            (vacuum)silva_c89_semantica_oraculum_augere(sem,
+                oraculum);
+            silva_oraculum_responsa_vacare(oraculum);
+            /* post: DECISUM (localis non-typus notus). NB versio
+             * nulla - canonica expressionis iam recta erat
+             * (decisum != versum; recanonicare solum versiones
+             * numerat) */
+            CREDO_AEQUALIS_I32 (silva_c89_ambigua_indecisa_numerare(
+                parsura->commissio, oraculum), ZEPHYRUM);
+            (vacuum)silva_recanonicare(parsura->commissio, oraculum,
+                silva_c89_resolutor, NIHIL);
+        }
+    }
+
+    /* ========================================================
+     * PROBARE (Chunk C): catenae conversionum nidificatae - furca
+     * intra furcam (formae GLR); contagio "omnes" sanata (lectio
+     * exterior ob alternativam interiorem non occiditur), catena
+     * PROFUNDA manet parca nominata (residuum I)
+     * ======================================================== */
+    {
+        constans character* fons_v =
+            "#define SCR_ELEM(basis, idx, m)"
+            " ((const char*)(basis) + (idx) * (m))\n"
+            "static void probare(const void *values,"
+            " unsigned long magnitudo)\n"
+            "{\n"
+            "    unsigned long i;\n"
+            "    for (i = 0; i < 4; i++) {\n"
+            "        const void *elem = SCR_ELEM(values, i,"
+            " magnitudo);\n"
+            "        (void)elem;\n"
+            "    }\n"
+            "}\n";
+        SilvaOraculum* oraculum = silva_oraculum_creare(piscina);
+        SilvaParsura* parsura = silva_c89_parsare(piscina,
+            "probatio.c", fons_v, (i32)strlen(fons_v), oraculum);
+        SilvaSemantica* sem;
+
+        imprimere("\n--- Probans catenas nidificatas ---\n");
+
+        CREDO_NON_NIHIL (parsura);
+        CREDO_AEQUALIS_I32 (parsura->numerus_errorum, ZEPHYRUM);
+        CREDO_AEQUALIS_I32 (xar_numerus(
+            parsura->commissio->ambigui), III);
+        sem = silva_c89_semantica_analysare(piscina, parsura);
+        CREDO_NON_NIHIL (sem);
+        (vacuum)silva_c89_semantica_oraculum_augere(sem, oraculum);
+        silva_oraculum_responsa_vacare(oraculum);
+        /* II decisa (contagione sanata); I residuum = catena
+         * profunda (parca resolutoris, vide worklog) */
+        CREDO_AEQUALIS_I32 (silva_c89_ambigua_indecisa_numerare(
+            parsura->commissio, oraculum), I);
     }
 
     credo_imprimere_compendium();

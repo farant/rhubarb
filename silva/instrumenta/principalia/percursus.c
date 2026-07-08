@@ -59,6 +59,11 @@ hic_manens b32 cum_semantica = FALSUM;
 hic_manens i32 summa_symbolorum = ZEPHYRUM;
 hic_manens i32 summa_diagnosticorum = ZEPHYRUM;
 hic_manens i32 plagulae_cum_diagnosticis = ZEPHYRUM;
+/* Chunk C: systema semel parsatum (piscina longaeva) + clausura */
+hic_manens SilvaParsura*   systema_parsura = NIHIL;
+hic_manens SilvaSemantica* systema_semantica = NIHIL;
+hic_manens i32 summa_versorum = ZEPHYRUM;
+hic_manens i32 summa_indecisorum = ZEPHYRUM;
 
 hic_manens b32 _praetermittendum (constans character* titulus);
 
@@ -336,6 +341,7 @@ _plagulam_percurrere (constans SilvaContextus* ctx,
     long mensura_l;
     i32 mensura;
     SilvaParsura* parsura;
+    SilvaOraculum* oraculum_clausurae = NIHIL;
     clock_t c0;
     clock_t c1;
 
@@ -385,10 +391,25 @@ _plagulam_percurrere (constans SilvaContextus* ctx,
     plagulae++;
     summa_octetorum += (duplex)mensura;
 
-    c0 = clock();
-    parsura = silva_c89_parsare_cum_contextu(piscina, ctx, via,
-        (constans character*)fons, mensura, NIHIL);
-    c1 = clock();
+    {
+        SilvaOraculum* oraculum_plagulae = NIHIL;
+
+        si (cum_semantica)
+        {
+            oraculum_plagulae = silva_oraculum_creare(piscina);
+            si (oraculum_plagulae != NIHIL
+                && systema_semantica != NIHIL)
+            {
+                (vacuum)silva_c89_semantica_oraculum_augere(
+                    systema_semantica, oraculum_plagulae);
+            }
+        }
+        c0 = clock();
+        parsura = silva_c89_parsare_cum_contextu(piscina, ctx, via,
+            (constans character*)fons, mensura, oraculum_plagulae);
+        c1 = clock();
+        oraculum_clausurae = oraculum_plagulae;
+    }
     summa_ms += (duplex)(c1 - c0) * 1000.0
         / (duplex)CLOCKS_PER_SEC;
 
@@ -427,8 +448,9 @@ _plagulam_percurrere (constans SilvaContextus* ctx,
         }
         si (cum_semantica)
         {
-            SilvaSemantica* sem = silva_c89_semantica_analysare(
-                piscina, parsura);
+            SilvaSemantica* sem =
+                silva_c89_semantica_analysare_cum_systemate(
+                    piscina, parsura, systema_parsura);
 
             si (sem != NIHIL)
             {
@@ -441,6 +463,31 @@ _plagulam_percurrere (constans SilvaContextus* ctx,
                     plagulae_cum_diagnosticis++;
                     imprimere("[semantica diagnostica %d] %s\n",
                         (int)diag, via);
+                }
+                /* clausura: oraculum auctum symbolis plagulae
+                 * (localibus!) -> recanonicare + residuum */
+                si (oraculum_clausurae != NIHIL)
+                {
+                    i32 versae;
+                    i32 indecisa;
+
+                    (vacuum)silva_c89_semantica_oraculum_augere(
+                        sem, oraculum_clausurae);
+                    silva_oraculum_responsa_vacare(
+                        oraculum_clausurae);
+                    versae = (i32)silva_recanonicare(
+                        parsura->commissio, oraculum_clausurae,
+                        silva_c89_resolutor, NIHIL);
+                    indecisa = (i32)
+                        silva_c89_ambigua_indecisa_numerare(
+                            parsura->commissio, oraculum_clausurae);
+                    summa_versorum += versae;
+                    summa_indecisorum += indecisa;
+                    si (indecisa > ZEPHYRUM)
+                    {
+                        imprimere("[indecisa %d] %s\n",
+                            (int)indecisa, via);
+                    }
                 }
             }
             alioquin
@@ -599,6 +646,51 @@ s32 principale (integer argc, character** argv)
     }
     plagula_apicis[ZEPHYRUM] = '\0';
 
+    /* Chunk C: systema semel parsatum (piscina_ctx longaeva - typi
+     * eius trans plagulas vivunt) */
+    si (cum_semantica)
+    {
+        FILE* pl_sys = fopen("silva/fontes/systema_c89.h", "rb");
+        long mensura_sys;
+        character* fons_sys;
+
+        si (pl_sys == NIHIL)
+        {
+            fprintf(stderr, "percursus: systema_c89.h deest"
+                " (curre ex radice repositorii)\n");
+            redde I;
+        }
+        fseek(pl_sys, 0L, SEEK_END);
+        mensura_sys = ftell(pl_sys);
+        fseek(pl_sys, 0L, SEEK_SET);
+        fons_sys = (character*)piscina_allocare(piscina_ctx,
+            (memoriae_index)(mensura_sys + 1L));
+        si (fons_sys == NIHIL
+            || fread(fons_sys, I, (memoriae_index)mensura_sys,
+                   pl_sys) != (memoriae_index)mensura_sys)
+        {
+            fprintf(stderr, "percursus: systema non lectum\n");
+            fclose(pl_sys);
+            redde I;
+        }
+        fclose(pl_sys);
+        systema_parsura = silva_c89_parsare(piscina_ctx,
+            "systema_c89.h", fons_sys, (i32)mensura_sys, NIHIL);
+        si (systema_parsura == NIHIL
+            || systema_parsura->numerus_errorum > ZEPHYRUM)
+        {
+            fprintf(stderr, "percursus: systema non parsatum\n");
+            redde I;
+        }
+        systema_semantica = silva_c89_semantica_analysare(
+            piscina_ctx, systema_parsura);
+        si (systema_semantica == NIHIL)
+        {
+            fprintf(stderr, "percursus: systema non analysatum\n");
+            redde I;
+        }
+    }
+
     /* Praepassus: omne caput repositorii praebere - expansio per
      * inclusionem VERAM (nullum lexicon incondicionale) */
     {
@@ -650,6 +742,8 @@ s32 principale (integer argc, character** argv)
             " plagulis\n",
             (int)summa_symbolorum, (int)summa_diagnosticorum,
             (int)plagulae_cum_diagnosticis);
+        imprimere("clausura:  %d versae; %d indecisa (residuum)\n",
+            (int)summa_versorum, (int)summa_indecisorum);
     }
     si (fines_tactae_plagulae > ZEPHYRUM)
     {
