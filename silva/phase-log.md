@@ -6304,4 +6304,58 @@ SELF-HEALS the POSIX residue for typing — close(fd) → int, legal
 C89, no diagnostic; M0a residue category (b) costs M0b nothing.
 
 **NEXT (named): Chunk A.**
+
+### M0b CHUNK A — RELATIO (2026-07-08): tabula + descensus + primaria SHIPPED
+
+**Suite 206 asserts (was 146), 29/29; sweep 731 plagulae, 0 ruinae,
+900,320 typationes; VERIFICATUM (hospes 28/28); root suite 93/94
+(the 1 = pre-existing flaky probatio_tcp). AND TYPING FOUND A REAL
+BUG IN LATINA.H ON ITS FIRST CORPUS CONTACT.**
+
+Shipped per INTENTIO: pointer-keyed typationes table (simplified —
+default chorda FNV-1a is binary-safe, no custom friatio needed);
+walk descends all 13 expression loci with live scopes; primaries
+typed (identificator resolution, literal suffix rules incl. the
+hex/octal unsigned ladder, folium-chorda char[N] over fragment
+lists, parenthesis, unarium incl. prefix ++/--, postcrementum);
+_fugam_decodere shared decoder — **\x/\NNN UNPARKED** in both the
+aestimator and string lengths; scalar-context lapsus annotated on
+conditions (naturalis stays undecayed — pinned: while(buf) naturalis
+char[4], conversus char*). B/C genera descend-only, silently.
+
+**FIND 1 — libc value-macros were invisible** (first sweep:
+diagnostics 110 → 18,293): NIHIL→NULL, EOF, INT_MAX lex as unknown
+identifiers — declarations never contain them, so M0a couldn't see
+it. Fix: systema_c89.h attached as LEXICON in percursus (-semantica
+only; the #defines-only channel, empirically typedef-inert — exactly
+right here). 18,293 → 1,026. Plus LP64 correction: systema's
+LONG/ULONG limits carried ILP32 values.
+
+**FIND 2 — latina.h:402 was REVERSED**: `#define FILE FILUM`
+(system name on the left, unlike all 388 other defines). Real
+compiles only worked because latina-before-stdio rewrote stdio's
+own typedef into defining FILUM — include order was secretly
+load-bearing. Silva could never see that typedef; `FILUM* f;`
+retained forks whose EXPRESSION canonicals typing then walked
+(pl/f/FILUM = ~700 diagnostics). Fran confirmed bug; flipped to
+`#define FILUM FILE`. **Retroactive M0a improvement: ambigui
+3,411→3,354, indecisa 414→355 — ~59 entries of the nested-chain
+park ledger were actually this bug.** Root+silva suites green.
+
+Residuum 245 in 28 plagulis, ALL classified (worklog table):
+(a) POSIX ~120 — the systema_posix park now known to need BOTH
+channels (macros via lexicon + prototypes via channel B);
+(b) latina-less standalone/fixture files ~112 (existing class
+extended to expressions); (c) tail 5 (typedef-in-expression 4 →
+re-examine at D's post-closure pass, + 1 mensura).
+
+Gate consequences as designed: tabula_dispersa_numerus left the
+amalgamator EXCLUDENDA (first caller); hospes semantica fixture
+declared its x (typing now diagnoses undeclared identifiers —
+the fixture predated expression examination).
+
+**NEXT (named): Chunk B — UAC + operators + auspex** (promotions +
+C99-rank ladder, binarium/ternarius pointer composites, assignatio
+compound implied-op, virgula, pointer arithmetic, auspex instrument;
+bar: auspex 0 dissentientes + LP64 corner fixtures).
   NEVER implement from a compaction summary alone.

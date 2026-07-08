@@ -57,9 +57,11 @@ extern int errno;
 #define INT_MIN    (-2147483647 - 1)
 #define INT_MAX    2147483647
 #define UINT_MAX   4294967295U
-#define LONG_MIN   (-2147483647L - 1L)
-#define LONG_MAX   2147483647L
-#define ULONG_MAX  4294967295UL
+/* LP64 (arm64 Apple): longus = 64 bit - valores ILP32 falsi erant
+ * (M0b Chunk A correctio; typos suffixa dant, valores hi) */
+#define LONG_MIN   (-9223372036854775807L - 1L)
+#define LONG_MAX   9223372036854775807L
+#define ULONG_MAX  18446744073709551615UL
 
 /* ==================================================
  * ctype.h

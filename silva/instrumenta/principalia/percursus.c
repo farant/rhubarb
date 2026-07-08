@@ -58,6 +58,7 @@ hic_manens i32 plagulae_cum_ambiguis = ZEPHYRUM;
 hic_manens b32 cum_semantica = FALSUM;
 hic_manens i32 summa_symbolorum = ZEPHYRUM;
 hic_manens i32 summa_diagnosticorum = ZEPHYRUM;
+hic_manens i32 summa_typationum = ZEPHYRUM;   /* M0b */
 hic_manens i32 plagulae_cum_diagnosticis = ZEPHYRUM;
 /* Chunk C: systema semel parsatum (piscina longaeva) + clausura */
 hic_manens SilvaParsura*   systema_parsura = NIHIL;
@@ -457,6 +458,8 @@ _plagulam_percurrere (constans SilvaContextus* ctx,
                 i32 diag = xar_numerus(sem->diagnostica);
 
                 summa_symbolorum += (i32)xar_numerus(sem->symbola);
+                summa_typationum +=
+                    silva_c89_typationes_numerus(sem);
                 si (diag > ZEPHYRUM)
                 {
                     summa_diagnosticorum += diag;
@@ -674,6 +677,19 @@ s32 principale (integer argc, character** argv)
             redde I;
         }
         fclose(pl_sys);
+        /* M0b Chunk A: macra systematis (NULL, EOF, INT_MAX...) per
+         * canalem LEXICI in plagulas usoris - #definita sola
+         * supersunt ("Reliqua abiciuntur", empirice probatum M0a).
+         * Sine hoc NIHIL -> NULL = identificator ignotus in omni
+         * fere expressione custodiae (inventum sub typatione).
+         * Sub -semantica solum - basis pristina manet. */
+        si (!silva_contextus_lexicon_addere(ctx, "systema_c89.h",
+                fons_sys, (i32)mensura_sys))
+        {
+            fprintf(stderr,
+                "percursus: lexicon systematis non additum\n");
+            redde I;
+        }
         systema_parsura = silva_c89_parsare(piscina_ctx,
             "systema_c89.h", fons_sys, (i32)mensura_sys, NIHIL);
         si (systema_parsura == NIHIL
@@ -738,9 +754,10 @@ s32 principale (integer argc, character** argv)
         (int)summa_ambiguorum, (int)plagulae_cum_ambiguis);
     si (cum_semantica)
     {
-        imprimere("semantica: %d symbola; %d diagnostica in %d"
-            " plagulis\n",
-            (int)summa_symbolorum, (int)summa_diagnosticorum,
+        imprimere("semantica: %d symbola; %d typationes;"
+            " %d diagnostica in %d plagulis\n",
+            (int)summa_symbolorum, (int)summa_typationum,
+            (int)summa_diagnosticorum,
             (int)plagulae_cum_diagnosticis);
         imprimere("clausura:  %d versae; %d indecisa (residuum)\n",
             (int)summa_versorum, (int)summa_indecisorum);

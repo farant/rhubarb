@@ -101,6 +101,104 @@ Notes that don't belong in the header comment:
   When probing with hand-linked binaries after fontes edits: rm the
   relevant silva/build objects first, or rebuild via BOTH scripts.
 
+## 2026-07-08 — M0b Chunk A ships (typatio: tabula + descensus + primaria)
+
+- **Numbers**: suite 206 asserts (was 146); sweep 731 plagulae,
+  **899,518 typationes, 0 ruinae**; walls unmoved (errores 0,
+  fideles 730/731, ambigui 3,411, clausura 1,939/414 — the lexicon
+  attach perturbed NOTHING on the parse side).
+- **THE FIND — libc value-macros are invisible, and expression
+  typing is what exposes them.** First sweep: diagnostics 110 →
+  18,293 in 381 files. Cause: `NIHIL` expands to `NULL`, and NULL
+  is a <stddef.h> macro silva never sees — it lexes as a plain
+  IDENTIFIER, resolves against nothing, and fires "identificator
+  ignotus" in nearly every guard expression in the monorepo (EOF,
+  INT_MAX, SEEK_* likewise). M0a never saw this because
+  DECLARATIONS never contain NULL — only expressions do. This is
+  the dark twin of simulatio-2's "pleasant surprise": implicit
+  extern-int self-heals unknown CALLEES, but value MACROS don't
+  self-heal.
+- **Fix — the lexicon channel earns its keep**: systema_c89.h
+  already carried the macro surface (NULL/EOF/limits/SEEK_*); it
+  reached only the SYSTEMA parse, not user parses. percursus now
+  attaches systema as a LEXICON to the context under -semantica
+  (the channel that discards everything but #defines — empirically
+  "inert for typedefs" in M0a, which is exactly the property we
+  want here). Diagnostics 18,293 → **1,026 in 52 plagulis** (-94%).
+  Baseline (flags off) stays pristine — attach is -semantica-only.
+- **THE SECOND FIND — a REAL LATENT BUG in latina.h, caught by
+  typing on day one.** Post-lexicon residue (1,026) was dominated
+  by `pl`/`f`/`FILUM` unknowns. Root cause: latina.h:402 read
+  `#define FILE FILUM` — REVERSED vs every other rename (imprimere
+  printf, liberare free). It only ever compiled by accident: with
+  latina included before <stdio.h>, the macro rewrites stdio's OWN
+  `typedef ... FILE;` into defining FILUM — so the monorepo's file
+  type was literally NAMED FILUM inside the invisible system
+  header, and include order was secretly load-bearing. Silva could
+  never see that typedef → `FILUM* f;` retained decl/expr forks
+  with canonical = MULTIPLICATION → typing walked `FILUM * f` as
+  an expression → both identifiers "ignoti". Fran confirmed bug;
+  fix = flip to `#define FILUM FILE` (order-independent, matches
+  the house pattern). Root suite 93/94 after flip (the 1 = the
+  known flaky probatio_tcp), silva suite 29/29, VERIFICATUM.
+- **The flip improved M0a's closure numbers RETROACTIVELY**:
+  ambigui retained 3,411 → 3,354, indecisa 414 → **355** — ~59 of
+  what M0a classified as nested-chain-park residue were actually
+  FILUM-bug forks. The park is smaller than its ledger said.
+- Post-flip sweep: diagnostica **245 in 28 plagulis**; typationes
+  900,320; symbola +203 (the f/pl file-handle variables now
+  register). Residuum classified (diagnosticator cause census):
+  (a) **POSIX (~120)** — tcp_posix 36, tessera_pons 25+25,
+      iter_directoria/reactor/imago/filum; lexemes AF_INET,
+      SOL_SOCKET, TCSAFLUSH, SIGTSTP, EINTR, DT_DIR, DIR, ssize_t,
+      S_I*USR. The named systema_posix on-pull park — NOW KNOWN to
+      need value-MACROS via the lexicon channel as well as
+      prototypes via channel B (same two-channel shape as ISO).
+      Includes the silva instrumenta's own dirent/mkdir uses
+      (percursus/haruspex/infidelis, 13 total).
+  (b) **latina-less standalone files (~112)** — roundtrip fixtures
+      (62: deliberately-unknown types Color/MyType/i8-without-
+      latina/redde-as-type), genera_biblia 20, knotapel demo_107
+      17, silva probatio fixture content 12. Deliberate or
+      out-of-world; existing M0a class extended to expressions.
+  (c) **small tail (5)** — typedef-in-expression 4 (re-examine at
+      Chunk D's post-closure re-analysis; suspected C1 canonical
+      artifacts) + 1 mensura-non-constans.
+- Amalgam gates caught two expected consequences: (1)
+  tabula_dispersa_numerus had to leave the amalgamator EXCLUDENDA
+  (first real caller — "the compile clamat" exactly as documented);
+  (2) hospes's semantica fixture used an UNDECLARED x in
+  `(foo)(x);` — M0b typing now correctly diagnoses it; fixture
+  gained `static int x;` (the ==0 diagnostics assert stays
+  meaningful).
+- Instrument note: scratchpad "diagnosticator" (percursus copy +
+  per-diagnosticum causa/lexeme/line printing) did the
+  classification; throwaway, not committed. If cause-level
+  diagnostics are wanted permanently, that's a percursus flag on
+  pull.
+- **LP64 limits correction**: systema's LONG_MIN/LONG_MAX/ULONG_MAX
+  carried ILP32 values (long=32bit) — wrong for arm64 LP64. Types
+  were always right (suffixes), values were not. Fixed.
+- **Table simplification vs INTENTIO**: no custom friatio/comparatio
+  needed — the default chorda FNV-1a hashes mensura bytes (binary-
+  safe, chorda is not NUL-terminated by design), so pointer keys
+  are just 8 pointer bytes wrapped in a chorda via the ordinary
+  creare_chorda. Key bytes live IN the entry (SemanticaTypatio
+  .clavis_octeti) — no cast-qual contortions.
+- **Behavior change (aestimator)**: _folium_character_aestimare
+  now decodes through the shared _fugam_decodere — \x/\NNN
+  UNPARKED (both char literals and string lengths); multi-char
+  literals ('ab') now FALSUM (previously returned first char —
+  impl-defined anyway); L'...'/L"..." = named-park diagnostic.
+- Integer literals beyond s64 wrap in _folium_integer_legere
+  (ULONG_MAX's 18446744073709551615UL types correctly via suffix;
+  the VALUE wraps to -1 — harmless for typing, aestimator caveat).
+- Typing dispatcher policy: B/C genera (binarium/vocatio/accessus/
+  congeries...) DESCEND into children and return NIHIL silently —
+  primaries inside operators get typed in A, the operators
+  themselves in B/C. vocatio's functio locus deliberately skipped
+  (C89 implicit-int callee rule = Chunk C).
+
 ## 2026-07-08 — Chunk D ships (haruspex + index + publica)
 
 - **HARUSPEX VERDICT: 177 TU, 4,801 assertiones, 0 dissentientes.**

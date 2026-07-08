@@ -85,7 +85,9 @@ interior constans character* constans EXCLUDENDA_AEDIFICATORIS[] = {
 interior constans character* constans EXCLUDENDA_TABULAE[] = {
     "tabula_dispersa_continet_literis",
     "tabula_dispersa_iterator_initium",
-    "tabula_dispersa_iterator_proximum", "tabula_dispersa_numerus",
+    /* tabula_dispersa_numerus NON exclusa - typationes_numerus M0b
+     * ea utitur */
+    "tabula_dispersa_iterator_proximum",
     "tabula_dispersa_status_imprimere", "tabula_dispersa_vacare",
     "tabula_friare_multiplicatio",
     "tabula_dispersa_invenire_literis", "_friare_literis",

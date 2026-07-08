@@ -76,6 +76,71 @@ _typus_declarationis (SilvaSemantica* sem,
     redde basis;
 }
 
+/* M0b: initiator declarationis (primus declarator initiatus) */
+interior constans SilvaNodus*
+_initiator_declarationis (constans SilvaNodus* declaratio)
+{
+    SilvaValor declaratores;
+    i32 i;
+    i32 m;
+
+    si (declaratio == NIHIL
+        || declaratio->genus != (s32)SILVA_C89_GENUS_DECLARATIO)
+    {
+        redde NIHIL;
+    }
+    declaratores = silva_c89_declaratio_declaratores(declaratio);
+    m = (i32)silva_valor_lista_numerus(declaratores);
+    per (i = ZEPHYRUM; i < m; i++)
+    {
+        SilvaValor* dv = silva_valor_lista_obtinere(declaratores, i);
+
+        si (dv != NIHIL && dv->genus == SILVA_VALOR_NODUS
+            && dv->datum.nodus->genus
+                == (s32)SILVA_C89_GENUS_DECLARATOR_INITIATUS)
+        {
+            SilvaValor init_v =
+                silva_c89_declarator_initiatus_initiator(
+                    dv->datum.nodus);
+
+            si (init_v.genus == SILVA_VALOR_NODUS)
+            {
+                redde init_v.datum.nodus;
+            }
+        }
+    }
+    redde NIHIL;
+}
+
+/* M0b: elementum corporis functionis (definitio in indice fili) */
+interior constans SilvaNodus*
+_elementum_corporis (constans SilvaParsura* parsura,
+    i32 index_definitionis, i32 index_elementi)
+{
+    constans SilvaNodus* def = _nodus(parsura, index_definitionis);
+    SilvaValor corpus_v;
+    SilvaValor elementa;
+    SilvaValor* e;
+
+    si (def == NIHIL
+        || def->genus != (s32)SILVA_C89_GENUS_DEFINITIO_FUNCTIONIS)
+    {
+        redde NIHIL;
+    }
+    corpus_v = silva_c89_definitio_functionis_corpus(def);
+    si (corpus_v.genus != SILVA_VALOR_NODUS)
+    {
+        redde NIHIL;
+    }
+    elementa = silva_c89_corpus_elementa(corpus_v.datum.nodus);
+    e = silva_valor_lista_obtinere(elementa, index_elementi);
+    si (e == NIHIL || e->genus != SILVA_VALOR_NODUS)
+    {
+        redde NIHIL;
+    }
+    redde e->datum.nodus;
+}
+
 s32 principale (vacuum)
 {
     Piscina* piscina;
@@ -833,6 +898,217 @@ s32 principale (vacuum)
         /* clausura decidit: typedef scopi corporis TYPUS notus */
         CREDO_AEQUALIS_I32 (silva_c89_ambigua_indecisa_numerare(
             parsura->commissio, oraculum), ZEPHYRUM);
+    }
+
+    /* ========================================================
+     * PROBARE (M0b Chunk A): typatio litteralium + initiatores
+     * ======================================================== */
+    {
+        constans character* fons_t =
+            "int a = 5;\n"
+            "unsigned int b = 10u;\n"
+            "long c = 10L;\n"
+            "unsigned int h = 0xffffffff;\n"
+            "long big = 4294967296;\n"
+            "double d = 1.5;\n"
+            "float fl = 1.5f;\n"
+            "int ch = 'a';\n"
+            "char s[] = \"ab\" \"cd\";\n"
+            "char e2[] = \"a\\x41\\102z\";\n";
+        SilvaParsura* parsura = _parsare(piscina, fons_t);
+        SilvaSemantica* sem;
+        TypusC89* char_t;
+
+        imprimere("\n--- Probans typationem litteralium (M0b A) ---\n");
+        CREDO_NON_NIHIL (parsura);
+        CREDO_AEQUALIS_I32 (parsura->numerus_errorum, ZEPHYRUM);
+        sem = silva_c89_semantica_analysare(piscina, parsura);
+        CREDO_NON_NIHIL (sem);
+        CREDO_AEQUALIS_I32 (silva_c89_diagnostica_numerus(sem),
+            ZEPHYRUM);
+        char_t = silva_c89_typus_primitivum(sem, PRIMITIVUM_CHARACTER);
+
+        CREDO_AEQUALIS_PTR (silva_c89_typus_expressionis(sem,
+            _initiator_declarationis(_nodus(parsura, 0))),
+            silva_c89_typus_primitivum(sem, PRIMITIVUM_INTEGER));
+        CREDO_AEQUALIS_PTR (silva_c89_typus_expressionis(sem,
+            _initiator_declarationis(_nodus(parsura, I))),
+            silva_c89_typus_primitivum(sem,
+                PRIMITIVUM_INTEGER_INSIGNATUM));
+        CREDO_AEQUALIS_PTR (silva_c89_typus_expressionis(sem,
+            _initiator_declarationis(_nodus(parsura, II))),
+            silva_c89_typus_primitivum(sem, PRIMITIVUM_LONGUS));
+        /* hex sine suffixo supra INT_MAX -> unsigned int (C89) */
+        CREDO_AEQUALIS_PTR (silva_c89_typus_expressionis(sem,
+            _initiator_declarationis(_nodus(parsura, III))),
+            silva_c89_typus_primitivum(sem,
+                PRIMITIVUM_INTEGER_INSIGNATUM));
+        /* decimale supra INT_MAX -> long (LP64) */
+        CREDO_AEQUALIS_PTR (silva_c89_typus_expressionis(sem,
+            _initiator_declarationis(_nodus(parsura, IV))),
+            silva_c89_typus_primitivum(sem, PRIMITIVUM_LONGUS));
+        CREDO_AEQUALIS_PTR (silva_c89_typus_expressionis(sem,
+            _initiator_declarationis(_nodus(parsura, V))),
+            silva_c89_typus_primitivum(sem, PRIMITIVUM_DUPLEX));
+        CREDO_AEQUALIS_PTR (silva_c89_typus_expressionis(sem,
+            _initiator_declarationis(_nodus(parsura, VI))),
+            silva_c89_typus_primitivum(sem, PRIMITIVUM_FLUITANS));
+        /* litterale characteris = INT (C89 6.1.3.4) */
+        CREDO_AEQUALIS_PTR (silva_c89_typus_expressionis(sem,
+            _initiator_declarationis(_nodus(parsura, VII))),
+            silva_c89_typus_primitivum(sem, PRIMITIVUM_INTEGER));
+        /* chordae adiacentes: "ab" "cd" -> char[5] */
+        CREDO_AEQUALIS_PTR (silva_c89_typus_expressionis(sem,
+            _initiator_declarationis(_nodus(parsura, VIII))),
+            silva_c89_typus_acies(sem, char_t, V));
+        /* fugae: a \x41 \102 z -> char[5] */
+        CREDO_AEQUALIS_PTR (silva_c89_typus_expressionis(sem,
+            _initiator_declarationis(_nodus(parsura, IX))),
+            silva_c89_typus_acies(sem, char_t, V));
+        CREDO_VERUM (silva_c89_typationes_numerus(sem) >= X);
+    }
+
+    /* ========================================================
+     * PROBARE (M0b Chunk A): identificatores + unarium +
+     * postcrementum + conditio scalaris (lapsus)
+     * ======================================================== */
+    {
+        constans character* fons_u =
+            "int g;\n"
+            "char gc;\n"
+            "int* p;\n"
+            "char buf[4];\n"
+            "enum Color { RUBER = 3, VIRIDIS };\n"
+            "int f(int par)\n"
+            "{\n"
+            "    int loc = g;\n"
+            "    int* lp = &g;\n"
+            "    int dr = *p;\n"
+            "    int nn = !g;\n"
+            "    int ng = -gc;\n"
+            "    char pc = gc;\n"
+            "    char po = gc++;\n"
+            "    int en = RUBER;\n"
+            "    while (buf) { }\n"
+            "    return g;\n"
+            "}\n";
+        SilvaParsura* parsura = _parsare(piscina, fons_u);
+        SilvaSemantica* sem;
+        TypusC89* int_t;
+        TypusC89* char_t;
+        constans SilvaNodus* elem;
+
+        imprimere("\n--- Probans typationem primariorum (M0b A) ---\n");
+        CREDO_NON_NIHIL (parsura);
+        CREDO_AEQUALIS_I32 (parsura->numerus_errorum, ZEPHYRUM);
+        sem = silva_c89_semantica_analysare(piscina, parsura);
+        CREDO_NON_NIHIL (sem);
+        CREDO_AEQUALIS_I32 (silva_c89_diagnostica_numerus(sem),
+            ZEPHYRUM);
+        int_t = silva_c89_typus_primitivum(sem, PRIMITIVUM_INTEGER);
+        char_t = silva_c89_typus_primitivum(sem, PRIMITIVUM_CHARACTER);
+
+        /* g -> int */
+        CREDO_AEQUALIS_PTR (silva_c89_typus_expressionis(sem,
+            _initiator_declarationis(_elementum_corporis(parsura,
+                V, 0))), int_t);
+        /* &g -> int* */
+        CREDO_AEQUALIS_PTR (silva_c89_typus_expressionis(sem,
+            _initiator_declarationis(_elementum_corporis(parsura,
+                V, I))), silva_c89_typus_monstrator(sem, int_t));
+        /* *p -> int */
+        CREDO_AEQUALIS_PTR (silva_c89_typus_expressionis(sem,
+            _initiator_declarationis(_elementum_corporis(parsura,
+                V, II))), int_t);
+        /* !g -> int */
+        CREDO_AEQUALIS_PTR (silva_c89_typus_expressionis(sem,
+            _initiator_declarationis(_elementum_corporis(parsura,
+                V, III))), int_t);
+        /* -gc -> int (promotio integralis!) */
+        CREDO_AEQUALIS_PTR (silva_c89_typus_expressionis(sem,
+            _initiator_declarationis(_elementum_corporis(parsura,
+                V, IV))), int_t);
+        /* gc -> char (naturalis, sine promotione) */
+        CREDO_AEQUALIS_PTR (silva_c89_typus_expressionis(sem,
+            _initiator_declarationis(_elementum_corporis(parsura,
+                V, V))), char_t);
+        /* gc++ -> char (postcrementum typum operandi habet) */
+        CREDO_AEQUALIS_PTR (silva_c89_typus_expressionis(sem,
+            _initiator_declarationis(_elementum_corporis(parsura,
+                V, VI))), char_t);
+        /* RUBER -> int (constans enumeri) */
+        CREDO_AEQUALIS_PTR (silva_c89_typus_expressionis(sem,
+            _initiator_declarationis(_elementum_corporis(parsura,
+                V, VII))), int_t);
+        /* while (buf): naturalis char[4], conversus char* (lapsus) */
+        elem = _elementum_corporis(parsura, V, VIII);
+        CREDO_NON_NIHIL (elem);
+        CREDO_AEQUALIS_I32 ((i32)elem->genus,
+            (i32)SILVA_C89_GENUS_DUM);
+        {
+            SilvaValor cond_v = silva_c89_dum_conditio(elem);
+
+            CREDO_VERUM (cond_v.genus == SILVA_VALOR_NODUS);
+            CREDO_AEQUALIS_PTR (silva_c89_typus_expressionis(sem,
+                cond_v.datum.nodus),
+                silva_c89_typus_acies(sem, char_t, IV));
+            CREDO_AEQUALIS_PTR (silva_c89_conversio_expressionis(sem,
+                cond_v.datum.nodus),
+                silva_c89_typus_monstrator(sem, char_t));
+        }
+        /* return g -> int */
+        elem = _elementum_corporis(parsura, V, IX);
+        CREDO_NON_NIHIL (elem);
+        CREDO_AEQUALIS_I32 ((i32)elem->genus,
+            (i32)SILVA_C89_GENUS_REDDE);
+        {
+            SilvaValor val_v = silva_c89_redde_valor(elem);
+
+            CREDO_VERUM (val_v.genus == SILVA_VALOR_NODUS);
+            CREDO_AEQUALIS_PTR (silva_c89_typus_expressionis(sem,
+                val_v.datum.nodus), int_t);
+        }
+        CREDO_VERUM (silva_c89_typationes_numerus(sem) >= XII);
+    }
+
+    /* ========================================================
+     * PROBARE (M0b Chunk A): venenum ignoti + fuga \x in
+     * aestimatore (exparcatum)
+     * ======================================================== */
+    {
+        constans character* fons_i =
+            "enum E2 { LITTERA_A = '\\x41' };\n"
+            "int f2(void)\n"
+            "{\n"
+            "    return incognitus;\n"
+            "}\n";
+        SilvaParsura* parsura = _parsare(piscina, fons_i);
+        SilvaSemantica* sem;
+        SemanticaSymbolum* symbolum;
+        constans SilvaNodus* elem;
+
+        imprimere("\n--- Probans venenum + fugam \\x (M0b A) ---\n");
+        CREDO_NON_NIHIL (parsura);
+        CREDO_AEQUALIS_I32 (parsura->numerus_errorum, ZEPHYRUM);
+        sem = silva_c89_semantica_analysare(piscina, parsura);
+        CREDO_NON_NIHIL (sem);
+
+        /* aestimator per fugam hexadecimalem (exparcatum): A = 65 */
+        symbolum = silva_c89_symbolum_invenire(sem, _ch("LITTERA_A"));
+        CREDO_NON_NIHIL (symbolum);
+        CREDO_AEQUALIS_I32 ((i32)symbolum->valor, 65);
+
+        /* identificator ignotus -> venenum + diagnosticum */
+        elem = _elementum_corporis(parsura, I, 0);
+        CREDO_NON_NIHIL (elem);
+        {
+            SilvaValor val_v = silva_c89_redde_valor(elem);
+
+            CREDO_VERUM (val_v.genus == SILVA_VALOR_NODUS);
+            CREDO_AEQUALIS_PTR (silva_c89_typus_expressionis(sem,
+                val_v.datum.nodus), sem->typus_erroris);
+        }
+        CREDO_VERUM (silva_c89_diagnostica_numerus(sem) >= I);
     }
 
     credo_imprimere_compendium();

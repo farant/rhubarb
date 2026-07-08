@@ -216,6 +216,13 @@ structura SilvaSemantica {
 
     Xar* diagnostica;           /* SemanticaDiagnosticum (valore) */
 
+    /* typatio expressionum (M0b): clavis = octeti valoris
+     * monstratoris nodi (lectionis canonicae, non involucri) ->
+     * SemanticaTypatio (in .c definita - superficies infra).
+     * FNV super octetos: chorda binaria licet, fabrica _chorda
+     * ordinaria sufficit. */
+    TabulaDispersa* typationes;
+
     b32 in_systemate;           /* vexillum ambulationis (provenientia) */
 };
 
@@ -344,6 +351,28 @@ constans SemanticaSymbolum* silva_c89_symbolum_per_indicem (
 i32 silva_c89_diagnostica_numerus (constans SilvaSemantica* sem);
 constans SemanticaDiagnosticum* silva_c89_diagnosticum_per_indicem (
     constans SilvaSemantica* sem, i32 index);
+
+/* ==================================================
+ * Typatio expressionum (M0b Chunk A): tabula parallela
+ * nodus -> {typus naturalis, typus conversus} - contractus
+ * demissionis (phase-log M0b INTENTIO DECISUS 1). Naturalis =
+ * typus proprius synthetizatus SINE lapsu (acies manet acies,
+ * functio manet functio - sizeof rectum per constructionem);
+ * conversus = conversio scopo applicata (lapsus/UAC/assignatio/
+ * argumentum - B/C) aut NIHIL. Quaestiones _canonicum consciae:
+ * involucrum ambiguum aut lectionem des, idem redditur.
+ * NB typatio RELATIVA CANONICAE est - post recanonicare analysim
+ * novam fac (INTENTIO DECISUS 2; percursus bis analysat).
+ * ================================================== */
+
+constans TypusC89* silva_c89_typus_expressionis (
+    constans SilvaSemantica* sem, constans SilvaNodus* nodus);
+
+/* NIHIL = nulla conversio scopo applicata */
+constans TypusC89* silva_c89_conversio_expressionis (
+    constans SilvaSemantica* sem, constans SilvaNodus* nodus);
+
+i32 silva_c89_typationes_numerus (constans SilvaSemantica* sem);
 
 /* ==================================================
  * Forma (pigra; arm64 LP64 Apple)

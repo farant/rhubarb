@@ -399,7 +399,7 @@
 #define hic_manens 	static
 #define universalis static
 
-#define FILE FILUM
+#define FILUM FILE
 
 nomen insignatus character	i8;
 nomen insignatus brevis 		i16;

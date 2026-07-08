@@ -884,9 +884,12 @@ int main(void)
      * forma, oraculum trivalens + clausura - custos declarationum
      * silva.h (regula hospitis: omnis functio nova vocatur) */
     {
+        /* x declaratum - typatio M0b expressiones examinat et
+         * ignotos diagnosticat (assertum ==0 infra) */
         static const char fons_sem[] =
             "typedef int Aetas;\n"
             "enum Color { RUBER, VIRIDIS = 5 };\n"
+            "static int x;\n"
             "static int foo(int a) { return a; }\n"
             "(foo)(x);\n";
         SilvaOraculum* oraculum = silva_oraculum_creare(piscina);
