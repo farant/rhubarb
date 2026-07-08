@@ -6358,4 +6358,94 @@ the fixture predated expression examination).
 C99-rank ladder, binarium/ternarius pointer composites, assignatio
 compound implied-op, virgula, pointer arithmetic, auspex instrument;
 bar: auspex 0 dissentientes + LP64 corner fixtures).
+
+### M0b CHUNK B — RELATIO (2026-07-08): UAC + operatores + auspex SHIPPED
+
+**AUSPEX VERDICT: 2,147 expressiones, 3,753 assertiones temporis
+compilationis, 0 dissentientes** — omnis copula primitivorum ×
+omnis operator, magnitudo ET signum, clang-certificata (eadem
+expressio verbatim per fistulam nostram et per clang; TU ut C99
+consulto — electio ordinum ll IPSA certificatur). Bar met.
+
+Suite 239 asserts, 29/29; sweep **1,086,949 typationes** (+186k),
+**ZERO operator-class false positives** over the million; walls
+unmoved (0 errores, indecisa 355, fideles 731/732 — the +1 file is
+auspex.c joining the corpus). VERIFICATUM, hospes 28/28.
+
+Shipped: UAC engine (C99 ranks; LP64 representability = strict
+size dominance; pinned corners ul+ll→ull, i+l→long); binarium all
+12 tiers (shifts = promoted LEFT, non-UAC); ternarius incl.
+composite pointers (qual merge, void* wins) + null-constant arms;
+assignatio simple (RHS→left conversus) + compound (implied-op
+conversions both operands); virgula; pointer arithmetic (T*±int,
+T*−T*→long); return conversion (sem->reditus_currens); initiator
+target conversion (_ad_finem_annotare shared by =/redde/init).
+**INTENTIO amendment: conversio (cast) typing pulled into B** —
+assigned to neither chunk; auspex required it; it IS the
+conversion operator.
+
+**FIND 3 — third real bug: uuid.c `(insignatus i8)`** = `unsigned
+i8`, illegal C, hiding in the #else (Linux) arm Apple never
+compiles. Silva takes that arm (__APPLE__ undefined) — typing
+checked code no compiler on this machine has ever compiled, free.
+Fixed (i8 alone). Config note recorded for the config-query
+milestone (taken-arm evaluation models a platform-neutral config).
+
+Diagnostic delta fully classified: +19 POSIX types in CAST
+position (new sighting path via conversio typing — same
+systema_posix park), +1 the uuid bug (now fixed). Instruments:
+auspex.c + auspex.sh committed; known gaps recorded (Darwin
+double==long double; pointer signedness non-constant; ternary
+composite types → probatio fixtures carry those).
+
+**NEXT (named): Chunk C — postfix + unparks** (vocatio w/ implicit
+extern-int + arg conversions; subscriptio; accessus w/ qual
+propagation + incomplete-tag poison; magnitudo-expressionis unpark;
+congeries context typing w/ elision diagnostic; bar: per-file
+expression-coverage % printed by percursus).
+
+### M0b CHUNK C — RELATIO (2026-07-08): postfixa + exparcata + est_implicitum SHIPPED
+
+**COOPERTURA 99.61%** (1,497,967/1,503,793 nodi expressionum typati,
+POST clausuram contra arborem finalem — the 5,826-node gap IS the
+canonical-relative flip class, Chunk D's named target; percursus
+prints per-file [expr coopertura N/M] + summary %). Suite 275
+asserts 29/29; typationes 1,610,983; VERIFICATUM hospes 28/28.
+Bar met, with the gap it exists to measure now measured.
+
+Shipped: vocatio (reditus; prototyped arg conversions; variadic/
+unprototyped default promotions; arity = enforcement layer's, not
+diagnosed); subscriptio (incl. 1[arr]); accessus (./-> one genus;
+bare-token member lookup; QUAL PROPAGATION pinned — const struct →
+const member; incomplete tag = poison+diagnosticum); magnitudo pair
+= size_t; **magnitudo-expressionis EXPARCATUM** (aestimator↔forma↔
+typatio three-way recursion; sizeof(arr)=16 UNdecayed pinned);
+**congeries context typing** (DECISUS 6: type flows down, nested
+recursion, member conversions annotated; **ELISION MEASUREMENT:
+ZERO corpus instances** — the M1 park is free today);
+**est_implicitum** (the enforcement-layer amendment: synthesized
+extern-int callees flagged + declarans = CALL SITE; silva.h struct
+mirrored; hospes reads it; pinned both ways).
+
+**Retroactive improvement #2: indecisa 355 → 305** — implicit
+callees feed the trivalent oracle as non-types; the nested-chain
+park ledger shrinks again without touching the resolver.
+
+**Noise class found + silenced precisely**: typing the CALLEE
+position unlocked typedef-in-expression ×2,155 — all inside
+retained-AMBIGUUS canonicals (the park files; real code cannot
+contain typedef-as-expression). _intra_ambiguum (pater chain)
+guards only the two typedef diagnostics; poison stays; ignotus
+stays ungated (it found three real bugs). Post-guard arithmetic
+closes exactly: 265 − 4 + 151 = **412 diagnostica in 32 plagulis,
+all classified** (POSIX now shows its THIRD face: types + macros +
+incomplete tag layouts = 151 accessus diagnostics; systema_posix
+park owns all three).
+
+**NEXT (named): Chunk D — pipeline + publica + close** (two-pass
+closure in percursus per DECISUS 2 — the 5,826-node coverage gap
+and the flip-class noise are its acceptance test; silva.h rows
+typus/conversio_expressionis + typationes_numerus + hospes;
+officina spec-v2 §XII.8 stale-refs refresh; M0b RELATIO + FULL
+phase-log audit at milestone close).
   NEVER implement from a compaction summary alone.

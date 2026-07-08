@@ -58,7 +58,11 @@ hic_manens i32 plagulae_cum_ambiguis = ZEPHYRUM;
 hic_manens b32 cum_semantica = FALSUM;
 hic_manens i32 summa_symbolorum = ZEPHYRUM;
 hic_manens i32 summa_diagnosticorum = ZEPHYRUM;
-hic_manens i32 summa_typationum = ZEPHYRUM;   /* M0b */
+hic_manens i32 summa_typationum = ZEPHYRUM;      /* M0b */
+hic_manens i32 summa_expr_visorum = ZEPHYRUM;    /* M0b C: coopertura */
+hic_manens i32 summa_expr_typatorum = ZEPHYRUM;
+hic_manens i32 plagula_expr_visa = ZEPHYRUM;     /* per plagulam */
+hic_manens i32 plagula_expr_typata = ZEPHYRUM;
 hic_manens i32 plagulae_cum_diagnosticis = ZEPHYRUM;
 /* Chunk C: systema semel parsatum (piscina longaeva) + clausura */
 hic_manens SilvaParsura*   systema_parsura = NIHIL;
@@ -139,6 +143,110 @@ _typedefs_numerare (SilvaValor valor, b32 intra_corpus,
             _typedefs_numerare(nodus->loci[i], intra_corpus, via,
                 profunditas + I);
         }
+    }
+}
+
+/* M0b C: genera expressionum quae tabula typationum tenere debet
+ * (parenthesis + congeries EXCLUSA - positio contextualis) */
+hic_manens b32
+_est_genus_expressionis (s32 genus)
+{
+    commutatio (genus)
+    {
+        casus (s32)SILVA_C89_GENUS_VIRGULA:
+        casus (s32)SILVA_C89_GENUS_ASSIGNATIO:
+        casus (s32)SILVA_C89_GENUS_TERNARIUS:
+        casus (s32)SILVA_C89_GENUS_BINARIUM:
+        casus (s32)SILVA_C89_GENUS_CONVERSIO:
+        casus (s32)SILVA_C89_GENUS_UNARIUM:
+        casus (s32)SILVA_C89_GENUS_MAGNITUDO_EXPRESSIONIS:
+        casus (s32)SILVA_C89_GENUS_MAGNITUDO_TYPI:
+        casus (s32)SILVA_C89_GENUS_SUBSCRIPTIO:
+        casus (s32)SILVA_C89_GENUS_VOCATIO:
+        casus (s32)SILVA_C89_GENUS_ACCESSUS:
+        casus (s32)SILVA_C89_GENUS_POSTCREMENTUM:
+        casus (s32)SILVA_C89_GENUS_FOLIUM_IDENTIFICATOR:
+        casus (s32)SILVA_C89_GENUS_FOLIUM_INTEGER:
+        casus (s32)SILVA_C89_GENUS_FOLIUM_FLUITANS:
+        casus (s32)SILVA_C89_GENUS_FOLIUM_CHARACTER:
+        casus (s32)SILVA_C89_GENUS_FOLIUM_CHORDA:
+            redde VERUM;
+        ordinarius:
+            redde FALSUM;
+    }
+}
+
+/* Coopertura typationis: nodi expressionum visitati/typati.
+ * AMBIGUUS -> lectio canonica SOLA (aliae numquam typantur);
+ * RAMUS_OMISSUS (cruda) + ERROR praetermissi. Post clausuram
+ * mensurata - lacuna canonicae-relativae (INTENTIO DECISUS 2)
+ * hic apparet donec Chunk D bis analysat. */
+hic_manens vacuum
+_expressiones_numerare (constans SilvaSemantica* sem,
+    SilvaValor valor, i32 profunditas)
+{
+    constans SilvaNodus* nodus;
+    i32 i;
+
+    si (profunditas > CXXVIII)
+    {
+        redde;
+    }
+    si (valor.genus == SILVA_VALOR_LISTA)
+    {
+        per (i = ZEPHYRUM;
+             i < silva_valor_lista_numerus(valor); i++)
+        {
+            SilvaValor* elem = silva_valor_lista_obtinere(valor, i);
+
+            si (elem != NIHIL)
+            {
+                _expressiones_numerare(sem, *elem, profunditas + I);
+            }
+        }
+        redde;
+    }
+    si (valor.genus != SILVA_VALOR_NODUS
+        || valor.datum.nodus == NIHIL)
+    {
+        redde;
+    }
+    nodus = valor.datum.nodus;
+    si (nodus->genus == (s32)SILVA_C89_GENUS_AMBIGUUS)
+    {
+        SilvaValor interp = silva_c89_ambiguus_interpretationes(
+            nodus);
+        SilvaValor canonica = silva_c89_ambiguus_canonica(nodus);
+
+        si (canonica.genus == SILVA_VALOR_INDEX)
+        {
+            SilvaValor* lectio = silva_valor_lista_obtinere(interp,
+                (i32)canonica.datum.index);
+
+            si (lectio != NIHIL)
+            {
+                _expressiones_numerare(sem, *lectio,
+                    profunditas + I);
+            }
+        }
+        redde;
+    }
+    si (nodus->genus == (s32)SILVA_C89_GENUS_RAMUS_OMISSUS
+        || nodus->genus == (s32)SILVA_C89_GENUS_ERROR)
+    {
+        redde;
+    }
+    si (_est_genus_expressionis(nodus->genus))
+    {
+        plagula_expr_visa++;
+        si (silva_c89_typus_expressionis(sem, nodus) != NIHIL)
+        {
+            plagula_expr_typata++;
+        }
+    }
+    per (i = ZEPHYRUM; i < nodus->numerus_locorum; i++)
+    {
+        _expressiones_numerare(sem, nodus->loci[i], profunditas + I);
     }
 }
 
@@ -492,6 +600,20 @@ _plagulam_percurrere (constans SilvaContextus* ctx,
                             (int)indecisa, via);
                     }
                 }
+                /* coopertura expressionum POST clausuram (contra
+                 * arborem finalem - lacuna canonicae hic paret) */
+                plagula_expr_visa = ZEPHYRUM;
+                plagula_expr_typata = ZEPHYRUM;
+                _expressiones_numerare(sem,
+                    parsura->commissio->radix, ZEPHYRUM);
+                summa_expr_visorum += plagula_expr_visa;
+                summa_expr_typatorum += plagula_expr_typata;
+                si (plagula_expr_typata < plagula_expr_visa)
+                {
+                    imprimere("[expr coopertura %d/%d] %s\n",
+                        (int)plagula_expr_typata,
+                        (int)plagula_expr_visa, via);
+                }
             }
             alioquin
             {
@@ -761,6 +883,14 @@ s32 principale (integer argc, character** argv)
             (int)plagulae_cum_diagnosticis);
         imprimere("clausura:  %d versae; %d indecisa (residuum)\n",
             (int)summa_versorum, (int)summa_indecisorum);
+        si (summa_expr_visorum > ZEPHYRUM)
+        {
+            imprimere("coopertura: %d/%d nodi expressionum typati"
+                " (%.2f%%)\n",
+                (int)summa_expr_typatorum, (int)summa_expr_visorum,
+                100.0 * (duplex)summa_expr_typatorum
+                    / (duplex)summa_expr_visorum);
+        }
     }
     si (fines_tactae_plagulae > ZEPHYRUM)
     {

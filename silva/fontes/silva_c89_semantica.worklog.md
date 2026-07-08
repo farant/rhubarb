@@ -199,6 +199,113 @@ Notes that don't belong in the header comment:
   themselves in B/C. vocatio's functio locus deliberately skipped
   (C89 implicit-int callee rule = Chunk C).
 
+## 2026-07-08 — M0b Chunk B ships (UAC + operatores + auspex)
+
+- **AUSPEX VERDICT: 2,147 expressiones, 3,753 assertiones, 0
+  dissentientes.** Every primitive pair × every operator, size AND
+  signedness, clang-certified — the same expression text flows
+  through OUR pipeline (parse → typare) and through clang
+  (compile-time asserts: sizeof in array bound + the signedness
+  trick `(expr)*0 - 1 > 0`, an integral constant expression). TU
+  compiled as C99 deliberately: the long-long C99-rank choice
+  (DECISUS 4) is itself what gets certified. Gaps recorded: double
+  vs long double (identical on Darwin), pointer-expression
+  signedness (not constant expressions — sizes only), ternary
+  composite pointer TYPES (sizes equal — probatio fixtures carry
+  those instead).
+- Suite 239 asserts (was 206). Sweep: **1,086,949 typationes**
+  (+186k = the operators), diagnostica 265 in 30 plagulis.
+  **Delta vs Chunk A fully classified: ZERO operator-class false
+  positives over a million typed expressions.** +19 = typus
+  nominatus ignotus for POSIX types in CAST position — a new
+  sighting path (conversio typing calls typus_ex_specie now), same
+  systema_posix park. +1 = a REAL BUG (below).
+- **INTENTIO amendment (named): conversio (cast) typing pulled
+  into B** — the chunk map had assigned it to neither B nor C;
+  auspex's cast-literal probes required it, and it belongs with
+  conversions anyway (it IS the conversion operator). Typus =
+  species sine qualibus; internum's conversus = the cast target.
+- **THIRD real bug found by typing — uuid.c:44 `(insignatus i8)`**:
+  expands to `unsigned i8`, illegal (i8 is already a typedef of
+  unsigned char). Never caught because it sits in the #else (Linux)
+  arm and Apple compiles the __APPLE__ arm. Silva does NOT define
+  __APPLE__, takes the #else arm, and type-checked code that no
+  compiler on this machine has ever compiled. Fixed: `(i8)`.
+  NOTE for config-query milestone: silva's taken-arm evaluation
+  models a platform-neutral config — here a feature (free checking
+  of the arm Apple never sees), but multi-config semantics remain
+  that milestone's problem.
+- UAC engine: C99 integer conversion ranks; LP64 representability
+  = strict-size-dominance (long swallows unsigned int; long long
+  does NOT swallow unsigned long → unsigned long long). Pinned:
+  ul+ll → ull, i+l → long w/ operand conversus, float ladder
+  (fp+i → float per C89), shifts = promoted LEFT (non-UAC),
+  ptr−ptr → long (systema ptrdiff_t), null-constant → pointer
+  (incl. `(void*)0` form), composite void* with qual merging,
+  compound assignment implied-op conversions, return conversion
+  via sem->reditus_currens (save/restore around bodies).
+- Operand-class diagnostics are deliberately narrow (wrong CLASS
+  only — poison absorbs silently, deep compatibility = lint).
+  The zero-false-positive sweep validates the narrowness.
+
+## 2026-07-08 — M0b Chunk C ships (postfixa + exparcata + est_implicitum)
+
+- **COVERAGE DEBUT: 99.61%** (1,497,967 / 1,503,793 expression
+  nodes typed, measured POST-closure against the final tree —
+  deliberately, so the 5,826-node gap IS the canonical-relative
+  flip class that Chunk D's two-pass closes; percursus now prints
+  per-file `[expr coopertura N/M]` + the summary %).
+- Suite 275 asserts; typationes 1,610,983 (+524k); VERIFICATUM.
+- Shipped: vocatio (reditus; prototyped arg conversions via
+  _ad_finem_annotare; variadic-extra + unprototyped default
+  promotions incl. float→double and decay; callee designator decay
+  annotated; arity NOT diagnosed — enforcement layer's); subscriptio
+  (incl. commutative 1[arr]); accessus (one genus, ./-> via
+  tok_operator; member = bare-token chorda compare over membra;
+  BASIS QUALS PROPAGATE to member type — const struct → const
+  member, pinned; incomplete tag = poison + diagnostic); magnitudo
+  pair typed as size_t (unsigned long, systema).
+- **est_implicitum shipped (INTENTIO amendment via the
+  enforcement-layer question)**: unknown DIRECT-identifier callees
+  synthesize `extern int f()` (non-prototyped) registered in the
+  CURRENT scope with est_implicitum=VERUM and declarans = THE CALL
+  SITE (folium-identificator, not a declaratio) — the datum that
+  would be unrecoverable post-hoc. Field mirrored into silva.h's
+  SemanticaSymbolum (vanilla int) + hospes reads it. Pinned:
+  implicit vs declared, call-site declarans, non-prototypata type.
+- **Retroactive improvement #2: indecisa 355 → 305** — implicit
+  callees flow into the oracle as non-types via augere, killing
+  more declaration readings. The nested-chain park ledger shrinks
+  again without touching the resolver.
+- **magnitudo-expressionis EXPARCATUM**: aestimator computes
+  sizeof(expr) through the typing engine (aestimator↔forma↔typatio
+  three-way recursion); sizeof(arr) = 16 pinned (UNdecayed by
+  construction of naturalis).
+- **Congeries context typing (DECISUS 6)**: type flows DOWN from
+  the declarator; direct correspondence typed (nested congeries
+  recurse; struct members positional; union first member; scalar
+  braces legal); element conversions annotated ('a'→char member
+  pinned); chorda-into-char-array recognized as legal.
+  **THE ELISION MEASUREMENT: ZERO instances in the whole corpus**
+  — generated tables are fully braced, as predicted. The M1-parked
+  full elision walk costs nothing today.
+- **Noise class found + silenced precisely**: typing the callee
+  position unlocked "typedef in expressione/vocatum" × 2,155 —
+  ALL inside retained-AMBIGUUS canonicals (the nested-chain park
+  files: arbor2_glr_tabula 1,916, delineare 34, scrutinium
+  family...). Real code cannot contain typedef-as-expression (it
+  wouldn't compile); inside a retained fork it's pure canonical
+  noise owned by closure/park machinery. Fix: _intra_ambiguum
+  (pater chain, fixed at commit) guards ONLY the two typedef
+  diagnostics — poison still applied, coverage unaffected,
+  "identificator ignotus" left ungated (it found three real bugs).
+  Post-guard arithmetic closes exactly: 265 − 4 + 151 = 412.
+- Diagnostics 412 in 32 plagulis, all classified: ~154 ignotus
+  (POSIX macros/fixtures) + 105 typus nominatus (POSIX types) +
+  151 accessus structurae incompletae (struct stat/sockaddr/
+  termios... — the systema_posix park's third face: types,
+  macros, AND tag layouts) + small tail.
+
 ## 2026-07-08 — Chunk D ships (haruspex + index + publica)
 
 - **HARUSPEX VERDICT: 177 TU, 4,801 assertiones, 0 dissentientes.**

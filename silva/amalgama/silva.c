@@ -1193,7 +1193,9 @@ typedef struct {
     unsigned int      repositio;
     unsigned int      profunditas;  /* 0 = scopus fili */
     int               ex_systemate;
-    const SilvaNodus* declarans;
+    int               est_implicitum; /* extern int implicitum
+                                       * synthetizatum (M0b C) */
+    const SilvaNodus* declarans;    /* implicitis: sedes vocationis */
     SilvaToken*       lexema;
 } SemanticaSymbolum;
 
@@ -3994,6 +3996,10 @@ structura SilvaSemantica {
      * FNV super octetos: chorda binaria licet, fabrica _chorda
      * ordinaria sufficit. */
     SilvaTabulaDispersa* typationes;
+
+    /* typus reditus functionis currentis (M0b B: conversio
+     * valoris redde annotatur; NIHIL extra corpora) */
+    TypusC89* reditus_currens;
 
     b32 in_systemate;           /* vexillum ambulationis (provenientia) */
 };
@@ -34402,6 +34408,11 @@ interior TypusC89* _expressionem_typare (SilvaSemantica* sem,
 interior vacuum _valorem_typare (SilvaSemantica* sem, SilvaValor v);
 interior vacuum _valorem_typare_scalarem (SilvaSemantica* sem,
     SilvaValor v);
+interior vacuum _ad_finem_annotare (SilvaSemantica* sem,
+    constans SilvaNodus* nodus, TypusC89* valoris, TypusC89* finis);
+interior TypusC89* _qualibus_exutum (TypusC89* typus);
+interior vacuum _congeriem_typare (SilvaSemantica* sem,
+    constans SilvaNodus* congeries, TypusC89* scopus_typus);
 
 vacuum
 silva_c89_diagnosticum_addere (
@@ -34536,6 +34547,7 @@ _symbolum_registrare (SilvaSemantica* sem, s32 genus,
     symbolum->repositio = repositio;
     symbolum->profunditas = sem->scopus_currens->profunditas;
     symbolum->ex_systemate = sem->in_systemate;
+    symbolum->est_implicitum = FALSUM;   /* sedes vocati ponit */
     symbolum->declarans = declarans;
     symbolum->lexema = lexema;
     (vacuum)silva_tabula_dispersa_inserere(sem->scopus_currens->ordinaria,
@@ -35869,16 +35881,38 @@ silva_c89_declarationem_tractare (SilvaSemantica* sem,
                 dv->datum.nodus, tok);
         }
         /* initiator typatur POST registrationem (int x = x; legale,
-         * dextrum x novum videt - C89). Conversio initiatoris
-         * (assignationis regula) = Chunk B; congeries typum scopi
-         * accipit in Chunk C. */
+         * dextrum x novum videt - C89). Conversio ad typum
+         * declaratum annotatur (B); congeries typum scopi accipit
+         * in Chunk C. */
         {
             constans SilvaNodus* d = _canonicum(dv->datum.nodus);
 
             si (d->genus == (s32)SILVA_C89_GENUS_DECLARATOR_INITIATUS)
             {
-                _valorem_typare(sem,
-                    silva_c89_declarator_initiatus_initiator(d));
+                SilvaValor init_v =
+                    silva_c89_declarator_initiatus_initiator(d);
+
+                si (init_v.genus == SILVA_VALOR_NODUS)
+                {
+                    constans SilvaNodus* init = _canonicum(
+                        init_v.datum.nodus);
+
+                    si (init->genus == (s32)SILVA_C89_GENUS_CONGERIES)
+                    {
+                        /* typus scopi deorsum (M0b C, DECISUS 6) */
+                        _congeriem_typare(sem, init, t);
+                    }
+                    alioquin
+                    {
+                        TypusC89* ti = _expressionem_typare(sem,
+                            init);
+
+                        si (ti != NIHIL)
+                        {
+                            _ad_finem_annotare(sem, init, ti, t);
+                        }
+                    }
+                }
             }
         }
         numerus++;
@@ -36034,6 +36068,7 @@ _definitionem_ambulare (SilvaSemantica* sem,
     i32 repositio = ZEPHYRUM;
     TypusC89* basis;
     TypusC89* t;
+    TypusC89* reditus_prior;
     SilvaToken* tok = NIHIL;
     constans SilvaNodus* declarator = NIHIL;
     SilvaValor decl_v;
@@ -36063,6 +36098,11 @@ _definitionem_ambulare (SilvaSemantica* sem,
         silva_c89_diagnosticum_addere(sem, definitio,
             "declarationes K&R - parca nominata");
     }
+    /* typus reditus pro conversione redde (M0b B) */
+    reditus_prior = sem->reditus_currens;
+    sem->reditus_currens = (t != NIHIL
+        && t->genus == TYPUS_C89_FUNCTIO)
+        ? t->datum.functio.reditus : NIHIL;
     _scopum_aperire(sem);
     si (declarator != NIHIL)
     {
@@ -36080,6 +36120,7 @@ _definitionem_ambulare (SilvaSemantica* sem,
         _corpus_ambulare(sem, corpus_v.datum.nodus);
     }
     _scopum_claudere(sem);
+    sem->reditus_currens = reditus_prior;
 }
 
 interior vacuum
@@ -36168,9 +36209,23 @@ _elementum_ambulare (SilvaSemantica* sem, constans SilvaNodus* nodus)
             _listam_ambulare(sem, silva_c89_casus_sententiae(nodus));
             frange;
         casus (s32)SILVA_C89_GENUS_REDDE:
-            /* conversio reditus (ad typum functionis) = Chunk B */
-            _valorem_typare(sem, silva_c89_redde_valor(nodus));
+        {
+            SilvaValor val_v = silva_c89_redde_valor(nodus);
+
+            si (val_v.genus == SILVA_VALOR_NODUS)
+            {
+                constans SilvaNodus* val = _canonicum(
+                    val_v.datum.nodus);
+                TypusC89* tv = _expressionem_typare(sem, val);
+
+                si (tv != NIHIL && sem->reditus_currens != NIHIL)
+                {
+                    _ad_finem_annotare(sem, val, tv,
+                        sem->reditus_currens);
+                }
+            }
             frange;
+        }
         casus (s32)SILVA_C89_GENUS_SENTENTIA_EXPRESSIONIS:
             _valorem_typare(sem,
                 silva_c89_sententia_expressionis_expressio(nodus));
@@ -37021,10 +37076,31 @@ silva_c89_constans_aestimare (SilvaSemantica* sem,
             redde VERUM;
         }
         casus (s32)SILVA_C89_GENUS_MAGNITUDO_EXPRESSIONIS:
-            /* typum expressionis postulat = M0b Chunk C; parca */
-            silva_c89_diagnosticum_addere(sem, expressio,
-                "magnitudo expressionis in constante - parca M0b");
-            redde FALSUM;
+        {
+            /* EXPARCATUM (M0b C): typus operandi per typationem -
+             * recursio triplex aestimator<->forma<->typatio.
+             * Naturalis metitur (acies manet acies - sizeof). */
+            SilvaValor v = silva_c89_magnitudo_expressionis_internum(
+                expressio);
+            TypusC89* t;
+
+            si (v.genus != SILVA_VALOR_NODUS)
+            {
+                redde FALSUM;
+            }
+            t = _expressionem_typare(sem, _canonicum(v.datum.nodus));
+            si (t == NIHIL
+                || _qualibus_exutum(t)->genus == TYPUS_C89_ERROR)
+            {
+                redde FALSUM;
+            }
+            si (!silva_c89_formam_computare(sem, t))
+            {
+                redde FALSUM;
+            }
+            *valor_out = (s64)t->magnitudo_octetorum;
+            redde VERUM;
+        }
         ordinarius:
             redde FALSUM;
     }
@@ -37112,6 +37188,42 @@ _qualibus_exutum (TypusC89* typus)
         typus = typus->datum.qualificatus.internum;
     }
     redde typus;
+}
+
+/* Intra involucrum AMBIGUUM retentum? Lectiones canonicae furcarum
+ * retentarum typum nominatum ut expressionem continere possunt
+ * (catenae nidificatae, C1) - strepitus furcae, non codex verus;
+ * clausura (Chunk D bis-analysis) et parca resolutoris eas
+ * possident. Diagnostica typedef intra eas SILENTUR. */
+interior b32
+_intra_ambiguum (constans SilvaNodus* nodus)
+{
+    i32 custos = ZEPHYRUM;
+
+    dum (nodus != NIHIL && custos < CXXVIII)
+    {
+        si (nodus->genus == (s32)SILVA_C89_GENUS_AMBIGUUS)
+        {
+            redde VERUM;
+        }
+        nodus = nodus->pater;
+        custos++;
+    }
+    redde FALSUM;
+}
+
+/* Vexilla qualium typi colligere (involucra multa iunguntur) */
+interior i32
+_quales_typi (TypusC89* typus)
+{
+    i32 quales = ZEPHYRUM;
+
+    dum (typus != NIHIL && typus->genus == TYPUS_C89_QUALIFICATUS)
+    {
+        quales |= typus->datum.qualificatus.quales;
+        typus = typus->datum.qualificatus.internum;
+    }
+    redde quales;
 }
 
 /* Promotio integralis C89 (LP64: int 32-bit OMNES valores char/
@@ -37215,6 +37327,258 @@ _est_integrale (TypusC89* typus)
             frange;
     }
     redde VERUM;
+}
+
+/* ==================================================
+ * Conversiones arithmeticae usuales (M0b Chunk B) - ordines
+ * C99 pro extensione longus longus (INTENTIO DECISUS 4; C89
+ * eadem logica pro subiecto suo). LP64: int 4, longus 8, ll 8.
+ * ================================================== */
+
+interior s32
+_ordo_integralis (s32 p)
+{
+    commutatio (p)
+    {
+        casus PRIMITIVUM_CHARACTER:
+        casus PRIMITIVUM_CHARACTER_SIGNATUM:
+        casus PRIMITIVUM_CHARACTER_INSIGNATUM:
+            redde (s32)I;
+        casus PRIMITIVUM_BREVIS:
+        casus PRIMITIVUM_BREVIS_INSIGNATUM:
+            redde (s32)II;
+        casus PRIMITIVUM_INTEGER:
+        casus PRIMITIVUM_INTEGER_INSIGNATUM:
+            redde (s32)III;
+        casus PRIMITIVUM_LONGUS:
+        casus PRIMITIVUM_LONGUS_INSIGNATUM:
+            redde (s32)IV;
+        casus PRIMITIVUM_LONGUS_LONGUS:
+        casus PRIMITIVUM_LONGUS_LONGUS_INSIGNATUM:
+            redde (s32)V;
+        ordinarius:
+            redde ZEPHYRUM;
+    }
+}
+
+interior b32
+_est_insignatum_primitivum (s32 p)
+{
+    commutatio (p)
+    {
+        casus PRIMITIVUM_CHARACTER_INSIGNATUM:
+        casus PRIMITIVUM_BREVIS_INSIGNATUM:
+        casus PRIMITIVUM_INTEGER_INSIGNATUM:
+        casus PRIMITIVUM_LONGUS_INSIGNATUM:
+        casus PRIMITIVUM_LONGUS_LONGUS_INSIGNATUM:
+            redde VERUM;
+        ordinarius:
+            redde FALSUM;
+    }
+}
+
+interior s32
+_par_insignatum (s32 p)
+{
+    commutatio (p)
+    {
+        casus PRIMITIVUM_INTEGER: redde (s32)PRIMITIVUM_INTEGER_INSIGNATUM;
+        casus PRIMITIVUM_LONGUS:  redde (s32)PRIMITIVUM_LONGUS_INSIGNATUM;
+        casus PRIMITIVUM_LONGUS_LONGUS:
+            redde (s32)PRIMITIVUM_LONGUS_LONGUS_INSIGNATUM;
+        ordinarius: redde p;
+    }
+}
+
+/* Typus communis duorum operandorum arithmeticorum (UAC).
+ * Praesupponit ambo arithmetica (vocator probat); quales exuti,
+ * enumerati -> int per _promotum. */
+interior TypusC89*
+_commune_arithmeticum (SilvaSemantica* sem, TypusC89* a, TypusC89* b)
+{
+    s32 pa;
+    s32 pb;
+    s32 ra;
+    s32 rb;
+    b32 ia;
+    b32 ib;
+
+    a = _qualibus_exutum(a);
+    b = _qualibus_exutum(b);
+    pa = (a->genus == TYPUS_C89_ENUMERATUS)
+        ? (s32)PRIMITIVUM_INTEGER : a->datum.primitivum;
+    pb = (b->genus == TYPUS_C89_ENUMERATUS)
+        ? (s32)PRIMITIVUM_INTEGER : b->datum.primitivum;
+
+    /* scala fluitans */
+    si (pa == (s32)PRIMITIVUM_DUPLEX_LONGUS
+        || pb == (s32)PRIMITIVUM_DUPLEX_LONGUS)
+    {
+        redde sem->primitivi[PRIMITIVUM_DUPLEX_LONGUS];
+    }
+    si (pa == (s32)PRIMITIVUM_DUPLEX || pb == (s32)PRIMITIVUM_DUPLEX)
+    {
+        redde sem->primitivi[PRIMITIVUM_DUPLEX];
+    }
+    si (pa == (s32)PRIMITIVUM_FLUITANS
+        || pb == (s32)PRIMITIVUM_FLUITANS)
+    {
+        redde sem->primitivi[PRIMITIVUM_FLUITANS];
+    }
+
+    /* promotiones integrales */
+    a = _promotum(sem, a);
+    b = _promotum(sem, b);
+    pa = a->datum.primitivum;
+    pb = b->datum.primitivum;
+    si (pa == pb)
+    {
+        redde a;
+    }
+    ra = _ordo_integralis(pa);
+    rb = _ordo_integralis(pb);
+    ia = _est_insignatum_primitivum(pa);
+    ib = _est_insignatum_primitivum(pb);
+    si (ia == ib)
+    {
+        redde (ra >= rb) ? a : b;
+    }
+    /* signa mixta: insignatum ordinis >= vincit; signatum ordinis
+     * maioris vincit SI omnes valores capit (LP64: magnitudo
+     * stricte maior); alioquin par insignatum signati */
+    {
+        TypusC89* signatum   = ia ? b : a;
+        TypusC89* insignatum = ia ? a : b;
+        s32 r_signati    = ia ? rb : ra;
+        s32 r_insignati  = ia ? ra : rb;
+
+        si (r_insignati >= r_signati)
+        {
+            redde insignatum;
+        }
+        si (signatum->magnitudo_octetorum
+            > insignatum->magnitudo_octetorum)
+        {
+            redde signatum;
+        }
+        redde sem->primitivi[_par_insignatum(
+            signatum->datum.primitivum)];
+    }
+}
+
+/* Conversum annotare si typus valoris re vera mutatur */
+interior vacuum
+_conversionem_annotare (SilvaSemantica* sem,
+    constans SilvaNodus* nodus, TypusC89* naturalis, TypusC89* finis)
+{
+    si (naturalis == NIHIL || finis == NIHIL)
+    {
+        redde;
+    }
+    si (finis->genus == TYPUS_C89_ERROR
+        || _qualibus_exutum(naturalis)->genus == TYPUS_C89_ERROR)
+    {
+        redde;
+    }
+    si (_qualibus_exutum(naturalis) != finis)
+    {
+        _conversum_ponere(sem, nodus, finis);
+    }
+}
+
+/* Operandum ut monstratorem (post lapsum): monstrator ipse,
+ * acies/functio lapsae; NIHIL = non monstrator */
+interior TypusC89*
+_ut_monstrator (SilvaSemantica* sem, TypusC89* typus)
+{
+    TypusC89* t = _qualibus_exutum(typus);
+
+    si (t == NIHIL)
+    {
+        redde NIHIL;
+    }
+    si (t->genus == TYPUS_C89_MONSTRATOR)
+    {
+        redde t;
+    }
+    si (t->genus == TYPUS_C89_ACIES || t->genus == TYPUS_C89_FUNCTIO)
+    {
+        redde _lapsus(sem, typus);
+    }
+    redde NIHIL;
+}
+
+/* Constans monstratoris nulla (C89): expressio constans integralis
+ * valoris 0, aut talis ad (void*) conversa */
+interior b32
+_est_constans_nulla (SilvaSemantica* sem, constans SilvaNodus* nodus)
+{
+    s64 valor = ZEPHYRUM;
+
+    si (nodus == NIHIL)
+    {
+        redde FALSUM;
+    }
+    nodus = _canonicum(nodus);
+    si (silva_c89_constans_aestimare(sem, nodus, &valor))
+    {
+        redde valor == ZEPHYRUM;
+    }
+    si (nodus->genus == (s32)SILVA_C89_GENUS_CONVERSIO)
+    {
+        SilvaValor typus_v = silva_c89_conversio_typus(nodus);
+        SilvaValor v = silva_c89_conversio_internum(nodus);
+        TypusC89* t;
+
+        si (typus_v.genus != SILVA_VALOR_NODUS
+            || v.genus != SILVA_VALOR_NODUS)
+        {
+            redde FALSUM;
+        }
+        t = _qualibus_exutum(silva_c89_typus_ex_specie(sem,
+            typus_v.datum.nodus));
+        si (t->genus != TYPUS_C89_MONSTRATOR
+            || _qualibus_exutum(t->datum.monstrator.internum)
+                != sem->primitivi[PRIMITIVUM_VACUUM])
+        {
+            redde FALSUM;
+        }
+        redde silva_c89_constans_aestimare(sem, v.datum.nodus,
+                  &valor)
+            && valor == ZEPHYRUM;
+    }
+    redde FALSUM;
+}
+
+/* Conversio "ad finem" (assignatio simplex / redde / initiator
+ * scalaris): conversum = typus finis, si classes conveniunt et
+ * typus re vera mutatur. Compatibilitas profunda = lint. */
+interior vacuum
+_ad_finem_annotare (SilvaSemantica* sem, constans SilvaNodus* nodus,
+    TypusC89* valoris, TypusC89* finis)
+{
+    TypusC89* f = _qualibus_exutum(finis);
+
+    si (valoris == NIHIL || f == NIHIL
+        || f->genus == TYPUS_C89_ERROR
+        || _qualibus_exutum(valoris)->genus == TYPUS_C89_ERROR)
+    {
+        redde;
+    }
+    si (_est_arithmeticum(f) && _est_arithmeticum(valoris))
+    {
+        _conversionem_annotare(sem, nodus, valoris, f);
+        redde;
+    }
+    si (f->genus == TYPUS_C89_MONSTRATOR)
+    {
+        si (_ut_monstrator(sem, valoris) != NIHIL
+            || _est_constans_nulla(sem, nodus))
+        {
+            _conversionem_annotare(sem, nodus, valoris, f);
+        }
+        redde;
+    }
 }
 
 /* Typus litteralis integri - C89 6.1.3.2 + extensio longus longus:
@@ -37450,8 +37814,11 @@ _expressionem_typare (SilvaSemantica* sem, constans SilvaNodus* nodus)
             }
             alioquin si (symbolum->genus == (s32)SYMBOLUM_TYPEDEF)
             {
-                silva_c89_diagnosticum_addere(sem, nodus,
-                    "typedef in expressione");
+                si (!_intra_ambiguum(nodus))
+                {
+                    silva_c89_diagnosticum_addere(sem, nodus,
+                        "typedef in expressione");
+                }
                 t = sem->typus_erroris;
             }
             alioquin si (symbolum->genus == (s32)SYMBOLUM_CONSTANS)
@@ -37644,64 +38011,860 @@ _expressionem_typare (SilvaSemantica* sem, constans SilvaNodus* nodus)
             redde t;
         }
 
-        /* ---- genera B/C: liberi descenduntur, nodus nondum ---- */
         casus (s32)SILVA_C89_GENUS_BINARIUM:
-            _valorem_typare(sem, silva_c89_binarium_sinister(nodus));
-            _valorem_typare(sem, silva_c89_binarium_dexter(nodus));
-            redde NIHIL;
-        casus (s32)SILVA_C89_GENUS_TERNARIUS:
-            _valorem_typare(sem, silva_c89_ternarius_conditio(nodus));
-            _valorem_typare(sem, silva_c89_ternarius_verum(nodus));
-            _valorem_typare(sem, silva_c89_ternarius_falsum(nodus));
-            redde NIHIL;
-        casus (s32)SILVA_C89_GENUS_ASSIGNATIO:
-            _valorem_typare(sem, silva_c89_assignatio_sinister(nodus));
-            _valorem_typare(sem, silva_c89_assignatio_dexter(nodus));
-            redde NIHIL;
-        casus (s32)SILVA_C89_GENUS_VIRGULA:
-            _valorem_typare(sem, silva_c89_virgula_sinister(nodus));
-            _valorem_typare(sem, silva_c89_virgula_dexter(nodus));
-            redde NIHIL;
-        casus (s32)SILVA_C89_GENUS_CONVERSIO:
-            _valorem_typare(sem, silva_c89_conversio_internum(nodus));
-            redde NIHIL;
-        casus (s32)SILVA_C89_GENUS_MAGNITUDO_EXPRESSIONIS:
-            /* operandum typatur (SINE lapsu annotato - sizeof);
-             * nodus ipse = Chunk C */
-            _valorem_typare(sem,
-                silva_c89_magnitudo_expressionis_internum(nodus));
-            redde NIHIL;
-        casus (s32)SILVA_C89_GENUS_MAGNITUDO_TYPI:
-            redde NIHIL;   /* typus, non expressio - Chunk C */
-        casus (s32)SILVA_C89_GENUS_SUBSCRIPTIO:
-            _valorem_typare(sem, silva_c89_subscriptio_basis(nodus));
-            _valorem_typare(sem, silva_c89_subscriptio_index(nodus));
-            redde NIHIL;
-        casus (s32)SILVA_C89_GENUS_VOCATIO:
         {
-            /* functio locus NON typatur - regula vocati C89
-             * (extern int implicitum) = Chunk C; argumenta
-             * descenduntur (signa COMMA interserta praetermissa) */
-            SilvaValor argumenta = silva_c89_vocatio_argumenta(nodus);
-            i32 i;
-            i32 m = (i32)silva_valor_lista_numerus(argumenta);
+            SilvaValor op_v = silva_c89_binarium_tok_operator(nodus);
+            SilvaValor s_v = silva_c89_binarium_sinister(nodus);
+            SilvaValor d_v = silva_c89_binarium_dexter(nodus);
+            constans SilvaNodus* ns;
+            constans SilvaNodus* nd;
+            TypusC89* ts;
+            TypusC89* td;
+            TypusC89* t = NIHIL;
 
-            per (i = ZEPHYRUM; i < m; i++)
+            si (op_v.genus != SILVA_VALOR_TOKEN
+                || s_v.genus != SILVA_VALOR_NODUS
+                || d_v.genus != SILVA_VALOR_NODUS)
             {
-                SilvaValor* a = silva_valor_lista_obtinere(
-                    argumenta, i);
-
-                si (a != NIHIL && a->genus == SILVA_VALOR_NODUS)
+                _valorem_typare(sem, s_v);
+                _valorem_typare(sem, d_v);
+                redde NIHIL;
+            }
+            ns = _canonicum(s_v.datum.nodus);
+            nd = _canonicum(d_v.datum.nodus);
+            ts = _expressionem_typare(sem, ns);
+            td = _expressionem_typare(sem, nd);
+            si (ts == NIHIL || td == NIHIL)
+            {
+                redde NIHIL;   /* operandum nondum typabile (C) */
+            }
+            si (_qualibus_exutum(ts)->genus == TYPUS_C89_ERROR
+                || _qualibus_exutum(td)->genus == TYPUS_C89_ERROR)
+            {
+                /* venenum absorbet sine cascata, sine strepitu */
+                (vacuum)_typationem_ponere(sem, nodus,
+                    sem->typus_erroris);
+                redde sem->typus_erroris;
+            }
+            commutatio ((s32)op_v.datum.token->genus)
+            {
+                casus SILVA_LEX_STAR:
+                casus SILVA_LEX_SOLIDUS:
+                    si (_est_arithmeticum(ts)
+                        && _est_arithmeticum(td))
+                    {
+                        t = _commune_arithmeticum(sem, ts, td);
+                        _conversionem_annotare(sem, ns, ts, t);
+                        _conversionem_annotare(sem, nd, td, t);
+                    }
+                    alioquin
+                    {
+                        silva_c89_diagnosticum_addere(sem, nodus,
+                            "operanda multiplicativa non arithmetica");
+                        t = sem->typus_erroris;
+                    }
+                    frange;
+                casus SILVA_LEX_PERCENTUM:
+                casus SILVA_LEX_AMPERSAND:
+                casus SILVA_LEX_CARET:
+                casus SILVA_LEX_BARRA:
+                    si (_est_integrale(ts) && _est_integrale(td))
+                    {
+                        t = _commune_arithmeticum(sem, ts, td);
+                        _conversionem_annotare(sem, ns, ts, t);
+                        _conversionem_annotare(sem, nd, td, t);
+                    }
+                    alioquin
+                    {
+                        silva_c89_diagnosticum_addere(sem, nodus,
+                            "operanda non integralia");
+                        t = sem->typus_erroris;
+                    }
+                    frange;
+                casus SILVA_LEX_PLUS:
                 {
-                    (vacuum)_expressionem_typare(sem, a->datum.nodus);
+                    TypusC89* ps = _ut_monstrator(sem, ts);
+                    TypusC89* pd = _ut_monstrator(sem, td);
+
+                    si (_est_arithmeticum(ts)
+                        && _est_arithmeticum(td))
+                    {
+                        t = _commune_arithmeticum(sem, ts, td);
+                        _conversionem_annotare(sem, ns, ts, t);
+                        _conversionem_annotare(sem, nd, td, t);
+                    }
+                    alioquin si (ps != NIHIL && _est_integrale(td))
+                    {
+                        _conversionem_annotare(sem, ns, ts, ps);
+                        t = ps;
+                    }
+                    alioquin si (pd != NIHIL && _est_integrale(ts))
+                    {
+                        _conversionem_annotare(sem, nd, td, pd);
+                        t = pd;
+                    }
+                    alioquin
+                    {
+                        silva_c89_diagnosticum_addere(sem, nodus,
+                            "operanda additiva incompatibilia");
+                        t = sem->typus_erroris;
+                    }
+                    frange;
+                }
+                casus SILVA_LEX_MINUS:
+                {
+                    TypusC89* ps = _ut_monstrator(sem, ts);
+                    TypusC89* pd = _ut_monstrator(sem, td);
+
+                    si (_est_arithmeticum(ts)
+                        && _est_arithmeticum(td))
+                    {
+                        t = _commune_arithmeticum(sem, ts, td);
+                        _conversionem_annotare(sem, ns, ts, t);
+                        _conversionem_annotare(sem, nd, td, t);
+                    }
+                    alioquin si (ps != NIHIL && pd != NIHIL)
+                    {
+                        /* monstrator - monstrator = ptrdiff_t
+                         * (LP64: long - systema) */
+                        _conversionem_annotare(sem, ns, ts, ps);
+                        _conversionem_annotare(sem, nd, td, pd);
+                        t = sem->primitivi[PRIMITIVUM_LONGUS];
+                    }
+                    alioquin si (ps != NIHIL && _est_integrale(td))
+                    {
+                        _conversionem_annotare(sem, ns, ts, ps);
+                        t = ps;
+                    }
+                    alioquin
+                    {
+                        silva_c89_diagnosticum_addere(sem, nodus,
+                            "operanda subtractionis incompatibilia");
+                        t = sem->typus_erroris;
+                    }
+                    frange;
+                }
+                casus SILVA_LEX_SINISTRORSUM:
+                casus SILVA_LEX_DEXTRORSUM:
+                    /* NON UAC: typus = sinister promotus (C89) */
+                    si (_est_integrale(ts) && _est_integrale(td))
+                    {
+                        t = _promotum(sem, ts);
+                        _conversionem_annotare(sem, ns, ts, t);
+                        _conversionem_annotare(sem, nd, td,
+                            _promotum(sem, td));
+                    }
+                    alioquin
+                    {
+                        silva_c89_diagnosticum_addere(sem, nodus,
+                            "operanda motus non integralia");
+                        t = sem->typus_erroris;
+                    }
+                    frange;
+                casus SILVA_LEX_MINOR:
+                casus SILVA_LEX_MAIOR:
+                casus SILVA_LEX_MINOR_AEQUALIS:
+                casus SILVA_LEX_MAIOR_AEQUALIS:
+                casus SILVA_LEX_AEQUALIS_AEQUALIS:
+                casus SILVA_LEX_NON_AEQUALIS:
+                {
+                    TypusC89* ps = _ut_monstrator(sem, ts);
+                    TypusC89* pd = _ut_monstrator(sem, td);
+
+                    t = sem->primitivi[PRIMITIVUM_INTEGER];
+                    si (_est_arithmeticum(ts)
+                        && _est_arithmeticum(td))
+                    {
+                        TypusC89* commune = _commune_arithmeticum(
+                            sem, ts, td);
+
+                        _conversionem_annotare(sem, ns, ts, commune);
+                        _conversionem_annotare(sem, nd, td, commune);
+                    }
+                    alioquin si (ps != NIHIL && pd != NIHIL)
+                    {
+                        _conversionem_annotare(sem, ns, ts, ps);
+                        _conversionem_annotare(sem, nd, td, pd);
+                    }
+                    alioquin si (ps != NIHIL
+                        && _est_constans_nulla(sem, nd))
+                    {
+                        _conversionem_annotare(sem, nd, td, ps);
+                    }
+                    alioquin si (pd != NIHIL
+                        && _est_constans_nulla(sem, ns))
+                    {
+                        _conversionem_annotare(sem, ns, ts, pd);
+                    }
+                    alioquin
+                    {
+                        silva_c89_diagnosticum_addere(sem, nodus,
+                            "comparatio incompatibilium");
+                    }
+                    frange;
+                }
+                casus SILVA_LEX_ET_ET:
+                casus SILVA_LEX_VEL_VEL:
+                {
+                    TypusC89* lapsum_s = _lapsus(sem, ts);
+                    TypusC89* lapsum_d = _lapsus(sem, td);
+
+                    si (lapsum_s != NIHIL)
+                    {
+                        _conversum_ponere(sem, ns, lapsum_s);
+                    }
+                    si (lapsum_d != NIHIL)
+                    {
+                        _conversum_ponere(sem, nd, lapsum_d);
+                    }
+                    t = sem->primitivi[PRIMITIVUM_INTEGER];
+                    frange;
+                }
+                ordinarius:
+                    redde NIHIL;
+            }
+            (vacuum)_typationem_ponere(sem, nodus, t);
+            redde t;
+        }
+        casus (s32)SILVA_C89_GENUS_TERNARIUS:
+        {
+            SilvaValor v_v = silva_c89_ternarius_verum(nodus);
+            SilvaValor f_v = silva_c89_ternarius_falsum(nodus);
+            constans SilvaNodus* nv;
+            constans SilvaNodus* nf;
+            TypusC89* tv;
+            TypusC89* tf;
+            TypusC89* t = NIHIL;
+
+            _valorem_typare_scalarem(sem,
+                silva_c89_ternarius_conditio(nodus));
+            si (v_v.genus != SILVA_VALOR_NODUS
+                || f_v.genus != SILVA_VALOR_NODUS)
+            {
+                redde NIHIL;
+            }
+            nv = _canonicum(v_v.datum.nodus);
+            nf = _canonicum(f_v.datum.nodus);
+            tv = _expressionem_typare(sem, nv);
+            tf = _expressionem_typare(sem, nf);
+            si (tv == NIHIL || tf == NIHIL)
+            {
+                redde NIHIL;
+            }
+            si (_qualibus_exutum(tv)->genus == TYPUS_C89_ERROR
+                || _qualibus_exutum(tf)->genus == TYPUS_C89_ERROR)
+            {
+                (vacuum)_typationem_ponere(sem, nodus,
+                    sem->typus_erroris);
+                redde sem->typus_erroris;
+            }
+            si (_est_arithmeticum(tv) && _est_arithmeticum(tf))
+            {
+                t = _commune_arithmeticum(sem, tv, tf);
+                _conversionem_annotare(sem, nv, tv, t);
+                _conversionem_annotare(sem, nf, tf, t);
+            }
+            alioquin si (_qualibus_exutum(tv) == _qualibus_exutum(tf))
+            {
+                t = _qualibus_exutum(tv);   /* tag/vacuum/monstrator idem */
+            }
+            alioquin
+            {
+                TypusC89* pv = _ut_monstrator(sem, tv);
+                TypusC89* pf = _ut_monstrator(sem, tf);
+
+                si (pv != NIHIL && pf != NIHIL)
+                {
+                    /* compositum: quales interiorum iunguntur;
+                     * vacuum* vincit; alias incompatibilia */
+                    TypusC89* iv = pv->datum.monstrator.internum;
+                    TypusC89* ifn = pf->datum.monstrator.internum;
+                    i32 quales = ZEPHYRUM;
+                    TypusC89* ev;
+                    TypusC89* ef;
+
+                    si (iv->genus == TYPUS_C89_QUALIFICATUS)
+                    {
+                        quales |= iv->datum.qualificatus.quales;
+                    }
+                    si (ifn->genus == TYPUS_C89_QUALIFICATUS)
+                    {
+                        quales |= ifn->datum.qualificatus.quales;
+                    }
+                    ev = _qualibus_exutum(iv);
+                    ef = _qualibus_exutum(ifn);
+                    si (ev == ef)
+                    {
+                        t = silva_c89_typus_monstrator(sem,
+                            silva_c89_typus_qualificatus(sem, ev,
+                                quales));
+                    }
+                    alioquin si (ev == sem->primitivi[PRIMITIVUM_VACUUM]
+                        || ef == sem->primitivi[PRIMITIVUM_VACUUM])
+                    {
+                        t = silva_c89_typus_monstrator(sem,
+                            silva_c89_typus_qualificatus(sem,
+                                sem->primitivi[PRIMITIVUM_VACUUM],
+                                quales));
+                    }
+                    alioquin
+                    {
+                        silva_c89_diagnosticum_addere(sem, nodus,
+                            "bracchia ternarii incompatibilia");
+                        t = sem->typus_erroris;
+                    }
+                    si (t != sem->typus_erroris)
+                    {
+                        _conversionem_annotare(sem, nv, tv, t);
+                        _conversionem_annotare(sem, nf, tf, t);
+                    }
+                }
+                alioquin si (pv != NIHIL
+                    && _est_constans_nulla(sem, nf))
+                {
+                    _conversionem_annotare(sem, nf, tf, pv);
+                    t = pv;
+                }
+                alioquin si (pf != NIHIL
+                    && _est_constans_nulla(sem, nv))
+                {
+                    _conversionem_annotare(sem, nv, tv, pf);
+                    t = pf;
+                }
+                alioquin
+                {
+                    silva_c89_diagnosticum_addere(sem, nodus,
+                        "bracchia ternarii incompatibilia");
+                    t = sem->typus_erroris;
                 }
             }
-            redde NIHIL;
+            (vacuum)_typationem_ponere(sem, nodus, t);
+            redde t;
+        }
+        casus (s32)SILVA_C89_GENUS_ASSIGNATIO:
+        {
+            SilvaValor op_v = silva_c89_assignatio_tok_operator(nodus);
+            SilvaValor s_v = silva_c89_assignatio_sinister(nodus);
+            SilvaValor d_v = silva_c89_assignatio_dexter(nodus);
+            constans SilvaNodus* ns;
+            constans SilvaNodus* nd;
+            TypusC89* ts;
+            TypusC89* td;
+            TypusC89* t;
+
+            si (op_v.genus != SILVA_VALOR_TOKEN
+                || s_v.genus != SILVA_VALOR_NODUS
+                || d_v.genus != SILVA_VALOR_NODUS)
+            {
+                _valorem_typare(sem, s_v);
+                _valorem_typare(sem, d_v);
+                redde NIHIL;
+            }
+            ns = _canonicum(s_v.datum.nodus);
+            nd = _canonicum(d_v.datum.nodus);
+            ts = _expressionem_typare(sem, ns);
+            td = _expressionem_typare(sem, nd);
+            si (ts == NIHIL)
+            {
+                redde NIHIL;
+            }
+            t = _qualibus_exutum(ts);   /* valor = typus sinistri
+                                         * sine qualibus */
+            si (t->genus == TYPUS_C89_ERROR || td == NIHIL)
+            {
+                (vacuum)_typationem_ponere(sem, nodus, t);
+                redde t;
+            }
+            commutatio ((s32)op_v.datum.token->genus)
+            {
+                casus SILVA_LEX_ASSIGNATIO:
+                    _ad_finem_annotare(sem, nd, td, t);
+                    frange;
+                casus SILVA_LEX_PLUS_ASSIGNATIO:
+                casus SILVA_LEX_MINUS_ASSIGNATIO:
+                    si (t->genus == TYPUS_C89_MONSTRATOR)
+                    {
+                        frange;   /* monstrator +/- integrale */
+                    }
+                    /* cadit in arithmeticam */
+                casus SILVA_LEX_STAR_ASSIGNATIO:
+                casus SILVA_LEX_SOLIDUS_ASSIGNATIO:
+                casus SILVA_LEX_PERCENTUM_ASSIGNATIO:
+                casus SILVA_LEX_AMPERSAND_ASSIGNATIO:
+                casus SILVA_LEX_CARET_ASSIGNATIO:
+                casus SILVA_LEX_BARRA_ASSIGNATIO:
+                    si (_est_arithmeticum(ts)
+                        && _est_arithmeticum(td))
+                    {
+                        /* conversiones operationis implicitae
+                         * annotantur (demissio: onera, converte,
+                         * opera, reconverte, conde) */
+                        TypusC89* commune = _commune_arithmeticum(
+                            sem, ts, td);
+
+                        _conversionem_annotare(sem, ns, ts, commune);
+                        _conversionem_annotare(sem, nd, td, commune);
+                    }
+                    frange;
+                casus SILVA_LEX_SINISTRORSUM_ASSIGNATIO:
+                casus SILVA_LEX_DEXTRORSUM_ASSIGNATIO:
+                    si (_est_integrale(ts) && _est_integrale(td))
+                    {
+                        _conversionem_annotare(sem, ns, ts,
+                            _promotum(sem, ts));
+                        _conversionem_annotare(sem, nd, td,
+                            _promotum(sem, td));
+                    }
+                    frange;
+                ordinarius:
+                    frange;
+            }
+            (vacuum)_typationem_ponere(sem, nodus, t);
+            redde t;
+        }
+        casus (s32)SILVA_C89_GENUS_VIRGULA:
+        {
+            SilvaValor d_v = silva_c89_virgula_dexter(nodus);
+            constans SilvaNodus* nd;
+            TypusC89* td;
+            TypusC89* t;
+            TypusC89* lapsum;
+
+            _valorem_typare(sem, silva_c89_virgula_sinister(nodus));
+            si (d_v.genus != SILVA_VALOR_NODUS)
+            {
+                redde NIHIL;
+            }
+            nd = _canonicum(d_v.datum.nodus);
+            td = _expressionem_typare(sem, nd);
+            si (td == NIHIL)
+            {
+                redde NIHIL;
+            }
+            lapsum = _lapsus(sem, td);
+            si (lapsum != NIHIL)
+            {
+                _conversum_ponere(sem, nd, lapsum);
+                t = lapsum;
+            }
+            alioquin
+            {
+                t = _qualibus_exutum(td);
+            }
+            (vacuum)_typationem_ponere(sem, nodus, t);
+            redde t;
+        }
+        casus (s32)SILVA_C89_GENUS_CONVERSIO:
+        {
+            /* B (emendatio INTENTIO: conversio nulli assignata
+             * erat; auspex eam trahit - IPSA operatio conversionis
+             * est). Typus = species sine qualibus; conversus
+             * interni = typus (demissio hoc legit). */
+            SilvaValor typus_v = silva_c89_conversio_typus(nodus);
+            SilvaValor v = silva_c89_conversio_internum(nodus);
+            constans SilvaNodus* ni;
+            TypusC89* ti;
+            TypusC89* t;
+
+            si (typus_v.genus != SILVA_VALOR_NODUS
+                || v.genus != SILVA_VALOR_NODUS)
+            {
+                _valorem_typare(sem, v);
+                redde NIHIL;
+            }
+            ni = _canonicum(v.datum.nodus);
+            ti = _expressionem_typare(sem, ni);
+            t = _qualibus_exutum(silva_c89_typus_ex_specie(sem,
+                typus_v.datum.nodus));
+            si (ti != NIHIL && t->genus != TYPUS_C89_ERROR
+                && _qualibus_exutum(ti)->genus != TYPUS_C89_ERROR)
+            {
+                _conversionem_annotare(sem, ni, ti, t);
+            }
+            (vacuum)_typationem_ponere(sem, nodus, t);
+            redde t;
+        }
+        casus (s32)SILVA_C89_GENUS_MAGNITUDO_EXPRESSIONIS:
+        {
+            /* operandum typatur SINE lapsu annotato - sizeof
+             * naturalem metitur (acies manet acies). Typus nodi =
+             * size_t (systema: unsigned long, LP64). */
+            _valorem_typare(sem,
+                silva_c89_magnitudo_expressionis_internum(nodus));
+            {
+                TypusC89* t = sem->primitivi[
+                    PRIMITIVUM_LONGUS_INSIGNATUM];
+
+                (vacuum)_typationem_ponere(sem, nodus, t);
+                redde t;
+            }
+        }
+        casus (s32)SILVA_C89_GENUS_MAGNITUDO_TYPI:
+        {
+            /* species non expressio est; typus nodi = size_t */
+            TypusC89* t = sem->primitivi[PRIMITIVUM_LONGUS_INSIGNATUM];
+
+            (vacuum)_typationem_ponere(sem, nodus, t);
+            redde t;
+        }
+        casus (s32)SILVA_C89_GENUS_SUBSCRIPTIO:
+        {
+            SilvaValor b_v = silva_c89_subscriptio_basis(nodus);
+            SilvaValor i_v = silva_c89_subscriptio_index(nodus);
+            constans SilvaNodus* nb;
+            constans SilvaNodus* ni;
+            TypusC89* tb;
+            TypusC89* ti;
+            TypusC89* pb;
+            TypusC89* pi;
+            TypusC89* t;
+
+            si (b_v.genus != SILVA_VALOR_NODUS
+                || i_v.genus != SILVA_VALOR_NODUS)
+            {
+                _valorem_typare(sem, b_v);
+                _valorem_typare(sem, i_v);
+                redde NIHIL;
+            }
+            nb = _canonicum(b_v.datum.nodus);
+            ni = _canonicum(i_v.datum.nodus);
+            tb = _expressionem_typare(sem, nb);
+            ti = _expressionem_typare(sem, ni);
+            si (tb == NIHIL || ti == NIHIL)
+            {
+                redde NIHIL;
+            }
+            si (_qualibus_exutum(tb)->genus == TYPUS_C89_ERROR
+                || _qualibus_exutum(ti)->genus == TYPUS_C89_ERROR)
+            {
+                (vacuum)_typationem_ponere(sem, nodus,
+                    sem->typus_erroris);
+                redde sem->typus_erroris;
+            }
+            pb = _ut_monstrator(sem, tb);
+            pi = _ut_monstrator(sem, ti);
+            si (pb != NIHIL && _est_integrale(ti))
+            {
+                _conversionem_annotare(sem, nb, tb, pb);
+                t = pb->datum.monstrator.internum;
+            }
+            alioquin si (pi != NIHIL && _est_integrale(tb))
+            {
+                /* i[a] - commutativum (C89) */
+                _conversionem_annotare(sem, ni, ti, pi);
+                t = pi->datum.monstrator.internum;
+            }
+            alioquin
+            {
+                silva_c89_diagnosticum_addere(sem, nodus,
+                    "subscriptio non monstratoris");
+                t = sem->typus_erroris;
+            }
+            (vacuum)_typationem_ponere(sem, nodus, t);
+            redde t;
+        }
+        casus (s32)SILVA_C89_GENUS_VOCATIO:
+        {
+            SilvaValor functio_v = silva_c89_vocatio_functio(nodus);
+            SilvaValor argumenta = silva_c89_vocatio_argumenta(nodus);
+            TypusC89* tf = NIHIL;
+            TypusC89* typus_functionis = NIHIL;
+            TypusC89* t;
+            b32 venenata = FALSUM;
+
+            /* --- vocatus --- */
+            si (functio_v.genus == SILVA_VALOR_NODUS)
+            {
+                constans SilvaNodus* nf = _canonicum(
+                    functio_v.datum.nodus);
+
+                si (nf->genus
+                    == (s32)SILVA_C89_GENUS_FOLIUM_IDENTIFICATOR)
+                {
+                    SilvaValor tok_v =
+                        silva_c89_folium_identificator_tok_valor(nf);
+
+                    si (tok_v.genus == SILVA_VALOR_TOKEN)
+                    {
+                        SemanticaSymbolum* symbolum =
+                            silva_c89_symbolum_invenire(sem,
+                                tok_v.datum.token->valor);
+
+                        si (symbolum == NIHIL)
+                        {
+                            /* extern int implicitum (C89 6.3.2.2)
+                             * - registratur IN SEDE VOCATIONIS cum
+                             * est_implicitum (emendatio C: signum
+                             * laminae exsecutionis, post-hoc
+                             * irrecuperabile) */
+                            TypusC89* implicitum =
+                                silva_c89_typus_functio(sem,
+                                    sem->primitivi[PRIMITIVUM_INTEGER],
+                                    NIHIL, ZEPHYRUM, FALSUM, FALSUM);
+
+                            symbolum = _symbolum_registrare(sem,
+                                SYMBOLUM_FUNCTIO,
+                                tok_v.datum.token->valor, implicitum,
+                                ZEPHYRUM, REPOSITIO_EXTERNA, nf,
+                                tok_v.datum.token);
+                            si (symbolum != NIHIL)
+                            {
+                                symbolum->est_implicitum = VERUM;
+                            }
+                            tf = implicitum;
+                        }
+                        alioquin si (symbolum->genus
+                            == (s32)SYMBOLUM_TYPEDEF)
+                        {
+                            si (!_intra_ambiguum(nf))
+                            {
+                                silva_c89_diagnosticum_addere(sem,
+                                    nf, "typedef vocatum");
+                            }
+                            tf = sem->typus_erroris;
+                        }
+                        alioquin
+                        {
+                            tf = (symbolum->typus != NIHIL)
+                                ? symbolum->typus
+                                : sem->typus_erroris;
+                        }
+                        (vacuum)_typationem_ponere(sem, nf, tf);
+                    }
+                }
+                alioquin
+                {
+                    tf = _expressionem_typare(sem, nf);
+                }
+                /* functio aut monstrator ad functionem */
+                si (tf != NIHIL)
+                {
+                    TypusC89* e = _qualibus_exutum(tf);
+
+                    si (e->genus == TYPUS_C89_ERROR)
+                    {
+                        venenata = VERUM;
+                    }
+                    alioquin si (e->genus == TYPUS_C89_FUNCTIO)
+                    {
+                        typus_functionis = e;
+                        /* designator laberetur (lapsus annotatus) */
+                        _conversum_ponere(sem, nf,
+                            silva_c89_typus_monstrator(sem, e));
+                    }
+                    alioquin si (e->genus == TYPUS_C89_MONSTRATOR)
+                    {
+                        TypusC89* intus = _qualibus_exutum(
+                            e->datum.monstrator.internum);
+
+                        si (intus->genus == TYPUS_C89_FUNCTIO)
+                        {
+                            typus_functionis = intus;
+                        }
+                    }
+                    si (typus_functionis == NIHIL && !venenata)
+                    {
+                        silva_c89_diagnosticum_addere(sem, nodus,
+                            "vocatus non functio");
+                        venenata = VERUM;
+                    }
+                }
+            }
+
+            /* --- argumenta (signa COMMA praetermissa) --- */
+            {
+                i32 i;
+                i32 m = (i32)silva_valor_lista_numerus(argumenta);
+                i32 a = ZEPHYRUM;   /* index argumenti */
+
+                per (i = ZEPHYRUM; i < m; i++)
+                {
+                    SilvaValor* av = silva_valor_lista_obtinere(
+                        argumenta, i);
+                    constans SilvaNodus* na;
+                    TypusC89* ta;
+
+                    si (av == NIHIL || av->genus != SILVA_VALOR_NODUS)
+                    {
+                        perge;
+                    }
+                    na = _canonicum(av->datum.nodus);
+                    ta = _expressionem_typare(sem, na);
+                    si (ta != NIHIL && typus_functionis != NIHIL)
+                    {
+                        si (typus_functionis
+                                ->datum.functio.est_prototypata
+                            && a < typus_functionis
+                                ->datum.functio.numerus_parametrorum)
+                        {
+                            /* conversio ad parametrum */
+                            _ad_finem_annotare(sem, na, ta,
+                                typus_functionis
+                                    ->datum.functio.parametra[a]);
+                        }
+                        alioquin
+                        {
+                            /* promotiones argumentorum ordinariae
+                             * (variadica extra / non prototypata):
+                             * fluitans->duplex, integralia parva
+                             * ->int, acies/functio labuntur */
+                            TypusC89* e = _qualibus_exutum(ta);
+                            TypusC89* finis = NIHIL;
+
+                            si (e->genus == TYPUS_C89_PRIMITIVUS
+                                && e->datum.primitivum
+                                    == (s32)PRIMITIVUM_FLUITANS)
+                            {
+                                finis = sem->primitivi[
+                                    PRIMITIVUM_DUPLEX];
+                            }
+                            alioquin si (_est_integrale(ta))
+                            {
+                                finis = _promotum(sem, ta);
+                            }
+                            alioquin
+                            {
+                                finis = _lapsus(sem, ta);
+                            }
+                            si (finis != NIHIL)
+                            {
+                                _conversionem_annotare(sem, na, ta,
+                                    finis);
+                            }
+                        }
+                    }
+                    a++;
+                }
+                (vacuum)a;
+            }
+            /* aritas non diagnosticatur - laminae exsecutionis */
+            t = (typus_functionis != NIHIL)
+                ? typus_functionis->datum.functio.reditus
+                : sem->typus_erroris;
+            si (typus_functionis == NIHIL && !venenata && tf == NIHIL)
+            {
+                redde NIHIL;   /* vocatus nondum typabilis */
+            }
+            (vacuum)_typationem_ponere(sem, nodus, t);
+            redde t;
         }
         casus (s32)SILVA_C89_GENUS_ACCESSUS:
-            /* tok_titulus = signum crudum, non expressio */
-            _valorem_typare(sem, silva_c89_accessus_basis(nodus));
-            redde NIHIL;
+        {
+            SilvaValor b_v = silva_c89_accessus_basis(nodus);
+            SilvaValor op_v = silva_c89_accessus_tok_operator(nodus);
+            SilvaValor tit_v = silva_c89_accessus_tok_titulus(nodus);
+            constans SilvaNodus* nb;
+            TypusC89* tb;
+            TypusC89* tag_typus = NIHIL;
+            i32 quales_basis = ZEPHYRUM;
+            TypusC89* t = NIHIL;
+
+            si (b_v.genus != SILVA_VALOR_NODUS
+                || op_v.genus != SILVA_VALOR_TOKEN
+                || tit_v.genus != SILVA_VALOR_TOKEN)
+            {
+                _valorem_typare(sem, b_v);
+                redde NIHIL;
+            }
+            nb = _canonicum(b_v.datum.nodus);
+            tb = _expressionem_typare(sem, nb);
+            si (tb == NIHIL)
+            {
+                redde NIHIL;
+            }
+            si (_qualibus_exutum(tb)->genus == TYPUS_C89_ERROR)
+            {
+                (vacuum)_typationem_ponere(sem, nodus,
+                    sem->typus_erroris);
+                redde sem->typus_erroris;
+            }
+            si (op_v.datum.token->genus == SILVA_LEX_SAGITTA)
+            {
+                TypusC89* pb = _ut_monstrator(sem, tb);
+
+                si (pb == NIHIL)
+                {
+                    silva_c89_diagnosticum_addere(sem, nodus,
+                        "sagitta non monstratoris");
+                    t = sem->typus_erroris;
+                }
+                alioquin
+                {
+                    TypusC89* intus = pb->datum.monstrator.internum;
+
+                    quales_basis = _quales_typi(intus);
+                    tag_typus = _qualibus_exutum(intus);
+                }
+            }
+            alioquin
+            {
+                quales_basis = _quales_typi(tb);
+                tag_typus = _qualibus_exutum(tb);
+            }
+            si (t == NIHIL)
+            {
+                si (tag_typus->genus != TYPUS_C89_STRUCTURA
+                    && tag_typus->genus != TYPUS_C89_UNIO)
+                {
+                    silva_c89_diagnosticum_addere(sem, nodus,
+                        "accessus non structurae");
+                    t = sem->typus_erroris;
+                }
+                alioquin si (!tag_typus->datum.tag.completa)
+                {
+                    silva_c89_diagnosticum_addere(sem, nodus,
+                        "accessus structurae incompletae");
+                    t = sem->typus_erroris;
+                }
+                alioquin
+                {
+                    /* membrum per nomen (signum crudum) */
+                    SilvaChorda quaesitum = tit_v.datum.token->valor;
+                    i32 k;
+                    TypusC89Membrum* inventum = NIHIL;
+
+                    per (k = ZEPHYRUM;
+                         k < (i32)tag_typus
+                             ->datum.tag.numerus_membrorum; k++)
+                    {
+                        TypusC89Membrum* membrum =
+                            &tag_typus->datum.tag.membra[k];
+
+                        si (membrum->titulus.mensura
+                                == quaesitum.mensura
+                            && memcmp(membrum->titulus.datum,
+                                   quaesitum.datum,
+                                   (memoriae_index)
+                                       quaesitum.mensura)
+                                == ZEPHYRUM)
+                        {
+                            inventum = membrum;
+                            frange;
+                        }
+                    }
+                    si (inventum == NIHIL)
+                    {
+                        silva_c89_diagnosticum_addere(sem, nodus,
+                            "membrum ignotum");
+                        t = sem->typus_erroris;
+                    }
+                    alioquin
+                    {
+                        /* quales basis in membrum PROPAGANTUR
+                         * (constans structura -> membra constantia) */
+                        t = inventum->typus;
+                        si (quales_basis != ZEPHYRUM
+                            && t->genus != TYPUS_C89_ERROR)
+                        {
+                            t = silva_c89_typus_qualificatus(sem, t,
+                                quales_basis);
+                        }
+                    }
+                }
+            }
+            (vacuum)_typationem_ponere(sem, nodus, t);
+            redde t;
+        }
         casus (s32)SILVA_C89_GENUS_CONGERIES:
         {
             /* typus scopi (deorsum fluens) = Chunk C (DECISUS 6);
@@ -37757,6 +38920,139 @@ _valorem_typare_scalarem (SilvaSemantica* sem, SilvaValor v)
     si (lapsum != NIHIL)
     {
         _conversum_ponere(sem, _canonicum(v.datum.nodus), lapsum);
+    }
+}
+
+interior b32
+_est_acies_characterum (TypusC89* t)
+{
+    TypusC89* e;
+
+    t = _qualibus_exutum(t);
+    si (t == NIHIL || t->genus != TYPUS_C89_ACIES)
+    {
+        redde FALSUM;
+    }
+    e = _qualibus_exutum(t->datum.acies.elementum);
+    si (e == NIHIL || e->genus != TYPUS_C89_PRIMITIVUS)
+    {
+        redde FALSUM;
+    }
+    commutatio (e->datum.primitivum)
+    {
+        casus PRIMITIVUM_CHARACTER:
+        casus PRIMITIVUM_CHARACTER_SIGNATUM:
+        casus PRIMITIVUM_CHARACTER_INSIGNATUM:
+            redde VERUM;
+        ordinarius:
+            redde FALSUM;
+    }
+}
+
+/* Congeries: typus DEORSUM fluit (DECISUS 6) - typus scopi ex
+ * declaratore/membro; correspondentia directa (uncis plenis)
+ * typatur; ELISIO uncorum (elementum scalare ubi aggregatum
+ * exspectatur) = diagnosticum nominatum = MENSURA corporis
+ * (ambulatio plena elisionis parcata -> M1 demissio). Chorda
+ * litteralis aciem characterum initians legalis, non elisio. */
+interior vacuum
+_congeriem_typare (SilvaSemantica* sem, constans SilvaNodus* congeries,
+    TypusC89* scopus_typus)
+{
+    TypusC89* t = _qualibus_exutum(scopus_typus);
+    SilvaValor elementa = silva_c89_congeries_elementa(congeries);
+    i32 i;
+    i32 m = (i32)silva_valor_lista_numerus(elementa);
+    i32 a = ZEPHYRUM;   /* index elementi (nodi soli) */
+
+    si (t == NIHIL || t->genus == TYPUS_C89_ERROR)
+    {
+        /* scopus venenatus: elementa saltem typantur */
+        per (i = ZEPHYRUM; i < m; i++)
+        {
+            SilvaValor* e = silva_valor_lista_obtinere(elementa, i);
+
+            si (e != NIHIL && e->genus == SILVA_VALOR_NODUS)
+            {
+                (vacuum)_expressionem_typare(sem, e->datum.nodus);
+            }
+        }
+        redde;
+    }
+    (vacuum)_typationem_ponere(sem, congeries, t);
+    per (i = ZEPHYRUM; i < m; i++)
+    {
+        SilvaValor* ev = silva_valor_lista_obtinere(elementa, i);
+        constans SilvaNodus* ne;
+        TypusC89* finis = NIHIL;
+
+        si (ev == NIHIL || ev->genus != SILVA_VALOR_NODUS)
+        {
+            perge;   /* virgulae intersertae */
+        }
+        ne = _canonicum(ev->datum.nodus);
+
+        si (t->genus == TYPUS_C89_ACIES)
+        {
+            finis = t->datum.acies.elementum;
+        }
+        alioquin si (t->genus == TYPUS_C89_STRUCTURA)
+        {
+            finis = (a < (i32)t->datum.tag.numerus_membrorum)
+                ? t->datum.tag.membra[a].typus : NIHIL;
+        }
+        alioquin si (t->genus == TYPUS_C89_UNIO)
+        {
+            finis = (a == ZEPHYRUM
+                     && t->datum.tag.numerus_membrorum > ZEPHYRUM)
+                ? t->datum.tag.membra[ZEPHYRUM].typus : NIHIL;
+        }
+        alioquin
+        {
+            finis = t;   /* scalaris: int x = {5} - C89 legale */
+        }
+
+        si (ne->genus == (s32)SILVA_C89_GENUS_CONGERIES)
+        {
+            si (finis != NIHIL)
+            {
+                _congeriem_typare(sem, ne, finis);
+            }
+            alioquin
+            {
+                (vacuum)_expressionem_typare(sem, ne);
+            }
+        }
+        alioquin
+        {
+            TypusC89* te = _expressionem_typare(sem, ne);
+            TypusC89* ef = (finis != NIHIL)
+                ? _qualibus_exutum(finis) : NIHIL;
+
+            si (ef != NIHIL
+                && (ef->genus == TYPUS_C89_ACIES
+                    || ef->genus == TYPUS_C89_STRUCTURA
+                    || ef->genus == TYPUS_C89_UNIO))
+            {
+                si (ne->genus == (s32)SILVA_C89_GENUS_FOLIUM_CHORDA
+                    && _est_acies_characterum(ef))
+                {
+                    /* chorda aciem characterum initians - legalis */
+                }
+                alioquin
+                {
+                    /* aggregatum exspectatum, scalare datum -
+                     * MENSURA elisionis (parca nominata) */
+                    silva_c89_diagnosticum_addere(sem, ne,
+                        "elisio uncorum congeriei - parca nominata");
+                }
+            }
+            alioquin si (te != NIHIL && finis != NIHIL)
+            {
+                _ad_finem_annotare(sem, ne, te, finis);
+            }
+        }
+        a++;
     }
 }
 

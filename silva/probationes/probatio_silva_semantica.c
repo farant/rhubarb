@@ -141,6 +141,68 @@ _elementum_corporis (constans SilvaParsura* parsura,
     redde e->datum.nodus;
 }
 
+/* M0b C: argumentum k-um vocationis (nodi soli, virgulae saltatae) */
+interior constans SilvaNodus*
+_argumentum_vocationis (constans SilvaNodus* vocatio, i32 k)
+{
+    SilvaValor argumenta;
+    i32 i;
+    i32 m;
+    i32 a = ZEPHYRUM;
+
+    si (vocatio == NIHIL
+        || vocatio->genus != (s32)SILVA_C89_GENUS_VOCATIO)
+    {
+        redde NIHIL;
+    }
+    argumenta = silva_c89_vocatio_argumenta(vocatio);
+    m = (i32)silva_valor_lista_numerus(argumenta);
+    per (i = ZEPHYRUM; i < m; i++)
+    {
+        SilvaValor* v = silva_valor_lista_obtinere(argumenta, i);
+
+        si (v != NIHIL && v->genus == SILVA_VALOR_NODUS)
+        {
+            si (a == k)
+            {
+                redde v->datum.nodus;
+            }
+            a++;
+        }
+    }
+    redde NIHIL;
+}
+
+/* M0b C: symbolum per nomen in INDICE (scopi post analysin clausi -
+ * implicita in scopo corporis registrata sunt) */
+interior SemanticaSymbolum*
+_symbolum_indicis (constans SilvaSemantica* sem,
+    constans character* titulus)
+{
+    i32 i;
+    i32 m = silva_c89_symbola_numerus(sem);
+    chorda quaesitum = _ch(titulus);
+
+    per (i = ZEPHYRUM; i < m; i++)
+    {
+        constans SemanticaSymbolum* symbolum =
+            silva_c89_symbolum_per_indicem(sem, i);
+
+        si (symbolum != NIHIL
+            && symbolum->titulus.mensura == quaesitum.mensura
+            && memcmp(symbolum->titulus.datum, quaesitum.datum,
+                   (memoriae_index)quaesitum.mensura) == ZEPHYRUM)
+        {
+            unio { constans SemanticaSymbolum* c;
+                   SemanticaSymbolum* m; } u;
+
+            u.c = symbolum;
+            redde u.m;
+        }
+    }
+    redde NIHIL;
+}
+
 s32 principale (vacuum)
 {
     Piscina* piscina;
@@ -1109,6 +1171,387 @@ s32 principale (vacuum)
                 val_v.datum.nodus), sem->typus_erroris);
         }
         CREDO_VERUM (silva_c89_diagnostica_numerus(sem) >= I);
+    }
+
+    /* ========================================================
+     * PROBARE (M0b Chunk B): UAC + operatores + conversiones
+     * ======================================================== */
+    {
+        constans character* fons_b =
+            "int i; long l; unsigned int ui; unsigned long ul;\n"
+            "long long ll; char ch; float fp; double dp;\n"
+            "int arr[4]; int* p; int* q; void* vp;\n"
+            "long f(int c)\n"
+            "{\n"
+            "    long a = i + l;\n"
+            "    unsigned long long b = ul + ll;\n"
+            "    int c2 = ch + ch;\n"
+            "    float f2 = fp + i;\n"
+            "    double d2 = dp + fp;\n"
+            "    long s = l << i;\n"
+            "    int r = i < l;\n"
+            "    int* p2 = arr + 1;\n"
+            "    long df = p - q;\n"
+            "    int* p3 = c ? p : 0;\n"
+            "    void* v2 = c ? vp : p;\n"
+            "    long t3 = c ? 1 : 2L;\n"
+            "    ch = i;\n"
+            "    ch += 1;\n"
+            "    return i;\n"
+            "}\n";
+        SilvaParsura* parsura = _parsare(piscina, fons_b);
+        SilvaSemantica* sem;
+        TypusC89* int_t;
+        TypusC89* long_t;
+        TypusC89* char_t;
+        constans SilvaNodus* init;
+        constans SilvaNodus* elem;
+
+        imprimere("\n--- Probans UAC + operatores (M0b B) ---\n");
+        CREDO_NON_NIHIL (parsura);
+        CREDO_AEQUALIS_I32 (parsura->numerus_errorum, ZEPHYRUM);
+        sem = silva_c89_semantica_analysare(piscina, parsura);
+        CREDO_NON_NIHIL (sem);
+        CREDO_AEQUALIS_I32 (silva_c89_diagnostica_numerus(sem),
+            ZEPHYRUM);
+        int_t = silva_c89_typus_primitivum(sem, PRIMITIVUM_INTEGER);
+        long_t = silva_c89_typus_primitivum(sem, PRIMITIVUM_LONGUS);
+        char_t = silva_c89_typus_primitivum(sem, PRIMITIVUM_CHARACTER);
+
+        /* i + l -> long; i conversus long */
+        init = _initiator_declarationis(_elementum_corporis(parsura,
+            XII, 0));
+        CREDO_AEQUALIS_PTR (silva_c89_typus_expressionis(sem, init),
+            long_t);
+        {
+            SilvaValor sin_v = silva_c89_binarium_sinister(init);
+
+            CREDO_VERUM (sin_v.genus == SILVA_VALOR_NODUS);
+            CREDO_AEQUALIS_PTR (silva_c89_typus_expressionis(sem,
+                sin_v.datum.nodus), int_t);
+            CREDO_AEQUALIS_PTR (silva_c89_conversio_expressionis(sem,
+                sin_v.datum.nodus), long_t);
+        }
+        /* ul + ll -> unsigned long long (angulus LP64!) */
+        init = _initiator_declarationis(_elementum_corporis(parsura,
+            XII, I));
+        CREDO_AEQUALIS_PTR (silva_c89_typus_expressionis(sem, init),
+            silva_c89_typus_primitivum(sem,
+                PRIMITIVUM_LONGUS_LONGUS_INSIGNATUM));
+        /* ch + ch -> int (promotiones) */
+        init = _initiator_declarationis(_elementum_corporis(parsura,
+            XII, II));
+        CREDO_AEQUALIS_PTR (silva_c89_typus_expressionis(sem, init),
+            int_t);
+        /* fp + i -> float (scala fluitans C89) */
+        init = _initiator_declarationis(_elementum_corporis(parsura,
+            XII, III));
+        CREDO_AEQUALIS_PTR (silva_c89_typus_expressionis(sem, init),
+            silva_c89_typus_primitivum(sem, PRIMITIVUM_FLUITANS));
+        /* dp + fp -> double */
+        init = _initiator_declarationis(_elementum_corporis(parsura,
+            XII, IV));
+        CREDO_AEQUALIS_PTR (silva_c89_typus_expressionis(sem, init),
+            silva_c89_typus_primitivum(sem, PRIMITIVUM_DUPLEX));
+        /* l << i -> long (sinister promotus, NON UAC) */
+        init = _initiator_declarationis(_elementum_corporis(parsura,
+            XII, V));
+        CREDO_AEQUALIS_PTR (silva_c89_typus_expressionis(sem, init),
+            long_t);
+        /* i < l -> int; i conversus long */
+        init = _initiator_declarationis(_elementum_corporis(parsura,
+            XII, VI));
+        CREDO_AEQUALIS_PTR (silva_c89_typus_expressionis(sem, init),
+            int_t);
+        {
+            SilvaValor sin_v = silva_c89_binarium_sinister(init);
+
+            CREDO_AEQUALIS_PTR (silva_c89_conversio_expressionis(sem,
+                sin_v.datum.nodus), long_t);
+        }
+        /* arr + 1 -> int*; arr conversus int* (lapsus) */
+        init = _initiator_declarationis(_elementum_corporis(parsura,
+            XII, VII));
+        CREDO_AEQUALIS_PTR (silva_c89_typus_expressionis(sem, init),
+            silva_c89_typus_monstrator(sem, int_t));
+        {
+            SilvaValor sin_v = silva_c89_binarium_sinister(init);
+
+            CREDO_AEQUALIS_PTR (silva_c89_conversio_expressionis(sem,
+                sin_v.datum.nodus),
+                silva_c89_typus_monstrator(sem, int_t));
+        }
+        /* p - q -> long (ptrdiff LP64) */
+        init = _initiator_declarationis(_elementum_corporis(parsura,
+            XII, VIII));
+        CREDO_AEQUALIS_PTR (silva_c89_typus_expressionis(sem, init),
+            long_t);
+        /* c ? p : 0 -> int*; 0 conversus int* (constans nulla) */
+        init = _initiator_declarationis(_elementum_corporis(parsura,
+            XII, IX));
+        CREDO_AEQUALIS_PTR (silva_c89_typus_expressionis(sem, init),
+            silva_c89_typus_monstrator(sem, int_t));
+        {
+            SilvaValor f_v = silva_c89_ternarius_falsum(init);
+
+            CREDO_AEQUALIS_PTR (silva_c89_conversio_expressionis(sem,
+                f_v.datum.nodus),
+                silva_c89_typus_monstrator(sem, int_t));
+        }
+        /* c ? vp : p -> void* (compositum) */
+        init = _initiator_declarationis(_elementum_corporis(parsura,
+            XII, X));
+        CREDO_AEQUALIS_PTR (silva_c89_typus_expressionis(sem, init),
+            silva_c89_typus_monstrator(sem,
+                silva_c89_typus_primitivum(sem, PRIMITIVUM_VACUUM)));
+        /* c ? 1 : 2L -> long */
+        init = _initiator_declarationis(_elementum_corporis(parsura,
+            XII, XI));
+        CREDO_AEQUALIS_PTR (silva_c89_typus_expressionis(sem, init),
+            long_t);
+        /* ch = i: valor char; i conversus char */
+        elem = _elementum_corporis(parsura, XII, XII);
+        CREDO_NON_NIHIL (elem);
+        {
+            SilvaValor expr_v =
+                silva_c89_sententia_expressionis_expressio(elem);
+            SilvaValor dex_v;
+
+            CREDO_VERUM (expr_v.genus == SILVA_VALOR_NODUS);
+            CREDO_AEQUALIS_PTR (silva_c89_typus_expressionis(sem,
+                expr_v.datum.nodus), char_t);
+            dex_v = silva_c89_assignatio_dexter(expr_v.datum.nodus);
+            CREDO_AEQUALIS_PTR (silva_c89_conversio_expressionis(sem,
+                dex_v.datum.nodus), char_t);
+        }
+        /* ch += 1: valor char; ch conversus int (op implicita) */
+        elem = _elementum_corporis(parsura, XII, XIII);
+        CREDO_NON_NIHIL (elem);
+        {
+            SilvaValor expr_v =
+                silva_c89_sententia_expressionis_expressio(elem);
+            SilvaValor sin_v;
+
+            CREDO_VERUM (expr_v.genus == SILVA_VALOR_NODUS);
+            CREDO_AEQUALIS_PTR (silva_c89_typus_expressionis(sem,
+                expr_v.datum.nodus), char_t);
+            sin_v = silva_c89_assignatio_sinister(expr_v.datum.nodus);
+            CREDO_AEQUALIS_PTR (silva_c89_conversio_expressionis(sem,
+                sin_v.datum.nodus), int_t);
+        }
+        /* return i: i conversus long (typus reditus f) */
+        elem = _elementum_corporis(parsura, XII, XIV);
+        CREDO_NON_NIHIL (elem);
+        {
+            SilvaValor val_v = silva_c89_redde_valor(elem);
+
+            CREDO_VERUM (val_v.genus == SILVA_VALOR_NODUS);
+            CREDO_AEQUALIS_PTR (silva_c89_conversio_expressionis(sem,
+                val_v.datum.nodus), long_t);
+        }
+    }
+
+    /* ========================================================
+     * PROBARE (M0b Chunk C): vocatio + accessus + subscriptio +
+     * magnitudo-expressionis (exparcata) + est_implicitum
+     * ======================================================== */
+    {
+        constans character* fons_c =
+            "struct Punctum { int x; char c; };\n"
+            "struct Ignota;\n"
+            "int arr[4];\n"
+            "int decl(long x);\n"
+            "int varia(char* f, ...);\n"
+            "enum { SZ = sizeof(arr) };\n"
+            "int f(struct Ignota* ig)\n"
+            "{\n"
+            "    struct Punctum p;\n"
+            "    const struct Punctum* q = &p;\n"
+            "    int a1 = p.x;\n"
+            "    char a2 = q->c;\n"
+            "    int s1 = arr[1];\n"
+            "    int s2 = 1[arr];\n"
+            "    int v1 = decl(2);\n"
+            "    int v2 = ignotus_vocatus(3);\n"
+            "    int v3 = varia(\"x\", 'a', 1.5f);\n"
+            "    unsigned long z1 = sizeof(arr);\n"
+            "    int malum = ig->x;\n"
+            "    return v1;\n"
+            "}\n";
+        SilvaParsura* parsura = _parsare(piscina, fons_c);
+        SilvaSemantica* sem;
+        TypusC89* int_t;
+        TypusC89* char_t;
+        SemanticaSymbolum* symbolum;
+        constans SilvaNodus* init;
+
+        imprimere("\n--- Probans postfixa + implicitum (M0b C) ---\n");
+        CREDO_NON_NIHIL (parsura);
+        CREDO_AEQUALIS_I32 (parsura->numerus_errorum, ZEPHYRUM);
+        sem = silva_c89_semantica_analysare(piscina, parsura);
+        CREDO_NON_NIHIL (sem);
+        /* UNUM diagnosticum exspectatum: ig->x incompleta */
+        CREDO_AEQUALIS_I32 (silva_c89_diagnostica_numerus(sem), I);
+        int_t = silva_c89_typus_primitivum(sem, PRIMITIVUM_INTEGER);
+        char_t = silva_c89_typus_primitivum(sem, PRIMITIVUM_CHARACTER);
+
+        /* sizeof(arr) in aestimatore: UNDECAYED = 16 (exparcatum) */
+        symbolum = silva_c89_symbolum_invenire(sem, _ch("SZ"));
+        CREDO_NON_NIHIL (symbolum);
+        CREDO_AEQUALIS_I32 ((i32)symbolum->valor, XVI);
+
+        /* p.x -> int */
+        CREDO_AEQUALIS_PTR (silva_c89_typus_expressionis(sem,
+            _initiator_declarationis(_elementum_corporis(parsura,
+                VI, II))), int_t);
+        /* q->c -> const char (quales basis propagantur) */
+        CREDO_AEQUALIS_PTR (silva_c89_typus_expressionis(sem,
+            _initiator_declarationis(_elementum_corporis(parsura,
+                VI, III))),
+            silva_c89_typus_qualificatus(sem, char_t,
+                QUALIS_CONSTANS));
+        /* arr[1] -> int; arr conversus int* */
+        init = _initiator_declarationis(_elementum_corporis(parsura,
+            VI, IV));
+        CREDO_AEQUALIS_PTR (silva_c89_typus_expressionis(sem, init),
+            int_t);
+        {
+            SilvaValor b_v = silva_c89_subscriptio_basis(init);
+
+            CREDO_AEQUALIS_PTR (silva_c89_conversio_expressionis(sem,
+                b_v.datum.nodus),
+                silva_c89_typus_monstrator(sem, int_t));
+        }
+        /* 1[arr] -> int (commutativum C89) */
+        CREDO_AEQUALIS_PTR (silva_c89_typus_expressionis(sem,
+            _initiator_declarationis(_elementum_corporis(parsura,
+                VI, V))), int_t);
+        /* decl(2) -> int; argumentum 2 conversus long */
+        init = _initiator_declarationis(_elementum_corporis(parsura,
+            VI, VI));
+        CREDO_AEQUALIS_PTR (silva_c89_typus_expressionis(sem, init),
+            int_t);
+        CREDO_AEQUALIS_PTR (silva_c89_conversio_expressionis(sem,
+            _argumentum_vocationis(init, 0)),
+            silva_c89_typus_primitivum(sem, PRIMITIVUM_LONGUS));
+        /* ignotus_vocatus(3) -> int; EXTERN INT IMPLICITUM cum
+         * est_implicitum + declarans = sedes vocationis */
+        init = _initiator_declarationis(_elementum_corporis(parsura,
+            VI, VII));
+        CREDO_AEQUALIS_PTR (silva_c89_typus_expressionis(sem, init),
+            int_t);
+        symbolum = _symbolum_indicis(sem, "ignotus_vocatus");
+        CREDO_NON_NIHIL (symbolum);
+        CREDO_AEQUALIS_I32 ((i32)symbolum->genus,
+            (i32)SYMBOLUM_FUNCTIO);
+        CREDO_VERUM (symbolum->est_implicitum);
+        CREDO_NON_NIHIL (symbolum->declarans);
+        CREDO_AEQUALIS_I32 ((i32)symbolum->declarans->genus,
+            (i32)SILVA_C89_GENUS_FOLIUM_IDENTIFICATOR);
+        CREDO_VERUM (symbolum->typus != NIHIL
+            && symbolum->typus->genus == TYPUS_C89_FUNCTIO
+            && !symbolum->typus->datum.functio.est_prototypata);
+        /* declarata NON implicita */
+        symbolum = _symbolum_indicis(sem, "decl");
+        CREDO_NON_NIHIL (symbolum);
+        CREDO_VERUM (!symbolum->est_implicitum);
+        /* varia("x", 'a', 1.5f): "x" conversus char*;
+         * 1.5f conversus double (promotio variadica) */
+        init = _initiator_declarationis(_elementum_corporis(parsura,
+            VI, VIII));
+        CREDO_AEQUALIS_PTR (silva_c89_conversio_expressionis(sem,
+            _argumentum_vocationis(init, 0)),
+            silva_c89_typus_monstrator(sem, char_t));
+        CREDO_AEQUALIS_PTR (silva_c89_conversio_expressionis(sem,
+            _argumentum_vocationis(init, II)),
+            silva_c89_typus_primitivum(sem, PRIMITIVUM_DUPLEX));
+        /* sizeof(arr) ut expressio -> size_t (unsigned long) */
+        CREDO_AEQUALIS_PTR (silva_c89_typus_expressionis(sem,
+            _initiator_declarationis(_elementum_corporis(parsura,
+                VI, IX))),
+            silva_c89_typus_primitivum(sem,
+                PRIMITIVUM_LONGUS_INSIGNATUM));
+        /* ig->x: incompleta -> venenum */
+        CREDO_AEQUALIS_PTR (silva_c89_typus_expressionis(sem,
+            _initiator_declarationis(_elementum_corporis(parsura,
+                VI, X))), sem->typus_erroris);
+    }
+
+    /* ========================================================
+     * PROBARE (M0b Chunk C): congeries - typus deorsum + elisio
+     * ======================================================== */
+    {
+        constans character* fons_g =
+            "int m2[2][2] = {{1,2},{3,4}};\n"
+            "struct P2 { int x; char c; };\n"
+            "struct P2 ps = {1, 'a'};\n"
+            "int me[2] = {1, 2L};\n"
+            "char cs[2][4] = {\"ab\", \"cd\"};\n"
+            "int e2[2][2] = {1, 2, 3, 4};\n";
+        SilvaParsura* parsura = _parsare(piscina, fons_g);
+        SilvaSemantica* sem;
+        TypusC89* int_t;
+        TypusC89* char_t;
+        constans SilvaNodus* init;
+
+        imprimere("\n--- Probans congeriem (M0b C) ---\n");
+        CREDO_NON_NIHIL (parsura);
+        CREDO_AEQUALIS_I32 (parsura->numerus_errorum, ZEPHYRUM);
+        sem = silva_c89_semantica_analysare(piscina, parsura);
+        CREDO_NON_NIHIL (sem);
+        int_t = silva_c89_typus_primitivum(sem, PRIMITIVUM_INTEGER);
+        char_t = silva_c89_typus_primitivum(sem, PRIMITIVUM_CHARACTER);
+
+        /* elisio: QUATTUOR elementa scalaria ubi int[2] exspectatur
+         * (mensura corporis - parca nominata) */
+        CREDO_AEQUALIS_I32 (silva_c89_diagnostica_numerus(sem), IV);
+
+        /* m2 congeries -> int[2][2]; interior [0] -> int[2] */
+        init = _initiator_declarationis(_nodus(parsura, 0));
+        CREDO_AEQUALIS_PTR (silva_c89_typus_expressionis(sem, init),
+            silva_c89_typus_acies(sem,
+                silva_c89_typus_acies(sem, int_t, II), II));
+        {
+            SilvaValor elementa = silva_c89_congeries_elementa(init);
+            SilvaValor* e0 = silva_valor_lista_obtinere(elementa, 0);
+
+            CREDO_VERUM (e0 != NIHIL
+                && e0->genus == SILVA_VALOR_NODUS);
+            CREDO_AEQUALIS_PTR (silva_c89_typus_expressionis(sem,
+                e0->datum.nodus),
+                silva_c89_typus_acies(sem, int_t, II));
+        }
+        /* ps = {1, 'a'}: 'a' (int) conversus char (membrum) */
+        init = _initiator_declarationis(_nodus(parsura, II));
+        {
+            SilvaValor elementa = silva_c89_congeries_elementa(init);
+            i32 i;
+            i32 m = (i32)silva_valor_lista_numerus(elementa);
+            i32 a = ZEPHYRUM;
+            constans SilvaNodus* secundum = NIHIL;
+
+            per (i = ZEPHYRUM; i < m; i++)
+            {
+                SilvaValor* v = silva_valor_lista_obtinere(
+                    elementa, i);
+
+                si (v != NIHIL && v->genus == SILVA_VALOR_NODUS)
+                {
+                    si (a == I)
+                    {
+                        secundum = v->datum.nodus;
+                    }
+                    a++;
+                }
+            }
+            CREDO_NON_NIHIL (secundum);
+            CREDO_AEQUALIS_PTR (silva_c89_conversio_expressionis(sem,
+                secundum), char_t);
+        }
+        /* me = {1, 2L}: 2L conversus int */
+        init = _initiator_declarationis(_nodus(parsura, III));
+        CREDO_AEQUALIS_PTR (silva_c89_typus_expressionis(sem, init),
+            silva_c89_typus_acies(sem, int_t, II));
     }
 
     credo_imprimere_compendium();

@@ -919,6 +919,7 @@ int main(void)
             symbolum = silva_c89_symbolum_invenire(sem, quaesitum);
             if (symbolum != NULL
                 && symbolum->genus == (int)SYMBOLUM_TYPEDEF
+                && symbolum->est_implicitum == 0
                 && symbolum->typus == silva_c89_typus_primitivum(
                        sem, (int)PRIMITIVUM_INTEGER)
                 && silva_c89_formam_computare(sem, symbolum->typus)

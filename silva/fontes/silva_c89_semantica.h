@@ -169,7 +169,15 @@ nomen structura {
     i32                  repositio;    /* REPOSITIO_* vexilla */
     i32                  profunditas;  /* 0 = scopus fili */
     b32                  ex_systemate; /* provenientia */
-    constans SilvaNodus* declarans;
+    b32                  est_implicitum; /* extern int implicitum
+                                         * synthetizatum (vocatus
+                                         * ignotus C89 6.3.2.2) -
+                                         * signum quod lamina
+                                         * exsecutionis postulat;
+                                         * post-hoc irrecuperabile
+                                         * (M0b C, emendatio) */
+    constans SilvaNodus* declarans;   /* pro implicitis: SEDES
+                                       * VOCATIONIS, non declaratio */
     SilvaToken*          lexema;       /* nomen; NIHIL licet */
 } SemanticaSymbolum;
 
@@ -222,6 +230,10 @@ structura SilvaSemantica {
      * FNV super octetos: chorda binaria licet, fabrica _chorda
      * ordinaria sufficit. */
     TabulaDispersa* typationes;
+
+    /* typus reditus functionis currentis (M0b B: conversio
+     * valoris redde annotatur; NIHIL extra corpora) */
+    TypusC89* reditus_currens;
 
     b32 in_systemate;           /* vexillum ambulationis (provenientia) */
 };

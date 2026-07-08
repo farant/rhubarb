@@ -1180,7 +1180,9 @@ typedef struct {
     unsigned int      repositio;
     unsigned int      profunditas;  /* 0 = scopus fili */
     int               ex_systemate;
-    const SilvaNodus* declarans;
+    int               est_implicitum; /* extern int implicitum
+                                       * synthetizatum (M0b C) */
+    const SilvaNodus* declarans;    /* implicitis: sedes vocationis */
     SilvaToken*       lexema;
 } SemanticaSymbolum;
 

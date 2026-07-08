@@ -41,7 +41,10 @@ _generare_randomos(i8* bytes, i32 mensura)
         /* Fallback: usus rand() (non cryptographice securus!) */
         per (i = ZEPHYRUM; i < mensura; i++)
         {
-            bytes[i] = (insignatus i8)(rand() & 0xFF);
+            /* i8 iam insignatus est - "insignatus i8" C invalidum
+             * erat (typatio silvae invenit; bracchium Linux numquam
+             * compilatum) */
+            bytes[i] = (i8)(rand() & 0xFF);
         }
     }
 #endif
