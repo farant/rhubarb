@@ -5890,3 +5890,54 @@ canonical-is-expression trap; lista-prospectus discipline
 
 Exit: chunks A-D bars + suite green + amalgamare VERIFICATUM +
 percursus baseline unchanged with flags off.
+
+### M0a CHUNK A — RELATIO (2026-07-08): typus + forma + aestimator SHIPPED
+
+**Suite 29/29 (+probatio_silva_semantica, 88 asserts — 87/88 first
+run; the one fracture was the probatio's own hand-counted fixture
+length feeding a trailing NUL, i.e. silva refusing bad bytes exactly
+as designed).** fontes/silva_c89_semantica.{h,c} (~1,450 lines):
+
+- TypusC89: interned derived types (monstrator/acies/functio/
+  qualificatus — single-pointer handles, POINTER EQUALITY IS
+  IDENTITY, pinned by fixtures), nominal tags (identity per
+  declaration site), primitive singletons with eager formae.
+  Qualificatus-super-qualificatum merges vexilla; quales==0 returns
+  internum (no gratuitous wrappers).
+- Specificatores walk per the v2 contract: bare tokens, maximal
+  primitive runs MERGED across qualifier splits (unsigned const
+  long fixture), typus-nominatus through the flat typedef table,
+  inline tag/enum handling, implicit int (C89 legale), mixed
+  primitive+named = poison.
+- Tag discrimination on tok_aperta PRESENCE (v2 contract);
+  register-BEFORE-membra (self-referential struct pinned:
+  membra[1].typus->monstrator.internum == the tag itself); enum
+  constants into the flat constantes table via the aestimator
+  (implicit counter semantics pinned: 0, 5, 6).
+- Declarator unwind, C inside-out via internum chain: char *p[3]
+  = acies[3] of monstratores (24/8); int (*f)(void) = monstrator
+  ad functionem; parameter adjustments (acies->monstrator,
+  functio->monstrator); (void) = prototypata 0; () = non
+  prototypata; ELLIPSIS bare in parametra.
+- Aestimator: folium-integer (dec/oct/hex + suffixa), folium-
+  character (escapes), enum constants, unarium/binarium/ternarius
+  (chosen-branch only), conversio (truncation to integer types),
+  MAGNITUDO-TYPI through forma — the typus<->forma<->aestimator
+  mutual recursion works (char b[sizeof(long)] pinned = 8).
+- Forma: arm64 LP64 Apple (long double = 8 — worklog), lazy,
+  in_computatione cycle guard, struct offsets/padding + union
+  max (const-strip U pinned 8/8, offsets 0/0), incomplete/functio/
+  vacuum/campos = FALSUM + diagnosticum.
+- Poison non-cascade pinned: unknown-to-semantica typedef poisons
+  ONE declaration, the next types clean; diagnostics table grows.
+
+Parks recorded in silva_c89_semantica.worklog.md: long long as
+deliberate extension (corpus s64!), sizeof(expr)-in-consteval (M0b),
+\x escapes, linear interning (measure at percursus), flat-table tag
+redefinition (Chunk B closes). Gates: amalgamare VERIFICATUM 27/27
+(module not yet in manifest — publica = Chunk D).
+
+**NEXT (named): Chunk B — scopus + the whole-file declaration walk**
+(scope stack, four namespaces, source-order register-before-use,
+conditionalis recursion, percursus -semantica flag, corpus sweep
+bar: every file analyzed, diagnostics 0).
