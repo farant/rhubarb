@@ -6147,3 +6147,45 @@ inter documenta eiusdem diei (crescentia corporis); "prope-zephyrum"
 **M0a numeris finalibus: 5 chunks (pre-M1 + A/B/C/D trans dies
 duos), probatio 146 assertiones, hospes 28/28, haruspex 4,801/0,
 corpus 730 plagularum 0 ruinis, residuum 411 omne classificatum.**
+
+### ADDENDUM ANTE COMPACTIONEM (2026-07-08) — M0b engine hints
+
+Nothing in-flight (M0a CLOSED, gates green); these are the
+implementation hints for whoever writes the M0b INTENTIO, recorded
+before they evaporate:
+
+- M0b = expression typing + usual arithmetic conversions as
+  EXPLICIT parallel-table annotations (design DECISUS 2/3): table
+  nodus -> {typus, conversio}. Bar: every expression node in the
+  corpus typed; conversion fixtures pinned; demissio's input
+  contract FROZEN (officina critical path).
+- THE SKELETON EXISTS: the aestimator's genus dispatch
+  (silva_c89_constans_aestimare) is the shape to generalize —
+  folium-*/unarium/binarium/ternarius/parenthesis/conversio/
+  magnitudo-* are already dispatched; M0b adds vocatio (reditus of
+  FUNCTIO type; implicit extern-int for unknown callees — C89
+  legale), subscriptio, accessus (member lookup = chorda compare
+  over membra; . vs -> via tok_operator), postcrementum,
+  assignatio, virgula, folium-identificator -> symbol resolution.
+- POINTER-KEYED TABLE: tabula_dispersa keys are chordae — for the
+  nodus->typus table use tabula_dispersa_creare (the GENERIC
+  constructor with custom TabulaFriatio/TabulaComparatio over the
+  pointer bytes) — do NOT invent a new map.
+- RESOLUTION DURING THE WALK: identifier-use resolution needs LIVE
+  scopes — Chunk B's walk skips expression subtrees; M0b extends
+  _elementum_ambulare (+ declaration initiators) to descend
+  expressions WHILE scopes are open, writing the parallel table
+  as it goes (walk-order = source-order, the sanatio invariant).
+- Usual arithmetic conversions: promotions (char/short -> int),
+  signed/unsigned dominance, the f64 ladder; pointer arithmetic
+  (T* + integer -> T*; T* - T* -> ptrdiff/long); lvalue-ness for
+  assignments (lint-grade, not blocking).
+- UNPARKS AT M0b: magnitudo-expressionis in the aestimator (needs
+  expression type — mutual recursion already shaped for it);
+  initiatores type-CHECKING; \x/\NNN escapes (folium-character
+  full escapes while touching that code).
+- Officina spec cross-refs to refresh while there: spec-v2 §XII.8
+  list (binary-oracle claim, M0a/M0b conflation, 724->730).
+- Re-entry: silva/CLAUDE.md -> this phase-log tail (M0a RELATIO +
+  AUDITUS) -> silva-semantica-design.md -> the semantica worklog.
+  NEVER implement from a compaction summary alone.
