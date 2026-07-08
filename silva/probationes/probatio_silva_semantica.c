@@ -1554,6 +1554,68 @@ s32 principale (vacuum)
             silva_c89_typus_acies(sem, int_t, II));
     }
 
+    /* ========================================================
+     * PROBARE (M0b Chunk D): FIXUM VERSIONIS - typatio relativa
+     * canonicae (DECISUS 2): sem1 ante clausuram venenum videt,
+     * sem2 post versionem typum verum (auditus M0b, inventum 2)
+     * ======================================================== */
+    {
+        constans character* fons_v2 =
+            "void f(void)\n"
+            "{\n"
+            "    typedef int T;\n"
+            "    T x;\n"
+            "    (T)(x);\n"
+            "}\n";
+        SilvaOraculum* oraculum = silva_oraculum_creare(piscina);
+        SilvaParsura* parsura = silva_c89_parsare(piscina,
+            "probatio.c", fons_v2, (i32)strlen(fons_v2), oraculum);
+        SilvaSemantica* sem1;
+        SilvaSemantica* sem2;
+        constans SilvaNodus* expressio = NIHIL;
+
+        imprimere("\n--- Probans fixum versionis (M0b D) ---\n");
+        CREDO_NON_NIHIL (parsura);
+        CREDO_AEQUALIS_I32 (parsura->numerus_errorum, ZEPHYRUM);
+        /* furca (T)(x) retenta ad commissionem (dec. 13) */
+        CREDO_VERUM (xar_numerus(parsura->commissio->ambigui) >= I);
+
+        sem1 = silva_c89_semantica_analysare(piscina, parsura);
+        CREDO_NON_NIHIL (sem1);
+        /* expressio sententiae tertiae corporis: involucrum
+         * ambiguum - quaestio canonicae-conscia */
+        {
+            constans SilvaNodus* elem = _elementum_corporis(parsura,
+                0, II);
+            SilvaValor expr_v;
+
+            CREDO_NON_NIHIL (elem);
+            CREDO_AEQUALIS_I32 ((i32)elem->genus,
+                (i32)SILVA_C89_GENUS_SENTENTIA_EXPRESSIONIS);
+            expr_v = silva_c89_sententia_expressionis_expressio(elem);
+            CREDO_VERUM (expr_v.genus == SILVA_VALOR_NODUS);
+            expressio = expr_v.datum.nodus;
+        }
+        /* ANTE versionem: canonica = vocatio T(x) - venenum
+         * (typedef vocatum, intra ambiguum silens) */
+        CREDO_AEQUALIS_PTR (silva_c89_typus_expressionis(sem1,
+            expressio), sem1->typus_erroris);
+
+        /* clausura: T typus notus -> canonica VERTITUR */
+        (vacuum)silva_c89_semantica_oraculum_augere(sem1, oraculum);
+        silva_oraculum_responsa_vacare(oraculum);
+        CREDO_VERUM ((i32)silva_recanonicare(parsura->commissio,
+            oraculum, silva_c89_resolutor, NIHIL) >= I);
+
+        /* POST versionem: sem2 canonicam conversionis videt ->
+         * (T)(x) typum int habet. FIXUM: sem1 != sem2. */
+        sem2 = silva_c89_semantica_analysare(piscina, parsura);
+        CREDO_NON_NIHIL (sem2);
+        CREDO_AEQUALIS_PTR (silva_c89_typus_expressionis(sem2,
+            expressio),
+            silva_c89_typus_primitivum(sem2, PRIMITIVUM_INTEGER));
+    }
+
     credo_imprimere_compendium();
     praeteritus = credo_omnia_praeterierunt();
     piscina_destruere(piscina);

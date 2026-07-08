@@ -557,24 +557,17 @@ _plagulam_percurrere (constans SilvaContextus* ctx,
         }
         si (cum_semantica)
         {
+            /* BIS-ANALYSIS (M0b D, INTENTIO DECISUS 2): typatio
+             * RELATIVA CANONICAE est. sem1 = pabulum clausurae
+             * (annotationes eius abiciuntur); post recanonicare
+             * sem2 AUCTORITATIVA contra canonicas versas - eius
+             * numeri referuntur, eius tabula quaeritur. */
             SilvaSemantica* sem =
                 silva_c89_semantica_analysare_cum_systemate(
                     piscina, parsura, systema_parsura);
 
             si (sem != NIHIL)
             {
-                i32 diag = xar_numerus(sem->diagnostica);
-
-                summa_symbolorum += (i32)xar_numerus(sem->symbola);
-                summa_typationum +=
-                    silva_c89_typationes_numerus(sem);
-                si (diag > ZEPHYRUM)
-                {
-                    summa_diagnosticorum += diag;
-                    plagulae_cum_diagnosticis++;
-                    imprimere("[semantica diagnostica %d] %s\n",
-                        (int)diag, via);
-                }
                 /* clausura: oraculum auctum symbolis plagulae
                  * (localibus!) -> recanonicare + residuum */
                 si (oraculum_clausurae != NIHIL)
@@ -599,9 +592,27 @@ _plagulam_percurrere (constans SilvaContextus* ctx,
                         imprimere("[indecisa %d] %s\n",
                             (int)indecisa, via);
                     }
+                    /* analysi secunda contra arborem versam */
+                    sem = silva_c89_semantica_analysare_cum_systemate(
+                        piscina, parsura, systema_parsura);
                 }
-                /* coopertura expressionum POST clausuram (contra
-                 * arborem finalem - lacuna canonicae hic paret) */
+            }
+            si (sem != NIHIL)
+            {
+                i32 diag = xar_numerus(sem->diagnostica);
+
+                summa_symbolorum += (i32)xar_numerus(sem->symbola);
+                summa_typationum +=
+                    silva_c89_typationes_numerus(sem);
+                si (diag > ZEPHYRUM)
+                {
+                    summa_diagnosticorum += diag;
+                    plagulae_cum_diagnosticis++;
+                    imprimere("[semantica diagnostica %d] %s\n",
+                        (int)diag, via);
+                }
+                /* coopertura POST clausuram contra sem2 - lacuna
+                 * canonicae CLAUSA esse debet (proba acceptionis) */
                 plagula_expr_visa = ZEPHYRUM;
                 plagula_expr_typata = ZEPHYRUM;
                 _expressiones_numerare(sem,

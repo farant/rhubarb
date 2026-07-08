@@ -187,21 +187,31 @@ grammatica/genera-c89.md as the loci reference.
   type construction reads layers in reverse + specificatores for base.
   Reference loop: silva_c89_declaratoris_titulus (oraculum.c).
 
-**What M0 adds** (the oracle is a binary typedef-name set, nothing more):
-1. Scoped symbol tables — block/prototype scopes, tag vs ordinary vs
-   member vs label namespaces, linkage, storage duration.
-2. Real types — resolve specificatores + declarator chains + typedef
-   targets + qualifiers into a type representation.
-3. Layout — size/align/offset per type, host-ABI-faithful (macho.c
-   depends on it). Proof: the generated clang assert file (M0 bar).
-4. Type checking + implicit conversions computed (demissio materializes
-   them as explicit medulla ops).
-5. Ambiguity closure — ~15,229 honest survivors monorepo-wide (mostly
-   header typedef unknowns). Semantica's scope tables close what they
-   can via silva_recanonicare (in-place canonical flip, no reparse,
-   pointers stay valid); block-scope typedefs (deferred by name in
-   genera-c89.md decisiones 13) are naturally closed here. The rest get
-   diagnosed, not silently guessed.
+**What M0 adds** (M0a + M0b BOTH SHIPPED 2026-07-08 — see
+silva/phase-log.md; historical text refreshed per §XII.8):
+1. Scoped symbol tables — SHIPPED (M0a). Ordinary/tag namespaces;
+   labels deliberately lint's; est_implicitum marks synthesized
+   implicit-int callees (enforcement-layer datum, M0b C).
+2. Real types — SHIPPED (M0a). Interned derived types (pointer
+   equality = identity), nominal tags.
+3. Layout — SHIPPED (M0a), clang-certified: haruspex 4,801
+   compile-time asserts, 0 dissent.
+4. Expression typing + implicit conversions — SHIPPED (M0b, its own
+   milestone per silva-semantica-design.md): parallel table nodus →
+   {typus naturalis, typus conversus}; UAC clang-certified by
+   auspex (3,753 asserts, 0 dissent); demissio reads exactly these
+   two columns. (Type CHECKING in the judgmental sense = the future
+   enforcement layer, deliberately separate.)
+5. Ambiguity closure — SHIPPED (M0a), via the TRIVALENT oracle
+   (typus / non-typus / ignotus — the binary set was M1's; the
+   census showed 84% of survivors discriminate on NON-types):
+   15,261 → 97.3% RESOLVED; residuum classified (nested-chain
+   park + POSIX + fixtures), shrinking as knowledge grows
+   (M0b: 411 @M0a-close → 414 w/ corpus growth → 305 without
+   resolver changes — FILUM flip −59, implicit-callee feed −50).
+   Typing is
+   CANONICAL-RELATIVE: analyze after the last recanonicare
+   (percursus two-pass, M0b D).
 
 **Architecture**: trees are immutable post-commit — semantica builds
 PARALLEL tables keyed by SilvaNodus* (the oracle's responsa cache is the
@@ -297,9 +307,10 @@ officina/
 
 - **Pre-M1 (small, named)**: silva.h genus/accessor export + hospes;
   expander execution-grade audit (#, __FILE__, __LINE__).
-- **M0 — semantica** (silva-side). Bar: scoped symbols + types + layout
-  for all 724 files; clang sizeof/offsetof assert file green; ambiguity
-  closure pass run (survivors diagnosed, block-scope typedefs closed).
+- **M0 — semantica** (silva-side). **CLOSED 2026-07-08** (M0a+M0b):
+  732-file corpus, 0 crashes; haruspex 4,801/0 + auspex 3,753/0;
+  1.6M expressions typed; closure 97.3%+, residuum classified.
+  Demissio's input contract {naturalis, conversus} FROZEN.
 - **M1 — medulla + demissio.** Bar: monorepo lowers; golden dumps;
   textual round-trip byte-identical. Medulla op vocabulary = naming
   ceremony at design time (DECISUS-grade, like genus tags).
@@ -330,15 +341,11 @@ officina/
    grammar-aware fuzzing + fuzz-to-time-travel, fault injection,
    typed-heap snapshot testing, headless GUI by world-substitution).
    Later project; pure consumer of M0–M3; no milestone changes.
-8. STALE CROSS-REFS after M0a shipped (2026-07-08, from the M0a
-   full-log audit — fix at the next officina pass): §VI's "the
-   oracle is a binary typedef-name set" is now false (trivalent
-   since M0a); §VI item 4 conflates M0a/M0b (expression typing =
-   M0b per silva-semantica-design.md, the authority); §VI's
-   "survivors get diagnosed" undersells (97.3% RESOLVED via
-   trivalent closure); "724 files" → corpus now 730. M0a itself:
-   CLOSED — see silva/phase-log.md M0a RELATIO (haruspex 4,801/0,
-   index API live, residuum 411 classified).
+8. ~~STALE CROSS-REFS after M0a~~ RESOLVED 2026-07-08 (M0b Chunk D):
+   §VI rewritten (trivalent oracle, M0a/M0b split with both SHIPPED,
+   97.3% resolved, corpus 732); §XI M0 bar restated with actuals.
+   M0 CLOSED end-to-end — next officina milestone = M1
+   medulla+demissio (see silva/phase-log.md M0b RELATIO).
 3. Indicium name (carried — floated: indicium).
 4. Medulla op vocabulary DECISUS (at M1 design).
 5. REPL semantics (at M4).

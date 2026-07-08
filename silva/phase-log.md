@@ -6448,4 +6448,107 @@ and the flip-class noise are its acceptance test; silva.h rows
 typus/conversio_expressionis + typationes_numerus + hospes;
 officina spec-v2 §XII.8 stale-refs refresh; M0b RELATIO + FULL
 phase-log audit at milestone close).
+
+### M0b CHUNK D — RELATIO (2026-07-08): fistula + publica SHIPPED
+
+**COOPERTURA 100.00% (1,503,915/1,503,915)** — the two-pass
+pipeline closed the 5,826-node canonical-relative gap to ZERO.
+Percursus: sem₁ feeds closure (annotations discarded) →
+recanonicare → sem₂ authoritative against the flipped canonicals
+(reported, queried, coverage-checked). Cost invisible (113s, same
+as single-pass). Diagnostics 412 → 399 (the small tail's C1
+artifacts evaporated with the flips, as predicted at C).
+
+Publica: silva.h rows silva_c89_typus_expressionis /
+conversio_expressionis / typationes_numerus (vanilla, const-correct,
+with the canonical-relative contract stated in the section comment);
+hospes calls all three with content asserts (initiator "1 + 2" →
+int, conversus long, through the public surface). VERIFICATUM,
+hospes 28/28. Officina spec-v2 §XII.8 RESOLVED (§VI rewritten
+trivalent + shipped-status, §XI M0 bar restated with actuals).
+
+## M0b — RELATIO MILLIARII (2026-07-08)
+
+**M0b CLAUSUM. Typatio expressionum + conversiones: the demissio
+input contract {typus naturalis, typus conversus} is FROZEN and
+shipping.** Bars, all met: **every expression node in the corpus
+typed (100.00%, 1.5M nodes, 732 plagulae, 0 ruinae)**; conversion
+table clang-certified (**auspex 3,753 assertiones / 0
+dissentientes** — every primitive pair × every operator, size and
+signedness); LP64 corners pinned by fixture; suite 275 asserts
+29/29; VERIFICATUM.
+
+Four chunks (one day): A tabula+primaria (+\x/\NNN unpark, systema
+LEXICON channel), B UAC+operatores+auspex (+conversio amendment),
+C postfixa+exparcata+est_implicitum (+congeries, elision measured
+ZERO), D two-pass+publica.
+
+**THREE REAL BUGS found by typing on first corpus contact**:
+latina.h `#define FILE FILUM` reversed (include-order was secretly
+load-bearing); uuid.c `(insignatus i8)` in the never-compiled Linux
+arm; plus the value-macro invisibility class (18,293 diagnostics →
+systema lexicon). **Retroactive M0a improvements**: indecisa 414 →
+305 (FILUM flip −59, implicit-callee oracle feed −50) — a quarter
+of the nested-chain park ledger was never a resolver limitation.
+
+Diagnostics 399 in 31 plagulis, all classified: POSIX (three faces:
+types, value-macros, incomplete tag layouts — systema_posix park
+owns all) + latina-less fixtures + 1 mensura. Parks with landing
+spots: full brace elision → M1 demissio (corpus measurement: ZERO
+instances); wide strings L"" → on-pull; lvalue bit → ENFORCEMENT
+LAYER as sole owner (demissio derives structurally in the interim —
+supersedes the earlier "on-pull" phrasing, audit finding 3); auspex
+gaps → Darwin double==long double (recorded), pointer-expression
+signedness (PERMANENT — not constant-expressible), ternary
+composite pointer TYPES (probatio fixtures carry them);
+enforcement layer itself → named future (compatibility relation,
+severity policy, richer diagnosticum, invalid corpus, recovery
+mode — per the 2026-07-08 enforcement analysis; est_implicitum
+recorded NOW because it was the one unrecoverable datum).
+
+Officina critical path: M0 CLOSED end-to-end. NEXT officina
+milestone = **M1 medulla + demissio** (op vocabulary = naming
+ceremony at design time; demissio reads {naturalis, conversus} +
+sym index + formae). Silva-side alternatives: saltuarius type-jump
+(index + typatio now both available), quaestio QB.
+
+**AUDITUS PLENUS (regula limitis milliarii; agente toto phase-log
+perlecto + worklog + simulatio-2 + spec-v2; verificatum hic):**
+
+VERDICT: clean on delivery — all 7 DECISUS delivered or
+amended-with-recorded-reason (3: generic-creare → creare_chorda,
+worklog A; +2 named additions: conversio→B, est_implicitum), all 3
+unparks logged, addendum hints honored, every park owned. Two
+findings ACTED ON before sealing:
+
+- F1 RESIDUUM BASELINE RECONCILED: 411 @M0a close (730 plagulae) →
+  414 with corpus growth (+1 plagula, Chunk A — the walls line
+  said "unmoved" without naming the +3) → 355 (FILUM flip, −59) →
+  305 (implicit-callee oracle feed, −50). END 305 agrees across
+  all documents; spec-v2 §VI stale "411 → 305" CORRECTED to the
+  full chain.
+- F2 FLIP FIXTURE LANDED (DECISUS 2's promised probatio, absent
+  through D): "fixum versionis" — sem₁ types the pre-flip vocatio
+  canonical of (T)(x) as venenum; recanonicare flips ≥1; sem₂
+  types the cast canonical as int. Suite 286 asserts, first
+  compile. The two-pass is now unit-pinned, not only
+  corpus-proven.
+
+LOW findings, recorded as notes: lvalue park had two owners →
+unified above (enforcement layer sole); two auspex gaps lifted
+from Chunk-B-only into the milestone parks list above; "1.6M
+expressions typed" in spec-v2 §XI = typationes (op count,
+1,610,983), coverage denominator = 1,503,915 NODES — different
+quantities, both true; "nested-chain park ledger" in this RELATIO
+reads TOTAL indecisa (411/414/355/305 include POSIX + fixture
+classes; the isolated nested-cast class is a subset, never
+separately sized — its repro stays pinned); D's −13 diagnostic
+drop = the named 4-item typedef tail + 9 sibling C1 artifacts in
+the same fork class (not decomposed further, same cause).
+
+**M0b final numbers: 4 chunks in one day; probatio 286 asserts;
+suite 29/29; coverage 100.00% (1,503,915 nodes, 732 plagulae, 0
+ruinae); auspex 3,753/0; typationes 1,609,161 post-flip; residuum
+305 all classified; VERIFICATUM. Demissio's contract is frozen —
+M1 medulla+demissio is unblocked.**
   NEVER implement from a compaction summary alone.

@@ -1238,4 +1238,23 @@ int silva_c89_formam_computare(SilvaSemantica* sem,
 TypusC89* silva_c89_typus_primitivum(SilvaSemantica* sem,
     int primitivum);
 
+/* ==================================================
+ * Typatio expressionum (M0b) - tabula parallela nodus ->
+ * {typus naturalis, typus conversus}: naturalis = typus proprius
+ * SINE lapsu (acies manet acies - sizeof rectum); conversus =
+ * conversio scopo applicata (lapsus/UAC/assignatio/argumentum/
+ * reditus) aut NIHIL. Quaestiones canonicae-consciae (involucrum
+ * ambiguum aut lectionem des, idem redditur). NB typatio RELATIVA
+ * CANONICAE est: post recanonicare analysim NOVAM fac (percursus
+ * bis analysat). Contractus demissionis officinae.
+ * ================================================== */
+
+const TypusC89* silva_c89_typus_expressionis(
+    const SilvaSemantica* sem, const SilvaNodus* nodus);
+/* NIHIL = nulla conversio scopo applicata */
+const TypusC89* silva_c89_conversio_expressionis(
+    const SilvaSemantica* sem, const SilvaNodus* nodus);
+unsigned int silva_c89_typationes_numerus(
+    const SilvaSemantica* sem);
+
 #endif /* SILVA_H */

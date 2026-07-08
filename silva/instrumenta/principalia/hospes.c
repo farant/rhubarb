@@ -890,6 +890,7 @@ int main(void)
             "typedef int Aetas;\n"
             "enum Color { RUBER, VIRIDIS = 5 };\n"
             "static int x;\n"
+            "static long y = 1 + 2;\n"
             "static int foo(int a) { return a; }\n"
             "(foo)(x);\n";
         SilvaOraculum* oraculum = silva_oraculum_creare(piscina);
@@ -939,7 +940,47 @@ int main(void)
                     && silva_c89_ambigua_indecisa_numerare(
                            parsura->commissio, oraculum) == 0)
                 {
-                    bene_sem = 1;
+                    /* typatio M0b (rows novae vocatae): initiator
+                     * "1 + 2" -> int, conversus long (ad finem) */
+                    SilvaValor* decl_y = silva_valor_lista_obtinere(
+                        parsura->commissio->radix, 3);
+                    const SilvaNodus* initiator = NULL;
+
+                    if (decl_y != NULL
+                        && decl_y->genus == SILVA_VALOR_NODUS)
+                    {
+                        SilvaValor ds =
+                            silva_c89_declaratio_declaratores(
+                                decl_y->datum.nodus);
+                        SilvaValor* d0 = silva_valor_lista_obtinere(
+                            ds, 0);
+
+                        if (d0 != NULL
+                            && d0->genus == SILVA_VALOR_NODUS)
+                        {
+                            SilvaValor iv =
+                                silva_c89_declarator_initiatus_initiator(
+                                    d0->datum.nodus);
+
+                            if (iv.genus == SILVA_VALOR_NODUS)
+                            {
+                                initiator = iv.datum.nodus;
+                            }
+                        }
+                    }
+                    if (initiator != NULL
+                        && silva_c89_typus_expressionis(sem,
+                               initiator)
+                            == silva_c89_typus_primitivum(sem,
+                                   (int)PRIMITIVUM_INTEGER)
+                        && silva_c89_conversio_expressionis(sem,
+                               initiator)
+                            == silva_c89_typus_primitivum(sem,
+                                   (int)PRIMITIVUM_LONGUS)
+                        && silva_c89_typationes_numerus(sem) > 0)
+                    {
+                        bene_sem = 1;
+                    }
                 }
             }
         }

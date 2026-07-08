@@ -306,6 +306,30 @@ Notes that don't belong in the header comment:
   termios... — the systema_posix park's third face: types,
   macros, AND tag layouts) + small tail.
 
+## 2026-07-08 — M0b Chunk D ships (bis-analysis + publica) — M0b CLOSED
+
+- **COOPERTURA 100.00% (1,503,915/1,503,915).** The two-pass
+  pipeline (sem₁ feeds closure, annotations discarded →
+  recanonicare → sem₂ authoritative) closed the 5,826-node
+  canonical-relative gap to zero. Second analysis cost: invisible
+  (113s sweep, unchanged). Diagnostics 412 → 399 — the C-RELATIO's
+  "re-examine at D" tail (typedef-in-expression C1 artifacts)
+  evaporated with the flips, exactly as predicted.
+- Publica: three silva.h rows (typus/conversio_expressionis,
+  typationes_numerus — vanilla const-correct; canonical-relative
+  contract stated in the section comment) + hospes content asserts
+  through the public surface. VERIFICATUM 28/28.
+- Officina spec-v2 §XII.8 RESOLVED: §VI rewritten (trivalent,
+  M0a/M0b both shipped w/ certified numbers), §XI M0 bar restated,
+  §XII.8 struck through with M1 named next.
+- **M0b milestone summary**: 4 chunks, one day; probatio 146 → 275
+  asserts; 1.6M typationes; auspex 3,753/0; THREE real bugs found
+  (latina FILE/FILUM reversal, uuid insignatus-i8, value-macro
+  invisibility); TWO retroactive M0a improvements (indecisa 414 →
+  305 — a quarter of the nested-chain ledger was latent bugs and
+  missing knowledge, not resolver limitation); elision measured
+  ZERO. Demissio's input contract FROZEN.
+
 ## 2026-07-08 — Chunk D ships (haruspex + index + publica)
 
 - **HARUSPEX VERDICT: 177 TU, 4,801 assertiones, 0 dissentientes.**
