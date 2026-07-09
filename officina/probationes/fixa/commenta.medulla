@@ -1,0 +1,11 @@
+; probatio commentorum et linearum vacuarum
+
+modulus "commenta.c"
+
+; functio unica
+functio $nihil_facere () -> vacuum
+@solum:
+    sistere "vacua"
+
+datum $parvus magnitudo 16 ordinatio 4
+    octeti 01

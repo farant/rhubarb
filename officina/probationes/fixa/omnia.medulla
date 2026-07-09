@@ -1,0 +1,26 @@
+modulus "omnia.c"
+
+functio $facere (i64 %p, f64 %x) -> vacuum
+@initium:
+    %t0 = arca 16, 8
+    %v = legere.s32 %t0
+    scribere.s32 %t0, %v
+    %g = locus $tabula
+    copia %g, %t0, 16
+    %w = extendere.s32.s64 %v
+    %y = dilatare.f32.f64 %w
+    %z = vocare.s32 $scribere_aliquid, %w, 1.5, $tabula
+    vocare %p
+    sistere "probatio causae"
+@post:
+    redde
+
+functio $variadicum (i64 %fmt, ...) -> s32
+@initium:
+    %r = vocare.s32 $variadicum, %fmt
+    redde %r
+
+datum $tabula magnitudo 20 ordinatio 8
+    octeti 01020304 05060708 090a0b0c 0d0e0f10
+    octeti 11121314
+    relocatio 8 $summa_externa

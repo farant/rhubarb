@@ -1,0 +1,16 @@
+modulus "probatio.c"
+
+functio $summa (s32 %n) -> s32
+@initium:
+    %s = movere.s32 0
+    %i = movere.s32 1
+    salire @proba
+@proba:
+    %c = maior.s32 %i, %n
+    ramus %c -> @finis | @corpus
+@corpus:
+    %s = addere.s32 %s, %i
+    %i = addere.s32 %i, 1
+    salire @proba
+@finis:
+    redde %s

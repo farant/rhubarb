@@ -52,7 +52,10 @@ nomen enumeratio {
     MEDULLA_TYPUS_NUMERUS
 } MedullaTypus;
 
-#define MEDULLA_TYPUS_NIHIL (-I)   /* operatio sine typo (salire...) */
+#define MEDULLA_TYPUS_NIHIL (-1)   /* operatio sine typo (salire...);
+                                    * litera nuda: officina.h idem
+                                    * verbatim definit (redefinitio
+                                    * identica = custodia gratuita) */
 
 /* ==================================================
  * Operationes (vocabularium-medullae.md §III - SIGNATUM)

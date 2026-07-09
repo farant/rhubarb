@@ -123,14 +123,28 @@ relocatio at its use sites in static images. Census fact: string relocations
 are the HIGH-VOLUME case (generated tables); function-address relocations
 are the rare tail on the same mechanism.
 
-## VII. Structural syntax notes (concrete-proposed, refinable in M1a C)
+## VII. Structural syntax (settled at M1a C — DECISUS 2026-07-09)
 
-- Provenance: in-memory instructions ALWAYS carry origo (vision pin);
-  textual form carries it as an OPTIONAL trailing attribute — proposed
-  `[fons linea:columna]` — round-tripped when present, absent in
-  hand-written fixtures.
 - Canonical form: THE DUMP DEFINES IT; the parser is strict;
-  bar = dump(parse(t)) == t.
+  bar = dump(parse(t)) == t for canonical files.
+- Float immediates: **%.17g decimal** (17 significant digits uniquely
+  determine every IEEE double; strtod recovers exact bits; clean
+  values stay clean, 0.1 shows its truth as 0.10000000000000001).
+- Comments (`;` to end of line) and blank lines: **the lector skips
+  them** — hand-written fixtures may carry them; such files are held
+  to the IDEMPOTENCE bar (parse→dump→parse→dump identical) instead of
+  byte-identity. Leading whitespace is skipped everywhere; content
+  syntax is strict.
+- Datum octeti: lowercase hex pairs, 4-byte groups space-separated,
+  16 bytes per line. The lector accepts PARTIAL coverage (sequential
+  from 0; rest stays zero) — a non-canonical convenience.
+- Register names are an OPAQUE NAMESPACE to the lector (find-or-create
+  by name); indices are internal and need not survive the round-trip —
+  only names print.
+- Provenance: in-memory instructions ALWAYS carry origo (vision pin);
+  the textual form does NOT yet emit it — the optional trailing
+  attribute (proposed `[fons linea:columna]`) is DEFERRED to M3
+  (indicium is its consumer; the round-trip bar is unaffected).
 - File extension: .medulla
 
 ## VIII. Exemplum (accepted at interview)

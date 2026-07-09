@@ -132,3 +132,74 @@ probationes/fixa/; round-trip harness = THE M1a BAR
 (dump(parse(t)) == t); amalgama/officina.c + officina.h born (shared
 silva_amalgama mechanism) + hospes + VERIFICATUM gates; then M1a
 RELATIO + audit.
+
+### M1a CHUNK C — RELATIO (2026-07-09): forma textualis + amalgama nata SHIPPED
+
+**THE M1a BAR IS GREEN: dump(parse(t)) == t byte-identical** — the
+fabrica-built $summa dumps byte-identical to the COMMITTED fixture
+(fixa/summa.medulla pins the scriptor); both canonical fixtures
+round-trip byte-identical; the commented fixture holds the idempotence
+bar; floats are bit-exact through the cycle (%.17g, DECISUS mid-chunk
+with the comment-skip policy — vocabularium §VII updated to settled).
+
+Shipped: officina_medulla_textus.{h,c} (scriptor canonicus + lector
+strictus line-based; blocks pre-scanned per functio for forward ramus
+targets; medulla_emittere doubles as the lector's validator — the
+fabrica discipline catches double terminators and bad registers for
+free); fixa/{summa,omnia,commenta}.medulla;
+probatio_officina_textus.c (37 asserts: golden, round-trip,
+idempotence, float bits, error lines). Suite 2/2 (109 asserts total).
+
+**Amalgama nata**: amalgama/officina.{c,h} (hand-written vanilla
+officina.h — ALL Medulla structs transparent, consumers build
+instructions; OfficinaXar is a transparent layout-exact copy, the
+TesseraChorda pattern one size up), manifest amalgamator.c (tessera
+exemplar; chorda excludes 44/45 functions), hospes.c 25/25 (pollution
++ golden equivalence + round-trip through the PUBLIC surface, every
+public row called), amalgamare.sh — **VERIFICATUM (standalone +
+hospes + nm-intersectio 0)** on birth day. Finds in the textus
+worklog: Xar typedef-unit vs Piscina split-tag cadenda behavior;
+MEDULLA_TYPUS_NIHIL token-identity; the i32-unsigned slip's officina
+debut.
+
+## M1a — RELATIO MILLIARII (2026-07-09)
+
+**M1a CLAUSUM. Silva exports + medulla core: the IR exists, builds,
+prints, parses, and ships as a verified amalgam.** Bars, all met:
+**byte-identical textual round-trip** (canonical fixtures + goldens;
+idempotence for commented files); suite green (2 suites, 109 asserts;
+silva side: semantica 308/308, silva 29/29); **VERIFICATUM** for BOTH
+touched amalgams (silva.h grew 5 rows, hospes 28/28; officina.{c,h}
+born, hospes 25/25, nm-intersectio 0).
+
+Three chunks, one day: A silva export package (nexus symbolorum +
+constans_aestimare row + chorda_decodere + responsa_vacare decl —
+two of four were header-rows-only, cheaper than the sim priced);
+B medulla structs + fabrica (tagged operands 16B with causa
+interning, a/b/c + stiva, terminator discipline, MedullaDatum
+{imago, relocationes}); C textual form + amalgam birth.
+
+**AUDITUS (full officina phase-log re-read; young book, all entries
+this milestone):** INTENTIO items all delivered; carried risks all
+closed (C2 operand shape settled in B BEFORE goldens pinned in C;
+C4 binding table landed as a semantica feature; goldens pinned after
+the sealed vocabulary — zero op renames needed during
+implementation, the ceremony held). Vocabulary refinements during C
+were STRUCTURAL only (float form, comment policy — Fran DECISUS'd
+mid-chunk; vocabularium §VII updated from proposed to settled).
+Parks, named with owners: textual provenance attribute → M3
+(indicium is the consumer; in-memory origo already carried);
+partial-octeti tolerance = documented non-canonical convenience;
+big-zero datum images materialized in full (optimization note, on
+measurement); symbol/causa interning linear (fusor measures, then
+tabula if hot).
+
+Latina landmine counter: magnitudo fired in B (seventh); the
+i32-unsigned slip made its officina debut in C.
+
+**NEXT: M1b — demissio.** Bar: every corpus TU lowers, 0 ruinae,
+N sistere all classified; fusor sweep green; every corpus dump
+round-trips byte-identically; golden dumps pinned for lowering
+fixtures. Chunks per officina-m1-spec.md §III: A driver + expressions
++ statements → B calls + aggregates + address-taken → C static data
+→ D fusor + close. Consider the INTENTIO after Fran's commit.
