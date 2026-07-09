@@ -1,0 +1,89 @@
+modulus "fluxus.c"
+
+functio $classis (s32 %x) -> s32
+@initium_0:
+    %genus = movere.s32 0
+    %t2 = aequalis.s32 %x, 0
+    ramus %t2 -> @comm_casus_2 | @comm_proba_3
+@comm_finis_1:
+    redde %genus
+@comm_casus_2:
+    %t5 = movere.s32 1
+    %genus = movere.s32 %t5
+    salire @comm_finis_1
+@comm_proba_3:
+    %t3 = aequalis.s32 %x, 1
+    ramus %t3 -> @comm_casus_4 | @comm_proba_5
+@comm_casus_4:
+    salire @comm_casus_6
+@comm_proba_5:
+    %t4 = aequalis.s32 %x, 2
+    ramus %t4 -> @comm_casus_6 | @comm_proba_7
+@comm_casus_6:
+    %t6 = movere.s32 2
+    %genus = movere.s32 %t6
+    salire @comm_finis_1
+@comm_proba_7:
+    salire @comm_ordinarius_8
+@comm_ordinarius_8:
+    %t7 = movere.s32 3
+    %genus = movere.s32 %t7
+    salire @comm_finis_1
+
+functio $dum_probat (s32 %n) -> s32
+@initium_0:
+    %i = movere.s32 0
+    %s = movere.s32 0
+    salire @dum_proba_1
+@dum_proba_1:
+    %t3 = minor.s32 %i, %n
+    ramus %t3 -> @dum_corpus_2 | @dum_finis_3
+@dum_corpus_2:
+    %t4 = addere.s32 %i, 1
+    %i = movere.s32 %t4
+    %t5 = aequalis.s32 %i, 3
+    ramus %t5 -> @si_verum_4 | @si_finis_5
+@dum_finis_3:
+    salire @fac_corpus_8
+@si_verum_4:
+    salire @dum_proba_1
+@si_finis_5:
+    %t6 = maior.s32 %i, 7
+    ramus %t6 -> @si_verum_6 | @si_finis_7
+@si_verum_6:
+    salire @dum_finis_3
+@si_finis_7:
+    %t7 = addere.s32 %s, %i
+    %s = movere.s32 %t7
+    salire @dum_proba_1
+@fac_corpus_8:
+    %t8 = subtrahere.s32 %s, 1
+    %s = movere.s32 %t8
+    salire @fac_proba_9
+@fac_proba_9:
+    %t9 = maior.s32 %s, 100
+    ramus %t9 -> @fac_corpus_8 | @fac_finis_10
+@fac_finis_10:
+    redde %s
+
+functio $salit (s32 %n) -> s32
+@initium_0:
+    %s = movere.s32 0
+    salire @l_initium
+@l_initium:
+    %t2 = addere.s32 %s, %n
+    %s = movere.s32 %t2
+    %t3 = minor.s32 %s, 10
+    ramus %t3 -> @si_verum_1 | @si_finis_2
+@si_verum_1:
+    salire @l_initium
+@si_finis_2:
+    redde %s
+
+functio $vacua (s32 %n) -> vacuum
+@initium_0:
+    ramus %n -> @si_verum_1 | @si_finis_2
+@si_verum_1:
+    redde
+@si_finis_2:
+    redde

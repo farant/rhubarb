@@ -51,6 +51,8 @@ declare -a RADIX_FONTES=(
     "chorda"
     "chorda_aedificator"
     "xar"
+    "tabula_dispersa"
+    "friatio"
     "credo"
 )
 

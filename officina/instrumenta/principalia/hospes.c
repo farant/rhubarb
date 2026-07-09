@@ -11,6 +11,8 @@
 #include <stdio.h>
 #include <string.h>
 #include "officina.h"
+#include "silva.h"   /* hospes duplex: demissio silvam consumit
+                      * (saltuarius exemplar) */
 
 /* --- latina keyword names as ordinary identifiers --- */
 static int si = 1;
@@ -234,6 +236,55 @@ int main(void)
         proba(secunda.mensura == scriptura.mensura
             && memcmp(secunda.datum, scriptura.datum,
                    secunda.mensura) == 0, "vectis byte-idem");
+    }
+
+    /* demissio per superficiem publicam DUPLICEM (silva.h +
+     * officina.h in hospite uno) */
+    {
+        SilvaPiscina* piscina_silvae =
+            silva_piscina_generare_dynamicum("hospes_silva",
+                8388608);
+        static const char fons_dem[] =
+            "int addens(int x) { return x + 1; }\n";
+        static const char* SPERATUM_DEM =
+            "modulus \"hospes_dem.c\"\n"
+            "\n"
+            "functio $addens (s32 %x) -> s32\n"
+            "@initium_0:\n"
+            "    %t1 = addere.s32 %x, 1\n"
+            "    redde %t1\n";
+        SilvaParsura* parsura = NULL;
+        SilvaSemantica* sem = NULL;
+        MedullaModulus* modulus_dem = NULL;
+
+        if (piscina_silvae != NULL) {
+            parsura = silva_c89_parsare(piscina_silvae,
+                "hospes_dem.c", fons_dem,
+                (unsigned int)(sizeof(fons_dem) - 1), NULL);
+        }
+        if (parsura != NULL && parsura->numerus_errorum == 0) {
+            sem = silva_c89_semantica_analysare(piscina_silvae,
+                parsura);
+        }
+        if (sem != NULL) {
+            modulus_dem = demissio_currere(piscina, parsura, sem,
+                ch("hospes_dem.c"));
+        }
+        proba(modulus_dem != NULL, "demissio");
+        if (modulus_dem != NULL) {
+            OfficinaChorda scriptura = medulla_textum_scribere(
+                piscina, modulus_dem);
+
+            proba(scriptura.mensura
+                    == (unsigned int)strlen(SPERATUM_DEM)
+                && memcmp(scriptura.datum, SPERATUM_DEM,
+                       scriptura.mensura) == 0, "demissio aurea");
+            proba(officina_xar_numerus(modulus_dem->causae) == 0,
+                "demissio sine sistere");
+        }
+        if (piscina_silvae != NULL) {
+            silva_piscina_destruere(piscina_silvae);
+        }
     }
 
     printf("hospes: %d/%d fideles (pollutio nulla)\n", fideles,

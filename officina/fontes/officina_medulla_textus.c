@@ -125,10 +125,28 @@ _operandum_scribere (ChordaAedificator* aed,
         casus (s32)MEDULLA_OPERANDUM_IMMEDIATUM_F:
         {
             character littera[XL];
+            i32 k;
+            b32 signatum_fluitantis = FALSUM;
 
             sprintf(littera, "%.17g",
                 operandum->datum.immediatum_f);
+            /* integri toti (%.17g "100") signum fluitantis
+             * servandum - aliter lector immediatum INTEGRALE
+             * relegit (genus mutatur, textus byte-idem manet:
+             * cautio subdola) */
+            per (k = ZEPHYRUM; littera[k] != '\0'; k++)
+            {
+                si (littera[k] == '.' || littera[k] == 'e'
+                    || littera[k] == 'E')
+                {
+                    signatum_fluitantis = VERUM;
+                }
+            }
             chorda_aedificator_appendere_literis(aed, littera);
+            si (!signatum_fluitantis)
+            {
+                chorda_aedificator_appendere_literis(aed, ".0");
+            }
             frange;
         }
         casus (s32)MEDULLA_OPERANDUM_SYMBOLUM:

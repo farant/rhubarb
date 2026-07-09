@@ -296,4 +296,22 @@ OfficinaChorda medulla_textum_scribere(OfficinaPiscina* piscina,
 MedullaModulus* medulla_textum_legere(OfficinaPiscina* piscina,
     OfficinaChorda textus, unsigned int* linea_erroris);
 
+/* ==================================================
+ * Demissio (M1b): arbor typata -> medulla
+ *
+ * Typi silvae TAG-SOLUM hic (officina.h sine silva.h manet);
+ * vocatores silva.h includunt (idem tags). Praesumit sem
+ * POST-FLIP (typatio canonicae-relativa; fistula bis-analysans
+ * vocantis est). sem non-const: forma pigra + aestimator
+ * tabulas per quaestionem mutant. Inlowerabilia -> sistere
+ * causa classificata; numquam ruit.
+ * ================================================== */
+
+struct SilvaParsura;
+struct SilvaSemantica;
+
+MedullaModulus* demissio_currere(OfficinaPiscina* piscina,
+    const struct SilvaParsura* parsura,
+    struct SilvaSemantica* sem, OfficinaChorda titulus_moduli);
+
 #endif /* OFFICINA_H */

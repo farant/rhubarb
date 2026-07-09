@@ -74,15 +74,26 @@ clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" \
 "$BUILD_DIR/amalgamator" "$RADIX_DIR" "$AMALGAMA_DIR/officina.c" || exit 1
 
 # ---- 3. VERIFICATIO: standalone compile under the FULL flag set ----
+# (UNA exceptio includendi: silva/amalgama - officina a silva pendet
+#  EX ARCHITECTURA; dependentia externa unica documentata)
 echo "  [verificatio] amalgama/officina.c standalone (severitas plena)"
-clang "${GCC_FLAGS[@]}" \
+clang "${GCC_FLAGS[@]}" -I"$RADIX_DIR/silva/amalgama" \
     -c "$AMALGAMA_DIR/officina.c" -o "$BUILD_DIR/amalgama_verificatio.o" || exit 1
 
+# ---- 3b. silva amalgam as object (hospes duplex) ----
+src="$RADIX_DIR/silva/amalgama/silva.c"
+obj="$BUILD_DIR/amalgama_silva.o"
+if [ ! -f "$obj" ] || [ "$src" -nt "$obj" ]; then
+    echo "  [amalgama] silva.c (hospes duplex)"
+    clang "${GCC_FLAGS[@]}" -c "$src" -o "$obj" || exit 1
+fi
+
 # ---- 4. VERIFICATIO: hospes (pollutio + aequivalentia + vectis) ----
-echo "  [verificatio] hospes.c (pollutio + aequivalentia)"
-clang "${GCC_FLAGS[@]}" -I"$AMALGAMA_DIR" \
+echo "  [verificatio] hospes.c (pollutio + aequivalentia + demissio)"
+clang "${GCC_FLAGS[@]}" -I"$AMALGAMA_DIR" -I"$RADIX_DIR/silva/amalgama" \
     "$OFF_DIR/instrumenta/principalia/hospes.c" \
     "$BUILD_DIR/amalgama_verificatio.o" \
+    "$BUILD_DIR/amalgama_silva.o" \
     -o "$BUILD_DIR/hospes" || exit 1
 "$BUILD_DIR/hospes" || exit 1
 

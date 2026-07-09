@@ -1,0 +1,111 @@
+modulus "scalaria.c"
+
+functio $duplum (s32 %n) -> s32
+@initium_0:
+    %t1 = addere.s32 %n, %n
+    redde %t1
+
+functio $summa (s32 %n) -> s32
+@initium_0:
+    %s = movere.s32 0
+    %t3 = movere.s32 1
+    %i = movere.s32 %t3
+    salire @per_proba_1
+@per_proba_1:
+    %t4 = minor_aequalis.s32 %i, %n
+    ramus %t4 -> @per_corpus_2 | @per_finis_4
+@per_corpus_2:
+    %t5 = addere.s32 %s, %i
+    %s = movere.s32 %t5
+    salire @per_passus_3
+@per_passus_3:
+    %t6 = addere.s32 %i, 1
+    %i = movere.s32 %t6
+    salire @per_proba_1
+@per_finis_4:
+    redde %s
+
+functio $mixtum (s32 %a, s64 %b) -> s64
+@initium_0:
+    %t3 = multiplicare.s32 %a, 2
+    %t4 = extendere.s32.s64 %t3
+    %t5 = addere.s64 %t4, %b
+    %c = movere.s64 %t5
+    %t6 = extendere.s32.s64 %a
+    %t7 = addere.s64 %c, %t6
+    %c = movere.s64 %t7
+    ramus %c -> @tern_verum_1 | @tern_falsum_2
+@tern_verum_1:
+    %t8 = movere.s64 %c
+    salire @tern_finis_3
+@tern_falsum_2:
+    %t9 = negare.s64 %b
+    %t8 = movere.s64 %t9
+    salire @tern_finis_3
+@tern_finis_3:
+    redde %t8
+
+functio $bitalia (i32 %x) -> i32
+@initium_0:
+    %t2 = sinistrorsum.i32 %x, 2
+    %y = movere.i32 %t2
+    %t3 = vel.i32 %y, 7
+    %y = movere.i32 %t3
+    %t4 = dextrorsum.i32 %x, 1
+    %t5 = aut.i32 %y, %t4
+    %y = movere.i32 %t5
+    %t6 = complementum.i32 %x
+    %t7 = et.i32 %y, %t6
+    %y = movere.i32 %t7
+    %t8 = subtrahere.i32 %y, 1
+    redde %t8
+
+functio $fluita (f64 %x, s32 %k) -> f64
+@initium_0:
+    %t3 = multiplicare.f64 %x, 2.5
+    %y = movere.f64 %t3
+    %t4 = movere.s32 0
+    %t5 = maior.s32 %k, 0
+    ramus %t5 -> @et_alter_3 | @et_finis_5
+@si_verum_1:
+    %t7 = fluitare.s32.f64 %k
+    %t8 = addere.f64 %y, %t7
+    %y = movere.f64 %t8
+    salire @si_finis_2
+@si_finis_2:
+    %t9 = negare.f64 %y
+    redde %t9
+@et_alter_3:
+    %t6 = minor.f64 %y, 100.0
+    ramus %t6 -> @et_verum_4 | @et_finis_5
+@et_verum_4:
+    %t4 = movere.s32 1
+    salire @et_finis_5
+@et_finis_5:
+    ramus %t4 -> @si_verum_1 | @si_finis_2
+
+functio $monstra (i64 %p) -> s32
+@initium_0:
+    %x = arca 4, 4
+    scribere.s32 %x, 5
+    %q = movere.i64 %x
+    %t3 = legere.s32 %p
+    %t4 = addere.s32 %t3, 1
+    scribere.s32 %q, %t4
+    %t5 = movere.i64 4
+    %t6 = addere.i64 %q, %t5
+    %q = movere.i64 %t6
+    %t7 = movere.i64 4
+    %t8 = subtrahere.i64 %q, %t7
+    %q = movere.i64 %t8
+    %t9 = legere.s32 %x
+    %t10 = addere.s32 %t9, 1
+    scribere.s32 %x, %t10
+    %t11 = legere.s32 %x
+    %t12 = movere.s32 %t11
+    %t13 = subtrahere.s32 %t11, 1
+    scribere.s32 %x, %t13
+    %t14 = legere.s32 %q
+    %t15 = aequalis.i64 %q, %p
+    %t16 = addere.s32 %t14, %t15
+    redde %t16

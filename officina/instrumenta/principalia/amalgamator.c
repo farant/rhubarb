@@ -18,6 +18,10 @@
  * Manifestum
  * ================================================== */
 
+interior constans character* constans SERVANDA_FRIATIONIS[] = {
+    "friatio_fnv1a", NIHIL
+};
+
 /* Excludenda: messis -Wunused-function - functio nova consumpta =
  * introitum delere (compilatio id clamat) */
 interior constans character* constans EXCLUDENDA_PISCINAE[] = {
@@ -42,7 +46,6 @@ interior constans character* constans EXCLUDENDA_CHORDAE[] = {
     "chorda_aequalis_literis",
     "chorda_camelus",
     "chorda_character_ad",
-    "chorda_comparare",
     "chorda_concatenare",
     "chorda_continet",
     "chorda_duplicare",
@@ -102,6 +105,19 @@ interior constans character* constans EXCLUDENDA_AEDIFICATORIS[] = {
     "chorda_aedificator_push_indentationem",
     NIHIL
 };
+interior constans character* constans EXCLUDENDA_TABULAE[] = {
+    "tabula_dispersa_continet",
+    "tabula_dispersa_continet_literis",
+    "tabula_dispersa_delere",
+    "tabula_dispersa_iterator_initium",
+    "tabula_dispersa_iterator_proximum",
+    "tabula_dispersa_numerus",
+    "tabula_dispersa_status_imprimere", "tabula_dispersa_vacare",
+    "tabula_friare_multiplicatio",
+    "tabula_dispersa_invenire_literis", "_friare_literis",
+    "_invenire_slotum_literis", "_aequalis_literis_chorda", NIHIL
+};
+
 interior constans character* constans EXCLUDENDA_XARIS[] = {
     "xar_addere_multos",
     "xar_capacitas",
@@ -136,6 +152,8 @@ interior constans AmalgamaPlagula CAPITA_VENDICATA[] = {
     { "include/piscina.h",            NIHIL, EXCLUDENDA_PISCINAE,      FALSUM, VERUM },
     { "include/chorda.h",             NIHIL, EXCLUDENDA_CHORDAE,       FALSUM, VERUM },
     { "include/chorda_aedificator.h", NIHIL, EXCLUDENDA_AEDIFICATORIS, FALSUM, VERUM },
+    { "include/friatio.h",            SERVANDA_FRIATIONIS, NIHIL,      FALSUM, VERUM },
+    { "include/tabula_dispersa.h",    NIHIL, EXCLUDENDA_TABULAE,       FALSUM, VERUM },
     { "include/xar.h",                NIHIL, EXCLUDENDA_XARIS,         FALSUM, VERUM }
 };
 
@@ -143,17 +161,21 @@ interior constans AmalgamaPlagula CORPORA_VENDICATA[] = {
     { "lib/piscina.c",            NIHIL, EXCLUDENDA_PISCINAE,      VERUM, VERUM },
     { "lib/chorda.c",             NIHIL, EXCLUDENDA_CHORDAE,       VERUM, VERUM },
     { "lib/chorda_aedificator.c", NIHIL, EXCLUDENDA_AEDIFICATORIS, VERUM, VERUM },
+    { "lib/friatio.c",            SERVANDA_FRIATIONIS, NIHIL,      VERUM, VERUM },
+    { "lib/tabula_dispersa.c",    NIHIL, EXCLUDENDA_TABULAE,       VERUM, VERUM },
     { "lib/xar.c",                NIHIL, EXCLUDENDA_XARIS,         VERUM, VERUM }
 };
 
 interior constans AmalgamaPlagula CAPITA_OFFICINAE[] = {
     { "officina/fontes/officina_medulla.h",        NIHIL, NIHIL, FALSUM, FALSUM },
-    { "officina/fontes/officina_medulla_textus.h", NIHIL, NIHIL, FALSUM, FALSUM }
+    { "officina/fontes/officina_medulla_textus.h", NIHIL, NIHIL, FALSUM, FALSUM },
+    { "officina/fontes/officina_demissio.h",       NIHIL, NIHIL, FALSUM, FALSUM }
 };
 
 interior constans AmalgamaPlagula CORPORA_OFFICINAE[] = {
     { "officina/fontes/officina_medulla.c",        NIHIL, NIHIL, VERUM, FALSUM },
-    { "officina/fontes/officina_medulla_textus.c", NIHIL, NIHIL, VERUM, FALSUM }
+    { "officina/fontes/officina_medulla_textus.c", NIHIL, NIHIL, VERUM, FALSUM },
+    { "officina/fontes/officina_demissio.c",       NIHIL, NIHIL, VERUM, FALSUM }
 };
 
 /* Typi quos officina.h possidet: unitates typedef cadunt ex
@@ -183,6 +205,7 @@ interior constans Renominatio TYPI_EXACTI[] = {
     { "chorda",            "OfficinaChorda" },
     { "chorda_fissio_fructus", "OfficinaChordaFissioFructus" },
     { "ChordaAedificator", "OfficinaChordaAedificator" },
+    { "TabulaDispersa",    "OfficinaTabulaDispersa" },
     { "Xar",               "OfficinaXar" },
     { "XarIterator",       "OfficinaXarIterator" },
     { "XarComparator",     "OfficinaXarComparator" }
@@ -191,19 +214,25 @@ interior constans Renominatio TYPI_EXACTI[] = {
 /* Longissimum primum! */
 interior constans Renominatio PRAEFIXA_FUNCTIONUM[] = {
     { "chorda_aedificator_", "officina_chorda_aedificator_" },
+    { "tabula_dispersa_",    "officina_tabula_dispersa_" },
     { "piscina_",            "officina_piscina_" },
+    { "friatio_",            "officina_friatio_" },
     { "chorda_",             "officina_chorda_" },
+    { "tabula_",             "officina_tabula_" },
     { "xar_",                "officina_xar_" }
 };
 
 interior constans character* constans PROOEMIUM =
     "/* officina.c - GENERATUM (amalgamator) - NE MANU EDITES\n"
     " *\n"
-    " * Medulla (IR registrorum) + forma textualis in plagula una\n"
-    " * (SQLite modo). Fons veritatis: officina/fontes/ +\n"
-    " * bibliothecae vendicatae in lib/. Regenerare:\n"
-    " * officina/amalgamare.sh\n"
-    " */\n\n";
+    " * Medulla (IR registrorum) + forma textualis + demissio in\n"
+    " * plagula una (SQLite modo). DEPENDENTIA EXTERNA UNICA:\n"
+    " * silva.h (officina a silva pendet EX ARCHITECTURA) -\n"
+    " * compila cum -I<radix>/silva/amalgama et conecte silva.c.\n"
+    " * Fons veritatis: officina/fontes/ + bibliothecae vendicatae\n"
+    " * in lib/. Regenerare: officina/amalgamare.sh\n"
+    " */\n\n"
+    "#include \"silva.h\"\n\n";
 
 s32 principale (s32 argc, character** argv)
 {

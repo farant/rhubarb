@@ -295,3 +295,44 @@ first place to silently diverge from C semantics (goldens +
 differential eyeballs on fixtures); dump volume on generated-table
 TUs (arbor2_glr_tabula: MBs of octeti lines) — fusor round-trips in
 memory, never writes corpus dumps to disk.
+
+### M1b CHUNK A — RELATIO (2026-07-09): demissio nata SHIPPED
+
+officina_demissio.{h,c} (~1,600 lines) — driver, expressions,
+statements, residency — compiled CLEAN under the full flag wall on
+the first try, and both lowering fixtures (scalaria.c: arithmetic/
+conversions/pointers/increments; fluxus.c: switch/while/do/goto/
+labels/break/continue) lower with **ZERO sistere** (asserted), all
+functiones terminated, dumps byte-identical through the lector,
+goldens pinned AND inspected. Suite 3/3.
+
+Detail in officina_demissio.worklog.md; headlines:
+- The frozen M0b contract pays exactly as designed — demissio has
+  ZERO promotion logic, just annotation obedience; conversions dump
+  as the named op family.
+- Declarator binding needed NO new silva export: the public symbol
+  index carries lexema tokens → one pointer-keyed map per TU.
+- Pre-pass = one generic recursion over public nodus->loci; arca
+  ops in the entry block; captured params respilled.
+- **FIND: byte-identity is not genus identity** — %.17g dumped
+  100.0 as "100", which reparses as an INTEGER immediate; the
+  round-trip bar could not see it; golden INSPECTION caught it.
+  Scriptor now appends ".0" to unmarked floats. Golden blessing is
+  a real gate.
+- Nested case labels are flat siblings in silva's tree — the
+  two-pass switch lowering handles `case 1: case 2:` fallthrough
+  with no special case.
+- Amalgam: demissio folded in; officina.c gained its ONE documented
+  external include (silva.h); hospes is now a dual-amalgam host
+  (28/28: parse→semantica→demissio→golden text through the public
+  surfaces of BOTH amalgams); manifest vendors tabula_dispersa +
+  friatio. VERIFICATUM (standalone + hospes + nm-intersectio 0).
+- Emendatio: demissio_currere takes NON-const sem (forma pigra +
+  aestimator mutate tables on query; INTENTIO said const).
+
+**NEXT: Chunk B — vocationes + aggregata**: vocatio (direct/
+indirect/variadic; args pre-converted; symbols stay EXTERNUM —
+routing is conexio's), accessus via membra[].offset, subscriptio
+scaling, copia for struct assignment, aggregate params/returns
+(explicit destination convention), the three "nondum (M1b B)"
+causae retired; goldens grow.
