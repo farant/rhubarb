@@ -432,6 +432,12 @@ int silva_oraculum_typum_addere_situ(SilvaOraculum* oraculum,
 int silva_oraculum_situs_typi(const SilvaOraculum* oraculum,
     SilvaChorda titulus, int* situs_out);
 
+/* Responsa stipata oraculi vacare - voca ante
+ * silva_recanonicare/indecisa_numerare pro statu recenti
+ * (fistula bis-analysans: augere -> vacare -> recanonicare;
+ * M1a A: declaratio deerat, functio iam exsistebat) */
+void silva_oraculum_responsa_vacare(SilvaOraculum* oraculum);
+
 typedef struct SilvaResolutioResponsum {
     int         victor;        /* index interpretationis; -1 ignotum */
     SilvaToken* discriminans;  /* NULL licet */
@@ -1256,5 +1262,29 @@ const TypusC89* silva_c89_conversio_expressionis(
     const SilvaSemantica* sem, const SilvaNodus* nodus);
 unsigned int silva_c89_typationes_numerus(
     const SilvaSemantica* sem);
+
+/* ==================================================
+ * Exporta demissionis (M1a Chunk A; officina-m1-spec §II)
+ * ================================================== */
+
+/* Symbolum sedis usus (folium-identificator aut vocatus
+ * vocationis, etiam implicitus). Canonicae-conscia et RELATIVA
+ * CANONICAE ut typatio. NIHIL si non resoluta. */
+const SemanticaSymbolum* silva_c89_symbolum_nodi(
+    const SilvaSemantica* sem, const SilvaNodus* nodus);
+unsigned int silva_c89_nexus_numerus(const SilvaSemantica* sem);
+
+/* Expressio constans integralis C89 -> valor (VERUM si constans).
+ * folium-integer/-character, constantes enumerorum, unarium,
+ * binarium, ternarius, conversio, magnitudo-typi/-expressionis. */
+int silva_c89_constans_aestimare(SilvaSemantica* sem,
+    const SilvaNodus* expressio, long long* valor_out);
+
+/* Octeti chordae litteralis DECODATI (fugae solutae, fragmenta
+ * adiacentia coniuncta) in piscinam datam. SINE nullo terminali -
+ * materia data (acies.numerus = octeti + 1; nullum ex typo).
+ * FALSUM: L-chorda (parca), fuga invalida, nodus non chorda. */
+int silva_c89_chorda_decodere(SilvaPiscina* piscina,
+    const SilvaNodus* nodus, SilvaChorda* octeti_out);
 
 #endif /* SILVA_H */

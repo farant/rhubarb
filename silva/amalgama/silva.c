@@ -445,6 +445,12 @@ int silva_oraculum_typum_addere_situ(SilvaOraculum* oraculum,
 int silva_oraculum_situs_typi(const SilvaOraculum* oraculum,
     SilvaChorda titulus, int* situs_out);
 
+/* Responsa stipata oraculi vacare - voca ante
+ * silva_recanonicare/indecisa_numerare pro statu recenti
+ * (fistula bis-analysans: augere -> vacare -> recanonicare;
+ * M1a A: declaratio deerat, functio iam exsistebat) */
+void silva_oraculum_responsa_vacare(SilvaOraculum* oraculum);
+
 typedef struct SilvaResolutioResponsum {
     int         victor;        /* index interpretationis; -1 ignotum */
     SilvaToken* discriminans;  /* NULL licet */
@@ -1269,6 +1275,30 @@ const TypusC89* silva_c89_conversio_expressionis(
     const SilvaSemantica* sem, const SilvaNodus* nodus);
 unsigned int silva_c89_typationes_numerus(
     const SilvaSemantica* sem);
+
+/* ==================================================
+ * Exporta demissionis (M1a Chunk A; officina-m1-spec §II)
+ * ================================================== */
+
+/* Symbolum sedis usus (folium-identificator aut vocatus
+ * vocationis, etiam implicitus). Canonicae-conscia et RELATIVA
+ * CANONICAE ut typatio. NIHIL si non resoluta. */
+const SemanticaSymbolum* silva_c89_symbolum_nodi(
+    const SilvaSemantica* sem, const SilvaNodus* nodus);
+unsigned int silva_c89_nexus_numerus(const SilvaSemantica* sem);
+
+/* Expressio constans integralis C89 -> valor (VERUM si constans).
+ * folium-integer/-character, constantes enumerorum, unarium,
+ * binarium, ternarius, conversio, magnitudo-typi/-expressionis. */
+int silva_c89_constans_aestimare(SilvaSemantica* sem,
+    const SilvaNodus* expressio, long long* valor_out);
+
+/* Octeti chordae litteralis DECODATI (fugae solutae, fragmenta
+ * adiacentia coniuncta) in piscinam datam. SINE nullo terminali -
+ * materia data (acies.numerus = octeti + 1; nullum ex typo).
+ * FALSUM: L-chorda (parca), fuga invalida, nodus non chorda. */
+int silva_c89_chorda_decodere(SilvaPiscina* piscina,
+    const SilvaNodus* nodus, SilvaChorda* octeti_out);
 
 #endif /* SILVA_H */
 
@@ -4016,6 +4046,13 @@ structura SilvaSemantica {
      * ordinaria sufficit. */
     SilvaTabulaDispersa* typationes;
 
+    /* nexus symbolorum (M1a Chunk A): sedes usus -> symbolum -
+     * clavis eadem ac typationes (octeti monstratoris nodi).
+     * Registratur in ipsa resolutione (folium-identificator +
+     * vocatus vocationis); demissio officinae per
+     * silva_c89_symbolum_nodi legit. */
+    SilvaTabulaDispersa* nexus;
+
     /* typus reditus functionis currentis (M0b B: conversio
      * valoris redde annotatur; NIHIL extra corpora) */
     TypusC89* reditus_currens;
@@ -4191,6 +4228,27 @@ b32 silva_c89_formam_computare (SilvaSemantica* sem,
  * magnitudo-expressionis = parca M0b (FALSUM + diagnosticum). */
 b32 silva_c89_constans_aestimare (SilvaSemantica* sem,
     constans SilvaNodus* expressio, s64* valor_out);
+
+/* ==================================================
+ * Exporta demissionis (M1a Chunk A; officina-m1-spec §II):
+ * nexus symbolorum + octeti chordae decodati
+ * ================================================== */
+
+/* Symbolum sedis usus (folium-identificator aut vocatus
+ * vocationis). _canonicum-conscia ut typatio. NIHIL si sedes
+ * non resoluta. NB RELATIVA CANONICAE ut typatio - post
+ * recanonicare analysim novam fac. */
+constans SemanticaSymbolum* silva_c89_symbolum_nodi (
+    constans SilvaSemantica* sem, constans SilvaNodus* nodus);
+
+i32 silva_c89_nexus_numerus (constans SilvaSemantica* sem);
+
+/* Octeti chordae litteralis DECODATI (fugae solutae, fragmenta
+ * adiacentia coniuncta). SINE nullo terminali - materia data
+ * (acies.numerus = octeti + I; demissio nullum ex typo scribit).
+ * FALSUM: L-chorda (parca), fuga invalida, nodus non chorda. */
+b32 silva_c89_chorda_decodere (SilvaPiscina* piscina,
+    constans SilvaNodus* nodus, SilvaChorda* octeti_out);
 
 #endif /* SILVA_C89_SEMANTICA_H */
 
@@ -34659,11 +34717,13 @@ silva_c89_semantica_creare (SilvaPiscina* piscina)
         (i32)magnitudo(SemanticaDiagnosticum));
     /* typationes: clavis = octeti monstratoris (FNV binariae-tutum) */
     sem->typationes = silva_tabula_dispersa_creare_chorda(piscina, CCLVI);
+    /* nexus symbolorum (M1a A): clavis eadem */
+    sem->nexus = silva_tabula_dispersa_creare_chorda(piscina, CCLVI);
     sem->scopus_summus = _scopum_creare(piscina, NIHIL);
     sem->scopus_currens = sem->scopus_summus;
     si (sem->derivati == NIHIL || sem->symbola == NIHIL
         || sem->diagnostica == NIHIL || sem->typationes == NIHIL
-        || sem->scopus_summus == NIHIL)
+        || sem->nexus == NIHIL || sem->scopus_summus == NIHIL)
     {
         redde NIHIL;
     }
@@ -37198,6 +37258,62 @@ _conversum_ponere (SilvaSemantica* sem, constans SilvaNodus* nodus,
     }
 }
 
+/* ==================================================
+ * Nexus symbolorum (M1a Chunk A) - tabula parallela sedes usus ->
+ * symbolum, exemplar typationis idem (clavis = octeti monstratoris
+ * nodi lectionis canonicae). Registratur ubi resolutio VERE fit:
+ * folium-identificator + vocatus vocationis (etiam implicitus).
+ * ================================================== */
+
+nomen structura {
+    i8                 clavis_octeti[magnitudo(vacuum*)];
+    SemanticaSymbolum* symbolum;
+} SemanticaNexus;
+
+interior SemanticaNexus*
+_nexum_invenire (constans SilvaSemantica* sem,
+    constans SilvaNodus* nodus)
+{
+    i8 octeti[magnitudo(vacuum*)];
+    SilvaChorda clavis;
+    vacuum* valor = NIHIL;
+
+    memcpy(octeti, &nodus, magnitudo(octeti));
+    clavis.datum = octeti;
+    clavis.mensura = (i32)magnitudo(octeti);
+    si (silva_tabula_dispersa_invenire(sem->nexus, clavis, &valor))
+    {
+        redde (SemanticaNexus*)valor;
+    }
+    redde NIHIL;
+}
+
+interior vacuum
+_nexum_ponere (SilvaSemantica* sem, constans SilvaNodus* nodus,
+    SemanticaSymbolum* symbolum)
+{
+    SemanticaNexus* n = _nexum_invenire(sem, nodus);
+    SilvaChorda clavis;
+
+    si (n != NIHIL)
+    {
+        n->symbolum = symbolum;
+        redde;
+    }
+    n = (SemanticaNexus*)silva_piscina_allocare(sem->piscina,
+        (memoriae_index)magnitudo(SemanticaNexus));
+    si (n == NIHIL)
+    {
+        redde;
+    }
+    memcpy(n->clavis_octeti, &nodus, magnitudo(n->clavis_octeti));
+    n->symbolum = symbolum;
+    clavis.datum = n->clavis_octeti;
+    clavis.mensura = (i32)magnitudo(n->clavis_octeti);
+    (vacuum)silva_tabula_dispersa_inserere(sem->nexus, clavis,
+        (vacuum*)n);
+}
+
 /* Quales exuere (valor r) */
 interior TypusC89*
 _qualibus_exutum (TypusC89* typus)
@@ -37823,6 +37939,10 @@ _expressionem_typare (SilvaSemantica* sem, constans SilvaNodus* nodus)
             }
             symbolum = silva_c89_symbolum_invenire(sem,
                 tok_v.datum.token->valor);
+            si (symbolum != NIHIL)
+            {
+                _nexum_ponere(sem, nodus, symbolum);   /* M1a A */
+            }
             si (symbolum == NIHIL)
             {
                 /* vocati ignoti = extern int implicitum (Chunk C);
@@ -38648,6 +38768,11 @@ _expressionem_typare (SilvaSemantica* sem, constans SilvaNodus* nodus)
                                 ? symbolum->typus
                                 : sem->typus_erroris;
                         }
+                        si (symbolum != NIHIL)
+                        {
+                            /* M1a A: etiam implicitus nectitur */
+                            _nexum_ponere(sem, nf, symbolum);
+                        }
                         (vacuum)_typationem_ponere(sem, nf, tf);
                     }
                 }
@@ -39111,6 +39236,123 @@ silva_c89_typationes_numerus (constans SilvaSemantica* sem)
         redde ZEPHYRUM;
     }
     redde silva_tabula_dispersa_numerus(sem->typationes);
+}
+
+/* ==================================================
+ * Exporta demissionis (M1a Chunk A)
+ * ================================================== */
+
+constans SemanticaSymbolum*
+silva_c89_symbolum_nodi (constans SilvaSemantica* sem,
+    constans SilvaNodus* nodus)
+{
+    SemanticaNexus* n;
+
+    si (sem == NIHIL || sem->nexus == NIHIL || nodus == NIHIL)
+    {
+        redde NIHIL;
+    }
+    n = _nexum_invenire(sem, _canonicum(nodus));
+    redde (n != NIHIL) ? n->symbolum : NIHIL;
+}
+
+i32
+silva_c89_nexus_numerus (constans SilvaSemantica* sem)
+{
+    si (sem == NIHIL || sem->nexus == NIHIL)
+    {
+        redde ZEPHYRUM;
+    }
+    redde silva_tabula_dispersa_numerus(sem->nexus);
+}
+
+b32
+silva_c89_chorda_decodere (SilvaPiscina* piscina,
+    constans SilvaNodus* nodus, SilvaChorda* octeti_out)
+{
+    SilvaValor fragmenta;
+    i32 i;
+    i32 m;
+    i32 summa_superior = ZEPHYRUM;
+    i8* datum;
+    i32 scriptum = ZEPHYRUM;
+
+    si (piscina == NIHIL || nodus == NIHIL || octeti_out == NIHIL)
+    {
+        redde FALSUM;
+    }
+    nodus = _canonicum(nodus);
+    si (nodus->genus != (s32)SILVA_C89_GENUS_FOLIUM_CHORDA)
+    {
+        redde FALSUM;
+    }
+    fragmenta = silva_c89_folium_chorda_tok_valor(nodus);
+    m = (i32)silva_valor_lista_numerus(fragmenta);
+
+    /* mensura superior: decodatum numquam fonte longius */
+    per (i = ZEPHYRUM; i < m; i++)
+    {
+        SilvaValor* v = silva_valor_lista_obtinere(fragmenta, i);
+
+        si (v != NIHIL && v->genus == SILVA_VALOR_TOKEN)
+        {
+            summa_superior += v->datum.token->valor.mensura;
+        }
+    }
+    datum = (i8*)silva_piscina_allocare(piscina,
+        (memoriae_index)(summa_superior > ZEPHYRUM
+                         ? summa_superior : I));
+    si (datum == NIHIL)
+    {
+        redde FALSUM;
+    }
+
+    per (i = ZEPHYRUM; i < m; i++)
+    {
+        SilvaValor* v = silva_valor_lista_obtinere(fragmenta, i);
+        constans SilvaToken* tok;
+        i32 cursor;
+        i32 finis;
+
+        si (v == NIHIL || v->genus != SILVA_VALOR_TOKEN)
+        {
+            perge;
+        }
+        tok = v->datum.token;
+        si (tok->valor.mensura < II)
+        {
+            redde FALSUM;
+        }
+        si (tok->valor.datum[ZEPHYRUM] == 'L')
+        {
+            redde FALSUM;   /* chorda lata - parca nominata */
+        }
+        cursor = I;
+        finis = tok->valor.mensura - I;   /* " claudens */
+        dum (cursor < finis)
+        {
+            si ((character)tok->valor.datum[cursor] == '\\')
+            {
+                s64 valor = ZEPHYRUM;
+
+                cursor++;
+                si (!_fugam_decodere(&tok->valor, &cursor, &valor))
+                {
+                    redde FALSUM;
+                }
+                datum[scriptum] = (i8)(valor & 0xff);
+            }
+            alioquin
+            {
+                datum[scriptum] = tok->valor.datum[cursor];
+                cursor++;
+            }
+            scriptum++;
+        }
+    }
+    octeti_out->datum = datum;
+    octeti_out->mensura = scriptum;
+    redde VERUM;
 }
 
 /* ================= ex silva/fontes/silva_quaestio.c ================= */

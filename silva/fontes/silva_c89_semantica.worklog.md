@@ -359,3 +359,35 @@ Notes that don't belong in the header comment:
   new public functions CALLED with content asserts incl. the
   closure fixture through the public API. VERIFICATUM first try,
   hospes 28/28.
+
+## 2026-07-09 — M1a Chunk A (officina export package)
+
+- **Nexus symbolorum**: use-site→symbol parallel table, the exact
+  SemanticaTypatio pattern (pointer-bytes key embedded in the entry,
+  creare_chorda FNV). Recorded at the ONLY two resolution sites:
+  FOLIUM_IDENTIFICATOR expression case + the vocatio callee path
+  (which bypasses the identifier case and does its own invenire —
+  implicit synthesized callees get bound there too, so
+  symbolum_nodi(callee)->est_implicitum works). Public rows
+  silva_c89_symbolum_nodi (canonical-aware, canonical-RELATIVE like
+  typatio) + nexus_numerus.
+- **chorda_decodere**: public escape-decoding of folium-chorda into
+  a caller piscina (upper-bound alloc = source length; single pass;
+  fragments concatenated; embedded NUL fine — chorda is binary).
+  Reuses _fugam_decodere via same-TU placement. NO trailing NUL by
+  design: acies.numerus = octeti+1 already carries it; demissio
+  zero-fills the datum image from the type.
+- **FINDING — the L park is PRE-PARSER for strings**: `int* w =
+  L"ab";` does not parse (numerus_errorum 1). The defensive
+  datum[0]=='L' checks in _chordae_litteralis_octeti/_folium_
+  character_aestimare are unreachable for STRING literals today
+  (kept — cheap armor if the lexer learns L later). Probatio uses
+  \q invalid-escape as the reachable decodere-FALSUM path instead.
+- constans_aestimare + responsa_vacare needed NO fontes changes —
+  both existed with prototypes; the gap was amalgam silva.h rows
+  only (audit items (b)+(d) were cheaper than the sim priced).
+- Gates: suite 308/308 (+22), silva 29/29, amalgam VERIFICATUM
+  hospes 28/28 (all 5 rows called with content asserts), percursus
+  UNCHANGED baselines (0 errores; coverage 100.00%; 399 diagnostica
+  in 31 plagulis; 305 indecisa) — nexus recording is invisible to
+  every existing gate.

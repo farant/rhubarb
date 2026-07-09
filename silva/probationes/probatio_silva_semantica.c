@@ -1616,6 +1616,82 @@ s32 principale (vacuum)
             silva_c89_typus_primitivum(sem2, PRIMITIVUM_INTEGER));
     }
 
+    /* ========================================================
+     * PROBARE (M1a Chunk A): exporta demissionis - nexus
+     * symbolorum (sedes usus -> symbolum, etiam implicitus) +
+     * octeti chordae decodati (fugae, fragmenta, L-parca)
+     * ======================================================== */
+    {
+        constans character* fons_n =
+            "int quadrare(int x) { int y = x + 1; return y; }\n"
+            "int f(void) { int r = g(); return r; }\n"
+            "char* s = \"a\\x41\\0b\" \"cd\";\n"
+            "char* w = \"a\\qb\";\n";
+        SilvaParsura* parsura = _parsare(piscina, fons_n);
+        SilvaSemantica* sem;
+        constans SilvaNodus* init;
+        constans SemanticaSymbolum* usus;
+        chorda octeti;
+
+        imprimere("\n--- Probans exporta demissionis (M1a A) ---\n");
+        CREDO_NON_NIHIL (parsura);
+        CREDO_AEQUALIS_I32 (parsura->numerus_errorum, ZEPHYRUM);
+        sem = silva_c89_semantica_analysare(piscina, parsura);
+        CREDO_NON_NIHIL (sem);
+        /* diagnosticum unicum = fuga invalida (\q) in w */
+        CREDO_AEQUALIS_I32 (silva_c89_diagnostica_numerus(sem), I);
+
+        /* usus x in "x + 1" -> symbolum PARAMETRUM idem quod
+         * index tenet (identitas monstratorum) */
+        init = _initiator_declarationis(_elementum_corporis(parsura,
+            ZEPHYRUM, ZEPHYRUM));
+        CREDO_NON_NIHIL (init);
+        {
+            SilvaValor sv = silva_c89_binarium_sinister(init);
+
+            CREDO_VERUM (sv.genus == SILVA_VALOR_NODUS);
+            usus = silva_c89_symbolum_nodi(sem, sv.datum.nodus);
+        }
+        CREDO_NON_NIHIL (usus);
+        CREDO_AEQUALIS_I32 ((i32)usus->genus,
+            (i32)SYMBOLUM_PARAMETRUM);
+        CREDO_VERUM (usus->profunditas >= I);
+        CREDO_AEQUALIS_PTR (usus, _symbolum_indicis(sem, "x"));
+
+        /* vocatus implicitus g() -> symbolum synthetizatum
+         * nectitur quoque */
+        init = _initiator_declarationis(_elementum_corporis(parsura,
+            I, ZEPHYRUM));
+        CREDO_NON_NIHIL (init);
+        {
+            SilvaValor fv = silva_c89_vocatio_functio(init);
+
+            CREDO_VERUM (fv.genus == SILVA_VALOR_NODUS);
+            usus = silva_c89_symbolum_nodi(sem, fv.datum.nodus);
+        }
+        CREDO_NON_NIHIL (usus);
+        CREDO_VERUM (usus->est_implicitum);
+        CREDO_AEQUALIS_PTR (usus, _symbolum_indicis(sem, "g"));
+        CREDO_VERUM (silva_c89_nexus_numerus(sem) >= III);
+
+        /* decodere: "a\x41\0b" "cd" -> sex octeti aA(nul)bcd -
+         * fugae solutae, fragmenta coniuncta, nullus intus tutus */
+        init = _initiator_declarationis(_nodus(parsura, II));
+        CREDO_NON_NIHIL (init);
+        CREDO_VERUM (silva_c89_chorda_decodere(piscina, init,
+            &octeti));
+        CREDO_AEQUALIS_I32 (octeti.mensura, VI);
+        CREDO_VERUM (memcmp(octeti.datum, "aA\0bcd",
+            (memoriae_index)VI) == ZEPHYRUM);
+
+        /* fuga invalida (\q) -> FALSUM (L-chorda ante parsatorem
+         * frangitur - parca profundior quam decodere) */
+        init = _initiator_declarationis(_nodus(parsura, III));
+        CREDO_NON_NIHIL (init);
+        CREDO_VERUM (!silva_c89_chorda_decodere(piscina, init,
+            &octeti));
+    }
+
     credo_imprimere_compendium();
     praeteritus = credo_omnia_praeterierunt();
     piscina_destruere(piscina);

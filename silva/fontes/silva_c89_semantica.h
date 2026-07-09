@@ -231,6 +231,13 @@ structura SilvaSemantica {
      * ordinaria sufficit. */
     TabulaDispersa* typationes;
 
+    /* nexus symbolorum (M1a Chunk A): sedes usus -> symbolum -
+     * clavis eadem ac typationes (octeti monstratoris nodi).
+     * Registratur in ipsa resolutione (folium-identificator +
+     * vocatus vocationis); demissio officinae per
+     * silva_c89_symbolum_nodi legit. */
+    TabulaDispersa* nexus;
+
     /* typus reditus functionis currentis (M0b B: conversio
      * valoris redde annotatur; NIHIL extra corpora) */
     TypusC89* reditus_currens;
@@ -406,5 +413,26 @@ b32 silva_c89_formam_computare (SilvaSemantica* sem,
  * magnitudo-expressionis = parca M0b (FALSUM + diagnosticum). */
 b32 silva_c89_constans_aestimare (SilvaSemantica* sem,
     constans SilvaNodus* expressio, s64* valor_out);
+
+/* ==================================================
+ * Exporta demissionis (M1a Chunk A; officina-m1-spec §II):
+ * nexus symbolorum + octeti chordae decodati
+ * ================================================== */
+
+/* Symbolum sedis usus (folium-identificator aut vocatus
+ * vocationis). _canonicum-conscia ut typatio. NIHIL si sedes
+ * non resoluta. NB RELATIVA CANONICAE ut typatio - post
+ * recanonicare analysim novam fac. */
+constans SemanticaSymbolum* silva_c89_symbolum_nodi (
+    constans SilvaSemantica* sem, constans SilvaNodus* nodus);
+
+i32 silva_c89_nexus_numerus (constans SilvaSemantica* sem);
+
+/* Octeti chordae litteralis DECODATI (fugae solutae, fragmenta
+ * adiacentia coniuncta). SINE nullo terminali - materia data
+ * (acies.numerus = octeti + I; demissio nullum ex typo scribit).
+ * FALSUM: L-chorda (parca), fuga invalida, nodus non chorda. */
+b32 silva_c89_chorda_decodere (Piscina* piscina,
+    constans SilvaNodus* nodus, chorda* octeti_out);
 
 #endif /* SILVA_C89_SEMANTICA_H */

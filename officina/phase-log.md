@@ -60,3 +60,40 @@ Known risks carried from simulatio-3: C2 operand shape is the most-copied
 struct (get it right in B before C pins goldens); C4 binding-table is the
 largest export (semantica change, not a header line); goldens pin AFTER
 the vocabulary — never before (it is already sealed, so safe).
+
+### M1a CHUNK A — RELATIO (2026-07-09): exporta demissionis SHIPPED
+
+All four export-package items landed silva-side (detail:
+silva/fontes/silva_c89_semantica.worklog.md 2026-07-09):
+
+1. **Nexus symbolorum** — `silva_c89_symbolum_nodi` + `nexus_numerus`.
+   Bindings recorded at BOTH resolution sites (identifier expression +
+   vocatio callee — implicit synthesized callees bind too:
+   `symbolum_nodi(callee)->est_implicitum` works). Canonical-aware and
+   canonical-RELATIVE like typatio.
+2. **`silva_c89_constans_aestimare`** — existed in fontes with the exact
+   proposed signature; the gap was the silva.h row only (cheaper than
+   the sim priced).
+3. **`silva_c89_chorda_decodere`** — decoded bytes into a caller piscina;
+   fragments concatenated, embedded NUL safe, NO trailing NUL
+   (acies.numerus = octeti+1 carries it; demissio zero-fills from the
+   type). FINDING: the L-string park is PRE-PARSER (`L"ab"` does not
+   parse) — decodere's L guard is defensive armor, not a live path.
+4. **`silva_oraculum_responsa_vacare`** — declared in silva.h (existed
+   in silva_commissio.h all along).
+
+Gates: semantica suite 308/308 (+22 asserts: nexus identity through the
+index, implicit-callee binding, decode with \x/\0/fragments,
+invalid-escape FALSUM); silva 29/29; amalgam VERIFICATUM (hospes 28/28,
+all five rows called with content asserts); percursus corpus sweep
+UNCHANGED on every baseline (0 errores, coverage 100.00%, 399
+diagnostica / 31 plagulis, 305 indecisa) — nexus recording is invisible
+to every existing gate.
+
+**NEXT: Chunk B — medulla structs + builder** (officina/fontes/
+officina_medulla.{h,c}: modulus/functio/blocci/instructiones, tagged
+operands + per-functio operand pool (sim C2 — the most-copied struct,
+settle before goldens pin), origo on every instruction, arca slots,
+MedullaDatum {imago, relocationes}, terminator discipline enforced by
+the builder; probatio_officina_medulla.c; officina
+compile_probationes.sh born).

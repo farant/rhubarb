@@ -62,6 +62,40 @@ fidelis(SilvaPiscina* piscina, const char* fons)
     return 1;
 }
 
+/* initiator declaratoris primi declarationis radicis[index]
+ * (navigatio M0b/M1a communis) */
+static const SilvaNodus*
+initiator_indice(const SilvaParsura* parsura, unsigned int index)
+{
+    SilvaValor* decl;
+    SilvaValor ds;
+    SilvaValor* d0;
+    SilvaValor iv;
+
+    if (parsura == NULL || parsura->commissio == NULL)
+    {
+        return NULL;
+    }
+    decl = silva_valor_lista_obtinere(parsura->commissio->radix,
+        index);
+    if (decl == NULL || decl->genus != SILVA_VALOR_NODUS)
+    {
+        return NULL;
+    }
+    ds = silva_c89_declaratio_declaratores(decl->datum.nodus);
+    d0 = silva_valor_lista_obtinere(ds, 0);
+    if (d0 == NULL || d0->genus != SILVA_VALOR_NODUS)
+    {
+        return NULL;
+    }
+    iv = silva_c89_declarator_initiatus_initiator(d0->datum.nodus);
+    if (iv.genus != SILVA_VALOR_NODUS)
+    {
+        return NULL;
+    }
+    return iv.datum.nodus;
+}
+
 int main(void)
 {
     SilvaPiscina* piscina;
@@ -892,7 +926,9 @@ int main(void)
             "static int x;\n"
             "static long y = 1 + 2;\n"
             "static int foo(int a) { return a; }\n"
-            "(foo)(x);\n";
+            "(foo)(x);\n"
+            "static const char* verba = \"ab\\ncd\" \"!\";\n"
+            "static long z = y + 1;\n";
         SilvaOraculum* oraculum = silva_oraculum_creare(piscina);
         SilvaParsura* parsura = silva_c89_parsare(piscina,
             "hospes_sem.c", fons_sem,
@@ -936,6 +972,7 @@ int main(void)
                  * post augere -> nihil indecisum */
                 (void)silva_c89_semantica_oraculum_augere(sem,
                     oraculum);
+                silva_oraculum_responsa_vacare(oraculum);  /* M1a */
                 if (parsura->commissio != NULL
                     && silva_c89_ambigua_indecisa_numerare(
                            parsura->commissio, oraculum) == 0)
@@ -979,7 +1016,48 @@ int main(void)
                                    (int)PRIMITIVUM_LONGUS)
                         && silva_c89_typationes_numerus(sem) > 0)
                     {
-                        bene_sem = 1;
+                        /* M1a Chunk A: exporta demissionis -
+                         * symbolum_nodi (usus y in "y + 1"),
+                         * nexus_numerus, constans_aestimare
+                         * ("1 + 2" -> 3), chorda_decodere
+                         * ("ab\ncd" "!" -> 6 octeti) */
+                        const SilvaNodus* init_verba =
+                            initiator_indice(parsura, 6);
+                        const SilvaNodus* init_z =
+                            initiator_indice(parsura, 7);
+                        const SemanticaSymbolum* usus_y = NULL;
+                        long long valor_y = 0;
+                        SilvaChorda octeti;
+
+                        if (init_z != NULL)
+                        {
+                            SilvaValor sv =
+                                silva_c89_binarium_sinister(init_z);
+
+                            if (sv.genus == SILVA_VALOR_NODUS)
+                            {
+                                usus_y = silva_c89_symbolum_nodi(
+                                    sem, sv.datum.nodus);
+                            }
+                        }
+                        if (usus_y != NULL
+                            && usus_y->genus
+                                == (int)SYMBOLUM_VARIABILE
+                            && usus_y->titulus.mensura == 1
+                            && usus_y->titulus.datum[0] == 'y'
+                            && silva_c89_nexus_numerus(sem) > 0
+                            && silva_c89_constans_aestimare(sem,
+                                   initiator, &valor_y)
+                            && valor_y == 3
+                            && init_verba != NULL
+                            && silva_c89_chorda_decodere(piscina,
+                                   init_verba, &octeti)
+                            && octeti.mensura == 6
+                            && memcmp(octeti.datum, "ab\ncd!", 6)
+                                == 0)
+                        {
+                            bene_sem = 1;
+                        }
                     }
                 }
             }

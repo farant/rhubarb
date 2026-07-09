@@ -6601,3 +6601,17 @@ recorded before they evaporate:
   silva_c89_semantica.worklog.md. NEVER implement from a
   compaction summary alone.
   NEVER implement from a compaction summary alone.
+
+## 2026-07-09 — OFFICINA M1a CHUNK A (exporta demissionis) — pointer entry
+
+Silva code changed as the opening chunk of officina M1a (narrative
+home: officina/phase-log.md, per the M1 interview bookkeeping
+DECISUS). Summary: nexus symbolorum use-site→symbol table (recorded
+at the two resolution sites; typationes pattern; rows
+silva_c89_symbolum_nodi + nexus_numerus), silva_c89_chorda_decodere
+(decoded string bytes), silva.h rows for the already-existing
+constans_aestimare + silva_oraculum_responsa_vacare. Gates: suite
+308/308, 29/29, VERIFICATUM hospes 28/28, percursus baselines
+UNCHANGED (0 errores / 100.00% / 399 diagnostica / 305 indecisa).
+Detail: silva_c89_semantica.worklog.md 2026-07-09 (incl. the
+L-strings-are-pre-parser finding).
