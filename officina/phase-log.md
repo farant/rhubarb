@@ -203,3 +203,95 @@ round-trips byte-identically; golden dumps pinned for lowering
 fixtures. Chunks per officina-m1-spec.md §III: A driver + expressions
 + statements → B calls + aggregates + address-taken → C static data
 → D fusor + close. Consider the INTENTIO after Fran's commit.
+
+## M1b — INTENTIO (2026-07-09): demissio
+
+**Bar: every corpus TU lowers — 0 ruinae, N sistere ALL classified
+(per-causa counts, the percursus-diagnostics discipline); fusor sweep
+green; every corpus dump round-trips byte-identically through the
+textus lector; golden .c→.medulla dumps pinned for lowering
+fixtures.**
+
+Design is ALREADY PAID: simulatio-3 pretend-built this pass
+(complications C4-C9 all have shipped answers), the interview sealed
+trap policy + module model + static naming, and every input demissio
+reads is public and frozen ({typus, conversio}_expressionis,
+symbolum_nodi, constans_aestimare, chorda_decodere, formam_computare,
+symbolum->valor/repositio/est_implicitum, membra[].offset). No new
+simulation; this INTENTIO is execution planning.
+
+**Boundary decisions (recorded now):**
+- officina_demissio.{h,c} consumes silva THROUGH amalgama/silva.h
+  ONLY (house rule). officina.h refers to silva types TAG-ONLY
+  (`struct SilvaParsura*`, `struct SilvaSemantica*` — both tags
+  verified present in silva.h) so officina.h stays include-free;
+  the amalgam officina.c #includes "silva.h" as its ONE documented
+  external dependency (officina is downstream of silva BY
+  ARCHITECTURE; amalgamare.sh compiles with -Isilva/amalgama and
+  hospes links both amalgams — the saltuarius dual-host pattern).
+- Entry (proposal): `MedullaModulus* demissio_currere(Piscina*,
+  const SilvaParsura*, const SilvaSemantica*, OfficinaChorda
+  titulus_moduli)` — takes the POST-FLIP parsura + sem₂ (the
+  canonical-relative contract); the two-pass driver is the CALLER's
+  (fusor copies percursus; probationes use a small local driver).
+- Internal-linkage mangling implemented here per the sealed scheme:
+  file statics `$<file-stem>.<name>` (stem from modulus titulus),
+  function statics `$<functio>.<name>`.
+- RESEQUENCING from spec §III (reason recorded): the address-taken
+  pre-pass moves from Chunk B INTO Chunk A — scalar identifier
+  lowering needs register-vs-arca residency on day one, the pre-pass
+  is one small walk (sim design: base-object chain, `&s.a[i].x`
+  marks s; aggregates/arrays always arca), and splitting residency
+  across chunks would churn every golden at B.
+
+**Chunk A — demissio nata: driver + expressiones + sententiae.**
+officina_demissio.{h,c}; address-taken pre-pass (pointer-keyed side
+table, M0b creare_chorda pattern); functio definitions → medulla
+(params, register-resident scalars, arca for addressed/aggregates);
+_ut_valor/_ut_locus expression pair — conversus annotation → the
+conversion-op family, ZERO UAC logic; all operators (compound
+assignment pre-chewed; shifts LEFT-promoted as annotated; &&/||/
+ternary naive block materialization); statements si/dum/fac/per/
+commutatio (compare-chain)/salta/frange/perge/redde/sententia;
+sistere for anything unlowerable (NEVER crash — tree-sitter posture
+inherited); golden fixtures fixa/*.c + .medulla pairs (scalar
+arithmetic, control flow, goto/switch); manifest + officina.h rows
++ hospes when the entry lands; probatio_officina_demissio.c with a
+local parse+analyse driver.
+
+**Chunk B — vocationes + aggregata.** Direct/indirect/variadic calls
+(args pre-converted; arity tolerated); builtin routing is NOT here
+(conexio/M2 — symbols stay EXTERNUM); aggregate return = explicit
+destination parameter (C7); member access via membra[].offset after
+formam_computare; subscript scaling by element size; struct
+assignment = copia; goldens grow (vocatio, structurae).
+
+**Chunk C — data statica.** Globals → MedullaDatum (aestimator
+staticus wrapping constans_aestimare; address constants → relocatio
+pieces — strings HIGH-VOLUME, fn-addresses rare, same mechanism);
+string literals → anonymous data via chorda_decodere (bytes; NUL
+from acies.numerus zero-fill); congeries direct correspondence
+(elision measured ZERO); union initializers first-member; tentative
+definitions; function-scope statics mangled; goldens grow (tabulae,
+chordae).
+
+**Chunk D — fusor + clausura.** instrumenta/principalia/fusor.c +
+fusor.sh: the percursus two-pass copied verbatim (parse w/ contextus
++ systema lexicon → sem₁ → augere → responsa_vacare → recanonicare →
+sem₂ → demissio) over every corpus TU; report functiones/
+instructiones/data/sistere per causa (classified, the honest bar);
+round-trip every dump through the lector (byte-identical); timing +
+apex memoriae (cost-curve history, cultura rule); publica complete +
+hospes; M1b RELATIO + FULL phase-log audit (milestone rule) + M1
+SEALED (spec-v2 §XI actuals; memory).
+
+**Named risks:** the corpus meets a NEW consumer again — budget a
+real-bugs day (the M0b lesson: three real bugs on first corpus
+contact; classify by CAUSE before theorizing, the 20-minute
+diagnostic-spike instrument); POSIX-incomplete plagulae (~31) are
+the KNOWN sistere class — anything beyond them gets classified, not
+papered over; arca-vs-register residency decisions are demissio's
+first place to silently diverge from C semantics (goldens +
+differential eyeballs on fixtures); dump volume on generated-table
+TUs (arbor2_glr_tabula: MBs of octeti lines) — fusor round-trips in
+memory, never writes corpus dumps to disk.
