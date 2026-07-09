@@ -97,3 +97,38 @@ settle before goldens pin), origo on every instruction, arca slots,
 MedullaDatum {imago, relocationes}, terminator discipline enforced by
 the builder; probatio_officina_medulla.c; officina
 compile_probationes.sh born).
+
+### M1a CHUNK B — RELATIO (2026-07-09): medulla structurae + fabrica SHIPPED
+
+First officina code. officina/fontes/officina_medulla.{h,c} +
+probatio_officina_medulla.c (72 asserts, green) + compile_probationes.sh
+born (saltuarius template; silva amalgam as object from day one).
+
+Shape as INTENTIO'd, three refinements recorded in the worklog:
+- **Operand held at 16 bytes** (sim C2): sistere causae are module-level
+  INTERNED chordae (dedup — the same diagnostic repeats thousands of
+  times corpus-wide); operand carries an index (new genus CAUSA).
+- **Three fixed operands (a/b/c) + stiva**: ramus and copia need exactly
+  three; only vocare's arguments overflow to the per-functio operand
+  pool. The common instruction is self-contained.
+- **Conversion suffix order pinned**: typus = FONS, typus_secundus =
+  FINIS (matches `extendere.s32.s64` reading order).
+
+Everything is index-referenced (blocci/registra/symbola/causae) with
+names riding along for the dump. Terminator discipline lives in
+medulla_emittere (positive + negative tested). MedullaDatum ships with
+imago (zero-filled) + relocationes and bounds-checked writes (sim C8).
+Register auto-names "tN"; the C parser should treat register names as
+an opaque namespace (worklog note).
+
+Latina landmine SEVENTH firing: `magnitudo` as field/param name
+(→ magnitudo_octetorum, TypusC89 precedent).
+
+**NEXT: Chunk C — textual form + amalgam birth**: dump + strict parser
+per vocabularium §VII (dump defines canon; float-immediate canonical
+form is C's one open decision — worklog note on exactness vs
+readability); hand-written canonical .medulla fixtures in
+probationes/fixa/; round-trip harness = THE M1a BAR
+(dump(parse(t)) == t); amalgama/officina.c + officina.h born (shared
+silva_amalgama mechanism) + hospes + VERIFICATUM gates; then M1a
+RELATIO + audit.
