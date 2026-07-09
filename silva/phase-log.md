@@ -6551,4 +6551,53 @@ suite 29/29; coverage 100.00% (1,503,915 nodes, 732 plagulae, 0
 ruinae); auspex 3,753/0; typationes 1,609,161 post-flip; residuum
 305 all classified; VERIFICATUM. Demissio's contract is frozen —
 M1 medulla+demissio is unblocked.**
+
+### ADDENDUM ANTE COMPACTIONEM (2026-07-09) — M1 engine hints
+
+Nothing in-flight (M0b CLOSED, committed, gates green); these are
+the accumulated hints for whoever designs M1 medulla+demissio,
+recorded before they evaporate:
+
+- **M1 opens with the OP-VOCABULARY NAMING CEREMONY** (DECISUS-
+  grade, like the genus tags — spec-v2 §XI). Consider the proven
+  arc first: /simulate-work (simulatio-3 against the SHIPPED
+  typing tables — both prior sims paid) → interview → INTENTIO.
+  Bar: monorepo lowers; golden dumps; textual round-trip
+  byte-identical.
+- **What demissio READS (all shipped, all public)**: typus/
+  conversio_expressionis (the frozen pair — conversus != NIHIL =
+  emit a convert op); the symbol index (est_implicitum routes
+  implicit callees to machinula builtins-or-fail); formam_computare
+  (sizes/offsets); symbolum->valor (enum constants pre-evaluated);
+  constans_aestimare (array sizes, case labels).
+- **DRIVER SHAPE IS SETTLED — copy percursus's two-pass**: parse
+  w/ preloaded oracle + systema lexicon → sem₁ → augere → vacare →
+  recanonicare → sem₂ → demissio reads sem₂ ONLY (typing is
+  canonical-relative; the flip fixture pins it).
+- **String-literal BYTES gap (named)**: _fugam_decodere is
+  interior; M0b only needed LENGTHS (char[N]). Demissio needs the
+  DECODED BYTES for static data materialization → export a decode
+  surface (or a chorda-materialization helper) as an early M1 task
+  — do NOT reimplement the decoder.
+- **Static data**: congeries direct-correspondence suffices for v1
+  (elision measured ZERO in corpus; full walk stays the M1 park
+  only if something pulls it). Union initializers: first member.
+- **Compound assignment lowering is pre-chewed**: both operands
+  carry implied-op conversions → load, convert, op, convert-back,
+  store. Shifts: LEFT-promoted result type (non-UAC) already
+  annotated.
+- **Unprototyped/variadic calls**: default argument promotions
+  already annotated on args; arity mismatches are NOT diagnosed
+  (enforcement layer's) — demissio must tolerate them.
+- **Machinula facts banked for M2**: systema_c89.h = the builtin
+  surface (same file, both channels); NULL reaches user code as
+  ((void*)0) via the lexicon — the VM sees a cast, not a magic
+  token; est_implicitum = builtin-routing signal.
+- Instruments precedent: haruspex (layout) + auspex (conversions)
+  → M1's analog is the golden-dump corpus + byte-exact round-trip
+  of the textual medulla form (the bar names it).
+- Re-entry: silva/CLAUDE.md → this phase-log tail (M0b RELATIO +
+  AUDITUS + this addendum) → officina-spec-v2.md §VI/§XI →
+  silva_c89_semantica.worklog.md. NEVER implement from a
+  compaction summary alone.
   NEVER implement from a compaction summary alone.
