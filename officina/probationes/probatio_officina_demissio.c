@@ -196,6 +196,10 @@ s32 principale (vacuum)
     _plagulam_probare(piscina, piscina_silvae,
         "officina/probationes/fixa/fluxus.c",
         "officina/probationes/fixa/fluxus.medulla", "fluxus.c");
+    _plagulam_probare(piscina, piscina_silvae,
+        "officina/probationes/fixa/aggregata.c",
+        "officina/probationes/fixa/aggregata.medulla",
+        "aggregata.c");
 
     /* structura directa: duplum = functio prima scalariae */
     {

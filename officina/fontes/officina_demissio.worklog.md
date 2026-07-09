@@ -59,3 +59,37 @@
   byte-identical through the lector, goldens pinned + inspected.
   Deferred genera emit named causae ("nondum vocatio (M1b B)" etc.)
   — the classification IS the B/C worklist.
+
+## 2026-07-09 — Chunk B: vocationes + aggregata (M1b)
+
+- The three "nondum (M1b B)" causae RETIRED: vocatio (direct via
+  $symbolum when the callee identifier's symbol type is FUNCTIO,
+  indirect via register otherwise — (*f)(x) collapses to the same
+  register call as f(x) for free, since deref of a function type
+  passes the address through); accessus (membra[].offset after
+  formam_computare; "->" reads the pointer value, "." takes the
+  base's address; offset-0 members skip the add); subscriptio
+  (base + scaled index; commutative i[a] handled by swapping on
+  which side is monstratorius).
+- **Stiva contiguity trap dodged by design**: nested calls in
+  arguments (rotunda: duplicare(facere(...))) would interleave the
+  operand stiva if args were appended during evaluation — all arg
+  operands are evaluated into a LOCAL buffer first, then appended
+  in ONE operanda_addere. The golden pins the proof.
+- **Aggregate convention (C7) end-to-end**: returns = explicit
+  first param %reditus (i64 address), callee copia's into it;
+  by-value args = caller allocates temp arca + copia, passes the
+  address; by-value params = the incoming register IS the storage
+  address (sedes flips to arca, no respill — the caller's copy is
+  the callee's local). $duplicare/$copiat/$rotunda show all three.
+- Variadic call args carry NO per-arg type tag in the stiva
+  (operands are 64-bit slots) — arg-width convention for builtin
+  bridges (printf %ld vs %d) lands with machinula M2; noted, not a
+  medulla change.
+- Polish notes (v1.1, not now): zero-offset subscript adds
+  (movere.i64 0 + addere) could fold; postcrement old-value copy is
+  dead when unused; aggregate arg from a fresh call-result temp
+  double-copies (uniformity over cleverness for v1).
+- aggregata.c lowers with ZERO sistere; golden pinned + blessed;
+  suite 3/3; amalgam VERIFICATUM (hospes 28/28) with demissio
+  changes folded.

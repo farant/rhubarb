@@ -1,0 +1,100 @@
+modulus "aggregata.c"
+
+functio $voca (s32 %n) -> s32
+@initium_0:
+    %t1 = addere.s32 %n, 1
+    %t2 = vocare.s32 $externa, %t1, 2.5
+    %t3 = vocare.s32 $scribens, 2, %n, 7
+    %t4 = addere.s32 %t2, %t3
+    redde %t4
+
+functio $duplicare (i64 %reditus, i64 %p) -> vacuum
+@initium_0:
+    %f = arca 8, 4
+    %t3 = legere.s32 %p
+    %t4 = multiplicare.s32 %t3, 2
+    scribere.s32 %f, %t4
+    %t5 = addere.i64 %f, 4
+    %t6 = addere.i64 %p, 4
+    %t7 = legere.s32 %t6
+    %t8 = multiplicare.s32 %t7, 2
+    scribere.s32 %t5, %t8
+    copia %reditus, %f, 8
+    redde
+
+functio $summa_seriei (i64 %v, s32 %n) -> s32
+@initium_0:
+    %acies = arca 16, 4
+    %s = movere.s32 0
+    %t5 = movere.i64 0
+    %t6 = addere.i64 %acies, %t5
+    %t7 = movere.i64 0
+    %t8 = addere.i64 %v, %t7
+    %t9 = legere.s32 %t8
+    scribere.s32 %t6, %t9
+    %t10 = extendere.s32.s64 %n
+    %t11 = multiplicare.i64 %t10, 4
+    %t12 = addere.i64 %acies, %t11
+    %t13 = extendere.s32.s64 %n
+    %t14 = multiplicare.i64 %t13, 4
+    %t15 = addere.i64 %v, %t14
+    %t16 = legere.s32 %t15
+    %t17 = addere.s32 %t16, 1
+    scribere.s32 %t12, %t17
+    %t18 = movere.s32 0
+    %i = movere.s32 %t18
+    salire @per_proba_1
+@per_proba_1:
+    %t19 = minor.s32 %i, %n
+    ramus %t19 -> @per_corpus_2 | @per_finis_4
+@per_corpus_2:
+    %t20 = extendere.s32.s64 %i
+    %t21 = multiplicare.i64 %t20, 4
+    %t22 = addere.i64 %v, %t21
+    %t23 = legere.s32 %t22
+    %t24 = addere.s32 %s, %t23
+    %s = movere.s32 %t24
+    salire @per_passus_3
+@per_passus_3:
+    %t25 = movere.s32 %i
+    %t26 = addere.s32 %i, 1
+    %i = movere.s32 %t26
+    salire @per_proba_1
+@per_finis_4:
+    %t27 = movere.i64 0
+    %t28 = addere.i64 %acies, %t27
+    %t29 = legere.s32 %t28
+    %t30 = addere.s32 %s, %t29
+    redde %t30
+
+functio $copiat (i64 %reditus, i64 %a) -> vacuum
+@initium_0:
+    %b = arca 8, 4
+    copia %b, %a, 8
+    %t3 = legere.s32 %b
+    %t4 = movere.s32 %t3
+    %t5 = addere.s32 %t3, 1
+    scribere.s32 %b, %t5
+    copia %reditus, %b, 8
+    redde
+
+functio $vocat_indirecte (i64 %f, s32 %x) -> s32
+@initium_0:
+    %t2 = vocare.s32 %f, %x
+    %t3 = vocare.s32 %f, %x
+    %t4 = addere.s32 %t2, %t3
+    redde %t4
+
+functio $rotunda (i64 %reditus, s32 %n) -> vacuum
+@initium_0:
+    %p = arca 8, 4
+    %t3 = arca 8, 4
+    %t4 = arca 8, 4
+    %t5 = addere.s32 %n, 1
+    vocare $facere, %t4, %n, %t5
+    %t6 = arca 8, 4
+    copia %t6, %t4, 8
+    vocare $duplicare, %t3, %t6
+    copia %p, %t3, 8
+    copia %reditus, %p, 8
+    redde

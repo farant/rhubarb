@@ -4983,6 +4983,10 @@ nomen structura {
     s32                     numerator;    /* nomina bloccorum */
     s32                     frange_finis; /* -I extra */
     s32                     perge_finis;
+    s32                     reditus_index;   /* registrum parametri
+                                              * reditus aggregati
+                                              * (conventio C7); -I */
+    s32                     reditus_mensura;
     OfficinaTabulaDispersa*         lexemata;     /* SilvaToken* -> symbolum */
     OfficinaTabulaDispersa*         sedes;        /* symbolum -> DemissioSedes* */
     OfficinaTabulaDispersa*         capti;        /* symbola inscriptione capta */
@@ -5454,6 +5458,55 @@ _conversionem (Demissio* d, constans SilvaNodus* origo, s32
     redde _em(d, origo, op, mt_de, mt_ad, _registrum_temporarium(d),
         medulla_op_registrum(registrum_valoris), medulla_op_nihil(),
         medulla_op_nihil());
+}
+
+/* membrum tag per titulum -> offset + typus (forma computata) */
+interior b32
+_membrum_invenire (Demissio* d, constans TypusC89* typus,
+    SilvaChorda titulus, s32* offset_fructus,
+    constans TypusC89** typus_fructus)
+{
+    constans TypusC89* exutus = _exutus(typus);
+    i32 i;
+
+    si (exutus == NIHIL
+        || (exutus->genus != TYPUS_C89_STRUCTURA
+            && exutus->genus != TYPUS_C89_UNIO)
+        || !exutus->datum.tag.completa)
+    {
+        redde FALSUM;
+    }
+    si (_mensura_typi(d, exutus) < ZEPHYRUM)
+    {
+        redde FALSUM;   /* forma incomputabilis */
+    }
+    per (i = ZEPHYRUM; i < (i32)exutus->datum.tag.numerus_membrorum;
+         i++)
+    {
+        constans TypusC89Membrum* membrum =
+            &exutus->datum.tag.membra[i];
+
+        si (membrum->titulus.mensura == titulus.mensura
+            && titulus.mensura > ZEPHYRUM
+            && memcmp(membrum->titulus.datum, titulus.datum,
+                   (memoriae_index)titulus.mensura) == ZEPHYRUM)
+        {
+            *offset_fructus = (s32)membrum->offset;
+            *typus_fructus = membrum->typus;
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
+interior b32
+_est_aggregatum (constans TypusC89* typus)
+{
+    constans TypusC89* exutus = _exutus(typus);
+
+    redde exutus != NIHIL
+        && (exutus->genus == TYPUS_C89_STRUCTURA
+            || exutus->genus == TYPUS_C89_UNIO);
 }
 
 /* ==================================================
@@ -6024,6 +6077,26 @@ _assignationem (Demissio* d, constans SilvaNodus* nodus)
     sin_naturalis = silva_c89_typus_expressionis(d->sem, sinister);
     mt = _typus_medullae(sin_naturalis);
     locus = _ut_locum(d, sin_v.datum.nodus);
+    si (locus.valida && !locus.directum && mt < ZEPHYRUM
+        && _est_aggregatum(sin_naturalis) && _op_est(operator, "="))
+    {
+        /* assignatio aggregati -> copia (valor = inscriptio) */
+        s32 mensura = _mensura_typi(d, sin_naturalis);
+        s32 fons;
+
+        si (mensura <= ZEPHYRUM)
+        {
+            _sistere(d, nodus, "forma aggregati ignota");
+            redde _registrum_temporarium(d);
+        }
+        fons = _ut_valor(d, dex_v.datum.nodus);
+        (vacuum)_em(d, nodus, MEDULLA_OP_COPIA, MEDULLA_TYPUS_NIHIL,
+            MEDULLA_TYPUS_NIHIL, -I,
+            medulla_op_registrum(locus.index),
+            medulla_op_registrum(fons),
+            medulla_op_immediatum((s64)mensura));
+        redde locus.index;
+    }
     si (!locus.valida || mt < ZEPHYRUM)
     {
         _sistere(d, nodus, "assignatio sine loco scalari");
@@ -6159,6 +6232,195 @@ _ternarium (Demissio* d, constans SilvaNodus* nodus)
     redde fructus;
 }
 
+interior s32
+_vocationem (Demissio* d, constans SilvaNodus* nodus)
+{
+    SilvaValor functio_v = silva_c89_vocatio_functio(nodus);
+    SilvaValor argumenta_v = silva_c89_vocatio_argumenta(nodus);
+    constans SilvaNodus* nf;
+    constans TypusC89* typus_vocati;
+    constans TypusC89* reditus;
+    MedullaOperandum vocatus;
+    MedullaOperandum argumenta[LXIV];
+    s32 numerus_argumentorum = ZEPHYRUM;
+    b32 reditus_aggregatus = FALSUM;
+    s32 arca_reditus = -I;
+    s32 mt_reditus;
+
+    si (functio_v.genus != SILVA_VALOR_NODUS)
+    {
+        _sistere(d, nodus, "vocatio sine vocato");
+        redde _registrum_temporarium(d);
+    }
+    nf = _canonicus(functio_v.datum.nodus);
+
+    /* typus functionis (monstrator ad functionem exuitur) */
+    typus_vocati = _exutus(_typus_finalis(d, nf));
+    si (typus_vocati != NIHIL
+        && typus_vocati->genus == TYPUS_C89_MONSTRATOR)
+    {
+        typus_vocati = _exutus(
+            typus_vocati->datum.monstrator.internum);
+    }
+    si (typus_vocati == NIHIL
+        || typus_vocati->genus != TYPUS_C89_FUNCTIO)
+    {
+        _sistere(d, nodus, "vocatio sine typo functionis");
+        redde _registrum_temporarium(d);
+    }
+    reditus = _exutus(typus_vocati->datum.functio.reditus);
+    mt_reditus = _typus_medullae(reditus);
+    reditus_aggregatus = _est_aggregatum(reditus);
+
+    /* vocatus: $symbolum directum si identificator functionis;
+     * aliter valor (monstrator functionis) */
+    vocatus = medulla_op_nihil();
+    si (nf->genus == (s32)SILVA_C89_GENUS_FOLIUM_IDENTIFICATOR)
+    {
+        constans SemanticaSymbolum* symbolum =
+            silva_c89_symbolum_nodi(d->sem, nf);
+        constans TypusC89* typus_symboli = (symbolum != NIHIL)
+            ? _exutus(symbolum->typus) : NIHIL;
+
+        si (typus_symboli != NIHIL
+            && typus_symboli->genus == TYPUS_C89_FUNCTIO)
+        {
+            vocatus = medulla_op_symbolum(
+                medulla_symbolum_internare(d->modulus,
+                    _ch_de_silva(symbolum->titulus)));
+        }
+    }
+    si (vocatus.genus == (s32)MEDULLA_OPERANDUM_NIHIL)
+    {
+        vocatus = medulla_op_registrum(_ut_valor(d,
+            functio_v.datum.nodus));
+    }
+
+    /* reditus aggregatus: arca destinationis = argumentum primum
+     * EXPLICITUM (conventio C7 - demissio semantica visibilia
+     * facit) */
+    si (reditus_aggregatus)
+    {
+        s32 mensura = _mensura_typi(d, reditus);
+
+        si (mensura <= ZEPHYRUM)
+        {
+            _sistere(d, nodus, "forma reditus ignota");
+            redde _registrum_temporarium(d);
+        }
+        arca_reditus = _em(d, nodus, MEDULLA_OP_ARCA,
+            MEDULLA_TYPUS_NIHIL, MEDULLA_TYPUS_NIHIL,
+            _registrum_temporarium(d),
+            medulla_op_immediatum((s64)mensura),
+            medulla_op_immediatum(
+                (s64)_exutus(reditus)->ordinatio),
+            medulla_op_nihil());
+        argumenta[numerus_argumentorum] =
+            medulla_op_registrum(arca_reditus);
+        numerus_argumentorum++;
+    }
+
+    /* argumenta (conversiones/promotiones variadicae iam
+     * annotatae; virgulae intersertae praetermissae) */
+    {
+        i32 i;
+        i32 m = (i32)silva_valor_lista_numerus(argumenta_v);
+
+        per (i = ZEPHYRUM; i < m; i++)
+        {
+            SilvaValor* v = silva_valor_lista_obtinere(argumenta_v,
+                (unsigned int)i);
+            constans SilvaNodus* argumentum;
+
+            si (v == NIHIL || v->genus != SILVA_VALOR_NODUS)
+            {
+                perge;
+            }
+            si (numerus_argumentorum >= (s32)LXIV)
+            {
+                _sistere(d, nodus, "argumenta nimia");
+                frange;
+            }
+            argumentum = v->datum.nodus;
+            si (_est_aggregatum(_typus_finalis(d,
+                    _canonicus(argumentum))))
+            {
+                /* valore: copia in arcam temporariam vocantis */
+                constans TypusC89* typus_argumenti = _exutus(
+                    _typus_finalis(d, _canonicus(argumentum)));
+                s32 mensura = _mensura_typi(d, typus_argumenti);
+                s32 fons;
+                s32 temporaria;
+
+                si (mensura <= ZEPHYRUM)
+                {
+                    _sistere(d, nodus, "forma argumenti ignota");
+                    perge;
+                }
+                fons = _ut_valor(d, argumentum);
+                temporaria = _em(d, nodus, MEDULLA_OP_ARCA,
+                    MEDULLA_TYPUS_NIHIL, MEDULLA_TYPUS_NIHIL,
+                    _registrum_temporarium(d),
+                    medulla_op_immediatum((s64)mensura),
+                    medulla_op_immediatum(
+                        (s64)typus_argumenti->ordinatio),
+                    medulla_op_nihil());
+                (vacuum)_em(d, nodus, MEDULLA_OP_COPIA,
+                    MEDULLA_TYPUS_NIHIL, MEDULLA_TYPUS_NIHIL, -I,
+                    medulla_op_registrum(temporaria),
+                    medulla_op_registrum(fons),
+                    medulla_op_immediatum((s64)mensura));
+                argumenta[numerus_argumentorum] =
+                    medulla_op_registrum(temporaria);
+            }
+            alioquin
+            {
+                argumenta[numerus_argumentorum] = _ut_operandum(d,
+                    argumentum);
+            }
+            numerus_argumentorum++;
+        }
+    }
+
+    /* emissio (stiva UNO ictu appensa - vocationes nidificatae in
+     * argumentis stivam propriam iam appenderunt) */
+    {
+        MedullaInstructio instructio;
+        s32 destinatio = -I;
+        s32 typus = MEDULLA_TYPUS_NIHIL;
+
+        si (!reditus_aggregatus && mt_reditus >= ZEPHYRUM)
+        {
+            destinatio = _registrum_temporarium(d);
+            typus = mt_reditus;
+        }
+        _vivum(d);
+        memset(&instructio, ZEPHYRUM, magnitudo(MedullaInstructio));
+        instructio.op = MEDULLA_OP_VOCARE;
+        instructio.typus = typus;
+        instructio.typus_secundus = MEDULLA_TYPUS_NIHIL;
+        instructio.destinatio = destinatio;
+        instructio.a = vocatus;
+        instructio.b = medulla_op_nihil();
+        instructio.c = medulla_op_nihil();
+        instructio.extra_index = medulla_operanda_addere(d->functio,
+            argumenta, numerus_argumentorum);
+        instructio.extra_numerus = numerus_argumentorum;
+        instructio.origo = nodus;
+        (vacuum)medulla_emittere(d->functio, d->bloccus,
+            &instructio);
+        si (reditus_aggregatus)
+        {
+            redde arca_reditus;
+        }
+        si (destinatio >= ZEPHYRUM)
+        {
+            redde destinatio;
+        }
+        redde _registrum_temporarium(d);   /* vacuum */
+    }
+}
+
 /* dispensator: valor naturalis + conversio annotata applicata */
 interior s32
 _expressionem (Demissio* d, constans SilvaNodus* nodus)
@@ -6270,18 +6532,38 @@ _expressionem (Demissio* d, constans SilvaNodus* nodus)
         }
         casus (s32)SILVA_C89_GENUS_VOCATIO:
         {
-            _sistere(d, nodus, "nondum vocatio (M1b B)");
-            redde _registrum_temporarium(d);
+            fructus = _vocationem(d, nodus);
+            frange;
         }
         casus (s32)SILVA_C89_GENUS_ACCESSUS:
-        {
-            _sistere(d, nodus, "nondum accessus (M1b B)");
-            redde _registrum_temporarium(d);
-        }
         casus (s32)SILVA_C89_GENUS_SUBSCRIPTIO:
         {
-            _sistere(d, nodus, "nondum subscriptio (M1b B)");
-            redde _registrum_temporarium(d);
+            DemissioLocus locus = _ut_locum(d, nodus);
+
+            si (!locus.valida)
+            {
+                redde _registrum_temporarium(d);   /* iam sistit */
+            }
+            {
+                constans TypusC89* exutus = _exutus(naturalis);
+                s32 mt = _typus_medullae(naturalis);
+
+                si (mt >= ZEPHYRUM && exutus != NIHIL
+                    && exutus->genus != TYPUS_C89_ACIES
+                    && exutus->genus != TYPUS_C89_FUNCTIO)
+                {
+                    fructus = _em(d, nodus, MEDULLA_OP_LEGERE, mt,
+                        MEDULLA_TYPUS_NIHIL,
+                        _registrum_temporarium(d),
+                        medulla_op_registrum(locus.index),
+                        medulla_op_nihil(), medulla_op_nihil());
+                }
+                alioquin
+                {
+                    fructus = locus.index;   /* inscriptio */
+                }
+            }
+            frange;
         }
         casus (s32)SILVA_C89_GENUS_FOLIUM_CHORDA:
         {
@@ -6443,7 +6725,119 @@ _ut_locum (Demissio* d, constans SilvaNodus* nodus)
             redde locus;
         }
     }
-    redde locus;   /* accessus/subscriptio -> M1b B */
+    si (nodus->genus == (s32)SILVA_C89_GENUS_SUBSCRIPTIO)
+    {
+        SilvaValor basis_v = silva_c89_subscriptio_basis(nodus);
+        SilvaValor index_v = silva_c89_subscriptio_index(nodus);
+        constans SilvaNodus* basis_n;
+        constans SilvaNodus* index_n;
+        constans TypusC89* basis_ft;
+        s32 mensura;
+        s32 basis_registrum;
+        MedullaOperandum index_op;
+        s32 scalatum;
+
+        si (basis_v.genus != SILVA_VALOR_NODUS
+            || index_v.genus != SILVA_VALOR_NODUS)
+        {
+            redde locus;
+        }
+        basis_n = basis_v.datum.nodus;
+        index_n = index_v.datum.nodus;
+        basis_ft = _typus_finalis(d, _canonicus(basis_n));
+        si (!_est_monstratorius(basis_ft))
+        {
+            /* subscriptio commutativa: i[a] */
+            constans SilvaNodus* commutatum = basis_n;
+
+            basis_n = index_n;
+            index_n = commutatum;
+            basis_ft = _typus_finalis(d, _canonicus(basis_n));
+        }
+        mensura = _mensura_elementi_monstratoris(d, basis_ft);
+        si (mensura <= ZEPHYRUM)
+        {
+            _sistere(d, nodus, "forma elementi ignota");
+            redde locus;
+        }
+        basis_registrum = _ut_valor(d, basis_n);
+        index_op = _ut_operandum(d, index_n);
+        scalatum = _indicem_scalare(d, nodus, index_op,
+            _typus_medullae(_typus_finalis(d, _canonicus(index_n))),
+            mensura);
+        locus.directum = FALSUM;
+        locus.index = _em(d, nodus, MEDULLA_OP_ADDERE,
+            MEDULLA_TYPUS_I64, MEDULLA_TYPUS_NIHIL,
+            _registrum_temporarium(d),
+            medulla_op_registrum(basis_registrum),
+            medulla_op_registrum(scalatum), medulla_op_nihil());
+        locus.valida = VERUM;
+        redde locus;
+    }
+    si (nodus->genus == (s32)SILVA_C89_GENUS_ACCESSUS)
+    {
+        SilvaValor basis_v = silva_c89_accessus_basis(nodus);
+        SilvaChorda operator = _tok_textus(
+            silva_c89_accessus_tok_operator(nodus));
+        SilvaChorda titulus = _tok_textus(
+            silva_c89_accessus_tok_titulus(nodus));
+        constans TypusC89* typus_tag;
+        s32 inscriptio_basis;
+        s32 offset = ZEPHYRUM;
+        constans TypusC89* typus_membri = NIHIL;
+
+        si (basis_v.genus != SILVA_VALOR_NODUS)
+        {
+            redde locus;
+        }
+        si (_op_est(operator, "->"))
+        {
+            constans TypusC89* basis_ft = _exutus(_typus_finalis(d,
+                _canonicus(basis_v.datum.nodus)));
+
+            si (basis_ft == NIHIL
+                || basis_ft->genus != TYPUS_C89_MONSTRATOR)
+            {
+                _sistere(d, nodus,
+                    "accessus sagittae sine monstratore");
+                redde locus;
+            }
+            typus_tag = basis_ft->datum.monstrator.internum;
+            inscriptio_basis = _ut_valor(d, basis_v.datum.nodus);
+        }
+        alioquin
+        {
+            DemissioLocus locus_basis = _ut_locum(d,
+                basis_v.datum.nodus);
+
+            si (!locus_basis.valida || locus_basis.directum)
+            {
+                _sistere(d, nodus,
+                    "accessus sine inscriptione basis");
+                redde locus;
+            }
+            typus_tag = silva_c89_typus_expressionis(d->sem,
+                _canonicus(basis_v.datum.nodus));
+            inscriptio_basis = locus_basis.index;
+        }
+        si (!_membrum_invenire(d, typus_tag, titulus, &offset,
+                &typus_membri))
+        {
+            _sistere(d, nodus, "accessus structurae incompletae");
+            redde locus;
+        }
+        (vacuum)typus_membri;
+        locus.directum = FALSUM;
+        locus.index = (offset == ZEPHYRUM) ? inscriptio_basis
+            : _em(d, nodus, MEDULLA_OP_ADDERE, MEDULLA_TYPUS_I64,
+                  MEDULLA_TYPUS_NIHIL, _registrum_temporarium(d),
+                  medulla_op_registrum(inscriptio_basis),
+                  medulla_op_immediatum((s64)offset),
+                  medulla_op_nihil());
+        locus.valida = VERUM;
+        redde locus;
+    }
+    redde locus;
 }
 
 /* ==================================================
@@ -6536,8 +6930,29 @@ _declarationem (Demissio* d, constans SilvaNodus* nodus)
         }
         {
             s32 mt = _typus_medullae(symbolum->typus);
-            MedullaOperandum fons = _ut_operandum(d, initiator);
+            MedullaOperandum fons;
 
+            si (mt < ZEPHYRUM && _est_aggregatum(symbolum->typus)
+                && sedes->est_arca)
+            {
+                /* initiator aggregati: copia ex inscriptione */
+                s32 mensura = _mensura_typi(d, symbolum->typus);
+                s32 origo_valoris;
+
+                si (mensura <= ZEPHYRUM)
+                {
+                    _sistere(d, nodus, "forma aggregati ignota");
+                    perge;
+                }
+                origo_valoris = _ut_valor(d, initiator);
+                (vacuum)_em(d, nodus, MEDULLA_OP_COPIA,
+                    MEDULLA_TYPUS_NIHIL, MEDULLA_TYPUS_NIHIL, -I,
+                    medulla_op_registrum(sedes->index_registri),
+                    medulla_op_registrum(origo_valoris),
+                    medulla_op_immediatum((s64)mensura));
+                perge;
+            }
+            fons = _ut_operandum(d, initiator);
             si (mt < ZEPHYRUM)
             {
                 _sistere(d, nodus,
@@ -7026,7 +7441,29 @@ _sententiam (Demissio* d, constans SilvaNodus* nodus)
             SilvaValor valor_v = silva_c89_redde_valor(nodus);
             MedullaOperandum a = medulla_op_nihil();
 
-            si (valor_v.genus == SILVA_VALOR_NODUS)
+            si (valor_v.genus == SILVA_VALOR_NODUS
+                && d->reditus_index >= ZEPHYRUM)
+            {
+                /* reditus aggregatus: copia in destinationem
+                 * (conventio C7), redde sine valore */
+                s32 fons = _ut_valor(d, valor_v.datum.nodus);
+
+                si (d->reditus_mensura > ZEPHYRUM)
+                {
+                    (vacuum)_em(d, nodus, MEDULLA_OP_COPIA,
+                        MEDULLA_TYPUS_NIHIL, MEDULLA_TYPUS_NIHIL,
+                        -I,
+                        medulla_op_registrum(d->reditus_index),
+                        medulla_op_registrum(fons),
+                        medulla_op_immediatum(
+                            (s64)d->reditus_mensura));
+                }
+                alioquin
+                {
+                    _sistere(d, nodus, "forma reditus ignota");
+                }
+            }
+            alioquin si (valor_v.genus == SILVA_VALOR_NODUS)
             {
                 a = _ut_operandum(d, valor_v.datum.nodus);
             }
@@ -7338,6 +7775,8 @@ _functionem (Demissio* d, constans SilvaNodus* nodus)
     d->numerator = ZEPHYRUM;
     d->frange_finis = -I;
     d->perge_finis = -I;
+    d->reditus_index = -I;
+    d->reditus_mensura = -I;
     d->sedes = officina_tabula_dispersa_creare_chorda(d->piscina, CCLVI);
     d->capti = officina_tabula_dispersa_creare_chorda(d->piscina, CCLVI);
     locales = officina_xar_creare(d->piscina,
@@ -7345,6 +7784,17 @@ _functionem (Demissio* d, constans SilvaNodus* nodus)
 
     /* praecursus: capti + locales (ante residentiam) */
     _praecursum(d, corpus_v.datum.nodus, locales);
+
+    /* reditus aggregatus: parametrum destinationis EXPLICITUM
+     * primum (conventio C7) */
+    si (reditus_aggregatus)
+    {
+        s32 mensura = _mensura_typi(d, reditus);
+
+        d->reditus_index = medulla_parametrum_addere(d->functio,
+            _ch_literis("reditus"), MEDULLA_TYPUS_I64);
+        d->reditus_mensura = mensura;
+    }
 
     /* parametra: registra prima (ordo signaturae); symbola
      * servata pro arca post initium */
@@ -7408,10 +7858,6 @@ _functionem (Demissio* d, constans SilvaNodus* nodus)
 
         /* bloccus primus */
         d->bloccus = _bloccum_novum(d, "initium");
-        si (reditus_aggregatus)
-        {
-            _sistere(d, nodus, "nondum reditus aggregatus (M1b B)");
-        }
 
         /* parametra capta inscriptione aut aggregata -> arca +
          * scribere valoris incipientis */
@@ -7437,8 +7883,14 @@ _functionem (Demissio* d, constans SilvaNodus* nodus)
             mt = _typus_medullae(p_symbolum->typus);
             si (mt < ZEPHYRUM)
             {
-                _sistere(d, nodus,
-                    "nondum parametrum aggregatum (M1b B)");
+                /* aggregatum valore: registrum parametri IAM
+                 * inscriptionem copiae vocantis tenet (conventio) -
+                 * sedes vertitur, nulla arca nova */
+                sedes = _sedem_symboli(d, p_symbolum);
+                si (sedes != NIHIL)
+                {
+                    sedes->est_arca = VERUM;
+                }
                 perge;
             }
             sedes = _sedem_symboli(d, p_symbolum);

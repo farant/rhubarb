@@ -336,3 +336,28 @@ routing is conexio's), accessus via membra[].offset, subscriptio
 scaling, copia for struct assignment, aggregate params/returns
 (explicit destination convention), the three "nondum (M1b B)"
 causae retired; goldens grow.
+
+### M1b CHUNK B — RELATIO (2026-07-09): vocationes + aggregata SHIPPED
+
+The three "nondum (M1b B)" causae retired: vocatio (direct $symbolum /
+indirect register — (*f)(x) collapses to f(x) for free), accessus
+(membra[].offset; incomplete access keeps its classified sistere =
+the POSIX causa), subscriptio (scaled, commutative). Aggregate
+convention (C7) end-to-end and VISIBLE in the goldens: $duplicare is
+`(i64 %reditus, i64 %p) -> vacuum` with `copia %reditus, %f, 8`;
+by-value args copy into caller temps; by-value params flip sedes to
+arca (the incoming register IS the address). Struct assignment and
+aggregate initializers = copia. Nested-call stiva contiguity solved
+by local-buffer-then-one-append (rotunda pins it).
+
+aggregata.c (calls, variadic call, fn-ptr param, arrays, struct
+by-value round trip) lowers with ZERO sistere; golden pinned +
+blessed; suite 3/3; amalgam VERIFICATUM hospes 28/28. Worklog: the
+variadic arg-width note (machinula M2 convention, not a medulla
+change) + three v1.1 polish notes.
+
+**NEXT: Chunk C — data statica**: globals → MedullaDatum (aestimator
+staticus wrapping constans_aestimare; address constants → relocatio;
+strings via chorda_decodere), congeries locals + statics, function-
+scope statics ($functio.nomen mangling), tentative definitions;
+"nondum (M1b C)" causae retired; goldens grow (tabulae, chordae).
