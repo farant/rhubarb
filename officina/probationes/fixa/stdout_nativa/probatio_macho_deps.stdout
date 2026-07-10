@@ -1,0 +1,22 @@
+
+--- Probans macho_obtinere_dylibs ---
+...  Found 1 dylibs:
+    [0] /usr/lib/libSystem.B.dylib
+..
+--- Probans macho_obtinere_entry_point ---
+.  No LC_MAIN command (older binary or library)
+
+--- Probans macho_obtinere_uuid ---
+..  UUID: 8a24666036163623845434c158f6832a
+.
+--- Probans NIHIL handling ---
+....
+
+=== CREDO COMPENDIUM ===
+Totalis:    13
+Praeteriti: 13
+Fracti:     0
+
+Conditio: OMNIA PRAETERIERUNT
+=========================
+

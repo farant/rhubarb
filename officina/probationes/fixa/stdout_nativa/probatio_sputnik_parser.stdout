@@ -1,0 +1,55 @@
+========================================
+PROBATIO SPUTNIK PARSER
+========================================
+
+--- Probatio Literalia ---
+.....................  Literalia: VERUM
+
+--- Probatio Identificatores ---
+...........  Identificatores: VERUM
+
+--- Probatio Operationes Binariae ---
+.................  Operationes Binariae: VERUM
+
+--- Probatio Praecedentia ---
+...........  Praecedentia: VERUM
+
+--- Probatio Operationes Unariae ---
+.......  Operationes Unariae: VERUM
+
+--- Probatio Ternaria ---
+..........  Ternaria: VERUM
+
+--- Probatio Accessus ---
+........  Accessus: VERUM
+
+--- Probatio Vocatio ---
+.........  Vocatio: VERUM
+
+--- Probatio Literalia Composita ---
+............  Literalia Composita: VERUM
+
+--- Probatio Declarationes ---
+...........  Declarationes: VERUM
+
+--- Probatio Control Flow ---
+..................  Control Flow: VERUM
+
+--- Probatio Functiones ---
+.......  Functiones: VERUM
+
+--- Probatio Programma Complexum ---
+....  Programma Complexum: VERUM
+
+--- Probatio Errores ---
+...  Errores: VERUM
+
+
+=== CREDO COMPENDIUM ===
+Totalis:    149
+Praeteriti: 149
+Fracti:     0
+
+Conditio: OMNIA PRAETERIERUNT
+=========================
+

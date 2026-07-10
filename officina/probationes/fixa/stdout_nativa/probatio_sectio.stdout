@@ -1,0 +1,40 @@
+
+--- Probans macho_piscina et macho_datum ---
+....
+--- Probans sectio_invenire ---
+.....
+--- Probans sectio attributa ---
+...  Section name: __text
+..  Segment name: __TEXT
+.  Size: 20
+.  Address: 0x100003f94
+.  Align: 2^2
+.  Flags: 0x80000400
+
+--- Probans sectio_datum (zero-copy) ---
+.....  Data size: 20 bytes
+.
+--- Probans sectio helper functions ---
+..  Is instructions: sic
+.  Is debug: non
+.  Section type: 0x0
+.
+--- Probans sectio_iterator ---
+.  [0] __TEXT.__text (size=20)
+  [1] __TEXT.__unwind_info (size=88)
+  Total sections: 2
+...
+--- Probans cum_functione (plures sectiones) ---
+.  Total sections: 5
+.
+--- Probans NIHIL handling ---
+....
+
+=== CREDO COMPENDIUM ===
+Totalis:    39
+Praeteriti: 39
+Fracti:     0
+
+Conditio: OMNIA PRAETERIERUNT
+=========================
+

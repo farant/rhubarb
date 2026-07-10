@@ -1,0 +1,79 @@
+
+--- Probans friatio_fnv1a ---
+.  Hash vacua: 0x811C9DC5
+.  Hash 'hello': 0x4F9F2CAB
+..  Hash 'world': 0x37A3E893
+
+--- Probans friatio_fnv1a_literis ---
+..  Hash 'test' (literis): 0xAFD071E5
+
+--- Probans FNV-1a valores cognitos ---
+.  '' -> 0x811C9DC5 (expected 0x811c9dc5)
+.  'a' -> 0xE40C292C (expected 0xe40c292c)
+.  'foobar' -> 0xBF9CF968 (expected 0xbf9cf968)
+
+--- Probans friatio_djb2 ---
+.  Hash 'hello': 0x0F923099
+..  Hash 'world': 0x10A7356D
+
+--- Probans friatio_djb2_literis ---
+..  Hash 'test' (literis): 0x7C9E6865
+
+--- Probans DJB2 valores cognitos ---
+.  '' -> 5381 (expected 5381)
+.  'hello' -> 0x0F923099
+
+--- Probans sha1_friare ---
+  SHA1('') = da39a3ee5e6b4b0d3255bfef95601890afd80709
+....
+--- Probans SHA-1 test vectors ---
+  SHA1('abc') = a9993e364706816aba3e25717850c26c9cd0d89d
+.....  SHA1('abcdbcde...nopq') = 84983e441c3bd26ebaae4aa1f95129e5e54670f1
+....
+--- Probans SHA-1 incrementale ---
+....................  Incrementale = uno passu: 2aae6c35c94fcfb415dbe95f408b9ce91ee846ed
+
+--- Probans sha1_friare_chorda ---
+....................  SHA1 chorda = SHA1 literis: VERUM
+
+--- Probans comparatio FNV-1a vs DJB2 ---
+.  'same input':
+    FNV-1a: 0x67527E97
+    DJB2:   0x72A4DD1B
+
+--- Probans sha256_friare ---
+  SHA256('') = e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+....
+--- Probans SHA-256 test vectors ---
+  SHA256('abc') = ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad
+.....  SHA256('abcdbcde...nopq') = 248d6a61d20638b8e5c026930c3e6039a33ce45964ff2167f6ecedd419db06c1
+....
+--- Probans SHA-256 incrementale ---
+................................  Incrementale = uno passu: b94d27b9934d3e08a52e52d7da7dabfac484efe37a5380ee9088f7ace2efcde9
+
+--- Probans sha256_friare_chorda ---
+................................  SHA256 chorda = SHA256 literis: VERUM
+
+--- Probans crc32_calculare ---
+  CRC32('') = 0x00000000
+.  CRC32('123456789') = 0xCBF43926 (expected 0xCBF43926)
+.
+--- Probans CRC32 test vectors ---
+  CRC32('hello') = 0x3610A686
+.  CRC32('The quick brown...') = 0x414FA339 (expected 0x414FA339)
+.
+--- Probans CRC32 incrementale ---
+.  Incrementale = uno passu: 0x0D4A1185
+
+--- Probans crc32_calculare_chorda ---
+.  CRC32 chorda = CRC32 literis: VERUM (0x13471545)
+
+
+=== CREDO COMPENDIUM ===
+Totalis:    153
+Praeteriti: 153
+Fracti:     0
+
+Conditio: OMNIA PRAETERIERUNT
+=========================
+

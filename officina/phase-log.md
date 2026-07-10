@@ -1040,3 +1040,40 @@ sine machinis M2d verti potest.
 PROXIMUM: decisio sigilli M2c (columna stdout-diff = vectis
 sequens per ordinem barrae) → M2d (systema_posix trahit 10+,
 fopen/getcwd ibi).
+
+### ADDENDUM (2026-07-10) — COLUMNA STDOUT VIVA (deliverable M2c
+### ultimum): 50 eaedem | 0 DIFFERUNT | 5 exclusae
+
+Vectis secundus permanens nunc stat. Mechanica:
+- **captare.sh natus** (fixatio capturarum nativarum): suites undae
+  ex `cursor -enumerare` (UNUS fons veritatis exclusionum — tabula
+  in cursor.c sola), obiecta ex compile_tests.sh EXTRACTA (fons
+  unus ibi quoque), quisque suitem BIS nativam currit — effusiones
+  differentes = NONDETERMINISTA (non figitur), aequae = aureum in
+  fixa/stdout_nativa/ (67 plagulae, 280K). generare NON curritur
+  (paritas: cursor plagulas ut-sunt demittit).
+- **cursor v2.3**: pullus effusionem in build/capturae/ scribit
+  (freopen pro /dev/null); versus pulli sine novissima linea —
+  parens post waitpid columnam appendit (idem | DIFFERT | sine
+  aureo | exclusa (causa)); alarm(0) post cursum (SIGALRM medio
+  versu vetitum); linea STDOUT sub TABULA; vectis: exitus != 0 si
+  quaevis DIFFERT. Aedes deduplicatae: exclusiones_undae in gradum
+  plagulae levatae (-enumerare + cursus eaedem).
+- **Exclusiones nominatae 6** (causa recordata in cursor.c):
+  arbor2_glr/arbor2_scribere/compound (monstratores DEBUG %p —
+  ASLR), commandi (purgamentum pre-init consulto impressum),
+  entitas (UUIDv7 tempus+fors), multipart (limes ex semine
+  time(NULL)).
+
+INVENTUM COLUMNAE PRIMO CURSU: multipart DIFFERT — cursus duplex
+nativus in SECUNDO EODEM cadit (3ms), semen time(NULL) idem bis;
+interpretatum secundo alio = limes alius. Fovea "secundi eiusdem"
+in captare.sh nunc clausa (somnus 1s inter cursus). NON vitium
+machinulae — machina fideliter limitem alium ex semine alio
+computavit. Latina landmine 10ma: "nomen" ut parametrum (typedef!).
+
+STATUS: 50/50 suites virides comparabiles OCTETIM IDENTICAE
+nativae. TABULA immota: 55 | 0 | 10 | 2 | 1 | 0 | 5 / 73.
+**OMNIA deliverables M2c completa** (cursor + sweep + builtins +
+capturae fixae + exclusiones recordatae). Sigillum M2c = decisio
+Franis. Post sigillum: M2d (systema_posix trahit 10+).

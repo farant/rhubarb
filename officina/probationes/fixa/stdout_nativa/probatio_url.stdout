@@ -1,0 +1,34 @@
+
+========================================
+PROBATIONES URL
+========================================
+
+--- Probans codificatio simplex ---
+....
+--- Probans codificatio speciales ---
+........
+--- Probans decodificatio ---
+........
+--- Probans round trip ---
+..  'Hello World! How are you?' -> 'Hello%20World%21%20How%20are%20you%3F' -> 'Hello World! How are you?'
+
+--- Probans params construere ---
+....  Query: 'name=John&age=30'
+.  Query cum spatio: 'q=hello%20world'
+
+--- Probans params parse ---
+.........  Parsed: q='hello world'
+
+--- Probans nullum argumenta ---
+....
+
+=== CREDO COMPENDIUM ===
+Totalis:    40
+Praeteriti: 40
+Fracti:     0
+
+Conditio: OMNIA PRAETERIERUNT
+=========================
+
+========================================
+

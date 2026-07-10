@@ -1,0 +1,32 @@
+
+========================================
+PROBATIONES BASE64
+========================================
+
+--- Probans longitudo codificata ---
+......
+--- Probans RFC 4648 test vectors ---
+.............
+--- Probans decodificatio ---
+............
+--- Probans round trip ---
+....  'Hello, World!' -> 'SGVsbG8sIFdvcmxkIQ==' -> 'Hello, World!'
+
+--- Probans binary data (cum nulls) ---
+...........  Binary data cum nulls: OK
+
+--- Probans nullum argumenta ---
+......
+--- Probans longitudo decodificata ---
+....
+
+=== CREDO COMPENDIUM ===
+Totalis:    56
+Praeteriti: 56
+Fracti:     0
+
+Conditio: OMNIA PRAETERIERUNT
+=========================
+
+========================================
+

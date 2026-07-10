@@ -1,0 +1,100 @@
+===========================================
+PROBATIO ARBOR QUAESTIO
+===========================================
+
+--- Type Selectors ---
+....  function-definition: found 1 - OK
+.  identifier: found 1 - OK
+..  return-statement: found 1 - OK
+
+--- Type Selectors (Extended) ---
+...  struct-specifier: found 1 - OK
+.  enum-specifier: found 1 - OK
+.  declaration: found 8 - OK
+.  if-statement: found 1 - OK
+.  for-statement: found 1 - OK
+.  while-statement: found 1 - OK
+.  binary-expression: found 3 - OK
+.  unary-expression: found 3 - OK
+.  integer-literal: found 3 - OK
+.  compound-statement: found 6 - OK
+.  type-specifier: found 6 - OK
+
+--- Descendant Combinator ---
+...  function-definition identifier: found 2 - OK
+..  compound-statement return-statement: found 1 - OK
+
+--- Child Combinator ---
+....  function-definition > compound-statement: found 1 - OK
+
+--- Attribute Selectors ---
+....  identifier[value="main"]: found 1 - OK
+..  identifier[value="nonexistent"]: found 0 - OK
+
+--- Attribute Operators ---
+....  identifier[value^="prefix"]: found 2 - OK
+..  identifier[value$="suffix"]: found 1 - OK
+..  identifier[value*="mid"]: found 1 - OK
+.  identifier[value^="xyz"]: found 0 - OK
+
+--- Captures ---
+.....  Capture $fn: found - OK
+
+--- Multiple Captures ---
+....  Multi-capture query: found 2 - OK
+...  Capture $ret: return-statement - OK
+  Capture $func: not found
+
+--- Pseudo-Selectors ---
+...  function-definition:returns: found 1 - OK
+.  function-definition:calls(printf): found 1 - OK
+
+--- Pseudo-Selectors (Extended) ---
+....  function-definition:defines(compute): found 1 - OK
+.  function-definition:calls(compute): found 0
+..  function-definition:uses(global_var): found 1 - OK
+..  function-definition:uses(nonexistent): found 0 - OK
+.  function-definition:defines(caller): found 1 - OK
+
+--- Complex Queries ---
+...  Complex chain: found 2 return statements - OK
+.  call-expression: found 1 - OK
+
+--- Deep Nesting ---
+....  4-level nesting: found 1 - OK
+.  Direct child (no deep match): found 0 - OK
+.  Descendant (all returns): found 2 - OK
+
+--- Child vs Descendant ---
+.  compound > return (direct): found 2
+  compound return (descendant): found 3
+.  descendant >= child: OK
+
+--- Edge Cases ---
+..  No functions in decl-only: found 0 - OK
+.  Unknown type: graceful empty result - OK
+..  Three functions: found 3 - OK
+.  Find 'beta' identifier: found 1 - OK
+
+--- Utilities ---
+.  pseudo_nomen(calls): OK
+.  pseudo_nomen(returns): OK
+.  pseudo_nomen(defines): OK
+.  pseudo_nomen(uses): OK
+.  combinator_nomen(descendens): OK
+.  combinator_nomen(liberum): OK
+.  combinator_nomen(nullus): OK
+
+--- Congruit (Simple Match) ---
+...  translation-unit matches root: OK
+.  function-definition does not match declaration root: OK
+
+
+=== CREDO COMPENDIUM ===
+Totalis:    99
+Praeteriti: 99
+Fracti:     0
+
+Conditio: OMNIA PRAETERIERUNT
+=========================
+

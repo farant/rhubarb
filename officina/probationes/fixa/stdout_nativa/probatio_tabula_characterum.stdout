@@ -1,0 +1,34 @@
+--- Probans initiare ---
+..--- Probans invenire_finem_contenti ---
+....--- Probans invenire_initium_contenti ---
+...--- Probans invenire_obicem ---
+....--- Probans trudere_dextram ---
+........--- Probans inserere_lineam ---
+........--- Probans delere_lineam ---
+......--- Probans inserere_characterem_simplex ---
+.......--- Probans inserere_characterem_consumere_whitespace ---
+..--- Probans inserere_characterem_ad_barrier ---
+..--- Probans inserere_characterem_post_contentum ---
+.--- Probans delere_characterem ---
+..--- Probans ex_literis ---
+..........--- Probans aequalis_literis ---
+...--- Probans inserere_tab_simplex ---
+...........--- Probans inserere_tab_ante_contentum ---
+............--- Probans inserere_tab_in_medio ---
+.......--- Probans delere_tab ---
+..--- Probans delere_ad_tab_continuatio ---
+....--- Probans est_tab_continuatio ---
+....--- Probans dimensiones_parvae ---
+......--- Probans dimensiones_minimae ---
+.....--- Probans dimensiones_asymmetricae ---
+....--- Probans dimensiones_trudere_ad_limitem ---
+....
+
+=== CREDO COMPENDIUM ===
+Totalis:    121
+Praeteriti: 121
+Fracti:     0
+
+Conditio: OMNIA PRAETERIERUNT
+=========================
+

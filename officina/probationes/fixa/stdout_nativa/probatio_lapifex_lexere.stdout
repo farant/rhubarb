@@ -1,0 +1,46 @@
+
+--- Probans I: simplex numerus "42" ---
+.....  signa: NUMBER(42), EOF
+
+--- Probans II: additio "2 + 3" ---
+........  signa: NUMBER(2), PLUS, NUMBER(3), EOF
+
+--- Probans III: sine spatiis "2+3" ---
+........  signa: NUMBER(2), PLUS, NUMBER(3), EOF
+
+--- Probans IV: multi-cifra "123" ---
+.....  signa: NUMBER(123), EOF
+
+--- Probans V: expressio plena "2 + 3 * 4" ---
+...........  signa: NUMBER(2), PLUS, NUMBER(3), STAR, NUMBER(4), EOF
+
+--- Probans VI: parentheses "(2+3)*4" ---
+.............  signa: LPAREN, NUMBER(2), PLUS, NUMBER(3), RPAREN, STAR, NUMBER(4), EOF
+
+--- Probans VII: spatium copiosum "  42  +  3  " ---
+........  signa: NUMBER(42), PLUS, NUMBER(3), EOF
+
+--- Probans VIII: vacuum "" ---
+...  signa: EOF
+
+--- Probans IX: error character ignotus "2 @ 3" ---
+....  error ad positio 2, linea 1, columna 3
+
+--- Probans X: lex+parse "2+3*4" = 14 ---
+..  2+3*4 = 14
+
+--- Probans XI: lex+parse "(1+2)*(3+4)" = 21 ---
+..  (1+2)*(3+4) = 21
+
+--- Probans XII: regressio grammatica sine exemplis ---
+....  grammatica sine exemplis: omnia exempla NIHIL
+
+
+=== CREDO COMPENDIUM ===
+Totalis:    73
+Praeteriti: 73
+Fracti:     0
+
+Conditio: OMNIA PRAETERIERUNT
+=========================
+

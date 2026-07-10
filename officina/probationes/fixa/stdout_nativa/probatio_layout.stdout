@@ -1,0 +1,55 @@
+
+--- Probans layout_creare cum pagina simplex ---
+...  Layout creatum: VERUM
+
+--- Probans layout_obtinere_pagina ---
+...  Obtinere pagina: VERUM
+
+--- Probans layout cum navigator ---
+.....  Navigator creatum: VERUM
+
+--- Probans layout cum pagina et navigator ---
+.....  Duo widgets: VERUM
+
+--- Probans layout_obtinere ---
+...  Obtinere genericum: VERUM
+
+--- Probans layout sine repositorium ---
+..  Navigator sine repo: VERUM
+
+--- Probans attributa defalta ---
+..  Attributa defalta: VERUM
+
+--- Probans layout_entitas_simplex ---
+...  Entitas simplex: VERUM
+
+--- Probans layout_entitas_proprietates ---
+......  Entitas proprietates: VERUM
+
+--- Probans layout_entitas_notae ---
+....  Entitas notae: VERUM
+
+--- Probans layout_entitas_relationes ---
+.........  Entitas relationes: VERUM
+
+--- Probans layout_entitas_hierarchicum ---
+.....  Entitas hierarchicum: VERUM
+
+--- Probans layout_entitas_idempotens ---
+......  Entitas idempotens: VERUM
+
+--- Probans layout_mixta ---
+.....  Layout mixta: VERUM
+
+--- Probans layout_entitas_errores ---
+..  Entitas errores: VERUM
+
+
+=== CREDO COMPENDIUM ===
+Totalis:    63
+Praeteriti: 63
+Fracti:     0
+
+Conditio: OMNIA PRAETERIERUNT
+=========================
+

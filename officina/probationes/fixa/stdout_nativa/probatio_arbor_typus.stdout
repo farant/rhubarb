@@ -1,0 +1,83 @@
+===========================================
+PROBATIO ARBOR TYPUS
+===========================================
+
+--- Primitive Types ---
+.......  Int declaration: genus=int - OK
+....  Char declaration: genus=char - OK
+.....  Void function: reditum=void - OK
+.....  Unsigned int: est_unsigned=1 - OK
+...  Long: genus=long - OK
+
+--- Float Types ---
+.....  Float: genus=float - OK
+...  Double: genus=double - OK
+
+--- Pointer Types ---
+.......  Pointer to int: basis=int - OK
+.......  Double pointer: **int - OK
+.....  Pointer to const int: basis->est_const=1 - OK
+
+--- Array Types ---
+......  Array of int[10]: mensura=10 - OK
+....  Unsized array: mensura=-1 - OK
+
+--- Function Types ---
+.....  Function -> int: reditum=int - OK
+.  Function pointer: typus inventa, genus=function - OK
+
+--- Function Parameter Types ---
+........  Param 0 (int x): genus=int - OK
+...  Param 1 (char c): genus=char - OK
+.....  Param 2 (long *p): pointer to long - OK
+............  Param x in scope: typus=int - OK
+
+--- Struct Types ---
+.  Struct definition: OK
+...  Struct with variable: genus=struct - OK
+
+--- Struct Member Types ---
+.....  Struct has 3 members - OK
+.....  Member 0 (x): int - OK
+......  Member 1 (name): pointer to char - OK
+.......  Member 2 (arr): array[10] of long - OK
+
+--- Union Member Types ---
+.....  Union has 3 members - OK
+...  Member 0 (i): int - OK
+...  Member 1 (f): float - OK
+.....  Member 2 (s): pointer to char - OK
+
+--- Typedef ---
+.  Typedef simplex: OK
+.  Typedef pointer: OK
+
+--- Typedef Usage ---
+.....  Typedef usage (MyInt x): basis=int - OK
+
+--- Typedef in Struct Members ---
+...........  Struct member typedef (Size len): basis=long - OK
+...........  Multi typedef members: OK
+
+--- Type Utilities ---
+.  Genus nomen int: int - OK
+.  Genus nomen pointer: pointer - OK
+.  Genus nomen struct: struct - OK
+.  Genus nomen function: function - OK
+.  Est integer check: OK
+
+--- Scope ---
+...  Nested scopes: OK
+
+--- Type Equality ---
+....  int == int: OK
+
+
+=== CREDO COMPENDIUM ===
+Totalis:    179
+Praeteriti: 179
+Fracti:     0
+
+Conditio: OMNIA PRAETERIERUNT
+=========================
+

@@ -1,0 +1,86 @@
+
+--- Probans xar_creare ---
+....
+--- Probans xar_addere et xar_obtinere ---
+.....
+--- Probans crescentia_automatica ---
+.............................................................................................................................................................................................................................................................................................................
+--- Probans xar_obtinere_vel_creare ---
+....
+--- Probans xar_ponere ---
+...
+--- Probans xar_addere_multos ---
+......................
+--- Probans xar_addere_multos trans segmenta ---
+.................................
+--- Probans xar_addere_multos cum xar partim pleno ---
+...........................................................................................................................
+--- Probans xar_addere_multos magnum numerum ---
+..........
+--- Probans iterator cum xar vacuo ---
+..
+--- Probans iterator ---
+............
+--- Probans iterator trans segmenta ---
+.....................................................................................................
+--- Probans xar_invenire ---
+...
+--- Probans xar_invenire_index ---
+..
+--- Probans xar_quaerere_binarie ---
+........
+--- Probans xar_quaerere_binarie_index ---
+.....
+--- Probans xar_vacare ---
+....
+--- Probans xar_truncare ---
+............
+--- Probans xar_copiare_ad_tabulam ---
+...........
+--- Probans vexilla ---
+..
+--- Probans accessus_invalidos ---
+..
+--- Probans magna_tabula ---
+........................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................
+--- Probans status_imprimere ---
+Xar 'Tabula Probationis' Status:
+  Numerus elementorum: 50
+  Magnitudo elementi: 4 bytes
+  Capacitas totalis: 64
+  Numerus segmentorum: 4
+
+  Segmenta:
+    [0]: 8 elementa (32 bytes) - ALLOCATUS
+    [1]: 8 elementa (32 bytes) - ALLOCATUS
+    [2]: 16 elementa (64 bytes) - ALLOCATUS
+    [3]: 32 elementa (128 bytes) - ALLOCATUS
+
+  Usus memoriae:
+    Allocatus: 64 elementa (256 bytes)
+    Usus: 50 elementa (200 bytes)
+    Utilitas: 78.1%
+
+--- Probans xar_removere_ultimum ---
+......
+--- Probans xar_removere_cum_ultimo ---
+..........
+--- Probans xar_tollere ---
+..........
+--- Probans xar_mutare ---
+.....
+--- Probans xar_invertere ---
+.......
+--- Probans xar_ordinare ---
+......
+--- Probans xar_continet ---
+...
+
+=== CREDO COMPENDIUM ===
+Totalis:    1220
+Praeteriti: 1220
+Fracti:     0
+
+Conditio: OMNIA PRAETERIERUNT
+=========================
+

@@ -1,0 +1,83 @@
+
+--- Probans xml_elementum_creare ---
+....  Elementum 'root' creatum: VERUM
+
+--- Probans xml_textum_creare ---
+....  Textus 'Hello World' creatum: VERUM
+
+--- Probans xml_attributum_addere ---
+.......  Attributa addita et obtenta: VERUM
+
+--- Probans xml_liberum_addere ---
+....  Liberum additum: VERUM
+
+--- Probans xml_invenire_liberum ---
+...  Invenire liberum: VERUM
+
+--- Probans xml_scribere simplex ---
+.  Output: <empty/>
+.
+--- Probans xml_scribere cum attributis ---
+.  Output: <item id="42"/>
+.
+--- Probans xml_scribere cum liberis ---
+.  Output: <parent><child/></parent>
+.
+--- Probans xml_scribere cum textu ---
+.  Output: <greeting>Hello</greeting>
+.
+--- Probans xml_scribere effugium ---
+.  Output: <data>&lt;&gt;&amp;</data>
+.
+--- Probans xml_scribere pulchrum ---
+.  Output:
+<root>
+  <item id="1"/>
+  <item id="2"/>
+</root>
+
+--- Probans xml_legere simplex ---
+....  Parsatio '<root/>': VERUM
+
+--- Probans xml_legere cum attributis ---
+......  Parsatio attributa: VERUM
+
+--- Probans xml_legere cum liberis ---
+....  Parsatio liberis: VERUM
+
+--- Probans xml_legere cum textu ---
+....  Parsatio textus: VERUM
+
+--- Probans xml_legere entity references ---
+...  Decoded: '<tag> & "test"'
+.
+--- Probans xml_legere complexum ---
+............  Parsatio complexa: VERUM
+
+--- Probans roundtrip ---
+..  Serialized: <root attr="value"><child>text</child></root>
+.....  Roundtrip: VERUM
+
+--- Probans xml_legere errores ---
+..  Empty input detectum: VERUM
+.  Unclosed tag detectum: VERUM
+.  Mismatched tags detectum: VERUM
+
+--- Probans xml_legere cum declaratione ---
+...  Declaratio XML saltata: VERUM
+
+--- Probans xml_legere cum commentis ---
+...  Commenta saltata: VERUM
+
+--- Probans xml_invenire_omnes_liberos ---
+...  Invenire omnes 'item': 3 (expected 3)
+
+
+=== CREDO COMPENDIUM ===
+Totalis:    87
+Praeteriti: 87
+Fracti:     0
+
+Conditio: OMNIA PRAETERIERUNT
+=========================
+

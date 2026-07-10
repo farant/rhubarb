@@ -1,0 +1,45 @@
+
+========================================
+PROBATIONES JSON
+========================================
+
+--- Probans nullum ---
+....--- Probans boolean ---
+......--- Probans integer ---
+.........--- Probans fluitans ---
+.........--- Probans chorda ---
+......--- Probans escapes ---
+..............--- Probans tabulatum ---
+.................--- Probans objectum ---
+................--- Probans whitespace ---
+.....--- Probans errores ---
+.....--- Probans builder ---
+.....  Output: {"items":[1,2,3],"count":3}
+--- Probans serialization ---
+....  Escaped: "hello\nworld"
+--- Probans round trip ---
+.  Original:   {"name":"Test","values":[1,2,3],"nested":{"a":true}}
+  Serialized: {"name":"Test","values":[1,2,3],"nested":{"a":true}}
+.....--- Probans pretty print ---
+{
+  "name": "Test",
+  "items": [
+    1,
+    2
+  ]
+}
+.--- Probans iterator ---
+.  Key: a = 1
+  Key: b = 2
+  Key: c = 3
+.
+=== CREDO COMPENDIUM ===
+Totalis:    109
+Praeteriti: 109
+Fracti:     0
+
+Conditio: OMNIA PRAETERIERUNT
+=========================
+
+========================================
+

@@ -6,8 +6,13 @@
  * Vectis: 0 fracturae oneris; decipulae numeratae + NOMINATAE;
  * $main inventum; relocationes sarcitae.
  *
- * M2c crescet: exsecutio per machinulam, tabula classificationis,
- * columna stdout-diff, tempus per plagulam probationis.
+ * M2c (v2.3): exsecutio per machinulam fork-per-suite, tabula
+ * classificationis, tempus per suitem, -custodia/-mora/-sola,
+ * -enumerare (captare.sh consumit), columna stdout VIVA: pullus
+ * effusionem in officina/build/capturae/ scribit, parens post
+ * waitpid contra aureum fixum (fixa/stdout_nativa/, captare.sh
+ * figit) octetim comparat - exclusiones nominatae supra. Vectis:
+ * exitus != 0 si quaevis effusio DIFFERT.
  *
  * Fistula bis-analysans ex fusore exscripta (superficies publica
  * silva.h). Piscinae arborum per TU destructae (arbores numquam
@@ -29,6 +34,7 @@
 #include <dirent.h>
 #include <unistd.h>
 #include <sys/wait.h>
+#include <sys/stat.h>
 #include <signal.h>
 
 /* ==================================================
@@ -57,6 +63,130 @@ hic_manens insignatus integer mora_secunda = 30; /* -mora <n> */
 hic_manens constans character* sola_quaesita = NIHIL; /* -sola
     <substr>: suites congruentes solae + stdout interpretatum
     VISIBILE (diagnosis per-suite) */
+hic_manens b32 enumerare_petita = FALSUM;        /* -enumerare:
+    vias suitarum undae imprimere et exire (captare.sh consumit -
+    UNUS fons veritatis exclusionum) */
+
+/* UNDA 0: exclusiones nominatae (network/GUI/asset/benchmark) */
+hic_manens constans character* exclusiones_undae[] = {
+    /* Unda 1 filesystem */
+    "probatio_arbor2_file_roundtrip.c", "probatio_arbor2_expandere.c",
+    "probatio_arbor.c", "probatio_arbor_formator.c",
+    "probatio_arbor_index.c", "probatio_entitas_repositorium.c",
+    "probatio_filum.c", "probatio_iter_directoria.c",
+    "probatio_macho.c", "probatio_generare.c",
+    "probatio_eventus_inspector.c",
+    /* Unda 1b/2/3 */
+    "probatio_uuid.c", "probatio_tempestivum.c",
+    "probatio_actor.c", "probatio_actor_integratio.c",
+    "probatio_tcp.c", "probatio_tcp_servus.c",
+    "probatio_tls.c", "probatio_reactor.c",
+    "probatio_http.c",
+    /* GUI/asset/benchmark */
+    "probatio_fenestra.c", "probatio_delineare.c",
+    "probatio_tempus.c", "probatio_pagina.c",
+    "probatio_navigator.c", "probatio_combinado.c",
+    "probatio_gradientum.c", "probatio_capsula_caudae.c",
+    "probatio_elementa.c", "probatio_imago.c",
+    "probatio_dithering.c", "probatio_flatura_benchmark.c",
+    "probatio_biblia_dr.c", "probatio_biblia_visus.c",
+    NIHIL
+};
+
+/* columna stdout: exclusiones nominatae (effusio non determinata -
+ * captare.sh per cursum duplicem invenit; causa recordata) */
+nomen structura {
+    constans character* titulus;
+    constans character* causa;
+} ExclusioStdout;
+
+hic_manens constans ExclusioStdout exclusiones_stdout[] = {
+    /* inventae per captare.sh cursu duplici 2026-07-10 */
+    { "probatio_arbor2_glr.c",      "monstratores DEBUG (ASLR)" },
+    { "probatio_arbor2_scribere.c", "monstratores DEBUG (ASLR)" },
+    { "probatio_compound.c",        "monstratores DEBUG (ASLR)" },
+    { "probatio_commandi.c",        "purgamentum pre-init impressum" },
+    { "probatio_entitas.c",         "UUIDv7 (tempus+fors)" },
+    /* inventa per columnam ipsam (cursu duplici latuit - secundum
+     * idem; captare.sh nunc 1s inter cursus dormit) */
+    { "probatio_multipart.c",       "limes ex semine time(NULL)" },
+    { NIHIL, NIHIL }
+};
+
+hic_manens constans character*
+_exclusio_stdout_causa (constans character* titulus)
+{
+    i32 i;
+
+    per (i = ZEPHYRUM; exclusiones_stdout[i].titulus != NIHIL; i++)
+    {
+        si (strcmp(titulus, exclusiones_stdout[i].titulus)
+            == ZEPHYRUM)
+        {
+            redde exclusiones_stdout[i].causa;
+        }
+    }
+    redde NIHIL;
+}
+
+/* comparatio plagularum octetim (aureum vs captura) */
+hic_manens b32
+_plagulae_aequae (constans character* via_a, constans character* via_b)
+{
+    FILE* pa = fopen(via_a, "rb");
+    FILE* pb = fopen(via_b, "rb");
+    b32 aequae = VERUM;
+
+    si (pa == NIHIL || pb == NIHIL)
+    {
+        si (pa != NIHIL) fclose(pa);
+        si (pb != NIHIL) fclose(pb);
+        redde FALSUM;
+    }
+    dum (VERUM)
+    {
+        character ba[4096];
+        character bb[4096];
+        memoriae_index na = fread(ba, I, magnitudo(ba), pa);
+        memoriae_index nb = fread(bb, I, magnitudo(bb), pb);
+
+        si (na != nb || (na > ZEPHYRUM
+            && memcmp(ba, bb, na) != ZEPHYRUM))
+        {
+            aequae = FALSUM;
+            frange;
+        }
+        si (na < magnitudo(ba))
+        {
+            frange;
+        }
+    }
+    fclose(pa);
+    fclose(pb);
+    redde aequae;
+}
+
+/* viae capturae/aurei ex via suitae ("probationes/probatio_x.c") */
+hic_manens vacuum
+_vias_effusionis (constans character* via_suitae,
+    character* via_capturae, character* via_aurei)
+{
+    constans character* titulus = via_suitae + XII;
+    integer mensura = (integer)strlen(titulus) - II; /* sine ".c" */
+
+    sprintf(via_capturae, "officina/build/capturae/%.*s.stdout",
+        mensura, titulus);
+    sprintf(via_aurei,
+        "officina/probationes/fixa/stdout_nativa/%.*s.stdout",
+        mensura, titulus);
+}
+
+/* comparator qsort pro ordinibus character[128] (-enumerare) */
+hic_manens integer
+_comparare_nomina (constans vacuum* a, constans vacuum* b)
+{
+    redde strcmp((constans character*)a, (constans character*)b);
+}
 
 /* ==================================================
  * Plagulam demittere (fistula fusoris; modulus CACHATUR)
@@ -391,6 +521,67 @@ s32 principale (integer argc, character** argv)
             a++;
             sola_quaesita = argv[a];
         }
+        alioquin si (strcmp(argv[a], "-enumerare") == ZEPHYRUM)
+        {
+            enumerare_petita = VERUM;
+        }
+    }
+
+    /* -enumerare: vias undae imprimere et exire (sine mundo) */
+    si (enumerare_petita)
+    {
+        DIR* dir = opendir("probationes");
+        structura dirent* introitus;
+        hic_manens character vias[256][128];
+        integer numerus = 0;
+        integer i;
+
+        si (dir == NIHIL)
+        {
+            fprintf(stderr, "cursor: probationes/ deest\n");
+            redde I;
+        }
+        dum ((introitus = readdir(dir)) != NIHIL && numerus < 256)
+        {
+            b32 exclusa = FALSUM;
+            memoriae_index md = strlen(introitus->d_name);
+
+            si (strncmp(introitus->d_name, "probatio_", IX)
+                != ZEPHYRUM)
+            {
+                perge;
+            }
+            si (md < III || md > CX
+                || introitus->d_name[md - II] != '.'
+                || introitus->d_name[md - I] != 'c')
+            {
+                perge;
+            }
+            per (i = 0; exclusiones_undae[i] != NIHIL; i++)
+            {
+                si (strcmp(introitus->d_name, exclusiones_undae[i])
+                    == ZEPHYRUM)
+                {
+                    exclusa = VERUM;
+                    frange;
+                }
+            }
+            si (exclusa)
+            {
+                perge;
+            }
+            sprintf(vias[numerus], "probationes/%s",
+                introitus->d_name);
+            numerus++;
+        }
+        closedir(dir);
+        qsort(vias, (memoriae_index)numerus, magnitudo(vias[0]),
+            _comparare_nomina);
+        per (i = 0; i < numerus; i++)
+        {
+            imprimere("%s\n", vias[i]);
+        }
+        redde ZEPHYRUM;
     }
 
     piscina_ctx = piscina_generare_dynamicum("cursor_ctx", 8388608);
@@ -531,32 +722,9 @@ s32 principale (integer argc, character** argv)
         (long)xar_numerus(moduli_mundi), summa_functionum,
         summa_instructionum, parsurae_fractae, ruinae_demissionis);
 
-    /* UNDA 0: omnes suites praeter exclusiones nominatas */
+    /* UNDA 0: omnes suites praeter exclusiones nominatas
+     * (exclusiones_undae - tabula unica, -enumerare eadem) */
     {
-        constans character* exclusiones[] = {
-            /* Unda 1 filesystem */
-            "probatio_arbor2_file_roundtrip.c", "probatio_arbor2_expandere.c",
-            "probatio_arbor.c", "probatio_arbor_formator.c",
-            "probatio_arbor_index.c", "probatio_entitas_repositorium.c",
-            "probatio_filum.c", "probatio_iter_directoria.c",
-            "probatio_macho.c", "probatio_generare.c",
-            "probatio_eventus_inspector.c",
-            /* Unda 1b/2/3 */
-            "probatio_uuid.c", "probatio_tempestivum.c",
-            "probatio_actor.c", "probatio_actor_integratio.c",
-            "probatio_tcp.c", "probatio_tcp_servus.c",
-            "probatio_tls.c", "probatio_reactor.c",
-            "probatio_http.c",
-            /* GUI/asset/benchmark */
-            "probatio_fenestra.c", "probatio_delineare.c",
-            "probatio_tempus.c", "probatio_pagina.c",
-            "probatio_navigator.c", "probatio_combinado.c",
-            "probatio_gradientum.c", "probatio_capsula_caudae.c",
-            "probatio_elementa.c", "probatio_imago.c",
-            "probatio_dithering.c", "probatio_flatura_benchmark.c",
-            "probatio_biblia_dr.c", "probatio_biblia_visus.c",
-            NIHIL
-        };
         DIR* dir = opendir("probationes");
         structura dirent* introitus;
         character* suites[256];
@@ -570,6 +738,13 @@ s32 principale (integer argc, character** argv)
         long nexus_fracti = 0L;
         long ruinae = 0L;
         long tempora = 0L;
+        long effusiones_eaedem = 0L;
+        long effusiones_differentes = 0L;
+        long effusiones_sine_aureo = 0L;
+        long effusiones_exclusae = 0L;
+
+        /* directorium capturarum (stdout interpretatum per suitem) */
+        (vacuum)mkdir("officina/build/capturae", 0755);
 
         si (dir == NIHIL)
         {
@@ -595,9 +770,9 @@ s32 principale (integer argc, character** argv)
                     perge;
                 }
             }
-            per (i = 0; exclusiones[i] != NIHIL; i++)
+            per (i = 0; exclusiones_undae[i] != NIHIL; i++)
             {
-                si (strcmp(introitus->d_name, exclusiones[i])
+                si (strcmp(introitus->d_name, exclusiones_undae[i])
                     == ZEPHYRUM)
                 {
                     exclusa = VERUM;
@@ -660,12 +835,20 @@ s32 principale (integer argc, character** argv)
                 i32 k;
                 b32 nexus_bene = VERUM;
 
-                /* stdout interpretatum tacet (columna diff
-                 * postea, instrumento separato) - PRAETER -sola
+                /* stdout interpretatum in capturam (columna diff
+                 * in parente post exitum) - PRAETER -sola
                  * (diagnosis: asserta credo videnda) */
                 si (sola_quaesita == NIHIL)
                 {
-                    (vacuum)freopen("/dev/null", "w", stdout);
+                    character via_capturae[CCLVI];
+                    character via_aurei[CCLVI];
+
+                    _vias_effusionis(suites[i], via_capturae,
+                        via_aurei);
+                    si (freopen(via_capturae, "w", stdout) == NIHIL)
+                    {
+                        (vacuum)freopen("/dev/null", "w", stdout);
+                    }
                 }
 
                 /* tectum temporis: SIGALRM = versus TEMPUS in
@@ -698,7 +881,7 @@ s32 principale (integer argc, character** argv)
                     constans chorda* symbolum =
                         conexio_querela_symbolum(conexio);
 
-                    fprintf(stderr, "%-44s NEXUS FRACTUS (%.*s)\n",
+                    fprintf(stderr, "%-44s NEXUS FRACTUS (%.*s)",
                         suites[i], (int)symbolum->mensura,
                         (constans character*)symbolum->datum);
                     _exit(44);
@@ -717,18 +900,21 @@ s32 principale (integer argc, character** argv)
                         titulus_main);
                 }
                 s1 = clock();
+                (vacuum)alarm(0U);   /* versus sine SIGALRM medio */
                 /* _exit stdio NON effundit - stdout interpretatum
-                 * expresse effundendum (modus -sola) */
+                 * expresse effundendum (captura/-sola) */
                 fflush(stdout);
                 {
                     duplex ms = (duplex)(s1 - s0) * 1000.0
                         / (duplex)CLOCKS_PER_SEC;
 
+                    /* versus SINE novissima linea - parens columnam
+                     * stdout appendit post waitpid */
                     si (fructus.genus == MACHINULA_BENE
                         && fructus.codex == ZEPHYRUM)
                     {
                         fprintf(stderr, "%-44s PRAETERIIT"
-                            "  %8.0f ms  %llu instr\n", suites[i],
+                            "  %8.0f ms  %llu instr", suites[i],
                             ms, (insignatus longus longus)
                             machinula_numerus_instructionum(
                                 machinula));
@@ -737,7 +923,7 @@ s32 principale (integer argc, character** argv)
                     alioquin si (fructus.genus == MACHINULA_BENE)
                     {
                         fprintf(stderr, "%-44s EXITUS %ld"
-                            "  %8.0f ms\n", suites[i],
+                            "  %8.0f ms", suites[i],
                             (long)fructus.codex, ms);
                         _exit(40);
                     }
@@ -747,7 +933,7 @@ s32 principale (integer argc, character** argv)
                             "SISTERE", "DECIPULA", "VITIUM" };
 
                         fprintf(stderr, "%-44s %s (%.*s)"
-                            "  %8.0f ms\n", suites[i],
+                            "  %8.0f ms", suites[i],
                             genera[fructus.genus],
                             (int)fructus.nuntius.mensura,
                             (constans character*)
@@ -789,7 +975,63 @@ s32 principale (integer argc, character** argv)
             }
             alioquin
             {
-                commutatio (WEXITSTATUS(status))
+                integer codex_pulli = WEXITSTATUS(status);
+
+                /* columna stdout (versus pulli sine novissima
+                 * linea): praeteriit -> diff capturae vs aurei;
+                 * ceteri -> linea sola finitur */
+                si (codex_pulli == ZEPHYRUM
+                    && sola_quaesita == NIHIL)
+                {
+                    character via_capturae[CCLVI];
+                    character via_aurei[CCLVI];
+                    constans character* causa;
+
+                    _vias_effusionis(suites[i], via_capturae,
+                        via_aurei);
+                    causa = _exclusio_stdout_causa(
+                        suites[i] + XII);
+                    si (causa != NIHIL)
+                    {
+                        fprintf(stderr, "  exclusa (%s)\n", causa);
+                        effusiones_exclusae++;
+                    }
+                    alioquin
+                    {
+                        FILE* pa = fopen(via_aurei, "rb");
+
+                        si (pa == NIHIL)
+                        {
+                            fprintf(stderr, "  sine aureo\n");
+                            effusiones_sine_aureo++;
+                        }
+                        alioquin
+                        {
+                            fclose(pa);
+                            si (_plagulae_aequae(via_capturae,
+                                    via_aurei))
+                            {
+                                fprintf(stderr, "  idem\n");
+                                effusiones_eaedem++;
+                            }
+                            alioquin
+                            {
+                                fprintf(stderr, "  DIFFERT\n");
+                                effusiones_differentes++;
+                            }
+                        }
+                    }
+                }
+                alioquin si (codex_pulli >= 40
+                    && codex_pulli <= 44)
+                {
+                    fprintf(stderr, "\n");
+                }
+                alioquin si (codex_pulli == ZEPHYRUM)
+                {
+                    fprintf(stderr, "\n");   /* -sola: sine captura */
+                }
+                commutatio (codex_pulli)
                 {
                     casus ZEPHYRUM: praeteritae++; frange;
                     casus 40: exitus_mali++; frange;
@@ -800,7 +1042,7 @@ s32 principale (integer argc, character** argv)
                     ordinarius:
                         fprintf(stderr, "%-44s RUINA (codex pulli"
                             " %d)\n", suites[i],
-                            (int)WEXITSTATUS(status));
+                            (int)codex_pulli);
                         ruinae++;
                         frange;
                 }
@@ -813,7 +1055,16 @@ s32 principale (integer argc, character** argv)
             praeteritae, exitus_mali, sisterae, decipulae_l, vitia,
             ruinae, tempora, nexus_fracti,
             (long)numerus_suitarum);
-        redde (praeteritae == (long)numerus_suitarum)
-            ? ZEPHYRUM : I;
+        si (sola_quaesita == NIHIL)
+        {
+            fprintf(stderr, "=== STDOUT: %ld eaedem |"
+                " %ld DIFFERUNT | %ld sine aureo | %ld exclusae"
+                " ===\n",
+                effusiones_eaedem, effusiones_differentes,
+                effusiones_sine_aureo, effusiones_exclusae);
+        }
+        /* vectis: virides omnes ET nulla effusio differens */
+        redde (praeteritae == (long)numerus_suitarum
+            && effusiones_differentes == 0L) ? ZEPHYRUM : I;
     }
 }

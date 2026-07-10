@@ -1,0 +1,70 @@
+
+--- Probans I: int x; ---
+.....
+--- Probans II: char c; ---
+..
+--- Probans III: void *p; ---
+......
+--- Probans IV: int x = 42; ---
+...
+--- Probans V: int a, b, c; ---
+.....
+--- Probans VI: int *p; ---
+......
+--- Probans VII: int **pp; ---
+.....
+--- Probans VIII: const int *p; ---
+..
+--- Probans IX: int arr[10]; ---
+......
+--- Probans X: int arr[]; ---
+.....
+--- Probans XI: int f(void); ---
+......
+--- Probans XII: int f(int a, char b); ---
+......
+--- Probans XIII: int (*fp)(int); ---
+..
+--- Probans XIV: void f(int, ...); ---
+.....
+--- Probans XV: struct Foo { int x; char c; }; ---
+......
+--- Probans XVI: enum Color { RED, GREEN, BLUE }; ---
+.......
+--- Probans XVII: int x = 2 + 3; ---
+..
+--- Probans XVIII: int arr[] = {1, 2, 3}; ---
+..
+--- Probans XIX: int a = 1, b = 2; ---
+..
+--- Probans XX: struct + init ---
+..
+--- Probans XXI: typedef unsigned long size_t; ---
+..
+--- Probans XXII: static const int MAX = 100; ---
+..
+--- Probans XXIII: Expressio regressio 2+3 ---
+...
+--- Probans XXIV: int f(); ---
+.....
+--- Probans XXV: enum E { A = 1, B = 2 }; ---
+..
+--- Probans XXVI: struct Foo; ---
+..
+--- Probans XXVII: int a[] = {1, 2,}; ---
+..
+--- Probans XXVIII: extern int x; ---
+..
+--- Probans XXIX: union U { int i; float f; }; ---
+.....
+--- Probans XXX: unsigned long long x; ---
+..
+
+=== CREDO COMPENDIUM ===
+Totalis:    112
+Praeteriti: 112
+Fracti:     0
+
+Conditio: OMNIA PRAETERIERUNT
+=========================
+

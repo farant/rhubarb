@@ -1,0 +1,42 @@
+
+--- Probans piscina_generare_dynamicum ---
+..
+--- Probans piscina_generare_certae_magnitudinis ---
+.
+--- Probans piscina_allocare (singularis) ---
+...
+--- Probans piscina_allocare (multiplex) ---
+.....
+--- Probans piscina_allocare (cresco) ---
+...
+--- Probans piscina_conari_allocare (successus) ---
+.
+--- Probans piscina_conari_allocare (fracta) ---
+..
+--- Probans piscina_allocare_ordinatum ---
+...
+--- Probans piscina_vacare ---
+......
+--- Probans piscina_summa_inutilis_allocatus ---
+..
+--- Probans piscina_reliqua_antequam_cresca_alvei ---
+...
+--- Probans piscina_summa_apex_usus ---
+....
+--- Probans tutelae initus NIHIL ---
+...
+--- Probans piscina_notare_reficere ---
+........
+--- Probans piscina_notare_nested ---
+.......
+--- Probans piscina_potesne_allocare ---
+.......
+
+=== CREDO COMPENDIUM ===
+Totalis:    60
+Praeteriti: 60
+Fracti:     0
+
+Conditio: OMNIA PRAETERIERUNT
+=========================
+

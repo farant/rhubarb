@@ -1,0 +1,56 @@
+
+--- Probans parsationem grammaticae ---
+.....  Terminalia: 6, Non-terminalia: 4, Productiones: 7
+
+--- Probans resolutionem symbolorum ---
+...............  Symbola resoluta recte
+
+--- Probans FIRST coniuncta ---
+..............=== Grammatica ===
+Terminalia: 6
+Non-terminalia: 4
+Productiones: 7
+Initium: 9
+
+--- Symbola ---
+  [0] NUMBER (terminale)
+  [1] PLUS (terminale)
+  [2] STAR (terminale)
+  [3] LPAREN (terminale)
+  [4] RPAREN (terminale)
+  [5] EOF (terminale)
+  [6] expr (non-terminale)
+  [7] term (non-terminale)
+  [8] factor (non-terminale)
+  [9] __initium__ (non-terminale)
+
+--- Productiones ---
+  P0: expr -> expr PLUS term
+  P1: expr -> term
+  P2: term -> term STAR factor
+  P3: term -> factor
+  P4: factor -> LPAREN expr RPAREN
+  P5: factor -> NUMBER
+  P6: __initium__ -> expr EOF
+
+=== FIRST Coniuncta ===
+  FIRST(expr) = {LPAREN, NUMBER}
+  FIRST(term) = {LPAREN, NUMBER}
+  FIRST(factor) = {LPAREN, NUMBER}
+  FIRST(__initium__) = {LPAREN, NUMBER}
+
+--- Probans error handling ---
+....  Error handling recte
+
+--- Probans terminalia FIRST ---
+......  Terminalia FIRST recte
+
+
+=== CREDO COMPENDIUM ===
+Totalis:    44
+Praeteriti: 44
+Fracti:     0
+
+Conditio: OMNIA PRAETERIERUNT
+=========================
+

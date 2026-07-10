@@ -1,0 +1,40 @@
+
+--- Probans I: nuntium simplex cum uno campo ---
+............  nuntium Persona { textus identificator = 1; } -> OK
+
+--- Probans II: nuntium cum campis multiplicibus ---
+.............  3 campi: textus, varint, textus -> OK
+
+--- Probans III: nuntia multiplicia ---
+........  Persona + Ordo -> OK
+
+--- Probans IV: omnia VIII genera camporum ---
+...................  textus, varint, svarint, fixum32, fixum64, bytes, f32, f64 -> OK
+
+--- Probans V: tag numeri maiores ---
+....  tag 100, 255 -> OK
+
+--- Probans VI: input vacuum -> NIHIL ---
+..  vacuum -> NIHIL -> OK
+
+--- Probans VII: semicolon deficiens -> error ---
+.  semicolon deficiens -> NIHIL -> OK
+
+--- Probans VIII: character ignotus -> error ---
+.  character ignotus -> NIHIL -> OK
+
+--- Probans IX: spatium copiosum et lineae novae ---
+....  spatium copiosum -> OK
+
+--- Probans X: tria nuntia (end-to-end) ---
+................  Eventum(4) + Persona(3) + Ordo(2) -> OK
+
+
+=== CREDO COMPENDIUM ===
+Totalis:    80
+Praeteriti: 80
+Fracti:     0
+
+Conditio: OMNIA PRAETERIERUNT
+=========================
+

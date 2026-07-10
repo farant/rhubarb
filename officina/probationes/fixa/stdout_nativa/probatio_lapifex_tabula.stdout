@@ -1,0 +1,163 @@
+
+--- Probans constructionem tabulae ---
+....  Tabula constructa: 23 status
+
+--- Probans omnes status habent introitus ---
+..
+--- Probans SHIFT in statu 0 ---
+.......  NUMBER -> SHIFT 5
+....  LPAREN -> SHIFT 4
+
+--- Probans ACCEPT ---
+..  ACCEPT in statu 7
+
+--- Probans GOTO in statu 0 ---
+....  GOTO(expr) = 1
+  GOTO(term) = 2
+  GOTO(factor) = 3
+
+--- Probans REDUCE ---
+.  Status 5: REDUCE P5 (factor -> NUMBER)
+.
+--- Probans nullos conflictus ---
+..  Conflictus: 0
+
+--- Probans numeros actionum/goto ---
+.  Totalis actiones: 57
+  Totalis goto: 15
+....
+--- Imprimere tabulam ---
+.
+=== Tabula ACTION/GOTO ===
+Status: 23, Conflictus: 0
+
+--- Status 0 ---
+  ACTION(LPAREN) = SHIFT 4
+  ACTION(NUMBER) = SHIFT 5
+  GOTO(expr) = 1
+  GOTO(term) = 2
+  GOTO(factor) = 3
+
+--- Status 1 ---
+  ACTION(PLUS) = SHIFT 6
+  ACTION(EOF) = SHIFT 7
+
+--- Status 2 ---
+  ACTION(STAR) = SHIFT 8
+  ACTION(PLUS) = REDUCE P1 (expr)
+  ACTION(EOF) = REDUCE P1 (expr)
+
+--- Status 3 ---
+  ACTION(PLUS) = REDUCE P3 (term)
+  ACTION(STAR) = REDUCE P3 (term)
+  ACTION(EOF) = REDUCE P3 (term)
+
+--- Status 4 ---
+  ACTION(LPAREN) = SHIFT 12
+  ACTION(NUMBER) = SHIFT 13
+  GOTO(expr) = 9
+  GOTO(term) = 10
+  GOTO(factor) = 11
+
+--- Status 5 ---
+  ACTION(PLUS) = REDUCE P5 (factor)
+  ACTION(STAR) = REDUCE P5 (factor)
+  ACTION(EOF) = REDUCE P5 (factor)
+
+--- Status 6 ---
+  ACTION(LPAREN) = SHIFT 4
+  ACTION(NUMBER) = SHIFT 5
+  GOTO(term) = 14
+  GOTO(factor) = 3
+
+--- Status 7 ---
+  ACTION($) = ACCEPT
+
+--- Status 8 ---
+  ACTION(LPAREN) = SHIFT 4
+  ACTION(NUMBER) = SHIFT 5
+  GOTO(factor) = 15
+
+--- Status 9 ---
+  ACTION(PLUS) = SHIFT 16
+  ACTION(RPAREN) = SHIFT 17
+
+--- Status 10 ---
+  ACTION(STAR) = SHIFT 18
+  ACTION(PLUS) = REDUCE P1 (expr)
+  ACTION(RPAREN) = REDUCE P1 (expr)
+
+--- Status 11 ---
+  ACTION(PLUS) = REDUCE P3 (term)
+  ACTION(STAR) = REDUCE P3 (term)
+  ACTION(RPAREN) = REDUCE P3 (term)
+
+--- Status 12 ---
+  ACTION(LPAREN) = SHIFT 12
+  ACTION(NUMBER) = SHIFT 13
+  GOTO(expr) = 19
+  GOTO(term) = 10
+  GOTO(factor) = 11
+
+--- Status 13 ---
+  ACTION(PLUS) = REDUCE P5 (factor)
+  ACTION(STAR) = REDUCE P5 (factor)
+  ACTION(RPAREN) = REDUCE P5 (factor)
+
+--- Status 14 ---
+  ACTION(STAR) = SHIFT 8
+  ACTION(PLUS) = REDUCE P0 (expr)
+  ACTION(EOF) = REDUCE P0 (expr)
+
+--- Status 15 ---
+  ACTION(PLUS) = REDUCE P2 (term)
+  ACTION(STAR) = REDUCE P2 (term)
+  ACTION(EOF) = REDUCE P2 (term)
+
+--- Status 16 ---
+  ACTION(LPAREN) = SHIFT 12
+  ACTION(NUMBER) = SHIFT 13
+  GOTO(term) = 20
+  GOTO(factor) = 11
+
+--- Status 17 ---
+  ACTION(PLUS) = REDUCE P4 (factor)
+  ACTION(STAR) = REDUCE P4 (factor)
+  ACTION(EOF) = REDUCE P4 (factor)
+
+--- Status 18 ---
+  ACTION(LPAREN) = SHIFT 12
+  ACTION(NUMBER) = SHIFT 13
+  GOTO(factor) = 21
+
+--- Status 19 ---
+  ACTION(PLUS) = SHIFT 16
+  ACTION(RPAREN) = SHIFT 22
+
+--- Status 20 ---
+  ACTION(STAR) = SHIFT 18
+  ACTION(PLUS) = REDUCE P0 (expr)
+  ACTION(RPAREN) = REDUCE P0 (expr)
+
+--- Status 21 ---
+  ACTION(PLUS) = REDUCE P2 (term)
+  ACTION(STAR) = REDUCE P2 (term)
+  ACTION(RPAREN) = REDUCE P2 (term)
+
+--- Status 22 ---
+  ACTION(PLUS) = REDUCE P4 (factor)
+  ACTION(STAR) = REDUCE P4 (factor)
+  ACTION(RPAREN) = REDUCE P4 (factor)
+
+
+Nulli conflictus in tabula.
+
+
+=== CREDO COMPENDIUM ===
+Totalis:    33
+Praeteriti: 33
+Fracti:     0
+
+Conditio: OMNIA PRAETERIERUNT
+=========================
+

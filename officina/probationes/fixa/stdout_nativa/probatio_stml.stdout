@@ -1,0 +1,216 @@
+
+--- Probans stml_elementum_creare ---
+....  Elementum 'root' creatum: VERUM
+
+--- Probans stml_textum_creare ---
+....  Textus 'Hello World' creatum: VERUM
+
+--- Probans stml_attributum_addere ---
+.......  Attributa addita et obtenta: VERUM
+
+--- Probans stml_attributum_boolean_addere ---
+.....  Boolean attributum 'disabled': VERUM
+
+--- Probans stml_liberum_addere ---
+....  Liberum additum: VERUM
+
+--- Probans stml_legere simplex ---
+.....  Parsatio '<root/>': VERUM
+
+--- Probans stml_legere cum attributis ---
+......  Parsatio attributa: VERUM
+
+--- Probans stml_legere boolean attributes ---
+.....  Boolean attribute 'disabled': VERUM
+
+--- Probans stml_legere cum apostrophis ---
+......  Parsatio cum apostrophis: VERUM
+
+--- Probans stml_legere cum valoribus nudis ---
+........  Parsatio valoribus nudis: VERUM
+
+--- Probans stml_legere cum valoribus mixtis ---
+..........  Parsatio valoribus mixtis: VERUM
+
+--- Probans stml_legere cum liberis ---
+....  Parsatio liberis: VERUM
+
+--- Probans stml_legere cum textu ---
+....  Parsatio textus: VERUM
+
+--- Probans stml_legere raw content ---
+.....  Raw content '<code!>': VERUM
+
+--- Probans forward capture operator ---
+.....  Forward capture <wrapper (>: VERUM
+
+--- Probans backward capture operator ---
+.....  Backward capture <) wrapper>: VERUM
+
+--- Probans sandwich capture operator ---
+.......  Sandwich capture <= wrapper =>: VERUM
+
+--- Probans stml_scribere simplex ---
+.  Output: <empty/>
+.
+--- Probans stml_scribere cum attributis ---
+.  Output: <item id="42"/>
+.
+--- Probans stml_scribere boolean attr ---
+.  Output: <button disabled/>
+.
+--- Probans stml_scribere cum liberis ---
+.  Output: <parent><child/></parent>
+.
+--- Probans stml_scribere cum textu ---
+.  Output: <greeting>Hello</greeting>
+.
+--- Probans stml_scribere raw content ---
+.  Output: <code!><div>&amp;</div></code>
+.
+--- Probans roundtrip ---
+..  Serialized: <root attr="value"><child>text</child></root>
+.....  Roundtrip: VERUM
+
+--- Probans stml_legere errores ---
+..  Empty input detectum: VERUM
+
+--- Probans stml_legere cum commento ---
+..  Commenta parsata: VERUM
+
+--- Probans stml_invenire_omnes_liberos ---
+...  Invenire omnes 'item': 3 (expected 3)
+
+--- Probans multiple forward captures ---
+........  Multiple forward capture ((: VERUM
+
+--- Probans errores malformed tags ---
+..  Mismatched tags detectum: VERUM
+..  Overlapping tags detectum: VERUM
+..  Unclosed tag detectum: VERUM
+.  Closing without opening detectum: VERUM
+.  Multiple closing tags detectum: VERUM
+
+--- Probans errores edge cases ---
+...  Whitespace only detectum: VERUM
+...  Only comment: VERUM
+....  Multiple roots: VERUM
+...  Deeply nested (10 levels): VERUM
+..  Many siblings (20): VERUM
+
+--- Probans capture edge cases ---
+...  Nested captures: VERUM
+...  Comments transparent to capture: VERUM
+...  Text capture: VERUM
+
+--- Probans PI et DOCTYPE ---
+...  Processing instruction: VERUM
+...  DOCTYPE: VERUM
+
+--- Probans raw content edge cases ---
+...  Raw special chars: VERUM
+..  Raw nested tags: VERUM
+...  Empty raw content: VERUM
+..  TAB raw content: [TAB = test]
+.  Raw content with TAB word: VERUM
+
+--- Probans serialization edge cases ---
+...  Pretty print: VERUM
+....  Multiple attributes: VERUM
+
+--- Probans parser features ---
+.......  Mixed content: VERUM
+.....  Namespace attributes: VERUM
+..  Direct children search: VERUM
+
+--- Probans capture operators (extended) ---
+...  Text node capture: VERUM
+.......  Multiple parens capture: VERUM
+...  Backward text capture: VERUM
+......  Multiple backward capture: VERUM
+....  Mixed operators: VERUM
+....  Sandwich with both siblings: VERUM
+...  Self-closing capture: VERUM
+...  Partial capture: VERUM
+
+--- Probans smart whitespace trimming ---
+......  Simple trim: VERUM
+.....  Multiline normalization: VERUM
+.....  Raw content preserved: VERUM
+....  Relative indentation: VERUM
+...  Whitespace-only skipped: VERUM
+
+--- Probans tituli (labels) ---
+.......  stml_titulum_habet: VERUM
+....  stml_titulos_numerus: VERUM
+.........  stml_titulos_capere: VERUM
+........  stml_titulum_addere: VERUM
+.......  stml_titulum_removere: VERUM
+.......  stml_titulum_commutare: VERUM
+......  Parsed labels: VERUM
+.....  HTML class compat: VERUM
+
+--- Probans navigatio ---
+...........  stml_index_inter_fratres: VERUM
+...  stml_frater_proximus: VERUM
+...  stml_frater_prior: VERUM
+....  stml_primus_liberum/ultimus_liberum: VERUM
+...  stml_fratres: VERUM
+.......  stml_maiores: VERUM
+.....  stml_proximus_maior: VERUM
+
+--- Probans mutatio ---
+.......  stml_praeponere: VERUM
+.......  stml_removere: VERUM
+....  stml_vacare_liberos: VERUM
+.....  stml_inserere_ante: VERUM
+.....  stml_inserere_post: VERUM
+......  stml_substituere: VERUM
+
+--- Probans duplicatio ---
+.........  stml_duplicare (profunde): VERUM
+.....  stml_duplicare_superficialiter: VERUM
+
+--- Probans Entity Unescaping ---
+...  &lt; &gt; unescaping: VERUM
+..  &amp; unescaping: VERUM
+..  &quot; unescaping: VERUM
+..  &apos; unescaping: VERUM
+...  Raw tags preserve entities: VERUM
+..  Roundtrip equality: VERUM
+..  Multiple entities: VERUM
+..  Unknown entities preserved: VERUM
+
+--- Probans Capture Operator Serialization ---
+..  Forward capture roundtrip: VERUM
+..  Multiple forward capture roundtrip: VERUM
+..  Backward capture roundtrip: VERUM
+..  Sandwich capture roundtrip: VERUM
+..  Forward capture with text: VERUM
+
+--- Probans Fragmenta ---
+....  Anonymous fragment: PRAETERITUM
+.....  Named fragment: PRAETERITUM
+..  Self-closing fragment: PRAETERITUM
+..  Fragment roundtrip: PRAETERITUM
+....  Fragment with attributes: PRAETERITUM
+..  Anonymous fragment roundtrip: PRAETERITUM
+..  Nested fragments: PRAETERITUM
+
+--- Probans Transclusio ---
+....  Basic transclusion: PRAETERITUM
+...  Complex selector transclusion: PRAETERITUM
+..  Transclusion roundtrip: PRAETERITUM
+..  Multiple transclusions: PRAETERITUM
+...  Whitespace trimmed selector: PRAETERITUM
+..  Mixed content transclusion: PRAETERITUM
+
+
+=== CREDO COMPENDIUM ===
+Totalis:    456
+Praeteriti: 456
+Fracti:     0
+
+Conditio: OMNIA PRAETERIERUNT
+=========================
+

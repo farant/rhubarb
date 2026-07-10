@@ -1,0 +1,42 @@
+
+--- Probans I: int x = 42; ---
+..
+--- Probans II: Latina.h macros ---
+..
+--- Probans III: #define MAX 100; int x = MAX; ---
+..
+--- Probans IV: typedef int i32t; i32t f(i32t a) { return a; } ---
+...
+--- Probans V: #define SQUARE(x) ((x)*(x)) ---
+..
+--- Probans VI: API macro in declaration ---
+..
+--- Probans VII: Multiple API macros ---
+...
+--- Probans VIII: External typedef (size_t) ---
+..
+--- Probans IX: nomen integer meus_typus; meus_typus x; ---
+...
+--- Probans X: int a; int b; int c; ---
+...
+--- Probans XI: int f(void) { return 0; } ---
+..
+--- Probans XII: #define MYTYPE int; typedef MYTYPE my_int; my_int x; ---
+...
+--- Probans XIII: Latina functi cum corpore complexo ---
+...
+--- Probans XIV: structura Punctum { integer x; integer y; }; ---
+..
+--- Probans XV: int g; int f(void) { return g; } ---
+...
+--- Probans XVI: Multiple #defines ---
+..
+--- Probans XVII: nomen structura { integer valor; } MeusTypus; ---
+...
+--- Probans XVIII: API function-like macro ---
+..
+--- Probans XIX: Latina per loop ---
+..
+--- Probans XX: enum through pipeline ---
+..
+Conditio: OMNIA PRAETERIERUNT

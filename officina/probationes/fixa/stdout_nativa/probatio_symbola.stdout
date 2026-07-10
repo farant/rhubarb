@@ -1,0 +1,56 @@
+
+--- Probans tabula_symbolorum_ex_macho ---
+..  Total symbols: 2
+.
+--- Probans tabula_symbolorum_symbolum ---
+.....
+--- Probans symbolorum_iterator ---
+..  [0] __mh_execute_header (addr=0x100000000, type=0xf, sect=1)
+  [1] _main (addr=0x100003f94, type=0xf, sect=1)
+  Total iterated: 2
+..
+--- Probans symbolum_invenire ---
+...  Found: _main at 0x100003f94
+..
+--- Probans symbolum attributa ---
+....  Name: _main
+  Address: 0x100003f94
+.  Type: 0xf
+  Section: 1
+.  Descriptor: 0x0
+
+--- Probans symbolum_est_* predicates ---
+...  _main is function: sic
+.  _main is external: sic
+.  _main is undefined: non
+.  _main is debug: non
+.
+--- Probans cum_functione (plures symbola) ---
+..  Total symbols: 6
+...........
+--- Probans symbola_obtinere_functiones ---
+..  Functions found: 5
+.    [0] _addere
+.    [1] _multiplicare
+.    [2] __mh_execute_header
+.    [3] _calculare_summa
+.    [4] _main
+...
+--- Probans symbola_obtinere_externa_indefinita ---
+..  External undefined symbols: 1
+.    [0] _printf
+...
+--- Probans symbolum_invenire_per_addressa ---
+...  _main address: 0x100003f94
+...
+--- Probans NIHIL handling ---
+.........
+
+=== CREDO COMPENDIUM ===
+Totalis:    74
+Praeteriti: 74
+Fracti:     0
+
+Conditio: OMNIA PRAETERIERUNT
+=========================
+

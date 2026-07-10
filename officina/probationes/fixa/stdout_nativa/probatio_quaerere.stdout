@@ -1,0 +1,64 @@
+
+========================================
+PROBATIONES QUAERERE (Fuzzy Matching)
+========================================
+
+--- Probans congruit simplex ---
+......
+--- Probans congruit case sensitive ---
+..
+--- Probans congruit smart case ---
+...
+--- Probans concordare exacta ---
+......  Score pro exacta match: 52
+.
+--- Probans concordare subsequence ---
+.....  Score pro subsequence: 16
+
+--- Probans consecutive bonus ---
+  Consecutive score: 44
+  Separated score: 18
+...
+--- Probans word boundary bonus ---
+...  Score pro word boundary: 21
+
+--- Probans CamelCase boundary ---
+...  Score pro CamelCase: 12
+
+--- Probans path matching ---
+.  Score pro path: 43
+  Positions: 4 5 7 12 
+
+--- Probans non congruit ---
+..
+--- Probans query vacuus ---
+...
+--- Probans filtrare simplex ---
+  Query: "ch"
+  Matches: 4
+.    [0] chorda.h (score=32)
+    [1] chorda.c (score=32)
+    [2] credo.h (score=19)
+    [3] piscina.h (score=12)
+
+--- Probans filtrare sorted ---
+.  Sorted results:
+    [0] ab (score=32)
+    [1] a_b (score=23)
+    [2] axxxxb (score=12)
+..
+--- Probans filtrare empty result ---
+.
+--- Probans filtrare empty query ---
+....
+
+=== CREDO COMPENDIUM ===
+Totalis:    47
+Praeteriti: 47
+Fracti:     0
+
+Conditio: OMNIA PRAETERIERUNT
+=========================
+
+========================================
+

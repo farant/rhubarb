@@ -1,0 +1,46 @@
+
+--- Probans argumenta_creare ---
+.
+--- Probans vexilla simplicia ---
+.....
+--- Probans optiones cum valoribus ---
+.....
+--- Probans optiones cum syntax equals ---
+...
+--- Probans argumenta positionalia ---
+....
+--- Probans mixtura vexilla, optiones, et positionalia ---
+......
+--- Probans vexillum solum breve ---
+..
+--- Probans optio solum longum ---
+..
+--- Probans optio non data ---
+..
+--- Probans errore: optio ignota ---
+.
+--- Probans errore: optio sine valore ---
+.
+--- Probans positionalia multa ---
+.....
+--- Probans vexillum cum valor (errore) ---
+.
+--- Probans sine argumenta ---
+...
+--- Probans --help cum positionalibus necessariis ---
+..
+--- Probans -h cum positionalibus necessariis ---
+..
+--- Probans sine --help debet verificare positionalia ---
+.
+--- Probans descriptio et exempla ---
+.
+
+=== CREDO COMPENDIUM ===
+Totalis:    47
+Praeteriti: 47
+Fracti:     0
+
+Conditio: OMNIA PRAETERIERUNT
+=========================
+

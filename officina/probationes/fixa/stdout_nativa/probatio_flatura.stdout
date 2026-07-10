@@ -1,0 +1,67 @@
+
+========================================
+PROBATIONES FLATURA (DEFLATE/GZIP)
+========================================
+
+--- Probans CRC-32 vector ---
+  CRC-32 de "123456789": 0xCBF43926
+.
+--- Probans CRC-32 vacuus ---
+  CRC-32 de "": 0x00000000
+.
+--- Probans CRC-32 incrementalis ---
+  Incrementalis: 0xCBF43926
+  Totalis:       0xCBF43926
+.
+--- Probans round-trip parvus ---
+  Originalis: 13 bytes
+  Compressa:  15 bytes (status=0)
+..  Decompressa: 13 bytes (status=0)
+...
+--- Probans round-trip magnus ---
+  Originalis: 4096 bytes
+  Compressa:  60 bytes (ratio: 1.5%)
+...  Decompressa: 4096 bytes
+...
+--- Probans stored block (sine compressione) ---
+  Originalis: 6 bytes
+  Compressa:  11 bytes
+....
+--- Probans datum vacuus ---
+  Compressa mensura: 5
+...
+--- Probans gzip round-trip ---
+  Originalis: 57 bytes
+  Gzip:       77 bytes (status=0)
+....  Decompressa: 57 bytes (status=0)
+...
+--- Probans gzip CRC invalidus ---
+.  Status post CRC corruptum: 6
+.
+--- Probans nullum argumenta ---
+...  NIHIL argumenta recte recusata
+
+--- Probans status nuntia ---
+.  OK: Successus
+.  FRACTA_DATUM: Datum invalidum
+.  GZIP_FRACTA: Gzip format invalidum
+
+--- Probans maxima magnitudo ---
+  Maxima pro 1000 bytes: 1023
+.  Maxima pro 0 bytes: 18
+.
+--- Probans compressio repetitiva ---
+  Originalis: 4096 bytes (omnes 'A')
+  Compressa:  29 bytes (ratio: 0.71%)
+..
+
+=== CREDO COMPENDIUM ===
+Totalis:    40
+Praeteriti: 40
+Fracti:     0
+
+Conditio: OMNIA PRAETERIERUNT
+=========================
+
+========================================
+

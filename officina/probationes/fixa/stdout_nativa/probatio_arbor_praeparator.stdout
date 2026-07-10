@@ -1,0 +1,84 @@
+
+========================================
+PROBATIO ARBOR PRAEPARATOR
+========================================
+
+--- Creatio ---
+.  Creare: OK
+
+--- Definire Macros ---
+........  Definire simplex: OK
+...  Definire vacua: OK
+..  Definire multi-token: OK
+
+--- Undefinire Macros ---
+...  Undefinire: OK
+
+--- Addere Via Include ---
+.  Addere via: OK
+
+--- Processare Simplex ---
+........  Processare simplex: OK
+
+--- Directivae Saltantur ---
+........  Directivae saltantur: OK
+
+--- Parsere #define ---
+......  Object-like simplex: OK
+...  Object-like multi-token: OK
+...  Object-like vacua: OK
+......  Function-like unum param: OK
+....  Function-like multi param: OK
+....  Function-like variadic: OK
+.  Undef via processare: OK
+
+--- Conditionales ---
+..  ifdef verum: OK
+..  ifdef falsum: OK
+..  ifndef verum: OK
+...  ifdef cum else: OK
+...  conditionales nidificatae: OK
+...  include guard pattern: OK
+
+--- If Expressions ---
+..  #if 1 verum: OK
+..  #if 0 falsum: OK
+..  #if defined: OK
+..  #if !defined: OK
+..  #if arithmetic: OK
+...  #elif: OK
+..  #if &&: OK
+
+--- Special Operators ---
+..  Function-like simplex: OK
+..  Stringification #: OK
+..  Token pasting ##: OK
+
+--- Macro Expansion ---
+..  Simplex expansion: OK
+..  Multi-token expansion: OK
+..  Nested expansion: OK
+..  Recursion protection: OK
+...  Empty expansion: OK
+...  Origin tracking: OK
+
+--- Include ---
+..  Include quoted: OK
+..  Include with macro: OK
+..  Include guard: OK
+..  Include search path: OK
+
+--- Nomina Directivarum ---
+.....  Nomina directivarum: OK
+
+========================================
+
+=== CREDO COMPENDIUM ===
+Totalis:    124
+Praeteriti: 124
+Fracti:     0
+
+Conditio: OMNIA PRAETERIERUNT
+=========================
+
+========================================

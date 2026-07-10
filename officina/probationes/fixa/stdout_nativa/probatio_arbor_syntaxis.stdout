@@ -1,0 +1,253 @@
+===========================================
+PROBATIO ARBOR SYNTAXIS
+===========================================
+.
+--- Creatio Parser ---
+.  Creare: OK
+
+--- Nodus Genus Nomen ---
+.  TRANSLATION_UNIT: translation-unit
+.  FUNCTION_DEFINITION: function-definition
+.  BINARY_EXPRESSION: binary-expression
+  Genus nomen: OK
+  Simplex probatio: OK
+
+--- Integer Literal ---
+..........  Integer literal: OK
+.  Hexadecimal: OK
+.  Octal: OK
+
+--- Float Literal ---
+.  Float simplex: OK
+.  Float exponent: OK
+.  Float suffix: OK
+
+--- Character Literal ---
+.  Char simplex: OK
+.  Char escape: OK
+
+--- String Literal ---
+.  String simplex: OK
+.  String escape: OK
+
+--- Identifier ---
+....  Identifier: OK
+
+--- Unary Expressions ---
+.  Negatio: OK
+.  Logicus non: OK
+.  Bitwise non: OK
+.  Address-of: OK
+.  Dereference: OK
+.  Prefix increment: OK
+.  Prefix decrement: OK
+
+--- Sizeof ---
+..  Sizeof expr: OK
+.  Sizeof type: OK
+
+--- Binary Expressions ---
+...  Additio: OK
+.  Subtractio: OK
+.  Multiplicatio: OK
+.  Divisio: OK
+.  Modulus: OK
+.  Minor quam: OK
+.  Maior quam: OK
+.  Aequalis: OK
+.  Non aequalis: OK
+.  Logicus et: OK
+.  Logicus vel: OK
+.  Bitwise et: OK
+.  Bitwise vel: OK
+.  Bitwise xor: OK
+.  Shift sinister: OK
+.  Shift dexter: OK
+
+--- Praecedentia ---
+.....  a + b * c: OK
+....  a * b + c: OK
+...  a && b || c: OK
+
+--- Postfix ---
+..  Vocatio vacua: OK
+...  Vocatio cum args: OK
+..  Subscriptum: OK
+...  Membrum dot: OK
+...  Membrum arrow: OK
+.  Postfix increment: OK
+.  Postfix decrement: OK
+
+--- Ternary ---
+.....  Ternary simplex: OK
+.  Ternary nested: OK
+
+--- Assignment ---
+.  Simplex: OK
+.  Plus-assign: OK
+.  Minus-assign: OK
+.  Mult-assign: OK
+.  Div-assign: OK
+
+--- Parentheses ---
+...  Override precedence: OK
+.  Nested parens: OK
+
+--- Compound Expressions ---
+.  Chained member: OK
+.  Multi subscript: OK
+.  Call member: OK
+.  Complex: OK
+
+--- If Statement ---
+.......  If simplex: OK
+..  If-else: OK
+.  If-else-if: OK
+
+--- While Statement ---
+....  While: OK
+.  While block: OK
+
+--- Do-While Statement ---
+..  Do-while: OK
+.  Do-while block: OK
+
+--- For Statement ---
+......  For complet: OK
+.  For sine init: OK
+.  For infinitus: OK
+
+--- Switch Statement ---
+....  Switch: OK
+
+--- Return Statement ---
+...  Return valor: OK
+..  Return vacuum: OK
+
+--- Break/Continue ---
+.  Break: OK
+.  Continue: OK
+
+--- Goto/Label ---
+..  Goto: OK
+.  Label: OK
+
+--- Declarations ---
+..  Simplex: OK
+.  Cum init: OK
+..  Multiple: OK
+.  Pointer: OK
+.  Double pointer: OK
+.  Const: OK
+.  Static: OK
+.  Extern: OK
+.  Unsigned: OK
+.  Long: OK
+
+--- Function Definition ---
+...  Void simplex: OK
+.  Cum parametro: OK
+.  Multiple params: OK
+.  Pointer param: OK
+.  Static func: OK
+
+--- Multiple Functions ---
+..  Multiple functions: OK
+
+--- Mixed Toplevel ---
+..  Mixed toplevel: OK
+
+--- Struct Definition ---
+......  Struct simplex: OK
+.  Struct variabilis: OK
+...  Forward decl: OK
+.  Anonymous struct: OK
+.  Nested struct: OK
+.  Self-referential: OK
+
+--- Union Definition ---
+....  Union simplex: OK
+.  Union variabilis: OK
+.  Anonymous union: OK
+
+--- Enum Definition ---
+....  Enum simplex: OK
+.  Enum cum valoribus: OK
+.  Enum variabilis: OK
+.  Anonymous enum: OK
+.  Trailing comma: OK
+
+--- Typedef ---
+..  Typedef simplex: OK
+.  Typedef pointer: OK
+.  Typedef struct: OK
+.  Typedef struct def: OK
+..  Typedef usus: OK
+.  Typedef func ptr: OK
+.  Typedef in struct: OK
+.  Multi typedef in struct: OK
+
+--- Bitfields ---
+.  Bitfield simplex: OK
+.  Unsigned bitfield: OK
+.  Mixed members: OK
+
+--- Extensions ---
+...  __extension__: OK
+.  __attribute__: OK
+.  __inline__: OK
+.  __volatile__: OK
+.  Multiple ext: OK
+
+--- AST Imprimere ---
+.  AST pro 'int main(void) { return 0; }':
+    translation-unit @1:1
+      function-definition @1:16
+        type-specifier "int" @1:1
+        declarator @1:5
+          identifier "main" @1:5
+          function-declarator @1:9
+            parameter-declaration @1:10
+        compound-statement @1:16
+          return-statement @1:18
+  Imprimere: OK
+
+--- Trivia Declaratio ---
+.......  declarator trivia_post: nihil
+  initializer trivia_ante: praesens
+    (num trivia: 1)
+  Declaratio trivia: INSPECTUM
+
+--- Trivia Braces ---
+......  declarator trivia_post: nihil
+  corpus trivia_ante: nihil
+  corpus trivia_post: nihil
+  Braces trivia: INSPECTUM
+
+--- Trivia Multi Decl ---
+...  num declaratores: 3
+.  init_decl[0]:
+    trivia_ante: nihil
+    trivia_post: praesens (num: 1) [',']
+  init_decl[1]:
+    trivia_ante: nihil
+    trivia_post: praesens (num: 1) [',']
+  init_decl[2]:
+    trivia_ante: nihil
+    trivia_post: nihil
+  Multi decl trivia: INSPECTUM
+
+--- Trivia Binary Op ---
+...  sinister trivia_post: praesens
+  dexter trivia_ante: praesens
+  Binary op trivia: INSPECTUM
+
+
+=== CREDO COMPENDIUM ===
+Totalis:    233
+Praeteriti: 233
+Fracti:     0
+
+Conditio: OMNIA PRAETERIERUNT
+=========================
+

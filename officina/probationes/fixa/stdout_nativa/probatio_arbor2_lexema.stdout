@@ -1,0 +1,28 @@
+
+--- Probans NOVA_LINEA in spatia ---
+........
+--- Probans newlines multiplices in spatia ---
+.....
+--- Probans line continuation ---
+....
+--- Probans spatia CONTINUATIO ---
+...
+--- Probans CRLF handling ---
+.....
+--- Probans preprocessor pattern ---
+......
+--- Probans arbor2_lexema_omnia ---
+.....
+--- Probans arbor2_lexema_genus_nomen ---
+...
+--- Probans leading newlines ---
+..
+
+=== CREDO COMPENDIUM ===
+Totalis:    41
+Praeteriti: 41
+Fracti:     0
+
+Conditio: OMNIA PRAETERIERUNT
+=========================
+

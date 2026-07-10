@@ -1,0 +1,106 @@
+
+--- Probans paginarium_config_defectus ---
+....
+--- Probans textus_vacuus ---
+.
+--- Probans prosa_simplex ---
+.......
+--- Probans prosa_involutio ---
+......
+--- Probans prosa_newline_singulum ---
+....
+--- Probans versus_purus ---
+.....
+--- Probans paragraph_break ---
+..
+--- Probans mixed_prosa_versus ---
+...
+--- Probans multiplex_paginas ---
+.....
+--- Probans linea_reddere_versus ---
+...
+--- Probans linea_vacua_reddere ---
+..
+--- Probans index_invalidus ---
+...
+--- Probans versus_word_wrap ---
+......
+--- Probans pindar_textus ---
+..  Numerus linearum: 12
+  [0] len=50 versus=0: "*** START OF THE PROJECT GUTENBERG EBOOK..."
+  [1] <vacua> versus=0
+  [2] len=10 versus=0: "THE EXTANT"
+  [3] <vacua> versus=0
+  [4] len=14 versus=0: "ODES OF PINDAR"
+  [5] <vacua> versus=0
+  [6] len=13 versus=0: "INTRODUCTION."
+  [7] <vacua> versus=0
+  [8] len=59 versus=0: "Probably no poet of importance equal or ..."
+  [9] len=53 versus=0: "of Pindar finds so few and so infrequent..."
+  [10] len=57 versus=0: "causes are not far to seek: in the first..."
+  [11] len=49 versus=0: "place comes the great difficulty of his ..."
+........
+--- Probans tres_newlines ---
+..
+--- Probans pindar_plenum_67 ---
+.  Config: latitudo=67, 80% limina=53
+  Numerus linearum: 25
+  [0] len=50 v=1: "*** START OF THE PROJECT GUTENBERG EBOOK 1071"
+  [1] <vacua>
+  [2] len=10 v=1: "THE EXTANT"
+  [3] <vacua>
+  [4] len=14 v=1: "ODES OF PINDAR"
+  [5] <vacua>
+  [6] len=29 v=1: "_First edition printed 1874._"
+  [7] <vacua>
+  [8] len=44 v=1: "  SON OF THE LIGHTNING, FAIR AND FIERY STAR,"
+  [9] len=46 v=1: "  STRONG-WINGED IMPERIAL PINDAR, VOICE DIVINE"
+  [10] len=47 v=1: "  LET THESE DEEP DRAUGHTS OF THY ENCHANTED WI"
+  [11] len=44 v=1: "  LIFT ME WITH THEE IN SOARINGS HIGH AND FAR"
+  [12] len=35 v=1: "  PROUDER THAN PEGASEAN, OR THE CAR"
+  [13] len=40 v=1: "  WHEREIN APOLLO RAPT THE HUNTRESS MAID."
+  [14] len=45 v=1: "  SO LET ME RANGE MINE HOUR, TOO SOON TO FADE"
+  [15] len=47 v=1: "  INTO STRANGE PRESENCE OF THE THINGS THAT AR"
+  [16] <vacua>
+  [17] len=13 v=0: "INTRODUCTION."
+  [18] <vacua>
+  [19] len=62 v=0: "Probably no poet of importance equal or appro"
+  [20] len=65 v=0: "Pindar finds so few and so infrequent readers"
+  [21] len=64 v=0: "far to seek: in the first and most obvious pl"
+  [22] len=64 v=0: "difficulty of his language, in the second the"
+  [23] len=64 v=0: "of his thought, resulting mainly from his exc"
+  [24] len=27 v=0: "and his abrupt transitions."
+  -> Prosa incipit [19] versus=0
+.
+--- Probans prosa_gutenberg_67 ---
+..  Config: latitudo=67, limina_versus=80%
+  Numerus linearum: 6
+  [0] len=62 versus=0: "Probably no poet of importance equal or approaching to that of"
+  [1] len=65 versus=0: "Pindar finds so few and so infrequent readers. The causes are not"
+  [2] len=64 versus=0: "far to seek: in the first and most obvious place comes the great"
+  [3] len=64 versus=0: "difficulty of his language, in the second the frequent obscurity"
+  [4] len=64 versus=0: "of his thought, resulting mainly from his exceeding allusiveness"
+  [5] len=27 versus=0: "and his abrupt transitions."
+..
+--- Probans crlf_line_endings ---
+.  Numerus linearum: 4
+  [0] len=62 v=0: "Probably no poet of importance equal or appro"
+  [1] len=65 v=0: "Pindar finds so few and so infrequent readers"
+  [2] len=64 v=0: "far to seek: in the first and most obvious pl"
+  [3] len=27 v=0: "difficulty of his language."
+..
+--- Probans crlf_paragraph_break ---
+.  Numerus linearum: 3
+  [0] len=65: "First paragraph with some long text that should flow nicely here."
+  [1] <vacua>
+  [2] len=33: "Second paragraph after the break."
+.
+
+=== CREDO COMPENDIUM ===
+Totalis:    74
+Praeteriti: 74
+Fracti:     0
+
+Conditio: OMNIA PRAETERIERUNT
+=========================
+

@@ -1,0 +1,62 @@
+--- Probans initiare ---
+....--- Probans motus hjkl ---
+.............--- Probans motus limites ---
+..........--- Probans motus 0 $ ---
+...--- Probans motus ^ ---
+.--- Probans i inserere ---
+......--- Probans a appendo ---
+..--- Probans A appendo finis ---
+..--- Probans I inserere initium ---
+..--- Probans inserere characterem ---
+..--- Probans cursor wrap ad finem lineae ---
+........--- Probans inserere in medio ---
+.--- Probans x delere ---
+..--- Probans dd delere lineam ---
+....--- Probans backspace ---
+........--- Probans o nova linea infra ---
+.........--- Probans O nova linea supra ---
+..........--- Probans escape ex inserere ---
+..--- Probans escape in normali ---
+.--- Probans w verbum proximum ---
+..--- Probans b verbum praecedens ---
+...--- Probans g initium tabulae ---
+..--- Probans G finem tabulae ---
+..--- Probans G ad finem buffer ---
+...--- Probans $ in linea vacua ---
+...--- Probans d$ delere ad finem lineae ---
+.--- Probans dG delere ad finem tabulae ---
+.--- Probans >> indent ---
+.--- Probans << dedent ---
+.--- Probans o auto-indent ---
+.....--- Probans O auto-indent ---
+...--- Probans enter auto-indent ---
+..--- Probans vim dimensiones parvae ---
+......--- Probans vim G dimensiones variae ---
+...--- Probans vim dd ultima linea ---
+...--- Probans enter split line ---
+........--- Probans enter split line in medio ---
+.......--- Probans enter ad initium lineae ---
+......--- Probans enter split cum indentatio ---
+.........--- Probans backspace join lines ---
+.........--- Probans backspace join lines cum spatiis ---
+......--- Probans V visual mode ---
+.......--- Probans V indent selectio ---
+.......--- Probans V dedent selectio ---
+...--- Probans dd cut et p paste ---
+............--- Probans P paste ante ---
+.....--- Probans u undo dd ---
+.....--- Probans u undo p ---
+.....--- Probans V d cut multi ---
+......--- Probans V d undo multi ---
+....--- Probans p paste multi ---
+...--- Probans J jungere lineas ---
+..............
+
+=== CREDO COMPENDIUM ===
+Totalis:    247
+Praeteriti: 247
+Fracti:     0
+
+Conditio: OMNIA PRAETERIERUNT
+=========================
+

@@ -1,0 +1,40 @@
+
+--- Probans I: generare caput simplex ---
+...............  caput generatum -> OK
+
+--- Probans II: generare corpus simplex ---
+................  corpus generatum -> OK
+
+--- Probans III: omnia VIII genera camporum ---
+.........................  VIII genera -> OK
+
+--- Probans IV: nuntia multiplicia ---
+.................  nuntia multiplicia -> OK
+
+--- Probans V: input invalidum ---
+..  input invalidum -> chorda vacua -> OK
+
+--- Probans VI: tag numeri ---
+......  tag numeri -> OK
+
+--- Probans VII: nomina camporum originalia in corpore ---
+.......  nomina originalia -> OK
+
+--- Probans VIII: struct campi in capite ---
+...  struct campi -> OK
+
+--- Probans IX: null-guard pro chorda in scribere ---
+..  null-guard -> OK
+
+--- Probans X: memset in legere ---
+...  memset -> OK
+
+
+=== CREDO COMPENDIUM ===
+Totalis:    96
+Praeteriti: 96
+Fracti:     0
+
+Conditio: OMNIA PRAETERIERUNT
+=========================
+

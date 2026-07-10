@@ -1,0 +1,43 @@
+
+--- Probans 42 ---
+..  42 = 42
+
+--- Probans 2+3 ---
+..  2+3 = 5
+
+--- Probans 2+3*4 ---
+..  2+3*4 = 14
+
+--- Probans 1+2+3 ---
+..  1+2+3 = 6
+
+--- Probans (2+3)*4 ---
+..  (2+3)*4 = 20
+
+--- Probans ((5)) ---
+..  ((5)) = 5
+
+--- Probans (1+2)*(3+4) ---
+..  (1+2)*(3+4) = 21
+
+--- Probans error: +2 ---
+...  Error in statu 0, terminalis 1, positio 0
+
+--- Probans error: 2 sine EOF ---
+..  Error in statu 5, terminalis -1, positio 1
+
+--- Probans callback NIHIL ---
+..  NIHIL callback: valor = 0
+
+--- Probans 2*3*4 ---
+..  2*3*4 = 24
+
+
+=== CREDO COMPENDIUM ===
+Totalis:    23
+Praeteriti: 23
+Fracti:     0
+
+Conditio: OMNIA PRAETERIERUNT
+=========================
+

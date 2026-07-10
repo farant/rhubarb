@@ -1,0 +1,44 @@
+=== PROBATIONES TOML ===
+
+Chordae Simplices:
+.....  [OK] Chorda simplex
+..  [OK] Chorda vacua
+
+Numeri:
+...  [OK] Numerus positivus
+..  [OK] Numerus negativus
+
+Tabulata:
+......  [OK] Tabulatum simplex
+...  [OK] Tabulatum multilinea
+
+Chordae Multilineae:
+...  [OK] Chorda multilinea
+
+Documenta Mixta:
+.....  [OK] Documentum mixtum
+
+Commenta et Spatium:
+..  [OK] Commenta
+...  [OK] Spatium
+
+Errores:
+..  [OK] Error sine aequali
+.  [OK] Error chorda non clausa
+
+Boolean et Table Headers:
+....  [OK] Boolean
+....  [OK] Table headers
+..  [OK] Numerus negativus magnus
+
+Format LLM:
+.........  [OK] Format LLM
+
+=== CREDO COMPENDIUM ===
+Totalis:    56
+Praeteriti: 56
+Fracti:     0
+
+Conditio: OMNIA PRAETERIERUNT
+=========================
+

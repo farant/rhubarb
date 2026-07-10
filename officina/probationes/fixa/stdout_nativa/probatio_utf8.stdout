@@ -1,0 +1,36 @@
+
+--- Probans utf8_longitudo_byte ---
+.............
+--- Probans utf8_est_continuatio ---
+........
+--- Probans utf8_decodere ASCII ---
+.......
+--- Probans utf8_decodere 2-byte ---
+....
+--- Probans utf8_decodere 3-byte ---
+....
+--- Probans utf8_decodere 4-byte ---
+..
+--- Probans utf8_decodere invalidae ---
+......
+--- Probans utf8_decodere buffer vacuus ---
+.
+--- Probans utf8_numerare_runas ---
+....
+--- Probans utf8_proxima_runa ---
+...
+--- Probans utf8_prior_runa ---
+....
+--- Probans textum Gutenberg ---
+...
+--- Probans codere ---
+........................
+
+=== CREDO COMPENDIUM ===
+Totalis:    83
+Praeteriti: 83
+Fracti:     0
+
+Conditio: OMNIA PRAETERIERUNT
+=========================
+

@@ -1,0 +1,25 @@
+
+--- Probans grammaticam simplicem ---
+...........
+--- Probans grammaticam ambiguam (id + id * id) ---
+......  Fructus: 2 parsationes
+  Valor[0] = 20
+  Valor[1] = 14
+..
+--- Probans singulare id ---
+......
+--- Probans errorem (signum invalidum) ---
+....
+--- Probans id + id ---
+.....
+--- Probans tutelas NIHIL ---
+..
+
+=== CREDO COMPENDIUM ===
+Totalis:    36
+Praeteriti: 36
+Fracti:     0
+
+Conditio: OMNIA PRAETERIERUNT
+=========================
+

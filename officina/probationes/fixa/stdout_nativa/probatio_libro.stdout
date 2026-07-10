@@ -1,0 +1,21 @@
+--- Probans libro_creare ---
+....--- Probans libro_navigare_ad ---
+....--- Probans libro_pagina_proxima ---
+...--- Probans libro_pagina_prior ---
+...--- Probans libro_pagina_prior_ad_initium ---
+..--- Probans libro_historia ---
+.....--- Probans libro_nominare_pagina ---
+..--- Probans libro_navigare_ad_nomen ---
+....--- Probans libro_pagina_nova ---
+....--- Probans libro_pagina_currens ---
+...--- Probans libro_limites_index ---
+...
+
+=== CREDO COMPENDIUM ===
+Totalis:    37
+Praeteriti: 37
+Fracti:     0
+
+Conditio: OMNIA PRAETERIERUNT
+=========================
+

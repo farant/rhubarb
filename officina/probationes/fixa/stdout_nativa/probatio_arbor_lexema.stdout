@@ -1,0 +1,55 @@
+
+========================================
+PROBATIO ARBOR LEXEMA
+========================================
+
+--- C89 Keywords ---
+................................................................  Keywords: OK
+
+--- Identifiers ---
+..............  Identifiers: OK
+
+--- Integer Literals ---
+..........................  Integer Literals: OK
+
+--- Float Literals ---
+..................  Float Literals: OK
+
+--- String Literals ---
+............  String Literals: OK
+
+--- Character Literals ---
+..............  Character Literals: OK
+
+--- Operators ---
+......................................................................  Operators: OK
+
+--- Punctuation ---
+..........................  Punctuation: OK
+
+--- Trivia ---
+.................  Trivia: OK
+
+--- Position Tracking ---
+.........  Position Tracking: OK
+
+--- Token Sequence ---
+.......  Token Sequence: OK
+
+--- arbor_lexema_omnia ---
+........  arbor_lexema_omnia: OK
+
+--- arbor_lexema_genus_nomen ---
+....  arbor_lexema_genus_nomen: OK
+
+========================================
+
+=== CREDO COMPENDIUM ===
+Totalis:    289
+Praeteriti: 289
+Fracti:     0
+
+Conditio: OMNIA PRAETERIERUNT
+=========================
+
+========================================

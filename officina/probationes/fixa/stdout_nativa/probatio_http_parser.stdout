@@ -1,0 +1,103 @@
+
+========================================
+PROBATIONES HTTP PARSER
+========================================
+
+--- Probans methodus_ex_literis ---
+.........
+--- Probans parse GET simplex ---
+........  Methodus: GET
+  Via: /path
+
+--- Probans parse POST cum corpus ---
+........  Methodus: POST
+  Corpus: {"name":"Claudius","age":42}
+
+--- Probans parse cum quaestio ---
+......  URI: /search?q=test&lang=la
+  Via: /search
+  Quaestio: q=test&lang=la
+
+--- Probans parse headers ---
+....  Headers (4):
+    Host: api.example.com
+    Authorization: Bearer token123
+    Accept: application/json
+    User-Agent: Rhubarb/1.0
+
+--- Probans HTTP versio ---
+...  HTTP/1.0: versio=10, keep_alive=0
+...  HTTP/1.1: versio=11, keep_alive=1
+
+--- Probans Connection header ---
+..  1.1 + close: keep_alive=0
+..  1.0 + keep-alive: keep_alive=1
+
+--- Probans parser incrementalis ---
+...  Post pars1: completa=0
+..  Post pars2: completa=0
+..  Post pars3: completa=1
+...
+--- Probans omnes methodi ---
+..  GET: OK
+..  POST: OK
+..  PUT: OK
+..  DELETE: OK
+..  PATCH: OK
+..  HEAD: OK
+..  OPTIONS: OK
+
+--- Probans nullum argumenta ---
+......
+--- Probans status_descriptio ---
+...............  Omnes status descriptiones correctae
+
+--- Probans responsum_serialize simplex ---
+.....  Serialized (51 bytes):
+    HTTP/1.1 200 OK
+Content-Length: 12
+
+Hello World!
+
+--- Probans responsum_serialize 404 ---
+..  Status line correcta
+
+--- Probans responsum_serialize cum headers ---
+...  Custom headers inclusi
+
+--- Probans responsum_serialize sine corpus ---
+....  204 No Content correcte serialized
+
+--- Probans responsum_serialize NIHIL ---
+..  NIHIL handling correcte
+
+--- Probans parse sine URI ---
+  Parsed (URI: 'HTTP/1.1')
+
+--- Probans parse sine versio ---
+  Parsed (versio: 11)
+
+--- Probans parse header sine colon ---
+  successus=0, capita=0
+
+--- Probans parse vacua ---
+.  Empty input recte recusatum
+.  NIHIL input recte recusatum
+
+--- Probans Content-Length mismatch ---
+  Recte: petitio incompleta
+
+--- Probans URI longa ---
+  URI longa accepted (len=2001)
+
+
+=== CREDO COMPENDIUM ===
+Totalis:    108
+Praeteriti: 108
+Fracti:     0
+
+Conditio: OMNIA PRAETERIERUNT
+=========================
+
+========================================
+

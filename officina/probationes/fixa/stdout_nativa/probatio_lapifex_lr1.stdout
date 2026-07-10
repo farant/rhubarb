@@ -1,0 +1,276 @@
+
+--- Probans FOLLOW coniuncta ---
+....................
+=== FOLLOW Coniuncta ===
+  FOLLOW(expr) = {PLUS, RPAREN, EOF}
+  FOLLOW(term) = {PLUS, STAR, RPAREN, EOF}
+  FOLLOW(factor) = {PLUS, STAR, RPAREN, EOF}
+  FOLLOW(__initium__) = {$}
+
+--- Probans collectionem canonicam LR(1) ---
+...  Status: 23, Transitiones: 39
+..............................  Acceptum in statu 7
+.
+=== Collectio Canonica LR(1) ===
+Status: 23, Transitiones: 39
+
+--- Status 0 (17 res) ---
+  [expr -> . expr PLUS term, PLUS]
+  [expr -> . expr PLUS term, EOF]
+  [expr -> . term, PLUS]
+  [expr -> . term, EOF]
+  [term -> . term STAR factor, PLUS]
+  [term -> . term STAR factor, STAR]
+  [term -> . term STAR factor, EOF]
+  [term -> . factor, PLUS]
+  [term -> . factor, STAR]
+  [term -> . factor, EOF]
+  [factor -> . LPAREN expr RPAREN, PLUS]
+  [factor -> . LPAREN expr RPAREN, STAR]
+  [factor -> . LPAREN expr RPAREN, EOF]
+  [factor -> . NUMBER, PLUS]
+  [factor -> . NUMBER, STAR]
+  [factor -> . NUMBER, EOF]
+  [__initium__ -> . expr EOF, $]
+  -> expr -> Status 1
+  -> term -> Status 2
+  -> factor -> Status 3
+  -> LPAREN -> Status 4
+  -> NUMBER -> Status 5
+
+--- Status 1 (3 res) ---
+  [expr -> expr . PLUS term, PLUS]
+  [expr -> expr . PLUS term, EOF]
+  [__initium__ -> expr . EOF, $]
+  -> PLUS -> Status 6
+  -> EOF -> Status 7
+
+--- Status 2 (5 res) ---
+  [expr -> term ., PLUS]
+  [expr -> term ., EOF]
+  [term -> term . STAR factor, PLUS]
+  [term -> term . STAR factor, STAR]
+  [term -> term . STAR factor, EOF]
+  -> STAR -> Status 8
+
+--- Status 3 (3 res) ---
+  [term -> factor ., PLUS]
+  [term -> factor ., STAR]
+  [term -> factor ., EOF]
+
+--- Status 4 (19 res) ---
+  [expr -> . expr PLUS term, PLUS]
+  [expr -> . expr PLUS term, RPAREN]
+  [expr -> . term, PLUS]
+  [expr -> . term, RPAREN]
+  [term -> . term STAR factor, PLUS]
+  [term -> . term STAR factor, STAR]
+  [term -> . term STAR factor, RPAREN]
+  [term -> . factor, PLUS]
+  [term -> . factor, STAR]
+  [term -> . factor, RPAREN]
+  [factor -> . LPAREN expr RPAREN, PLUS]
+  [factor -> . LPAREN expr RPAREN, STAR]
+  [factor -> . LPAREN expr RPAREN, RPAREN]
+  [factor -> LPAREN . expr RPAREN, PLUS]
+  [factor -> LPAREN . expr RPAREN, STAR]
+  [factor -> LPAREN . expr RPAREN, EOF]
+  [factor -> . NUMBER, PLUS]
+  [factor -> . NUMBER, STAR]
+  [factor -> . NUMBER, RPAREN]
+  -> expr -> Status 9
+  -> term -> Status 10
+  -> factor -> Status 11
+  -> LPAREN -> Status 12
+  -> NUMBER -> Status 13
+
+--- Status 5 (3 res) ---
+  [factor -> NUMBER ., PLUS]
+  [factor -> NUMBER ., STAR]
+  [factor -> NUMBER ., EOF]
+
+--- Status 6 (14 res) ---
+  [expr -> expr PLUS . term, PLUS]
+  [expr -> expr PLUS . term, EOF]
+  [term -> . term STAR factor, PLUS]
+  [term -> . term STAR factor, STAR]
+  [term -> . term STAR factor, EOF]
+  [term -> . factor, PLUS]
+  [term -> . factor, STAR]
+  [term -> . factor, EOF]
+  [factor -> . LPAREN expr RPAREN, PLUS]
+  [factor -> . LPAREN expr RPAREN, STAR]
+  [factor -> . LPAREN expr RPAREN, EOF]
+  [factor -> . NUMBER, PLUS]
+  [factor -> . NUMBER, STAR]
+  [factor -> . NUMBER, EOF]
+  -> term -> Status 14
+  -> factor -> Status 3
+  -> LPAREN -> Status 4
+  -> NUMBER -> Status 5
+
+--- Status 7 (1 res) ---
+  [__initium__ -> expr EOF ., $]
+
+--- Status 8 (9 res) ---
+  [term -> term STAR . factor, PLUS]
+  [term -> term STAR . factor, STAR]
+  [term -> term STAR . factor, EOF]
+  [factor -> . LPAREN expr RPAREN, PLUS]
+  [factor -> . LPAREN expr RPAREN, STAR]
+  [factor -> . LPAREN expr RPAREN, EOF]
+  [factor -> . NUMBER, PLUS]
+  [factor -> . NUMBER, STAR]
+  [factor -> . NUMBER, EOF]
+  -> factor -> Status 15
+  -> LPAREN -> Status 4
+  -> NUMBER -> Status 5
+
+--- Status 9 (5 res) ---
+  [expr -> expr . PLUS term, PLUS]
+  [expr -> expr . PLUS term, RPAREN]
+  [factor -> LPAREN expr . RPAREN, PLUS]
+  [factor -> LPAREN expr . RPAREN, STAR]
+  [factor -> LPAREN expr . RPAREN, EOF]
+  -> PLUS -> Status 16
+  -> RPAREN -> Status 17
+
+--- Status 10 (5 res) ---
+  [expr -> term ., PLUS]
+  [expr -> term ., RPAREN]
+  [term -> term . STAR factor, PLUS]
+  [term -> term . STAR factor, STAR]
+  [term -> term . STAR factor, RPAREN]
+  -> STAR -> Status 18
+
+--- Status 11 (3 res) ---
+  [term -> factor ., PLUS]
+  [term -> factor ., STAR]
+  [term -> factor ., RPAREN]
+
+--- Status 12 (19 res) ---
+  [expr -> . expr PLUS term, PLUS]
+  [expr -> . expr PLUS term, RPAREN]
+  [expr -> . term, PLUS]
+  [expr -> . term, RPAREN]
+  [term -> . term STAR factor, PLUS]
+  [term -> . term STAR factor, STAR]
+  [term -> . term STAR factor, RPAREN]
+  [term -> . factor, PLUS]
+  [term -> . factor, STAR]
+  [term -> . factor, RPAREN]
+  [factor -> . LPAREN expr RPAREN, PLUS]
+  [factor -> . LPAREN expr RPAREN, STAR]
+  [factor -> . LPAREN expr RPAREN, RPAREN]
+  [factor -> LPAREN . expr RPAREN, PLUS]
+  [factor -> LPAREN . expr RPAREN, STAR]
+  [factor -> LPAREN . expr RPAREN, RPAREN]
+  [factor -> . NUMBER, PLUS]
+  [factor -> . NUMBER, STAR]
+  [factor -> . NUMBER, RPAREN]
+  -> expr -> Status 19
+  -> term -> Status 10
+  -> factor -> Status 11
+  -> LPAREN -> Status 12
+  -> NUMBER -> Status 13
+
+--- Status 13 (3 res) ---
+  [factor -> NUMBER ., PLUS]
+  [factor -> NUMBER ., STAR]
+  [factor -> NUMBER ., RPAREN]
+
+--- Status 14 (5 res) ---
+  [expr -> expr PLUS term ., PLUS]
+  [expr -> expr PLUS term ., EOF]
+  [term -> term . STAR factor, PLUS]
+  [term -> term . STAR factor, STAR]
+  [term -> term . STAR factor, EOF]
+  -> STAR -> Status 8
+
+--- Status 15 (3 res) ---
+  [term -> term STAR factor ., PLUS]
+  [term -> term STAR factor ., STAR]
+  [term -> term STAR factor ., EOF]
+
+--- Status 16 (14 res) ---
+  [expr -> expr PLUS . term, PLUS]
+  [expr -> expr PLUS . term, RPAREN]
+  [term -> . term STAR factor, PLUS]
+  [term -> . term STAR factor, STAR]
+  [term -> . term STAR factor, RPAREN]
+  [term -> . factor, PLUS]
+  [term -> . factor, STAR]
+  [term -> . factor, RPAREN]
+  [factor -> . LPAREN expr RPAREN, PLUS]
+  [factor -> . LPAREN expr RPAREN, STAR]
+  [factor -> . LPAREN expr RPAREN, RPAREN]
+  [factor -> . NUMBER, PLUS]
+  [factor -> . NUMBER, STAR]
+  [factor -> . NUMBER, RPAREN]
+  -> term -> Status 20
+  -> factor -> Status 11
+  -> LPAREN -> Status 12
+  -> NUMBER -> Status 13
+
+--- Status 17 (3 res) ---
+  [factor -> LPAREN expr RPAREN ., PLUS]
+  [factor -> LPAREN expr RPAREN ., STAR]
+  [factor -> LPAREN expr RPAREN ., EOF]
+
+--- Status 18 (9 res) ---
+  [term -> term STAR . factor, PLUS]
+  [term -> term STAR . factor, STAR]
+  [term -> term STAR . factor, RPAREN]
+  [factor -> . LPAREN expr RPAREN, PLUS]
+  [factor -> . LPAREN expr RPAREN, STAR]
+  [factor -> . LPAREN expr RPAREN, RPAREN]
+  [factor -> . NUMBER, PLUS]
+  [factor -> . NUMBER, STAR]
+  [factor -> . NUMBER, RPAREN]
+  -> factor -> Status 21
+  -> LPAREN -> Status 12
+  -> NUMBER -> Status 13
+
+--- Status 19 (5 res) ---
+  [expr -> expr . PLUS term, PLUS]
+  [expr -> expr . PLUS term, RPAREN]
+  [factor -> LPAREN expr . RPAREN, PLUS]
+  [factor -> LPAREN expr . RPAREN, STAR]
+  [factor -> LPAREN expr . RPAREN, RPAREN]
+  -> PLUS -> Status 16
+  -> RPAREN -> Status 22
+
+--- Status 20 (5 res) ---
+  [expr -> expr PLUS term ., PLUS]
+  [expr -> expr PLUS term ., RPAREN]
+  [term -> term . STAR factor, PLUS]
+  [term -> term . STAR factor, STAR]
+  [term -> term . STAR factor, RPAREN]
+  -> STAR -> Status 18
+
+--- Status 21 (3 res) ---
+  [term -> term STAR factor ., PLUS]
+  [term -> term STAR factor ., STAR]
+  [term -> term STAR factor ., RPAREN]
+
+--- Status 22 (3 res) ---
+  [factor -> LPAREN expr RPAREN ., PLUS]
+  [factor -> LPAREN expr RPAREN ., STAR]
+  [factor -> LPAREN expr RPAREN ., RPAREN]
+
+
+--- Probans statum 0 ---
+......  Status 0: 17 res
+
+--- Probans transitiones ex statu 0 ---
+...  Transitiones ex statu 0: 5
+.
+
+=== CREDO COMPENDIUM ===
+Totalis:    64
+Praeteriti: 64
+Fracti:     0
+
+Conditio: OMNIA PRAETERIERUNT
+=========================
+

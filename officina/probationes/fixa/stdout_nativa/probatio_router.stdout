@@ -1,0 +1,63 @@
+
+========================================
+PROBATIONES ROUTER
+========================================
+
+--- Probans creare ---
+..
+--- Probans adicere routas ---
+.........  Routae registratae: 4
+
+--- Probans omnes methodi ---
+.......  Omnes methodi registratae
+
+--- Probans matching exacta ---
+........  Matching exacta correcte
+
+--- Probans non-matching ---
+...  Non-matching correcte
+
+--- Probans matching pattern simplex ---
+.....  Pattern simplex: id=123
+
+--- Probans matching pattern multiplex ---
+.......  Pattern multiplex: user_id=42, post_id=7
+
+--- Probans matching mixed (exact + pattern) ---
+.......  Mixed matching correcte
+
+--- Probans param_obtinere_i32 ---
+...  id = 456 (expectatum 456)
+.
+--- Probans param non numericus ---
+....  Non-numeric param handled correcte
+
+--- Probans nullum argumenta ---
+.......
+--- Probans trailing slash ---
+...  Trailing slash handled
+
+--- Probans routa capacitas (CXXVIII max) ---
+...  Routae additae: 128
+..  Routa CXXIX recte recusata
+
+--- Probans duplicata routa ---
+.....  Duplicata handled (handler: 100)
+
+--- Probans via longa ---
+...  Via longa (250 chars) matched
+
+--- Probans via radix (/) ---
+....  Radix matched
+
+
+=== CREDO COMPENDIUM ===
+Totalis:    83
+Praeteriti: 83
+Fracti:     0
+
+Conditio: OMNIA PRAETERIERUNT
+=========================
+
+========================================
+
