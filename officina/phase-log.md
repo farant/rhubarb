@@ -492,3 +492,127 @@ whoever designs M2 machinula, recorded before they evaporate:
   poison-fill guards, classification-table runner, dispatch counters,
   -vestigium trace) + the origo→(fons,linea) distillation item (=
   indicium's line table born early). Feeds simulatio-4 + M2 INTENTIO.
+
+## M2 — INTENTIO (2026-07-09): machinula + conexio + builtins
+
+**Bar (per chunk, sealing at M2d): M2a the world LINKS (all cached
+lib moduli + test modulus, 0 load failures, trap stubs counted+named,
+$main found, relocations patched, hand-written .medulla loads) →
+M2b probatio_piscina GREEN interpreted (exit 0 + stdout
+byte-identical to native — the memory-model gate) → M2c Wave 0 GREEN
+(~65 suites, classification table honest) → M2d Waves 0+1 GREEN
+(~80 suites) = M2 SEALED = officina v1 execution shipped.**
+
+Design is ALREADY PAID: three grounding agents (loader surface, libc
+reality, suite composition) ran BEFORE simulatio-4; the sim
+pretend-built the pass (C1-C12 all have shipped answers); the
+16-DECISUS interview sealed every fork (officina-m2-interview.md);
+officina-m2-spec.md is the plan; officina-m2-diagnostica.md's six
+instruments are ADOPTED as first-class deliverables. This INTENTIO is
+execution planning.
+
+**Boundary decisions (recorded now):**
+- THREE new fontes modules + one instrument: officina_regio (owned
+  region), officina_conexio (linker/loader), officina_machinula
+  (interpreter + builtins), instrumenta/principalia/cursor.c +
+  cursor.sh (corpus runner; SEPARATE from fusor, which stays the
+  standing lowering gate). Vocabulary adds NOUNS ONLY (regio,
+  descriptor, ansa, cursor, vestigium, custos) — the sealed op
+  surface is untouched.
+- SILVA BOUNDARY: regio/conexio/machinula never touch silva types.
+  The origo→(fons,linea) distillation needs SilvaNodus descent + the
+  SilvaExpansio, so it lives SILVA-FACING-SIDE as a demissio-adjacent
+  helper producing a pure medulla-side line table (structure defined
+  in officina_medulla.h, no silva types) — consumed by machinula's
+  flight recorder without front-end coupling. Distillation runs while
+  the front-end is alive; per-TU pipeline = parse → sem → demissio →
+  distill → FREE front-end arenas (the 9.7GB-apex answer; moduli +
+  line tables resident, ~100MB-scale).
+- CONEXIO MODEL (sim C1-C6): global symbol table (tabula_dispersa +
+  friatio, names interned length-aware into a conexio piscina) + one
+  translation array per module; moduli IMMUTABLE (no instruction
+  rewriting). LINK THE WORLD (no per-suite manifests exist or are
+  computable — grounded). Lazy trap stubs for unresolved symbols
+  (fault-if-CALLED, sistere's posture at the link seam;
+  classification gains "builtin deest"). Function DESCRIPTORS: 16B
+  region-resident {s64 tag; functio ref} per functio — descriptor
+  address IS the fn-ptr value; tag = the M5 native seam. Extern-data
+  cells: stdin/stdout/stderr as opaque ansae (0/1/2; fopen returns
+  3+) + errno with bridge write-back (errno is on the WAVE-0 path —
+  entitas).
+- MACHINULA CONVENTIONS: width DECISUS = canonicalize on write (every
+  op writes a full 64-bit word extended per op-suffix signedness; f64
+  bit-pattern; reads take low bits — variadic bridge reads plain
+  words). Switch dispatch (C89 forbids computed goto; ceiling until
+  M5). Explicit stack check at vocare (breach = honest halt). exit =
+  halt-flag unwind; main's redde = process status. Builtins: STATIC
+  table, ALL calls through ONE chokepoint (the named v2 record/replay
+  seam — nothing built); public registration row deferred to M4.
+- REGIO: one large fixed-base mmap reservation (lazy commit), areas
+  globals|stack|heap; region-malloc = free-list, bases >=16-aligned
+  (piscina asserts real-pointer %16 == 0), malloc stays INDETERMINATE
+  (poison-fill under debug flag makes it recognizable, never zero);
+  in-region + alignment guards under the same flag. Deterministic
+  base = diffable runs = time-travel brick one.
+- DIAGNOSTICS FIRST-CLASS (diagnostica note): flight recorder ALWAYS
+  ON (fixed ring: functio/bloccus/instr-index; halt report = position
+  + registers + call stack + ring tail, file:line via line table, to
+  stderr); dispatch counters (per-op/per-functio/builtin-frequency/
+  memory high-water — the jump-table park's evidence); -vestigium
+  full trace as escalation; cursor rows = praeteriit | exitus
+  dissimilis | sistere(causa) | vitium VM | builtin deest(symbolum) |
+  tempus, PLUS the standing stdout byte-diff column vs pinned native
+  capture (pass-path proven deterministic; nondeterministic suites
+  get named exclusions).
+
+**Chunk M2a — regio + conexio + loader.** officina_regio
+(reservation, areas, region-malloc + guards); officina_conexio
+(global table + translations, placement per ordinatio, ADDITIVE
+relocation patching, descriptors, trap stubs, extern-data cells,
+line-table intake); distillation helper (silva-facing side);
+lector-fed loading of hand-written .medulla; per-op-family fixture
+suite BEGUN (~8-12 files — loading asserted here, execution at M2b);
+probatio_officina_regio.c + probatio_officina_conexio.c; manifest +
+officina.h rows + hospes per standing rule.
+
+**Chunk M2b — machinula core + Wave-0 floor.** Dispatch loop (all 35
+ops, width convention); frames + arca + stack check; flight recorder
++ halt report + counters; sistere runtime (halt w/ causa + position);
+exit/redde plumbing; builtin chokepoint + floor (malloc free strlen
+strcpy memcpy memset snprintf printf exit; %zu in the directive set;
+ansa cells wired; errno write-back mechanism); .medulla fixture suite
+COMPLETE + green (exit-value asserts); summa.medulla executes = the
+walking skeleton. BAR: probatio_piscina GREEN interpreted.
+
+**Chunk M2c — cursor + Wave-0 sweep.** cursor.c/cursor.sh
+(lower-once-cache-all pipeline, world-link per suite, classification
++ timing + stdout-diff columns, native capture pinning); remaining
+Wave-0 builtins AS THE TABLE PULLS THEM (strtol family + errno,
+fabs/sin/cos/pow/fmod/ldexp, atoi/atof/strtod, ctype,
+sprintf/fprintf); named exclusions recorded. BAR: Wave 0 GREEN.
+
+**Chunk M2d — Wave 1 + systema_posix + clausura.** File builtins
+(fopen family via ansa table, stat/mkdir/getcwd); the systema_posix
+pull (struct stat layout — the NAMED prerequisite; the 1,160
+POSIX-classified sistere sites are the honest signal); CWD = repo
+root + results/ + /tmp write paths verified; Wave-1b/2/3 + GUI +
+benchmark deferrals restated by name; M2 RELATIO + FULL phase-log
+audit (milestone rule) + M2 SEALED (spec-v2 §XI actuals; memory).
+
+**Parks updated at this INTENTIO:** variadic arg-width park
+DISSOLVED (canonicalize-on-write answers it); qsort-as-builtin
+re-parked to a knotapel wave (grounded: ZERO sites in Waves 0+1);
+jump tables await M2c counter data; descriptor enrichment → M5/vindex
+on real need; builtin record/replay → v2 (chokepoint is the door).
+
+**Named risks:** the corpus meets a THIRD new consumer — the
+corpus-contact law's data points are 3 (M0b) and 8 (M1b); budget the
+days at M2c, classify by CAUSE before theorizing. The seams law says
+surprises land at conexio↔medulla and machinula↔host-libc boundaries,
+not in the designs above — the classification table + flight recorder
+exist to make them cheap. snprintf bridge fidelity policed
+continuously by the stdout-diff column. Indeterminate-malloc
+divergence (a test accidentally depending on native garbage) = a
+CORPUS bug, surfaced honestly, poison makes it recognizable.
+arbor2_glr wall-clock: accept minutes, measure, no optimization
+before M2c data.
