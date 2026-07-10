@@ -297,6 +297,139 @@ MedullaModulus* medulla_textum_legere(OfficinaPiscina* piscina,
     OfficinaChorda textus, unsigned int* linea_erroris);
 
 /* ==================================================
+ * Lineae distillatae (M2a; proto-indicium M3)
+ *
+ * origo = CLAVIS OPACA (numquam dereferenda post liberationem
+ * frontis). Distillatio: demissio_lineas_colligere infra.
+ * ================================================== */
+
+typedef struct {
+    OfficinaPiscina* piscina;
+    OfficinaXar*     viae;    /* OfficinaChorda valore */
+    void*            lineae;  /* tabula interna (typus anonymus
+                               * vendicatus - void* pellucide,
+                               * exemplar Xar layout-exactum) */
+} MedullaLineae;
+
+MedullaLineae* medulla_lineas_creare(OfficinaPiscina* piscina);
+int medulla_lineam_ponere(MedullaLineae* lineae,
+    const struct SilvaNodus* origo, OfficinaChorda via,
+    unsigned int linea);
+/* via_out/linea_out NULL licent (probatio existentiae) */
+int medulla_lineam_quaerere(const MedullaLineae* lineae,
+    const struct SilvaNodus* origo, OfficinaChorda* via_out,
+    unsigned int* linea_out);
+
+/* ==================================================
+ * Regio (M2a): memoria possessa machinulae
+ *
+ * UNA reservatio mmap magna cum BASI FIXA (determinismus);
+ * areae globalia | stiva | acervus. Monstratores veri SUNT
+ * monstratores machinulae. UNA regio uno tempore (figura).
+ * ================================================== */
+
+typedef struct Regio Regio;
+
+Regio* regio_generare(OfficinaPiscina* piscina);
+void regio_destruere(Regio* regio);
+
+void* regio_basis(const Regio* regio);
+size_t regio_magnitudo_tota(const Regio* regio);
+int regio_continet(const Regio* regio, const void* locus);
+
+void regio_custodiam_ponere(Regio* regio, int custodia);
+int regio_custodia(const Regio* regio);
+
+void* regio_globalia_allocare(Regio* regio,
+    size_t magnitudo_octetorum, size_t ordinatio);
+size_t regio_globalia_usus(const Regio* regio);
+
+void* regio_stiva_initium(const Regio* regio);
+size_t regio_stiva_magnitudo_octetorum(const Regio* regio);
+
+void* regio_allocare(Regio* regio, size_t n);
+int regio_liberare(Regio* regio, void* locus);
+void* regio_reallocare(Regio* regio, void* locus, size_t n);
+
+size_t regio_acervus_usus(const Regio* regio);
+size_t regio_acervus_apex(const Regio* regio);
+size_t regio_numerus_allocationum(const Regio* regio);
+size_t regio_numerus_liberationum(const Regio* regio);
+
+/* ==================================================
+ * Conexio (M2a): nexor moduli medullae
+ *
+ * Tabula symbolorum globalis + translatio per modulum (moduli
+ * IMMUTABILES); nectere mundum; decipulae pigrae (ruunt solum
+ * si vocatae); descriptores 16-octetorum (inscriptio EST valor
+ * monstratoris functionis; signum = commissura nativa M5);
+ * relocatio ADDITIVA; cellae externae (ansae 0/1/2 + errno).
+ * ================================================== */
+
+typedef enum {
+    CONEXIO_SYMBOLUM_IGNOTUM = 0,
+    CONEXIO_SYMBOLUM_FUNCTIO,
+    CONEXIO_SYMBOLUM_DATUM,
+    CONEXIO_SYMBOLUM_CELLA,
+    CONEXIO_SYMBOLUM_DECIPULA
+} ConexioSymbolumGenus;
+
+#define CONEXIO_SIGNUM_INTERPRETATUM 1
+#define CONEXIO_SIGNUM_DECIPULA      2
+
+typedef struct {
+    long long signum;
+    long long index;
+} ConexioDescriptor;
+
+typedef struct {
+    OfficinaChorda titulus;
+    int            genus;
+    int            modulus_index;   /* -1 nullus */
+    int            index_localis;   /* -1 */
+    void*          sedes;
+} ConexioSymbolum;
+
+typedef struct {
+    MedullaFunctio* functio;
+    int             modulus_index;
+} ConexioFunctioNexa;
+
+typedef struct Conexio Conexio;
+
+Conexio* conexio_creare(OfficinaPiscina* piscina, Regio* regio);
+int conexio_modulum_addere(Conexio* conexio,
+    MedullaModulus* modulus);
+int conexio_nectere(Conexio* conexio);
+const OfficinaChorda* conexio_querela(const Conexio* conexio);
+const OfficinaChorda* conexio_querela_symbolum(
+    const Conexio* conexio);
+
+int conexio_symbolum_quaerere(const Conexio* conexio,
+    OfficinaChorda titulus);
+const ConexioSymbolum* conexio_symbolum_obtinere(
+    const Conexio* conexio, int index);
+unsigned int conexio_numerus_symbolorum(const Conexio* conexio);
+void* conexio_sedes_quaerere(const Conexio* conexio,
+    OfficinaChorda titulus);
+
+int conexio_symbolum_globale(const Conexio* conexio,
+    int modulus_index, int index_localis);
+const ConexioFunctioNexa* conexio_functionem_obtinere(
+    const Conexio* conexio, long long index);
+unsigned int conexio_numerus_functionum(const Conexio* conexio);
+
+unsigned int conexio_numerus_modulorum(const Conexio* conexio);
+const MedullaModulus* conexio_modulum_obtinere(
+    const Conexio* conexio, int index);
+
+unsigned int conexio_numerus_datorum(const Conexio* conexio);
+unsigned int conexio_numerus_cellarum(const Conexio* conexio);
+unsigned int conexio_numerus_decipularum(const Conexio* conexio);
+const OfficinaChorda* conexio_decipulam_obtinere(
+    const Conexio* conexio, int index);
+
+/* ==================================================
  * Demissio (M1b): arbor typata -> medulla
  *
  * Typi silvae TAG-SOLUM hic (officina.h sine silva.h manet);
@@ -313,5 +446,11 @@ struct SilvaSemantica;
 MedullaModulus* demissio_currere(OfficinaPiscina* piscina,
     const struct SilvaParsura* parsura,
     struct SilvaSemantica* sem, OfficinaChorda titulus_moduli);
+
+/* Distillatio linearum (M2a): DUM frons vivit (expansio
+ * necessaria); post hanc arbores liberari possunt. */
+MedullaLineae* demissio_lineas_colligere(OfficinaPiscina* piscina,
+    const MedullaModulus* modulus,
+    const struct SilvaParsura* parsura);
 
 #endif /* OFFICINA_H */

@@ -43,7 +43,6 @@ interior constans character* constans EXCLUDENDA_CHORDAE[] = {
     "_extrahere_verba",
     "chorda_aequalis",
     "chorda_aequalis_case_insensitivus",
-    "chorda_aequalis_literis",
     "chorda_camelus",
     "chorda_character_ad",
     "chorda_concatenare",
@@ -52,7 +51,6 @@ interior constans character* constans EXCLUDENDA_CHORDAE[] = {
     "chorda_ex_buffer",
     "chorda_ex_bytes_legibilis",
     "chorda_ex_f64",
-    "chorda_ex_literis",
     "chorda_ex_s32",
     "chorda_fissio",
     "chorda_fissio_chorda",
@@ -169,12 +167,16 @@ interior constans AmalgamaPlagula CORPORA_VENDICATA[] = {
 interior constans AmalgamaPlagula CAPITA_OFFICINAE[] = {
     { "officina/fontes/officina_medulla.h",        NIHIL, NIHIL, FALSUM, FALSUM },
     { "officina/fontes/officina_medulla_textus.h", NIHIL, NIHIL, FALSUM, FALSUM },
+    { "officina/fontes/officina_regio.h",          NIHIL, NIHIL, FALSUM, FALSUM },
+    { "officina/fontes/officina_conexio.h",        NIHIL, NIHIL, FALSUM, FALSUM },
     { "officina/fontes/officina_demissio.h",       NIHIL, NIHIL, FALSUM, FALSUM }
 };
 
 interior constans AmalgamaPlagula CORPORA_OFFICINAE[] = {
     { "officina/fontes/officina_medulla.c",        NIHIL, NIHIL, VERUM, FALSUM },
     { "officina/fontes/officina_medulla_textus.c", NIHIL, NIHIL, VERUM, FALSUM },
+    { "officina/fontes/officina_regio.c",          NIHIL, NIHIL, VERUM, FALSUM },
+    { "officina/fontes/officina_conexio.c",        NIHIL, NIHIL, VERUM, FALSUM },
     { "officina/fontes/officina_demissio.c",       NIHIL, NIHIL, VERUM, FALSUM }
 };
 
@@ -186,7 +188,10 @@ interior constans character* constans CADENDA_TYPEDEF[] = {
     "MedullaOperandum", "MedullaInstructio", "MedullaBloccus",
     "MedullaParametrum", "MedullaFunctio", "MedullaSymbolumGenus",
     "MedullaSymbolum", "MedullaRelocatio", "MedullaDatum",
-    "MedullaModulus", NIHIL
+    "MedullaModulus", "MedullaLineae",
+    "Regio",
+    "ConexioSymbolumGenus", "ConexioDescriptor", "ConexioSymbolum",
+    "ConexioFunctioNexa", "Conexio", NIHIL
 };
 
 interior constans character* constans CADENDA_DEFINITIO[] = {

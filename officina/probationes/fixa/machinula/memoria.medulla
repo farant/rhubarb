@@ -1,0 +1,32 @@
+; fixtura machinulae: memoria (arca/scribere/legere/copia; latitudo!)
+; exspectatum: $main -> 42
+; scribere.s32[0]=42; scribere.i8[4]=200 (non tangit [0]);
+; legere.i8 = 200 (zephyrum-extensum); legere.s16[8]=-6 (signum);
+; copia arcam alteram; 42+200-200+(-6)+6 = 42
+modulus "fixa/machinula/memoria.medulla"
+
+functio $main () -> s32
+@initium:
+    %p = arca 16, 8
+    scribere.s32 %p, 42
+    %q = addere.i64 %p, 4
+    scribere.i8 %q, 200
+    %r = addere.i64 %p, 8
+    %z = movere.s32 0
+    %neg = subtrahere.s32 %z, 6
+    scribere.s16 %r, %neg
+    %v1 = legere.s32 %p
+    %v2 = legere.i8 %q
+    %v3 = legere.s16 %r
+    %alter = arca 16, 8
+    copia %alter, %p, 16
+    %v4 = legere.s32 %alter
+    %t1 = addere.s32 %v1, %v2
+    %t2 = subtrahere.s32 %t1, 200
+    %t3 = addere.s32 %t2, %v3
+    %t4 = addere.s32 %t3, 6
+    %t5 = subtrahere.s32 %t4, %v1
+    %t6 = addere.s32 %t5, %v4
+    %t7 = subtrahere.s32 %t6, 42
+    %t8 = addere.s32 %t7, 42
+    redde %t8

@@ -235,6 +235,52 @@ s32 principale (vacuum)
         }
     }
 
+    /* distillatio linearum (M2a): origo -> (via, linea) */
+    {
+        chorda fons = _plagulam_legere(piscina,
+            "officina/probationes/fixa/scalaria.c");
+        SilvaParsura* parsura = silva_c89_parsare(piscina_silvae,
+            "probatio.c", (constans character*)fons.datum,
+            fons.mensura, NIHIL);
+        SilvaSemantica* sem;
+        MedullaModulus* modulus;
+        MedullaLineae* lineae;
+
+        imprimere("\n--- Probans distillationem linearum ---\n");
+        CREDO_NON_NIHIL (parsura);
+        sem = silva_c89_semantica_analysare(piscina_silvae, parsura);
+        CREDO_NON_NIHIL (sem);
+        modulus = demissio_currere(piscina, parsura, sem,
+            _ch("scalaria.c"));
+        CREDO_NON_NIHIL (modulus);
+        lineae = demissio_lineas_colligere(piscina, modulus,
+            parsura);
+        CREDO_NON_NIHIL (lineae);
+        si (modulus != NIHIL && lineae != NIHIL)
+        {
+            MedullaFunctio** functio =
+                (MedullaFunctio**)xar_obtinere(modulus->functiones,
+                    ZEPHYRUM);
+            constans MedullaBloccus* bloccus =
+                medulla_bloccum_obtinere(*functio, ZEPHYRUM);
+            constans MedullaInstructio* instructio =
+                (constans MedullaInstructio*)xar_obtinere(
+                    bloccus->instructiones, ZEPHYRUM);
+            chorda via;
+            i32 linea = ZEPHYRUM;
+
+            CREDO_NON_NIHIL ((constans vacuum*)instructio->origo);
+            CREDO_VERUM (medulla_lineam_quaerere(lineae,
+                instructio->origo, &via, &linea));
+            CREDO_VERUM (linea > ZEPHYRUM);
+            CREDO_VERUM (chorda_aequalis_literis(via, "probatio.c"));
+            /* origo alienum -> FALSUM */
+            CREDO_FALSUM (medulla_lineam_quaerere(lineae,
+                (constans structura SilvaNodus*)(constans vacuum*)
+                    &via, NIHIL, NIHIL));
+        }
+    }
+
     credo_imprimere_compendium();
     praeteritus = credo_omnia_praeterierunt();
     silva_piscina_destruere(piscina_silvae);

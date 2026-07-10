@@ -43,3 +43,16 @@
   firing). $summa built via the fabrica matches vocabularium §VIII
   shape: IV blocci, III/II/III/I instructiones, terminator
   discipline verified positive and negative.
+
+## 2026-07-10 — M2a: MedullaLineae
+
+Distilled line table added medulla-side (structure + ponere/quaerere;
+collector is demissio's — it needs the living front-end). Keys =
+origo pointer BYTES via tabula_dispersa (DemissioIntroitus pattern);
+values carry interned via-index + linea. Amalgam note: the public
+MedullaLineae field for the internal table is `void*` in officina.h —
+TabulaDispersa is an ANONYMOUS-struct typedef (no tag to
+forward-reference; a forward `typedef struct X X;` COLLIDES with the
+vendored anonymous typedef in the amalgam TU — the Xar landmine's
+sibling, solved the opposite way: void* + implicit C89 conversion
+instead of a layout copy, since medulla.c never touches members).

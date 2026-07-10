@@ -1,0 +1,37 @@
+; fixtura machinulae: conversiones (.FONS.FINIS; signum a FONTE)
+; exspectatum: $main -> 42
+; amputare.s64.s32(2^32+42) = 42
+; extendere.i32.i64(-1 ut i32) >> 32 = 0 (extensio zephyri!)
+; extendere.s32.s64(-1) aequalis -1 = 1 (extensio signi)
+; 42*1+0 = 42 | fluitans: integrare(21.0+21.0)=42; (42+42)/2=42
+; f32: integrare(artare(dilatare(2.0)))=2; 42*2/2=42
+modulus "fixa/machinula/conversiones.medulla"
+
+functio $main () -> s32
+@initium:
+    %magnus = movere.s64 4294967338
+    %t1 = amputare.s64.s32 %magnus
+    %z = movere.s32 0
+    %neg = subtrahere.s32 %z, 1
+    %zx = extendere.i32.i64 %neg
+    %t2 = dextrorsum.i64 %zx, 32
+    %t3 = amputare.i64.i32 %t2
+    %sx = extendere.s32.s64 %neg
+    %zl = movere.s64 0
+    %negl = subtrahere.s64 %zl, 1
+    %t4 = aequalis.s64 %sx, %negl
+    %t5 = multiplicare.s32 %t1, %t4
+    %t6 = addere.s32 %t5, %t3
+    %f1 = fluitare.s32.f64 21
+    %f2 = addere.f64 %f1, 21.0
+    %t7 = integrare.f64.s32 %f2
+    %t8 = addere.s32 %t6, %t7
+    %t9 = dividere.s32 %t8, 2
+    %g1 = movere.f32 2.0
+    %g2 = dilatare.f32.f64 %g1
+    %g3 = artare.f64.f32 %g2
+    %g4 = dilatare.f32.f64 %g3
+    %t10 = integrare.f64.s32 %g4
+    %t11 = multiplicare.s32 %t9, %t10
+    %t12 = dividere.s32 %t11, 2
+    redde %t12

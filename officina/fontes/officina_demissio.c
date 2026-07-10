@@ -62,6 +62,9 @@ nomen structura {
     TabulaDispersa*         lexemata;     /* SilvaToken* -> symbolum */
     TabulaDispersa*         sedes;        /* symbolum -> DemissioSedes* */
     TabulaDispersa*         capti;        /* symbola inscriptione capta */
+    chorda                  stirps;       /* "lib/chorda.c" ->
+                                           * "chorda_c" (praefixum
+                                           * staticorum plagulae) */
 } Demissio;
 
 /* prototypa mutuae recursionis */
@@ -462,6 +465,75 @@ _bloccum_novum (Demissio* d, constans character* basis)
 {
     redde medulla_bloccum_creare(d->functio,
         _titulum_fingere(d, basis));
+}
+
+/* stirps moduli: "lib/chorda.c" -> "chorda_c" (vocabularium §II).
+ * Inventum M2a in primo contactu nexus mundi: sine praefixo statica
+ * plagulae + data anonyma trans modulos collidunt (M1b eas videre
+ * non potuit - demissio solitaria numquam collidit). */
+interior chorda
+_stirpem_computare (Piscina* piscina, chorda titulus_moduli)
+{
+    i8 littera[LXIV];
+    i32 initium = ZEPHYRUM;
+    i32 scriptum = ZEPHYRUM;
+    i32 i;
+    chorda s;
+
+    per (i = ZEPHYRUM; i < titulus_moduli.mensura; i++)
+    {
+        si (titulus_moduli.datum[i] == (i8)'/')
+        {
+            initium = i + I;
+        }
+    }
+    per (i = initium; i < titulus_moduli.mensura
+        && scriptum < (i32)(LXIV - I); i++)
+    {
+        i8 c = titulus_moduli.datum[i];
+        b32 idoneus = (b32)((c >= (i8)'a' && c <= (i8)'z')
+            || (c >= (i8)'A' && c <= (i8)'Z')
+            || (c >= (i8)'0' && c <= (i8)'9')
+            || c == (i8)'_');
+
+        littera[scriptum] = idoneus ? c : (i8)'_';
+        scriptum++;
+    }
+    s.datum = littera;
+    s.mensura = scriptum;
+    redde chorda_transcribere(s, piscina);
+}
+
+/* titulus symboli globalis - CANALIS UNICUS definitionis ET
+ * referentiarum (aliter nexus frangitur): statica plagulae
+ * (profunditas 0 + REPOSITIO_STATICA) praefixum stirpis accipiunt
+ * ($stirps.titulus); externa titulum nudum servant. */
+interior chorda
+_titulum_symboli (Demissio* d, constans SemanticaSymbolum* symbolum)
+{
+    chorda titulus = _ch_de_silva(symbolum->titulus);
+
+    si (symbolum->profunditas > ZEPHYRUM
+        || (symbolum->repositio & REPOSITIO_STATICA) == ZEPHYRUM)
+    {
+        redde titulus;
+    }
+    {
+        i8 littera[CXXVIII];
+        chorda plenus;
+        i32 caput_s = (d->stirps.mensura < XL)
+            ? d->stirps.mensura : XL;
+        i32 caput_t = (titulus.mensura < LXXX)
+            ? titulus.mensura : LXXX;
+
+        memcpy(littera, d->stirps.datum, (memoriae_index)caput_s);
+        littera[caput_s] = (i8)'.';
+        memcpy(littera + caput_s + I, titulus.datum,
+            (memoriae_index)caput_t);
+        plenus.datum = littera;
+        plenus.mensura = caput_s + I + caput_t;
+        redde chorda_transcribere(plenus, d->piscina);
+    }
 }
 
 interior b32
@@ -923,12 +995,17 @@ _datum_invenire_aut_creare (Demissio* d, chorda titulus,
         (i32)ordinatio);
 }
 
+/* data anonyma per se privata moduli sunt -> praefixum stirpis
+ * semper ($stirps.chorda_N; inventum M2a: sine eo chorda_0 in
+ * omnibus modulis collidit) */
 interior chorda
 _titulum_dati (Demissio* d, constans character* basis)
 {
-    character littera[XLVIII];
+    character littera[CXXVIII];
     chorda temporarium;
-    s32 longitudo = (s32)sprintf(littera, "%s_%d", basis,
+    s32 longitudo = (s32)sprintf(littera, "%.*s.%s_%d",
+        (int)((d->stirps.mensura < XL) ? d->stirps.mensura : XL),
+        (constans character*)d->stirps.datum, basis,
         (int)d->numerator_datorum);
 
     d->numerator_datorum++;
@@ -1009,7 +1086,7 @@ _locum_staticum (Demissio* d, constans SilvaNodus* nodus,
             redde FALSUM;   /* localia non statice */
         }
         *symbolum_fructus = medulla_symbolum_internare(d->modulus,
-            _ch_de_silva(symbolum->titulus));
+            _titulum_symboli(d, symbolum));
         *addendum_fructus = 0;
         redde *symbolum_fructus >= ZEPHYRUM;
     }
@@ -1540,7 +1617,7 @@ _identificatorem (Demissio* d, constans SilvaNodus* nodus)
     }
     {
         s32 index_symboli = medulla_symbolum_internare(d->modulus,
-            _ch_de_silva(symbolum->titulus));
+            _titulum_symboli(d, symbolum));
         s32 inscriptio = _em(d, nodus, MEDULLA_OP_LOCUS,
             MEDULLA_TYPUS_NIHIL, MEDULLA_TYPUS_NIHIL,
             _registrum_temporarium(d),
@@ -2230,7 +2307,7 @@ _vocationem (Demissio* d, constans SilvaNodus* nodus)
         {
             vocatus = medulla_op_symbolum(
                 medulla_symbolum_internare(d->modulus,
-                    _ch_de_silva(symbolum->titulus)));
+                    _titulum_symboli(d, symbolum)));
         }
     }
     si (vocatus.genus == (s32)MEDULLA_OPERANDUM_NIHIL)
@@ -2694,7 +2771,7 @@ _ut_locum (Demissio* d, constans SilvaNodus* nodus)
         /* globale */
         {
             s32 index_symboli = medulla_symbolum_internare(
-                d->modulus, _ch_de_silva(symbolum->titulus));
+                d->modulus, _titulum_symboli(d, symbolum));
 
             locus.directum = FALSUM;
             locus.index = _em(d, nodus, MEDULLA_OP_LOCUS,
@@ -3071,7 +3148,7 @@ interior vacuum
 _staticum_locale (Demissio* d, constans SemanticaSymbolum* symbolum,
     constans SilvaNodus* nodus, constans SilvaNodus* initiator)
 {
-    character littera[LXIV];
+    character littera[CXXVIII];
     chorda titulus;
     i32 scriptum = ZEPHYRUM;
     i32 caput_f;
@@ -3085,10 +3162,10 @@ _staticum_locale (Demissio* d, constans SemanticaSymbolum* symbolum,
         _sistere(d, nodus, "forma statici localis ignota");
         redde;
     }
-    caput_f = (d->functio->titulus.mensura < XXIV)
-        ? (i32)d->functio->titulus.mensura : XXIV;
-    caput_s = (symbolum->titulus.mensura < XXIV)
-        ? (i32)symbolum->titulus.mensura : XXIV;
+    caput_f = (d->functio->titulus.mensura < XL)
+        ? (i32)d->functio->titulus.mensura : XL;
+    caput_s = (symbolum->titulus.mensura < XL)
+        ? (i32)symbolum->titulus.mensura : XL;
     memcpy(littera, d->functio->titulus.datum,
         (memoriae_index)caput_f);
     scriptum = caput_f;
@@ -3107,7 +3184,7 @@ _staticum_locale (Demissio* d, constans SemanticaSymbolum* symbolum,
     si (medulla_symbolum_obtinere(d->modulus, index_symboli)->genus
         != (s32)MEDULLA_SYMBOLUM_EXTERNUM)
     {
-        character alterum[LXXX];
+        character alterum[CXXVIII];
         chorda secunda;
         s32 n = (s32)sprintf(alterum, "%.*s_%d", (int)scriptum,
             littera, (int)d->numerator_datorum);
@@ -4063,7 +4140,7 @@ _functionem (Demissio* d, constans SilvaNodus* nodus)
         reditus_aggregatus = VERUM;
     }
     d->functio = medulla_functionem_creare(d->modulus,
-        _ch_de_silva(symbolum->titulus),
+        _titulum_symboli(d, symbolum),
         (mt_reditus >= ZEPHYRUM) ? mt_reditus : MEDULLA_TYPUS_NIHIL,
         typus_functionis->datum.functio.est_variadica);
     si (d->functio == NIHIL)
@@ -4371,7 +4448,7 @@ _data_globalia (Demissio* d, constans SilvaNodus* nodus)
             perge;
         }
         datum = _datum_invenire_aut_creare(d,
-            _ch_de_silva(symbolum->titulus), mensura,
+            _titulum_symboli(d, symbolum), mensura,
             _ordinatio_typi(d, symbolum->typus));
         si (datum == NIHIL)
         {
@@ -4459,6 +4536,7 @@ demissio_currere (Piscina* piscina, constans SilvaParsura* parsura,
     memset(&d, ZEPHYRUM, magnitudo(Demissio));
     d.piscina = piscina;
     d.sem = sem;
+    d.stirps = _stirpem_computare(piscina, titulus_moduli);
     d.modulus = medulla_modulum_creare(piscina, titulus_moduli);
     d.bloccus = -I;
     d.frange_finis = -I;
@@ -4515,4 +4593,136 @@ demissio_currere (Piscina* piscina, constans SilvaParsura* parsura,
         silva_piscina_destruere(d.piscina_silvae);
     }
     redde d.modulus;
+}
+
+/* ==================================================
+ * Distillatio linearum (M2a) - vide caput
+ * ================================================== */
+
+/* lexema primum verum subarboris (byte_offset -1 = syntheticum -
+ * praetermittitur; fusor _linea_nodi cognatum) */
+interior constans SilvaToken*
+_lexema_primum (constans SilvaNodus* nodus, i32 profunditas)
+{
+    i32 i;
+
+    si (nodus == NIHIL || profunditas > XXXII)
+    {
+        redde NIHIL;
+    }
+    per (i = ZEPHYRUM; i < (i32)nodus->numerus_locorum; i++)
+    {
+        constans SilvaValor* v = &nodus->loci[i];
+
+        si (v->genus == SILVA_VALOR_TOKEN && v->datum.token != NIHIL
+            && v->datum.token->byte_offset != -I)
+        {
+            redde v->datum.token;
+        }
+        si (v->genus == SILVA_VALOR_NODUS)
+        {
+            constans SilvaToken* lexema = _lexema_primum(
+                v->datum.nodus, profunditas + I);
+
+            si (lexema != NIHIL)
+            {
+                redde lexema;
+            }
+        }
+    }
+    redde NIHIL;
+}
+
+interior vacuum
+_lineam_colligere (MedullaLineae* lineae,
+    constans SilvaParsura* parsura,
+    constans structura SilvaNodus* origo)
+{
+    constans SilvaToken* lexema;
+    chorda via;
+
+    si (origo == NIHIL
+        || medulla_lineam_quaerere(lineae, origo, NIHIL, NIHIL))
+    {
+        redde;
+    }
+    lexema = _lexema_primum((constans SilvaNodus*)origo, ZEPHYRUM);
+    si (lexema == NIHIL)
+    {
+        redde;
+    }
+    via.datum = NIHIL;
+    via.mensura = ZEPHYRUM;
+    si (parsura->expansio != NIHIL)
+    {
+        constans SilvaChorda* via_s = silva_fons_via(
+            parsura->expansio, lexema->fons_index);
+
+        si (via_s != NIHIL)
+        {
+            via = _ch_de_silva(*via_s);
+        }
+    }
+    (vacuum)medulla_lineam_ponere(lineae, origo, via,
+        (i32)lexema->linea);
+}
+
+MedullaLineae*
+demissio_lineas_colligere (Piscina* piscina,
+    constans MedullaModulus* modulus,
+    constans SilvaParsura* parsura)
+{
+    MedullaLineae* lineae;
+    i32 f;
+    i32 numerus_functionum;
+    i32 numerus_datorum;
+
+    si (piscina == NIHIL || modulus == NIHIL || parsura == NIHIL)
+    {
+        redde NIHIL;
+    }
+    lineae = medulla_lineas_creare(piscina);
+    si (lineae == NIHIL)
+    {
+        redde NIHIL;
+    }
+
+    numerus_functionum = xar_numerus(modulus->functiones);
+    per (f = ZEPHYRUM; f < numerus_functionum; f++)
+    {
+        constans MedullaFunctio* functio =
+            *(MedullaFunctio**)xar_obtinere(modulus->functiones,
+                (i32)f);
+        i32 b;
+        i32 numerus_bloccorum = xar_numerus(functio->blocci);
+
+        _lineam_colligere(lineae, parsura, functio->origo);
+        per (b = ZEPHYRUM; b < numerus_bloccorum; b++)
+        {
+            constans MedullaBloccus* bloccus =
+                (constans MedullaBloccus*)xar_obtinere(
+                    functio->blocci, (i32)b);
+            i32 n = xar_numerus(bloccus->instructiones);
+            i32 k;
+
+            per (k = ZEPHYRUM; k < n; k++)
+            {
+                constans MedullaInstructio* instructio =
+                    (constans MedullaInstructio*)xar_obtinere(
+                        bloccus->instructiones, (i32)k);
+
+                _lineam_colligere(lineae, parsura,
+                    instructio->origo);
+            }
+        }
+    }
+    numerus_datorum = xar_numerus(modulus->data);
+    per (f = ZEPHYRUM; f < numerus_datorum; f++)
+    {
+        constans MedullaDatum* datum =
+            *(MedullaDatum**)xar_obtinere(modulus->data, (i32)f);
+
+        _lineam_colligere(lineae, parsura, datum->origo);
+    }
+    redde lineae;
 }

@@ -1,0 +1,21 @@
+; fixtura machinulae: bitalia (et/vel/aut/complementum/gyri)
+; exspectatum: $main -> 42
+; (240&60)=48; 48|15=63; 63^21=42; ~~42=42; (42<<2)>>2=42;
+; gyrus arithmeticus: (-8)>>1 = -4; -4+4=0; 42+0=42
+modulus "fixa/machinula/bitalia.medulla"
+
+functio $main () -> s32
+@initium:
+    %t1 = et.i32 240, 60
+    %t2 = vel.i32 %t1, 15
+    %t3 = aut.i32 %t2, 21
+    %t4 = complementum.i32 %t3
+    %t5 = complementum.i32 %t4
+    %t6 = sinistrorsum.i32 %t5, 2
+    %t7 = dextrorsum.i32 %t6, 2
+    %z = movere.s32 0
+    %n = subtrahere.s32 %z, 8
+    %t8 = dextrorsum.s32 %n, 1
+    %t9 = addere.s32 %t8, 4
+    %t10 = addere.s32 %t7, %t9
+    redde %t10

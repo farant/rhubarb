@@ -621,3 +621,149 @@ medulla_relocationem_addere (MedullaDatum* datum, i32 offset,
     relocatio->symbolum = symbolum;
     redde VERUM;
 }
+
+/* ==================================================
+ * Lineae distillatae (M2a) - clavis = octeti monstratoris origo
+ * (numquam dereferendus - pattern DemissioIntroitus)
+ * ================================================== */
+
+nomen structura {
+    i8  clavis_octeti[magnitudo(vacuum*)];
+    s32 via_index;
+    i32 linea;
+} LineaIntroitus;
+
+MedullaLineae*
+medulla_lineas_creare (Piscina* piscina)
+{
+    MedullaLineae* lineae;
+
+    si (piscina == NIHIL)
+    {
+        redde NIHIL;
+    }
+    lineae = (MedullaLineae*)piscina_allocare(piscina,
+        magnitudo(MedullaLineae));
+    si (lineae == NIHIL)
+    {
+        redde NIHIL;
+    }
+    lineae->piscina = piscina;
+    lineae->viae = xar_creare(piscina, (i32)magnitudo(chorda));
+    lineae->lineae = tabula_dispersa_creare_chorda(piscina, CCLVI);
+    si (lineae->viae == NIHIL || lineae->lineae == NIHIL)
+    {
+        redde NIHIL;
+    }
+    redde lineae;
+}
+
+interior s32
+_viam_internare (MedullaLineae* lineae, chorda via)
+{
+    i32 i;
+    i32 numerus = xar_numerus(lineae->viae);
+    chorda* sedes;
+
+    per (i = ZEPHYRUM; i < numerus; i++)
+    {
+        constans chorda* nota = (constans chorda*)xar_obtinere(
+            lineae->viae, i);
+
+        si (nota->mensura == via.mensura
+            && (via.mensura == ZEPHYRUM
+                || memcmp(nota->datum, via.datum,
+                       (memoriae_index)via.mensura) == ZEPHYRUM))
+        {
+            redde (s32)i;
+        }
+    }
+    sedes = (chorda*)xar_addere(lineae->viae);
+    si (sedes == NIHIL)
+    {
+        redde -I;
+    }
+    *sedes = chorda_transcribere(via, lineae->piscina);
+    redde (s32)numerus;
+}
+
+b32
+medulla_lineam_ponere (MedullaLineae* lineae,
+    constans structura SilvaNodus* origo, chorda via, i32 linea)
+{
+    LineaIntroitus* introitus;
+    chorda clavis;
+    s32 via_index;
+
+    si (lineae == NIHIL || origo == NIHIL)
+    {
+        redde FALSUM;
+    }
+    si (medulla_lineam_quaerere(lineae, origo, NIHIL, NIHIL))
+    {
+        redde VERUM;   /* iam distillata */
+    }
+    via_index = _viam_internare(lineae, via);
+    si (via_index < ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    introitus = (LineaIntroitus*)piscina_allocare(lineae->piscina,
+        magnitudo(LineaIntroitus));
+    si (introitus == NIHIL)
+    {
+        redde FALSUM;
+    }
+    memcpy(introitus->clavis_octeti, &origo,
+        magnitudo(introitus->clavis_octeti));
+    introitus->via_index = via_index;
+    introitus->linea = linea;
+    clavis.datum = introitus->clavis_octeti;
+    clavis.mensura = (i32)magnitudo(introitus->clavis_octeti);
+    redde tabula_dispersa_inserere(lineae->lineae, clavis,
+        (vacuum*)introitus);
+}
+
+b32
+medulla_lineam_quaerere (constans MedullaLineae* lineae,
+    constans structura SilvaNodus* origo, chorda* via_out,
+    i32* linea_out)
+{
+    i8 octeti[magnitudo(vacuum*)];
+    chorda clavis;
+    vacuum* valor = NIHIL;
+    constans LineaIntroitus* introitus;
+
+    si (lineae == NIHIL || origo == NIHIL)
+    {
+        redde FALSUM;
+    }
+    memcpy(octeti, &origo, magnitudo(octeti));
+    clavis.datum = octeti;
+    clavis.mensura = (i32)magnitudo(octeti);
+    si (!tabula_dispersa_invenire(lineae->lineae, clavis, &valor))
+    {
+        redde FALSUM;
+    }
+    introitus = (constans LineaIntroitus*)valor;
+    si (via_out != NIHIL)
+    {
+        constans chorda* via = (constans chorda*)xar_obtinere(
+            lineae->viae, (i32)introitus->via_index);
+
+        si (via != NIHIL)
+        {
+            *via_out = *via;
+        }
+        alioquin
+        {
+            via_out->datum = NIHIL;
+            via_out->mensura = ZEPHYRUM;
+        }
+    }
+    si (linea_out != NIHIL)
+    {
+        *linea_out = introitus->linea;
+    }
+    redde VERUM;
+}

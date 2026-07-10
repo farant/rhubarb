@@ -30,4 +30,13 @@ MedullaModulus* demissio_currere (Piscina* piscina,
     constans SilvaParsura* parsura, SilvaSemantica* sem,
     chorda titulus_moduli);
 
+/* Distillatio linearum (M2a): origo -> (via, linea) DUM frons vivit
+ * (parsura->expansio necessaria pro viis fontium; nulla via publica
+ * post liberationem). Post hanc arbores liberari possunt - clavis
+ * origo opaca manet. Consumptor: recordator volatus (M2b);
+ * proto-indicium (M3). */
+MedullaLineae* demissio_lineas_colligere (Piscina* piscina,
+    constans MedullaModulus* modulus,
+    constans SilvaParsura* parsura);
+
 #endif /* OFFICINA_DEMISSIO_H */

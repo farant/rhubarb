@@ -29,6 +29,7 @@
 #include "piscina.h"
 #include "chorda.h"
 #include "xar.h"
+#include "tabula_dispersa.h"
 
 /* provenientia - silva.h NON requiritur (tag solum; demissio
  * plena silva.h includet) */
@@ -290,5 +291,29 @@ b32 medulla_datum_scribere (MedullaDatum* datum, i32 offset,
 /* locellus relocationis = 8 octeti intra imaginem */
 b32 medulla_relocationem_addere (MedullaDatum* datum, i32 offset,
     s32 symbolum);
+
+/* ==================================================
+ * Lineae distillatae (M2a; proto-indicium M3)
+ *
+ * origo (SilvaNodus*, CLAVIS OPACA - numquam dereferenda post
+ * liberationem frontis) -> (via fontis, linea). Distillatio in
+ * demissio_lineas_colligere DUM frons vivit; postea arbores
+ * liberari possunt (responsum apici 9.7GB). Consumptor: recordator
+ * volatus machinulae (M2b).
+ * ================================================== */
+
+nomen structura {
+    Piscina*        piscina;
+    Xar*            viae;     /* chorda valore (viae fontium unicae) */
+    TabulaDispersa* lineae;   /* octeti monstratoris -> introitus */
+} MedullaLineae;
+
+MedullaLineae* medulla_lineas_creare (Piscina* piscina);
+b32 medulla_lineam_ponere (MedullaLineae* lineae,
+    constans structura SilvaNodus* origo, chorda via, i32 linea);
+/* via_out/linea_out NIHIL licent (probatio existentiae) */
+b32 medulla_lineam_quaerere (constans MedullaLineae* lineae,
+    constans structura SilvaNodus* origo, chorda* via_out,
+    i32* linea_out);
 
 #endif /* OFFICINA_MEDULLA_H */

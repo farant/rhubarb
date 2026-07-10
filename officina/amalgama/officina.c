@@ -14,6 +14,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <ctype.h>
+#include <sys/mman.h>
 
 /* ================= officina.h (verbatim) ================= */
 /* officina.h - Medulla: IR registrorum linearis (interfacies publica)
@@ -315,6 +316,139 @@ MedullaModulus* medulla_textum_legere(OfficinaPiscina* piscina,
     OfficinaChorda textus, unsigned int* linea_erroris);
 
 /* ==================================================
+ * Lineae distillatae (M2a; proto-indicium M3)
+ *
+ * origo = CLAVIS OPACA (numquam dereferenda post liberationem
+ * frontis). Distillatio: demissio_lineas_colligere infra.
+ * ================================================== */
+
+typedef struct {
+    OfficinaPiscina* piscina;
+    OfficinaXar*     viae;    /* OfficinaChorda valore */
+    void*            lineae;  /* tabula interna (typus anonymus
+                               * vendicatus - void* pellucide,
+                               * exemplar Xar layout-exactum) */
+} MedullaLineae;
+
+MedullaLineae* medulla_lineas_creare(OfficinaPiscina* piscina);
+int medulla_lineam_ponere(MedullaLineae* lineae,
+    const struct SilvaNodus* origo, OfficinaChorda via,
+    unsigned int linea);
+/* via_out/linea_out NULL licent (probatio existentiae) */
+int medulla_lineam_quaerere(const MedullaLineae* lineae,
+    const struct SilvaNodus* origo, OfficinaChorda* via_out,
+    unsigned int* linea_out);
+
+/* ==================================================
+ * Regio (M2a): memoria possessa machinulae
+ *
+ * UNA reservatio mmap magna cum BASI FIXA (determinismus);
+ * areae globalia | stiva | acervus. Monstratores veri SUNT
+ * monstratores machinulae. UNA regio uno tempore (figura).
+ * ================================================== */
+
+typedef struct Regio Regio;
+
+Regio* regio_generare(OfficinaPiscina* piscina);
+void regio_destruere(Regio* regio);
+
+void* regio_basis(const Regio* regio);
+size_t regio_magnitudo_tota(const Regio* regio);
+int regio_continet(const Regio* regio, const void* locus);
+
+void regio_custodiam_ponere(Regio* regio, int custodia);
+int regio_custodia(const Regio* regio);
+
+void* regio_globalia_allocare(Regio* regio,
+    size_t magnitudo_octetorum, size_t ordinatio);
+size_t regio_globalia_usus(const Regio* regio);
+
+void* regio_stiva_initium(const Regio* regio);
+size_t regio_stiva_magnitudo_octetorum(const Regio* regio);
+
+void* regio_allocare(Regio* regio, size_t n);
+int regio_liberare(Regio* regio, void* locus);
+void* regio_reallocare(Regio* regio, void* locus, size_t n);
+
+size_t regio_acervus_usus(const Regio* regio);
+size_t regio_acervus_apex(const Regio* regio);
+size_t regio_numerus_allocationum(const Regio* regio);
+size_t regio_numerus_liberationum(const Regio* regio);
+
+/* ==================================================
+ * Conexio (M2a): nexor moduli medullae
+ *
+ * Tabula symbolorum globalis + translatio per modulum (moduli
+ * IMMUTABILES); nectere mundum; decipulae pigrae (ruunt solum
+ * si vocatae); descriptores 16-octetorum (inscriptio EST valor
+ * monstratoris functionis; signum = commissura nativa M5);
+ * relocatio ADDITIVA; cellae externae (ansae 0/1/2 + errno).
+ * ================================================== */
+
+typedef enum {
+    CONEXIO_SYMBOLUM_IGNOTUM = 0,
+    CONEXIO_SYMBOLUM_FUNCTIO,
+    CONEXIO_SYMBOLUM_DATUM,
+    CONEXIO_SYMBOLUM_CELLA,
+    CONEXIO_SYMBOLUM_DECIPULA
+} ConexioSymbolumGenus;
+
+#define CONEXIO_SIGNUM_INTERPRETATUM 1
+#define CONEXIO_SIGNUM_DECIPULA      2
+
+typedef struct {
+    long long signum;
+    long long index;
+} ConexioDescriptor;
+
+typedef struct {
+    OfficinaChorda titulus;
+    int            genus;
+    int            modulus_index;   /* -1 nullus */
+    int            index_localis;   /* -1 */
+    void*          sedes;
+} ConexioSymbolum;
+
+typedef struct {
+    MedullaFunctio* functio;
+    int             modulus_index;
+} ConexioFunctioNexa;
+
+typedef struct Conexio Conexio;
+
+Conexio* conexio_creare(OfficinaPiscina* piscina, Regio* regio);
+int conexio_modulum_addere(Conexio* conexio,
+    MedullaModulus* modulus);
+int conexio_nectere(Conexio* conexio);
+const OfficinaChorda* conexio_querela(const Conexio* conexio);
+const OfficinaChorda* conexio_querela_symbolum(
+    const Conexio* conexio);
+
+int conexio_symbolum_quaerere(const Conexio* conexio,
+    OfficinaChorda titulus);
+const ConexioSymbolum* conexio_symbolum_obtinere(
+    const Conexio* conexio, int index);
+unsigned int conexio_numerus_symbolorum(const Conexio* conexio);
+void* conexio_sedes_quaerere(const Conexio* conexio,
+    OfficinaChorda titulus);
+
+int conexio_symbolum_globale(const Conexio* conexio,
+    int modulus_index, int index_localis);
+const ConexioFunctioNexa* conexio_functionem_obtinere(
+    const Conexio* conexio, long long index);
+unsigned int conexio_numerus_functionum(const Conexio* conexio);
+
+unsigned int conexio_numerus_modulorum(const Conexio* conexio);
+const MedullaModulus* conexio_modulum_obtinere(
+    const Conexio* conexio, int index);
+
+unsigned int conexio_numerus_datorum(const Conexio* conexio);
+unsigned int conexio_numerus_cellarum(const Conexio* conexio);
+unsigned int conexio_numerus_decipularum(const Conexio* conexio);
+const OfficinaChorda* conexio_decipulam_obtinere(
+    const Conexio* conexio, int index);
+
+/* ==================================================
  * Demissio (M1b): arbor typata -> medulla
  *
  * Typi silvae TAG-SOLUM hic (officina.h sine silva.h manet);
@@ -331,6 +465,12 @@ struct SilvaSemantica;
 MedullaModulus* demissio_currere(OfficinaPiscina* piscina,
     const struct SilvaParsura* parsura,
     struct SilvaSemantica* sem, OfficinaChorda titulus_moduli);
+
+/* Distillatio linearum (M2a): DUM frons vivit (expansio
+ * necessaria); post hanc arbores liberari possunt. */
+MedullaLineae* demissio_lineas_colligere(OfficinaPiscina* piscina,
+    const MedullaModulus* modulus,
+    const struct SilvaParsura* parsura);
 
 #endif /* OFFICINA_H */
 
@@ -806,6 +946,16 @@ officina_piscina_allocare_ordinatum (
 #ifndef CHORDA_H
 #define CHORDA_H
 
+
+/* ==================================================
+ * Constructores
+ * ================================================== */
+
+static OfficinaChorda
+officina_chorda_ex_literis (
+		constans character* cstr,
+							 OfficinaPiscina* piscina);
+
 static OfficinaChorda
 officina_chorda_transcribere (
 		 OfficinaChorda  s,
@@ -820,6 +970,11 @@ nomen structura {
 	OfficinaChorda* elementa;
 	i32     numerus;
 } OfficinaChordaFissioFructus;
+
+static b32
+officina_chorda_aequalis_literis (
+		OfficinaChorda              s,
+		constans character* cstr);
 
 static s32
 officina_chorda_comparare (
@@ -1329,6 +1484,14 @@ b32 medulla_datum_scribere (MedullaDatum* datum, i32 offset,
 b32 medulla_relocationem_addere (MedullaDatum* datum, i32 offset,
     s32 symbolum);
 
+MedullaLineae* medulla_lineas_creare (OfficinaPiscina* piscina);
+b32 medulla_lineam_ponere (MedullaLineae* lineae,
+    constans structura SilvaNodus* origo, OfficinaChorda via, i32 linea);
+/* via_out/linea_out NIHIL licent (probatio existentiae) */
+b32 medulla_lineam_quaerere (constans MedullaLineae* lineae,
+    constans structura SilvaNodus* origo, OfficinaChorda* via_out,
+    i32* linea_out);
+
 #endif /* OFFICINA_MEDULLA_H */
 
 /* ================= ex officina/fontes/officina_medulla_textus.h ================= */
@@ -1363,6 +1526,195 @@ MedullaModulus* medulla_textum_legere (OfficinaPiscina* piscina,
 
 #endif /* OFFICINA_MEDULLA_TEXTUS_H */
 
+/* ================= ex officina/fontes/officina_regio.h ================= */
+/* officina_regio.h - Regio: memoria possessa machinulae (M2a)
+ *
+ * DECISUS (officina-m2-interview.md Q9/Q10 + diagnostica):
+ * UNA reservatio mmap magna cum BASI FIXA (determinismus: cursus
+ * identici -> monstratores identici -> vestigia differibilia; later
+ * primus itineris-temporis v2). Paginae pigre committuntur (macOS
+ * nativum) - reservatio gratis, pretium physicum = tactum solum.
+ *
+ * Monstratores veri SUNT monstratores machinulae (DECISUS 6 -
+ * probatio_piscina identitatem monstratorum et ordinationem XVI
+ * per valores veros asserit; ansae fictae corpus fallerent).
+ *
+ * TRES AREAE intra reservationem:
+ *   globalia - collocatio conexionis (data, descriptores, cellae
+ *              externae); cumulus simplex, numquam liberatur
+ *   stiva    - arcae + tabulae registrorum machinulae (cursor
+ *              machinulae est; regio fines solum praebet)
+ *   acervus  - pons malloc/free/realloc (aedificata); allocator
+ *              indicis liberi, bases >=XVI ordinatae SEMPER
+ *              (piscina %XVI == 0 per valorem verum asserit),
+ *              memoria INDETERMINATA manet (numquam zephyrum -
+ *              custodia venenum recognoscibile ponit, non zerum)
+ *
+ * CUSTODIA (vexillum diagnosticum): venenum 0xAA in allocatione,
+ * 0xDD in liberatione; probationes validitatis in liberare semper
+ * (viles). Machinula regio_continet ad custodes legere/scribere
+ * adhibet.
+ *
+ * UNA regio uno tempore (basis fixa) - figura, non defectus.
+ */
+
+#ifndef OFFICINA_REGIO_H
+#define OFFICINA_REGIO_H
+
+/* ==================================================
+ * Vita
+ * ================================================== */
+
+/* Reservat aream ad basim fixam; NIHIL si basis non data est
+ * (numquam basim aliam tacite accipit - determinismus ante
+ * commodum). Structura moderaminis ex piscina. */
+Regio* regio_generare (OfficinaPiscina* piscina);
+vacuum regio_destruere (Regio* regio);
+
+/* ==================================================
+ * Fines + custodia
+ * ================================================== */
+
+vacuum* regio_basis (constans Regio* regio);
+memoriae_index regio_magnitudo_tota (constans Regio* regio);
+b32 regio_continet (constans Regio* regio, constans vacuum* locus);
+
+vacuum regio_custodiam_ponere (Regio* regio, b32 custodia);
+b32 regio_custodia (constans Regio* regio);
+
+/* ==================================================
+ * Globalia (collocatio conexionis; cumulus, sine liberatione)
+ * ================================================== */
+
+/* ordinatio = potestas duorum (0 -> I); NIHIL si spatium deest */
+vacuum* regio_globalia_allocare (Regio* regio,
+    memoriae_index magnitudo_octetorum, memoriae_index ordinatio);
+memoriae_index regio_globalia_usus (constans Regio* regio);
+
+/* ==================================================
+ * Stiva (fines pro machinula)
+ * ================================================== */
+
+vacuum* regio_stiva_initium (constans Regio* regio);
+memoriae_index regio_stiva_magnitudo_octetorum (constans Regio* regio);
+
+/* ==================================================
+ * Acervus (pons malloc/free/realloc)
+ * ================================================== */
+
+/* n rotundatur ad XVI; fructus semper XVI-ordinatus; NIHIL si
+ * spatium deest aut n == 0 */
+vacuum* regio_allocare (Regio* regio, memoriae_index n);
+
+/* FALSUM = monstrator alienus / iam liber / caput corruptum -
+ * machinula halitum honestum ex hoc facit */
+b32 regio_liberare (Regio* regio, vacuum* locus);
+
+/* locus NIHIL -> allocare; contractio -> idem monstrator;
+ * amplificatio -> novus + copia + liberatio veteris */
+vacuum* regio_reallocare (Regio* regio, vacuum* locus,
+    memoriae_index n);
+
+/* census (numeratores diagnosticorum) */
+memoriae_index regio_acervus_usus (constans Regio* regio);
+memoriae_index regio_acervus_apex (constans Regio* regio);
+memoriae_index regio_numerus_allocationum (constans Regio* regio);
+memoriae_index regio_numerus_liberationum (constans Regio* regio);
+
+#endif /* OFFICINA_REGIO_H */
+
+/* ================= ex officina/fontes/officina_conexio.h ================= */
+/* officina_conexio.h - Conexio: nexor moduli medullae (M2a)
+ *
+ * DECISUS (simulatio-4 C1-C6 + interview Q2/Q3):
+ * - Tabula symbolorum GLOBALIS + ordinatio translationis per modulum
+ *   (index localis -> index globalis). Moduli IMMUTABILES manent -
+ *   nulla instructio rescribitur (1.15M instructiones intactae).
+ * - NECTERE MUNDUM: omnes moduli bibliothecae + modulus probationis
+ *   (manifesta per plagulam non existunt nec computari possunt -
+ *   fundus-corpus). Symbola insoluta -> DECIPULAE pigrae (ruunt
+ *   SOLUM SI vocata - sedes sisterae in commissura nexus).
+ * - DESCRIPTORES: 16 octeti in globalibus regionis per functionem -
+ *   inscriptio descriptoris EST valor monstratoris functionis
+ *   (relocationes symbola functionum petere possunt - aureum
+ *   statica.medulla). signum = commissura nativa M5.
+ * - CELLAE externae: stdin/stdout/stderr (ansae opacae 0/1/2) +
+ *   errno (0) - symbola data externa nota; pons aedificatorum eas
+ *   curat (M2b).
+ * - RELOCATIO ADDITIVA: locellus = inscriptio symboli + octeti
+ *   priores locelli (addendum). Unus mechanismus: plana/membrum/
+ *   elementum/functio.
+ *
+ * Ordo: creare -> modulum_addere (iterum) -> nectere -> quaerere.
+ * Conflictus (definitio duplex) = fractura honesta cum querela.
+ */
+
+#ifndef OFFICINA_CONEXIO_H
+#define OFFICINA_CONEXIO_H
+
+/* signa descriptorum - numquam 0 (memoria zephyrata numquam
+ * descriptor validus); M2b addet AEDIFICATUM, M5 NATIVUM */
+#define CONEXIO_SIGNUM_INTERPRETATUM 1
+#define CONEXIO_SIGNUM_DECIPULA      2
+
+/* ==================================================
+ * Vita + nexus
+ * ================================================== */
+
+Conexio* conexio_creare (OfficinaPiscina* piscina, Regio* regio);
+
+/* FALSUM: post nectere, aut definitio duplex (querela ponitur;
+ * conexio post fracturam invalida) */
+b32 conexio_modulum_addere (Conexio* conexio, MedullaModulus* modulus);
+
+/* collocat data, descriptores, cellas, decipulas; relocationes
+ * ADDITIVE sarcit. Decipulae NON sunt fracturae (numeratae +
+ * nominatae). FALSUM = fractura vera (querela). */
+b32 conexio_nectere (Conexio* conexio);
+
+constans OfficinaChorda* conexio_querela (constans Conexio* conexio);
+/* symbolum querelae (mensura 0 si nullum) */
+constans OfficinaChorda* conexio_querela_symbolum (constans Conexio* conexio);
+
+/* ==================================================
+ * Quaestio (post nectere)
+ * ================================================== */
+
+/* -I si absens */
+s32 conexio_symbolum_quaerere (constans Conexio* conexio,
+    OfficinaChorda titulus);
+constans ConexioSymbolum* conexio_symbolum_obtinere (
+    constans Conexio* conexio, s32 index);
+i32 conexio_numerus_symbolorum (constans Conexio* conexio);
+
+/* sedes per titulum; NIHIL si absens ($main -> descriptor) */
+vacuum* conexio_sedes_quaerere (constans Conexio* conexio,
+    OfficinaChorda titulus);
+
+/* (modulus, index localis) -> index globalis; -I si invalidus */
+s32 conexio_symbolum_globale (constans Conexio* conexio,
+    s32 modulus_index, s32 index_localis);
+
+constans ConexioFunctioNexa* conexio_functionem_obtinere (
+    constans Conexio* conexio, s64 index);
+i32 conexio_numerus_functionum (constans Conexio* conexio);
+
+i32 conexio_numerus_modulorum (constans Conexio* conexio);
+constans MedullaModulus* conexio_modulum_obtinere (
+    constans Conexio* conexio, s32 index);
+
+/* ==================================================
+ * Census (vectis M2a: decipulae numeratae + nominatae)
+ * ================================================== */
+
+i32 conexio_numerus_datorum (constans Conexio* conexio);
+i32 conexio_numerus_cellarum (constans Conexio* conexio);
+i32 conexio_numerus_decipularum (constans Conexio* conexio);
+constans OfficinaChorda* conexio_decipulam_obtinere (
+    constans Conexio* conexio, s32 index);
+
+#endif /* OFFICINA_CONEXIO_H */
+
 /* ================= ex officina/fontes/officina_demissio.h ================= */
 /* officina_demissio.h - Demissio: arbor typata -> medulla (M1b)
  *
@@ -1392,6 +1744,15 @@ MedullaModulus* medulla_textum_legere (OfficinaPiscina* piscina,
 MedullaModulus* demissio_currere (OfficinaPiscina* piscina,
     constans SilvaParsura* parsura, SilvaSemantica* sem,
     OfficinaChorda titulus_moduli);
+
+/* Distillatio linearum (M2a): origo -> (via, linea) DUM frons vivit
+ * (parsura->expansio necessaria pro viis fontium; nulla via publica
+ * post liberationem). Post hanc arbores liberari possunt - clavis
+ * origo opaca manet. Consumptor: recordator volatus (M2b);
+ * proto-indicium (M3). */
+MedullaLineae* demissio_lineas_colligere (OfficinaPiscina* piscina,
+    constans MedullaModulus* modulus,
+    constans SilvaParsura* parsura);
 
 #endif /* OFFICINA_DEMISSIO_H */
 
@@ -1701,6 +2062,43 @@ officina_piscina_allocare_ordinatum (
 #define CHORDA_FRIATUM_OFFSET  2166136261U
 #define CHORDA_FRIATUM_PRIMUS    16777619U
 
+
+/* ==================================================
+ * Constructores
+ * ================================================== */
+
+static OfficinaChorda
+officina_chorda_ex_literis (
+    constans character* cstr,
+               OfficinaPiscina* piscina)
+{
+    OfficinaChorda  fructus;
+       i32  mensura;
+        i8* allocatus;
+
+    si (!cstr || !piscina)
+    {
+        fructus.mensura = ZEPHYRUM;
+        fructus.datum   = NIHIL;
+        redde fructus;
+    }
+
+      mensura = (i32)strlen(cstr);
+    allocatus = (i8*)officina_piscina_allocare(piscina, mensura);
+
+    si (!allocatus)
+    {
+        fructus.mensura = ZEPHYRUM;
+        fructus.datum   = NIHIL;
+        redde fructus;
+    }
+
+    memcpy(allocatus, cstr, mensura);
+    fructus.mensura = mensura;
+    fructus.datum   = allocatus;
+    redde fructus;
+}
+
 static OfficinaChorda
 officina_chorda_transcribere (
      OfficinaChorda  s,
@@ -1730,6 +2128,42 @@ officina_chorda_transcribere (
     fructus.datum   = allocatus;
 
     redde fructus;
+}
+
+static b32
+officina_chorda_aequalis_literis (
+    OfficinaChorda              s,
+    constans character* cstr)
+{
+    i32 len;
+    i32 i;
+
+    si (!cstr)
+    {
+        redde FALSUM;
+    }
+
+    /* Mensura literarum */
+    len = ZEPHYRUM;
+    dum (cstr[len] != '\0')
+    {
+        len++;
+    }
+
+    si (s.mensura != len)
+    {
+        redde FALSUM;
+    }
+
+    per (i = ZEPHYRUM; i < len; i++)
+    {
+        si ((character)s.datum[i] != cstr[i])
+        {
+            redde FALSUM;
+        }
+    }
+
+    redde VERUM;
 }
 
 static s32
@@ -3415,6 +3849,152 @@ medulla_relocationem_addere (MedullaDatum* datum, i32 offset,
     redde VERUM;
 }
 
+/* ==================================================
+ * Lineae distillatae (M2a) - clavis = octeti monstratoris origo
+ * (numquam dereferendus - pattern DemissioIntroitus)
+ * ================================================== */
+
+nomen structura {
+    i8  clavis_octeti[magnitudo(vacuum*)];
+    s32 via_index;
+    i32 linea;
+} LineaIntroitus;
+
+MedullaLineae*
+medulla_lineas_creare (OfficinaPiscina* piscina)
+{
+    MedullaLineae* lineae;
+
+    si (piscina == NIHIL)
+    {
+        redde NIHIL;
+    }
+    lineae = (MedullaLineae*)officina_piscina_allocare(piscina,
+        magnitudo(MedullaLineae));
+    si (lineae == NIHIL)
+    {
+        redde NIHIL;
+    }
+    lineae->piscina = piscina;
+    lineae->viae = officina_xar_creare(piscina, (i32)magnitudo(OfficinaChorda));
+    lineae->lineae = officina_tabula_dispersa_creare_chorda(piscina, CCLVI);
+    si (lineae->viae == NIHIL || lineae->lineae == NIHIL)
+    {
+        redde NIHIL;
+    }
+    redde lineae;
+}
+
+interior s32
+_viam_internare (MedullaLineae* lineae, OfficinaChorda via)
+{
+    i32 i;
+    i32 numerus = officina_xar_numerus(lineae->viae);
+    OfficinaChorda* sedes;
+
+    per (i = ZEPHYRUM; i < numerus; i++)
+    {
+        constans OfficinaChorda* nota = (constans OfficinaChorda*)officina_xar_obtinere(
+            lineae->viae, i);
+
+        si (nota->mensura == via.mensura
+            && (via.mensura == ZEPHYRUM
+                || memcmp(nota->datum, via.datum,
+                       (memoriae_index)via.mensura) == ZEPHYRUM))
+        {
+            redde (s32)i;
+        }
+    }
+    sedes = (OfficinaChorda*)officina_xar_addere(lineae->viae);
+    si (sedes == NIHIL)
+    {
+        redde -I;
+    }
+    *sedes = officina_chorda_transcribere(via, lineae->piscina);
+    redde (s32)numerus;
+}
+
+b32
+medulla_lineam_ponere (MedullaLineae* lineae,
+    constans structura SilvaNodus* origo, OfficinaChorda via, i32 linea)
+{
+    LineaIntroitus* introitus;
+    OfficinaChorda clavis;
+    s32 via_index;
+
+    si (lineae == NIHIL || origo == NIHIL)
+    {
+        redde FALSUM;
+    }
+    si (medulla_lineam_quaerere(lineae, origo, NIHIL, NIHIL))
+    {
+        redde VERUM;   /* iam distillata */
+    }
+    via_index = _viam_internare(lineae, via);
+    si (via_index < ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    introitus = (LineaIntroitus*)officina_piscina_allocare(lineae->piscina,
+        magnitudo(LineaIntroitus));
+    si (introitus == NIHIL)
+    {
+        redde FALSUM;
+    }
+    memcpy(introitus->clavis_octeti, &origo,
+        magnitudo(introitus->clavis_octeti));
+    introitus->via_index = via_index;
+    introitus->linea = linea;
+    clavis.datum = introitus->clavis_octeti;
+    clavis.mensura = (i32)magnitudo(introitus->clavis_octeti);
+    redde officina_tabula_dispersa_inserere(lineae->lineae, clavis,
+        (vacuum*)introitus);
+}
+
+b32
+medulla_lineam_quaerere (constans MedullaLineae* lineae,
+    constans structura SilvaNodus* origo, OfficinaChorda* via_out,
+    i32* linea_out)
+{
+    i8 octeti[magnitudo(vacuum*)];
+    OfficinaChorda clavis;
+    vacuum* valor = NIHIL;
+    constans LineaIntroitus* introitus;
+
+    si (lineae == NIHIL || origo == NIHIL)
+    {
+        redde FALSUM;
+    }
+    memcpy(octeti, &origo, magnitudo(octeti));
+    clavis.datum = octeti;
+    clavis.mensura = (i32)magnitudo(octeti);
+    si (!officina_tabula_dispersa_invenire(lineae->lineae, clavis, &valor))
+    {
+        redde FALSUM;
+    }
+    introitus = (constans LineaIntroitus*)valor;
+    si (via_out != NIHIL)
+    {
+        constans OfficinaChorda* via = (constans OfficinaChorda*)officina_xar_obtinere(
+            lineae->viae, (i32)introitus->via_index);
+
+        si (via != NIHIL)
+        {
+            *via_out = *via;
+        }
+        alioquin
+        {
+            via_out->datum = NIHIL;
+            via_out->mensura = ZEPHYRUM;
+        }
+    }
+    si (linea_out != NIHIL)
+    {
+        *linea_out = introitus->linea;
+    }
+    redde VERUM;
+}
+
 /* ================= ex officina/fontes/officina_medulla_textus.c ================= */
 
 /* ==================================================
@@ -4950,6 +5530,993 @@ medulla_textum_legere (OfficinaPiscina* piscina, OfficinaChorda textus,
     redde lector.modulus;
 }
 
+/* ================= ex officina/fontes/officina_regio.c ================= */
+
+/* basis fixa: determinismus (interview Q9). 0x300000000000 =
+ * spatium altum, liberum in macOS arm64; si mmap eam non dat,
+ * regio_generare NIHIL reddit (numquam basim aliam tacite). */
+#define REGIO_BASIS_VALOR   ((memoriae_index)0x300000000000UL)
+#define REGIO_TOTA          ((memoriae_index)0x1000000000UL)  /* 64GB */
+#define REGIO_GLOBALIA_MAG  ((memoriae_index)0x200000000UL)   /*  8GB */
+#define REGIO_STIVA_MAG     ((memoriae_index)0x100000000UL)   /*  4GB */
+
+#define ACERVUS_ORDINATIO   ((memoriae_index)16)
+#define ACERVUS_VENENUM_ALLOCATIONIS  0xAA
+#define ACERVUS_VENENUM_LIBERATIONIS  0xDD
+
+/* caput ante quemque locellum acervi; XVI octeti - fructus manet
+ * XVI-ordinatus */
+nomen structura CaputAcervi CaputAcervi;
+structura CaputAcervi {
+    memoriae_index magnitudo_cum_vexillo;  /* payload; bit 0 = liber */
+    CaputAcervi*   sequens_liber;          /* index liber (si liber) */
+};
+
+structura Regio {
+    OfficinaPiscina* piscina;
+    i8*      basis;
+    b32      custodia;
+
+    /* globalia */
+    i8*             globalia_initium;
+    memoriae_index  globalia_cursor;       /* offset intra aream */
+
+    /* stiva */
+    i8*             stiva_initium;
+
+    /* acervus */
+    i8*             acervus_initium;
+    memoriae_index  acervus_magnitudo;
+    memoriae_index  acervus_cursor;        /* offset (fines cumuli) */
+    CaputAcervi*    index_liber;
+
+    /* census */
+    memoriae_index  acervus_octeti_usi;
+    memoriae_index  acervus_apex;
+    memoriae_index  numerus_allocationum;
+    memoriae_index  numerus_liberationum;
+};
+
+/* ==================================================
+ * Vita
+ * ================================================== */
+
+Regio*
+regio_generare (OfficinaPiscina* piscina)
+{
+    Regio* regio;
+    vacuum* datus;
+
+    si (piscina == NIHIL)
+    {
+        redde NIHIL;
+    }
+
+    datus = mmap((vacuum*)REGIO_BASIS_VALOR, REGIO_TOTA,
+        PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANON, -1, 0);
+    si (datus == MAP_FAILED)
+    {
+        redde NIHIL;
+    }
+    si (datus != (vacuum*)REGIO_BASIS_VALOR)
+    {
+        /* basis aliena: determinismus periret - honeste recusa */
+        munmap(datus, REGIO_TOTA);
+        redde NIHIL;
+    }
+
+    regio = officina_piscina_allocare(piscina, magnitudo(Regio));
+    si (regio == NIHIL)
+    {
+        munmap(datus, REGIO_TOTA);
+        redde NIHIL;
+    }
+    memset(regio, ZEPHYRUM, magnitudo(Regio));
+
+    regio->piscina = piscina;
+    regio->basis = (i8*)datus;
+    regio->custodia = FALSUM;
+
+    regio->globalia_initium = regio->basis;
+    regio->globalia_cursor = ZEPHYRUM;
+
+    regio->stiva_initium = regio->basis + REGIO_GLOBALIA_MAG;
+
+    regio->acervus_initium = regio->stiva_initium + REGIO_STIVA_MAG;
+    regio->acervus_magnitudo = REGIO_TOTA - REGIO_GLOBALIA_MAG
+        - REGIO_STIVA_MAG;
+    regio->acervus_cursor = ZEPHYRUM;
+    regio->index_liber = NIHIL;
+
+    redde regio;
+}
+
+vacuum
+regio_destruere (Regio* regio)
+{
+    si (regio == NIHIL)
+    {
+        redde;
+    }
+    munmap((vacuum*)regio->basis, REGIO_TOTA);
+    regio->basis = NIHIL;
+}
+
+/* ==================================================
+ * Fines + custodia
+ * ================================================== */
+
+vacuum*
+regio_basis (constans Regio* regio)
+{
+    redde (vacuum*)regio->basis;
+}
+
+memoriae_index
+regio_magnitudo_tota (constans Regio* regio)
+{
+    (vacuum)regio;
+    redde REGIO_TOTA;
+}
+
+b32
+regio_continet (constans Regio* regio, constans vacuum* locus)
+{
+    constans i8* p = (constans i8*)locus;
+
+    si (regio == NIHIL || regio->basis == NIHIL)
+    {
+        redde FALSUM;
+    }
+    redde (b32)(p >= regio->basis && p < regio->basis + REGIO_TOTA);
+}
+
+vacuum
+regio_custodiam_ponere (Regio* regio, b32 custodia)
+{
+    regio->custodia = custodia;
+}
+
+b32
+regio_custodia (constans Regio* regio)
+{
+    redde regio->custodia;
+}
+
+/* ==================================================
+ * Globalia
+ * ================================================== */
+
+vacuum*
+regio_globalia_allocare (Regio* regio,
+    memoriae_index magnitudo_octetorum, memoriae_index ordinatio)
+{
+    memoriae_index cursor;
+    i8* fructus;
+
+    si (regio == NIHIL || magnitudo_octetorum == ZEPHYRUM)
+    {
+        redde NIHIL;
+    }
+    si (ordinatio == ZEPHYRUM)
+    {
+        ordinatio = I;
+    }
+
+    /* rotundare cursorem ad ordinationem (potestas duorum) */
+    cursor = (regio->globalia_cursor + ordinatio - I)
+        & ~(ordinatio - I);
+    si (cursor + magnitudo_octetorum > REGIO_GLOBALIA_MAG)
+    {
+        redde NIHIL;
+    }
+
+    fructus = regio->globalia_initium + cursor;
+    regio->globalia_cursor = cursor + magnitudo_octetorum;
+    redde (vacuum*)fructus;
+}
+
+memoriae_index
+regio_globalia_usus (constans Regio* regio)
+{
+    redde regio->globalia_cursor;
+}
+
+/* ==================================================
+ * Stiva
+ * ================================================== */
+
+vacuum*
+regio_stiva_initium (constans Regio* regio)
+{
+    redde (vacuum*)regio->stiva_initium;
+}
+
+memoriae_index
+regio_stiva_magnitudo_octetorum (constans Regio* regio)
+{
+    (vacuum)regio;
+    redde REGIO_STIVA_MAG;
+}
+
+/* ==================================================
+ * Acervus
+ * ================================================== */
+
+interior memoriae_index
+_rotundare_xvi (memoriae_index n)
+{
+    redde (n + ACERVUS_ORDINATIO - I) & ~(ACERVUS_ORDINATIO - I);
+}
+
+interior CaputAcervi*
+_caput_de_loco (vacuum* locus)
+{
+    redde (CaputAcervi*)(vacuum*)((i8*)locus
+        - magnitudo(CaputAcervi));
+}
+
+interior vacuum*
+_locus_de_capite (CaputAcervi* caput)
+{
+    redde (vacuum*)((i8*)(vacuum*)caput
+        + magnitudo(CaputAcervi));
+}
+
+interior memoriae_index
+_caput_magnitudo (constans CaputAcervi* caput)
+{
+    redde caput->magnitudo_cum_vexillo & ~(memoriae_index)I;
+}
+
+interior b32
+_caput_liber (constans CaputAcervi* caput)
+{
+    redde (b32)(caput->magnitudo_cum_vexillo & (memoriae_index)I);
+}
+
+/* validitas capitis: intra acervum usum, magnitudo sana */
+interior b32
+_caput_validum (constans Regio* regio, constans CaputAcervi* caput)
+{
+    constans i8* p = (constans i8*)(constans vacuum*)caput;
+    memoriae_index m;
+
+    si (p < regio->acervus_initium
+        || p >= regio->acervus_initium + regio->acervus_cursor)
+    {
+        redde FALSUM;
+    }
+    si ((memoriae_index)(p - regio->acervus_initium)
+        % ACERVUS_ORDINATIO != ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    m = _caput_magnitudo(caput);
+    si (m == ZEPHYRUM || m % ACERVUS_ORDINATIO != ZEPHYRUM
+        || m > regio->acervus_cursor)
+    {
+        redde FALSUM;
+    }
+    redde VERUM;
+}
+
+vacuum*
+regio_allocare (Regio* regio, memoriae_index n)
+{
+    CaputAcervi* caput;
+    CaputAcervi* prior;
+    vacuum* fructus;
+    memoriae_index rotundata;
+
+    si (regio == NIHIL || n == ZEPHYRUM)
+    {
+        redde NIHIL;
+    }
+    rotundata = _rotundare_xvi(n);
+
+    /* primus-aptus in indice libero */
+    prior = NIHIL;
+    caput = regio->index_liber;
+    dum (caput != NIHIL)
+    {
+        si (_caput_magnitudo(caput) >= rotundata)
+        {
+            frange;
+        }
+        prior = caput;
+        caput = caput->sequens_liber;
+    }
+
+    si (caput != NIHIL)
+    {
+        /* evellere de indice */
+        si (prior == NIHIL)
+        {
+            regio->index_liber = caput->sequens_liber;
+        }
+        alioquin
+        {
+            prior->sequens_liber = caput->sequens_liber;
+        }
+
+        /* scindere si residuum locellum integrum fert */
+        si (_caput_magnitudo(caput) >= rotundata
+            + magnitudo(CaputAcervi) + ACERVUS_ORDINATIO)
+        {
+            CaputAcervi* residuum;
+            memoriae_index magnitudo_residui;
+
+            magnitudo_residui = _caput_magnitudo(caput) - rotundata
+                - magnitudo(CaputAcervi);
+            residuum = (CaputAcervi*)(vacuum*)((i8*)_locus_de_capite(caput)
+                + rotundata);
+            residuum->magnitudo_cum_vexillo = magnitudo_residui
+                | (memoriae_index)I;
+            residuum->sequens_liber = regio->index_liber;
+            regio->index_liber = residuum;
+
+            caput->magnitudo_cum_vexillo = rotundata;
+        }
+        alioquin
+        {
+            caput->magnitudo_cum_vexillo = _caput_magnitudo(caput);
+        }
+        caput->sequens_liber = NIHIL;
+    }
+    alioquin
+    {
+        /* cumulus crescit */
+        memoriae_index opus = magnitudo(CaputAcervi) + rotundata;
+
+        si (regio->acervus_cursor + opus > regio->acervus_magnitudo)
+        {
+            redde NIHIL;
+        }
+        caput = (CaputAcervi*)(vacuum*)(regio->acervus_initium
+            + regio->acervus_cursor);
+        regio->acervus_cursor += opus;
+        caput->magnitudo_cum_vexillo = rotundata;
+        caput->sequens_liber = NIHIL;
+    }
+
+    fructus = _locus_de_capite(caput);
+    regio->acervus_octeti_usi += _caput_magnitudo(caput);
+    si (regio->acervus_octeti_usi > regio->acervus_apex)
+    {
+        regio->acervus_apex = regio->acervus_octeti_usi;
+    }
+    regio->numerus_allocationum += I;
+
+    si (regio->custodia)
+    {
+        memset(fructus, ACERVUS_VENENUM_ALLOCATIONIS,
+            _caput_magnitudo(caput));
+    }
+    redde fructus;
+}
+
+b32
+regio_liberare (Regio* regio, vacuum* locus)
+{
+    CaputAcervi* caput;
+
+    si (regio == NIHIL || locus == NIHIL)
+    {
+        redde FALSUM;
+    }
+    caput = _caput_de_loco(locus);
+    si (!_caput_validum(regio, caput) || _caput_liber(caput))
+    {
+        redde FALSUM;
+    }
+
+    si (regio->custodia)
+    {
+        memset(locus, ACERVUS_VENENUM_LIBERATIONIS,
+            _caput_magnitudo(caput));
+    }
+
+    regio->acervus_octeti_usi -= _caput_magnitudo(caput);
+    regio->numerus_liberationum += I;
+
+    caput->magnitudo_cum_vexillo |= (memoriae_index)I;
+    caput->sequens_liber = regio->index_liber;
+    regio->index_liber = caput;
+    redde VERUM;
+}
+
+vacuum*
+regio_reallocare (Regio* regio, vacuum* locus, memoriae_index n)
+{
+    CaputAcervi* caput;
+    memoriae_index vetus;
+    vacuum* novus;
+
+    si (regio == NIHIL)
+    {
+        redde NIHIL;
+    }
+    si (locus == NIHIL)
+    {
+        redde regio_allocare(regio, n);
+    }
+    si (n == ZEPHYRUM)
+    {
+        redde NIHIL;
+    }
+
+    caput = _caput_de_loco(locus);
+    si (!_caput_validum(regio, caput) || _caput_liber(caput))
+    {
+        redde NIHIL;
+    }
+    vetus = _caput_magnitudo(caput);
+
+    si (_rotundare_xvi(n) <= vetus)
+    {
+        /* contractio: idem monstrator (pinnatur in probatione) */
+        redde locus;
+    }
+
+    novus = regio_allocare(regio, n);
+    si (novus == NIHIL)
+    {
+        redde NIHIL;
+    }
+    memcpy(novus, locus, vetus);
+    regio_liberare(regio, locus);
+    redde novus;
+}
+
+memoriae_index
+regio_acervus_usus (constans Regio* regio)
+{
+    redde regio->acervus_octeti_usi;
+}
+
+memoriae_index
+regio_acervus_apex (constans Regio* regio)
+{
+    redde regio->acervus_apex;
+}
+
+memoriae_index
+regio_numerus_allocationum (constans Regio* regio)
+{
+    redde regio->numerus_allocationum;
+}
+
+memoriae_index
+regio_numerus_liberationum (constans Regio* regio)
+{
+    redde regio->numerus_liberationum;
+}
+
+/* ================= ex officina/fontes/officina_conexio.c ================= */
+
+nomen structura {
+    constans character* titulus;
+    s64                 valor;
+} CellaNota;
+
+/* symbola data externa nota (M2a; M2c/M2d addent) - ansae opacae
+ * (interview Q1): stdin 0, stdout 1, stderr 2; errno cella 0 */
+interior constans CellaNota CELLAE_NOTAE[] = {
+    { "stdin",  0 },
+    { "stdout", 1 },
+    { "stderr", 2 },
+    { "errno",  0 }
+};
+#define CELLAE_NOTAE_NUMERUS 4
+
+structura Conexio {
+    OfficinaPiscina*        piscina;
+    Regio*          regio;
+    OfficinaXar*            moduli;            /* MedullaModulus* */
+    OfficinaXar*            symbola;           /* ConexioSymbolum valore */
+    OfficinaTabulaDispersa* index_titulorum;   /* titulus -> index+1 */
+    OfficinaXar*            translationes;     /* s32* (una per modulum) */
+    OfficinaXar*            functiones_nexae;  /* ConexioFunctioNexa valore */
+    OfficinaXar*            decipulae;         /* chorda valore (tituli) */
+    b32             nexum;
+    OfficinaChorda          querela;
+    OfficinaChorda          querela_symbolum;
+    i32             numerus_fracturarum;
+    i32             numerus_datorum;
+    i32             numerus_cellarum;
+};
+
+/* ==================================================
+ * Auxilia
+ * ================================================== */
+
+interior OfficinaChorda
+_titulum_copiare (Conexio* conexio, OfficinaChorda titulus)
+{
+    OfficinaChorda copia;
+    i8* datum;
+
+    datum = officina_piscina_allocare(conexio->piscina,
+        (memoriae_index)titulus.mensura);
+    memcpy(datum, titulus.datum, (memoriae_index)titulus.mensura);
+    copia.datum = datum;
+    copia.mensura = titulus.mensura;
+    redde copia;
+}
+
+interior vacuum
+_querelam_ponere (Conexio* conexio, constans character* nuntius)
+{
+    conexio->querela = officina_chorda_ex_literis(nuntius, conexio->piscina);
+}
+
+/* invenire aut creare; -I in fractura allocationis */
+interior s32
+_globale_internare (Conexio* conexio, OfficinaChorda titulus)
+{
+    vacuum* valor;
+    ConexioSymbolum* symbolum;
+    s32 index;
+
+    si (officina_tabula_dispersa_invenire(conexio->index_titulorum, titulus,
+        &valor))
+    {
+        redde (s32)(memoriae_index)valor - I;
+    }
+
+    index = (s32)officina_xar_numerus(conexio->symbola);
+    symbolum = officina_xar_addere(conexio->symbola);
+    si (symbolum == NIHIL)
+    {
+        redde -I;
+    }
+    symbolum->titulus = _titulum_copiare(conexio, titulus);
+    symbolum->genus = CONEXIO_SYMBOLUM_IGNOTUM;
+    symbolum->modulus_index = -I;
+    symbolum->index_localis = -I;
+    symbolum->sedes = NIHIL;
+
+    si (!officina_tabula_dispersa_inserere(conexio->index_titulorum,
+        symbolum->titulus,
+        (vacuum*)(memoriae_index)(index + I)))
+    {
+        redde -I;
+    }
+    redde index;
+}
+
+/* ==================================================
+ * Vita + nexus
+ * ================================================== */
+
+Conexio*
+conexio_creare (OfficinaPiscina* piscina, Regio* regio)
+{
+    Conexio* conexio;
+
+    si (piscina == NIHIL || regio == NIHIL)
+    {
+        redde NIHIL;
+    }
+    conexio = officina_piscina_allocare(piscina, magnitudo(Conexio));
+    memset(conexio, ZEPHYRUM, magnitudo(Conexio));
+
+    conexio->piscina = piscina;
+    conexio->regio = regio;
+    conexio->moduli = officina_xar_creare(piscina,
+        (i32)magnitudo(MedullaModulus*));
+    conexio->symbola = officina_xar_creare(piscina,
+        (i32)magnitudo(ConexioSymbolum));
+    conexio->index_titulorum = officina_tabula_dispersa_creare_chorda(piscina,
+        256);
+    conexio->translationes = officina_xar_creare(piscina,
+        (i32)magnitudo(s32*));
+    conexio->functiones_nexae = officina_xar_creare(piscina,
+        (i32)magnitudo(ConexioFunctioNexa));
+    conexio->decipulae = officina_xar_creare(piscina, (i32)magnitudo(OfficinaChorda));
+
+    si (conexio->moduli == NIHIL || conexio->symbola == NIHIL
+        || conexio->index_titulorum == NIHIL
+        || conexio->translationes == NIHIL
+        || conexio->functiones_nexae == NIHIL
+        || conexio->decipulae == NIHIL)
+    {
+        redde NIHIL;
+    }
+    redde conexio;
+}
+
+b32
+conexio_modulum_addere (Conexio* conexio, MedullaModulus* modulus)
+{
+    s32 modulus_index;
+    i32 numerus;
+    s32* translatio;
+    i32 i;
+    MedullaModulus** locellus;
+    s32** locellus_translationis;
+
+    si (conexio == NIHIL || modulus == NIHIL || conexio->nexum)
+    {
+        redde FALSUM;
+    }
+
+    modulus_index = (s32)officina_xar_numerus(conexio->moduli);
+    locellus = officina_xar_addere(conexio->moduli);
+    si (locellus == NIHIL)
+    {
+        redde FALSUM;
+    }
+    *locellus = modulus;
+
+    numerus = officina_xar_numerus(modulus->symbola);
+    translatio = NIHIL;
+    si (numerus > ZEPHYRUM)
+    {
+        translatio = officina_piscina_allocare(conexio->piscina,
+            (memoriae_index)numerus * magnitudo(s32));
+    }
+
+    /* fractura statum NON corrumpit: omnes duplicationes colliguntur
+     * (census instrumenti), translatio semper impletur et ponitur -
+     * nectere postea recusat si fracturae > 0 */
+    {
+        b32 fractum = FALSUM;
+
+        per (i = ZEPHYRUM; i < numerus; i += I)
+        {
+            constans MedullaSymbolum* localis =
+                medulla_symbolum_obtinere(modulus, (s32)i);
+            s32 globale = _globale_internare(conexio,
+                localis->titulus);
+            ConexioSymbolum* symbolum;
+
+            si (globale < ZEPHYRUM)
+            {
+                _querelam_ponere(conexio,
+                    "allocatio symboli fracta");
+                conexio->numerus_fracturarum += I;
+                redde FALSUM;
+            }
+            translatio[i] = globale;
+
+            si (localis->genus == MEDULLA_SYMBOLUM_EXTERNUM)
+            {
+                perge;
+            }
+
+            symbolum = officina_xar_obtinere(conexio->symbola, (i32)globale);
+            si (symbolum->genus != CONEXIO_SYMBOLUM_IGNOTUM)
+            {
+                _querelam_ponere(conexio,
+                    "definitio duplex symboli");
+                conexio->querela_symbolum = symbolum->titulus;
+                conexio->numerus_fracturarum += I;
+                fractum = VERUM;
+                perge;
+            }
+            symbolum->genus =
+                (localis->genus == MEDULLA_SYMBOLUM_FUNCTIO)
+                ? CONEXIO_SYMBOLUM_FUNCTIO
+                : CONEXIO_SYMBOLUM_DATUM;
+            symbolum->modulus_index = modulus_index;
+            symbolum->index_localis = localis->index;
+        }
+
+        locellus_translationis = officina_xar_addere(conexio->translationes);
+        si (locellus_translationis == NIHIL)
+        {
+            redde FALSUM;
+        }
+        *locellus_translationis = translatio;
+        redde !fractum;
+    }
+}
+
+interior b32
+_cellam_notam_quaerere (OfficinaChorda titulus, s64* valor_out)
+{
+    i32 i;
+
+    per (i = ZEPHYRUM; i < CELLAE_NOTAE_NUMERUS; i += I)
+    {
+        si (officina_chorda_aequalis_literis(titulus, CELLAE_NOTAE[i].titulus))
+        {
+            *valor_out = CELLAE_NOTAE[i].valor;
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
+b32
+conexio_nectere (Conexio* conexio)
+{
+    i32 numerus;
+    i32 i;
+
+    si (conexio == NIHIL || conexio->nexum
+        || conexio->numerus_fracturarum > ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+
+    /* gradus I: collocatio - omne symbolum sedem accipit */
+    numerus = officina_xar_numerus(conexio->symbola);
+    per (i = ZEPHYRUM; i < numerus; i += I)
+    {
+        ConexioSymbolum* symbolum = officina_xar_obtinere(conexio->symbola, i);
+        MedullaModulus* modulus;
+
+        si (symbolum->genus == CONEXIO_SYMBOLUM_FUNCTIO)
+        {
+            ConexioDescriptor* descriptor;
+            ConexioFunctioNexa* nexa;
+            s64 index_nexae;
+
+            modulus = *(MedullaModulus**)officina_xar_obtinere(conexio->moduli,
+                (i32)symbolum->modulus_index);
+            index_nexae = (s64)officina_xar_numerus(conexio->functiones_nexae);
+            nexa = officina_xar_addere(conexio->functiones_nexae);
+            nexa->functio = *(MedullaFunctio**)officina_xar_obtinere(
+                modulus->functiones, (i32)symbolum->index_localis);
+            nexa->modulus_index = symbolum->modulus_index;
+
+            descriptor = regio_globalia_allocare(conexio->regio,
+                magnitudo(ConexioDescriptor), XVI);
+            si (descriptor == NIHIL)
+            {
+                _querelam_ponere(conexio, "globalia exhausta");
+                redde FALSUM;
+            }
+            descriptor->signum = CONEXIO_SIGNUM_INTERPRETATUM;
+            descriptor->index = index_nexae;
+            symbolum->sedes = descriptor;
+        }
+        alioquin si (symbolum->genus == CONEXIO_SYMBOLUM_DATUM)
+        {
+            constans MedullaDatum* datum;
+
+            modulus = *(MedullaModulus**)officina_xar_obtinere(conexio->moduli,
+                (i32)symbolum->modulus_index);
+            datum = *(MedullaDatum**)officina_xar_obtinere(modulus->data,
+                (i32)symbolum->index_localis);
+            symbolum->sedes = regio_globalia_allocare(conexio->regio,
+                (memoriae_index)datum->magnitudo_octetorum,
+                (memoriae_index)datum->ordinatio);
+            si (symbolum->sedes == NIHIL)
+            {
+                _querelam_ponere(conexio, "globalia exhausta");
+                redde FALSUM;
+            }
+            memcpy(symbolum->sedes, datum->imago,
+                (memoriae_index)datum->magnitudo_octetorum);
+            conexio->numerus_datorum += I;
+        }
+        alioquin
+        {
+            s64 valor_cellae;
+
+            si (_cellam_notam_quaerere(symbolum->titulus,
+                &valor_cellae))
+            {
+                s64* cella = regio_globalia_allocare(conexio->regio,
+                    magnitudo(s64), VIII);
+                si (cella == NIHIL)
+                {
+                    _querelam_ponere(conexio, "globalia exhausta");
+                    redde FALSUM;
+                }
+                *cella = valor_cellae;
+                symbolum->genus = CONEXIO_SYMBOLUM_CELLA;
+                symbolum->sedes = cella;
+                conexio->numerus_cellarum += I;
+            }
+            alioquin
+            {
+                ConexioDescriptor* descriptor;
+                OfficinaChorda* titulus_decipulae;
+                s64 index_decipulae;
+
+                index_decipulae = (s64)officina_xar_numerus(conexio->decipulae);
+                titulus_decipulae = officina_xar_addere(conexio->decipulae);
+                *titulus_decipulae = symbolum->titulus;
+
+                descriptor = regio_globalia_allocare(conexio->regio,
+                    magnitudo(ConexioDescriptor), XVI);
+                si (descriptor == NIHIL)
+                {
+                    _querelam_ponere(conexio, "globalia exhausta");
+                    redde FALSUM;
+                }
+                descriptor->signum = CONEXIO_SIGNUM_DECIPULA;
+                descriptor->index = index_decipulae;
+                symbolum->genus = CONEXIO_SYMBOLUM_DECIPULA;
+                symbolum->sedes = descriptor;
+            }
+        }
+    }
+
+    /* gradus II: relocationes ADDITIVE sarcire (locellus = sedes
+     * symboli + addendum prius; memcpy - nulla assumptio
+     * ordinationis) */
+    per (i = ZEPHYRUM; i < numerus; i += I)
+    {
+        constans ConexioSymbolum* symbolum =
+            officina_xar_obtinere(conexio->symbola, i);
+        MedullaModulus* modulus;
+        constans MedullaDatum* datum;
+        s32* translatio;
+        i32 r;
+
+        si (symbolum->genus != CONEXIO_SYMBOLUM_DATUM)
+        {
+            perge;
+        }
+        modulus = *(MedullaModulus**)officina_xar_obtinere(conexio->moduli,
+            (i32)symbolum->modulus_index);
+        datum = *(MedullaDatum**)officina_xar_obtinere(modulus->data,
+            (i32)symbolum->index_localis);
+        translatio = *(s32**)officina_xar_obtinere(conexio->translationes,
+            (i32)symbolum->modulus_index);
+
+        per (r = ZEPHYRUM; r < officina_xar_numerus(datum->relocationes);
+            r += I)
+        {
+            constans MedullaRelocatio* relocatio =
+                officina_xar_obtinere(datum->relocationes, r);
+            s32 globale = translatio[relocatio->symbolum];
+            constans ConexioSymbolum* petitum =
+                officina_xar_obtinere(conexio->symbola, (i32)globale);
+            i8* locellus = (i8*)symbolum->sedes + relocatio->offset;
+            s64 addendum;
+            s64 valor;
+
+            memcpy(&addendum, locellus, magnitudo(s64));
+            valor = (s64)(memoriae_index)petitum->sedes + addendum;
+            memcpy(locellus, &valor, magnitudo(s64));
+        }
+    }
+
+    conexio->nexum = VERUM;
+    redde VERUM;
+}
+
+constans OfficinaChorda*
+conexio_querela (constans Conexio* conexio)
+{
+    redde &conexio->querela;
+}
+
+constans OfficinaChorda*
+conexio_querela_symbolum (constans Conexio* conexio)
+{
+    redde &conexio->querela_symbolum;
+}
+
+/* ==================================================
+ * Quaestio
+ * ================================================== */
+
+s32
+conexio_symbolum_quaerere (constans Conexio* conexio, OfficinaChorda titulus)
+{
+    vacuum* valor;
+
+    si (officina_tabula_dispersa_invenire(conexio->index_titulorum, titulus,
+        &valor))
+    {
+        redde (s32)(memoriae_index)valor - I;
+    }
+    redde -I;
+}
+
+constans ConexioSymbolum*
+conexio_symbolum_obtinere (constans Conexio* conexio, s32 index)
+{
+    redde officina_xar_obtinere_s(conexio->symbola, index);
+}
+
+i32
+conexio_numerus_symbolorum (constans Conexio* conexio)
+{
+    redde officina_xar_numerus(conexio->symbola);
+}
+
+vacuum*
+conexio_sedes_quaerere (constans Conexio* conexio, OfficinaChorda titulus)
+{
+    s32 index = conexio_symbolum_quaerere(conexio, titulus);
+    constans ConexioSymbolum* symbolum;
+
+    si (index < ZEPHYRUM)
+    {
+        redde NIHIL;
+    }
+    symbolum = conexio_symbolum_obtinere(conexio, index);
+    redde symbolum->sedes;
+}
+
+s32
+conexio_symbolum_globale (constans Conexio* conexio,
+    s32 modulus_index, s32 index_localis)
+{
+    constans MedullaModulus* modulus;
+    s32* translatio;
+
+    si (modulus_index < ZEPHYRUM
+        || modulus_index >= (s32)officina_xar_numerus(conexio->moduli))
+    {
+        redde -I;
+    }
+    modulus = *(MedullaModulus**)officina_xar_obtinere(conexio->moduli,
+        (i32)modulus_index);
+    si (index_localis < ZEPHYRUM
+        || index_localis >= (s32)officina_xar_numerus(modulus->symbola))
+    {
+        redde -I;
+    }
+    translatio = *(s32**)officina_xar_obtinere(conexio->translationes,
+        (i32)modulus_index);
+    redde translatio[index_localis];
+}
+
+constans ConexioFunctioNexa*
+conexio_functionem_obtinere (constans Conexio* conexio, s64 index)
+{
+    redde officina_xar_obtinere_s(conexio->functiones_nexae, (s32)index);
+}
+
+i32
+conexio_numerus_functionum (constans Conexio* conexio)
+{
+    redde officina_xar_numerus(conexio->functiones_nexae);
+}
+
+i32
+conexio_numerus_modulorum (constans Conexio* conexio)
+{
+    redde officina_xar_numerus(conexio->moduli);
+}
+
+constans MedullaModulus*
+conexio_modulum_obtinere (constans Conexio* conexio, s32 index)
+{
+    MedullaModulus** locellus = officina_xar_obtinere_s(conexio->moduli,
+        index);
+
+    redde (locellus == NIHIL) ? NIHIL : *locellus;
+}
+
+/* ==================================================
+ * Census
+ * ================================================== */
+
+i32
+conexio_numerus_datorum (constans Conexio* conexio)
+{
+    redde conexio->numerus_datorum;
+}
+
+i32
+conexio_numerus_cellarum (constans Conexio* conexio)
+{
+    redde conexio->numerus_cellarum;
+}
+
+i32
+conexio_numerus_decipularum (constans Conexio* conexio)
+{
+    redde officina_xar_numerus(conexio->decipulae);
+}
+
+constans OfficinaChorda*
+conexio_decipulam_obtinere (constans Conexio* conexio, s32 index)
+{
+    redde officina_xar_obtinere_s(conexio->decipulae, index);
+}
+
 /* ================= ex officina/fontes/officina_demissio.c ================= */
 
 /* ==================================================
@@ -5003,6 +6570,9 @@ nomen structura {
     OfficinaTabulaDispersa*         lexemata;     /* SilvaToken* -> symbolum */
     OfficinaTabulaDispersa*         sedes;        /* symbolum -> DemissioSedes* */
     OfficinaTabulaDispersa*         capti;        /* symbola inscriptione capta */
+    OfficinaChorda                  stirps;       /* "lib/chorda.c" ->
+                                           * "chorda_c" (praefixum
+                                           * staticorum plagulae) */
 } Demissio;
 
 /* prototypa mutuae recursionis */
@@ -5403,6 +6973,75 @@ _bloccum_novum (Demissio* d, constans character* basis)
 {
     redde medulla_bloccum_creare(d->functio,
         _titulum_fingere(d, basis));
+}
+
+/* stirps moduli: "lib/chorda.c" -> "chorda_c" (vocabularium §II).
+ * Inventum M2a in primo contactu nexus mundi: sine praefixo statica
+ * plagulae + data anonyma trans modulos collidunt (M1b eas videre
+ * non potuit - demissio solitaria numquam collidit). */
+interior OfficinaChorda
+_stirpem_computare (OfficinaPiscina* piscina, OfficinaChorda titulus_moduli)
+{
+    i8 littera[LXIV];
+    i32 initium = ZEPHYRUM;
+    i32 scriptum = ZEPHYRUM;
+    i32 i;
+    OfficinaChorda s;
+
+    per (i = ZEPHYRUM; i < titulus_moduli.mensura; i++)
+    {
+        si (titulus_moduli.datum[i] == (i8)'/')
+        {
+            initium = i + I;
+        }
+    }
+    per (i = initium; i < titulus_moduli.mensura
+        && scriptum < (i32)(LXIV - I); i++)
+    {
+        i8 c = titulus_moduli.datum[i];
+        b32 idoneus = (b32)((c >= (i8)'a' && c <= (i8)'z')
+            || (c >= (i8)'A' && c <= (i8)'Z')
+            || (c >= (i8)'0' && c <= (i8)'9')
+            || c == (i8)'_');
+
+        littera[scriptum] = idoneus ? c : (i8)'_';
+        scriptum++;
+    }
+    s.datum = littera;
+    s.mensura = scriptum;
+    redde officina_chorda_transcribere(s, piscina);
+}
+
+/* titulus symboli globalis - CANALIS UNICUS definitionis ET
+ * referentiarum (aliter nexus frangitur): statica plagulae
+ * (profunditas 0 + REPOSITIO_STATICA) praefixum stirpis accipiunt
+ * ($stirps.titulus); externa titulum nudum servant. */
+interior OfficinaChorda
+_titulum_symboli (Demissio* d, constans SemanticaSymbolum* symbolum)
+{
+    OfficinaChorda titulus = _ch_de_silva(symbolum->titulus);
+
+    si (symbolum->profunditas > ZEPHYRUM
+        || (symbolum->repositio & REPOSITIO_STATICA) == ZEPHYRUM)
+    {
+        redde titulus;
+    }
+    {
+        i8 littera[CXXVIII];
+        OfficinaChorda plenus;
+        i32 caput_s = (d->stirps.mensura < XL)
+            ? d->stirps.mensura : XL;
+        i32 caput_t = (titulus.mensura < LXXX)
+            ? titulus.mensura : LXXX;
+
+        memcpy(littera, d->stirps.datum, (memoriae_index)caput_s);
+        littera[caput_s] = (i8)'.';
+        memcpy(littera + caput_s + I, titulus.datum,
+            (memoriae_index)caput_t);
+        plenus.datum = littera;
+        plenus.mensura = caput_s + I + caput_t;
+        redde officina_chorda_transcribere(plenus, d->piscina);
+    }
 }
 
 interior b32
@@ -5864,12 +7503,17 @@ _datum_invenire_aut_creare (Demissio* d, OfficinaChorda titulus,
         (i32)ordinatio);
 }
 
+/* data anonyma per se privata moduli sunt -> praefixum stirpis
+ * semper ($stirps.chorda_N; inventum M2a: sine eo chorda_0 in
+ * omnibus modulis collidit) */
 interior OfficinaChorda
 _titulum_dati (Demissio* d, constans character* basis)
 {
-    character littera[XLVIII];
+    character littera[CXXVIII];
     OfficinaChorda temporarium;
-    s32 longitudo = (s32)sprintf(littera, "%s_%d", basis,
+    s32 longitudo = (s32)sprintf(littera, "%.*s.%s_%d",
+        (int)((d->stirps.mensura < XL) ? d->stirps.mensura : XL),
+        (constans character*)d->stirps.datum, basis,
         (int)d->numerator_datorum);
 
     d->numerator_datorum++;
@@ -5950,7 +7594,7 @@ _locum_staticum (Demissio* d, constans SilvaNodus* nodus,
             redde FALSUM;   /* localia non statice */
         }
         *symbolum_fructus = medulla_symbolum_internare(d->modulus,
-            _ch_de_silva(symbolum->titulus));
+            _titulum_symboli(d, symbolum));
         *addendum_fructus = 0;
         redde *symbolum_fructus >= ZEPHYRUM;
     }
@@ -6481,7 +8125,7 @@ _identificatorem (Demissio* d, constans SilvaNodus* nodus)
     }
     {
         s32 index_symboli = medulla_symbolum_internare(d->modulus,
-            _ch_de_silva(symbolum->titulus));
+            _titulum_symboli(d, symbolum));
         s32 inscriptio = _em(d, nodus, MEDULLA_OP_LOCUS,
             MEDULLA_TYPUS_NIHIL, MEDULLA_TYPUS_NIHIL,
             _registrum_temporarium(d),
@@ -7171,7 +8815,7 @@ _vocationem (Demissio* d, constans SilvaNodus* nodus)
         {
             vocatus = medulla_op_symbolum(
                 medulla_symbolum_internare(d->modulus,
-                    _ch_de_silva(symbolum->titulus)));
+                    _titulum_symboli(d, symbolum)));
         }
     }
     si (vocatus.genus == (s32)MEDULLA_OPERANDUM_NIHIL)
@@ -7635,7 +9279,7 @@ _ut_locum (Demissio* d, constans SilvaNodus* nodus)
         /* globale */
         {
             s32 index_symboli = medulla_symbolum_internare(
-                d->modulus, _ch_de_silva(symbolum->titulus));
+                d->modulus, _titulum_symboli(d, symbolum));
 
             locus.directum = FALSUM;
             locus.index = _em(d, nodus, MEDULLA_OP_LOCUS,
@@ -8012,7 +9656,7 @@ interior vacuum
 _staticum_locale (Demissio* d, constans SemanticaSymbolum* symbolum,
     constans SilvaNodus* nodus, constans SilvaNodus* initiator)
 {
-    character littera[LXIV];
+    character littera[CXXVIII];
     OfficinaChorda titulus;
     i32 scriptum = ZEPHYRUM;
     i32 caput_f;
@@ -8026,10 +9670,10 @@ _staticum_locale (Demissio* d, constans SemanticaSymbolum* symbolum,
         _sistere(d, nodus, "forma statici localis ignota");
         redde;
     }
-    caput_f = (d->functio->titulus.mensura < XXIV)
-        ? (i32)d->functio->titulus.mensura : XXIV;
-    caput_s = (symbolum->titulus.mensura < XXIV)
-        ? (i32)symbolum->titulus.mensura : XXIV;
+    caput_f = (d->functio->titulus.mensura < XL)
+        ? (i32)d->functio->titulus.mensura : XL;
+    caput_s = (symbolum->titulus.mensura < XL)
+        ? (i32)symbolum->titulus.mensura : XL;
     memcpy(littera, d->functio->titulus.datum,
         (memoriae_index)caput_f);
     scriptum = caput_f;
@@ -8048,7 +9692,7 @@ _staticum_locale (Demissio* d, constans SemanticaSymbolum* symbolum,
     si (medulla_symbolum_obtinere(d->modulus, index_symboli)->genus
         != (s32)MEDULLA_SYMBOLUM_EXTERNUM)
     {
-        character alterum[LXXX];
+        character alterum[CXXVIII];
         OfficinaChorda secunda;
         s32 n = (s32)sprintf(alterum, "%.*s_%d", (int)scriptum,
             littera, (int)d->numerator_datorum);
@@ -9004,7 +10648,7 @@ _functionem (Demissio* d, constans SilvaNodus* nodus)
         reditus_aggregatus = VERUM;
     }
     d->functio = medulla_functionem_creare(d->modulus,
-        _ch_de_silva(symbolum->titulus),
+        _titulum_symboli(d, symbolum),
         (mt_reditus >= ZEPHYRUM) ? mt_reditus : MEDULLA_TYPUS_NIHIL,
         typus_functionis->datum.functio.est_variadica);
     si (d->functio == NIHIL)
@@ -9312,7 +10956,7 @@ _data_globalia (Demissio* d, constans SilvaNodus* nodus)
             perge;
         }
         datum = _datum_invenire_aut_creare(d,
-            _ch_de_silva(symbolum->titulus), mensura,
+            _titulum_symboli(d, symbolum), mensura,
             _ordinatio_typi(d, symbolum->typus));
         si (datum == NIHIL)
         {
@@ -9400,6 +11044,7 @@ demissio_currere (OfficinaPiscina* piscina, constans SilvaParsura* parsura,
     memset(&d, ZEPHYRUM, magnitudo(Demissio));
     d.piscina = piscina;
     d.sem = sem;
+    d.stirps = _stirpem_computare(piscina, titulus_moduli);
     d.modulus = medulla_modulum_creare(piscina, titulus_moduli);
     d.bloccus = -I;
     d.frange_finis = -I;
@@ -9456,4 +11101,136 @@ demissio_currere (OfficinaPiscina* piscina, constans SilvaParsura* parsura,
         silva_piscina_destruere(d.officina_piscina_silvae);
     }
     redde d.modulus;
+}
+
+/* ==================================================
+ * Distillatio linearum (M2a) - vide caput
+ * ================================================== */
+
+/* lexema primum verum subarboris (byte_offset -1 = syntheticum -
+ * praetermittitur; fusor _linea_nodi cognatum) */
+interior constans SilvaToken*
+_lexema_primum (constans SilvaNodus* nodus, i32 profunditas)
+{
+    i32 i;
+
+    si (nodus == NIHIL || profunditas > XXXII)
+    {
+        redde NIHIL;
+    }
+    per (i = ZEPHYRUM; i < (i32)nodus->numerus_locorum; i++)
+    {
+        constans SilvaValor* v = &nodus->loci[i];
+
+        si (v->genus == SILVA_VALOR_TOKEN && v->datum.token != NIHIL
+            && v->datum.token->byte_offset != -I)
+        {
+            redde v->datum.token;
+        }
+        si (v->genus == SILVA_VALOR_NODUS)
+        {
+            constans SilvaToken* lexema = _lexema_primum(
+                v->datum.nodus, profunditas + I);
+
+            si (lexema != NIHIL)
+            {
+                redde lexema;
+            }
+        }
+    }
+    redde NIHIL;
+}
+
+interior vacuum
+_lineam_colligere (MedullaLineae* lineae,
+    constans SilvaParsura* parsura,
+    constans structura SilvaNodus* origo)
+{
+    constans SilvaToken* lexema;
+    OfficinaChorda via;
+
+    si (origo == NIHIL
+        || medulla_lineam_quaerere(lineae, origo, NIHIL, NIHIL))
+    {
+        redde;
+    }
+    lexema = _lexema_primum((constans SilvaNodus*)origo, ZEPHYRUM);
+    si (lexema == NIHIL)
+    {
+        redde;
+    }
+    via.datum = NIHIL;
+    via.mensura = ZEPHYRUM;
+    si (parsura->expansio != NIHIL)
+    {
+        constans SilvaChorda* via_s = silva_fons_via(
+            parsura->expansio, lexema->fons_index);
+
+        si (via_s != NIHIL)
+        {
+            via = _ch_de_silva(*via_s);
+        }
+    }
+    (vacuum)medulla_lineam_ponere(lineae, origo, via,
+        (i32)lexema->linea);
+}
+
+MedullaLineae*
+demissio_lineas_colligere (OfficinaPiscina* piscina,
+    constans MedullaModulus* modulus,
+    constans SilvaParsura* parsura)
+{
+    MedullaLineae* lineae;
+    i32 f;
+    i32 numerus_functionum;
+    i32 numerus_datorum;
+
+    si (piscina == NIHIL || modulus == NIHIL || parsura == NIHIL)
+    {
+        redde NIHIL;
+    }
+    lineae = medulla_lineas_creare(piscina);
+    si (lineae == NIHIL)
+    {
+        redde NIHIL;
+    }
+
+    numerus_functionum = officina_xar_numerus(modulus->functiones);
+    per (f = ZEPHYRUM; f < numerus_functionum; f++)
+    {
+        constans MedullaFunctio* functio =
+            *(MedullaFunctio**)officina_xar_obtinere(modulus->functiones,
+                (i32)f);
+        i32 b;
+        i32 numerus_bloccorum = officina_xar_numerus(functio->blocci);
+
+        _lineam_colligere(lineae, parsura, functio->origo);
+        per (b = ZEPHYRUM; b < numerus_bloccorum; b++)
+        {
+            constans MedullaBloccus* bloccus =
+                (constans MedullaBloccus*)officina_xar_obtinere(
+                    functio->blocci, (i32)b);
+            i32 n = officina_xar_numerus(bloccus->instructiones);
+            i32 k;
+
+            per (k = ZEPHYRUM; k < n; k++)
+            {
+                constans MedullaInstructio* instructio =
+                    (constans MedullaInstructio*)officina_xar_obtinere(
+                        bloccus->instructiones, (i32)k);
+
+                _lineam_colligere(lineae, parsura,
+                    instructio->origo);
+            }
+        }
+    }
+    numerus_datorum = officina_xar_numerus(modulus->data);
+    per (f = ZEPHYRUM; f < numerus_datorum; f++)
+    {
+        constans MedullaDatum* datum =
+            *(MedullaDatum**)officina_xar_obtinere(modulus->data, (i32)f);
+
+        _lineam_colligere(lineae, parsura, datum->origo);
+    }
+    redde lineae;
 }

@@ -18,16 +18,16 @@ functio $legens (s32 %i) -> s64
     %locales = arca 12, 4
     %mixta = arca 12, 4
     %salve_localis = arca 8, 1
-    %t4 = locus $congeries_4
+    %t4 = locus $statica_c.congeries_4
     copia %locales, %t4, 12
-    %t5 = locus $zeri_5
+    %t5 = locus $statica_c.zeri_5
     copia %mixta, %t5, 12
     scribere.s32 %mixta, 1
     %t6 = addere.i64 %mixta, 4
     scribere.s32 %t6, %i
     %t7 = addere.i64 %mixta, 8
     scribere.s32 %t7, 0
-    %t8 = locus $chorda_6
+    %t8 = locus $statica_c.chorda_6
     copia %salve_localis, %t8, 8
     %t9 = extendere.s32.s64 %i
     %t10 = multiplicare.i64 %t9, 4
@@ -50,7 +50,7 @@ functio $legens (s32 %i) -> s64
     %t27 = extendere.s8.s32 %t26
     %t28 = addere.s32 %t21, %t27
     %t29 = extendere.s32.s64 %t28
-    %t30 = locus $longum
+    %t30 = locus $statica_c.longum
     %t31 = legere.s64 %t30
     %t32 = addere.s64 %t29, %t31
     %t33 = locus $tabula_functionum
@@ -65,7 +65,7 @@ functio $legens (s32 %i) -> s64
 datum $numerus magnitudo 4 ordinatio 4
     octeti 2a000000
 
-datum $longum magnitudo 8 ordinatio 8
+datum $statica_c.longum magnitudo 8 ordinatio 8
     octeti f9ffffff ffffffff
 
 datum $ratio magnitudo 8 ordinatio 8
@@ -96,9 +96,9 @@ datum $ad_elementum magnitudo 8 ordinatio 8
 
 datum $salutatio magnitudo 8 ordinatio 8
     octeti 00000000 00000000
-    relocatio 0 $chorda_0
+    relocatio 0 $statica_c.chorda_0
 
-datum $chorda_0 magnitudo 7 ordinatio 1
+datum $statica_c.chorda_0 magnitudo 7 ordinatio 1
     octeti 73616c76 650a00
 
 datum $fixum magnitudo 8 ordinatio 1
@@ -107,17 +107,17 @@ datum $fixum magnitudo 8 ordinatio 1
 datum $nomina magnitudo 24 ordinatio 8
     octeti 00000000 00000000 00000000 00000000
     octeti 00000000 00000000
-    relocatio 0 $chorda_1
-    relocatio 8 $chorda_2
-    relocatio 16 $chorda_3
+    relocatio 0 $statica_c.chorda_1
+    relocatio 8 $statica_c.chorda_2
+    relocatio 16 $statica_c.chorda_3
 
-datum $chorda_1 magnitudo 2 ordinatio 1
+datum $statica_c.chorda_1 magnitudo 2 ordinatio 1
     octeti 6100
 
-datum $chorda_2 magnitudo 4 ordinatio 1
+datum $statica_c.chorda_2 magnitudo 4 ordinatio 1
     octeti 62230a00
 
-datum $chorda_3 magnitudo 2 ordinatio 1
+datum $statica_c.chorda_3 magnitudo 2 ordinatio 1
     octeti 6300
 
 datum $tabula_functionum magnitudo 16 ordinatio 8
@@ -127,11 +127,11 @@ datum $tabula_functionum magnitudo 16 ordinatio 8
 datum $addens.comes magnitudo 4 ordinatio 4
     octeti 05000000
 
-datum $congeries_4 magnitudo 12 ordinatio 4
+datum $statica_c.congeries_4 magnitudo 12 ordinatio 4
     octeti 01000000 02000000 03000000
 
-datum $zeri_5 magnitudo 12 ordinatio 1
+datum $statica_c.zeri_5 magnitudo 12 ordinatio 1
     octeti 00000000 00000000 00000000
 
-datum $chorda_6 magnitudo 8 ordinatio 1
+datum $statica_c.chorda_6 magnitudo 8 ordinatio 1
     octeti 696f0000 00000000

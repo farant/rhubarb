@@ -37,7 +37,7 @@ structura RegistrumCommandi;
  * ================================================== */
 
 /* Semantic color indices - mapped to actual colors by theme */
-enumeratio {
+nomen enumeratio {
     COLORATIO_DEFALTA     = 0,   /* Normal text */
     COLORATIO_COMMANDUM   = 1,   /* $command */
     COLORATIO_TAGUM       = 2,   /* <tag> */
@@ -60,7 +60,7 @@ enumeratio {
  * ================================================== */
 
 /* Status per linea - tracks context at end of line */
-enumeratio {
+nomen enumeratio {
     STATUS_LINEA_NORMALIS   = 0,  /* Normal text */
     STATUS_LINEA_IN_SPUTNIK = 1,  /* Inside <sputnik> block */
     STATUS_LINEA_IN_STML    = 2,  /* Inside other STML content */

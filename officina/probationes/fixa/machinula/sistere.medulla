@@ -1,0 +1,18 @@
+; fixtura machinulae: sistere (ruit SOLUM SI exsecutum)
+; exspectatum: $main -> 42 (ramus circa sistere salit)
+; $cade numquam vocatur a $main - probatio halitus M2b eam
+; directe vocabit (causa "probatio halitus")
+modulus "fixa/machinula/sistere.medulla"
+
+functio $main () -> s32
+@initium:
+    %c = movere.s32 1
+    ramus %c -> @vivus | @mortuus
+@mortuus:
+    sistere "numquam exsecutum"
+@vivus:
+    redde 42
+
+functio $cade () -> vacuum
+@initium:
+    sistere "probatio halitus"

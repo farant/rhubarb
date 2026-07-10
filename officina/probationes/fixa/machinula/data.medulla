@@ -1,0 +1,22 @@
+; fixtura machinulae: data statica (octeti/relocatio ADDITIVA/locus)
+; exspectatum: $main -> 42
+; $valores = {10, 32, 0}; $ad_valores = &valores + 4 (addendum!)
+; legere[valores]=10; legere[*ad_valores]=32; 10+32=42
+modulus "fixa/machinula/data.medulla"
+
+functio $main () -> s32
+@initium:
+    %p = locus $valores
+    %v1 = legere.s32 %p
+    %q = locus $ad_valores
+    %r = legere.i64 %q
+    %v2 = legere.s32 %r
+    %t = addere.s32 %v1, %v2
+    redde %t
+
+datum $valores magnitudo 12 ordinatio 4
+    octeti 0a000000 20000000 00000000
+
+datum $ad_valores magnitudo 8 ordinatio 8
+    octeti 04000000 00000000
+    relocatio 0 $valores

@@ -1,0 +1,16 @@
+; fixtura machinulae: arithmetica integralis
+; exspectatum: $main -> 42
+; catena: 6*9=54; 54-5=49; 49/2=24; 24%10=4; -4; -4+46=42
+modulus "fixa/machinula/arithmetica.medulla"
+
+functio $main () -> s32
+@initium:
+    %a = movere.s32 6
+    %b = movere.s32 9
+    %t1 = multiplicare.s32 %a, %b
+    %t2 = subtrahere.s32 %t1, 5
+    %t3 = dividere.s32 %t2, 2
+    %t4 = residuum.s32 %t3, 10
+    %t5 = negare.s32 %t4
+    %t6 = addere.s32 %t5, 46
+    redde %t6

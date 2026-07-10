@@ -282,9 +282,149 @@ int main(void)
             proba(officina_xar_numerus(modulus_dem->causae) == 0,
                 "demissio sine sistere");
         }
+        /* distillatio linearum (M2a): dum frons vivit */
+        if (modulus_dem != NULL && parsura != NULL) {
+            MedullaLineae* lineae = demissio_lineas_colligere(
+                piscina, modulus_dem, parsura);
+            MedullaFunctio** fd = (MedullaFunctio**)
+                officina_xar_obtinere(modulus_dem->functiones, 0);
+            const MedullaBloccus* bd;
+            const MedullaInstructio* id;
+            OfficinaChorda via;
+            unsigned int linea = 0;
+
+            proba(lineae != NULL, "lineas colligere");
+            bd = medulla_bloccum_obtinere(*fd, 0);
+            id = (const MedullaInstructio*)officina_xar_obtinere(
+                bd->instructiones, 0);
+            proba(lineae != NULL && id->origo != NULL
+                && medulla_lineam_quaerere(lineae, id->origo, &via,
+                       &linea)
+                && linea > 0, "lineam quaerere colligata");
+        }
         if (piscina_silvae != NULL) {
             silva_piscina_destruere(piscina_silvae);
         }
+    }
+
+    /* M2a: regio + conexio per superficiem publicam */
+    {
+        Regio* regio = regio_generare(piscina);
+
+        proba(regio != NULL, "regio generare");
+        if (regio != NULL) {
+            void* globale;
+            void* locus;
+
+            proba(regio_basis(regio) != NULL, "regio basis");
+            proba(regio_magnitudo_tota(regio) > 0, "regio tota");
+            proba(regio_continet(regio, regio_basis(regio)),
+                "regio continet");
+            regio_custodiam_ponere(regio, 1);
+            proba(regio_custodia(regio) == 1, "regio custodia");
+            globale = regio_globalia_allocare(regio, 16, 16);
+            proba(globale != NULL
+                && regio_globalia_usus(regio) >= 16,
+                "regio globalia");
+            proba(regio_stiva_initium(regio) != NULL
+                && regio_stiva_magnitudo_octetorum(regio) > 0,
+                "regio stiva");
+            locus = regio_allocare(regio, 32);
+            proba(locus != NULL, "regio allocare");
+            locus = regio_reallocare(regio, locus, 64);
+            proba(locus != NULL, "regio reallocare");
+            proba(regio_liberare(regio, locus), "regio liberare");
+            proba(regio_acervus_usus(regio) == 0
+                && regio_acervus_apex(regio) >= 64
+                && regio_numerus_allocationum(regio) == 2
+                && regio_numerus_liberationum(regio) == 2,
+                "regio census");
+
+            {
+                Conexio* conexio = conexio_creare(piscina, regio);
+
+                proba(conexio != NULL, "conexio creare");
+                proba(conexio_modulum_addere(conexio, modulus),
+                    "conexio addere");
+                proba(conexio_nectere(conexio), "conexio nectere");
+                proba(conexio_querela(conexio) != NULL
+                    && conexio_querela_symbolum(conexio) != NULL,
+                    "conexio querelae");
+                proba(conexio_numerus_modulorum(conexio) == 1
+                    && conexio_modulum_obtinere(conexio, 0)
+                        == modulus, "conexio moduli");
+                proba(conexio_numerus_symbolorum(conexio) == 3,
+                    "conexio symbola");
+                {
+                    int idx = conexio_symbolum_quaerere(conexio,
+                        ch("probare"));
+                    const ConexioSymbolum* symbolum =
+                        conexio_symbolum_obtinere(conexio, idx);
+                    const ConexioDescriptor* descriptor;
+                    const ConexioFunctioNexa* nexa;
+
+                    proba(idx >= 0 && symbolum != NULL
+                        && symbolum->genus
+                            == CONEXIO_SYMBOLUM_FUNCTIO,
+                        "conexio symbolum");
+                    descriptor = (const ConexioDescriptor*)
+                        conexio_sedes_quaerere(conexio,
+                            ch("probare"));
+                    proba(descriptor != NULL
+                        && descriptor->signum
+                            == CONEXIO_SIGNUM_INTERPRETATUM,
+                        "conexio descriptor");
+                    nexa = conexio_functionem_obtinere(conexio,
+                        descriptor->index);
+                    proba(nexa != NULL && nexa->functio == functio
+                        && nexa->modulus_index == 0,
+                        "conexio nexa");
+                    proba(conexio_symbolum_globale(conexio, 0,
+                            s_externa) >= 0, "conexio globale");
+                }
+                proba(conexio_numerus_functionum(conexio) == 1
+                    && conexio_numerus_datorum(conexio) == 1
+                    && conexio_numerus_cellarum(conexio) == 0
+                    && conexio_numerus_decipularum(conexio) == 1,
+                    "conexio census");
+                proba(conexio_decipulam_obtinere(conexio, 0)
+                    != NULL, "conexio decipula");
+                /* relocatio ADDITIVA: locellus = sedes decipulae
+                 * externae + addendum (octeti 01..08 LE) */
+                {
+                    const unsigned char* tab =
+                        (const unsigned char*)conexio_sedes_quaerere(
+                            conexio, ch("tabula"));
+                    const void* externa_sedes =
+                        conexio_sedes_quaerere(conexio,
+                            ch("externa"));
+                    long long locellus;
+
+                    memcpy(&locellus, tab, 8);
+                    proba(tab != NULL && externa_sedes != NULL
+                        && locellus == (long long)(size_t)
+                                externa_sedes
+                            + 0x0807060504030201LL,
+                        "relocatio additiva");
+                }
+            }
+            regio_destruere(regio);
+        }
+    }
+
+    /* M2a: lineae per claves opacas */
+    {
+        MedullaLineae* lineae = medulla_lineas_creare(piscina);
+        const struct SilvaNodus* origo =
+            (const struct SilvaNodus*)(const void*)AUREUM;
+        OfficinaChorda via;
+        unsigned int linea = 0;
+
+        proba(lineae != NULL, "lineae creare");
+        proba(medulla_lineam_ponere(lineae, origo, ch("x.c"), 7),
+            "lineam ponere");
+        proba(medulla_lineam_quaerere(lineae, origo, &via, &linea)
+            && linea == 7 && via.mensura == 3, "lineam quaerere");
     }
 
     printf("hospes: %d/%d fideles (pollutio nulla)\n", fideles,

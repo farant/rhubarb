@@ -169,3 +169,28 @@ instrument reborn):
   identifiers (126), small tails (16 notae/sistere, all named).
 - Apex memoriae 9.7 GB (demo_52 data-dense: dump text ~3x in memory
   during the round-trip) — survives; optimization on measurement only.
+
+## 2026-07-10 — M2a: stem-mangling + distillatio linearum
+
+**Stem-mangling gap closed** (found by conexio's first world-link,
+see officina_conexio.worklog.md): new `_titulum_symboli` chokepoint —
+file-scope statics (profunditas 0 + REPOSITIO_STATICA) get
+`$<stirps>.<name>` per the SEALED vocabulary §II; `_titulum_dati`
+always prefixes (anonymous data are inherently module-private).
+Function-scope statics cascade automatically (their prefix is the
+containing functio's — possibly already stem-mangled — title).
+SIX sites route through the chokepoint (identifier value + locum
+staticum + vocare callee + global locus + functio definition +
+global datum) — definitions and references MUST share the path.
+Goldens re-pinned + blessed: scalaria/fluxus/aggregata byte-identical
+(no statics), statica pure renames ($statica_c.chorda_0 etc.;
+extern $numerus correctly bare).
+
+**demissio_lineas_colligere** (M2a deliverable): origo → (via, linea)
+distilled WHILE the front-end lives — parsura->expansio is public
+(fundus-medulla's "not reachable from nodus alone" resolved at the
+parsura level); descent helper skips synthetic tokens
+(byte_offset == -1). Result = MedullaLineae (medulla-side, no silva
+types: origo pointers as OPAQUE KEYS — per-module maps, so
+arena-reuse address collisions across TUs are impossible). Consumer:
+M2b flight recorder; this IS proto-indicium's line table.

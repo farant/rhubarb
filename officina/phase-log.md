@@ -616,3 +616,75 @@ divergence (a test accidentally depending on native garbage) = a
 CORPUS bug, surfaced honestly, poison makes it recognizable.
 arbor2_glr wall-clock: accept minutes, measure, no optimization
 before M2c data.
+
+### M2a — RELATIO (2026-07-10): regio + conexio + nexus mundi SHIPPED
+
+**BAR GREEN: THE WORLD LINKS.** cursor v0 (link-only; grows into the
+full runner at M2c): 113 lib TUs lowered once into a cached-moduli
+piscina (trees destroyed per TU) + probatio_piscina.c → ONE conexio:
+**0 load failures; 11,863 global symbols; 2,799 functiones nexae;
+8,898 data placed + relocations patched; 164 decipulae COUNTED +
+NAMED; $main found — descriptor 0x3000000c7c90, BYTE-IDENTICAL
+ACROSS RUNS** (fixed-base determinism observed in the wild). Nexus
+itself: 3 ms.
+
+Shipped: officina_regio (fixed-base 64GB reservation, globalia|
+stiva|acervus, LIFO-deterministic free-list malloc PINNED in
+probatio, 16-aligned bases, poison custodia, validating liberare;
+62 asserts) + officina_conexio (global table + per-module
+translations, immutable moduli, ADDITIVE relocation patching
+memcpy-safe, 16B descriptors signum-tagged, lazy decipulae, extern
+cells stdin/stdout/stderr ansae + errno, duplicate = honest fractura
+w/ named symbol; 105 asserts incl. 9 machinula fixtures loading) +
+per-op-family .medulla fixtures (fixa/machinula/, 9 files, expected
+exit values documented — M2b executes them) + demissio_lineas_
+colligere + MedullaLineae (origo→(via,linea) distilled while the
+front lives; proto-indicium) + cursor.c/cursor.sh. Amalgam: 5
+capita/corpora, VERIFICATUM, **hospes 57/57** (was 28 — every new
+row called). Suite 5/5. Fusor full-corpus gate GREEN after the
+stem-mangling change: **576/576 plagulae** (corpus grew 571→576),
+0 fractae, 0 ruinae, **circuli 576/576 byte-idem**, 1,160,432
+instructiones; sistere 2,912 in 105 plagulis — same classified
+causa rows, deltas consistent with corpus growth.
+
+**THE CORPUS-CONTACT LAW: 4th data point — THREE real finds on
+first world-link contact** (all at the conexio↔medulla seam, as the
+INTENTIO predicted):
+1. **Demissio stem-mangling gap** — $chorda_0 and file statics
+   collided across modules (M1b's single-TU lowering couldn't see
+   it). The SEALED vocabulary already prescribed $<stirps>.<name>;
+   fixed at ONE chokepoint (_titulum_symboli: definitions AND
+   references share the path). Goldens re-pinned + BLESSED (pure
+   renames; extern names correctly bare).
+2. **REAL CORPUS BUG** — include/coloratio.h + include/biblia.h had
+   bare `enumeratio {...} Nomen;` (nomen MISSING): tentative-
+   definition GLOBALS in every including TU, silently merged by
+   native common-linking for months. FILE-FILUM class. Three
+   typedefs repaired (names appear only in comments — intent
+   unambiguous).
+3. **Conexio duplicate-handling desync** — early-return corrupted
+   moduli/translationes parity → downstream crash. Now collects ALL
+   duplicates coherently (the collision CENSUS is the instrument);
+   nectere refuses while fracturae > 0.
+
+Emendationes (recorded, reasons in worklogs): cursor.c born at M2a
+in link-only form (the world-link bar needed the driver; INTENTIO
+listed it at M2c — it grows there); MedullaLineae's public table
+field is void* (TabulaDispersa = anonymous-struct typedef, no tag —
+the Xar landmine's sibling, solved by conversion not copy). Named
+notes: decipulae contain ~70 BARE LOCAL NAMES (st/tv/stb internals)
+= the POSIX/stb park's linker face → M2c classification row; only
+2 cellae bound (errno may be reaching demissio via lexicon, not
+symbol — CHECK at M2b errno write-back design); biblia_dr.c
+over-tectum → biblia_* decipulae cascade (M2c: raise tectum for the
+world). Latina 8th firing: externus.
+
+**NEXT: M2b — machinula core + Wave-0 floor** (dispatch loop all 35
+ops w/ canonicalize-on-write; frames + arca + stack check; flight
+recorder ALWAYS ON w/ line-table backtraces + counters; sistere
+runtime; exit/redde plumbing; builtin chokepoint + floor: malloc
+free strlen strcpy memcpy memset snprintf printf exit + %zu; ansa
+cells wired; errno write-back mechanism; the 9 fixtures EXECUTE with
+asserted exit values; summa.medulla = walking skeleton). BAR:
+**probatio_piscina GREEN interpreted** (exit 0 + stdout
+byte-identical to native — the memory-model gate).

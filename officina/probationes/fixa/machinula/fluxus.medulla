@@ -1,0 +1,21 @@
+; fixtura machinulae: fluxus (salire/ramus; ansa summae §VIII)
+; exspectatum: $main -> 42
+; summa 1..6 = 21; 21*2 = 42
+modulus "fixa/machinula/fluxus.medulla"
+
+functio $main () -> s32
+@initium:
+    %n = movere.s32 6
+    %s = movere.s32 0
+    %i = movere.s32 1
+    salire @proba
+@proba:
+    %c = maior.s32 %i, %n
+    ramus %c -> @finis | @corpus
+@corpus:
+    %s = addere.s32 %s, %i
+    %i = addere.s32 %i, 1
+    salire @proba
+@finis:
+    %t = multiplicare.s32 %s, 2
+    redde %t

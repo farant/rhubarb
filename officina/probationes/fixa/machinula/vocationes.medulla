@@ -1,0 +1,22 @@
+; fixtura machinulae: vocationes (directa + indirecta per locum!)
+; exspectatum: $main -> 42
+; addens(20,1)=21; %f = locus $geminare (descriptor!);
+; vocare %f (21) = 42 - iter descriptoris totum
+modulus "fixa/machinula/vocationes.medulla"
+
+functio $addens (s32 %a, s32 %b) -> s32
+@initium:
+    %t = addere.s32 %a, %b
+    redde %t
+
+functio $geminare (s32 %x) -> s32
+@initium:
+    %t = multiplicare.s32 %x, 2
+    redde %t
+
+functio $main () -> s32
+@initium:
+    %t1 = vocare.s32 $addens, 20, 1
+    %f = locus $geminare
+    %t2 = vocare.s32 %f, %t1
+    redde %t2

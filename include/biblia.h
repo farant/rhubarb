@@ -22,7 +22,7 @@
  * Indices Librorum (Douay-Rheims ordering)
  * ================================================== */
 
-enumeratio {
+nomen enumeratio {
     /* Vetus Testamentum */
     LIBER_GENESIS = 0,
     LIBER_EXODUS,
