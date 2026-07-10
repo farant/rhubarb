@@ -446,3 +446,43 @@ interpreted, Waves 0+1; piscina suite first — the memory-model
 gate; conexio design opens the milestone: module merging, EXTERNUM
 resolution, builtin routing = definition-absent, the additive
 relocation loader, variadic arg-width convention).
+
+### ADDENDUM ANTE COMPACTIONEM (2026-07-09) — M2 engine hints
+
+Nothing in-flight (M1 SEALED, gates green); accumulated hints for
+whoever designs M2 machinula, recorded before they evaporate:
+
+- **M2 opens with CONEXIO design** (named in the M1b RELATIO), and
+  the proven arc applies: consider simulatio-4 → interview →
+  INTENTIO — machinula has REAL unknowns (region allocator layout,
+  value representation, builtin bridge mechanics, module loading).
+  Conexio's job list: merge moduli (symbol union by name; internal-
+  linkage names already globally unique via the sealed $-prefixes);
+  EXTERNUM resolution = definition-present → link, absent → builtin
+  table, neither → honest failure; the ADDITIVE relocation loader
+  (slot = symbol address + slot's prior 8 bytes as addend).
+- **Named convention to DECISUS at M2 design**: register width
+  semantics — registers are 64-bit words; define whether sub-64
+  values sit sign-/zero-extended (affects legere/scribere/movere
+  and the variadic builtin bridge: stiva operands are 64-bit slots,
+  printf-family reads widths from format directives).
+- **Corpus bar mechanics are pre-researched** (spec-v2 §III):
+  exit-code only, CWD = repo root, piscina suite FIRST (the
+  memory-model gate: pointer identity + 16-byte alignment +
+  indeterminate malloc + union aliasing), Waves 0+1 = v1 (~80
+  suites), Wave 0 builtin floor in §IV, qsort-as-builtin dissolves
+  the only trampoline.
+- **The 2,870 sistere sites are LOADED, not defused**: Wave 0/1
+  suites should never EXECUTE one; if one fires at runtime, that is
+  the honest signal (likely = the systema_posix pull, the NAMED
+  Wave-1 prerequisite — filum needs struct stat).
+- **sistere at runtime**: halt printing the causa + position;
+  origo is in-memory only (textual provenance still parked → M3).
+- M2's instrument analog: the corpus-bar runner (per-suite: lower
+  all TUs → conexio → run principale → exit code) + differential
+  spot-checks (same test native vs interpreted, byte-for-byte).
+  Fusor remains the standing lowering gate.
+- Re-entry: officina/CLAUDE.md → this phase-log tail (M1b RELATIO +
+  AUDITUS + this addendum) → officina-spec-v2.md §III/§IV/§V/§VIII →
+  vocabularium-medullae.md → demissio/medulla worklogs. NEVER
+  implement from a compaction summary alone.
