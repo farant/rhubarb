@@ -1,0 +1,121 @@
+modulus "statica.c"
+
+functio $addens (s32 %k) -> s32
+@initium_0:
+    %t1 = locus $addens.comes
+    %t2 = legere.s32 %t1
+    %t3 = addere.s32 %t2, %k
+    scribere.s32 %t1, %t3
+    %t4 = locus $addens.comes
+    %t5 = legere.s32 %t4
+    %t6 = locus $numerus
+    %t7 = legere.s32 %t6
+    %t8 = addere.s32 %t5, %t7
+    redde %t8
+
+functio $legens (s32 %i) -> s64
+@initium_0:
+    %locales = arca 12, 4
+    %mixta = arca 12, 4
+    %salve_localis = arca 8, 1
+    %t4 = locus $congeries_1
+    copia %locales, %t4, 12
+    %t5 = locus $zeri_2
+    copia %mixta, %t5, 12
+    scribere.s32 %mixta, 1
+    %t6 = addere.i64 %mixta, 4
+    scribere.s32 %t6, %i
+    %t7 = addere.i64 %mixta, 8
+    scribere.s32 %t7, 0
+    %t8 = locus $chorda_3
+    copia %salve_localis, %t8, 8
+    %t9 = extendere.s32.s64 %i
+    %t10 = multiplicare.i64 %t9, 4
+    %t11 = addere.i64 %locales, %t10
+    %t12 = legere.s32 %t11
+    %t13 = movere.i64 0
+    %t14 = addere.i64 %mixta, %t13
+    %t15 = legere.s32 %t14
+    %t16 = addere.s32 %t12, %t15
+    %t17 = movere.i64 0
+    %t18 = addere.i64 %salve_localis, %t17
+    %t19 = legere.s8 %t18
+    %t20 = extendere.s8.s32 %t19
+    %t21 = addere.s32 %t16, %t20
+    %t22 = locus $salutatio
+    %t23 = legere.i64 %t22
+    %t24 = movere.i64 1
+    %t25 = addere.i64 %t23, %t24
+    %t26 = legere.s8 %t25
+    %t27 = extendere.s8.s32 %t26
+    %t28 = addere.s32 %t21, %t27
+    %t29 = extendere.s32.s64 %t28
+    %t30 = locus $longum
+    %t31 = legere.s64 %t30
+    %t32 = addere.s64 %t29, %t31
+    %t33 = locus $tabula_functionum
+    %t34 = movere.i64 0
+    %t35 = addere.i64 %t33, %t34
+    %t36 = legere.i64 %t35
+    %t37 = vocare.s32 %t36, %i
+    %t38 = extendere.s32.s64 %t37
+    %t39 = addere.s64 %t32, %t38
+    redde %t39
+
+datum $numerus magnitudo 4 ordinatio 4
+    octeti 2a000000
+
+datum $longum magnitudo 8 ordinatio 8
+    octeti f9ffffff ffffffff
+
+datum $ratio magnitudo 8 ordinatio 8
+    octeti 00000000 00000440
+
+datum $parvum magnitudo 4 ordinatio 4
+    octeti 0000c03f
+
+datum $zeri magnitudo 4 ordinatio 4
+    octeti 00000000
+
+datum $acies_plena magnitudo 12 ordinatio 4
+    octeti 01000000 02000000 03000000
+
+datum $acies_partim magnitudo 16 ordinatio 4
+    octeti 09000000 00000000 00000000 00000000
+
+datum $origo_p magnitudo 8 ordinatio 4
+    octeti 03000000 04000000
+
+datum $ad_numerum magnitudo 8 ordinatio 8
+    octeti 00000000 00000000
+    relocatio 0 $numerus
+
+datum $ad_elementum magnitudo 8 ordinatio 8
+    octeti 04000000 00000000
+    relocatio 0 $acies_plena
+
+datum $salutatio magnitudo 8 ordinatio 8
+    octeti 00000000 00000000
+    relocatio 0 $chorda_0
+
+datum $chorda_0 magnitudo 7 ordinatio 1
+    octeti 73616c76 650a00
+
+datum $fixum magnitudo 8 ordinatio 1
+    octeti 61766500 00000000
+
+datum $tabula_functionum magnitudo 16 ordinatio 8
+    octeti 00000000 00000000 00000000 00000000
+    relocatio 0 $addens
+
+datum $addens.comes magnitudo 4 ordinatio 4
+    octeti 05000000
+
+datum $congeries_1 magnitudo 12 ordinatio 4
+    octeti 01000000 02000000 03000000
+
+datum $zeri_2 magnitudo 12 ordinatio 1
+    octeti 00000000 00000000 00000000
+
+datum $chorda_3 magnitudo 8 ordinatio 1
+    octeti 696f0000 00000000

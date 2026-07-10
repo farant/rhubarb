@@ -361,3 +361,28 @@ staticus wrapping constans_aestimare; address constants → relocatio;
 strings via chorda_decodere), congeries locals + statics, function-
 scope statics ($functio.nomen mangling), tentative definitions;
 "nondum (M1b C)" causae retired; goldens grow (tabulae, chordae).
+
+### M1b CHUNK C — RELATIO (2026-07-09): data statica SHIPPED
+
+Globals, tentative definitions, string literals, function-scope
+statics ($functio.titulus per the sealed mangling), local congeries
+(hybrid: constant → one $congeries_N image + copia; mixed → $zeri_N
++ element stores; char-array strings → padded $chorda_N + copia).
+**Relocatio settled ADDITIVE** (prior slot bytes = addend —
+&acies_plena[1] pins it in the golden; vocabularium §VI updated; no
+new MedullaRelocatio field needed). decodere's SilvaPiscina need
+resolved by a transient demissio-owned piscina (no API churn). Float
+images via a small demissio-side evaluator (public aestimator is
+integral-only). File-scope failures _notare (module-level causa —
+the honesty bar covers file scope without a functio context).
+
+statica.c lowers with ZERO sistere; golden blessed byte-by-byte
+(LE images verified by hand). Suite 3/3; amalgam VERIFICATUM
+(hospes 28/28); silva untouched green. All "nondum" causae now
+RETIRED — demissio has no named holes left.
+
+**NEXT: Chunk D — fusor + clausura**: the corpus sweep instrument
+(percursus two-pass copied verbatim), sistere classification
+per-causa over all TUs, round-trip every dump through the lector,
+timing + apex memoriae, publica complete, M1b RELATIO + FULL
+phase-log audit + M1 SEALED (spec-v2 §XI actuals; memory).

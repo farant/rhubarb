@@ -4966,6 +4966,9 @@ nomen structura {
     s32                         index_registri;  /* valor AUT
                                                   * inscriptio arcae */
     b32                         est_arca;
+    s32                         index_symboli_moduli;  /* staticum
+                                                        * locale ->
+                                                        * datum; -I */
 } DemissioSedes;
 
 nomen structura {
@@ -4987,12 +4990,18 @@ nomen structura {
                                               * reditus aggregati
                                               * (conventio C7); -I */
     s32                     reditus_mensura;
+    s32                     numerator_datorum;  /* chorda_N/zeri_N/
+                                                 * congeries_N */
+    SilvaPiscina*           officina_piscina_silvae;  /* transitoria (decodere;
+                                              * octeti statim copiati) */
     OfficinaTabulaDispersa*         lexemata;     /* SilvaToken* -> symbolum */
     OfficinaTabulaDispersa*         sedes;        /* symbolum -> DemissioSedes* */
     OfficinaTabulaDispersa*         capti;        /* symbola inscriptione capta */
 } Demissio;
 
 /* prototypa mutuae recursionis */
+interior s32 _mensura_elementi_monstratoris (Demissio* d,
+    constans TypusC89* typus);
 interior s32 _expressionem (Demissio* d, constans SilvaNodus* nodus);
 interior MedullaOperandum _ut_operandum (Demissio* d,
     constans SilvaNodus* nodus);
@@ -5212,6 +5221,95 @@ _mensura_typi (Demissio* d, constans TypusC89* typus)
         redde -I;
     }
     redde (s32)typus->magnitudo_octetorum;
+}
+
+/* octeti LE (deterministici - machinula LE) */
+interior vacuum
+_octetos_integri (s64 valor, i8* octeti, s32 mensura)
+{
+    s32 k;
+
+    per (k = ZEPHYRUM; k < mensura; k++)
+    {
+        octeti[k] = (i8)((valor >> (k * VIII)) & 0xff);
+    }
+}
+
+/* aestimator fluitantium staticus (aestimator publicus integralis
+ * solum est): folium fluitans/integer, -, +, parenthesis, conversio */
+interior b32
+_fluitantem_aestimare (Demissio* d, constans SilvaNodus* nodus,
+    f64* valor_fructus)
+{
+    s64 integrale = 0;
+
+    nodus = _canonicus(nodus);
+    si (nodus == NIHIL)
+    {
+        redde FALSUM;
+    }
+    si (nodus->genus == (s32)SILVA_C89_GENUS_FOLIUM_FLUITANS)
+    {
+        SilvaChorda textus = _tok_textus(
+            silva_c89_folium_fluitans_tok_valor(nodus));
+        character littera[XL];
+
+        si (textus.mensura == ZEPHYRUM || textus.mensura >= XL)
+        {
+            redde FALSUM;
+        }
+        memcpy(littera, textus.datum,
+            (memoriae_index)textus.mensura);
+        littera[textus.mensura] = '\0';
+        *valor_fructus = strtod(littera, NIHIL);
+        redde VERUM;
+    }
+    si (nodus->genus == (s32)SILVA_C89_GENUS_PARENTHESIS)
+    {
+        SilvaValor v = silva_c89_parenthesis_internum(nodus);
+
+        redde v.genus == SILVA_VALOR_NODUS
+            && _fluitantem_aestimare(d, v.datum.nodus,
+                   valor_fructus);
+    }
+    si (nodus->genus == (s32)SILVA_C89_GENUS_CONVERSIO)
+    {
+        SilvaValor v = silva_c89_conversio_internum(nodus);
+
+        redde v.genus == SILVA_VALOR_NODUS
+            && _fluitantem_aestimare(d, v.datum.nodus,
+                   valor_fructus);
+    }
+    si (nodus->genus == (s32)SILVA_C89_GENUS_UNARIUM)
+    {
+        SilvaChorda operator = _tok_textus(
+            silva_c89_unarium_tok_operator(nodus));
+        SilvaValor v = silva_c89_unarium_internum(nodus);
+        f64 internum;
+
+        si (v.genus != SILVA_VALOR_NODUS
+            || !_fluitantem_aestimare(d, v.datum.nodus, &internum))
+        {
+            redde FALSUM;
+        }
+        si (_op_est(operator, "-"))
+        {
+            *valor_fructus = -internum;
+            redde VERUM;
+        }
+        si (_op_est(operator, "+"))
+        {
+            *valor_fructus = internum;
+            redde VERUM;
+        }
+        redde FALSUM;
+    }
+    si (silva_c89_constans_aestimare(d->sem, nodus, &integrale))
+    {
+        *valor_fructus = (f64)integrale;
+        redde VERUM;
+    }
+    redde FALSUM;
 }
 
 /* ==================================================
@@ -5535,9 +5633,574 @@ _sedem_creare (Demissio* d, constans SemanticaSymbolum* symbolum,
     sedes->symbolum = symbolum;
     sedes->index_registri = index_registri;
     sedes->est_arca = est_arca;
+    sedes->index_symboli_moduli = -I;
     _tabulam_ponere(d, d->sedes, (constans vacuum*)symbolum,
         (vacuum*)sedes);
     redde sedes;
+}
+
+/* ==================================================
+ * Data statica (M1b C): imagines + relocationes.
+ * Relocatio ADDITIVA: locellus = inscriptio symboli + octeti
+ * priores (addendum in imagine).
+ * ================================================== */
+
+/* nota sine contextu functionis: causa internata = signum
+ * classificatum moduli (fusor eas numerat) */
+interior vacuum
+_notare (Demissio* d, constans SilvaNodus* nodus,
+    constans character* causa)
+{
+    si (d->functio != NIHIL)
+    {
+        _sistere(d, nodus, causa);
+    }
+    alioquin
+    {
+        (vacuum)medulla_causam_internare(d->modulus,
+            _ch_literis(causa));
+    }
+}
+
+interior MedullaDatum*
+_datum_moduli (constans Demissio* d, s32 index_symboli)
+{
+    constans MedullaSymbolum* symbolum = medulla_symbolum_obtinere(
+        d->modulus, index_symboli);
+    MedullaDatum** locus_dati;
+
+    si (symbolum == NIHIL
+        || symbolum->genus != (s32)MEDULLA_SYMBOLUM_DATUM)
+    {
+        redde NIHIL;
+    }
+    locus_dati = (MedullaDatum**)officina_xar_obtinere_s(d->modulus->data,
+        symbolum->index);
+    redde (locus_dati != NIHIL) ? *locus_dati : NIHIL;
+}
+
+interior MedullaDatum*
+_datum_invenire_aut_creare (Demissio* d, OfficinaChorda titulus,
+    s32 mensura, s32 ordinatio)
+{
+    s32 index_symboli = medulla_symbolum_internare(d->modulus,
+        titulus);
+    constans MedullaSymbolum* symbolum;
+
+    si (index_symboli < ZEPHYRUM)
+    {
+        redde NIHIL;
+    }
+    symbolum = medulla_symbolum_obtinere(d->modulus, index_symboli);
+    si (symbolum->genus == (s32)MEDULLA_SYMBOLUM_DATUM)
+    {
+        redde _datum_moduli(d, index_symboli);
+    }
+    si (symbolum->genus != (s32)MEDULLA_SYMBOLUM_EXTERNUM)
+    {
+        redde NIHIL;   /* functio eodem titulo */
+    }
+    redde medulla_datum_creare(d->modulus, titulus, (i32)mensura,
+        (i32)ordinatio);
+}
+
+interior OfficinaChorda
+_titulum_dati (Demissio* d, constans character* basis)
+{
+    character littera[XLVIII];
+    OfficinaChorda temporarium;
+    s32 longitudo = (s32)sprintf(littera, "%s_%d", basis,
+        (int)d->numerator_datorum);
+
+    d->numerator_datorum++;
+    temporarium.datum = (i8*)littera;
+    temporarium.mensura = (i32)longitudo;
+    redde officina_chorda_transcribere(temporarium, d->piscina);
+}
+
+/* chorda litteralis -> datum anonymum (octeti decodati + NUL;
+ * mensura data si maior). -I in errore. */
+interior s32
+_datum_chordae_mensurae (Demissio* d, constans SilvaNodus* nodus,
+    s32 mensura_data)
+{
+    SilvaChorda octeti;
+    OfficinaChorda titulus;
+    MedullaDatum* datum;
+    s32 mensura;
+    OfficinaChorda visus;
+
+    si (d->officina_piscina_silvae == NIHIL
+        || !silva_c89_chorda_decodere(d->officina_piscina_silvae, nodus,
+               &octeti))
+    {
+        redde -I;
+    }
+    mensura = (mensura_data > (s32)octeti.mensura)
+        ? mensura_data : (s32)octeti.mensura + I;   /* + NUL */
+    titulus = _titulum_dati(d, "chorda");
+    datum = medulla_datum_creare(d->modulus, titulus, (i32)mensura,
+        I);
+    si (datum == NIHIL)
+    {
+        redde -I;
+    }
+    visus.datum = octeti.datum;
+    visus.mensura = octeti.mensura;
+    si (visus.mensura > ZEPHYRUM)
+    {
+        (vacuum)medulla_datum_scribere(datum, ZEPHYRUM, visus.datum,
+            visus.mensura);
+    }
+    redde medulla_symbolum_internare(d->modulus, titulus);
+}
+
+interior s32
+_datum_chordae (Demissio* d, constans SilvaNodus* nodus)
+{
+    redde _datum_chordae_mensurae(d, nodus, ZEPHYRUM);
+}
+
+/* locus staticus: identificator globalis / functio, cum catena
+ * accessus/subscriptionis constantis -> symbolum + addendum */
+interior b32
+_locum_staticum (Demissio* d, constans SilvaNodus* nodus,
+    s32* symbolum_fructus, s64* addendum_fructus)
+{
+    nodus = _canonicus(nodus);
+    si (nodus == NIHIL)
+    {
+        redde FALSUM;
+    }
+    si (nodus->genus == (s32)SILVA_C89_GENUS_PARENTHESIS)
+    {
+        SilvaValor v = silva_c89_parenthesis_internum(nodus);
+
+        redde v.genus == SILVA_VALOR_NODUS
+            && _locum_staticum(d, v.datum.nodus, symbolum_fructus,
+                   addendum_fructus);
+    }
+    si (nodus->genus == (s32)SILVA_C89_GENUS_FOLIUM_IDENTIFICATOR)
+    {
+        constans SemanticaSymbolum* symbolum =
+            silva_c89_symbolum_nodi(d->sem, nodus);
+
+        si (symbolum == NIHIL || symbolum->profunditas > ZEPHYRUM)
+        {
+            redde FALSUM;   /* localia non statice */
+        }
+        *symbolum_fructus = medulla_symbolum_internare(d->modulus,
+            _ch_de_silva(symbolum->titulus));
+        *addendum_fructus = 0;
+        redde *symbolum_fructus >= ZEPHYRUM;
+    }
+    si (nodus->genus == (s32)SILVA_C89_GENUS_ACCESSUS)
+    {
+        SilvaValor basis_v = silva_c89_accessus_basis(nodus);
+        SilvaChorda operator = _tok_textus(
+            silva_c89_accessus_tok_operator(nodus));
+        SilvaChorda titulus = _tok_textus(
+            silva_c89_accessus_tok_titulus(nodus));
+        s32 offset = ZEPHYRUM;
+        constans TypusC89* typus_membri = NIHIL;
+
+        si (basis_v.genus != SILVA_VALOR_NODUS
+            || !_op_est(operator, "."))
+        {
+            redde FALSUM;
+        }
+        si (!_locum_staticum(d, basis_v.datum.nodus,
+                symbolum_fructus, addendum_fructus))
+        {
+            redde FALSUM;
+        }
+        si (!_membrum_invenire(d, silva_c89_typus_expressionis(
+                d->sem, _canonicus(basis_v.datum.nodus)), titulus,
+                &offset, &typus_membri))
+        {
+            redde FALSUM;
+        }
+        *addendum_fructus += (s64)offset;
+        redde VERUM;
+    }
+    si (nodus->genus == (s32)SILVA_C89_GENUS_SUBSCRIPTIO)
+    {
+        SilvaValor basis_v = silva_c89_subscriptio_basis(nodus);
+        SilvaValor index_v = silva_c89_subscriptio_index(nodus);
+        s64 index = 0;
+        s32 mensura;
+
+        si (basis_v.genus != SILVA_VALOR_NODUS
+            || index_v.genus != SILVA_VALOR_NODUS
+            || !silva_c89_constans_aestimare(d->sem,
+                   index_v.datum.nodus, &index))
+        {
+            redde FALSUM;
+        }
+        si (!_locum_staticum(d, basis_v.datum.nodus,
+                symbolum_fructus, addendum_fructus))
+        {
+            redde FALSUM;
+        }
+        mensura = _mensura_elementi_monstratoris(d,
+            _typus_finalis(d, _canonicus(basis_v.datum.nodus)));
+        si (mensura <= ZEPHYRUM)
+        {
+            redde FALSUM;
+        }
+        *addendum_fructus += index * (s64)mensura;
+        redde VERUM;
+    }
+    redde FALSUM;
+}
+
+/* constans inscriptionis pro imagine statica: &..., functio,
+ * acies (lapsus), chorda litteralis */
+interior b32
+_inscriptio_statica (Demissio* d, constans SilvaNodus* nodus,
+    s32* symbolum_fructus, s64* addendum_fructus)
+{
+    nodus = _canonicus(nodus);
+    si (nodus == NIHIL)
+    {
+        redde FALSUM;
+    }
+    si (nodus->genus == (s32)SILVA_C89_GENUS_PARENTHESIS)
+    {
+        SilvaValor v = silva_c89_parenthesis_internum(nodus);
+
+        redde v.genus == SILVA_VALOR_NODUS
+            && _inscriptio_statica(d, v.datum.nodus,
+                   symbolum_fructus, addendum_fructus);
+    }
+    si (nodus->genus == (s32)SILVA_C89_GENUS_CONVERSIO)
+    {
+        SilvaValor v = silva_c89_conversio_internum(nodus);
+
+        redde v.genus == SILVA_VALOR_NODUS
+            && _inscriptio_statica(d, v.datum.nodus,
+                   symbolum_fructus, addendum_fructus);
+    }
+    si (nodus->genus == (s32)SILVA_C89_GENUS_FOLIUM_CHORDA)
+    {
+        s32 index_symboli = _datum_chordae(d, nodus);
+
+        si (index_symboli < ZEPHYRUM)
+        {
+            redde FALSUM;
+        }
+        *symbolum_fructus = index_symboli;
+        *addendum_fructus = 0;
+        redde VERUM;
+    }
+    si (nodus->genus == (s32)SILVA_C89_GENUS_UNARIUM)
+    {
+        SilvaChorda operator = _tok_textus(
+            silva_c89_unarium_tok_operator(nodus));
+        SilvaValor v = silva_c89_unarium_internum(nodus);
+
+        redde _op_est(operator, "&")
+            && v.genus == SILVA_VALOR_NODUS
+            && _locum_staticum(d, v.datum.nodus, symbolum_fructus,
+                   addendum_fructus);
+    }
+    /* identificator functionis / aciei (lapsus) */
+    redde _locum_staticum(d, nodus, symbolum_fructus,
+        addendum_fructus);
+}
+
+/* imaginem staticam scribere (recursiva); FALSUM = inaestimabilis
+ * (vocans notat) */
+interior b32
+_imaginem_scribere (Demissio* d, MedullaDatum* datum, s32 offset,
+    constans TypusC89* typus, constans SilvaNodus* initiator)
+{
+    constans TypusC89* exutus = _exutus(typus);
+
+    initiator = _canonicus(initiator);
+    si (exutus == NIHIL || initiator == NIHIL)
+    {
+        redde FALSUM;
+    }
+    si (initiator->genus == (s32)SILVA_C89_GENUS_CONGERIES)
+    {
+        SilvaValor elementa = silva_c89_congeries_elementa(
+            initiator);
+        i32 i;
+        i32 m = (i32)silva_valor_lista_numerus(elementa);
+        s32 a = ZEPHYRUM;
+        b32 bene = VERUM;
+
+        per (i = ZEPHYRUM; i < m; i++)
+        {
+            SilvaValor* v = silva_valor_lista_obtinere(elementa,
+                (unsigned int)i);
+            constans TypusC89* finis = NIHIL;
+            s32 offset_elementi = offset;
+
+            si (v == NIHIL || v->genus != SILVA_VALOR_NODUS)
+            {
+                perge;
+            }
+            si (exutus->genus == TYPUS_C89_ACIES)
+            {
+                s32 mensura = _mensura_typi(d,
+                    exutus->datum.acies.elementum);
+
+                si (mensura <= ZEPHYRUM)
+                {
+                    redde FALSUM;
+                }
+                finis = exutus->datum.acies.elementum;
+                offset_elementi = offset + a * mensura;
+            }
+            alioquin si (exutus->genus == TYPUS_C89_STRUCTURA)
+            {
+                si (_mensura_typi(d, exutus) < ZEPHYRUM
+                    || a >= (s32)exutus->datum.tag.numerus_membrorum)
+                {
+                    redde FALSUM;
+                }
+                finis = exutus->datum.tag.membra[a].typus;
+                offset_elementi = offset
+                    + (s32)exutus->datum.tag.membra[a].offset;
+            }
+            alioquin si (exutus->genus == TYPUS_C89_UNIO)
+            {
+                si (a > ZEPHYRUM)
+                {
+                    frange;   /* membrum primum solum */
+                }
+                si (_mensura_typi(d, exutus) < ZEPHYRUM
+                    || exutus->datum.tag.numerus_membrorum
+                        == ZEPHYRUM)
+                {
+                    redde FALSUM;
+                }
+                finis = exutus->datum.tag.membra[ZEPHYRUM].typus;
+            }
+            alioquin
+            {
+                finis = exutus;   /* scalaris uncis vestitus */
+            }
+            si (!_imaginem_scribere(d, datum, offset_elementi,
+                    finis, v->datum.nodus))
+            {
+                bene = FALSUM;
+            }
+            a++;
+        }
+        redde bene;
+    }
+    /* chorda in aciem characterum */
+    si (initiator->genus == (s32)SILVA_C89_GENUS_FOLIUM_CHORDA
+        && exutus->genus == TYPUS_C89_ACIES)
+    {
+        SilvaChorda octeti;
+
+        si (d->officina_piscina_silvae == NIHIL
+            || !silva_c89_chorda_decodere(d->officina_piscina_silvae,
+                   initiator, &octeti))
+        {
+            redde FALSUM;
+        }
+        si (octeti.mensura > ZEPHYRUM)
+        {
+            redde medulla_datum_scribere(datum, (i32)offset,
+                octeti.datum, octeti.mensura);
+        }
+        redde VERUM;
+    }
+    /* folium scalare */
+    {
+        s32 mt = _typus_medullae(exutus);
+        s32 mensura = _mensura_typi(d, exutus);
+        i8 octeti[VIII];
+        s64 valor = 0;
+
+        si (mt < ZEPHYRUM || mensura <= ZEPHYRUM
+            || mensura > VIII)
+        {
+            redde FALSUM;
+        }
+        si (_fluitans_m(mt))
+        {
+            f64 fluitans_valor = 0.0;
+
+            si (!_fluitantem_aestimare(d, initiator,
+                    &fluitans_valor))
+            {
+                redde FALSUM;
+            }
+            si (mt == (s32)MEDULLA_TYPUS_F32)
+            {
+                unio { f32 v; i8 o[IV]; } u;
+
+                u.v = (f32)fluitans_valor;
+                memcpy(octeti, u.o, IV);
+            }
+            alioquin
+            {
+                unio { f64 v; i8 o[VIII]; } u;
+
+                u.v = fluitans_valor;
+                memcpy(octeti, u.o, VIII);
+            }
+            redde medulla_datum_scribere(datum, (i32)offset, octeti,
+                (i32)mensura);
+        }
+        si (silva_c89_constans_aestimare(d->sem, initiator, &valor))
+        {
+            _octetos_integri(valor, octeti, mensura);
+            redde medulla_datum_scribere(datum, (i32)offset, octeti,
+                (i32)mensura);
+        }
+        /* constans inscriptionis (relocatio additiva) */
+        si (exutus->genus == TYPUS_C89_MONSTRATOR
+            || mensura == VIII)
+        {
+            s32 index_symboli = -I;
+            s64 addendum = 0;
+
+            si (_inscriptio_statica(d, initiator, &index_symboli,
+                    &addendum))
+            {
+                _octetos_integri(addendum, octeti, VIII);
+                (vacuum)medulla_datum_scribere(datum, (i32)offset,
+                    octeti, VIII);
+                redde medulla_relocationem_addere(datum,
+                    (i32)offset, index_symboli);
+            }
+        }
+        redde FALSUM;
+    }
+}
+
+/* probatio puritatis: initiator totus statice aestimabilis? (sine
+ * effectibus - chordae aestimabiles censentur) */
+interior b32
+_constans_est (Demissio* d, constans TypusC89* typus,
+    constans SilvaNodus* initiator)
+{
+    constans TypusC89* exutus = _exutus(typus);
+
+    initiator = _canonicus(initiator);
+    si (exutus == NIHIL || initiator == NIHIL)
+    {
+        redde FALSUM;
+    }
+    si (initiator->genus == (s32)SILVA_C89_GENUS_CONGERIES)
+    {
+        SilvaValor elementa = silva_c89_congeries_elementa(
+            initiator);
+        i32 i;
+        i32 m = (i32)silva_valor_lista_numerus(elementa);
+        s32 a = ZEPHYRUM;
+
+        per (i = ZEPHYRUM; i < m; i++)
+        {
+            SilvaValor* v = silva_valor_lista_obtinere(elementa,
+                (unsigned int)i);
+            constans TypusC89* finis = NIHIL;
+
+            si (v == NIHIL || v->genus != SILVA_VALOR_NODUS)
+            {
+                perge;
+            }
+            si (exutus->genus == TYPUS_C89_ACIES)
+            {
+                finis = exutus->datum.acies.elementum;
+            }
+            alioquin si (exutus->genus == TYPUS_C89_STRUCTURA)
+            {
+                si (_mensura_typi(d, exutus) < ZEPHYRUM
+                    || a >= (s32)exutus->datum.tag.numerus_membrorum)
+                {
+                    redde FALSUM;
+                }
+                finis = exutus->datum.tag.membra[a].typus;
+            }
+            alioquin si (exutus->genus == TYPUS_C89_UNIO)
+            {
+                si (a > ZEPHYRUM)
+                {
+                    frange;
+                }
+                si (exutus->datum.tag.numerus_membrorum == ZEPHYRUM)
+                {
+                    redde FALSUM;
+                }
+                finis = exutus->datum.tag.membra[ZEPHYRUM].typus;
+            }
+            alioquin
+            {
+                finis = exutus;
+            }
+            si (!_constans_est(d, finis, v->datum.nodus))
+            {
+                redde FALSUM;
+            }
+            a++;
+        }
+        redde VERUM;
+    }
+    si (initiator->genus == (s32)SILVA_C89_GENUS_FOLIUM_CHORDA)
+    {
+        redde VERUM;
+    }
+    {
+        s32 mt = _typus_medullae(exutus);
+        s64 valor = 0;
+        f64 fluitans_valor = 0.0;
+
+        si (mt < ZEPHYRUM)
+        {
+            redde FALSUM;
+        }
+        si (_fluitans_m(mt))
+        {
+            redde _fluitantem_aestimare(d, initiator,
+                &fluitans_valor);
+        }
+        si (silva_c89_constans_aestimare(d->sem, initiator, &valor))
+        {
+            redde VERUM;
+        }
+        /* &globalis, functio, chorda - resolutio sine creatione
+         * TANTUM per probationem locorum: identificator/&-catena
+         * (chordae supra iam VERUM) */
+        si (exutus->genus == TYPUS_C89_MONSTRATOR)
+        {
+            constans SilvaNodus* probandus = initiator;
+
+            si (probandus->genus == (s32)SILVA_C89_GENUS_UNARIUM)
+            {
+                SilvaValor v = silva_c89_unarium_internum(
+                    probandus);
+
+                si (_op_est(_tok_textus(
+                        silva_c89_unarium_tok_operator(probandus)),
+                        "&")
+                    && v.genus == SILVA_VALOR_NODUS)
+                {
+                    s32 ignotum_s = -I;
+                    s64 ignotum_a = 0;
+
+                    redde _locum_staticum(d, v.datum.nodus,
+                        &ignotum_s, &ignotum_a);
+                }
+                redde FALSUM;
+            }
+            {
+                s32 ignotum_s = -I;
+                s64 ignotum_a = 0;
+
+                redde _locum_staticum(d, probandus, &ignotum_s,
+                    &ignotum_a);
+            }
+        }
+        redde FALSUM;
+    }
 }
 
 /* ==================================================
@@ -5566,6 +6229,26 @@ _identificatorem (Demissio* d, constans SilvaNodus* nodus)
             medulla_op_immediatum((s64)symbolum->valor));
     }
     sedes = _sedem_symboli(d, symbolum);
+    si (sedes != NIHIL && sedes->index_symboli_moduli >= ZEPHYRUM)
+    {
+        /* staticum locale: datum moduli */
+        s32 inscriptio = _em(d, nodus, MEDULLA_OP_LOCUS,
+            MEDULLA_TYPUS_NIHIL, MEDULLA_TYPUS_NIHIL,
+            _registrum_temporarium(d),
+            medulla_op_symbolum(sedes->index_symboli_moduli),
+            medulla_op_nihil(), medulla_op_nihil());
+        s32 mt = _typus_medullae(naturalis);
+
+        si (mt >= ZEPHYRUM
+            && _exutus(naturalis)->genus != TYPUS_C89_ACIES)
+        {
+            redde _em(d, nodus, MEDULLA_OP_LEGERE, mt,
+                MEDULLA_TYPUS_NIHIL, _registrum_temporarium(d),
+                medulla_op_registrum(inscriptio),
+                medulla_op_nihil(), medulla_op_nihil());
+        }
+        redde inscriptio;
+    }
     si (sedes != NIHIL)
     {
         si (!sedes->est_arca)
@@ -5592,7 +6275,7 @@ _identificatorem (Demissio* d, constans SilvaNodus* nodus)
     si (symbolum->profunditas > ZEPHYRUM
         && (symbolum->repositio & REPOSITIO_STATICA) != ZEPHYRUM)
     {
-        _sistere(d, nodus, "nondum staticum locale (M1b C)");
+        _sistere(d, nodus, "staticum ante declarationem");
         redde _registrum_temporarium(d);
     }
     {
@@ -6567,8 +7250,19 @@ _expressionem (Demissio* d, constans SilvaNodus* nodus)
         }
         casus (s32)SILVA_C89_GENUS_FOLIUM_CHORDA:
         {
-            _sistere(d, nodus, "nondum chorda litteralis (M1b C)");
-            redde _registrum_temporarium(d);
+            s32 index_symboli = _datum_chordae(d, nodus);
+
+            si (index_symboli < ZEPHYRUM)
+            {
+                _sistere(d, nodus, "chorda indecodabilis");
+                redde _registrum_temporarium(d);
+            }
+            fructus = _em(d, nodus, MEDULLA_OP_LOCUS,
+                MEDULLA_TYPUS_NIHIL, MEDULLA_TYPUS_NIHIL,
+                _registrum_temporarium(d),
+                medulla_op_symbolum(index_symboli),
+                medulla_op_nihil(), medulla_op_nihil());
+            frange;
         }
         casus (s32)SILVA_C89_GENUS_CONGERIES:
         {
@@ -6681,6 +7375,19 @@ _ut_locum (Demissio* d, constans SilvaNodus* nodus)
             redde locus;
         }
         sedes = _sedem_symboli(d, symbolum);
+        si (sedes != NIHIL
+            && sedes->index_symboli_moduli >= ZEPHYRUM)
+        {
+            /* staticum locale */
+            locus.directum = FALSUM;
+            locus.index = _em(d, nodus, MEDULLA_OP_LOCUS,
+                MEDULLA_TYPUS_NIHIL, MEDULLA_TYPUS_NIHIL,
+                _registrum_temporarium(d),
+                medulla_op_symbolum(sedes->index_symboli_moduli),
+                medulla_op_nihil(), medulla_op_nihil());
+            locus.valida = VERUM;
+            redde locus;
+        }
         si (sedes != NIHIL)
         {
             locus.directum = !sedes->est_arca;
@@ -6692,7 +7399,7 @@ _ut_locum (Demissio* d, constans SilvaNodus* nodus)
             && (symbolum->repositio & REPOSITIO_STATICA)
                 != ZEPHYRUM)
         {
-            redde locus;   /* staticum locale: M1b C */
+            redde locus;   /* staticum ante declarationem? */
         }
         /* globale */
         {
@@ -6868,6 +7575,284 @@ _symbolum_lexematis (constans Demissio* d, SilvaToken* lexema)
         d->lexemata, (constans vacuum*)lexema);
 }
 
+/* congeries localis: imagine statica + copia si constans;
+ * aliter zeri + copia + scripturae elementorum */
+interior vacuum
+_congeriem_localem (Demissio* d, s32 inscriptio,
+    constans TypusC89* typus, constans SilvaNodus* congeries)
+{
+    constans TypusC89* exutus = _exutus(typus);
+    SilvaValor elementa = silva_c89_congeries_elementa(congeries);
+    i32 i;
+    i32 m = (i32)silva_valor_lista_numerus(elementa);
+    s32 a = ZEPHYRUM;
+
+    per (i = ZEPHYRUM; i < m; i++)
+    {
+        SilvaValor* v = silva_valor_lista_obtinere(elementa,
+            (unsigned int)i);
+        constans TypusC89* finis = NIHIL;
+        s32 offset = ZEPHYRUM;
+        constans SilvaNodus* elementum;
+
+        si (v == NIHIL || v->genus != SILVA_VALOR_NODUS)
+        {
+            perge;
+        }
+        elementum = _canonicus(v->datum.nodus);
+        si (exutus->genus == TYPUS_C89_ACIES)
+        {
+            s32 mensura = _mensura_typi(d,
+                exutus->datum.acies.elementum);
+
+            si (mensura <= ZEPHYRUM)
+            {
+                _sistere(d, congeries, "forma elementi ignota");
+                redde;
+            }
+            finis = exutus->datum.acies.elementum;
+            offset = a * mensura;
+        }
+        alioquin si (exutus->genus == TYPUS_C89_STRUCTURA)
+        {
+            si (_mensura_typi(d, exutus) < ZEPHYRUM
+                || a >= (s32)exutus->datum.tag.numerus_membrorum)
+            {
+                _sistere(d, congeries, "congeries ultra membra");
+                redde;
+            }
+            finis = exutus->datum.tag.membra[a].typus;
+            offset = (s32)exutus->datum.tag.membra[a].offset;
+        }
+        alioquin si (exutus->genus == TYPUS_C89_UNIO)
+        {
+            si (a > ZEPHYRUM)
+            {
+                frange;
+            }
+            finis = exutus->datum.tag.membra[ZEPHYRUM].typus;
+        }
+        alioquin
+        {
+            finis = exutus;
+        }
+        {
+            s32 sedes_elementi = (offset == ZEPHYRUM) ? inscriptio
+                : _em(d, elementum, MEDULLA_OP_ADDERE,
+                      MEDULLA_TYPUS_I64, MEDULLA_TYPUS_NIHIL,
+                      _registrum_temporarium(d),
+                      medulla_op_registrum(inscriptio),
+                      medulla_op_immediatum((s64)offset),
+                      medulla_op_nihil());
+
+            si (elementum->genus == (s32)SILVA_C89_GENUS_CONGERIES)
+            {
+                _congeriem_localem(d, sedes_elementi, finis,
+                    elementum);
+            }
+            alioquin
+            {
+                s32 mt = _typus_medullae(finis);
+
+                si (mt < ZEPHYRUM)
+                {
+                    _sistere(d, elementum,
+                        "elementum congeriei non scalare");
+                }
+                alioquin
+                {
+                    MedullaOperandum fons = _ut_operandum(d,
+                        elementum);
+
+                    (vacuum)_em(d, elementum, MEDULLA_OP_SCRIBERE,
+                        mt, MEDULLA_TYPUS_NIHIL, -I,
+                        medulla_op_registrum(sedes_elementi), fons,
+                        medulla_op_nihil());
+                }
+            }
+        }
+        a++;
+    }
+}
+
+/* initiator localis non scalaris (congeries / chorda in aciem) */
+interior vacuum
+_initiatorem_aggregatum (Demissio* d, DemissioSedes* sedes,
+    constans SemanticaSymbolum* symbolum,
+    constans SilvaNodus* initiator)
+{
+    s32 mensura = _mensura_typi(d, symbolum->typus);
+    constans SilvaNodus* canonicus = _canonicus(initiator);
+
+    si (mensura <= ZEPHYRUM || !sedes->est_arca)
+    {
+        _sistere(d, initiator, "forma aggregati ignota");
+        redde;
+    }
+    /* chorda in aciem characterum: datum plenum + copia */
+    si (canonicus->genus == (s32)SILVA_C89_GENUS_FOLIUM_CHORDA)
+    {
+        s32 index_symboli = _datum_chordae_mensurae(d, canonicus,
+            mensura);
+
+        si (index_symboli < ZEPHYRUM)
+        {
+            _sistere(d, initiator, "chorda indecodabilis");
+            redde;
+        }
+        {
+            s32 fons = _em(d, initiator, MEDULLA_OP_LOCUS,
+                MEDULLA_TYPUS_NIHIL, MEDULLA_TYPUS_NIHIL,
+                _registrum_temporarium(d),
+                medulla_op_symbolum(index_symboli),
+                medulla_op_nihil(), medulla_op_nihil());
+
+            (vacuum)_em(d, initiator, MEDULLA_OP_COPIA,
+                MEDULLA_TYPUS_NIHIL, MEDULLA_TYPUS_NIHIL, -I,
+                medulla_op_registrum(sedes->index_registri),
+                medulla_op_registrum(fons),
+                medulla_op_immediatum((s64)mensura));
+        }
+        redde;
+    }
+    si (canonicus->genus != (s32)SILVA_C89_GENUS_CONGERIES)
+    {
+        _sistere(d, initiator, "initiator aggregati ignotus");
+        redde;
+    }
+    si (_constans_est(d, symbolum->typus, canonicus))
+    {
+        /* imago statica integra + copia una */
+        OfficinaChorda titulus = _titulum_dati(d, "congeries");
+        MedullaDatum* datum = medulla_datum_creare(d->modulus,
+            titulus, (i32)mensura,
+            (i32)_exutus(symbolum->typus)->ordinatio);
+
+        si (datum != NIHIL
+            && _imaginem_scribere(d, datum, ZEPHYRUM,
+                   symbolum->typus, canonicus))
+        {
+            s32 index_symboli = medulla_symbolum_internare(
+                d->modulus, titulus);
+            s32 fons = _em(d, initiator, MEDULLA_OP_LOCUS,
+                MEDULLA_TYPUS_NIHIL, MEDULLA_TYPUS_NIHIL,
+                _registrum_temporarium(d),
+                medulla_op_symbolum(index_symboli),
+                medulla_op_nihil(), medulla_op_nihil());
+
+            (vacuum)_em(d, initiator, MEDULLA_OP_COPIA,
+                MEDULLA_TYPUS_NIHIL, MEDULLA_TYPUS_NIHIL, -I,
+                medulla_op_registrum(sedes->index_registri),
+                medulla_op_registrum(fons),
+                medulla_op_immediatum((s64)mensura));
+            redde;
+        }
+        /* cadit ad viam infra */
+    }
+    /* zeri + copia (C89: membra intacta zephyrum) + scripturae */
+    {
+        OfficinaChorda titulus = _titulum_dati(d, "zeri");
+        MedullaDatum* datum = medulla_datum_creare(d->modulus,
+            titulus, (i32)mensura, I);
+
+        si (datum != NIHIL)
+        {
+            s32 index_symboli = medulla_symbolum_internare(
+                d->modulus, titulus);
+            s32 fons = _em(d, initiator, MEDULLA_OP_LOCUS,
+                MEDULLA_TYPUS_NIHIL, MEDULLA_TYPUS_NIHIL,
+                _registrum_temporarium(d),
+                medulla_op_symbolum(index_symboli),
+                medulla_op_nihil(), medulla_op_nihil());
+
+            (vacuum)_em(d, initiator, MEDULLA_OP_COPIA,
+                MEDULLA_TYPUS_NIHIL, MEDULLA_TYPUS_NIHIL, -I,
+                medulla_op_registrum(sedes->index_registri),
+                medulla_op_registrum(fons),
+                medulla_op_immediatum((s64)mensura));
+        }
+    }
+    _congeriem_localem(d, sedes->index_registri, symbolum->typus,
+        canonicus);
+}
+
+/* staticum locale: datum moduli nomine presso $functio.titulus */
+interior vacuum
+_staticum_locale (Demissio* d, constans SemanticaSymbolum* symbolum,
+    constans SilvaNodus* nodus, constans SilvaNodus* initiator)
+{
+    character littera[LXIV];
+    OfficinaChorda titulus;
+    i32 scriptum = ZEPHYRUM;
+    i32 caput_f;
+    i32 caput_s;
+    MedullaDatum* datum;
+    s32 mensura = _mensura_typi(d, symbolum->typus);
+    s32 index_symboli;
+
+    si (mensura <= ZEPHYRUM)
+    {
+        _sistere(d, nodus, "forma statici localis ignota");
+        redde;
+    }
+    caput_f = (d->functio->titulus.mensura < XXIV)
+        ? (i32)d->functio->titulus.mensura : XXIV;
+    caput_s = (symbolum->titulus.mensura < XXIV)
+        ? (i32)symbolum->titulus.mensura : XXIV;
+    memcpy(littera, d->functio->titulus.datum,
+        (memoriae_index)caput_f);
+    scriptum = caput_f;
+    littera[scriptum] = '.';
+    scriptum++;
+    memcpy(littera + scriptum, symbolum->titulus.datum,
+        (memoriae_index)caput_s);
+    scriptum += caput_s;
+    titulus.datum = (i8*)littera;
+    titulus.mensura = scriptum;
+    titulus = officina_chorda_transcribere(titulus, d->piscina);
+
+    /* collisio (statica eiusdem nominis in scopis fratribus) ->
+     * suffixum */
+    index_symboli = medulla_symbolum_internare(d->modulus, titulus);
+    si (medulla_symbolum_obtinere(d->modulus, index_symboli)->genus
+        != (s32)MEDULLA_SYMBOLUM_EXTERNUM)
+    {
+        character alterum[LXXX];
+        OfficinaChorda secunda;
+        s32 n = (s32)sprintf(alterum, "%.*s_%d", (int)scriptum,
+            littera, (int)d->numerator_datorum);
+
+        d->numerator_datorum++;
+        secunda.datum = (i8*)alterum;
+        secunda.mensura = (i32)n;
+        titulus = officina_chorda_transcribere(secunda, d->piscina);
+        index_symboli = medulla_symbolum_internare(d->modulus,
+            titulus);
+    }
+    datum = medulla_datum_creare(d->modulus, titulus, (i32)mensura,
+        (i32)_exutus(symbolum->typus)->ordinatio);
+    si (datum == NIHIL)
+    {
+        _sistere(d, nodus, "staticum locale sine dato");
+        redde;
+    }
+    si (initiator != NIHIL
+        && !_imaginem_scribere(d, datum, ZEPHYRUM, symbolum->typus,
+               initiator))
+    {
+        _notare(d, nodus, "initiator staticus inaestimabilis");
+    }
+    {
+        DemissioSedes* sedes = _sedem_creare(d, symbolum, -I,
+            VERUM);
+
+        si (sedes != NIHIL)
+        {
+            sedes->index_symboli_moduli = index_symboli;
+        }
+    }
+}
+
 interior vacuum
 _declarationem (Demissio* d, constans SilvaNodus* nodus)
 {
@@ -6914,7 +7899,7 @@ _declarationem (Demissio* d, constans SilvaNodus* nodus)
         }
         si ((symbolum->repositio & REPOSITIO_STATICA) != ZEPHYRUM)
         {
-            _sistere(d, nodus, "nondum staticum locale (M1b C)");
+            _staticum_locale(d, symbolum, nodus, initiator);
             perge;
         }
         sedes = _sedem_symboli(d, symbolum);
@@ -6923,9 +7908,14 @@ _declarationem (Demissio* d, constans SilvaNodus* nodus)
             perge;
         }
         si (_canonicus(initiator)->genus
-            == (s32)SILVA_C89_GENUS_CONGERIES)
+                == (s32)SILVA_C89_GENUS_CONGERIES
+            || (_canonicus(initiator)->genus
+                    == (s32)SILVA_C89_GENUS_FOLIUM_CHORDA
+                && _exutus(symbolum->typus) != NIHIL
+                && _exutus(symbolum->typus)->genus
+                    == TYPUS_C89_ACIES))
         {
-            _sistere(d, nodus, "nondum congeries localis (M1b C)");
+            _initiatorem_aggregatum(d, sedes, symbolum, initiator);
             perge;
         }
         {
@@ -8013,6 +9003,82 @@ _functionem (Demissio* d, constans SilvaNodus* nodus)
  * Radix
  * ================================================== */
 
+/* data globalia: definitiones (initiatae aut tentativae) ->
+ * MedullaDatum; declarationes purae (extern sine initiatore) et
+ * prototypa praetermissa */
+interior vacuum
+_data_globalia (Demissio* d, constans SilvaNodus* nodus)
+{
+    SilvaValor declaratores = silva_c89_declaratio_declaratores(
+        nodus);
+    i32 i;
+    i32 m = (i32)silva_valor_lista_numerus(declaratores);
+
+    per (i = ZEPHYRUM; i < m; i++)
+    {
+        SilvaValor* v = silva_valor_lista_obtinere(declaratores,
+            (unsigned int)i);
+        constans SilvaNodus* elementum;
+        constans SilvaNodus* initiator = NIHIL;
+        SilvaToken* lexema;
+        constans SemanticaSymbolum* symbolum;
+        MedullaDatum* datum;
+        s32 mensura;
+
+        si (v == NIHIL || v->genus != SILVA_VALOR_NODUS)
+        {
+            perge;
+        }
+        elementum = _canonicus(v->datum.nodus);
+        si (elementum->genus
+            == (s32)SILVA_C89_GENUS_DECLARATOR_INITIATUS)
+        {
+            SilvaValor init_v =
+                silva_c89_declarator_initiatus_initiator(elementum);
+
+            si (init_v.genus == SILVA_VALOR_NODUS)
+            {
+                initiator = init_v.datum.nodus;
+            }
+        }
+        lexema = silva_c89_declaratoris_titulus(elementum);
+        symbolum = (lexema != NIHIL)
+            ? _symbolum_lexematis(d, lexema) : NIHIL;
+        si (symbolum == NIHIL
+            || symbolum->genus != (int)SYMBOLUM_VARIABILE
+            || symbolum->profunditas > ZEPHYRUM)
+        {
+            perge;   /* typedef/functio/enumerator/prototypum */
+        }
+        si (initiator == NIHIL
+            && (symbolum->repositio & REPOSITIO_EXTERNA)
+                != ZEPHYRUM)
+        {
+            perge;   /* declaratio pura */
+        }
+        mensura = _mensura_typi(d, symbolum->typus);
+        si (mensura <= ZEPHYRUM)
+        {
+            _notare(d, nodus, "forma dati globalis ignota");
+            perge;
+        }
+        datum = _datum_invenire_aut_creare(d,
+            _ch_de_silva(symbolum->titulus), mensura,
+            (s32)_exutus(symbolum->typus)->ordinatio);
+        si (datum == NIHIL)
+        {
+            _notare(d, nodus, "datum globale non creatum");
+            perge;
+        }
+        si (initiator != NIHIL
+            && !_imaginem_scribere(d, datum, ZEPHYRUM,
+                   symbolum->typus, initiator))
+        {
+            _notare(d, nodus, "initiator staticus inaestimabilis");
+        }
+    }
+}
+
 interior vacuum
 _radicis_elementum (Demissio* d, constans SilvaNodus* nodus)
 {
@@ -8024,6 +9090,11 @@ _radicis_elementum (Demissio* d, constans SilvaNodus* nodus)
     si (nodus->genus == (s32)SILVA_C89_GENUS_DEFINITIO_FUNCTIONIS)
     {
         _functionem(d, nodus);
+        redde;
+    }
+    si (nodus->genus == (s32)SILVA_C89_GENUS_DECLARATIO)
+    {
+        _data_globalia(d, nodus);
         redde;
     }
     si (nodus->genus == (s32)SILVA_C89_GENUS_CONDITIONALIS)
@@ -8084,10 +9155,16 @@ demissio_currere (OfficinaPiscina* piscina, constans SilvaParsura* parsura,
     d.bloccus = -I;
     d.frange_finis = -I;
     d.perge_finis = -I;
+    d.reditus_index = -I;
+    d.reditus_mensura = -I;
     si (d.modulus == NIHIL)
     {
         redde NIHIL;
     }
+    /* piscina transitoria pro decodere (octeti statim in imagines
+     * copiantur) */
+    d.officina_piscina_silvae = silva_piscina_generare_dynamicum(
+        "demissio_chordae", 8388608);
     /* tabula lexematum: lexema declarationis -> symbolum (sedes
      * declaratorum; usus per symbolum_nodi) */
     d.lexemata = officina_tabula_dispersa_creare_chorda(piscina, CCLVI);
@@ -8124,6 +9201,10 @@ demissio_currere (OfficinaPiscina* piscina, constans SilvaParsura* parsura,
                 _radicis_elementum(&d, v->datum.nodus);
             }
         }
+    }
+    si (d.officina_piscina_silvae != NIHIL)
+    {
+        silva_piscina_destruere(d.officina_piscina_silvae);
     }
     redde d.modulus;
 }

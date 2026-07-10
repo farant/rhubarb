@@ -119,7 +119,11 @@ enforcement-layer evidence only.
         relocatio <offset>, $symbolum
 
 Every string literal materializes as an anonymous datum (decoded bytes) +
-relocatio at its use sites in static images. Census fact: string relocations
+relocatio at its use sites in static images. **Relocatio is ADDITIVE**
+(settled at M1b C): the 8-byte slot's prior image bytes are the ADDEND --
+at link/load, slot = symbol address + existing slot value. `&acies[1]` =
+addend 4 in the image + `relocatio <offset> $acies`; one mechanism covers
+plain, member, and element addresses. Census fact: string relocations
 are the HIGH-VOLUME case (generated tables); function-address relocations
 are the rare tail on the same mechanism.
 

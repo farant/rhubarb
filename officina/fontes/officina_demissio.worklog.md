@@ -93,3 +93,42 @@
 - aggregata.c lowers with ZERO sistere; golden pinned + blessed;
   suite 3/3; amalgam VERIFICATUM (hospes 28/28) with demissio
   changes folded.
+
+## 2026-07-09 — Chunk C: data statica (M1b)
+
+- All four M1a exports fire together for the first time:
+  constans_aestimare (scalar images, case-style folding),
+  chorda_decodere (string bytes — "salve\n" → 73616c76650a00),
+  symbolum_nodi (&-chain resolution), plus formam offsets for member
+  addends. The export package was priced exactly right.
+- **Relocatio settled as ADDITIVE** (slot's prior bytes = addend):
+  &acies_plena[1] emits addend 04 in the image + relocatio to the
+  base symbol. One mechanism for plain/member/element addresses;
+  vocabularium §VI updated. MedullaRelocatio needed NO new field.
+- **decodere's SilvaPiscina resolved by encapsulation**: demissio
+  owns a transient silva piscina (created/destroyed inside
+  demissio_currere; decoded bytes are memcpy'd into datum images
+  immediately, so lifetime is sound). No API churn.
+- Float static images via a small demissio-side float evaluator
+  (the public aestimator is integral-only — folium/-/+/parenthesis/
+  conversio coverage suffices for corpus initializers); f32/f64 bit
+  images through unions, LE-deterministic on this host.
+- Local congeries: HYBRID — all-constant initializers become one
+  anonymous $congeries_N image + single copia (the common case,
+  beautiful dumps); mixed initializers become $zeri_N copia (C89
+  zero-fill semantics for unlisted members) + per-element stores.
+  char arrays from strings = padded $chorda_N + copia.
+- Function-scope statics: $functio.titulus mangling per the sealed
+  scheme, sibling-scope collisions suffixed; sedes carries the
+  module symbol index and the identifier/locus paths route through
+  locus $mangled.
+- Tentative definitions: find-or-create datum; later initialized
+  declaration of the same symbol writes into the existing image.
+  Pure extern declarations skipped.
+- File-scope failures cannot sistere (no functio context): _notare
+  interns the causa at module level — fusor counts causae, so the
+  honesty bar covers file scope too.
+- statica.c (16 data incl. fn-pointer table, string globals, local
+  statics) lowers with ZERO sistere; golden pinned + blessed byte
+  by byte (42=2a, -7=f9ff.., 2.5=..0440, 1.5f=0000c03f all verified
+  LE). Suite 3/3; amalgam VERIFICATUM hospes 28/28.
