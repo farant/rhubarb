@@ -8735,15 +8735,43 @@ machinula_currere (Machinula* m, OfficinaChorda titulus_functionis)
                 _vitium(m, "vocatio: argumenta nimia");
                 frange;
             }
-            per (k = ZEPHYRUM; k < numerus_argumentorum; k++)
             {
-                constans MedullaOperandum* operandum =
-                    (constans MedullaOperandum*)officina_xar_obtinere(
-                        t->functio->operanda,
-                        (i32)(instructio->extra_index + k));
+                /* signatura ante argumenta: argumentum per typum
+                 * PARAMETRI aestimatur ubi nota (litera f32 ut
+                 * IMMEDIATUM_F sub S64 figuram f64 pareret -
+                 * dimidium falsum in parametro f32; inventum
+                 * nuntium EXITUS-1). Ignota (aedificata/decipulae/
+                 * argumenta supra parametra) -> S64 ut ante
+                 * (promotiones variadicae: f64 recte). */
+                constans MedullaFunctio* functio_nexae = NIHIL;
 
-                argumenta[k] = _valor_operandi(m, t, operandum,
-                    MEDULLA_TYPUS_S64);
+                si (descriptor->signum
+                    == CONEXIO_SIGNUM_INTERPRETATUM)
+                {
+                    functio_nexae = conexio_functionem_obtinere(
+                        m->conexio, descriptor->index)->functio;
+                }
+                per (k = ZEPHYRUM; k < numerus_argumentorum; k++)
+                {
+                    constans MedullaOperandum* operandum =
+                        (constans MedullaOperandum*)officina_xar_obtinere(
+                            t->functio->operanda,
+                            (i32)(instructio->extra_index + k));
+                    s32 typus_argumenti = MEDULLA_TYPUS_S64;
+
+                    si (functio_nexae != NIHIL
+                        && k < (s32)officina_xar_numerus(
+                               functio_nexae->parametra))
+                    {
+                        typus_argumenti =
+                            ((constans MedullaParametrum*)
+                                officina_xar_obtinere(
+                                    functio_nexae->parametra,
+                                    (i32)k))->typus;
+                    }
+                    argumenta[k] = _valor_operandi(m, t, operandum,
+                        typus_argumenti);
+                }
             }
             si (!m->currens)
             {

@@ -82,3 +82,33 @@ turned 34 anonymous signum-11s into ONE named chokepoint);
 fusor -textus <substr> (dump one TU's canonical medulla to stdout).
 Custodia stays OFF in the standing sweep (alloc poison vs native
 fresh-page zero could diverge behavior); it is the diagnosis mode.
+
+## 2026-07-10 — nuntium EXITUS-1: f32 literal as call argument
+## (args evaluated by PARAMETER type)
+
+First-ever wrong-exit suite (188/189 asserts; the one failure:
+pi through the nuntium wire came back -1.9253e+29). Minimal repro
+(cursor -sola + temp probe): memcpy bit-punning was PERFECT both
+ways — the breakage was `_identitas(3.14159f)`: an f32 LITERAL in
+direct argument position. Cause: vocare evaluated ALL args as
+MEDULLA_TYPUS_S64, so an IMMEDIATUM_F materialized the f64 bit
+pattern; the callee's frame-entry canonicalization then kept the
+LOW 32 bits of the double — the wrong half. Explains the suite's
+exact fingerprint: 0.0f passed (low half of 0.0 is 0), -123.456f
+passed (unary minus → negare.f32 → REGISTER arg, correct), only
+the bare positive literal broke.
+
+Fix: fetch the callee signature BEFORE argument evaluation and
+evaluate each arg with its PARAMETER's declared type when known
+(interpreted callees); unknown (builtins/decipulae/args beyond
+parametra) stay S64 — which is CORRECT for variadic default
+promotions (float→double). Register operands are unaffected
+(read as-is). Same principle as the day's width fix: the
+signature/suffix is the semantic authority at the boundary —
+this was its third missing mirror (params in, redde out, now
+immediates at the call site). Regression: vocationes.medulla
+$proba_f32 (f32 literal arg, bounds check, folded into →42).
+
+Instrument: cursor -sola <substr> (matching suites only, stdout
+VISIBLE — plus fflush(stdout) before _exit, which skips stdio
+flush; without it the interpreted output died in the buffer).

@@ -2,6 +2,9 @@
 ; exspectatum: $main -> 42
 ; addens(20,1)=21; %f = locus $geminare (descriptor!);
 ; vocare %f (21) = 42 - iter descriptoris totum
+; proba_f32: litera f32 ut argumentum IMMEDIATUM_F - per typum
+; PARAMETRI aestimanda (sub S64 figura f64 pareret, dimidium
+; falsum in f32 - inventum nuntium M2c); intra (3.14, 3.15) -> 2
 modulus "fixa/machinula/vocationes.medulla"
 
 functio $addens (s32 %a, s32 %b) -> s32
@@ -14,9 +17,19 @@ functio $geminare (s32 %x) -> s32
     %t = multiplicare.s32 %x, 2
     redde %t
 
+functio $proba_f32 (f32 %x) -> s32
+@initium:
+    %o1 = maior.f32 %x, 3.1400000000000001
+    %o2 = minor.f32 %x, 3.1499999999999999
+    %s = addere.s32 %o1, %o2
+    redde %s
+
 functio $main () -> s32
 @initium:
     %t1 = vocare.s32 $addens, 20, 1
     %f = locus $geminare
     %t2 = vocare.s32 %f, %t1
-    redde %t2
+    %t3 = vocare.s32 $proba_f32, 3.1415899999999999
+    %t4 = addere.s32 %t2, %t3
+    %t5 = subtrahere.s32 %t4, 2
+    redde %t5

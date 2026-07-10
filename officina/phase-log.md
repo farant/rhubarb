@@ -878,3 +878,34 @@ Murus residuus (classes):
 - capsula/libri VITIUM monstrator nullus (investigatio);
   decipulae fopen/time/getcwd/persona_scribere (Unda 1 / parvae);
   lapifex 5 TEMPUS — cursus -mora 600 in fundo currens.
+
+### ADDENDUM (2026-07-10, serius adhuc) — nuntium SANATUM: 46/73
+
+nuntium EXITUS-1 investigatum PRIMUM (porta fiduciae) et SANATUM
+eodem die: litera f32 ut argumentum vocationis (IMMEDIATUM_F sub
+S64 → figura f64, dimidium falsum in parametro f32; 0.0f et
+-123.456f casu praeteribant — negare.f32 per registrum!). Refectio:
+argumenta per typum PARAMETRI aestimata ubi signatura nota (idem
+principium diei: signatura auctoritas ad limitem — tertium
+speculum absens: parametra intro, redde retro, nunc literae ad
+sedem vocationis). Regressio in vocationes.medulla ($proba_f32).
+Instrumenta: cursor **-sola <substr>** (suites congruentes solae,
+stdout visibile + fflush ante _exit — _exit stdio non effundit!).
+Vide worklog machinulae.
+
+TABULA QUARTA: **46 praeteritae | 0 exitus mali | 16 sisterae |
+4 decipulae | 2 vitia | 0 ruinae | 5 tempora / 73 suites.**
+Hospes 61/61; suite 6/6.
+
+INVENTUM lapifex: c89_decl TEMPUS etiam @600s — obice sublato
+labor verus interpretatus ENORMIS est (native ~2-4s × 100-200
+tarditas interpretis ≈ 10-20 min per suitem). NON vitium —
+quaestio posturae undae (exclusio nominata? -mora ingens in cursu
+benedictionis? celeritas machinulae = opus posterius M5/numquam
+per mandatum). FRAN DECERNAT.
+
+PROXIMUM M2c: (1) "forma localis ignota" classis (9 suites — sedes
+per fusor -causa in plagulis propriis: fasti/sectio/symbola...);
+(2) capsula/libri monstrator nullus; (3) "magnitudo inaestimabilis"
+4; (4) decipulae parvae (time/getcwd — aedificata trivialia?);
+(5) columna stdout-diff post murum sisterarum.

@@ -54,6 +54,9 @@ hic_manens Xar* moduli_mundi = NIHIL;            /* MedullaModulus* */
 
 hic_manens b32 custodia_petita = FALSUM;         /* -custodia */
 hic_manens insignatus integer mora_secunda = 30; /* -mora <n> */
+hic_manens constans character* sola_quaesita = NIHIL; /* -sola
+    <substr>: suites congruentes solae + stdout interpretatum
+    VISIBILE (diagnosis per-suite) */
 
 /* ==================================================
  * Plagulam demittere (fistula fusoris; modulus CACHATUR)
@@ -382,6 +385,12 @@ s32 principale (integer argc, character** argv)
             a++;
             mora_secunda = (insignatus integer)atoi(argv[a]);
         }
+        alioquin si (strcmp(argv[a], "-sola") == ZEPHYRUM
+            && a + I < argc)
+        {
+            a++;
+            sola_quaesita = argv[a];
+        }
     }
 
     piscina_ctx = piscina_generare_dynamicum("cursor_ctx", 8388608);
@@ -552,6 +561,12 @@ s32 principale (integer argc, character** argv)
             {
                 perge;
             }
+            si (sola_quaesita != NIHIL
+                && strstr(introitus->d_name, sola_quaesita)
+                    == NIHIL)
+            {
+                perge;
+            }
             {
                 memoriae_index ml = strlen(introitus->d_name);
                 character* via = piscina_allocare(piscina_officinae,
@@ -599,8 +614,12 @@ s32 principale (integer argc, character** argv)
                 b32 nexus_bene = VERUM;
 
                 /* stdout interpretatum tacet (columna diff
-                 * postea, instrumento separato) */
-                (vacuum)freopen("/dev/null", "w", stdout);
+                 * postea, instrumento separato) - PRAETER -sola
+                 * (diagnosis: asserta credo videnda) */
+                si (sola_quaesita == NIHIL)
+                {
+                    (vacuum)freopen("/dev/null", "w", stdout);
+                }
 
                 /* tectum temporis: SIGALRM = versus TEMPUS in
                  * parente (lapifex interpretatus minuta ardet) */
@@ -651,6 +670,9 @@ s32 principale (integer argc, character** argv)
                         titulus_main);
                 }
                 s1 = clock();
+                /* _exit stdio NON effundit - stdout interpretatum
+                 * expresse effundendum (modus -sola) */
+                fflush(stdout);
                 {
                     duplex ms = (duplex)(s1 - s0) * 1000.0
                         / (duplex)CLOCKS_PER_SEC;
