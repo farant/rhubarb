@@ -21,15 +21,23 @@ Do these IN ORDER before writing code:
 
 1. **This file** (auto-loaded — done).
 2. **officina/phase-log.md** — TAIL first: current INTENTIO/RELATIO.
-3. **The spec for what you're touching**: project-specs/officina-m1-spec.md
-   (current milestone), officina-brainstorm.md (architecture DECISUS + the
-   why), officina-spec-v2.md (corpus bar, builtin surface, waves),
-   **officina/vocabularium-medullae.md (the SEALED IR vocabulary — op names,
-   suffixes, sigils are ceremony; do not coin new ones casually)**.
-   Never implement a chunk from a compaction summary alone.
-4. **Any .worklog.md** next to files you're editing.
+3. **The spec for what you're touching** — the CURRENT milestone is
+   whatever the phase-log tail says, never this file. Specs by layer:
+   officina-brainstorm.md (architecture DECISUS + the why),
+   officina-spec-v2.md (corpus bar, builtin surface, waves),
+   officina-m1-spec.md (medulla core + demissio),
+   officina-m2-spec.md + officina-m2-diagnostica.md (VM, conexio,
+   cursor, builtins, ansae),
+   **officina/vocabularium-medullae.md (the SEALED IR vocabulary — op
+   names, suffixes, sigils are ceremony; do not coin new ones
+   casually)**. Never implement a chunk from a compaction summary alone.
+4. **Any .worklog.md** next to files you're editing. The measured
+   interpreter performance decomposition lives in
+   officina_machinula.worklog.md (2026-07-10) — read it before ANY
+   speed work; optimize only from measurement.
 5. Simulation artifacts carry the discovered complications:
-   officina-simulatio-3.md (C1-C9) for M1.
+   officina-simulatio-3.md (C1-C9) for M1, officina-simulatio-4.md
+   (C1-C12) for M2.
 
 At every MILESTONE boundary: full phase-log re-read + audit (silva rule).
 Before compaction: append a phase-log addendum with anything in-flight.
@@ -63,7 +71,9 @@ When narrowing scope: name the deferred use case and the path back.
 ## CULTURA
 
 - Bars close milestones; nothing ships without its bar (M1a: byte-identical
-  round-trip; M1b: corpus lowers, 0 ruinae, sistere classified).
+  round-trip; M1b: corpus lowers, 0 ruinae, sistere classified; M2: Waves
+  0+1 green interpreted + the STANDING second bar — stdout byte-diff vs
+  pinned native captures, named exclusions with recorded causes).
 - One unit-tested module at a time; interface first; walking skeleton before
   polish. Instruments precedent: haruspex/auspex (clang-certified semantics)
   → M1's analog is golden dumps + fusor + round-trip.
@@ -85,6 +95,22 @@ When narrowing scope: name the deferred use case and the path back.
   (saltuarius pattern; probatio_officina_*.c in probationes/).
 - ./officina/amalgamare.sh — regenerates COMMITTED amalgama/officina.c and
   runs gates (standalone strict compile, hospes, nm-intersection 0).
-- Dev-time mains in instrumenta/principalia/ (fusor.c lives here).
-- Goldens: probationes/fixa/ — .medulla hand-written fixtures + .c/.medulla
-  golden pairs.
+- ./officina/cursor.sh — THE corpus sweep (Waves 0+1, world-link from
+  cache, fork-per-suite, classification TABULA + stdout-diff column).
+  Flags: -sola <substr> (solo suites, stdout visible), -mora <n>
+  (per-suite ceiling, default 30s), -custodia (wild-deref diagnosis,
+  NOT standing), -enumerare (print wave paths; captare.sh consumes),
+  -celer (FIRST arg: -O2+LTO build ~3.6x, objects in build/celer/ —
+  for lapifex-class blessing runs; daily driver stays -O0).
+- ./officina/captare.sh — pins native stdout goldens
+  (fixa/stdout_nativa/) via double-run w/ 1s sleep; nondeterministic
+  suites become named exclusions in cursor.c.
+- ./officina/auspex_posix.sh — clang-certifies systema_posix.h layouts
+  ≡ host (sizeof + offsets + macros). Gate for any systema_posix edit.
+- ./officina/fusor.sh — corpus lowering sweep (sistere census,
+  byte-idem circuli). Probes: -causa <str> (origin lines),
+  -textus <file-substr> (dump one TU's medulla).
+- Dev-time mains in instrumenta/principalia/.
+- Goldens: probationes/fixa/ — .medulla hand-written fixtures +
+  .c/.medulla golden pairs (re-pin = delete + suite run + BLESS by
+  reading) + stdout_nativa/ pinned captures.

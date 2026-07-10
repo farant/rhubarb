@@ -25,6 +25,7 @@
 #include "officina_demissio.h"
 #include "officina_conexio.h"
 #include "officina_machinula.h"
+#include "officina_medulla_textus.h"
 #include "tabula_dispersa.h"
 
 #include <stdio.h>
@@ -66,6 +67,9 @@ hic_manens constans character* sola_quaesita = NIHIL; /* -sola
 hic_manens b32 enumerare_petita = FALSUM;        /* -enumerare:
     vias suitarum undae imprimere et exire (captare.sh consumit -
     UNUS fons veritatis exclusionum) */
+hic_manens b32 census_petita = FALSUM;           /* -census:
+    numeri_op per suitem in build/census/ (datum quaestionis
+    dispatch parcatae - superinstructiones ex mensura, non fide) */
 
 /* UNDAE 0+1: exclusiones nominatae (M2d Chunk C - Unda 1
  * filesystem INTRAVIT; quaeque exclusio causam habet) */
@@ -560,6 +564,10 @@ s32 principale (integer argc, character** argv)
         {
             enumerare_petita = VERUM;
         }
+        alioquin si (strcmp(argv[a], "-census") == ZEPHYRUM)
+        {
+            census_petita = VERUM;
+        }
     }
 
     /* -enumerare: vias undae imprimere et exire (sine mundo) */
@@ -786,6 +794,10 @@ s32 principale (integer argc, character** argv)
 
         /* directorium capturarum (stdout interpretatum per suitem) */
         (vacuum)mkdir("officina/build/capturae", 0755);
+        si (census_petita)
+        {
+            (vacuum)mkdir("officina/build/census", 0755);
+        }
 
         si (dir == NIHIL)
         {
@@ -945,6 +957,37 @@ s32 principale (integer argc, character** argv)
                 /* _exit stdio NON effundit - stdout interpretatum
                  * expresse effundendum (captura/-sola) */
                 fflush(stdout);
+                si (census_petita)
+                {
+                    character via_census[CCLVI];
+                    FILE* pc;
+
+                    sprintf(via_census,
+                        "officina/build/census/%.*s.census",
+                        (int)(strlen(suites[i] + XII) - II),
+                        suites[i] + XII);
+                    pc = fopen(via_census, "w");
+                    si (pc != NIHIL)
+                    {
+                        s32 op_c;
+
+                        per (op_c = ZEPHYRUM;
+                            op_c < (s32)MEDULLA_OP_NUMERUS; op_c++)
+                        {
+                            i64 numerus = machinula_numerus_op(
+                                machinula, op_c);
+
+                            si (numerus > ZEPHYRUM)
+                            {
+                                fprintf(pc, "%-16s %llu\n",
+                                    medulla_op_titulus(op_c),
+                                    (insignatus longus longus)
+                                        numerus);
+                            }
+                        }
+                        fclose(pc);
+                    }
+                }
                 {
                     duplex ms = (duplex)(s1 - s0) * 1000.0
                         / (duplex)CLOCKS_PER_SEC;

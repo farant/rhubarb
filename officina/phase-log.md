@@ -1197,3 +1197,30 @@ lapifex): labor verus interpretatus ultra 30s — NON vitia.
 **CURSUS BENEDICTIONIS IN VOLATU (-mora 1800)** = vectis M2
 ultimus: si VI virides → UNDAE 0+1 VIRIDES = M2 SIGILLANDUM
 (caerimonia Franis).
+
+### ADDENDUM (2026-07-10) — BENEDICTIO -O0: 75/80; CELER IN VOLATU
+
+Cursus benedictionis -mora 1800 (-O0): **TABULA DECIMA: 75
+praeteritae | 0 exitus mali | 0 sisterae | 0 decipulae | 0 vitia |
+0 ruinae | 5 tempora / 80.** STDOUT: 68 eaedem | 0 DIFFERUNT |
+7 exclusae. **arbor_formator BENEDICTUS: 673,181,933 instructiones
+in 44s, effusio IDEM** (recordum novum, 6.6x prius). Lapifex V
+etiam @1800s TEMPUS — labor verus >32 miliardis instructionum
+quaeque; parca "cursor -celer" TRACTA (nominata ad hoc ipsum):
+cursor.sh -celer = -O2+LTO in build/celer/ (3.6x mensuratum,
+obiecta numquam mixta).
+
+Instrumentum novum: cursor **-census** — numeri_op per suitem in
+build/census/ (machinula_numerus_op + medulla_op_titulus publici
+iam erant). Datum quaestionis dispatch parcatae: superinstructiones
+ex mensura, non fide (spec: "decision falls out of timing data").
+
+**CURSUS CELER IN VOLATU** (-celer -census -mora 3600, tabula
+plena LXXX): si lapifex V virident → UNDAE 0+1 VIRIDES = vectis
+M2 impletus → SIGILLUM (caerimonia Franis: relectio phase-log
+plena + auditum). Cursus -O0 cotidianus manet.
+
+Domus: officina/CLAUDE.md refectum (norma nova: milestone currens
+= cauda phase-log, NUMQUAM hoc documentum; instrumenta omnia
+documentata; decompositio celeritatis in worklog machinulae
+indicata ante OMNE opus velocitatis).

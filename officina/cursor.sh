@@ -4,13 +4,25 @@
 # currere (percursus.sh exemplar)
 #
 # Usage:
-#   ./officina/cursor.sh     # ex radice repositorii
+#   ./officina/cursor.sh            # ex radice repositorii
+#   ./officina/cursor.sh -celer ... # variante VELOCI (-O2 + LTO,
+#       ~3.6x mensuratum; obiecta in build/celer/ - numquam mixta
+#       cum -O0!) - pro cursibus benedictionis lapifex-classis.
+#       Aedificatio -O0 norma manet (celeritas compilandi +
+#       debugabilitas).
 
 set -u
 
 OFF_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 RADIX_DIR="$(cd "$OFF_DIR/.." && pwd)"
 BUILD_DIR="$OFF_DIR/build"
+
+CELER=0
+if [ "${1:-}" = "-celer" ]; then
+    CELER=1
+    shift
+    BUILD_DIR="$OFF_DIR/build/celer"
+fi
 mkdir -p "$BUILD_DIR"
 
 declare -a GCC_FLAGS=(
@@ -19,6 +31,9 @@ declare -a GCC_FLAGS=(
     "-Wstrict-prototypes" "-Wmissing-prototypes" "-Wwrite-strings"
     "-Wno-long-long" "-Wno-overlength-strings" "-fbracket-depth=512"
 )
+if [ $CELER -eq 1 ]; then
+    GCC_FLAGS+=("-O2" "-flto")
+fi
 declare -a INCLUDE_FLAGS=(
     "-I$RADIX_DIR/include"
     "-I$RADIX_DIR/silva/amalgama"
