@@ -889,8 +889,12 @@ s32 principale (vacuum)
     /* ========================================================
      * PROBARE (Chunk C): catenae conversionum nidificatae - furca
      * intra furcam (formae GLR); contagio "omnes" sanata (lectio
-     * exterior ob alternativam interiorem non occiditur), catena
-     * PROFUNDA manet parca nominata (residuum I)
+     * exterior ob alternativam interiorem non occiditur).
+     * NOTA (sanatio catenarum 2026-07-10): residuum I = furca
+     * MORTUA (lectiones AMBAE impossibiles - intra lectionem a
+     * patre iam reiectam; extra spinam canonicam, typationi
+     * invisibilis). Retentio honesta - victor eligi non potest.
+     * Furcae VIVAE omnes deciduntur (exterior + interior)
      * ======================================================== */
     {
         constans character* fons_v =
@@ -921,10 +925,56 @@ s32 principale (vacuum)
         CREDO_NON_NIHIL (sem);
         (vacuum)silva_c89_semantica_oraculum_augere(sem, oraculum);
         silva_oraculum_responsa_vacare(oraculum);
-        /* II decisa (contagione sanata); I residuum = catena
-         * profunda (parca resolutoris, vide worklog) */
+        /* II vivae decisa; I residuum = furca mortua (extra
+         * spinam - vide notam supra) */
         CREDO_AEQUALIS_I32 (silva_c89_ambigua_indecisa_numerare(
             parsura->commissio, oraculum), I);
+    }
+
+    /* ========================================================
+     * PROBARE (sanatio catenarum 2026-07-10): conversio cum
+     * operando parenthesato TYPUM ferente - "(u32)(sizeof(catena))"
+     * ut VOCATIO parsata retinebatur (nominatus interior AMBAS
+     * lectiones exteriores typo-positivas faciebat - unicitatis
+     * regula (c) frangebatur). Regula trivalens DUALIS lectionem
+     * vocationis occidit (u32 typus notus in positione
+     * expressionis); fluxus victoris solius catenam solvit.
+     * Forma corporis M2c: friatio.c:133, url.c:209 (19 suites)
+     * ======================================================== */
+    {
+        constans character* fons_v =
+            "typedef unsigned int u32;\n"
+            "typedef unsigned char u8;\n"
+            "typedef struct { char* datum; int mensura; } catena;\n"
+            "static unsigned long probare(const char* buf, int i)\n"
+            "{\n"
+            "    unsigned long a = (u32)(sizeof(catena)) * 2;\n"
+            "    u32 b = ((u32)((u8)buf[i * 4] & 0xFF) << 24);\n"
+            "    return a + b;\n"
+            "}\n";
+        SilvaOraculum* oraculum = silva_oraculum_creare(piscina);
+        SilvaParsura* parsura = silva_c89_parsare(piscina,
+            "probatio.c", fons_v, (i32)strlen(fons_v), oraculum);
+        SilvaSemantica* sem;
+
+        imprimere("\n--- Probans conversionem parenthesatam"
+            " (dualis) ---\n");
+
+        CREDO_NON_NIHIL (parsura);
+        CREDO_AEQUALIS_I32 (parsura->numerus_errorum, ZEPHYRUM);
+        /* FORTIUS quam exspectatum: typedef ordine visibiles ->
+         * regula dualis in ambulatione praecommissionis decidit ->
+         * furcae TRANSMUTATAE (nodi definiti), ambigui NULLI
+         * retenti (ante sanationem: retentio - uterque lectio
+         * typo-positiva erat, unicitas (c) frangebatur) */
+        CREDO_AEQUALIS_I32 (xar_numerus(
+            parsura->commissio->ambigui), ZEPHYRUM);
+        sem = silva_c89_semantica_analysare(piscina, parsura);
+        CREDO_NON_NIHIL (sem);
+        (vacuum)silva_c89_semantica_oraculum_augere(sem, oraculum);
+        silva_oraculum_responsa_vacare(oraculum);
+        CREDO_AEQUALIS_I32 (silva_c89_ambigua_indecisa_numerare(
+            parsura->commissio, oraculum), ZEPHYRUM);
     }
 
     /* ========================================================

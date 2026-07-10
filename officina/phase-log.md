@@ -846,3 +846,35 @@ verisimiliter etiam 5 tempora lapifex post eam cadunt), non vitia
 machinulae. PROXIMUM: (1) oraculum cast-cum-parenthesi (silva),
 (2) "forma localis ignota" (5), (3) capsula/libri monstrator nullus
 (investigatio), (4) tunc columna stdout-diff.
+
+### ADDENDUM (2026-07-10, serius) — SANATIO CATENARUM: 31 → 45/73
+
+Vectis maxima TRACTA (opus silvae; detail:
+silva/fontes/silva_c89_oraculum.worklog.md + silva phase-log):
+classis "cast-ut-vocatio" = parca resolutoris M0a nominata
+("catenae nidificatae"). Regula trivalens DUALIS (typus notus in
+positione expressionis = lectio impossibilis) + fluxus victoris
+solius per furcas interiores in situ resolutas. Portae silvae:
+suite 29/29, percursus indecisa 305→9 / coopertura 100.00% /
+fideles 759/760 (deferral pasta), **auspex 3,753/0**, amalgama
+VERIFICATUM.
+
+TABULA TERTIA: **45 praeteritae | 1 exitus malus | 16 sisterae |
+4 decipulae | 2 vitia | 0 ruinae | 5 tempora / 73 suites.**
+Fusor: sistere "vocatio sine typo" → 1 instructione toto corpore;
+summa 2,912→2,659 in 105→68 plagulis; circuli 578/578.
+
+Murus residuus (classes):
+- "forma localis ignota" 9 (cursus, entitas, fasti, layout,
+  macho_deps, sectio, servitium, sputnik_interpres, symbola) —
+  nunc classis maxima; suites trans murum veterem PROGRESSAE.
+- "magnitudo inaestimabilis" 4 (arbor2_glr/scribere, compound,
+  utf8); "accessus sine inscriptione basis" 2 (calendarium, toml);
+  "vocatio sine typo" 1 (arbor_quaestio — residuum verum).
+- **nuntium EXITUS 1 — primus exitus malus**: suite ad finem
+  currit, assertum fallit. Classis investigationis NOVA (semantica
+  interpretata divergens? datum reale?). INVESTIGA PRIMUM — porta
+  fiduciae machinulae.
+- capsula/libri VITIUM monstrator nullus (investigatio);
+  decipulae fopen/time/getcwd/persona_scribere (Unda 1 / parvae);
+  lapifex 5 TEMPUS — cursus -mora 600 in fundo currens.

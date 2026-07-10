@@ -342,12 +342,24 @@ nomen structura {
     b32 ignotus_adest;    /* nominatus oraculo NUNC ignotus */
     b32 non_typus_adest;  /* nominatus NON-TYPUS notus (trivalens):
                            * lectio impossibilis - occiditur */
+    b32 typus_ut_expr_adest; /* regula trivalens DUALIS (sanatio
+                           * catenarum 2026-07-10): folium
+                           * identificatoris cuius nomen TYPUS notus
+                           * est (nec non-typus - umbratio protegit,
+                           * eadem conservatio ac regula prima) =
+                           * typedef in positione expressionis -
+                           * C89 id parsare non potest - lectio
+                           * impossibilis, occiditur */
     b32 species_adest;    /* nodus specificatores ferens (politica) */
 } ExamenLectionis;
 
 hic_manens vacuum _nodum_examinare (constans SilvaNodus* nodus,
     constans SilvaOraculum* oraculum,
     ExamenLectionis* examen, i32 profunditas);
+hic_manens vacuum _ambiguum_examinare_prof (
+    constans SilvaNodus* ambiguum,
+    constans SilvaOraculum* oraculum,
+    SilvaResolutioResponsum* responsum, i32 profunditas);
 
 /* Lista specificatorum: numerare atoma typorum + combinationem
  * probare + nominatos contra oraculum. SANATIO 2026-07-06:
@@ -448,16 +460,61 @@ _nodum_examinare (
     {
     casus (s32)SILVA_C89_GENUS_AMBIGUUS:
     {
-        /* Furca nidificata: vexilla nominatus/ignotus fluunt ut
-         * ante (QUAELIBET lectio); non_typus fluit SOLUM si OMNES
-         * lectiones interiores eum ferunt (aliter lectio exterior
-         * ob alternativam interiorem NON electam occideretur -
-         * contagio falsa, inventa Chunk C per "values") */
+        /* Furca nidificata. SANATIO CATENARUM 2026-07-10 (parca
+         * M0a "catenae nidificatae" exparcata): furca interior
+         * PRIMUM in situ resolvitur (fixpunctum interius-primum
+         * quod pactum nominavit); decisa -> vexilla ex lectione
+         * VICTRICE SOLA fluunt (furca decisa = nodus ordinarius).
+         * Indecisa -> mixtura ut ante: nominatus/ignotus/species
+         * QUAELIBET lectione; venena (non_typus, typus_ut_expr)
+         * SOLUM si OMNES lectiones ea ferunt (contagio falsa
+         * Chunk C aliter rediret). */
         SilvaValor interp =
             silva_c89_ambiguus_interpretationes(nodus);
         i32 m = silva_valor_lista_numerus(interp);
         i32 k;
         b32 omnes_non_typi = (m > ZEPHYRUM) ? VERUM : FALSUM;
+        b32 omnes_typi_ut_expr = (m > ZEPHYRUM) ? VERUM : FALSUM;
+
+        si (oraculum != NIHIL)
+        {
+            s32 victor = -I;
+            b32 decisum = FALSUM;
+
+            si (silva_oraculum_responsum_quaerere(oraculum, nodus,
+                    &victor)
+                && victor >= ZEPHYRUM)
+            {
+                decisum = VERUM;
+            }
+            alioquin
+            {
+                SilvaResolutioResponsum sub_resp;
+
+                sub_resp.victor = -I;
+                sub_resp.discriminans = NIHIL;
+                _ambiguum_examinare_prof(nodus, oraculum,
+                    &sub_resp, profunditas + I);
+                si (sub_resp.victor >= ZEPHYRUM)
+                {
+                    victor = sub_resp.victor;
+                    decisum = VERUM;
+                }
+            }
+            si (decisum)
+            {
+                SilvaValor* electa =
+                    silva_valor_lista_obtinere(interp, (i32)victor);
+
+                si (electa != NIHIL
+                    && electa->genus == SILVA_VALOR_NODUS)
+                {
+                    _nodum_examinare(electa->datum.nodus, oraculum,
+                        examen, profunditas + I);
+                }
+                redde;
+            }
+        }
 
         per (k = ZEPHYRUM; k < m; k++)
         {
@@ -468,10 +525,12 @@ _nodum_examinare (
             sub.nominatus_adest = FALSUM;
             sub.ignotus_adest = FALSUM;
             sub.non_typus_adest = FALSUM;
+            sub.typus_ut_expr_adest = FALSUM;
             sub.species_adest = FALSUM;
             si (elem == NIHIL || elem->genus != SILVA_VALOR_NODUS)
             {
                 omnes_non_typi = FALSUM;
+                omnes_typi_ut_expr = FALSUM;
                 perge;
             }
             _nodum_examinare(elem->datum.nodus, oraculum, &sub,
@@ -492,12 +551,41 @@ _nodum_examinare (
             {
                 omnes_non_typi = FALSUM;
             }
+            si (!sub.typus_ut_expr_adest)
+            {
+                omnes_typi_ut_expr = FALSUM;
+            }
         }
         si (omnes_non_typi)
         {
             examen->non_typus_adest = VERUM;
         }
+        si (omnes_typi_ut_expr)
+        {
+            examen->typus_ut_expr_adest = VERUM;
+        }
         redde;
+    }
+    casus (s32)SILVA_C89_GENUS_FOLIUM_IDENTIFICATOR:
+    {
+        /* regula trivalens DUALIS: typedef notus (non umbratus)
+         * in positione expressionis = lectio impossibilis. Folia
+         * SOLA - tituli declaratorum, membra (tok_titulus), salta
+         * (tok_destinatio) lexemata sunt, non folia: spatia
+         * nominum tuta per constructionem */
+        SilvaValor tok =
+            silva_c89_folium_identificator_tok_valor(nodus);
+
+        si (oraculum != NIHIL && tok.genus == SILVA_VALOR_TOKEN
+            && tok.datum.token != NIHIL
+            && silva_oraculum_typum_novit(oraculum,
+                   tok.datum.token->valor)
+            && !silva_oraculum_non_typum_novit(oraculum,
+                   tok.datum.token->valor))
+        {
+            examen->typus_ut_expr_adest = VERUM;
+        }
+        redde;  /* folium: liberi nulli */
     }
     casus (s32)SILVA_C89_GENUS_DECLARATIO:
         specificatores = silva_c89_declaratio_specificatores(nodus);
@@ -630,12 +718,15 @@ _situs_primi (constans SilvaNodus* nodus, i32 profunditas)
 /* Examinatio ambigui sine positione: filtrum X10 + scala
  * superstitis unici / typo-positivae unicae. Vocata ab
  * ambulatione intertexta (verdicta stipanda) atque a recidiva
- * resolutoris (vocator directus sine ambulatione). */
+ * resolutoris (vocator directus sine ambulatione), atque
+ * RECURSIVE ex _nodum_examinare (resolutio interior-prima
+ * catenarum - profunditas contra catenas pathologicas). */
 hic_manens vacuum
-_ambiguum_examinare (
+_ambiguum_examinare_prof (
     constans SilvaNodus*     ambiguum,
     constans SilvaOraculum*  oraculum,
-    SilvaResolutioResponsum* responsum)
+    SilvaResolutioResponsum* responsum,
+    i32                      profunditas)
 {
     SilvaValor interpretationes =
         silva_c89_ambiguus_interpretationes(ambiguum);
@@ -648,6 +739,7 @@ _ambiguum_examinare (
     i32 i;
 
     si (numerus > LECTIONES_MAXIMAE) redde;  /* numquam visum */
+    si (profunditas > LXIV) redde;
 
     per (i = ZEPHYRUM; i < numerus; i++)
     {
@@ -658,6 +750,7 @@ _ambiguum_examinare (
         examina[i].nominatus_adest = FALSUM;
         examina[i].ignotus_adest = FALSUM;
         examina[i].non_typus_adest = FALSUM;
+        examina[i].typus_ut_expr_adest = FALSUM;
         examina[i].species_adest = FALSUM;
         si (elem == NIHIL || elem->genus != SILVA_VALOR_NODUS)
         {
@@ -665,11 +758,14 @@ _ambiguum_examinare (
             perge;
         }
         _nodum_examinare(elem->datum.nodus, oraculum,
-            &examina[i], ZEPHYRUM);
+            &examina[i], profunditas);
 
         /* trivalens: lectio quae non-typum notum ut typum postulat
-         * OCCIDITUR (eadem vi ac combinatio impossibilis X10) */
-        si (examina[i].non_typus_adest)
+         * OCCIDITUR (eadem vi ac combinatio impossibilis X10);
+         * regula DUALIS: lectio quae typum notum ut expressionem
+         * postulat aeque occiditur (sanatio catenarum) */
+        si (examina[i].non_typus_adest
+            || examina[i].typus_ut_expr_adest)
         {
             examina[i].invalidum = VERUM;
         }
@@ -701,6 +797,16 @@ _ambiguum_examinare (
         redde;
     }
     /* (d) nullum responsum - retentio */
+}
+
+hic_manens vacuum
+_ambiguum_examinare (
+    constans SilvaNodus*     ambiguum,
+    constans SilvaOraculum*  oraculum,
+    SilvaResolutioResponsum* responsum)
+{
+    _ambiguum_examinare_prof(ambiguum, oraculum, responsum,
+        ZEPHYRUM);
 }
 
 vacuum
@@ -1161,6 +1267,8 @@ _politica_expressionis (
         examen.invalidum = FALSUM;
         examen.nominatus_adest = FALSUM;
         examen.ignotus_adest = FALSUM;
+        examen.non_typus_adest = FALSUM;
+        examen.typus_ut_expr_adest = FALSUM;
         examen.species_adest = FALSUM;
         si (elem == NIHIL || elem->genus != SILVA_VALOR_NODUS)
         {

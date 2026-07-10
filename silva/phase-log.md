@@ -6615,3 +6615,25 @@ constans_aestimare + silva_oraculum_responsa_vacare. Gates: suite
 UNCHANGED (0 errores / 100.00% / 399 diagnostica / 305 indecisa).
 Detail: silva_c89_semantica.worklog.md 2026-07-09 (incl. the
 L-strings-are-pre-parser finding).
+
+## 2026-07-10 — SANATIO CATENARUM (oraculum) — pointer entry
+
+Silva code changed, pulled by officina M2c (narrative home:
+officina/phase-log.md M2c addendum). The M0a nested-cast resolver
+park EXPARCATUM: dual trivalent kill (known TYPE as
+identifier-expression = reading impossible; umbratio protected by
+the existing non-typus registration) + winner-only flag flow
+through inner forks resolved on the spot (the ledger's
+"resolve-inner-first fixpoint"). Chains now TRANSMUTE at precommit
+when typedefs are walk-visible (whole corpus). Dead-fork finding:
+the catenae-nidificatae residuum-of-1 is a fork with NO valid
+reading inside a rejected parent reading — off-spine, honest
+retention (named follow-up: reachability-aware indecisa metric,
+no pull). Gates: suite 29/29 (+corpus-shape fixture); percursus
+indecisa 305→9, retenti ~3,354→1,046, coopertura 100.00% HELD,
+fideles 759/760 (pasta deferral, pre-existing), diagnostica 399→455
+ALL known classes (POSIX/fixtures un-gated by decision — cause
+census clean); **auspex 3,753/0 dissentientes**; amalgama
+VERIFICATUM 28/28. Officina effect: fusor sistere 2,912→2,659
+(vocatio-sine-typo → 1 instructione), cursor Unda-0 31→45/73.
+Detail: silva/fontes/silva_c89_oraculum.worklog.md (born).
