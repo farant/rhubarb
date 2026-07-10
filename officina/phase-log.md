@@ -486,3 +486,9 @@ whoever designs M2 machinula, recorded before they evaporate:
   AUDITUS + this addendum) → officina-spec-v2.md §III/§IV/§V/§VIII →
   vocabularium-medullae.md → demissio/medulla worklogs. NEVER
   implement from a compaction summary alone.
+- **Diagnostic investments pre-mapped (2026-07-09, post-compact):**
+  project-specs/officina-m2-diagnostica.md — six ranked investments
+  (flight recorder w/ origo backtraces, deterministic mmap base,
+  poison-fill guards, classification-table runner, dispatch counters,
+  -vestigium trace) + the origo→(fons,linea) distillation item (=
+  indicium's line table born early). Feeds simulatio-4 + M2 INTENTIO.
