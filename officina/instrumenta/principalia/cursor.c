@@ -27,6 +27,9 @@
 #include <string.h>
 #include <time.h>
 #include <dirent.h>
+#include <unistd.h>
+#include <sys/wait.h>
+#include <signal.h>
 
 /* ==================================================
  * Status globalis
@@ -48,6 +51,9 @@ hic_manens SilvaSemantica* systema_semantica = NIHIL;
 
 hic_manens Piscina* piscina_officinae = NIHIL;   /* moduli cachati */
 hic_manens Xar* moduli_mundi = NIHIL;            /* MedullaModulus* */
+
+hic_manens b32 custodia_petita = FALSUM;         /* -custodia */
+hic_manens insignatus integer mora_secunda = 30; /* -mora <n> */
 
 /* ==================================================
  * Plagulam demittere (fistula fusoris; modulus CACHATUR)
@@ -357,11 +363,26 @@ _bibliothecam_demittere (constans SilvaContextus* ctx)
  * Principale
  * ================================================== */
 
-s32 principale (vacuum)
+s32 principale (integer argc, character** argv)
 {
     Piscina* piscina_ctx;
     SilvaPiscina* piscina_silvae_ctx;
     SilvaContextus* ctx;
+    integer a;
+
+    per (a = I; a < argc; a++)
+    {
+        si (strcmp(argv[a], "-custodia") == ZEPHYRUM)
+        {
+            custodia_petita = VERUM;
+        }
+        alioquin si (strcmp(argv[a], "-mora") == ZEPHYRUM
+            && a + I < argc)
+        {
+            a++;
+            mora_secunda = (insignatus integer)atoi(argv[a]);
+        }
+    }
 
     piscina_ctx = piscina_generare_dynamicum("cursor_ctx", 8388608);
     piscina_silvae_ctx = silva_piscina_generare_dynamicum(
@@ -491,6 +512,8 @@ s32 principale (vacuum)
         long decipulae_l = 0L;
         long vitia = 0L;
         long nexus_fracti = 0L;
+        long ruinae = 0L;
+        long tempora = 0L;
 
         si (dir == NIHIL)
         {
@@ -506,6 +529,15 @@ s32 principale (vacuum)
                 != ZEPHYRUM)
             {
                 perge;
+            }
+            {
+                memoriae_index md = strlen(introitus->d_name);
+
+                si (md < III || introitus->d_name[md - II] != '.'
+                    || introitus->d_name[md - I] != 'c')
+                {
+                    perge;
+                }
             }
             per (i = 0; exclusiones[i] != NIHIL; i++)
             {
@@ -540,14 +572,8 @@ s32 principale (vacuum)
         {
             MedullaModulus* modulus_suitae =
                 _plagulam_demittere(ctx, suites[i]);
-            Regio* regio;
-            Conexio* conexio;
-            Machinula* machinula;
-            MachinulaExitus fructus;
-            clock_t s0;
-            clock_t s1;
-            i32 k;
-            b32 nexus_bene = VERUM;
+            pid_t pullus;
+            integer status;
 
             si (modulus_suitae == NIHIL)
             {
@@ -556,94 +582,167 @@ s32 principale (vacuum)
                 vitia++;
                 perge;
             }
-            regio = regio_generare(piscina_ctx);
-            conexio = conexio_creare(piscina_ctx, regio);
-            per (k = ZEPHYRUM; k < xar_numerus(moduli_mundi); k++)
+
+            /* pullus per suitem: ruina hospitis (segfault in
+             * aedificato etc.) = versus RUINA, non mors sweep;
+             * memoria pulli cum pullo perit (piscinae mundi COW) */
+            pullus = fork();
+            si (pullus == ZEPHYRUM)
             {
-                si (!conexio_modulum_addere(conexio,
-                        *(MedullaModulus**)xar_obtinere(
-                            moduli_mundi, k)))
+                Regio* regio;
+                Conexio* conexio;
+                Machinula* machinula;
+                MachinulaExitus fructus;
+                clock_t s0;
+                clock_t s1;
+                i32 k;
+                b32 nexus_bene = VERUM;
+
+                /* stdout interpretatum tacet (columna diff
+                 * postea, instrumento separato) */
+                (vacuum)freopen("/dev/null", "w", stdout);
+
+                /* tectum temporis: SIGALRM = versus TEMPUS in
+                 * parente (lapifex interpretatus minuta ardet) */
+                si (mora_secunda > 0U)
                 {
-                    nexus_bene = FALSUM;
+                    (vacuum)alarm(mora_secunda);
                 }
-            }
-            si (!conexio_modulum_addere(conexio, modulus_suitae)
-                || !nexus_bene || !conexio_nectere(conexio))
-            {
-                constans chorda* symbolum =
-                    conexio_querela_symbolum(conexio);
 
-                fprintf(stderr, "%-44s NEXUS FRACTUS (%.*s)\n",
-                    suites[i], (int)symbolum->mensura,
-                    (constans character*)symbolum->datum);
-                nexus_fracti++;
-                regio_destruere(regio);
-                perge;
-            }
-            machinula = machinula_creare(piscina_ctx, conexio,
-                regio);
-            s0 = clock();
-            {
-                chorda titulus_main;
-                unio { constans character* c; i8* mm; } um;
-
-                um.c = "main";
-                titulus_main.datum = um.mm;
-                titulus_main.mensura = IV;
-                fructus = machinula_currere(machinula,
-                    titulus_main);
-            }
-            s1 = clock();
-            fflush(stdout);
-            {
-                duplex ms = (duplex)(s1 - s0) * 1000.0
-                    / (duplex)CLOCKS_PER_SEC;
-
-                si (fructus.genus == MACHINULA_BENE
-                    && fructus.codex == ZEPHYRUM)
+                regio = regio_generare(piscina_ctx);
+                si (custodia_petita)
                 {
-                    fprintf(stderr, "%-44s PRAETERIIT  %8.0f ms"
-                        "  %llu instr\n", suites[i], ms,
-                        (insignatus longus longus)
-                        machinula_numerus_instructionum(machinula));
-                    praeteritae++;
+                    regio_custodiam_ponere(regio, VERUM);
                 }
-                alioquin si (fructus.genus == MACHINULA_BENE)
+                conexio = conexio_creare(piscina_ctx, regio);
+                per (k = ZEPHYRUM; k < xar_numerus(moduli_mundi);
+                    k++)
                 {
-                    fprintf(stderr, "%-44s EXITUS %ld  %8.0f ms\n",
-                        suites[i], (long)fructus.codex, ms);
-                    exitus_mali++;
-                }
-                alioquin
-                {
-                    constans character* genera[] = { "BENE",
-                        "SISTERE", "DECIPULA", "VITIUM" };
-
-                    fprintf(stderr, "%-44s %s (%.*s)  %8.0f ms\n",
-                        suites[i], genera[fructus.genus],
-                        (int)fructus.nuntius.mensura,
-                        (constans character*)fructus.nuntius.datum,
-                        ms);
-                    si (fructus.genus == MACHINULA_SISTERE)
+                    si (!conexio_modulum_addere(conexio,
+                            *(MedullaModulus**)xar_obtinere(
+                                moduli_mundi, k)))
                     {
-                        sisterae++;
+                        nexus_bene = FALSUM;
                     }
-                    alioquin si (fructus.genus == MACHINULA_DECIPULA)
+                }
+                si (!conexio_modulum_addere(conexio,
+                        modulus_suitae)
+                    || !nexus_bene || !conexio_nectere(conexio))
+                {
+                    constans chorda* symbolum =
+                        conexio_querela_symbolum(conexio);
+
+                    fprintf(stderr, "%-44s NEXUS FRACTUS (%.*s)\n",
+                        suites[i], (int)symbolum->mensura,
+                        (constans character*)symbolum->datum);
+                    _exit(44);
+                }
+                machinula = machinula_creare(piscina_ctx, conexio,
+                    regio);
+                s0 = clock();
+                {
+                    chorda titulus_main;
+                    unio { constans character* c; i8* mm; } um;
+
+                    um.c = "main";
+                    titulus_main.datum = um.mm;
+                    titulus_main.mensura = IV;
+                    fructus = machinula_currere(machinula,
+                        titulus_main);
+                }
+                s1 = clock();
+                {
+                    duplex ms = (duplex)(s1 - s0) * 1000.0
+                        / (duplex)CLOCKS_PER_SEC;
+
+                    si (fructus.genus == MACHINULA_BENE
+                        && fructus.codex == ZEPHYRUM)
                     {
-                        decipulae_l++;
+                        fprintf(stderr, "%-44s PRAETERIIT"
+                            "  %8.0f ms  %llu instr\n", suites[i],
+                            ms, (insignatus longus longus)
+                            machinula_numerus_instructionum(
+                                machinula));
+                        _exit(0);
+                    }
+                    alioquin si (fructus.genus == MACHINULA_BENE)
+                    {
+                        fprintf(stderr, "%-44s EXITUS %ld"
+                            "  %8.0f ms\n", suites[i],
+                            (long)fructus.codex, ms);
+                        _exit(40);
                     }
                     alioquin
                     {
-                        vitia++;
+                        constans character* genera[] = { "BENE",
+                            "SISTERE", "DECIPULA", "VITIUM" };
+
+                        fprintf(stderr, "%-44s %s (%.*s)"
+                            "  %8.0f ms\n", suites[i],
+                            genera[fructus.genus],
+                            (int)fructus.nuntius.mensura,
+                            (constans character*)
+                                fructus.nuntius.datum, ms);
+                        /* 41 sistere / 42 decipula / 43 vitium */
+                        _exit(40 + (int)fructus.genus);
                     }
                 }
             }
-            regio_destruere(regio);
+            /* PARENS: classis per codicem exitus pulli */
+            si (pullus < ZEPHYRUM)
+            {
+                fprintf(stderr, "%-44s RUINA (fork fractum)\n",
+                    suites[i]);
+                vitia++;
+                perge;
+            }
+            si (waitpid(pullus, &status, 0) < ZEPHYRUM)
+            {
+                fprintf(stderr, "%-44s RUINA (waitpid)\n",
+                    suites[i]);
+                vitia++;
+                perge;
+            }
+            si (WIFSIGNALED(status))
+            {
+                si (WTERMSIG(status) == SIGALRM)
+                {
+                    fprintf(stderr, "%-44s TEMPUS (>%us)\n",
+                        suites[i], mora_secunda);
+                    tempora++;
+                }
+                alioquin
+                {
+                    fprintf(stderr, "%-44s RUINA (signum %d)\n",
+                        suites[i], (int)WTERMSIG(status));
+                    ruinae++;
+                }
+            }
+            alioquin
+            {
+                commutatio (WEXITSTATUS(status))
+                {
+                    casus ZEPHYRUM: praeteritae++; frange;
+                    casus 40: exitus_mali++; frange;
+                    casus 41: sisterae++; frange;
+                    casus 42: decipulae_l++; frange;
+                    casus 43: vitia++; frange;
+                    casus 44: nexus_fracti++; frange;
+                    ordinarius:
+                        fprintf(stderr, "%-44s RUINA (codex pulli"
+                            " %d)\n", suites[i],
+                            (int)WEXITSTATUS(status));
+                        ruinae++;
+                        frange;
+                }
+            }
         }
         fprintf(stderr, "\n=== TABULA: %ld praeteritae | %ld exitus"
             " mali | %ld sisterae | %ld decipulae | %ld vitia |"
-            " %ld nexus fracti / %ld suites ===\n", praeteritae,
-            exitus_mali, sisterae, decipulae_l, vitia, nexus_fracti,
+            " %ld ruinae | %ld tempora | %ld nexus fracti /"
+            " %ld suites ===\n",
+            praeteritae, exitus_mali, sisterae, decipulae_l, vitia,
+            ruinae, tempora, nexus_fracti,
             (long)numerus_suitarum);
         redde (praeteritae == (long)numerus_suitarum)
             ? ZEPHYRUM : I;

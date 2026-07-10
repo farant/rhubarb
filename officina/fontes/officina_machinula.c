@@ -1398,6 +1398,22 @@ _valor_operandi (Machinula* m, constans Tabulatum* t,
     }
 }
 
+/* lectura canonica: suffixus operationis IPSE auctoritas est.
+ * Operationes amputantes (addere/multiplicare/et...) registra
+ * ut-sunt legere possunt (bits inferiores solum fluunt); operationes
+ * latitudini sensibiles (comparationes, divisio, dextrorsum,
+ * fluitare, redde) valorem ad latitudinem suffixi reducere DEBENT -
+ * aliter semantica instructionis ab historia scriptoris pendet
+ * (inventum muri M2c: inaequalis.i32 inter registrum s32-canonicum
+ * et i32-canonicum verba plena comparabat - ramus falsus). */
+interior i64
+_valor_canonicus (Machinula* m, constans Tabulatum* t,
+    constans MedullaOperandum* operandum, s32 typus)
+{
+    redde _canonicum(_valor_operandi(m, t, operandum, typus),
+        typus);
+}
+
 interior b32
 _memoriam_probare (Machinula* m, i64 inscriptio,
     memoriae_index numerus)
@@ -1518,8 +1534,8 @@ machinula_currere (Machinula* m, chorda titulus_functionis)
         casus MEDULLA_OP_RESIDUUM:
         {
             s32 typus = instructio->typus;
-            i64 a = _valor_operandi(m, t, &instructio->a, typus);
-            i64 b = _valor_operandi(m, t, &instructio->b, typus);
+            i64 a = _valor_canonicus(m, t, &instructio->a, typus);
+            i64 b = _valor_canonicus(m, t, &instructio->b, typus);
             i64 fructus = ZEPHYRUM;
 
             si (typus == MEDULLA_TYPUS_F64)
@@ -1665,7 +1681,7 @@ machinula_currere (Machinula* m, chorda titulus_functionis)
         casus MEDULLA_OP_DEXTRORSUM:
         {
             s32 typus = instructio->typus;
-            i64 a = _valor_operandi(m, t, &instructio->a, typus);
+            i64 a = _valor_canonicus(m, t, &instructio->a, typus);
             i64 b = _valor_operandi(m, t, &instructio->b,
                 MEDULLA_TYPUS_S32);
             i64 n = b & (i64)(_latitudo_typi(typus) - I);
@@ -1697,8 +1713,8 @@ machinula_currere (Machinula* m, chorda titulus_functionis)
         casus MEDULLA_OP_MAIOR_AEQUALIS:
         {
             s32 typus = instructio->typus;
-            i64 a = _valor_operandi(m, t, &instructio->a, typus);
-            i64 b = _valor_operandi(m, t, &instructio->b, typus);
+            i64 a = _valor_canonicus(m, t, &instructio->a, typus);
+            i64 b = _valor_canonicus(m, t, &instructio->b, typus);
             b32 verum_est = FALSUM;
 
             si (typus == MEDULLA_TYPUS_F64
@@ -1786,7 +1802,7 @@ machinula_currere (Machinula* m, chorda titulus_functionis)
 
         casus MEDULLA_OP_FLUITARE:
         {
-            i64 a = _valor_operandi(m, t, &instructio->a,
+            i64 a = _valor_canonicus(m, t, &instructio->a,
                 instructio->typus);
             f64 valor;
 
@@ -1990,7 +2006,9 @@ machinula_currere (Machinula* m, chorda titulus_functionis)
 
             si (valorem_habet)
             {
-                verbum = _valor_operandi(m, t, &instructio->a,
+                /* valor reditus canonicus per typum signaturae -
+                 * symmetria cum parametris (vide _tabulatum_addere) */
+                verbum = _valor_canonicus(m, t, &instructio->a,
                     t->functio->typus_reditus);
             }
             /* tabulatum solvere */

@@ -785,3 +785,64 @@ IN FLIGHT (compactio imminens; codice INCOMMISSO post m2b commit):
 - Re-entry: officina/CLAUDE.md → hic → M2c INTENTIO supra →
   officina-m2-spec.md → worklogs machinula/conexio. NUMQUAM ex
   compendio compactionis solo.
+
+### ADDENDUM (2026-07-10, post-compactionem) — MURUS FRACTUS:
+### latitudo suffixi auctoritas in lectura
+
+Instrumenta nova (cursor v2.1, eadem die):
+- **fork-per-suite**: mundus SEMEL demissus in parente (COW), pullus
+  per suitem — ruina hospitis = versus RUINA unus, non mors sweep.
+  Suspecti addendi superioris OMNES dissoluti gratis (memoria pulli
+  cum pullo perit).
+- **-custodia**: regio-probationes in omni accessu — 34 signum-11
+  anonyma → 34 VITIUM honesta cum positione. NON standing (venenum
+  allocationis contra paginas recentes nativas divergere posset);
+  modus diagnosis.
+- **fusor -textus <substr>**: medulla canonica unius TU ad stdout.
+- **-mora <n> / TEMPUS**: alarm() in pullo, SIGALRM → versus TEMPUS
+  (lapifex interpretatus 351s ante sistere suum ardebat; tectum 30s).
+- Filtrum suitarum: suffixus .c requisitus (toml intrusum).
+
+INVENTUM MURI (34/73 suites una causa): omnes ad EANDEM
+instructionem cadebant — tabula_dispersa_inserere @si_finis_14+4.
+Origo: `positus_primus_deletum != -1` (i32 domus = INSIGNATUS):
+movere.i32 canonicum zephyro-extensum vs negare.s32 canonicum
+signo-extensum; inaequalis.i32 verba PLENA comparabat ("registra
+ut-sunt") → ramus falsus → reditus -1 → sloti+0xFFFFFFFF*40 →
+extra regionem. REFINITIO DECISUS Q4: lectura ut-sunt sana est
+SOLUM pro operationibus amputantibus; operationes latitudini
+sensibiles (comparationes, dividere/residuum, dextrorsum, fluitare,
+redde) operanda ad latitudinem suffixi canonicant (_valor_canonicus,
+quinque sedes). Semantica instructionis per suffixum SE CONTINET —
+demissio NON mutata (suffixus IPSE conversio implicita visibilis
+est). Fixtura c8 in comparationes.medulla. Vide worklog machinulae.
+
+Classes residuae (per -causa probas + tabulam):
+- "vocatio sine typo functionis" (~10 suites: friatio, url, commandi,
+  ...): CAST cum operando parenthesato `(typus)(expr)` ut VOCATIO
+  parsatus, oraculum non vertit — **opus silva/oraculi**, classis
+  maxima residua (etiam lapifex verisimiliter).
+- "forma localis ignota" (fasti, sectio, symbola, macho_deps,
+  entitas): sedes in plagulis propriis (fasti.c...), classis
+  demissionis/semanticae.
+- "magnitudo inaestimabilis" (arbor2_glr/scribere, compound, utf8):
+  residuum classis sizeof.
+- "accessus sine inscriptione basis" (calendarium, toml);
+  "forma elementi ignota" (flatura); "monstrator nullus/humilis"
+  (capsula, libri — VITIUM verum, investigandum).
+- DECIPULAE nominatae: time, getcwd, persona_scribere, fopen
+  (arbor_praeparator — filesystem, Unda 1).
+- TEMPUS: suites lapifex (labor verus interpretatus, minuta; -mora
+  600 pro cursu benedictionis).
+
+TABULA POST REFECTIONEM (sweep secunda, eadem die):
+**31 praeteritae | 0 exitus mali | 31 sisterae | 4 decipulae |
+2 vitia | 0 ruinae | 5 tempora / 73 suites.** Viridis 16→31 una
+refectione (lex causarum: una causa, quindecim suites). NOTA BENE:
+**exitus mali ZEPHYRUM** — omnis suite quae ad finem currit, RECTE
+currit. Murus residuus = sistere semantica-parcae (19 "vocatio sine
+typo" = cast-ut-vocatio, opus oraculi silvae — vectis maxima:
+verisimiliter etiam 5 tempora lapifex post eam cadunt), non vitia
+machinulae. PROXIMUM: (1) oraculum cast-cum-parenthesi (silva),
+(2) "forma localis ignota" (5), (3) capsula/libri monstrator nullus
+(investigatio), (4) tunc columna stdout-diff.

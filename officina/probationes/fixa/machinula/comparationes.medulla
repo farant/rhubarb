@@ -3,7 +3,10 @@
 ; minor.s32(-1,1)=1  minor.i32(-1,1)=0 (insignatus: 0xFFFFFFFF!)
 ; aequalis(5,5)=1 inaequalis(5,6)=1 maior(7,3)=1
 ; maior_aequalis(3,3)=1 minor_aequalis(2,3)=1
-; summa = 6; 6*7 = 42
+; c8: latitudo suffixi auctoritas in lectura (inventum muri M2c) -
+;     registrum i32-canonicum et s32-canonicum sub aequalis.i32
+;     AEQUALIA sunt (verba plena differunt!)
+; summa = 7; 7*6 = 42
 modulus "fixa/machinula/comparationes.medulla"
 
 functio $main () -> s32
@@ -17,11 +20,14 @@ functio $main () -> s32
     %c5 = maior.s32 7, 3
     %c6 = maior_aequalis.s32 3, 3
     %c7 = minor_aequalis.s32 2, 3
+    %m = movere.i32 %neg
+    %c8 = aequalis.i32 %m, %neg
     %s1 = addere.s32 %c1, %c2
     %s2 = addere.s32 %s1, %c3
     %s3 = addere.s32 %s2, %c4
     %s4 = addere.s32 %s3, %c5
     %s5 = addere.s32 %s4, %c6
     %s6 = addere.s32 %s5, %c7
-    %t = multiplicare.s32 %s6, 7
+    %s7 = addere.s32 %s6, %c8
+    %t = multiplicare.s32 %s7, 6
     redde %t

@@ -31,6 +31,7 @@
 hic_manens b32 verbosa = FALSUM;
 hic_manens i32 mensura_maxima = 4194304;   /* -omnia = sine tecto */
 hic_manens constans character* causa_quaesita = NIHIL;
+hic_manens constans character* textus_quaesitus = NIHIL;
 
 /* linea primi lexematis subarboris (probatio -causa) */
 hic_manens unsigned int
@@ -400,6 +401,12 @@ _plagulam_fundere (constans SilvaContextus* ctx,
         c0 = clock();
         scriptura = medulla_textum_scribere(piscina_officinae,
             modulus);
+        si (textus_quaesitus != NIHIL
+            && strstr(via, textus_quaesitus) != NIHIL)
+        {
+            fwrite(scriptura.datum, I,
+                (memoriae_index)scriptura.mensura, stdout);
+        }
         iterum = medulla_textum_legere(piscina_officinae,
             scriptura, &linea);
         circuli++;
@@ -609,6 +616,12 @@ s32 principale (integer argc, character** argv)
         {
             k++;
             causa_quaesita = argv[k];
+        }
+        alioquin si (strcmp(argv[k], "-textus") == ZEPHYRUM
+            && k + I < argc)
+        {
+            k++;
+            textus_quaesitus = argv[k];
         }
         alioquin
         {
