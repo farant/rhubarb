@@ -1256,3 +1256,103 @@ Post sigillum (consilium cum Frane statutum): instrumenta prima
 (project-specs/instrumenta-simulatio-1.md — custos latinae,
 nexus/emitte, interpretare; 4-5 dies, linea sectionis nominata) →
 M3 (indicium + vindex).
+
+### ADDENDUM (2026-07-10, ante compactionem) — STATUS: SIGILLUM PENDET
+
+Vectis M2 IMPLETUS (vide TABULA UNDECIMA supra); libri omnes
+scripti; nihil in volatu praeter ipsum SIGILLUM. Sessio sigilli
+(post compactionem) faciat IN ORDINE:
+1. RELECTIO PLENA huius phase-log (regula limitis milestonis —
+   non ex compendio compactionis!).
+2. AUDITUM: quaeque parca/dilatio adhuc nominata cum domino?
+   quodque inventum in worklog suo? tabulae metricae rectae?
+3. RELATIO M2 scripta (exemplar: M0a/M1 relationes supra) +
+   sigillum = decisio Franis.
+4. Tum: instrumenta prima (project-specs/instrumenta-simulatio-1
+   + -2, DECISUS quinque sigillata: censor/emitte/origo/nexus/
+   interpretare) → M3.
+Non commissum: project-specs/instrumenta-simulatio-2.md.
+
+## M2 — RELATIO MILLIARII (2026-07-10)
+
+**M2 CLAUSUM. Machinula + conexio + aedificata: EXECUTIO OFFICINAE
+v1.** Fistula tota vivit: fons C89 → silva → semantica → demissio →
+conexio → machinula = mores nativi, octetim ubi comparabile.
+
+Bars, all met:
+- **TABULA UNDECIMA (cursus benedictionis -celer -census -mora
+  3600): 80/80 praeteritae | 0 exitus mali | 0 sisterae |
+  0 decipulae | 0 vitia | 0 ruinae | 0 tempora | 0 nexus fracti.**
+- **Vectis secundus permanens: 73/73 effusiones comparabiles
+  OCTETIM IDENTICAE capturis nativis fixis; 7 exclusiones nominatae
+  cum causis recordatis** (3+1 monstratores DEBUG/ASLR, purgamentum
+  pre-init, UUIDv7, semen time(NULL)).
+- Porta modelli memoriae (M2b): probatio_piscina interpretata
+  exitus 0 + stdout byte-idem nativo.
+- Benedictio: lapifex V quaeque ~72.8 MILIARDA instructionum
+  (~21 min @ ~58M instr/s; -celer 3.6x confirmatum); arbor_formator
+  673M; summa cursus **365.2 miliarda instructionum
+  interpretatarum**.
+- Portae stantes die sigilli RECURSAE: suite 6/6; hospes 61/61
+  VERIFICATUM; fusor circuli 578/578 byte-idem, sistere 2,426 in
+  30 plagulis — OMNES in parcis nominatis.
+
+Quattuor chunks, UNO DIE (2026-07-10; INTENTIO pridie): M2a regio +
+conexio + nexus mundi (11,863 symbola, 3 ms) → M2b machinula
+(dispensatio 35 op, canonicum-in-scriptura, recordator volatus
+SEMPER ACTIVUS, pavimentum 14 aedificatorum) → M2c cursor + Unda 0
+(aedificata 44, murus latitudinis fractus, sanatio catenarum silvae,
+completio aciei semanticae, membrum-in-rvalore, columna stdout) →
+M2d systema_posix + ansae + Unda 1 (aedificata 60, auspex_posix
+porta certificationis, VIII/IX intrantes virides primo contactu).
+
+**Lex contactus corporis — puncta data nunc 3/8/3/3 + ~10 (M2c+d)**:
+murus latitudinis (34 suites, instructio UNA); cast-ut-vocatio
+(oraculum silvae, 19 suites; indecisa 305→9 toto fronte); completio
+aciei C89 3.5.7 (semantica, 6 suites); membrum-in-rvalore (17
+plagulae); litera f32 per typum parametri; AEDIFICATA_NUMERUS extra
+tabulam legens; PARENTHESIS conversionem devorans; vitia corporis
+VERA (coloratio.h/biblia.h enumerationes sine nomine); multipart
+secundum-idem; capsula decipula-ut-datum in agro. TRIA inventa
+refectiones silvae/semanticae erant — frons tota melior facta.
+Tabularium caecitatum vectium: 2 (fluitans "100"; PARENTHESIS
+byte-idem-sed-falsum) — benedictio aureorum + vectes morum, non
+formae.
+
+**AUDITUS PLENUS (phase-log totum relectum + systema plagularum):**
+- INTENTIO omnia praestita aut emendata-cum-ratione (cursor natus
+  M2a link-only; campus tabulae MedullaLineae void*; arithmetica
+  undae 73+9−2=80 — cursus/libri ex ordinibus in exclusiones
+  nominatas moti; captare somnus-1; -celer varians).
+- Tabulae metricae contra systema plagularum VERIFICATAE: cursor
+  -enumerare = 80; census = 80 plagulae; aurea 75 = 73 comparabilia
+  + 2 fixa stantia (cursus, libri — pinnata dum in unda erant,
+  retenta pro tractionibus suis nominatis).
+- Quodque inventum in worklog suo (machinula 7 introitus, demissio
+  7, conexio 1 — capita inspecta).
+- Actuales contra spec-v2 §XI: vectis dixit "~80 suites, dilationes
+  nominatae" → ACTUALE exacte 80, omnes virides, dilationes IN
+  TABULA cum causis, PLUS vectis stdout stans 73/73.
+
+**Parcae cum dominis (restitutae ad sigillum):** Unda 1b
+(system+opendir) | Unda 2 (tempus/entropia) | Unda 3 (rete) |
+cursus Tier-2 .m | libri gravia (cum biblia_dr) — omnes IN tabula
+exclusionum cursoris cum causis. Velocitas: -celer benedictioni
+sufficit; acies instructionum planae = apertura M3 (~1.3-2x super
+celer); dispensatio/superinstructiones = EX DATIS census (messis
+in build/census/, 80 plagulae); ultra → M5. Lectio decipulae-ut-
+datum tacita: in agro confirmata, -custodia = instrumentum
+diagnosis (NON stans — venenum allocationis), ditatio → M5/vindex.
+Registratio aedificatorum publica → M4; record/replay aedificatorum
+→ v2 (canalis unus = ianua); qsort-ut-aedificatum → unda knotapel;
+provenientia textualis → M3 (indicium); parca stb_image vendita
+(imago.c, sistere 76) + tcp_posix (10, cum Unda 3); mktime
+periculum nominatum + auditum-purum; aurea stantia cursus/libri
+notata.
+
+**M2 SIGILLATUM (Fran, 2026-07-10) = EXECUTIO OFFICINAE v1 MISSA.**
+NEXT: **instrumenta prima** (censor/emitte/origo/nexus/interpretare;
+DECISUS quinque sigillata; specs = instrumenta-simulatio-1+2.md;
+~4-4.5 dies, linea sectionis censor+emitte+origo) → **M3 indicium +
+vindex** (apertura: acies instructionum planae; ad clausuram:
+auditum praedictionis usus instrumentorum, sim-2 §5).
