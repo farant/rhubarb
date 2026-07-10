@@ -18,6 +18,9 @@
 #include <math.h>
 #include <errno.h>
 #include <time.h>
+#include <sys/stat.h>
+#include <sys/time.h>
+#include <unistd.h>
 
 /* ================= officina.h (verbatim) ================= */
 /* officina.h - Medulla: IR registrorum linearis (interfacies publica)
@@ -6681,6 +6684,7 @@ conexio_decipulam_obtinere (constans Conexio* conexio, s32 index)
 #define ANULUS_LARVA          (ANULUS_MENSURA - 1)
 #define ARGUMENTA_MAXIMA      32
 #define STIVA_MARGO           256   /* octeti custodiae in vocare */
+#define ANSAE_MAXIMAE         64    /* plagulae apertae simul */
 
 /* ==================================================
  * Typi interni
@@ -6731,7 +6735,12 @@ structura Machinula {
     memoriae_index apex_stivae;
     /* cellae externae captae */
     s64*      cella_errno;          /* NIHIL licet */
+    /* ansae plagularum (M2d): 0/1/2 = flumina norma (DECISUS Q1),
+     * 3+ = plagulae fopen; locelli NIHIL liberi (fclose vacat) */
+    FILE*     ansae[ANSAE_MAXIMAE];
 };
+
+interior FILE* _ansam_solvere (Machinula* m, i64 ansa);
 
 /* ==================================================
  * Canonicum + figurae fluitantes
@@ -7480,15 +7489,8 @@ _aed_fprintf (Machinula* m, constans i64* argumenta, s32 numerus,
     f.regio_buf = NIHIL;
     f.cap = ZEPHYRUM;
     f.scriptum = ZEPHYRUM;
-    si (argumenta[ZEPHYRUM] == I)
-    {
-        f.fluxus = stdout;
-    }
-    alioquin si (argumenta[ZEPHYRUM] == II)
-    {
-        f.fluxus = stderr;
-    }
-    alioquin
+    f.fluxus = _ansam_solvere(m, argumenta[ZEPHYRUM]);
+    si (f.fluxus == NIHIL)
     {
         _vitium(m, "fprintf: ansa ignota");
         redde FALSUM;
@@ -7768,19 +7770,21 @@ _aed_ldexp (Machinula* m, constans i64* a, s32 n, i64* fr)
 interior b32
 _aed_fflush (Machinula* m, constans i64* a, s32 n, i64* fr)
 {
-    (vacuum)m;
     *fr = ZEPHYRUM;
     si (n < I || a[ZEPHYRUM] == ZEPHYRUM)
     {
+        /* 0 = NIHIL (omnia effundere); ambiguitas cum stdin
+         * consulta - fflush(stdin) indefinitum, nemo perdit */
         (vacuum)fflush(NIHIL);
-    }
-    alioquin si (a[ZEPHYRUM] == I)
-    {
-        (vacuum)fflush(stdout);
     }
     alioquin
     {
-        (vacuum)fflush(stderr);
+        FILE* pl = _ansam_solvere(m, a[ZEPHYRUM]);
+
+        si (pl != NIHIL)
+        {
+            (vacuum)fflush(pl);
+        }
     }
     redde VERUM;
 }
@@ -7801,6 +7805,259 @@ _aed_time (Machinula* m, constans i64* a, s32 n, i64* fr)
             magnitudo(i64));
     }
     *fr = (i64)(s64)v;
+    redde VERUM;
+}
+
+/* ==================================================
+ * Ansae plagularum (M2d) - FILE* = ansa opaca (DECISUS Q1)
+ * ================================================== */
+
+interior FILE*
+_ansam_solvere (Machinula* m, i64 ansa)
+{
+    si (ansa == ZEPHYRUM) redde stdin;
+    si (ansa == I)        redde stdout;
+    si (ansa == II)       redde stderr;
+    si (ansa >= III && ansa < (i64)ANSAE_MAXIMAE)
+    {
+        redde m->ansae[ansa];
+    }
+    redde NIHIL;
+}
+
+interior b32
+_aed_fopen (Machinula* m, constans i64* a, s32 n, i64* fr)
+{
+    FILE* pl;
+    i64 ansa = ZEPHYRUM;
+
+    (vacuum)n;
+    errno = ZEPHYRUM;
+    pl = fopen((constans character*)(memoriae_index)a[ZEPHYRUM],
+        (constans character*)(memoriae_index)a[I]);
+    si (pl != NIHIL)
+    {
+        i64 k;
+
+        per (k = III; k < (i64)ANSAE_MAXIMAE; k++)
+        {
+            si (m->ansae[k] == NIHIL)
+            {
+                m->ansae[k] = pl;
+                ansa = k;
+                frange;
+            }
+        }
+        si (ansa == ZEPHYRUM)
+        {
+            fclose(pl);
+            _vitium(m, "ansae exhaustae");
+            redde FALSUM;
+        }
+    }
+    _errno_retro(m);
+    *fr = ansa;
+    redde VERUM;
+}
+
+interior b32
+_aed_fclose (Machinula* m, constans i64* a, s32 n, i64* fr)
+{
+    i64 ansa = a[ZEPHYRUM];
+    FILE* pl = _ansam_solvere(m, ansa);
+
+    (vacuum)n;
+    si (pl == NIHIL || ansa < III)
+    {
+        _vitium(m, "fclose: ansa ignota");
+        redde FALSUM;
+    }
+    *fr = (i64)(s64)fclose(pl);
+    m->ansae[ansa] = NIHIL;
+    redde VERUM;
+}
+
+interior b32
+_aed_fread (Machinula* m, constans i64* a, s32 n, i64* fr)
+{
+    FILE* pl = _ansam_solvere(m, a[III]);
+
+    (vacuum)n;
+    si (pl == NIHIL)
+    {
+        _vitium(m, "fread: ansa ignota");
+        redde FALSUM;
+    }
+    *fr = (i64)fread((vacuum*)(memoriae_index)a[ZEPHYRUM],
+        (memoriae_index)a[I], (memoriae_index)a[II], pl);
+    redde VERUM;
+}
+
+interior b32
+_aed_fwrite (Machinula* m, constans i64* a, s32 n, i64* fr)
+{
+    FILE* pl = _ansam_solvere(m, a[III]);
+
+    (vacuum)n;
+    si (pl == NIHIL)
+    {
+        _vitium(m, "fwrite: ansa ignota");
+        redde FALSUM;
+    }
+    *fr = (i64)fwrite((constans vacuum*)(memoriae_index)a[ZEPHYRUM],
+        (memoriae_index)a[I], (memoriae_index)a[II], pl);
+    redde VERUM;
+}
+
+interior b32
+_aed_fseek (Machinula* m, constans i64* a, s32 n, i64* fr)
+{
+    FILE* pl = _ansam_solvere(m, a[ZEPHYRUM]);
+
+    (vacuum)n;
+    si (pl == NIHIL)
+    {
+        _vitium(m, "fseek: ansa ignota");
+        redde FALSUM;
+    }
+    *fr = (i64)(s64)fseek(pl, (long)(s64)a[I],
+        (int)(s64)_canonicum(a[II], MEDULLA_TYPUS_S32));
+    redde VERUM;
+}
+
+interior b32
+_aed_ftell (Machinula* m, constans i64* a, s32 n, i64* fr)
+{
+    FILE* pl = _ansam_solvere(m, a[ZEPHYRUM]);
+
+    (vacuum)n;
+    si (pl == NIHIL)
+    {
+        _vitium(m, "ftell: ansa ignota");
+        redde FALSUM;
+    }
+    *fr = (i64)(s64)ftell(pl);
+    redde VERUM;
+}
+
+interior b32
+_aed_fgets (Machinula* m, constans i64* a, s32 n, i64* fr)
+{
+    FILE* pl = _ansam_solvere(m, a[II]);
+    character* fructus_hospitis;
+
+    (vacuum)n;
+    si (pl == NIHIL)
+    {
+        _vitium(m, "fgets: ansa ignota");
+        redde FALSUM;
+    }
+    fructus_hospitis = fgets((character*)(memoriae_index)a[ZEPHYRUM],
+        (int)(s64)_canonicum(a[I], MEDULLA_TYPUS_S32), pl);
+    /* fructus = monstrator HOSPITIS (= hospes verus) aut NIHIL */
+    *fr = (fructus_hospitis != NIHIL) ? a[ZEPHYRUM] : ZEPHYRUM;
+    redde VERUM;
+}
+
+interior b32
+_aed_fputc (Machinula* m, constans i64* a, s32 n, i64* fr)
+{
+    FILE* pl = _ansam_solvere(m, a[I]);
+
+    (vacuum)n;
+    si (pl == NIHIL)
+    {
+        _vitium(m, "fputc: ansa ignota");
+        redde FALSUM;
+    }
+    *fr = (i64)(s64)fputc(
+        (int)(s64)_canonicum(a[ZEPHYRUM], MEDULLA_TYPUS_S32), pl);
+    redde VERUM;
+}
+
+interior b32
+_aed_remove (Machinula* m, constans i64* a, s32 n, i64* fr)
+{
+    (vacuum)n;
+    errno = ZEPHYRUM;
+    *fr = (i64)(s64)remove(
+        (constans character*)(memoriae_index)a[ZEPHYRUM]);
+    _errno_retro(m);
+    redde VERUM;
+}
+
+interior b32
+_aed_rename (Machinula* m, constans i64* a, s32 n, i64* fr)
+{
+    (vacuum)n;
+    errno = ZEPHYRUM;
+    *fr = (i64)(s64)rename(
+        (constans character*)(memoriae_index)a[ZEPHYRUM],
+        (constans character*)(memoriae_index)a[I]);
+    _errno_retro(m);
+    redde VERUM;
+}
+
+/* stat/gettimeofday: forma nostra ≡ formae hospitis CERTIFICATA
+ * (auspex_posix.sh) - scriptura DIRECTA per monstratorem hospitis */
+interior b32
+_aed_stat (Machinula* m, constans i64* a, s32 n, i64* fr)
+{
+    (vacuum)n;
+    errno = ZEPHYRUM;
+    *fr = (i64)(s64)stat(
+        (constans character*)(memoriae_index)a[ZEPHYRUM],
+        (structura stat*)(memoriae_index)a[I]);
+    _errno_retro(m);
+    redde VERUM;
+}
+
+interior b32
+_aed_mkdir (Machinula* m, constans i64* a, s32 n, i64* fr)
+{
+    (vacuum)n;
+    errno = ZEPHYRUM;
+    *fr = (i64)(s64)mkdir(
+        (constans character*)(memoriae_index)a[ZEPHYRUM],
+        (mode_t)(s64)_canonicum(a[I], MEDULLA_TYPUS_S32));
+    _errno_retro(m);
+    redde VERUM;
+}
+
+interior b32
+_aed_getcwd (Machinula* m, constans i64* a, s32 n, i64* fr)
+{
+    character* fructus_hospitis;
+
+    (vacuum)n;
+    errno = ZEPHYRUM;
+    fructus_hospitis = getcwd(
+        (character*)(memoriae_index)a[ZEPHYRUM],
+        (memoriae_index)a[I]);
+    _errno_retro(m);
+    *fr = (fructus_hospitis != NIHIL) ? a[ZEPHYRUM] : ZEPHYRUM;
+    redde VERUM;
+}
+
+interior b32
+_aed_gettimeofday (Machinula* m, constans i64* a, s32 n, i64* fr)
+{
+    (vacuum)m; (vacuum)n;
+    *fr = (i64)(s64)gettimeofday(
+        (structura timeval*)(memoriae_index)a[ZEPHYRUM], NIHIL);
+    redde VERUM;
+}
+
+/* tm hospitis staticum EXTRA regionem redditur - lectio sola per
+ * novem campos normae (praefixum idem); mktime cum tm hospitis
+ * PERICULUM nominatum (tm_gmtoff ultra formam systematis) - corpus
+ * mktime non vocat (auditum M2d) */
+interior b32
+_aed_localtime (Machinula* m, constans i64* a, s32 n, i64* fr)
+{
+    (vacuum)m; (vacuum)n;
+    *fr = (i64)(memoriae_index)localtime(
+        (constans time_t*)(memoriae_index)a[ZEPHYRUM]);
     redde VERUM;
 }
 
@@ -7852,7 +8109,23 @@ interior constans AedificatumNota AEDIFICATA[] = {
     { "fmod",     _aed_fmod },
     { "ldexp",    _aed_ldexp },
     { "fflush",   _aed_fflush },
-    { "time",     _aed_time }
+    { "time",     _aed_time },
+    /* M2d: plagulae (ansae) + POSIX */
+    { "fopen",        _aed_fopen },
+    { "fclose",       _aed_fclose },
+    { "fread",        _aed_fread },
+    { "fwrite",       _aed_fwrite },
+    { "fseek",        _aed_fseek },
+    { "ftell",        _aed_ftell },
+    { "fgets",        _aed_fgets },
+    { "fputc",        _aed_fputc },
+    { "remove",       _aed_remove },
+    { "rename",       _aed_rename },
+    { "stat",         _aed_stat },
+    { "mkdir",        _aed_mkdir },
+    { "getcwd",       _aed_getcwd },
+    { "gettimeofday", _aed_gettimeofday },
+    { "localtime",    _aed_localtime }
 };
 /* structuralis - numerus falsus (44 vs 42 verae) lectiones extra
  * tabulam in ansa ligationis fecit; magnitudo drift vetat */
@@ -11373,7 +11646,11 @@ _expressionem (Demissio* d, constans SilvaNodus* nodus)
         {
             SilvaValor v = silva_c89_parenthesis_internum(nodus);
 
-            redde _expressionem(d, v.datum.nodus);
+            /* NON redde directum: conversio annotata HUIUS nodi
+             * (cauda functionis) applicanda - (s64)(a*b) casus
+             * pecuniae sputnik (inventum M2d) */
+            fructus = _expressionem(d, v.datum.nodus);
+            frange;
         }
         casus (s32)SILVA_C89_GENUS_FOLIUM_IDENTIFICATOR:
         {

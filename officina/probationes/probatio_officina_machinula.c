@@ -298,6 +298,101 @@ s32 principale (vacuum)
     }
 
     /* ========================================================
+     * PROBARE: ansae plagularum (M2d) - vita tota: fopen/fputc/
+     * fwrite/ftell/fclose -> stat(st_size @96!) -> fopen/fread ->
+     * remove -> gettimeofday/getcwd. 'A'+'B'+'C' = 198; omnia
+     * recta -> 42. Via sub officina/build/ (CWD = radix).
+     * ======================================================== */
+    {
+        constans character* textus_literis =
+            "modulus \"ansae.medulla\"\n"
+            "\n"
+            "functio $main () -> s32\n"
+            "@initium:\n"
+            "    %via = locus $via_pr\n"
+            "    %mw = locus $modus_w\n"
+            "    %pl = vocare.s64 $fopen, %via, %mw\n"
+            "    %ok1 = maior_aequalis.s64 %pl, 3\n"
+            "    %c = vocare.s32 $fputc, 65, %pl\n"
+            "    %ok2 = aequalis.s32 %c, 65\n"
+            "    %bc = locus $bc_datum\n"
+            "    %w = vocare.s64 $fwrite, %bc, 1, 2, %pl\n"
+            "    %ok3 = aequalis.s64 %w, 2\n"
+            "    %t = vocare.s64 $ftell, %pl\n"
+            "    %ok4 = aequalis.s64 %t, 3\n"
+            "    %f1 = vocare.s32 $fclose, %pl\n"
+            "    %ok5 = aequalis.s32 %f1, 0\n"
+            "    %arca_st = arca 144, 8\n"
+            "    %st = vocare.s32 $stat, %via, %arca_st\n"
+            "    %ok6 = aequalis.s32 %st, 0\n"
+            "    %p_sz = addere.i64 %arca_st, 96\n"
+            "    %sz = legere.s64 %p_sz\n"
+            "    %ok7 = aequalis.s64 %sz, 3\n"
+            "    %mr = locus $modus_r\n"
+            "    %pl2 = vocare.s64 $fopen, %via, %mr\n"
+            "    %buf = arca 8, 8\n"
+            "    %r = vocare.s64 $fread, %buf, 1, 3, %pl2\n"
+            "    %ok8 = aequalis.s64 %r, 3\n"
+            "    %b0 = legere.i8 %buf\n"
+            "    %p1 = addere.i64 %buf, 1\n"
+            "    %b1 = legere.i8 %p1\n"
+            "    %p2 = addere.i64 %buf, 2\n"
+            "    %b2 = legere.i8 %p2\n"
+            "    %s01 = addere.s32 %b0, %b1\n"
+            "    %sum = addere.s32 %s01, %b2\n"
+            "    %ok9 = aequalis.s32 %sum, 198\n"
+            "    %f2 = vocare.s32 $fclose, %pl2\n"
+            "    %rm = vocare.s32 $remove, %via\n"
+            "    %ok10 = aequalis.s32 %rm, 0\n"
+            "    %tv = arca 16, 8\n"
+            "    %g = vocare.s32 $gettimeofday, %tv\n"
+            "    %ok11 = aequalis.s32 %g, 0\n"
+            "    %sec = legere.s64 %tv\n"
+            "    %ok12 = maior.s64 %sec, 0\n"
+            "    %cwb = arca 256, 8\n"
+            "    %cw = vocare.s64 $getcwd, %cwb, 256\n"
+            "    %ok13 = inaequalis.s64 %cw, 0\n"
+            "    %e1 = et.i32 %ok1, %ok2\n"
+            "    %e2 = et.i32 %e1, %ok3\n"
+            "    %e3 = et.i32 %e2, %ok4\n"
+            "    %e4 = et.i32 %e3, %ok5\n"
+            "    %e5 = et.i32 %e4, %ok6\n"
+            "    %e6 = et.i32 %e5, %ok7\n"
+            "    %e7 = et.i32 %e6, %ok8\n"
+            "    %e8 = et.i32 %e7, %ok9\n"
+            "    %e9 = et.i32 %e8, %ok10\n"
+            "    %e10 = et.i32 %e9, %ok11\n"
+            "    %e11 = et.i32 %e10, %ok12\n"
+            "    %e12 = et.i32 %e11, %ok13\n"
+            "    %fr = multiplicare.s32 %e12, 42\n"
+            "    redde %fr\n"
+            "\n"
+            "datum $via_pr magnitudo 24 ordinatio 1\n"
+            "    octeti 6f666669 63696e61 2f627569 6c642f70"
+            " 612e7478 74000000\n"
+            "datum $modus_w magnitudo 4 ordinatio 1\n"
+            "    octeti 77000000\n"
+            "datum $modus_r magnitudo 4 ordinatio 1\n"
+            "    octeti 72000000\n"
+            "datum $bc_datum magnitudo 4 ordinatio 1\n"
+            "    octeti 42430000\n";
+        chorda textus = _ch(textus_literis);
+        Regio* regio = NIHIL;
+        Machinula* machinula = _machinulam_parare(piscina, textus,
+            &regio);
+        MachinulaExitus exitus;
+
+        imprimere("\n--- Probans ansas plagularum ---\n");
+        CREDO_NON_NIHIL (machinula);
+        exitus = machinula_currere(machinula, _ch("main"));
+        CREDO_AEQUALIS_S32 (exitus.genus, MACHINULA_BENE);
+        CREDO_VERUM (exitus.codex == (s64)XLII);
+        CREDO_VERUM (machinula_numerus_aedificatorum(machinula)
+            == XII);
+        regio_destruere(regio);
+    }
+
+    /* ========================================================
      * PROBARE: numeratores + apex stivae
      * ======================================================== */
     {

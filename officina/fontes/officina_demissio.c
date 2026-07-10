@@ -2463,7 +2463,11 @@ _expressionem (Demissio* d, constans SilvaNodus* nodus)
         {
             SilvaValor v = silva_c89_parenthesis_internum(nodus);
 
-            redde _expressionem(d, v.datum.nodus);
+            /* NON redde directum: conversio annotata HUIUS nodi
+             * (cauda functionis) applicanda - (s64)(a*b) casus
+             * pecuniae sputnik (inventum M2d) */
+            fructus = _expressionem(d, v.datum.nodus);
+            frange;
         }
         casus (s32)SILVA_C89_GENUS_FOLIUM_IDENTIFICATOR:
         {

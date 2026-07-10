@@ -178,3 +178,33 @@ aedificata == 2). NULL arg arrives as immediate 0 under S64 eval
 
 Suite 67/67; amalgama VERIFICATUM; multipart PRAETERIIT solo
 (43,038 instr — was DECIPULA time).
+
+## 2026-07-10 — M2d Chunk B: ansae plagularum + aedificata POSIX
+
+Handle table born (DECISUS Q1 honored): FILE* = opaque ansa,
+0/1/2 = std streams, fopen scans slots 3..64 for first NIHIL
+(fclose vacates — unlimited total opens, 64 concurrent).
+_ansam_solvere is the ONE resolution point; fprintf/fflush
+rewired through it (fflush 0 = flush-all, ambiguity with stdin
+noted and accepted — nobody loses).
+
+15 new builtins (corpus-measured list, not the spec's maximal
+one): fopen fclose fread fwrite fseek ftell fgets fputc remove
+rename stat mkdir getcwd gettimeofday localtime → 58 total.
+stat/gettimeofday write through GUEST pointers with the HOST
+struct — sound because auspex_posix certifies our systema_posix
+layouts ≡ host layouts (that gate is what makes these builtins
+one-liners). localtime returns the host's static tm (outside the
+region — custodia would flag it, diagnosis-only); reads of the
+9 standard fields are prefix-safe; mktime-with-guest-tm = NAMED
+hazard, corpus audited clean (nobody calls it).
+
+Regression: ansae.medulla inline module — full lifecycle
+fopen→fputc/fwrite/ftell→fclose→stat (st_size read at offset 96
+through the certified layout!)→fopen/fread ('A'+'B'+'C'=198)→
+remove→gettimeofday→getcwd, 12 builtins counted, →42.
+
+Suite 71/71 → (post-localtime) green; amalgama VERIFICATUM.
+Sweep: 55→66/73 (POSIX-transitive 9 + via + arbor_praeparator +
+arbor_quaestio + fasti + sputnik_interpres — the last via the
+DEMISSIO paren-conversion find, see officina_demissio.worklog.md).

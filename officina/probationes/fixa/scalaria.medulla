@@ -109,3 +109,15 @@ functio $monstra (i64 %p) -> s32
     %t15 = aequalis.i64 %q, %p
     %t16 = addere.s32 %t14, %t15
     redde %t16
+
+functio $pecunia_exemplum (s64 %cents, f64 %n) -> s64
+@initium_0:
+    %t3 = fluitare.s64.f64 %cents
+    %t4 = multiplicare.f64 %t3, %n
+    %t5 = integrare.f64.s64 %t4
+    %implicita = movere.s64 %t5
+    %t6 = fluitare.s64.f64 %cents
+    %t7 = multiplicare.f64 %t6, %n
+    %t8 = integrare.f64.s64 %t7
+    %t9 = addere.s64 %implicita, %t8
+    redde %t9

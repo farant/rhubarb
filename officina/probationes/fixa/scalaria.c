@@ -41,3 +41,8 @@ int monstra(int* p)
     x--;
     return *q + (q == p);
 }
+long pecunia_exemplum(long cents, double n)
+{
+    long implicita = (cents * n);
+    return implicita + (long)(cents * n);
+}

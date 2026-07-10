@@ -1077,3 +1077,93 @@ nativae. TABULA immota: 55 | 0 | 10 | 2 | 1 | 0 | 5 / 73.
 **OMNIA deliverables M2c completa** (cursor + sweep + builtins +
 capturae fixae + exclusiones recordatae). Sigillum M2c = decisio
 Franis. Post sigillum: M2d (systema_posix trahit 10+).
+
+## 2026-07-10 — M2d INTENTIO (Unda 1 + systema_posix)
+
+Vectis M2d (spec §III): **Undae 0+1 VIRIDES (~80 suites) = M2
+SIGILLATUM = executio officinae v1 missa.** Chunks:
+
+**A — systema_posix + certificatio formarum.** Plagula nova
+silva/fontes/systema_posix.h (C89 vanilla, exemplar systema_c89.h):
+typi (intptr_t, mode_t, off_t, dev_t...), formae VERAE hospitis
+(structura timespec/timeval/stat — forma stat = praerequisitum
+NOMINATUM; 64-bit-inode arm64), declarationes (stat/mkdir/getcwd/
+gettimeofday/remove/rename), macra valoris/functionis per canalem
+LEXICON (S_ISDIR = probatio prima macri functionis in canale!).
+Mechanismus: CONCATENATIO textuum in parsuram UNAM apud oneratores
+(cursor + fusor SOLI - silva-latus intactum, API immutata,
+plagula ISO pura manet). PORTA NOVA: auspex_posix - clang formas
+asserit (sizeof + offset omnium camporum contra capita vera; forma
+falsa = corruptio memoriae tacita interpretata).
+Effectus mensurandus: classis "forma localis ignota" (129) solvitur.
+
+**B — ansae + aedificata plagularum.** Tabula ansarum in machinula
+(FILE* = ansa opaca; 0/1/2 = flumina norma, DECISUS M2): fopen ->
+ansa nova; fclose invalidat; fread/fwrite/fseek/ftell/fgetc/fgets/
+ungetc/feof/ferror/fputc/fputs per ansam -> FILE* hospitis;
+fprintf ansae verae (non 1/2) scribenda. + stat/mkdir/getcwd/
+gettimeofday/remove/rename. Regressiones in probatione machinulae
+(plagula temporaria sub officina/build/).
+
+**C — Unda 1 in cursum.** Exclusiones trimmatae: filum,
+entitas_repositorium, arbor_formator, arbor2_file_roundtrip, macho
+(+ singillatim: arbor/arbor_index/arbor2_expandere/
+eventus_inspector); iter_directoria + generare = Unda 1b NOMINE
+(system+opendir); uuid/tempestivum = Unda 2 NOMINE. captare
+recurritur (aurea nova), viae scripturae (results/, /tmp)
+verificatae, dilationes 1b/2/3 nomine restitutae.
+
+Lex suturarum vigilat: suturae machinula<->libc hospitis (ansae!)
+et lexicon<->macra functionis = sedes exspectatae inventorum.
+
+### ADDENDUM (2026-07-10) — M2d CHUNK A CLAUSUS: systema_posix
+
+- silva/fontes/systema_posix.h NATA (C89 vanilla; intptr_t + typi
+  POSIX Darwin; timespec/timeval/stat formis VERIS; stat/mkdir/
+  getcwd/gettimeofday; S_IS*/S_I*USR macra). Insidiae mensuratae:
+  st_mode/st_nlink 16-BIT, tv_usec 32-bit (suseconds_t = int!),
+  stat 144 octeti (inodus 64-bit).
+- **PORTA NOVA auspex_posix.sh VIRIDIS**: duae TU (capita vera |
+  plagula nostra) eandem tabulam assertionum compilant - sizeof +
+  offset omnium camporum + valores macrorum ≡. Forma falsa =
+  corruptio tacita; porta ante machinulam stat.
+- Oneratores cursor+fusor: textus ISO+POSIX CONCATENATUS in
+  parsuram unam (silva-latus intactum - baselines immotae; API
+  semantica immutata).
+- Effectus: fusor sistere 2,476→2,426 in 36→30 plagulis; "forma
+  localis ignota" in lib/ SOLUM in parcis nominatis restat
+  (imago/stb 76, tcp_posix/Unda-3 10); "vocatio sine typo" (intptr_t)
+  SOLUTA. Suites POSIX nunc DEMITTUNTUR et ad decipulas honestas
+  perveniunt (fasti: DECIPULA gettimeofday 8ms) - Chunk B eas vertet.
+
+### ADDENDUM (2026-07-10) — M2d CHUNK B CLAUSUS: 66/73, 0 sisterae
+
+Tabula ansarum (FILE* = ansa opaca, 0/1/2 flumina; fopen locellos
+3..64 scrutatur, fclose vacat) + XV aedificata nova (lista corpore
+mensurata): fopen/fclose/fread/fwrite/fseek/ftell/fgets/fputc/
+remove/rename/stat/mkdir/getcwd/gettimeofday/localtime → 58.
+stat/gettimeofday DIRECTE per monstratores hospitis scribunt -
+sanum QUIA auspex_posix formas ≡ certificat. Regressio
+ansae.medulla (vita tota, st_size @96 per formam certificatam, 42).
+
+**INVENTUM DEMISSIONIS (sputnik pecunia)**: PARENTHESIS in
+_expressionem redde directum faciebat - conversionem ANNOTATAM
+nodi ipsius (cauda) praetermittens. (s64)(a*b) et `s64 x = (a*b);`
+ambo conversionem perdebant - fructus f64 crudus in parametrum
+s64. Vectis rotundi-circuli caecus erat (forma non significatio -
+lectio secunda). Sanatio 2 lineae; regressio scalaria
+pecunia_exemplum (ambae formae); aureum re-pinnatum benedictum.
+Detail: officina_demissio.worklog.md.
+
+TABULA OCTAVA: **66 praeteritae | 0 exitus mali | 0 sisterae |
+1 decipula | 1 vitium | 0 ruinae | 5 tempora / 73.**
+STDOUT: 60 eaedem | 0 DIFFERUNT | 6 exclusae. Residuum 7 OMNE
+nominatum: cursus (fenestra_tempus_* = Tier-2 .m, extra corpus
+per DECISUM), libri (tectum 4MB), lapifex 5 (TEMPUS parca).
+UNDA 0 AD TECTUM VERUM.
+
+PROXIMUM (Chunk C): exclusiones Undae 1 trimmandae (filum,
+entitas_repositorium, arbor_formator, arbor2_file_roundtrip,
+macho + singillatim ceterae), captare aurea nova, viae scripturae
+verificatae, dilationes 1b/2/3 restitutae nomine → vectis
+M2: Undae 0+1 VIRIDES = M2 SIGILLATUM.

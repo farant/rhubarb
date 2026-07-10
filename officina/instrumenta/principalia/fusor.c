@@ -65,6 +65,36 @@ _linea_nodi (constans SilvaNodus* nodus, i32 profunditas)
     redde 0;
 }
 
+/* plagulam systematis in piscinam legere */
+hic_manens character*
+_systema_legere (Piscina* piscina, constans character* via,
+    long* mensura_fructus)
+{
+    FILE* pl = fopen(via, "rb");
+    long mensura;
+    character* fons;
+
+    si (pl == NIHIL)
+    {
+        redde NIHIL;
+    }
+    fseek(pl, 0L, SEEK_END);
+    mensura = ftell(pl);
+    fseek(pl, 0L, SEEK_SET);
+    fons = (character*)piscina_allocare(piscina,
+        (memoriae_index)(mensura + 1L));
+    si (fons == NIHIL
+        || fread(fons, I, (memoriae_index)mensura, pl)
+            != (memoriae_index)mensura)
+    {
+        fclose(pl);
+        redde NIHIL;
+    }
+    fclose(pl);
+    *mensura_fructus = mensura;
+    redde fons;
+}
+
 hic_manens long plagulae = 0L;
 hic_manens long praetermissae = 0L;
 hic_manens long parsurae_fractae = 0L;
@@ -645,32 +675,38 @@ s32 principale (integer argc, character** argv)
     }
     plagula_apicis[ZEPHYRUM] = '\0';
 
-    /* systema semel parsatum + lexicon (canalis M0b) */
+    /* systema semel parsatum + lexicon (canalis M0b) - textus
+     * CONCATENATUS: plagula ISO + supplementum POSIX (M2d; formae
+     * certificatae per auspex_posix.sh - oneratores officinae
+     * soli concatenant, silva-latus plagulam ISO solam videt) */
     {
-        FILE* pl_sys = fopen("silva/fontes/systema_c89.h", "rb");
-        long mensura_sys;
+        long m_iso = 0L;
+        long m_posix = 0L;
+        character* fons_iso = _systema_legere(piscina_ctx,
+            "silva/fontes/systema_c89.h", &m_iso);
+        character* fons_posix = _systema_legere(piscina_ctx,
+            "silva/fontes/systema_posix.h", &m_posix);
         character* fons_sys;
+        long mensura_sys;
 
-        si (pl_sys == NIHIL)
+        si (fons_iso == NIHIL || fons_posix == NIHIL)
         {
-            fprintf(stderr, "fusor: systema_c89.h deest"
-                " (curre ex radice repositorii)\n");
+            fprintf(stderr, "fusor: systema deest (curre ex"
+                " radice repositorii)\n");
             redde I;
         }
-        fseek(pl_sys, 0L, SEEK_END);
-        mensura_sys = ftell(pl_sys);
-        fseek(pl_sys, 0L, SEEK_SET);
+        mensura_sys = m_iso + 1L + m_posix;
         fons_sys = (character*)piscina_allocare(piscina_ctx,
             (memoriae_index)(mensura_sys + 1L));
-        si (fons_sys == NIHIL
-            || fread(fons_sys, I, (memoriae_index)mensura_sys,
-                   pl_sys) != (memoriae_index)mensura_sys)
+        si (fons_sys == NIHIL)
         {
             fprintf(stderr, "fusor: systema non lectum\n");
-            fclose(pl_sys);
             redde I;
         }
-        fclose(pl_sys);
+        memcpy(fons_sys, fons_iso, (memoriae_index)m_iso);
+        fons_sys[m_iso] = '\n';
+        memcpy(fons_sys + m_iso + 1L, fons_posix,
+            (memoriae_index)m_posix);
         si (!silva_contextus_lexicon_addere(ctx, "systema_c89.h",
                 fons_sys, (unsigned int)mensura_sys))
         {

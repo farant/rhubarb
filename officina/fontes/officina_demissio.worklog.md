@@ -224,3 +224,40 @@ just the 2 named suites. Residual 9 instances of the cause: ALL
 inside lib/imago.c's stb_image vendored park (expander-relative
 lines 6662-6757) — cause EXTINCT in live corpus. Circuli 578/578
 byte-idem; amalgama VERIFICATUM (hospes 61/61); suite 69/69.
+
+## 2026-07-10 — parenthesis devorabat conversionem (sputnik pecunia)
+
+M2d find, the best kind: WRONG ANSWERS, right exit paths everywhere
+else. sputnik_interpres EXITUS-1 with exactly 3 failing asserts,
+all pecunia*numerus multiplication (750/500/5997); subtraction and
+division passed. fusor -textus showed the lowered site: multiply
+present, `(s64)` cast GONE — the f64 product passed raw to
+_valor_pecunia's s64 param (callee canonicalization keeps the low
+bits of the DOUBLE = garbage cents).
+
+ROOT CAUSE: _expressionem's PARENTHESIS case did
+`redde _expressionem(internum)` — an EARLY RETURN that skips the
+function tail where the node's ANNOTATED conversion
+(conversio_expressionis) is applied. Semantica hangs the f64→s64
+conversion on the PAREN node (the cast/initializer operand); the
+early return dropped it. The cast case then saw
+_typus_finalis(internum) == s64 (the annotation!) == naturalis →
+no-op. Two mechanisms conspiring: annotation skipped where it
+lived, then assumed-already-applied one level up.
+
+Repro proved it's BROADER than casts: `s64 x = (a * b);` — implicit
+initializer conversion of any PARENTHESIZED expr — also dropped.
+Survived M1b's 571-TU corpus bar because byte-identical round-trip
+checks FORM not MEANING (the bars-have-blind-spots lesson, 2nd
+firing) — and division passed by accident (sputnik divides in s64,
+no float chain).
+
+FIX: two lines — `fructus = ...; frange;` so the tail applies the
+paren node's own conversus. No double-application: the inner node
+applies only its own annotation, and the cast case's no-op is now
+CORRECT (value genuinely already converted).
+
+Regression: scalaria.c pecunia_exemplum — BOTH shapes (implicit
+`(cents * n)` init + explicit `(long)(cents * n)`), golden
+re-pinned + blessed (integrare.f64.s64 present twice). sputnik
+PRAETERIIT 16.1M instr, all 189 asserts.
