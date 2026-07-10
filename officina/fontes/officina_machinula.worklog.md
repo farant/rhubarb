@@ -112,3 +112,43 @@ $proba_f32 (f32 literal arg, bounds check, folded into →42).
 Instrument: cursor -sola <substr> (matching suites only, stdout
 VISIBLE — plus fflush(stdout) before _exit, which skips stdio
 flush; without it the interpreted output died in the buffer).
+
+## 2026-07-10 — performance decomposition (MEASURED, parked)
+
+Fran asked where the interpreter's time goes. Three 10-minute
+experiments (probatio_vim, 9,074,881 instructions, scratchpad
+builds — NO shipped code changed; speed is explicitly not the
+current focus):
+
+| build                            | vim ms | instr/s | vs -O0 |
+|----------------------------------|-------:|--------:|-------:|
+| shipped (-O0, separate TUs)      |    507 |   ~18M  |   1.0x |
+| machinula.o at -O2               |    310 |   ~29M  |   1.6x |
+| -O2, ring+counters REMOVED       |    337 |   ~27M  |  noise |
+| -O2 + xar.c in the SAME TU       |    139 |   ~65M  |   3.6x |
+
+Findings:
+1. **The always-on flight recorder is FREE** (removal was noise —
+   the 4096-entry ring is 128KB, L2-hot, stores pipeline behind
+   dispatch). The VISIO's always-on provenance costs nothing.
+2. **The dominant cost was cross-TU xar_obtinere on EVERY
+   instruction fetch** (+ operand access): a non-inlinable function
+   call with segment math per step. Compiling xar into the same TU
+   (= what the AMALGAM build does naturally, or -flto) let it
+   inline: 2.2x on top of -O2, 3.6x total — pure build
+   configuration, zero code changes.
+3. Remaining headroom (unmeasured, grounded estimates): flat
+   instruction arrays frozen at machinula_creare (contiguous
+   pointer walk instead of per-fetch segment math) ~1.3-2x;
+   dispatch improvements (C89 has no computed goto — GNU
+   extension; superinstructions possible) ~1.5x; frame memset +
+   vocare overhead visible in call-heavy code. Realistic ceiling
+   for a straightforward pass: ~100-150M instr/s (~30-60x slower
+   than native). The rest of the gap is interpretation itself —
+   closed only by M5 native codegen.
+
+PARKED BY NAME: "cursor -celer build variant" (amalgam-or-LTO +
+-O2 objects for the sweep driver) — pull when lapifex-class
+blessing runs justify it (would take them ~10-20 min → ~3-5 min).
+The standing -O0 build stays: compile speed + debuggability are
+the daily-driver virtues.
