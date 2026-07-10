@@ -22,6 +22,10 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
+#include <ctype.h>
+#include <math.h>
+#include <errno.h>
 
 #define ANULUS_MENSURA        4096
 #define ANULUS_LARVA          (ANULUS_MENSURA - 1)
@@ -882,6 +886,255 @@ _aed_sprintf (Machinula* m, constans i64* argumenta, s32 numerus,
     redde (b32)(n >= ZEPHYRUM);
 }
 
+/* scriptura-retro errno (interview Q1/M2b): post aedificata quae
+ * errno hospitis ponunt, cella VM renovatur */
+interior vacuum
+_errno_retro (Machinula* m)
+{
+    si (m->cella_errno != NIHIL)
+    {
+        *m->cella_errno = (s64)errno;
+    }
+}
+
+interior b32
+_aed_strcmp (Machinula* m, constans i64* a, s32 n, i64* fr)
+{
+    (vacuum)m; (vacuum)n;
+    *fr = (i64)(s64)strcmp(
+        (constans character*)(memoriae_index)a[ZEPHYRUM],
+        (constans character*)(memoriae_index)a[I]);
+    redde VERUM;
+}
+
+interior b32
+_aed_strncmp (Machinula* m, constans i64* a, s32 n, i64* fr)
+{
+    (vacuum)m; (vacuum)n;
+    *fr = (i64)(s64)strncmp(
+        (constans character*)(memoriae_index)a[ZEPHYRUM],
+        (constans character*)(memoriae_index)a[I],
+        (memoriae_index)a[II]);
+    redde VERUM;
+}
+
+interior b32
+_aed_strchr (Machinula* m, constans i64* a, s32 n, i64* fr)
+{
+    (vacuum)m; (vacuum)n;
+    *fr = (i64)(memoriae_index)strchr(
+        (constans character*)(memoriae_index)a[ZEPHYRUM],
+        (int)(s64)_canonicum(a[I], MEDULLA_TYPUS_S32));
+    redde VERUM;
+}
+
+interior b32
+_aed_strstr (Machinula* m, constans i64* a, s32 n, i64* fr)
+{
+    (vacuum)m; (vacuum)n;
+    *fr = (i64)(memoriae_index)strstr(
+        (constans character*)(memoriae_index)a[ZEPHYRUM],
+        (constans character*)(memoriae_index)a[I]);
+    redde VERUM;
+}
+
+interior b32
+_aed_strncpy (Machinula* m, constans i64* a, s32 n, i64* fr)
+{
+    (vacuum)m; (vacuum)n;
+    strncpy((character*)(memoriae_index)a[ZEPHYRUM],
+        (constans character*)(memoriae_index)a[I],
+        (memoriae_index)a[II]);
+    *fr = a[ZEPHYRUM];
+    redde VERUM;
+}
+
+interior b32
+_aed_memmove (Machinula* m, constans i64* a, s32 n, i64* fr)
+{
+    (vacuum)m; (vacuum)n;
+    memmove((vacuum*)(memoriae_index)a[ZEPHYRUM],
+        (constans vacuum*)(memoriae_index)a[I],
+        (memoriae_index)a[II]);
+    *fr = a[ZEPHYRUM];
+    redde VERUM;
+}
+
+interior b32
+_aed_atoi (Machinula* m, constans i64* a, s32 n, i64* fr)
+{
+    (vacuum)m; (vacuum)n;
+    *fr = (i64)(s64)atoi(
+        (constans character*)(memoriae_index)a[ZEPHYRUM]);
+    redde VERUM;
+}
+
+interior b32
+_aed_atof (Machinula* m, constans i64* a, s32 n, i64* fr)
+{
+    (vacuum)m; (vacuum)n;
+    *fr = _verbum_de_f64(atof(
+        (constans character*)(memoriae_index)a[ZEPHYRUM]));
+    redde VERUM;
+}
+
+interior b32
+_aed_abs (Machinula* m, constans i64* a, s32 n, i64* fr)
+{
+    s64 v = (s64)_canonicum(a[ZEPHYRUM], MEDULLA_TYPUS_S32);
+
+    (vacuum)m; (vacuum)n;
+    *fr = _canonicum((i64)((v < ZEPHYRUM) ? -v : v),
+        MEDULLA_TYPUS_S32);
+    redde VERUM;
+}
+
+interior b32
+_aed_strtod (Machinula* m, constans i64* a, s32 n, i64* fr)
+{
+    character* finis = NIHIL;
+    f64 v;
+
+    (vacuum)n;
+    errno = ZEPHYRUM;
+    v = strtod((constans character*)(memoriae_index)a[ZEPHYRUM],
+        &finis);
+    si (a[I] != ZEPHYRUM)
+    {
+        i64 verbum = (i64)(memoriae_index)finis;
+
+        memcpy((vacuum*)(memoriae_index)a[I], &verbum,
+            magnitudo(i64));
+    }
+    _errno_retro(m);
+    *fr = _verbum_de_f64(v);
+    redde VERUM;
+}
+
+interior b32
+_aed_strtol (Machinula* m, constans i64* a, s32 n, i64* fr)
+{
+    character* finis = NIHIL;
+    longus v;
+
+    (vacuum)n;
+    errno = ZEPHYRUM;
+    v = strtol((constans character*)(memoriae_index)a[ZEPHYRUM],
+        &finis, (int)(s64)_canonicum(a[II], MEDULLA_TYPUS_S32));
+    si (a[I] != ZEPHYRUM)
+    {
+        i64 verbum = (i64)(memoriae_index)finis;
+
+        memcpy((vacuum*)(memoriae_index)a[I], &verbum,
+            magnitudo(i64));
+    }
+    _errno_retro(m);
+    *fr = (i64)(s64)v;
+    redde VERUM;
+}
+
+interior b32
+_aed_strtoul (Machinula* m, constans i64* a, s32 n, i64* fr)
+{
+    character* finis = NIHIL;
+    insignatus longus v;
+
+    (vacuum)n;
+    errno = ZEPHYRUM;
+    v = strtoul((constans character*)(memoriae_index)a[ZEPHYRUM],
+        &finis, (int)(s64)_canonicum(a[II], MEDULLA_TYPUS_S32));
+    si (a[I] != ZEPHYRUM)
+    {
+        i64 verbum = (i64)(memoriae_index)finis;
+
+        memcpy((vacuum*)(memoriae_index)a[I], &verbum,
+            magnitudo(i64));
+    }
+    _errno_retro(m);
+    *fr = (i64)v;
+    redde VERUM;
+}
+
+#define AED_CTYPE(TITULUS, FUNCTIO) \
+interior b32 \
+TITULUS (Machinula* m, constans i64* a, s32 n, i64* fr) \
+{ \
+    (vacuum)m; (vacuum)n; \
+    *fr = (i64)(s64)FUNCTIO( \
+        (int)(s64)_canonicum(a[ZEPHYRUM], MEDULLA_TYPUS_S32)); \
+    redde VERUM; \
+}
+
+AED_CTYPE(_aed_isalpha, isalpha)
+AED_CTYPE(_aed_isdigit, isdigit)
+AED_CTYPE(_aed_islower, islower)
+AED_CTYPE(_aed_isupper, isupper)
+AED_CTYPE(_aed_isspace, isspace)
+AED_CTYPE(_aed_iscntrl, iscntrl)
+AED_CTYPE(_aed_tolower, tolower)
+AED_CTYPE(_aed_toupper, toupper)
+
+#define AED_MATH1(TITULUS, FUNCTIO) \
+interior b32 \
+TITULUS (Machinula* m, constans i64* a, s32 n, i64* fr) \
+{ \
+    (vacuum)m; (vacuum)n; \
+    *fr = _verbum_de_f64(FUNCTIO(_f64_de_verbo(a[ZEPHYRUM]))); \
+    redde VERUM; \
+}
+
+AED_MATH1(_aed_sin, sin)
+AED_MATH1(_aed_cos, cos)
+AED_MATH1(_aed_sqrt, sqrt)
+AED_MATH1(_aed_floor, floor)
+
+interior b32
+_aed_pow (Machinula* m, constans i64* a, s32 n, i64* fr)
+{
+    (vacuum)m; (vacuum)n;
+    *fr = _verbum_de_f64(pow(_f64_de_verbo(a[ZEPHYRUM]),
+        _f64_de_verbo(a[I])));
+    redde VERUM;
+}
+
+interior b32
+_aed_fmod (Machinula* m, constans i64* a, s32 n, i64* fr)
+{
+    (vacuum)m; (vacuum)n;
+    *fr = _verbum_de_f64(fmod(_f64_de_verbo(a[ZEPHYRUM]),
+        _f64_de_verbo(a[I])));
+    redde VERUM;
+}
+
+interior b32
+_aed_ldexp (Machinula* m, constans i64* a, s32 n, i64* fr)
+{
+    (vacuum)m; (vacuum)n;
+    *fr = _verbum_de_f64(ldexp(_f64_de_verbo(a[ZEPHYRUM]),
+        (int)(s64)_canonicum(a[I], MEDULLA_TYPUS_S32)));
+    redde VERUM;
+}
+
+interior b32
+_aed_fflush (Machinula* m, constans i64* a, s32 n, i64* fr)
+{
+    (vacuum)m;
+    *fr = ZEPHYRUM;
+    si (n < I || a[ZEPHYRUM] == ZEPHYRUM)
+    {
+        (vacuum)fflush(NIHIL);
+    }
+    alioquin si (a[ZEPHYRUM] == I)
+    {
+        (vacuum)fflush(stdout);
+    }
+    alioquin
+    {
+        (vacuum)fflush(stderr);
+    }
+    redde VERUM;
+}
+
 nomen structura {
     constans character* titulus;
     MachinulaPons       pons;
@@ -901,9 +1154,37 @@ interior constans AedificatumNota AEDIFICATA[] = {
     { "printf",   _aed_printf },
     { "fprintf",  _aed_fprintf },
     { "snprintf", _aed_snprintf },
-    { "sprintf",  _aed_sprintf }
+    { "sprintf",  _aed_sprintf },
+    { "strcmp",   _aed_strcmp },
+    { "strncmp",  _aed_strncmp },
+    { "strchr",   _aed_strchr },
+    { "strstr",   _aed_strstr },
+    { "strncpy",  _aed_strncpy },
+    { "memmove",  _aed_memmove },
+    { "atoi",     _aed_atoi },
+    { "atof",     _aed_atof },
+    { "abs",      _aed_abs },
+    { "strtod",   _aed_strtod },
+    { "strtol",   _aed_strtol },
+    { "strtoul",  _aed_strtoul },
+    { "isalpha",  _aed_isalpha },
+    { "isdigit",  _aed_isdigit },
+    { "islower",  _aed_islower },
+    { "isupper",  _aed_isupper },
+    { "isspace",  _aed_isspace },
+    { "iscntrl",  _aed_iscntrl },
+    { "tolower",  _aed_tolower },
+    { "toupper",  _aed_toupper },
+    { "sin",      _aed_sin },
+    { "cos",      _aed_cos },
+    { "sqrt",     _aed_sqrt },
+    { "floor",    _aed_floor },
+    { "pow",      _aed_pow },
+    { "fmod",     _aed_fmod },
+    { "ldexp",    _aed_ldexp },
+    { "fflush",   _aed_fflush }
 };
-#define AEDIFICATA_NUMERUS 14
+#define AEDIFICATA_NUMERUS 44
 
 /* CANALIS UNUS aedificatorum - sedes memoriae/reddendi v2 (Q12) */
 interior b32

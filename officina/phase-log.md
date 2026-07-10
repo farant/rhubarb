@@ -728,3 +728,60 @@ tabula ea trahit: strtol+errno, mathematica, ctype, atoi/strtod;
 exclusiones nominatae; tectum biblia_dr). BAR: Unda 0 VIRIDIS (~65
 suites). Lex contactus corporis: 5 puncta data (3/8/3/3) — dies
 inventorum computa.
+
+## M2c — INTENTIO (2026-07-10): cursor + Unda 0
+
+**BAR: Unda 0 VIRIDIS (~65 suites purae) per tabulam
+classificationis.**
+
+Consilium (spec-v2 §III/§IV + relatio M2b):
+- **cursor v2 = cursor multi-suite**: mundus demittitur SEMEL
+  (moduli cachati, IMMUTABILES); tum PER SUITE: regio+conexio
+  recentes (generare/destruere — basis fixa una), addere mundum +
+  modulum probationis, nectere, machinula, currere $main. Columna
+  per suite: PRAETERIIT(0) | EXITUS(n) | SISTERE(causa) |
+  DECIPULA(symbolum) | VITIUM(nuntius) | tempus ms | instructiones.
+  Summa in fine = tabula classificationis (fusor exemplar).
+- **Selectio suitarum**: omnes probationes/probatio_*.c PRAETER
+  exclusiones nominatas (Unda 1 filesystem: arbor2_file_roundtrip,
+  arbor2_expandere, arbor, arbor_formator, arbor_index,
+  entitas_repositorium, filum, iter_directoria, macho, generare,
+  eventus_inspector; Unda 1b/2: uuid, tempestivum, actor*,
+  tcp*, tls, reactor, http(vivum); GUI 11 + benchmark + biblia_dr
+  consumers). Lista IN cursor.c (nominata, non tacita).
+- **Aedificata Undae 0 residua DUM TABULA TRAHIT** (non ante):
+  strtol/strtoul+errno-scriptura-retro, atoi/atof/strtod, abs,
+  ctype (isalpha/isdigit/islower/isupper/isspace/iscntrl/tolower/
+  toupper), mathematica (sin/cos/pow/fmod/ldexp), fflush, memmove,
+  strchr/strcmp/strncmp/strstr/strncpy, qsort NON (knotapel solum).
+- **Tectum biblia_dr**: -omnia modus (mundus completus).
+- Columna stdout-diff: infra POST primam sweep viridem (captura
+  nativa pinnata — instrumentum separatum); vectis M2c = exitus.
+- Lex contactus: 5 puncta data — MURUM exspecta prima sweep; per
+  causam classifica, -causa/origo probes, NUMQUAM theoriza ante
+  tabulam.
+
+### ADDENDUM IN CURSU (2026-07-10) — M2c prima sweep: status
+
+IN FLIGHT (compactio imminens; codice INCOMMISSO post m2b commit):
+- Aedificata 14→44 (str*/mem*/atoi/strtod/strtol+errno-retro/ctype/
+  mathematica/fflush) — suite machinula VIRIDIS.
+- cursor v2 = sweep multi-suite SCRIPTUS ET CURRIT: mundus cachatus
+  semel (moduli_mundi Xar), per suite regio/conexio recentes + tabula
+  classificationis (PRAETERIIT/EXITUS/SISTERE causa/DECIPULA/VITIUM/
+  ms/instr) + exclusiones nominatae (~34) in cursor.c.
+- PRIMA SWEEP: classificat recte (arbor2_glr → SISTERE "magnitudo
+  inaestimabilis" @arbor2_glr_initializare_tabulas, 32k instr — sedes
+  M1b onerata EXSECUTA, signum exspectatum!) tum SEGFAULT medio
+  sweep, suite ignota (stderr buffered peribat — lectio per-suite
+  superstes in scratchpad/unda0.txt).
+- PROXIMUM: (1) suitem ruinae invenire (echo ante quamque / binaria
+  quaesitio; suspecti: formator %s in regionem non probatus, aut
+  vitium in aedificato novo, aut memoria trans suites — regio
+  destruere inter suites sed piscina_ctx machinularum CRESCIT);
+  (2) murum classificare per causam (fusor exemplar);
+  (3) reficere per causam — "magnitudo inaestimabilis" = classis
+  semantica-parcae, fortasse plures suites eadem causa.
+- Re-entry: officina/CLAUDE.md → hic → M2c INTENTIO supra →
+  officina-m2-spec.md → worklogs machinula/conexio. NUMQUAM ex
+  compendio compactionis solo.

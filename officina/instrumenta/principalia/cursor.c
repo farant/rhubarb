@@ -47,13 +47,13 @@ hic_manens SilvaParsura*   systema_parsura = NIHIL;
 hic_manens SilvaSemantica* systema_semantica = NIHIL;
 
 hic_manens Piscina* piscina_officinae = NIHIL;   /* moduli cachati */
-hic_manens Conexio* conexio_mundi = NIHIL;
+hic_manens Xar* moduli_mundi = NIHIL;            /* MedullaModulus* */
 
 /* ==================================================
  * Plagulam demittere (fistula fusoris; modulus CACHATUR)
  * ================================================== */
 
-hic_manens vacuum
+hic_manens MedullaModulus*
 _plagulam_demittere (constans SilvaContextus* ctx,
     constans character* via)
 {
@@ -72,21 +72,21 @@ _plagulam_demittere (constans SilvaContextus* ctx,
     unio { constans character* c; i8* m; } u;
 
     pl = fopen(via, "rb");
-    si (pl == NIHIL) redde;
+    si (pl == NIHIL) redde NIHIL;
     fseek(pl, 0L, SEEK_END);
     mensura_l = ftell(pl);
     fseek(pl, 0L, SEEK_SET);
     si (mensura_l < 0L)
     {
         fclose(pl);
-        redde;
+        redde NIHIL;
     }
     mensura = (i32)mensura_l;
     si (mensura_maxima > ZEPHYRUM && mensura > (i32)mensura_maxima)
     {
         fprintf(stderr, "[PRAETERMISSA mensura] %s\n", via);
         fclose(pl);
-        redde;
+        redde NIHIL;
     }
 
     piscina_arboris = silva_piscina_generare_dynamicum(
@@ -94,7 +94,7 @@ _plagulam_demittere (constans SilvaContextus* ctx,
     si (piscina_arboris == NIHIL)
     {
         fclose(pl);
-        redde;
+        redde NIHIL;
     }
     fons = (i8*)piscina_allocare(piscina_officinae,
         (memoriae_index)(mensura > ZEPHYRUM ? mensura : I));
@@ -103,7 +103,7 @@ _plagulam_demittere (constans SilvaContextus* ctx,
             != (memoriae_index)mensura))
     {
         fclose(pl);
-        redde;
+        redde NIHIL;
     }
     fclose(pl);
 
@@ -125,7 +125,7 @@ _plagulam_demittere (constans SilvaContextus* ctx,
         fprintf(stderr, "[PARSURA FRACTA] %s\n", via);
         parsurae_fractae++;
         silva_piscina_destruere(piscina_arboris);
-        redde;
+        redde NIHIL;
     }
     sem = silva_c89_semantica_analysare_cum_systemate(
         piscina_arboris, parsura, systema_parsura);
@@ -146,7 +146,7 @@ _plagulam_demittere (constans SilvaContextus* ctx,
         fprintf(stderr, "[SEMANTICA FRACTA] %s\n", via);
         parsurae_fractae++;
         silva_piscina_destruere(piscina_arboris);
-        redde;
+        redde NIHIL;
     }
 
     u.c = via;
@@ -163,7 +163,7 @@ _plagulam_demittere (constans SilvaContextus* ctx,
         fprintf(stderr, "[DEMISSIO RUIT] %s\n", via);
         ruinae_demissionis++;
         silva_piscina_destruere(piscina_arboris);
-        redde;
+        redde NIHIL;
     }
 
     summa_functionum += (long)xar_numerus(modulus->functiones);
@@ -192,23 +192,10 @@ _plagulam_demittere (constans SilvaContextus* ctx,
         }
     }
 
-    si (!conexio_modulum_addere(conexio_mundi, modulus))
-    {
-        constans chorda* querela = conexio_querela(conexio_mundi);
-        constans chorda* symbolum =
-            conexio_querela_symbolum(conexio_mundi);
-
-        fprintf(stderr, "[CONEXIO FRACTA] %s: %.*s (%.*s)\n", via,
-            (int)querela->mensura,
-            (constans character*)querela->datum,
-            (int)symbolum->mensura,
-            (constans character*)symbolum->datum);
-        ruinae_demissionis++;
-    }
-
     /* arbores numquam cumulantur; origo pendens - clavis opaca
-     * solum, numquam dereferenda (distillatio linearum M2b) */
+     * solum, numquam dereferenda */
     silva_piscina_destruere(piscina_arboris);
+    redde modulus;
 }
 
 /* ==================================================
@@ -355,7 +342,14 @@ _bibliothecam_demittere (constans SilvaContextus* ctx)
         _comparare_vias);
     per (i = 0; i < numerus; i++)
     {
-        _plagulam_demittere(ctx, viae[i]);
+        MedullaModulus* modulus = _plagulam_demittere(ctx, viae[i]);
+
+        si (modulus != NIHIL)
+        {
+            MedullaModulus** locellus = xar_addere(moduli_mundi);
+
+            *locellus = modulus;
+        }
     }
 }
 
@@ -368,10 +362,6 @@ s32 principale (vacuum)
     Piscina* piscina_ctx;
     SilvaPiscina* piscina_silvae_ctx;
     SilvaContextus* ctx;
-    Regio* regio;
-    clock_t c0;
-    clock_t c1;
-    duplex ms_nexus;
 
     piscina_ctx = piscina_generare_dynamicum("cursor_ctx", 8388608);
     piscina_silvae_ctx = silva_piscina_generare_dynamicum(
@@ -391,19 +381,8 @@ s32 principale (vacuum)
         redde I;
     }
 
-    regio = regio_generare(piscina_ctx);
-    si (regio == NIHIL)
-    {
-        fprintf(stderr, "cursor: regio deest (basis fixa non"
-            " data)\n");
-        redde I;
-    }
-    conexio_mundi = conexio_creare(piscina_ctx, regio);
-    si (conexio_mundi == NIHIL)
-    {
-        fprintf(stderr, "cursor: conexio deest\n");
-        redde I;
-    }
+    moduli_mundi = xar_creare(piscina_ctx,
+        (i32)magnitudo(MedullaModulus*));
 
     /* systema semel parsatum + lexicon (canalis M0b) */
     {
@@ -468,118 +447,205 @@ s32 principale (vacuum)
         _capita_praeparare(ctx, piscina_ctx, visa, ".");
     }
 
-    /* mundus: plagulae .c sub lib/ + modulus probationis */
+    /* mundus: plagulae .c sub lib/ (semel, cachatae) */
     _bibliothecam_demittere(ctx);
-    _plagulam_demittere(ctx, "probationes/probatio_piscina.c");
+    fprintf(stderr, "mundus:      %ld moduli | %ld functiones |"
+        " %ld instructiones (fractae %ld, ruinae %ld)\n",
+        (long)xar_numerus(moduli_mundi), summa_functionum,
+        summa_instructionum, parsurae_fractae, ruinae_demissionis);
 
-    /* NEXUS MUNDI */
-    c0 = clock();
-    si (!conexio_nectere(conexio_mundi))
+    /* UNDA 0: omnes suites praeter exclusiones nominatas */
     {
-        constans chorda* querela = conexio_querela(conexio_mundi);
+        constans character* exclusiones[] = {
+            /* Unda 1 filesystem */
+            "probatio_arbor2_file_roundtrip.c", "probatio_arbor2_expandere.c",
+            "probatio_arbor.c", "probatio_arbor_formator.c",
+            "probatio_arbor_index.c", "probatio_entitas_repositorium.c",
+            "probatio_filum.c", "probatio_iter_directoria.c",
+            "probatio_macho.c", "probatio_generare.c",
+            "probatio_eventus_inspector.c",
+            /* Unda 1b/2/3 */
+            "probatio_uuid.c", "probatio_tempestivum.c",
+            "probatio_actor.c", "probatio_actor_integratio.c",
+            "probatio_tcp.c", "probatio_tcp_servus.c",
+            "probatio_tls.c", "probatio_reactor.c",
+            "probatio_http.c",
+            /* GUI/asset/benchmark */
+            "probatio_fenestra.c", "probatio_delineare.c",
+            "probatio_tempus.c", "probatio_pagina.c",
+            "probatio_navigator.c", "probatio_combinado.c",
+            "probatio_gradientum.c", "probatio_capsula_caudae.c",
+            "probatio_elementa.c", "probatio_imago.c",
+            "probatio_dithering.c", "probatio_flatura_benchmark.c",
+            "probatio_biblia_dr.c", "probatio_biblia_visus.c",
+            NIHIL
+        };
+        DIR* dir = opendir("probationes");
+        structura dirent* introitus;
+        character* suites[256];
+        integer numerus_suitarum = 0;
+        integer i;
+        long praeteritae = 0L;
+        long exitus_mali = 0L;
+        long sisterae = 0L;
+        long decipulae_l = 0L;
+        long vitia = 0L;
+        long nexus_fracti = 0L;
 
-        fprintf(stderr, "cursor: nexus fractus: %.*s\n",
-            (int)querela->mensura,
-            (constans character*)querela->datum);
-        redde I;
-    }
-    c1 = clock();
-    ms_nexus = (duplex)(c1 - c0) * 1000.0 / (duplex)CLOCKS_PER_SEC;
-
-    fprintf(stderr, "\n=== CURSOR: NEXUS MUNDI (M2a) ===\n");
-    fprintf(stderr, "plagulae:    %ld (fractae %ld, ruinae %ld)\n",
-        plagulae, parsurae_fractae, ruinae_demissionis);
-    fprintf(stderr, "functiones:  %ld   data: %ld   instructiones: %ld\n",
-        summa_functionum, summa_datorum, summa_instructionum);
-    fprintf(stderr, "symbola:     %ld globalia\n",
-        (long)conexio_numerus_symbolorum(conexio_mundi));
-    fprintf(stderr, "nexae:       %ld functiones | %ld data | %ld"
-        " cellae\n",
-        (long)conexio_numerus_functionum(conexio_mundi),
-        (long)conexio_numerus_datorum(conexio_mundi),
-        (long)conexio_numerus_cellarum(conexio_mundi));
-    fprintf(stderr, "globalia:    %.1f MB collocata\n",
-        (duplex)regio_globalia_usus(regio) / 1048576.0);
-    fprintf(stderr, "tempus:      arbor %.0f ms | demissio %.0f ms |"
-        " nexus %.0f ms\n", ms_arboris, ms_demissionis, ms_nexus);
-
-    /* decipulae: numeratae + NOMINATAE (vectis M2a) */
-    {
-        i32 numerus = conexio_numerus_decipularum(conexio_mundi);
-        i32 i;
-
-        fprintf(stderr, "decipulae:   %ld (ruunt solum si vocatae)\n",
-            (long)numerus);
-        per (i = ZEPHYRUM; i < numerus; i += I)
+        si (dir == NIHIL)
         {
-            constans chorda* titulus = conexio_decipulam_obtinere(
-                conexio_mundi, (s32)i);
-
-            fprintf(stderr, "    %.*s\n", (int)titulus->mensura,
-                (constans character*)titulus->datum);
-        }
-    }
-
-    /* $main inventum (probatio_piscina) */
-    {
-        chorda titulus_main;
-        unio { constans character* c; i8* m; } u;
-        vacuum* sedes;
-
-        u.c = "main";
-        titulus_main.datum = u.m;
-        titulus_main.mensura = IV;
-        sedes = conexio_sedes_quaerere(conexio_mundi, titulus_main);
-        si (sedes == NIHIL)
-        {
-            fprintf(stderr, "cursor: $main NON inventum\n");
+            fprintf(stderr, "cursor: probationes/ deest\n");
             redde I;
         }
-        fprintf(stderr, "$main:       inventum (descriptor %p)\n", sedes);
-
-        si (parsurae_fractae > 0L || ruinae_demissionis > 0L)
+        dum ((introitus = readdir(dir)) != NIHIL
+            && numerus_suitarum < 256)
         {
-            redde I;
-        }
+            b32 exclusa = FALSUM;
 
-        /* M2b: EXSECUTIO - machinula $main currit; stdout =
-         * exitus programmatis PURUS (vectis diff) */
-        {
-            Machinula* machinula = machinula_creare(piscina_ctx,
-                conexio_mundi, regio);
-            MachinulaExitus fructus_exsecutionis;
-            duplex ms_exsecutionis;
-
-            si (machinula == NIHIL)
+            si (strncmp(introitus->d_name, "probatio_", IX)
+                != ZEPHYRUM)
             {
-                fprintf(stderr, "cursor: machinula deest\n");
-                redde I;
+                perge;
             }
-            c0 = clock();
-            fructus_exsecutionis = machinula_currere(machinula,
-                titulus_main);
-            c1 = clock();
-            ms_exsecutionis = (duplex)(c1 - c0) * 1000.0
-                / (duplex)CLOCKS_PER_SEC;
+            per (i = 0; exclusiones[i] != NIHIL; i++)
+            {
+                si (strcmp(introitus->d_name, exclusiones[i])
+                    == ZEPHYRUM)
+                {
+                    exclusa = VERUM;
+                    frange;
+                }
+            }
+            si (exclusa)
+            {
+                perge;
+            }
+            {
+                memoriae_index ml = strlen(introitus->d_name);
+                character* via = piscina_allocare(piscina_officinae,
+                    ml + XVI);
+
+                sprintf(via, "probationes/%s", introitus->d_name);
+                suites[numerus_suitarum] = via;
+                numerus_suitarum++;
+            }
+        }
+        closedir(dir);
+        qsort(suites, (memoriae_index)numerus_suitarum,
+            magnitudo(character*), _comparare_vias);
+
+        fprintf(stderr, "\n=== CURSOR: UNDA 0 (%ld suites) ===\n",
+            (long)numerus_suitarum);
+        per (i = 0; i < numerus_suitarum; i++)
+        {
+            MedullaModulus* modulus_suitae =
+                _plagulam_demittere(ctx, suites[i]);
+            Regio* regio;
+            Conexio* conexio;
+            Machinula* machinula;
+            MachinulaExitus fructus;
+            clock_t s0;
+            clock_t s1;
+            i32 k;
+            b32 nexus_bene = VERUM;
+
+            si (modulus_suitae == NIHIL)
+            {
+                fprintf(stderr, "%-44s RUINA (demissio)\n",
+                    suites[i]);
+                vitia++;
+                perge;
+            }
+            regio = regio_generare(piscina_ctx);
+            conexio = conexio_creare(piscina_ctx, regio);
+            per (k = ZEPHYRUM; k < xar_numerus(moduli_mundi); k++)
+            {
+                si (!conexio_modulum_addere(conexio,
+                        *(MedullaModulus**)xar_obtinere(
+                            moduli_mundi, k)))
+                {
+                    nexus_bene = FALSUM;
+                }
+            }
+            si (!conexio_modulum_addere(conexio, modulus_suitae)
+                || !nexus_bene || !conexio_nectere(conexio))
+            {
+                constans chorda* symbolum =
+                    conexio_querela_symbolum(conexio);
+
+                fprintf(stderr, "%-44s NEXUS FRACTUS (%.*s)\n",
+                    suites[i], (int)symbolum->mensura,
+                    (constans character*)symbolum->datum);
+                nexus_fracti++;
+                regio_destruere(regio);
+                perge;
+            }
+            machinula = machinula_creare(piscina_ctx, conexio,
+                regio);
+            s0 = clock();
+            {
+                chorda titulus_main;
+                unio { constans character* c; i8* mm; } um;
+
+                um.c = "main";
+                titulus_main.datum = um.mm;
+                titulus_main.mensura = IV;
+                fructus = machinula_currere(machinula,
+                    titulus_main);
+            }
+            s1 = clock();
             fflush(stdout);
-            fprintf(stderr, "exsecutio:   genus %d, codex %ld,"
-                " %.0f ms\n", (int)fructus_exsecutionis.genus,
-                (long)fructus_exsecutionis.codex, ms_exsecutionis);
-            fprintf(stderr, "machinula:   %llu instructiones |"
-                " %llu vocationes | %llu aedificata | apex stivae"
-                " %.1f KB\n",
-                (insignatus longus longus)
-                    machinula_numerus_instructionum(machinula),
-                (insignatus longus longus)
-                    machinula_numerus_vocationum(machinula),
-                (insignatus longus longus)
-                    machinula_numerus_aedificatorum(machinula),
-                (duplex)machinula_stiva_apex(machinula) / 1024.0);
-            si (fructus_exsecutionis.genus != MACHINULA_BENE)
             {
-                redde I;
+                duplex ms = (duplex)(s1 - s0) * 1000.0
+                    / (duplex)CLOCKS_PER_SEC;
+
+                si (fructus.genus == MACHINULA_BENE
+                    && fructus.codex == ZEPHYRUM)
+                {
+                    fprintf(stderr, "%-44s PRAETERIIT  %8.0f ms"
+                        "  %llu instr\n", suites[i], ms,
+                        (insignatus longus longus)
+                        machinula_numerus_instructionum(machinula));
+                    praeteritae++;
+                }
+                alioquin si (fructus.genus == MACHINULA_BENE)
+                {
+                    fprintf(stderr, "%-44s EXITUS %ld  %8.0f ms\n",
+                        suites[i], (long)fructus.codex, ms);
+                    exitus_mali++;
+                }
+                alioquin
+                {
+                    constans character* genera[] = { "BENE",
+                        "SISTERE", "DECIPULA", "VITIUM" };
+
+                    fprintf(stderr, "%-44s %s (%.*s)  %8.0f ms\n",
+                        suites[i], genera[fructus.genus],
+                        (int)fructus.nuntius.mensura,
+                        (constans character*)fructus.nuntius.datum,
+                        ms);
+                    si (fructus.genus == MACHINULA_SISTERE)
+                    {
+                        sisterae++;
+                    }
+                    alioquin si (fructus.genus == MACHINULA_DECIPULA)
+                    {
+                        decipulae_l++;
+                    }
+                    alioquin
+                    {
+                        vitia++;
+                    }
+                }
             }
-            redde (s32)fructus_exsecutionis.codex;
+            regio_destruere(regio);
         }
+        fprintf(stderr, "\n=== TABULA: %ld praeteritae | %ld exitus"
+            " mali | %ld sisterae | %ld decipulae | %ld vitia |"
+            " %ld nexus fracti / %ld suites ===\n", praeteritae,
+            exitus_mali, sisterae, decipulae_l, vitia, nexus_fracti,
+            (long)numerus_suitarum);
+        redde (praeteritae == (long)numerus_suitarum)
+            ? ZEPHYRUM : I;
     }
 }
