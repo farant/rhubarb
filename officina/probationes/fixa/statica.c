@@ -13,6 +13,8 @@ extern int externum_solum;
 const char* salutatio = "salve\n";
 char fixum[8] = "ave";
 
+const char* nomina[3] = { "a", "b#\n", "c" };
+
 int addens(int k);
 int (*tabula_functionum[2])(int) = { addens, 0 };
 

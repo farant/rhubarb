@@ -311,9 +311,14 @@ officina/
   732-file corpus, 0 crashes; haruspex 4,801/0 + auspex 3,753/0;
   1.6M expressions typed; closure 97.3%+, residuum classified.
   Demissio's input contract {naturalis, conversus} FROZEN.
-- **M1 — medulla + demissio.** Bar: monorepo lowers; golden dumps;
-  textual round-trip byte-identical. Medulla op vocabulary = naming
-  ceremony at design time (DECISUS-grade, like genus tags).
+- **M1 — medulla + demissio.** **CLOSED 2026-07-09** (M1a+M1b, see
+  officina/phase-log.md): vocabulary ceremony-sealed
+  (vocabularium-medullae.md) and HELD end-to-end; textual round-trip
+  byte-identical (571/571 corpus TUs through the lector); whole
+  monorepo lowers — 0 ruinae, 1,153,305 instructiones, 106,717 data,
+  sistere 2,870 ALL classified (POSIX park / nested-chain park /
+  vendored stb / semantica-diagnosed); fusor = the standing sweep;
+  amalgama/officina.{c,h} VERIFICATUM (dual-amalgam hospes).
 - **M2 — machinula + builtins, staged by waves.** Bar: Wave 0 green
   (piscina suite first — the memory-model gate), then Wave 1 green.
   v1 SHIPPED = Waves 0+1 (~80 suites), deferrals named (1b/2/3).

@@ -132,3 +132,40 @@
   statics) lowers with ZERO sistere; golden pinned + blessed byte
   by byte (42=2a, -7=f9ff.., 2.5=..0440, 1.5f=0000c03f all verified
   LE). Suite 3/3; amalgam VERIFICATUM hospes 28/28.
+
+## 2026-07-09 — Chunk D: fusor + corpus contact (M1b)
+
+FIVE REAL FINDS on first corpus contact (the budgeted real-bugs day,
+delivered again — the M0b lesson holds; every one found by fusor's
+classification table + the -causa origo probe, the 20-minute
+instrument reborn):
+1. **ambiguus_canonica returns an INDEX** into interpretationes (locus
+   species INDEX), not a node — _canonicus only handled the node case,
+   so 442 retained-ambiguus nodes fell through as "generis ignoti
+   (54)". Genus-numbered causae found it in one run.
+2. **sizeof(local-expression) can't go through the public aestimator**
+   post-analysis — scopes are closed, locals resolve to nothing.
+   Demissio now reads the inner expression's UNdecayed type from the
+   typationes (that's what naturalis is FOR) → _mensura_typi.
+3. **Incomplete arrays completed by initializers** (x[] = "...", 
+   x[] = {...}) — semantica's "initiatores non probantur" parca leaves
+   acies incompleta; _mensura_completa computes from the initializer
+   (string: decoded+1; congeries: element count × elemsize). Dissolved
+   THREE causa rows incl. the "staticum ante declarationem" cascade;
+   corpus data 3,054 → 8,653 in lib alone.
+4. **static T* p = NULL fails the public aestimator** (NULL =
+   ((void*)0); casts to non-integral types rejected) — 46 modules.
+   Fix: strip conversio/parenthesis wrappers, aestimate the core.
+5. **Float static tables need a binarium evaluator** (1.0/3.0) —
+   extended the demissio-side float evaluator (+,-,*,/).
+- **Corpus definition, principled**: fusor lowers .c ONLY (571 = all
+  573 findable minus 2 over-tectum) — demissio's corpus is
+  TRANSLATION UNITS; percursus parses .c+.h (750) — a parser's corpus
+  is every parseable file. The delta is by design, recorded.
+- Residuum fully attributed (per-file -v + -causa probes): POSIX
+  faces (1160 accessus incompletae + locals), nested-chain park
+  (unflipped (T)(x) forks: vocatio sine typo 205 + poison downstream
+  ~870), stb_image vendored (imago.c forma rows), semantica-diagnosed
+  identifiers (126), small tails (16 notae/sistere, all named).
+- Apex memoriae 9.7 GB (demo_52 data-dense: dump text ~3x in memory
+  during the round-trip) — survives; optimization on measurement only.

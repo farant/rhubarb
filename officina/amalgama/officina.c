@@ -4978,6 +4978,12 @@ nomen structura {
 } DemissioLocus;
 
 nomen structura {
+    constans SemanticaSymbolum* symbolum;
+    constans SilvaNodus*        initiator;   /* NIHIL licet (mensura
+                                              * completa acierum) */
+} DemissioLocale;
+
+nomen structura {
     OfficinaPiscina*                piscina;
     SilvaSemantica*         sem;
     MedullaModulus*         modulus;
@@ -5053,11 +5059,33 @@ _canonicus (constans SilvaNodus* nodus)
     {
         SilvaValor v = silva_c89_ambiguus_canonica(nodus);
 
-        si (v.genus != SILVA_VALOR_NODUS)
+        si (v.genus == SILVA_VALOR_NODUS)
         {
-            frange;
+            nodus = v.datum.nodus;
+            perge;
         }
-        nodus = v.datum.nodus;
+        si (v.genus == SILVA_VALOR_INDEX)
+        {
+            /* canonica = INDEX in interpretationes (species loci
+             * INDEX - inventum fusoris: genus 54 residuum) */
+            SilvaValor interpretationes =
+                silva_c89_ambiguus_interpretationes(nodus);
+            SilvaValor* electa;
+
+            si (v.datum.index < ZEPHYRUM)
+            {
+                frange;
+            }
+            electa = silva_valor_lista_obtinere(interpretationes,
+                (unsigned int)v.datum.index);
+            si (electa != NIHIL
+                && electa->genus == SILVA_VALOR_NODUS)
+            {
+                nodus = electa->datum.nodus;
+                perge;
+            }
+        }
+        frange;
     }
     redde nodus;
 }
@@ -5300,6 +5328,46 @@ _fluitantem_aestimare (Demissio* d, constans SilvaNodus* nodus,
         si (_op_est(operator, "+"))
         {
             *valor_fructus = internum;
+            redde VERUM;
+        }
+        redde FALSUM;
+    }
+    si (nodus->genus == (s32)SILVA_C89_GENUS_BINARIUM)
+    {
+        /* initiatores tabularum fluitantium (1.0/3.0 - inventum
+         * fusoris, 47 moduli) */
+        SilvaValor sin_v = silva_c89_binarium_sinister(nodus);
+        SilvaValor dex_v = silva_c89_binarium_dexter(nodus);
+        SilvaChorda operator = _tok_textus(
+            silva_c89_binarium_tok_operator(nodus));
+        f64 a;
+        f64 b;
+
+        si (sin_v.genus != SILVA_VALOR_NODUS
+            || dex_v.genus != SILVA_VALOR_NODUS
+            || !_fluitantem_aestimare(d, sin_v.datum.nodus, &a)
+            || !_fluitantem_aestimare(d, dex_v.datum.nodus, &b))
+        {
+            redde FALSUM;
+        }
+        si (_op_est(operator, "+"))
+        {
+            *valor_fructus = a + b;
+            redde VERUM;
+        }
+        si (_op_est(operator, "-"))
+        {
+            *valor_fructus = a - b;
+            redde VERUM;
+        }
+        si (_op_est(operator, "*"))
+        {
+            *valor_fructus = a * b;
+            redde VERUM;
+        }
+        si (_op_est(operator, "/") && b != 0.0)
+        {
+            *valor_fructus = a / b;
             redde VERUM;
         }
         redde FALSUM;
@@ -5644,6 +5712,98 @@ _sedem_creare (Demissio* d, constans SemanticaSymbolum* symbolum,
  * Relocatio ADDITIVA: locellus = inscriptio symboli + octeti
  * priores (addendum in imagine).
  * ================================================== */
+
+/* mensura completa: acies incompleta (x[] = ...) ab initiatore
+ * completur - parca semanticae "initiatores non probantur"
+ * (inventum fusoris: hic_manens i8 lit[] = "...") */
+interior s32
+_mensura_completa (Demissio* d, constans TypusC89* typus,
+    constans SilvaNodus* initiator)
+{
+    constans TypusC89* exutus = _exutus(typus);
+    s32 mensura = _mensura_typi(d, typus);
+
+    si (mensura > ZEPHYRUM || exutus == NIHIL
+        || exutus->genus != TYPUS_C89_ACIES
+        || exutus->datum.acies.numerus >= ZEPHYRUM
+        || initiator == NIHIL)
+    {
+        redde mensura;
+    }
+    initiator = _canonicus(initiator);
+    {
+        s32 mensura_elementi = _mensura_typi(d,
+            exutus->datum.acies.elementum);
+
+        si (mensura_elementi <= ZEPHYRUM || initiator == NIHIL)
+        {
+            redde -I;
+        }
+        si (initiator->genus == (s32)SILVA_C89_GENUS_FOLIUM_CHORDA)
+        {
+            SilvaChorda octeti;
+
+            si (d->officina_piscina_silvae == NIHIL
+                || !silva_c89_chorda_decodere(d->officina_piscina_silvae,
+                       initiator, &octeti))
+            {
+                redde -I;
+            }
+            redde ((s32)octeti.mensura + I) * mensura_elementi;
+        }
+        si (initiator->genus == (s32)SILVA_C89_GENUS_CONGERIES)
+        {
+            SilvaValor elementa = silva_c89_congeries_elementa(
+                initiator);
+            i32 i;
+            i32 m = (i32)silva_valor_lista_numerus(elementa);
+            s32 numerus = ZEPHYRUM;
+
+            per (i = ZEPHYRUM; i < m; i++)
+            {
+                SilvaValor* v = silva_valor_lista_obtinere(elementa,
+                    (unsigned int)i);
+
+                si (v != NIHIL && v->genus == SILVA_VALOR_NODUS)
+                {
+                    numerus++;
+                }
+            }
+            si (numerus == ZEPHYRUM)
+            {
+                redde -I;
+            }
+            redde numerus * mensura_elementi;
+        }
+    }
+    redde -I;
+}
+
+/* ordinatio (acies incompleta: elementi) */
+interior s32
+_ordinatio_typi (Demissio* d, constans TypusC89* typus)
+{
+    constans TypusC89* exutus = _exutus(typus);
+
+    si (exutus == NIHIL)
+    {
+        redde I;
+    }
+    si (exutus->genus == TYPUS_C89_ACIES
+        && exutus->datum.acies.numerus < ZEPHYRUM)
+    {
+        exutus = _exutus(exutus->datum.acies.elementum);
+        si (exutus == NIHIL)
+        {
+            redde I;
+        }
+    }
+    si (_mensura_typi(d, exutus) <= ZEPHYRUM)
+    {
+        redde I;
+    }
+    redde (s32)exutus->ordinatio;
+}
 
 /* nota sine contextu functionis: causa internata = signum
  * classificatum moduli (fusor eas numerat) */
@@ -6070,6 +6230,47 @@ _imaginem_scribere (Demissio* d, MedullaDatum* datum, s32 offset,
                     octeti, VIII);
                 redde medulla_relocationem_addere(datum,
                     (i32)offset, index_symboli);
+            }
+        }
+        /* constans nulla monstratoris: NULL = ((void*)0) - aestimator
+         * publicus conversiones non-integrales recusat (inventum
+         * fusoris, 46 moduli). Involucra exuta, nucleus aestimatur. */
+        {
+            constans SilvaNodus* nucleus = initiator;
+            s32 custos = ZEPHYRUM;
+
+            dum (nucleus != NIHIL && custos < XVI)
+            {
+                custos++;
+                nucleus = _canonicus(nucleus);
+                si (nucleus->genus == (s32)SILVA_C89_GENUS_CONVERSIO)
+                {
+                    SilvaValor v = silva_c89_conversio_internum(
+                        nucleus);
+
+                    nucleus = (v.genus == SILVA_VALOR_NODUS)
+                        ? v.datum.nodus : NIHIL;
+                    perge;
+                }
+                si (nucleus->genus
+                    == (s32)SILVA_C89_GENUS_PARENTHESIS)
+                {
+                    SilvaValor v = silva_c89_parenthesis_internum(
+                        nucleus);
+
+                    nucleus = (v.genus == SILVA_VALOR_NODUS)
+                        ? v.datum.nodus : NIHIL;
+                    perge;
+                }
+                frange;
+            }
+            si (nucleus != NIHIL
+                && silva_c89_constans_aestimare(d->sem, nucleus,
+                       &valor))
+            {
+                _octetos_integri(valor, octeti, mensura);
+                redde medulla_datum_scribere(datum, (i32)offset,
+                    octeti, (i32)mensura);
             }
         }
         redde FALSUM;
@@ -7186,6 +7387,32 @@ _expressionem (Demissio* d, constans SilvaNodus* nodus)
             frange;
         }
         casus (s32)SILVA_C89_GENUS_MAGNITUDO_EXPRESSIONIS:
+        {
+            /* NON per aestimatorem: scopi post analysim clausi -
+             * expressiones locales ibi non solvuntur (inventum
+             * fusoris). Typus internae in typationibus UNdecayed
+             * (constructione naturalis) -> mensura per formam. */
+            SilvaValor internum_v =
+                silva_c89_magnitudo_expressionis_internum(nodus);
+            constans TypusC89* typus_interni =
+                (internum_v.genus == SILVA_VALOR_NODUS)
+                ? silva_c89_typus_expressionis(d->sem,
+                      _canonicus(internum_v.datum.nodus)) : NIHIL;
+            s32 mensura = _mensura_typi(d, typus_interni);
+
+            si (mensura > ZEPHYRUM)
+            {
+                fructus = _movere(d, nodus, MEDULLA_TYPUS_I64,
+                    _registrum_temporarium(d),
+                    medulla_op_immediatum((s64)mensura));
+            }
+            alioquin
+            {
+                _sistere(d, nodus, "magnitudo inaestimabilis");
+                fructus = _registrum_temporarium(d);
+            }
+            frange;
+        }
         casus (s32)SILVA_C89_GENUS_MAGNITUDO_TYPI:
         {
             s64 valor = 0;
@@ -7271,7 +7498,11 @@ _expressionem (Demissio* d, constans SilvaNodus* nodus)
         }
         ordinarius:
         {
-            _sistere(d, nodus, "expressio generis ignoti");
+            character causa[LXIV];
+
+            sprintf(causa, "expressio generis ignoti (%d)",
+                (int)nodus->genus);
+            _sistere(d, nodus, causa);   /* internatur - copia */
             redde _registrum_temporarium(d);
         }
     }
@@ -7681,7 +7912,7 @@ _initiatorem_aggregatum (Demissio* d, DemissioSedes* sedes,
     constans SemanticaSymbolum* symbolum,
     constans SilvaNodus* initiator)
 {
-    s32 mensura = _mensura_typi(d, symbolum->typus);
+    s32 mensura = _mensura_completa(d, symbolum->typus, initiator);
     constans SilvaNodus* canonicus = _canonicus(initiator);
 
     si (mensura <= ZEPHYRUM || !sedes->est_arca)
@@ -7787,7 +8018,7 @@ _staticum_locale (Demissio* d, constans SemanticaSymbolum* symbolum,
     i32 caput_f;
     i32 caput_s;
     MedullaDatum* datum;
-    s32 mensura = _mensura_typi(d, symbolum->typus);
+    s32 mensura = _mensura_completa(d, symbolum->typus, initiator);
     s32 index_symboli;
 
     si (mensura <= ZEPHYRUM)
@@ -7830,7 +8061,7 @@ _staticum_locale (Demissio* d, constans SemanticaSymbolum* symbolum,
             titulus);
     }
     datum = medulla_datum_creare(d->modulus, titulus, (i32)mensura,
-        (i32)_exutus(symbolum->typus)->ordinatio);
+        (i32)_ordinatio_typi(d, symbolum->typus));
     si (datum == NIHIL)
     {
         _sistere(d, nodus, "staticum locale sine dato");
@@ -8489,7 +8720,11 @@ _sententiam (Demissio* d, constans SilvaNodus* nodus)
         }
         ordinarius:
         {
-            _sistere(d, nodus, "sententia generis ignoti");
+            character causa[LXIV];
+
+            sprintf(causa, "sententia generis ignoti (%d)",
+                (int)nodus->genus);
+            _sistere(d, nodus, causa);
             redde;
         }
     }
@@ -8520,6 +8755,8 @@ _praecursum (Demissio* d, constans SilvaNodus* nodus, OfficinaXar* locales)
         {
             SilvaValor* v = silva_valor_lista_obtinere(declaratores,
                 k);
+            constans SilvaNodus* elementum;
+            constans SilvaNodus* initiator = NIHIL;
             SilvaToken* lexema;
             constans SemanticaSymbolum* symbolum;
 
@@ -8527,8 +8764,20 @@ _praecursum (Demissio* d, constans SilvaNodus* nodus, OfficinaXar* locales)
             {
                 perge;
             }
-            lexema = silva_c89_declaratoris_titulus(
-                _canonicus(v->datum.nodus));
+            elementum = _canonicus(v->datum.nodus);
+            si (elementum->genus
+                == (s32)SILVA_C89_GENUS_DECLARATOR_INITIATUS)
+            {
+                SilvaValor init_v =
+                    silva_c89_declarator_initiatus_initiator(
+                        elementum);
+
+                si (init_v.genus == SILVA_VALOR_NODUS)
+                {
+                    initiator = init_v.datum.nodus;
+                }
+            }
+            lexema = silva_c89_declaratoris_titulus(elementum);
             si (lexema == NIHIL)
             {
                 perge;
@@ -8540,13 +8789,13 @@ _praecursum (Demissio* d, constans SilvaNodus* nodus, OfficinaXar* locales)
                     == ZEPHYRUM
                 && symbolum->profunditas > ZEPHYRUM)
             {
-                constans SemanticaSymbolum** sedes =
-                    (constans SemanticaSymbolum**)officina_xar_addere(
-                        locales);
+                DemissioLocale* locale =
+                    (DemissioLocale*)officina_xar_addere(locales);
 
-                si (sedes != NIHIL)
+                si (locale != NIHIL)
                 {
-                    *sedes = symbolum;
+                    locale->symbolum = symbolum;
+                    locale->initiator = initiator;
                 }
             }
         }
@@ -8770,7 +9019,7 @@ _functionem (Demissio* d, constans SilvaNodus* nodus)
     d->sedes = officina_tabula_dispersa_creare_chorda(d->piscina, CCLVI);
     d->capti = officina_tabula_dispersa_creare_chorda(d->piscina, CCLVI);
     locales = officina_xar_creare(d->piscina,
-        (i32)magnitudo(SemanticaSymbolum*));
+        (i32)magnitudo(DemissioLocale));
 
     /* praecursus: capti + locales (ante residentiam) */
     _praecursum(d, corpus_v.datum.nodus, locales);
@@ -8914,22 +9163,23 @@ _functionem (Demissio* d, constans SilvaNodus* nodus)
     m = officina_xar_numerus(locales);
     per (i = ZEPHYRUM; i < m; i++)
     {
-        constans SemanticaSymbolum** sedes_symboli =
-            (constans SemanticaSymbolum**)officina_xar_obtinere(locales, i);
+        constans DemissioLocale* locale =
+            (constans DemissioLocale*)officina_xar_obtinere(locales, i);
         constans SemanticaSymbolum* symbolum_locale;
 
-        si (sedes_symboli == NIHIL)
+        si (locale == NIHIL)
         {
             perge;
         }
-        symbolum_locale = *sedes_symboli;
+        symbolum_locale = locale->symbolum;
         si (_sedem_symboli(d, symbolum_locale) != NIHIL)
         {
             perge;   /* iam creatum */
         }
         si (_arcam_symboli(d, symbolum_locale))
         {
-            s32 mensura = _mensura_typi(d, symbolum_locale->typus);
+            s32 mensura = _mensura_completa(d,
+                symbolum_locale->typus, locale->initiator);
             s32 ordinatio;
             s32 inscriptio;
 
@@ -8938,8 +9188,7 @@ _functionem (Demissio* d, constans SilvaNodus* nodus)
                 _sistere(d, nodus, "forma localis ignota");
                 perge;
             }
-            ordinatio = (s32)_exutus(symbolum_locale->typus)
-                ->ordinatio;
+            ordinatio = _ordinatio_typi(d, symbolum_locale->typus);
             inscriptio = _registrum_unicum(d,
                 symbolum_locale->titulus);
             (vacuum)_em(d, NIHIL, MEDULLA_OP_ARCA,
@@ -9056,7 +9305,7 @@ _data_globalia (Demissio* d, constans SilvaNodus* nodus)
         {
             perge;   /* declaratio pura */
         }
-        mensura = _mensura_typi(d, symbolum->typus);
+        mensura = _mensura_completa(d, symbolum->typus, initiator);
         si (mensura <= ZEPHYRUM)
         {
             _notare(d, nodus, "forma dati globalis ignota");
@@ -9064,7 +9313,7 @@ _data_globalia (Demissio* d, constans SilvaNodus* nodus)
         }
         datum = _datum_invenire_aut_creare(d,
             _ch_de_silva(symbolum->titulus), mensura,
-            (s32)_exutus(symbolum->typus)->ordinatio);
+            _ordinatio_typi(d, symbolum->typus));
         si (datum == NIHIL)
         {
             _notare(d, nodus, "datum globale non creatum");

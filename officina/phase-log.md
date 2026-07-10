@@ -386,3 +386,63 @@ RETIRED — demissio has no named holes left.
 per-causa over all TUs, round-trip every dump through the lector,
 timing + apex memoriae, publica complete, M1b RELATIO + FULL
 phase-log audit + M1 SEALED (spec-v2 §XI actuals; memory).
+
+### M1b CHUNK D — RELATIO (2026-07-09): fusor + corpus SHIPPED
+
+The sweep instrument lives (instrumenta/principalia/fusor.c +
+fusor.sh — the percursus two-pass exscriptus through the PUBLIC
+surface, with -v per-file attribution and -causa origo-line probes).
+FIVE real finds on first corpus contact, all fixed same-day (worklog:
+ambiguus-canonica-is-an-INDEX; sizeof-locals vs closed scopes;
+incomplete arrays completed by initializers; NULL-initialized static
+pointers vs the aestimator; float binarium initializers). The
+classification table IS the instrument — genus-numbered causae +
+origo probes turned each row into a cause in minutes.
+
+## M1b — RELATIO MILLIARII (2026-07-09)
+
+**M1b CLAUSUM. Demissio: arbor typata -> medulla, corpus totum.**
+Bars, all met:
+- **571/571 plagulae lowered, 0 ruinae** (571 = every findable .c
+  minus 2 over-tectum; percursus's 750 counts .c+.h — a PARSER's
+  corpus; demissio's corpus is TRANSLATION UNITS, delta by design).
+- **11,289 functiones; 106,717 data; 1,153,305 instructiones.**
+- **sistere 2,870 in 102 plagulis — 16 causae, ALL classified with
+  owners**: POSIX faces (accessus structurae incompletae 1,160 +
+  locals — systema_posix park, pulled by M2 Wave 1), nested-chain
+  park (unflipped forks: vocatio sine typo 205 + downstream poison
+  ~870 — the M0a park's demissio face), stb_image vendored (forma
+  rows in imago.c), semantica-diagnosed identifiers (126), small
+  named tails (16).
+- **Circuli 571/571 byte-idem** — every corpus dump reparses and
+  re-dumps identically through the lector.
+- Goldens: 4 fixture pairs pinned + blessed (scalaria/fluxus/
+  aggregata/statica).
+- Tempus: arbor 99s | demissio 5s | circulus 207s. Apex 9.7 GB
+  (demo_52, data-dense; dump ~3x in memory — on-measurement park).
+- VERIFICATUM (hospes 28/28 dual-amalgam) after every change.
+
+Four chunks, one day. Emendationes recorded: addr-taken resequenced
+into A; sem non-const; est_implicitum routing (M1a). Eight real
+finds across M1b (three in A-C, five in D) — the "new consumer meets
+the corpus" law now has three data points (M0b: 3, M1b: 8).
+
+**AUDITUS PLENUS (phase-log totum relectum):** all INTENTIO items
+delivered or emended-with-reason; carried risks closed (C2 operand
+shape settled before goldens; C4 binding table landed silva-side at
+M1a; vocabulary held END TO END — zero op renames from ceremony to
+corpus). Parks with owners: variadic arg-width convention → M2
+builtin bridge; jump tables → M2-if-profiled; &&/|| naive
+materialization → M5-if-ever; textual provenance attribute → M3
+(indicium); float-evaluator scope + notae tails (3+5+4+1) → named,
+-causa instrument makes each a 5-minute look; .h-not-lowered =
+principled corpus definition; dump-memory 3x → on-measurement.
+
+**M1 SEALED.** Medulla + demissio shipped: the IR exists, prints,
+parses, round-trips byte-identically, and the WHOLE MONOREPO lowers
+through the frozen M0b contract with every stop classified.
+**NEXT: M2 — machinula + builtins** (corpus bar: credo suites pass
+interpreted, Waves 0+1; piscina suite first — the memory-model
+gate; conexio design opens the milestone: module merging, EXTERNUM
+resolution, builtin routing = definition-absent, the additive
+relocation loader, variadic arg-width convention).
