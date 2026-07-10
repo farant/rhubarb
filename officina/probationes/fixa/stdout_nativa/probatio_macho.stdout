@@ -1,0 +1,58 @@
+
+--- Probans macho_aperire (simplex) ---
+..  CPU type: 0x100000c
+..  Load commands: 16
+.
+--- Probans macho_aperire (cum_functione) ---
+...  Load commands: 17
+.
+--- Probans iterationem mandatorum oneris ---
+.  [0] genus=0x19 mensura=72
+..  [1] genus=0x19 mensura=232
+..  [2] genus=0x19 mensura=72
+..  [3] genus=0x80000034 mensura=16
+..  [4] genus=0x80000033 mensura=16
+..  [5] genus=0x2 mensura=24
+..  [6] genus=0xb mensura=80
+..  [7] genus=0xe mensura=32
+..  [8] genus=0x1b mensura=24
+..  [9] genus=0x32 mensura=32
+..  [10] genus=0x2a mensura=16
+..  [11] genus=0x80000028 mensura=24
+..  [12] genus=0xc mensura=56
+..  [13] genus=0x26 mensura=16
+..  [14] genus=0x29 mensura=16
+..  [15] genus=0x1d mensura=16
+.....  Totalis iteratus: 16
+  Invenit LC_SEGMENT_64: sic
+  Invenit LC_SYMTAB: sic
+  Invenit LC_DYSYMTAB: sic
+
+--- Probans macho_iterator_mandatorum_finis ---
+....
+--- Probans concordantiam mandatum_datum ---
+.................................  Verificatus: 16 mandata
+.
+--- Probans macho_filum_aperire ---
+.  Numerus imaginum: 1
+..  CPU type: 0x100000c
+.  CPU subtype: 0x0
+.
+--- Probans NIHIL handling ---
+......
+--- Probans filum non existens ---
+.  Error: stat fracta
+.
+--- Comparans ambos fixtures ---
+.......  simplex mandata: 16
+  cum_functione mandata: 17
+
+
+=== CREDO COMPENDIUM ===
+Totalis:    103
+Praeteriti: 103
+Fracti:     0
+
+Conditio: OMNIA PRAETERIERUNT
+=========================
+

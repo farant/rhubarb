@@ -67,21 +67,24 @@ hic_manens b32 enumerare_petita = FALSUM;        /* -enumerare:
     vias suitarum undae imprimere et exire (captare.sh consumit -
     UNUS fons veritatis exclusionum) */
 
-/* UNDA 0: exclusiones nominatae (network/GUI/asset/benchmark) */
+/* UNDAE 0+1: exclusiones nominatae (M2d Chunk C - Unda 1
+ * filesystem INTRAVIT; quaeque exclusio causam habet) */
 hic_manens constans character* exclusiones_undae[] = {
-    /* Unda 1 filesystem */
-    "probatio_arbor2_file_roundtrip.c", "probatio_arbor2_expandere.c",
-    "probatio_arbor.c", "probatio_arbor_formator.c",
-    "probatio_arbor_index.c", "probatio_entitas_repositorium.c",
-    "probatio_filum.c", "probatio_iter_directoria.c",
-    "probatio_macho.c", "probatio_generare.c",
-    "probatio_eventus_inspector.c",
-    /* Unda 1b/2/3 */
+    /* Unda 1b nomine: system() + opendir/readdir */
+    "probatio_iter_directoria.c", "probatio_generare.c",
+    /* Unda 2 nomine: tempus/entropia */
     "probatio_uuid.c", "probatio_tempestivum.c",
     "probatio_actor.c", "probatio_actor_integratio.c",
+    /* Unda 3 nomine: rete vivum */
     "probatio_tcp.c", "probatio_tcp_servus.c",
     "probatio_tls.c", "probatio_reactor.c",
     "probatio_http.c",
+    /* Tier-2 .m: cursus vocat fenestra_tempus_* (stratum
+     * machinae extra corpus per DECISUM) */
+    "probatio_cursus.c",
+    /* gravia: capsula_libri.c 12.8MB super tectum 4MB
+     * (ordo nominatus cum biblia_dr) */
+    "probatio_libri.c",
     /* GUI/asset/benchmark */
     "probatio_fenestra.c", "probatio_delineare.c",
     "probatio_tempus.c", "probatio_pagina.c",
@@ -104,6 +107,8 @@ hic_manens constans ExclusioStdout exclusiones_stdout[] = {
     /* inventae per captare.sh cursu duplici 2026-07-10 */
     { "probatio_arbor2_glr.c",      "monstratores DEBUG (ASLR)" },
     { "probatio_arbor2_scribere.c", "monstratores DEBUG (ASLR)" },
+    { "probatio_arbor2_file_roundtrip.c",
+                                    "monstratores DEBUG (ASLR)" },
     { "probatio_compound.c",        "monstratores DEBUG (ASLR)" },
     { "probatio_commandi.c",        "purgamentum pre-init impressum" },
     { "probatio_entitas.c",         "UUIDv7 (tempus+fors)" },

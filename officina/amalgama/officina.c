@@ -8048,6 +8048,25 @@ _aed_gettimeofday (Machinula* m, constans i64* a, s32 n, i64* fr)
     redde VERUM;
 }
 
+interior b32
+_aed_clock (Machinula* m, constans i64* a, s32 n, i64* fr)
+{
+    (vacuum)m; (vacuum)a; (vacuum)n;
+    *fr = (i64)(s64)clock();
+    redde VERUM;
+}
+
+interior b32
+_aed_unlink (Machinula* m, constans i64* a, s32 n, i64* fr)
+{
+    (vacuum)n;
+    errno = ZEPHYRUM;
+    *fr = (i64)(s64)unlink(
+        (constans character*)(memoriae_index)a[ZEPHYRUM]);
+    _errno_retro(m);
+    redde VERUM;
+}
+
 /* tm hospitis staticum EXTRA regionem redditur - lectio sola per
  * novem campos normae (praefixum idem); mktime cum tm hospitis
  * PERICULUM nominatum (tm_gmtoff ultra formam systematis) - corpus
@@ -8125,7 +8144,9 @@ interior constans AedificatumNota AEDIFICATA[] = {
     { "mkdir",        _aed_mkdir },
     { "getcwd",       _aed_getcwd },
     { "gettimeofday", _aed_gettimeofday },
-    { "localtime",    _aed_localtime }
+    { "localtime",    _aed_localtime },
+    { "unlink",       _aed_unlink },
+    { "clock",        _aed_clock }
 };
 /* structuralis - numerus falsus (44 vs 42 verae) lectiones extra
  * tabulam in ansa ligationis fecit; magnitudo drift vetat */

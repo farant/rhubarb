@@ -1167,3 +1167,33 @@ entitas_repositorium, arbor_formator, arbor2_file_roundtrip,
 macho + singillatim ceterae), captare aurea nova, viae scripturae
 verificatae, dilationes 1b/2/3 restitutae nomine → vectis
 M2: Undae 0+1 VIRIDES = M2 SIGILLATUM.
+
+### ADDENDUM (2026-07-10) — M2d CHUNK C: UNDA 1 INTRAVIT — 74/80
+
+Exclusiones trimmatae: IX suites filesystem in undam (filum,
+entitas_repositorium, arbor_formator, arbor2_file_roundtrip,
+macho, arbor, arbor_index, arbor2_expandere, eventus_inspector);
+unda 73→80. Dilationes RESTITUTAE NOMINE in tabula ipsa cum
+causis: Unda 1b (iter_directoria/generare — system+opendir),
+Unda 2 (uuid/tempestivum/actor*), Unda 3 (rete), cursus (Tier-2
+.m fenestra_tempus_*), libri (gravia 12.8MB > tectum, ordo cum
+biblia_dr).
+
+Auditio aedificatorum intrantium: UNUM solum deerat (unlink, 6
+sedes) + clock (roundtrip) → 60 aedificata. captare recucurrit
+(somnus 1s vim probavit: multipart nunc SE detexit!); aurea 73;
+arbor2_file_roundtrip nondeterministicum (monstratores DEBUG
+arbor2 eaedem causae) → exclusio 7ma.
+
+**VIII ex IX suites intrantibus VIRIDES PRIMO CONTACTU** —
+effusionibus octetim identicis. arbor2_file_roundtrip post clock:
+PRAETERIIT 30.4M instr (plagulae verae per ansas scriptae lectae
+deletae!). TABULA NONA: **74 praeteritae | 0 exitus mali |
+0 sisterae | 0 decipulae | 0 vitia | 0 ruinae | 6 tempora / 80.**
+STDOUT: 67 eaedem | 0 DIFFERUNT.
+
+Residuum 6 = TEMPUS OMNE (arbor_formator lapifex-classis + 5
+lapifex): labor verus interpretatus ultra 30s — NON vitia.
+**CURSUS BENEDICTIONIS IN VOLATU (-mora 1800)** = vectis M2
+ultimus: si VI virides → UNDAE 0+1 VIRIDES = M2 SIGILLANDUM
+(caerimonia Franis).

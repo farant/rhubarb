@@ -1,0 +1,35 @@
+=== PROBATIO ARBOR CONVENIENCE API ===
+
+--- Probans arbor_optiones_default ---
+......  Default optiones: OK
+
+--- Probans arbor_parsere_fontem (simplex) ---
+.......  Declaratio simplex parsita: OK
+
+--- Probans arbor_parsere_fontem (functio) ---
+.....  Functio parsita: OK
+
+--- Probans arbor_parsere_fontem (NIHIL input) ---
+.....  NIHIL input tractatum: OK
+
+--- Probans arbor_parsere_filum ---
+.......  Filum parsitum: OK
+
+--- Probans arbor_parsere_filum (non existens) ---
+.....  Filum non existens tractatum: OK
+
+--- Probans arbor_parsere_filum (piscina.c HYBRID) ---
+......  piscina.c HYBRID parsitum: OK
+
+--- Probans arbor_parsere_filum (piscina.h HYBRID) ---
+......  piscina.h HYBRID parsitum: OK
+
+
+=== CREDO COMPENDIUM ===
+Totalis:    23
+Praeteriti: 23
+Fracti:     0
+
+Conditio: OMNIA PRAETERIERUNT
+=========================
+

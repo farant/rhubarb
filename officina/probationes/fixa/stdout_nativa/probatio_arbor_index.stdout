@@ -1,0 +1,60 @@
+===========================================
+PROBATIO ARBOR INDEX
+===========================================
+
+--- Creare Proiectum ---
+.  arbor_index_creare: OK
+
+--- Genus Nomen ---
+.  ARBOR_SYMBOLUM_FUNCTIO: functio - OK
+.  ARBOR_SYMBOLUM_VARIABILIS: variabilis - OK
+.  ARBOR_SYMBOLUM_TYPUS: typus - OK
+.  ARBOR_NEXUS_EXTERNUS: externus - OK
+.  ARBOR_NEXUS_INTERNUS: internus - OK
+
+--- Symbolum Invenire (vacua) ---
+..  Invenire non-existent: OK (reddidit NIHIL)
+
+--- Via Include ---
+.  arbor_index_addere_via_include: OK
+
+--- Aedificare Vacua ---
+.  arbor_index_aedificare (vacua): OK
+
+--- Simplex (functiones et variabiles) ---
+....  Functio 'addere': genus=functio nexus=externus - OK
+..  Functio 'subtrahere': OK
+...  Variabilis 'numerus_globalis': genus=variabilis nexus=externus - OK
+
+--- Staticus (nexus internus) ---
+....  Functio 'functio_publica': nexus=externus - OK
+...  Functio 'functio_privata': nexus=internus - OK
+...  Variabilis 'numerus_privatus': nexus=internus - OK
+
+--- Typus (struct, enum, typedef) ---
+...  Struct 'Punctum': genus=typus - OK
+..  Union 'Valor': genus=typus - OK
+..  Enum 'Color': genus=typus - OK
+..  Enum valor 'COLOR_RUBRUM': genus=enum_valor - OK
+..  Typedef 'Integer32': genus=typus - OK
+..  Functio 'creare_punctum': OK
+
+--- Multi (plures fila) ---
+...  Functio 'multiplicare' (utils.c): OK
+..  Functio 'dividere' (utils.c): OK
+..  Functio 'computare' (main.c): OK
+..  Functio 'main' (main.c): OK
+
+--- Referentiae ---
+.  Referentiae 'multiplicare': inventae
+.  Referentiae non-existent: NIHIL - OK
+
+
+=== CREDO COMPENDIUM ===
+Totalis:    53
+Praeteriti: 53
+Fracti:     0
+
+Conditio: OMNIA PRAETERIERUNT
+=========================
+

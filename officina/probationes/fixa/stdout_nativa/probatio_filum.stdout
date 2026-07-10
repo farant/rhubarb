@@ -1,0 +1,76 @@
+
+--- Probans filum_scribere et filum_legere_totum ---
+....
+--- Probans filum_existit ---
+.....
+--- Probans filum_mensura ---
+.
+--- Probans filum_lector lineam_proximam ---
+............
+--- Probans filum_appendere ---
+...
+--- Probans filum_movere ---
+....
+--- Probans filum_copiare ---
+....
+--- Probans filum_status ---
+......
+--- Probans filum vacuum ---
+..
+--- Probans NIHIL handling ---
+....
+--- Probans filum_error_recens ---
+....
+--- Probans binary data cum nullis embedded ---
+...
+--- Probans filum_appendere_literis ---
+...
+--- Probans superscribere ---
+....
+--- Probans lineas vacuas in filo ---
+.......
+--- Probans fines linearum diversos ---
+.......
+--- Probans filum sine newline finali (multi-linea) ---
+......
+--- Probans aperire filum non existens ---
+..
+--- Probans comportamentum post EOF ---
+.......
+--- Probans limites longitudinis linearum (4096 buffer) ---
+
+  Probatio: linea 4095 bytes
+.....  Probatio: linea 5000 bytes (crescentia dynamica)
+..    Linea legere: 5000 bytes
+..  Probatio: Longitudines linearum mixtae cum newlines
+..    Linea 1: 12 bytes
+..    Linea 2: 5000 bytes
+..    Linea 3: 17 bytes
+..
+  NOTA: Lineae > 4095 bytes transparenter tractantur
+        ChordaAedificator crescit dynamice pro lineis longis
+        (buffer_longus ex piscina, liberabitur cum piscina_destruere)
+
+--- Probans FilumScriptor basicum ---
+....
+--- Probans FilumScriptor modus appendere ---
+.....
+--- Probans FilumScriptor lineam_scribere ---
+............
+--- Probans FilumScriptor scribere chorda ---
+....
+--- Probans FilumScriptor sync ---
+....
+--- Probans FilumScriptor NIHIL handling ---
+....
+--- Probans FilumScriptor event log simulation ---
+.......................................................................................................
+
+=== CREDO COMPENDIUM ===
+Totalis:    241
+Praeteriti: 241
+Fracti:     0
+
+Conditio: OMNIA PRAETERIERUNT
+=========================
+

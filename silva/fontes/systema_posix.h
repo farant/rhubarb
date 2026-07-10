@@ -93,3 +93,4 @@ int mkdir(const char* via, mode_t modus);
  * ================================================== */
 
 char* getcwd(char* sedes, size_t mensura);
+int   unlink(const char* via);

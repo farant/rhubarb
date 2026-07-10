@@ -1,0 +1,307 @@
+=== PROBATIO ARBOR FORMATOR ===
+
+..  probatio_optiones_default...
+.....    [OK]
+  probatio_keyword_conversion...
+...............    [OK]
+  probatio_roman_numerals...
+.....................    [OK]
+  probatio_fidelis_simple...
+...    fructus: int main() { return 0; }
+    [OK]
+  probatio_fidelis_declaration...
+..    fructus: int x = 42;
+    [OK]
+  probatio_fidelis_control_flow...
+..    fructus: void test() { if (x) { y = 1; } else { y = 2; } }
+    [OK]
+  probatio_fidelis_struct...
+..    fructus: struct Point { int x; int y; };
+    [OK]
+  probatio_fidelis_expressions...
+..    fructus: int f() { return a + b * c - d / e; }
+    [OK]
+  probatio_fidelis_roundtrip...
+    declaration: 'int x = 42;' [OK]
+    function: 'int main() { return 0; }' [OK]
+    struct: 'struct Point { int x; int y; };' [OK]
+    control: 'void f() { if (x) { y = 1; } }' [OK]
+    expressions: 'int f() { return a + b * c - d / e; }' [OK]
+    call: 'int f() { return foo(a, b, c); }' [OK]
+    subscript: 'int f() { return arr[i]; }' [OK]
+    pointer: 'int *p = &x;' [OK]
+    ternary: 'int f() { return x ? a : b; }' [OK]
+    assign: 'void f() { x = y + z; }' [OK]
+    unary: 'int f() { return -x + !y; }' [OK]
+    parens: 'int f() { return (a + b) * c; }' [OK]
+    for: 'void f() { for (i = 0; i < n; i++) { x++; } }' [OK]
+    while: 'void f() { while (x > 0) { x--; } }' [OK]
+    nested-if: 'void f() { if (a) { if (b) { x = 1; } } else { x = 2; } }' [OK]
+    complex: 'int f() { return (a + b) * (c - d) / e; }' [OK]
+    member: 'int f() { return p->x + s.y; }' [OK]
+    compare: 'int f() { return a < b && c >= d; }' [OK]
+    bitwise: 'int f() { return a | b & c ^ d; }' [OK]
+    multi-decl: 'int a, b, c;' [OK]
+    func-params: 'int add(int a, int b) { return a + b; }' [OK]
+    simple-cast: 'int f() { return (int)x; }' [OK]
+    pointer-cast: 'int f() { return (int *)x; }' [OK]
+    double-ptr-cast: 'int f() { return (int **)x; }' [OK]
+    const-ptr-cast: 'int f() { return (const int *)x; }' [OK]
+    multi-spec-cast: 'int f() { return (unsigned long)x; }' [OK]
+    void-ptr-cast: 'int f() { return (void *)x; }' [OK]
+    char-ptr-cast: 'int f() { return (char *)x; }' [OK]
+    sizeof-ptr: 'int f() { return sizeof(int *); }' [OK]
+    sizeof-const: 'int f() { return sizeof(const int); }' [OK]
+    string-concat-simple: 'char *s = "hello" "world";' [OK]
+    string-concat-triple: 'char *s = "a" "b" "c";' [OK]
+    string-concat-extra-space: 'char *s = "hello"  "world";' [OK]
+    string-concat-in-call: 'void f() { printf("hello" "world"); }' [OK]
+    [OK]
+  probatio_fidelis_irregular_whitespace...
+    double-space-assign: 'int x  =  42;' [OK]
+    no-space-assign: 'int x=42;' [OK]
+    triple-space: 'int   x   =   42;' [OK]
+    mixed-spacing-expr: 'int f() { return a+b * c-d; }' [OK]
+    no-space-expr: 'int f() { return a+b+c; }' [OK]
+    double-space-comma: 'int f(int a,  int b,  int c) { return a; }' [OK]
+    no-space-comma: 'int f(int a,int b,int c) { return a; }' [OK]
+    space-inside-parens: 'int f( int x ) { return x; }' [OK]
+    space-inside-braces: 'void f() {  x = 1;  }' [OK]
+    no-space-before-brace: 'void f(){ return; }' [OK]
+    double-space-else: 'void f() { if (x) { a = 1; }  else { b = 2; } }' [OK]
+    compact-for: 'void f() { for (i=0;i<n;i++) { x++; } }' [OK]
+    extra-space-for: 'void f() { for (i = 0;  i < n;  i++) { x++; } }' [OK]
+    asymmetric-left: 'int x= 42;' [OK]
+    asymmetric-right: 'int x =42;' [OK]
+    irregular-multi-decl: 'int a,b,  c,   d;' [OK]
+    [OK]
+  probatio_fidelis_complex_structures...
+    deep-nested-if: 'void f() { if (a) { if (b) { if (c) { x = 1; } } } }' [OK]
+    nested-for: 'void f() { for (i = 0; i < n; i++) { for (j = 0; j < m; j++) { x++; } } }' [OK]
+    for-while: 'void f() { for (i = 0; i < n; i++) { while (x > 0) { x--; } } }' [OK]
+    pointer-params: 'int f(int *a, int **b, int ***c) { return *a; }' [OK]
+    deep-parens: 'int f() { return ((((a + b)))); }' [OK]
+    chained-arrow: 'int f() { return a->b->c->d; }' [OK]
+    mixed-member: 'int f() { return a.b->c.d->e; }' [OK]
+    multi-subscript: 'int f() { return a[i][j][k]; }' [OK]
+    complex-member-subscript: 'int f() { return a->b[i].c + d->e[j].f; }' [OK]
+    cast-simple: 'int f() { return (int)x; }' [OK]
+    cast-multi: 'int f() { return (long)y + (char)z; }' [OK]
+    cast-expr: 'int f() { return (int)(x + y); }' [OK]
+    sizeof: 'int f() { return sizeof(int) + sizeof(x); }' [OK]
+    sizeof-space: 'int f() { return sizeof (int); }' [OK]
+    inc-dec: 'void f() { ++a; --b; c++; d--; }' [OK]
+    addr-deref: 'void f() { int *p = &x; int y = *p; }' [OK]
+    nested-ternary: 'int f() { return a ? b ? c : d : e ? f : g; }' [OK]
+    logical-chain: 'int f() { return a && b || c && d || e; }' [OK]
+    compound-assign: 'void f() { a += b; c -= d; e *= f; g /= h; }' [OK]
+    comma-in-for: 'void f() { for (i = 0, j = 0; i < n; i++, j++) { x++; } }' [OK]
+    do-while: 'void f() { do { x++; } while (x < 10); }' [OK]
+    break-continue: 'void f() { while (1) { if (a) break; if (b) continue; } }' [OK]
+    complex-return: 'int f() { return (a + b) * (c - d) / (e + f) % (g - h); }' [OK]
+    multi-statement: 'void f() { int a; int b; a = 1; b = 2; }' [OK]
+    [OK]
+  probatio_fidelis_tabs_newlines...
+    tabs-basic: 'int	x	=	42;' [OK]
+    mixed-tab-space: 'int x	= 42;' [OK]
+    tabs-expr: 'int f() { return a	+	b; }' [OK]
+    tabs-braces: 'void f()	{	x = 1;	}' [OK]
+    tabs-for: 'void f() { for (i	=	0;	i	<	n;	i++) { x++; } }' [OK]
+    tabs-if: 'void f() { if	(x)	{	y = 1;	} }' [OK]
+    tabs-function: 'int	f()	{	return	0;	}' [OK]
+    newline-basic: 'void f() {
+x = 1;
+}' [OK]
+    newline-indent: 'void f() {
+    x = 1;
+}' [OK]
+    newline-multi: 'void f() {
+    int a;
+    int b;
+}' [OK]
+    newline-if: 'void f() {
+    if (x) {
+        y = 1;
+    }
+}' [OK]
+    newline-before-brace: 'void f()
+{
+    x = 1;
+}' [OK]
+    newline-decls: 'int x;
+int y;' [OK]
+    [OK]
+  probatio_roundtrip_fila...
+    simple.c: (419 bytes) [OK]
+    [OK]
+  probatio_roundtrip_preservare...
+    include-system: '#include <stdio.h>
+' [OK]
+    include-then-decl: '#include <stdio.h>
+int x;' [OK]
+    define-simple: '#define FOO 42
+' [OK]
+    define-then-use: '#define FOO 42
+int x = FOO;' [OK]
+    multiple-defines: '#define FOO 42
+#define BAR 99
+' [OK]
+    ifdef-block: '#ifdef DEBUG
+int debug = 1;
+#endif
+' [OK]
+    include-guard: '#ifndef HEADER_H
+#define HEADER_H
+int x;
+#endif
+' [OK]
+    if-else-endif: '#if 1
+int a;
+#else
+int b;
+#endif
+' [OK]
+    pragma-once: '#pragma once
+int x;' [OK]
+    mixed-directives-code: '#include <stdio.h>
+
+int main() {
+#ifdef DEBUG
+    printf("debug");
+#endif
+    return 0;
+}' [OK]
+    block-comment: '/* comment */
+' [OK]
+    block-comment-then-code: '/* comment */
+int x;
+' [OK]
+    multiline-block-comment: '/* line 1
+ * line 2
+ */
+int x;
+' [OK]
+    func-decl: 'void foo(int x);
+' [OK]
+    func-decl-ptr-param: 'void foo(int* x);
+' [OK]
+    include-local: '#include "header.h"
+' [OK]
+    multiple-local-includes: '#include "latina.h"
+#include "fenestra.h"
+' [OK]
+    endif-with-comment: '#ifndef FOO_H
+#define FOO_H
+int x;
+#endif /* FOO_H */
+' [OK]
+    multiline-func-decl-simple: 'void
+foo(void);' [OK]
+    multiline-func-decl-params: 'void
+foo(
+    int* x,
+    int y);
+' [OK]
+    full-header-pattern: '#ifndef FOO_H
+#define FOO_H
+
+#include "bar.h"
+
+void foo(int x);
+
+#endif /* FOO_H */
+' [OK]
+    cursor-func-pattern: 'void
+foo(
+    int* x,
+    int y,
+    int z);
+' [OK]
+    comment-block-then-func: '/* ==================================================
+ * CURSOR - Cursor Muris
+ * ================================================== */
+
+void
+foo(
+    int* x,
+    int y);
+' [OK]
+    custom-type-ptr-param: 'void
+foo(
+    MyType* x);
+' [OK]
+    cursor.h: (1052 bytes) [OK]
+    define-macro: '#define FOO 10
+' [OK]
+    static-const-array-literal: 'static const int arr[3] = {1, 2, 3};
+' [OK]
+    static-const-array-macro: '#define SIZE 3
+static const int arr[SIZE] = {1, 2, 3};
+' [OK]
+    2d-array-literal: 'static const int arr[2][3] = {{1,2,3}, {4,5,6}};
+' [OK]
+    2d-array-macro: '#define ROWS 2
+#define COLS 3
+static const int arr[ROWS][COLS] = {{1,2,3}, {4,5,6}};
+' [OK]
+    [OK]
+  probatio_roundtrip_hybrid...
+    latin-static: '#define hic_manens static
+hic_manens int x;
+' [OK]
+    latin-const: '#define constans const
+constans int x;
+' [OK]
+    latin-i32: '#define i32 int
+i32 x;
+' [OK]
+    latin-static-const: '#define hic_manens static
+#define constans const
+hic_manens constans int x;
+' [OK]
+    latin-param: '#define i32 int
+void foo(i32 x);
+' [OK]
+    latin-ptr: '#define i32 int
+i32* p;
+' [OK]
+    cursor.c: (2813 bytes) [OK]
+    color.c: (3565 bytes) [OK]
+    color.h: (2354 bytes) [OK]
+    utf8.c: (6064 bytes) [OK]
+    piscina.h: (3181 bytes) [OK]
+    base64.c: (6722 bytes) [OK]
+    sectio.c: (10581 bytes) [OK]
+    dialogus.c: (4837 bytes) [OK]
+    sectio.h: (7858 bytes) [OK]
+    tractator.c: (7722 bytes) [OK]
+    [OK]
+  probatio_processare_parse...
+.    minimal.c [OK]
+.    minimal2.c [OK]
+.    minimal3.c [OK]
+.    simple.c [OK]
+.    include_test.c [OK]
+.    include_stddef.c [OK]
+.    piscina_mini.c [OK]
+.    cursor.c [OK]
+.    color.c [OK]
+.    color.h [OK]
+.    utf8.c [OK]
+.    piscina.h [OK]
+.    base64.c [OK]
+.    sectio.c [OK]
+.    dialogus.c [OK]
+.    sectio.h [OK]
+.    tractator.c [OK]
+    [OK]
+
+
+=== CREDO COMPENDIUM ===
+Totalis:    71
+Praeteriti: 71
+Fracti:     0
+
+Conditio: OMNIA PRAETERIERUNT
+=========================
+

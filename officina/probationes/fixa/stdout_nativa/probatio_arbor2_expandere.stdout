@@ -1,0 +1,128 @@
+
+--- Probans object-like macro expansion ---
+......
+--- Probans #define creates segment ---
+.
+--- Probans macro provenance chain ---
+.....
+--- Probans nested macro expansion ---
+.
+--- Probans query macro at line ---
+..
+--- Probans est_typedef query ---
+..
+--- Probans simple typedef detection ---
+....
+--- Probans nomen (Latin typedef) detection ---
+...
+--- Probans struct typedef detection ---
+..
+--- Probans function pointer typedef detection ---
+.
+--- Probans typedef origo information ---
+...
+--- Probans function-like macro simple substitution ---
+.........
+--- Probans function-like macro with nested parens ---
+..
+--- Probans function-like macro empty params ---
+..
+--- Probans function-like macro MAX ---
+.
+--- Probans function-like macro via #define ---
+.........
+--- Probans stringification basic ---
+.
+--- Probans stringification numeric ---
+.
+--- Probans stringification escaping ---
+..
+--- Probans stringification via #define ---
+.
+--- Probans token pasting basic ---
+..
+--- Probans token pasting prefix ---
+..
+--- Probans token pasting numeric ---
+..
+--- Probans token pasting via #define ---
+..
+--- Probans variadic macro basic ---
+........
+--- Probans variadic macro with prefix ---
+..
+--- Probans variadic macro via #define ---
+........
+--- Probans recursion prevention direct ---
+..
+--- Probans recursion prevention mutual ---
+.
+--- Probans recursion prevention via #define ---
+.
+--- Probans #undef stops expansion ---
+..
+--- Probans re-define after #undef ---
+.
+--- Probans #undef non-existent macro ---
+.
+--- Probans variadic macro zero arguments ---
+.
+--- Probans variadic macro single argument ---
+..
+--- Probans __VA_ARGS__ used twice ---
+.
+--- Probans nested macro - arg is macro call ---
+.
+--- Probans chained function macros ---
+.
+--- Probans object-like macro via #define simple ---
+..
+--- Probans object-like macro multi-token ---
+...
+--- Probans stringification empty argument ---
+..
+--- Probans stringification multiple tokens ---
+..
+--- Probans token pasting create operator ---
+.
+--- Probans token pasting empty left arg ---
+.
+--- Probans triple nested macro expansion ---
+..
+--- Probans lookahead genus simple INT macro ---
+.
+--- Probans lookahead genus unknown macro ---
+.
+--- Probans lookahead genus empty macro ---
+.
+--- Probans lookahead extended recursive macro ---
+...
+--- Probans lookahead extended empty macro est_vacuum ---
+...
+--- Probans lookahead extended non-recursive identifier ---
+...
+--- Probans lookahead genus integer literal ---
+.
+--- Probans include path management ---
+..
+--- Probans local include macro extraction ---
+..
+--- Probans local include typedef extraction ---
+.
+--- Probans nested include extraction ---
+..
+--- Probans include guard ---
+.
+--- Probans unresolved include ---
+.
+--- Probans system include syntax ---
+.
+
+=== CREDO COMPENDIUM ===
+Totalis:    134
+Praeteriti: 134
+Fracti:     0
+
+Conditio: OMNIA PRAETERIERUNT
+=========================
+
