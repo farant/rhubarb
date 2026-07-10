@@ -1224,3 +1224,35 @@ Domus: officina/CLAUDE.md refectum (norma nova: milestone currens
 = cauda phase-log, NUMQUAM hoc documentum; instrumenta omnia
 documentata; decompositio celeritatis in worklog machinulae
 indicata ante OMNE opus velocitatis).
+
+### ADDENDUM (2026-07-10, nocte) — VECTIS M2 IMPLETUS: 80/80
+
+Cursus benedictionis celer (-celer -census -mora 3600):
+
+**TABULA UNDECIMA: 80 praeteritae | 0 exitus mali | 0 sisterae |
+0 decipulae | 0 vitia | 0 ruinae | 0 tempora | 0 nexus fracti /
+80 suites.**
+**STDOUT: 73 eaedem | 0 DIFFERUNT | 0 sine aureo | 7 exclusae.**
+
+Lapifex V benedicti: quaeque ~72.8 MILIARDA instructionum, ~21 min
+apud -celer (~58M instr/s — praedictio 3.6x confirmata), effusio
+quaeque IDEM. Summa cursus: **365.2 miliarda instructionum
+interpretatarum, omnes suites virides, omnes effusiones
+comparabiles octetim identicae.**
+
+Census messis: build/census/ 80 plagulae (numeri_op per suitem).
+Gustus (lapifex_c89_decl): movere 14.4G | ramus 13.5G | addere
+9.0G | legere 6.7G | salire 5.2G — datum quaestionis dispatch
+parcatae, nunc mensuratum.
+
+**UNDAE 0+1 VIRIDES = VECTIS M2 IMPLETUS.** Dilationes nominatae
+in tabula exclusionum cum causis (1b system+opendir | 2
+tempus/entropia | 3 rete | Tier-2 .m | gravia). SIGILLUM =
+caerimonia Franis: relectio phase-log plena + auditum (regula
+limitis milestonis), tum M2 CLAUSUM et executio officinae v1
+MISSA.
+
+Post sigillum (consilium cum Frane statutum): instrumenta prima
+(project-specs/instrumenta-simulatio-1.md — custos latinae,
+nexus/emitte, interpretare; 4-5 dies, linea sectionis nominata) →
+M3 (indicium + vindex).
