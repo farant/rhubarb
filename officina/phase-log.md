@@ -909,3 +909,73 @@ per fusor -causa in plagulis propriis: fasti/sectio/symbola...);
 (2) capsula/libri monstrator nullus; (3) "magnitudo inaestimabilis"
 4; (4) decipulae parvae (time/getcwd — aedificata trivialia?);
 (5) columna stdout-diff post murum sisterarum.
+
+### ADDENDUM (2026-07-10, nocte) — TABULA RESIDUI COMPLETA
+### (omnes 27 suites non-viridis classificatae per sedem)
+
+Investigatio per relationes recordatoris (unda3) + fontes — quisque
+halitus ad SEDEM UNAM reductus:
+
+1. **POSIX transitivum (9)**: cursus/entitas/layout/servitium/
+   sputnik_interpres → uuid_c._tempus_milliseconds (structura
+   timeval!); macho_deps/sectio/symbola → filum_legere_totum;
+   fasti → fasti_dies_hodie (timeval). "forma localis ignota" TOTA
+   = parca POSIX per dependentias transitivas. NON vitium — opus
+   systema_posix (M2d) aut reclassificatio undae. FRAN DECERNAT.
+2. **magnitudo aciei completae (5-6)**: arbor2_glr/scribere/
+   compound/utf8 ("magnitudo inaestimabilis" — idioma
+   sizeof(acies)/sizeof(acies[0]) in aciebus [] completis) +
+   capsula (EXITUS 1 via "initiator staticus inaestimabilis" —
+   capsula_assets.mensura = magnitudo(acies completae) → 0 →
+   aperire NIHIL). UNA radix: completio aciei per initiatorem non
+   in typatione. DUAE viae: (A) sanatio radicis in SEMANTICA
+   (typus symboli completur — C89 3.5.7; aestimator/typationes/
+   demissio omnes sanantur; portae auspex/percursus/suite parata)
+   aut (B) demissio-fallback tribus sedibus (_mensura_completa
+   consulta). QUAESTIO STRATI — Fran consulendus.
+3. **accessus membri in rvalore aggregato (2)**: calendarium/toml —
+   `fasti_differentia(...).dies_totales` (membrum in fructu
+   vocationis). Lacuna demissionis vera, refectio contenta
+   (temporarium reditus iam allocatur — locus deest).
+4. **intptr_t ignotum (1)**: arbor_quaestio — (intptr_t)(i+1),
+   typus C99 extra systema ISO → supplementum systematis (M2d).
+5. **tectum (1)**: libri — book_assets/capsula_libri.c 12.8MB
+   (tertius locus comitum!) super tectum 4MB. Cum biblia_dr in
+   ordine "gravia" nominando.
+6. **decipulae (3)**: multipart→time, via→getcwd,
+   arbor_praeparator→fopen. time = ISO (aedificatum parvum);
+   getcwd/fopen = Unda 1.
+7. lapifex TEMPUS (5) — parca nominata (velocitas mensurata).
+
+INSTRUMENTUM: cursor v2.2 — COMITES probationum in mundum
+(probationes/*.c non-probatio_: capsula_assets, persona_gen —
+compile_tests.sh eas nominatim nectit, mundus noster nunc quoque).
+Parca M2b "lectio decipulae-ut-datum tacita" IN AGRO CONFIRMATA
+(capsula: octeti descriptoris ut CapsulaEmbed → monstrator 2).
+Effectus: nuntium_rotunda VIRIDIS (persona_scribere soluta),
+capsula VITIUM→EXITUS-1 (nunc classis 2 supra). **47/73.**
+
+Maximum realisticum post refectiones 2+3: ~53-54/73; residuum =
+POSIX/tectum/tempus/velocitas — materia M2d aut ordines nominati.
+
+### ADDENDUM (2026-07-10, nocte serius) — COMPLETIO ACIEI: 52/73
+
+Classis 2 (magnitudo aciei completae) SANATA via (A) — radix
+semanticae (C89 3.5.7 ad litteram; vide silva phase-log +
+silva_c89_semantica.worklog.md). Portae: suite 29/29, percursus
+100.00%, **auspex 3,753/0**, amalgama VERIFICATUM; fusor sistere
+2,659→2,604 in 68→53 plagulis (initiator staticus EVANUIT).
+
+TABULA QUINTA: **52 praeteritae | 0 exitus mali | 12 sisterae |
+3 decipulae | 1 vitium | 0 ruinae | 5 tempora / 73 suites.**
+Quinque exspectatae verterunt (arbor2_glr **101M instructiones**
+VIRIDIS!, arbor2_scribere 51M, compound 18M, utf8, capsula — TOC
++ inflatio gzip tota interpretata) + BONUS: flatura ("forma
+elementi ignota" quoque forma aciei completae erat).
+
+Residuum 21 — OMNE in ordine nominato: POSIX-transitivum 9 |
+calendarium/toml 2 (membrum-in-rvalore, UNICA refectio demissionis
+residua) | arbor_quaestio 1 (intptr_t) | libri 1 (tectum) |
+decipulae 3 (fopen/time/getcwd) | lapifex 5 (TEMPUS parca).
+PROXIMUM: membrum-in-rvalore (→~54) → decipula time (ISO, vilis)
+→ tunc M2d materia (systema_posix trahit 10+).

@@ -479,6 +479,53 @@ s32 principale (integer argc, character** argv)
 
     /* mundus: plagulae .c sub lib/ (semel, cachatae) */
     _bibliothecam_demittere(ctx);
+
+    /* comites probationum: plagulae .c sub probationes/ quae NON
+     * probatio_* sunt (capsula_assets, persona_gen - data suitarum;
+     * compile_tests.sh eas nominatim nectit - mundus noster quoque.
+     * Sine his symbola eorum decipulae fiunt et LECTIO datorum
+     * octetos descriptoris tacite servit - parca M2b in agro:
+     * capsula/libri "monstrator humilis") */
+    {
+        DIR* dir_c = opendir("probationes");
+        structura dirent* intro_c;
+
+        si (dir_c != NIHIL)
+        {
+            dum ((intro_c = readdir(dir_c)) != NIHIL)
+            {
+                memoriae_index mc = strlen(intro_c->d_name);
+
+                si (intro_c->d_name[ZEPHYRUM] == '.') perge;
+                si (strncmp(intro_c->d_name, "probatio_", IX)
+                    == ZEPHYRUM)
+                {
+                    perge;
+                }
+                si (mc < III || intro_c->d_name[mc - II] != '.'
+                    || intro_c->d_name[mc - I] != 'c')
+                {
+                    perge;
+                }
+                {
+                    character via_c[CCLVI];
+                    MedullaModulus* modulus_c;
+
+                    sprintf(via_c, "probationes/%s",
+                        intro_c->d_name);
+                    modulus_c = _plagulam_demittere(ctx, via_c);
+                    si (modulus_c != NIHIL)
+                    {
+                        MedullaModulus** locellus_c =
+                            xar_addere(moduli_mundi);
+
+                        *locellus_c = modulus_c;
+                    }
+                }
+            }
+            closedir(dir_c);
+        }
+    }
     fprintf(stderr, "mundus:      %ld moduli | %ld functiones |"
         " %ld instructiones (fractae %ld, ruinae %ld)\n",
         (long)xar_numerus(moduli_mundi), summa_functionum,

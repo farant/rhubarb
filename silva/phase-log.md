@@ -6637,3 +6637,17 @@ census clean); **auspex 3,753/0 dissentientes**; amalgama
 VERIFICATUM 28/28. Officina effect: fusor sistere 2,912→2,659
 (vocatio-sine-typo → 1 instructione), cursor Unda-0 31→45/73.
 Detail: silva/fontes/silva_c89_oraculum.worklog.md (born).
+
+## 2026-07-10 — COMPLETIO ACIEI (semantica) — pointer entry
+
+Silva code changed, pulled by officina M2c (narrative home:
+officina phase-log). C89 3.5.7 array-completion-by-initializer
+implemented at the declaration chokepoint (declarationem_tractare;
+new acies node, shared types never mutated; congeries count safe
+by the corpus's elision-ZERO measurement; string literal =
+octeti+1; extern-sine-initiatore untouched). Gates: suite 29/29,
+percursus 100.00%/0 errores/indecisa 9, diagnostica +8 classified
+(POSIX-progress + stb park), **auspex 3,753/0**, amalgama
+VERIFICATUM. Officina effect: fusor sistere files 68→53, cursor
+Unda-0 47→52/73 (arbor2_glr 101M instr VIRIDIS; capsula gzip
+tota interpretata). Detail: silva_c89_semantica.worklog.md.

@@ -36047,6 +36047,81 @@ silva_c89_declarationem_tractare (SilvaSemantica* sem,
         }
         t = silva_c89_typus_ex_declaratore(sem, basis,
             dv->datum.nodus, &tok);
+        /* completio aciei per initiatorem (C89 3.5.7): "at the end
+         * of its initializer list, the array no longer has
+         * incomplete type" - dimensio EXTERIOR completur (congeries:
+         * numerus elementorum - elisio in corpore ZEPHYRUM mensurata,
+         * omnia plene vallata; chorda litteralis: octeti + I).
+         * Sine initiatore (extern/tentativa) incompleta manet -
+         * recte per normam. Typus NOVUS construitur (typi communes
+         * sunt - mutatio vetita). */
+        si (t != NIHIL && t->genus == TYPUS_C89_ACIES
+            && t->datum.acies.numerus < ZEPHYRUM && !est_typedef)
+        {
+            constans SilvaNodus* d_compl =
+                _canonicum(dv->datum.nodus);
+
+            si (d_compl->genus
+                == (s32)SILVA_C89_GENUS_DECLARATOR_INITIATUS)
+            {
+                SilvaValor init_v =
+                    silva_c89_declarator_initiatus_initiator(
+                        d_compl);
+
+                si (init_v.genus == SILVA_VALOR_NODUS)
+                {
+                    constans SilvaNodus* init = _canonicum(
+                        init_v.datum.nodus);
+                    s32 numerus_elementorum = -I;
+
+                    si (init->genus
+                        == (s32)SILVA_C89_GENUS_CONGERIES)
+                    {
+                        SilvaValor elementa =
+                            silva_c89_congeries_elementa(init);
+                        i32 k;
+                        i32 n = ZEPHYRUM;
+
+                        per (k = ZEPHYRUM;
+                             k < (i32)silva_valor_lista_numerus(
+                                 elementa); k++)
+                        {
+                            SilvaValor* e =
+                                silva_valor_lista_obtinere(
+                                    elementa, k);
+
+                            si (e != NIHIL
+                                && e->genus == SILVA_VALOR_NODUS)
+                            {
+                                n++;
+                            }
+                        }
+                        si (n > ZEPHYRUM)
+                        {
+                            numerus_elementorum = (s32)n;
+                        }
+                    }
+                    alioquin si (init->genus
+                        == (s32)SILVA_C89_GENUS_FOLIUM_CHORDA)
+                    {
+                        SilvaChorda octeti;
+
+                        si (silva_c89_chorda_decodere(sem->piscina,
+                                init, &octeti))
+                        {
+                            numerus_elementorum =
+                                (s32)(octeti.mensura + (i32)I);
+                        }
+                    }
+                    si (numerus_elementorum > ZEPHYRUM)
+                    {
+                        t = silva_c89_typus_acies(sem,
+                            t->datum.acies.elementum,
+                            numerus_elementorum);
+                    }
+                }
+            }
+        }
         si (tok != NIHIL)
         {
             s32 genus_symboli;

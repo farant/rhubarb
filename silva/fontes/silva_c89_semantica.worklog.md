@@ -391,3 +391,41 @@ Notes that don't belong in the header comment:
   UNCHANGED baselines (0 errores; coverage 100.00%; 399 diagnostica
   in 31 plagulis; 305 indecisa) — nexus recording is invisible to
   every existing gate.
+
+## 2026-07-10 — COMPLETIO ACIEI PER INITIATOREM (C89 3.5.7)
+
+Pulled by officina M2c: the "magnitudo inaestimabilis" sistere
+class (arbor2_glr/scribere/compound/utf8) + capsula's wrong-exit
+("initiator staticus inaestimabilis" — capsula_assets.mensura =
+sizeof of a completed array → 0 → aperire NIHIL) + flatura's
+"forma elementi ignota" ALL traced to one unimplemented clause:
+"at the end of its initializer list, the array no longer has
+incomplete type." Semantica typed symbols from declarator alone;
+congeries typing flowed types DOWN but never the count UP.
+
+Fix at the single declaration chokepoint
+(silva_c89_declarationem_tractare, both file- and block-scope
+route through it): declared type = incomplete ACIES + initiator
+present → construct COMPLETED acies (typi shared — new node via
+silva_c89_typus_acies, never mutate). Count: congeries top-level
+NODE elements (elision measured ZERO in corpus — fully braced,
+count == array count); string literal → decoded octeti + 1
+(chorda_decodere). extern/tentative without initiator stay
+incomplete — correct per the norm. Typedef guarded (cannot have
+initializers anyway).
+
+Gates: suite 29/29; percursus 100.00% coverage, 0 errores,
+indecisa 9 (unchanged); diagnostica 455→463, classified: +7
+accessus-incompletae (typing progresses deeper into POSIX files),
++1 inside the stb_image vendored park; **auspex 3,753/0 — clang
+certifies every completed sizeof**; amalgama VERIFICATUM 28/28.
+Officina: fusor sistere 2,659→2,604 in 68→53 plagulis
+(magnitudo 94→29 instr; initiator staticus GONE); cursor Wave-0
+**47→52/73** (arbor2_glr 101M instructions PASSES, arbor2_scribere,
+compound, utf8, capsula incl. gzip inflation, flatura).
+
+Note for the future standards-audit layer: this construct is
+conforming C89 (ancient element-count idiom); the C99 cousins a
+lint pass must distinguish: flexible array members, VLAs,
+designated initializers. The :norma pseudo + standard-tag pin
+(quaestio QC) is the named home for that query.
