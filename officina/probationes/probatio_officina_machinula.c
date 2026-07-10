@@ -260,6 +260,44 @@ s32 principale (vacuum)
     }
 
     /* ========================================================
+     * PROBARE: time aedificatum (ISO) - scriptura per
+     * monstratorem eodem valore ac fructus (vocatio UNA, ergo
+     * determinatum); valor post 2020; ordo monotonus
+     * ======================================================== */
+    {
+        constans character* textus_literis =
+            "modulus \"tempus.medulla\"\n"
+            "\n"
+            "functio $main () -> s32\n"
+            "@initium:\n"
+            "    %v1 = vocare.s64 $time, 0\n"
+            "    %p = arca 8, 8\n"
+            "    %v2 = vocare.s64 $time, %p\n"
+            "    %w = legere.s64 %p\n"
+            "    %aeq = aequalis.s64 %v2, %w\n"
+            "    %post = maior.s64 %v1, 1577836800\n"
+            "    %ordo = maior_aequalis.s64 %v2, %v1\n"
+            "    %t1 = et.i32 %aeq, %post\n"
+            "    %t2 = et.i32 %t1, %ordo\n"
+            "    %t3 = multiplicare.s32 %t2, 42\n"
+            "    redde %t3\n";
+        chorda textus = _ch(textus_literis);
+        Regio* regio = NIHIL;
+        Machinula* machinula = _machinulam_parare(piscina, textus,
+            &regio);
+        MachinulaExitus exitus;
+
+        imprimere("\n--- Probans time aedificatum ---\n");
+        CREDO_NON_NIHIL (machinula);
+        exitus = machinula_currere(machinula, _ch("main"));
+        CREDO_AEQUALIS_S32 (exitus.genus, MACHINULA_BENE);
+        CREDO_VERUM (exitus.codex == (s64)XLII);
+        CREDO_VERUM (machinula_numerus_aedificatorum(machinula)
+            == II);
+        regio_destruere(regio);
+    }
+
+    /* ========================================================
      * PROBARE: numeratores + apex stivae
      * ======================================================== */
     {

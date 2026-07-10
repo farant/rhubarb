@@ -1011,3 +1011,32 @@ POSIX-transitivum 9 + intptr_t 1 + decipulae 3 (fopen/time/getcwd)
 
 PROXIMUM: decipula time (ISO, vilis → multipart) → tunc M2d
 (systema_posix trahit 10+; getcwd/fopen ibi).
+
+### ADDENDUM (2026-07-10) — AEDIFICATUM time: 55/73 + INVENTUM
+### LIGATIONIS (lectio extra tabulam!)
+
+Aedificatum #43 addendo INVENTUM: `#define AEDIFICATA_NUMERUS 44`
+super tabulam 42 introituum — ansa ligationis in machinula_creare
+DUAS AedificatumNota structuras extra tabulam legebat in OMNI
+nexu mundi (UB tacitum, benignum solo fortuito: octeti sequentes
+nomen decipulae numquam congruerunt). Sanatio: numerus nunc
+STRUCTURALIS (magnitudo/magnitudo) — drift impossibilis. Lectio:
+numerus manu iuxta tabulam manu = duo fontes veritatis.
+
+time ipsum: _aed_time per formam strtol (scriptura-per-monstratorem
+memcpy; time_t hospitis = verbum 8 octetorum; scriptura == fructus
+in vocatione UNA = determinatum). Regressio: modulus tempus.medulla
+in probatione machinulae (aequalitas scripturae + solum post-2020 +
+ordo monotonus → 42). Suite 67/67; amalgama VERIFICATUM.
+
+TABULA SEPTIMA: **55 praeteritae | 0 exitus mali | 10 sisterae |
+2 decipulae | 1 vitium | 0 ruinae | 5 tempora / 73 suites.**
+multipart PRAETERIIT (43,038 instr). RESIDUUM 18 — OMNE materia
+M2d aut parca nominata: POSIX-transitivum 9 (forma localis ignota)
++ intptr_t 1 + fopen/getcwd 2 (Unda 1) + tectum libri 1 + lapifex
+5 (parca). **M2c AD SOLUM NOMINATUM PERVENIT** — nihil restat quod
+sine machinis M2d verti potest.
+
+PROXIMUM: decisio sigilli M2c (columna stdout-diff = vectis
+sequens per ordinem barrae) → M2d (systema_posix trahit 10+,
+fopen/getcwd ibi).

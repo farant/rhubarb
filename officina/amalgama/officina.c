@@ -17,6 +17,7 @@
 #include <sys/mman.h>
 #include <math.h>
 #include <errno.h>
+#include <time.h>
 
 /* ================= officina.h (verbatim) ================= */
 /* officina.h - Medulla: IR registrorum linearis (interfacies publica)
@@ -7784,6 +7785,25 @@ _aed_fflush (Machinula* m, constans i64* a, s32 n, i64* fr)
     redde VERUM;
 }
 
+/* time_t hospitis = longus (8 octeti) - verbum integrum;
+ * scriptura per monstratorem eodem valore ac fructus (vocatio UNA) */
+interior b32
+_aed_time (Machinula* m, constans i64* a, s32 n, i64* fr)
+{
+    time_t v = time(NIHIL);
+
+    (vacuum)m;
+    si (n >= I && a[ZEPHYRUM] != ZEPHYRUM)
+    {
+        i64 verbum = (i64)(s64)v;
+
+        memcpy((vacuum*)(memoriae_index)a[ZEPHYRUM], &verbum,
+            magnitudo(i64));
+    }
+    *fr = (i64)(s64)v;
+    redde VERUM;
+}
+
 nomen structura {
     constans character* titulus;
     MachinulaPons       pons;
@@ -7831,9 +7851,13 @@ interior constans AedificatumNota AEDIFICATA[] = {
     { "pow",      _aed_pow },
     { "fmod",     _aed_fmod },
     { "ldexp",    _aed_ldexp },
-    { "fflush",   _aed_fflush }
+    { "fflush",   _aed_fflush },
+    { "time",     _aed_time }
 };
-#define AEDIFICATA_NUMERUS 44
+/* structuralis - numerus falsus (44 vs 42 verae) lectiones extra
+ * tabulam in ansa ligationis fecit; magnitudo drift vetat */
+#define AEDIFICATA_NUMERUS \
+    ((i32)(magnitudo(AEDIFICATA) / magnitudo(AEDIFICATA[ZEPHYRUM])))
 
 /* CANALIS UNUS aedificatorum - sedes memoriae/reddendi v2 (Q12) */
 interior b32

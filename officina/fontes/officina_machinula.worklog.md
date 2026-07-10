@@ -152,3 +152,29 @@ PARKED BY NAME: "cursor -celer build variant" (amalgam-or-LTO +
 blessing runs justify it (would take them ~10-20 min → ~3-5 min).
 The standing -O0 build stays: compile speed + debuggability are
 the daily-driver virtues.
+
+## 2026-07-10 — time builtin (ISO) + AEDIFICATA_NUMERUS was READING
+## PAST THE TABLE
+
+Walked in to add builtin #43 and found `#define AEDIFICATA_NUMERUS
+44` over a 42-entry table: the ligatio loop in machinula_creare has
+been reading TWO AedificatumNota structs past the end of AEDIFICATA
+on every world bind — silent UB that stayed benign only because the
+trailing const-section bytes never chorda-matched a decipula name.
+Fix: the count is now STRUCTURAL (magnitudo(AEDIFICATA) /
+magnitudo(AEDIFICATA[0])) — it can never drift again. Lesson filed:
+a hand-maintained count next to a hand-maintained table is two
+sources of truth; the sizeof idiom was always the C89 answer.
+
+time itself: _aed_time follows the strtol pointer-write pattern —
+host time(NULL) once, write-through via memcpy when the arg is
+non-null, return the SAME value (write-through == return is
+deterministic within one call, which is what the regression pins;
+host time_t = longus = one 8-byte verbum). Regression: inline
+tempus.medulla module in probatio_officina_machinula (write-through
+equality + post-2020 floor + cross-call monotonicity, → 42,
+aedificata == 2). NULL arg arrives as immediate 0 under S64 eval
+(decipula has no signature) — correct.
+
+Suite 67/67; amalgama VERIFICATUM; multipart PRAETERIIT solo
+(43,038 instr — was DECIPULA time).
