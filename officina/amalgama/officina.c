@@ -11770,7 +11770,20 @@ _ut_locum (Demissio* d, constans SilvaNodus* nodus)
             DemissioLocus locus_basis = _ut_locum(d,
                 basis_v.datum.nodus);
 
-            si (!locus_basis.valida || locus_basis.directum)
+            si (locus_basis.valida && !locus_basis.directum)
+            {
+                inscriptio_basis = locus_basis.index;
+            }
+            alioquin si (_est_aggregatum(_typus_finalis(d,
+                    _canonicus(basis_v.datum.nodus))))
+            {
+                /* rvalor aggregatus (fructus vocationis, ...):
+                 * valor aggregati EST inscriptio eius (conventio -
+                 * vide _vocationem, _assignationem) */
+                inscriptio_basis = _ut_valor(d,
+                    basis_v.datum.nodus);
+            }
+            alioquin
             {
                 _sistere(d, nodus,
                     "accessus sine inscriptione basis");
@@ -11778,7 +11791,6 @@ _ut_locum (Demissio* d, constans SilvaNodus* nodus)
             }
             typus_tag = silva_c89_typus_expressionis(d->sem,
                 _canonicus(basis_v.datum.nodus));
-            inscriptio_basis = locus_basis.index;
         }
         si (!_membrum_invenire(d, typus_tag, titulus, &offset,
                 &typus_membri))

@@ -98,3 +98,20 @@ functio $rotunda (i64 %reditus, s32 %n) -> vacuum
     copia %p, %t3, 8
     copia %reditus, %p, 8
     redde
+
+functio $membrum_fructus (s32 %n) -> s32
+@initium_0:
+    %t1 = arca 8, 4
+    %t2 = addere.s32 %n, 1
+    vocare $facere, %t1, %n, %t2
+    %t3 = addere.i64 %t1, 4
+    %t4 = legere.s32 %t3
+    %t5 = arca 8, 4
+    %t6 = arca 8, 4
+    vocare $facere, %t6, 3, 4
+    %t7 = arca 8, 4
+    copia %t7, %t6, 8
+    vocare $duplicare, %t5, %t7
+    %t8 = legere.s32 %t5
+    %t9 = addere.s32 %t4, %t8
+    redde %t9

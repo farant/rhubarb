@@ -194,3 +194,33 @@ parsura level); descent helper skips synthetic tokens
 types: origo pointers as OPAQUE KEYS — per-module maps, so
 arena-reuse address collisions across TUs are impossible). Consumer:
 M2b flight recorder; this IS proto-indicium's line table.
+
+## 2026-07-10 — membrum in rvalore aggregato (last real demissio gap)
+
+The M1b residual class "accessus sine inscriptione basis"
+(calendarium/toml, `fasti_differentia(...).dies_totales`): `.` access
+required `_ut_locum` on the base, and a call result has no locus.
+
+THE FIX IS NOT A SPECIAL CASE — it's the house convention made
+visible in one more place: **the value of an aggregate-typed
+expression IS its address**. Already true everywhere: _vocationem
+returns arca_reditus (the return-temp address), _assignationem's
+aggregate `=` returns locus.index ("valor = inscriptio", its own
+comment), by-value args COPIA from _ut_valor. So the `.` branch of
+_ut_locum now falls back: locus attempt fails AND base type is
+aggregate → `inscriptio_basis = _ut_valor(basis)`. Handles calls,
+ternary-of-struct, (a=b).m uniformly; chains (f().a.b) compose
+through the recursion. Verified no double-evaluation: _ut_locum on a
+VOCATIO base returns invalid WITHOUT emitting.
+
+Regression: aggregata.c `membrum_fructus` — `facere(n,n+1).y +
+duplicare(facere(3,4)).x` exercises BOTH offset paths (y=+4 ADDERE,
+x=0 no-ADDERE fast path) + by-value copy from a call rvalue. Golden
+re-pinned + blessed.
+
+Corpus effect: sistere 2,604→2,476 in 53→36 plagulis — SEVENTEEN
+files cleared, the pattern was all over the fasti consumers, not
+just the 2 named suites. Residual 9 instances of the cause: ALL
+inside lib/imago.c's stb_image vendored park (expander-relative
+lines 6662-6757) — cause EXTINCT in live corpus. Circuli 578/578
+byte-idem; amalgama VERIFICATUM (hospes 61/61); suite 69/69.

@@ -47,3 +47,8 @@ struct Par rotunda(int n)
     struct Par p = duplicare(facere(n, n + 1));
     return p;
 }
+
+int membrum_fructus(int n)
+{
+    return facere(n, n + 1).y + duplicare(facere(3, 4)).x;
+}

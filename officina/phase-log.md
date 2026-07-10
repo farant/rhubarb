@@ -979,3 +979,35 @@ residua) | arbor_quaestio 1 (intptr_t) | libri 1 (tectum) |
 decipulae 3 (fopen/time/getcwd) | lapifex 5 (TEMPUS parca).
 PROXIMUM: membrum-in-rvalore (→~54) → decipula time (ISO, vilis)
 → tunc M2d materia (systema_posix trahit 10+).
+
+### ADDENDUM (2026-07-10) — MEMBRUM IN RVALORE: 54/73
+
+Ultima refectio demissionis vera CLAUSA. Classis "accessus sine
+inscriptione basis" (`fasti_differentia(...).dies_totales`) sanata
+in _ut_locum ramo `.`: locus basis deest ET typus aggregatus →
+`inscriptio_basis = _ut_valor(basis)` — NON casus specialis sed
+conventio domus visibilis facta (**valor aggregati EST inscriptio
+eius**: _vocationem reddit arca_reditus, assignatio aggregati
+"valor = inscriptio", argumenta valore COPIA ex _ut_valor).
+Catenae f().a.b componuntur; evaluatio duplex nulla (_ut_locum in
+vocatione invalidum SINE emissione reddit).
+
+Regressio: aggregata.c membrum_fructus (offset +4 ADDERE + offset
+0 via celeris + copia valore ex rvalore) — aureum re-pinnatum et
+BENEDICTUM. Suite 69/69; amalgama VERIFICATUM (hospes 61/61).
+
+Effectus corporis: fusor sistere 2,476 in 36 plagulis (2,604/53
+antea) — SEPTENDECIM plagulae purgatae (forma per consumptores
+fasti ubique, non 2 suites solae). Causa residua 9 OMNES in parca
+stb_image (imago.c, lineae expansae) — causa in corpore vivo
+EXSTINCTA. Circuli 578/578 byte-idem.
+
+TABULA SEXTA: **54 praeteritae | 0 exitus mali | 10 sisterae |
+3 decipulae | 1 vitium | 0 ruinae | 5 tempora / 73 suites.**
+calendarium PRAETERIIT (124/124 credo, computus paschalis totus
+interpretatus, 233,828 instr) + toml PRAETERIIT. Residuum 19 =
+POSIX-transitivum 9 + intptr_t 1 + decipulae 3 (fopen/time/getcwd)
++ tectum libri 1 + lapifex 5 (parca).
+
+PROXIMUM: decipula time (ISO, vilis → multipart) → tunc M2d
+(systema_posix trahit 10+; getcwd/fopen ibi).
