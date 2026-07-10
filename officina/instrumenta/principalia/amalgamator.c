@@ -137,10 +137,8 @@ interior constans character* constans EXCLUDENDA_XARIS[] = {
     "xar_quaerere_binarie",
     "xar_quaerere_binarie_index",
     "xar_removere_cum_ultimo",
-    "xar_removere_ultimum",
     "xar_status_imprimere",
     "xar_tollere",
-    "xar_truncare",
     "xar_vacare",
     "xar_vacuum_est",
     NIHIL
@@ -169,6 +167,7 @@ interior constans AmalgamaPlagula CAPITA_OFFICINAE[] = {
     { "officina/fontes/officina_medulla_textus.h", NIHIL, NIHIL, FALSUM, FALSUM },
     { "officina/fontes/officina_regio.h",          NIHIL, NIHIL, FALSUM, FALSUM },
     { "officina/fontes/officina_conexio.h",        NIHIL, NIHIL, FALSUM, FALSUM },
+    { "officina/fontes/officina_machinula.h",      NIHIL, NIHIL, FALSUM, FALSUM },
     { "officina/fontes/officina_demissio.h",       NIHIL, NIHIL, FALSUM, FALSUM }
 };
 
@@ -177,6 +176,7 @@ interior constans AmalgamaPlagula CORPORA_OFFICINAE[] = {
     { "officina/fontes/officina_medulla_textus.c", NIHIL, NIHIL, VERUM, FALSUM },
     { "officina/fontes/officina_regio.c",          NIHIL, NIHIL, VERUM, FALSUM },
     { "officina/fontes/officina_conexio.c",        NIHIL, NIHIL, VERUM, FALSUM },
+    { "officina/fontes/officina_machinula.c",      NIHIL, NIHIL, VERUM, FALSUM },
     { "officina/fontes/officina_demissio.c",       NIHIL, NIHIL, VERUM, FALSUM }
 };
 
@@ -191,7 +191,8 @@ interior constans character* constans CADENDA_TYPEDEF[] = {
     "MedullaModulus", "MedullaLineae",
     "Regio",
     "ConexioSymbolumGenus", "ConexioDescriptor", "ConexioSymbolum",
-    "ConexioFunctioNexa", "Conexio", NIHIL
+    "ConexioFunctioNexa", "Conexio",
+    "MachinulaExitusGenus", "MachinulaExitus", "Machinula", NIHIL
 };
 
 interior constans character* constans CADENDA_DEFINITIO[] = {

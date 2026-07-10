@@ -45,9 +45,13 @@ nomen enumeratio {
 } ConexioSymbolumGenus;
 
 /* signa descriptorum - numquam 0 (memoria zephyrata numquam
- * descriptor validus); M2b addet AEDIFICATUM, M5 NATIVUM */
+ * descriptor validus); M5 addet NATIVUM. AEDIFICATUM: machinula
+ * decipulas notas in aedificata IN SITU rescribit (signum solum -
+ * inscriptiones descriptorum, iam in relocationibus sarcitae,
+ * immotae manent) */
 #define CONEXIO_SIGNUM_INTERPRETATUM 1
 #define CONEXIO_SIGNUM_DECIPULA      2
+#define CONEXIO_SIGNUM_AEDIFICATUM   3
 
 /* in regione residens; inscriptio huius EST valor monstratoris
  * functionis (16 octeti, XVI-ordinata) */

@@ -19,6 +19,7 @@
 
 #include "officina_demissio.h"
 #include "officina_conexio.h"
+#include "officina_machinula.h"
 #include "tabula_dispersa.h"
 
 #include <stdio.h>
@@ -83,7 +84,7 @@ _plagulam_demittere (constans SilvaContextus* ctx,
     mensura = (i32)mensura_l;
     si (mensura_maxima > ZEPHYRUM && mensura > (i32)mensura_maxima)
     {
-        imprimere("[PRAETERMISSA mensura] %s\n", via);
+        fprintf(stderr, "[PRAETERMISSA mensura] %s\n", via);
         fclose(pl);
         redde;
     }
@@ -121,7 +122,7 @@ _plagulam_demittere (constans SilvaContextus* ctx,
     si (parsura == NIHIL || !parsura->successus
         || parsura->numerus_errorum > ZEPHYRUM)
     {
-        imprimere("[PARSURA FRACTA] %s\n", via);
+        fprintf(stderr, "[PARSURA FRACTA] %s\n", via);
         parsurae_fractae++;
         silva_piscina_destruere(piscina_arboris);
         redde;
@@ -142,7 +143,7 @@ _plagulam_demittere (constans SilvaContextus* ctx,
         / (duplex)CLOCKS_PER_SEC;
     si (sem == NIHIL)
     {
-        imprimere("[SEMANTICA FRACTA] %s\n", via);
+        fprintf(stderr, "[SEMANTICA FRACTA] %s\n", via);
         parsurae_fractae++;
         silva_piscina_destruere(piscina_arboris);
         redde;
@@ -159,7 +160,7 @@ _plagulam_demittere (constans SilvaContextus* ctx,
         / (duplex)CLOCKS_PER_SEC;
     si (modulus == NIHIL)
     {
-        imprimere("[DEMISSIO RUIT] %s\n", via);
+        fprintf(stderr, "[DEMISSIO RUIT] %s\n", via);
         ruinae_demissionis++;
         silva_piscina_destruere(piscina_arboris);
         redde;
@@ -197,7 +198,7 @@ _plagulam_demittere (constans SilvaContextus* ctx,
         constans chorda* symbolum =
             conexio_querela_symbolum(conexio_mundi);
 
-        imprimere("[CONEXIO FRACTA] %s: %.*s (%.*s)\n", via,
+        fprintf(stderr, "[CONEXIO FRACTA] %s: %.*s (%.*s)\n", via,
             (int)querela->mensura,
             (constans character*)querela->datum,
             (int)symbolum->mensura,
@@ -485,21 +486,21 @@ s32 principale (vacuum)
     c1 = clock();
     ms_nexus = (duplex)(c1 - c0) * 1000.0 / (duplex)CLOCKS_PER_SEC;
 
-    imprimere("\n=== CURSOR: NEXUS MUNDI (M2a) ===\n");
-    imprimere("plagulae:    %ld (fractae %ld, ruinae %ld)\n",
+    fprintf(stderr, "\n=== CURSOR: NEXUS MUNDI (M2a) ===\n");
+    fprintf(stderr, "plagulae:    %ld (fractae %ld, ruinae %ld)\n",
         plagulae, parsurae_fractae, ruinae_demissionis);
-    imprimere("functiones:  %ld   data: %ld   instructiones: %ld\n",
+    fprintf(stderr, "functiones:  %ld   data: %ld   instructiones: %ld\n",
         summa_functionum, summa_datorum, summa_instructionum);
-    imprimere("symbola:     %ld globalia\n",
+    fprintf(stderr, "symbola:     %ld globalia\n",
         (long)conexio_numerus_symbolorum(conexio_mundi));
-    imprimere("nexae:       %ld functiones | %ld data | %ld"
+    fprintf(stderr, "nexae:       %ld functiones | %ld data | %ld"
         " cellae\n",
         (long)conexio_numerus_functionum(conexio_mundi),
         (long)conexio_numerus_datorum(conexio_mundi),
         (long)conexio_numerus_cellarum(conexio_mundi));
-    imprimere("globalia:    %.1f MB collocata\n",
+    fprintf(stderr, "globalia:    %.1f MB collocata\n",
         (duplex)regio_globalia_usus(regio) / 1048576.0);
-    imprimere("tempus:      arbor %.0f ms | demissio %.0f ms |"
+    fprintf(stderr, "tempus:      arbor %.0f ms | demissio %.0f ms |"
         " nexus %.0f ms\n", ms_arboris, ms_demissionis, ms_nexus);
 
     /* decipulae: numeratae + NOMINATAE (vectis M2a) */
@@ -507,14 +508,14 @@ s32 principale (vacuum)
         i32 numerus = conexio_numerus_decipularum(conexio_mundi);
         i32 i;
 
-        imprimere("decipulae:   %ld (ruunt solum si vocatae)\n",
+        fprintf(stderr, "decipulae:   %ld (ruunt solum si vocatae)\n",
             (long)numerus);
         per (i = ZEPHYRUM; i < numerus; i += I)
         {
             constans chorda* titulus = conexio_decipulam_obtinere(
                 conexio_mundi, (s32)i);
 
-            imprimere("    %.*s\n", (int)titulus->mensura,
+            fprintf(stderr, "    %.*s\n", (int)titulus->mensura,
                 (constans character*)titulus->datum);
         }
     }
@@ -534,12 +535,51 @@ s32 principale (vacuum)
             fprintf(stderr, "cursor: $main NON inventum\n");
             redde I;
         }
-        imprimere("$main:       inventum (descriptor %p)\n", sedes);
-    }
+        fprintf(stderr, "$main:       inventum (descriptor %p)\n", sedes);
 
-    si (parsurae_fractae > 0L || ruinae_demissionis > 0L)
-    {
-        redde I;
+        si (parsurae_fractae > 0L || ruinae_demissionis > 0L)
+        {
+            redde I;
+        }
+
+        /* M2b: EXSECUTIO - machinula $main currit; stdout =
+         * exitus programmatis PURUS (vectis diff) */
+        {
+            Machinula* machinula = machinula_creare(piscina_ctx,
+                conexio_mundi, regio);
+            MachinulaExitus fructus_exsecutionis;
+            duplex ms_exsecutionis;
+
+            si (machinula == NIHIL)
+            {
+                fprintf(stderr, "cursor: machinula deest\n");
+                redde I;
+            }
+            c0 = clock();
+            fructus_exsecutionis = machinula_currere(machinula,
+                titulus_main);
+            c1 = clock();
+            ms_exsecutionis = (duplex)(c1 - c0) * 1000.0
+                / (duplex)CLOCKS_PER_SEC;
+            fflush(stdout);
+            fprintf(stderr, "exsecutio:   genus %d, codex %ld,"
+                " %.0f ms\n", (int)fructus_exsecutionis.genus,
+                (long)fructus_exsecutionis.codex, ms_exsecutionis);
+            fprintf(stderr, "machinula:   %llu instructiones |"
+                " %llu vocationes | %llu aedificata | apex stivae"
+                " %.1f KB\n",
+                (insignatus longus longus)
+                    machinula_numerus_instructionum(machinula),
+                (insignatus longus longus)
+                    machinula_numerus_vocationum(machinula),
+                (insignatus longus longus)
+                    machinula_numerus_aedificatorum(machinula),
+                (duplex)machinula_stiva_apex(machinula) / 1024.0);
+            si (fructus_exsecutionis.genus != MACHINULA_BENE)
+            {
+                redde I;
+            }
+            redde (s32)fructus_exsecutionis.codex;
+        }
     }
-    redde ZEPHYRUM;
 }

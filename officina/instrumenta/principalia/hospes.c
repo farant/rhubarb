@@ -412,6 +412,49 @@ int main(void)
         }
     }
 
+    /* M2b: machinula per superficiem publicam */
+    {
+        static const char* TEXTUS_M =
+            "modulus \"m.medulla\"\n"
+            "\n"
+            "functio $quadra (s32 %x) -> s32\n"
+            "@initium:\n"
+            "    %t = multiplicare.s32 %x, %x\n"
+            "    redde %t\n"
+            "\n"
+            "functio $main () -> s32\n"
+            "@initium:\n"
+            "    %a = vocare.s32 $quadra, 6\n"
+            "    %t = addere.s32 %a, 6\n"
+            "    redde %t\n";
+        OfficinaChorda textus = ch(TEXTUS_M);
+        unsigned int linea = 0;
+        MedullaModulus* modulus_m = medulla_textum_legere(piscina,
+            textus, &linea);
+        Regio* regio = regio_generare(piscina);
+        Conexio* conexio = conexio_creare(piscina, regio);
+        Machinula* machinula;
+        MachinulaExitus fructus_m;
+
+        proba(modulus_m != NULL && regio != NULL && conexio != NULL
+            && conexio_modulum_addere(conexio, modulus_m)
+            && conexio_nectere(conexio), "machinula praeparatio");
+        machinula = machinula_creare(piscina, conexio, regio);
+        proba(machinula != NULL, "machinula creare");
+        machinula_lineas_praebere(machinula, 0, NULL);
+        fructus_m = machinula_currere(machinula, ch("main"));
+        proba(fructus_m.genus == MACHINULA_BENE
+            && fructus_m.codex == 42, "machinula currere");
+        proba(machinula_numerus_instructionum(machinula) > 0
+            && machinula_numerus_op(machinula,
+                   MEDULLA_OP_MULTIPLICARE) == 1
+            && machinula_numerus_vocationum(machinula) == 2
+            && machinula_numerus_aedificatorum(machinula) == 0
+            && machinula_stiva_apex(machinula) > 0,
+            "machinula census");
+        regio_destruere(regio);
+    }
+
     /* M2a: lineae per claves opacas */
     {
         MedullaLineae* lineae = medulla_lineas_creare(piscina);

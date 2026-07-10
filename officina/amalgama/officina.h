@@ -430,6 +430,46 @@ const OfficinaChorda* conexio_decipulam_obtinere(
     const Conexio* conexio, int index);
 
 /* ==================================================
+ * Machinula (M2b): interpres medullae
+ *
+ * Canonicum-in-scriptura; recordator volatus semper activus
+ * (relatio halitus ad stderr); aedificata tabula statica interna
+ * (series publica ad M4); exit = vexillum; sistere exsecutum =
+ * halitus cum causa.
+ * ================================================== */
+
+typedef enum {
+    MACHINULA_BENE = 0,
+    MACHINULA_SISTERE,
+    MACHINULA_DECIPULA,
+    MACHINULA_VITIUM
+} MachinulaExitusGenus;
+
+typedef struct {
+    int            genus;
+    long long      codex;
+    OfficinaChorda nuntius;
+} MachinulaExitus;
+
+typedef struct Machinula Machinula;
+
+Machinula* machinula_creare(OfficinaPiscina* piscina,
+    Conexio* conexio, Regio* regio);
+void machinula_lineas_praebere(Machinula* machinula,
+    int modulus_index, const MedullaLineae* lineae);
+MachinulaExitus machinula_currere(Machinula* machinula,
+    OfficinaChorda titulus_functionis);
+unsigned long long machinula_numerus_instructionum(
+    const Machinula* machinula);
+unsigned long long machinula_numerus_op(const Machinula* machinula,
+    int op);
+unsigned long long machinula_numerus_vocationum(
+    const Machinula* machinula);
+unsigned long long machinula_numerus_aedificatorum(
+    const Machinula* machinula);
+size_t machinula_stiva_apex(const Machinula* machinula);
+
+/* ==================================================
  * Demissio (M1b): arbor typata -> medulla
  *
  * Typi silvae TAG-SOLUM hic (officina.h sine silva.h manet);

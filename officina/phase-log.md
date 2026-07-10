@@ -688,3 +688,43 @@ cells wired; errno write-back mechanism; the 9 fixtures EXECUTE with
 asserted exit values; summa.medulla = walking skeleton). BAR:
 **probatio_piscina GREEN interpreted** (exit 0 + stdout
 byte-identical to native — the memory-model gate).
+
+### M2b — RELATIO (2026-07-10): machinula core + pavimentum SHIPPED
+
+**BAR GREEN: probatio_piscina INTERPRETATA — exitus 0 ET stdout
+BYTE-IDEM nativo.** Porta modelli memoriae clausa: identitas
+monstratorum trans reficere, ordinatio XVI per valores veros, reusus
+arenae — omnia interpretata asserta. 46,521 instructiones, 2,103
+vocationes, 871 aedificata, 3 ms. Fistula TOTA clausa: fons C89 →
+silva → semantica → demissio → conexio → MACHINULA → mores
+observabiles identici clang nativo.
+
+Shipped: officina_machinula.{h,c} (~1700 lineae, compilatio prima
+munda): dispensatio commutatione 35 operationum; CANONICUM-IN-
+SCRIPTURA (DECISUS Q4) — arithmetica integralis in i64 insignato
+(involutio definita), divisio honesta; tabulata in stiva regionis
+(cursor per redde restauratus, arca probata, tectum 1M tabulatorum);
+recordator volatus SEMPER ACTIVUS (anulus 4096 + relatio halitus:
+positio + stiva vocationum + cauda anuli, via:linea per lineas
+distillatas); numeratores (per-op/vocationes/aedificata/apex);
+CANALIS UNUS aedificatorum (sedes v2) + ligatio in-situ
+(decipulae→AEDIFICATUM, signum solum); pavimentum 14 aedificatorum
+(malloc/free/realloc/str*/mem*/fabs/exit/printf-familia) + formator
+plenus (%.*s, latitudo *, %zu/%lld); ansae stdout/stderr; cella
+errno capta (scriptura-retro M2c). Fixturae 9 EXSECUTANTUR (omnes
+→42); halitus honesti probati (sistere causa, decipula, exit 7,
+recursio, functio absens). probatio_officina_machinula 63 asserts;
+cursor exsecutionem crevit (diagnostica→stderr, stdout purus pro
+diff). Amalgama: hospes 61/61 VERIFICATUM; suite 6/6.
+
+Inventa primi contactus (fixturae): SYMBOLUM ut argumentum vocationis
+(_valor_operandi sedem resolvit); vitium in argumentis vocationem
+non sistebat (ruina hospitis — probatio currens addita); recursio
+infinita 4GB stivae legitime implebat (tectum profunditatis).
+
+**NEXT: M2c — cursor + Unda 0** (tabula classificationis + columna
+stdout-diff + tempus per plagulam; aedificata residua Undae 0 dum
+tabula ea trahit: strtol+errno, mathematica, ctype, atoi/strtod;
+exclusiones nominatae; tectum biblia_dr). BAR: Unda 0 VIRIDIS (~65
+suites). Lex contactus corporis: 5 puncta data (3/8/3/3) — dies
+inventorum computa.
