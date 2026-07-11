@@ -1072,6 +1072,55 @@ int main(void)
         }
     }
 
+    /* examen M4a chunk A: diagnosticum v2 - identificator ignotus
+     * figitur, ordines novi leguntur (codex/severitas/positio/
+     * provisionale/socius; via ex parsura ambulationis) */
+    {
+        static const char fons_ex[] =
+            "static int q = mysterium;\n";
+        SilvaParsura* parsura_ex = silva_c89_parsare(piscina,
+            "hospes_examen.c", fons_ex,
+            (unsigned int)(sizeof(fons_ex) - 1), NULL);
+        int bene_ex = 0;
+
+        summa++;
+        if (parsura_ex != NULL)
+        {
+            SilvaSemantica* sem_ex =
+                silva_c89_semantica_analysare(piscina, parsura_ex);
+
+            if (sem_ex != NULL
+                && silva_c89_diagnostica_numerus(sem_ex) == 1)
+            {
+                const SemanticaDiagnosticum* d =
+                    silva_c89_diagnosticum_per_indicem(sem_ex, 0);
+
+                if (d != NULL
+                    && d->codex
+                        == (int)EXAMEN_CODEX_IDENTIFICATOR_IGNOTUS
+                    && d->severitas == (int)EXAMEN_VIOLATIO
+                    && d->provisionale == 0
+                    && d->linea == 1
+                    && d->columna == 16
+                    && d->via.mensura > 0
+                    && d->causa != NULL
+                    && d->socius == NULL
+                    && d->nodus != NULL)
+                {
+                    bene_ex = 1;
+                }
+            }
+        }
+        if (bene_ex)
+        {
+            fideles++;
+        }
+        else
+        {
+            fprintf(stderr, "hospes: INFIDELIS: examen\n");
+        }
+    }
+
     /* telemetria arenae */
     {
         size_t usus = silva_piscina_summa_usus(piscina);

@@ -1205,9 +1205,75 @@ typedef struct {
     SilvaToken*       lexema;
 } SemanticaSymbolum;
 
+/* Examen (M4a chunk A): severitas + codices diagnosticorum.
+ * INFRA = lacuna instrumentorum, numquam iudicium (verdicta ordines
+ * INFRA excludunt, ut provisionales). */
+typedef enum {
+    EXAMEN_VIOLATIO = 0,
+    EXAMEN_SUSPECTUM,
+    EXAMEN_DOMESTICUM,
+    EXAMEN_INFRA
+} ExamenSeveritas;
+
+/* Codex stabilis per nuntium - ordo tabulae internae; NE INSERE -
+ * adde ante NUMERUS (stabilitas pro vecte differentiali). */
+typedef enum {
+    EXAMEN_CODEX_REDECLARATIO_GENERIS = 0,
+    EXAMEN_CODEX_TAG_SINE_CORPORE,
+    EXAMEN_CODEX_ENUMERATIO_SINE_CORPORE,
+    EXAMEN_CODEX_ENUMERATOR_NON_CONSTANS,
+    EXAMEN_CODEX_TYPUS_NOMINATUS_IGNOTUS,   /* INFRA: LEXICON_DEEST */
+    EXAMEN_CODEX_ERROR_IN_SPECIFICATORIBUS,
+    EXAMEN_CODEX_SPECIFICATORES_MIXTI,
+    EXAMEN_CODEX_MULTISET_PRIMITIVORUM,
+    EXAMEN_CODEX_MENSURA_ACIEI,
+    EXAMEN_CODEX_ERROR_IN_DECLARATORE,
+    EXAMEN_CODEX_GENUS_DECLARATORIS,        /* INFRA: cautela */
+    EXAMEN_CODEX_SPECIES_TYPI_EXSPECTATA,
+    EXAMEN_CODEX_DECLARATIONES_KR,          /* INFRA: parca */
+    EXAMEN_CODEX_CYCLUS_FORMAE,
+    EXAMEN_CODEX_FORMA_ACIEI_INCOMPLETAE,
+    EXAMEN_CODEX_FORMA_FUNCTIONIS,
+    EXAMEN_CODEX_CAMPI_PARCATI,             /* INFRA: parca */
+    EXAMEN_CODEX_CHORDA_LATA,               /* INFRA: parca */
+    EXAMEN_CODEX_FUGA_INVALIDA,
+    EXAMEN_CODEX_LITTERALE_INVALIDUM,
+    EXAMEN_CODEX_IDENTIFICATOR_IGNOTUS,
+    EXAMEN_CODEX_TYPEDEF_IN_EXPRESSIONE,
+    EXAMEN_CODEX_TYPEDEF_VOCATUM,
+    EXAMEN_CODEX_OPERANDUM_UNARII,
+    EXAMEN_CODEX_OPERANDUM_TILDE,
+    EXAMEN_CODEX_DEIECTIO_NON_MONSTRATORIS,
+    EXAMEN_CODEX_CREMENTUM_NON_SCALARE,
+    EXAMEN_CODEX_MULTIPLICATIVA,
+    EXAMEN_CODEX_OPERANDA_NON_INTEGRALIA,
+    EXAMEN_CODEX_ADDITIVA_INCOMPATIBILIA,
+    EXAMEN_CODEX_SUBTRACTIONIS_INCOMPATIBILIA,
+    EXAMEN_CODEX_MOTUS_NON_INTEGRALIA,
+    EXAMEN_CODEX_COMPARATIO_INCOMPATIBILIUM,
+    EXAMEN_CODEX_BRACCHIA_TERNARII,
+    EXAMEN_CODEX_SUBSCRIPTIO_NON_MONSTRATORIS,
+    EXAMEN_CODEX_VOCATUS_NON_FUNCTIO,
+    EXAMEN_CODEX_SAGITTA_NON_MONSTRATORIS,
+    EXAMEN_CODEX_ACCESSUS_NON_STRUCTURAE,
+    EXAMEN_CODEX_ACCESSUS_INCOMPLETAE,
+    EXAMEN_CODEX_MEMBRUM_IGNOTUM,
+    EXAMEN_CODEX_ELISIO_UNCORUM,            /* INFRA: parca */
+    EXAMEN_CODEX_NUMERUS
+} ExamenCodex;
+
+/* Diagnosticum v2 (M4a chunk A): positio materializata tempore
+ * additionis; vita viae = vita parsurae ambulationis. */
 typedef struct {
-    const SilvaNodus* nodus;
-    const char*       causa;
+    const SilvaNodus* nodus;        /* NULL licet */
+    const char*       causa;        /* litterae staticae (ex tabula) */
+    int               codex;        /* ExamenCodex */
+    int               severitas;    /* ExamenSeveritas */
+    int               provisionale; /* sub AMBIGUO retento */
+    SilvaChorda       via;          /* radicis; vacua si ignota */
+    unsigned int      linea;        /* 1-basata; 0 si ignota */
+    unsigned int      columna;      /* 1-basata; 0 si ignota */
+    const SilvaNodus* socius;       /* sedes cognata; NULL licet */
 } SemanticaDiagnosticum;
 
 typedef struct SilvaSemantica SilvaSemantica;   /* opaca */
@@ -3995,8 +4061,9 @@ silva_c89_parsare_cum_contextu (
  *
  * PARCA NOMINATA (consilium §IX/XI + INTENTIO): campi (bitfields) -
  * forma tag venenatur, membrum typatur; magnitudo-expressionis in
- * aestimatore (typum expressionis postulat = M0b); initiatores non
- * probantur (M0b); K&R; vide phase-log.
+ * aestimatore (typum expressionis postulat = M0b); completio aciei
+ * per initiatorem FACTA (2026-07-10), VALIDATIO initiatorum parca
+ * (project-specs/c89-lacunae.md); K&R; vide phase-log.
  */
 
 #ifndef SILVA_C89_SEMANTICA_H
@@ -4058,12 +4125,23 @@ structura SilvaSemantica {
     TypusC89* reditus_currens;
 
     b32 in_systemate;           /* vexillum ambulationis (provenientia) */
+
+    /* parsura ambulationis currentis (M4a chunk A): analysare eam
+     * ponit per ambulationem (systema, deinde usoris) - fons viae
+     * diagnosticorum; NIHIL licet (positio tunc sine via) */
+    constans SilvaParsura* parsura_currens;
 };
 
 SilvaSemantica* silva_c89_semantica_creare (SilvaPiscina* piscina);
 
+/* Diagnosticum addere (M4a chunk A): codex -> {causa, severitas} ex
+ * tabula unica; positio/provisionale materializantur hic. Socius =
+ * sedes cognata (declaratio prior, etc.). */
 vacuum silva_c89_diagnosticum_addere (SilvaSemantica* sem,
-    constans SilvaNodus* nodus, constans character* causa);
+    constans SilvaNodus* nodus, s32 codex);
+vacuum silva_c89_diagnosticum_addere_cum_socio (SilvaSemantica* sem,
+    constans SilvaNodus* nodus, s32 codex,
+    constans SilvaNodus* socius);
 
 /* ==================================================
  * Constructio typorum (fabricae internantes)
@@ -34599,11 +34677,191 @@ interior TypusC89* _qualibus_exutum (TypusC89* typus);
 interior vacuum _congeriem_typare (SilvaSemantica* sem,
     constans SilvaNodus* congeries, TypusC89* scopus_typus);
 
+/* ==================================================
+ * Diagnosticum v2 (examen, M4a chunk A)
+ * ================================================== */
+
+interior b32 _intra_ambiguum (constans SilvaNodus* nodus);
+
+/* Tabula codicum - FONS UNICUS {causa, severitas}; ordo == ordo
+ * ExamenCodex in capite (assertum magnitudinis infra). */
+nomen structura {
+    constans character* causa;
+    s32                 severitas;
+} ExamenCodexInformatio;
+
+interior constans ExamenCodexInformatio _codices[] = {
+    { "redeclaratio generis diversi eodem scopo", EXAMEN_VIOLATIO },
+    { "tag sine titulo sine corpore",             EXAMEN_VIOLATIO },
+    { "enumeratio sine titulo sine corpore",      EXAMEN_VIOLATIO },
+    { "valor enumeratoris non constans",          EXAMEN_VIOLATIO },
+    { "typus nominatus ignotus",                  EXAMEN_INFRA },
+    { "nodus erroris in specificatoribus",        EXAMEN_VIOLATIO },
+    { "specificatores primitivi et nominati mixti", EXAMEN_VIOLATIO },
+    { "multiset primitivorum invalidum",          EXAMEN_VIOLATIO },
+    { "mensura aciei non constans positiva",      EXAMEN_VIOLATIO },
+    { "nodus erroris in declaratore",             EXAMEN_VIOLATIO },
+    { "genus declaratoris inexspectatum",         EXAMEN_INFRA },
+    { "species-typi exspectata",                  EXAMEN_VIOLATIO },
+    { "declarationes K&R - parca nominata",       EXAMEN_INFRA },
+    { "cyclus formae (structura se continens)",   EXAMEN_VIOLATIO },
+    { "forma aciei incompletae",                  EXAMEN_VIOLATIO },
+    { "forma functionis petita",                  EXAMEN_VIOLATIO },
+    { "campi (bitfields) - forma parcata",        EXAMEN_INFRA },
+    { "chorda lata (L) - parca nominata",         EXAMEN_INFRA },
+    { "fuga invalida in chorda litterali",        EXAMEN_VIOLATIO },
+    { "litterale integrum invalidum",             EXAMEN_VIOLATIO },
+    { "identificator ignotus in expressione",     EXAMEN_VIOLATIO },
+    { "typedef in expressione",                   EXAMEN_VIOLATIO },
+    { "typedef vocatum",                          EXAMEN_VIOLATIO },
+    { "operandum unarii non arithmeticum",        EXAMEN_VIOLATIO },
+    { "operandum ~ non integrale",                EXAMEN_VIOLATIO },
+    { "deiectio non monstratoris",                EXAMEN_VIOLATIO },
+    { "operandum crementi non scalare",           EXAMEN_VIOLATIO },
+    { "operanda multiplicativa non arithmetica",  EXAMEN_VIOLATIO },
+    { "operanda non integralia",                  EXAMEN_VIOLATIO },
+    { "operanda additiva incompatibilia",         EXAMEN_VIOLATIO },
+    { "operanda subtractionis incompatibilia",    EXAMEN_VIOLATIO },
+    { "operanda motus non integralia",            EXAMEN_VIOLATIO },
+    { "comparatio incompatibilium",               EXAMEN_VIOLATIO },
+    { "bracchia ternarii incompatibilia",         EXAMEN_VIOLATIO },
+    { "subscriptio non monstratoris",             EXAMEN_VIOLATIO },
+    { "vocatus non functio",                      EXAMEN_VIOLATIO },
+    { "sagitta non monstratoris",                 EXAMEN_VIOLATIO },
+    { "accessus non structurae",                  EXAMEN_VIOLATIO },
+    { "accessus structurae incompletae",          EXAMEN_VIOLATIO },
+    { "membrum ignotum",                          EXAMEN_VIOLATIO },
+    { "elisio uncorum congeriei - parca nominata", EXAMEN_INFRA }
+};
+
+/* assertum: tabula == enumeratio (acies negativa si discrepant) */
+nomen character _assertum_codicum[
+    (magnitudo(_codices) / magnitudo(_codices[0])
+        == (memoriae_index)EXAMEN_CODEX_NUMERUS) ? I : -I];
+
+/* Lexema primum nodi (repraesentans positionis): loci ordine, TOKEN
+ * primum inventum; NODUS et LISTA recursive. NIHIL si nullum. */
+interior SilvaToken*
+_lexema_primum (constans SilvaNodus* nodus)
+{
+    i32 i;
+
+    si (nodus == NIHIL)
+    {
+        redde NIHIL;
+    }
+    per (i = ZEPHYRUM; i < nodus->numerus_locorum; i++)
+    {
+        constans SilvaValor* v = &nodus->loci[i];
+
+        si (v->genus == SILVA_VALOR_TOKEN
+            && v->datum.token != NIHIL)
+        {
+            redde v->datum.token;
+        }
+        alioquin si (v->genus == SILVA_VALOR_NODUS)
+        {
+            SilvaToken* t = _lexema_primum(v->datum.nodus);
+
+            si (t != NIHIL)
+            {
+                redde t;
+            }
+        }
+        alioquin si (v->genus == SILVA_VALOR_LISTA)
+        {
+            i32 j;
+            i32 m = (i32)silva_valor_lista_numerus(*v);
+
+            per (j = ZEPHYRUM; j < m; j++)
+            {
+                SilvaValor* e = silva_valor_lista_obtinere(*v, (i32)j);
+
+                si (e == NIHIL)
+                {
+                    perge;
+                }
+                si (e->genus == SILVA_VALOR_TOKEN
+                    && e->datum.token != NIHIL)
+                {
+                    redde e->datum.token;
+                }
+                alioquin si (e->genus == SILVA_VALOR_NODUS)
+                {
+                    SilvaToken* t = _lexema_primum(e->datum.nodus);
+
+                    si (t != NIHIL)
+                    {
+                        redde t;
+                    }
+                }
+            }
+        }
+    }
+    redde NIHIL;
+}
+
+/* Nodus primus listae (positio pro diagnosticis listarum -
+ * specificatores mixti/invalidi ipsa lista sunt) */
+interior constans SilvaNodus*
+_nodus_primus_listae (SilvaValor lista)
+{
+    i32 i;
+    i32 m = silva_valor_lista_numerus(lista);
+
+    per (i = ZEPHYRUM; i < m; i++)
+    {
+        SilvaValor* e = silva_valor_lista_obtinere(lista, i);
+
+        si (e != NIHIL && e->genus == SILVA_VALOR_NODUS)
+        {
+            redde e->datum.nodus;
+        }
+    }
+    redde NIHIL;
+}
+
+/* Declarans typi (positio pro diagnosticis formae - cycli et acies
+ * incompletae per tags eunt; functio sine declarante = NIHIL) */
+interior constans SilvaNodus*
+_declarans_typi (constans TypusC89* typus)
+{
+    dum (typus != NIHIL)
+    {
+        commutatio (typus->genus)
+        {
+            casus TYPUS_C89_STRUCTURA:
+            casus TYPUS_C89_UNIO:
+            casus TYPUS_C89_ENUMERATUS:
+                redde typus->datum.tag.declarans;
+            casus TYPUS_C89_QUALIFICATUS:
+                typus = typus->datum.qualificatus.internum;
+                frange;
+            casus TYPUS_C89_ACIES:
+                typus = typus->datum.acies.elementum;
+                frange;
+            ordinarius:
+                redde NIHIL;
+        }
+    }
+    redde NIHIL;
+}
+
 vacuum
 silva_c89_diagnosticum_addere (
     SilvaSemantica*      sem,
     constans SilvaNodus* nodus,
-    constans character*  causa)
+    s32                  codex)
+{
+    silva_c89_diagnosticum_addere_cum_socio(sem, nodus, codex, NIHIL);
+}
+
+vacuum
+silva_c89_diagnosticum_addere_cum_socio (
+    SilvaSemantica*      sem,
+    constans SilvaNodus* nodus,
+    s32                  codex,
+    constans SilvaNodus* socius)
 {
     SemanticaDiagnosticum* d;
 
@@ -34612,10 +34870,55 @@ silva_c89_diagnosticum_addere (
         redde;
     }
     d = (SemanticaDiagnosticum*)silva_xar_addere(sem->diagnostica);
-    si (d != NIHIL)
+    si (d == NIHIL)
     {
-        d->nodus = nodus;
-        d->causa = causa;
+        redde;
+    }
+    d->nodus = nodus;
+    d->socius = socius;
+    si (codex >= ZEPHYRUM && codex < (s32)EXAMEN_CODEX_NUMERUS)
+    {
+        d->codex = codex;
+        d->causa = _codices[codex].causa;
+        d->severitas = _codices[codex].severitas;
+    }
+    alioquin
+    {
+        d->codex = -I;
+        d->causa = "codex ignotus";
+        d->severitas = EXAMEN_INFRA;
+    }
+    d->provisionale = _intra_ambiguum(nodus);
+    d->via.mensura = ZEPHYRUM;
+    d->via.datum = NIHIL;
+    d->linea = ZEPHYRUM;
+    d->columna = ZEPHYRUM;
+    si (nodus != NIHIL)
+    {
+        SilvaToken* lexema = _lexema_primum(nodus);
+
+        si (lexema != NIHIL)
+        {
+            SilvaToken* radix = silva_token_radix(lexema);
+
+            si (radix != NIHIL)
+            {
+                d->linea = radix->linea;
+                d->columna = radix->columna;
+                si (sem->parsura_currens != NIHIL
+                    && sem->parsura_currens->expansio != NIHIL)
+                {
+                    constans SilvaChorda* v = silva_fons_via(
+                        sem->parsura_currens->expansio,
+                        radix->fons_index);
+
+                    si (v != NIHIL)
+                    {
+                        d->via = *v;
+                    }
+                }
+            }
+        }
     }
 }
 
@@ -34715,7 +35018,7 @@ _symbolum_registrare (SilvaSemantica* sem, s32 genus,
             && ((SemanticaSymbolum*)prior)->genus != genus)
         {
             silva_c89_diagnosticum_addere(sem, declarans,
-                "redeclaratio generis diversi eodem scopo");
+                EXAMEN_CODEX_REDECLARATIO_GENERIS);
         }
     }
     symbolum = (SemanticaSymbolum*)silva_piscina_allocare(sem->piscina,
@@ -35272,7 +35575,7 @@ _tag_tractare (SilvaSemantica* sem, constans SilvaNodus* nodus,
         si (!nominata)
         {
             silva_c89_diagnosticum_addere(sem, nodus,
-                "tag sine titulo sine corpore");
+                EXAMEN_CODEX_TAG_SINE_CORPORE);
             redde sem->typus_erroris;
         }
         typus = _tag_invenire(sem, titulus_v.datum.token->valor);
@@ -35443,7 +35746,7 @@ _enumerationem_tractare (SilvaSemantica* sem,
         si (!nominata)
         {
             silva_c89_diagnosticum_addere(sem, nodus,
-                "enumeratio sine titulo sine corpore");
+                EXAMEN_CODEX_ENUMERATIO_SINE_CORPORE);
             redde sem->typus_erroris;
         }
         typus = _tag_invenire(sem, titulus_v.datum.token->valor);
@@ -35507,7 +35810,7 @@ _enumerationem_tractare (SilvaSemantica* sem,
                 alioquin
                 {
                     silva_c89_diagnosticum_addere(sem, e,
-                        "valor enumeratoris non constans");
+                        EXAMEN_CODEX_ENUMERATOR_NON_CONSTANS);
                 }
                 _valorem_typare(sem, valor_v);   /* expressio quoque */
             }
@@ -35639,7 +35942,7 @@ _typus_ex_specificatoribus_interior (SilvaSemantica* sem,
                     si (nominatus == NIHIL)
                     {
                         silva_c89_diagnosticum_addere(sem, n,
-                            "typus nominatus ignotus");
+                            EXAMEN_CODEX_TYPUS_NOMINATUS_IGNOTUS);
                     }
                 }
                 frange;
@@ -35658,7 +35961,7 @@ _typus_ex_specificatoribus_interior (SilvaSemantica* sem,
                 frange;
             casus (s32)SILVA_C89_GENUS_ERROR:
                 silva_c89_diagnosticum_addere(sem, n,
-                    "nodus erroris in specificatoribus");
+                    EXAMEN_CODEX_ERROR_IN_SPECIFICATORIBUS);
                 frange;
             ordinarius:
                 frange;
@@ -35676,8 +35979,9 @@ _typus_ex_specificatoribus_interior (SilvaSemantica* sem,
 
     si (habet_primitiva && habet_nominatum)
     {
-        silva_c89_diagnosticum_addere(sem, NIHIL,
-            "specificatores primitivi et nominati mixti");
+        silva_c89_diagnosticum_addere(sem,
+            _nodus_primus_listae(specificatores),
+            EXAMEN_CODEX_SPECIFICATORES_MIXTI);
         redde sem->typus_erroris;
     }
     si (habet_nominatum)
@@ -35690,8 +35994,9 @@ _typus_ex_specificatoribus_interior (SilvaSemantica* sem,
 
         si (p < ZEPHYRUM)
         {
-            silva_c89_diagnosticum_addere(sem, NIHIL,
-                "multiset primitivorum invalidum");
+            silva_c89_diagnosticum_addere(sem,
+                _nodus_primus_listae(specificatores),
+                EXAMEN_CODEX_MULTISET_PRIMITIVORUM);
             redde sem->typus_erroris;
         }
         basis = sem->primitivi[p];
@@ -35941,7 +36246,7 @@ silva_c89_typus_ex_declaratore (SilvaSemantica* sem,
                     alioquin
                     {
                         silva_c89_diagnosticum_addere(sem, declarator,
-                            "mensura aciei non constans positiva");
+                            EXAMEN_CODEX_MENSURA_ACIEI);
                     }
                     _valorem_typare(sem, mensura_v);   /* M0b */
                 }
@@ -35970,11 +36275,11 @@ silva_c89_typus_ex_declaratore (SilvaSemantica* sem,
             }
             casus (s32)SILVA_C89_GENUS_ERROR:
                 silva_c89_diagnosticum_addere(sem, declarator,
-                    "nodus erroris in declaratore");
+                    EXAMEN_CODEX_ERROR_IN_DECLARATORE);
                 redde sem->typus_erroris;
             ordinarius:
                 silva_c89_diagnosticum_addere(sem, declarator,
-                    "genus declaratoris inexspectatum");
+                    EXAMEN_CODEX_GENUS_DECLARATORIS);
                 redde sem->typus_erroris;
         }
     }
@@ -35996,7 +36301,7 @@ silva_c89_typus_ex_specie (SilvaSemantica* sem,
     si (species->genus != (s32)SILVA_C89_GENUS_SPECIES_TYPI)
     {
         silva_c89_diagnosticum_addere(sem, species,
-            "species-typi exspectata");
+            EXAMEN_CODEX_SPECIES_TYPI_EXSPECTATA);
         redde sem->typus_erroris;
     }
     basis = _typus_ex_specificatoribus_interior(sem,
@@ -36358,7 +36663,7 @@ _definitionem_ambulare (SilvaSemantica* sem,
         /* K&R - parca nominata (corpus eam continere non potest:
          * -Wstrict-prototypes -Werror; typus non prototypatus) */
         silva_c89_diagnosticum_addere(sem, definitio,
-            "declarationes K&R - parca nominata");
+            EXAMEN_CODEX_DECLARATIONES_KR);
     }
     /* typus reditus pro conversione redde (M0b B) */
     reditus_prior = sem->reditus_currens;
@@ -36542,9 +36847,11 @@ silva_c89_semantica_analysare_cum_systemate (SilvaPiscina* piscina,
     si (systema != NIHIL && systema->commissio != NIHIL)
     {
         sem->in_systemate = VERUM;
+        sem->parsura_currens = systema;
         _listam_ambulare(sem, systema->commissio->radix);
         sem->in_systemate = FALSUM;
     }
+    sem->parsura_currens = parsura;
     _listam_ambulare(sem, parsura->commissio->radix);
     redde sem;
 }
@@ -36687,8 +36994,8 @@ silva_c89_formam_computare (SilvaSemantica* sem, TypusC89* typus)
     }
     si (typus->in_computatione)
     {
-        silva_c89_diagnosticum_addere(sem, NIHIL,
-            "cyclus formae (structura se continens)");
+        silva_c89_diagnosticum_addere(sem, _declarans_typi(typus),
+            EXAMEN_CODEX_CYCLUS_FORMAE);
         redde FALSUM;
     }
     typus->in_computatione = VERUM;
@@ -36723,13 +37030,14 @@ silva_c89_formam_computare (SilvaSemantica* sem, TypusC89* typus)
             }
             alioquin
             {
-                silva_c89_diagnosticum_addere(sem, NIHIL,
-                    "forma aciei incompletae");
+                silva_c89_diagnosticum_addere(sem,
+                    _declarans_typi(typus),
+                    EXAMEN_CODEX_FORMA_ACIEI_INCOMPLETAE);
             }
             frange;
         casus TYPUS_C89_FUNCTIO:
-            silva_c89_diagnosticum_addere(sem, NIHIL,
-                "forma functionis petita");
+            silva_c89_diagnosticum_addere(sem, _declarans_typi(typus),
+                EXAMEN_CODEX_FORMA_FUNCTIONIS);
             frange;
         casus TYPUS_C89_STRUCTURA:
         casus TYPUS_C89_UNIO:
@@ -36746,7 +37054,7 @@ silva_c89_formam_computare (SilvaSemantica* sem, TypusC89* typus)
             {
                 silva_c89_diagnosticum_addere(sem,
                     typus->datum.tag.declarans,
-                    "campi (bitfields) - forma parcata");
+                    EXAMEN_CODEX_CAMPI_PARCATI);
             }
             per (k = ZEPHYRUM;
                  bene && k < (i32)typus->datum.tag.numerus_membrorum;
@@ -38009,7 +38317,7 @@ _chordae_litteralis_octeti (SilvaSemantica* sem,
         si (tok->valor.datum[ZEPHYRUM] == 'L')
         {
             silva_c89_diagnosticum_addere(sem, nodus,
-                "chorda lata (L) - parca nominata");
+                EXAMEN_CODEX_CHORDA_LATA);
             redde -I;
         }
         cursor = I;
@@ -38024,7 +38332,7 @@ _chordae_litteralis_octeti (SilvaSemantica* sem,
                 si (!_fugam_decodere(&tok->valor, &cursor, &ignotum))
                 {
                     silva_c89_diagnosticum_addere(sem, nodus,
-                        "fuga invalida in chorda litterali");
+                        EXAMEN_CODEX_FUGA_INVALIDA);
                     redde -I;
                 }
             }
@@ -38063,7 +38371,7 @@ _expressionem_typare (SilvaSemantica* sem, constans SilvaNodus* nodus)
             si (t->genus == TYPUS_C89_ERROR)
             {
                 silva_c89_diagnosticum_addere(sem, nodus,
-                    "litterale integrum invalidum");
+                    EXAMEN_CODEX_LITTERALE_INVALIDUM);
             }
             (vacuum)_typationem_ponere(sem, nodus, t);
             redde t;
@@ -38131,7 +38439,7 @@ _expressionem_typare (SilvaSemantica* sem, constans SilvaNodus* nodus)
                 /* vocati ignoti = extern int implicitum (Chunk C);
                  * hic locus non-vocati est */
                 silva_c89_diagnosticum_addere(sem, nodus,
-                    "identificator ignotus in expressione");
+                    EXAMEN_CODEX_IDENTIFICATOR_IGNOTUS);
                 t = sem->typus_erroris;
             }
             alioquin si (symbolum->genus == (s32)SYMBOLUM_TYPEDEF)
@@ -38139,7 +38447,7 @@ _expressionem_typare (SilvaSemantica* sem, constans SilvaNodus* nodus)
                 si (!_intra_ambiguum(nodus))
                 {
                     silva_c89_diagnosticum_addere(sem, nodus,
-                        "typedef in expressione");
+                        EXAMEN_CODEX_TYPEDEF_IN_EXPRESSIONE);
                 }
                 t = sem->typus_erroris;
             }
@@ -38205,7 +38513,7 @@ _expressionem_typare (SilvaSemantica* sem, constans SilvaNodus* nodus)
                     alioquin si (!_est_arithmeticum(intus))
                     {
                         silva_c89_diagnosticum_addere(sem, nodus,
-                            "operandum unarii non arithmeticum");
+                            EXAMEN_CODEX_OPERANDUM_UNARII);
                         t = sem->typus_erroris;
                     }
                     alioquin
@@ -38226,7 +38534,7 @@ _expressionem_typare (SilvaSemantica* sem, constans SilvaNodus* nodus)
                     alioquin si (!_est_integrale(intus))
                     {
                         silva_c89_diagnosticum_addere(sem, nodus,
-                            "operandum ~ non integrale");
+                            EXAMEN_CODEX_OPERANDUM_TILDE);
                         t = sem->typus_erroris;
                     }
                     alioquin
@@ -38275,7 +38583,7 @@ _expressionem_typare (SilvaSemantica* sem, constans SilvaNodus* nodus)
                     alioquin
                     {
                         silva_c89_diagnosticum_addere(sem, nodus,
-                            "deiectio non monstratoris");
+                            EXAMEN_CODEX_DEIECTIO_NON_MONSTRATORIS);
                         t = sem->typus_erroris;
                     }
                     frange;
@@ -38292,7 +38600,7 @@ _expressionem_typare (SilvaSemantica* sem, constans SilvaNodus* nodus)
                         && t->genus != TYPUS_C89_MONSTRATOR)
                     {
                         silva_c89_diagnosticum_addere(sem, nodus,
-                            "operandum crementi non scalare");
+                            EXAMEN_CODEX_CREMENTUM_NON_SCALARE);
                         t = sem->typus_erroris;
                     }
                     frange;
@@ -38326,7 +38634,7 @@ _expressionem_typare (SilvaSemantica* sem, constans SilvaNodus* nodus)
                 && t->genus != TYPUS_C89_MONSTRATOR)
             {
                 silva_c89_diagnosticum_addere(sem, nodus,
-                    "operandum crementi non scalare");
+                    EXAMEN_CODEX_CREMENTUM_NON_SCALARE);
                 t = sem->typus_erroris;
             }
             (vacuum)_typationem_ponere(sem, nodus, t);
@@ -38382,7 +38690,7 @@ _expressionem_typare (SilvaSemantica* sem, constans SilvaNodus* nodus)
                     alioquin
                     {
                         silva_c89_diagnosticum_addere(sem, nodus,
-                            "operanda multiplicativa non arithmetica");
+                            EXAMEN_CODEX_MULTIPLICATIVA);
                         t = sem->typus_erroris;
                     }
                     frange;
@@ -38399,7 +38707,7 @@ _expressionem_typare (SilvaSemantica* sem, constans SilvaNodus* nodus)
                     alioquin
                     {
                         silva_c89_diagnosticum_addere(sem, nodus,
-                            "operanda non integralia");
+                            EXAMEN_CODEX_OPERANDA_NON_INTEGRALIA);
                         t = sem->typus_erroris;
                     }
                     frange;
@@ -38428,7 +38736,7 @@ _expressionem_typare (SilvaSemantica* sem, constans SilvaNodus* nodus)
                     alioquin
                     {
                         silva_c89_diagnosticum_addere(sem, nodus,
-                            "operanda additiva incompatibilia");
+                            EXAMEN_CODEX_ADDITIVA_INCOMPATIBILIA);
                         t = sem->typus_erroris;
                     }
                     frange;
@@ -38461,7 +38769,7 @@ _expressionem_typare (SilvaSemantica* sem, constans SilvaNodus* nodus)
                     alioquin
                     {
                         silva_c89_diagnosticum_addere(sem, nodus,
-                            "operanda subtractionis incompatibilia");
+                            EXAMEN_CODEX_SUBTRACTIONIS_INCOMPATIBILIA);
                         t = sem->typus_erroris;
                     }
                     frange;
@@ -38479,7 +38787,7 @@ _expressionem_typare (SilvaSemantica* sem, constans SilvaNodus* nodus)
                     alioquin
                     {
                         silva_c89_diagnosticum_addere(sem, nodus,
-                            "operanda motus non integralia");
+                            EXAMEN_CODEX_MOTUS_NON_INTEGRALIA);
                         t = sem->typus_erroris;
                     }
                     frange;
@@ -38521,7 +38829,7 @@ _expressionem_typare (SilvaSemantica* sem, constans SilvaNodus* nodus)
                     alioquin
                     {
                         silva_c89_diagnosticum_addere(sem, nodus,
-                            "comparatio incompatibilium");
+                            EXAMEN_CODEX_COMPARATIO_INCOMPATIBILIUM);
                     }
                     frange;
                 }
@@ -38632,7 +38940,7 @@ _expressionem_typare (SilvaSemantica* sem, constans SilvaNodus* nodus)
                     alioquin
                     {
                         silva_c89_diagnosticum_addere(sem, nodus,
-                            "bracchia ternarii incompatibilia");
+                            EXAMEN_CODEX_BRACCHIA_TERNARII);
                         t = sem->typus_erroris;
                     }
                     si (t != sem->typus_erroris)
@@ -38656,7 +38964,7 @@ _expressionem_typare (SilvaSemantica* sem, constans SilvaNodus* nodus)
                 alioquin
                 {
                     silva_c89_diagnosticum_addere(sem, nodus,
-                        "bracchia ternarii incompatibilia");
+                        EXAMEN_CODEX_BRACCHIA_TERNARII);
                     t = sem->typus_erroris;
                 }
             }
@@ -38879,7 +39187,7 @@ _expressionem_typare (SilvaSemantica* sem, constans SilvaNodus* nodus)
             alioquin
             {
                 silva_c89_diagnosticum_addere(sem, nodus,
-                    "subscriptio non monstratoris");
+                    EXAMEN_CODEX_SUBSCRIPTIO_NON_MONSTRATORIS);
                 t = sem->typus_erroris;
             }
             (vacuum)_typationem_ponere(sem, nodus, t);
@@ -38941,7 +39249,7 @@ _expressionem_typare (SilvaSemantica* sem, constans SilvaNodus* nodus)
                             si (!_intra_ambiguum(nf))
                             {
                                 silva_c89_diagnosticum_addere(sem,
-                                    nf, "typedef vocatum");
+                                    nf, EXAMEN_CODEX_TYPEDEF_VOCATUM);
                             }
                             tf = sem->typus_erroris;
                         }
@@ -38992,7 +39300,7 @@ _expressionem_typare (SilvaSemantica* sem, constans SilvaNodus* nodus)
                     si (typus_functionis == NIHIL && !venenata)
                     {
                         silva_c89_diagnosticum_addere(sem, nodus,
-                            "vocatus non functio");
+                            EXAMEN_CODEX_VOCATUS_NON_FUNCTIO);
                         venenata = VERUM;
                     }
                 }
@@ -39112,7 +39420,7 @@ _expressionem_typare (SilvaSemantica* sem, constans SilvaNodus* nodus)
                 si (pb == NIHIL)
                 {
                     silva_c89_diagnosticum_addere(sem, nodus,
-                        "sagitta non monstratoris");
+                        EXAMEN_CODEX_SAGITTA_NON_MONSTRATORIS);
                     t = sem->typus_erroris;
                 }
                 alioquin
@@ -39134,13 +39442,13 @@ _expressionem_typare (SilvaSemantica* sem, constans SilvaNodus* nodus)
                     && tag_typus->genus != TYPUS_C89_UNIO)
                 {
                     silva_c89_diagnosticum_addere(sem, nodus,
-                        "accessus non structurae");
+                        EXAMEN_CODEX_ACCESSUS_NON_STRUCTURAE);
                     t = sem->typus_erroris;
                 }
                 alioquin si (!tag_typus->datum.tag.completa)
                 {
                     silva_c89_diagnosticum_addere(sem, nodus,
-                        "accessus structurae incompletae");
+                        EXAMEN_CODEX_ACCESSUS_INCOMPLETAE);
                     t = sem->typus_erroris;
                 }
                 alioquin
@@ -39172,7 +39480,7 @@ _expressionem_typare (SilvaSemantica* sem, constans SilvaNodus* nodus)
                     si (inventum == NIHIL)
                     {
                         silva_c89_diagnosticum_addere(sem, nodus,
-                            "membrum ignotum");
+                            EXAMEN_CODEX_MEMBRUM_IGNOTUM);
                         t = sem->typus_erroris;
                     }
                     alioquin
@@ -39371,7 +39679,7 @@ _congeriem_typare (SilvaSemantica* sem, constans SilvaNodus* congeries,
                     /* aggregatum exspectatum, scalare datum -
                      * MENSURA elisionis (parca nominata) */
                     silva_c89_diagnosticum_addere(sem, ne,
-                        "elisio uncorum congeriei - parca nominata");
+                        EXAMEN_CODEX_ELISIO_UNCORUM);
                 }
             }
             alioquin si (te != NIHIL && finis != NIHIL)

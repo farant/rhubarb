@@ -6687,3 +6687,138 @@ between M3 chunks as a palate cleanser (similitudo precedent) or
 post-M3; TITULUS = caerimonia Franis ("selecta" is a placeholder).
 Path back: this entry + nexus.worklog.md 2026-07-11 + the QA API
 rows (silva.h:1053-1067).
+
+## 2026-07-11 — EXAMEN (officina M4a) — CHUNK A INTENTIO: diagnosticum v2
+
+Books live HERE per the M0 precedent; the arc (fundamenta →
+simulatio-6 → interrogatio → spec) is in officina/phase-log.md and
+project-specs/officina-m4a-*.md. Chunk A = the struct and the
+plumbing; no judgment yet (relation = chunk B, seats = chunk C).
+
+**Census (this session, grounded):** 44 addere sites, 41 distinct
+causae (crementum + ternarius doubled), 5 NIHIL-node sites
+(c:1143/1157 specifier walk, c:2154/2190/2195 forma walk). External
+consumers of the diagnostics API: auspex + hospes, numerus/per_indicem
+ONLY, no field reads — struct extension is compat-safe; addere is NOT
+in silva.h, so its signature change is fontes-internal.
+
+**Design (emendationes-cum-ratione vs the spec where noted):**
+1. `EXAMEN_CODEX_*` enum (41 rows) + ONE static table
+   {causa, severitas} in semantica.c — codex is the single source;
+   the causa field stays populated (reader compat). addere becomes
+   (sem, nodus, codex); new addere_cum_socio(sem, nodus, codex,
+   socius) — first user = redeclaratio (socius = prior declaration,
+   chunk C wires it).
+2. **EMENDATIO: severitas gains a 4th value EXAMEN_INFRA** (toolchain
+   gap, never a judgment). Reason: the census contains parked-feature
+   honesty rows (campi parcata, chorda lata, K&R parca, elisio parca)
+   and defensive fallbacks (genus declaratoris inexspectatum) that
+   are neither violatio nor suspectum nor domesticum — this
+   generalizes the sealed LEXICON_DEEST decision, and the spec's
+   driver verdict already says ACCIPE/REICE/INFRA.
+3. **EMENDATIO: the spec's shared position resolver DISSOLVES —
+   positio materializes AT ADDERE.** linea/columna need only the
+   token radix walk (censor pattern; new _lexema_primum recursive
+   first-token helper); via needs the parsura, which analysare
+   already receives → sem stores it (sem->parsura_currens, set at
+   analysare entry; diagnostic lifetime = parsura's, documented).
+   Consumers just read fields; no resolver API. ~455 corpus
+   diagnostics × one walk = noise.
+4. provisionale = _intra_ambiguum(nodus) at addere (the existing
+   c:2980 walk IS the provisional test; 128-guard included).
+5. The 5 NIHIL-node sites get nodes plumbed from one frame up
+   (declaration/tag-declarans in scope at all five).
+6. silva.h mirror: extended struct + severitas/codex enums + the two
+   new/changed internal rows stay internal; hospes gains field-touch
+   coverage (standing rule).
+
+**Severity map for Fran's eyeball (VIOLATIO unless noted):**
+redeclaratio-generis, tag-sine-corpore, enumeratio-sine-corpore,
+enumerator-non-constans, error-in-specificatoribus,
+specificatores-mixti, multiset-primitivorum, mensura-aciei,
+error-in-declaratore, species-typi-exspectata, cyclus-formae,
+forma-aciei-incompletae, forma-functionis-petita, fuga-invalida,
+litterale-integrum-invalidum, identificator-ignotus,
+typedef-in-expressione, typedef-vocatum, operandum-unarii,
+operandum-tilde, deiectio-non-monstratoris, crementum-non-scalare,
+multiplicativa, non-integralia, additiva-incompatibilia,
+subtractionis-incompatibilia, motus-non-integralia,
+comparatio-incompatibilium, bracchia-ternarii, subscriptio,
+vocatus-non-functio, sagitta, accessus-non-structurae,
+accessus-incompletae, membrum-ignotum  → **VIOLATIO (35)**.
+typus-nominatus-ignotus → **INFRA, classis LEXICON_DEEST** (C1:
+harness excludes the class from hard verdicts; NAMED QUESTION for
+chunk D: promote to violatio when the world's lexicon is loaded —
+the differential will show the under-judgment on typo fixtures).
+campi-parcata, chorda-lata-parca, declarationes-KR-parca,
+elisio-uncorum-parca, genus-declaratoris-inexspectatum →
+**INFRA (5)**. SUSPECTUM: none yet (est_implicitum materializes in
+chunk C). DOMESTICUM: none yet (house lint populates later).
+
+**Gates:** suite green + NEW probatio_silva_examen.c (positions incl.
+a macro-expansion case; provisional bit on an ambiguus fixture;
+table integrity — every codex has causa + severitas, table size ==
+enum count); percursus: diagnostica count UNCHANGED (455 — same
+firings, richer rows), coopertura 100.00% HELD, indecisa 9; auspex
+3,753/0; amalgama VERIFICATUM; censor clean.
+
+## 2026-07-11 — EXAMEN CHUNK A RELATIO: diagnosticum v2 SHIPPED
+
+INTENTIO praestita per omnia; nulla emendatio ultra eas iam in
+INTENTIO scriptas (INFRA quartus gradus; resolutor dissolutus in
+additionem; Fran benedixit ante opus).
+
+**Quod navigavit:**
+- SemanticaDiagnosticum v2: {nodus, causa} + {codex, severitas,
+  provisionale, via, linea, columna, socius}. Positio materializata
+  TEMPORE ADDITIONIS: _lexema_primum (ambulatio locorum recursiva,
+  TOKEN/NODUS/LISTA) → silva_token_radix → linea:columna radicis;
+  via per sem->parsura_currens (per ambulationem ponitur in
+  analysare_cum_systemate — systema, deinde usoris).
+- Tabula codicum EXAMEN_CODEX_* (41 ordines) = FONS UNICUS
+  {causa, severitas}; assertum staticum magnitudinis (acies
+  negativa). addere(sem, nodus, codex) + addere_cum_socio; 43 sedes
+  vocationis conversae (percursu pythonis, 43/43, nulla manca).
+- Sedes NIHIL-nodi V sanatae: _nodus_primus_listae (specificatores
+  mixti/multiset — lista ipsa) + _declarans_typi (cyclus formae/
+  acies incompleta per tags; functio sine declarante = NIHIL manet,
+  honeste).
+- provisionale = _intra_ambiguum (ambulatio exsistens, gratis).
+- silva.h: enumerationes ExamenSeveritas/ExamenCodex + structura
+  extensa speculatae; amalgamator manifestum TYPI duo nomina nova.
+- hospes: massa examinis nova (identificator ignotus figitur,
+  omnes ordines novi asserti incl. columna exacta 16) — 29/29.
+- probatio_silva_examen.c NOVA (321 asserta, 6 sectiones):
+  integritas tabulae per omnes codices; positio exacta (linea 2,
+  columna 16, via); MACRO ad RADICEM ancorata (sedes usus non
+  definitio — praecedens indicii probatum hic); provisionale VERUM
+  sub furca retenta ('Ignotum * x;'); socius; sedes NIHIL sanatae.
+
+**Portae:** compilatio stricta primo cursu; suite silvae 30/30;
+amalgama VERIFICATUM (bis); percursus coopertura 100.00% TENETUR,
+indecisa 10 (basis eadem), **flagrationes diagnosticorum in corpore
+praeexsistenti IDENTICAE pre/post (diff per-plagulam via stash —
+delta totum = probatio nova ipsa sub capite VETERE, 31 ignoti
+identificatores qui sub novo evanescunt; lectio in
+silva_c89_semantica.worklog.md: corpus diff tuum ipsum continet)**;
+auspex 3,753/0; officina 10/10 + hospes 78/78 (consumptores trans
+proiectum intacti).
+
+**Nota bases novas:** percursus diagnostica 588 in 45 plagulis
+(recordata vetus 455+8 — incrementum = plagulae M3 novae + probatio
+haec; classificatio causa→gradus = opus chunk C/D iam nominatum).
+
+**Debrief instrumentorum:** adhibita — porta amalgamatoris (cepit
+duplicationem enumerationis statim, lineis exactis: manifestum TYPI
+egebat), fluxus clangd (cepit API fictam chorda_ex_litteris ante
+compilationem), percursus-stash-diff (methodus honesta portae),
+python ad percursum sedium (43/43). fructus — porta amalgamatoris
+et diff per-plagulam quaestionem numerorum solvit cursu uno.
+asperitates — NULLUS modus unius plagulae in percursu: mysterium
+numerorum 4 minuta constitit quod effusor unius plagulae secundis
+respondisset (demanda effusoris examinis ITERUM crescit — sedes
+critica chunk D confirmata). desiderata — nihil novum ultra
+effusorem iam nominatum.
+
+**SEQUENS:** commissio Franis = sigillum chunki A; deinde chunk B
+(relatio compatibilitatis — functio pura, probatio tabulata).

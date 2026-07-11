@@ -429,3 +429,20 @@ conforming C89 (ancient element-count idiom); the C99 cousins a
 lint pass must distinguish: flexible array members, VLAs,
 designated initializers. The :norma pseudo + standard-tag pin
 (quaestio QC) is the named home for that query.
+
+## 2026-07-11 — examen chunk A: the self-referential corpus lesson
+
+While proving the "diagnostics firing unchanged" gate (percursus
+pre/post diff via `git stash push` of just the two edited files), the
+counts refused to match: baseline 619/46 vs post 588/45, plus ~470
+extra symbols/typations post-change. Cause: **the percursus corpus
+includes your own diff** — the edited semantica.{c,h} are corpus
+members (bigger file = more nodes), and the NEW untracked
+probatio_silva_examen.c is swept too: under the STASHED (old) header
+its EXAMEN_CODEX_* references are unknown identifiers → 31
+"identificator ignotus" diagnostics that vanish under the new header.
+Per-file diff (`grep "diagnostica" | sort` both runs, diff) showed
+the entire delta was that one self-referential file — every
+pre-existing corpus file fired identically. Method note for future
+gate-proofs: always diff PER-FILE, never totals; and expect your own
+new test files to diagnose under the stashed baseline.

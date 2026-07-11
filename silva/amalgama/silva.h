@@ -1192,9 +1192,75 @@ typedef struct {
     SilvaToken*       lexema;
 } SemanticaSymbolum;
 
+/* Examen (M4a chunk A): severitas + codices diagnosticorum.
+ * INFRA = lacuna instrumentorum, numquam iudicium (verdicta ordines
+ * INFRA excludunt, ut provisionales). */
+typedef enum {
+    EXAMEN_VIOLATIO = 0,
+    EXAMEN_SUSPECTUM,
+    EXAMEN_DOMESTICUM,
+    EXAMEN_INFRA
+} ExamenSeveritas;
+
+/* Codex stabilis per nuntium - ordo tabulae internae; NE INSERE -
+ * adde ante NUMERUS (stabilitas pro vecte differentiali). */
+typedef enum {
+    EXAMEN_CODEX_REDECLARATIO_GENERIS = 0,
+    EXAMEN_CODEX_TAG_SINE_CORPORE,
+    EXAMEN_CODEX_ENUMERATIO_SINE_CORPORE,
+    EXAMEN_CODEX_ENUMERATOR_NON_CONSTANS,
+    EXAMEN_CODEX_TYPUS_NOMINATUS_IGNOTUS,   /* INFRA: LEXICON_DEEST */
+    EXAMEN_CODEX_ERROR_IN_SPECIFICATORIBUS,
+    EXAMEN_CODEX_SPECIFICATORES_MIXTI,
+    EXAMEN_CODEX_MULTISET_PRIMITIVORUM,
+    EXAMEN_CODEX_MENSURA_ACIEI,
+    EXAMEN_CODEX_ERROR_IN_DECLARATORE,
+    EXAMEN_CODEX_GENUS_DECLARATORIS,        /* INFRA: cautela */
+    EXAMEN_CODEX_SPECIES_TYPI_EXSPECTATA,
+    EXAMEN_CODEX_DECLARATIONES_KR,          /* INFRA: parca */
+    EXAMEN_CODEX_CYCLUS_FORMAE,
+    EXAMEN_CODEX_FORMA_ACIEI_INCOMPLETAE,
+    EXAMEN_CODEX_FORMA_FUNCTIONIS,
+    EXAMEN_CODEX_CAMPI_PARCATI,             /* INFRA: parca */
+    EXAMEN_CODEX_CHORDA_LATA,               /* INFRA: parca */
+    EXAMEN_CODEX_FUGA_INVALIDA,
+    EXAMEN_CODEX_LITTERALE_INVALIDUM,
+    EXAMEN_CODEX_IDENTIFICATOR_IGNOTUS,
+    EXAMEN_CODEX_TYPEDEF_IN_EXPRESSIONE,
+    EXAMEN_CODEX_TYPEDEF_VOCATUM,
+    EXAMEN_CODEX_OPERANDUM_UNARII,
+    EXAMEN_CODEX_OPERANDUM_TILDE,
+    EXAMEN_CODEX_DEIECTIO_NON_MONSTRATORIS,
+    EXAMEN_CODEX_CREMENTUM_NON_SCALARE,
+    EXAMEN_CODEX_MULTIPLICATIVA,
+    EXAMEN_CODEX_OPERANDA_NON_INTEGRALIA,
+    EXAMEN_CODEX_ADDITIVA_INCOMPATIBILIA,
+    EXAMEN_CODEX_SUBTRACTIONIS_INCOMPATIBILIA,
+    EXAMEN_CODEX_MOTUS_NON_INTEGRALIA,
+    EXAMEN_CODEX_COMPARATIO_INCOMPATIBILIUM,
+    EXAMEN_CODEX_BRACCHIA_TERNARII,
+    EXAMEN_CODEX_SUBSCRIPTIO_NON_MONSTRATORIS,
+    EXAMEN_CODEX_VOCATUS_NON_FUNCTIO,
+    EXAMEN_CODEX_SAGITTA_NON_MONSTRATORIS,
+    EXAMEN_CODEX_ACCESSUS_NON_STRUCTURAE,
+    EXAMEN_CODEX_ACCESSUS_INCOMPLETAE,
+    EXAMEN_CODEX_MEMBRUM_IGNOTUM,
+    EXAMEN_CODEX_ELISIO_UNCORUM,            /* INFRA: parca */
+    EXAMEN_CODEX_NUMERUS
+} ExamenCodex;
+
+/* Diagnosticum v2 (M4a chunk A): positio materializata tempore
+ * additionis; vita viae = vita parsurae ambulationis. */
 typedef struct {
-    const SilvaNodus* nodus;
-    const char*       causa;
+    const SilvaNodus* nodus;        /* NULL licet */
+    const char*       causa;        /* litterae staticae (ex tabula) */
+    int               codex;        /* ExamenCodex */
+    int               severitas;    /* ExamenSeveritas */
+    int               provisionale; /* sub AMBIGUO retento */
+    SilvaChorda       via;          /* radicis; vacua si ignota */
+    unsigned int      linea;        /* 1-basata; 0 si ignota */
+    unsigned int      columna;      /* 1-basata; 0 si ignota */
+    const SilvaNodus* socius;       /* sedes cognata; NULL licet */
 } SemanticaDiagnosticum;
 
 typedef struct SilvaSemantica SilvaSemantica;   /* opaca */

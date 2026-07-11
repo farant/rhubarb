@@ -24,8 +24,9 @@
  *
  * PARCA NOMINATA (consilium §IX/XI + INTENTIO): campi (bitfields) -
  * forma tag venenatur, membrum typatur; magnitudo-expressionis in
- * aestimatore (typum expressionis postulat = M0b); initiatores non
- * probantur (M0b); K&R; vide phase-log.
+ * aestimatore (typum expressionis postulat = M0b); completio aciei
+ * per initiatorem FACTA (2026-07-10), VALIDATIO initiatorum parca
+ * (project-specs/c89-lacunae.md); K&R; vide phase-log.
  */
 
 #ifndef SILVA_C89_SEMANTICA_H
@@ -190,12 +191,89 @@ structura SemanticaScopus {
 };
 
 /* ==================================================
+ * Examen (M4a chunk A): severitas + codices diagnosticorum
+ * ================================================== */
+
+/* Gradus severitatis (interrogatio M4a Q2/Q3 + emendatio chunki A):
+ * VIOLATIO = constrictio C89 (linea standard-stricta); SUSPECTUM =
+ * licitum sed suspectum; DOMESTICUM = regula domus; INFRA = lacuna
+ * instrumentorum, NUMQUAM iudicium (generalizat LEXICON_DEEST -
+ * verdicta ordines INFRA excludunt, ut provisionales). */
+nomen enumeratio {
+    EXAMEN_VIOLATIO = 0,
+    EXAMEN_SUSPECTUM,
+    EXAMEN_DOMESTICUM,
+    EXAMEN_INFRA
+} ExamenSeveritas;
+
+/* Codex stabilis per nuntium - FONS UNICUS (tabula in .c dat causam
+ * + severitatem per codicem). Ordo tabulae = hic ordo: NE INSERE -
+ * adde ante NUMERUS (codices stabiles trans versiones pro vecte
+ * differentiali et pinnis EXSPECTA). */
+nomen enumeratio {
+    EXAMEN_CODEX_REDECLARATIO_GENERIS = 0,
+    EXAMEN_CODEX_TAG_SINE_CORPORE,
+    EXAMEN_CODEX_ENUMERATIO_SINE_CORPORE,
+    EXAMEN_CODEX_ENUMERATOR_NON_CONSTANS,
+    EXAMEN_CODEX_TYPUS_NOMINATUS_IGNOTUS,   /* INFRA: LEXICON_DEEST */
+    EXAMEN_CODEX_ERROR_IN_SPECIFICATORIBUS,
+    EXAMEN_CODEX_SPECIFICATORES_MIXTI,
+    EXAMEN_CODEX_MULTISET_PRIMITIVORUM,
+    EXAMEN_CODEX_MENSURA_ACIEI,
+    EXAMEN_CODEX_ERROR_IN_DECLARATORE,
+    EXAMEN_CODEX_GENUS_DECLARATORIS,        /* INFRA: cautela */
+    EXAMEN_CODEX_SPECIES_TYPI_EXSPECTATA,
+    EXAMEN_CODEX_DECLARATIONES_KR,          /* INFRA: parca */
+    EXAMEN_CODEX_CYCLUS_FORMAE,
+    EXAMEN_CODEX_FORMA_ACIEI_INCOMPLETAE,
+    EXAMEN_CODEX_FORMA_FUNCTIONIS,
+    EXAMEN_CODEX_CAMPI_PARCATI,             /* INFRA: parca */
+    EXAMEN_CODEX_CHORDA_LATA,               /* INFRA: parca */
+    EXAMEN_CODEX_FUGA_INVALIDA,
+    EXAMEN_CODEX_LITTERALE_INVALIDUM,
+    EXAMEN_CODEX_IDENTIFICATOR_IGNOTUS,
+    EXAMEN_CODEX_TYPEDEF_IN_EXPRESSIONE,
+    EXAMEN_CODEX_TYPEDEF_VOCATUM,
+    EXAMEN_CODEX_OPERANDUM_UNARII,
+    EXAMEN_CODEX_OPERANDUM_TILDE,
+    EXAMEN_CODEX_DEIECTIO_NON_MONSTRATORIS,
+    EXAMEN_CODEX_CREMENTUM_NON_SCALARE,
+    EXAMEN_CODEX_MULTIPLICATIVA,
+    EXAMEN_CODEX_OPERANDA_NON_INTEGRALIA,
+    EXAMEN_CODEX_ADDITIVA_INCOMPATIBILIA,
+    EXAMEN_CODEX_SUBTRACTIONIS_INCOMPATIBILIA,
+    EXAMEN_CODEX_MOTUS_NON_INTEGRALIA,
+    EXAMEN_CODEX_COMPARATIO_INCOMPATIBILIUM,
+    EXAMEN_CODEX_BRACCHIA_TERNARII,
+    EXAMEN_CODEX_SUBSCRIPTIO_NON_MONSTRATORIS,
+    EXAMEN_CODEX_VOCATUS_NON_FUNCTIO,
+    EXAMEN_CODEX_SAGITTA_NON_MONSTRATORIS,
+    EXAMEN_CODEX_ACCESSUS_NON_STRUCTURAE,
+    EXAMEN_CODEX_ACCESSUS_INCOMPLETAE,
+    EXAMEN_CODEX_MEMBRUM_IGNOTUM,
+    EXAMEN_CODEX_ELISIO_UNCORUM,            /* INFRA: parca */
+    EXAMEN_CODEX_NUMERUS
+} ExamenCodex;
+
+/* ==================================================
  * Semantica (contextus communis typus/forma/aestimator/scopus)
  * ================================================== */
 
+/* Diagnosticum v2 (M4a chunk A): positio materializata TEMPORE
+ * ADDITIONIS (ambulatio radicis lexematis; via per parsuram
+ * ambulationis currentis). Vita viae = vita parsurae. */
 nomen structura {
-    constans SilvaNodus* nodus;   /* NIHIL licet */
-    constans character*  causa;   /* litterae staticae */
+    constans SilvaNodus* nodus;        /* NIHIL licet */
+    constans character*  causa;        /* litterae staticae (ex tabula) */
+    s32                  codex;        /* ExamenCodex */
+    s32                  severitas;    /* ExamenSeveritas (ex tabula) */
+    b32                  provisionale; /* sub AMBIGUO retento -
+                                        * canonicum = coniectura */
+    chorda               via;          /* radicis; vacua si ignota */
+    i32                  linea;        /* 1-basata; 0 si ignota */
+    i32                  columna;      /* 1-basata; 0 si ignota */
+    constans SilvaNodus* socius;       /* sedes cognata (e.g.
+                                        * declaratio prior); NIHIL */
 } SemanticaDiagnosticum;
 
 /* Titulo signata: silva.h eam OPACAM praenuntiat (exemplar
@@ -243,12 +321,23 @@ structura SilvaSemantica {
     TypusC89* reditus_currens;
 
     b32 in_systemate;           /* vexillum ambulationis (provenientia) */
+
+    /* parsura ambulationis currentis (M4a chunk A): analysare eam
+     * ponit per ambulationem (systema, deinde usoris) - fons viae
+     * diagnosticorum; NIHIL licet (positio tunc sine via) */
+    constans SilvaParsura* parsura_currens;
 };
 
 SilvaSemantica* silva_c89_semantica_creare (Piscina* piscina);
 
+/* Diagnosticum addere (M4a chunk A): codex -> {causa, severitas} ex
+ * tabula unica; positio/provisionale materializantur hic. Socius =
+ * sedes cognata (declaratio prior, etc.). */
 vacuum silva_c89_diagnosticum_addere (SilvaSemantica* sem,
-    constans SilvaNodus* nodus, constans character* causa);
+    constans SilvaNodus* nodus, s32 codex);
+vacuum silva_c89_diagnosticum_addere_cum_socio (SilvaSemantica* sem,
+    constans SilvaNodus* nodus, s32 codex,
+    constans SilvaNodus* socius);
 
 /* ==================================================
  * Constructio typorum (fabricae internantes)

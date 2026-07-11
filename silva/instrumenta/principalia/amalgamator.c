@@ -193,6 +193,7 @@ interior constans character* constans CADENDA_TYPEDEF[] = {
     "TypusC89Genus", "TypusC89Primitivum", "TypusC89",
     "TypusC89Membrum", "SemanticaSymbolumGenus", "SemanticaSymbolum",
     "SemanticaDiagnosticum", "SilvaSemantica",
+    "ExamenSeveritas", "ExamenCodex",
     NIHIL
 };
 
