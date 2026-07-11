@@ -58,6 +58,7 @@ hic_manens i32 plagulae_cum_ambiguis = ZEPHYRUM;
 hic_manens b32 cum_semantica = FALSUM;
 hic_manens i32 summa_symbolorum = ZEPHYRUM;
 hic_manens i32 summa_diagnosticorum = ZEPHYRUM;
+hic_manens i32 census_codicum[EXAMEN_CODEX_NUMERUS];
 hic_manens i32 summa_typationum = ZEPHYRUM;      /* M0b */
 hic_manens i32 summa_expr_visorum = ZEPHYRUM;    /* M0b C: coopertura */
 hic_manens i32 summa_expr_typatorum = ZEPHYRUM;
@@ -606,10 +607,25 @@ _plagulam_percurrere (constans SilvaContextus* ctx,
                     silva_c89_typationes_numerus(sem);
                 si (diag > ZEPHYRUM)
                 {
+                    i32 di;
+
                     summa_diagnosticorum += diag;
                     plagulae_cum_diagnosticis++;
                     imprimere("[semantica diagnostica %d] %s\n",
                         (int)diag, via);
+                    per (di = ZEPHYRUM; di < diag; di++)
+                    {
+                        constans SemanticaDiagnosticum* dg =
+                            silva_c89_diagnosticum_per_indicem(sem,
+                                di);
+
+                        si (dg != NIHIL && dg->codex >= ZEPHYRUM
+                            && dg->codex
+                                < (s32)EXAMEN_CODEX_NUMERUS)
+                        {
+                            census_codicum[dg->codex]++;
+                        }
+                    }
                 }
                 /* coopertura POST clausuram contra sem2 - lacuna
                  * canonicae CLAUSA esse debet (proba acceptionis) */
@@ -892,6 +908,24 @@ s32 principale (integer argc, character** argv)
             (int)summa_symbolorum, (int)summa_typationum,
             (int)summa_diagnosticorum,
             (int)plagulae_cum_diagnosticis);
+        {
+            /* census codicum (examen chunk C): quae classes
+             * flagrant - fons veritatis pro columna verdicti */
+            s32 cc;
+
+            per (cc = ZEPHYRUM; cc < (s32)EXAMEN_CODEX_NUMERUS;
+                 cc++)
+            {
+                si (census_codicum[cc] > ZEPHYRUM)
+                {
+                    imprimere("  [codex %2d sev %d] %6d  %s\n",
+                        (int)cc,
+                        (int)silva_c89_codicis_severitas(cc),
+                        (int)census_codicum[cc],
+                        silva_c89_codicis_causa(cc));
+                }
+            }
+        }
         imprimere("clausura:  %d versae; %d indecisa (residuum)\n",
             (int)summa_versorum, (int)summa_indecisorum);
         si (summa_expr_visorum > ZEPHYRUM)

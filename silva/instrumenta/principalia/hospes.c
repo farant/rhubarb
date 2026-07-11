@@ -1162,7 +1162,12 @@ int main(void)
                            NULL, p_int, p_longus, &codex_rel)
                         == (int)EXAMEN_VETITUM
                     && codex_rel
-                        == (int)EXAMEN_CODEX_MONSTRATORES_INCOMPATIBILES)
+                        == (int)EXAMEN_CODEX_MONSTRATORES_INCOMPATIBILES
+                    && silva_c89_codicis_causa(codex_rel) != NULL
+                    && silva_c89_codicis_severitas(codex_rel)
+                        == (int)EXAMEN_VIOLATIO
+                    && silva_c89_codicis_severitas(-1)
+                        == (int)EXAMEN_INFRA)
                 {
                     bene_rel = 1;
                 }

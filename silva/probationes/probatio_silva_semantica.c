@@ -1440,8 +1440,9 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_I32 (parsura->numerus_errorum, ZEPHYRUM);
         sem = silva_c89_semantica_analysare(piscina, parsura);
         CREDO_NON_NIHIL (sem);
-        /* UNUM diagnosticum exspectatum: ig->x incompleta */
-        CREDO_AEQUALIS_I32 (silva_c89_diagnostica_numerus(sem), I);
+        /* DUO diagnostica: ig->x incompleta + vocatio implicita
+         * ignotus_vocatus (materializatio chunk C, SUSPECTUM) */
+        CREDO_AEQUALIS_I32 (silva_c89_diagnostica_numerus(sem), II);
         int_t = silva_c89_typus_primitivum(sem, PRIMITIVUM_INTEGER);
         char_t = silva_c89_typus_primitivum(sem, PRIMITIVUM_CHARACTER);
 
@@ -1688,8 +1689,9 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_I32 (parsura->numerus_errorum, ZEPHYRUM);
         sem = silva_c89_semantica_analysare(piscina, parsura);
         CREDO_NON_NIHIL (sem);
-        /* diagnosticum unicum = fuga invalida (\q) in w */
-        CREDO_AEQUALIS_I32 (silva_c89_diagnostica_numerus(sem), I);
+        /* fuga invalida (\q) in w + vocatio implicita g()
+         * (materializatio chunk C, SUSPECTUM) */
+        CREDO_AEQUALIS_I32 (silva_c89_diagnostica_numerus(sem), II);
 
         /* usus x in "x + 1" -> symbolum PARAMETRUM idem quod
          * index tenet (identitas monstratorum) */

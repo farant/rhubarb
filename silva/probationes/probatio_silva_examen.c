@@ -83,6 +83,62 @@ _initiator_primus (constans SilvaParsura* parsura)
     redde iv.datum.nodus;
 }
 
+/* Chunk C: fons parvus -> codex exspectatus n-ies (aut purum) */
+interior vacuum
+_codicem_probare (Piscina* piscina, constans character* fons,
+    s32 codex, i32 numerus)
+{
+    SilvaParsura* parsura = _parsare(piscina, fons);
+    SilvaSemantica* sem;
+    i32 inventi = ZEPHYRUM;
+    i32 i;
+    i32 m;
+
+    CREDO_NON_NIHIL (parsura);
+    si (parsura == NIHIL)
+    {
+        redde;
+    }
+    sem = silva_c89_semantica_analysare(piscina, parsura);
+    CREDO_NON_NIHIL (sem);
+    si (sem == NIHIL)
+    {
+        redde;
+    }
+    m = (i32)silva_c89_diagnostica_numerus(sem);
+    per (i = ZEPHYRUM; i < m; i++)
+    {
+        constans SemanticaDiagnosticum* d =
+            silva_c89_diagnosticum_per_indicem(sem, i);
+
+        si (d != NIHIL && d->codex == codex)
+        {
+            inventi++;
+        }
+    }
+    CREDO_AEQUALIS_I32 (inventi, numerus);
+}
+
+interior vacuum
+_purum_probare (Piscina* piscina, constans character* fons)
+{
+    SilvaParsura* parsura = _parsare(piscina, fons);
+    SilvaSemantica* sem;
+
+    CREDO_NON_NIHIL (parsura);
+    si (parsura == NIHIL)
+    {
+        redde;
+    }
+    sem = silva_c89_semantica_analysare(piscina, parsura);
+    CREDO_NON_NIHIL (sem);
+    si (sem != NIHIL)
+    {
+        CREDO_AEQUALIS_I32 (
+            (i32)silva_c89_diagnostica_numerus(sem), ZEPHYRUM);
+    }
+}
+
 s32 principale (vacuum)
 {
     Piscina* piscina;
@@ -591,6 +647,134 @@ s32 principale (vacuum)
             }
         }
     }
+
+    /* ========================================================
+     * IX. Sedes (chunk C): codices novi flagrant; legalia PURA
+     * ======================================================== */
+    imprimere("\n--- Probans sedes (chunk C) ---\n");
+
+    /* locus */
+    _codicem_probare(piscina,
+        "static void f(void) { 5 = 1; }\n",
+        (s32)EXAMEN_CODEX_ASSIGNATIO_NON_LOCUS, I);
+    _codicem_probare(piscina,
+        "static void f(void) { int a; int b; (a + b) = 1; }\n",
+        (s32)EXAMEN_CODEX_ASSIGNATIO_NON_LOCUS, I);
+    _codicem_probare(piscina,
+        "static void f(void) { const int c = 1; c = 2; }\n",
+        (s32)EXAMEN_CODEX_LOCUS_IMMUTABILIS, I);
+    _codicem_probare(piscina,
+        "static void f(void) { int a[2]; a = 0; }\n",
+        (s32)EXAMEN_CODEX_LOCUS_IMMUTABILIS, I);
+    _codicem_probare(piscina,
+        "static void f(void) { int i = 0; (i + 1)++; }\n",
+        (s32)EXAMEN_CODEX_ASSIGNATIO_NON_LOCUS, I);
+    _codicem_probare(piscina,
+        "static void f(void) { const int c = 1; ++c; }\n",
+        (s32)EXAMEN_CODEX_LOCUS_IMMUTABILIS, I);
+    _codicem_probare(piscina,
+        "static void f(void) { int* p = &(1 + 2); }\n",
+        (s32)EXAMEN_CODEX_ASSIGNATIO_NON_LOCUS, I);
+
+    /* aritas */
+    _codicem_probare(piscina,
+        "static int g(int a, int b) { return a + b; }\n"
+        "static int f(void) { return g(1); }\n",
+        (s32)EXAMEN_CODEX_NUMERUS_ARGUMENTORUM, I);
+    _codicem_probare(piscina,
+        "static int g(int a, int b) { return a + b; }\n"
+        "static int f(void) { return g(1, 2, 3); }\n",
+        (s32)EXAMEN_CODEX_NUMERUS_ARGUMENTORUM, I);
+
+    /* redde */
+    _codicem_probare(piscina,
+        "static void v(void) { return 5; }\n",
+        (s32)EXAMEN_CODEX_REDDE_CUM_VALORE_IN_VACUO, I);
+    _codicem_probare(piscina,
+        "static int f(void) { return; }\n",
+        (s32)EXAMEN_CODEX_REDDE_SINE_VALORE, I);
+
+    /* condicio scalaris */
+    _codicem_probare(piscina,
+        "struct S { int a; };\n"
+        "static void f(void) { struct S s; if (s) { s.a = 1; } }\n",
+        (s32)EXAMEN_CODEX_CONDICIO_NON_SCALARIS, I);
+
+    /* vocatio implicita (SUSPECTUM) */
+    _codicem_probare(piscina,
+        "static int f(void) { return ignotus(); }\n",
+        (s32)EXAMEN_CODEX_VOCATIO_IMPLICITA, I);
+
+    /* redeclaratio incompatibilis (+ socius) */
+    {
+        SilvaParsura* parsura = _parsare(piscina,
+            "extern int x;\n"
+            "extern char x;\n");
+        SilvaSemantica* sem;
+        constans SemanticaDiagnosticum* d;
+
+        CREDO_NON_NIHIL (parsura);
+        sem = silva_c89_semantica_analysare(piscina, parsura);
+        CREDO_NON_NIHIL (sem);
+        d = _diagnosticum_codicis(sem,
+            (s32)EXAMEN_CODEX_REDECLARATIO_INCOMPATIBILIS);
+        CREDO_NON_NIHIL (d);
+        si (d != NIHIL)
+        {
+            CREDO_VERUM (d->socius != NIHIL);
+            CREDO_AEQUALIS_I32 (d->linea, II);
+        }
+    }
+
+    /* sedes finis (per iudicium) */
+    _codicem_probare(piscina,
+        "static void f(int* p, char* q) { p = q; }\n",
+        (s32)EXAMEN_CODEX_MONSTRATORES_INCOMPATIBILES, I);
+    _codicem_probare(piscina,
+        "static void f(int* p) { int n; n = p; }\n",
+        (s32)EXAMEN_CODEX_MONSTRATOR_INTEGER, I);
+    _codicem_probare(piscina,
+        "static void f(char* q) { const char* c = q; q = c; }\n",
+        (s32)EXAMEN_CODEX_QUALES_ABIECTI, I);
+    _codicem_probare(piscina,
+        "struct S { int a; }; struct T { int a; };\n"
+        "static void f(void) { struct S s; struct T t;\n"
+        "  s = t; }\n",
+        (s32)EXAMEN_CODEX_ASSIGNATIO_INCOMPATIBILIS, I);
+
+    /* profundatio operatorum */
+    _codicem_probare(piscina,
+        "static int f(int* p, char* q) { return p == q; }\n",
+        (s32)EXAMEN_CODEX_COMPARATIO_INCOMPATIBILIUM, I);
+    _codicem_probare(piscina,
+        "static long f(int* p, char* q) { return p - q; }\n",
+        (s32)EXAMEN_CODEX_SUBTRACTIONIS_INCOMPATIBILIA, I);
+
+    /* LEGALIA PURA (custodes C4: cauda aggregata, chorda in aciem,
+     * vacuum*, crementa, &functio, comparatio cum nulla/vacuo) */
+    _purum_probare(piscina,
+        "struct S { int a; };\n"
+        "static void f(void) { struct S a; struct S b; a = b;\n"
+        "  a.a = 1; }\n");
+    _purum_probare(piscina,
+        "static char s[] = \"ab\";\n"
+        "static char e[4] = \"xyz\";\n");
+    _purum_probare(piscina,
+        "static void f(int* p, void* v) { p = v; v = p;\n"
+        "  p = 0; }\n");
+    _purum_probare(piscina,
+        "static void f(void) { int i = 0; i++; ++i; --i; i--; }\n");
+    _purum_probare(piscina,
+        "static void g(void) { ; }\n"
+        "static void f(void) { void (*p)(void) = &g; p = g; }\n");
+    _purum_probare(piscina,
+        "static int f(int* p, void* v) { return p == v\n"
+        "  || p == 0; }\n");
+    _purum_probare(piscina,
+        "static int g(int a, ...) { return a; }\n"
+        "static int f(void) { return g(1, 2, 3); }\n");
+    _purum_probare(piscina,
+        "static void f(void) { const char* c = \"x\"; c = 0; }\n");
 
     credo_imprimere_compendium();
     praeteritus = credo_omnia_praeterierunt();

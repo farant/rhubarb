@@ -1251,6 +1251,15 @@ typedef enum {
     EXAMEN_CODEX_MONSTRATORES_INCOMPATIBILES,
     EXAMEN_CODEX_QUALES_ABIECTI,
     EXAMEN_CODEX_MONSTRATOR_INTEGER,
+    /* chunk C (sedes) */
+    EXAMEN_CODEX_ASSIGNATIO_NON_LOCUS,
+    EXAMEN_CODEX_LOCUS_IMMUTABILIS,
+    EXAMEN_CODEX_NUMERUS_ARGUMENTORUM,
+    EXAMEN_CODEX_REDDE_CUM_VALORE_IN_VACUO,
+    EXAMEN_CODEX_REDDE_SINE_VALORE,     /* SUSPECTUM: legale C89 */
+    EXAMEN_CODEX_CONDICIO_NON_SCALARIS,
+    EXAMEN_CODEX_VOCATIO_IMPLICITA,     /* SUSPECTUM: est_implicitum */
+    EXAMEN_CODEX_REDECLARATIO_INCOMPATIBILIS,
     EXAMEN_CODEX_NUMERUS
 } ExamenCodex;
 
@@ -1319,6 +1328,10 @@ int silva_c89_typi_compatibiles(TypusC89* a, TypusC89* b);
 int silva_c89_assignationem_iudicare(SilvaSemantica* sem,
     const SilvaNodus* nodus_valoris, TypusC89* finis,
     TypusC89* valoris, int* codex_out);
+
+/* Tabula codicum quaerenda (causa + severitas per codicem) */
+const char* silva_c89_codicis_causa(int codex);
+int silva_c89_codicis_severitas(int codex);
 
 unsigned int silva_c89_diagnostica_numerus(
     const SilvaSemantica* sem);

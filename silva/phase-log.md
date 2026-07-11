@@ -6909,3 +6909,134 @@ mutationum. asperitates — nullae novae. desiderata — nihil.
 (sedes: _ad_finem_annotare trifidum + locus + aritas/redde/scalare
 + materializatio est_implicitum + V sedes vocationis novae
 relationis — CAVE C4 sim-6: cauda aggregata LEGALIS).
+
+## 2026-07-11 — EXAMEN CHUNK C INTENTIO: sedes (iudicium in ambulatione)
+
+Sedes omnes, semper-activae (DECISUS Q7). Codices VIII novi
+(appendix): ASSIGNATIO_NON_LOCUS (V), LOCUS_IMMUTABILIS (V),
+NUMERUS_ARGUMENTORUM (V), REDDE_CUM_VALORE_IN_VACUO (V),
+REDDE_SINE_VALORE (**SUSPECTUM** — legale C89! probatio clang huius
+sessionis: clang-16 AMBOS reicit etiam nudo -std=c89, tertius
+casus [-Wreturn-type] auto-promotus; demotio -Wno-error=return-type
+CV verum quoque demitteret → ordo EXCLUSIO nominatus ad chunk D),
+CONDICIO_NON_SCALARIS (V), VOCATIO_IMPLICITA (**SUSPECTUM primus**),
+REDECLARATIO_INCOMPATIBILIS (V). Sedes operatorum codices EXSISTENTES
+adhibent (comparatio/subtractio/ternarius — constrictio eadem,
+probatio profundior).
+
+Sedes: ① _ad_finem_annotare → iudicare (LICET → nihil;
+LICET_CONVERSIO → _conversionem_annotare ut hodie — semitae legales
+BYTE-IDEM; VETITUM → diagnosticum + NOLI annotare = conversus
+fabricatus ABOLITUS); ② _est_locus + _est_locus_mutabilis
+(ambulatio formae in poscente: identificator/chorda-litteralis/
+deiectio/subscriptio/membrum-si-obiectum-locus/sagitta; mutabilis =
+locus ∧ ¬const-summus ∧ ¬acies ∧ ¬functio ∧ completus ∧ ¬const-per-
+catenam-accessus) — consumptores III: ASSIGNATIO sinister (locus
+ante finem — cauda una diagnostica), &-operandum (locus AUT
+designator functionis), crementum/decrementum; ③ aritas VOCATIONIS
+(prototypata solum; variadica = minimum partis fixae; implicita/K&R
+exemptae); ④ redde (valor-in-vacuo V; nudum-in-non-vacuo S);
+⑤ condicio scalaris (_valorem_typare_scalarem); ⑥ materializatio
+est_implicitum (post ambulationem usoris: symbola → VOCATIO_IMPLICITA
+ad declarans, ex_systemate exclusa); ⑦ redeclaratio typo-
+incompatibilis ad sedem registrationis (cum_socio = declarans prior;
+implicita→realis reconciliatio per relationem — f(int) compatibilis,
+f(char) non); ⑧ sedes operatorum profundatae: comparatio/subtractio/
+ternarius pointee-compatibilitas ubi hodie classis sola probatur
+(lectio codicis ante — semita p==0 constantis nullae NON tangenda).
+
+CAVE C4 sim-6: cauda aggregata LEGALIS (struct a = b) → LICET per
+relationem, nulla annotatio (ut hodie). CAVE conversus: semitae
+legales conversus IDENTICOS dare debent (minimum-diff: annotare
+vocatur ut hodie sub LICET*).
+
+**Portae C (tres partes vectis + solitae):** (1) fusor sistere
+census ante/post + cursor stdout paritas (probatio subtractionis
+fabricati — corpus legale byte-idem currit); (2) percursus: delta
+diagnosticorum = SOLUM codices novi; VIOLATIO novae in corpore =
+inventa investiganda (exspectatur 0 post systema; sim C9);
+(3) tempus percursus ante/post scriptum (iudicium semper-activum).
+Suite + amalgama + hospes + officina solitae. Probatio sectiones
+novae per sedem.
+
+## 2026-07-11 — EXAMEN CHUNK C RELATIO: sedes SHIPPED (iudicium vivum)
+
+INTENTIO praestita; emendationes duae in opere (clementiae liminum,
+infra — ambae inventa corporis, non consilii).
+
+**Quod navigavit:** ① _ad_finem_annotare = sedes iudicii (VETITUM →
+diagnosticum + NOLI annotare; LICET* → annotare ut semper — probatio
+mutationis intra annotare ordines hodiernos exacte reddit, etiam
+lapsum aciei sub LICET); ② _est_locus (ambulatio formae C89:
+identificator-obiecti [per symbolum_nodi — constantes enumeri
+exclusae], chorda litteralis, deiectio, subscriptio, sagitta,
+punctum-si-basis-locus, parenthesis recursiva) + _est_locus_mutabilis
+(quales summi — quales basis in membra IAM propagati [inventum:
+annotator id fecit]; acies/functio immutabiles); sedes III:
+ASSIGNATIO sinister, &-operandum (designator functionis exemptus),
+crementa ambo; ③ aritas VOCATIONIS (prototypatae; variadica minimum;
+implicitae/K&R exemptae); ④ redde (valor-in-vacuo V; nudum S);
+⑤ condicio scalaris in _valorem_typare_scalarem (si/dum/fac/per/
+ternarius); ⑥ materializatio est_implicitum → VOCATIO_IMPLICITA
+(SUSPECTUM, ad declarans, systema exclusum); ⑦ redeclaratio
+typo-incompatibilis cum socio (relatio; implicita→realis per regulas
+K&R mixtas); ⑧ comparatio + subtractio profundatae
+(_monstratores_comparabiles: pointee exuti compatibiles aut vacuum);
+TERNARIUS iam profundus erat (identitas pointee — inventum: sedes
+praeexistens). Codices VIII novi; percursus CENSUM CODICUM accepit
+(fons veritatis columnae verdicti futurae) + ordines publici II novi
+(codicis_causa/severitas — tractio percursus, consumptor primus).
+
+**Inventa primi contactus (lex corporis, puncta nova):**
+1. Cauda residua chordam-in-aciem VETUISSET (`char s[] = "ab"`) —
+   classis C4 ITERUM: tertium membrum legale in cauda "silenti"
+   (aggregata, chorda-init). Sanatio: ramus aciei characterum in
+   iudicare (6.5.7).
+2. Probationes veteres III fractae: una per classem C4-chordae
+   (sanata supra), duae per diagnostica DESIGNATA nova (vocationes
+   implicitae in fontibus probationum — exspectationes renovatae
+   I→II cum commentis).
+3. CORPUS: censum initiale 570 novorum = 377 VOCATIO_IMPLICITA
+   (suspectum; lacuna lexici POSIX percursus) + 193 VIOLATIO —
+   investigatio per positiones (fructus chunk A!): (a) 8
+   REDECLARATIO omnes in systema_c89.h ipso = **SUTURA PARSURARUM:
+   tags nominales trans parsuras distincti — lacuna in dissolutione
+   sim-6 C2 ad limen systematis**; clementia: compat redecl saltat
+   vetus ex_systemate (limen systematis = limen nexus, parca
+   trans-TU possidet); (b) 4 LOCUS_IMMUTABILIS = tag
+   incompletus-quia-ignotus (struct termios sub lexico ISO);
+   clementia: mutabilis clemens in tags incompletis (sedes vera =
+   declaratio obiecti incompleti, parca #9); (c) 118+63
+   MONSTRATORES/MONSTRATOR_INTEGER post clementias = OMNES
+   deorsum-lexici (knotapel includit cruda; instrumenta capita
+   POSIX vera; specimen verificatum: DIR* dir = opendir() in
+   percursus.c ipso). NULLUM mendum domus; NULLUM falsum positivum
+   sedium post clementias. Censum finale: 1146 in 77 (588 vetera +
+   377 suspecta + 181 violatio-deorsum-lexici). **Chunk D: vectis
+   acceptationis postulat lexicon satis plenum (systema_posix
+   exsistit officina-latere) + posturam knotapel (includit cruda) —
+   quaestio aperta nominata.**
+
+**Portae:** compilatio stricta; suite silvae 30/30 (probatio_examen
+553/553 — sedes omnes + custodes legalium: aggregata, chorda-init,
+vacuum*, crementa, &functio, variadica, nulla-comparationes); amalgama
+VERIFICATUM hospes 30/30 (ordines accessorum tacti); officina 10/10;
+**fusor circuli 596/596 byte-idem, 0 fracti**; **cursor: figura stans
+EXACTE — 76 praeteritae/0 sisterae/5 tempora, stdout 69 eaedem/0
+DIFFERUNT** (sanatio subtractiva + sedes = invisibiles in codice
+valido, per EXSECUTIONEM probatum); percursus coopertura 100.00%
+TENETUR, tempus 6.19 ms/KB (basis 6.05 — iudicium semper-activum
+~2.3%, scriptum per DECISUS Q7/mensura).
+
+**Debrief instrumentorum:** adhibita — positiones diagnosticorum
+(chunk A) pro investigatione corporis (probe temporalis in percursu,
+5 lineae, remota); censum codicum (novum, manet); python-sweeps.
+fructus — investigatio 193 violationum ex horis in minuta per
+positiones + censum; sine iis, caecus fuissem. asperitates — effusor
+unius plagulae ITERUM desideratus (tertia vice; chunk D eum fert).
+desiderata — nihil novum.
+
+**SEQUENS:** commissio Franis = sigillum chunki C; deinde chunk D
+(effusor examen.sh + corpus invalidum + vectis differentialis;
+quaestiones apertae: lexicon corporis-acceptationis, postura
+knotapel, demotio return-type in oraculo).

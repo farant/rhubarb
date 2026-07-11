@@ -257,6 +257,15 @@ nomen enumeratio {
     EXAMEN_CODEX_MONSTRATORES_INCOMPATIBILES,
     EXAMEN_CODEX_QUALES_ABIECTI,
     EXAMEN_CODEX_MONSTRATOR_INTEGER,
+    /* chunk C (sedes) */
+    EXAMEN_CODEX_ASSIGNATIO_NON_LOCUS,
+    EXAMEN_CODEX_LOCUS_IMMUTABILIS,
+    EXAMEN_CODEX_NUMERUS_ARGUMENTORUM,
+    EXAMEN_CODEX_REDDE_CUM_VALORE_IN_VACUO,
+    EXAMEN_CODEX_REDDE_SINE_VALORE,     /* SUSPECTUM: legale C89 */
+    EXAMEN_CODEX_CONDICIO_NON_SCALARIS,
+    EXAMEN_CODEX_VOCATIO_IMPLICITA,     /* SUSPECTUM: est_implicitum */
+    EXAMEN_CODEX_REDECLARATIO_INCOMPATIBILIS,
     EXAMEN_CODEX_NUMERUS
 } ExamenCodex;
 
@@ -372,6 +381,12 @@ b32 silva_c89_typi_compatibiles (TypusC89* a, TypusC89* b);
 s32 silva_c89_assignationem_iudicare (SilvaSemantica* sem,
     constans SilvaNodus* nodus_valoris, TypusC89* finis,
     TypusC89* valoris, s32* codex_out);
+
+/* Tabula codicum quaerenda (percursus census = consumptor primus;
+ * effusor/vectis chunk D sequuntur). Codex extra fines: causa
+ * "codex ignotus", severitas INFRA. */
+constans character* silva_c89_codicis_causa (s32 codex);
+s32 silva_c89_codicis_severitas (s32 codex);
 
 /* ==================================================
  * Constructio typorum (fabricae internantes)
