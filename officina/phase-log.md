@@ -2198,3 +2198,120 @@ virides + fumus -imago + sessio vera + inventa-sanata-iterum-acta.
 (relectio phase-log TOTA + auditus regulae milliarii; auditus
 praedictionis sim-2 §5 cum numeris organicis; parcae omnes cum
 dominis; sigillum M3 = commissio + RELATIO).
+
+## M3 — RELATIO MILLIARII (2026-07-11)
+
+**M3 CLAUSUM. Indicium + vindex: DEBUGGER OFFICINAE.** Punctum/
+gradus/inspectio in probatione credo vera PER PLAGULAM FORMAE SOLAM,
+cum tabulis linearum macro-consciis per originem tokenorum — vectis
+spec-v2 §XI ad litteram impletus, et Fran in vindice vivo sessionem
+veram egit ("working perfectly" post duo inventa eodem die sanata).
+
+**Vectes, omnes impleti (sex chunks, DUOBUS DIEBUS — on-ramp
+2026-07-11 mane usque ad sessionem vivam eodem die sero):**
+- **① Congelatio plana**: paritas EXACTA + vim 550→171 ms (3.2x —
+  aestimatio 1.3-2x superata: TRIA strata xar simul mortua);
+  arbor_formator e TEMPUS evasit (>30s→15.7s); sweep 75→76.
+- **② Lineae ubique**: distillator RADICIS (silva_token_radix);
+  relationes halitus ubique [via:linea] sedis invocationis; filum
+  numquam-exercitum (lineas_praebere semel-cum-NULL) nunc vivum
+  omni cursu; pretium +0.7s sweep TOTI.
+- **③ Indicium**: probatio circuitus 51/51 (acies macronum acervatae
+  more RDI; retro per lineas radicis; variabilia typata; determinismus
+  memcmp; magica reiecta; asserta magnitudinum); PACTUM AMBULATIONIS
+  fixum BIS (probatio + hospes).
+- **④ Pausa/gradus/puncta**: 66/66 primo cursu; puncta exemplar
+  congelatum patchant (pretium viae calidae ZEPHYRUM); Q12 mensuratum
+  (gradus -O0: vim +11%, sweep +1.6% — ACCEPTUM, net 2.9x).
+- **⑤ VECTIS FORMALIS**: probatio_officina_vindex 69/69 — punctum
+  lineae CREDO per RETRO, acies macronum in pausa, "usus" per NOMEN
+  FONTIS == 0, gradus-super-lineam, punctum trans-modulum + fini,
+  BENE codex 0 cum probatio_piscina 60/60 INTERPRETATA intus.
+- **⑥ Vindex TUI**: cellulae 24/24 primo cursu; fumus -imago duplex;
+  SESSIO VIVA FRANIS (duo inventa vera → sanata → "perfectly").
+Portae die sigilli: suite 10/10; hospes 78/78 VERIFICATUM; paritas
+sweep 76/69/0 DIFFERUNT/5 tempora (figura stans tribus mensuris).
+
+**Lex contactus corporis, puncta nova (vectes inveniunt quod
+validatio non invenit — BIS hoc milliario):** MedullaFunctio.origo
+NUMQUAM assignatum ab M1 (VI fracturae primi cursus, causa UNA, sanatio
+una linea); machinula_gradus ex pausa FALSUM (sedes resumptionis in
+gradum mota, pergere = ansa nuda); accessor via→chorda deerat (vectis
+= consumptor primus verus campi); medulla_functio_terminata sine
+vocatoribus (custos machinula-privatus); phantasmata voluminis stdout
+(inventum Franis cum imagine — captura fd circum VM); linea positionis
+iterata (compressio strato picturae); campus 'chorda' in fontibus
+amalgamatis VETITUS (renominatio per signa); firmationes latinae
+XII-XIII (magnitudo/registrum ut CAMPI, nomen in probatione); porta
+excludenda bis clamavit (copiare_ad_tabulam, removere_cum_ultimo);
+numerus instructionum suitarum horologium legentium NON invariabilis
+(sputnik −2,740 — stdout manet vectis).
+
+**AUDITUS PLENUS (phase-log totum relectum, 2,200 lineae):**
+- INTENTIO omnium sex chunkorum praestita aut emendata-cum-ratione
+  (emendationes ③: INDEX_CURSUS omissus v0 — consumptor unus per
+  sectionem; X-macro → exemplar domus speculi manualis + asserta
+  numerica. Emendatio ⑥ post sessionem: compressio positionis —
+  stratum picturae, forma intacta).
+- XII DECISUS interrogationis omnes honorati (titulus SIGILLATUS
+  indicium; per-mundum v0; vindex-solum productores; typus chorda +
+  tag; instrumenta-sedes; superficies UX quattuor-extra; sententia
+  machinula-privata; UX macronum monstratio-sola; lineae semper;
+  sigillum vectis+TUI; paritas+mensura; claves+linea latina).
+- Sim-5 C1-C13 contra rem: C1 planae[index] verificatum; C2 stiva
+  operandorum congelata; C3 quaestio binaria tempore imprimendi;
+  C4 pretium congelationis invisibile (fallback pigrum non tractum);
+  C5 pactum fixum bis; C6 radix in MedullaLineae + acies in indicio;
+  C7 inscriptio per-functionem (voff globalis mortuus — per-modulum
+  possibilis manet); C8 retro per radices trans-modulum; C9 extenta
+  dissoluta (veritas allocationis); C10 fread+cast, endian hospitis;
+  C11 patching legitimum; C12 coque-scribe-RECLUDE in oneratore;
+  C13 cache tabulati summi. NULLA reversio — simulatio integra tenuit.
+- Duo folds nominata (fundamenta §VII) INVENTA NON FACTA — auditus
+  ipse ea fecit (commentum machinula.h registra; nota anuli worklog).
+  Classis auditus: "parva nominata pro transitu" trans-sessionem
+  evaporant; folds nominatos IN CHUNK facere, non differre.
+
+**AUDITUS PRAEDICTIONIS SIM-2 §5 (numeri organici M3):** praedictio
+"emitte >> nexus > interpretare > origo numeris crudis; origo maxima
+vi-per-vocationem in opere macro-gressuum". ACTUALE M3: vocationes
+CLI organicae prope NULLAE (emitte 1-2, nexus 1-2, origo 1 — calefactio
+ad scopum; interpretare 0). ORDO fere rectus, MAGNITUDO longe infra.
+TRES causae (recalibratio methodi): (1) canales PUSH (uncus clangd +
+censor) demandam viae-erroris absorbuerunt quae tractiones pull
+pepererat (~5 errores ante compilationem capti hoc milliario) —
+victoria §XIV, non defectus subsellii; (2) demanda originis REALIS
+erat sed ut REUSUS MACHINAE (silva_token_radix intra distillatorem +
+indicium — machina instrumenti facta est codex producti), non ut CLI;
+(3) M3 = constructio superficiei NOVAE (grep in capitibus amalgamatum
+directior quam quaestiones de corpore veteri) — praedictiones usus
+per GENUS OPERIS calibrandae (venatio-corporis vs constructio).
+Sim-2 §5 CLAUSUM.
+
+**Parcae cum dominis (restitutae ad sigillum):** per-modulum indicium
++ manifestum (tractio: incrementalitas); fusor -indicium (tractio
+prima vera); gradus-in-macrum (post monstratio-sola demandam);
+nodi typorum C89 pleni + ambulatio membrorum (aera M4; subsumit
+hex-dump interpretare); extenta variabilium (opus liveness futurum);
+lector mmap (POSIX, ad mensuram); vigiliae/puncta condicionalia
+(tractiones vindicis post-v0); tabula effusionis in TUI (cauda
+capturae — responsum gdb-TUI); filtrum umbrarum p_N in VARIABILIA
+(v0.1, arbitrium Franis); congelatio pigra (fallback si mensura
+mordet — non momordit); migratio geminorum fontes-lateris ad
+oneratorem communem (tactu proximo cuiusque; app-latus iam unus:
+vindex + REPL M4); duritia parium suffixorum lectoris (vilis);
+selecta quaestio-CLI (silva-latus, tractio QB = 3); silva-lsp
+(post-M3 = NUNC eligibilis, arbitrium Franis); superinstructiones
+ex datis census (build/census/ 82 plagulae).
+
+**Correctiones spec-v2 eodem sigillo:** §XI M3 actuales; quaestio
+aperta 3 (titulus) SOLUTA = indicium; quaestio 6 (sedes vindicis)
+SOLUTA = instrumenta officinae.
+
+**M3 SIGILLATUM = commissio Franis huius RELATIO.** Fistula nunc:
+fons → silva → semantica → demissio → conexio → machinula →
+INDICIUM → VINDEX. **NEXT: M4 — REPL** (+ cursor #!; vectis spec-v2
+§XI: sessio interactiva bibliothecas monorepo agens; vindex_onerator
+= consumptor app-lateris alter iam paratus; arcus probatus:
+exploratores → simulatio → interrogatio → spec). Roadmap: M4 → M5
+aarch64 → v2 iter-temporis.

@@ -1968,9 +1968,11 @@ constans OfficinaChorda* conexio_decipulam_obtinere (
  * - Dispensatio commutatione (C89 -pedantic goto computatum vetat;
  *   tectum ad M5).
  * - RECORDATOR VOLATUS SEMPER ACTIVUS (Q16): anulus figurarum
- *   (functio/bloccus/instructio); relatio halitus in quovis exitu
- *   abnormali: positio + registra + stiva vocationum + cauda anuli,
- *   cum via:linea per lineas distillatas, ad stderr.
+ *   (functio/index planus); relatio halitus in quovis exitu
+ *   abnormali: positio + stiva vocationum + cauda anuli, cum
+ *   via:linea per lineas distillatas, ad stderr (registra NON in
+ *   relatione - inspectio per vindicem, M3; auditum milliarii
+ *   commentum mendax correxit).
  * - Probatio stivae explicita in vocare (Q10): fractura = halitus
  *   honestus.
  * - Aedificata: tabula statica interna (Q11; series publica ad M4);

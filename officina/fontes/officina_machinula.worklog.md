@@ -313,3 +313,15 @@ Ring/report note: a pausa never prints a report (pergere returns
 PAUSA; only currere prints on non-BENE — and currere through a
 punctum would honestly print a PAUSA report; genera[] gained
 "PAUSA" for exactly that path).
+
+## 2026-07-11 — M3 seal-audit corrections (two folds the spec named)
+
+1. machinula.h header claimed the halt report prints "registra" —
+   it never has (grounding find, fundamenta §VII). Comment fixed;
+   register inspection now genuinely exists via vindex's pane +
+   machinula_registrum_legere.
+2. The 2026-07-10 perf entry says the ring is 128KB; it is 4096 ×
+   16B = 64KB (AnulusFigura is 16 bytes even with the plana pointer
+   — functio* + plana* + s32 + i32 = 24B actually, post-freeze:
+   4096 × 24B = 96KB). Conclusion (L2-hot, free) unchanged at any
+   of these sizes; recorded so the numbers stop drifting.

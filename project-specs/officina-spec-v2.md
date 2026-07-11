@@ -322,9 +322,16 @@ officina/
 - **M2 — machinula + builtins, staged by waves.** Bar: Wave 0 green
   (piscina suite first — the memory-model gate), then Wave 1 green.
   v1 SHIPPED = Waves 0+1 (~80 suites), deferrals named (1b/2/3).
-- **M3 — indicium + vindex stepper.** Bar: breakpoint/step/inspect a
-  real credo test through the format file only; macro-aware line
-  mapping via token origo.
+- **M3 — indicium + vindex stepper.** **CLOSED 2026-07-11** (six
+  chunks, two days; see officina/phase-log.md M3 RELATIO): bar met
+  verbatim — probatio_officina_vindex 69/69 drives breakpoint/step/
+  inspect on probatio_piscina (60/60 interpreted inside it) through
+  the .indicium file ONLY, with RDI-style stacked macro line entries
+  (root/invocation first) from token origo. Flat instruction freeze
+  (3.2x, vim 550→171ms); halt reports carry root-site [via:linea]
+  everywhere (always-on lineae); vindex TUI daily-driven live
+  (app on three amalgams; positions through the lector only).
+  Format name SEALED: indicium (.indicium, magic "INDICIUM").
 - **M4 — REPL** (+ #! runner). Bar: interactive session driving
   monorepo libs.
 - **M5 — native aarch64** (compile-to-memory first, mach-o second;
@@ -351,7 +358,9 @@ officina/
    97.3% resolved, corpus 732); §XI M0 bar restated with actuals.
    M0 CLOSED end-to-end — next officina milestone = M1
    medulla+demissio (see silva/phase-log.md M0b RELATIO).
-3. Indicium name (carried — floated: indicium).
+3. ~~Indicium name~~ SEALED 2026-07-11: **indicium** (M3 interview).
 4. Medulla op vocabulary DECISUS (at M1 design).
 5. REPL semantics (at M4).
-6. vindex location: instrumenta of officina vs sibling project (at M3).
+6. ~~vindex location~~ RESOLVED 2026-07-11: officina/instrumenta/
+   principalia/ + vindex.sh (M3 interview; graduates only if it
+   outgrows the pattern).
