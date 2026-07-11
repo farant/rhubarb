@@ -1675,3 +1675,101 @@ mandata parata cum scopis notis-bonis; experientia in-contextu >
 catalogus lectus; (3) sectio bench in Build/test utriusque.
 NB: CAUTIO vetustatis nexus in calefactione ipsa docet -renovare
 — pars rituali, non vitium.
+
+## M3 — INDICIUM + VINDEX: ON-RAMP APERTUM (2026-07-11)
+
+### GRADUS 1/4 — EXPLORATORES FUNDANTES (facti)
+
+Quattuor exploratores paralleli (machinula / origo-catena / RDI /
+consumptores vindicis); synthesis integra in
+**project-specs/officina-m3-fundamenta.md** (SEDES RE-INTROITUS pro
+M3 — lege ante simulationem/spec). Quinque facta portantia:
+
+1. Provenientia MEMORIA-SOLA est (origo = SilvaNodus*; forma textus
+   NIHIL scribit, lector NIHIL restituit) — indicium coquendum est
+   tempore compilationis, numquam ex .medulla reficiendum.
+2. Tabula linearum hodierna sedem SCRIPTURAE (definitio macronis)
+   registrat, non sedem EXPANSIONIS — halt in credo.h monstrat, non
+   in linea probationis. Ambae sedes in catena originis recuperabiles
+   (silva_token_radix + profunditas + nomen_macro per gradum) — sed
+   solum dum parsura vivit.
+3. Fistulae linearum EXSISTUNT sed numquam datum verum portaverunt:
+   interpretare arborem destruit sine colligere (interpretare.c:179);
+   machinula_lineas_praebere semel tantum vocatur, cum NULL
+   (hospes.c:444). Primus filus M3 = collige-ante-destrue + praebe.
+4. Pausa VM vilis est: index instructionis in Tabulatum (structura,
+   non locale) — machinula_gradus() = extractio corporis ansae;
+   limites vocationum gratis recte gradiuntur.
+5. Coordinata plana instructionum NON exsistit (scopi ramorum =
+   indices bloccorum; 3× xar_obtinere per fetch; rami ~26% executionis
+   bis solvunt). Congelatio plana in machinula_creare (passus 4us,
+   IR IMMUTABILE manet) coordinatam creat quam ET velocitas ET
+   breakpoints poscunt.
+
+Instincta RDI adoptata (directorium sectionum per genus-indicem,
+chorda-in-disco, tabulae linearum binae ordinatae, sedes macronum =
+introitus consecutivi eodem indice — exemplar inline-site eorum) et
+complexitas praetermissa (bytecode locorum, ingestus PDB/DWARF,
+compressio) in fundamenta §V. Decem quaestiones apertae pro
+interrogatione in §VI (unitas coctionis per-TU vs per-mundum; quis
+scribit quando; mensa variabilium v0; typi; profunditas aciei
+macronum; TITULUS = caerimonia Franis; sedes vindicis; UX gradus;
+ordo aperturae; hex-dump aggregatorum).
+
+NEXT: gradus 2/4 = SIMULATIO (contra codicem veram, more sim-3/4);
+tum interrogatio; tum spec. Correctiones parvae notatae (fundamenta
+§VII): commentum machinula.h:14 "registra" mendax; anulus 64KB non
+128KB; census in officina/build/census/.
+
+### GRADUS 2/4 — SIMULATIO ⑤ (facta, 2026-07-11)
+
+**project-specs/officina-simulatio-5.md** — C1-C13 schemate quadripartito.
+NULLA reversio; apertura (congelatio plana) CONFIRMATA et promota:
+structura quae breakpoints possibilitat (C11 — patching in exemplari
+congelato LICITUM, quia exemplar machinulae proprium est, IR intactum),
+non solum velocitas. Inventa maiora: C5 pactum ambulationis canonicae
+(indices demissione cocti == indices congelatione computati — probatio
+figenda, non suppositio); C7 inscriptio per-functio voff globalem RDI
+NECAT (VM functio numquam obliviscitur — UnitVMap/ScopeVMap/renumeratio
+omnia supervacua; coctio per-modulum fit possibilis); C9 extenta
+variabilium in v0 DISSOLVUNTUR (demissio omnia localia in introitu
+collocat — "omnia registra tabulati" VERITAS est, non approximatio).
+Duae quaestiones §VI dissolutae (acies macronum sine fine; extenta),
+duae novae natae (Q11 sententia-op pausae = caerimonia; Q12 pretium
+gradus() sub -O0 = mensurandum). Ordo chunkorum: ① congelatio →
+② lineae+distillator → ③ modulus indicii → ④ pausa/gradus/breakpoint →
+⑤ probatio-vectis sine TUI → ⑥ TUI (exemplar saltuarii).
+NEXT: gradus 3/4 = INTERROGATIO Franis (quaestiones in simulatio-5
+"Effect on the interview" — Q1/Q2/Q4/Q6/Q7/Q8/Q11/Q12 vivae).
+
+### GRADUS 3/4 + 4/4 — INTERROGATIO + SPEC (facti, 2026-07-11)
+
+Interrogatio: XII quaestiones, tres circuli —
+**project-specs/officina-m3-interrogatio.md** (transcriptum crudum
+ante spec, more domus). DECISUS maiora: **TITULUS SIGILLATUS =
+indicium** (.indicium; magica capitis "INDICIUM"); coctio per-MUNDUM
+v0 (per-modulum = futurum nominatum); productores = vindex solum
+(coque-scribe-RECLUDE); typi v0 = chorda typi + tag medullae; sedes
+vindicis = instrumenta/principalia; superficies v0 = nucleus + fini
++ tabula memoriae + tabula anuli + puncta per-functionem; sententia
+pausae = MACHINULA_OP_PAUSA machinula-privata (medulla.h +
+vocabularium INTACTA); UX macronum = monstratio-sola (acies in linea
+positionis, gressus per lineam RADICIS); **lineae in memoria =
+SEMPER-VIVAE in omnibus consumptoribus** (relationes halitus ubique
+[via:linea] radicis lucrantur); sigillum M3 = probatio-vectis SINE
+capite (formalis) + TUI cotidie-agibilis; sigillum congelationis =
+paritas + mensura-et-nota (sine limine); lingua imperiorum = claves
++ linea ':' latina.
+
+Spec: **project-specs/officina-m3-spec.md** — sex chunki, quisque
+sigillabilis: ① congelatio plana (+ PACTUM AMBULATIONIS CANONICAE
+primum — probatio figens indices demissionis == congelationis) →
+② lineae ubique (distillator radicis + filum numquam-exercitum) →
+③ indicium (sectiones, X-macro schema, scriptor/lector, circuitus
+probatione) → ④ pausa/gradus/puncta (patching exemplaris congelati;
+mensura gradus sub -O0) → ⑤ VECTIS: probatio sine capite per
+plagulam SOLAM → ⑥ TUI (exemplar saltuarii; pingere per snapshot,
+numquam Machinula* viva). Dilationes nominatae cum dominis in §IX.
+
+**ON-RAMP COMPLETUS (4/4 uno die).** NEXT: recensio Franis + commissio
+(sigillum on-rampi), tum chunk ① congelatio plana.
