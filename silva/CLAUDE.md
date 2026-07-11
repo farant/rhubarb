@@ -76,7 +76,13 @@ The read bench (instrumenta prima, 2026-07-10): ./silva/censor.sh
 ./silva/emitte.sh <file> <symbol> (byte-exact definition),
 ./silva/origo.sh <file> <linea>[:<col>] (expansion story),
 ./silva/nexus.sh <symbol> (who-uses/which-file; -similis fuzzy;
--renovare rebuilds build/nexus.tsv). Officina-side sibling:
+-renovare rebuilds build/nexus.tsv),
+./silva/examen.sh <file> [-posix|-nudum] [-machina] (C89 judgment:
+verdict + positioned diagnostics; M4a; also pushed post-edit via
+examen-custos hook; lexicon exclusions in fixa/examinis/
+exclusiones.txt). Differential bar: ./silva/examen_vectis.sh
+[-corpus] (oracle leak sweep + pinned invalid corpus + corpus
+exclusion diff). Officina-side sibling:
 ./officina/interpretare.sh (run a corpus function in machinula).
 Conventions: root CLAUDE.md + the conventions recorded in phase-log
 complexities (i32 is UNSIGNED — s32/s64 for anything signed; never

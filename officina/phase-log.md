@@ -2462,3 +2462,29 @@ aciei-qualium in relatione nostra (118→3). Instrumenta nova:
 ./silva/examen.sh (effusor iudicii), ./silva/examen_vectis.sh
 (vectis), columna verdicti + censum codicum in percursu. Roadmap:
 M4b REPL → M5 aarch64 → v2 iter-temporis.
+
+### ADDENDUM (2026-07-11) — ORDO M4b: on-ramp nominatus (ante compactionem)
+
+M4b = REPL (+ cursor #!). Vectis (spec-v2 §XI): sessio interactiva
+bibliothecas monorepo agens. Hereditates paratae: iudicium ante
+demissionem (examen vivum — REICE ante demissionem = gratis);
+vindex_onerator = onerator app-lateris; machinula_currere IAM
+iterabile (status purgatur, GLOBALIA PERSISTUNT — designatum M2);
+mundus conexionis cachetur (cursor). ON-RAMP = arcus probatus,
+SESSIONE RECENTI, exploratores IV nominati:
+1. **Modus initus incrementalis**: quid silva pro fragmentis
+   praebet (VISIO: "snippets parse with API-injected context" —
+   canalis oraculi/typedef); parsura lineae unius; quid est
+   "turnus" (declaratio vs expressio vs sententia).
+2. **Mundus vivus**: TU novum in mundum conexum addere (conexio
+   post-nexum?); machinula trans aestimationes (globalia persistunt
+   — probatum?); redefinitio functionis inter turnos (tabulae
+   congelatae! planae[] parallela — quid mutatur?).
+3. **Reconciliatio symbolorum**: implicita→realis inter turnos
+   (fundamenta M4a fact 6); redeclaratio inter turnos; scopus
+   sessionis (quid vivit ubi).
+4. **Superficies producti**: ansa lecti (tessera? nudum stdin?);
+   impressio valorum (praecedens interpretare + recusatio
+   aggregatorum); #! cursor; historia/erratum-recuperatio UX.
+Deinde simulatio-7 → interrogatio → spec. Re-entry: hic addendum +
+spec-v2 §XI + silva/phase-log.md M4a RELATIO MILLIARII.
