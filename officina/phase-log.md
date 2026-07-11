@@ -2031,3 +2031,75 @@ viam oneris interpretare, indicium coctum-scriptum-RECLUSUM, punctum
 per lineam RETRO, pergere → pausa, inspectio per NOMEN FONTIS e
 VARIABILIA, gradus-super-lineam cum custode profunditatis, fini,
 perge → BENE stdout intacto — OMNIA per plagulam solam).
+
+### CHUNK ⑤ — VECTIS FORMALIS M3: INTENTIO (2026-07-11)
+
+Sigillum ④ commissum. probatio_officina_vindex.c = SIGILLUM FORMALE
+M3 (spec §VII; DECISUS 10): onerator proprius (exscriptum
+interpretare — TRES gemini nunc, refactor oneratoris communis
+PARCATUM nominatim, tractio viva), mundus scopo dato {piscina,
+chorda, chorda_aedificator, credo} + probationes/probatio_piscina.c;
+collectio indicii IN oneratore (disciplina C12: coque in via
+oneris); scribe → RECLUDE → ab eo puncto LECTOR SOLUS. Phases:
+(1) punctum per RETRO ("probationes/probatio_piscina.c", linea 37 —
+linea CREDO!) → pergere → PAUSA situ exacto; ACIES MACRONUM in situ
+pausae ≥2 (radix 37 prof. 0 + framea CREDO_AEQUALIS_I32 → credo.h)
+= "macro-aware" litteris vectis; variabile "usus" per NOMEN FONTIS
+e VARIABILIA → registrum_legere == 0; pactum ambulationis pro main.
+(2) gradus-super-lineam (radix mutatur ∧ profunditas ≤ introitus) →
+linea 39 (piscina_destruere). (3) punctum trans-modulum
+(lib/piscina.c:407 in piscina_summa_usus) → pergere → PAUSA
+profunditate 2 (vocatio lineae 54), imum = main; FINI (gradus dum
+profunditas < 2) → summum iterum main. (4) tollere ambo → pergere →
+BENE codex 0 (probatio_piscina interpretata perfecta stdout
+fluente), summa instructionum > XL milia (testis "probationis
+verae"). Effusio interior fluit in stdout probationis (exemplar
+cursor -sola) — vectis octetim maneat cursoris officium.
+
+### CHUNK ⑤ — VECTIS FORMALIS M3: RELATIO (2026-07-11)
+
+**CLAUSUS — VECTIS M3 IMPLETUS. probatio_officina_vindex 69/69,
+quattuor phases omnes; probatio_piscina intra eam INTERPRETATA
+perfecta (60/60 OMNIA PRAETERIERUNT, effusio fluens, codex 0,
+>40k instructiones) — punctum/gradus/inspectio PER PLAGULAM
+INDICII SOLAM.** Linea CREDO 37 per RETRO → PAUSA situ exacto cum
+ACIE MACRONUM (radix :37 + framea CREDO_AEQUALIS_I32 — clausula
+"macro-aware" vectis litteris demonstrata in probatione vera);
+"usus" per NOMEN FONTIS → 0; gradus-super-lineam → :39; punctum
+per-functionem TRANS-MODULUM + FINI; pactum ambulationis iterum.
+Suite 9/9; hospes 77/77; amalgama VERIFICATUM; paritas sweep
+EXACTA (76/69/0/5).
+
+**VECTIS DUO INVENTA VERA CEPIT (ambo sanata eodem die):**
+(1) machinula_gradus ex VM pausata FALSUM reddidit — chorea
+resumptionis in pergere sola vivebat, sed GRESSUS ex pausa panis
+debuggeris est; sedes resumptionis IN GRADUM mota (pergere =
+`dum (gradus)` nudum — sedes una, consumptores ambo). (2) nullus
+accessor publicus IndiciumLinea.via → chorda solvebat (index in
+VIAE, non in tabulam chordarum — impressio debug 'unsigned long'
+pro via monstravit!); indicium_via_chorda natus (fontes + vanilla
++ ordo hospitis). Probatio chunki ③ viam tabulae prorsae numquam
+solvit — VECTIS consumptor primus verus campi fuit. Vectes
+inveniunt quod validatio non invenit (lex e phasi instrumentorum
+iterum confirmata).
+
+Onerator = geminus TERTIUS (interpretare/cursor/vectis) —
+**tractio refactoris oneratoris communis VIVA (tres exemplaria);
+nominata pro chunk ⑥** (TUI eundem oneratorem poscit — extrahe
+TUNC, consumptore quarto vero in mensa). DEBRIEF: *adhibita* —
+diagnostica clangd (trio in probatione ipsa capta ante murum);
+grep/sed pro recognitione; instrumenta subsellii 0 hoc chunk
+(quaestiones = superficies propriae recentes). *desiderata* —
+nulla nova. Detail: officina_indicium.worklog.md.
+
+**M3 STATUS POST ⑤: VECTIS FORMALIS SIGILLATUS (DECISUS 10 pars
+prima). Restat chunk ⑥ = vindex TUI (cotidie-agibilis, polituram
+non obstante) → tum RELATIO MILLIARII M3 plena + auditus
+praedictionis sim-2 §5.**
+
+**NEXT: commissio Franis (sigillum chunk ⑤) → chunk ⑥ VINDEX TUI**
+(officina/instrumenta/principalia/vindex.c + vindex.sh; exemplar
+saltuarii: pingere per snapshot numquam Machinula* viva; tabulae
+fons/registra/stiva/memoria/anulus/puncta; claves + linea ':'
+latina; probationes cellularum sine capite per tessera_pons_
+memoriae; refactor oneratoris communis HIC).

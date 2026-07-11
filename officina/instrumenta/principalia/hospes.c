@@ -352,7 +352,9 @@ int main(void)
                     proba(indicium_lineas_de_instructione(lector,
                             (unsigned int)f, 0, &acies) > 0
                         && acies != NULL && acies[0].linea == 1
-                        && acies[0].profunditas == 0,
+                        && acies[0].profunditas == 0
+                        && indicium_via_chorda(lector,
+                               acies[0].via).mensura == 12,
                         "indicium prorsum");
                     proba(indicium_situs_de_linea(lector,
                             ch("hospes_dem.c"), 1, &situs) > 0

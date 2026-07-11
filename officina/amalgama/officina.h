@@ -612,6 +612,8 @@ IndiciumLector* indicium_aperire(OfficinaPiscina* piscina,
     const char* via);
 OfficinaChorda indicium_chorda(const IndiciumLector* lector,
     unsigned int index);
+OfficinaChorda indicium_via_chorda(const IndiciumLector* lector,
+    unsigned int via_index);
 unsigned int indicium_functiones_numerus(
     const IndiciumLector* lector);
 const IndiciumFunctio* indicium_functio(

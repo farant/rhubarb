@@ -131,6 +131,8 @@ structura Machinula {
 };
 
 interior FILE* _ansam_solvere (Machinula* m, i64 ansa);
+interior MachinulaPunctum* _punctum_invenire (constans Machinula* m,
+    s32 functio_index, i32 instructio);
 
 /* ==================================================
  * Canonicum + figurae fluitantes
@@ -2002,7 +2004,39 @@ machinula_gradus (Machinula* m)
 {
     i64 argumenta[ARGUMENTA_MAXIMA];
 
-    si (m == NIHIL || !m->currens)
+    si (m == NIHIL)
+    {
+        redde FALSUM;
+    }
+    /* resumptio ex pausa IN GRADU (inventum vectis M3): gressus a
+     * statu pausato = exsecutio instructionis sub puncto
+     * (restitue-grade-repone), tum status currens. pergere = ansa
+     * super gradus - sedes resumptionis UNA. */
+    si (m->halitus_genus == MACHINULA_PAUSA && !m->currens
+        && xar_numerus(m->tabulata) > ZEPHYRUM)
+    {
+        Tabulatum* t = m->tabulatum_summum;
+        s32 functio_index = (s32)(t->plana - m->planae);
+        i32 sedes = t->instructio;
+        MachinulaPunctum* punctum = _punctum_invenire(m,
+            functio_index, sedes);
+
+        m->currens = VERUM;
+        m->halitus_genus = MACHINULA_BENE;
+        m->halitus_codex = ZEPHYRUM;
+        si (punctum != NIHIL)
+        {
+            b32 pergendum;
+
+            m->planae[functio_index].instructiones[sedes].op =
+                punctum->op_originalis;
+            pergendum = machinula_gradus(m);
+            m->planae[functio_index].instructiones[sedes].op =
+                (s32)MACHINULA_OP_PAUSA;
+            redde pergendum;
+        }
+    }
+    si (!m->currens)
     {
         redde FALSUM;
     }
@@ -2829,29 +2863,7 @@ machinula_pergere (Machinula* m)
     {
         redde MACHINULA_VITIUM;
     }
-    /* resumptio ex pausa: punctum sub cursore restitue-grade-repone
-     * (aliter simpliciter perge) */
-    si (m->halitus_genus == MACHINULA_PAUSA && !m->currens
-        && xar_numerus(m->tabulata) > ZEPHYRUM)
-    {
-        Tabulatum* t = m->tabulatum_summum;
-        s32 functio_index = (s32)(t->plana - m->planae);
-        i32 sedes = t->instructio;
-        MachinulaPunctum* punctum = _punctum_invenire(m,
-            functio_index, sedes);
-
-        m->currens = VERUM;
-        m->halitus_genus = MACHINULA_BENE;
-        m->halitus_codex = ZEPHYRUM;
-        si (punctum != NIHIL)
-        {
-            m->planae[functio_index].instructiones[sedes].op =
-                punctum->op_originalis;
-            (vacuum)machinula_gradus(m);
-            m->planae[functio_index].instructiones[sedes].op =
-                (s32)MACHINULA_OP_PAUSA;
-        }
-    }
+    /* resumptio ex pausa in gradu ipso vivit - ansa nuda */
     dum (machinula_gradus(m))
     {
     }

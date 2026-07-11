@@ -1454,6 +1454,21 @@ indicium_chorda (constans IndiciumLector* lector, i32 index)
     }
 }
 
+chorda
+indicium_via_chorda (constans IndiciumLector* lector, i32 via_index)
+{
+    constans IndiciumVia* viae;
+
+    si (lector == NIHIL
+        || via_index >= lector->sectio_numerus[INDICIUM_SECTIO_VIAE])
+    {
+        redde _ch_vacua();
+    }
+    viae = (constans IndiciumVia*)(constans vacuum*)
+        lector->sectio_datum[INDICIUM_SECTIO_VIAE];
+    redde indicium_chorda(lector, viae[via_index].titulus);
+}
+
 i32
 indicium_functiones_numerus (constans IndiciumLector* lector)
 {

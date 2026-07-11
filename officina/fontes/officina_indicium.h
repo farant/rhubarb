@@ -180,6 +180,9 @@ IndiciumLector* indicium_aperire (Piscina* piscina,
     constans character* via);
 
 chorda indicium_chorda (constans IndiciumLector* lector, i32 index);
+/* via (IndiciumLinea.via = index in VIAE, non chorda) -> titulus */
+chorda indicium_via_chorda (constans IndiciumLector* lector,
+    i32 via_index);
 i32 indicium_functiones_numerus (constans IndiciumLector* lector);
 constans IndiciumFunctio* indicium_functio (
     constans IndiciumLector* lector, i32 index);

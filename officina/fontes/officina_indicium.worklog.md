@@ -75,3 +75,46 @@ Rough edges (at the reach):
 - IndiciumLector loads whole file (fread+cast; mmap = POSIX pull).
 - _internare appends bytes one xar_addere at a time (collection-
   time only; addere_multos if it ever shows in a profile).
+
+## 2026-07-11 — M3 chunk ⑤: THE FORMAL BAR (probatio_officina_vindex)
+
+probatio_officina_vindex.c = the M3 seal: breakpoint/step/inspect
+probatio_piscina THROUGH THE FILE ONLY. Loader = interpretare's
+path + indicium collection in the collect-before-destroy window
+(C12 discipline: the debugger's loader bakes). Scoped world
+{piscina, chorda, chorda_aedificator, credo} + the suite TU; write
+→ REOPEN → all queries via lector. Four phases, 69/69:
+1. RETRO punctum at probatio_piscina.c:37 (a CREDO line) →
+   pergere → PAUSA at the exact site; stacked macro entries at the
+   pause (root :37 prof 0 + CREDO_AEQUALIS_I32 frame — the bar's
+   "macro-aware" clause demonstrated on a real test); "usus" found
+   BY SOURCE NAME in VARIABILIA → registrum_legere == 0; walk pact
+   re-verified on main.
+2. Step-over-line (root changes ∧ depth ≤ entry) → lands on :39.
+3. Function-name punctum CROSS-MODULE (piscina_summa_usus, module
+   asserted ≠ suite module) → PAUSA at depth 2 (the :54 call),
+   bottom frame = main; FINI → depth 1, back in main.
+4. Tollere both → pergere → BENE codex 0; >40k instructions; the
+   interpreted suite's own credo output flowed to stdout and
+   reported 60/60 OMNIA PRAETERIERUNT.
+
+TWO REAL FINDS by the bar (both fixed):
+1. **machinula_gradus from a paused VM returned FALSUM** — the
+   resume dance (restitue-grade-repone + currens) lived only in
+   pergere, but STEPPING from a pause is the debugger's bread.
+   Moved the resume seam INTO gradus (recursion for the
+   punctum-step, then re-patch); pergere collapsed to
+   `dum (gradus)`. One resume site, both consumers.
+2. **No public accessor resolved IndiciumLinea.via → chorda** (it
+   indexes VIAE, not the string table; the debug print showed
+   'unsigned long' — a typus string — where a path belonged).
+   indicium_via_chorda born (fontes + vanilla + hospes row).
+   Chunk ③'s probatio never resolved a forward-table via — the
+   BAR was the first real consumer of that field. Bars find what
+   validation doesn't.
+
+Numbers: bar runtime ~7s (world build ~6s: 800-header praebere +
+5 TU demission; execution ~1s). Loader is the THIRD twin
+(interpretare/cursor/bar) — shared-loader refactor pull now LIVE
+at three copies, named for vindex chunk ⑥ (the TUI needs the same
+loader; extract THEN, with a real fourth consumer on the table).

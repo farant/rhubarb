@@ -637,6 +637,8 @@ IndiciumLector* indicium_aperire(OfficinaPiscina* piscina,
     const char* via);
 OfficinaChorda indicium_chorda(const IndiciumLector* lector,
     unsigned int index);
+OfficinaChorda indicium_via_chorda(const IndiciumLector* lector,
+    unsigned int via_index);
 unsigned int indicium_functiones_numerus(
     const IndiciumLector* lector);
 const IndiciumFunctio* indicium_functio(
@@ -7058,6 +7060,8 @@ structura Machinula {
 };
 
 interior FILE* _ansam_solvere (Machinula* m, i64 ansa);
+interior MachinulaPunctum* _punctum_invenire (constans Machinula* m,
+    s32 functio_index, i32 instructio);
 
 /* ==================================================
  * Canonicum + figurae fluitantes
@@ -8929,7 +8933,39 @@ machinula_gradus (Machinula* m)
 {
     i64 argumenta[ARGUMENTA_MAXIMA];
 
-    si (m == NIHIL || !m->currens)
+    si (m == NIHIL)
+    {
+        redde FALSUM;
+    }
+    /* resumptio ex pausa IN GRADU (inventum vectis M3): gressus a
+     * statu pausato = exsecutio instructionis sub puncto
+     * (restitue-grade-repone), tum status currens. pergere = ansa
+     * super gradus - sedes resumptionis UNA. */
+    si (m->halitus_genus == MACHINULA_PAUSA && !m->currens
+        && officina_xar_numerus(m->tabulata) > ZEPHYRUM)
+    {
+        Tabulatum* t = m->tabulatum_summum;
+        s32 functio_index = (s32)(t->plana - m->planae);
+        i32 sedes = t->instructio;
+        MachinulaPunctum* punctum = _punctum_invenire(m,
+            functio_index, sedes);
+
+        m->currens = VERUM;
+        m->halitus_genus = MACHINULA_BENE;
+        m->halitus_codex = ZEPHYRUM;
+        si (punctum != NIHIL)
+        {
+            b32 pergendum;
+
+            m->planae[functio_index].instructiones[sedes].op =
+                punctum->op_originalis;
+            pergendum = machinula_gradus(m);
+            m->planae[functio_index].instructiones[sedes].op =
+                (s32)MACHINULA_OP_PAUSA;
+            redde pergendum;
+        }
+    }
+    si (!m->currens)
     {
         redde FALSUM;
     }
@@ -9756,29 +9792,7 @@ machinula_pergere (Machinula* m)
     {
         redde MACHINULA_VITIUM;
     }
-    /* resumptio ex pausa: punctum sub cursore restitue-grade-repone
-     * (aliter simpliciter perge) */
-    si (m->halitus_genus == MACHINULA_PAUSA && !m->currens
-        && officina_xar_numerus(m->tabulata) > ZEPHYRUM)
-    {
-        Tabulatum* t = m->tabulatum_summum;
-        s32 functio_index = (s32)(t->plana - m->planae);
-        i32 sedes = t->instructio;
-        MachinulaPunctum* punctum = _punctum_invenire(m,
-            functio_index, sedes);
-
-        m->currens = VERUM;
-        m->halitus_genus = MACHINULA_BENE;
-        m->halitus_codex = ZEPHYRUM;
-        si (punctum != NIHIL)
-        {
-            m->planae[functio_index].instructiones[sedes].op =
-                punctum->op_originalis;
-            (vacuum)machinula_gradus(m);
-            m->planae[functio_index].instructiones[sedes].op =
-                (s32)MACHINULA_OP_PAUSA;
-        }
-    }
+    /* resumptio ex pausa in gradu ipso vivit - ansa nuda */
     dum (machinula_gradus(m))
     {
     }
@@ -16113,6 +16127,21 @@ indicium_chorda (constans IndiciumLector* lector, i32 index)
         c.mensura = offseta[index + I] - offseta[index];
         redde c;
     }
+}
+
+OfficinaChorda
+indicium_via_chorda (constans IndiciumLector* lector, i32 via_index)
+{
+    constans IndiciumVia* viae;
+
+    si (lector == NIHIL
+        || via_index >= lector->sectio_numerus[INDICIUM_SECTIO_VIAE])
+    {
+        redde _ch_vacua();
+    }
+    viae = (constans IndiciumVia*)(constans vacuum*)
+        lector->sectio_datum[INDICIUM_SECTIO_VIAE];
+    redde indicium_chorda(lector, viae[via_index].titulus);
 }
 
 i32
