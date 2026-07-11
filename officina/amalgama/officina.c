@@ -467,7 +467,8 @@ typedef enum {
     MACHINULA_BENE = 0,
     MACHINULA_SISTERE,
     MACHINULA_DECIPULA,
-    MACHINULA_VITIUM
+    MACHINULA_VITIUM,
+    MACHINULA_PAUSA   /* punctum tactum - resumabile (pergere) */
 } MachinulaExitusGenus;
 
 typedef struct {
@@ -493,6 +494,29 @@ unsigned long long machinula_numerus_vocationum(
 unsigned long long machinula_numerus_aedificatorum(
     const Machinula* machinula);
 size_t machinula_stiva_apex(const Machinula* machinula);
+
+/* M3 chunk 4: gressus + puncta + inspectio (superficies vindicis).
+ * aperire = status + tabulatum primum; gradus = instructio UNA;
+ * pergere = usque ad halitum/pausam (genus redditur; resumptio ex
+ * pausa punctum transit). Puncta: patching exemplaris congelati -
+ * sedes (index functionis conexionis, index planus; indicium
+ * easdem coordinatas dat). tabulatum_index: 0 = imum. */
+int machinula_aperire(Machinula* machinula,
+    OfficinaChorda titulus_functionis);
+int machinula_gradus(Machinula* machinula);
+int machinula_pergere(Machinula* machinula);
+int machinula_punctum_ponere(Machinula* machinula,
+    int functio_index, unsigned int instructio);
+int machinula_punctum_tollere(Machinula* machinula,
+    int functio_index, unsigned int instructio);
+long long machinula_halitus_codex(const Machinula* machinula);
+unsigned int machinula_tabulata_numerus(const Machinula* machinula);
+int machinula_positionem_inspicere(const Machinula* machinula,
+    unsigned int tabulatum_index, int* functio_index_out,
+    unsigned int* instructio_out);
+int machinula_registrum_legere(const Machinula* machinula,
+    unsigned int tabulatum_index, unsigned int index_registri,
+    unsigned long long* valor_out);
 
 /* ==================================================
  * Demissio (M1b): arbor typata -> medulla
@@ -1574,6 +1598,17 @@ static b32
 officina_xar_removere_ultimum(
 		OfficinaXar* xar);
 
+/* Xar Removere Cum Ultimo - Swap-remove O(1)
+ * "Removere elementum ad indicem mutando cum ultimo"
+ *
+ * Nota: Non servat ordinem! Utile si ordo non refert.
+ * Redde: VERUM si successus, FALSUM si index invalidus
+ */
+static b32
+officina_xar_removere_cum_ultimo(
+		OfficinaXar* xar,
+		i32  index);
+
 #endif /* XAR_H */
 
 /* ================= ex officina/fontes/officina_medulla.h ================= */
@@ -1963,6 +1998,36 @@ vacuum machinula_lineas_praebere (Machinula* machinula,
  * currere iterabile, globalia region PERSISTUNT */
 MachinulaExitus machinula_currere (Machinula* machinula,
     OfficinaChorda titulus_functionis);
+
+/* M3 chunk 4: gressus + puncta + inspectio (superficies vindicis).
+ * aperire = status purgatus + tabulatum primum (VERUM si paratum);
+ * gradus = instructio UNA (VERUM = pergendum); pergere = usque ad
+ * halitum aut pausam, genus halitus redditur; resumptio ex pausa
+ * punctum sub cursore transit (restitue-grade-repone). currere =
+ * involucrum compatibile (aperire + pergere + relatio + exitus). */
+b32 machinula_aperire (Machinula* machinula,
+    OfficinaChorda titulus_functionis);
+b32 machinula_gradus (Machinula* machinula);
+s32 machinula_pergere (Machinula* machinula);
+
+/* puncta: patching exemplaris CONGELATI (proprium machinulae - IR
+ * intactum; nullum pretium in via calida). Sedes = (index functionis
+ * conexionis, index instructionis planus) - indicium easdem
+ * coordinatas dat. */
+b32 machinula_punctum_ponere (Machinula* machinula,
+    s32 functio_index, i32 instructio);
+b32 machinula_punctum_tollere (Machinula* machinula,
+    s32 functio_index, i32 instructio);
+
+/* inspectio (VM pausata): tabulatum_index 0 = imum,
+ * numerus - I = cacumen */
+s64 machinula_halitus_codex (constans Machinula* machinula);
+i32 machinula_tabulata_numerus (constans Machinula* machinula);
+b32 machinula_positionem_inspicere (constans Machinula* machinula,
+    i32 tabulatum_index, s32* functio_index_out,
+    i32* instructio_out);
+b32 machinula_registrum_legere (constans Machinula* machinula,
+    i32 tabulatum_index, i32 index_registri, i64* valor_out);
 
 /* census */
 i64 machinula_numerus_instructionum (constans Machinula* machinula);
@@ -3554,6 +3619,55 @@ officina_xar_removere_ultimum(
 	}
 
 	xar->numerus_elementorum--;
+	redde VERUM;
+}
+
+/* Xar Removere Cum Ultimo
+ * "Swap-remove - O(1)"
+ */
+static b32
+officina_xar_removere_cum_ultimo(
+    OfficinaXar* xar,
+    i32  index)
+{
+	vacuum* elementum_ad_remotionem;
+	vacuum* elementum_ultimum;
+	   i32  index_ultimus;
+
+	si (!xar || xar->numerus_elementorum == ZEPHYRUM)
+	{
+		redde FALSUM;
+	}
+
+	si (index >= xar->numerus_elementorum)
+	{
+		redde FALSUM;
+	}
+
+	index_ultimus = xar->numerus_elementorum - I;
+
+	/* Si index est ultimus, simpliciter removere */
+	si (index == index_ultimus)
+	{
+		xar->numerus_elementorum--;
+		redde VERUM;
+	}
+
+	/* Mutare cum ultimo et removere ultimum */
+	elementum_ad_remotionem = officina_xar_obtinere(xar, index);
+	elementum_ultimum       = officina_xar_obtinere(xar, index_ultimus);
+
+	si (!elementum_ad_remotionem || !elementum_ultimum)
+	{
+		redde FALSUM;
+	}
+
+	/* Copiare ultimum ad positionem remotionis */
+	memcpy(elementum_ad_remotionem, elementum_ultimum, xar->magnitudo_elementi);
+
+	/* Decrementare numerum */
+	xar->numerus_elementorum--;
+
 	redde VERUM;
 }
 
@@ -6854,6 +6968,7 @@ conexio_decipulam_obtinere (constans Conexio* conexio, s32 index)
  * in exemplari congelato (numquam textuales, numquam in IR ipso).
  * Sedes numeratorum pro his in acie numeri_op reservantur. */
 #define MACHINULA_OP_FLUXUS_CUSTOS  (MEDULLA_OP_NUMERUS)
+#define MACHINULA_OP_PAUSA          (MEDULLA_OP_NUMERUS + 1)
 #define MACHINULA_OPS_PRIVATAE      2
 
 /* ==================================================
@@ -6869,13 +6984,21 @@ conexio_decipulam_obtinere (constans Conexio* conexio, s32 index)
  * inseritur - semantica "fluxus extra bloccum" hodierna servata
  * (corpus semper terminatum manet 1:1 cum ambulatione canonica). */
 nomen structura {
-    constans MedullaInstructio* instructiones;   /* contiguae */
+    MedullaInstructio* instructiones;   /* contiguae; NON-constans:
+                                         * puncta hoc exemplar
+                                         * patchant (M3 chunk 4) */
     i32                         numerus;
     constans i32*               blocci_initia;
     i32                         blocci_numerus;
     constans MedullaOperandum*  operanda;        /* acies plana */
     i32                         operanda_numerus;
 } FunctioPlana;
+
+nomen structura {
+    s32 functio_index;
+    i32 instructio;                /* index planus */
+    s32 op_originalis;
+} MachinulaPunctum;
 
 nomen structura {
     constans MedullaFunctio* functio;
@@ -6908,6 +7031,7 @@ structura Machinula {
     FunctioPlana* planae;           /* parallelae tabulae functionum
                                      * conexionis (index descriptoris) */
     i32       planae_numerus;
+    OfficinaXar*      puncta;               /* MachinulaPunctum valore (M3) */
     OfficinaXar*      lineae_modulorum;     /* MedullaLineae* (NIHIL licet) */
     i8*       stiva_basis;
     memoriae_index stiva_magnitudo;
@@ -7128,7 +7252,7 @@ interior vacuum
 _relationem_imprimere (constans Machinula* m)
 {
     constans character* genera[] = {
-        "BENE", "SISTERE", "DECIPULA", "VITIUM"
+        "BENE", "SISTERE", "DECIPULA", "VITIUM", "PAUSA"
     };
     i32 numerus_tabulatorum = officina_xar_numerus(m->tabulata);
     i32 i;
@@ -8403,6 +8527,12 @@ machinula_creare (OfficinaPiscina* piscina, Conexio* conexio, Regio* regio)
     m->conexio = conexio;
     m->regio = regio;
     m->tabulata = officina_xar_creare(piscina, (i32)magnitudo(Tabulatum));
+    m->puncta = officina_xar_creare(piscina,
+        (i32)magnitudo(MachinulaPunctum));
+    si (m->puncta == NIHIL)
+    {
+        redde NIHIL;
+    }
     m->lineae_modulorum = officina_xar_creare(piscina,
         (i32)magnitudo(MedullaLineae*));
     m->stiva_basis = (i8*)regio_stiva_initium(regio);
@@ -8743,16 +8873,10 @@ _memoriam_probare (Machinula* m, i64 inscriptio,
     redde VERUM;
 }
 
-MachinulaExitus
-machinula_currere (Machinula* m, OfficinaChorda titulus_functionis)
+b32
+machinula_aperire (Machinula* m, OfficinaChorda titulus_functionis)
 {
-    MachinulaExitus exitus;
-    i64 argumenta[ARGUMENTA_MAXIMA];
-
-    memset(&exitus, ZEPHYRUM, magnitudo(MachinulaExitus));
-    exitus.genus = MACHINULA_VITIUM;
-
-    /* status purgatus - currere iterabile */
+    /* status purgatus - aperire iterabile */
     officina_xar_truncare(m->tabulata, ZEPHYRUM);
     m->tabulatum_summum = NIHIL;
     m->stiva_cursor = ZEPHYRUM;
@@ -8793,8 +8917,22 @@ machinula_currere (Machinula* m, OfficinaChorda titulus_functionis)
         }
     }
 
-    /* ansa dispensationis */
-    dum (m->currens)
+    redde m->currens;
+}
+
+/* instructio UNA - corpus ansae dispensationis extractum (M3 chunk
+ * 4; indentatio corporis ex ansa originali servata). VERUM =
+ * pergendum. Pausa (punctum tactum) currens exstinguit positione
+ * INTACTA - resumptio per pergere. */
+b32
+machinula_gradus (Machinula* m)
+{
+    i64 argumenta[ARGUMENTA_MAXIMA];
+
+    si (m == NIHIL || !m->currens)
+    {
+        redde FALSUM;
+    }
     {
         Tabulatum* t = m->tabulatum_summum;
         constans FunctioPlana* plana = t->plana;
@@ -8804,7 +8942,7 @@ machinula_currere (Machinula* m, OfficinaChorda titulus_functionis)
         si (t->instructio >= plana->numerus)
         {
             _vitium(m, "fluxus extra bloccum");
-            frange;
+            redde FALSUM;
         }
         instructio = &plana->instructiones[t->instructio];
         op = instructio->op;
@@ -9513,12 +9651,220 @@ machinula_currere (Machinula* m, OfficinaChorda titulus_functionis)
             _vitium(m, "fluxus extra bloccum");
             frange;
 
+        casus MACHINULA_OP_PAUSA:
+            /* punctum tactum - ANTE exsecutionem; positio manet;
+             * resumptio per pergere (restitue-grade-repone) */
+            _halitum_ponere(m, MACHINULA_PAUSA, ZEPHYRUM, NIHIL);
+            frange;
+
         ordinarius:
             _vitium(m, "operatio ignota");
             frange;
         }
     }
+    redde m->currens;
+}
 
+interior MachinulaPunctum*
+_punctum_invenire (constans Machinula* m, s32 functio_index,
+    i32 instructio)
+{
+    i32 numerus = officina_xar_numerus(m->puncta);
+    i32 i;
+
+    per (i = ZEPHYRUM; i < numerus; i++)
+    {
+        MachinulaPunctum* punctum = officina_xar_obtinere(m->puncta, i);
+
+        si (punctum->functio_index == functio_index
+            && punctum->instructio == instructio)
+        {
+            redde punctum;
+        }
+    }
+    redde NIHIL;
+}
+
+b32
+machinula_punctum_ponere (Machinula* m, s32 functio_index,
+    i32 instructio)
+{
+    FunctioPlana* plana;
+
+    si (m == NIHIL || functio_index < ZEPHYRUM
+        || (i32)functio_index >= m->planae_numerus)
+    {
+        redde FALSUM;
+    }
+    plana = &m->planae[functio_index];
+    si (instructio >= plana->numerus)
+    {
+        redde FALSUM;
+    }
+    si (_punctum_invenire(m, functio_index, instructio) != NIHIL)
+    {
+        redde VERUM;   /* iam positum */
+    }
+    {
+        MachinulaPunctum* punctum = officina_xar_addere(m->puncta);
+
+        si (punctum == NIHIL)
+        {
+            redde FALSUM;
+        }
+        punctum->functio_index = functio_index;
+        punctum->instructio = instructio;
+        punctum->op_originalis = plana->instructiones[instructio].op;
+        plana->instructiones[instructio].op =
+            (s32)MACHINULA_OP_PAUSA;
+    }
+    redde VERUM;
+}
+
+b32
+machinula_punctum_tollere (Machinula* m, s32 functio_index,
+    i32 instructio)
+{
+    i32 numerus;
+    i32 i;
+
+    si (m == NIHIL)
+    {
+        redde FALSUM;
+    }
+    numerus = officina_xar_numerus(m->puncta);
+    per (i = ZEPHYRUM; i < numerus; i++)
+    {
+        MachinulaPunctum* punctum = officina_xar_obtinere(m->puncta, i);
+
+        si (punctum->functio_index == functio_index
+            && punctum->instructio == instructio)
+        {
+            m->planae[functio_index].instructiones[instructio].op =
+                punctum->op_originalis;
+            (vacuum)officina_xar_removere_cum_ultimo(m->puncta, i);
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
+s32
+machinula_pergere (Machinula* m)
+{
+    si (m == NIHIL)
+    {
+        redde MACHINULA_VITIUM;
+    }
+    /* resumptio ex pausa: punctum sub cursore restitue-grade-repone
+     * (aliter simpliciter perge) */
+    si (m->halitus_genus == MACHINULA_PAUSA && !m->currens
+        && officina_xar_numerus(m->tabulata) > ZEPHYRUM)
+    {
+        Tabulatum* t = m->tabulatum_summum;
+        s32 functio_index = (s32)(t->plana - m->planae);
+        i32 sedes = t->instructio;
+        MachinulaPunctum* punctum = _punctum_invenire(m,
+            functio_index, sedes);
+
+        m->currens = VERUM;
+        m->halitus_genus = MACHINULA_BENE;
+        m->halitus_codex = ZEPHYRUM;
+        si (punctum != NIHIL)
+        {
+            m->planae[functio_index].instructiones[sedes].op =
+                punctum->op_originalis;
+            (vacuum)machinula_gradus(m);
+            m->planae[functio_index].instructiones[sedes].op =
+                (s32)MACHINULA_OP_PAUSA;
+        }
+    }
+    dum (machinula_gradus(m))
+    {
+    }
+    redde m->halitus_genus;
+}
+
+s64
+machinula_halitus_codex (constans Machinula* machinula)
+{
+    si (machinula == NIHIL)
+    {
+        redde ZEPHYRUM;
+    }
+    redde machinula->halitus_codex;
+}
+
+i32
+machinula_tabulata_numerus (constans Machinula* machinula)
+{
+    si (machinula == NIHIL)
+    {
+        redde ZEPHYRUM;
+    }
+    redde officina_xar_numerus(machinula->tabulata);
+}
+
+b32
+machinula_positionem_inspicere (constans Machinula* machinula,
+    i32 tabulatum_index, s32* functio_index_out,
+    i32* instructio_out)
+{
+    constans Tabulatum* t;
+
+    si (machinula == NIHIL)
+    {
+        redde FALSUM;
+    }
+    t = (constans Tabulatum*)officina_xar_obtinere_s(machinula->tabulata,
+        (s32)tabulatum_index);
+    si (t == NIHIL)
+    {
+        redde FALSUM;
+    }
+    si (functio_index_out != NIHIL)
+    {
+        *functio_index_out = (s32)(t->plana - machinula->planae);
+    }
+    si (instructio_out != NIHIL)
+    {
+        *instructio_out = t->instructio;
+    }
+    redde VERUM;
+}
+
+b32
+machinula_registrum_legere (constans Machinula* machinula,
+    i32 tabulatum_index, i32 index_registri, i64* valor_out)
+{
+    constans Tabulatum* t;
+
+    si (machinula == NIHIL || valor_out == NIHIL)
+    {
+        redde FALSUM;
+    }
+    t = (constans Tabulatum*)officina_xar_obtinere_s(machinula->tabulata,
+        (s32)tabulatum_index);
+    si (t == NIHIL
+        || index_registri >= officina_xar_numerus(t->functio->registra))
+    {
+        redde FALSUM;
+    }
+    *valor_out = t->registra[index_registri];
+    redde VERUM;
+}
+
+MachinulaExitus
+machinula_currere (Machinula* m, OfficinaChorda titulus_functionis)
+{
+    MachinulaExitus exitus;
+
+    memset(&exitus, ZEPHYRUM, magnitudo(MachinulaExitus));
+    exitus.genus = MACHINULA_VITIUM;
+    si (machinula_aperire(m, titulus_functionis))
+    {
+        (vacuum)machinula_pergere(m);
+    }
     si (m->halitus_genus != MACHINULA_BENE)
     {
         _relationem_imprimere(m);

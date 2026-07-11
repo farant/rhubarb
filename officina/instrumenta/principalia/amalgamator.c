@@ -135,7 +135,6 @@ interior constans character* constans EXCLUDENDA_XARIS[] = {
     "xar_ponere_vexilla",
     "xar_quaerere_binarie",
     "xar_quaerere_binarie_index",
-    "xar_removere_cum_ultimo",
     "xar_status_imprimere",
     "xar_tollere",
     "xar_vacare",

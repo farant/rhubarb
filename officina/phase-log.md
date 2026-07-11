@@ -1969,3 +1969,65 @@ pausa/gradus/puncta** (MACHINULA_PAUSA halitus; machinula_gradus +
 machinula_pergere extractione corporis ansae; puncta per patching
 exemplaris congelati MACHINULA_OP_PAUSA = NUMERUS+1; mensura
 oneris gradus sub -O0 = Q12).
+
+### CHUNK ④ — PAUSA/GRADUS/PUNCTA: INTENTIO (2026-07-11)
+
+Superficies VM pro vindice (spec §VI): (1) genus halitus novum
+MACHINULA_PAUSA — resumabile, sine relatione, positio intacta
+(pausa ANTE exsecutionem instructionis). (2) Extractio corporis
+ansae: machinula_gradus (instructio UNA, b32 = pergendum) +
+machinula_aperire (status + tabulatum primum, ex capite currere) +
+machinula_pergere (usque ad halitum/pausam; resumptio ex pausa =
+restitue-grade-repone punctum sub cursore); machinula_currere =
+involucrum compatibile EXACTUM (aperire + pergere + relatio +
+exitus). (3) Puncta per PATCHING exemplaris congelati (sim C11;
+DECISUS Q11 machinula-privatum): MACHINULA_OP_PAUSA =
+MEDULLA_OP_NUMERUS+1 (sedes numeratoris iam reservata ①);
+FunctioPlana.instructiones fit non-constans (exemplar machinulae
+proprium — mutabilitas est punctum); punctum_ponere/tollere per
+(index functionis conexionis, index planus). (4) Inspectio minima
+pro vecte ⑤: tabulata_numerus + positionem_inspicere (index
+functionis derivatur t->plana - m->planae, SINE campo novo) +
+registrum_legere. VIII ordines publici novi → hospes + officina.h.
+Vectis: probatio nova (fixtura .medulla textualis — puncta per
+indices, lineae non necessariae): pergere sine punctis == currere;
+punctum tactum → PAUSA positione recta; registrum lectum in pausa;
+pergere iterum → BENE 42 idem; tollere; gradus-singuli numerati.
+MENSURA Q12: vim solo ante (171ms) / post — pretium vocationis
+gradus sub -O0; postura: structura vincit, fallback nominatum =
+ansa interna pergere.
+
+### CHUNK ④ — PAUSA/GRADUS/PUNCTA: RELATIO (2026-07-11)
+
+**CLAUSUS. Probatio 66/66 PRIMO CURSU** (fundamentum currere 42;
+gradus singuli numerati == numerus instructionum cursus == 42 idem;
+punctum medio-main → PAUSA indice plano exacto ANTE exsecutionem,
+%t1 == 21 lectum in pausa, resumptio → 42 idem; punctum instructione
+0 → nihil exsecutum; punctum in VOCATO → profunditas 2, %a == 20 in
+tabulato vocati, imum = main; punctum per iter DESCRIPTORIS (vocare
+%f); tollere + tollere iteratum; fines insani reiecti). Extractio
+corporis ansae primo transitu pura (clausura blocci indentationem
+servavit honeste). Suite 8/8; hospes 73→77 (aperire/gradus/positio/
+puncta+resumptio); amalgama VERIFICATUM (excludenda clamavit iterum:
+xar_removere_cum_ultimo — firmatio secunda portae); paritas sweep
+EXACTA (76/69/0/5).
+
+**Q12 MENSURATUM (incognitum nominatum chunki):** vim 171 → 190 ms
+(+11% — vocatio non-inlineata per instructionem sub -O0; NET contra
+fundamentum prae-M3 adhuc 2.9x: 550→190); murus sweep +1.6% solum
+(3:46.64 → 3:50.20 — dispensatio pars minor temporis sweep).
+ACCEPTUM per posturam interrogationis: corpus UNUM sine
+duplicatione; aedificationes amalgamatis/-celer gradus in pergere
+inlineant (TU eadem) → cursus benedictionis nihil solvunt; fallback
+manet nominatum (ansa interna pergere) si labor gressuum umquam
+dolet. IX ordines publici novi (aperire/gradus/pergere/punctum
+ponere+tollere/halitus_codex/tabulata_numerus/positionem_inspicere/
+registrum_legere) — index functionis derivatur t->plana - m->planae
+SINE campo novo. Detail: officina_machinula.worklog.md.
+
+**NEXT: commissio Franis (sigillum chunk ④) → chunk ⑤ VECTIS
+FORMALIS M3** (probatio sine capite: mundus probatio_piscina per
+viam oneris interpretare, indicium coctum-scriptum-RECLUSUM, punctum
+per lineam RETRO, pergere → pausa, inspectio per NOMEN FONTIS e
+VARIABILIA, gradus-super-lineam cum custode profunditatis, fini,
+perge → BENE stdout intacto — OMNIA per plagulam solam).

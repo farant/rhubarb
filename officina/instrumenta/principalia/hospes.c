@@ -520,6 +520,32 @@ int main(void)
             && machinula_numerus_aedificatorum(machinula) == 0
             && machinula_stiva_apex(machinula) > 0,
             "machinula census");
+        /* M3 chunk 4: gressus + puncta + inspectio */
+        {
+            unsigned long long valor = 0;
+            int functio_index = -1;
+            unsigned int instructio = 0;
+
+            proba(machinula_aperire(machinula, ch("main")),
+                "machinula aperire");
+            proba(machinula_gradus(machinula), "machinula gradus");
+            proba(machinula_positionem_inspicere(machinula, 0,
+                      &functio_index, &instructio)
+                && functio_index >= 0 && instructio == 1,
+                "machinula positio");
+            proba(machinula_punctum_ponere(machinula,
+                      functio_index, 2)
+                && machinula_pergere(machinula) == MACHINULA_PAUSA
+                && machinula_tabulata_numerus(machinula) == 1
+                && machinula_registrum_legere(machinula, 0, 0,
+                       &valor)
+                && valor == 36
+                && machinula_punctum_tollere(machinula,
+                       functio_index, 2)
+                && machinula_pergere(machinula) == MACHINULA_BENE
+                && machinula_halitus_codex(machinula) == 42,
+                "machinula puncta + resumptio");
+        }
         regio_destruere(regio);
     }
 

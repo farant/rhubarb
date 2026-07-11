@@ -267,3 +267,49 @@ frozen indices) lands in chunk ③ with indicium's side — the freeze
 alone has nothing to compare against; blocci_initia strict
 monotonicity is asserted implicitly by the parity bar (any drift
 = wrong branch targets = instant corpus carnage).
+
+## 2026-07-11 — M3 chunk ④: pausa/gradus/puncta (66/66 first run)
+
+The loop body became machinula_gradus() (one instruction, b32 =
+keep going) — wrapped in a block scope so the inherited indentation
+reads as intentional. machinula_aperire = the old currere head
+(reset + initium); machinula_pergere = resume-from-pausa +
+dum(gradus); machinula_currere = exact compat wrapper. New halitus
+genus MACHINULA_PAUSA (resumable: position intact, no report, pausa
+fires BEFORE executing the instruction).
+
+Puncta by PATCHING the frozen copy (sim C11, DECISUS Q11):
+MACHINULA_OP_PAUSA = MEDULLA_OP_NUMERUS+1 (counter slot was
+pre-reserved in chunk ①); FunctioPlana.instructiones went non-const
+(machinula's own copy — mutability is the point); continue-past =
+restore op, gradus once, re-patch, then run. Zero hot-path cost:
+run-to-punctum adds NOTHING per instruction. Inspection rows:
+positionem_inspicere derives the conexio functio index by POINTER
+ARITHMETIC (t->plana - m->planae) — no new frame field;
+registrum_legere reads t->registra[n] raw; halitus_codex getter
+born (probatio + vindex need the result after pergere).
+
+**Q12 MEASURED (the chunk's named unknown):** vim solo 171 → 190 ms
+(+11% — one non-inlined call per instruction at -O0; net vs pre-M3
+baseline still 2.9x at 550→190). Sweep wall 3:46.64 → 3:50.20
+(+1.6% — dispatch is a minor share of sweep time). ACCEPTED per the
+interview posture: one body, no duplication; the amalgam/-celer
+builds inline gradus into pergere (same-TU) so blessing runs pay
+zero. Fallback stays named (pergere internal loop sharing the
+extracted body) if stepping-heavy work ever hurts.
+
+Probatio_officina_puncta (vocationes.medulla): baseline currere 42;
+gradus-singuli count == currere instruction count == 42 result;
+punctum mid-main (pausa at exact flat index, %t1 == 21 read
+mid-pause, resume → same 42); punctum at instruction 0 (nothing
+executed before pausa); punctum in CALLEE (frame depth 2, param
+%a == 20 read in callee frame, bottom frame = main); punctum
+reached through the DESCRIPTOR call path (vocare %f); tollere +
+double-tollere; insane bounds refused. Amalgam: excludenda claimed
+xar_removere_cum_ultimo (2nd firing of the excludenda gate —
+manifest line deleted, gate clamavit as documented).
+
+Ring/report note: a pausa never prints a report (pergere returns
+PAUSA; only currere prints on non-BENE — and currere through a
+punctum would honestly print a PAUSA report; genera[] gained
+"PAUSA" for exactly that path).

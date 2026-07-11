@@ -442,7 +442,8 @@ typedef enum {
     MACHINULA_BENE = 0,
     MACHINULA_SISTERE,
     MACHINULA_DECIPULA,
-    MACHINULA_VITIUM
+    MACHINULA_VITIUM,
+    MACHINULA_PAUSA   /* punctum tactum - resumabile (pergere) */
 } MachinulaExitusGenus;
 
 typedef struct {
@@ -468,6 +469,29 @@ unsigned long long machinula_numerus_vocationum(
 unsigned long long machinula_numerus_aedificatorum(
     const Machinula* machinula);
 size_t machinula_stiva_apex(const Machinula* machinula);
+
+/* M3 chunk 4: gressus + puncta + inspectio (superficies vindicis).
+ * aperire = status + tabulatum primum; gradus = instructio UNA;
+ * pergere = usque ad halitum/pausam (genus redditur; resumptio ex
+ * pausa punctum transit). Puncta: patching exemplaris congelati -
+ * sedes (index functionis conexionis, index planus; indicium
+ * easdem coordinatas dat). tabulatum_index: 0 = imum. */
+int machinula_aperire(Machinula* machinula,
+    OfficinaChorda titulus_functionis);
+int machinula_gradus(Machinula* machinula);
+int machinula_pergere(Machinula* machinula);
+int machinula_punctum_ponere(Machinula* machinula,
+    int functio_index, unsigned int instructio);
+int machinula_punctum_tollere(Machinula* machinula,
+    int functio_index, unsigned int instructio);
+long long machinula_halitus_codex(const Machinula* machinula);
+unsigned int machinula_tabulata_numerus(const Machinula* machinula);
+int machinula_positionem_inspicere(const Machinula* machinula,
+    unsigned int tabulatum_index, int* functio_index_out,
+    unsigned int* instructio_out);
+int machinula_registrum_legere(const Machinula* machinula,
+    unsigned int tabulatum_index, unsigned int index_registri,
+    unsigned long long* valor_out);
 
 /* ==================================================
  * Demissio (M1b): arbor typata -> medulla

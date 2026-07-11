@@ -41,7 +41,9 @@ nomen enumeratio {
     MACHINULA_BENE = 0,       /* redde ex initio aut exit vocatum */
     MACHINULA_SISTERE,        /* sistere exsecutum (causa) */
     MACHINULA_DECIPULA,       /* symbolum insolutum vocatum */
-    MACHINULA_VITIUM          /* stiva/memoria/vocatio insana */
+    MACHINULA_VITIUM,         /* stiva/memoria/vocatio insana */
+    MACHINULA_PAUSA           /* punctum tactum - resumabile
+                               * (pergere; positio intacta, M3) */
 } MachinulaExitusGenus;
 
 nomen structura {
@@ -67,6 +69,36 @@ vacuum machinula_lineas_praebere (Machinula* machinula,
  * currere iterabile, globalia region PERSISTUNT */
 MachinulaExitus machinula_currere (Machinula* machinula,
     chorda titulus_functionis);
+
+/* M3 chunk 4: gressus + puncta + inspectio (superficies vindicis).
+ * aperire = status purgatus + tabulatum primum (VERUM si paratum);
+ * gradus = instructio UNA (VERUM = pergendum); pergere = usque ad
+ * halitum aut pausam, genus halitus redditur; resumptio ex pausa
+ * punctum sub cursore transit (restitue-grade-repone). currere =
+ * involucrum compatibile (aperire + pergere + relatio + exitus). */
+b32 machinula_aperire (Machinula* machinula,
+    chorda titulus_functionis);
+b32 machinula_gradus (Machinula* machinula);
+s32 machinula_pergere (Machinula* machinula);
+
+/* puncta: patching exemplaris CONGELATI (proprium machinulae - IR
+ * intactum; nullum pretium in via calida). Sedes = (index functionis
+ * conexionis, index instructionis planus) - indicium easdem
+ * coordinatas dat. */
+b32 machinula_punctum_ponere (Machinula* machinula,
+    s32 functio_index, i32 instructio);
+b32 machinula_punctum_tollere (Machinula* machinula,
+    s32 functio_index, i32 instructio);
+
+/* inspectio (VM pausata): tabulatum_index 0 = imum,
+ * numerus - I = cacumen */
+s64 machinula_halitus_codex (constans Machinula* machinula);
+i32 machinula_tabulata_numerus (constans Machinula* machinula);
+b32 machinula_positionem_inspicere (constans Machinula* machinula,
+    i32 tabulatum_index, s32* functio_index_out,
+    i32* instructio_out);
+b32 machinula_registrum_legere (constans Machinula* machinula,
+    i32 tabulatum_index, i32 index_registri, i64* valor_out);
 
 /* census */
 i64 machinula_numerus_instructionum (constans Machinula* machinula);
