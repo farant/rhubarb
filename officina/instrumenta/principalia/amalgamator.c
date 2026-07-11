@@ -176,7 +176,8 @@ interior constans AmalgamaPlagula CORPORA_OFFICINAE[] = {
     { "officina/fontes/officina_regio.c",          NIHIL, NIHIL, VERUM, FALSUM },
     { "officina/fontes/officina_conexio.c",        NIHIL, NIHIL, VERUM, FALSUM },
     { "officina/fontes/officina_machinula.c",      NIHIL, NIHIL, VERUM, FALSUM },
-    { "officina/fontes/officina_demissio.c",       NIHIL, NIHIL, VERUM, FALSUM }
+    { "officina/fontes/officina_demissio.c",       NIHIL, NIHIL, VERUM, FALSUM },
+    { "officina/fontes/officina_indicium.c",       NIHIL, NIHIL, VERUM, FALSUM }
 };
 
 /* Typi quos officina.h possidet: unitates typedef cadunt ex

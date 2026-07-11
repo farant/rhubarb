@@ -71,6 +71,12 @@ MachinulaExitus machinula_currere (Machinula* machinula,
 /* census */
 i64 machinula_numerus_instructionum (constans Machinula* machinula);
 i64 machinula_numerus_op (constans Machinula* machinula, s32 op);
+/* numerus instructionum in exemplari CONGELATO functionis (index =
+ * index functionis conexionis; 0 si extra fines). Probatio figens
+ * pacti ambulationis canonicae (M3): numerus indicii ex ambulatione
+ * collectionis == hic ex ambulatione congelationis. */
+i32 machinula_numerus_instructionum_planarum (
+    constans Machinula* machinula, s32 functio_index);
 i64 machinula_numerus_vocationum (constans Machinula* machinula);
 i64 machinula_numerus_aedificatorum (constans Machinula* machinula);
 memoriae_index machinula_stiva_apex (constans Machinula* machinula);

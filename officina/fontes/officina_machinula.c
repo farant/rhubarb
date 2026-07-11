@@ -2736,6 +2736,18 @@ machinula_numerus_op (constans Machinula* machinula, s32 op)
     redde machinula->numeri_op[op];
 }
 
+i32
+machinula_numerus_instructionum_planarum (
+    constans Machinula* machinula, s32 functio_index)
+{
+    si (machinula == NIHIL || functio_index < ZEPHYRUM
+        || (i32)functio_index >= machinula->planae_numerus)
+    {
+        redde ZEPHYRUM;
+    }
+    redde machinula->planae[functio_index].numerus;
+}
+
 i64
 machinula_numerus_vocationum (constans Machinula* machinula)
 {

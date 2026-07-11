@@ -493,4 +493,120 @@ MedullaLineae* demissio_lineas_colligere(OfficinaPiscina* piscina,
     const MedullaModulus* modulus,
     const struct SilvaParsura* parsura);
 
+/* ==================================================
+ * Indicium (M3): forma debug plana - sectiones typatae, indices
+ * i32, chorda-in-disco; coquitur tempore compilationis (dum
+ * parsura vivit), functio_idx == index functionis conexionis.
+ * Tabula linearum prorsum: acies macronum = introitus consecutivi
+ * eodem indice instructionis, radix (invocatio) prima. Endian
+ * hospitis, catena instrumentorum haec sola; versio dure reiecta.
+ * ================================================== */
+
+#define INDICIUM_MAGICA        "INDICIUM"
+#define INDICIUM_VERSIO        1
+#define INDICIUM_TYPUS_IGNOTUS (-2)
+
+typedef enum {
+    INDICIUM_SECTIO_CHORDAE_DATA = 0,
+    INDICIUM_SECTIO_CHORDAE_OFFSETA,
+    INDICIUM_SECTIO_VIAE,
+    INDICIUM_SECTIO_MODULI,
+    INDICIUM_SECTIO_FUNCTIONES,
+    INDICIUM_SECTIO_LINEAE_INDICES,
+    INDICIUM_SECTIO_LINEAE_RES,
+    INDICIUM_SECTIO_RETRO_LINEAE,
+    INDICIUM_SECTIO_RETRO_INTERVALLA,
+    INDICIUM_SECTIO_RETRO_SITUS,
+    INDICIUM_SECTIO_VARIABILIA,
+    INDICIUM_SECTIO_NUMERUS
+} IndiciumSectioGenus;
+
+typedef struct {
+    unsigned char magica[8];
+    unsigned int  versio;
+    unsigned int  numerus_sectionum;
+} IndiciumCaput;
+
+typedef struct {
+    unsigned int offset;
+    unsigned int magnitudo_octetorum;
+} IndiciumSectio;
+
+typedef struct {
+    unsigned int titulus;
+    unsigned int retro_lineae_primus;
+    unsigned int retro_intervalla_primus;
+    unsigned int retro_numerus;
+} IndiciumVia;
+
+typedef struct {
+    unsigned int titulus;
+} IndiciumModulus;
+
+typedef struct {
+    unsigned int titulus;
+    unsigned int modulus;
+    unsigned int instructiones_numerus;
+    unsigned int lineae_indices_primus;
+    unsigned int lineae_res_primus;
+    unsigned int lineae_numerus;
+    unsigned int variabilia_prima;
+    unsigned int variabilia_numerus;
+} IndiciumFunctio;
+
+typedef struct {
+    unsigned int via;
+    unsigned int linea;
+    unsigned int profunditas;
+    unsigned int nomen_macro;
+} IndiciumLinea;
+
+typedef struct {
+    unsigned int functio;
+    unsigned int instructio;
+} IndiciumSitus;
+
+typedef struct {
+    unsigned int titulus;
+    unsigned int index_registri;
+    int          typus_medulla;
+    unsigned int typus_scriptus;
+} IndiciumVariabile;
+
+typedef struct IndiciumScriptor IndiciumScriptor;
+typedef struct IndiciumLector IndiciumLector;
+
+IndiciumScriptor* indicium_scriptor_creare(OfficinaPiscina* piscina);
+int indicium_modulum_colligere(IndiciumScriptor* scriptor,
+    const MedullaModulus* modulus,
+    const struct SilvaParsura* parsura,
+    struct SilvaSemantica* sem);
+int indicium_scribere(IndiciumScriptor* scriptor,
+    const Conexio* conexio, const char* via);
+
+IndiciumLector* indicium_aperire(OfficinaPiscina* piscina,
+    const char* via);
+OfficinaChorda indicium_chorda(const IndiciumLector* lector,
+    unsigned int index);
+unsigned int indicium_functiones_numerus(
+    const IndiciumLector* lector);
+const IndiciumFunctio* indicium_functio(
+    const IndiciumLector* lector, unsigned int index);
+int indicium_functionem_quaerere(const IndiciumLector* lector,
+    OfficinaChorda titulus);
+unsigned int indicium_lineas_de_instructione(
+    const IndiciumLector* lector, unsigned int functio_index,
+    unsigned int instructio, const IndiciumLinea** acies_out);
+unsigned int indicium_situs_de_linea(const IndiciumLector* lector,
+    OfficinaChorda via, unsigned int linea,
+    const IndiciumSitus** acies_out);
+unsigned int indicium_variabilia_functionis(
+    const IndiciumLector* lector, unsigned int functio_index,
+    const IndiciumVariabile** acies_out);
+
+/* numerus instructionum exemplaris congelati (pactum ambulationis
+ * canonicae: == instructiones_numerus indicii) */
+unsigned int machinula_numerus_instructionum_planarum(
+    const Machinula* machinula, int functio_index);
+
 #endif /* OFFICINA_H */

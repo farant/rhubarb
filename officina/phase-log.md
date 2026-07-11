@@ -1883,3 +1883,89 @@ cepit. *asperitates/desiderata* — nullae novae.
 plana; sectiones per X-macro; acies expansionis PLENA in tabulam
 prorsam; tabula retro per lineas RADICIS; VARIABILIA; probatio
 circuitus + PROBATIO FIGENS trans-phasica pacti ambulationis).
+
+### CHUNK ③ — INDICIUM: INTENTIO (2026-07-11)
+
+Sigilla ①+② commissa (Fran). Recognitio pre-constructionis probavit:
+NIHIL silva-latus mutandum — unio SilvaOrigo TOTA publica in
+amalgamate (silva.h:192-215: expansio.invocatio/pasta.sinister/
+stringificatio.primus + nomen_macro per brachium — ambulatio aciei
+plenae officina-latere possibilis); SemanticaSymbolum.typus +
+TypusC89 plene ambulabilis (redditor typi parvus officina-latere
+scribendus — typi RESOLUTI monstrantur: "unsigned int" non "i32",
+honestum, notandum); SilvaNodus.pater publicus (probatio ancestriae
+pro variabilibus). DECISA constructionis: (a) emissio ordine
+CONEXIONIS — scriptor colligit per-TU clavibus monstratorum
+functionum (exemplar clavium MedullaLineae), scribere post nexum
+iungit → functio_idx indicii == index functionis conexionis ==
+index planae (nulla translatio ad tempus cursus); (b) INDEX_CURSUS
+OMISSUS v0 — omnis lista variabilis unum solum consumptorem habet,
+cursus in sectionibus typatis inline vivunt (piscina communis =
+dilatio cum duo consumptores); (c) mensa variabilium tempore
+COLLECTIONIS (registra nominata × symbola semanticae, probatio
+ancestriae per pater; umbrae x_37 sine typo = lacuna honesta
+interrogatione benedicta; registratio tempore demissionis = ascensus
+nominatus); (d) probatio figens = numerus instructionum per functio
+(indicium ex ambulatione collectionis == plana machinulae ex
+ambulatione congelationis; ordo iam vinctus per paritatem sweep —
+scopi ramorum falsi = strages corporis) per ordinem publicum novum
+machinula_numerus_instructionum_planarum (+ hospes). Vectis (spec
+§V): probatio circuitus — plagula scripta, reclusa, quaesita
+(prorsum acervata cum macro/retro/variabilia/asserta magnitudinum
+X-macro) + determinismus (bis scripta, memcmp aequalis). Sectiones:
+CHORDAE_DATA/OFFSETA (chorda-in-disco), VIAE, MODULI, FUNCTIONES,
+LINEAE_INDICES (+introitus claudens per functio), LINEAE_RES
+{via,linea,profunditas,nomen_macro}, RETRO_LINEAE/INTERVALLA/SITUS,
+VARIABILIA {titulus,registrum,typus_medulla,typus_scriptus}. Magica
+"INDICIUM" 8 octeti, versio dure reiecta, endian hospitis, sectiones
+8-ordinatae, indices u32 ubique.
+
+### CHUNK ③ — INDICIUM: RELATIO (2026-07-11)
+
+**CLAUSUS. Probatio circuitus 51/51** (acies macronum acervata:
+linea 15 radix + linea 4 GEMINARE profunditate 1; retro; variabilia
+typata "int"/"unsigned int"/"char*" cum tags medullae; determinismus
+bis-scriptus memcmp; magica corrupta reiecta; asserta magnitudinum
+numerica) **+ PROBATIO FIGENS pacti ambulationis VIVA BIS** (probatio
++ hospes "indicium pactum ambulationis" — ambulatio collectionis ==
+congelatio machinulae per ordinem publicum novum
+machinula_numerus_instructionum_planarum). Suite 7/7; hospes 61→73
+fideles (XII ordines novi); amalgama VERIFICATUM; paritas sweep
+EXACTA (76/69/0 DIFFERUNT/5 tempora).
+
+**INVENTUM CAPITALE: MedullaFunctio.origo NUMQUAM assignatum** —
+locellus provenientiae designatus, vacuus ab M1; omnes VI fracturae
+primi cursus (congruentiae variabilium semanticae omnes) UNAM
+causam habuerunt (probatio ancestriae ad scopum NIHIL). Sanatio
+una linea in _functionem; _lineam_colligere quoque meliorescit.
+Cursus primus: 45/51 — fistula tota (acies/retro/determinismus/
+pactum) recta primo ictu.
+
+Firmationes latinae II novae: magnitudo + registrum ut CAMPI
+structurarum in .h (clangd-push + censor suspecta ANTE compilationem
+ceperunt; campi identificatores quoque sunt) + `nomen` classicum in
+probatione. Lectiones amalgamatoris II novae: statica duplicata
+trans TU concatenatum (_ind_ praefixum IV); **campus 'chorda'
+VETITUS in fontibus amalgamatis** (renominatio typorum per signa
+campum rescripsit — spatium nominum camporum = spatium signorum).
+Deltae consilii (in INTENTIONE notatae): INDEX_CURSUS omissus v0;
+X-macro → exemplar domus (superficies manu speculatae + asserta
+numerica). Detail: officina_indicium.worklog.md (natus).
+
+DEBRIEF INSTRUMENTORUM: *adhibita* — recognitio per grep/sed gravis
+(silva.h superficies, exempla probationum); emitte 0/nexus 0 hoc
+chunk (quaestiones erant "quid superficies publica continet" — grep
+in capite amalgamatis directior); diagnostica clangd + censor
+suspecta = trio firmationum latinarum statim captarum; PORTAE
+amalgamatoris = co-fabricator (III captiones distinctae trans
+chunks: excludenda ①, statica duplicata ③, campus chorda ③).
+*fructus* — porta standalone erroris cuiusque genus recte nominavit.
+*asperitates* — nullae novae in subsellio. *desiderata* — selecta
+(parcata) iterum desiderata semel ("quae functiones officina.h
+declarat" = quaestio structurae).
+
+**NEXT: commissio Franis (sigillum chunk ③) → chunk ④
+pausa/gradus/puncta** (MACHINULA_PAUSA halitus; machinula_gradus +
+machinula_pergere extractione corporis ansae; puncta per patching
+exemplaris congelati MACHINULA_OP_PAUSA = NUMERUS+1; mensura
+oneris gradus sub -O0 = Q12).

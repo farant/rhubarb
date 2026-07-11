@@ -4163,6 +4163,10 @@ _functionem (Demissio* d, constans SilvaNodus* nodus)
     {
         redde;   /* definitio duplex */
     }
+    /* provenientia functionis (M3): locellus designatus sed numquam
+     * impletus ante indicium - probatio ancestriae variabilium eum
+     * poscit (et _lineam_colligere eo meliorescit) */
+    d->functio->origo = nodus;
     d->numerator = ZEPHYRUM;
     d->frange_finis = -I;
     d->perge_finis = -I;

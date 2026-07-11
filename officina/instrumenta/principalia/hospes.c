@@ -302,6 +302,74 @@ int main(void)
                        &linea)
                 && linea > 0, "lineam quaerere colligata");
         }
+        /* M3: indicium per superficiem publicam (coque -> scribe
+         * -> reclude -> quaere; pactum ambulationis) */
+        if (modulus_dem != NULL && parsura != NULL) {
+            IndiciumScriptor* scriptor =
+                indicium_scriptor_creare(piscina);
+            Regio* regio_i = regio_generare(piscina);
+            Conexio* conexio_i = conexio_creare(piscina, regio_i);
+            Machinula* machinula_i;
+            const char* via_i = "officina/build/hospes.indicium";
+
+            proba(scriptor != NULL, "indicium scriptor");
+            proba(indicium_modulum_colligere(scriptor, modulus_dem,
+                parsura, sem), "indicium colligere");
+            proba(conexio_i != NULL
+                && conexio_modulum_addere(conexio_i, modulus_dem)
+                && conexio_nectere(conexio_i), "indicium conexio");
+            machinula_i = machinula_creare(piscina, conexio_i,
+                regio_i);
+            proba(machinula_i != NULL, "indicium machinula");
+            proba(indicium_scribere(scriptor, conexio_i, via_i),
+                "indicium scribere");
+            {
+                IndiciumLector* lector = indicium_aperire(piscina,
+                    via_i);
+                int f = -1;
+
+                proba(lector != NULL, "indicium aperire");
+                if (lector != NULL) {
+                    f = indicium_functionem_quaerere(lector,
+                        ch("addens"));
+                }
+                proba(f >= 0, "indicium quaerere");
+                proba(lector != NULL
+                    && indicium_functiones_numerus(lector) > 0,
+                    "indicium numerus");
+                if (lector != NULL && f >= 0) {
+                    const IndiciumFunctio* ifu = indicium_functio(
+                        lector, (unsigned int)f);
+                    const IndiciumLinea* acies = NULL;
+                    const IndiciumSitus* situs = NULL;
+                    const IndiciumVariabile* varia = NULL;
+
+                    proba(ifu != NULL
+                        && ifu->instructiones_numerus
+                            == machinula_numerus_instructionum_planarum(
+                                   machinula_i, f),
+                        "indicium pactum ambulationis");
+                    proba(indicium_lineas_de_instructione(lector,
+                            (unsigned int)f, 0, &acies) > 0
+                        && acies != NULL && acies[0].linea == 1
+                        && acies[0].profunditas == 0,
+                        "indicium prorsum");
+                    proba(indicium_situs_de_linea(lector,
+                            ch("hospes_dem.c"), 1, &situs) > 0
+                        && situs != NULL,
+                        "indicium retro");
+                    proba(indicium_variabilia_functionis(lector,
+                            (unsigned int)f, &varia) > 0
+                        && varia != NULL
+                        && indicium_chorda(lector,
+                               varia[0].titulus).mensura == 1,
+                        "indicium variabilia");
+                }
+            }
+            if (regio_i != NULL) {
+                regio_destruere(regio_i);
+            }
+        }
         if (piscina_silvae != NULL) {
             silva_piscina_destruere(piscina_silvae);
         }
