@@ -2363,3 +2363,87 @@ LIBRI silva-latere per praecedens M0, TITULUS — examen candidatus)
 (strepitus clangd instrumentorum sanatus — pretium minimum, Tier 0
 colloquii lsp). Sessio haec: documentatio solum; on-ramp M4a =
 sessio proxima, re-entry per hunc addendum + spec-v2 §XI.
+
+## M4a ON-RAMP — GRADUS I: EXPLORATORES FUNDANTES (2026-07-11)
+
+Quattuor exploratores paralleli (taxonomia constrictionum / caecitates
+annotatoris / diagnostica+recuperatio / calibratio oraculi) →
+synthesis in **project-specs/officina-m4a-fundamenta.md** (13 facta
+portantia, inventarium superficiei, 13 quaestiones ad interrogationem,
+6 correctiones). CORRECTIO PORTANTISSIMA (tres exploratores
+independenter): "semantica iudicium NULLUM habet" FALSUM est — ~44
+sedes diagnosticorum, ~40 nuntii iam flagrant; M4a = signum exsistens
+PERFICERE (severitas, positiones, politica, relatio compatibilitatis,
+corpus invalidum), non creare. Inventa maiora: `_ad_finem_annotare`
+(semantica c:3338, 5 sedes vocationis) = SEDES UNA pro familia tota
+finis-contextus, quae hodie tacite cadit ET conversus FALSOS fabricat
+(int*→int** observatum — sanatio partim SUBTRACTIVA); recuperatio
+HEREDITATUR (parser numquam fallit, venenum sine cascata); canonicum
+furcae = lectio EXPRESSIONIS (iudicium durum solum in arboribus
+solutis; lexicon ante iudicium); oraculum clang-16 in AMBAS partes
+calibrandum (chorda operans probata in fundamentis; initiatores
+designati PERFLUUNT -pedantic-errors; pinnae per (linea,
+warning-group) non columnas; versio semper scribenda); vectis
+secundarius corpori nativus = sistere semantica-diagnosticata → 0.
+Experimenta vera: explorator II XVI fixturas invalidas per effusorem
+proprium egit; explorator IV POC pinnarum operans construxit.
+SEQUENS: simulatio-6 (gradus II arcus).
+
+## M4a ON-RAMP — GRADUS II: SIMULATIO-6 (2026-07-11)
+
+**project-specs/officina-simulatio-6.md** — ~2.5 horae simulatae,
+quattuor chunki (A diagnosticum v2 → B relatio compatibilitatis →
+C sedes → D effusor + vectis differentialis), C1-C11, **NULLA
+reversio**. Probationes codicis veri tres: corpus sedis
+(c:3338-3364 — commentum ipsius "Compatibilitas profunda = lint"!),
+residuum 245 OMNE classificatum (silva phase-log:6345), demissio
+conversum absentem = nulla conversio (demissio.c:291-296).
+Inventa maiora: cauda tacita sedis assignationem aggregatam LEGALEM
+continet (C4 — reiectio integra vectem 100% frangeret; iudicium
+trifidum necessarium); compatibilitas membrorum structurarum in v0
+DISSOLVITUR (C2 — nominalis per declarans intra TU unum); probatio
+regressionis sanationis subtractivae IAM EXSTAT (C5 — fusor circuli
+byte-idem); severitas non semper sedi-intrinseca (C1 — classis
+LEXICON_DEEST); vectis acceptationis = zephyrum-VIOLATIO non
+zephyrum-diagnostica (C9 — residuum 245 iam classificatum in tabula
+worklog M0b). Quaestio interrogationis 8 DISSOLUTA; quaestio nova:
+caerimonia vocabularii laminae (locus? iudicium? nomina graduum
+severitatis?). SEQUENS: interrogatio (gradus III arcus).
+
+## M4a ON-RAMP — GRADUS III+IV: INTERROGATIO + SPEC (2026-07-11)
+## — ARCUS COMPLETUS, TITULUS SIGILLATUS: **EXAMEN**
+
+Interrogatio XV quaestionum (omnes commendationes acceptae) →
+**project-specs/officina-m4a-interrogatio.md** (crudum) +
+**project-specs/officina-m4a-spec.md** (spec cum vectibus).
+DECISUS maiores: TITULUS **examen** (iudicium reiectum — confusio
+cum indicio); linea violationis = **C89-STANDARD-STRICTA** (K&R +
+vocationes implicitae in gradum domesticum); gradus severitatis =
+**violatio / suspectum / domesticum** (suspectum continuat usum
+censoris); lvalue = **locus** (locus mutabilis); diagnosticum v2 =
+{severitas, codex, positio, socius} (extenta ad tractionem lsp);
+ambitus v0 = nucleus simulatus; postura **SEMPER-ACTIVA** (praecedens
+linearum M3); ambigui = **nota provisionalis**; chorda oraculi
+SIGILLATA + percursus fugarum ante benedictionem; vectis secundarius
+= mensura scripta; corpus invalidum silva/probationes/fixa/examinis/
+cum notis EXSPECTA; porta stans = columna verdicti in percursu;
+effusor = exemplar censoris (silva/examen.sh, -machina TSV, lexicon
+ISO ordinarius / -posix / -nudum). Quattuor chunki A-D in spec,
+quisque cum vecte suo; vectis M4a = differentialis (corpus verum
+100% ACCIPE + corpus invalidum REICE ad pinnas). LIBRI silva-latere
+per praecedens M0 — INTENTIO chunki A in silva/phase-log.md
+incipiet. SEQUENS: commissio Franis horum quattuor documentorum =
+sigillum on-rampi; deinde chunk A.
+
+ADDENDUM EIUSDEM DIEI (synthesis lacunarum, Fran petente): ambitus
+v0 CRESCIT duabus sedibus (redeclaratio typo-compatibilis + compat
+finium monstratorum ad sedes operatorum — ambae consumptores
+relationis chunki B, ~5 sedes; operatores tollunt inconsistentiam
+vectis differentialis: clang eas REICIT). Vectis D conditionem 5
+accipit: classes dilatae = ordines EXCLUSIO in vecte (praecedens
+tabulae stdout) — nulla caecitas tacita. NATUM:
+**project-specs/c89-lacunae.md** — tabularium stans integritatis C89
+totius fistulae (lexer/pp, iudicium, demissio, machinula/libc,
+trans-TU; PARCATUM/AUDIENDUM/MORTUUM cum fontibus et tractionibus;
+regula: renovatur cum parca aperitur/clauditur; NON index operum —
+ordines per tractionem graduantur).
