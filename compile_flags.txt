@@ -18,3 +18,7 @@
 -Itessera/fontes
 -Itessera/amalgama
 -Isaltuarius/fontes
+-Iofficina/fontes
+-Iofficina/amalgama
+-Iofficina/instrumenta
+-Iofficina/probationes

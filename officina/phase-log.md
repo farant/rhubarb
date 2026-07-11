@@ -2315,3 +2315,28 @@ INDICIUM → VINDEX. **NEXT: M4 — REPL** (+ cursor #!; vectis spec-v2
 = consumptor app-lateris alter iam paratus; arcus probatus:
 exploratores → simulatio → interrogatio → spec). Roadmap: M4 → M5
 aarch64 → v2 iter-temporis.
+
+### ADDENDUM POST SIGILLUM (2026-07-11) — ORDO M4: LAMINA
+### EXSECUTIONIS ANTE REPL (colloquium, nondum INTENTIO)
+
+Fran ordinem M4 recte quaesivit: REPL sine iudicio typorum =
+"decipula cum prompto" — corpus numquam iudicium egebat (clang
+annis pre-validaverat), sed initus INTERACTIVUS = codex invalidus
+casus COMMUNIS. Consilium colloquii: **M4a = lamina exsecutionis**
+(silva-latus; relatio compatibilitatis, politica severitatis,
+diagnosticum ditius, corpus invalidum, modus recuperationis — omnia
+nominata ab M0b; est_implicitum + sedes sistere = semina posita) →
+**M4b = REPL** (thema unum: milliarium interactivum; exemplar
+M1a/M1b). Vectis M4a proponendus more domus: differentialis
+ACCIPE/REICE contra clang (praecedens haruspicis/auspicis extensum
+a "typos eosdem computamus" ad "iudicia eadem facimus"); corpus
+verum 100% acceptum; corpus invalidum syntheticum cum positionibus
+diagnosticorum fixis. Consumptores TRES parati: REPL + silva-lsp
+(lamina diagnostica = polus longus substitutionis clangd, colloquium
+scopi eodem die) + honestas codicis recentis. TITULUS laminae =
+caerimonia Franis ad interrogationem M4a (cave: iudicium ~ indicium
+confusabile; candidatus primus: examen). Substrata communia M4b+lsp
+notata (mundus vivus incrementalis; vindex_onerator = onerator).
+compile_flags.txt sanatum eodem die (radices officinae aberant —
+strepitus instrumentorum tota sessione explicatus). Sigillum
+ordinis = INTENTIO M4 (sessio proxima; arcus probatus).
