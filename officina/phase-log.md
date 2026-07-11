@@ -2488,3 +2488,49 @@ SESSIONE RECENTI, exploratores IV nominati:
    aggregatorum); #! cursor; historia/erratum-recuperatio UX.
 Deinde simulatio-7 → interrogatio → spec. Re-entry: hic addendum +
 spec-v2 §XI + silva/phase-log.md M4a RELATIO MILLIARII.
+
+## M4b ON-RAMP — GRADUS I: EXPLORATORES (2026-07-11)
+
+Quattuor exploratores paralleli per ADDENDUM ORDO M4b (modus initus
+incrementalis / mundus vivus / reconciliatio symbolorum / superficies
+producti), OMNES cum experimentis veris (probae compilatae contra
+amalgamata extra repositorium; fragmenta nuda per examen acta;
+gubernator bi-turni contra silva.c). Synthesis in
+**project-specs/officina-m4b-fundamenta.md** (17 facta portantia,
+inventarium superficiei, 17 quaestiones ad interrogationem, 8
+correctiones).
+
+CORRECTIO PORTANTISSIMA (exploratores I et III independenter): ianua
+fragmentorum IAM APERTA — grammatica elementa liberalis (sententiae/
+declarationes/definitiones in summo gradu, c89.stml:156-171), et
+canalis SYSTEMATIS reconciliationem trans-turnos IAM praestat
+(experimentum: turnus 2 functionem structuramque turni 1 adhibens,
+turno 1 ut systema → diagnostica 0, symbolum visibile ex_systemate).
+Quod deest = FISTULATIO (limes systematis unius parsurae; arbores
+priores vivae tenendae — onerator arenam silvae per TU delet;
+praeseminatio oraculi typedef situs-0), non facultas. recanonicare
+NON est vehiculum trans-turnos (intra-parsuram solum).
+
+PROBLEMA CENTRALE NOMINATUM (explorator II): mundus crescens et
+mundus statum servans PUGNANT — conexio sigillata post nexum
+(conexio.c:159,258,401) + regio basi fixa coexistentiam negans
+(proba-verificatum, regio.c:80-91) + nectere imagines initiales
+semper recopians (conexio.c:304-313) → turnus symbolum addens
+continuitatem globalium/acervi perdit. Quaestio designi PRIMA M4b;
+nullum documentum prius eam nominat.
+
+Inventa maiora cetera: redefinitio SINE symbolis novis = permutatio
+loculi (descriptor→index→planae parallelae; vocationes numquam corpus
+figunt — architectura congelata redefinitioni AMICA); persistentia
+machinulae (globalia/acervus/ansae trans currere) proba-verificata
+SED sine probatione regressionis — scribere-N/legere-N+1 in vectem
+M4b; exemplar cursoris NON transfertur (furca!); linea #! active
+delenda (directiva ignota = nodus erroris syntaxis → REICE; sanatio
+verificata: prima linea spatiis oblita, \n servato — positiones
+exactae manent); tessera editorem linearum NON habet et TTY requirit
+(fgets = via v0 + via #!); interpretare = praecedens impressionis
+PARTIALE (scalaria soluta, memoria informis, aggregata recusata);
+sutura tags mordet SOLUM redefinitionem-cum-corpore + valorem
+transeuntem (TU crescens eam vitat, parsura-per-turnum eam heres).
+
+SEQUENS: simulatio-7 (gradus II arcus).
