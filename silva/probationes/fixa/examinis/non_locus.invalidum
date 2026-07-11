@@ -1,0 +1,5 @@
+/* EXSPECTA 4:ASSIGNATIO_NON_LOCUS */
+static void f(void)
+{
+    5 = 1;
+}

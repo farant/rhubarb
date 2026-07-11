@@ -1,0 +1,5 @@
+/* EXSPECTA 4:IDENTIFICATOR_IGNOTUS */
+static int f(void)
+{
+    return mysterium;
+}

@@ -7040,3 +7040,101 @@ desiderata — nihil novum.
 (effusor examen.sh + corpus invalidum + vectis differentialis;
 quaestiones apertae: lexicon corporis-acceptationis, postura
 knotapel, demotio return-type in oraculo).
+
+## 2026-07-11 — EXAMEN CHUNK D INTENTIO: effusor + corpus invalidum + VECTIS
+
+① **examen.c/examen.sh** (exemplar censor.sh; recipe percursus
+FIDELE: contextus + capita praebita + lexicon systematis + oraculum
+praeseminatum + BIS-ANALYSIS post recanonicare — sem2 auctoritativum).
+Usus: `./silva/examen.sh <plagula.c> [-posix|-nudum] [-machina]`.
+Lexicon: ordinarius = systema_c89.h; -posix = + systema_posix.h
+(concatenatio, exemplar vindex_onerator; AMBAE silva/fontes!);
+-nudum = sine (probat LEXICON_DEEST). Exitus: 0 ACCIPE / 1 REICE /
+2 INFRA. Verdictum: REICE = violatio non-provisionalis ULLA aut
+nodi erroris (syntaxis = reiectio C89); INFRA = apparatus solum.
+-machina = TSV {via, linea, columna, severitas, codex,
+provisionale, causa} + ordo VERDICTUM. Geminus tertius oneratorum
+nascitur (migratio parca crescit).
+② Effusor = instrumentum investigationis: demo_85 + tcp_posix
+leguntur PRIMO (quaestio lexici corporis-acceptationis empirice
+solvitur, non coniectura).
+③ **Percursus fugarum oraculi** (DECISUS 9) ante benedictionem:
+fixturae C99/GNU (~12 classes) contra chordam sigillatam — omnes
+REICI debent; fugae → emendationes chordae (in worklog).
+④ **Corpus invalidum**: silva/probationes/fixa/examinis/*.c —
+sine-inclusionibus; nota `/* EXSPECTA linea:CODEX_NOMEN */`;
+extractor grep/sed (numquam silva); benedictio contra oraculum.
+⑤ **examen_vectis.sh**: modus ordinarius = percursus fugarum +
+corpus invalidum differentialis (examen REICE ad pinnas + oraculum
+REICE consentiens; versio clang scripta); modus -corpus = latus
+examinis super corpus verum (columna verdicti percursus) —
+postura lexici ex ② decisa. Ordines EXCLUSIO pro classibus dilatis
+(vectis D conditio 5): redde-sine-valore (clang auto-promotum),
+classes parcatae (switch/initiatores/...).
+⑥ Columna verdicti percursus (DECISUS 12): [verdictum REICE] per
+plagulam + summa.
+
+## 2026-07-11 — EXAMEN CHUNK D RELATIO: effusor + VECTIS — BAR M4a TENET
+
+**Quod navigavit:** ① silva/examen.sh + instrumenta/principalia/
+examen.c (recipe percursus fidele: contextus + capita praebita +
+lexicon + oraculum praeseminatum + bis-analysis; ISO ordinarius /
+-posix concatenatus / -nudum; -machina TSV; ACCIPE/REICE/INFRA;
+geminus TERTIUS oneratorum — migratio parca crescit); ② corpus
+invalidum silva/probationes/fixa/examinis/ — XIV fixturae
+.invalidum (suffixum extra corpus percursus — lectio corporis
+sui-referentis ITERUM: fixturae in tabulam exclusionum inciderant;
+praecedens .fragor censoris) cum pinnis EXSPECTA linea:CODEX_NOMEN;
+XII fugae .fuga (C99/GNU contra oraculum); ③ examen_vectis.sh =
+VECTIS: percursus fugarum + pinnae differentiales (mappa
+nomen→numerus ex capite grep/awk — extractor numquam silva) +
+modus -corpus (REICE percursus vs exclusiones.txt pinnatae);
+④ columna verdicti percursus (DECISUS 12) + probatio negativa
+pinnae (dens vectis probatus).
+
+**INVENTUM CORONAE — divergentia differentialis PRIMA, in nostra
+relatione:** examen demo_85 REICIEBAT (52 violationes), oraculum
+ACCIPIEBAT. Classis: `const int (*)[N] ← int (*)[N]` — additio
+qualium tuta PER GRADUS ACIERUM (littera C89 strictior; praxis +
+clang universales). Sanatio: _pointee_assignabilis (inclusio
+qualium descendens per acies, compatibilitas infra; comparabiles
+quales negligit utroque modo). Post: demo_85 ACCIPE **nulla
+diagnostica**; monstratores corporis 118→3; probatio 553/553 tenet
+(directio abiectionis adhuc capta). Vectis suum munus fecit die
+primo.
+
+**Etiam:** oraculum eget `-x c` pro plagulis non-.c (nota
+calibrationis — clang taciturne accipit suffixa ignota sub
+-fsyntax-only!); fugae 0/12 (obturamentum designatoris probatum).
+
+**VECTIS M4a (spec §IV bar D) — TENET:**
+1. corpus verum: 743/782 ACCIPE; 39 REICE = exclusiones PINNATAE
+   (omnes classes lexici nominatae: POSIX-profunda [rete/dirent/
+   signal], knotapel includit-cruda residua, fixturae consulto
+   fractae [flagrationes censoris], probationes parsatorias);
+   oraculum totum corpus accipit (aedificatio domus quotidiana);
+   diff exclusionum = porta stans (modus -corpus).
+2. corpus invalidum: XIV/XIV REICE ad pinnas (linea, codex);
+   oraculum consentit XIV/XIV.
+3. percursus fugarum ANTE benedictionem: 0 fugae.
+4. columna verdicti stans (+ censum codicum).
+5. EXCLUSIO nominatae: exclusiones.txt (39, causis); classis
+   redde-sine-valore = exclusio fixturarum nominata (examen
+   suspectum-accipit, clang auto-promotus reicit — fixtura addetur
+   cum demotione oraculi decisa; sedes in vectis parata).
+
+**Portae solitae:** silva 30/30; amalgama VERIFICATUM hospes 30/30;
+officina 10/10; **cursor figura stans EXACTE (76/0/5; stdout 69
+eaedem/0 DIFFERUNT)** — sanatio aciei-qualium in codice valido
+invisibilis, per exsecutionem.
+
+**Debrief:** adhibita — effusor NOVUS ut instrumentum investigationis
+(demo_85/tcp_posix intra minuta — desideratum tertiae vicis IMPLETUM
+die suo primo); oraculum empirice (exit-post-pipe decipula: `$?`
+post `| head` = exitus head!). fructus — divergentia prima inventa
+et sanata die uno. asperitates — nulla. desiderata — vectis
+-corpus lentus (percursus plenus ~2 min; satis pro portae stantis).
+
+**SEQUENS: commissio Franis = sigillum chunki D. Deinde RELATIO
+MILLIARII M4a (relectio plena phase-log + auditus, regula silvae)
+— sessione recenti si contextus deest.**

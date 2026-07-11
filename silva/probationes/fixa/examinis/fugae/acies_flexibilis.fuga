@@ -1,0 +1,2 @@
+struct F{int n;int d[];};
+int f(struct F* p){return p->n;}

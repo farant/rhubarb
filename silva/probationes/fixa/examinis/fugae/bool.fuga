@@ -1,0 +1,1 @@
+int f(_Bool b){return b;}

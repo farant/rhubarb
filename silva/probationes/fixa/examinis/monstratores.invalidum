@@ -1,0 +1,5 @@
+/* EXSPECTA 4:MONSTRATORES_INCOMPATIBILES */
+static void f(int* p, char* q)
+{
+    p = q;
+}

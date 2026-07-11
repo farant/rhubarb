@@ -1,0 +1,6 @@
+/* EXSPECTA 5:MONSTRATOR_INTEGER */
+static void f(int* p)
+{
+    int n;
+    n = p;
+}

@@ -1,0 +1,2 @@
+typedef struct{int x;}P;
+int f(void){return ((P){3}).x;}

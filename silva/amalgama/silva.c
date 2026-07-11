@@ -34734,6 +34734,8 @@ interior TypusC89* _expressionem_typare (SilvaSemantica* sem,
     constans SilvaNodus* nodus);
 interior vacuum _valorem_typare (SilvaSemantica* sem, SilvaValor v);
 interior b32 _est_acies_characterum (TypusC89* t);
+interior b32 _pointee_assignabilis (TypusC89* fp, TypusC89* vp,
+    b32* abiecti);
 interior vacuum _valorem_typare_scalarem (SilvaSemantica* sem,
     SilvaValor v);
 interior vacuum _ad_finem_annotare (SilvaSemantica* sem,
@@ -38583,8 +38585,7 @@ silva_c89_assignationem_iudicare (SilvaSemantica* sem,
                     && vps->datum.primitivum
                         == (s32)PRIMITIVUM_VACUUM);
 
-            si (per_vacuum
-                || silva_c89_typi_compatibiles(fps, vps))
+            si (per_vacuum)
             {
                 si ((fq & vq) == vq)    /* finis quales ⊇ valoris */
                 {
@@ -38598,10 +38599,22 @@ silva_c89_assignationem_iudicare (SilvaSemantica* sem,
                 }
                 redde (s32)EXAMEN_VETITUM;
             }
-            si (codex_out != NIHIL)
             {
-                *codex_out =
-                    (s32)EXAMEN_CODEX_MONSTRATORES_INCOMPATIBILES;
+                b32 abiecti = FALSUM;
+
+                si (_pointee_assignabilis(fp, vp, &abiecti))
+                {
+                    redde (vm == f)
+                        ? (s32)EXAMEN_LICET
+                        : (s32)EXAMEN_LICET_CONVERSIO;
+                }
+                si (codex_out != NIHIL)
+                {
+                    *codex_out = abiecti
+                        ? (s32)EXAMEN_CODEX_QUALES_ABIECTI
+                        : (s32)
+                          EXAMEN_CODEX_MONSTRATORES_INCOMPATIBILES;
+                }
             }
             redde (s32)EXAMEN_VETITUM;
         }
@@ -38774,6 +38787,48 @@ _est_locus_mutabilis (TypusC89* typus)
     }
 }
 
+/* Pointee assignabilis (chunk D, inventum differentiale primum):
+ * inclusio qualium PER GRADUS ACIERUM descendens (quales aciei =
+ * quales elementi; additio tuta const per gradus - oraculum clang
+ * consentit, littera C89 strictior sed praxis universalis),
+ * compatibilitas plena infra gradus acierum. */
+interior b32
+_pointee_assignabilis (TypusC89* fp, TypusC89* vp, b32* abiecti)
+{
+    dum (VERUM)
+    {
+        i32 fq = _quales_typi(fp);
+        i32 vq = _quales_typi(vp);
+        TypusC89* fs = _qualibus_exutum(fp);
+        TypusC89* vs = _qualibus_exutum(vp);
+
+        si ((fq & vq) != vq)
+        {
+            *abiecti = VERUM;
+            redde FALSUM;
+        }
+        si (fs == NIHIL || vs == NIHIL)
+        {
+            redde FALSUM;
+        }
+        si (fs->genus == TYPUS_C89_ACIES
+            && vs->genus == TYPUS_C89_ACIES)
+        {
+            si (fs->datum.acies.numerus >= ZEPHYRUM
+                && vs->datum.acies.numerus >= ZEPHYRUM
+                && fs->datum.acies.numerus
+                    != vs->datum.acies.numerus)
+            {
+                redde FALSUM;
+            }
+            fp = fs->datum.acies.elementum;
+            vp = vs->datum.acies.elementum;
+            perge;
+        }
+        redde silva_c89_typi_compatibiles(fs, vs);
+    }
+}
+
 /* Monstratores comparabiles/subtrahibiles: pointee exuti
  * compatibiles aut alteruter vacuum (chunk C - profundatio sedium
  * operatorum ubi classis sola probabatur) */
@@ -38802,7 +38857,17 @@ _monstratores_comparabiles (TypusC89* pa, TypusC89* pb)
     {
         redde VERUM;
     }
-    redde silva_c89_typi_compatibiles(ia, ib);
+    /* comparatio quales negligit - assignabilis utroque modo */
+    {
+        b32 neglectum = FALSUM;
+
+        redde _pointee_assignabilis(
+                pa->datum.monstrator.internum,
+                pb->datum.monstrator.internum, &neglectum)
+            || _pointee_assignabilis(
+                pb->datum.monstrator.internum,
+                pa->datum.monstrator.internum, &neglectum);
+    }
 }
 
 /* Typus litteralis integri - C89 6.1.3.2 + extensio longus longus:

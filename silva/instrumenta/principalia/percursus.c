@@ -59,6 +59,7 @@ hic_manens b32 cum_semantica = FALSUM;
 hic_manens i32 summa_symbolorum = ZEPHYRUM;
 hic_manens i32 summa_diagnosticorum = ZEPHYRUM;
 hic_manens i32 census_codicum[EXAMEN_CODEX_NUMERUS];
+hic_manens i32 verdicta_reice = ZEPHYRUM;
 hic_manens i32 summa_typationum = ZEPHYRUM;      /* M0b */
 hic_manens i32 summa_expr_visorum = ZEPHYRUM;    /* M0b C: coopertura */
 hic_manens i32 summa_expr_typatorum = ZEPHYRUM;
@@ -608,6 +609,8 @@ _plagulam_percurrere (constans SilvaContextus* ctx,
                 si (diag > ZEPHYRUM)
                 {
                     i32 di;
+                    b32 reice = parsura->numerus_errorum
+                        > ZEPHYRUM;
 
                     summa_diagnosticorum += diag;
                     plagulae_cum_diagnosticis++;
@@ -624,7 +627,20 @@ _plagulam_percurrere (constans SilvaContextus* ctx,
                                 < (s32)EXAMEN_CODEX_NUMERUS)
                         {
                             census_codicum[dg->codex]++;
+                            si (dg->severitas
+                                    == (s32)EXAMEN_VIOLATIO
+                                && !dg->provisionale)
+                            {
+                                reice = VERUM;
+                            }
                         }
+                    }
+                    /* columna verdicti (examen chunk D,
+                     * DECISUS 12) */
+                    si (reice)
+                    {
+                        verdicta_reice++;
+                        imprimere("[verdictum REICE] %s\n", via);
                     }
                 }
                 /* coopertura POST clausuram contra sem2 - lacuna
@@ -926,6 +942,8 @@ s32 principale (integer argc, character** argv)
                 }
             }
         }
+        imprimere("verdicta:  %d REICE (examen; cetera ACCIPE)\n",
+            (int)verdicta_reice);
         imprimere("clausura:  %d versae; %d indecisa (residuum)\n",
             (int)summa_versorum, (int)summa_indecisorum);
         si (summa_expr_visorum > ZEPHYRUM)

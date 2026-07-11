@@ -1,0 +1,9 @@
+/* EXSPECTA 8:ASSIGNATIO_INCOMPATIBILIS */
+struct S { int a; };
+struct T { int a; };
+static void f(void)
+{
+    struct S s;
+    struct T t;
+    s = t;
+}

@@ -1,0 +1,5 @@
+/* EXSPECTA 4:COMPARATIO_INCOMPATIBILIUM */
+static int f(int* p, char* q)
+{
+    return p == q;
+}

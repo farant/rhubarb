@@ -1,0 +1,5 @@
+/* EXSPECTA 4:REDDE_CUM_VALORE_IN_VACUO */
+static void f(void)
+{
+    return 5;
+}

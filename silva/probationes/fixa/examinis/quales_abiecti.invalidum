@@ -1,0 +1,6 @@
+/* EXSPECTA 5:QUALES_ABIECTI */
+static void f(char* q)
+{
+    const char* c = q;
+    q = c;
+}
