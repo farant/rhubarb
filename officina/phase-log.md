@@ -2340,3 +2340,26 @@ notata (mundus vivus incrementalis; vindex_onerator = onerator).
 compile_flags.txt sanatum eodem die (radices officinae aberant —
 strepitus instrumentorum tota sessione explicatus). Sigillum
 ordinis = INTENTIO M4 (sessio proxima; arcus probatus).
+
+### ADDENDUM (2026-07-11) — ORDO M4 DECISUS: M4a/M4b
+
+Fran consilium benedixit: **M4a = lamina exsecutionis → M4b = REPL**
+(colloquium supra promotum ad decisum; spec-v2 §XI emendatum cum
+ratione plena). Processus consilii M4a = arcus probatus SESSIONE
+RECENTI (integritas arcus M3 ex gradibus non fractis venit):
+exploratores IV (taxonomia constrictionum C89 + quid semantica iam
+decidere possit; CAECITATES annotatoris — ubi codex invalidus
+annotationes plausibiles tacite accipit, sedes ipsae iudicii;
+machinamentum diagnosticorum + postura recuperationis; vectis
+differentialis — CALIBRATIO clang ut oraculi: -std=c89
+-pedantic-errors, declarationes implicitae LEGALES C89, taxonomia
+severitatis triplex violatio/licitum-sed-suspectum/lint-domus) →
+simulatio-6 (classes contra corpus + fixturam fractam; exspectata:
+iudicium in arboribus ambiguis/canonicis-relativis, synthesis
+corporis invalidi) → interrogatio (politica severitatis, ambitus v0,
+profunditas recuperationis, forma diagnostica, censura-vs-iudicium,
+LIBRI silva-latere per praecedens M0, TITULUS — examen candidatus)
+→ spec cum vectibus. compile_flags.txt radices officinae accepit
+(strepitus clangd instrumentorum sanatus — pretium minimum, Tier 0
+colloquii lsp). Sessio haec: documentatio solum; on-ramp M4a =
+sessio proxima, re-entry per hunc addendum + spec-v2 §XI.

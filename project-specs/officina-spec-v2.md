@@ -332,8 +332,29 @@ officina/
   everywhere (always-on lineae); vindex TUI daily-driven live
   (app on three amalgams; positions through the lector only).
   Format name SEALED: indicium (.indicium, magic "INDICIUM").
-- **M4 — REPL** (+ #! runner). Bar: interactive session driving
-  monorepo libs.
+- **M4 — the interactive milestone, SPLIT 2026-07-11 (Fran, post-M3):**
+  - **M4a — enforcement layer** (silva-side, M0 precedent: books in
+    silva/phase-log.md + officina pointers). The named-since-M0b
+    judgment layer: compatibility relation, severity policy, richer
+    diagnosticum, invalid corpus, recovery mode. REASON for the
+    split: the corpus never needed judgment (clang pre-validated it
+    for years); a REPL's interactive input makes INVALID code the
+    common case — judgment before lowering is what makes the R
+    honest. Three consumers: the REPL, silva-lsp's diagnostics lane
+    (the long pole of clangd replacement), fresh-code checking.
+    Bar (proposed, seals at M4a interview): differential
+    ACCEPT/REJECT vs clang (haruspex/auspex precedent extended from
+    "same types" to "same judgments") — real corpus 100% accepted;
+    synthetic invalid corpus rejected with diagnostics at pinned
+    positions; clang calibrated with -std=c89 -pedantic-errors
+    (NB: implicit declarations are LEGAL C89 — est_implicitum is
+    not an error; severity taxonomy = interview). Name ceremony
+    pending (candidate: examen; cave iudicium ~ indicium).
+  - **M4b — REPL** (+ #! runner). Bar unchanged: interactive
+    session driving monorepo libs. Inherits from M4a: judgment
+    before lowering. Substrate notes: vindex_onerator = the
+    app-side loader (second consumer); design the long-lived
+    incremental world knowing silva-lsp wants to share it.
 - **M5 — native aarch64** (compile-to-memory first, mach-o second;
   fortify/_chk and stack-guard symbols become relevant HERE, not in
   the VM). **M6 — x86-64** (Rosetta-testable).
