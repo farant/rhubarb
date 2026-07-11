@@ -2447,3 +2447,18 @@ totius fistulae (lexer/pp, iudicium, demissio, machinula/libc,
 trans-TU; PARCATUM/AUDIENDUM/MORTUUM cum fontibus et tractionibus;
 regula: renovatur cum parca aperitur/clauditur; NON index operum —
 ordines per tractionem graduantur).
+
+## 2026-07-11 — M4a EXAMEN CLAUSUM — pointer entry
+
+Narrativa in silva/phase-log.md (LIBRI silva-latere per praecedens
+M0): quattuor chunki UNO DIE (A diagnosticum v2 → B relatio
+compatibilitatis → C sedes → D effusor + vectis). VECTIS TENET:
+corpus invalidum XIV/XIV REICE ad pinnas + oraculum consentiens;
+fugae 0/12; corpus verum 743/782 ACCIPE + 39 exclusiones pinnatae
+(classes lexici, diff = porta stans); cursor figura stans EXACTE
+(sedes in codice valido invisibiles, per exsecutionem). INVENTUM
+CORONAE: divergentia differentialis prima die primo — classis
+aciei-qualium in relatione nostra (118→3). Instrumenta nova:
+./silva/examen.sh (effusor iudicii), ./silva/examen_vectis.sh
+(vectis), columna verdicti + censum codicum in percursu. Roadmap:
+M4b REPL → M5 aarch64 → v2 iter-temporis.

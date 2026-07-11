@@ -22,6 +22,12 @@
             "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/censor-custos.sh",
             "timeout": 30,
             "statusMessage": "censor latinae..."
+          },
+          {
+            "type": "command",
+            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/examen-custos.sh",
+            "timeout": 30,
+            "statusMessage": "examen C89..."
           }
         ]
       }

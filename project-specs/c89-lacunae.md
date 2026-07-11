@@ -30,11 +30,12 @@ park indefinitely).
 
 ## II. Iudicium (semantica / examen) — compile-time constraints
 
-M4a (EXAMEN) v0 covers: compatibility relation, target-context
-three-way seat, locus (lvalue/const/modifiability), arity, return
-void/non-void, controlling-scalar, redeclaration type-compat,
-operator-site pointer-target compat, + the ~40 pre-existing
-diagnostics productionized. See officina-m4a-spec.md. Deferred:
+M4a (EXAMEN) v0 SHIPPED 2026-07-11: compatibility relation,
+target-context three-way seat, locus (lvalue/const/modifiability),
+arity, return void/non-void, controlling-scalar, redeclaration
+type-compat, operator-site pointer-target compat, + the ~40
+pre-existing diagnostics productionized. See officina-m4a-spec.md
++ silva/phase-log.md M4a RELATIO. Deferred:
 
 | Feature | C89 | Status | Detail + pull |
 |---|---|---|---|
@@ -45,6 +46,12 @@ diagnostics productionized. See officina-m4a-spec.md. Deferred:
 | Object-of-incomplete-type declarations | 6.5 | PARCATUM | Access side ENFORCED; declaration side (`struct S x;` never completed) silent. |
 | Enum int-representability | 6.5.2.2 | PARCATUM | Enum-constant constant-ness enforced; representability unchecked (rare). |
 | Lint tier growth (sign-compare, shadowing, narrowing…) | — | PARCATUM | Not C89 CV — domesticum tier grows on pull (silva-lsp lane). |
+| Logical-operand scalar (&&/\|\|/! operands) | 6.3.13-15 | PARCATUM | M4a wired statements+ternary conditions only; the logical-op operand seats exist unchecked. Pull: fixture demand. |
+| & of register-storage object | 6.3.3.2 | PARCATUM | Tiny CV; repositio flag exists. Pull: first miss. |
+| typedef redeclaration in same scope | 6.5 | PARCATUM | Genus-filter exempts TYPEDEF from redecl compat. Pull: REPL reports. |
+| Cross-parsura tag identity (systema seam) | 6.1.2.6 | PARCATUM | M4a find: same-text tags across parsuras nominally distinct; redecl seat clement on ex_systemate priors. Rides the cross-TU park (§V). |
+| Bare return in non-void: oracle demotion | 6.6.6.4 | PARCATUM | Legal C89, SUSPECTUM in examen; clang-16 auto-error and -Wno-error=return-type would also demote the REAL CV (value-in-void). Fixture waits on demotion decision — named vectis EXCLUSIO. |
+| Lexicon growth (network/deep POSIX) | — | PARCATUM | The 39 pinned corpus exclusions are all lexicon classes; systema_posix lacks Wave-3 (sockets/netinet). Pull: shrinking exclusiones.txt. |
 
 ## III. Demissio / medulla / semantica shared
 

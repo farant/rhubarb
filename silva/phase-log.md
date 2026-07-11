@@ -7138,3 +7138,80 @@ et sanata die uno. asperitates — nulla. desiderata — vectis
 **SEQUENS: commissio Franis = sigillum chunki D. Deinde RELATIO
 MILLIARII M4a (relectio plena phase-log + auditus, regula silvae)
 — sessione recenti si contextus deest.**
+
+## 2026-07-11 — M4a EXAMEN: RELATIO MILLIARII (auditus + sigillum)
+
+**QUATTUOR CHUNKI UNO DIE.** Fistula iudicii: fons → silva →
+semantica (typatio + IUDICIUM) → verdictum. Effusor
+./silva/examen.sh; vectis ./silva/examen_vectis.sh; columna
+verdicti + censum codicum in percursu.
+
+**AUDITUS (spec/fundamenta/sim-6 contra rem):**
+- Spec chunk A-D deliverabilia OMNIA praestita; emendationes V, omnes
+  cum ratione IN LIBRIS scriptae ante aut in opere: ① resolutor
+  positionum DISSOLUTUS (materializatio in additione); ② INFRA
+  gradus quartus (generalizat LEXICON_DEEST sigillatum; Fran
+  benedixit); ③ clementia tags incompletorum (incompletus-quia-
+  ignotus); ④ clementia redecl trans limen systematis (sutura
+  parsurarum); ⑤ pinnae per NOMINA codicum non numeros (mappa
+  derivata; legibilitas).
+- Interrogationis XV DECISUS omnes honorati. Fundamenta §III
+  quaestiones XIII omnes clausae (Q3 chorda oraculi + emendatio
+  `-x c`; Q4 mappa 245-residui = per constructionem: violatio extra
+  exclusiones = 0).
+- Sim-6 C1-C11: NULLA reversio; C3 (disciplina qualium)
+  PROFUNDATA inventis (quales per gradus acierum); C4 (cauda
+  legalis) membrum TERTIUM invenit (chorda-init); C2 (nominalis)
+  foramen ad suturam systematis invenit.
+- Vectis bar D: restatum honeste — "corpus 100% ACCIPE" = 100%
+  corporis lexico-coperti; 39 exclusiones PINNATAE cum causis
+  (diff = porta stans), praecedens tabulae stdout.
+
+**LEX CONTACTUS CORPORIS, puncta huius milliarii:** cauda
+chordam-in-aciem vetuisset (probationes veteres ceperunt); sutura
+parsurarum in systema_c89.h ipso; incompletus-quia-ignotus in
+tessera; classis aciei-qualium (INVENTUM DIFFERENTIALE PRIMUM —
+oraculum et examen inter se die primo calibraverunt: 118→3
+monstratores, demo_85 52→0); corpus sui-referens BIS (probatio
+nova sub capite vetere; fixturae invalidae in tabula exclusionum).
+
+**PARCAE NOVAE (cum dominis, → c89-lacunae.md):** operanda
+scalaria &&/||/! non probata (sedes exsistens, tractio fixturae);
+& repositionis registri (CV minima); typedef-redecl eodem scopo;
+demotio return-type oraculi (implexa: -Wno-error=return-type CV
+verum quoque demitteret — fixtura redde-sine-valore addetur cum
+decisione); crescentia lexici (systema_rete? — 39 exclusiones
+minuere); geminus tertius oneratorum (migratio tactu proximo).
+
+**DEBRIEF INSTRUMENTORUM MILLIARII:** effusor examen = desideratum
+tertiae-vicis impletum, investigator die primo (demo_85/tcp_posix
+minuta non horae); positiones chunk A ubique fructiferae
+(investigatio 193 violationum); censum codicum percursus = fons
+veritatis; porta amalgamatoris + probationes veteres + vectis =
+retia stratificata, quodque cepit quod alia non viderunt (exemplar
+M3 iteratum). Asperitas una: percursus plenus 2 min in ansa
+stash-diff (effusor eam iam solvit).
+
+**M4a SIGILLATUM = commissio Franis huius RELATIO.** EXAMEN vivit:
+semper-activum in analysi, effusore, vecte, columna. Consumptores
+parati: M4b REPL (iudicium ante demissionem), silva-lsp (lamina
+diagnostica), probatio codicis recentis. SEQUENS: M4b REPL
+(on-ramp arcu probato, sessione recenti; vindex_onerator =
+onerator; mundus incrementalis + reconciliatio implicita→realis =
+quaestiones primae).
+
+## 2026-07-11 — EXAMEN-CUSTOS NATUS (uncus post-editionem) — pointer entry
+
+Sequela immediata M4a (Fran: "sooner rather than later"). Uncus
+PostToolUse .claude/hooks/examen-custos.sh (praecedens
+censor-custos): iudicium C89 in omnem plagulam .c modo scriptam,
+canalis PUSH. Disciplina: silentium sub puritate (0.5s, vilior
+censore); exclusiones lexici pinnatae TACENT (strepitus
+deorsum-lexici doceret negligere); infra suppressum; scratchpad/
+build/fixa/amalgama exclusa; capita .h per includentes. Probatum:
+exclusa tacent, violatio flagrat cum positione exacta, purum tacet.
+DUM CLANGD QUOQUE CURRIT = DIFFERENTIALIS VIVUS in sessionibus
+veris — calibratio contra incumbentem ante substitutionem lsp
+(scopus agentis: diagnostica push = ~95% valoris clangd; navigatio
+iam per subsellium [nexus/emitte]). Armatur sessione proxima
+(oneratio settings). Detail: .claude/hooks/examen-custos.sh.

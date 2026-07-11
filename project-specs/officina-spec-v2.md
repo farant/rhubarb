@@ -333,7 +333,24 @@ officina/
   (app on three amalgams; positions through the lector only).
   Format name SEALED: indicium (.indicium, magic "INDICIUM").
 - **M4 — the interactive milestone, SPLIT 2026-07-11 (Fran, post-M3):**
-  - **M4a — enforcement layer** (silva-side, M0 precedent: books in
+  - **M4a — EXAMEN. CLOSED 2026-07-11** (four chunks, ONE day; see
+    silva/phase-log.md M4a RELATIO MILLIARII): diagnosticum v2
+    (codex/severitas[+INFRA]/positio-materializata/socius/
+    provisionale; 43 sites); compatibility relation + directional
+    iudicium (probatio 553/553); judgment live in the walk
+    (three-way seat w/ fabrication retired, locus, arity, return,
+    scalar, est_implicitum→SUSPECTUM, redecl w/ socius, operator
+    deepening); ./silva/examen.sh driver + fixa/examinis invalid
+    corpus (EXSPECTA pins) + ./silva/examen_vectis.sh differential.
+    BAR MET (restated honestly): invalid corpus 14/14 REICE at
+    pinned (linea,codex) w/ oracle agreement; leak sweep 0/12
+    BEFORE blessing; real corpus 100% of lexicon-covered ACCIPE +
+    39 PINNED named exclusions (diff = standing gate); cursor
+    stdout parity EXACT (judgment invisible on valid code, by
+    execution). FIRST DIFFERENTIAL DIVERGENCE found+fixed day one
+    (array-qual class, 118→3). Oracle amendments: + -x c for
+    non-.c files; return-type demotion entangled (named EXCLUSIO).
+  - *(original M4a plan, for the record:)* (silva-side, M0 precedent: books in
     silva/phase-log.md + officina pointers). The named-since-M0b
     judgment layer: compatibility relation, severity policy, richer
     diagnosticum, invalid corpus, recovery mode. REASON for the
