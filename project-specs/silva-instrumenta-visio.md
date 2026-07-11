@@ -791,3 +791,48 @@ machinula-verifiable. All three predecessors of silva died from data-model
 decisions that foreclosed features. This document exists so the features
 above stay decisions — named, with paths back — instead of becoming
 assumptions.*
+
+---
+
+## §XIV — Delivery: push beats pull (appended 2026-07-10, from the
+## adoption conversation with Fran)
+
+The instrumenta prima dogfooding surfaced a truth about the primary user:
+**every fresh agent session is a new user** — declarative knowledge ("censor
+exists") survives compaction, but the procedural intuition ("when I feel
+THIS, censor answers it") does not. Fran's framing: tool adoption is a
+marketing funnel, and rules-you-must-remember are friction that loses the
+conversion. Design consequences, ordered by what shipped:
+
+1. **Hooks = the push channel (LIVE 2026-07-10).** Claude Code hooks in
+   .claude/settings.json: a PostToolUse hook runs censor on every edited
+   .c/.h (~0.9s, additionalContext injection ONLY on flagrationes — the
+   clangd pattern), and a PreToolUse guard DENIES manual edits of generated
+   files (marker-driven: any file whose head says GENERATUM + NE MANU
+   EDITES/NOLI MANU MUTARE protects itself; no path list). Silence
+   discipline is the load-bearing property: a push channel that speaks when
+   nothing is wrong trains banner blindness; censor qualifies because its
+   measured FP rate is 0.00.
+2. **Conversion happens on the failure path.** Green gates get skimmed;
+   errors get read. Every diagnostic row should carry its own next command
+   (halt reports → `origo via linea`; fusor sistere → `-causa`; cursor
+   rows → `-sola`). Docs should be indexed by SYMPTOM, not tool name.
+3. **Chokepoints stay lean.** Gates carry only load-bearing checks
+   (censor's tool-alive probe); advertising rides failure paths and hooks,
+   which cost ~nothing when healthy. Triggers must be EVENTS (session
+   start, gate, error, edit), never mental states ("remember when
+   relevant").
+
+**NAMED FUTURE: silva-lsp.** Claude Code plugins register custom language
+servers (.lsp.json: command + extensionToLanguage + diagnostics:true) whose
+published diagnostics enter agent context exactly like clangd's. A
+silva-based LSP server (JSON-RPC over stdio: initialize, didOpen/didChange,
+publishDiagnostics — lib/json + chorda suffice) would unify FOUR separately
+named deferrals: the persistent daemon (dissolves the ~1s cold start to
+ms), the checker lane's delivery vehicle (censor = plugin #0), the
+incrementality pull (didChange is the consumer the foreclosure check kept
+the path open for), and the editor surface (one server: every editor +
+Claude Code + eventually solarium). Not before the instrumenta phase and
+M3 close; recorded so it stays a decision. Caveat noted: one LSP server
+per extension (first registered wins) — coexistence with clangd for .c is
+a real design point.

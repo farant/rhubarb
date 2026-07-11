@@ -1356,3 +1356,213 @@ DECISUS quinque sigillata; specs = instrumenta-simulatio-1+2.md;
 ~4-4.5 dies, linea sectionis censor+emitte+origo) → **M3 indicium +
 vindex** (apertura: acies instructionum planae; ad clausuram:
 auditum praedictionis usus instrumentorum, sim-2 §5).
+
+## INSTRUMENTA PRIMA — INTENTIO (2026-07-10)
+
+Five dogfood CLIs, design ALREADY PAID (instrumenta-simulatio-1.md
+C1-C5 + A1-A2; -2.md episodes 1-3; DECISUS quinque sigillata in
+sim-2). CLI-before-MCP stands. Homes: silva/instrumenta/principalia/
+(censor, emitte, origo, nexus) + officina/instrumenta/principalia/
+(interpretare). Shell wrappers per percursus.sh precedent. Books:
+worklog entry per tool; this phase-log; sim docs get the RELATIO.
+
+Order + bars:
+1. **censor** (~1d) — latina lint. Check = origo EXPANSIO +
+   nomen_macro ∈ latina-set, in NAME-BINDING slots ONLY (slot
+   inventory derived MECHANICALLY from the generated accessor table
+   — hand list forbidden, the AEDIFICATA lesson); per-TU
+   latina.h-inclusion awareness (knotapel English-C can't fire).
+   Wired into officina/silva compile-script gates DAY ONE;
+   full-corpus on-demand until FP rate measured on one run. BAR:
+   the ~10 historical firings × `git show` pre-fix blob = the credo
+   corpus — censor finds ALL of them at their recorded lines.
+2. **emitte** (~0.5d) — single-TU byte-exact definition dump,
+   `[via:linea-linea]` header. BAR: byte-diff vs source extent on
+   10 symbols incl. probationes files.
+3. **origo** (~0.5d) — expansion story of the token at
+   via:linea:columna (invocatio → nomen_macro → corpus per layer);
+   shares emitte's loader skeleton. Promoted by sim-2 (M3
+   macro-stepping asks it constantly). BAR: known macro sites
+   report full chains.
+4. **nexus** (~1d) — nexus_percursus sweep → build/nexus.tsv
+   (DISPOSABLE, never committed, mtime-staleness warning; explicit
+   pre-acta scaffolding) + nexus CLI (grep the tsv, group-by-file
+   w/ counts, definition site marked, WHOLE repo). BAR: spot-check
+   vs grep on 10 symbols.
+5. **interpretare** (~1-1.5d) — wrapper-module generator over
+   cursor guts (inline-module pattern from probatio machinula);
+   -plagulae manual scoping; scalars + string literals v0
+   (aggregates = named deferral); halt report prints free on
+   non-BENE. BAR: the sputnik pecunia repro + →42 fixtures smoke.
+
+Cut line if sprawl: censor + emitte + origo ship first. The
+falsifiable usage prediction (sim-2 §5: emitte >> nexus >
+interpretare > origo in counts; origo highest leverage-per-call)
+gets audited at M3 close.
+
+### ADDENDUM (2026-07-10) — CENSOR NATUS ET IN PORTIS (tool 1/5)
+
+**Bar MET same day**: silva/instrumenta/principalia/censor.c +
+silva/censor.sh. Corpus sweep: **762 plagulae / 528 cum latina /
+0 flagrationes — FP rate 0.00 primo contactu** (the two sealed
+exceptions principale+FILUM exactly sufficient). Gates wired DAY
+ONE per DECISUS: porta 6 CENSURA in BOTH amalgamare.sh (silva:
+regression probe 13/13 + ~77-file sweep ~12s; officina: ~25-file
+sweep ~4s); both VERIFICATUM "+ censura" green.
+
+Mechanics as simulated, both no-hand-list pledges kept: slot
+inventory RUNTIME-derived from SILVA_C89_REGISTRUM ("tok_titulus"
+slots; tok_valor/tok_destinatio consciously excluded); latina set
+from the expander's macro journal (fons basename = latina.h), no
+word list in the tool; BFS worklist walker (no depth cap); origo
+chain walked through all layers.
+
+**FINDING (sim assumption killed)**: git has NO pre-fix landmine
+blobs — every historical firing was fixed within its session
+before commit (tessera has 2 commits total). Validation corpus is
+SYNTHETIC: probationes/fixa/censoris/flagrationes.c (classis A, 13
+blessed rows incl. position-discrimination proof) +
+fragores.c.fragor (classis B — suffix keeps percursus/-corpus
+away from deliberate parse errors). Ledger audit: only exire (#4)
+was ever SILENT; the other ~9 firings were loud-but-cryptic →
+classis B rows list DISTINCT latina macros per ERROR node
+('integer', 'nomen', 'redde' → the culprit jumps out), cap VIII
+with explicit ", ..." marker.
+
+Detail: silva/instrumenta/principalia/censor.worklog.md. Named
+deferrals there (standing corpus sweep = Fran's promotion call now
+that FP=0 is measured; B-lane ranking; basename collisions).
+**NEXT: emitte** (single-TU byte-exact definition dump,
+[via:linea-linea] header; ~0.5d).
+
+### ADDENDUM (2026-07-10) — EMITTE NATUS, VECTIS 10/10 (tool 2/5)
+
+silva/instrumenta/principalia/emitte.c + silva/emitte.sh.
+**BAR MET: 10/10 symbola octetim identica extractioni sed** —
+fontes officinae/silvae/lib, capita (Xar/MedullaLineae), staticum
+gradus plagulae, DUAE probationes, unum caput knotapel anglicum.
+Mechanica communis censori (loci tok_titulus e registro; corpora
+functionum in ambulatione congruentiae praetermissa — usus = opus
+nexus).
+
+Duo inventa vera, AMBO per compositionem vectis ipsius capta:
+(1) valor lexematis = textus EXPANSUS — "principale" in arbore
+"main" est; congruentia nunc valor AUT valor radicis originis
+(scriptum ET expansum inveniunt); (2) tag-slots in USIBUS
+congruebant (quaerens Xar etiam XarIterator emittebat) — tags
+ligant solum cum membra definiunt (_tag_definit, registro-genericum).
+Detail + asperitates notatae: emitte.worklog.md.
+
+**DEBRIEF INSTRUMENTORUM (praxis nova Franis, exemplar primum —
+dies censor+emitte):** *adhibita*: censor 6× (fixturae, corpus,
+portae), emitte 12× (vectis + usus proprius in structuris silvae
+legendis — iam in die natali suo pro grep+Read adhibitum!), fusor
+0×, cursor 0× (dies sine tactu officinae). *fructus*: vectis
+emitte duo lacunas veras cepit (radix-valor, tag-refs); sweep
+censoris FP=0 mensuravit. *asperitates* (in worklogs ad momentum
+notatae): ordo blocorum emitte = ordo inventionis non linearum;
+praeparatio capitum ~1s per invocationem (pretium initii frigidi,
+notum, acta/M4 respondet). *desiderata*: nulla nova — nexus iam
+in ordine (blast-radius quaesitum bis hodie manu factum est).
+**NEXT: origo** (CLI fabulae expansionis; ~0.5d, sceletum emitte
+communicat).
+
+### ADDENDUM (2026-07-10) — ORIGO NATUS, VECTIS IMPLETUS (tool 3/5)
+### + DESIDERATUM PRIMUM: bibliotheca similitudinis
+
+silva/instrumenta/principalia/origo.c + silva/origo.sh. Simplius
+emitte: NULLA ambulatio arboris — fluxus expansus + catenae
+originis insertae SUNT fabula. `origo <plagula> <linea>[:<col>]`;
+quaestio per lineam solam CONSULTO (relationes halitus machinulae
+via:linea dant, columna absente). **VECTIS IMPLETUS: sedes
+macrorum notae catenas plenas referunt** — `'if' <- si`;
+`'NULL' <- NIHIL <- CREDO_NON_NIHIL` (profunditas 2!); brachium
+chordae `'"p"' <- CREDO_NON_NIHIL (chorda #)`; `'34' <- __LINE__
+(chorda #)` (canalis M0b visibilis); argumenta ad positionem SUAM
+scriptam attribuuntur. Asperitates in worklog (capita gregum
+iterata in lineis macro-functionum; solum plagula princeps v0).
+
+**DESIDERATUM PRIMUM PHASIS (Fran, conversatione post-debrief):**
+bibliotheca parva similitudinis nebulosae (fzf-genus: congruentia
+subsequentiae + punctatio limitum verborum, ~150 lineae C89 super
+chordas + suite credo). Signum demandae IAM HODIE accensum (vectis
+emitte: symbolum male coniectum in scrutinium.h → circuitus grep).
+Consumptores visibiles tres: emitte via "non inventum" (nomina
+ligaminum IAM ambulata — "fortasse: ..."), nexus -similis (12k
+symbola, vis bruta sufficit), saltuarius type-jump (v0.1 backlog).
+CONSILIUM SIGILLATUM cum Frane: origo primum (factum), tum
+bibliotheca similitudinis ANTE nexum (emitte "fortasse" + nexus
+-similis simul nascuntur). TITULUS = caerimonia Franis (candidati:
+similitudo / rete / chorda_similitudo). "Fixing the little
+frictions adds up" — Fran.
+**NEXT: bibliotheca similitudinis (titulus Franis) → nexus.**
+
+### ADDENDUM (2026-07-10) — SIMILITUDO NATA (titulus Franis) +
+### emitte "fortasse:" VIVUM
+
+lib/similitudo.{c,h} + probatio_similitudo (20 asserta, viridis
+primo cursu; in SOURCE_FILES compile_tests.sh). Congruentia
+subsequentiae avara (limes +16 / continuum +8 / casus +1 / hiatus
+−3/−1), functiones purae super chordas, sine allocatione; DP
+alineationis optimae = dilatio nominata (API immutata maneret).
+
+emitte "fortasse:" VIVUM eodem die: nomina ligaminum in ambulatione
+congruentiae gratis collecta → similitudo_optima → V suggestiones
+distinctae in stderr. **Fractura natalis replicata et sanata:**
+`scr_signatura_computare` → "fortasse: scr_signatura_ex,
+scr_signatura_libera, scr_signatura_aequalis".
+
+**INVENTUM (hora prima cibi canini): directio subsequentiae in
+casu did-you-mean INVERTITUR** — nomen totum male coniectum
+subsequentia nullius est. Sanatio = politica CONSUMPTORIS (emitte
+quaestionem a dextra decurtat donec candidati appareant, solum
+III), bibliotheca pura manet; regula duorum ante promotionem in
+API. Detail: lib/similitudo.worklog.md.
+
+Consecutio: probatio_similitudo undam cursoris sponte intravit
+(80→81) — bibliotheca nova INTERPRETATA in machinula die natali
+suo curritur (captare aurea nova; verificatio -sola infra).
+**NEXT: nexus** (sweep totius repositorii → build/nexus.tsv
+disponibile + CLI grep; -similis gratis nunc).
+
+### ADDENDUM (2026-07-10) — DEBRIEF SESSIONIS (rogatu Franis):
+### duo data pro auditu M3
+
+1. **Caveat validationis**: usus instrumentorum novorum hodie
+   maxima parte SE PROBANTES erant (vectes, fixturae, replicationes)
+   — non organici. Numeri organici veri incipient cum nexus +
+   interpretare exsistant et M3 aperiatur; auditum praedictionis
+   sim-2 §5 hoc discrimen servet (validatio ≠ demanda).
+2. **Datum nexus (ex grep-numeratione sessionis)**: dimidium fere
+   grep-quaestionum mearum erat "in QUA plagula est X?" — quaestio
+   quam emitte respondere NON potest (plagulam poscit!) et cuius
+   responsum nexus est. Confirmat: nexus = instrumentum desideratum
+   maximum residuum; group-by-file + sedes definitionis signata
+   (pins sim-2) recte sculpta sunt.
+
+### ADDENDUM (2026-07-10) — UNCI VIVI (canalis push) + silva-lsp
+### FUTURUM NOMINATUM
+
+Ex conversatione adoptionis cum Frane ("infundibulum
+venditationis": omnis sessio recens = usor novus; regulae
+memorandae = frictio quae conversionem perdit; visio-doc §XIV
+novum). Duo unci in .claude/settings.json (+ .claude/hooks/):
+
+- **censor-custos.sh** (PostToolUse, Write|Edit): censor in
+  plagulam .c/.h modo scriptam (~0.9s; .md etc 17ms praetermissa);
+  SILENS cum pura (FP=0.00 rem sustinet), flagrationes solae
+  additionalContext iniciunt (exemplar clangd — informatio, non
+  obex). Exclusa: censoris/, scratchpad/, build/.
+- **generata-custos.sh** (PreToolUse, Write|Edit): editiones
+  manuales plagularum GENERATARUM VETAT — mechanicum per signum
+  capitis (GENERATUM + NE MANU EDITES / NOLI MANU MUTARE), nulla
+  lista viarum; plagulae generatae futurae se sponte protegunt.
+  Regeneratio libera (generatores per Bash scribunt).
+
+Probati V casibus (nega/permitte/silens/flagra/praetermitte) per
+JSON simulatum; VIVI a sessione proxima (unci ad initium sessionis
+capiuntur). **silva-lsp = futurum nominatum** (visio-doc §XIV):
+servus LSP silvae quattuor dilationes unit (daemon/cold-start,
+vehiculum laneae censoriae, tractio incrementalitatis, superficies
+editorum); post phasim + M3. NEXT: nexus (cum sculptura per datum
+debrief confirmata).

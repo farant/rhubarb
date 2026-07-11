@@ -1,0 +1,30 @@
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/generata-custos.sh",
+            "timeout": 10,
+            "statusMessage": "custos generatorum..."
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/censor-custos.sh",
+            "timeout": 30,
+            "statusMessage": "censor latinae..."
+          }
+        ]
+      }
+    ]
+  }
+}

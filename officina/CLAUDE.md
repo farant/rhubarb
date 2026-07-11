@@ -81,6 +81,13 @@ When narrowing scope: name the deferred use case and the path back.
 - Amalgam discipline: shared mechanism (silva/instrumenta/silva_amalgama);
   run ./officina/amalgamare.sh after ANY fontes edit; VERIFICATUM gates.
 - Simulate before building (simulatio-3 preceded M1; both prior sims paid).
+- **INSTRUMENTA DEBRIEF (Fran, 2026-07-10):** every chunk/milestone RELATIO
+  carries a short instrument debrief: *adhibita* (tools reached for, rough
+  counts), *fructus* (reaches that changed the outcome), *asperitates*
+  (rough edges — note these in the TOOL'S worklog AT THE MOMENT of the
+  reach; the debrief compiles, never recalls), *desiderata* (reaches for
+  tools that don't exist = the demand signal; next tool's spec). Sim-2 §5's
+  usage prediction is audited from these at M3 close.
 - Latin in the code; English fine in meta-documents. Corpus caveat: knotapel
   is plain English C — grep-audits must be bilingual.
 - Fran understands all the code; teaching is part of the job.

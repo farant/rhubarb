@@ -113,4 +113,17 @@ if [ "$COMMUNIA" != "0" ]; then
     exit 1
 fi
 
-echo "amalgamare: VERIFICATUM (standalone + hospes + nm-intersectio 0)"
+# ---- 6. CENSURA: censor latinae (instrumenta prima; DECISUS
+# 2026-07-10: in portis compilationis a die primo; corpus
+# regressionis censoris in porta SILVAE probatur - hic fontes
+# officinae puri sunto) ----
+if ! "$RADIX_DIR/silva/censor.sh" "$OFF_DIR"/fontes/*.c "$OFF_DIR"/fontes/*.h \
+        "$OFF_DIR"/instrumenta/principalia/*.c \
+        "$OFF_DIR"/probationes/probatio_*.c \
+        > "$BUILD_DIR/censura.txt" 2>/dev/null; then
+    echo "amalgamare: CENSURA LATINAE FRACTA:"
+    grep '\[CENSURA\]\|\[SINE ARBORE\]' "$BUILD_DIR/censura.txt" | head -10
+    exit 1
+fi
+
+echo "amalgamare: VERIFICATUM (standalone + hospes + nm-intersectio 0 + censura)"

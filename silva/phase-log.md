@@ -6651,3 +6651,17 @@ percursus 100.00%/0 errores/indecisa 9, diagnostica +8 classified
 VERIFICATUM. Officina effect: fusor sistere files 68→53, cursor
 Unda-0 47→52/73 (arbor2_glr 101M instr VIRIDIS; capsula gzip
 tota interpretata). Detail: silva_c89_semantica.worklog.md.
+
+## 2026-07-10 — CENSOR NATUS (instrumenta prima) — pointer entry
+
+New silva-side instrument, zero fontes changes (narrative home:
+officina phase-log, INSTRUMENTA PRIMA). censor.c = latina-landmine
+lint over the public origo surface: slot inventory runtime-derived
+from SILVA_C89_REGISTRUM (tok_titulus slots), latina set from the
+expander's macro journal — no hand lists anywhere. First corpus
+contact: 762 plagulae, 0 flagrationes (FP 0.00). amalgamare.sh
+gained porta 6 CENSURA (regression probe 13/13 + fontes sweep);
+VERIFICATUM "+ censura". Regression corpus:
+probationes/fixa/censoris/ (fragores suffixed .fragor so percursus
+baselines never move). Detail: instrumenta/principalia/
+censor.worklog.md.

@@ -1,0 +1,43 @@
+#include "latina.h"
+
+/* CORPUS REGRESSIONIS CENSORIS - classis B (fragores obscuri):
+ * flagrationes historicae quae verba CLAVIUM fiunt et parsationem
+ * frangunt (compilator clamat sed obscure; censor causam nominat).
+ * Suffixus ".fragor" CONSULTO: percursus et censor -corpus hanc
+ * plagulam numquam vident (errores consulto plantati baselines
+ * moverent); porta censoris eam via explicita dat.
+ *
+ * Formae historicae: nomen ut parametrum (I et X, cursor.c);
+ * registrum localis (II); magnitudo localis (III et VII);
+ * structura ut variabilis (VI); commutatio (VIII, silva);
+ * externus campus (IX, officina_regio).
+ *
+ * EXSPECTANTUR: suspecta > ZEPHYRUM (macra culpanda in listis),
+ * flagrationes fortasse ZEPHYRUM (fragores arborem frangunt ante
+ * loca nominum). NUMQUAM compilatur. */
+
+integer fractum_i(integer nomen);
+integer
+fractum_i(integer nomen)
+{
+    redde nomen;
+}
+
+vacuum fractum_ii(vacuum);
+vacuum
+fractum_ii(vacuum)
+{
+    integer registrum = I;
+    integer magnitudo = II;
+    integer structura = III;
+    integer commutatio = IV;
+
+    (vacuum)registrum;
+    (vacuum)magnitudo;
+    (vacuum)structura;
+    (vacuum)commutatio;
+}
+
+structura Res {
+    integer externus;
+};
