@@ -49,3 +49,18 @@ repo-wide.
   filter-by-default only if it bites.
 - CLI loads the whole 45MB per query (~0.15s) — fine until it
   isn't; acta is the real answer.
+
+## 2026-07-11 — demand signal from M3 chunk ① (recorded at the reach)
+
+During the congelatio rewrite the load-bearing query was "every
+site touching FIELD `bloccus` of Tabulatum/AnulusFigura" — a
+member-access pattern, not a symbol. nexus can't answer it (member
+accesses aren't in the M1a binding table; the seat would be the
+struct field, unexported like typedef uses). grep `->bloccus`
+approximated it fine THIS time (only one struct family had the
+field), but with a common member name it would drown. This is
+syntax-pattern-query territory: quaestio selectors (membrum-access
+with $field capture), not a nexus column. Same family as Fran's
+lint-rule question (2026-07-11 conversation) — first named consumer
+pull for quaestio QB/QC as a lint/query harness. Counting per the
+rule of two: this is occurrence ONE.

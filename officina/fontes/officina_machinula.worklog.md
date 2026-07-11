@@ -208,3 +208,62 @@ Suite 71/71 → (post-localtime) green; amalgama VERIFICATUM.
 Sweep: 55→66/73 (POSIX-transitive 9 + via + arbor_praeparator +
 arbor_quaestio + fasti + sputnik_interpres — the last via the
 DEMISSIO paren-conversion find, see officina_demissio.worklog.md).
+
+## 2026-07-11 — M3 chunk ①: congelatio plana (3.2x, first-pass clean)
+
+FunctioPlana (instructiones contiguae + blocci_initia strictly
+increasing w/ closing sentinel + operanda plana) frozen as the 4th
+machinula_creare pass, AFTER decipulae ligatio (the copy captures
+the bound image — order matters). planae[] parallel to the conexio
+function table (the index VOCARE/initium already resolve).
+Tabulatum.bloccus DELETED — the runtime coordinate is now
+(functio, flat index); block identity derived by binary search
+over blocci_initia at PRINT time only (halt report). Ring entries
+carry plana + flat index. tabulatum_summum cache (Xar element
+pointers stable) killed the per-instruction frame re-fetch. The
+fetch went from 3 cross-TU xar_obtinere calls to zero.
+
+**MEASURED (seal pairs, -O0 daily build, same config):**
+- vim solo: 550 → 171 ms @ 9,075,028 instr = **3.2x** (~16.5M →
+  ~53M instr/s)
+- sputnik_interpres 1076→395, tabula_characterum 299→92, stml
+  163→60 (2.7-3.25x across the board)
+- full sweep wall 4:23.98 → 3:45.93; **arbor_formator ESCAPED the
+  TEMPUS bucket** (>30s → 15.7s, 673M instr, stdout idem) —
+  sweep 75→76 praeteritae, 69 eaedem / 0 DIFFERUNT, tempora 6→5.
+- The 1.3-2x grounded estimate undershot because THREE xar layers
+  died at once: instruction fetch + top-frame re-fetch + VOCARE
+  operand pool. This is ~LTO-experiment territory (3.6x) achieved
+  by structure alone in the un-inlined -O0 build.
+- Freeze cost: invisible at suite granularity — small suites are
+  NET faster (xml 20→7ms includes the freeze). Sim C4's lazy-freeze
+  fallback stays unneeded.
+
+**Finds:**
+1. medulla_functio_terminata has ZERO callers — the lector never
+   validates terminator discipline. Unterminated blocks (possible
+   only in hand-written .medulla) preserve today's honest runtime
+   "fluxus extra bloccum" via MACHINULA_OP_FLUXUS_CUSTOS, a
+   machinula-PRIVATE op (= MEDULLA_OP_NUMERUS; numeri_op array
+   oversized by MACHINULA_OPS_PRIVATAE so the counter write stays
+   branchless; slot NUMERUS+1 pre-reserved for chunk ④'s PAUSA).
+   Guards only on non-terminated blocks → corpus stays exactly 1:1
+   with the canonical walk (pact in officina_medulla.h).
+2. SALIRE/RAMUS gained an explicit target bounds check (one
+   unsigned compare) — today's bad-block honesty came free from
+   medulla_bloccum_obtinere returning NIHIL; flat indexing needs
+   it explicit. i32-unsigned compare catches negative garbage too.
+3. xar_copiare_ad_tabulam was on the amalgamator EXCLUDENDA list
+   (first officina use ever) — the standalone gate clamavit
+   exactly as documented; one manifest line deleted.
+4. sputnik_interpres instruction count moved −2,740 between runs
+   (16,161,601 → 16,158,861) with stdout still idem — its
+   interpreted workload has a time-dependent path (clock builtin).
+   Instruction counts are NOT a determinism invariant for suites
+   that read the clock; stdout remains the bar.
+
+Cross-phase note: the pinning probatio (demission-time indices ==
+frozen indices) lands in chunk ③ with indicium's side — the freeze
+alone has nothing to compare against; blocci_initia strict
+monotonicity is asserted implicitly by the parity bar (any drift
+= wrong branch targets = instant corpus carnage).

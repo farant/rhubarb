@@ -4667,6 +4667,23 @@ _lineam_colligere (MedullaLineae* lineae,
     {
         redde;
     }
+    /* sedes RADICIS (invocationis), non scripturae (M3 chunk 2):
+     * lexema expansum campos lexicales E CORPORE macronis fert -
+     * linea definitionis. Radix catenae originis = invocatio in
+     * plagula usoris; ea est linea quam relatio halitus et gressus
+     * macro-conscius monstrare debent. Catena PLENA (acies
+     * expansionis) ad indicium (chunk 3). */
+    {
+        unio { constans SilvaToken* c; SilvaToken* m; } ul;
+        constans SilvaToken* radix;
+
+        ul.c = lexema;
+        radix = silva_token_radix(ul.m);
+        si (radix != NIHIL)
+        {
+            lexema = radix;
+        }
+    }
     via.datum = NIHIL;
     via.mensura = ZEPHYRUM;
     si (parsura->expansio != NIHIL)

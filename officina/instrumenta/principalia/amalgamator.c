@@ -120,7 +120,6 @@ interior constans character* constans EXCLUDENDA_XARIS[] = {
     "xar_addere_multos",
     "xar_capacitas",
     "xar_continet",
-    "xar_copiare_ad_tabulam",
     "xar_creare_cum_magnitudine",
     "xar_destruere",
     "xar_invenire",

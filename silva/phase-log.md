@@ -6665,3 +6665,25 @@ VERIFICATUM "+ censura". Regression corpus:
 probationes/fixa/censoris/ (fragores suffixed .fragor so percursus
 baselines never move). Detail: instrumenta/principalia/
 censor.worklog.md.
+
+## 2026-07-11 — PARCA NOMINATA: "selecta" (quaestio in subsellio) — pointer entry
+
+Parked from the M3 chunk ① debrief conversation with Fran (narrative
+home: officina phase-log). The demand: a bench CLI running quaestio
+selectors against a file, printing matches BYTE-EXACTLY with line
+ranges (emitte's extent printer) — structure-shaped grep + ready-made
+unique Edit anchors. Sketch: `./silva/selecta.sh <plagula>
+'<selector>' [-intra <symbolum>]`, where -intra reuses emitte's
+binding-table walk to scope the query to a named function's subtree
+(papers over the missing QB name-filter for the common case).
+DEMAND COUNT (rule of two): occurrence ① member-access query gap
+during M3 congelatio (grep `->bloccus` — recorded in
+nexus.worklog.md 2026-07-11); occurrence ② Fran's structural-
+selection question (same day). The pull for QB attrs/captures is
+therefore LIVE — selecta (QA + -intra glue is already useful) and
+the lint-rule harness (Fran's coupled-behaviors idea, same
+conversation) are QB/QC's first two named consumers. Landing spot:
+between M3 chunks as a palate cleanser (similitudo precedent) or
+post-M3; TITULUS = caerimonia Franis ("selecta" is a placeholder).
+Path back: this entry + nexus.worklog.md 2026-07-11 + the QA API
+rows (silva.h:1053-1067).

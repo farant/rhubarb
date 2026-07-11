@@ -261,3 +261,30 @@ Regression: scalaria.c pecunia_exemplum — BOTH shapes (implicit
 `(cents * n)` init + explicit `(long)(cents * n)`), golden
 re-pinned + blessed (integrare.f64.s64 present twice). sputnik
 PRAETERIIT 16.1M instr, all 189 asserts.
+
+## 2026-07-11 — M3 chunk ②: distillator radicis (root-site line table)
+
+_lineam_colligere now walks silva_token_radix(lexema) before
+distilling (via, linea): an EXPANSIO token carries its lexical
+fields FROM THE MACRO BODY (definition site — silva_token.c copies
+corpus fields), so the old table pointed halt reports into credo.h
+instead of at the assert line. The root of the origo chain = the
+top-level source invocation, which is the line a user (and a
+stepping debugger) wants. FONS tokens are their own root — real
+function bodies unaffected. The FULL expansion stack (root→…→
+spelling, with nomen_macro per frame) is deliberately NOT distilled
+here — that's indicium's table (M3 chunk ③), built in the same
+collect-before-destroy window.
+
+API note: silva_token_radix takes non-const; house -Wcast-qual
+forbids the cast, so the union dance (pattern from
+machinula_lineas_praebere) converts. Cost of the walk: per distinct
+origo node, pointer-chase depth ≤ ~2 in practice — invisible
+(sweep +0.7s TOTAL including all wiring, within noise).
+
+Seal demo (ephemeral probatio, deleted after): a wild read inside a
+macro BODY reported [probatio_m3_lineae_scratch.c:23] (invocation)
+instead of :11 (definition); ring showed credo_aperire walking
+lib/credo.c:73-76 line-by-line. First real data through
+machinula_lineas_praebere ever — the seam is now exercised on every
+cursor/interpretare run (DECISUS 9, always-on).

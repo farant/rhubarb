@@ -58,6 +58,8 @@ hic_manens SilvaSemantica* systema_semantica = NIHIL;
 
 hic_manens Piscina* piscina_officinae = NIHIL;   /* moduli cachati */
 hic_manens Xar* moduli_mundi = NIHIL;            /* MedullaModulus* */
+hic_manens Xar* lineae_mundi = NIHIL;            /* MedullaLineae*
+                                                  * parallelae */
 
 hic_manens b32 custodia_petita = FALSUM;         /* -custodia */
 hic_manens insignatus integer mora_secunda = 30; /* -mora <n> */
@@ -233,7 +235,7 @@ _systema_legere (Piscina* piscina, constans character* via,
 
 hic_manens MedullaModulus*
 _plagulam_demittere (constans SilvaContextus* ctx,
-    constans character* via)
+    constans character* via, MedullaLineae** lineae_exitus)
 {
     FILE* pl;
     long mensura_l;
@@ -249,6 +251,10 @@ _plagulam_demittere (constans SilvaContextus* ctx,
     chorda titulus_moduli;
     unio { constans character* c; i8* m; } u;
 
+    si (lineae_exitus != NIHIL)
+    {
+        *lineae_exitus = NIHIL;
+    }
     pl = fopen(via, "rb");
     si (pl == NIHIL) redde NIHIL;
     fseek(pl, 0L, SEEK_END);
@@ -368,6 +374,15 @@ _plagulam_demittere (constans SilvaContextus* ctx,
                     (long)xar_numerus(bloccus->instructiones);
             }
         }
+    }
+
+    /* collige-ante-destrue (M3): catena originis solum dum parsura
+     * vivit ambulabilis; lineae in piscinam officinae (vita moduli,
+     * COW trans fork) */
+    si (lineae_exitus != NIHIL)
+    {
+        *lineae_exitus = demissio_lineas_colligere(
+            piscina_officinae, modulus, parsura);
     }
 
     /* arbores numquam cumulantur; origo pendens - clavis opaca
@@ -520,13 +535,17 @@ _bibliothecam_demittere (constans SilvaContextus* ctx)
         _comparare_vias);
     per (i = 0; i < numerus; i++)
     {
-        MedullaModulus* modulus = _plagulam_demittere(ctx, viae[i]);
+        MedullaLineae* lineae = NIHIL;
+        MedullaModulus* modulus = _plagulam_demittere(ctx, viae[i],
+            &lineae);
 
         si (modulus != NIHIL)
         {
             MedullaModulus** locellus = xar_addere(moduli_mundi);
+            MedullaLineae** locellus_l = xar_addere(lineae_mundi);
 
             *locellus = modulus;
+            *locellus_l = lineae;
         }
     }
 }
@@ -647,6 +666,8 @@ s32 principale (integer argc, character** argv)
 
     moduli_mundi = xar_creare(piscina_ctx,
         (i32)magnitudo(MedullaModulus*));
+    lineae_mundi = xar_creare(piscina_ctx,
+        (i32)magnitudo(MedullaLineae*));
 
     /* systema semel parsatum + lexicon (canalis M0b) - textus
      * CONCATENATUS: plagula ISO + supplementum POSIX (M2d; formae
@@ -750,16 +771,21 @@ s32 principale (integer argc, character** argv)
                 {
                     character via_c[CCLVI];
                     MedullaModulus* modulus_c;
+                    MedullaLineae* lineae_c = NIHIL;
 
                     sprintf(via_c, "probationes/%s",
                         intro_c->d_name);
-                    modulus_c = _plagulam_demittere(ctx, via_c);
+                    modulus_c = _plagulam_demittere(ctx, via_c,
+                        &lineae_c);
                     si (modulus_c != NIHIL)
                     {
                         MedullaModulus** locellus_c =
                             xar_addere(moduli_mundi);
+                        MedullaLineae** locellus_cl =
+                            xar_addere(lineae_mundi);
 
                         *locellus_c = modulus_c;
+                        *locellus_cl = lineae_c;
                     }
                 }
             }
@@ -860,8 +886,10 @@ s32 principale (integer argc, character** argv)
             (long)numerus_suitarum);
         per (i = 0; i < numerus_suitarum; i++)
         {
+            MedullaLineae* lineae_suitae = NIHIL;
             MedullaModulus* modulus_suitae =
-                _plagulam_demittere(ctx, suites[i]);
+                _plagulam_demittere(ctx, suites[i],
+                    &lineae_suitae);
             pid_t pullus;
             integer status;
 
@@ -941,6 +969,26 @@ s32 principale (integer argc, character** argv)
                 }
                 machinula = machinula_creare(piscina_ctx, conexio,
                     regio);
+                /* lineae semper (M3 DECISUS 9): mundus + suita
+                 * (index suitae = post mundum, ordo additionis) */
+                per (k = ZEPHYRUM; k < xar_numerus(lineae_mundi);
+                    k++)
+                {
+                    MedullaLineae* lineae_k = *(MedullaLineae**)
+                        xar_obtinere(lineae_mundi, k);
+
+                    si (lineae_k != NIHIL)
+                    {
+                        machinula_lineas_praebere(machinula,
+                            (s32)k, lineae_k);
+                    }
+                }
+                si (lineae_suitae != NIHIL)
+                {
+                    machinula_lineas_praebere(machinula,
+                        (s32)xar_numerus(moduli_mundi),
+                        lineae_suitae);
+                }
                 s0 = clock();
                 {
                     chorda titulus_main;

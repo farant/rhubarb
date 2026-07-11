@@ -161,6 +161,21 @@ nomen structura {
 } MedullaInstructio;
 
 /* ==================================================
+ * PACTUM AMBULATIONIS CANONICAE (M3)
+ *
+ * Ordo canonicus instructionum functionis: blocci in ordine Xar,
+ * intra bloccum instructiones in ordine Xar. INDEX PLANUS
+ * instructionis = positio in hac ambulatione. Tres consumptores
+ * eundem ordinem sequi DEBENT:
+ *   - demissio (ordo emissionis = ordo Xar per constructionem),
+ *   - congelatio machinulae (exemplar planum in machinula_creare),
+ *   - indicium (tabulae linearum indices planos demissione coquunt).
+ * Quisquis blocci aut instructiones postea ordinat, inserit, aut
+ * delet, pactum frangit - probatio trans-phasica (M3 chunk 3) id
+ * figit.
+ * ================================================== */
+
+/* ==================================================
  * Bloccus / functio / datum / modulus
  * ================================================== */
 

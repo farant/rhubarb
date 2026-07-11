@@ -37,15 +37,38 @@
 #define STIVA_MARGO           256   /* octeti custodiae in vocare */
 #define ANSAE_MAXIMAE         64    /* plagulae apertae simul */
 
+/* ops privatae machinulae: valores post MEDULLA_OP_NUMERUS, solum
+ * in exemplari congelato (numquam textuales, numquam in IR ipso).
+ * Sedes numeratorum pro his in acie numeri_op reservantur. */
+#define MACHINULA_OP_FLUXUS_CUSTOS  (MEDULLA_OP_NUMERUS)
+#define MACHINULA_OPS_PRIVATAE      2
+
 /* ==================================================
  * Typi interni
  * ================================================== */
 
+/* congelatio plana (M3 chunk I): exemplar machinulae proprium
+ * instructionum functionis - IR immutabile manet (DECISUS
+ * conexionis); ordo = ambulatio canonica medullae (PACTUM in
+ * officina_medulla.h). blocci_initia: blocci_numerus + I introitus,
+ * stricte crescentia (ultimus = numerus totus); scopi ramorum per
+ * eam transferuntur. Post bloccum non-terminatum custos fluxus
+ * inseritur - semantica "fluxus extra bloccum" hodierna servata
+ * (corpus semper terminatum manet 1:1 cum ambulatione canonica). */
+nomen structura {
+    constans MedullaInstructio* instructiones;   /* contiguae */
+    i32                         numerus;
+    constans i32*               blocci_initia;
+    i32                         blocci_numerus;
+    constans MedullaOperandum*  operanda;        /* acies plana */
+    i32                         operanda_numerus;
+} FunctioPlana;
+
 nomen structura {
     constans MedullaFunctio* functio;
+    constans FunctioPlana*   plana;
     s32            modulus_index;
-    s32            bloccus;
-    i32            instructio;      /* proxima exsecutanda */
+    i32            instructio;      /* index PLANUS proximae */
     i64*           registra;
     memoriae_index basis_stivae;    /* cursor restaurandus in redde */
     s32            destinatio_vocantis;   /* registrum vocantis; -I */
@@ -53,9 +76,9 @@ nomen structura {
 
 nomen structura {
     constans MedullaFunctio* functio;
+    constans FunctioPlana*   plana;
     s32 modulus_index;
-    s32 bloccus;
-    i32 instructio;
+    i32 instructio;                 /* index planus */
 } AnulusFigura;
 
 nomen b32 (*MachinulaPons)(Machinula* machinula,
@@ -66,6 +89,12 @@ structura Machinula {
     Conexio*  conexio;
     Regio*    regio;
     Xar*      tabulata;             /* Tabulatum valore */
+    Tabulatum* tabulatum_summum;    /* cacumen tabulatorum (monstra-
+                                     * tores Xar stabiles trans
+                                     * appends - Correctio 07-02) */
+    FunctioPlana* planae;           /* parallelae tabulae functionum
+                                     * conexionis (index descriptoris) */
+    i32       planae_numerus;
     Xar*      lineae_modulorum;     /* MedullaLineae* (NIHIL licet) */
     i8*       stiva_basis;
     memoriae_index stiva_magnitudo;
@@ -79,7 +108,7 @@ structura Machinula {
     AnulusFigura anulus[ANULUS_MENSURA];
     i64       anulus_cursor;
     /* numeratores */
-    i64       numeri_op[MEDULLA_OP_NUMERUS];
+    i64       numeri_op[MEDULLA_OP_NUMERUS + MACHINULA_OPS_PRIVATAE];
     i64       summa_instructionum;
     i64       numerus_vocationum;
     i64       numerus_aedificatorum;
@@ -220,23 +249,45 @@ _modulum (constans Machinula* m, s32 modulus_index)
 interior vacuum
 _positionem_imprimere (constans Machinula* m,
     constans MedullaFunctio* functio, s32 modulus_index,
-    s32 bloccus_index, i32 instructio_index)
+    constans FunctioPlana* plana, i32 instructio_plana)
 {
-    constans MedullaBloccus* bloccus;
     constans MedullaInstructio* instructio = NIHIL;
 
     fprintf(stderr, "    %.*s",
         (int)functio->titulus.mensura,
         (constans character*)functio->titulus.datum);
-    bloccus = medulla_bloccum_obtinere(functio, bloccus_index);
-    si (bloccus != NIHIL)
+    si (plana != NIHIL && plana->blocci_numerus > ZEPHYRUM
+        && instructio_plana < plana->numerus)
     {
-        fprintf(stderr, " @%.*s+%d",
-            (int)bloccus->titulus.mensura,
-            (constans character*)bloccus->titulus.datum,
-            (int)instructio_index);
-        instructio = (constans MedullaInstructio*)xar_obtinere_s(
-            bloccus->instructiones, (s32)instructio_index);
+        /* index planus -> (bloccus, intra): quaestio binaria in
+         * blocci_initia (stricte crescentia) - via imprimendi sola,
+         * numquam in ansa calida */
+        i32 imus = ZEPHYRUM;
+        i32 summus = plana->blocci_numerus - I;
+        constans MedullaBloccus* bloccus;
+
+        dum (imus < summus)
+        {
+            i32 medius = imus + (summus - imus + I) / II;
+
+            si (plana->blocci_initia[medius] <= instructio_plana)
+            {
+                imus = medius;
+            }
+            alioquin
+            {
+                summus = medius - I;
+            }
+        }
+        bloccus = medulla_bloccum_obtinere(functio, (s32)imus);
+        si (bloccus != NIHIL)
+        {
+            fprintf(stderr, " @%.*s+%d",
+                (int)bloccus->titulus.mensura,
+                (constans character*)bloccus->titulus.datum,
+                (int)(instructio_plana - plana->blocci_initia[imus]));
+        }
+        instructio = &plana->instructiones[instructio_plana];
     }
     si (instructio != NIHIL && instructio->origo != NIHIL
         && m->lineae_modulorum != NIHIL)
@@ -290,7 +341,7 @@ _relationem_imprimere (constans Machinula* m)
             frange;
         }
         _positionem_imprimere(m, t->functio, t->modulus_index,
-            t->bloccus, t->instructio);
+            t->plana, t->instructio);
     }
     fprintf(stderr, "cauda anuli (novissima prima):\n");
     per (i = ZEPHYRUM; i < XVI; i++)
@@ -308,7 +359,7 @@ _relationem_imprimere (constans Machinula* m)
             frange;
         }
         _positionem_imprimere(m, figura->functio,
-            figura->modulus_index, figura->bloccus,
+            figura->modulus_index, figura->plana,
             figura->instructio);
     }
     fprintf(stderr, "instructiones exsecutae: %llu\n",
@@ -1585,6 +1636,129 @@ machinula_creare (Piscina* piscina, Conexio* conexio, Regio* regio)
         }
     }
 
+    /* congelatio plana (M3): instructiones + operanda cuiusque
+     * functionis in acies contiguas - POST ligationem decipularum
+     * (exemplar effigiem ligatam capit), ante exsecutionem. IR
+     * intactum manet: exemplar machinulae proprium est. */
+    {
+        i32 numerus_functionum =
+            (i32)conexio_numerus_functionum(conexio);
+        i32 f;
+
+        m->planae_numerus = numerus_functionum;
+        si (numerus_functionum > ZEPHYRUM)
+        {
+            m->planae = piscina_allocare(piscina,
+                (memoriae_index)numerus_functionum
+                    * magnitudo(FunctioPlana));
+            si (m->planae == NIHIL)
+            {
+                redde NIHIL;
+            }
+            memset(m->planae, ZEPHYRUM,
+                (memoriae_index)numerus_functionum
+                    * magnitudo(FunctioPlana));
+        }
+        per (f = ZEPHYRUM; f < numerus_functionum; f++)
+        {
+            constans ConexioFunctioNexa* nexa =
+                conexio_functionem_obtinere(conexio, (s32)f);
+            constans MedullaFunctio* functio = nexa->functio;
+            FunctioPlana* plana = &m->planae[f];
+            MedullaInstructio* instructiones = NIHIL;
+            i32* initia;
+            i32 blocci_numerus;
+            i32 summa = ZEPHYRUM;
+            i32 b;
+
+            si (functio == NIHIL || functio->blocci == NIHIL)
+            {
+                perge;   /* plana vacua: introitus -> "fluxus extra
+                          * bloccum" (honestas hodierna servata) */
+            }
+            blocci_numerus = xar_numerus(functio->blocci);
+            per (b = ZEPHYRUM; b < blocci_numerus; b++)
+            {
+                constans MedullaBloccus* bloccus =
+                    medulla_bloccum_obtinere(functio, (s32)b);
+
+                summa += xar_numerus(bloccus->instructiones);
+                si (!bloccus->terminatus)
+                {
+                    summa += I;   /* custos fluxus */
+                }
+            }
+            initia = piscina_allocare(piscina,
+                ((memoriae_index)blocci_numerus + I)
+                    * magnitudo(i32));
+            si (initia == NIHIL)
+            {
+                redde NIHIL;
+            }
+            si (summa > ZEPHYRUM)
+            {
+                instructiones = piscina_allocare(piscina,
+                    (memoriae_index)summa
+                        * magnitudo(MedullaInstructio));
+                si (instructiones == NIHIL)
+                {
+                    redde NIHIL;
+                }
+            }
+            summa = ZEPHYRUM;
+            per (b = ZEPHYRUM; b < blocci_numerus; b++)
+            {
+                constans MedullaBloccus* bloccus =
+                    medulla_bloccum_obtinere(functio, (s32)b);
+                i32 n = xar_numerus(bloccus->instructiones);
+
+                initia[b] = summa;
+                si (n > ZEPHYRUM)
+                {
+                    (vacuum)xar_copiare_ad_tabulam(
+                        bloccus->instructiones,
+                        &instructiones[summa], ZEPHYRUM, n);
+                }
+                summa += n;
+                si (!bloccus->terminatus)
+                {
+                    memset(&instructiones[summa], ZEPHYRUM,
+                        magnitudo(MedullaInstructio));
+                    instructiones[summa].op =
+                        (s32)MACHINULA_OP_FLUXUS_CUSTOS;
+                    instructiones[summa].destinatio = -I;
+                    instructiones[summa].extra_index = -I;
+                    summa += I;
+                }
+            }
+            initia[blocci_numerus] = summa;
+            plana->instructiones = instructiones;
+            plana->numerus = summa;
+            plana->blocci_initia = initia;
+            plana->blocci_numerus = blocci_numerus;
+            si (functio->operanda != NIHIL)
+            {
+                plana->operanda_numerus =
+                    xar_numerus(functio->operanda);
+            }
+            si (plana->operanda_numerus > ZEPHYRUM)
+            {
+                MedullaOperandum* operanda = piscina_allocare(
+                    piscina,
+                    (memoriae_index)plana->operanda_numerus
+                        * magnitudo(MedullaOperandum));
+
+                si (operanda == NIHIL)
+                {
+                    redde NIHIL;
+                }
+                (vacuum)xar_copiare_ad_tabulam(functio->operanda,
+                    operanda, ZEPHYRUM, plana->operanda_numerus);
+                plana->operanda = operanda;
+            }
+        }
+    }
+
     /* cellae captae */
     {
         chorda titulus;
@@ -1620,8 +1794,9 @@ machinula_lineas_praebere (Machinula* machinula, s32 modulus_index,
 
 interior b32
 _tabulatum_impellere (Machinula* m,
-    constans MedullaFunctio* functio, s32 modulus_index,
-    s32 destinatio_vocantis, constans i64* argumenta, s32 numerus)
+    constans MedullaFunctio* functio, constans FunctioPlana* plana,
+    s32 modulus_index, s32 destinatio_vocantis,
+    constans i64* argumenta, s32 numerus)
 {
     Tabulatum* t;
     i32 numerus_registrorum = xar_numerus(functio->registra);
@@ -1647,8 +1822,8 @@ _tabulatum_impellere (Machinula* m,
         redde FALSUM;
     }
     t->functio = functio;
+    t->plana = plana;
     t->modulus_index = modulus_index;
-    t->bloccus = ZEPHYRUM;
     t->instructio = ZEPHYRUM;
     t->registra = (i64*)(vacuum*)(m->stiva_basis + m->stiva_cursor);
     t->basis_stivae = m->stiva_cursor;
@@ -1671,6 +1846,7 @@ _tabulatum_impellere (Machinula* m,
             parametrum->typus);
     }
     m->numerus_vocationum += I;
+    m->tabulatum_summum = t;
     redde VERUM;
 }
 
@@ -1765,6 +1941,7 @@ machinula_currere (Machinula* m, chorda titulus_functionis)
 
     /* status purgatus - currere iterabile */
     xar_truncare(m->tabulata, ZEPHYRUM);
+    m->tabulatum_summum = NIHIL;
     m->stiva_cursor = ZEPHYRUM;
     m->currens = VERUM;
     m->halitus_genus = MACHINULA_BENE;
@@ -1797,6 +1974,7 @@ machinula_currere (Machinula* m, chorda titulus_functionis)
                 nexa = conexio_functionem_obtinere(m->conexio,
                     descriptor->index);
                 (vacuum)_tabulatum_impellere(m, nexa->functio,
+                    &m->planae[descriptor->index],
                     nexa->modulus_index, -I, NIHIL, ZEPHYRUM);
             }
         }
@@ -1805,21 +1983,17 @@ machinula_currere (Machinula* m, chorda titulus_functionis)
     /* ansa dispensationis */
     dum (m->currens)
     {
-        Tabulatum* t = xar_obtinere(m->tabulata,
-            (i32)xar_numerus(m->tabulata) - I);
-        constans MedullaBloccus* bloccus =
-            medulla_bloccum_obtinere(t->functio, t->bloccus);
+        Tabulatum* t = m->tabulatum_summum;
+        constans FunctioPlana* plana = t->plana;
         constans MedullaInstructio* instructio;
         s32 op;
 
-        si (bloccus == NIHIL || t->instructio
-            >= (i32)xar_numerus(bloccus->instructiones))
+        si (t->instructio >= plana->numerus)
         {
             _vitium(m, "fluxus extra bloccum");
             frange;
         }
-        instructio = (constans MedullaInstructio*)xar_obtinere(
-            bloccus->instructiones, t->instructio);
+        instructio = &plana->instructiones[t->instructio];
         op = instructio->op;
 
         /* anulus + numeratores (semper) */
@@ -1828,8 +2002,8 @@ machinula_currere (Machinula* m, chorda titulus_functionis)
                 &m->anulus[m->anulus_cursor & (i64)ANULUS_LARVA];
 
             figura->functio = t->functio;
+            figura->plana = plana;
             figura->modulus_index = t->modulus_index;
-            figura->bloccus = t->bloccus;
             figura->instructio = t->instructio;
             m->anulus_cursor += I;
         }
@@ -2298,19 +2472,30 @@ machinula_currere (Machinula* m, chorda titulus_functionis)
         }
 
         casus MEDULLA_OP_SALIRE:
-            t->bloccus = instructio->a.datum.index;
-            t->instructio = ZEPHYRUM;
+            si ((i32)instructio->a.datum.index
+                >= plana->blocci_numerus)
+            {
+                _vitium(m, "fluxus extra bloccum");
+                frange;
+            }
+            t->instructio =
+                plana->blocci_initia[instructio->a.datum.index];
             frange;
 
         casus MEDULLA_OP_RAMUS:
         {
             i64 conditio = _valor_operandi(m, t, &instructio->a,
                 MEDULLA_TYPUS_I64);
-
-            t->bloccus = (conditio != ZEPHYRUM)
+            s32 scopus = (conditio != ZEPHYRUM)
                 ? instructio->b.datum.index
                 : instructio->c.datum.index;
-            t->instructio = ZEPHYRUM;
+
+            si ((i32)scopus >= plana->blocci_numerus)
+            {
+                _vitium(m, "fluxus extra bloccum");
+                frange;
+            }
+            t->instructio = plana->blocci_initia[scopus];
             frange;
         }
 
@@ -2338,12 +2523,11 @@ machinula_currere (Machinula* m, chorda titulus_functionis)
                 frange;
             }
             (vacuum)xar_removere_ultimum(m->tabulata);
+            m->tabulatum_summum = xar_obtinere(m->tabulata,
+                (i32)xar_numerus(m->tabulata) - I);
             si (destinatio >= ZEPHYRUM && valorem_habet)
             {
-                Tabulatum* vocans = xar_obtinere(m->tabulata,
-                    (i32)xar_numerus(m->tabulata) - I);
-
-                vocans->registra[destinatio] = verbum;
+                m->tabulatum_summum->registra[destinatio] = verbum;
             }
             frange;
         }
@@ -2423,9 +2607,8 @@ machinula_currere (Machinula* m, chorda titulus_functionis)
                 per (k = ZEPHYRUM; k < numerus_argumentorum; k++)
                 {
                     constans MedullaOperandum* operandum =
-                        (constans MedullaOperandum*)xar_obtinere(
-                            t->functio->operanda,
-                            (i32)(instructio->extra_index + k));
+                        &plana->operanda[instructio->extra_index
+                            + k];
                     s32 typus_argumenti = MEDULLA_TYPUS_S64;
 
                     si (functio_nexae != NIHIL
@@ -2455,6 +2638,7 @@ machinula_currere (Machinula* m, chorda titulus_functionis)
 
                 t->instructio += I;   /* resumptio post redde */
                 si (!_tabulatum_impellere(m, nexa->functio,
+                        &m->planae[descriptor->index],
                         nexa->modulus_index, instructio->destinatio,
                         argumenta, numerus_argumentorum))
                 {
@@ -2509,6 +2693,12 @@ machinula_currere (Machinula* m, chorda titulus_functionis)
             }
             frange;
         }
+
+        casus MACHINULA_OP_FLUXUS_CUSTOS:
+            /* sedes post bloccum non-terminatum (congelatio) -
+             * semantica hodierna: cadere de fine blocci = vitium */
+            _vitium(m, "fluxus extra bloccum");
+            frange;
 
         ordinarius:
             _vitium(m, "operatio ignota");

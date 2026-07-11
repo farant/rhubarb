@@ -1773,3 +1773,113 @@ numquam Machinula* viva). Dilationes nominatae cum dominis in §IX.
 
 **ON-RAMP COMPLETUS (4/4 uno die).** NEXT: recensio Franis + commissio
 (sigillum on-rampi), tum chunk ① congelatio plana.
+
+### CHUNK ① — CONGELATIO PLANA: INTENTIO (2026-07-11)
+
+Sigillum on-rampi commissum (Fran). Aperitur chunk ① per spec §III:
+FunctioPlana (instructiones contiguae + blocci_initia + operanda
+plana) ut passus 4us machinulae_creare POST ligationem decipularum;
+planae[] parallela tabulae functionum conexionis (index quem VOCARE
+iam solvit); Tabulatum.bloccus DELETUR (flat index unicus; bloccus
+derivatur quaestione binaria ad tempus imprimendi solum); anulus fert
+plana + indicem planum; cache tabulatum_summum (monstratores Xar
+stabiles). PACTUM AMBULATIONIS CANONICAE in medulla.h; probatio
+trans-phasica figens (indices demissionis == congelationis) DIFFERTUR
+ad chunk ③ ubi latus indicii exsistit — congelatio sola nihil habet
+quocum comparet; auto-constantia (blocci_initia stricte crescentia)
+probatur hic. INVENTUM praevium: medulla_functio_terminata numquam
+vocatur (lector NON validat) → blocci non-terminati servant
+honestatem hodiernam per CUSTODEM machinula-privatum
+(MACHINULA_OP_FLUXUS_CUSTOS = MEDULLA_OP_NUMERUS, sedes privatae
+post NUMERUS in acie numeratorum) appensum solis bloccis
+non-terminatis — corpus (semper terminatum) manet 1:1 cum ambulatione
+canonica. Vectis: paritas sweep (stdout octetim) + suites virides +
+mensurae notatae (vim ANTE: 550ms/9,075,028 instr in -sola; sweep
+ANTE in cursu). NULLA superficies publica nova (hospes intactus).
+
+### CHUNK ① — CONGELATIO PLANA: RELATIO (2026-07-11)
+
+**CLAUSUS, primo transitu purus sub muro vexillorum. VECTIS IMPLETUS
+ET SUPERATUS: vim 550 → 171 ms (3.2x; aestimatio fundata erat
+1.3-2x) @ 9,075,028 instructionibus identicis; paritas TOTA (69
+eaedem / 0 DIFFERUNT); arbor_formator e sinu TEMPUS EVASIT (>30s →
+15.7s, 673M instr, idem) — sweep 75→76 praeteritae, tempora 6→5,
+murus 4:24 → 3:46.** Aestimatio superata quia TRES strata xar simul
+mortua: fetch instructionis (3 vocationes → 0) + re-fetch tabulati
+summi (cache, monstratores Xar stabiles) + stiva operandorum VOCARE.
+Pretium congelationis invisibile (suites parvae NET celeriores: xml
+20→7ms). Amalgama VERIFICATUM (hospes 61/61; xar_copiare_ad_tabulam
+ex EXCLUDENDA deletum — porta standalone clamavit sicut documentum).
+
+Inventa (detail: officina_machinula.worklog.md 2026-07-11):
+custos fluxus pro bloccis non-terminatis (lector numquam validat —
+inventum INTENTIONIS); scopi SALIRE/RAMUS nunc explicite probati
+(honestas quae gratis veniebat fit explicita); numerus
+instructionum sputnik_interpres inter cursus movetur (−2,740, via
+horologii — stdout manet vectis, non numerus). Probatio figens
+trans-phasica → chunk ③ (latus indicii deest adhuc).
+
+DEBRIEF INSTRUMENTORUM: *adhibita* — nexus 1× + emitte 1× + origo
+1× (calefactio ad scopum verum: machinula_currere), grep/Read
+gravia in constructione, diagnostica clangd VIVA per uncos
+(progressum editionum meum vestigavit — sedes 'bloccus' reliquae
+enumeratae post quamque seriem); censor per uncum SILENS (purus).
+*fructus* — calefactio emitte dedit lectionem ansae dispensationis
+ANTE laborem; clangd-push = lista laborum viva. *asperitates* —
+nullae novae. *desiderata* — nulla nova.
+
+**NEXT: commissio Franis (sigillum chunk ①) → chunk ② lineae
+ubique** (distillator radicis silva_token_radix in _lineam_colligere
++ filum collige-ante-destrue in interpretare/cursor +
+machinula_lineas_praebere semper). Praemium visibile: relationes
+halitus cum [via:linea] radicis UBIQUE.
+
+### CHUNK ② — LINEAE UBIQUE: INTENTIO (2026-07-11)
+
+Per spec §IV. Tria: (1) DISTILLATOR RADICIS — _lineam_colligere
+(officina_demissio.c) ambulat silva_token_radix (iam in amalgama,
+silva.h:254) ad sedem INVOCATIONIS pro sede scripturae; halt in
+brachio CREDO monstrabit lineam plagulae probationis, non credo.h.
+(2) FILUM COLLIGE-ANTE-DESTRUE — _plagulam_demittere in AMBOBUS
+(interpretare.c + cursor.c, exemplaria separata — refactor oneris
+communis = quaestio chunk ⑤) parametrum exitus MedullaLineae**
+accipit, collectio ante silva_piscina_destruere; Xar lineae_mundi
+parallelus moduli_mundi; suita = index post mundum. (3) PRAEBERE
+SEMPER (DECISUS 9) — post machinula_creare, quisque modulus suas
+lineas accipit. Vectis: relatio halitus VITII coacti monstrat
+[via:linea] RADICIS per cursor ET interpretare (probatio effimera,
+delenda post demonstrationem); paritas sweep immutata; suite +
+amalgama VERIFICATUM. Pretium collectionis (semel per TU, ~ms)
+notandum in mensuris sweep.
+
+### CHUNK ② — LINEAE UBIQUE: RELATIO (2026-07-11)
+
+**CLAUSUS. VECTIS IMPLETUS AMBOBUS CONSUMPTORIBUS:** probatio
+effimera (lectio insana in CORPORE macronis) rettulit
+[probatio_m3_lineae_scratch.c:23] — lineam INVOCATIONIS, non :11
+definitionis (distillator radicis probatus); cauda anuli
+credo_aperire per lib/credo.c:73-76 lineatim ambulavit; interpretare
+(piscina_allocare(42,16)) stivam positionatam plenam dedit
+(piscina.c:141 ← :348 ← main nudum honeste — involucrum textuale).
+**Primum datum verum per machinula_lineas_praebere UMQUAM** — filum
+numquam-exercitum nunc in omni cursu cursoris/interpretare vivit
+(DECISUS 9). Paritas: 76 praeteritae / 69 eaedem / 0 DIFFERUNT / 5
+tempora — figura post-congelationem exacta. **Pretium semper-vivum:
++0.7s muri sweep TOTI** (115 moduli mundi + 81 suitae; 3:45.93 →
+3:46.64) — intra strepitum. Suite 6/6; amalgama VERIFICATUM.
+Probatio effimera DELETA. Detail: officina_demissio.worklog.md +
+interpretare.worklog.md (gemini consulto — refactor oneratoris
+communis = quaestio nominata chunk ⑤).
+
+DEBRIEF INSTRUMENTORUM: *adhibita* — grep/sed lectio gravis
+(regiones ligationis); diagnostica clangd per uncos ITERUM viva
+(unum verum: signatura credo_aperire in probatione effimera capta
+ante compilationem!); censor silens. *fructus* — clangd in plagulis
+probationum (viae inclusionis verae) vitium ante muri vexillorum
+cepit. *asperitates/desiderata* — nullae novae.
+
+**NEXT: commissio Franis (sigillum chunk ②) → chunk ③ INDICIUM**
+(modulus officina_indicium.{c,h}: scriptor demissione + lector
+plana; sectiones per X-macro; acies expansionis PLENA in tabulam
+prorsam; tabula retro per lineas RADICIS; VARIABILIA; probatio
+circuitus + PROBATIO FIGENS trans-phasica pacti ambulationis).

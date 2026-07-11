@@ -54,3 +54,16 @@ the exact nexus command. The bench answers questions about itself.
 - -plagulae filters lib/ only; probationes companions and fixture
   .c files unreachable (scalaria.c's pecunia_exemplum) — named,
   add probationes/ filtering if a real reach asks.
+
+## 2026-07-11 — M3 chunk ②: lineae wired (collect-before-destroy)
+
+_plagulam_demittere (both here and cursor.c — deliberate twins;
+shared-loader refactor is a named chunk-⑤ question) gained a
+MedullaLineae** out-param: demissio_lineas_colligere runs AFTER
+demissio_currere succeeds, BEFORE silva_piscina_destruere — the
+only window where the origo chain is walkable. lineae_mundi Xar
+parallels moduli_mundi (appended together — indices stay aligned);
+after machinula_creare every module gets machinula_lineas_praebere.
+Halt reports here now carry [via:linea] call stacks (demo:
+piscina_allocare(42,16) → piscina.c:141 ← piscina.c:348 ← main).
+The wrapper module is honestly bare (textual medulla, origo NIHIL).
