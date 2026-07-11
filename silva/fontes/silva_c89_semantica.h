@@ -252,8 +252,20 @@ nomen enumeratio {
     EXAMEN_CODEX_ACCESSUS_INCOMPLETAE,
     EXAMEN_CODEX_MEMBRUM_IGNOTUM,
     EXAMEN_CODEX_ELISIO_UNCORUM,            /* INFRA: parca */
+    /* chunk B (relatio compatibilitatis) - flagrant a chunk C */
+    EXAMEN_CODEX_ASSIGNATIO_INCOMPATIBILIS,
+    EXAMEN_CODEX_MONSTRATORES_INCOMPATIBILES,
+    EXAMEN_CODEX_QUALES_ABIECTI,
+    EXAMEN_CODEX_MONSTRATOR_INTEGER,
     EXAMEN_CODEX_NUMERUS
 } ExamenCodex;
+
+/* Licentia assignationis (iudicium directionale 6.3.16.1) */
+nomen enumeratio {
+    EXAMEN_LICET = 0,          /* nulla conversio (typi identici) */
+    EXAMEN_LICET_CONVERSIO,    /* licita cum conversione ad finem */
+    EXAMEN_VETITUM             /* violatio - codex_out dicit quae */
+} ExamenLicentia;
 
 /* ==================================================
  * Semantica (contextus communis typus/forma/aestimator/scopus)
@@ -338,6 +350,28 @@ vacuum silva_c89_diagnosticum_addere (SilvaSemantica* sem,
 vacuum silva_c89_diagnosticum_addere_cum_socio (SilvaSemantica* sem,
     constans SilvaNodus* nodus, s32 codex,
     constans SilvaNodus* socius);
+
+/* ==================================================
+ * Relatio compatibilitatis (examen chunk B)
+ * ================================================== */
+
+/* Relatio symmetrica C89 6.1.2.6, pura super typis internatis.
+ * ERROR absorbet (compatibilis cum omnibus - regula recuperationis).
+ * Quales ut copiae comparantur per gradum; monstrator = pointee
+ * compatibilis QUALIBUS INCLUSIS; acies = elementum + sentinella
+ * mensurae (-1 ignota); functio = reditus + parametra (mixta
+ * prototypata/K&R: promotione ordinaria immota, non variadica);
+ * tags nominales (identitas per declarans); enumeratus <-> int. */
+b32 silva_c89_typi_compatibiles (TypusC89* a, TypusC89* b);
+
+/* Iudicium directionale assignationis simplicis (6.3.16.1; idem
+ * pro initiatore scalari / argumento prototypato / redde). Quales
+ * summi finis exuuntur (conversio valoris); nodus_valoris pro
+ * constante nulla (NIHIL licet). Redditur ExamenLicentia; sub
+ * VETITO codex_out (NIHIL licet) codicem violationis fert. */
+s32 silva_c89_assignationem_iudicare (SilvaSemantica* sem,
+    constans SilvaNodus* nodus_valoris, TypusC89* finis,
+    TypusC89* valoris, s32* codex_out);
 
 /* ==================================================
  * Constructio typorum (fabricae internantes)

@@ -42,6 +42,47 @@ _diagnosticum_codicis (constans SilvaSemantica* sem, s32 codex)
     redde NIHIL;
 }
 
+interior TypusC89*
+_typus_symboli (SilvaSemantica* sem, constans character* titulus)
+{
+    chorda c;
+    unio { constans character* l; i8* m; } u;
+    SemanticaSymbolum* s;
+
+    u.l = titulus;
+    c.datum = u.m;
+    c.mensura = (i32)strlen(titulus);
+    s = silva_c89_symbolum_invenire(sem, c);
+    redde (s != NIHIL) ? s->typus : NIHIL;
+}
+
+interior constans SilvaNodus*
+_initiator_primus (constans SilvaParsura* parsura)
+{
+    SilvaValor* e = silva_valor_lista_obtinere(
+        parsura->commissio->radix, ZEPHYRUM);
+    SilvaValor ds;
+    SilvaValor* d0;
+    SilvaValor iv;
+
+    si (e == NIHIL || e->genus != SILVA_VALOR_NODUS)
+    {
+        redde NIHIL;
+    }
+    ds = silva_c89_declaratio_declaratores(e->datum.nodus);
+    d0 = silva_valor_lista_obtinere(ds, ZEPHYRUM);
+    si (d0 == NIHIL || d0->genus != SILVA_VALOR_NODUS)
+    {
+        redde NIHIL;
+    }
+    iv = silva_c89_declarator_initiatus_initiator(d0->datum.nodus);
+    si (iv.genus != SILVA_VALOR_NODUS)
+    {
+        redde NIHIL;
+    }
+    redde iv.datum.nodus;
+}
+
 s32 principale (vacuum)
 {
     Piscina* piscina;
@@ -230,6 +271,324 @@ s32 principale (vacuum)
         si (d != NIHIL)
         {
             CREDO_AEQUALIS_I32 (d->linea, II);
+        }
+    }
+
+    /* ========================================================
+     * VII. Relatio compatibilitatis (chunk B): paria tabulata
+     * ======================================================== */
+    {
+        SilvaParsura* parsura = _parsare(piscina,
+            "enum A { XA }; enum B { XB };\n"
+            "struct S { int a; }; struct T { int a; };\n"
+            "static enum A ea; static enum B eb;\n"
+            "static struct S s1; static struct T t1;\n");
+        SilvaSemantica* sem;
+        TypusC89* t_int;
+        TypusC89* t_longus;
+        TypusC89* t_char;
+        TypusC89* t_char_sig;
+        TypusC89* t_duplex;
+        TypusC89* t_fluitans;
+        TypusC89* t_vacuum;
+        TypusC89* enum_a;
+        TypusC89* enum_b;
+        TypusC89* struct_s;
+        TypusC89* struct_t;
+
+        CREDO_NON_NIHIL (parsura);
+        sem = silva_c89_semantica_analysare(piscina, parsura);
+        CREDO_NON_NIHIL (sem);
+        t_int = silva_c89_typus_primitivum(sem,
+            (s32)PRIMITIVUM_INTEGER);
+        t_longus = silva_c89_typus_primitivum(sem,
+            (s32)PRIMITIVUM_LONGUS);
+        t_char = silva_c89_typus_primitivum(sem,
+            (s32)PRIMITIVUM_CHARACTER);
+        t_char_sig = silva_c89_typus_primitivum(sem,
+            (s32)PRIMITIVUM_CHARACTER_SIGNATUM);
+        t_duplex = silva_c89_typus_primitivum(sem,
+            (s32)PRIMITIVUM_DUPLEX);
+        t_fluitans = silva_c89_typus_primitivum(sem,
+            (s32)PRIMITIVUM_FLUITANS);
+        t_vacuum = silva_c89_typus_primitivum(sem,
+            (s32)PRIMITIVUM_VACUUM);
+        enum_a = _typus_symboli(sem, "ea");
+        enum_b = _typus_symboli(sem, "eb");
+        struct_s = _typus_symboli(sem, "s1");
+        struct_t = _typus_symboli(sem, "t1");
+        CREDO_NON_NIHIL (enum_a);
+        CREDO_NON_NIHIL (struct_s);
+
+        /* identitas + primitivi distincti */
+        CREDO_VERUM (silva_c89_typi_compatibiles(t_int, t_int));
+        CREDO_VERUM (!silva_c89_typi_compatibiles(t_int, t_longus));
+        CREDO_VERUM (!silva_c89_typi_compatibiles(t_char,
+            t_char_sig));   /* char != signed char in C89 */
+
+        /* venenum absorbet */
+        CREDO_VERUM (silva_c89_typi_compatibiles(sem->typus_erroris,
+            t_int));
+        CREDO_VERUM (silva_c89_typi_compatibiles(struct_s,
+            sem->typus_erroris));
+
+        /* quales ut copiae */
+        {
+            TypusC89* c_int = silva_c89_typus_qualificatus(sem,
+                t_int, QUALIS_CONSTANS);
+
+            CREDO_VERUM (silva_c89_typi_compatibiles(c_int, c_int));
+            CREDO_VERUM (!silva_c89_typi_compatibiles(c_int, t_int));
+        }
+
+        /* monstratores: pointee qualibus inclusis */
+        {
+            TypusC89* p_int = silva_c89_typus_monstrator(sem, t_int);
+            TypusC89* p_longus = silva_c89_typus_monstrator(sem,
+                t_longus);
+            TypusC89* p_char = silva_c89_typus_monstrator(sem,
+                t_char);
+            TypusC89* p_c_char = silva_c89_typus_monstrator(sem,
+                silva_c89_typus_qualificatus(sem, t_char,
+                    QUALIS_CONSTANS));
+            TypusC89* pp_int = silva_c89_typus_monstrator(sem,
+                p_int);
+
+            CREDO_VERUM (silva_c89_typi_compatibiles(p_int, p_int));
+            CREDO_VERUM (!silva_c89_typi_compatibiles(p_int,
+                p_longus));
+            /* DECIPULA INTERNAMENTI: numquam == pro his */
+            CREDO_VERUM (!silva_c89_typi_compatibiles(p_char,
+                p_c_char));
+            CREDO_VERUM (silva_c89_typi_compatibiles(pp_int,
+                pp_int));
+        }
+
+        /* acies: elementum + sentinella mensurae */
+        {
+            TypusC89* a10 = silva_c89_typus_acies(sem, t_int, 10);
+            TypusC89* a10b = silva_c89_typus_acies(sem, t_int, 10);
+            TypusC89* a5 = silva_c89_typus_acies(sem, t_int, 5);
+            TypusC89* a_ign = silva_c89_typus_acies(sem, t_int, -1);
+            TypusC89* a10_l = silva_c89_typus_acies(sem, t_longus,
+                10);
+
+            CREDO_VERUM (silva_c89_typi_compatibiles(a10, a10b));
+            CREDO_VERUM (!silva_c89_typi_compatibiles(a10, a5));
+            CREDO_VERUM (silva_c89_typi_compatibiles(a10, a_ign));
+            CREDO_VERUM (silva_c89_typi_compatibiles(a_ign, a_ign));
+            CREDO_VERUM (!silva_c89_typi_compatibiles(a10, a10_l));
+        }
+
+        /* functiones: prototypatae / K&R / mixtae */
+        {
+            TypusC89* par_int[1];
+            TypusC89* par_longus[1];
+            TypusC89* par_char[1];
+            TypusC89* par_duplex[1];
+            TypusC89* par_fluitans[1];
+            TypusC89* f_int;
+            TypusC89* f_longus;
+            TypusC89* f_char;
+            TypusC89* f_duplex;
+            TypusC89* f_fluitans;
+            TypusC89* f_kr;
+            TypusC89* f_var;
+
+            par_int[0] = t_int;
+            par_longus[0] = t_longus;
+            par_char[0] = t_char;
+            par_duplex[0] = t_duplex;
+            par_fluitans[0] = t_fluitans;
+            f_int = silva_c89_typus_functio(sem, t_int, par_int, 1,
+                FALSUM, VERUM);
+            f_longus = silva_c89_typus_functio(sem, t_int,
+                par_longus, 1, FALSUM, VERUM);
+            f_char = silva_c89_typus_functio(sem, t_int, par_char,
+                1, FALSUM, VERUM);
+            f_duplex = silva_c89_typus_functio(sem, t_int,
+                par_duplex, 1, FALSUM, VERUM);
+            f_fluitans = silva_c89_typus_functio(sem, t_int,
+                par_fluitans, 1, FALSUM, VERUM);
+            f_kr = silva_c89_typus_functio(sem, t_int, NIHIL, 0,
+                FALSUM, FALSUM);
+            f_var = silva_c89_typus_functio(sem, t_int, par_int, 1,
+                VERUM, VERUM);
+
+            CREDO_VERUM (silva_c89_typi_compatibiles(f_int, f_int));
+            CREDO_VERUM (!silva_c89_typi_compatibiles(f_int,
+                f_longus));
+            CREDO_VERUM (silva_c89_typi_compatibiles(f_kr, f_kr));
+            /* mixtae: int/duplex immota promotione -> compatibiles;
+             * char/fluitans mutantur -> incompatibiles */
+            CREDO_VERUM (silva_c89_typi_compatibiles(f_kr, f_int));
+            CREDO_VERUM (silva_c89_typi_compatibiles(f_kr,
+                f_duplex));
+            CREDO_VERUM (!silva_c89_typi_compatibiles(f_kr,
+                f_char));
+            CREDO_VERUM (!silva_c89_typi_compatibiles(f_kr,
+                f_fluitans));
+            CREDO_VERUM (!silva_c89_typi_compatibiles(f_kr, f_var));
+            CREDO_VERUM (!silva_c89_typi_compatibiles(f_int,
+                f_var));
+        }
+
+        /* tags nominales + enum <-> int */
+        si (enum_a != NIHIL && enum_b != NIHIL && struct_s != NIHIL
+            && struct_t != NIHIL)
+        {
+            CREDO_VERUM (silva_c89_typi_compatibiles(enum_a,
+                enum_a));
+            CREDO_VERUM (!silva_c89_typi_compatibiles(enum_a,
+                enum_b));
+            CREDO_VERUM (silva_c89_typi_compatibiles(enum_a,
+                t_int));
+            CREDO_VERUM (silva_c89_typi_compatibiles(t_int,
+                enum_a));
+            CREDO_VERUM (!silva_c89_typi_compatibiles(enum_a,
+                t_longus));
+            CREDO_VERUM (silva_c89_typi_compatibiles(struct_s,
+                struct_s));
+            CREDO_VERUM (!silva_c89_typi_compatibiles(struct_s,
+                struct_t));  /* forma eadem, nomina diversa */
+        }
+
+        /* vacuum non est arithmeticum nec compatibile cum int */
+        CREDO_VERUM (!silva_c89_typi_compatibiles(t_vacuum, t_int));
+
+        /* ====================================================
+         * VIII. Iudicium assignationis (directionale)
+         * ==================================================== */
+        {
+            TypusC89* p_int = silva_c89_typus_monstrator(sem, t_int);
+            TypusC89* p_longus = silva_c89_typus_monstrator(sem,
+                t_longus);
+            TypusC89* p_char = silva_c89_typus_monstrator(sem,
+                t_char);
+            TypusC89* p_c_char = silva_c89_typus_monstrator(sem,
+                silva_c89_typus_qualificatus(sem, t_char,
+                    QUALIS_CONSTANS));
+            TypusC89* p_vacuum = silva_c89_typus_monstrator(sem,
+                t_vacuum);
+            TypusC89* a10 = silva_c89_typus_acies(sem, t_int, 10);
+            s32 codex = -1;
+
+            /* arith <- arith semper licita */
+            CREDO_AEQUALIS_I32 ((i32)silva_c89_assignationem_iudicare(
+                sem, NIHIL, t_int, t_longus, &codex),
+                (i32)EXAMEN_LICET_CONVERSIO);
+
+            /* quales summi finis exuti (locus possidet, non hic) */
+            CREDO_AEQUALIS_I32 ((i32)silva_c89_assignationem_iudicare(
+                sem, NIHIL, silva_c89_typus_qualificatus(sem, t_int,
+                    QUALIS_CONSTANS), t_int, &codex),
+                (i32)EXAMEN_LICET_CONVERSIO);
+
+            /* monstrator identicus -> LICET */
+            CREDO_AEQUALIS_I32 ((i32)silva_c89_assignationem_iudicare(
+                sem, NIHIL, p_int, p_int, &codex),
+                (i32)EXAMEN_LICET);
+
+            /* acies -> monstrator (lapsus) -> LICET */
+            CREDO_AEQUALIS_I32 ((i32)silva_c89_assignationem_iudicare(
+                sem, NIHIL, p_int, a10, &codex),
+                (i32)EXAMEN_LICET);
+
+            /* pointee incompatibilis */
+            codex = -1;
+            CREDO_AEQUALIS_I32 ((i32)silva_c89_assignationem_iudicare(
+                sem, NIHIL, p_int, p_longus, &codex),
+                (i32)EXAMEN_VETITUM);
+            CREDO_VERUM (codex
+                == (s32)EXAMEN_CODEX_MONSTRATORES_INCOMPATIBILES);
+
+            /* monstrator <- integer (sine constante nulla) */
+            codex = -1;
+            CREDO_AEQUALIS_I32 ((i32)silva_c89_assignationem_iudicare(
+                sem, NIHIL, p_int, t_int, &codex),
+                (i32)EXAMEN_VETITUM);
+            CREDO_VERUM (codex
+                == (s32)EXAMEN_CODEX_MONSTRATOR_INTEGER);
+
+            /* integer <- monstrator */
+            codex = -1;
+            CREDO_AEQUALIS_I32 ((i32)silva_c89_assignationem_iudicare(
+                sem, NIHIL, t_int, p_int, &codex),
+                (i32)EXAMEN_VETITUM);
+            CREDO_VERUM (codex
+                == (s32)EXAMEN_CODEX_MONSTRATOR_INTEGER);
+
+            /* dilatatio qualium licita; abiectio vetita */
+            CREDO_AEQUALIS_I32 ((i32)silva_c89_assignationem_iudicare(
+                sem, NIHIL, p_c_char, p_char, &codex),
+                (i32)EXAMEN_LICET_CONVERSIO);
+            codex = -1;
+            CREDO_AEQUALIS_I32 ((i32)silva_c89_assignationem_iudicare(
+                sem, NIHIL, p_char, p_c_char, &codex),
+                (i32)EXAMEN_VETITUM);
+            CREDO_VERUM (codex == (s32)EXAMEN_CODEX_QUALES_ABIECTI);
+
+            /* void* utroque modo */
+            CREDO_AEQUALIS_I32 ((i32)silva_c89_assignationem_iudicare(
+                sem, NIHIL, p_vacuum, p_int, &codex),
+                (i32)EXAMEN_LICET_CONVERSIO);
+            CREDO_AEQUALIS_I32 ((i32)silva_c89_assignationem_iudicare(
+                sem, NIHIL, p_int, p_vacuum, &codex),
+                (i32)EXAMEN_LICET_CONVERSIO);
+
+            /* aggregata: identica LICET, diversa VETITUM */
+            si (struct_s != NIHIL && struct_t != NIHIL)
+            {
+                CREDO_AEQUALIS_I32 (
+                    (i32)silva_c89_assignationem_iudicare(sem,
+                        NIHIL, struct_s, struct_s, &codex),
+                    (i32)EXAMEN_LICET);
+                codex = -1;
+                CREDO_AEQUALIS_I32 (
+                    (i32)silva_c89_assignationem_iudicare(sem,
+                        NIHIL, struct_s, struct_t, &codex),
+                    (i32)EXAMEN_VETITUM);
+                CREDO_VERUM (codex
+                    == (s32)EXAMEN_CODEX_ASSIGNATIO_INCOMPATIBILIS);
+                /* int <- structura */
+                codex = -1;
+                CREDO_AEQUALIS_I32 (
+                    (i32)silva_c89_assignationem_iudicare(sem,
+                        NIHIL, t_int, struct_s, &codex),
+                    (i32)EXAMEN_VETITUM);
+                CREDO_VERUM (codex
+                    == (s32)EXAMEN_CODEX_ASSIGNATIO_INCOMPATIBILIS);
+            }
+
+            /* venenum absorbet - numquam re-iudica */
+            CREDO_AEQUALIS_I32 ((i32)silva_c89_assignationem_iudicare(
+                sem, NIHIL, sem->typus_erroris, t_int, &codex),
+                (i32)EXAMEN_LICET);
+        }
+
+        /* constans nulla: 'static int* pz = 0;' - initiator
+         * verus (sine eo iudicium nullam constantem non videt) */
+        {
+            SilvaParsura* pn = _parsare(piscina,
+                "static int* pz = 0;\n");
+            SilvaSemantica* semn;
+
+            CREDO_NON_NIHIL (pn);
+            semn = silva_c89_semantica_analysare(piscina, pn);
+            CREDO_NON_NIHIL (semn);
+            si (semn != NIHIL)
+            {
+                constans SilvaNodus* init = _initiator_primus(pn);
+                TypusC89* ti = silva_c89_typus_primitivum(semn,
+                    (s32)PRIMITIVUM_INTEGER);
+                TypusC89* pi = silva_c89_typus_monstrator(semn, ti);
+
+                CREDO_NON_NIHIL (init);
+                CREDO_AEQUALIS_I32 (
+                    (i32)silva_c89_assignationem_iudicare(semn,
+                        init, pi, ti, NIHIL),
+                    (i32)EXAMEN_LICET_CONVERSIO);
+            }
         }
     }
 

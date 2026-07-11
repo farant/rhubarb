@@ -117,7 +117,11 @@ interior constans ExamenCodexInformatio _codices[] = {
     { "accessus non structurae",                  EXAMEN_VIOLATIO },
     { "accessus structurae incompletae",          EXAMEN_VIOLATIO },
     { "membrum ignotum",                          EXAMEN_VIOLATIO },
-    { "elisio uncorum congeriei - parca nominata", EXAMEN_INFRA }
+    { "elisio uncorum congeriei - parca nominata", EXAMEN_INFRA },
+    { "assignatio classium incompatibilium",      EXAMEN_VIOLATIO },
+    { "monstratores incompatibiles",              EXAMEN_VIOLATIO },
+    { "quales finis abiecti",                     EXAMEN_VIOLATIO },
+    { "monstrator et integer mixti",              EXAMEN_VIOLATIO }
 };
 
 /* assertum: tabula == enumeratio (acies negativa si discrepant) */
@@ -3560,6 +3564,302 @@ _est_constans_nulla (SilvaSemantica* sem, constans SilvaNodus* nodus)
             && valor == ZEPHYRUM;
     }
     redde FALSUM;
+}
+
+/* ==================================================
+ * Relatio compatibilitatis (examen chunk B)
+ * ================================================== */
+
+/* Typus promotione ordinaria immotus? (reconciliatio K&R pura -
+ * char/brevis -> int, fluitans -> duplex mutantur; cetera manent;
+ * sine sem, sine internamento) */
+interior b32
+_promotione_immotum (TypusC89* typus)
+{
+    TypusC89* n = _qualibus_exutum(typus);
+
+    si (n == NIHIL)
+    {
+        redde FALSUM;
+    }
+    si (n->genus == TYPUS_C89_PRIMITIVUS)
+    {
+        commutatio (n->datum.primitivum)
+        {
+            casus (s32)PRIMITIVUM_CHARACTER:
+            casus (s32)PRIMITIVUM_CHARACTER_SIGNATUM:
+            casus (s32)PRIMITIVUM_CHARACTER_INSIGNATUM:
+            casus (s32)PRIMITIVUM_BREVIS:
+            casus (s32)PRIMITIVUM_BREVIS_INSIGNATUM:
+            casus (s32)PRIMITIVUM_FLUITANS:
+                redde FALSUM;
+            ordinarius:
+                redde VERUM;
+        }
+    }
+    redde VERUM;
+}
+
+b32
+silva_c89_typi_compatibiles (TypusC89* a, TypusC89* b)
+{
+    i32 qa;
+    i32 qb;
+    TypusC89* na;
+    TypusC89* nb;
+
+    si (a == NIHIL || b == NIHIL)
+    {
+        redde FALSUM;
+    }
+    si (a == b)
+    {
+        redde VERUM;    /* identitas (internamentum) */
+    }
+    qa = _quales_typi(a);
+    qb = _quales_typi(b);
+    na = _qualibus_exutum(a);
+    nb = _qualibus_exutum(b);
+    si (na == NIHIL || nb == NIHIL)
+    {
+        redde FALSUM;
+    }
+    si (na->genus == TYPUS_C89_ERROR
+        || nb->genus == TYPUS_C89_ERROR)
+    {
+        redde VERUM;    /* venenum absorbet - numquam re-iudica */
+    }
+    si (qa != qb)
+    {
+        redde FALSUM;   /* quales ut copiae per gradum */
+    }
+    si (na == nb)
+    {
+        redde VERUM;
+    }
+    /* enumeratus <-> int (6.1.2.5; impl LP64 = int) */
+    si ((na->genus == TYPUS_C89_ENUMERATUS
+            && nb->genus == TYPUS_C89_PRIMITIVUS
+            && nb->datum.primitivum == (s32)PRIMITIVUM_INTEGER)
+        || (nb->genus == TYPUS_C89_ENUMERATUS
+            && na->genus == TYPUS_C89_PRIMITIVUS
+            && na->datum.primitivum == (s32)PRIMITIVUM_INTEGER))
+    {
+        redde VERUM;
+    }
+    si (na->genus != nb->genus)
+    {
+        redde FALSUM;
+    }
+    commutatio (na->genus)
+    {
+        casus TYPUS_C89_MONSTRATOR:
+            /* pointee compatibilis QUALIBUS INCLUSIS (6.1.2.6) */
+            redde silva_c89_typi_compatibiles(
+                na->datum.monstrator.internum,
+                nb->datum.monstrator.internum);
+        casus TYPUS_C89_ACIES:
+            si (!silva_c89_typi_compatibiles(
+                    na->datum.acies.elementum,
+                    nb->datum.acies.elementum))
+            {
+                redde FALSUM;
+            }
+            si (na->datum.acies.numerus < ZEPHYRUM
+                || nb->datum.acies.numerus < ZEPHYRUM)
+            {
+                redde VERUM;    /* sentinella: mensura ignota */
+            }
+            redde na->datum.acies.numerus
+                == nb->datum.acies.numerus;
+        casus TYPUS_C89_FUNCTIO:
+            si (!silva_c89_typi_compatibiles(
+                    na->datum.functio.reditus,
+                    nb->datum.functio.reditus))
+            {
+                redde FALSUM;
+            }
+            si (na->datum.functio.est_prototypata
+                && nb->datum.functio.est_prototypata)
+            {
+                i32 i;
+
+                si (na->datum.functio.est_variadica
+                        != nb->datum.functio.est_variadica
+                    || na->datum.functio.numerus_parametrorum
+                        != nb->datum.functio.numerus_parametrorum)
+                {
+                    redde FALSUM;
+                }
+                per (i = ZEPHYRUM;
+                     i < na->datum.functio.numerus_parametrorum;
+                     i++)
+                {
+                    /* quales summi parametrorum exuti (6.5.4.3) */
+                    si (!silva_c89_typi_compatibiles(
+                            _qualibus_exutum(
+                                na->datum.functio.parametra[i]),
+                            _qualibus_exutum(
+                                nb->datum.functio.parametra[i])))
+                    {
+                        redde FALSUM;
+                    }
+                }
+                redde VERUM;
+            }
+            si (!na->datum.functio.est_prototypata
+                && !nb->datum.functio.est_prototypata)
+            {
+                redde VERUM;
+            }
+            /* mixta prototypata/K&R: non variadica, parametra
+             * promotione ordinaria immota (6.1.2.6) */
+            {
+                TypusC89* proto =
+                    na->datum.functio.est_prototypata ? na : nb;
+                i32 i;
+
+                si (proto->datum.functio.est_variadica)
+                {
+                    redde FALSUM;
+                }
+                per (i = ZEPHYRUM;
+                     i < proto->datum.functio.numerus_parametrorum;
+                     i++)
+                {
+                    si (!_promotione_immotum(
+                            proto->datum.functio.parametra[i]))
+                    {
+                        redde FALSUM;
+                    }
+                }
+                redde VERUM;
+            }
+        ordinarius:
+            /* primitivi/tags: internati - identitas iam probata */
+            redde FALSUM;
+    }
+}
+
+s32
+silva_c89_assignationem_iudicare (SilvaSemantica* sem,
+    constans SilvaNodus* nodus_valoris, TypusC89* finis,
+    TypusC89* valoris, s32* codex_out)
+{
+    TypusC89* f;
+    TypusC89* v;
+
+    si (codex_out != NIHIL)
+    {
+        *codex_out = -I;
+    }
+    si (sem == NIHIL || finis == NIHIL || valoris == NIHIL)
+    {
+        redde (s32)EXAMEN_LICET;    /* input fractum - absorbe */
+    }
+    f = _qualibus_exutum(finis);
+    v = _qualibus_exutum(valoris);
+    si (f == NIHIL || v == NIHIL
+        || f->genus == TYPUS_C89_ERROR
+        || v->genus == TYPUS_C89_ERROR)
+    {
+        redde (s32)EXAMEN_LICET;    /* venenum - numquam re-iudica */
+    }
+    si (_est_arithmeticum(f) && _est_arithmeticum(valoris))
+    {
+        redde (s32)EXAMEN_LICET_CONVERSIO;
+    }
+    si (f->genus == TYPUS_C89_MONSTRATOR)
+    {
+        TypusC89* vm;
+
+        si (nodus_valoris != NIHIL
+            && _est_constans_nulla(sem, nodus_valoris))
+        {
+            redde (s32)EXAMEN_LICET_CONVERSIO;
+        }
+        vm = _ut_monstrator(sem, valoris);
+        si (vm == NIHIL)
+        {
+            si (codex_out != NIHIL)
+            {
+                *codex_out = _est_arithmeticum(valoris)
+                    ? (s32)EXAMEN_CODEX_MONSTRATOR_INTEGER
+                    : (s32)EXAMEN_CODEX_ASSIGNATIO_INCOMPATIBILIS;
+            }
+            redde (s32)EXAMEN_VETITUM;
+        }
+        {
+            TypusC89* fp = f->datum.monstrator.internum;
+            TypusC89* vp = vm->datum.monstrator.internum;
+            i32 fq = _quales_typi(fp);
+            i32 vq = _quales_typi(vp);
+            TypusC89* fps = _qualibus_exutum(fp);
+            TypusC89* vps = _qualibus_exutum(vp);
+            b32 per_vacuum =
+                (fps != NIHIL
+                    && fps->genus == TYPUS_C89_PRIMITIVUS
+                    && fps->datum.primitivum
+                        == (s32)PRIMITIVUM_VACUUM)
+                || (vps != NIHIL
+                    && vps->genus == TYPUS_C89_PRIMITIVUS
+                    && vps->datum.primitivum
+                        == (s32)PRIMITIVUM_VACUUM);
+
+            si (per_vacuum
+                || silva_c89_typi_compatibiles(fps, vps))
+            {
+                si ((fq & vq) == vq)    /* finis quales ⊇ valoris */
+                {
+                    redde (vm == f)
+                        ? (s32)EXAMEN_LICET
+                        : (s32)EXAMEN_LICET_CONVERSIO;
+                }
+                si (codex_out != NIHIL)
+                {
+                    *codex_out = (s32)EXAMEN_CODEX_QUALES_ABIECTI;
+                }
+                redde (s32)EXAMEN_VETITUM;
+            }
+            si (codex_out != NIHIL)
+            {
+                *codex_out =
+                    (s32)EXAMEN_CODEX_MONSTRATORES_INCOMPATIBILES;
+            }
+            redde (s32)EXAMEN_VETITUM;
+        }
+    }
+    si (_est_arithmeticum(f))
+    {
+        /* f arithmeticus, valoris non: monstrator/acies/functio */
+        si (codex_out != NIHIL)
+        {
+            *codex_out =
+                (_ut_monstrator(sem, valoris) != NIHIL)
+                    ? (s32)EXAMEN_CODEX_MONSTRATOR_INTEGER
+                    : (s32)EXAMEN_CODEX_ASSIGNATIO_INCOMPATIBILIS;
+        }
+        redde (s32)EXAMEN_VETITUM;
+    }
+    si (f->genus == TYPUS_C89_STRUCTURA
+        || f->genus == TYPUS_C89_UNIO)
+    {
+        si (silva_c89_typi_compatibiles(f, v))
+        {
+            redde (s32)EXAMEN_LICET;    /* aggregata identica */
+        }
+        si (codex_out != NIHIL)
+        {
+            *codex_out =
+                (s32)EXAMEN_CODEX_ASSIGNATIO_INCOMPATIBILIS;
+        }
+        redde (s32)EXAMEN_VETITUM;
+    }
+    si (codex_out != NIHIL)
+    {
+        *codex_out = (s32)EXAMEN_CODEX_ASSIGNATIO_INCOMPATIBILIS;
+    }
+    redde (s32)EXAMEN_VETITUM;
 }
 
 /* Conversio "ad finem" (assignatio simplex / redde / initiator

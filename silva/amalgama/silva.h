@@ -1246,8 +1246,20 @@ typedef enum {
     EXAMEN_CODEX_ACCESSUS_INCOMPLETAE,
     EXAMEN_CODEX_MEMBRUM_IGNOTUM,
     EXAMEN_CODEX_ELISIO_UNCORUM,            /* INFRA: parca */
+    /* chunk B (relatio compatibilitatis) - flagrant a chunk C */
+    EXAMEN_CODEX_ASSIGNATIO_INCOMPATIBILIS,
+    EXAMEN_CODEX_MONSTRATORES_INCOMPATIBILES,
+    EXAMEN_CODEX_QUALES_ABIECTI,
+    EXAMEN_CODEX_MONSTRATOR_INTEGER,
     EXAMEN_CODEX_NUMERUS
 } ExamenCodex;
+
+/* Licentia assignationis (iudicium directionale 6.3.16.1) */
+typedef enum {
+    EXAMEN_LICET = 0,          /* nulla conversio (typi identici) */
+    EXAMEN_LICET_CONVERSIO,    /* licita cum conversione ad finem */
+    EXAMEN_VETITUM             /* violatio - codex_out dicit quae */
+} ExamenLicentia;
 
 /* Diagnosticum v2 (M4a chunk A): positio materializata tempore
  * additionis; vita viae = vita parsurae ambulationis. */
@@ -1296,6 +1308,17 @@ SemanticaSymbolum* silva_c89_symbolum_invenire(SilvaSemantica* sem,
 unsigned int silva_c89_symbola_numerus(const SilvaSemantica* sem);
 const SemanticaSymbolum* silva_c89_symbolum_per_indicem(
     const SilvaSemantica* sem, unsigned int index);
+
+/* Relatio compatibilitatis C89 6.1.2.6 (examen chunk B) - pura,
+ * symmetrica; ERROR absorbet; tags nominales; enum <-> int. */
+int silva_c89_typi_compatibiles(TypusC89* a, TypusC89* b);
+
+/* Iudicium directionale assignationis (6.3.16.1; etiam initiator
+ * scalaris/argumentum prototypatum/redde). Reddit ExamenLicentia;
+ * sub VETITO codex_out (NULL licet) codicem violationis fert. */
+int silva_c89_assignationem_iudicare(SilvaSemantica* sem,
+    const SilvaNodus* nodus_valoris, TypusC89* finis,
+    TypusC89* valoris, int* codex_out);
 
 unsigned int silva_c89_diagnostica_numerus(
     const SilvaSemantica* sem);

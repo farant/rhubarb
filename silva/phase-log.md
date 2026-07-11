@@ -6822,3 +6822,90 @@ effusorem iam nominatum.
 
 **SEQUENS:** commissio Franis = sigillum chunki A; deinde chunk B
 (relatio compatibilitatis — functio pura, probatio tabulata).
+
+## 2026-07-11 — EXAMEN CHUNK B INTENTIO: relatio compatibilitatis
+
+Functio pura — sedes NON tanguntur (chunk C eas nectet). Duo ordines
+publici novi:
+
+1. **silva_c89_typi_compatibiles(a, b)** — relatio symmetrica C89
+   6.1.2.6, pura super TypusC89* internatis. Regulae: ERROR absorbet
+   (compatibilis cum omnibus — regula recuperationis, numquam
+   re-diagnostica); via celeris identitatis (internamentum); quales
+   collecti-exuti-comparati ut COPIAE (_quales_typi), deinde recursio;
+   monstrator = pointee compatibilis QUALIBUS INCLUSIS (6.1.2.6);
+   acies = elementum compatibile + sentinella mensurae (-1 = ignota,
+   compatibilis; ambae notae → aequales); functio = reditus
+   compatibilis + (ambae prototypatae: numerus + variadica + parametra
+   per paria) + (mixta: reconciliatio K&R — parametra prototypata
+   promotione ordinaria immota (_promotum), non variadica); tags
+   NOMINALES per identitatem (declarans intra TU — sim-6 C2);
+   enumeratus ↔ int compatibiles (6.1.2.5, impl = int in LP64).
+2. **silva_c89_assignationem_iudicare(sem, nodus_valoris, finis,
+   valoris, codex_out)** → ExamenLicentia {LICET, LICET_CONVERSIO,
+   VETITUM} — regula directionalis 6.3.16.1 (sem + nodus pro
+   constante nulla). Quales summi finis exuti (conversio valoris);
+   arith ← arith = LICET_CONVERSIO semper; monstrator finis:
+   constans-nulla → LICET_CONVERSIO; void* utroque modo + inclusio
+   qualium; pointee compatibilis (exutus) + quales finis ⊇ valoris →
+   LICET (identici) / LICET_CONVERSIO; quales abiecti → VETITUM;
+   pointee incompatibilis → VETITUM; arith ↔ monstrator mixti →
+   VETITUM; aggregata identica → LICET; residuum → VETITUM.
+   DISCIPLINA QUALIUM DIVISA (sim-6 C3): relatio possidet quales
+   pointee; iudicium possidet quales summos; locus (chunk C)
+   possidet mutabilitatem.
+
+**Codices IV novi** (APPENDIX ante NUMERUS — regula stabilitatis):
+ASSIGNATIO_INCOMPATIBILIS, MONSTRATORES_INCOMPATIBILES,
+QUALES_ABIECTI, MONSTRATOR_INTEGER — omnes VIOLATIO; non flagrant
+ante chunk C (tabula integra, probatio sectionis I eos ambulat
+gratis).
+
+**Vectis B:** probatio tabulata in probatio_silva_examen.c (sectiones
+novae): ~40+ paria per omnes ramos — decipulae qualium (char* vs
+const char* internati separatim: relatio numquam ==), reconciliatio
+K&R, sentinella aciei, void*/nulla, tags distincti, enum↔int,
+functiones prototypatae/mixtae. Fabricae publicae typos struunt;
+tags per parsationem. Amalgama: ordines II + ExamenLicentia in
+manifestum + hospes vocationes. Portae solitae (suite, amalgama,
+percursus-firing-idem non necessarium — nulla sedes tacta, sed
+percursus curritur pro cautela regressionis temporis).
+
+## 2026-07-11 — EXAMEN CHUNK B RELATIO: relatio compatibilitatis SHIPPED
+
+INTENTIO praestita per omnia; nulla emendatio.
+
+**Quod navigavit:** silva_c89_typi_compatibiles (symmetrica 6.1.2.6:
+identitas-primum; venenum absorbet; quales ut copiae per gradum;
+pointee qualibus inclusis; sentinella aciei -1; functio prototypata/
+K&R/mixta — reconciliatio per _promotione_immotum PURUM, sine sem:
+char/brevis/fluitans mutantur, cetera manent; tags nominales; enum
+↔ int) + silva_c89_assignationem_iudicare (directionalis 6.3.16.1:
+quales summi finis exuti; arith semper; constans-nulla; void*; via
+vacui + inclusio qualium; vm==f → LICET; aggregata identica; codex
+per VETITUM) + codices IV novi (appendix, VIOLATIO omnes, muti ante
+chunk C). Sedes INTACTAE (percursus 588/45 IDEM — chunk B nihil
+flagrat per constructionem).
+
+**Portae:** compilatio stricta primo cursu; probatio_silva_examen
+sectiones VII/VIII novae — **411/411** (paria tabulata: decipula
+internamenti char*/const char* per relationem numquam ==;
+reconciliatio K&R int/duplex immota vs char/fluitans mutata;
+sentinella aciei; dilatatio vs abiectio qualium directionalis;
+void* utroque; tags forma-eadem-nomine-diverso incompatibiles;
+enum↔int sed non enum↔long; venenum; constans nulla per nodum
+VERUM parsatum); suite 30/30; amalgama VERIFICATUM hospes 30/30
+(ordo relationis novus — typi monstratorum ex declarationibus
+parsatis, NON fabricae exportatae: regula per-tractionem tenuit);
+officina 10/10; percursus 100.00%/588/tempus 6.14 ms/KB (basis
+6.05 — strepitus, ambulatio intacta).
+
+**Debrief instrumentorum:** adhibita — porta amalgamatoris (cepit
+fabricam monstratoris non-publicam in hospite: solutio = typi ex
+parsatione, superficies publica NON crevit), python-percursus
+mutationum. asperitates — nullae novae. desiderata — nihil.
+
+**SEQUENS:** commissio Franis = sigillum chunki B; deinde chunk C
+(sedes: _ad_finem_annotare trifidum + locus + aritas/redde/scalare
++ materializatio est_implicitum + V sedes vocationis novae
+relationis — CAVE C4 sim-6: cauda aggregata LEGALIS).

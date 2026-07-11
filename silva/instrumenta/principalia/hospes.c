@@ -1077,7 +1077,8 @@ int main(void)
      * provisionale/socius; via ex parsura ambulationis) */
     {
         static const char fons_ex[] =
-            "static int q = mysterium;\n";
+            "static int q = mysterium;\n"
+            "static int* pi; static long* pl;\n";
         SilvaParsura* parsura_ex = silva_c89_parsare(piscina,
             "hospes_examen.c", fons_ex,
             (unsigned int)(sizeof(fons_ex) - 1), NULL);
@@ -1118,6 +1119,66 @@ int main(void)
         else
         {
             fprintf(stderr, "hospes: INFIDELIS: examen\n");
+        }
+
+        /* chunk B: relatio + iudicium (ordines novi vocantur) */
+        summa++;
+        if (parsura_ex != NULL)
+        {
+            SilvaSemantica* sem_rel =
+                silva_c89_semantica_analysare(piscina, parsura_ex);
+            int bene_rel = 0;
+
+            if (sem_rel != NULL)
+            {
+                static unsigned char pi_lit[] = { 'p', 'i' };
+                static unsigned char pl_lit[] = { 'p', 'l' };
+                SilvaChorda q_pi;
+                SilvaChorda q_pl;
+                TypusC89* t_int = silva_c89_typus_primitivum(
+                    sem_rel, (int)PRIMITIVUM_INTEGER);
+                TypusC89* t_longus = silva_c89_typus_primitivum(
+                    sem_rel, (int)PRIMITIVUM_LONGUS);
+                SemanticaSymbolum* s_pi;
+                SemanticaSymbolum* s_pl;
+                TypusC89* p_int = NULL;
+                TypusC89* p_longus = NULL;
+                int codex_rel = -1;
+
+                q_pi.mensura = 2; q_pi.datum = pi_lit;
+                q_pl.mensura = 2; q_pl.datum = pl_lit;
+                s_pi = silva_c89_symbolum_invenire(sem_rel, q_pi);
+                s_pl = silva_c89_symbolum_invenire(sem_rel, q_pl);
+                if (s_pi != NULL) { p_int = s_pi->typus; }
+                if (s_pl != NULL) { p_longus = s_pl->typus; }
+
+                if (p_int != NULL && p_longus != NULL
+                    && silva_c89_typi_compatibiles(t_int, t_int)
+                    && !silva_c89_typi_compatibiles(t_int, t_longus)
+                    && silva_c89_assignationem_iudicare(sem_rel,
+                           NULL, t_int, t_longus, NULL)
+                        == (int)EXAMEN_LICET_CONVERSIO
+                    && silva_c89_assignationem_iudicare(sem_rel,
+                           NULL, p_int, p_longus, &codex_rel)
+                        == (int)EXAMEN_VETITUM
+                    && codex_rel
+                        == (int)EXAMEN_CODEX_MONSTRATORES_INCOMPATIBILES)
+                {
+                    bene_rel = 1;
+                }
+            }
+            if (bene_rel)
+            {
+                fideles++;
+            }
+            else
+            {
+                fprintf(stderr, "hospes: INFIDELIS: relatio\n");
+            }
+        }
+        else
+        {
+            fprintf(stderr, "hospes: INFIDELIS: relatio\n");
         }
     }
 
