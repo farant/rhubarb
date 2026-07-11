@@ -492,6 +492,9 @@ int machinula_positionem_inspicere(const Machinula* machinula,
 int machinula_registrum_legere(const Machinula* machinula,
     unsigned int tabulatum_index, unsigned int index_registri,
     unsigned long long* valor_out);
+int machinula_anulum_inspicere(const Machinula* machinula,
+    unsigned int retro_index, int* functio_index_out,
+    unsigned int* instructio_out);
 
 /* ==================================================
  * Demissio (M1b): arbor typata -> medulla

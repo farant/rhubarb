@@ -131,6 +131,12 @@ When narrowing scope: name the deferred use case and the path back.
   quick-hypothesis loop; scalars + string literals; aggregates
   refused by name). Silva-side read bench (censor/emitte/origo/
   nexus): see silva/CLAUDE.md + the symptom table in MEMORY.md.
+- ./officina/vindex.sh <suita.c> [-plagulae a,b,c]
+  [-imago via:linea | -imago functio] — THE DEBUGGER (M3): TUI
+  stepper driven through the .indicium file only. Keys g/s/i/f/p,
+  ':' Latin commands (punctum, dele, memoria, curre). -imago =
+  headless one-frame render to stdout (smoke/CI). App on three
+  amalgams; loader = instrumenta/vindex_onerator.{c,h}.
 - Dev-time mains in instrumenta/principalia/.
 - Goldens: probationes/fixa/ — .medulla hand-written fixtures +
   .c/.medulla golden pairs (re-pin = delete + suite run + BLESS by

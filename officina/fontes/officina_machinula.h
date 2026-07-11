@@ -99,6 +99,10 @@ b32 machinula_positionem_inspicere (constans Machinula* machinula,
     i32* instructio_out);
 b32 machinula_registrum_legere (constans Machinula* machinula,
     i32 tabulatum_index, i32 index_registri, i64* valor_out);
+/* anulus volatus: retro_index 0 = novissima figura, crescens =
+ * vetustior; FALSUM ultra caudam (tabula anuli vindicis) */
+b32 machinula_anulum_inspicere (constans Machinula* machinula,
+    i32 retro_index, s32* functio_index_out, i32* instructio_out);
 
 /* census */
 i64 machinula_numerus_instructionum (constans Machinula* machinula);

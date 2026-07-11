@@ -2103,3 +2103,98 @@ saltuarii: pingere per snapshot numquam Machinula* viva; tabulae
 fons/registra/stiva/memoria/anulus/puncta; claves + linea ':'
 latina; probationes cellularum sine capite per tessera_pons_
 memoriae; refactor oneratoris communis HIC).
+
+### CHUNK ⑥ — VINDEX TUI: INTENTIO (2026-07-11)
+
+Sigillum ⑤ commissum. VINDEX = app super amalgamata TRIA (officina
++ silva + tessera; exemplar aedificationis saltuarii — plagulae
+fontium amalgamatorum CONSULTO absentes, limes amalgamatis = API),
+sedes = instrumenta officinae (DECISUS 5). Partes:
+(1) **officina/instrumenta/vindex_onerator.{c,h}** — EXTRACTIO
+oneratoris (consumptor 4us): systema+capita+demittere(lineae+
+indicium)+nectere super superficies PUBLICAS (officina.h+silva.h).
+NOTA ARCHITECTURAE: familiae oneratorum DUAE sunt — fontes-latus
+(cursor/interpretare/vectis, typi domus) et app-latus (vindex nunc,
+REPL M4 mox); extractio app-latus catenam geminorum novam praevenit;
+gemini fontes-lateris migrant tactu proximo (dilatio nominata).
+(2) **officina/instrumenta/vindex_visum.{c,h}** — CONSPECTUS
+(snapshot purum: lineae fontis, positio+acies macronum, tabulata,
+variabilia, anulus, puncta, memoria, modus/imperium) + pingere
+super tessera.h — NUMQUAM Machinula*/lector (sutura saltuarii;
+probationes cellularum sine capite). (3) **vindex.c** (principalia)
+— onerator → machinula → indicium coque-scribe-RECLUDE (positio
+omnis per LECTOREM, numquam per lineas memoriae — forma-primum
+visibiliter); ansa eventuum; auxilia gressuum = ansae vectis ⑤
+(radix-mutatur ∧ custos profunditatis). Claves: g gradus / s super
+/ i intra / f fini / p perge / v-a-u-m tabula dextra inferior /
+q exi / ':' linea imperii latina (:punctum via:linea aut functio,
+:dele, :memoria hex, :curre). (4) **officina/vindex.sh** + modus
+**-imago <via>:<linea>**: pons memoriae, punctum, pergere, UNA
+effigies picta → stdout ut textus (fumus sine terminale — pars
+verificationis meae; sessio viva = pars Franis). (5) Ordo publicus
+NOVUS machinula_anulum_inspicere (tabula anuli; + vanilla + hospes).
+(6) compile_probationes.sh dilatatur (amalgama tesserae + obiectum
+visus) pro probatio_officina_vindex_visum (cellulae fixturae).
+Vectis ⑥ (DECISUS 10): probationes cellularum virides + fumus
+-imago + SESSIO VERA FRANIS (cotidie-agibilis; politura non
+obstat). Post ⑥: RELATIO MILLIARII M3 plena + auditus sim-2 §5.
+
+### CHUNK ⑥ — VINDEX TUI: RELATIO (latus meum, 2026-07-11)
+
+**CONSTRUCTUM ET FUMATUM. Probatio cellularum 24/24 PRIMO CURSU;
+fumus -imago DUPLEX vivus:** (1) probatio_piscina.c:37 — TUI
+plena picta: signa */> linea 37, STIVA, VARIABILIA cum valoribus
+VIVIS tabulati pausati per plagulam ("usus unsigned long 0";
+"piscina struct Piscina*" cum monstratore regionis vero; p_1..p_N
+umbrae honeste sine typo — lacuna benedicta, visibiliter strepitosa:
+filtrum = candidatus v0.1, arbitrium Franis); linea positionis cum
+acie macronum. (2) piscina_summa_usus (punctum per-functionem):
+pausa TRANS-MODULUM, tabula fontis sponte ad lib/piscina.c mutata,
+stiva bi-tabulata posita. Suite 10/10; hospes 78/78 (ordo novus
+machinula_anulum_inspicere — anulus erat privatus, tabula anuli
+consumptor externus primus); amalgama VERIFICATUM; paritas sweep
+EXACTA (76/69/0/5).
+
+Partes: vindex_onerator.{c,h} (EXTRACTIO oneratoris app-lateris —
+familiae DUAE notatae: fontes-latus exemplaria tenet, migratio
+tactu proximo; REPL M4 = consumptor app-lateris secundus),
+vindex_visum.{c,h} (conspectus purus + pictura — sutura saltuarii
+honorata, probationes cellularum id probant), vindex.c (positio
+OMNIS per LECTOREM — numquam lineae memoriae: forma-primum
+visibiliter), vindex.sh (amalgamata TRIA; officina.c cum
+-Isilva/amalgama — dependentia externa unica documentata),
+compile_probationes.sh dilatatum (tessera + visum obiecta stantia).
+Inventum notatum: acies positionis "…:37 per CREDO <- …:37" (via
+eadem bis) cum instructio pausata argumentum macronis aestimat —
+rectum, non vitium (corpus macronis credo.h monstrat); in worklog
+ne mirum videatur. Detail: vindex.worklog.md (natus).
+
+**RESTAT (vectis ⑥ pars Franis): SESSIO VIVA cotidie-agibilis**
+(`./officina/vindex.sh probationes/probatio_piscina.c -plagulae
+piscina,chorda,credo,friatio` in terminale vero; politura non
+obstat — asperitates in worklog notandae). Post sessionem +
+commissionem: RELATIO MILLIARII M3 plena + auditus praedictionis
+sim-2 §5 (numeri organici nunc exsistunt).
+
+### CHUNK ⑥ — SESSIO VIVA FRANIS: VECTIS IMPLETUS (2026-07-11)
+
+**Fran vindicem VIVUM egit — duo inventa vera, ambo eodem die
+sanata, tum "working perfectly":** (1) linea positionis iterata
+(framea argumenti macronis eadem via:linea — compressio in strato
+picturae, forma intacta); (2) **PHANTASMATA VOLUMINIS** (cum
+imagine photographica!): printf mundi interpretati in TERMINALE
+IPSUM scribebat — volumen physicum quod diff tesserae nescit;
+lineae duplicatae accumulatae quoque gressu super lineam
+imprimentem. Sanatio: captura fd 1+2 circum exsecutionem VM
+(_vm_capere/_vm_solvere, dup2 → officina/build/vindex.stdout;
+stderr quoque — relationes halitus eodem via; -imago consulto
+sine captura). Tessera ipsa INNOCENS probata (purgare + diff
+recte spatia emittunt — solae scripturae externae in tty
+phantasmant). Vectis cotidie-agibilis: probationes cellularum
+virides + fumus -imago + sessio vera + inventa-sanata-iterum-acta.
+**CHUNK ⑥ CLAUSUS. Sex ex sex.**
+
+**NEXT: commissio Franis (sigillum ⑥) → RELATIO MILLIARII M3**
+(relectio phase-log TOTA + auditus regulae milliarii; auditus
+praedictionis sim-2 §5 cum numeris organicis; parcae omnes cum
+dominis; sigillum M3 = commissio + RELATIO).

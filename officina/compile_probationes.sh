@@ -41,7 +41,9 @@ declare -a GCC_FLAGS=(
 declare -a INCLUDE_FLAGS=(
     "-I$RADIX_DIR/include"
     "-I$RADIX_DIR/silva/amalgama"
+    "-I$RADIX_DIR/tessera/amalgama"
     "-I$OFF_DIR/fontes"
+    "-I$OFF_DIR/instrumenta"
     "-I$OFF_DIR/probationes"
 )
 
@@ -85,6 +87,30 @@ if [ ! -f "$obj" ] || [ "$src" -nt "$obj" ]; then
     echo "  [amalgama] silva.c"
     if ! clang "${GCC_FLAGS[@]}" -c "$src" -o "$obj"; then
         echo "FRACTA: amalgama silva" ; exit 1
+    fi
+fi
+obj_files="$obj_files $obj"
+
+# ---- 2b. tessera amalgam + vindex visum (M3 chunk 6: probationes
+#          cellularum sine capite; obiecta inutilia innocua) ----
+src="$RADIX_DIR/tessera/amalgama/tessera.c"
+obj="$BUILD_DIR/amalgama_tessera.o"
+if [ ! -f "$obj" ] || [ "$src" -nt "$obj" ]; then
+    echo "  [amalgama] tessera.c"
+    if ! clang "${GCC_FLAGS[@]}" -c "$src" -o "$obj"; then
+        echo "FRACTA: amalgama tessera" ; exit 1
+    fi
+fi
+obj_files="$obj_files $obj"
+src="$OFF_DIR/instrumenta/vindex_visum.c"
+obj="$BUILD_DIR/vindex_visum.o"
+if [ ! -f "$obj" ] || [ "$src" -nt "$obj" ] \
+    || [ "$OFF_DIR/instrumenta/vindex_visum.h" -nt "$obj" ]; then
+    echo "  [vindex] vindex_visum.c"
+    if ! clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" \
+        -I"$RADIX_DIR/tessera/amalgama" -I"$OFF_DIR/instrumenta" \
+        -c "$src" -o "$obj"; then
+        echo "FRACTA: vindex_visum" ; exit 1
     fi
 fi
 obj_files="$obj_files $obj"

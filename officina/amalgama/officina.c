@@ -517,6 +517,9 @@ int machinula_positionem_inspicere(const Machinula* machinula,
 int machinula_registrum_legere(const Machinula* machinula,
     unsigned int tabulatum_index, unsigned int index_registri,
     unsigned long long* valor_out);
+int machinula_anulum_inspicere(const Machinula* machinula,
+    unsigned int retro_index, int* functio_index_out,
+    unsigned int* instructio_out);
 
 /* ==================================================
  * Demissio (M1b): arbor typata -> medulla
@@ -2030,6 +2033,10 @@ b32 machinula_positionem_inspicere (constans Machinula* machinula,
     i32* instructio_out);
 b32 machinula_registrum_legere (constans Machinula* machinula,
     i32 tabulatum_index, i32 index_registri, i64* valor_out);
+/* anulus volatus: retro_index 0 = novissima figura, crescens =
+ * vetustior; FALSUM ultra caudam (tabula anuli vindicis) */
+b32 machinula_anulum_inspicere (constans Machinula* machinula,
+    i32 retro_index, s32* functio_index_out, i32* instructio_out);
 
 /* census */
 i64 machinula_numerus_instructionum (constans Machinula* machinula);
@@ -9865,6 +9872,40 @@ machinula_registrum_legere (constans Machinula* machinula,
         redde FALSUM;
     }
     *valor_out = t->registra[index_registri];
+    redde VERUM;
+}
+
+b32
+machinula_anulum_inspicere (constans Machinula* machinula,
+    i32 retro_index, s32* functio_index_out, i32* instructio_out)
+{
+    i64 index;
+    constans AnulusFigura* figura;
+
+    si (machinula == NIHIL
+        || retro_index >= (i32)ANULUS_MENSURA)
+    {
+        redde FALSUM;
+    }
+    index = machinula->anulus_cursor - I - (i64)retro_index;
+    si (index < ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    figura = &machinula->anulus[index & (i64)ANULUS_LARVA];
+    si (figura->functio == NIHIL)
+    {
+        redde FALSUM;
+    }
+    si (functio_index_out != NIHIL)
+    {
+        *functio_index_out =
+            (s32)(figura->plana - machinula->planae);
+    }
+    si (instructio_out != NIHIL)
+    {
+        *instructio_out = figura->instructio;
+    }
     redde VERUM;
 }
 

@@ -547,6 +547,12 @@ int main(void)
                 && machinula_pergere(machinula) == MACHINULA_BENE
                 && machinula_halitus_codex(machinula) == 42,
                 "machinula puncta + resumptio");
+            proba(machinula_anulum_inspicere(machinula, 0,
+                      &functio_index, &instructio)
+                && functio_index >= 0
+                && !machinula_anulum_inspicere(machinula, 99999,
+                       NULL, NULL),
+                "machinula anulus inspectio");
         }
         regio_destruere(regio);
     }
