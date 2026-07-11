@@ -1,0 +1,91 @@
+#!/bin/bash
+
+# silva/nexus.sh - nexus (instrumenta prima #4)
+#
+# Usage:
+#   ./silva/nexus.sh <symbolum> [-omnia]    sedes + usus symboli
+#   ./silva/nexus.sh -similis <quaestio>    nomina similia
+#   ./silva/nexus.sh -renovare              tabulam regenerare
+#                                           (sweep corporis, ~min)
+# Exit:  0 inventum | 1 non inventum | 2 tabula deest / usus
+#
+# Tabula build/nexus.tsv DISPONIBILIS: numquam committitur;
+# vetustas contra fontes .c/.h monetur (CAUTIO), non impeditur.
+
+set -u
+
+SILVA_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+RADIX_DIR="$(cd "$SILVA_DIR/.." && pwd)"
+BUILD_DIR="$SILVA_DIR/build"
+mkdir -p "$BUILD_DIR"
+
+declare -a GCC_FLAGS=(
+    "-std=c89" "-pedantic" "-Wall" "-Wextra" "-Werror"
+    "-Wconversion" "-Wsign-conversion" "-Wcast-qual"
+    "-Wstrict-prototypes" "-Wmissing-prototypes" "-Wwrite-strings"
+    "-Wno-long-long" "-Wno-overlength-strings"
+)
+declare -a INCLUDE_FLAGS=(
+    "-I$RADIX_DIR/include"
+    "-I$SILVA_DIR/fontes"
+)
+declare -a RADIX_FONTES=(
+    "piscina" "chorda" "chorda_aedificator" "xar" "tabula_dispersa"
+    "friatio" "internamentum" "similitudo"
+)
+
+newest_header () {
+    find "$RADIX_DIR/include" "$SILVA_DIR/fontes" -name '*.h' -newer "$1" 2>/dev/null | head -1
+}
+
+obj_files=""
+for f in "${RADIX_FONTES[@]}"; do
+    src="$RADIX_DIR/lib/$f.c"
+    obj="$BUILD_DIR/$f.o"
+    if [ ! -f "$obj" ] || [ "$src" -nt "$obj" ] || [ -n "$(newest_header "$obj")" ]; then
+        echo "  [dep] $f.c" >&2
+        clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" -c "$src" -o "$obj" || exit 1
+    fi
+    obj_files="$obj_files $obj"
+done
+
+for src in "$SILVA_DIR"/fontes/*.c; do
+    base="$(basename "$src" .c)"
+    obj="$BUILD_DIR/fons_$base.o"
+    if [ ! -f "$obj" ] || [ "$src" -nt "$obj" ] || [ -n "$(newest_header "$obj")" ]; then
+        echo "  [silva] $base.c" >&2
+        clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" -c "$src" -o "$obj" || exit 1
+    fi
+    obj_files="$obj_files $obj"
+done
+
+# CLI + sweep (obiecta plena - chorda.o aedificatorem trahit etc.)
+CLI_SRC="$SILVA_DIR/instrumenta/principalia/nexus.c"
+CLI_BIN="$BUILD_DIR/nexus"
+clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" "$CLI_SRC" $obj_files \
+    -o "$CLI_BIN" || exit 1
+
+cd "$RADIX_DIR"
+
+# -renovare: sweep corporis (nexus_percursus)
+if [ "${1:-}" = "-renovare" ]; then
+    SWEEP_SRC="$SILVA_DIR/instrumenta/principalia/nexus_percursus.c"
+    SWEEP_BIN="$BUILD_DIR/nexus_percursus"
+    clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" "$SWEEP_SRC" $obj_files \
+        -o "$SWEEP_BIN" || exit 1
+    mkdir -p "$RADIX_DIR/build"
+    exec "$SWEEP_BIN"
+fi
+
+# cautio vetustatis: tabula senior fonte aliquo recentiore
+TSV="$RADIX_DIR/build/nexus.tsv"
+if [ -f "$TSV" ]; then
+    RECENTIOR=$(find "$RADIX_DIR" -name '*.c' -newer "$TSV" \
+        -not -path '*/build/*' -not -path '*/.git/*' 2>/dev/null | head -1)
+    if [ -n "$RECENTIOR" ]; then
+        echo "CAUTIO: nexus.tsv vetustior quam $RECENTIOR" >&2
+        echo "        (renovare: ./silva/nexus.sh -renovare)" >&2
+    fi
+fi
+
+exec "$CLI_BIN" "$@"

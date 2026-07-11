@@ -36,6 +36,14 @@ Do these IN ORDER before writing code:
    re-read project-specs/silva-brainstorm.md (5 minutes). For the deep feature
    vision: arbor_ce_lxxxix-brainstorm.md and arbor-v2-all-brainstorms.md.
    These transcripts carry the motivating energy that compression strips.
+6. **Warm the bench (~2 min).** Run each read-tier instrument once —
+   seeing real output builds the reach that reading a list doesn't.
+   Aim at your actual task; known-good fallbacks:
+   `./silva/nexus.sh silva_c89_parsare` · `./silva/emitte.sh
+   lib/piscina.c piscina_generare_dynamicum` · `./silva/origo.sh
+   lib/piscina.c 239:5` ('if' <- si). Symptom table (dolor →
+   mandatum) in MEMORY.md; censor runs itself (amalgamare porta 6 +
+   post-edit hook); interpretare is officina-side.
 
 Before compaction: append a phase-log addendum with anything in-flight.
 When narrowing scope: log it in the phase-log with the deferred use case
@@ -63,6 +71,13 @@ extend it; new use of an excluded vendored function = delete its
 excludenda entry in the amalgamator manifest, the compile clamat).
 Dev-time mains live in instrumenta/principalia/ (outside the test
 link glob).
+The read bench (instrumenta prima, 2026-07-10): ./silva/censor.sh
+(latina lint; also in amalgamare porta 6 + post-edit hook),
+./silva/emitte.sh <file> <symbol> (byte-exact definition),
+./silva/origo.sh <file> <linea>[:<col>] (expansion story),
+./silva/nexus.sh <symbol> (who-uses/which-file; -similis fuzzy;
+-renovare rebuilds build/nexus.tsv). Officina-side sibling:
+./officina/interpretare.sh (run a corpus function in machinula).
 Conventions: root CLAUDE.md + the conventions recorded in phase-log
 complexities (i32 is UNSIGNED — s32/s64 for anything signed; never
 `nomen`, `registrum`, `magnitudo`, `exire`, or `structura` as

@@ -37,7 +37,16 @@ Do these IN ORDER before writing code:
    speed work; optimize only from measurement.
 5. Simulation artifacts carry the discovered complications:
    officina-simulatio-3.md (C1-C9) for M1, officina-simulatio-4.md
-   (C1-C12) for M2.
+   (C1-C12) for M2; instrumenta-simulatio-1/2.md for the tool bench.
+6. **Warm the bench (~2 min).** Run each instrument once — seeing real
+   output builds the reach that reading a list doesn't. Ideally aim
+   them at something from your actual task; known-good fallbacks:
+   `./silva/nexus.sh machinula_currere` (who calls it, where) ·
+   `./silva/emitte.sh officina/fontes/officina_machinula.c machinula_currere` ·
+   `./silva/origo.sh lib/piscina.c 239:5` ('if' <- si) ·
+   `./officina/interpretare.sh -plagulae fasti fasti_est_bissextilis 2024` (→ 1).
+   The symptom table (dolor → mandatum) is in MEMORY.md; censor runs
+   itself (amalgamare gates + post-edit hook).
 
 At every MILESTONE boundary: full phase-log re-read + audit (silva rule).
 Before compaction: append a phase-log addendum with anything in-flight.
@@ -117,6 +126,11 @@ When narrowing scope: name the deferred use case and the path back.
 - ./officina/fusor.sh — corpus lowering sweep (sistere census,
   byte-idem circuli). Probes: -causa <str> (origin lines),
   -textus <file-substr> (dump one TU's medulla).
+- ./officina/interpretare.sh [-plagulae a,b,c] [-textus] <functio>
+  [args...] — run a corpus function in machinula (the
+  quick-hypothesis loop; scalars + string literals; aggregates
+  refused by name). Silva-side read bench (censor/emitte/origo/
+  nexus): see silva/CLAUDE.md + the symptom table in MEMORY.md.
 - Dev-time mains in instrumenta/principalia/.
 - Goldens: probationes/fixa/ — .medulla hand-written fixtures +
   .c/.medulla golden pairs (re-pin = delete + suite run + BLESS by

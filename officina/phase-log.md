@@ -1566,3 +1566,112 @@ servus LSP silvae quattuor dilationes unit (daemon/cold-start,
 vehiculum laneae censoriae, tractio incrementalitatis, superficies
 editorum); post phasim + M3. NEXT: nexus (cum sculptura per datum
 debrief confirmata).
+
+### ADDENDUM (2026-07-10, nocte) — NEXUS NATUS, VECTIS X/X (4/5)
+
+nexus_percursus.c (sceletum percursus duo-passus + corpus fusionis:
+sedes symbolorum per indicem + usus per ambulationem
+FOLIUM_IDENTIFICATOR super symbolum_nodi; sem2 post recanonicare —
+tabula ligaminum canonicae-RELATIVA) → build/nexus.tsv
+(DISPONIBILE per DECISUM, 45MB, 640,032 ordines, 769 plagulae,
+133s) → nexus.c CLI (TSV purum sine silva, ~0.15s: greges per
+plagulam, sedes primum, -omnia localia, -similis, fortasse).
+Simplificatio M1a persoluta: vocati impliciti in folio vocati
+ligant — brachium VOCATIO non necessarium.
+
+**VECTIS X/X**: fasti_differentia (radius displosionis membri:
+15 usus/2 plagulae statim); similitudo_optima (nexus SE IPSUM
+indexavit — nexus.c horarum aetatis inter consumptores!); malloc
+(quaestio auditus aedificatorum M2: 134 usus/29 plagulae);
+chorda_aequalis_literis 332 semantici vs grep 414 crudi (delta =
+commenta — praecisio semantica); MedullaLineae sedes typedef;
+localia cum genere+profunditate; -similis; fortasse; CAUTIO
+vetustatis. Inventa: viae capitum sub DUOBUS nominibus (basename
+praebitum vs via plena) → ordines basename praetermissi, dedup
+176k→3.4k. **DILATIO NOMINATA: usus typorum absunt** (typus-
+nominatus extra tabulam ligaminum M1a; tractio = exportum
+silva-side cum saltuarius type-jump rogat). Detail:
+nexus.worklog.md. **NEXT: interpretare** (ultimum, ~1-1.5d) →
+RELATIO phasis + debrief.
+
+## INSTRUMENTA PRIMA — RELATIO PHASIS (2026-07-10, nocte)
+
+**PHASIS CLAUSA. Quinque instrumenta + bibliotheca + duo unci +
+praxis debrief — UNO DIE (aestimatio erat 4-4.5).** Omnes vectes
+impleti; linea sectionis numquam necessaria; promotio origonis
+(sim-2) validata.
+
+Vectes, omnes impleti:
+- **censor**: FP 0.00 / 762 plagulae primo contactu; porta 6 in
+  AMBOBUS amalgamare.sh; corpus regressionis syntheticum (XIII
+  ordines benedicti + fragores classis B).
+- **emitte**: 10/10 symbola octetim identica extractioni sed;
+  "fortasse" suggestiones (similitudo).
+- **origo**: catenae plenae (profunditas 2, brachia omnia, canalis
+  __FILE__/__LINE__ visibilis).
+- **similitudo** (desideratum #1, titulus Franis): 28 asserta
+  nativa ET interpretata die natali (unda cursoris 80→81).
+- **nexus**: 10/10 probationes punctuales (640k ordines, 133s
+  sweep, CLI ~0.15s; malloc 134 usus/29 plagulis).
+- **interpretare**: sex responsa nota recta (b32/s32/f32; unda_sinus
+  1.41421!); recusatio aggregatorum honesta; relatio halitus
+  gratis; ~2s cum -plagulae (venatio sputnik erat ~10 min).
+- **unci** (.claude/): censor-custos push ~0.9s silens-cum-purus +
+  generata-custos DENY (signum-ductus); vivi a sessione proxima.
+
+**Inventa vera phasi (lex contactus etiam pro instrumentis):**
+git sine blobs prae-sanationum (corpus validationis syntheticum);
+solum exire umquam SILENS fuit (classes A/B); valor lexematis =
+textus EXPANSUS (radix quaerenda); tag-slots in usibus; inversio
+directionis subsequentiae (did-you-mean); viae capitum sub duobus
+nominibus; usus typorum extra tabulam ligaminum (dilatio nominata);
+dilatare non extendere pro f32→f64 + LECTOR CLEMENS in paribus
+suffixorum (duritia futura vilis); conventio %reditus in signatura
+visibilis (recusatio aggregatorum).
+
+**DEBRIEF PHASIS (praxis nova, exemplar plenum):**
+- *adhibita*: emitte ~20× (12 vectis + 8 organici), nexus ~15×
+  (10 vectis + 5 organici — instrumenta quaestiones FRATRIS SUI
+  responderunt: sedes unda_sinus, signaturae fasti), censor 7×,
+  origo 4×, similitudo (per emitte/nexus), interpretare 12×;
+  grep/Read basis adhuc gravis in constructione ipsa.
+- *fructus*: vectes ceperunt lacunas veras (radix-valor, tag-refs,
+  dilatare); nexus quaestionem "in qua plagula" delevit; explorator
+  superficialis censoris consilium melioravit (acta macrorum).
+- *asperitates* (in worklogs ad momentum): initium frigidum ~1-2s
+  per invocationem (acta/M4 respondet; silva-lsp futurum);
+  fortasse nexus localia filtrata suggerit (confusio -omnia);
+  lector clemens; ordo blocorum emitte.
+- *desiderata*: similitudo NATA ET SOLUTA intra phasim (circulus
+  desiderati ~2 horae); nulla alia nova.
+- Auditus praedictionis sim-2 §5 ad clausuram M3 sigillatus manet
+  (cave: numeri huius phasis maxima parte VALIDATIO, non demanda).
+
+**AUDITUS**: INTENTIO omnia praestita; parcae nominatae cum
+dominis (usus typorum → exportum silva cum type-jump; hex-dump
+aggregatorum → in tractione; duritia lectoris → vilis futura;
+sweep corporis censoris standing → decisio Franis, FP=0 mensurata;
+silva-lsp → post M3). Sim docs (instrumenta-simulatio-1/2)
+RELATIONE hac clausi — praedictiones formae C1-C5 omnes tenuerunt,
+duo suppositi mortui (git-blobs; "afternoon" lint).
+
+**NEXT: M3 — indicium + vindex.** Apertura: acies instructionum
+planae (~1.3-2x super celer, datum census paratum). On-ramp
+probatus: exploratores fundantes → simulatio → interrogatio →
+spec. Instrumenta parata: origo pro gressu macro-conscio, emitte/
+nexus pro constructione, interpretare pro verificatione morum,
+census pro dispatch. Sigillum phasis = commissio Franis.
+
+### ADDENDUM (2026-07-10, post RELATIONEM) — STRATUM PRAESENTATIONIS
+
+Auditus praesentationis (rogatu Franis: quid agens recens videt?)
+lacunam MEAM invenit: instrumenta nova in NEUTRO CLAUDE.md erant,
+et tabula symptomatum (promissa in conversatione §XIV) numquam
+scripta. SANATUM: (1) tabula "dolor → mandatum" in MEMORY.md
+(superficies SEMPER onerata); (2) gradus 6 "Warm the bench" in
+AMBOBUS protocollis re-introitus (silva + officina CLAUDE.md) —
+idea Franis: singula instrumenta semel currere post compactionem,
+mandata parata cum scopis notis-bonis; experientia in-contextu >
+catalogus lectus; (3) sectio bench in Build/test utriusque.
+NB: CAUTIO vetustatis nexus in calefactione ipsa docet -renovare
+— pars rituali, non vitium.
