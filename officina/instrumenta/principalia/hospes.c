@@ -512,6 +512,14 @@ int main(void)
         machinula = machinula_creare(piscina, conexio, regio);
         proba(machinula != NULL, "machinula creare");
         machinula_lineas_praebere(machinula, 0, NULL);
+        /* M4b: sutura capturae + recusationes (pone-et-restitue) */
+        machinula_ansam_ponere(machinula, 1, stderr);
+        machinula_ansam_ponere(machinula, 1, NULL);
+        machinula_recusationes_ponere(machinula,
+            MACHINULA_RECUSARE_SCRIPTURAS | MACHINULA_RECUSARE_TEMPUS
+            | MACHINULA_RECUSARE_INITUM);
+        machinula_recusationes_ponere(machinula, 0);
+        machinula_ansas_claudere(machinula);
         fructus_m = machinula_currere(machinula, ch("main"));
         proba(fructus_m.genus == MACHINULA_BENE
             && fructus_m.codex == 42, "machinula currere");

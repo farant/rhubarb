@@ -18,6 +18,7 @@
 #define OFFICINA_H
 
 #include <stddef.h>
+#include <stdio.h>   /* FILE (machinula_ansam_ponere M4b) */
 
 struct SilvaNodus;   /* provenientia; silva.h eundem tag possidet */
 
@@ -443,8 +444,14 @@ typedef enum {
     MACHINULA_SISTERE,
     MACHINULA_DECIPULA,
     MACHINULA_VITIUM,
-    MACHINULA_PAUSA   /* punctum tactum - resumabile (pergere) */
+    MACHINULA_PAUSA,  /* punctum tactum - resumabile (pergere) */
+    MACHINULA_RECUSATIO   /* aedilis in sessione recusatus (M4b) */
 } MachinulaExitusGenus;
+
+/* vexilla recusationum (M4b sessio) */
+#define MACHINULA_RECUSARE_SCRIPTURAS  1
+#define MACHINULA_RECUSARE_TEMPUS      2
+#define MACHINULA_RECUSARE_INITUM      4
 
 typedef struct {
     int            genus;
@@ -458,6 +465,11 @@ Machinula* machinula_creare(OfficinaPiscina* piscina,
     Conexio* conexio, Regio* regio);
 void machinula_lineas_praebere(Machinula* machinula,
     int modulus_index, const MedullaLineae* lineae);
+void machinula_ansam_ponere(Machinula* machinula, int ansa,
+    FILE* plagula);
+void machinula_recusationes_ponere(Machinula* machinula,
+    unsigned int vexilla);
+void machinula_ansas_claudere(Machinula* machinula);
 MachinulaExitus machinula_currere(Machinula* machinula,
     OfficinaChorda titulus_functionis);
 unsigned long long machinula_numerus_instructionum(

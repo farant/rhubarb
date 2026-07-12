@@ -68,6 +68,19 @@ typedef struct {
     chorda nomen_declaratum;    /* vacua nisi declaratio/definitio */
     const SessioDiagnosticum* diagnostica;
     s32    diagnostica_numerus;
+    /* exsecutio (chunk B: replicatio documenti totius) */
+    b32    exsecutum;           /* replicatio facta */
+    s32    halitus_genus;       /* MachinulaExitusGenus; -1 nisi
+                                 * halitus (BENE non relatum nisi
+                                 * codex exit) */
+    s64    halitus_codex;
+    chorda halitus_nuntius;
+    s32    halitus_turnus;      /* quis turnus fregit; -1 nisi */
+    chorda effusio;             /* stdout turni novi (captum) */
+    chorda effusio_erroris;     /* stderr turni novi */
+    /* historia mutata: redefinitio effusionem turni veteris mutavit */
+    const s32* turni_mutati;
+    s32    turni_mutati_numerus;
 } SessioRelatum;
 
 typedef struct {
@@ -76,6 +89,12 @@ typedef struct {
     b32         cum_posix;      /* systema POSIX concatenatum */
     b32         sine_capitibus; /* ambulatio capitum omissa (probae
                                  * velociores; #include tunc deest) */
+    /* bibliothecae demissae SEMEL in mundum (viae radici relativae,
+     * e.g. "lib/piscina.c") */
+    const char* const* plagulae;
+    s32         plagulae_numerus;
+    b32         sine_recusationibus;  /* modus scripti: scripturae/
+                                       * tempus/stdin LICENT */
 } SessioConfiguratio;
 
 /* Praeparat contextum (latina compilata + systema + capita).
@@ -99,6 +118,10 @@ i32    sessio_turni_numerus(const Sessio* sessio);
 chorda sessio_turnus_textus(const Sessio* sessio, i32 index);
 s32    sessio_turnus_genus(const Sessio* sessio, i32 index);
 chorda sessio_turnus_nomen(const Sessio* sessio, i32 index);
+
+/* effusio capta novissima turni (acta; vacua si numquam involutus
+ * aut nondum exsecutus) */
+chorda sessio_turnus_effusio(const Sessio* sessio, i32 index);
 
 /* Textus ostensus integer (materializatus in piscinam datam) */
 chorda sessio_documentum(const Sessio* sessio, Piscina* piscina);

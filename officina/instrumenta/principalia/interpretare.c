@@ -893,7 +893,7 @@ s32 principale (integer argc, character** argv)
             }
             {
                 constans character* genera[] = { "BENE", "SISTERE",
-                    "DECIPULA", "VITIUM" };
+                    "DECIPULA", "VITIUM", "PAUSA", "RECUSATIO" };
 
                 fprintf(stderr, "[%s: %.*s]\n",
                     genera[fructus.genus],

@@ -1062,7 +1062,8 @@ s32 principale (integer argc, character** argv)
                     alioquin
                     {
                         constans character* genera[] = { "BENE",
-                            "SISTERE", "DECIPULA", "VITIUM" };
+                            "SISTERE", "DECIPULA", "VITIUM",
+                            "PAUSA", "RECUSATIO" };
 
                         fprintf(stderr, "%-44s %s (%.*s)"
                             "  %8.0f ms", suites[i],

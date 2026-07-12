@@ -19,6 +19,12 @@
 #include "tabula_dispersa.h"
 #include "silva.h"
 
+#include "officina_medulla.h"
+#include "officina_demissio.h"
+#include "officina_regio.h"
+#include "officina_conexio.h"
+#include "officina_machinula.h"
+
 #include <stdio.h>
 #include <string.h>
 #include <dirent.h>
@@ -35,6 +41,10 @@ nomen structura {
     chorda titulus;      /* declaratum (religatio); vacua nisi */
     chorda involucrum;   /* "turnus_N" si involvendus; vacua nisi */
     i32    lineae;       /* numerus linearum textus */
+    /* acta (chunk B): effusio capta replicationis novissimae */
+    chorda effusio;
+    chorda effusio_erroris;
+    b32    effusio_valida;
 } TurnusInternus;
 
 /* visus operans per oblationem: turni exsistentes (substitutione
@@ -58,6 +68,15 @@ structura Sessio {
     SilvaSemantica* systema_semantica;
     Xar*            turni;             /* TurnusInternus */
     i32             numerator;         /* involucra turnus_N */
+    /* mundus (chunk B): bibliothecae perennes + generatio currens */
+    Piscina*        piscina_bibliothecarum;  /* moduli demissi semel */
+    Xar*            moduli_bibliothecarum;   /* MedullaModulus* */
+    Piscina*        piscina_generationis;    /* mundus currens - per
+                                              * turnum demolitur */
+    Regio*          regio;
+    Conexio*        conexio;
+    Machinula*      machinula;
+    i32             vexilla_recusationum;
 };
 
 /* ==================================================
@@ -570,12 +589,186 @@ _titulum_declaratum (constans SilvaNodus* elementum, Piscina* piscina)
 }
 
 /* ==================================================
+ * custos initiatoris globalis (chunk B, experimentum B6):
+ * demissio initiatorem non-constantem TACITE zephyrat - vocationes
+ * et lectiones valoris variabilium reiciuntur ad limen. Licent:
+ * constantes, &variabilis (adressa), magnitudo (inaestimata),
+ * congeries {…} (v0 clementia). Refinamentum nominatum: &a[i]
+ * cum i variabili per clementiam maiorum transit.
+ * ================================================== */
+
+interior b32
+_sub_maiore_generis (constans SilvaNodus* nodus,
+    constans SilvaNodus* radix, integer genus_quaesitum)
+{
+    constans SilvaNodus* n = nodus->pater;
+
+    dum (n != NIHIL)
+    {
+        si (n->genus == genus_quaesitum)
+        {
+            redde VERUM;
+        }
+        si (n == radix)
+        {
+            frange;
+        }
+        n = n->pater;
+    }
+    redde FALSUM;
+}
+
+interior b32
+_sub_adressa (constans SilvaNodus* nodus, constans SilvaNodus* radix)
+{
+    constans SilvaNodus* n = nodus->pater;
+
+    dum (n != NIHIL)
+    {
+        si (n->genus == SILVA_C89_GENUS_UNARIUM)
+        {
+            SilvaValor op = silva_c89_unarium_tok_operator(n);
+
+            si (op.genus == SILVA_VALOR_TOKEN
+                && op.datum.token != NIHIL
+                && op.datum.token->valor.mensura == I
+                && op.datum.token->valor.datum[ZEPHYRUM] == '&')
+            {
+                redde VERUM;
+            }
+        }
+        si (n == radix)
+        {
+            frange;
+        }
+        n = n->pater;
+    }
+    redde FALSUM;
+}
+
+/* VERUM = initiator illegalis (nuntius_out impletur) */
+interior b32 _initiator_arbor_illegalis (SilvaSemantica* sem,
+    SilvaValor v, constans SilvaNodus* radix,
+    constans character** nuntius_out);
+
+interior b32
+_initiator_nodus_illegalis (SilvaSemantica* sem,
+    constans SilvaNodus* n, constans SilvaNodus* radix,
+    constans character** nuntius_out)
+{
+    insignatus integer k;
+
+    si (n == NIHIL)
+    {
+        redde FALSUM;
+    }
+    si (n->genus == SILVA_C89_GENUS_VOCATIO
+        && !_sub_maiore_generis(n, radix,
+            SILVA_C89_GENUS_MAGNITUDO_EXPRESSIONIS))
+    {
+        *nuntius_out = "vocatio in initiatore globali - divide"
+            " declarationem et assignationem";
+        redde VERUM;
+    }
+    si (n->genus == SILVA_C89_GENUS_FOLIUM_IDENTIFICATOR)
+    {
+        constans SemanticaSymbolum* sym = silva_c89_symbolum_nodi(
+            sem, n);
+
+        si (sym != NIHIL
+            && (sym->genus == (int)SYMBOLUM_VARIABILE
+                || sym->genus == (int)SYMBOLUM_PARAMETRUM)
+            && !_sub_adressa(n, radix)
+            && !_sub_maiore_generis(n, radix,
+                SILVA_C89_GENUS_MAGNITUDO_EXPRESSIONIS))
+        {
+            *nuntius_out = "lectio variabilis in initiatore"
+                " globali - divide declarationem et assignationem";
+            redde VERUM;
+        }
+    }
+    per (k = ZEPHYRUM; k < n->numerus_locorum; k++)
+    {
+        si (_initiator_arbor_illegalis(sem, n->loci[k], radix,
+                nuntius_out))
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
+interior b32
+_initiator_arbor_illegalis (SilvaSemantica* sem, SilvaValor v,
+    constans SilvaNodus* radix, constans character** nuntius_out)
+{
+    commutatio (v.genus)
+    {
+        casus SILVA_VALOR_NODUS:
+            redde _initiator_nodus_illegalis(sem, v.datum.nodus,
+                radix, nuntius_out);
+        casus SILVA_VALOR_LISTA:
+        {
+            insignatus integer m = silva_valor_lista_numerus(v);
+            insignatus integer k;
+
+            per (k = ZEPHYRUM; k < m; k++)
+            {
+                SilvaValor* elem = silva_valor_lista_obtinere(v, k);
+
+                si (elem != NIHIL && _initiator_arbor_illegalis(sem,
+                        *elem, radix, nuntius_out))
+                {
+                    redde VERUM;
+                }
+            }
+            redde FALSUM;
+        }
+        ordinarius:
+            redde FALSUM;
+    }
+}
+
+/* custos: declaratio globalis cum initiatore illegali? */
+interior b32
+_initiatorem_probare (SilvaSemantica* sem,
+    constans SilvaNodus* elementum, constans character** nuntius_out)
+{
+    constans SilvaNodus* initiatus;
+    SilvaValor initiator;
+
+    *nuntius_out = NIHIL;
+    si (elementum->genus != SILVA_C89_GENUS_DECLARATIO)
+    {
+        redde FALSUM;
+    }
+    initiatus = _nodum_generis_nodi(elementum,
+        SILVA_C89_GENUS_DECLARATOR_INITIATUS);
+    si (initiatus == NIHIL)
+    {
+        redde FALSUM;
+    }
+    initiator = silva_c89_declarator_initiatus_initiator(initiatus);
+    si (initiator.genus != SILVA_VALOR_NODUS
+        || initiator.datum.nodus == NIHIL)
+    {
+        redde FALSUM;   /* sine initiatore (aut lista aliena) */
+    }
+    si (initiator.datum.nodus->genus == SILVA_C89_GENUS_CONGERIES)
+    {
+        redde FALSUM;   /* congeries {…} - clementia v0 */
+    }
+    redde _initiator_arbor_illegalis(sem, initiator,
+        initiator.datum.nodus, nuntius_out);
+}
+
+/* ==================================================
  * receptum iudicii (examen fidele)
  * ================================================== */
 
 interior SilvaSemantica*
-_iudicare (Sessio* s, SilvaPiscina* effimera, constans character* fons,
-    i32 mensura, SilvaParsura** parsura_out)
+_iudicare (Sessio* s, SilvaPiscina* effimera, constans character* via,
+    constans character* fons, i32 mensura, SilvaParsura** parsura_out)
 {
     SilvaOraculum* oraculum;
     SilvaParsura* parsura;
@@ -589,7 +782,7 @@ _iudicare (Sessio* s, SilvaPiscina* effimera, constans character* fons,
             s->systema_semantica, oraculum);
     }
     parsura = silva_c89_parsare_cum_contextu(effimera, s->ctx,
-        SESSIO_VIA_DOCUMENTI, fons, (insignatus integer)mensura,
+        via, fons, (insignatus integer)mensura,
         oraculum);
     si (parsura == NIHIL || !parsura->successus
         || parsura->commissio == NIHIL)
@@ -793,6 +986,335 @@ _colligere (Sessio* s, Collectio* c, SilvaParsura* parsura,
 }
 
 /* ==================================================
+ * mundus (chunk B): generationes + replicatio + captura
+ * ================================================== */
+
+interior character* _plagulam_legere (Piscina* piscina,
+    constans character* via, i32* mensura_out);
+
+interior chorda
+_capturam_legere (FILE* pl, Piscina* piscina)
+{
+    long mensura_l;
+    chorda fructus;
+    i8* datum;
+
+    fructus.mensura = ZEPHYRUM;
+    fructus.datum = NIHIL;
+    si (pl == NIHIL)
+    {
+        redde fructus;
+    }
+    fflush(pl);
+    fseek(pl, 0L, SEEK_END);
+    mensura_l = ftell(pl);
+    si (mensura_l <= 0L)
+    {
+        redde fructus;
+    }
+    fseek(pl, 0L, SEEK_SET);
+    datum = piscina_allocare(piscina, (memoriae_index)mensura_l);
+    si (datum == NIHIL
+        || fread(datum, I, (memoriae_index)mensura_l, pl)
+            != (memoriae_index)mensura_l)
+    {
+        redde fructus;
+    }
+    fructus.datum = datum;
+    fructus.mensura = (i32)mensura_l;
+    redde fructus;
+}
+
+/* ordo demolitionis RIGIDUS (C6/C8): ansae programmatis clausae ->
+ * regio soluta (basis fixa!) -> piscina generationis destructa */
+interior vacuum
+_generationem_demoliri (Sessio* s)
+{
+    si (s->machinula != NIHIL)
+    {
+        machinula_ansas_claudere(s->machinula);
+    }
+    si (s->regio != NIHIL)
+    {
+        regio_destruere(s->regio);
+    }
+    si (s->piscina_generationis != NIHIL)
+    {
+        piscina_destruere(s->piscina_generationis);
+    }
+    s->piscina_generationis = NIHIL;
+    s->regio = NIHIL;
+    s->conexio = NIHIL;
+    s->machinula = NIHIL;
+}
+
+/* mundum aedificare in piscina generationis currenti: bibliothecae
+ * (perennes) + modulus documenti -> nexus -> machinula */
+interior b32
+_mundum_aedificare (Sessio* s, MedullaModulus* modulus_documenti)
+{
+    i32 k;
+
+    s->regio = regio_generare(s->piscina_generationis);
+    si (s->regio == NIHIL)
+    {
+        redde FALSUM;
+    }
+    s->conexio = conexio_creare(s->piscina_generationis, s->regio);
+    si (s->conexio == NIHIL)
+    {
+        redde FALSUM;
+    }
+    per (k = ZEPHYRUM; k < xar_numerus(s->moduli_bibliothecarum);
+        k++)
+    {
+        si (!conexio_modulum_addere(s->conexio,
+                *(MedullaModulus**)xar_obtinere(
+                    s->moduli_bibliothecarum, k)))
+        {
+            redde FALSUM;
+        }
+    }
+    si (modulus_documenti != NIHIL
+        && !conexio_modulum_addere(s->conexio, modulus_documenti))
+    {
+        redde FALSUM;
+    }
+    si (!conexio_nectere(s->conexio))
+    {
+        redde FALSUM;
+    }
+    s->machinula = machinula_creare(s->piscina_generationis,
+        s->conexio, s->regio);
+    si (s->machinula == NIHIL)
+    {
+        redde FALSUM;
+    }
+    machinula_recusationes_ponere(s->machinula,
+        s->vexilla_recusationum);
+    redde VERUM;
+}
+
+/* replicatio: turni involuti ordine, machinula UNA (persistentia
+ * globalium trans currere = designata M2, probata hic). Captura per
+ * turnum; capturae/capturae_err NIHIL = modus abiciendi
+ * (restitutio). VERUM = replicatio viridis. */
+interior b32
+_replicare (Sessio* s, TurnusVisus* visus, i32 numerus,
+    i32 index_novi, chorda* capturae, chorda* capturae_err,
+    Xar* mutati, SessioRelatum* r)
+{
+    i32 k;
+    i32 n_recordorum = xar_numerus(s->turni);
+
+    per (k = ZEPHYRUM; k < numerus; k++)
+    {
+        FILE* effusio_pl;
+        FILE* erroris_pl;
+        MachinulaExitus exitus;
+        chorda capta;
+        chorda capta_err;
+
+        si (visus[k].involucrum.mensura == ZEPHYRUM)
+        {
+            perge;   /* declarationes/definitiones non exsecuntur */
+        }
+        effusio_pl = tmpfile();
+        erroris_pl = tmpfile();
+        machinula_ansam_ponere(s->machinula, I, effusio_pl);
+        machinula_ansam_ponere(s->machinula, II, erroris_pl);
+        exitus = machinula_currere(s->machinula,
+            visus[k].involucrum);
+        machinula_ansam_ponere(s->machinula, I, NIHIL);
+        machinula_ansam_ponere(s->machinula, II, NIHIL);
+        capta = _capturam_legere(effusio_pl, s->piscina);
+        capta_err = _capturam_legere(erroris_pl, s->piscina);
+        si (effusio_pl != NIHIL)
+        {
+            fclose(effusio_pl);
+        }
+        si (erroris_pl != NIHIL)
+        {
+            fclose(erroris_pl);
+        }
+        si (capturae != NIHIL)
+        {
+            capturae[k] = capta;
+            capturae_err[k] = capta_err;
+        }
+        si (exitus.genus != (s32)MACHINULA_BENE)
+        {
+            /* halitus: replicatio fracta (C8) */
+            si (r != NIHIL)
+            {
+                r->halitus_genus = exitus.genus;
+                r->halitus_codex = exitus.codex;
+                r->halitus_nuntius = chorda_transcribere(
+                    exitus.nuntius, s->piscina);
+                r->halitus_turnus = (s32)k;
+            }
+            redde FALSUM;
+        }
+        si (r != NIHIL && r->halitus_genus == -I
+            && (s32)k == (s32)index_novi
+            && exitus.codex != (s64)ZEPHYRUM)
+        {
+            /* exit(n) in turno novo: BENE + codex - relatum */
+            r->halitus_genus = (s32)MACHINULA_BENE;
+            r->halitus_codex = exitus.codex;
+        }
+        /* historia mutata: comparatio contra actas conditas */
+        si (mutati != NIHIL && k != index_novi && k < n_recordorum)
+        {
+            TurnusInternus* t = xar_obtinere(s->turni, k);
+
+            si (t->effusio_valida
+                && (t->effusio.mensura != capta.mensura
+                    || (capta.mensura > ZEPHYRUM
+                        && memcmp(t->effusio.datum, capta.datum,
+                            (memoriae_index)capta.mensura)
+                            != ZEPHYRUM)))
+            {
+                s32* locellus = xar_addere(mutati);
+
+                si (locellus != NIHIL)
+                {
+                    *locellus = (s32)k;
+                }
+            }
+        }
+    }
+    redde VERUM;
+}
+
+/* mundum ex recordis restituere (post reiectionem replicationis C8:
+ * determinismus reaedificationem veterem correctam facit) */
+interior vacuum
+_mundum_restituere (Sessio* s)
+{
+    i32 n = xar_numerus(s->turni);
+    TurnusVisus* visus;
+    chorda involutum;
+    SilvaPiscina* effimera;
+    SilvaParsura* parsura = NIHIL;
+    SilvaSemantica* sem;
+    MedullaModulus* modulus_doc;
+    i32 k;
+
+    si (n == ZEPHYRUM)
+    {
+        redde;   /* documentum vacuum - sine mundo licet */
+    }
+    visus = piscina_allocare(s->piscina,
+        (memoriae_index)n * magnitudo(TurnusVisus));
+    si (visus == NIHIL)
+    {
+        redde;
+    }
+    per (k = ZEPHYRUM; k < n; k++)
+    {
+        TurnusInternus* t = xar_obtinere(s->turni, k);
+
+        visus[k].textus = t->textus;
+        visus[k].genus = t->genus;
+        visus[k].involucrum = t->involucrum;
+        visus[k].lineae = t->lineae;
+    }
+    (vacuum)_ostensum_texere(visus, n, s->piscina);
+    involutum = _involutum_texere(visus, n, s->piscina);
+    si (involutum.datum == NIHIL)
+    {
+        redde;
+    }
+    effimera = silva_piscina_generare_dynamicum("sessio_restitutio",
+        268435456);
+    si (effimera == NIHIL)
+    {
+        redde;
+    }
+    sem = _iudicare(s, effimera, SESSIO_VIA_DOCUMENTI,
+        (constans character*)involutum.datum, involutum.mensura,
+        &parsura);
+    si (sem == NIHIL || parsura == NIHIL)
+    {
+        silva_piscina_destruere(effimera);
+        redde;
+    }
+    s->piscina_generationis = piscina_generare_dynamicum(
+        "sessio_generatio", 67108864);
+    si (s->piscina_generationis == NIHIL)
+    {
+        silva_piscina_destruere(effimera);
+        redde;
+    }
+    modulus_doc = demissio_currere(s->piscina_generationis, parsura,
+        sem, chorda_ex_literis(SESSIO_VIA_DOCUMENTI, s->piscina));
+    silva_piscina_destruere(effimera);
+    si (modulus_doc == NIHIL || !_mundum_aedificare(s, modulus_doc))
+    {
+        _generationem_demoliri(s);
+        redde;
+    }
+    (vacuum)_replicare(s, visus, n, n + I, NIHIL, NIHIL, NIHIL,
+        NIHIL);
+}
+
+/* bibliothecam demittere (perenniter) - receptum oneratoris */
+interior b32
+_bibliothecam_demittere (Sessio* s, constans character* radix,
+    constans character* via)
+{
+    character via_plena[1024];
+    i32 mensura = ZEPHYRUM;
+    character* fons;
+    SilvaPiscina* effimera;
+    SilvaParsura* parsura = NIHIL;
+    SilvaSemantica* sem;
+    MedullaModulus* modulus;
+
+    si (strlen(radix) + strlen(via) + II >= magnitudo(via_plena))
+    {
+        redde FALSUM;
+    }
+    sprintf(via_plena, "%s/%s", radix, via);
+    fons = _plagulam_legere(s->piscina, via_plena, &mensura);
+    si (fons == NIHIL)
+    {
+        redde FALSUM;
+    }
+    effimera = silva_piscina_generare_dynamicum("sessio_bibliotheca",
+        268435456);
+    si (effimera == NIHIL)
+    {
+        redde FALSUM;
+    }
+    sem = _iudicare(s, effimera, via, fons, mensura, &parsura);
+    si (sem == NIHIL || parsura == NIHIL
+        || parsura->numerus_errorum > ZEPHYRUM)
+    {
+        silva_piscina_destruere(effimera);
+        redde FALSUM;
+    }
+    modulus = demissio_currere(s->piscina_bibliothecarum, parsura,
+        sem, chorda_ex_literis(via, s->piscina));
+    silva_piscina_destruere(effimera);
+    si (modulus == NIHIL)
+    {
+        redde FALSUM;
+    }
+    {
+        vacuum** locellus = xar_addere(s->moduli_bibliothecarum);
+
+        si (locellus == NIHIL)
+        {
+            redde FALSUM;
+        }
+        *locellus = modulus;
+    }
+    redde VERUM;
+}
+
+/* ==================================================
  * capita praebere (exemplar examen/onerator)
  * ================================================== */
 
@@ -943,12 +1465,27 @@ sessio_creare (Piscina* piscina, constans SessioConfiguratio* cfg)
     {
         redde NIHIL;
     }
+    s->piscina_bibliothecarum = piscina_generare_dynamicum(
+        "sessio_bibliothecae", 67108864);
+    s->moduli_bibliothecarum = xar_creare(piscina,
+        (i32)magnitudo(vacuum*));
+    si (s->piscina_bibliothecarum == NIHIL
+        || s->moduli_bibliothecarum == NIHIL)
+    {
+        redde NIHIL;
+    }
+    s->vexilla_recusationum = cfg->sine_recusationibus
+        ? (i32)ZEPHYRUM
+        : (i32)(MACHINULA_RECUSARE_SCRIPTURAS
+            | MACHINULA_RECUSARE_TEMPUS | MACHINULA_RECUSARE_INITUM);
     s->ctx = silva_contextus_creare(s->piscina_silvae);
     si (s->ctx == NIHIL)
     {
         redde NIHIL;
     }
-    (vacuum)silva_contextus_latinam_addere(s->ctx);
+    /* latina ut lexicon TEXTUS (canalis systematis; latinam_addere
+     * compilata demissionem bibliothecarum frangebat - vide
+     * worklog: forma localis ignota in piscina.c) */
 
     si (cfg->radix != NIHIL)
     {
@@ -993,11 +1530,45 @@ sessio_creare (Piscina* piscina, constans SessioConfiguratio* cfg)
             mensura_sys = m_iso + I + m_px;
             fons_sys[mensura_sys] = '\0';
         }
+        /* latina.h in TEXTUM SYSTEMATIS concatenata (post size_t!).
+         * INVENTUM (B7): lexicon = canalis MACRORUM solum - typedefs
+         * systematis per systema_parsura + oraculum fluunt. Latina
+         * ut lexicon separatum custodem LATINA_H definivit ->
+         * inclusio vera piscinae.c tacuit -> typedefs latinae
+         * (memoriae_index!) evanuerunt -> Piscina incompleta ->
+         * "forma localis ignota". Concatenatio = exemplar
+         * ISO+POSIX: typedefs in parsuram systematis intrant. */
+        {
+            i32 m_lat = ZEPHYRUM;
+            character* fons_lat;
+            character* iunctum;
+
+            sprintf(via_sys, "%s/include/latina.h", cfg->radix);
+            fons_lat = _plagulam_legere(piscina, via_sys, &m_lat);
+            si (fons_lat == NIHIL)
+            {
+                redde NIHIL;
+            }
+            iunctum = (character*)piscina_allocare(piscina,
+                (memoriae_index)(mensura_sys + m_lat + II));
+            si (iunctum == NIHIL)
+            {
+                redde NIHIL;
+            }
+            memcpy(iunctum, fons_sys, (memoriae_index)mensura_sys);
+            iunctum[mensura_sys] = '\n';
+            memcpy(iunctum + mensura_sys + I, fons_lat,
+                (memoriae_index)m_lat);
+            mensura_sys = mensura_sys + I + m_lat;
+            iunctum[mensura_sys] = '\0';
+            fons_sys = iunctum;
+        }
         si (!silva_contextus_lexicon_addere(s->ctx, "systema_c89.h",
                 fons_sys, (insignatus integer)mensura_sys))
         {
             redde NIHIL;
         }
+
         s->systema_parsura = silva_c89_parsare(s->piscina_silvae,
             "systema_c89.h", fons_sys,
             (insignatus integer)mensura_sys, NIHIL);
@@ -1023,6 +1594,20 @@ sessio_creare (Piscina* piscina, constans SessioConfiguratio* cfg)
                 _capita_praeparare(s, visa, cfg->radix);
             }
         }
+
+        /* bibliothecae: demissae semel, moduli perennes */
+        {
+            s32 k;
+
+            per (k = ZEPHYRUM; k < cfg->plagulae_numerus; k++)
+            {
+                si (!_bibliothecam_demittere(s, cfg->radix,
+                        cfg->plagulae[k]))
+                {
+                    redde NIHIL;
+                }
+            }
+        }
     }
     redde s;
 }
@@ -1033,6 +1618,12 @@ sessio_destruere (Sessio* s)
     si (s == NIHIL)
     {
         redde;
+    }
+    _generationem_demoliri(s);
+    si (s->piscina_bibliothecarum != NIHIL)
+    {
+        piscina_destruere(s->piscina_bibliothecarum);
+        s->piscina_bibliothecarum = NIHIL;
     }
     si (s->piscina_silvae != NIHIL)
     {
@@ -1094,6 +1685,22 @@ sessio_turnus_nomen (constans Sessio* s, i32 index)
     }
     t = xar_obtinere(s->turni, index);
     redde t == NIHIL ? vacua : t->titulus;
+}
+
+chorda
+sessio_turnus_effusio (constans Sessio* s, i32 index)
+{
+    chorda vacua;
+    TurnusInternus* t;
+
+    vacua.mensura = ZEPHYRUM;
+    vacua.datum = NIHIL;
+    si (s == NIHIL)
+    {
+        redde vacua;
+    }
+    t = xar_obtinere(s->turni, index);
+    redde (t == NIHIL || !t->effusio_valida) ? vacua : t->effusio;
 }
 
 chorda
@@ -1241,6 +1848,8 @@ _relatum_vacuum (vacuum)
     r.genus = -I;
     r.turnus_substitutus = -I;
     r.turnus_index = -I;
+    r.halitus_genus = -I;
+    r.halitus_turnus = -I;
     redde r;
 }
 
@@ -1406,7 +2015,7 @@ sessio_turnum_offerre (Sessio* s, chorda initus)
                 salta finis;
             }
             initium_novi = visus[index_novi].ostensum_initium;
-            sem = _iudicare(s, effimera,
+            sem = _iudicare(s, effimera, SESSIO_VIA_DOCUMENTI,
                 (constans character*)ostensum.datum,
                 ostensum.mensura, &parsura);
             si (sem == NIHIL || parsura == NIHIL)
@@ -1443,6 +2052,7 @@ sessio_turnum_offerre (Sessio* s, chorda initus)
                     ostensum2 = _ostensum_texere(visus2,
                         visus_numerus, piscina_visus);
                     sem2 = _iudicare(s, effimera,
+                        SESSIO_VIA_DOCUMENTI,
                         (constans character*)ostensum2.datum,
                         ostensum2.mensura, &parsura2);
                     si (sem2 != NIHIL && parsura2 != NIHIL
@@ -1541,6 +2151,23 @@ sessio_turnum_offerre (Sessio* s, chorda initus)
                     titulus_decl = _titulum_declaratum(
                         elementum_novum, s->piscina);
                 }
+                si (genus == SESSIO_TURNUS_DECLARATIO)
+                {
+                    constans character* nuntius_init = NIHIL;
+
+                    si (_initiatorem_probare(sem, elementum_novum,
+                            &nuntius_init))
+                    {
+                        r.verdictum = SESSIO_REIECTUM;
+                        _diagnosticum_addere(&collectio, s->piscina,
+                            chorda_ex_literis(SESSIO_VIA_DOCUMENTI,
+                                s->piscina),
+                            initium_novi, I, ZEPHYRUM, -I, FALSUM,
+                            FALSUM, -I, nuntius_init);
+                        collectio.reice = VERUM;
+                        salta finis;
+                    }
+                }
             }
         }
         silva_piscina_destruere(effimera);
@@ -1608,7 +2235,7 @@ sessio_turnum_offerre (Sessio* s, chorda initus)
         {
             salta finis;
         }
-        sem = _iudicare(s, effimera,
+        sem = _iudicare(s, effimera, SESSIO_VIA_DOCUMENTI,
             (constans character*)involutum.datum, involutum.mensura,
             &parsura);
         si (sem == NIHIL || parsura == NIHIL)
@@ -1624,37 +2251,153 @@ sessio_turnum_offerre (Sessio* s, chorda initus)
             salta finis;
         }
 
-        /* ACCIPE: committere (appensio aut substitutio) */
-        si (index_substituti >= ZEPHYRUM)
+        /* ACCIPE iudicio: demissio (effimera adhuc viva - fenestra
+         * collige-ante-destrue), tum mundus + replicatio (chunk B) */
         {
-            TurnusInternus* t = xar_obtinere(s->turni,
-                (i32)index_substituti);
+            MedullaModulus* modulus_doc;
+            Piscina* generatio_nova;
+            chorda* capturae;
+            chorda* capturae_err;
+            Xar* mutati;
+            b32 viridis;
 
-            t->textus = candidatus;
-            t->genus = genus;
-            t->titulus = titulus_decl;
-            t->lineae = _lineas_numerare(candidatus);
-            /* involucrum immotum (declarationes numquam involutae) */
-            r.turnus_index = index_substituti;
-            r.substitutus = VERUM;
-            r.turnus_substitutus = index_substituti;
-        }
-        alioquin
-        {
-            TurnusInternus* t = xar_addere(s->turni);
-
-            si (t == NIHIL)
+            generatio_nova = piscina_generare_dynamicum(
+                "sessio_generatio", 67108864);
+            si (generatio_nova == NIHIL)
             {
                 salta finis;
             }
-            t->textus = candidatus;
-            t->genus = genus;
-            t->titulus = titulus_decl;
-            t->involucrum = involucrum;
-            t->lineae = _lineas_numerare(candidatus);
-            r.turnus_index = (s32)(xar_numerus(s->turni) - I);
+            modulus_doc = demissio_currere(generatio_nova, parsura,
+                sem, chorda_ex_literis(SESSIO_VIA_DOCUMENTI,
+                    s->piscina));
+            si (modulus_doc == NIHIL)
+            {
+                piscina_destruere(generatio_nova);
+                r.verdictum = SESSIO_REIECTUM;
+                _diagnosticum_addere(&collectio, s->piscina,
+                    chorda_ex_literis(SESSIO_VIA_DOCUMENTI,
+                        s->piscina),
+                    visus[index_novi].ostensum_initium, I, ZEPHYRUM,
+                    -I, FALSUM, FALSUM, -I,
+                    "demissio fracta (initiator non constans?"
+                    " divide declarationem et assignationem)");
+                salta finis;
+            }
+            silva_piscina_destruere(effimera);
+            effimera = NIHIL;
+
+            /* mundus novus (iudicium ANTE demolitionem factum, C8) */
+            _generationem_demoliri(s);
+            s->piscina_generationis = generatio_nova;
+            si (!_mundum_aedificare(s, modulus_doc))
+            {
+                _generationem_demoliri(s);
+                _mundum_restituere(s);
+                salta finis;
+            }
+
+            capturae = piscina_allocare(s->piscina,
+                (memoriae_index)visus_numerus * magnitudo(chorda));
+            capturae_err = piscina_allocare(s->piscina,
+                (memoriae_index)visus_numerus * magnitudo(chorda));
+            mutati = xar_creare(s->piscina, (i32)magnitudo(s32));
+            si (capturae == NIHIL || capturae_err == NIHIL
+                || mutati == NIHIL)
+            {
+                salta finis;
+            }
+            memset(capturae, ZEPHYRUM,
+                (memoriae_index)visus_numerus * magnitudo(chorda));
+            memset(capturae_err, ZEPHYRUM,
+                (memoriae_index)visus_numerus * magnitudo(chorda));
+
+            viridis = _replicare(s, visus, visus_numerus,
+                (i32)index_novi, capturae, capturae_err, mutati, &r);
+            r.exsecutum = VERUM;
+            si (!viridis)
+            {
+                /* C8: turnus reicitur, mundus vetus restituitur
+                 * (determinismus restitutionem correctam facit) */
+                r.verdictum = SESSIO_REIECTUM;
+                _generationem_demoliri(s);
+                _mundum_restituere(s);
+                salta finis;
+            }
+
+            /* committere (appensio aut substitutio) */
+            si (index_substituti >= ZEPHYRUM)
+            {
+                TurnusInternus* t = xar_obtinere(s->turni,
+                    (i32)index_substituti);
+
+                t->textus = candidatus;
+                t->genus = genus;
+                t->titulus = titulus_decl;
+                t->lineae = _lineas_numerare(candidatus);
+                /* involucrum immotum (declarationes numquam
+                 * involutae) */
+                r.turnus_index = index_substituti;
+                r.substitutus = VERUM;
+                r.turnus_substitutus = index_substituti;
+            }
+            alioquin
+            {
+                TurnusInternus* t = xar_addere(s->turni);
+
+                si (t == NIHIL)
+                {
+                    salta finis;
+                }
+                memset(t, ZEPHYRUM, magnitudo(TurnusInternus));
+                t->textus = candidatus;
+                t->genus = genus;
+                t->titulus = titulus_decl;
+                t->involucrum = involucrum;
+                t->lineae = _lineas_numerare(candidatus);
+                r.turnus_index = (s32)(xar_numerus(s->turni) - I);
+            }
+
+            /* actas condere (omnes turni involuti) */
+            {
+                i32 k;
+
+                per (k = ZEPHYRUM; k < visus_numerus; k++)
+                {
+                    TurnusInternus* t = xar_obtinere(s->turni, k);
+
+                    si (t != NIHIL
+                        && t->involucrum.mensura > ZEPHYRUM)
+                    {
+                        t->effusio = capturae[k];
+                        t->effusio_erroris = capturae_err[k];
+                        t->effusio_valida = VERUM;
+                    }
+                }
+            }
+            r.effusio = capturae[index_novi];
+            r.effusio_erroris = capturae_err[index_novi];
+            {
+                i32 n_mut = xar_numerus(mutati);
+
+                si (n_mut > ZEPHYRUM)
+                {
+                    s32* ordo = piscina_allocare(s->piscina,
+                        (memoriae_index)n_mut * magnitudo(s32));
+                    i32 k;
+
+                    si (ordo != NIHIL)
+                    {
+                        per (k = ZEPHYRUM; k < n_mut; k++)
+                        {
+                            ordo[k] = *(s32*)xar_obtinere(mutati, k);
+                        }
+                        r.turni_mutati = ordo;
+                        r.turni_mutati_numerus = (s32)n_mut;
+                    }
+                }
+            }
+            r.verdictum = SESSIO_ACCEPTUM;
         }
-        r.verdictum = SESSIO_ACCEPTUM;
     }
 
 finis:

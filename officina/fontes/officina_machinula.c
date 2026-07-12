@@ -126,11 +126,17 @@ structura Machinula {
     /* cellae externae captae */
     s64*      cella_errno;          /* NIHIL licet */
     /* ansae plagularum (M2d): 0/1/2 = flumina norma (DECISUS Q1),
-     * 3+ = plagulae fopen; locelli NIHIL liberi (fclose vacat) */
+     * 3+ = plagulae fopen; locelli NIHIL liberi (fclose vacat).
+     * M4b: locelli 0/1/2 redirectiones facultativae (ansam_ponere -
+     * sutura capturae); NIHIL = flumen hospitis ordinarium. */
     FILE*     ansae[ANSAE_MAXIMAE];
+    /* M4b: vexilla recusationum sessionis (0 = omnia licita) */
+    i32       recusationes;
 };
 
 interior FILE* _ansam_solvere (Machinula* m, i64 ansa);
+interior vacuum _recusare (Machinula* m,
+    constans character* nuntius);
 interior MachinulaPunctum* _punctum_invenire (constans Machinula* m,
     s32 functio_index, i32 instructio);
 
@@ -327,7 +333,8 @@ interior vacuum
 _relationem_imprimere (constans Machinula* m)
 {
     constans character* genera[] = {
-        "BENE", "SISTERE", "DECIPULA", "VITIUM", "PAUSA"
+        "BENE", "SISTERE", "DECIPULA", "VITIUM", "PAUSA",
+        "RECUSATIO"
     };
     i32 numerus_tabulatorum = xar_numerus(m->tabulata);
     i32 i;
@@ -885,7 +892,7 @@ _aed_printf (Machinula* m, constans i64* argumenta, s32 numerus,
     f.regio_buf = NIHIL;
     f.cap = ZEPHYRUM;
     f.scriptum = ZEPHYRUM;
-    f.fluxus = stdout;
+    f.fluxus = _ansam_solvere(m, I);   /* M4b: captura per ansae[1] */
     n = _formare(m,&f,
         (constans character*)(memoriae_index)argumenta[ZEPHYRUM],
         argumenta + I, numerus - I);
@@ -1208,9 +1215,15 @@ _aed_fflush (Machinula* m, constans i64* a, s32 n, i64* fr)
 interior b32
 _aed_time (Machinula* m, constans i64* a, s32 n, i64* fr)
 {
-    time_t v = time(NIHIL);
+    time_t v;
 
-    (vacuum)m;
+    si (m->recusationes & MACHINULA_RECUSARE_TEMPUS)
+    {
+        _recusare(m, "time in sessione recusatum"
+            " - determinismus replicationis");
+        redde FALSUM;
+    }
+    v = time(NIHIL);
     si (n >= I && a[ZEPHYRUM] != ZEPHYRUM)
     {
         i64 verbum = (i64)(s64)v;
@@ -1229,14 +1242,32 @@ _aed_time (Machinula* m, constans i64* a, s32 n, i64* fr)
 interior FILE*
 _ansam_solvere (Machinula* m, i64 ansa)
 {
-    si (ansa == ZEPHYRUM) redde stdin;
-    si (ansa == I)        redde stdout;
-    si (ansa == II)       redde stderr;
+    /* M4b: locelli 0/1/2 redirectiones facultativae (captura) */
+    si (ansa == ZEPHYRUM)
+    {
+        redde m->ansae[ZEPHYRUM] != NIHIL ? m->ansae[ZEPHYRUM]
+            : stdin;
+    }
+    si (ansa == I)
+    {
+        redde m->ansae[I] != NIHIL ? m->ansae[I] : stdout;
+    }
+    si (ansa == II)
+    {
+        redde m->ansae[II] != NIHIL ? m->ansae[II] : stderr;
+    }
     si (ansa >= III && ansa < (i64)ANSAE_MAXIMAE)
     {
         redde m->ansae[ansa];
     }
     redde NIHIL;
+}
+
+/* M4b: halitus recusationis (politica sessionis, non defectus) */
+interior vacuum
+_recusare (Machinula* m, constans character* nuntius)
+{
+    _halitum_ponere(m, MACHINULA_RECUSATIO, I, nuntius);
 }
 
 interior b32
@@ -1246,6 +1277,20 @@ _aed_fopen (Machinula* m, constans i64* a, s32 n, i64* fr)
     i64 ansa = ZEPHYRUM;
 
     (vacuum)n;
+    si (m->recusationes & MACHINULA_RECUSARE_SCRIPTURAS)
+    {
+        constans character* modus =
+            (constans character*)(memoriae_index)a[I];
+
+        si (modus == NIHIL || strchr(modus, 'w') != NIHIL
+            || strchr(modus, 'a') != NIHIL
+            || strchr(modus, '+') != NIHIL)
+        {
+            _recusare(m, "fopen scribens in sessione recusatus"
+                " - dilatio nominata (umbra)");
+            redde FALSUM;
+        }
+    }
     errno = ZEPHYRUM;
     pl = fopen((constans character*)(memoriae_index)a[ZEPHYRUM],
         (constans character*)(memoriae_index)a[I]);
@@ -1297,6 +1342,13 @@ _aed_fread (Machinula* m, constans i64* a, s32 n, i64* fr)
     FILE* pl = _ansam_solvere(m, a[III]);
 
     (vacuum)n;
+    si (a[III] == ZEPHYRUM
+        && (m->recusationes & MACHINULA_RECUSARE_INITUM))
+    {
+        _recusare(m, "lectio stdin in sessione recusata"
+            " - dilatio nominata (acta)");
+        redde FALSUM;
+    }
     si (pl == NIHIL)
     {
         _vitium(m, "fread: ansa ignota");
@@ -1361,6 +1413,13 @@ _aed_fgets (Machinula* m, constans i64* a, s32 n, i64* fr)
     character* fructus_hospitis;
 
     (vacuum)n;
+    si (a[II] == ZEPHYRUM
+        && (m->recusationes & MACHINULA_RECUSARE_INITUM))
+    {
+        _recusare(m, "lectio stdin in sessione recusata"
+            " - dilatio nominata (acta)");
+        redde FALSUM;
+    }
     si (pl == NIHIL)
     {
         _vitium(m, "fgets: ansa ignota");
@@ -1393,6 +1452,11 @@ interior b32
 _aed_remove (Machinula* m, constans i64* a, s32 n, i64* fr)
 {
     (vacuum)n;
+    si (m->recusationes & MACHINULA_RECUSARE_SCRIPTURAS)
+    {
+        _recusare(m, "remove in sessione recusatum");
+        redde FALSUM;
+    }
     errno = ZEPHYRUM;
     *fr = (i64)(s64)remove(
         (constans character*)(memoriae_index)a[ZEPHYRUM]);
@@ -1404,6 +1468,11 @@ interior b32
 _aed_rename (Machinula* m, constans i64* a, s32 n, i64* fr)
 {
     (vacuum)n;
+    si (m->recusationes & MACHINULA_RECUSARE_SCRIPTURAS)
+    {
+        _recusare(m, "rename in sessione recusatum");
+        redde FALSUM;
+    }
     errno = ZEPHYRUM;
     *fr = (i64)(s64)rename(
         (constans character*)(memoriae_index)a[ZEPHYRUM],
@@ -1430,6 +1499,11 @@ interior b32
 _aed_mkdir (Machinula* m, constans i64* a, s32 n, i64* fr)
 {
     (vacuum)n;
+    si (m->recusationes & MACHINULA_RECUSARE_SCRIPTURAS)
+    {
+        _recusare(m, "mkdir in sessione recusatum");
+        redde FALSUM;
+    }
     errno = ZEPHYRUM;
     *fr = (i64)(s64)mkdir(
         (constans character*)(memoriae_index)a[ZEPHYRUM],
@@ -1456,7 +1530,13 @@ _aed_getcwd (Machinula* m, constans i64* a, s32 n, i64* fr)
 interior b32
 _aed_gettimeofday (Machinula* m, constans i64* a, s32 n, i64* fr)
 {
-    (vacuum)m; (vacuum)n;
+    (vacuum)n;
+    si (m->recusationes & MACHINULA_RECUSARE_TEMPUS)
+    {
+        _recusare(m, "gettimeofday in sessione recusatum"
+            " - determinismus replicationis");
+        redde FALSUM;
+    }
     *fr = (i64)(s64)gettimeofday(
         (structura timeval*)(memoriae_index)a[ZEPHYRUM], NIHIL);
     redde VERUM;
@@ -1465,7 +1545,13 @@ _aed_gettimeofday (Machinula* m, constans i64* a, s32 n, i64* fr)
 interior b32
 _aed_clock (Machinula* m, constans i64* a, s32 n, i64* fr)
 {
-    (vacuum)m; (vacuum)a; (vacuum)n;
+    (vacuum)a; (vacuum)n;
+    si (m->recusationes & MACHINULA_RECUSARE_TEMPUS)
+    {
+        _recusare(m, "clock in sessione recusatum"
+            " - determinismus replicationis");
+        redde FALSUM;
+    }
     *fr = (i64)(s64)clock();
     redde VERUM;
 }
@@ -1474,6 +1560,11 @@ interior b32
 _aed_unlink (Machinula* m, constans i64* a, s32 n, i64* fr)
 {
     (vacuum)n;
+    si (m->recusationes & MACHINULA_RECUSARE_SCRIPTURAS)
+    {
+        _recusare(m, "unlink in sessione recusatum");
+        redde FALSUM;
+    }
     errno = ZEPHYRUM;
     *fr = (i64)(s64)unlink(
         (constans character*)(memoriae_index)a[ZEPHYRUM]);
@@ -1803,6 +1894,46 @@ machinula_lineas_praebere (Machinula* machinula, s32 modulus_index,
 
         u.c = lineae;
         *locellus = u.m;
+    }
+}
+
+vacuum
+machinula_ansam_ponere (Machinula* machinula, s32 ansa,
+    FILE* plagula)
+{
+    si (machinula == NIHIL || ansa < ZEPHYRUM || ansa > (s32)II)
+    {
+        redde;   /* 0/1/2 solum - flumina norma redirigenda */
+    }
+    machinula->ansae[ansa] = plagula;
+}
+
+vacuum
+machinula_recusationes_ponere (Machinula* machinula, i32 vexilla)
+{
+    si (machinula == NIHIL)
+    {
+        redde;
+    }
+    machinula->recusationes = vexilla;
+}
+
+vacuum
+machinula_ansas_claudere (Machinula* machinula)
+{
+    i64 k;
+
+    si (machinula == NIHIL)
+    {
+        redde;
+    }
+    per (k = III; k < (i64)ANSAE_MAXIMAE; k++)
+    {
+        si (machinula->ansae[k] != NIHIL)
+        {
+            fclose(machinula->ansae[k]);
+            machinula->ansae[k] = NIHIL;
+        }
     }
 }
 

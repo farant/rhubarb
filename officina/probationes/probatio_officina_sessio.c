@@ -12,6 +12,7 @@
 #include "chorda.h"
 #include "credo.h"
 #include "sessio.h"
+#include "officina_machinula.h"   /* MACHINULA_* genera halitus */
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -64,6 +65,7 @@ s32 principale (vacuum)
     {
         radix = ".";
     }
+    memset(&cfg, ZEPHYRUM, magnitudo(SessioConfiguratio));
     cfg.radix = radix;
     cfg.cum_posix = FALSUM;
     cfg.sine_capitibus = VERUM;
@@ -340,6 +342,185 @@ s32 principale (vacuum)
     }
 
     /* ========================================================
+     * PROBARE B1: persistentia globalium (scriptio-N/lectio-N+1)
+     * - LACUNA exploratoris mundi: designata M2, probata HIC
+     * ======================================================== */
+    {
+        Sessio* s;
+        SessioRelatum r;
+
+        imprimere("\n--- Probans persistentia globalium (B1) ---\n");
+        s = sessio_creare(piscina, &cfg);
+        CREDO_NON_NIHIL(s);
+
+        r = sessio_turnum_offerre(s, _ch("integer g = 7;", piscina));
+        CREDO_AEQUALIS_I32((i32)r.verdictum, (i32)SESSIO_ACCEPTUM);
+        r = sessio_turnum_offerre(s, _ch("g = g + 35;", piscina));
+        CREDO_AEQUALIS_I32((i32)r.verdictum, (i32)SESSIO_ACCEPTUM);
+        CREDO_VERUM(r.exsecutum);
+        r = sessio_turnum_offerre(s, _ch("printf(\"%d\\n\", g);",
+            piscina));
+        CREDO_AEQUALIS_I32((i32)r.verdictum, (i32)SESSIO_ACCEPTUM);
+        CREDO_VERUM(chorda_aequalis_literis(r.effusio, "42\n"));
+
+        /* B2: exit non fatale (vexillum halitus, mundus reusabilis) */
+        r = sessio_turnum_offerre(s, _ch("{ exit(3); }", piscina));
+        CREDO_AEQUALIS_I32((i32)r.verdictum, (i32)SESSIO_ACCEPTUM);
+        CREDO_AEQUALIS_I32((i32)r.halitus_genus,
+            (i32)MACHINULA_BENE);
+        CREDO_VERUM(r.halitus_codex == (s64)III);
+        r = sessio_turnum_offerre(s, _ch("printf(\"%d\\n\", g);",
+            piscina));
+        CREDO_AEQUALIS_I32((i32)r.verdictum, (i32)SESSIO_ACCEPTUM);
+        CREDO_VERUM(chorda_aequalis_literis(r.effusio, "42\n"));
+
+        sessio_destruere(s);
+    }
+
+    /* ========================================================
+     * PROBARE B3: recusationes (scripturae + tempus)
+     * ======================================================== */
+    {
+        Sessio* s;
+        SessioRelatum r;
+
+        imprimere("\n--- Probans recusationes (B3) ---\n");
+        s = sessio_creare(piscina, &cfg);
+        CREDO_NON_NIHIL(s);
+
+        r = sessio_turnum_offerre(s, _ch("{ remove(\"nulla\"); }",
+            piscina));
+        CREDO_AEQUALIS_I32((i32)r.verdictum, (i32)SESSIO_REIECTUM);
+        CREDO_AEQUALIS_I32((i32)r.halitus_genus,
+            (i32)MACHINULA_RECUSATIO);
+        CREDO_VERUM(_chorda_continet(r.halitus_nuntius, "recusatum"));
+        CREDO_AEQUALIS_I32(sessio_turni_numerus(s), ZEPHYRUM);
+
+        r = sessio_turnum_offerre(s, _ch("{ clock(); }", piscina));
+        CREDO_AEQUALIS_I32((i32)r.verdictum, (i32)SESSIO_REIECTUM);
+        CREDO_AEQUALIS_I32((i32)r.halitus_genus,
+            (i32)MACHINULA_RECUSATIO);
+
+        sessio_destruere(s);
+    }
+
+    /* ========================================================
+     * PROBARE B4: historia mutata (redefinitio effusionem mutat)
+     * ======================================================== */
+    {
+        Sessio* s;
+        SessioRelatum r;
+
+        imprimere("\n--- Probans historia mutata (B4) ---\n");
+        s = sessio_creare(piscina, &cfg);
+        CREDO_NON_NIHIL(s);
+
+        r = sessio_turnum_offerre(s, _ch(
+            "integer f(vacuum) { printf(\"unus\\n\"); redde 1; }",
+            piscina));
+        CREDO_AEQUALIS_I32((i32)r.verdictum, (i32)SESSIO_ACCEPTUM);
+        r = sessio_turnum_offerre(s, _ch("f();", piscina));
+        CREDO_AEQUALIS_I32((i32)r.verdictum, (i32)SESSIO_ACCEPTUM);
+        CREDO_VERUM(chorda_aequalis_literis(r.effusio, "unus\n"));
+        CREDO_AEQUALIS_I32((i32)r.turni_mutati_numerus, ZEPHYRUM);
+
+        /* redefinitio compatibilis: effusio turni 1 mutatur */
+        r = sessio_turnum_offerre(s, _ch(
+            "integer f(vacuum) { printf(\"duo\\n\"); redde 2; }",
+            piscina));
+        CREDO_AEQUALIS_I32((i32)r.verdictum, (i32)SESSIO_ACCEPTUM);
+        CREDO_VERUM(r.substitutus);
+        CREDO_AEQUALIS_I32((i32)r.turni_mutati_numerus, I);
+        CREDO_AEQUALIS_I32((i32)r.turni_mutati[ZEPHYRUM], I);
+        CREDO_VERUM(chorda_aequalis_literis(
+            sessio_turnus_effusio(s, I), "duo\n"));
+
+        sessio_destruere(s);
+    }
+
+    /* ========================================================
+     * PROBARE B5: C8 - vocatio implicita ACCIPITUR iudicio,
+     * DECIPULA in replicatione -> reiectio + restitutio mundi
+     * ======================================================== */
+    {
+        Sessio* s;
+        SessioRelatum r;
+
+        imprimere("\n--- Probans C8 decipula + restitutio (B5) ---\n");
+        s = sessio_creare(piscina, &cfg);
+        CREDO_NON_NIHIL(s);
+
+        r = sessio_turnum_offerre(s, _ch("integer h = 5;", piscina));
+        CREDO_AEQUALIS_I32((i32)r.verdictum, (i32)SESSIO_ACCEPTUM);
+
+        /* implicita: iudicium ACCIPIT (suspectum), replicatio
+         * DECIPULAT */
+        r = sessio_turnum_offerre(s, _ch("ignota();", piscina));
+        CREDO_AEQUALIS_I32((i32)r.verdictum, (i32)SESSIO_REIECTUM);
+        CREDO_AEQUALIS_I32((i32)r.halitus_genus,
+            (i32)MACHINULA_DECIPULA);
+        CREDO_AEQUALIS_I32(sessio_turni_numerus(s), I);
+
+        /* mundus restitutus: turnus sequens vivit */
+        r = sessio_turnum_offerre(s, _ch("printf(\"%d\\n\", h);",
+            piscina));
+        CREDO_AEQUALIS_I32((i32)r.verdictum, (i32)SESSIO_ACCEPTUM);
+        CREDO_VERUM(chorda_aequalis_literis(r.effusio, "5\n"));
+
+        /* B6: initiator globalis non constans -> reiectio ad limen */
+        r = sessio_turnum_offerre(s, _ch("integer mala = h + 1;",
+            piscina));
+        CREDO_AEQUALIS_I32((i32)r.verdictum, (i32)SESSIO_REIECTUM);
+        CREDO_VERUM(_chorda_continet(r.diagnostica[ZEPHYRUM].nuntius,
+            "initiatore"));
+
+        /* adressa constans LICET */
+        r = sessio_turnum_offerre(s, _ch("integer* adr = &h;",
+            piscina));
+        CREDO_AEQUALIS_I32((i32)r.verdictum, (i32)SESSIO_ACCEPTUM);
+
+        sessio_destruere(s);
+    }
+
+    /* ========================================================
+     * PROBARE B7: bibliotheca vera (piscina demissa in mundum)
+     * ======================================================== */
+    {
+        Sessio* s;
+        SessioRelatum r;
+        SessioConfiguratio cfg_bibliothecae;
+        hic_manens constans character* plagulae[] = {
+            "lib/piscina.c"
+        };
+
+        imprimere("\n--- Probans bibliotheca vera (B7) ---\n");
+        cfg_bibliothecae = cfg;
+        cfg_bibliothecae.sine_capitibus = FALSUM;
+        cfg_bibliothecae.cum_posix = VERUM;   /* piscina.c = mmap */
+        cfg_bibliothecae.plagulae = plagulae;
+        cfg_bibliothecae.plagulae_numerus = I;
+        s = sessio_creare(piscina, &cfg_bibliothecae);
+        CREDO_NON_NIHIL(s);
+
+        r = sessio_turnum_offerre(s, _ch("#include \"piscina.h\"",
+            piscina));
+        CREDO_AEQUALIS_I32((i32)r.verdictum, (i32)SESSIO_ACCEPTUM);
+        r = sessio_turnum_offerre(s, _ch("Piscina* p = NIHIL;",
+            piscina));
+        CREDO_AEQUALIS_I32((i32)r.verdictum, (i32)SESSIO_ACCEPTUM);
+        r = sessio_turnum_offerre(s, _ch(
+            "{ p = piscina_generare_dynamicum(\"proba\", 4096); }",
+            piscina));
+        CREDO_AEQUALIS_I32((i32)r.verdictum, (i32)SESSIO_ACCEPTUM);
+        r = sessio_turnum_offerre(s, _ch(
+            "printf(\"%d\\n\", p != NIHIL);", piscina));
+        CREDO_AEQUALIS_I32((i32)r.verdictum, (i32)SESSIO_ACCEPTUM);
+        CREDO_VERUM(chorda_aequalis_literis(r.effusio, "1\n"));
+
+        sessio_destruere(s);
+    }
+
+    /* ========================================================
      * PROBARE: #include per praebenda (capita ambulata)
      * ======================================================== */
     {
@@ -359,9 +540,10 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_I32((i32)r.genus,
             (i32)SESSIO_TURNUS_DIRECTIVA);
 
-        r = sessio_turnum_offerre(s, _ch(
-            "Piscina* p = piscina_generare_dynamicum(\"proba\","
-            " 1024);", piscina));
+        /* chunk B: initiator globalis non-constans reiceretur
+         * (demissio) - constans nulla licita */
+        r = sessio_turnum_offerre(s, _ch("Piscina* p = NIHIL;",
+            piscina));
         CREDO_AEQUALIS_I32((i32)r.verdictum, (i32)SESSIO_ACCEPTUM);
         CREDO_AEQUALIS_I32((i32)r.genus,
             (i32)SESSIO_TURNUS_DECLARATIO);

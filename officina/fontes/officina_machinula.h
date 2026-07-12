@@ -39,14 +39,26 @@
 #include "officina_regio.h"
 #include "officina_conexio.h"
 
+#include <stdio.h>   /* FILE (ansam_ponere - sutura capturae M4b) */
+
 nomen enumeratio {
     MACHINULA_BENE = 0,       /* redde ex initio aut exit vocatum */
     MACHINULA_SISTERE,        /* sistere exsecutum (causa) */
     MACHINULA_DECIPULA,       /* symbolum insolutum vocatum */
     MACHINULA_VITIUM,         /* stiva/memoria/vocatio insana */
-    MACHINULA_PAUSA           /* punctum tactum - resumabile
+    MACHINULA_PAUSA,          /* punctum tactum - resumabile
                                * (pergere; positio intacta, M3) */
+    MACHINULA_RECUSATIO       /* aedilis in modo sessionis recusatus
+                               * (M4b - politica, non defectus) */
 } MachinulaExitusGenus;
+
+/* vexilla recusationum (M4b sessio: determinismus replicationis).
+ * custos: officina.h amalgami eadem valoribus arabicis definit */
+#ifndef MACHINULA_RECUSARE_SCRIPTURAS
+#define MACHINULA_RECUSARE_SCRIPTURAS  I    /* fopen w/a, remove... */
+#define MACHINULA_RECUSARE_TEMPUS      II   /* time/clock/gettimeofday */
+#define MACHINULA_RECUSARE_INITUM      IV   /* lectiones stdin */
+#endif
 
 nomen structura {
     s32    genus;             /* MachinulaExitusGenus */
@@ -65,6 +77,20 @@ Machinula* machinula_creare (Piscina* piscina, Conexio* conexio,
  * tunc sine via:linea) */
 vacuum machinula_lineas_praebere (Machinula* machinula,
     s32 modulus_index, constans MedullaLineae* lineae);
+
+/* M4b sessio: flumina norma redirigere (ansa 0/1/2; NIHIL =
+ * flumen hospitis ordinarium restitutum). Sutura capturae actorum. */
+vacuum machinula_ansam_ponere (Machinula* machinula, s32 ansa,
+    FILE* plagula);
+
+/* M4b sessio: vexilla recusationum ponere (MACHINULA_RECUSARE_*;
+ * 0 = omnia licita). Aedilis recusatus = halitus RECUSATIO. */
+vacuum machinula_recusationes_ponere (Machinula* machinula,
+    i32 vexilla);
+
+/* M4b: ansae 3+ (plagulae fopen programmatis) claudere - hygiene
+ * demolitionis generationis (C6; fd non effluunt) */
+vacuum machinula_ansas_claudere (Machinula* machinula);
 
 /* functionem nominatam currit (functio sine parametris aut
  * parametra zephyro implentur); status stivae/halitus purgatur -

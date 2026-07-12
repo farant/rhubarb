@@ -2690,3 +2690,109 @@ secunda post lsp-visionem).
 
 SEQUENS: chunk B (vita mundi + replicatio + captura). Commissio
 Franis = sigillum chunki A.
+
+## M4b CHUNK B — INTENTIO (2026-07-11): vita mundi + replicatio + captura
+
+**Vectis B: probatio multi-turnorum per API machinae (aedifica/
+replica/reice/reaedifica-veterem C8) + PROBATIO REGRESSIONIS
+PERSISTENTIAE (scriptio-N/lectio-N+1 globalis + acervi — lacuna
+mundi-exploratoris) + captura effusionis per turnum + recusationes +
+historia mutata. Suita plena viridis; amalgama VERIFICATA; cursor
+paritas stans (machinula tacta!).**
+
+Aedificanda: ① machinula — printf→ansae[1] (correctio semantica
+LINEA UNA, sutura capturae; V4 percursus stdout fixorum),
+machinula_ansam_ponere + machinula_recusationes_ponere (ordines novi
++ hospes), custodes recusationum (scripturae plagularum [fopen non-r,
+remove...], tempus/fortuna, initus stdin) → halitus VITIUM honestus
+"recusatus in sessione". ② sessio — cfg.plagulae (bibliotecae
+demissae SEMEL in piscinam perennem, receptum oneratoris);
+generationes (piscina officinae generationis + regio + conexio +
+machinula, demolitio ordine RIGIDO: ansae>2 claudere → regio_destruere
+→ piscina); replicatio = turni involuti ordine per machinula_currere
+in machinula UNA (persistentia globalium trans currere = ipsa
+probatio); captura per turnum (tmpfile in ansae[1]/[2], relectum in
+acta); comparatio actorum → historia mutata (notitia quieta);
+C8 = iudica ante demolitionem, halitus replicationis in turno vetere
+→ reiectio + reaedificatio veteris.
+
+DECISIO SPEC-TEMPORIS ④: initiator globalis NON-constans (`Piscina*
+p = piscina_generare_dynamicum(…)`) reicitur ad limen sessionis cum
+nuntio claro "initiator non constans — divide declarationem et
+assignationem" (constans_aestimare M1a; demissio sisteret cryptice
+alioquin; scissio automatica = parca nominata, tractio ergonomiae).
+Probatio chunki A (#include) emendanda: `Piscina* p = NIHIL;`
+(constans nulla — licita).
+
+V2 (arenae) et V4 (stdout percursus) resolvendae in opere.
+
+## M4b CHUNK B — RELATIO (2026-07-11): vita mundi + replicatio VIRIDIS
+
+**VECTIS B TENET: probatio 129 assertiones (A 85 + B 44) viridis;
+suita plena 11/11; amalgama VERIFICATA ×2 (hospes 78/78); censor
+PURUS ×5; CURSOR PARITAS STANS: 76 praeteritae / 0 mali / 69 eaedem
+/ 0 DIFFERUNT (correctio printf in corpore invisibilis - sicut
+decet).** PROBATIO REGRESSIONIS PERSISTENTIAE VIVIT (B1: g=7 →
+g=g+35 → printf "42\n" trans tres currere in machinula una — lacuna
+exploratoris mundi clausa).
+
+Machinula (fontes + amalgama + hospes): genus halitus
+**MACHINULA_RECUSATIO** (politica, non defectus) + vexilla
+RECUSARE_{SCRIPTURAS,TEMPUS,INITUM}; ordines novi
+machinula_ansam_ponere (sutura capturae — _ansam_solvere locelli
+0/1/2 redirectiones) / machinula_recusationes_ponere /
+machinula_ansas_claudere (hygiene C6); printf → ansae[1] (correctio
+semantica); custodes VIII (fopen-scribens, remove, rename, mkdir,
+unlink, time, clock, gettimeofday, fgets/fread-stdin); tabulae
+generum halitus extentae (latens: PAUSA iam ultra tabulas
+interpretare/cursor legisset!).
+
+Sessio: bibliothecae demissae SEMEL (piscina perennis; receptum
+oneratoris) + generatio per turnum (demoliri ordine rigido:
+ansas_claudere → regio_destruere → piscina) + replicatio cum captura
+per turnum (tmpfile in ansae[1]/[2]) + acta conditae + historia
+mutata (B4: redefinitio f → "turnus 1 mutatus" recte) + C8 (B5:
+vocatio implicita iudicium transit, DECIPULA in replicatione →
+reiectio + restitutio mundi ex documento — determinismus) + custos
+initiatoris globalis (B6; vide infra) + exit non fatale (B2: currere
+per turnum halitum reficit — timor veneni documenti DISSOLUTUS).
+
+**INVENTUM CAPITALE (B7, worklog sessio.worklog.md): lexicon
+contextus = CANALIS MACRORUM SOLUM.** Typedefs systematis per
+systema_parsura + oraculum fluunt, NON per lexicon. Latina ut
+lexicon separatum custodem LATINA_H definivit → inclusio vera
+piscinae.c tacuit → typedefs latinae (memoriae_index!) evanuerunt →
+Piscina incompleta → SISTERE "forma localis ignota" in
+piscina_generare_dynamicum+0. Venatio: interpretare = differentiale
+noti-boni; bisectiones confusae (turni latini lexicon egent);
+instrumentum discriminans = effusio diagnosticorum in
+_bibliothecam_demittere (68 → 0). SANATIO: latina.h in TEXTUM
+SYSTEMATIS concatenata (exemplar ISO+POSIX; ordo portans — size_t
+ante memoriae_index). Lex contactus corporis, punctum novum.
+
+INVENTA CETERA: ① demissio initiatorem globalem non-constantem NON
+reicit — TACITE zephyrat (experimentum B6) → custos ad limen
+sessionis (vocatio aut lectio variabilis in initiatore → reiectio
+cum nuntio "divide declarationem et assignationem"; licent: &x,
+magnitudo, congeries — clementia maiorum nominata pro &a[i]).
+② cfg crescens: probationes veteres structuram novam sine memset →
+plagulae_numerus purgamentum → ruina (disciplina zephyri-initus).
+③ piscina.c POSIX est (mmap) — sessiones bibliothecas agentes
+cum_posix volunt. ④ probationes/fixa/roundtrip/latina.h = fossile
+ante-M0b (#define FILE FILUM inversum!) — innocuum (praebenda
+identica vincit), notatum.
+
+Instrumenta debrief: adhibita interpretare (differentiale
+noti-boni — VENATIONEM DECIDIT), cursor (paritas), censor, grep/
+emitte (~10), amalgamare ×2, recordator volatus (stiva halitus =
+sedes sistere exacta). Fructus: interpretare + effusio
+diagnosticorum = via ad radicem; volatus stiva
+"piscina_generare_dynamicum+0" venationem angustavit. Asperitates:
+bisectio lexici confusa per dialectum turnorum (dependentia
+circularis probationum); relatio volatus in stderr probationum
+strepitosa (capienda? — nota UX chunk C). Desideratum: effusor
+"quid in hoc modulo sistere?" (fusor -causa per modulum unum —
+prope exsistit).
+
+SEQUENS: chunk C (impressor + superficies colloquii). Commissio
+Franis = sigillum chunki B.
