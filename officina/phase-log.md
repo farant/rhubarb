@@ -2570,3 +2570,33 @@ semantica FILE* super quadris, non interceptio); sutura navigat, umbra
 alioquin ordo sententiarum summi gradus = SCRIPTA C cum codice summi
 gradus (productum novum, C12). Lista verificandorum V1-V5 in
 documento. SEQUENS: interrogatio (gradus III arcus).
+
+## M4b ON-RAMP — GRADUS III+IV: INTERROGATIO + SPEC (2026-07-11)
+## — ARCUS COMPLETUS, NOMINA SIGILLATA: **SESSIO + COLLOQUIUM**
+
+Interrogatio XV quaestionum (omnes commendationes acceptae) →
+**project-specs/officina-m4b-interrogatio.md** (crudum) +
+**project-specs/officina-m4b-spec.md** (spec cum vectibus).
+DECISUS maiores: machina = **sessio** (bibliotheca sine UI,
+instrumenta/), binarium = **colloquium** (superficies linearis ET
+cursor #! — modus scripti: recusationes DESUNT, iudicium ADEST);
+vestigia = **acta** (Acta Diurna); praefixum involucri =
+**turnus_N** (+ probatio collisionis); umbra RESERVATA non aedificata
+(tractio prima post-v0). Politica: reparatio+echo; echo
+declarationis `nomen : typus`; impressor v0 = scalaria + praevisus
+char* (chorda = sequela nominata); notitia quieta historiae mutatae;
+SEMPER-REAEDIFICARE v0 (via celeris = optimizatio prima nominata);
+initus -plagulae; recusationes sessionis = scripturae + tempus/
+fortuna + stdin (omnes tres); `:serva` liberalis + `-strictum`
+(exportatio C89 stricta cum principale synthetico — clang compilat);
+regula scripti = principale-si-adest alioquin ordo sententiarum;
+historia = documentum ipsum. VECTIS M4b = transcripta aurea (per API
+machinae, byte-comparata, cum scenariis redefinitionis/recusationum/
+circuli serva-aperi) + scriptum #! agens ≥2 bibliothecas + probatio
+regressionis persistentiae globalium. Quattuor chunki A-D in spec
+(A nucleus sine mundo → B vita mundi + replicatio + captura → C
+impressor + superficies → D via #! + sigillum), quisque cum vecte;
+lista V1-V5 chunkis assignata. Exploratio codicis pro spec-v2 IAM
+FACTA (fundamenta + probae sim-7 = ipsa exploratio). SEQUENS:
+commissio Franis horum documentorum = sigillum on-rampi; deinde
+chunk A, sessione recenti aut hac.
