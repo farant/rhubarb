@@ -115,6 +115,19 @@ if [ ! -f "$obj" ] || [ "$src" -nt "$obj" ] \
 fi
 obj_files="$obj_files $obj"
 
+# ---- 2c. sessio (machina sessionis M4b; amalgama consumit) ----
+src="$OFF_DIR/instrumenta/sessio.c"
+obj="$BUILD_DIR/sessio.o"
+if [ ! -f "$obj" ] || [ "$src" -nt "$obj" ] \
+    || [ "$OFF_DIR/instrumenta/sessio.h" -nt "$obj" ]; then
+    echo "  [sessio] sessio.c"
+    if ! clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" \
+        -c "$src" -o "$obj"; then
+        echo "FRACTA: sessio" ; exit 1
+    fi
+fi
+obj_files="$obj_files $obj"
+
 # ---- 3. officina fontes ----
 shopt -s nullglob
 for src in "$OFF_DIR"/fontes/*.c; do

@@ -47,6 +47,7 @@ pre-existing diagnostics productionized. See officina-m4a-spec.md
 | Enum int-representability | 6.5.2.2 | PARCATUM | Enum-constant constant-ness enforced; representability unchecked (rare). |
 | Lint tier growth (sign-compare, shadowing, narrowing…) | — | PARCATUM | Not C89 CV — domesticum tier grows on pull (silva-lsp lane). |
 | Logical-operand scalar (&&/\|\|/! operands) | 6.3.13-15 | PARCATUM | M4a wired statements+ternary conditions only; the logical-op operand seats exist unchecked. Pull: fixture demand. |
+| break/continue outside loop/switch | 6.6.6.2-3 | PARCATUM | M4b chunk A V1 audit: NO loop-context codex exists (54 codices); a wrapped top-level `frange;` turn passes judgment silently — demissio/machinula own the honesty downstream. Pull: REPL user reports / fixture demand. |
 | & of register-storage object | 6.3.3.2 | PARCATUM | Tiny CV; repositio flag exists. Pull: first miss. |
 | typedef redeclaration in same scope | 6.5 | PARCATUM | Genus-filter exempts TYPEDEF from redecl compat. Pull: REPL reports. |
 | Cross-parsura tag identity (systema seam) | 6.1.2.6 | PARCATUM | M4a find: same-text tags across parsuras nominally distinct; redecl seat clement on ex_systemate priors. Rides the cross-TU park (§V). |

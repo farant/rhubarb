@@ -2600,3 +2600,93 @@ lista V1-V5 chunkis assignata. Exploratio codicis pro spec-v2 IAM
 FACTA (fundamenta + probae sim-7 = ipsa exploratio). SEQUENS:
 commissio Franis horum documentorum = sigillum on-rampi; deinde
 chunk A, sessione recenti aut hac.
+
+## M4b CHUNK A — INTENTIO (2026-07-11): sessio nucleus (sine mundo)
+
+**Vectis A: probatio_officina_sessio — classificatio, reparatio-echo,
+circuitus positionum (iudicata→ostensa), scenaria verdicti documenti
+totius (incl. redefinitio-reicit-ad-lineam-veterem); sine machinula.**
+
+Aedificanda: officina/instrumenta/sessio.{h,c} (praecedens
+vindex_onerator: amalgamata SOLA) + probatio. Fluxus turni: parsura
+CLASSIFICATIONIS (documentum + initus NUDUS — grammatica liberalis;
+reparatio `;` C1 hic) → transformatio involucri (sententiae/
+expressiones → `vacuum turnus_N(vacuum){…}`, tabula offset linearum
+per turnum) → parsura IUDICII (textus involutus, receptum examinis:
+bis-analysis) → verdictum documenti totius (violatio non-provisionalis
+UBIVIS reicit; ostensio = intervallum novum + extra_turnum notae C2)
+→ appende.
+
+V1 RESOLUTUM: frange/perge extra ansam NON probantur in semantica
+(54 codices, nullus ansae) — iudicium involutum tacet; demissio
+possidet honestatem deorsum; ordo novus in c89-lacunae.md.
+
+DECISIONES SPEC-TEMPORIS (Fran vetare potest):
+① **Turnus = elementum UNUM** (aut directiva una); initus
+multi-elementorum reicitur cum monitu "involve { }" — fuga honesta
+pro glutinatis (corpus compositum = sententia una, localia licita).
+Mixta decl+sententia semantica ambigua (localis vs globalis) —
+regula simplex docibilis.
+② **Religatio = substitutio turni IN LOCO** (non appensio): turnus
+declarans/definiens nomen UNUM quod turnus prior unicus declaravit →
+textus turni prioris substituitur (ordo declarationis-ante-usum
+servatur; definitio mota ad finem vocationes priores implicitas
+faceret). Nomina multa aut nulla congruentia → appensio simplex,
+iudex loquitur. `int x=5;` → `int x=6;` = substitutio (semantica
+documenti: religatio = historia initii mutata). Directivae numquam
+substituuntur.
+③ Genus quintum **DIRECTIVA** (initus incipiens `#`): sine
+involucro, sine reparatione, verbatim — #include/#define inter
+turnos naturales per canalem praebendarum.
+
+## M4b CHUNK A — RELATIO (2026-07-11): sessio nucleus VIRIDIS
+
+**VECTIS A TENET: probatio_officina_sessio 85 assertiones, PRIMO
+TRANSITU viridis** (dentes probati: fractura consulta → FRACTAE →
+reversio → viridis). Suita officinae plena 11/11 (sessio.o in omnes
+nexus); censor PURUS ×3; examen_vectis -corpus TENET (exclusiones
+40 — sessio.c classis lexici eadem ac vindex_onerator: ambulatio
+dirent, POSIX Wave-3).
+
+Praestita: **officina/instrumenta/sessio.{h,c}** (~1100 lineae; API
+opaca sine typis silvae in capite — quattuor consumptores nominati) +
+probatio + ordo in compile_probationes.sh (2c). Fluxus turni totus:
+directiva (`#`) → classificatio (parsura ostensi liberalis, receptum
+examinis bis-analysis) → reparatio `;` C1 (tentamen secundum, echo
+per r.reparatum/r.textus) → regula elementi UNIUS (fons_princeps +
+intervallum novum; fuga corporis compositi) → religatio in loco
+(titulus declaratus unicus congruens → substitutio; probatio:
+`integer y=5;`→`integer y=6;` substituit, documentum "y = 5" NON
+continet) → involucrum `void turnus_N(void)` (collisione vitata) →
+iudicium textus involuti documenti TOTIUS → acceptatio ≠ ostensio C2
+(scenarium redefinitionis: arity-violatio ad lineam turni VETERIS,
+extra_turnum + turnus_vetus recte; documentum revolutum; religatio
+compatibilis postea ACCIPITUR) → positiones iudicatae→ostensae per
+tabulam offset (linea III exacta in turno tri-lineari). Macro trans
+turnos (#define → usus) et #include per praebenda VIVUNT.
+
+INVENTA: ① **decipula credo claudere-tum-interrogare** — claudere
+statum REFICIT; interrogare post = semper VERUM; suita quae fallere
+non potest; capta SOLUM per probationem dentium (fractura consulta).
+Ordo canonicus in lib/credo.worklog.md. ② V1: frange/perge extra
+ansam NON probantur (ordo novus c89-lacunae §II). ③ sessio.c in
+exclusiones examinis (40; classis onerator eadem — dirent).
+④ `x = x+1;` classificatur EXPRESSIO (sententia-expressionis) —
+assignationes valorem imprimet chunk C (norma consolis JS; nota UX).
+
+Parcae chunki: echo typi (`x : s32`) postulat impressorem nominum
+typorum — chunk C (impressor valorum eum quoque vult); optimizatio
+parsurarum (2-4 per oblationem, ms-scala, mensura ante);
+arena-per-oblationem iam disciplinata (piscina effimera destructa),
+relata in piscina sessionis crescunt — chunk B generationes plenas.
+
+Instrumenta debrief: adhibita nexus/emitte (navigatio API amalgami
+~8 vices), examen -posix (auto-iudicium; classis lexici agnita),
+censor (×3 PURUS), grep silva.h (accessores). Fructus: emitte in
+machinula_currere signaturam; percursus generum silva.h. Asperitas:
+NULLA nova — subsellium suffecit. Desideratum: impressor nominum
+typorum semanticae publicus (chunk C eum construet — tractio jam
+secunda post lsp-visionem).
+
+SEQUENS: chunk B (vita mundi + replicatio + captura). Commissio
+Franis = sigillum chunki A.
