@@ -39,6 +39,18 @@ enum {
     SESSIO_APPARATUS = 2    /* infrastructura fracta */
 };
 
+/* Genus valoris turni expressionis (impressio hospitis-lateris;
+ * chunk C). NULLUS = nihil imprimendum (vacuum/aggregatum/…). */
+enum {
+    SESSIO_VALOR_NULLUS = 0,
+    SESSIO_VALOR_SIGNATUS,
+    SESSIO_VALOR_INSIGNATUS,
+    SESSIO_VALOR_FLUITANS_32,
+    SESSIO_VALOR_FLUITANS_64,
+    SESSIO_VALOR_MONSTRATOR,
+    SESSIO_VALOR_MONSTRATOR_CHARACTERUM
+};
+
 /* Diagnosticum ostensum: positiones in DOCUMENTO OSTENSO (lineae
  * quas usor typavit), non in textu involuto iudicato. */
 typedef struct {
@@ -81,6 +93,12 @@ typedef struct {
     /* historia mutata: redefinitio effusionem turni veteris mutavit */
     const s32* turni_mutati;
     s32    turni_mutati_numerus;
+    /* valor turni expressionis (chunk C: impressio) */
+    chorda typus_textus;        /* typus redditus latine; vacua si
+                                 * irreddibilis */
+    s32    valor_genus;         /* SESSIO_VALOR_* */
+    b32    valor_validus;       /* exsecutio BENE, valor in codex */
+    s64    valor;               /* codex crudus (figurae f32/f64) */
 } SessioRelatum;
 
 typedef struct {
@@ -122,6 +140,14 @@ chorda sessio_turnus_nomen(const Sessio* sessio, i32 index);
 /* effusio capta novissima turni (acta; vacua si numquam involutus
  * aut nondum exsecutus) */
 chorda sessio_turnus_effusio(const Sessio* sessio, i32 index);
+
+/* Formator transcripti (chunk C): relatum -> textus ostensionis
+ * (echo reparationis, effusio capta, echo declarationis,
+ * valor : typus [+ praevisus char*], notitiae historiae, diagnostica,
+ * halitus). Superficies (colloquium) eum imprimit; probationes eum
+ * byte-comparant. */
+chorda sessio_relatum_formare(Sessio* sessio,
+    const SessioRelatum* relatum, Piscina* piscina);
 
 /* Textus ostensus integer (materializatus in piscinam datam) */
 chorda sessio_documentum(const Sessio* sessio, Piscina* piscina);

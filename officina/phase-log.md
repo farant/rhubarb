@@ -2796,3 +2796,77 @@ prope exsistit).
 
 SEQUENS: chunk C (impressor + superficies colloquii). Commissio
 Franis = sigillum chunki B.
+
+## M4b CHUNK C — INTENTIO (2026-07-11): impressor + superficies
+
+**Vectis C: suita transcriptorum aureorum v1 (initus scriptus per
+API machinae, effusio formata byte-comparata: echo reparationis,
+echo declarationis, valor:typus, nuntii recusationum, notitia
+historiae mutatae).**
+
+Aedificanda: ① redditor typorum (TypusC89 → textus latinus C-stili:
+integer, character*, insignatus longus…; aggregata → recusatio
+impressionis nominata); ② turni expressionis involucrum TYPATUM
+(classificatio typum dat → involucrum `<typus> turnus_N(void) {
+return <expr>; }` → codex fert valorem; V3: f64 per codex ut figura
+bitorum verificanda); ③ impressor hospitis-lateris (signati %ld,
+insignati %lu, fluitantia %g, monstratores 0x… + praevisus char*
+limitatus ex memoria regionis — fines verificandi); ④ echo
+declarationis `nomen : typus` (symbolum → typus → redditor); ⑤
+**sessio_relatum_formare** (formator transcripti in machina — sine
+UI, probabilis byte-exacte); ⑥ **colloquium** (instrumenta/
+principalia + colloquium.sh): ansa fgets + continuatio librarum +
+imperia `:monstra`/`:effusio k`/`:exi` (aperi/serva = chunk D).
+Aggregata expressionum: involucrum void manet, valor non impressus
+(nota honesta). Typus ostensus = structuralis latine (s32 exempli
+interrogationis = illustrativum; typedef-nomina non servantur in
+typis structuralibus semanticae — nota).
+
+## M4b CHUNK C — RELATIO (2026-07-11): impressor + superficies VIRIDIS
+
+**VECTIS C TENET: transcripta formata byte-comparata (147
+assertiones totales; suita plena 11/11; censor PURUS ×4; colloquium.c
+examen ACCIPE purum — sine exclusione).** Sessio viva probata:
+`x : integer` (echo declarationis) / `… x * 8;` + `40 : integer`
+(reparatio + valor) / **`2.5 : duplex` (V3 VIVUM: f64 per codex ut
+figura bitorum — reinterpretatio hospitis)** / `0x… "ave maria" :
+constans character*` (praevisus ex memoria regionis per
+regio_continet) / `[halitus RECUSATIO] … (turnus 8)` / religatio in
+:monstra visibilis.
+
+Praestita: ① redditor typorum (TypusC89 → latine C-stili;
+primitiva + monstratores + quales + tags + enumerationes; acies/
+functio/aggregata nuda = irreddibilia → impressio tacet, recusatio
+nominata); ② involucrum TYPATUM expressionum (`<typus> turnus_N
+(void) { return\n<textus> }` — `return` linea propria, mappa
+linearum pura; typus_textus in recordis pro reaedificationibus); ③
+impressor hospitis (signati %lld / insignati %llu / f32-f64 per
+uniones figurarum / monstratores 0x + praevisus char* limitatus
+LXIV octetis, fines per regio_continet, fuga non-imprimibilium); ④
+**sessio_relatum_formare** (formator transcripti IN MACHINA — sine
+UI, byte-probabilis; echo/effusio/valor/exitus/historia/diagnostica/
+halitus); ⑤ **colloquium** (instrumenta/principalia + colloquium.sh,
+familia fontes-lateris): ansa fgets cocta (fistulis operatur!),
+continuatio librarum, :monstra/:effusio/:exi.
+
+INVENTA: ① nexus symbolorum sedes USUS solas notat — declaratores
+absunt → echo declarationis per PARSURAM-PROBAM (usus syntheticus
+`nomen;` appensus, typus_expressionis in eo; parsura extra per
+declarationem, ms) — eadem via definitio→"functio" unificatur; ②
+radix elementa LEXICI quoque continet — "ultimum elementum" sine
+filtro fons_princeps CONDITIONALIS lexici erat (filtrum iam tertium
+locum postulavit — exemplar); ③ printf("salve!\n") == VII non VI —
+probatio errabat, machina recta (numeratio!); ④ nota v0: religatio
+typum turnorum veterum expressionis NON retypat (involucrum vetus
+typum vetustum servat; conversio redditus legalis — cosmetica,
+parca).
+
+Instrumenta debrief: adhibita colloquium ipsum (effusio viva =
+instrumentum diagnosis — od -c byte-exactum), grep/sed silva.h
+(~8), censor, examen (colloquium purum). Fructus: colloquium-fistula
+= ansa diagnosis rapidissima (typare-videre secundis). Asperitates:
+NULLA nova. Desideratum: nullum — subsellium + superficies nova
+suffecerunt.
+
+SEQUENS: chunk D (via #! + :serva/:aperi + SIGILLUM M4b). Commissio
+Franis = sigillum chunki C.

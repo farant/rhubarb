@@ -521,6 +521,108 @@ s32 principale (vacuum)
     }
 
     /* ========================================================
+     * PROBARE C: transcripta formata (vectis C - formator machinae)
+     * ======================================================== */
+    {
+        Sessio* s;
+        SessioRelatum r;
+        chorda f;
+
+        imprimere("\n--- Probans transcripta formata (C) ---\n");
+        s = sessio_creare(piscina, &cfg);
+        CREDO_NON_NIHIL(s);
+
+        /* echo declarationis: nomen : typus */
+        r = sessio_turnum_offerre(s, _ch("integer x = 5;", piscina));
+        f = sessio_relatum_formare(s, &r, piscina);
+        CREDO_VERUM(chorda_aequalis_literis(f, "x : integer\n"));
+
+        /* valor : typus (+ echo reparationis) */
+        r = sessio_turnum_offerre(s, _ch("x + 2", piscina));
+        f = sessio_relatum_formare(s, &r, piscina);
+        CREDO_VERUM(chorda_aequalis_literis(f,
+            "\xE2\x80\xA6 x + 2;\n7 : integer\n"));
+
+        /* V3 VIVUM: f64 per codex (figura bitorum) */
+        r = sessio_turnum_offerre(s, _ch(
+            "duplex media(duplex a) { redde a / 2; }", piscina));
+        f = sessio_relatum_formare(s, &r, piscina);
+        CREDO_VERUM(chorda_aequalis_literis(f, "media : functio\n"));
+        r = sessio_turnum_offerre(s, _ch("media(5);", piscina));
+        f = sessio_relatum_formare(s, &r, piscina);
+        CREDO_VERUM(chorda_aequalis_literis(f, "2.5 : duplex\n"));
+
+        /* praevisus char* ex memoria regionis */
+        r = sessio_turnum_offerre(s, _ch(
+            "constans character* salve = \"salve\";", piscina));
+        CREDO_AEQUALIS_I32((i32)r.verdictum, (i32)SESSIO_ACCEPTUM);
+        r = sessio_turnum_offerre(s, _ch("salve;", piscina));
+        f = sessio_relatum_formare(s, &r, piscina);
+        CREDO_VERUM(_chorda_continet(f,
+            "\"salve\" : constans character*"));
+        CREDO_VERUM(_chorda_continet(f, "0x"));
+
+        /* insignatus */
+        r = sessio_turnum_offerre(s, _ch(
+            "insignatus integer u = 7;", piscina));
+        CREDO_VERUM(chorda_aequalis_literis(
+            sessio_relatum_formare(s, &r, piscina),
+            "u : insignatus integer\n"));
+
+        /* effusio ante valorem (programma loquitur primum) */
+        r = sessio_turnum_offerre(s, _ch(
+            "printf(\"salve!\\n\");", piscina));
+        f = sessio_relatum_formare(s, &r, piscina);
+        CREDO_VERUM(chorda_aequalis_literis(f,
+            "salve!\n7 : integer\n"));
+
+        /* recusatio formata */
+        r = sessio_turnum_offerre(s, _ch("{ clock(); }", piscina));
+        f = sessio_relatum_formare(s, &r, piscina);
+        CREDO_VERUM(_chorda_continet(f, "[halitus RECUSATIO]"));
+        CREDO_VERUM(_chorda_continet(f, "recusatum"));
+
+        /* diagnosticum formatum */
+        r = sessio_turnum_offerre(s, _ch("ignotus_omnino;", piscina));
+        f = sessio_relatum_formare(s, &r, piscina);
+        CREDO_VERUM(_chorda_continet(f, "<sessio>:"));
+        CREDO_VERUM(_chorda_continet(f, "[violatio]"));
+
+        sessio_destruere(s);
+    }
+
+    /* ========================================================
+     * PROBARE C2: historia mutata formata + sessio plena
+     * ======================================================== */
+    {
+        Sessio* s;
+        SessioRelatum r;
+        chorda f;
+
+        imprimere("\n--- Probans historia mutata formata (C2) ---\n");
+        s = sessio_creare(piscina, &cfg);
+        CREDO_NON_NIHIL(s);
+
+        r = sessio_turnum_offerre(s, _ch(
+            "integer f(vacuum) { printf(\"unus\\n\"); redde 1; }",
+            piscina));
+        CREDO_AEQUALIS_I32((i32)r.verdictum, (i32)SESSIO_ACCEPTUM);
+        r = sessio_turnum_offerre(s, _ch("f();", piscina));
+        f = sessio_relatum_formare(s, &r, piscina);
+        CREDO_VERUM(chorda_aequalis_literis(f,
+            "unus\n1 : integer\n"));
+
+        r = sessio_turnum_offerre(s, _ch(
+            "integer f(vacuum) { printf(\"duo\\n\"); redde 2; }",
+            piscina));
+        f = sessio_relatum_formare(s, &r, piscina);
+        CREDO_VERUM(chorda_aequalis_literis(f,
+            "f : functio\nturnus 1: effusio mutata\n"));
+
+        sessio_destruere(s);
+    }
+
+    /* ========================================================
      * PROBARE: #include per praebenda (capita ambulata)
      * ======================================================== */
     {
