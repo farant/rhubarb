@@ -2534,3 +2534,39 @@ sutura tags mordet SOLUM redefinitionem-cum-corpore + valorem
 transeuntem (TU crescens eam vitat, parsura-per-turnum eam heres).
 
 SEQUENS: simulatio-7 (gradus II arcus).
+
+## M4b ON-RAMP — GRADUS II: SIMULATIO-7 (2026-07-11)
+
+**project-specs/officina-simulatio-7.md** — ~2¾ horae simulatae,
+quattuor chunki (A sessio + documentum + iudicium → B vita mundi +
+replicatio → C captura + umbra → D superficies + transcriptum),
+C1-C12, **NULLA reversio designi replicationis**. Probationes codicis
+veri: _aed_printf stdout fixum (machinula.c:888) SED ansae[1] iam
+sedes stdout (:128-130) — sutura capturae = LINEA UNA; tabula
+aedilium = ordines nomen→functio (:1546); MachinulaExitus.codex =
+"valor redditus" (machinula.h:53) — impressio hospitis-lateris cum
+typo semanticae; machinula_creare piscinam vocantis accipit (:61).
+
+CONFIRMATUM CAPITALE: simplificatio semper-reparsare TENET — opus
+silva-latere v0 collabitur ad probam `;` (C1) + transformationem
+involucri et mappam positionum (C3) + filtrationem intervalli (C2);
+NULLA fistulatio systematis, NULLUM oraculum trans-turnos, NULLA
+sutura tags. Determinismus TER ut argumentum correctitudinis (via
+celeris ≡ replicatio; recuperatio per reaedificationem veteris;
+comparatio historiae mutatae) — paries portans designi.
+
+INVENTA: acceptatio ≠ ostensio (C2 — redefinitio violat in linea
+turni VETERIS; verdictum = documentum totum, ostensio = intervallum
+novum + socius); textus duplex (C3 — documentum ostensionis vs
+demissum, iudicare INVOLUTUM = legalitas contextus sententiarum
+GRATIS); dialectus servandi (C4 — exportatio C89 stricta cum
+principale synthetico = clang compilat!); ordo transactionis (C8 —
+iudica ANTE demolitionem; divergentia replicationis = reaedificatio
+duplex, rara); mundus sordidus post haltum viae celeris (C9 —
+vexillum + reaedificatio pigra). REVERSIO UNA (gradus, non designum):
+umbra v0 = GRADUS I recusatio-per-nomen (C11 — pretium verum =
+semantica FILE* super quadris, non interceptio); sutura navigat, umbra
+= tractio v1 nominata. Regula scriptorum #!: principale si adest,
+alioquin ordo sententiarum summi gradus = SCRIPTA C cum codice summi
+gradus (productum novum, C12). Lista verificandorum V1-V5 in
+documento. SEQUENS: interrogatio (gradus III arcus).
