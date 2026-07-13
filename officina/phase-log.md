@@ -3091,3 +3091,47 @@ calidus, uncus examen-custos = calibratio viva):
 
 Re-entry: hic addendum + memoria (MEMORY.md furcam nominat) +
 officina/phase-log.md interludii relationes.
+
+## FURCA RESOLUTA (2026-07-13): silva-lsp electum
+
+Fran silva-lsp elegit (M5 aarch64 post). Ratio nominata: instrumentum
+quo agens COTIDIE utetur — usus cotidianus = machina poliendi
+(asperitates inveniuntur celeritate operis, non celeritate memoriae).
+Exploratores IV lanceati eadem sessione, subiecta ut in addendo ORDO
+PROXIMUS (superficies LSP / daemon calidus per praeparatorem /
+positio→extentum / integratio clientis Claude Code). Arcus probatus
+sequitur: fundamenta → simulatio → interrogatio → spec. Libri
+silva-latere (praecedens M4a — instrumentum silvae est), relationes
+in silva/phase-log.md cum indice hic.
+
+## SILVA-LSP GRADUS II (2026-07-13): interrogatio — NOMEN SIGILLATUM: LEGATUS
+
+(Correctio librorum: Q7 domum OFFICINA-latere decrevit — libri
+posthac HIC; introitus GRADUS I in silva/phase-log.md stat ut
+historia, numquam editus.)
+
+Fundamenta (project-specs/silva-lsp-fundamenta.md, 34 facta +
+quattuor reframationes) → interrogatio 16 quaestionum, OMNES
+commendationes acceptae + duo gubernacula Franis:
+① principium scopi = "quod agens re vera adhibet" (superficies
+instrumenti LSP inspecta vivo: hover IN manu agentis est);
+② sutura reusabilis JSON-RPC pro servo MCP futuro.
+
+DECISA (plena in project-specs/silva-lsp-interrogatio.md):
+**LEGATUS** natus officina-latere (v0 = diagnostica + hover +
+documentSymbol; def/refs = v0.1 post exploratione quinta [index
+trans-plagularis, nexus symbolorum = substratum probabile]);
+**lib/tabellarius** natus purus (framing ∥ envelope, consumptor
+secundus = servus MCP); clangd-lsp INACTIVUM NUNC (settings repo,
+differentialis vivus DONE post vectem M4a); R1 parcatum nominatim
+(pull = migratio fontes-oneratorum / latentia sentita); positiones
+errorum syntaxis = conatus timeboxed cum effugio; ruina =
+accipe-et-resuscita; invalidatio = reaedificatio in .h servato;
+uncus examen-custos coexsistit → dimittitur ad barram (scriptum
+manet pro contextibus sine capite); .h iudicantur directe (coverage
+novum); exclusiones eaedem, vacuum publicatur; utf-8 oblatum +
+utf-16 fallback; sigillum = transcripta aurea + agitatio cotidiana.
+
+SEQUENS: silva-lsp-simulatio (ansa transportus / index
+positio→nodus / redditio hover / registratio clientis) → spec.
+Fran committit ante simulationem.

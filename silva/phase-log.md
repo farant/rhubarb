@@ -7215,3 +7215,52 @@ veris — calibratio contra incumbentem ante substitutionem lsp
 (scopus agentis: diagnostica push = ~95% valoris clangd; navigatio
 iam per subsellium [nexus/emitte]). Armatur sessione proxima
 (oneratio settings). Detail: .claude/hooks/examen-custos.sh.
+
+## 2026-07-13 — SILVA-LSP ON-RAMP, GRADUS I: exploratores + fundamenta
+
+Furca resoluta (officina/phase-log.md FURCA RESOLUTA): Fran
+silva-lsp elegit prae M5; ratio = usus cotidianus agentis = machina
+poliendi. Libri silva-latere (praecedens M4a). Exploratores IV
+(superficies protocolli / daemon calidus / positio→extentum /
+integratio clientis) → **project-specs/silva-lsp-fundamenta.md**
+(34 facta onerifera + mensurae + R1-R7 + quaestiones apertae).
+
+QUATTUOR REFRAMATIONES (plenae in fundamentis):
+① VALOR MOTUS EST: canalis diagnosticorum LSP = editione-scopatus,
+EADEM superficies quam uncus examen-custos iam possidet — v0
+diagnostica-solum duplicaret canalem exsistentem. Additivum verum =
+instrumentum LSP nativum (definitio/references/hover — renderer
+typorum M4b consumptorem naturalem invenit) + consolidatio unci.
+② CLANGD CONTRA NOS NUNC CURRIT: plugin clangd-lsp activum
+globaliter; silentium = una linea settings (gratis, sine codice) —
+sed differentialem vivum terminat. Decisio Franis.
+③ AMORTISATIO IMPEDITA: contextus calidus TEXTUM capitum servat,
+non LEXEMATA — _contextum_applicare omnia 184 capita RE-LEXAT
+quaque analysi (~0.10s ex ~0.15s solo frigido) ⇒ daemon calidus
+receptu immutato = ~1.4x, non ~7x. Lucrum verum = includenda
+prae-lexata calida in contextu (mutatio silva-latere; fortasse
+"migratio fontes-lateris tactu proximo" adveniens). R1 = DECISIO
+CENTRALIS.
+④ PROBLEMA JSON NON EXSTAT: lib/json.c completum (1859 lineae,
+parse+scribere+evasio recta, suita 553-linearum). Uti ut est.
+
+INVENTA CETERA: columnae silvae = OCTETI 1-basati ⇒ positionEncoding
+utf-8 = conversio nulla (inversio intuitionis utf-16!); extensio
+~2-linearum (radix->longitudo computatum-tum-abiectum ad
+semantica.c:328 — campus + assignatio = extensio honesta omni
+diagnostico semantico); honestas macrorum IAM operatur (catena
+radicis originis); ERRORES SYNTAXIS SINE POSITIONE (0:0 duratum in
+examen.c — lacuna maxima UX, status frequentissimus editoris vivi;
+positiones in nodis erroris parsurae exsistunt = opus
+parser-lateris, scopus decidendus); aedificare super AMALGAMA
+(exemplar vindicis — praeparator silva.h solum in amalgamate
+invenit, DECISUM non apertum); piscina ephemera per analysin =
+exemplar probatum (vindex_onerator.c:110-138 = formula); OOM =
+exire(I) daemonem necat (restartOnCrash clientis = mitigatio
+probabilis); sessio NON necessaria (iudex-solum sine regione, UNA
+SESSIO EXSECUTANS non ligat).
+
+SEQUENS: colloquium designi cum Frane super quaestiones apertas
+(centrum gravitatis diagnostica-vs-navigatio; clangd-lsp nunc?;
+R1 in scopo?; dispositio unci; positiones errorum syntaxis; nomen
+ceremoniae) → simulatio → interrogatio → spec.
