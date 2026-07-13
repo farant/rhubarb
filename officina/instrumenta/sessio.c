@@ -88,6 +88,16 @@ structura Sessio {
  * auxilia chordarum et linearum
  * ================================================== */
 
+interior chorda
+_chorda_vacua (vacuum)
+{
+    chorda c;
+
+    c.mensura = ZEPHYRUM;
+    c.datum = NIHIL;
+    redde c;
+}
+
 interior i32
 _lineas_numerare (chorda textus)
 {
@@ -125,7 +135,9 @@ _praecisa (chorda textus)
     {
         b--;
     }
-    redde chorda_sectio(textus, a, b - a);
+    /* chorda_sectio(s, initium, FINIS) - non mensura! (vitium
+     * latens interludii: a>0 caudam praecidebat) */
+    redde chorda_sectio(textus, a, b);
 }
 
 /* textus turni normalizatus: praecisus + '\n' finali (copia in
@@ -705,6 +717,9 @@ _valor_genus_ex_typo (constans TypusC89* t)
             }
         casus TYPUS_C89_ENUMERATUS:
             redde SESSIO_VALOR_SIGNATUS;
+        casus TYPUS_C89_STRUCTURA:
+        casus TYPUS_C89_UNIO:
+            redde SESSIO_VALOR_AGGREGATUM;
         casus TYPUS_C89_MONSTRATOR:
         {
             constans TypusC89* interior_t = _qualibus_nudatum(
@@ -751,12 +766,23 @@ _titulum_declaratum (constans SilvaNodus* elementum, Piscina* piscina)
         i32 initiati = _numerare_generis_nodi(elementum,
             SILVA_C89_GENUS_DECLARATOR_INITIATUS);
 
-        si (initiati != I)
+        si (initiati == I)
+        {
+            sedes = _nodum_generis_nodi(elementum,
+                SILVA_C89_GENUS_DECLARATOR_INITIATUS);
+        }
+        alioquin si (initiati == ZEPHYRUM
+            && _numerare_generis_nodi(elementum,
+                SILVA_C89_GENUS_DECLARATOR_TITULUS) == I)
+        {
+            /* declaratio nuda (`chorda s;`): titulus unicus -
+             * religatio + echo etiam sine initiatore */
+            sedes = elementum;
+        }
+        alioquin
         {
             redde vacua;
         }
-        sedes = _nodum_generis_nodi(elementum,
-            SILVA_C89_GENUS_DECLARATOR_INITIATUS);
     }
     si (sedes == NIHIL)
     {
@@ -924,15 +950,21 @@ _initiator_arbor_illegalis (SilvaSemantica* sem, SilvaValor v,
     }
 }
 
-/* custos: declaratio globalis cum initiatore illegali? */
+/* custos: declaratio globalis cum initiatore illegali?
+ * initiatus_out (licet NIHIL) = nodus pro scissione automatica */
 interior b32
 _initiatorem_probare (SilvaSemantica* sem,
-    constans SilvaNodus* elementum, constans character** nuntius_out)
+    constans SilvaNodus* elementum, constans character** nuntius_out,
+    constans SilvaNodus** initiatus_out)
 {
     constans SilvaNodus* initiatus;
     SilvaValor initiator;
 
     *nuntius_out = NIHIL;
+    si (initiatus_out != NIHIL)
+    {
+        *initiatus_out = NIHIL;
+    }
     si (elementum->genus != SILVA_C89_GENUS_DECLARATIO)
     {
         redde FALSUM;
@@ -942,6 +974,10 @@ _initiatorem_probare (SilvaSemantica* sem,
     si (initiatus == NIHIL)
     {
         redde FALSUM;
+    }
+    si (initiatus_out != NIHIL)
+    {
+        *initiatus_out = initiatus;
     }
     initiator = silva_c89_declarator_initiatus_initiator(initiatus);
     si (initiator.genus != SILVA_VALOR_NODUS
@@ -1346,7 +1382,10 @@ _replicare (Sessio* s, TurnusVisus* visus, i32 numerus,
                 r->halitus_codex = exitus.codex;
                 r->halitus_nuntius = chorda_transcribere(
                     exitus.nuntius, s->piscina);
-                r->halitus_turnus = (s32)k;
+                /* index solum si turnus VETUS fregit (novus =
+                 * ipse - suffixum "(turnus N)" tunc taceat) */
+                r->halitus_turnus = ((s32)k == (s32)index_novi)
+                    ? -I : (s32)k;
             }
             redde FALSUM;
         }
@@ -2429,6 +2468,16 @@ sessio_relatum_formare (Sessio* s, constans SessioRelatum* r,
         redde vacua;
     }
 
+    /* echo scissionis: declaratio + assignatio ostensae */
+    si (r->divisum && r->verdictum == SESSIO_ACCEPTUM)
+    {
+        (vacuum)chorda_aedificator_appendere_literis(a,
+            "\xE2\x89\xA1 divisum: ");
+        (vacuum)chorda_aedificator_appendere_chorda(a,
+            r->nomen_declaratum);
+        (vacuum)chorda_aedificator_appendere_literis(a,
+            " declaratum, tum assignatum\n");
+    }
     /* echo reparationis */
     si (r->reparatum && r->textus.mensura > ZEPHYRUM)
     {
@@ -2465,9 +2514,22 @@ sessio_relatum_formare (Sessio* s, constans SessioRelatum* r,
                 r->typus_textus);
             (vacuum)chorda_aedificator_appendere_character(a, '\n');
         }
+        /* aggregatum: typus notus, impressio parcata (nota honesta) */
+        si (r->genus == SESSIO_TURNUS_EXPRESSIO
+            && r->valor_genus == SESSIO_VALOR_AGGREGATUM
+            && r->typus_textus.mensura > ZEPHYRUM)
+        {
+            (vacuum)chorda_aedificator_appendere_literis(a,
+                "aggregatum : ");
+            (vacuum)chorda_aedificator_appendere_chorda(a,
+                r->typus_textus);
+            (vacuum)chorda_aedificator_appendere_literis(a,
+                " (impressio parcata)\n");
+        }
         /* valor : typus */
         si (r->genus == SESSIO_TURNUS_EXPRESSIO && r->valor_validus
-            && r->valor_genus != SESSIO_VALOR_NULLUS)
+            && r->valor_genus != SESSIO_VALOR_NULLUS
+            && r->valor_genus != SESSIO_VALOR_AGGREGATUM)
         {
             commutatio (r->valor_genus)
             {
@@ -2565,8 +2627,7 @@ sessio_relatum_formare (Sessio* s, constans SessioRelatum* r,
             (vacuum)chorda_aedificator_appendere_literis(a, buffer);
             (vacuum)chorda_aedificator_appendere_chorda(a,
                 r->halitus_nuntius);
-            si (r->halitus_turnus >= ZEPHYRUM
-                && r->halitus_turnus != r->turnus_index)
+            si (r->halitus_turnus >= ZEPHYRUM)
             {
                 sprintf(buffer, " (turnus %d)",
                     (int)r->halitus_turnus);
@@ -3064,6 +3125,8 @@ sessio_turnum_offerre (Sessio* s, chorda initus)
                             }
                         }
                     }
+                    /* aggregata: typus OSTENDITUR, involucrum VOID
+                     * manet (%reditus parca) - typus_involucri infra */
                 }
                 alioquin si ((genus == SESSIO_TURNUS_DECLARATIO
                         || genus == SESSIO_TURNUS_DEFINITIO)
@@ -3179,10 +3242,94 @@ sessio_turnum_offerre (Sessio* s, chorda initus)
                 si (genus == SESSIO_TURNUS_DECLARATIO)
                 {
                     constans character* nuntius_init = NIHIL;
+                    constans SilvaNodus* initiatus_nodus = NIHIL;
 
                     si (_initiatorem_probare(sem, elementum_novum,
-                            &nuntius_init))
+                            &nuntius_init, &initiatus_nodus))
                     {
+                        /* SCISSIO AUTOMATICA (interludium M4b):
+                         * `chorda s = f(...)` -> `chorda s;` +
+                         * `s = f(...);` - exemplar REPL naturale;
+                         * C89 initiatorem non-constantem vetat,
+                         * machina dividit pro usore */
+                        SilvaValor tok_op = (initiatus_nodus != NIHIL)
+                            ? silva_c89_declarator_initiatus_tok_operator(
+                                initiatus_nodus)
+                            : silva_c89_declarator_initiatus_tok_operator(
+                                NIHIL);
+                        SilvaToken* op_radix = NIHIL;
+
+                        si (tok_op.genus == SILVA_VALOR_TOKEN
+                            && tok_op.datum.token != NIHIL)
+                        {
+                            op_radix = silva_token_radix(
+                                tok_op.datum.token);
+                            si (op_radix == NIHIL)
+                            {
+                                op_radix = tok_op.datum.token;
+                            }
+                        }
+                        si (op_radix != NIHIL
+                            && op_radix->byte_offset >= ZEPHYRUM
+                            && titulus_decl.mensura > ZEPHYRUM)
+                        {
+                            i32 initium_candidati = ostensum.mensura
+                                - candidatus.mensura;
+                            i32 scissura =
+                                (i32)op_radix->byte_offset
+                                - initium_candidati;
+
+                            si (scissura > ZEPHYRUM
+                                && scissura < candidatus.mensura)
+                            {
+                                chorda pars_decl;
+                                chorda pars_assign;
+                                ChordaAedificator* aed;
+                                SessioRelatum r_decl;
+
+                                pars_decl = _normalizare(s->piscina,
+                                    chorda_sectio(candidatus,
+                                        ZEPHYRUM, scissura), VERUM);
+                                aed = chorda_aedificator_creare(
+                                    s->piscina, CXXVIII);
+                                si (pars_decl.datum == NIHIL
+                                    || aed == NIHIL)
+                                {
+                                    salta finis;
+                                }
+                                (vacuum)
+                                chorda_aedificator_appendere_chorda(
+                                    aed, titulus_decl);
+                                (vacuum)
+                                chorda_aedificator_appendere_literis(
+                                    aed, " =");
+                                (vacuum)
+                                chorda_aedificator_appendere_chorda(
+                                    aed, chorda_sectio(candidatus,
+                                        scissura
+                                        + (i32)op_radix->longitudo,
+                                        candidatus.mensura));
+                                pars_assign =
+                                    chorda_aedificator_finire(aed);
+
+                                silva_piscina_destruere(effimera);
+                                effimera = NIHIL;
+                                r_decl = sessio_turnum_offerre(s,
+                                    pars_decl);
+                                si (r_decl.verdictum
+                                    != SESSIO_ACCEPTUM)
+                                {
+                                    redde r_decl;
+                                }
+                                r = sessio_turnum_offerre(s,
+                                    pars_assign);
+                                r.divisum = VERUM;
+                                r.nomen_declaratum =
+                                    r_decl.nomen_declaratum;
+                                redde r;
+                            }
+                        }
+                        /* scissio non potuit: reiectio ut prius */
                         r.verdictum = SESSIO_REIECTUM;
                         _diagnosticum_addere(&collectio, s->piscina,
                             chorda_ex_literis(SESSIO_VIA_DOCUMENTI,
@@ -3239,9 +3386,19 @@ sessio_turnum_offerre (Sessio* s, chorda initus)
                 ostensum_praesens.datum == NIHIL
                     ? candidatus : ostensum_praesens);
         }
-        visus = _visum_construere(s, s->piscina, candidatus, genus,
-            involucrum, typus_textus, index_substituti,
-            &visus_numerus, &index_novi);
+        {
+            chorda typus_involucri = typus_textus;
+
+            si (valor_genus == SESSIO_VALOR_AGGREGATUM
+                || valor_genus == SESSIO_VALOR_NULLUS)
+            {
+                typus_involucri.mensura = ZEPHYRUM;
+                typus_involucri.datum = NIHIL;
+            }
+            visus = _visum_construere(s, s->piscina, candidatus,
+                genus, involucrum, typus_involucri,
+                index_substituti, &visus_numerus, &index_novi);
+        }
         si (visus == NIHIL)
         {
             salta finis;
@@ -3358,7 +3515,10 @@ sessio_turnum_offerre (Sessio* s, chorda initus)
                 t->textus = candidatus;
                 t->genus = genus;
                 t->titulus = titulus_decl;
-                t->typus_textus = typus_textus;
+                t->typus_textus = (valor_genus
+                        == SESSIO_VALOR_AGGREGATUM
+                    || valor_genus == SESSIO_VALOR_NULLUS)
+                    ? _chorda_vacua() : typus_textus;
                 t->valor_genus = valor_genus;
                 t->lineae = _lineas_numerare(candidatus);
                 /* involucrum immotum (declarationes numquam
@@ -3380,7 +3540,10 @@ sessio_turnum_offerre (Sessio* s, chorda initus)
                 t->genus = genus;
                 t->titulus = titulus_decl;
                 t->involucrum = involucrum;
-                t->typus_textus = typus_textus;
+                t->typus_textus = (valor_genus
+                        == SESSIO_VALOR_AGGREGATUM
+                    || valor_genus == SESSIO_VALOR_NULLUS)
+                    ? _chorda_vacua() : typus_textus;
                 t->valor_genus = valor_genus;
                 t->lineae = _lineas_numerare(candidatus);
                 r.turnus_index = (s32)(xar_numerus(s->turni) - I);

@@ -270,8 +270,9 @@ _positionem_imprimere (constans Machinula* m,
     constans FunctioPlana* plana, i32 instructio_plana)
 {
     constans MedullaInstructio* instructio = NIHIL;
+    FILE* fl = m->ansae[II] != NIHIL ? m->ansae[II] : stderr;
 
-    fprintf(stderr, "    %.*s",
+    fprintf(fl, "    %.*s",
         (int)functio->titulus.mensura,
         (constans character*)functio->titulus.datum);
     si (plana != NIHIL && plana->blocci_numerus > ZEPHYRUM
@@ -300,7 +301,7 @@ _positionem_imprimere (constans Machinula* m,
         bloccus = medulla_bloccum_obtinere(functio, (s32)imus);
         si (bloccus != NIHIL)
         {
-            fprintf(stderr, " @%.*s+%d",
+            fprintf(fl, " @%.*s+%d",
                 (int)bloccus->titulus.mensura,
                 (constans character*)bloccus->titulus.datum,
                 (int)(instructio_plana - plana->blocci_initia[imus]));
@@ -319,12 +320,12 @@ _positionem_imprimere (constans Machinula* m,
             && medulla_lineam_quaerere(*lineae, instructio->origo,
                    &via, &linea))
         {
-            fprintf(stderr, "  [%.*s:%u]", (int)via.mensura,
+            fprintf(fl, "  [%.*s:%u]", (int)via.mensura,
                 (constans character*)via.datum,
                 (insignatus integer)linea);
         }
     }
-    fprintf(stderr, "\n");
+    fprintf(fl, "\n");
 }
 
 /* relatio halitus (recordator volatus): positio + stiva vocationum
@@ -332,6 +333,10 @@ _positionem_imprimere (constans Machinula* m,
 interior vacuum
 _relationem_imprimere (constans Machinula* m)
 {
+    /* M4b interludium: relatio per ansae[2] (captura sessionis
+     * absorbat; NIHIL = stderr hospitis ut prius - cursor/vindex
+     * immoti) */
+    FILE* fl = m->ansae[II] != NIHIL ? m->ansae[II] : stderr;
     constans character* genera[] = {
         "BENE", "SISTERE", "DECIPULA", "VITIUM", "PAUSA",
         "RECUSATIO"
@@ -339,15 +344,15 @@ _relationem_imprimere (constans Machinula* m)
     i32 numerus_tabulatorum = xar_numerus(m->tabulata);
     i32 i;
 
-    fprintf(stderr, "\n=== MACHINULA HALITUS: %s ===\n",
+    fprintf(fl, "\n=== MACHINULA HALITUS: %s ===\n",
         genera[m->halitus_genus]);
     si (m->halitus_nuntius.mensura > ZEPHYRUM)
     {
-        fprintf(stderr, "nuntius: %.*s\n",
+        fprintf(fl, "nuntius: %.*s\n",
             (int)m->halitus_nuntius.mensura,
             (constans character*)m->halitus_nuntius.datum);
     }
-    fprintf(stderr, "stiva vocationum (%ld tabulata, cacumen "
+    fprintf(fl, "stiva vocationum (%ld tabulata, cacumen "
         "primum):\n", (long)numerus_tabulatorum);
     per (i = (i32)numerus_tabulatorum; i > ZEPHYRUM; i--)
     {
@@ -356,13 +361,13 @@ _relationem_imprimere (constans Machinula* m)
 
         si ((i32)numerus_tabulatorum - i >= XXXII)
         {
-            fprintf(stderr, "    ... (%ld reliqua)\n", (long)i);
+            fprintf(fl, "    ... (%ld reliqua)\n", (long)i);
             frange;
         }
         _positionem_imprimere(m, t->functio, t->modulus_index,
             t->plana, t->instructio);
     }
-    fprintf(stderr, "cauda anuli (novissima prima):\n");
+    fprintf(fl, "cauda anuli (novissima prima):\n");
     per (i = ZEPHYRUM; i < XVI; i++)
     {
         i64 index = m->anulus_cursor - I - (i64)i;
@@ -381,7 +386,7 @@ _relationem_imprimere (constans Machinula* m)
             figura->modulus_index, figura->plana,
             figura->instructio);
     }
-    fprintf(stderr, "instructiones exsecutae: %llu\n",
+    fprintf(fl, "instructiones exsecutae: %llu\n",
         (insignatus longus longus)m->summa_instructionum);
 }
 

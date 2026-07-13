@@ -2971,3 +2971,37 @@ mutata quieta. Consumptores sequentes nominati: subsellium tessera
 (documentum+consolatorium+gradarium), vindex-eval (VARIABILIA
 tractio), umbra. ROADMAP: **M5 aarch64** (compile-to-memory primum)
 → M6 x86-64 → v2 iter-temporis (acta-visio substratum).
+
+## INTERLUDIUM POST-M4b, PARS I (2026-07-13): colloquium agitatum
+
+Agitatio cotidiana colloquii (propositum interludii: tractiones
+sentire ante M5). SESSIO CHORDAE VERA nunc fluit integre:
+`chorda s = chorda_ex_literis("ave maria", p);` → scissio; `s;` →
+nota aggregati; `s.mensura;` → `9 : insignatus integer`; `s.datum;`
+→ `0x… "ave maria" : insignatus character*`.
+
+TRACTIONES QUAE FLAGRAVERUNT (sessione prima!) ET SANATIONES:
+① **SCISSIO AUTOMATICA** (parca nominata M4b — tractio flagravit
+statim): `chorda s = f(...)` = exemplar REPL naturalissimum, C89
+initiatorem vetat → machina nunc dividit (`chorda s;` +
+`s = f(...);`), echo "≡ divisum"; declaratio pendens post
+assignationem fractam = nota v0. ② **relatio volatus REPL inundabat**
+— machinula relationem per ansae[2] nunc scribit (captura sessionis
+absorbet; NIHIL = stderr ut prius — cursor/vindex immoti; amalgama
+VERIFICATA). ③ nota aggregatorum honesta ("aggregatum : structura
+chorda (impressio parcata)") — SESSIO_VALOR_AGGREGATUM. ④ suffixum
+"(turnus N)" halitus solum pro turnis VETERIBUS. ⑤ **VITIUM LATENS:
+chorda_sectio(s, initium, FINIS) non (initium, mensura)** —
+_praecisa caudam praecidebat quotiens initus spatio incipiebat
+(numquam in probationibus flagravit — nulla probatio spatio
+incipiebat!); et scissura assignationis vacua erat. ⑥ tituli
+declarationum NUDARUM (`integer x;`) nunc extracti (religatio +
+echo; scissio eos postulabat).
+
+VITIUM PROPRIUM IN OPERE: regex purgationis debug enunta VERA
+comedit (conditio + r_decl assignatio) → r_decl inexpletum →
+verdictum 10 phantasma. Lectio: purgatio per notas /*DBG*/ non per
+regex trans multa enuntiata. Suita 11/11; censor PURUS.
+
+PARS II SEQUENS: migratio geminorum oneratorum (quinque exemplaria;
+classis canalis-macrorum in exemplaribus divergentibus vivit).

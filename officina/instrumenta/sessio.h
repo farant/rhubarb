@@ -48,7 +48,8 @@ enum {
     SESSIO_VALOR_FLUITANS_32,
     SESSIO_VALOR_FLUITANS_64,
     SESSIO_VALOR_MONSTRATOR,
-    SESSIO_VALOR_MONSTRATOR_CHARACTERUM
+    SESSIO_VALOR_MONSTRATOR_CHARACTERUM,
+    SESSIO_VALOR_AGGREGATUM   /* typus notus, impressio parcata */
 };
 
 /* Diagnosticum ostensum: positiones in DOCUMENTO OSTENSO (lineae
@@ -94,6 +95,9 @@ typedef struct {
     const s32* turni_mutati;
     s32    turni_mutati_numerus;
     /* valor turni expressionis (chunk C: impressio) */
+    b32    divisum;             /* scissio automatica: declaratio +
+                                 * assignatio (initiator non
+                                 * constans) - textus = assignatio */
     chorda typus_textus;        /* typus redditus latine; vacua si
                                  * irreddibilis */
     s32    valor_genus;         /* SESSIO_VALOR_* */

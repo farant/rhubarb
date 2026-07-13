@@ -467,17 +467,29 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_I32((i32)r.verdictum, (i32)SESSIO_ACCEPTUM);
         CREDO_VERUM(chorda_aequalis_literis(r.effusio, "5\n"));
 
-        /* B6: initiator globalis non constans -> reiectio ad limen */
+        /* B6 (interludium): initiator globalis non constans ->
+         * SCISSIO AUTOMATICA (declaratio + assignatio) */
         r = sessio_turnum_offerre(s, _ch("integer mala = h + 1;",
             piscina));
-        CREDO_AEQUALIS_I32((i32)r.verdictum, (i32)SESSIO_REIECTUM);
-        CREDO_VERUM(_chorda_continet(r.diagnostica[ZEPHYRUM].nuntius,
-            "initiatore"));
+        CREDO_AEQUALIS_I32((i32)r.verdictum, (i32)SESSIO_ACCEPTUM);
+        CREDO_VERUM(r.divisum);
+        CREDO_VERUM(chorda_aequalis_literis(r.nomen_declaratum,
+            "mala"));
+        {
+            chorda doc = sessio_documentum(s, piscina);
 
-        /* adressa constans LICET */
+            CREDO_VERUM(_chorda_continet(doc, "integer mala;"));
+            CREDO_VERUM(_chorda_continet(doc, "mala = h + 1;"));
+        }
+        r = sessio_turnum_offerre(s, _ch("mala;", piscina));
+        CREDO_AEQUALIS_I32((i32)r.verdictum, (i32)SESSIO_ACCEPTUM);
+        CREDO_VERUM(r.valor == (s64)VI);
+
+        /* adressa constans LICET (sine scissione) */
         r = sessio_turnum_offerre(s, _ch("integer* adr = &h;",
             piscina));
         CREDO_AEQUALIS_I32((i32)r.verdictum, (i32)SESSIO_ACCEPTUM);
+        CREDO_FALSUM(r.divisum);
 
         sessio_destruere(s);
     }
