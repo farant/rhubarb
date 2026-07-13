@@ -1,0 +1,42 @@
+#!/bin/bash
+
+# post-commit - basis nexus.tsv commissiones sequitur (LEGATUS
+# v0.1b: tabulae vetustas trans-sessionalis = lacuna maxima indicis;
+# commissio = momentum quo plagulae "vigilatae" fiunt "clausae").
+#
+# Installatio (semel, localis):
+#   git config core.hooksPath tools/unci-git
+# Remotio: git config --unset core.hooksPath
+#
+# Percursus in FUNDO curritur (nice; fd-s solutae ne git pendeat);
+# sera contra cumulationem; debounce 10 min. Scriptura tabulae
+# ATOMICA (sweep .nova + rename) - lectores numquam truncata vident.
+
+RADIX="$(git rev-parse --show-toplevel 2>/dev/null)" || exit 0
+TSV="$RADIX/build/nexus.tsv"
+SERA="$RADIX/build/nexus_renovare.sera"
+
+# debounce: tabula satis recens
+if [ -f "$TSV" ] && [ -n "$(find "$TSV" -mmin -10 2>/dev/null)" ]; then
+    exit 0
+fi
+
+# sera: percursus iam currit; sera vetus (>15 min) = derelicta
+if [ -f "$SERA" ]; then
+    if [ -n "$(find "$SERA" -mmin +15 2>/dev/null)" ]; then
+        rm -f "$SERA"
+    else
+        exit 0
+    fi
+fi
+
+mkdir -p "$RADIX/build"
+touch "$SERA"
+(
+    cd "$RADIX" || exit 1
+    nice ./silva/nexus.sh -renovare \
+        > build/nexus_renovare.log 2>&1
+    rm -f "$SERA"
+) < /dev/null > /dev/null 2>&1 &
+
+exit 0

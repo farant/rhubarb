@@ -3483,6 +3483,64 @@ LSP servatae (+diagnostica); restant goToImplementation (non-
 propositum C89) et outgoingCalls (parca nominata, intra-plagularis
 facilis). Fran committit + /reload-plugins → probae vivae.
 
+## LEGATUS — UNCUS POST-COMMISSIONEM + SCRIPTURA ATOMICA (2026-07-13)
+
+Vetustas trans-sessionalis indicis (lacuna maxima post v0.1b) in
+infrastructuram conversa: **tools/unci-git/post-commit** (committitur;
+installatio localis semel: `git config core.hooksPath
+tools/unci-git`) — post quamque commissionem percursus nexus in
+FUNDO (nice, fd-s solutae ne git pendeat; sera contra cumulationem,
+sera vetus >15min derelicta purgatur; debounce 10 min). **Scriptura
+tabulae ATOMICA in sweep ipso** (nexus.tsv.nova + rename — lectores
+[CLI, legatus ad initialize, uncus in fundo] numquam truncata
+vident; necessaria ANTE automationem). Basis nunc commissiones
+sequitur: sessio proxima indicem recentem oneratat sine memoria
+humana.
+
+**LEGATUSD = futurum nominatum** (Fran: "the right way long term").
+Visio: daemon UNUS per repositorium (transport socket — .lsp.json
+"transport":"socket" iam sustinetur; tabellarius framing iam
+FILE*-agnosticum): ① sessiones multae mundum calidum UNUM communicant
+(superpositio trans-sessionalis: editiones sessionis A quaestionibus
+B statim serviunt); ② vetustas RECTE soluta — daemon corpus vigilat
+(mtime/kqueue) et ordines plagularum mutatarum per nexus_ordines
+re-derivat (~0.2s/plagulam pro percursu 2.5-min; tenet etiam casum
+git-pull quem uncus non videt); ③ tsv fit forma persistentiae quam
+daemon scribit (nexus.sh -renovare daemonem rogat si vivus); uncus
+= "daemonem pulsa" (instantaneum). ④ CONVERGENTIA: servus MCP
+futurus daemonem EUNDEM communicaret — protocolla duo (LSP + MCP,
+involucrum tabellarii commune, framing diversa), mundus silvae unus.
+Quaestiones designi: concurrentia clientium (serialisatio in ansa
+uni-fili — latentiae nostrae ferunt), vita (quis incipit —
+launchd / cliens primus / involucrum incipe-aut-necte), thesauri
+documentorum per clientem. Arcus proprius quando trahitur.
+
+### ADDENDUM ANTE COMPACTIONEM (2026-07-13, sero)
+
+STATUS: LEGATUS 7/9 operationes vivas servat (+diagnostica);
+barrae formales OMNES tentae (99/121/136 + paritas tsv octetim);
+agitatio cotidiana IN VOLATU. Non commissa hoc momento: mutatio
+atomica sweep (nexus_percursus.c), uncus (tools/unci-git/),
+introitus phase-log (uncus+legatusd+addendum hoc), worklog
+probarum vivarum, memoria (extra repositorium).
+
+IN VOLATU / PROXIMA (sessio recens legit):
+① AGITATIO pergit — uncus examen-custos COEXSISTIT consulto
+(differentialis); dimittitur cum agitatio satisfecerit (id = barra
+sigilli milliarii; scriptum manet pro contextibus sine capite).
+② Parcae tractae: outgoingCalls (intra-plagularis, facilis);
+tags in documentSymbol; deduplicatio symbolorum; multi-publicatio
+trans-plagularis; R1 lexemata calida.
+③ FUTURA nominata: LEGATUSD (introitus supra — arcus proprius
+quando trahitur); servus MCP (tabellarius paratus); M5 aarch64
+POST sigillum legati.
+④ MOS NOVUS: commissiones basim indicis auto-renovant (uncus
+post-commissionem); registratio sessionis =
+`claude --plugin-dir "$PWD/officina/legatus-plugin" [--resume ...]`.
+Re-entry: introitus LEGATUS huius diei (FURCA RESOLUTA → GRADUS
+I/II/III → chunki 0/A/B/C/D → v0.1a → v0.1b I/II → uncus) +
+legatus.worklog.md + silva-lsp-spec.md + memoria.
+
 ## LEGATUS — PRIMUM CONTACTUM AGITATIONIS (2026-07-13, sessione resumpta)
 
 Fran sessione `claude --plugin-dir .../legatus-plugin --resume

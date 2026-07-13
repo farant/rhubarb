@@ -106,3 +106,19 @@ insignatus longus`). Rough edges AT THE REACH:
   catching bugs in its own source.
 - Bar: 121/121 (declared hover, definition {0,25}/{0,4} exact,
   header jump uri-suffix + line>0); suite 12/12; teeth 3/verified.
+
+## 2026-07-13 — v0.1b live probes (post-reload)
+
+- incomingCalls(nexus_ordines_fundere) → sweep caller only:
+  CORRECT-per-index — legatus.c's own call site postdates the last
+  -renovare. This is the staleness/overlay dynamic live: judged
+  files overlay fresh rows; closed files trust the sweep. Habit:
+  run `./silva/nexus.sh -renovare` after committing large additions
+  (2.5 min) so the cold baseline follows the code.
+- Concurrent LSP tool calls raced the server restart ("server is
+  starting") — second request failed transiently, clean retry
+  succeeded. Client-side behavior; nothing to fix server-side.
+- references(similitudo_optima) = 9 across 5 files (def + header +
+  probatio ×4 + nexus ×2 + emitte fortasse) — complete and correct.
+- workspaceSymbol("tabellarius_epistulam") → both framing fns at
+  .c body lines. Fuzzy ranking = nexus -similis voice.

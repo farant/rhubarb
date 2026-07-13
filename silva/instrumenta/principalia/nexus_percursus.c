@@ -407,7 +407,11 @@ s32 principale (integer argc, character** argv)
     SilvaPiscina* piscina_arboris_ctx;
     SilvaContextus* ctx;
     constans character* radix = ".";
-    constans character* via_effusionis = "build/nexus.tsv";
+    /* scriptura ATOMICA: .nova + rename - lectores (nexus CLI,
+     * legatus ad initialize, uncus post-commissionem in fundo)
+     * numquam tabulam truncatam vident */
+    constans character* via_effusionis = "build/nexus.tsv.nova";
+    constans character* via_finalis = "build/nexus.tsv";
     integer k;
     clock_t c0;
     clock_t c1;
@@ -540,6 +544,12 @@ s32 principale (integer argc, character** argv)
     _directorium_percurrere(ctx, radix);
     c1 = clock();
     fclose(effusio);
+    si (rename(via_effusionis, via_finalis) != ZEPHYRUM)
+    {
+        fprintf(stderr, "nexus_percursus: rename %s -> %s fractum\n",
+            via_effusionis, via_finalis);
+        redde I;
+    }
 
     fprintf(stderr, "\n=== NEXUS PERCURSUS ===\n");
     fprintf(stderr, "plagulae: %d", (int)plagulae);
@@ -553,6 +563,6 @@ s32 principale (integer argc, character** argv)
         (int)ordines_duplicati);
     fprintf(stderr, "tempus:   %.0f s\n",
         (duplex)(c1 - c0) / (duplex)CLOCKS_PER_SEC);
-    fprintf(stderr, "tabula:   %s\n", via_effusionis);
+    fprintf(stderr, "tabula:   %s\n", via_finalis);
     redde ZEPHYRUM;
 }
