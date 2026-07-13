@@ -3404,6 +3404,26 @@ Parcae registro (viae retro nominatae): hover-super-declarato
 symbolorum; multi-publicatio trans-plagularis; R1 lexemata calida;
 didClose .h; involucrum marketplace.
 
+## LEGATUS v0.1a (2026-07-13): DEFINITIO + HOVER-SUPER-DECLARATO
+
+Agitatio pull #1 et #2 UNA SOLUTIONE: **parca "exportatio nominis
+declaratoris" DISSOLUTA inspectione** — symbola lexema nominis ab
+M0 ferebant (_symbolum_registrare tok tradit); nulla mutatio
+silvae, nulla ceremonia amalgamatis. `_symbolum_declaratum_ad_byte`
+(ambulatio symbolorum) + `_invenire_ad_byte` (descensus communis ex
+hover refactus) + `_sedes_ex_symbolo` (Location: fons princeps =
+conversio plena; caput praebitum = **saltus trans-plagularis per
+praeparatio.viae_capitum novam** [basename→via absoluta ex
+ambulatione capitum — extensio praeparatoris parva]). Functiones
+signaturas etiam in hover declaratorum. definitionProvider
+nuntiatum. Gradus corporis-.c = exploratio quinta (index).
+INTEREA: legatus refactorem meum incompletum in FONTE SUO PROPRIO
+flagravit (push diagnosticorum ante compilationem) — canis-cibus
+vitium in se ipso capiens. BARRA: **121/121** (hover declarati
+`b : integer`; definitio {0,25}/{0,4} exacta; saltus in
+include/piscina.h); suita 12/12; dentes 3/viride. Fran committit +
+/reload-plugins → probae vivae.
+
 ## LEGATUS — PRIMUM CONTACTUM AGITATIONIS (2026-07-13, sessione resumpta)
 
 Fran sessione `claude --plugin-dir .../legatus-plugin --resume

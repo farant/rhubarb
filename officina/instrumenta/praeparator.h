@@ -19,6 +19,7 @@
 #define PRAEPARATOR_H
 
 #include "piscina.h"
+#include "tabula_dispersa.h"
 #include "silva.h"
 
 typedef struct {
@@ -39,6 +40,12 @@ typedef struct {
     SilvaContextus* ctx;
     SilvaParsura*   systema_parsura;   /* NULL si radix NULL */
     SilvaSemantica* systema_semantica;
+    TabulaDispersa* viae_capitum;      /* basename (chorda) -> via
+                                        * absoluta (char*); ex
+                                        * ambulatione capitum; NULL
+                                        * si sine_capitibus. Pro
+                                        * URIs saltuum in capita
+                                        * (legatus definitio). */
 } Praeparatio;
 
 /* Praeparat contextum. piscina_capitum = arena textuum capitum et

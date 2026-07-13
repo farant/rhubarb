@@ -125,6 +125,22 @@ _capita_praeparare (Praeparatio* p, Piscina* piscina_capitum,
                 {
                     (vacuum)tabula_dispersa_inserere(visa, clavis,
                         NIHIL);
+                    /* basename -> via absoluta (saltus in capita:
+                     * legatus definitio URIs inde struit) */
+                    si (p->viae_capitum != NIHIL)
+                    {
+                        memoriae_index mv = strlen(via_plena);
+                        character* copia = (character*)
+                            piscina_allocare(piscina_capitum,
+                                mv + I);
+
+                        si (copia != NIHIL)
+                        {
+                            memcpy(copia, via_plena, mv + I);
+                            (vacuum)tabula_dispersa_inserere(
+                                p->viae_capitum, clavis, copia);
+                        }
+                    }
                 }
             }
         }
@@ -260,6 +276,8 @@ praeparator_praeparare (Praeparatio* p, Piscina* piscina_capitum,
         TabulaDispersa* visa = tabula_dispersa_creare_chorda(
             piscina_capitum, DXII);
 
+        p->viae_capitum = tabula_dispersa_creare_chorda(
+            piscina_capitum, DXII);
         si (visa != NIHIL)
         {
             _capita_praeparare(p, piscina_capitum, visa, cfg->radix);

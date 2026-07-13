@@ -1131,9 +1131,209 @@ _regionem_ex_extentis (Legatus* l, Piscina* pn,
     redde _regio_json(pn, l0, c0, l1, c1);
 }
 
-/* NB: nexus symbolorum = SEDES USUS solum (inventum sessionis M4b)
- * - hover super NOMINE DECLARATO nullum reddit; parca nominata
- * (exportatio nominis declaratoris silva-latere = via retro). */
+nomen structura {
+    constans SemanticaSymbolum* symbolum;
+    constans TypusC89*          typus;
+    s32                         a;    /* extentum nodi electi */
+    s32                         b;
+} LegatusInventum;
+
+/* descensus per extenta: symbolum/typus profundissimum ad octetum
+ * (sedes USUS - nexus symbolorum ibi solum registrat) */
+interior vacuum
+_invenire_ad_byte (LegatusDocumentum* doc, memoriae_index octetum,
+    LegatusInventum* inv)
+{
+    s32 fons = doc->parsura->fons_princeps;
+    s32 a_e = -I;
+    s32 b_e = ZEPHYRUM;
+    constans SilvaNodus* nodus = NIHIL;
+
+    inv->symbolum = NIHIL;
+    inv->typus = NIHIL;
+    inv->a = -I;
+    inv->b = ZEPHYRUM;
+    {
+        SilvaValor radix = doc->parsura->commissio->radix;
+        insignatus integer n_el = silva_valor_lista_numerus(radix);
+        insignatus integer k;
+
+        per (k = ZEPHYRUM; k < n_el; k++)
+        {
+            SilvaValor* v = silva_valor_lista_obtinere(radix, k);
+
+            si (v != NIHIL && v->genus == SILVA_VALOR_NODUS
+                && v->datum.nodus != NIHIL
+                && _extentum_continet(v->datum.nodus, fons,
+                       (s32)octetum, &a_e, &b_e))
+            {
+                nodus = v->datum.nodus;
+                frange;
+            }
+        }
+    }
+    dum (nodus != NIHIL)
+    {
+        constans SemanticaSymbolum* s = silva_c89_symbolum_nodi(
+            doc->sem, nodus);
+        constans TypusC89* t = silva_c89_typus_expressionis(
+            doc->sem, nodus);
+
+        si (s != NIHIL)
+        {
+            inv->symbolum = s;
+            inv->typus = NIHIL;
+            inv->a = a_e;
+            inv->b = b_e;
+        }
+        alioquin si (t != NIHIL)
+        {
+            inv->typus = t;
+            inv->symbolum = NIHIL;
+            inv->a = a_e;
+            inv->b = b_e;
+        }
+        nodus = _filium_continentem(nodus, fons, (s32)octetum,
+            &a_e, &b_e);
+    }
+}
+
+/* nomen DECLARATUM ad octetum: symbolum->lexema = lexema nominis
+ * declaratoris (inventum: _symbolum_registrare tok nominis tradit
+ * - datum aderat ab M0!). Nexus sedes usus solum tegit; haec
+ * ambulatio declarationes ipsas tegit. O(symbola) - satis. */
+interior constans SemanticaSymbolum*
+_symbolum_declaratum_ad_byte (LegatusDocumentum* doc,
+    memoriae_index octetum)
+{
+    s32 fons = doc->parsura->fons_princeps;
+    insignatus integer n = silva_c89_symbola_numerus(doc->sem);
+    insignatus integer i;
+
+    per (i = ZEPHYRUM; i < n; i++)
+    {
+        constans SemanticaSymbolum* s =
+            silva_c89_symbolum_per_indicem(doc->sem, i);
+        SilvaToken* radix_t;
+
+        si (s == NIHIL || s->lexema == NIHIL)
+        {
+            perge;
+        }
+        radix_t = silva_token_radix(s->lexema);
+        si (radix_t == NIHIL)
+        {
+            radix_t = s->lexema;
+        }
+        si (radix_t->fons_index == fons
+            && radix_t->byte_offset >= ZEPHYRUM
+            && (memoriae_index)radix_t->byte_offset <= octetum
+            && octetum < (memoriae_index)radix_t->byte_offset
+                + radix_t->longitudo)
+        {
+            redde s;
+        }
+    }
+    redde NIHIL;
+}
+
+/* Location ex symbolo (definitio): lexema nominis -> uri + regio.
+ * Fons princeps: conversio plena (tabula linearum). Fons alienus
+ * (caput praebitum): uri per praeparatio.viae_capitum (basename ->
+ * via absoluta), columnae octetorum (approximatio sub utf-16 -
+ * capita quasi-ASCII, nota in worklog). NIHIL = sine sede honesta
+ * (lexema syntheticum / systema / basename ignotum). */
+interior JsonValor*
+_sedes_ex_symbolo (Legatus* l, Piscina* pn, LegatusDocumentum* doc,
+    constans SemanticaSymbolum* s)
+{
+    SilvaToken* radix_t;
+
+    si (s == NIHIL || s->lexema == NIHIL)
+    {
+        redde NIHIL;
+    }
+    radix_t = silva_token_radix(s->lexema);
+    si (radix_t == NIHIL)
+    {
+        radix_t = s->lexema;
+    }
+    si (radix_t->byte_offset < ZEPHYRUM)
+    {
+        redde NIHIL;
+    }
+    {
+        JsonValor* sedes_v = json_objectum_creare(pn);
+        JsonValor* regio;
+
+        si (radix_t->fons_index == doc->parsura->fons_princeps)
+        {
+            insignatus integer l0;
+            insignatus integer c0;
+            insignatus integer l1;
+            insignatus integer c1;
+
+            _byte_ad_positio(l, doc,
+                (memoriae_index)radix_t->byte_offset, &l0, &c0);
+            _byte_ad_positio(l, doc,
+                (memoriae_index)radix_t->byte_offset
+                    + radix_t->longitudo, &l1, &c1);
+            regio = _regio_json(pn, l0, c0, l1, c1);
+            json_objectum_ponere(sedes_v, "uri",
+                json_chorda_creare(pn, doc->uri));
+        }
+        alioquin
+        {
+            constans SilvaChorda* via_f = silva_fons_via(
+                doc->parsura->expansio, radix_t->fons_index);
+            character basename_b[CCLVI];
+            chorda clavis;
+            vacuum* via_plena = NIHIL;
+            character uri_b[LEGATUS_VIA_MAXIMA + VIII];
+            insignatus integer c0;
+
+            si (via_f == NIHIL
+                || l->praeparatio.viae_capitum == NIHIL
+                || via_f->mensura >= (unsigned int)CCLVI)
+            {
+                redde NIHIL;
+            }
+            memcpy(basename_b, via_f->datum, via_f->mensura);
+            clavis.mensura = (i32)via_f->mensura;
+            clavis.datum = (i8*)basename_b;
+            si (!tabula_dispersa_invenire(
+                    l->praeparatio.viae_capitum, clavis,
+                    &via_plena)
+                || via_plena == NIHIL)
+            {
+                redde NIHIL;   /* systema aut basename ignotum */
+            }
+            si (strlen((constans character*)via_plena) + VIII
+                >= magnitudo(uri_b))
+            {
+                redde NIHIL;
+            }
+            sprintf(uri_b, "file://%s",
+                (constans character*)via_plena);
+            json_objectum_ponere(sedes_v, "uri",
+                json_chorda_creare_literis(pn, uri_b));
+            c0 = radix_t->columna > ZEPHYRUM ? radix_t->columna - I
+                                             : ZEPHYRUM;
+            regio = _regio_json(pn,
+                radix_t->linea > ZEPHYRUM ? radix_t->linea - I
+                                          : ZEPHYRUM,
+                c0,
+                radix_t->linea > ZEPHYRUM ? radix_t->linea - I
+                                          : ZEPHYRUM,
+                c0 + radix_t->longitudo);
+        }
+        json_objectum_ponere(sedes_v, "range", regio);
+        redde sedes_v;
+    }
+}
+
+/* Hover: sedes usus per descensum; nomina DECLARATA per ambulatio
+ * symbolorum (parca "use-sites only" SOLUTA - lexema aderat). */
 interior vacuum
 _hover_tractare (Legatus* l, Piscina* pn, JsonValor* id,
     JsonValor* params)
@@ -1145,14 +1345,7 @@ _hover_tractare (Legatus* l, Piscina* pn, JsonValor* id,
     JsonValor* pos_v;
     LegatusDocumentum* doc;
     memoriae_index octetum;
-    s32 fons;
-    s32 a_e = -I;
-    s32 b_e = ZEPHYRUM;
-    s32 el_a = -I;
-    s32 el_b = ZEPHYRUM;
-    constans SilvaNodus* nodus = NIHIL;
-    constans SemanticaSymbolum* symbolum_electum = NIHIL;
-    constans TypusC89* typus_electus = NIHIL;
+    LegatusInventum inv;
 
     si (params == NIHIL)
     {
@@ -1181,57 +1374,27 @@ _hover_tractare (Legatus* l, Piscina* pn, JsonValor* id,
             json_objectum_capere(pos_v, "line")),
         (insignatus integer)json_ad_integer(
             json_objectum_capere(pos_v, "character")));
-    fons = doc->parsura->fons_princeps;
-
-    /* elementum radicis continens (filtrum fontis principis
-     * nodos lexici naturaliter excludit) */
+    _invenire_ad_byte(doc, octetum, &inv);
+    si (inv.symbolum == NIHIL && inv.typus == NIHIL)
     {
-        SilvaValor radix = doc->parsura->commissio->radix;
-        insignatus integer n_el = silva_valor_lista_numerus(radix);
-        insignatus integer k;
+        /* nomen declaratum? */
+        constans SemanticaSymbolum* s =
+            _symbolum_declaratum_ad_byte(doc, octetum);
 
-        per (k = ZEPHYRUM; k < n_el; k++)
+        si (s != NIHIL && s->lexema != NIHIL)
         {
-            SilvaValor* v = silva_valor_lista_obtinere(radix, k);
+            SilvaToken* rt = silva_token_radix(s->lexema);
 
-            si (v != NIHIL && v->genus == SILVA_VALOR_NODUS
-                && v->datum.nodus != NIHIL
-                && _extentum_continet(v->datum.nodus, fons,
-                       (s32)octetum, &a_e, &b_e))
+            si (rt == NIHIL)
             {
-                nodus = v->datum.nodus;
-                frange;
+                rt = s->lexema;
             }
+            inv.symbolum = s;
+            inv.a = rt->byte_offset;
+            inv.b = rt->byte_offset + (s32)rt->longitudo;
         }
     }
-
-    /* descensus: profundissimum symbolum/typus vincit */
-    dum (nodus != NIHIL)
-    {
-        constans SemanticaSymbolum* s = silva_c89_symbolum_nodi(
-            doc->sem, nodus);
-        constans TypusC89* t = silva_c89_typus_expressionis(
-            doc->sem, nodus);
-
-        si (s != NIHIL)
-        {
-            symbolum_electum = s;
-            typus_electus = NIHIL;   /* symbolum profundius vincit */
-            el_a = a_e;
-            el_b = b_e;
-        }
-        alioquin si (t != NIHIL)
-        {
-            typus_electus = t;
-            symbolum_electum = NIHIL;
-            el_a = a_e;
-            el_b = b_e;
-        }
-        nodus = _filium_continentem(nodus, fons, (s32)octetum,
-            &a_e, &b_e);
-    }
-
-    si (symbolum_electum == NIHIL && typus_electus == NIHIL)
+    si (inv.symbolum == NIHIL && inv.typus == NIHIL)
     {
         _respondere(l, tabellarius_responsum(pn, id, NIHIL));
         redde;
@@ -1242,30 +1405,30 @@ _hover_tractare (Legatus* l, Piscina* pn, JsonValor* id,
         JsonValor* resultatum;
         JsonValor* contenta;
 
-        si (symbolum_electum != NIHIL)
+        si (inv.symbolum != NIHIL)
         {
-            si (silva_c89_typum_scribere(symbolum_electum->typus,
+            si (silva_c89_typum_scribere(inv.symbolum->typus,
                     typus_b, (insignatus integer)CCLVI)
                 > ZEPHYRUM)
             {
                 sprintf(valor_b, "%.*s : %s",
-                    (int)symbolum_electum->titulus.mensura,
+                    (int)inv.symbolum->titulus.mensura,
                     (constans character*)
-                        symbolum_electum->titulus.datum,
+                        inv.symbolum->titulus.datum,
                     typus_b);
             }
             alioquin
             {
-                /* typus irreddibilis (functio/acies) - nomen solum */
+                /* typus irreddibilis (acies) - nomen solum */
                 sprintf(valor_b, "%.*s",
-                    (int)symbolum_electum->titulus.mensura,
+                    (int)inv.symbolum->titulus.mensura,
                     (constans character*)
-                        symbolum_electum->titulus.datum);
+                        inv.symbolum->titulus.datum);
             }
         }
         alioquin
         {
-            si (silva_c89_typum_scribere(typus_electus, typus_b,
+            si (silva_c89_typum_scribere(inv.typus, typus_b,
                     (insignatus integer)CCLVI) == ZEPHYRUM)
             {
                 _respondere(l, tabellarius_responsum(pn, id,
@@ -1281,13 +1444,74 @@ _hover_tractare (Legatus* l, Piscina* pn, JsonValor* id,
         json_objectum_ponere(contenta, "value",
             json_chorda_creare_literis(pn, valor_b));
         json_objectum_ponere(resultatum, "contents", contenta);
-        si (el_a >= ZEPHYRUM)
+        si (inv.a >= ZEPHYRUM)
         {
             json_objectum_ponere(resultatum, "range",
-                _regionem_ex_extentis(l, pn, doc, el_a, el_b));
+                _regionem_ex_extentis(l, pn, doc, inv.a, inv.b));
         }
         _respondere(l, tabellarius_responsum(pn, id, resultatum));
     }
+}
+
+/* Definitio (gradus declarationis, v0.1a): sedes usus -> symbolum
+ * -> lexema nominis (etiam in CAPITE praebito - saltus
+ * trans-plagularis primus!); nomen declaratum -> se ipsum.
+ * Definitio corporis .c alieni = post explorationem quintam
+ * (index trans-plagularis). */
+interior vacuum
+_definitio_tractare (Legatus* l, Piscina* pn, JsonValor* id,
+    JsonValor* params)
+{
+    character via_c[LEGATUS_VIA_MAXIMA];
+    chorda via;
+    chorda uri;
+    JsonValor* doc_v;
+    JsonValor* pos_v;
+    LegatusDocumentum* doc;
+    memoriae_index octetum;
+    LegatusInventum inv;
+    constans SemanticaSymbolum* s;
+
+    si (params == NIHIL)
+    {
+        _respondere(l, tabellarius_responsum(pn, id, NIHIL));
+        redde;
+    }
+    doc_v = json_objectum_capere(params, "textDocument");
+    pos_v = json_objectum_capere(params, "position");
+    si (!_viam_extrahere(l, doc_v, via_c, magnitudo(via_c), &via,
+            &uri)
+        || pos_v == NIHIL)
+    {
+        _respondere(l, tabellarius_responsum(pn, id, NIHIL));
+        redde;
+    }
+    doc = _documentum_invenire(l, via);
+    si (doc == NIHIL || !doc->apertum || doc->sem == NIHIL
+        || doc->parsura == NIHIL
+        || doc->parsura->commissio == NIHIL)
+    {
+        _respondere(l, tabellarius_responsum(pn, id, NIHIL));
+        redde;
+    }
+    octetum = _positio_ad_byte(l, doc,
+        (insignatus integer)json_ad_integer(
+            json_objectum_capere(pos_v, "line")),
+        (insignatus integer)json_ad_integer(
+            json_objectum_capere(pos_v, "character")));
+    _invenire_ad_byte(doc, octetum, &inv);
+    s = inv.symbolum;
+    si (s == NIHIL)
+    {
+        s = _symbolum_declaratum_ad_byte(doc, octetum);
+    }
+    si (s == NIHIL)
+    {
+        _respondere(l, tabellarius_responsum(pn, id, NIHIL));
+        redde;
+    }
+    _respondere(l, tabellarius_responsum(pn, id,
+        _sedes_ex_symbolo(l, pn, doc, s)));
 }
 
 interior vacuum
@@ -1659,6 +1883,8 @@ _initialize_tractare (Legatus* l, Piscina* pn, JsonValor* id,
             json_boolean_creare(pn, VERUM));
         json_objectum_ponere(caps, "documentSymbolProvider",
             json_boolean_creare(pn, VERUM));
+        json_objectum_ponere(caps, "definitionProvider",
+            json_boolean_creare(pn, VERUM));
         json_objectum_ponere(servus, "name",
             json_chorda_creare_literis(pn, "legatus"));
         json_objectum_ponere(servus, "version",
@@ -1717,6 +1943,11 @@ _nuntium_tractare (Legatus* l, Piscina* pn, TabellariusNuntius* n,
         alioquin si (_methodus_est(n->methodus, "textDocument/hover"))
         {
             _hover_tractare(l, pn, n->id, n->params);
+        }
+        alioquin si (_methodus_est(n->methodus,
+                         "textDocument/definition"))
+        {
+            _definitio_tractare(l, pn, n->id, n->params);
         }
         alioquin si (_methodus_est(n->methodus,
                          "textDocument/documentSymbol"))

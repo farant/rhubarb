@@ -76,3 +76,33 @@ insignatus longus`). Rough edges AT THE REACH:
   pinned); probatio pins `probatio_functio : integer(integer)`.
   First full dogfood loop closed: reach → asperitas-in-worklog →
   silva fix → gates → live, within the hour.
+
+## 2026-07-13 — goToDefinition (declaration tier) + hover-on-declared
+
+- **The declarator-export park DISSOLVED by inspection**:
+  `_symbolum_registrare(..., dv->datum.nodus, tok)` — symbols have
+  carried their declaring NAME TOKEN (`lexema`) since M0. No silva
+  change needed; `_symbolum_declaratum_ad_byte` scans the symbol
+  table (O(symbols), fine). Fixes hover-on-declared-names AND
+  serves definition-on-declared-names in one helper.
+- Definition = use-site symbol (shared `_invenire_ad_byte` descent,
+  refactored out of hover) OR declared-name scan → `lexema` radix →
+  Location. **Cross-file jump into praebere'd HEADERS works**: fons
+  ≠ princeps → basename via silva_fons_via → absolute path via the
+  NEW `praeparatio.viae_capitum` map (praeparator records
+  basename→path during the capita sweep; lives/dies with
+  piscina_capitum). systema fontes → NIHIL (no jump into synthetic
+  text; correct).
+- Header-target ranges use raw byte columns (no line table for
+  unopened files) — exact under utf-8; utf-16 approximation on
+  non-ASCII header lines (quasi-ASCII corpus; acceptable, noted).
+- **Definition body-tier stays v0.1**: the jump lands on the LATEST
+  registered declaration preceding the use (static defined above
+  its uses = the definition itself; header-declared = the header
+  decl). True defining-.c jump = the fifth exploration's index.
+- LIVE MOMENT during this work: legatus flagged my own incomplete
+  refactor (stale identifiers in the render block) via the
+  diagnostics push before any compile ran — the dogfood channel
+  catching bugs in its own source.
+- Bar: 121/121 (declared hover, definition {0,25}/{0,4} exact,
+  header jump uri-suffix + line>0); suite 12/12; teeth 3/verified.

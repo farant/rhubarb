@@ -427,6 +427,34 @@ probatio_hover_symbola (Piscina* p)
         "\"file://%s/lib/legatus_phantasma_f.c\"}}}", _radix());
     _scribe(intra, p, corpus);
 
+    /* hover nominis DECLARATI 'b' (linea 2, char 8) - parca soluta */
+    sprintf(corpus,
+        "{\"jsonrpc\":\"2.0\",\"id\":9,"
+        "\"method\":\"textDocument/hover\",\"params\":"
+        "{\"textDocument\":{\"uri\":"
+        "\"file://%s/lib/legatus_phantasma_f.c\"},"
+        "\"position\":{\"line\":2,\"character\":8}}}", _radix());
+    _scribe(intra, p, corpus);
+
+    /* definitio ex USU parametri 'a' (linea 2 char 12) ->
+     * declaratio {0,25} */
+    sprintf(corpus,
+        "{\"jsonrpc\":\"2.0\",\"id\":10,"
+        "\"method\":\"textDocument/definition\",\"params\":"
+        "{\"textDocument\":{\"uri\":"
+        "\"file://%s/lib/legatus_phantasma_f.c\"},"
+        "\"position\":{\"line\":2,\"character\":12}}}", _radix());
+    _scribe(intra, p, corpus);
+
+    /* definitio ex VOCATIONE (linea 7 char 15) -> nomen {0,4} */
+    sprintf(corpus,
+        "{\"jsonrpc\":\"2.0\",\"id\":11,"
+        "\"method\":\"textDocument/definition\",\"params\":"
+        "{\"textDocument\":{\"uri\":"
+        "\"file://%s/lib/legatus_phantasma_f.c\"},"
+        "\"position\":{\"line\":7,\"character\":15}}}", _radix());
+    _scribe(intra, p, corpus);
+
     _scribe(intra, p,
         "{\"jsonrpc\":\"2.0\",\"id\":7,\"method\":\"shutdown\"}");
     _scribe(intra, p, "{\"jsonrpc\":\"2.0\",\"method\":\"exit\"}");
@@ -494,9 +522,131 @@ probatio_hover_symbola (Piscina* p)
         }
     }
 
+    n = _lege(extra, p, &bene);   /* hover DECLARATI b */
+    CREDO_VERUM(bene);
+    CREDO_VERUM(_hover_valor_est(&n, "b : integer"));
+
+    n = _lege(extra, p, &bene);   /* definitio parametri a */
+    CREDO_VERUM(bene);
+    {
+        JsonValor* resultatum = json_objectum_capere(n.radix,
+            "result");
+        JsonValor* initium;
+
+        CREDO_VERUM(resultatum != NIHIL
+            && !json_est_nullum(resultatum));
+        initium = json_objectum_capere(json_objectum_capere(
+            resultatum, "range"), "start");
+        CREDO_VERUM(json_ad_integer(json_objectum_capere(initium,
+            "line")) == ZEPHYRUM);
+        CREDO_VERUM(json_ad_integer(json_objectum_capere(initium,
+            "character")) == XXV);
+    }
+
+    n = _lege(extra, p, &bene);   /* definitio ex vocatione */
+    CREDO_VERUM(bene);
+    {
+        JsonValor* resultatum = json_objectum_capere(n.radix,
+            "result");
+        JsonValor* initium;
+
+        CREDO_VERUM(resultatum != NIHIL
+            && !json_est_nullum(resultatum));
+        initium = json_objectum_capere(json_objectum_capere(
+            resultatum, "range"), "start");
+        CREDO_VERUM(json_ad_integer(json_objectum_capere(initium,
+            "line")) == ZEPHYRUM);
+        CREDO_VERUM(json_ad_integer(json_objectum_capere(initium,
+            "character")) == IV);
+    }
+
     n = _lege(extra, p, &bene);   /* shutdown */
     CREDO_VERUM(bene);
     CREDO_VERUM(_resultatum_nullum(&n));
+
+    fclose(intra);
+    fclose(extra);
+}
+
+/* ==================================================
+ * DEFINITIO IN CAPUT (saltus trans-plagularis primus): usus
+ * functionis capitis -> Location in include/piscina.h
+ * ================================================== */
+
+interior vacuum
+probatio_definitio_capitis (Piscina* p)
+{
+    FILE* intra = tmpfile();
+    FILE* extra = tmpfile();
+    character corpus[1024];
+    LegatusConfiguratio cfg;
+    b32 bene = FALSUM;
+    TabellariusNuntius n;
+
+    imprimere("--- Probans definitionem in caput ---\n");
+    CREDO_VERUM(intra != NIHIL && extra != NIHIL);
+
+    sprintf(corpus,
+        "{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"initialize\","
+        "\"params\":{\"rootUri\":\"file://%s\",\"capabilities\":"
+        "{\"general\":{\"positionEncodings\":[\"utf-8\"]}}}}",
+        _radix());
+    _scribe(intra, p, corpus);
+
+    sprintf(corpus,
+        "{\"jsonrpc\":\"2.0\",\"method\":\"textDocument/didOpen\","
+        "\"params\":{\"textDocument\":{\"uri\":"
+        "\"file://%s/lib/legatus_phantasma_d.c\",\"version\":1,"
+        "\"languageId\":\"c\",\"text\":"
+        "\"#include \\\"piscina.h\\\"\\n"
+        "void* g(Piscina* p) { return piscina_allocare(p, 4); }"
+        "\\n\"}}}", _radix());
+    _scribe(intra, p, corpus);
+
+    /* definitio ex usu piscina_allocare (linea 1 char 30) */
+    sprintf(corpus,
+        "{\"jsonrpc\":\"2.0\",\"id\":2,"
+        "\"method\":\"textDocument/definition\",\"params\":"
+        "{\"textDocument\":{\"uri\":"
+        "\"file://%s/lib/legatus_phantasma_d.c\"},"
+        "\"position\":{\"line\":1,\"character\":30}}}", _radix());
+    _scribe(intra, p, corpus);
+
+    _scribe(intra, p,
+        "{\"jsonrpc\":\"2.0\",\"id\":3,\"method\":\"shutdown\"}");
+    _scribe(intra, p, "{\"jsonrpc\":\"2.0\",\"method\":\"exit\"}");
+
+    rewind(intra);
+    memset(&cfg, ZEPHYRUM, magnitudo(LegatusConfiguratio));
+    CREDO_VERUM(legatus_currere(intra, extra, &cfg) == ZEPHYRUM);
+    rewind(extra);
+
+    n = _lege(extra, p, &bene);   /* initialize */
+    CREDO_VERUM(bene);
+    n = _lege(extra, p, &bene);   /* publicatio (pura) */
+    CREDO_VERUM(bene);
+    CREDO_VERUM(_diagnostica_numerus(&n) == (s32)ZEPHYRUM);
+
+    n = _lege(extra, p, &bene);   /* definitio -> caput */
+    CREDO_VERUM(bene);
+    {
+        JsonValor* resultatum = json_objectum_capere(n.radix,
+            "result");
+        chorda uri;
+        constans character* suffixum = "include/piscina.h";
+        memoriae_index m = strlen(suffixum);
+
+        CREDO_VERUM(resultatum != NIHIL
+            && !json_est_nullum(resultatum));
+        uri = json_ad_chorda(json_objectum_capere(resultatum,
+            "uri"));
+        CREDO_VERUM(uri.mensura >= (i32)m
+            && memcmp(uri.datum + (uri.mensura - (i32)m), suffixum,
+                   m) == ZEPHYRUM);
+        CREDO_VERUM(json_ad_integer(json_objectum_capere(
+            json_objectum_capere(json_objectum_capere(resultatum,
+                "range"), "start"), "line")) > ZEPHYRUM);
+    }
 
     fclose(intra);
     fclose(extra);
@@ -888,6 +1038,7 @@ principale (vacuum)
 
     probatio_ordo_plenus(piscina);
     probatio_hover_symbola(piscina);
+    probatio_definitio_capitis(piscina);
     probatio_utf16(piscina);
     probatio_syntaxis_posita(piscina);
     probatio_caput_servatum(piscina);
