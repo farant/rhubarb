@@ -182,3 +182,15 @@ project-specs/silva-lsp-simulatio.md → THEN the spec (from interview
 | 14 | encoding | utf-8 oblatum + utf-16 fallback |
 | 15 | sigillum | transcripta aurea formalia + agitatio cotidiana |
 | 16 | processus | simulatio → spec |
+
+## Q17 — addendum post-simulatio: domus redditoris typorum (sim C5)
+
+**FRAN (verbatim):** "we might as well promote it silva side if we
+will have to do that eventually anyway?"
+
+**DECISUS: promotio silva-latere.** _typum_scribere (sessio-privata,
+M4b chunk C) fit publica silva API (silva_c89_typum_scribere);
+sessio migrat ad publicam et privatam delet (paritas per suitam —
+exemplar praeparatoris). Cum longitudine diagnostici et extensione
+nodi consolidatur in UNUM tactum silvae ("chunk 0" — una ceremonia
+amalgamatis, unus cursus portarum).

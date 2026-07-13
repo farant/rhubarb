@@ -3135,3 +3135,45 @@ utf-16 fallback; sigillum = transcripta aurea + agitatio cotidiana.
 SEQUENS: silva-lsp-simulatio (ansa transportus / index
 positio→nodus / redditio hover / registratio clientis) → spec.
 Fran committit ante simulationem.
+
+## SILVA-LSP GRADUS III (2026-07-13): simulatio + spec — ON-RAMP COMPLETUS
+
+**Simulatio (sim-8; project-specs/silva-lsp-simulatio.md): C1–C15,
+NULLA reversio decisorum.** Duo mutationes formae scopi: ① promotio
+extensionis (C4) fit V0-NECESSARIA — hover descensum arboris per
+extenta postulat (positio→token facilis, token→NODUS mappam publicam
+non habet); tribus consumptoribus se solvit (hover/docSymbol/nodi
+erroris). "Index spatialis non necessarius" fundamentorum MORTUUS —
+correctio honesta. ② conatus positionum syntaxis (C13) VIDETUR
+CADERE IN MANUS: GENUS_ERROR publicum (53), nodi erroris in
+elementis radicis, extenta eadem machina — effugium manet.
+Inventa optima: C3 diagnostica trans-plagularia (via=caput sub URI
+documenti = squigglae mendaces; v0 filtrat via==documentum, via
+retro nominata: multi-publish per-via); C11 decipula
+obiecti-staleis PRAE-VITATA (ordo rigidus: documenta → Praeparatio
+→ re-analysis); C6 dissoluta per designum (legatus = MACHINA cum
+principali tenui, probatio in-processu — exemplar sessionis).
+Hover loquitur formam echo colloquii (`titulus : typus`) — una vox
+domus.
+
+**Q17 (Fran):** redditor typorum promovetur SILVA-LATERE ("might as
+well... if we will have to do that eventually anyway") →
+consolidatio: longitudo + extensio + redditor = CHUNK 0, UNA
+ceremonia amalgamatis; sessio migrat eodem passu (privata delet,
+paritas per suitam — exemplar praeparatoris). NB: redditor =
+re-expressio contra interna silvae (aedificator officinae non
+transfert) — unicum opus verum chunki 0.
+
+**SPEC SCRIPTUM: project-specs/silva-lsp-spec.md.** Chunki:
+0 silva-enablers (portae quinque uno cursu) → A lib/tabellarius
+(framing ∥ envelope, purus) → B machina legatus + lamina
+diagnosticorum (URI↔via, thesaurus documentorum
+piscina-per-versionem, filtrum C3, exclusiones) → C positiones/
+hover/documentSymbol (tabula linearum + index extentorum; utf-16
+fallback) → D syntaxis + lamina .h + involucrum plugin + SIGILLUM
+(transcripta aurea plena + agitatio cotidiana + differentialis
+shakedown cum unco, tum uncus dimittitur).
+
+Arcus on-ramp COMPLETUS (exploratores → fundamenta → interrogatio →
+simulatio → spec, duobus diebus non — UNO die). SEQUENS: Fran
+committit → chunk 0.
