@@ -3316,3 +3316,47 @@ pro signaturis API. Asperitates: CREDO_VERUM fractum "Speratus:
 SEQUENS: chunk C (positiones/hover/documentSymbol — tabula
 linearum + index extentorum + descensus per extenta + redditor
 publicus chunki 0). Fran committit.
+
+## LEGATUS CHUNK C — RELATIO (2026-07-13): HOVER + DOCUMENTSYMBOL VIVUNT
+
+**Positiones**: tabula linearum per versionem (structa in
+textum_ponere, moritur cum piscina versionis); remappa utf-16 per
+lineam AMBOBUS directionibus (unitates numeratae, paria surrogata
+recta quamvis corpus BMP-solum); iniens positio→octetum, exiens
+columna→LSP applicata publicationibus. **Hover**: descensus per
+extenta (silva_nodus_extensionem chunki 0 — INDEX SPATIALIS NON
+OPUS FUIT, resolutio C4 simulationis tenuit); symbolum/typus
+profundissimum vincit; VOX COLLOQUII (`a : integer`); typus
+irreddibilis (functio) → nomen solum; regio ex extentis nodi
+electi. **documentSymbol**: C14 RESOLUTUM inspectione —
+SemanticaSymbolum declarans ET lexema fert → ambulatio tabulae
+symbolorum; filtra ex_systemate / profunditas≠0 / est_implicitum /
+plagula-aliena (extentum<0 = symbolum capitis); species 12/5/14/13.
+Facultates hoverProvider + documentSymbolProvider nuntiatae.
+
+BARRA: **81/81 PRIMO TRANSITU** (44→81; suita 12/12) — hover usus
+parametri/litteralis/localis + nusquam-nullum + documentSymbol ordo
+exactus (probatio_functio/12/linea 0); utf-16: negotiatio
+ordinaria, columnae exientes 16/19 EXACTAE post signum bi-octetum,
+hover iniens ad unitatem 30 (discriminans verus — sine remappa
+nullum redderet). Positiones utf-16 manu computatae congruerunt
+primo transitu. DENTES: 3 FRACTA flexo, viride restituto.
+
+LIMITES NOMINATI (parcae cum viis retro): ① nexus symbolorum =
+SEDES USUS solum → hover super NOMINE DECLARATO nullum (via retro:
+exportatio ligaminis nominis declaratoris silva-latere — pull
+nominatum); ② tags structurarum/enumerorum absunt a documentSymbol
+(tabula symbolorum sine ordinibus tag; ambulatio tag = additio
+posterior); ③ symbola duplicata (decl+def) non deduplicata v0.
+
+DEBRIEF: fructus praecipuus = LIBRI IPSI ut instrumentum —
+inventum sessionis M4b ("nexus = sedes usus solum") fixturam
+pravam PRAEVENIT antequam scripta est (hover super declaratis in
+probatione numquam temptatum, sedes usus electae ab initio).
+Asperitates: nullae novae. Desiderata: hover-super-declarato (iam
+parca ①).
+
+SEQUENS: chunk D (positiones errorum syntaxis ex nodis GENUS_ERROR
++ lamina .h [didSave → reaedificatio ordine C11] + involucrum
+plugin + SIGILLUM: transcripta aurea plena + agitatio cotidiana +
+differentialis unci + dimissio unci). Fran committit.

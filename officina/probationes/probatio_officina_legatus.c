@@ -207,6 +207,10 @@ probatio_ordo_plenus (Piscina* p)
             json_objectum_capere(v, "change")) == I);
         CREDO_VERUM(json_ad_boolean(
             json_objectum_capere(v, "save")) == VERUM);
+        v = json_objectum_capere(caps, "hoverProvider");
+        CREDO_VERUM(v != NIHIL && json_ad_boolean(v) == VERUM);
+        v = json_objectum_capere(caps, "documentSymbolProvider");
+        CREDO_VERUM(v != NIHIL && json_ad_boolean(v) == VERUM);
         v = json_objectum_capere(resultatum, "serverInfo");
         CREDO_VERUM(v != NIHIL && _chorda_est(json_ad_chorda(
             json_objectum_capere(v, "name")), "legatus"));
@@ -288,6 +292,294 @@ probatio_ordo_plenus (Piscina* p)
         (vacuum)tabellarius_epistulam_legere(extra, p, &finitus);
         CREDO_VERUM(finitus);
     }
+
+    fclose(intra);
+    fclose(extra);
+}
+
+interior b32
+_resultatum_nullum (TabellariusNuntius* n)
+{
+    JsonValor* resultatum;
+
+    si (n->radix == NIHIL)
+    {
+        redde FALSUM;
+    }
+    resultatum = json_objectum_capere(n->radix, "result");
+    redde (resultatum != NIHIL && json_est_nullum(resultatum))
+        ? VERUM : FALSUM;
+}
+
+interior b32
+_hover_valor_est (TabellariusNuntius* n,
+    constans character* litterae)
+{
+    JsonValor* resultatum;
+    JsonValor* contenta;
+
+    si (n->radix == NIHIL)
+    {
+        redde FALSUM;
+    }
+    resultatum = json_objectum_capere(n->radix, "result");
+    si (resultatum == NIHIL || json_est_nullum(resultatum))
+    {
+        redde FALSUM;
+    }
+    contenta = json_objectum_capere(resultatum, "contents");
+    si (contenta == NIHIL)
+    {
+        redde FALSUM;
+    }
+    redde _chorda_est(json_ad_chorda(
+        json_objectum_capere(contenta, "value")), litterae);
+}
+
+/* ==================================================
+ * HOVER + DOCUMENTSYMBOL (utf-8): sedes usus, litterale, nihil,
+ * symbola plagulae
+ * ================================================== */
+
+interior vacuum
+probatio_hover_symbola (Piscina* p)
+{
+    FILE* intra = tmpfile();
+    FILE* extra = tmpfile();
+    character corpus[2048];
+    LegatusConfiguratio cfg;
+    b32 bene = FALSUM;
+    TabellariusNuntius n;
+
+    imprimere("--- Probans hover + documentSymbol ---\n");
+    CREDO_VERUM(intra != NIHIL && extra != NIHIL);
+
+    sprintf(corpus,
+        "{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"initialize\","
+        "\"params\":{\"rootUri\":\"file://%s\",\"capabilities\":"
+        "{\"general\":{\"positionEncodings\":[\"utf-8\"]}}}}",
+        _radix());
+    _scribe(intra, p, corpus);
+
+    /* functio: usus parametrorum + localium (nexus = sedes USUS -
+     * hover super nominibus declaratis nullum reddit, parca) */
+    sprintf(corpus,
+        "{\"jsonrpc\":\"2.0\",\"method\":\"textDocument/didOpen\","
+        "\"params\":{\"textDocument\":{\"uri\":"
+        "\"file://%s/lib/legatus_phantasma_f.c\",\"version\":1,"
+        "\"languageId\":\"c\",\"text\":"
+        "\"int probatio_functio(int a)\\n{\\n"
+        "    int b = a + 1;\\n    return b;\\n}\\n\"}}}", _radix());
+    _scribe(intra, p, corpus);
+
+    /* hover usus 'a' (linea 2, char 12) */
+    sprintf(corpus,
+        "{\"jsonrpc\":\"2.0\",\"id\":2,"
+        "\"method\":\"textDocument/hover\",\"params\":"
+        "{\"textDocument\":{\"uri\":"
+        "\"file://%s/lib/legatus_phantasma_f.c\"},"
+        "\"position\":{\"line\":2,\"character\":12}}}", _radix());
+    _scribe(intra, p, corpus);
+
+    /* hover litterale '1' (linea 2, char 16) - ramus typi */
+    sprintf(corpus,
+        "{\"jsonrpc\":\"2.0\",\"id\":3,"
+        "\"method\":\"textDocument/hover\",\"params\":"
+        "{\"textDocument\":{\"uri\":"
+        "\"file://%s/lib/legatus_phantasma_f.c\"},"
+        "\"position\":{\"line\":2,\"character\":16}}}", _radix());
+    _scribe(intra, p, corpus);
+
+    /* hover usus 'b' (linea 3, char 11) */
+    sprintf(corpus,
+        "{\"jsonrpc\":\"2.0\",\"id\":4,"
+        "\"method\":\"textDocument/hover\",\"params\":"
+        "{\"textDocument\":{\"uri\":"
+        "\"file://%s/lib/legatus_phantasma_f.c\"},"
+        "\"position\":{\"line\":3,\"character\":11}}}", _radix());
+    _scribe(intra, p, corpus);
+
+    /* hover nusquam (ultra textum) - nullum */
+    sprintf(corpus,
+        "{\"jsonrpc\":\"2.0\",\"id\":5,"
+        "\"method\":\"textDocument/hover\",\"params\":"
+        "{\"textDocument\":{\"uri\":"
+        "\"file://%s/lib/legatus_phantasma_f.c\"},"
+        "\"position\":{\"line\":9,\"character\":0}}}", _radix());
+    _scribe(intra, p, corpus);
+
+    /* documentSymbol */
+    sprintf(corpus,
+        "{\"jsonrpc\":\"2.0\",\"id\":6,"
+        "\"method\":\"textDocument/documentSymbol\",\"params\":"
+        "{\"textDocument\":{\"uri\":"
+        "\"file://%s/lib/legatus_phantasma_f.c\"}}}", _radix());
+    _scribe(intra, p, corpus);
+
+    _scribe(intra, p,
+        "{\"jsonrpc\":\"2.0\",\"id\":7,\"method\":\"shutdown\"}");
+    _scribe(intra, p, "{\"jsonrpc\":\"2.0\",\"method\":\"exit\"}");
+
+    rewind(intra);
+    memset(&cfg, ZEPHYRUM, magnitudo(LegatusConfiguratio));
+    CREDO_VERUM(legatus_currere(intra, extra, &cfg) == ZEPHYRUM);
+    rewind(extra);
+
+    n = _lege(extra, p, &bene);   /* initialize */
+    CREDO_VERUM(bene);
+    n = _lege(extra, p, &bene);   /* publicatio (pura) */
+    CREDO_VERUM(bene);
+    CREDO_VERUM(_diagnostica_numerus(&n) == (s32)ZEPHYRUM);
+
+    n = _lege(extra, p, &bene);   /* hover a */
+    CREDO_VERUM(bene);
+    CREDO_VERUM(_hover_valor_est(&n, "a : integer"));
+
+    n = _lege(extra, p, &bene);   /* hover 1 */
+    CREDO_VERUM(bene);
+    CREDO_VERUM(_hover_valor_est(&n, "integer"));
+
+    n = _lege(extra, p, &bene);   /* hover b */
+    CREDO_VERUM(bene);
+    CREDO_VERUM(_hover_valor_est(&n, "b : integer"));
+
+    n = _lege(extra, p, &bene);   /* hover nusquam */
+    CREDO_VERUM(bene);
+    CREDO_VERUM(_resultatum_nullum(&n));
+
+    n = _lege(extra, p, &bene);   /* documentSymbol */
+    CREDO_VERUM(bene);
+    {
+        JsonValor* resultatum = json_objectum_capere(n.radix,
+            "result");
+        JsonValor* symbolum_v;
+
+        CREDO_VERUM(resultatum != NIHIL
+            && json_est_tabulatum(resultatum));
+        CREDO_VERUM(json_tabulatum_numerus(resultatum) == I);
+        symbolum_v = json_tabulatum_obtinere(resultatum, ZEPHYRUM);
+        CREDO_VERUM(_chorda_est(json_ad_chorda(
+            json_objectum_capere(symbolum_v, "name")),
+            "probatio_functio"));
+        CREDO_VERUM(json_ad_integer(json_objectum_capere(
+            symbolum_v, "kind")) == XII);
+        {
+            JsonValor* sedes_v = json_objectum_capere(symbolum_v,
+                "location");
+            JsonValor* regio = json_objectum_capere(sedes_v,
+                "range");
+
+            CREDO_VERUM(json_ad_integer(json_objectum_capere(
+                json_objectum_capere(regio, "start"), "line"))
+                == ZEPHYRUM);
+        }
+    }
+
+    n = _lege(extra, p, &bene);   /* shutdown */
+    CREDO_VERUM(bene);
+    CREDO_VERUM(_resultatum_nullum(&n));
+
+    fclose(intra);
+    fclose(extra);
+}
+
+/* ==================================================
+ * UTF-16: remappa exiens (columnae diagnostici post BMP-signum)
+ * + iniens (positio hover post signum)
+ * ================================================== */
+
+interior vacuum
+probatio_utf16 (Piscina* p)
+{
+    FILE* intra = tmpfile();
+    FILE* extra = tmpfile();
+    character corpus[2048];
+    LegatusConfiguratio cfg;
+    b32 bene = FALSUM;
+    TabellariusNuntius n;
+
+    imprimere("--- Probans remappam utf-16 ---\n");
+    CREDO_VERUM(intra != NIHIL && extra != NIHIL);
+
+    /* initialize SINE positionEncodings -> utf-16 obligatorius */
+    sprintf(corpus,
+        "{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"initialize\","
+        "\"params\":{\"rootUri\":\"file://%s\"}}", _radix());
+    _scribe(intra, p, corpus);
+
+    /* linea 0: violatio post signum BMP (2 octeti, 1 unitas);
+     * linea 1: usus 'a' post signum - remappa iniens */
+    sprintf(corpus,
+        "{\"jsonrpc\":\"2.0\",\"method\":\"textDocument/didOpen\","
+        "\"params\":{\"textDocument\":{\"uri\":"
+        "\"file://%s/lib/legatus_phantasma_u.c\",\"version\":1,"
+        "\"languageId\":\"c\",\"text\":"
+        "\"/* \xC2\xA7 */ int x = \\\"s\\\";\\n"
+        "/* \xC2\xA7 */ int f(int a) { return a; }\\n\"}}}",
+        _radix());
+    _scribe(intra, p, corpus);
+
+    /* hover 'a' in usu: octetum 31, unitas utf-16 = 30 */
+    sprintf(corpus,
+        "{\"jsonrpc\":\"2.0\",\"id\":2,"
+        "\"method\":\"textDocument/hover\",\"params\":"
+        "{\"textDocument\":{\"uri\":"
+        "\"file://%s/lib/legatus_phantasma_u.c\"},"
+        "\"position\":{\"line\":1,\"character\":30}}}", _radix());
+    _scribe(intra, p, corpus);
+
+    _scribe(intra, p,
+        "{\"jsonrpc\":\"2.0\",\"id\":3,\"method\":\"shutdown\"}");
+    _scribe(intra, p, "{\"jsonrpc\":\"2.0\",\"method\":\"exit\"}");
+
+    rewind(intra);
+    memset(&cfg, ZEPHYRUM, magnitudo(LegatusConfiguratio));
+    CREDO_VERUM(legatus_currere(intra, extra, &cfg) == ZEPHYRUM);
+    rewind(extra);
+
+    n = _lege(extra, p, &bene);   /* initialize: utf-16 */
+    CREDO_VERUM(bene);
+    {
+        JsonValor* caps = json_objectum_capere(
+            json_objectum_capere(n.radix, "result"),
+            "capabilities");
+
+        CREDO_VERUM(_chorda_est(json_ad_chorda(
+            json_objectum_capere(caps, "positionEncoding")),
+            "utf-16"));
+    }
+
+    n = _lege(extra, p, &bene);   /* publicatio: columnae remappatae */
+    CREDO_VERUM(bene);
+    {
+        JsonValor* lista;
+        JsonValor* diag;
+        JsonValor* regio;
+
+        CREDO_VERUM(_diagnostica_numerus(&n) == (s32)I);
+        lista = json_objectum_capere(n.params, "diagnostics");
+        diag = json_tabulatum_obtinere(lista, ZEPHYRUM);
+        regio = json_objectum_capere(diag, "range");
+        CREDO_VERUM(json_ad_integer(json_objectum_capere(
+            json_objectum_capere(regio, "start"), "line"))
+            == ZEPHYRUM);
+        /* octetum 17 - signum bi-octetum = unitas 16 */
+        CREDO_VERUM(json_ad_integer(json_objectum_capere(
+            json_objectum_capere(regio, "start"), "character"))
+            == XVI);
+        /* finis: octetum 20 -> unitas 19 */
+        CREDO_VERUM(json_ad_integer(json_objectum_capere(
+            json_objectum_capere(regio, "end"), "character"))
+            == XIX);
+    }
+
+    n = _lege(extra, p, &bene);   /* hover a (remappa iniens) */
+    CREDO_VERUM(bene);
+    CREDO_VERUM(_hover_valor_est(&n, "a : integer"));
+
+    n = _lege(extra, p, &bene);   /* shutdown */
+    CREDO_VERUM(bene);
+    CREDO_VERUM(_resultatum_nullum(&n));
 
     fclose(intra);
     fclose(extra);
@@ -408,6 +700,8 @@ principale (vacuum)
     credo_aperire(piscina);
 
     probatio_ordo_plenus(piscina);
+    probatio_hover_symbola(piscina);
+    probatio_utf16(piscina);
     probatio_ante_initium(piscina);
     probatio_fluxus_vacuus();
     probatio_quisquiliae(piscina);
