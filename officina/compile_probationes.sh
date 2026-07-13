@@ -56,6 +56,9 @@ declare -a RADIX_FONTES=(
     "tabula_dispersa"
     "friatio"
     "credo"
+    "internamentum"
+    "json"
+    "tabellarius"
 )
 
 FILTER="${1:-}"
@@ -137,6 +140,19 @@ if [ ! -f "$obj" ] || [ "$src" -nt "$obj" ] \
     if ! clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" \
         -c "$src" -o "$obj"; then
         echo "FRACTA: sessio" ; exit 1
+    fi
+fi
+obj_files="$obj_files $obj"
+
+src="$OFF_DIR/instrumenta/legatus.c"
+obj="$BUILD_DIR/legatus.o"
+if [ ! -f "$obj" ] || [ "$src" -nt "$obj" ] \
+    || [ "$OFF_DIR/instrumenta/legatus.h" -nt "$obj" ] \
+    || [ "$OFF_DIR/instrumenta/praeparator.h" -nt "$obj" ]; then
+    echo "  [legatus] legatus.c"
+    if ! clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" \
+        -c "$src" -o "$obj"; then
+        echo "FRACTA: legatus" ; exit 1
     fi
 fi
 obj_files="$obj_files $obj"

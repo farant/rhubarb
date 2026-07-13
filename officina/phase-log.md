@@ -3265,3 +3265,54 @@ desiderata = nulla. Nota mensurae: 53 asserta in ~0.25s.
 
 SEQUENS: chunk B (machina legatus + lamina diagnosticorum). Fran
 committit.
+
+## LEGATUS CHUNK B — RELATIO (2026-07-13): MACHINA LOQUITUR
+
+**officina/instrumenta/legatus.{c,h} (~850 lineae) + principale
+tenue + ./officina/legatus.sh** (aedificatio IUDICIS SOLIUS —
+amalgama + praeparator + legatus, NULLA fontes officinae; machinula/
+regio absunt consulto). Ansa synchrona: nuntius plene tractatus ante
+proximum; lineae erroris −32700 (id nullum) / −32600 / −32601
+(etiam $/) / −32002 (OMNIS petitio ante initialize, etiam
+shutdown); nuntiationes ignotae + $/ tacitae; exit post shutdown =
+0, EOF sine exit = 1. initialize: radix ex rootUri/workspaceFolders
+(cfg praevalet — commoditas probationum); negotiatio
+positionEncodings (utf-8 si oblatum, utf-16 ordinarius);
+initializationOptions.posix; Praeparatio calida; exclusiones
+pinnatae oneratae. Thesaurus documentorum: piscina-per-versionem
+(textus) + effimera silvae (arbores) — arbores ANTE textum
+demolitae; URI VERBATIM relata (nulla quaestio codificationis
+reversae). Lamina diagnosticorum: filtrum trans-plagulare C3
+(numeratio omissa ad stderr), INFRA omissa (paritas unci), gradus
+violatio→1/suspectum→2/domesticum→3, **extensiones ex longitudine
+chunki 0**, suffixum provisionale, syntaxis fracta = extensio
+degenerata 0:0 (chunk D promovet), versio relata, publicatio vacua
+undulas purgat.
+
+BARRA: probatio_officina_legatus **44/44** (suita officinae 12/12) —
+ordo plenus (initialize cum utf-8 negotiato / didOpen violatio →
+severitas 1 + linea 0 + finis>initium + source silva / didChange
+purum → VACUA versio 2 / exclusum textu fracto → VACUA / $/setTrace
+tacitum ordine probato / −32601 / shutdown null / exitus 0);
+ante-initium (etiam shutdown → −32002); fluxus vacuus → 1;
+quisquiliae → −32700 id nullo. DENTES: 3 FRACTA flexo, viride
+restituto. FUMUS VIVUS: binarium per stdio — initialize/shutdown/
+exit, exitus 0, utf-16 ordinarius recte.
+
+**INVENTUM FIXTURAE (differentialis una linea!):** phantasma
+`integer x = "salve";` SINE inclusione = INFRA "typus nominatus
+ignotus" (clementia ignoti-typi M4a) → ACCIPE, nihil publicatum —
+machina RECTA erat, fixtura prava; examen.sh -machina diagnosim
+uno mandato dedit. LEX: fixturae phantasmatum = C89 PURUM aut
+inclusiones ferant — dialectus latina sine inclusionibus iudicio
+INVISIBILIS est consulto. (Idem valet pro exspectationibus hover
+chunki C!)
+
+DEBRIEF: adhibita = examen.sh -machina ut oraculum differentiale
+(diagnosis fixturae uno mandato — subsellium operans), grep/Read
+pro signaturis API. Asperitates: CREDO_VERUM fractum "Speratus:
+(null)" imprimit — parum utile (nota credo). Desiderata: nulla.
+
+SEQUENS: chunk C (positiones/hover/documentSymbol — tabula
+linearum + index extentorum + descensus per extenta + redditor
+publicus chunki 0). Fran committit.

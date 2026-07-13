@@ -1,0 +1,424 @@
+/* probatio_officina_legatus.c - Transcripta aurea machinae legati
+ * (LEGATUS chunk B: ansa, initialize, lamina diagnosticorum,
+ * exclusiones, ordo vitae)
+ *
+ * Machinam IN-PROCESSU agit super FILE* effimeris (exemplar
+ * sessionis - C6): epistulae scriptae in intra, currere, exitus
+ * lecti ex extra. Radix vera repositorii ex RHUBARB_RADIX.
+ *
+ * Plagulae probationum = PHANTASMATA: viae sub ./lib/ quae in
+ * disco NON exsistunt - didOpen textum buffer fert, discus numquam
+ * legitur. Ita nec fixa/ (exclusa!) nec inquinatio repositorii.
+ */
+
+#include "legatus.h"
+#include "tabellarius.h"
+#include "credo.h"
+#include "piscina.h"
+#include "chorda.h"
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+interior constans character*
+_radix (vacuum)
+{
+    constans character* r = getenv("RHUBARB_RADIX");
+
+    redde r != NIHIL ? r : ".";
+}
+
+interior vacuum
+_scribe (FILE* pl, Piscina* p, constans character* corpus)
+{
+    tabellarius_epistulam_scribere(pl, chorda_ex_literis(corpus, p));
+}
+
+interior TabellariusNuntius
+_lege (FILE* pl, Piscina* p, b32* bene)
+{
+    b32 finitus = FALSUM;
+    chorda corpus = tabellarius_epistulam_legere(pl, p, &finitus);
+    TabellariusNuntius n;
+
+    memset(&n, ZEPHYRUM, magnitudo(TabellariusNuntius));
+    si (finitus)
+    {
+        *bene = FALSUM;
+        redde n;
+    }
+    *bene = VERUM;
+    redde tabellarius_nuntium_legere(corpus, p);
+}
+
+interior b32
+_chorda_est (chorda c, constans character* litterae)
+{
+    memoriae_index m = strlen(litterae);
+
+    redde (c.mensura == (i32)m && c.datum != NIHIL
+        && memcmp(c.datum, litterae, m) == ZEPHYRUM) ? VERUM : FALSUM;
+}
+
+/* numerus diagnosticorum publicationis (-1 = non publicatio) */
+interior s32
+_diagnostica_numerus (TabellariusNuntius* n)
+{
+    JsonValor* lista;
+
+    si (n->genus != TABELLARIUS_NUNTIATIO
+        || !_chorda_est(n->methodus,
+               "textDocument/publishDiagnostics")
+        || n->params == NIHIL)
+    {
+        redde -I;
+    }
+    lista = json_objectum_capere(n->params, "diagnostics");
+    si (lista == NIHIL || !json_est_tabulatum(lista))
+    {
+        redde -I;
+    }
+    redde (s32)json_tabulatum_numerus(lista);
+}
+
+interior s64
+_error_codex (TabellariusNuntius* n)
+{
+    JsonValor* error_v;
+    JsonValor* codex_v;
+
+    si (n->radix == NIHIL)
+    {
+        redde ZEPHYRUM;
+    }
+    error_v = json_objectum_capere(n->radix, "error");
+    si (error_v == NIHIL)
+    {
+        redde ZEPHYRUM;
+    }
+    codex_v = json_objectum_capere(error_v, "code");
+    redde json_ad_integer(codex_v);
+}
+
+/* ==================================================
+ * ORDO PLENUS: initialize -> didOpen violatio -> didChange purum
+ * -> exclusum -> $/tacitum -> methodus ignota -> shutdown -> exit
+ * ================================================== */
+
+interior vacuum
+probatio_ordo_plenus (Piscina* p)
+{
+    FILE* intra = tmpfile();
+    FILE* extra = tmpfile();
+    character corpus[2048];
+    LegatusConfiguratio cfg;
+    s32 exitus;
+    b32 bene = FALSUM;
+    TabellariusNuntius n;
+
+    imprimere("--- Probans ordinem plenum ---\n");
+    CREDO_VERUM(intra != NIHIL && extra != NIHIL);
+
+    /* 1: initialize (utf-8 oblatum) */
+    sprintf(corpus,
+        "{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"initialize\","
+        "\"params\":{\"rootUri\":\"file://%s\",\"capabilities\":"
+        "{\"general\":{\"positionEncodings\":[\"utf-8\","
+        "\"utf-16\"]}}}}", _radix());
+    _scribe(intra, p, corpus);
+
+    /* 2: initialized */
+    _scribe(intra, p,
+        "{\"jsonrpc\":\"2.0\",\"method\":\"initialized\","
+        "\"params\":{}}");
+
+    /* 3: didOpen phantasma cum violatione (chorda -> integer) */
+    sprintf(corpus,
+        "{\"jsonrpc\":\"2.0\",\"method\":\"textDocument/didOpen\","
+        "\"params\":{\"textDocument\":{\"uri\":"
+        "\"file://%s/lib/legatus_phantasma.c\",\"version\":1,"
+        "\"languageId\":\"c\",\"text\":"
+        "\"int x = \\\"salve\\\";\\n\"}}}", _radix());
+    _scribe(intra, p, corpus);
+
+    /* 4: didChange ad textum purum - undulae purgandae */
+    sprintf(corpus,
+        "{\"jsonrpc\":\"2.0\",\"method\":\"textDocument/didChange\","
+        "\"params\":{\"textDocument\":{\"uri\":"
+        "\"file://%s/lib/legatus_phantasma.c\",\"version\":2},"
+        "\"contentChanges\":[{\"text\":\"int x;\\n\"}]}}",
+        _radix());
+    _scribe(intra, p, corpus);
+
+    /* 5: didOpen plagulae EXCLUSAE (lib/uuid.c pinnata) cum textu
+     * fracto - nihilominus vacua publicanda */
+    sprintf(corpus,
+        "{\"jsonrpc\":\"2.0\",\"method\":\"textDocument/didOpen\","
+        "\"params\":{\"textDocument\":{\"uri\":"
+        "\"file://%s/lib/uuid.c\",\"version\":1,"
+        "\"languageId\":\"c\",\"text\":\"quisquiliae (((\"}}}",
+        _radix());
+    _scribe(intra, p, corpus);
+
+    /* 6: $/nuntiatio - tacite omittenda */
+    _scribe(intra, p,
+        "{\"jsonrpc\":\"2.0\",\"method\":\"$/setTrace\","
+        "\"params\":{\"value\":\"off\"}}");
+
+    /* 7: petitio methodi ignotae */
+    _scribe(intra, p,
+        "{\"jsonrpc\":\"2.0\",\"id\":2,"
+        "\"method\":\"workspace/executeCommand\",\"params\":{}}");
+
+    /* 8+9: shutdown + exit */
+    _scribe(intra, p,
+        "{\"jsonrpc\":\"2.0\",\"id\":3,\"method\":\"shutdown\"}");
+    _scribe(intra, p,
+        "{\"jsonrpc\":\"2.0\",\"method\":\"exit\"}");
+
+    rewind(intra);
+    memset(&cfg, ZEPHYRUM, magnitudo(LegatusConfiguratio));
+    exitus = legatus_currere(intra, extra, &cfg);
+    CREDO_VERUM(exitus == ZEPHYRUM);   /* exit post shutdown */
+
+    rewind(extra);
+
+    /* R1: responsio initialize */
+    n = _lege(extra, p, &bene);
+    CREDO_VERUM(bene);
+    CREDO_VERUM(n.genus == TABELLARIUS_RESPONSUM);
+    CREDO_VERUM(json_ad_integer(n.id) == I);
+    {
+        JsonValor* resultatum = json_objectum_capere(n.radix,
+            "result");
+        JsonValor* caps;
+        JsonValor* v;
+
+        CREDO_VERUM(resultatum != NIHIL);
+        caps = json_objectum_capere(resultatum, "capabilities");
+        CREDO_VERUM(caps != NIHIL);
+        v = json_objectum_capere(caps, "positionEncoding");
+        CREDO_VERUM(v != NIHIL
+            && _chorda_est(json_ad_chorda(v), "utf-8"));
+        v = json_objectum_capere(caps, "textDocumentSync");
+        CREDO_VERUM(v != NIHIL);
+        CREDO_VERUM(json_ad_integer(
+            json_objectum_capere(v, "change")) == I);
+        CREDO_VERUM(json_ad_boolean(
+            json_objectum_capere(v, "save")) == VERUM);
+        v = json_objectum_capere(resultatum, "serverInfo");
+        CREDO_VERUM(v != NIHIL && _chorda_est(json_ad_chorda(
+            json_objectum_capere(v, "name")), "legatus"));
+    }
+
+    /* R2: publicatio violationis - saltem una, severitas 1,
+     * linea 0, extensio vera (finis > initium) */
+    n = _lege(extra, p, &bene);
+    CREDO_VERUM(bene);
+    {
+        s32 numerus = _diagnostica_numerus(&n);
+        JsonValor* lista;
+        b32 violatio_inventa = FALSUM;
+        s32 i;
+
+        CREDO_VERUM(numerus >= (s32)I);
+        CREDO_VERUM(json_ad_integer(json_objectum_capere(n.params,
+            "version")) == I);
+        lista = json_objectum_capere(n.params, "diagnostics");
+        per (i = ZEPHYRUM; i < numerus; i++)
+        {
+            JsonValor* diag = json_tabulatum_obtinere(lista,
+                (i32)i);
+            JsonValor* regio = json_objectum_capere(diag, "range");
+            JsonValor* initium = json_objectum_capere(regio,
+                "start");
+            JsonValor* finis_r = json_objectum_capere(regio, "end");
+
+            si (json_ad_integer(json_objectum_capere(diag,
+                    "severity")) == I
+                && json_ad_integer(json_objectum_capere(initium,
+                       "line")) == ZEPHYRUM
+                && json_ad_integer(json_objectum_capere(finis_r,
+                       "character"))
+                    > json_ad_integer(json_objectum_capere(initium,
+                       "character")))
+            {
+                violatio_inventa = VERUM;
+            }
+            CREDO_VERUM(_chorda_est(json_ad_chorda(
+                json_objectum_capere(diag, "source")), "silva"));
+        }
+        CREDO_VERUM(violatio_inventa);
+    }
+
+    /* R3: publicatio post didChange purum - VACUA (undulae
+     * purgatae), versio 2 */
+    n = _lege(extra, p, &bene);
+    CREDO_VERUM(bene);
+    CREDO_VERUM(_diagnostica_numerus(&n) == (s32)ZEPHYRUM);
+    CREDO_VERUM(json_ad_integer(json_objectum_capere(n.params,
+        "version")) == II);
+
+    /* R4: plagula exclusa - vacua quamvis textus fractus */
+    n = _lege(extra, p, &bene);
+    CREDO_VERUM(bene);
+    CREDO_VERUM(_diagnostica_numerus(&n) == (s32)ZEPHYRUM);
+
+    /* R5: methodus ignota -> -32601 (post $/ tacitum - ordo
+     * probat $/ nihil emisisse) */
+    n = _lege(extra, p, &bene);
+    CREDO_VERUM(bene);
+    CREDO_VERUM(n.genus == TABELLARIUS_RESPONSUM);
+    CREDO_VERUM(json_ad_integer(n.id) == II);
+    CREDO_VERUM(_error_codex(&n) == -32601);
+
+    /* R6: shutdown -> result null */
+    n = _lege(extra, p, &bene);
+    CREDO_VERUM(bene);
+    CREDO_VERUM(n.genus == TABELLARIUS_RESPONSUM);
+    CREDO_VERUM(json_ad_integer(n.id) == III);
+    CREDO_VERUM(json_est_nullum(json_objectum_capere(n.radix,
+        "result")));
+
+    /* nihil ultra */
+    {
+        b32 finitus = FALSUM;
+
+        (vacuum)tabellarius_epistulam_legere(extra, p, &finitus);
+        CREDO_VERUM(finitus);
+    }
+
+    fclose(intra);
+    fclose(extra);
+}
+
+/* ==================================================
+ * ANTE INITIALIZE: petitio -> -32002; EOF sine exit -> 1
+ * ================================================== */
+
+interior vacuum
+probatio_ante_initium (Piscina* p)
+{
+    FILE* intra = tmpfile();
+    FILE* extra = tmpfile();
+    LegatusConfiguratio cfg;
+    s32 exitus;
+    b32 bene = FALSUM;
+    TabellariusNuntius n;
+
+    imprimere("--- Probans ante initium ---\n");
+    CREDO_VERUM(intra != NIHIL && extra != NIHIL);
+
+    _scribe(intra, p,
+        "{\"jsonrpc\":\"2.0\",\"id\":9,"
+        "\"method\":\"textDocument/hover\",\"params\":{}}");
+    /* etiam shutdown ante initialize = -32002 */
+    _scribe(intra, p,
+        "{\"jsonrpc\":\"2.0\",\"id\":10,\"method\":\"shutdown\"}");
+    rewind(intra);
+
+    memset(&cfg, ZEPHYRUM, magnitudo(LegatusConfiguratio));
+    exitus = legatus_currere(intra, extra, &cfg);
+    CREDO_VERUM(exitus == I);   /* EOF sine exit = abnormis */
+
+    rewind(extra);
+    n = _lege(extra, p, &bene);
+    CREDO_VERUM(bene);
+    CREDO_VERUM(json_ad_integer(n.id) == IX);
+    CREDO_VERUM(_error_codex(&n) == -32002);
+    n = _lege(extra, p, &bene);
+    CREDO_VERUM(bene);
+    CREDO_VERUM(json_ad_integer(n.id) == X);
+    CREDO_VERUM(_error_codex(&n) == -32002);
+
+    fclose(intra);
+    fclose(extra);
+}
+
+/* ==================================================
+ * FLUXUS VACUUS: exitus 1 statim
+ * ================================================== */
+
+interior vacuum
+probatio_fluxus_vacuus (vacuum)
+{
+    FILE* intra = tmpfile();
+    FILE* extra = tmpfile();
+    LegatusConfiguratio cfg;
+
+    imprimere("--- Probans fluxum vacuum ---\n");
+    CREDO_VERUM(intra != NIHIL && extra != NIHIL);
+    memset(&cfg, ZEPHYRUM, magnitudo(LegatusConfiguratio));
+    CREDO_VERUM(legatus_currere(intra, extra, &cfg) == I);
+    fclose(intra);
+    fclose(extra);
+}
+
+/* ==================================================
+ * QUISQUILIAE: analysis fracta -> -32700 cum id nullo
+ * ================================================== */
+
+interior vacuum
+probatio_quisquiliae (Piscina* p)
+{
+    FILE* intra = tmpfile();
+    FILE* extra = tmpfile();
+    LegatusConfiguratio cfg;
+    b32 bene = FALSUM;
+    TabellariusNuntius n;
+
+    imprimere("--- Probans quisquilias ---\n");
+    CREDO_VERUM(intra != NIHIL && extra != NIHIL);
+
+    _scribe(intra, p, "hoc non est json");
+    rewind(intra);
+    memset(&cfg, ZEPHYRUM, magnitudo(LegatusConfiguratio));
+    (vacuum)legatus_currere(intra, extra, &cfg);
+
+    rewind(extra);
+    n = _lege(extra, p, &bene);
+    CREDO_VERUM(bene);
+    CREDO_VERUM(_error_codex(&n) == -32700);
+    CREDO_VERUM(json_est_nullum(json_objectum_capere(n.radix,
+        "id")));
+
+    fclose(intra);
+    fclose(extra);
+}
+
+/* ================================================== */
+
+integer
+principale (vacuum)
+{
+    Piscina* piscina;
+
+    imprimere("\n========================================\n");
+    imprimere("PROBATIO OFFICINA LEGATUS\n");
+    imprimere("========================================\n\n");
+
+    piscina = piscina_generare_dynamicum("probatio_legatus",
+        CDLVI);
+    si (piscina == NIHIL)
+    {
+        imprimere("piscina generari non potuit\n");
+        redde I;
+    }
+    credo_aperire(piscina);
+
+    probatio_ordo_plenus(piscina);
+    probatio_ante_initium(piscina);
+    probatio_fluxus_vacuus();
+    probatio_quisquiliae(piscina);
+
+    credo_imprimere_compendium();
+
+    {
+        b32 omnia = credo_omnia_praeterierunt();
+
+        piscina_destruere(piscina);
+        imprimere("========================================\n\n");
+        redde omnia ? ZEPHYRUM : I;
+    }
+}
