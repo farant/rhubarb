@@ -440,6 +440,75 @@ s32 principale (vacuum)
     }
 
     /* ========================================================
+     * PROBARE: redditor typorum - baptisma tag anonymi, acies,
+     * anonyma sine typedef (inventum agitationis legati 2026-07-13:
+     * hover in legatus_currere signaturam totam perdebat)
+     * ======================================================== */
+    {
+        SilvaSemantica* sem = silva_c89_semantica_creare(piscina);
+        SilvaParsura* parsura;
+        TypusC89* t;
+        character buffer[CXXVIII];
+
+        imprimere("\n--- Probans redditorem typorum ---\n");
+
+        parsura = _parsare(piscina,
+            "typedef struct { int radix; } Configuratio;\n"
+            "typedef struct Titulata { int a; } Titulata;\n"
+            "void currere(const Configuratio* cfg);\n"
+            "char textus[256];\n"
+            "extern int series[];\n"
+            "struct { int x; } innominata;\n");
+        CREDO_NON_NIHIL (parsura);
+        CREDO_AEQUALIS_I32 (parsura->numerus_errorum, ZEPHYRUM);
+
+        CREDO_AEQUALIS_I32 ((i32)silva_c89_declarationem_tractare(
+            sem, _nodus(parsura, 0)), I);
+        CREDO_AEQUALIS_I32 ((i32)silva_c89_declarationem_tractare(
+            sem, _nodus(parsura, I)), I);
+
+        /* baptisma: typedef nomen structurae anonymae dedit */
+        t = silva_c89_typedef_invenire(sem, _ch("Configuratio"));
+        CREDO_NON_NIHIL (t);
+        CREDO_AEQUALIS_I32 ((i32)t->datum.tag.titulus.mensura, XII);
+        CREDO_VERUM (memcmp(t->datum.tag.titulus.datum,
+            "Configuratio", XII) == ZEPHYRUM);
+
+        /* titulus proprius NON superscribitur */
+        t = silva_c89_typedef_invenire(sem, _ch("Titulata"));
+        CREDO_NON_NIHIL (t);
+        CREDO_AEQUALIS_I32 ((i32)t->datum.tag.titulus.mensura, VIII);
+        CREDO_VERUM (memcmp(t->datum.tag.titulus.datum,
+            "Titulata", VIII) == ZEPHYRUM);
+
+        /* signatura per typum baptizatum redditur (ante:
+         * irreddibilis - ipse casus legatus_currere) */
+        t = _typus_declarationis(sem, _nodus(parsura, II), NIHIL);
+        CREDO_NON_NIHIL (t);
+        CREDO_VERUM (silva_c89_typum_scribere(t, buffer,
+            (insignatus integer)magnitudo(buffer)) > ZEPHYRUM);
+        CREDO_VERUM (strcmp(buffer,
+            "vacuum(constans structura Configuratio*)") == ZEPHYRUM);
+
+        /* acies completa et incompleta (ante: irreddibiles) */
+        t = _typus_declarationis(sem, _nodus(parsura, III), NIHIL);
+        CREDO_VERUM (silva_c89_typum_scribere(t, buffer,
+            (insignatus integer)magnitudo(buffer)) > ZEPHYRUM);
+        CREDO_VERUM (strcmp(buffer, "character[256]") == ZEPHYRUM);
+        t = _typus_declarationis(sem, _nodus(parsura, IV), NIHIL);
+        CREDO_VERUM (silva_c89_typum_scribere(t, buffer,
+            (insignatus integer)magnitudo(buffer)) > ZEPHYRUM);
+        CREDO_VERUM (strcmp(buffer, "integer[]") == ZEPHYRUM);
+
+        /* anonyma sine typedef: locum tenens, non defectus */
+        t = _typus_declarationis(sem, _nodus(parsura, V), NIHIL);
+        CREDO_VERUM (silva_c89_typum_scribere(t, buffer,
+            (insignatus integer)magnitudo(buffer)) > ZEPHYRUM);
+        CREDO_VERUM (strcmp(buffer,
+            "structura <anonyma>") == ZEPHYRUM);
+    }
+
+    /* ========================================================
      * PROBARE: enumerationes + aestimator + mensurae acierum
      * ======================================================== */
     {

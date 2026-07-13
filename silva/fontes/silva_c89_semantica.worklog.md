@@ -446,3 +446,41 @@ the entire delta was that one self-referential file — every
 pre-existing corpus file fired identically. Method note for future
 gate-proofs: always diff PER-FILE, never totals; and expect your own
 new test files to diagnose under the stashed baseline.
+
+## 2026-07-13 — anonymous-tag baptism + renderer totality (legatus shakedown find #1)
+
+Hover on `legatus_currere` returned a bare name: one parameter of
+type `constans LegatusConfiguratio*` — a TAGLESS struct typedef —
+made `silva_c89_typum_scribere` return irreddibilis, killing the
+whole signature. Three changes:
+
+1. **Baptism** (`_typedef_baptizare`): a typedef donates its name to
+   an anonymous struct/union/enum tag at registration time (clang's
+   pattern; first typedef wins, named tags untouched, qualificatus
+   wrappers pierced). Called from BOTH registration paths — the
+   organic `declarationem_tractare` est_typedef branch AND the
+   API-injection `silva_c89_typedef_registrare` (which, note, has
+   ZERO organic callers — nexus proved the two paths never meet).
+   Safety argument: tag identity is NOMINAL (by declarans, not by
+   titulus — header contract), and grep shows titulus is read only
+   by the renderer and officina_indicium. examen diagnostics never
+   print it → VECTIS TENET confirmed no differential drift.
+2. **Renderer arms**: ACIES was falling through to ordinarius
+   (`T[n]` / `T[]` now); anonymous aggregates that baptism can't
+   reach (no typedef at all) render `structura <anonyma>` instead
+   of failing; ENUMERATUS now appends its tag when present.
+   The renderer can no longer fail on any valid type — only on
+   TYPUS_C89_ERROR or buffer exhaustion.
+3. **Side-find**: silva/compile_probationes.sh had been BROKEN since
+   legatus chunk C — its instrumenta/*.c glob swept the amalgam-world
+   nexus_ordines.c into the fontes world (silva.h not found). Nobody
+   noticed because the officina runner was the daily driver. Fixed
+   with an explicit documented skip. Law reaffirmed: one source
+   cannot speak both spellings; flat instrumenta/*.c is presumed
+   fontes-world by the runner.
+
+Free consequence: officina_indicium writes tag.titulus when present,
+so typedef'd-anonymous structs now carry real names into vindex too.
+Bars: semantica 332/332 (new PROBARE block: baptism, no-overwrite,
+function signature, arrays, placeholder), hospes 31/31, officina
+12/12 suites (indicium pins unmoved), examen_vectis TENET.

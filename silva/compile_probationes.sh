@@ -82,6 +82,9 @@ done
 shopt -s nullglob
 for src in "$SILVA_DIR"/fontes/*.c "$SILVA_DIR"/instrumenta/*.c; do
     base="$(basename "$src" .c)"
+    # nexus_ordines est mundi AMALGAMATIS (silva.h includit; communis
+    # cum officina/legatus) — contra capita fontium non compilat.
+    if [ "$base" = "nexus_ordines" ]; then continue; fi
     obj="$BUILD_DIR/$base.o"
     if [ ! -f "$obj" ] || [ "$src" -nt "$obj" ] || [ -n "$(newest_header "$obj")" ]; then
         echo "  [silva] $base.c"

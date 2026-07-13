@@ -122,3 +122,66 @@ insignatus longus`). Rough edges AT THE REACH:
   probatio ×4 + nexus ×2 + emitte fortasse) — complete and correct.
 - workspaceSymbol("tabellarius_epistulam") → both framing fns at
   .c body lines. Fuzzy ranking = nexus -similis voice.
+
+## 2026-07-13 — shakedown find #1: hover signature declines on FILE*
+
+- hover(legatus_currere at its own definition) → bare name, no
+  signature. hover(_methodus_est) same file → full signature. The
+  difference is the parameter list: legatus_currere takes FILE*
+  (systema type). silva_c89_typum_scribere evidently returns
+  irreddibilis (0) for the FILE typedef chain, and legatus falls
+  back to name-only — graceful, but every function touching stdio
+  (a large club: currere entry points, ansae plumbing) hovers
+  thin. Root cause to confirm silva-side: is FILE materialized as
+  an unresolvable/incomplete typedef in the systema layer, or is
+  one renderer arm missing? Candidate fix lives in
+  silva_c89_semantica.c (_typum_scribere_intus), not legatus.
+- Found during post-compact bench warming — first organic
+  shakedown find of the agitatio period.
+
+## 2026-07-13 — shakedown find #1 RESOLVED (silva-side, ~1 hr find-to-fix)
+
+Root cause was NOT FILE* (it renders via its `_systema_FILE` tag) —
+it was the TAGLESS `LegatusConfiguratio` typedef. Fix landed in
+silva_c89_semantica.c: typedef baptism of anonymous tags + ACIES
+renderer arm + `<anonyma>` placeholder (details in
+silva_c89_semantica.worklog.md). No legatus-side change needed —
+the graceful name-only fallback stays as the last-resort tier.
+Expected hover after reload:
+`legatus_currere : integer(structura _systema_FILE*, structura
+_systema_FILE*, constans structura LegatusConfiguratio*)`.
+Also fixed in passing: silva/compile_probationes.sh choked on
+amalgam-world nexus_ordines.c (broken since chunk C, unnoticed —
+officina runner was the only one exercised). Second organic
+shakedown find, same afternoon.
+
+## 2026-07-13 — instrument debrief, find-#1 session (desiderata ledger)
+
+Reaches that fell back to grep though the bench could in theory serve:
+1. MACRO LOOKUPS ×2 (do XII/CXXVIII exist in latina.h? which
+   CREDO_AEQUALIS_* variants exist?) — the named macro-index park
+   firing in real work. No #define rows in nexus.tsv = no
+   workspaceSymbol/hover for macros. Demand +2 in one session.
+2. FIELD REFERENCES (who reads tag.titulus? — THE safety audit for
+   baptism) — members are not ordinary symbols, no index rows, so
+   references/nexus can't answer; grep with false-positive risk was
+   the only path. Semantica already types member accesses, so the
+   knowledge exists. NEW desideratum, biggest of the day.
+3. TYPE DECLARATIONS AS TEXT (how is LegatusConfiguratio/FILE
+   declared?) — workspaceSymbol+definition exist but return
+   locations; I wanted source text + context, so grep+Read won on
+   round trips. emitte speaks that voice for functions only.
+   Desideratum: emitte (and definition-with-body) for typedefs/
+   structs/enums.
+Roughness (not a fallback): hover's name-only degraded tier is
+SILENT — indistinguishable from a complete answer unless you already
+know a signature should be there. An explicit marker (e.g.
+"<signatura irreddibilis>") would have started the diagnosis one
+probe closer. Moot for the render-failure class after the baptism
+fix, but the tier still exists (poison types).
+Fructus worth naming: nexus zero-USUS on typedef_registrare =
+authoritative negative evidence (grep can't prove absence) → the
+two-registration-paths discovery → fix landed on both. emitte ×2
+byte-exact function reads. nexus -fortasse caught a typo'd symbol.
+Where grep was RIGHT (no gap): comment text, shell scripts,
+within-file locals (est_typedef), header context sweeps.

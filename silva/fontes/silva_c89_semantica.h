@@ -302,8 +302,10 @@ nomen structura {
 /* Redditor typorum (LEGATUS chunk 0, ex sessione promotus): typus
  * -> textus latinus C-stili in buffer datum (NUL appenso).
  * Functiones = signatura "reditus(parametra)" (additio agitationis
- * legati). Redde octetos scriptos; 0 = irreddibilis (acies/error/
- * aggregata sine tag) - buffer tunc vacuus. */
+ * legati); acies = "T[n]" / "T[]"; aggregata anonyma = "<anonyma>"
+ * (typedef tamen tag anonymum BAPTIZAT titulo suo - agitatio
+ * 2026-07-13). Redde octetos scriptos; 0 = irreddibilis (error /
+ * spatium deficiens) - buffer tunc vacuus. */
 insignatus integer silva_c89_typum_scribere (constans TypusC89* t,
     character* buffer, insignatus integer capacitas);
 
@@ -446,7 +448,8 @@ TypusC89* silva_c89_typus_ex_specie (SilvaSemantica* sem,
 i32 silva_c89_declarationem_tractare (SilvaSemantica* sem,
     constans SilvaNodus* declaratio);
 
-/* Registratio typedef in scopum CURRENTEM (B: scopus-conscia) */
+/* Registratio typedef in scopum CURRENTEM (B: scopus-conscia).
+ * Tag anonymum titulo typedef baptizat (vide _typedef_baptizare) */
 b32 silva_c89_typedef_registrare (SilvaSemantica* sem,
     chorda titulus, TypusC89* typus);
 TypusC89* silva_c89_typedef_invenire (SilvaSemantica* sem,

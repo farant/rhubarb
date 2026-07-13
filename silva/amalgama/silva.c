@@ -1398,8 +1398,10 @@ unsigned int silva_c89_typationes_numerus(
 
 /* Redditor typorum (LEGATUS chunk 0): typus -> textus latinus
  * C-stili in buffer datum (NUL appenso). Functiones = signatura
- * "reditus(parametra)". Redde octetos scriptos; 0 = irreddibilis
- * (acies/error/aggregata sine tag) - buffer tunc vacuus. */
+ * "reditus(parametra)"; acies = "T[n]" / "T[]"; aggregata anonyma
+ * = "<anonyma>" (typedef tag anonymum baptizat titulo suo). Redde
+ * octetos scriptos; 0 = irreddibilis (error / spatium deficiens)
+ * - buffer tunc vacuus. */
 unsigned int silva_c89_typum_scribere(const TypusC89* t,
     char* buffer, unsigned int capacitas);
 
@@ -4182,8 +4184,10 @@ structura SemanticaScopus {
 /* Redditor typorum (LEGATUS chunk 0, ex sessione promotus): typus
  * -> textus latinus C-stili in buffer datum (NUL appenso).
  * Functiones = signatura "reditus(parametra)" (additio agitationis
- * legati). Redde octetos scriptos; 0 = irreddibilis (acies/error/
- * aggregata sine tag) - buffer tunc vacuus. */
+ * legati); acies = "T[n]" / "T[]"; aggregata anonyma = "<anonyma>"
+ * (typedef tamen tag anonymum BAPTIZAT titulo suo - agitatio
+ * 2026-07-13). Redde octetos scriptos; 0 = irreddibilis (error /
+ * spatium deficiens) - buffer tunc vacuus. */
 insignatus integer silva_c89_typum_scribere (constans TypusC89* t,
     character* buffer, insignatus integer capacitas);
 structura SilvaSemantica {
@@ -4321,7 +4325,8 @@ TypusC89* silva_c89_typus_ex_specie (SilvaSemantica* sem,
 i32 silva_c89_declarationem_tractare (SilvaSemantica* sem,
     constans SilvaNodus* declaratio);
 
-/* Registratio typedef in scopum CURRENTEM (B: scopus-conscia) */
+/* Registratio typedef in scopum CURRENTEM (B: scopus-conscia).
+ * Tag anonymum titulo typedef baptizat (vide _typedef_baptizare) */
 b32 silva_c89_typedef_registrare (SilvaSemantica* sem,
     SilvaChorda titulus, TypusC89* typus);
 TypusC89* silva_c89_typedef_invenire (SilvaSemantica* sem,
@@ -35333,6 +35338,22 @@ _typum_scribere_intus (constans TypusC89* t, character* b,
             }
             *cursor += (s32)sprintf(b + *cursor, "*");
             redde VERUM;
+        casus TYPUS_C89_ACIES:
+            si (!_typum_scribere_intus(t->datum.acies.elementum,
+                    b, cursor, capacitas))
+            {
+                redde FALSUM;
+            }
+            si (t->datum.acies.numerus < ZEPHYRUM)
+            {
+                *cursor += (s32)sprintf(b + *cursor, "[]");
+            }
+            alioquin
+            {
+                *cursor += (s32)sprintf(b + *cursor, "[%ld]",
+                    (longus)t->datum.acies.numerus);
+            }
+            redde VERUM;
         casus TYPUS_C89_QUALIFICATUS:
             si (t->datum.qualificatus.quales
                 & (insignatus integer)QUALIS_CONSTANS)
@@ -35344,20 +35365,45 @@ _typum_scribere_intus (constans TypusC89* t, character* b,
                 capacitas);
         casus TYPUS_C89_STRUCTURA:
         casus TYPUS_C89_UNIO:
-            si (t->datum.tag.titulus.mensura == ZEPHYRUM
-                || *cursor + (s32)t->datum.tag.titulus.mensura + XVI
-                    >= capacitas)
+            si (*cursor + (s32)t->datum.tag.titulus.mensura + XVI
+                >= capacitas)
             {
                 redde FALSUM;
             }
-            *cursor += (s32)sprintf(b + *cursor, "%s %.*s",
-                t->genus == TYPUS_C89_STRUCTURA ? "structura"
-                    : "unio",
-                (int)t->datum.tag.titulus.mensura,
-                (constans character*)t->datum.tag.titulus.datum);
+            nomen_p = t->genus == TYPUS_C89_STRUCTURA ? "structura"
+                : "unio";
+            si (t->datum.tag.titulus.mensura == ZEPHYRUM)
+            {
+                /* anonyma quam baptisma non attigit (sine typedef) */
+                *cursor += (s32)sprintf(b + *cursor, "%s <anonyma>",
+                    nomen_p);
+            }
+            alioquin
+            {
+                *cursor += (s32)sprintf(b + *cursor, "%s %.*s",
+                    nomen_p,
+                    (int)t->datum.tag.titulus.mensura,
+                    (constans character*)t->datum.tag.titulus.datum);
+            }
             redde VERUM;
         casus TYPUS_C89_ENUMERATUS:
-            *cursor += (s32)sprintf(b + *cursor, "enumeratio");
+            si (*cursor + (s32)t->datum.enumeratus.titulus.mensura
+                + XVI >= capacitas)
+            {
+                redde FALSUM;
+            }
+            si (t->datum.enumeratus.titulus.mensura == ZEPHYRUM)
+            {
+                *cursor += (s32)sprintf(b + *cursor, "enumeratio");
+            }
+            alioquin
+            {
+                *cursor += (s32)sprintf(b + *cursor,
+                    "enumeratio %.*s",
+                    (int)t->datum.enumeratus.titulus.mensura,
+                    (constans character*)
+                        t->datum.enumeratus.titulus.datum);
+            }
             redde VERUM;
         casus TYPUS_C89_FUNCTIO:
             /* signatura: reditus(parametra) - additio post
@@ -35875,6 +35921,40 @@ silva_c89_typus_functio (SilvaSemantica* sem, TypusC89* reditus,
  * Registratio plana (Chunk A - scopus B substituet)
  * ================================================== */
 
+/* Baptisma tag anonymi (inventum agitationis legati 2026-07-13:
+ * hover in legatus_currere signaturam TOTAM perdebat quia
+ * LegatusConfiguratio anonyma erat). Typedef nomen suum
+ * structurae/unioni/enumerationi SINE titulo dat - exemplar clang;
+ * typedef primum vincit, typi iam nominati intacti. Involucra
+ * qualificata perforantur. Tutum: identitas tag NOMINALIS est (per
+ * declarantem, non per titulum) et titulus in diagnosticis nusquam
+ * apparet - solum redditor et indicium eum legunt. */
+interior vacuum
+_typedef_baptizare (SilvaSemantica* sem, SilvaChorda titulus, TypusC89* t)
+{
+    dum (t != NIHIL && t->genus == TYPUS_C89_QUALIFICATUS)
+    {
+        t = t->datum.qualificatus.internum;
+    }
+    si (t == NIHIL || titulus.mensura == ZEPHYRUM)
+    {
+        redde;
+    }
+    si ((t->genus == TYPUS_C89_STRUCTURA
+            || t->genus == TYPUS_C89_UNIO)
+        && t->datum.tag.titulus.mensura == ZEPHYRUM)
+    {
+        t->datum.tag.titulus = silva_chorda_transcribere(titulus,
+            sem->piscina);
+    }
+    alioquin si (t->genus == TYPUS_C89_ENUMERATUS
+        && t->datum.enumeratus.titulus.mensura == ZEPHYRUM)
+    {
+        t->datum.enumeratus.titulus = silva_chorda_transcribere(titulus,
+            sem->piscina);
+    }
+}
+
 b32
 silva_c89_typedef_registrare (SilvaSemantica* sem, SilvaChorda titulus,
     TypusC89* typus)
@@ -35883,6 +35963,7 @@ silva_c89_typedef_registrare (SilvaSemantica* sem, SilvaChorda titulus,
     {
         redde FALSUM;
     }
+    _typedef_baptizare(sem, titulus, typus);
     redde _symbolum_registrare(sem, SYMBOLUM_TYPEDEF, titulus,
         typus, ZEPHYRUM, ZEPHYRUM, NIHIL, NIHIL) != NIHIL;
 }
@@ -36963,6 +37044,7 @@ silva_c89_declarationem_tractare (SilvaSemantica* sem,
             si (est_typedef)
             {
                 genus_symboli = SYMBOLUM_TYPEDEF;
+                _typedef_baptizare(sem, tok->valor, t);
             }
             alioquin si (t != NIHIL && t->genus == TYPUS_C89_FUNCTIO)
             {

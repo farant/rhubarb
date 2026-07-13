@@ -1385,8 +1385,10 @@ unsigned int silva_c89_typationes_numerus(
 
 /* Redditor typorum (LEGATUS chunk 0): typus -> textus latinus
  * C-stili in buffer datum (NUL appenso). Functiones = signatura
- * "reditus(parametra)". Redde octetos scriptos; 0 = irreddibilis
- * (acies/error/aggregata sine tag) - buffer tunc vacuus. */
+ * "reditus(parametra)"; acies = "T[n]" / "T[]"; aggregata anonyma
+ * = "<anonyma>" (typedef tag anonymum baptizat titulo suo). Redde
+ * octetos scriptos; 0 = irreddibilis (error / spatium deficiens)
+ * - buffer tunc vacuus. */
 unsigned int silva_c89_typum_scribere(const TypusC89* t,
     char* buffer, unsigned int capacitas);
 
