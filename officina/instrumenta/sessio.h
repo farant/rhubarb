@@ -115,8 +115,11 @@ typedef struct {
                                        * tempus/stdin LICENT */
 } SessioConfiguratio;
 
-/* Praeparat contextum (latina compilata + systema + capita).
- * NIHIL si infrastructura deest. */
+/* Praeparat contextum (systema+latina lexicon + capita). NIHIL si
+ * infrastructura deest. NOTA: UNA sessio EXSECUTANS uno tempore per
+ * processum (regio basi fixa - "una regio uno tempore"); sessio
+ * altera creari potest, sed turni eius reicientur APPARATUS dum
+ * mundus prioris vivit - destrue priorem primum. */
 Sessio* sessio_creare(Piscina* piscina,
     const SessioConfiguratio* configuratio);
 void sessio_destruere(Sessio* sessio);
@@ -151,5 +154,31 @@ chorda sessio_relatum_formare(Sessio* sessio,
 
 /* Textus ostensus integer (materializatus in piscinam datam) */
 chorda sessio_documentum(const Sessio* sessio, Piscina* piscina);
+
+/* ==================================================
+ * Chunk D: via #! + emissores
+ * ================================================== */
+
+/* Scriptum in turnos findere et seriatim offerre (cursor #! +
+ * :aperi). Linea #! prima spatiis obliteratur (\n servato -
+ * positiones exactae). Primus turnus REIECTUS sistit. Redditur
+ * numerus turnorum RECEPTORUM; -1 = apparatus. relatum_out (licet
+ * NIHIL) = relatum ultimum (reiecti aut ultimi recepti).
+ * NOTA v0: commenta INTER turnos in findendo pereunt. */
+s32 sessio_scriptum_offerre(Sessio* sessio, chorda textus,
+    SessioRelatum* relatum_out);
+
+/* Functionem nominatam in mundo currenti currit (C12: principale
+ * post scriptum; tractio vindex-eval futura). Flumina directa -
+ * SINE captura (scriptum = programma verum). VERUM = halitus BENE;
+ * codex_out (licet NIHIL) = valor redditus / codex exitus. */
+b32 sessio_functionem_currere(Sessio* sessio,
+    const char* titulus, s64* codex_out);
+
+/* Exportatio C89 stricta: textus involutus + `#include "latina.h"`
+ * praepositum + principale syntheticum turnos ordine vocans (NISI
+ * usor principale definivit). clang vexillis domus compilat. */
+chorda sessio_documentum_strictum(const Sessio* sessio,
+    Piscina* piscina);
 
 #endif /* SESSIO_H */

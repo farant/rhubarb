@@ -623,6 +623,194 @@ s32 principale (vacuum)
     }
 
     /* ========================================================
+     * PROBARE D1: recusatio stdin (familia tertia - vectis M4b)
+     * ======================================================== */
+    {
+        Sessio* s;
+        SessioRelatum r;
+        chorda f;
+
+        imprimere("\n--- Probans recusatio stdin (D1) ---\n");
+        s = sessio_creare(piscina, &cfg);
+        CREDO_NON_NIHIL(s);
+
+        r = sessio_turnum_offerre(s, _ch(
+            "{ character b[8]; fgets(b, 8, stdin); }", piscina));
+        CREDO_AEQUALIS_I32((i32)r.verdictum, (i32)SESSIO_REIECTUM);
+        CREDO_AEQUALIS_I32((i32)r.halitus_genus,
+            (i32)MACHINULA_RECUSATIO);
+        f = sessio_relatum_formare(s, &r, piscina);
+        CREDO_VERUM(_chorda_continet(f, "stdin"));
+
+        sessio_destruere(s);
+    }
+
+    /* ========================================================
+     * PROBARE D2: scriptum #! (fixum verum, bibliothecae II,
+     * scripturae verae) - VECTIS M4b
+     * ======================================================== */
+    {
+        Sessio* s;
+        SessioRelatum r;
+        SessioConfiguratio cfg_scripti;
+        hic_manens constans character* plagulae_scripti[] = {
+            "lib/piscina.c", "lib/chorda.c"
+        };
+        chorda scriptum;
+        s32 recepti;
+        s64 codex = -I;
+
+        imprimere("\n--- Probans scriptum #! (D2) ---\n");
+        cfg_scripti = cfg;
+        cfg_scripti.sine_capitibus = FALSUM;
+        cfg_scripti.cum_posix = VERUM;
+        cfg_scripti.sine_recusationibus = VERUM;
+        cfg_scripti.plagulae = plagulae_scripti;
+        cfg_scripti.plagulae_numerus = II;
+        s = sessio_creare(piscina, &cfg_scripti);
+        CREDO_NON_NIHIL(s);
+
+        {
+            character via_scripti[1024];
+            FILE* pl;
+            long m_l = 0L;
+            i8* datum = NIHIL;
+
+            sprintf(via_scripti,
+                "%s/officina/probationes/fixa/sessio_scripta/"
+                "salutatio.c", radix);
+            pl = fopen(via_scripti, "rb");
+            CREDO_NON_NIHIL(pl);
+            fseek(pl, 0L, SEEK_END);
+            m_l = ftell(pl);
+            fseek(pl, 0L, SEEK_SET);
+            datum = piscina_allocare(piscina, (memoriae_index)m_l);
+            CREDO_VERUM(fread(datum, I, (memoriae_index)m_l, pl)
+                == (memoriae_index)m_l);
+            fclose(pl);
+            scriptum.datum = datum;
+            scriptum.mensura = (i32)m_l;
+        }
+
+        recepti = sessio_scriptum_offerre(s, scriptum, &r);
+        CREDO_AEQUALIS_I32((i32)recepti, III);   /* 2 directivae + main */
+        CREDO_AEQUALIS_I32((i32)r.verdictum, (i32)SESSIO_ACCEPTUM);
+        CREDO_VERUM(sessio_functionem_currere(s, "main", &codex));
+        CREDO_VERUM(codex == (s64)ZEPHYRUM);
+        {
+            /* scriptura VERA facta (recusationes desunt) */
+            character via_effectus[1024];
+            FILE* pl;
+
+            sprintf(via_effectus,
+                "%s/officina/build/salutatio_scripti.txt", radix);
+            pl = fopen(via_effectus, "rb");
+            CREDO_NON_NIHIL(pl);
+            si (pl != NIHIL)
+            {
+                fclose(pl);
+            }
+        }
+
+        sessio_destruere(s);
+    }
+
+    /* ========================================================
+     * PROBARE D3: circulus serva/aperi (documentum -> sessio
+     * recens -> documentum idem) - VECTIS M4b
+     * ======================================================== */
+    {
+        Sessio* s_a;
+        Sessio* s_b;
+        SessioRelatum r;
+        chorda doc_a;
+        chorda doc_b;
+        s32 recepti;
+
+        imprimere("\n--- Probans circulus serva/aperi (D3) ---\n");
+        s_a = sessio_creare(piscina, &cfg);
+        CREDO_NON_NIHIL(s_a);
+        r = sessio_turnum_offerre(s_a, _ch("integer x = 5;",
+            piscina));
+        CREDO_AEQUALIS_I32((i32)r.verdictum, (i32)SESSIO_ACCEPTUM);
+        r = sessio_turnum_offerre(s_a, _ch(
+            "integer duplum(integer a) { redde a + a; }", piscina));
+        CREDO_AEQUALIS_I32((i32)r.verdictum, (i32)SESSIO_ACCEPTUM);
+        r = sessio_turnum_offerre(s_a, _ch("x = duplum(x);",
+            piscina));
+        CREDO_AEQUALIS_I32((i32)r.verdictum, (i32)SESSIO_ACCEPTUM);
+        doc_a = sessio_documentum(s_a, piscina);
+        CREDO_VERUM(doc_a.mensura > ZEPHYRUM);
+        /* UNA regio uno tempore: sessio prior destruenda ante
+         * exsecutionem alterius (basis fixa regionis) */
+        sessio_destruere(s_a);
+        s_a = NIHIL;
+
+        s_b = sessio_creare(piscina, &cfg);
+        CREDO_NON_NIHIL(s_b);
+        recepti = sessio_scriptum_offerre(s_b, doc_a, &r);
+        CREDO_AEQUALIS_I32((i32)recepti, III);
+        doc_b = sessio_documentum(s_b, piscina);
+        CREDO_VERUM(chorda_aequalis(doc_a, doc_b));
+
+        /* sessio aperta PERGIT (continuatio interactiva) */
+        r = sessio_turnum_offerre(s_b, _ch("x;", piscina));
+        CREDO_AEQUALIS_I32((i32)r.verdictum, (i32)SESSIO_ACCEPTUM);
+        CREDO_VERUM(r.valor == (s64)X);
+
+        sessio_destruere(s_b);
+    }
+
+    /* ========================================================
+     * PROBARE D4: exportatio stricta compilat (clang vexillis
+     * domus) - VECTIS M4b
+     * ======================================================== */
+    {
+        Sessio* s;
+        SessioRelatum r;
+        chorda strictum;
+        character via_export[1024];
+        character imperium[2048];
+        FILE* pl;
+
+        imprimere("\n--- Probans exportatio stricta (D4) ---\n");
+        s = sessio_creare(piscina, &cfg);
+        CREDO_NON_NIHIL(s);
+        r = sessio_turnum_offerre(s, _ch("integer x = 5;", piscina));
+        CREDO_AEQUALIS_I32((i32)r.verdictum, (i32)SESSIO_ACCEPTUM);
+        r = sessio_turnum_offerre(s, _ch(
+            "integer duplum(integer a) { redde a + a; }", piscina));
+        CREDO_AEQUALIS_I32((i32)r.verdictum, (i32)SESSIO_ACCEPTUM);
+        r = sessio_turnum_offerre(s, _ch("x = duplum(x);", piscina));
+        CREDO_AEQUALIS_I32((i32)r.verdictum, (i32)SESSIO_ACCEPTUM);
+
+        strictum = sessio_documentum_strictum(s, piscina);
+        CREDO_VERUM(_chorda_continet(strictum,
+            "#include \"latina.h\""));
+        CREDO_VERUM(_chorda_continet(strictum,
+            "integer turnus_1(void)"));
+        CREDO_VERUM(_chorda_continet(strictum,
+            "integer principale(vacuum)"));
+
+        sprintf(via_export, "%s/officina/build/strictum_export.c",
+            radix);
+        pl = fopen(via_export, "wb");
+        CREDO_NON_NIHIL(pl);
+        fwrite(strictum.datum, I, (memoriae_index)strictum.mensura,
+            pl);
+        fclose(pl);
+
+        sprintf(imperium, "clang -std=c89 -pedantic -Wall -Wextra"
+            " -Werror -Wconversion -Wsign-conversion -Wcast-qual"
+            " -Wstrict-prototypes -Wwrite-strings -Wno-long-long"
+            " -I%s/include -c %s -o %s/officina/build/"
+            "strictum_export.o", radix, via_export, radix);
+        CREDO_AEQUALIS_I32((i32)system(imperium), ZEPHYRUM);
+
+        sessio_destruere(s);
+    }
+
+    /* ========================================================
      * PROBARE: #include per praebenda (capita ambulata)
      * ======================================================== */
     {

@@ -2870,3 +2870,104 @@ suffecerunt.
 
 SEQUENS: chunk D (via #! + :serva/:aperi + SIGILLUM M4b). Commissio
 Franis = sigillum chunki C.
+
+## M4b CHUNK D — INTENTIO (2026-07-11): via #! + emissores + SIGILLUM
+
+**Vectis D = VECTIS M4b (spec §V): transcripta aurea (incl. stdin
+recusatio + circulus serva/aperi + -strictum sub vexillis domus
+compilat) + scriptum #! agens ≥2 bibliothecas monorepo cum
+scripturis VERIS (recusationes DESUNT) + probatio persistentiae
+(vivit ex B) + suitae omnes virides + portae amalgamatis.**
+
+Aedificanda: ① **sessio_scriptum_offerre** (findere scriptum in
+turnos: linea #! spatiis oblita [\n servato]; parsura principis →
+extensiones elementorum per octetos fons-principis; lineae
+directivarum per scannerum textus [extra extensiones elementorum —
+directivae INTRA elementa cum eis vehuntur]; oblatio seriatim; primus
+REICE sistit). NOTA v0: commenta inter turnos in findendo pereunt
+(circulus serva/aperi textum codicis servat, trivia non — parca
+nominata). ② **sessio_functionem_currere** (principale post scriptum
+— C12: principale-si-adest; flumina directa sine captura; tractio
+vindex-eval futura). ③ **sessio_documentum_strictum** (involutum +
+`#include "latina.h"` praepositum + principale syntheticum vocans
+turnos ordine — NISI usor principale definivit). ④ colloquium:
+modus batch (argv = via scripti; recusationes desunt; effusio sola
+imprimitur, non echines; exitus = codex principalis) + imperia
+:serva [-strictum] <via> / :aperi <via>. ⑤ probatio D: scriptum
+fixum (piscina + chorda + scriptura vera), circulus, strictum-clang,
+stdin-recusatio.
+
+## 2026-07-11 — M4b SESSIO+COLLOQUIUM: RELATIO MILLIARII (auditus + sigillum)
+
+**QUATTUOR CHUNKI UNO DIE (on-ramp eodem die praecedente). VECTIS
+M4b INTEGER TENET:**
+① transcripta aurea: probatio_officina_sessio **178 assertiones**
+(scenaria nominata OMNIA: genera turnorum quinque; echo reparationis
+"… x + 2;"; turnus REIECTUS documento absens; redefinitio-reicit-ad-
+lineam-veterem [extra_turnum+turnus_vetus]; redefinitio cum notitia
+"turnus 1: effusio mutata"; familiae recusationum TRES [scripturae/
+tempus/stdin]; circulus serva/aperi [documenta byte-aequalia +
+sessio pergit: x; → 10]; exportatio -strictum sub vexillis domus
+COMPILAT [system clang == 0]);
+② scriptum #! bibliothecas II agens (piscina + chorda) cum
+scripturis VERIS (plagula scripta et relecta), exitus 0 — et per
+machinam (D2) et per colloquium batch VIVUM;
+③ probatio persistentiae globalium (B1, scriptio-N/lectio-N+1);
+④ suitae 11/11; censor PURUS; examen colloquium ACCIPE purum;
+amalgama VERIFICATA (B); cursor paritas 69/0 (B; machinula post
+intacta); vectis corporis TENET (40 exclusiones).
+
+**AUDITUS (spec/interrogatio/sim-7 contra rem):**
+- DECISUS XV omnes honorati; decisiones spec-temporis ⑦ omnes in
+  INTENTIONIBUS scriptae. SILVA FONTES INTACTAE TOTO MILLIARIO —
+  simplificatio semper-reparsare promissum tenuit (fistulatio
+  systematis, oraculum trans-turnos, sutura tags: nullae aedificatae,
+  nullae necessariae).
+- V1-V5 clausae (V3 vivum: "2.5 : duplex"; V5 numquam flagravit).
+- Sim-7 C1-C12: NULLA reversio in aedificatione. C2/C3/C8 exacte ut
+  simulatae; C11 gradus-reversio tenuit (sutura sine umbra).
+- EMENDATIONES (rationibus in libris): ① principale = macro latinae
+  → symbolum verum "main" (lex emitte iterata; superficies
+  "principale" honorat, machina "main" currit); ② echo declarationis
+  per PARSURAM-PROBAM (nexus sedes usus solas notat); ③ latina in
+  textum systematis concatenata (inventum capitale chunki B); ④
+  **UNA SESSIO EXSECUTANS uno tempore per processum** (regio basi
+  fixa sursum fluit; documentatum sessio.h; probatio D3 ordinem
+  docuit); ⑤ custos initiatoris ad limen (demissio tacite zephyrat
+  — experimentum); ⑥ commenta inter turnos in findendo scripti
+  pereunt (parca nominata: trivia in circulis); ⑦ involucra typata
+  in exportatione (spec "void" illustrativum erat).
+- INVENTA D: extensiones elementorum per RADICEM originis (lexemata
+  expansa synthetica — macros latinae ubique; tertium exemplar
+  radicis); segmenta directivarum extra elementa (directivae intra
+  elementa cum eis vehuntur).
+
+**PARCAE NOVAE (→ spec §VII et c89-lacunae ubi decet):** resolutio
+bibliothecarum automatica (#include → plagulae; onus-pigrum);
+conservatio triviorum in findendo; retypatio involucrorum veterum
+post religationem (conversio legalis, cosmetica); umbra/:committe
+(prima post-v0, sutura parata); via celeris; impressio chordae
+(aggregata); argv scriptorum; subsellium tessera; vindex-eval.
+
+**DEBRIEF INSTRUMENTORUM MILLIARII:** adhibita — colloquium ipsum
+(ansa diagnosis vivae: typare-videre-secundis; od -c byte-exactum),
+interpretare (differentiale noti-boni chunki B — venationem
+decidit), recordator volatus (stiva halitus = sedes sistere),
+censor/examen/cursor/amalgamare (portae), nexus/emitte/grep (~25
+reaches). Fructus maximus: SUPERFICIES NOVA UT INSTRUMENTUM SUI —
+colloquium fistulatum vitium suum demonstravit (D principale/main)
+et paritatem probavit. Asperitates: bisectiones confusae per
+dialectum (chunk B — dependentia circularis lexici et probationum);
+relatio volatus in stderr strepitosa pro REPL (nota UX). Desideratum:
+effusor sistere-per-modulum (fusor -causa unius moduli — prope
+exsistit); instrumentatio salta-finis manualis erat (probatio
+apparatus-viarum nominata parca).
+
+**M4b SIGILLATUM = commissio Franis huius RELATIO. COLLOQUIUM
+VIVIT:** sessio interactiva bibliothecas monorepo agens (bar
+spec-v2 §XI ad litteram), scripta #! cum C top-gradu, documentum =
+veritas replicata, iudicium ante demissionem, acta captae, historia
+mutata quieta. Consumptores sequentes nominati: subsellium tessera
+(documentum+consolatorium+gradarium), vindex-eval (VARIABILIA
+tractio), umbra. ROADMAP: **M5 aarch64** (compile-to-memory primum)
+→ M6 x86-64 → v2 iter-temporis (acta-visio substratum).

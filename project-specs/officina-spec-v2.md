@@ -367,7 +367,30 @@ officina/
     (NB: implicit declarations are LEGAL C89 — est_implicitum is
     not an error; severity taxonomy = interview). Name ceremony
     pending (candidate: examen; cave iudicium ~ indicium).
-  - **M4b — REPL** (+ #! runner). Bar unchanged: interactive
+  - **M4b — SESSIO + COLLOQUIUM. CLOSED 2026-07-11** (on-ramp +
+    four chunks, two days; see officina/phase-log.md M4b RELATIO
+    MILLIARII): the REPLAY-DOCUMENT design (document = truth, world
+    = cache of replay(document); green invariant; determinism =
+    load-bearing wall). Engine sessio (officina/instrumenta/, four
+    named consumers) + colloquium binary (line surface AND #!
+    batch: refusals OFF, judgment ON). BAR MET: 178-assert golden
+    suite (all named scenarios incl. redefinition-rejects-at-old-
+    line, three refusal families, serva/aperi round-trip byte-equal,
+    -strictum export clang-compiles); #! script driving piscina +
+    chorda with REAL writes, exit 0; globals persistence regression
+    (write-N/read-N+1). Machinula grew the session layer:
+    MACHINULA_RECUSATIO + 3 refusal flags + 8 guards, ansae 0/1/2
+    redirections (capture seam = acta v0), ansas_claudere,
+    printf→ansae[1] (corpus-invisible: cursor 69/0). SILVA FONTES
+    UNTOUCHED the whole milestone (always-reparse held). Crown
+    finds: contextus lexicon = MACRO channel only (typedefs flow
+    via systema parsura + oracle — latina concatenated into systema
+    text); UNA SESSIO EXSECUTANS per process (fixed-base regio
+    flows up); principale IS main (latina macro — token valor =
+    expanded text). Parks named in RELATIO: umbra/:committe (seam
+    ready), fast path, chorda printing, script-lib auto-resolution,
+    trivia in split, workbench, vindex-eval.
+  - *(original M4b plan:)* Bar unchanged: interactive
     session driving monorepo libs. Inherits from M4a: judgment
     before lowering. Substrate notes: vindex_onerator = the
     app-side loader (second consumer); design the long-lived

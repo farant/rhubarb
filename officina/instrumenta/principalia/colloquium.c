@@ -1,12 +1,18 @@
-/* colloquium.c - superficies linearis sessionis (M4b chunk C)
+/* colloquium.c - superficies sessionis (M4b chunki C+D)
  *
- * Ansa fgets (modus coctus - functionat fistulatum; cursor #! =
- * chunk D). Continuatio per sessio_initus_completus (librae).
- * Imperia: :monstra (documentum), :effusio <k> (acta turni),
- * :exi. Formatio per sessio_relatum_formare (machina - transcripta
- * probabilia byte-exacte).
+ * INTERACTIVUS: ansa fgets (modus coctus - functionat fistulatum);
+ * continuatio per sessio_initus_completus (librae); imperia
+ * :monstra / :effusio <k> / :serva [-strictum] <via> / :aperi <via>
+ * / :exi. Formatio per sessio_relatum_formare.
  *
- * Usus: colloquium [-plagulae a,b,c] [-posix] [-radix via]
+ * BATCH (cursor #!, chunk D): colloquium <scriptum.c> - linea #!
+ * obliterata, iudicium ADEST, recusationes DESUNT (scriptum =
+ * programma verum: scripturae/tempus/stdin licent), effusio sola
+ * imprimitur; principale (si definitum) post turnos curritur;
+ * exitus processus = codex eius.
+ *
+ * Usus: colloquium [scriptum.c] [-plagulae a,b,c] [-posix]
+ *       [-radix via]
  */
 
 #include "latina.h"
@@ -46,12 +52,49 @@ _plagulas_findere (character* argumentum,
     redde numerus;
 }
 
+interior chorda
+_plagulam_totam_legere (Piscina* piscina, constans character* via)
+{
+    FILE* pl = fopen(via, "rb");
+    long mensura_l;
+    chorda fructus;
+    i8* datum;
+
+    fructus.mensura = ZEPHYRUM;
+    fructus.datum = NIHIL;
+    si (pl == NIHIL)
+    {
+        redde fructus;
+    }
+    fseek(pl, 0L, SEEK_END);
+    mensura_l = ftell(pl);
+    fseek(pl, 0L, SEEK_SET);
+    si (mensura_l <= 0L)
+    {
+        fclose(pl);
+        redde fructus;
+    }
+    datum = piscina_allocare(piscina, (memoriae_index)mensura_l);
+    si (datum == NIHIL
+        || fread(datum, I, (memoriae_index)mensura_l, pl)
+            != (memoriae_index)mensura_l)
+    {
+        fclose(pl);
+        redde fructus;
+    }
+    fclose(pl);
+    fructus.datum = datum;
+    fructus.mensura = (i32)mensura_l;
+    redde fructus;
+}
+
 s32 principale (integer argc, character** argv)
 {
     Piscina* piscina;
     Sessio* sessio;
     SessioConfiguratio cfg;
     constans character* plagulae[XXXII];
+    constans character* via_scripti = NIHIL;
     character initus[INITUS_MAXIMUS];
     integer k;
 
@@ -84,12 +127,24 @@ s32 principale (integer argc, character** argv)
             k++;
             cfg.radix = argv[k];
         }
+        alioquin si (argv[k][ZEPHYRUM] != '-'
+            && via_scripti == NIHIL)
+        {
+            via_scripti = argv[k];
+        }
         alioquin
         {
-            fprintf(stderr, "usus: colloquium [-plagulae a,b,c]"
-                " [-posix] [-radix via]\n");
+            fprintf(stderr, "usus: colloquium [scriptum.c]"
+                " [-plagulae a,b,c] [-posix] [-radix via]\n");
             redde I;
         }
+    }
+
+    si (via_scripti != NIHIL)
+    {
+        /* modus batch (C12): recusationes desunt, iudicium adest */
+        cfg.sine_recusationibus = VERUM;
+        cfg.cum_posix = VERUM;   /* scripta bibliothecas POSIX agunt */
     }
 
     sessio = sessio_creare(piscina, &cfg);
@@ -98,6 +153,73 @@ s32 principale (integer argc, character** argv)
         fprintf(stderr, "colloquium: sessio deest (curre ex radice"
             " repositorii aut da -radix)\n");
         redde I;
+    }
+
+    si (via_scripti != NIHIL)
+    {
+        chorda scriptum = _plagulam_totam_legere(piscina,
+            via_scripti);
+        SessioRelatum r;
+        s32 recepti;
+        s64 codex = ZEPHYRUM;
+        b32 principale_definitum = FALSUM;
+
+        si (scriptum.mensura == ZEPHYRUM)
+        {
+            fprintf(stderr, "colloquium: scriptum illegibile: %s\n",
+                via_scripti);
+            redde I;
+        }
+        recepti = sessio_scriptum_offerre(sessio, scriptum, &r);
+        si (recepti < ZEPHYRUM
+            || r.verdictum != SESSIO_ACCEPTUM)
+        {
+            chorda f = sessio_relatum_formare(sessio, &r, piscina);
+
+            fprintf(stderr, "%s: turnus %d reiectus\n", via_scripti,
+                (int)(recepti + I));
+            si (f.mensura > ZEPHYRUM)
+            {
+                fprintf(stderr, "%.*s", (int)f.mensura,
+                    (constans character*)f.datum);
+            }
+            redde I;
+        }
+        /* effusio turnorum (capta) ad stdout */
+        per (k = ZEPHYRUM; k < (integer)sessio_turni_numerus(sessio);
+            k++)
+        {
+            chorda e = sessio_turnus_effusio(sessio, (i32)k);
+
+            si (e.mensura > ZEPHYRUM)
+            {
+                imprimere("%.*s", (int)e.mensura,
+                    (constans character*)e.datum);
+            }
+            /* principale = macro latinae (-> main): valor lexematis
+             * = textus EXPANSUS (lex emitte) - symbolum verum "main" */
+            si (sessio_turnus_genus(sessio, (i32)k)
+                    == SESSIO_TURNUS_DEFINITIO
+                && (chorda_aequalis_literis(
+                        sessio_turnus_nomen(sessio, (i32)k), "main")
+                    || chorda_aequalis_literis(
+                        sessio_turnus_nomen(sessio, (i32)k),
+                        "principale")))
+            {
+                principale_definitum = VERUM;
+            }
+        }
+        fflush(stdout);
+        si (principale_definitum)
+        {
+            si (!sessio_functionem_currere(sessio, "main", &codex))
+            {
+                fprintf(stderr, "colloquium: principale fractum\n");
+                redde I;
+            }
+        }
+        sessio_destruere(sessio);
+        redde (s32)codex;
     }
 
     imprimere("colloquium (M4b) - :exi exit, :monstra documentum\n");
@@ -168,6 +290,84 @@ s32 principale (integer argc, character** argv)
 
                     imprimere("[%d] %.*s", (int)j, (int)t.mensura,
                         (constans character*)t.datum);
+                }
+            }
+            alioquin si (strncmp(initus, ":serva", VI) == ZEPHYRUM)
+            {
+                character* via = initus + VI;
+                b32 strictum = FALSUM;
+                chorda textus_servandus;
+                FILE* pl;
+
+                dum (*via == ' ')
+                {
+                    via++;
+                }
+                si (strncmp(via, "-strictum", IX) == ZEPHYRUM)
+                {
+                    strictum = VERUM;
+                    via += IX;
+                    dum (*via == ' ')
+                    {
+                        via++;
+                    }
+                }
+                via[strcspn(via, "\n")] = '\0';
+                si (*via == '\0')
+                {
+                    imprimere("usus: :serva [-strictum] <via>\n");
+                    perge;
+                }
+                textus_servandus = strictum
+                    ? sessio_documentum_strictum(sessio, piscina)
+                    : sessio_documentum(sessio, piscina);
+                pl = fopen(via, "wb");
+                si (pl == NIHIL)
+                {
+                    imprimere("serva: %s non scribitur\n", via);
+                    perge;
+                }
+                si (textus_servandus.mensura > ZEPHYRUM)
+                {
+                    fwrite(textus_servandus.datum, I,
+                        (memoriae_index)textus_servandus.mensura,
+                        pl);
+                }
+                fclose(pl);
+                imprimere("servatum: %s (%d octeti)\n", via,
+                    (int)textus_servandus.mensura);
+            }
+            alioquin si (strncmp(initus, ":aperi", VI) == ZEPHYRUM)
+            {
+                character* via = initus + VI;
+                chorda scriptum;
+                SessioRelatum r_scripti;
+                s32 recepti;
+
+                dum (*via == ' ')
+                {
+                    via++;
+                }
+                via[strcspn(via, "\n")] = '\0';
+                scriptum = _plagulam_totam_legere(piscina, via);
+                si (scriptum.mensura == ZEPHYRUM)
+                {
+                    imprimere("aperi: %s illegibile\n", via);
+                    perge;
+                }
+                recepti = sessio_scriptum_offerre(sessio, scriptum,
+                    &r_scripti);
+                imprimere("aperti: %d turni\n", (int)recepti);
+                si (r_scripti.verdictum != SESSIO_ACCEPTUM)
+                {
+                    chorda f = sessio_relatum_formare(sessio,
+                        &r_scripti, piscina);
+
+                    si (f.mensura > ZEPHYRUM)
+                    {
+                        imprimere("%.*s", (int)f.mensura,
+                            (constans character*)f.datum);
+                    }
                 }
             }
             alioquin si (strncmp(initus, ":effusio", VIII)

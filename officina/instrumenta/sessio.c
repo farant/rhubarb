@@ -1908,6 +1908,447 @@ sessio_turnus_effusio (constans Sessio* s, i32 index)
     redde (t == NIHIL || !t->effusio_valida) ? vacua : t->effusio;
 }
 
+/* ==================================================
+ * chunk D: via #! + emissores
+ * ================================================== */
+
+/* extensio octetorum elementi in fonte principe (min/max trans
+ * lexemata fontis principis; tokens synthetici/lexici omissi) */
+interior vacuum _extensionem_valoris (SilvaValor v, integer princeps,
+    s32* minimum, s32* maximum);
+
+interior vacuum
+_extensionem_nodi (constans SilvaNodus* n, integer princeps,
+    s32* minimum, s32* maximum)
+{
+    insignatus integer k;
+
+    si (n == NIHIL)
+    {
+        redde;
+    }
+    per (k = ZEPHYRUM; k < n->numerus_locorum; k++)
+    {
+        _extensionem_valoris(n->loci[k], princeps, minimum, maximum);
+    }
+}
+
+interior vacuum
+_extensionem_valoris (SilvaValor v, integer princeps, s32* minimum,
+    s32* maximum)
+{
+    commutatio (v.genus)
+    {
+        casus SILVA_VALOR_TOKEN:
+            si (v.datum.token != NIHIL)
+            {
+                /* RADIX originis: lexemata expansa synthetica sunt
+                 * (byte_offset -1) - sedes invocationis in fonte
+                 * principe per catenam originis (macros latinae!) */
+                SilvaToken* radix_t = silva_token_radix(
+                    v.datum.token);
+
+                si (radix_t == NIHIL)
+                {
+                    radix_t = v.datum.token;
+                }
+                si (radix_t->fons_index == princeps
+                    && radix_t->byte_offset >= ZEPHYRUM)
+                {
+                    s32 a = (s32)radix_t->byte_offset;
+                    s32 b = a + (s32)radix_t->longitudo;
+
+                    si (*minimum < (s32)ZEPHYRUM || a < *minimum)
+                    {
+                        *minimum = a;
+                    }
+                    si (b > *maximum)
+                    {
+                        *maximum = b;
+                    }
+                }
+            }
+            frange;
+        casus SILVA_VALOR_NODUS:
+            _extensionem_nodi(v.datum.nodus, princeps, minimum,
+                maximum);
+            frange;
+        casus SILVA_VALOR_LISTA:
+        {
+            insignatus integer m = silva_valor_lista_numerus(v);
+            insignatus integer k;
+
+            per (k = ZEPHYRUM; k < m; k++)
+            {
+                SilvaValor* elem = silva_valor_lista_obtinere(v, k);
+
+                si (elem != NIHIL)
+                {
+                    _extensionem_valoris(*elem, princeps, minimum,
+                        maximum);
+                }
+            }
+            frange;
+        }
+        ordinarius:
+            frange;
+    }
+}
+
+nomen structura {
+    i32 initium;
+    i32 finis;
+} SegmentumScripti;
+
+s32
+sessio_scriptum_offerre (Sessio* s, chorda textus,
+    SessioRelatum* relatum_out)
+{
+    i8* copia;
+    SilvaPiscina* effimera;
+    SilvaParsura* parsura = NIHIL;
+    SilvaSemantica* sem;
+    Xar* segmenta;
+    s32 recepti = ZEPHYRUM;
+    SessioRelatum relatum_ultimum;
+
+    memset(&relatum_ultimum, ZEPHYRUM,
+        magnitudo(SessioRelatum));
+    relatum_ultimum.verdictum = SESSIO_APPARATUS;
+    si (s == NIHIL || textus.mensura == ZEPHYRUM)
+    {
+        salta apparatus;
+    }
+
+    /* copia mutabilis; linea #! spatiis obliterata (\n servato) */
+    copia = piscina_allocare(s->piscina,
+        (memoriae_index)textus.mensura);
+    si (copia == NIHIL)
+    {
+        salta apparatus;
+    }
+    memcpy(copia, textus.datum, (memoriae_index)textus.mensura);
+    si (textus.mensura >= II && copia[ZEPHYRUM] == (i8)'#'
+        && copia[I] == (i8)'!')
+    {
+        i32 k;
+
+        per (k = ZEPHYRUM; k < textus.mensura
+            && copia[k] != (i8)'\n'; k++)
+        {
+            copia[k] = (i8)' ';
+        }
+    }
+
+    /* parsura findendi (fines elementorum; iudicium in oblatione) */
+    effimera = silva_piscina_generare_dynamicum("sessio_scriptum",
+        268435456);
+    si (effimera == NIHIL)
+    {
+        salta apparatus;
+    }
+    sem = _iudicare(s, effimera, "<scriptum>",
+        (constans character*)copia, textus.mensura, &parsura);
+    (vacuum)sem;
+    si (parsura == NIHIL)
+    {
+        silva_piscina_destruere(effimera);
+        salta apparatus;
+    }
+    segmenta = xar_creare(s->piscina,
+        (i32)magnitudo(SegmentumScripti));
+    si (segmenta == NIHIL)
+    {
+        silva_piscina_destruere(effimera);
+        salta apparatus;
+    }
+
+    /* extensiones elementorum principis */
+    {
+        SilvaValor radix = parsura->commissio->radix;
+        insignatus integer n = silva_valor_lista_numerus(radix);
+        insignatus integer k;
+
+        per (k = ZEPHYRUM; k < n; k++)
+        {
+            SilvaValor* v = silva_valor_lista_obtinere(radix, k);
+            s32 minimum = -I;
+            s32 maximum = ZEPHYRUM;
+
+            si (v == NIHIL || v->genus != SILVA_VALOR_NODUS
+                || v->datum.nodus == NIHIL)
+            {
+                perge;
+            }
+            _extensionem_valoris(*v, parsura->fons_princeps,
+                &minimum, &maximum);
+            si (minimum >= (s32)ZEPHYRUM && maximum > minimum)
+            {
+                SegmentumScripti* seg = xar_addere(segmenta);
+
+                si (seg != NIHIL)
+                {
+                    seg->initium = (i32)minimum;
+                    seg->finis = (i32)maximum;
+                }
+            }
+        }
+    }
+    silva_piscina_destruere(effimera);
+
+    /* lineae directivarum EXTRA extensiones (scanner textus cum
+     * statu commentorum; directivae intra elementa cum eis vehuntur) */
+    {
+        b32 in_commento = FALSUM;
+        i32 k = ZEPHYRUM;
+
+        dum (k < textus.mensura)
+        {
+            i32 linea_initium = k;
+            i32 linea_finis;
+            i32 j;
+            b32 directiva = FALSUM;
+
+            /* finis lineae */
+            linea_finis = k;
+            dum (linea_finis < textus.mensura
+                && copia[linea_finis] != (i8)'\n')
+            {
+                linea_finis++;
+            }
+            si (linea_finis < textus.mensura)
+            {
+                linea_finis++;   /* \n inclusum */
+            }
+            si (!in_commento)
+            {
+                j = linea_initium;
+                dum (j < linea_finis && (copia[j] == (i8)' '
+                    || copia[j] == (i8)'\t'))
+                {
+                    j++;
+                }
+                si (j < linea_finis && copia[j] == (i8)'#')
+                {
+                    directiva = VERUM;
+                }
+            }
+            /* status commentorum trans lineam (grossus: chordae
+             * non trans lineas in C89) */
+            per (j = linea_initium; j < linea_finis; j++)
+            {
+                si (in_commento)
+                {
+                    si (copia[j] == (i8)'*' && j + I < linea_finis
+                        && copia[j + I] == (i8)'/')
+                    {
+                        in_commento = FALSUM;
+                        j++;
+                    }
+                }
+                alioquin si (copia[j] == (i8)'/'
+                    && j + I < linea_finis
+                    && copia[j + I] == (i8)'*')
+                {
+                    in_commento = VERUM;
+                    j++;
+                }
+            }
+            si (directiva)
+            {
+                /* extra omnes extensiones elementorum? */
+                i32 n_seg = xar_numerus(segmenta);
+                i32 si_index;
+                b32 intra = FALSUM;
+
+                per (si_index = ZEPHYRUM; si_index < n_seg;
+                    si_index++)
+                {
+                    SegmentumScripti* seg = xar_obtinere(segmenta,
+                        si_index);
+
+                    si (linea_initium < seg->finis
+                        && linea_finis > seg->initium)
+                    {
+                        intra = VERUM;
+                        frange;
+                    }
+                }
+                si (!intra)
+                {
+                    SegmentumScripti* seg = xar_addere(segmenta);
+
+                    si (seg != NIHIL)
+                    {
+                        seg->initium = linea_initium;
+                        seg->finis = linea_finis;
+                    }
+                }
+            }
+            k = linea_finis;
+        }
+    }
+
+    /* ordinare per initium (insertio - segmenta pauca) et offerre */
+    {
+        i32 n = xar_numerus(segmenta);
+        i32 a;
+        i32 b;
+
+        per (a = I; a < n; a++)
+        {
+            per (b = a; b > ZEPHYRUM; b--)
+            {
+                SegmentumScripti* praecedens = xar_obtinere(
+                    segmenta, b - I);
+                SegmentumScripti* hic_seg = xar_obtinere(segmenta,
+                    b);
+
+                si (praecedens->initium > hic_seg->initium)
+                {
+                    SegmentumScripti temp = *praecedens;
+
+                    *praecedens = *hic_seg;
+                    *hic_seg = temp;
+                }
+                alioquin
+                {
+                    frange;
+                }
+            }
+        }
+        per (a = ZEPHYRUM; a < n; a++)
+        {
+            SegmentumScripti* seg = xar_obtinere(segmenta, a);
+            chorda pars;
+
+            pars.datum = copia + seg->initium;
+            pars.mensura = seg->finis - seg->initium;
+            relatum_ultimum = sessio_turnum_offerre(s, pars);
+            si (relatum_ultimum.verdictum != SESSIO_ACCEPTUM)
+            {
+                si (relatum_out != NIHIL)
+                {
+                    *relatum_out = relatum_ultimum;
+                }
+                redde recepti;
+            }
+            recepti++;
+        }
+    }
+    si (relatum_out != NIHIL)
+    {
+        *relatum_out = relatum_ultimum;
+    }
+    redde recepti;
+
+apparatus:
+    si (relatum_out != NIHIL)
+    {
+        *relatum_out = relatum_ultimum;
+    }
+    redde -I;
+}
+
+b32
+sessio_functionem_currere (Sessio* s, constans character* titulus,
+    s64* codex_out)
+{
+    MachinulaExitus exitus;
+
+    si (codex_out != NIHIL)
+    {
+        *codex_out = ZEPHYRUM;
+    }
+    si (s == NIHIL || s->machinula == NIHIL || titulus == NIHIL)
+    {
+        redde FALSUM;
+    }
+    exitus = machinula_currere(s->machinula,
+        chorda_ex_literis(titulus, s->piscina));
+    si (codex_out != NIHIL)
+    {
+        *codex_out = exitus.codex;
+    }
+    redde exitus.genus == (s32)MACHINULA_BENE ? VERUM : FALSUM;
+}
+
+chorda
+sessio_documentum_strictum (constans Sessio* s, Piscina* piscina)
+{
+    i32 n;
+    i32 k;
+    TurnusVisus* visus;
+    chorda involutum;
+    ChordaAedificator* a;
+    b32 principale_adest = FALSUM;
+    chorda vacua;
+
+    vacua.mensura = ZEPHYRUM;
+    vacua.datum = NIHIL;
+    si (s == NIHIL || piscina == NIHIL)
+    {
+        redde vacua;
+    }
+    n = xar_numerus(s->turni);
+    visus = piscina_allocare(piscina,
+        (memoriae_index)(n > ZEPHYRUM ? n : I)
+            * magnitudo(TurnusVisus));
+    si (visus == NIHIL)
+    {
+        redde vacua;
+    }
+    per (k = ZEPHYRUM; k < n; k++)
+    {
+        TurnusInternus* t = xar_obtinere(s->turni, k);
+
+        visus[k].textus = t->textus;
+        visus[k].genus = t->genus;
+        visus[k].involucrum = t->involucrum;
+        visus[k].typus_textus = t->typus_textus;
+        visus[k].lineae = t->lineae;
+        si (t->genus == SESSIO_TURNUS_DEFINITIO
+            && chorda_aequalis_literis(t->titulus, "principale"))
+        {
+            principale_adest = VERUM;
+        }
+    }
+    (vacuum)_ostensum_texere(visus, n, piscina);
+    involutum = _involutum_texere(visus, n, piscina);
+
+    a = chorda_aedificator_creare(piscina, DXII);
+    si (a == NIHIL)
+    {
+        redde vacua;
+    }
+    (vacuum)chorda_aedificator_appendere_literis(a,
+        "#include \"latina.h\"\n\n");
+    si (involutum.mensura > ZEPHYRUM)
+    {
+        (vacuum)chorda_aedificator_appendere_chorda(a, involutum);
+    }
+    si (!principale_adest)
+    {
+        (vacuum)chorda_aedificator_appendere_literis(a,
+            "\ninteger principale(vacuum)\n{\n");
+        per (k = ZEPHYRUM; k < n; k++)
+        {
+            si (visus[k].involucrum.mensura > ZEPHYRUM)
+            {
+                (vacuum)chorda_aedificator_appendere_literis(a,
+                    "    ");
+                (vacuum)chorda_aedificator_appendere_chorda(a,
+                    visus[k].involucrum);
+                (vacuum)chorda_aedificator_appendere_literis(a,
+                    "();\n");
+            }
+        }
+        (vacuum)chorda_aedificator_appendere_literis(a,
+            "    redde 0;\n}\n");
+    }
+    redde chorda_aedificator_finire(a);
+}
+
 interior constans character*
 _halitus_titulus (s32 genus)
 {
