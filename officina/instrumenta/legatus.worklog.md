@@ -185,3 +185,34 @@ two-registration-paths discovery → fix landed on both. emitte ×2
 byte-exact function reads. nexus -fortasse caught a typo'd symbol.
 Where grep was RIGHT (no gap): comment text, shell scripts,
 within-file locals (est_typedef), header context sweeps.
+
+## 2026-07-13 — v0.2 chunk 2: macro resolution (sero)
+
+Design find of the chunk: HOVER ORDERING. Hover on a macro use
+descends the node tree into the EXPANSION — `GRADUS` lands on the
+literal `7` (typus tier renders "integer"), `imprimere` would land
+on printf. The invocation the writer typed must beat the type of
+its invisible expansion, so the origo tier runs BEFORE the
+symbol/typus render; the raw-word tier stays last (directive lines
+only — never hijacks real symbols because those resolve earlier).
+_macro_ad_byte(cum_verbo) gates the two tiers.
+Definition/references need no early tier: expansion nodes carry no
+symbolum, so they fall through to the macro tier naturally.
+
+Same-file #defines are the hard fixture: body tokens ARE
+fons_princeps, so expression extents can span def-site AND use-site
+bytes. The origo tier's radix-extent match is immune (exact
+invocation-root interval). Genus guards added on every symbol-path
+row walk (definition body-tier, references, incomingCalls) — macro
+and symbol rows share titulus chains; without guards a macro named
+like a function would inject phantom rows.
+
+Push-channel tally this chunk: 3× arg-count mismatches during the
+_symbolum_petitionis signature change (each fixed before compile),
+1× "multiset primitivorum invalidum" — my scenario insertion SPLIT
+principale's two-line signature, leaving an orphaned `integer`
+above the new block. All caught at edit time by legatus's own
+diagnostics. Bar: 165/165 (29 macro asserts: hover-beats-expansion,
+directive raw-word, definition→line 0, references sedes+usus,
+workspaceSymbol kind 14, documentSymbol functio+2 macra), 12/12
+suites, clang PURUS throughout.

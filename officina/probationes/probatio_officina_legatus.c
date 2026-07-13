@@ -1160,6 +1160,203 @@ probatio_quisquiliae (Piscina* p)
 
 /* ================================================== */
 
+/* ==================================================
+ * MACRA (v0.2): hover invocationis (gradus originis VINCIT typum
+ * expansionis), hover directivae (verbum crudum), definitio,
+ * references, workspaceSymbol, documentSymbol cum #define
+ * ================================================== */
+
+interior vacuum
+probatio_macra (Piscina* p)
+{
+    FILE* intra = tmpfile();
+    FILE* extra = tmpfile();
+    character corpus[2048];
+    LegatusConfiguratio cfg;
+    b32 bene = FALSUM;
+    TabellariusNuntius n;
+
+    imprimere("--- Probans macra (index v0.2) ---\n");
+    CREDO_VERUM(intra != NIHIL && extra != NIHIL);
+
+    sprintf(corpus,
+        "{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"initialize\","
+        "\"params\":{\"rootUri\":\"file://%s\",\"capabilities\":"
+        "{\"general\":{\"positionEncodings\":[\"utf-8\"]}}}}",
+        _radix());
+    _scribe(intra, p, corpus);
+
+    /* phantasma: macra obiecti et functionis, in EADEM plagula
+     * definita (lexemata corporis = fons princeps - casus durus) */
+    sprintf(corpus,
+        "{\"jsonrpc\":\"2.0\",\"method\":\"textDocument/didOpen\","
+        "\"params\":{\"textDocument\":{\"uri\":"
+        "\"file://%s/lib/legatus_phantasma_m.c\",\"version\":1,"
+        "\"languageId\":\"c\",\"text\":"
+        "\"#define GRADUS 7\\n"
+        "#define DUPLICARE(x) ((x) * 2)\\n"
+        "int probatio_macro_functio(int a)\\n{\\n"
+        "    return DUPLICARE(a) + GRADUS;\\n}\\n\"}}}", _radix());
+    _scribe(intra, p, corpus);
+
+    /* hover usus GRADUS (linea 4, char 26) - expansio est litterale
+     * 7; invocatio scripta vincere debet */
+    sprintf(corpus,
+        "{\"jsonrpc\":\"2.0\",\"id\":20,"
+        "\"method\":\"textDocument/hover\",\"params\":"
+        "{\"textDocument\":{\"uri\":"
+        "\"file://%s/lib/legatus_phantasma_m.c\"},"
+        "\"position\":{\"line\":4,\"character\":26}}}", _radix());
+    _scribe(intra, p, corpus);
+
+    /* hover usus DUPLICARE (linea 4, char 11) - functionis */
+    sprintf(corpus,
+        "{\"jsonrpc\":\"2.0\",\"id\":21,"
+        "\"method\":\"textDocument/hover\",\"params\":"
+        "{\"textDocument\":{\"uri\":"
+        "\"file://%s/lib/legatus_phantasma_m.c\"},"
+        "\"position\":{\"line\":4,\"character\":11}}}", _radix());
+    _scribe(intra, p, corpus);
+
+    /* hover in DIRECTIVA ipsa (linea 0, char 8) - verbum crudum
+     * (directivae consumptae, nulla lexemata expansa ibi) */
+    sprintf(corpus,
+        "{\"jsonrpc\":\"2.0\",\"id\":22,"
+        "\"method\":\"textDocument/hover\",\"params\":"
+        "{\"textDocument\":{\"uri\":"
+        "\"file://%s/lib/legatus_phantasma_m.c\"},"
+        "\"position\":{\"line\":0,\"character\":8}}}", _radix());
+    _scribe(intra, p, corpus);
+
+    /* definitio ex usu GRADUS -> linea 0 */
+    sprintf(corpus,
+        "{\"jsonrpc\":\"2.0\",\"id\":23,"
+        "\"method\":\"textDocument/definition\",\"params\":"
+        "{\"textDocument\":{\"uri\":"
+        "\"file://%s/lib/legatus_phantasma_m.c\"},"
+        "\"position\":{\"line\":4,\"character\":26}}}", _radix());
+    _scribe(intra, p, corpus);
+
+    /* references GRADUS cum declaratione: sedes + usus = 2 */
+    sprintf(corpus,
+        "{\"jsonrpc\":\"2.0\",\"id\":24,"
+        "\"method\":\"textDocument/references\",\"params\":"
+        "{\"textDocument\":{\"uri\":"
+        "\"file://%s/lib/legatus_phantasma_m.c\"},"
+        "\"position\":{\"line\":4,\"character\":26},"
+        "\"context\":{\"includeDeclaration\":true}}}", _radix());
+    _scribe(intra, p, corpus);
+
+    /* workspaceSymbol - macro inveniendum, species Constant */
+    _scribe(intra, p,
+        "{\"jsonrpc\":\"2.0\",\"id\":25,"
+        "\"method\":\"workspace/symbol\",\"params\":"
+        "{\"query\":\"GRADUS\"}}");
+
+    /* documentSymbol - functio + duo macra */
+    sprintf(corpus,
+        "{\"jsonrpc\":\"2.0\",\"id\":26,"
+        "\"method\":\"textDocument/documentSymbol\",\"params\":"
+        "{\"textDocument\":{\"uri\":"
+        "\"file://%s/lib/legatus_phantasma_m.c\"}}}", _radix());
+    _scribe(intra, p, corpus);
+
+    _scribe(intra, p,
+        "{\"jsonrpc\":\"2.0\",\"id\":27,\"method\":\"shutdown\"}");
+    _scribe(intra, p, "{\"jsonrpc\":\"2.0\",\"method\":\"exit\"}");
+
+    rewind(intra);
+    memset(&cfg, ZEPHYRUM, magnitudo(LegatusConfiguratio));
+    CREDO_VERUM(legatus_currere(intra, extra, &cfg) == ZEPHYRUM);
+    rewind(extra);
+
+    n = _lege(extra, p, &bene);   /* initialize */
+    CREDO_VERUM(bene);
+    n = _lege(extra, p, &bene);   /* publicatio (pura) */
+    CREDO_VERUM(bene);
+    CREDO_VERUM(_diagnostica_numerus(&n) == (s32)ZEPHYRUM);
+
+    n = _lege(extra, p, &bene);   /* hover GRADUS */
+    CREDO_VERUM(bene);
+    CREDO_VERUM(_hover_valor_est(&n, "#define GRADUS 7"));
+
+    n = _lege(extra, p, &bene);   /* hover DUPLICARE */
+    CREDO_VERUM(bene);
+    CREDO_VERUM(_hover_valor_est(&n,
+        "#define DUPLICARE(x) ((x) * 2)"));
+
+    n = _lege(extra, p, &bene);   /* hover directivae */
+    CREDO_VERUM(bene);
+    CREDO_VERUM(_hover_valor_est(&n, "#define GRADUS 7"));
+
+    n = _lege(extra, p, &bene);   /* definitio -> linea 0 */
+    CREDO_VERUM(bene);
+    {
+        JsonValor* sedes_v = _sedes_prima(&n);
+        JsonValor* initium;
+
+        CREDO_VERUM(sedes_v != NIHIL);
+        initium = json_objectum_capere(json_objectum_capere(
+            sedes_v, "range"), "start");
+        CREDO_VERUM(json_ad_integer(json_objectum_capere(initium,
+            "line")) == ZEPHYRUM);
+        CREDO_VERUM(json_ad_integer(json_objectum_capere(initium,
+            "character")) == ZEPHYRUM);
+    }
+
+    n = _lege(extra, p, &bene);   /* references: sedes + usus */
+    CREDO_VERUM(bene);
+    {
+        JsonValor* resultatum = json_objectum_capere(n.radix,
+            "result");
+
+        CREDO_VERUM(resultatum != NIHIL
+            && json_est_tabulatum(resultatum));
+        CREDO_VERUM(json_tabulatum_numerus(resultatum) == II);
+    }
+
+    n = _lege(extra, p, &bene);   /* workspaceSymbol */
+    CREDO_VERUM(bene);
+    {
+        JsonValor* resultatum = json_objectum_capere(n.radix,
+            "result");
+        JsonValor* primum;
+
+        CREDO_VERUM(resultatum != NIHIL
+            && json_est_tabulatum(resultatum)
+            && json_tabulatum_numerus(resultatum) >= I);
+        primum = json_tabulatum_obtinere(resultatum, ZEPHYRUM);
+        CREDO_VERUM(_chorda_est(json_ad_chorda(
+            json_objectum_capere(primum, "name")), "GRADUS"));
+        CREDO_VERUM(json_ad_integer(json_objectum_capere(primum,
+            "kind")) == XIV);
+    }
+
+    n = _lege(extra, p, &bene);   /* documentSymbol: III */
+    CREDO_VERUM(bene);
+    {
+        JsonValor* resultatum = json_objectum_capere(n.radix,
+            "result");
+        JsonValor* macro_v;
+
+        CREDO_VERUM(resultatum != NIHIL
+            && json_est_tabulatum(resultatum));
+        CREDO_VERUM(json_tabulatum_numerus(resultatum) == III);
+        macro_v = json_tabulatum_obtinere(resultatum, I);
+        CREDO_VERUM(_chorda_est(json_ad_chorda(
+            json_objectum_capere(macro_v, "name")), "GRADUS"));
+        CREDO_VERUM(json_ad_integer(json_objectum_capere(macro_v,
+            "kind")) == XIV);
+    }
+
+    n = _lege(extra, p, &bene);   /* shutdown */
+    CREDO_VERUM(bene);
+    CREDO_VERUM(_resultatum_nullum(&n));
+
+    fclose(intra);
+    fclose(extra);
+}
+
 integer
 principale (vacuum)
 {
@@ -1180,6 +1377,7 @@ principale (vacuum)
 
     probatio_ordo_plenus(piscina);
     probatio_hover_symbola(piscina);
+    probatio_macra(piscina);
     probatio_definitio_capitis(piscina);
     probatio_utf16(piscina);
     probatio_syntaxis_posita(piscina);

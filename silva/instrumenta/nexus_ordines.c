@@ -318,8 +318,8 @@ _via_latinae_est (constans SilvaChorda* via)
  * ascendere; titulus ultimus ante radicem FONS = macro invocatum.
  * API = finis catenae. custos contra catenas corruptas.
  * (NB "nomen" ut variabile VETITUM - macro latinae = typedef) */
-interior constans SilvaChorda*
-_titulus_macronis_extimi (SilvaToken* tok)
+constans SilvaChorda*
+nexus_ordines_titulus_macronis (SilvaToken* tok)
 {
     SilvaToken* cur = tok;
     constans SilvaChorda* titulus = NIHIL;
@@ -458,7 +458,7 @@ _macros_fundere (constans SilvaParsura* parsura, Piscina* effimera,
                 perge;   /* eadem invocatio - lexemata contigua */
             }
             radix_prior = radix;
-            titulus = _titulus_macronis_extimi(tok);
+            titulus = nexus_ordines_titulus_macronis(tok);
             si (titulus == NIHIL)
             {
                 perge;

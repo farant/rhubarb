@@ -3630,3 +3630,40 @@ CHUNK 2 SEQUITUR: arma legati — resolutio positionis (ascensus
 originis + verbum-crudum), hover corpus-lineae, definition/
 references/workspaceSymbol/documentSymbol, SymbolKind macro→14,
 pin cum_latina=0 (legatus.c:2666).
+
+### v0.2 addendum (Fran, ante chunk 2): FUTURUM NOMINATUM —
+configuratio per-project pro filtratione chirurgica strepitus
+(macra ex plagulis certis, macra certa nominatim). Domus recta pro
+classe strepitus amalgamatum quoque. Post implementationem v0.2.
+
+## LEGATUS v0.2 CHUNK 2 (resolutio macrorum) — RELATIO (2026-07-13)
+
+SHIPPED: legatus macra resolvit per QUINQUE arma. Resolutio =
+_macro_ad_byte duobus gradibus: ① ORIGO (lexema expansum cuius
+radix positionem tegit -> nexus_ordines_titulus_macronis, UNITAS
+EADEM quam emissio - divergentia impossibilis); ② VERBUM CRUDUM
+(directivae: lexemata consumpta, nihil expansum ibi; cum_verbo
+gestum). INVENTUM CONSILII: gradus originis ANTE redditionem
+symboli/typi in hover - invocatio scripta vincit typum expansionis
+(GRADUS -> "integer" fuisset; hover in `si` litteram `if`
+monstravisset). Hover corpus = linea #define ad postulatum lecta
+(documentum apertum ante discum; continuatio '\' -> " ...").
+Definition = Location[] omnium sedium; references = sedes/usus per
+includeDeclaration (tectum 200); workspaceSymbol species 14;
+documentSymbol macra plagulae addit (vista, fons princeps solum).
+Custodes generis in omnibus ambulationibus ordinum symbolorum
+(macra et symbola catenas titulorum communicant). PIN cum_latina=0
+commentario (provenientia collabitur si vertitur).
+
+BARRAE: probatio_macra 29 asserta NOVA (hover vincit expansionem;
+directiva verbo crudo; definitio {0,0}; references II;
+workspaceSymbol GRADUS/XIV; documentSymbol III cum macris) — suita
+165/165 PRIMO CURSU; officina 12/12; clang PURUS. Canalis impulsus
+4 vitia in ipso fonte cepit ante compilationem (3 discrepantiae
+argumentorum, 1 signatura principale SCISSA insertione — "multiset
+primitivorum invalidum" locum exactum dedit).
+
+RESTAT: probationes vivae post /reload-plugins (hover si ->
+"#define si if"; definitio CXXVIII -> latina.h:177; references
+macronis CREDO; workspaceSymbol). Deinde: debrief instrumentorum +
+memoria.

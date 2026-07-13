@@ -1742,6 +1742,359 @@ _sedes_ex_symbolo (Legatus* l, Piscina* pn, LegatusDocumentum* doc,
     }
 }
 
+/* ==================================================
+ * Macra (v0.2): resolutio positionis per ascensum originis
+ * (nexus_ordines_titulus_macronis - EADEM logica quam emissio
+ * indicis) + gradus verbi crudi (lineae directivarum: lexemata
+ * consumpta, nihil expansum ibi). Corpus hover = linea #define ad
+ * postulatum lecta (vista corpus non fert - inventum
+ * explorationis; documentum apertum ante discum).
+ * ================================================== */
+
+/* ordo indicis genus "macro" fert? (ordines symbolorum et macrorum
+ * catenas titulorum COMMUNICANT - custodes generis in ambabus viis) */
+interior b32
+_ordo_macro_est (constans LegatusOrdo* o)
+{
+    redde o->genus.mensura == (i32)V
+        && memcmp(o->genus.datum, "macro", V) == ZEPHYRUM;
+}
+
+interior b32
+_character_identificatoris (character c)
+{
+    redde (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z')
+        || (c >= '0' && c <= '9') || c == '_';
+}
+
+/* macro ad octetum. gradus I: lexema expansum cuius RADIX originis
+ * positionem tegit (provenientia vera - lexemata expansa sedem
+ * definitionis ferunt, radix sedem invocationis; trap
+ * explorationis). gradus II: verbum crudum in textu (directivae
+ * consumptae; corpora vacua invisibilia gradui I). titulus_out in
+ * textum documenti aut piscinam parsurae spectat. */
+interior b32
+_macro_ad_byte (LegatusDocumentum* doc, memoriae_index octetum,
+    b32 cum_verbo, chorda* titulus_out, s32* a_out, s32* b_out)
+{
+    si (doc->parsura != NIHIL && doc->parsura->lexemata != NIHIL)
+    {
+        insignatus integer n = silva_xar_numerus(
+            doc->parsura->lexemata);
+        insignatus integer k;
+
+        per (k = ZEPHYRUM; k < n; k++)
+        {
+            SilvaToken** cella = (SilvaToken**)silva_xar_obtinere(
+                doc->parsura->lexemata, k);
+            SilvaToken* tok;
+            SilvaToken* radix;
+
+            si (cella == NIHIL || *cella == NIHIL)
+            {
+                perge;
+            }
+            tok = *cella;
+            si (tok->origo.genus == SILVA_ORIGO_FONS)
+            {
+                perge;
+            }
+            radix = silva_token_radix(tok);
+            si (radix == NIHIL
+                || radix->fons_index
+                    != doc->parsura->fons_princeps
+                || radix->byte_offset < ZEPHYRUM)
+            {
+                perge;
+            }
+            si (octetum < (memoriae_index)radix->byte_offset
+                || octetum >= (memoriae_index)radix->byte_offset
+                    + (memoriae_index)radix->longitudo)
+            {
+                perge;
+            }
+            {
+                constans SilvaChorda* t =
+                    nexus_ordines_titulus_macronis(tok);
+
+                si (t == NIHIL)
+                {
+                    perge;
+                }
+                titulus_out->mensura = (i32)t->mensura;
+                titulus_out->datum = (i8*)t->datum;
+                *a_out = radix->byte_offset;
+                *b_out = radix->byte_offset
+                    + (s32)radix->longitudo;
+                redde VERUM;
+            }
+        }
+    }
+    si (!cum_verbo)
+    {
+        redde FALSUM;   /* gradus verbi crudi non petitus */
+    }
+    {
+        memoriae_index a = octetum;
+        memoriae_index b = octetum;
+        memoriae_index m = (memoriae_index)doc->textus.mensura;
+
+        si (octetum >= m
+            || !_character_identificatoris(
+                   (character)doc->textus.datum[octetum]))
+        {
+            redde FALSUM;
+        }
+        dum (a > ZEPHYRUM && _character_identificatoris(
+                (character)doc->textus.datum[a - I]))
+        {
+            a--;
+        }
+        dum (b < m && _character_identificatoris(
+                (character)doc->textus.datum[b]))
+        {
+            b++;
+        }
+        titulus_out->mensura = (i32)(b - a);
+        titulus_out->datum = doc->textus.datum + a;
+        *a_out = (s32)a;
+        *b_out = (s32)b;
+        redde VERUM;
+    }
+}
+
+/* prima sedes macronis in indice (via non omissa) */
+interior LegatusOrdo*
+_sedes_macronis (Legatus* l, chorda titulus)
+{
+    LegatusOrdo* o;
+
+    si (!l->index_paratus)
+    {
+        redde NIHIL;
+    }
+    per (o = _ordines_tituli(l, titulus); o != NIHIL;
+         o = o->proximus)
+    {
+        si (o->mortuus || !o->sedes || !_ordo_macro_est(o)
+            || _via_omissa(o->via))
+        {
+            perge;
+        }
+        redde o;
+    }
+    redde NIHIL;
+}
+
+/* linea #define sedis lecta (documentum apertum ante discum -
+ * textus recentior); continuatio '\' -> cauda " ..." */
+interior b32
+_lineam_definitionis_legere (Legatus* l, Piscina* pn,
+    constans LegatusOrdo* o, character* buffer,
+    memoriae_index capacitas)
+{
+    constans i8* textus = NIHIL;
+    memoriae_index mensura = ZEPHYRUM;
+
+    {
+        character via_ap[LEGATUS_VIA_MAXIMA];
+
+        si ((memoriae_index)o->via.mensura + IV
+            < magnitudo(via_ap))
+        {
+            chorda via_doc;
+            LegatusDocumentum* doc;
+
+            sprintf(via_ap, "./%.*s", (int)o->via.mensura,
+                (constans character*)o->via.datum);
+            via_doc.datum = (i8*)via_ap;
+            via_doc.mensura = o->via.mensura + II;
+            doc = _documentum_invenire(l, via_doc);
+            si (doc != NIHIL && doc->apertum)
+            {
+                textus = doc->textus.datum;
+                mensura = (memoriae_index)doc->textus.mensura;
+            }
+        }
+    }
+    si (textus == NIHIL)
+    {
+        character via_plena[LEGATUS_VIA_MAXIMA + LXIV];
+        insignatus integer m_lecta = ZEPHYRUM;
+        character* lectus;
+
+        si ((memoriae_index)o->via.mensura + l->radix_mensura + IV
+            >= magnitudo(via_plena))
+        {
+            redde FALSUM;
+        }
+        sprintf(via_plena, "%s/%.*s", l->radix,
+            (int)o->via.mensura,
+            (constans character*)o->via.datum);
+        lectus = praeparator_plagulam_legere(pn, via_plena,
+            &m_lecta);
+        si (lectus == NIHIL)
+        {
+            redde FALSUM;
+        }
+        textus = (constans i8*)lectus;
+        mensura = m_lecta;
+    }
+    {
+        memoriae_index cursor = ZEPHYRUM;
+        insignatus integer linea = I;
+        memoriae_index a;
+        memoriae_index b;
+        memoriae_index scribenda;
+        b32 continuatio = FALSUM;
+
+        dum (linea < o->linea && cursor < mensura)
+        {
+            si (textus[cursor] == '\n')
+            {
+                linea++;
+            }
+            cursor++;
+        }
+        si (linea != o->linea)
+        {
+            redde FALSUM;
+        }
+        a = cursor;
+        b = a;
+        dum (b < mensura && textus[b] != '\n')
+        {
+            b++;
+        }
+        dum (b > a && (textus[b - I] == '\r'
+            || textus[b - I] == ' ' || textus[b - I] == '\t'))
+        {
+            b--;
+        }
+        si (b > a && textus[b - I] == '\\')
+        {
+            continuatio = VERUM;
+            b--;
+            dum (b > a && (textus[b - I] == ' '
+                || textus[b - I] == '\t'))
+            {
+                b--;
+            }
+        }
+        si (b <= a)
+        {
+            redde FALSUM;
+        }
+        scribenda = b - a;
+        si (scribenda > capacitas - VIII)
+        {
+            scribenda = capacitas - VIII;
+        }
+        memcpy(buffer, textus + a, scribenda);
+        si (continuatio)
+        {
+            memcpy(buffer + scribenda, " ...",
+                (memoriae_index)IV);
+            scribenda += IV;
+        }
+        buffer[scribenda] = '\0';
+    }
+    redde VERUM;
+}
+
+/* gradus hover macronis; cum_verbo FALSUM = gradus originis solum
+ * (ANTE redditionem symbolorum vocatur - invocatio scripta vincit
+ * typum expansionis invisibilis), VERUM = etiam verbum crudum
+ * (POST omnia - directivae). VERUM = responsum missum. */
+interior b32
+_hover_macro (Legatus* l, Piscina* pn, JsonValor* id,
+    LegatusDocumentum* doc, memoriae_index octetum, b32 cum_verbo)
+{
+    chorda titulus;
+    s32 a = -I;
+    s32 b = ZEPHYRUM;
+    LegatusOrdo* sedes;
+    character linea_b[DXII];
+
+    si (!_macro_ad_byte(doc, octetum, cum_verbo, &titulus, &a, &b))
+    {
+        redde FALSUM;
+    }
+    sedes = _sedes_macronis(l, titulus);
+    si (sedes == NIHIL)
+    {
+        redde FALSUM;
+    }
+    si (!_lineam_definitionis_legere(l, pn, sedes, linea_b,
+            magnitudo(linea_b)))
+    {
+        sprintf(linea_b, "%.*s : macro", (int)titulus.mensura,
+            (constans character*)titulus.datum);
+    }
+    {
+        JsonValor* resultatum = json_objectum_creare(pn);
+        JsonValor* contenta = json_objectum_creare(pn);
+
+        json_objectum_ponere(contenta, "kind",
+            json_chorda_creare_literis(pn, "plaintext"));
+        json_objectum_ponere(contenta, "value",
+            json_chorda_creare_literis(pn, linea_b));
+        json_objectum_ponere(resultatum, "contents", contenta);
+        si (a >= ZEPHYRUM)
+        {
+            json_objectum_ponere(resultatum, "range",
+                _regionem_ex_extentis(l, pn, doc, a, b));
+        }
+        _respondere(l, tabellarius_responsum(pn, id, resultatum));
+    }
+    redde VERUM;
+}
+
+/* gradus definitionis macronis: omnes sedes (Location[]); VERUM =
+ * responsum missum */
+interior b32
+_definitio_macronis (Legatus* l, Piscina* pn, JsonValor* id,
+    LegatusDocumentum* doc, memoriae_index octetum)
+{
+    chorda titulus;
+    s32 a;
+    s32 b;
+    JsonValor* lista;
+    insignatus integer numerus = ZEPHYRUM;
+    LegatusOrdo* o;
+
+    si (!l->index_paratus
+        || !_macro_ad_byte(doc, octetum, VERUM, &titulus, &a, &b))
+    {
+        redde FALSUM;
+    }
+    lista = json_tabulatum_creare(pn);
+    per (o = _ordines_tituli(l, titulus); o != NIHIL;
+         o = o->proximus)
+    {
+        si (o->mortuus || !o->sedes || !_ordo_macro_est(o)
+            || _via_omissa(o->via))
+        {
+            perge;
+        }
+        {
+            JsonValor* sedes_v = _sedes_ex_ordine(l, pn, o);
+
+            si (sedes_v != NIHIL)
+            {
+                json_tabulatum_addere(lista, sedes_v);
+                numerus++;
+            }
+        }
+    }
+    si (numerus == ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    _respondere(l, tabellarius_responsum(pn, id, lista));
+    redde VERUM;
+}
+
 /* Hover: sedes usus per descensum; nomina DECLARATA per ambulatio
  * symbolorum (parca "use-sites only" SOLUTA - lexema aderat). */
 interior vacuum
@@ -1804,8 +2157,20 @@ _hover_tractare (Legatus* l, Piscina* pn, JsonValor* id,
             inv.b = rt->byte_offset + (s32)rt->longitudo;
         }
     }
+    /* invocatio macronis sub positione VINCIT redditionem symboli/
+     * typi (litterale 7, printf - typus expansionis NON est quod
+     * scriptor scripsit); gradus originis solum, praecisus */
+    si (_hover_macro(l, pn, id, doc, octetum, FALSUM))
+    {
+        redde;
+    }
     si (inv.symbolum == NIHIL && inv.typus == NIHIL)
     {
+        /* gradus macronis postremus (verbum crudum - directivae) */
+        si (_hover_macro(l, pn, id, doc, octetum, VERUM))
+        {
+            redde;
+        }
         _respondere(l, tabellarius_responsum(pn, id, NIHIL));
         redde;
     }
@@ -1917,6 +2282,11 @@ _definitio_tractare (Legatus* l, Piscina* pn, JsonValor* id,
     }
     si (s == NIHIL)
     {
+        /* gradus macronis (v0.2) */
+        si (_definitio_macronis(l, pn, id, doc, octetum))
+        {
+            redde;
+        }
         _respondere(l, tabellarius_responsum(pn, id, NIHIL));
         redde;
     }
@@ -1937,6 +2307,7 @@ _definitio_tractare (Legatus* l, Piscina* pn, JsonValor* id,
                  cursor = cursor->proximus)
             {
                 si (cursor->mortuus || !cursor->sedes
+                    || _ordo_macro_est(cursor)
                     || cursor->profunditas != ZEPHYRUM
                     || _via_omissa(cursor->via)
                     || !_chorda_desinit_literis(cursor->via, ".c"))
@@ -2058,6 +2429,59 @@ _documentsymbol_tractare (Legatus* l, Piscina* pn, JsonValor* id,
             json_objectum_ponere(symbolum_v, "location", sedes_v);
             json_tabulatum_addere(lista, symbolum_v);
         }
+
+        /* macra plagulae (v0.2 DECISUS: #define = pars superficiei
+         * API - conspectus latina.h contenta sua monstrat) */
+        si (doc->parsura->expansio != NIHIL)
+        {
+            insignatus integer nm = silva_macros_numerus(
+                doc->parsura->expansio);
+            insignatus integer im;
+
+            per (im = ZEPHYRUM; im < nm; im++)
+            {
+                SilvaMacroVista vista;
+                memoriae_index la;
+                memoriae_index lb;
+                JsonValor* symbolum_v;
+                JsonValor* sedes_v;
+
+                si (!silva_macro_vista(doc->parsura->expansio, im,
+                        &vista)
+                    || vista.titulus == NIHIL
+                    || vista.fons_index != (int)fons
+                    || vista.linea == ZEPHYRUM)
+                {
+                    perge;
+                }
+                la = _lineae_initium(doc, vista.linea - I);
+                lb = _lineae_terminus(doc, vista.linea - I);
+                si (lb <= la)
+                {
+                    perge;
+                }
+                symbolum_v = json_objectum_creare(pn);
+                sedes_v = json_objectum_creare(pn);
+                {
+                    chorda titulus;
+
+                    titulus.mensura = (i32)vista.titulus->mensura;
+                    titulus.datum = (i8*)vista.titulus->datum;
+                    json_objectum_ponere(symbolum_v, "name",
+                        json_chorda_creare(pn, titulus));
+                }
+                json_objectum_ponere(symbolum_v, "kind",
+                    json_integer_creare(pn, (s64)14));
+                json_objectum_ponere(sedes_v, "uri",
+                    json_chorda_creare(pn, doc->uri));
+                json_objectum_ponere(sedes_v, "range",
+                    _regionem_ex_extentis(l, pn, doc, (s32)la,
+                        (s32)lb));
+                json_objectum_ponere(symbolum_v, "location",
+                    sedes_v);
+                json_tabulatum_addere(lista, symbolum_v);
+            }
+        }
     }
     _respondere(l, tabellarius_responsum(pn, id, lista));
 }
@@ -2070,10 +2494,48 @@ _documentsymbol_tractare (Legatus* l, Piscina* pn, JsonValor* id,
 #define LEGATUS_RELATIONES_MAXIMAE 200
 #define LEGATUS_PLAGULAE_VOCANTIUM_MAXIMAE 20
 
-/* symbolum ad positionem petitionis (usus AUT declaratum) */
+/* relationes macronis in listam (sedes per cum_declarationibus,
+ * usus semper); numerus additarum redditur */
+interior insignatus integer
+_relationes_macronis (Legatus* l, Piscina* pn, JsonValor* lista,
+    chorda titulus, b32 cum_declarationibus)
+{
+    insignatus integer numerus = ZEPHYRUM;
+    LegatusOrdo* o;
+
+    per (o = _ordines_tituli(l, titulus);
+         o != NIHIL && numerus < (insignatus integer)
+                LEGATUS_RELATIONES_MAXIMAE;
+         o = o->proximus)
+    {
+        si (o->mortuus || !_ordo_macro_est(o)
+            || _via_omissa(o->via))
+        {
+            perge;
+        }
+        si (o->sedes && !cum_declarationibus)
+        {
+            perge;
+        }
+        {
+            JsonValor* sedes_v = _sedes_ex_ordine(l, pn, o);
+
+            si (sedes_v != NIHIL)
+            {
+                json_tabulatum_addere(lista, sedes_v);
+                numerus++;
+            }
+        }
+    }
+    redde numerus;
+}
+
+/* symbolum ad positionem petitionis (usus AUT declaratum);
+ * octetum_ex (NIHIL licet) = octetum positionis - gradus macronis
+ * vocantis eo utitur cum symbolum deest */
 interior constans SemanticaSymbolum*
 _symbolum_petitionis (Legatus* l, JsonValor* params,
-    LegatusDocumentum** doc_ex)
+    LegatusDocumentum** doc_ex, memoriae_index* octetum_ex)
 {
     character via_c[LEGATUS_VIA_MAXIMA];
     chorda via;
@@ -2086,6 +2548,10 @@ _symbolum_petitionis (Legatus* l, JsonValor* params,
     constans SemanticaSymbolum* s;
 
     *doc_ex = NIHIL;
+    si (octetum_ex != NIHIL)
+    {
+        *octetum_ex = ZEPHYRUM;
+    }
     si (params == NIHIL)
     {
         redde NIHIL;
@@ -2111,6 +2577,10 @@ _symbolum_petitionis (Legatus* l, JsonValor* params,
             json_objectum_capere(pos_v, "line")),
         (insignatus integer)json_ad_integer(
             json_objectum_capere(pos_v, "character")));
+    si (octetum_ex != NIHIL)
+    {
+        *octetum_ex = octetum;
+    }
     _invenire_ad_byte(doc, octetum, &inv);
     s = inv.symbolum;
     si (s == NIHIL)
@@ -2125,13 +2595,14 @@ _references_tractare (Legatus* l, Piscina* pn, JsonValor* id,
     JsonValor* params)
 {
     LegatusDocumentum* doc = NIHIL;
+    memoriae_index octetum = ZEPHYRUM;
     constans SemanticaSymbolum* s = _symbolum_petitionis(l, params,
-        &doc);
+        &doc, &octetum);
     JsonValor* lista = json_tabulatum_creare(pn);
     b32 cum_declarationibus = FALSUM;
     insignatus integer numerus = ZEPHYRUM;
 
-    si (s == NIHIL || !l->index_paratus)
+    si (!l->index_paratus || (s == NIHIL && doc == NIHIL))
     {
         _respondere(l, tabellarius_responsum(pn, id, lista));
         redde;
@@ -2150,6 +2621,21 @@ _references_tractare (Legatus* l, Piscina* pn, JsonValor* id,
             }
         }
     }
+    si (s == NIHIL)
+    {
+        /* gradus macronis (v0.2) */
+        chorda titulus;
+        s32 a;
+        s32 b;
+
+        si (_macro_ad_byte(doc, octetum, VERUM, &titulus, &a, &b))
+        {
+            (vacuum)_relationes_macronis(l, pn, lista, titulus,
+                cum_declarationibus);
+        }
+        _respondere(l, tabellarius_responsum(pn, id, lista));
+        redde;
+    }
     {
         b32 plagulae_solius = _symbolum_plagulae_solius(s);
         chorda via_sine;
@@ -2162,7 +2648,8 @@ _references_tractare (Legatus* l, Piscina* pn, JsonValor* id,
                     LEGATUS_RELATIONES_MAXIMAE;
              o = o->proximus)
         {
-            si (o->mortuus || _via_omissa(o->via))
+            si (o->mortuus || _ordo_macro_est(o)
+                || _via_omissa(o->via))
             {
                 perge;
             }
@@ -2220,6 +2707,10 @@ _species_lsp_ex_genere (chorda genus)
     si (_chorda_incipit_literis(genus, "constans"))
     {
         redde 14;
+    }
+    si (_chorda_incipit_literis(genus, "macro"))
+    {
+        redde 14;   /* Constant - LSP genus macronis non habet */
     }
     redde 13;
 }
@@ -2498,7 +2989,7 @@ _preparecallhierarchy_tractare (Legatus* l, Piscina* pn,
 {
     LegatusDocumentum* doc = NIHIL;
     constans SemanticaSymbolum* s = _symbolum_petitionis(l, params,
-        &doc);
+        &doc, NIHIL);
 
     si (s == NIHIL || s->genus != (int)SYMBOLUM_FUNCTIO)
     {
@@ -2565,7 +3056,7 @@ _incomingcalls_tractare (Legatus* l, Piscina* pn, JsonValor* id,
             Xar* extenta;
             constans LegatusFunctioExtentum* vocans;
 
-            si (o->mortuus || o->sedes
+            si (o->mortuus || o->sedes || _ordo_macro_est(o)
                 || o->profunditas != ZEPHYRUM
                 || _via_omissa(o->via))
             {
@@ -2663,6 +3154,11 @@ _praeparationem_struere (Legatus* l)
     memset(&pc, ZEPHYRUM, magnitudo(PraeparatorConfiguratio));
     pc.radix = l->radix;
     pc.cum_posix = l->cum_posix ? I : ZEPHYRUM;
+    /* PIN (v0.2): cum_latina ZEPHYRUM MANEAT - si vertitur, latina
+     * in textum lexici systematis concatenatur et provenientia
+     * macrorum in "systema_c89.h" collabitur (lineae falsae; index
+     * macrorum et saltus definitionis franguntur - trap inclusi
+     * custode taciti, vide sessio.worklog.md) */
     pc.cum_latina = ZEPHYRUM;
     pc.sine_capitibus = ZEPHYRUM;
     l->praeparata = praeparator_praeparare(&l->praeparatio,
