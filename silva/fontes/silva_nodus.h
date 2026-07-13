@@ -164,4 +164,37 @@ silva_nodus_liberi (
     Piscina*           piscina,
     constans SilvaNodus* nodus);
 
+/* Extensio fontis (LEGATUS chunk 0, ex sessione promota): min/max
+ * octetorum super lexemata subarboris in fonte dato, per RADICEM
+ * originis (lexemata expansa synthetica - byte_offset -1 - omissa;
+ * sedes invocationis numeratur). *minimum initia < 0, *maximum
+ * initia 0; *minimum manet < 0 si nihil inventum. */
+vacuum
+silva_valor_extensionem (
+    SilvaValor        valor,
+    s32               fons_index,
+    s32*              minimum,
+    s32*              maximum);
+
+vacuum
+silva_nodus_extensionem (
+    constans SilvaNodus* nodus,
+    s32                  fons_index,
+    s32*                 minimum,
+    s32*                 maximum);
+
+/* Variantia linearum (pro LSP): initium = minimum (linea,columna)
+ * lexicographicum, finis = maximum (linea, columna+longitudo -
+ * approximatio uni-linearis finis lexematis). Omnia 1-basata;
+ * exitus intus zerantur; *linea_a == 0 post reditum = nihil
+ * inventum. */
+vacuum
+silva_nodus_extensionem_lineis (
+    constans SilvaNodus* nodus,
+    s32                  fons_index,
+    i32*                 linea_a,
+    i32*                 columna_a,
+    i32*                 linea_b,
+    i32*                 columna_b);
+
 #endif /* SILVA_NODUS_H */

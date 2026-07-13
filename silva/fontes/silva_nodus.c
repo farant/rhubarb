@@ -337,3 +337,185 @@ silva_nodus_liberi (
     }
     redde liberi;
 }
+
+/* ==================================================
+ * Extensio fontis (LEGATUS chunk 0, ex sessione promota - motus
+ * purus; ambulator contra API publicam scriptus erat)
+ * ================================================== */
+
+vacuum
+silva_nodus_extensionem (constans SilvaNodus* n, s32 fons_index,
+    s32* minimum, s32* maximum)
+{
+    insignatus integer k;
+
+    si (n == NIHIL)
+    {
+        redde;
+    }
+    per (k = ZEPHYRUM; k < n->numerus_locorum; k++)
+    {
+        silva_valor_extensionem(n->loci[k], fons_index, minimum,
+            maximum);
+    }
+}
+
+vacuum
+silva_valor_extensionem (SilvaValor v, s32 fons_index, s32* minimum,
+    s32* maximum)
+{
+    commutatio (v.genus)
+    {
+        casus SILVA_VALOR_TOKEN:
+            si (v.datum.token != NIHIL)
+            {
+                /* RADIX originis: lexemata expansa synthetica sunt
+                 * (byte_offset -1) - sedes invocationis in fonte
+                 * dato per catenam originis (macros latinae!) */
+                SilvaToken* radix_t = silva_token_radix(
+                    v.datum.token);
+
+                si (radix_t == NIHIL)
+                {
+                    radix_t = v.datum.token;
+                }
+                si (radix_t->fons_index == fons_index
+                    && radix_t->byte_offset >= ZEPHYRUM)
+                {
+                    s32 a = (s32)radix_t->byte_offset;
+                    s32 b = a + (s32)radix_t->longitudo;
+
+                    si (*minimum < (s32)ZEPHYRUM || a < *minimum)
+                    {
+                        *minimum = a;
+                    }
+                    si (b > *maximum)
+                    {
+                        *maximum = b;
+                    }
+                }
+            }
+            frange;
+        casus SILVA_VALOR_NODUS:
+            silva_nodus_extensionem(v.datum.nodus, fons_index,
+                minimum, maximum);
+            frange;
+        casus SILVA_VALOR_LISTA:
+        {
+            insignatus integer m = silva_valor_lista_numerus(v);
+            insignatus integer k;
+
+            per (k = ZEPHYRUM; k < m; k++)
+            {
+                SilvaValor* elem = silva_valor_lista_obtinere(v, k);
+
+                si (elem != NIHIL)
+                {
+                    silva_valor_extensionem(*elem, fons_index,
+                        minimum, maximum);
+                }
+            }
+            frange;
+        }
+        ordinarius:
+            frange;
+    }
+}
+
+interior vacuum
+_extensionem_lineis_valoris (SilvaValor v, s32 fons_index,
+    i32* linea_a, i32* columna_a, i32* linea_b, i32* columna_b)
+{
+    commutatio (v.genus)
+    {
+        casus SILVA_VALOR_TOKEN:
+            si (v.datum.token != NIHIL)
+            {
+                SilvaToken* radix_t = silva_token_radix(
+                    v.datum.token);
+
+                si (radix_t == NIHIL)
+                {
+                    radix_t = v.datum.token;
+                }
+                si (radix_t->fons_index == fons_index
+                    && radix_t->byte_offset >= ZEPHYRUM)
+                {
+                    i32 l = radix_t->linea;
+                    i32 c = radix_t->columna;
+                    i32 cf = c + radix_t->longitudo;
+
+                    si (*linea_a == ZEPHYRUM || l < *linea_a
+                        || (l == *linea_a && c < *columna_a))
+                    {
+                        *linea_a = l;
+                        *columna_a = c;
+                    }
+                    si (*linea_b == ZEPHYRUM || l > *linea_b
+                        || (l == *linea_b && cf > *columna_b))
+                    {
+                        *linea_b = l;
+                        *columna_b = cf;
+                    }
+                }
+            }
+            frange;
+        casus SILVA_VALOR_NODUS:
+        {
+            constans SilvaNodus* n = v.datum.nodus;
+            insignatus integer k;
+
+            si (n != NIHIL)
+            {
+                per (k = ZEPHYRUM; k < n->numerus_locorum; k++)
+                {
+                    _extensionem_lineis_valoris(n->loci[k],
+                        fons_index, linea_a, columna_a, linea_b,
+                        columna_b);
+                }
+            }
+            frange;
+        }
+        casus SILVA_VALOR_LISTA:
+        {
+            insignatus integer m = silva_valor_lista_numerus(v);
+            insignatus integer k;
+
+            per (k = ZEPHYRUM; k < m; k++)
+            {
+                SilvaValor* elem = silva_valor_lista_obtinere(v, k);
+
+                si (elem != NIHIL)
+                {
+                    _extensionem_lineis_valoris(*elem, fons_index,
+                        linea_a, columna_a, linea_b, columna_b);
+                }
+            }
+            frange;
+        }
+        ordinarius:
+            frange;
+    }
+}
+
+vacuum
+silva_nodus_extensionem_lineis (constans SilvaNodus* n,
+    s32 fons_index, i32* linea_a, i32* columna_a, i32* linea_b,
+    i32* columna_b)
+{
+    insignatus integer k;
+
+    *linea_a = ZEPHYRUM;
+    *columna_a = ZEPHYRUM;
+    *linea_b = ZEPHYRUM;
+    *columna_b = ZEPHYRUM;
+    si (n == NIHIL)
+    {
+        redde;
+    }
+    per (k = ZEPHYRUM; k < n->numerus_locorum; k++)
+    {
+        _extensionem_lineis_valoris(n->loci[k], fons_index, linea_a,
+            columna_a, linea_b, columna_b);
+    }
+}

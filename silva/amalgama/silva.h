@@ -316,6 +316,22 @@ SilvaValor* silva_valor_lista_obtinere(SilvaValor lista,
 SilvaXar* silva_nodus_liberi(SilvaPiscina* piscina,
     const SilvaNodus* nodus);
 
+/* Extensio fontis (LEGATUS chunk 0): min/max octetorum super
+ * lexemata subarboris in fonte dato, per radicem originis
+ * (synthetica omissa). *minimum initia < 0, *maximum initia 0;
+ * *minimum manet < 0 si nihil inventum. */
+void silva_valor_extensionem(SilvaValor valor, int fons_index,
+    int* minimum, int* maximum);
+void silva_nodus_extensionem(const SilvaNodus* nodus,
+    int fons_index, int* minimum, int* maximum);
+
+/* Variantia linearum (1-basata; exitus intus zerantur; linea_a==0
+ * post reditum = nihil inventum; finis = columna+longitudo,
+ * approximatio uni-linearis). */
+void silva_nodus_extensionem_lineis(const SilvaNodus* nodus,
+    int fons_index, unsigned int* linea_a, unsigned int* columna_a,
+    unsigned int* linea_b, unsigned int* columna_b);
+
 /* ==================================================
  * Tabulae coctae (generatae - contractus stabilis)
  * ================================================== */
@@ -1281,6 +1297,8 @@ typedef struct {
     SilvaChorda       via;          /* radicis; vacua si ignota */
     unsigned int      linea;        /* 1-basata; 0 si ignota */
     unsigned int      columna;      /* 1-basata; 0 si ignota */
+    unsigned int      longitudo;    /* octeti lexematis primi
+                                     * (radicis); 0 si ignota */
     const SilvaNodus* socius;       /* sedes cognata; NULL licet */
 } SemanticaDiagnosticum;
 
@@ -1364,6 +1382,13 @@ const TypusC89* silva_c89_conversio_expressionis(
     const SilvaSemantica* sem, const SilvaNodus* nodus);
 unsigned int silva_c89_typationes_numerus(
     const SilvaSemantica* sem);
+
+/* Redditor typorum (LEGATUS chunk 0): typus -> textus latinus
+ * C-stili in buffer datum (NUL appenso). Redde octetos scriptos;
+ * 0 = irreddibilis (acies/functio/error/aggregata sine tag) -
+ * buffer tunc vacuus. */
+unsigned int silva_c89_typum_scribere(const TypusC89* t,
+    char* buffer, unsigned int capacitas);
 
 /* ==================================================
  * Exporta demissionis (M1a Chunk A; officina-m1-spec §II)

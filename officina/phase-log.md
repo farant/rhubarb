@@ -3177,3 +3177,57 @@ shakedown cum unco, tum uncus dimittitur).
 Arcus on-ramp COMPLETUS (exploratores → fundamenta → interrogatio →
 simulatio → spec, duobus diebus non — UNO die). SEQUENS: Fran
 committit → chunk 0.
+
+## LEGATUS CHUNK 0 — INTENTIO (2026-07-13): silva-enablers
+
+Tria dona publica silvae, UNUS tactus fontium, UNA ceremonia
+amalgamatis (spec §IV): ① longitudo in SemanticaDiagnosticum
+(assignata ex radix->longitudo ad sedem materializationis —
+computatum-tum-abiectum finitur); ② promotio ambulatorum extensionis
+(sessio.c:1694-1773, motus purus) → silva_valor_extensionem +
+silva_nodus_extensionem + variantia _lineis (nova, pro LSP); domus
+silva_nodus.{h,c}; ③ redditor typorum → publica. INVENTUM
+INTENTIONIS: redditor buffer-scriptor purus est (sessio._typum_
+scribere cursor in character[], NON aedificator) → forma publica
+SINE allocatore: silva_c89_typum_scribere(t, buffer, capacitas) →
+octeti scripti (0 = irreddibilis) — nulla copulatio piscinarum
+trans limitem amalgamatis; "re-expressio" spec §X evanescit in
+motum quasi-purum. Sessio migrat eodem passu: _typum_scribere
+deletum (_typum_reddere fit involucrum tenue), ambulatores deleti,
+vocator unicus (1860) ad publicam. TSV examinis IMMUTATUM. Portae
+quinque uno cursu: suita silvae · amalgamare VERIFICATUM · suita
+officinae 11/11 (paritas = probatio migrationis) · examen_vectis
+-corpus TENET · censor.
+
+## LEGATUS CHUNK 0 — RELATIO (2026-07-13): silva-enablers VIRIDES
+
+**Tria dona publica silvae VIVUNT, primo transitu.** ① longitudo in
+SemanticaDiagnosticum (fontes struct + assignatio ad sedem + speculum
+silva.h) — extensio diagnostici gratis omni consumptori posthac.
+② silva_valor_extensionem + silva_nodus_extensionem +
+silva_nodus_extensionem_lineis (domus silva_nodus.{h,c}; motus purus
+ex sessione + variantia linearum nova pro LSP: initium
+lexicographicum, finis = columna+longitudo approximatio
+uni-linearis). ③ silva_c89_typum_scribere (domus semantica.c;
+buffer-scriptor purus sine allocatore — nulla copulatio piscinarum
+trans limitem). SESSIO MIGRATA: renderer nucleus + ambulatores
+deleti, _typum_reddere involucrum tenue, vocator ad publicam
+(~140 lineae netae deletae).
+
+PORTAE OMNES UNO CURSU, primo transitu: amalgamare VERIFICATUM
+(compilatio standalone severitate plena + hospes 31/31 [introitus
+novus "extensio"] + nm-intersectio 0 + censura) · officina 11/11
+(paritas sessionis = probatio migrationis) · silva 30/30 ·
+examen_vectis -corpus VECTIS TENET (exclusiones 39, TSV immutatum) ·
+censor tacitus per omnes editiones. Fumus vivus: colloquium
+`x : integer` per redditorem publicum.
+
+DEBRIEF INSTRUMENTORUM: adhibita = grep/Read directa (chunk
+motus-codicis; subsellium lectionis non necessarium); unci
+censor/examen TACITE PURI in omni editione .c — canales push munus
+suum invisibiliter fecerunt (hoc est silentium disciplinae operans).
+Asperitates: nullae. Desiderata: nulla. Fructus: ordo
+fontes→amalgamare→sessio migrationem mechanicam fecit.
+
+SEQUENS: chunk A (lib/tabellarius — framing ∥ envelope). Fran
+committit.

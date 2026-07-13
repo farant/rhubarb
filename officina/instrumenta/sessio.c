@@ -572,103 +572,22 @@ _genus_turni_ex_nodo (constans SilvaNodus* n)
 
 /* ==================================================
  * redditor typorum (chunk C): TypusC89 -> textus latinus C-stili.
- * FALSUM = irreddibilis (acies/functio/error/aggregata nuda) -
- * impressio tunc tacet (recusatio nominata).
+ * Nucleus in silvam promotus (LEGATUS chunk 0:
+ * silva_c89_typum_scribere) - hic solum involucrum chordae manet.
+ * Chorda vacua = irreddibilis - impressio tunc tacet (recusatio
+ * nominata).
  * ================================================== */
-
-interior b32
-_typum_scribere (constans TypusC89* t, character* b, i32* cursor,
-    i32 capacitas)
-{
-    constans character* nomen_p = NIHIL;
-
-    si (t == NIHIL || *cursor + LXIV >= capacitas)
-    {
-        redde FALSUM;
-    }
-    commutatio (t->genus)
-    {
-        casus TYPUS_C89_PRIMITIVUS:
-            commutatio (t->datum.primitivum)
-            {
-                casus PRIMITIVUM_VACUUM: nomen_p = "vacuum"; frange;
-                casus PRIMITIVUM_CHARACTER:
-                    nomen_p = "character"; frange;
-                casus PRIMITIVUM_CHARACTER_SIGNATUM:
-                    nomen_p = "signatus character"; frange;
-                casus PRIMITIVUM_CHARACTER_INSIGNATUM:
-                    nomen_p = "insignatus character"; frange;
-                casus PRIMITIVUM_BREVIS: nomen_p = "brevis"; frange;
-                casus PRIMITIVUM_BREVIS_INSIGNATUM:
-                    nomen_p = "insignatus brevis"; frange;
-                casus PRIMITIVUM_INTEGER: nomen_p = "integer"; frange;
-                casus PRIMITIVUM_INTEGER_INSIGNATUM:
-                    nomen_p = "insignatus integer"; frange;
-                casus PRIMITIVUM_LONGUS: nomen_p = "longus"; frange;
-                casus PRIMITIVUM_LONGUS_INSIGNATUM:
-                    nomen_p = "insignatus longus"; frange;
-                casus PRIMITIVUM_LONGUS_LONGUS:
-                    nomen_p = "longus longus"; frange;
-                casus PRIMITIVUM_LONGUS_LONGUS_INSIGNATUM:
-                    nomen_p = "insignatus longus longus"; frange;
-                casus PRIMITIVUM_FLUITANS:
-                    nomen_p = "fluitans"; frange;
-                casus PRIMITIVUM_DUPLEX: nomen_p = "duplex"; frange;
-                casus PRIMITIVUM_DUPLEX_LONGUS:
-                    nomen_p = "duplex longus"; frange;
-                ordinarius: redde FALSUM;
-            }
-            *cursor += (i32)sprintf(b + *cursor, "%s", nomen_p);
-            redde VERUM;
-        casus TYPUS_C89_MONSTRATOR:
-            si (!_typum_scribere(t->datum.monstrator.internum, b,
-                    cursor, capacitas))
-            {
-                redde FALSUM;
-            }
-            *cursor += (i32)sprintf(b + *cursor, "*");
-            redde VERUM;
-        casus TYPUS_C89_QUALIFICATUS:
-            si (t->datum.qualificatus.quales
-                & (insignatus integer)QUALIS_CONSTANS)
-            {
-                *cursor += (i32)sprintf(b + *cursor, "constans ");
-            }
-            redde _typum_scribere(t->datum.qualificatus.internum,
-                b, cursor, capacitas);
-        casus TYPUS_C89_STRUCTURA:
-        casus TYPUS_C89_UNIO:
-            si (t->datum.tag.titulus.mensura == ZEPHYRUM
-                || *cursor + (i32)t->datum.tag.titulus.mensura + XVI
-                    >= capacitas)
-            {
-                redde FALSUM;
-            }
-            *cursor += (i32)sprintf(b + *cursor, "%s %.*s",
-                t->genus == TYPUS_C89_STRUCTURA ? "structura"
-                    : "unio",
-                (int)t->datum.tag.titulus.mensura,
-                (constans character*)t->datum.tag.titulus.datum);
-            redde VERUM;
-        casus TYPUS_C89_ENUMERATUS:
-            *cursor += (i32)sprintf(b + *cursor, "enumeratio");
-            redde VERUM;
-        ordinarius:
-            redde FALSUM;
-    }
-}
 
 interior chorda
 _typum_reddere (constans TypusC89* t, Piscina* piscina)
 {
     character buffer[CCLVI];
-    i32 cursor = ZEPHYRUM;
     chorda vacua;
 
     vacua.mensura = ZEPHYRUM;
     vacua.datum = NIHIL;
-    si (t == NIHIL
-        || !_typum_scribere(t, buffer, &cursor, (i32)CCLVI))
+    si (silva_c89_typum_scribere(t, buffer,
+            (insignatus integer)CCLVI) == ZEPHYRUM)
     {
         redde vacua;
     }
@@ -1689,88 +1608,8 @@ sessio_turnus_effusio (constans Sessio* s, i32 index)
  * chunk D: via #! + emissores
  * ================================================== */
 
-/* extensio octetorum elementi in fonte principe (min/max trans
- * lexemata fontis principis; tokens synthetici/lexici omissi) */
-interior vacuum _extensionem_valoris (SilvaValor v, integer princeps,
-    s32* minimum, s32* maximum);
-
-interior vacuum
-_extensionem_nodi (constans SilvaNodus* n, integer princeps,
-    s32* minimum, s32* maximum)
-{
-    insignatus integer k;
-
-    si (n == NIHIL)
-    {
-        redde;
-    }
-    per (k = ZEPHYRUM; k < n->numerus_locorum; k++)
-    {
-        _extensionem_valoris(n->loci[k], princeps, minimum, maximum);
-    }
-}
-
-interior vacuum
-_extensionem_valoris (SilvaValor v, integer princeps, s32* minimum,
-    s32* maximum)
-{
-    commutatio (v.genus)
-    {
-        casus SILVA_VALOR_TOKEN:
-            si (v.datum.token != NIHIL)
-            {
-                /* RADIX originis: lexemata expansa synthetica sunt
-                 * (byte_offset -1) - sedes invocationis in fonte
-                 * principe per catenam originis (macros latinae!) */
-                SilvaToken* radix_t = silva_token_radix(
-                    v.datum.token);
-
-                si (radix_t == NIHIL)
-                {
-                    radix_t = v.datum.token;
-                }
-                si (radix_t->fons_index == princeps
-                    && radix_t->byte_offset >= ZEPHYRUM)
-                {
-                    s32 a = (s32)radix_t->byte_offset;
-                    s32 b = a + (s32)radix_t->longitudo;
-
-                    si (*minimum < (s32)ZEPHYRUM || a < *minimum)
-                    {
-                        *minimum = a;
-                    }
-                    si (b > *maximum)
-                    {
-                        *maximum = b;
-                    }
-                }
-            }
-            frange;
-        casus SILVA_VALOR_NODUS:
-            _extensionem_nodi(v.datum.nodus, princeps, minimum,
-                maximum);
-            frange;
-        casus SILVA_VALOR_LISTA:
-        {
-            insignatus integer m = silva_valor_lista_numerus(v);
-            insignatus integer k;
-
-            per (k = ZEPHYRUM; k < m; k++)
-            {
-                SilvaValor* elem = silva_valor_lista_obtinere(v, k);
-
-                si (elem != NIHIL)
-                {
-                    _extensionem_valoris(*elem, princeps, minimum,
-                        maximum);
-                }
-            }
-            frange;
-        }
-        ordinarius:
-            frange;
-    }
-}
+/* extensio octetorum elementi: in silvam promota (LEGATUS chunk 0)
+ * - silva_valor_extensionem consumitur infra */
 
 nomen structura {
     i32 initium;
@@ -1857,7 +1696,7 @@ sessio_scriptum_offerre (Sessio* s, chorda textus,
             {
                 perge;
             }
-            _extensionem_valoris(*v, parsura->fons_princeps,
+            silva_valor_extensionem(*v, parsura->fons_princeps,
                 &minimum, &maximum);
             si (minimum >= (s32)ZEPHYRUM && maximum > minimum)
             {

@@ -1187,6 +1187,35 @@ int main(void)
         }
     }
 
+    /* extensio fontis + redditor typorum (LEGATUS chunk 0) */
+    {
+        int minimum = -1;
+        int maximum = 0;
+        unsigned int la = 9u;
+        unsigned int ca = 9u;
+        unsigned int lb = 9u;
+        unsigned int cb = 9u;
+        char buffer[64];
+        SilvaValor valor_nihil;
+
+        valor_nihil.genus = SILVA_VALOR_NIHIL;
+        valor_nihil.datum.nodus = NULL;
+        silva_nodus_extensionem(NULL, 0, &minimum, &maximum);
+        silva_valor_extensionem(valor_nihil, 0, &minimum, &maximum);
+        silva_nodus_extensionem_lineis(NULL, 0, &la, &ca, &lb, &cb);
+        summa++;
+        if (minimum < 0 && maximum == 0
+            && la == 0u && ca == 0u && lb == 0u && cb == 0u
+            && silva_c89_typum_scribere(NULL, buffer, 64u) == 0u)
+        {
+            fideles++;
+        }
+        else
+        {
+            fprintf(stderr, "hospes: INFIDELIS: extensio\n");
+        }
+    }
+
     /* telemetria arenae */
     {
         size_t usus = silva_piscina_summa_usus(piscina);

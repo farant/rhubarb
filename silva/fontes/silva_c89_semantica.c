@@ -4,6 +4,7 @@
 #include "silva_c89_semantica.h"
 #include "silva_tabulae_c89.h"
 #include "silva_c89_oraculum.h"
+#include <stdio.h>
 #include <string.h>
 
 /* ==================================================
@@ -314,6 +315,7 @@ silva_c89_diagnosticum_addere_cum_socio (
     d->via.datum = NIHIL;
     d->linea = ZEPHYRUM;
     d->columna = ZEPHYRUM;
+    d->longitudo = ZEPHYRUM;
     si (nodus != NIHIL)
     {
         SilvaToken* lexema = _lexema_primum(nodus);
@@ -326,6 +328,9 @@ silva_c89_diagnosticum_addere_cum_socio (
             {
                 d->linea = radix->linea;
                 d->columna = radix->columna;
+                /* longitudo radicis IN MANU hic - extensio gratis
+                 * (LEGATUS chunk 0: computatum-tum-abiectum finitur) */
+                d->longitudo = radix->longitudo;
                 si (sem->parsura_currens != NIHIL
                     && sem->parsura_currens->expansio != NIHIL)
                 {
@@ -341,6 +346,115 @@ silva_c89_diagnosticum_addere_cum_socio (
             }
         }
     }
+}
+
+/* ==================================================
+ * Redditor typorum (LEGATUS chunk 0, ex sessione promotus - mores
+ * identici cum _typum_scribere sessionis; paritas per suitam
+ * officinae probatur)
+ * ================================================== */
+
+interior b32
+_typum_scribere_intus (constans TypusC89* t, character* b,
+    s32* cursor, s32 capacitas)
+{
+    constans character* nomen_p = NIHIL;
+
+    si (t == NIHIL || *cursor + LXIV >= capacitas)
+    {
+        redde FALSUM;
+    }
+    commutatio (t->genus)
+    {
+        casus TYPUS_C89_PRIMITIVUS:
+            commutatio (t->datum.primitivum)
+            {
+                casus PRIMITIVUM_VACUUM: nomen_p = "vacuum"; frange;
+                casus PRIMITIVUM_CHARACTER:
+                    nomen_p = "character"; frange;
+                casus PRIMITIVUM_CHARACTER_SIGNATUM:
+                    nomen_p = "signatus character"; frange;
+                casus PRIMITIVUM_CHARACTER_INSIGNATUM:
+                    nomen_p = "insignatus character"; frange;
+                casus PRIMITIVUM_BREVIS: nomen_p = "brevis"; frange;
+                casus PRIMITIVUM_BREVIS_INSIGNATUM:
+                    nomen_p = "insignatus brevis"; frange;
+                casus PRIMITIVUM_INTEGER:
+                    nomen_p = "integer"; frange;
+                casus PRIMITIVUM_INTEGER_INSIGNATUM:
+                    nomen_p = "insignatus integer"; frange;
+                casus PRIMITIVUM_LONGUS: nomen_p = "longus"; frange;
+                casus PRIMITIVUM_LONGUS_INSIGNATUM:
+                    nomen_p = "insignatus longus"; frange;
+                casus PRIMITIVUM_LONGUS_LONGUS:
+                    nomen_p = "longus longus"; frange;
+                casus PRIMITIVUM_LONGUS_LONGUS_INSIGNATUM:
+                    nomen_p = "insignatus longus longus"; frange;
+                casus PRIMITIVUM_FLUITANS:
+                    nomen_p = "fluitans"; frange;
+                casus PRIMITIVUM_DUPLEX:
+                    nomen_p = "duplex"; frange;
+                casus PRIMITIVUM_DUPLEX_LONGUS:
+                    nomen_p = "duplex longus"; frange;
+                ordinarius: redde FALSUM;
+            }
+            *cursor += (s32)sprintf(b + *cursor, "%s", nomen_p);
+            redde VERUM;
+        casus TYPUS_C89_MONSTRATOR:
+            si (!_typum_scribere_intus(t->datum.monstrator.internum,
+                    b, cursor, capacitas))
+            {
+                redde FALSUM;
+            }
+            *cursor += (s32)sprintf(b + *cursor, "*");
+            redde VERUM;
+        casus TYPUS_C89_QUALIFICATUS:
+            si (t->datum.qualificatus.quales
+                & (insignatus integer)QUALIS_CONSTANS)
+            {
+                *cursor += (s32)sprintf(b + *cursor, "constans ");
+            }
+            redde _typum_scribere_intus(
+                t->datum.qualificatus.internum, b, cursor,
+                capacitas);
+        casus TYPUS_C89_STRUCTURA:
+        casus TYPUS_C89_UNIO:
+            si (t->datum.tag.titulus.mensura == ZEPHYRUM
+                || *cursor + (s32)t->datum.tag.titulus.mensura + XVI
+                    >= capacitas)
+            {
+                redde FALSUM;
+            }
+            *cursor += (s32)sprintf(b + *cursor, "%s %.*s",
+                t->genus == TYPUS_C89_STRUCTURA ? "structura"
+                    : "unio",
+                (int)t->datum.tag.titulus.mensura,
+                (constans character*)t->datum.tag.titulus.datum);
+            redde VERUM;
+        casus TYPUS_C89_ENUMERATUS:
+            *cursor += (s32)sprintf(b + *cursor, "enumeratio");
+            redde VERUM;
+        ordinarius:
+            redde FALSUM;
+    }
+}
+
+insignatus integer
+silva_c89_typum_scribere (constans TypusC89* t, character* buffer,
+    insignatus integer capacitas)
+{
+    s32 cursor = ZEPHYRUM;
+
+    si (t == NIHIL || buffer == NIHIL || capacitas == ZEPHYRUM)
+    {
+        redde ZEPHYRUM;
+    }
+    si (!_typum_scribere_intus(t, buffer, &cursor, (s32)capacitas))
+    {
+        buffer[ZEPHYRUM] = '\0';
+        redde ZEPHYRUM;
+    }
+    redde (insignatus integer)cursor;
 }
 
 /* ==================================================

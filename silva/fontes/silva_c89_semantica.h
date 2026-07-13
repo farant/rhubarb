@@ -293,9 +293,18 @@ nomen structura {
     chorda               via;          /* radicis; vacua si ignota */
     i32                  linea;        /* 1-basata; 0 si ignota */
     i32                  columna;      /* 1-basata; 0 si ignota */
+    i32                  longitudo;    /* octeti lexematis primi
+                                        * (radicis); 0 si ignota */
     constans SilvaNodus* socius;       /* sedes cognata (e.g.
                                         * declaratio prior); NIHIL */
 } SemanticaDiagnosticum;
+
+/* Redditor typorum (LEGATUS chunk 0, ex sessione promotus): typus
+ * -> textus latinus C-stili in buffer datum (NUL appenso). Redde
+ * octetos scriptos; 0 = irreddibilis (acies/functio/error/
+ * aggregata sine tag) - buffer tunc vacuus. */
+insignatus integer silva_c89_typum_scribere (constans TypusC89* t,
+    character* buffer, insignatus integer capacitas);
 
 /* Titulo signata: silva.h eam OPACAM praenuntiat (exemplar
  * SilvaOraculum) - interna (scopi, derivati) post amalgamam
