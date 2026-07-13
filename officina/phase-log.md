@@ -3403,3 +3403,19 @@ Parcae registro (viae retro nominatae): hover-super-declarato
 (exportatio silva-latere); tags in documentSymbol; deduplicatio
 symbolorum; multi-publicatio trans-plagularis; R1 lexemata calida;
 didClose .h; involucrum marketplace.
+
+## LEGATUS — PRIMUM CONTACTUM AGITATIONIS (2026-07-13, sessione resumpta)
+
+Fran sessione `claude --plugin-dir .../legatus-plugin --resume
+silva` resumpta: **LEGATUS VIVUS in tabula processuum** (74213 =
+officina/build/legatus/legatus, filius processus claude; clangd-i
+visibiles = Xcodis, ut explorator cliens praedixit). Primae tres
+petitiones per instrumentum LSP nativum agentis, OMNES rectae:
+documentSymbol lib/piscina.c → 23 symbola (interiores inclusi,
+Alveus ut Class = mappa nostra typedef→5); hover sedis usus →
+**`piscina : structura Piscina*`** et **`mensura : insignatus
+longus`** — VOX COLLOQUII per catenam integram (instrumentum LSP →
+tabellarius → machina → praeparatio calida → descensus extentorum →
+symbolum_nodi → redditor chunki 0 hodie promotus). Agitatio
+cotidiana INCEPIT; uncus coexsistit (differentialis vivus);
+sigillum cum agitatio satisfecerit.

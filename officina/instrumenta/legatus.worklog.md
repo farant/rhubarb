@@ -29,3 +29,30 @@ Design notes that will matter to future maintenance:
   cross-file diagnostics dropped with stderr count (path back:
   group-by-via multi-publish); didClose of .h does not rebuild
   (didSave only).
+
+## 2026-07-13 — first live reaches (shakedown, resumed session)
+
+First contact through the agent's native LSP tool: documentSymbol
+(lib/piscina.c 23 rows; include/piscina.h 17 rows — the .h lane
+pays off immediately, headers were never judged per-edit before),
+hover use-sites (`piscina : structura Piscina*`, `mensura :
+insignatus longus`). Rough edges AT THE REACH:
+
+- **ASPERITAS #1 — hover on a function gives the bare name**
+  (`_allocare_interna`, no signature). "What are the parameters"
+  is THE agent hover question. TypusC89.datum.functio carries
+  reditus + parametra + numerus — renderable. Options: extend
+  silva_c89_typum_scribere (function arm), or compose in legatus
+  from parts. TOP desideratum, demand = day one.
+- **FINDING — the client IGNORES capability negotiation for
+  tool-invoked requests**: goToDefinition was sent although we
+  never advertised definitionProvider. R7's polite −32601 is
+  LOAD-BEARING, not theoretical — and it surfaces verbatim in the
+  tool output ("methodus ignota", Latin error through the whole
+  chain). Also: this is a live DEMAND SIGNAL for definition
+  (v0.1 pull counter: 1).
+- Hover on declared names (null, use-sites park) will bite most
+  when reading HEADERS — decl-heavy files. Same park, sharper
+  pull.
+- Shakedown watch: double-push (hook + legatus) on first real .c
+  edit — expected differential noise, retire hook at bar.
