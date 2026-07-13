@@ -336,6 +336,29 @@ _hover_valor_est (TabellariusNuntius* n,
         json_objectum_capere(contenta, "value")), litterae);
 }
 
+/* definitio: Location unum AUT tabulatum (gradus corporis v0.1b)
+ * -> primum */
+interior JsonValor*
+_sedes_prima (TabellariusNuntius* n)
+{
+    JsonValor* resultatum;
+
+    si (n->radix == NIHIL)
+    {
+        redde NIHIL;
+    }
+    resultatum = json_objectum_capere(n->radix, "result");
+    si (resultatum == NIHIL || json_est_nullum(resultatum))
+    {
+        redde NIHIL;
+    }
+    si (json_est_tabulatum(resultatum))
+    {
+        redde json_tabulatum_obtinere(resultatum, ZEPHYRUM);
+    }
+    redde resultatum;
+}
+
 /* ==================================================
  * HOVER + DOCUMENTSYMBOL (utf-8): sedes usus, litterale, nihil,
  * symbola plagulae
@@ -455,6 +478,47 @@ probatio_hover_symbola (Piscina* p)
         "\"position\":{\"line\":7,\"character\":15}}}", _radix());
     _scribe(intra, p, corpus);
 
+    /* references parametri 'a' (localis - plagula sola, sine
+     * declaratione) */
+    sprintf(corpus,
+        "{\"jsonrpc\":\"2.0\",\"id\":12,"
+        "\"method\":\"textDocument/references\",\"params\":"
+        "{\"textDocument\":{\"uri\":"
+        "\"file://%s/lib/legatus_phantasma_f.c\"},"
+        "\"position\":{\"line\":2,\"character\":12},"
+        "\"context\":{\"includeDeclaration\":false}}}", _radix());
+    _scribe(intra, p, corpus);
+
+    /* references functionis (globalis, cum declaratione - ordines
+     * ex SUPERPOSITIONE: phantasma in tsv numquam fuit) */
+    sprintf(corpus,
+        "{\"jsonrpc\":\"2.0\",\"id\":13,"
+        "\"method\":\"textDocument/references\",\"params\":"
+        "{\"textDocument\":{\"uri\":"
+        "\"file://%s/lib/legatus_phantasma_f.c\"},"
+        "\"position\":{\"line\":7,\"character\":15},"
+        "\"context\":{\"includeDeclaration\":true}}}", _radix());
+    _scribe(intra, p, corpus);
+
+    /* workspaceSymbol - quaestio exacta */
+    _scribe(intra, p,
+        "{\"jsonrpc\":\"2.0\",\"id\":14,"
+        "\"method\":\"workspace/symbol\",\"params\":"
+        "{\"query\":\"probatio_functio\"}}");
+
+    /* prepareCallHierarchy + incomingCalls (via documenti aperti) */
+    sprintf(corpus,
+        "{\"jsonrpc\":\"2.0\",\"id\":15,"
+        "\"method\":\"textDocument/prepareCallHierarchy\","
+        "\"params\":{\"textDocument\":{\"uri\":"
+        "\"file://%s/lib/legatus_phantasma_f.c\"},"
+        "\"position\":{\"line\":7,\"character\":15}}}", _radix());
+    _scribe(intra, p, corpus);
+    _scribe(intra, p,
+        "{\"jsonrpc\":\"2.0\",\"id\":16,"
+        "\"method\":\"callHierarchy/incomingCalls\",\"params\":"
+        "{\"item\":{\"name\":\"probatio_functio\"}}}");
+
     _scribe(intra, p,
         "{\"jsonrpc\":\"2.0\",\"id\":7,\"method\":\"shutdown\"}");
     _scribe(intra, p, "{\"jsonrpc\":\"2.0\",\"method\":\"exit\"}");
@@ -546,18 +610,89 @@ probatio_hover_symbola (Piscina* p)
     n = _lege(extra, p, &bene);   /* definitio ex vocatione */
     CREDO_VERUM(bene);
     {
-        JsonValor* resultatum = json_objectum_capere(n.radix,
-            "result");
+        /* corpus primum (v0.1b) - phantasma per SUPERPOSITIONEM
+         * in indicem intravit (in tsv numquam fuit!) */
+        JsonValor* sedes_v = _sedes_prima(&n);
         JsonValor* initium;
 
-        CREDO_VERUM(resultatum != NIHIL
-            && !json_est_nullum(resultatum));
+        CREDO_VERUM(sedes_v != NIHIL);
         initium = json_objectum_capere(json_objectum_capere(
-            resultatum, "range"), "start");
+            sedes_v, "range"), "start");
         CREDO_VERUM(json_ad_integer(json_objectum_capere(initium,
             "line")) == ZEPHYRUM);
         CREDO_VERUM(json_ad_integer(json_objectum_capere(initium,
             "character")) == IV);
+    }
+
+    n = _lege(extra, p, &bene);   /* references 'a' (localis) */
+    CREDO_VERUM(bene);
+    {
+        JsonValor* resultatum = json_objectum_capere(n.radix,
+            "result");
+
+        CREDO_VERUM(resultatum != NIHIL
+            && json_est_tabulatum(resultatum));
+        CREDO_VERUM(json_tabulatum_numerus(resultatum) == I);
+    }
+
+    n = _lege(extra, p, &bene);   /* references functionis:
+                                   * sedes + usus = 2 (superpositio!) */
+    CREDO_VERUM(bene);
+    {
+        JsonValor* resultatum = json_objectum_capere(n.radix,
+            "result");
+
+        CREDO_VERUM(resultatum != NIHIL
+            && json_est_tabulatum(resultatum));
+        CREDO_VERUM(json_tabulatum_numerus(resultatum) == II);
+    }
+
+    n = _lege(extra, p, &bene);   /* workspaceSymbol */
+    CREDO_VERUM(bene);
+    {
+        JsonValor* resultatum = json_objectum_capere(n.radix,
+            "result");
+        JsonValor* primum;
+
+        CREDO_VERUM(resultatum != NIHIL
+            && json_est_tabulatum(resultatum)
+            && json_tabulatum_numerus(resultatum) >= I);
+        primum = json_tabulatum_obtinere(resultatum, ZEPHYRUM);
+        CREDO_VERUM(_chorda_est(json_ad_chorda(
+            json_objectum_capere(primum, "name")),
+            "probatio_functio"));
+    }
+
+    n = _lege(extra, p, &bene);   /* prepareCallHierarchy */
+    CREDO_VERUM(bene);
+    {
+        JsonValor* resultatum = json_objectum_capere(n.radix,
+            "result");
+
+        CREDO_VERUM(resultatum != NIHIL
+            && json_est_tabulatum(resultatum)
+            && json_tabulatum_numerus(resultatum) == I);
+    }
+
+    n = _lege(extra, p, &bene);   /* incomingCalls: probatio_vocans */
+    CREDO_VERUM(bene);
+    {
+        JsonValor* resultatum = json_objectum_capere(n.radix,
+            "result");
+        JsonValor* introitus;
+        JsonValor* ab;
+
+        CREDO_VERUM(resultatum != NIHIL
+            && json_est_tabulatum(resultatum)
+            && json_tabulatum_numerus(resultatum) == I);
+        introitus = json_tabulatum_obtinere(resultatum, ZEPHYRUM);
+        ab = json_objectum_capere(introitus, "from");
+        CREDO_VERUM(_chorda_est(json_ad_chorda(
+            json_objectum_capere(ab, "name")), "probatio_vocans"));
+        CREDO_VERUM(json_ad_integer(json_objectum_capere(
+            json_objectum_capere(json_tabulatum_obtinere(
+                json_objectum_capere(introitus, "fromRanges"),
+                ZEPHYRUM), "start"), "line")) == VII);
     }
 
     n = _lege(extra, p, &bene);   /* shutdown */
@@ -627,24 +762,31 @@ probatio_definitio_capitis (Piscina* p)
     CREDO_VERUM(bene);
     CREDO_VERUM(_diagnostica_numerus(&n) == (s32)ZEPHYRUM);
 
-    n = _lege(extra, p, &bene);   /* definitio -> caput */
+    n = _lege(extra, p, &bene);   /* definitio -> CORPUS .c primum
+                                   * (v0.1b), caput in lista */
     CREDO_VERUM(bene);
     {
-        JsonValor* resultatum = json_objectum_capere(n.radix,
-            "result");
+        JsonValor* sedes_v = _sedes_prima(&n);
         chorda uri;
-        constans character* suffixum = "include/piscina.h";
+        /* cum tsv: corpus .c primum; sine tsv (arbor recens):
+         * gradus declarationis solus -> caput */
+        FILE* tsv = fopen("build/nexus.tsv", "rb");
+        constans character* suffixum = tsv != NIHIL
+            ? "lib/piscina.c" : "include/piscina.h";
         memoriae_index m = strlen(suffixum);
 
-        CREDO_VERUM(resultatum != NIHIL
-            && !json_est_nullum(resultatum));
-        uri = json_ad_chorda(json_objectum_capere(resultatum,
-            "uri"));
+        si (tsv != NIHIL)
+        {
+            fclose(tsv);
+        }
+
+        CREDO_VERUM(sedes_v != NIHIL);
+        uri = json_ad_chorda(json_objectum_capere(sedes_v, "uri"));
         CREDO_VERUM(uri.mensura >= (i32)m
             && memcmp(uri.datum + (uri.mensura - (i32)m), suffixum,
                    m) == ZEPHYRUM);
         CREDO_VERUM(json_ad_integer(json_objectum_capere(
-            json_objectum_capere(json_objectum_capere(resultatum,
+            json_objectum_capere(json_objectum_capere(sedes_v,
                 "range"), "start"), "line")) > ZEPHYRUM);
     }
 

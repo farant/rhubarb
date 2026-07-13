@@ -26,12 +26,13 @@ declare -a GCC_FLAGS=(
 declare -a INCLUDE_FLAGS=(
     "-I$RADIX_DIR/include"
     "-I$RADIX_DIR/silva/amalgama"
+    "-I$RADIX_DIR/silva/instrumenta"
     "-I$OFF_DIR/instrumenta"
 )
 
 declare -a RADIX_FONTES=(
     "piscina" "chorda" "chorda_aedificator" "xar" "tabula_dispersa"
-    "friatio" "internamentum" "json" "tabellarius"
+    "friatio" "internamentum" "json" "tabellarius" "similitudo"
 )
 obj_files=""
 for f in "${RADIX_FONTES[@]}"; do
@@ -49,6 +50,15 @@ obj="$BUILD_DIR/amalgama_silva.o"
 if [ ! -f "$obj" ] || [ "$src" -nt "$obj" ]; then
     echo "  [amalgama] silva.c" >&2
     clang "${GCC_FLAGS[@]}" -c "$src" -o "$obj" || exit 1
+fi
+obj_files="$obj_files $obj"
+
+src="$RADIX_DIR/silva/instrumenta/nexus_ordines.c"
+obj="$BUILD_DIR/nexus_ordines.o"
+if [ ! -f "$obj" ] || [ "$src" -nt "$obj" ] \
+    || [ "$RADIX_DIR/silva/instrumenta/nexus_ordines.h" -nt "$obj" ]; then
+    echo "  [ordines] nexus_ordines.c" >&2
+    clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" -c "$src" -o "$obj" || exit 1
 fi
 obj_files="$obj_files $obj"
 

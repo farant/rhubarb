@@ -41,6 +41,7 @@ declare -a GCC_FLAGS=(
 declare -a INCLUDE_FLAGS=(
     "-I$RADIX_DIR/include"
     "-I$RADIX_DIR/silva/amalgama"
+    "-I$RADIX_DIR/silva/instrumenta"
     "-I$RADIX_DIR/tessera/amalgama"
     "-I$OFF_DIR/fontes"
     "-I$OFF_DIR/instrumenta"
@@ -59,6 +60,7 @@ declare -a RADIX_FONTES=(
     "internamentum"
     "json"
     "tabellarius"
+    "similitudo"
 )
 
 FILTER="${1:-}"
@@ -114,6 +116,19 @@ if [ ! -f "$obj" ] || [ "$src" -nt "$obj" ] \
         -I"$RADIX_DIR/tessera/amalgama" -I"$OFF_DIR/instrumenta" \
         -c "$src" -o "$obj"; then
         echo "FRACTA: vindex_visum" ; exit 1
+    fi
+fi
+obj_files="$obj_files $obj"
+
+# ---- 2c-0. nexus_ordines (unitas ordinum communis - legatus) ----
+src="$RADIX_DIR/silva/instrumenta/nexus_ordines.c"
+obj="$BUILD_DIR/nexus_ordines.o"
+if [ ! -f "$obj" ] || [ "$src" -nt "$obj" ] \
+    || [ "$RADIX_DIR/silva/instrumenta/nexus_ordines.h" -nt "$obj" ]; then
+    echo "  [ordines] nexus_ordines.c"
+    if ! clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" \
+        -c "$src" -o "$obj"; then
+        echo "FRACTA: nexus_ordines" ; exit 1
     fi
 fi
 obj_files="$obj_files $obj"

@@ -3451,6 +3451,38 @@ superpositio per nexus_ordines in quaque analysi, tractatores
 references/workspaceSymbol/definitio-corporis/incomingCalls,
 politica viarum, probationes. Fran committit.
 
+## LEGATUS v0.1b PARS II — RELATIO (2026-07-13): SEPTEM EX NOVEM
+
+**Index trans-plagularis VIVIT**: tsv oneratum ad initialize
+(LegatusOrdo catenae per titulum + omnes_ordines + nomina distincta;
+sectiones in textum tsv — nulla copia onerationis); SUPERPOSITIO in
+quaque analysi (ordines plagulae necati + re-derivati per
+nexus_ordines — unitas EADEM ac sweep, divergentia impossibilis);
+politica viarum (amalgama/fixa omissa; knotapel/tools secundaria).
+TRACTATORES QUATTUOR: **references** (locales/statici = plagula
+sola; globales = prof-0 trans corpus; includeDeclaration; tectum
+200); **workspaceSymbol** (similitudo_optima super nomina — vox
+nexus -similis); **definitio gradus CORPORIS** (sedes .c primariae
+→ secundariae → declaratio, tabulatum Locationum; sine tsv = gradus
+declarationis solus); **incomingCalls EXACTUS** (extenta functionum
+per silva_nodus_extensionem_lineis [consumptor primus variantis
+chunki 0!]: documenta aperta viva, clausa analysata ad postulatum +
+cache in indice, tectum 20 plagularum). prepareCallHierarchy.
+Facultates tres novae nuntiatae.
+
+BARRA: **136/136** (references localis=1/globalis=2 EX
+SUPERPOSITIONE [phantasma in tsv numquam fuit — superpositio bis
+probata: etiam definitio phantasmatis via indicem]; workspaceSymbol
+exactum primum; incomingCalls → probatio_vocans @ linea 7;
+definitio-capitis nunc CORPUS lib/piscina.c primum [custodia
+sine-tsv → caput]); suita 12/12; DENTES 4 FRACTA/viride.
+**LEGATUS BIS IN FONTE SUO PROPRIO vitium cepit hac parte**
+(declaratio-ante-usum trium auxiliorum — push diagnosticorum ante
+compilationem, iterum). Septem ex novem operationibus instrumenti
+LSP servatae (+diagnostica); restant goToImplementation (non-
+propositum C89) et outgoingCalls (parca nominata, intra-plagularis
+facilis). Fran committit + /reload-plugins → probae vivae.
+
 ## LEGATUS — PRIMUM CONTACTUM AGITATIONIS (2026-07-13, sessione resumpta)
 
 Fran sessione `claude --plugin-dir .../legatus-plugin --resume
