@@ -1863,6 +1863,96 @@ _macro_ad_byte (LegatusDocumentum* doc, memoriae_index octetum,
     }
 }
 
+/* viae congruunt si aequae aut altera in alteram desinit (limite
+ * '/'): fons praebitus = basename ("latina.h"), fons princeps =
+ * via absoluta; ordo indicis = relativa sine "./" */
+interior b32
+_viae_congruunt (chorda a, constans SilvaChorda* b)
+{
+    constans i8* longa;
+    constans i8* brevis_d;
+    insignatus integer m_longae;
+    insignatus integer m_brevis;
+
+    si (a.mensura == (i32)b->mensura)
+    {
+        redde memcmp(a.datum, b->datum,
+            (memoriae_index)a.mensura) == ZEPHYRUM;
+    }
+    si (a.mensura > (i32)b->mensura)
+    {
+        longa = a.datum;
+        m_longae = a.mensura;
+        brevis_d = (constans i8*)b->datum;
+        m_brevis = b->mensura;
+    }
+    alioquin
+    {
+        longa = (constans i8*)b->datum;
+        m_longae = b->mensura;
+        brevis_d = a.datum;
+        m_brevis = (insignatus integer)a.mensura;
+    }
+    si (m_brevis == ZEPHYRUM
+        || longa[m_longae - m_brevis - I] != '/')
+    {
+        redde FALSUM;
+    }
+    redde memcmp(longa + (m_longae - m_brevis), brevis_d,
+        (memoriae_index)m_brevis) == ZEPHYRUM;
+}
+
+/* extentum corporis macronis ex expansione documenti petentis:
+ * vista cuius titulus + linea + via sedi indicis congruunt.
+ * -1 = non visibilis in hoc TU (verbum crudum in macro aliena) -
+ * consumptor ad lineam solam recidit. */
+interior s32
+_corpus_finis_macronis (LegatusDocumentum* doc,
+    constans LegatusOrdo* sedes)
+{
+    insignatus integer n;
+    insignatus integer k;
+
+    si (doc == NIHIL || doc->parsura == NIHIL
+        || doc->parsura->expansio == NIHIL)
+    {
+        redde -I;
+    }
+    n = silva_macros_numerus(doc->parsura->expansio);
+    per (k = ZEPHYRUM; k < n; k++)
+    {
+        SilvaMacroVista vista;
+        constans SilvaChorda* via_fontis;
+
+        si (!silva_macro_vista(doc->parsura->expansio, k, &vista)
+            || vista.titulus == NIHIL
+            || vista.corpus_finis < ZEPHYRUM)
+        {
+            perge;
+        }
+        si (vista.linea != sedes->linea)
+        {
+            perge;
+        }
+        si ((i32)vista.titulus->mensura != sedes->titulus.mensura
+            || memcmp(vista.titulus->datum, sedes->titulus.datum,
+                   (memoriae_index)sedes->titulus.mensura)
+                != ZEPHYRUM)
+        {
+            perge;
+        }
+        via_fontis = silva_fons_via(doc->parsura->expansio,
+            vista.fons_index);
+        si (via_fontis == NIHIL
+            || !_viae_congruunt(sedes->via, via_fontis))
+        {
+            perge;
+        }
+        redde vista.corpus_finis;
+    }
+    redde -I;
+}
+
 /* prima sedes macronis in indice (via non omissa) */
 interior LegatusOrdo*
 _sedes_macronis (Legatus* l, chorda titulus)
@@ -1886,12 +1976,15 @@ _sedes_macronis (Legatus* l, chorda titulus)
     redde NIHIL;
 }
 
-/* linea #define sedis lecta (documentum apertum ante discum -
- * textus recentior); continuatio '\' -> cauda " ..." */
+/* corpus #define sedis lectum (documentum apertum ante discum -
+ * textus recentior). Finis EXACTUS ex extentis vistae quando macro
+ * in TU petentis visibilis (corpus_finis - nulla scansio '\');
+ * aliter linea sola + cauda " ...". Truncatio ad capacitatem
+ * quoque " ..." signata. */
 interior b32
 _lineam_definitionis_legere (Legatus* l, Piscina* pn,
-    constans LegatusOrdo* o, character* buffer,
-    memoriae_index capacitas)
+    LegatusDocumentum* doc_petitionis, constans LegatusOrdo* o,
+    character* buffer, memoriae_index capacitas)
 {
     constans i8* textus = NIHIL;
     memoriae_index mensura = ZEPHYRUM;
@@ -1961,24 +2054,42 @@ _lineam_definitionis_legere (Legatus* l, Piscina* pn,
             redde FALSUM;
         }
         a = cursor;
-        b = a;
-        dum (b < mensura && textus[b] != '\n')
         {
-            b++;
-        }
-        dum (b > a && (textus[b - I] == '\r'
-            || textus[b - I] == ' ' || textus[b - I] == '\t'))
-        {
-            b--;
-        }
-        si (b > a && textus[b - I] == '\\')
-        {
-            continuatio = VERUM;
-            b--;
-            dum (b > a && (textus[b - I] == ' '
-                || textus[b - I] == '\t'))
+            s32 finis_corporis = _corpus_finis_macronis(
+                doc_petitionis, o);
+
+            si (finis_corporis > ZEPHYRUM
+                && (memoriae_index)finis_corporis > a
+                && (memoriae_index)finis_corporis <= mensura)
             {
-                b--;
+                /* extenta EXACTA vistae - corpus totum,
+                 * continuationes inclusae */
+                b = (memoriae_index)finis_corporis;
+            }
+            alioquin
+            {
+                /* macro extra TU - linea sola */
+                b = a;
+                dum (b < mensura && textus[b] != '\n')
+                {
+                    b++;
+                }
+                dum (b > a && (textus[b - I] == '\r'
+                    || textus[b - I] == ' '
+                    || textus[b - I] == '\t'))
+                {
+                    b--;
+                }
+                si (b > a && textus[b - I] == '\\')
+                {
+                    continuatio = VERUM;
+                    b--;
+                    dum (b > a && (textus[b - I] == ' '
+                        || textus[b - I] == '\t'))
+                    {
+                        b--;
+                    }
+                }
             }
         }
         si (b <= a)
@@ -1989,6 +2100,7 @@ _lineam_definitionis_legere (Legatus* l, Piscina* pn,
         si (scribenda > capacitas - VIII)
         {
             scribenda = capacitas - VIII;
+            continuatio = VERUM;   /* truncatio signata */
         }
         memcpy(buffer, textus + a, scribenda);
         si (continuatio)
@@ -2014,7 +2126,7 @@ _hover_macro (Legatus* l, Piscina* pn, JsonValor* id,
     s32 a = -I;
     s32 b = ZEPHYRUM;
     LegatusOrdo* sedes;
-    character linea_b[DXII];
+    character linea_b[DXII * II];   /* corpora multilinearia */
 
     si (!_macro_ad_byte(doc, octetum, cum_verbo, &titulus, &a, &b))
     {
@@ -2025,7 +2137,7 @@ _hover_macro (Legatus* l, Piscina* pn, JsonValor* id,
     {
         redde FALSUM;
     }
-    si (!_lineam_definitionis_legere(l, pn, sedes, linea_b,
+    si (!_lineam_definitionis_legere(l, pn, doc, sedes, linea_b,
             magnitudo(linea_b)))
     {
         sprintf(linea_b, "%.*s : macro", (int)titulus.mensura,

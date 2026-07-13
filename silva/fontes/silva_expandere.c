@@ -2643,6 +2643,30 @@ silva_macro_vista (constans SilvaExpansio* exp, i32 index,
                 ? eventum->def->est_functio : FALSUM;
             vista_out->fons_index = eventum->fons_index;
             vista_out->linea = eventum->linea;
+            /* extenta corporis ex laminis (lexemata cruda fontis -
+             * positiones exactae, continuationes '\' inclusae) */
+            vista_out->corpus_initium = -I;
+            vista_out->corpus_finis = -I;
+            si (eventum->def != NIHIL && !eventum->def->ex_api
+                && eventum->def->corpus != NIHIL
+                && xar_numerus(eventum->def->corpus) > ZEPHYRUM)
+            {
+                SilvaToken* primum = *(SilvaToken**)xar_obtinere(
+                    eventum->def->corpus, ZEPHYRUM);
+                SilvaToken* ultimum = *(SilvaToken**)xar_obtinere(
+                    eventum->def->corpus,
+                    xar_numerus(eventum->def->corpus) - I);
+
+                si (primum != NIHIL && ultimum != NIHIL
+                    && primum->byte_offset >= ZEPHYRUM
+                    && ultimum->byte_offset >= ZEPHYRUM)
+                {
+                    vista_out->corpus_initium =
+                        primum->byte_offset;
+                    vista_out->corpus_finis = ultimum->byte_offset
+                        + (s32)ultimum->longitudo;
+                }
+            }
             redde VERUM;
         }
         visae++;

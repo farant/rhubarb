@@ -216,3 +216,38 @@ diagnostics. Bar: 165/165 (29 macro asserts: hover-beats-expansion,
 directive raw-word, definition→line 0, references sedes+usus,
 workspaceSymbol kind 14, documentSymbol functio+2 macra), 12/12
 suites, clang PURUS throughout.
+
+## 2026-07-13 — v0.2 polish: multi-line hover via vista extents (+ ABI find)
+
+Fran's instinct confirmed: no scanning needed. SilvaMacroDef.corpus
+holds raw source tokens with exact byte offsets, and SilvaRamusVista
+already had corpus_initium/corpus_finis for the same reason —
+SilvaMacroVista just never got them. Added (fontes + amalgam mirror
++ expansio unit tests w/ hand-computed offsets across '\'
+continuations). Legatus: _corpus_finis_macronis matches the index
+sedes against the requesting doc's expansio (titulus + linea +
+_viae_congruunt suffix-symmetric: praebere basename vs absolute vs
+repo-relative), then the line reader copies [line-start ..
+corpus_finis] VERBATIM — backslashes and newlines included, honest
+source. Single-line + " ..." stays as fallback for macros not
+visible in the requesting TU; truncation to buffer also marks
+" ...". hover CREDO_VERUM now shows the whole body.
+
+THE BIG FIND (all 7 macro asserts failed on first run): STALE-OBJECT
+ABI CORRUPTION. compile_probationes.sh's per-unit blocks checked
+only their own .c/.h mtimes — NOT silva.h. The amalgam object
+rebuilt fresh (6-field SilvaMacroVista), nexus_ordines.o stayed
+stale (4-field stack struct) → silva_macro_vista overflowed the
+caller's frame → emission loop locals smashed → ZERO macro rows →
+every downstream feature dead. newest_header() existed and scanned
+silva/amalgama — only the lib loop used it. Fixed: all four unit
+blocks now call it; legatus.sh got an explicit SILVA_H -nt condition
+(its build dir had the SAME stale objects — the production reload
+would have shipped the corruption). Debugging-lessons instance:
+stale-object trap, amalgam-ABI flavor — struct extended in a shared
+header = every consumer object must rebuild; the failure reads as
+"feature returns nothing", not a crash.
+
+Bars: expansio unit tests (UNUS/MULTI/VACUUS extents exact),
+probatio_macra + SUMMA multi-line hover verbatim (167/167), officina
+12/12, silva 30/30 FULL, hospes 31/31.

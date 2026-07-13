@@ -3667,3 +3667,29 @@ RESTAT: probationes vivae post /reload-plugins (hover si ->
 "#define si if"; definitio CXXVIII -> latina.h:177; references
 macronis CREDO; workspaceSymbol). Deinde: debrief instrumentorum +
 memoria.
+
+## LEGATUS v0.2 POLITIO (hover multilineare) — RELATIO (2026-07-13, sero)
+
+Agitatio: hover CREDO_VERUM = "#define CREDO_VERUM(x) ..." — corpus
+in continuationibus invisibile (dolor primus politionis). VIA FRAN:
+extenta ex arbore, non scansio — CONFIRMATA: SilvaMacroDef.corpus =
+lexemata cruda cum positionibus exactis; SilvaRamusVista exemplar
+iam habebat. SilvaMacroVista + corpus_initium/corpus_finis (fontes
++ speculum + probationes expansionis, offsets manu computati trans
+continuationes). Legatus: _corpus_finis_macronis (vista sedi
+congruens per titulum+lineam+_viae_congruunt) → lector corpus totum
+VERBATIM legit; linea sola = recessus (macro extra TU); truncatio
+" ..." signata. probatio SUMMA multilinearis verbatim pinnata.
+
+INVENTUM MAGNUM (7 asserta fracta primo cursu): CORRUPTIO ABI
+OBIECTI STALI — regulae dependentiarum unitatum silva.h NON
+sequebantur; amalgama recens 6 campos in structuram acervi 4
+camporum scripsit → ordines macrorum OMNES evanuerunt (nulla ruina
+- silentium). newest_header() exsistebat, solum ansa lib utebatur.
+SANATUM: quattuor introitus compile_probationes.sh + legatus.sh
+SILVA_H (cuius build dir EADEM obiecta stala habebat - impositio
+viva corruptionem tulisset!). Lectio in debugging-lessons scripta.
+
+BARRAE: expansio-unitates extentorum; 167/167; officina 12/12;
+silva 30/30 PLENA; hospes 31/31. Restat: /reload-plugins + hover
+CREDO_VERUM vivum.

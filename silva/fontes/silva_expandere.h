@@ -394,6 +394,14 @@ nomen structura {
     b32              est_functio;
     s32              fons_index;
     i32              linea;
+    s32              corpus_initium;    /* OCTETI in fonte (lexema
+                                         * primum corporis); -1 =
+                                         * vacuum aut ex api.
+                                         * Exemplar SilvaRamusVista;
+                                         * LEGATUS v0.2 - hover
+                                         * multilinearis sine
+                                         * scansione '\'. */
+    s32              corpus_finis;      /* exclusivus; -1 vacuum */
 } SilvaMacroVista;
 
 i32

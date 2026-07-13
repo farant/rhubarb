@@ -210,6 +210,45 @@ s32 principale (vacuum)
     }
 
 
+    /* ========================================================
+     * PROBARE: vista macronis - extenta corporis (LEGATUS v0.2:
+     * hover multilinearis sine scansione; exemplar ramus-vistae)
+     * ======================================================== */
+
+    {
+        SilvaExpansio* exp;
+        Xar* reliqua;
+        SilvaMacroVista vista;
+
+        imprimere("\n--- Probans extenta corporis vistae ---\n");
+
+        exp = _praeparare(piscina,
+            "#define UNUS 1\n"
+            "#define MULTI(x) \\\n"
+            "    ((x) + \\\n"
+            "     1)\n"
+            "#define VACUUS\n", &reliqua, NIHIL);
+        CREDO_AEQUALIS_I32 (silva_macros_numerus(exp), III);
+
+        /* UNUS: corpus "1" - octeti [13,14) */
+        CREDO_VERUM (silva_macro_vista(exp, ZEPHYRUM, &vista));
+        CREDO_AEQUALIS_S32 (vista.corpus_initium, XIII);
+        CREDO_AEQUALIS_S32 (vista.corpus_finis, XIV);
+
+        /* MULTI: corpus trans continuationes '\' - primum '(' 38,
+         * ultimum ')' 53+1 (extenta EXACTA, nulla scansio) */
+        CREDO_VERUM (silva_macro_vista(exp, I, &vista));
+        CREDO_VERUM (vista.est_functio);
+        CREDO_AEQUALIS_S32 (vista.corpus_initium, XXXVIII);
+        CREDO_AEQUALIS_S32 (vista.corpus_finis, LIV);
+
+        /* VACUUS: corpus vacuum - -1 */
+        CREDO_VERUM (silva_macro_vista(exp, II, &vista));
+        CREDO_AEQUALIS_S32 (vista.corpus_initium, -I);
+        CREDO_AEQUALIS_S32 (vista.corpus_finis, -I);
+    }
+
+
     credo_imprimere_compendium();
     praeteritus = credo_omnia_praeterierunt();
 

@@ -1196,7 +1196,12 @@ probatio_macra (Piscina* p)
         "\"#define GRADUS 7\\n"
         "#define DUPLICARE(x) ((x) * 2)\\n"
         "int probatio_macro_functio(int a)\\n{\\n"
-        "    return DUPLICARE(a) + GRADUS;\\n}\\n\"}}}", _radix());
+        "    return DUPLICARE(a) + GRADUS;\\n}\\n"
+        "#define SUMMA(x, y) \\\\\\n"
+        "    ((x) + \\\\\\n"
+        "     (y))\\n"
+        "int probatio_macro_summa(int a)\\n{\\n"
+        "    return SUMMA(a, 2);\\n}\\n\"}}}", _radix());
     _scribe(intra, p, corpus);
 
     /* hover usus GRADUS (linea 4, char 26) - expansio est litterale
@@ -1259,6 +1264,16 @@ probatio_macra (Piscina* p)
         "\"method\":\"textDocument/documentSymbol\",\"params\":"
         "{\"textDocument\":{\"uri\":"
         "\"file://%s/lib/legatus_phantasma_m.c\"}}}", _radix());
+    _scribe(intra, p, corpus);
+
+    /* hover usus SUMMA (linea 11, char 11) - corpus MULTILINEARE
+     * per extenta vistae (nulla scansio '\') */
+    sprintf(corpus,
+        "{\"jsonrpc\":\"2.0\",\"id\":28,"
+        "\"method\":\"textDocument/hover\",\"params\":"
+        "{\"textDocument\":{\"uri\":"
+        "\"file://%s/lib/legatus_phantasma_m.c\"},"
+        "\"position\":{\"line\":11,\"character\":11}}}", _radix());
     _scribe(intra, p, corpus);
 
     _scribe(intra, p,
@@ -1332,7 +1347,8 @@ probatio_macra (Piscina* p)
             "kind")) == XIV);
     }
 
-    n = _lege(extra, p, &bene);   /* documentSymbol: III */
+    n = _lege(extra, p, &bene);   /* documentSymbol: II functiones
+                                   * + III macra = V */
     CREDO_VERUM(bene);
     {
         JsonValor* resultatum = json_objectum_capere(n.radix,
@@ -1341,13 +1357,19 @@ probatio_macra (Piscina* p)
 
         CREDO_VERUM(resultatum != NIHIL
             && json_est_tabulatum(resultatum));
-        CREDO_VERUM(json_tabulatum_numerus(resultatum) == III);
-        macro_v = json_tabulatum_obtinere(resultatum, I);
+        CREDO_VERUM(json_tabulatum_numerus(resultatum) == V);
+        macro_v = json_tabulatum_obtinere(resultatum, II);
         CREDO_VERUM(_chorda_est(json_ad_chorda(
             json_objectum_capere(macro_v, "name")), "GRADUS"));
         CREDO_VERUM(json_ad_integer(json_objectum_capere(macro_v,
             "kind")) == XIV);
     }
+
+    n = _lege(extra, p, &bene);   /* hover SUMMA: corpus totum
+                                   * multilineare, verbatim */
+    CREDO_VERUM(bene);
+    CREDO_VERUM(_hover_valor_est(&n,
+        "#define SUMMA(x, y) \\\n    ((x) + \\\n     (y))"));
 
     n = _lege(extra, p, &bene);   /* shutdown */
     CREDO_VERUM(bene);

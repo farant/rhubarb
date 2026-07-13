@@ -123,8 +123,11 @@ obj_files="$obj_files $obj"
 # ---- 2c-0. nexus_ordines (unitas ordinum communis - legatus) ----
 src="$RADIX_DIR/silva/instrumenta/nexus_ordines.c"
 obj="$BUILD_DIR/nexus_ordines.o"
+# newest_header: silva.h mutatio formae (SilvaMacroVista v0.2!) sine
+# ea obiectum vetus + amalgama recens = corruptio ABI in acervo
 if [ ! -f "$obj" ] || [ "$src" -nt "$obj" ] \
-    || [ "$RADIX_DIR/silva/instrumenta/nexus_ordines.h" -nt "$obj" ]; then
+    || [ "$RADIX_DIR/silva/instrumenta/nexus_ordines.h" -nt "$obj" ] \
+    || [ -n "$(newest_header "$obj")" ]; then
     echo "  [ordines] nexus_ordines.c"
     if ! clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" \
         -c "$src" -o "$obj"; then
@@ -137,7 +140,8 @@ obj_files="$obj_files $obj"
 src="$OFF_DIR/instrumenta/praeparator.c"
 obj="$BUILD_DIR/praeparator.o"
 if [ ! -f "$obj" ] || [ "$src" -nt "$obj" ] \
-    || [ "$OFF_DIR/instrumenta/praeparator.h" -nt "$obj" ]; then
+    || [ "$OFF_DIR/instrumenta/praeparator.h" -nt "$obj" ] \
+    || [ -n "$(newest_header "$obj")" ]; then
     echo "  [praeparator] praeparator.c"
     if ! clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" \
         -c "$src" -o "$obj"; then
@@ -150,7 +154,8 @@ src="$OFF_DIR/instrumenta/sessio.c"
 obj="$BUILD_DIR/sessio.o"
 if [ ! -f "$obj" ] || [ "$src" -nt "$obj" ] \
     || [ "$OFF_DIR/instrumenta/sessio.h" -nt "$obj" ] \
-    || [ "$OFF_DIR/instrumenta/praeparator.h" -nt "$obj" ]; then
+    || [ "$OFF_DIR/instrumenta/praeparator.h" -nt "$obj" ] \
+    || [ -n "$(newest_header "$obj")" ]; then
     echo "  [sessio] sessio.c"
     if ! clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" \
         -c "$src" -o "$obj"; then
@@ -163,7 +168,8 @@ src="$OFF_DIR/instrumenta/legatus.c"
 obj="$BUILD_DIR/legatus.o"
 if [ ! -f "$obj" ] || [ "$src" -nt "$obj" ] \
     || [ "$OFF_DIR/instrumenta/legatus.h" -nt "$obj" ] \
-    || [ "$OFF_DIR/instrumenta/praeparator.h" -nt "$obj" ]; then
+    || [ "$OFF_DIR/instrumenta/praeparator.h" -nt "$obj" ] \
+    || [ -n "$(newest_header "$obj")" ]; then
     echo "  [legatus] legatus.c"
     if ! clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" \
         -c "$src" -o "$obj"; then

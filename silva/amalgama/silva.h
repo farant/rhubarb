@@ -667,6 +667,9 @@ typedef struct {
     int                est_functio;
     int                fons_index;
     unsigned int       linea;
+    int                corpus_initium;  /* BYTES in fons (first body
+                                         * token); -1 = empty/api */
+    int                corpus_finis;    /* exclusive; -1 = empty */
 } SilvaMacroVista;
 
 unsigned int silva_fontes_numerus(const SilvaExpansio* exp);

@@ -53,10 +53,15 @@ if [ ! -f "$obj" ] || [ "$src" -nt "$obj" ]; then
 fi
 obj_files="$obj_files $obj"
 
+# silva.h mutatio formae sine recompilo = corruptio ABI (stalum
+# obiectum + amalgama recens - inventum v0.2, SilvaMacroVista)
+SILVA_H="$RADIX_DIR/silva/amalgama/silva.h"
+
 src="$RADIX_DIR/silva/instrumenta/nexus_ordines.c"
 obj="$BUILD_DIR/nexus_ordines.o"
 if [ ! -f "$obj" ] || [ "$src" -nt "$obj" ] \
-    || [ "$RADIX_DIR/silva/instrumenta/nexus_ordines.h" -nt "$obj" ]; then
+    || [ "$RADIX_DIR/silva/instrumenta/nexus_ordines.h" -nt "$obj" ] \
+    || [ "$SILVA_H" -nt "$obj" ]; then
     echo "  [ordines] nexus_ordines.c" >&2
     clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" -c "$src" -o "$obj" || exit 1
 fi
@@ -66,7 +71,8 @@ for unit in praeparator legatus; do
     src="$OFF_DIR/instrumenta/$unit.c"
     obj="$BUILD_DIR/$unit.o"
     if [ ! -f "$obj" ] || [ "$src" -nt "$obj" ] \
-        || [ "$OFF_DIR/instrumenta/$unit.h" -nt "$obj" ]; then
+        || [ "$OFF_DIR/instrumenta/$unit.h" -nt "$obj" ] \
+        || [ "$SILVA_H" -nt "$obj" ]; then
         echo "  [$unit] $unit.c" >&2
         clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" -c "$src" -o "$obj" || exit 1
     fi
