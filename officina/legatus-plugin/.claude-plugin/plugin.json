@@ -1,0 +1,5 @@
+{
+  "name": "legatus",
+  "description": "LEGATUS - silva's C89 judgment as an LSP server (diagnostics + hover + documentSymbol) for the rhubarb monorepo. Replaces clangd for this repo.",
+  "version": "0.1.0"
+}

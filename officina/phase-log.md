@@ -3360,3 +3360,46 @@ SEQUENS: chunk D (positiones errorum syntaxis ex nodis GENUS_ERROR
 + lamina .h [didSave → reaedificatio ordine C11] + involucrum
 plugin + SIGILLUM: transcripta aurea plena + agitatio cotidiana +
 differentialis unci + dimissio unci). Fran committit.
+
+## LEGATUS CHUNK D — RELATIO (2026-07-13): BARRA FORMALIS PLENA
+
+**Syntaxis POSITA (C13 conatus CECIDIT IN MANUS, ut simulatio
+praedixit):** nodi GENUS_ERROR in elementis radicis → extenta per
+radicem originis → positiones verae; effugium degeneratum INTACTUM
+(radices omnes syntheticae). Probatio discriminans: declaratio
+valida + fractura in linea 1 → ordo "syntaxis fracta" AD LINEAM 1
+(degenerata daret 0). **Lamina .h**: didSave capitis → ordo rigidus
+C11 (① arbores OMNIUM documentorum moriuntur [in textus capitum
+monstrant] ② praeparatio + piscina capitum PROPRIA reaedificantur
+[~0.05s; reaedificationes ligatae — capita non iam in perennem]
+③ documenta aperta re-analysata re-publicata); didSave .c tacitum;
+probatio: superstes reaedificationis cum iudicio identico + versione
+servata = decipula obiecti-stalis vitata sub onere. **Involucrum
+plugin**: officina/legatus-plugin/ (.claude-plugin/plugin.json +
+.lsp.json [startupTimeout 30s, restartOnCrash, initializationOptions
+posix] + legatus-exec.sh + README cum gradibus registrationis).
+
+**BARRA FORMALIS: 99/99 asserta, septem scaenae** (ordo plenus /
+hover+documentSymbol / utf-16 ambabus directionibus / syntaxis
+posita / caput servatum / ante-initium / fluxus vacuus+quisquiliae).
+Suita officinae 12/12 · silva 30/30 · tabellarius viridis · censor
+tacitus · DENTES 3 FRACTA flexo/viride restituto. Machina tota =
+5 chunki (0 A B C D) UNO DIE, on-ramp incluso.
+
+**SIGILLUM MILLIARII: DIMIDIUM.** Barra formalis PLENA; barra
+agitationis cotidianae IN VOLATU — registratio parata
+(`claude --plugin-dir "$PWD/officina/legatus-plugin"`; praestructio
+documentata in README). Uncus examen-custos COEXSISTIT per
+shakedown (differentialis consultus) → dimittitur ad barram
+(scriptum manet). Milliarium sigillatur cum agitatio probata erit.
+
+DEBRIEF: adhibita = examen.sh (differentialis fixturarum),
+grep/emitte-modo-manuali per silva.h (typi camporum), libri
+(sessio/M4b inventa ×3 vias rectas dederunt). Asperitates: nullae
+novae. Desiderata: nulla — machina tota ex partibus exsistentibus
+constructa est (tabellarius+json+praeparator+dona chunki 0).
+
+Parcae registro (viae retro nominatae): hover-super-declarato
+(exportatio silva-latere); tags in documentSymbol; deduplicatio
+symbolorum; multi-publicatio trans-plagularis; R1 lexemata calida;
+didClose .h; involucrum marketplace.

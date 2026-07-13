@@ -586,6 +586,174 @@ probatio_utf16 (Piscina* p)
 }
 
 /* ==================================================
+ * SYNTAXIS POSITA (chunk D): nodus erroris post declarationem
+ * validam -> linea 1 (degenerata daret 0)
+ * ================================================== */
+
+interior vacuum
+probatio_syntaxis_posita (Piscina* p)
+{
+    FILE* intra = tmpfile();
+    FILE* extra = tmpfile();
+    character corpus[1024];
+    LegatusConfiguratio cfg;
+    b32 bene = FALSUM;
+    TabellariusNuntius n;
+
+    imprimere("--- Probans syntaxim positam ---\n");
+    CREDO_VERUM(intra != NIHIL && extra != NIHIL);
+
+    sprintf(corpus,
+        "{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"initialize\","
+        "\"params\":{\"rootUri\":\"file://%s\",\"capabilities\":"
+        "{\"general\":{\"positionEncodings\":[\"utf-8\"]}}}}",
+        _radix());
+    _scribe(intra, p, corpus);
+
+    /* linea 0 valida; linea 1 fracta - positio discriminat */
+    sprintf(corpus,
+        "{\"jsonrpc\":\"2.0\",\"method\":\"textDocument/didOpen\","
+        "\"params\":{\"textDocument\":{\"uri\":"
+        "\"file://%s/lib/legatus_phantasma_s.c\",\"version\":1,"
+        "\"languageId\":\"c\",\"text\":"
+        "\"int x;\\nint f( {\\n\"}}}", _radix());
+    _scribe(intra, p, corpus);
+
+    _scribe(intra, p,
+        "{\"jsonrpc\":\"2.0\",\"id\":2,\"method\":\"shutdown\"}");
+    _scribe(intra, p, "{\"jsonrpc\":\"2.0\",\"method\":\"exit\"}");
+
+    rewind(intra);
+    memset(&cfg, ZEPHYRUM, magnitudo(LegatusConfiguratio));
+    CREDO_VERUM(legatus_currere(intra, extra, &cfg) == ZEPHYRUM);
+    rewind(extra);
+
+    n = _lege(extra, p, &bene);   /* initialize */
+    CREDO_VERUM(bene);
+    n = _lege(extra, p, &bene);   /* publicatio */
+    CREDO_VERUM(bene);
+    {
+        s32 numerus = _diagnostica_numerus(&n);
+        JsonValor* lista = json_objectum_capere(n.params,
+            "diagnostics");
+        b32 posita_inventa = FALSUM;
+        s32 i;
+
+        CREDO_VERUM(numerus >= (s32)I);
+        per (i = ZEPHYRUM; i < numerus; i++)
+        {
+            JsonValor* diag = json_tabulatum_obtinere(lista,
+                (i32)i);
+            chorda nuntius = json_ad_chorda(
+                json_objectum_capere(diag, "message"));
+
+            si (nuntius.mensura >= (i32)VIII
+                && memcmp(nuntius.datum, "syntaxis", VIII)
+                    == ZEPHYRUM)
+            {
+                JsonValor* initium = json_objectum_capere(
+                    json_objectum_capere(diag, "range"), "start");
+
+                /* POSITA: linea 1, non degenerata 0:0 */
+                si (json_ad_integer(json_objectum_capere(initium,
+                        "line")) == I)
+                {
+                    posita_inventa = VERUM;
+                }
+            }
+        }
+        CREDO_VERUM(posita_inventa);
+    }
+
+    fclose(intra);
+    fclose(extra);
+}
+
+/* ==================================================
+ * LAMINA .h (chunk D): didSave capitis -> reaedificatio ordine
+ * C11 + re-publicatio documentorum apertorum; didSave .c tacitum
+ * ================================================== */
+
+interior vacuum
+probatio_caput_servatum (Piscina* p)
+{
+    FILE* intra = tmpfile();
+    FILE* extra = tmpfile();
+    character corpus[1024];
+    LegatusConfiguratio cfg;
+    b32 bene = FALSUM;
+    TabellariusNuntius n;
+
+    imprimere("--- Probans caput servatum ---\n");
+    CREDO_VERUM(intra != NIHIL && extra != NIHIL);
+
+    sprintf(corpus,
+        "{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"initialize\","
+        "\"params\":{\"rootUri\":\"file://%s\",\"capabilities\":"
+        "{\"general\":{\"positionEncodings\":[\"utf-8\"]}}}}",
+        _radix());
+    _scribe(intra, p, corpus);
+
+    /* documentum apertum cum violatione (1 ordo) */
+    sprintf(corpus,
+        "{\"jsonrpc\":\"2.0\",\"method\":\"textDocument/didOpen\","
+        "\"params\":{\"textDocument\":{\"uri\":"
+        "\"file://%s/lib/legatus_phantasma_h.c\",\"version\":1,"
+        "\"languageId\":\"c\",\"text\":"
+        "\"int x = \\\"salve\\\";\\n\"}}}", _radix());
+    _scribe(intra, p, corpus);
+
+    /* didSave capitis VERI (nulla scriptura disci - nuntiatio
+     * sola!) -> reaedificatio + re-publicatio eiusdem iudicii */
+    sprintf(corpus,
+        "{\"jsonrpc\":\"2.0\",\"method\":\"textDocument/didSave\","
+        "\"params\":{\"textDocument\":{\"uri\":"
+        "\"file://%s/lib/piscina.h\"}}}", _radix());
+    _scribe(intra, p, corpus);
+
+    /* didSave plagulae .c - NIHIL reaedificatur, nihil emittitur */
+    sprintf(corpus,
+        "{\"jsonrpc\":\"2.0\",\"method\":\"textDocument/didSave\","
+        "\"params\":{\"textDocument\":{\"uri\":"
+        "\"file://%s/lib/legatus_phantasma_h.c\"}}}", _radix());
+    _scribe(intra, p, corpus);
+
+    _scribe(intra, p,
+        "{\"jsonrpc\":\"2.0\",\"id\":2,\"method\":\"shutdown\"}");
+    _scribe(intra, p, "{\"jsonrpc\":\"2.0\",\"method\":\"exit\"}");
+
+    rewind(intra);
+    memset(&cfg, ZEPHYRUM, magnitudo(LegatusConfiguratio));
+    CREDO_VERUM(legatus_currere(intra, extra, &cfg) == ZEPHYRUM);
+    rewind(extra);
+
+    n = _lege(extra, p, &bene);   /* initialize */
+    CREDO_VERUM(bene);
+
+    n = _lege(extra, p, &bene);   /* publicatio prima: 1 ordo */
+    CREDO_VERUM(bene);
+    CREDO_VERUM(_diagnostica_numerus(&n) == (s32)I);
+
+    /* post didSave capitis: RE-publicatio, idem iudicium, eadem
+     * versio (superstes reaedificationis = decipula C11 vitata) */
+    n = _lege(extra, p, &bene);
+    CREDO_VERUM(bene);
+    CREDO_VERUM(_diagnostica_numerus(&n) == (s32)I);
+    CREDO_VERUM(json_ad_integer(json_objectum_capere(n.params,
+        "version")) == I);
+
+    /* didSave .c NIHIL emisit: proximus exitus = shutdown */
+    n = _lege(extra, p, &bene);
+    CREDO_VERUM(bene);
+    CREDO_VERUM(n.genus == TABELLARIUS_RESPONSUM);
+    CREDO_VERUM(json_ad_integer(n.id) == II);
+    CREDO_VERUM(_resultatum_nullum(&n));
+
+    fclose(intra);
+    fclose(extra);
+}
+
+/* ==================================================
  * ANTE INITIALIZE: petitio -> -32002; EOF sine exit -> 1
  * ================================================== */
 
@@ -702,6 +870,8 @@ principale (vacuum)
     probatio_ordo_plenus(piscina);
     probatio_hover_symbola(piscina);
     probatio_utf16(piscina);
+    probatio_syntaxis_posita(piscina);
+    probatio_caput_servatum(piscina);
     probatio_ante_initium(piscina);
     probatio_fluxus_vacuus();
     probatio_quisquiliae(piscina);

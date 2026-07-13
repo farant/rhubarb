@@ -47,6 +47,9 @@ nomen structura {
 
 nomen structura {
     Piscina*        perennis;
+    Piscina*        piscina_capitum;   /* textus capitum; moritur
+                                        * cum praeparatione
+                                        * (reaedificatio ligata) */
     FILE*           extra;
     Praeparatio     praeparatio;
     b32             praeparata;
@@ -580,17 +583,68 @@ _analysare_et_publicare (Legatus* l, Piscina* pn,
         (constans character*)doc->textus.datum,
         (insignatus integer)doc->textus.mensura, &doc->parsura);
 
-    /* errores syntaxis: v0 = extensio degenerata ad 0:0 (chunk D
-     * positiones veras ex nodis erroris promovebit - C13) */
+    /* errores syntaxis POSITI (chunk D, C13): nodi GENUS_ERROR in
+     * elementis radicis; extenta per radicem originis. Effugium
+     * intactum: nullo nodo posito (radices omnes syntheticae) ->
+     * extensio degenerata 0:0. */
     si (doc->parsura != NIHIL
         && doc->parsura->numerus_errorum > ZEPHYRUM)
     {
         character nuntius_b[CCLVI];
+        insignatus integer positi = ZEPHYRUM;
 
         sprintf(nuntius_b, "syntaxis fracta (%u loci)",
             doc->parsura->numerus_errorum);
-        json_tabulatum_addere(lista, _diagnosticum_json(pn,
-            ZEPHYRUM, ZEPHYRUM, ZEPHYRUM, I, I, nuntius_b));
+        si (doc->parsura->commissio != NIHIL)
+        {
+            SilvaValor radix = doc->parsura->commissio->radix;
+            insignatus integer n_el = silva_valor_lista_numerus(
+                radix);
+            insignatus integer k;
+            s32 fons = doc->parsura->fons_princeps;
+
+            per (k = ZEPHYRUM; k < n_el; k++)
+            {
+                SilvaValor* v = silva_valor_lista_obtinere(radix,
+                    k);
+                s32 a = -I;
+                s32 b = ZEPHYRUM;
+
+                si (v == NIHIL || v->genus != SILVA_VALOR_NODUS
+                    || v->datum.nodus == NIHIL
+                    || v->datum.nodus->genus
+                        != (int)SILVA_C89_GENUS_ERROR)
+                {
+                    perge;
+                }
+                silva_nodus_extensionem(v->datum.nodus, fons, &a,
+                    &b);
+                si (a < ZEPHYRUM)
+                {
+                    perge;   /* radices omnes syntheticae */
+                }
+                {
+                    insignatus integer l0;
+                    insignatus integer c0;
+                    insignatus integer l1;
+                    insignatus integer c1;
+
+                    _byte_ad_positio(l, doc, (memoriae_index)a,
+                        &l0, &c0);
+                    _byte_ad_positio(l, doc, (memoriae_index)b,
+                        &l1, &c1);
+                    json_tabulatum_addere(lista,
+                        _diagnosticum_json(pn, l0, c0, l1, c1, I,
+                            nuntius_b));
+                    positi++;
+                }
+            }
+        }
+        si (positi == ZEPHYRUM)
+        {
+            json_tabulatum_addere(lista, _diagnosticum_json(pn,
+                ZEPHYRUM, ZEPHYRUM, ZEPHYRUM, I, I, nuntius_b));
+        }
     }
 
     si (doc->sem != NIHIL)
@@ -1323,6 +1377,121 @@ _documentsymbol_tractare (Legatus* l, Piscina* pn, JsonValor* id,
 }
 
 /* ==================================================
+ * praeparatio (structura + reaedificatio - lamina .h)
+ * ================================================== */
+
+/* Praeparationem (re)struere: capita in piscinam PROPRIAM leguntur
+ * quae cum praeparatione moritur - reaedificationes repetitae
+ * ligatae manent. VOCATOR arbores omnium documentorum ANTE
+ * demoliatur (arbores in textus capitum monstrant - C11!). */
+interior b32
+_praeparationem_struere (Legatus* l)
+{
+    PraeparatorConfiguratio pc;
+
+    si (l->praeparata)
+    {
+        praeparator_destruere(&l->praeparatio);
+        l->praeparata = FALSUM;
+    }
+    si (l->piscina_capitum != NIHIL)
+    {
+        piscina_destruere(l->piscina_capitum);
+        l->piscina_capitum = NIHIL;
+    }
+    si (l->radix_mensura == ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    l->piscina_capitum = piscina_generare_dynamicum("legatus_capita",
+        1048576);
+    si (l->piscina_capitum == NIHIL)
+    {
+        redde FALSUM;
+    }
+    memset(&pc, ZEPHYRUM, magnitudo(PraeparatorConfiguratio));
+    pc.radix = l->radix;
+    pc.cum_posix = l->cum_posix ? I : ZEPHYRUM;
+    pc.cum_latina = ZEPHYRUM;
+    pc.sine_capitibus = ZEPHYRUM;
+    l->praeparata = praeparator_praeparare(&l->praeparatio,
+        l->piscina_capitum, &pc) ? VERUM : FALSUM;
+    redde l->praeparata;
+}
+
+/* didSave capitis: contextus reaedificatur ordine rigido (C11 -
+ * decipula obiecti stalis): ① arbores OMNIUM documentorum moriuntur
+ * (in textus capitum monstrant) ② praeparatio reaedificatur
+ * ③ omnia documenta aperta re-analysantur et re-publicantur. */
+interior vacuum
+_didsave_tractare (Legatus* l, Piscina* pn, JsonValor* params)
+{
+    character via_c[LEGATUS_VIA_MAXIMA];
+    chorda via;
+    chorda uri;
+    JsonValor* doc_v;
+    memoriae_index m;
+
+    si (params == NIHIL)
+    {
+        redde;
+    }
+    doc_v = json_objectum_capere(params, "textDocument");
+    si (!_viam_extrahere(l, doc_v, via_c, magnitudo(via_c), &via,
+            &uri))
+    {
+        redde;
+    }
+    m = strlen(via_c);
+    si (m < II || via_c[m - II] != '.' || via_c[m - I] != 'h')
+    {
+        redde;   /* .c servatum: nihil reaedificandum */
+    }
+    fprintf(stderr,
+        "legatus: caput servatum (%s) - contextus reaedificatur\n",
+        via_c);
+    {
+        i32 n_doc = l->omnia_documenta != NIHIL
+            ? xar_numerus(l->omnia_documenta) : (i32)ZEPHYRUM;
+        i32 i;
+
+        /* ① arbores primae moriuntur */
+        per (i = ZEPHYRUM; i < n_doc; i++)
+        {
+            LegatusDocumentum** doc = (LegatusDocumentum**)
+                xar_obtinere(l->omnia_documenta, i);
+
+            si (doc != NIHIL && *doc != NIHIL
+                && (*doc)->effimera != NIHIL)
+            {
+                silva_piscina_destruere((*doc)->effimera);
+                (*doc)->effimera = NIHIL;
+                (*doc)->parsura = NIHIL;
+                (*doc)->sem = NIHIL;
+            }
+        }
+        /* ② praeparatio nova */
+        si (!_praeparationem_struere(l))
+        {
+            fprintf(stderr,
+                "legatus: reaedificatio praeparationis FRACTA\n");
+            redde;
+        }
+        /* ③ documenta aperta re-iudicata */
+        per (i = ZEPHYRUM; i < n_doc; i++)
+        {
+            LegatusDocumentum** doc = (LegatusDocumentum**)
+                xar_obtinere(l->omnia_documenta, i);
+
+            si (doc != NIHIL && *doc != NIHIL && (*doc)->apertum)
+            {
+                _analysare_et_publicare(l, pn, *doc);
+            }
+        }
+    }
+}
+
+/* ==================================================
  * initialize
  * ================================================== */
 
@@ -1459,18 +1628,7 @@ _initialize_tractare (Legatus* l, Piscina* pn, JsonValor* id,
     }
 
     /* praeparatio calida (systema + capita, ~0.15s semel) */
-    si (l->radix_mensura > ZEPHYRUM)
-    {
-        PraeparatorConfiguratio pc;
-
-        memset(&pc, ZEPHYRUM, magnitudo(PraeparatorConfiguratio));
-        pc.radix = l->radix;
-        pc.cum_posix = l->cum_posix ? I : ZEPHYRUM;
-        pc.cum_latina = ZEPHYRUM;
-        pc.sine_capitibus = ZEPHYRUM;
-        l->praeparata = praeparator_praeparare(&l->praeparatio,
-            l->perennis, &pc) ? VERUM : FALSUM;
-    }
+    (vacuum)_praeparationem_struere(l);
     si (!l->praeparata)
     {
         _respondere(l, tabellarius_errorem(pn, id,
@@ -1595,7 +1753,11 @@ _nuntium_tractare (Legatus* l, Piscina* pn, TabellariusNuntius* n,
     {
         _didclose_tractare(l, pn, n->params);
     }
-    /* didSave: chunk D (lamina .h); ceterae nuntiationes tacitae */
+    alioquin si (_methodus_est(n->methodus, "textDocument/didSave"))
+    {
+        _didsave_tractare(l, pn, n->params);
+    }
+    /* ceterae nuntiationes tacitae */
     redde LEGATUS_PERGE;
 }
 
@@ -1683,6 +1845,10 @@ legatus_currere (FILE* intra, FILE* extra,
     si (l.praeparata)
     {
         praeparator_destruere(&l.praeparatio);
+    }
+    si (l.piscina_capitum != NIHIL)
+    {
+        piscina_destruere(l.piscina_capitum);
     }
     piscina_destruere(l.perennis);
     redde exitus;

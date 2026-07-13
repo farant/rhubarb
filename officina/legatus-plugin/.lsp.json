@@ -1,0 +1,15 @@
+{
+  "legatus": {
+    "command": "${CLAUDE_PLUGIN_ROOT}/legatus-exec.sh",
+    "extensionToLanguage": {
+      ".c": "c",
+      ".h": "c"
+    },
+    "startupTimeout": 30000,
+    "restartOnCrash": true,
+    "maxRestarts": 5,
+    "initializationOptions": {
+      "posix": false
+    }
+  }
+}
