@@ -3556,3 +3556,77 @@ tabellarius → machina → praeparatio calida → descensus extentorum →
 symbolum_nodi → redditor chunki 0 hodie promotus). Agitatio
 cotidiana INCEPIT; uncus coexsistit (differentialis vivus);
 sigillum cum agitatio satisfecerit.
+
+## LEGATUS v0.2 MACRO INDEX — INTENTIO (2026-07-13, sero)
+
+Demand: instrument debrief of find-#1 session — macro-index park
+fired ×2 in one session (latina numerals, credo assert family), the
+named park's usage bar met. Exploration (explorator-macro) confirmed
+BOTH halves work through the amalgam TODAY: silva_macro_vista
+enumeration (name/kind/fons/linea; NO body/column — line-granular)
++ position→use via silva_token_radix + origo chain walk (REAL
+provenance, not word-matching — origo's voice entering the LSP
+channel, engine reuse #3). Provenance clean because cum_latina=0
+(legatus.c:2666 — pin with comment; flip = guard-silenced-include
+trap). Via-law covers macros unchanged: praebere basenames dropped,
+canonical rows from the direct include/latina.h walk.
+
+DECISUS (Fran): ① usus rows EXCEPT latina.h-defined macros
+(references work for real macros; keyword noise excluded — examen
+lexicon-exclusion precedent; sedes-only was offered, rejected);
+② genus = "macro" (untranslated term of art, offset precedent);
+③ documentSymbol includes the file's own #defines (API surface).
+
+SHAPE: chunk 1 = emission in nexus_ordines_fundere (shared unit —
+sweep/overlay divergence impossible) + baseline re-pin; chunk 2 =
+legatus resolution tiers (origo walk + raw-word fallback) + hover
+body read-line-on-demand + definition/references/workspaceSymbol/
+documentSymbol arms + SymbolKind macro→14.
+
+v0 limits accepted: dead-#if-arm defines not enumerable (default-
+track consistency); empty-body invocations invisible to position
+match (word fallback covers); redefinitions = one sedes row each
+(journal semantics, correct); usus dedup key (nomen, fons, linea) —
+function-like arg-token roots may multiply rows, collapsed per line
+(refine if bar shows wrong columns).
+
+## LEGATUS v0.2 CHUNK 1 (emissio macrorum) — RELATIO (2026-07-13)
+
+SHIPPED: nexus_ordines_fundere stadium tertium — sedes macrorum ex
+vista actorum (redefinitiones = ordines plures; columna I,
+linea-granularis) + usus ex fluxu expanso per silva_token_radix +
+ascensum catenae originis (_titulus_macronis_extimi: EXPANSIO/PASTA/
+CHORDA/API arma; provenientia vera, non verba). Exclusio latinae:
+tituli in *latina.h definiti notantur ANTE legem viae (forma
+basename praebita tegitur), usus eorum omissi; SEDES manent (saltus
+definitionis). Dedup usus (titulus|via|linea) — radices argumentorum
+in eadem linea collabuntur. genus "macro"; Piscina effimera fert
+tabulas (latina_tituli, usus_visi).
+
+BASELINE RE-PINNED: 717.601 ordines (664.137 + 4.122 sedes + 48.907
+usus; +8%; aestimatio 10-30k humilis sed ordo idem). Probata: sedes
+si @ include/latina.h:23 canonica; CXXVIII @ 177 (IPSA quaestio quae
+parcum accendit — nexus CLI nunc respondet GRATIS); CREDO_* usus
+fluunt; si-usus 3.521 OMNES in amalgamatis (silva/officina/tessera)
+— NON fuga: amalgama latinam TEXTU incorporant, ergo "si" IBI
+definitur; ordines symbolorum amalgamatum eadem lege iam vivunt
+(onerator legati amalgama/ demittit; CLI sedes amalgamatum iam
+monstrabat). Constantia, non vitium.
+
+DUO INVENTA PROCESSUS: ① lex latinae accensio ~#12 — "nomen" ut
+variabile locale, IPSUM verbum canonicum. Impulsus diagnosticorum
+LEGATI in momento editionis cepit (ante compilationem ullam); clang
+confirmavit. ② censor PURUS dixit dum 'nomen' in fracturis
+enumerabat — hiatus gradus mollis (censor.worklog.md, parcum cum
+via: verba periculosa in [suspectum in errore] → verdictum
+escalare). ③ obiter: uncus post-commissionem primum cursum organicum
+perfecit (17:05, post commissionem baptismatis).
+
+BARRAE: clang plena-severitate PURUS; examen ACCIPE; suita legatus
+viridis; percursus 147s. Instrumenta: censor/examen -machina/emitte/
+nexus/impulsus-legati adhibita; clang oraculum decisivum.
+
+CHUNK 2 SEQUITUR: arma legati — resolutio positionis (ascensus
+originis + verbum-crudum), hover corpus-lineae, definition/
+references/workspaceSymbol/documentSymbol, SymbolKind macro→14,
+pin cum_latina=0 (legatus.c:2666).

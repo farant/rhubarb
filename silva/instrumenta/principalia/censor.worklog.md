@@ -83,3 +83,21 @@ measured at 0 — promotion is Fran's call); class-B culprit ranking
 field data asks); knotapel-side header praebere collisions
 (basename-first-wins, percursus exemplar — revisit if a wrong-header
 FP ever appears).
+
+## 2026-07-13 — soft-tier verdict gap (macro-index chunk 1)
+
+Fresh code used `nomen` as a local variable (THE canonical forbidden
+word, firing ~#12). Censor's output listed 'nomen' among "macra
+latinae intra fracturam parsationis" — the signal WAS there — but
+flagrationes stayed 0 and conditio said PURUS, because the
+identifier-position check cannot see inside broken parse regions
+(where a real firing lands by definition: the macro expanded and
+wrecked the parse). Reader sees PURUS and moves on; the diagnosis
+came from clang + the legatus diagnostics push instead.
+
+Improvement candidate (not built): when the [suspectum in errore]
+list inside a broken region contains one of the HIGH-RISK words
+(nomen/registrum/magnitudo/exire/structura/casus/externus — the
+historical offender list), escalate conditio to SUSPECTUM instead of
+PURUS. The suspecta count already exists; only the verdict line
+underplays it. Park with a path back: censor.c verdict logic.

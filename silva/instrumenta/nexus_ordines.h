@@ -44,7 +44,10 @@ typedef void (*NexusOrdinesReceptor)(
  * serie ambulationis (vita = haec vocatio). Systema exclusum;
  * impliciti exclusi; lexemata synthetica (byte_offset < 0) omissa;
  * viae sine '/' (copiae basename capitum praebitorum) omissae -
- * ambulatio directa .h ordinem canonicum via plena praebet. */
+ * ambulatio directa .h ordinem canonicum via plena praebet.
+ * Stadium tertium (LEGATUS v0.2): macra - sedes ex vista actorum
+ * (genus "macro", columna I) + usus per radicem originis; usus
+ * macrorum in latina.h definitorum exclusi (sedes manent). */
 void
 nexus_ordines_fundere (
     const SilvaParsura*   parsura,
