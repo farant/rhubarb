@@ -3231,3 +3231,37 @@ fontes→amalgamare→sessio migrationem mechanicam fecit.
 
 SEQUENS: chunk A (lib/tabellarius — framing ∥ envelope). Fran
 committit.
+
+## LEGATUS CHUNK A — RELATIO (2026-07-13): lib/tabellarius NATUS
+
+**Cursor JSON-RPC vivit: include/tabellarius.h + lib/tabellarius.c,
+bibliotheca monorepo vera** (consumptor secundus nominatus: servus
+MCP). Duo strata separata numquam coniungenda: EPISTULA (framing
+Content-Length super FILE*; capita sine casu; capita aliena
+ignorata; tectum corporis 64MB contra mensuras hostiles; corpus
+NUL-appenso) ∥ NUNTIUS (envelope super lib/json: classificatio
+PETITIO/NUNTIATIO/RESPONSUM/PRAVUM; **id VERBATIM ut JsonValor** —
+integer AUT chorda, C1; fasces PRAVA) + FABRI (responsum/errorem/
+nuntiationem; codices −32700/−32600/−32601/−32602/−32603/−32002
+nominati).
+
+BARRA: probatio_tabellarius **53/53 asserta** — scriptura
+octetim-exacta; lectiones sequentes ex uno fluxu; tolerantia
+(content-length minusculum + Content-Type ignoratum); prava tria
+(sine mensura / vacuum / corpus breve); classificatio quattuor
+generum; id-chorda verbatim; fabri per FORMAM CANONICAM
+(scribere(legere(X)) — asserta independentia formae exactae
+json_scribere); circulus plenus legere→respondere→scribere→legere
+cum id relato. **PROBATIO DENTIUM**: assertum fractum → Fracti 1 →
+restitutum → viride (ritus tenet). Fractura nascendi una:
+credo_aperire deerat — apparatus ipse clare dixit ("FATALE: credo
+nunquam aperitum"), sanatum uno versu.
+
+compile_tests.sh: ordo tabellarius post json. DEBRIEF: adhibita =
+probatio_json.c ut exemplar (credo + json uno loco); asperitates =
+NULLAE — json.c omnia praestitit quae fundamenta promiserant
+(genera integra/chordae distincta portaverunt id-verbatim gratis);
+desiderata = nulla. Nota mensurae: 53 asserta in ~0.25s.
+
+SEQUENS: chunk B (machina legatus + lamina diagnosticorum). Fran
+committit.

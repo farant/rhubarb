@@ -89,6 +89,7 @@ declare -a SOURCE_FILES=(
     "lib/exemplar.c"
     "lib/toml.c"
     "lib/json.c"
+    "lib/tabellarius.c"
     "lib/paginarium.c"
     "lib/utf8.c"
     "lib/fons.c"
