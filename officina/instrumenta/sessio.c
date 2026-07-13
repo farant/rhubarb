@@ -13,6 +13,7 @@
  */
 
 #include "sessio.h"
+#include "praeparator.h"
 
 #include "latina.h"
 #include "xar.h"
@@ -67,10 +68,8 @@ nomen structura {
 
 structura Sessio {
     Piscina*        piscina;
-    SilvaPiscina*   piscina_silvae;    /* ctx + systema (perennis) */
-    SilvaContextus* ctx;
-    SilvaParsura*   systema_parsura;
-    SilvaSemantica* systema_semantica;
+    Praeparatio     praeparatio;       /* ctx + systema (praeparator
+                                        * - unitas communis) */
     Xar*            turni;             /* TurnusInternus */
     i32             numerator;         /* involucra turnus_N */
     /* mundus (chunk B): bibliothecae perennes + generatio currens */
@@ -1001,38 +1000,8 @@ interior SilvaSemantica*
 _iudicare (Sessio* s, SilvaPiscina* effimera, constans character* via,
     constans character* fons, i32 mensura, SilvaParsura** parsura_out)
 {
-    SilvaOraculum* oraculum;
-    SilvaParsura* parsura;
-    SilvaSemantica* sem;
-
-    *parsura_out = NIHIL;
-    oraculum = silva_oraculum_creare(effimera);
-    si (oraculum != NIHIL && s->systema_semantica != NIHIL)
-    {
-        (vacuum)silva_c89_semantica_oraculum_augere(
-            s->systema_semantica, oraculum);
-    }
-    parsura = silva_c89_parsare_cum_contextu(effimera, s->ctx,
-        via, fons, (insignatus integer)mensura,
-        oraculum);
-    si (parsura == NIHIL || !parsura->successus
-        || parsura->commissio == NIHIL)
-    {
-        redde NIHIL;
-    }
-    sem = silva_c89_semantica_analysare_cum_systemate(effimera,
-        parsura, s->systema_parsura);
-    si (sem != NIHIL && oraculum != NIHIL)
-    {
-        (vacuum)silva_c89_semantica_oraculum_augere(sem, oraculum);
-        silva_oraculum_responsa_vacare(oraculum);
-        (vacuum)silva_recanonicare(parsura->commissio, oraculum,
-            silva_c89_resolutor, NIHIL);
-        sem = silva_c89_semantica_analysare_cum_systemate(effimera,
-            parsura, s->systema_parsura);
-    }
-    *parsura_out = parsura;
-    redde sem;
+    redde praeparator_analysare(&s->praeparatio, effimera, via,
+        fons, (insignatus integer)mensura, parsura_out);
 }
 
 /* ==================================================
@@ -1219,9 +1188,6 @@ _colligere (Sessio* s, Collectio* c, SilvaParsura* parsura,
 /* ==================================================
  * mundus (chunk B): generationes + replicatio + captura
  * ================================================== */
-
-interior character* _plagulam_legere (Piscina* piscina,
-    constans character* via, i32* mensura_out);
 
 interior chorda
 _capturam_legere (FILE* pl, Piscina* piscina)
@@ -1509,7 +1475,7 @@ _bibliothecam_demittere (Sessio* s, constans character* radix,
     constans character* via)
 {
     character via_plena[1024];
-    i32 mensura = ZEPHYRUM;
+    insignatus integer mensura = ZEPHYRUM;
     character* fons;
     SilvaPiscina* effimera;
     SilvaParsura* parsura = NIHIL;
@@ -1521,7 +1487,8 @@ _bibliothecam_demittere (Sessio* s, constans character* radix,
         redde FALSUM;
     }
     sprintf(via_plena, "%s/%s", radix, via);
-    fons = _plagulam_legere(s->piscina, via_plena, &mensura);
+    fons = praeparator_plagulam_legere(s->piscina, via_plena,
+        &mensura);
     si (fons == NIHIL)
     {
         redde FALSUM;
@@ -1532,7 +1499,8 @@ _bibliothecam_demittere (Sessio* s, constans character* radix,
     {
         redde FALSUM;
     }
-    sem = _iudicare(s, effimera, via, fons, mensura, &parsura);
+    sem = _iudicare(s, effimera, via, fons, (i32)mensura,
+        &parsura);
     si (sem == NIHIL || parsura == NIHIL
         || parsura->numerus_errorum > ZEPHYRUM)
     {
@@ -1556,125 +1524,6 @@ _bibliothecam_demittere (Sessio* s, constans character* radix,
         *locellus = modulus;
     }
     redde VERUM;
-}
-
-/* ==================================================
- * capita praebere (exemplar examen/onerator)
- * ================================================== */
-
-interior character*
-_plagulam_legere (Piscina* piscina, constans character* via,
-    i32* mensura_out)
-{
-    FILE* pl = fopen(via, "rb");
-    long mensura_l;
-    character* textus;
-
-    *mensura_out = ZEPHYRUM;
-    si (pl == NIHIL)
-    {
-        redde NIHIL;
-    }
-    fseek(pl, 0L, SEEK_END);
-    mensura_l = ftell(pl);
-    fseek(pl, 0L, SEEK_SET);
-    si (mensura_l < 0L)
-    {
-        fclose(pl);
-        redde NIHIL;
-    }
-    textus = (character*)piscina_allocare(piscina,
-        (memoriae_index)(mensura_l > 0L ? mensura_l + 1L : I));
-    si (textus == NIHIL
-        || (mensura_l > 0L
-            && fread(textus, I, (memoriae_index)mensura_l, pl)
-                != (memoriae_index)mensura_l))
-    {
-        fclose(pl);
-        redde NIHIL;
-    }
-    fclose(pl);
-    textus[mensura_l] = '\0';
-    *mensura_out = (i32)mensura_l;
-    redde textus;
-}
-
-interior b32
-_praetermittendum (constans character* titulus)
-{
-    redde (strcmp(titulus, "build") == ZEPHYRUM
-        || strcmp(titulus, ".git") == ZEPHYRUM
-        || strcmp(titulus, "results") == ZEPHYRUM
-        || strcmp(titulus, "node_modules") == ZEPHYRUM)
-        ? VERUM : FALSUM;
-}
-
-interior vacuum
-_capita_praeparare (Sessio* s, TabulaDispersa* visa,
-    constans character* via)
-{
-    DIR* dir = opendir(via);
-    structura dirent* introitus;
-
-    si (dir == NIHIL)
-    {
-        redde;
-    }
-    dum ((introitus = readdir(dir)) != NIHIL)
-    {
-        character via_plena[1024];
-        memoriae_index m;
-
-        si (introitus->d_name[ZEPHYRUM] == '.')
-        {
-            perge;
-        }
-        si (_praetermittendum(introitus->d_name))
-        {
-            perge;
-        }
-        si (strlen(via) + strlen(introitus->d_name) + II
-            >= magnitudo(via_plena))
-        {
-            perge;
-        }
-        sprintf(via_plena, "%s/%s", via, introitus->d_name);
-        si (introitus->d_type == DT_DIR)
-        {
-            _capita_praeparare(s, visa, via_plena);
-        }
-        alioquin
-        {
-            m = strlen(introitus->d_name);
-            si (m >= III && introitus->d_name[m - II] == '.'
-                && introitus->d_name[m - I] == 'h')
-            {
-                chorda clavis = chorda_ex_literis(introitus->d_name,
-                    s->piscina);
-                character* textus;
-                i32 mensura;
-
-                si (tabula_dispersa_continet(visa, clavis))
-                {
-                    perge;
-                }
-                textus = _plagulam_legere(s->piscina, via_plena,
-                    &mensura);
-                si (textus == NIHIL)
-                {
-                    perge;
-                }
-                si (silva_contextus_praebere(s->ctx,
-                        introitus->d_name, textus,
-                        (insignatus integer)mensura))
-                {
-                    (vacuum)tabula_dispersa_inserere(visa, clavis,
-                        NIHIL);
-                }
-            }
-        }
-    }
-    closedir(dir);
 }
 
 /* ==================================================
@@ -1703,11 +1552,19 @@ sessio_creare (Piscina* piscina, constans SessioConfiguratio* cfg)
     {
         redde NIHIL;
     }
-    s->piscina_silvae = silva_piscina_generare_dynamicum(
-        "sessio_silva", 67108864);
-    si (s->piscina_silvae == NIHIL)
     {
-        redde NIHIL;
+        PraeparatorConfiguratio pcfg;
+
+        memset(&pcfg, ZEPHYRUM, magnitudo(PraeparatorConfiguratio));
+        pcfg.radix = cfg->radix;
+        pcfg.cum_posix = cfg->cum_posix ? I : ZEPHYRUM;
+        pcfg.cum_latina = I;   /* turni latine loquuntur */
+        pcfg.sine_capitibus = cfg->sine_capitibus ? I : ZEPHYRUM;
+        si (!praeparator_praeparare(&s->praeparatio, piscina,
+                &pcfg))
+        {
+            redde NIHIL;
+        }
     }
     s->piscina_bibliothecarum = piscina_generare_dynamicum(
         "sessio_bibliothecae", 67108864);
@@ -1722,123 +1579,8 @@ sessio_creare (Piscina* piscina, constans SessioConfiguratio* cfg)
         ? (i32)ZEPHYRUM
         : (i32)(MACHINULA_RECUSARE_SCRIPTURAS
             | MACHINULA_RECUSARE_TEMPUS | MACHINULA_RECUSARE_INITUM);
-    s->ctx = silva_contextus_creare(s->piscina_silvae);
-    si (s->ctx == NIHIL)
-    {
-        redde NIHIL;
-    }
-    /* latina ut lexicon TEXTUS (canalis systematis; latinam_addere
-     * compilata demissionem bibliothecarum frangebat - vide
-     * worklog: forma localis ignota in piscina.c) */
-
     si (cfg->radix != NIHIL)
     {
-        /* systema ISO (+POSIX si petitum) - exemplar examen */
-        character via_sys[600];
-        i32 m_iso = ZEPHYRUM;
-        character* fons_iso;
-        character* fons_sys;
-        i32 mensura_sys;
-
-        sprintf(via_sys, "%s/silva/fontes/systema_c89.h",
-            cfg->radix);
-        fons_iso = _plagulam_legere(piscina, via_sys, &m_iso);
-        si (fons_iso == NIHIL)
-        {
-            redde NIHIL;
-        }
-        fons_sys = fons_iso;
-        mensura_sys = m_iso;
-        si (cfg->cum_posix)
-        {
-            i32 m_px = ZEPHYRUM;
-            character* fons_px;
-
-            sprintf(via_sys, "%s/silva/fontes/systema_posix.h",
-                cfg->radix);
-            fons_px = _plagulam_legere(piscina, via_sys, &m_px);
-            si (fons_px == NIHIL)
-            {
-                redde NIHIL;
-            }
-            fons_sys = (character*)piscina_allocare(piscina,
-                (memoriae_index)(m_iso + m_px + II));
-            si (fons_sys == NIHIL)
-            {
-                redde NIHIL;
-            }
-            memcpy(fons_sys, fons_iso, (memoriae_index)m_iso);
-            fons_sys[m_iso] = '\n';
-            memcpy(fons_sys + m_iso + I, fons_px,
-                (memoriae_index)m_px);
-            mensura_sys = m_iso + I + m_px;
-            fons_sys[mensura_sys] = '\0';
-        }
-        /* latina.h in TEXTUM SYSTEMATIS concatenata (post size_t!).
-         * INVENTUM (B7): lexicon = canalis MACRORUM solum - typedefs
-         * systematis per systema_parsura + oraculum fluunt. Latina
-         * ut lexicon separatum custodem LATINA_H definivit ->
-         * inclusio vera piscinae.c tacuit -> typedefs latinae
-         * (memoriae_index!) evanuerunt -> Piscina incompleta ->
-         * "forma localis ignota". Concatenatio = exemplar
-         * ISO+POSIX: typedefs in parsuram systematis intrant. */
-        {
-            i32 m_lat = ZEPHYRUM;
-            character* fons_lat;
-            character* iunctum;
-
-            sprintf(via_sys, "%s/include/latina.h", cfg->radix);
-            fons_lat = _plagulam_legere(piscina, via_sys, &m_lat);
-            si (fons_lat == NIHIL)
-            {
-                redde NIHIL;
-            }
-            iunctum = (character*)piscina_allocare(piscina,
-                (memoriae_index)(mensura_sys + m_lat + II));
-            si (iunctum == NIHIL)
-            {
-                redde NIHIL;
-            }
-            memcpy(iunctum, fons_sys, (memoriae_index)mensura_sys);
-            iunctum[mensura_sys] = '\n';
-            memcpy(iunctum + mensura_sys + I, fons_lat,
-                (memoriae_index)m_lat);
-            mensura_sys = mensura_sys + I + m_lat;
-            iunctum[mensura_sys] = '\0';
-            fons_sys = iunctum;
-        }
-        si (!silva_contextus_lexicon_addere(s->ctx, "systema_c89.h",
-                fons_sys, (insignatus integer)mensura_sys))
-        {
-            redde NIHIL;
-        }
-
-        s->systema_parsura = silva_c89_parsare(s->piscina_silvae,
-            "systema_c89.h", fons_sys,
-            (insignatus integer)mensura_sys, NIHIL);
-        si (s->systema_parsura == NIHIL
-            || s->systema_parsura->numerus_errorum > ZEPHYRUM)
-        {
-            redde NIHIL;
-        }
-        s->systema_semantica = silva_c89_semantica_analysare(
-            s->piscina_silvae, s->systema_parsura);
-        si (s->systema_semantica == NIHIL)
-        {
-            redde NIHIL;
-        }
-
-        si (!cfg->sine_capitibus)
-        {
-            TabulaDispersa* visa = tabula_dispersa_creare_chorda(
-                piscina, DXII);
-
-            si (visa != NIHIL)
-            {
-                _capita_praeparare(s, visa, cfg->radix);
-            }
-        }
-
         /* bibliothecae: demissae semel, moduli perennes */
         {
             s32 k;
@@ -1869,11 +1611,7 @@ sessio_destruere (Sessio* s)
         piscina_destruere(s->piscina_bibliothecarum);
         s->piscina_bibliothecarum = NIHIL;
     }
-    si (s->piscina_silvae != NIHIL)
-    {
-        silva_piscina_destruere(s->piscina_silvae);
-        s->piscina_silvae = NIHIL;
-    }
+    praeparator_destruere(&s->praeparatio);
 }
 
 /* ==================================================

@@ -58,7 +58,7 @@ for nom in "tessera" "silva" "officina"; do
     obj_files="$obj_files $obj"
 done
 
-for f in "vindex_onerator" "vindex_visum"; do
+for f in "praeparator" "vindex_onerator" "vindex_visum"; do
     src="$OFF_DIR/instrumenta/$f.c"
     obj="$BUILD_DIR/$f.o"
     if [ ! -f "$obj" ] || [ "$src" -nt "$obj" ] \

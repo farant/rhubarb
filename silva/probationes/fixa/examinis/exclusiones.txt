@@ -9,12 +9,11 @@
 ./officina/amalgama/officina.c
 ./officina/fontes/officina_machinula.c
 ./officina/fontes/officina_regio.c
+./officina/instrumenta/praeparator.c
 ./officina/instrumenta/principalia/cursor.c
 ./officina/instrumenta/principalia/fusor.c
 ./officina/instrumenta/principalia/interpretare.c
 ./officina/instrumenta/principalia/vindex.c
-./officina/instrumenta/sessio.c
-./officina/instrumenta/vindex_onerator.c
 ./officina/probationes/probatio_officina_vindex.c
 ./probationes/probatio_uuid.c
 ./silva/instrumenta/principalia/censor.c

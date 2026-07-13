@@ -690,7 +690,7 @@ s32 principale (vacuum)
 
             sprintf(via_scripti,
                 "%s/officina/probationes/fixa/sessio_scripta/"
-                "salutatio.c", radix);
+                "salutatio.scriptum", radix);
             pl = fopen(via_scripti, "rb");
             CREDO_NON_NIHIL(pl);
             fseek(pl, 0L, SEEK_END);

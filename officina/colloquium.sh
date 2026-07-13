@@ -62,6 +62,15 @@ for src in "$OFF_DIR"/fontes/*.c; do
     obj_files="$obj_files $obj"
 done
 
+src="$OFF_DIR/instrumenta/praeparator.c"
+obj="$BUILD_DIR/praeparator.o"
+if [ ! -f "$obj" ] || [ "$src" -nt "$obj" ] \
+    || [ "$OFF_DIR/instrumenta/praeparator.h" -nt "$obj" ]; then
+    echo "  [praeparator] praeparator.c" >&2
+    clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" -c "$src" -o "$obj" || exit 1
+fi
+obj_files="$obj_files $obj"
+
 src="$OFF_DIR/instrumenta/sessio.c"
 obj="$BUILD_DIR/sessio.o"
 if [ ! -f "$obj" ] || [ "$src" -nt "$obj" ] \

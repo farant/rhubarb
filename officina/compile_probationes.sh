@@ -115,11 +115,24 @@ if [ ! -f "$obj" ] || [ "$src" -nt "$obj" ] \
 fi
 obj_files="$obj_files $obj"
 
-# ---- 2c. sessio (machina sessionis M4b; amalgama consumit) ----
+# ---- 2c. praeparator (unitas oneratorum communis) + sessio ----
+src="$OFF_DIR/instrumenta/praeparator.c"
+obj="$BUILD_DIR/praeparator.o"
+if [ ! -f "$obj" ] || [ "$src" -nt "$obj" ] \
+    || [ "$OFF_DIR/instrumenta/praeparator.h" -nt "$obj" ]; then
+    echo "  [praeparator] praeparator.c"
+    if ! clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" \
+        -c "$src" -o "$obj"; then
+        echo "FRACTA: praeparator" ; exit 1
+    fi
+fi
+obj_files="$obj_files $obj"
+
 src="$OFF_DIR/instrumenta/sessio.c"
 obj="$BUILD_DIR/sessio.o"
 if [ ! -f "$obj" ] || [ "$src" -nt "$obj" ] \
-    || [ "$OFF_DIR/instrumenta/sessio.h" -nt "$obj" ]; then
+    || [ "$OFF_DIR/instrumenta/sessio.h" -nt "$obj" ] \
+    || [ "$OFF_DIR/instrumenta/praeparator.h" -nt "$obj" ]; then
     echo "  [sessio] sessio.c"
     if ! clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" \
         -c "$src" -o "$obj"; then

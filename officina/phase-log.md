@@ -3005,3 +3005,54 @@ regex trans multa enuntiata. Suita 11/11; censor PURUS.
 
 PARS II SEQUENS: migratio geminorum oneratorum (quinque exemplaria;
 classis canalis-macrorum in exemplaribus divergentibus vivit).
+
+## INTERLUDIUM PARS II — INTENTIO (2026-07-13): migratio geminorum
+
+Quinque exemplaria recepti oneratorum (percursus, examen,
+vindex_onerator, interpretare/cursor, sessio); classis vitii
+canalis-macrorum in exemplaribus DIVERGENTIBUS vivit (probatum
+chunk B). Ambitus = quod vindex_onerator.h ipse nominavit: familia
+APP-LATERIS extrahitur (**officina/instrumenta/praeparator.{h,c}**
+— ① lectio plagularum ② systema texere ISO[+POSIX][+latina] +
+lexicon + parsura/semantica systematis ③ capita praebere ④ receptum
+bis-analysis), consumptores sessio + vindex_onerator MIGRANT;
+fontes-latus (cursor/interpretare/examen/percursus) tactu proximo
+cuiusque — cursor = vectis stans, non tangitur hodie. Migratio
+SERVANS MORES: onerator sine latina (cum_latina=0), sessio cum.
+Portae: suita plena; vindex.sh -imago (via oneratoris);
+colloquium fumus; censor; exclusio examinis pro praeparator.c
+(dirent); examen_vectis -corpus.
+
+## INTERLUDIUM PARS II — RELATIO (2026-07-13): migratio geminorum VIRIDIS
+
+**officina/instrumenta/praeparator.{h,c} NATUS** (396 lineae; C89
+vanilla in capite): ① praeparator_plagulam_legere ② systema texere
+ISO[+POSIX][+latina] + lexicon + parsura/semantica systematis (cum
+sanatione latinae-in-systemate — sedes canonica UNA nunc) ③ capita
+praebere (dirent, basename primus-vincit) ④ praeparator_analysare
+(receptum bis-analysis integrum). CONSUMPTORES MIGRATI: sessio +
+vindex_onerator — **473 lineae deletae, 44 insertae** (moribus
+servatis: onerator sine latina, sessio cum). Scripta tria renovata
+(compile_probationes 2c, colloquium.sh, vindex.sh).
+
+PORTAE: suita plena 11/11; vindex.sh -imago main IMAGO PLENA per
+oneratorem migratum (paritas: punctum via:linea non-positum =
+mores PRAE-migrationis, stash-probatum); colloquium fumus; censor
+PURUS ×4; **examen_vectis -corpus TENET — exclusiones 40→39**:
+sessio.c et vindex_onerator.c nunc ACCIPE PURI (classis dirent in
+praeparator.c SOLO continetur — migratio superficiem caecitatis
+iudicii MINUIT, non auxit).
+
+INVENTA: ① lacuna honestatis chunki D capta — fixum scripti
+salutatio.c in corpus intraverat (#! = nodus erroris → REICE non
+pinnatum; porta -corpus post D non recurrit). Lex corporis
+sui-referentis TERTIO: → salutatio.scriptum (suffixum extra
+corpus; probatio renovata). ② discrepantia ordinis solius in
+exclusionibus (instrumenta/p-r-a ante principalia — lista ordine
+asciibetico tenenda). ③ vindex -imago quoque "main" non
+"principale" postulat (lex latinae iterum).
+
+Fontes-latus (cursor/interpretare/examen/percursus) migrat tactu
+proximo cuiusque — praeparator paratus (silva-latus [examen/
+percursus] quaestionem contextus aedificandi habet: fontes vs
+amalgama; tactu suo decidetur).

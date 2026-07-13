@@ -5,9 +5,11 @@
  * in fenestra collige-ante-destrue) + nexus + machinula, super
  * superficies PUBLICAS solas (officina.h + silva.h). Familiae
  * oneratorum DUAE: fontes-latus (cursor/interpretare/vectis ⑤ -
- * typi domus, exemplaria propria) et APP-latus (vindex nunc, REPL
- * M4 mox) - haec extractio catenam geminorum app-lateris praevenit;
- * migratio fontes-lateris = tactu proximo cuiusque.
+ * typi domus, exemplaria propria) et APP-latus (vindex + sessio).
+ * INTERLUDIUM POST-M4b (2026-07-13): praeparatio contextus (systema/
+ * capita/bis-analysis) in praeparator.{h,c} MIGRATA - familia
+ * app-lateris consolidata; migratio fontes-lateris = tactu proximo
+ * cuiusque.
  *
  * C89 vanilla - hospites amalgamata consumunt, latina absens. */
 
