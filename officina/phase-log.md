@@ -3693,3 +3693,77 @@ viva corruptionem tulisset!). Lectio in debugging-lessons scripta.
 BARRAE: expansio-unitates extentorum; 167/167; officina 12/12;
 silva 30/30 PLENA; hospes 31/31. Restat: /reload-plugins + hover
 CREDO_VERUM vivum.
+
+### v0.2 POLITIO VIVA CONFIRMATA (2026-07-13, sero): hover
+CREDO_VERUM post reload = corpus decemlineare VERBATIM (tabs,
+continuationes, ad parenthesim ultimam - octetus ultimus lexematis
+ultimi, non scansio). Circulus politionis clausus intra vesperam.
+
+## FUTURUM NOMINATUM: EXCUBITOR (custos staleness, 2026-07-13)
+
+Demand: inventum ABI hodiernum (obiecta stala + amalgama recens =
+corruptio silens) + interrogatio Fran "graphus dependentiarum +
+diagnostica staleness?". CONSILIUM (probatum contra casum ipsum):
+① GRAPHUS: percursus iam vistas inclusionum tenet
+(silva_inclusio_vista) - emittere build/inclusiones.tsv in eodem
+percursu (SILVA IPSA scanner est, -MMD non opus); PLUS ordines
+"generat" manu declarati (amalgamare fontes→silva.c, generare
+tabulae, percursus tsv) - classis "amalgama stalum" eodem reti.
+② EXCUBITOR.SH (~100 lineis): propagatio mtime super graphum -
+obiecta vetustiora clausura inclusionum, binaria vetustiora
+obiectis, generata vetustiora generantibus. VERDICTUM + rei
+nominati. Verificat et explicat SOLUM - scripta manent executores.
+③ CANALES: verdictum post-constructionem (casum hodiernum FRIGIDE
+cepisset - nexus_ordines.o < silva.h nominatum ante nexum); uncus
+capitum communium (monitum leve, non-praeventivum); LEGATUS SE
+IPSUM inspicit ad initialize/didSave (binarium residens = classis
+quam nullum scriptum videt - "legatus ipse stalus, /reload").
+CAVEATA: mappa obiectum→fons manifesto parvo opus (graphus dat
+fons→capita tantum); mtime non semantica (mutatio commentarii =
+eadem vox). Ordo symptomatum novus: "res silenter vacua post
+mutationem capitis" → excubitor. MAGNITUDO: arcus unus commodus.
+
+## FUTURUM NOMINATUM: AEDILIS (stratum constructionis, 2026-07-13)
+
+Demand (Fran): "scriptum constructionis rectum invenire confusum
+est in C" - XV scripta eundem morem fragilem manu volvunt (flagra,
+listae RADIX_FONTES, condiciones -nt; drift + foramen ABI ter
+copiatum). CONTEXTUS CULTURALIS: constructio C = artefactum sine
+systemate modulorum; sepulcretum generalitatis (autotools/cmake)
+NOBIS defusum - una machina, unus compilator, una lingua, nullae
+dependentiae. Amalgamata iam responsio handmade (unity build) pro
+NAVE; stratum pro MUNDO FONTIUM dev est. FORMA GRADATA:
+① (= excubitor stage 0) graphus fundamentum.
+② AEDILIS.SH bibliotheca communis fontata: flagra/listae/viae UNO
+loco; functio compilare cum staleness EX GRAPHO (non -nt manu);
+scripta = manifesta + orchestratio; migratio in tactu (exemplar
+praeparatoris). Fructus statim: drift mortuum, foramen ABI clausum
+ubique, instrumentum novum = X lineae.
+③ (tractum serius) manifesta declarativa per scopum (STML) +
+machina C89 parva: fontes/mundus/nexus/PRAEVALENTIAE CHIRURGICAE
+per scopum; verba inventionis "aedilis quid <plagula>" (quid hoc
+aedificat? quid frangitur si hoc muto? - quaestio agentis
+post-compactionem!); excubitor fit verbum eiusdem graphi
+(aedilis -vigila). CONVERGENTIA notata: philosophia una tribus
+consumptoribus - exclusiones lexici examinis, configuratio filtri
+macrorum (futurum v0.2), praevalentiae aedilis. Formam
+praevalentiarum SEMEL bene designare (Eskil). PROCESSUS: on-ramp
+plenus (interrogatio + sim) quando trahitur - tangit OMNIA.
+
+### ADDENDUM ANTE COMPACTIONEM (2026-07-13, nocte)
+
+STATUS: omnia commissa (arbor pura). Dies: baptisma typedef →
+v0.2 index macrorum (chunki 2, 165/165) → politio hover
+multilinearis (extenta vistae, 167/167 + 30/30 PLENA) → inventum
+ABI (scripta ambo sanata) → VIVA omnia confirmata (si/CXXVIII/
+CREDO_VERUM verbatim). TABULA TRACTIONUM (ordo suasus): ①
+EXCUBITOR (aperiens crastinum - arcus unus); ② FIELD REFERENCES
+(hiatus maximus debrief - consilium identitatis (tag,membrum) ante
+formam tsv); ③ AEDILIS (post excubitorem - graphum communicant);
+④ configuratio filtri (fortasse in aedilis praevalentias
+convergit). AGITATIO pergit: examen-custos coexsistit → dimissio
+= sigillum milliarii. Re-entry: introitus v0.2 huius diei (INTENTIO
+→ chunk 1 → chunk 2 → politio → futura excubitor/aedilis) +
+legatus.worklog.md + silva_c89_semantica.worklog.md (baptisma) +
+censor.worklog.md (hiatus PURUS) + memoria (MEMORY.md +
+officina-project.md + debugging-lessons ABI).
