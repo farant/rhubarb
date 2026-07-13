@@ -300,8 +300,9 @@ nomen structura {
 } SemanticaDiagnosticum;
 
 /* Redditor typorum (LEGATUS chunk 0, ex sessione promotus): typus
- * -> textus latinus C-stili in buffer datum (NUL appenso). Redde
- * octetos scriptos; 0 = irreddibilis (acies/functio/error/
+ * -> textus latinus C-stili in buffer datum (NUL appenso).
+ * Functiones = signatura "reditus(parametra)" (additio agitationis
+ * legati). Redde octetos scriptos; 0 = irreddibilis (acies/error/
  * aggregata sine tag) - buffer tunc vacuus. */
 insignatus integer silva_c89_typum_scribere (constans TypusC89* t,
     character* buffer, insignatus integer capacitas);

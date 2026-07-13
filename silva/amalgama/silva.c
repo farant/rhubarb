@@ -1397,9 +1397,9 @@ unsigned int silva_c89_typationes_numerus(
     const SilvaSemantica* sem);
 
 /* Redditor typorum (LEGATUS chunk 0): typus -> textus latinus
- * C-stili in buffer datum (NUL appenso). Redde octetos scriptos;
- * 0 = irreddibilis (acies/functio/error/aggregata sine tag) -
- * buffer tunc vacuus. */
+ * C-stili in buffer datum (NUL appenso). Functiones = signatura
+ * "reditus(parametra)". Redde octetos scriptos; 0 = irreddibilis
+ * (acies/error/aggregata sine tag) - buffer tunc vacuus. */
 unsigned int silva_c89_typum_scribere(const TypusC89* t,
     char* buffer, unsigned int capacitas);
 
@@ -4180,8 +4180,9 @@ structura SemanticaScopus {
 };
 
 /* Redditor typorum (LEGATUS chunk 0, ex sessione promotus): typus
- * -> textus latinus C-stili in buffer datum (NUL appenso). Redde
- * octetos scriptos; 0 = irreddibilis (acies/functio/error/
+ * -> textus latinus C-stili in buffer datum (NUL appenso).
+ * Functiones = signatura "reditus(parametra)" (additio agitationis
+ * legati). Redde octetos scriptos; 0 = irreddibilis (acies/error/
  * aggregata sine tag) - buffer tunc vacuus. */
 insignatus integer silva_c89_typum_scribere (constans TypusC89* t,
     character* buffer, insignatus integer capacitas);
@@ -35357,6 +35358,52 @@ _typum_scribere_intus (constans TypusC89* t, character* b,
             redde VERUM;
         casus TYPUS_C89_ENUMERATUS:
             *cursor += (s32)sprintf(b + *cursor, "enumeratio");
+            redde VERUM;
+        casus TYPUS_C89_FUNCTIO:
+            /* signatura: reditus(parametra) - additio post
+             * agitationem legati (desideratum #1: "quae parametra"
+             * = quaestio hover praecipua agentis). Recursio arma
+             * monstratoris ad functiones gratis componit. */
+            si (!_typum_scribere_intus(t->datum.functio.reditus, b,
+                    cursor, capacitas))
+            {
+                redde FALSUM;
+            }
+            *cursor += (s32)sprintf(b + *cursor, "(");
+            si (!t->datum.functio.est_prototypata)
+            {
+                /* K&R: parametra ignota - vacuae parentheses */
+            }
+            alioquin si (t->datum.functio.numerus_parametrorum
+                == ZEPHYRUM)
+            {
+                *cursor += (s32)sprintf(b + *cursor, "vacuum");
+            }
+            alioquin
+            {
+                insignatus integer k;
+
+                per (k = ZEPHYRUM;
+                     k < t->datum.functio.numerus_parametrorum;
+                     k++)
+                {
+                    si (k > ZEPHYRUM)
+                    {
+                        *cursor += (s32)sprintf(b + *cursor, ", ");
+                    }
+                    si (!_typum_scribere_intus(
+                            t->datum.functio.parametra[k], b,
+                            cursor, capacitas))
+                    {
+                        redde FALSUM;
+                    }
+                }
+                si (t->datum.functio.est_variadica)
+                {
+                    *cursor += (s32)sprintf(b + *cursor, ", ...");
+                }
+            }
+            *cursor += (s32)sprintf(b + *cursor, ")");
             redde VERUM;
         ordinarius:
             redde FALSUM;

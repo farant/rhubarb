@@ -56,3 +56,23 @@ insignatus longus`). Rough edges AT THE REACH:
   pull.
 - Shakedown watch: double-push (hook + legatus) on first real .c
   edit — expected differential noise, retire hook at bar.
+- **SHAKEDOWN FINDING — binary upgrade path**: killing the running
+  server externally (SIGTERM) to force a rebuilt binary left the
+  client WEDGED: "Cannot send request … server is running" with NO
+  process alive (restartOnCrash evidently arms only on failures the
+  client itself observes, or is slow). Recovery = /reload-plugins
+  (user-side) or session restart. LESSON: upgrade a live legatus
+  via /reload-plugins, never kill-and-pray. Prebuild first
+  regardless (startupTimeout). CONFIRMED: /reload-plugins cleared
+  the wedge and respawned the new binary cleanly.
+- **ASPERITAS #1 RESOLVED same session**: function-signature hover
+  live — `_allocare_interna : vacuum*(structura Piscina*,
+  insignatus longus, insignatus longus, integer)`. Renderer
+  extended SILVA-SIDE (TYPUS_C89_FUNCTIO arm in
+  _typum_scribere_intus: K&R = empty parens, prototyped-zero =
+  "(vacuum)", variadic = ", ..."; pointer-to-function composes via
+  the monstrator arm for free); amalgam VERIFICATUM; suites 12/12 +
+  30/30 (sessio goldens unaffected — function-decl echo was never
+  pinned); probatio pins `probatio_functio : integer(integer)`.
+  First full dogfood loop closed: reach → asperitas-in-worklog →
+  silva fix → gates → live, within the hour.

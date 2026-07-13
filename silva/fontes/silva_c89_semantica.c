@@ -434,6 +434,52 @@ _typum_scribere_intus (constans TypusC89* t, character* b,
         casus TYPUS_C89_ENUMERATUS:
             *cursor += (s32)sprintf(b + *cursor, "enumeratio");
             redde VERUM;
+        casus TYPUS_C89_FUNCTIO:
+            /* signatura: reditus(parametra) - additio post
+             * agitationem legati (desideratum #1: "quae parametra"
+             * = quaestio hover praecipua agentis). Recursio arma
+             * monstratoris ad functiones gratis componit. */
+            si (!_typum_scribere_intus(t->datum.functio.reditus, b,
+                    cursor, capacitas))
+            {
+                redde FALSUM;
+            }
+            *cursor += (s32)sprintf(b + *cursor, "(");
+            si (!t->datum.functio.est_prototypata)
+            {
+                /* K&R: parametra ignota - vacuae parentheses */
+            }
+            alioquin si (t->datum.functio.numerus_parametrorum
+                == ZEPHYRUM)
+            {
+                *cursor += (s32)sprintf(b + *cursor, "vacuum");
+            }
+            alioquin
+            {
+                insignatus integer k;
+
+                per (k = ZEPHYRUM;
+                     k < t->datum.functio.numerus_parametrorum;
+                     k++)
+                {
+                    si (k > ZEPHYRUM)
+                    {
+                        *cursor += (s32)sprintf(b + *cursor, ", ");
+                    }
+                    si (!_typum_scribere_intus(
+                            t->datum.functio.parametra[k], b,
+                            cursor, capacitas))
+                    {
+                        redde FALSUM;
+                    }
+                }
+                si (t->datum.functio.est_variadica)
+                {
+                    *cursor += (s32)sprintf(b + *cursor, ", ...");
+                }
+            }
+            *cursor += (s32)sprintf(b + *cursor, ")");
+            redde VERUM;
         ordinarius:
             redde FALSUM;
     }

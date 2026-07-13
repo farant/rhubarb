@@ -1384,9 +1384,9 @@ unsigned int silva_c89_typationes_numerus(
     const SilvaSemantica* sem);
 
 /* Redditor typorum (LEGATUS chunk 0): typus -> textus latinus
- * C-stili in buffer datum (NUL appenso). Redde octetos scriptos;
- * 0 = irreddibilis (acies/functio/error/aggregata sine tag) -
- * buffer tunc vacuus. */
+ * C-stili in buffer datum (NUL appenso). Functiones = signatura
+ * "reditus(parametra)". Redde octetos scriptos; 0 = irreddibilis
+ * (acies/error/aggregata sine tag) - buffer tunc vacuus. */
 unsigned int silva_c89_typum_scribere(const TypusC89* t,
     char* buffer, unsigned int capacitas);
 

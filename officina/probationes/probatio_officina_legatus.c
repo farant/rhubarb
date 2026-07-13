@@ -369,7 +369,18 @@ probatio_hover_symbola (Piscina* p)
         "\"file://%s/lib/legatus_phantasma_f.c\",\"version\":1,"
         "\"languageId\":\"c\",\"text\":"
         "\"int probatio_functio(int a)\\n{\\n"
-        "    int b = a + 1;\\n    return b;\\n}\\n\"}}}", _radix());
+        "    int b = a + 1;\\n    return b;\\n}\\n"
+        "int probatio_vocans(void)\\n{\\n"
+        "    return probatio_functio(7);\\n}\\n\"}}}", _radix());
+    _scribe(intra, p, corpus);
+
+    /* hover VOCATI (linea 7, char 15) - signatura functionis */
+    sprintf(corpus,
+        "{\"jsonrpc\":\"2.0\",\"id\":8,"
+        "\"method\":\"textDocument/hover\",\"params\":"
+        "{\"textDocument\":{\"uri\":"
+        "\"file://%s/lib/legatus_phantasma_f.c\"},"
+        "\"position\":{\"line\":7,\"character\":15}}}", _radix());
     _scribe(intra, p, corpus);
 
     /* hover usus 'a' (linea 2, char 12) */
@@ -431,6 +442,11 @@ probatio_hover_symbola (Piscina* p)
     CREDO_VERUM(bene);
     CREDO_VERUM(_diagnostica_numerus(&n) == (s32)ZEPHYRUM);
 
+    n = _lege(extra, p, &bene);   /* hover vocati: SIGNATURA */
+    CREDO_VERUM(bene);
+    CREDO_VERUM(_hover_valor_est(&n,
+        "probatio_functio : integer(integer)"));
+
     n = _lege(extra, p, &bene);   /* hover a */
     CREDO_VERUM(bene);
     CREDO_VERUM(_hover_valor_est(&n, "a : integer"));
@@ -456,7 +472,10 @@ probatio_hover_symbola (Piscina* p)
 
         CREDO_VERUM(resultatum != NIHIL
             && json_est_tabulatum(resultatum));
-        CREDO_VERUM(json_tabulatum_numerus(resultatum) == I);
+        CREDO_VERUM(json_tabulatum_numerus(resultatum) == II);
+        CREDO_VERUM(_chorda_est(json_ad_chorda(
+            json_objectum_capere(json_tabulatum_obtinere(
+                resultatum, I), "name")), "probatio_vocans"));
         symbolum_v = json_tabulatum_obtinere(resultatum, ZEPHYRUM);
         CREDO_VERUM(_chorda_est(json_ad_chorda(
             json_objectum_capere(symbolum_v, "name")),
