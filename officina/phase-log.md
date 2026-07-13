@@ -3424,6 +3424,33 @@ vitium in se ipso capiens. BARRA: **121/121** (hover declarati
 include/piscina.h); suita 12/12; dentes 3/viride. Fran committit +
 /reload-plugins → probae vivae.
 
+## LEGATUS v0.1b PARS I (2026-07-13): nexus_ordines NATUS — GEMINUS SEPULTUS
+
+Exploratio quinta (explorator-index; inventum praecipuum: **ordines
+tsv iam sedes/usus distinguunt** — gradus-corporis definitio
+directe servibilis; onus 0.14-0.5s/60MB = trivialis; 21,787 symbola
+sedem .c habent; incomingCalls partialis [vocans includens non
+registratus]; strepitus amalgama/fixa/knotapel nominatus). Quattuor
+DECISA Franis: hybridum A+C (tsv + superpositio viva) · genita
+omissa/realia servata · **UNITAS COMMUNIS extracta** (non copia) ·
+incomingCalls EXACTUS (analysis ad postulatum + cache).
+
+**PARS I FACTA: silva/instrumenta/nexus_ordines.{h,c}** (logica
+ordinum sedes/usus ex sweep levata; receptor callback; AMBULATIO
+LATA SERVATA consulto — ordo emissionis = ordo tabulae, decipula
+paritatis in recursionem "purgare"). **nexus_percursus MIGRATUS in
+mundum amalgamatis** (prophetia oneratorum fontes-lateris cadit uno:
+piscinae divisae SilvaPiscina/Piscina exemplari praeparatoris;
+nexus.sh sine obiectis fontium — velocior). **BARRA: PARITAS
+OCTETIM TENET** — binarium vetus (praestructum ante sectionem) et
+novum in ARBORE EADEM: 662,790 ordines identici (44MB, cmp post
+lineam temporis). CLI + -similis fumus post migrationem ✓.
+
+SEQUENS (pars II): latus legati — index nominum ad initialize,
+superpositio per nexus_ordines in quaque analysi, tractatores
+references/workspaceSymbol/definitio-corporis/incomingCalls,
+politica viarum, probationes. Fran committit.
+
 ## LEGATUS — PRIMUM CONTACTUM AGITATIONIS (2026-07-13, sessione resumpta)
 
 Fran sessione `claude --plugin-dir .../legatus-plugin --resume
