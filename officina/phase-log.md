@@ -3056,3 +3056,38 @@ Fontes-latus (cursor/interpretare/examen/percursus) migrat tactu
 proximo cuiusque — praeparator paratus (silva-latus [examen/
 percursus] quaestionem contextus aedificandi habet: fontes vs
 amalgama; tactu suo decidetur).
+
+### ADDENDUM (2026-07-13) — ORDO PROXIMUS: furca M5 / silva-lsp (ante compactionem)
+
+Interludio sigillato, furca aperta (casus ambo in sessione
+2026-07-13 expositi; Fran decidit). QUIDQUID eligitur: arcus
+probatus (exploratores IV → simulatio → interrogatio → spec),
+sessione recenti. Subiecta exploratorum PRO UTROQUE nominata:
+
+**M5 aarch64** (compile-to-memory primum, mach-o secundum):
+1. mappa medulla→aarch64: cooperculum op-um, registra linearia →
+   physica (linear scan), suffixa latitudinum → instructiones;
+2. mechanica compile-to-memory in macOS: MAP_JIT + W^X +
+   pthread_jit_write_protect_np (constrictio VERA Apple Silicon —
+   exploranda ante designum!);
+3. limen ABI: pons aedilium ex codice nativo (AAPCS64, vocationes
+   hospitis), descriptores = valores fn-ptr (sutura M5 iam in M2
+   designata);
+4. vectis differentialis: nativum vs machinula (exemplar cursoris
+   extensum; acta-visio semina — comparatio effusionis + status).
+
+**silva-lsp** (substitutio clangd; casus: lamina diagnostica
+engine-completa post M4a, redditor typorum ex M4b, sessio = mundus
+calidus, uncus examen-custos = calibratio viva):
+1. superficies LSP minima: initialize/didOpen/didChange/
+   publishDiagnostics — JSON-RPC super stdio (status lib/json.c);
+2. daemon calidus + incrementalitas: praeparator/sessio reuti
+   (spec-v2 §XI: sessio designata sciens silva-lsp mundum communicare
+   velle);
+3. positio→nodus + extenta (parca M4a: _extentum_valoris promovenda);
+4. integratio clientis: registratio LSP in Claude Code (unus per
+   genus plagulae — substitutio, non additio), configuratio clangd
+   hodierna, mensura "diagnostica push = ~95% valoris".
+
+Re-entry: hic addendum + memoria (MEMORY.md furcam nominat) +
+officina/phase-log.md interludii relationes.
