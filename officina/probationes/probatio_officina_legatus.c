@@ -385,6 +385,47 @@ _hover_valor_est (TabellariusNuntius* n,
         json_objectum_capere(contenta, "value")), litterae);
 }
 
+/* valor hoveris particulam continet? (vicinitas: indicium, non
+ * aequalitas exacta) */
+interior b32
+_hover_valor_continet (TabellariusNuntius* n,
+    constans character* particula)
+{
+    JsonValor* resultatum;
+    JsonValor* contenta;
+    chorda valor;
+    memoriae_index pm = strlen(particula);
+    i32 j;
+
+    si (n->radix == NIHIL)
+    {
+        redde FALSUM;
+    }
+    resultatum = json_objectum_capere(n->radix, "result");
+    si (resultatum == NIHIL || json_est_nullum(resultatum))
+    {
+        redde FALSUM;
+    }
+    contenta = json_objectum_capere(resultatum, "contents");
+    si (contenta == NIHIL)
+    {
+        redde FALSUM;
+    }
+    valor = json_ad_chorda(json_objectum_capere(contenta, "value"));
+    si (valor.datum == NIHIL || valor.mensura < (i32)pm)
+    {
+        redde FALSUM;
+    }
+    per (j = ZEPHYRUM; j + (i32)pm <= valor.mensura; j++)
+    {
+        si (memcmp(valor.datum + j, particula, pm) == ZEPHYRUM)
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
 /* definitio: Location unum AUT tabulatum (gradus corporis v0.1b)
  * -> primum */
 interior JsonValor*
@@ -482,7 +523,8 @@ probatio_hover_symbola (Piscina* p)
         "\"position\":{\"line\":3,\"character\":11}}}", _radix());
     _scribe(intra, p, corpus);
 
-    /* hover nusquam (ultra textum) - nullum */
+    /* hover nusquam (ultra textum) - olim nullum, nunc VICINITAS
+     * (sedes proximae; politio post-debrief) */
     sprintf(corpus,
         "{\"jsonrpc\":\"2.0\",\"id\":5,"
         "\"method\":\"textDocument/hover\",\"params\":"
@@ -600,9 +642,9 @@ probatio_hover_symbola (Piscina* p)
     CREDO_VERUM(bene);
     CREDO_VERUM(_hover_valor_est(&n, "b : integer"));
 
-    n = _lege(extra, p, &bene);   /* hover nusquam */
+    n = _lege(extra, p, &bene);   /* hover nusquam -> vicinitas */
     CREDO_VERUM(bene);
-    CREDO_VERUM(_resultatum_nullum(&n));
+    CREDO_VERUM(_hover_valor_continet(&n, "sedes proximae"));
 
     n = _lege(extra, p, &bene);   /* documentSymbol */
     CREDO_VERUM(bene);
@@ -1325,6 +1367,17 @@ probatio_macra (Piscina* p)
         "\"position\":{\"line\":11,\"character\":11}}}", _radix());
     _scribe(intra, p, corpus);
 
+    /* hover in '{' (linea 3, char 0) - nihil sub cursore ->
+     * VICINITAS: sedes proximae eiusdem viae (politio
+     * post-debrief) */
+    sprintf(corpus,
+        "{\"jsonrpc\":\"2.0\",\"id\":29,"
+        "\"method\":\"textDocument/hover\",\"params\":"
+        "{\"textDocument\":{\"uri\":"
+        "\"file://%s/lib/legatus_phantasma_m.c\"},"
+        "\"position\":{\"line\":3,\"character\":0}}}", _radix());
+    _scribe(intra, p, corpus);
+
     _scribe(intra, p,
         "{\"jsonrpc\":\"2.0\",\"id\":27,\"method\":\"shutdown\"}");
     _scribe(intra, p, "{\"jsonrpc\":\"2.0\",\"method\":\"exit\"}");
@@ -1420,6 +1473,12 @@ probatio_macra (Piscina* p)
     CREDO_VERUM(_hover_valor_est(&n,
         "#define SUMMA(x, y) \\\n    ((x) + \\\n     (y))"));
 
+    n = _lege(extra, p, &bene);   /* hover '{': vicinitas - sedes
+                                   * proximae, non NIHIL nudum */
+    CREDO_VERUM(bene);
+    CREDO_VERUM(_hover_valor_continet(&n, "sedes proximae"));
+    CREDO_VERUM(_hover_valor_continet(&n, "probatio_macro_functio"));
+
     n = _lege(extra, p, &bene);   /* shutdown */
     CREDO_VERUM(bene);
     CREDO_VERUM(_resultatum_nullum(&n));
@@ -1480,6 +1539,18 @@ _vigilia_agere (Piscina* p, constans character* via_binarii,
         CREDO_VERUM(_diagnostica_numerus(&n) == (s32)I);
         CREDO_VERUM(_diagnosticum_continet(&n,
             "LEGATUS IPSE STALUS"));
+        /* fons "excubitor" (non "silva") - monitum vigiliae ab
+         * origine sua nominatur */
+        {
+            JsonValor* lista = json_objectum_capere(n.params,
+                "diagnostics");
+            JsonValor* d = json_tabulatum_obtinere(lista,
+                ZEPHYRUM);
+
+            CREDO_VERUM(d != NIHIL && _chorda_est(
+                json_ad_chorda(json_objectum_capere(d, "source")),
+                "excubitor"));
+        }
     }
     alioquin
     {

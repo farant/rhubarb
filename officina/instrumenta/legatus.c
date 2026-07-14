@@ -893,7 +893,7 @@ interior JsonValor*
 _diagnosticum_json (Piscina* p, insignatus integer l0,
     insignatus integer c0, insignatus integer l1,
     insignatus integer c1, insignatus integer severitas,
-    constans character* nuntius)
+    constans character* nuntius, constans character* fons)
 {
     JsonValor* diag = json_objectum_creare(p);
 
@@ -902,7 +902,7 @@ _diagnosticum_json (Piscina* p, insignatus integer l0,
     json_objectum_ponere(diag, "severity",
         json_integer_creare(p, (s64)severitas));
     json_objectum_ponere(diag, "source",
-        json_chorda_creare_literis(p, "silva"));
+        json_chorda_creare_literis(p, fons));
     json_objectum_ponere(diag, "message",
         json_chorda_creare_literis(p, nuntius));
     redde diag;
@@ -1039,7 +1039,7 @@ _analysare_et_publicare (Legatus* l, Piscina* pn,
                         &l1, &c1);
                     json_tabulatum_addere(lista,
                         _diagnosticum_json(pn, l0, c0, l1, c1, I,
-                            nuntius_b));
+                            nuntius_b, "silva"));
                     positi++;
                 }
             }
@@ -1047,7 +1047,8 @@ _analysare_et_publicare (Legatus* l, Piscina* pn,
         si (positi == ZEPHYRUM)
         {
             json_tabulatum_addere(lista, _diagnosticum_json(pn,
-                ZEPHYRUM, ZEPHYRUM, ZEPHYRUM, I, I, nuntius_b));
+                ZEPHYRUM, ZEPHYRUM, ZEPHYRUM, I, I, nuntius_b,
+                "silva"));
         }
     }
 
@@ -1100,13 +1101,13 @@ _analysare_et_publicare (Legatus* l, Piscina* pn,
                 }
                 json_tabulatum_addere(lista, _diagnosticum_json(pn,
                     d->linea - I, c0, d->linea - I, c1,
-                    severitas_lsp, nuntius_b));
+                    severitas_lsp, nuntius_b, "silva"));
             }
             alioquin
             {
                 json_tabulatum_addere(lista, _diagnosticum_json(pn,
                     ZEPHYRUM, ZEPHYRUM, ZEPHYRUM, I, severitas_lsp,
-                    nuntius_b));
+                    nuntius_b, "silva"));
             }
         }
     }
@@ -1156,7 +1157,8 @@ _analysare_et_publicare (Legatus* l, Piscina* pn,
             "binario residente - responsa fortasse vetera; "
             "/reload-plugins renovat", l->stalus_causa);
         json_tabulatum_addere(lista, _diagnosticum_json(pn,
-            ZEPHYRUM, ZEPHYRUM, ZEPHYRUM, I, II, nuntius_b));
+            ZEPHYRUM, ZEPHYRUM, ZEPHYRUM, I, II, nuntius_b,
+            "excubitor"));
     }
 
     _publicare(l, pn, doc->uri, doc->versio, lista);
@@ -2261,6 +2263,295 @@ _definitio_macronis (Legatus* l, Piscina* pn, JsonValor* id,
 
 /* Hover: sedes usus per descensum; nomina DECLARATA per ambulatio
  * symbolorum (parca "use-sites only" SOLUTA - lexema aderat). */
+/* particulam in via quaerere (vicinitas: fontes prae amalgamate) */
+interior b32
+_via_particulam_habet (chorda via, constans character* particula)
+{
+    memoriae_index pm = strlen(particula);
+    i32 j;
+
+    si (via.datum == NIHIL || via.mensura < (i32)pm)
+    {
+        redde FALSUM;
+    }
+    per (j = ZEPHYRUM; j + (i32)pm <= via.mensura; j++)
+    {
+        si (memcmp(via.datum + j, particula, pm) == ZEPHYRUM)
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
+/* vicinitas (politio post-debrief): give-up hoveris indicium dat
+ * pro NIHIL nudo. Verbum sub cursore non resolutum -> simillima ex
+ * nominibus indicis (similitudo; commentaria quoque - nomen in
+ * commentario memoratum directionem accipit); nihil sub cursore ->
+ * sedes proximae eiusdem viae per distantiam linearum (ordines
+ * superpositione vivi). Cliens noster agens est: miss cum
+ * directione melior nudo; editor humanus strepitum sentiret
+ * (caveat acceptum, phase-log). */
+interior b32
+_hover_vicinitas (Legatus* l, Piscina* pn, JsonValor* id,
+    LegatusDocumentum* doc, memoriae_index octetum)
+{
+    character valor_b[DXII];
+    chorda verbum;
+    insignatus integer linea_h = ZEPHYRUM;
+    insignatus integer col_h = ZEPHYRUM;
+
+    valor_b[ZEPHYRUM] = '\0';
+    si (!l->index_paratus)
+    {
+        redde FALSUM;
+    }
+    _byte_ad_positio(l, doc, octetum, &linea_h, &col_h);
+
+    /* verbum sub cursore (semantica gradus verbi crudi) */
+    verbum.datum = NIHIL;
+    verbum.mensura = ZEPHYRUM;
+    {
+        memoriae_index a = octetum;
+        memoriae_index b = octetum;
+        memoriae_index m = (memoriae_index)doc->textus.mensura;
+
+        si (octetum < m && _character_identificatoris(
+                (character)doc->textus.datum[octetum]))
+        {
+            dum (a > ZEPHYRUM && _character_identificatoris(
+                    (character)doc->textus.datum[a - I]))
+            {
+                a--;
+            }
+            dum (b < m && _character_identificatoris(
+                    (character)doc->textus.datum[b]))
+            {
+                b++;
+            }
+            verbum.datum = doc->textus.datum + a;
+            verbum.mensura = (i32)(b - a);
+        }
+    }
+
+    si (verbum.mensura > ZEPHYRUM && verbum.mensura < CXXVIII)
+    {
+        /* simillima ex nominibus indicis (acies plana - Xar
+         * segmentatum est, similitudo aciem contiguam petit) */
+        i32 numerus = xar_numerus(l->nomina_indicis);
+        chorda* acies;
+        SimilitudoFructus fructus[III];
+        i32 n = ZEPHYRUM;
+
+        acies = (chorda*)piscina_allocare(pn,
+            (memoriae_index)(numerus > ZEPHYRUM ? numerus : I)
+                * magnitudo(chorda));
+        si (acies != NIHIL && numerus > ZEPHYRUM)
+        {
+            i32 c;
+
+            per (c = ZEPHYRUM; c < numerus; c++)
+            {
+                acies[c] = *(chorda*)xar_obtinere(
+                    l->nomina_indicis, c);
+            }
+            n = similitudo_optima(verbum, acies, numerus, fructus,
+                III);
+        }
+        si (n > ZEPHYRUM)
+        {
+            int scripti = sprintf(valor_b,
+                "nihil hic ('%.*s'); simillima:",
+                (int)verbum.mensura,
+                (constans character*)verbum.datum);
+            i32 f;
+
+            per (f = ZEPHYRUM; f < n; f++)
+            {
+                chorda t = acies[fructus[f].index];
+                constans LegatusOrdo* sedes_prima = NIHIL;
+                vacuum* valor;
+
+                si (tabula_dispersa_invenire(l->index_titulorum,
+                        t, &valor))
+                {
+                    constans LegatusOrdo* o =
+                        (constans LegatusOrdo*)valor;
+
+                    dum (o != NIHIL)
+                    {
+                        si (o->sedes && !o->mortuus)
+                        {
+                            b32 amalgama = _via_particulam_habet(
+                                o->via, "/amalgama/");
+
+                            si (sedes_prima == NIHIL)
+                            {
+                                sedes_prima = o;
+                            }
+                            /* fontes prae amalgamate (lector eo
+                             * salit ubi editur) */
+                            si (!amalgama)
+                            {
+                                sedes_prima = o;
+                                frange;
+                            }
+                        }
+                        o = o->proximus;
+                    }
+                }
+                si ((memoriae_index)scripti
+                    + (memoriae_index)t.mensura
+                    + (sedes_prima != NIHIL
+                        ? (memoriae_index)sedes_prima->via.mensura
+                        : ZEPHYRUM)
+                    + XXXII >= magnitudo(valor_b))
+                {
+                    frange;
+                }
+                si (sedes_prima != NIHIL)
+                {
+                    scripti += sprintf(valor_b + scripti,
+                        " %.*s (%.*s:%u)",
+                        (int)t.mensura,
+                        (constans character*)t.datum,
+                        (int)sedes_prima->via.mensura,
+                        (constans character*)sedes_prima->via.datum,
+                        sedes_prima->linea);
+                }
+                alioquin
+                {
+                    scripti += sprintf(valor_b + scripti, " %.*s",
+                        (int)t.mensura,
+                        (constans character*)t.datum);
+                }
+            }
+        }
+    }
+
+    si (valor_b[ZEPHYRUM] == '\0' && doc->via.mensura > II)
+    {
+        /* sedes proximae eiusdem viae per distantiam linearum */
+        chorda via_sine;
+        i32 numerus = xar_numerus(l->omnes_ordines);
+        i32 k;
+        constans LegatusOrdo* optimi[III];
+        insignatus integer distantiae[III];
+        i32 n_opt = ZEPHYRUM;
+
+        via_sine.datum = doc->via.datum + II;
+        via_sine.mensura = doc->via.mensura - II;
+        per (k = ZEPHYRUM; k < numerus; k++)
+        {
+            constans LegatusOrdo* o = *(constans LegatusOrdo**)
+                xar_obtinere(l->omnes_ordines, k);
+            insignatus integer d;
+            i32 j;
+            b32 iam = FALSUM;
+
+            si (o == NIHIL || !o->sedes || o->mortuus
+                || o->via.mensura != via_sine.mensura
+                || memcmp(o->via.datum, via_sine.datum,
+                       (memoriae_index)via_sine.mensura)
+                    != ZEPHYRUM)
+            {
+                perge;
+            }
+            d = o->linea > linea_h + I
+                ? o->linea - (linea_h + I)
+                : (linea_h + I) - o->linea;
+            /* titulus iam retentus? (sedes plures eiusdem) */
+            per (j = ZEPHYRUM; j < n_opt; j++)
+            {
+                si (optimi[j]->titulus.mensura == o->titulus.mensura
+                    && memcmp(optimi[j]->titulus.datum,
+                           o->titulus.datum,
+                           (memoriae_index)o->titulus.mensura)
+                        == ZEPHYRUM)
+                {
+                    si (d < distantiae[j])
+                    {
+                        optimi[j] = o;
+                        distantiae[j] = d;
+                    }
+                    iam = VERUM;
+                    frange;
+                }
+            }
+            si (iam)
+            {
+                perge;
+            }
+            si (n_opt == III && d >= distantiae[II])
+            {
+                perge;   /* peior pessimo retento */
+            }
+            /* insertio ordinata (tres optimi) */
+            per (j = n_opt < III ? n_opt : II; j > ZEPHYRUM
+                && distantiae[j - I] > d; j--)
+            {
+                si (j < III)
+                {
+                    optimi[j] = optimi[j - I];
+                    distantiae[j] = distantiae[j - I];
+                }
+            }
+            si (j < III)
+            {
+                optimi[j] = o;
+                distantiae[j] = d;
+                si (n_opt < III)
+                {
+                    n_opt++;
+                }
+            }
+        }
+        si (n_opt > ZEPHYRUM)
+        {
+            int scripti = sprintf(valor_b,
+                "nihil sub cursore; sedes proximae:");
+            i32 f;
+
+            per (f = ZEPHYRUM; f < n_opt; f++)
+            {
+                constans LegatusOrdo* o = optimi[f];
+
+                si ((memoriae_index)scripti
+                    + (memoriae_index)o->titulus.mensura
+                    + (memoriae_index)o->genus.mensura + XXXII
+                    >= magnitudo(valor_b))
+                {
+                    frange;
+                }
+                scripti += sprintf(valor_b + scripti,
+                    " %.*s (%.*s) linea %u;",
+                    (int)o->titulus.mensura,
+                    (constans character*)o->titulus.datum,
+                    (int)o->genus.mensura,
+                    (constans character*)o->genus.datum,
+                    o->linea);
+            }
+        }
+    }
+
+    si (valor_b[ZEPHYRUM] == '\0')
+    {
+        redde FALSUM;
+    }
+    {
+        JsonValor* resultatum = json_objectum_creare(pn);
+        JsonValor* contenta = json_objectum_creare(pn);
+
+        json_objectum_ponere(contenta, "kind",
+            json_chorda_creare_literis(pn, "plaintext"));
+        json_objectum_ponere(contenta, "value",
+            json_chorda_creare_literis(pn, valor_b));
+        json_objectum_ponere(resultatum, "contents", contenta);
+        _respondere(l, tabellarius_responsum(pn, id, resultatum));
+        redde VERUM;
+    }
+}
+
 interior vacuum
 _hover_tractare (Legatus* l, Piscina* pn, JsonValor* id,
     JsonValor* params)
@@ -2332,6 +2623,11 @@ _hover_tractare (Legatus* l, Piscina* pn, JsonValor* id,
     {
         /* gradus macronis postremus (verbum crudum - directivae) */
         si (_hover_macro(l, pn, id, doc, octetum, VERUM))
+        {
+            redde;
+        }
+        /* vicinitas: miss cum directione pro NIHIL nudo */
+        si (_hover_vicinitas(l, pn, id, doc, octetum))
         {
             redde;
         }

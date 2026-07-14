@@ -3979,3 +3979,60 @@ scratchpad = semen; LEGATUSD naturaliter absorbet); ceterum
 NIHIL: in arcu toto instrumentum numquam mentitum est, ego de
 instrumento bis mentitus sum (grep-audit ×2) et index me bis
 correxit.
+
+## PARCA NOMINATA post debrief (2026-07-13, nocte)
+
+① HOVER-VICINITAS: hover mis-positus pro "no hover" nudo det
+indicium — verbum ignotum → similitudo contra nomina indicis
+(simillimum + sedes); nihil sub cursore → sedes proximae eiusdem
+viae per distantiam linearum. Caveat acceptum: cliens noster
+agens est (editor humanus strepitum sentiret). Cum sanatione
+fontis "excubitor" (diagnosticum vigiliae "silva" dicit) = fascis
+politionis parvus. ② MCP LEGATI (futurum nominatum): servus MCP
+stdio nomine-basatus (describe symbolum / diagnostica viae / quis
+vocat / verdictum excubitoris) — COMPLEMENTUM positionis LSP, non
+duplicatum; tabellarius modum framing lineis-delimitatum eget (MCP
+stdio = JSON-RPC lineis, NON Content-Length); json/praeparator/
+nexus_ordines reusantur; v0 mundo calido proprio, LEGATUSD postea
+utrumque unificat. Radix CLAUDE.md hoc prophetavit (instrumentum
+tertium contextus inter sessiones).
+
+## HOVER-VICINITAS — INTENTIO (2026-07-13, nocte)
+
+Pulled (Fran). Fascis: ① give-up hoveris → vicinitas (verbum →
+similitudo; vacuum → sedes proximae viae ex ordinibus indicis —
+superpositio ordines vivos tenet, ambulatio omnes_ordines in via
+missi accepta [via missi rara]); gradus priores INTACTI (lex
+ordinis v0.2). ② _diagnosticum_json param fons ("silva" ubique,
+"excubitor" vigiliae). Barrae: probationes hover-vacui +
+hover-verbi-ignoti + fons excubitoris; suita plena; VIVUM: hover
+in linea vacua legatus.c (miss exactus hodiernus) → indicium cum
+directione.
+
+## HOVER-VICINITAS — RELATIO (2026-07-13, nocte)
+
+SHIPPED: _hover_vicinitas in give-up hoveris (post gradum verbi
+crudi, ante NIHIL): verbum sub cursore → similitudo_optima contra
+nomina_indicis (acies plana in piscinam nuntii — Xar segmentatum,
+similitudo contiguam petit), tria simillima cum sede prima
+catenae; FONTES PRAE AMALGAMATE (sedes non-amalgamatis praelata —
+lector eo salit ubi editur; sonda viva: officina/fontes/...h:98
+pro officina/amalgama/...:10085). Nihil sub cursore → sedes
+proximae eiusdem viae per distantiam linearum (tres optimi,
+insertio ordinata; vitium peior-pessimo in manu inventum ante
+compilationem — plenum tribus, quartus peior sedem II
+superscribebat). DONUM INOPINATUM: nomen symboli in COMMENTARIO
+memoratum nunc directionem dat (verba commentariorum lexemata non
+sunt → semper missi erant → nunc simillima). ② fons diagnostici:
+param in _diagnosticum_json (quinque sedes "silva", vigilia
+"excubitor") — impulsus ipse listam sedium quinque dedit editione
+prima (differentialis vivus operans pro me).
+
+MUTATIO EXPECTATIONIS: probatio "hover nusquam → nullum" (v0.1a)
+nunc vicinitatem accipit — probatio inversa in assertionem
+indicii (olim vacuum adfirmabat, nunc directionem). Barrae:
+186/186 (vicinitas '{' + fons excubitoris novae); officina 12/12;
+sonda stdio viva: verbum falsum in commentario →
+"nihil hic ('machinula_curere'); simillima: machinula_currere
+(officina/fontes/officina_machinula.h:98)". Post /reload: miss
+hodiernus (linea vacua) directionem dabit in sessione.
