@@ -245,8 +245,22 @@ third: by then the store has survived two tenants' worth of churn.
 
 ## PROXIMA
 
-Phase A is pull-ready as a small fascis (digest lib is a clean
-afternoon; vendor+wrapper another). B' (= kernel K1 + tenant) waits on
+**PHASE A SHIPPED 2026-07-14 (same evening it was pulled).**
+vendor/sqlite3.{c,h} = SQLite 3.53.3, relaxed own-object compile
+(compile_tests.sh VENDOR_SOURCES; flags recorded there, FTS5 ON);
+lib/sigillum.{c}+include (SHA-256, NIST goldens 4 vectors +
+boundary sweep); lib/scrinium.{c}+include (aperire/exsequi/
+praeparare/ligare/gradi/columnae/migrare/ulid; WAL pragmas;
+append-only migration runner; ULID monotonic). Suites: sigillum
+green first run; scrinium 73/73. FINDS (worklogs): ① Roman-numeral
+macros ate sqlite3.h ("char C" -> "char 100") — vendor headers
+BEFORE latina.h, always (second instance of the class after stb);
+② porter stemming is ENGLISH — Latin corpus search idiom = prefix
+queries ('parsur*'); custom Latin FTS5 tokenizer = named distant
+pull. Names scrinium/sigillum WORKING, unsealed — Fran may rename.
+Decision-owed #1 (SQLite exception) settled by doing.
+
+Next rung: B' B' (= kernel K1 + tenant) waits on
 the interview → simulatio → spec ritual; the K1 interview should press
 on: reducer/handler API shape in C, entitas_repositorium three-body
 decision, anchor semantics + resolution failure modes, genus initial

@@ -50,6 +50,8 @@ declare -a SOURCE_FILES=(
     "lib/persistentia_nuntium.c"
     "lib/entitas_repositorium_impl.c"
     "lib/friatio.c"
+    "lib/sigillum.c"
+    "lib/scrinium.c"
     "lib/xml.c"
     "lib/stml.c"
     "lib/selectio.c"
@@ -151,6 +153,25 @@ declare -a OBJC_SOURCES=(
     "lib/fenestra_macos.m"
     "lib/tls_macos.m"
     "lib/clipboard_platform_macos.m"
+)
+
+# Vendored sources (compiled RELAXED in their own objects - treat
+# like libc; tabularium-gradus.md phase A). Flags decided at vendor
+# time: FTS5 ON (full-text search), THREADSAFE=0 (single-writer
+# house law), DQS=0 (no double-quoted strings), no loadable
+# extensions, no deprecated API.
+declare -a VENDOR_SOURCES=(
+    "vendor/sqlite3.c"
+)
+declare -a VENDOR_FLAGS=(
+    "-O2"
+    "-DSQLITE_ENABLE_FTS5"
+    "-DSQLITE_THREADSAFE=0"
+    "-DSQLITE_DQS=0"
+    "-DSQLITE_DEFAULT_MEMSTATUS=0"
+    "-DSQLITE_OMIT_LOAD_EXTENSION"
+    "-DSQLITE_OMIT_DEPRECATED"
+    "-DSQLITE_DEFAULT_WAL_SYNCHRONOUS=1"
 )
 
 # Build directory for object files
@@ -274,6 +295,21 @@ compile_libraries() {
         fi
     done
 
+    # Compile vendored files (relaxed flags, own objects; headers
+    # in include/ do not affect them - source-newer check only)
+    for vend_file in "${VENDOR_SOURCES[@]}"; do
+        obj_name=$(basename "$vend_file" .c).o
+        obj_file="$BUILD_DIR/$obj_name"
+
+        if [ ! -f "$obj_file" ] || [ "$vend_file" -nt "$obj_file" ]; then
+            echo -e "  Compiling (vendor): $vend_file"
+            if ! clang -c ${VENDOR_FLAGS[@]} "$vend_file" -o "$obj_file" 2>&1; then
+                echo -e "${RED}✗ FAILED: $vend_file${RESET}"
+                return 1
+            fi
+        fi
+    done
+
     echo -e "${GREEN}Libraries compiled${RESET}"
     echo ""
     LIBS_COMPILED=1
@@ -294,6 +330,12 @@ get_object_files() {
     # Add Objective-C objects
     for objc_file in "${OBJC_SOURCES[@]}"; do
         obj_name=$(basename "$objc_file" .m).o
+        obj_files="$obj_files $BUILD_DIR/$obj_name"
+    done
+
+    # Add vendored objects
+    for vend_file in "${VENDOR_SOURCES[@]}"; do
+        obj_name=$(basename "$vend_file" .c).o
         obj_files="$obj_files $BUILD_DIR/$obj_name"
     done
 
