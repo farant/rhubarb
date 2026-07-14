@@ -64,3 +64,59 @@ with $field capture), not a nexus column. Same family as Fran's
 lint-rule question (2026-07-11 conversation) — first named consumer
 pull for quaestio QB/QC as a lint/query harness. Counting per the
 rule of two: this is occurrence ONE.
+
+## 2026-07-14 — RUNG 5: incremental sweep (canonical order + stream-merge)
+
+Full design/soundness argument in silva/phase-log.md (INTENTIO written
+hot-context the day before, implemented next session — the
+capture-then-implement pattern worked; zero design reversals). Notes
+that live here are the FINDS, not the plan:
+
+**Per-file attribution was already true for rows.** fundere's
+"viae sine '/' omissae" rule (nexus_ordines.h) meant every via's rows
+came only from that file's own standalone judgment — verified 796
+runs / 796 distinct vias before any edit. Canonical ordering made it
+official; the row filter in the receptor is a safety net (0 alieni
+in production). Inclusion edges were NOT attributed (1150 runs / 723
+ex, first-TU-wins interleave) — re-pinned to per-ex attribution.
+
+**Named limit — conditional includes vanish from the graph.** Under
+per-ex attribution an edge exists only if the ex file's STANDALONE
+preprocessing takes it. stb_image's `#ifdef STB_IMAGE_IMPLEMENTATION`
+arm includes (7 edges) + one raqiya.h guard edge vanished at re-pin —
+audited: 8/8 point at EXTERNAL headers (stdio.h...), which never seed
+the staleness closure, so the loss is harmless today. The pattern that
+WOULD bite: a repo header conditionally included inside another
+header's foreign-TU expansion. The monorepo doesn't do this (amalgams
+are generated whole). If it ever appears, the closure under-fires —
+watch for it.
+
+**Root-level .c files are invisible to nexus rows** (pre-existing,
+discovered via the bar-test specimen at repo root): their via has no
+'/', so fundere's basename-omission heuristic swallows their rows
+(edges survive — _viam_solvere output keeps them distinct). Full and
+incremental agree (parity holds); it's a fundere contract edge, not a
+rung 5 bug. Convention already avoids root-level sources; if one ever
+becomes real, fundere needs a smarter praebere-copy discriminator.
+
+**Tombstones `# vacua <via>`.** Files judged-but-empty (invalid
+roundtrip fixtures: no rows, no edges) looked "new" every run —
+eternal re-judgment + table rewrite + stamp bump (= pointless legatus
+tier-2 reloads). Fix: judgment writes a `# vacua` comment line for
+empty files (both modes); the group scanner treats it as a
+zero-line group. All tsv consumers already skip '#' lines (nexus
+CLI:168, legatus rows:793, legatus incl:4570). Size-praetermissae
+(capsula/biblia) deliberately get NO tombstone — the same st_size
+rule that excludes them from nova keeps them re-discoverable when
+-omnia lifts the cap.
+
+**Toolchain-force.** nexus.sh passes -plenus whenever ANY celer
+object or the sweep binary was rebuilt — a mixed-parser table (some
+rows judged by old silva, some by new) can never be born. systema
+mtime >= stamp likewise forces plenus inside the binary (systema is
+the lexicon channel, invisible to the include graph — M4b find).
+
+**Numbers.** Quiet run (nulla mutatio, tables untouched): 0.3s.
+One .c edit: 0.5s. Header edit w/ 3-file closure: 0.7s. Rename:
+deleta+nova in one pass. Full sweep unchanged ~50s. Parity octetim
+incremental-vs-plenus on both tables at every bar, same tree.

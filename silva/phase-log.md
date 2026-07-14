@@ -7424,3 +7424,55 @@ temporis = systema+capita startup (~2s) + iudicia copiae.
 
 CONVERGENTIA AEDILIS: computatio copiae per clausuram = quod
 aedilis -vigila possidebit; forma huius codicis eam praefigurat.
+
+## RUNG 5 NAVIS — PERCURSUS INCREMENTALIS: RELATIO (2026-07-14)
+
+INTENTIO (supra) implementata sessione post compactionem — captura
+contextu-calido TENUIT: reversio consilii NULLA aedificatione tota.
+Partes (1)-(4) omnes navis; barrae 6/6 (omnes arbore EADEM):
+
+① nulla-mutatio: "incrementale: nulla mutatio - tabulae intactae"
+  0.3s, tabulae NON scriptae (stampa manet - residens legati non
+  recargat frustra); ② editio .c unius: 0.5s, PARITAS OCTETIM
+  ambabus tabulis; ③ editio capitis (legatus.h): 4 re-iudicatae =
+  caput + clausura exacta (3 includentes ex grapho), 0.7s, paritas;
+  reversio symmetrica; ④ deletio: greges cadunt, paritas, 0.2s;
+  ⑤ nova + RENOMINATIO (mv = 1 deleta + 1 nova uno cursu), paritas;
+  ⑥ suitae officina 12/12 + silva 30/30 post re-pin ordinis canonici
+  (sensibilitas catenarum legati non momordit).
+
+RE-PIN (1): ordines nexus IAM sui-attributi (796/796 cursus contigui
+- fundere basenames omittens id tacite fecerat); margines RE-PINNATI
+per-ex (8 margines conditionales evanidi, 8/8 ad externa = clausurae
+innocui, LIMES NOMINATUS in worklog). Basename duplicata (5 paria
+include/ vs fixturae) nunc deterministice include/ vincunt.
+
+SUPRA INTENTIONEM: lapides "# vacua <via>" (plagulae vacuae ne novae
+aeternae fiant - sine eis cursus quietus tabulas rescribebat et
+stampam movebat = recargationes residentis frustra); custos
+instrumenti in nexus.sh (obiecta celer recompilata -> -plenus
+coactum: tabula mixta duorum parsatorum numquam nascitur); via
+intactarum-tabularum (cursus quietus NIHIL scribit).
+
+CALIBRATIO: floor aestimatus ~2s, mensuratus ~0.3s (praebere capitum
+= repositio textus sine parsura). Commissio typica nunc sub-secundo
+- fenestra staleness legati gradus II de facto EVANUIT (aestimatio
+INTENTIO: "1-2s" - realitas melior 4x).
+
+INVENTUM OBITER (praeexsistens): plagulae .c radicis repositorii
+ordinibus invisibiles (via sine '/' = heuristica basename fundere).
+Mos repositorii eas non habet; worklog notat.
+
+PARCUM: debounce unci 600s minui potest (cursus 0.3s); furcae rung 4
+nunc vix valent (49s plenus rarus fit - post commissiones
+instrumentorum solum).
+
+DEBRIEF INSTRUMENTORUM: adhibita examen.sh (specimen "cur sine
+ordinibus?" - verdictum ACCIPE uno ictu diagnosim ad fundere vertit),
+excubitor -tacitus (status pools post barras), suitae ambae, awk/comm
+super tabulas (contiguitas 796/796 + diff parium marginum - quaestio
+"quot cursus per clavem" instrumento proprio caret sed awk sufficit).
+FRUCTUS: bench + tabulae ipsae = auditus re-pin sine instrumento novo.
+ASPERITAS: nulla nova (via_activa globalis = exemplar receptoris
+existens). DESIDERATUM: nihil novum - sonda una-ictus manet parcum
+vetus.

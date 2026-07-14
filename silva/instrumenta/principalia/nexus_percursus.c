@@ -30,12 +30,24 @@
  * _caput_praebere, primus-vincit = semantica praebere ipsius) vias
  * plenas reddit - ordo viam CUIUS OCTETI VERE PARSATI SUNT nominat.
  * Viae externae (stdio.h...) basename manent; consumptores eas
- * praetermittunt. */
+ * praetermittunt.
+ *
+ * ORDO CANONICUS + ATTRIBUTIO PER PLAGULAM (rung 5 (1), 2026-07-14):
+ * ambulatio vias COLLIGIT, ordinatio (strcmp), deinde iudicia -
+ * readdir non deterministicum erat (ordo tabulae = fortuna APFS).
+ * Ordines nexus IAM sui-attributi erant (fundere vias sine '/'
+ * omittit; 796/796 cursus contigui verificati) - filtrum
+ * via==plagula rete tutelae est. Margines inclusionum RE-PINNATI
+ * ad attributionem per-ex (antea primus-TU-vincit interpositus:
+ * 1150 cursus / 723 ex). Consecutio: tabulae per viam aggregatae
+ * ordine canonico stabili - praecursor fusionis incrementalis
+ * (INTENTIO rung 5, silva/phase-log.md). */
 
 #include "latina.h"
 #include "piscina.h"
 #include "chorda.h"
 #include "tabula_dispersa.h"
+#include "xar.h"
 #include "silva.h"
 #include "nexus_ordines.h"
 
@@ -66,6 +78,12 @@ hic_manens TabulaDispersa* capita_viae = NIHIL;  /* basename -> chorda* via plen
 hic_manens i32 inclusiones_scriptae = ZEPHYRUM;
 hic_manens i32 inclusiones_duplicatae = ZEPHYRUM;
 
+/* rung 5 (1): ordo canonicus + attributio per plagulam */
+hic_manens Xar* viae_omnes = NIHIL;                /* character* elementa */
+hic_manens constans character* via_activa = NIHIL; /* plagula sub iudicio */
+hic_manens i32 ordines_alieni = ZEPHYRUM;          /* rete tutelae (0 exspectatum) */
+hic_manens i32 inclusiones_alienae = ZEPHYRUM;     /* margines non-sui omissi */
+
 hic_manens SilvaParsura*   systema_parsura = NIHIL;
 hic_manens SilvaSemantica* systema_semantica = NIHIL;
 
@@ -95,6 +113,21 @@ _ordinem_recipere (vacuum* datum, constans SilvaChorda* titulus,
     {
         via_datum += II;
         via_mensura -= II;
+    }
+    /* attributio per plagulam (rung 5 (1)): ordines viae alienae
+     * omissi. Rete tutelae - fundere basenames iam omittit, ergo 0
+     * exspectatum; si accendit, praesumptio attributionis fracta
+     * (vide commentarium capitis). */
+    si (via_activa != NIHIL)
+    {
+        memoriae_index m_activae = strlen(via_activa);
+
+        si ((memoriae_index)via_mensura != m_activae
+            || memcmp(via_datum, via_activa, m_activae) != ZEPHYRUM)
+        {
+            ordines_alieni++;
+            redde;
+        }
     }
     si (titulus->mensura == ZEPHYRUM
         || (memoriae_index)titulus->mensura
@@ -225,6 +258,22 @@ _inclusiones_fundere (constans SilvaExpansio* exp)
         }
         _viam_solvere(via_ex, &ex_datum, &ex_mensura);
         _viam_solvere(via_ad, &ad_datum, &ad_mensura);
+        /* attributio per-ex (rung 5 (1)): quaeque plagula ambulata
+         * margines SUOS solum emittit - margines nidificati (ex =
+         * caput inclusum) ab ea ipsa plagula, directe ambulata,
+         * emittuntur. Antea primus-TU-vincit interpositus. */
+        si (via_activa != NIHIL)
+        {
+            memoriae_index m_activae = strlen(via_activa);
+
+            si ((memoriae_index)ex_mensura != m_activae
+                || memcmp(ex_datum, via_activa, m_activae)
+                    != ZEPHYRUM)
+            {
+                inclusiones_alienae++;
+                perge;
+            }
+        }
         si (ex_mensura == ZEPHYRUM || ad_mensura == ZEPHYRUM
             || (memoriae_index)ex_mensura + (memoriae_index)ad_mensura
                 + XXXII >= magnitudo(clavis_litterae))
@@ -421,9 +470,25 @@ _praetermittendum (constans character* titulus)
         ? VERUM : FALSUM;
 }
 
+/* rung 5 (1): ambulatio vias COLLIGIT (iudicium separatum) - viae
+ * praefixu "./" detracto in piscinam duplicatae, deinde ordinatae */
+hic_manens constans character*
+_viam_dupare (constans character* via)
+{
+    memoriae_index m = strlen(via);
+    character* nova;
+
+    nova = (character*)piscina_allocare(piscina_textuum, m + I);
+    si (nova == NIHIL)
+    {
+        redde NIHIL;
+    }
+    memcpy(nova, via, m + I);
+    redde nova;
+}
+
 hic_manens vacuum
-_directorium_percurrere (constans SilvaContextus* ctx,
-    constans character* via)
+_vias_colligere (constans character* via)
 {
     DIR* dir = opendir(via);
     structura dirent* introitus;
@@ -453,14 +518,819 @@ _directorium_percurrere (constans SilvaContextus* ctx,
 
         si (introitus->d_type == DT_DIR)
         {
-            _directorium_percurrere(ctx, via_plena);
+            _vias_colligere(via_plena);
         }
         alioquin si (_est_fons_c(introitus->d_name))
         {
-            _plagulam_percurrere(ctx, via_plena);
+            constans character* v = via_plena;
+            constans character* dup;
+
+            si (v[ZEPHYRUM] == '.' && v[I] == '/')
+            {
+                v += II;
+            }
+            dup = _viam_dupare(v);
+            si (dup != NIHIL && viae_omnes != NIHIL)
+            {
+                constans character** sedes =
+                    (constans character**)xar_addere(viae_omnes);
+
+                si (sedes != NIHIL)
+                {
+                    *sedes = dup;
+                }
+            }
         }
     }
     closedir(dir);
+}
+
+hic_manens s32
+_viae_comparare (constans vacuum* a, constans vacuum* b)
+{
+    constans character* va = *(constans character* constans*)a;
+    constans character* vb = *(constans character* constans*)b;
+    integer d = strcmp(va, vb);
+
+    redde (d < ZEPHYRUM) ? -I : (d > ZEPHYRUM ? I : ZEPHYRUM);
+}
+
+/* ==================================================
+ * rung 5 (2)(3): percursus incrementalis
+ * ==================================================
+ *
+ * Aqua-signum = stampa GENERATUM INTERNA tabulae veteris (numquam
+ * mtime tabulae ipsius - lectio venenationis debounce: mtime per
+ * touch falsificabilis, stampa sola cum regeneratione vera mutatur).
+ *
+ * Copia laboris: (a) plagulae quarum mtime >= stampa (aequaevum =
+ * suspectum - polaritas _via_recens, non vigiliae); (b) CLAUSURA
+ * REVERSA super graphum inclusionum VETEREM. Argumentum sanitatis
+ * graphi veteris: plagula G quae caput novum I per caput vetus H
+ * trahit - H mutatum est (mtime >= stampa), ergo includentes H per
+ * graphum VETEREM G continent (margo G->H vetus exstat). Plagula
+ * quae includes SUOS mutavit mtime proprio recentior est - in (a).
+ * Casus omnes tecti. (c) deletae = viae veteres non ambulatae;
+ * (d) novae = ambulatae sine grege veteri.
+ *
+ * Fusio: tabula vetus in memoriam onerata, greges per viam
+ * (contigui post ordinem canonicum - non-contiguitas = tabula
+ * MALFORMATA -> plenus). Emissio ordine canonico: via in copia ->
+ * iudicium recens; via retenta -> octeti veteres verbatim; via
+ * deleta -> nihil. Dedup tutum: claves ordinum viam continent -
+ * collisio trans plagulas impossibilis (verificatum 2026-07-14),
+ * dedup intra-copiam sufficit.
+ *
+ * LIMES NOMINATUS (re-pin (1)): margines ex-attributi = visio
+ * plagulae SOLIUS (praeprocessore standalone); margo conditionalis
+ * qui solum intra TU alienum accenditur (exemplar stb_image
+ * IMPLEMENTATION) e grapho cadit. Auditum ad re-pin: 8/8 margines
+ * evanidi ad EXTERNA (stdio.h...) - clausurae innocui, quia externa
+ * numquam copiam seminant. Caput repositorii sub condicione alieni
+ * TU inclusum limitem hunc excitaret - exemplar quod repositorium
+ * non adhibet (worklog).
+ *
+ * CUSTOS SYSTEMATIS: systema_c89.h in graphum non intrat (canalis
+ * lexici, non inclusio - inventum M4b) sed iudicia OMNIA afficit ->
+ * mtime eius >= stampa = plenus coactum. Instrumentum ipsum novum
+ * (obiecta celer recompilata) = plenus coactum in nexus.sh - tabula
+ * mixta duorum parsatorum numquam nascitur. */
+
+#include <sys/stat.h>   /* instrumentum solum - mtime copiae */
+
+nomen structura
+{
+    constans character* initium;   /* in tabulam veterem oneratam */
+    memoriae_index      mensura;   /* octeti gregis (lineis plenis) */
+    i32                 lineae;
+} GrexVetus;
+
+hic_manens b32  modus_plenus = FALSUM;          /* -plenus */
+hic_manens b32  modus_incrementalis = FALSUM;
+hic_manens long stampa_vetus = 0L;
+
+hic_manens TabulaDispersa* greges_ordinum = NIHIL;    /* via -> GrexVetus* */
+hic_manens TabulaDispersa* greges_marginum = NIHIL;   /* ex  -> GrexVetus* */
+hic_manens TabulaDispersa* copia_iudicanda = NIHIL;   /* via -> NIHIL */
+hic_manens TabulaDispersa* adjacentia_inversa = NIHIL; /* ad -> Xar*(chorda ex) */
+hic_manens TabulaDispersa* affecta = NIHIL;           /* clausura */
+hic_manens Xar* frons_clausurae = NIHIL;              /* chorda */
+hic_manens Xar* ads_visae = NIHIL;                    /* chorda (pro umbris basename) */
+
+hic_manens i32 stat_directae = ZEPHYRUM;
+hic_manens i32 stat_clausura = ZEPHYRUM;
+hic_manens i32 stat_deletae = ZEPHYRUM;
+hic_manens i32 stat_novae = ZEPHYRUM;
+hic_manens i32 ordines_retenti = ZEPHYRUM;
+hic_manens i32 margines_retenti = ZEPHYRUM;
+
+/* chorda quae in litteras exsistentes monstrat (sine copia) */
+hic_manens chorda
+_chordam_alligare (constans character* datum, memoriae_index mensura)
+{
+    chorda c;
+    unio { constans character* l; i8* m; } u;
+
+    u.l = datum;
+    c.datum = u.m;
+    c.mensura = (i32)mensura;
+    redde c;
+}
+
+/* plagula tota in piscinam PROPRIAM mensurae plenae onerata
+ * (piscina vita processus manet - consulto; tabula vetus 48MB) */
+hic_manens character*
+_plagulam_totam_legere (constans character* via,
+    constans character* titulus_piscinae, memoriae_index* mensura_out)
+{
+    FILE* pl;
+    long m_l;
+    memoriae_index m;
+    Piscina* p;
+    character* datum;
+
+    pl = fopen(via, "rb");
+    si (pl == NIHIL)
+    {
+        redde NIHIL;
+    }
+    fseek(pl, 0L, SEEK_END);
+    m_l = ftell(pl);
+    fseek(pl, 0L, SEEK_SET);
+    si (m_l < 0L)
+    {
+        fclose(pl);
+        redde NIHIL;
+    }
+    m = (memoriae_index)m_l;
+    p = piscina_generare_dynamicum(titulus_piscinae, m + 4096);
+    si (p == NIHIL)
+    {
+        fclose(pl);
+        redde NIHIL;
+    }
+    datum = (character*)piscina_allocare(p, m + I);
+    si (datum == NIHIL
+        || (m > ZEPHYRUM && fread(datum, I, m, pl) != m))
+    {
+        fclose(pl);
+        redde NIHIL;
+    }
+    fclose(pl);
+    datum[m] = '\0';
+    *mensura_out = m;
+    redde datum;
+}
+
+/* greges contigui campo clave (0-basato, tab separato) aedificare.
+ * FALSUM = tabula vetus malformata (clavis non contigua = forma
+ * ante ordinem canonicum, aut campus deest) -> plenus. Claves in
+ * tabulam oneratam monstrant. */
+hic_manens b32
+_greges_aedificare (constans character* datum, memoriae_index mensura,
+    i32 lineae_praefationis, i32 campus, TabulaDispersa* greges,
+    Xar* claves)
+{
+    constans character* cursor = datum;
+    constans character* finis = datum + mensura;
+    chorda clavis_aperta;
+    constans character* initium_gregis = NIHIL;
+    i32 lineae_gregis = ZEPHYRUM;
+    i32 n_praef = lineae_praefationis;
+
+    clavis_aperta.datum = NIHIL;
+    clavis_aperta.mensura = ZEPHYRUM;
+
+    dum (cursor < finis)
+    {
+        constans character* linea = cursor;
+        constans character* nl = (constans character*)memchr(cursor,
+            '\n', (memoriae_index)(finis - cursor));
+        constans character* finis_lineae = (nl != NIHIL) ? nl : finis;
+        constans character* c;
+        constans character* campus_init;
+        i32 k;
+        chorda clavis;
+
+        cursor = (nl != NIHIL) ? nl + I : finis;
+        si (n_praef > ZEPHYRUM)
+        {
+            n_praef--;
+            perge;
+        }
+        si (linea == finis_lineae)
+        {
+            perge;
+        }
+        si (*linea == '#')
+        {
+            /* lapis "# vacua <via>": plagula iudicata quae nihil
+             * emisit - grex nullarum linearum, ne nova aeterna
+             * fiat (fixturae roundtrip invalidae). Linea aliena
+             * '#' silenter praetermittitur. */
+            si ((memoriae_index)(finis_lineae - linea) > VIII
+                && memcmp(linea, "# vacua ", VIII) == ZEPHYRUM)
+            {
+                chorda clavis_vacua = _chordam_alligare(
+                    linea + VIII,
+                    (memoriae_index)(finis_lineae
+                        - (linea + VIII)));
+
+                si (clavis_aperta.datum != NIHIL)
+                {
+                    GrexVetus* g = (GrexVetus*)piscina_allocare(
+                        piscina_clavium, magnitudo(GrexVetus));
+
+                    si (g == NIHIL)
+                    {
+                        redde FALSUM;
+                    }
+                    g->initium = initium_gregis;
+                    g->mensura =
+                        (memoriae_index)(linea - initium_gregis);
+                    g->lineae = lineae_gregis;
+                    (vacuum)tabula_dispersa_inserere(greges,
+                        clavis_aperta, g);
+                    clavis_aperta.datum = NIHIL;
+                    clavis_aperta.mensura = ZEPHYRUM;
+                }
+                si (tabula_dispersa_continet(greges, clavis_vacua))
+                {
+                    redde FALSUM;
+                }
+                {
+                    GrexVetus* g = (GrexVetus*)piscina_allocare(
+                        piscina_clavium, magnitudo(GrexVetus));
+
+                    si (g == NIHIL)
+                    {
+                        redde FALSUM;
+                    }
+                    g->initium = linea;
+                    g->mensura = (memoriae_index)(cursor - linea);
+                    g->lineae = ZEPHYRUM;
+                    (vacuum)tabula_dispersa_inserere(greges,
+                        clavis_vacua, g);
+                }
+                si (claves != NIHIL)
+                {
+                    chorda* s = (chorda*)xar_addere(claves);
+
+                    si (s != NIHIL)
+                    {
+                        *s = clavis_vacua;
+                    }
+                }
+            }
+            perge;
+        }
+        c = linea;
+        campus_init = linea;
+        k = ZEPHYRUM;
+        dum (k < campus && c < finis_lineae)
+        {
+            si (*c == '\t')
+            {
+                k++;
+                campus_init = c + I;
+            }
+            c++;
+        }
+        si (k < campus)
+        {
+            redde FALSUM;
+        }
+        c = campus_init;
+        dum (c < finis_lineae && *c != '\t')
+        {
+            c++;
+        }
+        clavis = _chordam_alligare(campus_init,
+            (memoriae_index)(c - campus_init));
+
+        si (clavis_aperta.datum != NIHIL
+            && clavis.mensura == clavis_aperta.mensura
+            && memcmp(clavis.datum, clavis_aperta.datum,
+                   (memoriae_index)clavis.mensura) == ZEPHYRUM)
+        {
+            lineae_gregis++;
+            perge;
+        }
+        /* grex prior clauditur (mensura = initium lineae huius) */
+        si (clavis_aperta.datum != NIHIL)
+        {
+            GrexVetus* g = (GrexVetus*)piscina_allocare(
+                piscina_clavium, magnitudo(GrexVetus));
+
+            si (g == NIHIL)
+            {
+                redde FALSUM;
+            }
+            g->initium = initium_gregis;
+            g->mensura = (memoriae_index)(linea - initium_gregis);
+            g->lineae = lineae_gregis;
+            (vacuum)tabula_dispersa_inserere(greges, clavis_aperta,
+                g);
+        }
+        si (tabula_dispersa_continet(greges, clavis))
+        {
+            redde FALSUM;   /* NON CONTIGUA */
+        }
+        clavis_aperta = clavis;
+        initium_gregis = linea;
+        lineae_gregis = I;
+        si (claves != NIHIL)
+        {
+            chorda* s = (chorda*)xar_addere(claves);
+
+            si (s != NIHIL)
+            {
+                *s = clavis;
+            }
+        }
+    }
+    si (clavis_aperta.datum != NIHIL)
+    {
+        GrexVetus* g = (GrexVetus*)piscina_allocare(piscina_clavium,
+            magnitudo(GrexVetus));
+
+        si (g == NIHIL)
+        {
+            redde FALSUM;
+        }
+        g->initium = initium_gregis;
+        g->mensura = (memoriae_index)(finis - initium_gregis);
+        g->lineae = lineae_gregis;
+        (vacuum)tabula_dispersa_inserere(greges, clavis_aperta, g);
+    }
+    redde VERUM;
+}
+
+/* adjacentia inversa graphi veteris: ad -> Xar exium (clausura
+ * reversa ab ea currit). Status (sumpta|praetermissa) AMBO numerant
+ * - coniunctio conservativa. */
+hic_manens vacuum
+_adjacentiam_aedificare (constans character* datum,
+    memoriae_index mensura)
+{
+    constans character* cursor = datum;
+    constans character* finis = datum + mensura;
+    i32 n_praef = II;
+
+    dum (cursor < finis)
+    {
+        constans character* linea = cursor;
+        constans character* nl = (constans character*)memchr(cursor,
+            '\n', (memoriae_index)(finis - cursor));
+        constans character* finis_lineae = (nl != NIHIL) ? nl : finis;
+        constans character* t1;
+        constans character* t2;
+        chorda ex;
+        chorda ad;
+        vacuum* valor;
+        Xar* exs;
+
+        cursor = (nl != NIHIL) ? nl + I : finis;
+        si (n_praef > ZEPHYRUM)
+        {
+            n_praef--;
+            perge;
+        }
+        si (linea == finis_lineae)
+        {
+            perge;
+        }
+        t1 = (constans character*)memchr(linea, '\t',
+            (memoriae_index)(finis_lineae - linea));
+        si (t1 == NIHIL)
+        {
+            perge;
+        }
+        t2 = (constans character*)memchr(t1 + I, '\t',
+            (memoriae_index)(finis_lineae - (t1 + I)));
+        si (t2 == NIHIL)
+        {
+            perge;
+        }
+        ex = _chordam_alligare(linea, (memoriae_index)(t1 - linea));
+        ad = _chordam_alligare(t1 + I, (memoriae_index)(t2 - (t1 + I)));
+        si (ex.mensura == ZEPHYRUM || ad.mensura == ZEPHYRUM)
+        {
+            perge;
+        }
+        si (tabula_dispersa_invenire(adjacentia_inversa, ad, &valor)
+            && valor != NIHIL)
+        {
+            exs = (Xar*)valor;
+        }
+        alioquin
+        {
+            exs = xar_creare(piscina_clavium, (i32)magnitudo(chorda));
+            si (exs == NIHIL)
+            {
+                perge;
+            }
+            (vacuum)tabula_dispersa_inserere(adjacentia_inversa, ad,
+                exs);
+            si (ads_visae != NIHIL)
+            {
+                chorda* s = (chorda*)xar_addere(ads_visae);
+
+                si (s != NIHIL)
+                {
+                    *s = ad;
+                }
+            }
+        }
+        {
+            chorda* s = (chorda*)xar_addere(exs);
+
+            si (s != NIHIL)
+            {
+                *s = ex;
+            }
+        }
+    }
+}
+
+/* semen clausurae (idempotens): in affecta + frontem */
+hic_manens vacuum
+_afficere (chorda via)
+{
+    chorda* s;
+
+    si (affecta == NIHIL || via.mensura == ZEPHYRUM
+        || tabula_dispersa_continet(affecta, via))
+    {
+        redde;
+    }
+    (vacuum)tabula_dispersa_inserere(affecta, via, NIHIL);
+    s = (chorda*)xar_addere(frons_clausurae);
+    si (s != NIHIL)
+    {
+        *s = via;
+    }
+}
+
+hic_manens chorda
+_basis_chordae (chorda via)
+{
+    i32 k = via.mensura;
+
+    dum (k > ZEPHYRUM && via.datum[k - I] != '/')
+    {
+        k--;
+    }
+    redde _chordam_alligare((constans character*)via.datum + k,
+        (memoriae_index)(via.mensura - k));
+}
+
+/* praeparatio incrementalis (viae_omnes iam collectae/ordinatae).
+ * FALSUM cum causa in stderr -> plenus (numquam tacite). VERUM ->
+ * greges_*, copia_iudicanda, stat_* impleta. */
+hic_manens b32
+_incrementale_praeparare (vacuum)
+{
+    memoriae_index m_ord = ZEPHYRUM;
+    memoriae_index m_marg = ZEPHYRUM;
+    constans character* vetus_ord;
+    constans character* vetus_marg;
+    TabulaDispersa* ambulatae;
+    TabulaDispersa* directae;
+    TabulaDispersa* deletae_visae;
+    Xar* claves_ordinum;
+    Xar* claves_marginum;
+    i32 n;
+    i32 j;
+
+    vetus_ord = _plagulam_totam_legere("build/nexus.tsv",
+        "nexus_vetus_ordines", &m_ord);
+    si (vetus_ord == NIHIL)
+    {
+        fprintf(stderr, "incrementale non possibile: nexus.tsv"
+            " vetus deest -> plenus\n");
+        redde FALSUM;
+    }
+    si (sscanf(vetus_ord, "# nexus.tsv GENERATUM %ld",
+            &stampa_vetus) != I
+        || stampa_vetus <= 0L)
+    {
+        fprintf(stderr, "incrementale non possibile: stampa"
+            " GENERATUM illegibilis -> plenus\n");
+        redde FALSUM;
+    }
+    vetus_marg = _plagulam_totam_legere("build/inclusiones.tsv",
+        "nexus_vetus_margines", &m_marg);
+    si (vetus_marg == NIHIL)
+    {
+        fprintf(stderr, "incrementale non possibile:"
+            " inclusiones.tsv vetus deest -> plenus\n");
+        redde FALSUM;
+    }
+
+    /* custos systematis: canalis lexici extra graphum, iudicia
+     * OMNIA afficit */
+    {
+        structura stat st;
+
+        si (stat("silva/fontes/systema_c89.h", &st) != ZEPHYRUM
+            || (long)st.st_mtime >= stampa_vetus)
+        {
+            fprintf(stderr, "incrementale non possibile: systema"
+                " mutatum -> plenus\n");
+            redde FALSUM;
+        }
+    }
+
+    greges_ordinum = tabula_dispersa_creare_chorda(piscina_clavium,
+        DXII);
+    greges_marginum = tabula_dispersa_creare_chorda(piscina_clavium,
+        DXII);
+    adjacentia_inversa = tabula_dispersa_creare_chorda(
+        piscina_clavium, DXII);
+    affecta = tabula_dispersa_creare_chorda(piscina_clavium, DXII);
+    copia_iudicanda = tabula_dispersa_creare_chorda(piscina_clavium,
+        DXII);
+    ambulatae = tabula_dispersa_creare_chorda(piscina_clavium, DXII);
+    directae = tabula_dispersa_creare_chorda(piscina_clavium, DXII);
+    deletae_visae = tabula_dispersa_creare_chorda(piscina_clavium,
+        DXII);
+    claves_ordinum = xar_creare(piscina_clavium,
+        (i32)magnitudo(chorda));
+    claves_marginum = xar_creare(piscina_clavium,
+        (i32)magnitudo(chorda));
+    ads_visae = xar_creare(piscina_clavium, (i32)magnitudo(chorda));
+    frons_clausurae = xar_creare(piscina_clavium,
+        (i32)magnitudo(chorda));
+    si (greges_ordinum == NIHIL || greges_marginum == NIHIL
+        || adjacentia_inversa == NIHIL || affecta == NIHIL
+        || copia_iudicanda == NIHIL || ambulatae == NIHIL
+        || directae == NIHIL || deletae_visae == NIHIL
+        || claves_ordinum == NIHIL || claves_marginum == NIHIL
+        || ads_visae == NIHIL || frons_clausurae == NIHIL)
+    {
+        fprintf(stderr, "incrementale non possibile: memoria"
+            " -> plenus\n");
+        redde FALSUM;
+    }
+
+    si (!_greges_aedificare(vetus_ord, m_ord, I, III,
+            greges_ordinum, claves_ordinum))
+    {
+        fprintf(stderr, "incrementale non possibile: nexus.tsv"
+            " vetus non contiguus (forma ante ordinem canonicum?)"
+            " -> plenus\n");
+        redde FALSUM;
+    }
+    si (!_greges_aedificare(vetus_marg, m_marg, II, ZEPHYRUM,
+            greges_marginum, claves_marginum))
+    {
+        fprintf(stderr, "incrementale non possibile:"
+            " inclusiones.tsv vetus non contiguus -> plenus\n");
+        redde FALSUM;
+    }
+    _adjacentiam_aedificare(vetus_marg, m_marg);
+
+    n = xar_numerus(viae_omnes);
+    per (j = ZEPHYRUM; j < n; j++)
+    {
+        constans character* v =
+            *(constans character**)xar_obtinere(viae_omnes, j);
+
+        (vacuum)tabula_dispersa_inserere(ambulatae,
+            _chordam_alligare(v, strlen(v)), NIHIL);
+    }
+
+    /* (a) directae per mtime (>= : aequaevum suspectum, polaritas
+     * _via_recens) + (d) novae */
+    per (j = ZEPHYRUM; j < n; j++)
+    {
+        constans character* v =
+            *(constans character**)xar_obtinere(viae_omnes, j);
+        chorda cv = _chordam_alligare(v, strlen(v));
+        structura stat st;
+
+        si (stat(v, &st) != ZEPHYRUM)
+        {
+            perge;   /* evanuit inter collectionem et hic - cursus
+                      * proximus deletam videt */
+        }
+        si ((long)st.st_mtime >= stampa_vetus)
+        {
+            (vacuum)tabula_dispersa_inserere(directae, cv, NIHIL);
+            _afficere(cv);
+        }
+        alioquin si (!tabula_dispersa_continet(greges_ordinum, cv)
+            && !tabula_dispersa_continet(greges_marginum, cv))
+        {
+            /* sine grege veteri = nova - NISI mensura eam
+             * praetermitteret (regula eadem qua iudicium) */
+            si (mensura_maxima > ZEPHYRUM
+                && (long)st.st_size > (long)mensura_maxima)
+            {
+                perge;
+            }
+            (vacuum)tabula_dispersa_inserere(copia_iudicanda, cv,
+                NIHIL);
+            stat_novae++;
+            /* umbra basename: caput novum resolutiones praebere
+             * mutare potest (primus-vincit) - semina basename ipsum
+             * (margines ad non resoluti) + ads veteres eiusdem
+             * basename */
+            {
+                chorda basis = _basis_chordae(cv);
+                i32 na = xar_numerus(ads_visae);
+                i32 ka;
+
+                _afficere(basis);
+                per (ka = ZEPHYRUM; ka < na; ka++)
+                {
+                    chorda ad = *(chorda*)xar_obtinere(ads_visae,
+                        ka);
+                    chorda basis_ad = _basis_chordae(ad);
+
+                    si (basis_ad.mensura == basis.mensura
+                        && memcmp(basis_ad.datum, basis.datum,
+                               (memoriae_index)basis.mensura)
+                            == ZEPHYRUM)
+                    {
+                        _afficere(ad);
+                    }
+                }
+            }
+        }
+    }
+
+    /* (c) deletae: claves veteres non ambulatae - semina quoque
+     * (includentes capitis deleti re-iudicandi; umbratio inversa
+     * per easdem margines tecta) */
+    {
+        i32 nk = xar_numerus(claves_ordinum);
+        i32 kk;
+
+        per (kk = ZEPHYRUM; kk < nk; kk++)
+        {
+            chorda cl = *(chorda*)xar_obtinere(claves_ordinum, kk);
+
+            si (!tabula_dispersa_continet(ambulatae, cl)
+                && !tabula_dispersa_continet(deletae_visae, cl))
+            {
+                (vacuum)tabula_dispersa_inserere(deletae_visae, cl,
+                    NIHIL);
+                stat_deletae++;
+                _afficere(cl);
+            }
+        }
+        nk = xar_numerus(claves_marginum);
+        per (kk = ZEPHYRUM; kk < nk; kk++)
+        {
+            chorda cl = *(chorda*)xar_obtinere(claves_marginum, kk);
+
+            si (!tabula_dispersa_continet(ambulatae, cl)
+                && !tabula_dispersa_continet(deletae_visae, cl))
+            {
+                (vacuum)tabula_dispersa_inserere(deletae_visae, cl,
+                    NIHIL);
+                stat_deletae++;
+                _afficere(cl);
+            }
+        }
+    }
+
+    /* clausura reversa (BFS super graphum VETEREM - argumentum
+     * sanitatis in commentario sectionis) */
+    {
+        i32 caput = ZEPHYRUM;
+
+        dum (caput < xar_numerus(frons_clausurae))
+        {
+            chorda ad = *(chorda*)xar_obtinere(frons_clausurae,
+                caput);
+            vacuum* valor;
+
+            caput++;
+            si (tabula_dispersa_invenire(adjacentia_inversa, ad,
+                    &valor)
+                && valor != NIHIL)
+            {
+                Xar* exs = (Xar*)valor;
+                i32 ne = xar_numerus(exs);
+                i32 ke;
+
+                per (ke = ZEPHYRUM; ke < ne; ke++)
+                {
+                    _afficere(*(chorda*)xar_obtinere(exs, ke));
+                }
+            }
+        }
+    }
+
+    /* copia = (affecta ∩ ambulatae) ∪ novae (iam insertae) */
+    per (j = ZEPHYRUM; j < n; j++)
+    {
+        constans character* v =
+            *(constans character**)xar_obtinere(viae_omnes, j);
+        chorda cv = _chordam_alligare(v, strlen(v));
+
+        si (tabula_dispersa_continet(affecta, cv)
+            && !tabula_dispersa_continet(copia_iudicanda, cv))
+        {
+            (vacuum)tabula_dispersa_inserere(copia_iudicanda, cv,
+                NIHIL);
+            si (tabula_dispersa_continet(directae, cv))
+            {
+                stat_directae++;
+            }
+            alioquin
+            {
+                stat_clausura++;
+            }
+        }
+    }
+    redde VERUM;
+}
+
+/* iudicium plagulae unius + lapis vacuae: si iudicata nihil emisit
+ * (nec mensura praetermissa - illa regula sua excluditur ut -omnia
+ * postea eas capiat), "# vacua <via>" scribitur ne nova aeterna
+ * fiat. Ambobus modis (plenus quoque - tabula plena lapides fert
+ * quos cursus incrementalis sequens legit). */
+hic_manens vacuum
+_plagulam_iudicare (constans SilvaContextus* ctx,
+    constans character* via)
+{
+    i32 ord0 = ordines_scripti;
+    i32 marg0 = inclusiones_scriptae;
+    i32 praet0 = praetermissae;
+
+    via_activa = via;
+    _plagulam_percurrere(ctx, via);
+    via_activa = NIHIL;
+    si (ordines_scripti == ord0 && inclusiones_scriptae == marg0
+        && praetermissae == praet0 && effusio != NIHIL)
+    {
+        fprintf(effusio, "# vacua %s\n", via);
+    }
+}
+
+/* systema semel parsatum (exemplar percursus -semantica) - solum
+ * quando iudicia futura sunt (transitus nulla-mutatione hoc
+ * praeterit: solum floor ambulationis + stat) */
+hic_manens b32
+_systema_praeparare (SilvaContextus* ctx,
+    SilvaPiscina* piscina_arboris_ctx)
+{
+    FILE* pl_sys = fopen("silva/fontes/systema_c89.h", "rb");
+    long mensura_sys;
+    character* fons_sys;
+
+    si (pl_sys == NIHIL)
+    {
+        fprintf(stderr, "nexus_percursus: systema_c89.h deest"
+            " (curre ex radice repositorii)\n");
+        redde FALSUM;
+    }
+    fseek(pl_sys, 0L, SEEK_END);
+    mensura_sys = ftell(pl_sys);
+    fseek(pl_sys, 0L, SEEK_SET);
+    fons_sys = (character*)piscina_allocare(piscina_textuum,
+        (memoriae_index)(mensura_sys + 1L));
+    si (fons_sys == NIHIL
+        || fread(fons_sys, I, (memoriae_index)mensura_sys,
+               pl_sys) != (memoriae_index)mensura_sys)
+    {
+        fprintf(stderr,
+            "nexus_percursus: systema non lectum\n");
+        fclose(pl_sys);
+        redde FALSUM;
+    }
+    fclose(pl_sys);
+    si (!silva_contextus_lexicon_addere(ctx, "systema_c89.h",
+            fons_sys, (insignatus integer)mensura_sys))
+    {
+        fprintf(stderr,
+            "nexus_percursus: lexicon non additum\n");
+        redde FALSUM;
+    }
+    systema_parsura = silva_c89_parsare(piscina_arboris_ctx,
+        "systema_c89.h", fons_sys,
+        (insignatus integer)mensura_sys, NIHIL);
+    si (systema_parsura == NIHIL
+        || systema_parsura->numerus_errorum > ZEPHYRUM)
+    {
+        fprintf(stderr,
+            "nexus_percursus: systema non parsatum\n");
+        redde FALSUM;
+    }
+    systema_semantica = silva_c89_semantica_analysare(
+        piscina_arboris_ctx, systema_parsura);
+    si (systema_semantica == NIHIL)
+    {
+        fprintf(stderr,
+            "nexus_percursus: systema non analysatum\n");
+        redde FALSUM;
+    }
+    redde VERUM;
 }
 
 hic_manens vacuum
@@ -533,55 +1403,6 @@ _caput_praebere (SilvaContextus* ctx, TabulaDispersa* visa,
     }
 }
 
-hic_manens vacuum
-_capita_praeparare (SilvaContextus* ctx, TabulaDispersa* visa,
-    constans character* via)
-{
-    DIR* dir = opendir(via);
-    structura dirent* introitus;
-
-    si (dir == NIHIL)
-    {
-        redde;
-    }
-    dum ((introitus = readdir(dir)) != NIHIL)
-    {
-        character via_plena[1024];
-        memoriae_index m;
-
-        si (introitus->d_name[ZEPHYRUM] == '.')
-        {
-            perge;
-        }
-        si (_praetermittendum(introitus->d_name))
-        {
-            perge;
-        }
-        si (strlen(via) + strlen(introitus->d_name) + II
-            >= magnitudo(via_plena))
-        {
-            perge;
-        }
-        sprintf(via_plena, "%s/%s", via, introitus->d_name);
-
-        si (introitus->d_type == DT_DIR)
-        {
-            _capita_praeparare(ctx, visa, via_plena);
-        }
-        alioquin
-        {
-            m = strlen(introitus->d_name);
-            si (m >= III && introitus->d_name[m - II] == '.'
-                && introitus->d_name[m - I] == 'h')
-            {
-                _caput_praebere(ctx, visa, via_plena,
-                    introitus->d_name);
-            }
-        }
-    }
-    closedir(dir);
-}
-
 s32 principale (integer argc, character** argv)
 {
     SilvaPiscina* piscina_arboris_ctx;
@@ -598,12 +1419,17 @@ s32 principale (integer argc, character** argv)
     integer k;
     clock_t c0;
     clock_t c1;
+    time_t nunc_stampa;
 
     per (k = I; k < argc; k++)
     {
         si (strcmp(argv[k], "-omnia") == ZEPHYRUM)
         {
             mensura_maxima = ZEPHYRUM;
+        }
+        alioquin si (strcmp(argv[k], "-plenus") == ZEPHYRUM)
+        {
+            modus_plenus = VERUM;
         }
         alioquin
         {
@@ -646,70 +1472,75 @@ s32 principale (integer argc, character** argv)
         redde I;
     }
 
-    /* systema semel parsatum (exemplar percursus -semantica) */
-    {
-        FILE* pl_sys = fopen("silva/fontes/systema_c89.h", "rb");
-        long mensura_sys;
-        character* fons_sys;
+    /* stampa nova ANTE ambulationem capta (conservativum: editiones
+     * durante cursu proximo cursui cadunt, numquam perduntur) */
+    nunc_stampa = time(NIHIL);
 
-        si (pl_sys == NIHIL)
-        {
-            fprintf(stderr, "nexus_percursus: systema_c89.h deest"
-                " (curre ex radice repositorii)\n");
-            redde I;
-        }
-        fseek(pl_sys, 0L, SEEK_END);
-        mensura_sys = ftell(pl_sys);
-        fseek(pl_sys, 0L, SEEK_SET);
-        fons_sys = (character*)piscina_allocare(piscina_textuum,
-            (memoriae_index)(mensura_sys + 1L));
-        si (fons_sys == NIHIL
-            || fread(fons_sys, I, (memoriae_index)mensura_sys,
-                   pl_sys) != (memoriae_index)mensura_sys)
-        {
-            fprintf(stderr,
-                "nexus_percursus: systema non lectum\n");
-            fclose(pl_sys);
-            redde I;
-        }
-        fclose(pl_sys);
-        si (!silva_contextus_lexicon_addere(ctx, "systema_c89.h",
-                fons_sys, (insignatus integer)mensura_sys))
-        {
-            fprintf(stderr,
-                "nexus_percursus: lexicon non additum\n");
-            redde I;
-        }
-        systema_parsura = silva_c89_parsare(piscina_arboris_ctx,
-            "systema_c89.h", fons_sys,
-            (insignatus integer)mensura_sys, NIHIL);
-        si (systema_parsura == NIHIL
-            || systema_parsura->numerus_errorum > ZEPHYRUM)
-        {
-            fprintf(stderr,
-                "nexus_percursus: systema non parsatum\n");
-            redde I;
-        }
-        systema_semantica = silva_c89_semantica_analysare(
-            piscina_arboris_ctx, systema_parsura);
-        si (systema_semantica == NIHIL)
-        {
-            fprintf(stderr,
-                "nexus_percursus: systema non analysatum\n");
-            redde I;
-        }
+    /* rung 5 (1): collectio + ordinatio canonica ANTE praebitionem
+     * capitum et iudicia - primus-vincit basename duplicatorum nunc
+     * deterministicus (include/ ante probationes/, quinque paria
+     * fixturarum roundtrip) */
+    viae_omnes = xar_creare(piscina_clavium,
+        (i32)magnitudo(constans character*));
+    si (viae_omnes == NIHIL)
+    {
+        fprintf(stderr, "nexus_percursus: xar deest\n");
+        redde I;
+    }
+    _vias_colligere(radix);
+    xar_ordinare(viae_omnes, _viae_comparare);
+
+    /* rung 5 (2): modus incrementalis temptatur (radix "." solum -
+     * viae tabulae veteris radici-relativae sunt) */
+    si (!modus_plenus && strcmp(radix, ".") == ZEPHYRUM)
+    {
+        modus_incrementalis = _incrementale_praeparare();
+    }
+    si (modus_incrementalis
+        && stat_directae + stat_clausura + stat_novae + stat_deletae
+            == ZEPHYRUM)
+    {
+        fprintf(stderr, "incrementale: nulla mutatio - tabulae"
+            " intactae\n");
+        redde ZEPHYRUM;
     }
 
+    /* systema + capita solum quando iudicia futura (cursus
+     * deletione-sola eas praeterit) */
+    si (!modus_incrementalis
+        || stat_directae + stat_clausura + stat_novae > ZEPHYRUM)
     {
-        TabulaDispersa* visa = tabula_dispersa_creare_chorda(
-            piscina_clavium, DXII);
-
-        si (visa == NIHIL)
+        si (!_systema_praeparare(ctx, piscina_arboris_ctx))
         {
-            fprintf(stderr, "nexus_percursus: tabula deest\n");
             redde I;
         }
-        _capita_praeparare(ctx, visa, ".");
+        {
+            TabulaDispersa* visa = tabula_dispersa_creare_chorda(
+                piscina_clavium, DXII);
+            i32 n = xar_numerus(viae_omnes);
+            i32 j;
+
+            si (visa == NIHIL)
+            {
+                fprintf(stderr, "nexus_percursus: tabula deest\n");
+                redde I;
+            }
+            per (j = ZEPHYRUM; j < n; j++)
+            {
+                constans character* v =
+                    *(constans character**)xar_obtinere(viae_omnes,
+                        j);
+                memoriae_index m = strlen(v);
+
+                si (v[m - I] == 'h')
+                {
+                    constans character* basis = strrchr(v, '/');
+
+                    _caput_praebere(ctx, visa, v,
+                        basis != NIHIL ? basis + I : v);
+                }
+            }
+        }
     }
 
     effusio = fopen(via_effusionis, "w");
@@ -726,22 +1557,63 @@ s32 principale (integer argc, character** argv)
             via_incl_effusionis);
         redde I;
     }
-    {
-        time_t nunc = time(NIHIL);
-
-        fprintf(effusio, "# nexus.tsv GENERATUM %ld"
-            " - DISPONIBILE, noli committere;"
-            " regenera: ./silva/nexus.sh -renovare\n",
-            (long)nunc);
-        fprintf(effusio_inclusionum, "# inclusiones.tsv GENERATUM %ld"
-            " - DISPONIBILE, noli committere;"
-            " regenera: ./silva/nexus.sh -renovare\n"
-            "# ex\tad\tstatus(sumpta|praetermissa)\n",
-            (long)nunc);
-    }
+    fprintf(effusio, "# nexus.tsv GENERATUM %ld"
+        " - DISPONIBILE, noli committere;"
+        " regenera: ./silva/nexus.sh -renovare\n",
+        (long)nunc_stampa);
+    fprintf(effusio_inclusionum, "# inclusiones.tsv GENERATUM %ld"
+        " - DISPONIBILE, noli committere;"
+        " regenera: ./silva/nexus.sh -renovare\n"
+        "# ex\tad\tstatus(sumpta|praetermissa)\n",
+        (long)nunc_stampa);
 
     c0 = clock();
-    _directorium_percurrere(ctx, radix);
+    {
+        i32 n = xar_numerus(viae_omnes);
+        i32 j;
+
+        per (j = ZEPHYRUM; j < n; j++)
+        {
+            constans character* v =
+                *(constans character**)xar_obtinere(viae_omnes, j);
+            chorda cv;
+            vacuum* valor;
+
+            si (!modus_incrementalis)
+            {
+                _plagulam_iudicare(ctx, v);
+                perge;
+            }
+            /* rung 5 (3): fusio fluminis ordine canonico - via in
+             * copia iudicatur recens, via retenta octetim vetus,
+             * via deleta (non ambulata) numquam attingitur */
+            cv = _chordam_alligare(v, strlen(v));
+            si (tabula_dispersa_continet(copia_iudicanda, cv))
+            {
+                _plagulam_iudicare(ctx, v);
+                perge;
+            }
+            si (tabula_dispersa_invenire(greges_ordinum, cv, &valor)
+                && valor != NIHIL)
+            {
+                constans GrexVetus* g = (constans GrexVetus*)valor;
+
+                fwrite(g->initium, I, g->mensura, effusio);
+                ordines_retenti += g->lineae;
+            }
+            si (tabula_dispersa_invenire(greges_marginum, cv,
+                    &valor)
+                && valor != NIHIL)
+            {
+                constans GrexVetus* g = (constans GrexVetus*)valor;
+
+                fwrite(g->initium, I, g->mensura,
+                    effusio_inclusionum);
+                margines_retenti += g->lineae;
+            }
+        }
+        via_activa = NIHIL;
+    }
     c1 = clock();
     fclose(effusio);
     fclose(effusio_inclusionum);
@@ -768,10 +1640,27 @@ s32 principale (integer argc, character** argv)
     fprintf(stderr, "\nordines:  %d scripti; %d duplicati"
         " (capita inclusa)\n", (int)ordines_scripti,
         (int)ordines_duplicati);
-    fprintf(stderr, "margines: %d scripti; %d duplicati\n",
-        (int)inclusiones_scriptae, (int)inclusiones_duplicatae);
+    fprintf(stderr, "margines: %d scripti; %d duplicati;"
+        " %d alieni omissi\n", (int)inclusiones_scriptae,
+        (int)inclusiones_duplicatae, (int)inclusiones_alienae);
+    si (ordines_alieni > ZEPHYRUM)
+    {
+        fprintf(stderr, "CAUTIO: %d ordines alieni omissi"
+            " (praesumptio attributionis fracta!)\n",
+            (int)ordines_alieni);
+    }
     fprintf(stderr, "sem2:     %d / %d plagulae (recanonicare"
         " mutavit)\n", (int)plagulae_sem2, (int)plagulae);
+    si (modus_incrementalis)
+    {
+        fprintf(stderr, "incrementale: %d re-iudicatae (%d per"
+            " clausuram capitum), %d deletae, %d novae;"
+            " ordines retenti %d, margines retenti %d\n",
+            (int)(stat_directae + stat_clausura),
+            (int)stat_clausura, (int)stat_deletae,
+            (int)stat_novae, (int)ordines_retenti,
+            (int)margines_retenti);
+    }
     fprintf(stderr, "tempus:   %.0f s\n",
         (duplex)(c1 - c0) / (duplex)CLOCKS_PER_SEC);
     fprintf(stderr, "tabula:   %s\n", via_finalis);

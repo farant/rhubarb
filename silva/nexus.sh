@@ -88,9 +88,12 @@ cd "$RADIX_DIR"
 # (-O2 -flto, exemplar cursor -celer; 143s -> ~55s mensuratum
 # 2026-07-14, PARITAS OCTETIM contra -O0 probata in ambabus
 # tabulis). Obiecta celeria in build/celer/ - NUMQUAM mixta cum
-# -O0. Scala reliqua (reusus piscinarum / sem2 condicionalis /
-# furcae / INCREMENTALE) in silva/phase-log.md.
+# -O0. RUNG 5: modus INCREMENTALIS ordinarius (copia laboris per
+# stampam GENERATUM + clausuram reversam graphi; commissio typica
+# 1-2s); -plenus vim facit. INSTRUMENTUM NOVUM -> plenus coactum
+# (tabula mixta duorum parsatorum numquam nascitur).
 if [ "${1:-}" = "-renovare" ]; then
+    shift   # args reliqua (-plenus, -omnia) ad sweep transeunt
     CELER_DIR="$BUILD_DIR/celer"
     mkdir -p "$CELER_DIR"
     CELER_FLAGS=("${GCC_FLAGS[@]}" "-O2" "-flto")
@@ -130,6 +133,7 @@ if [ "${1:-}" = "-renovare" ]; then
     celer_objs="$celer_objs $obj"
     SWEEP_SRC="$SILVA_DIR/instrumenta/principalia/nexus_percursus.c"
     SWEEP_BIN="$CELER_DIR/nexus_percursus"
+    plenus_vis=""
     if [ "$celer_novum" = "1" ] || [ ! -f "$SWEEP_BIN" ] \
         || [ "$SWEEP_SRC" -nt "$SWEEP_BIN" ] \
         || [ -n "$(newest_header "$SWEEP_BIN")" ] \
@@ -137,9 +141,15 @@ if [ "${1:-}" = "-renovare" ]; then
         echo "  [celer percursus] nexus_percursus.c" >&2
         clang "${CELER_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" "$SWEEP_SRC" \
             $celer_objs -o "$SWEEP_BIN" || exit 1
+        # instrumentum novum: iudicia mutari potuerunt -> plenus
+        # (numquam tacite: nota infra)
+        plenus_vis="-plenus"
+        echo "  [instrumentum novum -> plenus]" >&2
     fi
     mkdir -p "$RADIX_DIR/build"
-    exec "$SWEEP_BIN"
+    # $plenus_vis SINE virgulis consulto (vacuum evanescit - bash
+    # scissio verborum; tabula vacua sub set -u in bash 3.2 fallit)
+    exec "$SWEEP_BIN" $plenus_vis "$@"
 fi
 
 # cautio vetustatis: tabula senior fonte aliquo recentiore
