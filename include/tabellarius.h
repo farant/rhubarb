@@ -62,6 +62,26 @@ tabellarius_epistulam_scribere (
     FILE*  fluxus,
     chorda corpus);
 
+/* Framing alterum (MCP stdio): nuntius unus = linea una JSON.
+ * Lineam legere: sine termino (aedificator), '\r' finalis
+ * detractum, lineae vacuae praetermissae (spec eas vetat - liberales
+ * legimus), EOF ante '\n' = fluxus finitus. */
+chorda
+tabellarius_lineam_legere (
+    FILE*    fluxus,
+    Piscina* piscina,
+    b32*     fluxus_finitus);
+
+/* Lineam scribere: corpus + '\n' + fflush. LEX SERIALIZATIONIS:
+ * corpus '\n' crudum continere NON potest (json_scribere compactum
+ * cum effugiis id praestat) - si continet, functio RECUSAT (stderr
+ * clamor, nihil scriptum) ne canalis corrumpatur. Redde VERUM si
+ * scriptum. */
+b32
+tabellarius_lineam_scribere (
+    FILE*  fluxus,
+    chorda corpus);
+
 /* ==================================================
  * NUNTIUS (envelope)
  * ================================================== */

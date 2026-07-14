@@ -12,6 +12,7 @@ integer
 principale (integer argc, character** argv)
 {
     LegatusConfiguratio cfg;
+    integer i;
 
     memset(&cfg, ZEPHYRUM, magnitudo(LegatusConfiguratio));
     si (argc > ZEPHYRUM)
@@ -19,6 +20,19 @@ principale (integer argc, character** argv)
         /* vigilia sui: binarium residens fontibus posterius
          * cognoscit (excubitor chunk 3) */
         cfg.binarium_via = argv[ZEPHYRUM];
+    }
+    per (i = I; i < argc; i++)
+    {
+        si (strcmp(argv[i], "-mcp") == ZEPHYRUM)
+        {
+            cfg.modus_mcp = VERUM;
+        }
+        alioquin si (strcmp(argv[i], "-radix") == ZEPHYRUM
+            && i + I < argc)
+        {
+            cfg.radix = argv[i + I];
+            i++;
+        }
     }
     redde (integer)legatus_currere(stdin, stdout, &cfg);
 }

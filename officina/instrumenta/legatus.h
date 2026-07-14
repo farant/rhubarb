@@ -36,6 +36,10 @@ nomen structura {
                                         * (probationes) */
     constans character* fabrica_via;   /* NIHIL = "fabrica.tsv"
                                         * (commoditas probationum) */
+    b32 modus_mcp;               /* VERUM = servus MCP (LEGATI):
+                                  * framing lineis-delimitatum,
+                                  * methodi tools; radix ex cfg
+                                  * (initialize MCP rootUri caret) */
 } LegatusConfiguratio;
 
 /* Ansa principalis: legere epistulas ex intra, respondere/publicare

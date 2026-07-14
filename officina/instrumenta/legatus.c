@@ -109,6 +109,10 @@ nomen structura {
     longus          binarium_tempus;   /* mtime binarii; 0 = quieta */
     b32             se_stalus;
     character       stalus_causa[LEGATUS_VIA_MAXIMA];
+
+    /* LEGATI (modus MCP): framing lineis, methodi tools -
+     * quaestiones nomine-basatae; sine documentis */
+    b32             modus_mcp;
 } Legatus;
 
 /* quid ansa post nuntium faciat */
@@ -870,7 +874,14 @@ _symbolum_plagulae_solius (constans SemanticaSymbolum* s)
 interior vacuum
 _respondere (Legatus* l, chorda corpus)
 {
-    tabellarius_epistulam_scribere(l->extra, corpus);
+    si (l->modus_mcp)
+    {
+        (vacuum)tabellarius_lineam_scribere(l->extra, corpus);
+    }
+    alioquin
+    {
+        tabellarius_epistulam_scribere(l->extra, corpus);
+    }
 }
 
 interior JsonValor*
@@ -4379,6 +4390,8 @@ _initialize_tractare (Legatus* l, Piscina* pn, JsonValor* id,
             json_boolean_creare(pn, VERUM));
         json_objectum_ponere(caps, "definitionProvider",
             json_boolean_creare(pn, VERUM));
+        json_objectum_ponere(caps, "implementationProvider",
+            json_boolean_creare(pn, VERUM));
         json_objectum_ponere(caps, "referencesProvider",
             json_boolean_creare(pn, VERUM));
         json_objectum_ponere(caps, "workspaceSymbolProvider",
@@ -4393,6 +4406,293 @@ _initialize_tractare (Legatus* l, Piscina* pn, JsonValor* id,
         json_objectum_ponere(resultatum, "serverInfo", servus);
         _respondere(l, tabellarius_responsum(pn, id, resultatum));
     }
+}
+
+/* ==================================================
+ * LEGATI - modus MCP (pars 1: framing + handshake)
+ *
+ * Quaestiones nomine-basatae, trahentes, disco-verae - complementum
+ * LSP positionalis impellentis. Idem mundus calidus (radix,
+ * praeparatio, index, vigilia); framing lineis-delimitatum; sine
+ * documentis (arbores effimerae - decipula C11 exarmata, spec-v2
+ * §V). Instrumenta implentur parte 3; hic sceleta.
+ * ================================================== */
+
+#define LEGATI_PROTOCOLLUM_PINNATUM "2025-06-18"
+
+interior constans character* constans LEGATI_DOCTRINA =
+    "LEGATI: quaestiones nomine-basatae de codice C89 huius arboris"
+    " (complementum LSP positionalis). diagnostica {via} = iudicium"
+    " plagulae ex disco (verdictum ACCIPE/REICE + diagnostica posita"
+    " omnium graduum). symbolum {titulus} = charta symboli: sedes"
+    " definitionis, genus, signatura, usus per plagulas; simillima"
+    " si titulus ignotus. vocantes {titulus} = quae functiones eum"
+    " vocant. vocata {titulus} = quas functiones ea vocat. Responsa"
+    " statum disci recentem legunt (revalidatio pigra); lineae"
+    " CAUTIO staleness aut sumptus aperiunt.";
+
+/* instrumentum unius argumenti chordae -> {name, description,
+ * inputSchema} */
+interior JsonValor*
+_mcp_instrumentum (Piscina* pn, constans character* titulus,
+    constans character* descriptio, constans character* arg_titulus,
+    constans character* arg_descriptio)
+{
+    JsonValor* instrumentum = json_objectum_creare(pn);
+    JsonValor* schema = json_objectum_creare(pn);
+    JsonValor* proprietates = json_objectum_creare(pn);
+    JsonValor* arg = json_objectum_creare(pn);
+    JsonValor* necessaria = json_tabulatum_creare(pn);
+
+    json_objectum_ponere(arg, "type",
+        json_chorda_creare_literis(pn, "string"));
+    json_objectum_ponere(arg, "description",
+        json_chorda_creare_literis(pn, arg_descriptio));
+    json_objectum_ponere(proprietates, arg_titulus, arg);
+    json_tabulatum_addere(necessaria,
+        json_chorda_creare_literis(pn, arg_titulus));
+    json_objectum_ponere(schema, "type",
+        json_chorda_creare_literis(pn, "object"));
+    json_objectum_ponere(schema, "properties", proprietates);
+    json_objectum_ponere(schema, "required", necessaria);
+    json_objectum_ponere(instrumentum, "name",
+        json_chorda_creare_literis(pn, titulus));
+    json_objectum_ponere(instrumentum, "description",
+        json_chorda_creare_literis(pn, descriptio));
+    json_objectum_ponere(instrumentum, "inputSchema", schema);
+    redde instrumentum;
+}
+
+interior vacuum
+_mcp_initialize_tractare (Legatus* l, Piscina* pn, JsonValor* id,
+    JsonValor* params, constans LegatusConfiguratio* cfg)
+{
+    si (l->initiatum)
+    {
+        _respondere(l, tabellarius_errorem(pn, id,
+            TABELLARIUS_ERROR_PETITIO_INVALIDA, "iam initiatum"));
+        redde;
+    }
+    /* opus LSP minus codificatione (effectus = textus, numeri
+     * 1-basati - remappa non opus, spec-v2 §III) */
+    _radicem_statuere(l, params, cfg);
+    si (l->radix_mensura == ZEPHYRUM)
+    {
+        _respondere(l, tabellarius_errorem(pn, id,
+            TABELLARIUS_ERROR_INTERNUS,
+            "radix ignota (-radix deest)"));
+        redde;
+    }
+    si (!_praeparationem_struere(l))
+    {
+        _respondere(l, tabellarius_errorem(pn, id,
+            TABELLARIUS_ERROR_INTERNUS,
+            "apparatus praeparari non potuit"));
+        redde;
+    }
+    _exclusiones_onerare(l);
+    _indicem_onerare(l);
+    _vigiliam_construere(l, cfg);
+    si (l->se_stalus)
+    {
+        fprintf(stderr, "legati: VIGILIA - %s recentior binario\n",
+            l->stalus_causa);
+    }
+    l->initiatum = VERUM;
+
+    {
+        JsonValor* resultatum = json_objectum_creare(pn);
+        JsonValor* caps = json_objectum_creare(pn);
+        JsonValor* instrumenta_caps = json_objectum_creare(pn);
+        JsonValor* servus = json_objectum_creare(pn);
+        JsonValor* versio_v = params != NIHIL
+            ? json_objectum_capere(params, "protocolVersion")
+            : NIHIL;
+        chorda versio = json_ad_chorda(versio_v);
+
+        /* protocolVersion resonatum si datum (subcopia tools
+         * stabilis trans versiones), alioquin pinna nostra */
+        json_objectum_ponere(resultatum, "protocolVersion",
+            versio.mensura > ZEPHYRUM
+                ? json_chorda_creare(pn, versio)
+                : json_chorda_creare_literis(pn,
+                      LEGATI_PROTOCOLLUM_PINNATUM));
+        json_objectum_ponere(caps, "tools", instrumenta_caps);
+        json_objectum_ponere(resultatum, "capabilities", caps);
+        json_objectum_ponere(servus, "name",
+            json_chorda_creare_literis(pn, "legati"));
+        json_objectum_ponere(servus, "version",
+            json_chorda_creare_literis(pn, "0"));
+        json_objectum_ponere(resultatum, "serverInfo", servus);
+        json_objectum_ponere(resultatum, "instructions",
+            json_chorda_creare_literis(pn, LEGATI_DOCTRINA));
+        _respondere(l, tabellarius_responsum(pn, id, resultatum));
+    }
+}
+
+interior vacuum
+_mcp_toolslist_tractare (Legatus* l, Piscina* pn, JsonValor* id)
+{
+    JsonValor* resultatum = json_objectum_creare(pn);
+    JsonValor* instrumenta = json_tabulatum_creare(pn);
+
+    json_tabulatum_addere(instrumenta, _mcp_instrumentum(pn,
+        "diagnostica",
+        "Iudicium C89 plagulae ex disco (examen calidum): verdictum"
+        " ACCIPE/REICE + diagnostica posita omnium graduum"
+        " (violatio/suspectum/domesticum/infra).",
+        "via",
+        "via plagulae .c/.h, relativa radici aut absoluta"));
+    json_tabulatum_addere(instrumenta, _mcp_instrumentum(pn,
+        "symbolum",
+        "Charta symboli nomine: sedes definitionis (corpus .c"
+        " primum), genus, signatura, usus per plagulas; macris"
+        " corpus definitionis; simillima si titulus ignotus.",
+        "titulus",
+        "nomen symboli (functio/variabile/typus/macro)"));
+    json_tabulatum_addere(instrumenta, _mcp_instrumentum(pn,
+        "vocantes",
+        "Quae functiones titulum vocant (hierarchia vocationum"
+        " intrans, nomine - sine documento aperto).",
+        "titulus",
+        "nomen functionis"));
+    json_tabulatum_addere(instrumenta, _mcp_instrumentum(pn,
+        "vocata",
+        "Quas functiones functio nominata vocat (hierarchia"
+        " vocationum exiens, nomine).",
+        "titulus",
+        "nomen functionis"));
+    json_objectum_ponere(resultatum, "tools", instrumenta);
+    _respondere(l, tabellarius_responsum(pn, id, resultatum));
+}
+
+/* effectus textus instrumenti (+ CAUTIO vigiliae si stalus) */
+interior vacuum
+_mcp_textum_respondere (Legatus* l, Piscina* pn, JsonValor* id,
+    constans character* textus, b32 error_est)
+{
+    JsonValor* resultatum = json_objectum_creare(pn);
+    JsonValor* contentus = json_tabulatum_creare(pn);
+    JsonValor* fragmentum = json_objectum_creare(pn);
+    constans character* corpus = textus;
+
+    si (l->se_stalus)
+    {
+        character* cum_cautione = (character*)piscina_allocare(pn,
+            strlen(textus) + LEGATUS_VIA_MAXIMA + CXXVIII);
+
+        si (cum_cautione != NIHIL)
+        {
+            sprintf(cum_cautione,
+                "%s\nCAUTIO: LEGATI IPSE STALUS (%s recentior"
+                " binario) - /mcp reconnect renovat", textus,
+                l->stalus_causa);
+            corpus = cum_cautione;
+        }
+    }
+    json_objectum_ponere(fragmentum, "type",
+        json_chorda_creare_literis(pn, "text"));
+    json_objectum_ponere(fragmentum, "text",
+        json_chorda_creare_literis(pn, corpus));
+    json_tabulatum_addere(contentus, fragmentum);
+    json_objectum_ponere(resultatum, "content", contentus);
+    si (error_est)
+    {
+        json_objectum_ponere(resultatum, "isError",
+            json_boolean_creare(pn, VERUM));
+    }
+    _respondere(l, tabellarius_responsum(pn, id, resultatum));
+}
+
+interior vacuum
+_mcp_toolscall_tractare (Legatus* l, Piscina* pn, JsonValor* id,
+    JsonValor* params)
+{
+    chorda titulus;
+
+    si (params == NIHIL)
+    {
+        _respondere(l, tabellarius_errorem(pn, id,
+            TABELLARIUS_ERROR_PARAMETRA_INVALIDA,
+            "params desunt"));
+        redde;
+    }
+    titulus = json_ad_chorda(json_objectum_capere(params, "name"));
+    si (_methodus_est(titulus, "diagnostica")
+        || _methodus_est(titulus, "symbolum")
+        || _methodus_est(titulus, "vocantes")
+        || _methodus_est(titulus, "vocata"))
+    {
+        /* pars 3 implet; sceletum honestum */
+        _mcp_textum_respondere(l, pn, id,
+            "nondum implementum (pars 3)", VERUM);
+        redde;
+    }
+    _respondere(l, tabellarius_errorem(pn, id,
+        TABELLARIUS_ERROR_PARAMETRA_INVALIDA,
+        "instrumentum ignotum"));
+}
+
+interior LegatusCursus
+_mcp_tractare (Legatus* l, Piscina* pn, TabellariusNuntius* n,
+    constans LegatusConfiguratio* cfg)
+{
+    si (n->genus == TABELLARIUS_PRAVUM)
+    {
+        si (n->radix == NIHIL)
+        {
+            _respondere(l, tabellarius_errorem(pn, NIHIL,
+                TABELLARIUS_ERROR_ANALYSIS, "analysis fracta"));
+        }
+        alioquin
+        {
+            _respondere(l, tabellarius_errorem(pn, n->id,
+                TABELLARIUS_ERROR_PETITIO_INVALIDA,
+                "petitio invalida"));
+        }
+        redde LEGATUS_PERGE;
+    }
+    si (n->genus == TABELLARIUS_RESPONSUM)
+    {
+        redde LEGATUS_PERGE;   /* numquam petimus - omittere */
+    }
+    si (n->genus == TABELLARIUS_PETITIO)
+    {
+        si (_methodus_est(n->methodus, "initialize"))
+        {
+            _mcp_initialize_tractare(l, pn, n->id, n->params, cfg);
+        }
+        alioquin si (_methodus_est(n->methodus, "ping"))
+        {
+            /* ante initialize quoque licitum (MCP spec) */
+            _respondere(l, tabellarius_responsum(pn, n->id,
+                json_objectum_creare(pn)));
+        }
+        alioquin si (!l->initiatum)
+        {
+            _respondere(l, tabellarius_errorem(pn, n->id,
+                TABELLARIUS_ERROR_NONDUM_INITIATUM,
+                "nondum initiatum"));
+        }
+        alioquin si (_methodus_est(n->methodus, "tools/list"))
+        {
+            _mcp_toolslist_tractare(l, pn, n->id);
+        }
+        alioquin si (_methodus_est(n->methodus, "tools/call"))
+        {
+            _mcp_toolscall_tractare(l, pn, n->id, n->params);
+        }
+        alioquin
+        {
+            _respondere(l, tabellarius_errorem(pn, n->id,
+                TABELLARIUS_ERROR_METHODUS_IGNOTA,
+                "methodus ignota"));
+        }
+        redde LEGATUS_PERGE;
+    }
+    /* nuntiationes (notifications/initialized, cancelled...) -
+     * tacite omissae; exitus = cliens fistulam claudit (EOF) */
+    redde LEGATUS_PERGE;
 }
 
 /* ==================================================
@@ -4445,8 +4745,12 @@ _nuntium_tractare (Legatus* l, Piscina* pn, TabellariusNuntius* n,
             _hover_tractare(l, pn, n->id, n->params);
         }
         alioquin si (_methodus_est(n->methodus,
-                         "textDocument/definition"))
+                         "textDocument/definition")
+            || _methodus_est(n->methodus,
+                   "textDocument/implementation"))
         {
+            /* implementation in C89 = definitio corporis (alias -
+             * exemplar clangd; nona operationis clientis) */
             _definitio_tractare(l, pn, n->id, n->params);
         }
         alioquin si (_methodus_est(n->methodus,
@@ -4533,6 +4837,7 @@ legatus_currere (FILE* intra, FILE* extra,
     si (cfg != NIHIL)
     {
         l.cum_posix = cfg->cum_posix;
+        l.modus_mcp = cfg->modus_mcp;
     }
     l.perennis = piscina_generare_dynamicum("legatus", 1048576);
     si (l.perennis == NIHIL || intra == NIHIL || extra == NIHIL)
@@ -4557,14 +4862,24 @@ legatus_currere (FILE* intra, FILE* extra,
         {
             frange;
         }
-        corpus = tabellarius_epistulam_legere(intra, pn, &finitus);
+        corpus = l.modus_mcp
+            ? tabellarius_lineam_legere(intra, pn, &finitus)
+            : tabellarius_epistulam_legere(intra, pn, &finitus);
         si (finitus)
         {
             piscina_destruere(pn);
-            frange;   /* cliens mortuus / fluxus corruptus -> 1 */
+            /* MCP: cliens fistulam claudit = exitus ORDINATUS 0
+             * (protocollum "exit" caret); LSP: EOF = abnormis 1 */
+            si (l.modus_mcp)
+            {
+                exitus = ZEPHYRUM;
+            }
+            frange;
         }
         n = tabellarius_nuntium_legere(corpus, pn);
-        cursus = _nuntium_tractare(&l, pn, &n, cfg);
+        cursus = l.modus_mcp
+            ? _mcp_tractare(&l, pn, &n, cfg)
+            : _nuntium_tractare(&l, pn, &n, cfg);
         piscina_destruere(pn);
         si (cursus == LEGATUS_FINI)
         {

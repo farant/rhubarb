@@ -170,6 +170,96 @@ probatio_epistula_prava (Piscina* piscina)
     fclose(pl);
 }
 
+/* framing lineis-delimitatum (MCP, LEGATI pars 1) */
+interior vacuum
+probatio_linea (Piscina* piscina)
+{
+    imprimere("--- Probans framing lineis ---\n");
+
+    /* legere: lineae plures, '\r' detractum, vacuae praetermissae,
+     * EOF finitus */
+    {
+        FILE* pl = _fluxus_ex_literis(
+            "{\"a\":1}\r\n"
+            "\n"
+            "{\"b\":2}\n");
+        b32 finitus = FALSUM;
+        chorda corpus;
+
+        CREDO_VERUM(pl != NIHIL);
+        corpus = tabellarius_lineam_legere(pl, piscina, &finitus);
+        CREDO_VERUM(!finitus && _aequalis(corpus, "{\"a\":1}"));
+        corpus = tabellarius_lineam_legere(pl, piscina, &finitus);
+        CREDO_VERUM(!finitus && _aequalis(corpus, "{\"b\":2}"));
+        corpus = tabellarius_lineam_legere(pl, piscina, &finitus);
+        CREDO_VERUM(finitus && corpus.mensura == ZEPHYRUM);
+        fclose(pl);
+    }
+    /* EOF ante '\n' = finitus (nuntius truncatus) */
+    {
+        FILE* pl = _fluxus_ex_literis("{\"c\":3}");
+        b32 finitus = FALSUM;
+        chorda corpus;
+
+        CREDO_VERUM(pl != NIHIL);
+        corpus = tabellarius_lineam_legere(pl, piscina, &finitus);
+        CREDO_VERUM(finitus && corpus.mensura == ZEPHYRUM);
+        fclose(pl);
+    }
+    /* scribere: corpus + '\n'; '\n' crudum RECUSATUM */
+    {
+        FILE* pl = tmpfile();
+        character receptum[LXIV];
+        memoriae_index m;
+
+        CREDO_VERUM(pl != NIHIL);
+        CREDO_VERUM(tabellarius_lineam_scribere(pl,
+            chorda_ex_literis("{}", piscina)));
+        CREDO_VERUM(!tabellarius_lineam_scribere(pl,
+            chorda_ex_literis("{\n}", piscina)));
+        rewind(pl);
+        m = fread(receptum, I, magnitudo(receptum), pl);
+        CREDO_VERUM(m == (memoriae_index)III
+            && memcmp(receptum, "{}\n", III) == ZEPHYRUM);
+        fclose(pl);
+    }
+    /* lex serializationis: '\t'/'\n' in valore chordae effugiuntur
+     * compacte -> linea una tuta -> circulus integer */
+    {
+        JsonValor* obj = json_objectum_creare(piscina);
+        chorda serialis;
+        FILE* pl = tmpfile();
+        b32 finitus = FALSUM;
+        chorda relecta;
+        i32 i;
+
+        CREDO_VERUM(pl != NIHIL);
+        json_objectum_ponere(obj, "nuntius",
+            json_chorda_creare(piscina, chorda_ex_literis(
+                "linea\nsecunda\tcum tab", piscina)));
+        serialis = json_scribere(obj, piscina);
+        per (i = ZEPHYRUM; i < serialis.mensura; i++)
+        {
+            CREDO_VERUM(serialis.datum[i] != (i8)'\n');
+        }
+        CREDO_VERUM(tabellarius_lineam_scribere(pl, serialis));
+        rewind(pl);
+        relecta = tabellarius_lineam_legere(pl, piscina, &finitus);
+        CREDO_VERUM(!finitus);
+        {
+            JsonResultus iterum = json_legere(relecta, piscina);
+            chorda valor;
+
+            CREDO_VERUM(iterum.successus);
+            valor = json_ad_chorda(json_objectum_capere(
+                iterum.radix, "nuntius"));
+            CREDO_VERUM(_aequalis(valor,
+                "linea\nsecunda\tcum tab"));
+        }
+        fclose(pl);
+    }
+}
+
 /* ==================================================
  * NUNTIUS (envelope)
  * ================================================== */
@@ -366,6 +456,7 @@ principale (vacuum)
     probatio_epistula_legere(piscina);
     probatio_epistula_tolerantia(piscina);
     probatio_epistula_prava(piscina);
+    probatio_linea(piscina);
     probatio_nuntius_petitio(piscina);
     probatio_nuntius_nuntiatio(piscina);
     probatio_nuntius_id_chorda(piscina);

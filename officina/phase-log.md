@@ -4177,3 +4177,41 @@ documento (disco-fallback completus). Emissio superpositionis =
 nexus_ordines_fundere (necare→fundere→extenta, legatus.c:1175-1189);
 forma examinis verbatim capta (verdictum + ordines omnium graduum
 incl. infra + provisionale suffixum).
+
+## MCP LEGATI PARS 1 — INTENTIO (2026-07-14)
+
+Ex spec-v2 §IX: ① tabellarius_lineam_legere/scribere (framing
+lineis-delimitatum, sine statu — aedificator sine termino, \r
+detractum, lineae vacuae praetermissae, adfirmatio nullius '\n'
+crudi in scriptura) ② -mcp/-radix in principali + configuratione;
+legatus.sh -radix appendit ③ ansa MCP in legatus_currere (lectio
+lineam; EOF = exitus MUNDUS 0 in modo MCP — cliens fistulam claudit,
+non "exit") ④ _mcp_tractare: initialize (opus LSP minus
+codificatione; instructions doctrina; protocolVersion resonatum) /
+initialized (tacitum) / ping / tools/list (schemata IV) / tools/call
+(sceletum: "nondum implementum" isError — pars 3 implet) / -32601
+⑤ vector goToImplementation (alias definitionis + capability).
+BARRAE: aureae framing lineis + effugium '\t' + goToImplementation
+(9/9); suita plena viridis; sonda stdio manuali contra binarium.
+
+## MCP LEGATI PARS 1 — RELATIO (2026-07-14)
+
+SHIPPED primo cursu (post unum -Wcomment: "tools/*" in commentario
+— clang ipse censor). ① tabellarius_lineam_legere/scribere (lib +
+probatio_linea in suita radicis: lineae plures/\r/vacuae/EOF
+truncatus/recusatio '\n' crudi/circulus '\t'+'\n' effugitorum —
+lex serializationis PROBATA) ② -mcp/-radix per principale;
+legatus.sh -radix appendit (LSP quoque cfg-radicem nunc accipit,
+rootUri idem) ③ ansa currere furcata: lectio lineam + EOF = exitus
+mundus 0 (VIVUM: probatum) ④ sectio LEGATI in legatus.c:
+_mcp_initialize (opus LSP minus codificatione; protocolVersion
+resonatum; doctrina LEGATI_DOCTRINA in instructions; vigilia
+constructa), ping, tools/list (schemata IV programmatice per
+_mcp_instrumentum), tools/call sceleta honesta (isError "nondum
+implementum"), _mcp_textum_respondere cum CAUTIONE vigiliae parata
+⑤ vector goToImplementation (alias _definitio_tractare + capability
+— cliens 9/9 CLAUSUS). BARRAE OMNES: aureae 217/217 (MCP handshake
+plenus + implementation {0,IV}); officina 12/12; tabellarius radix
+viridis; sonda stdio viva: handshake + doctrina + schemata IV +
+sceletum, exitus 0 post EOF. Sequens: pars 2 (_recensere + lex
+aetatum + reload utrimque; barra: suita LSP viridis manet).

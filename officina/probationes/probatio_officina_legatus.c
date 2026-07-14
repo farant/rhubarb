@@ -53,6 +53,31 @@ _lege (FILE* pl, Piscina* p, b32* bene)
     redde tabellarius_nuntium_legere(corpus, p);
 }
 
+/* framing lineis (modus MCP, LEGATI) */
+interior vacuum
+_scribe_lineam (FILE* pl, Piscina* p, constans character* corpus)
+{
+    (vacuum)tabellarius_lineam_scribere(pl,
+        chorda_ex_literis(corpus, p));
+}
+
+interior TabellariusNuntius
+_lege_lineam (FILE* pl, Piscina* p, b32* bene)
+{
+    b32 finitus = FALSUM;
+    chorda corpus = tabellarius_lineam_legere(pl, p, &finitus);
+    TabellariusNuntius n;
+
+    memset(&n, ZEPHYRUM, magnitudo(TabellariusNuntius));
+    si (finitus)
+    {
+        *bene = FALSUM;
+        redde n;
+    }
+    *bene = VERUM;
+    redde tabellarius_nuntium_legere(corpus, p);
+}
+
 interior b32
 _chorda_est (chorda c, constans character* litterae)
 {
@@ -70,6 +95,26 @@ _chorda_desinit (chorda c, constans character* litterae)
     redde (c.datum != NIHIL && (memoriae_index)c.mensura >= m
         && memcmp(c.datum + ((memoriae_index)c.mensura - m),
                litterae, m) == ZEPHYRUM) ? VERUM : FALSUM;
+}
+
+interior b32
+_chorda_continet (chorda c, constans character* particula)
+{
+    memoriae_index m = strlen(particula);
+    memoriae_index i;
+
+    si (c.datum == NIHIL || (memoriae_index)c.mensura < m)
+    {
+        redde FALSUM;
+    }
+    per (i = ZEPHYRUM; i + m <= (memoriae_index)c.mensura; i++)
+    {
+        si (memcmp(c.datum + i, particula, m) == ZEPHYRUM)
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
 }
 
 /* numerus diagnosticorum publicationis (-1 = non publicatio) */
@@ -629,6 +674,15 @@ probatio_hover_symbola (Piscina* p)
         "\"file://%s/lib/legatus_phantasma_f.c\"}}}", _radix());
     _scribe(intra, p, corpus);
 
+    /* implementation = alias definitionis (nona operationis, 9/9) */
+    sprintf(corpus,
+        "{\"jsonrpc\":\"2.0\",\"id\":18,"
+        "\"method\":\"textDocument/implementation\",\"params\":"
+        "{\"textDocument\":{\"uri\":"
+        "\"file://%s/lib/legatus_phantasma_f.c\"},"
+        "\"position\":{\"line\":7,\"character\":15}}}", _radix());
+    _scribe(intra, p, corpus);
+
     _scribe(intra, p,
         "{\"jsonrpc\":\"2.0\",\"id\":7,\"method\":\"shutdown\"}");
     _scribe(intra, p, "{\"jsonrpc\":\"2.0\",\"method\":\"exit\"}");
@@ -832,6 +886,21 @@ probatio_hover_symbola (Piscina* p)
             json_objectum_capere(json_tabulatum_obtinere(
                 json_objectum_capere(introitus, "fromRanges"),
                 ZEPHYRUM), "start"), "line")) == VII);
+    }
+
+    n = _lege(extra, p, &bene);   /* implementation = definitio */
+    CREDO_VERUM(bene);
+    {
+        JsonValor* sedes_v = _sedes_prima(&n);
+        JsonValor* initium;
+
+        CREDO_VERUM(sedes_v != NIHIL);
+        initium = json_objectum_capere(json_objectum_capere(
+            sedes_v, "range"), "start");
+        CREDO_VERUM(json_ad_integer(json_objectum_capere(initium,
+            "line")) == ZEPHYRUM);
+        CREDO_VERUM(json_ad_integer(json_objectum_capere(initium,
+            "character")) == IV);
     }
 
     n = _lege(extra, p, &bene);   /* shutdown */
@@ -1659,6 +1728,124 @@ probatio_vigilia (Piscina* p)
     remove(via_binarii);
 }
 
+/* ==================================================
+ * MODUS MCP (LEGATI pars 1): framing lineis + handshake +
+ * tools/list + sceleta tools/call; EOF = exitus mundus 0
+ * ================================================== */
+
+interior vacuum
+probatio_mcp (Piscina* p)
+{
+    FILE* intra = tmpfile();
+    FILE* extra = tmpfile();
+    LegatusConfiguratio cfg;
+    b32 bene = FALSUM;
+    TabellariusNuntius n;
+
+    imprimere("--- Probans modum MCP (LEGATI) ---\n");
+    CREDO_VERUM(intra != NIHIL && extra != NIHIL);
+
+    _scribe_lineam(intra, p,
+        "{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"initialize\","
+        "\"params\":{\"protocolVersion\":\"2025-03-26\","
+        "\"capabilities\":{},"
+        "\"clientInfo\":{\"name\":\"probatio\"}}}");
+    _scribe_lineam(intra, p,
+        "{\"jsonrpc\":\"2.0\",\"method\":"
+        "\"notifications/initialized\"}");
+    _scribe_lineam(intra, p,
+        "{\"jsonrpc\":\"2.0\",\"id\":2,\"method\":\"ping\"}");
+    _scribe_lineam(intra, p,
+        "{\"jsonrpc\":\"2.0\",\"id\":3,\"method\":\"tools/list\"}");
+    _scribe_lineam(intra, p,
+        "{\"jsonrpc\":\"2.0\",\"id\":4,\"method\":\"tools/call\","
+        "\"params\":{\"name\":\"diagnostica\",\"arguments\":"
+        "{\"via\":\"lib/piscina.c\"}}}");
+    _scribe_lineam(intra, p,
+        "{\"jsonrpc\":\"2.0\",\"id\":5,\"method\":\"tools/call\","
+        "\"params\":{\"name\":\"ignotum\"}}");
+    /* nullum "exit" - EOF fistulae = exitus ordinatus */
+
+    rewind(intra);
+    memset(&cfg, ZEPHYRUM, magnitudo(LegatusConfiguratio));
+    cfg.modus_mcp = VERUM;
+    cfg.radix = _radix();
+    CREDO_VERUM(legatus_currere(intra, extra, &cfg) == ZEPHYRUM);
+    rewind(extra);
+
+    n = _lege_lineam(extra, p, &bene);   /* initialize */
+    CREDO_VERUM(bene);
+    {
+        JsonValor* resultatum = json_objectum_capere(n.radix,
+            "result");
+
+        CREDO_VERUM(resultatum != NIHIL);
+        /* protocolVersion resonatum */
+        CREDO_VERUM(_chorda_est(json_ad_chorda(json_objectum_capere(
+            resultatum, "protocolVersion")), "2025-03-26"));
+        CREDO_VERUM(_chorda_est(json_ad_chorda(json_objectum_capere(
+            json_objectum_capere(resultatum, "serverInfo"),
+            "name")), "legati"));
+        /* doctrina praesens */
+        CREDO_VERUM(json_ad_chorda(json_objectum_capere(resultatum,
+            "instructions")).mensura > ZEPHYRUM);
+        /* capabilities.tools praesens */
+        CREDO_VERUM(json_objectum_capere(json_objectum_capere(
+            resultatum, "capabilities"), "tools") != NIHIL);
+    }
+
+    n = _lege_lineam(extra, p, &bene);   /* ping */
+    CREDO_VERUM(bene);
+    CREDO_VERUM(json_objectum_capere(n.radix, "result") != NIHIL);
+
+    n = _lege_lineam(extra, p, &bene);   /* tools/list */
+    CREDO_VERUM(bene);
+    {
+        JsonValor* instrumenta = json_objectum_capere(
+            json_objectum_capere(n.radix, "result"), "tools");
+
+        CREDO_VERUM(instrumenta != NIHIL
+            && json_est_tabulatum(instrumenta)
+            && json_tabulatum_numerus(instrumenta) == IV);
+        CREDO_VERUM(_chorda_est(json_ad_chorda(json_objectum_capere(
+            json_tabulatum_obtinere(instrumenta, ZEPHYRUM),
+            "name")), "diagnostica"));
+        CREDO_VERUM(_chorda_est(json_ad_chorda(json_objectum_capere(
+            json_tabulatum_obtinere(instrumenta, III),
+            "name")), "vocata"));
+        /* inputSchema.required[0] praesens */
+        CREDO_VERUM(_chorda_est(json_ad_chorda(
+            json_tabulatum_obtinere(json_objectum_capere(
+                json_objectum_capere(json_tabulatum_obtinere(
+                    instrumenta, ZEPHYRUM), "inputSchema"),
+                "required"), ZEPHYRUM)), "via"));
+    }
+
+    n = _lege_lineam(extra, p, &bene);   /* tools/call: sceletum */
+    CREDO_VERUM(bene);
+    {
+        JsonValor* resultatum = json_objectum_capere(n.radix,
+            "result");
+
+        CREDO_VERUM(resultatum != NIHIL);
+        CREDO_VERUM(json_ad_boolean(json_objectum_capere(resultatum,
+            "isError")));
+        CREDO_VERUM(_chorda_continet(json_ad_chorda(
+            json_objectum_capere(json_tabulatum_obtinere(
+                json_objectum_capere(resultatum, "content"),
+                ZEPHYRUM), "text")), "nondum"));
+    }
+
+    n = _lege_lineam(extra, p, &bene);   /* instrumentum ignotum */
+    CREDO_VERUM(bene);
+    CREDO_VERUM(json_ad_integer(json_objectum_capere(
+        json_objectum_capere(n.radix, "error"), "code"))
+        == (s64)(-32602L));
+
+    fclose(intra);
+    fclose(extra);
+}
+
 integer
 principale (vacuum)
 {
@@ -1688,6 +1875,7 @@ principale (vacuum)
     probatio_ante_initium(piscina);
     probatio_fluxus_vacuus();
     probatio_quisquiliae(piscina);
+    probatio_mcp(piscina);
 
     credo_imprimere_compendium();
 

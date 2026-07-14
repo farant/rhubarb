@@ -85,4 +85,7 @@ if [ ! -f "$BIN" ] || [ "$src" -nt "$BIN" ] || [ -n "$obj_files" ]; then
     clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" "$src" $obj_files -o "$BIN" || exit 1
 fi
 
-cd "$RADIX_DIR" && exec "$BIN" "$@"
+# -radix semper appenditur: modus MCP rootUri caret (LSP rootUri
+# praevalet cum adest - _radicem_statuere cfg->radix... ordo: cfg
+# vincit, ideo LSP quoque radicem rectam accipit)
+cd "$RADIX_DIR" && exec "$BIN" "$@" -radix "$RADIX_DIR"

@@ -1,6 +1,7 @@
 /* tabellarius.c - Cursor JSON-RPC (vide tabellarius.h) */
 
 #include "tabellarius.h"
+#include "chorda_aedificator.h"
 
 #include <stdlib.h>
 #include <string.h>
@@ -154,6 +155,90 @@ tabellarius_epistulam_scribere (FILE* fluxus, chorda corpus)
             fluxus);
     }
     fflush(fluxus);
+}
+
+chorda
+tabellarius_lineam_legere (FILE* fluxus, Piscina* piscina,
+    b32* fluxus_finitus)
+{
+    *fluxus_finitus = FALSUM;
+    si (fluxus == NIHIL || piscina == NIHIL)
+    {
+        *fluxus_finitus = VERUM;
+        redde _chorda_vacua();
+    }
+    per (;;)
+    {
+        ChordaAedificator* aed = chorda_aedificator_creare(piscina,
+            CCLVI);
+        int c;
+        b32 aliquid = FALSUM;
+
+        si (aed == NIHIL)
+        {
+            *fluxus_finitus = VERUM;
+            redde _chorda_vacua();
+        }
+        dum ((c = fgetc(fluxus)) != EOF && c != '\n')
+        {
+            chorda_aedificator_appendere_character(aed,
+                (character)c);
+            aliquid = VERUM;
+        }
+        si (c == EOF)
+        {
+            /* EOF ante '\n': etiam cum reliquiis = finitus (nuntius
+             * truncatus fide indignus) */
+            *fluxus_finitus = VERUM;
+            redde _chorda_vacua();
+        }
+        {
+            chorda linea = chorda_aedificator_finire(aed);
+
+            si (aliquid && linea.mensura > ZEPHYRUM
+                && linea.datum[linea.mensura - I] == (i8)'\r')
+            {
+                linea.mensura--;
+            }
+            si (linea.mensura == ZEPHYRUM)
+            {
+                perge;   /* linea vacua praetermissa */
+            }
+            si ((insignatus longus)linea.mensura
+                > TABELLARIUS_CORPUS_MAXIMUM)
+            {
+                *fluxus_finitus = VERUM;
+                redde _chorda_vacua();
+            }
+            redde linea;
+        }
+    }
+}
+
+b32
+tabellarius_lineam_scribere (FILE* fluxus, chorda corpus)
+{
+    i32 i;
+
+    si (fluxus == NIHIL || corpus.datum == NIHIL
+        || corpus.mensura == ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    /* lex serializationis: '\n' crudum canalem corrumperet */
+    per (i = ZEPHYRUM; i < corpus.mensura; i++)
+    {
+        si (corpus.datum[i] == (i8)'\n')
+        {
+            fprintf(stderr, "tabellarius: linea '\\n' crudum"
+                " continet - scriptura recusata\n");
+            redde FALSUM;
+        }
+    }
+    fwrite(corpus.datum, I, (memoriae_index)corpus.mensura, fluxus);
+    fputc('\n', fluxus);
+    fflush(fluxus);
+    redde VERUM;
 }
 
 /* ==================================================
