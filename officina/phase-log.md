@@ -4036,3 +4036,20 @@ sonda stdio viva: verbum falsum in commentario →
 "nihil hic ('machinula_curere'); simillima: machinula_currere
 (officina/fontes/officina_machinula.h:98)". Post /reload: miss
 hodiernus (linea vacua) directionem dabit in sessione.
+
+### ADDENDUM ANTE COMPACTIONEM (2026-07-14, primis horis)
+
+STATUS (correctum post scriptionem): fascis magnus IAM COMMISSUS —
+Fran quattuor sigillis sigillavit dum memoriam scribebam (4fe71ca
+chunk 1 · 1d54c52 chunk 3 · 74f21bc probatio et conclusio · 1cab8ef
+politio vicinitatis). Solum hoc addendum ipsum restabat.
+Dies plenus: v0.2 politio → EXCUBITOR arcus totus (graphus →
+custos → canales tres) → vigilia vivo-cyclata → debrief LSP →
+hover-vicinitas viva. TABULA TRACTIONUM: ① field references ②
+AEDILIS (on-ramp plenus) ③ configuratio filtri ④ MCP LEGATI
+(tractus Fran ordinem vincit). Re-entry: introitus excubitoris
+huius diei (INTENTIO → chunk 1 → chunk 2 → chunk 3 → vigilia
+confirmata → debrief → parca → vicinitas RELATIO) +
+legatus.worklog.md (vigilia + asperitates) + memoria (MEMORY.md +
+officina-project.md). Post commissionem: uncus graphum renovat,
+CAUTIO abit.
