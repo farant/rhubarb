@@ -7264,3 +7264,18 @@ SEQUENS: colloquium designi cum Frane super quaestiones apertas
 (centrum gravitatis diagnostica-vs-navigatio; clangd-lsp nunc?;
 R1 in scopo?; dispositio unci; positiones errorum syntaxis; nomen
 ceremoniae) → simulatio → interrogatio → spec.
+
+## NOTA CONTRACTUS: symbola = registrationes (2026-07-14)
+
+Commentarium contractus additum SemanticaSymbolo in silva.h +
+silva_c89_semantica.h (mutatio nulla codicis): declaratio quaeque
+symbolum PROPRIUM registrat — prototypus + definitio = symbola duo;
+enumeratio omnia reddit; consumptor entia volens plicet, definitione
+praelata (probatio per accessorem corporis, contractus generis
+alieni). Causa: "umbra prototypi" in legato (officina/phase-log
+2026-07-14) — consumptor semantica tabulae-fusae praesumpsit,
+diagnosis prima falso mutationem silvae postulabat. ACTA SUNT
+FRUCTUS iam macris valebat; nunc symbolis quoque EXPLICITUM.
+Si consumptor SECUNDUS plicationem entium umquam eget (vindex,
+saltus-typi saltuarii, :definitio quaestionis), visus entium
+silva-lateris = additio nominata (acta intacta).

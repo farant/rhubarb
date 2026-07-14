@@ -162,6 +162,16 @@ nomen enumeratio {
 #define REPOSITIO_AUTOMATA  4
 #define REPOSITIO_REGISTRI  8
 
+/* SYMBOLA = REGISTRATIONES, NON ENTIA (acta sunt fructus):
+ * declaratio quaeque symbolum PROPRIUM registrat - prototypus +
+ * definitio eiusdem functionis = symbola DUO, quodque cum declarans
+ * suo. Tabula scopi recentissimum tenet (resolutio nominum);
+ * enumeratio (symbolum_per_indicem) OMNIA reddit. Consumptor qui
+ * "ens" vult (extentum definitionis...) registrationes ipse plicet,
+ * definitione praelata - probatio: definitio_functionis_corpus
+ * (declarans) generis alieni SILVA_VALOR_NIHIL reddit. Umbra
+ * prototypi in legato inde orta est (2026-07-14): primus-congruens
+ * prototypum capiebat. */
 nomen structura {
     s32                  genus;        /* SemanticaSymbolumGenus */
     chorda               titulus;      /* copia in piscinam */

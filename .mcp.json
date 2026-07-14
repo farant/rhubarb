@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "legati": {
+      "command": "./officina/legatus.sh",
+      "args": ["-mcp"]
+    }
+  }
+}

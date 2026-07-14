@@ -16,9 +16,18 @@ RADIX="$(git rev-parse --show-toplevel 2>/dev/null)" || exit 0
 TSV="$RADIX/build/nexus.tsv"
 SERA="$RADIX/build/nexus_renovare.sera"
 
-# debounce: tabula satis recens
-if [ -f "$TSV" ] && [ -n "$(find "$TSV" -mmin -10 2>/dev/null)" ]; then
-    exit 0
+# debounce: tabula satis recens - per stampam GENERATUM INTERNAM,
+# non mtime (mtime fallax: sondae "touch" reload servi probant sine
+# contentu novo et debounce venenabant - inventum shakedown MCP
+# 2026-07-14: commissio chunk-2 tabulam NON renovavit, symbola nova
+# "ignota"; stampa solum cum regeneratione vera mutatur)
+if [ -f "$TSV" ]; then
+    STAMPA="$(head -n 1 "$TSV" \
+        | sed -n 's/^# nexus.tsv GENERATUM \([0-9]*\).*/\1/p')"
+    NUNC="$(date +%s)"
+    if [ -n "$STAMPA" ] && [ $((NUNC - STAMPA)) -lt 600 ]; then
+        exit 0
+    fi
 fi
 
 # sera: percursus iam currit; sera vetus (>15 min) = derelicta

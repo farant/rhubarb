@@ -97,6 +97,16 @@ _chorda_desinit (chorda c, constans character* litterae)
                litterae, m) == ZEPHYRUM) ? VERUM : FALSUM;
 }
 
+/* textus effectus instrumenti MCP: result.content[0].text */
+interior chorda
+_mcp_textus (TabellariusNuntius* n)
+{
+    redde json_ad_chorda(json_objectum_capere(
+        json_tabulatum_obtinere(json_objectum_capere(
+            json_objectum_capere(n->radix, "result"), "content"),
+            ZEPHYRUM), "text"));
+}
+
 interior b32
 _chorda_continet (chorda c, constans character* particula)
 {
@@ -1734,11 +1744,13 @@ probatio_vigilia (Piscina* p)
  * novum (gradus III)
  * ================================================== */
 
-/* SINE prototypis praeviis: declarans = declaratio PRIMA (silva),
- * ergo prototypus extentum ad lineam unam contrahit et vocationes
- * corporis extra cadunt - INVENTUM partis 2 (praeexsistens ex
- * v0.1b; tractus silvae nominatus: definitio declarans vincat).
- * Vide legatus.worklog.md 2026-07-14. */
+/* CUM prototypis praeviis - regressio umbrae prototypi: quaeque
+ * declaratio registrationem PROPRIAM habet (prototypus [n,n] +
+ * definitio [corpus]); primus-congruens prototypum capiebat,
+ * vocationes corporis extra cadebant. Sanatio: est_definitio in
+ * chartis (accessor corporis, contractus generis alieni) +
+ * _extentum_tituli definitionem praefert. Vide legatus.worklog.md
+ * 2026-07-14. */
 interior vacuum
 _stala_scribere (constans character* via, b32 cum_altero)
 {
@@ -1748,12 +1760,15 @@ _stala_scribere (constans character* via, b32 cum_altero)
     {
         redde;
     }
-    fputs("int adiutor_stalae(int a) { return a + 1; }\n", pl);
+    fputs("int adiutor_stalae(int a);\n"
+          "int adiutor_stalae(int a) { return a + 1; }\n", pl);
     si (cum_altero)
     {
-        fputs("int alter_stalae(int a) { return a * 2; }\n", pl);
+        fputs("int alter_stalae(int a);\n"
+              "int alter_stalae(int a) { return a * 2; }\n", pl);
     }
-    fputs("int probans_stala(void)\n"
+    fputs("int probans_stala(void);\n"
+          "int probans_stala(void)\n"
           "{\n", pl);
     fputs("    int x = adiutor_stalae(1);\n", pl);
     si (cum_altero)
@@ -1929,6 +1944,24 @@ probatio_mcp (Piscina* p)
     _scribe_lineam(intra, p,
         "{\"jsonrpc\":\"2.0\",\"id\":5,\"method\":\"tools/call\","
         "\"params\":{\"name\":\"ignotum\"}}");
+    _scribe_lineam(intra, p,
+        "{\"jsonrpc\":\"2.0\",\"id\":6,\"method\":\"tools/call\","
+        "\"params\":{\"name\":\"symbolum\",\"arguments\":"
+        "{\"titulus\":\"piscina_generare_dynamicum\"}}}");
+    /* typo DELETIONIS (subsequentia manet - similitudo subsequentiam
+     * requirit; substitutio 'u'->'v' nihil inveniret) */
+    _scribe_lineam(intra, p,
+        "{\"jsonrpc\":\"2.0\",\"id\":7,\"method\":\"tools/call\","
+        "\"params\":{\"name\":\"symbolum\",\"arguments\":"
+        "{\"titulus\":\"piscina_generare_dynamicm\"}}}");
+    _scribe_lineam(intra, p,
+        "{\"jsonrpc\":\"2.0\",\"id\":8,\"method\":\"tools/call\","
+        "\"params\":{\"name\":\"vocata\",\"arguments\":"
+        "{\"titulus\":\"machinula_currere\"}}}");
+    _scribe_lineam(intra, p,
+        "{\"jsonrpc\":\"2.0\",\"id\":9,\"method\":\"tools/call\","
+        "\"params\":{\"name\":\"vocantes\",\"arguments\":"
+        "{\"titulus\":\"machinula_currere\"}}}");
     /* nullum "exit" - EOF fistulae = exitus ordinatus */
 
     rewind(intra);
@@ -1986,19 +2019,12 @@ probatio_mcp (Piscina* p)
                 "required"), ZEPHYRUM)), "via"));
     }
 
-    n = _lege_lineam(extra, p, &bene);   /* tools/call: sceletum */
+    n = _lege_lineam(extra, p, &bene);   /* diagnostica piscina.c */
     CREDO_VERUM(bene);
     {
-        JsonValor* resultatum = json_objectum_capere(n.radix,
-            "result");
+        chorda textus = _mcp_textus(&n);
 
-        CREDO_VERUM(resultatum != NIHIL);
-        CREDO_VERUM(json_ad_boolean(json_objectum_capere(resultatum,
-            "isError")));
-        CREDO_VERUM(_chorda_continet(json_ad_chorda(
-            json_objectum_capere(json_tabulatum_obtinere(
-                json_objectum_capere(resultatum, "content"),
-                ZEPHYRUM), "text")), "nondum"));
+        CREDO_VERUM(_chorda_continet(textus, "verdictum: ACCIPE"));
     }
 
     n = _lege_lineam(extra, p, &bene);   /* instrumentum ignotum */
@@ -2006,6 +2032,43 @@ probatio_mcp (Piscina* p)
     CREDO_VERUM(json_ad_integer(json_objectum_capere(
         json_objectum_capere(n.radix, "error"), "code"))
         == (s64)(-32602L));
+
+    n = _lege_lineam(extra, p, &bene);   /* symbolum */
+    CREDO_VERUM(bene);
+    {
+        chorda textus = _mcp_textus(&n);
+
+        CREDO_VERUM(_chorda_continet(textus, "signatura:"));
+        CREDO_VERUM(_chorda_continet(textus, "lib/piscina.c"));
+        CREDO_VERUM(_chorda_continet(textus, "usus "));
+    }
+
+    n = _lege_lineam(extra, p, &bene);   /* symbolum: typo */
+    CREDO_VERUM(bene);
+    {
+        chorda textus = _mcp_textus(&n);
+
+        CREDO_VERUM(_chorda_continet(textus, "simillima"));
+        CREDO_VERUM(_chorda_continet(textus,
+            "piscina_generare_dynamicum"));
+    }
+
+    n = _lege_lineam(extra, p, &bene);   /* vocata */
+    CREDO_VERUM(bene);
+    {
+        chorda textus = _mcp_textus(&n);
+
+        CREDO_VERUM(_chorda_continet(textus, "machinula_aperire"));
+    }
+
+    n = _lege_lineam(extra, p, &bene);   /* vocantes */
+    CREDO_VERUM(bene);
+    {
+        chorda textus = _mcp_textus(&n);
+
+        CREDO_VERUM(_chorda_continet(textus,
+            "officina/instrumenta/sessio.c"));
+    }
 
     fclose(intra);
     fclose(extra);

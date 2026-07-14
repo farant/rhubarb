@@ -4274,3 +4274,96 @@ SUPERVIVIT renovationi (symbolum phantasmatis post reload); gradus
 I in modo MCP: caput tactum → "praeparatio stala - reaedificatur" →
 "tsv coactus" → petitiones respondent. Sequens: pars 3 (instrumenta
 quattuor + doctrina + .mcp.json + shakedown vivus).
+
+## MCP LEGATI PARS 3 — INTENTIO (2026-07-14)
+
+Instrumenta quattuor viva: ① diagnostica = _recensere cum effusore
+(param novus ChordaAedificator*; forma examinis VERBATIM: linea
+syntaxis + ordines omnium graduum [etiam infra - LSP supprimit,
+examen non] + verdictum cum numeris; REICE = violatio
+non-provisionalis aut error parsurae; iudicium SEMPER novum -
+diagnostica non cachantur, paritas = iudica nunc) ② symbolum =
+charta macra: sedes (corpus primum, politica v0.1b) + genus +
+signatura (ex chartis) + usus per plagulas (nexus-forma, tecta) +
+ramus macro (linea #define ex disco) + simillima in fallendo
+(exemplar vicinitatis) ③ vocantes/vocata nomine (lex duorum
+transituum: _extenta_viae per viam [ipsa revalidat] DEINDE ordines
+re-ambulati) ④ tecta ubique + caudae "et alia N" (lex
+nullorum-tectorum-tacitorum) ⑤ _mcp_textum_respondere chorda (non
+literis) ⑥ .mcp.json radicis. BARRAE: aureae instrumentorum IV in
+probatio_mcp (REICE fixtura fracta / ACCIPE lib/piscina.c /
+symbolum+signatura / simillima in typo / vocata machinula_currere
+continet machinula_aperire / vocantes continet sessio); suita
+plena; shakedown VIVUS in sessione post /mcp additum (paritas
+examinis oculo ibi - diff in aurea INGOLDABILIS sine compilatione
+examinis, deviatio nominata).
+
+## MCP LEGATI PARS 3 — RELATIO (2026-07-14)
+
+INSTRUMENTA QUATTUOR VIVA. ① diagnostica: _recensere param effusor
+novus (ChordaAedificator*) + _diagnostica_effundere (forma examinis
+verbatim; iudicium semper novum). PARITAS OCULO: verdictum lib/json.c
+per instrumentum ET per examen.sh BYTE-IDEM. ② symbolum: charta
+(genus/signatura ex chartis/sedes corpus-primum/usus per plagulas
+tecta) + ramus macro (#define ex disco, NIHIL documento -
+degradatio " ..." recta) + simillima deletionis. ③ vocantes: lex
+duorum transituum (viae → extenta [revalidant] → ordines
+re-ambulati); greges (vocans, via) cum numeris. ④ vocata:
+nomine-primum, interna outgoingCalls, sedes vocatorum resolutae.
+⑤ _mcp_textum_respondere chorda + CAUTIO aedificator. ⑥ .mcp.json
+radicis scripta (post commissionem: Fran approbat / sessio nova).
+
+VIVUM: symbolum machinula_currere (signatura plena + sedes II +
+usus 17/6 plagulis); vocata IV (memset → lexicon modelatum);
+vocantes VII grouped ("main" ×V plagulae distinctae — principale
+EST main, lexemata expansa); macro CREDO_VERUM linea. INVENTUM
+MINUS: similitudo subsequentiam REQUIRIT — typo substitutionis
+nihil invenit, deletionis invenit (aurea correcta, commentata).
+
+BARRAE: aureae 238/238 (diagnostica ACCIPE + symbolum + simillima +
+vocata + vocantes + ignotum -32602); suita plena 12/12; sonda viva
+supra. Debrief: adhibita impulsus (×3 fasce hoc: sceletum-chorda
+discrepans, _mcp_textus implicitus, _recensere arg-numerus — lista
+sedium gratis), emitte/nexus (recon), fifo-sondae; asperitates:
+similitudo-substitutio (nota supra, non vitium — natura
+instrumenti); desideratum: NIHIL novum. SHAKEDOWN in sessione
+sequente (C12: /mcp + instrumenta per clientem verum).
+
+## LEGATI SHAKEDOWN VIVUS (2026-07-14, in sessione)
+
+Registratum + approbatum; instrumenta IV per clientem VERUM omnia
+exercita. C12 clausa: instructions IN CONTEXTUM AGENTIS verbatim
+cadunt (doctrina visibilis); schemata IV per ToolSearch onerantur;
+effectus ut textus purus redditi. INVENTUM MAGNUM (worklog plene):
+VENENATIO DEBOUNCE — uncus post-commissionis mtime debounce +
+sondae tier-2 "touch" tabulae = commissio chunk-2 tabulam NON
+renovavit (symbola nova "ignota" nomine, sed vocata per
+superpositionem _recensere sanabat — quaestiones via-scopatae se
+sanant, nomine-scopatae non [terminus C4]). SANATIO: uncus per
+stampam GENERATUM internam (identitas super mtime — eadem lectio
+quam _via_recens); regula sondarum: utime vetus, non touch. DEMO
+CORONAE: post renovationem tabulae, tools/call proximus in
+RESIDENTE gradum II accendit — 720k ordines media sessione, sine
+reconnect — symbolum _recensere charta plena signatura hodierna.
+Lattice aetatum in productione sanavit exacte quod destinatum erat,
+XX minutis post navem. Non-commissa: pars 3 + .mcp.json + sanatio
+unci.
+
+## UMBRA PROTOTYPI SOLUTA + VIGILIA MCP AD PETITIONEM (2026-07-14)
+
+Tractus silvae CLAUSUS INOPUS — diagnosis reversa per recon:
+registratio non fundit, symbola OMNIA supervivunt (definitio suam
+registrationem cum nodo definitionis IAM fert); extenta ambos
+introitus semper habebant; quaestio nominis primo-congruente
+prototypum capiebat. Sanatio legatus-latere: charta est_definitio
+(accessor corporis, contractus "generis alieni -> NIHIL" silva.h)
++ _extentum_tituli (definitio praelata) tribus sedibus + gradus
+range-in-prototypo. Aurea regressionis: fixtura AD prototypos
+reversa — casus matutinus fallens nunc probatio. VIVUM: vocata
+_scribere_valor (json.c prototypus verus) 0 → VI vocata.
+INVENTUM SHAKEDOWN #2 eodem fasce: CAUTIO MCP numquam accendebatur
+(se_stalus ad initium solum) → clausura_viae retenta +
+_vigiliam_percurrere ad petitionem (modo MCP; LSP per
+publicationem iam habebat). VIVUM fifo: tactus medius-sessione →
+responsum plenum + CAUTIO subter. Barrae: 238/238; officina 12/12;
+silva 30/30 (intacta — mutatio nulla silvae).

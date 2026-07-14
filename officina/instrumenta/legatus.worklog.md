@@ -425,3 +425,72 @@ Design notes that shipped:
   survival (phantasma symbol found post-reload); tier-1 MCP cascade
   (touched fixture header → "praeparatio stala" → "tsv coactus" →
   requests answer).
+
+## 2026-07-14 — LEGATI shakedown: the debounce-poisoning find
+
+First session with legati registered. Instructions field CONFIRMED
+landing in agent context verbatim (C12 unknown closed). All four
+tools exercised through the real client.
+
+THE FIND: symbolum '_recensere' answered "titulus ignotus" while
+vocata resolved chunk-3 functions at current lines. Root cause was
+an INTERFERENCE BUG between two of our own staleness mechanisms:
+the post-commit hook debounced on the tsv's MTIME (find -mmin -10),
+and the chunk-2 live tier-2 probes TOUCHED build/nexus.tsv to
+trigger resident reloads without content change — so the chunk-2
+commit's hook saw a fresh mtime over stale content and SKIPPED
+regeneration. The tsv silently stayed at chunk-1 state across two
+commits. vocata still answered correctly because its walk runs
+through _extenta_viae -> _recensere overlay (the self-heal masks
+index gaps for VIA-scoped questions); symbolum's liveness check is
+NAME-scoped (no via to re-judge — the C4 chicken-and-egg boundary)
+and had nothing to heal from. FIX: hook debounces on the GENERATUM
+stamp INSIDE the file (only true regeneration changes it) — the
+same identity-over-mtime lesson as _via_recens, now applied to the
+hook. PROBE RULE going forward: live tests that want to trip the
+resident's tier-2 should utime the tsv to an ANCIENT time, not
+touch it — ancient trips the server's identity compare without
+faking recency to anything else.
+
+The heal was the demo: after nexus -renovare, the NEXT tools/call
+hit the resident's tier-2 check, reloaded 720k rows mid-session,
+and answered with the current signature — no reconnect, no
+intervention. The epoch lattice fixed in production the exact
+failure it was designed for, twenty minutes after shipping.
+
+## 2026-07-14 — prototype-shadow RESOLVED legatus-side (no silva change)
+
+Fran pulled the "silva declarans" fix while fresh. Recon REVERSED
+the diagnosis: _symbolum_registrare does not merge — every
+declaration allocates a FRESH SemanticaSymbolum and sem->symbola
+keeps ALL of them. The definition's own registration already
+carries the definition node as declarans; extents held BOTH entries
+(prototype [n,n] AND definition [body]) all along. That's why
+incomingCalls/containment always worked (containment self-selects
+the body-spanning entry) and only NAME-SCANS broke (first-match
+took the prototype). The named silva pull
+(definition-wins-declarans) is CLOSED UNNEEDED — mutating declarans
+would have destroyed information (first-declaration site) and
+risked hover-on-declared regressions; the code-is-a-database pin
+wins again: both facts were already in the database, the consumer
+was selecting wrong.
+
+Fix: card field est_definitio (honest test:
+silva_c89_definitio_functionis_corpus(declarans).genus !=
+SILVA_VALOR_NIHIL — the silva.h accessor contract "generis alieni
+-> SILVA_VALOR_NIHIL" makes this a clean public-API probe) +
+_extentum_tituli (definition-preferred titulus scan) replacing
+first-match at three sites (outgoingCalls fallback + range-upgrade,
+legati vocata, legati symbolum signature). Regression golden:
+_stala_scribere flipped BACK to prototype-first — this morning's
+failing case is now the proof. Live: vocata _scribere_valor
+(json.c's real forward-prototyped case) 0 -> 6 callees.
+
+SHAKEDOWN FIND #2 (same batch): MCP CAUTIO never fired — se_stalus
+was computed ONLY at initialize; post-spawn edits invisible (LSP
+re-checks per-publish, MCP had no per-request analog). Fix:
+clausura_viae retained (perennis Xar of the same durable keys) +
+_vigiliam_percurrere extracted from the init sweep, called at MCP
+request entry via _aetates_custodire. Live via fifo: touch
+legatus.c mid-session -> next answer carries the CAUTIO line under
+a complete answer (Q9 semantics: answer + disclose, never refuse).

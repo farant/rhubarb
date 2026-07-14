@@ -1197,6 +1197,13 @@ typedef enum {
 #define REPOSITIO_AUTOMATA  4
 #define REPOSITIO_REGISTRI  8
 
+/* SYMBOLA = REGISTRATIONES, NON ENTIA (acta sunt fructus):
+ * declaratio quaeque symbolum PROPRIUM registrat - prototypus +
+ * definitio eiusdem functionis = symbola DUO, quodque cum declarans
+ * suo. Enumeratio (symbolum_per_indicem) OMNIA reddit; consumptor
+ * qui "ens" vult registrationes plicet, definitione praelata -
+ * probatio: silva_c89_definitio_functionis_corpus(declarans)
+ * generis alieni SILVA_VALOR_NIHIL reddit. */
 typedef struct {
     int               genus;        /* SemanticaSymbolumGenus */
     SilvaChorda       titulus;
