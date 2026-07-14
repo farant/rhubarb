@@ -4367,3 +4367,33 @@ _vigiliam_percurrere ad petitionem (modo MCP; LSP per
 publicationem iam habebat). VIVUM fifo: tactus medius-sessione →
 responsum plenum + CAUTIO subter. Barrae: 238/238; officina 12/12;
 silva 30/30 (intacta — mutatio nulla silvae).
+
+### ADDENDUM ANTE COMPACTIONEM (2026-07-14, sero)
+
+DIES TOTUS UNO SPIRITU: outgoingCalls (8/9→9/9 clientis) → MCP
+LEGATI arcus INTEGER (simulatio-3 → colloquium XII quaestionum →
+spec v1 → exploratores III → spec-v2 → partes 3 → shakedown vivus,
+inventa II [venenatio debounce; CAUTIO mortua ad initium]) → umbra
+prototypi SOLUTA legatus-latere (tractus silvae clausus inopus;
+commentarium contractus "symbola = registrationes" in silva.h) →
+scala celeritatis tsv (rungs 1+3 navis 143s→49s; rung 2 temptatum
+et reversum [vacare memset!]; rung 5 INTENTIO contextu calido in
+silva/phase-log — captura subtilitatum sex, NOLI ex compendio
+implementare).
+
+STATUS SIGILLORUM: omnia commissa praeter silva/phase-log.md
+(INTENTIO rung 5) + project-specs/tabularium-visio.md (PLAGULA
+FRAN, non mea - noli tangere). Residentes ambo (LSP + legati)
+staluntur editionibus commissis - sessio nova utrumque recens
+spawnat, nulla actione.
+
+TABULA TRACTIONUM: ① field references ② AEDILIS (on-ramp plenus)
+③ configuratio filtri ④ LEGATUSD (+ scissio legatus.c ~6300)
+⑤ rung 5 percursus incrementalis (INTENTIO parata — fascis parvus,
+sessio una) ⑥ rung 4 furcae (~nuclei× in 49s). Tractus Fran ordinem
+vincit; tabularium-visio.md fortasse tractum novum portat.
+
+RE-ENTRY: hoc phase-log (LEGATI arcus totus + shakedown) +
+silva/phase-log.md cauda (rung 5 INTENTIO + scala honesta) +
+legatus.worklog.md + mcp-legati-spec-v2.md + memoria (MEMORY.md
+lineae officina/tsv + officina-project.md narratio LEGATI).

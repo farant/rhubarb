@@ -7339,3 +7339,88 @@ est, PARSURA dominatur (~85% user). Scala revisa: rung 4 (furcae)
 solum rung qui re vera valet — commissio typica 1-5 plagulae ≈
 1-2s. Status: 143s (initium) → 49s (rungs 1+3); fenestra
 post-commissionem iam 3x brevior.
+
+## RUNG 5 — PERCURSUS INCREMENTALIS: INTENTIO (2026-07-14, contextu calido scripta)
+
+*Captura conscia: haec INTENTIO plenior solito est quia sessio
+calida subtilitates tenet quas sessio frigida re-derivare deberet.
+NOLI implementare ex compendio compactionis — hoc introitum lege.*
+
+PROPOSITUM: regeneratio tsv post commissionem ~49s → ~1-2s
+(commissio typica 1-5 plagulae). Fenestra staleness LEGATI gradus
+II evanescit. Cache residentis MANET (onus 48MB per quaestionem =
+1s quam mundus calidus vitat); quod moritur est FENESTRA.
+
+FORMA (quattuor partes):
+
+**① ORDO CANONICUS (praecursor, pars propria).** Ambulatio
+readdir NON deterministica trans mutationes directoriorum — ordo
+tsv hodiernus = fortuna APFS. Lista viarum SORTETUR ante iudicia
+(qsort viae). Consecutio: ordo plenus-contra-plenum stabilis in
+aeternum; paritas incrementalis-contra-plenum possibilis octetim.
+RE-PIN semel: tsv ordine novo (diff unica contra praeteritum).
+CAVE: ordo ordinum tsv = ordo catenarum legati (sedes "prima" in
+ambulationibus catenae; politica graduum plerumque vincit, sed
+paria ordine solvuntur) — SUITA OFFICINA post re-pin currenda
+(aureae legati sensilia ordinis detegent).
+
+**② COPIA LABORIS (quid re-iudicandum).**
+- Aqua-signum = stampa GENERATUM INTERNA tabulae veteris (numquam
+  mtime tabulae — lectio venenationis debounce: mtime falsificabilis
+  per touch; stampa sola cum regeneratione vera mutatur).
+- (a) plagulae .c/.h quarum mtime >= stampa (aequaevum = suspectum,
+  polaritas _via_recens non vigiliae; re-iudicium superfluum vile).
+- (b) CLAUSURA REVERSA: includentes capitum mutatorum — BFS super
+  inclusiones.tsv VETEREM inversam (ad → ex; index inversus in
+  memoria). ARGUMENTUM SANITATIS GRAPHI VETERIS (scribe in codice):
+  plagula G quae caput novum I per caput vetus H trahit — H mutatum
+  est (mtime >= stampa) → includentes H per graphum VETEREM G
+  continent (margo G→H vetus exstat). Plagula quae includes SUOS
+  mutavit = mtime proprio recentior → in (a). Casus omnes tecti.
+- (c) DELETAE: viae distinctae tabulae veteris quae in disco non
+  exstant (stat per viam, ~800, ~ms) → ordines cadunt. Renominatio
+  = deletio + nova, tecta.
+- (d) NOVAE: ambulatio directoriorum (necessaria utcumque) plagulas
+  ignotas tabulae veteri invenit → iudicandae.
+- Externa (basenames in graphō: stdio.h...) numquam in copia.
+
+**③ FUSIO FLUMINIS (quomodo tabula nova scribitur).**
+- Tabula vetus in memoriam onerata, ordines per viam aggregati
+  (48MB nihil est; piscina).
+- Emissio in ORDINE CANONICO viarum: via in copia laboris → iudica
+  et emitte ordines recentes; via retenta → ordines veteres
+  verbatim; via deleta → nihil. PARITAS OCTETIM ita conservatur
+  (non appendix-ad-finem, quae ordinem frangeret).
+- DEDUP TUTUM: clavis ordinum = titulus\tspecies\tVIA\tlinea\tcolumna
+  (via inclusa — collisio trans plagulas IMPOSSIBILIS; verificatum
+  2026-07-14 percursus:106); clavis inclusionum = ex|ad|status (ex
+  inclusum, idem argumentum). Dedup intra-copiam sufficit.
+- inclusiones.tsv EODEM tractatu (ex ∈ copia∪deletae cadunt, ordo
+  canonicus, stampa eadem).
+- Stampa nova = tempus ANTE ambulationem captum (conservativum:
+  editiones durante cursu proximo cursui cadunt).
+- Scriptura atomica .nova + rename UTRIUSQUE (mos exstans).
+
+**④ VECTES + HONESTAS.**
+- Modus incrementalis = ORDINARIUS quando tabula vetus cum stampa
+  legibilis exstat ET inclusiones.tsv exstat; -plenus vim facit;
+  defectus quivis (stampa absens, tabula corrupta) → plenus cum
+  nota stderr (numquam tacite).
+- Statisticae: "incrementale: N re-iudicatae (M per clausuram
+  capitum), K deletae, L novae; ordines retenti R" — lex
+  nullorum-tectorum-tacitorum.
+- Uncus IMMUTATUS (nexus.sh -renovare idem; debounce stampae manet
+  600s — cum 1-2s cursu fors minui potest, postea).
+
+BARRAE (omnes arbore EADEM — lectio falsae alarmae 2026-07-14:
+comparatio trans arbores editiones proprias "regressionem" fingit):
+① nulla-mutatio: incrementalis = transitus purus, tabula
+byte-idem, <3s; ② editio unius .c → paritas octetim contra
+-plenus; ③ editio CAPITIS (silva.h!) → clausura magna, paritas;
+④ deletio plagulae → paritas; ⑤ plagula nova → paritas; ⑥ suita
+officina viridis post re-pin ordinis canonici (sensibilitas
+catenarum legati). Aestimatio: ~300 lineae in percursu; floor
+temporis = systema+capita startup (~2s) + iudicia copiae.
+
+CONVERGENTIA AEDILIS: computatio copiae per clausuram = quod
+aedilis -vigila possidebit; forma huius codicis eam praefigurat.
