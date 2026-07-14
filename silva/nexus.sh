@@ -84,12 +84,60 @@ clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" "$CLI_SRC" $obj_files \
 
 cd "$RADIX_DIR"
 
-# -renovare: sweep corporis (nexus_percursus)
+# -renovare: sweep corporis (nexus_percursus) - VARIANTE CELERI
+# (-O2 -flto, exemplar cursor -celer; 143s -> ~55s mensuratum
+# 2026-07-14, PARITAS OCTETIM contra -O0 probata in ambabus
+# tabulis). Obiecta celeria in build/celer/ - NUMQUAM mixta cum
+# -O0. Scala reliqua (reusus piscinarum / sem2 condicionalis /
+# furcae / INCREMENTALE) in silva/phase-log.md.
 if [ "${1:-}" = "-renovare" ]; then
+    CELER_DIR="$BUILD_DIR/celer"
+    mkdir -p "$CELER_DIR"
+    CELER_FLAGS=("${GCC_FLAGS[@]}" "-O2" "-flto")
+    celer_objs=""
+    celer_novum=0   # obiectum quodvis recompilatum -> religa
+    for f in "${RADIX_FONTES[@]}"; do
+        src="$RADIX_DIR/lib/$f.c"
+        obj="$CELER_DIR/$f.o"
+        if [ ! -f "$obj" ] || [ "$src" -nt "$obj" ] \
+            || [ -n "$(newest_header "$obj")" ]; then
+            echo "  [celer dep] $f.c" >&2
+            clang "${CELER_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" \
+                -c "$src" -o "$obj" || exit 1
+            celer_novum=1
+        fi
+        celer_objs="$celer_objs $obj"
+    done
+    src="$SILVA_DIR/amalgama/silva.c"
+    obj="$CELER_DIR/amalgama_silva.o"
+    if [ ! -f "$obj" ] || [ "$src" -nt "$obj" ] \
+        || [ "$SILVA_H" -nt "$obj" ]; then
+        echo "  [celer amalgama] silva.c" >&2
+        clang "${CELER_FLAGS[@]}" -c "$src" -o "$obj" || exit 1
+        celer_novum=1
+    fi
+    celer_objs="$celer_objs $obj"
+    src="$SILVA_DIR/instrumenta/nexus_ordines.c"
+    obj="$CELER_DIR/nexus_ordines.o"
+    if [ ! -f "$obj" ] || [ "$src" -nt "$obj" ] \
+        || [ "$SILVA_DIR/instrumenta/nexus_ordines.h" -nt "$obj" ] \
+        || [ "$SILVA_H" -nt "$obj" ]; then
+        echo "  [celer ordines] nexus_ordines.c" >&2
+        clang "${CELER_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" \
+            -c "$src" -o "$obj" || exit 1
+        celer_novum=1
+    fi
+    celer_objs="$celer_objs $obj"
     SWEEP_SRC="$SILVA_DIR/instrumenta/principalia/nexus_percursus.c"
-    SWEEP_BIN="$BUILD_DIR/nexus_percursus"
-    clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" "$SWEEP_SRC" $sweep_objs \
-        -o "$SWEEP_BIN" || exit 1
+    SWEEP_BIN="$CELER_DIR/nexus_percursus"
+    if [ "$celer_novum" = "1" ] || [ ! -f "$SWEEP_BIN" ] \
+        || [ "$SWEEP_SRC" -nt "$SWEEP_BIN" ] \
+        || [ -n "$(newest_header "$SWEEP_BIN")" ] \
+        || [ "$SILVA_H" -nt "$SWEEP_BIN" ]; then
+        echo "  [celer percursus] nexus_percursus.c" >&2
+        clang "${CELER_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" "$SWEEP_SRC" \
+            $celer_objs -o "$SWEEP_BIN" || exit 1
+    fi
     mkdir -p "$RADIX_DIR/build"
     exec "$SWEEP_BIN"
 fi

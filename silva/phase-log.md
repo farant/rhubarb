@@ -7279,3 +7279,36 @@ FRUCTUS iam macris valebat; nunc symbolis quoque EXPLICITUM.
 Si consumptor SECUNDUS plicationem entium umquam eget (vindex,
 saltus-typi saltuarii, :definitio quaestionis), visus entium
 silva-lateris = additio nominata (acta intacta).
+
+## NEXUS -RENOVARE CELER + SCALA CELERITATIS TSV (2026-07-14)
+
+Fenestra post-commissionem (LEGATI gradus II caret signo dum
+percursus in fundo currit, ~143s) → mensura + scala. RUNG 1
+NAVIS: -renovare variante celeri (-O2 -flto, exemplar cursor
+-celer; obiecta build/celer/ numquam mixta; vexillum celer_novum =
+religatio cum obiecto quovis recompilato [lectio compile_tests
+decorativi]; conditiones staleness plenae — recompilatio
+incondicionata vetus etiam sanata). MENSURATUM: 143s → 52s (2.75x);
+compilatio stricta + O2 pura; PARITAS OCTETIM ambabus tabulis
+contra -O0 (barra: cursus incrementalis/optimatus tabulam
+byte-idem cursui pleno reddere DEBET — facile probanda, fraudi
+impossibilis). Effigies temporis: ~37s user / ~16s sys — sys =
+tumultus mmap (piscinae 2×8MB creatae/destructae per plagulam
+×800).
+
+SCALA RELIQUA (parca nominata, ordine sumptus):
+② reusus piscinarum trans plagulas (textus: piscina_vacare exstat;
+arboris: silva_piscina_vacare exportandum = ordo unus silva.h) —
+sys 16s → ~2s; ③ sem2 condicionalis: silva_recanonicare numerum
+mutationum REDDIT (nunc abiectum) — 0 mutationes = sem1 auctoritas,
+transitus alter omissus (semantics-praeservans constructione;
+plerisque plagulis ambiguitas nulla) — fors ~30-40% user; ④ furcae
+(exemplar cursor fork-per-suite; tabulae fragmentatae + concatenatio
++ sort -u inclusionibus) — ~nuclei×; ⑤ INCREMENTALE (finis):
+plagulae mtime > stampa GENERATUM ∪ clausura reversa capitum
+recentiorum (BFS inclusiones.tsv = computatio excubitoris!),
+old-tsv stream-merge (necatio viarum re-iudicatarum/deletarum +
+appendix novarum; deletio = stat existentiae per viam distinctam);
+commissio typica 1-5 plagulae ≈ 1-2s — fenestra evanescit. Barra
+paritatis supra pro omnibus gradibus. Convergentia AEDILIS:
+computatio copiae-laboris clausurae = quod aedilis possidebit.
