@@ -55,6 +55,9 @@ hic_manens i32 plagulae = ZEPHYRUM;
 hic_manens i32 ordines_scripti = ZEPHYRUM;
 hic_manens i32 ordines_duplicati = ZEPHYRUM;
 hic_manens i32 praetermissae = ZEPHYRUM;
+hic_manens i32 plagulae_sem2 = ZEPHYRUM;   /* recanonicare > 0 ->
+                                            * transitus alter (rung 3
+                                            * scalae: calibratio) */
 
 /* EXCUBITOR chunk 1: effusio graphi inclusionum */
 hic_manens FILE* effusio_inclusionum = NIHIL;
@@ -289,6 +292,12 @@ _plagulam_percurrere (constans SilvaContextus* ctx,
         redde;
     }
 
+    /* rung 2 (piscinae communes + vacare) TEMPTATUM ET REVERSUM
+     * 2026-07-14: piscina_vacare alvei OMNES memset-purgat
+     * (contractus - allocare in memoriam pool-purgatam confidit),
+     * ergo reusus = purgatio catenae maximae x800 plagulas = 52s ->
+     * 306s PESSIMATIO. Creatio/destructio per plagulam (~16s sys
+     * toto) pretium iustum est. */
     piscina_textus = piscina_generare_dynamicum("nexus_textus",
         8388608);
     si (piscina_textus == NIHIL)
@@ -345,12 +354,20 @@ _plagulam_percurrere (constans SilvaContextus* ctx,
             (vacuum)silva_c89_semantica_oraculum_augere(sem,
                 oraculum_plagulae);
             silva_oraculum_responsa_vacare(oraculum_plagulae);
-            (vacuum)silva_recanonicare(parsura->commissio,
-                oraculum_plagulae, silva_c89_resolutor, NIHIL);
-            /* sem2 AUCTORITAS post recanonicare (canonicae-
-             * relativum: symbolum_nodi contra arborem versam) */
-            sem = silva_c89_semantica_analysare_cum_systemate(
-                piscina_arboris, parsura, systema_parsura);
+            /* rung 3 scalae: recanonicare numerum mutationum
+             * reddit - 0 = arbor intacta, sem1 IAM auctoritas
+             * (semantics-praeservans constructione; barra paritatis
+             * octetim id probat). sem2 solum post mutationes
+             * (canonicae-relativum: symbolum_nodi contra arborem
+             * versam). */
+            si (silva_recanonicare(parsura->commissio,
+                    oraculum_plagulae, silva_c89_resolutor, NIHIL)
+                > ZEPHYRUM)
+            {
+                sem = silva_c89_semantica_analysare_cum_systemate(
+                    piscina_arboris, parsura, systema_parsura);
+                plagulae_sem2++;
+            }
         }
         si (sem != NIHIL)
         {
@@ -753,6 +770,8 @@ s32 principale (integer argc, character** argv)
         (int)ordines_duplicati);
     fprintf(stderr, "margines: %d scripti; %d duplicati\n",
         (int)inclusiones_scriptae, (int)inclusiones_duplicatae);
+    fprintf(stderr, "sem2:     %d / %d plagulae (recanonicare"
+        " mutavit)\n", (int)plagulae_sem2, (int)plagulae);
     fprintf(stderr, "tempus:   %.0f s\n",
         (duplex)(c1 - c0) / (duplex)CLOCKS_PER_SEC);
     fprintf(stderr, "tabula:   %s\n", via_finalis);

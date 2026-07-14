@@ -7312,3 +7312,30 @@ appendix novarum; deletio = stat existentiae per viam distinctam);
 commissio typica 1-5 plagulae ≈ 1-2s — fenestra evanescit. Barra
 paritatis supra pro omnibus gradibus. Convergentia AEDILIS:
 computatio copiae-laboris clausurae = quod aedilis possidebit.
+
+## SCALA TSV RUNGS 2+3 — RELATIO HONESTA (2026-07-14)
+
+**RUNG 2 TEMPTATUM ET REVERSUM.** piscina_vacare non est reversio
+vilis: _catena_alveus_vacare alvei OMNES memset-purgat (contractus
+— allocare in memoriam pool-purgatam confidit; varians
+non-purgans classem praesumptionis "memoria nata purgata" per
+omnes vocatores frangeret = non sanatio localis). Reusus ergo =
+purgatio catenae ad plagulam maximam crescentis x800 = 52s → 306s
+(sys 16s → 218s) — PESSIMATIO 6x. Reversum; lectio in commentario
+ad sedem. EXPORTATIO silva_piscina_vacare MANET (API legitima,
+piscinis parvis; amalgama regenerata, portae VERIFICATUM 31/31 +
+officina 78/78). Falsa alarma paritatis obiter: tabulas trans
+ARBORES DIVERSAS comparaveram (editiones meae ipsae in ordinibus
+— honestissime); barra paritatis ARBOREM EANDEM postulat.
+
+**RUNG 3 NAVIS.** sem2 conditionale (recanonicare mutationes > 0);
+PARITAS ARBORE EADEM PROBATA (varians sem2-semper ex fonte
+correcto aedificata [sed prima laxa duas lineas alienas cepit —
+correctio chirurgica python], ambae tabulae BYTE-IDEM).
+CALIBRATIO CONTRA AESTIMATIONEM: sem2 in 1/799 plagularum SOLUM
+accendit, sed lucrum ~3s (52s → 49s) non 30-40% — semantica vilis
+est, PARSURA dominatur (~85% user). Scala revisa: rung 4 (furcae)
+~nuclei× in 49s → ~7-10s; rung 5 (INCREMENTALE) IMMUTATUM et nunc
+solum rung qui re vera valet — commissio typica 1-5 plagulae ≈
+1-2s. Status: 143s (initium) → 49s (rungs 1+3); fenestra
+post-commissionem iam 3x brevior.

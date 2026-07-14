@@ -52,6 +52,9 @@ typedef struct SilvaXar {
     char          titulus[32];
 } SilvaXar;
 
+/* Vacare: cursor ad initium, ALVEI RETENTI (nullum unmap) - reusus
+ * trans opera (percursus: piscinae per plagulam sine tumultu mmap) */
+void silva_piscina_vacare(SilvaPiscina* piscina);
 SilvaPiscina* silva_piscina_generare_dynamicum(const char* titulus,
     size_t mensura_alvei_initia);
 void silva_piscina_destruere(SilvaPiscina* piscina);

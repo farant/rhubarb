@@ -65,6 +65,9 @@ typedef struct SilvaXar {
     char          titulus[32];
 } SilvaXar;
 
+/* Vacare: cursor ad initium, ALVEI RETENTI (nullum unmap) - reusus
+ * trans opera (percursus: piscinae per plagulam sine tumultu mmap) */
+void silva_piscina_vacare(SilvaPiscina* piscina);
 SilvaPiscina* silva_piscina_generare_dynamicum(const char* titulus,
     size_t mensura_alvei_initia);
 void silva_piscina_destruere(SilvaPiscina* piscina);
@@ -1210,6 +1213,13 @@ typedef enum {
 #define REPOSITIO_AUTOMATA  4
 #define REPOSITIO_REGISTRI  8
 
+/* SYMBOLA = REGISTRATIONES, NON ENTIA (acta sunt fructus):
+ * declaratio quaeque symbolum PROPRIUM registrat - prototypus +
+ * definitio eiusdem functionis = symbola DUO, quodque cum declarans
+ * suo. Enumeratio (symbolum_per_indicem) OMNIA reddit; consumptor
+ * qui "ens" vult registrationes plicet, definitione praelata -
+ * probatio: silva_c89_definitio_functionis_corpus(declarans)
+ * generis alieni SILVA_VALOR_NIHIL reddit. */
 typedef struct {
     int               genus;        /* SemanticaSymbolumGenus */
     SilvaChorda       titulus;
@@ -1899,6 +1909,15 @@ silva_piscina_allocare_ordinatum (
 						 SilvaPiscina* piscina,
 		memoriae_index  mensura,
 		memoriae_index  ordinatio);
+
+
+/* ===============================================
+ * Cyclus Vitae
+ * =============================================== */
+
+vacuum 
+silva_piscina_vacare (
+		SilvaPiscina* piscina);
 
 
 /* ===============================================
@@ -4678,6 +4697,18 @@ _catena_alveus_destruere (
     }
 }
 
+interior vacuum
+_catena_alveus_vacare (
+        Alveus* alveus)
+{
+    dum (alveus)
+    {
+        memset(alveus->buffer, ZEPHYRUM, alveus->capacitas);
+        alveus->offset = ZEPHYRUM;
+        alveus = alveus->sequens;
+    }
+}
+
 /* ===========================================================
  * ALLOCATIO FUNDAMENTALIS LOGICA
  * =========================================================== */
@@ -4870,6 +4901,20 @@ silva_piscina_allocare_ordinatum (
     memoriae_index  ordinatio)
 {
     redde _allocare_interna(piscina, mensura, ordinatio, VERUM);
+}
+
+/* ===========================================================
+ * CYCLUS VITAE
+ * =========================================================== */
+
+vacuum
+silva_piscina_vacare (
+        SilvaPiscina* piscina)
+{
+    si (!piscina) redde;
+    _catena_alveus_vacare(piscina->primus);
+    piscina->nunc = piscina->primus;
+    _debug_imprimere(piscina->titulus ? piscina->titulus : "nemo", "vacare", ZEPHYRUM);
 }
 
 /* ===========================================================
