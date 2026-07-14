@@ -1729,6 +1729,171 @@ probatio_vigilia (Piscina* p)
 }
 
 /* ==================================================
+ * RECENSIO (pars 2): plagula clausa numquam-in-tsv -> outgoingCalls
+ * per superpositionem _recensere; editio + mtime alia -> iudicium
+ * novum (gradus III)
+ * ================================================== */
+
+/* SINE prototypis praeviis: declarans = declaratio PRIMA (silva),
+ * ergo prototypus extentum ad lineam unam contrahit et vocationes
+ * corporis extra cadunt - INVENTUM partis 2 (praeexsistens ex
+ * v0.1b; tractus silvae nominatus: definitio declarans vincat).
+ * Vide legatus.worklog.md 2026-07-14. */
+interior vacuum
+_stala_scribere (constans character* via, b32 cum_altero)
+{
+    FILE* pl = fopen(via, "wb");
+
+    si (pl == NIHIL)
+    {
+        redde;
+    }
+    fputs("int adiutor_stalae(int a) { return a + 1; }\n", pl);
+    si (cum_altero)
+    {
+        fputs("int alter_stalae(int a) { return a * 2; }\n", pl);
+    }
+    fputs("int probans_stala(void)\n"
+          "{\n", pl);
+    fputs("    int x = adiutor_stalae(1);\n", pl);
+    si (cum_altero)
+    {
+        fputs("    x = alter_stalae(x);\n", pl);
+    }
+    fputs("    return x;\n"
+          "}\n", pl);
+    fclose(pl);
+}
+
+interior s32
+_vocata_numerus (TabellariusNuntius* n)
+{
+    JsonValor* resultatum = json_objectum_capere(n->radix,
+        "result");
+
+    si (resultatum == NIHIL || !json_est_tabulatum(resultatum))
+    {
+        redde -I;
+    }
+    redde (s32)json_tabulatum_numerus(resultatum);
+}
+
+interior vacuum
+probatio_recensio (Piscina* p)
+{
+    FILE* intra = tmpfile();
+    FILE* extra = tmpfile();
+    character corpus[1024];
+    character via_stalae[DXII];
+    LegatusConfiguratio cfg;
+    b32 bene = FALSUM;
+    TabellariusNuntius n;
+
+    imprimere("--- Probans recensionem (gradus III) ---\n");
+    CREDO_VERUM(intra != NIHIL && extra != NIHIL);
+
+    sprintf(via_stalae, "%s/officina/build/probatio_stala_f.c",
+        _radix());
+    _stala_scribere(via_stalae, FALSUM);
+
+    sprintf(corpus,
+        "{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"initialize\","
+        "\"params\":{\"rootUri\":\"file://%s\",\"capabilities\":"
+        "{\"general\":{\"positionEncodings\":[\"utf-8\"]}}}}",
+        _radix());
+    _scribe(intra, p, corpus);
+
+    /* outgoingCalls SINE didOpen, SINE tsv: superpositio ex
+     * _recensere (inventum heri [vacuum fail-clausum] obsoletum) */
+    sprintf(corpus,
+        "{\"jsonrpc\":\"2.0\",\"id\":2,"
+        "\"method\":\"callHierarchy/outgoingCalls\",\"params\":"
+        "{\"item\":{\"name\":\"probans_stala\",\"uri\":"
+        "\"file://%s\"}}}", via_stalae);
+    _scribe(intra, p, corpus);
+
+    _scribe(intra, p,
+        "{\"jsonrpc\":\"2.0\",\"id\":7,\"method\":\"shutdown\"}");
+    _scribe(intra, p, "{\"jsonrpc\":\"2.0\",\"method\":\"exit\"}");
+
+    rewind(intra);
+    memset(&cfg, ZEPHYRUM, magnitudo(LegatusConfiguratio));
+    CREDO_VERUM(legatus_currere(intra, extra, &cfg) == ZEPHYRUM);
+    rewind(extra);
+
+    n = _lege(extra, p, &bene);   /* initialize */
+    CREDO_VERUM(bene);
+    n = _lege(extra, p, &bene);   /* outgoingCalls: unum vocatum */
+    CREDO_VERUM(bene);
+    CREDO_VERUM(_vocata_numerus(&n) == (s32)I);
+
+    fclose(intra);
+    fclose(extra);
+
+    /* sessio secunda: editio + mtime alia -> iudicium novum videt
+     * vocatum alterum (in UNA sessione idem fluxus - hic sessio
+     * nova quia fluxus praescripti; gradus III intra sessionem
+     * per tempora_viarum agit: primum iudicium in petitione 2,
+     * mtime mutatum ante petitionem 3) */
+    intra = tmpfile();
+    extra = tmpfile();
+    CREDO_VERUM(intra != NIHIL && extra != NIHIL);
+
+    sprintf(corpus,
+        "{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"initialize\","
+        "\"params\":{\"rootUri\":\"file://%s\",\"capabilities\":"
+        "{\"general\":{\"positionEncodings\":[\"utf-8\"]}}}}",
+        _radix());
+    _scribe(intra, p, corpus);
+    sprintf(corpus,
+        "{\"jsonrpc\":\"2.0\",\"id\":2,"
+        "\"method\":\"callHierarchy/outgoingCalls\",\"params\":"
+        "{\"item\":{\"name\":\"probans_stala\",\"uri\":"
+        "\"file://%s\"}}}", via_stalae);
+    _scribe(intra, p, corpus);
+    /* petitio eadem iterum: cache + _via_recens (identitas mtime)
+     * -> responsum idem sine iudicio novo */
+    sprintf(corpus,
+        "{\"jsonrpc\":\"2.0\",\"id\":3,"
+        "\"method\":\"callHierarchy/outgoingCalls\",\"params\":"
+        "{\"item\":{\"name\":\"probans_stala\",\"uri\":"
+        "\"file://%s\"}}}", via_stalae);
+    _scribe(intra, p, corpus);
+    _scribe(intra, p,
+        "{\"jsonrpc\":\"2.0\",\"id\":7,\"method\":\"shutdown\"}");
+    _scribe(intra, p, "{\"jsonrpc\":\"2.0\",\"method\":\"exit\"}");
+
+    /* editio ANTE sessionem: plagula cum vocato altero + mtime
+     * vetus discretum */
+    _stala_scribere(via_stalae, VERUM);
+    {
+        structura utimbuf tempora;
+
+        tempora.actime = 1500000000L;
+        tempora.modtime = 1500000000L;
+        (vacuum)utime(via_stalae, &tempora);
+    }
+
+    rewind(intra);
+    memset(&cfg, ZEPHYRUM, magnitudo(LegatusConfiguratio));
+    CREDO_VERUM(legatus_currere(intra, extra, &cfg) == ZEPHYRUM);
+    rewind(extra);
+
+    n = _lege(extra, p, &bene);   /* initialize */
+    CREDO_VERUM(bene);
+    n = _lege(extra, p, &bene);   /* outgoingCalls: DUO vocata */
+    CREDO_VERUM(bene);
+    CREDO_VERUM(_vocata_numerus(&n) == (s32)II);
+    n = _lege(extra, p, &bene);   /* iterum: cache recens, idem */
+    CREDO_VERUM(bene);
+    CREDO_VERUM(_vocata_numerus(&n) == (s32)II);
+
+    fclose(intra);
+    fclose(extra);
+    remove(via_stalae);
+}
+
+/* ==================================================
  * MODUS MCP (LEGATI pars 1): framing lineis + handshake +
  * tools/list + sceleta tools/call; EOF = exitus mundus 0
  * ================================================== */
@@ -1875,6 +2040,7 @@ principale (vacuum)
     probatio_ante_initium(piscina);
     probatio_fluxus_vacuus();
     probatio_quisquiliae(piscina);
+    probatio_recensio(piscina);
     probatio_mcp(piscina);
 
     credo_imprimere_compendium();

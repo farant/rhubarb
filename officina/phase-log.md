@@ -4215,3 +4215,62 @@ plenus + implementation {0,IV}); officina 12/12; tabellarius radix
 viridis; sonda stdio viva: handshake + doctrina + schemata IV +
 sceletum, exitus 0 post EOF. Sequens: pars 2 (_recensere + lex
 aetatum + reload utrimque; barra: suita LSP viridis manet).
+
+## MCP LEGATI PARS 2 — INTENTIO (2026-07-14)
+
+Ex spec-v2: ① extractio redditoris signaturae (_signaturam_scribere
+ex hover inline, symbolo solo) ② chartae symbolorum: extentum
+crescit {genus, signatura} + symbola omnium generum profunditatis 0
+(_functio_continens genus-custoditum ne variabilis vocantem fingat)
+③ _recensere(via): lege+analysa+neca+funde+extenta/chartae+tempus —
+iudicium semel, consumptores tres; _extenta_viae clausae super eum
+refactum ④ tempora_viarum (identitas: mtime+mensura commemorata,
+non limen — C8 refinatum: aequalitas cum SE IPSO, non cum horologio)
+⑤ gradus II: _indicem_renovare (tsv mtime mutatum → piscina_indicis
+tota nova + superpositio documentorum apertorum RE-EMISSA ex
+arboribus vivis — foramen LSP clausum) UTRIMQUE ⑥ gradus I (modo
+MCP): praeparator_caput_stalum (tempora per caput commemorata,
+percursus intra praeparatorem) → reaedificatio + gradus II cascade.
+DEVIATIO NOMINATA: inventio novorum capitum per iudicium-fallens =
+parcum (in tsv post commissionem apparent; via retro nominata).
+BARRAE: aurea staleness (plagula nova SINE tsv/didOpen →
+outgoingCalls per superpositionem _recensere VIVIT [inventum heri
+obsoletum facit!]; editio+utime → vocatum secundum apparet); aurea
+tsv-swap (utime tsv → reload → workspaceSymbol vivit + superpositio
+aperta supervivit); SUITA LSP VIRIDIS.
+
+## MCP LEGATI PARS 2 — RELATIO (2026-07-14)
+
+SHIPPED: ① praeparator: tempora_capitum (Xar per-caput mtime ad
+onus) + praeparator_caput_stalum (percursus identitatis intra
+praeparatorem — systema + arbor .h tota) ② _signaturam_scribere
+extracta (hover refactus super eam) ③ chartae symbolorum: extentum
+{+genus, +signatura} omnium generum profunditatis 0; custos generis
+in _functio_continens ④ _recensere (lege+analysa+neca+funde+
+extenta/chartae+tempus; titulus analysis "./via" — forma ordinum;
+plagula fracta = ordines veteres INTACTI) ⑤ _via_recens (identitas
+mtime, polaritas contraria vigiliae commentata utrimque)
+⑥ _extenta_viae refacta (apertum→pn [stillicidium piscinae indicis
+per petitionem sanatum]; clausum→cache+recentia→_recensere)
+⑦ _indicem_renovare (piscina indicis tota nova + superpositio
+apertorum re-emissa ex arboribus vivis) ⑧ _aetates_custodire in
+utroque dispensatore (gradus I modo-MCP → cascade; gradus II
+utrimque — reload LSP quoque, Q6).
+
+INVENTUM (aurea cepit, praeexsistens ex v0.1b): UMBRA PROTOTYPI —
+declarans = declaratio PRIMA; prototypus praevius extentum ad
+lineam unam contrahit, vocationes corporis cadunt. TRACTUS SILVAE
+NOMINATUS: definitio-vincit-declarans. Worklog habet.
+
+BARRAE: aureae 229/229 (recensio: plagula numquam-in-tsv sine
+didOpen → outgoingCalls per superpositionem _recensere VIVIT
+[inventum fail-clausum heri obsoletum]; editio+utime → vocata II;
+petitio iterata → cache recens idem); SUITA PLENA 12/12 (LSP
+VIRIDIS trans refactorem — barra portans); VIVUM ×3 per fistulas
+fifo (aurea tsv-swap in fluxu praescripto INGOLDABILIS — deviatio
+honesta, semen tertium sondae una-ictus): gradus II "index
+renovatur (tsv mutatus)" + responsa recta; superpositio aperta
+SUPERVIVIT renovationi (symbolum phantasmatis post reload); gradus
+I in modo MCP: caput tactum → "praeparatio stala - reaedificatur" →
+"tsv coactus" → petitiones respondent. Sequens: pars 3 (instrumenta
+quattuor + doctrina + .mcp.json + shakedown vivus).

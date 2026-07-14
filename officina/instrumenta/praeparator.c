@@ -68,6 +68,36 @@ praeparator_tempus_plagulae (constans character* via)
  * capita praebere (ambulatio dirent; basename primus-vincit)
  * ================================================== */
 
+/* tempus capitis commemorare (via copiatur in piscinam - fontes
+ * saepe in quadris effimeris) */
+interior vacuum
+_tempus_commemorare (Praeparatio* p, Piscina* piscina_capitum,
+    constans character* via)
+{
+    PraeparatorCaputTempus* introitus;
+    memoriae_index m;
+    character* copia;
+
+    si (p->tempora_capitum == NIHIL)
+    {
+        redde;
+    }
+    m = strlen(via);
+    copia = (character*)piscina_allocare(piscina_capitum, m + I);
+    si (copia == NIHIL)
+    {
+        redde;
+    }
+    memcpy(copia, via, m + I);
+    introitus = (PraeparatorCaputTempus*)xar_addere(
+        p->tempora_capitum);
+    si (introitus != NIHIL)
+    {
+        introitus->via = copia;
+        introitus->tempus = praeparator_tempus_plagulae(copia);
+    }
+}
+
 interior b32
 _praetermittendum (constans character* titulus)
 {
@@ -138,6 +168,8 @@ _capita_praeparare (Praeparatio* p, Piscina* piscina_capitum,
                 {
                     (vacuum)tabula_dispersa_inserere(visa, clavis,
                         NIHIL);
+                    _tempus_commemorare(p, piscina_capitum,
+                        via_plena);
                     /* basename -> via absoluta (saltus in capita:
                      * legatus definitio URIs inde struit) */
                     si (p->viae_capitum != NIHIL)
@@ -189,6 +221,8 @@ praeparator_praeparare (Praeparatio* p, Piscina* piscina_capitum,
     {
         redde I;   /* sine systemate et capitibus - contextus nudus */
     }
+    p->tempora_capitum = xar_creare(piscina_capitum,
+        (i32)magnitudo(PraeparatorCaputTempus));
 
     /* systema: ISO [+POSIX] [+latina] concatenata in TEXTUM UNUM -
      * lexicon = canalis macrorum; typedefs per parsuram systematis
@@ -208,6 +242,7 @@ praeparator_praeparare (Praeparatio* p, Piscina* piscina_capitum,
         {
             redde ZEPHYRUM;
         }
+        _tempus_commemorare(p, piscina_capitum, via_sys);
         mensura_sys = m_iso;
         si (cfg->cum_posix)
         {
@@ -223,6 +258,7 @@ praeparator_praeparare (Praeparatio* p, Piscina* piscina_capitum,
             {
                 redde ZEPHYRUM;
             }
+            _tempus_commemorare(p, piscina_capitum, via_sys);
             iunctum = (character*)piscina_allocare(piscina_capitum,
                 (memoriae_index)(mensura_sys + m_px + II));
             si (iunctum == NIHIL)
@@ -250,6 +286,7 @@ praeparator_praeparare (Praeparatio* p, Piscina* piscina_capitum,
             {
                 redde ZEPHYRUM;
             }
+            _tempus_commemorare(p, piscina_capitum, via_sys);
             iunctum = (character*)piscina_allocare(piscina_capitum,
                 (memoriae_index)(mensura_sys + m_lat + II));
             si (iunctum == NIHIL)
@@ -358,4 +395,33 @@ praeparator_analysare (constans Praeparatio* p,
     }
     *parsura_out = parsura;
     redde sem;
+}
+
+constans character*
+praeparator_caput_stalum (constans Praeparatio* p)
+{
+    i32 n;
+    i32 i;
+
+    si (p == NIHIL || p->tempora_capitum == NIHIL)
+    {
+        redde NIHIL;
+    }
+    n = xar_numerus(p->tempora_capitum);
+    per (i = ZEPHYRUM; i < n; i++)
+    {
+        constans PraeparatorCaputTempus* introitus =
+            (constans PraeparatorCaputTempus*)xar_obtinere(
+                p->tempora_capitum, i);
+
+        /* identitas cum se ipso: differentia quaevis (etiam retro -
+         * git checkout) = stalum */
+        si (introitus != NIHIL
+            && praeparator_tempus_plagulae(introitus->via)
+                   != introitus->tempus)
+        {
+            redde introitus->via;
+        }
+    }
+    redde NIHIL;
 }

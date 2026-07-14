@@ -20,6 +20,7 @@
 
 #include "piscina.h"
 #include "tabula_dispersa.h"
+#include "xar.h"
 #include "silva.h"
 
 typedef struct {
@@ -35,6 +36,12 @@ typedef struct {
     int sine_capitibus;    /* ambulatio capitum omissa */
 } PraeparatorConfiguratio;
 
+/* tempus capitis ad onus commemoratum (percursus staleness) */
+typedef struct {
+    const char* via;       /* via absoluta (copia in piscina) */
+    long        tempus;    /* mtime ad tempus onerationis */
+} PraeparatorCaputTempus;
+
 typedef struct {
     SilvaPiscina*   piscina;           /* ctx + systema (perennis) */
     SilvaContextus* ctx;
@@ -46,6 +53,10 @@ typedef struct {
                                         * si sine_capitibus. Pro
                                         * URIs saltuum in capita
                                         * (legatus definitio). */
+    Xar*            tempora_capitum;   /* PraeparatorCaputTempus -
+                                        * omnia capita onerata
+                                        * (systema + repositorium);
+                                        * pro caput_stalum */
 } Praeparatio;
 
 /* Praeparat contextum. piscina_capitum = arena textuum capitum et
@@ -64,6 +75,14 @@ char* praeparator_plagulam_legere(Piscina* piscina, const char* via,
  * illegibilis. Sedes POSIX (sys/stat.h) consulto HIC continetur -
  * eadem lex qua dirent (classis POSIX in una plagula). */
 long praeparator_tempus_plagulae(const char* via);
+
+/* Percursus staleness (gradus I legis aetatum, spec-v2 mcp-legati):
+ * omnia capita onerata re-stantur; via primi cuius mtime a
+ * commemorato DIFFERT (identitas, non limen - retro quoque capit,
+ * e.g. git checkout) redditur, NULL = omnia recentia. Capita NOVA
+ * (post onus creata) non videntur - inventio per iudicium-fallens
+ * parcum nominatum. */
+const char* praeparator_caput_stalum(const Praeparatio* praeparatio);
 
 /* Receptum bis-analysis: parsura cum contextu + semantica cum
  * systemate + clausura oraculi (augere + vacare + recanonicare) +

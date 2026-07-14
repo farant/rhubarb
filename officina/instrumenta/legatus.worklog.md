@@ -381,3 +381,47 @@ Same family as the no-diagnostics-pull quirk: the client is the
 constraint, not the server. This is the sharpest demand signal yet
 for MCP LEGATI — a name-based "quis vocatur ab X" needs no
 document, no position, no prepare handshake.
+
+## 2026-07-14 — chunk 2 (recensere + epoch lattice): the prototype-shadow find
+
+FIND (golden-caught, PRE-EXISTING since v0.1b): a forward prototype
+in the same file shadows the definition extent. SemanticaSymbolum
+has only `declarans` (silva.h:1210) — the FIRST declaration — so a
+file with `int f(int);` before `int f(int){...}` yields a one-line
+extent and every call inside the body falls outside it: outgoing
+calls silently empty, incoming attribution misses that caller. My
+chunk-1 outgoingCalls inherited this invisibly; the chunk-2 golden's
+fixture (written prototype-first out of clang habit) exposed it.
+NAMED SILVA PULL: definition-wins declarans (semantica updates the
+node when the definition arrives) — improves hover-on-declared and
+extents everywhere; needs silva-side ceremony (differential bar),
+not a legatus rider. Until then: house style rarely
+forward-declares in .c (interior functions defined before use), so
+exposure is limited (json.c's _scribere_valor is a known case).
+
+Design notes that shipped:
+- _via_recens compares recorded-vs-current mtime by IDENTITY (!=),
+  not threshold — no clock semantics at all; the opposite polarity
+  from the vigilia's strict > is commented at both sites (C8).
+  Residual: same-second same-size rewrite invisible (nanosecond
+  park).
+- _recensere passes "./via" as the analysis label so overlay rows
+  land in index form — the absolute-path label would have emitted
+  rows no lookup could match (caught at design time by tracing the
+  didOpen precedent).
+- _extenta_ex_semantica now allocates into a caller piscina: the
+  open-doc path allocated its per-request extents into
+  piscina_indicis FOREVER (pre-existing slow leak, one Xar per
+  call-hierarchy request on an open doc); now they go to the
+  message piscina.
+- _indicem_renovare re-emits open documents' overlays from their
+  LIVE trees after the wholesale piscina swap (no re-parse) — the
+  uncommitted-open-edits hole the sim predicted (C7) is closed.
+- Live-verified via fifo (prescripted tmpfile streams cannot mutate
+  disk mid-session — the tsv-swap golden from the sim was
+  UNGOLDENABLE in-harness; fifo probes are the honest substitute
+  and the sonda-una-ictus park grows a third seed): tier-2 touch →
+  "index renovatur (tsv mutatus)" + correct answers; overlay
+  survival (phantasma symbol found post-reload); tier-1 MCP cascade
+  (touched fixture header → "praeparatio stala" → "tsv coactus" →
+  requests answer).
