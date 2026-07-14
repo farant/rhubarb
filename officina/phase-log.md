@@ -3767,3 +3767,59 @@ convergit). AGITATIO pergit: examen-custos coexsistit → dimissio
 legatus.worklog.md + silva_c89_semantica.worklog.md (baptisma) +
 censor.worklog.md (hiatus PURUS) + memoria (MEMORY.md +
 officina-project.md + debugging-lessons ABI).
+
+## EXCUBITOR — INTENTIO (2026-07-13)
+
+Pulled per the recorded board (①). Design = the FUTURUM NOMINATUM
+entry above, verified counterfactually against the ABI case. Fran's
+frame at pull time: excubitor v1 rides mtimes + the inclusion graph;
+AEDILIS later backports precise target knowledge (excubitor becomes
+aedilis -vigila). So the manifest we author now is the SEED of what
+aedilis stage-2 generates — design it disposable on purpose.
+
+RECON CONFIRMED: everything needed is amalgam-surface TODAY —
+parsura->expansio, silva_fons_via (index→via), silva_inclusiones_
+numerus/silva_inclusio_vista (via/fons_ex/fons_ad/est_praetermissa).
+Chunk 1 touches ONE file (nexus_percursus.c), no silva fontes edits.
+WRINKLE + SOLUTION: headers are praebere'd BY BASENAME (_caput_
+praebere keys d_name), so included vias return "latina.h" not
+"include/latina.h" — but _capita_praeparare HOLDS via_plena at
+praebere time; recording basename→path there (first-wins, mirroring
+praebere's own dedup) resolves edges to the file whose bytes the
+parser ACTUALLY read. The graph tells the truth about the parse.
+OBJECT SIDE: ~310 .o across 10 build dirs; nearly all <base>.o ←
+<base>.c resolvable by basename convention; manifest carries only
+generates-edges (amalgams←fontes, tabulae←grammatica, nexus.tsv/
+inclusiones.tsv←percursus) + irregular names (amalgama_silva.o...).
+
+DECISUS (Fran): ① manifest = plain TSV marked DISPOSABLE — the real
+declarative format (STML, per-scope overrides) is designed ONCE at
+the aedilis on-ramp, fed by excubitor v1 lessons; ② ./excubitor.sh
+at REPO ROOT (repo-wide watchman; compile_tests.sh precedent),
+manifest fabrica.tsv committed alongside; ③ ALL THREE channels this
+arc (post-build verdict + shared-header hook hint + legatus
+self-staleness push — the resident-binary class no script sees).
+
+DECISA MINORA (recorded, mine): praetermissa edges KEPT as flagged
+rows (code-is-a-database pin; dedup key ex|ad|status so both
+sightings survive honestly); unresolved basenames (stdio.h...) stay
+as-is — external, excubitor skips non-repo paths; emission fires
+whenever expansio exists (include graph valid even when semantics
+fail).
+
+CHUNKS: ① emission — capita map + inclusiones.tsv in the SAME sweep
+(atomic .nova+rename, dedup table, header comment; nexus.sh
+-renovare + post-commit hook refresh it FREE), spot-check known
+edges; ② excubitor.sh — closure mtime propagation, objects by
+convention + fabrica.tsv, binaries, generated targets; verdict +
+named offenders, CHECK-ONLY; BAR: replay the ABI case (touch
+silva.h, no rebuild → excubitor must name nexus_ordines.o); ③
+channels (post-build verdict, hook hint, legatus self-check at
+initialize/didSave).
+
+OBITER at recon: silva/nexus.sh has the SAME ABI hole fixed in the
+two officina scripts during v0.2 politio (nexus_ordines.o +
+nexus_amalgama_silva.o don't track silva.h) — the third hand-rolled
+copy of the pattern, missed because it lives silva-side. THE drift
+class this arc exists for, found while building the fix. Repaired in
+chunk 1; stays the canonical demo for chunk 2's bar.

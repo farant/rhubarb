@@ -54,9 +54,14 @@ for f in "${RADIX_FONTES[@]}"; do
     obj_files="$obj_files $obj"
 done
 
+# silva.h mutatio formae sine recompilo = corruptio ABI (inventum
+# v0.2 in officina; TERTIUM exemplar manu volutum - excubitor chunk 1)
+SILVA_H="$SILVA_DIR/amalgama/silva.h"
+
 src="$SILVA_DIR/amalgama/silva.c"
 obj="$BUILD_DIR/nexus_amalgama_silva.o"
-if [ ! -f "$obj" ] || [ "$src" -nt "$obj" ]; then
+if [ ! -f "$obj" ] || [ "$src" -nt "$obj" ] \
+    || [ "$SILVA_H" -nt "$obj" ]; then
     echo "  [amalgama] silva.c" >&2
     clang "${GCC_FLAGS[@]}" -c "$src" -o "$obj" || exit 1
 fi
@@ -64,7 +69,8 @@ fi
 src="$SILVA_DIR/instrumenta/nexus_ordines.c"
 obj="$BUILD_DIR/nexus_ordines.o"
 if [ ! -f "$obj" ] || [ "$src" -nt "$obj" ] \
-    || [ "$SILVA_DIR/instrumenta/nexus_ordines.h" -nt "$obj" ]; then
+    || [ "$SILVA_DIR/instrumenta/nexus_ordines.h" -nt "$obj" ] \
+    || [ "$SILVA_H" -nt "$obj" ]; then
     echo "  [ordines] nexus_ordines.c" >&2
     clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" -c "$src" -o "$obj" || exit 1
 fi
