@@ -589,6 +589,15 @@ _chorda_desinit_literis (chorda c, constans character* litterae)
                litterae, m) == ZEPHYRUM) ? VERUM : FALSUM;
 }
 
+interior b32
+_chordae_pares (chorda a, chorda b)
+{
+    redde (a.mensura == b.mensura && a.datum != NIHIL
+        && b.datum != NIHIL
+        && memcmp(a.datum, b.datum, (memoriae_index)a.mensura)
+               == ZEPHYRUM) ? VERUM : FALSUM;
+}
+
 /* politica viarum (Q2 explorationis quintae): genita/fixturae
  * NUMQUAM sedes saltus; knotapel/tools realia sed secundaria */
 interior b32
@@ -1815,6 +1824,13 @@ _ordo_macro_est (constans LegatusOrdo* o)
 }
 
 interior b32
+_ordo_functio_est (constans LegatusOrdo* o)
+{
+    redde o->genus.mensura == (i32)VII
+        && memcmp(o->genus.datum, "functio", VII) == ZEPHYRUM;
+}
+
+interior b32
 _character_identificatoris (character c)
 {
     redde (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z')
@@ -2948,6 +2964,7 @@ _documentsymbol_tractare (Legatus* l, Piscina* pn, JsonValor* id,
 
 /* ==================================================
  * v0.1b: references / workspaceSymbol / incomingCalls
+ * (+ outgoingCalls: inversum, grex per vocatum)
  * (index trans-plagularis; politica viarum ubique)
  * ================================================== */
 
@@ -3572,6 +3589,219 @@ _incomingcalls_tractare (Legatus* l, Piscina* pn, JsonValor* id,
                 json_objectum_ponere(introitus, "fromRanges",
                     ranges);
                 json_tabulatum_addere(lista, introitus);
+            }
+        }
+    }
+    _respondere(l, tabellarius_responsum(pn, id, lista));
+}
+
+/* sedes optima tituli (politica gradus corporis v0.1b): corpus .c
+ * primarium -> .c secundarium -> quaevis sedes (caput/lexicon) */
+interior constans LegatusOrdo*
+_ordo_corporis_tituli (Legatus* l, chorda titulus)
+{
+    LegatusOrdo* caput = _ordines_tituli(l, titulus);
+    s32 gradus;
+
+    per (gradus = ZEPHYRUM; gradus < (s32)III; gradus++)
+    {
+        LegatusOrdo* o = caput;
+
+        per (; o != NIHIL; o = o->proximus)
+        {
+            si (o->mortuus || !o->sedes || _ordo_macro_est(o)
+                || o->profunditas != ZEPHYRUM
+                || _via_omissa(o->via))
+            {
+                perge;
+            }
+            si (gradus < (s32)II
+                && (!_chorda_desinit_literis(o->via, ".c")
+                    || (_via_secundaria(o->via) ? I : ZEPHYRUM)
+                           != (insignatus integer)gradus))
+            {
+                perge;
+            }
+            redde o;
+        }
+    }
+    redde NIHIL;
+}
+
+/* outgoingCalls: inversum vocantium. Extentum functionis ad item
+ * (range si adest ET titulus congruit, alioquin quaestio tituli),
+ * deinde usus generis "functio" intra extentum = sedes vocationum.
+ * GREX per vocatum (forma LSP vera: fromRanges plurales); "to" ex
+ * politica corporis. Approximatio indicis: usus sine vocatione
+ * (functio-punctator) includitur; vocatum sine sede omittitur. */
+interior vacuum
+_outgoingcalls_tractare (Legatus* l, Piscina* pn, JsonValor* id,
+    JsonValor* params)
+{
+    JsonValor* lista = json_tabulatum_creare(pn);
+    JsonValor* item_v;
+    chorda titulus;
+    character via_c[LEGATUS_VIA_MAXIMA];
+    chorda via;
+    chorda uri;
+    chorda via_sine;
+    Xar* extenta;
+    constans LegatusFunctioExtentum* vocans_e = NIHIL;
+
+    si (params == NIHIL || !l->index_paratus)
+    {
+        _respondere(l, tabellarius_responsum(pn, id, lista));
+        redde;
+    }
+    item_v = json_objectum_capere(params, "item");
+    si (item_v == NIHIL)
+    {
+        _respondere(l, tabellarius_responsum(pn, id, lista));
+        redde;
+    }
+    titulus = json_ad_chorda(json_objectum_capere(item_v, "name"));
+    si (titulus.mensura == ZEPHYRUM
+        || !_viam_extrahere(l, item_v, via_c, magnitudo(via_c),
+               &via, &uri)
+        || via.mensura <= (i32)II)
+    {
+        _respondere(l, tabellarius_responsum(pn, id, lista));
+        redde;
+    }
+    /* via "./x" -> sine praefixo (forma ordinum indicis) */
+    via_sine.datum = via.datum + II;
+    via_sine.mensura = via.mensura - II;
+
+    extenta = _extenta_viae(l, pn, via_sine);
+    {
+        JsonValor* range_v = json_objectum_capere(item_v, "range");
+
+        si (range_v != NIHIL)
+        {
+            insignatus integer linea_r = (insignatus integer)
+                json_ad_integer(json_objectum_capere(
+                    json_objectum_capere(range_v, "start"),
+                    "line")) + I;
+
+            vocans_e = _functio_continens(extenta, linea_r);
+            si (vocans_e != NIHIL
+                && !_chordae_pares(vocans_e->titulus, titulus))
+            {
+                vocans_e = NIHIL;   /* range aliena - titulus regit */
+            }
+        }
+        si (vocans_e == NIHIL && extenta != NIHIL)
+        {
+            i32 n_e = xar_numerus(extenta);
+            i32 k;
+
+            per (k = ZEPHYRUM; k < n_e; k++)
+            {
+                constans LegatusFunctioExtentum* e =
+                    (constans LegatusFunctioExtentum*)
+                        xar_obtinere(extenta, k);
+
+                si (e != NIHIL
+                    && _chordae_pares(e->titulus, titulus))
+                {
+                    vocans_e = e;
+                    frange;
+                }
+            }
+        }
+    }
+    si (vocans_e == NIHIL)
+    {
+        _respondere(l, tabellarius_responsum(pn, id, lista));
+        redde;
+    }
+    {
+        chorda vocata_tituli[LEGATUS_RELATIONES_MAXIMAE];
+        JsonValor* vocata_ranges[LEGATUS_RELATIONES_MAXIMAE];
+        insignatus integer n_vocata = ZEPHYRUM;
+        insignatus integer relationes = ZEPHYRUM;
+        i32 n_ordines = xar_numerus(l->omnes_ordines);
+        i32 k;
+
+        per (k = ZEPHYRUM; k < n_ordines
+             && relationes < (insignatus integer)
+                    LEGATUS_RELATIONES_MAXIMAE; k++)
+        {
+            constans LegatusOrdo* o = *(constans LegatusOrdo**)
+                xar_obtinere(l->omnes_ordines, k);
+            JsonValor* ranges = NIHIL;
+
+            si (o == NIHIL || o->mortuus || o->sedes
+                || !_ordo_functio_est(o)
+                || !_chordae_pares(o->via, via_sine)
+                || o->linea < vocans_e->linea_a
+                || o->linea > vocans_e->linea_b)
+            {
+                perge;
+            }
+            {
+                insignatus integer g;
+
+                per (g = ZEPHYRUM; g < n_vocata; g++)
+                {
+                    si (_chordae_pares(vocata_tituli[g],
+                            o->titulus))
+                    {
+                        ranges = vocata_ranges[g];
+                        frange;
+                    }
+                }
+            }
+            si (ranges == NIHIL)
+            {
+                constans LegatusOrdo* sedes_o =
+                    _ordo_corporis_tituli(l, o->titulus);
+                JsonValor* sedes_v;
+                JsonValor* ad;
+                JsonValor* introitus;
+
+                si (sedes_o == NIHIL
+                    || n_vocata >= (insignatus integer)
+                           LEGATUS_RELATIONES_MAXIMAE)
+                {
+                    perge;
+                }
+                sedes_v = _sedes_ex_ordine(l, pn, sedes_o);
+                si (sedes_v == NIHIL)
+                {
+                    perge;
+                }
+                introitus = json_objectum_creare(pn);
+                ad = json_objectum_creare(pn);
+                ranges = json_tabulatum_creare(pn);
+                json_objectum_ponere(ad, "name",
+                    json_chorda_creare(pn, o->titulus));
+                json_objectum_ponere(ad, "kind",
+                    json_integer_creare(pn, 12));
+                json_objectum_ponere(ad, "uri",
+                    json_objectum_capere(sedes_v, "uri"));
+                json_objectum_ponere(ad, "range",
+                    json_objectum_capere(sedes_v, "range"));
+                json_objectum_ponere(ad, "selectionRange",
+                    json_objectum_capere(sedes_v, "range"));
+                json_objectum_ponere(introitus, "to", ad);
+                json_objectum_ponere(introitus, "fromRanges",
+                    ranges);
+                json_tabulatum_addere(lista, introitus);
+                vocata_tituli[n_vocata] = o->titulus;
+                vocata_ranges[n_vocata] = ranges;
+                n_vocata++;
+            }
+            {
+                insignatus integer l0 = o->linea > ZEPHYRUM
+                    ? o->linea - I : ZEPHYRUM;
+                insignatus integer c0 = o->columna > ZEPHYRUM
+                    ? o->columna - I : ZEPHYRUM;
+
+                json_tabulatum_addere(ranges, _regio_json(pn, l0,
+                    c0, l0, c0 + (insignatus integer)
+                        o->titulus.mensura));
+                relationes++;
             }
         }
     }
@@ -4242,6 +4472,11 @@ _nuntium_tractare (Legatus* l, Piscina* pn, TabellariusNuntius* n,
                          "callHierarchy/incomingCalls"))
         {
             _incomingcalls_tractare(l, pn, n->id, n->params);
+        }
+        alioquin si (_methodus_est(n->methodus,
+                         "callHierarchy/outgoingCalls"))
+        {
+            _outgoingcalls_tractare(l, pn, n->id, n->params);
         }
         alioquin
         {

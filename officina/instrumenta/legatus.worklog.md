@@ -320,3 +320,64 @@ should say "excubitor". Cosmetic, park. ④ USAGE NOTE (not a tool
 gap): for mapping a big file's functions I still reach for grep -n
 out of habit; documentSymbol IS the bench answer now — symptom
 table addition.
+
+## 2026-07-14 — outgoingCalls (nona operationis octava impleta)
+
+callHierarchy/outgoingCalls shipped as the exact inverse of
+incomingCalls, reusing every mechanism that arc built: the
+extenta_functionum cache + _functio_continens give the caller's
+body extent; the omnes_ordines walk (vicinitas idiom) finds usus
+rows of genus "functio" inside it; _sedes_ex_ordine + the v0.1b
+body-def gradus policy (new helper _ordo_corporis_tituli: .c
+primary -> .c secondary -> any sedes) resolve each callee's "to"
+item. Unlike our per-use incomingCalls entries, outgoing GROUPS by
+callee — one CallHierarchyOutgoingCall per distinct callee with
+plural fromRanges (the LSP-spec shape; live probe: _lex_currens
+13 call sites in one entry, including a two-calls-one-line pair).
+libc callees resolve to silva/fontes/systema_c89.h — the modeled
+lexicon is a real, jumpable sedes; a pleasant surprise, no
+special-casing needed. Known approximation: a bare function-name
+use (function pointer taken, no call) counts as an outgoing call —
+index rows can't distinguish; acceptable for an agent client.
+
+FIND (probe time): on a file with UNCOMMITTED line-shifting edits,
+outgoingCalls via the closed-file path returns empty — the extent
+comes from a fresh on-demand parse (current lines) while tsv usus
+rows carry committed-time lines; the line-range intersection
+misses. Same staleness class as references/definition, but the
+INTERSECTION makes it fail closed (empty) rather than approximate.
+In real sessions the client didOpens the file first -> overlay
+re-judges with current lines -> extent and rows agree. The
+degenerate case is stdio probes without didOpen on a dirty file.
+Remedy if it ever bites: didOpen first (or commit); post-commit
+hook re-pins the tsv.
+
+Item resolution detail: prefer item.range.start (via
+_functio_continens) but VERIFY the extent's titulus matches
+item.name — a junk range must not silently pick a different
+function; on mismatch fall back to the titulus scan of the file's
+extents. Item without range (our goldens, hand probes) goes
+straight to the titulus scan.
+
+## 2026-07-14 — outgoingCalls LIVE in-session + client didOpen scoping
+
+Post-reload verification: outgoingCalls on _outgoingcalls_tractare
+ITSELF (uncommitted legatus.c) returned its complete call graph —
+21 callees grouped by file, every hour-old helper (_chordae_pares,
+_ordo_functio_est, _ordo_corporis_tituli) at CURRENT dirty-file
+lines. The overlay-coherence prediction from the ship-time FIND
+held exactly: client didOpen -> re-judge -> extent and rows agree.
+Client renders grouped fromRanges as "called from: a, b, c" — the
+per-callee grouping paid off in the reading surface.
+
+ASPERITAS (client-side, new): the Claude Code LSP client only
+didOpens files that were EDITED in the session (a partial Read did
+not open one; hover/prepare on a merely-Read file return empty —
+"No call hierarchy item found"). Since prepareCallHierarchy needs
+an open document, call-hierarchy THROUGH THE CLIENT only works on
+the session's working set. The SERVER answers closed-file
+outgoingCalls fine (stdio probe, no didOpen: on-demand parse).
+Same family as the no-diagnostics-pull quirk: the client is the
+constraint, not the server. This is the sharpest demand signal yet
+for MCP LEGATI — a name-based "quis vocatur ab X" needs no
+document, no position, no prepare handshake.

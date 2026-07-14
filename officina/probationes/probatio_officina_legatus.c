@@ -62,6 +62,16 @@ _chorda_est (chorda c, constans character* litterae)
         && memcmp(c.datum, litterae, m) == ZEPHYRUM) ? VERUM : FALSUM;
 }
 
+interior b32
+_chorda_desinit (chorda c, constans character* litterae)
+{
+    memoriae_index m = strlen(litterae);
+
+    redde (c.datum != NIHIL && (memoriae_index)c.mensura >= m
+        && memcmp(c.datum + ((memoriae_index)c.mensura - m),
+               litterae, m) == ZEPHYRUM) ? VERUM : FALSUM;
+}
+
 /* numerus diagnosticorum publicationis (-1 = non publicatio) */
 interior s32
 _diagnostica_numerus (TabellariusNuntius* n)
@@ -610,6 +620,15 @@ probatio_hover_symbola (Piscina* p)
         "\"method\":\"callHierarchy/incomingCalls\",\"params\":"
         "{\"item\":{\"name\":\"probatio_functio\"}}}");
 
+    /* outgoingCalls: quas functiones probatio_vocans vocat
+     * (inversum - item sine range: quaestio tituli in extentis) */
+    sprintf(corpus,
+        "{\"jsonrpc\":\"2.0\",\"id\":17,"
+        "\"method\":\"callHierarchy/outgoingCalls\",\"params\":"
+        "{\"item\":{\"name\":\"probatio_vocans\",\"uri\":"
+        "\"file://%s/lib/legatus_phantasma_f.c\"}}}", _radix());
+    _scribe(intra, p, corpus);
+
     _scribe(intra, p,
         "{\"jsonrpc\":\"2.0\",\"id\":7,\"method\":\"shutdown\"}");
     _scribe(intra, p, "{\"jsonrpc\":\"2.0\",\"method\":\"exit\"}");
@@ -780,6 +799,35 @@ probatio_hover_symbola (Piscina* p)
         ab = json_objectum_capere(introitus, "from");
         CREDO_VERUM(_chorda_est(json_ad_chorda(
             json_objectum_capere(ab, "name")), "probatio_vocans"));
+        CREDO_VERUM(json_ad_integer(json_objectum_capere(
+            json_objectum_capere(json_tabulatum_obtinere(
+                json_objectum_capere(introitus, "fromRanges"),
+                ZEPHYRUM), "start"), "line")) == VII);
+    }
+
+    n = _lege(extra, p, &bene);   /* outgoingCalls: probatio_functio */
+    CREDO_VERUM(bene);
+    {
+        JsonValor* resultatum = json_objectum_capere(n.radix,
+            "result");
+        JsonValor* introitus;
+        JsonValor* ad;
+
+        CREDO_VERUM(resultatum != NIHIL
+            && json_est_tabulatum(resultatum)
+            && json_tabulatum_numerus(resultatum) == I);
+        introitus = json_tabulatum_obtinere(resultatum, ZEPHYRUM);
+        ad = json_objectum_capere(introitus, "to");
+        CREDO_VERUM(_chorda_est(json_ad_chorda(
+            json_objectum_capere(ad, "name")), "probatio_functio"));
+        CREDO_VERUM(_chorda_desinit(json_ad_chorda(
+            json_objectum_capere(ad, "uri")),
+            "legatus_phantasma_f.c"));
+        /* sedes vocati: definitio linea 0 (0-basata) */
+        CREDO_VERUM(json_ad_integer(json_objectum_capere(
+            json_objectum_capere(json_objectum_capere(ad, "range"),
+                "start"), "line")) == (s64)ZEPHYRUM);
+        /* sedes vocationis: linea VII (0-basata) */
         CREDO_VERUM(json_ad_integer(json_objectum_capere(
             json_objectum_capere(json_tabulatum_obtinere(
                 json_objectum_capere(introitus, "fromRanges"),

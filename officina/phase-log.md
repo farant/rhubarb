@@ -4053,3 +4053,127 @@ confirmata → debrief → parca → vicinitas RELATIO) +
 legatus.worklog.md (vigilia + asperitates) + memoria (MEMORY.md +
 officina-project.md). Post commissionem: uncus graphum renovat,
 CAUTIO abit.
+
+## OUTGOINGCALLS — INTENTIO (2026-07-14)
+
+Pulled (Fran): e novem operationibus quas cliens LSP rogare potest,
+septem habemus; hiatus = outgoingCalls + goToImplementation. Hoc
+fasce: **callHierarchy/outgoingCalls** (inversum incomingCalls —
+"quas functiones haec functio vocat", directio lectionis quam
+agens maxime adhibet). goToImplementation = parca (alias
+definitionis; fascis posterior aut idem si vilis).
+
+FORMA: machinae IAM exstant omnes — extenta_functionum +
+_functio_continens (incomingCalls), ambulatio omnes_ordines cum
+filtro viae (vicinitas), _sedes_ex_ordine, politica gradus
+corporis (.c primaria → .c secundaria → quaevis sedes, ex
+_definitio_tractare). Novum: ① item.uri → via → extenta viae →
+extentum vocantis (range.start si adest ET titulus congruit,
+alioquin quaestio tituli); ② ambulatio ordinum: usus + genus
+"functio" + via eadem + linea intra extentum = sedes vocationis;
+③ GREX per vocatum (LSP forma vera: unum CallHierarchyOutgoingCall
+per vocatum distinctum, fromRanges plurales — incoming per-usum
+manet, non tangitur); "to" ex _ordo_corporis_tituli (auxilium
+novum, politica definitionis reusa). Vocata sine sede ulla
+omittuntur; usus sine vocatione (functio-punctator) includitur —
+approximatio indicis, notanda. printf et similia ad
+silva/fontes/systema_c89.h resolvuntur (lexicon modelatum — sedes
+vera saltabilis). capability iam vera (callHierarchyProvider tegit
+ambas directiones — nulla mutatio).
+
+BARRAE: probatio aurea (outgoingCalls in probatio_vocans phantasmatis
+→ unum vocatum probatio_functio, fromRanges linea VII, to.name +
+to.uri .c); suita officina plena; sonda stdio viva in functione
+reali (post /reload etiam in sessione).
+
+## OUTGOINGCALLS — RELATIO (2026-07-14)
+
+SHIPPED primo cursu: _outgoingcalls_tractare + _ordo_corporis_tituli
+(politica corporis reusa) + _ordo_functio_est + _chordae_pares +
+bracchium dispatch; capability nulla mutatio (callHierarchyProvider
+ambas directiones tegit). GREX per vocatum (forma LSP vera —
+incoming per-usum manet). BARRAE OMNES: ① aurea 192/192 (186+6:
+to.name/to.uri/to.range.linea 0/fromRanges linea VII); ② suita
+officina 12/12; ③ sonda stdio viva: machinula_currere → memset +
+machinula_aperire + machinula_pergere + _relationem_imprimere —
+CONGRUENTIA EXACTA cum emitte (magnitudo/enumerata recte exclusa,
+genus non-functio); _lex_numerus → _lex_currens UNO introitu cum
+XIII fromRanges (etiam par duarum-vocationum-una-linea). memset ad
+silva/fontes/systema_c89.h resolvit — lexicon modelatum sedes vera
+saltabilis, nullo casu speciali.
+
+INVENTUM (hora sondae): plagula cum editionibus NON-commissis
+lineas movantibus → responsum VACUUM per viam plagulae-clausae
+(extentum ex parsura recenti, ordines tsv ex lineis commissionis —
+intersectio linearum cadit CLAUSA, non falsa). In sessione vera
+cliens didOpen prius mittit → superpositio re-iudicat → cohaerent.
+Casus degener: sondae stdio sine didOpen in arbore sordida.
+Worklog habet. Impulsus me bis servavit in fasce: _chorda_desinit
+auxilium fictum in probatione (vocatio implicita clamata ante
+compilationem — scripsi), et vigilia IPSA in omni editione (fascis
+prior sui-custodiam aedificavit quae hunc fascem vigilavit).
+
+PARCA MANET: goToImplementation (alias definitionis, ~XII lineae)
+= ultima operatio novem clientis. Debrief: adhibita nexus/emitte/
+awk-in-tsv (recon), impulsus (×2 supra), sonda stdio; asperitas
+nulla nova; desideratum idem — sonda una-ictus (scripta scratchpad
+iam duo semina).
+
+### VIVUM IN SESSIONE (2026-07-14, post /reload): outgoingCalls in
+_outgoingcalls_tractare IPSO (legatus.c sordidum) → graphus
+vocationum plenus, XXI vocata per plagulas, auxilia horae huius ad
+lineas sordidas currentes — praedictio superpositionis EXACTE
+tenuit. ASPERITAS CLIENTIS NOVA (worklog): cliens solum plagulas
+EDITAS in sessione didOpen-at (lectio partialis non aperit) →
+prepare (documentum apertum egens) in plagulis tantum-lectis vacuum
+→ hierarchia vocationum PER CLIENTEM solum in copia laboris
+sessionis; SERVUS plagulas clausas bene respondet (sonda stdio sine
+didOpen). Signum postulationis acerrimum pro MCP LEGATI: "quis
+vocatur ab X" nomine-basatum nullo documento eget.
+
+## INSTRUMENTA-SIMULATIO-3 — MCP LEGATI (2026-07-14)
+
+Fran iussit. Aedificatio simulata ~2¾ horarum, quattuor partes;
+plagula: project-specs/instrumenta-simulatio-3.md (C1-C12 + tabula
+partium + semina colloquii). CAPUT: forma pinnata SUPERVIXIT (nulla
+reversio); inventum coronae = modus sine documentis decipulam
+reaedificationis praeparationis EXARMAT (C5); lex aetatum trium
+graduum (C6: praeparatio ⊃ index ⊃ per-viam); primitivum _recensere
+(iudicium semel, tres consumptores + chartae symbolorum C9); lex
+duorum transituum (C4). Sondae reales: framing = II functiones;
+tsv 48MB/719k ordines; _evadere_json \n tegit (compactum SOLUM);
+radix sine rootUri → launcher -radix (C2). Onus verum: ~M lineae in
+legatus.c (→ ~5600) — quaestio scissionis unitatum VERA (C11, ad
+colloquium). Partes: ① framing+handshake ② _recensere+lattice
+(barra: suita LSP VIRIDIS manet — refactor viam communem tangit)
+③ instrumenta quattuor + shakedown vivus (C12).
+
+## MCP LEGATI — COLLOQUIUM + SPEC v1 (2026-07-14)
+
+Colloquium XII quaestionum post simulationem — OMNES commendationes
+acceptae: ① v0 in-plagula (scissio ad LEGATUSD) ② Latine pure
+③ paritas examinis pro diagnostica ④ tecta fixa + verbosum parcum
+⑤ instructions = doctrina electionis ⑥ reload indicis LSP EODEM arcu
+(pars 2) ⑦ nomen "legati" ⑧ protocolVersion resonatum ⑨ stalus-ipse
+= responde + CAUTIO ⑩ posix late-servi OFF + dual-praeparatio parcum
+⑪ charta macra ⑫ goToImplementation vector in parte 1 (9/9).
+Plagulae: instrumenta-simulatio-3-interview.md (crudum) +
+mcp-legati-spec.md (v1, §X = facta aperta pro v2). Exploratores
+tres emissi (diagnostica-ambulatio/effusor examinis; redditor
+signaturae + machinae macrorum sine documento; inventarium capitum
+praeparationis + emissio superpositionis + ordo initialize) → v2.
+
+### SPEC v2 VERIFICATA (2026-07-14): exploratores tres reversi;
+mcp-legati-spec-v2.md scripta (auto-continens — impletio HANC legit).
+Correctiones tres contra sim: ① codificatio positionum NON opus
+(effectus = textus, numeri 1-basati); ② inventarium capitum tier-1 =
+ARBOR .h TOTA (non ~40) → lista nota statur (p->viae_capitum,
+centena, ~2ms) + inventio novorum per iudicium-fallens — hodie NIHIL
+capita re-stat (LSP didSave solum, asymmetria confirmata);
+③ refactor minor quam timui: chartae ex ITERATIONE symbolorum
+(silva_c89_typum_scribere typo solo pendet, silva.h:1395), solum
+redditor hoveris inline extrahendus; machinae macrorum iam sine
+documento (disco-fallback completus). Emissio superpositionis =
+nexus_ordines_fundere (necare→fundere→extenta, legatus.c:1175-1189);
+forma examinis verbatim capta (verdictum + ordines omnium graduum
+incl. infra + provisionale suffixum).
