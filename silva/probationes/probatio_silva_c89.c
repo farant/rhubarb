@@ -3012,6 +3012,103 @@ s32 principale (vacuum)
     }
 
 
+    /* ========================================================
+     * PROBARE: commentarium ducens (regula arcte-supra -
+     * consumptor primus pinnae "commenta sunt contenta";
+     * INTENTIO silva/phase-log 2026-07-14)
+     * ======================================================== */
+    {
+        SilvaParsura* parsura;
+        SilvaNodus* nodus;
+        SilvaCommentariumVista vista;
+
+        imprimere("\n--- Probans commentarium ducens ---\n");
+
+        /* attachatum simplex (etiam caput plagulae sine vacua) */
+        parsura = _parsare(piscina,
+            "/* contractus rei */\nint f(void);\n");
+        CREDO_NON_NIHIL (parsura);
+        CREDO_VERUM (parsura->successus);
+        nodus = _elementum(parsura->commissio->radix, ZEPHYRUM);
+        CREDO_NON_NIHIL (nodus);
+        CREDO_AEQUALIS_I32 ((i32)silva_commentarium_ducens(nodus,
+            parsura->fons_princeps, &vista), I);
+        CREDO_AEQUALIS_I32 ((i32)vista.initium, ZEPHYRUM);
+        CREDO_AEQUALIS_I32 ((i32)vista.finis, 20);
+        CREDO_AEQUALIS_I32 ((i32)vista.linea, I);
+
+        /* linea vacua inter commentum et nodum = absens */
+        parsura = _parsare(piscina,
+            "/* alienum */\n\nint g(void);\n");
+        CREDO_NON_NIHIL (parsura);
+        nodus = _elementum(parsura->commissio->radix, ZEPHYRUM);
+        CREDO_NON_NIHIL (nodus);
+        CREDO_AEQUALIS_I32 ((i32)silva_commentarium_ducens(nodus,
+            parsura->fons_princeps, &vista), ZEPHYRUM);
+        CREDO_AEQUALIS_I32 ((i32)vista.initium, (i32)-I);
+
+        /* bloccus multi-commentum contiguus - totus attachatur */
+        parsura = _parsare(piscina,
+            "/* pars a */\n/* pars b */\nint h(void);\n");
+        CREDO_NON_NIHIL (parsura);
+        nodus = _elementum(parsura->commissio->radix, ZEPHYRUM);
+        CREDO_AEQUALIS_I32 ((i32)silva_commentarium_ducens(nodus,
+            parsura->fons_princeps, &vista), I);
+        CREDO_AEQUALIS_I32 ((i32)vista.initium, ZEPHYRUM);
+        CREDO_AEQUALIS_I32 ((i32)vista.finis, 25);
+
+        /* linea vacua INTRA bloccum - pars superior cadit */
+        parsura = _parsare(piscina,
+            "/* vetus */\n\n/* recens */\nint i(void);\n");
+        CREDO_NON_NIHIL (parsura);
+        nodus = _elementum(parsura->commissio->radix, ZEPHYRUM);
+        CREDO_AEQUALIS_I32 ((i32)silva_commentarium_ducens(nodus,
+            parsura->fons_princeps, &vista), I);
+        CREDO_AEQUALIS_I32 ((i32)vista.initium, 13);
+        CREDO_AEQUALIS_I32 ((i32)vista.finis, 25);
+
+        /* commentum finis-lineae prioris NON attachatur (politica
+         * divisionis lexatoris: in spatia_post prioris manet) */
+        parsura = _parsare(piscina,
+            "int a; /* caudale */\nint j(void);\n");
+        CREDO_NON_NIHIL (parsura);
+        nodus = _elementum(parsura->commissio->radix, I);
+        CREDO_NON_NIHIL (nodus);
+        CREDO_AEQUALIS_I32 ((i32)silva_commentarium_ducens(nodus,
+            parsura->fons_princeps, &vista), ZEPHYRUM);
+
+        /* declaratio macro-initiata: lexema primum = expansio
+         * synthetica, radix originis (invocatio) trivia fert */
+        parsura = _parsare(piscina,
+            "#define proprius static\n"
+            "/* per macrum */\nproprius int k(void);\n");
+        CREDO_NON_NIHIL (parsura);
+        {
+            i32 e;
+
+            nodus = NIHIL;
+            per (e = ZEPHYRUM; e < III; e++)
+            {
+                SilvaNodus* cand = _elementum(
+                    parsura->commissio->radix, e);
+
+                si (cand != NIHIL && cand->genus
+                    == (s32)SILVA_C89_GENUS_DECLARATIO)
+                {
+                    nodus = cand;
+                    frange;
+                }
+            }
+        }
+        CREDO_NON_NIHIL (nodus);
+        CREDO_AEQUALIS_I32 ((i32)silva_commentarium_ducens(nodus,
+            parsura->fons_princeps, &vista), I);
+        CREDO_AEQUALIS_I32 ((i32)vista.initium, 24);
+        CREDO_AEQUALIS_I32 ((i32)vista.finis, 40);
+        CREDO_AEQUALIS_I32 ((i32)vista.linea, II);
+    }
+
+
     credo_imprimere_compendium();
     praeteritus = credo_omnia_praeterierunt();
 

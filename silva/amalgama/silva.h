@@ -335,6 +335,21 @@ void silva_nodus_extensionem_lineis(const SilvaNodus* nodus,
     int fons_index, unsigned int* linea_a, unsigned int* columna_a,
     unsigned int* linea_b, unsigned int* columna_b);
 
+/* Commentarium ducens: bloccus commentorum "arcte-supra" nodum
+ * (contiguus, sine linea vacua inter finem eius et nodum; linea
+ * vacua intra bloccum = pars superior cadit). Extenta BYTES in
+ * fonte dato, radice originis soluta (declarationes macris
+ * initiatae: invocatio trivia fert). Redde 1 si praesens. */
+typedef struct
+{
+    int          initium;   /* BYTES in fons; -1 = absens */
+    int          finis;     /* exclusive; -1 = absens */
+    unsigned int linea;     /* 1-basata (commenti primi) */
+} SilvaCommentariumVista;
+
+int silva_commentarium_ducens(const SilvaNodus* nodus,
+    int fons_index, SilvaCommentariumVista* vista);
+
 /* ==================================================
  * Tabulae coctae (generatae - contractus stabilis)
  * ================================================== */

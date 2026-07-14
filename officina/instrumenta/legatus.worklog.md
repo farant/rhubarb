@@ -494,3 +494,46 @@ _vigiliam_percurrere extracted from the init sweep, called at MCP
 request entry via _aetates_custodire. Live via fifo: touch
 legatus.c mid-session -> next answer carries the CAUTIO line under
 a complete answer (Q9 semantics: answer + disclose, never refuse).
+
+## 2026-07-14 — quintum instrumentum MCP: inclusiones
+
+Demand signal fired the same day it was recorded (rung 5 debrief:
+"who includes X" went to awk three times; excubitor-custos already
+answers the closure variant on every header edit). Design choice:
+per-request disk read of build/inclusiones.tsv (the diagnostica
+freshness law — no cache, no epoch-lattice integration needed; the
+graph is ~500KB, parse is ~ms). The vigilia loader's line-walk was
+reused nearly verbatim; the reverse-closure BFS is the same
+computation excubitor does in awk — now answerable warm, by name.
+Output: includit / includitur ab / clausura reversa with exact
+counts, praetermissa annotations, XL-capped closure listing.
+Unknown via gets an "in disco est - tabula vetustior?" hint when
+the file exists but the graph predates it. If the tool ever gets
+hot, promote to retained adjacency + tier-2 swap — interface
+unchanged (Eskil).
+
+## 2026-07-14 — commentarium on cards (+ the declarans shape lesson)
+
+symbolum cards now carry the leading comment block (tight-above
+rule, silva_commentarium_ducens) under each sedes — corpus always,
+first header sedes when it differs. Extents captured at judge time
+(macro-vista pattern), bytes read verbatim at render (open-doc
+first, disk fallback), 24-line cap.
+
+THE LESSON: SemanticaSymbolum->declarans is NOT one shape.
+Definition registrations carry the whole definitio-functionis node
+(specifiers included); prototype registrations carry only the
+DECLARATOR — which starts at the name token, so the leading
+comment's trivia (riding on the first specifier) are OUTSIDE the
+node. Any consumer walking declarans for position/trivia purposes
+must decide which enclosure it means. Cards are depth-0 only, so
+pater-climb to the root node = the containing declaration, always.
+Debug detour recorded: the bisection probe (standalone amalgam
+parse) proved silva correct in one shot and pointed the blame at
+the node handed over, not the accessor.
+
+Also: a stale silva.h in the session scratchpad shadowed the quoted
+include of the probe (quoted includes search the includer's dir
+first) — phantom "missing declaration" errors against a file that
+was fine. Angle-include or clean scratchpad. Same family as the
+stale-object ABI trap.

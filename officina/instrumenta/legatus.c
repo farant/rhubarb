@@ -82,6 +82,12 @@ nomen structura {
                                    * (worklog 2026-07-14) */
     chorda signatura;             /* "titulus : typus" (vacua =
                                    * irreddibilis) */
+    s32 commentarium_initium;     /* commentarium ducens (BYTES in
+                                   * fonte; -1 absens) - extenta ad
+                                   * tempus iudicii, octeti verbatim
+                                   * ad tempus reddendi (exemplar
+                                   * macro-vistae) */
+    s32 commentarium_finis;       /* exclusivum; -1 absens */
 } LegatusFunctioExtentum;
 
 /* tempus viae ad iudicium commemoratum (gradus III legis aetatum;
@@ -3492,6 +3498,30 @@ _extenta_ex_semantica (Legatus* l, constans SilvaParsura* parsura,
             {
                 e->signatura = chorda_ex_literis(sig_b, scopus);
             }
+            /* commentarium ducens (pinna "commenta sunt contenta"
+             * - INTENTIO silva/phase-log 2026-07-14): extenta hic,
+             * octeti ad tempus reddendi. ASCENSUS PATRIS: declarans
+             * prototypi = nodus DECLARATORIS (a titulo incipit -
+             * trivia in specificatoribus EXTRA), definitionis =
+             * nodus totus; chartae profunditatis 0 solae, ergo
+             * ascensus ad radicem = declaratio continens semper. */
+            {
+                SilvaCommentariumVista cv;
+                constans SilvaNodus* radix_decl = s->declarans;
+
+                dum (radix_decl->pater != NIHIL)
+                {
+                    radix_decl = radix_decl->pater;
+                }
+                e->commentarium_initium = (s32)-I;
+                e->commentarium_finis = (s32)-I;
+                si (silva_commentarium_ducens(radix_decl,
+                        (int)fons, &cv) == I)
+                {
+                    e->commentarium_initium = (s32)cv.initium;
+                    e->commentarium_finis = (s32)cv.finis;
+                }
+            }
         }
     }
     redde extenta;
@@ -4830,9 +4860,12 @@ interior constans character* constans LEGATI_DOCTRINA =
     " omnium graduum). symbolum {titulus} = charta symboli: sedes"
     " definitionis, genus, signatura, usus per plagulas; simillima"
     " si titulus ignotus. vocantes {titulus} = quae functiones eum"
-    " vocant. vocata {titulus} = quas functiones ea vocat. Responsa"
-    " statum disci recentem legunt (revalidatio pigra); lineae"
-    " CAUTIO staleness aut sumptus aperiunt.";
+    " vocant. vocata {titulus} = quas functiones ea vocat."
+    " inclusiones {via} = margines graphi inclusionum: quae"
+    " includit, a quibus includitur, clausura reversa (radius"
+    " editionis). Responsa statum disci recentem legunt"
+    " (revalidatio pigra); lineae CAUTIO staleness aut sumptus"
+    " aperiunt.";
 
 /* instrumentum unius argumenti chordae -> {name, description,
  * inputSchema} */
@@ -4965,6 +4998,13 @@ _mcp_toolslist_tractare (Legatus* l, Piscina* pn, JsonValor* id)
         " vocationum exiens, nomine).",
         "titulus",
         "nomen functionis"));
+    json_tabulatum_addere(instrumenta, _mcp_instrumentum(pn,
+        "inclusiones",
+        "Margines graphi inclusionum plagulae: quae includit"
+        " (directum), a quibus includitur (directum), clausura"
+        " reversa (includentes transitivi = radius editionis).",
+        "via",
+        "via plagulae .c/.h (aut caput externum ut stdio.h)"));
     json_objectum_ponere(resultatum, "tools", instrumenta);
     _respondere(l, tabellarius_responsum(pn, id, resultatum));
 }
@@ -5085,6 +5125,117 @@ _legati_diagnostica (Legatus* l, Piscina* pn, JsonValor* id,
     }
     _mcp_textum_respondere(l, pn, id,
         chorda_aedificator_finire(effusor), FALSUM);
+}
+
+/* commentarium chartae capere: octeti [initium, finis) viae -
+ * documento-aperto-primum, disco secundo (exemplar
+ * _lineam_definitionis_legere). Vacua si extenta absentia aut
+ * ultra textum (discus post iudicium mutatus - fallitur tute). */
+interior chorda
+_commentarium_capere (Legatus* l, Piscina* pn, chorda via,
+    s32 initium, s32 finis)
+{
+    chorda vacua;
+    constans i8* textus = NIHIL;
+    memoriae_index mensura = ZEPHYRUM;
+
+    vacua.datum = NIHIL;
+    vacua.mensura = ZEPHYRUM;
+    si (initium < ZEPHYRUM || finis <= initium)
+    {
+        redde vacua;
+    }
+    {
+        character via_ap[LEGATUS_VIA_MAXIMA];
+
+        si ((memoriae_index)via.mensura + IV < magnitudo(via_ap))
+        {
+            chorda via_doc;
+            LegatusDocumentum* doc;
+
+            sprintf(via_ap, "./%.*s", (int)via.mensura,
+                (constans character*)via.datum);
+            via_doc.datum = (i8*)via_ap;
+            via_doc.mensura = via.mensura + II;
+            doc = _documentum_invenire(l, via_doc);
+            si (doc != NIHIL && doc->apertum)
+            {
+                textus = doc->textus.datum;
+                mensura = (memoriae_index)doc->textus.mensura;
+            }
+        }
+    }
+    si (textus == NIHIL)
+    {
+        character via_plena[LEGATUS_VIA_MAXIMA + LXIV];
+        insignatus integer m_lecta = ZEPHYRUM;
+        character* lectus;
+
+        si ((memoriae_index)via.mensura + l->radix_mensura + IV
+            >= magnitudo(via_plena))
+        {
+            redde vacua;
+        }
+        sprintf(via_plena, "%s/%.*s", l->radix, (int)via.mensura,
+            (constans character*)via.datum);
+        lectus = praeparator_plagulam_legere(pn, via_plena,
+            &m_lecta);
+        si (lectus == NIHIL)
+        {
+            redde vacua;
+        }
+        textus = (constans i8*)lectus;
+        mensura = m_lecta;
+    }
+    si ((memoriae_index)finis > mensura)
+    {
+        redde vacua;
+    }
+    {
+        chorda fructus;
+        unio { constans i8* c; i8* m; } u;
+
+        u.c = textus + initium;
+        fructus.datum = u.m;
+        fructus.mensura = (i32)(finis - initium);
+        redde fructus;
+    }
+}
+
+#define LEGATI_COMMENTARII_LINEAE 24
+
+/* commentarium verbatim appendere, tectum lineis (caudae "...") */
+interior vacuum
+_commentarium_appendere (ChordaAedificator* aed, chorda c)
+{
+    i32 k;
+    i32 lineae = ZEPHYRUM;
+
+    per (k = ZEPHYRUM; k < c.mensura; k++)
+    {
+        si (c.datum[k] == (i8)'\n')
+        {
+            lineae++;
+            si (lineae >= (i32)LEGATI_COMMENTARII_LINEAE)
+            {
+                frange;
+            }
+        }
+    }
+    si (k < c.mensura)
+    {
+        chorda pars = c;
+
+        pars.mensura = k;
+        (vacuum)chorda_aedificator_appendere_chorda(aed, pars);
+        (vacuum)chorda_aedificator_appendere_literis(aed,
+            "\n...\n");
+    }
+    alioquin
+    {
+        (vacuum)chorda_aedificator_appendere_chorda(aed, c);
+        (vacuum)chorda_aedificator_appendere_literis(aed, "\n");
+    }
 }
 
 /* symbolum {titulus}: charta macra (sedes/genus/signatura/usus per
@@ -5242,11 +5393,17 @@ _legati_symbolum (Legatus* l, Piscina* pn, JsonValor* id,
                 linea_b);
         }
     }
-    /* sedes (corpus primum) */
+    /* sedes (corpus primum) - commentarium ducens sub sede sua
+     * (corpus semper; caput primum si differt - contractus in
+     * capite, notae implementationis in corpore) */
     {
         constans LegatusOrdo* o = _ordines_tituli(l, titulus);
         insignatus integer scriptae = ZEPHYRUM;
+        chorda commentarium_corporis;
+        b32 caput_visum = FALSUM;
 
+        commentarium_corporis.datum = NIHIL;
+        commentarium_corporis.mensura = ZEPHYRUM;
         si (sedes_o != NIHIL)
         {
             sprintf(linea_b, "sedes: %.*s:%u (corpus)\n",
@@ -5255,6 +5412,23 @@ _legati_symbolum (Legatus* l, Piscina* pn, JsonValor* id,
                 sedes_o->linea);
             (vacuum)chorda_aedificator_appendere_literis(aed,
                 linea_b);
+            {
+                constans LegatusFunctioExtentum* e2 =
+                    _extentum_tituli(_extenta_viae(l, pn,
+                        sedes_o->via), titulus);
+
+                si (e2 != NIHIL)
+                {
+                    commentarium_corporis = _commentarium_capere(l,
+                        pn, sedes_o->via, e2->commentarium_initium,
+                        e2->commentarium_finis);
+                    si (commentarium_corporis.mensura > ZEPHYRUM)
+                    {
+                        _commentarium_appendere(aed,
+                            commentarium_corporis);
+                    }
+                }
+            }
             scriptae++;
         }
         per (; o != NIHIL && scriptae < (insignatus integer)V;
@@ -5271,6 +5445,27 @@ _legati_symbolum (Legatus* l, Piscina* pn, JsonValor* id,
                 (constans character*)o->via.datum, o->linea);
             (vacuum)chorda_aedificator_appendere_literis(aed,
                 linea_b);
+            si (!caput_visum)
+            {
+                constans LegatusFunctioExtentum* eh =
+                    _extentum_tituli(_extenta_viae(l, pn, o->via),
+                        titulus);
+
+                caput_visum = VERUM;
+                si (eh != NIHIL)
+                {
+                    chorda ch = _commentarium_capere(l, pn, o->via,
+                        eh->commentarium_initium,
+                        eh->commentarium_finis);
+
+                    si (ch.mensura > ZEPHYRUM
+                        && !chorda_aequalis(ch,
+                               commentarium_corporis))
+                    {
+                        _commentarium_appendere(aed, ch);
+                    }
+                }
+            }
             scriptae++;
         }
     }
@@ -5662,6 +5857,317 @@ _legati_vocata (Legatus* l, Piscina* pn, JsonValor* id,
         FALSUM);
 }
 
+/* margo unus graphi (pro listis directis) */
+nomen structura
+{
+    chorda via;
+    b32    praetermissa;
+} LegatiMargo;
+
+#define LEGATI_CLAUSURA_LISTA XL
+
+/* inclusiones {via}: margines graphi inclusionum ex disco (statum
+ * recentem legit per petitionem - nulla cache, nulla staleness;
+ * exemplar diagnosticae). Tres partes: includit (margines directi,
+ * ordo = ordo inclusionum plagulae), includitur ab (directi, ordo
+ * canonicus tabulae), clausura reversa (includentes transitivi =
+ * radius editionis; calculus idem quo excubitor/vigilia). Status
+ * praetermissa notatus; externa (stdio.h...) basename manent. */
+interior vacuum
+_legati_inclusiones (Legatus* l, Piscina* pn, JsonValor* id,
+    JsonValor* argumenta)
+{
+    chorda via_arg = json_ad_chorda(json_objectum_capere(argumenta,
+        "via"));
+    chorda via_sine;
+    character* textus;
+    insignatus integer mensura;
+    ChordaAedificator* aed;
+    character linea_b[LEGATUS_VIA_MAXIMA + LXIV];
+    TabulaDispersa* inversa;   /* ad -> Xar<chorda ex> */
+    Xar* includit;             /* LegatiMargo */
+    Xar* includentes;          /* LegatiMargo */
+    insignatus integer k;
+
+    si (!_legati_viam_normare(l, via_arg, &via_sine))
+    {
+        _mcp_textum_respondere(l, pn, id, chorda_ex_literis(
+            "argumentum 'via' pravum aut extra radicem", pn),
+            VERUM);
+        redde;
+    }
+    textus = praeparator_plagulam_legere(pn,
+        "build/inclusiones.tsv", &mensura);
+    si (textus == NIHIL)
+    {
+        _mcp_textum_respondere(l, pn, id, chorda_ex_literis(
+            "build/inclusiones.tsv deest -"
+            " ./silva/nexus.sh -renovare", pn), VERUM);
+        redde;
+    }
+    inversa = tabula_dispersa_creare_chorda(pn, CCLVI);
+    includit = xar_creare(pn, (i32)magnitudo(LegatiMargo));
+    includentes = xar_creare(pn, (i32)magnitudo(LegatiMargo));
+    aed = chorda_aedificator_creare(pn, (memoriae_index)4096);
+    si (inversa == NIHIL || includit == NIHIL
+        || includentes == NIHIL || aed == NIHIL)
+    {
+        _mcp_textum_respondere(l, pn, id, chorda_ex_literis(
+            "memoria deest", pn), VERUM);
+        redde;
+    }
+
+    /* transitus unus: listae directae + adjacentia inversa tota
+     * (clausurae) - exemplar lineae idem quo vigilia */
+    {
+        character* p = textus;
+
+        dum (*p != '\0')
+        {
+            character* linea = p;
+            character* t1 = NIHIL;
+            character* t2 = NIHIL;
+            character* finis;
+
+            dum (*p != '\0' && *p != '\n')
+            {
+                si (*p == '\t')
+                {
+                    si (t1 == NIHIL) { t1 = p; }
+                    alioquin si (t2 == NIHIL) { t2 = p; }
+                }
+                p++;
+            }
+            finis = p;
+            si (*p == '\n')
+            {
+                p++;
+            }
+            si (linea[ZEPHYRUM] == '#' || t1 == NIHIL || t2 == NIHIL)
+            {
+                perge;
+            }
+            {
+                chorda ex;
+                chorda ad;
+                b32 praeterm;
+                unio { constans character* c; i8* m; } u;
+
+                u.c = linea;
+                ex.datum = u.m;
+                ex.mensura = (i32)(t1 - linea);
+                u.c = t1 + I;
+                ad.datum = u.m;
+                ad.mensura = (i32)(t2 - t1 - I);
+                praeterm = (finis > t2 + I && t2[I] == 'p')
+                    ? VERUM : FALSUM;
+                si (chorda_aequalis(ex, via_sine))
+                {
+                    LegatiMargo* m2 = (LegatiMargo*)xar_addere(
+                        includit);
+
+                    si (m2 != NIHIL)
+                    {
+                        m2->via = ad;
+                        m2->praetermissa = praeterm;
+                    }
+                }
+                si (chorda_aequalis(ad, via_sine))
+                {
+                    LegatiMargo* m2 = (LegatiMargo*)xar_addere(
+                        includentes);
+
+                    si (m2 != NIHIL)
+                    {
+                        m2->via = ex;
+                        m2->praetermissa = praeterm;
+                    }
+                }
+                {
+                    vacuum* valor;
+                    Xar* lista;
+
+                    si (tabula_dispersa_invenire(inversa, ad,
+                            &valor))
+                    {
+                        lista = (Xar*)valor;
+                    }
+                    alioquin
+                    {
+                        lista = xar_creare(pn,
+                            (i32)magnitudo(chorda));
+                        si (lista == NIHIL)
+                        {
+                            perge;
+                        }
+                        (vacuum)tabula_dispersa_inserere(inversa,
+                            ad, lista);
+                    }
+                    {
+                        chorda* locus = (chorda*)xar_addere(lista);
+
+                        si (locus != NIHIL)
+                        {
+                            *locus = ex;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    /* via prorsus ignota grapho? (nec ex nec ad) */
+    si (xar_numerus(includit) == ZEPHYRUM
+        && xar_numerus(includentes) == ZEPHYRUM)
+    {
+        sprintf(linea_b, "via '%.*s' in grapho inclusionum ignota",
+            (int)(via_sine.mensura < LEGATUS_VIA_MAXIMA
+                ? via_sine.mensura : LEGATUS_VIA_MAXIMA),
+            (constans character*)via_sine.datum);
+        (vacuum)chorda_aedificator_appendere_literis(aed, linea_b);
+        si (via_sine.mensura < LEGATUS_VIA_MAXIMA)
+        {
+            memcpy(linea_b, via_sine.datum,
+                (memoriae_index)via_sine.mensura);
+            linea_b[via_sine.mensura] = '\0';
+            si (praeparator_tempus_plagulae(linea_b) > 0L)
+            {
+                (vacuum)chorda_aedificator_appendere_literis(aed,
+                    "\n(plagula in disco est - tabula vetustior?"
+                    " ./silva/nexus.sh -renovare)");
+            }
+        }
+        _mcp_textum_respondere(l, pn, id,
+            chorda_aedificator_finire(aed), FALSUM);
+        redde;
+    }
+
+    sprintf(linea_b, "inclusiones %.*s\n",
+        (int)(via_sine.mensura < LEGATUS_VIA_MAXIMA
+            ? via_sine.mensura : LEGATUS_VIA_MAXIMA),
+        (constans character*)via_sine.datum);
+    (vacuum)chorda_aedificator_appendere_literis(aed, linea_b);
+
+    sprintf(linea_b, "includit (%u):\n",
+        (insignatus integer)xar_numerus(includit));
+    (vacuum)chorda_aedificator_appendere_literis(aed, linea_b);
+    per (k = ZEPHYRUM; k < xar_numerus(includit); k++)
+    {
+        constans LegatiMargo* m2 = (constans LegatiMargo*)
+            xar_obtinere(includit, (i32)k);
+
+        (vacuum)chorda_aedificator_appendere_literis(aed, "  ");
+        (vacuum)chorda_aedificator_appendere_chorda(aed, m2->via);
+        si (m2->praetermissa)
+        {
+            (vacuum)chorda_aedificator_appendere_literis(aed,
+                " (praetermissa)");
+        }
+        (vacuum)chorda_aedificator_appendere_literis(aed, "\n");
+    }
+
+    sprintf(linea_b, "includitur ab (%u):\n",
+        (insignatus integer)xar_numerus(includentes));
+    (vacuum)chorda_aedificator_appendere_literis(aed, linea_b);
+    per (k = ZEPHYRUM; k < xar_numerus(includentes); k++)
+    {
+        constans LegatiMargo* m2 = (constans LegatiMargo*)
+            xar_obtinere(includentes, (i32)k);
+
+        (vacuum)chorda_aedificator_appendere_literis(aed, "  ");
+        (vacuum)chorda_aedificator_appendere_chorda(aed, m2->via);
+        si (m2->praetermissa)
+        {
+            (vacuum)chorda_aedificator_appendere_literis(aed,
+                " (praetermissa)");
+        }
+        (vacuum)chorda_aedificator_appendere_literis(aed, "\n");
+    }
+
+    /* clausura reversa: BFS ab via super adjacentiam inversam -
+     * radius editionis (quot plagulae re-iudicandae si haec
+     * mutatur) */
+    {
+        TabulaDispersa* visa = tabula_dispersa_creare_chorda(pn,
+            CCLVI);
+        Xar* frons = xar_creare(pn, (i32)magnitudo(chorda));
+        insignatus integer caput = ZEPHYRUM;
+
+        si (visa != NIHIL && frons != NIHIL)
+        {
+            (vacuum)tabula_dispersa_inserere(visa, via_sine, NIHIL);
+            {
+                chorda* s = (chorda*)xar_addere(frons);
+
+                si (s != NIHIL)
+                {
+                    *s = via_sine;
+                }
+            }
+            dum (caput < xar_numerus(frons))
+            {
+                chorda nodus = *(chorda*)xar_obtinere(frons,
+                    (i32)caput);
+                vacuum* valor;
+
+                caput++;
+                si (tabula_dispersa_invenire(inversa, nodus,
+                        &valor)
+                    && valor != NIHIL)
+                {
+                    Xar* lista = (Xar*)valor;
+                    insignatus integer e;
+
+                    per (e = ZEPHYRUM; e < xar_numerus(lista); e++)
+                    {
+                        chorda ex = *(chorda*)xar_obtinere(lista,
+                            (i32)e);
+
+                        si (!tabula_dispersa_continet(visa, ex))
+                        {
+                            chorda* s;
+
+                            (vacuum)tabula_dispersa_inserere(visa,
+                                ex, NIHIL);
+                            s = (chorda*)xar_addere(frons);
+                            si (s != NIHIL)
+                            {
+                                *s = ex;
+                            }
+                        }
+                    }
+                }
+            }
+            /* frons[0] = via ipsa - exclusa e numero et lista */
+            sprintf(linea_b, "clausura reversa (%u):\n",
+                (insignatus integer)(xar_numerus(frons) - I));
+            (vacuum)chorda_aedificator_appendere_literis(aed,
+                linea_b);
+            per (k = I; k < xar_numerus(frons)
+                && k <= LEGATI_CLAUSURA_LISTA; k++)
+            {
+                (vacuum)chorda_aedificator_appendere_literis(aed,
+                    "  ");
+                (vacuum)chorda_aedificator_appendere_chorda(aed,
+                    *(chorda*)xar_obtinere(frons, (i32)k));
+                (vacuum)chorda_aedificator_appendere_literis(aed,
+                    "\n");
+            }
+            si (xar_numerus(frons) - I > LEGATI_CLAUSURA_LISTA)
+            {
+                sprintf(linea_b, "  et aliae %u\n",
+                    (insignatus integer)(xar_numerus(frons) - I
+                        - LEGATI_CLAUSURA_LISTA));
+                (vacuum)chorda_aedificator_appendere_literis(aed,
+                    linea_b);
+            }
+        }
+    }
+
+    _mcp_textum_respondere(l, pn, id,
+        chorda_aedificator_finire(aed), FALSUM);
+}
+
 interior vacuum
 _mcp_toolscall_tractare (Legatus* l, Piscina* pn, JsonValor* id,
     JsonValor* params)
@@ -5695,6 +6201,10 @@ _mcp_toolscall_tractare (Legatus* l, Piscina* pn, JsonValor* id,
         alioquin si (_methodus_est(titulus, "vocata"))
         {
             _legati_vocata(l, pn, id, argumenta);
+        }
+        alioquin si (_methodus_est(titulus, "inclusiones"))
+        {
+            _legati_inclusiones(l, pn, id, argumenta);
         }
         alioquin
         {

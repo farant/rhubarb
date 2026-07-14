@@ -4397,3 +4397,36 @@ RE-ENTRY: hoc phase-log (LEGATI arcus totus + shakedown) +
 silva/phase-log.md cauda (rung 5 INTENTIO + scala honesta) +
 legatus.worklog.md + mcp-legati-spec-v2.md + memoria (MEMORY.md
 lineae officina/tsv + officina-project.md narratio LEGATI).
+
+## LEGATI INSTRUMENTUM V — INCLUSIONES (2026-07-14)
+
+Demanda ex debrief rung 5 eodem die (quaestio "quis includit
+legatus.h?" awk responsa; excubitor-custos versionem clausurae in
+omni editione capitis iam respondet; residens graphum pro vigilia
+IAM onerat = regula duorum transita). NAVIS: tools/call
+"inclusiones" {via} -> tres partes: includit (directi, ordo
+inclusionum plagulae, praetermissa notata), includitur ab (directi,
+ordo canonicus), clausura reversa (includentes transitivi = RADIUS
+EDITIONIS; calculus idem quo excubitor/vigilia; lista XL-capta,
+numerus exactus semper).
+
+CONSILIUM: lectio disci per petitionem (exemplar diagnosticae -
+nulla cache, nulla staleness; tabula ~500KB, ms). Interfacies
+stabilis si umquam calida fiet et cache meret. Via ignota grapho ->
+nuntius + indicium "in disco est - tabula vetustior?" si stat
+invenit. CAUTIO vigiliae gratis per _mcp_textum_respondere.
+
+BARRAE: aureae 249/249 (tools/list V; piscina.c directi;
+legatus.h clausura (3) exacta; via ignota); suita 12/12; sondae
+vivae per legatus.sh -mcp: nexus_ordines.h (includentes 3 =
+legatus + ordines + percursus) et silva.h (clausura 48, lista
+capta "et aliae 8"). Binarium praestructum - reconexio /mcp
+instrumentum novum statim fert.
+
+DEBRIEF: adhibita emitte/grep (recon sectionis MCP), impulsus
+(lexicon utime praeexsistens re-flagratum - non meum), aureae
+tmpfile exemplar re-usum sine attritu. FRUCTUS: exemplar
+_vigiliam_construere (ambulatio linearum tsv) verbatim re-usum.
+ASPERITAS: nulla nova. DESIDERATUM: batch-symbolum manet (tituli
+plures uno ictu); charta cum commentario ducente (praecedens:
+hover macronis corpus legit) - ambo parca.

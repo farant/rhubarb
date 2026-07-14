@@ -519,3 +519,168 @@ silva_nodus_extensionem_lineis (constans SilvaNodus* n,
             columna_a, linea_b, columna_b);
     }
 }
+
+/* ==================================================
+ * commentarium ducens - consumptor PRIMUS pinnae
+ * "commenta sunt contenta" (VISIO; INTENTIO in
+ * silva/phase-log.md 2026-07-14)
+ * ================================================== */
+
+/* lexema primum nodi in fonte dato (minimum byte_offset, RADICE
+ * originis soluto - declarationes latinae macris incipiunt:
+ * lexema expansum syntheticum est, invocatio trivia fert) */
+interior vacuum
+_lexema_primum_valoris (SilvaValor v, s32 fons_index,
+    SilvaToken** primum, s32* minimum)
+{
+    commutatio (v.genus)
+    {
+        casus SILVA_VALOR_TOKEN:
+            si (v.datum.token != NIHIL)
+            {
+                SilvaToken* radix_t = silva_token_radix(
+                    v.datum.token);
+
+                si (radix_t == NIHIL)
+                {
+                    radix_t = v.datum.token;
+                }
+                si (radix_t->fons_index == fons_index
+                    && radix_t->byte_offset >= ZEPHYRUM
+                    && (*minimum < (s32)ZEPHYRUM
+                        || (s32)radix_t->byte_offset < *minimum))
+                {
+                    *minimum = (s32)radix_t->byte_offset;
+                    *primum = radix_t;
+                }
+            }
+            frange;
+        casus SILVA_VALOR_NODUS:
+            si (v.datum.nodus != NIHIL)
+            {
+                insignatus integer k;
+
+                per (k = ZEPHYRUM;
+                    k < v.datum.nodus->numerus_locorum; k++)
+                {
+                    _lexema_primum_valoris(v.datum.nodus->loci[k],
+                        fons_index, primum, minimum);
+                }
+            }
+            frange;
+        casus SILVA_VALOR_LISTA:
+        {
+            insignatus integer m = silva_valor_lista_numerus(v);
+            insignatus integer k;
+
+            per (k = ZEPHYRUM; k < m; k++)
+            {
+                SilvaValor* elem = silva_valor_lista_obtinere(v, k);
+
+                si (elem != NIHIL)
+                {
+                    _lexema_primum_valoris(*elem, fons_index,
+                        primum, minimum);
+                }
+            }
+            frange;
+        }
+        ordinarius:
+            frange;
+    }
+}
+
+integer
+silva_commentarium_ducens (constans SilvaNodus* n, s32 fons_index,
+    SilvaCommentariumVista* vista)
+{
+    SilvaToken* primum = NIHIL;
+    s32 minimum = (s32)-I;
+    insignatus integer k;
+    s32 nl;
+    s32 initium;
+    s32 finis;
+    insignatus integer linea;
+
+    si (vista == NIHIL)
+    {
+        redde ZEPHYRUM;
+    }
+    vista->initium = (s32)-I;
+    vista->finis = (s32)-I;
+    vista->linea = ZEPHYRUM;
+    si (n == NIHIL)
+    {
+        redde ZEPHYRUM;
+    }
+    per (k = ZEPHYRUM; k < n->numerus_locorum; k++)
+    {
+        _lexema_primum_valoris(n->loci[k], fons_index, &primum,
+            &minimum);
+    }
+    si (primum == NIHIL || primum->spatia_ante == NIHIL)
+    {
+        redde ZEPHYRUM;
+    }
+    /* regula arcte-supra, ambulatio RETRO: spatia_ante = trivia
+     * sui-lineae SOLA (politica divisionis lexatoris - commenta
+     * finis-lineae prioris in spatia_post eius, exclusa
+     * constructione); linea vacua = II NOVA_LINEA consecutivae
+     * (SPATIA/TABULAE neglectis) -> bloccus finitur; commentum
+     * numerum linearum novarum retexit (commenta multi-lineae
+     * bloccus unus manent) */
+    nl = ZEPHYRUM;
+    initium = (s32)-I;
+    finis = (s32)-I;
+    linea = ZEPHYRUM;
+    k = xar_numerus(primum->spatia_ante);
+    dum (k > ZEPHYRUM)
+    {
+        SilvaToken* t;
+
+        k--;
+        t = *(SilvaToken**)xar_obtinere(primum->spatia_ante,
+            (i32)k);
+        si (t == NIHIL)
+        {
+            perge;
+        }
+        si (t->genus == SILVA_LEX_NOVA_LINEA)
+        {
+            nl++;
+            si (nl >= (s32)II)
+            {
+                frange;
+            }
+            perge;
+        }
+        si (t->genus == SILVA_LEX_SPATIA
+            || t->genus == SILVA_LEX_TABULAE
+            || t->genus == SILVA_LEX_CONTINUATIO)
+        {
+            perge;
+        }
+        si ((t->genus == SILVA_LEX_COMMENTUM_CLAUSUM
+                || t->genus == SILVA_LEX_COMMENTUM_LINEA)
+            && t->byte_offset >= ZEPHYRUM)
+        {
+            si (finis < ZEPHYRUM)
+            {
+                finis = (s32)t->byte_offset + (s32)t->longitudo;
+            }
+            initium = (s32)t->byte_offset;
+            linea = t->linea;
+            nl = ZEPHYRUM;
+            perge;
+        }
+        frange;   /* genus inopinatum - tutela */
+    }
+    si (initium < ZEPHYRUM)
+    {
+        redde ZEPHYRUM;
+    }
+    vista->initium = initium;
+    vista->finis = finis;
+    vista->linea = linea;
+    redde I;
+}

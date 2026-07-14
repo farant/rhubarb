@@ -197,4 +197,23 @@ silva_nodus_extensionem_lineis (
     i32*                 linea_b,
     i32*                 columna_b);
 
+/* Commentarium ducens: bloccus commentorum "arcte-supra" nodum
+ * (regula arbor2-comment-spec: bloccus contiguus sine linea vacua
+ * inter finem eius et nodum; linea vacua intra = bloccus superior
+ * cadit). Extenta BYTES in fonte dato, radice originis soluta
+ * (declarationes macris initiatae: invocatio trivia fert).
+ * Redde I si praesens (vista impleta), ZEPHYRUM si absens. */
+nomen structura
+{
+    s32                initium;   /* BYTES in fonte; -1 = absens */
+    s32                finis;     /* exclusivum; -1 = absens */
+    insignatus integer linea;     /* 1-basata (commenti primi) */
+} SilvaCommentariumVista;
+
+integer
+silva_commentarium_ducens (
+    constans SilvaNodus*    nodus,
+    s32                     fons_index,
+    SilvaCommentariumVista* vista);
+
 #endif /* SILVA_NODUS_H */

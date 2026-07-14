@@ -7476,3 +7476,102 @@ FRUCTUS: bench + tabulae ipsae = auditus re-pin sine instrumento novo.
 ASPERITAS: nulla nova (via_activa globalis = exemplar receptoris
 existens). DESIDERATUM: nihil novum - sonda una-ictus manet parcum
 vetus.
+
+## COMMENTARIUM DUCENS — INTENTIO (2026-07-14, contextu calido)
+
+PROPOSITUM: consumptor PRIMUS pinnae "commenta sunt contenta"
+(VISIO - pinna quam CLAUDE.md "facillime complanatam" vocat).
+Accessor silva-lateris: commentarium ducens ("arcte-supra" ex
+arbor2-comment-spec) nodi declarationis -> extenta; legatus chartas
+symbolorum eo ditat (contractus in commentario capitis = quod grep
+hodie invenit et instrumenta non - debrief rung 5).
+
+FACTA RECOGNITIONIS (lege ante implementationem):
+- Politica lexatoris (silva_lexema.c ~950): trivia inter lexemata
+  vera DIVIDUNTUR ad primam NOVA_LINEA - ante eam ad spatia_post
+  prioris (caudalia), post eam ad spatia_ante sequentis. ERGO
+  spatia_ante declarationis = trivia sui-lineae SOLA; commenta
+  finis-lineae enuntiati prioris iam exclusa CONSTRUCTIONE.
+- NOVA_LINEA = lexema triviae PROPRIUM -> linea vacua = duae NL
+  consecutivae inter commentum et ancoram (SPATIA/TABULAE inter
+  eas neglectis). Regula arcte-supra = ambulatio spatia_ante
+  RETRO: NL numerare (>=II frange), commenta colligere (numerum
+  NL ad nihilum retexere), SPATIA/TABULAE/CONTINUATIO transilire.
+- SUBTILITAS RADICIS: declarationes latinae macris incipiunt
+  (hic_manens...) - lexema primum nodi = expansio SYNTHETICA
+  (byte_offset -1, sine triviis). silva_token_radix -> lexema
+  invocationis in fonte scripto, quod spatia_ante FERT. Idem
+  ambulatus quo silva_valor_extensionem ("macros latinae!" in
+  commentario eius - silva_nodus.c:~365).
+- Commentum clausum multi-linea = lexema UNUM (extentum =
+  byte_offset..+longitudo).
+
+FORMA:
+① silva: SilvaCommentariumVista {initium, finis (exclusivum),
+  linea; -1 = absens} + silva_commentarium_ducens(nodus,
+  fons_index, vista*) in silva_nodus.c iuxta extensionem
+  (recursio locorum eadem, lexema minimi offsetus radice soluto,
+  deinde ambulatio spatia_ante retro). silva.h manu extenditur;
+  amalgamare + portae.
+② legatus: charta (LegatusFunctioExtentum) tria campa nova ad
+  tempus iudicii (exemplar macro-vistae: extenta tunc, octeti ad
+  tempus reddendi verbatim, documento-aperto-primum); symbolum
+  commentarium sub sede quaque (corpus + caput, ambo si differunt)
+  reddit, tectum ~XXIV lineis ("..."). Hover LSP = vector si vilis
+  in transitu, alioquin sequela nominata.
+
+BARRAE: ① probatio silvae accessoris (attachatum simplex /
+multi-commentum / linea vacua = absens / finis-lineae prioris =
+absens / declaratio hic_manens-initialis [radix] / caput plagulae
+sine vacua = attachatum); ② portae amalgamatis VERIFICATUM;
+③ aureae legati (symbolum piscina_generare_dynamicum fert
+commentarium notum ex piscina.h); ④ suitae silva + officina;
+⑤ sonda viva legatus.sh -mcp.
+
+CAVE: separatores vexilliformes (/* ==== */) supra declarationem
+sine linea vacua ATTACHANTUR - honestum (regula est regula);
+tectum lineae longa commenta compescit.
+
+## COMMENTARIUM DUCENS — RELATIO (2026-07-14)
+
+NAVIS eodem die. Accessor silva_commentarium_ducens in silva_nodus.c
+(recursio locorum extensionis + ambulatio spatia_ante retro);
+SilvaCommentariumVista manu in silva.h + CADENDA_TYPEDEF
+amalgamatoris (lectio: typus publicus novus = introitus manifesti,
+alioquin typedef duplicatum in silva.c generato). Probationes 6/6
+(attachatum/vacua-linea/multi-bloccus/vacua-intra/finis-lineae/
+macro-radix); amalgamare VERIFICATUM; suitae 30/30 + 12/12
+(aureae legati 252).
+
+INVENTUM PRINCIPALE (implementatio, non consilium): **declarans
+prototypi = nodus DECLARATORIS** (a titulo incipit - specificatores
+cum triviis EXTRA nodum), definitionis = nodus definitionis totus.
+Accessor recte anchorat sed nodus datus falsus erat - casus capitis
+(contractus!) invisibilis. Sanatio legatus-latere: ASCENSUS PATRIS
+ad radicem ante vocationem (chartae profunditatis 0 solae, ergo
+radix = declaratio continens semper - argumentum in commentario ad
+sedem). Regula divisionis triviarum verificata obiter: NL primus
+gap-i in spatia_post prioris cadit - regula "II NL consecutivae"
+tenet quia bloccus-cum-vacua [C,NL,NL] in spatia_ante manet.
+
+CHARTA VIVA: symbolum nexus_ordines_fundere nunc contractum capitis
+fert (ipsissimum commentarium "viae sine '/' omissae" quod rung 5
+hodie mane grep-avit - instrumentum factum quod deerat). Vexillum
+supra definitionem linea vacua separatum NON attachatur (aurea
+negativa). Corpus + caput ambo si differunt; tectum XXIV lineis.
+
+PARCUM NOMINATUM: hover LSP idem commentarium ferre potest (charta
+eadem, sedes reddendi altera) - sequela cum primo desiderio vero.
+Macra sine commentario ducente manent (corpus #define iam habent).
+
+DEBRIEF INSTRUMENTORUM: adhibita impulsus legati (×4 hoc fasce:
+accessus-non-structurae ante declarationem vistae, vocatio implicita
+_deb_min_tok, syntaxis fracta editionis meae pravae, arg-ordo -
+SINGULA capta ad editionem), sonda amalgamatis (diagnosis reversa:
+silva recta, nodus falsus), sonda -mcp viva, suitae. FRUCTUS: sonda
+standalone contra amalgama = bisectio silva-vs-legatus uno ictu.
+ASPERITAS NOVA: silva.h VETUS in scratchpad sessionis prioris
+umbravit includem citatam ("silva.h" quaerit directorium plagulae
+includentis PRIMUM) - sonda phantasma-errores dedit; sanatio
+includem angulatam; lectio in debugging-lessons (varians umbrae
+stalae). DESIDERATUM: nihil novum.

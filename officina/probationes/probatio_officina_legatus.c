@@ -1962,6 +1962,25 @@ probatio_mcp (Piscina* p)
         "{\"jsonrpc\":\"2.0\",\"id\":9,\"method\":\"tools/call\","
         "\"params\":{\"name\":\"vocantes\",\"arguments\":"
         "{\"titulus\":\"machinula_currere\"}}}");
+    _scribe_lineam(intra, p,
+        "{\"jsonrpc\":\"2.0\",\"id\":10,\"method\":\"tools/call\","
+        "\"params\":{\"name\":\"inclusiones\",\"arguments\":"
+        "{\"via\":\"lib/piscina.c\"}}}");
+    _scribe_lineam(intra, p,
+        "{\"jsonrpc\":\"2.0\",\"id\":11,\"method\":\"tools/call\","
+        "\"params\":{\"name\":\"inclusiones\",\"arguments\":"
+        "{\"via\":\"officina/instrumenta/legatus.h\"}}}");
+    _scribe_lineam(intra, p,
+        "{\"jsonrpc\":\"2.0\",\"id\":12,\"method\":\"tools/call\","
+        "\"params\":{\"name\":\"inclusiones\",\"arguments\":"
+        "{\"via\":\"nusquam/phantasma.c\"}}}");
+    /* commentarium ducens in charta: corpus sine commentario
+     * (vacuum ante definitionem), caput cum contractu - via caput
+     * ostenditur */
+    _scribe_lineam(intra, p,
+        "{\"jsonrpc\":\"2.0\",\"id\":13,\"method\":\"tools/call\","
+        "\"params\":{\"name\":\"symbolum\",\"arguments\":"
+        "{\"titulus\":\"nexus_ordines_fundere\"}}}");
     /* nullum "exit" - EOF fistulae = exitus ordinatus */
 
     rewind(intra);
@@ -2004,7 +2023,7 @@ probatio_mcp (Piscina* p)
 
         CREDO_VERUM(instrumenta != NIHIL
             && json_est_tabulatum(instrumenta)
-            && json_tabulatum_numerus(instrumenta) == IV);
+            && json_tabulatum_numerus(instrumenta) == V);
         CREDO_VERUM(_chorda_est(json_ad_chorda(json_objectum_capere(
             json_tabulatum_obtinere(instrumenta, ZEPHYRUM),
             "name")), "diagnostica"));
@@ -2041,6 +2060,9 @@ probatio_mcp (Piscina* p)
         CREDO_VERUM(_chorda_continet(textus, "signatura:"));
         CREDO_VERUM(_chorda_continet(textus, "lib/piscina.c"));
         CREDO_VERUM(_chorda_continet(textus, "usus "));
+        /* vexillum (banner) supra definitionem linea vacua
+         * separatum NON attachatur (regula arcte-supra) */
+        CREDO_VERUM(!_chorda_continet(textus, "GENERATIO"));
     }
 
     n = _lege_lineam(extra, p, &bene);   /* symbolum: typo */
@@ -2068,6 +2090,52 @@ probatio_mcp (Piscina* p)
 
         CREDO_VERUM(_chorda_continet(textus,
             "officina/instrumenta/sessio.c"));
+    }
+
+    n = _lege_lineam(extra, p, &bene);   /* inclusiones .c */
+    CREDO_VERUM(bene);
+    {
+        chorda textus = _mcp_textus(&n);
+
+        CREDO_VERUM(_chorda_continet(textus, "includit ("));
+        CREDO_VERUM(_chorda_continet(textus, "include/piscina.h"));
+        CREDO_VERUM(_chorda_continet(textus, "stdlib.h"));
+        /* .c a nemine inclusum */
+        CREDO_VERUM(_chorda_continet(textus, "includitur ab (0)"));
+    }
+
+    n = _lege_lineam(extra, p, &bene);   /* inclusiones .h */
+    CREDO_VERUM(bene);
+    {
+        chorda textus = _mcp_textus(&n);
+
+        CREDO_VERUM(_chorda_continet(textus, "includitur ab ("));
+        CREDO_VERUM(_chorda_continet(textus,
+            "officina/instrumenta/legatus.c"));
+        /* clausura = includentes tres (folia - transitivum nihil
+         * addit) */
+        CREDO_VERUM(_chorda_continet(textus,
+            "clausura reversa (3)"));
+    }
+
+    n = _lege_lineam(extra, p, &bene);   /* inclusiones ignota */
+    CREDO_VERUM(bene);
+    {
+        chorda textus = _mcp_textus(&n);
+
+        CREDO_VERUM(_chorda_continet(textus,
+            "in grapho inclusionum ignota"));
+    }
+
+    n = _lege_lineam(extra, p, &bene);   /* symbolum + commentarium */
+    CREDO_VERUM(bene);
+    {
+        chorda textus = _mcp_textus(&n);
+
+        /* contractus capitis (nexus_ordines.h) in charta - sub
+         * sede capitis, quia corpus commentarium ducens caret */
+        CREDO_VERUM(_chorda_continet(textus,
+            "Sedes + usus TU unius fundere"));
     }
 
     fclose(intra);

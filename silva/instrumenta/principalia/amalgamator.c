@@ -190,7 +190,7 @@ interior constans character* constans CADENDA_TYPEDEF[] = {
     "SilvaExpansio", "SilvaGrammatica", "SilvaParsura",
     "SilvaScriptura", "SilvaFines", "SilvaPergereFunctio",
     "SilvaContextusPlagula", "SilvaContextus", "SilvaRamusGenus", "SilvaInclusioVista",
-    "SilvaRamusVista", "SilvaMacroVista",
+    "SilvaRamusVista", "SilvaMacroVista", "SilvaCommentariumVista",
     "SilvaQuaestio", "SilvaQuaestioResultatum",
     "TypusC89Genus", "TypusC89Primitivum", "TypusC89",
     "TypusC89Membrum", "SemanticaSymbolumGenus", "SemanticaSymbolum",
