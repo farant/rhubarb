@@ -195,6 +195,14 @@ compile_libraries() {
     # Create build directory
     mkdir -p "$BUILD_DIR"
 
+    # capita mutata sine recompilo = corruptio ABI (excubitor:
+    # antea vexillum globale needs_compile solum accendebatur sed
+    # condiciones per-plagulam capita ignorabant - vexillum
+    # decorativum, nihil recompilabatur)
+    newest_header () {
+        find include -name '*.h' -newer "$1" 2>/dev/null | head -1
+    }
+
     # Check if any source file is newer than its object file
     for src_file in "${SOURCE_FILES[@]}"; do
         obj_name=$(basename "$src_file" .c).o
@@ -242,8 +250,8 @@ compile_libraries() {
         obj_name=$(basename "$src_file" .c).o
         obj_file="$BUILD_DIR/$obj_name"
 
-        # Only recompile if source is newer than object
-        if [ ! -f "$obj_file" ] || [ "$src_file" -nt "$obj_file" ]; then
+        # Recompile if source OR any header is newer than object
+        if [ ! -f "$obj_file" ] || [ "$src_file" -nt "$obj_file" ] || [ -n "$(newest_header "$obj_file")" ]; then
             echo -e "  Compiling: $src_file"
             if ! clang -c ${GCC_FLAGS[@]} ${INCLUDE_FLAGS[@]} "$src_file" -o "$obj_file" 2>&1; then
                 echo -e "${RED}✗ FAILED: $src_file${RESET}"
@@ -257,7 +265,7 @@ compile_libraries() {
         obj_name=$(basename "$objc_file" .m).o
         obj_file="$BUILD_DIR/$obj_name"
 
-        if [ ! -f "$obj_file" ] || [ "$objc_file" -nt "$obj_file" ]; then
+        if [ ! -f "$obj_file" ] || [ "$objc_file" -nt "$obj_file" ] || [ -n "$(newest_header "$obj_file")" ]; then
             echo -e "  Compiling: $objc_file"
             if ! clang -c ${GCC_FLAGS[@]} ${INCLUDE_FLAGS[@]} "$objc_file" -o "$obj_file" 2>&1; then
                 echo -e "${RED}✗ FAILED: $objc_file${RESET}"

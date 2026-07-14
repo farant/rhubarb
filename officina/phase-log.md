@@ -3823,3 +3823,67 @@ nexus_amalgama_silva.o don't track silva.h) — the third hand-rolled
 copy of the pattern, missed because it lives silva-side. THE drift
 class this arc exists for, found while building the fix. Repaired in
 chunk 1; stays the canonical demo for chunk 2's bar.
+
+## EXCUBITOR CHUNK 1 (emissio graphi) — RELATIO (2026-07-13)
+
+SHIPPED: nexus_percursus fundit build/inclusiones.tsv in EODEM
+percursu (atomica .nova+rename, dedup, commentarium capitis; -renovare
+et uncus post-commissionem GRATIS renovant). Ordines: ex TAB ad TAB
+status(sumpta|praetermissa); ambae visiones eiusdem marginis
+supersunt (tabula = database). capita_viae in _caput_praebere
+(basename→via plena, primus-vincit = semantica praebere) — margines
+viam nominant CUIUS OCTETI VERE PARSATI SUNT; externa (stdio.h)
+basename manent. + silva/nexus.sh foramen ABI sanatum (SILVA_H).
+
+NUMERI: 4.468 margines unici ex 799 plagulis (14.576 duplicata);
+percursus ~144s immutatus; compilatio severitate plena PURA primo.
+FALSUM SIGNUM DOCENS: nexus_ordines.c → silva.h margo "deest" —
+quia inclusio per nexus_ordines.h TRANSIT (duo saltus). Graphus
+verus erat, ego non; ARGUMENTUM ipsum pro clausura transitiva
+chunk 2. Census consumptorum silva.h = unum grep in tabula nova.
+
+## EXCUBITOR CHUNK 2 (custos ipse) — RELATIO (2026-07-13)
+
+SHIPPED: ./excubitor.sh (radix; bash+awk unum, ~0.6s totum corpus)
++ fabrica.tsv (manifestum DISPOSITUM: 3 praefixa [fons_/mech_/
+amalgama_], 1 obiectum exactum, 9 generata, 1 binarium legati).
+Clausura inclusionum BFS trans graphum, catena explicans ("POST
+silva.h (silva.h <- nexus_ordines.h <- nexus_ordines.c)");
+obiecta conventione <basis>.o ← <basis>.c/.m (principalia numquam;
+ambiguitas: praelatio prooemii, aliter OMNES candidati); generata/
+binaria per fabricam; aetas graphi CAUTIO; filtrum substr; -omnia;
+exitus 0/1/2. VERIFICAT ET EXPLICAT SOLUM.
+
+BARRA IMPLETA (replay ABI): tactum silva.h → STALA 3, TRES
+nexus_ordines.o nominati cum catena duorum saltuum exacta;
+mtime restitutum → PURUS. Frigide capta la classis quae 2026-07-13
+mane sessionem debugging constitit.
+
+CURSUS PRIMUS = MESSIS: 172/309 obiecta stala. ① colloquium.sh
+ARMATUM (nulla custodia capitum; sessio.o stalum + amalgama
+recompilaturum = mixtura corrumpens in proximo cursu) — sanatum
+(newest_header), piscina recompilata, PURUS. ② compile_tests.sh
+vexillum capitum DECORATIVUM (needs_compile globale accendebatur,
+condiciones per-plagulam capita ignorabant — vexillum sine effectu!)
+— sanatum, piscina radicis tota recompilata, suita piscina viridis.
+③ saltuarius.sh sine custodia — sanatum. ④ EXONERATI: cursor/fusor/
+interpretare (newest_header amalgama iam tegit — audit meum grep
+crudum falso accusavit; GRAPHUS iudex melior: amalgama/silva.c SOLUM
+capita systematis includit ergo regulae src-solae obiectorum
+amalgamatis RECTAE sunt). Status stabilis: STALA 19 = piscinae
+dormientes scriptis sanis (vindex/celer/mech tesserae — se sanant
+usu proximo) + orphana 5 nominata (verificatio ×3, strictum_export;
+fontes deleti — candidati purgationi).
+
+DEBRIEF INSTRUMENTORUM: adhibita — grep in inclusiones.tsv (census
+consumptorum, self-containment amalgamatis), nexus, excubitor ipse
+media constructione (colloquium PURUS, barra). fructus — graphus
+DUAS quaestiones decidit quas grep meum male responderat (tria
+scripta exonerata; amalgama self-contained). asperitates — echo
+'===' in zsh frangitur (meta, non instrumenti). desiderata —
+AEDILIS: hoc chunk newest_header QUARTUM et QUINTUM exemplar manu
+copiavit; bibliotheca communis stage-1 exacte hoc necat.
+
+RESTAT CHUNK 3: canales (verdictum post-constructionem in scriptis,
+monitum unci capitum communium, legatus se ipsum inspicit ad
+initialize/didSave — classis binarii residentis).

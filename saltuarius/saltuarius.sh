@@ -35,11 +35,20 @@ declare -a RADIX_FONTES=(
     "piscina" "chorda" "chorda_aedificator" "xar" "tabula_dispersa"
     "friatio" "filum" "via" "iter_directoria" "utf8"
 )
+
+# capita mutata sine recompilo = corruptio ABI (inventum v0.2;
+# excubitor hanc plagulam sine custodia capitum nominavit)
+newest_header () {
+    find "$RADIX_DIR/include" "$SALT_DIR/fontes" \
+        "$RADIX_DIR/silva/amalgama" "$RADIX_DIR/tessera/amalgama" \
+        -name '*.h' -newer "$1" 2>/dev/null | head -1
+}
+
 obj_files=""
 for f in "${RADIX_FONTES[@]}"; do
     src="$RADIX_DIR/lib/$f.c"
     obj="$BUILD_DIR/$f.o"
-    if [ ! -f "$obj" ] || [ "$src" -nt "$obj" ]; then
+    if [ ! -f "$obj" ] || [ "$src" -nt "$obj" ] || [ -n "$(newest_header "$obj")" ]; then
         echo "  [dep] $f.c"
         clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" -c "$src" -o "$obj" || exit 1
     fi
@@ -60,7 +69,7 @@ shopt -s nullglob
 for src in "$SALT_DIR"/fontes/*.c; do
     f="$(basename "$src" .c)"
     obj="$BUILD_DIR/$f.o"
-    if [ ! -f "$obj" ] || [ "$src" -nt "$obj" ]; then
+    if [ ! -f "$obj" ] || [ "$src" -nt "$obj" ] || [ -n "$(newest_header "$obj")" ]; then
         echo "  [saltuarius] $f.c"
         clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" -c "$src" -o "$obj" || exit 1
     fi

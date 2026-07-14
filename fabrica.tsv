@@ -1,0 +1,30 @@
+# fabrica.tsv - manifestum manuale EXCUBITORIS (excubitor.sh legit)
+#
+# DISPOSITUM CONSULTO: aedilis stage-2 manifesta per scopum generabit
+# et hoc manifestum absorbebit; forma simplex manet donec forma vera
+# in on-ramp aedilis SEMEL designetur (phase-log officinae: FUTURUM
+# NOMINATUM AEDILIS). Hic solum quod ex conventione (<basis>.o <-
+# <basis>.c) et grapho inclusionum derivari NON potest.
+#
+# species TAB res TAB fons
+#   praefixum  res = praefixum obiecti; detracto praefixo basis
+#              conventione resolvitur (fons_x.o -> x.c)
+#   obiectum   res = basename obiecti irregularis; fons = via exacta
+#   generatum  res = via generati; fons = via generantis
+#              (finalis '/' = directorium totum, plagula recentissima)
+#   binarium   res = via binarii; fons = directorium obiectorum eius
+#
+praefixum	fons_	-
+praefixum	mech_	-
+praefixum	amalgama_	-
+obiectum	nexus_amalgama_silva.o	silva/amalgama/silva.c
+generatum	silva/amalgama/silva.c	silva/fontes/
+generatum	officina/amalgama/officina.c	officina/fontes/
+generatum	tessera/amalgama/tessera.c	tessera/fontes/
+generatum	silva/grammatica/silva_tabulae_c89.c	silva/grammatica/c89.stml
+generatum	silva/grammatica/silva_tabulae_c89.h	silva/grammatica/c89.stml
+generatum	silva/grammatica/silva_tabulae_sceleti.c	silva/grammatica/sceletum.stml
+generatum	silva/grammatica/silva_tabulae_sceleti.h	silva/grammatica/sceletum.stml
+generatum	silva/grammatica/silva_tabulae_imparilis.c	silva/grammatica/sceletum_imparilis.stml
+generatum	silva/grammatica/silva_tabulae_imparilis.h	silva/grammatica/sceletum_imparilis.stml
+binarium	officina/build/legatus/legatus	officina/build/legatus/
