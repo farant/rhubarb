@@ -1646,6 +1646,22 @@ _vigilia_agere (Piscina* p, constans character* via_binarii,
         "\"file://%s/lib/legatus_phantasma_v.c\",\"version\":1,"
         "\"languageId\":\"c\",\"text\":\"int x;\\n\"}}}", _radix());
     _scribe(intra, p, corpus);
+    /* phantasma alterum EXTRA clausuram: monitum semel per epocham
+     * (debrief 2026-07-14) - publicatio secunda quieta */
+    sprintf(corpus,
+        "{\"jsonrpc\":\"2.0\",\"method\":\"textDocument/didOpen\","
+        "\"params\":{\"textDocument\":{\"uri\":"
+        "\"file://%s/lib/legatus_phantasma_v2.c\",\"version\":1,"
+        "\"languageId\":\"c\",\"text\":\"int y;\\n\"}}}", _radix());
+    _scribe(intra, p, corpus);
+    /* plagula IN clausura propria: monitum SEMPER (textus fictus -
+     * superpositio processus-localis, innocua) */
+    sprintf(corpus,
+        "{\"jsonrpc\":\"2.0\",\"method\":\"textDocument/didOpen\","
+        "\"params\":{\"textDocument\":{\"uri\":"
+        "\"file://%s/officina/instrumenta/legatus.c\",\"version\":1,"
+        "\"languageId\":\"c\",\"text\":\"int z;\\n\"}}}", _radix());
+    _scribe(intra, p, corpus);
     _scribe(intra, p,
         "{\"jsonrpc\":\"2.0\",\"id\":2,\"method\":\"shutdown\"}");
     _scribe(intra, p, "{\"jsonrpc\":\"2.0\",\"method\":\"exit\"}");
@@ -1678,6 +1694,23 @@ _vigilia_agere (Piscina* p, constans character* via_binarii,
                 json_ad_chorda(json_objectum_capere(d, "source")),
                 "excubitor"));
         }
+    }
+    alioquin
+    {
+        CREDO_VERUM(_diagnostica_numerus(&n) == (s32)ZEPHYRUM);
+    }
+    n = _lege(extra, p, &bene);   /* phantasma v2 (extra clausuram) */
+    CREDO_VERUM(bene);
+    /* semel per epocham: monitum NON repetitur extra clausuram */
+    CREDO_VERUM(_diagnostica_numerus(&n) == (s32)ZEPHYRUM);
+    n = _lege(extra, p, &bene);   /* legatus.c (in clausura) */
+    CREDO_VERUM(bene);
+    si (stalus_expectatus)
+    {
+        /* clausura propria SEMPER monetur */
+        CREDO_VERUM(_diagnostica_numerus(&n) == (s32)I);
+        CREDO_VERUM(_diagnosticum_continet(&n,
+            "LEGATUS IPSE STALUS"));
     }
     alioquin
     {
@@ -1981,6 +2014,14 @@ probatio_mcp (Piscina* p)
         "{\"jsonrpc\":\"2.0\",\"id\":13,\"method\":\"tools/call\","
         "\"params\":{\"name\":\"symbolum\",\"arguments\":"
         "{\"titulus\":\"nexus_ordines_fundere\"}}}");
+    _scribe_lineam(intra, p,
+        "{\"jsonrpc\":\"2.0\",\"id\":14,\"method\":\"tools/call\","
+        "\"params\":{\"name\":\"corpus\",\"arguments\":"
+        "{\"titulus\":\"piscina_generare_dynamicum\"}}}");
+    _scribe_lineam(intra, p,
+        "{\"jsonrpc\":\"2.0\",\"id\":15,\"method\":\"tools/call\","
+        "\"params\":{\"name\":\"corpus\",\"arguments\":"
+        "{\"titulus\":\"piscina_generare_dynamicm\"}}}");
     /* nullum "exit" - EOF fistulae = exitus ordinatus */
 
     rewind(intra);
@@ -2023,7 +2064,7 @@ probatio_mcp (Piscina* p)
 
         CREDO_VERUM(instrumenta != NIHIL
             && json_est_tabulatum(instrumenta)
-            && json_tabulatum_numerus(instrumenta) == V);
+            && json_tabulatum_numerus(instrumenta) == VI);
         CREDO_VERUM(_chorda_est(json_ad_chorda(json_objectum_capere(
             json_tabulatum_obtinere(instrumenta, ZEPHYRUM),
             "name")), "diagnostica"));
@@ -2136,6 +2177,30 @@ probatio_mcp (Piscina* p)
          * sede capitis, quia corpus commentarium ducens caret */
         CREDO_VERUM(_chorda_continet(textus,
             "Sedes + usus TU unius fundere"));
+    }
+
+    n = _lege_lineam(extra, p, &bene);   /* corpus */
+    CREDO_VERUM(bene);
+    {
+        chorda textus = _mcp_textus(&n);
+
+        CREDO_VERUM(_chorda_continet(textus,
+            "corpus piscina_generare_dynamicum"));
+        CREDO_VERUM(_chorda_continet(textus, "lib/piscina.c"));
+        /* corpus verum: definitio integra cum redde */
+        CREDO_VERUM(_chorda_continet(textus,
+            "piscina_generare_dynamicum ("));
+        CREDO_VERUM(_chorda_continet(textus, "redde"));
+    }
+
+    n = _lege_lineam(extra, p, &bene);   /* corpus: typo */
+    CREDO_VERUM(bene);
+    {
+        chorda textus = _mcp_textus(&n);
+
+        CREDO_VERUM(_chorda_continet(textus, "simillima"));
+        CREDO_VERUM(_chorda_continet(textus,
+            "piscina_generare_dynamicum"));
     }
 
     fclose(intra);

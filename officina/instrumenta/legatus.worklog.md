@@ -537,3 +537,24 @@ include of the probe (quoted includes search the includer's dir
 first) — phantom "missing declaration" errors against a file that
 was fine. Angle-include or clean scratchpad. Same family as the
 stale-object ABI trap.
+
+## 2026-07-14 — corpus {titulus} + vigilia once-per-epoch
+
+corpus = the "show me the code" tool: card gained corpus byte
+extents (whole declaration via the pater-climbed root — same node
+the comment anchors to), rendered verbatim through the same
+open-doc-first byte capture as comments, 200-line cap. symbolum's
+unknown/macro arms extracted into shared helpers
+(_titulus_vivus/_ignotum_respondere/_macro_respondere) — corpus
+and symbolum stay in lockstep by construction. Named park: full
+macro bodies in MCP mode need the parsura out of _recensere
+(document-free path has no LegatusDocumentum for
+_corpus_finis_macronis); first-line-with-ellipsis until then.
+
+vigilia noise fix: the per-publish STALUS warning now fires always
+for files in legatus's own closure, once per staleness epoch
+otherwise (stalus_nuntiatum, reset at both FALSUM->VERUM flip
+sites). The repetition was correct disclosure that trained the
+reader to skim — the failure mode disclosure exists to prevent.
+MCP CAUTIO untouched (per-request, part of the answer's trust
+envelope).

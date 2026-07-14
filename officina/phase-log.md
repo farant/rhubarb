@@ -4430,3 +4430,38 @@ _vigiliam_construere (ambulatio linearum tsv) verbatim re-usum.
 ASPERITAS: nulla nova. DESIDERATUM: batch-symbolum manet (tituli
 plures uno ictu); charta cum commentario ducente (praecedens:
 hover macronis corpus legit) - ambo parca.
+
+## LEGATI INSTRUMENTUM VI (CORPUS) + VIGILIA SEMEL-PER-EPOCHAM (2026-07-14)
+
+Demanda ex debrief commentarii eodem die: exemplar "grep-pro-
+corpore" frequentissimum sessionis = instrumentum deerat. NAVIS
+corpus {titulus}: fons definitionis VERBATIM nomine - commentarium
+ducens + declaratio TOTA (extenta octetorum nodi radicis in charta
+ad tempus iudicii - silva_nodus_extensionem in radicem
+pater-ascensam; eadem lectio verbatim qua commentaria). Definitio
+.c prae prototypo; sine corpore, declaratio capitis (contractus);
+macris corpus #define (linea prima - PARCUM NOMINATUM: corpus
+macronis plenum modo MCP postulat parsuram ex _recensere, contractus
+alter); simillima in fallendo. Tectum CC lineis. Refactura:
+_titulus_vivus/_ignotum_respondere/_macro_respondere ex symbolo
+extracta (communia); _commentarium_capere -> _extentum_viae_capere
+(generale), _verbatim_appendere cum tecto parametrico.
+
+VIGILIA: monitum LSP "LEGATUS IPSE STALUS" in OMNI publicatione
+lectorem obtundebat (debrief: ~12 repetitiones identicae una
+sessione). Nunc: plagulae clausurae propriae SEMPER (editio rem
+peiorem facit), aliae SEMEL PER EPOCHAM staleness
+(stalus_nuntiatum; epocha nova = quivis transitus FALSUM->VERUM,
+ambabus sedibus flip). CAUTIO MCP immutata (pars responsi, sparsa).
+
+BARRAE: aureae 269/269 (corpus definitio integra + typo-simillima;
+tools/list VI; vigilia: phantasma alterum extra clausuram QUIETUM
++ legatus.c in clausura MONITUM, ambae directiones); suita 12/12;
+sondae vivae: corpus chorda_aequalis (definitio 300-316 verbatim),
+corpus CREDO_VERUM (arcus macronis). Binarium praestructum.
+
+DEBRIEF: adhibita impulsus (×1 hoc fasce: sedes vocationum
+_commentarium_capere post renominationem - lista omnium IV sedium
+gratis), aureae, sondae -mcp. FRUCTUS: refactura symboli sine
+regressione (aureae 252 tenebant). ASPERITAS: nulla nova.
+DESIDERATA: corpus macronis plenum (parcum supra); cetera vacua.
