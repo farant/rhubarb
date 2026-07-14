@@ -251,3 +251,72 @@ header = every consumer object must rebuild; the failure reads as
 Bars: expansio unit tests (UNUS/MULTI/VACUUS extents exact),
 probatio_macra + SUMMA multi-line hover verbatim (167/167), officina
 12/12, silva 30/30 FULL, hospes 31/31.
+
+## 2026-07-13 (nocte) — VIGILIA SUI (excubitor chunk 3)
+
+Legatus now watches ITSELF for staleness — the resident-binary
+class no script sees (a script checks at spawn; the process then
+outlives its own sources). Mechanism: cfg.binarium_via (argv[0]
+from principale; NIHIL in probationes = feature inert), fabrica.tsv
+"binarium" rows suffix-matched against own path give the unit .c
+roots, BFS over build/inclusiones.tsv gives the closure (~all own
+sources + headers), praeparator_tempus_plagulae (new; sys/stat.h
+joins dirent in the ONE posix-seam file) sweeps mtimes at
+initialize. Per-publish: doc in own closure + disk mtime > captured
+binary mtime → se_stalus. Once stale, EVERY publish carries one
+Warning diagnostic ("LEGATUS IPSE STALUS: <via> recentior binario
+residente - /reload-plugins renovat") — any answer is now suspect,
+so the nag is global by design.
+
+CAPTURE-AT-INIT SEMANTICS (accidental and correct): binarium_tempus
+is stat'd once at initialize. If legatus.sh later rebuilds the
+binary on disk, the RESIDENT keeps comparing against its own
+vintage and keeps nagging — right, because the resident IS still
+old. /reload-plugins is the only cure, which is exactly what the
+message says.
+
+Test: probatio_vigilia — fabrica ficta (binarium fictum ←
+officina/instrumenta/legatus.c), fake binary mtime forced ancient
+via utime() → publish carries exactly the STALUS diagnostic;
+recreate binary fresh → publish clean. Real closure through the
+real graph (inclusiones.tsv joins nexus.tsv as a test dependency —
+precedent already set by v0.1b).
+
+LEXICON GAP NOTED: the diagnostics push flagged `structura utimbuf`
+as incomplete in the probatio — <utime.h> is outside silva's
+modeled system lexicon (systema_c89/posix don't carry it). clang
+compiles it clean; same class as the M4b contextus-lexicon finding.
+If posix-header coverage grows, utime.h is a candidate.
+
+## 2026-07-13 (nocte, addendum) — vigilia LIVE-VERIFIED + spawn subtlety
+
+The resident pushed "⚠ LEGATUS IPSE STALUS ... /reload-plugins
+renovat" attached to the very edit that aged it. But the FIRST live
+probe was silent, CORRECTLY: the client spawns the server LAZILY
+via legatus.sh, which rebuilds — my edit and the spawn-rebuild
+landed in the same second, so the "resident" answering was younger
+than (well, coeval with — strict > says fresh) the edit. Operational
+truth: the vigilia covers the long-resident case (server up, then
+sources move); the lazy spawn-rebuild covers edit-before-spawn for
+free. Between them the stale-answers window is closed from both
+ends. Same-second equality counts as fresh by design (strict >),
+matching excubitor.sh.
+
+## 2026-07-13 (nocte) — asperitates from the excubitor-arc debrief
+
+① NO DIAGNOSTICS PULL: when I needed "what diagnostics does legatus
+hold for this file RIGHT NOW" (vigilia verification), no channel
+existed — the client is push-only and pushes surface only on edits.
+Had to hand-roll a stdio probe script (scratchpad; drove
+initialize+didOpen by hand). The probe doubled as the honest
+end-to-end test, but the gap is real. Natural homes: a one-shot
+sonda driver script, or LEGATUSD answering queries. ② HOVER EMPTY
+MISS: hover at a wrong position returns bare "no hover information"
+— no nearest-symbol hint; cost a round-trip + grep. similitudo
+exists; a fuzzy "did you mean the symbol at line N" would convert
+misses into hits. ③ VIGILIA SOURCE FIELD: the self-staleness
+diagnostic reports source "silva" (_diagnosticum_json default) —
+should say "excubitor". Cosmetic, park. ④ USAGE NOTE (not a tool
+gap): for mapping a big file's functions I still reach for grep -n
+out of habit; documentSymbol IS the bench answer now — symptom
+table addition.

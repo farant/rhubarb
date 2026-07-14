@@ -34,11 +34,23 @@ declare -a RADIX_FONTES=(
     "piscina" "chorda" "chorda_aedificator" "xar" "tabula_dispersa"
     "friatio"
 )
+
+# capita mutata sine recompilo = corruptio ABI (excubitor:
+# vindex_onerator.o/amalgama_officina.o stala post silva.h v0.2 -
+# mixtura corrumpens in proximo cursu; auditus prior hanc plagulam
+# per COMMENTARIUM "silva.h" falso exoneravit)
+newest_header () {
+    find "$RADIX_DIR/include" "$OFF_DIR/instrumenta" \
+        "$RADIX_DIR/silva/amalgama" "$RADIX_DIR/tessera/amalgama" \
+        "$OFF_DIR/amalgama" \
+        -name '*.h' -newer "$1" 2>/dev/null | head -1
+}
+
 obj_files=""
 for f in "${RADIX_FONTES[@]}"; do
     src="$RADIX_DIR/lib/$f.c"
     obj="$BUILD_DIR/$f.o"
-    if [ ! -f "$obj" ] || [ "$src" -nt "$obj" ]; then
+    if [ ! -f "$obj" ] || [ "$src" -nt "$obj" ] || [ -n "$(newest_header "$obj")" ]; then
         echo "  [dep] $f.c"
         clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" -c "$src" -o "$obj" || exit 1
     fi
@@ -49,9 +61,15 @@ for nom in "tessera" "silva" "officina"; do
     src="$RADIX_DIR/$nom/amalgama/$nom.c"
     obj="$BUILD_DIR/amalgama_$nom.o"
     # officina amalgam: silva.h = the ONE documented external dep
+    # (tessera/silva amalgamata self-contained - src solum recte)
     extra=""
-    [ "$nom" = "officina" ] && extra="-I$RADIX_DIR/silva/amalgama"
-    if [ ! -f "$obj" ] || [ "$src" -nt "$obj" ]; then
+    silva_h_recentior=""
+    if [ "$nom" = "officina" ]; then
+        extra="-I$RADIX_DIR/silva/amalgama"
+        [ "$RADIX_DIR/silva/amalgama/silva.h" -nt "$obj" ] 2>/dev/null \
+            && silva_h_recentior="1"
+    fi
+    if [ ! -f "$obj" ] || [ "$src" -nt "$obj" ] || [ -n "$silva_h_recentior" ]; then
         echo "  [amalgama] $nom.c"
         clang "${GCC_FLAGS[@]}" $extra -c "$src" -o "$obj" || exit 1
     fi
@@ -62,7 +80,7 @@ for f in "praeparator" "vindex_onerator" "vindex_visum"; do
     src="$OFF_DIR/instrumenta/$f.c"
     obj="$BUILD_DIR/$f.o"
     if [ ! -f "$obj" ] || [ "$src" -nt "$obj" ] \
-        || [ "$OFF_DIR/instrumenta/$f.h" -nt "$obj" ]; then
+        || [ -n "$(newest_header "$obj")" ]; then
         echo "  [vindex] $f.c"
         clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" -c "$src" -o "$obj" || exit 1
     fi
@@ -75,6 +93,9 @@ if [ ! -f "$bin" ] || [ "$src" -nt "$bin" ] || [ -n "$(find $obj_files -newer "$
     echo "  [vindex] vindex.c (principale)"
     clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" "$src" $obj_files -o "$bin" || exit 1
 fi
+
+# canalis excubitoris: verdictum post-constructionem (tacet nisi stala)
+"$RADIX_DIR/excubitor.sh" -tacitus "officina/build/vindex/" >&2 || true
 
 cd "$RADIX_DIR"
 exec "$bin" "$@"

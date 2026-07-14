@@ -713,7 +713,7 @@ TesseraEventumGenus tessera_eventum_expectare(TesseraLector* lector,
 #define hic_manens 	static
 #define universalis static
 
-#define FILE FILUM
+#define FILUM FILE
 
 nomen insignatus character	i8;
 nomen insignatus brevis 		i16;
@@ -1196,7 +1196,10 @@ b32 tessera_magnitudinem_renovare (TesseraOpus* opus);
 
 /* ================= ex lib/piscina.c ================= */
 
-#define PISCINA_DEBUG FALSUM /* Muta ad VERUM pro imprimere debugging */
+#ifndef PISCINA_DEBUG
+#define PISCINA_DEBUG FALSUM /* Muta ad VERUM pro imprimere debugging,
+                              * vel -DPISCINA_DEBUG=1 in linea compilandi */
+#endif
 
 /* ===========================================================
  * Structura Alvei - allocatio singularis

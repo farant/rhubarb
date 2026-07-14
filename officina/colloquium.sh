@@ -96,4 +96,7 @@ if [ ! -f "$BIN" ] || [ "$src" -nt "$BIN" ] || [ -n "$obj_files" ]; then
     clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" "$src" $obj_files -o "$BIN" || exit 1
 fi
 
+# canalis excubitoris: verdictum post-constructionem (tacet nisi stala)
+"$RADIX_DIR/excubitor.sh" -tacitus "officina/build/colloquium/" >&2 || true
+
 cd "$RADIX_DIR" && exec "$BIN" "$@"

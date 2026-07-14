@@ -9,7 +9,9 @@
 # species TAB res TAB fons
 #   praefixum  res = praefixum obiecti; detracto praefixo basis
 #              conventione resolvitur (fons_x.o -> x.c)
-#   obiectum   res = basename obiecti irregularis; fons = via exacta
+#   obiectum   res = basename obiecti irregularis (ubique) AUT via
+#              plena (cum '/') pro obiectis eiusdem nominis in
+#              piscinis diversis; fons = via exacta
 #   generatum  res = via generati; fons = via generantis
 #              (finalis '/' = directorium totum, plagula recentissima)
 #   binarium   res = via binarii; fons = directorium obiectorum eius
@@ -18,6 +20,9 @@ praefixum	fons_	-
 praefixum	mech_	-
 praefixum	amalgama_	-
 obiectum	nexus_amalgama_silva.o	silva/amalgama/silva.c
+obiectum	silva/build/amalgama_verificatio.o	silva/amalgama/silva.c
+obiectum	officina/build/amalgama_verificatio.o	officina/amalgama/officina.c
+obiectum	tessera/build/amalgama_verificatio.o	tessera/amalgama/tessera.c
 generatum	silva/amalgama/silva.c	silva/fontes/
 generatum	officina/amalgama/officina.c	officina/fontes/
 generatum	tessera/amalgama/tessera.c	tessera/fontes/
@@ -28,3 +33,20 @@ generatum	silva/grammatica/silva_tabulae_sceleti.h	silva/grammatica/sceletum.stm
 generatum	silva/grammatica/silva_tabulae_imparilis.c	silva/grammatica/sceletum_imparilis.stml
 generatum	silva/grammatica/silva_tabulae_imparilis.h	silva/grammatica/sceletum_imparilis.stml
 binarium	officina/build/legatus/legatus	officina/build/legatus/
+# unitates legati (speculum legatus.sh; legatus VIGILIAM SUI ex his
+# ordinibus construit - .c radices clausurae inclusionum)
+binarium	officina/build/legatus/legatus	officina/instrumenta/principalia/legatus.c
+binarium	officina/build/legatus/legatus	officina/instrumenta/legatus.c
+binarium	officina/build/legatus/legatus	officina/instrumenta/praeparator.c
+binarium	officina/build/legatus/legatus	silva/instrumenta/nexus_ordines.c
+binarium	officina/build/legatus/legatus	silva/amalgama/silva.c
+binarium	officina/build/legatus/legatus	lib/piscina.c
+binarium	officina/build/legatus/legatus	lib/chorda.c
+binarium	officina/build/legatus/legatus	lib/chorda_aedificator.c
+binarium	officina/build/legatus/legatus	lib/xar.c
+binarium	officina/build/legatus/legatus	lib/tabula_dispersa.c
+binarium	officina/build/legatus/legatus	lib/friatio.c
+binarium	officina/build/legatus/legatus	lib/internamentum.c
+binarium	officina/build/legatus/legatus	lib/json.c
+binarium	officina/build/legatus/legatus	lib/tabellarius.c
+binarium	officina/build/legatus/legatus	lib/similitudo.c

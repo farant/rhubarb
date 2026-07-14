@@ -60,6 +60,11 @@ void praeparator_destruere(Praeparatio* praeparatio);
 char* praeparator_plagulam_legere(Piscina* piscina, const char* via,
     unsigned int* mensura_out);
 
+/* Tempus modificationis plagulae (secunda epochae); 0 = deest aut
+ * illegibilis. Sedes POSIX (sys/stat.h) consulto HIC continetur -
+ * eadem lex qua dirent (classis POSIX in una plagula). */
+long praeparator_tempus_plagulae(const char* via);
+
 /* Receptum bis-analysis: parsura cum contextu + semantica cum
  * systemate + clausura oraculi (augere + vacare + recanonicare) +
  * semantica iterum (auctoritativa). Effimera = piscina vocantis

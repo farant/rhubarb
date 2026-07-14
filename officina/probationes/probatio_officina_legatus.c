@@ -20,6 +20,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <utime.h>   /* probatio vigiliae: mtime binarii ficti */
 
 interior constans character*
 _radix (vacuum)
@@ -99,6 +100,54 @@ _error_codex (TabellariusNuntius* n)
     }
     codex_v = json_objectum_capere(error_v, "code");
     redde json_ad_integer(codex_v);
+}
+
+/* verum si aliquod diagnosticum publicationis particulam in
+ * nuntio fert */
+interior b32
+_diagnosticum_continet (TabellariusNuntius* n,
+    constans character* particula)
+{
+    JsonValor* lista;
+    i32 k;
+    memoriae_index pm = strlen(particula);
+
+    si (n->genus != TABELLARIUS_NUNTIATIO || n->params == NIHIL)
+    {
+        redde FALSUM;
+    }
+    lista = json_objectum_capere(n->params, "diagnostics");
+    si (lista == NIHIL || !json_est_tabulatum(lista))
+    {
+        redde FALSUM;
+    }
+    per (k = ZEPHYRUM; k < (i32)json_tabulatum_numerus(lista); k++)
+    {
+        JsonValor* d = json_tabulatum_obtinere(lista, k);
+        JsonValor* nuntius_v = d != NIHIL
+            ? json_objectum_capere(d, "message") : NIHIL;
+        chorda nuntius;
+
+        si (nuntius_v == NIHIL)
+        {
+            perge;
+        }
+        nuntius = json_ad_chorda(nuntius_v);
+        si (nuntius.datum != NIHIL && nuntius.mensura >= (i32)pm)
+        {
+            i32 j;
+
+            per (j = ZEPHYRUM; j + (i32)pm <= nuntius.mensura; j++)
+            {
+                si (memcmp(nuntius.datum + j, particula, pm)
+                    == ZEPHYRUM)
+                {
+                    redde VERUM;
+                }
+            }
+        }
+    }
+    redde FALSUM;
 }
 
 /* ==================================================
@@ -1379,6 +1428,118 @@ probatio_macra (Piscina* p)
     fclose(extra);
 }
 
+/* ==================================================
+ * VIGILIA SUI (excubitor chunk 3): binarium residens fontibus
+ * posterius -> diagnosticum in publicatione. Fabrica ficta +
+ * binarium fictum cum mtempore antiquo (utime); clausura VERA
+ * trans graphum verum (build/inclusiones.tsv - dependentia
+ * probationis sicut nexus.tsv).
+ * ================================================== */
+
+interior vacuum
+_vigilia_agere (Piscina* p, constans character* via_binarii,
+    constans character* via_fabricae, b32 stalus_expectatus)
+{
+    FILE* intra = tmpfile();
+    FILE* extra = tmpfile();
+    character corpus[2048];
+    LegatusConfiguratio cfg;
+    b32 bene = FALSUM;
+    TabellariusNuntius n;
+
+    CREDO_VERUM(intra != NIHIL && extra != NIHIL);
+    sprintf(corpus,
+        "{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"initialize\","
+        "\"params\":{\"rootUri\":\"file://%s\",\"capabilities\":"
+        "{\"general\":{\"positionEncodings\":[\"utf-8\"]}}}}",
+        _radix());
+    _scribe(intra, p, corpus);
+    sprintf(corpus,
+        "{\"jsonrpc\":\"2.0\",\"method\":\"textDocument/didOpen\","
+        "\"params\":{\"textDocument\":{\"uri\":"
+        "\"file://%s/lib/legatus_phantasma_v.c\",\"version\":1,"
+        "\"languageId\":\"c\",\"text\":\"int x;\\n\"}}}", _radix());
+    _scribe(intra, p, corpus);
+    _scribe(intra, p,
+        "{\"jsonrpc\":\"2.0\",\"id\":2,\"method\":\"shutdown\"}");
+    _scribe(intra, p, "{\"jsonrpc\":\"2.0\",\"method\":\"exit\"}");
+
+    rewind(intra);
+    memset(&cfg, ZEPHYRUM, magnitudo(LegatusConfiguratio));
+    cfg.binarium_via = via_binarii;
+    cfg.fabrica_via = via_fabricae;
+    CREDO_VERUM(legatus_currere(intra, extra, &cfg) == ZEPHYRUM);
+    rewind(extra);
+
+    n = _lege(extra, p, &bene);   /* initialize */
+    CREDO_VERUM(bene);
+    n = _lege(extra, p, &bene);   /* publicatio phantasmatis */
+    CREDO_VERUM(bene);
+    si (stalus_expectatus)
+    {
+        CREDO_VERUM(_diagnostica_numerus(&n) == (s32)I);
+        CREDO_VERUM(_diagnosticum_continet(&n,
+            "LEGATUS IPSE STALUS"));
+    }
+    alioquin
+    {
+        CREDO_VERUM(_diagnostica_numerus(&n) == (s32)ZEPHYRUM);
+    }
+    fclose(intra);
+    fclose(extra);
+}
+
+interior vacuum
+probatio_vigilia (Piscina* p)
+{
+    constans character* via_binarii =
+        "officina/build/probatio_vigilia_binarium";
+    constans character* via_fabricae =
+        "officina/build/probatio_vigilia_fabrica.tsv";
+
+    imprimere("--- Probans vigiliam sui (excubitor chunk 3) ---\n");
+
+    /* fabrica ficta: binarium fictum <- fons verus legati */
+    {
+        FILE* pl = fopen(via_fabricae, "wb");
+
+        CREDO_NON_NIHIL(pl);
+        fprintf(pl, "# probatio vigiliae\n"
+            "binarium\t%s\tofficina/instrumenta/legatus.c\n",
+            via_binarii);
+        fclose(pl);
+    }
+
+    /* casus stalus: binarium antiquum - quivis fons clausurae
+     * recentior est */
+    {
+        FILE* pl = fopen(via_binarii, "wb");
+        structura utimbuf tempora;
+
+        CREDO_NON_NIHIL(pl);
+        fputc('x', pl);
+        fclose(pl);
+        tempora.actime = 1000000L;
+        tempora.modtime = 1000000L;
+        CREDO_VERUM(utime(via_binarii, &tempora) == ZEPHYRUM);
+    }
+    _vigilia_agere(p, via_binarii, via_fabricae, VERUM);
+
+    /* casus recens: binarium nunc scriptum - vigilia quieta
+     * (phantasma extra clausuram = via membri quoque probata) */
+    {
+        FILE* pl = fopen(via_binarii, "wb");
+
+        CREDO_NON_NIHIL(pl);
+        fputc('x', pl);
+        fclose(pl);
+    }
+    _vigilia_agere(p, via_binarii, via_fabricae, FALSUM);
+
+    remove(via_fabricae);
+    remove(via_binarii);
+}
+
 integer
 principale (vacuum)
 {
@@ -1400,6 +1561,7 @@ principale (vacuum)
     probatio_ordo_plenus(piscina);
     probatio_hover_symbola(piscina);
     probatio_macra(piscina);
+    probatio_vigilia(piscina);
     probatio_definitio_capitis(piscina);
     probatio_utf16(piscina);
     probatio_syntaxis_posita(piscina);

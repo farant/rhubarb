@@ -3887,3 +3887,95 @@ copiavit; bibliotheca communis stage-1 exacte hoc necat.
 RESTAT CHUNK 3: canales (verdictum post-constructionem in scriptis,
 monitum unci capitum communium, legatus se ipsum inspicit ad
 initialize/didSave — classis binarii residentis).
+
+## EXCUBITOR CHUNK 3 (canales) — RELATIO (2026-07-13, nocte)
+
+SHIPPED, tres canales:
+① POST-CONSTRUCTIONEM: excubitor -tacitus (PURUS = silentium
+totale, disciplina uncorum) + filtrum tribus gradibus (finalis '/'
+= DIRECTE in directorio — piscinae subiectae alienis scriptis
+exclusae, lectio anti-strepitus; '/' medius = prooemium; sine =
+substring). Insertum in SEPTEM scripta: quattuor suitae
+(officina/silva/saltuarius/tessera compile_probationes) +
+compile_tests radicis + colloquium.sh/vindex.sh ante exec. Canalis
+VIVUS primo cursu organico: suita tesserae mech_* stala nominavit.
+② UNCUS CAPITUM (excubitor-custos.sh, PostToolUse .h): caput a ≥II
+plagulis inclusum mutatum → monitum leve cum numero includentium +
+quaestione. Silentium: caput privatum / graphus deest. INVENTUM
+PORTABILITATIS: grep BSD systematis -P nescit (profilum meum GNU
+habet — uncus PATH systematis currit); -F cum tab litterali.
+③ VIGILIA SUI LEGATI: cfg.binarium_via (argv[0]) + ordines binarium
+fabricae (suffixu congruente) → radices .c → BFS trans
+inclusiones.tsv → percursio mtemporum ad initialize
+(praeparator_tempus_plagulae NOVA — sys/stat.h in plagula seminis
+POSIX una cum dirent); per publicationem: documentum in clausura
+propria + discus recentior binario capto → diagnosticum Warning in
+OMNI publicatione ("LEGATUS IPSE STALUS ... /reload-plugins
+renovat"). Semantica captae-ad-initium RECTA sponte: reaedificatio
+disci residentem non sanat — residens SE comparat, non plagulam.
+probatio_vigilia: fabrica ficta + binarium fictum utime-antiquum →
+diagnosticum exactum; recens → purum. 182/182 primo cursu; officina
+12/12.
+
+MESSIS CANALIUM (arcus se solvit aedificando): ① vindex.sh per
+COMMENTARIUM "silva.h" falso exoneratum in audit priore — tres
+ansae sine custodia capitum, piscina cum amalgama_officina.o stalo
++ amalgama_silva.o recompilaturo = mixtura ARMATA in debugger;
+sanatum (newest_header + silva.h pro amalgamate officinae),
+recompilatum, PURUS. ② PORTA TESSERAE FRACTA IACENS: amalgamare
+tesserae clamavit — utf8_codere in lib post "saltuarius phase D"
+additum, amalgama numquam post regeneratum (porta zero-
+inusitatorum ut destinata); excludenda +1, VERIFICATUM, mech_*
+regulae sanatae, 5/5. ③ compile_tests.sh vexillum DECORATIVUM +
+saltuarius.sh sine custodia (chunk 2 tail). ④ amalgama_verificatio
+ORPHANUM SOLUTUM: obiectum ROLE-nominatum (verificatio stricta
+amalgamatis cuiusque) — regulae obiectorum via-plena in fabrica
+(tres ordines), excubitor via-plena ante basename. ⑤ ambiguitas
+falsa 21: res fabricae bis statae → fontes_basis duplicata; dedup
+fons_visa (21→2). ⑥ orphanum verum restans: strictum_export.o
+(fons deletus — candidatus purgationi Fran).
+
+LEXICON: <utime.h> extra systema modelatum (impulsus incompletam
+clamavit, clang purus — classis nota M4b).
+
+### VIGILIA VIVA CONFIRMATA (2026-07-13, nocte). Editio fontis
+proprii → impulsus residentis IPSE tulit: "⚠ LEGATUS IPSE STALUS:
+officina/instrumenta/legatus.c recentior binario residente -
+responsa fortasse vetera; /reload-plugins renovat" — adfixum
+EDITIONI IPSI quae eum senem fecit. Sonda stdio manualis contra
+binarium depositum idem dedit. INVENTUM VIAE: prima sonda QUIETA
+RECTE — cliens servum PIGRE generat per legatus.sh, quod
+recompilat; editio + generatio in EODEM secundo = binarium
+aequaevum fonti = recens (>-strictum). Vigilia casum
+residentis-diu-viventis tegit, exacte ut destinata; generatio
+pigra casum editionis-ante-generationem GRATIS sanat. CIRCULUS
+PLENUS: /reload alterum → generatio pigra in hover proximo →
+sonda diagnostics:[] — quietum→stalum→monitum→reload→quietum,
+totum vivum.
+
+### DEBRIEF INSTRUMENTORUM ARCUS (LSP praecipue, Fran petiit):
+ADHIBITA — impulsus diagnosticorum (utimbuf ×3 in momento
+editionis; monitum vigiliae ipsius), hover (liveness + typus;
+unus mis-positus), nexus CLI (~5, unum "miss"), emitte, grep/sed
+multa. FRUCTUS — ① impulsus utimbuf ANTE compilationem ullam:
+hiatum lexici (<utime.h> extra systema) recte diagnosticavi quia
+clang postea purus — impulsus + oraculum = discriminatio
+classium; ② hover ut sonda vitae in investigatione vigiliae:
+"servus mortuus?" a "monitum non accensum?" discrevit — ad
+evidentiam mtemporum duxit (inventum generationis pigrae);
+③ INDEX EXONERATUS TER: nexus "miss" in tessera_utf8_codere =
+VERITAS (symbolum in NULLO amalgamate commisso umquam fuit —
+vetus ante, excludendum post; sola regeneratio intermedia porta
+propria fracta id tenuit). ASPERITATES (in legatus.worklog in
+momento) — ① NULLUS canalis TRAHENDI diagnostica (cliens impulsus
+solum, impulsus solum in editionibus emergunt): sonda stdio manu
+volvenda erat; ② hover mis-positus nudum "no hover" — nullum
+indicium symboli proximi (similitudo exsistit); ③ fons
+diagnostici vigiliae "silva" — "excubitor" legi debet
+(cosmeticum); ④ consuetudo grep pro tabula-plagulae-magnae ubi
+documentSymbol IAM respondet (nota tabulae symptomatum, non
+hiatus instrumenti). DESIDERATA — sonda una-ictus (scriptum
+scratchpad = semen; LEGATUSD naturaliter absorbet); ceterum
+NIHIL: in arcu toto instrumentum numquam mentitum est, ego de
+instrumento bis mentitus sum (grep-audit ×2) et index me bis
+correxit.

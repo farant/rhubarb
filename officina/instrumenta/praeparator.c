@@ -13,6 +13,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <dirent.h>
+#include <sys/stat.h>
 
 character*
 praeparator_plagulam_legere (Piscina* piscina,
@@ -49,6 +50,18 @@ praeparator_plagulam_legere (Piscina* piscina,
     textus[mensura_l] = '\0';
     *mensura_out = (insignatus integer)mensura_l;
     redde textus;
+}
+
+longus
+praeparator_tempus_plagulae (constans character* via)
+{
+    structura stat indicium;
+
+    si (via == NIHIL || stat(via, &indicium) != ZEPHYRUM)
+    {
+        redde 0L;
+    }
+    redde (longus)indicium.st_mtime;
 }
 
 /* ==================================================

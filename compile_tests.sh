@@ -671,6 +671,9 @@ else
     print_summary
 
     if [ $TESTS_FAILED -eq 0 ]; then
+        # canalis excubitoris: verdictum post-constructionem
+        # (tacet nisi stala)
+        ./excubitor.sh -tacitus "build/" >&2 || true
         exit 0
     else
         exit 1

@@ -64,6 +64,9 @@ interior constans character* constans EXCLUDENDA_AEDIFICATORIS[] = {
     NIHIL
 };
 interior constans character* constans EXCLUDENDA_UTF8[] = {
+    "utf8_codere",     /* additum lib post phase D saltuarii -
+                        * porta clamavit (custodia
+                        * zero-inusitatorum, ut destinata) */
     "utf8_numerare_runas",
     "utf8_prior_runa",
     "utf8_proxima_runa",

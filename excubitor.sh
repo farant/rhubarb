@@ -4,8 +4,13 @@
 #
 # Usage:
 #   ./excubitor.sh             # omnia obiecta + res fabricae
-#   ./excubitor.sh <substr>    # solum res quae substr continent
+#   ./excubitor.sh <filtrum>   # finalis '/' = directe in directorio
+#                              # (officina/build/ sine subpiscinis);
+#                              # '/' medius = prooemium profundum;
+#                              # sine '/' = substring (ubique)
 #   ./excubitor.sh -omnia      # sine tecto enumerationis (5/gregem)
+#   ./excubitor.sh -tacitus    # NIHIL nisi stala (canalis
+#                              # post-constructionem in scriptis)
 #
 # Exit: 0 PURUS | 1 STALA inventa | 2 graphus deest / usus
 #
@@ -30,10 +35,12 @@ GRAPHUS="build/inclusiones.tsv"
 FABRICA="fabrica.tsv"
 FILTRUM=""
 OMNIA=0
+TACITUS=0
 
 for a in "$@"; do
     case "$a" in
         -omnia) OMNIA=1 ;;
+        -tacitus) TACITUS=1 ;;
         -*) echo "excubitor: flagrum ignotum $a" >&2 ; exit 2 ;;
         *)  FILTRUM="$a" ;;
     esac
@@ -54,9 +61,12 @@ FLUMEN="$(mktemp)"
 trap 'rm -f "$FLUMEN"' EXIT
 
 {
-    # fontes et capita (extra directoria build/)
+    # fontes et capita (extra build/ et fixa/ - plagulae fixae
+    # nomina fontium verorum communicant sed inputus constructionis
+    # numquam sunt; ambiguitas falsa sine hac exclusione)
     find . \( -name build -o -name .git -o -name node_modules \
-            -o -name results -o -name censoris \) -prune -o \
+            -o -name results -o -name censoris -o -name fixa \) \
+        -prune -o \
         \( -name '*.c' -o -name '*.h' -o -name '*.m' \) -print0 \
         2>/dev/null | xargs -0 stat -f 'M %m %N' 2>/dev/null
 
@@ -89,7 +99,7 @@ trap 'rm -f "$FLUMEN"' EXIT
 # iudicium: graphus + fabrica + flumen in uno awk
 # --------------------------------------------------
 awk -F'\t' -v graphus="$GRAPHUS" -v fabrica="$FABRICA" \
-    -v filtrum="$FILTRUM" -v omnia="$OMNIA" '
+    -v filtrum="$FILTRUM" -v omnia="$OMNIA" -v tacitus="$TACITUS" '
 
 # ---- graphus inclusionum: margines ex -> ad (status neglectus:
 #      margo praetermissa quoque dependentia textualis est) ----
@@ -131,8 +141,11 @@ FILENAME == fabrica {
     } else if (campi[1] == "G") {
         graphus_t = campi[2] + 0
     } else {
-        # index fontium: basis -> viae (pro resolutione obiectorum)
-        if (via ~ /\.(c|m)$/) {
+        # index fontium: basis -> viae (pro resolutione obiectorum);
+        # dedup - res fabricae iam in percursione statae iterum
+        # adveniunt (ambiguitas falsa sine hac)
+        if (via ~ /\.(c|m)$/ && !(via in fons_visa)) {
+            fons_visa[via] = 1
             basis = via
             sub(/^.*\//, "", basis)
             sub(/\.(c|m)$/, "", basis)
@@ -189,6 +202,9 @@ function clausura_recentissima(fons,    pila, np, visum, nodus, \
 # aliter OMNES candidati (conservativum). Reddit "via1\nvia2..." aut "".
 function fontem_resolvere(obiectum,    basis, k, cand, nc, viae, \
     lista, m, prooemium, praelati, np2, omnes, no) {
+    if (obiectum in regula_obiecti) {
+        return regula_obiecti[obiectum]   # regula via plena
+    }
     basis = obiectum
     sub(/^.*\//, "", basis)
     if (basis in regula_obiecti) {
@@ -232,6 +248,20 @@ function fontem_resolvere(obiectum,    basis, k, cand, nc, viae, \
     return omnes
 }
 
+# filtrum tres gradus: finalis "/" = DIRECTE in directorio (canales
+# scriptorum - piscinae subiectae alienis scriptis exclusae);
+# "/" medius = prooemium profundum; sine "/" = substring
+function congruit(via,    reliquum) {
+    if (filtrum == "") return 1
+    if (filtrum ~ /\/$/) {
+        if (index(via, filtrum) != 1) return 0
+        reliquum = substr(via, length(filtrum) + 1)
+        return index(reliquum, "/") == 0
+    }
+    if (index(filtrum, "/") > 0) return index(via, filtrum) == 1
+    return index(via, filtrum) > 0
+}
+
 function nuntiare(grex, linea) {
     grex_n[grex]++
     if (grex_n[grex] <= 5 || omnia) {
@@ -247,7 +277,7 @@ END {
     # ---- obiecta contra clausuras fontium ----
     for (i = 1; i <= n_obiecta; i++) {
         ob = obiecta[i]
-        if (filtrum != "" && index(ob, filtrum) == 0) continue
+        if (!congruit(ob)) continue
         fontes_ob = fontem_resolvere(ob)
         if (fontes_ob == "") {
             orphana++
@@ -278,7 +308,7 @@ END {
     # ---- res fabricae: generata et binaria ----
     for (i = 1; i <= n_res; i++) {
         rv = res_via[i]
-        if (filtrum != "" && index(rv, filtrum) == 0) continue
+        if (!congruit(rv)) continue
         if (!(rv in mtempus)) continue   # nondum aedificata
         inspecta++
         rf = res_fons[i]
@@ -313,6 +343,10 @@ END {
     }
 
     # ---- relatio ----
+    # -tacitus: PURUS = silentium totale (disciplina uncorum;
+    # etiam CAUTIO aetatis tacet - inter commissiones graphus
+    # semper paulum vetus, uncus post-commissionem renovat)
+    if (tacitus && stala == 0) exit 0
     print "=== EXCUBITOR ==="
     if (graphus_t < fons_recentissimus_t) {
         print "CAUTIO: graphus vetustior quam " fons_recentissimus_via

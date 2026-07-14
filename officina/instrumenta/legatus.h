@@ -30,6 +30,12 @@ nomen structura {
                                   * probationum) */
     b32 cum_posix;               /* systema += POSIX; praevaletur ab
                                   * initializationOptions.posix */
+    constans character* binarium_via;  /* argv[0] - vigilia sui
+                                        * (excubitor chunk 3);
+                                        * NIHIL = vigilia quieta
+                                        * (probationes) */
+    constans character* fabrica_via;   /* NIHIL = "fabrica.tsv"
+                                        * (commoditas probationum) */
 } LegatusConfiguratio;
 
 /* Ansa principalis: legere epistulas ex intra, respondere/publicare

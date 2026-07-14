@@ -126,4 +126,7 @@ if [ -n "$failed_names" ]; then
     echo "FRACTAE:$failed_names"
     exit 1
 fi
+
+# canalis excubitoris: verdictum post-constructionem (tacet nisi stala)
+"$RADIX_DIR/excubitor.sh" -tacitus "silva/build/" >&2 || true
 exit 0
