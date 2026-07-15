@@ -1,6 +1,6 @@
 # TABULA (proiectio tabularii - GENERATUM, noli manu edere)
 
-seq 61 - 2026-07-15T14:33:13.937Z
+seq 62 - 2026-07-15T14:54:24.625Z
 
 ## QUAESTIONES
 

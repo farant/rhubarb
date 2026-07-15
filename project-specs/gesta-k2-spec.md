@@ -44,20 +44,32 @@ machinery. `gerere nexus` MCP grammar is unchanged (sugar).
 | 9 | Seed v2 emends the five LIVE tabularium genera with schemas (dogfood) |
 | 10 | Compressed ritual: this spec → Fran commits → build in 3 chunks |
 
-## III. DDL — MIGRATION 2 (verbatim)
+## III. DDL — MIGRATIONS 2 + 3 (verbatim)
 
-Append to GESTA_MIGRATIONES (gesta.c) and bump GESTA_MIGRATIONES_NUMERUS
-I → II:
+**STAGING AMENDMENT (chunk A build find, 2026-07-15)**: dropping nexus in
+chunk A would break tabularium.c (tabula NEXUS reads the table until
+chunk C) — suites would run red between chunks. So the DDL splits:
+migration 2 (chunk A) is ADDITIVE, migration 3 (chunk C) is the cutover.
+Endpoint identical to the original plan.
+
+Migration 2 — chunk A (SHIPPED), GESTA_MIGRATIONES_NUMERUS I → II:
 
 ```c
     ,
-    "DROP TABLE nexus;"
     "CREATE TABLE membra("
     "  res_id  TEXT NOT NULL,"      /* the link res (ULID) */
     "  pars    TEXT NOT NULL,"      /* role name */
     "  membrum TEXT NOT NULL);"     /* the linked res */
     "CREATE INDEX idx_membra_membrum ON membra(membrum);"
     "CREATE INDEX idx_membra_res ON membra(res_id);"
+```
+
+Migration 3 — chunk C, NUMERUS II → III (with the fold/consumer
+deletions listed in §XI chunk C):
+
+```c
+    ,
+    "DROP TABLE nexus;"
     "DELETE FROM consumptores WHERE titulus = 'nexus';"
 ```
 
@@ -359,18 +371,24 @@ G14–G15 live in probatio_tabularium.c; the rest in probatio_gesta.c.
 
 ## XI. CHUNKS
 
-**A — machinamentum** (gesta.{h,c}): migration 2, reducer delta, membra
-consumer (+tombstones, +solutum clearing), delete _nexui_applicare/old
-consumer, FTS exclusion, custodia checks §VI, genus-datum parsing helpers
-(species/partes/attributa), query API §VII-queries. Goldens G1–G6, G13.
-K1 nexus-fold goldens rewritten to new machinery.
+**A — machinamentum** (gesta.{h,c}) — **SHIPPED 2026-07-15, ADDITIVE**
+(staging amendment §III): migration 2 (membra table only), reducer delta,
+membra consumer as FOURTH fold (genera→res→nexus→membra; solutum
+clearing consults res genus, hence after res), legacy nexus/denexus =
+tombstones in the new fold, FTS exclusion, custodia checks §VI, genus
+parsing helpers (_species_nexus_est/_partem_invenire), query API. Goldens
+G1–G6, G13 (+65 asserts; suites 220/220; examen ACCIPE). Old nexus
+fold/table/goldens INTACT until C.
 
 **B — salus** (gesta.{h,c}): typus validator, gesta_salutem_aestimare,
 gesta_insalubres_enumerare. Goldens G7–G12 (incl. opus-gratis).
 
-**C — tenens** (tabularium.c + live store): seed v2, sugar rewrite,
-tabula NEXUS rewrite, res/census surfacing, live deploy + re-expression +
-seal bars. Goldens G14–G15.
+**C — tenens** (tabularium.c + live store + CUTOVER): migration 3 (drop
+nexus + retire consumer row), delete _nexui_applicare +
+GESTA_CONSUMPTOR_NEXUS + 'nexus' from gesta_plicare + DELETE-FROM-nexus
+in replicare, rewrite K1 nexus-fold goldens (probatio_gesta §XIV) to new
+machinery, seed v2, sugar rewrite, tabula NEXUS rewrite, res/census
+surfacing, live deploy + re-expression + seal bars. Goldens G14–G15.
 
 ## XII. BARS (seal criteria)
 

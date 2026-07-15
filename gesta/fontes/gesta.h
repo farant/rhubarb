@@ -46,9 +46,13 @@ nomen structura GestaMundus GestaMundus;
 nomen structura {
     constans character* res_id;
     constans character* genus_eventus;   /* creatio|mutatio|remotio|
-                                          * status|nota|nexus|denexus|
+                                          * status|nota|
+                                          * membrum-additum|
+                                          * membrum-remotum|
                                           * definitio-generis|
-                                          * emendatio-generis|... */
+                                          * emendatio-generis|...
+                                          * (nexus/denexus vetera =
+                                          * tumuli, K2 D2) */
     constans character* datum;           /* JSON obiectum */
     constans character* actor;           /* fran|claude|machina */
     constans character* origo;           /* sessio/scriptum/uncus; ""
@@ -163,6 +167,42 @@ gesta_census_tagorum (
     GestaMundus* mundus,
     Piscina*     piscina);
 
+/* ==================================================
+ * Nexus generibus (K2 chunk A) - vincula ut res propriae
+ * ==================================================
+ * Genus cum specie "nexus" partes declarat (K2 spec par IV);
+ * membra per eventus membrum-additum/-remotum adveniunt et in
+ * tabulam membra proiciuntur (consumptor plicaturae - D1). Status
+ * "solutum" in re nexus-speciei indicem purgat, res manet. */
+
+nomen structura {
+    chorda nexus_res;   /* res vinculi */
+    chorda pars;        /* pars quam res quaesita implet */
+    chorda genus;       /* genus vinculi ("" si res abest) */
+} GestaNexusRei;
+
+nomen structura {
+    chorda membrum;     /* res ALTERA */
+    chorda pars;        /* pars rei alterius */
+    chorda nexus_res;
+} GestaSocius;
+
+/* Vincula rem continentia (TS getRelationshipsForEntity,
+ * smaragda.ts:4008; ordines crudi - duplicata apparent) */
+Xar*
+gesta_nexus_rei (
+    GestaMundus*        mundus,
+    constans character* res_id,
+    Piscina*            piscina);
+
+/* Socii per vincula communia (TS getRelatedEntities,
+ * smaragda.ts:4119) */
+Xar*
+gesta_socii_rei (
+    GestaMundus*        mundus,
+    constans character* res_id,
+    Piscina*            piscina);
+
 /* Lectiones (pro probationibus et stratis superioribus; textus in
  * piscinam datam copiatur; chorda vacua = absens) */
 chorda
@@ -190,7 +230,8 @@ gesta_seq_ultima (
 s64
 gesta_hwm (
     GestaMundus*        mundus,
-    constans character* consumptor);   /* "genera" | "res" */
+    constans character* consumptor);   /* "genera" | "res" |
+                                        * "nexus" | "membra" */
 
 /* Scrinium subiacens (quaestiones liberae probationum - lectio;
  * scriptura per gesta_scribere SOLUM) */

@@ -48,9 +48,20 @@ interior constans character* constans GESTA_MIGRATIONES[] = {
     "  res_id UNINDEXED, titulus, corpus, notae,"
     "  tokenize='unicode61 remove_diacritics 2');"
     "CREATE TABLE sordidae(res_id TEXT PRIMARY KEY);"
+    ,
+    /* migratio II (K2 spec par III, ADDITIVA - tabula nexus vetus
+     * cum plicatura sua usque ad frustum C vivit, suitae virides
+     * inter frusta): sine clave primaria - duplicata status licitus
+     * (paritas reductoris, custodia scripturae ea nominat) */
+    "CREATE TABLE membra("
+    "  res_id  TEXT NOT NULL,"
+    "  pars    TEXT NOT NULL,"
+    "  membrum TEXT NOT NULL);"
+    "CREATE INDEX idx_membra_membrum ON membra(membrum);"
+    "CREATE INDEX idx_membra_res ON membra(res_id);"
 };
 
-#define GESTA_MIGRATIONES_NUMERUS I
+#define GESTA_MIGRATIONES_NUMERUS II
 
 structura GestaMundus {
     Piscina*            piscina;
@@ -99,6 +110,15 @@ _chorda_est (chorda c, constans character* litterae)
     redde (memoriae_index)c.mensura == m
         && (m == ZEPHYRUM
             || memcmp(c.datum, litterae, m) == ZEPHYRUM);
+}
+
+interior b32
+_chordae_pares (chorda a, chorda b)
+{
+    redde a.mensura == b.mensura
+        && (a.mensura == ZEPHYRUM
+            || memcmp(a.datum, b.datum,
+                   (memoriae_index)a.mensura) == ZEPHYRUM);
 }
 
 /* chorda -> litterae NUL-terminatae in piscina */
@@ -252,6 +272,67 @@ _res_capere (GestaMundus* m, chorda res_id, Piscina* piscina)
     redde ordo;
 }
 
+/* genus datae speciei "nexus" est? (K2 spec par IV: species absens
+ * = genus rerum ordinarium) */
+interior b32
+_species_nexus_est (GestaMundus* m, chorda genus_titulus,
+    Piscina* piscina)
+{
+    chorda gd;
+    JsonResultus r;
+    JsonValor* species;
+
+    si (genus_titulus.mensura == ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    gd = _genus_datum_capere(m, genus_titulus, piscina);
+    si (gd.mensura == ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    r = json_legere(gd, piscina);
+    si (!r.successus || !json_est_objectum(r.radix))
+    {
+        redde FALSUM;
+    }
+    species = json_objectum_capere(r.radix, "species");
+    redde species != NIHIL && json_est_chorda(species)
+        && _chorda_est(json_ad_chorda(species), "nexus");
+}
+
+/* partem nominatam in genere invenire (partes:
+ * [{titulus, genera_licita, cardinalitas}]) */
+interior JsonValor*
+_partem_invenire (JsonValor* genus_radix, chorda titulus)
+{
+    JsonValor* partes;
+    i32 i;
+
+    si (genus_radix == NIHIL)
+    {
+        redde NIHIL;
+    }
+    partes = json_objectum_capere(genus_radix, "partes");
+    si (partes == NIHIL || !json_est_tabulatum(partes))
+    {
+        redde NIHIL;
+    }
+    per (i = ZEPHYRUM; i < json_tabulatum_numerus(partes); i++)
+    {
+        JsonValor* p = json_tabulatum_obtinere(partes, i);
+        JsonValor* t = (p != NIHIL && json_est_objectum(p))
+            ? json_objectum_capere(p, "titulus") : NIHIL;
+
+        si (t != NIHIL && json_est_chorda(t)
+            && _chordae_pares(json_ad_chorda(t), titulus))
+        {
+            redde p;
+        }
+    }
+    redde NIHIL;
+}
+
 /* transitio (ex -> ad) in machina generis? machina absens/vacua =
  * licita (genera sine statu). datum_generis vacuum = genus ignotum
  * (vocans decidit quid faciat). */
@@ -310,6 +391,171 @@ _transitio_licita (Piscina* piscina, chorda datum_generis,
         }
     }
     redde FALSUM;
+}
+
+/* custodia membrorum (K2 spec par VI - iudicat, non obstat; TS
+ * OBSTAT: smaragda.ts:3731-3783, :3952-3958, :3990-3998 -
+ * divergentia D3). Querela prima inventa redditur (litterae
+ * staticae); NIHIL = sanum. Status ANTE eventum legitur (tectum/
+ * duplicatum contra membra stantia iudicantur). */
+interior constans character*
+_membrum_validare (GestaMundus* m, b32 additum, chorda res_id,
+    JsonValor* datum_obiectum, Piscina* piscina)
+{
+    GestaResOrdo ordo;
+    JsonValor* pars = json_objectum_capere(datum_obiectum, "pars");
+    JsonValor* membrum = json_objectum_capere(datum_obiectum,
+        "membrum");
+    chorda c_pars;
+    chorda c_membrum;
+    JsonValor* genus_radix = NIHIL;
+    JsonValor* pars_def;
+    chorda cardinalitas;
+    i32 acies_n = ZEPHYRUM;     /* membra stantia in parte */
+    i32 in_acie = ZEPHYRUM;     /* occurrentiae membri dati */
+
+    si (pars == NIHIL || !json_est_chorda(pars)
+        || membrum == NIHIL || !json_est_chorda(membrum))
+    {
+        redde "violatio: eventus membri sine pare aut membro";
+    }
+    c_pars = json_ad_chorda(pars);
+    c_membrum = json_ad_chorda(membrum);
+
+    /* I. res vinculi genus nexus-speciei habeat */
+    ordo = _res_capere(m, res_id, piscina);
+    si (!ordo.exsistit
+        || !_species_nexus_est(m, ordo.genus, piscina))
+    {
+        redde "violatio: membrum in genere non-nexu";
+    }
+    {
+        chorda gd = _genus_datum_capere(m, ordo.genus, piscina);
+        JsonResultus r = json_legere(gd, piscina);
+
+        si (r.successus && json_est_objectum(r.radix))
+        {
+            genus_radix = r.radix;
+        }
+    }
+    /* II. pars nota sit */
+    pars_def = _partem_invenire(genus_radix, c_pars);
+    si (pars_def == NIHIL)
+    {
+        redde "violatio: pars ignota";
+    }
+    {
+        JsonValor* c = json_objectum_capere(pars_def,
+            "cardinalitas");
+
+        cardinalitas = (c != NIHIL && json_est_chorda(c))
+            ? json_ad_chorda(c) : _ch("quotlibet");
+    }
+    /* membra stantia ex statu rei */
+    si (ordo.datum.mensura > ZEPHYRUM)
+    {
+        JsonResultus r = json_legere(ordo.datum, piscina);
+
+        si (r.successus && json_est_objectum(r.radix))
+        {
+            JsonValor* membra = json_objectum_capere(r.radix,
+                "membra");
+            JsonValor* acies = (membra != NIHIL
+                && json_est_objectum(membra))
+                ? json_objectum_capere(membra,
+                      _litterae(piscina, c_pars))
+                : NIHIL;
+
+            si (acies != NIHIL && json_est_tabulatum(acies))
+            {
+                i32 i;
+
+                acies_n = json_tabulatum_numerus(acies);
+                per (i = ZEPHYRUM; i < acies_n; i++)
+                {
+                    JsonValor* v = json_tabulatum_obtinere(acies,
+                        i);
+
+                    si (v != NIHIL && json_est_chorda(v)
+                        && _chordae_pares(json_ad_chorda(v),
+                               c_membrum))
+                    {
+                        in_acie++;
+                    }
+                }
+            }
+        }
+    }
+    si (additum)
+    {
+        GestaResOrdo alter = _res_capere(m, c_membrum, piscina);
+
+        /* III. membrum exsistat */
+        si (!alter.exsistit)
+        {
+            redde "violatio: membrum inexistens";
+        }
+        /* IV. genus membri in generibus licitis (acies vacua =
+         * incoercita, TS smaragda.ts:3768) */
+        {
+            JsonValor* licita = json_objectum_capere(pars_def,
+                "genera_licita");
+
+            si (licita != NIHIL && json_est_tabulatum(licita)
+                && json_tabulatum_numerus(licita) > ZEPHYRUM)
+            {
+                b32 licitum = FALSUM;
+                i32 i;
+
+                per (i = ZEPHYRUM;
+                     i < json_tabulatum_numerus(licita); i++)
+                {
+                    JsonValor* g = json_tabulatum_obtinere(licita,
+                        i);
+
+                    si (g != NIHIL && json_est_chorda(g)
+                        && _chordae_pares(json_ad_chorda(g),
+                               alter.genus))
+                    {
+                        licitum = VERUM;
+                        frange;
+                    }
+                }
+                si (!licitum)
+                {
+                    redde "violatio: genus membri non licitum";
+                }
+            }
+        }
+        /* V. tectum unicum */
+        si (_chorda_est(cardinalitas, "unicus")
+            && acies_n >= I)
+        {
+            redde "violatio: cardinalitas unicus excessa";
+        }
+        /* VI. duplicatum (TS tacite sinit - D11: nos sinimus ET
+         * nominamus) */
+        si (in_acie > ZEPHYRUM)
+        {
+            redde "violatio: membrum duplicatum";
+        }
+    }
+    alioquin
+    {
+        /* VII. membrum adsit */
+        si (in_acie == ZEPHYRUM)
+        {
+            redde "violatio: membrum absens";
+        }
+        /* VIII. limen inferius */
+        si ((_chorda_est(cardinalitas, "unicus")
+                || _chorda_est(cardinalitas, "aliquot"))
+            && acies_n <= I)
+        {
+            redde "violatio: cardinalitas sub limite";
+        }
+    }
+    redde NIHIL;
 }
 
 /* ==================================================
@@ -559,10 +805,76 @@ _rei_applicare (GestaMundus* m, chorda res_id, chorda genus_eventus,
             mutatum_est = VERUM;
         }
     }
+    alioquin si (_chorda_est(genus_eventus, "membrum-additum")
+        || _chorda_est(genus_eventus, "membrum-remotum"))
+    {
+        /* membra pars-clavata (TS: smaragda.ts:759-769): additum
+         * appendit SINE deduplicatione (:762); remotum occurrentias
+         * OMNES tollit, clavis cum acie vacua MANET (:768) */
+        JsonValor* pars = (datum_obiectum != NIHIL)
+            ? json_objectum_capere(datum_obiectum, "pars") : NIHIL;
+        JsonValor* membrum = (datum_obiectum != NIHIL)
+            ? json_objectum_capere(datum_obiectum, "membrum")
+            : NIHIL;
+
+        si (pars != NIHIL && json_est_chorda(pars)
+            && membrum != NIHIL && json_est_chorda(membrum))
+        {
+            JsonValor* membra = json_objectum_capere(
+                status_obiectum, "membra");
+            constans character* pars_l = _litterae(piscina,
+                json_ad_chorda(pars));
+            JsonValor* acies;
+
+            si (membra == NIHIL || !json_est_objectum(membra))
+            {
+                membra = json_objectum_creare(piscina);
+                json_objectum_ponere(status_obiectum, "membra",
+                    membra);
+            }
+            acies = json_objectum_capere(membra, pars_l);
+            si (_chorda_est(genus_eventus, "membrum-additum"))
+            {
+                si (acies == NIHIL || !json_est_tabulatum(acies))
+                {
+                    acies = json_tabulatum_creare(piscina);
+                    json_objectum_ponere(membra, pars_l, acies);
+                }
+                json_tabulatum_addere(acies,
+                    json_chorda_creare(piscina,
+                        json_ad_chorda(membrum)));
+            }
+            alioquin
+            {
+                JsonValor* nova = json_tabulatum_creare(piscina);
+                chorda cm = json_ad_chorda(membrum);
+                i32 i;
+                i32 n = (acies != NIHIL
+                    && json_est_tabulatum(acies))
+                    ? json_tabulatum_numerus(acies) : ZEPHYRUM;
+
+                per (i = ZEPHYRUM; i < n; i++)
+                {
+                    JsonValor* v = json_tabulatum_obtinere(acies,
+                        i);
+
+                    si (v != NIHIL && json_est_chorda(v)
+                        && _chordae_pares(json_ad_chorda(v), cm))
+                    {
+                        perge;
+                    }
+                    json_tabulatum_addere(nova, v);
+                }
+                json_objectum_ponere(membra, pars_l, nova);
+            }
+            mutatum_est = VERUM;
+        }
+    }
     alioquin
     {
         /* genus_eventus ignotum = nihil agit (TS: smaragda.ts:
-         * 771-772; nexus/denexus hic cadunt donec chunk B) */
+         * 771-772; nexus/denexus vetera hic cadunt = tumuli in
+         * statu rei quoque, K2 D2) */
         redde;
     }
 
@@ -651,10 +963,92 @@ _nexui_applicare (GestaMundus* m, chorda res_id,
     scrinium_finire(e);
 }
 
+/* eventum unum in plicaturam membrorum applicare (K2 chunk A -
+ * index vinculorum: membrum-additum inserit [duplicata licita],
+ * membrum-remotum congruentia OMNIA delet [paritas reductoris],
+ * status "solutum" in re nexus-speciei ordines rei purgat [res et
+ * historia manent]. Eventus veteres nexus/denexus = TUMULI hic
+ * [K2 D2]; consumptor res ANTE membra currit - genus rei iam
+ * plicatum cum solutum iudicatur.) */
+interior vacuum
+_membris_applicare (GestaMundus* m, chorda res_id,
+    chorda genus_eventus, chorda datum, Piscina* piscina)
+{
+    b32 additum = _chorda_est(genus_eventus, "membrum-additum");
+    b32 remotum = _chorda_est(genus_eventus, "membrum-remotum");
+    b32 status_ev = _chorda_est(genus_eventus, "status");
+    JsonResultus r;
+
+    si (!additum && !remotum && !status_ev)
+    {
+        redde;
+    }
+    r = json_legere(datum, piscina);
+    si (!r.successus || !json_est_objectum(r.radix))
+    {
+        redde;
+    }
+    si (status_ev)
+    {
+        JsonValor* novus = json_objectum_capere(r.radix, "novus");
+        GestaResOrdo ordo;
+        ScriniumEnuntiatum* e;
+
+        si (novus == NIHIL || !json_est_chorda(novus)
+            || !_chorda_est(json_ad_chorda(novus), "solutum"))
+        {
+            redde;
+        }
+        ordo = _res_capere(m, res_id, piscina);
+        si (!ordo.exsistit
+            || !_species_nexus_est(m, ordo.genus, piscina))
+        {
+            redde;   /* solutum in re ordinaria membra non tangit */
+        }
+        e = scrinium_praeparare(m->scrinium,
+            "DELETE FROM membra WHERE res_id = ?");
+        si (e == NIHIL)
+        {
+            redde;
+        }
+        scrinium_ligare_textum(e, I, res_id);
+        (vacuum)scrinium_gradi(e);
+        scrinium_finire(e);
+        redde;
+    }
+    {
+        JsonValor* pars = json_objectum_capere(r.radix, "pars");
+        JsonValor* membrum = json_objectum_capere(r.radix,
+            "membrum");
+        ScriniumEnuntiatum* e;
+
+        si (pars == NIHIL || !json_est_chorda(pars)
+            || membrum == NIHIL || !json_est_chorda(membrum))
+        {
+            redde;
+        }
+        e = scrinium_praeparare(m->scrinium, additum
+            ? "INSERT INTO membra (res_id, pars, membrum)"
+              " VALUES (?, ?, ?)"
+            : "DELETE FROM membra WHERE res_id = ? AND pars = ?"
+              " AND membrum = ?");
+        si (e == NIHIL)
+        {
+            redde;
+        }
+        scrinium_ligare_textum(e, I, res_id);
+        scrinium_ligare_textum(e, II, json_ad_chorda(pars));
+        scrinium_ligare_textum(e, III, json_ad_chorda(membrum));
+        (vacuum)scrinium_gradi(e);
+        scrinium_finire(e);
+    }
+}
+
 /* genera consumptorum */
 #define GESTA_CONSUMPTOR_RES    0
 #define GESTA_CONSUMPTOR_GENERA 1
 #define GESTA_CONSUMPTOR_NEXUS  2
+#define GESTA_CONSUMPTOR_MEMBRA 3
 
 /* consumptorem unum provehere: replicatio seq > hwm, applicatio,
  * hwm = seq ultima IN EADEM TRANSACTIONE (exacte-semel - emendatio
@@ -699,6 +1093,11 @@ _consumptorem_plicare (GestaMundus* m,
             _nexui_applicare(m, res_id, genus_ev, datum,
                 m->piscina);
         }
+        alioquin si (genus_consumptoris == GESTA_CONSUMPTOR_MEMBRA)
+        {
+            _membris_applicare(m, res_id, genus_ev, datum,
+                m->piscina);
+        }
         alioquin
         {
             _rei_applicare(m, res_id, genus_ev, datum, actor,
@@ -738,7 +1137,9 @@ gesta_plicare (GestaMundus* mundus)
     {
         redde FALSUM;
     }
-    /* ORDO PORTANS: genera ante res (spec-v2 par V); nexus tertius */
+    /* ORDO PORTANS: genera ante res (spec-v2 par V); nexus tertius
+     * (vetus, ad frustum C); membra QUARTUS - post res, quia
+     * solutum genus rei plicatum consulit (K2 spec par V) */
     si (!_consumptorem_plicare(mundus, "genera",
             GESTA_CONSUMPTOR_GENERA))
     {
@@ -749,8 +1150,13 @@ gesta_plicare (GestaMundus* mundus)
     {
         redde FALSUM;
     }
-    redde _consumptorem_plicare(mundus, "nexus",
-        GESTA_CONSUMPTOR_NEXUS);
+    si (!_consumptorem_plicare(mundus, "nexus",
+            GESTA_CONSUMPTOR_NEXUS))
+    {
+        redde FALSUM;
+    }
+    redde _consumptorem_plicare(mundus, "membra",
+        GESTA_CONSUMPTOR_MEMBRA);
 }
 
 /* ==================================================
@@ -930,6 +1336,14 @@ _scribere_crudum (GestaMundus* m, constans GestaEventum* e,
                         " extra machinam generis";
                 }
             }
+        }
+        alioquin si (strcmp(genus_ev, "membrum-additum") == ZEPHYRUM
+            || strcmp(genus_ev, "membrum-remotum") == ZEPHYRUM)
+        {
+            /* custodia membrorum K2 spec par VI (I-VIII) */
+            *violatio_out = _membrum_validare(m,
+                strcmp(genus_ev, "membrum-additum") == ZEPHYRUM,
+                res_id, datum_obiectum, m->piscina);
         }
         alioquin si (est_generis)
         {
@@ -1193,6 +1607,8 @@ gesta_replicare (GestaMundus* mundus)
         || !scrinium_exsequi(mundus->scrinium,
                "DELETE FROM nexus")
         || !scrinium_exsequi(mundus->scrinium,
+               "DELETE FROM membra")
+        || !scrinium_exsequi(mundus->scrinium,
                "DELETE FROM res_fts")
         || !scrinium_exsequi(mundus->scrinium,
                "DELETE FROM sordidae")
@@ -1375,7 +1791,12 @@ gesta_fts_exhaurire (GestaMundus* mundus)
         (vacuum)scrinium_gradi(del);
         scrinium_finire(del);
 
-        si (ordo.exsistit)
+        /* res nexus-speciei NON indicantur (structura, non prosa -
+         * paritas TS _shouldIndexInFts smaragda.ts:538, K2 D8);
+         * deletio supra iam facta = delere-tunc-praeterire */
+        si (ordo.exsistit
+            && !_species_nexus_est(mundus, ordo.genus,
+                   mundus->piscina))
         {
             JsonResultus r = json_legere(ordo.datum,
                 mundus->piscina);
@@ -1860,6 +2281,95 @@ gesta_ex_annalibus_restituere (Piscina* piscina,
         redde NIHIL;
     }
     redde m;
+}
+
+/* ==================================================
+ * Quaesita vinculorum (K2 chunk A - super indicem membra)
+ * ================================================== */
+
+Xar*
+gesta_nexus_rei (GestaMundus* mundus, constans character* res_id,
+    Piscina* piscina)
+{
+    Xar* fructus;
+    ScriniumEnuntiatum* e;
+
+    si (mundus == NIHIL || res_id == NIHIL || piscina == NIHIL)
+    {
+        redde NIHIL;
+    }
+    fructus = xar_creare(piscina, (i32)magnitudo(GestaNexusRei));
+    si (fructus == NIHIL)
+    {
+        redde NIHIL;
+    }
+    /* TS getRelationshipsForEntity (smaragda.ts:4008); ordines
+     * crudi - duplicata apparent (index honestus) */
+    e = scrinium_praeparare(mundus->scrinium,
+        "SELECT m.res_id, m.pars, COALESCE(r.genus, '')"
+        " FROM membra m LEFT JOIN res r ON r.res_id = m.res_id"
+        " WHERE m.membrum = ? ORDER BY m.res_id, m.pars");
+    si (e == NIHIL)
+    {
+        redde fructus;
+    }
+    scrinium_ligare_textum(e, I, _ch(res_id));
+    dum (scrinium_gradi(e) == SCRINIUM_ORDO)
+    {
+        GestaNexusRei* n = (GestaNexusRei*)xar_addere(fructus);
+
+        si (n != NIHIL)
+        {
+            n->nexus_res = scrinium_columna_textus(e, 0, piscina);
+            n->pars = scrinium_columna_textus(e, I, piscina);
+            n->genus = scrinium_columna_textus(e, II, piscina);
+        }
+    }
+    scrinium_finire(e);
+    redde fructus;
+}
+
+Xar*
+gesta_socii_rei (GestaMundus* mundus, constans character* res_id,
+    Piscina* piscina)
+{
+    Xar* fructus;
+    ScriniumEnuntiatum* e;
+
+    si (mundus == NIHIL || res_id == NIHIL || piscina == NIHIL)
+    {
+        redde NIHIL;
+    }
+    fructus = xar_creare(piscina, (i32)magnitudo(GestaSocius));
+    si (fructus == NIHIL)
+    {
+        redde NIHIL;
+    }
+    /* TS getRelatedEntities (smaragda.ts:4119): socii = membra
+     * altera vinculorum communium */
+    e = scrinium_praeparare(mundus->scrinium,
+        "SELECT m2.membrum, m2.pars, m2.res_id"
+        " FROM membra m1 JOIN membra m2 ON m2.res_id = m1.res_id"
+        " WHERE m1.membrum = ?1 AND m2.membrum <> ?1"
+        " ORDER BY m2.res_id, m2.pars");
+    si (e == NIHIL)
+    {
+        redde fructus;
+    }
+    scrinium_ligare_textum(e, I, _ch(res_id));
+    dum (scrinium_gradi(e) == SCRINIUM_ORDO)
+    {
+        GestaSocius* s = (GestaSocius*)xar_addere(fructus);
+
+        si (s != NIHIL)
+        {
+            s->membrum = scrinium_columna_textus(e, 0, piscina);
+            s->pars = scrinium_columna_textus(e, I, piscina);
+            s->nexus_res = scrinium_columna_textus(e, II, piscina);
+        }
+    }
+    scrinium_finire(e);
+    redde fructus;
 }
 
 /* ==================================================

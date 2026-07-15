@@ -401,3 +401,35 @@ FRUSTA: A machinamentum (migratio 2, reducer, plicatura membrorum,
 tumuli, custodiae, quaesita) / B salus / C tenens (semen v2,
 saccharum, tabula, deploy + sigillum). Goldens G1-G15 cum locis
 oraculi in spec §IX; divergentiae D1-D11 §X; vectes sigilli §XII.
+
+## RELATIO K2 FRUSTUM A (2026-07-15) - machinamentum membrorum
+
+NAVIS. gesta.{h,c} + probatio_gesta.c; suitae 220/220 (gesta 107
+->172, tabularium 48 intactae); examen ACCIPE ter; compilatio
+prima-vice munda.
+
+EMENDATIO CONSILII (in aedificatione capta, spec par III emendata):
+migratio 2 ADDITIVA facta - tabulam nexus delere in frusto A
+tabularium.c frangeret (sectio NEXUS tabulae eam legit usque ad
+frustum C); suitae inter frusta virides manent. Divisio: migratio
+2 = membra creata (A), migratio 3 = nexus deleta + consumptor
+retiratus (C, cum omni codice veteri). Finis idem.
+
+FACTA: migratio 2; reductor membrum-additum/-remotum (paritas TS
+759-769 EXACTA: additum sine dedup, remotum omnes tollit clavis
+manet); consumptor membra QUARTUS (post res - solutum genus rei
+plicatum consulit); tumuli nexus/denexus veterum; exclusio FTS
+specierum nexus (paritas TS 538); custodia I-VIII
+(_membrum_validare, querela prima redditur, litterae staticae);
+auxilia _species_nexus_est/_partem_invenire/_chordae_pares;
+quaesita gesta_nexus_rei/gesta_socii_rei (Xar* redduntur - forma
+domus, non signaturae spec par VII crudae).
+
+AUREAE G1-G6, G13 (sectiones XIX-XXIV, +65 asserta). Inventum
+scribendi auream: eventus violans CADIT in indicem (recordare-non-
+obstare!) - fixura sectionis XXII membrum id_b (non id_q) adhibet
+ne quaesita reversa XXIV polluat. Lex: in probationibus custodiae
+memento etiam eventus malos plicari.
+
+PROXIMUM: frustum B (salus) - validator typorum, salutem_aestimare,
+insalubres_enumerare, aureae G7-G12 (opus-gratis inclusa).

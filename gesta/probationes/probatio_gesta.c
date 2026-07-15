@@ -119,6 +119,52 @@ _notae_continentes (JsonValor* obiectum, constans character* pars)
     redde inventae;
 }
 
+/* numerus ordinum membrorum in indice (pars NIHIL = res tota);
+ * -I = apparatus fractus */
+interior s64
+_membra_numerus (GestaMundus* m, constans character* res_id,
+    constans character* pars, Piscina* piscina)
+{
+    ScriniumEnuntiatum* e;
+    s64 n = -I;
+
+    e = scrinium_praeparare(gesta_scrinium(m), pars != NIHIL
+        ? "SELECT COUNT(*) FROM membra WHERE res_id = ?1"
+          " AND pars = ?2"
+        : "SELECT COUNT(*) FROM membra WHERE res_id = ?1");
+    si (e == NIHIL)
+    {
+        redde -I;
+    }
+    scrinium_ligare_textum(e, I, chorda_ex_literis(res_id,
+        piscina));
+    si (pars != NIHIL)
+    {
+        scrinium_ligare_textum(e, II, chorda_ex_literis(pars,
+            piscina));
+    }
+    si (scrinium_gradi(e) == SCRINIUM_ORDO)
+    {
+        n = scrinium_columna_numerus(e, 0);
+    }
+    scrinium_finire(e);
+    redde n;
+}
+
+/* acies membrorum partis ex statu rei (NIHIL = absens) */
+interior JsonValor*
+_membra_pars (JsonValor* st, constans character* pars)
+{
+    JsonValor* membra = (st != NIHIL)
+        ? json_objectum_capere(st, "membra") : NIHIL;
+
+    si (membra == NIHIL || !json_est_objectum(membra))
+    {
+        redde NIHIL;
+    }
+    redde json_objectum_capere(membra, pars);
+}
+
 s32 principale (vacuum)
 {
     Piscina* piscina;
@@ -127,6 +173,11 @@ s32 principale (vacuum)
     character id_a[GESTA_RES_ID_MENSURA];
     character id_b[GESTA_RES_ID_MENSURA];
     character id_q[GESTA_RES_ID_MENSURA];
+    character id_l[GESTA_RES_ID_MENSURA];
+    character id_lv[GESTA_RES_ID_MENSURA];
+    character id_l2[GESTA_RES_ID_MENSURA];
+    character id_l3[GESTA_RES_ID_MENSURA];
+    character datum_ev[CXXVIII];
 
     piscina = piscina_generare_dynamicum("probatio_gesta",
         134217728);
@@ -678,6 +729,289 @@ s32 principale (vacuum)
         CREDO_VERUM (gesta_replicare(m));
         inv = gesta_quaerere(m, "parsur*", NIHIL, NIHIL, piscina);
         CREDO_VERUM ((i32)xar_numerus(inv) >= I);
+    }
+
+    /* ========================================================
+     * XIX. K2 G1+G2: reductor membrorum (TS: smaragda.ts:759-769)
+     * - additum appendit SINE dedup (:762); remotum occurrentias
+     * OMNES tollit, clavis cum acie vacua MANET (:768); plicatura
+     * membra ordines speculatur
+     * ======================================================== */
+    _scribe(m, NIHIL, "definitio-generis",
+        "{\"titulus\":\"filum\",\"species\":\"nexus\","
+        "\"partes\":[{\"titulus\":\"a\",\"genera_licita\":[],"
+        "\"cardinalitas\":\"unicus\"},{\"titulus\":\"b\","
+        "\"genera_licita\":[\"quaestio\"],\"cardinalitas\":"
+        "\"aliquot\"}],\"attributa\":[{\"titulus\":\"verbum\","
+        "\"typus\":\"textus\",\"necessarium\":true}],"
+        "\"status_initialis\":\"vigens\",\"machina\":"
+        "[[\"vigens\",\"solutum\"]],\"reducer\":\"ordinarius\"}");
+    {
+        GestaEventum e;
+        JsonValor* st;
+        JsonValor* acies;
+        chorda status;
+
+        e.res_id = NIHIL;
+        e.genus_eventus = "creatio";
+        e.datum = "{\"genus\":\"filum\",\"verbum\":\"tangit\"}";
+        e.actor = "fran";
+        e.origo = "probatio";
+        CREDO_VERUM (gesta_scribere(m, &e, id_l));
+        status = gesta_res_status(m, id_l, piscina);
+        CREDO_VERUM (status.mensura == (i32)strlen("vigens")
+            && memcmp(status.datum, "vigens", strlen("vigens"))
+                == ZEPHYRUM);
+
+        /* G1: bis additum -> acies II (sine dedup); secundum
+         * tectum unicum excedit -> nota custodiae, eventus TAMEN
+         * cadit (D3+D11) */
+        sprintf(datum_ev,
+            "{\"pars\":\"a\",\"membrum\":\"%s\"}", id_a);
+        _scribe(m, id_l, "membrum-additum", datum_ev);
+        _scribe(m, id_l, "membrum-additum", datum_ev);
+        st = _status_entis(m, id_l, piscina);
+        acies = _membra_pars(st, "a");
+        CREDO_NON_NIHIL (acies);
+        CREDO_AEQUALIS_I32 ((i32)json_tabulatum_numerus(acies),
+            II);
+        CREDO_AEQUALIS_I32 (_notae_continentes(st,
+            "cardinalitas unicus excessa"), I);
+        CREDO_VERUM (_membra_numerus(m, id_l, "a", piscina)
+            == (s64)II);
+
+        /* G2: remotum unum -> occurrentiae AMBAE tolluntur; clavis
+         * manet cum acie vacua; index ordines congruentes omnes
+         * delet */
+        _scribe(m, id_l, "membrum-remotum", datum_ev);
+        st = _status_entis(m, id_l, piscina);
+        acies = _membra_pars(st, "a");
+        CREDO_NON_NIHIL (acies);
+        CREDO_VERUM (json_est_tabulatum(acies));
+        CREDO_AEQUALIS_I32 ((i32)json_tabulatum_numerus(acies),
+            ZEPHYRUM);
+        CREDO_VERUM (_membra_numerus(m, id_l, "a", piscina)
+            == (s64)ZEPHYRUM);
+    }
+
+    /* ========================================================
+     * XX. K2 G3: plicatura membrorum - consumptor recens ex seq I
+     * replicat (lex plicaturae K1; hwm=0 nihil praetermittit)
+     * ======================================================== */
+    {
+        sprintf(datum_ev,
+            "{\"pars\":\"b\",\"membrum\":\"%s\"}", id_q);
+        _scribe(m, id_l, "membrum-additum", datum_ev);
+        CREDO_VERUM (_membra_numerus(m, id_l, "b", piscina)
+            == (s64)I);
+
+        CREDO_VERUM (scrinium_exsequi(gesta_scrinium(m),
+            "DELETE FROM consumptores WHERE titulus = 'membra'"));
+        CREDO_VERUM (scrinium_exsequi(gesta_scrinium(m),
+            "DELETE FROM membra"));
+        CREDO_VERUM (gesta_plicare(m));
+        CREDO_VERUM (_membra_numerus(m, id_l, "b", piscina)
+            == (s64)I);
+        CREDO_VERUM (_membra_numerus(m, id_l, "a", piscina)
+            == (s64)ZEPHYRUM);
+    }
+
+    /* ========================================================
+     * XXI. K2 G4: eventus veteres nexus/denexus = TUMULI in
+     * plicatura membrorum (D2) - id_b eos in actis habet (XIV);
+     * replicatio quoque nihil ex eis in membra ponit
+     * ======================================================== */
+    {
+        CREDO_VERUM (_membra_numerus(m, id_b, NIHIL, piscina)
+            == (s64)ZEPHYRUM);
+        CREDO_VERUM (gesta_replicare(m));
+        CREDO_VERUM (_membra_numerus(m, id_b, NIHIL, piscina)
+            == (s64)ZEPHYRUM);
+        CREDO_VERUM (_membra_numerus(m, id_l, "b", piscina)
+            == (s64)I);
+    }
+
+    /* ========================================================
+     * XXII. K2 G5: custodia membrorum (spec par VI I-VIII) -
+     * quaeque violatio notam parit ET eventus cadit (index rem
+     * veram monstrat; TS obstat: smaragda.ts:3731-3783)
+     * ======================================================== */
+    {
+        GestaEventum e;
+        JsonValor* st;
+
+        e.res_id = NIHIL;
+        e.genus_eventus = "creatio";
+        e.datum = "{\"genus\":\"filum\",\"verbum\":\"vexat\"}";
+        e.actor = "fran";
+        e.origo = "probatio";
+        CREDO_VERUM (gesta_scribere(m, &e, id_lv));
+
+        /* I. res non-nexus (id_a genus vacuum) - membrum id_b ne
+         * quaesita XXIV polluat (eventus cadit, index rem
+         * monstrat!) */
+        sprintf(datum_ev,
+            "{\"pars\":\"a\",\"membrum\":\"%s\"}", id_b);
+        _scribe(m, id_a, "membrum-additum", datum_ev);
+        st = _status_entis(m, id_a, piscina);
+        CREDO_AEQUALIS_I32 (_notae_continentes(st,
+            "membrum in genere non-nexu"), I);
+
+        /* II. pars ignota - eventus cadit, index rem monstrat */
+        sprintf(datum_ev,
+            "{\"pars\":\"c\",\"membrum\":\"%s\"}", id_a);
+        _scribe(m, id_lv, "membrum-additum", datum_ev);
+        st = _status_entis(m, id_lv, piscina);
+        CREDO_AEQUALIS_I32 (_notae_continentes(st, "pars ignota"),
+            I);
+        CREDO_VERUM (_membra_numerus(m, id_lv, "c", piscina)
+            == (s64)I);
+
+        /* III. membrum inexistens */
+        _scribe(m, id_lv, "membrum-additum",
+            "{\"pars\":\"b\",\"membrum\":"
+            "\"PHANTASMA00000000000000000\"}");
+        st = _status_entis(m, id_lv, piscina);
+        CREDO_AEQUALIS_I32 (_notae_continentes(st,
+            "membrum inexistens"), I);
+
+        /* IV. genus membri non licitum (pars b quaestionem
+         * requirit; id_b genus vacuum) */
+        sprintf(datum_ev,
+            "{\"pars\":\"b\",\"membrum\":\"%s\"}", id_b);
+        _scribe(m, id_lv, "membrum-additum", datum_ev);
+        st = _status_entis(m, id_lv, piscina);
+        CREDO_AEQUALIS_I32 (_notae_continentes(st,
+            "genus membri non licitum"), I);
+
+        /* VII. membrum absens (id_a in parte b numquam fuit) */
+        sprintf(datum_ev,
+            "{\"pars\":\"b\",\"membrum\":\"%s\"}", id_a);
+        _scribe(m, id_lv, "membrum-remotum", datum_ev);
+        st = _status_entis(m, id_lv, piscina);
+        CREDO_AEQUALIS_I32 (_notae_continentes(st,
+            "membrum absens"), I);
+
+        /* VIII. limen inferius: id_l pars b (aliquot) membrum unum
+         * habet - remotio sub limen it, TAMEN fit */
+        sprintf(datum_ev,
+            "{\"pars\":\"b\",\"membrum\":\"%s\"}", id_q);
+        _scribe(m, id_l, "membrum-remotum", datum_ev);
+        st = _status_entis(m, id_l, piscina);
+        CREDO_AEQUALIS_I32 (_notae_continentes(st,
+            "cardinalitas sub limite"), I);
+        CREDO_VERUM (_membra_numerus(m, id_l, "b", piscina)
+            == (s64)ZEPHYRUM);
+    }
+
+    /* ========================================================
+     * XXIII. K2 G6: status solutum in re nexus-speciei indicem
+     * purgat (res manet); in re ordinaria membra non tangit
+     * ======================================================== */
+    {
+        GestaEventum e;
+        JsonValor* st;
+
+        e.res_id = NIHIL;
+        e.genus_eventus = "creatio";
+        e.datum = "{\"genus\":\"filum\",\"verbum\":\"ligat\"}";
+        e.actor = "fran";
+        e.origo = "probatio";
+        CREDO_VERUM (gesta_scribere(m, &e, id_l2));
+        sprintf(datum_ev,
+            "{\"pars\":\"a\",\"membrum\":\"%s\"}", id_q);
+        _scribe(m, id_l2, "membrum-additum", datum_ev);
+        CREDO_VERUM (_membra_numerus(m, id_l2, NIHIL, piscina)
+            == (s64)I);
+
+        /* solutum in re ordinaria (id_q non-nexus): membra
+         * aliena intacta */
+        _scribe(m, id_q, "status", "{\"novus\":\"solutum\"}");
+        CREDO_VERUM (_membra_numerus(m, id_l2, NIHIL, piscina)
+            == (s64)I);
+
+        /* solutum in vinculo: index purgatur, res manet, transitio
+         * vigens->solutum licita (sine nota violationis) */
+        _scribe(m, id_l2, "status", "{\"novus\":\"solutum\"}");
+        CREDO_VERUM (_membra_numerus(m, id_l2, NIHIL, piscina)
+            == (s64)ZEPHYRUM);
+        st = _status_entis(m, id_l2, piscina);
+        CREDO_NON_NIHIL (st);
+        CREDO_VERUM (_clavis_est_chorda(st, "status", "solutum"));
+        CREDO_AEQUALIS_I32 (_notae_continentes(st,
+            "violatio machinae"), ZEPHYRUM);
+    }
+
+    /* ========================================================
+     * XXIV. K2 G13: quaesita reversa (TS: smaragda.ts:4008
+     * getRelationshipsForEntity, :4119 getRelatedEntities)
+     * ======================================================== */
+    {
+        GestaEventum e;
+        Xar* vincula;
+        Xar* socii;
+
+        e.res_id = NIHIL;
+        e.genus_eventus = "creatio";
+        e.datum = "{\"genus\":\"filum\",\"verbum\":\"spectat\"}";
+        e.actor = "fran";
+        e.origo = "probatio";
+        CREDO_VERUM (gesta_scribere(m, &e, id_l3));
+        sprintf(datum_ev,
+            "{\"pars\":\"a\",\"membrum\":\"%s\"}", id_a);
+        _scribe(m, id_l3, "membrum-additum", datum_ev);
+        sprintf(datum_ev,
+            "{\"pars\":\"b\",\"membrum\":\"%s\"}", id_q);
+        _scribe(m, id_l3, "membrum-additum", datum_ev);
+
+        /* vincula rei id_q: solum id_l3.b stat (id_l.b remotum
+         * XXII; id_l2 solutum XXIII) */
+        vincula = gesta_nexus_rei(m, id_q, piscina);
+        CREDO_NON_NIHIL (vincula);
+        CREDO_AEQUALIS_I32 ((i32)xar_numerus(vincula), I);
+        {
+            GestaNexusRei* n = (GestaNexusRei*)xar_obtinere(
+                vincula, ZEPHYRUM);
+
+            CREDO_NON_NIHIL (n);
+            si (n != NIHIL)
+            {
+                CREDO_VERUM (n->nexus_res.mensura
+                        == (i32)strlen(id_l3)
+                    && memcmp(n->nexus_res.datum, id_l3,
+                           strlen(id_l3)) == ZEPHYRUM);
+                CREDO_VERUM (n->pars.mensura == I
+                    && n->pars.datum[ZEPHYRUM] == (i8)'b');
+                CREDO_VERUM (n->genus.mensura
+                        == (i32)strlen("filum")
+                    && memcmp(n->genus.datum, "filum",
+                           strlen("filum")) == ZEPHYRUM);
+            }
+        }
+
+        /* socii rei id_q: id_a per id_l3 (pars a) */
+        socii = gesta_socii_rei(m, id_q, piscina);
+        CREDO_NON_NIHIL (socii);
+        CREDO_AEQUALIS_I32 ((i32)xar_numerus(socii), I);
+        {
+            GestaSocius* s = (GestaSocius*)xar_obtinere(socii,
+                ZEPHYRUM);
+
+            CREDO_NON_NIHIL (s);
+            si (s != NIHIL)
+            {
+                CREDO_VERUM (s->membrum.mensura
+                        == (i32)strlen(id_a)
+                    && memcmp(s->membrum.datum, id_a,
+                           strlen(id_a)) == ZEPHYRUM);
+                CREDO_VERUM (s->pars.mensura == I
+                    && s->pars.datum[ZEPHYRUM] == (i8)'a');
+                CREDO_VERUM (s->nexus_res.mensura
+                        == (i32)strlen(id_l3)
+                    && memcmp(s->nexus_res.datum, id_l3,
+                           strlen(id_l3)) == ZEPHYRUM);
+            }
+        }
     }
 
     gesta_claudere(m);
