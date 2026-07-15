@@ -98,3 +98,61 @@ transitions AND bad genus definitions (record-don't-block live).
 Suites: gesta 1/1 (76 asserts), scrinium root regression green,
 excubitor tail silent. NEXT: chunk B (nexus fold, FTS+sordidae
 drain, census, anchor hashes at write).
+
+## K1 CHUNK B — FOLDS INFRA: INTENTIO (2026-07-15)
+
+Scope (spec §XV-B): nexus fold, FTS + sordidae drain, census,
+goldens 10-12. Anchors CLARIFIED OUT of the kernel: "kernel stores,
+server resolves" means ancorae ride res datum as ordinary attributes
+and the WRITER (MCP layer, chunk C) computes sigillum hashes —
+nothing kernel-side to build; sigillum links at chunk C.
+
+Fresh decisions:
+1. **FTS corpus column = state.corpus + "clavis: valor" pairs for
+   other top-level string attrs + tags joined** (TS 'extra' move,
+   smaragda.ts:919-924, ADAPTED: TS excluded arrays; our tags array
+   is exactly what the tenant searches by — golden 11 'by tag' rides
+   FTS, no separate tag machinery).
+2. **No archived-deletion from FTS** (TS :911-914 deletes archived).
+   DELIBERATE DIVERGENCE: closed/parked items STAY searchable — the
+   tenant's whole point is querying history ("what was parked and
+   never pulled"). Ledger entry.
+3. **Refold-FTS story**: replicare clears res_fts + sordidae too,
+   then repopulates sordidae from all res ids — the next quaerere
+   drains and rebuilds the index lazily (libraries.ts rebuild-at-
+   init analogue, :481-484, done the dirty-queue way).
+4. Delete-then-insert FTS upsert (BM25 honesty, libraries.ts:867)
+   via `DELETE FROM res_fts WHERE res_id = ?` — our res_id UNINDEXED
+   column makes TS's _meta/fts_rowid table unnecessary (full-scan
+   delete fine at tenant volume).
+5. quaerere drains sordidae first (lazy, TS search-time pattern
+   :1024); empty/whitespace query = empty result (:1117); MATCH
+   syntax errors = empty result honestly (quoting = MCP layer's
+   business); prefix idiom = caller appends '*'.
+6. Consumer order: genera -> res -> nexus.
+
+## K1 CHUNK B — RELATIO (2026-07-15)
+
+NAVIS: 107/107 PRIMO CURSU — zero iterations, no bugs, examen
+ACCIPE. Shipped: nexus consumer (third, after genera→res; duplicate
+triples IGNORED, denexus selective — golden X live), FTS drain
+(delete-then-insert per sordida in one transaction; corpus column =
+corpus attr + "clavis: valor" string-attr pairs + tags joined per
+INTENTIO B-1), gesta_quaerere (drains first; empty/whitespace =
+nihil; genus/status filters; bm25 order; LIMIT 50; MATCH errors =
+empty honestly), census generum×statuum + census tagorum,
+replicare extended (clears nexus/res_fts/sordidae, repopulates
+sordidae from res → next quaerere rebuilds the index lazily —
+verified live in golden XVIII).
+
+Goldens X-XII + FTS suite: prose/tag/prefix ('parsur*' finds
+'Parsura' — the Latin idiom bar), status-flip reindex through the
+dirty queue, notae searchable in their own column, ULID
+structure+ordering (never literal values). Divergence held: closed
+items STAY indexed (deliberate, ledger §XIII amended by INTENTIO
+B-2 — the tenant queries history).
+
+NEXT: chunk C — surfaces (MCP resident via legatus copy-map,
+nexus.tsv anchor resolver + similitudo, doctrine w/ scribe
+contract, .mcp.json + launcher, nota_frigida cold path, tenant
+seed).

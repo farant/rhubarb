@@ -32,6 +32,7 @@
 #include "latina.h"
 #include "piscina.h"
 #include "chorda.h"
+#include "xar.h"
 #include "scrinium.h"
 
 nomen structura GestaMundus GestaMundus;
@@ -103,6 +104,64 @@ gesta_ex_annalibus_restituere (
     Piscina*            piscina,
     constans character* via_annalium,
     constans character* via_scrinii_novi);
+
+/* ==================================================
+ * Quaestio + census (chunk B)
+ * ================================================== */
+
+nomen structura {
+    chorda res_id;
+    chorda genus;
+    chorda titulus;
+    chorda status;
+} GestaInventum;
+
+nomen structura {
+    chorda genus;
+    chorda status;
+    s64    numerus;
+} GestaCensusOrdo;
+
+nomen structura {
+    chorda tag;
+    s64    numerus;
+} GestaTagNumerus;
+
+/* Sordidas exhaurire: quaeque res sordida relegi, in res_fts
+ * delere-tunc-inserere (BM25 honestum), sordidae purgatae - una
+ * transactione (TS: libraries.ts:1074-1098). Columna corpus =
+ * state.corpus + paria "clavis: valor" attributorum chordarum +
+ * tags iuncta (via 'extra' TS, smaragda.ts:919-924 adaptata). */
+b32
+gesta_fts_exhaurire (
+    GestaMundus* mundus);
+
+/* Quaestio FTS: exhaurit primum (pigra, TS ad-quaestionem);
+ * textus NIHIL/vacuus = fructus vacuus (libraries.ts:1117);
+ * praefixum = vocans '*' appendit (idioma Latinum); genus/status
+ * NIHIL licent (filtra); fructus = Xar de GestaInventum (valore)
+ * ordine bm25 (negativius = melius), tectum L ordinibus. Error
+ * syntaxis MATCH = fructus vacuus (honestum; citatio = stratum
+ * MCP). NIHIL = apparatus fractus. */
+Xar*
+gesta_quaerere (
+    GestaMundus*        mundus,
+    constans character* textus,
+    constans character* genus,
+    constans character* status,
+    Piscina*            piscina);
+
+/* Census generum x statuum (ex plicatura res) */
+Xar*
+gesta_census_generum (
+    GestaMundus* mundus,
+    Piscina*     piscina);
+
+/* Census tagorum (datum omnium rerum percurritur - volumen parvum) */
+Xar*
+gesta_census_tagorum (
+    GestaMundus* mundus,
+    Piscina*     piscina);
 
 /* Lectiones (pro probationibus et stratis superioribus; textus in
  * piscinam datam copiatur; chorda vacua = absens) */

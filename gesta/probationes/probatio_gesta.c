@@ -486,8 +486,199 @@ s32 principale (vacuum)
         CREDO_VERUM (!json_objectum_habet(st, "tags"));
     }
 
-    /* id_b tantum ne -Wunused feriat cum sectiones mutantur */
-    (vacuum)id_b;
+    /* ========================================================
+     * XIV. Plicatura nexuum (aurea X; TS conformatio:
+     * smaragda.ts:759-769 -> tripla plana)
+     * ======================================================== */
+    {
+        GestaEventum e;
+        ScriniumEnuntiatum* sel;
+        s64 n = -I;
+
+        e.res_id = NIHIL;
+        e.genus_eventus = "creatio";
+        e.datum = "{\"titulus\":\"Nexa\"}";
+        e.actor = "fran";
+        e.origo = "probatio";
+        CREDO_VERUM (gesta_scribere(m, &e, id_b));
+        _scribe(m, id_b, "nexus",
+            "{\"verbum\":\"impedit\",\"alterum\":\"alia\"}");
+        _scribe(m, id_b, "nexus",
+            "{\"verbum\":\"impedit\",\"alterum\":\"alia\"}");
+        _scribe(m, id_b, "nexus",
+            "{\"verbum\":\"tangit\",\"alterum\":\"alia\"}");
+        sel = scrinium_praeparare(gesta_scrinium(m),
+            "SELECT COUNT(*) FROM nexus WHERE res_a = ?");
+        CREDO_NON_NIHIL (sel);
+        scrinium_ligare_textum(sel, I,
+            chorda_ex_literis(id_b, piscina));
+        si (scrinium_gradi(sel) == SCRINIUM_ORDO)
+        {
+            n = scrinium_columna_numerus(sel, 0);
+        }
+        scrinium_finire(sel);
+        CREDO_VERUM (n == (s64)II);   /* duplicata IGNORATA */
+
+        _scribe(m, id_b, "denexus",
+            "{\"verbum\":\"impedit\",\"alterum\":\"alia\"}");
+        sel = scrinium_praeparare(gesta_scrinium(m),
+            "SELECT verbum FROM nexus WHERE res_a = ?");
+        CREDO_NON_NIHIL (sel);
+        scrinium_ligare_textum(sel, I,
+            chorda_ex_literis(id_b, piscina));
+        n = ZEPHYRUM;
+        {
+            chorda verbum_reliquum;
+
+            verbum_reliquum.mensura = ZEPHYRUM;
+            verbum_reliquum.datum = NIHIL;
+            dum (scrinium_gradi(sel) == SCRINIUM_ORDO)
+            {
+                verbum_reliquum = scrinium_columna_textus(sel, 0,
+                    piscina);
+                n = n + I;
+            }
+            CREDO_VERUM (n == (s64)I);
+            CREDO_VERUM (verbum_reliquum.mensura
+                    == (i32)strlen("tangit")
+                && memcmp(verbum_reliquum.datum, "tangit",
+                       strlen("tangit")) == ZEPHYRUM);
+        }
+        scrinium_finire(sel);
+    }
+
+    /* ========================================================
+     * XV. FTS: prosa/tag/praefixum/filtra; quaestio vacua = nihil;
+     * status-flip re-indexatur post exhaustionem (aurea XI; TS:
+     * libraries.ts:1117, :990-1038; corpus-columna INTENTIO B 1)
+     * ======================================================== */
+    {
+        GestaEventum e;
+        character id_f[GESTA_RES_ID_MENSURA];
+        Xar* inv;
+
+        e.res_id = NIHIL;
+        e.genus_eventus = "creatio";
+        e.datum = "{\"genus\":\"quaestio\",\"titulus\":"
+            "\"Parsura fracta\",\"corpus\":\"expansio macronis"
+            " in capite alieno fallit\",\"tags\":[\"urgens\","
+            "\"lsp\"]}";
+        e.actor = "fran";
+        e.origo = "probatio";
+        CREDO_VERUM (gesta_scribere(m, &e, id_f));
+
+        /* quaestio vacua / spatia = nihil */
+        inv = gesta_quaerere(m, NIHIL, NIHIL, NIHIL, piscina);
+        CREDO_AEQUALIS_I32 ((i32)xar_numerus(inv), ZEPHYRUM);
+        inv = gesta_quaerere(m, "   ", NIHIL, NIHIL, piscina);
+        CREDO_AEQUALIS_I32 ((i32)xar_numerus(inv), ZEPHYRUM);
+
+        /* prosa (corpus) */
+        inv = gesta_quaerere(m, "expansio", NIHIL, NIHIL, piscina);
+        CREDO_VERUM ((i32)xar_numerus(inv) >= I);
+
+        /* tag (in columna corpus iuncta) */
+        inv = gesta_quaerere(m, "urgens", NIHIL, NIHIL, piscina);
+        CREDO_VERUM ((i32)xar_numerus(inv) >= I);
+
+        /* praefixum (idioma Latinum - 'parsur*' invenit
+         * 'Parsura') */
+        inv = gesta_quaerere(m, "parsur*", NIHIL, NIHIL, piscina);
+        CREDO_VERUM ((i32)xar_numerus(inv) >= I);
+
+        /* filtrum statûs: apertum (initialis ex genere) */
+        inv = gesta_quaerere(m, "parsur*", "quaestio", "apertum",
+            piscina);
+        CREDO_VERUM ((i32)xar_numerus(inv) >= I);
+        inv = gesta_quaerere(m, "parsur*", "quaestio", "clausum",
+            piscina);
+        CREDO_AEQUALIS_I32 ((i32)xar_numerus(inv), ZEPHYRUM);
+
+        /* status-flip -> sordida -> quaestio proxima re-indexat */
+        _scribe(m, id_f, "status", "{\"novus\":\"laborans\"}");
+        inv = gesta_quaerere(m, "parsur*", "quaestio", "laborans",
+            piscina);
+        CREDO_VERUM ((i32)xar_numerus(inv) >= I);
+
+        /* nota quaesibilis (columna notae) */
+        _scribe(m, id_f, "nota",
+            "{\"textus\":\"radix inventa in praeparatore\"}");
+        inv = gesta_quaerere(m, "praeparatore", NIHIL, NIHIL,
+            piscina);
+        CREDO_VERUM ((i32)xar_numerus(inv) >= I);
+    }
+
+    /* ========================================================
+     * XVI. Census generum + tagorum
+     * ======================================================== */
+    {
+        Xar* cg = gesta_census_generum(m, piscina);
+        Xar* ct = gesta_census_tagorum(m, piscina);
+        b32 quaestio_inventa = FALSUM;
+        b32 urgens_inventum = FALSUM;
+        i32 i;
+
+        CREDO_NON_NIHIL (cg);
+        CREDO_NON_NIHIL (ct);
+        per (i = ZEPHYRUM; i < xar_numerus(cg); i++)
+        {
+            GestaCensusOrdo* o = (GestaCensusOrdo*)xar_obtinere(cg,
+                i);
+
+            si (o != NIHIL && o->genus.mensura
+                    == (i32)strlen("quaestio")
+                && memcmp(o->genus.datum, "quaestio",
+                       strlen("quaestio")) == ZEPHYRUM
+                && o->numerus > ZEPHYRUM)
+            {
+                quaestio_inventa = VERUM;
+            }
+        }
+        CREDO_VERUM (quaestio_inventa);
+        per (i = ZEPHYRUM; i < xar_numerus(ct); i++)
+        {
+            GestaTagNumerus* t = (GestaTagNumerus*)xar_obtinere(ct,
+                i);
+
+            si (t != NIHIL && t->tag.mensura
+                    == (i32)strlen("urgens")
+                && memcmp(t->tag.datum, "urgens",
+                       strlen("urgens")) == ZEPHYRUM
+                && t->numerus == (s64)I)
+            {
+                urgens_inventum = VERUM;
+            }
+        }
+        CREDO_VERUM (urgens_inventum);
+    }
+
+    /* ========================================================
+     * XVII. ULID: structura + ordo (aurea XII; TS: libraries.ts:
+     * 82-122; C: lib/scrinium.c:326-382) - numquam valores
+     * litterales
+     * ======================================================== */
+    {
+        character u1[SCRINIUM_ULID_MENSURA];
+        character u2[SCRINIUM_ULID_MENSURA];
+
+        scrinium_ulid(u1);
+        scrinium_ulid(u2);
+        CREDO_AEQUALIS_I32 ((i32)strlen(u1), XXVI);
+        CREDO_AEQUALIS_I32 ((i32)strlen(u2), XXVI);
+        CREDO_VERUM (strcmp(u1, u2) < ZEPHYRUM);
+    }
+
+    /* ========================================================
+     * XVIII. Replicatio cum FTS: post replicationem quaestio
+     * indicem pigre reficit (INTENTIO B decisio 3)
+     * ======================================================== */
+    {
+        Xar* inv;
+
+        CREDO_VERUM (gesta_replicare(m));
+        inv = gesta_quaerere(m, "parsur*", NIHIL, NIHIL, piscina);
+        CREDO_VERUM ((i32)xar_numerus(inv) >= I);
+    }
 
     gesta_claudere(m);
     credo_imprimere_compendium();

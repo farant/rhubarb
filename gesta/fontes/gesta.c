@@ -605,12 +605,63 @@ _rei_applicare (GestaMundus* m, chorda res_id, chorda genus_eventus,
     }
 }
 
+/* eventum unum in plicaturam nexuum applicare (chunk B; aurea X;
+ * TS conformatio: smaragda.ts:759-769 membra role-clavata ->
+ * tripla plana nostra, spec par XIII) */
+interior vacuum
+_nexui_applicare (GestaMundus* m, chorda res_id,
+    chorda genus_eventus, chorda datum, Piscina* piscina)
+{
+    b32 est_nexus = _chorda_est(genus_eventus, "nexus");
+    b32 est_denexus = _chorda_est(genus_eventus, "denexus");
+    JsonResultus r;
+    JsonValor* verbum;
+    JsonValor* alterum;
+    ScriniumEnuntiatum* e;
+
+    si (!est_nexus && !est_denexus)
+    {
+        redde;
+    }
+    r = json_legere(datum, piscina);
+    si (!r.successus || !json_est_objectum(r.radix))
+    {
+        redde;
+    }
+    verbum = json_objectum_capere(r.radix, "verbum");
+    alterum = json_objectum_capere(r.radix, "alterum");
+    si (verbum == NIHIL || !json_est_chorda(verbum)
+        || alterum == NIHIL || !json_est_chorda(alterum))
+    {
+        redde;
+    }
+    e = scrinium_praeparare(m->scrinium, est_nexus
+        ? "INSERT OR IGNORE INTO nexus (res_a, verbum, res_b)"
+          " VALUES (?, ?, ?)"
+        : "DELETE FROM nexus WHERE res_a = ? AND verbum = ?"
+          " AND res_b = ?");
+    si (e == NIHIL)
+    {
+        redde;
+    }
+    scrinium_ligare_textum(e, I, res_id);
+    scrinium_ligare_textum(e, II, json_ad_chorda(verbum));
+    scrinium_ligare_textum(e, III, json_ad_chorda(alterum));
+    (vacuum)scrinium_gradi(e);
+    scrinium_finire(e);
+}
+
+/* genera consumptorum */
+#define GESTA_CONSUMPTOR_RES    0
+#define GESTA_CONSUMPTOR_GENERA 1
+#define GESTA_CONSUMPTOR_NEXUS  2
+
 /* consumptorem unum provehere: replicatio seq > hwm, applicatio,
  * hwm = seq ultima IN EADEM TRANSACTIONE (exacte-semel - emendatio
  * super TS at-least-once; libraries.ts:228-233) */
 interior b32
 _consumptorem_plicare (GestaMundus* m,
-    constans character* consumptor, b32 est_generum)
+    constans character* consumptor, s32 genus_consumptoris)
 {
     s64 hwm = _hwm_capere(m, consumptor);
     s64 ultima = hwm;
@@ -639,9 +690,14 @@ _consumptorem_plicare (GestaMundus* m,
         chorda actor = scrinium_columna_textus(e, IV, m->piscina);
         chorda creatum = scrinium_columna_textus(e, V, m->piscina);
 
-        si (est_generum)
+        si (genus_consumptoris == GESTA_CONSUMPTOR_GENERA)
         {
             _generum_applicare(m, genus_ev, datum, m->piscina);
+        }
+        alioquin si (genus_consumptoris == GESTA_CONSUMPTOR_NEXUS)
+        {
+            _nexui_applicare(m, res_id, genus_ev, datum,
+                m->piscina);
         }
         alioquin
         {
@@ -682,12 +738,19 @@ gesta_plicare (GestaMundus* mundus)
     {
         redde FALSUM;
     }
-    /* ORDO PORTANS: genera ante res (spec-v2 par V) */
-    si (!_consumptorem_plicare(mundus, "genera", VERUM))
+    /* ORDO PORTANS: genera ante res (spec-v2 par V); nexus tertius */
+    si (!_consumptorem_plicare(mundus, "genera",
+            GESTA_CONSUMPTOR_GENERA))
     {
         redde FALSUM;
     }
-    redde _consumptorem_plicare(mundus, "res", FALSUM);
+    si (!_consumptorem_plicare(mundus, "res",
+            GESTA_CONSUMPTOR_RES))
+    {
+        redde FALSUM;
+    }
+    redde _consumptorem_plicare(mundus, "nexus",
+        GESTA_CONSUMPTOR_NEXUS);
 }
 
 /* ==================================================
@@ -1124,17 +1187,448 @@ gesta_replicare (GestaMundus* mundus)
     {
         redde FALSUM;
     }
-    /* NB sordidae hic intactae manent - fabula replicationis FTS =
-     * chunk B */
     si (!scrinium_exsequi(mundus->scrinium, "DELETE FROM res")
         || !scrinium_exsequi(mundus->scrinium,
                "DELETE FROM genera")
+        || !scrinium_exsequi(mundus->scrinium,
+               "DELETE FROM nexus")
+        || !scrinium_exsequi(mundus->scrinium,
+               "DELETE FROM res_fts")
+        || !scrinium_exsequi(mundus->scrinium,
+               "DELETE FROM sordidae")
         || !scrinium_exsequi(mundus->scrinium,
                "DELETE FROM consumptores"))
     {
         redde _fractum(mundus, scrinium_error(mundus->scrinium));
     }
-    redde gesta_plicare(mundus);
+    si (!gesta_plicare(mundus))
+    {
+        redde FALSUM;
+    }
+    /* fabula replicationis FTS (INTENTIO B decisio 3): omnes res
+     * sordidae fiunt - quaestio proxima indicem pigre reficit
+     * (analogum libraries.ts:481-484, via cauda sordida) */
+    si (!scrinium_exsequi(mundus->scrinium,
+            "INSERT OR IGNORE INTO sordidae (res_id)"
+            " SELECT res_id FROM res"))
+    {
+        redde _fractum(mundus, scrinium_error(mundus->scrinium));
+    }
+    redde VERUM;
+}
+
+/* ==================================================
+ * FTS + quaestio + census (chunk B)
+ * ================================================== */
+
+/* columnam corpus construere: state.corpus + paria "clavis: valor"
+ * attributorum chordarum (claves reservatae exceptae) + tags iuncta
+ * (via 'extra' TS smaragda.ts:919-924, ADAPTATA: acies tags
+ * inclusa - INTENTIO B decisio 1) */
+interior chorda
+_corpus_construere (Piscina* piscina, JsonValor* status_obiectum)
+{
+    ChordaAedificator* aed = chorda_aedificator_creare(piscina,
+        CCLVI);
+    JsonObjectumIterator iter;
+    chorda k;
+    JsonValor* v;
+    JsonValor* corpus = json_objectum_capere(status_obiectum,
+        "corpus");
+    JsonValor* tags = json_objectum_capere(status_obiectum,
+        "tags");
+
+    si (corpus != NIHIL && json_est_chorda(corpus))
+    {
+        chorda_aedificator_appendere_chorda(aed,
+            json_ad_chorda(corpus));
+    }
+    iter = json_objectum_iterator(status_obiectum);
+    dum (json_objectum_iterator_proxima(&iter, &k, &v))
+    {
+        si (_chorda_est(k, "titulus") || _chorda_est(k, "status")
+            || _chorda_est(k, "corpus") || _chorda_est(k, "notae")
+            || _chorda_est(k, "tags")
+            || _chorda_est(k, "ancorae"))
+        {
+            perge;
+        }
+        si (json_est_chorda(v))
+        {
+            chorda_aedificator_appendere_literis(aed, " ");
+            chorda_aedificator_appendere_chorda(aed, k);
+            chorda_aedificator_appendere_literis(aed, ": ");
+            chorda_aedificator_appendere_chorda(aed,
+                json_ad_chorda(v));
+        }
+    }
+    si (tags != NIHIL && json_est_tabulatum(tags))
+    {
+        i32 i;
+
+        per (i = ZEPHYRUM; i < json_tabulatum_numerus(tags); i++)
+        {
+            JsonValor* t = json_tabulatum_obtinere(tags, i);
+
+            si (t != NIHIL && json_est_chorda(t))
+            {
+                chorda_aedificator_appendere_literis(aed, " ");
+                chorda_aedificator_appendere_chorda(aed,
+                    json_ad_chorda(t));
+            }
+        }
+    }
+    redde chorda_aedificator_finire(aed);
+}
+
+interior chorda
+_notas_construere (Piscina* piscina, JsonValor* status_obiectum)
+{
+    ChordaAedificator* aed = chorda_aedificator_creare(piscina,
+        CCLVI);
+    JsonValor* notae = json_objectum_capere(status_obiectum,
+        "notae");
+    i32 i;
+
+    si (notae != NIHIL && json_est_tabulatum(notae))
+    {
+        per (i = ZEPHYRUM; i < json_tabulatum_numerus(notae); i++)
+        {
+            JsonValor* n = json_tabulatum_obtinere(notae, i);
+            JsonValor* t = (n != NIHIL)
+                ? json_objectum_capere(n, "textus") : NIHIL;
+
+            si (t != NIHIL && json_est_chorda(t))
+            {
+                si (i > ZEPHYRUM)
+                {
+                    chorda_aedificator_appendere_literis(aed, " ");
+                }
+                chorda_aedificator_appendere_chorda(aed,
+                    json_ad_chorda(t));
+            }
+        }
+    }
+    redde chorda_aedificator_finire(aed);
+}
+
+b32
+gesta_fts_exhaurire (GestaMundus* mundus)
+{
+    ScriniumEnuntiatum* sel;
+    Xar* sordidae;
+    i32 i;
+
+    si (mundus == NIHIL)
+    {
+        redde FALSUM;
+    }
+    /* sordidas colligere ante transactionem scripturae */
+    sordidae = xar_creare(mundus->piscina, (i32)magnitudo(chorda));
+    sel = scrinium_praeparare(mundus->scrinium,
+        "SELECT res_id FROM sordidae");
+    si (sel == NIHIL || sordidae == NIHIL)
+    {
+        si (sel != NIHIL)
+        {
+            scrinium_finire(sel);
+        }
+        redde _fractum(mundus, scrinium_error(mundus->scrinium));
+    }
+    dum (scrinium_gradi(sel) == SCRINIUM_ORDO)
+    {
+        chorda* locus = (chorda*)xar_addere(sordidae);
+
+        si (locus != NIHIL)
+        {
+            *locus = scrinium_columna_textus(sel, 0,
+                mundus->piscina);
+        }
+    }
+    scrinium_finire(sel);
+    si (xar_numerus(sordidae) == ZEPHYRUM)
+    {
+        redde VERUM;
+    }
+    /* una transactione: delere-tunc-inserere quamque + purgatio
+     * (TS: libraries.ts:1074-1098, :990-1038) */
+    si (!scrinium_incipere(mundus->scrinium))
+    {
+        redde _fractum(mundus, scrinium_error(mundus->scrinium));
+    }
+    per (i = ZEPHYRUM; i < xar_numerus(sordidae); i++)
+    {
+        chorda res_id = *(chorda*)xar_obtinere(sordidae, i);
+        GestaResOrdo ordo = _res_capere(mundus, res_id,
+            mundus->piscina);
+        ScriniumEnuntiatum* del = scrinium_praeparare(
+            mundus->scrinium,
+            "DELETE FROM res_fts WHERE res_id = ?");
+
+        si (del == NIHIL)
+        {
+            (vacuum)scrinium_revolvere(mundus->scrinium);
+            redde _fractum(mundus,
+                scrinium_error(mundus->scrinium));
+        }
+        scrinium_ligare_textum(del, I, res_id);
+        (vacuum)scrinium_gradi(del);
+        scrinium_finire(del);
+
+        si (ordo.exsistit)
+        {
+            JsonResultus r = json_legere(ordo.datum,
+                mundus->piscina);
+            JsonValor* st = (r.successus
+                && json_est_objectum(r.radix))
+                ? r.radix
+                : json_objectum_creare(mundus->piscina);
+            chorda corpus = _corpus_construere(mundus->piscina,
+                st);
+            chorda notae = _notas_construere(mundus->piscina, st);
+            ScriniumEnuntiatum* ins = scrinium_praeparare(
+                mundus->scrinium,
+                "INSERT INTO res_fts (res_id, titulus, corpus,"
+                " notae) VALUES (?, ?, ?, ?)");
+
+            si (ins == NIHIL)
+            {
+                (vacuum)scrinium_revolvere(mundus->scrinium);
+                redde _fractum(mundus,
+                    scrinium_error(mundus->scrinium));
+            }
+            scrinium_ligare_textum(ins, I, res_id);
+            scrinium_ligare_textum(ins, II,
+                _chorda_tuta(ordo.titulus));
+            scrinium_ligare_textum(ins, III, _chorda_tuta(corpus));
+            scrinium_ligare_textum(ins, IV, _chorda_tuta(notae));
+            (vacuum)scrinium_gradi(ins);
+            scrinium_finire(ins);
+        }
+    }
+    si (!scrinium_exsequi(mundus->scrinium,
+            "DELETE FROM sordidae"))
+    {
+        (vacuum)scrinium_revolvere(mundus->scrinium);
+        redde _fractum(mundus, scrinium_error(mundus->scrinium));
+    }
+    si (!scrinium_committere(mundus->scrinium))
+    {
+        (vacuum)scrinium_revolvere(mundus->scrinium);
+        redde _fractum(mundus, scrinium_error(mundus->scrinium));
+    }
+    redde VERUM;
+}
+
+Xar*
+gesta_quaerere (GestaMundus* mundus, constans character* textus,
+    constans character* genus, constans character* status,
+    Piscina* piscina)
+{
+    Xar* inventa;
+    ScriniumEnuntiatum* e;
+    b32 solum_spatia = VERUM;
+    memoriae_index i;
+
+    si (mundus == NIHIL || piscina == NIHIL)
+    {
+        redde NIHIL;
+    }
+    inventa = xar_creare(piscina, (i32)magnitudo(GestaInventum));
+    si (inventa == NIHIL)
+    {
+        redde NIHIL;
+    }
+    /* quaestio vacua = nihil (TS: libraries.ts:1117) */
+    si (textus == NIHIL)
+    {
+        redde inventa;
+    }
+    per (i = ZEPHYRUM; i < strlen(textus); i++)
+    {
+        si (textus[i] != ' ' && textus[i] != '\t')
+        {
+            solum_spatia = FALSUM;
+            frange;
+        }
+    }
+    si (solum_spatia)
+    {
+        redde inventa;
+    }
+    si (!gesta_fts_exhaurire(mundus))
+    {
+        redde inventa;
+    }
+    e = scrinium_praeparare(mundus->scrinium,
+        "SELECT f.res_id, r.genus, r.titulus, r.status"
+        " FROM res_fts f JOIN res r ON r.res_id = f.res_id"
+        " WHERE res_fts MATCH ?"
+        " AND (?2 = '' OR r.genus = ?2)"
+        " AND (?3 = '' OR r.status = ?3)"
+        " ORDER BY bm25(res_fts) LIMIT 50");
+    si (e == NIHIL)
+    {
+        redde inventa;
+    }
+    scrinium_ligare_textum(e, I, _ch(textus));
+    scrinium_ligare_textum(e, II,
+        _ch(genus != NIHIL ? genus : ""));
+    scrinium_ligare_textum(e, III,
+        _ch(status != NIHIL ? status : ""));
+    /* error syntaxis MATCH -> gradi ERROR -> fructus vacuus
+     * (honestum; citatio = stratum MCP) */
+    dum (scrinium_gradi(e) == SCRINIUM_ORDO)
+    {
+        GestaInventum* inv = (GestaInventum*)xar_addere(inventa);
+
+        si (inv != NIHIL)
+        {
+            inv->res_id = scrinium_columna_textus(e, 0, piscina);
+            inv->genus = scrinium_columna_textus(e, I, piscina);
+            inv->titulus = scrinium_columna_textus(e, II, piscina);
+            inv->status = scrinium_columna_textus(e, III, piscina);
+        }
+    }
+    scrinium_finire(e);
+    redde inventa;
+}
+
+Xar*
+gesta_census_generum (GestaMundus* mundus, Piscina* piscina)
+{
+    Xar* census;
+    ScriniumEnuntiatum* e;
+
+    si (mundus == NIHIL || piscina == NIHIL)
+    {
+        redde NIHIL;
+    }
+    census = xar_creare(piscina, (i32)magnitudo(GestaCensusOrdo));
+    si (census == NIHIL)
+    {
+        redde NIHIL;
+    }
+    e = scrinium_praeparare(mundus->scrinium,
+        "SELECT genus, status, COUNT(*) FROM res"
+        " GROUP BY genus, status ORDER BY genus, status");
+    si (e == NIHIL)
+    {
+        redde census;
+    }
+    dum (scrinium_gradi(e) == SCRINIUM_ORDO)
+    {
+        GestaCensusOrdo* ordo = (GestaCensusOrdo*)xar_addere(
+            census);
+
+        si (ordo != NIHIL)
+        {
+            ordo->genus = scrinium_columna_textus(e, 0, piscina);
+            ordo->status = scrinium_columna_textus(e, I, piscina);
+            ordo->numerus = scrinium_columna_numerus(e, II);
+        }
+    }
+    scrinium_finire(e);
+    redde census;
+}
+
+Xar*
+gesta_census_tagorum (GestaMundus* mundus, Piscina* piscina)
+{
+    Xar* census;
+    ScriniumEnuntiatum* e;
+
+    si (mundus == NIHIL || piscina == NIHIL)
+    {
+        redde NIHIL;
+    }
+    census = xar_creare(piscina, (i32)magnitudo(GestaTagNumerus));
+    si (census == NIHIL)
+    {
+        redde NIHIL;
+    }
+    e = scrinium_praeparare(mundus->scrinium,
+        "SELECT datum FROM res");
+    si (e == NIHIL)
+    {
+        redde census;
+    }
+    dum (scrinium_gradi(e) == SCRINIUM_ORDO)
+    {
+        chorda d = scrinium_columna_textus(e, 0, piscina);
+        JsonResultus r = json_legere(d, piscina);
+        JsonValor* tags;
+        i32 i;
+
+        si (!r.successus || !json_est_objectum(r.radix))
+        {
+            perge;
+        }
+        tags = json_objectum_capere(r.radix, "tags");
+        si (tags == NIHIL || !json_est_tabulatum(tags))
+        {
+            perge;
+        }
+        per (i = ZEPHYRUM; i < json_tabulatum_numerus(tags); i++)
+        {
+            JsonValor* t = json_tabulatum_obtinere(tags, i);
+            chorda ct;
+            i32 j;
+            b32 inventum = FALSUM;
+
+            si (t == NIHIL || !json_est_chorda(t))
+            {
+                perge;
+            }
+            ct = json_ad_chorda(t);
+            per (j = ZEPHYRUM; j < xar_numerus(census); j++)
+            {
+                GestaTagNumerus* tn = (GestaTagNumerus*)
+                    xar_obtinere(census, j);
+
+                si (tn != NIHIL && tn->tag.mensura == ct.mensura
+                    && (ct.mensura == ZEPHYRUM
+                        || memcmp(tn->tag.datum, ct.datum,
+                               (memoriae_index)ct.mensura)
+                            == ZEPHYRUM))
+                {
+                    tn->numerus = tn->numerus + I;
+                    inventum = VERUM;
+                    frange;
+                }
+            }
+            si (!inventum)
+            {
+                GestaTagNumerus* tn = (GestaTagNumerus*)
+                    xar_addere(census);
+
+                si (tn != NIHIL)
+                {
+                    /* copia stabilis in piscinam datam */
+                    character* cp = (character*)piscina_allocare(
+                        piscina, (memoriae_index)ct.mensura + I);
+
+                    si (cp != NIHIL)
+                    {
+                        si (ct.mensura > ZEPHYRUM)
+                        {
+                            memcpy(cp, ct.datum,
+                                (memoriae_index)ct.mensura);
+                        }
+                        cp[ct.mensura] = '\0';
+                        tn->tag = _ch(cp);
+                    }
+                    alioquin
+                    {
+                        tn->tag = _ch("");
+                    }
+                    tn->numerus = I;
+                }
+            }
+        }
+    }
+    scrinium_finire(e);
+    redde census;
 }
 
 b32
