@@ -335,3 +335,23 @@ res ambiguitatem recusant nominando; nexus-alterum tolerans
 recusatio; doctrina renovata (tituli duplicati iam NON taciti).
 Vitium meum in flumine: buffer LXIV pro cautione ~85 octetorum -
 manu captum ante compilationem. Goldens 4; suitae 155/155.
+
+## ADDENDUM ANTE COMPACTIONEM (2026-07-15, mane)
+
+STATE: K1 SEALED + K1.1 (tabula.md, doctrina v2, tituli duplicati)
+omnia NAVIS et viva. Suitae 155/155; examen ACCIPE; excubitor
+tacitus. Acta vera: seq 49 (semina + messis 32 + ergonomia +
+vita quaestionis primae completa).
+
+RE-ENTRY POST COMPACTIONEM:
+1. Doctrina in contextum cadit sponte (conexio tabularii) - mores
+   ibi; census + quaerere in area laboris = orientatio.
+2. gesta/annales/tabula.md = tabula legibilis (etiam tibi, lector).
+3. Aedificatio: hic phase-log (INTENTIO/RELATIO omnium chunks) +
+   project-specs/gesta-k1-spec-v2.md (fons implementationis).
+4. NIHIL in volatu - proximum per tabulam trahitur (K2-K5 parca in
+   tabulario; ergonomia tag pro poliendis; nihil praescriptum).
+
+RESIDENS CONEXUS = binarium ANTE tabulam/duplicata - /mcp reconnect
+bracchia nova capit. Incommissum: hic phase-log SOLUS (Fran cetera
+in itinere commisit - sigillum unum restat).
