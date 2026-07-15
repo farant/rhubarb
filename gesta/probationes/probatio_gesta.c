@@ -1,0 +1,502 @@
+/* probatio_gesta.c - K1 chunk A: aureae 1-9, 13-14 (spec-v2 par XII)
+ *
+ * Quaeque aurea commentario 'TS: file:NNN' oraculum suum nominat -
+ * expectata MANU derivata ex semanticis TS (smaragda.ts reductor;
+ * libraries.ts HWM), bun numquam in constructione. */
+
+#include "latina.h"
+#include "piscina.h"
+#include "chorda.h"
+#include "json.h"
+#include "gesta.h"
+#include "credo.h"
+#include <stdio.h>
+#include <string.h>
+
+#define VIA_DB  "gesta/build/probatio_gesta.db"
+#define VIA_AN  "gesta/build/probatio_gesta.jsonl"
+#define VIA_DB3 "gesta/build/probatio_gesta_restitutum.db"
+
+interior vacuum
+_purgare (vacuum)
+{
+    remove(VIA_DB);
+    remove(VIA_DB "-wal");
+    remove(VIA_DB "-shm");
+    remove(VIA_AN);
+    remove(VIA_DB3);
+    remove(VIA_DB3 "-wal");
+    remove(VIA_DB3 "-shm");
+}
+
+/* scriptura brevis asserta */
+interior vacuum
+_scribe (GestaMundus* m, constans character* res_id,
+    constans character* genus_ev, constans character* datum)
+{
+    GestaEventum e;
+
+    e.res_id = res_id;
+    e.genus_eventus = genus_ev;
+    e.datum = datum;
+    e.actor = "fran";
+    e.origo = "probatio";
+    CREDO_VERUM (gesta_scribere(m, &e, NIHIL));
+}
+
+interior JsonValor*
+_status_entis (GestaMundus* m, constans character* res_id,
+    Piscina* piscina)
+{
+    chorda d = gesta_res_datum(m, res_id, piscina);
+    JsonResultus r;
+
+    si (d.mensura == ZEPHYRUM)
+    {
+        redde NIHIL;
+    }
+    r = json_legere(d, piscina);
+    redde r.successus ? r.radix : NIHIL;
+}
+
+interior b32
+_clavis_est_chorda (JsonValor* obiectum, constans character* clavis,
+    constans character* valor)
+{
+    JsonValor* v = json_objectum_capere(obiectum, clavis);
+    chorda c;
+    memoriae_index m;
+
+    si (v == NIHIL || !json_est_chorda(v))
+    {
+        redde FALSUM;
+    }
+    c = json_ad_chorda(v);
+    m = strlen(valor);
+    redde (memoriae_index)c.mensura == m
+        && memcmp(c.datum, valor, m) == ZEPHYRUM;
+}
+
+/* numerus notarum quarum textus substringam continet */
+interior i32
+_notae_continentes (JsonValor* obiectum, constans character* pars)
+{
+    JsonValor* notae = json_objectum_capere(obiectum, "notae");
+    i32 inventae = ZEPHYRUM;
+    i32 i;
+
+    si (notae == NIHIL || !json_est_tabulatum(notae))
+    {
+        redde ZEPHYRUM;
+    }
+    per (i = ZEPHYRUM; i < json_tabulatum_numerus(notae); i++)
+    {
+        JsonValor* n = json_tabulatum_obtinere(notae, i);
+        JsonValor* t = (n != NIHIL)
+            ? json_objectum_capere(n, "textus") : NIHIL;
+
+        si (t != NIHIL && json_est_chorda(t))
+        {
+            chorda c = json_ad_chorda(t);
+            memoriae_index mp = strlen(pars);
+            i32 j;
+
+            si ((memoriae_index)c.mensura >= mp)
+            {
+                per (j = ZEPHYRUM;
+                     (memoriae_index)j
+                         <= (memoriae_index)c.mensura - mp; j++)
+                {
+                    si (memcmp(c.datum + j, pars, mp) == ZEPHYRUM)
+                    {
+                        inventae++;
+                        frange;
+                    }
+                }
+            }
+        }
+    }
+    redde inventae;
+}
+
+s32 principale (vacuum)
+{
+    Piscina* piscina;
+    GestaMundus* m;
+    b32 praeteritus;
+    character id_a[GESTA_RES_ID_MENSURA];
+    character id_b[GESTA_RES_ID_MENSURA];
+    character id_q[GESTA_RES_ID_MENSURA];
+
+    piscina = piscina_generare_dynamicum("probatio_gesta",
+        134217728);
+    si (!piscina)
+    {
+        imprimere("FRACTA: piscina\n");
+        redde I;
+    }
+    credo_aperire(piscina);
+    _purgare();
+
+    m = gesta_aperire(piscina, VIA_DB, VIA_AN);
+    CREDO_NON_NIHIL (m);
+    si (m == NIHIL)
+    {
+        redde I;
+    }
+
+    /* ========================================================
+     * I. Seq 1-basata (aurea VIII pars; TS: libraries.ts:245-247,
+     * :373-378 - consumptor recens hwm=0 nihil praetermittat)
+     * ======================================================== */
+    _scribe(m, NIHIL, "creatio", "{\"titulus\":\"Prima\"}");
+    CREDO_VERUM (gesta_seq_ultima(m) == (s64)I);
+    CREDO_VERUM (gesta_hwm(m, "res") == (s64)I);
+
+    /* ========================================================
+     * II. Mersio superficialis (aurea I; TS: smaragda.ts:727-730)
+     * ======================================================== */
+    {
+        GestaEventum e;
+        JsonValor* st;
+
+        e.res_id = NIHIL;
+        e.genus_eventus = "creatio";
+        e.datum = "{\"titulus\":\"Merge\"}";
+        e.actor = "fran";
+        e.origo = "probatio";
+        CREDO_VERUM (gesta_scribere(m, &e, id_a));
+        _scribe(m, id_a, "mutatio", "{\"a\":\"1\"}");
+        _scribe(m, id_a, "mutatio", "{\"b\":\"2\"}");
+        _scribe(m, id_a, "mutatio", "{\"a\":\"9\"}");
+        st = _status_entis(m, id_a, piscina);
+        CREDO_NON_NIHIL (st);
+        CREDO_VERUM (_clavis_est_chorda(st, "a", "9"));
+        CREDO_VERUM (_clavis_est_chorda(st, "b", "2"));
+        CREDO_VERUM (_clavis_est_chorda(st, "titulus", "Merge"));
+    }
+
+    /* ========================================================
+     * III. remotio != mutatio-ad-nihil (aurea II; TS:
+     * smaragda.ts:731-736 contra :727)
+     * ======================================================== */
+    {
+        JsonValor* st;
+
+        _scribe(m, id_a, "mutatio", "{\"k\":\"5\"}");
+        _scribe(m, id_a, "remotio", "{\"clavis\":\"k\"}");
+        st = _status_entis(m, id_a, piscina);
+        CREDO_VERUM (!json_objectum_habet(st, "k"));
+
+        _scribe(m, id_a, "mutatio", "{\"k\":null}");
+        st = _status_entis(m, id_a, piscina);
+        CREDO_VERUM (json_objectum_habet(st, "k"));
+        CREDO_VERUM (json_est_nullum(json_objectum_capere(st,
+            "k")));
+    }
+
+    /* ========================================================
+     * IV. Acies TOTA substituitur (aurea III; TS: smaragda.ts:729,
+     * :8386 - nulla mersio partialis)
+     * ======================================================== */
+    {
+        JsonValor* st;
+        JsonValor* tags;
+
+        _scribe(m, id_a, "mutatio", "{\"tags\":[\"a\"]}");
+        _scribe(m, id_a, "mutatio", "{\"tags\":[\"b\",\"c\"]}");
+        st = _status_entis(m, id_a, piscina);
+        tags = json_objectum_capere(st, "tags");
+        CREDO_NON_NIHIL (tags);
+        CREDO_AEQUALIS_I32 ((i32)json_tabulatum_numerus(tags), II);
+        {
+            chorda primus = json_ad_chorda(
+                json_tabulatum_obtinere(tags, ZEPHYRUM));
+
+            CREDO_VERUM (primus.mensura == I
+                && primus.datum[ZEPHYRUM] == (i8)'b');
+        }
+    }
+
+    /* ========================================================
+     * V. Genus ignotum = nihil agit (aurea IV; TS:
+     * smaragda.ts:771-772); nexus quoque hic cadit donec chunk B
+     * ======================================================== */
+    {
+        chorda ante = gesta_res_datum(m, id_a, piscina);
+        chorda post;
+
+        _scribe(m, id_a, "xyzzy", "{\"quidquid\":\"x\"}");
+        _scribe(m, id_a, "nexus",
+            "{\"verbum\":\"impedit\",\"alterum\":\"nemo\"}");
+        post = gesta_res_datum(m, id_a, piscina);
+        CREDO_VERUM (ante.mensura == post.mensura
+            && memcmp(ante.datum, post.datum,
+                   (memoriae_index)ante.mensura) == ZEPHYRUM);
+    }
+
+    /* ========================================================
+     * VI. Genus definitum + creatio: status initialis; machina
+     * caeca in plicatura, iudicium ad scripturam (aureae V + VII;
+     * TS: smaragda.ts:737-739, :2099-2100, :2152/:2167 [TS
+     * obstat - nos iudicamus, divergentia par XIII])
+     * ======================================================== */
+    _scribe(m, NIHIL, "definitio-generis",
+        "{\"titulus\":\"quaestio\",\"status_initialis\":"
+        "\"apertum\",\"machina\":[[\"apertum\",\"laborans\"],"
+        "[\"laborans\",\"clausum\"],[\"apertum\",\"clausum\"]],"
+        "\"reducer\":\"ordinarius\"}");
+    {
+        GestaEventum e;
+        JsonValor* st;
+        chorda status;
+
+        e.res_id = NIHIL;
+        e.genus_eventus = "creatio";
+        e.datum = "{\"genus\":\"quaestio\",\"titulus\":\"Casus\"}";
+        e.actor = "fran";
+        e.origo = "probatio";
+        CREDO_VERUM (gesta_scribere(m, &e, id_q));
+        status = gesta_res_status(m, id_q, piscina);
+        CREDO_VERUM (status.mensura == (i32)strlen("apertum")
+            && memcmp(status.datum, "apertum",
+                   strlen("apertum")) == ZEPHYRUM);
+
+        /* transitio licita: nulla nota custodiae */
+        _scribe(m, id_q, "status", "{\"novus\":\"laborans\"}");
+        st = _status_entis(m, id_q, piscina);
+        CREDO_AEQUALIS_I32 (_notae_continentes(st,
+            "violatio machinae"), ZEPHYRUM);
+
+        /* transitio ILLICITA (laborans -> apertum extra machinam):
+         * status TAMEN ponitur + nota custodiae appenditur */
+        _scribe(m, id_q, "status", "{\"novus\":\"apertum\"}");
+        st = _status_entis(m, id_q, piscina);
+        CREDO_VERUM (_clavis_est_chorda(st, "status", "apertum"));
+        CREDO_AEQUALIS_I32 (_notae_continentes(st,
+            "violatio machinae"), I);
+    }
+
+    /* ========================================================
+     * VII. Plicatura generum: emendatio = substitutio TOTA (aurea
+     * VI; TS granularitas alia - smaragda.ts:1819-1822 documentata;
+     * phase-log decisio 6); definitio prava -> nota custodiae
+     * ======================================================== */
+    {
+        chorda gd;
+        JsonResultus r;
+        JsonValor* machina;
+
+        _scribe(m, NIHIL, "emendatio-generis",
+            "{\"titulus\":\"quaestio\",\"status_initialis\":"
+            "\"apertum\",\"machina\":[[\"apertum\",\"clausum\"]],"
+            "\"reducer\":\"ordinarius\"}");
+        gd = gesta_genus_datum(m, "quaestio", piscina);
+        CREDO_VERUM (gd.mensura > ZEPHYRUM);
+        r = json_legere(gd, piscina);
+        CREDO_VERUM (r.successus);
+        machina = json_objectum_capere(r.radix, "machina");
+        CREDO_AEQUALIS_I32 ((i32)json_tabulatum_numerus(machina),
+            I);
+
+        /* status_initialis extra machinam -> definitio TAMEN
+         * plicatur + nota custodiae (record-don't-block) */
+        _scribe(m, NIHIL, "definitio-generis",
+            "{\"titulus\":\"pravum\",\"status_initialis\":"
+            "\"alibi\",\"machina\":[[\"hic\",\"illic\"]]}");
+        gd = gesta_genus_datum(m, "pravum", piscina);
+        CREDO_VERUM (gd.mensura > ZEPHYRUM);
+        {
+            JsonValor* st = _status_entis(m, "pravum", piscina);
+
+            CREDO_NON_NIHIL (st);
+            CREDO_AEQUALIS_I32 (_notae_continentes(st,
+                "violatio definitionis"), I);
+        }
+    }
+
+    /* ========================================================
+     * VIII. HWM: provectio + iniectio cruda (aurea VIII; TS:
+     * libraries.ts:373-378, :349-350) - eventus crudus infra hwm
+     * usque ad plicaturam invisibilis
+     * ======================================================== */
+    {
+        s64 seq_ante = gesta_seq_ultima(m);
+        Scrinium* s = gesta_scrinium(m);
+        ScriniumEnuntiatum* ins;
+        JsonValor* st;
+
+        CREDO_VERUM (gesta_hwm(m, "res") == seq_ante);
+        ins = scrinium_praeparare(s,
+            "INSERT INTO tessellae (id, res_id, genus_eventus,"
+            " datum, actor, origo) VALUES ('CRUDUS0000000000000000"
+            "000001', ?, 'mutatio', '{\"crudus\":\"ita\"}',"
+            " 'machina', 'probatio-cruda')");
+        CREDO_NON_NIHIL (ins);
+        scrinium_ligare_textum(ins, I, chorda_ex_literis(id_a,
+            piscina));
+        CREDO_VERUM (scrinium_gradi(ins) == SCRINIUM_FACTUM);
+        scrinium_finire(ins);
+
+        CREDO_VERUM (gesta_seq_ultima(m) == seq_ante + I);
+        CREDO_VERUM (gesta_hwm(m, "res") == seq_ante);
+        st = _status_entis(m, id_a, piscina);
+        CREDO_VERUM (!json_objectum_habet(st, "crudus"));
+
+        CREDO_VERUM (gesta_plicare(m));
+        CREDO_VERUM (gesta_hwm(m, "res") == seq_ante + I);
+        st = _status_entis(m, id_a, piscina);
+        CREDO_VERUM (_clavis_est_chorda(st, "crudus", "ita"));
+    }
+
+    /* ========================================================
+     * IX. Idempotentia replicationis fascis (aurea IX; TS
+     * contractus: libraries.ts:228-233) - hwm ad nihilum retro,
+     * replicatio super plicaturas stantes -> status idem
+     * ======================================================== */
+    {
+        chorda ante = gesta_res_datum(m, id_a, piscina);
+        chorda post;
+
+        CREDO_VERUM (scrinium_exsequi(gesta_scrinium(m),
+            "DELETE FROM consumptores WHERE titulus = 'res'"));
+        CREDO_VERUM (gesta_plicare(m));
+        post = gesta_res_datum(m, id_a, piscina);
+        CREDO_VERUM (ante.mensura == post.mensura
+            && memcmp(ante.datum, post.datum,
+                   (memoriae_index)ante.mensura) == ZEPHYRUM);
+    }
+
+    /* ========================================================
+     * X. Replicatio == tabulae stantes (aurea XIII pars i)
+     * ======================================================== */
+    {
+        chorda res_ante = gesta_res_datum(m, id_a, piscina);
+        chorda q_ante = gesta_res_datum(m, id_q, piscina);
+        chorda g_ante = gesta_genus_datum(m, "quaestio", piscina);
+        chorda res_post;
+        chorda q_post;
+        chorda g_post;
+
+        CREDO_VERUM (gesta_replicare(m));
+        res_post = gesta_res_datum(m, id_a, piscina);
+        q_post = gesta_res_datum(m, id_q, piscina);
+        g_post = gesta_genus_datum(m, "quaestio", piscina);
+        CREDO_VERUM (res_ante.mensura == res_post.mensura
+            && memcmp(res_ante.datum, res_post.datum,
+                   (memoriae_index)res_ante.mensura) == ZEPHYRUM);
+        CREDO_VERUM (q_ante.mensura == q_post.mensura
+            && memcmp(q_ante.datum, q_post.datum,
+                   (memoriae_index)q_ante.mensura) == ZEPHYRUM);
+        CREDO_VERUM (g_ante.mensura == g_post.mensura
+            && memcmp(g_ante.datum, g_post.datum,
+                   (memoriae_index)g_ante.mensura) == ZEPHYRUM);
+    }
+
+    /* ========================================================
+     * XI. Annales: verificatio + restitutio (aurea XIII partes
+     * ii-iii). NB iniectio cruda VIII lineam annalium NON habet -
+     * verificatio id honeste nominat ("acta plura quam lineae");
+     * asserimus fructum FALSUM deinde restitutionem ex annalibus
+     * quae acta VERA (sine crudo) refert.
+     * ======================================================== */
+    {
+        GestaMundus* m3;
+        JsonValor* st;
+
+        /* acta continent ordinem crudum sine linea annalium ->
+         * verificare FALSUM (honestum; scriptura per gesta_scribere
+         * sola paritatem tenet) */
+        CREDO_VERUM (!gesta_annales_verificare(m));
+
+        m3 = gesta_ex_annalibus_restituere(piscina, VIA_AN,
+            VIA_DB3);
+        CREDO_NON_NIHIL (m3);
+        si (m3 != NIHIL)
+        {
+            /* mundus restitutus actis annalium congruit */
+            CREDO_VERUM (gesta_annales_verificare(m3));
+            st = _status_entis(m3, id_a, piscina);
+            CREDO_NON_NIHIL (st);
+            CREDO_VERUM (_clavis_est_chorda(st, "a", "9"));
+            CREDO_VERUM (_clavis_est_chorda(st, "titulus",
+                "Merge"));
+            /* ordo crudus in annalibus ABEST - status sine eo */
+            CREDO_VERUM (!json_objectum_habet(st, "crudus"));
+
+            /* ================================================
+             * XII. Linea lacera in cauda detegitur (aurea XIII
+             * pars iv) - in mundo restituto, cuius annales actis
+             * PERFECTE congruunt (supra assertum)
+             * ================================================ */
+            {
+                FILE* pl = fopen(VIA_AN, "ab");
+
+                CREDO_NON_NIHIL (pl);
+                si (pl != NIHIL)
+                {
+                    fputs("{\"seq\":999,\"lacera", pl);
+                    fclose(pl);
+                }
+                CREDO_VERUM (!gesta_annales_verificare(m3));
+                CREDO_VERUM (strstr(gesta_error(m3), "lacera")
+                    != NIHIL);
+            }
+            gesta_claudere(m3);
+        }
+    }
+
+    /* ========================================================
+     * XIII. creatio: duplicata recusatur; cruda secunda plicaturam
+     * RESET facit (aurea XIV; TS: smaragda.ts:726)
+     * ======================================================== */
+    {
+        GestaEventum e;
+        JsonValor* st;
+
+        e.res_id = id_a;
+        e.genus_eventus = "creatio";
+        e.datum = "{\"titulus\":\"Duplicata\"}";
+        e.actor = "fran";
+        e.origo = "probatio";
+        CREDO_VERUM (!gesta_scribere(m, &e, NIHIL));
+
+        /* iniectio cruda: creatio secunda in actis -> replicatio
+         * statum purgat (plicatura reset litteralis) */
+        {
+            ScriniumEnuntiatum* ins = scrinium_praeparare(
+                gesta_scrinium(m),
+                "INSERT INTO tessellae (id, res_id, genus_eventus,"
+                " datum, actor, origo) VALUES ('CRUDUS00000000000"
+                "00000000002', ?, 'creatio',"
+                " '{\"titulus\":\"Renata\"}', 'machina',"
+                " 'probatio-cruda')");
+
+            CREDO_NON_NIHIL (ins);
+            scrinium_ligare_textum(ins, I,
+                chorda_ex_literis(id_a, piscina));
+            CREDO_VERUM (scrinium_gradi(ins) == SCRINIUM_FACTUM);
+            scrinium_finire(ins);
+        }
+        CREDO_VERUM (gesta_plicare(m));
+        st = _status_entis(m, id_a, piscina);
+        CREDO_NON_NIHIL (st);
+        CREDO_VERUM (_clavis_est_chorda(st, "titulus", "Renata"));
+        CREDO_VERUM (!json_objectum_habet(st, "a"));
+        CREDO_VERUM (!json_objectum_habet(st, "tags"));
+    }
+
+    /* id_b tantum ne -Wunused feriat cum sectiones mutantur */
+    (vacuum)id_b;
+
+    gesta_claudere(m);
+    credo_imprimere_compendium();
+    praeteritus = credo_omnia_praeterierunt();
+    piscina_destruere(piscina);
+
+    si (praeteritus)
+    {
+        redde ZEPHYRUM;
+    }
+    redde I;
+}

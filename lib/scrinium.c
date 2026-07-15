@@ -209,6 +209,25 @@ scrinium_finire (ScriniumEnuntiatum* enuntiatum)
     sqlite3_free(enuntiatum);
 }
 
+/* trias transactionum (gesta K1) - tenuis super exsequi */
+b32
+scrinium_incipere (Scrinium* scrinium)
+{
+    redde scrinium_exsequi(scrinium, "BEGIN");
+}
+
+b32
+scrinium_committere (Scrinium* scrinium)
+{
+    redde scrinium_exsequi(scrinium, "COMMIT");
+}
+
+b32
+scrinium_revolvere (Scrinium* scrinium)
+{
+    redde scrinium_exsequi(scrinium, "ROLLBACK");
+}
+
 b32
 scrinium_migrare (Scrinium* scrinium,
     constans character* constans* migrationes, integer numerus)

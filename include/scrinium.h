@@ -128,6 +128,20 @@ vacuum
 scrinium_finire (
     ScriniumEnuntiatum* enuntiatum);
 
+/* transactiones (trias tenuis super exsequi - gesta K1: via
+ * scripturae eventus totam involvit) */
+b32
+scrinium_incipere (
+    Scrinium* scrinium);
+
+b32
+scrinium_committere (
+    Scrinium* scrinium);
+
+b32
+scrinium_revolvere (
+    Scrinium* scrinium);
+
 /* migrationes solum-appende: quaeque semel, transactione una;
  * VERUM = successus (etiam si nihil novum) */
 b32
