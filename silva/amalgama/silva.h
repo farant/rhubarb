@@ -1304,6 +1304,9 @@ typedef enum {
     EXAMEN_CODEX_CONDICIO_NON_SCALARIS,
     EXAMEN_CODEX_VOCATIO_IMPLICITA,     /* SUSPECTUM: est_implicitum */
     EXAMEN_CODEX_REDECLARATIO_INCOMPATIBILIS,
+    /* macro domesticum in capite alieno (vendor) expansum -
+     * SUSPECTUM; causa in piscina structa (nominat omnia) */
+    EXAMEN_CODEX_MACRO_DOMESTICUM_IN_ALIENO,
     EXAMEN_CODEX_NUMERUS
 } ExamenCodex;
 
@@ -1318,7 +1321,9 @@ typedef enum {
  * additionis; vita viae = vita parsurae ambulationis. */
 typedef struct {
     const SilvaNodus* nodus;        /* NULL licet */
-    const char*       causa;        /* litterae staticae (ex tabula) */
+    const char*       causa;        /* litterae staticae (ex tabula);
+                                     * MACRO_DOMESTICUM_IN_ALIENO in
+                                     * piscina struit (nominat) */
     int               codex;        /* ExamenCodex */
     int               severitas;    /* ExamenSeveritas */
     int               provisionale; /* sub AMBIGUO retento */

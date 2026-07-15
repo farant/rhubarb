@@ -581,3 +581,31 @@ usable specimen — it's a latina macro; the function rows are
 titled 'main'. _ch (seventeen definitions across probatio files)
 is the canonical ambiguity specimen now. Misses list known sedes
 (capped 8) — the tool teaches its own arguments.
+
+## 2026-07-14 (macro-domesticum session debrief) — two observations
+
+PHANTOM DIAGNOSTIC (one occurrence, unexplained): the diagnostics
+push once named "specimen_usus.c" 15:15/15:21 (mensura aciei +
+identificator ignotus) — a file that exists NOWHERE (repo searched,
+scratchpad searched, not created this session). Transient, never
+recurred. Class concern: diagnostics for nonexistent files erode
+channel trust. Suspects: hook argument parsing on a transient path,
+or stale open-doc state surviving somewhere. Watch for recurrence
+before investing.
+
+HABIT GAP, NOT TOOL GAP: the session's dominant discovery reach was
+struct/enum/typedef bodies (~15 grep+sed+Read cycles: SilvaParsura,
+SilvaOrigo, SilvaFons, SilvaInclusio, ExamenCodex, chorda,
+xar_creare...). corpus serves ALL of these — verified post-session
+(SilvaParsura returns the full struct WITH field comments; the tool
+description even says "functio/variabile/typus/macro"). The reach
+never happened out of grep muscle-memory + untested assumption that
+type rows might not resolve. Fix applied: bench-table memory line.
+Possible tool-side lever: doctrine/instructions could SHOW a type
+example (one line: "corpus SilvaParsura -> struct body w/ field
+comments") — examples teach reaches better than type lists.
+
+FIELD REFERENCES demand +2 data points this session ("where does
+est_syntheticus get initialized", "where are ctx->lexica consumed")
+— both greps, both below symbol granularity. Pull board #1
+reconfirmed third session running.

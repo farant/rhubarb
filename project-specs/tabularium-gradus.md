@@ -260,12 +260,18 @@ queries ('parsur*'); custom Latin FTS5 tokenizer = named distant
 pull. Names scrinium/sigillum WORKING, unsealed — Fran may rename.
 Decision-owed #1 (SQLite exception) settled by doing.
 
-Next rung: B' B' (= kernel K1 + tenant) waits on
-the interview → simulatio → spec ritual; the K1 interview should press
-on: reducer/handler API shape in C, entitas_repositorium three-body
-decision, anchor semantics + resolution failure modes, genus initial
-set + issue lifecycle in a one-person+Claude shop, write-path
-ergonomics (where do notes come from mid-session?), tag vocabulary
-seed, retention defaults, and the eventus/tessella table shape
-(decisions-owed #3). Kernel milestones K2-K5 follow by pull, TS
+**K1 RITUAL COMPLETE 2026-07-14/15 (same night): interview (22 Q&A,
+gesta-k1-interrogatio.md) → spec v1 → 3 explorers → gesta-k1-spec-v2.md
+(SELF-CONTAINED — implementation reads IT).** NAMES SEALED: **gesta**
+(kernel) + **tabularium** (tenant/MCP, mcp__tabularii__*). Headline
+decisions: universal JSON log, genera-as-events (total refold), HWM
+folds persisted (assembly of smaragda reducer + libraries esStore —
+TS has neither standing folds nor HWM in smaragda itself), annales
+JSONL committed under gesta/ + appended in the write transaction, NO
+CLI twin (MCP day one + COMPILED cold path — explorer correction:
+machinula cannot call sqlite, colloquium path dead), anchors resolved
+read-time via nexus.tsv (resident-to-resident impossible until
+LEGATUSD), record-don't-block validation, 14 hand-derived TS goldens.
+Build = 4 chunks (core / folds+FTS / MCP+seed / harvest+ledger-bar),
+next session onward. Kernel milestones K2-K5 follow by pull, TS
 modules as their specs.

@@ -133,7 +133,8 @@ interior constans ExamenCodexInformatio _codices[] = {
     { "redde sine valore in functione non vacua", EXAMEN_SUSPECTUM },
     { "condicio non scalaris",                    EXAMEN_VIOLATIO },
     { "vocatio implicita (extern int synthetizatum)", EXAMEN_SUSPECTUM },
-    { "redeclaratio typi incompatibilis",         EXAMEN_VIOLATIO }
+    { "redeclaratio typi incompatibilis",         EXAMEN_VIOLATIO },
+    { "macro domesticum in capite alieno expansum", EXAMEN_SUSPECTUM }
 };
 
 /* assertum: tabula == enumeratio (acies negativa si discrepant) */
@@ -345,6 +346,297 @@ silva_c89_diagnosticum_addere_cum_socio (
                 }
             }
         }
+    }
+}
+
+/* ==================================================
+ * Macro domesticum in capite alieno (sequela M4a, 2026-07-14)
+ *
+ * Classis "char C -> char 100" (sqlite3.h:8883; stb ante): caput
+ * vendicatum POST latina.h inclusum - macros nostra in textu
+ * alieno expanduntur et significationem tacite mutant (subcasus
+ * compilans = responsum pravum sine errore, quem solum origo
+ * capit). Regula: sedes invocationis (radix catenae originis) in
+ * fonte ALIENO et definitio (lexema corporis) in fonte DOMESTICO
+ * -> SUSPECTUM, semel per par (macro, fons alienus).
+ *
+ * Alienitas ex GRAPHO INCLUSIONUM: via SCRIPTA directivae
+ * ("../vendor/sqlite3.h") probatur - viae fontium ipsae basename
+ * sunt (praebere basename-clavatum; ordines percursus inde
+ * pendent, ne mutes). Transitiva: inclusum ab alieno alienum est
+ * (transitus unus sufficit - margo parentis ante margines
+ * filiorum scribitur, _includendum_processare ante recursionem).
+ * Fontes lexici (est_lexicon: ISO; latina in mundis cum_latina =
+ * LIMES NOMINATUS, vide worklog) et synthetici numquam domestici:
+ * codex vendicatus macros ordinarios (NULL...) iure adhibet.
+ * Diagnosticum ad 1:1 plagulae iudicatae (linea directivae in
+ * vista non est); causa in piscina structa - omnia nominat.
+ * ================================================== */
+
+/* "vendor/" ab initio aut post '/' */
+interior b32
+_via_aliena (constans chorda* via)
+{
+    i32 i;
+
+    si (via == NIHIL || via->datum == NIHIL || via->mensura < VII)
+    {
+        redde FALSUM;
+    }
+    per (i = ZEPHYRUM; i + VII <= via->mensura; i++)
+    {
+        si (memcmp(via->datum + i, "vendor/", VII) == ZEPHYRUM
+            && (i == ZEPHYRUM || via->datum[i - I] == '/'))
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
+/* par emissum (dedup: macro semel per fontem alienum) */
+nomen structura {
+    constans chorda* titulus;
+    s32              fons_alienus;
+} ExamenParAlienum;
+
+interior vacuum
+_alienum_emittere (SilvaSemantica* sem, constans chorda* titulus,
+    constans chorda* via_aliena, i32 linea_invocationis,
+    constans chorda* via_def, constans chorda* via_princeps)
+{
+    SemanticaDiagnosticum* d;
+    character* nuntius;
+    memoriae_index capacitas;
+
+    si (sem == NIHIL || titulus == NIHIL || titulus->datum == NIHIL
+        || via_aliena == NIHIL || via_aliena->datum == NIHIL
+        || via_def == NIHIL || via_def->datum == NIHIL)
+    {
+        redde;
+    }
+    capacitas = (memoriae_index)titulus->mensura
+        + (memoriae_index)via_aliena->mensura
+        + (memoriae_index)via_def->mensura
+        + (memoriae_index)CXXVIII;
+    nuntius = (character*)piscina_allocare(sem->piscina, capacitas);
+    si (nuntius == NIHIL)
+    {
+        redde;
+    }
+    sprintf(nuntius, "macro domesticum '%.*s' in capite alieno"
+        " expansum (%.*s:%d) - caput alienum ANTE %.*s includendum",
+        (int)titulus->mensura, (constans character*)titulus->datum,
+        (int)via_aliena->mensura,
+        (constans character*)via_aliena->datum,
+        (int)linea_invocationis,
+        (int)via_def->mensura, (constans character*)via_def->datum);
+    d = (SemanticaDiagnosticum*)xar_addere(sem->diagnostica);
+    si (d == NIHIL)
+    {
+        redde;
+    }
+    d->nodus = NIHIL;
+    d->socius = NIHIL;
+    d->codex = (s32)EXAMEN_CODEX_MACRO_DOMESTICUM_IN_ALIENO;
+    d->causa = nuntius;
+    d->severitas =
+        _codices[EXAMEN_CODEX_MACRO_DOMESTICUM_IN_ALIENO].severitas;
+    d->provisionale = FALSUM;
+    d->via = (via_princeps != NIHIL) ? *via_princeps
+                                     : _chorda_vacua();
+    d->linea = I;
+    d->columna = I;
+    d->longitudo = ZEPHYRUM;
+}
+
+interior vacuum
+_macros_domestica_in_alienis_examinare (SilvaSemantica* sem,
+    constans SilvaParsura* parsura)
+{
+    SilvaExpansio* exp;
+    i32 numerus_fontium;
+    i32 numerus_lexematum;
+    b32* alienus;
+    constans chorda** via_scripta;
+    b32 ullus_alienus;
+    Xar* paria;
+    constans chorda* via_princeps;
+    i32 i;
+
+    si (sem == NIHIL || parsura == NIHIL
+        || parsura->expansio == NIHIL
+        || parsura->lexemata == NIHIL
+        || parsura->fons_princeps < ZEPHYRUM)
+    {
+        redde;
+    }
+    exp = parsura->expansio;
+    numerus_fontium = xar_numerus(exp->fontes);
+    si (numerus_fontium == ZEPHYRUM
+        || xar_numerus(exp->inclusiones) == ZEPHYRUM)
+    {
+        redde;
+    }
+    alienus = (b32*)piscina_allocare(sem->piscina,
+        (memoriae_index)numerus_fontium * magnitudo(b32));
+    via_scripta = (constans chorda**)piscina_allocare(sem->piscina,
+        (memoriae_index)numerus_fontium * magnitudo(chorda*));
+    si (alienus == NIHIL || via_scripta == NIHIL)
+    {
+        redde;
+    }
+    per (i = ZEPHYRUM; i < numerus_fontium; i++)
+    {
+        alienus[i] = FALSUM;
+        via_scripta[i] = NIHIL;
+    }
+
+    /* alienitas per graphum: transitus unus */
+    ullus_alienus = FALSUM;
+    per (i = ZEPHYRUM; i < xar_numerus(exp->inclusiones); i++)
+    {
+        constans SilvaInclusio* inc = (constans SilvaInclusio*)
+            xar_obtinere(exp->inclusiones, i);
+
+        si (inc == NIHIL || inc->fons_ad < ZEPHYRUM
+            || inc->fons_ad >= (s32)numerus_fontium
+            || alienus[inc->fons_ad])
+        {
+            perge;
+        }
+        si ((inc->fons_ex >= ZEPHYRUM
+                && inc->fons_ex < (s32)numerus_fontium
+                && alienus[inc->fons_ex])
+            || _via_aliena(inc->via))
+        {
+            alienus[inc->fons_ad] = VERUM;
+            via_scripta[inc->fons_ad] = inc->via;
+            ullus_alienus = VERUM;
+        }
+    }
+    si (!ullus_alienus)
+    {
+        redde;   /* via celeris: TU sine vendore (fere omnes) */
+    }
+
+    paria = xar_creare(sem->piscina,
+        (i32)magnitudo(ExamenParAlienum));
+    si (paria == NIHIL)
+    {
+        redde;
+    }
+    via_princeps = silva_fons_via(exp, parsura->fons_princeps);
+    numerus_lexematum = xar_numerus(parsura->lexemata);
+    per (i = ZEPHYRUM; i < numerus_lexematum; i++)
+    {
+        SilvaToken* tok = *(SilvaToken**)xar_obtinere(
+            parsura->lexemata, i);
+        SilvaToken* cur;
+        constans chorda* titulus = NIHIL;
+        SilvaToken* corpus = NIHIL;
+        insignatus integer custos = ZEPHYRUM;
+        b32 iam_emissum;
+        i32 j;
+
+        si (tok == NIHIL
+            || tok->origo.genus == SILVA_ORIGO_FONS)
+        {
+            perge;
+        }
+        /* ascensus ad radicem: expansio EXTIMA (invocatio in fonte
+         * scripto) sola iudicatur - macros intra corpora domestica
+         * res definientis sunt, non vendoris */
+        cur = tok;
+        dum (cur != NIHIL
+            && cur->origo.genus != SILVA_ORIGO_FONS
+            && custos < LXIV)
+        {
+            custos++;
+            commutatio (cur->origo.genus)
+            {
+                casus SILVA_ORIGO_EXPANSIO:
+                    titulus = cur->origo.datum.expansio.nomen_macro;
+                    corpus = cur->origo.datum.expansio.corpus;
+                    cur = cur->origo.datum.expansio.invocatio;
+                    frange;
+                casus SILVA_ORIGO_PASTA:
+                    cur = cur->origo.datum.pasta.sinister;
+                    frange;
+                casus SILVA_ORIGO_CHORDA:
+                    cur = cur->origo.datum.stringificatio.primus;
+                    frange;
+                ordinarius:   /* API: sine sede invocationis */
+                    cur = NIHIL;
+                    frange;
+            }
+        }
+        si (cur == NIHIL || cur->origo.genus != SILVA_ORIGO_FONS
+            || titulus == NIHIL || corpus == NIHIL)
+        {
+            perge;
+        }
+        si (cur->fons_index < ZEPHYRUM
+            || cur->fons_index >= (s32)numerus_fontium
+            || !alienus[cur->fons_index])
+        {
+            perge;   /* invocatio non in fonte alieno */
+        }
+        si (corpus->fons_index < ZEPHYRUM
+            || corpus->fons_index >= (s32)numerus_fontium
+            || alienus[corpus->fons_index])
+        {
+            perge;   /* definitio ipsa aliena - res vendoris */
+        }
+        {
+            constans SilvaFons* fons_def = (constans SilvaFons*)
+                xar_obtinere(exp->fontes, (i32)corpus->fons_index);
+
+            si (fons_def == NIHIL || fons_def->est_lexicon
+                || fons_def->est_syntheticus)
+            {
+                perge;   /* ISO/systema/syntheticum - non nostrum */
+            }
+        }
+        /* dedup per (titulus, fons invocationis) */
+        iam_emissum = FALSUM;
+        per (j = ZEPHYRUM; j < xar_numerus(paria); j++)
+        {
+            constans ExamenParAlienum* p =
+                (constans ExamenParAlienum*)xar_obtinere(paria, j);
+
+            si (p != NIHIL && p->fons_alienus == cur->fons_index
+                && p->titulus != NIHIL
+                && p->titulus->mensura == titulus->mensura
+                && memcmp(p->titulus->datum, titulus->datum,
+                       (memoriae_index)titulus->mensura)
+                    == ZEPHYRUM)
+            {
+                iam_emissum = VERUM;
+                frange;
+            }
+        }
+        si (iam_emissum)
+        {
+            perge;
+        }
+        {
+            ExamenParAlienum* par =
+                (ExamenParAlienum*)xar_addere(paria);
+
+            si (par != NIHIL)
+            {
+                par->titulus = titulus;
+                par->fons_alienus = cur->fons_index;
+            }
+        }
+        _alienum_emittere(sem, titulus,
+            via_scripta[cur->fons_index] != NIHIL
+                ? via_scripta[cur->fons_index]
+                : silva_fons_via(exp, cur->fons_index),
+            cur->linea,
+            silva_fons_via(exp, corpus->fons_index),
+            via_princeps);
     }
 }
 
@@ -2572,6 +2864,10 @@ silva_c89_semantica_analysare_cum_systemate (Piscina* piscina,
             }
         }
     }
+    /* macro domesticum in capite alieno (sequela M4a): ambulatio
+     * lexematum TU usoris - systema exclusum per constructionem
+     * (parsura usoris sola datur) */
+    _macros_domestica_in_alienis_examinare(sem, parsura);
     redde sem;
 }
 

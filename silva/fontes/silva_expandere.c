@@ -124,6 +124,7 @@ silva_fons_addere (
     }
     locus->via = via_fixa;
     locus->est_syntheticus = est_syntheticus;
+    locus->est_lexicon = FALSUM;   /* _contextum_applicare signat */
     locus->est_custos = FALSUM;
     locus->custos_titulus = NIHIL;
     redde (s32)(xar_numerus(exp->fontes) - I);

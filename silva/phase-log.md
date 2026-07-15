@@ -7636,3 +7636,56 @@ BARRAE:
 COST AESTIMATUS: fascis dimidii diei (caerimonia vectis > codex
 ipse). Re-entry: hic + examen fons (effusor/relation) +
 examen_vectis.sh + fixa/examinis/ conventiones.
+
+## MACRO DOMESTICUM IN CAPITE ALIENO — RELATIO (2026-07-14)
+
+NAVIS sessione post compactionem — captura-tunc-implementa TENUIT
+TERTIO (rung 5, commentarium, hoc): reversio consilii NULLA, sed
+TRES inventiones implementationis (silva_c89_semantica.worklog):
+① alienitas ex GRAPHO INCLUSIONUM (via SCRIPTA directivae
+"../vendor/sqlite3.h"), non ex viis fontium — viae fontium basename
+SUNT (praebere basename-clavatum ambobus oneratoribus; ordines
+percursus inde pendent, ne "sanes"); transitiva transitu uno (margo
+parentis ante filiorum); ② SilvaFons.est_lexicon NOVUM — macros ISO
+(NULL...) in textu vendicato iure stant; regula litterae INTENTIONIS
+eas flagravisset (imago.c OMNI ordine!); fontes lexici + synthetici
+numquam domestici; ③ mundi cum_latina (sessio/colloquium/vindex) =
+LIMES NOMINATUS (latina in lexico ibi = tacet); canales portantes
+(examen/legatus/percursus — cum_latina PINNATUM ZEPHYRUM in legato)
+inclusione vera latinam ferunt — vigil ubi importat; via retro =
+probatio nominum contra silva_latina_datum.
+
+BARRAE 5/5: ① fixtura ordo_pravus_vendicati.invalidum per vectem
+EXSTANTEM (EXSPECTA linea:codex; REICE ex syntaxi; oraculum
+consentit) — effusum vivum: "macro domesticum 'C' in capite alieno
+expansum (vendor/collidens_vendicatum.h:13) - caput alienum ANTE
+latina.h includendum" (omnia nominata; ANTE <basename> DYNAMICE, non
+fixum); ② ordo rectus TACET; ③ corpus ZEPHYRUM inventa nova (census
+codicum vacuus; scrinium/imago recte ordinant — praedictio tenuit);
+re-pin exclusionum 39→40 = deriva baselinae phase A (scrinium.c +
+probatio_officina_legatus.c classis lexici POSIX; genera_biblia.c
+SANATUM), NON hoc; ④ vectis TENET + silva 30/30 + officina 12/12
+(aureae legati octetim tenent); ⑤ scrinium.c 0.23s usoris = baseline
+IDEM (via celeris post scansionem marginum exit).
+
+Probatio sectio X (579/579 examen): pravus/rectus/lexicon-fictum/
+transitivum/dedup/causa-nominat. Sonda MCP viva: residens vetus
+honeste vetera respondit CUM CAUTIONE staleness sui (vigilia in
+productione) — post /mcp reconnect bracchium novum vivet. Codex 54
+(MACRO_DOMESTICUM_IN_ALIENO, SUSPECTUM); causa in piscina structa
+(contractus tabulae laxatus, commenta ambabus sedibus renovata).
+
+DEBRIEF INSTRUMENTORUM: adhibita mcp corpus (nexus_ordines_titulus_
+macronis verbatim calidum — exemplar ambulationis originis SINE grep,
+primum quaesitum sessionis), mcp diagnostica (sonda vigiliae viva —
+CAUTIO staleness sui functa in productione), nexus.sh, examen.sh
+(baselines scrinium/fixturae), excubitor -tacitus, vectis ambobus
+modis, impulsus legati (arg-counts ×4 capti AD EDITIONEM — signatura
+_analysare_alienum crevit, quattuor sedes vocationis statim
+nominatae). FRUCTUS: sessio integra sine grep-auditu uno — quaestio
+"quid margo inclusionis fert" per lectionem fontis directam,
+"ubi ambulator" per corpus. ASPERITAS: exclusiones -corpus DERIVANT
+TACITE inter cursus (drift phase A latuit diem — inventum solum quia
+barra ③ cursum coegit); nota, non postulatum: cursus 50s = custodia
+cara, re-pin ad barras milestone sufficere videtur. DESIDERATUM:
+nihil novum.

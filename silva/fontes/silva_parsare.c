@@ -1287,6 +1287,18 @@ _contextum_applicare (
         {
             redde FALSUM;
         }
+        /* fons lexici signatur (provenientia): macros eius (ISO -
+         * et latina in mundis cum_latina) non domestica pro
+         * examine alienorum */
+        {
+            SilvaFons* fons_lexici = (SilvaFons*)xar_obtinere(
+                expansio->fontes, (i32)fons_index);
+
+            si (fons_lexici != NIHIL)
+            {
+                fons_lexici->est_lexicon = VERUM;
+            }
+        }
         lexemata = silva_lexare(piscina, plagula->textus,
             plagula->mensura, fons_index);
         si (lexemata == NIHIL)

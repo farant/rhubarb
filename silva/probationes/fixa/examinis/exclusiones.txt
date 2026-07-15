@@ -3,6 +3,7 @@
 ./lib/imago.c
 ./lib/iter_directoria.c
 ./lib/reactor.c
+./lib/scrinium.c
 ./lib/tcp_posix.c
 ./lib/uuid.c
 ./lib/via.c
@@ -14,6 +15,7 @@
 ./officina/instrumenta/principalia/fusor.c
 ./officina/instrumenta/principalia/interpretare.c
 ./officina/instrumenta/principalia/vindex.c
+./officina/probationes/probatio_officina_legatus.c
 ./officina/probationes/probatio_officina_vindex.c
 ./probationes/probatio_uuid.c
 ./silva/instrumenta/principalia/censor.c
@@ -35,5 +37,4 @@
 ./tools/capsula_caudae_adiungere.c
 ./tools/capsula_generare.c
 ./tools/fons_merge.c
-./tools/genera_biblia.c
 ./tools/librarium_collector.c

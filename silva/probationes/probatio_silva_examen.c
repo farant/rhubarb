@@ -119,6 +119,75 @@ _codicem_probare (Piscina* piscina, constans character* fons,
     CREDO_AEQUALIS_I32 (inventi, numerus);
 }
 
+/* Sectio X: parsura cum contextu (praebenda + lexicon optionale) -
+ * TU cum capitibus fictis pro examine alienorum */
+interior SilvaSemantica*
+_analysare_alienum (Piscina* piscina, constans character* fons,
+    constans character* via_a, constans character* textus_a,
+    constans character* via_b, constans character* textus_b,
+    constans character* via_c, constans character* textus_c,
+    constans character* lexicon)
+{
+    SilvaContextus* ctx = silva_contextus_creare(piscina);
+    SilvaParsura* parsura;
+
+    si (ctx == NIHIL)
+    {
+        redde NIHIL;
+    }
+    si (lexicon != NIHIL
+        && !silva_contextus_lexicon_addere(ctx, "systema_probatio.h",
+               lexicon, (i32)strlen(lexicon)))
+    {
+        redde NIHIL;
+    }
+    si (via_a != NIHIL
+        && !silva_contextus_praebere(ctx, via_a, textus_a,
+               (i32)strlen(textus_a)))
+    {
+        redde NIHIL;
+    }
+    si (via_b != NIHIL
+        && !silva_contextus_praebere(ctx, via_b, textus_b,
+               (i32)strlen(textus_b)))
+    {
+        redde NIHIL;
+    }
+    si (via_c != NIHIL
+        && !silva_contextus_praebere(ctx, via_c, textus_c,
+               (i32)strlen(textus_c)))
+    {
+        redde NIHIL;
+    }
+    parsura = silva_c89_parsare_cum_contextu(piscina, ctx,
+        "probatio_examen.c", fons, (i32)strlen(fons), NIHIL);
+    si (parsura == NIHIL)
+    {
+        redde NIHIL;
+    }
+    redde silva_c89_semantica_analysare(piscina, parsura);
+}
+
+interior i32
+_codicem_numerare (constans SilvaSemantica* sem, s32 codex)
+{
+    i32 i;
+    i32 m = (i32)silva_c89_diagnostica_numerus(sem);
+    i32 inventi = ZEPHYRUM;
+
+    per (i = ZEPHYRUM; i < m; i++)
+    {
+        constans SemanticaDiagnosticum* d =
+            silva_c89_diagnosticum_per_indicem(sem, i);
+
+        si (d != NIHIL && d->codex == codex)
+        {
+            inventi++;
+        }
+    }
+    redde inventi;
+}
+
 interior vacuum
 _purum_probare (Piscina* piscina, constans character* fons)
 {
@@ -775,6 +844,119 @@ s32 principale (vacuum)
         "static int f(void) { return g(1, 2, 3); }\n");
     _purum_probare(piscina,
         "static void f(void) { const char* c = \"x\"; c = 0; }\n");
+
+    /* ========================================================
+     * X. Macro domesticum in capite alieno (sequela M4a): ordo
+     * pravus SUSPECTUM ad 1:1 (dedup unum per par, causa omnia
+     * nominat); ordo rectus TACET; lexicon (ISO) TACET;
+     * transitivum (inclusum ab alieno) clamat
+     * ======================================================== */
+    {
+        constans character* domesticum = "#define PLUVIA 100\n";
+        constans character* specimen =
+            "void aliena_f(char PLUVIA);\n"
+            "void aliena_g(char PLUVIA);\n";
+        SilvaSemantica* sem;
+        constans SemanticaDiagnosticum* d;
+
+        /* ordo pravus: domesticum ante specimen - unum (dedup) */
+        sem = _analysare_alienum(piscina,
+            "#include \"domesticum_probatio.h\"\n"
+            "#include \"vendor/specimen_alienum.h\"\n"
+            "int probe_x;\n",
+            "domesticum_probatio.h", domesticum,
+            "specimen_alienum.h", specimen,
+            NIHIL, NIHIL, NIHIL);
+        CREDO_NON_NIHIL (sem);
+        si (sem != NIHIL)
+        {
+            CREDO_AEQUALIS_I32 (_codicem_numerare(sem,
+                (s32)EXAMEN_CODEX_MACRO_DOMESTICUM_IN_ALIENO), I);
+            d = _diagnosticum_codicis(sem,
+                (s32)EXAMEN_CODEX_MACRO_DOMESTICUM_IN_ALIENO);
+            CREDO_NON_NIHIL (d);
+            si (d != NIHIL)
+            {
+                CREDO_VERUM (d->severitas
+                    == (s32)EXAMEN_SUSPECTUM);
+                CREDO_AEQUALIS_I32 (d->linea, I);
+                CREDO_AEQUALIS_I32 (d->columna, I);
+                CREDO_VERUM (d->via.mensura
+                    == (i32)strlen("probatio_examen.c"));
+                CREDO_VERUM (!d->provisionale);
+                /* causa nominat: macro, fontem alienum (via
+                 * scripta), definientem */
+                CREDO_VERUM (strstr(d->causa,
+                    "macro domesticum 'PLUVIA'") != NIHIL);
+                CREDO_VERUM (strstr(d->causa,
+                    "vendor/specimen_alienum.h:1") != NIHIL);
+                CREDO_VERUM (strstr(d->causa,
+                    "ANTE domesticum_probatio.h") != NIHIL);
+            }
+        }
+
+        /* ordo rectus: specimen ante domesticum - TACET */
+        sem = _analysare_alienum(piscina,
+            "#include \"vendor/specimen_alienum.h\"\n"
+            "#include \"domesticum_probatio.h\"\n"
+            "int probe_y;\n",
+            "domesticum_probatio.h", domesticum,
+            "specimen_alienum.h", specimen,
+            NIHIL, NIHIL, NIHIL);
+        CREDO_NON_NIHIL (sem);
+        si (sem != NIHIL)
+        {
+            CREDO_AEQUALIS_I32 (_codicem_numerare(sem,
+                (s32)EXAMEN_CODEX_MACRO_DOMESTICUM_IN_ALIENO),
+                ZEPHYRUM);
+        }
+
+        /* lexicon (ISO fictum): macro ex lexico in alieno - TACET
+         * (est_lexicon; codex vendicatus NULL... iure adhibet) */
+        sem = _analysare_alienum(piscina,
+            "#include \"vendor/specimen_alienum.h\"\n"
+            "int probe_z;\n",
+            "specimen_alienum.h",
+            "void aliena_h(char NIVIS);\n",
+            NIHIL, NIHIL, NIHIL, NIHIL,
+            "#define NIVIS 100\n");
+        CREDO_NON_NIHIL (sem);
+        si (sem != NIHIL)
+        {
+            CREDO_AEQUALIS_I32 (_codicem_numerare(sem,
+                (s32)EXAMEN_CODEX_MACRO_DOMESTICUM_IN_ALIENO),
+                ZEPHYRUM);
+        }
+
+        /* transitivum: alienum caput alterum includit (via scripta
+         * SINE "vendor/") - alienitas per graphum propagatur */
+        sem = _analysare_alienum(piscina,
+            "#include \"domesticum_probatio.h\"\n"
+            "#include \"vendor/specimen_alienum.h\"\n"
+            "int probe_w;\n",
+            "domesticum_probatio.h", domesticum,
+            "specimen_alienum.h",
+            "#include \"profundum_alienum.h\"\n",
+            "profundum_alienum.h",
+            "void aliena_p(char PLUVIA);\n",
+            NIHIL);
+        CREDO_NON_NIHIL (sem);
+        si (sem != NIHIL)
+        {
+            CREDO_AEQUALIS_I32 (_codicem_numerare(sem,
+                (s32)EXAMEN_CODEX_MACRO_DOMESTICUM_IN_ALIENO), I);
+            d = _diagnosticum_codicis(sem,
+                (s32)EXAMEN_CODEX_MACRO_DOMESTICUM_IN_ALIENO);
+            CREDO_NON_NIHIL (d);
+            si (d != NIHIL)
+            {
+                /* margo signans = inclusio profundi (in specimine
+                 * scripta) - via eius in causa */
+                CREDO_VERUM (strstr(d->causa,
+                    "profundum_alienum.h:1") != NIHIL);
+            }
+        }
+    }
 
     credo_imprimere_compendium();
     praeteritus = credo_omnia_praeterierunt();

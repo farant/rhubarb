@@ -276,6 +276,10 @@ nomen enumeratio {
     EXAMEN_CODEX_CONDICIO_NON_SCALARIS,
     EXAMEN_CODEX_VOCATIO_IMPLICITA,     /* SUSPECTUM: est_implicitum */
     EXAMEN_CODEX_REDECLARATIO_INCOMPATIBILIS,
+    /* sequela M4a (2026-07-14): macro domesticum in capite alieno
+     * (vendor) expansum - ordo inclusionis significationem tacite
+     * mutat ('char C' -> 'char 100'); causa IN PISCINA structa */
+    EXAMEN_CODEX_MACRO_DOMESTICUM_IN_ALIENO,  /* SUSPECTUM */
     EXAMEN_CODEX_NUMERUS
 } ExamenCodex;
 
@@ -295,7 +299,9 @@ nomen enumeratio {
  * ambulationis currentis). Vita viae = vita parsurae. */
 nomen structura {
     constans SilvaNodus* nodus;        /* NIHIL licet */
-    constans character*  causa;        /* litterae staticae (ex tabula) */
+    constans character*  causa;        /* litterae staticae (ex tabula);
+                                        * MACRO_DOMESTICUM_IN_ALIENO in
+                                        * piscina sem struit (nominat) */
     s32                  codex;        /* ExamenCodex */
     s32                  severitas;    /* ExamenSeveritas (ex tabula) */
     b32                  provisionale; /* sub AMBIGUO retento -

@@ -484,3 +484,52 @@ so typedef'd-anonymous structs now carry real names into vindex too.
 Bars: semantica 332/332 (new PROBARE block: baptism, no-overwrite,
 function signature, arrays, placeholder), hospes 31/31, officina
 12/12 suites (indicium pins unmoved), examen_vectis TENET.
+
+## 2026-07-14 — macro domesticum in capite alieno (codex 54)
+
+Implemented from the phase-log INTENTIO (capture-then-implement,
+third proof: zero design reversals). Three implementation finds the
+hot context did NOT have:
+
+1. **Fons vias are BASENAMES** ("sqlite3.h", never "vendor/sqlite3.h")
+— praebere is basename-keyed in BOTH loaders (examen.c AND
+praeparator.c), and percursus row attribution ("viae sine '/'
+omissae" in fundere) DEPENDS on it — do not "fix". The INTENTIO's
+via rule therefore runs on the INCLUSION GRAPH's written directive
+paths (exp->inclusiones[].via, "../vendor/sqlite3.h" as typed), not
+on fons vias. Alienity propagates transitively (included-by-alien =
+alien) in a SINGLE forward pass — parent edges are appended before
+child edges (_includendum_processare writes, then recurses).
+
+2. **ISO macros needed excluding** — the INTENTIO's literal rule
+("definition fons non-alien") would fire on NULL/EOF/... (systema
+lexicon = non-alien) used anywhere in vendor text, i.e. on every stb
+TU regardless of include order. New SilvaFons.est_lexicon (set at
+the ONE site lexicon fontes are born, _contextum_applicare in
+silva_parsare.c); lexicon + synthetic fontes never "domestic" —
+vendor code uses standard macros by right.
+
+3. **cum_latina worlds = NAMED LIMIT** — where latina is concatenated
+into the systema lexicon text (sessio/colloquium/vindex via
+praeparator cum_latina), latina macros are est_lexicon -> check
+silent there. The carrying channels (examen.sh, legatus push, MCP
+diagnostica, percursus) all true-include latina (legatus PINS
+cum_latina=0, legatus.c:~4332) -> latina.h = real praebere'd fons ->
+domestic -> check live. Path back if a cum_latina judge ever needs
+it: name-test against silva_latina_datum's lexeme set.
+
+Rule detail: only the OUTERMOST expansion of each origo chain is
+judged (invocation whose radix is FONS = the name physically written
+in the vendor file); macros inside domestic macro bodies are the
+definer's business. Argument-substituted tokens self-exclude (their
+corpus token sits at the use site = alien). Dedup per (macro name,
+alien fons). Message built in sem->piscina (causa contract relaxed,
+comments updated in both header spellings); position 1:1 of the
+judged file (include directive line is not in the vista).
+
+Corpus: ZERO findings (imago/scrinium order correctly — prediction
+held). Exclusiones re-pin 39->40 was phase-A baseline drift
+(scrinium.c + probatio_officina_legatus.c = POSIX-lexicon class;
+genera_biblia.c HEALED by smart-quotes fix), not this check.
+scrinium.c judge cost 0.23s user = baseline-identical (fast path
+exits at the edge scan for vendor-free TUs).
