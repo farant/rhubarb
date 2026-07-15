@@ -240,3 +240,98 @@ NEXT: chunk D — harvest (open items from the prose ledgers) +
 LEDGER BAR + live shakedown w/ registered resident + K1 seal.
 NOTE for the seal: /mcp reconnect (or session restart) to pick up
 the tabularii registration.
+
+## K1 CHUNK D — MESSIS + SIGILLUM: RELATIO. **K1 SIGILLATUM** (2026-07-15)
+
+MESSIS: 32 res per contractum scribae SPONTE filatae (sine portis -
+ipsa messis = barra scribae autonomi): 5 DECRETA (censor-declinata,
+nullum-CLI, clausa-in-FTS, mcp_servus-copia, genera-ut-eventus),
+17 PARCA (tabula tractuum officinae integra + silva QB-QD +
+gesta K2-K5 + saltuarius...), 6 QUAESTIONES (phantasma
+specimen_usus, tcp fluctuans, exclusiones-deriva, phase-log-407KB,
+nomina-insigillata, fundamentum-1x11), 4 DESIDERATA (sonda,
+tokenizator Latinus, MEMORY-migratio, batch-symbolum-debile).
+Tag messis-2026-07 in omnibus (origo argumentum in addere deest -
+tag sufficit, emendatio minima futura); ancorae via-generis ×3;
+nexus unus (sigillum-ancorae impeditur-a LEGATUSD).
+
+**BARRA ACTORUM (spec §XV-D) TENET**: "quid legato debetur?" =
+quaerere 'legat*' UNO ictu - omnia quae liber manu-compilatus
+2026-07-14 habuit (field-refs/LEGATUSD/filtra/macro-corpora/hover/
+batch/sonda/mtimes) PLUS nata postea (sigillum-ancorae cum nexu,
+vigilia-tabularii, phantasma). Quaestio dominat scansionem
+quattuor documentorum.
+
+**BARRAE SIGILLI in tabulario VERO**: annales == acta
+(verificatum); replicatio == tabulae stantes (seq 40). Omne
+eventum computatum: 40 = 5 definitio-generis + 33 creatio +
+1 nota fran (frigida) + 1 nexus. Census: 33 res, 25 tags,
+hwm == seq.
+
+**K1 SIGILLATUM**: quattuor chunks, UNA NOCTE + mane (interrogatio
+22 Q&A → spec-v2 per exploratores → A 76/76 → B 107/107 primo
+cursu → C 140 asserts + residens vivus + via frigida → D messis +
+barrae). Summae: probationes 173 asserts 2/2 suitis; vitia TOTIUS
+MILESTONE = 1 verum (BIND-NULL) + 2 fixturae meae (lex
+subsequentiae similitudinis); examen ACCIPE ambabus unitatibus;
+capture-then-implement QUARTUM tenuit (interrogatio calida →
+implementatio eadem nocte, exploratores 3 correctiones ante codicem
+- cold path, oracle-attribution, seq-1-basata).
+
+Parca K1 aperta (in tabulario ipso nunc - quaere 'gesta'): K2-K5,
+vigilia binarii, piscina scratch, sigillum symboli, tokenizator.
+Sequens gradus maior per tabulam: quodlibet Fran trahit.
+
+## K1.1 — DOCTRINA v2 + inventum launcher (2026-07-15)
+
+Doctrina v2 VIVA (mores additi: quaere-ante-filationem, status-
+flecte-cum-trahis, orientatio post-compactionem = census+quaerere,
+divisio actorum quattuor domorum, via frigida nominata) - navis
+ipsa per binarium, sessiones futurae hereditant. INVENTUM excubitoris
+(organicum, minuta post editionem): conditio nexus launcher obiecta
+recompilata non videbat (main_src + capita sola) - binarium vetus
+post editionem fontis, classis ABI-inventi. Sanatio ambobus scriptis
+(obj_recentius ambulatio). Excubitor iterum se probavit.
+
+## K1.1 — TABULA.MD PROIECTIO: INTENTIO (2026-07-15)
+
+Pulled by rule-of-two (Fran's projection question + reading question,
+one hour apart). Tenant-side renderer in tabularium.c (board FORMAT
+= tenant vocabulary; kernel stays generic): _tabulam_scribere after
+each successful write + at initialize; path via config (via_tabulae;
+NIHIL = off — kernel probatio unaffected; real = gesta/annales/
+tabula.md COMMITTED next to the jsonl). CONTENT-DETERMINISTIC header
+(seq + last-event creatum, NO wall clock — file changes only when
+the store changes, git diffs stay honest). Board = OPEN things:
+quaestiones (apertum/laborans), parca (parcatum/tractum), desiderata
+(apertum), decreta (all — stateless), nexus links; clausum/relictum/
+impletum OMITTED (history = queries, board = now). Bars: file
+exists + planted titles present + closed items absent after flip +
+regen through real initialize pipe.
+
+## K1.1 — TABULA.MD: RELATIO (2026-07-15)
+
+NAVIS: 147/147 (goldens novi: praesentia apertorum, absentia
+clausorum post flip, nexus redditus). Impulsus unum vitium ante
+compilationem cepit (campus via_tabulae in configuratione sed non
+in structura). VIVA: gesta/annales/tabula.md = 38 ordines aperti,
+caput deterministicum (seq+creatum, sine horologio), sectiones
+QUAESTIONES/PARCA/DESIDERATA/DECRETA/NEXUS, tags in lineis.
+Desideratum quod tabulam petivit -> impletum IN TABULARIO ipso
+(circulus perfectus: tabula completionem suam ostendendo desiit
+eam monstrare). NB residens conexus (binarium vetus) scripturas
+recte facit sed tabulam non regenerat donec /mcp reconnect -
+regeneratio interim per fistulam initialize.
+
+## K1.1 — TITULI DUPLICATI SANATI: RELATIO (2026-07-15)
+
+Quaestio prima tabularii VITAM PLENAM vixit: filata (debrief) ->
+laborans (tractio) -> nota sanationis -> clausum -> e tabula
+evanuit. Sanatio: addere CAUTIO cum titulo exsistente (numeratio
+ante-post); _res_solvere ambiguum_out + _ambiguitatem_respondere
+(candidati cum res_id/genere/statu, exemplar legati); gerere +
+res ambiguitatem recusant nominando; nexus-alterum tolerans
+(ligamen ad textum crudum non obstat); nota_frigida LIMIT 2
+recusatio; doctrina renovata (tituli duplicati iam NON taciti).
+Vitium meum in flumine: buffer LXIV pro cautione ~85 octetorum -
+manu captum ante compilationem. Goldens 4; suitae 155/155.

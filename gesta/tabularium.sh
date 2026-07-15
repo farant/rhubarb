@@ -71,7 +71,13 @@ for src in "$GESTA_DIR"/fontes/*.c; do
 done
 
 main_src="$GESTA_DIR/instrumenta/tabularium_principale.c"
-if [ ! -f "$BIN" ] || [ "$main_src" -nt "$BIN" ] || [ -n "$(newest_header "$BIN")" ]; then
+# obiectum quodvis recentius binario -> renexus (lectio excubitoris:
+# conditio capitum sola obiecta recompilata non videt)
+obj_recentius=""
+for o in $obj_files; do
+    if [ "$o" -nt "$BIN" ]; then obj_recentius="$o"; break; fi
+done
+if [ ! -f "$BIN" ] || [ "$main_src" -nt "$BIN" ] || [ -n "$obj_recentius" ] || [ -n "$(newest_header "$BIN")" ]; then
     echo "  [nexus] tabularium" >&2
     clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" "$main_src" $obj_files -o "$BIN" >&2 || exit 1
 fi

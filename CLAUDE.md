@@ -218,3 +218,26 @@ after all 5 pitches come back, DO NOT go straight to writing the beat sheet. ins
 the point of this is that the compilation decisions are the hard part and they should survive as a file in case of context compaction. writing the actual beat sheet from a good plan is just execution.
 
 /NOVUM FUNDAMENTUM WRITERS' ROOM
+
+
+
+TABULARIUM (the records office)
+
+the project ledger lives in the tabularii MCP server, not in prose.
+its doctrine auto-loads on connect and carries the tool grammar +
+the scribe contract: claude files notes/parks/decisions/questions
+autonomously during work and debriefs — i review by querying
+(census, quaerere), not by approving each write.
+
+division of records (one thing, one home):
+- tabularium: anything with an open/closed lifecycle — parks,
+  questions, wishes, decisions — plus links between them
+- phase-logs: the narrative of building (INTENTIO/RELATIO)
+- worklogs: code-adjacent finds at find-time
+- MEMORY.md: orientation reflexes and pointers, never ledgers
+
+when the resident is down: ./gesta/frigida.sh writes cold.
+truth is gesta/annales/tabularium.jsonl (committed); the .db is a
+rebuildable projection of it.
+
+

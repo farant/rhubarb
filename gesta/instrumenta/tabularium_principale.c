@@ -25,5 +25,6 @@ s32 principale (integer argc, character** argv)
     cfg.via_scrinii = "tabularium.db";
     cfg.via_annalium = "gesta/annales/tabularium.jsonl";
     cfg.via_nexus = "build/nexus.tsv";
+    cfg.via_tabulae = "gesta/annales/tabula.md";
     redde tabularium_currere(&cfg, stdin, stdout);
 }

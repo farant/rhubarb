@@ -32,6 +32,10 @@ nomen structura {
     constans character* via_annalium;  /* gesta/annales/...jsonl */
     constans character* via_nexus;     /* build/nexus.tsv; NIHIL =
                                         * ancorae sine resolutione */
+    constans character* via_tabulae;   /* tabula.md (proiectio status
+                                        * legibilis, post scripturas
+                                        * regenerata); NIHIL = sine
+                                        * tabula */
 } TabulariumConfiguratio;
 
 nomen structura Tabularium Tabularium;

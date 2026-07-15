@@ -31,7 +31,7 @@ _per_titulum (GestaMundus* m, constans character* titulus,
     t.datum = u.d;
     t.mensura = (i32)strlen(titulus);
     e = scrinium_praeparare(gesta_scrinium(m),
-        "SELECT res_id FROM res WHERE titulus = ? LIMIT 1");
+        "SELECT res_id FROM res WHERE titulus = ? LIMIT 2");
     si (e == NIHIL)
     {
         redde fructus;
@@ -40,6 +40,15 @@ _per_titulum (GestaMundus* m, constans character* titulus,
     si (scrinium_gradi(e) == SCRINIUM_ORDO)
     {
         fructus = scrinium_columna_textus(e, 0, piscina);
+        si (scrinium_gradi(e) == SCRINIUM_ORDO)
+        {
+            /* titulus ambiguus - recusatio honesta (acies
+             * titulorum duplicatorum; res_id discernit) */
+            fprintf(stderr, "nota_frigida: titulus ambiguus"
+                " (plures res) - res_id adhibe\n");
+            fructus.mensura = ZEPHYRUM;
+            fructus.datum = NIHIL;
+        }
     }
     scrinium_finire(e);
     redde fructus;

@@ -13,6 +13,7 @@
 #define VIA_DB "gesta/build/probatio_tab.db"
 #define VIA_AN "gesta/build/probatio_tab.jsonl"
 #define VIA_NX "gesta/probationes/fixa/nexus_specimen.tsv"
+#define VIA_TB "gesta/build/probatio_tabula.md"
 
 interior vacuum
 _purgare (vacuum)
@@ -21,6 +22,37 @@ _purgare (vacuum)
     remove(VIA_DB "-wal");
     remove(VIA_DB "-shm");
     remove(VIA_AN);
+    remove(VIA_TB);
+}
+
+/* plagulam totam ut litterae (vacuae si abest) */
+interior constans character*
+_plagula_litterae (Piscina* piscina, constans character* via)
+{
+    FILE* pl = fopen(via, "rb");
+    long mensura;
+    character* textus;
+
+    si (pl == NIHIL)
+    {
+        redde "";
+    }
+    fseek(pl, 0L, SEEK_END);
+    mensura = ftell(pl);
+    fseek(pl, 0L, SEEK_SET);
+    textus = (character*)piscina_allocare(piscina,
+        (memoriae_index)(mensura > 0L ? mensura + 1L : I));
+    si (textus == NIHIL
+        || (mensura > 0L
+            && fread(textus, I, (memoriae_index)mensura, pl)
+                != (memoriae_index)mensura))
+    {
+        fclose(pl);
+        redde "";
+    }
+    textus[mensura] = '\0';
+    fclose(pl);
+    redde textus;
 }
 
 /* lineam mittere, responsum totum (litterae) recipere */
@@ -85,6 +117,7 @@ s32 principale (vacuum)
     cfg.via_scrinii = VIA_DB;
     cfg.via_annalium = VIA_AN;
     cfg.via_nexus = VIA_NX;
+    cfg.via_tabulae = VIA_TB;
     t = tabularium_creare(piscina, &cfg);
     CREDO_NON_NIHIL (t);
     si (t == NIHIL)
@@ -207,6 +240,67 @@ s32 principale (vacuum)
         "\"actus\":\"nexus\",\"verbum\":\"impeditur-a\","
         "\"alterum\":\"Cache calida\"}}}");
     CREDO_VERUM (strstr(r, "eventum nexus scriptum") != NIHIL);
+
+    /* XI-b. tabula.md: res apertae praesentes, clausae absentes,
+     * nexus redditus (proiectio plicata; INTENTIO K1.1) */
+    {
+        constans character* tabula = _plagula_litterae(piscina,
+            VIA_TB);
+
+        CREDO_VERUM (strstr(tabula, "QUAESTIONES") != NIHIL);
+        CREDO_VERUM (strstr(tabula, "Parsura lenta") != NIHIL);
+        CREDO_VERUM (strstr(tabula, "Cache calida") != NIHIL);
+        CREDO_VERUM (strstr(tabula, "impeditur-a") != NIHIL);
+
+        /* clausa e tabula evanescit */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":20,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"gerere\",\"arguments\":{\"res\":\"Cache calida\","
+            "\"actus\":\"status\",\"novus\":\"clausum\"}}}");
+        CREDO_VERUM (strstr(r, "status clausum") != NIHIL);
+        tabula = _plagula_litterae(piscina, VIA_TB);
+        /* titulus in sectione PARCA abest; in NEXU manere licet
+         * (ligamen ipsum vivit) - probamus sectionem */
+        CREDO_VERUM (strstr(tabula, "[parcatum] Cache calida")
+            == NIHIL);
+        CREDO_VERUM (strstr(tabula, "Parsura lenta") != NIHIL);
+    }
+
+    /* XII. tituli duplicati: addere monet, resolutio ambigua
+     * candidatos nominat, res_id discernit (quaestio 'Tituli
+     * duplicati: acies tacita' - sanatio) */
+    {
+        /* duplicatum "Cache calida" (parcum iam clausum supra sed
+         * ordo res manet - titulus idem, res altera) */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":30,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"addere\",\"arguments\":{\"genus\":\"nota\","
+            "\"titulus\":\"Cache calida\"}}}");
+        CREDO_VERUM (strstr(r, "creata") != NIHIL);
+        CREDO_VERUM (strstr(r, "CAUTIO: titulus iam exsistit")
+            != NIHIL);
+
+        /* resolutio per titulum nunc AMBIGUA - candidati nominati */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":31,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"res\",\"arguments\":{\"res\":\"Cache calida\"}}}");
+        CREDO_VERUM (strstr(r, "titulus ambiguus") != NIHIL);
+        CREDO_VERUM (strstr(r, "res_id adhibe") != NIHIL);
+        CREDO_VERUM (strstr(r, "parcum/clausum") != NIHIL);
+        CREDO_VERUM (strstr(r, "nota/") != NIHIL);
+
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":32,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"gerere\",\"arguments\":{\"res\":\"Cache calida\","
+            "\"actus\":\"nota\",\"textus\":\"x\"}}}");
+        CREDO_VERUM (strstr(r, "titulus ambiguus") != NIHIL);
+
+        /* titulus unicus adhuc solvit */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":33,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"res\",\"arguments\":{\"res\":\"Parsura lenta\"}}}");
+        CREDO_VERUM (strstr(r, "annales") != NIHIL);
+    }
 
     /* XI. nuntiatio tacite omissa; ping ante omnia licitum;
      * analysis fracta -> -32700 */

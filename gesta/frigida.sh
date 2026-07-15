@@ -31,7 +31,11 @@ for o in piscina chorda chorda_aedificator xar friatio tabula_dispersa intername
     obj_files="$obj_files $BUILD_DIR/$o.o"
 done
 
-if [ ! -f "$BIN" ] || [ "$main_src" -nt "$BIN" ]; then
+obj_recentius=""
+for o in $obj_files; do
+    if [ "$o" -nt "$BIN" ]; then obj_recentius="$o"; break; fi
+done
+if [ ! -f "$BIN" ] || [ "$main_src" -nt "$BIN" ] || [ -n "$obj_recentius" ]; then
     echo "  [nexus] nota_frigida" >&2
     clang "${GCC_FLAGS[@]}" -I"$RADIX_DIR/include" -I"$GESTA_DIR/fontes" "$main_src" $obj_files -o "$BIN" >&2 || exit 1
 fi
