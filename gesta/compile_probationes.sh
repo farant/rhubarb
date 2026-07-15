@@ -51,7 +51,10 @@ declare -a RADIX_FONTES=(
     "internamentum"
     "utf8"
     "json"
+    "similitudo"
+    "sigillum"
     "scrinium"
+    "tabellarius"
     "credo"
 )
 

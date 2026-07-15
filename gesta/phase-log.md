@@ -156,3 +156,87 @@ NEXT: chunk C — surfaces (MCP resident via legatus copy-map,
 nexus.tsv anchor resolver + similitudo, doctrine w/ scribe
 contract, .mcp.json + launcher, nota_frigida cold path, tenant
 seed).
+
+## K1 CHUNK C — SURFACES: INTENTIO (2026-07-15)
+
+Scope (spec §XV-C): MCP resident, anchor resolver, doctrine,
+registration, cold path, seed. Fresh decisions:
+
+1. **Engine/main split (legatus precedent)**: gesta/fontes/
+   tabularium.{h,c} = engine (tractare-per-message, testable —
+   probatio drives it with prescripted JSON lines + tmpfile
+   capture); gesta/instrumenta/tabularium_principale.c = thin main.
+   Engine rides the fontes glob into the suite automatically.
+2. **Seed AT INITIALIZE, idempotent**: the server seeds missing
+   genera (×5) + the tag-vocabulary nota (res_id
+   "vocabularium-tagorum", deterministic) on every initialize —
+   "seed = just events" through gesta_scribere; zero manual steps;
+   actor=machina origo=seminatio.
+3. **Anchor index LAZY**: nexus.tsv (48MB, ~107k sedes) parsed on
+   first anchor-bearing request into tabula_dispersa titulus→
+   "via:linea" (first-sedes-wins, praebere mirror) + flat tituli
+   list for similitudo (hover-vicinitas lesson: flat copy). Config
+   carries via_nexus so the PROBATIO points at a small fixture tsv.
+4. **Args all strings v1**: tags = comma-separated; ancorae = JSON
+   array TEXT (Claude writes JSON trivially); gerere carries both
+   simple fields (textus/novus/verbum/alterum/clavis/valor) and a
+   raw 'datum' JSON escape hatch for mutatio.
+5. **Hash checks v1 = via-anchors only** (file bytes through
+   sigillum); symbolum-anchor CONTENT hashing needs corpus
+   extraction (legati territory, resident-to-resident impossible) —
+   NAMED PARK; symbolum anchors get existence+location+similitudo.
+6. **actor defaults to "claude"** on MCP writes (optional arg
+   overrides); origo="mcp". Cold path writes actor=fran,
+   origo="frigida".
+7. Cold path = nota_frigida.c COMPILED (infra-explorer correction
+   honored); frigida.sh builds+runs; tabularium.sh = legatus.sh
+   template (deps loop duplicated — 6th newest_header copy, AEDILIS
+   ledger grows).
+
+## K1 CHUNK C — RELATIO (2026-07-15)
+
+NAVIS. Suites 2/2 (140 asserts: gesta 107 + tabularium 33). TWO
+fixture bugs only, both MINE: similitudo test typos were
+SUBSTITUTIONS ('secure'→'secare') — the documented subsequence law
+(deletion-typos only, same lesson as the legatus goldens) — fixed
+to deletion typos, commented at both sites. Engine code compiled
+clean under house flags essentially first-try (one stray label +
+imaginary Roman-numeral macros in nota_frigida caught pre-compile).
+
+Shipped: gesta/fontes/tabularium.{h,c} (engine, ~1100 lines —
+legatus copy-map honored: lineam framing, gating, dispatch ladder,
+flexible-args instrumentum builder [legatus's 2-arg builder
+extended to arrays], textum_respondere without vigilia [index = db,
+fresh by construction]); TABULARII_DOCTRINA carries the SCRIBE
+CONTRACT verbatim into agent context; idempotent seed at initialize
+(5 genera + vocabularium-tagorum); anchor index lazy-loaded from
+config-supplied nexus.tsv (fixture-testable; first-sedes-wins;
+similitudo over flat tituli copy); via-anchors hash-check through
+sigillum, symbolum-anchor content-hash = NAMED PARK;
+tabularium_principale.c + nota_frigida.c (COMPILED cold path);
+tabularium.sh launcher (stderr-only, -radix appended) + frigida.sh;
+.mcp.json "tabularii" registered; .gitignore db lines; fabrica.tsv
+explicit unit rows ×2 binaries (directory rule REJECTED for the
+mixed build dir — sibling binaries + test dbs would arm it
+permanently; excubitor now silent on the pool).
+
+LIVE: the real store BORN through the actual launcher pipeline —
+initialize seeded 5 genera + vocabulary (seq 1-6), census answered
+through real MCP framing; frigida.sh wrote event 7 (a nota on
+vocabularium-tagorum, actor fran origo frigida) WITH NO RESIDENT —
+the cold-path bar met; gesta/annales/tabularium.jsonl = 7 lines,
+committed history begins.
+
+Probatio drives the engine through tractare with prescripted JSON
+lines + tmpfile capture (the engine/main split paying off):
+pre-init refusal (-32002), doctrine landing, double-init refusal,
+5 tools listed, addere w/ tags+anchors, res w/ resolved anchor
+(first-sedes-wins vs fixture) + CAUTIO + simillima, gerere
+status/nota/nexus-by-titulus, quaerere prose/prefix/tag/miss,
+res-miss simillima, census, notification silence, ping-pre-init,
+-32700 on garbage.
+
+NEXT: chunk D — harvest (open items from the prose ledgers) +
+LEDGER BAR + live shakedown w/ registered resident + K1 seal.
+NOTE for the seal: /mcp reconnect (or session restart) to pick up
+the tabularii registration.

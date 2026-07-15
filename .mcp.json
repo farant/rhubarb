@@ -3,6 +3,10 @@
     "legati": {
       "command": "./officina/legatus.sh",
       "args": ["-mcp"]
+    },
+    "tabularii": {
+      "command": "./gesta/tabularium.sh",
+      "args": ["-mcp"]
     }
   }
 }

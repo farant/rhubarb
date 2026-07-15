@@ -22,3 +22,8 @@ probationes/fixa/simplex
 episodes/*-audio/audio/
 episodes/*-audio/output/
 *.mp3
+
+# tabularium (status vivus - annales JSONL committitur, db non)
+tabularium.db
+tabularium.db-wal
+tabularium.db-shm

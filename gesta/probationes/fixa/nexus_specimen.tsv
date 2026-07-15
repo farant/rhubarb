@@ -1,0 +1,5 @@
+# nexus.tsv GENERATUM 0 - FIXTURA probationis tabularii
+chorda_secare	sedes	functio	lib/chorda.c	42	1	0
+chorda_secare	usus	functio	lib/alia.c	7	3	0
+piscina_creare	sedes	functio	lib/piscina.c	100	1	0
+chorda_secare	sedes	functio	lib/copia.c	9	1	0
