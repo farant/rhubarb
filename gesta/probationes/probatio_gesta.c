@@ -165,6 +165,26 @@ _membra_pars (JsonValor* st, constans character* pars)
     redde json_objectum_capere(membra, pars);
 }
 
+/* numerus querelarum dati typi in salute */
+interior i32
+_querelae_typi (constans GestaSalus* s, constans character* typus)
+{
+    i32 n = ZEPHYRUM;
+    i32 i;
+    memoriae_index m = strlen(typus);
+
+    per (i = ZEPHYRUM; i < s->numerus; i++)
+    {
+        si ((memoriae_index)s->querelae[i].typus.mensura == m
+            && memcmp(s->querelae[i].typus.datum, typus, m)
+                == ZEPHYRUM)
+        {
+            n++;
+        }
+    }
+    redde n;
+}
+
 s32 principale (vacuum)
 {
     Piscina* piscina;
@@ -177,6 +197,11 @@ s32 principale (vacuum)
     character id_lv[GESTA_RES_ID_MENSURA];
     character id_l2[GESTA_RES_ID_MENSURA];
     character id_l3[GESTA_RES_ID_MENSURA];
+    character id_ls[GESTA_RES_ID_MENSURA];
+    character id_c1[GESTA_RES_ID_MENSURA];
+    character id_c2[GESTA_RES_ID_MENSURA];
+    character id_o[GESTA_RES_ID_MENSURA];
+    character id_o2[GESTA_RES_ID_MENSURA];
     character datum_ev[CXXVIII];
 
     piscina = piscina_generare_dynamicum("probatio_gesta",
@@ -1012,6 +1037,330 @@ s32 principale (vacuum)
                            strlen(id_l3)) == ZEPHYRUM);
             }
         }
+    }
+
+    /* ========================================================
+     * XXV. K2 G7: salus - attributum necessarium absens + LEX
+     * CHORDAE VACUAE (TS: smaragda.ts:4374-4386, :4378 - absens,
+     * null, ET "" pro deficiente numerantur)
+     * ======================================================== */
+    _scribe(m, NIHIL, "definitio-generis",
+        "{\"titulus\":\"charta\",\"attributa\":["
+        "{\"titulus\":\"auctor\",\"typus\":\"textus\","
+        "\"necessarium\":true},"
+        "{\"titulus\":\"paginae\",\"typus\":\"numerus\"},"
+        "{\"titulus\":\"publica\",\"typus\":\"veritas\"},"
+        "{\"titulus\":\"tags\",\"typus\":\"tabulatum\"},"
+        "{\"titulus\":\"mirus\",\"typus\":\"arcanum\"}],"
+        "\"reducer\":\"ordinarius\"}");
+    {
+        GestaEventum e;
+        GestaSalus s;
+
+        e.res_id = NIHIL;
+        e.genus_eventus = "creatio";
+        e.datum = "{\"genus\":\"charta\",\"titulus\":\"Prima\"}";
+        e.actor = "fran";
+        e.origo = "probatio";
+        CREDO_VERUM (gesta_scribere(m, &e, id_c1));
+
+        CREDO_VERUM (gesta_salutem_aestimare(m, id_c1, piscina,
+            &s));
+        CREDO_VERUM (!s.sanus);
+        CREDO_AEQUALIS_I32 (s.numerus, I);
+        CREDO_AEQUALIS_I32 (_querelae_typi(&s,
+            "attributum-necessarium-absens"), I);
+        CREDO_VERUM (s.querelae[ZEPHYRUM].gravis);
+
+        /* chorda vacua = absens (LEX :4378) */
+        _scribe(m, id_c1, "mutatio", "{\"auctor\":\"\"}");
+        CREDO_VERUM (gesta_salutem_aestimare(m, id_c1, piscina,
+            &s));
+        CREDO_AEQUALIS_I32 (_querelae_typi(&s,
+            "attributum-necessarium-absens"), I);
+
+        /* null = absens */
+        _scribe(m, id_c1, "mutatio", "{\"auctor\":null}");
+        CREDO_VERUM (gesta_salutem_aestimare(m, id_c1, piscina,
+            &s));
+        CREDO_AEQUALIS_I32 (_querelae_typi(&s,
+            "attributum-necessarium-absens"), I);
+
+        _scribe(m, id_c1, "mutatio", "{\"auctor\":\"Plinius\"}");
+        CREDO_VERUM (gesta_salutem_aestimare(m, id_c1, piscina,
+            &s));
+        CREDO_VERUM (s.sanus);
+    }
+
+    /* ========================================================
+     * XXVI. K2 G8: salus - typi quattuor + typus ignotus TRANSIT
+     * (TS: smaragda.ts:1790-1798, :1796) + chorda vacua typum NON
+     * iudicat (:4391)
+     * ======================================================== */
+    {
+        GestaSalus s;
+
+        /* textus pro numero -> cautio (gravis FALSUM) */
+        _scribe(m, id_c1, "mutatio", "{\"paginae\":\"multae\"}");
+        CREDO_VERUM (gesta_salutem_aestimare(m, id_c1, piscina,
+            &s));
+        CREDO_AEQUALIS_I32 (s.numerus, I);
+        CREDO_AEQUALIS_I32 (_querelae_typi(&s,
+            "typus-attributi-pravus"), I);
+        CREDO_VERUM (!s.querelae[ZEPHYRUM].gravis);
+        _scribe(m, id_c1, "mutatio", "{\"paginae\":37}");
+        CREDO_VERUM (gesta_salutem_aestimare(m, id_c1, piscina,
+            &s));
+        CREDO_VERUM (s.sanus);
+
+        /* chorda pro veritate */
+        _scribe(m, id_c1, "mutatio", "{\"publica\":\"ita\"}");
+        CREDO_VERUM (gesta_salutem_aestimare(m, id_c1, piscina,
+            &s));
+        CREDO_AEQUALIS_I32 (_querelae_typi(&s,
+            "typus-attributi-pravus"), I);
+        _scribe(m, id_c1, "mutatio", "{\"publica\":true}");
+
+        /* chorda pro tabulato */
+        _scribe(m, id_c1, "mutatio", "{\"tags\":\"unus\"}");
+        CREDO_VERUM (gesta_salutem_aestimare(m, id_c1, piscina,
+            &s));
+        CREDO_AEQUALIS_I32 (_querelae_typi(&s,
+            "typus-attributi-pravus"), I);
+        _scribe(m, id_c1, "mutatio",
+            "{\"tags\":[\"a\",\"b\"]}");
+
+        /* typus ignotus 'arcanum' TRANSIT (lex progressiva) */
+        _scribe(m, id_c1, "mutatio", "{\"mirus\":{\"x\":1}}");
+        CREDO_VERUM (gesta_salutem_aestimare(m, id_c1, piscina,
+            &s));
+        CREDO_VERUM (s.sanus);
+
+        /* chorda vacua typum non iudicat (paginae numerus, valor
+         * "" - nec absens-querela [non necessarium] nec typus) */
+        _scribe(m, id_c1, "mutatio", "{\"paginae\":\"\"}");
+        CREDO_VERUM (gesta_salutem_aestimare(m, id_c1, piscina,
+            &s));
+        CREDO_VERUM (s.sanus);
+    }
+
+    /* ========================================================
+     * XXVII. K2 G9: salus - status ignotus; genera sine machina
+     * praetereunt (TS: smaragda.ts:4402-4412)
+     * ======================================================== */
+    {
+        GestaSalus s;
+
+        /* charta sine machina: status quilibet praeteritur */
+        _scribe(m, id_c1, "mutatio",
+            "{\"status\":\"quidlibet\"}");
+        CREDO_VERUM (gesta_salutem_aestimare(m, id_c1, piscina,
+            &s));
+        CREDO_VERUM (s.sanus);
+
+        /* id_q status 'solutum' (XXIII) extra machinam quaestionis
+         * [[apertum,clausum]] */
+        CREDO_VERUM (gesta_salutem_aestimare(m, id_q, piscina,
+            &s));
+        CREDO_AEQUALIS_I32 (s.numerus, I);
+        CREDO_AEQUALIS_I32 (_querelae_typi(&s, "status-ignotus"),
+            I);
+
+        /* clausum finis machinae est - salus tacet (transitio
+         * ipsa illicita = res custodiae, non salutis) */
+        _scribe(m, id_q, "status", "{\"novus\":\"clausum\"}");
+        CREDO_VERUM (gesta_salutem_aestimare(m, id_q, piscina,
+            &s));
+        CREDO_VERUM (s.sanus);
+    }
+
+    /* ========================================================
+     * XXVIII. K2 G10: salus - cardinalitas: limen inferius (id_l
+     * partes ambae vacuae) et tectum (id_ls pars a bis impleta)
+     * ======================================================== */
+    {
+        GestaEventum e;
+        GestaSalus s;
+
+        /* id_l: verbum adest, status vigens validus, membra a=[]
+         * b=[] -> querelae II (a unicus 0!=1; b aliquot 0<1) */
+        CREDO_VERUM (gesta_salutem_aestimare(m, id_l, piscina,
+            &s));
+        CREDO_AEQUALIS_I32 (s.numerus, II);
+        CREDO_AEQUALIS_I32 (_querelae_typi(&s,
+            "cardinalitas-violata"), II);
+
+        /* id_l3: a=[id_a] b=[id_q] verbum adest -> sanum */
+        CREDO_VERUM (gesta_salutem_aestimare(m, id_l3, piscina,
+            &s));
+        CREDO_VERUM (s.sanus);
+
+        /* tectum: pars a (unicus) bis impleta, pars b impleta ->
+         * querela UNA sola (tectum a; b sana) */
+        e.res_id = NIHIL;
+        e.genus_eventus = "creatio";
+        e.datum = "{\"genus\":\"filum\",\"verbum\":\"premit\"}";
+        e.actor = "fran";
+        e.origo = "probatio";
+        CREDO_VERUM (gesta_scribere(m, &e, id_ls));
+        sprintf(datum_ev,
+            "{\"pars\":\"a\",\"membrum\":\"%s\"}", id_a);
+        _scribe(m, id_ls, "membrum-additum", datum_ev);
+        sprintf(datum_ev,
+            "{\"pars\":\"a\",\"membrum\":\"%s\"}", id_q);
+        _scribe(m, id_ls, "membrum-additum", datum_ev);
+        sprintf(datum_ev,
+            "{\"pars\":\"b\",\"membrum\":\"%s\"}", id_q);
+        _scribe(m, id_ls, "membrum-additum", datum_ev);
+        CREDO_VERUM (gesta_salutem_aestimare(m, id_ls, piscina,
+            &s));
+        CREDO_AEQUALIS_I32 (s.numerus, I);
+        CREDO_AEQUALIS_I32 (_querelae_typi(&s,
+            "cardinalitas-violata"), I);
+    }
+
+    /* ========================================================
+     * XXIX. K2 G11: insalubres enumerantur; filtrum generis;
+     * sanae excluduntur (TS: smaragda.ts:4447-4467)
+     * ======================================================== */
+    {
+        GestaEventum e;
+        Xar* ins;
+        b32 c1_inventa = FALSUM;
+        b32 c2_inventa = FALSUM;
+        i32 i;
+
+        e.res_id = NIHIL;
+        e.genus_eventus = "creatio";
+        e.datum = "{\"genus\":\"charta\",\"titulus\":\"Secunda\"}";
+        e.actor = "fran";
+        e.origo = "probatio";
+        CREDO_VERUM (gesta_scribere(m, &e, id_c2));
+
+        /* filtrum: chartarum insalubris una sola (id_c2 sine
+         * auctore; id_c1 sana) */
+        ins = gesta_insalubres_enumerare(m, "charta", piscina);
+        CREDO_NON_NIHIL (ins);
+        CREDO_AEQUALIS_I32 ((i32)xar_numerus(ins), I);
+        {
+            GestaInsalubris* in0 = (GestaInsalubris*)xar_obtinere(
+                ins, ZEPHYRUM);
+
+            CREDO_NON_NIHIL (in0);
+            si (in0 != NIHIL)
+            {
+                CREDO_VERUM (in0->res_id.mensura
+                        == (i32)strlen(id_c2)
+                    && memcmp(in0->res_id.datum, id_c2,
+                           strlen(id_c2)) == ZEPHYRUM);
+                CREDO_AEQUALIS_I32 (in0->salus.numerus, I);
+            }
+        }
+
+        /* sine filtro: id_l (cardinalitas) et id_c2 insunt,
+         * id_c1 sana ABEST */
+        ins = gesta_insalubres_enumerare(m, NIHIL, piscina);
+        CREDO_NON_NIHIL (ins);
+        CREDO_VERUM ((i32)xar_numerus(ins) >= II);
+        per (i = ZEPHYRUM; i < xar_numerus(ins); i++)
+        {
+            GestaInsalubris* in_i = (GestaInsalubris*)xar_obtinere(
+                ins, i);
+
+            si (in_i == NIHIL)
+            {
+                perge;
+            }
+            si (in_i->res_id.mensura == (i32)strlen(id_c1)
+                && memcmp(in_i->res_id.datum, id_c1,
+                       strlen(id_c1)) == ZEPHYRUM)
+            {
+                c1_inventa = VERUM;
+            }
+            si (in_i->res_id.mensura == (i32)strlen(id_c2)
+                && memcmp(in_i->res_id.datum, id_c2,
+                       strlen(id_c2)) == ZEPHYRUM)
+            {
+                c2_inventa = VERUM;
+            }
+        }
+        CREDO_VERUM (!c1_inventa);
+        CREDO_VERUM (c2_inventa);
+    }
+
+    /* ========================================================
+     * XXX. K2 G12: OPUS-GRATIS - genus opus per eventus solos
+     * definitum, vita integra ambulata, NULLUS codex machinae
+     * novus (TS opera = API vera smaragda.ts:4568-4611; nobis
+     * genera-ut-eventus ea GRATIS dant - decretum K2 Q5).
+     * Transitus rectus pendens->perfectum consulto licitus (TS
+     * design note :4534-4535, adprobationes simplices)
+     * ======================================================== */
+    _scribe(m, NIHIL, "definitio-generis",
+        "{\"titulus\":\"opus\",\"status_initialis\":\"pendens\","
+        "\"machina\":[[\"pendens\",\"susceptum\"],"
+        "[\"susceptum\",\"perfectum\"],"
+        "[\"pendens\",\"perfectum\"],[\"pendens\",\"omissum\"],"
+        "[\"susceptum\",\"omissum\"]],\"attributa\":["
+        "{\"titulus\":\"titulus\",\"typus\":\"textus\","
+        "\"necessarium\":true},"
+        "{\"titulus\":\"assignatum\",\"typus\":\"textus\"},"
+        "{\"titulus\":\"prioritas\",\"typus\":\"textus\"},"
+        "{\"titulus\":\"effectus\",\"typus\":\"textus\"}],"
+        "\"reducer\":\"ordinarius\"}");
+    {
+        GestaEventum e;
+        GestaSalus s;
+        JsonValor* st;
+        chorda status;
+
+        e.res_id = NIHIL;
+        e.genus_eventus = "creatio";
+        e.datum = "{\"genus\":\"opus\",\"titulus\":"
+            "\"Recense caput\",\"prioritas\":\"alta\"}";
+        e.actor = "fran";
+        e.origo = "probatio";
+        CREDO_VERUM (gesta_scribere(m, &e, id_o));
+        status = gesta_res_status(m, id_o, piscina);
+        CREDO_VERUM (status.mensura == (i32)strlen("pendens")
+            && memcmp(status.datum, "pendens",
+                   strlen("pendens")) == ZEPHYRUM);
+
+        /* susceptio (claimTask :4583) = mutatio + status */
+        _scribe(m, id_o, "mutatio",
+            "{\"assignatum\":\"claude\"}");
+        _scribe(m, id_o, "status", "{\"novus\":\"susceptum\"}");
+
+        /* perfectio (completeTask :4594) = mutatio + status */
+        _scribe(m, id_o, "mutatio",
+            "{\"effectus\":\"recensum, probatum\"}");
+        _scribe(m, id_o, "status", "{\"novus\":\"perfectum\"}");
+
+        status = gesta_res_status(m, id_o, piscina);
+        CREDO_VERUM (status.mensura == (i32)strlen("perfectum")
+            && memcmp(status.datum, "perfectum",
+                   strlen("perfectum")) == ZEPHYRUM);
+        CREDO_VERUM (gesta_salutem_aestimare(m, id_o, piscina,
+            &s));
+        CREDO_VERUM (s.sanus);
+        st = _status_entis(m, id_o, piscina);
+        CREDO_AEQUALIS_I32 (_notae_continentes(st,
+            "violatio machinae"), ZEPHYRUM);
+
+        /* adprobatio simplex: pendens -> perfectum recta */
+        e.res_id = NIHIL;
+        e.genus_eventus = "creatio";
+        e.datum = "{\"genus\":\"opus\",\"titulus\":"
+            "\"Adproba consilium\"}";
+        e.actor = "fran";
+        e.origo = "probatio";
+        CREDO_VERUM (gesta_scribere(m, &e, id_o2));
+        _scribe(m, id_o2, "status", "{\"novus\":\"perfectum\"}");
+        st = _status_entis(m, id_o2, piscina);
+        CREDO_VERUM (_clavis_est_chorda(st, "status",
+            "perfectum"));
+        CREDO_AEQUALIS_I32 (_notae_continentes(st,
+            "violatio machinae"), ZEPHYRUM);
     }
 
     gesta_claudere(m);

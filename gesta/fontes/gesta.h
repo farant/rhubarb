@@ -203,6 +203,54 @@ gesta_socii_rei (
     constans character* res_id,
     Piscina*            piscina);
 
+/* ==================================================
+ * Salus (K2 chunk B) - aestimatio pura status contra genus
+ * ==================================================
+ * Oraculum: _evaluateHealthPure smaragda.ts:4368-4415. NIHIL
+ * obstat - salus refert solum. Querelae typi:
+ *   attributum-necessarium-absens (gravis) - absens/null/""
+ *     (LEX CHORDAE VACUAE, TS :4378)
+ *   typus-attributi-pravus (cautio) - typus ignotus TRANSIT
+ *     (TS :1796, lex progressiva)
+ *   status-ignotus (gravis) - genera sine machina praetereunt
+ *   cardinalitas-violata (gravis) - species nexus solum
+ * Notae custodiae NON numerantur (divergentia D4). */
+
+nomen structura {
+    chorda typus;     /* index querelae supra */
+    chorda nuntius;
+    b32    gravis;    /* VERUM erratum, FALSUM cautio */
+} GestaQuerela;
+
+nomen structura {
+    b32           sanus;
+    GestaQuerela* querelae;   /* tabulatum in piscina data */
+    i32           numerus;
+} GestaSalus;
+
+nomen structura {
+    chorda     res_id;
+    GestaSalus salus;
+} GestaInsalubris;
+
+/* FALSUM solum si res ignota / apparatus fractus; genus rei
+ * ignotum = sanum (nihil iudicandum) */
+b32
+gesta_salutem_aestimare (
+    GestaMundus*        mundus,
+    constans character* res_id,
+    Piscina*            piscina,
+    GestaSalus*         exitus);
+
+/* Res insalubres solae redduntur (Xar de GestaInsalubris);
+ * genus NIHIL = omnia. Percursus plenus - satis parvis
+ * copiis (via sordidarum parcata). */
+Xar*
+gesta_insalubres_enumerare (
+    GestaMundus*        mundus,
+    constans character* genus,
+    Piscina*            piscina);
+
 /* Lectiones (pro probationibus et stratis superioribus; textus in
  * piscinam datam copiatur; chorda vacua = absens) */
 chorda

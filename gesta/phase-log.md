@@ -433,3 +433,36 @@ memento etiam eventus malos plicari.
 
 PROXIMUM: frustum B (salus) - validator typorum, salutem_aestimare,
 insalubres_enumerare, aureae G7-G12 (opus-gratis inclusa).
+
+## RELATIO K2 FRUSTUM B (2026-07-15) - salus
+
+NAVIS. gesta.{h,c} + probatio_gesta.c; suitae 304/304 (gesta 172
+->256, +84; tabularium 48 intactae); examen ACCIPE; aureae G7-G12
+PRIMO CURSU virides.
+
+FACTA: _typus_validus (textus/numerus[integer aut fluitans]/
+veritas/tabulatum; ignotus TRANSIT - lex progressiva TS 1796);
+gesta_salutem_aestimare (querelae quattuor typorum: attributum-
+necessarium-absens cum LEGE CHORDAE VACUAE TS 4378 [""=absens, et
+typum non iudicat 4391], typus-attributi-pravus [cautio non
+erratum], status-ignotus [genera sine machina praetereunt],
+cardinalitas-violata [species nexus solum, limen + tectum]);
+gesta_insalubres_enumerare (filtrum generis, sanae exclusae,
+exemplar collige-primum); genus rei ignotum = sanum (TS iacit,
+nos praeterimus). Notae custodiae NON numerantur (D4).
+
+VITIUM UNUM in flumine: parametrum 'nomen' scripsi (chorda nomen)
+- macro latina.h typedef! Impulsus examinis id ANTE compilationem
+cepit (syntaxis fracta + quattuor monstrator-integer-mixti ex
+functione non parsata). Ipsum verbum de quo CLAUDE.md monet.
+Numeratio firmationum latinarum ~13 nunc. Sanatio: 'intextum'.
+
+AUREA XXX (opus-gratis) = probatio decreti Q5: genus opus
+definitum, vita pendens->susceptum->perfectum ambulata, transitus
+adprobationis rectus pendens->perfectum - NULLA linea machinae
+nova. Genera-ut-eventus opera vere gratis dant.
+
+PROXIMUM: frustum C (tenens + CUTOVER) - migratio 3, deletio
+plicaturae veteris, aureae XIV rescriptae, semen v2, saccharum,
+tabula, superficies res/census, deploy + re-expressio + vectes
+sigilli.
