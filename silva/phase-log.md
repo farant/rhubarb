@@ -7575,3 +7575,64 @@ umbravit includem citatam ("silva.h" quaerit directorium plagulae
 includentis PRIMUM) - sonda phantasma-errores dedit; sanatio
 includem angulatam; lectio in debugging-lessons (varians umbrae
 stalae). DESIDERATUM: nihil novum.
+
+## MACRO DOMESTICUM IN CAPITE ALIENO — INTENTIO (2026-07-14, contextu calido; exemplar rung-5 captura-tunc-implementa)
+
+PROPOSITUM: diagnosticum examinis quando macro DOMESTICUM in textu
+capitis VENDICATI expanditur — classis "char C -> char 100"
+(sqlite3.h hodie; stb ante). Subcasus tacitus quem solum origo
+capit: expansio quae COMPILAT (parametrum arithmeticum -> litera
+numerica = responsum pravum, non error). Censor-varians DECLINATA
+ut supervacua (impulsus ad editionem = tutela vera; inventarium
+dormiens nihil emit; veritas una, domus una).
+
+REGULA (generalis, non latina-sola): expansio cuius sedes
+invocationis in fonte ALIENO est (via fontis incipit "vendor/" aut
+continet "/vendor/") ET cuius definitio in fonte NON alieno -> 
+diagnosticum. Vendicatum-in-vendicato tacet; domesticum-in-alieno
+clamat. Codices vendor numquam macros nostros consulto adhibent -
+falsa positiva nulla exspectata.
+
+DECIPULA PORTANS (hoc solum contextus calidus scit): definitio
+macrorum latinae in mundo iudicis NON in include/latina.h sedet -
+LEXICON latina in TEXTUM SYSTEMATIS concatenat (inventum M4b:
+"canalis macrorum"; praeparator cum_latina). Ergo test definitionis
+= "fons definitionis non alienus" (systema/lexicon/repositorium
+omnes non-alieni), NON "fons == latina.h". Regula generalis supra
+hoc gratis tractat.
+
+FORMA:
+- Sedes: examen (silva-latere, semantica/effusor M4a) - impulsus
+  LSP + diagnostica MCP octetim-identica gratis.
+- Ambulatio: lexemata TU cum catenis originis (exemplar
+  nexus_ordines_titulus_macronis - ascensus ad invocationem);
+  quaeque expansio: fons invocationis alienus? fons definitionis
+  non alienus? -> collige. Emissio SEMEL per par (titulus macronis,
+  via fontis alieni).
+- Positio: diagnosticum in plagula iudicata 1:1 (directiva
+  inclusionis linea in vista NON est - confirmatum hodie); textus
+  omnia nominat: "macro domesticum 'C' in capite vendicato expansum
+  (vendor/sqlite3.h:8883) - caput vendicatum ANTE latina.h
+  includendum". Gradus: SUSPECTUM (significationem tacite mutat).
+- Codex novus -> census codicum aureae renovandus; nomen codicis
+  INSIGILLATUM (sessio implementans conventiones codicum examinis
+  in fonte consulat ante cudendum).
+
+BARRAE:
+① fixtura positiva: fixa/examinis/vendor/<specimen>.h (via "/vendor/"
+  continet - regula viae ita exercetur; praebere basename-clavatum
+  specimen unde-cumque resolvit) cum identificatore collidenti +
+  .c quod latina.h ANTE specimen includit -> SUSPECTUM emissum;
+② ordo rectus (specimen ANTE latina) -> TACET;
+③ corpus sweep (examen_vectis -corpus): ZEPHYRUM inventa nova
+  exspectata (imago.c stb-ante-latina recta; scrinium.c
+  vendor-ante-latina recta) - inventum quodvis = aut vitium regulae
+  aut peccatum corporis verum (utrumque pretiosum);
+④ vectis pins + suita silvae + officina intactae;
+⑤ sumptus impulsus: iudicium scrinium.c (TU cum sqlite3.h 14k
+  linearum) intra budget ~0.5s manet (ambulatio originis vilis -
+  nexus eam per sweep totum iam solvit).
+
+COST AESTIMATUS: fascis dimidii diei (caerimonia vectis > codex
+ipse). Re-entry: hic + examen fons (effusor/relation) +
+examen_vectis.sh + fixa/examinis/ conventiones.

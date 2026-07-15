@@ -4511,3 +4511,23 @@ factus - semel-per-epocham vivum. ASPERITAS: probatio LSP-fluxus
 pro capitibus novis impossibilis (tmpfile praescriptum discum
 mutare nequit - semen quartum parci sonda-una-ictus); probatio
 praeparator-gradu substituta honesta. DESIDERATUM: nihil novum.
+
+### ADDENDUM ANTE COMPACTIONEM II (2026-07-14, nocte)
+
+Post-meridiem + vespera uno spiritu: legati instrumenta V+VI
+(inclusiones, corpus) + commentarium-in-chartis (accessor silvae
+commentarium_ducens = consumptor primus pinnae commentorum) +
+vigilia semel-per-epocham + fallax iudicis SANATA (directoria in
+tempora_capitum) + via-disambiguator + PHASE A TABULARII
+(vendor/sqlite3 + sigillum + scrinium - vide
+project-specs/tabularium-gradus.md, quod etiam scalam integram +
+decisionem nuclei smaragda-C + reductores machinulae portat).
+OMNIA VIVA-VERIFICATA per clientem verum.
+
+SIGILLA: omnia commissa praeter silva/phase-log.md (INTENTIO
+macro-domesticum-in-alieno, tractus proximus). Residentes recentes
+(reload post fallax-sanata).
+
+RE-ENTRY: hoc phase-log (fasces hodierni V) + silva/phase-log cauda
+(INTENTIO examen nova) + tabularium-gradus.md + legatus.worklog +
+scrinium/sigillum worklogs + memoria (tabula tractionum ⑥ nova).
