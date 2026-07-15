@@ -55,7 +55,10 @@ typedef struct {
                                         * (legatus definitio). */
     Xar*            tempora_capitum;   /* PraeparatorCaputTempus -
                                         * omnia capita onerata
-                                        * (systema + repositorium);
+                                        * (systema + repositorium)
+                                        * + DIRECTORIA ambulata
+                                        * (mtime parentis = inventio
+                                        * capitum novorum, 2026-07-14);
                                         * pro caput_stalum */
 } Praeparatio;
 

@@ -4465,3 +4465,49 @@ _commentarium_capere post renominationem - lista omnium IV sedium
 gratis), aureae, sondae -mcp. FRUCTUS: refactura symboli sine
 regressione (aureae 252 tenebant). ASPERITAS: nulla nova.
 DESIDERATA: corpus macronis plenum (parcum supra); cetera vacua.
+
+## FALLAX IUDICIS SANATA + VIA DISAMBIGUATOR (2026-07-14, sero)
+
+Duo tractus ex debrief phase-A (tria incendia fallacis, sedes
+lectionis grep-atae):
+
+① INVENTIO CAPITUM NOVORUM: radix altior quam parcum nominabat -
+praeparator_caput_stalum tempora capitum NOTORUM sola comparabat;
+caput RECENS NATUM invisibile AMBOBUS modis (MCP quoque, non solum
+LSP). Sanatio elegans: DIRECTORIA in tempora_capitum eadem
+(plagula nova/deleta/renominata mtime parentis pulsat - POSIX;
+stat in directoriis fungitur; ansa examinis IMMUTATA - introitus
+directorii ut introitus capitis). Commemoratio ANTE percursum
+(creatio durante ambulatione proximo examine detegitur). LSP:
+_contextum_reaedificare ex _didsave extractum (ordo rigidus C11
+(1)(2)(3) communis); didOpen nunc caput_stalum examinat ->
+reaedificatio ante iudicium. MCP gratis per _aetates_custodire.
+Probatio: praeparator-gradu (caput fictum + utime directorii
+[granularitas secundi!] -> stalum detectum -> reaedificatio ->
+basename resolvitur). Fenestra secundi-eiusdem manet (mtime
+granularitas) - parcum nanosecundarum vetus tegit.
+
+② VIA DISAMBIGUATOR: symbolum/corpus argumentum 'via' OPTIONALE
+(suffixum, limite '/' - exemplar vigiliae congruentiae); tituli
+multi-definiti (_ch SEPTEMDECIES definitum; statica per plagulas)
+nunc certe eligibiles; in fallendo "sedes notae" enumerantur
+(auto-docens, VIII tectae). _mcp_instrumentum argumentum alterum
+optionale accepit (schema sine necessaria). INVENTUM AUREAE:
+principale non idoneum specimen - MACRO est, ordines functionis
+'main' titulantur (aurea commentata).
+
+BARRAE: 282/282 (capita-nova probatio; corpus+via _ch e XVII;
+via ignota -> sedes notae); suita 12/12; sonda viva _ch per
+probatio_silva_semantica.c = corpus rectum e XVII. Reconexio
+/reload-plugins + /mcp instrumenta nova fert (vigilia
+semel-per-epocham iam VIVA visa post reload priorem: monitum unum
+mundum in editione clausurae, non undecies).
+
+DEBRIEF: adhibita impulsus (×3: prototypum deesse, sedes sex
+argumentorum enumeratae, praeparator.h include deesse - OMNIA ad
+editionem capta), awk super tsv (diagnosis principale-est-macro
+uno ictu), sondae vivae. FRUCTUS: impulsus post reload QUIETUS
+factus - semel-per-epocham vivum. ASPERITAS: probatio LSP-fluxus
+pro capitibus novis impossibilis (tmpfile praescriptum discum
+mutare nequit - semen quartum parci sonda-una-ictus); probatio
+praeparator-gradu substituta honesta. DESIDERATUM: nihil novum.

@@ -558,3 +558,26 @@ sites). The repetition was correct disclosure that trained the
 reader to skim — the failure mode disclosure exists to prevent.
 MCP CAUTIO untouched (per-request, part of the answer's trust
 envelope).
+
+## 2026-07-14 — new-header discovery + via disambiguator
+
+The judge-miss root cause was deeper than the park's name: the
+tier-1 sweep compared KNOWN headers' mtimes, so a newly created
+header was invisible in BOTH modes — MCP never actually healed
+this either. Fix: directories ride in tempora_capitum alongside
+headers (a new/deleted/renamed file bumps the parent dir's mtime,
+POSIX-guaranteed; stat works on dirs; the sweep loop is unchanged).
+Recorded BEFORE each dir is scanned — creation during the walk is
+caught next check. LSP didOpen now runs the sweep and rebuilds via
+_contextum_reaedificare (extracted from _didsave — the rigid C11
+①②③ order shared); MCP inherits through _aetates_custodire.
+Same-second window remains (mtime seconds granularity — the old
+nanosecond-mtimes park covers it; tests force the difference with
+utime).
+
+via disambiguator: symbolum/corpus take optional 'via' (suffix
+match with '/' boundary). Golden lesson: principale is NOT a
+usable specimen — it's a latina macro; the function rows are
+titled 'main'. _ch (seventeen definitions across probatio files)
+is the canonical ambiguity specimen now. Misses list known sedes
+(capped 8) — the tool teaches its own arguments.

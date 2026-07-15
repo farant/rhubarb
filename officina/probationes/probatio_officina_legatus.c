@@ -12,6 +12,9 @@
  */
 
 #include "legatus.h"
+#include "praeparator.h"   /* probatio_capita_nova: inventio
+                            * capitum novorum */
+#include "tabula_dispersa.h"
 #include "tabellarius.h"
 #include "credo.h"
 #include "piscina.h"
@@ -1771,6 +1774,72 @@ probatio_vigilia (Piscina* p)
     remove(via_binarii);
 }
 
+/* inventio capitum NOVORUM (fallax iudicis 2026-07-14, tria
+ * incendia): directoria in tempora_capitum - plagula nova mtime
+ * parentis pulsat (POSIX), quod tempora capitum notorum sola
+ * videre non possunt */
+interior vacuum
+probatio_capita_nova (Piscina* p)
+{
+    constans character* via_capitis =
+        "officina/probationes/fixa/specimen_caput_novum.h";
+    Praeparatio praeparatio;
+    PraeparatorConfiguratio cfg;
+    Piscina* piscina_capitum;
+
+    (vacuum)p;
+    imprimere("--- Probans inventionem capitum novorum ---\n");
+    remove(via_capitis);
+
+    piscina_capitum = piscina_generare_dynamicum(
+        "probatio_capita_nova", 8388608);
+    CREDO_NON_NIHIL(piscina_capitum);
+    memset(&cfg, ZEPHYRUM, magnitudo(PraeparatorConfiguratio));
+    cfg.radix = _radix();
+    cfg.cum_latina = I;
+    CREDO_VERUM(praeparator_praeparare(&praeparatio,
+        piscina_capitum, &cfg) != ZEPHYRUM);
+    /* mundus recens: nihil stalum */
+    CREDO_VERUM(praeparator_caput_stalum(&praeparatio) == NIHIL);
+
+    /* caput novum nascitur */
+    {
+        FILE* pl = fopen(via_capitis, "wb");
+
+        CREDO_NON_NIHIL(pl);
+        fputs("typedef int specimen_novum_t;\n", pl);
+        fclose(pl);
+    }
+    /* utime directorii: granularitas secundi intra probationem
+     * eundem secundum caderet - tempus antiquum differentiam vim
+     * facit (exemplar vigiliae; identitas, non ordo) */
+    {
+        structura utimbuf tempora;
+
+        tempora.actime = 1000000L;
+        tempora.modtime = 1000000L;
+        CREDO_VERUM(utime("officina/probationes/fixa", &tempora)
+            == ZEPHYRUM);
+    }
+    /* stalum detectum (directorium mutatum = caput novum possibile) */
+    CREDO_VERUM(praeparator_caput_stalum(&praeparatio) != NIHIL);
+
+    /* reaedificatio: caput novum resolvitur */
+    praeparator_destruere(&praeparatio);
+    CREDO_VERUM(praeparator_praeparare(&praeparatio,
+        piscina_capitum, &cfg) != ZEPHYRUM);
+    {
+        vacuum* valor = NIHIL;
+
+        CREDO_VERUM(tabula_dispersa_invenire_literis(
+            praeparatio.viae_capitum, "specimen_caput_novum.h",
+            &valor));
+    }
+    praeparator_destruere(&praeparatio);
+    piscina_destruere(piscina_capitum);
+    remove(via_capitis);
+}
+
 /* ==================================================
  * RECENSIO (pars 2): plagula clausa numquam-in-tsv -> outgoingCalls
  * per superpositionem _recensere; editio + mtime alia -> iudicium
@@ -2022,6 +2091,19 @@ probatio_mcp (Piscina* p)
         "{\"jsonrpc\":\"2.0\",\"id\":15,\"method\":\"tools/call\","
         "\"params\":{\"name\":\"corpus\",\"arguments\":"
         "{\"titulus\":\"piscina_generare_dynamicm\"}}}");
+    /* via disambiguat: _ch septemdecies definitum (statica per
+     * plagulas probationum - NOTA: principale non idoneum, macro
+     * est, ordines functionis 'main' titulantur) */
+    _scribe_lineam(intra, p,
+        "{\"jsonrpc\":\"2.0\",\"id\":16,\"method\":\"tools/call\","
+        "\"params\":{\"name\":\"corpus\",\"arguments\":"
+        "{\"titulus\":\"_ch\","
+        "\"via\":\"probatio_scrinium.c\"}}}");
+    _scribe_lineam(intra, p,
+        "{\"jsonrpc\":\"2.0\",\"id\":17,\"method\":\"tools/call\","
+        "\"params\":{\"name\":\"corpus\",\"arguments\":"
+        "{\"titulus\":\"_ch\","
+        "\"via\":\"nusquam_xyz.c\"}}}");
     /* nullum "exit" - EOF fistulae = exitus ordinatus */
 
     rewind(intra);
@@ -2203,6 +2285,25 @@ probatio_mcp (Piscina* p)
             "piscina_generare_dynamicum"));
     }
 
+    n = _lege_lineam(extra, p, &bene);   /* corpus + via */
+    CREDO_VERUM(bene);
+    {
+        chorda textus = _mcp_textus(&n);
+
+        CREDO_VERUM(_chorda_continet(textus,
+            "probationes/probatio_scrinium.c"));
+        /* _ch HUIUS plagulae (strlen adhibet), non alterius */
+        CREDO_VERUM(_chorda_continet(textus, "strlen"));
+    }
+
+    n = _lege_lineam(extra, p, &bene);   /* corpus + via ignota */
+    CREDO_VERUM(bene);
+    {
+        chorda textus = _mcp_textus(&n);
+
+        CREDO_VERUM(_chorda_continet(textus, "sedes notae"));
+    }
+
     fclose(intra);
     fclose(extra);
 }
@@ -2229,6 +2330,7 @@ principale (vacuum)
     probatio_hover_symbola(piscina);
     probatio_macra(piscina);
     probatio_vigilia(piscina);
+    probatio_capita_nova(piscina);
     probatio_definitio_capitis(piscina);
     probatio_utf16(piscina);
     probatio_syntaxis_posita(piscina);

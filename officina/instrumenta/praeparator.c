@@ -119,6 +119,13 @@ _capita_praeparare (Praeparatio* p, Piscina* piscina_capitum,
     {
         redde;
     }
+    /* DIRECTORIUM ipsum commemoratur (2026-07-14, inventio capitum
+     * NOVORUM): plagula nova/deleta/renominata mtime directorii
+     * parentis pulsat (POSIX) - caput_stalum ita creationem videt,
+     * quam tempora capitum notorum sola videre non possunt.
+     * ANTE percursum stat-atur: creatio durante ambulatione
+     * proximo examine detegitur (conservativum). */
+    _tempus_commemorare(p, piscina_capitum, via);
     dum ((introitus = readdir(dir)) != NIHIL)
     {
         character via_plena[1024];
