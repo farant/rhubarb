@@ -355,3 +355,49 @@ RE-ENTRY POST COMPACTIONEM:
 RESIDENS CONEXUS = binarium ANTE tabulam/duplicata - /mcp reconnect
 bracchia nova capit. Incommissum: hic phase-log SOLUS (Fran cetera
 in itinere commisit - sigillum unum restat).
+
+# ===================================================================
+# K2 - RELATIONES PROPRIAE (nexus generibus, salus, opera)
+# ===================================================================
+
+## INTENTIO K2 (2026-07-15)
+
+Parcum tractum: 01KXJ2RVM4Y0FWF28MNCKSWX2B. Ritus compressus (per
+interrogationem, Q10): interrogatio 10 quaestionum ->
+project-specs/gesta-k2-interrogatio.md (crudum) ->
+project-specs/gesta-k2-spec.md (FONS IMPLEMENTATIONIS - ex illo
+aedifica, non ex summariis). Exploratores omissi: oraculum lectum
+directo (Relationships/Health/Tasks + reducer 759-770 + genusReducer
+1802 + _validateAttributeType 1790).
+
+DECRETA X (omnia in interrogatione):
+1. NEXUS SUBSUMPTUS - machinamentum unum vinculorum; genus seminatum
+   species:"nexus" (partes a/b unicus, verbum attributum, machina
+   vigens->solutum); eventus veteres nexus/denexus = TUMULI in
+   plicatura; vinculum vivum unum manu re-expressum (frustum C).
+2. emendatio-generis MANET integra-substitutio; fusio additiva =
+   comitas clientis, non semantica actorum.
+3. recordare-non-obstare EXTENDITUR ad membra (custodiae notae §VI
+   spec - octo probationes; eventus SEMPER cadit).
+4. salus SINE genere erratorum - custodiae notae iam flumen
+   erratorum nostrum; aestimatio pura status-contra-definitionem.
+5. opera = VOCABULARIUM, non API - probatio aurea G12 genus opus
+   definit et vitam ambulat per eventus exsistentes solos.
+6. typi attributorum: textus/numerus/veritas/TABULATUM (tags iam
+   tabulatum vivum; filetree = res palatii, K4-K5).
+7. MCP QUIETUM - nulla instrumenta nova; gerere nexus/denexus
+   grammatica eadem, saccharum super machinamentum novum; salus
+   passive in res/census.
+8. nomina: nexus EST verbum (nullum "relatio"); partes,
+   cardinalitas (unicus/aliquot/quotlibet), membrum-additum/
+   -remotum, salus, opus.
+9. semen v2 genera VIVA emendat (attributa: titulus necessarium,
+   corpus, tags, ancorae) - salus contra tabularium verum die primo.
+10. tabula membra = PLICATURA consumptoris (non scriptio in linea ut
+    TS) - architectura K1 exacte-semel; migratio 2 tabulam nexus
+    delet.
+
+FRUSTA: A machinamentum (migratio 2, reducer, plicatura membrorum,
+tumuli, custodiae, quaesita) / B salus / C tenens (semen v2,
+saccharum, tabula, deploy + sigillum). Goldens G1-G15 cum locis
+oraculi in spec §IX; divergentiae D1-D11 §X; vectes sigilli §XII.
