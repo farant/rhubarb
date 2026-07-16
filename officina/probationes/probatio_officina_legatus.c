@@ -2042,6 +2042,12 @@ probatio_mcp (Piscina* p)
         "{\"jsonrpc\":\"2.0\",\"id\":4,\"method\":\"tools/call\","
         "\"params\":{\"name\":\"diagnostica\",\"arguments\":"
         "{\"via\":\"lib/piscina.c\"}}}");
+    /* acervus commatibus (desideratum 'Diagnostica multiplex'):
+     * via secunda prava - linea erroris, non recusatio totius */
+    _scribe_lineam(intra, p,
+        "{\"jsonrpc\":\"2.0\",\"id\":41,\"method\":\"tools/call\","
+        "\"params\":{\"name\":\"diagnostica\",\"arguments\":"
+        "{\"via\":\"lib/piscina.c, lib/xar.c, nusquam.c\"}}}");
     _scribe_lineam(intra, p,
         "{\"jsonrpc\":\"2.0\",\"id\":5,\"method\":\"tools/call\","
         "\"params\":{\"name\":\"ignotum\"}}");
@@ -2166,6 +2172,20 @@ probatio_mcp (Piscina* p)
         chorda textus = _mcp_textus(&n);
 
         CREDO_VERUM(_chorda_continet(textus, "verdictum: ACCIPE"));
+    }
+
+    n = _lege_lineam(extra, p, &bene);   /* diagnostica acervus */
+    CREDO_VERUM(bene);
+    {
+        chorda textus = _mcp_textus(&n);
+
+        CREDO_VERUM(_chorda_continet(textus,
+            "== lib/piscina.c =="));
+        CREDO_VERUM(_chorda_continet(textus, "== lib/xar.c =="));
+        CREDO_VERUM(_chorda_continet(textus, "verdictum: ACCIPE"));
+        CREDO_VERUM(_chorda_continet(textus, "== nusquam.c =="));
+        CREDO_VERUM(_chorda_continet(textus,
+            "non analysabilis aut illegibilis"));
     }
 
     n = _lege_lineam(extra, p, &bene);   /* instrumentum ignotum */

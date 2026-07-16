@@ -9,6 +9,7 @@
 #include "gesta.h"
 #include "json.h"
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 /* ==================================================
@@ -1902,6 +1903,39 @@ gesta_census_generum (GestaMundus* mundus, Piscina* piscina)
     redde census;
 }
 
+/* comparator censūs tagorum: numerus descendens, tag ascendens
+ * in paritate (ordo stabilis legibilis - desideratum 'Census tags
+ * ordine numeri') */
+interior integer
+_tagos_comparare (constans vacuum* a, constans vacuum* b)
+{
+    constans GestaTagNumerus* ta = (constans GestaTagNumerus*)a;
+    constans GestaTagNumerus* tb = (constans GestaTagNumerus*)b;
+
+    si (ta->numerus != tb->numerus)
+    {
+        redde (ta->numerus > tb->numerus) ? -I : I;
+    }
+    {
+        i32 minima = ta->tag.mensura < tb->tag.mensura
+            ? ta->tag.mensura : tb->tag.mensura;
+        integer c = (minima > ZEPHYRUM)
+            ? memcmp(ta->tag.datum, tb->tag.datum,
+                  (memoriae_index)minima)
+            : ZEPHYRUM;
+
+        si (c != ZEPHYRUM)
+        {
+            redde c;
+        }
+        si (ta->tag.mensura == tb->tag.mensura)
+        {
+            redde ZEPHYRUM;
+        }
+        redde ta->tag.mensura < tb->tag.mensura ? -I : I;
+    }
+}
+
 Xar*
 gesta_census_tagorum (GestaMundus* mundus, Piscina* piscina)
 {
@@ -1998,6 +2032,38 @@ gesta_census_tagorum (GestaMundus* mundus, Piscina* piscina)
         }
     }
     scrinium_finire(e);
+    /* ordinatio (Xar segmentatus - acies plana, qsort,
+     * rescriptio in ordinem) */
+    {
+        i32 n = xar_numerus(census);
+
+        si (n > I)
+        {
+            GestaTagNumerus* plana = (GestaTagNumerus*)
+                piscina_allocare_ordinatum(piscina,
+                    (memoriae_index)n
+                        * magnitudo(GestaTagNumerus),
+                    (memoriae_index)magnitudo(vacuum*));
+
+            si (plana != NIHIL)
+            {
+                i32 i;
+
+                per (i = ZEPHYRUM; i < n; i++)
+                {
+                    plana[i] = *(GestaTagNumerus*)xar_obtinere(
+                        census, i);
+                }
+                qsort(plana, (memoriae_index)n,
+                    magnitudo(GestaTagNumerus), _tagos_comparare);
+                per (i = ZEPHYRUM; i < n; i++)
+                {
+                    *(GestaTagNumerus*)xar_obtinere(census, i)
+                        = plana[i];
+                }
+            }
+        }
+    }
     redde census;
 }
 

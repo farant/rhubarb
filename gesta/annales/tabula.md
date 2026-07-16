@@ -1,6 +1,6 @@
 # TABULA (proiectio tabularii - GENERATUM, noli manu edere)
 
-seq 93 - 2026-07-16T15:06:35.631Z
+seq 95 - 2026-07-16T15:16:45.134Z
 
 ## QUAESTIONES
 
@@ -37,8 +37,6 @@ seq 93 - 2026-07-16T15:06:35.631Z
 
 - Ancorae ut tabulatum typatum  `gesta mcp ergonomia`
 - Batch-symbolum multiplex  `legatus mcp messis-2026-07`
-- Census tags ordine numeri  `gesta ergonomia`
-- Diagnostica multiplex uno vocamine  `legatus mcp ergonomia`
 - MEMORY.md in tabularium migratio  `gesta meta messis-2026-07`
 - Origo argumentum in addere-gerere  `gesta mcp ergonomia`
 - Sonda una-ictus diagnostics pull  `legatus lsp messis-2026-07`

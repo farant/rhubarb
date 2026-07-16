@@ -567,3 +567,17 @@ REICE PRAE-EXSISTENS [utime, 7 ante -> 6 post]). Vivum: legati
 5892cea0806b2da0, tabularii 1782fb64faa0755f; manifesta 139/24
 lineae. Reconnect ambo capiet - posthac fontes editi CAUTIONEM
 ipsi pariunt ante reaedificationem.
+
+## RELATIO ERGONOMIA (2026-07-16) - census ordinatus + acervus verdictorum
+
+Desiderata duo impleta uno halitu: (1) gesta_census_tagorum nunc
+ordine numeri (descendens, tag lexicographice in paritate; Xar
+segmentatus -> acies plana + qsort + rescriptio; aurea proprietatis
+in XVI - numeri numquam crescunt trans indicem). (2) legati
+diagnostica vias PLURES commatibus accipit (idioma tags tabularii):
+acervus verdictorum capitibus "== via ==" per plagulam, via prava
+= linea erroris non recusatio totius; via una = effectus pristinus
+ad octetum (transcripta intacta). Suitae gesta 256 + legatus 288
+virides; examen ACCIPE. Inter opera: vigilia bis CAUTIONEM in
+responsis residentis tulit (binarium sub eo reaedificatum) -
+organum heri natum iam quotidianum.

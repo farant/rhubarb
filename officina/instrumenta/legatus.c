@@ -4758,9 +4758,11 @@ _mcp_toolslist_tractare (Legatus* l, Piscina* pn, JsonValor* id)
         "diagnostica",
         "Iudicium C89 plagulae ex disco (examen calidum): verdictum"
         " ACCIPE/REICE + diagnostica posita omnium graduum"
-        " (violatio/suspectum/domesticum/infra).",
+        " (violatio/suspectum/domesticum/infra). Viae plures"
+        " commatibus = acervus verdictorum uno vocamine.",
         "via",
-        "via plagulae .c/.h, relativa radici aut absoluta",
+        "via plagulae .c/.h (aut viae plures commatibus separatae),"
+        " relativa radici aut absoluta",
         NIHIL, NIHIL));
     json_tabulatum_addere(instrumenta, _mcp_instrumentum(pn,
         "symbolum",
@@ -4893,31 +4895,127 @@ _legati_viam_normare (Legatus* l, chorda via_arg, chorda* via_ex)
 #define LEGATI_LINEAE_GREGIS 8
 
 /* diagnostica {via}: iudicium SEMPER novum (paritas examinis =
- * iudica nunc; diagnostica non cachantur) */
+ * iudica nunc; diagnostica non cachantur). Viae PLURES commatibus
+ * separatae = acervus verdictorum uno vocamine (desideratum
+ * 'Diagnostica multiplex'; idioma tags tabularii) - via una =
+ * effectus pristinus ad octetum. */
 interior vacuum
 _legati_diagnostica (Legatus* l, Piscina* pn, JsonValor* id,
     JsonValor* argumenta)
 {
-    chorda via_arg = json_ad_chorda(json_objectum_capere(argumenta,
-        "via"));
+    chorda viae_arg = json_ad_chorda(json_objectum_capere(
+        argumenta, "via"));
     chorda via_sine;
     ChordaAedificator* effusor;
+    b32 plures = FALSUM;
+    i32 k;
 
-    si (!_legati_viam_normare(l, via_arg, &via_sine))
+    per (k = ZEPHYRUM; k < viae_arg.mensura; k++)
     {
-        _mcp_textum_respondere(l, pn, id, chorda_ex_literis(
-            "argumentum 'via' pravum aut extra radicem", pn),
-            VERUM);
+        si (viae_arg.datum[k] == (i8)',')
+        {
+            plures = VERUM;
+            frange;
+        }
+    }
+    si (!plures)
+    {
+        si (!_legati_viam_normare(l, viae_arg, &via_sine))
+        {
+            _mcp_textum_respondere(l, pn, id, chorda_ex_literis(
+                "argumentum 'via' pravum aut extra radicem", pn),
+                VERUM);
+            redde;
+        }
+        effusor = chorda_aedificator_creare(pn,
+            (memoriae_index)4096);
+        si (effusor == NIHIL
+            || _recensere(l, pn, via_sine, effusor) == NIHIL)
+        {
+            _mcp_textum_respondere(l, pn, id, chorda_ex_literis(
+                "plagula non analysabilis aut illegibilis", pn),
+                VERUM);
+            redde;
+        }
+        _mcp_textum_respondere(l, pn, id,
+            chorda_aedificator_finire(effusor), FALSUM);
         redde;
     }
-    effusor = chorda_aedificator_creare(pn, (memoriae_index)4096);
-    si (effusor == NIHIL
-        || _recensere(l, pn, via_sine, effusor) == NIHIL)
+    /* acervus: quaeque via caput suum accipit; via prava lineam
+     * erroris (non recusationem totius - acervus honestus) */
+    effusor = chorda_aedificator_creare(pn, (memoriae_index)8192);
+    si (effusor == NIHIL)
     {
         _mcp_textum_respondere(l, pn, id, chorda_ex_literis(
-            "plagula non analysabilis aut illegibilis", pn),
-            VERUM);
+            "apparatus fractus", pn), VERUM);
         redde;
+    }
+    {
+        i32 cursor = ZEPHYRUM;
+        i32 tractatae = ZEPHYRUM;
+
+        dum (cursor < viae_arg.mensura)
+        {
+            i32 initium = cursor;
+            chorda segmentum;
+
+            dum (cursor < viae_arg.mensura
+                && viae_arg.datum[cursor] != (i8)',')
+            {
+                cursor++;
+            }
+            segmentum.datum = viae_arg.datum + initium;
+            segmentum.mensura = (i32)(cursor - initium);
+            cursor++;
+            /* spatia marginum tondere (idioma tags) */
+            dum (segmentum.mensura > ZEPHYRUM
+                && segmentum.datum[0] == (i8)' ')
+            {
+                segmentum.datum++;
+                segmentum.mensura--;
+            }
+            dum (segmentum.mensura > ZEPHYRUM
+                && segmentum.datum[segmentum.mensura - I]
+                    == (i8)' ')
+            {
+                segmentum.mensura--;
+            }
+            si (segmentum.mensura == ZEPHYRUM)
+            {
+                perge;
+            }
+            si (tractatae > ZEPHYRUM)
+            {
+                (vacuum)chorda_aedificator_appendere_literis(
+                    effusor, "\n");
+            }
+            (vacuum)chorda_aedificator_appendere_literis(effusor,
+                "== ");
+            (vacuum)chorda_aedificator_appendere_chorda(effusor,
+                segmentum);
+            (vacuum)chorda_aedificator_appendere_literis(effusor,
+                " ==\n");
+            si (!_legati_viam_normare(l, segmentum, &via_sine))
+            {
+                (vacuum)chorda_aedificator_appendere_literis(
+                    effusor,
+                    "via prava aut extra radicem\n");
+            }
+            alioquin si (_recensere(l, pn, via_sine, effusor)
+                == NIHIL)
+            {
+                (vacuum)chorda_aedificator_appendere_literis(
+                    effusor,
+                    "plagula non analysabilis aut illegibilis\n");
+            }
+            tractatae++;
+        }
+        si (tractatae == ZEPHYRUM)
+        {
+            _mcp_textum_respondere(l, pn, id, chorda_ex_literis(
+                "argumentum 'via' vacuum", pn), VERUM);
+            redde;
+        }
     }
     _mcp_textum_respondere(l, pn, id,
         chorda_aedificator_finire(effusor), FALSUM);

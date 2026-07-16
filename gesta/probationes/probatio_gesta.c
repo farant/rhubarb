@@ -701,6 +701,38 @@ s32 principale (vacuum)
             }
         }
         CREDO_VERUM (urgens_inventum);
+
+        /* ordo numeri: numeri numquam crescunt trans indicem;
+         * paritate tag lexicographice non decrescit (desideratum
+         * 'Census tags ordine numeri') */
+        per (i = I; i < xar_numerus(ct); i++)
+        {
+            GestaTagNumerus* prior = (GestaTagNumerus*)
+                xar_obtinere(ct, i - I);
+            GestaTagNumerus* hic_t = (GestaTagNumerus*)
+                xar_obtinere(ct, i);
+
+            CREDO_VERUM (prior != NIHIL && hic_t != NIHIL);
+            si (prior == NIHIL || hic_t == NIHIL)
+            {
+                frange;
+            }
+            CREDO_VERUM (prior->numerus >= hic_t->numerus);
+            si (prior->numerus == hic_t->numerus)
+            {
+                i32 minima = prior->tag.mensura
+                        < hic_t->tag.mensura
+                    ? prior->tag.mensura : hic_t->tag.mensura;
+                integer c = (minima > ZEPHYRUM)
+                    ? memcmp(prior->tag.datum, hic_t->tag.datum,
+                          (memoriae_index)minima)
+                    : ZEPHYRUM;
+
+                CREDO_VERUM (c < ZEPHYRUM
+                    || (c == ZEPHYRUM && prior->tag.mensura
+                            <= hic_t->tag.mensura));
+            }
+        }
     }
 
     /* ========================================================
