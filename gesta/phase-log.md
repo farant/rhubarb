@@ -581,3 +581,61 @@ ad octetum (transcripta intacta). Suitae gesta 256 + legatus 288
 virides; examen ACCIPE. Inter opera: vigilia bis CAUTIONEM in
 responsis residentis tulit (binarium sub eo reaedificatum) -
 organum heri natum iam quotidianum.
+
+# ===================================================================
+# K3 - ACTIONES + PROCESSUS
+# ===================================================================
+
+## INTENTIO K3 (2026-07-16) - interrogatio + ritus plenus incohatus
+
+Parcum tractum + RETITULATUM: "Gesta K3: actiones + processus"
+(reducers machinulae in parcum proprium moti - statio propria cum
+ritu officina-gradus). Interrogatio XIV quaestionum (4 rotae, omnia
+commendata tenuerunt) post excursionem VIVAM per smaragda TS
+currentem (MCP claude_ai_smaragda): anatomia actionis
+Book/checkout, verruca checkout_v2/v3/v4 (nulla redefinitio in
+situ - validatio integrae-substitutionis nostrae!), processus
+Publication currens (ordines 3 concurrentes, porta convergentiae),
+591 opera perfecta.
+
+DECRETA MAIORA: porta obstat / effectus recordant (phases duae);
+executio = eventus actio-facta in flumine rei actionis (nullae
+tabulae laterales - TS input/action_taken subsumptae); verba
+clausa 1:1 in eventus; substitutio Latina + $novus.N (melioratio
+oraculi - referentiae creatorum); species:"actio" opes/argumenta/
+effectus (praevisus adprobatus = receptum princeps
+claudere-cum-decreto); rollback + actio-recusata; gradus tres v1
+(opus/actio/porta; fetch+ramus parcata); provectio avida
+anguste-icta (membra K2 = index!); semen v3 = opus + receptum
+princeps + RITUS-SIGNACULI (ritus milestonis ipse ut processus -
+K4 ritum ut instantiam primam K3 curret); instrumentum unum agere;
+recepta sunt codex (definitio numquam per MCP).
+
+PRIMITIVUM NOVUM NUCLEI: fascis atomicus (eventus N, transactio
+una, lineae annalium N ante COMMIT, plicaturae semel post).
+
+RITUS PLENUS: spec v1 scripta (gesta-k3-spec.md - SCOPUS
+exploratorum, NON fons aedificationis) + interrogatio cruda;
+EXPLORATORES TRES in cursu (fundo): E1 oraculum (TS Processes
+4655-5431 non lectum), E2 suturae nostrae (fascis atomicus,
+re-entrantia provectionis, membra), E3 fossio systematis VIVI
+(genera processuum 16, formae usus, quid computruerit). Spec-v2 =
+fons implementationis post relationes.
+
+## ADDENDUM K3 - RITUS PERFECTUS (2026-07-16)
+
+Exploratores III relati (verbatim: gesta-k3-exploratio-{1,2,3}.md) +
+rota interrogationis secunda (iunctio porta-sola oraculi; recusatio
+actio-gradus = obstructum-retenta, se-sanans). SPEC-V2 SCRIPTA =
+gesta-k3-spec-v2.md - FONS IMPLEMENTATIONIS (16 decisiones, ledger
+divergentiarum XIII, aureae XXIV, frusta A/B/C, vectes VI).
+
+Inventa portantia: 'post' + opes/ligamina processuum IN ORACULO NON
+SUNT (D8 - aedificamus consulto, receptum princeps ea postulat);
+fascis atomicus = ansa exhauriendi post-commissum (nulla recursio -
+scrinium BEGIN nidificatum non fert); decipulae B1/B2 (species-porta
+membrorum, fusio-v2 sine fine) in frusta A/C consutae; instantia
+definitionem PHOTOGRAPHAT ad ortum (systema vivum statūs absurdos
+monstravit); opera 97.6% processu-nata - membra-axis rectus.
+
+POST COMMISSIONEM FRANI: frustum A (fascis + actiones).

@@ -1,6 +1,6 @@
 # TABULA (proiectio tabularii - GENERATUM, noli manu edere)
 
-seq 95 - 2026-07-16T15:16:45.134Z
+seq 103 - 2026-07-16T16:08:25.596Z
 
 ## QUAESTIONES
 
@@ -16,7 +16,6 @@ seq 95 - 2026-07-16T15:16:45.134Z
 - [parcatum] AEDILIS stratum constructionis  `aedilis officina messis-2026-07`
 - [parcatum] Configuratio filtrorum per proiectum  `legatus examen aedilis messis-2026-07`
 - [parcatum] Corpora macronum plena in corpus  `legatus mcp messis-2026-07`
-- [parcatum] Gesta K3: reducers machinulae  `gesta machinula officina messis-2026-07`
 - [parcatum] Gesta K4-K5: rami + palatium  `gesta palace messis-2026-07`
 - [parcatum] Hover commentarium ducens rider  `legatus lsp messis-2026-07`
 - [parcatum] LEGATUSD daemon socketorum  `legatus mcp lsp messis-2026-07`
@@ -26,12 +25,14 @@ seq 95 - 2026-07-16T15:16:45.134Z
 - [parcatum] Nexus: instrumenta MCP propria  `gesta mcp messis-2026-07`
 - [parcatum] Piscina residentis: disciplina scratch  `gesta perf messis-2026-07`
 - [parcatum] Praedefinitum attributorum  `gesta messis-2026-07`
+- [parcatum] Reducers machinulae: mores-ut-data  `gesta machinula officina`
 - [parcatum] Rung 4 furcae + debounce unci  `nexus perf silva messis-2026-07`
 - [parcatum] Saltuarius v0.1  `saltuarius tessera messis-2026-07`
 - [parcatum] Salus per sordidas  `gesta perf messis-2026-07`
 - [parcatum] Sigillum ancorae symboli  `gesta legatus messis-2026-07`
 - [parcatum] Silva quaestio QB-QD  `silva saltuarius messis-2026-07`
 - [parcatum] Tabula: nexus multi-partium redditio  `gesta messis-2026-07`
+- [tractum] Gesta K3: actiones + processus  `gesta machinula officina messis-2026-07`
 
 ## DESIDERATA
 
@@ -44,13 +45,17 @@ seq 95 - 2026-07-16T15:16:45.134Z
 
 ## DECRETA
 
+- Actio: porta obstat, effectus recordant  `gesta messis-2026-07`
 - Censor-variant macro-domesticum declinata  `examen silva messis-2026-07`
 - Clausa manent in indice FTS  `gesta fts messis-2026-07`
+- Effectus = verba clausa in eventus 1:1  `gesta messis-2026-07`
 - Emendatio-generis manet integra-substitutio  `gesta messis-2026-07`
+- Executio actionis = eventus, non tabulae  `gesta messis-2026-07`
 - Genera ut eventus  `gesta messis-2026-07`
 - Nexus subsumptus: machinamentum unum vinculorum  `gesta messis-2026-07`
 - Nullum CLI geminum tabularii  `gesta mcp messis-2026-07`
 - Opera vocabularium sunt, non API  `gesta messis-2026-07`
+- Recepta sunt codex  `gesta mcp messis-2026-07`
 - Recordare-non-obstare extenditur ad membra  `gesta messis-2026-07`
 - Salus sine genere erratorum  `gesta messis-2026-07`
 - Vigilia una bibliotheca; invarians manifesti  `gesta legatus mcp officina`
