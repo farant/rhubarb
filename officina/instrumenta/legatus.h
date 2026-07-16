@@ -31,15 +31,23 @@ nomen structura {
     b32 cum_posix;               /* systema += POSIX; praevaletur ab
                                   * initializationOptions.posix */
     constans character* binarium_via;  /* argv[0] - vigilia sui
-                                        * (excubitor chunk 3);
-                                        * NIHIL = vigilia quieta
+                                        * (lib/vigilia); NIHIL =
+                                        * vigilia quieta
                                         * (probationes) */
-    constans character* fabrica_via;   /* NIHIL = "fabrica.tsv"
-                                        * (commoditas probationum) */
+    constans character* via_manifesti; /* manifestum clausurae a
+                                        * launchero scriptum
+                                        * (lib/vigilia - invarians:
+                                        * aedificator indicem
+                                        * scribit); NIHIL = vigilia
+                                        * fontium quieta */
     b32 modus_mcp;               /* VERUM = servus MCP (LEGATI):
                                   * framing lineis-delimitatum,
                                   * methodi tools; radix ex cfg
                                   * (initialize MCP rootUri caret) */
+    constans character* signum;  /* sigillum hex binarii (launcher
+                                  * computat, K2.1 exemplar
+                                  * tabularii) -> serverInfo.version;
+                                  * NIHIL = "0" */
 } LegatusConfiguratio;
 
 /* Ansa principalis: legere epistulas ex intra, respondere/publicare

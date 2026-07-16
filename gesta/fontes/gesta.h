@@ -279,7 +279,7 @@ s64
 gesta_hwm (
     GestaMundus*        mundus,
     constans character* consumptor);   /* "genera" | "res" |
-                                        * "nexus" | "membra" */
+                                        * "membra" */
 
 /* Scrinium subiacens (quaestiones liberae probationum - lectio;
  * scriptura per gesta_scribere SOLUM) */

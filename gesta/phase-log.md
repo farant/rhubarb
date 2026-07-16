@@ -466,3 +466,104 @@ PROXIMUM: frustum C (tenens + CUTOVER) - migratio 3, deletio
 plicaturae veteris, aureae XIV rescriptae, semen v2, saccharum,
 tabula, superficies res/census, deploy + re-expressio + vectes
 sigilli.
+
+## RELATIO K2 FRUSTUM C + SIGILLUM K2 (2026-07-15)
+
+**K2 SIGILLATUM.** Suitae 316/316 (gesta 253 + tabularium 63);
+examen ACCIPE quinquies; vectes sigilli VI/VI.
+
+CUTOVER: migratio III (tabula nexus deleta, consumptor retiratus);
+_nexui_applicare + ramus consumptoris deleti; aurea XIV rescripta
+(tumuli ubique - eventus veteres in actis cadunt, nihil tangunt).
+Cautela clang -Wstring-concatenation: elementum ultimum tabulae
+migrationum concatenationem trans lineas suspicatur - fragmenta
+media-enuntiatione secare.
+
+TENENS: semen v2 (genus nexus VI-um seminatum; emendatio
+integra-substitutio ex definitione currenti + ATTRIBUTA_V2 pro
+quinque generibus - idempotens per clavem 'attributa'); saccharum
+gerere nexus = creatio + membrum a + membrum b (grammatica eadem,
+responsum sagittale), denexus = vinculum per membra+verbum inventum
+-> status solutum; tabula NEXUS ex membris (sagitta bi-partibus,
+index crudus aliter); res superficies: socii (sagitta directionalis
+ex parte) + salus querelae; census: insalubres numerus.
+
+DEPLOY VIVUS (per fistulam launcheri - residens conexus VETUS,
+scripturae MCP vitatae post migrationem; testimonium alterum parci
+'Vigilia binarii'): migratio + semen v2 (seq 63->69), re-expressio
+vinculi impeditur-a ut res 01KXK5T8A629EME3639TZ6BH51 (69->72).
+
+VECTES: (I) suitae+examen supra; (II) annales==acta TENET;
+(III) replicatio==stans, tabulae AEQUALES octetim; (IV) sagitta
+in tabula per machinamentum novum; (V) insalubres 0 in copia viva
+- omnes res schemata v2 transeunt; (VI) instrumenta+doctrina
+intacta (diff vacuum in regionibus).
+
+INVENTUM (vectis II falso fractus primo cursu): copia scrinii WAL
+sine plagula -wal = acta trunca dum annales pleni - superset
+phantasma. Lex: copia verificationis = db+wal+shm aut checkpoint
+ante. In gesta.worklog.md.
+
+K2 parcum CLAUSUM (vita plena secunda). Parca nata K2 in tabulario
+(praedefinitum, instrumenta MCP propria, multi-partium redditio,
+salus per sordidas). POST COMPACTIONEM: /mcp reconnect residentis
+(binarium novum), deinde tractio proxima ex tabula.
+
+## RELATIO K2.1 - VIGILIA BINARII (2026-07-16)
+
+NAVIS eodem die quo consilium (Fran: "hash of itself... write a
+warning when the binary it started with is out of date"). Suitae
+325/325 (+9); examen ACCIPE (tabularium.c modo -posix).
+
+FORMA: launcher (non binarium ipsum!) sigillum computat - modo
+aedificavit, octetos habet; -signum/-binarium tradita. Residens:
+serverInfo.version = signum breve (erat "0" fixum); census
+'binarium <hex16>'; per tools/call stat unum (vile) -> mtime aut
+magnitudo mota -> sigillum disci confirmat -> obsoletum GLUTINOSUM
+-> CAUTIO VIGILIAE in omni responso (infundibulum
+_textum_respondere - praeteriri legendo non potest). Contentum
+idem (tactum/reaedificatum par) = status tacite renovatus.
+
+SUTURA POSIX: stat/sys-stat.h = macOS ex decreto, commentario
+notata; examen modo -posix iudicat; st_mtimespec.tv_sec (nomen
+verum macOS) pro macrone st_mtime quem lexicon nescit. Magnitudo
++ mtime ambo speculata - granularitas secundorum mtime probationem
+deterministicam per magnitudinem sinit.
+
+Scala staleness nunc tota tecta: fontes->obiecta->binarium
+(excubitor/fabrica) + binarium->processus (vigilia). Parcum
+Vigilia CLAUSUM (vita plena tertia), desideratum Signum versionis
+IMPLETUM (primum!). Vivum: b6aba9346d3826aa. Reconnect unum
+residentem vigilantem capiet - staleness posthac SE IPSA nuntiat.
+
+## RELATIO K2.2 - LIB/VIGILIA (2026-07-16)
+
+NAVIS: formae duae manu-volutae in bibliothecam unam fusae ANTE
+tertiam (Fran: "bundle the two... portable and not hand rolled per
+mcp server"). lib/vigilia.{c,h} + probatio_vigilia (unitas
+propria, quam neutra forma vetus habuit); tabularium et legatus
+AMBO adoptaverunt.
+
+FORMA: vigilia DISCI (binarium sub processu mutatum - sigillum
+confirmat) + vigilia FONTIUM (fons manifesti recentior binario) +
+signum identitatis; glutinosa cum promotione FONTES->BINARIUM.
+INVARIANS MANIFESTI: launcher clausuram scribit quam ipse
+compilat - vigil et aedificator dissentire non possunt; BFS
+fabricae in legato deleta (~200 lineae). MTEMPORA NANOSECUNDIS
+(st_mtimespec): fenestra eiusdem-secundi clausa - probationes
+deterministicae sine mora/utime (lex ns in probatione ipsa
+probata).
+
+ADOPTIO: tabularium - machina inlinea sublata, sys/stat e
+tabularium.c migravit (examen DEFAULT iterum!); superficies
+eaedem + vigilia fontium NOVA. legatus - construere/percurrere/
+congruit deleti, semantica epochae LSP servata (textus pinnati
+"LEGATUS IPSE STALUS" intacti - vox servi, mechanismus
+bibliothecae), transcripta viridia sine re-benedictione.
+
+Suitae: vigilia unitas + gesta 328 (75 tab) + legatus 282 -
+virides. Examen ACCIPE (vigilia.c modo -posix; probatio legati
+REICE PRAE-EXSISTENS [utime, 7 ante -> 6 post]). Vivum: legati
+5892cea0806b2da0, tabularii 1782fb64faa0755f; manifesta 139/24
+lineae. Reconnect ambo capiet - posthac fontes editi CAUTIONEM
+ipsi pariunt ante reaedificationem.

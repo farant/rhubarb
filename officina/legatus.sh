@@ -33,6 +33,7 @@ declare -a INCLUDE_FLAGS=(
 declare -a RADIX_FONTES=(
     "piscina" "chorda" "chorda_aedificator" "xar" "tabula_dispersa"
     "friatio" "internamentum" "json" "tabellarius" "similitudo"
+    "sigillum" "vigilia"
 )
 obj_files=""
 for f in "${RADIX_FONTES[@]}"; do
@@ -88,4 +89,27 @@ fi
 # -radix semper appenditur: modus MCP rootUri caret (LSP rootUri
 # praevalet cum adest - _radicem_statuere cfg->radix... ordo: cfg
 # vincit, ideo LSP quoque radicem rectam accipit)
-cd "$RADIX_DIR" && exec "$BIN" "$@" -radix "$RADIX_DIR"
+# vigilia (lib/vigilia): -signum = sigillum binarii ->
+# serverInfo.version; -manifestum = clausura quam HIC launcher
+# compilat (invarians: aedificator indicem scribit - vigil et
+# aedificator dissentire non possunt)
+MANIFEST="$BUILD_DIR/legatus.vigilia"
+{
+    echo "# clausura launcheri (generatum a legatus.sh)"
+    for f in "${RADIX_FONTES[@]}"; do echo "$RADIX_DIR/lib/$f.c"; done
+    echo "$RADIX_DIR/silva/amalgama/silva.c"
+    echo "$SILVA_H"
+    echo "$RADIX_DIR/silva/instrumenta/nexus_ordines.c"
+    echo "$RADIX_DIR/silva/instrumenta/nexus_ordines.h"
+    echo "$OFF_DIR/instrumenta/praeparator.c"
+    echo "$OFF_DIR/instrumenta/praeparator.h"
+    echo "$OFF_DIR/instrumenta/legatus.c"
+    echo "$OFF_DIR/instrumenta/legatus.h"
+    echo "$OFF_DIR/instrumenta/principalia/legatus.c"
+} > "$MANIFEST" 2>/dev/null
+SIGNUM="$(shasum -a 256 "$BIN" 2>/dev/null | cut -c1-64)"
+if [ -n "$SIGNUM" ]; then
+    cd "$RADIX_DIR" && exec "$BIN" "$@" -radix "$RADIX_DIR" -signum "$SIGNUM" -manifestum "$MANIFEST"
+else
+    cd "$RADIX_DIR" && exec "$BIN" "$@" -radix "$RADIX_DIR"
+fi

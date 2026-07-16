@@ -50,6 +50,8 @@ binarium	officina/build/legatus/legatus	lib/internamentum.c
 binarium	officina/build/legatus/legatus	lib/json.c
 binarium	officina/build/legatus/legatus	lib/tabellarius.c
 binarium	officina/build/legatus/legatus	lib/similitudo.c
+binarium	officina/build/legatus/legatus	lib/sigillum.c
+binarium	officina/build/legatus/legatus	lib/vigilia.c
 binarium	gesta/build/tabularium	gesta/instrumenta/tabularium_principale.c
 binarium	gesta/build/tabularium	gesta/fontes/gesta.c
 binarium	gesta/build/tabularium	gesta/fontes/tabularium.c
@@ -65,6 +67,7 @@ binarium	gesta/build/tabularium	lib/utf8.c
 binarium	gesta/build/tabularium	lib/json.c
 binarium	gesta/build/tabularium	lib/similitudo.c
 binarium	gesta/build/tabularium	lib/sigillum.c
+binarium	gesta/build/tabularium	lib/vigilia.c
 binarium	gesta/build/tabularium	lib/scrinium.c
 binarium	gesta/build/tabularium	lib/tabellarius.c
 binarium	gesta/build/nota_frigida	gesta/instrumenta/nota_frigida.c

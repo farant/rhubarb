@@ -609,3 +609,38 @@ FIELD REFERENCES demand +2 data points this session ("where does
 est_syntheticus get initialized", "where are ctx->lexica consumed")
 — both greps, both below symbol granularity. Pull board #1
 reconfirmed third session running.
+
+## 2026-07-16 — serverInfo.version = binary sigillum (K2.1 port)
+
+Ported the identity half of tabularium's vigilia: legatus.sh
+computes shasum of the freshly linked binary, passes -signum;
+both serverInfo sites (LSP "legatus" + MCP "legati") report the
+16-hex prefix instead of hardcoded "0". Find while porting:
+legatus already HAD the warning half (se_stalus watches its
+source closure vs startup binary mtime — fires BEFORE rebuild,
+persists after since the mtime is cached at spawn; complementary
+to tabularium's disk-hash watch which fires AFTER rebuild). The
+two servers now cover the binary→process staleness rung from
+both directions. Config: LegatusConfiguratio.signum (NIHIL="0",
+memset-zero tests unaffected — pinned transcripts keep "0").
+Poetic footnote: the running legati resident announced its own
+staleness via diagnostics push while we were adding the identity
+stamp to its successor.
+
+## 2026-07-16 (later) — vigilia migrated to lib/vigilia
+
+The fabrica-BFS closure (~200 lines: _vigilia_res_congruit,
+_vigiliam_construere, _vigiliam_percurrere) replaced by lib/vigilia
+with a launcher-written manifest (legatus.sh now emits
+build/legatus/legatus.vigilia listing exactly what it compiles).
+The MANIFEST INVARIANT is the design win: the watcher can never
+disagree with the builder about what triggers a rebuild — the old
+BFS was ABI-precise but could diverge from legatus.sh's actual
+rebuild conditions. Kept: LSP epoch semantics (stalus_nuntiatum),
+pinned "LEGATUS IPSE STALUS" texts (server voice, library
+mechanism), in-closure always-warn via vigilia_continet. Gained:
+disk-hash watch (post-rebuild detection) legatus never had, and
+ns-precision mtimes. cfg.fabrica_via → cfg.via_manifesti;
+transcripts stayed green without re-blessing. Note:
+probatio_officina_legatus is REICE under examen (utime fixtures)
+— PRE-EXISTING, count went 7→6 with this change.

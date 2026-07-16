@@ -1,5 +1,10 @@
 # GESTA K2 SPEC — RELATIONES PROPRIAE (nexus generibus, salus, opera)
 
+**K2 SEALED 2026-07-15** — all three chunks shipped, six seal bars met
+(suites 316/316, annales==acta, refold==standing, live link re-expressed,
+insalubres 0 on the live store, tool surface untouched). This spec is now
+the record of what was built.
+
 2026-07-15. Self-contained implementation source, same contract as
 gesta-k1-spec-v2.md: build from THIS file, not from summaries. Interview
 record: gesta-k2-interrogatio.md (10 decisions, all locked). Oracle:

@@ -61,6 +61,8 @@ declare -a RADIX_FONTES=(
     "json"
     "tabellarius"
     "similitudo"
+    "sigillum"
+    "vigilia"
 )
 
 FILTER="${1:-}"

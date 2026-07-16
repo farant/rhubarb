@@ -10,6 +10,9 @@ s32 principale (integer argc, character** argv)
 {
     TabulariumConfiguratio cfg;
     constans character* radix = ".";
+    constans character* signum = NIHIL;
+    constans character* via_binarii = NIHIL;
+    constans character* via_manifesti = NIHIL;
     integer k;
 
     per (k = I; k < argc; k++)
@@ -19,6 +22,24 @@ s32 principale (integer argc, character** argv)
             radix = argv[k + I];
             k++;
         }
+        alioquin si (strcmp(argv[k], "-signum") == ZEPHYRUM
+            && k + I < argc)
+        {
+            signum = argv[k + I];
+            k++;
+        }
+        alioquin si (strcmp(argv[k], "-binarium") == ZEPHYRUM
+            && k + I < argc)
+        {
+            via_binarii = argv[k + I];
+            k++;
+        }
+        alioquin si (strcmp(argv[k], "-manifestum") == ZEPHYRUM
+            && k + I < argc)
+        {
+            via_manifesti = argv[k + I];
+            k++;
+        }
         /* -mcp acceptum et omissum (modus unicus) */
     }
     cfg.radix = radix;
@@ -26,5 +47,8 @@ s32 principale (integer argc, character** argv)
     cfg.via_annalium = "gesta/annales/tabularium.jsonl";
     cfg.via_nexus = "build/nexus.tsv";
     cfg.via_tabulae = "gesta/annales/tabula.md";
+    cfg.signum = signum;
+    cfg.via_binarii = via_binarii;
+    cfg.via_manifesti = via_manifesti;
     redde tabularium_currere(&cfg, stdin, stdout);
 }

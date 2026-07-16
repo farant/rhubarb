@@ -1618,16 +1618,16 @@ probatio_macra (Piscina* p)
 }
 
 /* ==================================================
- * VIGILIA SUI (excubitor chunk 3): binarium residens fontibus
- * posterius -> diagnosticum in publicatione. Fabrica ficta +
- * binarium fictum cum mtempore antiquo (utime); clausura VERA
- * trans graphum verum (build/inclusiones.tsv - dependentia
- * probationis sicut nexus.tsv).
+ * VIGILIA SUI (lib/vigilia): binarium residens fontibus
+ * posterius -> diagnosticum in publicatione. Manifestum fictum
+ * (invarians launcheri: aedificator indicem scribit - graphus
+ * inclusionum supervacuus) + binarium fictum mtempore antiquo
+ * (utime).
  * ================================================== */
 
 interior vacuum
 _vigilia_agere (Piscina* p, constans character* via_binarii,
-    constans character* via_fabricae, b32 stalus_expectatus)
+    constans character* via_manifesti, b32 stalus_expectatus)
 {
     FILE* intra = tmpfile();
     FILE* extra = tmpfile();
@@ -1672,7 +1672,7 @@ _vigilia_agere (Piscina* p, constans character* via_binarii,
     rewind(intra);
     memset(&cfg, ZEPHYRUM, magnitudo(LegatusConfiguratio));
     cfg.binarium_via = via_binarii;
-    cfg.fabrica_via = via_fabricae;
+    cfg.via_manifesti = via_manifesti;
     CREDO_VERUM(legatus_currere(intra, extra, &cfg) == ZEPHYRUM);
     rewind(extra);
 
@@ -1728,19 +1728,18 @@ probatio_vigilia (Piscina* p)
 {
     constans character* via_binarii =
         "officina/build/probatio_vigilia_binarium";
-    constans character* via_fabricae =
-        "officina/build/probatio_vigilia_fabrica.tsv";
+    constans character* via_manifesti =
+        "officina/build/probatio_vigilia_manifestum";
 
     imprimere("--- Probans vigiliam sui (excubitor chunk 3) ---\n");
 
-    /* fabrica ficta: binarium fictum <- fons verus legati */
+    /* manifestum fictum: fons verus legati (recens per se) */
     {
-        FILE* pl = fopen(via_fabricae, "wb");
+        FILE* pl = fopen(via_manifesti, "wb");
 
         CREDO_NON_NIHIL(pl);
-        fprintf(pl, "# probatio vigiliae\n"
-            "binarium\t%s\tofficina/instrumenta/legatus.c\n",
-            via_binarii);
+        fputs("# probatio vigiliae\n"
+            "officina/instrumenta/legatus.c\n", pl);
         fclose(pl);
     }
 
@@ -1757,7 +1756,7 @@ probatio_vigilia (Piscina* p)
         tempora.modtime = 1000000L;
         CREDO_VERUM(utime(via_binarii, &tempora) == ZEPHYRUM);
     }
-    _vigilia_agere(p, via_binarii, via_fabricae, VERUM);
+    _vigilia_agere(p, via_binarii, via_manifesti, VERUM);
 
     /* casus recens: binarium nunc scriptum - vigilia quieta
      * (phantasma extra clausuram = via membri quoque probata) */
@@ -1768,9 +1767,9 @@ probatio_vigilia (Piscina* p)
         fputc('x', pl);
         fclose(pl);
     }
-    _vigilia_agere(p, via_binarii, via_fabricae, FALSUM);
+    _vigilia_agere(p, via_binarii, via_manifesti, FALSUM);
 
-    remove(via_fabricae);
+    remove(via_manifesti);
     remove(via_binarii);
 }
 

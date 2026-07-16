@@ -29,7 +29,7 @@ declare -a INCLUDE_FLAGS=(
 )
 declare -a RADIX_FONTES=(
     piscina chorda chorda_aedificator xar friatio tabula_dispersa
-    internamentum utf8 json similitudo sigillum scrinium
+    internamentum utf8 json similitudo sigillum vigilia scrinium
     tabellarius
 )
 declare -a VENDOR_FLAGS=(
@@ -82,4 +82,22 @@ if [ ! -f "$BIN" ] || [ "$main_src" -nt "$BIN" ] || [ -n "$obj_recentius" ] || [
     clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" "$main_src" $obj_files -o "$BIN" >&2 || exit 1
 fi
 
-cd "$RADIX_DIR" && exec "$BIN" "$@" -radix "$RADIX_DIR"
+# vigilia (lib/vigilia): sigillum binarii quod modo aedificavimus +
+# MANIFESTUM clausurae (invarians: aedificator indicem scribit -
+# vigil et aedificator dissentire non possunt). Residens monet cum
+# binarium in disco eum superat AUT fontes eum superant.
+MANIFEST="$BUILD_DIR/tabularium.vigilia"
+{
+    echo "# clausura launcheri (generatum a tabularium.sh)"
+    echo "$RADIX_DIR/vendor/sqlite3.c"
+    for f in "${RADIX_FONTES[@]}"; do echo "$RADIX_DIR/lib/$f.c"; done
+    ls "$GESTA_DIR"/fontes/*.c
+    echo "$GESTA_DIR/instrumenta/tabularium_principale.c"
+    find "$RADIX_DIR/include" "$GESTA_DIR/fontes" -name '*.h'
+} > "$MANIFEST" 2>/dev/null
+SIGNUM="$(shasum -a 256 "$BIN" 2>/dev/null | cut -c1-64)"
+if [ -n "$SIGNUM" ]; then
+    cd "$RADIX_DIR" && exec "$BIN" "$@" -radix "$RADIX_DIR" -signum "$SIGNUM" -binarium "$BIN" -manifestum "$MANIFEST"
+else
+    cd "$RADIX_DIR" && exec "$BIN" "$@" -radix "$RADIX_DIR"
+fi

@@ -6,6 +6,7 @@
 #include "piscina.h"
 #include "chorda.h"
 #include "tabularium.h"
+#include "sigillum.h"
 #include "credo.h"
 #include <stdio.h>
 #include <string.h>
@@ -14,6 +15,9 @@
 #define VIA_AN "gesta/build/probatio_tab.jsonl"
 #define VIA_NX "gesta/probationes/fixa/nexus_specimen.tsv"
 #define VIA_TB "gesta/build/probatio_tabula.md"
+#define VIA_BN "gesta/build/probatio_binarium_fictum.txt"
+#define VIA_MN "gesta/build/probatio_manifestum_fictum"
+#define VIA_FN "gesta/build/probatio_fons_fictus.c"
 
 interior vacuum
 _purgare (vacuum)
@@ -23,6 +27,25 @@ _purgare (vacuum)
     remove(VIA_DB "-shm");
     remove(VIA_AN);
     remove(VIA_TB);
+    remove(VIA_BN);
+    remove(VIA_MN);
+    remove(VIA_FN);
+}
+
+/* plagulam scribere (fixtura vigiliae) */
+interior b32
+_plagulam_scribere (constans character* via,
+    constans character* contentum)
+{
+    FILE* pl = fopen(via, "wb");
+
+    si (pl == NIHIL)
+    {
+        redde FALSUM;
+    }
+    fputs(contentum, pl);
+    fclose(pl);
+    redde VERUM;
 }
 
 /* plagulam totam ut litterae (vacuae si abest) */
@@ -118,6 +141,9 @@ s32 principale (vacuum)
     cfg.via_annalium = VIA_AN;
     cfg.via_nexus = VIA_NX;
     cfg.via_tabulae = VIA_TB;
+    cfg.signum = NIHIL;
+    cfg.via_binarii = NIHIL;
+    cfg.via_manifesti = NIHIL;
     t = tabularium_creare(piscina, &cfg);
     CREDO_NON_NIHIL (t);
     si (t == NIHIL)
@@ -228,7 +254,8 @@ s32 principale (vacuum)
     CREDO_VERUM (strstr(r, "perf") != NIHIL);
     CREDO_VERUM (strstr(r, "vocabularium") != NIHIL);
 
-    /* X. nexus inter res (gerere nexus + titulus alterius) */
+    /* X. nexus inter res (saccharum K2: res vinculi propria -
+     * creatio + membra duo; grammatica gerere eadem, G15) */
     r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":14,"
         "\"method\":\"tools/call\",\"params\":{\"name\":"
         "\"addere\",\"arguments\":{\"genus\":\"parcum\","
@@ -239,7 +266,9 @@ s32 principale (vacuum)
         "\"gerere\",\"arguments\":{\"res\":\"Parsura lenta\","
         "\"actus\":\"nexus\",\"verbum\":\"impeditur-a\","
         "\"alterum\":\"Cache calida\"}}}");
-    CREDO_VERUM (strstr(r, "eventum nexus scriptum") != NIHIL);
+    CREDO_VERUM (strstr(r, "creatum") != NIHIL);
+    CREDO_VERUM (strstr(r, "--impeditur-a-->") != NIHIL);
+    CREDO_VERUM (strstr(r, "Cache calida") != NIHIL);
 
     /* XI-b. tabula.md: res apertae praesentes, clausae absentes,
      * nexus redditus (proiectio plicata; INTENTIO K1.1) */
@@ -265,6 +294,29 @@ s32 principale (vacuum)
             == NIHIL);
         CREDO_VERUM (strstr(tabula, "Parsura lenta") != NIHIL);
     }
+
+    /* XI-c. denexus (G15): vinculum solvitur - status solutum,
+     * plicatura membra indicem purgat, sagitta e tabula evanescit
+     * (res vinculi et historia manent) */
+    r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":21,"
+        "\"method\":\"tools/call\",\"params\":{\"name\":"
+        "\"gerere\",\"arguments\":{\"res\":\"Parsura lenta\","
+        "\"actus\":\"denexus\",\"verbum\":\"impeditur-a\","
+        "\"alterum\":\"Cache calida\"}}}");
+    CREDO_VERUM (strstr(r, "solutum") != NIHIL);
+    {
+        constans character* tabula = _plagula_litterae(piscina,
+            VIA_TB);
+
+        CREDO_VERUM (strstr(tabula, "impeditur-a") == NIHIL);
+    }
+    /* denexus iterum = ignotus (iam solutum, index vacuus) */
+    r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":22,"
+        "\"method\":\"tools/call\",\"params\":{\"name\":"
+        "\"gerere\",\"arguments\":{\"res\":\"Parsura lenta\","
+        "\"actus\":\"denexus\",\"verbum\":\"impeditur-a\","
+        "\"alterum\":\"Cache calida\"}}}");
+    CREDO_VERUM (strstr(r, "nexus ignotus") != NIHIL);
 
     /* XII. tituli duplicati: addere monet, resolutio ambigua
      * candidatos nominat, res_id discernit (quaestio 'Tituli
@@ -300,6 +352,128 @@ s32 principale (vacuum)
             "\"method\":\"tools/call\",\"params\":{\"name\":"
             "\"res\",\"arguments\":{\"res\":\"Parsura lenta\"}}}");
         CREDO_VERUM (strstr(r, "annales") != NIHIL);
+    }
+
+    /* XIII. salus in superficiebus (K2 passiva): schema v2 in
+     * generibus VIVIS (tags = tabulatum) - valor chorda querelam
+     * parit; census insalubres numerat; res querelam ostendit;
+     * sanatio ambas purgat */
+    r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":40,"
+        "\"method\":\"tools/call\",\"params\":{\"name\":"
+        "\"gerere\",\"arguments\":{\"res\":\"Parsura lenta\","
+        "\"actus\":\"mutatio\",\"clavis\":\"tags\",\"valor\":"
+        "\"pravum-textus\"}}}");
+    CREDO_VERUM (strstr(r, "eventum mutatio scriptum") != NIHIL);
+    r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":41,"
+        "\"method\":\"tools/call\",\"params\":{\"name\":"
+        "\"census\",\"arguments\":{}}}");
+    CREDO_VERUM (strstr(r, "insalubres 1") != NIHIL);
+    r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":42,"
+        "\"method\":\"tools/call\",\"params\":{\"name\":\"res\","
+        "\"arguments\":{\"res\":\"Parsura lenta\"}}}");
+    CREDO_VERUM (strstr(r, "salus:") != NIHIL);
+    CREDO_VERUM (strstr(r, "[cautio]") != NIHIL);
+    CREDO_VERUM (strstr(r, "tags") != NIHIL);
+    r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":43,"
+        "\"method\":\"tools/call\",\"params\":{\"name\":"
+        "\"gerere\",\"arguments\":{\"res\":\"Parsura lenta\","
+        "\"actus\":\"mutatio\",\"datum\":\"{\\\"tags\\\":"
+        "[\\\"perf\\\",\\\"lsp\\\"]}\"}}}");
+    CREDO_VERUM (strstr(r, "eventum mutatio scriptum") != NIHIL);
+    r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":44,"
+        "\"method\":\"tools/call\",\"params\":{\"name\":"
+        "\"census\",\"arguments\":{}}}");
+    CREDO_VERUM (strstr(r, "insalubres 0") != NIHIL);
+
+    /* XIV. semen v2 idempotens (G14): initialize alterum NIHIL
+     * scribit - tabula content-deterministica octetim aequalis
+     * manet (caput = seq eventi ultimi) */
+    {
+        constans character* tabula_ante = _plagula_litterae(
+            piscina, VIA_TB);
+        Tabularium* t2 = tabularium_creare(piscina, &cfg);
+
+        CREDO_NON_NIHIL (t2);
+        si (t2 != NIHIL)
+        {
+            r = _mitte(t2, piscina, "{\"jsonrpc\":\"2.0\","
+                "\"id\":50,\"method\":\"initialize\",\"params\":"
+                "{\"protocolVersion\":\"2025-06-18\"}}");
+            CREDO_VERUM (strstr(r, "CONTRACTUS SCRIBAE") != NIHIL);
+            {
+                constans character* tabula_post =
+                    _plagula_litterae(piscina, VIA_TB);
+
+                CREDO_VERUM (strcmp(tabula_ante, tabula_post)
+                    == ZEPHYRUM);
+            }
+        }
+    }
+
+    /* XV. vigilia (lib/vigilia): signum in serverInfo.version +
+     * censu; fontes superantes -> CAUTIO; binarium motum ->
+     * promotio + CAUTIO glutinosa. Semantica profunda in
+     * probatio_vigilia (unitas); hic = integratio superficierum. */
+    {
+        Tabularium* t3;
+        TabulariumConfiguratio cfg3 = cfg;
+        Sigillum s;
+        character hex[SIGILLUM_HEX_MENSURA];
+        character breve[XVII];
+        constans character* contentum = "binarium fictum primum";
+
+        CREDO_VERUM (_plagulam_scribere(VIA_BN, contentum));
+        CREDO_VERUM (_plagulam_scribere(VIA_MN, VIA_FN "\n"));
+        s = sigillum_computare(contentum, strlen(contentum));
+        sigillum_hex(&s, hex);
+        memcpy(breve, hex, XVI);
+        breve[XVI] = '\0';
+        cfg3.signum = hex;
+        cfg3.via_binarii = VIA_BN;
+        cfg3.via_manifesti = VIA_MN;
+        t3 = tabularium_creare(piscina, &cfg3);
+        CREDO_NON_NIHIL (t3);
+        si (t3 != NIHIL)
+        {
+            r = _mitte(t3, piscina, "{\"jsonrpc\":\"2.0\","
+                "\"id\":60,\"method\":\"initialize\",\"params\":"
+                "{\"protocolVersion\":\"2025-06-18\"}}");
+            CREDO_VERUM (strstr(r, breve) != NIHIL);
+
+            r = _mitte(t3, piscina, "{\"jsonrpc\":\"2.0\","
+                "\"id\":61,\"method\":\"tools/call\",\"params\":"
+                "{\"name\":\"census\",\"arguments\":{}}}");
+            CREDO_VERUM (strstr(r, "binarium ") != NIHIL);
+            CREDO_VERUM (strstr(r, breve) != NIHIL);
+            CREDO_VERUM (strstr(r, "CAUTIO VIGILIAE") == NIHIL);
+
+            /* fons post ortum scriptus (lex ns - etiam eodem
+             * secundo detegitur) -> vigilia fontium */
+            CREDO_VERUM (_plagulam_scribere(VIA_FN,
+                "integer x;\n"));
+            r = _mitte(t3, piscina, "{\"jsonrpc\":\"2.0\","
+                "\"id\":62,\"method\":\"tools/call\",\"params\":"
+                "{\"name\":\"census\",\"arguments\":{}}}");
+            CREDO_VERUM (strstr(r, "CAUTIO VIGILIAE: fontes me"
+                " superant") != NIHIL);
+
+            /* binarium 'reaedificatum' contento alio -> promotio
+             * ad nuntium disci */
+            CREDO_VERUM (_plagulam_scribere(VIA_BN,
+                "binarium fictum alterum - contentum longius"));
+            r = _mitte(t3, piscina, "{\"jsonrpc\":\"2.0\","
+                "\"id\":63,\"method\":\"tools/call\",\"params\":"
+                "{\"name\":\"census\",\"arguments\":{}}}");
+            CREDO_VERUM (strstr(r, "CAUTIO VIGILIAE: binarium in"
+                " disco novius me") != NIHIL);
+
+            /* glutinosa: vocatio proxima etiam monet */
+            r = _mitte(t3, piscina, "{\"jsonrpc\":\"2.0\","
+                "\"id\":64,\"method\":\"tools/call\",\"params\":"
+                "{\"name\":\"quaerere\",\"arguments\":"
+                "{\"textus\":\"parsur*\"}}}");
+            CREDO_VERUM (strstr(r, "CAUTIO VIGILIAE") != NIHIL);
+        }
     }
 
     /* XI. nuntiatio tacite omissa; ping ante omnia licitum;

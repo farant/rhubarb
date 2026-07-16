@@ -36,6 +36,13 @@ nomen structura {
                                         * legibilis, post scripturas
                                         * regenerata); NIHIL = sine
                                         * tabula */
+    /* vigilia (lib/vigilia, K2.1): launcher sigillum binarii quod
+     * modo aedificavit computat + manifestum clausurae scribit -
+     * residens se ipsum inspicere non debet. Campi NIHIL =
+     * vigiliae partes quietae. */
+    constans character* signum;        /* sigillum hex (64) ad ortum */
+    constans character* via_binarii;   /* vigilia disci */
+    constans character* via_manifesti; /* vigilia fontium */
 } TabulariumConfiguratio;
 
 nomen structura Tabularium Tabularium;

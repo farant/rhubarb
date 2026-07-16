@@ -1,6 +1,6 @@
 # TABULA (proiectio tabularii - GENERATUM, noli manu edere)
 
-seq 63 - 2026-07-15T15:04:20.998Z
+seq 93 - 2026-07-16T15:06:35.631Z
 
 ## QUAESTIONES
 
@@ -32,14 +32,13 @@ seq 63 - 2026-07-15T15:04:20.998Z
 - [parcatum] Sigillum ancorae symboli  `gesta legatus messis-2026-07`
 - [parcatum] Silva quaestio QB-QD  `silva saltuarius messis-2026-07`
 - [parcatum] Tabula: nexus multi-partium redditio  `gesta messis-2026-07`
-- [parcatum] Vigilia binarii tabularii  `gesta excubitor messis-2026-07`
-- [tractum] Gesta K2: relationes propriae  `gesta messis-2026-07`
 
 ## DESIDERATA
 
 - Ancorae ut tabulatum typatum  `gesta mcp ergonomia`
 - Batch-symbolum multiplex  `legatus mcp messis-2026-07`
 - Census tags ordine numeri  `gesta ergonomia`
+- Diagnostica multiplex uno vocamine  `legatus mcp ergonomia`
 - MEMORY.md in tabularium migratio  `gesta meta messis-2026-07`
 - Origo argumentum in addere-gerere  `gesta mcp ergonomia`
 - Sonda una-ictus diagnostics pull  `legatus lsp messis-2026-07`
@@ -56,8 +55,11 @@ seq 63 - 2026-07-15T15:04:20.998Z
 - Opera vocabularium sunt, non API  `gesta messis-2026-07`
 - Recordare-non-obstare extenditur ad membra  `gesta messis-2026-07`
 - Salus sine genere erratorum  `gesta messis-2026-07`
+- Vigilia una bibliotheca; invarians manifesti  `gesta legatus mcp officina`
 - mcp_servus: copia non extractio  `mcp legatus gesta messis-2026-07`
 
 ## NEXUS
 
 - Sigillum ancorae symboli --impeditur-a--> LEGATUSD daemon socketorum
+- Saltuarius v0.1 --impeditur-a--> Silva quaestio QB-QD
+- Signum versionis residentis --pertinet-ad--> Vigilia binarii tabularii

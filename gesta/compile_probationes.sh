@@ -53,6 +53,7 @@ declare -a RADIX_FONTES=(
     "json"
     "similitudo"
     "sigillum"
+    "vigilia"
     "scrinium"
     "tabellarius"
     "credo"

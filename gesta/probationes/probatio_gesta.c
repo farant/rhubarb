@@ -563,13 +563,17 @@ s32 principale (vacuum)
     }
 
     /* ========================================================
-     * XIV. Plicatura nexuum (aurea X; TS conformatio:
-     * smaragda.ts:759-769 -> tripla plana)
+     * XIV. Eventus veteres nexus/denexus = TUMULI ubique (K2
+     * cutover, D2): in actis cadunt (historia sancta), statum rei
+     * NON tangunt (reductor ignotum), indicem membra NON tangunt
+     * (assertum XXI). Aurea X vetus tabulam nexus probabat -
+     * tabula ipsa migratione III sublata.
      * ======================================================== */
     {
         GestaEventum e;
-        ScriniumEnuntiatum* sel;
-        s64 n = -I;
+        chorda ante;
+        chorda post;
+        s64 seq_ante;
 
         e.res_id = NIHIL;
         e.genus_eventus = "creatio";
@@ -577,50 +581,21 @@ s32 principale (vacuum)
         e.actor = "fran";
         e.origo = "probatio";
         CREDO_VERUM (gesta_scribere(m, &e, id_b));
+        ante = gesta_res_datum(m, id_b, piscina);
+        seq_ante = gesta_seq_ultima(m);
         _scribe(m, id_b, "nexus",
             "{\"verbum\":\"impedit\",\"alterum\":\"alia\"}");
         _scribe(m, id_b, "nexus",
             "{\"verbum\":\"impedit\",\"alterum\":\"alia\"}");
         _scribe(m, id_b, "nexus",
             "{\"verbum\":\"tangit\",\"alterum\":\"alia\"}");
-        sel = scrinium_praeparare(gesta_scrinium(m),
-            "SELECT COUNT(*) FROM nexus WHERE res_a = ?");
-        CREDO_NON_NIHIL (sel);
-        scrinium_ligare_textum(sel, I,
-            chorda_ex_literis(id_b, piscina));
-        si (scrinium_gradi(sel) == SCRINIUM_ORDO)
-        {
-            n = scrinium_columna_numerus(sel, 0);
-        }
-        scrinium_finire(sel);
-        CREDO_VERUM (n == (s64)II);   /* duplicata IGNORATA */
-
         _scribe(m, id_b, "denexus",
             "{\"verbum\":\"impedit\",\"alterum\":\"alia\"}");
-        sel = scrinium_praeparare(gesta_scrinium(m),
-            "SELECT verbum FROM nexus WHERE res_a = ?");
-        CREDO_NON_NIHIL (sel);
-        scrinium_ligare_textum(sel, I,
-            chorda_ex_literis(id_b, piscina));
-        n = ZEPHYRUM;
-        {
-            chorda verbum_reliquum;
-
-            verbum_reliquum.mensura = ZEPHYRUM;
-            verbum_reliquum.datum = NIHIL;
-            dum (scrinium_gradi(sel) == SCRINIUM_ORDO)
-            {
-                verbum_reliquum = scrinium_columna_textus(sel, 0,
-                    piscina);
-                n = n + I;
-            }
-            CREDO_VERUM (n == (s64)I);
-            CREDO_VERUM (verbum_reliquum.mensura
-                    == (i32)strlen("tangit")
-                && memcmp(verbum_reliquum.datum, "tangit",
-                       strlen("tangit")) == ZEPHYRUM);
-        }
-        scrinium_finire(sel);
+        CREDO_VERUM (gesta_seq_ultima(m) == seq_ante + IV);
+        post = gesta_res_datum(m, id_b, piscina);
+        CREDO_VERUM (ante.mensura == post.mensura
+            && memcmp(ante.datum, post.datum,
+                   (memoriae_index)ante.mensura) == ZEPHYRUM);
     }
 
     /* ========================================================

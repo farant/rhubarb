@@ -10,6 +10,7 @@
  */
 
 #include "legatus.h"
+#include "vigilia.h"
 
 #include "piscina.h"
 #include "chorda.h"
@@ -141,19 +142,14 @@ nomen structura {
      * quam nullum scriptum videt. Clausura fontium propriorum ex
      * fabrica.tsv (ordines binarii) + build/inclusiones.tsv;
      * fons recentior binario -> diagnosticum in omni publicatione */
-    TabulaDispersa* clausura_sua;      /* via (sine "./") -> NIHIL */
-    Xar*            clausura_viae;     /* chorda (eaedem claves) -
-                                        * percursio iterabilis (MCP
-                                        * re-percurrit ad petitionem;
-                                        * LSP ad publicationem) */
-    longus          binarium_tempus;   /* mtime binarii; 0 = quieta */
-    b32             se_stalus;
+    Vigilia*        vigilia;           /* lib/vigilia: disci +
+                                        * fontium (manifestum
+                                        * launcheri); glutinosa */
     b32             stalus_nuntiatum;  /* monitum LSP semel per
                                         * epocham staleness emissum
                                         * (clausura propria SEMPER
                                         * monetur - vide sedem
                                         * publicationis) */
-    character       stalus_causa[LEGATUS_VIA_MAXIMA];
 
     /* LEGATI (modus MCP): framing lineis, methodi tools -
      * quaestiones nomine-basatae; sine documentis */
@@ -165,6 +161,42 @@ nomen enumeratio {
     LEGATUS_PERGE = 0,
     LEGATUS_FINI
 } LegatusCursus;
+
+/* vigiliam parare (lib/vigilia; manifestum launcheri - invarians:
+ * aedificator indicem scribit, vigil et aedificator dissentire non
+ * possunt) + inspectio prima cum nota stderr */
+interior vacuum
+_vigiliam_parare (Legatus* l, constans LegatusConfiguratio* cfg,
+    Piscina* pn)
+{
+    VigiliaConfiguratio vc;
+
+    vc.signum = (cfg != NIHIL) ? cfg->signum : NIHIL;
+    vc.via_binarii = (cfg != NIHIL) ? cfg->binarium_via : NIHIL;
+    vc.via_manifesti = (cfg != NIHIL) ? cfg->via_manifesti : NIHIL;
+    l->vigilia = vigilia_creare(l->perennis, &vc);
+    si (vigilia_inspicere(l->vigilia, pn) != VIGILIA_RECENS)
+    {
+        l->stalus_nuntiatum = FALSUM;
+        fprintf(stderr, "legatus: VIGILIA: %.900s\n",
+            vigilia_causa(l->vigilia));
+    }
+}
+
+/* inspectio cum epocha: transitio recens->stalus nuntiationem
+ * novam aperit (semantica 'semel per epocham' LSP; MCP eam ad
+ * introitum petitionis vocat - inventum shakedown #2) */
+interior vacuum
+_vigiliam_inspicere_epocha (Legatus* l, Piscina* pn)
+{
+    b32 ante = (vigilia_status(l->vigilia) != VIGILIA_RECENS);
+
+    si (vigilia_inspicere(l->vigilia, pn) != VIGILIA_RECENS
+        && !ante)
+    {
+        l->stalus_nuntiatum = FALSUM;
+    }
+}
 
 /* ==================================================
  * auxilia parva
@@ -1289,53 +1321,26 @@ _analysare_et_publicare (Legatus* l, Piscina* pn,
      * eius rem peiorem facit), aliae SEMEL per epocham staleness -
      * repetitio identica in omni editione lectorem obtundebat
      * (debrief 2026-07-14) donec /reload-plugins. */
-    si (!l->se_stalus && l->clausura_sua != NIHIL
-        && doc->via.mensura > II)
-    {
-        chorda via_sine;
-
-        via_sine.datum = doc->via.datum + II;
-        via_sine.mensura = doc->via.mensura - II;
-        si (tabula_dispersa_continet(l->clausura_sua, via_sine))
-        {
-            character via_b[LEGATUS_VIA_MAXIMA];
-
-            si ((memoriae_index)via_sine.mensura < magnitudo(via_b))
-            {
-                longus t;
-
-                sprintf(via_b, "%.*s", (int)via_sine.mensura,
-                    (constans character*)via_sine.datum);
-                t = praeparator_tempus_plagulae(via_b);
-                si (t > l->binarium_tempus)
-                {
-                    l->se_stalus = VERUM;
-                    l->stalus_nuntiatum = FALSUM;   /* epocha nova */
-                    sprintf(l->stalus_causa, "%s", via_b);
-                }
-            }
-        }
-    }
-    si (l->se_stalus)
+    _vigiliam_inspicere_epocha(l, pn);
+    si (vigilia_status(l->vigilia) != VIGILIA_RECENS)
     {
         b32 in_clausura = FALSUM;
 
-        si (l->clausura_sua != NIHIL && doc->via.mensura > II)
+        si (doc->via.mensura > II)
         {
             chorda via_s2;
 
             via_s2.datum = doc->via.datum + II;
             via_s2.mensura = doc->via.mensura - II;
-            in_clausura = tabula_dispersa_continet(l->clausura_sua,
-                via_s2);
+            in_clausura = vigilia_continet(l->vigilia, via_s2);
         }
         si (in_clausura || !l->stalus_nuntiatum)
         {
             character nuntius_b[LEGATUS_VIA_MAXIMA + CXXVIII];
 
-            sprintf(nuntius_b, "LEGATUS IPSE STALUS: %s recentior "
+            sprintf(nuntius_b, "LEGATUS IPSE STALUS: %.900s recentior "
                 "binario residente - responsa fortasse vetera; "
-                "/reload-plugins renovat", l->stalus_causa);
+                "/reload-plugins renovat", vigilia_causa(l->vigilia));
             json_tabulatum_addere(lista, _diagnosticum_json(pn,
                 ZEPHYRUM, ZEPHYRUM, ZEPHYRUM, I, II, nuntius_b,
                 "excubitor"));
@@ -4341,46 +4346,6 @@ _praeparationem_struere (Legatus* l)
     redde l->praeparata;
 }
 
-/* percursio vigiliae: clausura propria contra mtime binarii
- * CAPTUM. Semel stalus manet (respawn solum renovat - captura ad
- * initium). MCP eam ad introitum petitionis vocat (inventum
- * shakedown #2: se_stalus ad initium solum computabatur - editio
- * post spawn CAUTIONEM numquam accendebat; LSP per publicationem
- * iam re-percurrit). */
-interior vacuum
-_vigiliam_percurrere (Legatus* l)
-{
-    insignatus integer k;
-    character via_b[LEGATUS_VIA_MAXIMA];
-
-    si (l->se_stalus || l->clausura_viae == NIHIL
-        || l->binarium_tempus == 0L)
-    {
-        redde;
-    }
-    per (k = ZEPHYRUM; k < xar_numerus(l->clausura_viae); k++)
-    {
-        chorda* via = (chorda*)xar_obtinere(l->clausura_viae, k);
-        longus t;
-
-        si (via == NIHIL
-            || (memoriae_index)via->mensura >= magnitudo(via_b))
-        {
-            perge;
-        }
-        sprintf(via_b, "%.*s", (int)via->mensura,
-            (constans character*)via->datum);
-        t = praeparator_tempus_plagulae(via_b);
-        si (t > l->binarium_tempus)
-        {
-            l->se_stalus = VERUM;
-            l->stalus_nuntiatum = FALSUM;   /* epocha nova */
-            sprintf(l->stalus_causa, "%s", via_b);
-            redde;
-        }
-    }
-}
-
 /* CUSTODIA AETATUM ad introitum petitionis (lex aetatum spec-v2
  * §V): gradus I (capita praeparationis - modo MCP; LSP in didSave
  * confidit, mos vetus) -> cascade in gradum II; alioquin gradus II
@@ -4395,7 +4360,7 @@ _aetates_custodire (Legatus* l, Piscina* pn)
     }
     si (l->modus_mcp)
     {
-        _vigiliam_percurrere(l);
+        _vigiliam_inspicere_epocha(l, pn);
     }
     si (l->modus_mcp && l->praeparata)
     {
@@ -4556,266 +4521,6 @@ _radicem_statuere (Legatus* l, JsonValor* params,
     }
 }
 
-/* ==================================================
- * vigilia sui (excubitor chunk 3)
- * ================================================== */
-
-/* binarium_via in ordinem fabricae congruit si via ordine FINITUR
- * cum limite '/' (argv[0] absoluta, ordo radici relativus) */
-interior b32
-_vigilia_res_congruit (constans character* binarium_via,
-    constans character* res, memoriae_index res_m)
-{
-    memoriae_index bin_m = strlen(binarium_via);
-
-    si (res_m == ZEPHYRUM || bin_m < res_m)
-    {
-        redde FALSUM;
-    }
-    si (memcmp(binarium_via + (bin_m - res_m), res, res_m)
-        != ZEPHYRUM)
-    {
-        redde FALSUM;
-    }
-    redde (bin_m == res_m
-        || binarium_via[bin_m - res_m - I] == '/') ? VERUM : FALSUM;
-}
-
-/* clausuram fontium propriorum construere: ordines "binarium" ex
- * fabrica (fons .c) -> BFS trans graphum inclusionum -> tabula
- * viarum + percursio mtemporum. Quidquid deest = vigilia quieta
- * (numquam impedit). */
-interior vacuum
-_vigiliam_construere (Legatus* l,
-    constans LegatusConfiguratio* cfg)
-{
-    constans character* binarium;
-    constans character* fabrica_via;
-    Piscina* effimera;
-    character* textus;
-    insignatus integer mensura;
-    Xar* pila;                 /* chorda (viae visitandae) */
-    Xar* omnes;                /* chorda (clausura tota - percursio) */
-    TabulaDispersa* margines;  /* ex -> Xar<chorda>* (ad) */
-
-    binarium = cfg != NIHIL ? cfg->binarium_via : NIHIL;
-    si (binarium == NIHIL)
-    {
-        redde;   /* probationes sine fabrica - quieta */
-    }
-    l->binarium_tempus = praeparator_tempus_plagulae(binarium);
-    si (l->binarium_tempus == 0L)
-    {
-        redde;
-    }
-    fabrica_via = (cfg->fabrica_via != NIHIL) ? cfg->fabrica_via
-                                              : "fabrica.tsv";
-
-    effimera = piscina_generare_dynamicum("legatus_vigilia",
-        1048576);
-    si (effimera == NIHIL)
-    {
-        l->binarium_tempus = 0L;
-        redde;
-    }
-    pila = xar_creare(effimera, magnitudo(chorda));
-    omnes = xar_creare(effimera, magnitudo(chorda));
-    margines = tabula_dispersa_creare_chorda(effimera, CCLVI);
-    l->clausura_viae = xar_creare(l->perennis,
-        (i32)magnitudo(chorda));
-    l->clausura_sua = tabula_dispersa_creare_chorda(l->perennis,
-        CCLVI);
-    si (pila == NIHIL || omnes == NIHIL || margines == NIHIL
-        || l->clausura_sua == NIHIL)
-    {
-        l->clausura_sua = NIHIL;
-        l->binarium_tempus = 0L;
-        piscina_destruere(effimera);
-        redde;
-    }
-
-    /* fabrica: radices (ordines binarium quorum res = binarium) */
-    textus = praeparator_plagulam_legere(effimera, fabrica_via,
-        &mensura);
-    si (textus != NIHIL)
-    {
-        character* p = textus;
-
-        dum (*p != '\0')
-        {
-            character* linea = p;
-            character* t1 = NIHIL;
-            character* t2 = NIHIL;
-            character* finis;
-
-            dum (*p != '\0' && *p != '\n')
-            {
-                si (*p == '\t')
-                {
-                    si (t1 == NIHIL) { t1 = p; }
-                    alioquin si (t2 == NIHIL) { t2 = p; }
-                }
-                p++;
-            }
-            finis = p;
-            si (*p == '\n')
-            {
-                p++;
-            }
-            si (linea[ZEPHYRUM] == '#' || t1 == NIHIL || t2 == NIHIL)
-            {
-                perge;
-            }
-            si ((memoriae_index)(t1 - linea) == VIII
-                && memcmp(linea, "binarium", VIII) == ZEPHYRUM
-                && _vigilia_res_congruit(binarium, t1 + I,
-                       (memoriae_index)(t2 - t1 - I))
-                && (memoriae_index)(finis - t2) > III
-                && memcmp(finis - II, ".c", II) == ZEPHYRUM)
-            {
-                chorda* radix_nova = (chorda*)xar_addere(pila);
-                unio { constans character* c; i8* m; } u;
-
-                u.c = t2 + I;
-                radix_nova->datum = u.m;
-                radix_nova->mensura = (i32)(finis - t2 - I);
-            }
-        }
-    }
-    si (xar_numerus(pila) == ZEPHYRUM)
-    {
-        l->clausura_sua = NIHIL;
-        l->binarium_tempus = 0L;
-        piscina_destruere(effimera);
-        redde;
-    }
-
-    /* graphus inclusionum: margines ex -> ad */
-    textus = praeparator_plagulam_legere(effimera,
-        "build/inclusiones.tsv", &mensura);
-    si (textus != NIHIL)
-    {
-        character* p = textus;
-
-        dum (*p != '\0')
-        {
-            character* linea = p;
-            character* t1 = NIHIL;
-            character* t2 = NIHIL;
-
-            dum (*p != '\0' && *p != '\n')
-            {
-                si (*p == '\t')
-                {
-                    si (t1 == NIHIL) { t1 = p; }
-                    alioquin si (t2 == NIHIL) { t2 = p; }
-                }
-                p++;
-            }
-            si (*p == '\n')
-            {
-                p++;
-            }
-            si (linea[ZEPHYRUM] != '#' && t1 != NIHIL && t2 != NIHIL)
-            {
-                chorda ex;
-                chorda ad;
-                vacuum* valor;
-                Xar* lista;
-                unio { constans character* c; i8* m; } u;
-
-                u.c = linea;
-                ex.datum = u.m;
-                ex.mensura = (i32)(t1 - linea);
-                u.c = t1 + I;
-                ad.datum = u.m;
-                ad.mensura = (i32)(t2 - t1 - I);
-                si (tabula_dispersa_invenire(margines, ex, &valor))
-                {
-                    lista = (Xar*)valor;
-                }
-                alioquin
-                {
-                    lista = xar_creare(effimera,
-                        magnitudo(chorda));
-                    si (lista == NIHIL)
-                    {
-                        perge;
-                    }
-                    (vacuum)tabula_dispersa_inserere(margines, ex,
-                        lista);
-                }
-                {
-                    chorda* locus = (chorda*)xar_addere(lista);
-
-                    si (locus != NIHIL)
-                    {
-                        *locus = ad;
-                    }
-                }
-            }
-        }
-    }
-
-    /* BFS: pila -> clausura_sua (claves in perenni) + omnes */
-    dum (xar_numerus(pila) > ZEPHYRUM)
-    {
-        chorda nodus = *(chorda*)xar_obtinere(pila,
-            xar_numerus(pila) - I);
-        vacuum* valor;
-
-        xar_truncare(pila, xar_numerus(pila) - I);
-        si (tabula_dispersa_continet(l->clausura_sua, nodus))
-        {
-            perge;
-        }
-        {
-            chorda clavis = chorda_transcribere(nodus, l->perennis);
-            chorda* locus;
-
-            (vacuum)tabula_dispersa_inserere(l->clausura_sua,
-                clavis, NIHIL);
-            locus = (chorda*)xar_addere(omnes);
-            si (locus != NIHIL)
-            {
-                *locus = clavis;
-            }
-            /* lista iterabilis retenta (percursio ad petitionem) */
-            si (l->clausura_viae != NIHIL)
-            {
-                locus = (chorda*)xar_addere(l->clausura_viae);
-                si (locus != NIHIL)
-                {
-                    *locus = clavis;
-                }
-            }
-        }
-        si (tabula_dispersa_invenire(margines, nodus, &valor)
-            && valor != NIHIL)
-        {
-            Xar* lista = (Xar*)valor;
-            insignatus integer k;
-
-            per (k = ZEPHYRUM; k < xar_numerus(lista); k++)
-            {
-                chorda* filius = (chorda*)xar_obtinere(lista, k);
-                chorda* locus = (chorda*)xar_addere(pila);
-
-                si (locus != NIHIL)
-                {
-                    *locus = *filius;
-                }
-            }
-        }
-    }
-
-    /* percursio mtemporum: fons recentior binario -> stalus */
-    (vacuum)omnes;
-    _vigiliam_percurrere(l);
-
-    piscina_destruere(effimera);
-}
-
 interior vacuum
 _initialize_tractare (Legatus* l, Piscina* pn, JsonValor* id,
     JsonValor* params, constans LegatusConfiguratio* cfg)
@@ -4857,13 +4562,7 @@ _initialize_tractare (Legatus* l, Piscina* pn, JsonValor* id,
     }
     _exclusiones_onerare(l);
     _indicem_onerare(l);
-    _vigiliam_construere(l, cfg);
-    si (l->se_stalus)
-    {
-        fprintf(stderr, "legatus: VIGILIA: %s recentior binario "
-            "residente - /reload-plugins renovat\n",
-            l->stalus_causa);
-    }
+    _vigiliam_parare(l, cfg, pn);
     l->initiatum = VERUM;
 
     {
@@ -4899,7 +4598,9 @@ _initialize_tractare (Legatus* l, Piscina* pn, JsonValor* id,
         json_objectum_ponere(servus, "name",
             json_chorda_creare_literis(pn, "legatus"));
         json_objectum_ponere(servus, "version",
-            json_chorda_creare_literis(pn, "0"));
+            json_chorda_creare_literis(pn,
+                vigilia_signum_breve(l->vigilia)[ZEPHYRUM] != '\0'
+                    ? vigilia_signum_breve(l->vigilia) : "0"));
         json_objectum_ponere(resultatum, "capabilities", caps);
         json_objectum_ponere(resultatum, "serverInfo", servus);
         _respondere(l, tabellarius_responsum(pn, id, resultatum));
@@ -5010,12 +4711,7 @@ _mcp_initialize_tractare (Legatus* l, Piscina* pn, JsonValor* id,
     }
     _exclusiones_onerare(l);
     _indicem_onerare(l);
-    _vigiliam_construere(l, cfg);
-    si (l->se_stalus)
-    {
-        fprintf(stderr, "legati: VIGILIA - %s recentior binario\n",
-            l->stalus_causa);
-    }
+    _vigiliam_parare(l, cfg, pn);
     l->initiatum = VERUM;
 
     {
@@ -5039,8 +4735,12 @@ _mcp_initialize_tractare (Legatus* l, Piscina* pn, JsonValor* id,
         json_objectum_ponere(resultatum, "capabilities", caps);
         json_objectum_ponere(servus, "name",
             json_chorda_creare_literis(pn, "legati"));
+        /* versio = signum binarii (K2.1) - "quale binarium es?"
+         * uno vocamine */
         json_objectum_ponere(servus, "version",
-            json_chorda_creare_literis(pn, "0"));
+            json_chorda_creare_literis(pn,
+                vigilia_signum_breve(l->vigilia)[ZEPHYRUM] != '\0'
+                    ? vigilia_signum_breve(l->vigilia) : "0"));
         json_objectum_ponere(resultatum, "serverInfo", servus);
         json_objectum_ponere(resultatum, "instructions",
             json_chorda_creare_literis(pn, LEGATI_DOCTRINA));
@@ -5118,23 +4818,20 @@ _mcp_textum_respondere (Legatus* l, Piscina* pn, JsonValor* id,
     JsonValor* fragmentum = json_objectum_creare(pn);
     chorda corpus = textus;
 
-    si (l->se_stalus)
+    si (vigilia_cautio(l->vigilia) != NIHIL)
     {
         ChordaAedificator* aed = chorda_aedificator_creare(pn,
             (memoriae_index)textus.mensura + LEGATUS_VIA_MAXIMA
-                + CXXVIII);
+                + CCLVI);
 
         si (aed != NIHIL)
         {
-            character cautio_b[LEGATUS_VIA_MAXIMA + CXXVIII];
-
             (vacuum)chorda_aedificator_appendere_chorda(aed,
                 textus);
-            sprintf(cautio_b, "\nCAUTIO: LEGATI IPSE STALUS (%s"
-                " recentior binario) - /mcp reconnect renovat",
-                l->stalus_causa);
             (vacuum)chorda_aedificator_appendere_literis(aed,
-                cautio_b);
+                "\n");
+            (vacuum)chorda_aedificator_appendere_literis(aed,
+                vigilia_cautio(l->vigilia));
             corpus = chorda_aedificator_finire(aed);
         }
     }

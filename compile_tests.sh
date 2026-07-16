@@ -51,6 +51,7 @@ declare -a SOURCE_FILES=(
     "lib/entitas_repositorium_impl.c"
     "lib/friatio.c"
     "lib/sigillum.c"
+    "lib/vigilia.c"
     "lib/scrinium.c"
     "lib/xml.c"
     "lib/stml.c"

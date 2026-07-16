@@ -59,9 +59,17 @@ interior constans character* constans GESTA_MIGRATIONES[] = {
     "  membrum TEXT NOT NULL);"
     "CREATE INDEX idx_membra_membrum ON membra(membrum);"
     "CREATE INDEX idx_membra_res ON membra(res_id);"
+    ,
+    /* migratio III (K2 frustum C - CUTOVER): tabula nexus vetus
+     * cadit, consumptor eius retiratur; vincula = res nexus-speciei
+     * + index membra solum. Eventus veteres nexus/denexus in actis
+     * manent ut TUMULI (D2). */
+    "DROP TABLE nexus;"
+    " DELETE FROM consumptores"
+    " WHERE titulus = 'nexus';"
 };
 
-#define GESTA_MIGRATIONES_NUMERUS II
+#define GESTA_MIGRATIONES_NUMERUS III
 
 structura GestaMundus {
     Piscina*            piscina;
@@ -917,52 +925,6 @@ _rei_applicare (GestaMundus* m, chorda res_id, chorda genus_eventus,
     }
 }
 
-/* eventum unum in plicaturam nexuum applicare (chunk B; aurea X;
- * TS conformatio: smaragda.ts:759-769 membra role-clavata ->
- * tripla plana nostra, spec par XIII) */
-interior vacuum
-_nexui_applicare (GestaMundus* m, chorda res_id,
-    chorda genus_eventus, chorda datum, Piscina* piscina)
-{
-    b32 est_nexus = _chorda_est(genus_eventus, "nexus");
-    b32 est_denexus = _chorda_est(genus_eventus, "denexus");
-    JsonResultus r;
-    JsonValor* verbum;
-    JsonValor* alterum;
-    ScriniumEnuntiatum* e;
-
-    si (!est_nexus && !est_denexus)
-    {
-        redde;
-    }
-    r = json_legere(datum, piscina);
-    si (!r.successus || !json_est_objectum(r.radix))
-    {
-        redde;
-    }
-    verbum = json_objectum_capere(r.radix, "verbum");
-    alterum = json_objectum_capere(r.radix, "alterum");
-    si (verbum == NIHIL || !json_est_chorda(verbum)
-        || alterum == NIHIL || !json_est_chorda(alterum))
-    {
-        redde;
-    }
-    e = scrinium_praeparare(m->scrinium, est_nexus
-        ? "INSERT OR IGNORE INTO nexus (res_a, verbum, res_b)"
-          " VALUES (?, ?, ?)"
-        : "DELETE FROM nexus WHERE res_a = ? AND verbum = ?"
-          " AND res_b = ?");
-    si (e == NIHIL)
-    {
-        redde;
-    }
-    scrinium_ligare_textum(e, I, res_id);
-    scrinium_ligare_textum(e, II, json_ad_chorda(verbum));
-    scrinium_ligare_textum(e, III, json_ad_chorda(alterum));
-    (vacuum)scrinium_gradi(e);
-    scrinium_finire(e);
-}
-
 /* eventum unum in plicaturam membrorum applicare (K2 chunk A -
  * index vinculorum: membrum-additum inserit [duplicata licita],
  * membrum-remotum congruentia OMNIA delet [paritas reductoris],
@@ -1047,8 +1009,7 @@ _membris_applicare (GestaMundus* m, chorda res_id,
 /* genera consumptorum */
 #define GESTA_CONSUMPTOR_RES    0
 #define GESTA_CONSUMPTOR_GENERA 1
-#define GESTA_CONSUMPTOR_NEXUS  2
-#define GESTA_CONSUMPTOR_MEMBRA 3
+#define GESTA_CONSUMPTOR_MEMBRA 2
 
 /* consumptorem unum provehere: replicatio seq > hwm, applicatio,
  * hwm = seq ultima IN EADEM TRANSACTIONE (exacte-semel - emendatio
@@ -1087,11 +1048,6 @@ _consumptorem_plicare (GestaMundus* m,
         si (genus_consumptoris == GESTA_CONSUMPTOR_GENERA)
         {
             _generum_applicare(m, genus_ev, datum, m->piscina);
-        }
-        alioquin si (genus_consumptoris == GESTA_CONSUMPTOR_NEXUS)
-        {
-            _nexui_applicare(m, res_id, genus_ev, datum,
-                m->piscina);
         }
         alioquin si (genus_consumptoris == GESTA_CONSUMPTOR_MEMBRA)
         {
@@ -1137,9 +1093,9 @@ gesta_plicare (GestaMundus* mundus)
     {
         redde FALSUM;
     }
-    /* ORDO PORTANS: genera ante res (spec-v2 par V); nexus tertius
-     * (vetus, ad frustum C); membra QUARTUS - post res, quia
-     * solutum genus rei plicatum consulit (K2 spec par V) */
+    /* ORDO PORTANS: genera ante res (spec-v2 par V); membra
+     * TERTIUS - post res, quia solutum genus rei plicatum consulit
+     * (K2 spec par V) */
     si (!_consumptorem_plicare(mundus, "genera",
             GESTA_CONSUMPTOR_GENERA))
     {
@@ -1147,11 +1103,6 @@ gesta_plicare (GestaMundus* mundus)
     }
     si (!_consumptorem_plicare(mundus, "res",
             GESTA_CONSUMPTOR_RES))
-    {
-        redde FALSUM;
-    }
-    si (!_consumptorem_plicare(mundus, "nexus",
-            GESTA_CONSUMPTOR_NEXUS))
     {
         redde FALSUM;
     }
@@ -1604,8 +1555,6 @@ gesta_replicare (GestaMundus* mundus)
     si (!scrinium_exsequi(mundus->scrinium, "DELETE FROM res")
         || !scrinium_exsequi(mundus->scrinium,
                "DELETE FROM genera")
-        || !scrinium_exsequi(mundus->scrinium,
-               "DELETE FROM nexus")
         || !scrinium_exsequi(mundus->scrinium,
                "DELETE FROM membra")
         || !scrinium_exsequi(mundus->scrinium,

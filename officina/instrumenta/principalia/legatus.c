@@ -33,6 +33,18 @@ principale (integer argc, character** argv)
             cfg.radix = argv[i + I];
             i++;
         }
+        alioquin si (strcmp(argv[i], "-signum") == ZEPHYRUM
+            && i + I < argc)
+        {
+            cfg.signum = argv[i + I];
+            i++;
+        }
+        alioquin si (strcmp(argv[i], "-manifestum") == ZEPHYRUM
+            && i + I < argc)
+        {
+            cfg.via_manifesti = argv[i + I];
+            i++;
+        }
     }
     redde (integer)legatus_currere(stdin, stdout, &cfg);
 }
