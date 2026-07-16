@@ -281,15 +281,78 @@ _res_capere (GestaMundus* m, chorda res_id, Piscina* piscina)
     redde ordo;
 }
 
-/* genus datae speciei "nexus" est? (K2 spec par IV: species absens
- * = genus rerum ordinarium) */
+/* obumbrae fascis (K3 B3): res in eodem fasce creatae, nondum
+ * plicatae - validatio eventuum posteriorum eas videt. Exsistentia
+ * et genus tantum; status = status_initialis generis; datum vacuum
+ * (membra stantia ex obumbra nulla - salus posterior iudicat). */
+nomen structura {
+    chorda res_id;
+    chorda genus;
+} GestaObumbra;
+
+interior GestaResOrdo
+_res_capere_cum_obumbra (GestaMundus* m, chorda res_id,
+    Xar* obumbrae, Piscina* piscina)
+{
+    GestaResOrdo ordo = _res_capere(m, res_id, piscina);
+    i32 i;
+
+    si (ordo.exsistit || obumbrae == NIHIL)
+    {
+        redde ordo;
+    }
+    per (i = ZEPHYRUM; i < xar_numerus(obumbrae); i++)
+    {
+        GestaObumbra* ob = (GestaObumbra*)xar_obtinere(obumbrae,
+            i);
+
+        si (ob == NIHIL || !_chordae_pares(ob->res_id, res_id))
+        {
+            perge;
+        }
+        ordo.exsistit = VERUM;
+        ordo.genus = ob->genus;
+        ordo.titulus = _ch("");
+        ordo.status = _ch("");
+        ordo.datum = _ch("");
+        ordo.creatum = _ch("");
+        si (ob->genus.mensura > ZEPHYRUM)
+        {
+            chorda gd = _genus_datum_capere(m, ob->genus,
+                piscina);
+
+            si (gd.mensura > ZEPHYRUM)
+            {
+                JsonResultus r = json_legere(gd, piscina);
+
+                si (r.successus && json_est_objectum(r.radix))
+                {
+                    JsonValor* si_init = json_objectum_capere(
+                        r.radix, "status_initialis");
+
+                    si (si_init != NIHIL
+                        && json_est_chorda(si_init))
+                    {
+                        ordo.status = json_ad_chorda(si_init);
+                    }
+                }
+            }
+        }
+        frange;
+    }
+    redde ordo;
+}
+
+/* genus datae speciei est? (K2 spec par IV: species absens =
+ * genus rerum ordinarium; K3 species "actio" superveniunt -
+ * generalizatio E2 par 4) */
 interior b32
-_species_nexus_est (GestaMundus* m, chorda genus_titulus,
-    Piscina* piscina)
+_species_est (GestaMundus* m, chorda genus_titulus,
+    constans character* species, Piscina* piscina)
 {
     chorda gd;
     JsonResultus r;
-    JsonValor* species;
+    JsonValor* v;
 
     si (genus_titulus.mensura == ZEPHYRUM)
     {
@@ -305,9 +368,16 @@ _species_nexus_est (GestaMundus* m, chorda genus_titulus,
     {
         redde FALSUM;
     }
-    species = json_objectum_capere(r.radix, "species");
-    redde species != NIHIL && json_est_chorda(species)
-        && _chorda_est(json_ad_chorda(species), "nexus");
+    v = json_objectum_capere(r.radix, "species");
+    redde v != NIHIL && json_est_chorda(v)
+        && _chorda_est(json_ad_chorda(v), species);
+}
+
+interior b32
+_species_nexus_est (GestaMundus* m, chorda genus_titulus,
+    Piscina* piscina)
+{
+    redde _species_est(m, genus_titulus, "nexus", piscina);
 }
 
 /* partem nominatam in genere invenire (partes:
@@ -406,10 +476,12 @@ _transitio_licita (Piscina* piscina, chorda datum_generis,
  * OBSTAT: smaragda.ts:3731-3783, :3952-3958, :3990-3998 -
  * divergentia D3). Querela prima inventa redditur (litterae
  * staticae); NIHIL = sanum. Status ANTE eventum legitur (tectum/
- * duplicatum contra membra stantia iudicantur). */
+ * duplicatum contra membra stantia iudicantur). Obumbrae fascis
+ * (NIHIL licet) res in eodem fasce creatas visibiles faciunt
+ * (K3 B3 - vinculum modo creatum, membrum modo creatum). */
 interior constans character*
 _membrum_validare (GestaMundus* m, b32 additum, chorda res_id,
-    JsonValor* datum_obiectum, Piscina* piscina)
+    JsonValor* datum_obiectum, Xar* obumbrae, Piscina* piscina)
 {
     GestaResOrdo ordo;
     JsonValor* pars = json_objectum_capere(datum_obiectum, "pars");
@@ -432,7 +504,7 @@ _membrum_validare (GestaMundus* m, b32 additum, chorda res_id,
     c_membrum = json_ad_chorda(membrum);
 
     /* I. res vinculi genus nexus-speciei habeat */
-    ordo = _res_capere(m, res_id, piscina);
+    ordo = _res_capere_cum_obumbra(m, res_id, obumbrae, piscina);
     si (!ordo.exsistit
         || !_species_nexus_est(m, ordo.genus, piscina))
     {
@@ -497,7 +569,8 @@ _membrum_validare (GestaMundus* m, b32 additum, chorda res_id,
     }
     si (additum)
     {
-        GestaResOrdo alter = _res_capere(m, c_membrum, piscina);
+        GestaResOrdo alter = _res_capere_cum_obumbra(m, c_membrum,
+            obumbrae, piscina);
 
         /* III. membrum exsistat */
         si (!alter.exsistit)
@@ -1169,31 +1242,56 @@ _annalem_appendere (GestaMundus* m, s64 seq,
     redde VERUM;
 }
 
-/* scriptura cruda: validatio + transactio + annales; SINE plicatura
- * (gesta_scribere eam semel in fine agit). nuntius_violationis_out
- * (NIHIL licet): litterae in piscina si machina violata / genus
- * ignotum - vocans notam custodiae appendit. */
+/* creatum unum per fascem: strftime semel lectum (inter enuntiata
+ * progreditur - timestamp stabile per fascem, idem $nunc actionum;
+ * forma eadem ac DEFAULT columnae) */
+interior chorda
+_nunc_capere (GestaMundus* m)
+{
+    ScriniumEnuntiatum* e;
+    chorda nunc = _ch("");
+
+    e = scrinium_praeparare(m->scrinium,
+        "SELECT strftime('%Y-%m-%dT%H:%M:%fZ','now')");
+    si (e == NIHIL)
+    {
+        redde nunc;
+    }
+    si (scrinium_gradi(e) == SCRINIUM_ORDO)
+    {
+        nunc = scrinium_columna_textus(e, 0, m->piscina);
+    }
+    scrinium_finire(e);
+    redde nunc;
+}
+
+/* eventum paratum: GestaEventum solutum ante scripturam
+ * (decompositio K3 spec-v2 par III: praeparare / validare /
+ * inserere sine transactione propria - fascis BEGIN/COMMIT unum
+ * tenet) */
+nomen structura {
+    constans character* event_id;      /* ULID NUL-terminatum */
+    chorda              res_id;
+    constans character* genus_eventus;
+    chorda              datum_canon;
+    JsonValor*          datum_obiectum;
+    constans character* actor;
+    constans character* origo;
+    b32                 est_creatio;
+    b32                 est_generis;
+} GestaEventumParatum;
+
+/* praeparare: syntaxis + res_id effectivum. ULID creationis hic
+ * NON cuditur - fascis cudit (aut executor actionis prae-cudit ut
+ * $novus liget - E2 par 1) et res_id expressum tradit. */
 interior b32
-_scribere_crudum (GestaMundus* m, constans GestaEventum* e,
-    character* res_id_out, constans character** violatio_out)
+_eventum_praeparare (GestaMundus* m, constans GestaEventum* e,
+    GestaEventumParatum* p)
 {
     JsonResultus r;
-    JsonValor* datum_obiectum;
-    chorda datum_canon;
-    chorda res_id;
-    character ulid_res[GESTA_RES_ID_MENSURA];
-    character ulid_ev[SCRINIUM_ULID_MENSURA];
-    constans character* genus_ev = e->genus_eventus;
-    b32 est_creatio;
-    b32 est_generis;
-    s64 seq;
-    chorda creatum;
 
-    si (violatio_out != NIHIL)
-    {
-        *violatio_out = NIHIL;
-    }
-    si (genus_ev == NIHIL || e->actor == NIHIL)
+    memset(p, ZEPHYRUM, magnitudo(GestaEventumParatum));
+    si (e->genus_eventus == NIHIL || e->actor == NIHIL)
     {
         redde _fractum(m, "eventum sine genere aut actore");
     }
@@ -1204,219 +1302,372 @@ _scribere_crudum (GestaMundus* m, constans GestaEventum* e,
         redde _fractum(m, "datum malformatum (obiectum JSON"
             " requiritur)");
     }
-    datum_obiectum = r.radix;
-    datum_canon = json_scribere(datum_obiectum, m->piscina);
-
-    est_creatio = (strcmp(genus_ev, "creatio") == ZEPHYRUM);
-    est_generis = _est_eventus_generis(_ch(genus_ev));
+    p->datum_obiectum = r.radix;
+    p->datum_canon = json_scribere(r.radix, m->piscina);
+    p->genus_eventus = e->genus_eventus;
+    p->actor = e->actor;
+    p->origo = e->origo != NIHIL ? e->origo : "";
+    p->est_creatio = (strcmp(e->genus_eventus, "creatio")
+        == ZEPHYRUM);
+    p->est_generis = _est_eventus_generis(_ch(e->genus_eventus));
 
     /* res_id effectivum */
-    si (est_generis)
+    si (p->est_generis)
     {
-        JsonValor* titulus = json_objectum_capere(datum_obiectum,
-            "titulus");
+        JsonValor* titulus = json_objectum_capere(
+            p->datum_obiectum, "titulus");
 
         si (titulus == NIHIL || !json_est_chorda(titulus))
         {
             redde _fractum(m, "eventus generis sine titulo");
         }
-        res_id = json_ad_chorda(titulus);
-    }
-    alioquin si (est_creatio && e->res_id == NIHIL)
-    {
-        scrinium_ulid(ulid_res);
-        res_id = _ch(ulid_res);
+        p->res_id = json_ad_chorda(titulus);
     }
     alioquin si (e->res_id != NIHIL)
     {
-        res_id = _ch(e->res_id);
+        p->res_id = _ch(e->res_id);
     }
     alioquin
     {
         redde _fractum(m, "eventum sine res_id");
     }
+    redde VERUM;
+}
 
-    /* identitas: creatio duplicata recusatur (phase-log decisio 2) */
-    si (est_creatio)
+/* validatio - iudicat, non obstat (violatio -> nota custodiae
+ * intra fascem). Lectiones purae contra plicaturas stantes et
+ * obumbras fascis (B3). Litterae staticae aut in piscina;
+ * NIHIL = sanum. */
+interior constans character*
+_eventum_validare (GestaMundus* m, constans GestaEventumParatum* p,
+    Xar* obumbrae)
+{
+    si (p->est_creatio)
     {
-        GestaResOrdo ordo = _res_capere(m, res_id, m->piscina);
+        JsonValor* g = json_objectum_capere(p->datum_obiectum,
+            "genus");
 
-        si (ordo.exsistit)
+        si (g != NIHIL && json_est_chorda(g))
         {
-            redde _fractum(m, "creatio duplicata recusata (res iam"
-                " exsistit)");
+            chorda gd = _genus_datum_capere(m, json_ad_chorda(g),
+                m->piscina);
+
+            si (gd.mensura == ZEPHYRUM)
+            {
+                redde "violatio: genus ignotum ad creationem"
+                    " (definitio-generis deest)";
+            }
         }
+        redde NIHIL;
     }
-
-    /* validatio - iudicat, non obstat (violatio -> nota custodiae) */
-    si (violatio_out != NIHIL)
+    si (strcmp(p->genus_eventus, "status") == ZEPHYRUM)
     {
-        si (est_creatio)
+        GestaResOrdo ordo = _res_capere_cum_obumbra(m, p->res_id,
+            obumbrae, m->piscina);
+        JsonValor* novus = json_objectum_capere(p->datum_obiectum,
+            "novus");
+
+        si (ordo.exsistit && novus != NIHIL
+            && json_est_chorda(novus)
+            && ordo.genus.mensura > ZEPHYRUM)
         {
-            JsonValor* g = json_objectum_capere(datum_obiectum,
-                "genus");
+            chorda gd = _genus_datum_capere(m, ordo.genus,
+                m->piscina);
 
-            si (g != NIHIL && json_est_chorda(g))
+            si (!_transitio_licita(m->piscina, gd, ordo.status,
+                    json_ad_chorda(novus)))
             {
-                chorda gd = _genus_datum_capere(m,
-                    json_ad_chorda(g), m->piscina);
-
-                si (gd.mensura == ZEPHYRUM)
-                {
-                    *violatio_out = "violatio: genus ignotum ad"
-                        " creationem (definitio-generis deest)";
-                }
+                redde "violatio machinae: transitio extra"
+                    " machinam generis";
             }
         }
-        alioquin si (strcmp(genus_ev, "status") == ZEPHYRUM)
+        redde NIHIL;
+    }
+    si (strcmp(p->genus_eventus, "membrum-additum") == ZEPHYRUM
+        || strcmp(p->genus_eventus, "membrum-remotum") == ZEPHYRUM)
+    {
+        /* custodia membrorum K2 spec par VI (I-VIII) */
+        redde _membrum_validare(m,
+            strcmp(p->genus_eventus, "membrum-additum")
+                == ZEPHYRUM,
+            p->res_id, p->datum_obiectum, obumbrae, m->piscina);
+    }
+    si (p->est_generis)
+    {
+        /* status_initialis in machina appareat (si machina datur)
+         * - lex definitionis */
+        JsonValor* si_init = json_objectum_capere(
+            p->datum_obiectum, "status_initialis");
+        JsonValor* machina = json_objectum_capere(
+            p->datum_obiectum, "machina");
+
+        si (si_init != NIHIL && json_est_chorda(si_init)
+            && machina != NIHIL && json_est_tabulatum(machina)
+            && json_tabulatum_numerus(machina) > ZEPHYRUM)
         {
-            GestaResOrdo ordo = _res_capere(m, res_id, m->piscina);
-            JsonValor* novus = json_objectum_capere(datum_obiectum,
-                "novus");
+            chorda cs = json_ad_chorda(si_init);
+            b32 inventum = FALSUM;
+            i32 i;
+            i32 n = json_tabulatum_numerus(machina);
 
-            si (ordo.exsistit && novus != NIHIL
-                && json_est_chorda(novus)
-                && ordo.genus.mensura > ZEPHYRUM)
+            per (i = ZEPHYRUM; i < n && !inventum; i++)
             {
-                chorda gd = _genus_datum_capere(m, ordo.genus,
-                    m->piscina);
+                JsonValor* par = json_tabulatum_obtinere(machina,
+                    i);
+                i32 j;
 
-                si (!_transitio_licita(m->piscina, gd, ordo.status,
-                        json_ad_chorda(novus)))
+                si (par == NIHIL || !json_est_tabulatum(par))
                 {
-                    *violatio_out = "violatio machinae: transitio"
-                        " extra machinam generis";
+                    perge;
                 }
-            }
-        }
-        alioquin si (strcmp(genus_ev, "membrum-additum") == ZEPHYRUM
-            || strcmp(genus_ev, "membrum-remotum") == ZEPHYRUM)
-        {
-            /* custodia membrorum K2 spec par VI (I-VIII) */
-            *violatio_out = _membrum_validare(m,
-                strcmp(genus_ev, "membrum-additum") == ZEPHYRUM,
-                res_id, datum_obiectum, m->piscina);
-        }
-        alioquin si (est_generis)
-        {
-            /* status_initialis in machina appareat (si machina
-             * datur) - lex definitionis */
-            JsonValor* si_init = json_objectum_capere(
-                datum_obiectum, "status_initialis");
-            JsonValor* machina = json_objectum_capere(
-                datum_obiectum, "machina");
-
-            si (si_init != NIHIL && json_est_chorda(si_init)
-                && machina != NIHIL && json_est_tabulatum(machina)
-                && json_tabulatum_numerus(machina) > ZEPHYRUM)
-            {
-                chorda cs = json_ad_chorda(si_init);
-                b32 inventum = FALSUM;
-                i32 i;
-                i32 n = json_tabulatum_numerus(machina);
-
-                per (i = ZEPHYRUM; i < n && !inventum; i++)
+                per (j = ZEPHYRUM;
+                     j < json_tabulatum_numerus(par); j++)
                 {
-                    JsonValor* par = json_tabulatum_obtinere(
-                        machina, i);
-                    i32 j;
+                    chorda fin = json_ad_chorda(
+                        json_tabulatum_obtinere(par, j));
 
-                    si (par == NIHIL || !json_est_tabulatum(par))
+                    si (fin.mensura == cs.mensura
+                        && (cs.mensura == ZEPHYRUM
+                            || memcmp(fin.datum, cs.datum,
+                                   (memoriae_index)cs.mensura)
+                                == ZEPHYRUM))
                     {
-                        perge;
-                    }
-                    per (j = ZEPHYRUM;
-                         j < json_tabulatum_numerus(par); j++)
-                    {
-                        chorda fin = json_ad_chorda(
-                            json_tabulatum_obtinere(par, j));
-
-                        si (fin.mensura == cs.mensura
-                            && (cs.mensura == ZEPHYRUM
-                                || memcmp(fin.datum, cs.datum,
-                                       (memoriae_index)cs.mensura)
-                                    == ZEPHYRUM))
-                        {
-                            inventum = VERUM;
-                            frange;
-                        }
+                        inventum = VERUM;
+                        frange;
                     }
                 }
-                si (!inventum)
-                {
-                    *violatio_out = "violatio definitionis:"
-                        " status_initialis extra machinam";
-                }
+            }
+            si (!inventum)
+            {
+                redde "violatio definitionis: status_initialis"
+                    " extra machinam";
             }
         }
+        redde NIHIL;
     }
+    redde NIHIL;
+}
 
-    /* transactio: INSERT + creatum relegere + annales + sordidae */
-    scrinium_ulid(ulid_ev);
-    si (!scrinium_incipere(m->scrinium))
-    {
-        redde _fractum(m, scrinium_error(m->scrinium));
-    }
+/* inserere: INSERT + annales + sordidae - SINE BEGIN/COMMIT,
+ * intra transactionem apertam fascis currit. Creatum expresse
+ * ligatur (unum per fascem). */
+interior b32
+_eventum_inserere (GestaMundus* m,
+    constans GestaEventumParatum* p, chorda nunc)
+{
+    s64 seq;
+
     {
         ScriniumEnuntiatum* ins = scrinium_praeparare(m->scrinium,
             "INSERT INTO tessellae"
-            " (id, res_id, genus_eventus, datum, actor, origo)"
-            " VALUES (?, ?, ?, ?, ?, ?)");
+            " (id, res_id, genus_eventus, datum, actor, origo,"
+            "  creatum) VALUES (?, ?, ?, ?, ?, ?, ?)");
 
         si (ins == NIHIL)
         {
-            (vacuum)scrinium_revolvere(m->scrinium);
             redde _fractum(m, scrinium_error(m->scrinium));
         }
-        scrinium_ligare_textum(ins, I, _ch(ulid_ev));
-        scrinium_ligare_textum(ins, II, res_id);
-        scrinium_ligare_textum(ins, III, _ch(genus_ev));
-        scrinium_ligare_textum(ins, IV, datum_canon);
-        scrinium_ligare_textum(ins, V, _ch(e->actor));
-        scrinium_ligare_textum(ins, VI,
-            _ch(e->origo != NIHIL ? e->origo : ""));
+        scrinium_ligare_textum(ins, I, _ch(p->event_id));
+        scrinium_ligare_textum(ins, II, p->res_id);
+        scrinium_ligare_textum(ins, III, _ch(p->genus_eventus));
+        scrinium_ligare_textum(ins, IV, p->datum_canon);
+        scrinium_ligare_textum(ins, V, _ch(p->actor));
+        scrinium_ligare_textum(ins, VI, _ch(p->origo));
+        scrinium_ligare_textum(ins, VII, nunc);
         si (scrinium_gradi(ins) != SCRINIUM_FACTUM)
         {
             scrinium_finire(ins);
-            (vacuum)scrinium_revolvere(m->scrinium);
             redde _fractum(m, scrinium_error(m->scrinium));
         }
         scrinium_finire(ins);
     }
     seq = scrinium_ultimum_id(m->scrinium);
+    si (!_annalem_appendere(m, seq, p->event_id, p->res_id,
+            p->genus_eventus, p->datum_obiectum, p->actor,
+            p->origo, nunc))
     {
-        ScriniumEnuntiatum* sel = scrinium_praeparare(m->scrinium,
-            "SELECT creatum FROM tessellae WHERE seq = ?");
-
-        creatum = _ch("");
-        si (sel != NIHIL)
-        {
-            scrinium_ligare_numerum(sel, I, seq);
-            si (scrinium_gradi(sel) == SCRINIUM_ORDO)
-            {
-                creatum = scrinium_columna_textus(sel, 0,
-                    m->piscina);
-            }
-            scrinium_finire(sel);
-        }
-    }
-    si (!_annalem_appendere(m, seq, ulid_ev, res_id, genus_ev,
-            datum_obiectum, e->actor,
-            e->origo != NIHIL ? e->origo : "", creatum))
-    {
-        (vacuum)scrinium_revolvere(m->scrinium);
         redde _fractum(m, "annales non appensi");
     }
-    si (!est_generis)
+    si (!p->est_generis)
     {
         ScriniumEnuntiatum* so = scrinium_praeparare(m->scrinium,
             "INSERT OR IGNORE INTO sordidae (res_id) VALUES (?)");
 
         si (so != NIHIL)
         {
-            scrinium_ligare_textum(so, I, res_id);
+            scrinium_ligare_textum(so, I, p->res_id);
             (vacuum)scrinium_gradi(so);
             scrinium_finire(so);
+        }
+    }
+    redde VERUM;
+}
+
+/* rector fascis: praeparatio + validatio OMNIUM ante scripturam;
+ * error mechanicus totum recusat (nihil scriptum - G1); notae
+ * custodiae interpositae statim post eventum suum (G3); BEGIN
+ * unum, COMMIT unum, lineae annalium ordine seq ante COMMIT.
+ * nunc vacuum = cuditur (executor actionis suum tradit - $nunc
+ * et creatum idem). SINE plicatura - vocans agit. */
+interior b32
+_fascis_scribere (GestaMundus* m,
+    constans GestaFascisEventum* eventa, i32 numerus,
+    character* res_ids_out, chorda nunc)
+{
+    Xar* parata;      /* GestaEventumParatum */
+    Xar* obumbrae;    /* GestaObumbra - res in fasce creatae (B3) */
+    i32 i;
+
+    si (numerus < I)
+    {
+        redde _fractum(m, "fascis vacuus");
+    }
+    parata = xar_creare(m->piscina,
+        (i32)magnitudo(GestaEventumParatum));
+    obumbrae = xar_creare(m->piscina,
+        (i32)magnitudo(GestaObumbra));
+    si (parata == NIHIL || obumbrae == NIHIL)
+    {
+        redde _fractum(m, "piscina exhausta");
+    }
+    si (nunc.mensura == ZEPHYRUM)
+    {
+        nunc = _nunc_capere(m);
+    }
+
+    per (i = ZEPHYRUM; i < numerus; i++)
+    {
+        GestaEventum e;
+        GestaEventumParatum p;
+        constans character* violatio;
+
+        e = eventa[i].eventum;
+        /* ULID creationis: fascis cudit si vocans non dedit */
+        si (e.genus_eventus != NIHIL && e.res_id == NIHIL
+            && strcmp(e.genus_eventus, "creatio") == ZEPHYRUM)
+        {
+            character ulid[SCRINIUM_ULID_MENSURA];
+
+            scrinium_ulid(ulid);
+            e.res_id = _litterae(m->piscina, _ch(ulid));
+        }
+        si (!_eventum_praeparare(m, &e, &p))
+        {
+            redde FALSUM;
+        }
+        /* identitas: creatio duplicata recusatur - contra tabulam
+         * stantem ET obumbras (creatio bis in eodem fasce) */
+        si (p.est_creatio)
+        {
+            GestaResOrdo ordo = _res_capere_cum_obumbra(m,
+                p.res_id, obumbrae, m->piscina);
+
+            si (ordo.exsistit)
+            {
+                redde _fractum(m, "creatio duplicata recusata"
+                    " (res iam exsistit)");
+            }
+        }
+        /* id eventus: datum aut cusum */
+        si (eventa[i].event_id != NIHIL)
+        {
+            p.event_id = eventa[i].event_id;
+        }
+        alioquin
+        {
+            character uev[SCRINIUM_ULID_MENSURA];
+
+            scrinium_ulid(uev);
+            p.event_id = _litterae(m->piscina, _ch(uev));
+        }
+
+        violatio = _eventum_validare(m, &p, obumbrae);
+        {
+            GestaEventumParatum* locus =
+                (GestaEventumParatum*)xar_addere(parata);
+
+            si (locus == NIHIL)
+            {
+                redde _fractum(m, "piscina exhausta");
+            }
+            *locus = p;
+        }
+        si (violatio != NIHIL)
+        {
+            /* nota custodiae INTRA fascem (scriptura secunda K1
+             * moritur - transactione eadem, sequenter adiacens) */
+            GestaEventumParatum n;
+            JsonValor* d = json_objectum_creare(m->piscina);
+            character uev[SCRINIUM_ULID_MENSURA];
+            GestaEventumParatum* locus;
+
+            json_objectum_ponere(d, "textus",
+                json_chorda_creare(m->piscina, _ch(violatio)));
+            memset(&n, ZEPHYRUM, magnitudo(GestaEventumParatum));
+            scrinium_ulid(uev);
+            n.event_id = _litterae(m->piscina, _ch(uev));
+            n.res_id = p.res_id;
+            n.genus_eventus = "nota";
+            n.datum_obiectum = d;
+            n.datum_canon = json_scribere(d, m->piscina);
+            n.actor = "machina";
+            n.origo = "gesta-custodia";
+            locus = (GestaEventumParatum*)xar_addere(parata);
+            si (locus == NIHIL)
+            {
+                redde _fractum(m, "piscina exhausta");
+            }
+            *locus = n;
+        }
+        si (p.est_creatio)
+        {
+            JsonValor* g = json_objectum_capere(p.datum_obiectum,
+                "genus");
+            GestaObumbra* ob = (GestaObumbra*)xar_addere(
+                obumbrae);
+
+            si (ob != NIHIL)
+            {
+                ob->res_id = p.res_id;
+                ob->genus = (g != NIHIL && json_est_chorda(g))
+                    ? json_ad_chorda(g) : _ch("");
+            }
+        }
+        si (res_ids_out != NIHIL)
+        {
+            character* sedes = res_ids_out
+                + (memoriae_index)i
+                    * (memoriae_index)GESTA_RES_ID_MENSURA;
+            i32 n_oct = p.res_id.mensura
+                    < (i32)(GESTA_RES_ID_MENSURA - I)
+                ? p.res_id.mensura
+                : (i32)(GESTA_RES_ID_MENSURA - I);
+
+            si (n_oct > ZEPHYRUM)
+            {
+                memcpy(sedes, p.res_id.datum,
+                    (memoriae_index)n_oct);
+            }
+            sedes[n_oct] = '\0';
+        }
+    }
+
+    /* transactio una: INSERT + linea annalium quaeque ordine seq
+     * (annales ANTE COMMIT - ruina => superset, lex K1) */
+    si (!scrinium_incipere(m->scrinium))
+    {
+        redde _fractum(m, scrinium_error(m->scrinium));
+    }
+    per (i = ZEPHYRUM; i < xar_numerus(parata); i++)
+    {
+        constans GestaEventumParatum* p =
+            (constans GestaEventumParatum*)xar_obtinere(parata,
+                i);
+
+        si (!_eventum_inserere(m, p, nunc))
+        {
+            (vacuum)scrinium_revolvere(m->scrinium);
+            redde FALSUM;
         }
     }
     si (!scrinium_committere(m->scrinium))
@@ -1424,60 +1675,48 @@ _scribere_crudum (GestaMundus* m, constans GestaEventum* e,
         (vacuum)scrinium_revolvere(m->scrinium);
         redde _fractum(m, scrinium_error(m->scrinium));
     }
-
-    si (res_id_out != NIHIL)
-    {
-        i32 n = res_id.mensura < (i32)(GESTA_RES_ID_MENSURA - I)
-            ? res_id.mensura : (i32)(GESTA_RES_ID_MENSURA - I);
-
-        si (n > ZEPHYRUM)
-        {
-            memcpy(res_id_out, res_id.datum, (memoriae_index)n);
-        }
-        res_id_out[n] = '\0';
-    }
     redde VERUM;
+}
+
+b32
+gesta_fascis_scribere (GestaMundus* mundus,
+    constans GestaFascisEventum* eventa, i32 numerus,
+    character* res_ids_out)
+{
+    chorda vacua;
+
+    vacua.mensura = ZEPHYRUM;
+    vacua.datum = NIHIL;
+    si (mundus == NIHIL || eventa == NIHIL)
+    {
+        redde FALSUM;
+    }
+    si (!_fascis_scribere(mundus, eventa, numerus, res_ids_out,
+            vacua))
+    {
+        redde FALSUM;
+    }
+    redde gesta_plicare(mundus);
 }
 
 b32
 gesta_scribere (GestaMundus* mundus, constans GestaEventum* eventum,
     character* res_id_out)
 {
-    constans character* violatio = NIHIL;
-    character res_id_locale[GESTA_RES_ID_MENSURA];
+    GestaFascisEventum unus;
+    chorda vacua;
 
+    vacua.mensura = ZEPHYRUM;
+    vacua.datum = NIHIL;
     si (mundus == NIHIL || eventum == NIHIL)
     {
         redde FALSUM;
     }
-    si (res_id_out == NIHIL)
-    {
-        res_id_out = res_id_locale;
-    }
-    si (!_scribere_crudum(mundus, eventum, res_id_out, &violatio))
+    unus.event_id = NIHIL;
+    unus.eventum = *eventum;
+    si (!_fascis_scribere(mundus, &unus, I, res_id_out, vacua))
     {
         redde FALSUM;
-    }
-    si (violatio != NIHIL)
-    {
-        /* nota custodiae (phase-log decisio 2): eventus primus IAM
-         * scriptus - iudicat, non obstat */
-        GestaEventum nota;
-        JsonValor* d = json_objectum_creare(mundus->piscina);
-        chorda d_textus;
-
-        json_objectum_ponere(d, "textus",
-            json_chorda_creare(mundus->piscina, _ch(violatio)));
-        d_textus = json_scribere(d, mundus->piscina);
-        nota.res_id = res_id_out;
-        nota.genus_eventus = "nota";
-        nota.datum = _litterae(mundus->piscina, d_textus);
-        nota.actor = "machina";
-        nota.origo = "gesta-custodia";
-        si (!_scribere_crudum(mundus, &nota, NIHIL, NIHIL))
-        {
-            redde FALSUM;
-        }
     }
     redde gesta_plicare(mundus);
 }
@@ -2786,6 +3025,838 @@ gesta_insalubres_enumerare (GestaMundus* mundus,
             }
         }
     }
+    redde fructus;
+}
+
+/* ==================================================
+ * Actiones (K3 chunk A) - recepta ut data
+ * Oraculum: smaragda.ts:3180-3673 (defineActionGenus,
+ * executeAction, _substituteParams :3376-3391). Divergentiae:
+ * D1 (executio = eventus in flumine actionis, non tabulae
+ * laterales), D3 (effectus scribunt-non-obstant intra fascem
+ * portatum), D4 ($novus - TS creare-tunc-referre nequit).
+ * ================================================== */
+
+/* res creatae actionis currentis ('' titulus = innominata) */
+nomen structura {
+    chorda titulus;   /* 'ut' effectūs creationis */
+    chorda res_id;
+} GestaResNova;
+
+/* contextus substitutionis signorum */
+nomen structura {
+    JsonValor* ligamina;    /* obiectum titulus -> res_id */
+    JsonValor* argumenta;   /* obiectum titulus -> valor */
+    Xar*       novae;       /* GestaResNova, ordine effectuum */
+    chorda     nunc;        /* creatum fascis */
+} GestaSubstitutio;
+
+interior chorda
+_novam_invenire (constans GestaSubstitutio* s, chorda titulus)
+{
+    i32 i;
+
+    per (i = ZEPHYRUM; i < xar_numerus(s->novae); i++)
+    {
+        GestaResNova* n = (GestaResNova*)xar_obtinere(s->novae,
+            i);
+
+        si (n != NIHIL && n->titulus.mensura > ZEPHYRUM
+            && _chordae_pares(n->titulus, titulus))
+        {
+            redde n->res_id;
+        }
+    }
+    redde _ch("");
+}
+
+interior b32
+_littera_signi (i8 c)
+{
+    redde (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z')
+        || (c >= '0' && c <= '9') || c == '_' || c == '-';
+}
+
+interior b32
+_praefixum_ad (chorda s, i32 pos, constans character* lit)
+{
+    memoriae_index n = strlen(lit);
+
+    redde (memoriae_index)(s.mensura - pos) >= n
+        && memcmp(s.datum + pos, lit, n) == ZEPHYRUM;
+}
+
+/* signum ad positionem solvere ('$' iam visum). *longitudo_out =
+ * octeti signi consumpti (0 = non signum, '$' litteralis manet).
+ * NIHIL cum *querela_out posito = signum notum sed inresolutum
+ * (error mechanicus recepti). Vocans *querela_out NIHIL initiat. */
+interior JsonValor*
+_signum_solvere (Piscina* piscina, constans GestaSubstitutio* subst,
+    chorda s, i32 pos, i32* longitudo_out,
+    constans character** querela_out)
+{
+    chorda titulus;
+    i32 initium;
+    i32 finis;
+
+    *longitudo_out = ZEPHYRUM;
+
+    /* $nunc - sine nomine sequente */
+    si (_praefixum_ad(s, pos, "$nunc")
+        && (pos + V >= s.mensura
+            || !_littera_signi(s.datum[pos + V])))
+    {
+        *longitudo_out = V;
+        redde json_chorda_creare(piscina, subst->nunc);
+    }
+    si (_praefixum_ad(s, pos, "$arg.")
+        || _praefixum_ad(s, pos, "$res."))
+    {
+        initium = pos + V;
+    }
+    alioquin si (_praefixum_ad(s, pos, "$novus."))
+    {
+        initium = pos + VII;
+    }
+    alioquin
+    {
+        redde NIHIL;   /* '$' litteralis */
+    }
+    finis = initium;
+    dum (finis < s.mensura && _littera_signi(s.datum[finis]))
+    {
+        finis++;
+    }
+    si (finis == initium)
+    {
+        redde NIHIL;   /* "$arg." sine nomine - litteralis */
+    }
+    titulus.datum = s.datum + initium;
+    titulus.mensura = finis - initium;
+    *longitudo_out = finis - pos;
+
+    si (s.datum[pos + I] == 'a')   /* $arg.X */
+    {
+        JsonValor* v = json_objectum_capere(subst->argumenta,
+            _litterae(piscina, titulus));
+
+        si (v == NIHIL)
+        {
+            *querela_out = _nuntius_forma(piscina,
+                "recusata: signum $arg.%.*s inresolutum%s",
+                titulus, "");
+        }
+        redde v;
+    }
+    si (s.datum[pos + I] == 'r')   /* $res.X */
+    {
+        JsonValor* v = json_objectum_capere(subst->ligamina,
+            _litterae(piscina, titulus));
+
+        si (v == NIHIL || !json_est_chorda(v))
+        {
+            *querela_out = _nuntius_forma(piscina,
+                "recusata: signum $res.%.*s inresolutum%s",
+                titulus, "");
+            redde NIHIL;
+        }
+        redde v;
+    }
+    /* $novus.N - creatio 'ut' PRIORE tantum (referentia antrorsum
+     * = novae nondum impletae = error mechanicus) */
+    {
+        chorda nova = _novam_invenire(subst, titulus);
+
+        si (nova.mensura == ZEPHYRUM)
+        {
+            *querela_out = _nuntius_forma(piscina,
+                "recusata: signum $novus.%.*s inresolutum"
+                " (creatio 'ut' prior deest)%s", titulus, "");
+            redde NIHIL;
+        }
+        redde json_chorda_creare(piscina, nova);
+    }
+}
+
+/* chordam substituere: signum solum = typus JSON servatur;
+ * intextum = valores alieni ut JSON coercentur (paritas TS
+ * :3376-3391). NIHIL = querela posita. */
+interior JsonValor*
+_chordam_substituere (Piscina* piscina,
+    constans GestaSubstitutio* subst, chorda s,
+    constans character** querela_out)
+{
+    ChordaAedificator* aed;
+    i32 pos = ZEPHYRUM;
+    i32 initium_litterae = ZEPHYRUM;
+
+    /* signum solum */
+    si (s.mensura > ZEPHYRUM && s.datum[ZEPHYRUM] == '$')
+    {
+        i32 longitudo = ZEPHYRUM;
+        JsonValor* v = _signum_solvere(piscina, subst, s,
+            ZEPHYRUM, &longitudo, querela_out);
+
+        si (*querela_out != NIHIL)
+        {
+            redde NIHIL;
+        }
+        si (v != NIHIL && longitudo == s.mensura)
+        {
+            redde v;
+        }
+    }
+    /* intextum */
+    aed = chorda_aedificator_creare(piscina, s.mensura + XVI);
+    dum (pos < s.mensura)
+    {
+        si (s.datum[pos] == '$')
+        {
+            i32 longitudo = ZEPHYRUM;
+            JsonValor* v = _signum_solvere(piscina, subst, s, pos,
+                &longitudo, querela_out);
+
+            si (*querela_out != NIHIL)
+            {
+                redde NIHIL;
+            }
+            si (v != NIHIL)
+            {
+                chorda ante;
+
+                ante.datum = s.datum + initium_litterae;
+                ante.mensura = pos - initium_litterae;
+                chorda_aedificator_appendere_chorda(aed, ante);
+                si (json_est_chorda(v))
+                {
+                    chorda_aedificator_appendere_chorda(aed,
+                        json_ad_chorda(v));
+                }
+                alioquin
+                {
+                    chorda_aedificator_appendere_chorda(aed,
+                        json_scribere(v, piscina));
+                }
+                pos += longitudo;
+                initium_litterae = pos;
+                perge;
+            }
+        }
+        pos++;
+    }
+    {
+        chorda cauda;
+
+        cauda.datum = s.datum + initium_litterae;
+        cauda.mensura = s.mensura - initium_litterae;
+        chorda_aedificator_appendere_chorda(aed, cauda);
+    }
+    redde json_chorda_creare(piscina,
+        chorda_aedificator_finire(aed));
+}
+
+/* valorem recursive substituere (chordae; obiecta/tabulata
+ * descenduntur; claves NON substituuntur) */
+interior JsonValor*
+_valorem_substituere (Piscina* piscina,
+    constans GestaSubstitutio* subst, JsonValor* v,
+    constans character** querela_out)
+{
+    si (json_est_chorda(v))
+    {
+        redde _chordam_substituere(piscina, subst,
+            json_ad_chorda(v), querela_out);
+    }
+    si (json_est_objectum(v))
+    {
+        JsonValor* novum = json_objectum_creare(piscina);
+        JsonObjectumIterator iter = json_objectum_iterator(v);
+        chorda k;
+        JsonValor* filius;
+
+        dum (json_objectum_iterator_proxima(&iter, &k, &filius))
+        {
+            JsonValor* f = _valorem_substituere(piscina, subst,
+                filius, querela_out);
+
+            si (f == NIHIL)
+            {
+                redde NIHIL;
+            }
+            json_objectum_ponere_chorda(novum, k, f);
+        }
+        redde novum;
+    }
+    si (json_est_tabulatum(v))
+    {
+        JsonValor* novum = json_tabulatum_creare(piscina);
+        i32 i;
+
+        per (i = ZEPHYRUM; i < json_tabulatum_numerus(v); i++)
+        {
+            JsonValor* f = _valorem_substituere(piscina, subst,
+                json_tabulatum_obtinere(v, i), querela_out);
+
+            si (f == NIHIL)
+            {
+                redde NIHIL;
+            }
+            json_tabulatum_addere(novum, f);
+        }
+        redde novum;
+    }
+    redde v;
+}
+
+/* porta recepti: opes + argumenta contra tabulas stantes.
+ * Litterae causae aut NIHIL = aperta. PORTA OBSTAT (decisio 2 -
+ * recusatio est receptum negans, non machinam mentiri). */
+interior constans character*
+_portam_probare (GestaMundus* m, JsonValor* def_radix,
+    JsonValor* ligamina, JsonValor* argumenta, Piscina* piscina)
+{
+    JsonValor* opes = json_objectum_capere(def_radix, "opes");
+    JsonValor* args = json_objectum_capere(def_radix, "argumenta");
+    i32 i;
+
+    si (opes != NIHIL && json_est_tabulatum(opes))
+    {
+        per (i = ZEPHYRUM; i < json_tabulatum_numerus(opes); i++)
+        {
+            JsonValor* ops = json_tabulatum_obtinere(opes, i);
+            JsonValor* v_tit;
+            JsonValor* v_gen;
+            JsonValor* v_st;
+            JsonValor* lig;
+            chorda c_tit;
+            GestaResOrdo ordo;
+
+            si (ops == NIHIL || !json_est_objectum(ops))
+            {
+                perge;
+            }
+            v_tit = json_objectum_capere(ops, "titulus");
+            si (v_tit == NIHIL || !json_est_chorda(v_tit))
+            {
+                perge;
+            }
+            c_tit = json_ad_chorda(v_tit);
+            lig = json_objectum_capere(ligamina,
+                _litterae(piscina, c_tit));
+            si (lig == NIHIL || !json_est_chorda(lig))
+            {
+                redde _nuntius_forma(piscina,
+                    "recusata: ligamen '%.*s' absens%s", c_tit,
+                    "");
+            }
+            ordo = _res_capere(m, json_ad_chorda(lig), piscina);
+            si (!ordo.exsistit)
+            {
+                redde _nuntius_forma(piscina,
+                    "recusata: ops '%.*s' inexistens%s", c_tit,
+                    "");
+            }
+            v_gen = json_objectum_capere(ops, "genus");
+            si (v_gen != NIHIL && json_est_chorda(v_gen)
+                && !_chordae_pares(json_ad_chorda(v_gen),
+                       ordo.genus))
+            {
+                redde _nuntius_forma(piscina,
+                    "recusata: genus opis '%.*s' non"
+                    " congruit%s", c_tit, "");
+            }
+            v_st = json_objectum_capere(ops,
+                "status_necessarius");
+            si (v_st != NIHIL && json_est_chorda(v_st)
+                && !_chordae_pares(json_ad_chorda(v_st),
+                       ordo.status))
+            {
+                redde _nuntius_forma(piscina,
+                    "recusata: status opis '%.*s' non"
+                    " congruit%s", c_tit, "");
+            }
+        }
+    }
+    si (args != NIHIL && json_est_tabulatum(args))
+    {
+        per (i = ZEPHYRUM; i < json_tabulatum_numerus(args); i++)
+        {
+            JsonValor* a = json_tabulatum_obtinere(args, i);
+            JsonValor* v_tit;
+            JsonValor* v_typ;
+            JsonValor* v_nec;
+            JsonValor* v;
+            chorda c_tit;
+
+            si (a == NIHIL || !json_est_objectum(a))
+            {
+                perge;
+            }
+            v_tit = json_objectum_capere(a, "titulus");
+            si (v_tit == NIHIL || !json_est_chorda(v_tit))
+            {
+                perge;
+            }
+            c_tit = json_ad_chorda(v_tit);
+            v = json_objectum_capere(argumenta,
+                _litterae(piscina, c_tit));
+            v_nec = json_objectum_capere(a, "necessarium");
+            si (v_nec != NIHIL && json_ad_boolean(v_nec)
+                && (v == NIHIL || json_est_nullum(v)))
+            {
+                redde _nuntius_forma(piscina,
+                    "recusata: argumentum necessarium '%.*s'"
+                    " abest%s", c_tit, "");
+            }
+            v_typ = json_objectum_capere(a, "typus");
+            si (v != NIHIL && !json_est_nullum(v)
+                && v_typ != NIHIL && json_est_chorda(v_typ)
+                && !_typus_validus(v, json_ad_chorda(v_typ)))
+            {
+                redde _nuntius_forma(piscina,
+                    "recusata: argumentum '%.*s' typum"
+                    " violat%s", c_tit, "");
+            }
+        }
+    }
+    redde NIHIL;
+}
+
+/* actio-recusata in flumine rei actionis - tabularium
+ * attentatuum integrum (portae recusatae ET errores mechanici,
+ * interrogatio Q8) */
+interior vacuum
+_actionem_recusare (GestaMundus* m, constans character* titulus,
+    JsonValor* ligamina, JsonValor* argumenta,
+    constans character* causa, constans character* origo,
+    Piscina* piscina, GestaActioFructus* exitus)
+{
+    JsonValor* d = json_objectum_creare(piscina);
+    GestaFascisEventum unus;
+    chorda vacua;
+
+    vacua.mensura = ZEPHYRUM;
+    vacua.datum = NIHIL;
+    json_objectum_ponere(d, "ligamina", ligamina);
+    json_objectum_ponere(d, "argumenta", argumenta);
+    json_objectum_ponere(d, "causa",
+        json_chorda_creare(piscina, _ch(causa)));
+    unus.event_id = NIHIL;
+    unus.eventum.res_id = titulus;
+    unus.eventum.genus_eventus = "actio-recusata";
+    unus.eventum.datum = _litterae(piscina,
+        json_scribere(d, piscina));
+    unus.eventum.actor = "machina";
+    unus.eventum.origo = origo;
+    si (_fascis_scribere(m, &unus, I, NIHIL, vacua))
+    {
+        (vacuum)gesta_plicare(m);
+    }
+    exitus->facta = FALSUM;
+    exitus->causa = causa;
+}
+
+/* effectus in fascem aedificare: verbum probare, signa
+ * substituere, ULIDs creationum cudere ($novus ordine crescit -
+ * referentia antrorsum cadit naturaliter), ids eventuum
+ * prae-cudere (E2 B4 - actio-facta eos ANTE scripturam nominat).
+ * Causa mechanica aut NIHIL. */
+interior constans character*
+_effectus_aedificare (JsonValor* effectus, i32 n_eff,
+    GestaSubstitutio* subst, constans character* origo,
+    GestaFascisEventum* fascis, JsonValor* eventus_ids,
+    Piscina* piscina)
+{
+    i32 i;
+
+    per (i = ZEPHYRUM; i < n_eff; i++)
+    {
+        JsonValor* eff = json_tabulatum_obtinere(effectus, i);
+        JsonValor* v_verbum;
+        JsonValor* v_datum;
+        JsonValor* datum_subst;
+        chorda c_verbum;
+        chorda res_ev;
+        constans character* querela = NIHIL;
+
+        si (eff == NIHIL || !json_est_objectum(eff))
+        {
+            redde "recusata: effectus malformatus";
+        }
+        v_verbum = json_objectum_capere(eff, "verbum");
+        si (v_verbum == NIHIL || !json_est_chorda(v_verbum))
+        {
+            redde "recusata: effectus sine verbo";
+        }
+        c_verbum = json_ad_chorda(v_verbum);
+        si (!(_chorda_est(c_verbum, "creatio")
+            || _chorda_est(c_verbum, "mutatio")
+            || _chorda_est(c_verbum, "remotio")
+            || _chorda_est(c_verbum, "status")
+            || _chorda_est(c_verbum, "nota")
+            || _chorda_est(c_verbum, "membrum-additum")
+            || _chorda_est(c_verbum, "membrum-remotum")))
+        {
+            redde _nuntius_forma(piscina,
+                "recusata: verbum ignotum '%.*s'%s", c_verbum,
+                "");
+        }
+        v_datum = json_objectum_capere(eff, "datum");
+        si (v_datum == NIHIL || json_est_nullum(v_datum))
+        {
+            datum_subst = json_objectum_creare(piscina);
+        }
+        alioquin
+        {
+            datum_subst = _valorem_substituere(piscina, subst,
+                v_datum, &querela);
+            si (datum_subst == NIHIL)
+            {
+                redde querela;
+            }
+            si (!json_est_objectum(datum_subst))
+            {
+                redde "recusata: datum effectus non obiectum";
+            }
+        }
+        si (_chorda_est(c_verbum, "creatio"))
+        {
+            JsonValor* v_ut = json_objectum_capere(eff, "ut");
+            GestaResNova* nova;
+            character ulid[SCRINIUM_ULID_MENSURA];
+
+            scrinium_ulid(ulid);
+            res_ev = _ch(_litterae(piscina, _ch(ulid)));
+            si (v_ut != NIHIL && json_est_chorda(v_ut)
+                && json_ad_chorda(v_ut).mensura > ZEPHYRUM)
+            {
+                chorda c_ut = json_ad_chorda(v_ut);
+
+                si (_novam_invenire(subst, c_ut).mensura
+                    > ZEPHYRUM)
+                {
+                    redde _nuntius_forma(piscina,
+                        "recusata: 'ut' duplicatum '%.*s'%s",
+                        c_ut, "");
+                }
+                nova = (GestaResNova*)xar_addere(subst->novae);
+                si (nova != NIHIL)
+                {
+                    nova->titulus = c_ut;
+                    nova->res_id = res_ev;
+                }
+            }
+            alioquin
+            {
+                nova = (GestaResNova*)xar_addere(subst->novae);
+                si (nova != NIHIL)
+                {
+                    nova->titulus = _ch("");
+                    nova->res_id = res_ev;
+                }
+            }
+        }
+        alioquin
+        {
+            JsonValor* v_res = json_objectum_capere(eff, "res");
+            JsonValor* res_subst;
+
+            si (v_res == NIHIL || !json_est_chorda(v_res))
+            {
+                redde "recusata: effectus sine re";
+            }
+            res_subst = _chordam_substituere(piscina, subst,
+                json_ad_chorda(v_res), &querela);
+            si (res_subst == NIHIL)
+            {
+                redde querela;
+            }
+            si (!json_est_chorda(res_subst))
+            {
+                redde "recusata: res effectus non chorda";
+            }
+            res_ev = json_ad_chorda(res_subst);
+        }
+        {
+            character uev[SCRINIUM_ULID_MENSURA];
+            constans character* id_l;
+
+            scrinium_ulid(uev);
+            id_l = _litterae(piscina, _ch(uev));
+            json_tabulatum_addere(eventus_ids,
+                json_chorda_creare(piscina, _ch(id_l)));
+            fascis[i].event_id = id_l;
+            fascis[i].eventum.res_id = _litterae(piscina, res_ev);
+            fascis[i].eventum.genus_eventus = _litterae(piscina,
+                c_verbum);
+            fascis[i].eventum.datum = _litterae(piscina,
+                json_scribere(datum_subst, piscina));
+            fascis[i].eventum.actor = "machina";
+            fascis[i].eventum.origo = origo;
+        }
+    }
+    redde NIHIL;
+}
+
+b32
+gesta_agere (GestaMundus* mundus, constans character* actio_titulus,
+    constans character* ligamina_json,
+    constans character* argumenta_json, Piscina* piscina,
+    GestaActioFructus* exitus)
+{
+    chorda def_datum;
+    JsonResultus r;
+    JsonValor* def_radix;
+    JsonValor* ligamina;
+    JsonValor* argumenta;
+    JsonValor* effectus;
+    JsonValor* eventus_ids;
+    constans character* origo;
+    constans character* causa;
+    GestaSubstitutio subst;
+    GestaFascisEventum* fascis;
+    chorda nunc;
+    i32 n_eff;
+    i32 i;
+
+    si (mundus == NIHIL || actio_titulus == NIHIL
+        || piscina == NIHIL || exitus == NIHIL)
+    {
+        redde FALSUM;
+    }
+    memset(exitus, ZEPHYRUM, magnitudo(GestaActioFructus));
+    exitus->causa = "";
+
+    /* definitio: genus speciei actio */
+    def_datum = _genus_datum_capere(mundus, _ch(actio_titulus),
+        piscina);
+    si (def_datum.mensura == ZEPHYRUM)
+    {
+        redde _fractum(mundus, "actio ignota (definitio-generis"
+            " deest)");
+    }
+    r = json_legere(def_datum, piscina);
+    si (!r.successus || !json_est_objectum(r.radix))
+    {
+        redde _fractum(mundus, "definitio actionis malformata");
+    }
+    def_radix = r.radix;
+    {
+        JsonValor* species = json_objectum_capere(def_radix,
+            "species");
+
+        si (species == NIHIL || !json_est_chorda(species)
+            || !_chorda_est(json_ad_chorda(species), "actio"))
+        {
+            redde _fractum(mundus, "genus non actio");
+        }
+    }
+    r = json_legere_literis(ligamina_json != NIHIL
+        ? ligamina_json : "{}", piscina);
+    si (!r.successus || !json_est_objectum(r.radix))
+    {
+        redde _fractum(mundus, "ligamina malformata");
+    }
+    ligamina = r.radix;
+    r = json_legere_literis(argumenta_json != NIHIL
+        ? argumenta_json : "{}", piscina);
+    si (!r.successus || !json_est_objectum(r.radix))
+    {
+        redde _fractum(mundus, "argumenta malformata");
+    }
+    argumenta = r.radix;
+    {
+        character* buf = (character*)piscina_allocare(piscina,
+            strlen(actio_titulus) + VII);
+
+        si (buf == NIHIL)
+        {
+            redde _fractum(mundus, "piscina exhausta");
+        }
+        sprintf(buf, "actio:%s", actio_titulus);
+        origo = buf;
+    }
+
+    /* PORTA - obstat */
+    causa = _portam_probare(mundus, def_radix, ligamina,
+        argumenta, piscina);
+    si (causa != NIHIL)
+    {
+        _actionem_recusare(mundus, actio_titulus, ligamina,
+            argumenta, causa, origo, piscina, exitus);
+        redde VERUM;
+    }
+
+    /* substitutio + aedificatio fascis */
+    nunc = _nunc_capere(mundus);
+    subst.ligamina = ligamina;
+    subst.argumenta = argumenta;
+    subst.novae = xar_creare(piscina,
+        (i32)magnitudo(GestaResNova));
+    subst.nunc = nunc;
+    effectus = json_objectum_capere(def_radix, "effectus");
+    n_eff = (effectus != NIHIL && json_est_tabulatum(effectus))
+        ? json_tabulatum_numerus(effectus) : ZEPHYRUM;
+    fascis = (GestaFascisEventum*)piscina_allocare(piscina,
+        (memoriae_index)(n_eff + I)
+        * magnitudo(GestaFascisEventum));
+    eventus_ids = json_tabulatum_creare(piscina);
+    si (subst.novae == NIHIL || fascis == NIHIL
+        || eventus_ids == NIHIL)
+    {
+        redde _fractum(mundus, "piscina exhausta");
+    }
+    causa = _effectus_aedificare(effectus, n_eff, &subst, origo,
+        fascis, eventus_ids, piscina);
+    si (causa != NIHIL)
+    {
+        /* error mechanicus: nihil scriptum - recusata sola */
+        _actionem_recusare(mundus, actio_titulus, ligamina,
+            argumenta, causa, origo, piscina, exitus);
+        redde VERUM;
+    }
+
+    /* actio-facta postrema: index executionis in flumine
+     * actionis, ids eventuum prae-cusos nominans (E2 B4) */
+    {
+        JsonValor* d = json_objectum_creare(piscina);
+
+        json_objectum_ponere(d, "ligamina", ligamina);
+        json_objectum_ponere(d, "argumenta", argumenta);
+        json_objectum_ponere(d, "eventus", eventus_ids);
+        fascis[n_eff].event_id = NIHIL;
+        fascis[n_eff].eventum.res_id = actio_titulus;
+        fascis[n_eff].eventum.genus_eventus = "actio-facta";
+        fascis[n_eff].eventum.datum = _litterae(piscina,
+            json_scribere(d, piscina));
+        fascis[n_eff].eventum.actor = "machina";
+        fascis[n_eff].eventum.origo = origo;
+    }
+
+    si (!_fascis_scribere(mundus, fascis, n_eff + I, NIHIL, nunc))
+    {
+        /* apparatus in scriptura fractus - fascis totus
+         * revolutus, error mundi iam positus */
+        exitus->causa = gesta_error(mundus);
+        redde FALSUM;
+    }
+    si (!gesta_plicare(mundus))
+    {
+        redde FALSUM;
+    }
+
+    exitus->facta = VERUM;
+    exitus->novae_numerus = xar_numerus(subst.novae);
+    si (exitus->novae_numerus > ZEPHYRUM)
+    {
+        exitus->res_novae = (chorda*)piscina_allocare(piscina,
+            (memoriae_index)exitus->novae_numerus
+            * magnitudo(chorda));
+        si (exitus->res_novae == NIHIL)
+        {
+            exitus->novae_numerus = ZEPHYRUM;
+            redde _fractum(mundus, "piscina exhausta");
+        }
+        per (i = ZEPHYRUM; i < exitus->novae_numerus; i++)
+        {
+            exitus->res_novae[i] = ((GestaResNova*)xar_obtinere(
+                subst.novae, i))->res_id;
+        }
+    }
+    redde VERUM;
+}
+
+Xar*
+gesta_actiones_rei (GestaMundus* mundus, constans character* res_id,
+    Piscina* piscina)
+{
+    Xar* fructus;
+    GestaResOrdo ordo;
+    ScriniumEnuntiatum* e;
+
+    si (mundus == NIHIL || res_id == NIHIL || piscina == NIHIL)
+    {
+        redde NIHIL;
+    }
+    fructus = xar_creare(piscina, (i32)magnitudo(chorda));
+    si (fructus == NIHIL)
+    {
+        redde NIHIL;
+    }
+    ordo = _res_capere(mundus, _ch(res_id), piscina);
+    si (!ordo.exsistit)
+    {
+        redde fructus;
+    }
+    /* percursus generum plenus - copiae parvae (E2 par 5: genera
+     * VI hodie, IX post semen v3; columna species parcata) */
+    e = scrinium_praeparare(mundus->scrinium,
+        "SELECT titulus, datum FROM genera ORDER BY titulus");
+    si (e == NIHIL)
+    {
+        redde fructus;
+    }
+    dum (scrinium_gradi(e) == SCRINIUM_ORDO)
+    {
+        chorda titulus = scrinium_columna_textus(e, 0, piscina);
+        chorda datum = scrinium_columna_textus(e, I, piscina);
+        JsonResultus r = json_legere(datum, piscina);
+        JsonValor* species;
+        JsonValor* opes;
+        i32 i;
+
+        si (!r.successus || !json_est_objectum(r.radix))
+        {
+            perge;
+        }
+        species = json_objectum_capere(r.radix, "species");
+        si (species == NIHIL || !json_est_chorda(species)
+            || !_chorda_est(json_ad_chorda(species), "actio"))
+        {
+            perge;
+        }
+        opes = json_objectum_capere(r.radix, "opes");
+        si (opes == NIHIL || !json_est_tabulatum(opes))
+        {
+            perge;
+        }
+        per (i = ZEPHYRUM; i < json_tabulatum_numerus(opes); i++)
+        {
+            JsonValor* ops = json_tabulatum_obtinere(opes, i);
+            JsonValor* v_gen;
+            JsonValor* v_st;
+
+            si (ops == NIHIL || !json_est_objectum(ops))
+            {
+                perge;
+            }
+            v_gen = json_objectum_capere(ops, "genus");
+            si (v_gen != NIHIL && json_est_chorda(v_gen)
+                && !_chordae_pares(json_ad_chorda(v_gen),
+                       ordo.genus))
+            {
+                perge;
+            }
+            v_st = json_objectum_capere(ops,
+                "status_necessarius");
+            si (v_st != NIHIL && json_est_chorda(v_st)
+                && !_chordae_pares(json_ad_chorda(v_st),
+                       ordo.status))
+            {
+                perge;
+            }
+            {
+                chorda* locus = (chorda*)xar_addere(fructus);
+
+                si (locus != NIHIL)
+                {
+                    *locus = titulus;
+                }
+            }
+            frange;
+        }
+    }
+    scrinium_finire(e);
     redde fructus;
 }
 

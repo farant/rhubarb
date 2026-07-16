@@ -639,3 +639,50 @@ definitionem PHOTOGRAPHAT ad ortum (systema vivum statūs absurdos
 monstravit); opera 97.6% processu-nata - membra-axis rectus.
 
 POST COMMISSIONEM FRANI: frustum A (fascis + actiones).
+
+## RELATIO K3 FRUSTUM A (2026-07-16) - fascis atomicus + actiones
+
+FRUSTUM A PERFECTUM PRIMO CURSU: 399/399 gesta (143 asserta nova,
+zephyrum iterationes) + 75/75 tabularium; examen ACCIPE tribus
+plagulis; barra G9 TENET (256 asserta K1/K2 intacta viridia -
+_scribere_crudum decompositum, mores byte-idem).
+
+QUOD AEDIFICATUM (fons: gesta-k3-spec-v2.md par III/IV; E2 par 1):
+- Decompositio: _eventum_praeparare (syntaxis + res_id; cusio ULID
+  ad vocantem EXIIT) / _eventum_validare (lectiones purae + obumbrae)
+  / _eventum_inserere (INSERT + annales + sordidae, sine BEGIN).
+- gesta_fascis_scribere: eventus N, transactio una, notae custodiae
+  INTERPOSITAE (scriptura secunda K1 mortua), creatum UNUM per
+  fascem (strftime semel - fenestra inter-enuntiata clausa), lineae
+  annalium ordine ante COMMIT. Error mechanicus = fascis totus
+  recusatus, nihil scriptum.
+- Obumbrae B3: res in fasce creatae validationi visibiles
+  (exsistentia + genus; status = status_initialis generis) -
+  receptum princeps eas TER exercet sine querela falsa.
+- gesta_agere: porta obstat (recusationes VI probatae), substitutio
+  $arg (signum solum typum servat!)/$res/$novus (ordine crescens -
+  antrorsum cadit naturaliter)/$nunc, verba clausa VII, ids eventuum
+  prae-cusi (actio-facta eos nominat), actio-recusata in flumine
+  (porta ET mechanica). Errores apparatus (actio ignota, genus non
+  actio) = FALSUM sine eventu.
+- gesta_actiones_rei: affordantiae per genus + status_necessarius.
+- _species_est generalizata (E2 par 4); _membrum_validare et
+  validatio statûs obumbras accipiunt.
+
+NOTA CONSILII (frustum C tangit): signatura gesta_agere spec-v2
+actorem NON habet - effectus et facta/recusata actor="machina",
+origo="actio:<titulus>". Subsumptio tabulae input TS (Q3: "eventus
+nostri actorem iam ferunt") initiatorem vult; parametrum actoris
+addere cum instrumento MCP frusti C (quod actorem novit) proposito.
+Quaestio in tabulario.
+
+INSTRUMENTA: impulsus examen-custos statum transitionalem recte
+nominavit (situs vocationis _membrum_validare ante emendationem -
+cascata argumentorum discrepantium, sponte sanata proximo Edit);
+compile_probationes + examen sine asperitate; corpus/census/res ad
+orientationem post-compactionem - nihil grepatum quod non oportuit.
+
+PROXIMUM: frustum B (processus + provectio; CUM emendatione E2-B1
+membrum-validare species-porta). Suitae virides inter frusta -
+binaria tabularium/nota_frigida stala manent usque ad frustum C
+(vigilia residentis id nuntiabit).

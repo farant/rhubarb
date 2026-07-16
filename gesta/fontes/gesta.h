@@ -50,7 +50,9 @@ nomen structura {
                                           * membrum-additum|
                                           * membrum-remotum|
                                           * definitio-generis|
-                                          * emendatio-generis|...
+                                          * emendatio-generis|
+                                          * actio-facta|
+                                          * actio-recusata|...
                                           * (nexus/denexus vetera =
                                           * tumuli, K2 D2) */
     constans character* datum;           /* JSON obiectum */
@@ -81,6 +83,35 @@ gesta_scribere (
     GestaMundus*         mundus,
     constans GestaEventum* eventum,
     character*           res_id_out);
+
+/* ==================================================
+ * Fascis atomicus (K3 chunk A) - eventus N, transactio una
+ * ==================================================
+ * Omnes eventus praeparantur et validantur ANTE scripturam; error
+ * mechanicus (datum malformatum, creatio duplicata, res_id absens)
+ * totum fascem recusat - NIHIL scribitur, nullae lineae annalium.
+ * Violationes machinae MORE DOMUS: eventus cadit + nota custodiae
+ * INTRA fascem (transactione eadem, sequenter adiacens). Lineae
+ * annalium N ordine seq ANTE COMMIT (ruina => annales superset,
+ * lex K1 servata). Creatum UNUM per fascem (strftime semel lectum
+ * - $nunc actionum stabile). Validatio res in eodem fasce creatas
+ * per obumbras videt (exsistentia + genus; status = initialis
+ * generis). Plicatura semel post scripturam. */
+
+nomen structura {
+    constans character* event_id;   /* NIHIL = ULID cuditur */
+    GestaEventum        eventum;
+} GestaFascisEventum;
+
+/* res_ids_out: NIHIL aut tabulatum numerus * GESTA_RES_ID_MENSURA
+ * octetorum - res_id effectivum cuiusque eventus DATI (notae
+ * custodiae interpositae locum non occupant). */
+b32
+gesta_fascis_scribere (
+    GestaMundus*                 mundus,
+    constans GestaFascisEventum* eventa,
+    i32                          numerus,
+    character*                   res_ids_out);
 
 /* Plicaturas provehere (genera PRIMUM, deinde res - ordo portans;
  * quaeque transactione sua cum provectione HWM = exacte-semel). */
@@ -249,6 +280,59 @@ Xar*
 gesta_insalubres_enumerare (
     GestaMundus*        mundus,
     constans character* genus,
+    Piscina*            piscina);
+
+/* ==================================================
+ * Actiones (K3 chunk A) - recepta ut data
+ * ==================================================
+ * Definitio = genus cum specie "actio" (definitio-generis /
+ * emendatio-generis solita - emendatio in loco, historia in
+ * annalibus): opes (ligamina rerum: titulus/genus/
+ * status_necessarius), argumenta (titulus/typus K2/necessarium),
+ * effectus (verba clausa 1:1 in eventus: creatio [cum 'ut'],
+ * mutatio, remotio, status, nota, membrum-additum,
+ * membrum-remotum). Signa substitutionis in effectibus:
+ *   $arg.X   (signum solum = typus JSON servatur; intextum =
+ *             coercitur in chordam - paritas TS :3376-3391)
+ *   $res.X   (res_id ligaminis X)
+ *   $novus.N (res creata 'ut':N effectu PRIORE - referentia
+ *             antrorsum = error mechanicus)
+ *   $nunc    (creatum fascis - timestamp unum stabile)
+ * PORTA OBSTAT (recusatio = receptum negans, non machina mentiens);
+ * effectus MORE DOMUS scribunt (violationes = notae custodiae
+ * intra fascem). Executio = eventus 'actio-facta' {ligamina,
+ * argumenta, eventus:[ids]} in flumine rei actionis (res_id =
+ * titulus actionis - flumen ipsum tabularium executionum est);
+ * recusationes (porta ET mechanicae) = 'actio-recusata'
+ * {ligamina, argumenta, causa} ibidem. Ordo rei pro actione NON
+ * materializatur (eventus ignoti reductori = nihil agunt). */
+
+nomen structura {
+    b32                 facta;         /* FALSUM = recusata */
+    constans character* causa;         /* si recusata */
+    chorda*             res_novae;     /* res creatae, ordine
+                                        * effectuum */
+    i32                 novae_numerus;
+} GestaActioFructus;
+
+/* FALSUM solum apparatu fracto aut actione ignota / non-actione;
+ * recusatio = VERUM cum exitus->facta FALSUM et causa posita. */
+b32
+gesta_agere (
+    GestaMundus*        mundus,
+    constans character* actio_titulus,
+    constans character* ligamina_json,
+    constans character* argumenta_json,
+    Piscina*            piscina,
+    GestaActioFructus*  exitus);
+
+/* Affordantiae: tituli actionum quarum ops aliquis rem datam NUNC
+ * ligare potest (genus et status_necessarius congruunt). Xar de
+ * chorda; percursus generum plenus (copiae parvae - E2 par 5). */
+Xar*
+gesta_actiones_rei (
+    GestaMundus*        mundus,
+    constans character* res_id,
     Piscina*            piscina);
 
 /* Lectiones (pro probationibus et stratis superioribus; textus in

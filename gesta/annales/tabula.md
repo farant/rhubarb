@@ -1,6 +1,6 @@
 # TABULA (proiectio tabularii - GENERATUM, noli manu edere)
 
-seq 103 - 2026-07-16T16:08:25.596Z
+seq 105 - 2026-07-16T16:59:41.448Z
 
 ## QUAESTIONES
 
@@ -9,6 +9,7 @@ seq 103 - 2026-07-16T16:08:25.596Z
 - [apertum] Nomina scrinium sigillum insigillata  `gesta meta messis-2026-07`
 - [apertum] Novum Fundamentum 1x11 Nuntium  `fundamentum messis-2026-07`
 - [apertum] Phase-log silvae 407KB  `silva meta messis-2026-07`
+- [apertum] gesta_agere sine actore: quis egit?  `gesta k3`
 - [apertum] probatio_tcp_servus fluctuans  `tcp messis-2026-07`
 
 ## PARCA
