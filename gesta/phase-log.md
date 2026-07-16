@@ -743,3 +743,106 @@ defectum - decisio 16 discriminationem postulat) + facta_id
 PROXIMUM: frustum C (tenens: semen v3 CUM emendatione E2-B2, agere
 instrumentum, linea actiones:, doctrina v3, deploy vivum,
 ritus-signaculi cum parco K4, vectes sigilli VI).
+
+### ADDENDUM INSTRUMENTA FRUSTI B (debrief)
+Adhibita: census/res/gerere (orientatio + scriba), impulsus
+examen-custos (tacuit - nihil captum quia nihil peccatum),
+compile_probationes (ansa verificationis sola), examen.sh (vectes).
+Legati: NUMQUAM tractum hoc frusto - chirurgia uni-plagulae, plagula
+tota in contextu post lectionem primam; valor subsellii = navigatio
+trans plagulas et quaesita frigida, non chirurgia profunda (inventum
+phasi-dependens, non defectus). Vigilia: CAUTIO in omni responso
+residentis post editiones gesta.c - lex adhaesiva K2.1 recte, linea
+una, numquam obstitit. Asperitates novae: NULLAE. Desiderata nova:
+NULLA (sessio rara).
+
+## RELATIO SIGILLI K3 (2026-07-16) - FRUSTUM C + SIGILLUM VIVUM
+
+K3 SIGILLATUM. Frustum C primo cursu TERTIUM: 498/498 gesta +
+114/114 tabularium (aureae G20-G23, XXXIX asserta nova); examen
+ACCIPE plagulis V. Vectes sigilli VI OMNES:
+  I.   suitae virides + examen ACCIPE (612 asserta trans frusta)
+  II.  copia VIVA WAL-plena: annales==acta TENET (seq 123),
+       replicatio==stantes (res 63 octetim; instrumentum
+       verificatio_sigilli.c - candidatum instrumenti permanentis)
+  III. receptum princeps VIVUM: parcum K3 verum clausum, decretum
+       filatum ET vinculatum (natum-de), fascis unus atomicus -
+       nota et status creatum IDEM ferunt (lex $nunc in productione
+       visibilis)
+  IV.  ritus-signaculi CURRENS instantia 01KXP19AC2GP2G6AFVR6A8PECA,
+       propositum = parcum K4-K5; interrogatio generata, portae
+       tacite obstant - TABULARIUM MILESTONEM PROXIMUM SUUM IPSUM
+       ORCHESTRAT
+  V.   sigillum K3 ipsum per agere factum (vectis tabularii -
+       decretum 01KXP18B7Z... manus ipsius tabularii)
+  VI.  doctrina v3 in reconnexu; vigilia binarium recens confirmat
+       (5f28c827e78ee010, CAUTIO nulla)
+
+FRUSTUM C QUOD AEDIFICATUM: parametrum actoris in gesta_agere/
+incipere (quaestio 'quis egit?' CLAUSA - initiator in eventibus,
+machina in gradibus motoris); semen v3 (opus + claudere-cum-decreto
++ ritus-signaculi; SEMINA_BOARD_NUMERUS = emendatio E2-B2 consuta;
+divergentia: cur_sigilli NECESSARIUM - optionale = defectus
+mechanicus certus in gradu ultimo); instrumentum agere (resolutio
+ligaminum per titulum, ambiguitas candidatos nominat); linea
+actiones: in res; sectiones OPERA + PROCESSUS in tabula (cursus
+graduum redditus); doctrina v3 (agere + recepta-sunt-codex + vita
+operis; pinna CONTRACTUS SCRIBAE intacta).
+
+DEPLOY VIVUS: semen v3 in reconnexu (seq 106->109); verbum natum-de
++ tag k3 sancita in vocabulario; parca VII ex spec par XII filata
+(fetch+ramus, post-saccharum, cancellatio cascadens, piscina sub
+agere, columna species, superficies definitionis MCP, susceptum).
+
+MILESTONE UNO DIE: ritus (interrogatio XIV + exploratores III +
+spec-v2) heri; frusta tria hodie, QUODQUE primo cursu viridium -
+zephyrum insecta in fuga trans totum K3. Decipulae omnes ante
+codicem captae (exploratio + consilium). Systema quod aedificavimus
+sigillum suum scripsit et ritum successoris sui incohavit.
+
+PROXIMUM: K4 per ritum vivum (opus 'interrogatio' pendens in
+tabula = ritus K4 incipit ibi); machinula reducers = parcum
+separatum; parca K3 vii in tabula.
+
+## INTENTIO K4 - RAMI (2026-07-16, ritus per processum ipsum ductus)
+
+RITUS PLENUS PERFECTUS INTRA RITUM VIVUM: instantia ritus-signaculi
+01KXP19AC2 opus quodque genuit dum perficimus - interrogatio
+(susceptum ante rotam I, perfectum post IV) -> motor spec genuit ->
+spec perfecta -> exploratores geniti -> relati -> perfecti. Cursus
+consilii CLAUSUS; porta-spec transiit; FRUSTUM 'frusta' incohatum
+manet donec frusta A/B/C aedificata (tunc porta-sigilli -> sigillare
+SPONTE flagship in parcum K4 aget - recusata+retenta si parcum
+nondum paratum: se-sanatio ipsa demonstratio est).
+
+INTERROGATIO XIV + CHARTA III (gesta-k4-interrogatio.md):
+truncus avidus / rami pigri; replay-on-merge; parametricum ubique;
+ramus genus in trunco (sentinella '' manet); custodia in statu rami;
+genera/motor/indices trunco-soli; confligentia res-eadem + vis;
+annales interpositi (forma parata ab K1); NAVE-DISCARD-PRIMO
+(inversio E3); verificare INTENSUM (branch_id in comparationem);
+fusio nidificata recusata nisi parens fusus.
+
+EXPLORATORES III (gesta-k4-exploratio-{1,2,3}.md VERBATIM):
+E1 - lectio nidificata oraculi RIMOSA (tectum seq deest parentibus
+mediis - CORRECTIO NOSTRA D1); fusio non-atomica/attributionem
+destruens/processus non provehens (nostra = emendationes D2-D4);
+familiae indicum avidae VI + unci fusionis IV = quod recusamus (D7).
+E2 - sutura UNA (branch_id='' in plicatore 1196) = puritas trunci
+GRATIS; decompositio _rei_applicare -> _statum_transformare purum;
+hwm limen non numerus = saltus recti; must-fix III (B1 resolutio
+tituli trunco-ligata -> res_id in ramo requiritur; B2 lectiones
+membri III una mutandae; B3 fusio numquam per _fascis_scribere -
+notae phantasmatis). E3 - RAMI ORACULI DEMO-WARE (2 umquam, 0
+abiecti, 0 confligentiae detectae, workspaces vicerunt, git pro
+speculatione ipsorum; currentBranch deletus post insectum
+concurrentiae git 53b0372 - decisio 2 VINDICATA).
+
+SPEC-V2 = FONS IMPLEMENTATIONIS: project-specs/gesta-k4-spec-v2.md
+(decisiones XVII, ledger divergentiarum IX, aureae XVIII, frusta
+A/B/C, ratio essendi contra provocationem E3: speculatio
+compactionem superans + substratum sync). Parcum K4 TRACTUM.
+Parcum K4-K5 fissum: K4 retitulatum in situ (ligamen ritūs tenet),
+K5 palatium filatum 01KXP9XNE4.
+
+POST COMMISSIONEM FRANI: frustum A (decompositio + lectio rami).

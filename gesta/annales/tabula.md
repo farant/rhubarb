@@ -1,6 +1,6 @@
 # TABULA (proiectio tabularii - GENERATUM, noli manu edere)
 
-seq 106 - 2026-07-16T17:27:00.316Z
+seq 161 - 2026-07-16T20:59:59.268Z
 
 ## QUAESTIONES
 
@@ -9,21 +9,25 @@ seq 106 - 2026-07-16T17:27:00.316Z
 - [apertum] Nomina scrinium sigillum insigillata  `gesta meta messis-2026-07`
 - [apertum] Novum Fundamentum 1x11 Nuntium  `fundamentum messis-2026-07`
 - [apertum] Phase-log silvae 407KB  `silva meta messis-2026-07`
-- [apertum] gesta_agere sine actore: quis egit?  `gesta k3`
 - [apertum] probatio_tcp_servus fluctuans  `tcp messis-2026-07`
 
 ## PARCA
 
+- [parcatum] 'post' saccharum super portas  `gesta k3`
 - [parcatum] AEDILIS stratum constructionis  `aedilis officina messis-2026-07`
+- [parcatum] Cancellatio cascadens (opera orba)  `gesta k3`
+- [parcatum] Columna species in tabula generum  `gesta k3 perf`
 - [parcatum] Configuratio filtrorum per proiectum  `legatus examen aedilis messis-2026-07`
 - [parcatum] Corpora macronum plena in corpus  `legatus mcp messis-2026-07`
-- [parcatum] Gesta K4-K5: rami + palatium  `gesta palace messis-2026-07`
+- [parcatum] Gesta K5: palatium  `gesta palace`
+- [parcatum] Gradus fetch + ramus (par substrati contextūs)  `gesta k3`
 - [parcatum] Hover commentarium ducens rider  `legatus lsp messis-2026-07`
 - [parcatum] LEGATUSD daemon socketorum  `legatus mcp lsp messis-2026-07`
 - [parcatum] Legatus: field references  `legatus lsp silva messis-2026-07`
 - [parcatum] M5 dorsum aarch64  `officina machinula messis-2026-07`
 - [parcatum] Mtimes nanosecundorum  `officina legatus messis-2026-07`
 - [parcatum] Nexus: instrumenta MCP propria  `gesta mcp messis-2026-07`
+- [parcatum] Piscina mundi sub agere copioso  `gesta k3 perf`
 - [parcatum] Piscina residentis: disciplina scratch  `gesta perf messis-2026-07`
 - [parcatum] Praedefinitum attributorum  `gesta messis-2026-07`
 - [parcatum] Reducers machinulae: mores-ut-data  `gesta machinula officina`
@@ -32,8 +36,10 @@ seq 106 - 2026-07-16T17:27:00.316Z
 - [parcatum] Salus per sordidas  `gesta perf messis-2026-07`
 - [parcatum] Sigillum ancorae symboli  `gesta legatus messis-2026-07`
 - [parcatum] Silva quaestio QB-QD  `silva saltuarius messis-2026-07`
+- [parcatum] Superficies MCP definitionis receptorum  `gesta k3 mcp`
+- [parcatum] Susceptum in provectione (si susceptio umquam refert)  `gesta k3`
 - [parcatum] Tabula: nexus multi-partium redditio  `gesta messis-2026-07`
-- [tractum] Gesta K3: actiones + processus  `gesta machinula officina messis-2026-07`
+- [tractum] Gesta K4: rami  `gesta palace messis-2026-07`
 
 ## DESIDERATA
 
@@ -53,6 +59,7 @@ seq 106 - 2026-07-16T17:27:00.316Z
 - Emendatio-generis manet integra-substitutio  `gesta messis-2026-07`
 - Executio actionis = eventus, non tabulae  `gesta messis-2026-07`
 - Genera ut eventus  `gesta messis-2026-07`
+- K3 sigillatum 2026-07-16: actiones + processus in nucleo gestarum - fascis atomicus (N eventus, transactio una), porta obstat / effectus scribunt, provectio avida se-sanans per indicem membrorum; frusta tria primo cursu viridia (612 asserta, examen ACCIPE, sigillum ipsum per agere factum)
 - Nexus subsumptus: machinamentum unum vinculorum  `gesta messis-2026-07`
 - Nullum CLI geminum tabularii  `gesta mcp messis-2026-07`
 - Opera vocabularium sunt, non API  `gesta messis-2026-07`
@@ -62,8 +69,21 @@ seq 106 - 2026-07-16T17:27:00.316Z
 - Vigilia una bibliotheca; invarians manifesti  `gesta legatus mcp officina`
 - mcp_servus: copia non extractio  `mcp legatus gesta messis-2026-07`
 
+## OPERA
+
+- [pendens] frusta
+- [perfectum] exploratores
+- [perfectum] interrogatio
+- [perfectum] spec
+
+## PROCESSUS
+
+- [currens] ritus-signaculi  (interrogatio perfectus; spec perfectus; exploratores perfectus; porta-spec perfectus; frusta incohatus)
+
 ## NEXUS
 
 - Sigillum ancorae symboli --impeditur-a--> LEGATUSD daemon socketorum
 - Saltuarius v0.1 --impeditur-a--> Silva quaestio QB-QD
 - Signum versionis residentis --pertinet-ad--> Vigilia binarii tabularii
+- K3 sigillatum 2026-07-16: actiones + processus in nucleo gestarum - fascis atomicus (N eventus, transactio una), porta obstat / effectus scribunt, provectio avida se-sanans per indicem membrorum; frusta tria primo cursu viridia (612 asserta, examen ACCIPE, sigillum ipsum per agere factum) --natum-de--> Gesta K3: actiones + processus
+- 01KXP19AC2GP2G6AFVR6A8PECA: ops:propositum=Gesta K4: rami interrogatio=interrogatio spec=spec exploratores=exploratores frusta=frusta

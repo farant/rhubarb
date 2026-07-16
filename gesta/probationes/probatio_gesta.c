@@ -1850,7 +1850,7 @@ s32 principale (vacuum)
             /* 1. ligamen absens */
             seq_ante = gesta_seq_ultima(m4);
             CREDO_VERUM (gesta_agere(m4, "claudere-cum-decreto",
-                "{}", "{\"cur\":\"x\"}", piscina, &fr));
+                "{}", "{\"cur\":\"x\"}", "fran", piscina, &fr));
             CREDO_VERUM (!fr.facta);
             CREDO_VERUM (strstr(fr.causa, "ligamen") != NIHIL);
             CREDO_VERUM (gesta_seq_ultima(m4) == seq_ante + I);
@@ -1858,34 +1858,34 @@ s32 principale (vacuum)
             /* 2. ops inexistens */
             CREDO_VERUM (gesta_agere(m4, "claudere-cum-decreto",
                 "{\"parcum\":\"PHANTASMA00000000000000000\"}",
-                "{\"cur\":\"x\"}", piscina, &fr));
+                "{\"cur\":\"x\"}", "fran", piscina, &fr));
             CREDO_VERUM (!fr.facta
                 && strstr(fr.causa, "inexistens") != NIHIL);
 
             /* 3. genus opis non congruit */
             sprintf(ligamina_json, "{\"parcum\":\"%s\"}", id_qq);
             CREDO_VERUM (gesta_agere(m4, "claudere-cum-decreto",
-                ligamina_json, "{\"cur\":\"x\"}", piscina, &fr));
+                ligamina_json, "{\"cur\":\"x\"}", "fran", piscina, &fr));
             CREDO_VERUM (!fr.facta
                 && strstr(fr.causa, "genus opis") != NIHIL);
 
             /* 4. status opis non congruit (parcatum, non tractum) */
             sprintf(ligamina_json, "{\"parcum\":\"%s\"}", id_p2);
             CREDO_VERUM (gesta_agere(m4, "claudere-cum-decreto",
-                ligamina_json, "{\"cur\":\"x\"}", piscina, &fr));
+                ligamina_json, "{\"cur\":\"x\"}", "fran", piscina, &fr));
             CREDO_VERUM (!fr.facta
                 && strstr(fr.causa, "status opis") != NIHIL);
 
             /* 5. argumentum necessarium abest */
             sprintf(ligamina_json, "{\"parcum\":\"%s\"}", id_p);
             CREDO_VERUM (gesta_agere(m4, "claudere-cum-decreto",
-                ligamina_json, "{}", piscina, &fr));
+                ligamina_json, "{}", "fran", piscina, &fr));
             CREDO_VERUM (!fr.facta
                 && strstr(fr.causa, "necessarium") != NIHIL);
 
             /* 6. argumentum typum violat */
             CREDO_VERUM (gesta_agere(m4, "claudere-cum-decreto",
-                ligamina_json, "{\"cur\":42}", piscina, &fr));
+                ligamina_json, "{\"cur\":42}", "fran", piscina, &fr));
             CREDO_VERUM (!fr.facta
                 && strstr(fr.causa, "typum") != NIHIL);
 
@@ -1917,12 +1917,12 @@ s32 principale (vacuum)
             s64 seq_ante = gesta_seq_ultima(m4);
 
             CREDO_VERUM (gesta_agere(m4, "explodere", "{}", "{}",
-                piscina, &fr));
+                "fran", piscina, &fr));
             CREDO_VERUM (!fr.facta
                 && strstr(fr.causa, "verbum ignotum") != NIHIL);
             /* referentia antrorsum: $novus ANTE creationem suam */
             CREDO_VERUM (gesta_agere(m4, "antrorsum", "{}", "{}",
-                piscina, &fr));
+                "fran", piscina, &fr));
             CREDO_VERUM (!fr.facta
                 && strstr(fr.causa, "$novus.cras") != NIHIL);
             CREDO_VERUM (gesta_seq_ultima(m4) == seq_ante + II);
@@ -1933,9 +1933,9 @@ s32 principale (vacuum)
         /* actio ignota / genus non actio = apparatus, non
          * recusata */
         CREDO_VERUM (!gesta_agere(m4, "nusquam", "{}", "{}",
-            piscina, &fr));
+            "fran", piscina, &fr));
         CREDO_VERUM (!gesta_agere(m4, "parcum", "{}", "{}",
-            piscina, &fr));
+            "fran", piscina, &fr));
 
         /* ====================================================
          * XXXV. G6+G7: receptum princeps - sex effectus atomice,
@@ -1949,7 +1949,7 @@ s32 principale (vacuum)
             sprintf(ligamina_json, "{\"parcum\":\"%s\"}", id_p);
             CREDO_VERUM (gesta_agere(m4, "claudere-cum-decreto",
                 ligamina_json,
-                "{\"cur\":\"K3 chunk A perfectum\"}", piscina,
+                "{\"cur\":\"K3 chunk A perfectum\"}", "fran", piscina,
                 &fr));
             CREDO_VERUM (fr.facta);
             CREDO_AEQUALIS_I32 (fr.novae_numerus, II);
@@ -2038,7 +2038,7 @@ s32 principale (vacuum)
 
             sprintf(ligamina_json, "{\"quaestio\":\"%s\"}", id_qq);
             CREDO_VERUM (gesta_agere(m4, "signare", ligamina_json,
-                "{\"n\":42,\"verbum\":\"alta\"}", piscina, &fr));
+                "{\"n\":42,\"verbum\":\"alta\"}", "fran", piscina, &fr));
             CREDO_VERUM (fr.facta);
             CREDO_AEQUALIS_I32 (fr.novae_numerus, ZEPHYRUM);
             st = _status_entis(m4, id_qq, piscina);
@@ -2083,7 +2083,7 @@ s32 principale (vacuum)
 
             sprintf(ligamina_json, "{\"q\":\"%s\"}", id_qv);
             CREDO_VERUM (gesta_agere(m4, "praecipitare",
-                ligamina_json, "{}", piscina, &fr));
+                ligamina_json, "{}", "fran", piscina, &fr));
             CREDO_VERUM (fr.facta);
             st = _status_entis(m4, id_qv, piscina);
             /* clausum -> laborans extra machinam: cadit TAMEN */
@@ -2146,7 +2146,7 @@ s32 principale (vacuum)
 
             sprintf(ligamina_json, "{\"quaestio\":\"%s\"}", id_qq);
             CREDO_VERUM (gesta_agere(m4, "signare", ligamina_json,
-                "{\"n\":7,\"verbum\":\"corr\"}", piscina, &fr));
+                "{\"n\":7,\"verbum\":\"corr\"}", "fran", piscina, &fr));
             CREDO_VERUM (fr.facta);
             st = _status_entis(m4, id_qq, piscina);
             CREDO_VERUM (_clavis_est_chorda(st, "descriptio",
@@ -2170,7 +2170,7 @@ s32 principale (vacuum)
                     id_qq);
                 CREDO_VERUM (gesta_agere(m4, "signare",
                     ligamina_json,
-                    "{\"n\":7,\"verbum\":\"iterum\"}", piscina,
+                    "{\"n\":7,\"verbum\":\"iterum\"}", "fran", piscina,
                     &fr));
                 CREDO_VERUM (fr.facta);
             }
@@ -2356,7 +2356,7 @@ s32 principale (vacuum)
             JsonValor* st;
 
             CREDO_VERUM (gesta_processum_incipere(m5,
-                "cursus-simplex", "{}", "{}", piscina, &pf));
+                "cursus-simplex", "{}", "{}", "fran", piscina, &pf));
             CREDO_VERUM (pf.facta);
             memcpy(id_i, pf.instantia, GESTA_RES_ID_MENSURA);
 
@@ -2386,7 +2386,7 @@ s32 principale (vacuum)
             /* porta processūs: ligamen absens -> recusatus */
             CREDO_VERUM (gesta_processum_incipere(m5,
                 "cursus-actionis", "{}",
-                "{\"cur_sigilli\":\"x\"}", piscina, &pf));
+                "{\"cur_sigilli\":\"x\"}", "fran", piscina, &pf));
             CREDO_VERUM (!pf.facta);
             CREDO_VERUM (strstr(pf.causa, "ligamen") != NIHIL);
             CREDO_VERUM (_eventus_rei(m5, "cursus-actionis",
@@ -2395,12 +2395,12 @@ s32 principale (vacuum)
             /* species-fines: actio non processus, processus non
              * actio, ignotum */
             CREDO_VERUM (!gesta_processum_incipere(m5,
-                "claudere-cum-decreto", "{}", "{}", piscina,
+                "claudere-cum-decreto", "{}", "{}", "fran", piscina,
                 &pf));
             CREDO_VERUM (!gesta_agere(m5, "cursus-simplex", "{}",
-                "{}", piscina, &fr));
+                "{}", "fran", piscina, &fr));
             CREDO_VERUM (!gesta_processum_incipere(m5, "nusquam",
-                "{}", "{}", piscina, &pf));
+                "{}", "{}", "fran", piscina, &pf));
         }
 
         /* ====================================================
@@ -2471,7 +2471,7 @@ s32 principale (vacuum)
             character op_b[GESTA_RES_ID_MENSURA];
 
             CREDO_VERUM (gesta_processum_incipere(m5,
-                "cursus-simplex", "{}", "{}", piscina, &pf));
+                "cursus-simplex", "{}", "{}", "fran", piscina, &pf));
             CREDO_VERUM (pf.facta);
             memcpy(id_i2, pf.instantia, GESTA_RES_ID_MENSURA);
 
@@ -2511,7 +2511,7 @@ s32 principale (vacuum)
             character op_fini[GESTA_RES_ID_MENSURA];
 
             CREDO_VERUM (gesta_processum_incipere(m5,
-                "cursus-geminus", "{}", "{}", piscina, &pf));
+                "cursus-geminus", "{}", "{}", "fran", piscina, &pf));
             CREDO_VERUM (pf.facta);
             memcpy(id_g, pf.instantia, GESTA_RES_ID_MENSURA);
 
@@ -2581,7 +2581,7 @@ s32 principale (vacuum)
                 id_pp);
             CREDO_VERUM (gesta_processum_incipere(m5,
                 "cursus-actionis", ligamina_json,
-                "{\"cur_sigilli\":\"probatio B\"}", piscina,
+                "{\"cur_sigilli\":\"probatio B\"}", "fran", piscina,
                 &pf));
             CREDO_VERUM (pf.facta);
             memcpy(id_ac, pf.instantia, GESTA_RES_ID_MENSURA);
@@ -2628,7 +2628,7 @@ s32 principale (vacuum)
          * ==================================================== */
         {
             CREDO_VERUM (gesta_processum_incipere(m5,
-                "cursus-fractus", "{}", "{}", piscina, &pf));
+                "cursus-fractus", "{}", "{}", "fran", piscina, &pf));
             CREDO_VERUM (pf.facta);
             memcpy(id_fr, pf.instantia, GESTA_RES_ID_MENSURA);
 

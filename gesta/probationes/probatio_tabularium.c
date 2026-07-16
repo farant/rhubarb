@@ -6,6 +6,7 @@
 #include "piscina.h"
 #include "chorda.h"
 #include "tabularium.h"
+#include "gesta.h"
 #include "sigillum.h"
 #include "credo.h"
 #include <stdio.h>
@@ -408,6 +409,211 @@ s32 principale (vacuum)
                     == ZEPHYRUM);
             }
         }
+    }
+
+    /* ========================================================
+     * K3 CHUNK C (aureae G20-G23)
+     * ======================================================== */
+
+    /* XVI. G20: semen v3 - genera K3 praesentia; fusio v2 in
+     * genera TABULAE terminata (E2-B2): quaestio attributa tabulae
+     * fert, opus/actio/processus EA NON ferunt (idempotentia iam
+     * in XIV probata - tabula octetim aequalis post initialize
+     * alterum CUM seminibus v3) */
+    {
+        GestaMundus* sonda = gesta_aperire(piscina, VIA_DB,
+            VIA_AN);
+
+        CREDO_NON_NIHIL (sonda);
+        si (sonda != NIHIL)
+        {
+            /* chorda non NUL-terminata - copiae NUL-terminatae
+             * pro strstr */
+            {
+                chorda c = gesta_genus_datum(sonda, "quaestio",
+                    piscina);
+                character* buf = (character*)piscina_allocare(
+                    piscina, (memoriae_index)c.mensura + I);
+
+                CREDO_VERUM (c.mensura > ZEPHYRUM);
+                si (buf != NIHIL && c.mensura > ZEPHYRUM)
+                {
+                    memcpy(buf, c.datum,
+                        (memoriae_index)c.mensura);
+                    buf[c.mensura] = '\0';
+                    CREDO_VERUM (strstr(buf, "\"ancorae\"")
+                        != NIHIL);
+                }
+            }
+            {
+                chorda c = gesta_genus_datum(sonda,
+                    "claudere-cum-decreto", piscina);
+                character* buf = (character*)piscina_allocare(
+                    piscina, (memoriae_index)c.mensura + I);
+
+                CREDO_VERUM (c.mensura > ZEPHYRUM);
+                si (buf != NIHIL && c.mensura > ZEPHYRUM)
+                {
+                    memcpy(buf, c.datum,
+                        (memoriae_index)c.mensura);
+                    buf[c.mensura] = '\0';
+                    CREDO_VERUM (strstr(buf,
+                        "\"species\":\"actio\"") != NIHIL);
+                    CREDO_VERUM (strstr(buf, "\"ancorae\"")
+                        == NIHIL);
+                }
+            }
+            {
+                chorda c = gesta_genus_datum(sonda,
+                    "ritus-signaculi", piscina);
+                character* buf = (character*)piscina_allocare(
+                    piscina, (memoriae_index)c.mensura + I);
+
+                CREDO_VERUM (c.mensura > ZEPHYRUM);
+                si (buf != NIHIL && c.mensura > ZEPHYRUM)
+                {
+                    memcpy(buf, c.datum,
+                        (memoriae_index)c.mensura);
+                    buf[c.mensura] = '\0';
+                    CREDO_VERUM (strstr(buf,
+                        "\"species\":\"processus\"") != NIHIL);
+                    CREDO_VERUM (strstr(buf, "\"ancorae\"")
+                        == NIHIL);
+                }
+            }
+            {
+                chorda c = gesta_genus_datum(sonda, "opus",
+                    piscina);
+                character* buf = (character*)piscina_allocare(
+                    piscina, (memoriae_index)c.mensura + I);
+
+                CREDO_VERUM (c.mensura > ZEPHYRUM);
+                si (buf != NIHIL && c.mensura > ZEPHYRUM)
+                {
+                    memcpy(buf, c.datum,
+                        (memoriae_index)c.mensura);
+                    buf[c.mensura] = '\0';
+                    CREDO_VERUM (strstr(buf, "\"assignatum\"")
+                        != NIHIL);
+                    CREDO_VERUM (strstr(buf, "\"ancorae\"")
+                        == NIHIL);
+                }
+            }
+            gesta_claudere(sonda);
+        }
+    }
+
+    /* XVII. G21: agere - receptum princeps felix (ligamina PER
+     * TITULUM soluta) + recusata causam nominat */
+    r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":70,"
+        "\"method\":\"tools/call\",\"params\":{\"name\":"
+        "\"addere\",\"arguments\":{\"genus\":\"parcum\","
+        "\"titulus\":\"Migratio K3\"}}}");
+    CREDO_VERUM (strstr(r, "creata") != NIHIL);
+    /* recusata: parcum parcatum, actio tractum postulat */
+    r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":71,"
+        "\"method\":\"tools/call\",\"params\":{\"name\":"
+        "\"agere\",\"arguments\":{\"actio\":"
+        "\"claudere-cum-decreto\",\"ligamina\":\"{\\\"parcum\\\":"
+        "\\\"Migratio K3\\\"}\",\"argumenta\":\"{\\\"cur\\\":"
+        "\\\"probatio\\\"}\"}}}");
+    CREDO_VERUM (strstr(r, "actio recusata") != NIHIL);
+    CREDO_VERUM (strstr(r, "status opis") != NIHIL);
+    /* tractum -> felix: sex effectus atomice, res novae nominatae */
+    r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":72,"
+        "\"method\":\"tools/call\",\"params\":{\"name\":"
+        "\"gerere\",\"arguments\":{\"res\":\"Migratio K3\","
+        "\"actus\":\"status\",\"novus\":\"tractum\"}}}");
+    CREDO_VERUM (strstr(r, "status tractum") != NIHIL);
+    r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":73,"
+        "\"method\":\"tools/call\",\"params\":{\"name\":"
+        "\"agere\",\"arguments\":{\"actio\":"
+        "\"claudere-cum-decreto\",\"ligamina\":\"{\\\"parcum\\\":"
+        "\\\"Migratio K3\\\"}\",\"argumenta\":\"{\\\"cur\\\":"
+        "\\\"K3 probatum est\\\"}\",\"actor\":\"fran\"}}}");
+    CREDO_VERUM (strstr(r, "actio facta") != NIHIL);
+    CREDO_VERUM (strstr(r, "res nova") != NIHIL);
+    CREDO_VERUM (strstr(r, "K3 probatum est") != NIHIL);
+    /* parcum clausum + decretum natum + vinculum in tabula */
+    r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":74,"
+        "\"method\":\"tools/call\",\"params\":{\"name\":\"res\","
+        "\"arguments\":{\"res\":\"Migratio K3\"}}}");
+    CREDO_VERUM (strstr(r, "clausum") != NIHIL);
+    CREDO_VERUM (strstr(r, "clausum: K3 probatum est") != NIHIL);
+    CREDO_VERUM (strstr(r, "natum-de") != NIHIL);
+    {
+        constans character* tabula = _plagula_litterae(piscina,
+            VIA_TB);
+
+        CREDO_VERUM (strstr(tabula, "K3 probatum est") != NIHIL);
+        CREDO_VERUM (strstr(tabula, "natum-de") != NIHIL);
+    }
+
+    /* XVIII. G22: affordantiae in res (actiones: linea) - tractum
+     * affert, quaestio non */
+    r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":75,"
+        "\"method\":\"tools/call\",\"params\":{\"name\":"
+        "\"addere\",\"arguments\":{\"genus\":\"parcum\","
+        "\"titulus\":\"Affordata\"}}}");
+    CREDO_VERUM (strstr(r, "creata") != NIHIL);
+    r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":76,"
+        "\"method\":\"tools/call\",\"params\":{\"name\":"
+        "\"gerere\",\"arguments\":{\"res\":\"Affordata\","
+        "\"actus\":\"status\",\"novus\":\"tractum\"}}}");
+    CREDO_VERUM (strstr(r, "status tractum") != NIHIL);
+    r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":77,"
+        "\"method\":\"tools/call\",\"params\":{\"name\":\"res\","
+        "\"arguments\":{\"res\":\"Affordata\"}}}");
+    CREDO_VERUM (strstr(r, "actiones: claudere-cum-decreto")
+        != NIHIL);
+    r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":78,"
+        "\"method\":\"tools/call\",\"params\":{\"name\":\"res\","
+        "\"arguments\":{\"res\":\"Parsura lenta\"}}}");
+    CREDO_VERUM (strstr(r, "actiones:") == NIHIL);
+    /* tools/list nunc sex instrumenta */
+    r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":79,"
+        "\"method\":\"tools/list\"}");
+    CREDO_VERUM (strstr(r, "\"agere\"") != NIHIL);
+
+    /* XIX. G23: ritus-signaculi incipit - opus primum cursus
+     * consilii generatur (in-cursu sequentia: spec NONDUM);
+     * tabula instantiam + opus ostendit; perfectio operis per
+     * gerere provectionem SPONTE ciet */
+    r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":80,"
+        "\"method\":\"tools/call\",\"params\":{\"name\":"
+        "\"addere\",\"arguments\":{\"genus\":\"parcum\","
+        "\"titulus\":\"Parcum ritus\"}}}");
+    CREDO_VERUM (strstr(r, "creata") != NIHIL);
+    r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":81,"
+        "\"method\":\"tools/call\",\"params\":{\"name\":"
+        "\"agere\",\"arguments\":{\"processus\":"
+        "\"ritus-signaculi\",\"ligamina\":\"{\\\"propositum\\\":"
+        "\\\"Parcum ritus\\\"}\",\"argumenta\":"
+        "\"{\\\"cur_sigilli\\\":\\\"probatio ritus\\\"}\"}}}");
+    CREDO_VERUM (strstr(r, "inceptus: instantia") != NIHIL);
+    CREDO_VERUM (strstr(r, "interrogatio: incohatus") != NIHIL);
+    CREDO_VERUM (strstr(r, "spec:") == NIHIL);
+    {
+        constans character* tabula = _plagula_litterae(piscina,
+            VIA_TB);
+
+        CREDO_VERUM (strstr(tabula, "PROCESSUS") != NIHIL);
+        CREDO_VERUM (strstr(tabula, "ritus-signaculi") != NIHIL);
+        CREDO_VERUM (strstr(tabula, "OPERA") != NIHIL);
+        CREDO_VERUM (strstr(tabula, "interrogatio") != NIHIL);
+    }
+    /* perfectio operis 'interrogatio' -> spec generatur (motor
+     * per superficiem MCP ipsam) */
+    r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":82,"
+        "\"method\":\"tools/call\",\"params\":{\"name\":"
+        "\"gerere\",\"arguments\":{\"res\":\"interrogatio\","
+        "\"actus\":\"status\",\"novus\":\"perfectum\"}}}");
+    CREDO_VERUM (strstr(r, "status perfectum") != NIHIL);
+    {
+        constans character* tabula = _plagula_litterae(piscina,
+            VIA_TB);
+
+        CREDO_VERUM (strstr(tabula, "spec") != NIHIL);
     }
 
     /* XV. vigilia (lib/vigilia): signum in serverInfo.version +

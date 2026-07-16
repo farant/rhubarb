@@ -3575,8 +3575,9 @@ _portam_probare (GestaMundus* m, JsonValor* def_radix,
 interior vacuum
 _actionem_recusare (GestaMundus* m, constans character* titulus,
     JsonValor* ligamina, JsonValor* argumenta,
-    constans character* causa, constans character* origo,
-    Piscina* piscina, GestaActioFructus* exitus)
+    constans character* causa, constans character* actor,
+    constans character* origo, Piscina* piscina,
+    GestaActioFructus* exitus)
 {
     JsonValor* d = json_objectum_creare(piscina);
     GestaFascisEventum unus;
@@ -3593,7 +3594,7 @@ _actionem_recusare (GestaMundus* m, constans character* titulus,
     unus.eventum.genus_eventus = "actio-recusata";
     unus.eventum.datum = _litterae(piscina,
         json_scribere(d, piscina));
-    unus.eventum.actor = "machina";
+    unus.eventum.actor = actor;
     unus.eventum.origo = origo;
     si (_fascis_scribere(m, &unus, I, NIHIL, vacua))
     {
@@ -3610,9 +3611,9 @@ _actionem_recusare (GestaMundus* m, constans character* titulus,
  * Causa mechanica aut NIHIL. */
 interior constans character*
 _effectus_aedificare (JsonValor* effectus, i32 n_eff,
-    GestaSubstitutio* subst, constans character* origo,
-    GestaFascisEventum* fascis, JsonValor* eventus_ids,
-    Piscina* piscina)
+    GestaSubstitutio* subst, constans character* actor,
+    constans character* origo, GestaFascisEventum* fascis,
+    JsonValor* eventus_ids, Piscina* piscina)
 {
     i32 i;
 
@@ -3738,7 +3739,7 @@ _effectus_aedificare (JsonValor* effectus, i32 n_eff,
                 c_verbum);
             fascis[i].eventum.datum = _litterae(piscina,
                 json_scribere(datum_subst, piscina));
-            fascis[i].eventum.actor = "machina";
+            fascis[i].eventum.actor = actor;
             fascis[i].eventum.origo = origo;
         }
     }
@@ -3748,9 +3749,10 @@ _effectus_aedificare (JsonValor* effectus, i32 n_eff,
 b32
 gesta_agere (GestaMundus* mundus, constans character* actio_titulus,
     constans character* ligamina_json,
-    constans character* argumenta_json, Piscina* piscina,
-    GestaActioFructus* exitus)
+    constans character* argumenta_json, constans character* actor,
+    Piscina* piscina, GestaActioFructus* exitus)
 {
+    constans character* actor_l;
     chorda def_datum;
     JsonResultus r;
     JsonValor* def_radix;
@@ -3774,6 +3776,7 @@ gesta_agere (GestaMundus* mundus, constans character* actio_titulus,
     memset(exitus, ZEPHYRUM, magnitudo(GestaActioFructus));
     exitus->causa = "";
     exitus->facta_id = "";
+    actor_l = actor != NIHIL ? actor : "machina";
 
     /* definitio: genus speciei actio */
     def_datum = _genus_datum_capere(mundus, _ch(actio_titulus),
@@ -3831,7 +3834,7 @@ gesta_agere (GestaMundus* mundus, constans character* actio_titulus,
     si (causa != NIHIL)
     {
         _actionem_recusare(mundus, actio_titulus, ligamina,
-            argumenta, causa, origo, piscina, exitus);
+            argumenta, causa, actor_l, origo, piscina, exitus);
         redde VERUM;
     }
 
@@ -3854,13 +3857,13 @@ gesta_agere (GestaMundus* mundus, constans character* actio_titulus,
     {
         redde _fractum(mundus, "piscina exhausta");
     }
-    causa = _effectus_aedificare(effectus, n_eff, &subst, origo,
-        fascis, eventus_ids, piscina);
+    causa = _effectus_aedificare(effectus, n_eff, &subst, actor_l,
+        origo, fascis, eventus_ids, piscina);
     si (causa != NIHIL)
     {
         /* error mechanicus: nihil scriptum - recusata sola */
         _actionem_recusare(mundus, actio_titulus, ligamina,
-            argumenta, causa, origo, piscina, exitus);
+            argumenta, causa, actor_l, origo, piscina, exitus);
         exitus->mechanica = VERUM;
         redde VERUM;
     }
@@ -3883,7 +3886,7 @@ gesta_agere (GestaMundus* mundus, constans character* actio_titulus,
         fascis[n_eff].eventum.genus_eventus = "actio-facta";
         fascis[n_eff].eventum.datum = _litterae(piscina,
             json_scribere(d, piscina));
-        fascis[n_eff].eventum.actor = "machina";
+        fascis[n_eff].eventum.actor = actor_l;
         fascis[n_eff].eventum.origo = origo;
     }
 
@@ -4632,7 +4635,7 @@ _provehere_ad_fixum (GestaMundus* m, constans character* instantia)
                                 lig_subst, piscina)),
                             _litterae(piscina, json_scribere(
                                 arg_subst, piscina)),
-                            piscina, &fa))
+                            "machina", piscina, &fa))
                     {
                         JsonValor* d = _datum_gradus(piscina,
                             g_titulus);
@@ -4811,9 +4814,10 @@ b32
 gesta_processum_incipere (GestaMundus* mundus,
     constans character* processus_titulus,
     constans character* ligamina_json,
-    constans character* argumenta_json, Piscina* piscina,
-    GestaProcessusFructus* exitus)
+    constans character* argumenta_json, constans character* actor,
+    Piscina* piscina, GestaProcessusFructus* exitus)
 {
+    constans character* actor_l;
     chorda def_datum;
     JsonResultus r;
     JsonValor* def_radix;
@@ -4832,6 +4836,7 @@ gesta_processum_incipere (GestaMundus* mundus,
     }
     memset(exitus, ZEPHYRUM, magnitudo(GestaProcessusFructus));
     exitus->causa = "";
+    actor_l = actor != NIHIL ? actor : "machina";
 
     def_datum = _genus_datum_capere(mundus,
         _ch(processus_titulus), piscina);
@@ -4899,7 +4904,7 @@ gesta_processum_incipere (GestaMundus* mundus,
         unus.eventum.genus_eventus = "processus-recusatus";
         unus.eventum.datum = _litterae(piscina,
             json_scribere(d, piscina));
-        unus.eventum.actor = "machina";
+        unus.eventum.actor = actor_l;
         unus.eventum.origo = origo;
         si (_fascis_scribere(mundus, &unus, I, NIHIL, vacua))
         {
@@ -4966,7 +4971,7 @@ gesta_processum_incipere (GestaMundus* mundus,
         fascis[ZEPHYRUM].eventum.genus_eventus = "creatio";
         fascis[ZEPHYRUM].eventum.datum = _litterae(piscina,
             json_scribere(d, piscina));
-        fascis[ZEPHYRUM].eventum.actor = "machina";
+        fascis[ZEPHYRUM].eventum.actor = actor_l;
         fascis[ZEPHYRUM].eventum.origo = origo;
 
         /* ligamina opum per membra (pars "ops:<titulus>") -
@@ -5007,7 +5012,7 @@ gesta_processum_incipere (GestaMundus* mundus,
             fascis[pos].eventum.genus_eventus = "membrum-additum";
             fascis[pos].eventum.datum = _litterae(piscina,
                 json_scribere(dm, piscina));
-            fascis[pos].eventum.actor = "machina";
+            fascis[pos].eventum.actor = actor_l;
             fascis[pos].eventum.origo = origo;
             pos++;
         }

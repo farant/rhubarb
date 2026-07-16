@@ -29,11 +29,24 @@ interior constans character* constans TABULARII_DOCTRINA =
     "novus?/verbum?/alterum?/clavis?/valor?/datum?} = eventus unus. "
     "quaerere {textus, genus?, status?, tag?} = FTS (idioma "
     "Latinum: praefixa 'parsur*' - stemmata Anglica sola). res "
-    "{res} = status + ancorae (CAUTIO si inresolutae) + annales. "
-    "census {} = genera x status + tags + arretrata. Genera: "
+    "{res} = status + ancorae (CAUTIO si inresolutae) + actiones "
+    "affordatae + annales. "
+    "census {} = genera x status + tags + arretrata. "
+    "agere {actio?|processus?, ligamina? (JSON: ops->res_id|"
+    "titulus), argumenta? (JSON), actor?} = K3: actionem exsequi "
+    "(porta obstat - recusata causam nominat; effectus atomice, "
+    "actio-facta in flumine actionis) AUT processum incipere "
+    "(instantia photographat, opera cursuum generantur). Opus "
+    "processus: susceptio = gerere status susceptum; perfectio = "
+    "gerere mutatio {effectus} + status perfectum -> provectio "
+    "SPONTE sequitur (gradus proximi/portae/actiones). RECEPTA "
+    "SUNT CODEX: definitiones actionum/processuum per semen aut "
+    "canalem solum - agere exsequitur, numquam definit. Genera: "
     "quaestio (apertum->laborans->clausum|relictum), parcum "
     "(parcatum->tractum->clausum), decretum, nota, desideratum "
-    "(apertum->impletum). Violationes machinae NON obstant - nota "
+    "(apertum->impletum), opus (pendens->susceptum?->perfectum|"
+    "omissum), actiones (claudere-cum-decreto), processus "
+    "(ritus-signaculi). Violationes machinae NON obstant - nota "
     "custodiae appenditur (iudicat, non obstat). MORES: quaere ANTE "
     "filationem (addere titulum duplicatum CAUTIONE monet; "
     "resolutio tituli ambigui candidatos nominat - res_id "
@@ -80,10 +93,82 @@ interior constans TabulariumSemen SEMINA_GENERUM[] = {
       "\"cardinalitas\":\"unicus\"}],\"attributa\":[{\"titulus\":"
       "\"verbum\",\"typus\":\"textus\",\"necessarium\":true}],"
       "\"status_initialis\":\"vigens\",\"machina\":[[\"vigens\","
-      "\"solutum\"]],\"reducer\":\"ordinarius\"}" }
+      "\"solutum\"]],\"reducer\":\"ordinarius\"}" },
+    /* ---- semen v3 (K3): infra hunc locum genera NON-tabulae -
+     * fusio ATTRIBUTA_V2 supra SEMINA_BOARD_NUMERUS terminatur
+     * (emendatio E2-B2: attributa tabulae numquam in opus/actio/
+     * processum stampantur) ---- */
+    { "opus",
+      "{\"titulus\":\"opus\",\"status_initialis\":\"pendens\","
+      "\"machina\":[[\"pendens\",\"susceptum\"],[\"susceptum\","
+      "\"perfectum\"],[\"pendens\",\"perfectum\"],[\"pendens\","
+      "\"omissum\"],[\"susceptum\",\"omissum\"]],\"attributa\":"
+      "[{\"titulus\":\"titulus\",\"typus\":\"textus\","
+      "\"necessarium\":true},{\"titulus\":\"assignatum\","
+      "\"typus\":\"textus\"},{\"titulus\":\"prioritas\","
+      "\"typus\":\"textus\"},{\"titulus\":\"effectus\","
+      "\"typus\":\"textus\"}],\"reducer\":\"ordinarius\"}" },
+    /* actio princeps (spec-v2 par IV; genus vinculi VIVUM =
+     * 'nexus'): $novus bis, obumbrae ter - sex effectus atomice */
+    { "claudere-cum-decreto",
+      "{\"titulus\":\"claudere-cum-decreto\",\"species\":"
+      "\"actio\",\"opes\":[{\"titulus\":\"parcum\",\"genus\":"
+      "\"parcum\",\"status_necessarius\":\"tractum\"}],"
+      "\"argumenta\":[{\"titulus\":\"cur\",\"typus\":\"textus\","
+      "\"necessarium\":true}],\"effectus\":["
+      "{\"verbum\":\"creatio\",\"ut\":\"decretum_novum\","
+      "\"datum\":{\"genus\":\"decretum\",\"titulus\":"
+      "\"$arg.cur\"}},"
+      "{\"verbum\":\"creatio\",\"ut\":\"vinculum\",\"datum\":"
+      "{\"genus\":\"nexus\",\"verbum\":\"natum-de\"}},"
+      "{\"verbum\":\"membrum-additum\",\"res\":"
+      "\"$novus.vinculum\",\"datum\":{\"pars\":\"a\","
+      "\"membrum\":\"$novus.decretum_novum\"}},"
+      "{\"verbum\":\"membrum-additum\",\"res\":"
+      "\"$novus.vinculum\",\"datum\":{\"pars\":\"b\","
+      "\"membrum\":\"$res.parcum\"}},"
+      "{\"verbum\":\"nota\",\"res\":\"$res.parcum\",\"datum\":"
+      "{\"textus\":\"clausum: $arg.cur\"}},"
+      "{\"verbum\":\"status\",\"res\":\"$res.parcum\",\"datum\":"
+      "{\"novus\":\"clausum\"}}]}" },
+    /* processus ritūs milestonis (spec-v2 par V, porta-sola;
+     * divergentia: cur_sigilli NECESSARIUM - gradus sigillare
+     * $arg.cur_sigilli postulat, absentia = defectus mechanicus
+     * post ritum totum) */
+    { "ritus-signaculi",
+      "{\"titulus\":\"ritus-signaculi\",\"species\":"
+      "\"processus\",\"status_initialis\":\"currens\","
+      "\"machina\":[[\"currens\",\"perfectus\"],[\"currens\","
+      "\"defectus\"],[\"currens\",\"omissus\"]],\"opes\":"
+      "[{\"titulus\":\"propositum\",\"genus\":\"parcum\"}],"
+      "\"argumenta\":[{\"titulus\":\"cur_sigilli\",\"typus\":"
+      "\"textus\",\"necessarium\":true}],\"ordines\":"
+      "[\"consilium\",\"aedificatio\",\"sigillum\"],\"gradus\":["
+      "{\"titulus\":\"interrogatio\",\"ordo\":\"consilium\","
+      "\"genus_gradus\":\"opus\",\"positio\":0},"
+      "{\"titulus\":\"spec\",\"ordo\":\"consilium\","
+      "\"genus_gradus\":\"opus\",\"positio\":1},"
+      "{\"titulus\":\"exploratores\",\"ordo\":\"consilium\","
+      "\"genus_gradus\":\"opus\",\"positio\":2},"
+      "{\"titulus\":\"porta-spec\",\"ordo\":\"aedificatio\","
+      "\"genus_gradus\":\"porta\",\"positio\":0,\"condiciones\":"
+      "[\"spec\"]},"
+      "{\"titulus\":\"frusta\",\"ordo\":\"aedificatio\","
+      "\"genus_gradus\":\"opus\",\"positio\":1},"
+      "{\"titulus\":\"porta-sigilli\",\"ordo\":\"sigillum\","
+      "\"genus_gradus\":\"porta\",\"positio\":0,\"condiciones\":"
+      "[\"exploratores\",\"frusta\"]},"
+      "{\"titulus\":\"sigillare\",\"ordo\":\"sigillum\","
+      "\"genus_gradus\":\"actio\",\"positio\":1,\"actio\":"
+      "\"claudere-cum-decreto\",\"ligamina\":{\"parcum\":"
+      "\"$ops.propositum\"},\"argumenta\":{\"cur\":"
+      "\"sigillum ritus: $arg.cur_sigilli\"}}]}" }
 };
 
-#define SEMINA_NUMERUS VI
+/* scopus fusionis v2 (genera tabulae + nexus); genera K3 infra
+ * attributa propria ferunt (emendatio E2-B2) */
+#define SEMINA_BOARD_NUMERUS VI
+#define SEMINA_NUMERUS IX
 
 /* semen v2 (K2 decisio Q9): attributa in genera VIVA - emendatio
  * integra-substitutio ex definitione currenti + attributa (fusio
@@ -814,6 +899,83 @@ _tabulae_sectionem (Tabularium* t, ChordaAedificator* aed,
     scrinium_finire(e);
 }
 
+/* sectio processuum (K3): instantiae non-terminatae cum cursu
+ * graduum - defectae VISIBILES manent (attentionem petunt) */
+interior vacuum
+_tabulae_processus (Tabularium* t, ChordaAedificator* aed,
+    Piscina* pn)
+{
+    ScriniumEnuntiatum* e = scrinium_praeparare(
+        gesta_scrinium(t->mundus),
+        "SELECT r.res_id, r.genus, r.status, r.datum FROM res r"
+        " JOIN genera g ON g.titulus = r.genus"
+        " WHERE r.status NOT IN ('perfectus','omissus')"
+        " AND g.datum LIKE '%\"species\":\"processus\"%'"
+        " ORDER BY r.genus, r.res_id");
+    b32 caput_scriptum = FALSUM;
+
+    si (e == NIHIL)
+    {
+        redde;
+    }
+    dum (scrinium_gradi(e) == SCRINIUM_ORDO)
+    {
+        chorda genus = scrinium_columna_textus(e, I, pn);
+        chorda status = scrinium_columna_textus(e, II, pn);
+        chorda datum = scrinium_columna_textus(e, III, pn);
+
+        si (!caput_scriptum)
+        {
+            chorda_aedificator_appendere_literis(aed,
+                "\n## PROCESSUS\n\n");
+            caput_scriptum = VERUM;
+        }
+        chorda_aedificator_appendere_literis(aed, "- [");
+        chorda_aedificator_appendere_chorda(aed, status);
+        chorda_aedificator_appendere_literis(aed, "] ");
+        chorda_aedificator_appendere_chorda(aed, genus);
+        {
+            JsonResultus r = json_legere(datum, pn);
+            JsonValor* cursus = (r.successus
+                && json_est_objectum(r.radix))
+                ? json_objectum_capere(r.radix, "cursus")
+                : NIHIL;
+
+            si (cursus != NIHIL && json_est_objectum(cursus))
+            {
+                JsonObjectumIterator iter =
+                    json_objectum_iterator(cursus);
+                chorda k;
+                JsonValor* v;
+                b32 primus = VERUM;
+
+                chorda_aedificator_appendere_literis(aed, "  (");
+                dum (json_objectum_iterator_proxima(&iter, &k,
+                    &v))
+                {
+                    si (!primus)
+                    {
+                        chorda_aedificator_appendere_literis(aed,
+                            "; ");
+                    }
+                    primus = FALSUM;
+                    chorda_aedificator_appendere_chorda(aed, k);
+                    chorda_aedificator_appendere_literis(aed,
+                        " ");
+                    si (v != NIHIL && json_est_chorda(v))
+                    {
+                        chorda_aedificator_appendere_chorda(aed,
+                            json_ad_chorda(v));
+                    }
+                }
+                chorda_aedificator_appendere_literis(aed, ")");
+            }
+        }
+        chorda_aedificator_appendere_literis(aed, "\n");
+    }
+    scrinium_finire(e);
+}
+
 interior vacuum
 _tabulam_scribere (Tabularium* t, Piscina* pn)
 {
@@ -863,6 +1025,9 @@ _tabulam_scribere (Tabularium* t, Piscina* pn)
     _tabulae_sectionem(t, aed, "desideratum", "DESIDERATA", FALSUM,
         pn);
     _tabulae_sectionem(t, aed, "decretum", "DECRETA", FALSUM, pn);
+    /* K3: opera aperta (actionabilia) + instantiae processuum */
+    _tabulae_sectionem(t, aed, "opus", "OPERA", VERUM, pn);
+    _tabulae_processus(t, aed, pn);
     /* nexus (vincula = res nexus-speciei per indicem membra; K2
      * cutover). Soluta sponte absunt - plicatura membra eorum
      * ordines purgat. Bi-partia cum verbo = forma sagittae; alia
@@ -1750,6 +1915,32 @@ _tab_res (Tabularium* t, Piscina* pn, JsonValor* id,
             }
         }
     }
+    /* affordantiae (K3 - superficies passiva): actiones quae rem
+     * NUNC ligare possunt */
+    {
+        Xar* act = gesta_actiones_rei(t->mundus,
+            _litterae(pn, res_id), pn);
+
+        si (act != NIHIL && xar_numerus(act) > ZEPHYRUM)
+        {
+            i32 i;
+
+            chorda_aedificator_appendere_literis(aed,
+                "\nactiones:");
+            per (i = ZEPHYRUM; i < xar_numerus(act); i++)
+            {
+                chorda* c = (chorda*)xar_obtinere(act, i);
+
+                si (c == NIHIL)
+                {
+                    perge;
+                }
+                chorda_aedificator_appendere_literis(aed,
+                    i > ZEPHYRUM ? ", " : " ");
+                chorda_aedificator_appendere_chorda(aed, *c);
+            }
+        }
+    }
     /* annales entis (XV eventa recentissima) */
     {
         ScriniumEnuntiatum* e = scrinium_praeparare(
@@ -1857,6 +2048,220 @@ _tab_census (Tabularium* t, Piscina* pn, JsonValor* id,
         chorda_aedificator_finire(aed), FALSUM);
 }
 
+/* agere (K3): actio exsequi aut processum incipere. Ligamina
+ * valores = res_id AUT titulus exactus (resolutio tabularii ante
+ * nucleum; ambiguitas candidatos nominat). RECEPTA SUNT CODEX:
+ * definitiones per semen/canalem solum - hoc instrumentum
+ * exsequitur, numquam definit (decisio 13). */
+interior vacuum
+_tab_agere (Tabularium* t, Piscina* pn, JsonValor* id,
+    JsonValor* argumenta, FILE* effusio)
+{
+    chorda actio = _arg(argumenta, "actio");
+    chorda processus = _arg(argumenta, "processus");
+    chorda lig = _arg(argumenta, "ligamina");
+    chorda arg_j = _arg(argumenta, "argumenta");
+    chorda actor = _arg(argumenta, "actor");
+    constans character* actor_l;
+    constans character* lig_l = "{}";
+    constans character* arg_l = "{}";
+
+    si ((actio.mensura == ZEPHYRUM)
+        == (processus.mensura == ZEPHYRUM))
+    {
+        _textum_respondere(t, pn, effusio, id,
+            _ch("actio AUT processus requiritur (unum ex"
+                " ambobus)"), VERUM);
+        redde;
+    }
+    actor_l = actor.mensura > ZEPHYRUM
+        ? _litterae(pn, actor) : "claude";
+    si (lig.mensura > ZEPHYRUM)
+    {
+        JsonResultus r = json_legere(lig, pn);
+        JsonValor* solutum;
+        JsonObjectumIterator iter;
+        chorda k;
+        JsonValor* v;
+
+        si (!r.successus || !json_est_objectum(r.radix))
+        {
+            _textum_respondere(t, pn, effusio, id,
+                _ch("ligamina: obiectum JSON requiritur"), VERUM);
+            redde;
+        }
+        solutum = json_objectum_creare(pn);
+        iter = json_objectum_iterator(r.radix);
+        dum (json_objectum_iterator_proxima(&iter, &k, &v))
+        {
+            si (v != NIHIL && json_est_chorda(v))
+            {
+                b32 ambiguum = FALSUM;
+                chorda rid = _res_solvere(t, json_ad_chorda(v),
+                    pn, &ambiguum);
+
+                si (ambiguum)
+                {
+                    _ambiguitatem_respondere(t, pn, id,
+                        json_ad_chorda(v), effusio);
+                    redde;
+                }
+                /* insolutum = crudum manet (porta nuclei honeste
+                 * recusat) */
+                json_objectum_ponere_chorda(solutum, k,
+                    json_chorda_creare(pn,
+                        rid.mensura > ZEPHYRUM
+                            ? rid : json_ad_chorda(v)));
+            }
+            alioquin
+            {
+                json_objectum_ponere_chorda(solutum, k, v);
+            }
+        }
+        lig_l = _litterae(pn, json_scribere(solutum, pn));
+    }
+    si (arg_j.mensura > ZEPHYRUM)
+    {
+        arg_l = _litterae(pn, arg_j);
+    }
+
+    si (actio.mensura > ZEPHYRUM)
+    {
+        GestaActioFructus fr;
+
+        si (!gesta_agere(t->mundus, _litterae(pn, actio), lig_l,
+                arg_l, actor_l, pn, &fr))
+        {
+            ChordaAedificator* aed = chorda_aedificator_creare(pn,
+                CCLVI);
+
+            chorda_aedificator_appendere_literis(aed,
+                "agere fractum: ");
+            chorda_aedificator_appendere_literis(aed,
+                gesta_error(t->mundus));
+            _textum_respondere(t, pn, effusio, id,
+                chorda_aedificator_finire(aed), VERUM);
+            redde;
+        }
+        si (!fr.facta)
+        {
+            ChordaAedificator* aed = chorda_aedificator_creare(pn,
+                CCLVI);
+
+            chorda_aedificator_appendere_literis(aed,
+                "actio recusata: ");
+            chorda_aedificator_appendere_literis(aed, fr.causa);
+            _textum_respondere(t, pn, effusio, id,
+                chorda_aedificator_finire(aed), FALSUM);
+            redde;
+        }
+        _tabulam_scribere(t, pn);
+        {
+            ChordaAedificator* aed = chorda_aedificator_creare(pn,
+                CCLVI);
+            i32 i;
+
+            chorda_aedificator_appendere_literis(aed,
+                "actio facta: ");
+            chorda_aedificator_appendere_chorda(aed, actio);
+            per (i = ZEPHYRUM; i < fr.novae_numerus; i++)
+            {
+                chorda_aedificator_appendere_literis(aed,
+                    "\n  res nova ");
+                chorda_aedificator_appendere_chorda(aed,
+                    fr.res_novae[i]);
+                chorda_aedificator_appendere_literis(aed, "  ");
+                chorda_aedificator_appendere_chorda(aed,
+                    _titulus_membri(t, fr.res_novae[i], pn));
+            }
+            _textum_respondere(t, pn, effusio, id,
+                chorda_aedificator_finire(aed), FALSUM);
+        }
+        redde;
+    }
+    {
+        GestaProcessusFructus pf;
+
+        si (!gesta_processum_incipere(t->mundus,
+                _litterae(pn, processus), lig_l, arg_l, actor_l,
+                pn, &pf))
+        {
+            ChordaAedificator* aed = chorda_aedificator_creare(pn,
+                CCLVI);
+
+            chorda_aedificator_appendere_literis(aed,
+                "incipere fractum: ");
+            chorda_aedificator_appendere_literis(aed,
+                gesta_error(t->mundus));
+            _textum_respondere(t, pn, effusio, id,
+                chorda_aedificator_finire(aed), VERUM);
+            redde;
+        }
+        si (!pf.facta)
+        {
+            ChordaAedificator* aed = chorda_aedificator_creare(pn,
+                CCLVI);
+
+            chorda_aedificator_appendere_literis(aed,
+                "processus recusatus: ");
+            chorda_aedificator_appendere_literis(aed, pf.causa);
+            _textum_respondere(t, pn, effusio, id,
+                chorda_aedificator_finire(aed), FALSUM);
+            redde;
+        }
+        _tabulam_scribere(t, pn);
+        {
+            ChordaAedificator* aed = chorda_aedificator_creare(pn,
+                CCLVI);
+            chorda d = gesta_res_datum(t->mundus, pf.instantia,
+                pn);
+
+            chorda_aedificator_appendere_literis(aed,
+                "processus ");
+            chorda_aedificator_appendere_chorda(aed, processus);
+            chorda_aedificator_appendere_literis(aed,
+                " inceptus: instantia ");
+            chorda_aedificator_appendere_literis(aed,
+                pf.instantia);
+            /* cursus graduum generatorum */
+            si (d.mensura > ZEPHYRUM)
+            {
+                JsonResultus r = json_legere(d, pn);
+                JsonValor* cursus = (r.successus
+                    && json_est_objectum(r.radix))
+                    ? json_objectum_capere(r.radix, "cursus")
+                    : NIHIL;
+
+                si (cursus != NIHIL && json_est_objectum(cursus))
+                {
+                    JsonObjectumIterator iter =
+                        json_objectum_iterator(cursus);
+                    chorda k;
+                    JsonValor* v;
+
+                    dum (json_objectum_iterator_proxima(&iter, &k,
+                        &v))
+                    {
+                        chorda_aedificator_appendere_literis(aed,
+                            "\n  ");
+                        chorda_aedificator_appendere_chorda(aed,
+                            k);
+                        chorda_aedificator_appendere_literis(aed,
+                            ": ");
+                        si (v != NIHIL && json_est_chorda(v))
+                        {
+                            chorda_aedificator_appendere_chorda(
+                                aed, json_ad_chorda(v));
+                        }
+                    }
+                }
+            }
+            _textum_respondere(t, pn, effusio, id,
+                chorda_aedificator_finire(aed), FALSUM);
+        }
+    }
+}
+
 /* ==================================================
  * protocollum (sceletum legati)
  * ================================================== */
@@ -1949,6 +2354,16 @@ _toolslist_tractare (Piscina* pn, JsonValor* id, FILE* effusio)
     interior constans TabArgumentum ARG_RES[] = {
         { "res", "res_id aut titulus exactus", VERUM }
     };
+    interior constans TabArgumentum ARG_AGERE[] = {
+        { "actio", "titulus actionis exsequendae (aut"
+          " 'processus' adhibe - unum ex ambobus)", FALSUM },
+        { "processus", "titulus processus incipiendi", FALSUM },
+        { "ligamina", "obiectum JSON: titulus opis -> res_id aut"
+          " titulus exactus", FALSUM },
+        { "argumenta", "obiectum JSON: titulus -> valor", FALSUM },
+        { "actor", "fran|claude|machina (ordinarius claude)",
+          FALSUM }
+    };
 
     json_tabulatum_addere(instrumenta, _instrumentum(pn, "addere",
         "Rem novam creare (quaestio/parcum/decretum/nota/"
@@ -1971,6 +2386,13 @@ _toolslist_tractare (Piscina* pn, JsonValor* id, FILE* effusio)
     json_tabulatum_addere(instrumenta, _instrumentum(pn, "census",
         "Census: genera x status, tags, seq/hwm.",
         NIHIL, ZEPHYRUM));
+    json_tabulatum_addere(instrumenta, _instrumentum(pn, "agere",
+        "Actionem exsequi (porta obstat, effectus atomice - fascis"
+        " unus) aut processum incipere (instantia definitionem"
+        " photographat; opera generantur; perfectio operum"
+        " processum sponte provehit). Recepta sunt codex -"
+        " definitiones per semen solum.",
+        ARG_AGERE, V));
     json_objectum_ponere(resultatum, "tools", instrumenta);
     _respondere(effusio, tabellarius_responsum(pn, id,
         resultatum));
@@ -1999,9 +2421,11 @@ _seminare (Tabularium* t, Piscina* pn)
             (vacuum)gesta_scribere(t->mundus, &e, NIHIL);
         }
     }
-    /* semen v2: generibus sine 'attributa' schema additur
-     * (definitio currens + attributa -> emendatio integra) */
-    per (i = ZEPHYRUM; i < SEMINA_NUMERUS; i++)
+    /* semen v2: generibus TABULAE sine 'attributa' schema additur
+     * (definitio currens + attributa -> emendatio integra).
+     * SCOPUS: SEMINA_BOARD_NUMERUS - genera K3 (opus/actio/
+     * processus) attributa tabulae NON accipiunt (E2-B2) */
+    per (i = ZEPHYRUM; i < SEMINA_BOARD_NUMERUS; i++)
     {
         chorda gd = gesta_genus_datum(t->mundus,
             SEMINA_GENERUM[i].titulus, pn);
@@ -2156,6 +2580,10 @@ _toolscall_tractare (Tabularium* t, Piscina* pn, JsonValor* id,
     alioquin si (_chorda_est(titulus, "census"))
     {
         _tab_census(t, pn, id, effusio);
+    }
+    alioquin si (_chorda_est(titulus, "agere"))
+    {
+        _tab_agere(t, pn, id, argumenta, effusio);
     }
     alioquin
     {

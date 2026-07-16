@@ -322,13 +322,17 @@ nomen structura {
 } GestaActioFructus;
 
 /* FALSUM solum apparatu fracto aut actione ignota / non-actione;
- * recusatio = VERUM cum exitus->facta FALSUM et causa posita. */
+ * recusatio = VERUM cum exitus->facta FALSUM et causa posita.
+ * actor = initiator executionis (eventus effectuum + facta/
+ * recusata eum ferunt - subsumptio tabulae input TS, Q3; origo
+ * mechanismum fert: "actio:<titulus>"). NIHIL = machina. */
 b32
 gesta_agere (
     GestaMundus*        mundus,
     constans character* actio_titulus,
     constans character* ligamina_json,
     constans character* argumenta_json,
+    constans character* actor,
     Piscina*            piscina,
     GestaActioFructus*  exitus);
 
@@ -382,13 +386,16 @@ nomen structura {
 
 /* Instantiam incipere: porta (opes + argumenta) -> photographia ->
  * creatio -> provectio prima (gradus primi cuiusque cursūs
- * generantur). FALSUM solum apparatu fracto / processu ignoto. */
+ * generantur). actor = initiator (creatio instantiae + ligamina;
+ * NIHIL = machina); gradus quos motor ipse agit actorem machina
+ * ferunt. FALSUM solum apparatu fracto / processu ignoto. */
 b32
 gesta_processum_incipere (
     GestaMundus*        mundus,
     constans character* processus_titulus,
     constans character* ligamina_json,
     constans character* argumenta_json,
+    constans character* actor,
     Piscina*            piscina,
     GestaProcessusFructus* exitus);
 
