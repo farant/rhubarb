@@ -310,6 +310,12 @@ gesta_insalubres_enumerare (
 nomen structura {
     b32                 facta;         /* FALSUM = recusata */
     constans character* causa;         /* si recusata */
+    b32                 mechanica;     /* recusata: FALSUM = porta
+                                        * (retenta - K3 decisio 16),
+                                        * VERUM = error mechanicus */
+    constans character* facta_id;      /* id eventus actio-facta
+                                        * (prae-cusum; "" si
+                                        * recusata) */
     chorda*             res_novae;     /* res creatae, ordine
                                         * effectuum */
     i32                 novae_numerus;
@@ -334,6 +340,57 @@ gesta_actiones_rei (
     GestaMundus*        mundus,
     constans character* res_id,
     Piscina*            piscina);
+
+/* ==================================================
+ * Processus (K3 chunk B) - orchestratio ut data
+ * ==================================================
+ * Definitio = genus cum specie "processus": opes/argumenta (porta
+ * eadem ac actionum), ordines (nomina cursuum sancita), gradus
+ * [{titulus, ordo, genus_gradus: opus|actio|porta, positio,
+ * condiciones? (portae: tituli graduum, omnes-ex), actio?/
+ * ligamina?/argumenta? (actio-gradus; signa $ops.X/$arg.X duabus
+ * stratis - processus solvit, actio deinde sua), opus_titulus?/
+ * descriptio?/prioritas? (opus-gradus)}]. Intra cursum stricte
+ * sequentia; cursus concurrentes; iunctio trans cursus PER PORTAS
+ * SOLAS (decisio 15).
+ *
+ * Instantia = res ordinaria cuius genus = titulus processūs;
+ * creatio definitionem PHOTOGRAPHAT (gradus/ordines/opes soluta/
+ * argumenta - D9: emendatio generis instantias currentes non
+ * tangit). Machina: currens -> perfectus | defectus | omissus.
+ * Opera generata + ligamina opum per membra nectuntur (instantia
+ * --pars--> res; ligamina opum pars "ops:<titulus>" - excitatio
+ * per indicem membrorum, decisio 10/G16).
+ *
+ * Provectio AVIDA anguste-icta: eventus status in re quae membrum
+ * instantiae currentis est -> ansa exhauriendi ad fixum (fascis
+ * micro + plicatura per iterationem; sine recursione - scrinium
+ * BEGIN nidificatum non fert). Actio-gradus recusata = gradus
+ * pendens manet, iterum temptatur excitatione proxima (decisio 16
+ * - se-sanans); error mechanicus = gradus-defectus. Eventus
+ * instantiae: gradus-incohatus/-perfectus/-defectus,
+ * porta-perfecta (semel - portae obstructae NIHIL emittunt, D10),
+ * opus-genitum, actio-acta, processus-perfectus/-defectus (+
+ * eventus status ordinarius). Motor in strato scripturae SOLO
+ * vivit - replicatio eventus ut data replicat (decisio 10). */
+
+nomen structura {
+    b32                 facta;        /* FALSUM = recusata */
+    constans character* causa;
+    character           instantia[GESTA_RES_ID_MENSURA];
+} GestaProcessusFructus;
+
+/* Instantiam incipere: porta (opes + argumenta) -> photographia ->
+ * creatio -> provectio prima (gradus primi cuiusque cursūs
+ * generantur). FALSUM solum apparatu fracto / processu ignoto. */
+b32
+gesta_processum_incipere (
+    GestaMundus*        mundus,
+    constans character* processus_titulus,
+    constans character* ligamina_json,
+    constans character* argumenta_json,
+    Piscina*            piscina,
+    GestaProcessusFructus* exitus);
 
 /* Lectiones (pro probationibus et stratis superioribus; textus in
  * piscinam datam copiatur; chorda vacua = absens) */

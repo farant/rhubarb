@@ -18,6 +18,8 @@
 #define VIA_DB3 "gesta/build/probatio_gesta_restitutum.db"
 #define VIA_DB4 "gesta/build/probatio_gesta_k3.db"
 #define VIA_AN4 "gesta/build/probatio_gesta_k3.jsonl"
+#define VIA_DB5 "gesta/build/probatio_gesta_k3b.db"
+#define VIA_AN5 "gesta/build/probatio_gesta_k3b.jsonl"
 
 interior vacuum
 _purgare (vacuum)
@@ -33,6 +35,10 @@ _purgare (vacuum)
     remove(VIA_DB4 "-wal");
     remove(VIA_DB4 "-shm");
     remove(VIA_AN4);
+    remove(VIA_DB5);
+    remove(VIA_DB5 "-wal");
+    remove(VIA_DB5 "-shm");
+    remove(VIA_AN5);
 }
 
 /* scriptura brevis asserta */
@@ -325,6 +331,76 @@ _res_id_figere (chorda c, character* quaternio)
         memcpy(quaternio, c.datum, (memoriae_index)n);
     }
     quaternio[n] = '\0';
+}
+
+/* numerus eventuum dati generis in flumine rei */
+interior s64
+_eventus_rei (GestaMundus* m, constans character* res_id,
+    constans character* genus_eventus, Piscina* piscina)
+{
+    ScriniumEnuntiatum* e = scrinium_praeparare(gesta_scrinium(m),
+        "SELECT COUNT(*) FROM tessellae WHERE res_id = ?1"
+        " AND genus_eventus = ?2");
+    s64 n = -I;
+
+    si (e == NIHIL)
+    {
+        redde -I;
+    }
+    scrinium_ligare_textum(e, I, chorda_ex_literis(res_id,
+        piscina));
+    scrinium_ligare_textum(e, II, chorda_ex_literis(genus_eventus,
+        piscina));
+    si (scrinium_gradi(e) == SCRINIUM_ORDO)
+    {
+        n = scrinium_columna_numerus(e, 0);
+    }
+    scrinium_finire(e);
+    redde n;
+}
+
+/* cursus gradūs instantiae valori aequat? (valor NIHIL = absens
+ * asserendus) */
+interior b32
+_cursus_est (GestaMundus* m, constans character* instantia,
+    constans character* gradus, constans character* valor,
+    Piscina* piscina)
+{
+    JsonValor* st = _status_entis(m, instantia, piscina);
+    JsonValor* cursus = (st != NIHIL)
+        ? json_objectum_capere(st, "cursus") : NIHIL;
+    JsonValor* v = (cursus != NIHIL && json_est_objectum(cursus))
+        ? json_objectum_capere(cursus, gradus) : NIHIL;
+
+    si (v == NIHIL || !json_est_chorda(v))
+    {
+        redde valor == NIHIL;
+    }
+    si (valor == NIHIL)
+    {
+        redde FALSUM;
+    }
+    redde _chorda_aequa(json_ad_chorda(v), valor);
+}
+
+/* opus generatum gradūs ex statu instantiae (FALSUM = absens) */
+interior b32
+_opus_gradus (GestaMundus* m, constans character* instantia,
+    constans character* gradus, character* quaternio,
+    Piscina* piscina)
+{
+    JsonValor* st = _status_entis(m, instantia, piscina);
+    JsonValor* opera = (st != NIHIL)
+        ? json_objectum_capere(st, "opera") : NIHIL;
+    JsonValor* v = (opera != NIHIL && json_est_objectum(opera))
+        ? json_objectum_capere(opera, gradus) : NIHIL;
+
+    si (v == NIHIL || !json_est_chorda(v))
+    {
+        redde FALSUM;
+    }
+    _res_id_figere(json_ad_chorda(v), quaternio);
+    redde VERUM;
 }
 
 s32 principale (vacuum)
@@ -2132,6 +2208,478 @@ s32 principale (vacuum)
         }
 
         gesta_claudere(m4);
+    }
+
+    /* ========================================================
+     * K3 CHUNK B - processus + provectio (spec-v2 par V, aureae
+     * G12-G19). Mundus recens m5.
+     * ======================================================== */
+    {
+        GestaMundus* m5;
+        GestaProcessusFructus pf;
+        GestaActioFructus fr;
+        character id_i[GESTA_RES_ID_MENSURA];
+        character id_i2[GESTA_RES_ID_MENSURA];
+        character id_g[GESTA_RES_ID_MENSURA];
+        character id_ac[GESTA_RES_ID_MENSURA];
+        character id_fr[GESTA_RES_ID_MENSURA];
+        character op1[GESTA_RES_ID_MENSURA];
+        character op2[GESTA_RES_ID_MENSURA];
+        character id_pp[GESTA_RES_ID_MENSURA];
+        character ligamina_json[CXXVIII];
+
+        m5 = gesta_aperire(piscina, VIA_DB5, VIA_AN5);
+        CREDO_NON_NIHIL (m5);
+        si (m5 == NIHIL)
+        {
+            redde I;
+        }
+
+        /* genera fundamenta (opus ex XXX; cetera ex frusto A) */
+        _scribe(m5, NIHIL, "definitio-generis",
+            "{\"titulus\":\"opus\",\"status_initialis\":"
+            "\"pendens\",\"machina\":[[\"pendens\",\"susceptum\"],"
+            "[\"susceptum\",\"perfectum\"],"
+            "[\"pendens\",\"perfectum\"],[\"pendens\",\"omissum\"],"
+            "[\"susceptum\",\"omissum\"]],\"reducer\":"
+            "\"ordinarius\"}");
+        _scribe(m5, NIHIL, "definitio-generis",
+            "{\"titulus\":\"parcum\",\"status_initialis\":"
+            "\"parcatum\",\"machina\":[[\"parcatum\",\"tractum\"],"
+            "[\"tractum\",\"clausum\"],[\"parcatum\",\"clausum\"]],"
+            "\"reducer\":\"ordinarius\"}");
+        _scribe(m5, NIHIL, "definitio-generis",
+            "{\"titulus\":\"decretum\",\"reducer\":"
+            "\"ordinarius\"}");
+        _scribe(m5, NIHIL, "definitio-generis",
+            "{\"titulus\":\"quaestio\",\"status_initialis\":"
+            "\"apertum\",\"machina\":[[\"apertum\",\"laborans\"],"
+            "[\"laborans\",\"clausum\"],[\"apertum\",\"clausum\"]],"
+            "\"reducer\":\"ordinarius\"}");
+        _scribe(m5, NIHIL, "definitio-generis",
+            "{\"titulus\":\"vinculum\",\"species\":\"nexus\","
+            "\"partes\":[{\"titulus\":\"a\",\"genera_licita\":[],"
+            "\"cardinalitas\":\"unicus\"},{\"titulus\":\"b\","
+            "\"genera_licita\":[],\"cardinalitas\":\"unicus\"}],"
+            "\"status_initialis\":\"vigens\",\"machina\":"
+            "[[\"vigens\",\"solutum\"]],\"reducer\":"
+            "\"ordinarius\"}");
+        _scribe(m5, NIHIL, "definitio-generis",
+            "{\"titulus\":\"claudere-cum-decreto\",\"species\":"
+            "\"actio\",\"opes\":[{\"titulus\":\"parcum\","
+            "\"genus\":\"parcum\",\"status_necessarius\":"
+            "\"tractum\"}],\"argumenta\":[{\"titulus\":\"cur\","
+            "\"typus\":\"textus\",\"necessarium\":true}],"
+            "\"effectus\":["
+            "{\"verbum\":\"creatio\",\"ut\":\"decretum_novum\","
+            "\"datum\":{\"genus\":\"decretum\",\"titulus\":"
+            "\"$arg.cur\"}},"
+            "{\"verbum\":\"creatio\",\"ut\":\"vinculum\","
+            "\"datum\":{\"genus\":\"vinculum\",\"verbum\":"
+            "\"natum-de\"}},"
+            "{\"verbum\":\"membrum-additum\",\"res\":"
+            "\"$novus.vinculum\",\"datum\":{\"pars\":\"a\","
+            "\"membrum\":\"$novus.decretum_novum\"}},"
+            "{\"verbum\":\"membrum-additum\",\"res\":"
+            "\"$novus.vinculum\",\"datum\":{\"pars\":\"b\","
+            "\"membrum\":\"$res.parcum\"}},"
+            "{\"verbum\":\"nota\",\"res\":\"$res.parcum\","
+            "\"datum\":{\"textus\":\"clausum: $arg.cur\"}},"
+            "{\"verbum\":\"status\",\"res\":\"$res.parcum\","
+            "\"datum\":{\"novus\":\"clausum\"}}]}");
+        _scribe(m5, NIHIL, "definitio-generis",
+            "{\"titulus\":\"antrorsum\",\"species\":\"actio\","
+            "\"opes\":[],\"argumenta\":[],\"effectus\":["
+            "{\"verbum\":\"nota\",\"res\":\"$novus.cras\","
+            "\"datum\":{\"textus\":\"x\"}},"
+            "{\"verbum\":\"creatio\",\"ut\":\"cras\","
+            "\"datum\":{\"genus\":\"decretum\"}}]}");
+
+        /* processus */
+        _scribe(m5, NIHIL, "definitio-generis",
+            "{\"titulus\":\"cursus-simplex\",\"species\":"
+            "\"processus\",\"status_initialis\":\"currens\","
+            "\"machina\":[[\"currens\",\"perfectus\"],"
+            "[\"currens\",\"defectus\"],[\"currens\","
+            "\"omissus\"]],\"opes\":[],\"argumenta\":[],"
+            "\"ordines\":[\"unus\"],\"gradus\":["
+            "{\"titulus\":\"primum\",\"ordo\":\"unus\","
+            "\"genus_gradus\":\"opus\",\"positio\":0},"
+            "{\"titulus\":\"secundum\",\"ordo\":\"unus\","
+            "\"genus_gradus\":\"opus\",\"positio\":1,"
+            "\"descriptio\":\"opus alterum\"}]}");
+        _scribe(m5, NIHIL, "definitio-generis",
+            "{\"titulus\":\"cursus-geminus\",\"species\":"
+            "\"processus\",\"status_initialis\":\"currens\","
+            "\"machina\":[[\"currens\",\"perfectus\"],"
+            "[\"currens\",\"defectus\"],[\"currens\","
+            "\"omissus\"]],\"ordines\":[\"a\",\"b\"],\"gradus\":["
+            "{\"titulus\":\"para\",\"ordo\":\"a\","
+            "\"genus_gradus\":\"opus\",\"positio\":0},"
+            "{\"titulus\":\"proba\",\"ordo\":\"b\","
+            "\"genus_gradus\":\"opus\",\"positio\":0},"
+            "{\"titulus\":\"porta-ambo\",\"ordo\":\"b\","
+            "\"genus_gradus\":\"porta\",\"positio\":1,"
+            "\"condiciones\":[\"para\",\"proba\"]},"
+            "{\"titulus\":\"fini\",\"ordo\":\"b\","
+            "\"genus_gradus\":\"opus\",\"positio\":2}]}");
+        _scribe(m5, NIHIL, "definitio-generis",
+            "{\"titulus\":\"cursus-actionis\",\"species\":"
+            "\"processus\",\"status_initialis\":\"currens\","
+            "\"machina\":[[\"currens\",\"perfectus\"],"
+            "[\"currens\",\"defectus\"],[\"currens\","
+            "\"omissus\"]],\"opes\":[{\"titulus\":\"propositum\","
+            "\"genus\":\"parcum\"}],\"argumenta\":["
+            "{\"titulus\":\"cur_sigilli\",\"typus\":\"textus\","
+            "\"necessarium\":true}],\"ordines\":[\"unus\"],"
+            "\"gradus\":[{\"titulus\":\"claudere\",\"ordo\":"
+            "\"unus\",\"genus_gradus\":\"actio\",\"positio\":0,"
+            "\"actio\":\"claudere-cum-decreto\",\"ligamina\":"
+            "{\"parcum\":\"$ops.propositum\"},\"argumenta\":"
+            "{\"cur\":\"sigillum: $arg.cur_sigilli\"}}]}");
+        _scribe(m5, NIHIL, "definitio-generis",
+            "{\"titulus\":\"cursus-fractus\",\"species\":"
+            "\"processus\",\"status_initialis\":\"currens\","
+            "\"machina\":[[\"currens\",\"perfectus\"],"
+            "[\"currens\",\"defectus\"],[\"currens\","
+            "\"omissus\"]],\"ordines\":[\"unus\"],\"gradus\":["
+            "{\"titulus\":\"rumpe\",\"ordo\":\"unus\","
+            "\"genus_gradus\":\"actio\",\"positio\":0,"
+            "\"actio\":\"antrorsum\"}]}");
+
+        /* ====================================================
+         * XLII. Instantiatio: photographia, generatio prima,
+         * ligamina membra SINE custodia (G18), porta processūs,
+         * species-fines apparatus
+         * ==================================================== */
+        {
+            JsonValor* st;
+
+            CREDO_VERUM (gesta_processum_incipere(m5,
+                "cursus-simplex", "{}", "{}", piscina, &pf));
+            CREDO_VERUM (pf.facta);
+            memcpy(id_i, pf.instantia, GESTA_RES_ID_MENSURA);
+
+            CREDO_VERUM (_chorda_aequa(_genus_rei(m5, id_i,
+                piscina), "cursus-simplex"));
+            CREDO_VERUM (_chorda_aequa(gesta_res_status(m5, id_i,
+                piscina), "currens"));
+            /* primum generatum, secundum nondum */
+            CREDO_VERUM (_cursus_est(m5, id_i, "primum",
+                "incohatus", piscina));
+            CREDO_VERUM (_cursus_est(m5, id_i, "secundum", NIHIL,
+                piscina));
+            CREDO_VERUM (_opus_gradus(m5, id_i, "primum", op1,
+                piscina));
+            CREDO_VERUM (_chorda_aequa(_genus_rei(m5, op1,
+                piscina), "opus"));
+            CREDO_VERUM (_chorda_aequa(gesta_res_status(m5, op1,
+                piscina), "pendens"));
+            CREDO_VERUM (_membra_numerus(m5, id_i, "primum",
+                piscina) == (s64)I);
+            /* G18: vinculum instantia->opus sine querela */
+            st = _status_entis(m5, id_i, piscina);
+            CREDO_AEQUALIS_I32 (_notae_continentes(st,
+                "violatio"), ZEPHYRUM);
+            CREDO_VERUM (gesta_annales_verificare(m5));
+
+            /* porta processūs: ligamen absens -> recusatus */
+            CREDO_VERUM (gesta_processum_incipere(m5,
+                "cursus-actionis", "{}",
+                "{\"cur_sigilli\":\"x\"}", piscina, &pf));
+            CREDO_VERUM (!pf.facta);
+            CREDO_VERUM (strstr(pf.causa, "ligamen") != NIHIL);
+            CREDO_VERUM (_eventus_rei(m5, "cursus-actionis",
+                "processus-recusatus", piscina) == (s64)I);
+
+            /* species-fines: actio non processus, processus non
+             * actio, ignotum */
+            CREDO_VERUM (!gesta_processum_incipere(m5,
+                "claudere-cum-decreto", "{}", "{}", piscina,
+                &pf));
+            CREDO_VERUM (!gesta_agere(m5, "cursus-simplex", "{}",
+                "{}", piscina, &fr));
+            CREDO_VERUM (!gesta_processum_incipere(m5, "nusquam",
+                "{}", "{}", piscina, &pf));
+        }
+
+        /* ====================================================
+         * XLIII. G15: status operis provehit (etiam rectus
+         * pendens->perfectum); scripturae non-membrorum sondam
+         * negativam habent; effectus operis in gradus-perfectus
+         * ==================================================== */
+        {
+            GestaEventum e;
+            character id_x[GESTA_RES_ID_MENSURA];
+            s64 eventa_ante;
+
+            /* res aliena: status eius instantiam non tangit */
+            e.res_id = NIHIL;
+            e.genus_eventus = "creatio";
+            e.datum = "{\"genus\":\"quaestio\",\"titulus\":"
+                "\"Aliena\"}";
+            e.actor = "fran";
+            e.origo = "probatio";
+            CREDO_VERUM (gesta_scribere(m5, &e, id_x));
+            eventa_ante = _numerus_sql_t(m5,
+                "SELECT COUNT(*) FROM tessellae WHERE res_id"
+                " = ?1", id_i, piscina);
+            _scribe(m5, id_x, "status",
+                "{\"novus\":\"laborans\"}");
+            CREDO_VERUM (_numerus_sql_t(m5,
+                "SELECT COUNT(*) FROM tessellae WHERE res_id"
+                " = ?1", id_i, piscina) == eventa_ante);
+
+            /* perfectio operis primi (rectus pendens->perfectum)
+             * -> gradus perfectus + secundum generatum */
+            _scribe(m5, op1, "status",
+                "{\"novus\":\"perfectum\"}");
+            CREDO_VERUM (_cursus_est(m5, id_i, "primum",
+                "perfectus", piscina));
+            CREDO_VERUM (_cursus_est(m5, id_i, "secundum",
+                "incohatus", piscina));
+            CREDO_VERUM (_opus_gradus(m5, id_i, "secundum", op2,
+                piscina));
+            CREDO_VERUM (_chorda_aequa(gesta_res_status(m5, id_i,
+                piscina), "currens"));
+
+            /* effectus operis in eventum gradus-perfectus fluit */
+            _scribe(m5, op2, "mutatio",
+                "{\"effectus\":\"confectum probatione\"}");
+            _scribe(m5, op2, "status", "{\"novus\":\"susceptum\"}");
+            _scribe(m5, op2, "status",
+                "{\"novus\":\"perfectum\"}");
+            CREDO_VERUM (_numerus_sql_t(m5,
+                "SELECT COUNT(*) FROM tessellae WHERE res_id = ?1"
+                " AND genus_eventus = 'gradus-perfectus'"
+                " AND datum LIKE '%confectum%'", id_i, piscina)
+                == (s64)I);
+
+            /* omnes perfecti -> processus perfectus */
+            CREDO_VERUM (_chorda_aequa(gesta_res_status(m5, id_i,
+                piscina), "perfectus"));
+            CREDO_VERUM (_eventus_rei(m5, id_i,
+                "processus-perfectus", piscina) == (s64)I);
+            CREDO_VERUM (gesta_annales_verificare(m5));
+        }
+
+        /* ====================================================
+         * XLIV. G12: photographia - emendatio generis instantiam
+         * currentem NON tangit
+         * ==================================================== */
+        {
+            character op_b[GESTA_RES_ID_MENSURA];
+
+            CREDO_VERUM (gesta_processum_incipere(m5,
+                "cursus-simplex", "{}", "{}", piscina, &pf));
+            CREDO_VERUM (pf.facta);
+            memcpy(id_i2, pf.instantia, GESTA_RES_ID_MENSURA);
+
+            /* definitio mutatur medio cursu */
+            _scribe(m5, NIHIL, "emendatio-generis",
+                "{\"titulus\":\"cursus-simplex\",\"species\":"
+                "\"processus\",\"status_initialis\":\"currens\","
+                "\"machina\":[[\"currens\",\"perfectus\"]],"
+                "\"ordines\":[\"unus\"],\"gradus\":["
+                "{\"titulus\":\"aliud\",\"ordo\":\"unus\","
+                "\"genus_gradus\":\"opus\",\"positio\":0}]}");
+
+            CREDO_VERUM (_opus_gradus(m5, id_i2, "primum", op_b,
+                piscina));
+            _scribe(m5, op_b, "status",
+                "{\"novus\":\"perfectum\"}");
+            /* photographia: secundum (vetus), non aliud (novum) */
+            CREDO_VERUM (_cursus_est(m5, id_i2, "secundum",
+                "incohatus", piscina));
+            CREDO_VERUM (_cursus_est(m5, id_i2, "aliud", NIHIL,
+                piscina));
+            CREDO_VERUM (_opus_gradus(m5, id_i2, "secundum", op_b,
+                piscina));
+            _scribe(m5, op_b, "status",
+                "{\"novus\":\"perfectum\"}");
+            CREDO_VERUM (_chorda_aequa(gesta_res_status(m5, id_i2,
+                piscina), "perfectus"));
+        }
+
+        /* ====================================================
+         * XLV. G13+G14: cursus concurrentes; porta omnes-ex,
+         * obstructa NIHIL emittit, transit SEMEL
+         * ==================================================== */
+        {
+            character op_para[GESTA_RES_ID_MENSURA];
+            character op_proba[GESTA_RES_ID_MENSURA];
+            character op_fini[GESTA_RES_ID_MENSURA];
+
+            CREDO_VERUM (gesta_processum_incipere(m5,
+                "cursus-geminus", "{}", "{}", piscina, &pf));
+            CREDO_VERUM (pf.facta);
+            memcpy(id_g, pf.instantia, GESTA_RES_ID_MENSURA);
+
+            /* G13: cursus ambo statim generati (concurrentes) */
+            CREDO_VERUM (_cursus_est(m5, id_g, "para",
+                "incohatus", piscina));
+            CREDO_VERUM (_cursus_est(m5, id_g, "proba",
+                "incohatus", piscina));
+            CREDO_VERUM (_opus_gradus(m5, id_g, "para", op_para,
+                piscina));
+            CREDO_VERUM (_opus_gradus(m5, id_g, "proba", op_proba,
+                piscina));
+
+            /* proba perfecta - porta adhuc obstructa (para) ->
+             * NIHIL emittitur (D10) */
+            _scribe(m5, op_proba, "status",
+                "{\"novus\":\"perfectum\"}");
+            CREDO_VERUM (_eventus_rei(m5, id_g, "porta-perfecta",
+                piscina) == (s64)ZEPHYRUM);
+            CREDO_VERUM (_cursus_est(m5, id_g, "fini", NIHIL,
+                piscina));
+
+            /* para perfecta -> porta transit semel, fini
+             * generatur */
+            _scribe(m5, op_para, "status",
+                "{\"novus\":\"perfectum\"}");
+            CREDO_VERUM (_eventus_rei(m5, id_g, "porta-perfecta",
+                piscina) == (s64)I);
+            CREDO_VERUM (_cursus_est(m5, id_g, "porta-ambo",
+                "perfectus", piscina));
+            CREDO_VERUM (_cursus_est(m5, id_g, "fini",
+                "incohatus", piscina));
+
+            /* fini perfectum -> processus perfectus; porta SEMEL
+             * transiit (G14) */
+            CREDO_VERUM (_opus_gradus(m5, id_g, "fini", op_fini,
+                piscina));
+            _scribe(m5, op_fini, "status",
+                "{\"novus\":\"perfectum\"}");
+            CREDO_VERUM (_chorda_aequa(gesta_res_status(m5, id_g,
+                piscina), "perfectus"));
+            CREDO_VERUM (_eventus_rei(m5, id_g, "porta-perfecta",
+                piscina) == (s64)I);
+        }
+
+        /* ====================================================
+         * XLVI. G16: actio-gradus recusatus PENDENS manet
+         * (se-sanans) - status ligaminis postea adveniens per
+         * membra "ops:" excitat et sanat
+         * ==================================================== */
+        {
+            GestaEventum e;
+            s64 recusatae_ante;
+
+            e.res_id = NIHIL;
+            e.genus_eventus = "creatio";
+            e.datum = "{\"genus\":\"parcum\",\"titulus\":"
+                "\"Propositum\"}";
+            e.actor = "fran";
+            e.origo = "probatio";
+            CREDO_VERUM (gesta_scribere(m5, &e, id_pp));
+
+            recusatae_ante = _eventus_rei(m5,
+                "claudere-cum-decreto", "actio-recusata",
+                piscina);
+            sprintf(ligamina_json, "{\"propositum\":\"%s\"}",
+                id_pp);
+            CREDO_VERUM (gesta_processum_incipere(m5,
+                "cursus-actionis", ligamina_json,
+                "{\"cur_sigilli\":\"probatio B\"}", piscina,
+                &pf));
+            CREDO_VERUM (pf.facta);
+            memcpy(id_ac, pf.instantia, GESTA_RES_ID_MENSURA);
+
+            /* actio temptata, porta actionis recusavit (parcum
+             * parcatum, non tractum): gradus PENDENS manet,
+             * defectus nullus, instantia currens */
+            CREDO_VERUM (_eventus_rei(m5, "claudere-cum-decreto",
+                "actio-recusata", piscina)
+                == recusatae_ante + I);
+            CREDO_VERUM (_cursus_est(m5, id_ac, "claudere", NIHIL,
+                piscina));
+            CREDO_VERUM (_eventus_rei(m5, id_ac,
+                "gradus-defectus", piscina) == (s64)ZEPHYRUM);
+            CREDO_VERUM (_chorda_aequa(gesta_res_status(m5, id_ac,
+                piscina), "currens"));
+
+            /* praecondicio advenit: parcum -> tractum. Ligamen
+             * "ops:propositum" membrum est -> excitatio -> actio
+             * iterum temptatur -> facta -> processus perfectus */
+            _scribe(m5, id_pp, "status",
+                "{\"novus\":\"tractum\"}");
+            CREDO_VERUM (_cursus_est(m5, id_ac, "claudere",
+                "perfectus", piscina));
+            CREDO_VERUM (_eventus_rei(m5, id_ac, "actio-acta",
+                piscina) == (s64)I);
+            CREDO_VERUM (_chorda_aequa(gesta_res_status(m5, id_ac,
+                piscina), "perfectus"));
+            /* effectus actionis re vera facti: parcum clausum,
+             * decretum natum */
+            CREDO_VERUM (_chorda_aequa(gesta_res_status(m5, id_pp,
+                piscina), "clausum"));
+            {
+                JsonValor* st = _status_entis(m5, id_pp, piscina);
+
+                CREDO_AEQUALIS_I32 (_notae_continentes(st,
+                    "clausum: sigillum: probatio B"), I);
+            }
+        }
+
+        /* ====================================================
+         * XLVII. G17: error mechanicus actionis -> gradus-defectus
+         * -> cascata processus-defectus
+         * ==================================================== */
+        {
+            CREDO_VERUM (gesta_processum_incipere(m5,
+                "cursus-fractus", "{}", "{}", piscina, &pf));
+            CREDO_VERUM (pf.facta);
+            memcpy(id_fr, pf.instantia, GESTA_RES_ID_MENSURA);
+
+            CREDO_VERUM (_cursus_est(m5, id_fr, "rumpe",
+                "defectus", piscina));
+            CREDO_VERUM (_eventus_rei(m5, id_fr,
+                "gradus-defectus", piscina) == (s64)I);
+            CREDO_VERUM (_eventus_rei(m5, id_fr,
+                "processus-defectus", piscina) == (s64)I);
+            CREDO_VERUM (_chorda_aequa(gesta_res_status(m5, id_fr,
+                piscina), "defectus"));
+        }
+
+        /* ====================================================
+         * XLVIII. G19: replicatio == stans CUM historia
+         * provectionis (eventus = data; motor numquam re-ignitur)
+         * ==================================================== */
+        {
+            chorda i_ante = gesta_res_datum(m5, id_i, piscina);
+            chorda g_ante = gesta_res_datum(m5, id_g, piscina);
+            chorda ac_ante = gesta_res_datum(m5, id_ac, piscina);
+            s64 membra_ante = _membra_numerus(m5, id_g, NIHIL,
+                piscina);
+            chorda i_post;
+            chorda g_post;
+            chorda ac_post;
+
+            CREDO_VERUM (gesta_annales_verificare(m5));
+            CREDO_VERUM (gesta_replicare(m5));
+            i_post = gesta_res_datum(m5, id_i, piscina);
+            g_post = gesta_res_datum(m5, id_g, piscina);
+            ac_post = gesta_res_datum(m5, id_ac, piscina);
+            CREDO_VERUM (i_ante.mensura == i_post.mensura
+                && memcmp(i_ante.datum, i_post.datum,
+                       (memoriae_index)i_ante.mensura)
+                    == ZEPHYRUM);
+            CREDO_VERUM (g_ante.mensura == g_post.mensura
+                && memcmp(g_ante.datum, g_post.datum,
+                       (memoriae_index)g_ante.mensura)
+                    == ZEPHYRUM);
+            CREDO_VERUM (ac_ante.mensura == ac_post.mensura
+                && memcmp(ac_ante.datum, ac_post.datum,
+                       (memoriae_index)ac_ante.mensura)
+                    == ZEPHYRUM);
+            CREDO_VERUM (_membra_numerus(m5, id_g, NIHIL, piscina)
+                == membra_ante);
+            CREDO_VERUM (_chorda_aequa(gesta_res_status(m5, id_fr,
+                piscina), "defectus"));
+        }
+
+        gesta_claudere(m5);
     }
 
     gesta_claudere(m);

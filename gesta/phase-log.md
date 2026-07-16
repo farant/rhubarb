@@ -686,3 +686,60 @@ PROXIMUM: frustum B (processus + provectio; CUM emendatione E2-B1
 membrum-validare species-porta). Suitae virides inter frusta -
 binaria tabularium/nota_frigida stala manent usque ad frustum C
 (vigilia residentis id nuntiabit).
+
+## RELATIO K3 FRUSTUM B (2026-07-16) - processus + provectio
+
+FRUSTUM B PERFECTUM PRIMO CURSU ITERUM: 498/498 gesta (99 asserta
+nova) + 75/75 tabularium; examen ACCIPE; motor INERS sine instantiis
+(asserta frusti A/K1/K2 intacta - barra frusti tenuit). Aureae
+G12-G19 omnes.
+
+QUOD AEDIFICATUM (fons: spec-v2 par V; E1 par 3 ambulatio, E2 par 2
+ansa):
+- Reductor: eventus instantiae (gradus-incohatus/-perfectus/
+  -defectus, porta-perfecta, opus-genitum, actio-acta) in statum
+  plicantur (claves cursus/opera/actae - paritas oraculi
+  processInstanceReducer; superficies passivae frusti C eas gratis
+  ostendent). processus-perfectus/-defectus signa mera; eventus
+  status ordinarius plicat.
+- E2-B1 CONSUTA: _membrum_validare speciem processus agnoscit -
+  custodia levis (membrum exsistat), partes non iudicantur; purgatio
+  solutum nexus-sola manet (vincula instantiae = historia).
+- gesta_processum_incipere: porta (grammatica actionum eadem, D8) ->
+  photographia (D9 - gradus/ordines/opes/argumenta in datum) ->
+  fascis creatio+ligamina -> provectio prima. Recusatio =
+  processus-recusatus in flumine generis (speculum actionum - spec
+  tacebat, grammaticam paravimus).
+- _provehere_ad_fixum: ansa plana (nulla recursio), iteratio =
+  computare ex plicaturis -> fascis micro -> plicatura; ambulatio
+  per cursus = algorithmus oraculi (terminalis->proximum, opus
+  activum = cursus stat, porta omnes-ex tacita obstructa, actio
+  duabus stratis substituta). Terminatio: omnes perfecti ->
+  processus-perfectus + status; defectus sine activo -> cascata.
+- Excitatio: sonda una idx_membra_membrum in eventibus STATUS solis,
+  ex gesta_scribere + gesta_fascis_scribere publico + effectibus
+  gesta_agere.
+
+DECIPULAE IN CONSILIO CAPTAE (ante codicem - nulla in fuga):
+1. RECURSIO EXCITATIONIS: actio intra exhaustum effectus status
+   scribit -> excitatio intra exhaustum -> eadem actio ITERUM (ansa
+   infinita). Custos m->provectio_activa: excitatio interior tacet,
+   ansa exterior fixum recomputat.
+2. ANSA RECUSATIONIS: actio recusata pendens manet -> iteratio
+   proxima eam iterum temptaret in aeternum. Memoria 'attemptae'
+   per exhaustum unum - retentio vera = excitatio PROXIMA (decisio
+   16 servata).
+3. FORAMEN G16: sonda membra-basata ligamina opum non videbat
+   (opera sola membra erant) - actio recusata numquam sanaretur.
+   ADDITUM POSSESSUM: instantiatio ligamina per membra nectit
+   (pars "ops:<titulus>") - excitatio se-sanans indicem eundem
+   equitat (D7); obumbrae B3 frusti A validationem eorum gratis
+   texerunt (instantia in eodem fasce creata).
+
+GestaActioFructus crevit: mechanica (porta-retenta contra
+defectum - decisio 16 discriminationem postulat) + facta_id
+(prae-cusum - actio-acta eventum facta nominat).
+
+PROXIMUM: frustum C (tenens: semen v3 CUM emendatione E2-B2, agere
+instrumentum, linea actiones:, doctrina v3, deploy vivum,
+ritus-signaculi cum parco K4, vectes sigilli VI).
