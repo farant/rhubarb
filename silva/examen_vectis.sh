@@ -90,12 +90,13 @@ for f in "$FIXA"/*.invalidum; do
 done
 
 # ②b corpus domesticum: legale C89 (verdictum ACCIPE manet) sed
-#   ordines DOMESTICUM ad pinnas; oraculum clang -Wsign-conversion
-#   easdem lineas monet ET numerus monitorum == numerus pinnarum
-#   (aequalitas honesta - differentiale vivum vexillorum domus)
+#   ordines DOMESTICUM ad pinnas; oraculum clang easdem lineas monet
+#   ET numerus monitorum == numerus pinnarum (aequalitas honesta).
+#   Vexillum oraculi per fixturam: directivum "ORACULUM -W..." in
+#   commentario; ordinarius -Wsign-conversion.
 echo "--- corpus domesticum (pinnae EXSPECTA + oraculum) ---"
-declare -a ORACULUM_DOMUS=(
-    clang -x c -std=c89 -pedantic -Wsign-conversion
+declare -a ORACULUM_BASIS_D=(
+    clang -x c -std=c89 -pedantic
     -Wno-long-long -fno-caret-diagnostics -fsyntax-only
 )
 for f in "$FIXA"/*.domesticum; do
@@ -103,6 +104,10 @@ for f in "$FIXA"/*.domesticum; do
     basis="$(basename "$f")"
     exspecta="$(grep -o 'EXSPECTA [0-9]*:[A-Z_]*' "$f" \
         | sed 's/EXSPECTA //')"
+    vexillum="$(grep -o 'ORACULUM -W[a-z-]*' "$f" | head -1 \
+        | sed 's/ORACULUM //')"
+    [ -z "$vexillum" ] && vexillum="-Wsign-conversion"
+    exemplar="${vexillum#-W}"
 
     effusum="$("$SILVA_DIR/build/examen" "$f" -machina 2>/dev/null)"
     verdictum="$(printf '%s\n' "$effusum" | awk -F'\t' \
@@ -113,7 +118,7 @@ for f in "$FIXA"/*.domesticum; do
         fracta=1
         continue
     fi
-    monita="$("${ORACULUM_DOMUS[@]}" "$f" 2>&1)"
+    monita="$("${ORACULUM_BASIS_D[@]}" "$vexillum" "$f" 2>&1)"
     for pinna in $exspecta; do
         linea="${pinna%%:*}"
         nomen="EXAMEN_CODEX_${pinna#*:}"
@@ -130,14 +135,14 @@ for f in "$FIXA"/*.domesticum; do
             echo "  PINNA DEEST: $basis linea $linea $nomen"
             fracta=1
         fi
-        if ! printf '%s\n' "$monita" | grep -q ":$linea:.*sign-conversion"; then
+        if ! printf '%s\n' "$monita" | grep -q ":$linea:.*$exemplar"; then
             echo "  ORACULUM DISSENTIT: $basis linea $linea" \
                  "(clang non monet)"
             fracta=1
         fi
     done
     n_pinnae="$(printf '%s\n' "$exspecta" | grep -c . || true)"
-    n_monita="$(printf '%s\n' "$monita" | grep -c 'sign-conversion' \
+    n_monita="$(printf '%s\n' "$monita" | grep -c "$exemplar" \
         || true)"
     if [ "$n_pinnae" != "$n_monita" ]; then
         echo "  DISCREPANTIA NUMERI: $basis pinnae=$n_pinnae" \
@@ -148,13 +153,19 @@ done
 
 # ②c corpus severum: gradus SEVERI (supra oraculum - clang SILET ad
 #   pinnas, id ipsum proprietas est); verdictum ACCIPE; ordines
-#   severi == pinnae exacte (lineae toleratae QUIETAE); IRRITUM 0
+#   codicum pinnatorum == pinnae exacte (lineae toleratae QUIETAE);
+#   IRRITUM 0. Vexillum oraculi per directivum "ORACULUM -W..." ut
+#   supra.
 echo "--- corpus severum (pinnae + oraculum inversum) ---"
 for f in "$FIXA"/*.severum; do
     [ -e "$f" ] || continue
     basis="$(basename "$f")"
     exspecta="$(grep -o 'EXSPECTA [0-9]*:[A-Z_]*' "$f" \
         | sed 's/EXSPECTA //')"
+    vexillum="$(grep -o 'ORACULUM -W[a-z-]*' "$f" | head -1 \
+        | sed 's/ORACULUM //')"
+    [ -z "$vexillum" ] && vexillum="-Wsign-conversion"
+    exemplar="${vexillum#-W}"
 
     effusum="$("$SILVA_DIR/build/examen" "$f" -machina 2>/dev/null)"
     verdictum="$(printf '%s\n' "$effusum" | awk -F'\t' \
@@ -164,8 +175,9 @@ for f in "$FIXA"/*.severum; do
         fracta=1
         continue
     fi
-    monita="$("${ORACULUM_DOMUS[@]}" "$f" 2>&1)"
+    monita="$("${ORACULUM_BASIS_D[@]}" "$vexillum" "$f" 2>&1)"
     n_pinnae=0
+    codices_pinnati=""
     for pinna in $exspecta; do
         n_pinnae=$((n_pinnae + 1))
         linea="${pinna%%:*}"
@@ -176,6 +188,7 @@ for f in "$FIXA"/*.severum; do
             fracta=1
             continue
         fi
+        codices_pinnati="$codices_pinnati $numerus"
         if ! printf '%s\n' "$effusum" | awk -F'\t' \
             -v l="$linea" -v c="$numerus" \
             '$2==l && $4=="domesticum" && $5==c {inventum=1}
@@ -183,14 +196,16 @@ for f in "$FIXA"/*.severum; do
             echo "  PINNA DEEST: $basis linea $linea $nomen"
             fracta=1
         fi
-        if printf '%s\n' "$monita" | grep -q ":$linea:.*sign-conversion"; then
+        if printf '%s\n' "$monita" | grep -q ":$linea:.*$exemplar"; then
             echo "  ORACULUM FLAGRAT: $basis linea $linea" \
                  "(gradus severus supra oraculum esse debet!)"
             fracta=1
         fi
     done
     n_severa="$(printf '%s\n' "$effusum" | awk -F'\t' \
-        '$5==55' | wc -l | tr -d ' ')"
+        -v cs="$codices_pinnati" \
+        'BEGIN{n=split(cs,a," "); for(i=1;i<=n;i++) cc[a[i]]=1}
+         ($5 in cc){k++} END{print k+0}')"
     if [ "$n_severa" != "$n_pinnae" ]; then
         echo "  DISCREPANTIA NUMERI: $basis severa=$n_severa" \
              "pinnae=$n_pinnae (tolerata flagrant?)"

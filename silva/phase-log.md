@@ -8194,3 +8194,113 @@ INSTRUMENTA DEBRIEF (more domus):
   four-for-four on new judgment machinery (budget for it in every
   future tier: your own docs/fixtures WILL trip the new rule).
 - desiderata: none filed (phasis II items named above).
+
+## COMPARATIONES — phasis II conversionis signi: INTENTIO (2026-07-17)
+
+Origin: menu analyseos staticae (parcum 01KXQ82Z9Z), Fran's pull #1;
+named as phase II since the conversio-signi INTENTIO. The recipe is
+now standard: seat -> CALIBRATE FIRST -> corpus census ->
+adjudicate -> fixtures drop into existing vectis legs.
+
+TWO LEGS, one seat (the comparison branch of binarium typing — the
+very place the conversion tier's pater-suppression already stands):
+- PARITY: EXAMEN_CODEX_COMPARATIO_SIGNORUM (DOMESTICUM,
+  comment-free) = clang -Wsign-compare (house -Wextra includes it;
+  corpus-zero free). Signed/unsigned comparison after UAC where the
+  oracle warns. Suppression shape UNKNOWN until calibrated —
+  specimens BEFORE predicate (the calibration law, now a memory
+  entry: two of three a-priori guesses were wrong last time).
+- SEVERA: EXAMEN_CODEX_COMPARATIO_VANA (DOMESTICUM,
+  TOLERA-suppressible) = tautological zero-comparison: expression
+  with SOUND non-negative range (severum bit — zero false positives
+  by construction) compared < 0 (semper falsum) or >= 0 (semper
+  verum), both operand orders. THE KEY INSIGHT: clang suppresses
+  tautological warnings inside macro expansions and every house
+  zero is ZEPHYRUM — the C toolchain is structurally BLIND to this
+  class here (that is HOW delineare's dead clamp lived). We see the
+  expanded tree with provenance; the inverse-oracle property is not
+  incidental, it is the tier's reason to exist. The historical
+  unsigned-loop-decrement firing (i >= 0 with i unsigned) is this
+  class.
+
+MACHINERY REUSED WHOLE: range engine (severum bit for VANA, 
+heuristic bit for any parity range-suppression calibration finds),
+TOLERA table (+1 row in _tolerabiles), alienity guard, structured
+causa, vectis legs ②b/②c iterate ALL fixtures of each class — new
+fixtures just drop in; differentia gains one GRADUS row
+(-Wsign-compare).
+
+BARS: unit section (both legs, both operand orders, TOLERA, XOR
+with parity where applicable); corpus parity-zero + VANA census =
+THE HUNT (expect more dead ZEPHYRUM clamps — adjudicate each as
+bug-fix or TOLERA); fixture .domesticum (oracle agrees) + .severum
+(oracle SILENT through the ZEPHYRUM blindness — pinned); suites;
+amalgam; timing recorded.
+
+RISK: clang -Wsign-compare folklore (constant handling, promoted
+small types, macro contexts) — entirely calibration-first.
+
+## COMPARATIONES — phasis II: RELATIO (2026-07-17, same day)
+
+SHIPPED — and the VANA census surfaced the largest latent-bug
+harvest of the whole lint streak.
+
+TWO CODICES LIVE:
+- COMPARATIO_SIGNORUM (parity -Wsign-compare): **CORPUS-ZERO ON
+  FIRST CONTACT** — the calibration-first discipline (two specimen
+  batteries BEFORE the predicate) produced zero false positives on
+  its first sweep. Calibrated shape: fires when UAC commune is
+  unsigned and the promoted-signed side converts (==/!= included;
+  long-vs-u32 silent); suppressed by non-negative constants
+  (negative constants FIRE — deliberate divergence from clang's
+  inconsistent '-1 < u' silence, corpus has neither) and
+  heuristic-nonneg ranges (promoted u8, masks).
+- COMPARATIO_VANA (severa, TOLERA-suppressible): tautological
+  zero-compares — commune-type-unsigned ((u-v) >= 0 = the broken
+  underflow check!) OR sound-nonneg range (promoted u8). Sees
+  through macros BY DESIGN (aestimator) — clang suppresses
+  tautologicals in macro expansions and -Wtautological-* is not in
+  house flags at all: this class was DOUBLY invisible (that is how
+  delineare's dead clamp lived).
+
+DECISUS mid-arc (Fran): IDIOM CUSTODIAE BILATERALIS — "X < 0 || X
+>= LIMES" on plain-identifier X is the house's standard defensive
+guard (~94 corpus sites), functionally safe (wrap caught by the
+upper bound); the rule recognizes it structurally (pater ||/&&
+chain, sibling orders the SAME identifier; composite X like u-v
+never suppressed) and stays silent. 168 -> 74 firings.
+
+THE HARVEST (census 58 = 74, STANDING as an open ledger —
+quaestio 01KXQ9NF8J): spot-verification confirmed the classes are
+REAL — lib/tcp_posix.c:280 'i32 n = tcp_mittere(); si (n < 0)' =
+the TCP write loop's error path NEVER WORKED (-1 flows as 4e9 into
+totalis); dead -1 sentinels (quaerere, sententia_fissio x5);
+reverse-scan loops 'k >= ZEPHYRUM; k--' = the historical
+infinite-loop trap alive in vindex/biblia_visus/selectio/stml;
+delineare has 14 MORE standalone dead clamps beyond cohibere.
+Adjudication = type surgery with conversion ripples — deliberately
+deferred to a FRESH session (74 sites at session-end quality is
+how mistakes ship). The census row is the standing meter.
+
+BARS: unit 780/780 first-run (5 SIGNORUM fire forms, 5
+suppressions, 4 VANA forms + broken-underflow + promoted-u8,
+idiom pins both polarities + multi-clause + mismatched-identifier
+NEGATIVE + composite-X NEGATIVE, TOLERA, VANA/SIGNORUM
+exclusivity); SIGNORUM corpus-zero; fixtures
+comparatio_signorum.domesticum (oracle agrees line-for-line) +
+comparatio_vana.severum (oracle SILENT incl. through-macro form —
+the ZEPHYRUM blindness pinned); vectis legs GENERALIZED (per-
+fixture "ORACULUM -W..." directive; ②c counts pinned codices
+generically) — VECTIS TENET; differentia gained the sign-compare
+row; amalgamare VERIFICATUM; silva 30/30; officina 12/12.
+
+Seat note: the judgment rides the comparison branch where the
+conversion tier's pater-suppression already stood — phasis II
+landed exactly where phase I said it would ("-> COMPARATIO_
+SIGNORUM/VANA ad nodum comparationis").
+
+INSTRUMENTA DEBRIEF: calibration-first = corpus-zero first contact
+(the law's first full-cycle validation); the census-as-meter
+pattern (a standing nonzero row = visible work ledger, verdict-
+neutral) is new and deliberate; _constans_probare extracted at
+third use (rule of three); no new asperitates.

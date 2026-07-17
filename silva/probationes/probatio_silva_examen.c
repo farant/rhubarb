@@ -1143,6 +1143,125 @@ s32 principale (vacuum)
         "static int probe_j; /* commentarium simplex */\n",
         (s32)EXAMEN_CODEX_TOLERA_IRRITUM, ZEPHYRUM);
 
+    /* ========================================================
+     * XIII. Comparationes (phasis II): SIGNORUM paritas
+     * -Wsign-compare (calibratio viva 2026-07-17) + VANA
+     * tautologica contra zephyrum (typus communis insignatus AUT
+     * intervallum sanum; per macra videt - ZEPHYRUM!).
+     * ======================================================== */
+    imprimere("\n--- Probans comparationes ---\n");
+
+    /* SIGNORUM flagrat: s<u, u>s, ==, !=, int<u64, short<u32 */
+    _codicem_probare(piscina,
+        "static int f(int s, unsigned u) { return s < u; }\n",
+        (s32)EXAMEN_CODEX_COMPARATIO_SIGNORUM, I);
+    _codicem_probare(piscina,
+        "static int f(int s, unsigned u) { return u > s; }\n",
+        (s32)EXAMEN_CODEX_COMPARATIO_SIGNORUM, I);
+    _codicem_probare(piscina,
+        "static int f(int s, unsigned u) { return s == u; }\n",
+        (s32)EXAMEN_CODEX_COMPARATIO_SIGNORUM, I);
+    _codicem_probare(piscina,
+        "static int f(unsigned long ul, int s)\n"
+        "{ return ul != s; }\n",
+        (s32)EXAMEN_CODEX_COMPARATIO_SIGNORUM, I);
+    _codicem_probare(piscina,
+        "static int f(short h, unsigned u) { return h < u; }\n",
+        (s32)EXAMEN_CODEX_COMPARATIO_SIGNORUM, I);
+    /* SIGNORUM tacet: constans nonneg, u8 promotum, larva,
+     * long<u32 (valores servati), s<s */
+    _codicem_probare(piscina,
+        "static int f(unsigned u) { return u > 5; }\n",
+        (s32)EXAMEN_CODEX_COMPARATIO_SIGNORUM, ZEPHYRUM);
+    _codicem_probare(piscina,
+        "static int f(unsigned char c, unsigned u)\n"
+        "{ return c < u; }\n",
+        (s32)EXAMEN_CODEX_COMPARATIO_SIGNORUM, ZEPHYRUM);
+    _codicem_probare(piscina,
+        "static int f(int s, unsigned u)\n"
+        "{ return (s & 0xff) < u; }\n",
+        (s32)EXAMEN_CODEX_COMPARATIO_SIGNORUM, ZEPHYRUM);
+    _codicem_probare(piscina,
+        "static int f(long l, unsigned u) { return l < u; }\n",
+        (s32)EXAMEN_CODEX_COMPARATIO_SIGNORUM, ZEPHYRUM);
+    _codicem_probare(piscina,
+        "static int f(int a, int b) { return a < b; }\n",
+        (s32)EXAMEN_CODEX_COMPARATIO_SIGNORUM, ZEPHYRUM);
+
+    /* VANA flagrat: quattuor formae contra zephyrum + per macrum
+     * (ZEPHYRUM via lexicon iniectum probatur infra manualiter) */
+    _codicem_probare(piscina,
+        "static int f(unsigned u) { return u < 0; }\n",
+        (s32)EXAMEN_CODEX_COMPARATIO_VANA, I);
+    _codicem_probare(piscina,
+        "static int f(unsigned u) { return u >= 0; }\n",
+        (s32)EXAMEN_CODEX_COMPARATIO_VANA, I);
+    _codicem_probare(piscina,
+        "static int f(unsigned u) { return 0 > u; }\n",
+        (s32)EXAMEN_CODEX_COMPARATIO_VANA, I);
+    _codicem_probare(piscina,
+        "static int f(unsigned u) { return 0 <= u; }\n",
+        (s32)EXAMEN_CODEX_COMPARATIO_VANA, I);
+    /* proba subfluxus fracta: (u - v) >= 0 semper verum */
+    _codicem_probare(piscina,
+        "static int f(unsigned u, unsigned v)\n"
+        "{ return u - v >= 0; }\n",
+        (s32)EXAMEN_CODEX_COMPARATIO_VANA, I);
+    /* u8 promotum (typus communis signatus, intervallum sanum) */
+    _codicem_probare(piscina,
+        "static int f(unsigned char c) { return c >= 0; }\n",
+        (s32)EXAMEN_CODEX_COMPARATIO_VANA, I);
+    /* VANA tacet: formae non tautologicae + signata */
+    _codicem_probare(piscina,
+        "static int f(unsigned u) { return u > 0; }\n"
+        "static int g(unsigned u) { return u <= 0; }\n"
+        "static int h(unsigned u) { return u == 0; }\n"
+        "static int k(int s) { return s < 0; }\n",
+        (s32)EXAMEN_CODEX_COMPARATIO_VANA, ZEPHYRUM);
+    /* subtractio signata: (a - b) >= 0 legitima */
+    _codicem_probare(piscina,
+        "static int f(int a, int b) { return a - b >= 0; }\n",
+        (s32)EXAMEN_CODEX_COMPARATIO_VANA, ZEPHYRUM);
+    /* TOLERA supprimit VANAM (linea praecedente) */
+    _codicem_probare(piscina,
+        "static int f(unsigned u)\n"
+        "{\n"
+        "    /* TOLERA COMPARATIO_VANA: proba defensiva consulta */\n"
+        "    return u >= 0;\n"
+        "}\n",
+        (s32)EXAMEN_CODEX_COMPARATIO_VANA, ZEPHYRUM);
+    /* VANA et SIGNORUM se excludunt: u < 0 dat VANAM solam */
+    _codicem_probare(piscina,
+        "static int f(unsigned u) { return u < 0; }\n",
+        (s32)EXAMEN_CODEX_COMPARATIO_SIGNORUM, ZEPHYRUM);
+    /* idiom custodiae bilateralis (DECISUS): dimidium mortuum in
+     * custodia || tacet - involutio a limite altero capta */
+    _codicem_probare(piscina,
+        "static int f(unsigned u, unsigned limes)\n"
+        "{ return u < 0 || u >= limes; }\n",
+        (s32)EXAMEN_CODEX_COMPARATIO_VANA, ZEPHYRUM);
+    /* variatio &&: proba validitatis */
+    _codicem_probare(piscina,
+        "static int f(unsigned u, unsigned limes)\n"
+        "{ return u >= 0 && u < limes; }\n",
+        (s32)EXAMEN_CODEX_COMPARATIO_VANA, ZEPHYRUM);
+    /* custodia multiplex (x et y, catena ||) - ambo dimidia tacent */
+    _codicem_probare(piscina,
+        "static int f(unsigned x, unsigned y, unsigned l,\n"
+        "    unsigned a)\n"
+        "{ return x < 0 || x >= l || y < 0 || y >= a; }\n",
+        (s32)EXAMEN_CODEX_COMPARATIO_VANA, ZEPHYRUM);
+    /* frater identificatorem ALIUM ordinat: NON idiom - flagrat */
+    _codicem_probare(piscina,
+        "static int f(unsigned u, unsigned v, unsigned l)\n"
+        "{ return u < 0 || v >= l; }\n",
+        (s32)EXAMEN_CODEX_COMPARATIO_VANA, I);
+    /* X compositum in custodia: NON idiom (u - v semper flagrat) */
+    _codicem_probare(piscina,
+        "static int f(unsigned u, unsigned v, unsigned l)\n"
+        "{ return u - v >= 0 || u < l; }\n",
+        (s32)EXAMEN_CODEX_COMPARATIO_VANA, I);
+
     credo_imprimere_compendium();
     praeteritus = credo_omnia_praeterierunt();
     piscina_destruere(piscina);

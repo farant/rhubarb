@@ -1,6 +1,6 @@
 # TABULA (proiectio tabularii - GENERATUM, noli manu edere)
 
-seq 211 - 2026-07-17T05:12:36.964Z
+seq 213 - 2026-07-17T05:44:22.546Z
 
 ## QUAESTIONES
 
@@ -9,6 +9,7 @@ seq 211 - 2026-07-17T05:12:36.964Z
 - [apertum] Nomina scrinium sigillum insigillata  `gesta meta messis-2026-07`
 - [apertum] Novum Fundamentum 1x11 Nuntium  `fundamentum messis-2026-07`
 - [apertum] Phase-log silvae 407KB  `silva meta messis-2026-07`
+- [apertum] VANA adiudicatio: 74 sedes comparationum mortuarum (messis insectorum)  `examen silva lint messis-2026-07`
 - [apertum] probatio_tcp_servus fluctuans  `tcp messis-2026-07`
 
 ## PARCA
@@ -25,6 +26,7 @@ seq 211 - 2026-07-17T05:12:36.964Z
 - [parcatum] LEGATUSD daemon socketorum  `legatus mcp lsp messis-2026-07`
 - [parcatum] Legatus: field references  `legatus lsp silva messis-2026-07`
 - [parcatum] M5 dorsum aarch64  `officina machinula messis-2026-07`
+- [parcatum] Menu analyseos staticae: fructus pendentes post TOLERA  `examen silva lint ergonomia`
 - [parcatum] Mtimes nanosecundorum  `officina legatus messis-2026-07`
 - [parcatum] Nexus: instrumenta MCP propria  `gesta mcp messis-2026-07`
 - [parcatum] Piscina mundi sub agere copioso  `gesta k3 perf`

@@ -39,7 +39,8 @@ fi
 # tabula graduum oraculo-comparium: codex <TAB> vexilla clang
 # <TAB> titulus vexilli (exemplar in effuso oraculi "[-W...]").
 # Gradus novus oraculo-compar: ordinem adde.
-GRADUS_TABULA="54	-Wsign-conversion	-Wsign-conversion"
+GRADUS_TABULA="54	-Wsign-conversion	-Wsign-conversion
+57	-Wsign-compare	-Wsign-compare"
 
 # ---- latus nostrum (per involucrum - SEMPER recens; binarium
 # directum numquam: decipula binarii vetusti) ----

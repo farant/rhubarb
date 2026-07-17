@@ -300,6 +300,17 @@ nomen enumeratio {
      * absorbet signum est, non nihil). */
     EXAMEN_CODEX_CONVERSIO_SIGNI_SEVERA,      /* DOMESTICUM */
     EXAMEN_CODEX_TOLERA_IRRITUM,              /* DOMESTICUM */
+    /* phasis II conversionis signi (2026-07-17): comparationes.
+     * SIGNORUM = paritas -Wsign-compare (commune UAC insignatum,
+     * latus signatum convertitur; constans non-negativa et
+     * intervallum nonneg supprimunt - calibratio viva). VANA =
+     * comparatio tautologica contra zephyrum (typus communis
+     * insignatus AUT intervallum SANUM nonneg -> semper verum/
+     * falsum; TOLERA-suppressibilis) - vexilla domus hanc classem
+     * NUMQUAM tegunt et clang tautologica in macris supprimit
+     * (ZEPHYRUM!): sic cohibitio mortua delineare vixit. */
+    EXAMEN_CODEX_COMPARATIO_SIGNORUM,         /* DOMESTICUM */
+    EXAMEN_CODEX_COMPARATIO_VANA,             /* DOMESTICUM */
     EXAMEN_CODEX_NUMERUS
 } ExamenCodex;
 

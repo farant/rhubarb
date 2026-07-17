@@ -1329,6 +1329,12 @@ typedef enum {
      * = suppressio quae nihil absorbet aut sine causa */
     EXAMEN_CODEX_CONVERSIO_SIGNI_SEVERA,
     EXAMEN_CODEX_TOLERA_IRRITUM,
+    /* comparationes (phasis II): SIGNORUM = paritas -Wsign-compare;
+     * VANA = tautologica contra zephyrum (typus communis insignatus
+     * aut intervallum sanum; per macra videt - ZEPHYRUM),
+     * TOLERA-suppressibilis */
+    EXAMEN_CODEX_COMPARATIO_SIGNORUM,
+    EXAMEN_CODEX_COMPARATIO_VANA,
     EXAMEN_CODEX_NUMERUS
 } ExamenCodex;
 

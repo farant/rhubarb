@@ -1,0 +1,29 @@
+/* comparatio vana - tautologica contra zephyrum, semper eadem.
+ * Clang hic TACET: tautologica extra -Wextra vivunt et in macris
+ * etiam suppressa sunt (ZEPHYRUM omnes zephyros domus dat) - haec
+ * classis vexillis domus INVISIBILIS est; aestimator noster per
+ * macra videt. ORACULUM -Wsign-compare */
+/* EXSPECTA 12:COMPARATIO_VANA */
+/* EXSPECTA 17:COMPARATIO_VANA */
+#define INFIMUM 0
+
+static int proba_mortua(unsigned u)
+{
+    return u < 0;
+}
+
+static int per_macrum(unsigned u)
+{
+    return u >= INFIMUM;
+}
+
+static int tolerata_proba(unsigned u)
+{
+    /* TOLERA COMPARATIO_VANA: probatio suppressionis */
+    return 0 <= u;
+}
+
+static int radix(void)
+{
+    return proba_mortua(1u) + per_macrum(2u) + tolerata_proba(3u);
+}

@@ -1,0 +1,20 @@
+/* comparatio signorum diversorum - paritas -Wsign-compare (latus
+ * signatum in commune insignatum UAC convertitur).
+ * ORACULUM -Wsign-compare */
+/* EXSPECTA 9:COMPARATIO_SIGNORUM */
+/* EXSPECTA 14:COMPARATIO_SIGNORUM */
+
+static int minor_mixta(int s, unsigned u)
+{
+    return s < u;
+}
+
+static int aequalitas_mixta(unsigned long ul, int s)
+{
+    return ul != s;
+}
+
+static int radix(void)
+{
+    return minor_mixta(-1, 2u) + aequalitas_mixta(3ul, -4);
+}
