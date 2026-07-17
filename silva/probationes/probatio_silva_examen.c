@@ -1262,6 +1262,81 @@ s32 principale (vacuum)
         "{ return u - v >= 0 || u < l; }\n",
         (s32)EXAMEN_CODEX_COMPARATIO_VANA, I);
 
+    /* ==================================================
+     * XIV. Chorda nuda: chorda.datum ad lectorem NUL
+     * ================================================== */
+
+    /* punctum + casus: forma canonica flagrat */
+    _codicem_probare(piscina,
+        "typedef struct chorda { unsigned m;"
+        " unsigned char* datum; } chorda;\n"
+        "static int f(chorda c)"
+        " { return strlen((const char*)c.datum); }\n",
+        (s32)EXAMEN_CODEX_CHORDA_NUDA, I);
+    /* sagitta per monstratorem */
+    _codicem_probare(piscina,
+        "typedef struct chorda { unsigned m;"
+        " unsigned char* datum; } chorda;\n"
+        "static int f(chorda* p)"
+        " { return strcmp((const char*)p->datum, \"x\"); }\n",
+        (s32)EXAMEN_CODEX_CHORDA_NUDA, I);
+    /* ambo argumenta strcmp: bina flagrantia */
+    _codicem_probare(piscina,
+        "typedef struct chorda { unsigned m;"
+        " unsigned char* datum; } chorda;\n"
+        "static int f(chorda a, chorda b)"
+        " { return strcmp((const char*)a.datum,"
+        " (const char*)b.datum); }\n",
+        (s32)EXAMEN_CODEX_CHORDA_NUDA, II);
+    /* parentheses intra casum despiciuntur */
+    _codicem_probare(piscina,
+        "typedef struct chorda { unsigned m;"
+        " unsigned char* datum; } chorda;\n"
+        "static int f(chorda c)"
+        " { return strlen((const char*)((c.datum))); }\n",
+        (s32)EXAMEN_CODEX_CHORDA_NUDA, I);
+    /* NEGATIVUM: lector limitatus (strncmp) tacet */
+    _codicem_probare(piscina,
+        "typedef struct chorda { unsigned m;"
+        " unsigned char* datum; } chorda;\n"
+        "static int f(chorda c)"
+        " { return strncmp((const char*)c.datum, \"x\", c.m); }\n",
+        (s32)EXAMEN_CODEX_CHORDA_NUDA, ZEPHYRUM);
+    /* NEGATIVUM: ager 'datum' tag ALTERIUS (non chorda) tacet -
+     * praecisio typorum, non nominis agri (RegioClicca!) */
+    _codicem_probare(piscina,
+        "typedef struct alia { unsigned char* datum; } alia;\n"
+        "static int f(alia x)"
+        " { return strlen((const char*)x.datum); }\n",
+        (s32)EXAMEN_CODEX_CHORDA_NUDA, ZEPHYRUM);
+    /* strcpy: destinatio (positio 0) EXTRA larvam tacet... */
+    _codicem_probare(piscina,
+        "typedef struct chorda { unsigned m;"
+        " unsigned char* datum; } chorda;\n"
+        "static void f(chorda c)"
+        " { strcpy((char*)c.datum, \"x\"); }\n",
+        (s32)EXAMEN_CODEX_CHORDA_NUDA, ZEPHYRUM);
+    /* ...fons (positio 1) flagrat */
+    _codicem_probare(piscina,
+        "typedef struct chorda { unsigned m;"
+        " unsigned char* datum; } chorda;\n"
+        "static void f(chorda c, char* effugium)"
+        " { strcpy(effugium, (const char*)c.datum); }\n",
+        (s32)EXAMEN_CODEX_CHORDA_NUDA, I);
+    /* TOLERA absorbet (severa-classis) */
+    _codicem_probare(piscina,
+        "typedef struct chorda { unsigned m;"
+        " unsigned char* datum; } chorda;\n"
+        "static int f(chorda c) {\n"
+        "    /* TOLERA CHORDA_NUDA: probatio suppressionis */\n"
+        "    return strlen((const char*)c.datum);\n"
+        "}\n",
+        (s32)EXAMEN_CODEX_CHORDA_NUDA, ZEPHYRUM);
+    /* NEGATIVUM: identificator planus (non membrum) tacet */
+    _codicem_probare(piscina,
+        "static int f(char* p) { return strlen(p); }\n",
+        (s32)EXAMEN_CODEX_CHORDA_NUDA, ZEPHYRUM);
+
     credo_imprimere_compendium();
     praeteritus = credo_omnia_praeterierunt();
     piscina_destruere(piscina);

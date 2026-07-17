@@ -623,3 +623,24 @@ the right call — the tail was real and had exact shape:
   (delineare dead clamp, color rounding drift) and 5 legitimate
   TOLERA sites (guarded digit arithmetic, mask construction). The
   hit rate argument for strict tiers made itself.
+
+## 2026-07-17 — CHORDA_NUDA (codex 59) + the causa-lifetime strike
+
+Tier shipped in one arc (VOCATIO seat: callee name captured before
+symbol resolution, sink mask checked per arg after the subtree is
+typed — typation READ via _typationem_invenire, never re-typed,
+else conversion annotations duplicate).
+
+STRIKE for the book: _diagnosticum_addere_plenum STORES the
+causa_structa POINTER — it does not copy. First version passed a
+stack buffer; the fixture printed garbage bytes ("H..%") because the
+frame died before materialization. The house pattern (from the VANA
+site): sprintf into piscina_allocare'd storage, pass that. Rule:
+structured causae live in sem->piscina, always.
+
+Also worth remembering: the corpus survey (grep) said zero misuse
+sites; the shipped checker found ELEVEN. Cause: `atoi((character*)
+ref.datum)` — the cast's closing paren terminates a `[^)]*` grep
+pattern before it reaches `datum`. Single-line regex cannot see
+through casts; the parser can. Surveys size the work, the tree is
+the truth.

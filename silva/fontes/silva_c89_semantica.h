@@ -311,6 +311,12 @@ nomen enumeratio {
      * (ZEPHYRUM!): sic cohibitio mortua delineare vixit. */
     EXAMEN_CODEX_COMPARATIO_SIGNORUM,         /* DOMESTICUM */
     EXAMEN_CODEX_COMPARATIO_VANA,             /* DOMESTICUM */
+    /* 59: chorda.datum ad lectorem C sine limite (strlen/strcmp/...)
+     * - chorda NON terminatur NUL (regula domus, oraculo invisibilis:
+     * clang contractum chordae scire non potest). Effugia legitima:
+     * chorda_ut_cstr, lectores mensura-limitati (strncmp/memcmp),
+     * "%.*s" cum mensura. TOLERA-bilis (gradus severus). */
+    EXAMEN_CODEX_CHORDA_NUDA,                 /* DOMESTICUM */
     EXAMEN_CODEX_NUMERUS
 } ExamenCodex;
 

@@ -1,0 +1,31 @@
+/* chorda nuda - datum (sine fine NUL) ad lectorem C sine limite.
+ * Oraculum TACET: contractus chordae regula domus est quam clang
+ * scire non potest - gradus inversus purus. */
+/* EXSPECTA 13:CHORDA_NUDA */
+/* EXSPECTA 18:CHORDA_NUDA */
+typedef struct chorda { unsigned mensura;
+    unsigned char* datum; } chorda;
+extern unsigned long strlen(const char*);
+extern int strcmp(const char*, const char*);
+
+static unsigned long mortua(chorda c)
+{
+    return strlen((const char*)c.datum);
+}
+
+static int comparata(chorda* p)
+{
+    return strcmp((const char*)p->datum, "x");
+}
+
+static int tolerata(chorda c)
+{
+    /* TOLERA CHORDA_NUDA: probatio suppressionis */
+    return strcmp((const char*)c.datum, "y");
+}
+
+static unsigned long radix(chorda c, chorda* p)
+{
+    return mortua(c)
+        + (unsigned long)(comparata(p) + tolerata(c));
+}

@@ -1348,6 +1348,9 @@ typedef enum {
      * TOLERA-suppressibilis */
     EXAMEN_CODEX_COMPARATIO_SIGNORUM,
     EXAMEN_CODEX_COMPARATIO_VANA,
+    /* CHORDA_NUDA = chorda.datum ad lectorem C sine limite (chorda
+     * non terminatur NUL - regula domus); TOLERA-suppressibilis */
+    EXAMEN_CODEX_CHORDA_NUDA,
     EXAMEN_CODEX_NUMERUS
 } ExamenCodex;
 
@@ -35429,7 +35432,8 @@ interior constans ExamenCodexInformatio _codices[] = {
     { "conversio signi implicita (analysi stricta)", EXAMEN_DOMESTICUM },
     { "TOLERA irritum",                           EXAMEN_DOMESTICUM },
     { "comparatio signorum diversorum",           EXAMEN_DOMESTICUM },
-    { "comparatio vana (semper eadem)",           EXAMEN_DOMESTICUM }
+    { "comparatio vana (semper eadem)",           EXAMEN_DOMESTICUM },
+    { "chorda nuda (sine fine NUL)",              EXAMEN_DOMESTICUM }
 };
 
 /* assertum: tabula == enumeratio (acies negativa si discrepant) */
@@ -36016,7 +36020,9 @@ interior constans ExamenTolerabilis _tolerabiles[] = {
     { "CONVERSIO_SIGNI_SEVERA",
       (s32)EXAMEN_CODEX_CONVERSIO_SIGNI_SEVERA },
     { "COMPARATIO_VANA",
-      (s32)EXAMEN_CODEX_COMPARATIO_VANA }
+      (s32)EXAMEN_CODEX_COMPARATIO_VANA },
+    { "CHORDA_NUDA",
+      (s32)EXAMEN_CODEX_CHORDA_NUDA }
 };
 
 /* commentarium TOLERA? valor = octeti pleni delimitatoribus
@@ -40181,6 +40187,138 @@ _fons_alienus (SilvaSemantica* sem, constans SilvaNodus* nodus)
     redde sem->fontes_alieni[radix->fons_index];
 }
 
+/* ==================================================
+ * CHORDA NUDA (codex 59): chorda.datum ad lectorem NUL
+ * ================================================== */
+
+interior b32
+_chorda_par_literis (SilvaChorda s, constans character* litterae)
+{
+    i32 m = (i32)strlen(litterae);
+
+    redde s.mensura == m
+        && memcmp(s.datum, litterae, (memoriae_index)m) == ZEPHYRUM;
+}
+
+/* lectores C sine limite: larva positionum argumentorum quae
+ * terminationem NUL requirunt (bit a = argumentum a). Lectores
+ * mensura-limitati (strncmp/strncpy/memcmp/memcpy) CONSULTO
+ * absunt - effugium legitimum sunt, ut chorda_ut_cstr et "%.*s"
+ * (familia printf ad gradum formati differtur - charta communis
+ * formati->argumenti ibi aedificabitur). */
+nomen structura {
+    constans character* titulus;
+    i32                 larva;
+} ExamenLectorNul;
+
+interior constans ExamenLectorNul _lectores_nul[] = {
+    { "strlen",  1u }, { "strcmp",  3u }, { "strcpy",  2u },
+    { "strcat",  3u }, { "strchr",  1u }, { "strrchr", 1u },
+    { "strstr",  3u }, { "strspn",  3u }, { "strcspn", 3u },
+    { "strpbrk", 3u }, { "strtok",  3u }, { "atoi",    1u },
+    { "atol",    1u }, { "atof",    1u }, { "strtol",  1u },
+    { "strtoul", 1u }, { "strtod",  1u }, { "sscanf",  3u },
+    { "puts",    1u }, { "fputs",   1u }
+};
+
+interior i32
+_larva_lectoris_nul (SilvaChorda titulus)
+{
+    i32 i;
+
+    per (i = ZEPHYRUM;
+         i < (i32)(magnitudo(_lectores_nul)
+             / magnitudo(_lectores_nul[0])); i++)
+    {
+        si (_chorda_par_literis(titulus, _lectores_nul[i].titulus))
+        {
+            redde _lectores_nul[i].larva;
+        }
+    }
+    redde ZEPHYRUM;
+}
+
+/* Estne expressio (per casus/parentheses despecta) accessus
+ * .datum/->datum cuius basis typum chordam habet? Typatio LECTA,
+ * non retypata - subarbor iam typata est; retypatio annotationes
+ * conversionum duplicaret. Typus tag nomine "chorda" agnoscitur
+ * (10+ structurae domus agrum 'datum' habent - RegioClicca.datum
+ * character[64] terminatum est; nomen agri solum non sufficit). */
+interior b32
+_est_datum_chordae (SilvaSemantica* sem, constans SilvaNodus* nodus)
+{
+    dum (VERUM)
+    {
+        nodus = _canonicum(nodus);
+        si (nodus->genus == (s32)SILVA_C89_GENUS_PARENTHESIS)
+        {
+            SilvaValor v = silva_c89_parenthesis_internum(nodus);
+
+            si (v.genus != SILVA_VALOR_NODUS)
+            {
+                redde FALSUM;
+            }
+            nodus = v.datum.nodus;
+            perge;
+        }
+        si (nodus->genus == (s32)SILVA_C89_GENUS_CONVERSIO)
+        {
+            SilvaValor v = silva_c89_conversio_internum(nodus);
+
+            si (v.genus != SILVA_VALOR_NODUS)
+            {
+                redde FALSUM;
+            }
+            nodus = v.datum.nodus;
+            perge;
+        }
+        frange;
+    }
+    si (nodus->genus != (s32)SILVA_C89_GENUS_ACCESSUS)
+    {
+        redde FALSUM;
+    }
+    {
+        SilvaValor tit_v = silva_c89_accessus_tok_titulus(nodus);
+        SilvaValor op_v = silva_c89_accessus_tok_operator(nodus);
+        SilvaValor b_v = silva_c89_accessus_basis(nodus);
+        SemanticaTypatio* typatio;
+        TypusC89* tb;
+        TypusC89* tag;
+
+        si (tit_v.genus != SILVA_VALOR_TOKEN
+            || op_v.genus != SILVA_VALOR_TOKEN
+            || b_v.genus != SILVA_VALOR_NODUS)
+        {
+            redde FALSUM;
+        }
+        si (!_chorda_par_literis(tit_v.datum.token->valor, "datum"))
+        {
+            redde FALSUM;
+        }
+        typatio = _typationem_invenire(sem,
+            _canonicum(b_v.datum.nodus));
+        si (typatio == NIHIL || typatio->naturalis == NIHIL)
+        {
+            redde FALSUM;
+        }
+        tb = typatio->naturalis;
+        si (op_v.datum.token->genus == SILVA_LEX_SAGITTA)
+        {
+            TypusC89* e = _qualibus_exutum(tb);
+
+            si (e->genus != TYPUS_C89_MONSTRATOR)
+            {
+                redde FALSUM;
+            }
+            tb = e->datum.monstrator.internum;
+        }
+        tag = _qualibus_exutum(tb);
+        redde tag->genus == TYPUS_C89_STRUCTURA
+            && _chorda_par_literis(tag->datum.tag.titulus, "chorda");
+    }
+}
+
 interior vacuum
 _conversionem_signi_examinare (SilvaSemantica* sem,
     constans SilvaNodus* nodus, TypusC89* naturalis, TypusC89* finis)
@@ -42423,6 +42561,11 @@ _expressionem_typare (SilvaSemantica* sem, constans SilvaNodus* nodus)
             TypusC89* typus_functionis = NIHIL;
             TypusC89* t;
             b32 venenata = FALSUM;
+            i32 larva_nul = ZEPHYRUM;   /* codex 59 */
+            SilvaChorda titulus_vocati;
+
+            titulus_vocati.mensura = ZEPHYRUM;
+            titulus_vocati.datum = NIHIL;
 
             /* --- vocatus --- */
             si (functio_v.genus == SILVA_VALOR_NODUS)
@@ -42441,6 +42584,10 @@ _expressionem_typare (SilvaSemantica* sem, constans SilvaNodus* nodus)
                         SemanticaSymbolum* symbolum =
                             silva_c89_symbolum_invenire(sem,
                                 tok_v.datum.token->valor);
+
+                        titulus_vocati = tok_v.datum.token->valor;
+                        larva_nul = _larva_lectoris_nul(
+                            titulus_vocati);
 
                         si (symbolum == NIHIL)
                         {
@@ -42547,6 +42694,37 @@ _expressionem_typare (SilvaSemantica* sem, constans SilvaNodus* nodus)
                     }
                     na = _canonicum(av->datum.nodus);
                     ta = _expressionem_typare(sem, na);
+                    /* codex 59: chorda.datum ad lectorem NUL sine
+                     * limite - solum positiones larvae, sedes domus */
+                    si (larva_nul != ZEPHYRUM
+                        && a < XXXII
+                        && (larva_nul & (I << a)) != ZEPHYRUM
+                        && !sem->in_systemate
+                        && !_fons_alienus(sem, na)
+                        && _est_datum_chordae(sem, na)
+                        && !_tolera_absorbere(sem, na,
+                               (s32)EXAMEN_CODEX_CHORDA_NUDA))
+                    {
+                        memoriae_index capacitas =
+                            (memoriae_index)titulus_vocati.mensura
+                            + (memoriae_index)LXIV;
+                        character* nuntius =
+                            (character*)silva_piscina_allocare(
+                                sem->piscina, capacitas);
+
+                        si (nuntius != NIHIL)
+                        {
+                            sprintf(nuntius,
+                                "datum chordae sine fine NUL"
+                                " ad '%.*s'",
+                                (int)titulus_vocati.mensura,
+                                (constans character*)
+                                    titulus_vocati.datum);
+                            _diagnosticum_addere_plenum(sem, na,
+                                (s32)EXAMEN_CODEX_CHORDA_NUDA,
+                                NIHIL, nuntius);
+                        }
+                    }
                     si (ta != NIHIL && typus_functionis != NIHIL)
                     {
                         si (typus_functionis

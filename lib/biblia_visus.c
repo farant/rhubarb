@@ -1285,7 +1285,10 @@ biblia_visus_carcare_status(
     valor = entitas_proprietas_capere(entitas, clavis);
     si (valor && valor->mensura > ZEPHYRUM)
     {
-        visus->liber_currens = (i32)atoi((character*)valor->datum);
+        i32 n = ZEPHYRUM;
+
+        (vacuum)chorda_ut_i32(*valor, &n);
+        visus->liber_currens = n;
         visus->cache_liber = (i32)(-1);  /* Force recalculation */
     }
 
@@ -1294,7 +1297,10 @@ biblia_visus_carcare_status(
     valor = entitas_proprietas_capere(entitas, clavis);
     si (valor && valor->mensura > ZEPHYRUM)
     {
-        visus->capitulum_currens = (i32)atoi((character*)valor->datum);
+        i32 n = ZEPHYRUM;
+
+        (vacuum)chorda_ut_i32(*valor, &n);
+        visus->capitulum_currens = n;
         visus->cache_capitulum = (i32)(-1);  /* Force recalculation */
     }
 
@@ -1303,6 +1309,9 @@ biblia_visus_carcare_status(
     valor = entitas_proprietas_capere(entitas, clavis);
     si (valor && valor->mensura > ZEPHYRUM)
     {
-        visus->index_paginae = (i32)atoi((character*)valor->datum);
+        i32 n = ZEPHYRUM;
+
+        (vacuum)chorda_ut_i32(*valor, &n);
+        visus->index_paginae = n;
     }
 }

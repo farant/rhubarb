@@ -1335,6 +1335,9 @@ typedef enum {
      * TOLERA-suppressibilis */
     EXAMEN_CODEX_COMPARATIO_SIGNORUM,
     EXAMEN_CODEX_COMPARATIO_VANA,
+    /* CHORDA_NUDA = chorda.datum ad lectorem C sine limite (chorda
+     * non terminatur NUL - regula domus); TOLERA-suppressibilis */
+    EXAMEN_CODEX_CHORDA_NUDA,
     EXAMEN_CODEX_NUMERUS
 } ExamenCodex;
 

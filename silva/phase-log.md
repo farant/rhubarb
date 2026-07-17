@@ -8424,3 +8424,90 @@ categories held: every parity fix compiled clean first try against
 session. Desiderata — percursus per-file attribution flag
 (-attributio?): print via:linea:codex rows during the sweep instead
 of census-only.
+
+## GRADUS CHORDA NUDA: INTENTIO (2026-07-17)
+
+Menu pull (park 01KXQ82Z9Z item 1): chorda.datum handed to C-string
+functions that assume NUL termination — the house rule clang cannot
+know (pure inverse oracle; chorda is length+pointer, NOT terminated).
+
+CALIBRATION SURVEY FIRST (the recipe, adapted — no clang oracle, so
+the specimen battery is a CORPUS battery): direct str*+datum = 2
+sites, BOTH RegioClicca (character[64], terminated by construction,
+legitimate); printf "%s"+datum = 0 sites; chorda_ut_cstr bridge = 61
+uses. TRUE MISUSE COUNT: ZERO. The discipline held — this tier is
+PROPHYLAXIS, not harvest. Corpus-zero is the expected first-contact
+state, and the bar.
+
+DESIGN:
+- Codex 59 CHORDA_NUDA, DOMESTICUM, verdict-neutral,
+  TOLERA-suppressible (+1 _tolerabiles row) — severa-class doctrine
+  (no oracle exists for house semantics).
+- Predicate: call to a NUL-requiring sink; for each sink arg
+  position, strip casts/parens; fire when the arg is a .datum/->datum
+  member access whose BASE resolves to chorda type. Type-aware is
+  mandatory: 10+ house structs carry a `datum` field (RegioClicca's
+  is a terminated buffer — name-only matching would false-positive
+  immediately).
+- Sink lexicon v1 = UNBOUNDED readers only: strlen strcmp strcpy
+  strcat strchr strrchr strstr strspn strcspn strpbrk strtok atoi
+  atol atof strtol strtoul strtod sscanf puts fputs. Bounded readers
+  (strncmp/strncpy/memcmp/memcpy) EXCLUDED — length-capped calls are
+  the legitimate escape hatch alongside chorda_ut_cstr and %.*s.
+- printf-family "%s" sink DEFERRED BY NAME to the format-signedness
+  tier: both need the same format-string->vararg mapper; build the
+  mapper once, both tiers ride it. (Corpus has zero %s+datum today;
+  the wall arrives with the mapper.)
+- Fires only at home call sites (alienity guard as usual); the sink
+  being alien (libc) is the point.
+
+BARS: unit section (fire forms: direct, cast-wrapped, ->datum,
+nested parens; NEGATIVE: RegioClicca-shaped non-chorda datum,
+strncmp bounded, chorda_ut_cstr result, %.*s idiom untouched);
+corpus-zero sweep; fixture .severum (oracle SILENT — inverse);
+vectis legs unchanged-generic; amalgam twin row; suites green.
+
+## GRADUS CHORDA NUDA: RELATIO (2026-07-17)
+
+SHIPPED — codex 59 CHORDA_NUDA, the first pure inverse-oracle tier
+(no clang flag exists or can exist: the chorda contract is house
+knowledge). Seat: the VOCATIO arg loop — callee name captured at
+identifier resolution, sink mask (20 unbounded readers, arg-position
+bitmask) checked per argument after the subtree is typed; the
+predicate reads stored typations (never re-types — re-typing would
+duplicate conversion annotations), sees through casts/parens, and
+demands the BASE resolve to struct tag "chorda" (10+ house structs
+have a datum field; RegioClicca's is a terminated buffer — field
+name alone would false-positive immediately). TOLERA-suppressible.
+
+THE SURVEY LIED, THE TREE DIDN'T: the calibration grep said zero
+misuse sites. First corpus contact found ELEVEN — every one hidden
+behind `atoi((character*)x.datum)`, where the cast's closing paren
+terminates a [^)]* regex before it reaches datum. Surveys size the
+work; only the parser is the truth. (Filed in the semantica worklog
+next to the second strike: _diagnosticum_addere_plenum stores the
+causa POINTER — structured causae must live in sem->piscina, not the
+stack; the fixture printed garbage bytes until the VANA site's
+pattern was copied.)
+
+THE HARVEST (all 11 adjudicated same-arc):
+- lib/biblia_visus.c x3 + lib/arx_caeli.c x3: entity-property
+  chordas fed to atoi — reads past mensura until a non-digit byte
+  happens; parses garbage silently when memory continues with
+  digits. Fixed with chorda_ut_i32 (mensura-bounded, zero-default
+  preserving old atoi-garbage semantics).
+- probationes/probatio_http_parser.c x5: strstr assertions on
+  serialized responses — passing only by luck of the byte after the
+  buffer (incl. one NEGATIVE assert that could false-fail). Fixed
+  with chorda_continet + chorda_ex_literis.
+
+BARS: unit 10/10 probes (both operators, both strcmp args, paren
+nesting, bounded-reader NEGATIVE, foreign-tag NEGATIVE, strcpy
+position asymmetry, TOLERA, plain-identifier NEGATIVE); fixture
+chorda_nuda.severum (pins 13/18, TOLERA'd twin quiet, oracle silent)
+dropped into vectis leg ②c generically — VECTIS TENET; amalgamare
+VERIFICATUM; silva 30/30; officina 12/12; corpus census 59 = 0
+POST-ADJUDICATION; 58 = 46 and REICE = 41 both unchanged.
+
+Deferred by name: printf-family "%s" sink rides the future
+format-signedness tier (shared format-string->vararg mapper).

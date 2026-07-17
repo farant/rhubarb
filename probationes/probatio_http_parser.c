@@ -424,10 +424,12 @@ probatio_responsum_serialize_simplex(Piscina* piscina)
     CREDO_VERUM(memcmp(serialized.datum, "HTTP/1.1 200 OK\r\n", XVII) == 0);
 
     /* Verificare Content-Length praesens */
-    CREDO_VERUM(strstr((character*)serialized.datum, "Content-Length: 12") != NIHIL);
+    CREDO_VERUM(chorda_continet(serialized,
+        chorda_ex_literis("Content-Length: 12", piscina)));
 
     /* Verificare corpus in fine */
-    CREDO_VERUM(strstr((character*)serialized.datum, "\r\n\r\nHello World!") != NIHIL);
+    CREDO_VERUM(chorda_continet(serialized,
+        chorda_ex_literis("\r\n\r\nHello World!", piscina)));
 
     printf("  Serialized (%d bytes):\n", serialized.mensura);
     printf("    %.*s\n", serialized.mensura, serialized.datum);
@@ -480,8 +482,10 @@ probatio_responsum_serialize_cum_headers(Piscina* piscina)
     serialized = http_responsum_serialize(&resp, piscina);
 
     CREDO_VERUM(serialized.mensura > 0);
-    CREDO_VERUM(strstr((character*)serialized.datum, "Content-Type: application/json\r\n") != NIHIL);
-    CREDO_VERUM(strstr((character*)serialized.datum, "X-Custom: test-value\r\n") != NIHIL);
+    CREDO_VERUM(chorda_continet(serialized,
+        chorda_ex_literis("Content-Type: application/json\r\n", piscina)));
+    CREDO_VERUM(chorda_continet(serialized,
+        chorda_ex_literis("X-Custom: test-value\r\n", piscina)));
 
     printf("  Custom headers inclusi\n");
     printf("\n");
@@ -504,7 +508,8 @@ probatio_responsum_serialize_sine_corpus(Piscina* piscina)
     CREDO_VERUM(memcmp(serialized.datum, "HTTP/1.1 204 No Content\r\n", XXV) == 0);
 
     /* Non debet habere Content-Length */
-    CREDO_VERUM(strstr((character*)serialized.datum, "Content-Length") == NIHIL);
+    CREDO_FALSUM(chorda_continet(serialized,
+        chorda_ex_literis("Content-Length", piscina)));
 
     /* Debet finire cum \r\n\r\n */
     CREDO_VERUM(memcmp(serialized.datum + serialized.mensura - IV, "\r\n\r\n", IV) == 0);

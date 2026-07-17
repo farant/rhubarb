@@ -2493,7 +2493,10 @@ arx_caeli_carcare(
 
         si (x_valor && x_valor->datum)
         {
-            carta->x = (i32)atoi((constans character*)x_valor->datum);
+            i32 n = ZEPHYRUM;
+
+            (vacuum)chorda_ut_i32(*x_valor, &n);
+            carta->x = n;
         }
         alioquin
         {
@@ -2502,7 +2505,10 @@ arx_caeli_carcare(
 
         si (y_valor && y_valor->datum)
         {
-            carta->y = (i32)atoi((constans character*)y_valor->datum);
+            i32 n = ZEPHYRUM;
+
+            (vacuum)chorda_ut_i32(*y_valor, &n);
+            carta->y = n;
         }
         alioquin
         {
@@ -2511,7 +2517,10 @@ arx_caeli_carcare(
 
         si (z_valor && z_valor->datum)
         {
-            carta->z_index = (i32)atoi((constans character*)z_valor->datum);
+            i32 n = ZEPHYRUM;
+
+            (vacuum)chorda_ut_i32(*z_valor, &n);
+            carta->z_index = n;
         }
         alioquin
         {
