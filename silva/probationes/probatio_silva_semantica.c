@@ -49,6 +49,32 @@ _parsare (Piscina* piscina, constans character* fons)
         (i32)strlen(fons), NIHIL);
 }
 
+/* Ordines praeter inutilia (69/70, revisio 2026-07-17): fontes
+ * probationum = scaffolding typationis, variabiles consulto numquam
+ * lectae - asserta numerorum sensum TYPATIONIS servant, non censum
+ * inutilium */
+interior i32
+_ordines_praeter_inutilia (constans SilvaSemantica* sem)
+{
+    i32 i;
+    i32 m = (i32)silva_c89_diagnostica_numerus(sem);
+    i32 n = ZEPHYRUM;
+
+    per (i = ZEPHYRUM; i < m; i++)
+    {
+        constans SemanticaDiagnosticum* d =
+            silva_c89_diagnosticum_per_indicem(sem, i);
+
+        si (d != NIHIL
+            && d->codex != (s32)EXAMEN_CODEX_VARIABILIS_INUTILIS
+            && d->codex != (s32)EXAMEN_CODEX_PARAMETRUM_INUTILE)
+        {
+            n++;
+        }
+    }
+    redde n;
+}
+
 /* Basis declarationis (specificatores) + typus declaratoris primi */
 interior TypusC89*
 _typus_declarationis (SilvaSemantica* sem,
@@ -650,7 +676,7 @@ s32 principale (vacuum)
 
         sem = silva_c89_semantica_analysare(piscina, parsura);
         CREDO_NON_NIHIL (sem);
-        CREDO_AEQUALIS_I32 (xar_numerus(sem->diagnostica), ZEPHYRUM);
+        CREDO_AEQUALIS_I32 (_ordines_praeter_inutilia(sem), ZEPHYRUM);
 
         /* symbola fili (post analysem scopus currens = summus) */
         {
@@ -1184,7 +1210,7 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_I32 (parsura->numerus_errorum, ZEPHYRUM);
         sem = silva_c89_semantica_analysare(piscina, parsura);
         CREDO_NON_NIHIL (sem);
-        CREDO_AEQUALIS_I32 (silva_c89_diagnostica_numerus(sem),
+        CREDO_AEQUALIS_I32 (_ordines_praeter_inutilia(sem),
             ZEPHYRUM);
         int_t = silva_c89_typus_primitivum(sem, PRIMITIVUM_INTEGER);
         char_t = silva_c89_typus_primitivum(sem, PRIMITIVUM_CHARACTER);
@@ -1337,8 +1363,9 @@ s32 principale (vacuum)
          * exspectatus, non zephyrum.
          * revisio altera (angustatio 2026-07-17): "ch = i" quoque
          * angustatio vera (int -> character; clang
-         * -Wimplicit-int-conversion) - ordines II. */
-        CREDO_AEQUALIS_I32 (silva_c89_diagnostica_numerus(sem), II);
+         * -Wimplicit-int-conversion) - ordines II (praeter
+         * inutilia scaffolding). */
+        CREDO_AEQUALIS_I32 (_ordines_praeter_inutilia(sem), II);
         {
             constans SemanticaDiagnosticum* d =
                 silva_c89_diagnosticum_per_indicem(sem, ZEPHYRUM);
@@ -1527,8 +1554,9 @@ s32 principale (vacuum)
         sem = silva_c89_semantica_analysare(piscina, parsura);
         CREDO_NON_NIHIL (sem);
         /* DUO diagnostica: ig->x incompleta + vocatio implicita
-         * ignotus_vocatus (materializatio chunk C, SUSPECTUM) */
-        CREDO_AEQUALIS_I32 (silva_c89_diagnostica_numerus(sem), II);
+         * ignotus_vocatus (materializatio chunk C, SUSPECTUM) -
+         * praeter inutilia scaffolding */
+        CREDO_AEQUALIS_I32 (_ordines_praeter_inutilia(sem), II);
         int_t = silva_c89_typus_primitivum(sem, PRIMITIVUM_INTEGER);
         char_t = silva_c89_typus_primitivum(sem, PRIMITIVUM_CHARACTER);
 

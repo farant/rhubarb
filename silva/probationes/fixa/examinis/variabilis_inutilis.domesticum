@@ -1,0 +1,13 @@
+/* variabilis inutilis (codex 69) - paritas -Wunused-variable
+ * (in -Wall). Initiator cum effectu NON eximit; (void)x usus est.
+ * ORACULUM -Wunused-variable */
+/* EXSPECTA 9:VARIABILIS_INUTILIS */
+
+static int g(void) { return 1; }
+static void f(void)
+{
+    int mortuus;
+    int visus = g();
+    (void)visus;
+    f();
+}

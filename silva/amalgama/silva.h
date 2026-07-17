@@ -1246,6 +1246,8 @@ typedef struct {
                                        * synthetizatum (M0b C) */
     const SilvaNodus* declarans;    /* implicitis: sedes vocationis */
     SilvaToken*       lexema;
+    int               usus;         /* resolutio symbolum invenit
+                                     * (codices 69/70) */
 } SemanticaSymbolum;
 
 /* Examen (M4a chunk A): severitas + codices diagnosticorum.

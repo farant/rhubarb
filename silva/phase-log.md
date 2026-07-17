@@ -8881,3 +8881,58 @@ demanded it); suites green each chunk; amalgam twins (enum rows
 
 CHUNKS: ① calibratio + 68 + census/differentia; ② 69 (+70 si
 vilis) + census. Each ends green.
+
+## GRADUS ANGUSTATIO + INUTILES: RELATIO (2026-07-17)
+
+THE LINT MENU IS EMPTY. Codices 68/69/70 shipped in two chunks;
+everything left in the lane now waits on flow-analysis stage 1+.
+
+CHUNK ① ANGUSTATIO (68): calibration first paid immediately -
+"truncation" is THREE clang sub-flags under -Wconversion
+(constant/implicit-int/shorten-64-to-32; one codex ours), fitting
+constants exempt, & mask credited but % NOT. Seat = the 54 funnel
+(sibling function; same-sign narrowing was the exact hole in 54's
+early return; cross-sign width slips 54's non-negative exemption -
+gap closed with no double-fire). FIRST CENSUS = 87 rows, ALL false
+positives (corpus compiles -Werror): three classes taught the
+_angustatio_capit recursive fit-checker (negative constant tables
+via exact aestimator range - base64's -1 in s8; ternary arms
+each-fitting - selectio's ' ' : cast; structural type width).
+SECOND CENSUS = 0. PURE WALL. Specimen parity 6/6 line-exact.
+Differentia grew '|'-alternative bracket matching (umbrella flags).
+
+CHUNK ② INUTILES (69/70): usus flag on SemanticaSymbolum, set at
+_nexum_ponere (resolution IS the use-recorder; (vacuum)x counts for
+free, same as clang). Calibration: side-effect initializers still
+fire, static locals fire, extern-local declarations don't. TWO
+TU-degradation lessons from the census: capsula_libri.c is a
+DEGRADED TU for examen (REICE, 293 unknown named types - includes
+resolve for clang but not fully for examen; pre-existing) whose
+symbol layer breeds phantoms - venenata guard per symbol (error
+type) PLUS a TU-level abstention (any TYPUS_NOMINATUS_IGNOTUS =>
+the unused pass abstains; symbol-layer judgments need a resolved
+type context). FINAL CENSUS: 69 = 35 + 70 = 8, EVERY row inside
+probationes/fixa/ roundtrip parse fixtures where unused params are
+LOAD-BEARING test shapes - recommendation: fixa/ is out of the
+judging domain (like vendor/); in maintained code both are PURE
+WALLS. Probe scaffolding: typing probes' exact-count asserts now
+filter 69/70 (_ordines_praeter_inutilia) - typing asserts keep
+typing meaning.
+
+PROCESS SLIP, RECORDED HONESTLY: chunk ①'s commit gate was a shell
+chain gated on grep (matched the tally line, ignored the suite's
+exit) - a red suite (UAC probe, outdated count) reached a commit;
+fixed forward within minutes (3aa7a2c). New discipline: gate on
+script exit codes, grep only for display. The slip recurred as a
+NEAR-miss in chunk ② and the exit-gate caught 4 outdated asserts
+pre-commit - the lesson held.
+
+BARS: probes 1119/1119; fixtures 3 new on the oracle-paired
+domesticum leg (68/69/70, all clang-line-exact); VECTIS TENET;
+amalgamare VERIFICATUM; silva 31/31 (exit 0); officina 12/12.
+STANDING METERS: 54-67 unchanged; 68 = 0; 69/70 = 0 extra fixa.
+
+INSTRUMENTA: calibration-probe discipline caught the three-subflag
+split and the %-vs-& asymmetry pre-build; the census-as-experiment
+pattern went 5-for-5 this arc (3 capit classes + 2 TU-degradation
+guards); the differentia '|' extension is reusable machinery.

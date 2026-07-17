@@ -73,6 +73,7 @@ interior b32 _constans_probare (SilvaSemantica* sem,
     constans SilvaNodus* nodus, s64* valor_out);
 interior b32 _fons_alienus (SilvaSemantica* sem,
     constans SilvaNodus* nodus);
+interior vacuum _inutiles_examinare (SilvaSemantica* sem);
 
 /* ==================================================
  * Diagnosticum v2 (examen, M4a chunk A)
@@ -1425,6 +1426,7 @@ _symbolum_registrare (SilvaSemantica* sem, s32 genus,
     symbolum->est_implicitum = FALSUM;   /* sedes vocati ponit */
     symbolum->declarans = declarans;
     symbolum->lexema = lexema;
+    symbolum->usus = FALSUM;             /* _nexum_ponere ponit */
     (vacuum)tabula_dispersa_inserere(sem->scopus_currens->ordinaria,
         copia, (vacuum*)symbolum);
     {
@@ -3508,6 +3510,8 @@ silva_c89_semantica_analysare_cum_systemate (Piscina* piscina,
     /* TOLERA irrita (gradus severi): suppressiones quae nihil
      * absorbuerunt aut sine causa - post ambulationem totam */
     _toleras_irritas_examinare(sem, parsura);
+    /* MENU-FINALE: inutilia (69/70) - post ambulationem totam */
+    _inutiles_examinare(sem);
     redde sem;
 }
 
@@ -4440,6 +4444,11 @@ _nexum_ponere (SilvaSemantica* sem, constans SilvaNodus* nodus,
 {
     SemanticaNexus* n = _nexum_invenire(sem, nodus);
     chorda clavis;
+
+    si (symbolum != NIHIL)
+    {
+        symbolum->usus = VERUM;   /* codices 69/70 */
+    }
 
     si (n != NIHIL)
     {
@@ -6538,6 +6547,90 @@ _angustationem_examinare (SilvaSemantica* sem,
                     (s32)EXAMEN_CODEX_ANGUSTATIO, NIHIL, nuntius);
             }
         }
+    }
+}
+
+/* MENU-FINALE: variabiles et parametra inutilia (codices 69/70,
+ * paritas -Wunused-variable in -Wall / -Wunused-parameter in
+ * -Wextra). Calibratio 2026-07-17: initiator cum effectu NON
+ * eximit; staticus localis flagrat; (vacuum)x usus est (nexus eum
+ * registrat - semantica eadem sponte). Symbola = registrationes:
+ * externa localia transeunt (declarationes, non definitiones),
+ * implicita transeunt, systema transit. Vocatur post ambulationem
+ * totam (iuxta toleras irritas). */
+interior vacuum
+_inutiles_examinare (SilvaSemantica* sem)
+{
+    i32 i;
+    i32 m = xar_numerus(sem->symbola);
+
+    /* ABSTENTIO TU: typi nominati ignoti = contextus typorum non
+     * resolvit (capsula_libri: 293 ignoti, stratum symbolorum
+     * corruptum - phantasmata in capitibus). Iudicium inutilium
+     * stratum symbolorum sanum postulat; degradatum abstinet. */
+    {
+        i32 d;
+        i32 numerus_diagnosticorum = xar_numerus(sem->diagnostica);
+
+        per (d = ZEPHYRUM; d < numerus_diagnosticorum; d++)
+        {
+            constans SemanticaDiagnosticum* dg =
+                silva_c89_diagnosticum_per_indicem(sem, d);
+
+            si (dg != NIHIL && dg->codex
+                == (s32)EXAMEN_CODEX_TYPUS_NOMINATUS_IGNOTUS)
+            {
+                redde;
+            }
+        }
+    }
+
+    per (i = ZEPHYRUM; i < m; i++)
+    {
+        constans SemanticaSymbolum* s = *(SemanticaSymbolum**)
+            xar_obtinere(sem->symbola, i);
+        s32 codex;
+
+        si (s == NIHIL || s->usus || s->ex_systemate
+            || s->est_implicitum || s->declarans == NIHIL)
+        {
+            perge;
+        }
+        si ((s->repositio & (i32)REPOSITIO_EXTERNA) != ZEPHYRUM)
+        {
+            perge;
+        }
+        si (s->genus == (s32)SYMBOLUM_VARIABILE
+            && s->profunditas > ZEPHYRUM)
+        {
+            codex = (s32)EXAMEN_CODEX_VARIABILIS_INUTILIS;
+        }
+        alioquin si (s->genus == (s32)SYMBOLUM_PARAMETRUM)
+        {
+            codex = (s32)EXAMEN_CODEX_PARAMETRUM_INUTILE;
+        }
+        alioquin
+        {
+            perge;
+        }
+        si (_fons_alienus(sem, s->declarans))
+        {
+            perge;
+        }
+        si (_intra_ambiguum(s->declarans))
+        {
+            /* lectio incerta: symbola phantasmata non iudicantur */
+            perge;
+        }
+        si (s->typus == NIHIL || s->typus == sem->typus_erroris
+            || _qualibus_exutum(s->typus)->genus == TYPUS_C89_ERROR)
+        {
+            /* typus venenatus (TU degradata - capsula_libri: 293
+             * typi ignoti, symbola phantasmata in capitibus) -
+             * regula veneni: degradatum non iudicatur */
+            perge;
+        }
+        silva_c89_diagnosticum_addere(sem, s->declarans, codex);
     }
 }
 

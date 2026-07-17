@@ -190,6 +190,11 @@ nomen structura {
     constans SilvaNodus* declarans;   /* pro implicitis: SEDES
                                        * VOCATIONIS, non declaratio */
     SilvaToken*          lexema;       /* nomen; NIHIL licet */
+    b32                  usus;         /* resolutio nominis hoc
+                                        * symbolum invenit (nexus) -
+                                        * codices 69/70 (MENU-FINALE
+                                        * 2026-07-17); (vacuum)x
+                                        * usus est ut clang-i */
 } SemanticaSymbolum;
 
 nomen structura SemanticaScopus SemanticaScopus;

@@ -1679,6 +1679,43 @@ s32 principale (vacuum)
         "static void f(int c, char y)"
         " { char b = c ? ' ' : (char)y; (void)b; }\n",
         (s32)EXAMEN_CODEX_ANGUSTATIO, ZEPHYRUM);
+
+    /* ==================================================
+     * XIX. Inutilia (codices 69/70)
+     * ================================================== */
+
+    /* variabilis localis numquam lecta - flagrat */
+    _codicem_probare(piscina,
+        "static void f(void) { int mortuus; }\n",
+        (s32)EXAMEN_CODEX_VARIABILIS_INUTILIS, I);
+    /* (void)x usus est (nexus) - tacet */
+    _codicem_probare(piscina,
+        "static void f(void) { int visus; (void)visus; }\n",
+        (s32)EXAMEN_CODEX_VARIABILIS_INUTILIS, ZEPHYRUM);
+    /* initiator cum effectu NON eximit (calibratio clang) */
+    _codicem_probare(piscina,
+        "static int g(void);\n"
+        "static void f(void) { int e = g(); }\n",
+        (s32)EXAMEN_CODEX_VARIABILIS_INUTILIS, I);
+    /* staticus localis inutilis - flagrat ut clang */
+    _codicem_probare(piscina,
+        "static void f(void) { static int s; }\n",
+        (s32)EXAMEN_CODEX_VARIABILIS_INUTILIS, I);
+    /* externus localis = declaratio, non definitio - tacet */
+    _codicem_probare(piscina,
+        "static void f(void) { extern int e; }\n",
+        (s32)EXAMEN_CODEX_VARIABILIS_INUTILIS, ZEPHYRUM);
+    /* parametrum inutile - codex 70, non 69 */
+    _codicem_probare(piscina,
+        "static int f(int usatus, int otiosus) { return usatus; }\n",
+        (s32)EXAMEN_CODEX_PARAMETRUM_INUTILE, I);
+    _codicem_probare(piscina,
+        "static int f(int usatus, int otiosus) { return usatus; }\n",
+        (s32)EXAMEN_CODEX_VARIABILIS_INUTILIS, ZEPHYRUM);
+    /* parametrum per (vacuum) usatum - tacet */
+    _codicem_probare(piscina,
+        "static void f(int contextus) { (void)contextus; }\n",
+        (s32)EXAMEN_CODEX_PARAMETRUM_INUTILE, ZEPHYRUM);
     credo_imprimere_compendium();
     praeteritus = credo_omnia_praeterierunt();
     piscina_destruere(piscina);
