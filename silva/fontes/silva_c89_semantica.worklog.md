@@ -644,3 +644,29 @@ ref.datum)` — the cast's closing paren terminates a `[^)]*` grep
 pattern before it reaches `datum`. Single-line regex cannot see
 through casts; the parser can. Surveys size the work, the tree is
 the truth.
+
+## 2026-07-17 — TOLERA invisible through latina expansion (found by codex 64)
+
+The first live TOLERA demand of the CASUS_LAPSUS tier (the intentional
++=/-= fall-through in _expressionem_typare's assignment switch) refused
+to absorb. Bisection by twin specimens: identical shape in plain C
+suppressed; the latina form did not — and no IRRITUM fired, so the
+comment never entered the table at all. Mechanism: an own-line comment
+attaches as spatia_ante of the FOLLOWING token; when that token is a
+latina keyword (casus/si/redde...), the carrier is the macro INVOCATION
+lexeme, which expansion replaces in the final stream — the comment
+becomes unreachable to a collector that walks parsura->lexemata only.
+Dead end tried first: walking parsura->strata[0] — strata records only
+POST-expansion generations (silva_expandere: strata pushes each
+mutated exitus; the raw source stream is never retained), so that walk
+was provably a no-op. Correct fix: per final token, ALSO examine
+silva_token_radix(tok) — the use-site origin chain ends at the
+invocation lexeme, which still carries its trivia. Dedup by (linea,
+fons, codex) because multi-token expansions share one root. End-of-line
+TOLERA on the fired line always worked (rides the colon/identifier);
+own-line now works too. This affected ALL TOLERA-able tiers in Latin
+files since the TOLERA arc shipped — nobody noticed because all 17
+existing sites happened to sit above identifier-led lines. Also note:
+_tolera_legere is single-line-strict (multi-line TOLERA comments do
+not parse) — discovered en route, kept as-is, format is documented as
+single-line.

@@ -71,6 +71,8 @@ interior vacuum _congeriem_typare (SilvaSemantica* sem,
     constans SilvaNodus* congeries, TypusC89* scopus_typus);
 interior b32 _constans_probare (SilvaSemantica* sem,
     constans SilvaNodus* nodus, s64* valor_out);
+interior b32 _fons_alienus (SilvaSemantica* sem,
+    constans SilvaNodus* nodus);
 
 /* ==================================================
  * Diagnosticum v2 (examen, M4a chunk A)
@@ -752,7 +754,9 @@ interior constans ExamenTolerabilis _tolerabiles[] = {
     { "SENTINELLA_INSIGNATA",
       (s32)EXAMEN_CODEX_SENTINELLA_INSIGNATA },
     { "COMPARATIO_DEGRADATA",
-      (s32)EXAMEN_CODEX_COMPARATIO_DEGRADATA }
+      (s32)EXAMEN_CODEX_COMPARATIO_DEGRADATA },
+    { "CASUS_LAPSUS",
+      (s32)EXAMEN_CODEX_CASUS_LAPSUS }
 };
 
 /* commentarium TOLERA? valor = octeti pleni delimitatoribus
@@ -850,7 +854,85 @@ _tolera_legere (constans chorda* valor, s32* codex_out,
     redde VERUM;
 }
 
-/* collectio pigra per parsuram (exemplar tabulae alienitatis) */
+/* trivia lexematis unius (ambo latera) -> tabula. Duplicata per
+ * (linea, fons, codex) omissa - radix invocationis pluribus
+ * lexematibus expansis COMMUNIS est. */
+interior vacuum
+_toleras_ex_lexemate (SilvaSemantica* sem, SilvaToken* tok)
+{
+    i32 latus;
+
+    per (latus = ZEPHYRUM; latus < II; latus++)
+    {
+        Xar* trivia = (latus == ZEPHYRUM) ? tok->spatia_ante
+                                          : tok->spatia_post;
+        i32 j;
+
+        si (trivia == NIHIL)
+        {
+            perge;
+        }
+        per (j = ZEPHYRUM; j < xar_numerus(trivia); j++)
+        {
+            SilvaToken* tr = *(SilvaToken**)xar_obtinere(
+                trivia, j);
+            s32 codex;
+            b32 causam;
+            b32 iam = FALSUM;
+            i32 k;
+
+            si (tr == NIHIL
+                || ((s32)tr->genus
+                        != SILVA_LEX_COMMENTUM_CLAUSUM
+                    && (s32)tr->genus
+                        != SILVA_LEX_COMMENTUM_LINEA))
+            {
+                perge;
+            }
+            si (!_tolera_legere(&tr->valor, &codex, &causam))
+            {
+                perge;
+            }
+            per (k = ZEPHYRUM; k < xar_numerus(sem->tolerae); k++)
+            {
+                ExamenTolera* d = (ExamenTolera*)xar_obtinere(
+                    sem->tolerae, k);
+
+                si (d->linea == tr->linea
+                    && d->fons_index == tr->fons_index
+                    && d->codex == codex)
+                {
+                    iam = VERUM;
+                    frange;
+                }
+            }
+            si (!iam)
+            {
+                ExamenTolera* e = (ExamenTolera*)xar_addere(
+                    sem->tolerae);
+
+                si (e == NIHIL)
+                {
+                    redde;
+                }
+                e->linea = tr->linea;
+                e->fons_index = tr->fons_index;
+                e->codex = codex;
+                e->habet_causam = causam;
+                e->usus = FALSUM;
+            }
+        }
+    }
+}
+
+/* collectio pigra per parsuram (exemplar tabulae alienitatis).
+ * RADIX QUOQUE examinatur (2026-07-17): commentarium ante
+ * sententiam verbo latino ductam (casus/si/redde...) in lexemate
+ * INVOCATIONIS equitat, quod expansio e flumine finali substituit -
+ * trivia per catenam originis (silva_token_radix) sola attinguntur.
+ * Inventum per gradum CASUS_LAPSUS (TOLERA supra casus numquam
+ * absorbebatur, geminus C planus absorbebat); afficiebat OMNES
+ * gradus TOLERA-biles in plagulis latinis. */
 interior vacuum
 _toleras_colligere (SilvaSemantica* sem)
 {
@@ -877,53 +959,17 @@ _toleras_colligere (SilvaSemantica* sem)
     {
         SilvaToken* tok = *(SilvaToken**)xar_obtinere(
             parsura->lexemata, i);
-        i32 latus;
+        SilvaToken* radix;
 
         si (tok == NIHIL)
         {
             perge;
         }
-        per (latus = ZEPHYRUM; latus < II; latus++)
+        _toleras_ex_lexemate(sem, tok);
+        radix = silva_token_radix(tok);
+        si (radix != NIHIL && radix != tok)
         {
-            Xar* trivia = (latus == ZEPHYRUM) ? tok->spatia_ante
-                                              : tok->spatia_post;
-            i32 j;
-
-            si (trivia == NIHIL)
-            {
-                perge;
-            }
-            per (j = ZEPHYRUM; j < xar_numerus(trivia); j++)
-            {
-                SilvaToken* tr = *(SilvaToken**)xar_obtinere(
-                    trivia, j);
-                s32 codex;
-                b32 causam;
-
-                si (tr == NIHIL
-                    || ((s32)tr->genus
-                            != SILVA_LEX_COMMENTUM_CLAUSUM
-                        && (s32)tr->genus
-                            != SILVA_LEX_COMMENTUM_LINEA))
-                {
-                    perge;
-                }
-                si (_tolera_legere(&tr->valor, &codex, &causam))
-                {
-                    ExamenTolera* e = (ExamenTolera*)xar_addere(
-                        sem->tolerae);
-
-                    si (e == NIHIL)
-                    {
-                        redde;
-                    }
-                    e->linea = tr->linea;
-                    e->fons_index = tr->fons_index;
-                    e->codex = codex;
-                    e->habet_causam = causam;
-                    e->usus = FALSUM;
-                }
-            }
+            _toleras_ex_lexemate(sem, radix);
         }
     }
 }
@@ -3069,6 +3115,53 @@ _fluxum_examinare (SilvaSemantica* sem, constans SilvaNodus* definitio)
                 fluxus->saltus_ignoti, i),
             (s32)EXAMEN_CODEX_SALTA_AD_TITULUM_IGNOTUM);
     }
+    /* codex 64: lapsus inter casus - margines LAPSUS quorum fons
+     * attingibilis NEC caput gregis vacuum (cumulus titulorum:
+     * casus 0: casus 1: - fons est caput vacuum, clang quoque
+     * tacet). Flagrat AD titulum recipientem (margo.origo);
+     * TOLERA-bilis (decisio Q2: TOLERA solum, idioma commenti
+     * non honoratur). */
+    m = xar_numerus(fluxus->bloci);
+    per (i = ZEPHYRUM; i < m; i++)
+    {
+        constans FluxusBlocus* blocus = (constans FluxusBlocus*)
+            xar_obtinere(fluxus->bloci, i);
+        i32 k;
+        i32 numerus_marginum = xar_numerus(blocus->margines);
+
+        per (k = ZEPHYRUM; k < numerus_marginum; k++)
+        {
+            constans FluxusMargo* margo = (constans FluxusMargo*)
+                xar_obtinere(blocus->margines, k);
+            b32 cumulus;
+
+            si (margo->genus != (s32)FLUXUS_MARGO_LAPSUS
+                || !blocus->attingibilis)
+            {
+                perge;
+            }
+            cumulus = blocus->titulus_dux != NIHIL
+                && xar_numerus(blocus->sententiae) == ZEPHYRUM;
+            si (cumulus)
+            {
+                perge;
+            }
+            /* iudicium DOMESTICUM: codex alienus numquam iudicatur
+             * (stb_image lapsus suos habet - census primus docuit) */
+            si (_fons_alienus(sem, margo->origo))
+            {
+                perge;
+            }
+            si (_tolera_absorbere(sem, margo->origo,
+                (s32)EXAMEN_CODEX_CASUS_LAPSUS))
+            {
+                perge;
+            }
+            silva_c89_diagnosticum_addere(sem, margo->origo,
+                (s32)EXAMEN_CODEX_CASUS_LAPSUS);
+        }
+    }
+
     /* codex 63: finis cadit in functione non vacua */
     rc = sem->reditus_currens;
     si (fluxus->cadit_attingibilis && rc != NIHIL
@@ -7697,7 +7790,7 @@ _expressionem_typare (SilvaSemantica* sem, constans SilvaNodus* nodus)
                     {
                         frange;   /* monstrator +/- integrale */
                     }
-                    /* cadit in arithmeticam */
+                    /* TOLERA CASUS_LAPSUS: cadit in arithmeticam consulto */
                 casus SILVA_LEX_STAR_ASSIGNATIO:
                 casus SILVA_LEX_SOLIDUS_ASSIGNATIO:
                 casus SILVA_LEX_PERCENTUM_ASSIGNATIO:

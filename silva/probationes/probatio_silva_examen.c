@@ -1551,6 +1551,45 @@ s32 principale (vacuum)
     _codicem_probare(piscina,
         "static int f(int x) { goto finis; finis: return x; }\n",
         (s32)EXAMEN_CODEX_SALTA_AD_TITULUM_IGNOTUM, ZEPHYRUM);
+
+    /* codex 64: lapsus incustoditus - flagrat ad titulum recipientem */
+    _codicem_probare(piscina,
+        "static int f(int x) { switch (x) { case 0: x = x + 1;"
+        " case 1: x = x - 1; break; } return x; }\n",
+        (s32)EXAMEN_CODEX_CASUS_LAPSUS, I);
+    /* lapsus custoditus (si frange) - semita cadens manet, flagrat
+     * (forma arbor_syntaxis:3491, path-based ut clang) */
+    _codicem_probare(piscina,
+        "static int f(int x) { switch (x) { case 0: if (x)"
+        " { break; } case 1: x = x - 1; break; } return x; }\n",
+        (s32)EXAMEN_CODEX_CASUS_LAPSUS, I);
+    /* cumulus titulorum (grex vacuus) - tacet ut clang */
+    _codicem_probare(piscina,
+        "static int f(int x) { switch (x) { case 0: case 1:"
+        " x = x - 1; break; } return x; }\n",
+        (s32)EXAMEN_CODEX_CASUS_LAPSUS, ZEPHYRUM);
+    /* frange-terminatus - tacet */
+    _codicem_probare(piscina,
+        "static int f(int x) { switch (x) { case 0: x = x + 1;"
+        " break; case 1: x = x - 1; break; } return x; }\n",
+        (s32)EXAMEN_CODEX_CASUS_LAPSUS, ZEPHYRUM);
+    /* lapsus in ordinarium - flagrat etiam */
+    _codicem_probare(piscina,
+        "static int f(int x) { switch (x) { case 0: x = x + 1;"
+        " default: x = x - 1; } return x; }\n",
+        (s32)EXAMEN_CODEX_CASUS_LAPSUS, I);
+    /* grex ultimus e commutatione cadit - NON lapsus, tacet */
+    _codicem_probare(piscina,
+        "static int f(int x) { switch (x) { case 0: x = x + 1; }"
+        " return x; }\n",
+        (s32)EXAMEN_CODEX_CASUS_LAPSUS, ZEPHYRUM);
+    /* TOLERA supprimit (decisio Q2: TOLERA solum) */
+    _codicem_probare(piscina,
+        "static int f(int x)\n{\n    switch (x) {\n"
+        "    case 0: x = x + 1;\n"
+        "    /* TOLERA CASUS_LAPSUS: probatio suppressionis */\n"
+        "    case 1: x = x - 1; break;\n    }\n    return x;\n}\n",
+        (s32)EXAMEN_CODEX_CASUS_LAPSUS, ZEPHYRUM);
     credo_imprimere_compendium();
     praeteritus = credo_omnia_praeterierunt();
     piscina_destruere(piscina);

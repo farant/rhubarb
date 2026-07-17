@@ -1,0 +1,19 @@
+/* lapsus inter casus (codex 64) - paritas -Wimplicit-fallthrough
+ * (vexillum opt-in: vexilla domus caeca, clang cum vexillo AD
+ * TITULUM RECIPIENTEM monet, semita-basatum). Cumulus titulorum
+ * tacet (grex vacuus); frange-terminatus tacet.
+ * ORACULUM -Wimplicit-fallthrough */
+/* EXSPECTA 13:CASUS_LAPSUS */
+/* EXSPECTA 14:CASUS_LAPSUS */
+
+static int f(int x)
+{
+    switch (x) {
+    case 0: x = x + 1;
+    case 1: if (x) { break; }
+    case 2: x = x - 1; break;
+    case 3: case 4: x = 0; break;
+    default: break;
+    }
+    return x;
+}
