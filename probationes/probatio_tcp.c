@@ -103,7 +103,7 @@ probatio_connexio_http(Piscina* piscina)
     TcpResultus res;
     constans character* petitio;
     i8 buffer[MMMMXCVI];
-    i32 n;
+    s32 n;
     b32 misit;
 
     printf("--- Probans connexio HTTP (httpbin.org:80) ---\n");
@@ -128,7 +128,7 @@ probatio_connexio_http(Piscina* piscina)
     CREDO_VERUM(res.successus);
     CREDO_NON_NIHIL(res.connexio);
     CREDO_VERUM(tcp_est_valida(res.connexio));
-    CREDO_MAIOR_S32((s32)tcp_obtinere_fd(res.connexio), -1);
+    CREDO_MAIOR_S32(tcp_obtinere_fd(res.connexio), -1);
 
     /* Mittere HTTP petitio */
     petitio = "GET /get HTTP/1.1\r\n"
@@ -145,7 +145,7 @@ probatio_connexio_http(Piscina* piscina)
 
     /* Recipere responsum */
     n = tcp_recipere(res.connexio, buffer, MMMMXCVI - I);
-    CREDO_MAIOR_I32(n, 0);
+    CREDO_MAIOR_S32(n, 0);
 
     si (n > 0)
     {
@@ -175,8 +175,8 @@ probatio_mittere_recipere(Piscina* piscina)
     TcpResultus res;
     constans character* petitio;
     i8 buffer[MMMMXCVI];
-    i32 totalis;
-    i32 n;
+    s32 totalis;
+    s32 n;
 
     printf("--- Probans mittere/recipere ---\n");
 
@@ -195,7 +195,7 @@ probatio_mittere_recipere(Piscina* piscina)
               "\r\n";
 
     n = tcp_mittere(res.connexio, (constans i8*)petitio, (i32)strlen(petitio));
-    CREDO_MAIOR_I32(n, 0);
+    CREDO_MAIOR_S32(n, 0);
 
     /* Recipere in loop usque connexio clausa */
     totalis = 0;
@@ -209,7 +209,7 @@ probatio_mittere_recipere(Piscina* piscina)
     } dum (n > 0);
 
     printf("  Totalis receptum: %d bytes\n", totalis);
-    CREDO_MAIOR_I32(totalis, 0);
+    CREDO_MAIOR_S32(totalis, 0);
 
     tcp_claudere(res.connexio);
 
@@ -231,13 +231,13 @@ probatio_nullum_argumenta(Piscina* piscina)
     printf("--- Probans nullum argumenta ---\n");
 
     /* tcp_mittere cum NIHIL */
-    n = (s32)tcp_mittere(NIHIL, (constans i8*)"test", IV);
+    n = tcp_mittere(NIHIL, (constans i8*)"test", IV);
     CREDO_AEQUALIS_S32(n, -1);
 
     /* tcp_recipere cum NIHIL */
     {
         i8 buffer[CXXVIII];
-        n = (s32)tcp_recipere(NIHIL, buffer, CXXVIII);
+        n = tcp_recipere(NIHIL, buffer, CXXVIII);
         CREDO_AEQUALIS_S32(n, -1);
     }
 
@@ -248,7 +248,7 @@ probatio_nullum_argumenta(Piscina* piscina)
     CREDO_FALSUM(tcp_est_valida(NIHIL));
 
     /* tcp_obtinere_fd cum NIHIL */
-    CREDO_AEQUALIS_S32((s32)tcp_obtinere_fd(NIHIL), -1);
+    CREDO_AEQUALIS_S32(tcp_obtinere_fd(NIHIL), -1);
 
     printf("\n");
 }

@@ -656,7 +656,7 @@ http_exsequi(
     i8* total_data;
     i32 total_size;
     i32 total_capacity;
-    i32 n;
+    s32 n;
     constans character* headers_end;
     constans character* line_start;
     constans character* line_end;
@@ -753,11 +753,11 @@ http_exsequi(
         si (n > 0)
         {
             /* Expandere si necesse */
-            si (total_size + n > total_capacity)
+            si (total_size + (i32)n > total_capacity)
             {
                 i8* nova_data;
                 i32 nova_capacitas = total_capacity * II;
-                dum (nova_capacitas < total_size + n)
+                dum (nova_capacitas < total_size + (i32)n)
                 {
                     nova_capacitas *= II;
                 }
@@ -768,7 +768,7 @@ http_exsequi(
             }
 
             memcpy(total_data + total_size, buffer, (size_t)n);
-            total_size += n;
+            total_size += (i32)n;
         }
     } dum (n > 0);
 
@@ -1233,7 +1233,7 @@ http_exsequi_cum_redirectionibus(
     HttpPetitio* current_petitio;
     i32 i;
 
-    si (!petitio || !piscina || max_redirectiones < 0)
+    si (!petitio || !piscina)
     {
         redde _creare_error(HTTP_ERROR_URL, "Argumenta invalida", piscina);
     }

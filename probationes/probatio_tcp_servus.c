@@ -161,8 +161,8 @@ probatio_accipere_connexio(Piscina* piscina)
     TcpAddress peer;
     constans character* msg;
     constans character* resp;
-    i32 sent;
-    i32 recv_len;
+    s32 sent;
+    s32 recv_len;
     character buffer[CXXVIII];
 
     printf("--- Probans accipere connexio ---\n");
@@ -200,7 +200,7 @@ probatio_accipere_connexio(Piscina* piscina)
     /* Mittere data client -> server */
     msg = "Salve Server!";
     sent = tcp_mittere(client_res.connexio, (constans i8*)msg, (i32)strlen(msg));
-    CREDO_VERUM(sent == (i32)strlen(msg));
+    CREDO_VERUM(sent == (s32)strlen(msg));
 
     /* Recipere in server */
     recv_len = tcp_recipere(accept_res.connexio, (i8*)buffer, CXXVIII - I);
@@ -212,7 +212,7 @@ probatio_accipere_connexio(Piscina* piscina)
     /* Mittere responsum server -> client */
     resp = "Salve Client!";
     sent = tcp_mittere(accept_res.connexio, (constans i8*)resp, (i32)strlen(resp));
-    CREDO_VERUM(sent == (i32)strlen(resp));
+    CREDO_VERUM(sent == (s32)strlen(resp));
 
     /* Recipere in client */
     recv_len = tcp_recipere(client_res.connexio, (i8*)buffer, CXXVIII - I);
@@ -330,7 +330,7 @@ interior vacuum
 probatio_client_nullum_argumenta(Piscina* piscina)
 {
     TcpResultus res;
-    i32 result;
+    s32 result;
     character buffer[XXXII];
 
     printf("--- Probans client nullum argumenta ---\n");
@@ -343,17 +343,17 @@ probatio_client_nullum_argumenta(Piscina* piscina)
     res = tcp_connectere("localhost", LXXX, NIHIL);
     CREDO_FALSUM(res.successus);
 
-    /* Mittere cum NIHIL connexio - returns (i32)-1 which is 0xFFFFFFFF */
+    /* Mittere cum NIHIL connexio */
     result = tcp_mittere(NIHIL, (constans i8*)"test", IV);
-    CREDO_VERUM(result == (i32)-1);
+    CREDO_VERUM(result == -1);
 
     /* Recipere cum NIHIL connexio */
     result = tcp_recipere(NIHIL, (i8*)buffer, XXXII);
-    CREDO_VERUM(result == (i32)-1);
+    CREDO_VERUM(result == -1);
 
     /* Obtinere fd cum NIHIL */
     result = tcp_obtinere_fd(NIHIL);
-    CREDO_VERUM(result == (i32)-1);
+    CREDO_VERUM(result == -1);
 
     /* Est valida cum NIHIL */
     CREDO_FALSUM(tcp_est_valida(NIHIL));
@@ -432,7 +432,7 @@ probatio_multi_connexiones(Piscina* piscina)
     i32 i;
     character hospes[XXXII];
     character buffer[LXIV];
-    i32 n;
+    s32 n;
 
     printf("--- Probans multi connexiones ---\n");
 
@@ -549,7 +549,7 @@ probatio_integratio_http(Piscina* piscina)
     Router* router;
     character hospes[XXXII];
     character buffer[M];
-    i32 n;
+    s32 n;
 
     /* HTTP request et response */
     constans character* http_request =
@@ -602,7 +602,7 @@ probatio_integratio_http(Piscina* piscina)
     CREDO_VERUM(n > 0);
     buffer[n] = '\0';
 
-    parse_res = http_petitio_parse(buffer, n, piscina);
+    parse_res = http_petitio_parse(buffer, (i32)n, piscina);
     CREDO_VERUM(parse_res.successus);
     CREDO_VERUM(parse_res.completa);
     CREDO_VERUM(parse_res.petitio->methodus == HTTP_GET);
@@ -631,7 +631,7 @@ probatio_integratio_http(Piscina* piscina)
     /* 10. Mittere responsum */
     n = tcp_mittere(accept_res.connexio, (constans i8*)serialized.datum,
                     serialized.mensura);
-    CREDO_VERUM(n == serialized.mensura);
+    CREDO_VERUM(n == (s32)serialized.mensura);
 
     usleep(X * M);
 

@@ -228,7 +228,7 @@ tcp_connectere_cum_optionibus(
  * FUNCTIONES PUBLICAE - I/O
  * ======================================================================== */
 
-i32
+s32
 tcp_mittere(
     TcpConnexio*   connexio,
     constans i8*   data,
@@ -238,7 +238,7 @@ tcp_mittere(
 
     si (!connexio || connexio->clausa || connexio->fd < 0)
     {
-        redde (i32)-1;
+        redde -1;
     }
 
     si (!data || mensura <= 0)
@@ -254,10 +254,10 @@ tcp_mittere(
         {
             redde 0;
         }
-        redde (i32)-1;
+        redde -1;
     }
 
-    redde (i32)n;
+    redde (s32)n;
 }
 
 b32
@@ -276,7 +276,7 @@ tcp_mittere_omnia(
 
     dum (restans > 0)
     {
-        i32 n = tcp_mittere(connexio, data + totalis, restans);
+        s32 n = tcp_mittere(connexio, data + totalis, restans);
         si (n < 0)
         {
             redde FALSUM;
@@ -287,14 +287,14 @@ tcp_mittere_omnia(
             usleep(M);  /* 1ms */
             perge;
         }
-        totalis += n;
-        restans -= n;
+        totalis += (i32)n;
+        restans -= (i32)n;
     }
 
     redde VERUM;
 }
 
-i32
+s32
 tcp_recipere(
     TcpConnexio* connexio,
     i8*          buffer,
@@ -304,7 +304,7 @@ tcp_recipere(
 
     si (!connexio || connexio->clausa || connexio->fd < 0)
     {
-        redde (i32)-1;
+        redde -1;
     }
 
     si (!buffer || capacitas <= 0)
@@ -320,7 +320,7 @@ tcp_recipere(
         {
             redde 0;
         }
-        redde (i32)-1;
+        redde -1;
     }
 
     si (n == 0)
@@ -329,7 +329,7 @@ tcp_recipere(
         connexio->clausa = VERUM;
     }
 
-    redde (i32)n;
+    redde (s32)n;
 }
 
 vacuum
@@ -353,14 +353,14 @@ tcp_claudere(TcpConnexio* connexio)
  * FUNCTIONES PUBLICAE - UTILITAS
  * ======================================================================== */
 
-i32
+s32
 tcp_obtinere_fd(TcpConnexio* connexio)
 {
     si (!connexio)
     {
-        redde (i32)-1;
+        redde -1;
     }
-    redde (i32)connexio->fd;
+    redde connexio->fd;
 }
 
 b32

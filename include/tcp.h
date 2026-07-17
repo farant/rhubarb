@@ -7,7 +7,7 @@
  *   TcpResultus res = tcp_connectere("httpbin.org", 80, piscina);
  *   si (res.successus) {
  *       tcp_mittere(res.connexio, data, mensura);
- *       i32 n = tcp_recipere(res.connexio, buffer, capacitas);
+ *       s32 n = tcp_recipere(res.connexio, buffer, capacitas);
  *       tcp_claudere(res.connexio);
  *   }
  */
@@ -90,7 +90,7 @@ TcpOptiones tcp_optiones_default(vacuum);
  *
  * Redde: Numerus bytes missi, vel -1 si error
  */
-i32
+s32
 tcp_mittere(
     TcpConnexio*   connexio,
     constans i8*   data,
@@ -110,7 +110,7 @@ tcp_mittere_omnia(
  *
  * Redde: Numerus bytes recepti, 0 si connexio clausa, -1 si error
  */
-i32
+s32
 tcp_recipere(
     TcpConnexio* connexio,
     i8*          buffer,
@@ -126,7 +126,7 @@ tcp_claudere(TcpConnexio* connexio);
  * ======================================================================== */
 
 /* Obtinere file descriptor (pro select/poll) */
-i32 tcp_obtinere_fd(TcpConnexio* connexio);
+s32 tcp_obtinere_fd(TcpConnexio* connexio);
 
 /* Verificare si connexio valida */
 b32 tcp_est_valida(TcpConnexio* connexio);

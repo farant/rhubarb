@@ -102,7 +102,7 @@ probatio_connexio_https(Piscina* piscina)
     TlsResultus res;
     constans character* petitio;
     i8 buffer[MMMMXCVI];
-    i32 n;
+    s32 n;
     b32 misit;
 
     printf("--- Probans connexio HTTPS (httpbin.org:443) ---\n");
@@ -143,7 +143,7 @@ probatio_connexio_https(Piscina* piscina)
 
     /* Recipere responsum */
     n = tls_recipere(res.connexio, buffer, MMMMXCVI - I);
-    CREDO_MAIOR_I32(n, 0);
+    CREDO_MAIOR_S32(n, 0);
 
     si (n > 0)
     {
@@ -173,8 +173,8 @@ probatio_mittere_recipere(Piscina* piscina)
     TlsResultus res;
     constans character* petitio;
     i8 buffer[MMMMXCVI];
-    i32 totalis;
-    i32 n;
+    s32 totalis;
+    s32 n;
 
     printf("--- Probans mittere/recipere ---\n");
 
@@ -193,7 +193,7 @@ probatio_mittere_recipere(Piscina* piscina)
               "\r\n";
 
     n = tls_mittere(res.connexio, (constans i8*)petitio, (i32)strlen(petitio));
-    CREDO_MAIOR_I32(n, 0);
+    CREDO_MAIOR_S32(n, 0);
 
     /* Recipere in loop usque connexio clausa */
     totalis = 0;
@@ -207,7 +207,7 @@ probatio_mittere_recipere(Piscina* piscina)
     } dum (n > 0);
 
     printf("  Totalis receptum: %d bytes\n", totalis);
-    CREDO_MAIOR_I32(totalis, 0);
+    CREDO_MAIOR_S32(totalis, 0);
 
     tls_claudere(res.connexio);
 
@@ -240,13 +240,13 @@ probatio_nullum_argumenta(Piscina* piscina)
     printf("  NIHIL piscina: recte recusatum\n");
 
     /* tls_mittere cum NIHIL */
-    n = (s32)tls_mittere(NIHIL, (constans i8*)"test", IV);
+    n = tls_mittere(NIHIL, (constans i8*)"test", IV);
     CREDO_AEQUALIS_S32(n, -1);
 
     /* tls_recipere cum NIHIL */
     {
         i8 buffer[CXXVIII];
-        n = (s32)tls_recipere(NIHIL, buffer, CXXVIII);
+        n = tls_recipere(NIHIL, buffer, CXXVIII);
         CREDO_AEQUALIS_S32(n, -1);
     }
 
@@ -267,7 +267,7 @@ probatio_connectere_cum_optionibus(Piscina* piscina)
     TlsResultus res;
     constans character* petitio;
     i8 buffer[MMMMXCVI];
-    i32 n;
+    s32 n;
 
     printf("--- Probans connectere cum optionibus ---\n");
 
@@ -294,10 +294,10 @@ probatio_connectere_cum_optionibus(Piscina* piscina)
               "\r\n";
 
     n = tls_mittere(res.connexio, (constans i8*)petitio, (i32)strlen(petitio));
-    CREDO_MAIOR_I32(n, 0);
+    CREDO_MAIOR_S32(n, 0);
 
     n = tls_recipere(res.connexio, buffer, MMMMXCVI - I);
-    CREDO_MAIOR_I32(n, 0);
+    CREDO_MAIOR_S32(n, 0);
     buffer[n] = '\0';
 
     CREDO_VERUM(strncmp((character*)buffer, "HTTP/1.1 200", XII) == 0);

@@ -40,7 +40,8 @@ _tls_read_callback(
 {
     /* SSLConnectionRef est const void* - debemus removere const */
     TlsConnexio* conn;
-    i32 n;
+    s32 n;
+    size_t petitum;
 
     memcpy(&conn, &connection, magnitudo(conn));
 
@@ -50,7 +51,8 @@ _tls_read_callback(
         redde errSSLClosedAbort;
     }
 
-    n = tcp_recipere(conn->tcp, (i8*)data, (i32)*dataLength);
+    petitum = *dataLength;
+    n = tcp_recipere(conn->tcp, (i8*)data, (i32)petitum);
 
     si (n < 0)
     {
@@ -66,7 +68,7 @@ _tls_read_callback(
 
     *dataLength = (size_t)n;
 
-    si ((size_t)n < *dataLength)
+    si ((size_t)n < petitum)
     {
         redde errSSLWouldBlock;
     }
@@ -83,7 +85,7 @@ _tls_write_callback(
 {
     /* SSLConnectionRef est const void* - debemus removere const */
     TlsConnexio* conn;
-    i32 n;
+    s32 n;
 
     memcpy(&conn, &connection, magnitudo(conn));
 
@@ -359,7 +361,7 @@ tls_connectere_cum_optionibus(
  * FUNCTIONES PUBLICAE - I/O
  * ======================================================================== */
 
-i32
+s32
 tls_mittere(
     TlsConnexio*   connexio,
     constans i8*   data,
@@ -370,7 +372,7 @@ tls_mittere(
 
     si (!connexio || connexio->clausa || !connexio->ssl_context)
     {
-        redde (i32)-1;
+        redde -1;
     }
 
     si (!data || mensura <= 0)
@@ -385,15 +387,15 @@ tls_mittere(
 
     si (status == errSSLWouldBlock)
     {
-        redde (i32)processed;
+        redde (s32)processed;
     }
 
     si (status != noErr)
     {
-        redde (i32)-1;
+        redde -1;
     }
 
-    redde (i32)processed;
+    redde (s32)processed;
 }
 
 b32
@@ -412,7 +414,7 @@ tls_mittere_omnia(
 
     dum (restans > 0)
     {
-        i32 n = tls_mittere(connexio, data + totalis, restans);
+        s32 n = tls_mittere(connexio, data + totalis, restans);
         si (n < 0)
         {
             redde FALSUM;
@@ -423,14 +425,14 @@ tls_mittere_omnia(
             usleep(M);  /* 1ms */
             perge;
         }
-        totalis += n;
-        restans -= n;
+        totalis += (i32)n;
+        restans -= (i32)n;
     }
 
     redde VERUM;
 }
 
-i32
+s32
 tls_recipere(
     TlsConnexio* connexio,
     i8*          buffer,
@@ -441,7 +443,7 @@ tls_recipere(
 
     si (!connexio || connexio->clausa || !connexio->ssl_context)
     {
-        redde (i32)-1;
+        redde -1;
     }
 
     si (!buffer || capacitas <= 0)
@@ -456,21 +458,21 @@ tls_recipere(
 
     si (status == errSSLWouldBlock)
     {
-        redde (i32)processed;
+        redde (s32)processed;
     }
 
     si (status == errSSLClosedGraceful || status == errSSLClosedNoNotify)
     {
         connexio->clausa = VERUM;
-        redde (i32)processed;
+        redde (s32)processed;
     }
 
     si (status != noErr && processed == 0)
     {
-        redde (i32)-1;
+        redde -1;
     }
 
-    redde (i32)processed;
+    redde (s32)processed;
 }
 
 vacuum

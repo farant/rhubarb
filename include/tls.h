@@ -7,7 +7,7 @@
  *   TlsResultus res = tls_connectere("httpbin.org", 443, piscina);
  *   si (res.successus) {
  *       tls_mittere(res.connexio, data, mensura);
- *       i32 n = tls_recipere(res.connexio, buffer, capacitas);
+ *       s32 n = tls_recipere(res.connexio, buffer, capacitas);
  *       tls_claudere(res.connexio);
  *   }
  */
@@ -89,7 +89,7 @@ TlsOptiones tls_optiones_default(vacuum);
  *
  * Redde: Numerus bytes missi, vel -1 si error
  */
-i32
+s32
 tls_mittere(
     TlsConnexio*   connexio,
     constans i8*   data,
@@ -109,7 +109,7 @@ tls_mittere_omnia(
  *
  * Redde: Numerus bytes recepti, 0 si connexio clausa, -1 si error
  */
-i32
+s32
 tls_recipere(
     TlsConnexio* connexio,
     i8*          buffer,
