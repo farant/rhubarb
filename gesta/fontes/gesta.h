@@ -413,6 +413,32 @@ gesta_res_status (
     constans character* res_id,
     Piscina*            piscina);
 
+/* ==================================================
+ * Lectio in ramo (K4 frustum A) - plicatura pigra
+ * ==================================================
+ * Ramus = res generis "ramus" in trunco {titulus, parens, punctum};
+ * parametrum = RES_ID rami (resolutio tituli stratum tenentis).
+ * Lectio plicat in memoria per catenam parentum, quisque parens ad
+ * punctum filii sui TECTUS (nepos scripturas post-furcam parentis
+ * non videt). ramus NIHIL/"" = truncus (delegatio ad lectionem
+ * ordinariam). Chorda vacua = res absens in ramo AUT ramus ignotus
+ * (gesta_error tunc positus). Lectio rami fusi/abiecti licet
+ * (archaeologia). */
+
+chorda
+gesta_res_in_ramo_datum (
+    GestaMundus*        mundus,
+    constans character* res_id,
+    constans character* ramus,
+    Piscina*            piscina);
+
+chorda
+gesta_res_in_ramo_status (
+    GestaMundus*        mundus,
+    constans character* res_id,
+    constans character* ramus,
+    Piscina*            piscina);
+
 chorda
 gesta_genus_datum (
     GestaMundus*        mundus,

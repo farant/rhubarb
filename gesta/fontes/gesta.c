@@ -68,9 +68,14 @@ interior constans character* constans GESTA_MIGRATIONES[] = {
     "DROP TABLE nexus;"
     " DELETE FROM consumptores"
     " WHERE titulus = 'nexus';"
+    ,
+    /* migratio IV (K4 frustum A): index ramorum - servit lectiones
+     * catenae (branch_id, seq) et examen puritatis trunci in
+     * plicaturis avidis */
+    "CREATE INDEX idx_tessellae_ramus ON tessellae(branch_id, seq);"
 };
 
-#define GESTA_MIGRATIONES_NUMERUS III
+#define GESTA_MIGRATIONES_NUMERUS IV
 
 structura GestaMundus {
     Piscina*            piscina;
@@ -742,39 +747,33 @@ _generum_applicare (GestaMundus* m, chorda genus_eventus,
     scrinium_finire(e);
 }
 
-/* eventum unum in plicaturam rerum applicare */
-interior vacuum
-_rei_applicare (GestaMundus* m, chorda res_id, chorda genus_eventus,
+/* fructus transformationis status (K4 frustum A) */
+#define GESTA_TRANSFORMATUM_IGNOTUM 0
+#define GESTA_TRANSFORMATUM_INANE   I
+#define GESTA_TRANSFORMATUM_MUTATUM II
+
+/* transformatio PURA status rei (K4 frustum A: decompositio
+ * _rei_applicare, eadem ratio ac praeparare/validare/inserere K3):
+ * obiectum status intra/extra, SINE scriptura tabulae - reductor
+ * idem plicaturae avidae trunci ET plicaturis pigris ramorum
+ * servit. m SOLUM pro generum lectione (status_initialis) - genera
+ * trunco-sola (K4 decisio 8) ergo etiam in ramis recta. Corpus
+ * reductoris VERBATIM ex _rei_applicare motum (barra G9: truncus
+ * octetim idem). IGNOTUM = eventus reductori ignotus (nulla
+ * scriptura umquam); INANE = agnitum sed non materiale (truncus
+ * ordinem rescribit solum si res exsistit - mutatum renovatur);
+ * MUTATUM = status materialiter mutatus. */
+interior s32
+_statum_transformare (GestaMundus* m, JsonValor** status_in_ex,
+    chorda* genus_in_ex, chorda* creatum_in_ex, chorda genus_eventus,
     chorda datum, chorda actor, chorda creatum, Piscina* piscina)
 {
-    GestaResOrdo ordo;
-    JsonValor* status_obiectum = NIHIL;
+    JsonValor* status_obiectum = *status_in_ex;
+    chorda genus_columna = *genus_in_ex;
+    chorda creatum_columna = *creatum_in_ex;
     JsonResultus r_datum;
     JsonValor* datum_obiectum = NIHIL;
-    chorda genus_columna;
-    chorda creatum_columna;
     b32 mutatum_est = FALSUM;
-
-    si (_est_eventus_generis(genus_eventus))
-    {
-        redde;   /* res consumptor generum eventus praeterit */
-    }
-    ordo = _res_capere(m, res_id, piscina);
-    si (ordo.exsistit && ordo.datum.mensura > ZEPHYRUM)
-    {
-        JsonResultus r = json_legere(ordo.datum, piscina);
-
-        si (r.successus && json_est_objectum(r.radix))
-        {
-            status_obiectum = r.radix;
-        }
-    }
-    si (status_obiectum == NIHIL)
-    {
-        status_obiectum = json_objectum_creare(piscina);
-    }
-    genus_columna = ordo.exsistit ? ordo.genus : _ch("");
-    creatum_columna = ordo.exsistit ? ordo.creatum : creatum;
 
     r_datum = json_legere(datum, piscina);
     si (r_datum.successus && json_est_objectum(r_datum.radix))
@@ -1050,10 +1049,55 @@ _rei_applicare (GestaMundus* m, chorda res_id, chorda genus_eventus,
          * 771-772; nexus/denexus vetera hic cadunt = tumuli in
          * statu rei quoque, K2 D2; processus-perfectus/-defectus
          * signa mera - eventus status sequens plicat) */
-        redde;
+        redde GESTA_TRANSFORMATUM_IGNOTUM;
     }
 
-    si (!mutatum_est && !ordo.exsistit)
+    *status_in_ex = status_obiectum;
+    *genus_in_ex = genus_columna;
+    *creatum_in_ex = creatum_columna;
+    redde mutatum_est ? GESTA_TRANSFORMATUM_MUTATUM
+        : GESTA_TRANSFORMATUM_INANE;
+}
+
+/* eventum unum in plicaturam rerum applicare (involucrum trunci
+ * post decompositionem K4: lectio tabulae -> transformatio ->
+ * scriptura tabulae; mores omnes priores octetim servati) */
+interior vacuum
+_rei_applicare (GestaMundus* m, chorda res_id, chorda genus_eventus,
+    chorda datum, chorda actor, chorda creatum, Piscina* piscina)
+{
+    GestaResOrdo ordo;
+    JsonValor* status_obiectum = NIHIL;
+    chorda genus_columna;
+    chorda creatum_columna;
+    s32 fructus;
+
+    si (_est_eventus_generis(genus_eventus))
+    {
+        redde;   /* res consumptor generum eventus praeterit */
+    }
+    ordo = _res_capere(m, res_id, piscina);
+    si (ordo.exsistit && ordo.datum.mensura > ZEPHYRUM)
+    {
+        JsonResultus r = json_legere(ordo.datum, piscina);
+
+        si (r.successus && json_est_objectum(r.radix))
+        {
+            status_obiectum = r.radix;
+        }
+    }
+    si (status_obiectum == NIHIL)
+    {
+        status_obiectum = json_objectum_creare(piscina);
+    }
+    genus_columna = ordo.exsistit ? ordo.genus : _ch("");
+    creatum_columna = ordo.exsistit ? ordo.creatum : creatum;
+
+    fructus = _statum_transformare(m, &status_obiectum,
+        &genus_columna, &creatum_columna, genus_eventus, datum,
+        actor, creatum, piscina);
+    si (fructus == GESTA_TRANSFORMATUM_IGNOTUM
+        || (fructus == GESTA_TRANSFORMATUM_INANE && !ordo.exsistit))
     {
         redde;   /* nihil materiale, nulla series nova */
     }
@@ -1090,6 +1134,228 @@ _rei_applicare (GestaMundus* m, chorda res_id, chorda genus_eventus,
         (vacuum)scrinium_gradi(e);
         scrinium_finire(e);
     }
+}
+
+/* ==================================================
+ * Lectio ramorum (K4 frustum A) - plicatura pigra per catenam
+ * ==================================================
+ * Truncus avidus intactus; lectio rami = quaesitum catenae
+ * parentum + plicatura in memoria per petitionem (K4 decisio 3).
+ * TECTUM PER NEXUM (correctio E1-B2/D1): quisque parens ad punctum
+ * FILII SUI tectus - nepos scripturas post-furcam parentis NON
+ * videt (oraculum rimosum: _collectBranchTessellae sine tecto
+ * parentum mediorum). Ramus = res generis "ramus" IN TRUNCO
+ * {titulus, parens (res_id; "" = truncus), punctum (seq furcae)};
+ * parametrum rami in nucleo = RES_ID rami (tituli inter activos
+ * solos unici - resolutio tituli stratum tenentis est, frustum C).
+ * Lectio rami fusi/abiecti LICET (archaeologia, E1-B8) -
+ * scripturae solae recusantur (frustum B). */
+
+nomen structura {
+    chorda ramus;    /* res_id rami; "" = truncus */
+    s64    tectum;   /* seq tectum inclusivum; -I = sine tecto */
+} GestaCatenaNexus;
+
+#define GESTA_CATENA_ALTITUDO_MAXIMA XVI
+
+/* catena a ramo ad truncum: [{ramus, -I}, {parens, punctum_rami},
+ * ..., {"", punctum_filii_primi}]. Ordo nexuum non portans
+ * (clausulae OR in quaesito). NIHIL = ramus ignotus / non-ramus /
+ * datum corruptum / catena nimis alta (ansae custodia). */
+interior Xar*
+_catena_rami (GestaMundus* m, constans character* ramus,
+    Piscina* piscina)
+{
+    Xar* catena = xar_creare(piscina,
+        (i32)magnitudo(GestaCatenaNexus));
+    chorda currens = _ch(ramus);
+    s64 tectum = -I;
+    i32 gradus;
+
+    si (catena == NIHIL)
+    {
+        (vacuum)_fractum(m, "xar catenae fractum");
+        redde NIHIL;
+    }
+    per (gradus = ZEPHYRUM; gradus < GESTA_CATENA_ALTITUDO_MAXIMA;
+        gradus++)
+    {
+        GestaCatenaNexus* nexus_novus =
+            (GestaCatenaNexus*)xar_addere(catena);
+        GestaResOrdo ordo;
+        JsonResultus r;
+        JsonValor* v_parens;
+        JsonValor* v_punctum;
+
+        si (nexus_novus == NIHIL)
+        {
+            (vacuum)_fractum(m, "xar catenae fractum");
+            redde NIHIL;
+        }
+        nexus_novus->ramus = currens;
+        nexus_novus->tectum = tectum;
+        si (currens.mensura == ZEPHYRUM)
+        {
+            redde catena;   /* truncus attactus */
+        }
+        ordo = _res_capere(m, currens, piscina);
+        si (!ordo.exsistit || !_chorda_est(ordo.genus, "ramus"))
+        {
+            (vacuum)_fractum(m, "ramus ignotus");
+            redde NIHIL;
+        }
+        r = json_legere(ordo.datum, piscina);
+        si (!r.successus || !json_est_objectum(r.radix))
+        {
+            (vacuum)_fractum(m, "datum rami corruptum");
+            redde NIHIL;
+        }
+        v_parens = json_objectum_capere(r.radix, "parens");
+        v_punctum = json_objectum_capere(r.radix, "punctum");
+        si (v_parens == NIHIL || !json_est_chorda(v_parens)
+            || v_punctum == NIHIL || !json_est_integer(v_punctum))
+        {
+            (vacuum)_fractum(m, "datum rami corruptum");
+            redde NIHIL;
+        }
+        currens = json_ad_chorda(v_parens);
+        tectum = json_ad_integer(v_punctum);
+    }
+    (vacuum)_fractum(m, "catena ramorum nimis alta");
+    redde NIHIL;
+}
+
+/* res in ramo capere: plicatura in memoria super eventus catenae
+ * (truncus ad punctum + parentes tecti + ramus ipse, ordine seq).
+ * Ordo redditus proiectiones easdem fert ac tabula res (genus ex
+ * creatio, titulus/status ex statu plicato). Quaestio pura - SINE
+ * scriptura; pretium proportionale usui ramorum (decisio 3, sine
+ * copia conservata v1). */
+interior GestaResOrdo
+_res_in_ramo_capere (GestaMundus* m, chorda res_id,
+    constans character* ramus, Piscina* piscina)
+{
+    GestaResOrdo ordo;
+    Xar* catena;
+    ChordaAedificator* aed;
+    ScriniumEnuntiatum* e;
+    JsonValor* status_obiectum = NIHIL;
+    chorda genus_columna = _ch("");
+    chorda creatum_columna = _ch("");
+    integer ligamen;
+    i32 i;
+
+    memset(&ordo, ZEPHYRUM, magnitudo(GestaResOrdo));
+    catena = _catena_rami(m, ramus, piscina);
+    si (catena == NIHIL)
+    {
+        redde ordo;   /* error iam positus */
+    }
+    aed = chorda_aedificator_creare(piscina, 256);
+    si (aed == NIHIL)
+    {
+        (vacuum)_fractum(m, "aedificator fractus");
+        redde ordo;
+    }
+    chorda_aedificator_appendere_literis(aed,
+        "SELECT genus_eventus, datum, actor, creatum"
+        " FROM tessellae WHERE res_id = ? AND (");
+    per (i = ZEPHYRUM; i < xar_numerus(catena); i++)
+    {
+        GestaCatenaNexus* n = (GestaCatenaNexus*)xar_obtinere(
+            catena, i);
+
+        si (i > ZEPHYRUM)
+        {
+            chorda_aedificator_appendere_literis(aed, " OR ");
+        }
+        chorda_aedificator_appendere_literis(aed,
+            (n != NIHIL && n->tectum >= ZEPHYRUM)
+                ? "(branch_id = ? AND seq <= ?)"
+                : "(branch_id = ?)");
+    }
+    chorda_aedificator_appendere_literis(aed, ") ORDER BY seq");
+    e = scrinium_praeparare(m->scrinium,
+        _litterae(piscina, chorda_aedificator_finire(aed)));
+    si (e == NIHIL)
+    {
+        (vacuum)_fractum(m, scrinium_error(m->scrinium));
+        redde ordo;
+    }
+    scrinium_ligare_textum(e, I, res_id);
+    ligamen = II;
+    per (i = ZEPHYRUM; i < xar_numerus(catena); i++)
+    {
+        GestaCatenaNexus* n = (GestaCatenaNexus*)xar_obtinere(
+            catena, i);
+
+        si (n == NIHIL)
+        {
+            perge;
+        }
+        /* _chorda_tuta: nexus trunci fert "" cum dato NIHIL (ex
+         * json_ad_chorda parentis vacui) - ligare crudum = SQL
+         * NULL, branch_id = NULL nihil congruit (decipula
+         * documentata supra) */
+        scrinium_ligare_textum(e, ligamen, _chorda_tuta(n->ramus));
+        ligamen++;
+        si (n->tectum >= ZEPHYRUM)
+        {
+            scrinium_ligare_numerum(e, ligamen, n->tectum);
+            ligamen++;
+        }
+    }
+    dum (scrinium_gradi(e) == SCRINIUM_ORDO)
+    {
+        chorda genus_ev = scrinium_columna_textus(e, 0, piscina);
+        chorda datum = scrinium_columna_textus(e, I, piscina);
+        chorda actor = scrinium_columna_textus(e, II, piscina);
+        chorda creatum = scrinium_columna_textus(e, III, piscina);
+        s32 fructus;
+
+        si (_est_eventus_generis(genus_ev))
+        {
+            perge;   /* consumptoris generum - non status rei */
+        }
+        si (!ordo.exsistit)
+        {
+            /* paritas involucri trunci: sine ordine exsistente
+             * status vacuus, genus vacuum, creatum eventūs (eventus
+             * INANIS statum non tangit - initium purum sequenti) */
+            status_obiectum = json_objectum_creare(piscina);
+            genus_columna = _ch("");
+            creatum_columna = creatum;
+        }
+        fructus = _statum_transformare(m, &status_obiectum,
+            &genus_columna, &creatum_columna, genus_ev, datum,
+            actor, creatum, piscina);
+        si (fructus == GESTA_TRANSFORMATUM_MUTATUM)
+        {
+            ordo.exsistit = VERUM;
+        }
+    }
+    scrinium_finire(e);
+    si (!ordo.exsistit)
+    {
+        redde ordo;
+    }
+    ordo.genus = genus_columna;
+    ordo.creatum = creatum_columna;
+    ordo.datum = json_scribere(status_obiectum, piscina);
+    {
+        JsonValor* v_titulus = json_objectum_capere(status_obiectum,
+            "titulus");
+        JsonValor* v_status = json_objectum_capere(status_obiectum,
+            "status");
+
+        ordo.titulus = (v_titulus != NIHIL
+            && json_est_chorda(v_titulus))
+            ? json_ad_chorda(v_titulus) : _ch("");
+        ordo.status = (v_status != NIHIL
+            && json_est_chorda(v_status))
+            ? json_ad_chorda(v_status) : _ch("");
+    }
+    redde ordo;
 }
 
 /* eventum unum in plicaturam membrorum applicare (K2 chunk A -
@@ -1193,9 +1459,14 @@ _consumptorem_plicare (GestaMundus* m,
     {
         redde _fractum(m, scrinium_error(m->scrinium));
     }
+    /* puritas trunci (K4, sutura una E2 par 1): plicaturae avidae
+     * ordines ramorum numquam vident. hwm = limen, non numerus -
+     * seq ramorum praetermissae nec morantur nec replicant (E2
+     * par 4); census/FTS/salus/motor puri per constructionem. */
     e = scrinium_praeparare(m->scrinium,
         "SELECT seq, res_id, genus_eventus, datum, actor, creatum"
-        " FROM tessellae WHERE seq > ? ORDER BY seq");
+        " FROM tessellae WHERE seq > ? AND branch_id = ''"
+        " ORDER BY seq");
     si (e == NIHIL)
     {
         (vacuum)scrinium_revolvere(m->scrinium);
@@ -5070,6 +5341,52 @@ gesta_res_status (GestaMundus* mundus, constans character* res_id,
         redde vacua;
     }
     ordo = _res_capere(mundus, _ch(res_id), piscina);
+    redde ordo.exsistit ? ordo.status : vacua;
+}
+
+chorda
+gesta_res_in_ramo_datum (GestaMundus* mundus,
+    constans character* res_id, constans character* ramus,
+    Piscina* piscina)
+{
+    GestaResOrdo ordo;
+    chorda vacua;
+
+    vacua.mensura = ZEPHYRUM;
+    vacua.datum = NIHIL;
+    si (mundus == NIHIL || res_id == NIHIL)
+    {
+        redde vacua;
+    }
+    si (ramus == NIHIL || ramus[0] == '\0')
+    {
+        redde gesta_res_datum(mundus, res_id, piscina);
+    }
+    ordo = _res_in_ramo_capere(mundus, _ch(res_id), ramus,
+        piscina);
+    redde ordo.exsistit ? ordo.datum : vacua;
+}
+
+chorda
+gesta_res_in_ramo_status (GestaMundus* mundus,
+    constans character* res_id, constans character* ramus,
+    Piscina* piscina)
+{
+    GestaResOrdo ordo;
+    chorda vacua;
+
+    vacua.mensura = ZEPHYRUM;
+    vacua.datum = NIHIL;
+    si (mundus == NIHIL || res_id == NIHIL)
+    {
+        redde vacua;
+    }
+    si (ramus == NIHIL || ramus[0] == '\0')
+    {
+        redde gesta_res_status(mundus, res_id, piscina);
+    }
+    ordo = _res_in_ramo_capere(mundus, _ch(res_id), ramus,
+        piscina);
     redde ordo.exsistit ? ordo.status : vacua;
 }
 

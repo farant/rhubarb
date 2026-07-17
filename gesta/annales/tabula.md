@@ -1,6 +1,6 @@
 # TABULA (proiectio tabularii - GENERATUM, noli manu edere)
 
-seq 161 - 2026-07-16T20:59:59.268Z
+seq 163 - 2026-07-17T00:07:53.385Z
 
 ## QUAESTIONES
 
@@ -71,10 +71,10 @@ seq 161 - 2026-07-16T20:59:59.268Z
 
 ## OPERA
 
-- [pendens] frusta
 - [perfectum] exploratores
 - [perfectum] interrogatio
 - [perfectum] spec
+- [susceptum] frusta
 
 ## PROCESSUS
 

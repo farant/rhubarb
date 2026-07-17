@@ -20,6 +20,8 @@
 #define VIA_AN4 "gesta/build/probatio_gesta_k3.jsonl"
 #define VIA_DB5 "gesta/build/probatio_gesta_k3b.db"
 #define VIA_AN5 "gesta/build/probatio_gesta_k3b.jsonl"
+#define VIA_DB6 "gesta/build/probatio_gesta_k4.db"
+#define VIA_AN6 "gesta/build/probatio_gesta_k4.jsonl"
 
 interior vacuum
 _purgare (vacuum)
@@ -39,6 +41,10 @@ _purgare (vacuum)
     remove(VIA_DB5 "-wal");
     remove(VIA_DB5 "-shm");
     remove(VIA_AN5);
+    remove(VIA_DB6);
+    remove(VIA_DB6 "-wal");
+    remove(VIA_DB6 "-shm");
+    remove(VIA_AN6);
 }
 
 /* scriptura brevis asserta */
@@ -54,6 +60,42 @@ _scribe (GestaMundus* m, constans character* res_id,
     e.actor = "fran";
     e.origo = "probatio";
     CREDO_VERUM (gesta_scribere(m, &e, NIHIL));
+}
+
+/* insertio cruda in tessellae cum branch_id (K4 frustum A: via
+ * scripturae ramorum = frustum B; fixturae lectionis ramorum hic
+ * crudae. CAVE: lineas annalium non scribit - verificare in mundo
+ * m6 non vocandum) */
+interior vacuum
+_ramo_insere (GestaMundus* m, constans character* ramus,
+    constans character* res_id, constans character* genus_ev,
+    constans character* datum, Piscina* piscina)
+{
+    hic_manens integer numerator = ZEPHYRUM;
+    character id_ev[XVI];
+    ScriniumEnuntiatum* e;
+
+    numerator++;
+    sprintf(id_ev, "K4FIX%04d", numerator);
+    e = scrinium_praeparare(gesta_scrinium(m),
+        "INSERT INTO tessellae (id, res_id, genus_eventus, datum,"
+        " actor, origo, branch_id)"
+        " VALUES (?, ?, ?, ?, 'fran', 'probatio', ?)");
+    CREDO_NON_NIHIL (e);
+    si (e == NIHIL)
+    {
+        redde;
+    }
+    scrinium_ligare_textum(e, I, chorda_ex_literis(id_ev, piscina));
+    scrinium_ligare_textum(e, II,
+        chorda_ex_literis(res_id, piscina));
+    scrinium_ligare_textum(e, III,
+        chorda_ex_literis(genus_ev, piscina));
+    scrinium_ligare_textum(e, IV,
+        chorda_ex_literis(datum, piscina));
+    scrinium_ligare_textum(e, V, chorda_ex_literis(ramus, piscina));
+    CREDO_VERUM (scrinium_gradi(e) == SCRINIUM_FACTUM);
+    scrinium_finire(e);
 }
 
 interior JsonValor*
@@ -2680,6 +2722,252 @@ s32 principale (vacuum)
         }
 
         gesta_claudere(m5);
+    }
+
+    /* ================================================================
+     * K4 frustum A - lectio ramorum (mundus m6; spec-v2 par IX).
+     * Fixturae eventuum ramorum CRUDAE (via scripturae ramorum =
+     * frustum B); annales verificare in m6 NON vocatur (insertiones
+     * crudae lineas annalium non ferunt).
+     * ================================================================ */
+    {
+        GestaMundus* m6;
+        character id_x[GESTA_RES_ID_MENSURA];
+        character id_r[GESTA_RES_ID_MENSURA];
+        character id_z[GESTA_RES_ID_MENSURA];
+        character id_ra[GESTA_RES_ID_MENSURA];
+        character id_rb[GESTA_RES_ID_MENSURA];
+        character id_rc[GESTA_RES_ID_MENSURA];
+        character datum_rami[CXXVIII];
+
+        m6 = gesta_aperire(piscina, VIA_DB6, VIA_AN6);
+        CREDO_NON_NIHIL (m6);
+        si (m6 == NIHIL)
+        {
+            redde I;
+        }
+
+        _scribe(m6, NIHIL, "definitio-generis",
+            "{\"titulus\":\"ramus\",\"status_initialis\":"
+            "\"activus\",\"machina\":[[\"activus\",\"fusus\"],"
+            "[\"activus\",\"abiectus\"]],\"reducer\":"
+            "\"ordinarius\"}");
+        _scribe(m6, NIHIL, "definitio-generis",
+            "{\"titulus\":\"codex\",\"status_initialis\":"
+            "\"scriptus\",\"machina\":[[\"scriptus\",\"probatus\"]],"
+            "\"reducer\":\"ordinarius\"}");
+
+        /* ========================================================
+         * XLIX. G2: lectio catenae - ramus videt truncum-ad-punctum
+         * plicatum + eventus proprios (status/mutatio/nota/membra/
+         * creatio); truncus ramo caecus (puritas plicaturae avidae)
+         * ======================================================== */
+        {
+            GestaEventum e;
+            JsonValor* st;
+            chorda d;
+            JsonResultus r;
+            s64 punctum;
+
+            e.res_id = NIHIL;
+            e.genus_eventus = "creatio";
+            e.datum = "{\"genus\":\"codex\",\"titulus\":"
+                "\"codex unus\"}";
+            e.actor = "fran";
+            e.origo = "probatio";
+            CREDO_VERUM (gesta_scribere(m6, &e, id_x));
+            _scribe(m6, id_x, "nota",
+                "{\"textus\":\"in trunco\"}");
+
+            punctum = gesta_seq_ultima(m6);
+            sprintf(datum_rami, "{\"genus\":\"ramus\",\"titulus\":"
+                "\"experimentum\",\"parens\":\"\",\"punctum\":%d}",
+                (integer)punctum);
+            e.datum = datum_rami;
+            CREDO_VERUM (gesta_scribere(m6, &e, id_r));
+
+            /* scriptura trunci POST punctum - ramo invisibilis */
+            _scribe(m6, id_x, "mutatio", "{\"post\":\"trunci\"}");
+
+            /* eventus rami (crudi - frustum B viam scripturae
+             * feret) */
+            _ramo_insere(m6, id_r, id_x, "status",
+                "{\"novus\":\"probatus\"}", piscina);
+            _ramo_insere(m6, id_r, id_x, "mutatio",
+                "{\"color\":\"viridis\"}", piscina);
+            _ramo_insere(m6, id_r, id_x, "nota",
+                "{\"textus\":\"in ramo\"}", piscina);
+            _ramo_insere(m6, id_r, "res-y-in-ramo", "creatio",
+                "{\"genus\":\"codex\",\"titulus\":"
+                "\"solum in ramo\"}", piscina);
+            _ramo_insere(m6, id_r, id_x, "membrum-additum",
+                "{\"pars\":\"testes\",\"membrum\":"
+                "\"res-y-in-ramo\"}", piscina);
+
+            /* per ramum: status rami, color rami, notae AMBAE,
+             * membra rami - sine clave post-punctum trunci */
+            CREDO_VERUM (_chorda_aequa(gesta_res_in_ramo_status(
+                m6, id_x, id_r, piscina), "probatus"));
+            d = gesta_res_in_ramo_datum(m6, id_x, id_r, piscina);
+            CREDO_VERUM (d.mensura > ZEPHYRUM);
+            r = json_legere(d, piscina);
+            CREDO_VERUM (r.successus);
+            st = r.radix;
+            CREDO_VERUM (_clavis_est_chorda(st, "color",
+                "viridis"));
+            CREDO_VERUM (!json_objectum_habet(st, "post"));
+            CREDO_AEQUALIS_I32 (_notae_continentes(st,
+                "in trunco"), I);
+            CREDO_AEQUALIS_I32 (_notae_continentes(st,
+                "in ramo"), I);
+            {
+                JsonValor* membra = json_objectum_capere(st,
+                    "membra");
+                JsonValor* testes = (membra != NIHIL)
+                    ? json_objectum_capere(membra, "testes")
+                    : NIHIL;
+
+                CREDO_NON_NIHIL (testes);
+                CREDO_VERUM (testes != NIHIL
+                    && json_est_tabulatum(testes)
+                    && json_tabulatum_numerus(testes) == I);
+            }
+
+            /* truncus: status trunci, clavis post, sine colore */
+            CREDO_VERUM (_chorda_aequa(gesta_res_status(m6, id_x,
+                piscina), "scriptus"));
+            st = _status_entis(m6, id_x, piscina);
+            CREDO_VERUM (_clavis_est_chorda(st, "post", "trunci"));
+            CREDO_VERUM (!json_objectum_habet(st, "color"));
+
+            /* res solum-in-ramo: trunco invisibilis, in ramo nata
+             * cum statu initiali generis (genera trunco-sola etiam
+             * ramis serviunt - decisio 8) */
+            CREDO_VERUM (gesta_res_datum(m6, "res-y-in-ramo",
+                piscina).mensura == ZEPHYRUM);
+            CREDO_VERUM (_chorda_aequa(gesta_res_in_ramo_status(
+                m6, "res-y-in-ramo", id_r, piscina), "scriptus"));
+            CREDO_VERUM (gesta_res_in_ramo_datum(m6,
+                "res-y-in-ramo", NIHIL, piscina).mensura
+                == ZEPHYRUM);
+
+            /* puritas trunci sub plicatura posteriore: scriptura
+             * trunci post insertiones rami ordines ramorum non
+             * vorat (WHERE branch_id='' in plicatore avido) */
+            _scribe(m6, id_x, "mutatio",
+                "{\"iterum\":\"trunci\"}");
+            CREDO_VERUM (_chorda_aequa(gesta_res_status(m6, id_x,
+                piscina), "scriptus"));
+            st = _status_entis(m6, id_x, piscina);
+            CREDO_VERUM (_clavis_est_chorda(st, "iterum",
+                "trunci"));
+            CREDO_VERUM (!json_objectum_habet(st, "color"));
+            CREDO_AEQUALIS_I32 (_notae_continentes(st,
+                "in ramo"), ZEPHYRUM);
+
+            /* delegatio: ramus NIHIL aut "" = truncus */
+            CREDO_VERUM (_chorda_aequa(gesta_res_in_ramo_status(
+                m6, id_x, NIHIL, piscina), "scriptus"));
+            CREDO_VERUM (_chorda_aequa(gesta_res_in_ramo_status(
+                m6, id_x, "", piscina), "scriptus"));
+
+            /* errores: ramus ignotus; res ordinaria pro ramo */
+            CREDO_VERUM (gesta_res_in_ramo_datum(m6, id_x,
+                "ramus-ignotus", piscina).mensura == ZEPHYRUM);
+            CREDO_VERUM (gesta_res_in_ramo_datum(m6, id_x, id_x,
+                piscina).mensura == ZEPHYRUM);
+        }
+
+        /* ========================================================
+         * L. G3: tectum per nexum (correctio E1-B2/D1) - nepos
+         * scripturas post-furcam parentis NON videt; truncus per
+         * punctum PARENTIS visus (nidificatio honesta); custodia
+         * altitudinis contra gyros
+         * ======================================================== */
+        {
+            GestaEventum e;
+            JsonValor* st;
+            chorda d;
+            JsonResultus r;
+            s64 punctum_a;
+            s64 punctum_b;
+
+            e.res_id = NIHIL;
+            e.genus_eventus = "creatio";
+            e.datum = "{\"genus\":\"codex\",\"titulus\":"
+                "\"nidus\"}";
+            e.actor = "fran";
+            e.origo = "probatio";
+            CREDO_VERUM (gesta_scribere(m6, &e, id_z));
+
+            punctum_a = gesta_seq_ultima(m6);
+            sprintf(datum_rami, "{\"genus\":\"ramus\",\"titulus\":"
+                "\"ramus-a\",\"parens\":\"\",\"punctum\":%d}",
+                (integer)punctum_a);
+            e.datum = datum_rami;
+            CREDO_VERUM (gesta_scribere(m6, &e, id_ra));
+
+            /* scriptura trunci INTER furcas: post punctum A, ergo
+             * nec A nec B (visio trunci per punctum A) eam videt */
+            _scribe(m6, id_z, "mutatio",
+                "{\"t1\":\"inter-furcas\"}");
+
+            /* eventus in A ANTE furcam B */
+            _ramo_insere(m6, id_ra, id_z, "mutatio",
+                "{\"a1\":\"ante-furcam-b\"}", piscina);
+
+            punctum_b = gesta_seq_ultima(m6);
+            sprintf(datum_rami, "{\"genus\":\"ramus\",\"titulus\":"
+                "\"ramus-b\",\"parens\":\"%s\",\"punctum\":%d}",
+                id_ra, (integer)punctum_b);
+            e.datum = datum_rami;
+            CREDO_VERUM (gesta_scribere(m6, &e, id_rb));
+
+            /* eventus in A POST furcam B - probatio rimae oraculi */
+            _ramo_insere(m6, id_ra, id_z, "mutatio",
+                "{\"a2\":\"post-furcam-b\"}", piscina);
+
+            /* per B: a1 visum; a2 NON (tectum per nexum); t1 NON */
+            d = gesta_res_in_ramo_datum(m6, id_z, id_rb, piscina);
+            CREDO_VERUM (d.mensura > ZEPHYRUM);
+            r = json_legere(d, piscina);
+            CREDO_VERUM (r.successus);
+            st = r.radix;
+            CREDO_VERUM (_clavis_est_chorda(st, "a1",
+                "ante-furcam-b"));
+            CREDO_VERUM (!json_objectum_habet(st, "a2"));
+            CREDO_VERUM (!json_objectum_habet(st, "t1"));
+
+            /* per A: a1 ET a2 (caput sine tecto); t1 NON */
+            d = gesta_res_in_ramo_datum(m6, id_z, id_ra, piscina);
+            r = json_legere(d, piscina);
+            CREDO_VERUM (r.successus);
+            st = r.radix;
+            CREDO_VERUM (_clavis_est_chorda(st, "a1",
+                "ante-furcam-b"));
+            CREDO_VERUM (_clavis_est_chorda(st, "a2",
+                "post-furcam-b"));
+            CREDO_VERUM (!json_objectum_habet(st, "t1"));
+
+            /* truncus: t1 visum, a1/a2 numquam */
+            st = _status_entis(m6, id_z, piscina);
+            CREDO_VERUM (_clavis_est_chorda(st, "t1",
+                "inter-furcas"));
+            CREDO_VERUM (!json_objectum_habet(st, "a1"));
+            CREDO_VERUM (!json_objectum_habet(st, "a2"));
+
+            /* gyrus: parens sui ipsius -> catena nimis alta,
+             * lectio vacua (custodia altitudinis, sine pendulo) */
+            e.datum = "{\"genus\":\"ramus\",\"titulus\":"
+                "\"gyrus\",\"parens\":\"\",\"punctum\":1}";
+            CREDO_VERUM (gesta_scribere(m6, &e, id_rc));
+            sprintf(datum_rami, "{\"parens\":\"%s\"}", id_rc);
+            _scribe(m6, id_rc, "mutatio", datum_rami);
+            CREDO_VERUM (gesta_res_in_ramo_datum(m6, id_z, id_rc,
+                piscina).mensura == ZEPHYRUM);
+        }
+
+        gesta_claudere(m6);
     }
 
     gesta_claudere(m);

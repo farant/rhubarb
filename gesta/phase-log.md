@@ -846,3 +846,55 @@ Parcum K4-K5 fissum: K4 retitulatum in situ (ligamen ritūs tenet),
 K5 palatium filatum 01KXP9XNE4.
 
 POST COMMISSIONEM FRANI: frustum A (decompositio + lectio rami).
+
+## RELATIO K4 FRUSTUM A - DECOMPOSITIO + LECTIO RAMORUM (2026-07-16)
+
+AEDIFICATUM (spec-v2 par IX frustum A + una translatio possessa):
+- Migratio IV: idx_tessellae_ramus ON tessellae(branch_id, seq).
+- DECOMPOSITIO PLICATURAE: _rei_applicare fissum in
+  _statum_transformare PURUM (obiectum status intra/extra, corpus
+  reductoris VERBATIM motum - K1 verba, K2 membra, K3 cursus/opera/
+  actae) + involucrum trunci (lectio -> transformatio -> scriptura,
+  octetim idem). Fructus TRI-STATUS (IGNOTUM/INANE/MUTATUM) -
+  eventus ignotus numquam scribit, inanis ordinem renovat solum si
+  res exsistit; bivalens barram G9 fregisset.
+- LECTIO RAMORUM: _catena_rami (tectum PER NEXUM - correctio
+  E1-B2/D1; custodia altitudinis XVI contra gyros; stricta in dato
+  corrupto) + _res_in_ramo_capere (quaesitum catenae unum, plicatura
+  in memoria per transformatorem eundem) + par publicum
+  gesta_res_in_ramo_datum/_status (NIHIL/"" = delegatio trunco).
+- TRANSLATIO POSSESSA: puritas trunci (AND branch_id='' in
+  plicatore avido) ex frusto B huc tracta - fixturae crudae aliter
+  a plicaturis avidis vorarentur. E2 par 4 exacte tenuit: hwm limen
+  non numerus.
+- DECISIO NOVA: parametrum rami nuclei = RES_ID rami (columna
+  branch_id res_ids fert; tituli inter solos activos unici -
+  resolutio tituli = tenens, frustum C).
+
+PROBATIONES: mundus m6 (VIA_DB6/AN6), sectiones XLIX (G2: catena,
+delegatio, puritas, errores) + L (G3: tectum per nexum, nidificatio
+honesta, gyrus). 498 -> 562 asserta gesta; 114 tabularium intacta.
+Fixturae ramorum CRUDAE per _ramo_insere (via scripturae = frustum
+B; annales verificare in m6 non vocatur).
+
+INSECTUM UNUM IN FUGA: decipula _chorda_tuta TERTIO contextu -
+nexus trunci chorda "" dato NIHIL -> ligare = SQL NULL ->
+branch_id = NULL nihil congruit; segmentum trunci vacuum. 561/562:
+asserta negativa omnia trivialiter transibant; assertum POSITIVUM
+unum (nota trunci per ramum visa) id cepit. Lex probationum: sectio
+tota-negativa nihil de via positiva probat.
+
+INSTRUMENTA: adhibita - legati diagnostica (ACCIPE ante compilationem
+utramque), corpus/nexus non necessaria (regiones notae ex spec),
+excubitor stala honesta post editionem gesta.h. Asperitas UNA:
+impulsus diagnosticorum post editionem gesta.h falso-positiva in
+probatio_gesta.c ostendit (index residentis medio-editionis;
+"numerus argumentorum discrepat" in vocationibus gesta_agere
+intactis) - compilator arbiter, suitae virides; nulla actio.
+Desideratum: nullum novum.
+
+PROXIMUM: frustum B (scriptura + vita ramorum) - filatio rami per
+viam scripturae, permutationes validationis (copia E2-B2 tres una),
+annales branch_id, recusatio generis, creare/enumerare/abicere
+(FLAGSHIP)/confligentia/fundere + verrere sondae, verificare
+intensum. Aureae G1, G4-G8, G10-G16.
