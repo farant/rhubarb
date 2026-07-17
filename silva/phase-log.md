@@ -8936,3 +8936,71 @@ INSTRUMENTA: calibration-probe discipline caught the three-subflag
 split and the %-vs-& asymmetry pre-build; the census-as-experiment
 pattern went 5-for-5 this arc (3 capit classes + 2 TU-degradation
 guards); the differentia '|' extension is reusable machinery.
+
+## EXAMEN -CENSUS: INTENTIO (2026-07-17)
+
+Pull: desideratum 01KXRXW70T (census half) — codify the per-codex
+corpus sweep that every tier arc has re-derived by hand (three
+times in fluxus-0 alone; also where the while-read-in-background
+28-minute hang lives).
+
+Surface: `./silva/examen.sh -census [codex] [radix] [-posix]` —
+pure shell orchestration around the freshly-built binary; no C
+changes. Walk = .c files from radix (default .), skipping
+build/.git/results/node_modules/hidden (mirrors percursus.c
+_praetermittendum; percursus additionally walks .h — census is
+.c-only, validated against standing meters below). xargs -P 4 over
+`build/examen -machina`; raw rows land in build/census.tsv and
+SURVIVE the run (immediate re-slicing without re-sweep). With a
+codex: site rows via:linea:columna + causa, per-file tally, fixa/
+subtotal. Without: codex × sedes × plagulae table. Verdict tally
+(ACCIPE/REICE) both ways; INFRA files (exit 2) collected by NAME —
+no silent drops. Eyes-tool, not a gate: exit 0 = sweep completed.
+
+Bars: lib/-radix smoke (expect chorda ×2, chorda_aedificator ×2
+from the VANA attribution table); full sweep must reproduce the
+standing meters (58 = 43, REICE = 41) or the divergence gets
+explained before shipping.
+
+## EXAMEN -CENSUS: RELATIO (2026-07-17)
+
+Shipped in one chunk: `./silva/examen.sh -census [codex] [radix]
+[-posix]` — ~90 lines of shell orchestration, no C changes. Walk =
+.c files (percursus also walks .h; every per-codex meter reconciles
+on .c-only, so headers-standalone contributed no sites — the "820
+files" historical counts were .c+.h). Raw rows land in
+build/census.tsv and SURVIVE the run; re-slicing needs awk, not a
+re-sweep.
+
+THE INTENTIO BAR PAID IMMEDIATELY: the first full sweep diverged
+from FIVE standing meters (54=1138!, 68=216, 64=58, 65=4, 58=46,
+REICE=43). Attribution over the raw table (no re-sweep needed —
+the survives-design proving itself during its own build): every
+excess row was vendor/sqlite3.c. The hand indexes had been
+excluding vendor/ all along — the judging-domain rule ("fixa/ is
+out of the domain, like vendor/") was live practice never written
+into a walk. vendor/ now pruned by name; the radix argument itself
+is never pruned, so `-census 54 vendor` still sweeps it
+deliberately. Second sweep: EVERY meter exact — 58 = 43 in 22
+plagulis (39 source + 4 amalgam shadows), 61=2, 64=1, 65=1, 69=35 +
+70=8 all-in-fixa, 54/55/57/63/68 pure walls (rows absent).
+
+Second in-arc find: VERDICTUM rows carry no via, so the REICE
+count was un-attributable from the raw table. The wrapper now
+appends `VERDICTUM_PLAGULAE\tvia\tACCIPE|REICE|INFRA` per file;
+the tally reads those; INFRA files are also named (nothing silently
+dropped). Attribution immediately explained the last divergence:
+REICE 42 vs meter 41 = lib/vigilia.c, newly POSIX-lexicon via
+K2.3's stat helper (post-meter; ACCIPE under -posix). Meter
+updated, not a regression. NEW REICE METER: 42.
+
+BARS: lib/ smoke = VANA attribution table exact (33 sites/16 files,
+sputnik_lexema correctly absent post-fix); full-sweep meters above;
+VECTIS TENET (exit 0, gated on script exit per the new law);
+single-file passthrough intact.
+
+INSTRUMENTA: adhibita — raw-table awk was the whole diagnosis
+loop; asperitates — VERDICTUM-sine-via was the one gap, closed
+in-arc; desiderata — none new. The TOLERA rider on 01KXRXW70T
+stands documented-as-designed (single-line official; a small
+multi-line reader only if causae grow long).
