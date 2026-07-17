@@ -288,7 +288,7 @@ _quaerere_passus_posterior(
     b32    case_sensitivus)
 {
     i32 qi;
-    i32 si_idx;
+    s32 si_idx;
 
     si (quaestio.mensura <= 1)
     {
@@ -297,7 +297,7 @@ _quaerere_passus_posterior(
 
     /* Start from last match position, scan backward */
     qi = quaestio.mensura - 1;
-    si_idx = positiones[qi];
+    si_idx = (s32)positiones[qi];
 
     dum (qi > 0)
     {
@@ -313,9 +313,9 @@ _quaerere_passus_posterior(
                                     case_sensitivus))
         {
             /* Check if this position is better (tighter clustering) */
-            si (si_idx > positiones[qi - 1])
+            si (si_idx > (s32)positiones[qi - 1])
             {
-                positiones[qi - 1] = si_idx;
+                positiones[qi - 1] = (i32)si_idx;
             }
             qi--;
         }

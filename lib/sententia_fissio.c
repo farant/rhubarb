@@ -273,8 +273,9 @@ _extrahere_verbum_ante_punctum(chorda textus, i32 punctum_index, character* buff
     /* Invenire initium verbi - ire retro usque ad non-litteram */
     initium = punctum_index - I;
 
-    /* Scan backwards through letters and dots, but never below 0 */
-    dum (initium >= ZEPHYRUM)
+    /* Scan backwards through letters and dots, but never below 0
+     * (custodia interna frangit ad 0 ANTE decrementum) */
+    dum (VERUM)
     {
         c = (character)textus.datum[initium];
         si (_est_littera(c) || c == '.')
@@ -522,7 +523,8 @@ structura SententiaIterator {
  * Functio Principalis - Invenire Finem Sententiae
  *
  * Haec functio determinat ubi sententia finit.
- * Redde: index byte post finem sententiae, vel -1 si nihil
+ * Redde: index byte post finem sententiae, vel textus.mensura
+ * si punctum finale non invenitur (numquam negativum)
  * ================================================== */
 
 interior i32
@@ -531,16 +533,14 @@ _invenire_finem_sententiae(chorda textus, i32 initium)
     i32 i;
     b32 in_quote;
     s32 quote_genus;  /* Codepoint quote aperientis */
-    i32 sententia_initium;
 
     si (initium >= textus.mensura)
     {
-        redde (i32)-1;
+        redde textus.mensura;
     }
 
     in_quote = FALSUM;
     quote_genus = ZEPHYRUM;
-    sententia_initium = initium;
 
     i = initium;
     dum (i < textus.mensura)
@@ -791,12 +791,7 @@ _invenire_finem_sententiae(chorda textus, i32 initium)
     }
 
     /* Si textus finit sine puncto, tota residua est sententia */
-    si (i > sententia_initium)
-    {
-        redde textus.mensura;
-    }
-
-    redde (i32)-1;
+    redde textus.mensura;
 }
 
 
@@ -846,11 +841,6 @@ sententia_fissio(
 
         initium = i;
         finis = _invenire_finem_sententiae(textus, initium);
-
-        si (finis < ZEPHYRUM)
-        {
-            finis = textus.mensura;
-        }
 
         /* Creare sententiam (trim spatia) */
         {
@@ -942,11 +932,6 @@ sententia_numerare(
     {
         finis = _invenire_finem_sententiae(textus, i);
 
-        si (finis < ZEPHYRUM)
-        {
-            finis = textus.mensura;
-        }
-
         /* Probare si non vacua */
         {
             i32 sent_init;
@@ -1021,11 +1006,6 @@ sententia_fissio_indices(
 
         initium = i;
         finis = _invenire_finem_sententiae(textus, initium);
-
-        si (finis < ZEPHYRUM)
-        {
-            finis = textus.mensura;
-        }
 
         /* Trim spatia */
         sent_init = initium;
@@ -1174,11 +1154,6 @@ _iterator_parsere_proximam(SententiaIterator* iter)
     initium = iter->byte_currens;
     finis = _invenire_finem_sententiae(iter->textus, initium);
 
-    si (finis < ZEPHYRUM)
-    {
-        finis = iter->textus.mensura;
-    }
-
     /* Trim */
     sent_init = initium;
     sent_fin = finis;
@@ -1298,12 +1273,12 @@ sententia_iterator_prior(
         redde vacua;
     }
 
-    prior_index = iter->index_currens - I;
-
-    si (prior_index < ZEPHYRUM)
+    si (iter->index_currens == ZEPHYRUM)
     {
         redde vacua;
     }
+
+    prior_index = iter->index_currens - I;
 
     si (prior_index < iter->cache_numerus)
     {
