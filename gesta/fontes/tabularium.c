@@ -47,7 +47,17 @@ interior constans character* constans TABULARII_DOCTRINA =
     "(apertum->impletum), opus (pendens->susceptum?->perfectum|"
     "omissum), actiones (claudere-cum-decreto), processus "
     "(ritus-signaculi). Violationes machinae NON obstant - nota "
-    "custodiae appenditur (iudicat, non obstat). MORES: quaere ANTE "
+    "custodiae appenditur (iudicat, non obstat). "
+    "RAMI (K4): ramus {actus: creare|enumerare|comparare|fundere|"
+    "abicere, titulus?, parens?, res?, vis?} = lineae temporis "
+    "parallelae intra tabularium. truncus = veritas, rami = "
+    "hypothetica; ABICERE GRATIS - fingere audacter (fusio casus "
+    "rarus, non finis debitus). parametrum 'ramus' in addere/"
+    "gerere/res = scriptura/lectio in ramo; IN RAMO res_id "
+    "REQUIRITUR (resolutio tituli truncalis est). fusio = replay "
+    "in truncum attributione servata; confligentia obstat nisi "
+    "vis; nidificata nisi parens fusus recusatur. genera/census/"
+    "quaerere/motor truncalia manent. MORES: quaere ANTE "
     "filationem (addere titulum duplicatum CAUTIONE monet; "
     "resolutio tituli ambigui candidatos nominat - res_id "
     "discernit); cum res parcata "
@@ -162,13 +172,24 @@ interior constans TabulariumSemen SEMINA_GENERUM[] = {
       "\"genus_gradus\":\"actio\",\"positio\":1,\"actio\":"
       "\"claudere-cum-decreto\",\"ligamina\":{\"parcum\":"
       "\"$ops.propositum\"},\"argumenta\":{\"cur\":"
-      "\"sigillum ritus: $arg.cur_sigilli\"}}]}" }
+      "\"sigillum ritus: $arg.cur_sigilli\"}}]}" },
+    /* ---- semen v4 (K4): genus rami - metadata linearum temporis
+     * parallelarum, SEMPER truncale (decisio 6). parens NON
+     * necessarium: radix fert "" et lex chordae vacuae (K2 salus)
+     * absentem numeraret - divergentia a spec possessa ---- */
+    { "ramus",
+      "{\"titulus\":\"ramus\",\"status_initialis\":\"activus\","
+      "\"machina\":[[\"activus\",\"fusus\"],[\"activus\","
+      "\"abiectus\"]],\"attributa\":[{\"titulus\":\"titulus\","
+      "\"typus\":\"textus\",\"necessarium\":true},{\"titulus\":"
+      "\"parens\",\"typus\":\"textus\"},{\"titulus\":\"punctum\","
+      "\"typus\":\"numerus\"}],\"reducer\":\"ordinarius\"}" }
 };
 
 /* scopus fusionis v2 (genera tabulae + nexus); genera K3 infra
  * attributa propria ferunt (emendatio E2-B2) */
 #define SEMINA_BOARD_NUMERUS VI
-#define SEMINA_NUMERUS IX
+#define SEMINA_NUMERUS X
 
 /* semen v2 (K2 decisio Q9): attributa in genera VIVA - emendatio
  * integra-substitutio ex definitione currenti + attributa (fusio
@@ -976,6 +997,49 @@ _tabulae_processus (Tabularium* t, ChordaAedificator* aed,
     scrinium_finire(e);
 }
 
+/* prototypum (definitio post _tab_agere) */
+interior s64
+_rami_eventa (Tabularium* t, chorda ramus_id, Piscina* pn);
+
+/* sectio RAMI tabulae (K4): rami ACTIVI soli - lineae temporis
+ * apertae quas sessio sequens videre debet (fusi/abiecti = annales,
+ * enumerare eos refert) */
+interior vacuum
+_tabulae_rami (Tabularium* t, ChordaAedificator* aed, Piscina* pn)
+{
+    Xar* rami = gesta_ramos_enumerare(t->mundus, pn);
+    b32 caput_scriptum = FALSUM;
+    character numeri[LXIV];
+    i32 i;
+
+    si (rami == NIHIL)
+    {
+        redde;
+    }
+    per (i = ZEPHYRUM; i < xar_numerus(rami); i++)
+    {
+        GestaRamusOrdo* o = (GestaRamusOrdo*)xar_obtinere(rami, i);
+
+        si (o == NIHIL || !_chorda_est(o->status, "activus"))
+        {
+            perge;
+        }
+        si (!caput_scriptum)
+        {
+            chorda_aedificator_appendere_literis(aed,
+                "\n## RAMI\n\n");
+            caput_scriptum = VERUM;
+        }
+        chorda_aedificator_appendere_literis(aed, "- ");
+        chorda_aedificator_appendere_chorda(aed, o->titulus);
+        sprintf(numeri, "  punctum %d  eventa %d",
+            (int)o->punctum,
+            (int)_rami_eventa(t, o->res_id, pn));
+        chorda_aedificator_appendere_literis(aed, numeri);
+        chorda_aedificator_appendere_literis(aed, "\n");
+    }
+}
+
 interior vacuum
 _tabulam_scribere (Tabularium* t, Piscina* pn)
 {
@@ -1028,6 +1092,7 @@ _tabulam_scribere (Tabularium* t, Piscina* pn)
     /* K3: opera aperta (actionabilia) + instantiae processuum */
     _tabulae_sectionem(t, aed, "opus", "OPERA", VERUM, pn);
     _tabulae_processus(t, aed, pn);
+    _tabulae_rami(t, aed, pn);
     /* nexus (vincula = res nexus-speciei per indicem membra; K2
      * cutover). Soluta sponte absunt - plicatura membra eorum
      * ordines purgat. Bi-partia cum verbo = forma sagittae; alia
@@ -1165,6 +1230,11 @@ _tabulam_scribere (Tabularium* t, Piscina* pn)
  * instrumenta
  * ================================================== */
 
+/* prototypum resolutionis ramorum (definitio post _tab_agere -
+ * addere/gerere/res parametrum 'ramus' eam postulant) */
+interior chorda
+_ramum_solvere (Tabularium* t, chorda clavis, Piscina* pn);
+
 interior vacuum
 _tab_addere (Tabularium* t, Piscina* pn, JsonValor* id,
     JsonValor* argumenta, FILE* effusio)
@@ -1175,16 +1245,30 @@ _tab_addere (Tabularium* t, Piscina* pn, JsonValor* id,
     chorda tags = _arg(argumenta, "tags");
     chorda ancorae = _arg(argumenta, "ancorae");
     chorda actor = _arg(argumenta, "actor");
+    chorda ramus_arg = _arg(argumenta, "ramus");
+    chorda ramus_id;
     JsonValor* datum;
     GestaEventum e;
     character res_id[GESTA_RES_ID_MENSURA];
     chorda datum_textus;
 
+    ramus_id.mensura = ZEPHYRUM;
+    ramus_id.datum = NIHIL;
     si (genus.mensura == ZEPHYRUM || titulus.mensura == ZEPHYRUM)
     {
         _textum_respondere(t, pn, effusio, id,
             _ch("genus et titulus requiruntur"), VERUM);
         redde;
+    }
+    si (ramus_arg.mensura > ZEPHYRUM)
+    {
+        ramus_id = _ramum_solvere(t, ramus_arg, pn);
+        si (ramus_id.mensura == ZEPHYRUM)
+        {
+            _textum_respondere(t, pn, effusio, id,
+                _ch("ramus ignotus"), VERUM);
+            redde;
+        }
     }
     datum = json_objectum_creare(pn);
     json_objectum_ponere(datum, "genus",
@@ -1254,6 +1338,46 @@ _tab_addere (Tabularium* t, Piscina* pn, JsonValor* id,
     e.actor = actor.mensura > ZEPHYRUM
         ? _litterae(pn, actor) : "claude";
     e.origo = "mcp";
+    /* in ramo: scriptura iudicata in linea parallela - tabula/FTS
+     * trunci intacta (invisibilis usque ad fusionem) */
+    si (ramus_id.mensura > ZEPHYRUM)
+    {
+        si (!gesta_in_ramo_scribere(t->mundus, &e,
+                _litterae(pn, ramus_id), res_id))
+        {
+            ChordaAedificator* aed = chorda_aedificator_creare(pn,
+                CCLVI);
+
+            chorda_aedificator_appendere_literis(aed,
+                "scriptura recusata: ");
+            chorda_aedificator_appendere_literis(aed,
+                gesta_error(t->mundus));
+            _textum_respondere(t, pn, effusio, id,
+                chorda_aedificator_finire(aed), VERUM);
+            redde;
+        }
+        {
+            ChordaAedificator* aed = chorda_aedificator_creare(pn,
+                CCLVI);
+
+            chorda_aedificator_appendere_literis(aed, "res ");
+            chorda_aedificator_appendere_literis(aed, res_id);
+            chorda_aedificator_appendere_literis(aed,
+                " creata: ");
+            chorda_aedificator_appendere_chorda(aed, titulus);
+            chorda_aedificator_appendere_literis(aed, " (");
+            chorda_aedificator_appendere_chorda(aed, genus);
+            chorda_aedificator_appendere_literis(aed,
+                ", in ramo ");
+            chorda_aedificator_appendere_chorda(aed, ramus_arg);
+            chorda_aedificator_appendere_literis(aed,
+                ") - trunco invisibilis usque ad fusionem;"
+                " res_id ad lectiones/scripturas ramales adhibe");
+            _textum_respondere(t, pn, effusio, id,
+                chorda_aedificator_finire(aed), FALSUM);
+        }
+        redde;
+    }
     si (!gesta_scribere(t->mundus, &e, res_id))
     {
         ChordaAedificator* aed = chorda_aedificator_creare(pn,
@@ -1307,17 +1431,49 @@ _tab_gerere (Tabularium* t, Piscina* pn, JsonValor* id,
     chorda clavis = _arg(argumenta, "res");
     chorda actus = _arg(argumenta, "actus");
     chorda actor = _arg(argumenta, "actor");
+    chorda ramus_arg = _arg(argumenta, "ramus");
+    chorda ramus_id;
     chorda res_id;
     JsonValor* datum = json_objectum_creare(pn);
     constans character* genus_eventus = NIHIL;
     GestaEventum e;
 
+    ramus_id.mensura = ZEPHYRUM;
+    ramus_id.datum = NIHIL;
     si (clavis.mensura == ZEPHYRUM || actus.mensura == ZEPHYRUM)
     {
         _textum_respondere(t, pn, effusio, id,
             _ch("res et actus requiruntur"), VERUM);
         redde;
     }
+    si (ramus_arg.mensura > ZEPHYRUM)
+    {
+        ramus_id = _ramum_solvere(t, ramus_arg, pn);
+        si (ramus_id.mensura == ZEPHYRUM)
+        {
+            _textum_respondere(t, pn, effusio, id,
+                _ch("ramus ignotus"), VERUM);
+            redde;
+        }
+    }
+    si (ramus_id.mensura > ZEPHYRUM)
+    {
+        /* LEX E2-B1: in ramo res_id requiritur - resolutio tituli
+         * statum TRUNCI legit et male solveret (res solum-ramales
+         * titulis invisibiles) */
+        res_id = clavis;
+        si (gesta_res_in_ramo_datum(t->mundus,
+                _litterae(pn, clavis), _litterae(pn, ramus_id),
+                pn).mensura == ZEPHYRUM)
+        {
+            _textum_respondere(t, pn, effusio, id,
+                _ch("res in ramo ignota (in ramo res_id"
+                    " requiritur - resolutio tituli truncalis"
+                    " est)"), VERUM);
+            redde;
+        }
+    }
+    alioquin
     {
         b32 ambiguum = FALSUM;
 
@@ -1327,12 +1483,12 @@ _tab_gerere (Tabularium* t, Piscina* pn, JsonValor* id,
             _ambiguitatem_respondere(t, pn, id, clavis, effusio);
             redde;
         }
-    }
-    si (res_id.mensura == ZEPHYRUM)
-    {
-        _textum_respondere(t, pn, effusio, id,
-            _ch("res ignota (id aut titulus exactus)"), VERUM);
-        redde;
+        si (res_id.mensura == ZEPHYRUM)
+        {
+            _textum_respondere(t, pn, effusio, id,
+                _ch("res ignota (id aut titulus exactus)"), VERUM);
+            redde;
+        }
     }
     si (_chorda_est(actus, "nota"))
     {
@@ -1377,6 +1533,15 @@ _tab_gerere (Tabularium* t, Piscina* pn, JsonValor* id,
         JsonValor* d;
         GestaEventum ev;
 
+        si (ramus_id.mensura > ZEPHYRUM)
+        {
+            /* saccharum vinculi = scripturae plures + resolutio
+             * alterius truncalis (fovea E2-B1) - in ramo nondum */
+            _textum_respondere(t, pn, effusio, id,
+                _ch("nexus/denexus in ramo nondum sustentus"
+                    " (parcum)"), VERUM);
+            redde;
+        }
         si (verbum.mensura == ZEPHYRUM
             || alterum.mensura == ZEPHYRUM)
         {
@@ -1444,6 +1609,13 @@ _tab_gerere (Tabularium* t, Piscina* pn, JsonValor* id,
         ScriniumEnuntiatum* sel;
         GestaEventum ev;
 
+        si (ramus_id.mensura > ZEPHYRUM)
+        {
+            _textum_respondere(t, pn, effusio, id,
+                _ch("nexus/denexus in ramo nondum sustentus"
+                    " (parcum)"), VERUM);
+            redde;
+        }
         si (verbum.mensura == ZEPHYRUM
             || alterum.mensura == ZEPHYRUM)
         {
@@ -1577,6 +1749,52 @@ _tab_gerere (Tabularium* t, Piscina* pn, JsonValor* id,
     e.actor = actor.mensura > ZEPHYRUM
         ? _litterae(pn, actor) : "claude";
     e.origo = "mcp";
+    /* in ramo: eventus iudicatus in linea parallela (custodia
+     * contra statum RAMI); tabula trunci intacta */
+    si (ramus_id.mensura > ZEPHYRUM)
+    {
+        si (!gesta_in_ramo_scribere(t->mundus, &e,
+                _litterae(pn, ramus_id), NIHIL))
+        {
+            ChordaAedificator* aed = chorda_aedificator_creare(pn,
+                CCLVI);
+
+            chorda_aedificator_appendere_literis(aed,
+                "scriptura recusata: ");
+            chorda_aedificator_appendere_literis(aed,
+                gesta_error(t->mundus));
+            _textum_respondere(t, pn, effusio, id,
+                chorda_aedificator_finire(aed), VERUM);
+            redde;
+        }
+        {
+            ChordaAedificator* aed = chorda_aedificator_creare(pn,
+                CCLVI);
+            chorda status = gesta_res_in_ramo_status(t->mundus,
+                _litterae(pn, res_id), _litterae(pn, ramus_id),
+                pn);
+
+            chorda_aedificator_appendere_literis(aed, "eventum ");
+            chorda_aedificator_appendere_literis(aed,
+                genus_eventus);
+            chorda_aedificator_appendere_literis(aed,
+                " scriptum in ");
+            chorda_aedificator_appendere_chorda(aed, res_id);
+            chorda_aedificator_appendere_literis(aed,
+                " (in ramo ");
+            chorda_aedificator_appendere_chorda(aed, ramus_arg);
+            si (status.mensura > ZEPHYRUM)
+            {
+                chorda_aedificator_appendere_literis(aed,
+                    ", status ");
+                chorda_aedificator_appendere_chorda(aed, status);
+            }
+            chorda_aedificator_appendere_literis(aed, ")");
+            _textum_respondere(t, pn, effusio, id,
+                chorda_aedificator_finire(aed), FALSUM);
+        }
+        redde;
+    }
     si (!gesta_scribere(t->mundus, &e, NIHIL))
     {
         ChordaAedificator* aed = chorda_aedificator_creare(pn,
@@ -1696,6 +1914,7 @@ _tab_res (Tabularium* t, Piscina* pn, JsonValor* id,
     JsonValor* argumenta, FILE* effusio)
 {
     chorda clavis = _arg(argumenta, "res");
+    chorda ramus_arg = _arg(argumenta, "ramus");
     chorda res_id;
     chorda datum;
     JsonValor* st = NIHIL;
@@ -1705,6 +1924,50 @@ _tab_res (Tabularium* t, Piscina* pn, JsonValor* id,
     {
         _textum_respondere(t, pn, effusio, id,
             _ch("res requiritur (id aut titulus)"), VERUM);
+        redde;
+    }
+    /* in ramo: lectio plicaturae catenae - redditio macra (ancorae/
+     * actiones/annales = proiectiones truncales). LEX E2-B1: res =
+     * res_id (resolutio tituli truncalis est). */
+    si (ramus_arg.mensura > ZEPHYRUM)
+    {
+        chorda ramus_id = _ramum_solvere(t, ramus_arg, pn);
+        chorda status_rami;
+        chorda datum_rami;
+
+        si (ramus_id.mensura == ZEPHYRUM)
+        {
+            _textum_respondere(t, pn, effusio, id,
+                _ch("ramus ignotus"), VERUM);
+            redde;
+        }
+        datum_rami = gesta_res_in_ramo_datum(t->mundus,
+            _litterae(pn, clavis), _litterae(pn, ramus_id), pn);
+        si (datum_rami.mensura == ZEPHYRUM)
+        {
+            _textum_respondere(t, pn, effusio, id,
+                _ch("res in ramo ignota (in ramo res_id"
+                    " requiritur - resolutio tituli truncalis"
+                    " est)"), VERUM);
+            redde;
+        }
+        status_rami = gesta_res_in_ramo_status(t->mundus,
+            _litterae(pn, clavis), _litterae(pn, ramus_id), pn);
+        aed = chorda_aedificator_creare(pn, 2048);
+        chorda_aedificator_appendere_chorda(aed, clavis);
+        chorda_aedificator_appendere_literis(aed, " (in ramo ");
+        chorda_aedificator_appendere_chorda(aed, ramus_arg);
+        chorda_aedificator_appendere_literis(aed, ")");
+        si (status_rami.mensura > ZEPHYRUM)
+        {
+            chorda_aedificator_appendere_literis(aed,
+                "\nstatus ");
+            chorda_aedificator_appendere_chorda(aed, status_rami);
+        }
+        chorda_aedificator_appendere_literis(aed, "\ndatum ");
+        chorda_aedificator_appendere_chorda(aed, datum_rami);
+        _textum_respondere(t, pn, effusio, id,
+            chorda_aedificator_finire(aed), FALSUM);
         redde;
     }
     {
@@ -2044,6 +2307,24 @@ _tab_census (Tabularium* t, Piscina* pn, JsonValor* id,
             chorda_aedificator_appendere_literis(aed, numeri);
         }
     }
+    /* K4: rami activi (proiectio truncalis - res generis ramus) */
+    {
+        ScriniumEnuntiatum* e = scrinium_praeparare(
+            gesta_scrinium(t->mundus),
+            "SELECT COUNT(*) FROM res WHERE genus = 'ramus'"
+            " AND status = 'activus'");
+
+        si (e != NIHIL)
+        {
+            si (scrinium_gradi(e) == SCRINIUM_ORDO)
+            {
+                sprintf(numeri, "\nrami activi %d",
+                    (int)scrinium_columna_numerus(e, 0));
+                chorda_aedificator_appendere_literis(aed, numeri);
+            }
+            scrinium_finire(e);
+        }
+    }
     _textum_respondere(t, pn, effusio, id,
         chorda_aedificator_finire(aed), FALSUM);
 }
@@ -2262,6 +2543,416 @@ _tab_agere (Tabularium* t, Piscina* pn, JsonValor* id,
     }
 }
 
+/* ramum solvere: titulus inter ACTIVOS (unicus per legem nuclei)
+ * aut res_id directum generis ramus (archaeologia fusorum/
+ * abiectorum per res_id). Chorda vacua = ignotus. */
+interior chorda
+_ramum_solvere (Tabularium* t, chorda clavis, Piscina* pn)
+{
+    ScriniumEnuntiatum* e;
+    chorda fructus;
+
+    fructus.mensura = ZEPHYRUM;
+    fructus.datum = NIHIL;
+    e = scrinium_praeparare(gesta_scrinium(t->mundus),
+        "SELECT res_id FROM res WHERE genus = 'ramus'"
+        " AND status = 'activus' AND titulus = ?1");
+    si (e != NIHIL)
+    {
+        scrinium_ligare_textum(e, I, clavis);
+        si (scrinium_gradi(e) == SCRINIUM_ORDO)
+        {
+            fructus = scrinium_columna_textus(e, 0, pn);
+        }
+        scrinium_finire(e);
+    }
+    si (fructus.mensura > ZEPHYRUM)
+    {
+        redde fructus;
+    }
+    e = scrinium_praeparare(gesta_scrinium(t->mundus),
+        "SELECT res_id FROM res WHERE genus = 'ramus'"
+        " AND res_id = ?1");
+    si (e != NIHIL)
+    {
+        scrinium_ligare_textum(e, I, clavis);
+        si (scrinium_gradi(e) == SCRINIUM_ORDO)
+        {
+            fructus = scrinium_columna_textus(e, 0, pn);
+        }
+        scrinium_finire(e);
+    }
+    redde fructus;
+}
+
+/* numerus eventuum rami */
+interior s64
+_rami_eventa (Tabularium* t, chorda ramus_id, Piscina* pn)
+{
+    ScriniumEnuntiatum* e = scrinium_praeparare(
+        gesta_scrinium(t->mundus),
+        "SELECT COUNT(*) FROM tessellae WHERE branch_id = ?1");
+    s64 n = ZEPHYRUM;
+
+    (vacuum)pn;
+    si (e == NIHIL)
+    {
+        redde ZEPHYRUM;
+    }
+    scrinium_ligare_textum(e, I, ramus_id);
+    si (scrinium_gradi(e) == SCRINIUM_ORDO)
+    {
+        n = scrinium_columna_numerus(e, 0);
+    }
+    scrinium_finire(e);
+    redde n;
+}
+
+/* ramus (K4 frustum C): vita linearum temporis parallelarum.
+ * truncus = veritas, rami = hypothetica; ABICERE GRATIS
+ * (flagship - charta E3). Resolutio per titulum inter activos;
+ * scripturae/lectiones in ramo per parametrum 'ramus' in
+ * addere/gerere/res (lex E2-B1 ibi). */
+interior vacuum
+_tab_ramus (Tabularium* t, Piscina* pn, JsonValor* id,
+    JsonValor* argumenta, FILE* effusio)
+{
+    chorda actus = _arg(argumenta, "actus");
+    chorda titulus = _arg(argumenta, "titulus");
+    chorda parens = _arg(argumenta, "parens");
+    chorda res_clavis = _arg(argumenta, "res");
+    chorda vis = _arg(argumenta, "vis");
+    chorda actor = _arg(argumenta, "actor");
+    constans character* actor_l = actor.mensura > ZEPHYRUM
+        ? _litterae(pn, actor) : "claude";
+
+    si (actus.mensura == ZEPHYRUM)
+    {
+        _textum_respondere(t, pn, effusio, id,
+            _ch("actus requiritur (creare|enumerare|comparare|"
+                "fundere|abicere)"), VERUM);
+        redde;
+    }
+    si (_chorda_est(actus, "creare"))
+    {
+        character rid[GESTA_RES_ID_MENSURA];
+        chorda parens_id;
+
+        parens_id.mensura = ZEPHYRUM;
+        parens_id.datum = NIHIL;
+        si (titulus.mensura == ZEPHYRUM)
+        {
+            _textum_respondere(t, pn, effusio, id,
+                _ch("creare: titulus requiritur"), VERUM);
+            redde;
+        }
+        si (parens.mensura > ZEPHYRUM)
+        {
+            parens_id = _ramum_solvere(t, parens, pn);
+            si (parens_id.mensura == ZEPHYRUM)
+            {
+                _textum_respondere(t, pn, effusio, id,
+                    _ch("parens ramus ignotus"), VERUM);
+                redde;
+            }
+        }
+        si (!gesta_ramum_creare(t->mundus, _litterae(pn, titulus),
+                parens_id.mensura > ZEPHYRUM
+                    ? _litterae(pn, parens_id) : "",
+                actor_l, pn, rid))
+        {
+            ChordaAedificator* aed = chorda_aedificator_creare(pn,
+                CCLVI);
+
+            chorda_aedificator_appendere_literis(aed,
+                "creare recusatum: ");
+            chorda_aedificator_appendere_literis(aed,
+                gesta_error(t->mundus));
+            _textum_respondere(t, pn, effusio, id,
+                chorda_aedificator_finire(aed), VERUM);
+            redde;
+        }
+        _tabulam_scribere(t, pn);
+        {
+            ChordaAedificator* aed = chorda_aedificator_creare(pn,
+                CCLVI);
+
+            chorda_aedificator_appendere_literis(aed, "ramus ");
+            chorda_aedificator_appendere_literis(aed, rid);
+            chorda_aedificator_appendere_literis(aed,
+                " creatus: ");
+            chorda_aedificator_appendere_chorda(aed, titulus);
+            chorda_aedificator_appendere_literis(aed,
+                " (scripturae: parametrum 'ramus' in addere/"
+                "gerere; abicere gratis)");
+            _textum_respondere(t, pn, effusio, id,
+                chorda_aedificator_finire(aed), FALSUM);
+        }
+        redde;
+    }
+    si (_chorda_est(actus, "enumerare"))
+    {
+        Xar* rami = gesta_ramos_enumerare(t->mundus, pn);
+        ChordaAedificator* aed = chorda_aedificator_creare(pn,
+            2048);
+        character numeri[LXIV];
+        i32 i;
+
+        si (rami == NIHIL || xar_numerus(rami) == ZEPHYRUM)
+        {
+            _textum_respondere(t, pn, effusio, id,
+                _ch("rami nulli"), FALSUM);
+            redde;
+        }
+        chorda_aedificator_appendere_literis(aed, "rami:");
+        per (i = ZEPHYRUM; i < xar_numerus(rami); i++)
+        {
+            GestaRamusOrdo* o = (GestaRamusOrdo*)xar_obtinere(
+                rami, i);
+
+            si (o == NIHIL)
+            {
+                perge;
+            }
+            chorda_aedificator_appendere_literis(aed, "\n  ");
+            chorda_aedificator_appendere_chorda(aed, o->titulus);
+            chorda_aedificator_appendere_literis(aed, " [");
+            chorda_aedificator_appendere_chorda(aed, o->status);
+            chorda_aedificator_appendere_literis(aed, "]");
+            sprintf(numeri, "  punctum %d  eventa %d",
+                (int)o->punctum,
+                (int)_rami_eventa(t, o->res_id, pn));
+            chorda_aedificator_appendere_literis(aed, numeri);
+        }
+        _textum_respondere(t, pn, effusio, id,
+            chorda_aedificator_finire(aed), FALSUM);
+        redde;
+    }
+    si (_chorda_est(actus, "comparare"))
+    {
+        chorda ramus_id;
+        chorda res_id;
+        chorda st_trunci;
+        chorda st_rami;
+        chorda d_rami;
+        ChordaAedificator* aed;
+
+        si (titulus.mensura == ZEPHYRUM
+            || res_clavis.mensura == ZEPHYRUM)
+        {
+            _textum_respondere(t, pn, effusio, id,
+                _ch("comparare: titulus (rami) et res"
+                    " requiruntur"), VERUM);
+            redde;
+        }
+        ramus_id = _ramum_solvere(t, titulus, pn);
+        si (ramus_id.mensura == ZEPHYRUM)
+        {
+            _textum_respondere(t, pn, effusio, id,
+                _ch("ramus ignotus"), VERUM);
+            redde;
+        }
+        /* res: res_id aut titulus TRUNCALIS (dimidium truncale
+         * comparationis titulum sine periculo solvit) */
+        res_id = _res_solvere(t, res_clavis, pn, NIHIL);
+        si (res_id.mensura == ZEPHYRUM)
+        {
+            res_id = res_clavis;
+        }
+        st_trunci = gesta_res_status(t->mundus,
+            _litterae(pn, res_id), pn);
+        st_rami = gesta_res_in_ramo_status(t->mundus,
+            _litterae(pn, res_id), _litterae(pn, ramus_id), pn);
+        d_rami = gesta_res_in_ramo_datum(t->mundus,
+            _litterae(pn, res_id), _litterae(pn, ramus_id), pn);
+        aed = chorda_aedificator_creare(pn, 2048);
+        chorda_aedificator_appendere_literis(aed, "truncus: ");
+        si (gesta_res_datum(t->mundus, _litterae(pn, res_id),
+                pn).mensura == ZEPHYRUM)
+        {
+            chorda_aedificator_appendere_literis(aed, "(absens)");
+        }
+        alioquin
+        {
+            chorda_aedificator_appendere_literis(aed, "[");
+            chorda_aedificator_appendere_chorda(aed, st_trunci);
+            chorda_aedificator_appendere_literis(aed, "] ");
+            chorda_aedificator_appendere_chorda(aed,
+                gesta_res_datum(t->mundus, _litterae(pn, res_id),
+                    pn));
+        }
+        chorda_aedificator_appendere_literis(aed, "\nramus ");
+        chorda_aedificator_appendere_chorda(aed, titulus);
+        chorda_aedificator_appendere_literis(aed, ": ");
+        si (d_rami.mensura == ZEPHYRUM)
+        {
+            chorda_aedificator_appendere_literis(aed, "(absens)");
+        }
+        alioquin
+        {
+            chorda_aedificator_appendere_literis(aed, "[");
+            chorda_aedificator_appendere_chorda(aed, st_rami);
+            chorda_aedificator_appendere_literis(aed, "] ");
+            chorda_aedificator_appendere_chorda(aed, d_rami);
+        }
+        _textum_respondere(t, pn, effusio, id,
+            chorda_aedificator_finire(aed), FALSUM);
+        redde;
+    }
+    si (_chorda_est(actus, "fundere"))
+    {
+        chorda ramus_id;
+        GestaFusioFructus ff;
+        b32 vi = _chorda_est(vis, "verum")
+            || _chorda_est(vis, "true") || _chorda_est(vis, "ita");
+
+        si (titulus.mensura == ZEPHYRUM)
+        {
+            _textum_respondere(t, pn, effusio, id,
+                _ch("fundere: titulus requiritur"), VERUM);
+            redde;
+        }
+        ramus_id = _ramum_solvere(t, titulus, pn);
+        si (ramus_id.mensura == ZEPHYRUM)
+        {
+            _textum_respondere(t, pn, effusio, id,
+                _ch("ramus ignotus"), VERUM);
+            redde;
+        }
+        si (!gesta_ramum_fundere(t->mundus,
+                _litterae(pn, ramus_id), vi, actor_l, pn, &ff))
+        {
+            ChordaAedificator* aed = chorda_aedificator_creare(pn,
+                CCLVI);
+
+            chorda_aedificator_appendere_literis(aed,
+                "fusio fracta: ");
+            chorda_aedificator_appendere_literis(aed,
+                gesta_error(t->mundus));
+            _textum_respondere(t, pn, effusio, id,
+                chorda_aedificator_finire(aed), VERUM);
+            redde;
+        }
+        si (!ff.fusa)
+        {
+            ChordaAedificator* aed = chorda_aedificator_creare(pn,
+                2048);
+            character numeri[LXIV];
+
+            chorda_aedificator_appendere_literis(aed,
+                "fusio recusata: ");
+            chorda_aedificator_appendere_literis(aed, ff.causa);
+            si (ff.confligentia_numerus > ZEPHYRUM)
+            {
+                Xar* conf = gesta_confligentia(t->mundus,
+                    _litterae(pn, ramus_id), pn);
+                i32 i;
+
+                sprintf(numeri, "\nconfligentiae %d:",
+                    (int)ff.confligentia_numerus);
+                chorda_aedificator_appendere_literis(aed, numeri);
+                per (i = ZEPHYRUM;
+                     conf != NIHIL && i < xar_numerus(conf); i++)
+                {
+                    GestaConfligentia* c = (GestaConfligentia*)
+                        xar_obtinere(conf, i);
+
+                    si (c == NIHIL)
+                    {
+                        perge;
+                    }
+                    chorda_aedificator_appendere_literis(aed,
+                        "\n  ");
+                    chorda_aedificator_appendere_chorda(aed,
+                        c->res_id);
+                    chorda_aedificator_appendere_literis(aed,
+                        "\n    truncus: ");
+                    chorda_aedificator_appendere_chorda(aed,
+                        c->status_trunci);
+                    chorda_aedificator_appendere_literis(aed,
+                        "\n    ramus:   ");
+                    chorda_aedificator_appendere_chorda(aed,
+                        c->status_rami);
+                }
+                chorda_aedificator_appendere_literis(aed,
+                    "\n(vis: \"verum\" cogit)");
+            }
+            _textum_respondere(t, pn, effusio, id,
+                chorda_aedificator_finire(aed), FALSUM);
+            redde;
+        }
+        _tabulam_scribere(t, pn);
+        {
+            ChordaAedificator* aed = chorda_aedificator_creare(pn,
+                CCLVI);
+            character numeri[LXIV];
+
+            chorda_aedificator_appendere_literis(aed,
+                "fusio perfecta: ");
+            sprintf(numeri, "%d eventa in truncum copiata",
+                (int)ff.copiata);
+            chorda_aedificator_appendere_literis(aed, numeri);
+            chorda_aedificator_appendere_literis(aed,
+                " (origo merge:");
+            chorda_aedificator_appendere_chorda(aed, titulus);
+            chorda_aedificator_appendere_literis(aed,
+                ", attributio servata)");
+            _textum_respondere(t, pn, effusio, id,
+                chorda_aedificator_finire(aed), FALSUM);
+        }
+        redde;
+    }
+    si (_chorda_est(actus, "abicere"))
+    {
+        chorda ramus_id;
+
+        si (titulus.mensura == ZEPHYRUM)
+        {
+            _textum_respondere(t, pn, effusio, id,
+                _ch("abicere: titulus requiritur"), VERUM);
+            redde;
+        }
+        ramus_id = _ramum_solvere(t, titulus, pn);
+        si (ramus_id.mensura == ZEPHYRUM)
+        {
+            _textum_respondere(t, pn, effusio, id,
+                _ch("ramus ignotus"), VERUM);
+            redde;
+        }
+        si (!gesta_ramum_abicere(t->mundus,
+                _litterae(pn, ramus_id), actor_l))
+        {
+            ChordaAedificator* aed = chorda_aedificator_creare(pn,
+                CCLVI);
+
+            chorda_aedificator_appendere_literis(aed,
+                "abicere recusatum: ");
+            chorda_aedificator_appendere_literis(aed,
+                gesta_error(t->mundus));
+            _textum_respondere(t, pn, effusio, id,
+                chorda_aedificator_finire(aed), VERUM);
+            redde;
+        }
+        _tabulam_scribere(t, pn);
+        {
+            ChordaAedificator* aed = chorda_aedificator_creare(pn,
+                CCLVI);
+
+            chorda_aedificator_appendere_literis(aed, "ramus ");
+            chorda_aedificator_appendere_chorda(aed, titulus);
+            chorda_aedificator_appendere_literis(aed,
+                " abiectus (acta manent, lectio libera -"
+                " fingere audacter, abicere gratis)");
+            _textum_respondere(t, pn, effusio, id,
+                chorda_aedificator_finire(aed), FALSUM);
+        }
+        redde;
+    }
+    _textum_respondere(t, pn, effusio, id,
+        _ch("actus ignotus (creare|enumerare|comparare|fundere|"
+            "abicere)"), VERUM);
+}
+
 /* ==================================================
  * protocollum (sceletum legati)
  * ================================================== */
@@ -2328,10 +3019,13 @@ _toolslist_tractare (Piscina* pn, JsonValor* id, FILE* effusio)
         { "ancorae", "tabulatum JSON: [{\"genus\":\"symbolum|via\","
           "\"scopus\":\"...\",\"sigillum\":\"hex?\"}]", FALSUM },
         { "actor", "fran|claude|machina (ordinarius claude)",
-          FALSUM }
+          FALSUM },
+        { "ramus", "titulus rami activi - creatio in ramo (trunco"
+          " invisibilis usque ad fusionem)", FALSUM }
     };
     interior constans TabArgumentum ARG_GERERE[] = {
-        { "res", "res_id aut titulus exactus", VERUM },
+        { "res", "res_id aut titulus exactus (in ramo: res_id"
+          " SOLUM)", VERUM },
         { "actus", "nota|status|nexus|denexus|mutatio|remotio",
           VERUM },
         { "textus", "pro nota", FALSUM },
@@ -2343,7 +3037,9 @@ _toolslist_tractare (Piscina* pn, JsonValor* id, FILE* effusio)
         { "valor", "pro mutatione simplici (chorda)", FALSUM },
         { "datum", "pro mutatione: obiectum JSON crudum", FALSUM },
         { "actor", "fran|claude|machina (ordinarius claude)",
-          FALSUM }
+          FALSUM },
+        { "ramus", "titulus rami activi - eventus in ramo"
+          " (custodia contra statum rami)", FALSUM }
     };
     interior constans TabArgumentum ARG_QUAERERE[] = {
         { "textus", "quaestio FTS (praefixa 'termin*')", VERUM },
@@ -2352,7 +3048,23 @@ _toolslist_tractare (Piscina* pn, JsonValor* id, FILE* effusio)
         { "tag", "filtrum tagi (terminus FTS additus)", FALSUM }
     };
     interior constans TabArgumentum ARG_RES[] = {
-        { "res", "res_id aut titulus exactus", VERUM }
+        { "res", "res_id aut titulus exactus (in ramo: res_id"
+          " SOLUM)", VERUM },
+        { "ramus", "titulus rami - lectio plicaturae ramalis",
+          FALSUM }
+    };
+    interior constans TabArgumentum ARG_RAMUS[] = {
+        { "actus", "creare|enumerare|comparare|fundere|abicere",
+          VERUM },
+        { "titulus", "titulus rami (creare/comparare/fundere/"
+          "abicere)", FALSUM },
+        { "parens", "ramus parens (creare; absens = truncus)",
+          FALSUM },
+        { "res", "res_id comparandae (comparare)", FALSUM },
+        { "vis", "\"verum\" = confligentiaas cogere (fundere)",
+          FALSUM },
+        { "actor", "fran|claude|machina (ordinarius claude)",
+          FALSUM }
     };
     interior constans TabArgumentum ARG_AGERE[] = {
         { "actio", "titulus actionis exsequendae (aut"
@@ -2368,12 +3080,12 @@ _toolslist_tractare (Piscina* pn, JsonValor* id, FILE* effusio)
     json_tabulatum_addere(instrumenta, _instrumentum(pn, "addere",
         "Rem novam creare (quaestio/parcum/decretum/nota/"
         "desideratum) cum tags et ancoris optionalibus.",
-        ARG_ADDERE, VI));
+        ARG_ADDERE, VII));
     json_tabulatum_addere(instrumenta, _instrumentum(pn, "gerere",
         "Eventum unum in rem exsistentem scribere: nota, status,"
         " nexus/denexus (ligamina), mutatio, remotio. Violationes"
         " machinae notantur, non obstant.",
-        ARG_GERERE, X));
+        ARG_GERERE, XI));
     json_tabulatum_addere(instrumenta, _instrumentum(pn,
         "quaerere",
         "Quaestio FTS super statum materializatum (titulus/corpus/"
@@ -2381,8 +3093,9 @@ _toolslist_tractare (Piscina* pn, JsonValor* id, FILE* effusio)
         ARG_QUAERERE, IV));
     json_tabulatum_addere(instrumenta, _instrumentum(pn, "res",
         "Rem unam reddere: status + datum + ancorae (resolutae per"
-        " indicem; CAUTIO si inresolutae) + annales recentes.",
-        ARG_RES, I));
+        " indicem; CAUTIO si inresolutae) + actiones affordatae +"
+        " annales recentes.",
+        ARG_RES, II));
     json_tabulatum_addere(instrumenta, _instrumentum(pn, "census",
         "Census: genera x status, tags, seq/hwm.",
         NIHIL, ZEPHYRUM));
@@ -2393,6 +3106,15 @@ _toolslist_tractare (Piscina* pn, JsonValor* id, FILE* effusio)
         " processum sponte provehit). Recepta sunt codex -"
         " definitiones per semen solum.",
         ARG_AGERE, V));
+    json_tabulatum_addere(instrumenta, _instrumentum(pn, "ramus",
+        "K4: lineae temporis parallelae. creare (furca a trunco"
+        " aut parente), enumerare, comparare (res in trunco et"
+        " ramo), fundere (replay in truncum, confligentia obstat"
+        " nisi vis), ABICERE (flagship - gratis, acta manent)."
+        " truncus = veritas, rami = hypothetica; fingere audacter."
+        " Scripturae/lectiones in ramo: parametrum 'ramus' in"
+        " addere/gerere/res (ibi res_id requiritur).",
+        ARG_RAMUS, VI));
     json_objectum_ponere(resultatum, "tools", instrumenta);
     _respondere(effusio, tabellarius_responsum(pn, id,
         resultatum));
@@ -2584,6 +3306,10 @@ _toolscall_tractare (Tabularium* t, Piscina* pn, JsonValor* id,
     alioquin si (_chorda_est(titulus, "agere"))
     {
         _tab_agere(t, pn, id, argumenta, effusio);
+    }
+    alioquin si (_chorda_est(titulus, "ramus"))
+    {
+        _tab_ramus(t, pn, id, argumenta, effusio);
     }
     alioquin
     {

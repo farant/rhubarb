@@ -1083,11 +1083,23 @@ SilvaScriptura silva_c89_functionis_subscriptio(
 
 typedef struct SilvaQuaestio SilvaQuaestio;  /* compilata (opaca) */
 
+/* Captura ligata (QB): gradus catenae congruentis cum $nomine -
+ * gradus OMNES ligantur, non subiectum solum */
+typedef struct SilvaQuaestioCaptura {
+    SilvaChorda       titulus;
+    const SilvaNodus* nodus;
+} SilvaQuaestioCaptura;
+
 typedef struct SilvaQuaestioResultatum {
-    const SilvaNodus* nodus;   /* subiectum congruens */
+    const SilvaNodus* nodus;    /* subiectum congruens */
+    SilvaXar*         capturae; /* SilvaQuaestioCaptura (valore);
+                                 * NULL = catena sine capturis */
 } SilvaQuaestioResultatum;
 
 /* Selector -> quaestio compilata (reusabilis trans arbores).
+ * Superficies QA+QB: tags, *, spatium, >, virgula, +/~ (fratres),
+ * [locus op "valor"] (= ^= $= *= et exsistentia; locus PER GENUS;
+ * compositum cum tag = validatio compilationis), $nomen (capturae).
  * NULL + *causa_out (litterae staticae; NULL licet) si malformatus
  * aut tag ignotum. */
 SilvaQuaestio* silva_quaestio_compilare(SilvaPiscina* piscina,

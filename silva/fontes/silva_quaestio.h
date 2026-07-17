@@ -1,15 +1,37 @@
 /* silva_quaestio.h - machina selectorum CSS-similis super arbores
- * silvae (QUAESTIO QA; consilium = project-specs/
+ * silvae (QUAESTIO QA+QB; consilium = project-specs/
  * silva-quaestio-design.md, DECISUS 2026-07-06)
  *
- * SUPERFICIES (QA subset; QB attributa/capturae/fratres, QC
- * pseudo-classes - IR eas iam fert, parser nondum):
+ * SUPERFICIES (QA+QB; QC pseudo-classes - IR eas fert, parser
+ * nondum):
  *
  *   declaratio                    genus-tag (registro-ductus)
  *   *                             universalis
  *   definitio-functionis corpus   descendens
  *   definitio-functionis > corpus filius directus
+ *   declaratio + sententia-*      frater proximus (QB)
+ *   declaratio ~ sententia-*      frater sequens (QB)
  *   declaratio, commutatio        unio (virgula)
+ *   [locus]                       attributum exsistit (QB)
+ *   [locus="valor"]               aequalis; ^= incipit, $= desinit,
+ *                                 *= continet (QB)
+ *   tag$nomen                     captura (QB; iuxtaposita - spatium
+ *                                 = combinator)
+ *
+ * ATTRIBUTA (QB): locus PER GENUS nodi sub probatione resolvitur
+ * (nomina locorum = vocabularium annotationum, DECISUS Q2). Locus
+ * TOKEN valorem lexematis comparat (mensura-conscius); locus LISTA
+ * congruit si elementum lexematis ULLUM congruit (folium-chorda);
+ * loci non-lexematis: exsistentia = non-NIHIL, operationes
+ * comparationis = FALSUM. Compositum cum genus-tag: locus generi
+ * ignotus = fractura compilationis CLARA (viae attributorum mortuae
+ * v1 exstirpatae); compositum sine tag differt ad non-congruentiam
+ * temporis cursus. Valor citatus: octeti ad '"' clausum, SINE
+ * sequentiis fugae (LIMES NOMINATUS v1).
+ *
+ * CAPTURAE (QB): $nomen gradus OMNES catenae congruentis ligat
+ * (insectum v1 #1 exstirpatum); unio = catena congruens PRIMA
+ * ligat. congruit() booleanum manet - exsequi() ligat.
  *
  * GRAMMATICAE-IGNARA: compilare registrum coctum accipit (tags =
  * tituli generum DECISUS); modulus nullum caput c89 includit.
@@ -55,11 +77,25 @@ nomen enumeratio {
     SILVA_QUAESTIO_COMB_FRATER_SEQUENS   /* ~ (QB) */
 } SilvaQuaestioCombinator;
 
+nomen enumeratio {
+    SILVA_QUAESTIO_ATTR_EXSISTIT = 0,  /* [locus] */
+    SILVA_QUAESTIO_ATTR_AEQUALIS,      /* = */
+    SILVA_QUAESTIO_ATTR_INCIPIT,       /* ^= */
+    SILVA_QUAESTIO_ATTR_DESINIT,       /* $= */
+    SILVA_QUAESTIO_ATTR_CONTINET       /* *= */
+} SilvaQuaestioAttrOp;
+
 nomen structura {
     SilvaQuaestioParsGenus genus;
     s32                    nodi_genus;  /* PARS_GENUS: index generis */
-    /* QB/QC: attributum {locus, op, valor}, pseudo {titulus, arg},
-     * captura {titulus} hic crescent */
+    /* QB attributum: [locus op "valor"] - chordae in piscinam
+     * copiatae (quaestio selectorem superviveat) */
+    chorda                 locus_titulus;
+    s32                    attr_op;     /* SilvaQuaestioAttrOp */
+    chorda                 attr_valor;
+    /* QB captura: $nomen */
+    chorda                 captura_titulus;
+    /* QC: pseudo {titulus, arg} hic crescet */
 } SilvaQuaestioPars;
 
 /* Gradus catenae: combinator ad SINISTRAM + partes composito */
@@ -75,6 +111,7 @@ nomen structura SilvaQuaestio SilvaQuaestio;
 structura SilvaQuaestio {
     constans SilvaRegistrumCoctum* tabularium;
     Xar*                           catenae; /* Xar* graduum (unio) */
+    i32                            gradus_maximi; /* vestigia (QB) */
     /* forma ambigui (exemplar commissionis - descensus canonicus) */
     s32 genus_ambigui;
     i32 locus_interpretationum;
@@ -85,9 +122,16 @@ structura SilvaQuaestio {
  * Fructus
  * ================================================== */
 
+/* Captura ligata: gradus catenae congruentis cum $nomine (QB) */
+nomen structura {
+    chorda               titulus;
+    constans SilvaNodus* nodus;
+} SilvaQuaestioCaptura;
+
 nomen structura {
     constans SilvaNodus* nodus;   /* subiectum (compositum ultimum) */
-    /* QB: capturae (nomen -> nodus, omnes gradus catenae) */
+    Xar*                 capturae; /* SilvaQuaestioCaptura (valore);
+                                    * NIHIL = catena sine capturis */
 } SilvaQuaestioResultatum;
 
 /* ==================================================

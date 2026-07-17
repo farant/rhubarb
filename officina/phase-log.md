@@ -4531,3 +4531,37 @@ macro-domesticum-in-alieno, tractus proximus). Residentes recentes
 RE-ENTRY: hoc phase-log (fasces hodierni V) + silva/phase-log cauda
 (INTENTIO examen nova) + tabularium-gradus.md + legatus.worklog +
 scrinium/sigillum worklogs + memoria (tabula tractionum ⑥ nova).
+
+## LEGATUS: custos capitum ad didChange (2026-07-17, venatio una sessione)
+
+Classis campi K4 (impulsus falso-positivus "numerus argumentorum
+discrepat" in vocationibus rectis probatio_gesta.c) VENATA, REPRODUCTA
+DETERMINISTICE, SANATA, PINNATA una sessione. Radix: _didchange_tractare
+capita stala numquam inspiciebat - didOpen custodem habebat (2026-07-14),
+MCP geminus per _aetates_custodire numquam mentitus; via iudicii
+frequentissima sola nuda erat. Caput in disco mutatum sine eventu LSP
+(instrumentum Edit caput numquam apertum; fenestra eiusdem-secundi) =
+praeparatio mendax in aeternum.
+
+Sanatio: custos caput_stalum in _didchange_tractare POST textum novum
+(republicatio reaedificationis textum recentem iudicat - transiens
+mendax nullus; collocatio prima ANTE textum transientem verum-sed-
+molestum pariebat). Pinna: probatio_capita_nova gradus alter -
+stratum PLAGULAE (caput notum rescriptum, utime deterministicum);
+295/295, suitae 12/12.
+
+Lectio probationis: fluxus publicationum LSP = ultima-vincit; scriptum
+reproductionis primum publicationem PRIMAM legit et sanationem mortuam
+declaravit. Exhauri ad silentium.
+
+Residua nominata: fenestra eiusdem-secundi (parcum mtimes
+nanosecundorum - detector identitate secundi-granularis); custos
+stratι petitionum (hover inter mutationem disci et didChange proximum
+- exemplar MCP ad introitus LSP); harnessum transcriptorum
+interpositorum (parcum, naturale ad LEGATUSD).
+
+INSTRUMENTA: corpus (praeparator_caput_stalum/_contextum_reaedificare/
+_praeparationem_struere - navigatio tota per legati, greps nulli fere);
+vigilia ipsa bis in venatione flagravit (editio quae residentem
+senescebat) - strata staleness DUO orthogonalia demonstrata: binarium
+(vigilia) et photographia capitum (hoc insectum).

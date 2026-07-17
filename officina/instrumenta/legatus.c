@@ -1740,6 +1740,24 @@ _didchange_tractare (Legatus* l, Piscina* pn, JsonValor* params)
     {
         redde;
     }
+    /* capita stala etiam ad MUTATIONEM (venatio 2026-07-17): caput
+     * in disco mutatum SINE eventu LSP (instrumentum editionis caput
+     * numquam apertum tangit; fenestra eiusdem-secundi) praeparationem
+     * mendacem relinquebat - iudicium omnis mutationis posterioris
+     * contra photographiam veterem ("numerus argumentorum discrepat"
+     * in vocationibus rectis - gesta_agere 6-arg phantasma in campo;
+     * MCP geminus per _aetates_custodire numquam mentitus - processus
+     * duo, visiones duae). didOpen custodem iam habebat (2026-07-14);
+     * symmetria completa. POST textum novum consulto: republicatio
+     * reaedificationis (gradus ③) textum RECENTEM iudicat - transiens
+     * mendax nullus. */
+    si (l->praeparata
+        && praeparator_caput_stalum(&l->praeparatio) != NIHIL)
+    {
+        fprintf(stderr, "legatus: capita stala ad mutationem -"
+            " contextus reaedificatur\n");
+        _contextum_reaedificare(l, pn);
+    }
     _analysare_et_publicare(l, pn, doc);
 }
 

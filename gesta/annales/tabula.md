@@ -1,6 +1,6 @@
 # TABULA (proiectio tabularii - GENERATUM, noli manu edere)
 
-seq 164 - 2026-07-17T00:31:54.792Z
+seq 195 - 2026-07-17T01:58:14.383Z
 
 ## QUAESTIONES
 
@@ -30,16 +30,23 @@ seq 164 - 2026-07-17T00:31:54.792Z
 - [parcatum] Piscina mundi sub agere copioso  `gesta k3 perf`
 - [parcatum] Piscina residentis: disciplina scratch  `gesta perf messis-2026-07`
 - [parcatum] Praedefinitum attributorum  `gesta messis-2026-07`
+- [parcatum] Quaestio in legati: selectores nominati et parametrizati  `silva legatus quaestio mcp messis-2026-07`
+- [parcatum] Rami: copia plicaturae ramalis  `gesta k4 rami perf`
+- [parcatum] Rami: processus speculativi in ramis  `gesta k4 rami machinula`
+- [parcatum] Rami: quaerere conscium ramorum + nexus in ramo  `gesta k4 rami`
+- [parcatum] Rami: quaestio FTS ramalis  `gesta k4 rami fts`
+- [parcatum] Rami: resolutio confligentiae per-res  `gesta k4 rami`
 - [parcatum] Reducers machinulae: mores-ut-data  `gesta machinula officina`
 - [parcatum] Rung 4 furcae + debounce unci  `nexus perf silva messis-2026-07`
 - [parcatum] Saltuarius v0.1  `saltuarius tessera messis-2026-07`
 - [parcatum] Salus per sordidas  `gesta perf messis-2026-07`
+- [parcatum] Sessio et actor ut entia  `gesta k4`
 - [parcatum] Sigillum ancorae symboli  `gesta legatus messis-2026-07`
 - [parcatum] Silva quaestio QB-QD  `silva saltuarius messis-2026-07`
 - [parcatum] Superficies MCP definitionis receptorum  `gesta k3 mcp`
 - [parcatum] Susceptum in provectione (si susceptio umquam refert)  `gesta k3`
+- [parcatum] Sync: replicatio machinarum super branch_id  `gesta k4 fundamentum`
 - [parcatum] Tabula: nexus multi-partium redditio  `gesta messis-2026-07`
-- [tractum] Gesta K4: rami  `gesta palace messis-2026-07`
 
 ## DESIDERATA
 
@@ -68,17 +75,14 @@ seq 164 - 2026-07-17T00:31:54.792Z
 - Salus sine genere erratorum  `gesta messis-2026-07`
 - Vigilia una bibliotheca; invarians manifesti  `gesta legatus mcp officina`
 - mcp_servus: copia non extractio  `mcp legatus gesta messis-2026-07`
+- sigillum ritus: K4 sigillandum: rami + palatium (aut quod interrogatio K4 decernet) - ritus per processum ipsum ductus, instantia prima viva
 
 ## OPERA
 
 - [perfectum] exploratores
+- [perfectum] frusta
 - [perfectum] interrogatio
 - [perfectum] spec
-- [susceptum] frusta
-
-## PROCESSUS
-
-- [currens] ritus-signaculi  (interrogatio perfectus; spec perfectus; exploratores perfectus; porta-spec perfectus; frusta incohatus)
 
 ## NEXUS
 
@@ -87,3 +91,4 @@ seq 164 - 2026-07-17T00:31:54.792Z
 - Signum versionis residentis --pertinet-ad--> Vigilia binarii tabularii
 - K3 sigillatum 2026-07-16: actiones + processus in nucleo gestarum - fascis atomicus (N eventus, transactio una), porta obstat / effectus scribunt, provectio avida se-sanans per indicem membrorum; frusta tria primo cursu viridia (612 asserta, examen ACCIPE, sigillum ipsum per agere factum) --natum-de--> Gesta K3: actiones + processus
 - 01KXP19AC2GP2G6AFVR6A8PECA: ops:propositum=Gesta K4: rami interrogatio=interrogatio spec=spec exploratores=exploratores frusta=frusta
+- sigillum ritus: K4 sigillandum: rami + palatium (aut quod interrogatio K4 decernet) - ritus per processum ipsum ductus, instantia prima viva --natum-de--> Gesta K4: rami

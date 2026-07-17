@@ -119,6 +119,28 @@ _mitte (Tabularium* t, Piscina* pn, constans character* linea)
     redde fructus;
 }
 
+/* res_id ex responso "res <ID> creata" extrahere (primum "res "
+ * in textu responsi = nostrum) */
+interior vacuum
+_res_id_ex_responso (constans character* r, character* quaternio)
+{
+    constans character* p = strstr(r, "res ");
+    i32 i;
+
+    quaternio[0] = '\0';
+    si (p == NIHIL)
+    {
+        redde;
+    }
+    p += IV;
+    per (i = ZEPHYRUM; i < (i32)(GESTA_RES_ID_MENSURA - I)
+        && p[i] != '\0' && p[i] != ' '; i++)
+    {
+        quaternio[i] = p[i];
+    }
+    quaternio[i] = '\0';
+}
+
 s32 principale (vacuum)
 {
     Piscina* piscina;
@@ -692,6 +714,179 @@ s32 principale (vacuum)
     CREDO_VERUM (strstr(r, "\"result\"") != NIHIL);
     r = _mitte(t, piscina, "{nequaquam json");
     CREDO_VERUM (strstr(r, "-32700") != NIHIL);
+
+    /* XX. G17 (K4): instrumentum ramus - vita completa via MCP;
+     * parametrum ramus in addere/gerere/res; lex res_id in ramo
+     * (E2-B1); truncus caecus usque ad fusionem */
+    {
+        character rid[GESTA_RES_ID_MENSURA];
+
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":70,"
+            "\"method\":\"tools/list\"}");
+        CREDO_VERUM (strstr(r, "\"ramus\"") != NIHIL);
+        CREDO_VERUM (strstr(r, "ABICERE") != NIHIL);
+
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":71,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"ramus\",\"arguments\":{\"actus\":\"creare\","
+            "\"titulus\":\"speculatio\",\"actor\":\"fran\"}}}");
+        CREDO_VERUM (strstr(r, "creatus") != NIHIL);
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":72,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"ramus\",\"arguments\":{\"actus\":\"creare\","
+            "\"titulus\":\"speculatio\"}}}");
+        CREDO_VERUM (strstr(r, "recusatum") != NIHIL);
+
+        /* addere in ramo - trunco invisibilis */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":73,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"addere\",\"arguments\":{\"genus\":\"nota\","
+            "\"titulus\":\"cogitatio ramalis\",\"ramus\":"
+            "\"speculatio\",\"actor\":\"fran\"}}}");
+        CREDO_VERUM (strstr(r, "in ramo speculatio") != NIHIL);
+        _res_id_ex_responso(r, rid);
+        CREDO_VERUM (rid[0] != '\0');
+
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":74,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"quaerere\",\"arguments\":{\"textus\":"
+            "\"cogitatio\"}}}");
+        CREDO_VERUM (strstr(r, "nihil inventum") != NIHIL);
+        {
+            character linea[CCLVI];
+
+            sprintf(linea, "{\"jsonrpc\":\"2.0\",\"id\":75,"
+                "\"method\":\"tools/call\",\"params\":{\"name\":"
+                "\"res\",\"arguments\":{\"res\":\"%s\"}}}", rid);
+            r = _mitte(t, piscina, linea);
+            CREDO_VERUM (strstr(r, "res ignota") != NIHIL);
+
+            /* res cum ramo (res_id) - plicatura ramalis redditur */
+            sprintf(linea, "{\"jsonrpc\":\"2.0\",\"id\":76,"
+                "\"method\":\"tools/call\",\"params\":{\"name\":"
+                "\"res\",\"arguments\":{\"res\":\"%s\",\"ramus\":"
+                "\"speculatio\"}}}", rid);
+            r = _mitte(t, piscina, linea);
+            CREDO_VERUM (strstr(r, "in ramo speculatio") != NIHIL);
+            CREDO_VERUM (strstr(r, "cogitatio ramalis") != NIHIL);
+
+            /* LEX E2-B1: titulus in ramo recusatur */
+            r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\","
+                "\"id\":77,\"method\":\"tools/call\",\"params\":"
+                "{\"name\":\"res\",\"arguments\":{\"res\":"
+                "\"cogitatio ramalis\",\"ramus\":"
+                "\"speculatio\"}}}");
+            CREDO_VERUM (strstr(r, "res_id requiritur") != NIHIL);
+
+            /* gerere in ramo (nota) */
+            sprintf(linea, "{\"jsonrpc\":\"2.0\",\"id\":78,"
+                "\"method\":\"tools/call\",\"params\":{\"name\":"
+                "\"gerere\",\"arguments\":{\"res\":\"%s\","
+                "\"actus\":\"nota\",\"textus\":\"adnotatio"
+                " ramalis\",\"ramus\":\"speculatio\",\"actor\":"
+                "\"fran\"}}}", rid);
+            r = _mitte(t, piscina, linea);
+            CREDO_VERUM (strstr(r, "in ramo speculatio") != NIHIL);
+
+            /* nexus in ramo nondum */
+            sprintf(linea, "{\"jsonrpc\":\"2.0\",\"id\":79,"
+                "\"method\":\"tools/call\",\"params\":{\"name\":"
+                "\"gerere\",\"arguments\":{\"res\":\"%s\","
+                "\"actus\":\"nexus\",\"verbum\":\"impedit\","
+                "\"alterum\":\"x\",\"ramus\":\"speculatio\"}}}",
+                rid);
+            r = _mitte(t, piscina, linea);
+            CREDO_VERUM (strstr(r, "nondum sustentus") != NIHIL);
+
+            /* comparare: truncus absens, ramus praesens */
+            sprintf(linea, "{\"jsonrpc\":\"2.0\",\"id\":80,"
+                "\"method\":\"tools/call\",\"params\":{\"name\":"
+                "\"ramus\",\"arguments\":{\"actus\":\"comparare\","
+                "\"titulus\":\"speculatio\",\"res\":\"%s\"}}}",
+                rid);
+            r = _mitte(t, piscina, linea);
+            CREDO_VERUM (strstr(r, "(absens)") != NIHIL);
+            CREDO_VERUM (strstr(r, "ramus speculatio") != NIHIL);
+
+            /* fundere - copiae in truncum, FTS nunc videt */
+            r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\","
+                "\"id\":81,\"method\":\"tools/call\",\"params\":"
+                "{\"name\":\"ramus\",\"arguments\":{\"actus\":"
+                "\"fundere\",\"titulus\":\"speculatio\","
+                "\"actor\":\"fran\"}}}");
+            CREDO_VERUM (strstr(r, "fusio perfecta") != NIHIL);
+            r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\","
+                "\"id\":82,\"method\":\"tools/call\",\"params\":"
+                "{\"name\":\"quaerere\",\"arguments\":{\"textus\":"
+                "\"cogitatio\"}}}");
+            CREDO_VERUM (strstr(r, "cogitatio ramalis") != NIHIL);
+            sprintf(linea, "{\"jsonrpc\":\"2.0\",\"id\":83,"
+                "\"method\":\"tools/call\",\"params\":{\"name\":"
+                "\"res\",\"arguments\":{\"res\":\"%s\"}}}", rid);
+            r = _mitte(t, piscina, linea);
+            CREDO_VERUM (strstr(r, "res ignota") == NIHIL);
+        }
+
+        /* abicere flagship: vilis, resolutio titulorum activos
+         * solos videt - scriptura in abiectum iam per titulum
+         * inattingibilis */
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":84,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"ramus\",\"arguments\":{\"actus\":\"creare\","
+            "\"titulus\":\"vitrina\"}}}");
+        CREDO_VERUM (strstr(r, "creatus") != NIHIL);
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":85,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"ramus\",\"arguments\":{\"actus\":\"abicere\","
+            "\"titulus\":\"vitrina\"}}}");
+        CREDO_VERUM (strstr(r, "abiectus") != NIHIL);
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":86,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"addere\",\"arguments\":{\"genus\":\"nota\","
+            "\"titulus\":\"post mortem\",\"ramus\":"
+            "\"vitrina\"}}}");
+        CREDO_VERUM (strstr(r, "ramus ignotus") != NIHIL);
+    }
+
+    /* XXI. G18 (K4): census 'rami activi'; tabula sectio RAMI
+     * (activi soli); semen v4 genus ramus praesens */
+    {
+        constans character* tb;
+
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":87,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"ramus\",\"arguments\":{\"actus\":\"creare\","
+            "\"titulus\":\"manens\"}}}");
+        CREDO_VERUM (strstr(r, "creatus") != NIHIL);
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":88,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"census\",\"arguments\":{}}}");
+        CREDO_VERUM (strstr(r, "rami activi 1") != NIHIL);
+        r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":89,"
+            "\"method\":\"tools/call\",\"params\":{\"name\":"
+            "\"ramus\",\"arguments\":{\"actus\":"
+            "\"enumerare\"}}}");
+        CREDO_VERUM (strstr(r, "manens [activus]") != NIHIL);
+        CREDO_VERUM (strstr(r, "speculatio [fusus]") != NIHIL);
+        CREDO_VERUM (strstr(r, "vitrina [abiectus]") != NIHIL);
+        tb = _plagula_litterae(piscina, VIA_TB);
+        CREDO_VERUM (strstr(tb, "## RAMI") != NIHIL);
+        CREDO_VERUM (strstr(tb, "manens") != NIHIL);
+        {
+            GestaMundus* sonda = gesta_aperire(piscina, VIA_DB,
+                VIA_AN);
+
+            CREDO_NON_NIHIL (sonda);
+            si (sonda != NIHIL)
+            {
+                chorda c = gesta_genus_datum(sonda, "ramus",
+                    piscina);
+
+                CREDO_VERUM (c.mensura > ZEPHYRUM);
+                gesta_claudere(sonda);
+            }
+        }
+    }
 
     credo_imprimere_compendium();
     praeteritus = credo_omnia_praeterierunt();

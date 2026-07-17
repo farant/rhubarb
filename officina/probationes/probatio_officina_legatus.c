@@ -1834,6 +1834,43 @@ probatio_capita_nova (Piscina* p)
             praeparatio.viae_capitum, "specimen_caput_novum.h",
             &valor));
     }
+    /* gradus alter (venatio 2026-07-17, classis campi): caput
+     * NOTUM contento mutato - stratum PLAGULAE detectoris, non
+     * directorii (rescriptio mtime directorii non pulsat). In
+     * campo: gesta.h mutatum sine eventu LSP -> praeparatio
+     * mendax -> "numerus argumentorum discrepat" in vocationibus
+     * rectis. Detector hic; filatio didChange custodita in
+     * legatus.c (probatio viva per transcriptum LSP scriptum -
+     * vide legatus.worklog.md; harnessum interpositum = parcum). */
+    CREDO_VERUM(praeparator_caput_stalum(&praeparatio) == NIHIL);
+    {
+        FILE* pl = fopen(via_capitis, "wb");
+        structura utimbuf tempora;
+
+        CREDO_NON_NIHIL(pl);
+        si (pl != NIHIL)
+        {
+            fputs("typedef long specimen_novum_t;\n", pl);
+            fclose(pl);
+        }
+        /* tempus alterum deterministicum (granularitas secundi) */
+        tempora.actime = 2000000L;
+        tempora.modtime = 2000000L;
+        CREDO_VERUM(utime(via_capitis, &tempora) == ZEPHYRUM);
+    }
+    {
+        constans character* stalum =
+            praeparator_caput_stalum(&praeparatio);
+
+        CREDO_NON_NIHIL(stalum);
+        CREDO_VERUM(stalum != NIHIL
+            && strstr(stalum, "specimen_caput_novum.h") != NIHIL);
+    }
+    /* reaedificatio sanat */
+    praeparator_destruere(&praeparatio);
+    CREDO_VERUM(praeparator_praeparare(&praeparatio,
+        piscina_capitum, &cfg) != ZEPHYRUM);
+    CREDO_VERUM(praeparator_caput_stalum(&praeparatio) == NIHIL);
     praeparator_destruere(&praeparatio);
     piscina_destruere(piscina_capitum);
     remove(via_capitis);

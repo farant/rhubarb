@@ -893,9 +893,68 @@ int main(void)
         {
             fideles++;
         }
+
         else
         {
             fprintf(stderr, "hospes: INFIDELIS: quaestio\n");
+        }
+
+        /* QB: attributum + captura omnium graduum + frater - per
+         * amalgama (custos SilvaQuaestioCaptura in silva.h) */
+        summa++;
+        {
+            const char* causa_b = NULL;
+            SilvaQuaestio* q_attr = silva_quaestio_compilare(
+                piscina, &SILVA_C89_REGISTRUM,
+                "definitio-functionis$f"
+                " declarator-titulus[tok_titulus=\"y\"]$t",
+                &causa_b);
+            SilvaQuaestio* q_frater = silva_quaestio_compilare(
+                piscina, &SILVA_C89_REGISTRUM,
+                "declaratio + sententia-expressionis", &causa_b);
+            int bene_b = 0;
+
+            if (parsura != NULL && q_attr != NULL
+                && q_frater != NULL)
+            {
+                SilvaXar* ra = silva_quaestio_exsequi(q_attr,
+                    parsura->commissio->radix, piscina);
+                SilvaXar* rf = silva_quaestio_exsequi(q_frater,
+                    parsura->commissio->radix, piscina);
+
+                if (ra != NULL && silva_xar_numerus(ra) == 1
+                    && rf != NULL && silva_xar_numerus(rf) == 1)
+                {
+                    SilvaQuaestioResultatum* r =
+                        (SilvaQuaestioResultatum*)
+                        silva_xar_obtinere(ra, 0);
+
+                    if (r != NULL && r->capturae != NULL
+                        && silva_xar_numerus(r->capturae) == 2)
+                    {
+                        SilvaQuaestioCaptura* cap =
+                            (SilvaQuaestioCaptura*)
+                            silva_xar_obtinere(r->capturae, 1);
+
+                        if (cap != NULL && cap->nodus == r->nodus
+                            && cap->titulus.mensura == 1
+                            && cap->titulus.datum != NULL
+                            && cap->titulus.datum[0] == 't')
+                        {
+                            bene_b = 1;
+                        }
+                    }
+                }
+            }
+            if (bene_b)
+            {
+                fideles++;
+            }
+            else
+            {
+                fprintf(stderr,
+                    "hospes: INFIDELIS: quaestio-qb\n");
+            }
         }
 
         /* fractura clara: tag ignotum = NULL + causa */

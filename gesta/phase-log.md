@@ -953,3 +953,76 @@ abicere}, parametrum ramus in addere/gerere/res + lex E2-B1
 (res_id in ramo requiritur), census/tabula RAMI, doctrina v5,
 deploy vivus, G17-G18, SIGILLUM PER RITUM CURRENTEM (opus frusta
 perfectum -> porta-sigilli -> sigillare sponte).
+
+## RELATIO K4 FRUSTUM C + SIGILLUM K4 (2026-07-17)
+
+AEDIFICATUM (tenens): semen v4 genus ramus (SEMINA_NUMERUS X;
+DIVERGENTIA POSSESSA: parens NON necessarium - radix fert "" et
+lex chordae vacuae salutis eam absentem numeraret); instrumentum
+MCP ramus {creare|enumerare|comparare|fundere|abicere} cum
+resolutione per titulum inter ACTIVOS (_ramum_solvere; res_id pro
+archaeologia fusorum/abiectorum); parametrum ramus in addere/
+gerere/res cum LEGE E2-B1 verbatim ("in ramo res_id requiritur -
+resolutio tituli truncalis est"); nexus/denexus in ramo RECUSATI
+(saccharum multi-scripturae + resolutio truncalis = fovea; parcum
+filatum); census linea "rami activi N"; tabula sectio RAMI (activi
+soli - lineae apertae quas sessio sequens videre debet); doctrina
+v5 (grammatica ramorum + "truncus = veritas, rami = hypothetica;
+ABICERE GRATIS - fingere audacter").
+
+PROBATIONES: G17 (vita completa per MCP: creatio/duplicatus
+recusatus/addere-in-ramo/FTS caecum/lex res_id/gerere-in-ramo/
+nexus-nondum/comparare-absens/fusio/FTS-post-fusionem/abicere/
+scriptura-in-abiectum-per-titulum-inattingibilis) + G18 (census
+rami-activi, enumerare tri-status, tabula RAMI, semen v4).
+Asserta tabularium 114 -> 144; gesta 680 intacta. Primo cursu
+viridia - insecta in fuga frusti C: ZEPHYRUM (structura una
+si-catenae in gerere ante compilationem reordinata: custodia ante
+declarationes C89).
+
+DEPLOY VIVUS: binarium 153ec1932cdd6f5c (praestructum, reconnexus
+Frani); semen v4 in reconnexu (seq 161->165); census "rami activi
+0" vivus. PROBATIO FUMI FLAGSHIP: ramus probatio-vivi natus ->
+nota "cogitatio hypothetica" in ramo creata (trunco invisibilis,
+FTS nihil invenit, comparare "truncus: (absens)") -> ABIECTUS.
+Cogitatio nata et abiecta sine vestigio in trunco - casus usus
+princeps K4 vivus.
+
+SIGILLUM PER RITUM VIVUM (2026-07-17T00:51:14): opus frusta
+perfectum (effectus mutatione scriptum) -> CASCADE MILLISECUNDORUM
+SEX in annalibus instantiae: gradus-perfectus frusta (.121) ->
+porta-perfecta porta-sigilli (.123) -> actio-acta sigillare (.124:
+claudere-cum-decreto in parcum K4 - decretum natum, nexus
+natum-de, nota + status clausum, actor MACHINA OMNIA) ->
+gradus-perfectus sigillare (.126) -> processus-perfectus (.127).
+PARCUM K4 CLAUSUM MANU MACHINAE - primo ictu, sine recusatione
+(parcum tractum erat ex initio aedificationis). QUIRK ACCEPTUM:
+textus decreti cur_sigilli in instantiatione ligatum fert ("rami +
+palatium (aut quod interrogatio K4 decernet)") - nomen parci
+ante-fissionem; provenientia honesta, photographia D9 recte
+functa.
+
+BARRAE SIGILLI: I. suitae 680+144 virides (III mundi novi m6/m7 +
+sectiones MCP XX/XXI). II. verificatio_sigilli in copia
+WAL-plena: annales == acta TENET (seq 183 - ordines ramorum vivos
+inclusos, comparatio INTENSA branch_id 1:1), replicatio == stantes
+TENET (res 77 octetim; plicaturae puritate WHERE ramos recte
+praetermittunt). III. deploy vivus + fumus flagship. IV. parca
+§X spec-v2 filata VII (confligentia per-res, copia plicaturae,
+FTS ramalis, processus speculativi, sessio/actor, SYNC super
+branch_id, quaerere-conscium+nexus-in-ramo).
+
+K4 MILESTONE: frusta tria diebus duobus, insectum UNUM in fuga
+toto milestone (decipula _chorda_tuta frusti A - tertius
+contextus eius). Ledger divergentiarum D1-D9 totus exsecutus:
+quattuor insecta oraculi demonstrabiliter NON habita (G3 tectum
+per-nexum, actor servatus per fusionem, sonda D4, generis
+recusatio D5). Ritus per processum vivum ductus AB INITIO AD
+SIGILLUM - interrogatio suscepta intra instantiam, sigillum ab
+actione instantiae ipsius scriptum. Machina quam aedificavimus
+suum proprium aedificatum sigillavit.
+
+PROXIMUM: K5 palatium (parcum 01KXP9XNE4 parcatum; fontes
+docs/{memory-palace,palace-2,palace-v2-rendering,npc-spec}.md in
+../bun-libraries) - ritus novus incipiet ibi; aut quod Fran
+trahat.

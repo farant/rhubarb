@@ -7689,3 +7689,99 @@ TACITE inter cursus (drift phase A latuit diem — inventum solum quia
 barra ③ cursum coegit); nota, non postulatum: cursus 50s = custodia
 cara, re-pin ad barras milestone sufficere videtur. DESIDERATUM:
 nihil novum.
+
+## QUAESTIO QB — INTENTIO (2026-07-17)
+
+Pull: Fran (quaestio→legati MCP + named/parameterized selectors parked
+as 01KXPV9FPK; parameterization NEEDS attributes = QB). Re-entry find:
+the QA-closing act ALREADY SHIPPED 2026-07-08 (clausura RELATIO) — the
+memory hint was stale; protocol paid. Scope = QB per design DECISUS:
+attributa [locus op "valor"], capturae $nomen, fratres +/~.
+
+Decisions for this build:
+- IR: SilvaQuaestioPars grows {locus_titulus, attr_op, attr_valor,
+  captura_titulus} (chordae COPIED into piscina — query object outlives
+  the selector string). Attr ops: EXSISTIT (bare [locus]), AEQUALIS =,
+  INCIPIT ^=, DESINIT $=, CONTINET *=.
+- Attribute semantics: locus resolved PER-GENUS at match time (hint);
+  COMPILE-TIME validation when the compound carries a genus tag — locus
+  ignotus = loud fracture (bug #3 dead-attr-paths designed out at the
+  strongest point available); tag-less compounds defer to runtime
+  no-match. TOKEN locus compares token->valor (mensura-aware);
+  LISTA locus matches if ANY token element matches (folium-chorda
+  precedent); non-token loci: EXSISTIT = non-NIHIL, comparison ops =
+  FALSUM (documented in header). Quoted valor = bytes to closing '"',
+  NO escape sequences v1 (NAMED LIMIT; path back = lexer escape arm
+  when a fixture needs an embedded quote).
+- Capturae: $nomen juxtaposed as pars (space = combinator, so binding
+  is tag$nomen / ]$nomen adjacency); matching-neutral; ALL HOPS bound
+  (v1 bug #1): _catenae_congruit gains a vestigia out-array (slot per
+  gradus, written on the success path AFTER upstream succeeds — retry
+  overwrites die with their failed paths); congruit() signature stays
+  boolean (vestigia NIHIL); exsequi binds. Result grows capturae Xar
+  (SilvaQuaestioCaptura {titulus, nodus}; NIHIL = none — allocated
+  only when the matched catena carries captures). Union: FIRST
+  matching catena binds. gradus_maximi precomputed at compile;
+  vestigia allocated once per exsequi.
+- Fratres: siblings = elements of the node's CONTAINING LISTA in
+  pater's loci (walk loci, scan listae for the node); interleaved
+  token elements (congeries commas) skipped; node held in a direct
+  NODUS locus has no siblings (+/~ fail honestly). + = nearest
+  preceding NODUS element; ~ = any preceding.
+- Public surface: SilvaQuaestioCaptura + capturae field mirrored BY
+  HAND in silva.h (transparent structs live in both — the amalgam-ABI
+  law: fontes and silva.h edited same-change); CADENDA_TYPEDEF +=
+  SilvaQuaestioCaptura; hospes QB calls with content asserts;
+  amalgamare gates.
+
+Bar: probatio extensions — five ops incl. prefix/suffix/substring,
+bare existence, compile fracture on locus-ignotus-with-tag, runtime
+no-match on tag-less unknown locus, lista-token match, captures
+all-hops + union-first-wins, sibling counts +/~ with interleaved
+separators, congruit boolean unchanged. Suite green, hospes green,
+amalgam VERIFICATUM, fidelitas untouched (no lexer/grammar edits).
+QC (pseudos) and QD (translated v1 bar) stay next-by-name.
+
+### QUAESTIO QB — RELATIO (2026-07-17): attributa/capturae/fratres SHIPPED
+
+**Suite 30/30 (probatio_quaestio 38→86 asserta, tier temporis cursus
+primo cursu viridis); hospes 32/32; amalgama VERIFICATUM.** Superficies
+QB tota: attributa [locus op "valor"] (quinque operationes = ^= $= *=
++ exsistentia nuda; resolutio PER GENUS ad congruentiam; validatio
+compilationis cum genus-tag praesente — "locus generi ignotus" fractura
+CLARA, compositum sine tag ad tempus cursus differt; TOKEN valorem
+comparat mensura-conscius, LISTA elemento ULLO congruit
+[folium-chorda], non-lexema exsistentia sola); capturae $nomen
+(iuxtapositae; gradus OMNES catenae ligati per vestigia — quaternio
+scriptus in VIA VICTRICE SOLA post successum superiorem, retentationes
+mortuae vestigia secum ferunt; insectum v1 #1 exstirpatum probatum;
+unio = catena PRIMA ligat; sine capturis = NIHIL sine allocatione);
+fratres +/~ (lista continens in patre, lexemata interposita
+transilita — virgulae congeriei pinnatae [folium + folium = II inter
+commata], nodus in loco NODO directo sine fratribus honeste).
+
+INVENTA: (1) murus i32-insignatus TERTIO in auctorem suum — _locum_
+invenire -I reddens + sedes/i decrementum sub zephyrum; functiones
+index-aut-minus-unum s32 reddant SEMPER (classis eadem ac firing QA).
+(2) hospes: insertio in "if (x) { }" sine else legendo — else orbum
+syntaxin fregit; et sanatio prima PANICA (hack etiquettae) statim
+reversa; lex: syntaxin numquam sarci, restructura. (3) arbor.sh formas
+congeriei/folii-chordae ANTE asserta pinnavit — pinnae sine
+coniectura, cursus primus viridis.
+
+LIMITES NOMINATI: sequentiae fugae in valore citato ABSUNT (via
+retro: bracchium fugarum in lectore cum fixtura citationem internam
+petat; CONTINET interea sufficit — demonstratum in probatio
+folii-chordae). Validatio loci trans-genus (compositum-tag +
+attributum generis alieni) impossibilis per constructionem — locus
+per genus SUI nodi semper.
+
+RE-ENTRY FIND: actus claudens QA iam 2026-07-08 navigaverat (RELATIO
+clausurae) — monitum memoriae stalum erat; protocollum "numquam ex
+summario" iterum solvit.
+
+PROXIMA BY NAME: QC pseudo-classes (:habet/:non/:lectiones/:vocat...;
+monita machinae in memoria topica) → QD barra v1 translata (100
+asserta, tags Anglici → DECISUS). Parcum 01KXPV9FPK (quaestio in
+legati MCP + selectores nominati/parametrizati — parametrizatio EST
+attributa, dependentia nunc soluta) trahitur post QD.

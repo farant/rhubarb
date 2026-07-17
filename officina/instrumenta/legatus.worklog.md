@@ -644,3 +644,56 @@ ns-precision mtimes. cfg.fabrica_via → cfg.via_manifesti;
 transcripts stayed green without re-blessing. Note:
 probatio_officina_legatus is REICE under examen (utime fixtures)
 — PRE-EXISTING, count went 7→6 with this change.
+
+## 2026-07-17 — didChange capita-staleness guard (the K4 false-positive burst)
+
+FIELD SYMPTOM (K4 chunk A, gesta session): diagnostics push flagged
+five gesta_agere calls in probatio_gesta.c with "numerus argumentorum
+discrepat" + "monstratores incompatibiles" — calls that were CORRECT
+(7 args). Same moment, MCP diagnostica said ACCIPE. Two processes,
+two views: the MCP twin re-checks capita at every request entry
+(_aetates_custodire); the LSP resident's didChange path judged with
+NO staleness check at all. Its praeparatio still held a PRE-ACTOR
+gesta.h snapshot (6-param gesta_agere) — 7-arg calls against it =
+arity + shifted-position pointer errors, exactly the burst. The lie
+persisted until some header event finally fired a rebuild.
+
+THE HOLE (asymmetry audit): didOpen had the caput_stalum guard
+(2026-07-14, new-header arc); didSave rebuilds for .h and no-ops for
+.c; didChange — the HIGHEST-frequency judgment path — had nothing.
+A header changed on disk without an LSP event (Edit tool touching a
+never-opened header; same-second window) poisoned every subsequent
+didChange judgment indefinitely.
+
+REPRO: deterministic, scripted LSP session (python driver, scratch):
+didOpen consumer clean → rewrite header ON DISK ONLY → didChange
+consumer with corrected call → false "numerus argumentorum
+discrepat" on a correct call. First run.
+
+FIX: the didOpen guard mirrored into _didchange_tractare — placed
+AFTER _documentum_textum_ponere deliberately, so the rebuild's
+step-③ republication judges the NEW text (no stale-flavored
+transient publish; first placement BEFORE the text update produced a
+transient true-at-that-instant mismatch publish, superseded but
+noisy). Verified: all publishes clean post-fix.
+
+REPRO-SCRIPT LESSON: my first driver read the FIRST
+publishDiagnostics per file and declared the fix dead — the rebuild
+emits transient + final publishes; LSP semantics are last-wins.
+Drain to silence before judging a publish stream.
+
+PINNED: probatio_capita_nova gained the FILE-tier gradus (known
+header, content rewritten, utime-deterministic 2000000L) — the dir
+tier alone misses rewrites (fopen "wb" on existing file never bumps
+parent dir mtime). 295/295; 12/12 suites.
+
+RESIDUALS (named): (1) same-second window remains — detector
+compares second-granular st_mtime by identity; nanosecond-mtimes
+park unchanged (st_mtimespec on Darwin, praeparator_tempus_plagulae
++ PraeparatorCaputTempus.tempus widen together). (2) hover/
+definition REQUESTS between a disk header change and the next
+didChange/didOpen still answer from the stale world — request-tier
+guard (MCP's _aetates_custodire pattern at LSP request entry) =
+follow-up candidate, lower stakes. (3) interleaved-transcript
+engine harness (batch model can't mutate disk mid-conversation) =
+park; natural at LEGATUSD (socket transport).
