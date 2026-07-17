@@ -28,7 +28,7 @@ declare -a INCLUDE_FLAGS=(
 )
 declare -a RADIX_FONTES=(
     "piscina" "chorda" "chorda_aedificator" "xar" "tabula_dispersa"
-    "friatio" "internamentum"
+    "friatio" "internamentum" "vigilia" "sigillum"
 )
 
 # Obiecta vetusta capitibus novis = valores enum falsi (exemplar
@@ -62,6 +62,15 @@ EXAMEN_SRC="$SILVA_DIR/instrumenta/principalia/examen.c"
 EXAMEN_BIN="$BUILD_DIR/examen"
 clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" "$EXAMEN_SRC" $obj_files \
     -o "$EXAMEN_BIN" || exit 1
+
+# manifestum vigiliae (invarians: aedificator indicem VERUM scribit -
+# binarium directe vocatum contra hunc fontes suos vigilat)
+{
+    for f in "${RADIX_FONTES[@]}"; do echo "$RADIX_DIR/lib/$f.c"; done
+    ls "$SILVA_DIR"/fontes/*.c "$SILVA_DIR"/fontes/*.h
+    echo "$EXAMEN_SRC"
+    ls "$RADIX_DIR"/include/*.h
+} > "$BUILD_DIR/examen.manifestum"
 
 cd "$RADIX_DIR"
 exec "$EXAMEN_BIN" "$@"

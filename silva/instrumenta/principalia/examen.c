@@ -20,6 +20,7 @@
 #include "piscina.h"
 #include "xar.h"
 #include "chorda.h"
+#include "vigilia.h"
 #include "tabula_dispersa.h"
 #include "silva_token.h"
 #include "silva_nodus.h"
@@ -209,6 +210,33 @@ s32 principale (integer argc, character** argv)
     }
 
     piscina = piscina_generare_dynamicum("examen", 268435456);
+    si (piscina != NIHIL)
+    {
+        /* vigilia sui (2026-07-17): binarium hoc SOLUM examen.sh
+         * religat - vocatio directa (circuli celeres) post
+         * editionem fontium binarium VETUSTUM currit tacite
+         * (decipula 2026-07-16: "custos alienitatis non operatur"
+         * = custos in binario numquam erat). Manifestum involucrum
+         * scribit (invarians aedificatoris); absentia = quieta.
+         * Cautio in STDERR solum - effusum -machina intactum. */
+        VigiliaConfiguratio vc;
+        Vigilia* vigilia;
+
+        vc.signum = NIHIL;
+        vc.via_binarii = argv[ZEPHYRUM];
+        vc.via_manifesti = "silva/build/examen.manifestum";
+        vigilia = vigilia_creare(piscina, &vc);
+        si (vigilia != NIHIL
+            && vigilia_inspicere(vigilia, piscina)
+                == VIGILIA_FONTES_SUPERANT)
+        {
+            /* nuntius proprius (cautio bibliothecae residentibus
+             * scripta est - "/mcp reconnect" hic fallax) */
+            fprintf(stderr, "CAUTIO examen: binarium vetustius"
+                " fontibus (%s) - per ./silva/examen.sh recurre\n",
+                vigilia_causa(vigilia));
+        }
+    }
     si (piscina == NIHIL)
     {
         fprintf(stderr, "examen: piscina deest\n");

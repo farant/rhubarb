@@ -8031,3 +8031,35 @@ INSTRUMENTA DEBRIEF (more domus):
 - desiderata: none new (phasis II items named above; oracle-
   specimen calibration could become a small fixture convention if
   a third oracle-paired tier appears).
+
+## Sequela debrief: differentia.sh + vigilia examinis (2026-07-17)
+
+Two instruments from the conversio-signi debrief, built same-day on
+Fran's pull:
+
+DIFFERENTIA (./silva/differentia.sh <plagula> [-posix]): our
+judgment vs the clang oracle on one file, three buckets per
+oracle-paired tier — CONSENSUS / NOS SOLI (false-positive suspects)
+/ ORACULUM SOLUM (misses or named limits). Tier table in the script
+(codex 54 <-> -Wsign-conversion; phasis-II comparisons tier adds a
+row). Judgment side goes through examen.sh (ALWAYS the wrapper —
+the stale-binary trap is why this script exists); oracle stderr
+captured correctly ONCE (2>&1 — the all-zeros-table lesson).
+Verified: fixture 4/4 CONSENSUS; flatura consensus plenus; enum
+named-limit specimen -> ORACULUM SOLUM row + exit 1. Eyes-tool,
+not a gate (gates = vectis).
+
+VIGILIA EXAMINIS: lib/vigilia (generalized 2026-07-16, legatus/
+tabularium seed) wired into the examen binary — examen.sh writes
+silva/build/examen.manifestum (aedificator-invariant: the TRUE
+list it compiles: 8 lib fontes + silva/fontes *.c+*.h + examen.c +
+include/*.h), binary checks fontes-superant at startup, one CAUTIO
+line to STDERR naming the offender ("per ./silva/examen.sh
+recurre" — the lib's resident message says /mcp reconnect, wrong
+for a CLI, composed our own from vigilia_causa). -machina stdout
+BYTE-IDEM under warning (diff-verified). Live bar 3/3: fresh
+quiet / touched fontes warns with exact path / rebuild heals.
+Link find: vigilia.o needs sigillum.o (RADIX_FONTES += vigilia,
+sigillum). Fast direct-binary loops are now safe BY DETECTION.
+Ceteri binaria subsellii (censor...) get the same ~20 lines on
+next touch — pattern proven here.
