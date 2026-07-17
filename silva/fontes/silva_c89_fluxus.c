@@ -101,7 +101,50 @@ _blocus_novus (FluxusAedificator* aed)
     b->margines = xar_creare(aed->piscina, (i32)magnitudo(FluxusMargo));
     b->attingibilis = FALSUM;
     b->titulus_dux = NIHIL;
+    b->plicatione_exemptus = FALSUM;
     redde b;
+}
+
+/* Conditio macro-tincta? (folium per parentheses, lexema cuius
+ * radix originis a se differt = expansum). Pro exemptione codicis
+ * 65: si (DEBUG) disabilitatum clang quoque tacet; si (0)
+ * litterale flagrat. */
+interior b32
+_conditio_macro_tincta (FluxusAedificator* aed, SilvaValor conditio_v)
+{
+    constans SilvaNodus* n = _nodalis(conditio_v);
+    SilvaValor tok_v;
+
+    dum (n != NIHIL)
+    {
+        n = _canonicum_per(aed, n);
+        si (n->genus != (s32)SILVA_C89_GENUS_PARENTHESIS)
+        {
+            frange;
+        }
+        n = _nodalis(silva_c89_parenthesis_internum(n));
+    }
+    si (n == NIHIL)
+    {
+        redde FALSUM;
+    }
+    si (n->genus == (s32)SILVA_C89_GENUS_FOLIUM_INTEGER)
+    {
+        tok_v = silva_c89_folium_integer_tok_valor(n);
+    }
+    alioquin si (n->genus == (s32)SILVA_C89_GENUS_FOLIUM_IDENTIFICATOR)
+    {
+        tok_v = silva_c89_folium_identificator_tok_valor(n);
+    }
+    alioquin
+    {
+        redde FALSUM;
+    }
+    si (tok_v.genus != SILVA_VALOR_TOKEN)
+    {
+        redde FALSUM;
+    }
+    redde silva_token_radix(tok_v.datum.token) != tok_v.datum.token;
 }
 
 interior vacuum
@@ -406,6 +449,11 @@ _si_fluere (FluxusAedificator* aed, constans SilvaNodus* nodus)
     {
         _margo_addere(apertura, (s32)FLUXUS_MARGO_VERUS, dein, nodus);
     }
+    alioquin
+    {
+        dein->plicatione_exemptus = _conditio_macro_tincta(aed,
+            conditio_v);
+    }
     aed->currens = dein;
     _sententiam_ambulare(aed, _nodalis(silva_c89_si_consequens(nodus)));
     dein_finis = aed->currens;
@@ -418,6 +466,11 @@ _si_fluere (FluxusAedificator* aed, constans SilvaNodus* nodus)
         {
             _margo_addere(apertura, (s32)FLUXUS_MARGO_FALSUS,
                 alterum, nodus);
+        }
+        alioquin
+        {
+            alterum->plicatione_exemptus = _conditio_macro_tincta(
+                aed, conditio_v);
         }
         aed->currens = alterum;
         _sententiam_ambulare(aed, alterum_n);
@@ -460,9 +513,20 @@ _dum_fluere (FluxusAedificator* aed, constans SilvaNodus* nodus)
     {
         _margo_addere(caput, (s32)FLUXUS_MARGO_VERUS, corpus_b, nodus);
     }
+    alioquin
+    {
+        corpus_b->plicatione_exemptus = _conditio_macro_tincta(aed,
+            conditio_v);
+    }
     si (!constansne || valor == ZEPHYRUM)
     {
         _margo_addere(caput, (s32)FLUXUS_MARGO_FALSUS, postis, nodus);
+    }
+    alioquin
+    {
+        /* cauda ansae infinitae: territorium -aggressive (differtur
+         * nomine) - semper exempta */
+        postis->plicatione_exemptus = VERUM;
     }
     _contextum_imponere(aed, postis, caput);
     aed->currens = corpus_b;
@@ -509,6 +573,10 @@ _fac_dum_fluere (FluxusAedificator* aed, constans SilvaNodus* nodus)
         _margo_addere(conditio_b, (s32)FLUXUS_MARGO_FALSUS, postis,
             nodus);
     }
+    alioquin
+    {
+        postis->plicatione_exemptus = VERUM;   /* cauda infinita */
+    }
     aed->currens = postis;
 }
 
@@ -554,9 +622,18 @@ _per_fluere (FluxusAedificator* aed, constans SilvaNodus* nodus)
     {
         _margo_addere(caput, (s32)FLUXUS_MARGO_VERUS, corpus_b, nodus);
     }
+    alioquin
+    {
+        corpus_b->plicatione_exemptus = _conditio_macro_tincta(aed,
+            silva_c89_per_clausula_conditio(clausula));
+    }
     si (conditio_n != NIHIL && (!constansne || valor == ZEPHYRUM))
     {
         _margo_addere(caput, (s32)FLUXUS_MARGO_FALSUS, postis, nodus);
+    }
+    alioquin
+    {
+        postis->plicatione_exemptus = VERUM;   /* cauda infinita */
     }
     _contextum_imponere(aed, postis, passus_b);
     aed->currens = corpus_b;

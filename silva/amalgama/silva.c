@@ -4318,6 +4318,16 @@ structura FluxusBlocus {
     constans SilvaNodus* titulus_dux;  /* casus/ordinarius/titulatum
                                  * qui blocum aperit; NIHIL alias
                                  * (sedes flagrationis gradus) */
+    b32  plicatione_exemptus;   /* margo introitus plicatione
+                                 * constantium omissus est MODO
+                                 * exempto: conditio macro-tincta
+                                 * (si (DEBUG) - clang idem tacet)
+                                 * aut cauda ansae infinitae
+                                 * (-aggressive territorium).
+                                 * Codex 65 hos transit; plicatio
+                                 * LITTERALIS (si (0)) NON exempta
+                                 * - clang flagrat (calibratio
+                                 * 2026-07-17). */
 };
 
 /* Titulus functionis (salta-destinatio) - tabula quaesibilis */
@@ -35565,7 +35575,50 @@ _blocus_novus (FluxusAedificator* aed)
     b->margines = silva_xar_creare(aed->piscina, (i32)magnitudo(FluxusMargo));
     b->attingibilis = FALSUM;
     b->titulus_dux = NIHIL;
+    b->plicatione_exemptus = FALSUM;
     redde b;
+}
+
+/* Conditio macro-tincta? (folium per parentheses, lexema cuius
+ * radix originis a se differt = expansum). Pro exemptione codicis
+ * 65: si (DEBUG) disabilitatum clang quoque tacet; si (0)
+ * litterale flagrat. */
+interior b32
+_conditio_macro_tincta (FluxusAedificator* aed, SilvaValor conditio_v)
+{
+    constans SilvaNodus* n = _nodalis(conditio_v);
+    SilvaValor tok_v;
+
+    dum (n != NIHIL)
+    {
+        n = _canonicum_per(aed, n);
+        si (n->genus != (s32)SILVA_C89_GENUS_PARENTHESIS)
+        {
+            frange;
+        }
+        n = _nodalis(silva_c89_parenthesis_internum(n));
+    }
+    si (n == NIHIL)
+    {
+        redde FALSUM;
+    }
+    si (n->genus == (s32)SILVA_C89_GENUS_FOLIUM_INTEGER)
+    {
+        tok_v = silva_c89_folium_integer_tok_valor(n);
+    }
+    alioquin si (n->genus == (s32)SILVA_C89_GENUS_FOLIUM_IDENTIFICATOR)
+    {
+        tok_v = silva_c89_folium_identificator_tok_valor(n);
+    }
+    alioquin
+    {
+        redde FALSUM;
+    }
+    si (tok_v.genus != SILVA_VALOR_TOKEN)
+    {
+        redde FALSUM;
+    }
+    redde silva_token_radix(tok_v.datum.token) != tok_v.datum.token;
 }
 
 interior vacuum
@@ -35870,6 +35923,11 @@ _si_fluere (FluxusAedificator* aed, constans SilvaNodus* nodus)
     {
         _margo_addere(apertura, (s32)FLUXUS_MARGO_VERUS, dein, nodus);
     }
+    alioquin
+    {
+        dein->plicatione_exemptus = _conditio_macro_tincta(aed,
+            conditio_v);
+    }
     aed->currens = dein;
     _sententiam_ambulare(aed, _nodalis(silva_c89_si_consequens(nodus)));
     dein_finis = aed->currens;
@@ -35882,6 +35940,11 @@ _si_fluere (FluxusAedificator* aed, constans SilvaNodus* nodus)
         {
             _margo_addere(apertura, (s32)FLUXUS_MARGO_FALSUS,
                 alterum, nodus);
+        }
+        alioquin
+        {
+            alterum->plicatione_exemptus = _conditio_macro_tincta(
+                aed, conditio_v);
         }
         aed->currens = alterum;
         _sententiam_ambulare(aed, alterum_n);
@@ -35924,9 +35987,20 @@ _dum_fluere (FluxusAedificator* aed, constans SilvaNodus* nodus)
     {
         _margo_addere(caput, (s32)FLUXUS_MARGO_VERUS, corpus_b, nodus);
     }
+    alioquin
+    {
+        corpus_b->plicatione_exemptus = _conditio_macro_tincta(aed,
+            conditio_v);
+    }
     si (!constansne || valor == ZEPHYRUM)
     {
         _margo_addere(caput, (s32)FLUXUS_MARGO_FALSUS, postis, nodus);
+    }
+    alioquin
+    {
+        /* cauda ansae infinitae: territorium -aggressive (differtur
+         * nomine) - semper exempta */
+        postis->plicatione_exemptus = VERUM;
     }
     _contextum_imponere(aed, postis, caput);
     aed->currens = corpus_b;
@@ -35973,6 +36047,10 @@ _fac_dum_fluere (FluxusAedificator* aed, constans SilvaNodus* nodus)
         _margo_addere(conditio_b, (s32)FLUXUS_MARGO_FALSUS, postis,
             nodus);
     }
+    alioquin
+    {
+        postis->plicatione_exemptus = VERUM;   /* cauda infinita */
+    }
     aed->currens = postis;
 }
 
@@ -36018,9 +36096,18 @@ _per_fluere (FluxusAedificator* aed, constans SilvaNodus* nodus)
     {
         _margo_addere(caput, (s32)FLUXUS_MARGO_VERUS, corpus_b, nodus);
     }
+    alioquin
+    {
+        corpus_b->plicatione_exemptus = _conditio_macro_tincta(aed,
+            silva_c89_per_clausula_conditio(clausula));
+    }
     si (conditio_n != NIHIL && (!constansne || valor == ZEPHYRUM))
     {
         _margo_addere(caput, (s32)FLUXUS_MARGO_FALSUS, postis, nodus);
+    }
+    alioquin
+    {
+        postis->plicatione_exemptus = VERUM;   /* cauda infinita */
     }
     _contextum_imponere(aed, postis, passus_b);
     aed->currens = corpus_b;
@@ -37150,7 +37237,9 @@ interior constans ExamenTolerabilis _tolerabiles[] = {
     { "COMPARATIO_DEGRADATA",
       (s32)EXAMEN_CODEX_COMPARATIO_DEGRADATA },
     { "CASUS_LAPSUS",
-      (s32)EXAMEN_CODEX_CASUS_LAPSUS }
+      (s32)EXAMEN_CODEX_CASUS_LAPSUS },
+    { "SENTENTIA_INATTINGIBILIS",
+      (s32)EXAMEN_CODEX_SENTENTIA_INATTINGIBILIS }
 };
 
 /* commentarium TOLERA? valor = octeti pleni delimitatoribus
@@ -39554,6 +39643,55 @@ _fluxum_examinare (SilvaSemantica* sem, constans SilvaNodus* definitio)
             silva_c89_diagnosticum_addere(sem, margo->origo,
                 (s32)EXAMEN_CODEX_CASUS_LAPSUS);
         }
+    }
+
+    /* codex 65: sententia inattingibilis - blocus non attingibilis
+     * cum sententia VERA. Vacuae et redde/frange/perge SOLAE
+     * transeunt: clang eas sub-vexillis (-return/-break) separat
+     * quia saltus defensivi caudales idioma sunt - paritatem cum
+     * -Wunreachable-code PLANO tenemus. Flagrat ad sententiam veram
+     * primam bloci; TOLERA-bilis. */
+    m = silva_xar_numerus(fluxus->bloci);
+    per (i = ZEPHYRUM; i < m; i++)
+    {
+        constans FluxusBlocus* blocus = (constans FluxusBlocus*)
+            silva_xar_obtinere(fluxus->bloci, i);
+        constans SilvaNodus* culpa = NIHIL;
+        i32 k;
+        i32 numerus_sententiarum;
+
+        si (blocus->attingibilis || blocus->plicatione_exemptus)
+        {
+            perge;
+        }
+        numerus_sententiarum = silva_xar_numerus(blocus->sententiae);
+        per (k = ZEPHYRUM; k < numerus_sententiarum; k++)
+        {
+            constans SilvaNodus* s = *(constans SilvaNodus**)
+                silva_xar_obtinere(blocus->sententiae, k);
+
+            si (s == NIHIL
+                || s->genus == (s32)SILVA_C89_GENUS_SENTENTIA_VACUA
+                || s->genus == (s32)SILVA_C89_GENUS_REDDE
+                || s->genus == (s32)SILVA_C89_GENUS_FRANGE
+                || s->genus == (s32)SILVA_C89_GENUS_PERGE)
+            {
+                perge;
+            }
+            culpa = s;
+            frange;
+        }
+        si (culpa == NIHIL || _fons_alienus(sem, culpa))
+        {
+            perge;
+        }
+        si (_tolera_absorbere(sem, culpa,
+            (s32)EXAMEN_CODEX_SENTENTIA_INATTINGIBILIS))
+        {
+            perge;
+        }
+        silva_c89_diagnosticum_addere(sem, culpa,
+            (s32)EXAMEN_CODEX_SENTENTIA_INATTINGIBILIS);
     }
 
     /* codex 63: finis cadit in functione non vacua */

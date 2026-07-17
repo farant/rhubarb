@@ -78,6 +78,16 @@ structura FluxusBlocus {
     constans SilvaNodus* titulus_dux;  /* casus/ordinarius/titulatum
                                  * qui blocum aperit; NIHIL alias
                                  * (sedes flagrationis gradus) */
+    b32  plicatione_exemptus;   /* margo introitus plicatione
+                                 * constantium omissus est MODO
+                                 * exempto: conditio macro-tincta
+                                 * (si (DEBUG) - clang idem tacet)
+                                 * aut cauda ansae infinitae
+                                 * (-aggressive territorium).
+                                 * Codex 65 hos transit; plicatio
+                                 * LITTERALIS (si (0)) NON exempta
+                                 * - clang flagrat (calibratio
+                                 * 2026-07-17). */
 };
 
 /* Titulus functionis (salta-destinatio) - tabula quaesibilis */

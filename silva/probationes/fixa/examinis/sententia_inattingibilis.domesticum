@@ -1,0 +1,20 @@
+/* sententia inattingibilis (codex 65) - paritas -Wunreachable-code
+ * (vexillum opt-in; vexilla domus caeca). Redde post ansam infinitam
+ * TACET ambobus: clang sub-vexillo -aggressive solum, nos saltus
+ * solos (redde/frange/perge) consulto omittimus.
+ * ORACULUM -Wunreachable-code */
+/* EXSPECTA 11:SENTENTIA_INATTINGIBILIS */
+
+static int post_redditum(int x)
+{
+    return x + 1;
+    x = 99;
+    return x;
+}
+
+static int post_ansam(void)
+{
+    for (;;) {
+    }
+    return 0;
+}

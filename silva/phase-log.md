@@ -8760,3 +8760,80 @@ retained in sem; 65 in-arc stretch; fluxus internal v1; TOLERA-only
 suppression. Chunks: ① module+unit suite ② integration + 63/66/67 +
 differentia sweep ③ 64 + census ④ stretch 65. NOTHING BUILT YET —
 compaction next by decision; chunk ① starts from the spec.
+
+## GRADUS FLUXUS-0: RELATIO (2026-07-17)
+
+THE ARC SHIPPED WHOLE: CFG stage 0 + FIVE codices (63-67), four
+chunks, each ending green, exactly along the spec's consumer order.
+The simulation-first + interview + spec pipeline held: ZERO design
+reversals during build - every wall the build hit had been named
+beforehand except the ones the CENSUS was designed to find (which
+is the point of the census).
+
+CHUNK ①: silva_c89_fluxus.{h,c} (~750 lines) + 65-assert unit
+suite, green on first run. Auxilia seam as designed (canonicum +
+aestimator are caller policy); blocks by value in xar; violations
+as data. One honest stumble: first Write of the .c went out
+half-designed (stubbed context stack) - caught on re-read, rewritten
+whole; the final stack idiom is live-depth over append-only xar.
+
+CHUNK ②: semantica integration (sem->fluxus_functionum, retained
+per Q7) + 63 SUSPECTUM + 66/67 VIOLATIO (the verdict-parity hole,
+closed). THE ACCEPTANCE SWEEP: 649 files - 66/67 = 0 corpus-wide;
+63 fired exactly twice = ONE real latent bug (roundtrip fixture
+make_point returns struct from empty body - never compiled, clang
+agrees line-exact); noreturn disagreement count = 0 (decision Q1's
+branch never taken). New generic vectis leg ②b′ (*.suspectum,
+oracle-paired); chorda_aequalis resurrected from excludenda.
+
+CHUNK ③: 64 CASUS_LAPSUS. Census-taught, twice: (1) the alien
+guard was missing (stb_image's three fall-throughs - DOMESTICUM
+never judges alien; added); (2) the intentional +=/-= fall-through
+in semantica ITSELF became the tier's first live TOLERA demand and
+exposed a LATENT BUG: TOLERA above latin-keyword-led statements
+NEVER absorbed (comment rides the macro invocation lexeme, which
+expansion drops from the final stream; strata[0] = post-expansion,
+dead end proven; fix = collector also examines silva_token_radix
+per token). Affected ALL TOLERA-able tiers in Latin files since
+the TOLERA arc - all 17 existing sites happened to be
+identifier-led. Also documented: _tolera_legere is
+single-line-strict. Census final: 1 (arbor_syntaxis:3504 frozen,
+standing per Q2).
+
+CHUNK ④: 65 SENTENTIA_INATTINGIBILIS, plain -Wunreachable-code
+parity. TWO calibration surprises shaped the predicate: clang
+FIRES on literal if(0) but is SILENT on if(MACRO_0) - the config
+idiom exemption is macro-provenance-based, and OUR TREE KNOWS
+PROVENANCE (plicatione_exemptus mark on folded-out blocks,
+macro-tinged only; loop tails always exempt = -aggressive
+territory, deferred by name). Skip-list redde/frange/perge-only
+blocks (clang's -return/-break sub-flags = defensive-jump idiom).
+Census: piscina's si(PISCINA_DEBUG) correctly exempt; final = 1
+(arbor2_glr_tabula:25808, dead (vacuum)glr after redde -I, frozen,
+standing).
+
+STANDING METERS after the arc: 58=43 (VANA tail), 61=2, 63=2 (one
+defect in a non-compiled roundtrip fixture, clang-confirmed -
+Fran adjudicates fix-vs-stand), 64=1 (frozen), 65=1 (frozen),
+REICE=41. Bars: silva 31/31, officina 12/12, probes 1043/1043,
+VECTIS TENET, amalgamare VERIFICATUM, percursus 823 trees /
+0 error nodes.
+
+INSTRUMENTA DEBRIEF (adhibita/fructus/asperitates/desiderata):
+- adhibita: arbor.sh (live parse dumps DROVE the simulation -
+  Duff rejection + stacking shape found pre-build), differentia
+  (5-file spot sweep), examen -machina + xargs -P4 recipe (three
+  clean census sweeps), vectis (absorbed 4 fixtures + 1 new
+  generic leg), push (caught _tolera_quaerere phantom call live),
+  legati corpus (seat reads), store (all decisions ledgered).
+- fructus: the census-as-experiment pattern went 3-for-3 THIS ARC
+  (alien gap, TOLERA latent bug, if(0)-vs-if(MACRO) split) - first
+  contact with the corpus keeps out-teaching design; twin-specimen
+  bisection (C vs Latin) cracked the TOLERA bug in two probes.
+- asperitates: xargs -I{} "too long" recurred (runner-script form
+  is now the recipe of record); fixture line-pins shifted twice on
+  comment edits (relative-pins desideratum 01KXRD8JVS still open);
+  legati resident staleness nags during heavy edit runs.
+- desiderata: TOLERA multi-line parsing (filed); a census
+  convenience (examen -census CODEX over a file list) would
+  replace the runner-script dance.

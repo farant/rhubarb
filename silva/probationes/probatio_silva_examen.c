@@ -1590,6 +1590,49 @@ s32 principale (vacuum)
         "    /* TOLERA CASUS_LAPSUS: probatio suppressionis */\n"
         "    case 1: x = x - 1; break;\n    }\n    return x;\n}\n",
         (s32)EXAMEN_CODEX_CASUS_LAPSUS, ZEPHYRUM);
+
+    /* codex 65: sententia vera post redde - flagrat */
+    _codicem_probare(piscina,
+        "static int f(int x) { return x; x = 99; return x; }\n",
+        (s32)EXAMEN_CODEX_SENTENTIA_INATTINGIBILIS, I);
+    /* redde solum post redde - saltus defensivus, tacet (clang
+     * sub-vexillo -return solum) */
+    _codicem_probare(piscina,
+        "static int f(int x) { return x; return x; }\n",
+        (s32)EXAMEN_CODEX_SENTENTIA_INATTINGIBILIS, ZEPHYRUM);
+    /* sententiae ante titulum primum commutationis - flagrant */
+    _codicem_probare(piscina,
+        "static int f(int x) { switch (x) { x = 1; case 0:"
+        " x = x - 1; } return x; }\n",
+        (s32)EXAMEN_CODEX_SENTENTIA_INATTINGIBILIS, I);
+    /* redde post ansam infinitam - tacet (paritas plana; clang
+     * -aggressive solum) */
+    _codicem_probare(piscina,
+        "static int f(void) { for (;;) { } return 0; }\n",
+        (s32)EXAMEN_CODEX_SENTENTIA_INATTINGIBILIS, ZEPHYRUM);
+    /* codex attingibilis - tacet */
+    _codicem_probare(piscina,
+        "static int f(int x) { if (x) { x = x - 1; } return x; }\n",
+        (s32)EXAMEN_CODEX_SENTENTIA_INATTINGIBILIS, ZEPHYRUM);
+    /* TOLERA supprimit */
+    _codicem_probare(piscina,
+        "static int f(int x)\n{\n    return x;\n"
+        "    /* TOLERA SENTENTIA_INATTINGIBILIS: probatio */\n"
+        "    x = 99;\n    return x;\n}\n",
+        (s32)EXAMEN_CODEX_SENTENTIA_INATTINGIBILIS, ZEPHYRUM);
+    /* si (MACRO disabilitatum): exemptum - clang idem tacet
+     * (idioma PISCINA_DEBUG; calibratio 2026-07-17) */
+    _codicem_probare(piscina,
+        "#define DEBUG_PROBATIONIS 0\n"
+        "static void g(void);\n"
+        "static int f(int x) { if (DEBUG_PROBATIONIS) { g(); }"
+        " return x; }\n",
+        (s32)EXAMEN_CODEX_SENTENTIA_INATTINGIBILIS, ZEPHYRUM);
+    /* si (0) litterale: NON exemptum - clang flagrat */
+    _codicem_probare(piscina,
+        "static void g(void);\n"
+        "static int f(int x) { if (0) { g(); } return x; }\n",
+        (s32)EXAMEN_CODEX_SENTENTIA_INATTINGIBILIS, I);
     credo_imprimere_compendium();
     praeteritus = credo_omnia_praeterierunt();
     piscina_destruere(piscina);
