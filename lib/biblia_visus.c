@@ -633,11 +633,14 @@ biblia_visus_reddere(
         /* Clamp page index to valid range */
         si (visus->index_paginae >= visus->paginae_numerus)
         {
-            visus->index_paginae = visus->paginae_numerus - I;
-        }
-        si (visus->index_paginae < ZEPHYRUM)
-        {
-            visus->index_paginae = ZEPHYRUM;
+            si (visus->paginae_numerus > ZEPHYRUM)
+            {
+                visus->index_paginae = visus->paginae_numerus - I;
+            }
+            alioquin
+            {
+                visus->index_paginae = ZEPHYRUM;
+            }
         }
 
         /* Ensure versus_initium matches current page */
@@ -966,6 +969,7 @@ _biblia_visus_parse_referentiam(
     character nomen_buffer[LXIV];
     i32 nomen_idx;
     constans character* p;
+    s32 liber_inventus;
     i32 liber;
     i32 capitulum;
     i32 versus;
@@ -1024,11 +1028,12 @@ _biblia_visus_parse_referentiam(
     nomen_buffer[nomen_idx] = '\0';
 
     /* Look up book */
-    liber = biblia_invenire_librum(biblia, nomen_buffer);
-    si (liber < ZEPHYRUM)
+    liber_inventus = biblia_invenire_librum(biblia, nomen_buffer);
+    si (liber_inventus < ZEPHYRUM)
     {
         redde FALSUM;
     }
+    liber = (i32)liber_inventus;
 
     /* Parse chapter number if present */
     si (*p >= '0' && *p <= '9')
@@ -1116,15 +1121,15 @@ biblia_visus_navigare_ad(
         /* Find page containing verse (0-indexed internally) */
         {
             i32 versus_idx;
-            i32 pagina;
+            s32 pagina;
 
             versus_idx = versus - I;  /* Convert to 0-indexed */
 
-            per (pagina = visus->paginae_numerus - I; pagina >= ZEPHYRUM; pagina--)
+            per (pagina = (s32)visus->paginae_numerus - I; pagina >= ZEPHYRUM; pagina--)
             {
                 si (visus->paginae_limites[pagina] <= versus_idx)
                 {
-                    visus->index_paginae = pagina;
+                    visus->index_paginae = (i32)pagina;
                     frange;
                 }
             }

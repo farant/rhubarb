@@ -700,14 +700,14 @@ _conspectum_aedificare (Vindex* v, VindexConspectus* conspectus,
     {
         i32 n = ZEPHYRUM;
 
-        per (k = numerus_tabulatorum - I; k >= ZEPHYRUM
+        per (k = numerus_tabulatorum; k > ZEPHYRUM
             && n < ORDINES_MAXIMI; k--)
         {
             s32 functio_k = -I;
             i32 instructio_k = ZEPHYRUM;
 
             si (!machinula_positionem_inspicere(v->machinula,
-                    (insignatus integer)k, &functio_k,
+                    (insignatus integer)(k - I), &functio_k,
                     &instructio_k))
             {
                 frange;

@@ -223,7 +223,7 @@ biblia_versus_in_capitulo(
  *
  * Reddit: index libri si inventus, -1 si non inventus
  */
-i32
+s32
 biblia_invenire_librum(
     constans Biblia* biblia,
     constans character* quaesitum);

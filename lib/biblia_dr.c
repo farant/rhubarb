@@ -73238,7 +73238,7 @@ _praefixum_aequale(constans character* textus, constans character* praefixum)
     redde VERUM;
 }
 
-i32
+s32
 biblia_invenire_librum(
     constans Biblia* biblia,
     constans character* quaesitum)
@@ -73251,7 +73251,7 @@ biblia_invenire_librum(
 
     si (!biblia || !quaesitum || !*quaesitum)
     {
-        redde (i32)(-I);
+        redde -I;
     }
 
     /* Videre si quaesitum incipit cum numero (e.g., "1 Maccabees") */
@@ -73295,7 +73295,7 @@ biblia_invenire_librum(
             {
                 si (_praefixum_aequale(nomen_anglicum + II, p))
                 {
-                    redde i;
+                    redde (s32)i;
                 }
             }
         }
@@ -73304,12 +73304,12 @@ biblia_invenire_librum(
             /* Comparatio simplex sine numero */
             si (_praefixum_aequale(nomen_anglicum, quaesitum))
             {
-                redde i;
+                redde (s32)i;
             }
         }
     }
 
-    redde (i32)(-I);
+    redde -I;
 }
 
 #if defined(__clang__)

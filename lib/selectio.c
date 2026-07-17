@@ -747,7 +747,7 @@ interior b32
 _est_ultimus_liberum (StmlNodus* nodus)
 {
     StmlNodus* parens;
-    i32        i;
+    s32        i;
     i32        num;
     StmlNodus* liberum;
 
@@ -759,7 +759,7 @@ _est_ultimus_liberum (StmlNodus* nodus)
     num = xar_numerus(parens->liberi);
 
     /* Scandere retro pro ultimo elemento */
-    per (i = num - 1; i >= 0; i--) {
+    per (i = (s32)num - 1; i >= 0; i--) {
         liberum = *(StmlNodus**)xar_obtinere(parens->liberi, (i32)i);
         si (liberum->genus == STML_NODUS_ELEMENTUM) {
             redde liberum == nodus;

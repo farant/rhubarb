@@ -1908,7 +1908,7 @@ _processare_captiones(StmlNodus* nodus, Piscina* piscina)
     i32 j;
     i32 captio_count;
     i32 captured_count;
-    i32 k;
+    s32 k;
 
     si (!nodus || !nodus->liberi)
     {
@@ -1988,10 +1988,10 @@ _processare_captiones(StmlNodus* nodus, Piscina* piscina)
                 captured_count = ZEPHYRUM;
 
                 /* Capture previous N non-comment siblings from novi_liberi */
-                k = xar_numerus(novi_liberi) - I;
+                k = (s32)xar_numerus(novi_liberi) - I;
                 dum (k >= ZEPHYRUM && captured_count < captio_count)
                 {
-                    captus = *((StmlNodus**)xar_obtinere(novi_liberi, k));
+                    captus = *((StmlNodus**)xar_obtinere(novi_liberi, (i32)k));
                     si (captus && !_est_commentum(captus))
                     {
                         /* Insert at beginning of liberum's children */
@@ -2018,7 +2018,7 @@ _processare_captiones(StmlNodus* nodus, Piscina* piscina)
 
                         /* Remove from novi_liberi */
                         /* For simplicity, mark as null and skip later */
-                        *((StmlNodus**)xar_obtinere(novi_liberi, k)) = NIHIL;
+                        *((StmlNodus**)xar_obtinere(novi_liberi, (i32)k)) = NIHIL;
 
                         captured_count++;
                     }
@@ -2038,16 +2038,16 @@ _processare_captiones(StmlNodus* nodus, Piscina* piscina)
             {
                 StmlNodus** slot_c;
                 /* Capture one previous non-comment sibling */
-                k = xar_numerus(novi_liberi) - I;
+                k = (s32)xar_numerus(novi_liberi) - I;
                 dum (k >= ZEPHYRUM)
                 {
-                    captus = *((StmlNodus**)xar_obtinere(novi_liberi, k));
+                    captus = *((StmlNodus**)xar_obtinere(novi_liberi, (i32)k));
                     si (captus && !_est_commentum(captus))
                     {
                         captus->parens = liberum;
                         slot_c = xar_addere(liberum->liberi);
                         si (slot_c) *slot_c = captus;
-                        *((StmlNodus**)xar_obtinere(novi_liberi, k)) = NIHIL;
+                        *((StmlNodus**)xar_obtinere(novi_liberi, (i32)k)) = NIHIL;
                         frange;
                     }
                     k--;
@@ -2430,7 +2430,7 @@ stml_numerus_liberorum(StmlNodus* nodus)
 StmlNodus*
 stml_liberum_ad_indicem(StmlNodus* nodus, i32 index)
 {
-    si (!nodus || !nodus->liberi || index < ZEPHYRUM)
+    si (!nodus || !nodus->liberi)
     {
         redde NIHIL;
     }
