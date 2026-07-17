@@ -8304,3 +8304,123 @@ INSTRUMENTA DEBRIEF: calibration-first = corpus-zero first contact
 pattern (a standing nonzero row = visible work ledger, verdict-
 neutral) is new and deliberate; _constans_probare extracted at
 third use (rule of three); no new asperitates.
+
+### Addendum prae-compactione (2026-07-17) — re-entry for the next arcs
+
+Session state at compaction: lint streak = FOUR tiers shipped in two
+days (conversio-signi parity, TOLERA/severa, comparatio signorum,
+comparatio vana) + instruments (differentia.sh, vigilia examinis) +
+four real bugs (two fixed, one confirmed-live, one class standing).
+All suites green, amalgam VERIFICATUM, everything filed.
+
+NEXT PULL (Fran's stated order): **VANA ADJUDICATION** — quaestio
+01KXQ9NF8J carries classes/priorities/recipe. Re-entry protocol:
+(1) read the quaestio, (2) regenerate the site list (percursus
+-semantica | codex 58; attribution loop in the quaestio), (3) per
+site READ THE DECLARED TYPE before surgery — a firing proves
+unsignedness at the comparison, the fix (s32-ification vs
+restructure vs TOLERA) needs the declaration and callers, (4)
+tcp_posix.c:280 FIRST (confirmed live), then sentinels, then
+reverse-scan loops, then delineare clamps, (5) fixes ripple into
+-Wsign-conversion — compile per batch, sweep at end (54=55=58
+deltas all matter). Batch commits per class recommended.
+
+AFTER THAT (menu park 01KXQ82Z9Z): chorda.datum->str* (house rule,
+inverse oracle) -> narrowing -> commutatio fall-through -> unused.
+QC quaestio pseudos still queued behind the lint streak (interview
+seeds in the 2026-07-16 addendum above).
+
+Standing counters at compaction: census 58 = 74 (the meter);
+census 54 = 55 = 56 = 57 = 0. Verdicts = 41 pinned exclusions.
+
+## VANA ADIUDICATIO: INTENTIO (2026-07-17, sessio recens)
+
+The fresh session the addendum prescribed. Quaestio 01KXQ9NF8J is the
+ledger; census regenerated at re-entry = **74, byte-stable** against
+the compaction counter. Task ledger mirrors the four classes.
+
+TWO SCOPE DISCOVERIES at re-entry (both worse than the ledger knew):
+1. **lib/http.c:750 receive loop shares the trap** — `i32 n =
+   tcp_recipere(...)` then `si (n > 0) memcpy(..., (size_t)n)`: a TCP
+   error mid-response arrives as n=4e9, is treated as received data,
+   and memcpys ~4GB out of a 4KB buffer. Not just a dead error path —
+   a live crash/corruption path. (Same loop serves tls_recipere.)
+2. **lib/tls_macos.m is an invisible twin** — identical API disease
+   (tls_mittere returns (i32)-1; tls_mittere_omnia:415 has the same
+   dead `si (n < 0)`), but .m files are outside examen's walk, so the
+   census CANNOT see it. The 74 is a floor, not the class. Grep is the
+   only meter for .m; noted as a standing limitation.
+
+PLAN (class 1 = API surgery, the root cause): the tcp/tls I/O API was
+DESIGNED signed (headers document "-1 si error") but TYPED unsigned.
+Fix the type to match the design: tcp_mittere / tcp_recipere /
+tcp_obtinere_fd / tls_mittere / tls_recipere → **s32**. Ripples:
+tcp_posix.c + tls_macos.m bodies (casts, sentinels un-cast),
+tcp_mittere_omnia/tls_mittere_omnia loops (guard becomes LIVE;
+positive-n casts back into i32 accumulators), http.c receive loop
+(n → s32), probationes ×2 (locals + CREDO _I32→_S32). Header doc
+examples (tcp.h:10, tls.h:10) fixed too — they propagate the trap.
+Then classes 2-4 per the quaestio (sentinels → reverse loops →
+delineare clamps), READ THE DECLARED TYPE before every cut, compile
+per batch, commit per class, full sweep at end (54=55=58 deltas).
+
+BARS: census 58 → 0-or-TOLERA; census 54/55 unchanged (no new
+conversions smuggled in); suites green incl. tcp/http (tcp_servus
+known-flakey noted); grep-meter for tls_macos.m; RELATIO + quaestio
+closed with decree.
+
+## VANA ADIUDICATIO: RELATIO (2026-07-17)
+
+FOUR CLASSES SHIPPED, four commits (dc2bb5a, 1a5968e, 125a4e8,
+834113d). Census 58: **74 -> 46**; census 54/55/57 = 0 (no
+conversions smuggled in by the surgery); REICE = 41 unchanged.
+
+THE BUG HARVEST (every one live, none theoretical):
+1. tcp/tls sentinel API (typed unsigned, designed signed) — the TCP
+   write error path never worked; http.c's receive loop turned a
+   transport error into a ~4GB memcpy from a 4KB buffer (crash
+   vector, not just corruption).
+2. tls_macos.m — the INVISIBLE TWIN (.m outside examen's walk) +
+   a third bug found by reading: the read callback's partial-read
+   check compared n against itself (ordering), so errSSLWouldBlock
+   was never returned. Grep is the only meter for .m files.
+3. quaerere backward pass: wrapped index = live OUT-OF-BOUNDS reads.
+4. sententia_fissio: sentinel DELETED at the root (-1 branches were
+   unreachable AND every caller clamped -1 to mensura — the function
+   now just returns mensura).
+5. selectio._est_ultimus_liberum: empty child list -> wrap ->
+   xar_obtinere NIHIL -> NULL DEREF.
+6. vindex stack walk terminated only because inspicere happened to
+   fail on the wrapped index — by luck, not design.
+7. delineare: wrapped radius = ~4e9-iteration HANG; midpoint circle
+   error term unsigned -> `<= 0` degenerated to `== 0` = circles
+   subtly misshapen since birth (outside the census — found because
+   the surgery required reading the algorithm); gray-palette
+   distance unsigned -> brighter entries could never win.
+
+SCOPE NARROWED, PATH BACK NAMED: the unnamed tail = 42 source sites
+across 22 files (+4 amalgam shadows that regenerate) — includes
+FROZEN reference code (arbor2_glr, arbor_praeparator, lapifex) where
+fixing vs TOLERA is a policy question for Fran, plus core libs
+(chorda x2, chorda_aedificator x2, vim x2, sputnik x8, schirmata x4,
+arx_caeli x4, officina fontes x4...). Deliberately NOT batch-fixed
+at session end (the ledger's own law). The full list lives in
+quaestio 01KXQ9NF8J; census row 58 remains the standing meter at 46.
+
+INSTRUMENTA DEBRIEF: adhibita — examen -machina per-file attribution
+(hand-rolled, see asperitas), the edit push (caught the biblia_dr
+return conversions the instant the signature changed, the selectio
+intermediate state, delineare's header/body redeclaration mismatch
+— the push drove three fixes this arc), differentia not needed
+(no predicate tuning). Asperitates — (1) percursus -semantica
+prints only the aggregate census; corpus-wide per-file codex
+attribution required a hand-rolled 812-file examen loop, whose
+first (background) incarnation hung silently for 28 minutes;
+desideratum filed. (2) `grep -v biblia_dr.c` also excluded
+probatio_biblia_dr.c — substring filters eat sibling names; the
+compile wall caught the missed caller. Fructus — calibration
+categories held: every parity fix compiled clean first try against
+-Werror; the vigilia CAUTIO correctly nagged resident staleness all
+session. Desiderata — percursus per-file attribution flag
+(-attributio?): print via:linea:codex rows during the sweep instead
+of census-only.
